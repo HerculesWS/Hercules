@@ -1,24 +1,55 @@
-//===== Hercules Script ========================================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2014-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Playtester
+//= Copyright (C)  erKURITA
+//= Copyright (C)  Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Halloween Event (2014)
-//===== By: ====================================================================
-//= Kisuka
-//===== Current Version: =======================================================
-//= 1.0.0
-//===== File Encoding ==========================================================
+//================= File Encoding =========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//===== Description: ===========================================================
+//= -If the encoding is correct, the next three lines have the same length-
+//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
+//= ============ ============================================= ============
+//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
+//================= Description ===========================================
 //= The Official 2014 Halloween Event
 //=
 //= Help an Exhausted Priest collect souls in exchange for Candy Holders.
-//= Help some spirits in Niflheim figure out which one among them isn't dead.
-//= Collect 10 Red Scarf and 10 Hanging Doll for a spirit by the name of Loru.
-//= Hunt 20 Hylozoists and 20 Bloody Murderers for a spirit by the name of Devi.
-//===== Additional Comments: ===================================================
-//= 1.0.0 Initial Release. [Kisuka]
-//==============================================================================
+//= Help some spirits in Niflheim figure out which one among them isn't
+//= dead.
+//= Collect 10 Red Scarf and 10 Hanging Doll for a spirit by the name of
+//= Loru.
+//= Hunt 20 Hylozoists and 20 Bloody Murderers for a spirit by the name of
+//= Devi.
+//================= Current Version =======================================
+//= 1.0.0
+//=========================================================================
 
-//= Exhausted Priest
-//==============================================================================
+//== Exhausted Priest ======================================
 -	script	Exhausted Priest#14hal::Hal14Priest	4_M_MINISTER,{
 	if (!checkweight("Orcish_Axe", 3)) {
 		mes "[Exhausted Priest]";
@@ -236,8 +267,7 @@ payon,179,107,3	duplicate(Hal14Priest)	Exhausted Priest#pay14h	4_M_MINISTER
 prontera,156,194,3	duplicate(Hal14Priest)	Exhausted Priest#pron14h	4_M_MINISTER
 yuno,162,192,3	duplicate(Hal14Priest)	Exhausted Priest#yuno14h	4_M_MINISTER
 
-//= Bolak
-//==============================================================================
+//== Bolak =================================================
 niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 	if (!checkweight("Orcish_Axe", 3)) {
 		mes "[Bolak]";
@@ -842,8 +872,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 	}
 }
 
-//= Nathan
-//==============================================================================
+//== Nathan ================================================
 niflheim,195,183,1	script	Nathan#14hal	4_LUDE,{
 	mes "[Nathan]";
 	mes "Ma?";
@@ -863,8 +892,7 @@ niflheim,195,183,1	script	Nathan#14hal	4_LUDE,{
 	close;
 }
 
-//= Jack
-//==============================================================================
+//== Jack ==================================================
 niflheim,192,182,7	script	Jack#14hal	4_JACK,{
 	mes "[Jack]";
 	mes "Come empty, return empty...";
@@ -875,8 +903,7 @@ niflheim,192,182,7	script	Jack#14hal	4_JACK,{
 	close;
 }
 
-//= Richard
-//==============================================================================
+//== Richard ===============================================
 niflheim,190,185,5	script	Richard#14hal01	4_M_NFDEADSWDMAN,{
 	if (questprogress(14457)) {
 		mes "A doll which resembles Richard.";
@@ -887,8 +914,7 @@ niflheim,190,185,5	script	Richard#14hal01	4_M_NFDEADSWDMAN,{
 	close;
 }
 
-//= Loru
-//==============================================================================
+//== Loru ==================================================
 niflheim,194,189,3	script	Loru#14hal	4_LOLI_RURI,{
 	if (!checkweight("Orcish_Axe", 3)) {
 		mes "[Loru]";
@@ -1120,8 +1146,7 @@ niflheim,194,189,3	script	Loru#14hal	4_LOLI_RURI,{
 	}
 }
 
-//= Devi
-//==============================================================================
+//== Devi ==================================================
 niflheim,191,188,5	script	Devi#14hal	4_DEVIRUCHI,5,5,{
 	if (!checkweight("Orcish_Axe", 3)) {
 		mes "[Devi]";
@@ -1333,8 +1358,7 @@ niflheim,191,188,5	script	Devi#14hal	4_DEVIRUCHI,5,5,{
 	}
 }
 
-//= Bonfire
-//==============================================================================
+//== Bonfire ===============================================
 niflheim,193,186,6	script	Bonfire Spirit#14hal	4_TRACE,{
 	mes "[Bonfire Spirit]";
 	mes "Ahahah! Don't touch me with such cold hands!!!";
@@ -1382,8 +1406,7 @@ niflheim,193,186,6	script	Bonfire Spirit#14hal	4_TRACE,{
 		end;
 }
 
-//= Sister / Nun
-//==============================================================================
+//== Sister / Nun ==========================================
 prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 	if (!checkweight("Orcish_Axe", 3)) {
 		mes "[Spiritual Sister]";
@@ -1628,8 +1651,7 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 		end;
 }
 
-//= Richard's Wife
-//==============================================================================
+//== Richard's Wife ========================================
 xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 	if (questprogress(14456) == 1) {
 		if (countitem("Leaf_Of_Yggdrasil") > 0 && countitem("Live_Coal") > 0) {
@@ -1906,8 +1928,7 @@ xmas_in,160,175,1	script	Worried Wife#14hal	4_F_05,{
 	}
 }
 
-//= Richard's Daughter
-//==============================================================================
+//== Richard's Daughter ====================================
 xmas_in,163,178,3	script	Worried Daughter#14hal	4_F_NFLOSTGIRL,{
 	mes "[Richard's Daughter]";
 	if (questprogress(14457)) {
@@ -1926,8 +1947,7 @@ xmas_in,163,178,3	script	Worried Daughter#14hal	4_F_NFLOSTGIRL,{
 	close;
 }
 
-//= Richard
-//==============================================================================
+//== Richard ===============================================
 xmas_in,160,178,3	script	Richard#14hal02	4_M_DIEMAN,{
 	mes "[Richard]";
 	if (questprogress(14457) == 2) {
@@ -1943,8 +1963,7 @@ xmas_in,160,178,3	script	Richard#14hal02	4_M_DIEMAN,{
 	close;
 }
 
-//= Event Monsters
-//==============================================================================
+//== Event Monsters ========================================
 gld_dun01_2,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
 gld_dun02_2,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0
 gld_dun03_2,0,0,0,0	monster	Dark Soul	3381,2,5000,0,0

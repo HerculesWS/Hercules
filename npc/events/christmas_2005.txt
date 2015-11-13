@@ -1,29 +1,42 @@
-//===== Hercules Script ======================================
-//= 2005 ChristMas Event
-//===== By: ==================================================
-//= Brainstorm
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Paradox924X
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Brainstorm
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= 2005 Christmas Event
+//================= Description ===========================================
 //= Event 1: Louise's Kim creates Louise's Santa Hat.
 //= Event 2: Enjoy Happymerry Chistmas Event summons monsters.
 //= Event 3: Oholy requires you to hunt Deviruchi NPCs.
-//==========================================
-//= Break down of arguments used in the function:
-//=	arg(0) Originating NPC (disable)
-//=	arg(1) Next NPC to be enabled
-//=	arg(2) Map name of originating NPC
-//=	arg(3) Coordinate X to be teleported to
-//=	arg(4) Coordinate Y to be teleported to
-//===== Additional Comments: =================================
-//= 1.0 First semi-working conversion. [Brainstorm]
-//= 1.1 Refined Brainstorm's conversion. [L0ne_W0lf]
-//= 1.2 Replaced effect numerics with constants. [L0ne_W0lf]
-//= 1.2a Small update to the checkweight. (bugreport:2553). [Paradox924X]
-//============================================================
+//================= Current Version =======================================
+//= 1.2a
+//=========================================================================
 
-// Louise's Santa Hat (Event 1)
+//== Louise's Santa Hat (Event 1) ==========================
 xmas_in,89,92,5	script	Louise Kim#designer	4_F_06,{
 	mes "[Designer Louise Kim]";
 	mes "Cone shaped red Santa hat is too ordinary.";
@@ -188,7 +201,7 @@ xmas_in,89,92,5	script	Louise Kim#designer	4_F_06,{
 	}
 }
 
-// Enjoy Happymerry Chistmas Event (Event 2)
+//== Enjoy Happymerry Chistmas Event (Event 2) =============
 prontera,155,285,3	script	Enjoy#enjoy	4_M_MONK,{
 	if (!christ_solo05){
 		mes "[Enjoy]";
@@ -932,7 +945,7 @@ prontera,35,209,5	script	Event#event	4_M_SITDOWN,{
 	}
 }
 
-// Oholy (Event 3)
+//== Oholy (Event 3) =======================================
 prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 	if (!christ_carol05) {
 		mes "[Oholy]";
@@ -1386,7 +1399,13 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 	}
 }
 
-// Deviruchi functions
+//== Deviruchi functions ===================================
+//= Arguments:
+//= - 0: Originating NPC (disable)
+//= - 1: Next NPC to be enabled
+//= - 2: Map name of originating NPC
+//= - 3: Coordinate X to be teleported to
+//= - 4: Coordinate Y to be teleported to
 function	script	F_carol_devi	{
 	if (christ_carol05 == 1) {
 		mes "[Deviruchi]";
@@ -1565,7 +1584,7 @@ OnTouch:
 	end;
 }
 
-// Payon
+//- Payon -
 payon,165,153,3	duplicate(OholyDup)	Oholy#payon	1_F_PRIEST
 payon,142,203,3	script	Deviruchi#payon_01	4_DEVIRUCHI,3,3,{
 	callfunc("F_carol_devi2","payon",166,60);
@@ -1622,7 +1641,7 @@ OnTouch:
 	end;
 }
 
-// Geffen
+//- Geffen -
 geffen,120,188,0	duplicate(OholyDup)	Oholy#geffen	1_F_PRIEST
 geffen,173,163,3	script	Deviruchi#geffen_01	4_DEVIRUCHI,3,3,{
 	callfunc("F_carol_devi2","geffen",120,34);
@@ -1651,7 +1670,7 @@ OnTouch:
 	end;
 }
 
-// Alberta
+//- Alberta -
 alberta,54,237,0	duplicate(OholyDup)	Oholy#alberta	1_F_PRIEST
 alberta,97,86,3	script	Deviruchi#alberta_01	4_DEVIRUCHI,3,3,{
 	callfunc("F_carol_devi2","alberta",28,235);

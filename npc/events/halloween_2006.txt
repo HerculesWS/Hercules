@@ -1,25 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Samuray22
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Brainstorm
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= 2006 Halloween Event
-//===== By: ==================================================
-//= Brainstorm
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Event 1: Redeem "Pumpkin Mojo" for pumpkin headgear.
 //= Event 2: Create "Pumpkin Pie" item.
-//===== Additional Comments: =================================
-//= 1.0 First semi-working conversion. [Brainstorm]
-//= 1.1 Refined Brainstorm's conversion. [L0ne_W0lf]
-//= 1.1a Minor fixes. (Screwed up weight checks somehow) [L0ne_W0lf]
-//= 1.2 Added missing checkweights. [L0ne_W0lf]
-//= 1.3 Replaced effect numerics with constants. [L0ne_W0lf]
-//= 1.3a Replaced effect numerics with constants (1 was missed). [Samuray22]
-//= 1.4 Effects are now played by proper NPC. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
-// Pumpkin Mojo quest (Event 1)
-//============================================================
+//== Pumpkin Mojo quest (Event 1) ==========================
 prontera,162,69,5	script	Gloomy Jack#06_hw	JAKK,2,2,{
 	end;
 
@@ -480,8 +496,7 @@ nif_in,19,32,3	script	Deviruchi#06_hw	4_DEVIRUCHI,{
 	}
 }
 
-// Creation of Pumpkin Pie (Event 2)
-//============================================================
+//== Creation of Pumpkin Pie (Event 2) =====================
 nif_fild01,165,115,3	script	Chicken Masta#06_hw	4_M_NFDEADMAN2,{
 	if (MaxWeight - Weight < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
@@ -904,8 +919,7 @@ pay_dun03,156,131,3	duplicate(HwChicken3)	Chicken#06_hw_p39	4_NFCOCK
 pay_dun03,157,131,3	duplicate(HwChicken2)	Chicken#06_hw_p40	4_NFCOCK
 pay_dun03,158,131,3	duplicate(HwChicken3)	Chicken#06_hw_p41	4_NFCOCK
 
-// Payon Field chickens
-//============================================================
+//== Payon Field chickens ==================================
 pay_fild08,1,1,0	script	#06_hw_timer02	-1,{
 OnInit:
 	disablenpc "Chicken#06_hw_pf01";
@@ -1077,8 +1091,7 @@ morocc,159,143,3	duplicate(HWFamiDup)	Familiar#06_hw03	4_NFBAT
 geffen,120,188,3	duplicate(HWFamiDup)	Familiar#06_hw04	4_NFBAT
 alberta,80,171,3	duplicate(HWFamiDup)	Familiar#06_hw05	4_NFBAT
 
-// Event Lude Monster Spawns
-//============================================================
+//== Event Lude Monster Spawns =============================
 ra_fild01,0,0,0,0	monster	Lude	1812,3,0,0,0
 ra_fild02,0,0,0,0	monster	Lude	1812,3,0,0,0
 ra_fild03,0,0,0,0	monster	Lude	1812,3,0,0,0

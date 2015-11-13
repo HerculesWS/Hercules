@@ -1,25 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Lupus
+//= Copyright (C)  Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= iRO Halloween (2009)
-//===== By: ==================================================
-//= Kisuka
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
+//================= Description ===========================================
 //= iRO Halloween (2009)
 //= Quest for Weird Pumpkin Hat.
 //= Exchange treats for buffs.
 //= Summon event monsters in towns.
-//===== Notes: ===============================================
+//================= Current Version =======================================
+//= 1.1
+//================= Additional Comments ===================================
 //= You must enable the event items in item_db2.
-//= You must enable the event mobs in mob_db2, mob_avail, and
-//= their skills in mob_skill_db2.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Kisuka]
-//= 1.1 Fixed even exploit, fixed mobs overlap. [Lupus]
-//============================================================
+//= You must enable the event mobs in mob_db2, mob_avail, and their skills
+//= in mob_skill_db2.
+//=========================================================================
 
-// Headgear Quest - Pumpkin Hat
-//============================================================
+//== Headgear Quest - Pumpkin Hat ==========================
 prontera,152,192,5	script	Pumpkin Hat Researcher	4_M_05,{
 	if(BaseLevel < 45) {
 		mes "[Pumpkin Hat Researcher]";
@@ -92,8 +113,7 @@ prontera,152,192,5	script	Pumpkin Hat Researcher	4_M_05,{
 	}
 }
 
-// Buffs - Trick or Treaters
-//============================================================
+//== Buffs - Trick or Treaters =============================
 -	script	Trick or Treater::09Treats	4_M_KID1,2,2,{
 OnTouch:
 	hideoffnpc strnpcinfo(3);
@@ -218,8 +238,7 @@ prontera,142,214,5	duplicate(09Treats)	Trick or Treater#iRO6	4_M_KID1,2,2
 prontera,134,125,5	duplicate(09Treats)	Trick or Treater#iRO7	4_M_KID1,2,2
 prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 
-// Monster Summoning - Halloween Wizard
-//============================================================
+//== Monster Summoning - Halloween Wizard ==================
 -	script	Halloween Wizard#iRO09::09HallowWiz	4_DARKLORD,{
 	mes "[Halloween Wizard]";
 	mes "...";
