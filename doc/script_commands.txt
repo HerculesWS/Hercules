@@ -8966,15 +8966,15 @@ Returns the amount of entries in the queue instance of <queue_id>.
 
 *queueadd(<queue_id>,<var_id>);
 
-Adds <var_id> to queue of <queue_id>, returning 1 if <var_id> is already
-present in the queue, otherwise returning 0.
+Adds <var_id> to queue of <queue_id>, returning 0 if <var_id> is already
+present in the queue, otherwise returning 1.
 
 ---------------------------------------
 
 *queueremove(<queue_id>,<var_id>);
 
-Removes <var_id> from queue of <queue_id>, returning 1 if <var_id> is not
-present in the queue, otherwise returning 0.
+Removes <var_id> from queue of <queue_id>, returning 0 if <var_id> is not
+present in the queue, otherwise returning 1.
 
 ---------------------------------------
 

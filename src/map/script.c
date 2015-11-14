@@ -18842,12 +18842,12 @@ bool script_hqueue_add(int idx, int var)
 {
 	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 ) {
 		ShowWarning("script_hqueue_add: unknown queue id %d\n",idx);
-		return true;
+		return false;
 	} else {
 		int i;
 		for (i = 0; i < script->hq[idx].size; i++) {
 			if (script->hq[idx].item[i] == var) {
-				return true;
+				return false;
 			}
 		}
 
@@ -18880,7 +18880,7 @@ bool script_hqueue_add(int idx, int var)
 
 		}
 	}
-	return false;
+	return true;
 }
 /* queueadd(.@queue_id,.@var_id); */
 /* adds a new entry to the queue, returns 1 if already in queue, 0 otherwise */
@@ -18895,7 +18895,7 @@ BUILDIN(queueadd) {
 bool script_hqueue_remove(int idx, int var) {
 	if( idx < 0 || idx >= script->hqs || script->hq[idx].size == -1 ) {
 		ShowWarning("script_hqueue_remove: unknown queue id %d (used with var %d)\n",idx,var);
-		return true;
+		return false;
 	} else {
 		int i;
 
@@ -18923,8 +18923,11 @@ bool script_hqueue_remove(int idx, int var) {
 			}
 
 		}
+		else
+			return false;
+
 	}
-	return false;
+	return true;
 }
 /* queueremove(.@queue_id,.@var_id); */
 /* removes a entry from the queue, returns 1 if not in queue, 0 otherwise */
