@@ -48031,6 +48031,59 @@ void HP_npc_delsrcfile(const char *name) {
 	}
 	return;
 }
+const char* HP_npc_retainpathreference(const char *filepath) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if( HPMHooks.count.HP_npc_retainpathreference_pre ) {
+		const char* (*preHookFunc) (const char *filepath);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_retainpathreference_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_retainpathreference_pre[hIndex].func;
+			retVal___ = preHookFunc(filepath);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.retainpathreference(filepath);
+	}
+	if( HPMHooks.count.HP_npc_retainpathreference_post ) {
+		const char* (*postHookFunc) (const char* retVal___, const char *filepath);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_retainpathreference_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_retainpathreference_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filepath);
+		}
+	}
+	return retVal___;
+}
+void HP_npc_releasepathreference(const char *filepath) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_npc_releasepathreference_pre ) {
+		void (*preHookFunc) (const char *filepath);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_releasepathreference_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_releasepathreference_pre[hIndex].func;
+			preHookFunc(filepath);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.npc.releasepathreference(filepath);
+	}
+	if( HPMHooks.count.HP_npc_releasepathreference_post ) {
+		void (*postHookFunc) (const char *filepath);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_releasepathreference_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_releasepathreference_post[hIndex].func;
+			postHookFunc(filepath);
+		}
+	}
+	return;
+}
 void HP_npc_parsename(struct npc_data *nd, const char *name, const char *start, const char *buffer, const char *filepath) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_npc_parsename_pre ) {
@@ -48111,15 +48164,15 @@ bool HP_npc_viewisid(const char *viewid) {
 	}
 	return retVal___;
 }
-struct npc_data* HP_npc_create_npc(int m, int x, int y) {
+struct npc_data* HP_npc_create_npc(enum npc_subtype subtype, int m, int x, int y, uint8 dir, int16 class_) {
 	int hIndex = 0;
 	struct npc_data* retVal___ = NULL;
 	if( HPMHooks.count.HP_npc_create_npc_pre ) {
-		struct npc_data* (*preHookFunc) (int *m, int *x, int *y);
+		struct npc_data* (*preHookFunc) (enum npc_subtype *subtype, int *m, int *x, int *y, uint8 *dir, int16 *class_);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_create_npc_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_npc_create_npc_pre[hIndex].func;
-			retVal___ = preHookFunc(&m, &x, &y);
+			retVal___ = preHookFunc(&subtype, &m, &x, &y, &dir, &class_);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -48127,13 +48180,13 @@ struct npc_data* HP_npc_create_npc(int m, int x, int y) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.npc.create_npc(m, x, y);
+		retVal___ = HPMHooks.source.npc.create_npc(subtype, m, x, y, dir, class_);
 	}
 	if( HPMHooks.count.HP_npc_create_npc_post ) {
-		struct npc_data* (*postHookFunc) (struct npc_data* retVal___, int *m, int *x, int *y);
+		struct npc_data* (*postHookFunc) (struct npc_data* retVal___, enum npc_subtype *subtype, int *m, int *x, int *y, uint8 *dir, int16 *class_);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_create_npc_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_create_npc_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &m, &x, &y);
+			retVal___ = postHookFunc(retVal___, &subtype, &m, &x, &y, &dir, &class_);
 		}
 	}
 	return retVal___;
@@ -48322,6 +48375,140 @@ const char* HP_npc_parse_script(char *w1, char *w2, char *w3, char *w4, const ch
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_parse_script_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_npc_parse_script_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, w1, w2, w3, w4, start, buffer, filepath, &options, retval);
+		}
+	}
+	return retVal___;
+}
+void HP_npc_add_to_location(struct npc_data *nd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_npc_add_to_location_pre ) {
+		void (*preHookFunc) (struct npc_data *nd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_add_to_location_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_add_to_location_pre[hIndex].func;
+			preHookFunc(nd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.npc.add_to_location(nd);
+	}
+	if( HPMHooks.count.HP_npc_add_to_location_post ) {
+		void (*postHookFunc) (struct npc_data *nd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_add_to_location_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_add_to_location_post[hIndex].func;
+			postHookFunc(nd);
+		}
+	}
+	return;
+}
+bool HP_npc_duplicate_script_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_npc_duplicate_script_sub_pre ) {
+		bool (*preHookFunc) (struct npc_data *nd, const struct npc_data *snd, int *xs, int *ys, int *options);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_duplicate_script_sub_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_duplicate_script_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(nd, snd, &xs, &ys, &options);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.duplicate_script_sub(nd, snd, xs, ys, options);
+	}
+	if( HPMHooks.count.HP_npc_duplicate_script_sub_post ) {
+		bool (*postHookFunc) (bool retVal___, struct npc_data *nd, const struct npc_data *snd, int *xs, int *ys, int *options);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_duplicate_script_sub_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_duplicate_script_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, nd, snd, &xs, &ys, &options);
+		}
+	}
+	return retVal___;
+}
+bool HP_npc_duplicate_shop_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_npc_duplicate_shop_sub_pre ) {
+		bool (*preHookFunc) (struct npc_data *nd, const struct npc_data *snd, int *xs, int *ys, int *options);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_duplicate_shop_sub_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_duplicate_shop_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(nd, snd, &xs, &ys, &options);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.duplicate_shop_sub(nd, snd, xs, ys, options);
+	}
+	if( HPMHooks.count.HP_npc_duplicate_shop_sub_post ) {
+		bool (*postHookFunc) (bool retVal___, struct npc_data *nd, const struct npc_data *snd, int *xs, int *ys, int *options);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_duplicate_shop_sub_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_duplicate_shop_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, nd, snd, &xs, &ys, &options);
+		}
+	}
+	return retVal___;
+}
+bool HP_npc_duplicate_warp_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_npc_duplicate_warp_sub_pre ) {
+		bool (*preHookFunc) (struct npc_data *nd, const struct npc_data *snd, int *xs, int *ys, int *options);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_duplicate_warp_sub_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_duplicate_warp_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(nd, snd, &xs, &ys, &options);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.duplicate_warp_sub(nd, snd, xs, ys, options);
+	}
+	if( HPMHooks.count.HP_npc_duplicate_warp_sub_post ) {
+		bool (*postHookFunc) (bool retVal___, struct npc_data *nd, const struct npc_data *snd, int *xs, int *ys, int *options);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_duplicate_warp_sub_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_duplicate_warp_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, nd, snd, &xs, &ys, &options);
+		}
+	}
+	return retVal___;
+}
+bool HP_npc_duplicate_sub(struct npc_data *nd, const struct npc_data *snd, int xs, int ys, int options) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_npc_duplicate_sub_pre ) {
+		bool (*preHookFunc) (struct npc_data *nd, const struct npc_data *snd, int *xs, int *ys, int *options);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_duplicate_sub_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_npc_duplicate_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(nd, snd, &xs, &ys, &options);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.npc.duplicate_sub(nd, snd, xs, ys, options);
+	}
+	if( HPMHooks.count.HP_npc_duplicate_sub_post ) {
+		bool (*postHookFunc) (bool retVal___, struct npc_data *nd, const struct npc_data *snd, int *xs, int *ys, int *options);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_npc_duplicate_sub_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_npc_duplicate_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, nd, snd, &xs, &ys, &options);
 		}
 	}
 	return retVal___;
