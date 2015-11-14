@@ -19051,7 +19051,7 @@ BUILDIN(queueiterator) {
 	int qid = script_getnum(st, 2);
 	struct hQueue *queue = NULL;
 	int idx = script->hqis;
-	int i;
+	int i, count = 0;
 
 	if( qid < 0 || qid >= script->hqs || script->hq[qid].size == -1 || !(queue = script->queue(qid)) ) {
 		ShowWarning("queueiterator: invalid queue id %d\n",qid);
@@ -19078,9 +19078,11 @@ BUILDIN(queueiterator) {
 
 	RECREATE(script->hqi[ idx ].item, int, queue->size);
 
-	memcpy(script->hqi[idx].item, queue->item, sizeof(int)*queue->size);
+	for (i = 0; i < queue->size; i++)
+		if (queue->item[i] != -1)
+			script->hqi[idx].item[count++] = queue->item[i];
 
-	script->hqi[ idx ].items = queue->size;
+	script->hqi[ idx ].items = count;
 	script->hqi[ idx ].pos = 0;
 
 	script_pushint(st,idx);
