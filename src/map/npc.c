@@ -3016,7 +3016,7 @@ void npc_add_to_location(struct npc_data *nd)
 {
 	nullpo_retv(nd);
 
-	if (nd->bl.m > 0) {
+	if (nd->bl.m >= 0) {
 		map->addnpc(nd->bl.m, nd);
 		npc->setcells(nd);
 		map->addblock(&nd->bl);
