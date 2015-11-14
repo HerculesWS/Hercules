@@ -1126,8 +1126,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->bg_queue.client_has_bg_data = 0;
 	sd->bg_queue.type = 0;
 
-	sd->queues = NULL;
-	sd->queues_count = 0;
+	VECTOR_INIT(sd->script_queues);
 
 	sd->state.dialog = 0;
 
@@ -5526,11 +5525,11 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 		int i;
 		sd->state.pmap = sd->bl.m;
 
-		for( i = 0; i < sd->queues_count; i++ ) {
-			struct hQueue *queue;
-			if( (queue = script->queue(sd->queues[i])) && queue->onMapChange[0] != '\0' ) {
-				pc->setregstr(sd, script->add_str("QMapChangeTo"), map->list[m].name);
-				npc->event(sd, queue->onMapChange, 0);
+		for (i = 0; i < VECTOR_LENGTH(sd->script_queues); i++) {
+			struct script_queue *queue = script->queue(VECTOR_INDEX(sd->script_queues, i));
+			if (queue && queue->event_mapchange[0] != '\0') {
+				pc->setregstr(sd, script->add_str("@Queue_Destination_Map$"), map->list[m].name);
+				npc->event(sd, queue->event_mapchange, 0);
 			}
 		}
 
@@ -7634,10 +7633,10 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			npc->event(sd, bgd->die_event, 0);
 	}
 
-	for( i = 0; i < sd->queues_count; i++ ) {
-		struct hQueue *queue;
-		if( (queue = script->queue(sd->queues[i])) && queue->onDeath[0] != '\0' )
-			npc->event(sd, queue->onDeath, 0);
+	for (i = 0; i < VECTOR_LENGTH(sd->script_queues); i++ ) {
+		struct script_queue *queue = script->queue(VECTOR_INDEX(sd->script_queues, i));
+		if (queue && queue->event_death[0] != '\0')
+			npc->event(sd, queue->event_death, 0);
 	}
 
 	npc->script_event(sd,NPCE_DIE);

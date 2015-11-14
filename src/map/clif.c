@@ -610,12 +610,12 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 
 		case BG_QUEUE:
 			if( sd && sd->bg_queue.arena ) {
-				struct hQueue *queue = &script->hq[sd->bg_queue.arena->queue_id];
+				struct script_queue *queue = script->queue(sd->bg_queue.arena->queue_id);
 
-				for( i = 0; i < queue->size; i++ ) {
-					struct map_session_data *qsd = NULL;
+				for (i = 0; i < VECTOR_LENGTH(queue->entries); i++) {
+					struct map_session_data *qsd = map->id2sd(VECTOR_INDEX(queue->entries, i));
 
-					if (queue->item[i] > 0 && (qsd = map->id2sd(queue->item[i])) != NULL) {
+					if (qsd != NULL) {
 						WFIFOHEAD(qsd->fd,len);
 						memcpy(WFIFOP(qsd->fd,0), buf, len);
 						WFIFOSET(qsd->fd,len);

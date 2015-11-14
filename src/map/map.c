@@ -1802,16 +1802,16 @@ int map_quit(struct map_session_data *sd) {
 	skill->cooldown_save(sd);
 	pc->itemcd_do(sd,false);
 
-	for( i = 0; i < sd->queues_count; i++ ) {
-		struct hQueue *queue;
-		if( (queue = script->queue(sd->queues[i])) && queue->onLogOut[0] != '\0' ) {
-			npc->event(sd, queue->onLogOut, 0);
+	for (i = 0; i < VECTOR_LENGTH(sd->script_queues); i++) {
+		struct script_queue *queue = script->queue(VECTOR_INDEX(sd->script_queues, i));
+		if (queue && queue->event_logout[0] != '\0') {
+			npc->event(sd, queue->event_logout, 0);
 		}
 	}
 	/* two times, the npc event above may assign a new one or delete others */
-	for( i = 0; i < sd->queues_count; i++ ) {
-		if( sd->queues[i] != -1 )
-			script->queue_remove(sd->queues[i],sd->status.account_id);
+	while (VECTOR_LENGTH(sd->script_queues)) {
+		int qid = VECTOR_LAST(sd->script_queues);
+		script->queue_remove(qid, sd->status.account_id);
 	}
 
 	npc->script_event(sd, NPCE_LOGOUT);

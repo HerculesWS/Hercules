@@ -33,8 +33,8 @@ OnPlayerListReady:
 	set $@Croix_QueueBG1, queue();
 	set $@Guill_QueueBG1, queue();
 
-	queueopt($@Guill_QueueBG1,HQO_OnLogout,"start#bat_b01::OnGuillaumeQuit");
-	queueopt($@Croix_QueueBG1,HQO_OnLogout,"start#bat_b01::OnCroixQuit");
+	queueopt($@Guill_QueueBG1, QUEUEOPT_LOGOUT, "start#bat_b01::OnGuillaumeQuit");
+	queueopt($@Croix_QueueBG1, QUEUEOPT_LOGOUT, "start#bat_b01::OnCroixQuit");
 
 	set .@i, 0;
 
@@ -143,8 +143,8 @@ OnPlayerListReady:
 	bg_warp $@FlaviusBG1_id2,"bat_b01",311,224;
 
 	/* after warp */
-	queueopt($@Guill_QueueBG1,HQO_OnMapChange,"start#bat_b01::OnGuillaumeQuit");
-	queueopt($@Croix_QueueBG1,HQO_OnMapChange,"start#bat_b01::OnCroixQuit");
+	queueopt($@Guill_QueueBG1, QUEUEOPT_MAPCHANGE, "start#bat_b01::OnGuillaumeQuit");
+	queueopt($@Croix_QueueBG1, QUEUEOPT_MAPCHANGE, "start#bat_b01::OnCroixQuit");
 
 	donpcevent "countdown#bat_b01::OnEnable";
 	end;
