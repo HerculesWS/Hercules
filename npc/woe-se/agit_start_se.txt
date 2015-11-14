@@ -7,10 +7,6 @@
 //===== Description: =========================================
 //= Auto Start for War of Emperium
 //= To know how to set up WoE times, go to doc\woe_time_explanation.txt
-//=============================================
-//= gettime(3): Gets hour (24 hour time)
-//= gettime(4): Gets day of week 1=Monday, 2=Tuesday,
-//= 3=Wednesday, 4=Thursday, etc.
 //===== Additional Comments: =================================
 //= 1.0 Copy/Paste of the original setter.
 //============================================================
@@ -27,9 +23,9 @@ OnClock2300:	//end time for Sat(6)
 
 OnAgitInit2:
 	// starting time checks
-	if((gettime(4)==2) && (gettime(3)>=18 && gettime(3)<21) ||
-	   (gettime(4)==4) && (gettime(3)>=18 && gettime(3)<21) ||
-	   (gettime(4)==6) && (gettime(3)>=22 && gettime(3)<23)) {
+	if((gettime(GETTIME_WEEKDAY) == 2 && gettime(GETTIME_HOUR) >= 18 && gettime(GETTIME_HOUR) < 21) ||
+	   (gettime(GETTIME_WEEKDAY) == 4 && gettime(GETTIME_HOUR) >= 18 && gettime(GETTIME_HOUR) < 21) ||
+	   (gettime(GETTIME_WEEKDAY) == 6 && gettime(GETTIME_HOUR) >= 22 && gettime(GETTIME_HOUR) < 23)) {
 		if (!agitcheck2()) {
 			agitstart2;
 		}
@@ -37,9 +33,9 @@ OnAgitInit2:
 	}
 
 	// end time checks
-	if ((gettime(4)==2) && (gettime(3)==21) ||
-	    (gettime(4)==4) && (gettime(3)==21) ||
-	    (gettime(4)==6) && (gettime(3)==23)) {
+	if ((gettime(GETTIME_WEEKDAY) == 2 && gettime(GETTIME_HOUR) == 21) ||
+	    (gettime(GETTIME_WEEKDAY) == 4 && gettime(GETTIME_HOUR) == 21) ||
+	    (gettime(GETTIME_WEEKDAY) == 6 && gettime(GETTIME_HOUR) == 23)) {
 		if (agitcheck2()) {
 			agitend2;
 		}

@@ -85,7 +85,7 @@ lighthalzen,267,200,3	script	Guard#lhz01	4_M_LGTGUARD,{
 		$@Lhz_Gangster_Alert = 100;
 		close;
 	}
-	if (gettime(HOUR) >= 22 || gettime(HOUR) < 2) {
+	if (gettime(GETTIME_HOUR) >= 22 || gettime(GETTIME_HOUR) < 2) {
 		mes "[Guard]";
 		mes "Zzzz... Zzz...";
 		mes "ZZZzzzzzzzzzz...";
@@ -152,7 +152,7 @@ lighthalzen,294,223,7	script	Guard#lhz02	4_M_LGTGUARD,{
 		$@Lhz_Gangster_Alert = 100;
 		close;
 	}
-	if (gettime(HOUR) >= 22 || gettime(HOUR) < 2) {
+	if (gettime(GETTIME_HOUR) >= 22 || gettime(GETTIME_HOUR) < 2) {
 		mes "[Guard]";
 		mes "Zzzz... Zzz...";
 		mes "ZZZzzzzzzzzzz...";
@@ -7378,8 +7378,8 @@ yuno_pre,69,20,4	script	Secretary#1	4_F_LGTGIRL,{
 					mes "Membership Card.^000000";
 					close;
 				}
-				if(((gettime(HOUR) > 10) && (gettime(HOUR) < 15)) || ((gettime(HOUR) > 19) && (gettime(HOUR) <= 23)))
-				{
+				if ((gettime(GETTIME_HOUR) > 10 && gettime(GETTIME_HOUR) < 15)
+				 || (gettime(GETTIME_HOUR) > 19 && gettime(GETTIME_HOUR) <= 23)) {
 					mes "^3355FFYou suavely flash";
 					mes "your ''Secret Wing''";
 					mes "Membership Card.^000000";

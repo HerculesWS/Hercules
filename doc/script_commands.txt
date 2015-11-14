@@ -3181,30 +3181,28 @@ Valid types are :
 
 This function returns specified information about the current system time.
 
-Valid types are listed in const.txt:
-	1 - SECOND		- Seconds (of a minute)
-	2 - MINUTE		- Minutes (of an hour)
-	3 - HOUR		- Hour (of a day)
-	4 - WEEKDAY		- Week day (0 for Sunday, 6 is Saturday)
-					- Additional: (SUNDAY,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY)
-	5 - DAYOFMONTH	- Day of the month.
-	6 - MONTH		- Number of the month.
-					- Additional: ( JANUARY,FEBRUARY,MARCH,APRIL,MAY,JUNE,JULY,AUGUST,SEPTEMBER,OCTOBER,NOVEMBER,DECEMBER)
-	7 - YEAR		- Year.
-	8 - DAYOFYEAR	- Day of the year.
+Valid types:
+	1 - GETTIME_SECOND     - Seconds (of a minute)
+	2 - GETTIME_MINUTE     - Minutes (of an hour)
+	3 - GETTIME_HOUR       - Hour (of a day)
+	4 - GETTIME_WEEKDAY    - Week day (0 for Sunday, 6 is Saturday)
+	                       - Additional: SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+	5 - GETTIME_DAYOFMONTH - Day of the month.
+	6 - GETTIME_MONTH      - Number of the month.
+	                       - Additional: JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER
+	7 - GETTIME_YEAR       - Year
+	8 - GETTIME_DAYOFYEAR  - Day of the year.
 
 It will only return numbers based on types.
 Example :
-	if ( gettime(WEEKDAY) == SATURDAY ) {
+	if (gettime(GETTIME_WEEKDAY) == SATURDAY) {
 		mes "It's a Saturday. I don't work on Saturdays.";
+	} else if (gettime(GETTIME_MONTH) == JANUARY) {
+		mes "It's January. I don't work on January.";
+	} else if (gettime(GETTIME_MONTH) == OCTOBER && gettime(GETTIME_DAYOFMONTH) == 31) {
+		mes "It's Halloween.";
 	}
-	else if ( gettime(MONTH) == JANUARY ) {
-		mes "It's a January. I don't work on January.";
-	}
-	else if ( gettime(MONTH) == OCTOBER && gettime(DAYOFMONTH) == 31 ) {
-		mes "It's a Halloween.";
-	}
-	
+
 ---------------------------------------
 
 *gettimestr(<format string>,<max length>)
@@ -7578,7 +7576,7 @@ OnClock0600:
 	end;
 OnInit:
 	// setting correct mode upon server start-up
-	if(gettime(3)>=6 && gettime(3)<18) end;
+	if (gettime(GETTIME_HOUR) >= 6 && gettime(GETTIME_HOUR) < 18) end;
 OnClock1800:
 	night;
 	end;

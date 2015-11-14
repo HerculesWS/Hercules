@@ -7,10 +7,6 @@
 //= 2.0a
 //===== Description: =========================================
 //= Auto Start for War of Emperium
-//=============================================
-//= gettime(3): Gets hour (24 hour time)
-//= gettime(4): Gets day of week 1=Monday, 2=Tuesday,
-//= 3=Wednesday, 4=Thursday, etc.
 //===== Additional Comments: =================================
 //= v1.1a changed OnInit to OnAgitInit.[kobra_k88]
 //= v1.2 added gettime checks. removed $AgitStarted var.[kobra_k88]
@@ -44,9 +40,9 @@ OnClock1800:	//end time for Sat(6)
 
 OnAgitInit:
 	// starting time checks
-	if((gettime(4)==2) && (gettime(3)>=21 && gettime(3)<23) ||
-	   (gettime(4)==4) && (gettime(3)>=21 && gettime(3)<23) ||
-	   (gettime(4)==6) && (gettime(3)>=16 && gettime(3)<18)) {
+	if((gettime(GETTIME_WEEKDAY) == TUESDAY  && gettime(GETTIME_HOUR) >= 21 && gettime(GETTIME_HOUR) < 23) ||
+	   (gettime(GETTIME_WEEKDAY) == THURSDAY && gettime(GETTIME_HOUR) >= 21 && gettime(GETTIME_HOUR) < 23) ||
+	   (gettime(GETTIME_WEEKDAY) == SATURDAY && gettime(GETTIME_HOUR) >= 16 && gettime(GETTIME_HOUR) < 18)) {
 		if (!agitcheck()) {
 			agitstart;
 			callsub S_DisplayOwners;
@@ -55,9 +51,9 @@ OnAgitInit:
 	}
 
 	// end time checks
-	if ((gettime(4)==2) && (gettime(3)==23) ||
-	    (gettime(4)==4) && (gettime(3)==23) ||
-	    (gettime(4)==6) && (gettime(3)==18)) {
+	if ((gettime(GETTIME_WEEKDAY) == 2 && gettime(GETTIME_HOUR) == 23) ||
+	    (gettime(GETTIME_WEEKDAY) == 4 && gettime(GETTIME_HOUR) == 23) ||
+	    (gettime(GETTIME_WEEKDAY) == 6 && gettime(GETTIME_HOUR) == 18)) {
 		if (agitcheck()) {
 			agitend;
 			callsub S_DisplayOwners;
