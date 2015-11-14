@@ -18918,7 +18918,8 @@ bool script_hqueue_add(int idx, int var)
 /**
  * Script command queueadd: Adds a new entry to the given queue.
  *
- * Returns 1 if already in queue or in case of error, 0 otherwise.
+ * Returns 0 (false) if already in queue or in case of error, 1 (true)
+ * otherwise.
  *
  * @code{.herc}
  *    .@size = queuesize(.@queue_id);
@@ -18930,9 +18931,9 @@ BUILDIN(queueadd)
 	int var = script_getnum(st, 3);
 
 	if (script->queue_add(idx, var))
-		script_pushint(st, 0);
-	else
 		script_pushint(st, 1);
+	else
+		script_pushint(st, 0);
 
 	return true;
 }
@@ -18978,7 +18979,7 @@ bool script_hqueue_remove(int idx, int var)
 /**
  * Script command queueremove: Removes an entry from a queue.
  *
- * Returns 0 on success, 1 if the item wasn't in queue.
+ * Returns 1 (true) on success, 0 (false) if the item wasn't in queue.
  *
  * @code{.herc}
  *    queueremove(.@queue_id, .@value);
@@ -18990,9 +18991,9 @@ BUILDIN(queueremove)
 	int var = script_getnum(st, 3);
 
 	if (script->queue_remove(idx,var))
-		script_pushint(st, 0);
-	else
 		script_pushint(st, 1);
+	else
+		script_pushint(st, 0);
 
 	return true;
 }
@@ -19002,15 +19003,15 @@ BUILDIN(queueremove)
  *
  * When the option value isn't provided, the option is removed.
  *
- * Returns 0 on success, 1 on failure.
+ * Returns 1 (true) on success, 0 (false) on failure.
  *
  * The optionType is one of:
- * - HQO_OnDeath
- * - HQO_OnLogOut
- * - HQO_OnMapChange
+ * - QUEUEOPT_DEATH
+ * - QUEUEOPT_LOGOUT
+ * - QUEUEOPT_MAPCHANGE
  *
- * When the OnMapChange event is triggered, it sets a temporary character
- * variable \c @QMapChangeTo with the destination map name.
+ * When the QUEUEOPT_MAPCHANGE event is triggered, it sets a temporary
+ * character variable \c @Queue_Destination_Map$ with the destination map name.
  *
  * @code{.herc}
  *    queueopt(.@queue_id, optionType, <optional val>);
@@ -19024,7 +19025,7 @@ BUILDIN(queueopt)
 
 	if (idx < 0 || idx >= VECTOR_LENGTH(script->hq) || VECTOR_INDEX(script->hq, idx).size == -1) {
 		ShowWarning("buildin_queueopt: unknown queue id %d\n",idx);
-		script_pushint(st, 1);
+		script_pushint(st, 0);
 		return true;
 	}
 
@@ -19051,7 +19052,7 @@ BUILDIN(queueopt)
 			break;
 		default:
 			ShowWarning("buildin_queueopt: unsupported optionType %d\n",var);
-			script_pushint(st, 1);
+			script_pushint(st, 0);
 			return true;
 	}
 	script_pushint(st, 1);
@@ -19098,7 +19099,7 @@ bool script_hqueue_del(int idx)
 /**
  * Script command queuedel: Deletes a queue.
  *
- * Returns 0 on success, 1 if the queue doesn't exist.
+ * Returns 1 (true) on success, 0 (false) if the queue doesn't exist.
  *
  * @code{.herc}
  *    queuedel(.@queue_id);
@@ -19109,9 +19110,9 @@ BUILDIN(queuedel)
 	int idx = script_getnum(st, 2);
 
 	if (script->queue_del(idx))
-		script_pushint(st, 0);
-	else
 		script_pushint(st, 1);
+	else
+		script_pushint(st, 0);
 
 	return true;
 }
@@ -19270,7 +19271,7 @@ BUILDIN(qicheck)
 /**
  * Script command qiclear: Destroys a queue iterator.
  *
- * Returns 0 on success, 1 on failure.
+ * Returns true (1) on success, false (0) on failure.
  *
  * @code{.herc}
  *    qiclear(.@iter);
@@ -19282,12 +19283,12 @@ BUILDIN(qiclear)
 
 	if (idx < 0 || idx >= VECTOR_LENGTH(script->hqi)) {
 		ShowWarning("buildin_qiclear: unknown queue iterator id %d\n",idx);
-		script_pushint(st, 1);
+		script_pushint(st, 0);
 		return true;
 	}
 
 	VECTOR_INDEX(script->hqi, idx).items = -1;
-	script_pushint(st, 0);
+	script_pushint(st, 1);
 	return true;
 }
 
