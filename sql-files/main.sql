@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `account_data` (
 
 CREATE TABLE IF NOT EXISTS `acc_reg_num_db` (
   `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
+  `key` VARCHAR(31) NOT NULL DEFAULT '',
   `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `value` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`,`key`,`index`),
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `acc_reg_num_db` (
 
 CREATE TABLE IF NOT EXISTS `acc_reg_str_db` (
   `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
+  `key` VARCHAR(31) NOT NULL DEFAULT '',
   `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `value` VARCHAR(254) NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`,`key`,`index`),
@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `char` (
 
 CREATE TABLE IF NOT EXISTS `char_reg_num_db` (
   `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
+  `key` VARCHAR(31) NOT NULL DEFAULT '',
   `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `value` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`char_id`,`key`,`index`),
@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `char_reg_num_db` (
 
 CREATE TABLE IF NOT EXISTS `char_reg_str_db` (
   `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
+  `key` VARCHAR(31) NOT NULL DEFAULT '',
   `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `value` VARCHAR(254) NOT NULL DEFAULT '0',
   PRIMARY KEY (`char_id`,`key`,`index`),
@@ -287,7 +287,7 @@ CREATE TABLE IF NOT EXISTS `hotkey` (
 
 CREATE TABLE IF NOT EXISTS `global_acc_reg_num_db` (
   `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
+  `key` VARCHAR(31) NOT NULL DEFAULT '',
   `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `value` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`,`key`,`index`),
@@ -300,7 +300,7 @@ CREATE TABLE IF NOT EXISTS `global_acc_reg_num_db` (
 
 CREATE TABLE IF NOT EXISTS `global_acc_reg_str_db` (
   `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
+  `key` VARCHAR(31) NOT NULL DEFAULT '',
   `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `value` VARCHAR(254) NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`,`key`,`index`),
@@ -567,7 +567,7 @@ INSERT IGNORE INTO `login` (`account_id`, `userid`, `user_pass`, `sex`, `email`)
 --
 
 CREATE TABLE IF NOT EXISTS `mapreg` (
-  `varname` VARCHAR(32) BINARY NOT NULL,
+  `varname` VARCHAR(31) NOT NULL,
   `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `value` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`varname`,`index`)
