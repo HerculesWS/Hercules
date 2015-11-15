@@ -9005,7 +9005,7 @@ When the QUEUEOPT_MAPCHANGE event is triggered, it sets a temp char var
 @Queue_Destination_Map$ with the destination map name.
 
 Example:
-	queueopt(.@queue_id, QUEUEOPT_DEATH, "MyNPC::MyOnQueueMemberDeathEventName");
+	queueopt(.@queue_id, QUEUEOPT_DEATH, "MyNPC::OnQueueMemberDeathEvent");
 	
 ---------------------------------------
 
