@@ -2680,7 +2680,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 	prefix = name[0];
 	postfix = name[strlen(name) - 1];
 
-	if (strlen(name) > 32) {
+	if (strlen(name) > SCRIPT_VARNAME_LENGTH) {
 		ShowError("script_get_val: variable name too long. '%s'\n", name);
 		script->reportsrc(st);
 		st->state = END;
@@ -3103,7 +3103,7 @@ void set_reg_instance_num(struct script_state* st, int64 num, const char* name, 
 int set_reg(struct script_state* st, TBL_PC* sd, int64 num, const char* name, const void* value, struct reg_db *ref) {
 	char prefix = name[0];
 
-	if (strlen(name) > 32) {
+	if (strlen(name) > SCRIPT_VARNAME_LENGTH) {
 		ShowError("script:set_reg: variable name too long. '%s'\n", name);
 		script->reportsrc(st);
 		st->state = END;
