@@ -1,19 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Athena Dev Teams
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= The Airship System Script
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Description: =========================================
+//================= Description ===========================================
 //= The Airship System used in the official servers.
-//===== Additional Comments: =================================
-//= Official NPCs.
-//============================================================
+//=========================================================================
 
-//============================================================
-//= Domestic Airship Route
-//= ... -> Juno -> Einbroch -> Lighthalzen -> Einbroch
-//= -> Juno -> Hugel -> ...
-//============================================================
-
+//=== Domestic Airship Route ===============================
+// ... -> Juno -> Einbroch -> Lighthalzen -> Einbroch ->
+// -> Juno -> Hugel -> ...
 airplane,243,73,0	script	#AirshipWarp-1	WARPNPC,1,1,{
 	end;
 
@@ -643,11 +662,8 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 	}
 }
 
-//============================================================
-//= International Airship Route
-//= ... -> Izlude -> Juno -> Rachel -> ...
-//============================================================
-
+//== International Airship Route ===========================
+// ... -> Izlude -> Juno -> Rachel -> ...
 airplane_01,243,73,0	script	#AirshipWarp-3	WARPNPC,1,1,{
 	end;
 
@@ -1054,9 +1070,7 @@ airplane_01,71,31,2	script	Swordsman Shimizu#air_01	1_M_MOC_LORD,{
 	close;
 }
 
-//============================================================
-//= Typing Challenge
-//============================================================
+//=== Typing Challenge =====================================
 airplane_01,32,61,4	script	Nils#ein	1_M_03,1,1,{
 	mes "[Nils]";
 	mes "Welcome to the";
@@ -1229,9 +1243,7 @@ airplane_01,32,61,4	script	Nils#ein	1_M_03,1,1,{
 	}
 }
 
-//============================================================
-//= Apple Gambling
-//============================================================
+//== Apple Gambling ========================================
 airplane_01,33,68,4	script	Clarice	1_F_MERCHANT_02,{
 	mes "[Clarice]";
 	mes "Hi, I'm Clarice~";

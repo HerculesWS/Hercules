@@ -1,23 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Joseph
+//= Copyright (C)  Euphy
+//= Copyright (C)  Elias (og2)
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= PvP NPCs
-//===== By: ==================================================
-//= kobra_k88; L0ne_W0lf, Elias (og2)
-//===== Current Version: =====================================
-//= 2.5
-//===== Description: =========================================
+//================= Description ===========================================
 //= PvP NPCs that are found in the Inns in major cities.
 //= Includes Yoyo Mode, Nightmare Mode, and Event Mode.
-//===== Additional Comments: =================================
-//= 2.0 Narrators/GateKeepers,etc. Translated from the Official 2011 [Elias]
-//= 2.1 Changed PVP Narrator and GateKeeper to Floating NPC [Elias]
-//= 2.2 Some cleaning. [Euphy]
-//= 2.3 Fixed grammatical errors. [Joseph]
-//= 2.4 Fixed incorrect use of 'close' and some cleaning. [Joseph]
-//= 2.5 Renewal/Pre-Renewal split. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.5
+//=========================================================================
 
-// Information
-//============================================================
+//== Information ===========================================
 -	script	PVP Narrator::pvpe	-1,{
 	mes "[PVP Narrator]";
 	mes "Hello and welcome!";
@@ -171,8 +191,7 @@ geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe4	4_M_02
 payon_in01,142,50,4	duplicate(pvpe)	PVP Narrator#pe5	4_M_02
 geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 
-// Mode Select
-//============================================================
+//== Mode Select ===========================================
 -	script	Gate Keeper::gkut	-1,{
 	mes "[Gate Keeper]";
 	mes "Glad to be of service.";
@@ -277,10 +296,8 @@ prt_in,52,140,4	duplicate(gkut)	Gate Keeper#gke3	4_M_01
 geffen_in,63,63,4	duplicate(gkut)	Gate Keeper#gke4	4_M_01
 payon_in01,140,53,4	duplicate(gkut)	Gate Keeper#gke5	4_M_01
 
-// PVP Warper Function
-//============================================================
+//== PVP Warper Function ===================================
 // Note: The warper NPCs are in the pre-re/re paths.
-
 //callfunc "F_PVP_FSRS"{,<min_lvl>,<max_lvl>};
 function	script	F_PVP_FSRS	{
 	if (getargcount()) {
@@ -314,8 +331,7 @@ function	script	F_PVP_FSRS	{
 	end;
 }
 
-// Event Contestant Entrance
-//============================================================
+//== Event Contestant Entrance =============================
 pvp_room,54,85,4	script	Registration Staff#1	8W_SOLDIER,{
 	if (countitem(7028) == 0) {
 		mes "[PVP Combat Square Register Staff]";
@@ -357,8 +373,7 @@ OnInit:
 	end;
 }
 
-// Spectator Entrance
-//============================================================
+//== Spectator Entrance ====================================
 -	script	Spectator's Entrance#dum::PVPSpectator	-1,{
 	if (countitem(7029) == 0) {
 		mes "[PVP Compete Square Register Staff]";
@@ -389,8 +404,7 @@ pvp_room,70,85,4	duplicate(PVPSpectator)	Spectator's Entrance#2	8W_SOLDIER
 pvp_room,78,85,4	duplicate(PVPSpectator)	Spectator's Entrance#3	8W_SOLDIER
 pvp_room,86,85,4	duplicate(PVPSpectator)	Spectator's Entrance#4	8W_SOLDIER
 
-// Spectator Warps
-//============================================================
+//== Spectator Warps =======================================
 -	script	Combat Square Staff#dum::PVPSpecWarp	-1,{
 OnTouch:
 	mes "[Combat Square Staff]";
@@ -424,8 +438,7 @@ pvp_2vs2,40,40,0	script	Combat Square Staff#5	WARPNPC,1,1,{
 	}
 }
 
-// PVP Area Exit warp
-//============================================================
+//== PVP Area Exit warp ====================================
 pvp_room,51,19,0	script	out#eventpvp	WARPNPC,4,2,{
 OnTouch:
 	mes "[Combat Square Staff]";

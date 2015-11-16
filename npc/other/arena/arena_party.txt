@@ -1,20 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Inkfish
+//= Copyright (C)  Samuray22
+//= Copyright (C)  SinSloth
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Izlude Party Arena
-//===== By: ==================================================
-//= SinSloth
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
+//================= Description ===========================================
 //= Izlude Party Battle Arena
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.0a Fixed a typo.
-//= 1.1 Replaced effect numerics with constants. [Samuray22]
-//= 1.2 Fixed "OnMyMobDead" doesn't work sometime. [Inkfish]
-//= 1.3 Corrected donpcevent typo. (bugreport:4374) [L0ne_w0lf]
-//= 1.4 Label standardization and bug fixes. [Euphy]
-//= 1.5 Script updates, and removed a level restriction. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 arena_room,162,88,3	script	Ponox	4_F_TELEPORTER,{
 	end;
@@ -132,7 +152,7 @@ OnEnter:
 	end;
 
 OnStop:
-// 	broadcastinmap "toout turns off the timer."
+//	broadcastinmap "toout turns off the timer."
 	stopnpctimer;
 	end;
 }

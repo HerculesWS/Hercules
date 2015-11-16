@@ -1,22 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Slim
+//= Copyright (C)  CalciumKid
+//= Copyright (C)  5511
+//= Copyright (C)  Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Poring War
-//===== By: ==================================================
-//= Kisuka
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Join a team in battle between Angeling and Deviling.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Kisuka][5511]
-//= 1.1 Fixed some typos/bugs. [CalciumKid]
-//= 1.1a Fixed Waiting rooms witht he default MAX_LEVEL [Slim]
-//= 1.1b Fixed incorrect label calls. [Euphy]
-//= 1.2 Added missing barrier resets, credits to Zopokx. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// Poring War Recruiter
-//============================================================
+//== Poring War Recruiter ==================================
 prt_fild08,159,371,3	script	Poring War Recruiter#wop	4_PORING,{
 	mes "[Poring]";
 	mes "!!!!!";
@@ -65,8 +85,7 @@ prt_fild08,159,371,3	script	Poring War Recruiter#wop	4_PORING,{
 	}
 }
 
-// Poring Vending Machine
-//============================================================
+//== Poring Vending Machine ================================
 poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 	if (checkweight(714,3) == 0) {
 		mes "- You are carrying too much items in order to use the Vending Machine. -";
@@ -218,8 +237,7 @@ S_PoringVending:
 	close;
 }
 
-// Information
-//============================================================
+//== Information ===========================================
 poring_w01,96,97,3	script	Sweet Devi#wop	4_DEVIRUCHI,{
 	if (MaxWeight-Weight < 2000 || checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
@@ -352,8 +370,7 @@ OnInit:
 	end;
 }
 
-// Poring Registers
-//============================================================
+//== Poring Registers ======================================
 poring_w01,91,97,3	script	Poring#wop_door_all	PORING,{
 	end;
 
@@ -616,8 +633,7 @@ OnTimer65000:
 	end;
 }
 
-// Mr. Doppel
-//============================================================
+//== Mr. Doppel ============================================
 poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 	if (checkweight(714,3) == 0) {
 		mes "- Wait a minute !! -";
@@ -1071,8 +1087,7 @@ OnTouch:
 	end;
 }
 
-// Poring Spawn
-//============================================================
+//== Poring Spawn ==========================================
 poring_w02,80,82,0	script	#wop_angellium1	-1,{
 	end;
 
@@ -1211,8 +1226,7 @@ OnTimer120000:
 	stopnpctimer;
 }
 
-// Deviruchi
-//============================================================
+//== Deviruchi =============================================
 poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 	if (MaxWeight-Weight < 2000 || checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
@@ -1446,8 +1460,7 @@ OnTimer68100:
 	end;
 }
 
-// Gate Guardian
-//============================================================
+//== Gate Guardian =========================================
 poring_w02,99,52,0	script	Angeling Guardian#wop_da	HIDDEN_NPC,{
 	cutin "wop_emb0" + $@wop_doorcount_a,1;
 	if ($@wop_doorcount_a < 4) {
@@ -1642,8 +1655,7 @@ OnTouch:
 	end;
 }
 
-// Other NPCs
-//============================================================
+//== Other NPCs ============================================
 -	script	Angeling Side Poring#wpa	-1,{
 	end;
 }
