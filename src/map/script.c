@@ -16387,7 +16387,7 @@ BUILDIN(getunittype) {
 		case BL_PC:   value = 0; break;
 		case BL_NPC:  value = 1; break;
 		case BL_PET:  value = 2; break;
-		case BL_MOB:  value = 2; break;
+		case BL_MOB:  value = 3; break;
 		case BL_HOM:  value = 4; break;
 		case BL_MER:  value = 5; break;
 		case BL_ELEM: value = 6; break;
