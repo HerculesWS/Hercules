@@ -1,11 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  rAthena Dev Team
+//= Copyright (C)  eAthena Dev Team
+//= Copyright (C)  akrus
+//= Copyright (C)  Samuray22
+//= Copyright (C)  Lupus
+//= Copyright (C)  Darkchild
+//= Copyright (C)  kobra_k88
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Juno
-//===== By: ==================================================
-//= rAthena Dev Team; L0ne_W0lf
-//===== Current Version: =====================================
-//= 2.0a
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Metto Quest:
 //= - Not really sure exaclty what it's for. :P
 //= - Variable in use: metto_q (max 9)
@@ -17,24 +45,11 @@
 //= - Part 1: Found in Quests_Comodo.txt
 //= - Part 3: Found in Doomed_Swords.txt
 //= - Variable in use dmdswrd_Q (Max 45)
-//===== Additional Comments: =================================
-//= 1.1 Re-did the text and re-organized the script.  Corrected some items. [kobra_k88]
-//= 1.2 Added part to Bro's for alchemist quest [Darkchild]
-//= 1.3 fixed that part of Alch Job Quest. [Lupus]
-//= 1.4 Fixed exploit [Lupus]
-//= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=     Merged metto_quest.txt into Juno quest file.
-//=     Added the Juno portion of the Doomed Swords quest.
-//= 1.6 Fixed various errors in the Bajin NPC. [L0ne_W0lf]
-//= 1.7 Changed ALCH_Q check and set to corrispond to new alchemist job quest. [L0ne_W0lf]
-//= 1.8 Fixed metto_q never reaching 2. Made some names more unique. [L0ne_W0lf]
-//= 1.9 Fixed Missing Variables in Metto quest. (bugreport:473) [Samuray22]
-//= 2.0 Added missing checkweights. [L0ne_W0lf]
-//= 2.0a Fixed several typos (bugreport:1786) [akrus]
-//============================================================
+//================= Current Version =======================================
+//= 2.0a
+//=========================================================================
 
-// Metto Quest :: yuno_ryusei
-//============================================================
+//== Metto Quest :: yuno_ryusei ============================
 yuno_in03,26,39,3	script	Metto#juno	4_M_SEAMAN,{
 	mes "[Metto]";
 	if (metto_q == 0) {
@@ -420,8 +435,7 @@ yuno_in03,178,43,0	script	CiCi#juno	2_M_MOLGENSTEIN,{
 	}
 }
 
-// Alchemist Brothers Quest :: yuno_ryusei
-//============================================================
+//== Alchemist Brothers Quest :: yuno_ryusei ===============
 yuno_in01,103,157,3	script	Bain#juno	4W_M_02,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
@@ -682,8 +696,7 @@ S_DelItems:
 	close;
 }
 
-// Doomed Swords - Juno Portion :: matnani_yuno
-//============================================================
+//== Doomed Swords - Juno Portion :: matnani_yuno ==========
 yuno,157,87,4	script	A Citizen of Juno#juno	8_F,{
 	mes "[Shalima]";
 	mes "When you go north from Al De Baran, you will arrive at 'Elmeth Plateau,' a place covered with molten rock.";

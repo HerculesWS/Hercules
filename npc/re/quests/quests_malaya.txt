@@ -1,30 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Michieru
+//= Copyright (C)  DeadlySilence
+//= Copyright (C)  Euphy
+//= Copyright (C)  Masao
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Port Malaya Quest NPCs
-//===== By: ==================================================
-//= Masao
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quest NPCs related to Port Malaya:
-//== Cautious Village, Port Malaya Daily Quests,
-//== Secret in the Woods, Bakonawa Extermination
-//== Nurse in Port Malaya, Pintados Festival
+//= - Cautious Village, Port Malaya Daily Quests,
+//= - Secret in the Woods, Bakonawa Extermination
+//= - Nurse in Port Malaya, Pintados Festival
 //= Merchants:
-//== Traders, Upgrade Boss Equipment
-//===== Additional Comments: =================================
-//= 0.1 Traders only. Adapted from Masao's conversion. [Euphy]
-//= 0.2 Added Tribe Blacksmith [DeadlySilence]
-//= 0.3 Added "Secret in the Woods" quest [DeadlySilence]
-//= 0.4 Added "Cautious Village" and subsequent quests [DeadlySilence]
-//= 0.5 Added "Bakonawa Extermination" quest. [Euphy]
-//= 1.0 Added "Nurse in Port Malaya" and "Pintados Festival" quests. [Euphy]
-//= 1.1 Added GM management function and NPC. [Euphy]
-//= 1.2 Added item Lost_Belongings to Tiyanak mob & fix wrong item id [Michieru]
-//============================================================
+//= - Traders, Upgrade Boss Equipment
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// Cautious Village & Daily Quests :: hi_malaya
-//============================================================
+//== Cautious Village & Daily Quests :: hi_malaya ==========
 malaya,266,76,3	script	Rodel the Guard#malaya	4_MAL_SOLDIER,4,4,{
 	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
 		mes "Cannot proceed with the quest. You are carrying too many items. -";
@@ -3337,8 +3353,7 @@ ma_fild02,241,39,5	script	Good Capre Budidai	4_MAL_BUDIDAI,{
 	end;
 }
 
-// Traders :: malaya_npc
-//============================================================
+//== Traders :: malaya_npc =================================
 ma_fild01,166,214,6	script	Old Man in Dilemma#GA	4_F_BARYO_OLD,{
 	if (MaxWeight - Weight < 600 || checkweight(1201,1) == 0) {
 		mes "Cannot proceed because you have too many items in your possession.";
@@ -3598,8 +3613,7 @@ ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
 	}
 }
 
-// Upgrade Boss Equipment :: malaya_mvpitem
-//============================================================
+//== Upgrade Boss Equipment :: malaya_mvpitem ==============
 ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "[Bayani]";
 	mes "I will upgrade your armor if you bring one that holds enormous power.";
@@ -3828,8 +3842,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	close;
 }
 
-// Secret in the Woods :: malaya_buwaya
-//============================================================
+//== Secret in the Woods :: malaya_buwaya ==================
 malaya,305,281,3	script	Guard#buwaya	4_MAL_SOLDIER,7,7,{
 	if (malaya_hi < 10) {
 		mes "- From the wary looks on the guard's face, it is obvious he is at alert at the sight of you. He won't intimidate you but seems he won't even deal with you either. -";
@@ -4805,8 +4818,7 @@ OnInit:
 	end;
 }
 
-// Bakonawa Extermination :: malaya_bakonawa
-//============================================================
+//== Bakonawa Extermination :: malaya_bakonawa =============
 malaya,280,331,4	script	Singing Man#bako1	4_M_BARYO_MAN,{
 	if (malaya_bakona1 < 5) {
 		mes "[Singing Man]";
@@ -6590,8 +6602,7 @@ sec_in02,10,16,5	script	Bakonawa Intro Helper	4_MASK_SMOKEY,{
 	}
 }
 
-// Nurse in Port Malaya :: malaya_bang
-//============================================================
+//== Nurse in Port Malaya :: malaya_bang ===================
 function	script	F_Malaya_Nurse	{
 	if (malaya_bang == 30) {
 		mes "[Nurse Las]";
@@ -8227,8 +8238,7 @@ malaya,276,367,4	script	Bent Shaman#ma	4_F_UMOLDWOMAN,{
 	close;
 }
 
-// Pintados Festival :: malaya_pintados
-//============================================================
+//== Pintados Festival :: malaya_pintados ==================
 /*
 Description
 -----------

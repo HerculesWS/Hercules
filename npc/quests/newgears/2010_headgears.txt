@@ -1,16 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2015  Hercules Dev Team
+//= Copyright (C)  Dastgir
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= 2010 Headgear Quest
-//===== By: ==================================================
-//= Dastgir
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
+//================= Description ===========================================
 //= Quests For Headgears:
 //=     Flower Of Fairy, NeckTie, Hair Brush
 //=     Status Of Baby Angel, Frog Cap, Solo Play Box
-//===== Additional Comments: =================================
-//= 1.0 Converted from the official Aegis script. [Dastgir]
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
 gonryun,149,189,0	script	Yotang#Flower_Of_Fairy	1_M_04,{
 	mes "[Yotang]";
@@ -145,8 +167,7 @@ gonryun,149,189,0	script	Yotang#Flower_Of_Fairy	1_M_04,{
 	close;
 }
 
-// 2. Making the new headgear Necktie(5442)
-
+//== 2. Making the new headgear Necktie(5442) ==============
 lhz_in02,276,281,1	script	Drunken Man#Necktie	4_M_ALCHE_A,{
 	mes "[Drunken Man]";
 	mes "Hey.. you wanna fight?!";
@@ -253,7 +274,7 @@ lhz_in02,276,281,1	script	Drunken Man#Necktie	4_M_ALCHE_A,{
 	close;
 }
 
-// 3. Making the new headgear Hair Brush(5444)
+//== 3. Making the new headgear Hair Brush(5444) ===========
 comodo,236,164,0	script	Hat Girl#Hair_Brush	1_F_04,{
 	mes "[Hat Girl]";
 	mes "Isn't the unique hat much better";
@@ -345,7 +366,7 @@ comodo,236,164,0	script	Hat Girl#Hair_Brush	1_F_04,{
 	close;
 }
 
-// 4. Making the new headgear Statue Of Baby Angel(5443)
+//== 4. Making the new headgear Statue Of Baby Angel(5443) =
 alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
 	// Check if wearing Ear_Of_Angel's_Wing, Angelic_Chain, Flying_Angel
 	if (!isequipped(Ear_Of_Angel's_Wing) && !isequipped(Angelic_Chain) && !isequipped(Flying_Angel)) {
@@ -493,7 +514,7 @@ alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
 	end;
 }
 
-// 5. Making the new headgear Frog_Cap(5447)
+//== 5. Making the new headgear Frog_Cap(5447) =============
 
 gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 	if (2009_hat == 0) {
@@ -826,7 +847,7 @@ OnTouch:
 	close;
 }
 
-// 6. Making the new headgear Solo Playing Box 1,2 ()5448,5449)
+//== 6. Making the new headgear Solo Playing Box 1,2 (5448,5449) =
 alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 	if (2009_1_hat == 0) {
 		mes "[Alonie]";

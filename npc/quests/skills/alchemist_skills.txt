@@ -1,20 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Samuray22
+//= Copyright (C)  SinSloth
+//= Copyright (C)  DracoRPG
+//= Copyright (C)  Reddozen
+//= Copyright (C)  Lupus
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Alchemist Skills Quests
-//===== By: ==================================================
-//= Lupus, Reddozen, Samuray22
-//===== Current Version: =====================================
-//= 2.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quests for item: Elemental_Create_Book
 //= Quest for skill: Bioethics
-//===== Additional Comments: =================================
-//= 1.9 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//= 2.0 Rescripted (and re-added) Bio Ethics quest. [L0ne_W0lf]
-//= 2.1 Fixed a Resurrection -> Homunculus Resurrection. [L0ne_W0lf]
-//= 2.1a Deleted some unused Variables in Bio Ethics quest. [Samuray22]
-//= 2.2 Replaced effect numerics with constants. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 2.2
+//=========================================================================
 
 yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 	if (BaseJob == Job_Alchemist) {
@@ -1146,7 +1168,7 @@ yuno_in04,33,106,4	script	Pile of Books#qsk_al	HIDDEN_NPC,{
 	close;
 }
 
-// Start Bioethics quest
+//== Start Bioethics quest =================================
 lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 	if (BaseJob == Job_Alchemist && bioeth == 13) {
 		mes "[Kellasus]";
@@ -2196,24 +2218,3 @@ lhz_in01,218,141,7	script	Alchemist#qsk_al	4W_M_02,{
 	mes "both science and personal life.";
 	close;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 for fully working skills only [Lupus]
-//= 1.1 Added more new skill quests for more classes [Lupus]
-//= Somehow eA engine doesn't let you keep learn't skill V_V'
-//= 1.2 Added to correct locations, correct NPC's, fixed
-//= some of the items required and made them into real
-//= quests. [Reddozen]
-//= 1.3 Fixed bugs and minor typos. Optimized [Lupus]
-//= 1.3a fixed an item ID typo, thx 2Spiritual Kid
-//= 1.3b Splitted into different files [DracoRPG]
-//= 1.4 Added Creators + Baby Alchemists can pass Bio Ethics
-//= 	Quest too [Lupus]
-//= 1.5 Removed duplicates [Toms] 1.5a fixed typo [Lupus]
-//= 1.6 Moved some NPCs related to Lighthalzen quests. [SinSloth]
-//= 1.7 Updated "Elemental Potion Creation Quest" to the official one. [Samuray22]
-//= 1.8 Added some missing NPCs from the Laboratory. [Samuray22]
-//= 1.8a replaced item "names" with item id [Lupus]
-//============================================================

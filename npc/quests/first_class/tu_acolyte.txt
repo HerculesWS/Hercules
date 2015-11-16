@@ -1,28 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Daegaladh
+//= Copyright (C)  Euphy
+//= Copyright (C)  Joseph
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  SinSloth
+//= Copyright (C)  Lupus
+//= Copyright (C)  Jukka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Acolyte Class Tutorial and Job Specific Quest
-//===== By: ==================================================
-//= Fix up by Jukka
-//===== Current Version: =====================================
-//= 1.9
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Acolyte training quest.
-//===== Additional Comments: =================================
-//= 1.0 Fully working
-//= 1.1 optimized [Lupus]
-//= 1.2 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 1.3 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
-//= 1.4 Misc. updates. [L0ne_W0lf]
-//= 1.5 Adjusted EXP gains to Renewal values.
-//= 1.6 Fixed a wrong placed curly bracket. [Joseph]
-//= 1.6a Added 'npcskill' command. [Euphy]
-//= 1.7 Fixed exp, texts, and requirements in pre-renewal [Daegaladh]
-//= 1.8 Updated to match the official script. [Euphy]
-//= 1.9 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.9
+//=========================================================================
 
-// Priest Praupin
-//============================================================
+//== Priest Praupin ========================================
 prt_church,179,15,1	script	Priest Praupin	4_M_MINISTER,{
 	mes "[Priest Praupin]";
 	if(BaseJob != Job_Acolyte){
@@ -172,8 +188,7 @@ prt_church,179,15,1	script	Priest Praupin	4_M_MINISTER,{
 	close;
 }
 
-// Asthe
-//============================================================
+//== Asthe =================================================
 prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 	mes "[Asthe]";
 	switch(tu_acolyte01){
@@ -798,8 +813,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 }
 
 
-// Priest Gardron
-//============================================================
+//== Priest Gardron ========================================
 monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 	mes "[Priest Gardron]";
 	if(tu_acolyte01 == 7){
@@ -950,8 +964,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 	close;
 }
 
-// Dog
-//============================================================
+//== Dog ===================================================
 prt_monk,235,245,5	script	Dog#tu	4_DOG01,{
 	mes "[Dog]";
 	mes "^CDB79EBark bark!";
@@ -997,8 +1010,7 @@ prt_monk,235,245,5	script	Dog#tu	4_DOG01,{
 	close;
 }
 
-// Boy
-//============================================================
+//== Boy ===================================================
 prt_monk,243,238,5	script	Boy#boy_voi	HIDDEN_WARP_NPC,5,5,{
 OnTouch_:
 	if(tu_acolyte01 != 10)end;
@@ -1008,8 +1020,7 @@ OnTouch_:
 	close;
 }
 
-// Ill Girl
-//============================================================
+//== Ill Girl ==============================================
 prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 	mes "[Angelic]";
 	if(tu_acolyte01 > 12){
@@ -1210,8 +1221,7 @@ prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 	close;
 }
 
-// Veiner
-//============================================================
+//== Veiner ================================================
 prt_monk,197,228,3	script	Veiner	4_M_ORIENT02,{
 	mes "[Veiner]";
 	if(countitem(1081) && tu_acolyte01 == 18){
@@ -1254,8 +1264,7 @@ prt_monk,197,228,3	script	Veiner	4_M_ORIENT02,{
 	close;
 }
 
-// Hedrick
-//============================================================
+//== Hedrick ===============================================
 prt_monk,28,260,5	script	Hedrick	1_M_04,{
 	mes "[Hedrick]";
 	mes "^333333*Whew!*^000000";
@@ -1290,8 +1299,7 @@ prt_monk,28,260,5	script	Hedrick	1_M_04,{
 	close;
 }
 
-// Weapon Merchant
-//============================================================
+//== Weapon Merchant =======================================
 prt_monk,136,261,0	script	Weapon Merchant#tu	HIDDEN_WARP_NPC,9,9,{
 OnTouch:
 	if(tu_acolyte01 != 20 || countitem(1081)==0) end;
@@ -1308,8 +1316,7 @@ OnTouch:
 	close;
 }
 
-// Karven
-//============================================================
+//== Karven ================================================
 monk_in,103,176,7	script	Karven	1_M_PASTOR,{
 	mes "[Karven]";
 	mes "May you rest";
@@ -1342,8 +1349,7 @@ monk_in,103,176,7	script	Karven	1_M_PASTOR,{
 	close;
 }
 
-// Gloria
-//============================================================
+//== Gloria ================================================
 prt_monk,219,164,3	script	Gloria#tu	4_F_SISTER,{
 	mes "[Gloria]";
 	if(BaseJob != Job_Acolyte){
@@ -1415,8 +1421,7 @@ prt_monk,219,164,3	script	Gloria#tu	4_F_SISTER,{
 	close;
 }
 
-// Cleope Verce
-//============================================================
+//== Cleope Verce ==========================================
 prt_monk,153,210,3	script	Cleope Verce	4_F_SISTER,{
 	mes "[Cleope Verce]";
 	if(BaseJob != Job_Acolyte){
@@ -1589,8 +1594,7 @@ prt_monk,153,210,3	script	Cleope Verce	4_F_SISTER,{
 	mes "weather today...";
 	close;
 }
-// Range NPC
-//============================================================
+//== Range NPC =============================================
 prt_monk,217,123,0	script	#tu_monk	HIDDEN_WARP_NPC,10,10,{
 OnTouch_:
 	if(BaseJob == Job_Acolyte){
@@ -1610,8 +1614,7 @@ OnTouch_:
 	end;
 }
 
-// Eavesdrop
-//============================================================
+//== Eavesdrop =============================================
 prt_monk,223,123,3	script	Eavesdrop#tu	HIDDEN_NPC,{
 	if(BaseJob != Job_Acolyte){
 		mes "^3355FFThere's nothing here.^000000";

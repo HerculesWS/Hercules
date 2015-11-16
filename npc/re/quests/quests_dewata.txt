@@ -1,23 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Lemongrass
+//= Copyright (C)  Euphy
+//= Copyright (C)  Muad_Dib
+//= Copyright (C)  Gennosuke Kouga
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Dewata Quest NPCs
-//===== By: ==================================================
-//= Gennosuke Kouga, Muad_Dib
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quest NPCs related to Dewata:
-//== "Dewata Legend"
-//== "Help Out the Old Man"
-//== "Traditional Weapon"
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Standardized. [Euphy]
-//= 1.2 Updated to match the official script. [Lemongrass/Euphy]
-//============================================================
+//= - Dewata Legend
+//= - Help Out the Old Man
+//= - Traditional Weapon
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// Dewata Legend Quest :: dewata_legend
-//============================================================
+//== Dewata Legend Quest :: dewata_legend ==================
 dew_fild01,57,274,0	script	#hideout_legend	HIDDEN_NPC,6,6,{
 OnTouch:
 	if (BaseLevel > 59 && dew_legend < 1) {
@@ -740,8 +761,7 @@ dewata,78,192,6	script	Borobudur Temple Manager	4_M_DEWMAN,{
 	close;
 }
 
-// Help Out the Old Man :: dewata_drink
-//============================================================
+//== Help Out the Old Man :: dewata_drink ==================
 dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 5000) {
 		if (dew_drink) {
@@ -1661,8 +1681,7 @@ dew_fild01,209,137,0	duplicate(DewataPalm)	Palm Tree#drink38	CLEAR_NPC
 dew_fild01,206,156,0	duplicate(DewataPalm)	Palm Tree#drink39	CLEAR_NPC
 dew_fild01,209,201,0	duplicate(DewataPalm)	Palm Tree#drink40	CLEAR_NPC
 
-// Traditional Weapon Quest :: dewata_weapon
-//============================================================
+//== Traditional Weapon Quest :: dewata_weapon =============
 dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 10000) {
 		mes "- Hold it right there!! -";

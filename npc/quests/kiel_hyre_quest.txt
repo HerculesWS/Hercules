@@ -1,221 +1,86 @@
-//===== Hercules Script ======================================
-//= Kiel Hyre Quest
-//===== By: ==================================================
-//= L0ne_W0lf (Script), DZeroX (Timer)
-//===== Current Version: =====================================
-//= 4.7
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Samuray22
+//= Copyright (C)  SinSloth
+//= Copyright (C)  Lupus
+//= Copyright (C)  Balish
+//= Copyright (C)  Toms
+//= Copyright (C)  Playtester
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  DZeroX
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Kiel Hyre Quest/Robotic Lab Dungeon
+//================= Description ===========================================
 //= Quest for opening Robot Factory first and second floors.
-//===== Additional Comments: =================================
-//= 4.0 A whole bunch-a-updates to various npcs. [L0ne_W0lf]
-//=     Corrected condition checks throughout the quest.
-//=     Npcs no longer make use of the goto command.
-//=     Uses temp npc vars now instead of temp char.
-//=     Reduced the amount of variables used.
-//=     Corrected some of the cutins in npcs with them.
-//=     Added the missing dialogs and weight checks.
-//=     Fixed many typos, and grammatical errors.
-//=     NPC now names use '#<name>' instead of labels.
-//=     Updated some NPC positions, and facings.
-//=     Changed the way some NPCs work.
-//=     Updated comments for get/delitem commands.
-//= 4.1 Added an 'end;' to Kiel Hyre's dialog for the "Yes" option for if you want to confront Kiehl.
-//= 4.2 Fixed some issues reported in bugreport:2129. [L0ne_W0lf]
-//= 4.2a Follow up to last update. [L0ne_W0lf]
-//= 4.2b Missed a condition, fixed it though. [L0ne_W0lf]
-//= 4.2c More various fixes :D [L0ne_W0lf]
-//= 4.3 Fixed improper condition in the Elly NPC. [L0ne_W0lf]
-//=     Corrected some typos in the dialogs.
-//= 4.4 Updated reviecer and robots NPC to use mobcount. (bugreport:2380) [L0ne_W0lf]
-//= 4.5 Removed a delitem that was no logner needed. [L0en_W0lf]
-//= 4.6 Fixed impossible condition for security guard. [L0ne_W0lf]
-//= 4.7 Updated RE/Pre-RE EXP. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 4.7
+//================= Additional Comments ===================================
+//= Based on [iRO Sakray] as of [03/29/2007]
+//= Let it be noted that ALL DIALOG IS OFFICIAL TO IRO UNLESS SPECIFIED.
+//= I've fixed a few of iRO's mistakes, but I'm sure I made some of my own.
+//= Will probably require a major optimizing.
+//= Not going to list ALL of the more usless NPCs. (Doors + Empty
+//= "Beautiful Ladies")
+//= Parties are *NOT REQUIRED* as per Doddler's Wiki information.
+//================= Maps Used =============================================
+//= yuno_in01   : Start quest in pub
+//= kh_school   : Deliver Wine here, Meet Elly
+//= yuno        : Get Delivery for/from "Little Kid"
+//= lighthalzen : Get Delivery package for "Little Kid"
+//= kh_vila     : Kiel Hyre cottage.
+//= kh_dun01    : Robot Factory; Save Kiel Hyre
+//= kh_mansion  : Kiel Hyre's Mansion in Lighthalzen
+//= kh_kiehl01  : Kiehl's room/Cave
+//= kh_kiehl02  : Kiehl's room/Boss Room
+//================= Variables Used ========================================
+//= KielHyreQuest  : Main quest tracking variable (Quest finished at 106)
+//= KHToastGirlEnd : 1 - Pick up delivery
+//=                  2 - picked up delivery
+//=                  3 - finished
+//=                  Deleted once no longer needed.
+//= KHCottagePoem1 : Tracks Poem 1 quest in cottage. (finished = 5)
+//=                  Deleted once no longer needed.
+//= KHCottagePoem2 : Tracks Poem 2 quest in cottage. (finished = 3)
+//=                  Deleted once no longer needed.
+//= .KHKilled      : Tracks how many monsters have been killed.
+//=                  Used with "Receiver", "Robots", and "Kiehl" NPCs
+//= .KHDoor1Open   : 0/1 Depending on if the first door is opened.
+//= .KHDoor2Open   : 0/1 Depending on if the second door is opened.
+//= .KHDoor3Open   : 0/1 Depending on if the third door is opened.
+//= .KHDoor4Open   : 0/1 Depending on if the fourth door is opened.
+//= .KHDoor5Open   : 0/1 Depending on if the fifth door is opened.
+//= .KHKilledBoss  : 0/1 depending on if the boss has been killed.
+//= $@KHQuestBusy  : 0/1 depending on if the boss room has been set in
+//=                  motion.
+//=========================================================================
 
-//============================================================================
-// Kiel Hyre Quest/Robotic Lab Dungeon
-//
-// Script Dialog Obtained and Copied Down by L0ne_W0lf
-// Timer work and some variable dances by DZeroX
-// Based on [iRO Sakray] as of [03/29/2007]
-//============================================================================
-//----------------------------------------------------------------------------
-// [Notes]
-//  - Let it be noted that ALL DIALOG IS OFFICIAL TO IRO UNLESS SPECIFIED.
-//  - I've fixed a few of iRO's mistakes, but I'm sure I made some of my own.
-//  - Will probably require a major optimizing.
-//  - Not going to list ALL of the more usless NPCs. (Doors + Empty "Beautiful Ladies")
-//  - Parties are *NOT REQUIRED* as per Doddler's Wiki information.
-//
-//----------------------------------------------------------------------------
-// [Maps]                [Use]
-//  yuno_in01 ........... Start quest in pub
-//  kh_school ........... Deliver Wine here, Meet Elly
-//  yuno ................ Get Delivery for/from "Little Kid"
-//  lighthalzen ......... Get Delivery package for "Little Kid"
-//  kh_vila ............. Kiel Hyre cottage.
-//  kh_dun01 ............ Robot Factory; Save Kiel Hyre
-//  kh_mansion .......... Kiel Hyre's Mansion in Lighthalzen
-//  kh_kiehl01 .......... Kiehl's room/Cave
-//  kh_kiehl02 .......... Kiehl's room/Boss Room
-//
-//----------------------------------------------------------------------------
-// [Variables in Use]
-//  KielHyreQuest 	- Main quest tracking variable (Quest finished at 106)
-//
-//  KHToastGirlEnd	- Pick up delivery if set to 1,
-//			- picked up delivery if set to 2
-//			- finished if set to 3
-//			- Deleted once no longer needed.
-//
-//  KHCottagePoem1	- Tracks Poem 1 quest in cottage. (finished = 5)
-//			- Deleted once no longer needed.
-//
-//  KHCottagePoem2	- Tracks Poem 2 quest in cottage. (finished = 3)
-//			- Deleted once no longer needed.
-//
-//  .@KHInput$		- Used with "Security Guard"
-//  			- Used with "Test Tube"
-//  			- Used when "Elly" (inputing string in attempt to wake her)
-//  			- Used with "Grave", (twice)
-//  			- Used with "Heavy Door"
-//  			- Used with "Mechanical Device"
-//  			- Used for opening various doors in Kiehl's area.
-//
-//  .@KHFirstKeyhole	- Holds 1 (green keycard) or 2 (cottage key)
-//  .@KHSecondKeyhole	- Holds 1 (green keycard) or 2 (cottage key)
-//
-//  .@KHPotionColor$	- Holds 'red', 'green', or 'yellow' depending on what wrong potion is selected.
-//
-//  .@KHSwords 		- Used with "Sword Hilt"
-//
-//  .@KHQRead		- Make sure player has asked questions to Kiel Hyre
-//
-//  .@KHTitle$		- Holds "Mr", "Mrs", or "Miss"
-//
-//  .@KHDoorPushAttempt	- Keeps track of how many times a person has attmepted to push the door open.
-//
-//  .@KHPryingItem$	- Used for incorrect options when prying open last door.
-//
-//  .KHKilled		- Tracks how many monsters have been killed. Used with "Receiver", "Robots", and "Kiehl" NPCs
-//
-//  .KHDoor1Open	- 0/1 Depending on if the first door is opened.
-//  .KHDoor2Open	- 0/1 Depending on if the second door is opened.
-//  .KHDoor3Open	- 0/1 Depending on if the third door is opened.
-//  .KHDoor4Open	- 0/1 Depending on if the fourth door is opened.
-//  .KHDoor5Open	- 0/1 Depending on if the fifth door is opened.
-//
-//  .KHKilledBoss	- 0/1 depending on if the boss has been killed.
-//
-//  $@KHQuestBusy	- 0/1 depending on if the boss room has been set in motion.
-//
-//----------------------------------------------------------------------------
-// [NPCs]			 [Location]
-//  Pub Master .................. yuno_in01	[ 35,178]
-//  Hanie ....................... yuno_fild08	[196,196]
-//  Security Guard .............. yuno_fild08	[158,194]
-//  Security Guard .............. yuno_fild08	[158,183]
-//  Student ..................... kh_school	[ 57,142]
-//  Student ..................... kh_school	[ 57,139]
-//  Lady ........................ kh_school	[176, 60]
-//  Cute Student ................ kh_school	[179, 39]
-//  Little Kid .................. yuno		[217,114]
-//  Windmill Owner .............. lighthalzen	[365,300]
-//  Cottage Keeper .............. yuno_fild02	[ 93,210]
-//  Door ........................ yuno_fild02	[ 75,218]
-//  Door ........................ yuno_fild02	[109,218]
-//  Wall ........................ kh_vila	[191, 14]
-//  Book ........................ kh_vila	[184, 20]
-//  Book ........................ kh_vila	[181, 20]
-//  Book ........................ kh_vila	[178, 20]
-//  Book ........................ kh_vila	[175, 19]
-//  Letter ...................... kh_vila	[179, 11]
-//  Box ......................... kh_vila	[ 16,175]
-//  Apple Box ................... kh_vila	[ 30,184]
-//  Map ......................... kh_vila	[ 44,125]
-//  Pot ......................... kh_vila	[ 33,148]
-//  Calabash .................... kh_vila	[ 14, 55]
-//  Pool ........................ kh_vila	[ 39, 39]
-//  Vicious Dog ................. kh_vila 	[180,178]
-//  Drawer ...................... kh_vila 	[115,186]
-//  Box ......................... kh_vila 	[107,126]
-//  Bookshelf ................... kh_vila 	[181,138]
-//  Sword Hilt .................. kh_vila 	[136, 69]
-//  Test Tube ................... kh_vila	[179, 69]
-//  Test Tube ................... kh_vila	[185, 69]
-//  Window ...................... yuno_fild08	[ 69,185]
-//  Elly ........................ kh_school	[178,180]
-//  Cookie Basket ............... kh_school	[175,175]
-//  Window ...................... kh_school	[188,185]
-//  Grave ....................... yuno_fild08	[ 72,170]
-//  Heavy Door .................. kh_dun01	[236, 48]
-//  Beautiful lady .............. kh_school	[119,149]
-//  Beautiful lady .............. kh_school	[122,186]
-//  Signboard ................... kh_dun01	[163,223]
-//  Mechanical Device ........... kh_dun01	[166,223]
-//  Mechanical Device ........... kh_dun01	[162,206]
-//  Kiel_Hyre_Door .............. kh_dun01	[224,232]
-//  Steward ..................... kh_mansion	[ 78, 55]
-//  Kiel Hyre ................... kh_mansion	[ 22, 27]
-//  Allysia ..................... kh_mansion	[ 22, 27]
-//  Abduction_trigger ........... lighthalzen	[188,200]
-//  Mysterious Woman ............ kh_mansion	[ 25, 79]
-//  Odd Granma .................. yuno		[250,132]
-//  Old Lady .................... yuno 		[250,132]
-//  Rosimmir_Entrance ........... yuno		[273,141]
-//  Table ....................... kh_rossi	[ 23, 23]
-//  Shelf ....................... kh_rossi	[ 92, 40]
-//  Desk ........................ kh_rossi	[144,146]
-//  Bookshelf ................... kh_rossi	[144,146]
-//  Bed ......................... kh_rossi	[154,286]
-//  Old Fisherman ............... yuno_fild12	[232,222]
-//  Wooden Board ................ yuno_fild09	[158,217]
-//  Kiehl_Room_Warp ............. kh_mansion	[ 29, 27]
-//  Entrance Device#KHEntry1 .... kh_dun01	[ 44, 20]
-//  Entrance Device#KHEntry2 .... kh_dun01	[ 44,203]
-//  Security Guard .............. yuno_fild08	[158,194]
-//  Receiver .................... kh_kiehl01	[ 17, 39]
-//  Flower Vase ................. kh_kiehl01	[ 13, 40]
-//  Box ......................... kh_kiehl01	[ 19, 25]
-//  Big Door .................... kh_kiehl01	[ 44, 33]
-//  Big_Door_1_Warp ............. kh_kiehl01	[ 43, 33]
-//  Big Door .................... kh_kiehl01	[174, 40]
-//  Big_Door_2_Warp ............. kh_kiehl01	[174, 39]
-//  Big Door .................... kh_kiehl01	[ 77,108]
-//  Big_Door_3_Warp ............. kh_kiehl01	[ 68,108]
-//  Big Door .................... kh_kiehl01	[ 41,177]
-//  Big_Door_4_Warp ............. kh_kiehl01	[ 78,177]
-//  Robots ...................... kh_kiehl01	[ 15,181]
-//  Big Door .................... kh_kiehl01	[166,187]
-//  Big_Door_5_Warp ............. kh_kiehl01	[166,186]
-//  Kiehl_Room_Trap ............. kh_kiehl02	[ 49, 15]
-//  Kiehl#Original .............. kh_kiehl02	[ 50, 52]
-//  KiehlRoom ................... kh_kiehl02	[  1,  1]
-//  Mitchell#KiehlRoom .......... kh_kiehl02	[ 49, 55]
-//  Agent#KHAgent1 ....   ....... kh_kiehl02	[ 53, 52]
-//  Agent#KHAgent2 .............. kh_kiehl02	[ 51, 49]
-//  Agent#KHAgent3 .............. kh_kiehl02	[ 47, 50]
-//  Agent#KHAgent4 .............. kh_kiehl02	[ 46, 53]
-//  Kiehl#Copy .................. kh_kiehl02	[ 48, 53]
-//  Kiehl_Roomn_Exit ............ kh_kiehl01	[ 50, 59]
-//
-//----------------------------------------------------------------------------
-// [Functions]
-//  None
-//
-//----------------------------------------------------------------------------
-// [Conflicts]
-//   Resolved
-//
-//============================================================================
+//== Affiliated NPCs =======================================
 
-//============================================================================
-// Affiliated NPCs
-//============================================================================
-
-//----------------------------------------------------------------------------
-// Juno Pub Master/Starting point.
-//----------------------------------------------------------------------------
+//- Juno Pub Master/Starting point -
 yuno_in01,35,179,4	script	Pub Master#kh	1_ETC_01,5,5,{
 	if (checkweight(7487,1) == 0) {
 		mes "[Vandt]";
@@ -450,9 +315,7 @@ OnTouch:
 	}
 }
 
-//----------------------------------------------------------------------------
-// Juno Toast Sales Girl.
-//----------------------------------------------------------------------------
+//- Juno Toast Sales Girl -
 yuno,217,114,6	script	Little Kid#kh	4W_KID,{
 	mes "[Cezu]";
 	if (KielHyreQuest < 6) {
@@ -541,9 +404,7 @@ yuno,217,114,6	script	Little Kid#kh	4W_KID,{
 	close;
 }
 
-//----------------------------------------------------------------------------
-// Lighthalzen WindMill Owner.
-//----------------------------------------------------------------------------
+//- Lighthalzen WindMill Owner -
 lighthalzen,366,299,4	script	Windmill Owner#kh	1_ETC_01,{
 	if (checkweight(7488,1) == 0) {
 		mes "[Mills]";
@@ -645,13 +506,9 @@ lighthalzen,366,289,2	script	Windmill Owner's Helper	4W_M_01,{
 	}
 }
 
-//============================================================================
-//Kiel Hyre Academy NPCs
-//============================================================================
+//== Kiel Hyre Academy NPCs ================================
 
-//----------------------------------------------------------------------------
-// Girl (Talks about the academy)
-//----------------------------------------------------------------------------
+//- Girl (Talks about the academy) -
 yuno_fild08,196,196,5	script	Hanie#kh1	8_F,{
 	mes "[Hanie]";
 	mes "Oh, I wish I could study";
@@ -679,10 +536,7 @@ yuno_fild08,196,196,5	script	Hanie#kh1	8_F,{
 	close;
 }
 
-
-//----------------------------------------------------------------------------
-// Academy Security Guards
-//----------------------------------------------------------------------------
+//- Academy Security Guards -
 yuno_fild08,158,194,6	script	Security Guard#1::KHAGuard	4_M_EIN_SOLDIER,{
 	if ((KielHyreQuest < 2) || (KielHyreQuest > 31)) {
 		mes "[Security Guard]";
@@ -795,9 +649,7 @@ yuno_fild08,158,194,6	script	Security Guard#1::KHAGuard	4_M_EIN_SOLDIER,{
 
 yuno_fild08,158,183,7	duplicate(KHAGuard)	Security Guard#2	4_M_EIN_SOLDIER
 
-//----------------------------------------------------------------------------
-// Gossiping Teenagers/Story NPCs
-//----------------------------------------------------------------------------
+//- Gossiping Teenagers/Story NPCs -
 kh_school,57,142,6	script	Student#kha	4_F_HUWOMAN,3,3,{
 	mes "[Laci]";
 	mes "Oh, wow! We usually";
@@ -844,9 +696,7 @@ kh_school,57,139,0	script	Student#khb	4_F_HUWOMAN,{
 	close;
 }
 
-//----------------------------------------------------------------------------
-// Mrs. Lecollane
-//----------------------------------------------------------------------------
+//- Mrs. Lecollane -
 kh_school,176,60,4	script	Lady#kh	4W_F_01,{
 	if (KielHyreQuest < 2) {
 		mes "[Mrs. Lecollane]";
@@ -925,9 +775,7 @@ kh_school,176,60,4	script	Lady#kh	4W_F_01,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Elly (In school)
-//----------------------------------------------------------------------------
+//- Elly (In school) -
 kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 	if (checkweight(908,200) == 0) {
 		mes "[Elly]";
@@ -1472,9 +1320,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Elly's Window
-//----------------------------------------------------------------------------
+//- Elly's Window -
 yuno_fild08,69,185,0	script	Window#kh	HIDDEN_NPC,{
 	if (KielHyreQuest < 29) {
 		mes "^3355FFYou can see a curtain";
@@ -1538,9 +1384,7 @@ yuno_fild08,69,185,0	script	Window#kh	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Elly (In Dormitory)
-//----------------------------------------------------------------------------
+//- Elly (In Dormitory) -
 kh_school,178,180,4	script	Elly	4_F_KHELLY,{
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFJust a second...";
@@ -1717,9 +1561,7 @@ kh_school,178,180,4	script	Elly	4_F_KHELLY,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cookie Basket
-//----------------------------------------------------------------------------
+//- Cookie Basket -
 kh_school,175,176,0	script	Cookie Basket#kh	HIDDEN_NPC,{
 	if (KielHyreQuest < 30) {
 		mes "^3355FFIt's a cookie";
@@ -1827,17 +1669,13 @@ kh_school,175,176,0	script	Cookie Basket#kh	HIDDEN_NPC,{
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Elly's Window (In Dormitory)
-//----------------------------------------------------------------------------
+//- Elly's Window (In Dormitory) -
 kh_school,188,185,0	script	Window#kh2	HIDDEN_NPC,{
 	warp "yuno_fild08",69,183;
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Grave/Kiel Hyre dungeon entry
-//----------------------------------------------------------------------------
+//- Grave/Kiel Hyre dungeon entry -
 yuno_fild08,71,170,0	script	Grave#kh	HIDDEN_NPC,{
 	if (KielHyreQuest < 36) {
 		mes "^3355FFIt's just a grave.";
@@ -1957,13 +1795,9 @@ yuno_fild08,71,170,0	script	Grave#kh	HIDDEN_NPC,{
 	}
 }
 
-//============================================================================
-//Kiel Hyre Cottage NPCs
-//============================================================================
+//== Kiel Hyre Cottage NPCs ================================
 
-//----------------------------------------------------------------------------
-// Cottage Keeper
-//----------------------------------------------------------------------------
+//- Cottage Keeper -
 yuno_fild02,93,210,4	script	Cottage Keeper#kh	4_M_03,{
 	if ((KielHyreQuest < 12) || (KielHyreQuest > 12)) {
 		mes "[Cottage Keeper]";
@@ -2012,9 +1846,7 @@ yuno_fild02,93,210,4	script	Cottage Keeper#kh	4_M_03,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage Door (left)
-//----------------------------------------------------------------------------
+//- Cottage Door (left) -
 yuno_fild02,75,218,0	script	Door#kh2	HIDDEN_NPC,{
 	if (KielHyreQuest < 16) {
 		mes "^3355FFThis door is locked.";
@@ -2066,9 +1898,7 @@ yuno_fild02,75,218,0	script	Door#kh2	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage Door (Right)
-//----------------------------------------------------------------------------
+//- Cottage Door (Right) -
 yuno_fild02,109,218,0	script	Door#kh1	HIDDEN_NPC,{
 	if (KielHyreQuest != 16) {
 		mes "^3355FFThis door is locked.";
@@ -2098,10 +1928,7 @@ yuno_fild02,109,218,0	script	Door#kh1	HIDDEN_NPC,{
 	}
 }
 
-
-//----------------------------------------------------------------------------
-// Store room interior; Wall
-//----------------------------------------------------------------------------
+//- Store room interior; Wall -
 kh_vila,191,14,0	script	Wall#kh	HIDDEN_WARP_NPC,1,1,{
 	if (KielHyreQuest < 28) {
 		mes "^3355FFIt's just a wall.";
@@ -2124,9 +1951,7 @@ kh_vila,191,14,0	script	Wall#kh	HIDDEN_WARP_NPC,1,1,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Store room interior; books
-//----------------------------------------------------------------------------
+//- Store room interior; books -
 kh_vila,184,20,0	script	Book#kh1::BookKHQ1	HIDDEN_NPC,{
 	if (KielHyreQuest != 26) {
 		mes "^3355FFThis bookshelf is^000000";
@@ -2160,9 +1985,7 @@ kh_vila,181,20,0	duplicate(BookKHQ1)	Book#kh2	HIDDEN_NPC
 kh_vila,178,20,0	duplicate(BookKHQ1)	Book#kh3	HIDDEN_NPC
 kh_vila,175,19,0	duplicate(BookKHQ1)	Book#kh4	HIDDEN_NPC
 
-//----------------------------------------------------------------------------
-// Store room interior; Letter to Elly on the floor.
-//----------------------------------------------------------------------------
+//- Store room interior; Letter to Elly on the floor. -
 kh_vila,179,11,0	script	Letter#kh	-1,1,1,{
 //OnTouch2:
 OnTouch:
@@ -2191,9 +2014,7 @@ OnTouch:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, kitchen; Box (Pet Food vending machine)
-//----------------------------------------------------------------------------
+//- Cottage interior, kitchen; Box (Pet Food vending machine) -
 kh_vila,16,175,0	script	Box#khp1	HIDDEN_NPC,{
 	mes "^FFFFFF##^000000*Tasty-Nutricious-Delicious*";
 	mes "*Cute Pet Doof Vending Machine*";
@@ -2237,9 +2058,7 @@ kh_vila,16,175,0	script	Box#khp1	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, kitchen; Apple Box (Useless?)
-//----------------------------------------------------------------------------
+//- Cottage interior, kitchen; Apple Box (Useless?) -
 kh_vila,30,184,0	script	Apple Box#khp1	HIDDEN_NPC,{
 	mes "^3355FFYou find a box filled with";
 	mes "ripe, delicious apples.^000000";
@@ -2264,9 +2083,7 @@ kh_vila,30,184,0	script	Apple Box#khp1	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, dining room; Map
-//----------------------------------------------------------------------------
+//- Cottage interior, dining room; Map -
 kh_vila,44,126,0	script	Map#khp1	HIDDEN_NPC,{
 	if ((KHCottagePoem1 < 2) && (KielHyreQuest < 30)) {
 		mes "^3355FFA magnificent world map,";
@@ -2378,9 +2195,7 @@ kh_vila,44,126,0	script	Map#khp1	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, kitchen; Pot
-//----------------------------------------------------------------------------
+//- Cottage interior, kitchen; Pot -
 kh_vila,33,184,0	script	Pot#khp1	HIDDEN_NPC,{
 	if (KHCottagePoem1 < 1) {
 		mes "^3355FFYou've found a pot";
@@ -2420,9 +2235,7 @@ kh_vila,33,184,0	script	Pot#khp1	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, fire place; Calabash
-//----------------------------------------------------------------------------
+//- Cottage interior, fire place; Calabash -
 kh_vila,14,55,0	script	Calabash#khp1	HIDDEN_NPC,{
 	if ((countitem(7329) < 1) && (countitem(7516) < 1) && (countitem(7491) < 1) && (KielHyreQuest < 38)) {
 		if (checkweight(7329,1) == 0) {
@@ -2474,9 +2287,7 @@ kh_vila,14,55,0	script	Calabash#khp1	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, garden; Pool
-//----------------------------------------------------------------------------
+//- Cottage interior, garden; Pool -
 kh_vila,39,41,0	script	Pool#khp1	HIDDEN_NPC,{
 	if ((KHCottagePoem1 < 3) && (KielHyreQuest < 30)) {
 		mes "^3355FFYou find a fancy pool";
@@ -2556,9 +2367,7 @@ kh_vila,39,41,0	script	Pool#khp1	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, upstairs; Vicious Dog
-//----------------------------------------------------------------------------
+//- Cottage interior, upstairs; Vicious Dog -
 kh_vila,181,178,4	script	Vicious Dog#khp1	4_DOG01,7,3,{
 //OnTouch2:
 OnTouch:
@@ -2621,9 +2430,7 @@ OnTouch:
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, upstairs; Drawer, first room nightstand
-//----------------------------------------------------------------------------
+//- Cottage interior, upstairs; Drawer, first room nightstand -
 kh_vila,115,186,0	script	Drawer#khp1	HIDDEN_NPC,{
 	if (checkweight(7492,1) == 0) {
 		mes "^3355FFThere's something inside";
@@ -2665,9 +2472,7 @@ kh_vila,115,186,0	script	Drawer#khp1	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, upstairs; Box
-//----------------------------------------------------------------------------
+//- Cottage interior, upstairs; Box -
 kh_vila,107,126,0	script	Box#khp2	HIDDEN_NPC,{
 	if ((countitem(7329) < 1) && (countitem(7516) < 1) && (countitem(7491) < 1) && (KielHyreQuest < 38)) {
 		mes "^3355FFA solid box is laid";
@@ -2712,9 +2517,7 @@ kh_vila,107,126,0	script	Box#khp2	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, upstairs; Bookshelf.
-//----------------------------------------------------------------------------
+//- Cottage interior, upstairs; Bookshelf -
 kh_vila,181,138,0	script	Bookshelf#khp1	HIDDEN_NPC,{
 	if ((countitem(7491) < 1) && (countitem(7329) >= 1) || (countitem(7516) >= 1)) {
 		mes "^3355FFOne of the books on";
@@ -2822,9 +2625,7 @@ kh_vila,181,138,0	script	Bookshelf#khp1	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, upstairs; Desk
-//----------------------------------------------------------------------------
+//- Cottage interior, upstairs; Desk -
 kh_vila,118,144,0	script	Desk#khp1	HIDDEN_NPC,{
 	if (KHCottagePoem2 < 1) {
 		mes "^3355FFThere are piles of papers";
@@ -2857,9 +2658,7 @@ kh_vila,118,144,0	script	Desk#khp1	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, upstairs; Medicine Chest
-//----------------------------------------------------------------------------
+//- Cottage interior, upstairs; Medicine Chest -
 kh_vila,123,170,0	script	Medicine Chest#khp1	HIDDEN_NPC,{
 	if ((KHCottagePoem2 < 1) && (KielHyreQuest < 30)) {
 		mes "^3355FFThis medicine cabinet";
@@ -3003,9 +2802,7 @@ kh_vila,123,170,0	script	Medicine Chest#khp1	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, stair case; Sword hilt
-//----------------------------------------------------------------------------
+//- Cottage interior, stair case; Sword hilt -
 kh_vila,136,68,0	script	Sword Hilt#kh	HIDDEN_NPC,{
 	if ((KHCottagePoem1 < 3) || (KHCottagePoem2 < 2) && (KielHyreQuest < 30)) {
 		mes "^3355FFThere are four elaborately";
@@ -3144,9 +2941,7 @@ kh_vila,136,68,0	script	Sword Hilt#kh	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Cottage interior, Secret Room; left test tube
-//----------------------------------------------------------------------------
+//- Cottage interior, Secret Room; left test tube -
 kh_vila,179,68,0	script	Test Tube#khp2	HIDDEN_NPC,{
 	mes "^3355FFThis test tube contains";
 	mes "a young man dressed in";
@@ -3157,10 +2952,7 @@ kh_vila,179,68,0	script	Test Tube#khp2	HIDDEN_NPC,{
 	close;
 }
 
-
-//----------------------------------------------------------------------------
-// Cottage interior, Secret Room; Right test tube
-//----------------------------------------------------------------------------
+//- Cottage interior, Secret Room; Right test tube -
 kh_vila,185,68,0	script	Test Tube::TestTubeKHQ2	HIDDEN_NPC,{
 	if (KielHyreQuest > 28) {
 		mes "^3355FFA strange looking,";
@@ -3242,13 +3034,9 @@ kh_vila,185,68,0	script	Test Tube::TestTubeKHQ2	HIDDEN_NPC,{
 	end;
 }
 
-//============================================================================
-// Robot Factory NPCs
-//============================================================================
+//== Robot Factory NPCs ====================================
 
-//----------------------------------------------------------------------------
-// Robotic's Factory; Heavy Door
-//----------------------------------------------------------------------------
+//- Robotic's Factory; Heavy Door -
 kh_dun01,235,48,0	script	Heavy Door#kh1::HeavyDoorKHQ1	HIDDEN_NPC,{
 	if (KielHyreQuest < 38) {
 		mes "^3355FFThere is a large, heavy";
@@ -3308,9 +3096,7 @@ kh_dun01,235,48,0	script	Heavy Door#kh1::HeavyDoorKHQ1	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Robotic's Factory; Heavy Door (These doors don't seem to serve any purpose)
-//----------------------------------------------------------------------------
+//- Robotic's Factory; Heavy Door (These doors don't seem to serve any purpose) -
 kh_dun01,76,233,0	script	Heavy Door::HeavyDoorKHQ2	HIDDEN_NPC,{
 	if ((KielHyreQuest >= 38) && (KielHyreQuest < 46)) {
 		mes "^3355FFThere is a large, heavy";
@@ -3349,9 +3135,7 @@ kh_dun01,235,70,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh9	HIDDEN_NPC
 kh_dun01,235,92,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh10	HIDDEN_NPC
 kh_dun01,235,114,0	duplicate(HeavyDoorKHQ2)	Heavy Door#kh11	HIDDEN_NPC
 
-//----------------------------------------------------------------------------
-// Beautiful Lady and Beautiful Lady copies.
-//----------------------------------------------------------------------------
+//- Beautiful Lady and Beautiful Lady copies -
 kh_school,119,149,4	script	Beautiful Lady#kh1::BeatifulLadyKHQ1	4_F_KHELLISIA,{
 	cutin "kh_ellisia",2;
 	if (KielHyreQuest < 40) {
@@ -3438,9 +3222,7 @@ kh_school,118,149,4	duplicate(BeatifulLadyKHQ2)	Beautiful lady#kh3	4_F_KHELLISIA
 kh_school,120,149,4	duplicate(BeatifulLadyKHQ2)	Beautiful lady#kh4	4_F_KHELLISIA
 kh_school,121,149,4	duplicate(BeatifulLadyKHQ1)	Beautiful lady#kh5	4_F_KHELLISIA
 
-//----------------------------------------------------------------------------
-// Beautiful Lady "Allysia"
-//----------------------------------------------------------------------------
+//- Beautiful Lady "Allysia" -
 kh_school,122,186,4	script	Beautiful Lady#kh6	4_F_KHELLISIA,{
 	if (checkweight(7496,1) == 0) {
 		mes "^3355FFJust a second...";
@@ -3614,9 +3396,7 @@ kh_school,122,186,4	script	Beautiful Lady#kh6	4_F_KHELLISIA,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Signboard (another useless NPC?)
-//----------------------------------------------------------------------------
+//- Signboard (another useless NPC?) -
 kh_dun01,163,223,4	script	Signboard#kh	4_BOARD3,{
 	mes "[Notice]";
 	mes "Cute Pets are prohibited";
@@ -3627,9 +3407,7 @@ kh_dun01,163,223,4	script	Signboard#kh	4_BOARD3,{
 	close;
 }
 
-//----------------------------------------------------------------------------
-// Mechanical Devices for accessing restricted area
-//----------------------------------------------------------------------------
+//- Mechanical Devices for accessing restricted area -
 kh_dun01,166,223,0	script	Mechanical Device#kh::KHKeyardReader	HIDDEN_NPC,{
 	if ((KielHyreQuest <= 38) || (KielHyreQuest >= 44)) {
 		mes "^3355FFYou encounter";
@@ -3663,10 +3441,8 @@ kh_dun01,166,223,0	script	Mechanical Device#kh::KHKeyardReader	HIDDEN_NPC,{
 
 kh_dun01,162,206,0	duplicate(KHKeyardReader)	Mechanical Device	HIDDEN_NPC
 
-//----------------------------------------------------------------------------
-// Keep monsters out of the quest area.
+//- Keep monsters out of the quest area -
 // Silly really since the rest of it's a dungeon
-//----------------------------------------------------------------------------
 //kh_dun01,180,220,0	script	Monster Warp#kh1::KHMobWarp	-1,5,20,{
 //OnTouchNPC:
 //	warp "kh_dun01",178,138;
@@ -3678,9 +3454,7 @@ kh_dun01,162,206,0	duplicate(KHKeyardReader)	Mechanical Device	HIDDEN_NPC
 //kh_dun01,210,220,0	duplicate(KHMobWarp)	Monster Warp#kh4	-1,5,20
 //kh_dun01,220,220,0	duplicate(KHMobWarp)	Monster Warp#kh5	-1,5,10
 
-//----------------------------------------------------------------------------
-// Kiel Hyre - OnTouch
-//----------------------------------------------------------------------------
+//- Kiel Hyre - OnTouch -
 kh_dun01,224,233,0	script	Factory B Area Door	-1,5,5,{
 //OnTouch2:
 OnTouch:
@@ -3750,9 +3524,7 @@ OnTouch:
 	}
 }
 
-//----------------------------------------------------------------------------
-// Robot Factory Second Floor Entrances
-//----------------------------------------------------------------------------
+//- Robot Factory Second Floor Entrances -
 kh_dun01,44,203,0	script	Entrance Device#khd2::KHAccess	HIDDEN_NPC,{
 	if (countitem(7509) < 1) {
 		mes "^3355FFYou encounter";
@@ -3802,13 +3574,9 @@ kh_dun01,44,203,0	script	Entrance Device#khd2::KHAccess	HIDDEN_NPC,{
 
 kh_dun01,36,195,0	duplicate(KHAccess)	Entrance Device#khd1	HIDDEN_NPC
 
-//============================================================================
-// Kiel Hyre Mansion NPCs, and Kiehl's Room NPCs
-//============================================================================
+//== Kiel Hyre Mansion NPCs, and Kiehl's Room NPCs =========
 
-//----------------------------------------------------------------------------
-// Kiel's Steward
-//----------------------------------------------------------------------------
+//- Kiel's Steward -
 kh_mansion,78,55,5	script	Steward#kh	4_M_MANAGER,{
 	if (KielHyreQuest < 46) {
 		mes "[Steward]";
@@ -3908,9 +3676,7 @@ kh_mansion,78,55,5	script	Steward#kh	4_M_MANAGER,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Kiel Hyre
-//----------------------------------------------------------------------------
+//- Kiel Hyre -
 kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFJust a second...";
@@ -4679,10 +4445,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 	end;
 }
 
-
-//----------------------------------------------------------------------------
-// Allysia
-//----------------------------------------------------------------------------
+//- Allysia -
 kh_mansion,18,30,4	script	Allysia	4_F_KHELLISIA,{
 	if (KielHyreQuest < 46) {
 		mes "[Allysia]";
@@ -4847,9 +4610,7 @@ kh_mansion,18,30,4	script	Allysia	4_F_KHELLISIA,{
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Abduction triggering NPC
-//----------------------------------------------------------------------------
+//- Abduction triggering NPC -
 lighthalzen,188,200,0	script	Abduction_trigger	-1,3,1,{
 //OnTouch2:
 OnTouch:
@@ -4866,9 +4627,7 @@ OnTouch:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Mysterious Woman "Mitchell Layla"
-//----------------------------------------------------------------------------
+//- Mysterious Woman "Mitchell Layla" -
 kh_mansion,25,79,4	script	Mysterious Woman#kh	4_F_JOB_HUNTER,3,3,{
 
 //OnTouch2:
@@ -5150,11 +4909,9 @@ OnTouch:
 	}
 }
 
-//----------------------------------------------------------------------------
-// Warp portal into Kiehl's 'Room'
-// - Anyone can enter
-// - After 30-40 seonds this NPC should be disabled.
-//----------------------------------------------------------------------------
+//- Warp portal into Kiehl's 'Room' -
+// Anyone can enter
+// After 30-40 seonds this NPC should be disabled.
 kh_mansion,29,27,0	script	Kiehl_Room_Warp	WARPNPC,2,2,{
 OnTouch:
 	warp "kh_kiehl01",10,31;
@@ -5176,13 +4933,9 @@ OnInit:
 	end;
 }
 
-//============================================================================
-// Rosimier NPCs and other Related NPCs
-//============================================================================
+//== Rosimier NPCs and other Related NPCs ==================
 
-//----------------------------------------------------------------------------
-// Odd Grandma
-//----------------------------------------------------------------------------
+//- Odd Grandma -
 yuno,257,140,4	script	Odd Grandma	4_F_EINOLD,{
 	if (KielHyreQuest < 54) {
 		mes "[Grandma]";
@@ -5265,9 +5018,7 @@ yuno,257,140,4	script	Odd Grandma	4_F_EINOLD,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Old Lady; gives you the key to the Rosimier Mansion
-//----------------------------------------------------------------------------
+//- Old Lady; gives you the key to the Rosimier Mansion -
 yuno,250,132,0	script	Old Lady#kh	4_F_05,{
 	if (KielHyreQuest < 56) {
 		mes "[Old Lady]";
@@ -5433,9 +5184,7 @@ yuno,250,132,0	script	Old Lady#kh	4_F_05,{
 }
 
 
-//----------------------------------------------------------------------------
-// Warp portal into Rosimier Mansion
-//----------------------------------------------------------------------------
+//- Warp portal into Rosimier Mansion -
 yuno,273,141,0	script	Rosimmir_Entrance	WARPNPC,2,2,{
 OnTouch:
 	if (countitem(7498) < 1) {
@@ -5452,9 +5201,7 @@ OnTouch:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Rosimier Mansion, first floor; Table
-//----------------------------------------------------------------------------
+//- Rosimier Mansion, first floor; Table -
 kh_rossi,23,23,0	script	Table#khr2	HIDDEN_NPC,{
 	if (checkweight(7499,1) == 0) {
 		mes "^3355FFJust a second...";
@@ -5495,9 +5242,7 @@ kh_rossi,23,23,0	script	Table#khr2	HIDDEN_NPC,{
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Rosimier Mansion, first floor; Shelf
-//----------------------------------------------------------------------------
+//- Rosimier Mansion, first floor; Shelf -
 kh_rossi,92,40,0	script	Shelf#khr	HIDDEN_NPC,{
 	if (checkweight(7500,1) == 0) {
 		mes "^3355FFJust a second...";
@@ -5568,9 +5313,7 @@ kh_rossi,92,40,0	script	Shelf#khr	HIDDEN_NPC,{
 }
 
 
-//----------------------------------------------------------------------------
-// Rosimier Mansion, top floor; Desk
-//----------------------------------------------------------------------------
+//- Rosimier Mansion, top floor; Desk -
 kh_rossi,144,286,0	script	Desk#khr3	HIDDEN_NPC,{
 	if (checkweight(7501,1) == 0) {
 		mes "^3355FFJust a second...";
@@ -5633,9 +5376,7 @@ kh_rossi,144,286,0	script	Desk#khr3	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Rosimier Mansion, top floor; Bookshelf
-//----------------------------------------------------------------------------
+//- Rosimier Mansion, top floor; Bookshelf -
 kh_rossi,148,288,0	script	Bookshelf#khr	HIDDEN_NPC,{
 	if (checkweight(7502,1) == 0) {
 		mes "^3355FFJust a second...";
@@ -5677,9 +5418,7 @@ kh_rossi,148,288,0	script	Bookshelf#khr	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Rosimier Mansion, top floor; Bed
-//----------------------------------------------------------------------------
+//- Rosimier Mansion, top floor; Bed -
 kh_rossi,154,286,0	script	Bed#khr	HIDDEN_NPC,{
 	if (KielHyreQuest < 58) {
 		mes "^3355FFYou found a well made";
@@ -5716,9 +5455,7 @@ kh_rossi,154,286,0	script	Bed#khr	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Fisherman
-//----------------------------------------------------------------------------
+//- Fisherman -
 yuno_fild12,232,222,0	script	Old Fisherman	4_M_SEAMAN,{
 	if (KielHyreQuest < 60) {
 		mes "[Fisherman]";
@@ -5824,9 +5561,7 @@ yuno_fild12,232,222,0	script	Old Fisherman	4_M_SEAMAN,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Kiel Hyre's hut; Wooden Board
-//----------------------------------------------------------------------------
+//- Kiel Hyre's hut; Wooden Board -
 yuno_fild09,158,217,0	script	Wooden Board#kh	HIDDEN_NPC,{
 	if (checkweight(7503,1) == 0) {
 		mes "^3355FFJust a second...";
@@ -5867,21 +5602,15 @@ yuno_fild09,158,217,0	script	Wooden Board#kh	HIDDEN_NPC,{
 	}
 }
 
-//============================================================================
-// Kiehl Hyre's Room and Boss NPCs
-//============================================================================
-// Beyond here the NPC for the final areas.
-// Now, this area is not someplace you wanna slow down so
-// you can pick up dialog. I used packet logging to pull
-// what I could and for the sake of the two people with me,
-// did not bother doing all the proper NPC positioning
-// or some of the 'error/wrong option' dialogs.
+//== Kiehl Hyre's Room and Boss NPCs =======================
+// Beyond here the NPC for the final areas.  Now, this area is not someplace
+// you wanna slow down so you can pick up dialog. I used packet logging to pull
+// what I could and for the sake of the two people with me, did not bother
+// doing all the proper NPC positioning or some of the 'error/wrong option'
+// dialogs.
 // All the doors are kind of weird.
-//============================================================================
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Receiver (Gives black keycards upon killing mobs)
-//----------------------------------------------------------------------------
+//- Kiehl's Room; Receiver (Gives black keycards upon killing mobs) -
 kh_kiehl01,17,39,0	script	Receiver#kh	HIDDEN_NPC,{
 	if (mobcount("kh_kiehl01","Receiver#kh::OnMyMobDead") < 1) {
 		mes "^333333*BBBZZZ*^000000";
@@ -5913,9 +5642,7 @@ OnMyMobDead:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Flower Vase (Gives...password...for Box)
-//----------------------------------------------------------------------------
+//- Kiehl's Room; Flower Vase (Gives...password...for Box) -
 kh_kiehl01,13,40,0	script	Flower Vase#kh1	HIDDEN_NPC,{
 	if (KielHyreQuest < 74) {
 		mes "^3355FFYou found";
@@ -5966,9 +5693,7 @@ kh_kiehl01,13,40,0	script	Flower Vase#kh1	HIDDEN_NPC,{
 }
 
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Box
-//----------------------------------------------------------------------------
+//- Kiehl's Room; Box -
 kh_kiehl01,19,25,0	script	Box#kh1	HIDDEN_NPC,{
 	if (checkweight(7505,1) == 0) {
 		mes "^3355FFJust a second...";
@@ -6023,12 +5748,10 @@ kh_kiehl01,19,25,0	script	Box#kh1	HIDDEN_NPC,{
 	}
 }
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Big Door, (First)
+//- Kiehl's Room; Big Door, (First) -
 // - Anyone can pass through this door
 // - Consume one Black KeyCard when opened.
 // - Only one person actually needs to open it.
-//----------------------------------------------------------------------------
 kh_kiehl01,44,33,0	script	Big Door#BigDoorKHQ1	HIDDEN_NPC,{
 	if (.KHDoor1Opened == 0) {
 		mes "^3355FFThe door is locked,";
@@ -6085,11 +5808,9 @@ OnTouch:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Big Door, (second)
+//- Kiehl's Room; Big Door, (second) -
 // - Consume Toy Key when opened.
 // - Only one person actually needs to open it.
-//----------------------------------------------------------------------------
 kh_kiehl01,174,40,0	script	Big Door#BigDoorKHQ2	HIDDEN_NPC,{
 	if (.KHDoor2Opened == 0) {
 		mes "^3355FFThe door is locked,";
@@ -6145,11 +5866,9 @@ OnTouch:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Big Door, (Third)
+//- Kiehl's Room; Big Door, (Third) -
 // - Consume one Black KeyCard when opened.
 // - Only one person actually needs to open it.
-//----------------------------------------------------------------------------
 kh_kiehl01,77,108,0	script	Big Door#BigDoorKHQ3	HIDDEN_NPC,{
 	if (.KHDoor3Opened == 0) {
 		mes "^3355FFThe door is locked,";
@@ -6205,11 +5924,9 @@ OnTouch:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Big Door, (Fourth)
+//- Kiehl's Room; Big Door, (Fourth) -
 // - Consume TWO Black KeyCard when opened.
 // - Only one person actually needs to open it.
-//----------------------------------------------------------------------------
 kh_kiehl01,42,177,0	script	Big Door#BigDoorKHQ4	HIDDEN_NPC,{
 	if (.KHDoor4Opened == 0) {
 		mes "^3355FFThe door is locked,";
@@ -6265,9 +5982,7 @@ OnTouch:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Robots
-//----------------------------------------------------------------------------
+//- Kiehl's Room; Robots -
 kh_kiehl01,15,179,0	script	Robots#kh1	HIDDEN_NPC,{
 	if (mobcount("kh_kiehl01","Robots#kh1::OnMyMobDead") < 1) {
 		mes "^3355FFAs soon as you";
@@ -6292,9 +6007,7 @@ OnMyMobDead:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Dummy Robots
-//----------------------------------------------------------------------------
+//- Kiehl's Room; Dummy Robots -
 kh_kiehl01,15,177,0	script	Robots#kh2::RobotsKHQ	HIDDEN_NPC,{
 	end;
 }
@@ -6305,11 +6018,9 @@ kh_kiehl01,37,187,0	duplicate(RobotsKHQ)	Robots#kh6	HIDDEN_NPC
 kh_kiehl01,39,187,0	duplicate(RobotsKHQ)	Robots#kh7	HIDDEN_NPC
 kh_kiehl01,41,187,0	duplicate(RobotsKHQ)	Robots#kh8	HIDDEN_NPC
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Big Door, (Fifth, and final)
+//- Kiehl's Room; Big Door, (Fifth, and final) -
 // - Anyone can pass through this door
 // - Consumes 4 Solid Iron Pieces
-//----------------------------------------------------------------------------
 kh_kiehl01,166,187,0	script	Big Door#BigDoorKHQ5	HIDDEN_NPC,{
 	if (($@KHQuestBusy == 0) && (KielHyreQuest >= 74) && (KielHyreQuest <= 106)) {
 		if (KielHyreQuest < 86) {
@@ -6479,9 +6190,7 @@ OnTouch:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Kiehl_Room_Trap (Entry way trap)
-//----------------------------------------------------------------------------
+//- Kiehl's Room; Kiehl_Room_Trap (Entry way trap) -
 kh_kiehl02,49,10,0	script	Kiehl_Room_Trap	-1,5,3,{
 	end;
 
@@ -6518,10 +6227,8 @@ OnGlobalTimerOff:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Kiehl
+//- Kiehl's Room; Kiehl -
 // - Timer will drop to 3 minutes once Kiehl is defeated.
-//----------------------------------------------------------------------------
 kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 	if (checkweight(908,200) == 0) {
 		mes "^3355FFJust a second...";
@@ -7021,9 +6728,7 @@ OnTimer1000:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; NPC for mob control, timers, and other junk.
-//----------------------------------------------------------------------------
+//- Kiehl's Room; NPC for mob control, timers, and other junk. -
 kh_kiehl02,1,1,0	script	KiehlRoom	-1,{
 	end;
 
@@ -7059,9 +6764,7 @@ OnReset:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Mitchell and Agents.
-//----------------------------------------------------------------------------
+//- Kiehl's Room; Mitchell and Agents. -
 kh_kiehl02,49,55,6	script	Mitchell#KiehlRoom	4_F_JOB_HUNTER,{
 	end;
 OnInit:
@@ -7073,9 +6776,7 @@ kh_kiehl02,51,49,1	duplicate(Mitchell#KiehlRoom)	Agent#KHAgent2	4_M_MASKMAN
 kh_kiehl02,47,50,0	duplicate(Mitchell#KiehlRoom)	Agent#KHAgent3	4_M_MASKMAN
 kh_kiehl02,46,53,6	duplicate(Mitchell#KiehlRoom)	Agent#KHAgent4	4_M_MASKMAN
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Copy of Kiehl.
-//----------------------------------------------------------------------------
+//- Kiehl's Room; Copy of Kiehl. -
 kh_kiehl02,48,53,6	script	Kiehl#Copy	4_M_KHKIEL,{
 	end;
 
@@ -7084,9 +6785,7 @@ OnInit:
 	end;
 }
 
-//----------------------------------------------------------------------------
-// Kiehl's Room; Kiehl_Room_Exit
-//----------------------------------------------------------------------------
+//- Kiehl's Room; Kiehl_Room_Exit -
 kh_kiehl02,50,59,0	script	Kiehl_Room_Exit	WARPNPC,1,1,{
 OnTouch:
 	if (getmapusers("kh_kiehl02") < 1)
@@ -7102,72 +6801,3 @@ OnInit:
 	disablenpc "Kiehl_Room_Exit";
 	end;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 First version, needs testing [Playtester]
-//= 1.1 Copied over some changes made by -Tsuyuki- [L0ne_W0lf]
-//=     Reworked variables slightly so that the permenents ones aside from the
-//=     main tracking variable, are deleted when no longer needed. Renamed
-//=     several variables that handle strings to @KHInput$. [L0ne_W0lf]
-//= 1.2 Removed duplicate NPCs. [Toms]
-//= 1.3 More Bug fixes, fixed typo. Updated Additional comments. [L0ne_W0lf]
-//= 1.4 Fixed doors not resetting in kh_kiehl01 after 30 second timer is up. [L0ne_W0lf]
-//= 1.5 Another bug fixed (&& instead of ||). [L0ne_W0lf]
-//= 1.6 More squashed bugs with if checking. [L0ne_W0lf]
-//= 1.7 Corrected some spelling mistakes. [Balish]
-//=     Corrected Exploit with the pub man, giving infinite wine and money.
-//=     Corrected pool and map not showing text for some states of the quest.
-//=     Corrected Elly showing cutin but not text for some states of the quest (causing players to log off to continue).
-//=     Let fisherman talk to you when you have 10 fishes OR MORE.
-//=     Corrected not letting you enter the tombstone after finishing the quest.
-//= 1.8 Elly now deletes the Iron_Box, and Kiel Hyre deletes the Pin. [L0ne_W0lf]
-//=     More security on the 5th Big Door, now makes sure no one outside of who-
-//=     acticated it initially can use it. Resets after 10 minutes to make it.
-//=     Made it so that you need to be at least step 84 to activate the final door.
-//=     Corrected not deleting Allysia's Ring from inventory.
-//= 1.9 Exit will now enable if you are just retrieving the Ring, keeps you from getting stuck. [L0ne_W0lf]
-//=     Corrected "KH_Kielh02", was setting off a debug, invalid map index. Should have been "kh_Kiehl02"
-//=     Made .KHQuestBusy$ into a temp global variable. $@KHQuestBusy$.
-//= 2.0 Changed the labels on the "Big Doors" to "Identifier Names" to prevent an error with using getvariableofnpc [L0ne_W0lf]
-//= 2.1 Fifth door now checks for a variable HIGHER or EQUAL to 74 not 84, as pointed out by Stollen. [L0ne_W0lf]
-//= 2.2 Another fix for Elly, no longer RESETS to 26 when you talk to her. [L0ne_W0lf]
-//= 2.3 Should NOT have been setting .KHQuestBusy at all. It's not used or accessed anymore. Removed. [L0ne_W0lf]
-//= 2.4 Lots of fixes (4ish) from Valandi. [L0ne_W0lf]
-//=     Added a getmapuser check to the mapwarp in KHTimerEnd so it's not trying to warp out 0 users. [L0ne_W0lf]
-//= 2.5 Fixed several small issues (and large one) such as typos in cutins, typos in dialog, etc. [L0ne_W0lf]
-//=     Added some of the missing dialogs for several NPCs, and fixed a few NPC locations.
-//=     ALL books can now trigger the wall.
-//=     Allysia will now summon 4 (was 2) G_CONSTANTS instead of REGULAR constants.
-//=     Fixed where Golden_Key and Kiel_Button are deleted.
-//=     Removed KHTimerEnd, and instead use OnReset.
-//=     Fixed typo in the second NPC that gives Black Keycards.
-//=     Added Monster Warps. (Keeps monsters from being in dungeon quest area.) [Non-functional]
-//= 2.6 Stupid mistake, accidentally had 4 copies of the same script in 1... [L0ne_W0lf the bonehead]
-//= 2.7 Fixed the wrong name being displayed for Kiel Hyre in one dialog.
-//=     Removed $@KH_DoorInvoker entirely. The quest is now working like it should according to iRO.
-//=     Fixed up a few more NPC headers. Facing direction fixes mostly this time.
-//=     More progression changes to Kiehl Hyre. He no longer stops dialog after the agents appear.
-//= 2.8 Fixed the weight checking in Vandt, and added official dialog. [L0ne_W0lf]
-//=     Added weight checks for all NPCs that give items. Semi-official dialog.
-//=     Got the missing portion of dialog for Mills'.
-//=     Will add further proper dialogs as I get to them on the second runthrough of the quest.
-//= 2.8a minor optimization with extra goto, else or empty switch [Lupus]
-//= 2.9 Fixed the "enablenpc" problem with the missing spaces. No idea how it happened. [L0ne_W0lf]
-//= 3.0 Fixed a typo in Elly, in her room. (was <= should have been <) [L0ne_W0lf]
-//=     Added an 'end;' to the cookie basket. Kiel Hyre's final dialog will now delete all quest-related items.
-//= 3.1 Moved the "delitem" for all related quest items to the proper NPC. [L0ne_W0lf]
-//= 3.2 Fixed error with Allysia teling you to "Go away." maybe. [L0ne_W0lf]
-//= 3.2b Fixed some typos and grammar mistakes. [SinSloth]
-//= 3.3 Fixed the receiver log out bugs. [L0ne_W0lf]
-//= 3.4 Fixed bug when u can't get a Yellow Keycard if u got the Blue one at first [Lupus]
-//=     Note: There are many condition checks that should be omitted in the future fixed item names in item_db.txt / txt resources according the quest
-//=     for items, should be used bitwise methods in a single variable. So let's fix the rest possible bugs (if they exist) and then optimize ^_-
-//= 3.5 Changed the way the Black Keycard distibuting NPCs work slighty. [L0ne_W0lf]
-//= 3.6 Keil Hyre removes ALL outstanding quest items when he is talked [L0ne_W0lf]
-//=     to after finishing the quest.
-//= 3.7 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 3.8 Corrected some delitems. (bugreport:690) [Samuray22]
-//= 3.9 Fixed a cutin not being erased. (bugreport:1539) [L0ne_W0lf]
-//============================================================

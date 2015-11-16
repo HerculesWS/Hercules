@@ -1,29 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Lupus
+//= Copyright (C)  reddozen
+//= Copyright (C)  DiviniaRO members
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= 2006 Headgear
-//===== By: ==================================================
-//= DiviniaRO members, cleaned by reddozen
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Censor Bar, Feather Beret, Valk. Helm, Hahoe Mask, Mythical Lion Mask,
+//= Bride Mask, Magistrate Hat and Ayam
+//================= Current Version =======================================
 //= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
-//= Censor Bar, Feather Beret, Valk. Helm, Hahoe Mask,
-//= Mythical Lion Mask, Bride Mask, Magistrate Hat and Ayam
-//===== Additional Comments: =================================
-//= NPC id's and dialog are custom, please replace
-//= 1.0a fixed typos, added missing names, more cleaned and
-//=     standartized stuff a bit [Lupus]
-//= 1.0b fixed Helm of Valkyries ingredients
-//= 1.0c corrected item names according to item_db [Lupus]
-//= 1.1 Full update. EuRO (?) dialogs, and positions. [L0ne_W0lf]
-//= 1.2 Fixed bugs in the Hahoe/Lion/Bride Mask NPC. [L0ne_W0lf]
-//=     Fixed some of the names to iRO.
-//= 1.3 Fixed some color code bugs in Ghenirhemin. Thanks to yyCC. [L0ne_W0lf]
-//= 1.3a Fixed wrong item names (due to copy/paste) [Lupus]
-//= 1.4 Chungwolmang now checks if the last item set should be deleted. (bugreport:4719) [L0ne_W0lf]
-//============================================================
+//=========================================================================
 
-// Censor Bar
-//============================================================
+//== Censor Bar ============================================
 rachel,91,273,0	script	?	4_M_RACHMAN2,{
 	if (countitem(983) > 0 && countitem(7111) > 99 && countitem(938) > 98 && Zeny > 99999) {
 		mes "[?]";
@@ -90,8 +103,7 @@ rachel,91,273,0	script	?	4_M_RACHMAN2,{
 	close;
 }
 
-// Feather Beret
-//============================================================
+//== Feather Beret =========================================
 rachel,152,131,3	script	Sakjul	4_M_MIDDLE1,{
 	if (countitem(5172) > 0 && countitem(7063) > 99 && countitem(982) > 0) {
 		mes "[Sakjul]";
@@ -206,8 +218,7 @@ rachel,152,131,3	script	Sakjul	4_M_MIDDLE1,{
 	close;
 }
 
-// Valkyrie Helm
-//============================================================
+//== Valkyrie Helm =========================================
 hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 	if (moza_valkylie == 5) {
 		.@val2 = rand(1,10);
@@ -563,8 +574,7 @@ hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 	mes "when you show me your money. Hahahaha!";
 	close;
 }
-// Hahoe Mask / Mythical Lion Mask / Bride Mask
-//============================================================
+//== Hahoe Mask / Mythical Lion Mask / Bride Mask ==========
 payon,135,320,3	script	Chungwolmang	4W_M_01,{
 	if (moza_tal == 2) {
 		if (countitem(7015) > 19 && countitem(952) > 99 && countitem(1028) > 99) {
@@ -806,8 +816,7 @@ S_MakeMask:
 }
 
 
-// Magistrate Hat / Ayam
-//============================================================
+//== Magistrate Hat / Ayam =================================
 payon_in03,139,124,3	script	Han Garam	4_M_ORIENT01,{
 	if (moza_korea == 2 && countitem(954) > 299 && countitem(733) > 4 && countitem(975) > 0 && countitem(7166) > 49) {
 		mes "[Han Garam]";

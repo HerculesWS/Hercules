@@ -1,11 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  rAthena Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  eAthena Dev Team
+//= Copyright (C)  Paradox924X
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  SinSloth
+//= Copyright (C)  Lupus
+//= Copyright (C)  Evera
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Louyang
-//===== By: ==================================================
-//= Evera and The rAthena Dev Team
-//===== Current Version: =====================================
-//= 2.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Soup Quest
 //= - Variable in use: che_tre (max 5)
 //= Doctor Quest
@@ -14,29 +42,11 @@
 //= - Variable in use: ch_poison (max 20)
 //= Revolution Quest
 //= - Variable in use: QL_REVO (max 9)
-//===== Additional Comments: =================================
-//= 1.0 Initial Release [Evera]
-//= 1.1 Fixed double levelup bug [Lupus]
-//= 1.2 Added Revolution Quest. [SinSloth]
-//= 1.3 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 1.4 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 1.5 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
-//= 1.6 Rescripted Soup, Doctor, and Poison King quests [L0ne_W0lf]
-//=     to Aegis 10.3 standards. Attempted to save current
-//=     quest progress from the old scripts.
-//= 1.7 Added missing checkweights. And corrected [L0ne_W0lf]
-//=     a typo in Poison King quest.
-//= 1.8 Bug fixes. (bugreport:1025 bugreport:1062) [L0ne_W0lf]
-//= 1.9 Bug fixes/Typos. [Paradox924X]
-//= 2.0 Replaced effect numerics with constants. [L0ne_W0lf]
-//= 2.1 Fixed guard tower warper ALWAYS warping. (bugreport:2377) [L0ne_W0lf]
-//= 2.2 Removed unused "name" variable. [L0ne_W0lf]
-//= 2.3 Updated RE/Pre-RE EXP. [Euphy]
-//= 2.4 Added questlog support. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.4
+//=========================================================================
 
-// Soup Quest :: lou_tre
-//============================================================
+//== Soup Quest :: lou_tre =================================
 lou_in02,53,174,7	script	Employee#1	4_M_CHNMAN,6,62,{
 	if (gettime(GETTIME_HOUR) >= 10 && gettime(GETTIME_HOUR) < 22) {
 		mes "[Chang Pai]";
@@ -1072,8 +1082,7 @@ louyang,174,150,5	script	Jiu Chi Ling#lou	4_F_CHNDRESS1,{
 	close;
 }
 
-// Doctor Quest :: dr_china
-//============================================================
+//== Doctor Quest :: dr_china ==============================
 lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFWait a minute! Right now, you're over weight, so you cannot receive more items. Please store some of your things in Kafra Storage and try again.^000000";
@@ -2398,8 +2407,7 @@ louyang,125,121,0	warp	Storage Warp#2	1,1,lou_in02,198,161
 lou_in02,198,159,0	warp	Storage Warp#3	1,1,louyang,124,118
 lou_in02,203,159,0	warp	Storage Warp#4	1,1,louyang,129,118
 
-// Poison King Quest :: poison_king
-//============================================================
+//== Poison King Quest :: poison_king ======================
 lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 	// Attempt to preserve prior quest progress.
 	if (ch_poison == 0 && CL_POISONKING != 0) {
@@ -4572,8 +4580,7 @@ lou_in01,99,144,4	script	Soldier#bailong4	4_M_CHNSOLDIER,{
 	close;
 }
 
-// Revolution Quest :: lou_zero
-//============================================================
+//== Revolution Quest :: lou_zero ==========================
 lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 	if (!QL_REVOL) {
 		mes "[Sun Mao]";

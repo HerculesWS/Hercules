@@ -1,11 +1,35 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Joseph
+//= Copyright (C)  Toms
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Veins Quests
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 2.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Collection of Veins Quests
 //= Stone Quest:
 //= - Help an Old Man with his job.
@@ -23,34 +47,11 @@
 //= - Missing addition to High Priest Zhed to start quest.
 //= - Infiltrate Thor Volcano Base. What is Arunafeltz up to?
 //= - Variable in use: rachel_camel (max 27)
-//===== Additional Comments: =================================
-//= 1.0 First version, Added Veins Stone quest. [L0ne_W0lf]
-//= 1.1 Added Veins Spy Quest. [L0ne_W0lf]
-//= 1.2 Added Veins Siblings Quest. [L0ne_W0lf]
-//=     Added Veins Thor Volcano Base Quest NPC. [L0ne_W0lf]
-//=     Start NPC is missing, but will be added when I get it.
-//= 1.3 Fixed two typos small in Asbar. [L0ne_W0lf]
-//= 1.3a More fixes to some of the Base quest NPCs. [L0ne_W0lf]
-//= 1.4 Added missing checkweights. [L0ne_W0lf]
-//= 1.4a Corrected a typo error ";;". [Toms]
-//= 1.5 Added Nameless Island quest addition. [L0ne_W0lf]
-//= 1.5a Corrected a couple typos in Nameless Addition. [L0ne_W0lf]
-//= 1.6 Replaced effect numerics with constants. [L0ne_W0lf]
-//= 1.7 Moved a couple NPCs related to the Spy quest. [L0ne_W0lf]
-//= 1.8 Fixed some typos and confusing condition checks. [L0ne_W0lf]
-//= 1.9 Added quest log entries for:
-//=     - Siblings Quest
-//=     - Thor Volcano Base Quest
-//= 2.0 Removed level requirement. (bugreport:4678) [L0ne_W0lf]
-//= 2.1 Added missing changequest (3071-3076). [Joseph]
-//= 2.2 Moved "Wincing Old Man" to pre-re/re coordinates. [Euphy]
-//= 2.3 Fixed incorrect use of 'close'. [Joseph]
-//= 2.4 Updated RE/Pre-RE EXP. [Euphy]
-//= 2.5 Added GM management NPC. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.5
+//=========================================================================
 
-// Stone Quest :: veins_stone
-//============================================================
+//== Stone Quest :: veins_stone ============================
 -	script	::WincingOldMan_veins	-1,{
 	if ((MaxWeight - Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "- Wait a moment! -";
@@ -641,8 +642,7 @@ ve_in02,68,39,7	script	Factory Worker#ve2	4_M_DESERT,{
 	close;
 }
 
-// Spy Quest :: veins_secret
-//============================================================
+//== Spy Quest :: veins_secret =============================
 prontera,202,122,0	script	Kid#sch	4_F_KID2,{
 	if (que_sch == 0) {
 		mes "[Rooney]";
@@ -1441,7 +1441,7 @@ ra_in01,58,389,0	script	Guant Prisoner#sch	4_M_MIDDLE,{
 	close;
 }
 
-// Escort Dancers to Schwaltzvalt Republic
+//- Escort Dancers to Schwaltzvalt Republic -
 job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
 		mes "^3355FFWait a second!";
@@ -2662,8 +2662,7 @@ sec_in02,10,43,4	script	Extra Story Patch	1_M_SIGNMONK,{
 	close;
 }
 
-// Siblings Quest :: veins_camel
-//============================================================
+//== Siblings Quest :: veins_camel =========================
 veins,327,185,3	script	Kid#camelcamel	4_M_DST_CHILD,{
 	if (MISC_QUEST & 8192) {
 		if (rachel_camel == 0) {
@@ -5071,8 +5070,7 @@ veins,221,120,5	script	Young Town Native	4_M_DESERT,{
 	}
 }
 
-// Thor Volcano Base Quest :: veins_camp
-//============================================================
+//== Thor Volcano Base Quest :: veins_camp =================
 ra_temin,87,133,1	script	Rachel Guard#vol1	4_M_RASWORD,5,2,{
 	if (aru_vol == 2) {
 		mes "[Guard Karlum]";

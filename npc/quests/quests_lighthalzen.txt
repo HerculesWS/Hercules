@@ -1,36 +1,49 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Joseph
+//= Copyright (C)  Euphy
+//= Copyright (C)  Gepard
+//= Copyright (C)  Samuray22
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Lord Gywall
+//= Copyright (C)  Lupus
+//= Copyright (C)  MasterOfMupppets
+//= Copyright (C)  Evera
+//= Copyright (C)  aoa00
+//= Copyright (C)  Vicious_Pucca
+//= Copyright (C)  Persian
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs located in Lighthalzen
-//===== By: ==================================================
-//= Persian, Vicious_Pucca, aoa00, Evera, MasterOfMupppets,
-//= Lupus, Lord Gywall
-//===== Current Version: =====================================
-//= 5.1
-//===== Description: =========================================
+//================= Description ===========================================
 //= Quests related to Lighthalzen City.
-//===== Additional Comments: =================================
-//= 4.0 Updated several NPCs to Official (iRO) dialog, and restrucured. [L0ne_W0lf]
-//= 4.1 Updated Dungeon quest, and Friendhsip quest to 10.3 standards. [L0ne_W0lf]
-//= 4.2 Fixed wrong variable type in use in "Box#cube1". [L0ne_W0lf]
-//= 4.3 Fixed a bug where if you relog after you take out the Lab Permit from the Box
-//=     You can't finish the quest. (bugreport:1798) [Samuray22]
-//= 4.3a Reverted changes from the last version. . [L0ne_W0lf]
-//=     Changed temp char vars to normal vars, that unset at end.
-//=     Tube just makes sure you have 1 or more permits.
-//= 4.4 Replaced effect numerics with constants. [L0ne_W0lf]
-//= 4.5 Corrected an Incorrect check of the Shinokas_Quest. (bugreport:2276) [Samuray22]
-//=     Replaced effect numerics with constants.
-//= 4.5 Official Gangster Alert script. [Gepard]
-//= 4.6 Added quest log entries for:
-//=     - Cursed Spirit Quest
-//= 4.7 Fixed missing label. (bugreport:4654) [L0ne_W0lf]
-//= 4.8 Fixed Cursed Spirit Quest EXP reward. [Euphy]
-//= 4.9 Fixed incorrect use of 'close'. [Joseph]
-//= 5.0 Updated RE/Pre-RE EXP. [Euphy]
-//= 5.1 Added GM management NPCs. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 5.1
+//=========================================================================
 
-// Gangster Alert [Official Conversion]
-//============================================================
+//== Gangster Alert [Official Conversion] ==================
 lighthalzen,1,1,0	script	Law Enforcement	-1,{
 	end;
 
@@ -186,8 +199,7 @@ lighthalzen,294,223,7	script	Guard#lhz02	4_M_LGTGUARD,{
 	}
 }
 
-// Cube Room Quest
-//============================================================
+//== Cube Room Quest =======================================
 lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 	// Retain prior position in quest.
 	if (piciburn) {
@@ -1709,8 +1721,7 @@ OnTouch:
 	close;
 }
 
-// Lighthalzen Pickpocket Mini-Quest
-//============================================================
+//== Lighthalzen Pickpocket Mini-Quest =====================
 lighthalzen,240,216,4	script	Suspicious Guy#lhz_01	4_M_LGTPOOR,2,2,{
 	end;
 
@@ -2034,8 +2045,7 @@ OnTouch:
 	}
 }
 
-// Friendship Quest
-//============================================================
+//== Friendship Quest ======================================
 lhz_in02,201,210,5	script	Digotz	4_M_LGTMAN,{
 	if (BaseLevel < 50) {
 		mes "[Digotz]";
@@ -3356,8 +3366,7 @@ yuno_in04,168,117,3	script	Book#lhz	HIDDEN_NPC,{
 	close;
 }
 
-// Cursed Spirit Quest
-//============================================================
+//== Cursed Spirit Quest ===================================
 lhz_dun01,147,106,0	script	#kiz01-1	-1,3,3,{
 OnTouch_:
 	if (countitem(7345) > 0 ) {
@@ -6328,8 +6337,7 @@ lhz_in01,269,114,3	script	A File#li-1	HIDDEN_NPC,{
 	close;
 }
 
-// President Quest, a.k.a. Schwartzvalt Triology Quest
-//============================================================
+//== President Quest, a.k.a. Schwartzvalt Triology Quest ===
 lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 
 	if(!lhz_boss)
@@ -10338,8 +10346,7 @@ lhz_in02,19,274,2	script	Maintenance Guy	4_M_REPAIR,{
 	close;
 }
 
-// Rekenber Job Quest
-//============================================================
+//== Rekenber Job Quest ====================================
 lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 
 	if(lhz_rekenber > 21)
@@ -12042,60 +12049,3 @@ airplane_01,10,10,3	script	#LyozienSwitch	HIDDEN_NPC,{
 		close;
 	}
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= Grammar/script check please. This was a quick job.
-//= Things to add: Look at the thread "Lighthalzen Guard" in SVN script
-//= 0.3 Initial Release
-//= 0.5 Added mobsters spawn and Einbroch pollution. Alert lasts either 10 minutes or all mob killed.
-//= 0.6-0.9 fix small bug. Added Bio-lab entrance Quest. Added Getting security-card Quest.
-//= 1.0 Patched "mobsters spawn & Alert" like Real-RO.
-//= 1.0a fixed rand(1,10) + comparision. There just can't be 'X < 1' [Lupus]
-//= 1.1 Changed the mobster spawn to g_mobster to prevent exploits [MasterOfMuppets]
-//= 1.2 Added the cube room quest by DeNy, translated by vicious_pucca. [MasterOfMuppets]
-//=     Thanks to Linuxwolf for a grammar check as well =).
-//= 1.2a Moved Biolab entrance to lhz_dun warps. [Vicious]
-//= 1.3 Fixed password bug, fixed endless item exploit, some typos [Lupus]
-//= 1.4 Fixed password abuse. When people don't read the password under the picture
-//=     and enter Zero shit 8) (TODO: I saw some "Sticks" abuses, too.. where you could skip a part of quest...)
-//= 1.5 Fixed Mobster's OnDead event(it has to start with "On"!) [Playtester]
-//= 1.5a Fixed "free stick" bug, thx 2 Neouni [Lupus]
-//= 1.6 Added Gywall's Pickpocket Quest
-//= 1.7 Implemented the Friendship quest [MasterOfMuppets]
-//= 1.8 Changed the name of the mobsters to Gangster, as it should be. [MasterOfMuppets]
-//= 1.9 Added extra input check on Biolab so that the first letter of the word could be capitalized or undercase. [Evera]
-//= 2.0 Removed Duplicates [Silent]
-//= 2.1 Added first part of Bio Ethics Quest [Evera]
-//= 2.2 Added bit to say Bio Ethics is unfinished, and if a player attempts, it warps them
-//=     out after finished part... Don't want players getting stuck ;_; [Evera]
-//= 2.3 Finished Bio Ethics Quest. Need bug testers before moving to trunk, my
-//=     mind was somewhere else when writing @_@ [Evera]
-//= 2.4 Fixed the bug where a str&int debug was shown in the console for
-//=     test tube in bio labs quest. [Evera]
-//= 2.5 Fixed Kellasus giving you extra skills in Bio Ethics quest [Evera]
-//= 2.6 Fixed exploit letting any class get homunculus from Bio Ethics Quest [Evera]
-//= 2.6a Moved Bio Ethics Quest to Alchemist SKILL QUESTS [Lupus]
-//= 2.7 fixed bugs that let people bypass some quest parts V_V [Lupus]
-//=     reused cubekey var for 4 Cube Room key vars
-//= 2.8 More optimization. Also fixed bug with "2x short sticks -> long" [Lupus]
-//=     Now uses MISC_QUEST&512 instead of 'hzdun'. WIP
-//= 2.9 Fixed Friendship Quest levelup exploit (u could get EXP twice) [Lupus]
-//= 3.0 Added Cursed Spirit Quest. [SinSloth]
-//=     Moved a book non-related to Lighthalzen quests.
-//= 3.1 Added Schwartzvalt Trilogy Quest. [SinSloth]
-//= 3.2 Updated some NPCs regarding Hugel Rebellion Quest. [SinSloth]
-//= 3.2 Removed the NPC "#kiz03-4" as I couldn't find any [L0ne_W0lf]
-//=     reference to it in the Aegis script.
-//= 3.3 Fixed a wrong negative value checking in Schwartzvalt Trilogy quest. [SinSloth]
-//= 3.4 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 3.5 Touch-ups to the Friendship quest. Added EXP reward. [L0ne_W0lf]
-//=     Added cutins for "Maku" npc, and changed "set HP" to percentheal.
-//= 3.5a Adjusted EXP given by "Benkasttein" to be the same as that given by Maku. [L0ne_W0lf]
-//= 3.6 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 3.7 Counter-fixed negative value checking to now look for both positive and negative values
-//=     since its symbol depends on the time. [SinSloth]
-//= 3.8 Removed bio ethic quest definition from header. [L0ne_W0lf]
-//= 3.9 Added Rekenber Job quest. Don't know why it hasn't been there before though. [SinSloth]
-//============================================================

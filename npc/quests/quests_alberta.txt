@@ -1,11 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Kisuka
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  DZeroX
+//= Copyright (C)  Evera
+//= Copyright (C)  Lupus
+//= Copyright (C)  kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Alberta
-//===== By: ==================================================
-//= kobra_k88
-//===== Current Version: =====================================
-//= 2.6
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Dolls Quest
 //= Boy's Cap Quest
 //= Antlers Quest
@@ -13,28 +40,11 @@
 //= Hat of Sun God, Sunday Hat, Mage Hat, Magician Hat Quests
 //= Turtle Island Quests
 //= Alberta Boy
-//===== Additional Comments: =================================
-//= 1.1 Fixed Spore Doll exploit, Gramp's Tiger skin label bug
-//= 1.3 Fixed item ID 7031 -> 7013
-//= 1.4 Fixed a bug, Fixed Exploits, Optimized [Lupus]
-//= 1.6 TEMPESTRA quest uses common quests variable MISC_QUEST
-//=     Condition if done: (MISC_QUEST & 2) [Lupus]
-//= 1.7 Moved quest from cities/albera.txt [Evera]
-//= 1.8 Re-made the Doll Quest, now with official dialogs. [DZeroX]
-//= 1.8a Removed .GATs [Lupus]
-//= 1.9 Updated Turtle Quest to official. [L0ne_W0lf]
-//= 2.0 Turtle Island quest now clears TURTLE var and set
-//=     MISC_QUEST bit (MISC_QUEST & 65536) [Lupus]
-//= 2.1 Added missing close. [L0ne_W0lf]
-//= 2.2 Updated Gotan to be compliant with misc_quiest var. [L0ne_W0lf]
-//= 2.3 Updated heardgear Quest NPCs. [L0ne_W0lf]
-//= 2.4 Updated 'Doll Quest' to match AEGIS script. [Kisuka]
-//= 2.5 Moved Alberta NPC to pre-re/re paths. [Euphy]
-//= 2.6 Updated RE/Pre-RE EXP. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.6
+//=========================================================================
 
-// Doll Quest
-//============================================================
+//== Doll Quest ============================================
 alberta,117,135,0	script	Elin	4W_KID,{
 	if (checkweight(1201,1) == 0) {
 		mes "[Elin]";
@@ -385,8 +395,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 	}
 }
 
-// 'Boy's Cap' Quest
-//============================================================
+//== 'Boy's Cap' Quest =====================================
 alberta_in,28,145,4	script	Grampa	2_M_PHARMACIST,{
 	mes "[Grampa]";
 	mes "*Gasp*...";
@@ -462,8 +471,7 @@ alberta_in,28,145,4	script	Grampa	2_M_PHARMACIST,{
 	}
 }
 
-// 'Antlers' Quest
-//============================================================
+//== 'Antlers' Quest =======================================
 alberta_in,122,53,4	script	Cherokee	1_M_01,{
 	mes "[Cherokee]";
 	mes "Hey there~!";
@@ -508,8 +516,7 @@ alberta_in,122,53,4	script	Cherokee	1_M_01,{
 	}
 }
 
-// 'Bao Bao', 'Crescent Hairpin', 'Fashionable Glasses', 'Heart Hairpin' Quest
-//============================================================
+//== 'Bao Bao', 'Crescent Hairpin', 'Fashionable Glasses', 'Heart Hairpin' Quest =
 alberta,120,53,1	script	Stylish Merchant#new30	1_M_BARD,{
 	if ((countitem(10007) > 0) && (countitem(968) > 49)) {
 		mes "[Zic]";
@@ -641,8 +648,7 @@ alberta,120,53,1	script	Stylish Merchant#new30	1_M_BARD,{
 	}
 }
 
-// 'Hat of the Sun God', 'Sunday Hat', 'Mage Hat', 'Magician Hat' Quest
-//============================================================
+//== 'Hat of the Sun God', 'Sunday Hat', 'Mage Hat', 'Magician Hat' Quest =
 alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 	mes "[Tempestra]";
 	mes "Ah, such a cool breeze. It's good to visit the seashore. I think it was the right choice to come here to take a break from my business.";
@@ -942,8 +948,7 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 	}
 }
 
-// Turtle Quest
-//============================================================
+//== Turtle Quest ==========================================
 alberta,91,70,4	script	Kinsey#tur	4_M_ORIENT02,{
 	mes "[Kinsey]";
 	mes "What does a man have to do to get a stiff drink around here? I mean, there are absolutely no good bars in Alberta!";
@@ -2310,8 +2315,7 @@ tur_dun03,67,130,4	script	Knight#tur4	8W_SOLDIER,{
 	close;
 }
 
-// Alberta Boy
-//============================================================
+//== Alberta Boy ===========================================
 alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 	if (ep13_2_hiki == 13) {
 		mes "[Iromo]";

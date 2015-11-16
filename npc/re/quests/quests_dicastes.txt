@@ -1,44 +1,54 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Frost
+//= Copyright (C)  Dastgir
+//= Copyright (C)  Joseph
+//= Copyright (C)  Masao
+//= Copyright (C)  Euphy
+//= Copyright (C)  Muad_Dib
+//= Copyright (C)  Gennosuke Kouga
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= El Dicastes Quest NPCs
-//===== By: ==================================================
-//= Gennosuke Kouga, Muad_Dib
-//===== Current Version: =====================================
-//= 2.5
-//===== File Encoding ========================================
+//================= File Encoding =========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//===== Description: =========================================
-//= [Official Conversion]
+//= -If the encoding is correct, the next three lines have the same length-
+//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
+//= ============ ============================================= ============
+//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
+//================= Description ===========================================
 //= Quest NPCs related to Dewata:
-//== Sapha's Visit, Doha's Secrect Order, Frede's Request,
-//== Department Quests, Document Quests,
-//== Chesire's Call, Cat Hands Enchantment
-//== Cat Hand Agent
-//===== Additional Comments: =================================
-//= 1.0 First version. 14107 lines, oh, the pain...
-//= 1.1 Standardized and reduced by 7000+ lines. [Euphy]
-//= 1.2 Further optimization. [Euphy]
-//= 1.2a Small bug fix. [Euphy]
-//= 1.3 Temporarly disabled Izlude Fish Tail?#33 NPC because of
-//= 	the new Izlude Town Map. [Masao]
-//= 1.4 Fixed minor typos. [Joseph]
-//= 1.5 Removed "Mysterious Documents" duplicated in magic_books. [Euphy]
-//= 1.6 Fixed missing checks for quest: Sapha's Visit. [Joseph]
-//= 1.7 Updated to match the official script. [Joseph]
-//= 1.8 Optimized and fixed invalid checkquest. [Joseph]
-//= 1.8a Disabled "Fish Tails" until Izlude RE coordinates are found. [Euphy]
-//= 1.8b Updated "Calyon" NPC and fixed a check. [Euphy]
-//= 1.9 Updated "Fish Tails" with RE coordinates.
-//= 1.9a Minor fix. [Joseph]
-//= 2.0 Fixed variables. [Joseph]
-//= 2.1 Added reset option to "Kareka". [Euphy]
-//= 2.2 Added Izlude duplicates. [Euphy]
-//= 2.3 Added GM management NPCs. [Euphy]
-//= 2.4 Corrected NPC Location. [Dastgir]
-//= 2.5 Fixed Incorrect variable. [Frost]
-//============================================================
+//= - Sapha's Visit, Doha's Secrect Order, Frede's Request,
+//= - Department Quests, Document Quests,
+//= - Chesire's Call, Cat Hands Enchantment
+//= - Cat Hand Agent
+//================= Current Version =======================================
+//= 2.5
+//=========================================================================
 
-// Entrance
-//============================================================
+//== Entrance ==============================================
 manuk,321,182,5	script	Entrance Manager#ep133	4_MAN_GALTUN,{
 	if (!isequipped(2782)) {
 		mes "[Average Galten]";
@@ -192,8 +202,7 @@ sec_in02,16,43,5	script	Scaraba Dungeon Entrance	4_MAN_BENKUNI,{
 	close;
 }
 
-// Vigilantes
-//============================================================
+//== Vigilantes ============================================
 -	script	Vigilante#main	-1,{
 	if (compare(strnpcinfo(0),"ep133_26")) {
 		if (!isequipped(2782)) {
@@ -453,8 +462,7 @@ sec_in02,10,42,1	script	13.3 Related Reset	4_MAN_BENKUNI,{
 	close;
 }
 
-// Civil Services
-//============================================================
+//== Civil Services ========================================
 function	script	que_dic	{
 	if (!getarg(0)) {
 		if (questprogress(getarg(1),HUNTING) != 2) return;
@@ -1011,8 +1019,7 @@ dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 	close;
 }
 
-// Document Packages
-//============================================================
+//== Document Packages =====================================
 -	script	Document Package#main	-1,{
 	function	eldicastes_dp;
 	if (isequipped(2782) < 1) {
@@ -1118,8 +1125,7 @@ dic_in01,31,187,0	duplicate(Document Package#main)	Document Package#0002	CLEAR_N
 dic_in01,25,192,0	duplicate(Document Package#main)	Document Package#0003	CLEAR_NPC
 dic_in01,25,187,0	duplicate(Document Package#main)	Document Package#0004	CLEAR_NPC
 
-// Unknown Relics
-//============================================================
+//== Unknown Relics ========================================
 function	script	unknown_d	{
 	if (!questprogress(getarg(0))) {
 		mes "You see some traces of digging.";
@@ -3386,8 +3392,7 @@ dicastes01,225,211,3	script	Tragis#pa0829	4_MAN_NITT,{
 	}
 }
 
-// Doha's Secret Orders
-//============================================================
+//== Doha's Secret Orders ==================================
 mid_campin,168,170,3	script	Inspector Doha#ep133	1_M_ORIENT01,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- You can too many items to proceed with the quest. -";
@@ -4993,8 +4998,7 @@ dic_fild02,224,74,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef8	CLEAR_NPC
 dic_fild02,244,59,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef9	CLEAR_NPC
 dic_fild02,249,43,0	duplicate(ep133_crack#main)	Split Earth#ep133_ef10	CLEAR_NPC
 
-// Frede's Request
-//============================================================
+//== Frede's Request =======================================
 dicastes01,117,262,0	script	Frede#13_3	4_MAN_PIOM5,2,2,{
 	if (isequipped(2782)) {
 		if (ep13_3_invite <= 5) {
@@ -6097,8 +6101,7 @@ dic_in01,349,129,5	script	Bouy#13_3	4_MAN_BENKUNI,{
 	close;
 }
 
-// Sapha's Visit
-//============================================================
+//== Sapha's Visit =========================================
 -	script	Expedition#ep133_is	-1,{
 	if (ep13_3_invite) {
 		if (compare(strnpcinfo(1),"Maha")) {
@@ -6945,8 +6948,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 			close;
 	}
 }
-// Enchantment NPCs
-//============================================================
+//== Enchantment NPCs ======================================
 -	script	dic_enc#main	-1,{
 	.@re$ = strnpcinfo(1);
 	.@n$ = "["+.@re$+"]";
@@ -7450,8 +7452,7 @@ dic_fild01,228,159,4	script	Jahbong#pa0829	4_M_MERCAT2,{
 	close;
 }
 
-// Cat Hand Agent
-//============================================================
+//== Cat Hand Agent ========================================
 moc_para01,44,19,3	script	Cat Hand Agent#gekk	4_M_MERCAT2,{
 	if (BaseLevel < 70)	{
 		mes "[Cat Hand Agent]";

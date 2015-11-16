@@ -1,53 +1,49 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Gepard
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Samuray22
+//= Copyright (C)  SinSloth
+//= Copyright (C)  Lupus
+//= Copyright (C)  kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Morroc
-//===== By: ==================================================
-//= kobra_k88
-//===== Current Version: =====================================
-//= 3.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= - Stop Post
 //= - Binoculars Quest
 //= - Assassin Pub NPCs/supporting quest NPCS. [Disabled]
 //= - Resurrection of Satan Morroc
 //= - The Crow of the Fate
 //= - Succession of the Prince
-//===== Additional Comments: =================================
-//= 1.1 Fixed exploits [Lupus]
-//= 1.2 Added Dandelion's Request / Morroc Invasion quest. [SinSloth]
-//= 1.3 Updated dialogs from Binoculars Quest. [Samuray22]
-//= 1.3a added GM lvl check as in other invansion quests [Lupus]
-//= 1.4 Fixed a small bug in Dandelion's Request. [SinSloth]
-//= 1.5 Fixed a little bug with "Job_Alchemist" changed to "Job_Alchem". [Samuray22]
-//= 1.6 Fixed a nasty bug in last part of the quest. [SinSloth]
-//= 1.6a replaced item "names" with item id. [Lupus]
-//= 1.7 Fixed a bug with XP rewards. [SinSloth]
-//= 1.8 Fixed a bug which prevented reset of events. [SinSloth]
-//= 1.9 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 2.0 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
-//= 2.0a Corrected a Typo error ";;". [Samuray22]
-//= 2.1 Assassins will now get their request item. (bugreport:1220) [L0ne_W0lf]
-//= 2.2 Updated Binocular and Stop Post quests. [L0ne_W0lf]
-//= 2.3 Replaced effect numerics with constants. [Samuray22]
-//= 2.4 Implemented Ep. 12.1 Continental Guard Quest. [L0ne_W0lf]
-//=     Moved Dandelion's Request to a it's own file.
-//=     Added support NPCs required to finish Gaebolg quest.
-//= 2.5 Fixed Group of Evil never re-enabling. [L0ne_W0lf]
-//= 2.6 Added quest log commands for Resurrection of Satan Morroc. [L0ne_W0lf]
-//=     Added the two remaining episode 12.1 quests.
-//=     Updated Satan Morroc Quest to allow peopel who have
-//=     finished it to return to the previous map.
-//= 2.7 Corrected weight checks, they only check for inventory slots. [L0ne_W0lf]
-//= 2.8 Disabled Assassin bar pub NPCs, as they are included in the 13.1 quests file. [L0ne_W0lf]
-//= 2.9 Fixed player dying/logging out during conversation could prevent
-//=     summoning of Satan Morroc until server reboot. [Gepard]
-//= 3.0 Updated RE/Pre-RE EXP. [Euphy]
-//= 3.1 Updated to match the latest official scripts. [Euphy]
-//= 3.2 Added GM management NPC and variable $@re_moc_time$. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 3.2
+//=========================================================================
 
-// Stop Post Quest
-// ============================================================
+//== Stop Post Quest =======================================
 moc_ruins,113,181,4	script	William	4_M_ORIENT02,{
 	mes "[William]";
 	mes "Welcome to";
@@ -91,8 +87,7 @@ moc_ruins,113,181,4	script	William	4_M_ORIENT02,{
 	}
 }
 
-// Binoculars Quest
-// ============================================================
+//== Binoculars Quest ======================================
 moc_ruins,118,176,4	script	Alchemist	1_M_WIZARD,{
 	mes "[Marius]";
 	mes "Howdy, new customer!!";
@@ -163,8 +158,7 @@ moc_ruins,118,176,4	script	Alchemist	1_M_WIZARD,{
 	}
 }
 
-// Morroc Assassin Guild Bar [Disabled]
-// ============================================================
+//== Morroc Assassin Guild Bar [Disabled] ==================
 /*
 morocc,43,108,5	script	Sharp-Looking Kid#dan_07	4_KID01,{
 	if (BaseClass == Job_Assassin) {
@@ -886,8 +880,7 @@ que_job01,70,84,1	script	Girl#moc_ex002	4_F_SITDOWN,{
 	close;
 }
 
-// Resurrection of Satan Morroc
-// ============================================================
+//== Resurrection of Satan Morroc ==========================
 moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,3,{
 	if ((rebirth_moc_edq == 0) && (rebirth_moc_edq < 4)) {
 		mes "[Continental Guard]";
@@ -2101,8 +2094,7 @@ sec_in02,14,43,5	script	Morroc GlobalVar Admin::MorrocAdmin_sec	4_F_RUSGREEN,{
 }
 moc_fild21,5,5,5	duplicate(MorrocAdmin_sec)	Morroc GlobalVar Admin::MorrocAdmin_moc	4_F_RUSGREEN
 
-// The Crow of the Fate
-// ============================================================
+//== The Crow of the Fate ==================================
 moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 	if (BaseLevel > 59) {
 		if (checkweight(703,3) == 0) {
@@ -4327,8 +4319,7 @@ cave,105,32,7	script	Cave Settler#f_cave7	4_F_CAVE1,{
 	close;
 }
 
-// Succession of the Prince
-// ============================================================
+//== Succession of the Prince ==============================
 prontera,153,353,4	script	Messenger#prince1	8W_SOLDIER,{
 	if (nk_prince == 0) {
 		if (rebirth_moc_edq > 1) {

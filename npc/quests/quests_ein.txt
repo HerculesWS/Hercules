@@ -1,11 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  rAthena Dev Team
+//= Copyright (C)  eAthena Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Kisuka
+//= Copyright (C)  Paradox924X
+//= Copyright (C)  Yommy
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  SinSloth
+//= Copyright (C)  KarLaeda
+//= Copyright (C)  Lupus
+//= Copyright (C)  MasterOfMuppets
+//= Copyright (C)  Evera
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Einbroch and Einbech
-//===== By: ==================================================
-//= Evera and The rAthena Dev Team
-//===== Current Version: =====================================
-//= 2.7
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Oridecon/Mineral Quest
 //= - Variable in use: ein_gear1 (max 2)
 //= - Variable in use: $ein_amano (max 60)
@@ -18,41 +50,11 @@
 //= - Variable in use: Shinokas_Quest (max 11)
 //= Lovers Quest
 //= - Variable in use: EIN_LOVERQ (max 17)
-//===== Additional Comments: =================================
-//= 1.0 Initial Release [Evera]
-//= 1.1 Added more quests [Evera]
-//= 1.2 Added quest bits from Einbech and renamed file to
-//=     quests_ein.txt [Evera]
-//= 1.3 Implemented the polution quest. [MasterOfMuppets]
-//= 1.4.1 Massive bugfix. Fixed Pollution exploit [Lupus]
-//= 1.4.2 Fixed Khowropher bug [Lupus]
-//= 1.5 Fixed double levelup bug [Lupus]
-//= 1.5.1 Fixed exploit [KarLaeda]
-//= 1.5.2 Updated Shino Quest to leave no grabage vars [Lupus]
-//= 1.5.3 Fixed some typos regarding Schwartzvalt Trilogy [SinSloth]
-//= 1.6 Updated Laboratory Entrance regarding Heart Fragment quest. [SinSloth]
-//= 1.7 Changed the laboratory entrance checking to prevent players
-//= from being stuck in the quest. [SinSloth]
-//= 1.8 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 1.9 Fixed a bug with Einbroch Pollution quest. [SinSloth]
-//= 2.0 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
-//= 2.1 Fixed typo in disable/enable npc's (bugreport:2027) [Yommy]
-//= 2.2 Overall update to the structure of the scripts. [L0ne_W0lf]
-//=     Swapped the use of enable/disablenpc with hideon/offnpc.
-//=     Added missing quest, "Oridecon/Mineral Quest"
-//=     Full overhual of the Uwe Kleine quest.
-//= 2.2a Fixed typos in var names from EIN_LOVERQRQ to EIN_LOVERQ. (bugreport:2464) [Paradox924X]
-//= 2.3 Removed occurance of PcName. [L0ne_W0lf]
-//= 2.4 Added missing remove cutin. [Kisuka]
-//= 2.5 Added quest log entries for:
-//=     - Factory Quest
-//=     - Murder Quest
-//= 2.6 Updated RE/Pre-RE EXP. [Euphy]
-//= 2.7 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.7
+//=========================================================================
 
-// Oridecon Stone OR Mineral Stone Quest :: ein_amano
-//============================================================
+//== Oridecon Stone OR Mineral Stone Quest :: ein_amano ====
 einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 	if (ein_gear1 == 2) {
 		mes "[Cavitar]";
@@ -470,8 +472,7 @@ einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 	}
 }
 
-// Uwe Kleine :: ein_anoz
-//============================================================
+//== Uwe Kleine :: ein_anoz ================================
 einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 	EinUwe = 0;
 	if (BaseClass == Job_Blacksmith) {
@@ -3209,8 +3210,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 	}
 }
 
-// Factory Quest :: ein_factory
-//============================================================
+//== Factory Quest :: ein_factory ==========================
 einbroch,1,1,0	script	Einbroch Smog Alert	-1,{
 	end;
 
@@ -4166,7 +4166,7 @@ ein_in01,95,239,3	script	Conveyor#ins2	HIDDEN_NPC,{
 	end;
 }
 
-// Administrator NPC used to rig the invasion in Einbroch.
+//- Administrator NPC used to rig the invasion in Einbroch. -
 sec_in02,127,86,3	script	Factory Quest Test	4_M_REPAIR,{
 	.@i = callfunc("F_GM_NPC",8028,0,0,9000);
 	if (.@i == -2) {
@@ -4214,8 +4214,7 @@ sec_in02,127,86,3	script	Factory Quest Test	4_M_REPAIR,{
 	}
 }
 
-// Murder Quest :: ein_main_tre
-//============================================================
+//== Murder Quest :: ein_main_tre ==========================
 einbech,165,105,7	script	Buender Hikeman#ein	4_M_EINOLD,{
 	cutin "ein_hicman",2;
 	if (Shinokas_Quest == 0) {
@@ -5671,8 +5670,7 @@ einbech,57,210,3	script	Young Man#Shinokas_Quest	4_M_EINMAN,{
 	close;
 }
 
-// Typing Test :: ein_main_ma1
-//============================================================
+//== Typing Test :: ein_main_ma1 ===========================
 einbroch,51,52,0	script	Security#ein	WARPNPC,1,1,{
 	end;
 
@@ -5825,8 +5823,7 @@ OnTouch:
 	}
 }
 
-// Lovers Quest :: ein_ryu
-//============================================================
+//== Lovers Quest :: ein_ryu ===============================
 ein_in01,31,138,3	script	Calla#ein	4_F_01,{
 	if (checkweight(908,70) == 0) {
 		mes "^3355FFWait a second!";

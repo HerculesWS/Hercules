@@ -1,19 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2015  Hercules Dev Team
+//= Copyright (C)  -SkittleNugget-
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= 2012 Headgear Quests
-//===== By: ==================================================
-//= Euphy, -SkittleNugget-
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Enhance gears by synthesizing them with Energy Crystals.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//=     Script is a little messy, could use some cleaning.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-// Main NPC :: 2012_hat_quest
-//============================================================
+//== Main NPC :: 2012_hat_quest ============================
 moc_para01,41,169,3	script	Reno#2012hat	1_M_WIZARD,{
 	// iRO has (very) minor differences in dialogue from the original script.
 	// To use iRO's version, uncomment the line below.

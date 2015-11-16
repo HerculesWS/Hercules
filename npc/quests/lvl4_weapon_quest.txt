@@ -1,24 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Gepard
+//= Copyright (C)  erKURITA
+//= Copyright (C)  Silent
+//= Copyright (C)  MasterOfMuppets
+//= Copyright (C)  Reddozen
+//= Copyright (C)  Vicious_Pucca
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Grade A and Grade S weapon quests
-//===== By: ==================================================
-//= Vicious_Pucca, Reddozen & MasterOfMuppets
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Grade A and Grade S weapon quests
+//================= Current Version =======================================
 //= 1.6
-//===== Description: =========================================
-//= [Official Conversion]
-//= Grade A and Grade S weapon quests
-//===== Additional Comments: =================================
-//= 1.0 First Version, Credits goes to Vicious_Pucca for converting [MasterOfMuppets]
-//=     the quest from aegis format to eA format. Also thanks to
-//=     reddozen for fixing bugs.
-//= 1.1 Many fixes to spelling, grammar, and sentence order. [Silent]
-//= 1.2 A small fix, thanks to vicious_pucca [MasterOfMuppets]
-//= 1.21 Fixing MoM's typos (Citrin -> Citrine) [erKURITA]
-//= 1.3 Redirected error message for "LV_16" to "LV_16_NOGEM" (Gepard) [L0ne_W0lf]
-//= 1.4 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
-//= 1.5 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.6 Was using the wrong IDs for the ores needed. [L0ne_W0lf]
-//============================================================
+//=========================================================================
 
 umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 	if (checkweight(908,300) == 0) {

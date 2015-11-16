@@ -1,18 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Dastgir
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Eclage Quests
-//===== By: ==================================================
-//= Dastgir
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= Quests of Eclage
+//================= Description ===========================================
 //= Contains All Quest of Eclage
-//===== Additional Comments: =================================
-//= 1.0 Converted from the official Aegis script. [Dastgir]
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-// Teleport Cats
-//============================================================
+//== Teleport Cats =========================================
 
 ecl_fild01,118,311,4	script	Teleport Cat No.1#1	4_M_BOSSCAT,{
 	mes "[Teleport Cat]";
@@ -85,8 +105,7 @@ mid_camp,207,234,4	duplicate(Teleport Cat No.1#1)	Teleport Cat No.4#4	4_M_BOSSCA
 man_fild02,135,49,4	duplicate(Teleport Cat No.1#1)	Teleport Cat No.5#5	4_M_BOSSCAT
 dic_fild01,161,266,4	duplicate(Teleport Cat No.1#1)	Teleport Cat No.6#6	4_M_BOSSCAT
 
-// Eclage's Entrance
-//============================================================
+//== Eclage's Entrance =====================================
 ecl_fild01,97,322,0	script	#ep14_2Entrance	WARPNPC,3,3,{
 	end;
 
@@ -462,8 +481,7 @@ ecl_fild01,88,315,5	script	Tourist#ep14_2f12	4_WHITE_COW,{
 	close;
 }
 
-// Oliver Wolf Hood(Dreaming Time)
-//============================================================
+//== Oliver Wolf Hood(Dreaming Time) =======================
 eclage,101,29,0	script	#ep14_2Bridge	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
@@ -3232,8 +3250,7 @@ ecl_in04,223,230,4	script	Alp Ocart#ep14_2in2	4_M_BLACKMAN,{
 	end;
 }
 
-// Wanted to be Big and Beautiful
-//============================================================
+//== Wanted to be Big and Beautiful ========================
 eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 	if (!checkweight(Knife,1) || (MaxWeight-Weight)<2000){
 		mes "- Stop Here!! -";
@@ -4988,8 +5005,7 @@ ecl_in01,50,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig03	4_M_FAI
 ecl_in01,52,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig04	4_M_FAIRYKID
 ecl_in01,54,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig05	4_M_FAIRYKID
 
-// Mystery Burglary Quest
-//============================================================
+//== Mystery Burglary Quest ================================
 eclage,156,51,6	script	#hidden_eclage	HIDDEN_NPC,3,3,{
 	end;
 OnTouch:
@@ -7950,8 +7966,7 @@ ecl_in04,81,102,3	script	Residence exit#ecl_port2	CLEAR_NPC,{
 	end;
 }
 
-// Troublesome Fairies(Prankster of Eclage)
-//============================================================
+//== Troublesome Fairies(Prankster of Eclage) ==============
 ecl_in02,160,36,4	script	Eirinn#nk	4_F_FAIRYKID6,{
 	if (questprogress(4254) == 0) {
 		if (BaseLevel < 120) {
@@ -9440,8 +9455,7 @@ ecl_in01,82,79,4	script	Magazine#02	HIDDEN_NPC,{
 	close;
 }
 
-// Light and Darkness
-//============================================================
+//== Light and Darkness ====================================
 ecl_in02,98,32,3	script	Eclage Guard#tl1b	4_M_FAIRYSOLDIER2,{
 	mes "[Eclage Guard]";
 	if (ep14_2_mylord > 6){
@@ -12282,8 +12296,7 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 	close;
 }
 
-// Laphines That Love The Land(Lost Adventurers)
-//============================================================
+//== Laphines That Love The Land (Lost Adventurers) ========
 ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 	if (BaseLevel < 100) {
 		mes "[Fili]";
@@ -13733,8 +13746,7 @@ sec_in02,16,11,5	script	New Oz Image#1	4_M_MINSTREL1,1,1,{
 	}
 }
 
-// Memory of Professor Worm
-//============================================================
+//== Memory of Professor Worm ==============================
 sec_in02,10,17,4	script	Professor Aide#worm	4_BULL,{
 	input .@input;
 	if (.@input != 1917) {
@@ -14632,8 +14644,7 @@ ecl_fild01,173,95,7	script	Diary Frog No. 30#worm	4_FROG,{
 	}
 }
 
-// Encounter in a Strange Land
-//============================================================
+//== Encounter in a Strange Land ===========================
 mora,103,74,5	script	Expedition Member#tl01	4_M_DST_MASTER,{
 	mes "[Expedition Member]";
 	mes "I've gone through Hazy Forest Maze and come all the way here just to see Eclage and I really don't want to go through that maze ever again.";

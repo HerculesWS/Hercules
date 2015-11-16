@@ -1,17 +1,37 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Party Relay Quest
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Party Relay Quest.
-//===== Additional Comments: =================================
-//= 1.0 First version. [L0ne_W0lf]
-//= 1.1 Fixed a couple typos, npcs check area for PCs. [L0ne_W0lf]
-//= 1.2 Updated RE/Pre-RE EXP. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
 payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 	getpartymember(getcharid(1));
@@ -3075,7 +3095,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 	close;
 }
 
-// EXP Rewards
+//== EXP Rewards ===========================================
 function	script	F_PartyRelay_Exp	{
 	if (RENEWAL_EXP) { //unconfirmed
 		if (BaseLevel > 94) getexp 104760,0;
@@ -3097,31 +3117,31 @@ function	script	F_PartyRelay_Exp	{
 	return;
 }
 
-// Comodo Relay
+//== Comodo Relay ==========================================
 comodo,71,137,3	duplicate(RelayLedrion)	Ledrion#comodo	4_M_MANAGER
 comodo,236,197,3	duplicate(RelayGatan)	Gatan#comodo	4_M_04
 comodo,152,184,3	duplicate(RelayBafhail)	Bafhail#comodo	4_M_JOB_BLACKSMITH
 comodo,64,219,3	duplicate(RelayLospii)	Lospii#comodo	4_M_KID1
 
-// Einbroch Relay
+//== Einbroch Relay ========================================
 einbroch,107,93,3	duplicate(RelayLedrion)	Ledrion#einbroch	4_M_MANAGER
 einbroch,260,128,3	duplicate(RelayGatan)	Gatan#einbroch	4_M_04
 einbroch,251,178,3	duplicate(RelayBafhail)	Bafhail#einbroch	4_M_JOB_BLACKSMITH
 einbroch,173,72,3	duplicate(RelayLospii)	Lospii#einbroch	4_M_KID1
 
-// Relay Hugel
+//== Relay Hugel ===========================================
 hugel,102,130,3	duplicate(RelayLedrion)	Ledrion#hugel	4_M_MANAGER
 hugel,169,139,3	duplicate(RelayGatan)	Gatan#hugel	4_M_04
 hugel,55,200,3	duplicate(RelayBafhail)	Bafhail#hugel	4_M_JOB_BLACKSMITH
 hugel,144,201,3	duplicate(RelayLospii)	Lospii#hugel	4_M_KID1
 
-// Relay Rachel
+//== Relay Rachel ==========================================
 rachel,215,71,3	duplicate(RelayLedrion)	Ledrion#rachel	4_M_MANAGER
 rachel,45,163,3	duplicate(RelayGatan)	Gatan#rachel	4_M_04
 rachel,245,132,3	duplicate(RelayBafhail)	Bafhail#rachel	4_M_JOB_BLACKSMITH
 rachel,158,215,3	duplicate(RelayLospii)	Lospii#rachel	4_M_KID1
 
-// Relay Veins
+//== Relay Veins ===========================================
 veins,274,188,5	duplicate(RelayLedrion)	Ledrion#veins	4_M_MANAGER
 veins,138,207,3	duplicate(RelayGatan)	Gatan#veins	4_M_04
 veins,202,235,3	duplicate(RelayBafhail)	Bafhail#veins	4_M_JOB_BLACKSMITH
