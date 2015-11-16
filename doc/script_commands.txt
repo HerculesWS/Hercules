@@ -2777,6 +2777,7 @@ See 'getequipid' for a full list of valid equipment slots.
 Given the database ID number of an item, this function will return the 
 text stored in the 'japanese name' field (which, in Hercules, stores an 
 English name the players would normally see on screen).
+Return "null" if no such item exist.
 
 ---------------------------------------
 
@@ -3246,6 +3247,8 @@ specified map.
 Currently being used in the PVP scripts to check if a PVP room is full of 
 not, if the number returned it equal to the maximum allowed it will not 
 let you enter.
+
+Return -1 if the map name is invalid.
 
 ---------------------------------------
 

@@ -46,10 +46,10 @@
 // Returns a number with commas based on precision of digits and custom separator.
 // -- callfunc "F_InsertComma",<number>{,<precision>,<separator>}
 // Examples:
-//    callfunc("F_InsertComma",7777777{,<precision>,<separator>})  // returns "7,777,777"
-//    callfunc("F_InsertComma",1000000000,3,","})					// returns "1,000,000,000"
-//    callfunc("F_InsertComma",1000000000,3,"_"})					// returns "1_000_000_000"
-//    callfunc("F_InsertComma",1000000000,4)						// returns "10,0000,0000"
+//    callfunc("F_InsertComma",7777777)           // returns "7,777,777"
+//    callfunc("F_InsertComma",1000000000,3,",")  // returns "1,000,000,000"
+//    callfunc("F_InsertComma",1000000000,3,"_")  // returns "1_000_000_000"
+//    callfunc("F_InsertComma",1000000000,4)      // returns "10,0000,0000"
 //////////////////////////////////////////////////////////////////////////////////
 function	script	F_InsertComma	{
 	.@value = getarg(0);
