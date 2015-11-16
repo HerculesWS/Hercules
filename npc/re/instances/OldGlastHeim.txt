@@ -1,21 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Heris
+//= Copyright (C)  Ziu
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Old Glast Heim
-//===== By: ==================================================
-//= Ziu, Heris (translation)
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Discover the history of events that took place in the Glast Heim castle
+//= and how it ended up in ruins.
+//================= Current Version =======================================
 //= 1.1
-//===== Description: =========================================
-//= Discover the history of events that took place in the
-//= Glast Heim castle and how it ended up in ruins.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//=     This is a custom version, and may contain bugs.
-//= 1.1 Bug fixes; removed redundant OnInstanceInit scripts.
-//============================================================
+//=========================================================================
 
 1@gl_k	mapflag	src4instance
 2@gl_k	mapflag	src4instance
-//============================================================
+
 glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 	mes "^ff0000This isn't considered a normal progression dungeon. Please note this point.^000000";
 	next;
@@ -90,8 +112,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 	}
 }
 
-// Floor 1
-//============================================================
+//== Floor 1 ===============================================
 1@gl_k,149,41,6	script	Varmunt#ghinstance1	4_M_BARMUND,{
 	if (getcharid(0) == getpartyleader(getcharid(1),2)) {
 		mes "Hey ^0000ffguys^000000, were you sent here to help me?";
@@ -433,8 +454,7 @@ OnTalk8:
 	end;
 }
 
-// Control Timer
-//============================================================
+//== Control Timer =========================================
 1@gl_k,0,0,0	script	#talkinstance1	-1,{
 OnInstanceInit:
 OnDisable:
@@ -796,8 +816,7 @@ OnTouch:
 2@gl_k,150,163,0	duplicate(#ghinstancewarp1)	#ghinstancewarp12	WARPNPC,1,2
 
 
-// Sector 1 Mobs
-//============================================================
+//== Sector 1 Mobs =========================================
 1@gl_k,0,0,0	script	#ghmemorialmob01	-1,{
 OnInstanceInit:
 OnDisable:
@@ -878,8 +897,7 @@ OnEnable:
 	end;
 }
 
-// Sector 2 Mobs
-//============================================================
+//== Sector 2 Mobs =========================================
 1@gl_k,291,145,3	script	Hollgrehenn Destroyer	4_F_JOB_BLACKSMITH,{
 	if (getcharid(0) == getpartyleader(getcharid(1),2)) {
 		mes "[Hollgrehenn Destroyer]";
@@ -960,8 +978,7 @@ OnMyMobDead:
 	end;
 }
 
-// Tramp Mobs
-//============================================================
+//== Tramp Mobs ============================================
 1@gl_k,221,82,3	script	Breathless Man#GHtramp1	4_M_DIEMAN,4,4,{
 	end;
 OnTouch:
@@ -1018,8 +1035,7 @@ OnDisable:
 2@gl_k,143,260,3	duplicate(Breathless Man#GHtramp1)	Breathless Man#GHtramp31	4_M_DIEMAN,4,4
 2@gl_k,173,258,3	duplicate(Breathless Man#GHtramp1)	Breathless Man#GHtramp32	4_M_DIEMAN,4,4
 
-// Sector 3 Mobs
-//============================================================
+//== Sector 3 Mobs =========================================
 1@gl_k,0,0,0	script	#ghmemorialmob03	-1,{
 OnInstanceInit:
 OnDisable:
@@ -1057,8 +1073,7 @@ OnMyMobDead:
 	end;
 }
 
-// 1st MVP
-//============================================================
+//== 1st MVP ===============================================
 1@gl_k,0,0,0	script	#ghmemorialmob04	-1,{
 OnInstanceInit:
 OnDisable:
@@ -1251,8 +1266,7 @@ OnTalk2:
 	end;
 }
 
-// Floor 2
-//============================================================
+//== Floor 2 ===============================================
 2@gl_k,148,67,1	script	Heinrich#ghinstance5	4_M_HEINRICH,{
 	mes "[Heinrich]";
 	mes "Himmelmez's blocking spells";

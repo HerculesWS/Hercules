@@ -1,23 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Hazy Forest
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Cross through the Hazy Forest to reach the Bifrost.
 //= Contains the "Wandering Guardian" quest.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//= 1.1 Instance system rewrite. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 1@mist	mapflag	src4instance
-//============================================================
 
-// Instance Creation
-//============================================================
+//== Instance Creation =====================================
 bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 
 	.@party_id = getcharid(1);
@@ -165,8 +183,7 @@ bif_fild01,161,355,0	script	Log Tunnel	CLEAR_NPC,{
 	}
 }
 
-// Instance Scripts
-//============================================================
+//== Instance Scripts ======================================
 1@mist,89,29,0	script	#Whisper_mist	CLEAR_NPC,1,1,{
 	end;
 OnInstanceInit:
@@ -497,8 +514,7 @@ OnMyMobDead:
 1@mist,252,206,0	duplicate(Mysterious Flower#1)	Mysterious Flower#49	CLEAR_NPC
 1@mist,244,211,0	duplicate(Mysterious Flower#1)	Mysterious Flower#50	CLEAR_NPC
 
-// Wandering Guardian Quest
-//============================================================
+//== Wandering Guardian Quest ==============================
 1@mist,2,2,0	script	#Dragon Herder	CLEAR_NPC,{
 	end;
 OnInstanceInit:
@@ -919,8 +935,7 @@ mora,48,152,3	script	Sharp Eyed Man	4_M_ROKI2,{
 	}
 }
 
-// Monster Spawns
-//============================================================
+//== Monster Spawns ========================================
 1@mist,1,1,0	script	#Mist Mobs Respawn1	CLEAR_NPC,{
 	end;
 OnInstanceInit:
@@ -994,8 +1009,7 @@ OnInstanceInit:
 	end;
 }
 
-// Warp Portals
-//============================================================
+//== Warp Portals ==========================================
 bif_fild01,38,374,0	script	Mysterious Flower#ep14_1	CLEAR_NPC,{
 	mes "It's a giant flower with mysterious energy.";
 	if (countitem(12561)) {
@@ -1123,7 +1137,7 @@ OnTouch:
 1@mist,329,171,0	warp	c11-1_c8-2	1,1,1@mist,346,120
 1@mist,301,237,0	warp	b8_b2	1,1,1@mist,289,170
 
-// Disable Garden Tree warps.
+//- Disable Garden Tree warps -
 // Custom, but saves processing and lines.
 1@mist,1,1,0	script	#mist_warp_init	CLEAR_NPC,{
 	end;
