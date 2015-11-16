@@ -40,6 +40,7 @@
 //= 2.17 Renamed 'F_RandMes' to 'F_Rand'. [Euphy]
 //= 2.18 Removed useless 'getJobName' function. [Euphy]
 //= 2.19 Improved 'F_InsertComma' function. [Emistry]
+//= 2.20 Add 'F_ShuffleNumbers' function. [AnnieRuru]
 //============================================================
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -360,4 +361,33 @@ function	script	Time2Str	{
 		.@Time$ += .@time_left + " second";
 
 	return .@Time$;
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// *** Function "F_ShuffleNumbers":
+// Generate a set of numbers in random order that the numbers are not repeated
+// --- callfunc "F_ShuffleNumbers",<start num>,<last num>,<output array>{,<count>};
+// Examples: 
+//    callfunc("F_ShuffleNumbers", 0, 5, .@output)      // possible output 4,1,3,2,0,5
+//    callfunc("F_ShuffleNumbers", -5, 1, .@output)     // possible output -3,-5,-4,-2,-1,1,0
+//    callfunc("F_ShuffleNumbers", 0, 100, .@output, 5) // possible output 9,55,27,84,33
+// Reminder: Use *freeloop command when appropriate !
+//////////////////////////////////////////////////////////////////////////////////
+function	script	F_ShuffleNumbers	{
+	deletearray getarg(2);
+	.@static = getarg(0);
+	.@range = getarg(1) +1 - .@static;
+	.@count = getarg(3, .@range);
+	if (.@range <= 0 || .@count <= 0)
+		return 0;
+	if (.@count > .@range)
+		.@count = .@range;
+	for (.@i = 0; .@i < .@range; ++.@i)
+		.@temparray[.@i] = .@i;
+	for (.@i = 0; .@i < .@count; ++.@i) {
+		.@rand = rand(.@range);
+		set getelementofarray( getarg(2), .@i ), .@temparray[.@rand] + .@static;
+		.@temparray[.@rand] = .@temparray[--.@range];
+	}
+	return .@count;
 }
