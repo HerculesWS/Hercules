@@ -1,21 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Lemongrass
+//= Copyright (C)  Joseph
+//= Copyright (C)  Euphy
+//= Copyright (C)  Muad_Dib
+//= Copyright (C)  Gennosuke Kouga
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Dewata Town
-//===== By: ==================================================
-//= Gennosuke Kouga, Muad_Dib
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Dewata Town Script
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Standardized. [Euphy]
-//= 1.2 Fixed Zeny check. [Joseph]
-//= 1.3 Updated to match the official script. [Lemongrass/Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
-// Dewata Transportation
-//============================================================
+//== Dewata Transportation =================================
 alberta,212,202,4	script	Dewata Sailor#alberta	4_M_DEWMAN,{
 	mes "[Dewata Sailor]";
 	mes "Do you want to visit ^8B4513Dewata Island^000000?";
@@ -67,8 +88,7 @@ dewata,229,49,6	script	Alberta Sailor#dewata	4_M_DEWMAN,{
 	}
 }
 
-// Generic Dewata NPCs
-//============================================================
+//== Generic Dewata NPCs ===================================
 dewata,221,237,5	script	Young Man#dew-1	4_M_DEWMAN,{
 	mes "[Fruit Fancier]";
 	mes "What's wrong with your faaaaaace? You must really be clueless!";

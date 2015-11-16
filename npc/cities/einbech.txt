@@ -1,28 +1,42 @@
-//===== Hercules Script ======================================
-//= Einbech Town
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//===== Additional Comments: =================================
-//= 0.1  Started writing Einbech npc's. [Muad_Dib]
-//= 0.1a Conversion to eA format [MasterOfMuppets]
-//= 0.1b Added missing tabs. [Mass Zero] 0.1c more missing tabs [Lupus]
-//= 0.2 Added reddozen's NPCs, fixedmissing '";' [Lupus]
-//= 0.2a Removed a few npcs never intended to be there [MasterOfMuppets]
-//= 0.3 Added some more npcs, thanks to Muad_Dib [MasterOfMuppets]
-//= 1.0 Added the last of the town npcs, [MasterOfMuppets]
-//=     all credits to muad_dib for scripting them.
-//= 1.1 Made some changes according to the Shinokas quest, [MasterOfMuppets]
-//=     thanks to Dj-Yhn for scripting them.
-//= 1.2 Removed Duplicates [Silent]
-//= 1.3 Implemented the Lover's quest. [MasterOfMuppets]
-//= 1.4 Moved quests to quests/quests_ein.txt [Evera]
-//= 1.5 Optimized some of the NPCs and fixed some typos [DZeroX]
-//= 1.6 Replaced occurances of PcName. [L0ne_W0lf]
-//============================================================
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  DZeroX
+//= Copyright (C)  Evera
+//= Copyright (C)  Silent
+//= Copyright (C)  Lupus
+//= Copyright (C)  MasterOfMuppets
+//= Copyright (C)  Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Einbech Town
+//================= Description ===========================================
+//= Einbech Town NPCs
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 einbech,172,113,4	script	Nemuk#ein	4_M_EINMAN,{
 	mes "[Nemuk]";

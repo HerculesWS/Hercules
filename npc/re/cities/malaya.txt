@@ -1,21 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  DeadlySilence
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Port Malaya
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Port Malaya Town Script
-//===== Additional Comments: =================================
-//= 0.1 Alberta sailors only. [Euphy]
-//= 0.2 Adapted from Masao's conversion.
-//= 1.0 Added remaining NPCs.
-//= 1.1 Added Jeepney script. [DeadlySilence]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
-// Port Malaya Transportation
-//============================================================
+//== Port Malaya Transportation ============================
 // Old coordinates: alberta (237,71)
 alberta,196,202,3	script	Optamara Crew#alberta	4W_SAILOR,{
 	mes "[Optamara Crew]";
@@ -88,8 +106,7 @@ malaya,276,55,4	script	Optamara Crew#malaya	4W_SAILOR,{
 	}
 }
 
-// Generic Port Malaya NPCs
-//============================================================
+//== Generic Port Malaya NPCs ==============================
 ma_in01,30,94,4	script	Inn Keeper#ma	4_F_MALAYA,{
 	if (malaya_hi < 10) {
 		mes "[Inn Keeper]";
@@ -683,8 +700,7 @@ malaya,63,185,4	script	Woman#ma08	4_F_MALAYA,{
 	close;
 }
 
-// Jeepneys
-//============================================================
+//== Jeepneys ==============================================
 function	script	F_Malaya_Jeepney	{
 	.@mapname$        = getarg(0);
 	.@passengers      = getarg(1);

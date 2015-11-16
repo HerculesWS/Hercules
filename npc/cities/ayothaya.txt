@@ -1,21 +1,44 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Lupus
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Evera
+//= Copyright (C)  Silent
+//= Copyright (C)  MasterOfMuppets
+//= Copyright (C)  ZoDIaC
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Ayotaya Town
-//===== By: ==================================================
-//= MasterOfMuppets
-//===== Current Version: =====================================
-//= 1.9
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Ayotaya Town Script
-//===== Additional Comments: =================================
-//= 1.6 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.7 Fixed character's anme bugs [Lupus]
-//= 1.8 Moved Alberta NPC to pre-re/re paths. [Euphy]
-//= 1.9 Updated Renewal warp coordinates.
-//============================================================
+//================= Current Version =======================================
+//= 1.9
+//=========================================================================
 
-// Ayothaya Transportation
-//============================================================
+//== Ayothaya Transportation ===============================
 -	script	::Aibakthing_ayothaya	-1,{
 	mes "[Aibakthing]";
 	mes "Hoo! Hah! Hoo! Hah!";
@@ -103,8 +126,7 @@ ayothaya,152,68,1	script	Aibakthing#ayo2	4_M_THAIONGBAK,{
 	close;
 }
 
-// Generic Ayothaya NPCs
-//============================================================
+//== Generic Ayothaya NPCs =================================
 ayothaya,189,120,3	script	Young Man#Thang	4_M_THAIONGBAK,{
 	mes "[Thang]";
 	mes "There's an ancient,";
@@ -295,23 +317,3 @@ ayothaya,241,264,5	script	Young Man#5ayothaya2	4_M_THAIONGBAK,{
 	emotion e_pif;
 	close;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 0.1 Added a Sailor NPC to get back to Alberta [ZoDIaC]
-//= 0.2 fixed coords, dialogues
-//= 0.3 Fixed Warp name, ayotaya doesn't exist, even though iRO
-//=     decided to call it Ayotaya, it really is Ayothaya, like
-//=     that Yuno/Juno thing
-//= 0.4 Added the official warp npc for Ayothaya. [MasterOfMuppets]
-//= 1.0 Added most of the official npcs. The following quests were added: [MasterOfMuppets]
-//=     Tom Yum Goong quest, Holy Threads quest and Holier threads quest.
-//= 1.0a some checks, optimization [Lupus]
-//= 1.1 Missing delitem fixed by Poki#3 [Lupus]
-//= 1.1a Fixed a typo and clarified a comment at the bottom of the script [MasterOfMuppets]
-//= 1.2 Fixed exploits [Lupus]
-//= 1.3 Removed Duplicates [Silent]
-//= 1.4 Moved quests to quests/quests_ayothaya.txt [Evera]
-//= 1.5 Moved a few NPC's to quests/quests_ayothaya.txt [MasterOfMuppets]
-//============================================================

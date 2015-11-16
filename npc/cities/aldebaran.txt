@@ -1,36 +1,45 @@
-//===== Hercules Script ======================================
-//= Al De Baran Town
-//===== By: ==================================================
-//= rAthena Dev Team; L0ne_W0lf
-//===== Current Version: =====================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  rAthena Dev Team
+//= Copyright (C)  eAthena Dev Team
+//= Copyright (C)  DZeroX
+//= Copyright (C)  Evera
+//= Copyright (C)  Silent
+//= Copyright (C)  massdriller
+//= Copyright (C)  Lupus
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Aldebaran Town
+//================= Description ===========================================
+//= Aldebaran Town NPCs
+//================= Current Version =======================================
 //= 2.3
-//===== Description: =========================================
-//= [Official Conversion]
-//= Al De Baran Town NPCs
-//===== Additional Comments: =================================
-//= 1.1 Added RS125 NPC.  Added another Kafra Reserve points agent.
-//=     The 2nd reserve points agent is not complete yet.
-//= 1.2 Lottery input number fix [Lupus], 1.2a - label typo fixed
-//= 1.3 Gatekeeper's bug fixed (wrong check and wrong item ID
-//=     for underground), fixed some typos [Lupus]
-//= 1.4 Fixed Typos & Spellcheck [massdriller]
-//= 1.5 Finally added the Special Reserve 2 Lotto 8))
-//=  with official prizes (80% official, 4-5 entries are made up)
-//=  also changed typo Orange Potions -> Red Potions [Lupus]
-//= 1.6 Fixed bug (missing label), optimized all menus [Lupus]
-//= 1.7 Fixed exploits [Lupus] 1.8 Removed Duplicates [Silent]
-//= 1.9 Fixed a bunch of typos with information from Crono/Hollengrhen [Evera]
-//= 1.9a Now Pavianne doesn't sell Kafra Passes. She refunds them [Lupus]
-//= 2.0 Re-made all the dialog-only NPCs with official dialogs.
-//=     Kafra and Clock Tower NPCs pending remake. [DZeroX]
-//= 2.01 removed all .GATs [Lupus]
-//= 2.1 Rescripted most NPCs to Aegis 10.3 standards. [L0ne_W0lf]
-//= 2.2 Corrected NPC names to fall within proper resctrictions. [L0ne_W0lf]
-//= 2.3 Fixed exploit with kafra pass
-//============================================================
+//=========================================================================
 
-// Al De Baran
-//============================================================
+//== Aldebaran =============================================
 aldebaran,113,70,4	script	Forger Munster#alde	1_M_02,{
 	mes "[Munster]";
 	mes "My family used to live in Geffen. So I guess it was natural that we studied forging and eventually became Blacksmiths. Then, we finally moved to this town,";
@@ -535,8 +544,7 @@ aldebaran,143,136,4	script	Bell Keeper#A	4_M_ORIENT02,{
 	close;
 }
 
-// Inside Al De Baran
-//============================================================
+//== Inside Aldebaran ======================================
 aldeba_in,232,241,4	script	RS125#alde	1_M_02,{
 	mes "[RS125]";
 	mes "I may sound unhuman rather robotic";
@@ -1045,9 +1053,8 @@ aldeba_in,91,244,4	script	Kafra Service#4alde	4_F_KAFRA6,{
 	end;
 }
 
-// Kafra Special Reserve Point NPCs
-//============================================================
-// Special Reserve ----------------------------------------------
+//== Kafra Special Reserve Point NPCs ======================
+//- Special Reserve -
 aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	mes "[Kafra]";
@@ -1131,7 +1138,7 @@ aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 	close;
 }
 
-// Special Reserve 2 ----------------------------------------------
+//- Special Reserve 2 -
 aldeba_in,88,161,3	script	Kafra#05	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	mes "[Kafra]";
@@ -1182,7 +1189,7 @@ aldeba_in,88,161,3	script	Kafra#05	4_F_KAFRA3,{
 	close;
 }
 
-// Function F_Lottery ------------------------------------------------------------------------------------------
+//- Function F_Lottery -
 function	script	F_Lottery	{
 	mes "[Kafra]";
 	mes "You have the unique opportunity to win a prize sent down from the heavens themselves!!";
@@ -1273,8 +1280,7 @@ sF_Spin:
 	goto sF_Spin;
 }
 
-// Inside Clock Tower
-//============================================================
+//== Inside Clock Tower ====================================
 c_tower3,10,249,4	script	Gatekeeper#ct	4_M_02,{
 	//Key_Of_Clock_Tower
 	callfunc "F_ClockTowerGate","4th",7026,"c_tower4",185,44;
