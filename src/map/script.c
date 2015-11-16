@@ -16391,6 +16391,7 @@ BUILDIN(getunittype) {
 		case BL_HOM:  value = 4; break;
 		case BL_MER:  value = 5; break;
 		case BL_ELEM: value = 6; break;
+		default:      value = -1; break;
 	}
 
 	script_pushint(st, value);
