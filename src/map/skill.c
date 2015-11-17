@@ -14316,17 +14316,15 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 
 	req.sp = cap_value(req.sp * sp_skill_rate_bonus / 100, 0, SHRT_MAX);
 
-	if (sc) {
-		if (sc->data[SC__LAZINESS])
+	if( sc ) {
+		if( sc->data[SC__LAZINESS] )
 			req.sp += req.sp + sc->data[SC__LAZINESS]->val1 * 10;
-		if (sc->data[SC_UNLIMITED_HUMMING_VOICE])
+		if( sc->data[SC_UNLIMITED_HUMMING_VOICE] )
 			req.sp += req.sp * sc->data[SC_UNLIMITED_HUMMING_VOICE]->val3 / 100;
-		if (sc->data[SC_RECOGNIZEDSPELL])
+		if( sc->data[SC_RECOGNIZEDSPELL] )
 			req.sp += req.sp / 4;
-		if (sc->data[SC_TELEKINESIS_INTENSE] && skill->get_ele(skill_id, skill_lv) == ELE_GHOST)
+		if( sc->data[SC_TELEKINESIS_INTENSE] && skill->get_ele(skill_id, skill_lv) == ELE_GHOST)
 			req.sp -= req.sp * sc->data[SC_TELEKINESIS_INTENSE]->val2 / 100;
-		if (sc->data[SC_TARGET_ASPD])
-			req.sp -= req.sp * sc->data[SC_TARGET_ASPD]->val1 / 100;
 	}
 
 	req.zeny = skill->dbs->db[idx].zeny[skill_lv-1];
@@ -14742,31 +14740,29 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 				}
 		}
 		// Fixed cast reduction bonuses
-		if (sc->data[SC__LAZINESS])
+		if( sc->data[SC__LAZINESS] )
 			fixcast_r = max(fixcast_r, sc->data[SC__LAZINESS]->val2);
-		if (sc->data[SC_DANCE_WITH_WUG])
+		if( sc->data[SC_DANCE_WITH_WUG])
 			fixcast_r = max(fixcast_r, sc->data[SC_DANCE_WITH_WUG]->val4);
-		if (sc->data[SC_SECRAMENT])
+		if( sc->data[SC_SECRAMENT] )
 			fixcast_r = max(fixcast_r, sc->data[SC_SECRAMENT]->val2);
 		if (sd && skill_id >= WL_WHITEIMPRISON && skill_id < WL_FREEZE_SP) {
 			int radius_lv = pc->checkskill(sd, WL_RADIUS);
 			if (radius_lv)
 				fixcast_r = max(fixcast_r, (status_get_int(bl) + status->get_lv(bl)) / 15 + radius_lv * 5); // [{(Caster?s INT / 15) + (Caster?s Base Level / 15) + (Radius Skill Level x 5)}] %
 		}
-		if (sc->data[SC_MYSTICSCROLL])
-			VARCAST_REDUCTION(sc->data[SC_MYSTICSCROLL]->val1);
 		// Fixed cast non percentage bonuses
-		if (sc->data[SC_MANDRAGORA])
+		if( sc->data[SC_MANDRAGORA] )
 			fixed += sc->data[SC_MANDRAGORA]->val1 * 500;
-		if (sc->data[SC_IZAYOI])
+		if( sc->data[SC_IZAYOI] )
 			fixed = 0;
-		if (sc->data[SC_GUST_OPTION] || sc->data[SC_BLAST_OPTION] || sc->data[SC_WILD_STORM_OPTION])
+		if( sc->data[SC_GUST_OPTION] || sc->data[SC_BLAST_OPTION] || sc->data[SC_WILD_STORM_OPTION] )
 			fixed -= 1000;
 	}
 
-	if (sd && !(skill->get_castnodex(skill_id, skill_lv)&4)) {
+	if( sd && !(skill->get_castnodex(skill_id, skill_lv)&4) ){
 		VARCAST_REDUCTION( max(sd->bonus.varcastrate, 0) + max(i, 0) );
-		fixcast_r = max(fixcast_r, sd->bonus.fixcastrate) + min(sd->bonus.fixcastrate, 0);
+		fixcast_r = max(fixcast_r, sd->bonus.fixcastrate) + min(sd->bonus.fixcastrate,0);
 		for( i = 0; i < ARRAYLENGTH(sd->skillcast) && sd->skillcast[i].id; i++ )
 			if( sd->skillcast[i].id == skill_id ){ // bonus2 bVariableCastrate
 				if( (i=sd->skillcast[i].val) > 0)
@@ -14775,12 +14771,12 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 			}
 	}
 
-	if (varcast_r < 0 ) // now compute overall factors
+	if( varcast_r < 0 ) // now compute overall factors
 		time = time * (1 - (float)varcast_r / 100);
-	if (!(skill->get_castnodex(skill_id, skill_lv)&1)) // reduction from status point
-		time = (1 - sqrt( ((float)(status_get_dex(bl) * 2 + status_get_int(bl)) / battle_config.vcast_stat_scale) )) * time;
+	if( !(skill->get_castnodex(skill_id, skill_lv)&1) )// reduction from status point
+		time = (1 - sqrt( ((float)(status_get_dex(bl)*2 + status_get_int(bl)) / battle_config.vcast_stat_scale) )) * time;
 	// underflow checking/capping
-	time = max(time, 0) + (1 - (float)min(fixcast_r, 100) / 100) * max(fixed, 0);
+	time = max(time, 0) + (1 - (float)min(fixcast_r, 100) / 100) * max(fixed,0);
 #endif
 	return (int)time;
 }
