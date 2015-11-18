@@ -109,6 +109,7 @@ struct npc_data {
 #define START_NPC_NUM 110000000
 
 enum actor_classes {
+	FAKE_NPC = -1,
 	WARP_CLASS = 45,
 	HIDDEN_WARP_CLASS = 139,
 	MOB_TOMB = 565,
