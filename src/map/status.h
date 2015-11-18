@@ -77,7 +77,7 @@ enum scstart_flag {
 	SCFLAG_LOADED    = 0x04, ///< sc_data was loaded, no value has to be altered.
 	SCFLAG_FIXEDRATE = 0x08, ///< rate should not be reduced (not evaluated in status_change_start, but in some calls to other functions).
 	SCFLAG_NOICON    = 0x10, ///< Status icon (SI) should not be sent.
-	SCFLAG_ALL = SCFLAG_NONE|SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_LOADED|SCFLAG_FIXEDRATE|SCFLAG_NOICON
+	SCFLAG_ALL       = SCFLAG_NONE | SCFLAG_NOAVOID | SCFLAG_FIXEDTICK | SCFLAG_LOADED | SCFLAG_FIXEDRATE | SCFLAG_NOICON
 };
 
 // Status changes listing. These code are for use by the server.
@@ -743,10 +743,12 @@ typedef enum sc_type {
 	SC_MTF_PUMPKIN,
 	SC_MTF_HITFLEE,
 	
-	SC_LJOSALFAR,
-	SC_MERMAID_LONGING,
+	SC_HAT_EFFECT, // We must know more what is the behavior of this SC. [Frost]
+	SC_LJOSALFAR, // [Frost]
+	SC_MERMAID_LONGING, // [Frost]
+	SC_TIME_ACCESSORY, // [Frost]
 
-	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
+	SC_MAX, // Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
 
 /// Official status change ids, used to display status icons in the client.
@@ -1350,7 +1352,7 @@ enum si_type {
 	SI_ODINS_POWER                           = 583,
 	SI_STYLE_CHANGE                          = 584,
 	SI_SONIC_CLAW_POSTDELAY                  = 585,
-	// ID's 586 - 595 Currently Unused
+	/** ID's 586 - 595 Currently Unused **/
 	SI_SILVERVEIN_RUSH_POSTDELAY             = 596,
 	SI_MIDNIGHT_FRENZY_POSTDELAY             = 597,
 	SI_GOLDENE_FERSE                         = 598,
@@ -1581,6 +1583,7 @@ enum si_type {
 	//SI_MTF_RANGEATK2                         = 818,
 	//SI_MTF_ASPD2                             = 819,
 	//SI_MTF_MATK2                             = 820,
+	/** ID's 821 - 824 Currently Unused **/
 	//SI_QSCARABA                              = 825,
 	SI_LJOSALFAR                             = 826,
 	//SI_PAD_READER_KNIGHT                     = 827,
@@ -1601,13 +1604,16 @@ enum si_type {
 	//SI_PAD_READER_GUNSLINGER                 = 842,
 	//SI_PAD_READER_SUPERNOVICE                = 843,
 	//SI_ESSENCE_OF_TIME                       = 844,
+	/** ID's 845 - 859 Currently Unused **/
 	//SI_MTF_MARIONETTE                        = 860,
 	//SI_MTF_LUDE                              = 861,
 	//SI_MTF_CRUISER                           = 862,
 	SI_MERMAID_LONGING                       = 863,
+	/** ID 864 Currently Unused **/
 	//SI_DRACULA_CARD                          = 865,
 	//SI_LIMIT_POWER_BOOSTER                   = 867,
-	//SI_TIME_ACCESSORY                        = 872,
+	/** ID's 868 - 871 Currently Unused **/
+	SI_TIME_ACCESSORY                        = 872,
 	//SI_EP16_DEF                              = 873,
 	//SI_NORMAL_ATKED_SP                       = 874,
 	//SI_BODYSTATE_STONECURSE                  = 875,
@@ -1630,6 +1636,8 @@ enum si_type {
 	//SI_CHERRY_BLOSSOM_CAKE                   = 892,
 	//SI_SU_STOOP                              = 893,
 	//SI_CATNIPPOWDER                          = 894,
+	/** ID 895 Currently Unused **/
+	//SI_SV_ROOTTWIST                          = 896,
 	//SI_ATTACK_PROPERTY_NOTHING               = 897,
 	//SI_ATTACK_PROPERTY_WATER                 = 898,
 	//SI_ATTACK_PROPERTY_GROUND                = 899,
@@ -1651,6 +1659,11 @@ enum si_type {
 	//SI_RESIST_PROPERTY_DARKNESS              = 914,
 	//SI_RESIST_PROPERTY_TELEKINESIS           = 915,
 	//SI_RESIST_PROPERTY_UNDEAD                = 916,
+	//SI_BITESCAR                              = 917,
+	//SI_ARCLOUSEDASH                          = 918,
+	//SI_TUNAPARTY                             = 919,
+	//SI_SHRIMP                                = 920,
+	//SI_FRESHSHRIMP                           = 921,
 	//SI_PERIOD_RECEIVEITEM                    = 922,
 	//SI_PERIOD_PLUSEXP                        = 923,
 	//SI_PERIOD_PLUSJOBEXP                     = 924,
@@ -1662,16 +1675,11 @@ enum si_type {
 	//SI_HELM_ISIA                             = 930,
 	//SI_HELM_ASIR                             = 931,
 	//SI_HELM_URJ                              = 932,
-	//SI_SV_ROOTTWIST                          = 896,
-	//SI_BITESCAR                              = 917,
-	//SI_ARCLOUSEDASH                          = 918,
-	//SI_TUNAPARTY                             = 919,
-	//SI_SHRIMP                                = 920,
-	//SI_FRESHSHRIMP                           = 921,
 	//SI_SUHIDE                                = 933,
-	//SI_SPRITEMABLE                           = 937,
+	/** ID 934 Currently Unused **/
 	//SI_DORAM_BUF_01                          = 935,
-	//SI_DORAM_BUF_02                          = 936,	
+	//SI_DORAM_BUF_02                          = 936,
+	//SI_SPRITEMABLE                           = 937,	
 
 	SI_MAX,
 };
@@ -1719,7 +1727,7 @@ enum {
 	OPT1_STUN,
 	OPT1_SLEEP,
 	//Aegis uses OPT1 = 5 to identify undead enemies (which also grants them immunity to the other opt1 changes)
-	OPT1_STONEWAIT=6, //Petrifying
+	OPT1_STONEWAIT = 6, //Petrifying
 	OPT1_BURNING,
 	OPT1_IMPRISON,
 	OPT1_CRYSTALIZE,
@@ -1826,11 +1834,11 @@ enum e_status_calc_opt {
 };
 
 //Define to determine who gets HP/SP consumed on doing skills/etc. [Skotlex]
-#define BL_CONSUME (BL_PC|BL_HOM|BL_MER|BL_ELEM)
+#define BL_CONSUME (BL_PC | BL_HOM | BL_MER | BL_ELEM)
 //Define to determine who has regen
-#define BL_REGEN (BL_PC|BL_HOM|BL_MER|BL_ELEM)
+#define BL_REGEN (BL_PC | BL_HOM | BL_MER | BL_ELEM)
 //Define to determine who will receive a clif_status_change packet for effects that require one to display correctly
-#define BL_SCEFFECT (BL_PC|BL_HOM|BL_MER|BL_MOB|BL_ELEM)
+#define BL_SCEFFECT (BL_PC | BL_HOM | BL_MER | BL_MOB | BL_ELEM)
 
 //Basic damage info of a weapon
 //Required because players have two of these, one in status_data
@@ -1882,16 +1890,16 @@ struct status_data {
 //Additional regen data that only players have.
 struct regen_data_sub {
 	unsigned short
-		hp,sp;
+		hp, sp;
 
 	//tick accumulation before healing.
 	struct {
-		unsigned int hp,sp;
+		unsigned int hp, sp;
 	} tick;
 
 	//Regen rates (where every 1 means +100% regen)
 	struct {
-		unsigned char hp,sp;
+		unsigned char hp, sp;
 	} rate;
 };
 
@@ -1899,24 +1907,24 @@ struct regen_data {
 
 	unsigned short flag; //Marks what stuff you may heal or not.
 	unsigned short
-		hp,sp,shp,ssp;
+		hp, sp, shp, ssp;
 
 	//tick accumulation before healing.
 	struct {
-		unsigned int hp,sp,shp,ssp;
+		unsigned int hp, sp, shp, ssp;
 	} tick;
 
 	//Regen rates (where every 1 means +100% regen)
 	struct {
 		unsigned char
-		hp,sp,shp,ssp;
+		hp, sp, shp, ssp;
 	} rate;
 
 	struct {
-		unsigned walk:1;        //Can you regen even when walking?
-		unsigned gc:1;          //Tags when you should have double regen due to GVG castle
-		unsigned overweight :2; //overweight state (1: 50%, 2: 90%)
-		unsigned block :2;      //Block regen flag (1: Hp, 2: Sp)
+		unsigned walk : 1;         //Can you regen even when walking?
+		unsigned gc : 1;           //Tags when you should have double regen due to GVG castle
+		unsigned overweight : 2;   //overweight state (1: 50%, 2: 90%)
+		unsigned block : 2;        //Block regen flag (1: Hp, 2: Sp)
 	} state;
 
 	//skill-regen, sitting-skill-regen (since not all chars with regen need it)
@@ -1925,12 +1933,12 @@ struct regen_data {
 
 struct sc_display_entry {
 	enum sc_type type;
-	int val1,val2,val3;
+	int val1, val2, val3;
 };
 
 struct status_change_entry {
 	int timer;
-	int val1,val2,val3,val4;
+	int val1, val2, val3, val4;
 	bool infinite_duration;
 };
 
@@ -1962,7 +1970,7 @@ struct status_change {
 #define status_zap(bl, hp, sp) (status->damage(NULL, (bl), (hp), (sp), 0, 1))
 //Easier handling of status->percent_change
 #define status_percent_heal(bl, hp_rate, sp_rate) (status->percent_change(NULL, (bl), -(hp_rate), -(sp_rate), 0))
-#define status_percent_damage(src, target, hp_rate, sp_rate, kill) (status->percent_change((src), (target), (hp_rate), (sp_rate), (kill)?1:2))
+#define status_percent_damage(src, target, hp_rate, sp_rate, kill) (status->percent_change((src), (target), (hp_rate), (sp_rate), (kill) ? 1 : 2))
 //Instant kill with no drops/exp/etc
 #define status_kill(bl) status_percent_damage(NULL, (bl), 100, 0, true)
 
@@ -2011,11 +2019,11 @@ struct status_change {
 #define status_get_homluk(bl)                   (st->luk + ((TBL_HOM*)bl)->homunculus.luk_value)
 
 //Short version, receives rate in 1->100 range, and does not uses a flag setting.
-#define sc_start(src, bl, type, rate, val1, tick)                    (status->change_start((src),(bl),(type),100*(rate),(val1),0,0,0,(tick),SCFLAG_NONE))
-#define sc_start2(src, bl, type, rate, val1, val2, tick)             (status->change_start((src),(bl),(type),100*(rate),(val1),(val2),0,0,(tick),SCFLAG_NONE))
-#define sc_start4(src, bl, type, rate, val1, val2, val3, val4, tick) (status->change_start((src),(bl),(type),100*(rate),(val1),(val2),(val3),(val4),(tick),SCFLAG_NONE))
+#define sc_start(src, bl, type, rate, val1, tick)                    (status->change_start((src), (bl), (type), 100 * (rate), (val1), 0, 0, 0, (tick), SCFLAG_NONE))
+#define sc_start2(src, bl, type, rate, val1, val2, tick)             (status->change_start((src), (bl), (type), 100 * (rate), (val1), (val2), 0, 0, (tick), SCFLAG_NONE))
+#define sc_start4(src, bl, type, rate, val1, val2, val3, val4, tick) (status->change_start((src), (bl), (type), 100 * (rate), (val1), (val2), (val3), (val4), (tick), SCFLAG_NONE))
 
-#define status_change_end(bl,type,tid) (status->change_end_((bl),(type),(tid),__FILE__,__LINE__))
+#define status_change_end(bl,type,tid) (status->change_end_((bl), (type), (tid), __FILE__, __LINE__))
 
 #define status_calc_bl(bl, flag)        (status->calc_bl_((bl), (enum scb_flag)(flag), SCO_NONE))
 #define status_calc_mob(md, opt)        (status->calc_bl_(&(md)->bl, SCB_ALL, (opt)))
@@ -2038,7 +2046,7 @@ BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when sta
 	int max_weight_base[CLASS_COUNT];
 	int HP_table[CLASS_COUNT][MAX_LEVEL + 1];
 	int SP_table[CLASS_COUNT][MAX_LEVEL + 1];
-	int aspd_base[CLASS_COUNT][MAX_WEAPON_TYPE+1]; // +1 for RENEWAL_ASPD
+	int aspd_base[CLASS_COUNT][MAX_WEAPON_TYPE + 1]; // +1 for RENEWAL_ASPD
 	sc_type Skill2SCTable[MAX_SKILL];  // skill  -> status
 	int IconChangeTable[SC_MAX];          // status -> "icon" (icon is a bit of a misnomer, since there exist values with no icon associated)
 	unsigned int ChangeFlagTable[SC_MAX]; // status -> flags
