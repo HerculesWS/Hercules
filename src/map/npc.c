@@ -2517,7 +2517,7 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 // Parse View
 // Support for using Constants in place of NPC View IDs.
 int npc_parseview(const char* w4, const char* start, const char* buffer, const char* filepath) {
-	int val = -1, i = 0;
+	int val = FAKE_NPC, i = 0;
 	char viewid[1024]; // Max size of name from const.txt, see script->read_constdb.
 
 	// Extract view ID / constant
@@ -2541,7 +2541,7 @@ int npc_parseview(const char* w4, const char* start, const char* buffer, const c
 	} else {
 		// NPC has an ID specified for view id.
 		val = atoi(w4);
-		if (val != -1)
+		if (val != FAKE_NPC) // TODO: Add this to the constants table and replace -1 with FAKE_NPC in the scripts, then remove this check.
 			ShowWarning("npc_parseview: Use of numeric NPC view IDs is deprecated and may be removed in a future update. Please use NPC view constants instead. ID '%d' specified in file '%s', line '%d'.\n", val, filepath, strline(buffer, start-buffer));
 	}
 
@@ -2552,8 +2552,7 @@ int npc_parseview(const char* w4, const char* start, const char* buffer, const c
 // Checks if given view is an ID or constant.
 bool npc_viewisid(const char * viewid)
 {
-	if(atoi(viewid) != -1)
-	{
+	if (atoi(viewid) != FAKE_NPC) {
 		// Loop through view, looking for non-numeric character.
 		while (*viewid) {
 			if (ISDIGIT(*viewid++) == 0) return false;
@@ -2789,7 +2788,7 @@ const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const char* s
 		return strchr(start,'\n');// continue
 	}
 
-	class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
+	class_ = m == -1 ? FAKE_NPC : npc->parseview(w4, start, buffer, filepath);
 	nd = npc->create_npc(type, m, x, y, dir, class_);
 	CREATE(nd->u.shop.shop_item, struct npc_item_list, i);
 	memcpy(nd->u.shop.shop_item, items, sizeof(items[0])*i);
@@ -2957,7 +2956,7 @@ const char* npc_parse_script(char* w1, char* w2, char* w3, char* w4, const char*
 		npc->convertlabel_db(label_list,filepath);
 	}
 
-	class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
+	class_ = m == -1 ? FAKE_NPC : npc->parseview(w4, start, buffer, filepath);
 	nd = npc->create_npc(SCRIPT, m, x, y, dir, class_);
 	if (sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2) {
 		// OnTouch area defined
@@ -3227,7 +3226,7 @@ const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const ch
 		return end;// next line, try to continue
 	}
 
-	class_ = m == -1 ? -1 : npc->parseview(w4, start, buffer, filepath);
+	class_ = m == -1 ? FAKE_NPC : npc->parseview(w4, start, buffer, filepath);
 	nd = npc->create_npc(dnd->subtype, m, x, y, dir, class_);
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->path = npc->retainpathreference(filepath);
