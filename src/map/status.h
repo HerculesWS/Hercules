@@ -745,6 +745,8 @@ typedef enum sc_type {
 	
 	SC_LJOSALFAR,
 	SC_MERMAID_LONGING,
+	
+	SC_ACARAJE, // 590
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;

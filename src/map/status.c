@@ -823,6 +823,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_L_LIFEPOTION] = SI_L_LIFEPOTION;
 	status->dbs->IconChangeTable[SC_ATKER_BLOOD] = SI_ATKER_BLOOD;
 	status->dbs->IconChangeTable[SC_TARGET_BLOOD] = SI_TARGET_BLOOD;
+	status->dbs->IconChangeTable[SC_ACARAJE] = SI_ACARAJE;
 	// Mercenary Bonus Effects
 	status->dbs->IconChangeTable[SC_MER_FLEE] = SI_MER_FLEE;
 	status->dbs->IconChangeTable[SC_MER_ATK] = SI_MER_ATK;
@@ -1008,12 +1009,13 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_MUSTLE_M] |= SCB_MAXHP;
 	status->dbs->ChangeFlagTable[SC_LIFE_FORCE_F] |= SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_EXTRACT_WHITE_POTION_Z] |= SCB_REGEN;
-	status->dbs->ChangeFlagTable[SC_VITATA_500] |= SCB_REGEN;
+	status->dbs->ChangeFlagTable[SC_VITATA_500] |= SCB_REGEN | SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_EXTRACT_SALAMINE_JUICE] |= SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_REBOUND] |= SCB_SPEED|SCB_REGEN;
 	status->dbs->ChangeFlagTable[SC_DEFSET] |= SCB_DEF|SCB_DEF2;
 	status->dbs->ChangeFlagTable[SC_MDEFSET] |= SCB_MDEF|SCB_MDEF2;
 	status->dbs->ChangeFlagTable[SC_MYSTERIOUS_POWDER] |= SCB_MAXHP;
+	status->dbs->ChangeFlagTable[SC_ACARAJE] |= SCB_HIT | SCB_ASPD;
 
 	status->dbs->ChangeFlagTable[SC_ALL_RIDING] = SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_WEDDING] = SCB_SPEED;
@@ -3328,8 +3330,8 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 		regen->flag &=~RGN_SP;
 	if(sc->data[SC_EXTRACT_WHITE_POTION_Z])
 		regen->rate.hp += regen->rate.hp * sc->data[SC_EXTRACT_WHITE_POTION_Z]->val1/100;
-	if(sc->data[SC_VITATA_500])
-		regen->rate.sp += regen->rate.sp * sc->data[SC_VITATA_500]->val1/100;
+	if (sc->data[SC_VITATA_500])
+		regen->rate.sp += regen->rate.sp * sc->data[SC_VITATA_500]->val1 / 100;
 }
 /// Recalculates parts of an object's battle status according to the specified flags.
 /// @param flag bitfield of values from enum scb_flag
@@ -4792,7 +4794,9 @@ signed short status_calc_hit(struct block_list *bl, struct status_change *sc, in
 		hit /= 2;
 	if(sc->data[SC_ILLUSIONDOPING])
 		hit -= hit * (5 + sc->data[SC_ILLUSIONDOPING]->val1) / 100; //custom
-
+	if (sc->data[SC_ACARAJE])
+		hit += sc->data[SC_ACARAJE]->val1;
+		
 	return (short)cap_value(hit,1,SHRT_MAX);
 }
 
@@ -5477,6 +5481,8 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 			bonus += sc->data[SC_GS_GATLINGFEVER]->val1;
 		if (sc->data[SC_STAR_COMFORT])
 			bonus += 3 * sc->data[SC_STAR_COMFORT]->val1;
+		if (sc->data[SC_ACARAJE])
+			bonus += sc->data[SC_ACARAJE]->val2;
 	}
 
 	return (bonus + pots);
@@ -5638,6 +5644,8 @@ short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int
 		aspd_rate += sc->data[SC_PAIN_KILLER]->val2 * 10;
 	if( sc->data[SC_GOLDENE_FERSE])
 		aspd_rate -= sc->data[SC_GOLDENE_FERSE]->val3 * 10;
+	if (sc->data[SC_ACARAJE])
+		aspd_rate += sc->data[SC_ACARAJE]->val2 * 10;
 
 	return (short)cap_value(aspd_rate,0,SHRT_MAX);
 }
@@ -5748,6 +5756,8 @@ unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, 
 		maxsp += maxsp * sc->data[SC_LIFE_FORCE_F]->val1/100;
 	if(sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 3)
 		maxsp += 50;
+	if (sc->data[SC_VITATA_500])
+		maxsp += maxsp * sc->data[SC_VITATA_500]->val2 / 100;
 
 	return cap_value(maxsp,1,UINT_MAX);
 }
