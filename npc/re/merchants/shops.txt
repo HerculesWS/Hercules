@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Hercules Dev Team
 //===== Current Version: =====================================
-//= 1.8
+//= 1.9
 //===== Description: =========================================
 //= Renewal-specific town shop NPCs.
 //===== Additional Comments: =================================
@@ -16,6 +16,7 @@
 //= 1.6 Added Mora and Port Malaya merchants.
 //= 1.7 Added Izlude duplicates. [Euphy]
 //= 1.8 Converted to trader format. [Frost]
+//= 1.9 Change the item sequence of Black Marketeer according to kRO. [Frost]
 //============================================================
 
 //=======================================================
@@ -110,14 +111,14 @@ OnInit:
 	sellitem Dark_Cannon_Ball;
 	sellitem Soul_Cannon_Ball;
 	sellitem Iron_Cannon_Ball;
-	sellitem RepairA;
-	sellitem RepairB;
-	sellitem RepairC;
 	sellitem Vulcan_Bullet;
 	sellitem Magic_Gear_Fuel;
 	sellitem Liquid_Condensed_Bullet;
 	sellitem Monkey_Wrench;
 	sellitem Camouflage_Generator;
+	sellitem RepairA;
+	sellitem RepairB;
+	sellitem RepairC;
 }
 
 //=======================================================
@@ -252,14 +253,14 @@ OnInit:
 	sellitem Dark_Cannon_Ball;
 	sellitem Soul_Cannon_Ball;
 	sellitem Iron_Cannon_Ball;
-	sellitem RepairA;
-	sellitem RepairB;
-	sellitem RepairC;
 	sellitem Vulcan_Bullet;
 	sellitem Magic_Gear_Fuel;
 	sellitem Liquid_Condensed_Bullet;
 	sellitem Monkey_Wrench;
 	sellitem Camouflage_Generator;
+	sellitem RepairA;
+	sellitem RepairB;
+	sellitem RepairC;
 }
 
 s_atelier,15,65,5	trader	Part-Timer#sc_lgt	4_M_ORIENT02,{
@@ -328,14 +329,14 @@ OnInit:
 	sellitem Dark_Cannon_Ball;
 	sellitem Soul_Cannon_Ball;
 	sellitem Iron_Cannon_Ball;
-	sellitem RepairA;
-	sellitem RepairB;
-	sellitem RepairC;
 	sellitem Vulcan_Bullet;
 	sellitem Magic_Gear_Fuel;
 	sellitem Liquid_Condensed_Bullet;
 	sellitem Monkey_Wrench;
 	sellitem Camouflage_Generator;
+	sellitem RepairA;
+	sellitem RepairB;
+	sellitem RepairC;
 }
 
 //=======================================================
@@ -437,14 +438,14 @@ OnInit:
 	sellitem Dark_Cannon_Ball;
 	sellitem Soul_Cannon_Ball;
 	sellitem Iron_Cannon_Ball;
-	sellitem RepairA;
-	sellitem RepairB;
-	sellitem RepairC;
 	sellitem Vulcan_Bullet;
 	sellitem Magic_Gear_Fuel;
 	sellitem Liquid_Condensed_Bullet;
 	sellitem Monkey_Wrench;
 	sellitem Camouflage_Generator;
+	sellitem RepairA;
+	sellitem RepairB;
+	sellitem RepairC;
 }
 
 s_atelier,17,110,1	trader	Part-Timer#sc_prt	1_F_02,{
@@ -500,14 +501,14 @@ OnInit:
 	sellitem Dark_Cannon_Ball;
 	sellitem Soul_Cannon_Ball;
 	sellitem Iron_Cannon_Ball;
-	sellitem RepairA;
-	sellitem RepairB;
-	sellitem RepairC;
 	sellitem Vulcan_Bullet;
 	sellitem Magic_Gear_Fuel;
 	sellitem Liquid_Condensed_Bullet;
 	sellitem Monkey_Wrench;
 	sellitem Camouflage_Generator;
+	sellitem RepairA;
+	sellitem RepairB;
+	sellitem RepairC;
 }
 
 s_atelier,137,60,3	trader	Part-Timer#sc_ra	1_F_GYPSY,{
@@ -515,4 +516,3 @@ OnInit:
 	sellitem Surface_Paint;
 	sellitem Face_Paint;
 }
-
