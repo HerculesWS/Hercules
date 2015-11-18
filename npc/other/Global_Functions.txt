@@ -384,8 +384,8 @@ function	script	F_ShuffleNumbers	{
 	for (.@i = 0; .@i < .@count; ++.@i) {
 		do {
 			.@pick = rand(.@range);
-		} while ( .@flag[.@pick] );
-		set getelementofarray( getarg(2), .@i ), .@pick + .@static;
+		} while (.@flag[.@pick]);
+		set getelementofarray(getarg(2), .@i), .@pick + .@static;
 		.@flag[.@pick] = 1;
 	}
 	return .@count;
