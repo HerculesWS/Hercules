@@ -460,6 +460,7 @@ OnInit:
 	sellitem Flash_Shuriken;
 	sellitem Sharp_Leaf_Shuriken;
 	sellitem Thorn_Needle_Shuriken;
+	sellitem Explosive_Kunai;
 	sellitem Makibishi;
 	sellitem Arm_Guard;
 	sellitem Fox_Armguard;
@@ -467,6 +468,7 @@ OnInit:
 	sellitem Flame_Stone;
 	sellitem Ice_Stone;
 	sellitem Wind_Stone;
+	sellitem Shadow_Orb;
 	sellitem Charm_Fire;
 	sellitem Charm_Ice;
 	sellitem Charm_Wind;
