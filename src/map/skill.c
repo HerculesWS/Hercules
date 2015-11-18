@@ -11878,8 +11878,8 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			//Take into account these hit more times than the timer interval can handle.
 			do
 				skill->attack(BF_MAGIC,ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick+count*sg->interval,0);
-			while(--src->val2 && x == bl->x && y == bl->y
-			   && ++count < SKILLUNITTIMER_INTERVAL/sg->interval && !status->isdead(bl));
+			while (src->alive != 0 && --src->val2 != 0 && x == bl->x && y == bl->y
+			    && ++count < SKILLUNITTIMER_INTERVAL/sg->interval && !status->isdead(bl));
 
 			if (src->val2<=0)
 				skill->delunit(src);
@@ -11961,8 +11961,8 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 							sg->limit = DIFF_TICK32(tick,sg->tick);
 							break;
 						}
-					} while( x == bl->x && y == bl->y && sg->alive_count
-					      && ++count < SKILLUNITTIMER_INTERVAL/sg->interval && !status->isdead(bl) );
+					} while (src->alive != 0 && x == bl->x && y == bl->y && sg->alive_count != 0
+					      && ++count < SKILLUNITTIMER_INTERVAL/sg->interval && !status->isdead(bl));
 					map->freeblock_unlock();
 				}
 				break;
