@@ -77,7 +77,7 @@ struct atcmd_binding_data* get_atcommandbind_byname(const char* name) {
 }
 
 const char* atcommand_msgsd(struct map_session_data *sd, int msg_number) {
-	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG);
+	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG && atcommand->msg_table[0][msg_number] != NULL);
 	if (!sd || sd->lang_id >= atcommand->max_message_table || !atcommand->msg_table[sd->lang_id][msg_number])
 		return atcommand->msg_table[0][msg_number];
 	return atcommand->msg_table[sd->lang_id][msg_number];
@@ -85,7 +85,7 @@ const char* atcommand_msgsd(struct map_session_data *sd, int msg_number) {
 
 const char* atcommand_msgfd(int fd, int msg_number) {
 	struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
-	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG);
+	Assert_retr("??", msg_number >= 0 && msg_number < MAX_MSG && atcommand->msg_table[0][msg_number] != NULL);
 	if (!sd || sd->lang_id >= atcommand->max_message_table || !atcommand->msg_table[sd->lang_id][msg_number])
 		return atcommand->msg_table[0][msg_number];
 	return atcommand->msg_table[sd->lang_id][msg_number];
