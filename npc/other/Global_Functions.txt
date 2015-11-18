@@ -373,6 +373,7 @@ function	script	Time2Str	{
 //    callfunc("F_ShuffleNumbers", 0, 100, .@output, 5) // possible output 9,55,27,84,33
 //////////////////////////////////////////////////////////////////////////////////
 function	script	F_ShuffleNumbers	{
+	deletearray getarg(2);
 	.@static = getarg(0);
 	.@range = getarg(1) +1 - .@static;
 	.@count = getarg(3, .@range);
@@ -380,19 +381,12 @@ function	script	F_ShuffleNumbers	{
 		return 0;
 	if (.@count > .@range)
 		.@count = .@range;
-	while (.@i < .@count) {
-		.@r = .@save = rand(.@i, .@range -1);
-		if (!.@tmp1[.@i]) {
-			if (.@tmp1[.@r])
-				.@r = .@tmp2[.@r];
-			.@tmp2[.@i] = .@r;
-			.@tmp2[.@save] = .@i;
-			.@tmp1[.@save] = 1;
-			set getelementofarray(getarg(2), .@i), .@r + .@static;
-			if (.@save < .@count)
-				set getelementofarray(getarg(2), .@save), .@i + .@static;
-		}
-		.@i++;
+	for (.@i = 0; .@i < .@count; ++.@i) {
+		do {
+			.@pick = rand(.@range);
+		} while ( .@flag[.@pick] );
+		set getelementofarray( getarg(2), .@i ), .@pick + .@static;
+		.@flag[.@pick] = 1;
 	}
 	return .@count;
 }
