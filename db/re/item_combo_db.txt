@@ -258,7 +258,15 @@
 4509:19023,{ bonus2 bSubRace,RC_Insect,10; bonus2 bResEff,Eff_Confusion,10000; }
 4517:5967,{ bonus bInt,1; bonus bCritAtkRate,5; if(BaseClass==Job_Archer) { bonus bCritAtkRate,10; } }
 4606:20778,{ bonus bMaxSPrate,44; bonus bSPGainValue,-(20+(getequiprefinerycnt(EQI_GARMENT)/2)); }
+4608:4609,{ bonus2 bAddSize,Size_Medium,15; bonus2 bAddSize,Size_Large,15; bonus2 bSubSize,Size_Medium,5; bonus2 bSubSize,Size_Large,5; }
 4635:4636,{ bonus2 bResEff,Eff_Burning,10000; }
+4642:4646,{ bonus bAtkRate,10; bonus bMatkRate,10; }
+4643:4646,{ bonus bAtkRate,10; bonus bMatkRate,10; }
+4644:4646,{ bonus bAtkRate,10; bonus bMatkRate,10; }
+4645:4646,{ bonus bAtkRate,10; bonus bMatkRate,10; }
+4653:4654,{ bonus2 bSubRace,RC_Brute,5; bonus2 bSubRace,RC_Undead,5; bonus2 bIgnoreMdefRate,50,RC_Brute; bonus2 bIgnoreMdefRate,50,RC_Undead; }
+4653:4655,{ bonus2 bSubRace,RC_Brute,5; bonus2 bSubRace,RC_Undead,5; bonus2 bIgnoreDefRate,50,RC_Brute; bonus2 bIgnoreDefRate,50,RC_Undead; }
+//4656:4657,{ bonus2 bSubEle,Ele_Neutral,5; /* Increase the probability of causing Sleep to all targets on 11x11 cells. */ }
 5007:18913,{ bonus2 bExpAddRace,RC_NonBoss,5; bonus2 bExpAddRace,RC_Boss,5; }
 5021:18824,{ bonus bMaxHP,100; bonus2 bSubEle,Ele_Neutral,getequiprefinerycnt(EQI_HEAD_TOP); }
 5040:5442,{ bonus bAspdRate,3; bonus bVariableCastrate,3; }
@@ -277,6 +285,7 @@
 5470:5653,{ bonus bDex,1; bonus bLongAtkRate,3; }
 5690:13428,{ bonus2 bAddRace,RC_DemiPlayer,10; bonus bHit,10; }
 5890:28306,{ bonus2 bAddRace,RC_Boss,3; bonus2 bAddRace,RC_NonBoss,3; }
+5932:1737,{ if (Class == Job_Ranger || Class == Job_Ranger_T) skill HT_BLITZBEAT,5*getequiprefinerycnt(EQI_HAND_R); }
 //5967:28321,{ skill HT_BLITZBEAT,-200; }
 13027:15044,{ bonus3 bAddMonsterDropItem,929,RC_Brute,100+(getequiprefinerycnt(EQI_HAND_R)*10); bonus3 bAddMonsterDropItem,929,RC_DemiPlayer,100+(getequiprefinerycnt(EQI_HAND_R)*10); bonus3 bAddMonsterDropItem,970,RC_Brute,20+(getequiprefinerycnt(EQI_HAND_R)*2); bonus3 bAddMonsterDropItem,970,RC_DemiPlayer,20+(getequiprefinerycnt(EQI_HAND_R)*2); }
 13034:13035,{ bonus bMaxSP,20; bonus bMaxHPrate,5; bonus bHit,10; bonus2 bAddSize,Size_Large,30; autobonus "{ bonus bAspdRate,100; }",1,7000,BF_WEAPON,"{ specialeffect2 EF_POTION_BERSERK; }"; }
