@@ -759,22 +759,22 @@ void initChangeTables(void) {
 
 	// Storing the target job rather than simply SC_SOULLINK simplifies code later on.
 	status->dbs->Skill2SCTable[SL_ALCHEMIST]   = (sc_type)MAPID_ALCHEMIST,
-		status->dbs->Skill2SCTable[SL_MONK]        = (sc_type)MAPID_MONK,
-		status->dbs->Skill2SCTable[SL_STAR]        = (sc_type)MAPID_STAR_GLADIATOR,
-		status->dbs->Skill2SCTable[SL_SAGE]        = (sc_type)MAPID_SAGE,
-		status->dbs->Skill2SCTable[SL_CRUSADER]    = (sc_type)MAPID_CRUSADER,
-		status->dbs->Skill2SCTable[SL_SUPERNOVICE] = (sc_type)MAPID_SUPER_NOVICE,
-		status->dbs->Skill2SCTable[SL_KNIGHT]      = (sc_type)MAPID_KNIGHT,
-		status->dbs->Skill2SCTable[SL_WIZARD]      = (sc_type)MAPID_WIZARD,
-		status->dbs->Skill2SCTable[SL_PRIEST]      = (sc_type)MAPID_PRIEST,
-		status->dbs->Skill2SCTable[SL_BARDDANCER]  = (sc_type)MAPID_BARDDANCER,
-		status->dbs->Skill2SCTable[SL_ROGUE]       = (sc_type)MAPID_ROGUE,
-		status->dbs->Skill2SCTable[SL_ASSASIN]     = (sc_type)MAPID_ASSASSIN,
-		status->dbs->Skill2SCTable[SL_BLACKSMITH]  = (sc_type)MAPID_BLACKSMITH,
-		status->dbs->Skill2SCTable[SL_HUNTER]      = (sc_type)MAPID_HUNTER,
-		status->dbs->Skill2SCTable[SL_SOULLINKER]  = (sc_type)MAPID_SOUL_LINKER,
+	status->dbs->Skill2SCTable[SL_MONK]        = (sc_type)MAPID_MONK,
+	status->dbs->Skill2SCTable[SL_STAR]        = (sc_type)MAPID_STAR_GLADIATOR,
+	status->dbs->Skill2SCTable[SL_SAGE]        = (sc_type)MAPID_SAGE,
+	status->dbs->Skill2SCTable[SL_CRUSADER]    = (sc_type)MAPID_CRUSADER,
+	status->dbs->Skill2SCTable[SL_SUPERNOVICE] = (sc_type)MAPID_SUPER_NOVICE,
+	status->dbs->Skill2SCTable[SL_KNIGHT]      = (sc_type)MAPID_KNIGHT,
+	status->dbs->Skill2SCTable[SL_WIZARD]      = (sc_type)MAPID_WIZARD,
+	status->dbs->Skill2SCTable[SL_PRIEST]      = (sc_type)MAPID_PRIEST,
+	status->dbs->Skill2SCTable[SL_BARDDANCER]  = (sc_type)MAPID_BARDDANCER,
+	status->dbs->Skill2SCTable[SL_ROGUE]       = (sc_type)MAPID_ROGUE,
+	status->dbs->Skill2SCTable[SL_ASSASIN]     = (sc_type)MAPID_ASSASSIN,
+	status->dbs->Skill2SCTable[SL_BLACKSMITH]  = (sc_type)MAPID_BLACKSMITH,
+	status->dbs->Skill2SCTable[SL_HUNTER]      = (sc_type)MAPID_HUNTER,
+	status->dbs->Skill2SCTable[SL_SOULLINKER]  = (sc_type)MAPID_SOUL_LINKER,
 
-	//Status that don't have a skill associated.
+	// Status that don't have a skill associated.
 	status->dbs->IconChangeTable[SC_WEIGHTOVER50] = SI_WEIGHTOVER50;
 	status->dbs->IconChangeTable[SC_WEIGHTOVER90] = SI_WEIGHTOVER90;
 	status->dbs->IconChangeTable[SC_ATTHASTE_POTION1] = SI_ATTHASTE_POTION1;
@@ -802,7 +802,8 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_SPL_MATK] = SI_SPL_MATK;
 	status->dbs->IconChangeTable[SC_PLUSATTACKPOWER] = SI_PLUSATTACKPOWER;
 	status->dbs->IconChangeTable[SC_PLUSMAGICPOWER] = SI_PLUSMAGICPOWER;
-	//Cash Items
+
+	// Cash Items
 	status->dbs->IconChangeTable[SC_FOOD_STR_CASH] = SI_FOOD_STR_CASH;
 	status->dbs->IconChangeTable[SC_FOOD_AGI_CASH] = SI_FOOD_AGI_CASH;
 	status->dbs->IconChangeTable[SC_FOOD_VIT_CASH] = SI_FOOD_VIT_CASH;
@@ -824,18 +825,21 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_ATKER_BLOOD] = SI_ATKER_BLOOD;
 	status->dbs->IconChangeTable[SC_TARGET_BLOOD] = SI_TARGET_BLOOD;
 	status->dbs->IconChangeTable[SC_ACARAJE] = SI_ACARAJE;
+	
 	// Mercenary Bonus Effects
 	status->dbs->IconChangeTable[SC_MER_FLEE] = SI_MER_FLEE;
 	status->dbs->IconChangeTable[SC_MER_ATK] = SI_MER_ATK;
 	status->dbs->IconChangeTable[SC_MER_HP] = SI_MER_HP;
 	status->dbs->IconChangeTable[SC_MER_SP] = SI_MER_SP;
 	status->dbs->IconChangeTable[SC_MER_HIT] = SI_MER_HIT;
+	
 	// Warlock Spheres
 	status->dbs->IconChangeTable[SC_SUMMON1] = SI_SPHERE_1;
 	status->dbs->IconChangeTable[SC_SUMMON2] = SI_SPHERE_2;
 	status->dbs->IconChangeTable[SC_SUMMON3] = SI_SPHERE_3;
 	status->dbs->IconChangeTable[SC_SUMMON4] = SI_SPHERE_4;
 	status->dbs->IconChangeTable[SC_SUMMON5] = SI_SPHERE_5;
+	
 	// Warlock Preserved spells
 	status->dbs->IconChangeTable[SC_SPELLBOOK1] = SI_SPELLBOOK1;
 	status->dbs->IconChangeTable[SC_SPELLBOOK2] = SI_SPELLBOOK2;
@@ -873,7 +877,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_BANANA_BOMB] = SI_BANANA_BOMB;
 	status->dbs->IconChangeTable[SC_BANANA_BOMB_SITDOWN_POSTDELAY] = SI_BANANA_BOMB_SITDOWN_POSTDELAY;
 
-	//Genetics New Food Items Status Icons
+	// Genetics New Food Items Status Icons
 	status->dbs->IconChangeTable[SC_SAVAGE_STEAK] = SI_SAVAGE_STEAK;
 	status->dbs->IconChangeTable[SC_COCKTAIL_WARG_BLOOD] = SI_COCKTAIL_WARG_BLOOD;
 	status->dbs->IconChangeTable[SC_MINOR_BBQ] = SI_MINOR_BBQ;
@@ -922,7 +926,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_LJOSALFAR] = SI_LJOSALFAR;
 	status->dbs->IconChangeTable[SC_MERMAID_LONGING] = SI_MERMAID_LONGING;
 
-	//Other SC which are not necessarily associated to skills.
+	// Other SC which are not necessarily associated to skills.
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION1] = SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION2] = SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION3] = SCB_ASPD;
@@ -971,6 +975,8 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_ATKER_BLOOD] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_WALKSPEED] |= SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_ITEMSCRIPT] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_TARGET_BLOOD] |= SCB_ALL;
+	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] = SCB_STR;
 	status->dbs->ChangeFlagTable[SC_FOOD_AGI_CASH] = SCB_AGI;
@@ -978,12 +984,14 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_FOOD_DEX_CASH] = SCB_DEX;
 	status->dbs->ChangeFlagTable[SC_FOOD_INT_CASH] = SCB_INT;
 	status->dbs->ChangeFlagTable[SC_FOOD_LUK_CASH] = SCB_LUK;
+	
 	// Mercenary Bonus Effects
 	status->dbs->ChangeFlagTable[SC_MER_FLEE] |= SCB_FLEE;
 	status->dbs->ChangeFlagTable[SC_MER_ATK] |= SCB_WATK;
 	status->dbs->ChangeFlagTable[SC_MER_HP] |= SCB_MAXHP;
 	status->dbs->ChangeFlagTable[SC_MER_SP] |= SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_MER_HIT] |= SCB_HIT;
+	
 	// Guillotine Cross Poison Effects
 	status->dbs->ChangeFlagTable[SC_PARALYSE] |= SCB_FLEE|SCB_SPEED|SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_VENOMBLEED] |= SCB_MAXHP;
@@ -991,9 +999,11 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_DEATHHURT] |= SCB_REGEN;
 	status->dbs->ChangeFlagTable[SC_PYREXIA] |= SCB_HIT|SCB_FLEE;
 	status->dbs->ChangeFlagTable[SC_OBLIVIONCURSE] |= SCB_REGEN;
+	
 	// RG status
 	status->dbs->ChangeFlagTable[SC_SHIELDSPELL_DEF] |= SCB_WATK;
 	status->dbs->ChangeFlagTable[SC_SHIELDSPELL_REF] |= SCB_DEF;
+	
 	// Meca status
 	status->dbs->ChangeFlagTable[SC_STEALTHFIELD_MASTER] |= SCB_SPEED;
 
@@ -6613,16 +6623,16 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		}
 
 		//Item resistance (only applies to rate%)
-		if(sd && SC_COMMON_MIN <= type && type <= SC_COMMON_MAX)
+		if (sd && SC_COMMON_MIN <= type && type <= SC_COMMON_MAX)
 		{
-			if( sd->reseff[type-SC_COMMON_MIN] > 0 )
-				rate -= rate*sd->reseff[type-SC_COMMON_MIN]/10000;
-			if( sd->sc.data[SC_TARGET_BLOOD] )
-				rate -= rate*sd->sc.data[SC_TARGET_BLOOD]->val1/100;
+			if (sd->reseff[type-SC_COMMON_MIN] > 0)
+				rate -= rate * sd->reseff[type-SC_COMMON_MIN] / 10000;
+			if (sd->sc.data[SC_TARGET_BLOOD])
+				rate -= rate * sd->sc.data[SC_TARGET_BLOOD]->val1 / 100;
 		}
 
 		//Aegis accuracy
-		if(rate > 0 && rate%10 != 0) rate += (10 - rate%10);
+		if (rate > 0 && rate%10 != 0) rate += (10 - rate%10);
 	}
 
 	if (!(rnd()%10000 < rate))
