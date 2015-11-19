@@ -366,7 +366,7 @@ function	script	Time2Str	{
 //////////////////////////////////////////////////////////////////////////////////
 // *** Function "F_ShuffleNumbers":
 // Generate a set of numbers in random order that the numbers are not repeated
-// --- callfunc "shuffle",<start num>,<last num>,<output array>{,<count>};
+// --- callfunc "F_ShuffleNumbers",<start num>,<last num>,<output array>{,<count>};
 // Examples: 
 //    callfunc("F_ShuffleNumbers", 0, 5, .@output)      // possible output 4,1,3,2,0,5
 //    callfunc("F_ShuffleNumbers", -5, 1, .@output)     // possible output -3,-5,-4,-2,-1,1,0
