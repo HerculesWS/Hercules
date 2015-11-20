@@ -383,6 +383,7 @@ struct Battle_Config {
 	int boss_active_time;
 
 	int show_hp_sp_drain, show_hp_sp_gain; //[Skotlex]
+	int show_katar_crit_bonus;
 
 	int mob_npc_event_type; //Determines on who the npc_event is executed. [Skotlex]
 
