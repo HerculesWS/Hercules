@@ -7110,7 +7110,7 @@ BUILDIN(getitem) {
 		return true;
 
 	//Check if it's stackable.
-	if (!itemdb->isstackable(nameid))
+	if (!itemdb->isstackable(nameid) || item_data->flag.force_serial)
 		get_count = 1;
 	else
 		get_count = amount;
@@ -7218,7 +7218,7 @@ BUILDIN(getitem2)
 		item_tmp.card[3]=(short)c4;
 
 		//Check if it's stackable.
-		if (!itemdb->isstackable(nameid))
+		if (!itemdb->isstackable(nameid) || item_data->flag.force_serial)
 			get_count = 1;
 		else
 			get_count = amount;
