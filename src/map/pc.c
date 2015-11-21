@@ -1960,7 +1960,7 @@ int pc_bonus_addeff_onskill(struct s_addeffectonskill* effect, int max, enum sc_
 	return 1;
 }
 
-int pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id, short group, int race, int rate) {
+int pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id, short group, int race_mask, int rate) {
 	int i;
 
 	//Apply config rate adjustment settings.
@@ -1978,12 +1978,10 @@ int pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id, short
 			rate = -1;
 	}
 	for(i = 0; i < max && (drop[i].id || drop[i].group); i++) {
-		if(
-			((id && drop[i].id == id) ||
-			(group && drop[i].group == group))
-			&& race > 0
+		if (((id && drop[i].id == id) || (group && drop[i].group == group))
+		 && race_mask != RCMASK_NONE
 		) {
-			drop[i].race |= race;
+			drop[i].race |= race_mask;
 			if (drop[i].rate > 0 && rate > 0) {
 				//Both are absolute rates.
 				if (drop[i].rate < rate)
@@ -2004,7 +2002,7 @@ int pc_bonus_item_drop(struct s_add_drop *drop, const short max, short id, short
 	}
 	drop[i].id = id;
 	drop[i].group = group;
-	drop[i].race |= race;
+	drop[i].race |= race_mask;
 	drop[i].rate = rate;
 	return 1;
 }
@@ -2178,6 +2176,17 @@ int pc_bonus_subele(struct map_session_data* sd, unsigned char ele, short rate, 
 
 	return 0;
 }
+
+/**
+ * Loops through the fields in a race bitmask (enum RaceMask => enum Race)
+ *
+ * To be used in pc_bonus functions with races represented in array form.
+ */
+#define BONUS_FOREACH_RCARRAY_FROMMASK(loop_counter, mask) \
+	for ((loop_counter) = RC_FORMLESS; (loop_counter) < RC_MAX; ++(loop_counter)) \
+		if (((mask) & 1<<(loop_counter)) == RCMASK_NONE) { \
+			continue; \
+		} else
 
 /*==========================================
  * Add a bonus(type) to player sd
@@ -2874,33 +2883,22 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			break;
 		case SP_ADDRACE:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus2: SP_ADDRACE: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_ADDRACE: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if ( type2 >= RC_MAX ) {
-				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-						 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-						)
-						continue;
-					if ( !sd->state.lr_flag )
-						sd->right_weapon.addrace[i] += val;
-					else if ( sd->state.lr_flag == 1 )
-						sd->left_weapon.addrace[i] += val;
-					else if ( sd->state.lr_flag == 2 )
-						sd->arrow_addrace[i] += val;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				if (sd->state.lr_flag == 0) {
+					sd->right_weapon.addrace[i] += val;
+				} else if (sd->state.lr_flag == 1) {
+					sd->left_weapon.addrace[i] += val;
+				} else if (sd->state.lr_flag == 2) {
+					sd->arrow_addrace[i] += val;
 				}
-			} else {
-				if(!sd->state.lr_flag)
-					sd->right_weapon.addrace[type2] += val;
-				else if(sd->state.lr_flag == 1)
-					sd->left_weapon.addrace[type2] += val;
-				else if(sd->state.lr_flag == 2)
-					sd->arrow_addrace[type2] += val;
 			}
+		}
 			break;
 		case SP_ADDSIZE:
 			if(!sd->state.lr_flag)
@@ -2926,25 +2924,18 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			break;
 		case SP_SUBRACE:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus2: SP_SUBRACE: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_SUBRACE: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if(sd->state.lr_flag != 2) {
-				if (type2 >= RC_MAX ) {
-					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-							 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-							)
-							continue;
-						sd->subrace[i] += val;
-					}
-				} else {
-					sd->subrace[type2]+=val;
-				}
+			if (sd->state.lr_flag == 2)
+				break;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				sd->subrace[i] += val;
 			}
+		}
 			break;
 		case SP_ADDEFF:
 			if (type2 > SC_MAX) {
@@ -2987,25 +2978,18 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			break;
 		case SP_MAGIC_ADDRACE:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus2: SP_MAGIC_ADDRACE: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_MAGIC_ADDRACE: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if(sd->state.lr_flag != 2){
-				if ( type2 >= RC_MAX ){
-					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-							 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-							)
-							continue;
-						sd->magic_addrace[i] += val;
-					}
-				} else {
-					sd->magic_addrace[type2]+=val;
-				}
+			if (sd->state.lr_flag == 2)
+				break;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				sd->magic_addrace[i] += val;
 			}
+		}
 			break;
 		case SP_MAGIC_ADDSIZE:
 			if(sd->state.lr_flag != 2)
@@ -3191,26 +3175,19 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			sd->special_state.bonus_coma = 1;
 			break;
 		case SP_WEAPON_COMA_RACE:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus2: SP_WEAPON_COMA_RACE: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_WEAPON_COMA_RACE: Invalid Race (%d)\n", type2);
 				break;
 			}
 			if(sd->state.lr_flag == 2)
 				break;
-			if ( type2 >= RC_MAX ) {
-				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-						 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-						)
-							continue;
-					sd->weapon_coma_race[i] += val;
-				}
-			} else {
-				sd->weapon_coma_race[type2] += val;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				sd->weapon_coma_race[i] += val;
 			}
 			sd->special_state.bonus_coma = 1;
+		}
 			break;
 		case SP_WEAPON_ATK:
 			if(sd->state.lr_flag != 2)
@@ -3221,25 +3198,18 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				sd->weapon_atk_rate[type2]+=val;
 			break;
 		case SP_CRITICAL_ADDRACE:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus2: SP_CRITICAL_ADDRACE: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_CRITICAL_ADDRACE: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if(sd->state.lr_flag != 2){
-				if ( type2 >= RC_MAX ){
-					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-							 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-							)
-							continue;
-						sd->critaddrace[i] += val*10;
-					}
-				} else {
-					sd->critaddrace[type2] += val*10;
-				}
+			if (sd->state.lr_flag == 2)
+				break;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				sd->critaddrace[i] += val*10;
 			}
+		}
 			break;
 		case SP_ADDEFF_WHENHIT:
 			if (type2 > SC_MAX) {
@@ -3404,46 +3374,32 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			sd->itemhealrate[i].rate += val;
 			break;
 		case SP_EXP_ADDRACE:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus2: SP_EXP_ADDRACE: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_EXP_ADDRACE: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if(sd->state.lr_flag != 2) {
-				if ( type2 >= RC_MAX ){
-					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-							 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-							)
-							continue;
-						sd->expaddrace[i] += val;
-					}
-				} else {
-					sd->expaddrace[type2] += val;
-				}
+			if (sd->state.lr_flag == 2)
+				break;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				sd->expaddrace[i] += val;
 			}
+		}
 			break;
 		case SP_SP_GAIN_RACE:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus2: SP_SP_GAIN_RACE: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_SP_GAIN_RACE: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if(sd->state.lr_flag != 2) {
-				if ( type2 >= RC_MAX ){
-					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-							 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-							)
-							continue;
-						sd->sp_gain_race[i] += val;
-					}
-				} else {
-					sd->sp_gain_race[type2] += val;
-				}
+			if (sd->state.lr_flag == 2)
+				break;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				sd->sp_gain_race[i] += val;
 			}
+		}
 			break;
 		case SP_ADD_MONSTER_DROP_ITEM:
 			if (sd->state.lr_flag != 2)
@@ -3462,112 +3418,90 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			break;
 		case SP_HP_DRAIN_VALUE_RACE:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus2: SP_HP_DRAIN_VALUE_RACE: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_HP_DRAIN_VALUE_RACE: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if ( type2 >= RC_MAX ){
-				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-						 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-						)
-						continue;
-					if(!sd->state.lr_flag) {
-						sd->right_weapon.hp_drain[i].value += val;
-					}
-					else if(sd->state.lr_flag == 1) {
-						sd->left_weapon.hp_drain[i].value += val;
-					}
-				}
-			} else {
-				if(!sd->state.lr_flag) {
-					sd->right_weapon.hp_drain[type2].value += val;
-				}
-				else if(sd->state.lr_flag == 1) {
-					sd->left_weapon.hp_drain[type2].value += val;
-				}
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				if (sd->state.lr_flag == 0)
+					sd->right_weapon.hp_drain[i].value += val;
+				else if(sd->state.lr_flag == 1)
+					sd->left_weapon.hp_drain[i].value += val;
 			}
+		}
 			break;
 		case SP_SP_DRAIN_VALUE_RACE:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus2: SP_SP_DRAIN_VALUE_RACE: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_SP_DRAIN_VALUE_RACE: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if ( type2 >= RC_MAX ){
-				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-						 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-						)
-						continue;
-					if(!sd->state.lr_flag) {
-						sd->right_weapon.sp_drain[i].value += val;
-					}
-					else if(sd->state.lr_flag == 1) {
-						sd->left_weapon.sp_drain[i].value += val;
-					}
-				}
-			} else {
-				if(!sd->state.lr_flag) {
-					sd->right_weapon.sp_drain[type2].value += val;
-				}
-				else if(sd->state.lr_flag == 1) {
-					sd->left_weapon.sp_drain[type2].value += val;
-				}
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				if (sd->state.lr_flag == 0)
+					sd->right_weapon.sp_drain[i].value += val;
+				else if (sd->state.lr_flag == 1)
+					sd->left_weapon.sp_drain[i].value += val;
 			}
+		}
 			break;
 		case SP_IGNORE_MDEF_RATE:
-			if(sd->state.lr_flag != 2)
-				sd->ignore_mdef[type2] += val;
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_IGNORE_MDEF_RATE: Invalid Race (%d)\n", type2);
+				break;
+			}
+			if (sd->state.lr_flag == 2)
+				break;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				sd->ignore_mdef[i] += val;
+			}
+		}
 			break;
 		case SP_IGNORE_DEF_RATE:
-			if(sd->state.lr_flag != 2)
-				sd->ignore_def[type2] += val;
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_IGNORE_DEF_RATE: Invalid Race (%d)\n", type2);
+				break;
+			}
+			if (sd->state.lr_flag == 2)
+				break;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				sd->ignore_def[i] += val;
+			}
+		}
 			break;
 		case SP_SP_GAIN_RACE_ATTACK:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus2: SP_SP_GAIN_RACE_ATTACK: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_SP_GAIN_RACE_ATTACK: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if(sd->state.lr_flag != 2) {
-				if ( type2 >= RC_MAX ) {
-					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-							 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-							)
-							continue;
-						sd->sp_gain_race_attack[i] = cap_value(sd->sp_gain_race_attack[i] + val, 0, INT16_MAX);
-					}
-				} else {
-						sd->sp_gain_race_attack[type2] = cap_value(sd->sp_gain_race_attack[type2] + val, 0, INT16_MAX);
-				}
+			if (sd->state.lr_flag == 2)
+				break;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				sd->sp_gain_race_attack[i] = cap_value(sd->sp_gain_race_attack[i] + val, 0, INT16_MAX);
 			}
+		}
 			break;
 		case SP_HP_GAIN_RACE_ATTACK:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus2: SP_HP_GAIN_RACE_ATTACK: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_HP_GAIN_RACE_ATTACK: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if(sd->state.lr_flag != 2) {
-				if ( type2 >= RC_MAX ) {
-					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-							 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-							)
-							continue;
-						sd->hp_gain_race_attack[i] = cap_value(sd->hp_gain_race_attack[i] + val, 0, INT16_MAX);
-					}
-				} else {
-						sd->hp_gain_race_attack[type2] = cap_value(sd->hp_gain_race_attack[type2] + val, 0, INT16_MAX);
-				}
+			if (sd->state.lr_flag == 2)
+				break;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				sd->hp_gain_race_attack[i] = cap_value(sd->hp_gain_race_attack[i] + val, 0, INT16_MAX);
 			}
+		}
 			break;
 		case SP_SKILL_USE_SP_RATE: //bonus2 bSkillUseSPrate,n,x;
 			if(sd->state.lr_flag == 2)
@@ -3680,24 +3614,16 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			break;
 #ifdef RENEWAL
 		case SP_RACE_TOLERANCE:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus2: SP_RACE_TOLERANCE: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus2: SP_RACE_TOLERANCE: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if(sd->state.lr_flag != 2) {
-				if ( type2 >= RC_MAX ) {
-					for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-						if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-							 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-							 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-							 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-							)
-							continue;
-						sd->race_tolerance[i] += val;
-					}
-				} else {
-						sd->race_tolerance[type2] += val;
-				}
+			if (sd->state.lr_flag == 2)
+				break;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask)
+				sd->race_tolerance[i] += val;
 			}
 			break;
 #endif
@@ -3767,70 +3693,40 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 			}
 			break;
 		case SP_HP_DRAIN_RATE_RACE:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus3: SP_HP_DRAIN_RATE_RACE: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus3: SP_HP_DRAIN_RATE_RACE: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if ( type2 >= RC_MAX ) {
-				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-						 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-						)
-						continue;
-					if(!sd->state.lr_flag) {
-						sd->right_weapon.hp_drain[i].rate += type3;
-						sd->right_weapon.hp_drain[i].per += val;
-					}
-					else if(sd->state.lr_flag == 1) {
-						sd->left_weapon.hp_drain[i].rate += type3;
-						sd->left_weapon.hp_drain[i].per += val;
-					}
-				}
-			} else {
-				if(!sd->state.lr_flag) {
-					sd->right_weapon.hp_drain[type2].rate += type3;
-					sd->right_weapon.hp_drain[type2].per += val;
-				}
-				else if(sd->state.lr_flag == 1) {
-					sd->left_weapon.hp_drain[type2].rate += type3;
-					sd->left_weapon.hp_drain[type2].per += val;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				if (sd->state.lr_flag == 0) {
+					sd->right_weapon.hp_drain[i].rate += type3;
+					sd->right_weapon.hp_drain[i].per += val;
+				} else if(sd->state.lr_flag == 1) {
+					sd->left_weapon.hp_drain[i].rate += type3;
+					sd->left_weapon.hp_drain[i].per += val;
 				}
 			}
+		}
 			break;
 		case SP_SP_DRAIN_RATE_RACE:
-			if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-				ShowWarning("pc_bonus3: SP_SP_DRAIN_RATE_RACE: Invalid Race(%d)\n",type2);
+		{
+			uint32 race_mask = map->race_id2mask(type2);
+			if (race_mask == RCMASK_NONE) {
+				ShowWarning("pc_bonus3: SP_SP_DRAIN_RATE_RACE: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if ( type2 >= RC_MAX ) {
-				for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-					if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-						 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-						 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-						 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-						)
-						continue;
-					if(!sd->state.lr_flag) {
-						sd->right_weapon.sp_drain[i].rate += type3;
-						sd->right_weapon.sp_drain[i].per += val;
-					}
-					else if(sd->state.lr_flag == 1) {
-						sd->left_weapon.sp_drain[i].rate += type3;
-						sd->left_weapon.sp_drain[i].per += val;
-					}
-				}
-			} else {
-				if(!sd->state.lr_flag) {
-					sd->right_weapon.sp_drain[type2].rate += type3;
-					sd->right_weapon.sp_drain[type2].per += val;
-				}
-				else if(sd->state.lr_flag == 1) {
-					sd->left_weapon.sp_drain[type2].rate += type3;
-					sd->left_weapon.sp_drain[type2].per += val;
+			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+				if (sd->state.lr_flag == 0) {
+					sd->right_weapon.sp_drain[i].rate += type3;
+					sd->right_weapon.sp_drain[i].per += val;
+				} else if(sd->state.lr_flag == 1) {
+					sd->left_weapon.sp_drain[i].rate += type3;
+					sd->left_weapon.sp_drain[i].per += val;
 				}
 			}
+		}
 			break;
 		case SP_ADDEFF:
 			if (type2 > SC_MAX) {
@@ -3938,55 +3834,37 @@ int pc_bonus4(struct map_session_data *sd,int type,int type2,int type3,int type4
 		break;
 
 	case SP_SET_DEF_RACE: //bonus4 bSetDefRace,n,x,r,y;
-		if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-			ShowWarning("pc_bonus4: SP_SET_DEF_RACE: Invalid Race(%d)\n",type2);
+	{
+		uint32 race_mask = map->race_id2mask(type2);
+		if (race_mask == RCMASK_NONE) {
+			ShowWarning("pc_bonus4: SP_SET_DEF_RACE: Invalid Race (%d)\n", type2);
 			break;
 		}
-		if(sd->state.lr_flag == 2)
+		if (sd->state.lr_flag == 2)
 			break;
-		if ( type2 >= RC_MAX ) {
-			for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-				if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-	 				 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-	 				 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-	 				 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-					)
-					continue;
-				sd->def_set_race[i].rate = type3;
-				sd->def_set_race[i].tick = type4;
-				sd->def_set_race[i].value = val;
-			}
-		} else {
-			sd->def_set_race[type2].rate = type3;
-			sd->def_set_race[type2].tick = type4;
-			sd->def_set_race[type2].value = val;
+		BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+			sd->def_set_race[i].rate = type3;
+			sd->def_set_race[i].tick = type4;
+			sd->def_set_race[i].value = val;
 		}
+	}
 		break;
 
 	case SP_SET_MDEF_RACE: //bonus4 bSetMDefRace,n,x,r,y;
-		if (type2 == RC_MAX || (type2 > RC_NONDEMIPLAYER && type2 != RC_ALL) || type2 < RC_FORMLESS ){
-			ShowWarning("pc_bonus4: SP_SET_MDEF_RACE: Invalid Race(%d)\n",type2);
+	{
+		uint32 race_mask = map->race_id2mask(type2);
+		if (race_mask == RCMASK_NONE) {
+			ShowWarning("pc_bonus4: SP_SET_MDEF_RACE: Invalid Race (%d)\n", type2);
 			break;
 		}
-		if(sd->state.lr_flag == 2)
+		if (sd->state.lr_flag == 2)
 			break;
-		if ( type2 >= RC_MAX ) {
-			for ( i = RC_FORMLESS; i < RC_BOSS; i++ ) {
-				if ( (type2 == RC_NONPLAYER && i == RC_PLAYER) ||
-	 				 (type2 == RC_NONDEMIHUMAN && i == RC_DEMIHUMAN) ||
-	 				 (type2 == RC_DEMIPLAYER && (i != RC_PLAYER && i != RC_DEMIHUMAN)) ||
-	 				 (type2 == RC_NONDEMIPLAYER && (i == RC_PLAYER || i == RC_DEMIHUMAN))
-					)
-					continue;
-				sd->mdef_set_race[i].rate = type3;
-				sd->mdef_set_race[i].tick = type4;
-				sd->mdef_set_race[i].value = val;
-			}
-		} else {
-			sd->mdef_set_race[type2].rate = type3;
-			sd->mdef_set_race[type2].tick = type4;
-			sd->mdef_set_race[type2].value = val;
+		BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask) {
+			sd->mdef_set_race[i].rate = type3;
+			sd->mdef_set_race[i].tick = type4;
+			sd->mdef_set_race[i].value = val;
 		}
+	}
 		break;
 
 	case SP_ADDEFF:
@@ -4042,6 +3920,8 @@ int pc_bonus5(struct map_session_data *sd,int type,int type2,int type3,int type4
 
 	return 0;
 }
+
+#undef BONUS_FOREACH_RCARRAY_FROMMASK
 
 /*==========================================
  * Grants a player a given skill.
@@ -10588,17 +10468,17 @@ int pc_level_penalty_mod(int diff, unsigned char race, unsigned short mode, int 
 	if( diff < 0 )
 		diff = MAX_LEVEL + ( ~diff + 1 );
 
-	for(i=0; i<RC_MAX; i++){
+	for (i = RC_FORMLESS; i < RC_MAX; i++) {
 		int tmp;
 
-		if( race != i ){
-			if( mode&MD_BOSS && i < RC_BOSS )
+		if (race != i) {
+			if (mode&MD_BOSS && i < RC_BOSS)
 				i = RC_BOSS;
-			else if( i <= RC_BOSS )
+			else if (i <= RC_BOSS)
 				continue;
 		}
 
-		if( (tmp=pc->level_penalty[type][i][diff]) > 0 ){
+		if ((tmp=pc->level_penalty[type][i][diff]) > 0) {
 			rate = tmp;
 			break;
 		}
@@ -10812,7 +10692,7 @@ bool pc_readdb_levelpenalty(char* fields[], int columns, int current) {
 		return false;
 	}
 
-	if( race < 0 || race > RC_MAX ){
+	if (race < RC_FORMLESS || race > RC_MAX) {
 		ShowWarning("pc_readdb_levelpenalty: Invalid race %d specified.\n", race);
 		return false;
 	}
@@ -10920,7 +10800,7 @@ int pc_readdb(void) {
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	sv->readdb(map->db_path, "re/level_penalty.txt", ',', 4, 4, -1, pc->readdb_levelpenalty);
 	for( k=1; k < 3; k++ ){ // fill in the blanks
-		for( j = 0; j < RC_MAX; j++ ){
+		for (j = RC_FORMLESS; j < RC_MAX; j++) {
 			int tmp = 0;
 			for( i = 0; i < MAX_LEVEL*2; i++ ){
 				if( i == MAX_LEVEL+1 )
