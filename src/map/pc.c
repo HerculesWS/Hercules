@@ -2480,7 +2480,8 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 				sd->bonus.misc_def_rate += val;
 			break;
 		case SP_IGNORE_MDEF_RATE:
-			if(sd->state.lr_flag != 2) {
+			if (sd->state.lr_flag != 2) {
+				// Decomposed RC_ALL:
 				sd->ignore_mdef[RC_NONBOSS] += val;
 				sd->ignore_mdef[RC_BOSS] += val;
 			}
@@ -2756,21 +2757,23 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 				sd->bonus.unstripable_equip |= EQP_SHIELD;
 			break;
 		case SP_HP_DRAIN_VALUE:
-			if(!sd->state.lr_flag) {
+			if (sd->state.lr_flag == 0) {
+				// Decomposed RC_ALL:
 				sd->right_weapon.hp_drain[RC_NONBOSS].value += val;
 				sd->right_weapon.hp_drain[RC_BOSS].value += val;
-			}
-			else if(sd->state.lr_flag == 1) {
+			} else if (sd->state.lr_flag == 1) {
+				// Decomposed RC_ALL:
 				sd->left_weapon.hp_drain[RC_NONBOSS].value += val;
 				sd->left_weapon.hp_drain[RC_BOSS].value += val;
 			}
 			break;
 		case SP_SP_DRAIN_VALUE:
-			if(!sd->state.lr_flag) {
+			if (sd->state.lr_flag == 0) {
+				// Decomposed RC_ALL:
 				sd->right_weapon.sp_drain[RC_NONBOSS].value += val;
 				sd->right_weapon.sp_drain[RC_BOSS].value += val;
-			}
-			else if(sd->state.lr_flag == 1) {
+			} else if (sd->state.lr_flag == 1) {
+				// Decomposed RC_ALL:
 				sd->left_weapon.sp_drain[RC_NONBOSS].value += val;
 				sd->left_weapon.sp_drain[RC_BOSS].value += val;
 			}
@@ -2828,7 +2831,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 	#endif
 		case SP_ADD_MONSTER_DROP_CHAINITEM:
 			if (sd->state.lr_flag != 2)
-				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), 0, val, map->race_id2mask(RC_BOSS)|map->race_id2mask(RC_NONBOSS), 10000);
+				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), 0, val, map->race_id2mask(RC_ALL), 10000);
 		break;
 		default:
 			ShowWarning("pc_bonus: unknown type %d %d !\n",type,val);
@@ -3094,13 +3097,14 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				memmove(&sd->add_mdef[i], &sd->add_mdef[i+1], sizeof(sd->add_mdef) - (i+1)*sizeof(sd->add_mdef[0]));
 			break;
 		case SP_HP_DRAIN_RATE:
-			if(!sd->state.lr_flag) {
+			if (sd->state.lr_flag == 0) {
+				// Decomposed RC_ALL:
 				sd->right_weapon.hp_drain[RC_NONBOSS].rate += type2;
 				sd->right_weapon.hp_drain[RC_NONBOSS].per += val;
 				sd->right_weapon.hp_drain[RC_BOSS].rate += type2;
 				sd->right_weapon.hp_drain[RC_BOSS].per += val;
-			}
-			else if(sd->state.lr_flag == 1) {
+			} else if (sd->state.lr_flag == 1) {
+				// Decomposed RC_ALL:
 				sd->left_weapon.hp_drain[RC_NONBOSS].rate += type2;
 				sd->left_weapon.hp_drain[RC_NONBOSS].per += val;
 				sd->left_weapon.hp_drain[RC_BOSS].rate += type2;
@@ -3108,13 +3112,14 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			break;
 		case SP_HP_DRAIN_VALUE:
-			if(!sd->state.lr_flag) {
+			if (sd->state.lr_flag == 0) {
+				// Decomposed RC_ALL:
 				sd->right_weapon.hp_drain[RC_NONBOSS].value += type2;
 				sd->right_weapon.hp_drain[RC_NONBOSS].type = val;
 				sd->right_weapon.hp_drain[RC_BOSS].value += type2;
 				sd->right_weapon.hp_drain[RC_BOSS].type = val;
-			}
-			else if(sd->state.lr_flag == 1) {
+			} else if (sd->state.lr_flag == 1) {
+				// Decomposed RC_ALL:
 				sd->left_weapon.hp_drain[RC_NONBOSS].value += type2;
 				sd->left_weapon.hp_drain[RC_NONBOSS].type = val;
 				sd->left_weapon.hp_drain[RC_BOSS].value += type2;
@@ -3122,13 +3127,14 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			break;
 		case SP_SP_DRAIN_RATE:
-			if(!sd->state.lr_flag) {
+			if (sd->state.lr_flag == 0) {
+				// Decomposed RC_ALL:
 				sd->right_weapon.sp_drain[RC_NONBOSS].rate += type2;
 				sd->right_weapon.sp_drain[RC_NONBOSS].per += val;
 				sd->right_weapon.sp_drain[RC_BOSS].rate += type2;
 				sd->right_weapon.sp_drain[RC_BOSS].per += val;
-			}
-			else if(sd->state.lr_flag == 1) {
+			} else if (sd->state.lr_flag == 1) {
+				// Decomposed RC_ALL:
 				sd->left_weapon.sp_drain[RC_NONBOSS].rate += type2;
 				sd->left_weapon.sp_drain[RC_NONBOSS].per += val;
 				sd->left_weapon.sp_drain[RC_BOSS].rate += type2;
@@ -3136,13 +3142,14 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			}
 			break;
 		case SP_SP_DRAIN_VALUE:
-			if(!sd->state.lr_flag) {
+			if (sd->state.lr_flag == 0) {
+				// Decomposed RC_ALL:
 				sd->right_weapon.sp_drain[RC_NONBOSS].value += type2;
 				sd->right_weapon.sp_drain[RC_NONBOSS].type = val;
 				sd->right_weapon.sp_drain[RC_BOSS].value += type2;
 				sd->right_weapon.sp_drain[RC_BOSS].type = val;
-			}
-			else if(sd->state.lr_flag == 1) {
+			} else if (sd->state.lr_flag == 1) {
+				// Decomposed RC_ALL:
 				sd->left_weapon.sp_drain[RC_NONBOSS].value += type2;
 				sd->left_weapon.sp_drain[RC_NONBOSS].type = val;
 				sd->left_weapon.sp_drain[RC_BOSS].value += type2;
@@ -3440,7 +3447,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			break;
 		case SP_ADD_MONSTER_DROP_ITEM:
 			if (sd->state.lr_flag != 2)
-				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), type2, 0, map->race_id2mask(RC_BOSS)|map->race_id2mask(RC_NONBOSS), val);
+				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), type2, 0, map->race_id2mask(RC_ALL), val);
 			break;
 		case SP_SP_LOSS_RATE:
 			if(sd->state.lr_flag != 2) {
@@ -3741,16 +3748,16 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 			}
 			break;
 		case SP_SP_DRAIN_RATE:
-			if(!sd->state.lr_flag) {
+			if (sd->state.lr_flag == 0) {
+				// Decomposed RC_ALL:
 				sd->right_weapon.sp_drain[RC_NONBOSS].rate += type2;
 				sd->right_weapon.sp_drain[RC_NONBOSS].per += type3;
 				sd->right_weapon.sp_drain[RC_NONBOSS].type = val;
 				sd->right_weapon.sp_drain[RC_BOSS].rate += type2;
 				sd->right_weapon.sp_drain[RC_BOSS].per += type3;
 				sd->right_weapon.sp_drain[RC_BOSS].type = val;
-
-			}
-			else if(sd->state.lr_flag == 1) {
+			} else if (sd->state.lr_flag == 1) {
+				// Decomposed RC_ALL:
 				sd->left_weapon.sp_drain[RC_NONBOSS].rate += type2;
 				sd->left_weapon.sp_drain[RC_NONBOSS].per += type3;
 				sd->left_weapon.sp_drain[RC_NONBOSS].type = val;
