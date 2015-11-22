@@ -775,6 +775,7 @@ typedef enum sc_type {
 	SC_ATKER_MOVESPEED,
 	
 	SC_FOOD_CRITICALSUCCESSVALUE, // 610
+	SC_CUP_OF_BOZA,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
@@ -1540,7 +1541,7 @@ enum si_type {
 	//SI_JITTER_BUFF8                          = 748,
 	//SI_JITTER_BUFF9                          = 749,
 	//SI_JITTER_BUFF10                         = 750,
-	//SI_CUP_OF_BOZA                           = 751,
+	SI_CUP_OF_BOZA                           = 751,
 	SI_B_TRAP                                = 752,
 	SI_E_CHAIN                               = 753,
 	SI_E_QD_SHOT_READY                       = 754,
