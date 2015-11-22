@@ -14743,6 +14743,7 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 		}
 		if (sc->data[SC_MYSTICSCROLL])
 			VARCAST_REDUCTION(sc->data[SC_MYSTICSCROLL]->val1);
+			
 		// Fixed cast reduction bonuses
 		if( sc->data[SC__LAZINESS] )
 			fixcast_r = max(fixcast_r, sc->data[SC__LAZINESS]->val2);
@@ -14755,6 +14756,9 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 			if (radius_lv)
 				fixcast_r = max(fixcast_r, (status_get_int(bl) + status->get_lv(bl)) / 15 + radius_lv * 5); // [{(Caster?s INT / 15) + (Caster?s Base Level / 15) + (Radius Skill Level x 5)}] %
 		}
+		if (sc->data[SC_FENRIR_CARD])
+			fixcast_r = max(fixcast_r, sc->data[SC_FENRIR_CARD]->val2);
+
 		// Fixed cast non percentage bonuses
 		if( sc->data[SC_MANDRAGORA] )
 			fixed += sc->data[SC_MANDRAGORA]->val1 * 500;

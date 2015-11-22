@@ -827,6 +827,17 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_ACARAJE] = SI_ACARAJE;
 	status->dbs->IconChangeTable[SC_TARGET_ASPD] = SI_TARGET_ASPD;
 	
+	// Eden Crystal Synthesis
+	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
+	status->dbs->IconChangeTable[SC_QUEST_BUFF2] = SI_QUEST_BUFF2;
+	status->dbs->IconChangeTable[SC_QUEST_BUFF3] = SI_QUEST_BUFF3;
+	
+	// Geffen Magic Tournament
+	status->dbs->IconChangeTable[SC_GEFFEN_MAGIC1] = SI_GEFFEN_MAGIC1;
+	status->dbs->IconChangeTable[SC_GEFFEN_MAGIC2] = SI_GEFFEN_MAGIC2;
+	status->dbs->IconChangeTable[SC_GEFFEN_MAGIC3] = SI_GEFFEN_MAGIC3;
+	status->dbs->IconChangeTable[SC_FENRIR_CARD] = SI_FENRIR_CARD;
+	
 	// Mercenary Bonus Effects
 	status->dbs->IconChangeTable[SC_MER_FLEE] = SI_MER_FLEE;
 	status->dbs->IconChangeTable[SC_MER_ATK] = SI_MER_ATK;
@@ -1043,10 +1054,22 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_ALL_RIDING] = SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_WEDDING] = SCB_SPEED;
 
-	status->dbs->ChangeFlagTable[SC_MTF_ASPD] = SCB_ASPD|SCB_HIT;
+	status->dbs->ChangeFlagTable[SC_MTF_ASPD] = SCB_ASPD | SCB_HIT;
 	status->dbs->ChangeFlagTable[SC_MTF_MATK] = SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_MTF_MLEATKED] |= SCB_ALL;
-
+	
+	// Eden Crystal Synthesis
+	status->dbs->ChangeFlagTable[SC_QUEST_BUFF1] |= SCB_BATK | SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_QUEST_BUFF2] |= SCB_BATK | SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_QUEST_BUFF3] |= SCB_BATK | SCB_MATK;
+	
+	// Geffen Magic Tournament
+	status->dbs->ChangeFlagTable[SC_GEFFEN_MAGIC1] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_GEFFEN_MAGIC2] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_GEFFEN_MAGIC3] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_FENRIR_CARD] |= SCB_MATK | SCB_ALL;
+	
+	// Costume
 	status->dbs->ChangeFlagTable[SC_MOONSTAR] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_SUPER_STAR] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_STRANGELIGHTS] |= SCB_NONE;
@@ -2996,6 +3019,21 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		}
 		if (sc->data[SC_IMMUNITYSCROLL])
 			sd->subele[ELE_NEUTRAL] += sd->subele[ELE_NEUTRAL] * sc->data[SC_IMMUNITYSCROLL]->val1 / 100;
+		
+		// Geffen Magic Tournament
+		if (sc->data[SC_GEFFEN_MAGIC1]) {
+			sd->right_weapon.addrace[RC_DEMIHUMAN] += sc->data[SC_DISTRUCTIONSCROLL]->val1;
+			sd->left_weapon.addrace[RC_DEMIHUMAN] += sc->data[SC_DISTRUCTIONSCROLL]->val1;	
+		}
+		if (sc->data[SC_GEFFEN_MAGIC2])
+			sd->magic_addrace[RC_DEMIHUMAN] += sc->data[SC_GEFFEN_MAGIC2]->val1;
+		if (sc->data[SC_GEFFEN_MAGIC3]) {
+#ifdef RENEWAL
+			sd->race_tolerance[RC_DEMIHUMAN] += sc->data[SC_GEFFEN_MAGIC3]->val1;
+#else
+			sd->subrace[RC_DEMIHUMAN] += sc->data[SC_GEFFEN_MAGIC3]->val1;
+#endif
+		}	
 	}
 	status_cpy(&sd->battle_status, bstatus);
 
@@ -4588,6 +4626,14 @@ unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc,
 		batk -= batk * sc->data[SC__ENERVATION]->val2 / 100;
 	if(sc->data[SC_SATURDAY_NIGHT_FEVER])
 		batk += 100 * sc->data[SC_SATURDAY_NIGHT_FEVER]->val1;
+		
+	// Eden Crystal Synthesis
+	if (sc->data[SC_QUEST_BUFF1])
+		batk += sc->data[SC_QUEST_BUFF1]->val1;
+	if (sc->data[SC_QUEST_BUFF2])
+		batk += sc->data[SC_QUEST_BUFF2]->val1;
+	if (sc->data[SC_QUEST_BUFF3])
+		batk += sc->data[SC_QUEST_BUFF3]->val1;
 
 	return (unsigned short)cap_value(batk,0,USHRT_MAX);
 }
@@ -4756,6 +4802,18 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += matk * 25 / 100;
 	if (sc->data[SC_MYSTICSCROLL])
 		matk += matk * sc->data[SC_MYSTICSCROLL]->val1 / 100;
+		
+	// Eden Crystal Synthesis
+	if (sc->data[SC_QUEST_BUFF1])
+		matk += sc->data[SC_QUEST_BUFF1]->val1;
+	if (sc->data[SC_QUEST_BUFF2])
+		matk += sc->data[SC_QUEST_BUFF2]->val1;
+	if (sc->data[SC_QUEST_BUFF3])
+		matk += sc->data[SC_QUEST_BUFF3]->val1;
+		
+	// Geffen Magic Tournament
+	if (sc->data[SC_FENRIR_CARD])
+		matk += sc->data[SC_FENRIR_CARD]->val1;
 
 	return (unsigned short)cap_value(matk,0,USHRT_MAX);
 }
