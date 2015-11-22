@@ -14316,15 +14316,17 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 
 	req.sp = cap_value(req.sp * sp_skill_rate_bonus / 100, 0, SHRT_MAX);
 
-	if( sc ) {
-		if( sc->data[SC__LAZINESS] )
+	if (sc) {
+		if (sc->data[SC__LAZINESS])
 			req.sp += req.sp + sc->data[SC__LAZINESS]->val1 * 10;
-		if( sc->data[SC_UNLIMITED_HUMMING_VOICE] )
+		if (sc->data[SC_UNLIMITED_HUMMING_VOICE])
 			req.sp += req.sp * sc->data[SC_UNLIMITED_HUMMING_VOICE]->val3 / 100;
-		if( sc->data[SC_RECOGNIZEDSPELL] )
+		if (sc->data[SC_RECOGNIZEDSPELL])
 			req.sp += req.sp / 4;
-		if( sc->data[SC_TELEKINESIS_INTENSE] && skill->get_ele(skill_id, skill_lv) == ELE_GHOST)
+		if (sc->data[SC_TELEKINESIS_INTENSE] && skill->get_ele(skill_id, skill_lv) == ELE_GHOST)
 			req.sp -= req.sp * sc->data[SC_TELEKINESIS_INTENSE]->val2 / 100;
+		if (sc->data[SC_TARGET_ASPD])
+			req.sp -= req.sp * sc->data[SC_TARGET_ASPD]->val1 / 100;
 	}
 
 	req.zeny = skill->dbs->db[idx].zeny[skill_lv-1];
@@ -14739,6 +14741,8 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 						VARCAST_REDUCTION(50);
 				}
 		}
+		if (sc->data[SC_MYSTICSCROLL])
+			VARCAST_REDUCTION(sc->data[SC_MYSTICSCROLL]->val1);
 		// Fixed cast reduction bonuses
 		if( sc->data[SC__LAZINESS] )
 			fixcast_r = max(fixcast_r, sc->data[SC__LAZINESS]->val2);

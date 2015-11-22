@@ -825,6 +825,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_ATKER_BLOOD] = SI_ATKER_BLOOD;
 	status->dbs->IconChangeTable[SC_TARGET_BLOOD] = SI_TARGET_BLOOD;
 	status->dbs->IconChangeTable[SC_ACARAJE] = SI_ACARAJE;
+	status->dbs->IconChangeTable[SC_TARGET_ASPD] = SI_TARGET_ASPD;
 	
 	// Mercenary Bonus Effects
 	status->dbs->IconChangeTable[SC_MER_FLEE] = SI_MER_FLEE;
@@ -976,6 +977,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_WALKSPEED] |= SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_ITEMSCRIPT] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_TARGET_BLOOD] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_TARGET_ASPD] |= SCB_MAXSP;
 	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] = SCB_STR;
@@ -1026,6 +1028,17 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_MDEFSET] |= SCB_MDEF|SCB_MDEF2;
 	status->dbs->ChangeFlagTable[SC_MYSTERIOUS_POWDER] |= SCB_MAXHP;
 	status->dbs->ChangeFlagTable[SC_ACARAJE] |= SCB_HIT | SCB_ASPD;
+	
+	// Geffen Scrolls
+	status->dbs->ChangeFlagTable[SC_SKELSCROLL] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_DISTRUCTIONSCROLL] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_ROYALSCROLL] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_IMMUNITYSCROLL] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_MYSTICSCROLL] |= SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_BATTLESCROLL] |= SCB_BATK | SCB_ASPD;
+	status->dbs->ChangeFlagTable[SC_ARMORSCROLL] |= SCB_DEF | SCB_FLEE;
+	status->dbs->ChangeFlagTable[SC_FREYJASCROLL] |= SCB_MDEF | SCB_FLEE2;
+	status->dbs->ChangeFlagTable[SC_SOULSCROLL] |= SCB_MAXHP | SCB_MAXSP;
 
 	status->dbs->ChangeFlagTable[SC_ALL_RIDING] = SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_WEDDING] = SCB_SPEED;
@@ -2957,6 +2970,32 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 			sd->magic_addele[ELE_WIND] += 25;
 		if( sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 3 )
 			sd->magic_addele[ELE_EARTH] += 25;
+			
+		// Geffen Scrolls
+		if (sc->data[SC_SKELSCROLL]) {
+#ifdef RENEWAL
+			sd->race_tolerance[RC_DEMIHUMAN] += sc->data[SC_SKELSCROLL]->val1;
+#else
+			sd->subrace[RC_DEMIHUMAN] += sc->data[SC_SKELSCROLL]->val1;
+#endif
+		}
+		if (sc->data[SC_DISTRUCTIONSCROLL]) {
+			sd->right_weapon.addrace[RC_ANGEL] += sc->data[SC_DISTRUCTIONSCROLL]->val1;
+			sd->left_weapon.addrace[RC_ANGEL] += sc->data[SC_DISTRUCTIONSCROLL]->val1;
+			sd->right_weapon.addele[ELE_HOLY] += sc->data[SC_DISTRUCTIONSCROLL]->val1;
+			sd->left_weapon.addele[ELE_HOLY] += sc->data[SC_DISTRUCTIONSCROLL]->val1;
+			sd->right_weapon.addrace[RC_BOSS] += sc->data[SC_DISTRUCTIONSCROLL]->val1;
+			sd->left_weapon.addrace[RC_BOSS] += sc->data[SC_DISTRUCTIONSCROLL]->val1;
+		}
+		if (sc->data[SC_ROYALSCROLL]) {
+#ifdef RENEWAL
+			sd->race_tolerance[RC_BOSS] += sc->data[SC_ROYALSCROLL]->val1;
+#else
+			sd->subrace[RC_BOSS] += sc->data[SC_ROYALSCROLL]->val1;
+#endif
+		}
+		if (sc->data[SC_IMMUNITYSCROLL])
+			sd->subele[ELE_NEUTRAL] += sd->subele[ELE_NEUTRAL] * sc->data[SC_IMMUNITYSCROLL]->val1 / 100;
 	}
 	status_cpy(&sd->battle_status, bstatus);
 
@@ -4715,6 +4754,8 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += matk * sc->data[SC_MOONLIT_SERENADE]->val2/100;
 	if (sc->data[SC_MTF_MATK])
 		matk += matk * 25 / 100;
+	if (sc->data[SC_MYSTICSCROLL])
+		matk += matk * sc->data[SC_MYSTICSCROLL]->val1 / 100;
 
 	return (unsigned short)cap_value(matk,0,USHRT_MAX);
 }
@@ -4895,9 +4936,10 @@ signed short status_calc_flee(struct block_list *bl, struct status_change *sc, i
 		if(status_get_element(bl) == ELE_WATER) //water type
 			flee /= 2;
 	}
-
 	if( sc->data[SC_OVERED_BOOST] ) // should be final and unmodifiable by any means
 		flee = sc->data[SC_OVERED_BOOST]->val2;
+	if (sc->data[SC_ARMORSCROLL])
+		flee += sc->data[SC_ARMORSCROLL]->val2;
 
 	return (short)cap_value(flee,1,SHRT_MAX);
 }
@@ -4918,6 +4960,8 @@ signed short status_calc_flee2(struct block_list *bl, struct status_change *sc, 
 		flee2 += sc->data[SC_WHISTLE]->val3*10;
 	if(sc->data[SC__UNLUCKY])
 		flee2 -= flee2 * sc->data[SC__UNLUCKY]->val2 / 100;
+	if (sc->data[SC_FREYJASCROLL])
+		flee2 += sc->data[SC_FREYJASCROLL]->val2;
 
 	return (short)cap_value(flee2,10,SHRT_MAX);
 }
@@ -5017,6 +5061,8 @@ defType status_calc_def(struct block_list *bl, struct status_change *sc, int def
 	}
 	if (sc->data[SC_UNLIMIT])
 		return 1;
+	if (sc->data[SC_ARMORSCROLL])
+		def += sc->data[SC_ARMORSCROLL]->val1;
 
 	return (defType)cap_value(def,DEFTYPE_MIN,DEFTYPE_MAX);
 }
@@ -5145,6 +5191,8 @@ defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int md
 		mdef -= mdef *25 / 100;
 	if (sc->data[SC_UNLIMIT])
 		return 1;
+	if (sc->data[SC_FREYJASCROLL])
+		mdef += sc->data[SC_FREYJASCROLL]->val1;
 
 	return (defType)cap_value(mdef,DEFTYPE_MIN,DEFTYPE_MAX);
 }
@@ -5493,6 +5541,8 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 			bonus += 3 * sc->data[SC_STAR_COMFORT]->val1;
 		if (sc->data[SC_ACARAJE])
 			bonus += sc->data[SC_ACARAJE]->val2;
+		if (sc->data[SC_BATTLESCROLL])
+			bonus += sc->data[SC_BATTLESCROLL]->val1;
 	}
 
 	return (bonus + pots);
@@ -5656,6 +5706,8 @@ short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int
 		aspd_rate -= sc->data[SC_GOLDENE_FERSE]->val3 * 10;
 	if (sc->data[SC_ACARAJE])
 		aspd_rate += sc->data[SC_ACARAJE]->val2 * 10;
+	if (sc->data[SC_BATTLESCROLL])
+		aspd_rate += sc->data[SC_BATTLESCROLL]->val1 * 10;
 
 	return (short)cap_value(aspd_rate,0,SHRT_MAX);
 }
@@ -5701,10 +5753,8 @@ unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, 
 		maxhp += 3000;
 	if(sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 2)
 		maxhp += 500;
-
 	if(sc->data[SC_MER_HP])
 		maxhp += maxhp * sc->data[SC_MER_HP]->val2/100;
-
 	if(sc->data[SC_EPICLESIS])
 		maxhp += maxhp * 5 * sc->data[SC_EPICLESIS]->val1 / 100;
 	if(sc->data[SC_VENOMBLEED])
@@ -5741,6 +5791,8 @@ unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, 
 		maxhp += maxhp * sc->data[SC_GOLDENE_FERSE]->val2 / 100;
 	if(sc->data[SC_FRIGG_SONG])
 		maxhp += maxhp * sc->data[SC_FRIGG_SONG]->val2 / 100;
+	if (sc->data[SC_SOULSCROLL])
+		maxhp += maxhp * sc->data[SC_SOULSCROLL]->val1 / 100;
 
 	return (unsigned int)cap_value(maxhp,1,UINT_MAX);
 }
@@ -5768,6 +5820,10 @@ unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, 
 		maxsp += 50;
 	if (sc->data[SC_VITATA_500])
 		maxsp += maxsp * sc->data[SC_VITATA_500]->val2 / 100;
+	if (sc->data[SC_TARGET_ASPD])
+		maxsp += maxsp * sc->data[SC_TARGET_ASPD]->val1 / 100;
+	if (sc->data[SC_SOULSCROLL])
+		maxsp += maxsp * sc->data[SC_SOULSCROLL]->val1 / 100;
 
 	return cap_value(maxsp,1,UINT_MAX);
 }

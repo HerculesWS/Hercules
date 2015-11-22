@@ -747,6 +747,18 @@ typedef enum sc_type {
 	SC_MERMAID_LONGING,
 	
 	SC_ACARAJE, // 590
+	SC_TARGET_ASPD,
+	
+	// Geffen Scrolls
+	SC_SKELSCROLL,
+	SC_DISTRUCTIONSCROLL,
+	SC_ROYALSCROLL,
+	SC_IMMUNITYSCROLL,
+	SC_MYSTICSCROLL,
+	SC_BATTLESCROLL,
+	SC_ARMORSCROLL,
+	SC_FREYJASCROLL,
+	SC_SOULSCROLL, // 600
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
@@ -1058,7 +1070,7 @@ enum si_type {
 	SI_CRITICALPERCENT                       = 295,
 	SI_PLUSAVOIDVALUE                        = 296,
 	//SI_ATKER_ASPD                          = 297,
-	//SI_TARGET_ASPD                         = 298,
+	SI_TARGET_ASPD                           = 298,
 	//SI_ATKER_MOVESPEED                     = 299,
 
 	SI_ATKER_BLOOD                           = 300,
