@@ -826,6 +826,8 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_TARGET_BLOOD] = SI_TARGET_BLOOD;
 	status->dbs->IconChangeTable[SC_ACARAJE] = SI_ACARAJE;
 	status->dbs->IconChangeTable[SC_TARGET_ASPD] = SI_TARGET_ASPD;
+	status->dbs->IconChangeTable[SC_ATKER_ASPD] = SI_ATKER_ASPD;
+	status->dbs->IconChangeTable[SC_ATKER_MOVESPEED] = SI_ATKER_MOVESPEED;
 	
 	// Eden Crystal Synthesis
 	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
@@ -989,6 +991,8 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_ITEMSCRIPT] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_TARGET_BLOOD] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_TARGET_ASPD] |= SCB_MAXSP;
+	status->dbs->ChangeFlagTable[SC_ATKER_ASPD] |= SCB_MAXHP | SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_ATKER_MOVESPEED] |= SCB_MAXSP | SCB_ALL;
 	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] = SCB_STR;
@@ -3405,7 +3409,7 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 		} else
 			regen->flag&=~sce->val4; //Remove regen as specified by val4
 	}
-	if(sc->data[SC_GENTLETOUCH_REVITALIZE]) {
+	if (sc->data[SC_GENTLETOUCH_REVITALIZE]) {
 		regen->hp += regen->hp * ( 30 * sc->data[SC_GENTLETOUCH_REVITALIZE]->val1 + 50 ) / 100;
 	}
 	if ((sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 1) //if insignia lvl 1
@@ -3413,12 +3417,16 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 		|| (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 1)
 		|| (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 1))
 		regen->rate.hp *= 2;
-	if( sc->data[SC_VITALITYACTIVATION] )
+	if (sc->data[SC_VITALITYACTIVATION])
 		regen->flag &=~RGN_SP;
-	if(sc->data[SC_EXTRACT_WHITE_POTION_Z])
-		regen->rate.hp += regen->rate.hp * sc->data[SC_EXTRACT_WHITE_POTION_Z]->val1/100;
+	if (sc->data[SC_EXTRACT_WHITE_POTION_Z])
+		regen->rate.hp += regen->rate.hp * sc->data[SC_EXTRACT_WHITE_POTION_Z]->val1 / 100;
 	if (sc->data[SC_VITATA_500])
 		regen->rate.sp += regen->rate.sp * sc->data[SC_VITATA_500]->val1 / 100;
+	if (sc->data[SC_ATKER_ASPD])
+		regen->rate.hp += regen->rate.hp * sc->data[SC_ATKER_ASPD]->val2 / 100;
+	if (sc->data[SC_ATKER_MOVESPEED])
+		regen->rate.sp += regen->rate.sp * sc->data[SC_ATKER_MOVESPEED]->val2 / 100;
 }
 /// Recalculates parts of an object's battle status according to the specified flags.
 /// @param flag bitfield of values from enum scb_flag
@@ -5851,6 +5859,8 @@ unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, 
 		maxhp += maxhp * sc->data[SC_FRIGG_SONG]->val2 / 100;
 	if (sc->data[SC_SOULSCROLL])
 		maxhp += maxhp * sc->data[SC_SOULSCROLL]->val1 / 100;
+	if (sc->data[SC_ATKER_ASPD])
+		maxhp += maxhp * sc->data[SC_ATKER_ASPD]->val1 / 100;
 
 	return (unsigned int)cap_value(maxhp,1,UINT_MAX);
 }
@@ -5882,6 +5892,8 @@ unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, 
 		maxsp += maxsp * sc->data[SC_TARGET_ASPD]->val1 / 100;
 	if (sc->data[SC_SOULSCROLL])
 		maxsp += maxsp * sc->data[SC_SOULSCROLL]->val1 / 100;
+	if (sc->data[SC_ATKER_MOVESPEED])
+		maxsp += maxsp * sc->data[SC_ATKER_MOVESPEED]->val1 / 100;
 
 	return cap_value(maxsp,1,UINT_MAX);
 }

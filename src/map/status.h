@@ -770,6 +770,9 @@ typedef enum sc_type {
 	SC_GEFFEN_MAGIC2,
 	SC_GEFFEN_MAGIC3,
 	SC_FENRIR_CARD,
+	
+	SC_ATKER_ASPD,
+	SC_ATKER_MOVESPEED,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
@@ -1080,9 +1083,9 @@ enum si_type {
 	SI_L_LIFEPOTION                          = 294,
 	SI_CRITICALPERCENT                       = 295,
 	SI_PLUSAVOIDVALUE                        = 296,
-	//SI_ATKER_ASPD                          = 297,
+	SI_ATKER_ASPD                            = 297,
 	SI_TARGET_ASPD                           = 298,
-	//SI_ATKER_MOVESPEED                     = 299,
+	SI_ATKER_MOVESPEED                       = 299,
 
 	SI_ATKER_BLOOD                           = 300,
 	SI_TARGET_BLOOD                          = 301,
