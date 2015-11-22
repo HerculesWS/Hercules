@@ -802,6 +802,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_SPL_MATK] = SI_SPL_MATK;
 	status->dbs->IconChangeTable[SC_PLUSATTACKPOWER] = SI_PLUSATTACKPOWER;
 	status->dbs->IconChangeTable[SC_PLUSMAGICPOWER] = SI_PLUSMAGICPOWER;
+	status->dbs->IconChangeTable[SC_FOOD_CRITICALSUCCESSVALUE] = SI_FOOD_CRITICALSUCCESSVALUE;
 
 	// Cash Items
 	status->dbs->IconChangeTable[SC_FOOD_STR_CASH] = SI_FOOD_STR_CASH;
@@ -993,6 +994,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_TARGET_ASPD] |= SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_ATKER_ASPD] |= SCB_MAXHP | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_ATKER_MOVESPEED] |= SCB_MAXSP | SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_FOOD_CRITICALSUCCESSVALUE] |= SCB_CRI;
 	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] = SCB_STR;
@@ -4839,6 +4841,8 @@ signed short status_calc_critical(struct block_list *bl, struct status_change *s
 
 	if (sc->data[SC_CRITICALPERCENT])
 		critical += sc->data[SC_CRITICALPERCENT]->val2;
+	if (sc->data[SC_FOOD_CRITICALSUCCESSVALUE])
+		critical += sc->data[SC_FOOD_CRITICALSUCCESSVALUE]->val1;
 	if (sc->data[SC_EXPLOSIONSPIRITS])
 		critical += sc->data[SC_EXPLOSIONSPIRITS]->val2;
 	if (sc->data[SC_FORTUNE])
