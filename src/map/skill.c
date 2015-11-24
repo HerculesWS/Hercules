@@ -975,7 +975,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			status_zap(bl, 0, rate);
 			break;
 		case SL_STUN:
-			if (tstatus->size==SZ_MEDIUM) //Only stuns mid-sized mobs.
+			if (tstatus->size==MOBSIZE_MEDIUM) //Only stuns mid-sized mobs.
 				sc_start(src,bl,SC_STUN,(30+10*skill_lv),skill_lv,skill->get_time(skill_id,skill_lv));
 			break;
 

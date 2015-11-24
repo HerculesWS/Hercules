@@ -2280,13 +2280,13 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	//Give them all modes except these (useful for clones)
 	bstatus->mode = MD_MASK&~(MD_BOSS|MD_PLANT|MD_DETECTOR|MD_ANGRY|MD_TARGETWEAK);
 
-	bstatus->size = (sd->class_&JOBL_BABY)?SZ_SMALL:SZ_MEDIUM;
+	bstatus->size = (sd->class_&JOBL_BABY)? MOBSIZE_SMALL : MOBSIZE_MEDIUM;
 	if (battle_config.character_size && (pc_isridingpeco(sd) || pc_isridingdragon(sd))) { //[Lupus]
 		if (sd->class_&JOBL_BABY) {
-			if (battle_config.character_size&SZ_BIG)
+			if (battle_config.character_size & 2)
 				bstatus->size++;
 		} else {
-			if(battle_config.character_size&SZ_MEDIUM)
+			if(battle_config.character_size & 1)
 				bstatus->size++;
 		}
 	}

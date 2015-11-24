@@ -74,10 +74,10 @@ enum MobDamageLogFlag
 	MDLF_PET,
 };
 
-enum size {
-	SZ_SMALL = 0,
-	SZ_MEDIUM,
-	SZ_BIG,
+enum mobsize {
+	MOBSIZE_SMALL = 0,
+	MOBSIZE_MEDIUM,
+	MOBSIZE_BIG,
 };
 
 enum ai {
