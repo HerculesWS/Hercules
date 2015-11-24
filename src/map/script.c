@@ -16279,6 +16279,61 @@ BUILDIN(rid2name) {
 	return true;
 }
 
+/*==========================================
+ * Makes the player size bigger or smaller
+ * setcharsize <size>{,account_id};
+ *------------------------------------------*/
+BUILDIN(setcharsize) {
+	TBL_PC *sd = NULL;
+	int size;
+
+	size = script_getnum(st,2);
+	if (script_hasdata(st,3))
+		sd = map->id2sd(script_getnum(st,3));
+	else
+		sd = script->rid2sd(st);
+
+	if (!sd)
+		return true;
+
+	if (size < UNITSIZE_NORMAL || size > UNITSIZE_BIG) {
+		ShowError("buildin_setcharsize: Invalid size %d.\n", size);
+		return false;
+	}
+
+	if (sd->state.size) {
+		sd->state.size = UNITSIZE_NORMAL;
+		pc->setpos(sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_TELEPORT);
+	}
+
+	sd->state.size = size;
+	if (size == UNITSIZE_SMALL)
+		clif->specialeffect(&sd->bl, 420, AREA);
+	else if (size == UNITSIZE_BIG)
+		clif->specialeffect(&sd->bl, 422, AREA);
+
+	return true;
+}
+
+/*==========================================
+ * Retrieve the size of the player
+ * getcharsize {<account_id>};
+ *------------------------------------------*/
+BUILDIN(getcharsize) {
+	TBL_PC *sd = NULL;
+
+	if (script_hasdata(st,2))
+		sd = map->id2sd(script_getnum(st,2));
+	else
+		sd = script->rid2sd(st);
+
+	if (!sd)
+		return true;
+
+	script_pushint(st, sd->state.size);
+	return true;
+}
+
 BUILDIN(pcblockmove) {
 	int id, flag;
 	TBL_PC *sd = NULL;
@@ -20350,6 +20405,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(strtol,"si"),
 		// [zBuffer] List of player cont commands --->
 		BUILDIN_DEF(rid2name,"i"),
+		BUILDIN_DEF(setcharsize,"i?"),
+		BUILDIN_DEF(getcharsize,"?"),
 		BUILDIN_DEF(pcfollow,"ii"),
 		BUILDIN_DEF(pcstopfollow,"i"),
 		BUILDIN_DEF(pcblockmove,"ii"),
