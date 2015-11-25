@@ -1377,6 +1377,8 @@ bool clif_spawn(struct block_list *bl)
 
 	if (vd->cloth_color)
 		clif->refreshlook(bl,bl->id,LOOK_CLOTHES_COLOR,vd->cloth_color,AREA_WOS);
+	if (vd->size)
+		unit->changeviewsize(bl, vd->size, 4);
 
 	switch (bl->type) {
 		case BL_PC:
@@ -1385,10 +1387,6 @@ bool clif_spawn(struct block_list *bl)
 				int i;
 				if (sd->spiritball > 0)
 					clif->spiritball(&sd->bl);
-				if(sd->vd.size==UNITSIZE_BIG) // tiny/big players [Valaris]
-					clif->specialeffect(bl,423,AREA);
-				else if(sd->vd.size==UNITSIZE_SMALL)
-					clif->specialeffect(bl,421,AREA);
 				if( sd->bg_id && map->list[sd->bl.m].flag.battleground )
 					clif->sendbgemblem_area(sd);
 				for( i = 0; i < sd->sc_display_count; i++ ) {
@@ -1398,24 +1396,6 @@ bool clif_spawn(struct block_list *bl)
 					clif->spiritcharm(sd);
 				if (sd->status.robe)
 					clif->refreshlook(bl,bl->id,LOOK_ROBE,sd->status.robe,AREA);
-			}
-			break;
-		case BL_MOB:
-			{
-				TBL_MOB *md = ((TBL_MOB*)bl);
-				if(md->vd->size==UNITSIZE_BIG) // tiny/big mobs [Valaris]
-					clif->specialeffect(&md->bl,423,AREA);
-				else if(md->vd->size==UNITSIZE_SMALL)
-					clif->specialeffect(&md->bl,421,AREA);
-			}
-			break;
-		case BL_NPC:
-			{
-				TBL_NPC *nd = ((TBL_NPC*)bl);
-				if( nd->vd->size == UNITSIZE_BIG )
-					clif->specialeffect(&nd->bl,423,AREA);
-				else if( nd->vd->size == UNITSIZE_SMALL )
-					clif->specialeffect(&nd->bl,421,AREA);
 			}
 			break;
 		case BL_PET:

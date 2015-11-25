@@ -7354,24 +7354,13 @@ ACMD(me)
  * @size
  * => Resize your character sprite. [Valaris]
  *------------------------------------------*/
-ACMD(size)
-{
+ACMD(size) {
 	int size = 0;
 
 	size = cap_value(atoi(message),UNITSIZE_NORMAL,UNITSIZE_BIG);
 
-	if(sd->vd.size) {
-		sd->vd.size = UNITSIZE_NORMAL;
-		pc->setpos(sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_TELEPORT);
-	}
-
-	sd->vd.size = size;
-	if( size == UNITSIZE_SMALL )
-		clif->specialeffect(&sd->bl,420,AREA);
-	else if( size == UNITSIZE_BIG )
-		clif->specialeffect(&sd->bl,422,AREA);
-
-	clif->message(fd, msg_fd(fd,1303)); // Size change applied.
+	if (unit->changeviewsize(&sd->bl, size, 3))
+		clif->message(fd, msg_fd(fd,1303)); // Size change applied.
 	return true;
 }
 
