@@ -243,7 +243,6 @@ enum bl_type {
 	BL_CHAT  = 0x100,
 	BL_ELEM  = 0x200,
 
-	BL_LIFE  = BL_PC | BL_MOB | BL_HOM | BL_MER | BL_NPC | BL_ELEM,
 	BL_ALL   = 0xFFF,
 };
 

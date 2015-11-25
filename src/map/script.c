@@ -15447,8 +15447,8 @@ BUILDIN(setnpcdisplay) {
 	if( newname )
 		npc->setdisplayname(nd, newname);
 
-	if( size != -1 && size != (int)nd->vd->size )
-		nd->vd->size = size;
+	if( size != -1 && size != (int)nd->size )
+		nd->size = size;
 	else
 		size = -1;
 
@@ -16301,12 +16301,12 @@ BUILDIN(setcharsize) {
 		return false;
 	}
 
-	if (sd->vd.size) {
-		sd->vd.size = UNITSIZE_NORMAL;
+	if (sd->state.size) {
+		sd->state.size = UNITSIZE_NORMAL;
 		pc->setpos(sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_TELEPORT);
 	}
 
-	sd->vd.size = size;
+	sd->state.size = size;
 	if (size == UNITSIZE_SMALL)
 		clif->specialeffect(&sd->bl, 420, AREA);
 	else if (size == UNITSIZE_BIG)
@@ -16330,7 +16330,7 @@ BUILDIN(getcharsize) {
 	if (!sd)
 		return true;
 
-	script_pushint(st, sd->vd.size);
+	script_pushint(st, sd->state.size);
 	return true;
 }
 

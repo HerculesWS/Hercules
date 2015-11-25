@@ -7354,13 +7354,24 @@ ACMD(me)
  * @size
  * => Resize your character sprite. [Valaris]
  *------------------------------------------*/
-ACMD(size) {
+ACMD(size)
+{
 	int size = 0;
 
 	size = cap_value(atoi(message),UNITSIZE_NORMAL,UNITSIZE_BIG);
 
-	if (unit->changeviewsize(&sd->bl, size, 3))
-		clif->message(fd, msg_fd(fd,1303)); // Size change applied.
+	if(sd->state.size) {
+		sd->state.size = UNITSIZE_NORMAL;
+		pc->setpos(sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_TELEPORT);
+	}
+
+	sd->state.size = size;
+	if( size == UNITSIZE_SMALL )
+		clif->specialeffect(&sd->bl,420,AREA);
+	else if( size == UNITSIZE_BIG )
+		clif->specialeffect(&sd->bl,422,AREA);
+
+	clif->message(fd, msg_fd(fd,1303)); // Size change applied.
 	return true;
 }
 
@@ -7375,13 +7386,13 @@ ACMD(sizeall)
 
 	iter = mapit_getallusers();
 	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter)) {
-		if (pl_sd->vd.size != size) {
-			if (pl_sd->vd.size) {
-				pl_sd->vd.size = UNITSIZE_NORMAL;
+		if (pl_sd->state.size != size) {
+			if (pl_sd->state.size) {
+				pl_sd->state.size = UNITSIZE_NORMAL;
 				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
 			}
 
-			pl_sd->vd.size = size;
+			pl_sd->state.size = size;
 			if (size == UNITSIZE_SMALL)
 				clif->specialeffect(&pl_sd->bl,420,AREA);
 			else if (size == UNITSIZE_BIG)
@@ -7416,13 +7427,13 @@ ACMD(sizeguild)
 	size = cap_value(size,UNITSIZE_NORMAL,UNITSIZE_BIG);
 
 	for (i = 0; i < g->max_member; i++) {
-		if ((pl_sd = g->member[i].sd) && pl_sd->vd.size != size) {
-			if( pl_sd->vd.size ) {
-				pl_sd->vd.size = UNITSIZE_NORMAL;
+		if ((pl_sd = g->member[i].sd) && pl_sd->state.size != size) {
+			if( pl_sd->state.size ) {
+				pl_sd->state.size = UNITSIZE_NORMAL;
 				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
 			}
 
-			pl_sd->vd.size = size;
+			pl_sd->state.size = size;
 			if( size == UNITSIZE_SMALL )
 				clif->specialeffect(&pl_sd->bl,420,AREA);
 			else if( size == UNITSIZE_BIG )

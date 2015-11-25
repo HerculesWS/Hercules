@@ -2286,62 +2286,23 @@ int unit_fixdamage(struct block_list *src, struct block_list *target, int sdelay
 }
 
 /*==========================================
- * To display the size of the unit
- * size is UNITSIZE_SMALL(1) or UNITSIZE_BIG(2)
- * flag &1 will show the animation for becoming big/small
- * flag &2 will refresh the client if the unit already big/small.
- *   This flag must ON in atcommand or setunitsize script command,
- *   and OFF in clif.c or spawning the unit
- * flag &4 means used in clif.c (conditioned first)
- * flag &8 use only when flag&4 on
- *   On = specialeffect AREA. Off = specialeffect_single
+ * To change the size of the char (player or mob only)
  *------------------------------------------*/
-int unit_changeviewsize(struct block_list *bl, unsigned int size, int flag) {
-	struct view_data *vd;
+int unit_changeviewsize(struct block_list *bl,short size)
+{
 	nullpo_ret(bl);
 
-	if (!(bl->type & BL_LIFE))
+	size=(size<0)?-1:(size>0)?1:0;
+
+	if(bl->type == BL_PC) {
+		((TBL_PC*)bl)->state.size=size;
+	} else if(bl->type == BL_MOB) {
+		((TBL_MOB*)bl)->special_state.size=size;
+	} else
 		return 0;
-ShowDebug("1");
-	if (flag & 4) {
-		if (flag & 8) {
-			if (size == UNITSIZE_SMALL)
-				clif->specialeffect(bl, 421, AREA);
-			else if (size == UNITSIZE_BIG)
-				clif->specialeffect(bl, 423, AREA);
-		}
-		else {
-			if (size == UNITSIZE_SMALL)
-				clif->specialeffect(bl, 421, AREA);
-			else if (size == UNITSIZE_BIG)
-				clif->specialeffect(bl, 423, AREA);
-		}
-		return 1;
-	}
-ShowDebug("2");
-	vd = status->get_viewdata(bl);
-
-	if (vd->size == size)
-		return 0;
-
-	if (!vd->size && flag & 1) {
-		if (size == UNITSIZE_SMALL)
-			clif->specialeffect(bl, 420, AREA);
-		else if (size == UNITSIZE_BIG)
-			clif->specialeffect(bl, 422, AREA);
-		vd->size = size;
-		return 1;
-	}
-
-	if (vd->size > 0 && flag & 2)
-		unit->warp(bl, bl->m, bl->x, bl->y, CLR_OUTSIGHT);
-
-	if (size == UNITSIZE_SMALL)
-		clif->specialeffect(bl, 421, AREA);
-	else if (size == UNITSIZE_BIG)
-		clif->specialeffect(bl, 423, AREA);
-	vd->size = size;
-	return 1;
+	if(size!=0)
+		clif->specialeffect(bl,421+size, AREA);
+	return 0;
 }
 
 /*==========================================
