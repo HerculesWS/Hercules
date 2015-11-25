@@ -273,7 +273,7 @@ struct mob_data* mob_spawn_dataset(struct spawn_data *data) {
 	if (data->state.ai)
 		md->special_state.ai = data->state.ai;
 	if (data->state.size)
-		md->special_state.size = data->state.size;
+		md->vd->size = data->state.size;
 	if (data->eventname[0] && strlen(data->eventname) >= 4)
 		memcpy(md->npc_event, data->eventname, 50);
 	if(md->db->status.mode&MD_LOOTER)
@@ -2208,7 +2208,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 
 		// change experience for different sized monsters [Valaris]
 		if (battle_config.mob_size_influence) {
-			switch( md->special_state.size ) {
+			switch( md->vd->size ) {
 				case UNITSIZE_SMALL:
 					per /= 2.;
 					break;
@@ -2331,9 +2331,9 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 			// change drops depending on monsters size [Valaris]
 			if (battle_config.mob_size_influence)
 			{
-				if (md->special_state.size == UNITSIZE_SMALL && drop_rate >= 2)
+				if (md->vd->size == UNITSIZE_SMALL && drop_rate >= 2)
 					drop_rate /= 2;
-				else if( md->special_state.size == UNITSIZE_BIG)
+				else if( md->vd->size == UNITSIZE_BIG)
 					drop_rate *= 2;
 			}
 
@@ -2879,7 +2879,7 @@ int mob_summonslave(struct mob_data *md2,int *value,int amount,uint16 skill_id)
 	data.x = md2->bl.x;
 	data.y = md2->bl.y;
 	data.num = 1;
-	data.state.size = md2->special_state.size;
+	data.state.size = md2->vd->size;
 	data.state.ai = md2->special_state.ai;
 
 	if(mob->db_checkid(value[0]) == 0)

@@ -169,7 +169,6 @@ struct map_session_data {
 		unsigned int trading :1; //[Skotlex] is 1 only after a trade has started.
 		unsigned int deal_locked :2; //1: Clicked on OK. 2: Clicked on TRADE
 		unsigned int monster_ignore :1; // for monsters to ignore a character [Valaris] [zzo]
-		unsigned int size :2; // for tiny/large types
 		unsigned int night :1; //Holds whether or not the player currently has the SI_NIGHT effect on. [Skotlex]
 		unsigned int blockedmove :1;
 		unsigned int using_fake_npc :1;

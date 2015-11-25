@@ -2295,9 +2295,9 @@ int unit_changeviewsize(struct block_list *bl,short size)
 	size=(size<0)?-1:(size>0)?1:0;
 
 	if(bl->type == BL_PC) {
-		((TBL_PC*)bl)->state.size=size;
+		((TBL_PC*)bl)->vd.size=size;
 	} else if(bl->type == BL_MOB) {
-		((TBL_MOB*)bl)->special_state.size=size;
+		((TBL_MOB*)bl)->vd->size=size;
 	} else
 		return 0;
 	if(size!=0)

@@ -88,6 +88,7 @@ struct view_data {
 		cloth_color;
 	char sex;
 	unsigned dead_sit : 2;
+	enum unitsize size;
 };
 
 struct unit_interface {
