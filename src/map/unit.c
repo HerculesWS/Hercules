@@ -2286,23 +2286,35 @@ int unit_fixdamage(struct block_list *src, struct block_list *target, int sdelay
 }
 
 /*==========================================
- * To change the size of the char (player or mob only)
+ * To display the size of the unit
+ * size is UNITSIZE_SMALL(1) or UNITSIZE_BIG(2)
+ * flag &1 will show the animation for becoming big/small
  *------------------------------------------*/
-int unit_changeviewsize(struct block_list *bl,short size)
-{
+int unit_changeviewsize(struct block_list *bl, unsigned int size, int flag) {
+	struct view_data *vd;
 	nullpo_ret(bl);
 
-	size=(size<0)?-1:(size>0)?1:0;
-
-	if(bl->type == BL_PC) {
-		((TBL_PC*)bl)->vd.size=size;
-	} else if(bl->type == BL_MOB) {
-		((TBL_MOB*)bl)->vd->size=size;
-	} else
+	if (~bl->type & BL_LIFE)
 		return 0;
-	if(size!=0)
-		clif->specialeffect(bl,421+size, AREA);
-	return 0;
+
+	vd = status->get_viewdata(bl);
+
+	if (vd->size > 0 || !(flag & 1)) { // if the object already big/small, will just display the correct size without animation
+		if (vd->size > 0)
+			unit->warp(bl, bl->m, bl->x, bl->y, CLR_OUTSIGHT);
+		if (size == UNITSIZE_SMALL)
+			clif->specialeffect(bl, 421, AREA);
+		else if (size == UNITSIZE_BIG)
+			clif->specialeffect(bl, 423, AREA);
+		return 1;
+	}
+
+	if (size == UNITSIZE_SMALL)
+		clif->specialeffect(bl, 420, AREA);
+	else if (size == UNITSIZE_BIG)
+		clif->specialeffect(bl, 422, AREA);
+
+	return 1;
 }
 
 /*==========================================

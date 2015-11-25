@@ -88,7 +88,7 @@ struct view_data {
 		cloth_color;
 	char sex;
 	unsigned dead_sit : 2;
-	enum unitsize size;
+	unsigned size : 2;
 };
 
 struct unit_interface {
@@ -136,7 +136,7 @@ struct unit_interface {
 	void (*dataset) (struct block_list *bl);
 	int (*counttargeted) (struct block_list *bl);
 	int (*fixdamage) (struct block_list *src, struct block_list *target, int sdelay, int ddelay, int64 damage, short div, unsigned char type, int64 damage2);
-	int (*changeviewsize) (struct block_list *bl, short size);
+	int (*changeviewsize) (struct block_list *bl, unsigned int size, int flag);
 	int (*remove_map) (struct block_list *bl, clr_type clrtype, const char *file, int line, const char *func);
 	void (*remove_map_pc) (struct map_session_data *sd, clr_type clrtype);
 	void (*free_pc) (struct map_session_data *sd);
