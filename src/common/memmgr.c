@@ -140,7 +140,7 @@ void* aReallocz_(void *p, size_t size, const char *file, int line, const char *f
 #else
 	size_t newSize;
 	if (p) {
-		size_t oldSize = malloc_usable_size(p);
+		size_t oldSize = BUFFER_SIZE(p);
 		ret = REALLOC(p, size, file, line, func);
 		newSize = BUFFER_SIZE(ret);
 		if (ret && newSize > oldSize)
