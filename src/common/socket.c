@@ -303,18 +303,31 @@ void set_nonblocking(int fd, unsigned long yes)
 		ShowError("set_nonblocking: Failed to set socket #%d to non-blocking mode (%s) - Please report this!!!\n", fd, error_msg());
 }
 
-void setsocketopts(int fd, struct hSockOpt *opt) {
-	int yes = 1; // reuse fix
-	struct linger lopt;
+/**
+ * Sets the options for a socket.
+ *
+ * @param fd  The socket descriptor
+ * @param opt Optional, additional options to set (Can be NULL).
+ */
+void setsocketopts(int fd, struct hSockOpt *opt)
+{
+#if defined(WIN32)
+	BOOL yes = TRUE;
+#else // not WIN32
+	int yes = 1;
+#endif // WIN32
+	struct linger lopt = { 0 };
 
+	// Note: We cast the fourth argument to (char *) because, while in UNIX
+	// it takes a const void *, in Windows it takes a const char *.
 #if !defined(WIN32)
 	// set SO_REAUSEADDR to true, unix only. on windows this option causes
 	// the previous owner of the socket to give up, which is not desirable
 	// in most cases, neither compatible with unix.
-	if (sSetsockopt(fd,SOL_SOCKET,SO_REUSEADDR,(char *)&yes,sizeof(yes)))
+	if (sSetsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (char *)&yes, sizeof(yes)))
 		ShowWarning("setsocketopts: Unable to set SO_REUSEADDR mode for connection #%d!\n", fd);
 #ifdef SO_REUSEPORT
-	if (sSetsockopt(fd,SOL_SOCKET,SO_REUSEPORT,(char *)&yes,sizeof(yes)))
+	if (sSetsockopt(fd, SOL_SOCKET, SO_REUSEPORT, (char *)&yes, sizeof(yes)))
 		ShowWarning("setsocketopts: Unable to set SO_REUSEPORT mode for connection #%d!\n", fd);
 #endif // SO_REUSEPORT
 #endif // WIN32
@@ -324,15 +337,17 @@ void setsocketopts(int fd, struct hSockOpt *opt) {
 	if (sSetsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *)&yes, sizeof(yes)))
 		ShowWarning("setsocketopts: Unable to set TCP_NODELAY mode for connection #%d!\n", fd);
 
-	if( opt && opt->setTimeo ) {
-		struct timeval timeout;
-
+	if (opt && opt->setTimeo) {
+#if defined(WIN32)
+		DWORD timeout = 5000; // https://msdn.microsoft.com/en-us/library/windows/desktop/ms740476(v=vs.85).aspx
+#else // not WIN32
+		struct timeval timeout = { 0 };
 		timeout.tv_sec = 5;
-		timeout.tv_usec = 0;
+#endif // WIN32
 
-		if (sSetsockopt(fd,SOL_SOCKET,SO_RCVTIMEO,(char *)&timeout,sizeof(timeout)))
+		if (sSetsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)))
 			ShowWarning("setsocketopts: Unable to set SO_RCVTIMEO for connection #%d!\n", fd);
-		if (sSetsockopt(fd,SOL_SOCKET,SO_SNDTIMEO,(char *)&timeout,sizeof(timeout)))
+		if (sSetsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)))
 			ShowWarning("setsocketopts: Unable to set SO_SNDTIMEO for connection #%d!\n", fd);
 	}
 
@@ -340,7 +355,7 @@ void setsocketopts(int fd, struct hSockOpt *opt) {
 	//(http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winsock/winsock/closesocket_2.asp)
 	lopt.l_onoff = 0; // SO_DONTLINGER
 	lopt.l_linger = 0; // Do not care
-	if( sSetsockopt(fd, SOL_SOCKET, SO_LINGER, (char*)&lopt, sizeof(lopt)) )
+	if (sSetsockopt(fd, SOL_SOCKET, SO_LINGER, (char *)&lopt, sizeof(lopt)))
 		ShowWarning("setsocketopts: Unable to set SO_LINGER mode for connection #%d!\n", fd);
 
 #ifdef TCP_THIN_LINEAR_TIMEOUTS
