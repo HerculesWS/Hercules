@@ -1,14 +1,14 @@
-//===== Hercules Script ====================================== 
+//===== Hercules Script ======================================
 //= General Eclage NPC.
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Dastgir
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.0
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Eclage Town NPC
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 Converted from the official Aegis script. [Dastgir]
-//============================================================ 
+//============================================================
 
 ecl_in02,96,22,3	script	sign#prison_inn	2_BOARD1,{
 	mes "[North] Prison";
@@ -51,7 +51,6 @@ ecl_in02,164,56,3	script	Receptionist#Laphine	4_F_FAIRYKID2,{
 					percentheal 100,100;
 					warp "ecl_in02",167,49;
 					end;
-					
 				case 2:
 					if (Zeny < 5000) {
 						mes "[Receptionist]";

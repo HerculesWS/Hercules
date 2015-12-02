@@ -73,8 +73,6 @@ prt_church,168,19,0	warp	prtch01-1	1,2,prt_church,105,81
 prt_church,31,19,0	warp	prtch02	1,2,prt_church,94,81
 prt_church,90,81,0	warp	prtch02-1	1,2,prt_church,27,19
 
-
-
 //= Prontera Castle ===========================================
 prt_castle,102,129,0	warp	prtca01	3,2,prt_castle,102,143
 prt_castle,102,140,0	warp	prtca01-1	3,2,prt_castle,102,126

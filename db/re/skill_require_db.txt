@@ -715,7 +715,7 @@
 2347,0,0,40:50:60:70:80,-2:-4:-6:-8:-10,0,0,99,0,0,none,1:2:3:4:5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//SR_GENTLETOUCH_CHANGE#Gentle Touch - Change#
 2348,0,0,40:50:60:70:80,0,0,0,99,0,0,none,1:2:3:4:5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//SR_GENTLETOUCH_REVITALIZE#Gentle Touch - Revitalize#
 //More from SR Sura (but not following ID order)
-2517,0,0,40:45:50:55:60,0,0,0,99,0,0,none,1:2:3:4:5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//SR_HOWLINGOFLION#Howling of Lion# 
+2517,0,0,40:45:50:55:60,0,0,0,99,0,0,none,1:2:3:4:5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//SR_HOWLINGOFLION#Howling of Lion#
 2518,0,0,40:50:60:70:80,0,0,0,99,0,0,none,1:2:3:4:5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//SR_RIDEINLIGHTNING#Ride In Lightening#
 
 //****
@@ -734,8 +734,8 @@
 // WM Wanderer/Minstrel
 2413,0,0,64:68:72:76:80,0,0,0,99,0,0,none,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//WM_METALICSOUND#Metallic Sound#
 2414,0,0,28:32:38:42:48,0,0,0,99,0,0,none,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//WM_REVERBERATION#Reverberation#
-2415,0,0,1,0,0,0,99,0,0,none,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//WM_REVERBERATION_MELEE#Reverberation Melee# 
-2416,0,0,1,0,0,0,99,0,0,none,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//WM_REVERBERATION_MAGIC#Reverberation Magic# 
+2415,0,0,1,0,0,0,99,0,0,none,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//WM_REVERBERATION_MELEE#Reverberation Melee#
+2416,0,0,1,0,0,0,99,0,0,none,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//WM_REVERBERATION_MAGIC#Reverberation Magic#
 2417,0,0,10,0,0,0,99,0,0,none,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//WM_DOMINION_IMPULSE#Dominion Impulse#
 2418,0,0,80:90:100:110:120,0,0,0,11,1,20,none,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//WM_SEVERE_RAINSTORM#Severe Rainstorm#
 2419,0,0,12:16:20:24:28,0,0,0,13:14,0,0,none,0,11513,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0	//WM_POEMOFNETHERWORLD#Poem of Netherworld#

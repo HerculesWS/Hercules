@@ -23,7 +23,7 @@
 
 // Prontera
 //============================================================
-prontera,160,330,0	script	Guard#pront::prtguard	8W_SOLDIER,{
+prontera,160,330,4	script	Guard#pront::prtguard	8W_SOLDIER,{
 	mes "[Prontera Guard]";
 	mes "Welcome to Prontera.";
 	close;

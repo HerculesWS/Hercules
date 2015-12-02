@@ -2807,13 +2807,13 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		mes "[Hein]";
 		mes "Ready? This is";
 		mes "what I wrote down...";
-		if (.@npchand == 1) {
+		if (.@npchand1 == 1) {
 			mes "Scissors";
 		}
-		else if (.@npchand == 2) {
+		else if (.@npchand1 == 2) {
 			mes "Rock";
 		}
-		else if (.@npchand == 3) {
+		else if (.@npchand1 == 3) {
 			mes "Paper";
 		}
 		if (.@npchand2 == 1) {
@@ -2870,7 +2870,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		if (.@shobu > 1) {
 			mes "[Hein]";
 			mes "Let's see...";
-			mes "You won " + shobu + " times.";
+			mes "You won " + .@shobu + " times.";
 			mes "You're really good at game!";
 			mes "Yes, your luck is at its highest!";
 			next;
@@ -3273,13 +3273,13 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		mes "[Waltboughst]";
 		mes "Okay...";
 		mes "I wrote down...";
-		if (.@npchand == 1) {
+		if (.@npchand1 == 1) {
 			mes "Scissors";
 		}
-		else if (.@npchand == 2) {
+		else if (.@npchand1 == 2) {
 			mes "Rock";
 		}
-		else if (.@npchand == 3) {
+		else if (.@npchand1 == 3) {
 			mes "Paper";
 		}
 		if (.@npchand2 == 1) {
@@ -3333,7 +3333,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		next;
 		if (.@shobu > 1) {
 			mes "[Waltboughst]";
-			mes "Excellent. You won " + shobu + " times,";
+			mes "Excellent. You won " + .@shobu + " times,";
 			mes "so your luck must be really high.";
 			mes "That means we can begin~!";
 			next;

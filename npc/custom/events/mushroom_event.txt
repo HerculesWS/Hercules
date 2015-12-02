@@ -14,13 +14,13 @@
 
 prontera,142,228,6	script	Find the Mushroom	BLACK_MUSHROOM,{
 	mes "[ Find The Mushroom ]";
-	if (!.Status)
+	if (!.status)
 		mes "There is no event at the moment!";
 	else {
 		mes "There are "+.Spawn+" Mushrooms left in "+.Map$+"!";
 		mes "Find and kill the mushrooms to gain "+getitemname(.Prize)+"!";
 	}
-	if (.Status || getgmlevel() < .GM) close;
+	if (.status || getgmlevel() < .GM) close;
 	mes "Start the event?";
 	next;
 	if(select("- No:- Yes") == 1) close;
@@ -33,14 +33,14 @@ OnInit:
 	set .Prize,512;	// Reward item ID
 	set .Amount,10;	// Reward item amount
 	set .GM,60;	// GM level required to access NPC
-	setarray .Maps$[0],"izlude","geffen","morocc","prontera"; // Possible maps
+	setarray .maps$[0],"izlude","geffen","morocc","prontera"; // Possible maps
 	end;
 
 OnMinute10:	// Start time (every hour)
-	if (.Status) end;
-	set .Status,1;
+	if (.status) end;
+	set .status,1;
 	set .Spawn,rand(1,10);	// How many Mushrooms should spawn?
-	set .Map$,.Maps$[rand(getarraysize(.Maps$))];
+	set .Map$,.maps$[rand(getarraysize(.maps$))];
 	killmonster .Map$,"All";
 	monster .Map$,0,0,"Please don't kill me!",1084,.Spawn,strnpcinfo(0)+"::OnMobKilled";
 	announce "Find the Mushroom : Total of "+.Spawn+" Mushrooms have been spawned in "+.Map$+"!",0;
@@ -54,7 +54,7 @@ OnMobKilled:
 	if (.Spawn) announce "[ "+strcharinfo(0)+" ] has killed a Mushroom. There are now "+.Spawn+" Mushroom(s) left.",bc_map;
 	else {
 		announce "The Find the Mushroom Event has ended. All the Mushrooms have been killed.",0;
-		set .Status,0;
+		set .status,0;
 	}
 	end;
 }

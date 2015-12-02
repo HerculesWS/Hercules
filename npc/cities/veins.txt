@@ -551,7 +551,7 @@ ve_in,119,386,3	script	Prisoner#ve1	4_M_DST_MASTER,{
 	close;
 }
 
-ve_in,111,379,8	script	Ward#ve1	4_M_DST_MASTER,{
+ve_in,111,379,0	script	Ward#ve1	4_M_DST_MASTER,{
 	mes "[Ward]";
 	mes "This place ensures that";
 	mes "dangerous criminals aren't";

@@ -6,19 +6,21 @@
 
 #include "loginif.h"
 
+#include "char/char.h"
+#include "char/mapif.h"
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/db.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/timer.h"
+
 #include <stdlib.h>
 #include <string.h>
 
-#include "char.h"
-#include "mapif.h"
-
-#include "../common/cbasetypes.h"
-#include "../common/core.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/timer.h"
-
 struct loginif_interface loginif_s;
+struct loginif_interface *loginif;
 
 /// Resets all the data.
 void loginif_reset(void)
@@ -27,7 +29,7 @@ void loginif_reset(void)
 	// TODO kick everyone out and reset everything or wait for connect and try to reacquire locks [FlavioJS]
 	for( id = 0; id < ARRAYLENGTH(chr->server); ++id )
 		mapif->server_reset(id);
-	flush_fifos();
+	sockt->flush_fifos();
 	exit(EXIT_FAILURE);
 }
 
@@ -37,9 +39,9 @@ void loginif_reset(void)
 /// If all the conditions are met, it stops the core loop.
 void loginif_check_shutdown(void)
 {
-	if( runflag != CHARSERVER_ST_SHUTDOWN )
+	if( core->runflag != CHARSERVER_ST_SHUTDOWN )
 		return;
-	runflag = CORE_ST_STOP;
+	core->runflag = CORE_ST_STOP;
 }
 
 
@@ -61,8 +63,8 @@ void loginif_on_ready(void)
 	chr->send_accounts_tologin(INVALID_TIMER, timer->gettick(), 0, 0);
 
 	// if no map-server already connected, display a message...
-	ARR_FIND( 0, ARRAYLENGTH(chr->server), i, chr->server[i].fd > 0 && chr->server[i].map );
-	if( i == ARRAYLENGTH(chr->server) )
+	ARR_FIND(0, ARRAYLENGTH(chr->server), i, chr->server[i].fd > 0 && VECTOR_LENGTH(chr->server[i].maps));
+	if (i == ARRAYLENGTH(chr->server))
 		ShowStatus("Awaiting maps from map-server.\n");
 }
 
@@ -79,15 +81,15 @@ void do_init_loginif(void)
 
 void do_final_loginif(void)
 {
-	if( chr->login_fd != -1 )
-	{
-		do_close(chr->login_fd);
+	if (chr->login_fd != -1) {
+		sockt->close(chr->login_fd);
 		chr->login_fd = -1;
 	}
 }
 
 void loginif_block_account(int account_id, int flag)
 {
+	Assert_retv(chr->login_fd != -1);
 	WFIFOHEAD(chr->login_fd,10);
 	WFIFOW(chr->login_fd,0) = 0x2724;
 	WFIFOL(chr->login_fd,2) = account_id;
@@ -97,6 +99,7 @@ void loginif_block_account(int account_id, int flag)
 
 void loginif_ban_account(int account_id, short year, short month, short day, short hour, short minute, short second)
 {
+	Assert_retv(chr->login_fd != -1);
 	WFIFOHEAD(chr->login_fd,18);
 	WFIFOW(chr->login_fd, 0) = 0x2725;
 	WFIFOL(chr->login_fd, 2) = account_id;
@@ -111,6 +114,7 @@ void loginif_ban_account(int account_id, short year, short month, short day, sho
 
 void loginif_unban_account(int account_id)
 {
+	Assert_retv(chr->login_fd != -1);
 	WFIFOHEAD(chr->login_fd,6);
 	WFIFOW(chr->login_fd,0) = 0x272a;
 	WFIFOL(chr->login_fd,2) = account_id;
@@ -119,6 +123,7 @@ void loginif_unban_account(int account_id)
 
 void loginif_changesex(int account_id)
 {
+	Assert_retv(chr->login_fd != -1);
 	WFIFOHEAD(chr->login_fd,6);
 	WFIFOW(chr->login_fd,0) = 0x2727;
 	WFIFOL(chr->login_fd,2) = account_id;
@@ -127,6 +132,8 @@ void loginif_changesex(int account_id)
 
 void loginif_auth(int fd, struct char_session_data* sd, uint32 ipl)
 {
+	Assert_retv(chr->login_fd != -1);
+	nullpo_retv(sd);
 	WFIFOHEAD(chr->login_fd,23);
 	WFIFOW(chr->login_fd,0) = 0x2712; // ask login-server to authenticate an account
 	WFIFOL(chr->login_fd,2) = sd->account_id;
@@ -140,6 +147,7 @@ void loginif_auth(int fd, struct char_session_data* sd, uint32 ipl)
 
 void loginif_send_users_count(int users)
 {
+	Assert_retv(chr->login_fd != -1);
 	WFIFOHEAD(chr->login_fd,6);
 	WFIFOW(chr->login_fd,0) = 0x2714;
 	WFIFOL(chr->login_fd,2) = users;
@@ -148,6 +156,7 @@ void loginif_send_users_count(int users)
 
 void loginif_connect_to_server(void)
 {
+	Assert_retv(chr->login_fd != -1);
 	WFIFOHEAD(chr->login_fd,86);
 	WFIFOW(chr->login_fd,0) = 0x2710;
 	memcpy(WFIFOP(chr->login_fd,2), chr->userid, NAME_LENGTH);

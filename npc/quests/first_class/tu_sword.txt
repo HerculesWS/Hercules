@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Fix up by Jukka
 //===== Current Version: =====================================
-//= 1.6
+//= 1.7
 //===== Description: =========================================
 //= [Official Conversion]
 //= Swordman training quest.
@@ -15,6 +15,7 @@
 //= 1.4 Misc. updates. [L0ne_W0lf]
 //= 1.5 Added Renewal Izlude coordinates.
 //= 1.6 Added Pre-Renewal support. [Euphy]
+//= 1.7 Fixed quest log linking [KirieZ]
 //============================================================
 
 // Shurank
@@ -108,7 +109,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "your great efforts. But do not let your talents allow you to grow arrogant!";
 			tu_swordman = 23;
 			completequest 8228;
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 186,0;
 			else
 				getexp 1860,0;
@@ -199,7 +200,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "your accomplishment.";
 			tu_swordman = 22;
 			changequest 8227,8228;
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 186,0;
 			else
 				getexp 1860,0;
@@ -213,6 +214,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 		mes "Next time, I will tell you more about the Magnum Break skill.";
 		mes "I'll be here when you're ready to learn more.";
 		tu_swordman = 22;
+		changequest 8227,8228;
 		close;
 	case 13:
 		mes "You should leave as soon as possible to meet Dequ'ee in Geffen. You do remember where to find him, don't you?";
@@ -227,9 +229,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "From that gleen of toughness upon your skin, I see now that I was foolish to ask. Well done~";
 			tu_swordman = 13;
-			erasequest 8221;
-			setquest 8222;
-			if (checkre(3))
+			changequest 8221, 8222;
+			if (RENEWAL_EXP)
 				getexp 126,0;
 			else
 				getexp 1260,0;
@@ -275,8 +276,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			next;
 			mes "[Shurank]";
 			mes "Since you've learned the Endure skill already, I don't think I need to explain it any further. You've done well.";
-			erasequest 8221;
-			setquest 8222;
+			changequest 8221, 8222;
 			tu_swordman = 13;
 			next;
 			mes "[Shurank]";
@@ -292,9 +292,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "From that gleen of toughness upon your skin, I see now that I was foolish to ask. Well done~";
 			tu_swordman = 13;
-			erasequest 8221;
-			setquest 8222;
-			if (checkre(3))
+			changequest 8221, 8222;
+			if (RENEWAL_EXP)
 				getexp 126,0;
 			else
 				getexp 1260,0;
@@ -357,8 +356,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "Since you've learned the Endure skill already, I don't think I need to explain it any further. You've done well.";
 			tu_swordman = 13;
-			erasequest 8221;
-			setquest 8222;
+			changequest 8220, 8222;
 			next;
 			mes "[Shurank]";
 			mes "Ah, once again, I have";
@@ -372,9 +370,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "Hm. But judging from the gleen of toughness on your skin, I suppose teaching you about Endure would be a waste of your time. Well done!";
 			tu_swordman = 13;
-			erasequest 8221;
-			setquest 8222;
-			if (checkre(3))
+			changequest 8220, 8222;
+			if (RENEWAL_EXP)
 				getexp 126,0;
 			else
 				getexp 1260,0;
@@ -398,7 +395,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "Ah, I see that you have a fairly good understanding of the Provoke skill. Let me reward you in this small way for your efforts.";
 			tu_swordman = 10;
-			if (checkre(3))
+			changequest 8219, 8220;
+			if (RENEWAL_EXP)
 				getexp 112,0;
 			else
 				getexp 1120,0;
@@ -415,7 +413,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "an outstanding Swordman.";
 			mes "Here is a small reward...";
 			tu_swordman = 10;
-			if (checkre(3))
+			changequest 8219, 8220;
+			if (RENEWAL_EXP)
 				getexp 126,0;
 			else
 				getexp 1260,0;
@@ -462,12 +461,14 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "Alright, come back to me when you become sufficiently skilled in the use of Provoke. In the meantime, keep training.";
 			tu_swordman = 9;
+			changequest 8218,8219;
 			close;
 		} else if((.@chk_provoke > 4) && (.@chk_provoke < 10)){
 			mes "[Shurank]";
 			mes "Ah, I see that you have a fairly good understanding of the Provoke skill. Let me reward you in this small way for your efforts.";
 			tu_swordman = 10;
-			if (checkre(3))
+			changequest 8218,8220;
+			if (RENEWAL_EXP)
 				getexp 112,0;
 			else
 				getexp 1120,0;
@@ -484,7 +485,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "an outstanding Swordman.";
 			mes "Here is a small reward...";
 			tu_swordman = 10;
-			if (checkre(3))
+			changequest 8218,8220;
+			if (RENEWAL_EXP)
 				getexp 126,0;
 			else
 				getexp 1260,0;
@@ -562,14 +564,14 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Now I ask that you train yourself in the use of Provoke. Come back";
 			mes "to me when you have a sufficient understanding of the use of the Provoke skill.";
 			tu_swordman = 9;
-			changequest 8218,8219;
+			changequest 8217,8219;
 			close;
 		} else if((.@chk_provoke > 4) && (.@chk_provoke < 10)){
 			mes "[Shurank]";
 			mes "Ah, I see that you have a fairly good understanding of the Provoke skill. Let me reward you in this small way for your efforts.";
 			tu_swordman = 10;
-			changequest 8219,8220;
-			if (checkre(3))
+			changequest 8217,8220;
+			if (RENEWAL_EXP)
 				getexp 112,0;
 			else
 				getexp 1120,0;
@@ -586,11 +588,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "an outstanding Swordman.";
 			mes "Here is a small reward...";
 			tu_swordman = 10;
-			completequest 8218;
-			completequest 8219;
-			completequest 8220;
-			setquest 8221;
-			if (checkre(3))
+			changequest 8217,8220;
+			if (RENEWAL_EXP)
 				getexp 126,0;
 			else
 				getexp 1260,0;
@@ -682,7 +681,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Ah! That healthy glow!";
 			mes "I see that you've mastered this skill already. Let me give you a little reward for your hard training!";
 			tu_swordman = 5;
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 112,0;
 			else
 				getexp 1120,0;
@@ -706,6 +705,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 		}
 		mes "[Shurank]";
 		mes "By now, I believe that you know enough about the Increase HP Recovery skill. Next time, I shall teach you what I know about the Provoke skill.";
+		changequest 8214, 8215;
 		close;
 	case 3:
 		mes "If you want to be";
@@ -725,7 +725,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Here's a small prize in recognition of your efforts thus far. But don't relax yet! You still have a long way to go before grasping";
 			mes "all of the basics.";
 			tu_swordman = 4;
-			if (checkre(3))
+			changequest 8213, 8214;
+			if (RENEWAL_EXP)
 				getexp 97,0;
 			else
 				getexp 970,0;
@@ -763,7 +764,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Here's a little reward for all of your hard work. I hope you realize the importance of using Bash as";
 			mes "you grow stronger.";
 			tu_swordman = 3;
-			if (checkre(3))
+			changequest 8212, 8213;
+			if (RENEWAL_EXP)
 				getexp 83,0;
 			else
 				getexp 830,0;
@@ -777,7 +779,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Here's a small prize in recognition of your efforts thus far. But don't relax yet! You still have a long way to go before grasping";
 			mes "all of the basics.";
 			tu_swordman = 4;
-			if (checkre(3))
+			changequest 8212, 8214;
+			if (RENEWAL_EXP)
 				getexp 97,0;
 			else
 				getexp 970,0;
@@ -815,7 +818,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Still, for your training efforts, let me give you a humble reward. But remember, we still have more";
 			mes "of the fundamentals to cover!";
 			tu_swordman = 2;
-			if (checkre(3))
+			changequest 8211, 8212;
+			if (RENEWAL_EXP)
 				getexp 58,0;
 			else
 				getexp 580,0;
@@ -847,8 +851,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "For your efforts and patience, I offer you this small reward. Please take it and grow even stronger...";
 			tu_swordman = 3;
-			setquest 8211;
-			if (checkre(3))
+			changequest 8211, 8213;
+			if (RENEWAL_EXP)
 				getexp 83,0;
 			else
 				getexp 830,0;
@@ -865,7 +869,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Here's a small prize in recognition of your efforts thus far. But don't relax yet! You still have a long way to go before grasping";
 			mes "all of the basics.";
 			tu_swordman = 4;
-			if (checkre(3))
+			changequest 8211, 8214;
+			if (RENEWAL_EXP)
 				getexp 97,0;
 			else
 				getexp 970,0;
@@ -901,7 +906,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "[Shurank]";
 			mes "Now, if you wish to become a true Swordman, you must learn the Bash skill. There's no question about it: You've got to know these basics! Take this, and learn to Bash!";
 			tu_swordman = 1;
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 49,0;
 			else
 				getexp 490,0;
@@ -928,8 +933,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Still, for your training efforts, let me give you a humble reward. But remember, we still have more";
 			mes "of the fundamentals to cover!";
 			tu_swordman = 2;
-			changequest 8211,8212;
-			if (checkre(3))
+			setquest 8212;
+			if (RENEWAL_EXP)
 				getexp 58,0;
 			else
 				getexp 580,0;
@@ -954,8 +959,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Still, for your training efforts, let me give you a humble reward. But remember, we still have more";
 			mes "of the fundamentals to cover!";
 			tu_swordman = 3;
-			changequest 8212,8213;
-			if (checkre(3))
+			setquest 8213;
+			if (RENEWAL_EXP)
 				getexp 83,0;
 			else
 				getexp 830,0;
@@ -972,11 +977,8 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 			mes "Here's a small prize in recognition of your efforts thus far. But don't relax yet! You still have a long way to go before grasping";
 			mes "all of the basics.";
 			tu_swordman = 4;
-			completequest 8211;
-			completequest 8212;
-			completequest 8213;
 			setquest 8214;
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 97,0;
 			else
 				getexp 970,0;
@@ -1072,7 +1074,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 		tu_swordman = 21;
 		changequest 8226,8227;
 		close2;
-		if (checkre(0))
+		if (RENEWAL)
 			warp "izlude",127,100;
 		else
 			warp "izlude",35,78;
@@ -1132,7 +1134,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			mes "Hurry over to Morroc and monitor Bankley in case he does anything desperate. If something happens, report to me right away!";
 			tu_swordman = 19;
 			changequest 8224,8225;
-			if (checkre(3))
+			if (RENEWAL_EXP)
 				getexp 162,0;
 			else
 				getexp 1620,0;
@@ -2177,7 +2179,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					mes "Thank you for taking the trouble to come this far. Let me reward you with some experience points.";
 					tu_swordman = 7;
 					changequest 8216,8217;
-					if (checkre(3))
+					if (RENEWAL_EXP)
 						getexp 112,0;
 					else
 						getexp 1120,0;
@@ -2187,7 +2189,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					mes "of yourself,";
 					mes "brave Swordman.";
 					next;
-					if (checkre(0))
+					if (RENEWAL)
 						warp "izlude",127,100;
 					else
 						warp "izlude",35,78;

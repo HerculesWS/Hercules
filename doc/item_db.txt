@@ -34,6 +34,7 @@ item_db: (
 	Refine: Refineable            (boolean, defaults to true)
 	View: View ID                 (int, defaults to 0)
 	BindOnEquip: true/false       (boolean, defaults to false)
+	ForceSerial: true/false       (boolean, defaults to false)
 	BuyingStore: true/false       (boolean, defaults to false)
 	Delay: Delay to use item      (int, defaults to 0)
 	KeepAfterUse: true/false      (boolean, defaults to false)
@@ -41,13 +42,13 @@ item_db: (
 		override: GroupID             (int, defaults to 100)
 		nodrop: true/false            (boolean, defaults to false)
 		notrade: true/false           (boolean, defaults to false)
-		partneroverride: true/false   (boolean, defaults to false)
-		noselltonpc: true/false       (boolean, defaults to false)
-		nocart: true/false            (boolean, defaults to false)
 		nostorage: true/false         (boolean, defaults to false)
-		nogstorage: true/false        (boolean, defaults to false)
+		nocart: true/false            (boolean, defaults to false)
+		noselltonpc: true/false       (boolean, defaults to false)
 		nomail: true/false            (boolean, defaults to false)
-		noauction: true/false         (boolean, defaults to false)
+		noauction: true/false         (boolean, defaults to false)		
+		nogstorage: true/false        (boolean, defaults to false)
+		partneroverride: true/false   (boolean, defaults to false)
 	}
 	Nouse: {                      (defaults to no restrictions)
 		override: GroupID             (int, defaults to 100)
@@ -242,6 +243,10 @@ BindOnEquip: Whether the item will automatically bind to the character when it
              is equipped for the first time. An item that has this field set,
              will display a confirmation dialog the first time it is equipped,
              and, if accepted, the item will become character-bound.
+
+ForceSerial: Whether the item will be given new unique id or not. When the item
+			 have this field as true, the item will be unstackable and new uniqueID
+			 will be given to each item.
 
 BuyingStore: Whether the item can be sold via buyingstore, one must also edit
              data\buyingstoreitemlist.txt for client to accept item.

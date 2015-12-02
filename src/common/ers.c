@@ -44,13 +44,13 @@
 
 #include "ers.h"
 
+#include "common/cbasetypes.h"
+#include "common/memmgr.h" // CREATE, RECREATE, aMalloc, aFree
+#include "common/nullpo.h"
+#include "common/showmsg.h" // ShowMessage, ShowError, ShowFatalError, CL_BOLD, CL_NORMAL
+
 #include <stdlib.h>
 #include <string.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h" // CREATE, RECREATE, aMalloc, aFree
-#include "../common/nullpo.h"
-#include "../common/showmsg.h" // ShowMessage, ShowError, ShowFatalError, CL_BOLD, CL_NORMAL
 
 #ifndef DISABLE_ERS
 

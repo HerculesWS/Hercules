@@ -4,11 +4,7 @@
 #ifndef CHAR_INT_ELEMENTAL_H
 #define CHAR_INT_ELEMENTAL_H
 
-#include "../common/cbasetypes.h"
-
-#ifdef HERCULES_CORE
-void inter_elemental_defaults(void);
-#endif // HERCULES_CORE
+#include "common/hercules.h"
 
 /**
  * inter_elemental_interface interface
@@ -19,6 +15,10 @@ struct inter_elemental_interface {
 	int (*parse_frommap) (int fd);
 };
 
-struct inter_elemental_interface *inter_elemental;
+#ifdef HERCULES_CORE
+void inter_elemental_defaults(void);
+#endif // HERCULES_CORE
+
+HPShared struct inter_elemental_interface *inter_elemental;
 
 #endif /* CHAR_INT_ELEMENTAL_H */

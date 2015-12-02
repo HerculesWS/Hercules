@@ -94,9 +94,6 @@ nguild_alde,74,64,2	duplicate(NGuildAlde)	NGuild Aldebaran#a1-18	GUILD_FLAG
 nguild_alde,203,150,4	duplicate(NGuildAlde)	NGuild Aldebaran#a1-19	GUILD_FLAG
 nguild_alde,210,150,4	duplicate(NGuildAlde)	NGuild Aldebaran#a1-20	GUILD_FLAG
 
-
-
-
 //============================================================================//
 // 			Castle 2
 //============================================================================//
@@ -125,8 +122,6 @@ nguild_gef,17,171,5	duplicate(NGuildGef)	NGuild Geffen#g1-10	GUILD_FLAG
 nguild_gef,59,16,4	duplicate(NGuildGef)	NGuild Geffen#g1-11	GUILD_FLAG
 nguild_gef,64,16,4	duplicate(NGuildGef)	NGuild Geffen#g1-12	GUILD_FLAG
 
-
-
 //============================================================================//
 // 			Castle 3
 //============================================================================//
@@ -154,9 +149,6 @@ nguild_pay,221,123,4	duplicate(NGuildPay)	NGuild Payon#f1-8	GUILD_FLAG
 nguild_pay,221,116,4	duplicate(NGuildPay)	NGuild Payon#f1-9	GUILD_FLAG
 nguild_pay,206,108,4	duplicate(NGuildPay)	NGuild Payon#f1-10	GUILD_FLAG
 nguild_pay,212,108,4	duplicate(NGuildPay)	NGuild Payon#f1-11	GUILD_FLAG
-
-
-
 
 //=============================================================================//
 // 			Castle 4

@@ -4,50 +4,45 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h"
+#include "config/core.h"
 #include "core.h"
 
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/console.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/sysinfo.h"
-#include "../common/nullpo.h"
+#include "common/cbasetypes.h"
+#include "common/console.h"
+#include "common/db.h"
+#include "common/memmgr.h"
+#include "common/mmo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+#include "common/sysinfo.h"
+#include "common/nullpo.h"
 
 #ifndef MINICORE
-#	include "../common/HPM.h"
-#	include "../common/conf.h"
-#	include "../common/db.h"
-#	include "../common/ers.h"
-#	include "../common/socket.h"
-#	include "../common/sql.h"
-#	include "../common/thread.h"
-#	include "../common/timer.h"
-#	include "../common/utils.h"
+#	include "common/HPM.h"
+#	include "common/conf.h"
+#	include "common/ers.h"
+#	include "common/socket.h"
+#	include "common/sql.h"
+#	include "common/thread.h"
+#	include "common/timer.h"
+#	include "common/utils.h"
 #endif
 
 #ifndef _WIN32
 #	include <unistd.h>
 #else
-#	include "../common/winapi.h" // Console close event handling
+#	include "common/winapi.h" // Console close event handling
 #endif
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 /// Called when a terminate signal is received.
 void (*shutdown_callback)(void) = NULL;
 
-int runflag = CORE_ST_RUN;
-int arg_c = 0;
-char **arg_v = NULL;
-
-char *SERVER_NAME = NULL;
+struct core_interface core_s;
+struct core_interface *core = &core_s;
 
 #ifndef MINICORE // minimalist Core
 // Added by Gabuzomeu
@@ -92,7 +87,7 @@ static BOOL WINAPI console_handler(DWORD c_event) {
 			if( shutdown_callback != NULL )
 				shutdown_callback();
 			else
-				runflag = CORE_ST_STOP;// auto-shutdown
+				core->runflag = CORE_ST_STOP;// auto-shutdown
 			break;
 		default:
 			return FALSE;
@@ -120,7 +115,7 @@ static void sig_proc(int sn) {
 			if( shutdown_callback != NULL )
 				shutdown_callback();
 			else
-				runflag = CORE_ST_STOP;// auto-shutdown
+				core->runflag = CORE_ST_STOP;// auto-shutdown
 			break;
 		case SIGSEGV:
 		case SIGFPE:
@@ -178,6 +173,7 @@ void core_defaults(void) {
 	console_defaults();
 	strlib_defaults();
 	malloc_defaults();
+	showmsg_defaults();
 	cmdline_defaults();
 #ifndef MINICORE
 	libconfig_defaults();
@@ -210,9 +206,10 @@ const char *cmdline_arg_source(struct CmdlineArgData *arg) {
  */
 bool cmdline_arg_add(unsigned int pluginID, const char *name, char shortname, CmdlineExecFunc func, const char *help, unsigned int options) {
 	struct CmdlineArgData *data = NULL;
-	
-	RECREATE(cmdline->args_data, struct CmdlineArgData, ++cmdline->args_data_count);
-	data = &cmdline->args_data[cmdline->args_data_count-1];
+
+	VECTOR_ENSURE(cmdline->args_data, 1, 1);
+	VECTOR_PUSHZEROED(cmdline->args_data);
+	data = &VECTOR_LAST(cmdline->args_data);
 	data->pluginID = pluginID;
 	data->name = aStrdup(name);
 	data->shortname = shortname;
@@ -231,9 +228,9 @@ static CMDLINEARG(help)
 	ShowInfo("Usage: %s [options]\n", SERVER_NAME);
 	ShowInfo("\n");
 	ShowInfo("Options:\n");
-	
-	for (i = 0; i < cmdline->args_data_count; i++) {
-		struct CmdlineArgData *data = &cmdline->args_data[i];
+
+	for (i = 0; i < VECTOR_LENGTH(cmdline->args_data); i++) {
+		struct CmdlineArgData *data = &VECTOR_INDEX(cmdline->args_data, i);
 		char altname[16], paramnames[256];
 		if (data->shortname) {
 			snprintf(altname, sizeof(altname), " [-%c]", data->shortname);
@@ -250,7 +247,7 @@ static CMDLINEARG(help)
  */
 static CMDLINEARG(version)
 {
-	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttp://hercules.ws/\n");
+	ShowInfo(CL_GREEN"Website/Forum:"CL_RESET"\thttp://herc.ws/\n");
 	ShowInfo(CL_GREEN"IRC Channel:"CL_RESET"\tirc://irc.rizon.net/#Hercules\n");
 	ShowInfo("Open "CL_WHITE"readme.txt"CL_RESET" for more information.\n");
 	return false;
@@ -292,8 +289,9 @@ bool cmdline_arg_next_value(const char *name, int current_arg, int argc)
  */
 int cmdline_exec(int argc, char **argv, unsigned int options)
 {
-	int count = 0, i, j;
+	int count = 0, i;
 	for (i = 1; i < argc; i++) {
+		int j;
 		struct CmdlineArgData *data = NULL;
 		const char *arg = argv[i];
 		if (arg[0] != '-') { // All arguments must begin with '-'
@@ -301,17 +299,17 @@ int cmdline_exec(int argc, char **argv, unsigned int options)
 			exit(EXIT_FAILURE);
 		}
 		if (arg[1] != '-' && strlen(arg) == 2) {
-			ARR_FIND(0, cmdline->args_data_count, j, cmdline->args_data[j].shortname == arg[1]);
+			ARR_FIND(0, VECTOR_LENGTH(cmdline->args_data), j, VECTOR_INDEX(cmdline->args_data, j).shortname == arg[1]);
 		} else {
-			ARR_FIND(0, cmdline->args_data_count, j, strcmpi(cmdline->args_data[j].name, arg) == 0);
+			ARR_FIND(0, VECTOR_LENGTH(cmdline->args_data), j, strcmpi(VECTOR_INDEX(cmdline->args_data, j).name, arg) == 0);
 		}
-		if (j == cmdline->args_data_count) {
+		if (j == VECTOR_LENGTH(cmdline->args_data)) {
 			if (options&(CMDLINE_OPT_SILENT|CMDLINE_OPT_PREINIT))
 				continue;
 			ShowError("Unknown option '%s'.\n", arg);
 			exit(EXIT_FAILURE);
 		}
-		data = &cmdline->args_data[j];
+		data = &VECTOR_INDEX(cmdline->args_data, j);
 		if (data->options&CMDLINE_OPT_PARAM) {
 			if (!cmdline->arg_next_value(arg, i, argc))
 				exit(EXIT_FAILURE);
@@ -319,7 +317,7 @@ int cmdline_exec(int argc, char **argv, unsigned int options)
 		}
 		if (options&CMDLINE_OPT_SILENT) {
 			if (data->options&CMDLINE_OPT_SILENT) {
-				msg_silent = 0x7; // silence information and status messages
+				showmsg->silent = 0x7; // silence information and status messages
 				break;
 			}
 		} else if ((data->options&CMDLINE_OPT_PREINIT) == (options&CMDLINE_OPT_PREINIT)) {
@@ -350,25 +348,25 @@ void cmdline_init(void)
 #endif // !MINICORE
 	cmdline_args_init_local();
 }
+
 void cmdline_final(void)
 {
-	int i;
-	for (i = 0; i < cmdline->args_data_count; i++) {
-		aFree(cmdline->args_data[i].name);
-		aFree(cmdline->args_data[i].help);
+	while (VECTOR_LENGTH(cmdline->args_data) > 0) {
+		struct CmdlineArgData *data = &VECTOR_POP(cmdline->args_data);
+		aFree(data->name);
+		aFree(data->help);
 	}
-	if (cmdline->args_data)
-		aFree(cmdline->args_data);
+	VECTOR_CLEAR(cmdline->args_data);
 }
 
 struct cmdline_interface cmdline_s;
+struct cmdline_interface *cmdline;
 
 void cmdline_defaults(void)
 {
 	cmdline = &cmdline_s;
 
-	cmdline->args_data = NULL;
-	cmdline->args_data_count = 0;
+	VECTOR_INIT(cmdline->args_data);
 
 	cmdline->init = cmdline_init;
 	cmdline->final = cmdline_final;
@@ -389,22 +387,24 @@ int main (int argc, char **argv) {
 			SERVER_NAME = ++p1;
 			p2 = p1;
 		}
-		arg_c = argc;
-		arg_v = argv;
+		core->arg_c = argc;
+		core->arg_v = argv;
+		core->runflag = CORE_ST_RUN;
 	}
 	core_defaults();
 
 	iMalloc->init();// needed for Show* in display_title() [FlavioJS]
+	showmsg->init();
 
 	cmdline->init();
 
 	cmdline->exec(argc, argv, CMDLINE_OPT_SILENT);
 
 	iMalloc->init_messages(); // Initialization messages (after buying us some time to suppress them if needed)
-	
+
 	sysinfo->init();
 
-	if (!(msg_silent&0x1))
+	if (!(showmsg->silent&0x1))
 		console->display_title();
 
 	usercheck();
@@ -441,7 +441,7 @@ int main (int argc, char **argv) {
 	do_init(argc,argv);
 
 	// Main runtime cycle
-	while (runflag != CORE_ST_STOP) {
+	while (core->runflag != CORE_ST_STOP) {
 		int next = timer->perform(timer->gettick_nocache());
 		sockt->perform(next);
 	}
@@ -460,6 +460,7 @@ int main (int argc, char **argv) {
 	//sysinfo->final(); Called by iMalloc->final()
 
 	iMalloc->final();
+	showmsg->final(); // Should be after iMalloc->final()
 
 	return retval;
 }

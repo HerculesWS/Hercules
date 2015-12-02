@@ -57,7 +57,7 @@ brasilis,316,57,3	script	Crewman#bra1	4W_SAILOR,{
 		mes "[Crewman]";
 		mes "I sure do miss home.";
 		close2;
-		if (checkre(0))
+		if (RENEWAL)
 			warp "alberta",243,82;
 		else
 			warp "alberta",244,115;

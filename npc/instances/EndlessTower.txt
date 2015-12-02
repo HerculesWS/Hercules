@@ -267,21 +267,6 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 		case 3:
 			end;
 		}
-	} else if (.@etower_timer == 1) {
-		mes "If you have the dungeon generated already, you can enter it. ";
-		next;
-		switch(select("Enter the "+.@md_name$+":Return to Alberta:Cancel")) {
-		case 1:
-			callsub L_Enter,0,0,.@md_name$,.@p_name$;
-		case 2:
-			mes "I will move you to Alberta.";
-			close2;
-			warp "alberta",223,36;
-			end;
-		case 3:
-			break;
-		}
-		close;
 	} else if (.@etower_timer == 1 && .@etower_timer2 == 2) {
 
 		.@dun_lim_time = etower_timer+604800; // 1 week
@@ -298,6 +283,21 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 		close2;
 		warp "alberta",223,36;
 		end;
+	} else if (.@etower_timer == 1) {
+		mes "If you have the dungeon generated already, you can enter it. ";
+		next;
+		switch(select("Enter the "+.@md_name$+":Return to Alberta:Cancel")) {
+		case 1:
+			callsub L_Enter,0,0,.@md_name$,.@p_name$;
+		case 2:
+			mes "I will move you to Alberta.";
+			close2;
+			warp "alberta",223,36;
+			end;
+		case 3:
+			break;
+		}
+		close;
 	} else {
 		etower_timer = 0;
 		erasequest 60200;

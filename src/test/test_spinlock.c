@@ -1,9 +1,11 @@
+#define HERCULES_CORE
 
-#include "../common/core.h"
-#include "../common/atomic.h"
-#include "../common/thread.h"
-#include "../common/spinlock.h"
-#include "../common/showmsg.h"
+#include "common/atomic.h"
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/thread.h"
+#include "common/spinlock.h"
+#include "common/showmsg.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,12 +14,9 @@
 // Simple test for the spinlock implementation to see if it works properly..
 //
 
-
-
 #define THRC 32 //thread Count
 #define PERINC 100000
 #define LOOPS 47
-
 
 static SPIN_LOCK lock;
 static unsigned int val = 0;
@@ -40,7 +39,6 @@ static  void *worker(void *p){
 
 	return NULL;
 }//end: worker()
-
 
 int do_init(int argc, char **argv){
 	rAthread *t[THRC];
@@ -88,27 +86,22 @@ int do_init(int argc, char **argv){
 		ShowStatus("Test passed.\n");
 		exit(0);
 	}
-
-
-return 0;
+	return 0;
 }//end: do_init()
-
 
 void do_abort(void) {
 }//end: do_abort()
-
 
 void set_server_type(void) {
 	SERVER_TYPE = SERVER_TYPE_UNKNOWN;
 }//end: set_server_type()
 
-
 int do_final(void) {
 	return EXIT_SUCCESS;
 }//end: do_final()
-
 
 int parse_console(const char* command){
 	return 0;
 }//end: parse_console
 
+void cmdline_args_init_local(void) { }

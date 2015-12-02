@@ -26,10 +26,18 @@ foreach my $file (@files) {
 	next if $data->{compounddef}->{$filekey}->{compoundname}->[0] =~ /::/; # its a duplicate with a :: name e.g. struct script_state {<...>} ay;
 	my @filepath = split(/[\/\\]/, $data->{compounddef}->{$filekey}->{location}->[0]->{file});
 	my $foldername = uc($filepath[-2]);
+	next if $filepath[-1] eq "HPM.h"; # Skip the HPM core, plugins don't need it
 	my $filename = uc($filepath[-1]); $filename =~ s/-/_/g; $filename =~ s/\.[^.]*$//;
 	my $plugintypes = 'SERVER_TYPE_UNKNOWN';
-	$plugintypes = 'SERVER_TYPE_ALL' if $foldername eq 'COMMON';
-	$plugintypes = "SERVER_TYPE_${foldername}" if $foldername =~ /^(LOGIN|CHAR|MAP)/;
+	if ($foldername eq 'COMMON') {
+		if ($filename eq 'MAPINDEX') {
+			$plugintypes = 'SERVER_TYPE_CHAR|SERVER_TYPE_MAP';
+		} else {
+			$plugintypes = 'SERVER_TYPE_ALL';
+		}
+	} elsif ($foldername =~ /^(LOGIN|CHAR|MAP)/) {
+		$plugintypes = "SERVER_TYPE_${foldername}";
+	}
 	my $symboldata = {
 		name => $data->{compounddef}->{$filekey}->{compoundname}->[0],
 		type => $plugintypes,
@@ -50,6 +58,12 @@ print FH <<"EOF";
 #ifndef HPM_DATA_CHECK_H
 #define HPM_DATA_CHECK_H
 
+#if !defined(HPMHOOKGEN)
+#include "common/HPMSymbols.inc.h"
+#endif // ! HPMHOOKGEN
+#ifdef HPM_SYMBOL
+#undef HPM_SYMBOL
+#endif // HPM_SYMBOL
 
 HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 EOF

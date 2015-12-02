@@ -146,13 +146,17 @@ clean buildclean: $(MF_TARGETS)
 distclean: clean
 	@-rm -f $(MF_TARGETS) config.status config.log
 
-sysinfo:
+sysinfo: config.status
 	@./sysinfogen.sh src/common/sysinfo_new.inc @CFLAGS@ @CPPFLAGS@
 	@if cmp -s src/common/sysinfo.inc src/common/sysinfo_new.inc; then \
 		rm src/common/sysinfo_new.inc ; \
 	else \
 		mv src/common/sysinfo_new.inc src/common/sysinfo.inc ; \
 	fi
+
+config.status: configure
+	@echo "	RECONFIGURE"
+	@./config.status --recheck && ./config.status
 
 help: Makefile
 	@echo "most common targets are 'all' 'sql' 'clean' 'plugins' 'help'"

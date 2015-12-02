@@ -4,20 +4,20 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // CONSOLE_INPUT
+#include "config/core.h" // CONSOLE_INPUT
 #include "account.h"
 
-#include <stdlib.h>
-#include <string.h>
+#include "common/cbasetypes.h"
+#include "common/console.h"
+#include "common/memmgr.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/sql.h"
+#include "common/strlib.h"
 
-#include "../common/console.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/sql.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
+#include <stdlib.h>
 
 /// global defines
 #define ACCOUNT_SQL_DB_VERSION 20110114
@@ -136,6 +136,7 @@ static bool account_db_sql_init(AccountDB* self)
 	const char* database;
 	const char* codepage;
 
+	nullpo_ret(db);
 	db->accounts = SQL->Malloc();
 	sql_handle = db->accounts;
 
@@ -181,6 +182,7 @@ static void account_db_sql_destroy(AccountDB* self)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
 
+	nullpo_retv(db);
 	SQL->Free(db->accounts);
 	db->accounts = NULL;
 	aFree(db);
@@ -192,6 +194,9 @@ static bool account_db_sql_get_property(AccountDB* self, const char* key, char* 
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
 	const char* signature;
 
+	nullpo_ret(db);
+	nullpo_ret(key);
+	nullpo_ret(buf);
 	signature = "engine.";
 	if( strncmpi(key, signature, strlen(signature)) == 0 )
 	{
@@ -282,7 +287,9 @@ static bool account_db_sql_set_property(AccountDB* self, const char* key, const 
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
 	const char* signature;
 
-
+	nullpo_ret(db);
+	nullpo_ret(key);
+	nullpo_ret(value);
 	signature = "sql.";
 	if( strncmp(key, signature, strlen(signature)) == 0 )
 	{
@@ -356,10 +363,13 @@ static bool account_db_sql_set_property(AccountDB* self, const char* key, const 
 static bool account_db_sql_create(AccountDB* self, struct mmo_account* acc)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	Sql* sql_handle = db->accounts;
+	Sql* sql_handle;
 
 	// decide on the account id to assign
 	int account_id;
+	nullpo_ret(db);
+	nullpo_ret(acc);
+	sql_handle = db->accounts;
 	if( acc->account_id != -1 )
 	{// caller specifies it manually
 		account_id = acc->account_id;
@@ -407,9 +417,11 @@ static bool account_db_sql_create(AccountDB* self, struct mmo_account* acc)
 static bool account_db_sql_remove(AccountDB* self, const int account_id)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	Sql* sql_handle = db->accounts;
+	Sql* sql_handle;
 	bool result = false;
 
+	nullpo_ret(db);
+	sql_handle = db->accounts;
 	if( SQL_SUCCESS != SQL->QueryStr(sql_handle, "START TRANSACTION")
 	||  SQL_SUCCESS != SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = %d", db->account_db, account_id)
 	||  SQL_SUCCESS != SQL->Query(sql_handle, "DELETE FROM `%s` WHERE `account_id` = %d", db->global_acc_reg_num_db, account_id)
@@ -442,11 +454,13 @@ static bool account_db_sql_load_num(AccountDB* self, struct mmo_account* acc, co
 static bool account_db_sql_load_str(AccountDB* self, struct mmo_account* acc, const char* userid)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	Sql* sql_handle = db->accounts;
+	Sql* sql_handle;
 	char esc_userid[2*NAME_LENGTH+1];
 	int account_id;
 	char* data;
 
+	nullpo_ret(db);
+	sql_handle = db->accounts;
 	SQL->EscapeString(sql_handle, esc_userid, userid);
 
 	// get the list of account IDs for this user ID
@@ -481,8 +495,10 @@ static bool account_db_sql_load_str(AccountDB* self, struct mmo_account* acc, co
 static AccountDBIterator* account_db_sql_iterator(AccountDB* self)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	AccountDBIterator_SQL* iter = (AccountDBIterator_SQL*)aCalloc(1, sizeof(AccountDBIterator_SQL));
+	AccountDBIterator_SQL* iter;
 
+	nullpo_retr(NULL, db);
+	iter = (AccountDBIterator_SQL*)aCalloc(1, sizeof(AccountDBIterator_SQL));
 	// set up the vtable
 	iter->vtable.destroy = &account_db_sql_iter_destroy;
 	iter->vtable.next    = &account_db_sql_iter_next;
@@ -507,10 +523,14 @@ static void account_db_sql_iter_destroy(AccountDBIterator* self)
 static bool account_db_sql_iter_next(AccountDBIterator* self, struct mmo_account* acc)
 {
 	AccountDBIterator_SQL* iter = (AccountDBIterator_SQL*)self;
-	AccountDB_SQL* db = (AccountDB_SQL*)iter->db;
-	Sql* sql_handle = db->accounts;
+	AccountDB_SQL* db;
+	Sql* sql_handle;
 	char* data;
 
+	nullpo_ret(iter);
+	db = (AccountDB_SQL*)iter->db;
+	nullpo_ret(db);
+	sql_handle = db->accounts;
 	// get next account ID
 	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `account_id` FROM `%s` WHERE `account_id` > '%d' ORDER BY `account_id` ASC LIMIT 1",
 		db->account_db, iter->last_account_id) )
@@ -539,9 +559,12 @@ static bool account_db_sql_iter_next(AccountDBIterator* self, struct mmo_account
 
 static bool mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, int account_id)
 {
-	Sql* sql_handle = db->accounts;
+	Sql* sql_handle;
 	char* data;
 
+	nullpo_ret(db);
+	nullpo_ret(acc);
+	sql_handle = db->accounts;
 	// retrieve login entry for the specified account
 	if( SQL_ERROR == SQL->Query(sql_handle,
 	    "SELECT `account_id`,`userid`,`user_pass`,`sex`,`email`,`group_id`,`state`,`unban_time`,`expiration_time`,`logincount`,`lastlogin`,`last_ip`,`birthdate`,`character_slots`,`pincode`,`pincode_change` FROM `%s` WHERE `account_id` = %d",
@@ -581,9 +604,14 @@ static bool mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, int acc
 
 static bool mmo_auth_tosql(AccountDB_SQL* db, const struct mmo_account* acc, bool is_new)
 {
-	Sql* sql_handle = db->accounts;
-	SqlStmt* stmt = SQL->StmtMalloc(sql_handle);
+	Sql* sql_handle;
+	SqlStmt* stmt;
 	bool result = false;
+
+	nullpo_ret(db);
+	nullpo_ret(acc);
+	sql_handle = db->accounts;
+	stmt = SQL->StmtMalloc(sql_handle);
 
 	// try
 	do
@@ -662,10 +690,12 @@ Sql* account_db_sql_up(AccountDB* self) {
 	return db ? db->accounts : NULL;
 }
 void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
-	Sql* sql_handle = ((AccountDB_SQL*)self)->accounts;
+	Sql* sql_handle;
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
 	int count = RFIFOW(fd, 12);
 
+	nullpo_retv(db);
+	sql_handle = db->accounts;
 	if (count) {
 		int cursor = 14, i;
 		char key[32], sval[254];
@@ -709,12 +739,14 @@ void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
 }
 
 void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
-	Sql* sql_handle = ((AccountDB_SQL*)self)->accounts;
+	Sql* sql_handle;
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
 	char* data;
 	int plen = 0;
 	size_t len;
 
+	nullpo_retv(db);
+	sql_handle = db->accounts;
 	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT `key`, `index`, `value` FROM `%s` WHERE `account_id`='%d'", db->global_acc_reg_str_db, account_id) )
 		Sql_ShowDebug(sql_handle);
 

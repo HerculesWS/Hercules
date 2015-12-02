@@ -5,9 +5,11 @@
 #ifndef MAP_MAPREG_H
 #define MAP_MAPREG_H
 
-#include "script.h" // struct reg_db
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
+#include "map/script.h" // struct reg_db
+#include "common/hercules.h"
+#include "common/db.h"
+
+struct eri;
 
 /** Container for a mapreg value */
 struct mapreg_save {
@@ -46,10 +48,10 @@ struct mapreg_interface {
 	bool (*config_read) (const char *w1, const char *w2);
 };
 
-struct mapreg_interface *mapreg;
-
 #ifdef HERCULES_CORE
 void mapreg_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct mapreg_interface *mapreg;
 
 #endif /* MAP_MAPREG_H */

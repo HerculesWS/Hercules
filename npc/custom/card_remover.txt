@@ -49,7 +49,7 @@ prt_in,28,73,4	script	Wise Old Woman#eAcustom	1_F_ORIENT_04,{
 			close;
 		}
 		set .@cardcount,getequipcardcnt(.@part);
-		
+
 		if (!checkweight(1202,(.@cardcount+1))) {
 			mes "^3355FFJust a minute!";
 			mes "I can't offer any of my";
@@ -91,7 +91,7 @@ prt_in,28,73,4	script	Wise Old Woman#eAcustom	1_F_ORIENT_04,{
 		Zeny -= (.zenycost+(.@cardcount * .percardcost));
 		delitem 1000,1;
 		delitem 715,1;
-		
+
 		// Replace the constants in the next 3 lines with failure chance values defined in refine_db.txt
 		// First value = Total failure chance (item and cards destroyed)
 		// Second value = Partial failure chance (one or the other is destroyed, player decides which one is safe)

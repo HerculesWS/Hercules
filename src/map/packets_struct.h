@@ -1,13 +1,13 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
 
-/* Hercules Renewal: Phase Two http://hercules.ws/board/topic/383-hercules-renewal-phase-two/ */
+/* Hercules Renewal: Phase Two http://herc.ws/board/topic/383-hercules-renewal-phase-two/ */
 
 #ifndef MAP_PACKETS_STRUCT_H
 #define MAP_PACKETS_STRUCT_H
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h"
+#include "common/cbasetypes.h"
+#include "common/mmo.h"
 
 /**
  *
@@ -18,14 +18,44 @@ enum packet_headers {
 	banking_checkType = 0x9a6,
 	cart_additem_ackType = 0x12c,
 	sc_notickType = 0x196,
+#if PACKETVER >= 20141022
+	hotkeyType = 0xa00,
+#elif PACKETVER >= 20090603
+	hotkeyType = 0x7d9,
+#else
+	hotkeyType = 0x2b9,
+#endif
+#if PACKETVER >= 20150226
+	cartaddType = 0xa0b,
+#elif PACKETVER >= 5
+	cartaddType = 0x1c5,
+#else
+	cartaddType = 0x124,
+#endif
+#if PACKETVER >= 20150226
+	storageaddType = 0xa0a,
+#elif PACKETVER >= 5
+	storageaddType = 0x1c4,
+#else
+	storageaddType = 0xf4,
+#endif
+#if PACKETVER >= 20150226
+	tradeaddType = 0xa09,
+#elif PACKETVER >= 20100223
+	tradeaddType = 0x80f,
+#else
+	tradeaddType = 0x0e9,
+#endif
 #if PACKETVER < 20061218
-	additemType = 0xa0,
+	additemType = 0x0a0,
 #elif PACKETVER < 20071002
 	additemType = 0x29a,
 #elif PACKETVER < 20120925
 	additemType = 0x2d4,
-#else
+#elif PACKETVER < 20150226
 	additemType = 0x990,
+#else
+	additemType = 0xa0c,
 #endif
 #if PACKETVER < 4
 	idle_unitType = 0x78,
@@ -134,7 +164,9 @@ enum packet_headers {
 #else
 	inventorylistnormalType = 0xa3,
 #endif
-#if PACKETVER >= 20120925
+#if PACKETVER >= 20150226
+	inventorylistequipType = 0xa0d,
+#elif PACKETVER >= 20120925
 	inventorylistequipType = 0x992,
 #elif PACKETVER >= 20080102
 	inventorylistequipType = 0x2d0,
@@ -152,7 +184,9 @@ enum packet_headers {
 #else
 	storagelistnormalType = 0xa5,
 #endif
-#if PACKETVER >= 20120925
+#if PACKETVER >= 20150226
+	storagelistequipType = 0xa10,
+#elif PACKETVER >= 20120925
 	storagelistequipType = 0x996,
 #elif PACKETVER >= 20080102
 	storagelistequipType = 0x2d1,
@@ -170,7 +204,9 @@ enum packet_headers {
 #else
 	cartlistnormalType = 0x123,
 #endif
-#if PACKETVER >= 20120925
+#if PACKETVER >= 20150226
+	cartlistequipType = 0xa0f,
+#elif PACKETVER >= 20120925
 	cartlistequipType = 0x994,
 #elif PACKETVER >= 20080102
 	cartlistequipType = 0x2d2,
@@ -179,6 +215,12 @@ enum packet_headers {
 #else
 	cartlistequipType = 0x122,
 #endif
+#if PACKETVER < 20100105
+	vendinglistType = 0x133,
+#else
+	vendinglistType = 0x800,
+#endif
+	openvendingType = 0x136,
 #if PACKETVER >= 20120925
 	equipitemType = 0x998,
 #else
@@ -213,8 +255,15 @@ enum packet_headers {
 #endif
 	partyleaderchangedType = 0x7fc,
 	rouletteinfoackType = 0xa1c,
-	roulettgenerateackType = 0xA20,
-	roulettercvitemackType = 0xA22,
+	roulettgenerateackType = 0xa20,
+	roulettercvitemackType = 0xa22,
+#if 0 // Unknown
+	questListType = 0x9f8, ///< ZC_ALL_QUEST_LIST3
+#elif PACKETVER >= 20141022
+	questListType = 0x97a, ///< ZC_ALL_QUEST_LIST2
+#else // PACKETVER < 20141022
+	questListType = 0x2b1, ///< ZC_ALL_QUEST_LIST
+#endif // PACKETVER >= 20141022
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -256,6 +305,12 @@ struct NORMALITEM_INFO {
 #endif
 } __attribute__((packed));
 
+struct RndOptions {
+	short index;
+	short value;
+	unsigned char param;
+} __attribute__((packed));
+
 struct EQUIPITEM_INFO {
 	short index;
 	unsigned short ITID;
@@ -283,6 +338,10 @@ struct EQUIPITEM_INFO {
 #endif
 #if PACKETVER >= 20100629
 	unsigned short wItemSpriteNumber;
+#endif
+#if PACKETVER >= 20150226
+	unsigned char option_count;
+	struct RndOptions option_data[5];
 #endif
 #if PACKETVER >= 20120925
 	struct {
@@ -344,6 +403,9 @@ struct packet_additem {
 #if PACKETVER >= 20071002
 	unsigned short bindOnEquipType;
 #endif
+#if PACKETVER >= 20150226
+	struct RndOptions option_data[5];
+#endif
 } __attribute__((packed));
 
 struct packet_dropflooritem {
@@ -360,8 +422,8 @@ struct packet_dropflooritem {
 	unsigned char subY;
 	short count;
 } __attribute__((packed));
-#if PACKETVER < 20091103
 struct packet_idle_unit2 {
+#if PACKETVER < 20091103
 	short PacketType;
 #if PACKETVER >= 20071106
 	unsigned char objecttype;
@@ -392,8 +454,13 @@ struct packet_idle_unit2 {
 	unsigned char ySize;
 	unsigned char state;
 	short clevel;
+#else // ! PACKETVER < 20091103
+	char UNUSED;
+#endif // PACKETVER < 20091103
 } __attribute__((packed));
+
 struct packet_spawn_unit2 {
+#if PACKETVER < 20091103
 	short PacketType;
 #if PACKETVER >= 20071106
 	unsigned char objecttype;
@@ -418,8 +485,11 @@ struct packet_spawn_unit2 {
 	unsigned char PosDir[3];
 	unsigned char xSize;
 	unsigned char ySize;
+#else // ! PACKETVER < 20091103
+	char UNUSED;
+#endif // PACKETVER < 20091103
 } __attribute__((packed));
-#endif
+
 struct packet_spawn_unit {
 	short PacketType;
 #if PACKETVER >= 20091103
@@ -1026,6 +1096,58 @@ struct packet_party_leader_changed {
 	unsigned int new_leader_aid;
 } __attribute__((packed));
 
+struct packet_hotkey {
+	short PacketType;
+#if PACKETVER >= 20141022
+	char Rotate;
+#endif
+	struct {
+		char isSkill;		// 0: Item, 1:Skill
+		unsigned int ID;	// Item/Skill ID
+		short count;		// Item Quantity/Skill Level
+	} hotkey[MAX_HOTKEYS];
+} __attribute__((packed));
+
+/**
+ * MISSION_HUNT_INFO
+ */
+struct packet_mission_info_sub {
+	int32 mob_id;
+	int16 huntCount;
+	int16 maxCount;
+	char mobName[NAME_LENGTH];
+} __attribute__((packed));
+
+/**
+ * PACKET_ZC_ALL_QUEST_LIST2_INFO (PACKETVER >= 20141022)
+ * PACKET_ZC_ALL_QUEST_LIST3_INFO (PACKETVER Unknown) / unused
+ */
+struct packet_quest_list_info {
+	int32 questID;
+	int8 active;
+#if PACKETVER >= 20141022
+	int32 quest_svrTime;
+	int32 quest_endTime;
+	int16 hunting_count;
+	struct packet_mission_info_sub objectives[]; // Note: This will be < MAX_QUEST_OBJECTIVES
+#endif // PACKETVER >= 20141022
+} __attribute__((packed));
+
+/**
+ * Header for:
+ * PACKET_ZC_ALL_QUEST_LIST (PACKETVER < 20141022)
+ * PACKET_ZC_ALL_QUEST_LIST2 (PACKETVER >= 20141022)
+ * PACKET_ZC_ALL_QUEST_LIST3 (PACKETVER Unknown) / unused
+ *
+ * @remark
+ *     Contains (is followed by) a variable-length array of packet_quest_list_info
+ */
+struct packet_quest_list_header {
+	uint16 PacketType;
+	uint16 PacketLength;
+	int32 questCount;
+	//struct packet_quest_list_info list[]; // Variable-length
+} __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)

@@ -91,7 +91,7 @@ ayothaya,152,68,1	script	Aibakthing#ayo2	4_M_THAIONGBAK,{
 		mes "[Aibakthing]";
 		mes "You will be welcome to come back whenever you please. I hope that we will see each other again sometime soon. Thank you~";
 		close2;
-		if (checkre(0))
+		if (RENEWAL)
 			warp "alberta",235,45;
 		else
 			warp "alberta",238,22;
@@ -120,7 +120,7 @@ ayothaya,189,120,3	script	Young Man#Thang	4_M_THAIONGBAK,{
 	mes "I think.";
 	close;
 }
-	
+
 ayothaya,171,152,5	script	Girl#Lalitha	4_F_THAIAYO,{
 	.@sit = rand(1,5);
 	if (.@sit > 0 && .@sit < 3) {
@@ -191,7 +191,7 @@ ayothaya,171,152,5	script	Girl#Lalitha	4_F_THAIAYO,{
 	mes "What's up?";
 	close;
 }
-	
+
 ayothaya,143,102,5	script	Old Man#ayothaya	4_M_THAIOLD,{
 	mes "[Villager]";
 	mes "Ummm.";
@@ -236,7 +236,7 @@ ayothaya,143,102,5	script	Old Man#ayothaya	4_M_THAIOLD,{
 	mes "at least once.";
 	close;
 }
-	
+
 ayothaya,197,189,5	script	Young Man#1ayothaya	4_M_THAIAYO,{
 	mes "[Kwan]";
 	mes "Phew, isn't it";
@@ -262,7 +262,7 @@ ayothaya,197,189,5	script	Young Man#1ayothaya	4_M_THAIAYO,{
 	mes "Well, anyway, it's still a really good idea to stay away from that place. I hope you enjoy visiting Ayotaya, and that you keep safe~";
 	close;
 }
-	
+
 ayothaya,214,142,5	script	Young Man#5ayothaya	4_M_THAIONGBAK,{
 	mes "[Detzi]";
 	mes "In Ayotaya, we have our own traditional martial arts. We, the young men of the village, practice our traditional martial arts in order to become strong.";
@@ -271,7 +271,7 @@ ayothaya,214,142,5	script	Young Man#5ayothaya	4_M_THAIONGBAK,{
 	mes "Why don't you learn our martial arts? I guarantee that it will help you greatly in your travels.";
 	close;
 }
-	
+
 ayothaya,241,264,5	script	Young Man#5ayothaya2	4_M_THAIONGBAK,{
 	mes "[Eik]";
 	mes "Hey...";

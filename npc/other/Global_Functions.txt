@@ -39,8 +39,33 @@
 //= 2.16 Added F_GetWeaponType, and F_GetArmorType. [L0ne_W0lf]
 //= 2.17 Renamed 'F_RandMes' to 'F_Rand'. [Euphy]
 //= 2.18 Removed useless 'getJobName' function. [Euphy]
+//= 2.19 Improved 'F_InsertComma' function. [Emistry]
 //============================================================
 
+//////////////////////////////////////////////////////////////////////////////////
+// Returns a number with commas based on precision of digits and custom separator.
+// -- callfunc "F_InsertComma",<number>{,<precision>,<separator>}
+// Examples:
+//    callfunc("F_InsertComma",7777777)           // returns "7,777,777"
+//    callfunc("F_InsertComma",1000000000,3,",")  // returns "1,000,000,000"
+//    callfunc("F_InsertComma",1000000000,3,"_")  // returns "1_000_000_000"
+//    callfunc("F_InsertComma",1000000000,4)      // returns "10,0000,0000"
+//////////////////////////////////////////////////////////////////////////////////
+function	script	F_InsertComma	{
+	.@value = getarg(0);
+	.@precision = getarg(1,3);
+	.@separator$ = getarg( 2,"," );
+
+	.@str$ = ""+.@value;
+	.@is_negative = ( .@value < 0 );
+
+	.@length = getstrlen( .@str$ ) - .@precision - .@is_negative;
+	while ( .@length > 0 ) {
+		.@str$ = insertchar( .@str$, .@separator$ , ( .@length + .@is_negative ) );
+		.@length -= .@precision;
+	}
+	return .@str$;
+}
 
 //////////////////////////////////////////////////////////////////////////////////
 // Function that clears job quest variables
@@ -98,10 +123,10 @@ function	script	F_ClearGarbage	{
 		RES_SKILL = 0;
 	//Here you put outdated variables from your outdated EVENTS
 	//e.g. Is XMAS done? Add the EVENT var clearing code here.
-	
+
 	//due to bugs in BS quest:
 	wizard_m2 = 0;
-	
+
 	// Old Novice Ground Variables.
 	NEW_MES_FLAG0 = 0;
 	NEW_MES_FLAG1 = 0;
@@ -112,11 +137,11 @@ function	script	F_ClearGarbage	{
 	NEW_LVUP0 = 0;
 	NEW_LVUP1 = 0;
 	NEW_JOBLVUP = 0;
-	
+
 	// Old DTS variables that are no longer used.
 	dtseligible = 0;
 	MISC_QUEST = MISC_QUEST & ~128;
-	
+
 	return;
 }
 
@@ -132,7 +157,6 @@ function	script	Job_Change	{
 	logmes "CLASS CHANGE: " +strcharinfo(0)+ " become a "+jobname(Class);
 	return;
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////
 // Functions used to spiff up dialoges [Lupus]
@@ -150,7 +174,6 @@ function	script	F_Rand	{
 	return getarg(rand(getargcount()));
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////
 // *** Function "F_Sex"
 //////////////////////////////////////////////////////////////////////////////////
@@ -161,7 +184,6 @@ function	script	F_SexMes	{
 	return getarg(Sex);
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////
 // *** Function "F_Hi"
 //////////////////////////////////////////////////////////////////////////////////
@@ -171,7 +193,6 @@ function	script	F_Hi	{
 	return callfunc("F_Rand","Hi!","Hello!","Good day!","How are you?","Hello there.");
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////
 // *** Function "F_Bye"
 //////////////////////////////////////////////////////////////////////////////////
@@ -180,7 +201,6 @@ function	script	F_Hi	{
 function	script	F_Bye	{
 	return callfunc("F_Rand","Bye. See you again.","Later.","Goodbye.","Good luck!","Have a nice day!","Byebye!!!");
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////
 // *** Function "F_ItemName"
@@ -310,14 +330,14 @@ function	script	F_GetArmorType	{
 // *********************************************************************
 function	script	Time2Str	{
 	.@time_left = getarg(0) - gettimetick(2);
-	
+
 	.@Days = .@time_left / 86400;
 	.@time_left -= (.@Days * 86400);
 	.@Hours = .@time_left / 3600;
 	.@time_left -= (.@Hours * 3600);
 	.@Minutes = .@time_left / 60;
 	.@time_left -= (.@Minutes * 60);
-	
+
 	.@Time$ = "";
 	if( .@Days > 1 )
 		.@Time$ += .@Days + " days, ";
@@ -338,6 +358,6 @@ function	script	Time2Str	{
 		.@Time$ += .@time_left + " seconds";
 	else if( .@time_left == 1 )
 		.@Time$ += .@time_left + " second";
-	
+
 	return .@Time$;
 }

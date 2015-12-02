@@ -52,7 +52,19 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 	}
 
 	.@orctime = questprogress(12059,PLAYTIME);
-	if (!.@orctime) {
+	if (.@orctime == 2) {
+		mes "^0000ffAll records and after-effects related to the Orc's Memory Dungeon are deleted. You can now regenerate or re-enter the dungeon.^000000";
+		erasequest 12059;
+		close;
+	}
+
+	if (.@orctime == 1) {
+		mes "You can enter the Dungeon if it has been generated.";
+		next;
+		if(select("Enter the Dungeon "+.@md_name$+":Cancel") == 2)
+			close;
+		// Fall through to access the dungeon
+	} else { // !.@orctime
 		if (getcharid(0) == getpartyleader(.@party_id,2)) {
 			mes "Party status confirmed. Would you like to book entrance to the "+.@md_name$+"?";
 			next;
@@ -79,28 +91,17 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 				mes "After making a reservation, you have to select 'Enter the Dungeon' from the menu if you wish to enter the "+.@md_name$+".";
 				close;
 			case 2:
-				callsub L_Enter,0;
+				break; // Fall through to access the dungeon (after the else)
 			case 3:
 				close;
 			}
-		}
-		if(select(.@md_name$ + " Enter the Memorial Dungeon:Cancel") == 2)
+		} else if (select(.@md_name$ + " Enter the Memorial Dungeon:Cancel") == 2)
 			end;
-		callsub L_Enter,1;
-	} else if (.@orctime == 1) {
-		mes "You can enter the Dungeon if it has been generated.";
-		next;
-		if(select("Enter the Dungeon "+.@md_name$+":Cancel") == 2)
-			close;
-		callsub L_Enter,0;
-	} else if (.@orctime == 2) {
-		mes "^0000ffAll records and after-effects related to the Orc's Memory Dungeon are deleted. You can now regenerate or re-enter the dungeon.^000000";
-		erasequest 12059;
-		close;
+		// Else access the dungeon
 	}
-	mes "In order to generate a dungeon you must be the Party Leader and have at least 2 members in the party.";
-	close;
-L_Enter:
+
+	// Dungeon access
+
 	if (has_instance("1@orcs") == "") {
 		mes "Memorial Dungeon "+.@md_name$+" does not exist.";
 		mes "The party leader has not reserved entrance to the dungeon yet.";
@@ -108,12 +109,12 @@ L_Enter:
 		mes "Once the reservation is complete, the dungeon will be generated.";
 		mes "If your dungeon has been destroyed you must wait 7 days before re-entering.";
 		close;
-	} else {
-		mapannounce "gef_fild10", .@p_leader$ + " of the party, " + .@p_name$ + " is entering the "+.@md_name$+".",bc_map,"0x00ff99";
-		if (!questprogress(12059)) setquest 12059;
-		warp "1@orcs",179,15;
-		end;
 	}
+
+	mapannounce "gef_fild10", strcharinfo(0) + " of the party, " + .@p_name$ + " is entering the "+.@md_name$+".",bc_map,"0x00ff99";
+	if (!questprogress(12059)) setquest 12059;
+	warp "1@orcs",179,15;
+	end;
 }
 
 gef_fild10,238,202,6	script	Mad Scientist#orc	4_LGTSCIENCE,{

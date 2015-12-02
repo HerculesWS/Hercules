@@ -31,7 +31,7 @@
 		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
 	}
 	if (.@Delay) @HD = gettimetick(2)+.@Delay;
-	close;
+	end;
 }
 
 

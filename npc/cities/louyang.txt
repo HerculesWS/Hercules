@@ -107,7 +107,7 @@ lou_fild01,190,100,7	script	Girl#1lou	4_F_CHNDRESS1,{
 		mes "see you again!";
 		mes "Bye bye!";
 		close2;
-		if (checkre(0))
+		if (RENEWAL)
 			warp "alberta",236,40;
 		else
 			warp "alberta",235,45;

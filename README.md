@@ -1,7 +1,25 @@
 Hercules
 ========
 
-Build Status: [![Build Status](https://travis-ci.org/HerculesWS/Hercules.png?branch=master)](https://travis-ci.org/HerculesWS/Hercules) 
+Build Status:  
+[![Build Status](https://travis-ci.org/HerculesWS/Hercules.svg)](https://travis-ci.org/HerculesWS/Hercules)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/3892/badge.svg)](https://scan.coverity.com/projects/herculesws-hercules)
+
+Issues and pull requests:  
+[![Open Issues](https://img.shields.io/github/issues-raw/HerculesWS/Hercules.svg?label=Open%20Issues)](https://github.com/HerculesWS/Hercules/issues)
+[![Issues in progress](https://badge.waffle.io/HerculesWS/Hercules.svg?label=status%3Aconfirmed&title=In%20Progress)](https://waffle.io/HerculesWS/Hercules)
+[![Ready PRs](https://badge.waffle.io/HerculesWS/Hercules.svg?label=status%3Aready&title=Ready%20PRs)](https://waffle.io/HerculesWS/Hercules)
+
+Development and Community:  
+[![GitHub Repository](https://img.shields.io/badge/github-HerculesWS/Hercules-green.svg)](https://github.com/HerculesWS/Hercules)
+[![Waffle Board](https://img.shields.io/badge/waffle-HerculesWS/Hercules-6699dd.svg)](https://waffle.io/HerculesWS/Hercules)  
+[![IRC](https://img.shields.io/badge/IRC-Rizon/Hercules-yellow.svg)](irc://rizon.net/Hercules)
+[![Community Forum](https://img.shields.io/badge/forum-herc.ws-orange.svg)](http://herc.ws)
+[![Twitter](https://img.shields.io/badge/twitter-@HerculesWS-blue.svg)](https://twitter.com/HerculesWS)
+
+Project Info:  
+![Language](https://img.shields.io/badge/language-C-yellow.svg)
+[![License](https://img.shields.io/badge/license-GPLv3-663399.svg)](https://github.com/HerculesWS/Hercules/blob/master/LICENSE)
 
 Table of Contents
 ---------
@@ -12,81 +30,102 @@ Table of Contents
 * 5 Helpful Links
 * 6 More Documentation
 
-1. What is Hercules?
----------
+What is Hercules?
+-----------------
 Hercules is a collaborative software development project revolving around the
 creation of a robust massively multiplayer online role playing game (MMORPG)
 server package. Written in C, the program is very versatile and provides NPCs,
-warps and modifications. The project is jointly managed by a group of volunteers
-located around the world as well as a tremendous community providing QA and
-support. Hercules is a continuation of the original Athena project.
+warps and modifications. The project is jointly managed by a group of
+volunteers located around the world as well as a tremendous community providing
+QA and support. Hercules is a continuation of the original Athena project.
 
-2. Prerequisites
----------
-Before installing Hercules there are certain tools and applications you will need.
-This differs between the varying operating systems available, so the following
-is broken down into Windows and Linux prerequisites.
+Prerequisites
+-------------
+Before installing Hercules there are certain tools and applications you will
+need.  This differs between the varying operating systems available, so the
+following is broken down into Windows and Unix (incl. Linux) prerequisites.
 
-* Windows
-	* TortoiseGIT ( http://code.google.com/p/tortoisegit/ )
-	* MSysGit ( http://code.google.com/p/msysgit/downloads/list?can=2 )
-	* MySQL ( http://www.mysql.com/downloads/mysql/ )
-	* MySQL Workbench ( http://www.mysql.com/downloads/workbench/ )
-	* MS Visual C++ ( http://www.microsoft.com/visualstudio/en-us/products/2010-editions/visual-cpp-express )
+#### Windows
+  - Git client
+  - MySQL-compatible server ([MySQL Community Edition](https://www.mysql.com/products/community/) or [MariaDB](https://mariadb.org/))
+  - Microsoft Visual Studio ([Version 2010 through 2015](https://www.visualstudio.com/))
 
-* Linux (names of packages may require specific version numbers on certain distributions)
-	* gcc
-	* make
-	* mysql
-	* mysql-devel
-	* mysql-server
-	* pcre-devel
-	* git
-	* zlib-devel
+#### Unix/Linux/BSD (names of packages may require specific version numbers on certain distributions)
+  - git
+  - gcc or clang (version 4.1 or newer, recommended 4.8 or newer)
+  - GNU make
+  - mysql (mysql-server)
+  - libmysqlclient (mysql-devel)
+  - zlib (zlib-devel)
+  - libpcre (pcre-devel) *optional*
+  - *Optional dependencies for development only*
+    - perl (required to rebuild the HPM Hooks and HPMDataCheck or to regenerate the mobdb sql table)
+    - Doxygen (required to rebuild the HPM Hooks and HPMDataCheck)
 
-3. Installation
----------
+#### Mac OS X
+  - Xcode
+  - MySQL-compatible server (installation of mysql or mariadb through [Homebrew](http://brew.sh/) is recommended)
+  - libpcre (pcre-devel) *optional*
+  - *Optional dependencies for development only*
+    - Doxygen (required to rebuild the HPM Hooks and HPMDataCheck)
+
+#### Optional, useful tools
+  - MySQL GUI clients
+    - [MySQL Workbench](http://www.mysql.com/downloads/workbench/) (cross-platform)
+    - [HeidiSQL](http://www.heidisql.com/) (Windows)
+    - [Sequel Pro](http://www.sequelpro.com/) (Mac OS X)
+  - Git clients
+    - [Atlassian SourceTree](https://www.sourcetreeapp.com/) (Windows, Mac OS X)
+    - [TortoiseGit](https://tortoisegit.org/) (Windows)
+
+
+Installation
+------------
+
 This section is a very brief set of installation instructions. For more concise guides
 relevant to your Operation System, please refer to the Wiki (links at the end of this file).
 
-* Windows
-	* Install prerequisites
-	* Create a folder to download Hercules into (e.g. C:\Hercules)
-	* Right click this folder and select "Git Clone".
-	* Paste the GIT URL into the box: https://github.com/HerculesWS/Hercules.git
-	* Open MySQL Workbench and create an instance to connect to your MySQL Server
-	* Create a database (hercules), a user (hercules), give permissions (GRANT SELECT,INSERT,UPDATE,DELETE)
-		and then login using the new user
-	* Use MySQL Workbench to run the .sql files in /sql-files/ on the new Hercules database
+#### Windows
+  1. Install the prerequisites.
+  2. Clone the Hercules repository (see [GitHub](https://github.com/HerculesWS/Hercules)) using a git client, into a new folder.
+  3. Connect to the MySQL server as root:
+    - Create a database (hercules): `CREATE DATABASE hercules;`
+    - Create a user (hercules): `CREATE USER 'hercules'@'localhost' IDENTIFIED BY 'password';`.
+    - Give permissions (GRANT SELECT,INSERT,UPDATE,DELETE) to the user: `GRANT SELECT,INSERT,UPDATE,DELETE ON \`hercules\`.* TO 'hercules'@'localhost';`
+  4. Connect to the MySQL server as the new user:
+    - Import the .sql files in /sql-files/ into the new database.
+  5. Start Visual Studio and load the provided solution:
+    - Compile and run the three projects, login-server, char-server, map-server.
 
-* Linux
-	* (For CentOS)
-		* Step 1: yum install gcc make mysql mysql-devel mysql-server pcre-devel zlib-devel
-			* Step 2: rpm -Uvh http://repo.webtatic.com/yum/centos/5/latest.rpm
-			* Step 3: yum install --enablerepo=webtatic git-all
-			* Step 4: yum install --enablerepo=webtatic --disableexcludes=main git-all
-	* (For Debian/Others)
-		* Type: apt-get install git make gcc libmysqlclient-dev zlib1g-dev libpcre3-dev
-	* Type: mysql_secure_installation
-	* Start your MySQL server
-	* Setup a MySQL user:
+#### Unix
+  1. Install the prerequisites through your distribution's package manager
+    - (Red Hat compatible / CentOS) `yum install gcc make mysql mysql-devel mysql-server pcre-devel zlib-devel git`
+    - (Debian compatible) `apt-get install gcc make libmysqlclient-dev zlib1g-dev libpcre3-dev mysql-server git`
+    - (FreeBSD) `pkg install clang35 gmake mysql56-server mysql-connector-c pcre git`
+    - (Mac OS X):
+      - Install Xcode through the Mac App Store
+      - Initialize the build tools through the Terminal `xcode-select --help`
+      - Install Homebrew as described on the project page
+      - Install MySQL: `brew install mysql`
+  2. Clone the Hercules repository `git clone https://github.com/HerculesWS/Hercules.git ~/Hercules`
+  3. Configure the MySQL server and start it.
+  4. Connect to the MySQL server as root:
+    - Create a database (hercules): `CREATE DATABASE hercules;`
+    - Create a user (hercules): `CREATE USER 'hercules'@'localhost' IDENTIFIED BY 'password';`.
+    - Give permissions (GRANT SELECT,INSERT,UPDATE,DELETE) to the user: `GRANT SELECT,INSERT,UPDATE,DELETE ON \`hercules\`.* TO 'hercules'@'localhost';`
+  5. Connect to the MySQL server as the new user:
+    - Import the .sql files in /sql-files/ into the new database.
+  6. Enter the Hercules directory and configure/build Hercules
+    - `./configure`
+    - `make clean && make sql` (on FreeBSD, replace `make` with `gmake`)
+  7. Start the three servers login-server, char-server, map-server.
 
-				CREATE USER 'hercules'@'localhost' IDENTIFIED BY 'password';
-	* Assign permissions:
+Troubleshooting
+---------------
 
-				GRANT SELECT,INSERT,UPDATE,DELETE ON `hercules\_rag`.* TO 'hercules'@'localhost';
-	* Type: git clone https://github.com/HerculesWS/Hercules.git ~/Hercules
-	* Insert SQL files: mysql --user=root -p hercules_rag < trunk/sql-files/main.sql (and others)
-	* Type: cd trunk && ./configure && make clean && make sql
-	* When you're ready, type: ./athena-start start
-
-
-
-4. Troubleshooting
----------
 If you're having problems with starting your server, the first thing you should
-do is check what's happening on your consoles. More often that not, all support issues
-can be solved simply by looking at the error messages given.
+do is check what's happening on your consoles. More often that not, all support
+issues can be solved simply by looking at the error messages given.
 
 Examples:
 
@@ -125,13 +164,17 @@ Examples:
 	If this shows up on the map server, it generally means that there is no Char Server available
 		to accept the connection.
 
-5. Helpful Links
----------
+Helpful Links
+-------------
+
 The following list of links point to various help files within the GIT, articles or
 pages on the Wiki or topics within the Hercules forum.
 
 * Hercules Forums
-	http://hercules.ws/board/
+	http://herc.ws/board/
+
+* Hercules Wiki
+	http://herc.ws/wiki/Main_Page
 
 * GIT Repository URL:
 	https://github.com/HerculesWS/Hercules
@@ -141,9 +184,9 @@ pages on the Wiki or topics within the Hercules forum.
 	Channel: #Hercules
 
 
+More Documentation
+------------------
 
-6. More Documentation
----------
 Hercules has a large collection of help files and sample NPC scripts located in /doc/
 
 * Scripting

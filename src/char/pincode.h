@@ -5,7 +5,9 @@
 #ifndef CHAR_PINCODE_H
 #define CHAR_PINCODE_H
 
-#include "char.h"
+#include "common/hercules.h"
+
+struct char_session_data;
 
 enum PincodeResponseCode {
 	PINCODE_OK      = 0,
@@ -40,10 +42,10 @@ struct pincode_interface {
 	bool (*config_read) (char *w1, char *w2);
 };
 
-struct pincode_interface *pincode;
-
 #ifdef HERCULES_CORE
 void pincode_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct pincode_interface *pincode;
 
 #endif /* CHAR_PINCODE_H */

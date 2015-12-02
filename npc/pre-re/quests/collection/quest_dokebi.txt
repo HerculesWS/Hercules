@@ -228,5 +228,3 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 		close;
 	}
 }
-
-

@@ -26,7 +26,7 @@ bat_room,225,226,5	script	KVM Waiting Room#a3::KvM03R_Guillaume	4_M_KY_KNT,{
 OnInit:
 	waitingroom "Battle Station 5 Players",6,"KvM03_BG::OnGuillaumeJoin",1;
 	end;
-	
+
 OnEnterBG:
 	$@KvM03BG_id1 = waitingroom2bg("bat_c03",52,129,"KvM03_BG::OnGuillaumeQuit","KvM03_BG::OnGuillaumeDie");
 	end;

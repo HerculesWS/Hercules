@@ -391,7 +391,7 @@ prt_in,168,56,4	script	Monster Encyclopedia#prt	HIDDEN_NPC,{
 		}
 	}
 }
-				
+
 prt_in,159,56,4	script	Monster Encyclopedia#2pr	HIDDEN_NPC,{
 	mes "^FF0000[Monster Encyclopedia]^000000";
 	mes "This is a Monster Encyclopedia";
@@ -871,7 +871,7 @@ prt_in,159,56,4	script	Monster Encyclopedia#2pr	HIDDEN_NPC,{
 	}
 }
 
-prt_in,161,50,4	script	Monster Encyclopedia#3pr	 111,{
+prt_in,161,50,4	script	Monster Encyclopedia#3pr	HIDDEN_NPC,{
 	mes "^FF0000[Monster Encyclopedia]^000000";
 	mes "This is a Monster Encyclopedia";
 	mes "containing information on Dark,";
@@ -1719,7 +1719,6 @@ prt_in,172,96,4	script	Monster Encyclopedia#4pr	HIDDEN_NPC,{
 		close;
 	}
 }
-
 
 prt_in,164,96,4	script	Monster Encyclopedia#5pr	HIDDEN_NPC,{
 	mes "^FF0000[Dungeon Monster Encyclopedia]^000000";

@@ -4,21 +4,21 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // CELL_NOSTACK, CIRCULAR_AREA
+#include "config/core.h" // CELL_NOSTACK, CIRCULAR_AREA
 #include "path.h"
 
+#include "map/map.h"
+#include "common/cbasetypes.h"
+#include "common/db.h"
+#include "common/memmgr.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
-
-#include "map.h"
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
 
 #define SET_OPEN 0
 #define SET_CLOSED 1
@@ -29,6 +29,7 @@
 #define DIR_EAST 8
 
 struct path_interface path_s;
+struct path_interface *path;
 
 /// @name Structures and defines for A* pathfinding
 /// @{
@@ -44,7 +45,7 @@ struct path_node {
 };
 
 /// Binary heap of path nodes
-BHEAP_STRUCT_DECL(node_heap, struct path_node*);
+BHEAP_STRUCT_DECL(node_heap, struct path_node *);
 
 /// Comparator for binary heap of path nodes (minimum cost at top)
 #define NODE_MINTOPCMP(i,j) ((i)->f_cost - (j)->f_cost)
@@ -68,7 +69,7 @@ static const unsigned char walk_choices [3][3] =
  * Find the closest reachable cell, 'count' cells away from (x0,y0) in direction (dx,dy).
  * Income after the coordinates of the blow
  *------------------------------------------*/
-int path_blownpos(int16 m,int16 x0,int16 y0,int16 dx,int16 dy,int count)
+int path_blownpos(struct block_list *bl, int16 m,int16 x0,int16 y0,int16 dx,int16 dy,int count)
 {
 	struct map_data *md;
 
@@ -87,7 +88,7 @@ int path_blownpos(int16 m,int16 x0,int16 y0,int16 dx,int16 dy,int count)
 	}
 
 	while( count > 0 && (dx != 0 || dy != 0) ) {
-		if( !md->getcellp(md,x0+dx,y0+dy,CELL_CHKPASS) )
+		if (!md->getcellp(md, bl, x0 + dx, y0 + dy, CELL_CHKPASS))
 			break;
 
 		x0 += dx;
@@ -101,7 +102,7 @@ int path_blownpos(int16 m,int16 x0,int16 y0,int16 dx,int16 dy,int count)
 /*==========================================
  * is ranged attack from (x0,y0) to (x1,y1) possible?
  *------------------------------------------*/
-bool path_search_long(struct shootpath_data *spd,int16 m,int16 x0,int16 y0,int16 x1,int16 y1,cell_chk cell)
+bool path_search_long(struct shootpath_data *spd,struct block_list *bl,int16 m,int16 x0,int16 y0,int16 x1,int16 y1,cell_chk cell)
 {
 	int dx, dy;
 	int wx = 0, wy = 0;
@@ -158,7 +159,7 @@ bool path_search_long(struct shootpath_data *spd,int16 m,int16 x0,int16 y0,int16
 			spd->y[spd->len] = y0;
 			spd->len++;
 		}
-		if (md->getcellp(md,x0,y0,cell))
+		if (md->getcellp(md, bl, x0, y0, cell))
 			return false;
 	}
 
@@ -235,7 +236,7 @@ static int add_path(struct node_heap *heap, struct path_node *tp, int16 x, int16
  * flag: &1 = easy path search only
  * cell: type of obstruction to check for
  *------------------------------------------*/
-bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell)
+bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell)
 {
 	register int i, j, x, y, dx, dy;
 	struct map_data *md;
@@ -249,13 +250,13 @@ bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x
 	md = &map->list[m];
 
 	//Do not check starting cell as that would get you stuck.
-	if (x0 < 0 || x0 >= md->xs || y0 < 0 || y0 >= md->ys /*|| md->getcellp(md,x0,y0,cell)*/)
+	if (x0 < 0 || x0 >= md->xs || y0 < 0 || y0 >= md->ys /*|| md->getcellp(md, bl, x0, y0, cell)*/)
 		return false;
 
 	// Check destination cell
-	if (x1 < 0 || x1 >= md->xs || y1 < 0 || y1 >= md->ys || md->getcellp(md,x1,y1,cell))
+	if (x1 < 0 || x1 >= md->xs || y1 < 0 || y1 >= md->ys || md->getcellp(md, bl, x1, y1, cell))
 		return false;
-	
+
 	if( x0 == x1 && y0 == y1 ) {
 		wpd->path_len = 0;
 		wpd->path_pos = 0;
@@ -286,7 +287,7 @@ bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x
 
 			if( dx == 0 && dy == 0 )
 				break; // success
-			if( md->getcellp(md,x,y,cell) )
+			if (md->getcellp(md, bl, x, y, cell))
 				break; // obstacle = failure
 		}
 
@@ -359,26 +360,26 @@ bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x
 				break;
 			}
 
-			if (y < ys && !md->getcellp(md, x, y+1, cell)) allowed_dirs |= DIR_NORTH;
-			if (y >  0 && !md->getcellp(md, x, y-1, cell)) allowed_dirs |= DIR_SOUTH;
-			if (x < xs && !md->getcellp(md, x+1, y, cell)) allowed_dirs |= DIR_EAST;
-			if (x >  0 && !md->getcellp(md, x-1, y, cell)) allowed_dirs |= DIR_WEST;
+			if (y < ys && !md->getcellp(md, bl, x, y+1, cell)) allowed_dirs |= DIR_NORTH;
+			if (y >  0 && !md->getcellp(md, bl, x, y-1, cell)) allowed_dirs |= DIR_SOUTH;
+			if (x < xs && !md->getcellp(md, bl, x+1, y, cell)) allowed_dirs |= DIR_EAST;
+			if (x >  0 && !md->getcellp(md, bl, x-1, y, cell)) allowed_dirs |= DIR_WEST;
 
 #define chk_dir(d) ((allowed_dirs & (d)) == (d))
 			// Process neighbors of current node
-			if (chk_dir(DIR_SOUTH|DIR_EAST) && !md->getcellp(md, x+1, y-1, cell))
+			if (chk_dir(DIR_SOUTH|DIR_EAST) && !md->getcellp(md, bl, x+1, y-1, cell))
 				e += add_path(&open_set, tp, x+1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y-1, x1, y1)); // (x+1, y-1) 5
 			if (chk_dir(DIR_EAST))
 				e += add_path(&open_set, tp, x+1, y, g_cost + MOVE_COST, current, heuristic(x+1, y, x1, y1)); // (x+1, y) 6
-			if (chk_dir(DIR_NORTH|DIR_EAST) && !md->getcellp(md, x+1, y+1, cell))
+			if (chk_dir(DIR_NORTH|DIR_EAST) && !md->getcellp(md, bl, x+1, y+1, cell))
 				e += add_path(&open_set, tp, x+1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y+1, x1, y1)); // (x+1, y+1) 7
 			if (chk_dir(DIR_NORTH))
 				e += add_path(&open_set, tp, x, y+1, g_cost + MOVE_COST, current, heuristic(x, y+1, x1, y1)); // (x, y+1) 0
-			if (chk_dir(DIR_NORTH|DIR_WEST) && !md->getcellp(md, x-1, y+1, cell))
+			if (chk_dir(DIR_NORTH|DIR_WEST) && !md->getcellp(md, bl, x-1, y+1, cell))
 				e += add_path(&open_set, tp, x-1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y+1, x1, y1)); // (x-1, y+1) 1
 			if (chk_dir(DIR_WEST))
 				e += add_path(&open_set, tp, x-1, y, g_cost + MOVE_COST, current, heuristic(x-1, y, x1, y1)); // (x-1, y) 2
-			if (chk_dir(DIR_SOUTH|DIR_WEST) && !md->getcellp(md, x-1, y-1, cell))
+			if (chk_dir(DIR_SOUTH|DIR_WEST) && !md->getcellp(md, bl, x-1, y-1, cell))
 				e += add_path(&open_set, tp, x-1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y-1, x1, y1)); // (x-1, y-1) 3
 			if (chk_dir(DIR_SOUTH))
 				e += add_path(&open_set, tp, x, y-1, g_cost + MOVE_COST, current, heuristic(x, y-1, x1, y1)); // (x, y-1) 4
@@ -407,7 +408,6 @@ bool path_search(struct walkpath_data *wpd, int16 m, int16 x0, int16 y0, int16 x
 
 	return false;
 }
-
 
 //Distance functions, taken from http://www.flipcode.com/articles/article_fastdistance.shtml
 bool check_distance(int dx, int dy, int distance)
@@ -488,7 +488,7 @@ int distance_client(int dx, int dy)
 
 void path_defaults(void) {
 	path = &path_s;
-	
+
 	path->blownpos = path_blownpos;
 	path->search_long = path_search_long;
 	path->search = path_search;

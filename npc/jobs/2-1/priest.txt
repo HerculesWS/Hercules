@@ -1860,4 +1860,3 @@ function	script	F_FatherYos	{
 	mes "...Acolyte, you don't have any business with me here.";
 	close;
 }
-

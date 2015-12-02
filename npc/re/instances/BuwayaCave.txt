@@ -89,7 +89,7 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 				}
 				instance_set_timeout 3600,300,.@instance;
 				instance_init(.@instance);
-				
+
 				mes "[Guard]";
 				mes "I will open up the tunnel to ^0000ff"+.@md_name$+"^000000.";
 				mes "I wish you good luck.";

@@ -55,7 +55,7 @@ hugel,126,151,3	script	Emily	4_F_01,{
 	mes "Don't you think that sounds weird?";
 	close;
 }
- 
+
 hugel,86,165,5	script	Kayplas	4_M_HUBOY,{
 	mes "[Kayplas]";
 	mes "Ooh, I really want to";

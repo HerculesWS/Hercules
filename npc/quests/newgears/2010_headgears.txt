@@ -1,16 +1,16 @@
-//===== Hercules Script ====================================== 
+//===== Hercules Script ======================================
 //= 2010 Headgear Quest
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Dastgir
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.0
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Quests For Headgears:
 //=     Flower Of Fairy, NeckTie, Hair Brush
 //=     Status Of Baby Angel, Frog Cap, Solo Play Box
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 Converted from the official Aegis script. [Dastgir]
-//============================================================ 
+//============================================================
 
 gonryun,149,189,0	script	Yotang#Flower_Of_Fairy	1_M_04,{
 	mes "[Yotang]";
@@ -709,7 +709,6 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		close2;
 		donpcevent "Roda Frog#Frog_Cap::OnDisable";
 		end;
-		
 	}
 	else if (2009_hat == 5) {
 		if (questprogress(5004,HUNTING) == 1) {
@@ -826,7 +825,6 @@ OnTouch:
 	mes "Oh my.. the frog transformed into a child...";
 	close;
 }
-
 
 // 6. Making the new headgear Solo Playing Box 1,2 ()5448,5449)
 alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
@@ -948,7 +946,6 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 		mes "Go and kill";
 		mes "^FF000040 Arclouses and 30 High Orcs^000000!";
 		close;
-		
 	}
 	else if (2009_1_hat == 3) {
 		if ((questprogress(1108,HUNTING) == 2) && (questprogress(1105,HUNTING) == 2)) {
@@ -1039,7 +1036,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 			mes "My affection-lacked student!";
 			mes "This is the end of your training!";
 			next;
-			if (gettime(3) < 12) {
+			if (gettime(GETTIME_HOUR) < 12) {
 				if (checkweight(Solo_Play_Box1,1) == 0) {
 					 mes "[Alonie]";
 					 mes "Playing outside with this heavy bag?";
@@ -1109,5 +1106,4 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 		close;
 	}
 	end;
-	
 }

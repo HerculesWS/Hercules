@@ -2,7 +2,7 @@
 #
 # Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 # See the LICENSE file
-# Base Author: Haru @ http://hercules.ws
+# Base Author: Haru @ http://herc.ws
 #
 # This script converts an item_db(2).txt to the new item_db(2).conf format.
 # usage example: perl tools/itemdbconverter.pl < db/item_db2.txt > db/item_db2.conf

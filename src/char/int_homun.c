@@ -6,22 +6,23 @@
 
 #include "int_homun.h"
 
+#include "char/char.h"
+#include "char/inter.h"
+#include "char/mapif.h"
+#include "common/memmgr.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/sql.h"
+#include "common/strlib.h"
+#include "common/utils.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#include "char.h"
-#include "inter.h"
-#include "mapif.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/sql.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
 
 struct inter_homunculus_interface inter_homunculus_s;
+struct inter_homunculus_interface *inter_homunculus;
 
 int inter_homunculus_sql_init(void)
 {
@@ -34,6 +35,7 @@ void inter_homunculus_sql_final(void)
 
 void mapif_homunculus_created(int fd, int account_id, struct s_homunculus *sh, unsigned char flag)
 {
+	nullpo_retv(sh);
 	WFIFOHEAD(fd, sizeof(struct s_homunculus)+9);
 	WFIFOW(fd,0) = 0x3890;
 	WFIFOW(fd,2) = sizeof(struct s_homunculus)+9;
@@ -81,6 +83,7 @@ void mapif_homunculus_saved(int fd, int account_id, bool flag)
 
 void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsigned char flag, char* name)
 {
+	nullpo_retv(name);
 	WFIFOHEAD(fd, NAME_LENGTH+12);
 	WFIFOW(fd, 0) = 0x3894;
 	WFIFOL(fd, 2) = account_id;
@@ -95,6 +98,7 @@ bool mapif_homunculus_save(struct s_homunculus* hd)
 	bool flag = true;
 	char esc_name[NAME_LENGTH*2+1];
 
+	nullpo_ret(hd);
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, hd->name, strnlen(hd->name, NAME_LENGTH));
 
 	if( hd->hom_id == 0 )
@@ -158,6 +162,7 @@ bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd)
 	char* data;
 	size_t len;
 
+	nullpo_ret(hd);
 	memset(hd, 0, sizeof(*hd));
 
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `homun_id`,`char_id`,`class`,`prev_class`,`name`,`level`,`exp`,`intimacy`,`hunger`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `hp`,`max_hp`,`sp`,`max_sp`,`skill_point`,`rename_flag`, `vaporize` FROM `%s` WHERE `homun_id`='%u'", homunculus_db, homun_id) )
@@ -247,6 +252,7 @@ bool mapif_homunculus_rename(char *name)
 {
 	int i;
 
+	nullpo_ret(name);
 	// Check Authorized letters/symbols in the name of the homun
 	if( char_name_option == 1 )
 	{// only letters/symbols in char_name_letters are authorized

@@ -45,7 +45,7 @@ OnStartArena:
 	donpcevent "Broadcast#"+.@in$+.@in+"::OnEnable";
 	disablewaitingroomevent strnpcinfo(0);
 	end;
-	
+
 OnInit:
 	if (compare(strnpcinfo(0),"main")) end;
 	if (compare(strnpcinfo(2),"n1")) {
@@ -66,7 +66,7 @@ turbo_room,77,135,3	duplicate(entrance#tt_main)	Normal mode - 4 person	4_F_TELEP
 turbo_room,84,135,3	duplicate(entrance#tt_main)	Normal mode - 8 person	4_F_TELEPORTER
 turbo_room,91,135,3	duplicate(entrance#tt_main)	Normal mode - 16 person	4_F_TELEPORTER
 turbo_room,72,132,3	duplicate(entrance#tt_main)	Solo Mode#n1	4_F_TELEPORTER
-	
+
 turbo_e_4,298,167,3	script	Helper#tt_main	4_F_TELEPORTER,{
 	mes "[Helper]";
 	mes "You are now in the";
@@ -96,7 +96,7 @@ OnTouch:
 	else
 		warp strnpcinfo(4),59,364;
 	end;
-	
+
 OnInit:
 	.@w$ = callfunc("F_tt");
 	disablenpc "Point Give-Away Guy#"+.@w$;
@@ -391,12 +391,12 @@ OnTimer927000:
 	disablenpc "Flasher_Exit_1#"+.@w$;
 	disablenpc "Flasher_Exit_2#"+.@w$;
 	end;
-	
+
 OnInit:
 	.@w$ = callfunc("F_tt");
 	disablenpc "Master#"+.@w$;
 	end;
-	
+
 	function	RName	{
 		.@s = (getstrlen(getarg(0)) > 2)?(substr(getarg(0),1,2)):(charat(getarg(0),getstrlen(getarg(0))-1));
 		.@rn$ = ((compare(strnpcinfo(4),"_e_"+.@s))?"Expert mode":"Normal mode")+" - "+.@s+" person";
@@ -1641,7 +1641,6 @@ turbo_n_8,332,279,0	duplicate(snake02#tt_main)	snake02#n8	WARPNPC,1,1
 turbo_n_16,332,279,0	duplicate(snake02#tt_main)	snake02#n16	WARPNPC,1,1
 turbo_n_1,332,279,0	duplicate(snake02#tt_main)	snake02#n1	WARPNPC,1,1
 
-
 -	script	snake03#tt_main	WARPNPC,1,1,{
 OnTouch:
 	.@turbo2 = rand(1,8);
@@ -1658,7 +1657,6 @@ turbo_n_4,324,270,0	duplicate(snake03#tt_main)	snake03#n4	WARPNPC,1,1
 turbo_n_8,324,270,0	duplicate(snake03#tt_main)	snake03#n8	WARPNPC,1,1
 turbo_n_16,324,270,0	duplicate(snake03#tt_main)	snake03#n16	WARPNPC,1,1
 turbo_n_1,324,270,0	duplicate(snake03#tt_main)	snake03#n1	WARPNPC,1,1
-
 
 -	script	snake04#tt_main	WARPNPC,1,1,{
 OnTouch:
@@ -1679,7 +1677,7 @@ turbo_n_1,332,270,0	duplicate(snake04#tt_main)	snake04#n1	WARPNPC,1,1
 
 -	script	SnakeHunt#tt_main	-1,{
 	end;
-	
+
 OnReset:
 	killmonsterall strnpcinfo(4);
 	end;
@@ -1947,7 +1945,7 @@ OnTouch:
 	}
 	disablenpc "#cos_"+.@w$+"_end";
 	end;
-	
+
 	function	GetNumber	{
 		setarray .@w_n$[1], "n4","n8","n16","e4","e8","e16";
 		for (.@i = 1; .@i <= getarraysize(.@w_n$); ++.@i) {
@@ -1955,7 +1953,7 @@ OnTouch:
 				return .@i;
 		}
 	}
-	
+
 OnInit:
 	.@w$ = callfunc("F_tt");
 	enablenpc "#cos_"+.@w$+"_end";
@@ -1980,7 +1978,7 @@ OnTouch:
 	disablenpc "#cos_"+.@w$+"_end2";
 	enablenpc "#cos_"+.@w$+"_end3";
 	end;
-	
+
 OnInit:
 	.@w$ = callfunc("F_tt");
 	disablenpc "#cos_"+.@w$+"_end2";
@@ -2038,7 +2036,7 @@ OnTouch:
 	mapannounce strnpcinfo(4),strcharinfo(0) +" has just passed the Flasher Maze!",bc_map,"0x70DBDB";
 	warp strnpcinfo(4),185,227;
 	end;
-	
+
 OnInit:
 	.@w$ = callfunc("F_tt");
 	disablenpc strnpcinfo(0);
@@ -2361,7 +2359,7 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			end;
 		}
 	}
-	
+
 OnEnable:
 	.@w$ = callfunc("F_tt");
 	enablenpc "Winner Helper#TBT_"+.@w$;
@@ -2403,12 +2401,12 @@ OnTimer25000:
 	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapannounce strnpcinfo(4),"In the meantime, winners must procceed to receive their rewards as soon as possible.",bc_map,"0x33FF66";
 	end;
-	
+
 OnTimer28000:
 	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) mapannounce strnpcinfo(4),"Al De Baran Turbo Track is brought to you by...",bc_map,"0x33FF66";
 	end;
-	
+
 OnTimer30000:
 	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapannounce strnpcinfo(4),"Thank you for visiting Al De Baran Turbo Track.",bc_map,"0x33FF66";
@@ -2422,7 +2420,7 @@ OnTimer35000:
 	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapannounce strnpcinfo(4),"Al De Baran Turbo Track is brought to you by...",bc_map,"0x33FF66";
 	end;
-	
+
 OnTimer36000:
 	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) mapannounce strnpcinfo(4),"[Al De Baran Guild Castle Management Luina]",bc_map,"0x33FF66";
@@ -2450,7 +2448,7 @@ OnTimer48000:
 	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) mapannounce strnpcinfo(4),"Once again, we'd like to thank our sponsors.",bc_map,"0x33FF66";
 	end;
-	
+
 OnTimer50000:
 	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapannounce strnpcinfo(4),"[Blacksmith Union]",bc_map,"0x33FF66";
@@ -2460,7 +2458,7 @@ OnTimer52000:
 	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4")) mapannounce strnpcinfo(4),"Have a good day.",bc_map,"0x33FF66";
 	end;
-	
+
 OnTimer55000:
 	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapannounce strnpcinfo(4),"And [Comodo Casino].",bc_map,"0x33FF66";
@@ -2492,17 +2490,17 @@ OnTimer60000:
 		mapannounce strnpcinfo(4),"Once again, we'd like to thank our sponsors.",bc_map,"0x33FF66";
 	}
 	end;
-	
+
 OnTimer65000:
 	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapannounce strnpcinfo(4),"Have a good day.",bc_map,"0x33FF66";
 	end;
-	
+
 OnTimer70000:
 	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) mapwarp strnpcinfo(4),"turbo_room",72,89;
 	end;
-	
+
 OnTimer71000:
 	.@w$ = callfunc("F_tt");
 	if (!compare(.@w$,"4")) {
@@ -2525,13 +2523,13 @@ OnTimer71000:
 		stopnpctimer;
 	}
 	end;
-	
+
 	function	RName	{
 		.@s = (getstrlen(getarg(0)) > 2)?(substr(getarg(0),1,2)):(charat(getarg(0),getstrlen(getarg(0))-1));
 		.@rn$ = ((compare(strnpcinfo(4),"_e_"+.@s))?"Expert mode":"Normal mode")+" - "+.@s+" person";
 		return .@rn$;
 	}
-	
+
 OnInit:
 	.@w$ = callfunc("F_tt");
 	disablenpc "Winner Helper#TBT_"+.@w$;
@@ -2672,7 +2670,7 @@ turbo_n_1,384,167,1	script	Guide#TBT_n1	1_M_01,{
 			end;
 		}
 	}
-	
+
 OnEnable:
 	.@w$ = callfunc("F_tt");
 	enablenpc "Guide#TBT_"+.@w$;
@@ -2752,7 +2750,7 @@ OnTimer60000:
 	donpcevent "Solo Mode#"+.@w$+"::OnEnable";
 	stopnpctimer;
 	end;
-	
+
 OnInit:
 	.@w$ = callfunc("F_tt");
 	disablenpc "Guide#TBT_"+.@w$;
@@ -2766,7 +2764,7 @@ OnTouch:
 	donpcevent "Turbo Track Guide::OnEnd_"+.@w$;
 	disablenpc "Notice_Maker1#TBT_"+.@w$;
 	end;
-	
+
 OnInit:
 	.@w$ = callfunc("F_tt");
 	enablenpc "Notice_Maker1#TBT_"+.@w$;
@@ -2786,7 +2784,7 @@ OnTouch:
 	mapannounce strnpcinfo(4),strcharinfo(0) +" is now entering the Single Snail! " + strcharinfo(0) +" is now in the lead!",bc_map,"0xFFFF00";
 	disablenpc "Notice_Maker3#TBT_"+.@w$;
 	end;
-	
+
 OnInit:
 	.@w$ = callfunc("F_tt");
 	enablenpc "Notice_Maker3#TBT_"+.@w$;
@@ -3625,7 +3623,7 @@ OnTouch:
 		default: break;
 	}
 	end;
-	
+
 OnInit:
 	.@w$ = callfunc("F_tt");
 	disablenpc "bing2#"+.@w$;
@@ -4251,7 +4249,6 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 						mes "Points you have earned before";
 						mes "redeeming your points again.";
 						close;
-	
 					}
 					tt_point -= 40;
 					if (BaseLevel < 70) getexp 3000,0;
@@ -4670,7 +4667,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 	mes "Turbo Track~";
 	next;
 	mes "[Guide]";
-	if (checkre(0))
+	if (RENEWAL)
 		mes "Peco Pecos, Grand Pecos, Dragons, Gryphons, Wargs and Magic Gears are prohibited inside the Turbo Track Arena.";
 	else
 		mes "Peco Pecos are prohibited inside the Turbo Track Arena.";

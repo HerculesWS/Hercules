@@ -5,10 +5,10 @@
 #ifndef MAP_GUILD_H
 #define MAP_GUILD_H
 
-#include "map.h" // EVENT_NAME_LENGTH, TBL_PC
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/mmo.h"
+#include "map/map.h" // EVENT_NAME_LENGTH, TBL_PC
+#include "common/hercules.h"
+#include "common/db.h"
+#include "common/mmo.h"
 
 /**
  * Defines
@@ -163,10 +163,10 @@ struct guild_interface {
 	void (*castle_reconnect_sub) (void *key, void *data, va_list ap);
 };
 
-struct guild_interface *guild;
-
 #ifdef HERCULES_CORE
 void guild_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct guild_interface *guild;
 
 #endif /* MAP_GUILD_H */

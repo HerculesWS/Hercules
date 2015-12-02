@@ -38,7 +38,7 @@
 // Soup Quest :: lou_tre
 //============================================================
 lou_in02,53,174,7	script	Employee#1	4_M_CHNMAN,6,62,{
-	if (gettime(3) >= 10 && gettime(3) < 22) {
+	if (gettime(GETTIME_HOUR) >= 10 && gettime(GETTIME_HOUR) < 22) {
 		mes "[Chang Pai]";
 		mes "Welcome, welcome!";
 		mes "We are ready to serve you~!";
@@ -51,7 +51,7 @@ lou_in02,53,174,7	script	Employee#1	4_M_CHNMAN,6,62,{
 
 OnTouch:
 	if (ch_tre == 2 || ch_tre == 3) {
-		if (gettime(3) >= 10 && gettime(3) < 14) {
+		if (gettime(GETTIME_HOUR) >= 10 && gettime(GETTIME_HOUR) < 14) {
 			if (rand(1,10) < 9) {
 				mes "[Chang Pai]";
 				mes "Wait, who are you?!";
@@ -63,8 +63,7 @@ OnTouch:
 				ch_tre = 1;
 				close;
 			}
-		}
-		else if (gettime(3) >= 14 && gettime(3) < 17) {
+		} else if (gettime(GETTIME_HOUR) >= 14 && gettime(GETTIME_HOUR) < 17) {
 			if (rand(1,10) < 10) {
 				mes "[Chang Pai]";
 				mes "Wait, who are you?!";
@@ -76,8 +75,7 @@ OnTouch:
 				ch_tre = 1;
 				close;
 			}
-		}
-		else if (gettime(3) >= 17 && gettime(3) < 21) {
+		} else if (gettime(GETTIME_HOUR) >= 17 && gettime(GETTIME_HOUR) < 21) {
 			if (rand(1,10) < 6) {
 				mes "[Chang Pai]";
 				mes "Wait, who are you?!";
@@ -113,7 +111,7 @@ OnTouch:
 }
 
 lou_in02,76,181,3	script	Employee#2	4_M_CHNMAN,2,2,{
-	if (gettime(3) >= 10 && gettime(3) < 22) {
+	if (gettime(GETTIME_HOUR) >= 10 && gettime(GETTIME_HOUR) < 22) {
 		mes "[Huang Jia Xian]";
 		mes "Welcome~";
 		mes "Sorry for making you wait. If you wish to rest, please go upstairs.";
@@ -138,7 +136,7 @@ lou_in02,76,181,3	script	Employee#2	4_M_CHNMAN,2,2,{
 
 OnTouch:
 	if (ch_tre == 2 || ch_tre == 3) {
-		if (gettime(3) >= 10 && gettime(3) < 14) {
+		if (gettime(GETTIME_HOUR) >= 10 && gettime(GETTIME_HOUR) < 14) {
 			if (rand(1,10) < 9) {
 				mes "[Huang Jia Xian]";
 				mes "What the...?";
@@ -151,8 +149,7 @@ OnTouch:
 				ch_tre = 1;
 				close;
 			}
-		}
-		else if (gettime(3) >= 14 && gettime(3) < 17) {
+		} else if (gettime(GETTIME_HOUR) >= 14 && gettime(GETTIME_HOUR) < 17) {
 			if (rand(1,10) < 10) {
 				mes "[Huang Jia Xian]";
 				mes "What the...?";
@@ -165,8 +162,7 @@ OnTouch:
 				ch_tre = 1;
 				close;
 			}
-		}
-		else if (gettime(3) >= 17 && gettime(3) < 22) {
+		} else if (gettime(GETTIME_HOUR) >= 17 && gettime(GETTIME_HOUR) < 22) {
 			if (rand(1,10) < 6) {
 				mes "[Huang Jia Xian]";
 				mes "What the...?";
@@ -203,7 +199,7 @@ OnTouch:
 }
 
 lou_in02,61,175,3	script	Employee#3	4_F_CHNWOMAN,2,2,{
-	if (gettime(3) >= 10 && gettime(3) < 22) {
+	if (gettime(GETTIME_HOUR) >= 10 && gettime(GETTIME_HOUR) < 22) {
 		if (ch_tre == 5) {
 			mes "[Ya Hua]";
 			mes "Welcome, welcome!";
@@ -234,7 +230,7 @@ lou_in02,61,175,3	script	Employee#3	4_F_CHNWOMAN,2,2,{
 
 OnTouch:
 	if (ch_tre == 2 || ch_tre == 3) {
-		if (gettime(3) >= 10 && gettime(3) < 14) {
+		if (gettime(GETTIME_HOUR) >= 10 && gettime(GETTIME_HOUR) < 14) {
 			if (rand(1,10) < 9) {
 				mes "[Ya Hua]";
 				mes "What do you think";
@@ -247,8 +243,7 @@ OnTouch:
 				ch_tre = 1;
 				close;
 			}
-		}
-		else if (gettime(3) >= 14 && gettime(3) < 17) {
+		} else if (gettime(GETTIME_HOUR) >= 14 && gettime(GETTIME_HOUR) < 17) {
 			if (rand(1,10) < 10) {
 				mes "[Ya Hua]";
 				mes "What do you think";
@@ -261,8 +256,7 @@ OnTouch:
 				ch_tre = 1;
 				close;
 			}
-		}
-		else if (gettime(3) >= 17 && gettime(3) < 22) {
+		} else if (gettime(GETTIME_HOUR) >= 17 && gettime(GETTIME_HOUR) < 22) {
 			if (rand(1,10) < 6) {
 				mes "[Ya Hua]";
 				mes "What do you think";
@@ -367,7 +361,7 @@ lou_in02,62,183,3	script	Chef#1-2	4_M_CHNCOOK,2,2,{
 
 OnTouch:
 	if (ch_tre == 2 || ch_tre == 3) {
-		if (gettime(3) >= 10 && gettime(3) < 14) {
+		if (gettime(GETTIME_HOUR) >= 10 && gettime(GETTIME_HOUR) < 14) {
 			if (rand(1,10) < 9) {
 				mes "[Wang Shi Long]";
 				mes "Hey, what do you";
@@ -381,8 +375,7 @@ OnTouch:
 				warp "louyang",280,161;
 				close;
 			}
-		}
-		else if (gettime(3) >= 14 && gettime(3) < 17) {
+		} else if (gettime(GETTIME_HOUR) >= 14 && gettime(GETTIME_HOUR) < 17) {
 			if (rand(1,10) < 10) {
 				mes "[Wang Shi Long]";
 				mes "Hey, what do you";
@@ -396,8 +389,7 @@ OnTouch:
 				warp "louyang",280,161;
 				close;
 			}
-		}
-		else if (gettime(3) >= 17 && gettime(3) < 22) {
+		} else if (gettime(GETTIME_HOUR) >= 17 && gettime(GETTIME_HOUR) < 22) {
 			if (rand(1,10) < 6) {
 				mes "[Wang Shi Long]";
 				mes "Hey, what do you";
@@ -720,16 +712,14 @@ lou_in02,50,185,5	script	Pot#1	HIDDEN_NPC,{
 			mes "^3131FFYou take a careful look around.";
 			mes "It wouldn't be wise to steal this now if anyone is watching.^000000";
 			next;
-			if (gettime(3) >= 10 && gettime(3) < 14) {
+			if (gettime(GETTIME_HOUR) >= 10 && gettime(GETTIME_HOUR) < 14) {
 				mes "^3131FFThe restaurant doesn't seem busy right now, so there's only a few employees and customers.^000000";
-			}
-			else if (gettime(3) >= 14 && gettime(3) < 17) {
+			} else if (gettime(GETTIME_HOUR) >= 14 && gettime(GETTIME_HOUR) < 17) {
 				mes "^3131FFOnly the restaurant";
 				mes "employees are around,";
 				mes "and they busy chatting";
 				mes "amongst each other.^000000";
-			}
-			else if (gettime(3) >= 17 && gettime(3) < 22) {
+			} else if (gettime(GETTIME_HOUR) >= 17 && gettime(GETTIME_HOUR) < 22) {
 				mes "^3131FFThe restaurant is filled";
 				mes "with customers, and the";
 				mes "hustle and bustle of the";
@@ -770,7 +760,7 @@ lou_in02,50,185,5	script	Pot#1	HIDDEN_NPC,{
 		mes "^3131FFHowever, it's empty.^000000";
 		close;
 	}
-	if (gettime(3) >= 10 && gettime(3) < 22) {
+	if (gettime(GETTIME_HOUR) >= 10 && gettime(GETTIME_HOUR) < 22) {
 		mes "[Chef]";
 		mes "Ah...!";
 		mes "Please, do not";
@@ -792,16 +782,14 @@ lou_in02,49,185,5	script	Pot#2	HIDDEN_NPC,{
 			mes "^3131FFYou take a careful look around.";
 			mes "It wouldn't be wise to steal this now if anyone is watching.^000000";
 			next;
-			if (gettime(3) >= 10 && gettime(3) < 14) {
+			if (gettime(GETTIME_HOUR) >= 10 && gettime(GETTIME_HOUR) < 14) {
 				mes "^3131FFThe restaurant doesn't seem busy right now, so there's only a few employees and customers.^000000";
-			}
-			else if (gettime(3) >= 14 && gettime(3) < 17) {
+			} else if (gettime(GETTIME_HOUR) >= 14 && gettime(GETTIME_HOUR) < 17) {
 				mes "^3131FFOnly the restaurant";
 				mes "employees are around,";
 				mes "and they busy chatting";
 				mes "amongst each other.^000000";
-			}
-			else if (gettime(3) >= 17 && gettime(3) < 22) {
+			} else if (gettime(GETTIME_HOUR) >= 17 && gettime(GETTIME_HOUR) < 22) {
 				mes "^3131FFThe restaurant is filled";
 				mes "with customers, and the";
 				mes "hustle and bustle of the";
@@ -842,7 +830,7 @@ lou_in02,49,185,5	script	Pot#2	HIDDEN_NPC,{
 		mes "an empty pot.^000000";
 		close;
 	}
-	if (gettime(3) >= 10 && gettime(3) < 22) {
+	if (gettime(GETTIME_HOUR) >= 10 && gettime(GETTIME_HOUR) < 22) {
 		mes "[Chef]";
 		mes "Ah...!";
 		mes "Please, do not";
@@ -894,7 +882,7 @@ lou_in02,58,183,5	script	Chef Assistant#lou1	4_M_CHNMONK,5,5,{
 
 OnTouch:
 	if (ch_tre == 2 || ch_tre == 3) {
-		if (gettime(3) >= 10 && gettime(3) < 14) {
+		if (gettime(GETTIME_HOUR) >= 10 && gettime(GETTIME_HOUR) < 14) {
 			if (rand(1,10) < 9) {
 				mes "[Jin Wei Ling]";
 				mes "Wait! Who are you!";
@@ -907,8 +895,7 @@ OnTouch:
 				ch_tre = 1;
 				close;
 			}
-		}
-		else if (gettime(3) >= 14 && gettime(3) < 17) {
+		} else if (gettime(GETTIME_HOUR) >= 14 && gettime(GETTIME_HOUR) < 17) {
 			if (rand(1,10) < 10) {
 				mes "[Jin Wei Ling]";
 				mes "Wait! Who are you!";
@@ -921,8 +908,7 @@ OnTouch:
 				ch_tre = 1;
 				close;
 			}
-		}
-		else if (gettime(3) >= 17 && gettime(3) < 22) {
+		} else if (gettime(GETTIME_HOUR) >= 17 && gettime(GETTIME_HOUR) < 22) {
 			if (rand(1,10) < 6) {
 				mes "[Jin Wei Ling]";
 				mes "Wait! Who are you!";
@@ -1286,7 +1272,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			ch_par = 10;
 			completequest 11056;
 			getitem 679,2; //Gold_Pill
-			getexp (checkre(3))?1000:10000,0;
+			getexp RENEWAL_EXP?1000:10000,0;
 			next;
 			mes "[Hua Tuo]";
 			mes "Well then,";
@@ -1405,7 +1391,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			ch_par = 10;
 			completequest 11056;
 			getitem 679,2; //Gold_Pill
-			getexp (checkre(3))?1000:10000,0;
+			getexp RENEWAL_EXP?1000:10000,0;
 			next;
 			mes "[Hua Tuo]";
 			mes "Well then, I will see you around. Once again, I'd like to thank you for your help.";
@@ -1460,7 +1446,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			ch_par = 18;
 			completequest 11057;
 			getitem 679,5; //Gold_Pill
-			getexp (checkre(3))?10000:30000,0;
+			getexp RENEWAL_EXP?10000:30000,0;
 			next;
 			mes "[Hua Tuo]";
 			mes "However, please remember not to take more than the recommended dosage for the pills I have given you. Even medicine, in the wrong doses, can become poison to the body.";
@@ -2407,9 +2393,9 @@ lou_in02,192,170,0	script	Supply Stack#2	HIDDEN_NPC,{
 	close;
 }
 
-louyang,129,121,0	warp	Storage Warp#1	1,1,lou_in02,203,161;
-louyang,125,121,0	warp	Storage Warp#2	1,1,lou_in02,198,161;
-lou_in02,198,159,0	warp	Storage Warp#3	1,1,louyang,124,118;
+louyang,129,121,0	warp	Storage Warp#1	1,1,lou_in02,203,161
+louyang,125,121,0	warp	Storage Warp#2	1,1,lou_in02,198,161
+lou_in02,198,159,0	warp	Storage Warp#3	1,1,louyang,124,118
 lou_in02,203,159,0	warp	Storage Warp#4	1,1,louyang,129,118
 
 // Poison King Quest :: poison_king
@@ -3359,7 +3345,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 		next;
 		ch_poison = 20;
 		changequest 11082,11083;
-		if (checkre(3)) {
+		if (RENEWAL_EXP) {
 			if (BaseLevel < 56) getexp 1050,0;
 			else if (BaseLevel > 55 && BaseLevel < 61) getexp 1230,0;
 			else if (BaseLevel > 60 && BaseLevel < 66) getexp 1570,0;
@@ -4011,7 +3997,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		next;
 		mes "^3355FFThe nasty taste lingers in your mouth, but then you feel a great warmth flowing throughout your body. Eventually, you pass out.^000000";
 		next;
-		if (checkre(3)) {
+		if (RENEWAL_EXP) {
 			if (BaseLevel < 56) getexp 500,0;
 			else if (BaseLevel > 55 && BaseLevel < 61) getexp 700,0;
 			else if (BaseLevel > 60 && BaseLevel < 66) getexp 850,0;

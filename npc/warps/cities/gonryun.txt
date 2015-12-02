@@ -29,5 +29,3 @@ gon_in,42,35,0	warp	gon_castle2-1	1,1,gon_in,34,97
 gon_in,31,97,0	warp	gon_castle2-2	1,1,gon_in,39,35
 gonryun,161,8,0	warp	gon_fild1-1	1,1,gon_fild01,191,261
 gon_fild01,192,265,0	warp	gon_fild1-2	1,1,gonryun,161,11
-
-

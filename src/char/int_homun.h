@@ -4,13 +4,7 @@
 #ifndef CHAR_INT_HOMUN_H
 #define CHAR_INT_HOMUN_H
 
-#include "../common/cbasetypes.h"
-
-struct s_homunculus;
-
-#ifdef HERCULES_CORE
-void inter_homunculus_defaults(void);
-#endif // HERCULES_CORE
+#include "common/hercules.h"
 
 /**
  * inter_homunculus interface
@@ -21,6 +15,10 @@ struct inter_homunculus_interface {
 	int (*parse_frommap) (int fd);
 };
 
-struct inter_homunculus_interface *inter_homunculus;
+#ifdef HERCULES_CORE
+void inter_homunculus_defaults(void);
+#endif // HERCULES_CORE
+
+HPShared struct inter_homunculus_interface *inter_homunculus;
 
 #endif /* CHAR_INT_HOMUN_H */

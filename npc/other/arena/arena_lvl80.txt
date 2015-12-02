@@ -17,7 +17,7 @@ arena_room,147,42,1	script	Lv80 Waiting Room	4_F_TELEPORTER,{
 	end;
 
 OnInit:
-	waitingroom "Individual; Level 80 to "+(checkre(0)?"160":"99"),50,"Lv80 Waiting Room::OnStartArena",1,1000,80;
+	waitingroom "Individual; Level 80 to "+(RENEWAL?"160":"99"),50,"Lv80 Waiting Room::OnStartArena",1,1000,80;
 	enablewaitingroomevent;
 	end;
 
@@ -37,8 +37,8 @@ force_4-1,99,20,4	script	Octus#arena	4_F_TELEPORTER,{
 
 OnStart:
 	initnpctimer;
-	$arena_min80st = gettime(2);
-	$arena_sec80st = gettime(1);
+	$arena_min80st = gettime(GETTIME_MINUTE);
+	$arena_sec80st = gettime(GETTIME_SECOND);
 	end;
 
 OnTimer3000:
@@ -730,8 +730,8 @@ OnMyMobDead:
 		donpcevent "Octus#arena::On09_End";
 		donpcevent "arena#80::OnReset_09";
 		donpcevent "arena#80::OnReset_All";
-		$arena_min80end = gettime(2);
-		$arena_sec80end = gettime(1);
+		$arena_min80end = gettime(GETTIME_MINUTE);
+		$arena_sec80end = gettime(GETTIME_SECOND);
 	}
 	end;
 }

@@ -31,6 +31,7 @@ CREATE TABLE `item_db2` (
   `refineable` tinyint(1) UNSIGNED DEFAULT NULL,
   `view` smallint(3) UNSIGNED DEFAULT NULL,
   `bindonequip` tinyint(1) UNSIGNED DEFAULT NULL,
+  `forceserial` tinyint(1) UNSIGNED DEFAULT NULL,
   `buyingstore` tinyint(1) UNSIGNED DEFAULT NULL,
   `delay` mediumint(9) UNSIGNED DEFAULT NULL,
   `trade_flag` smallint(4) UNSIGNED DEFAULT NULL,

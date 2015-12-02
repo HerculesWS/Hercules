@@ -5,18 +5,14 @@
 #ifndef MAP_ITEMDB_H
 #define MAP_ITEMDB_H
 
-#include "map.h"
-#include "../common/cbasetypes.h"
-#include "../common/conf.h"
-#include "../common/db.h"
-#include "../common/mmo.h" // ITEM_NAME_LENGTH
-#include "../common/sql.h"
+/* #include "map/map.h" */
+#include "common/hercules.h"
+#include "common/conf.h"
+#include "common/db.h"
+#include "common/mmo.h" // ITEM_NAME_LENGTH
 
-/**
- * Declarations
- **/
-struct item_group;
-struct item_package;
+struct script_code;
+struct hplugin_data_store;
 
 /**
  * Defines
@@ -371,6 +367,63 @@ enum ItemNouseRestrictions {
 	INR_ALL     = 0x1 ///< Sum of all the above values
 };
 
+struct item_combo {
+	struct script_code *script;
+	unsigned short nameid[MAX_ITEMS_PER_COMBO];/* nameid array */
+	unsigned char count;
+	unsigned short id;/* id of this combo */
+};
+
+struct item_group {
+	unsigned short id;
+	unsigned short *nameid;
+	unsigned short qty;
+};
+
+struct item_chain_entry {
+	unsigned short id;
+	unsigned short rate;
+	struct item_chain_entry *next;
+};
+
+struct item_chain {
+	struct item_chain_entry *items;
+	unsigned short qty;
+};
+
+struct item_package_rand_entry {
+	unsigned short id;
+	unsigned short qty;
+	unsigned short rate;
+	unsigned short hours;
+	unsigned int announce : 1;
+	unsigned int named : 1;
+	unsigned int force_serial: 1;
+	struct item_package_rand_entry *next;
+};
+
+struct item_package_must_entry {
+	unsigned short id;
+	unsigned short qty;
+	unsigned short hours;
+	unsigned int announce : 1;
+	unsigned int named : 1;
+	unsigned int force_serial : 1;
+};
+
+struct item_package_rand_group {
+	struct item_package_rand_entry *random_list;
+	unsigned short random_qty;
+};
+
+struct item_package {
+	unsigned short id;
+	struct item_package_rand_group *random_groups;
+	struct item_package_must_entry *must_items;
+	unsigned short random_qty;
+	unsigned short must_qty;
+};
+
 struct item_data {
 	uint16 nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
@@ -415,6 +468,7 @@ struct item_data {
 		unsigned buyingstore : 1;
 		unsigned bindonequip : 1;
 		unsigned keepafteruse : 1;
+		unsigned force_serial : 1;
 	} flag;
 	struct {// item stacking limitation
 		unsigned short amount;
@@ -434,65 +488,7 @@ struct item_data {
 	/* TODO add a pointer to some sort of (struct extra) and gather all the not-common vals into it to save memory */
 	struct item_group *group;
 	struct item_package *package;
-
-	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
-};
-
-struct item_combo {
-	struct script_code *script;
-	unsigned short nameid[MAX_ITEMS_PER_COMBO];/* nameid array */
-	unsigned char count;
-	unsigned short id;/* id of this combo */
-};
-
-struct item_group {
-	unsigned short id;
-	unsigned short *nameid;
-	unsigned short qty;
-};
-
-struct item_chain_entry {
-	unsigned short id;
-	unsigned short rate;
-	struct item_chain_entry *next;
-};
-
-struct item_chain {
-	struct item_chain_entry *items;
-	unsigned short qty;
-};
-
-struct item_package_rand_entry {
-	unsigned short id;
-	unsigned short qty;
-	unsigned short rate;
-	unsigned short hours;
-	unsigned int announce : 1;
-	unsigned int named : 1;
-	struct item_package_rand_entry *next;
-};
-
-struct item_package_must_entry {
-	unsigned short id;
-	unsigned short qty;
-	unsigned short hours;
-	unsigned int announce : 1;
-	unsigned int named : 1;
-};
-
-struct item_package_rand_group {
-	struct item_package_rand_entry *random_list;
-	unsigned short random_qty;
-};
-
-struct item_package {
-	unsigned short id;
-	struct item_package_rand_group *random_groups;
-	struct item_package_must_entry *must_items;
-	unsigned short random_qty;
-	unsigned short must_qty;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 #define itemdb_name(n)        (itemdb->search(n)->name)
@@ -605,10 +601,8 @@ struct itemdb_interface {
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
 	void (*readdb_additional_fields) (int itemid, config_setting_t *it, int n, const char *source);
-	int (*readdb_sql_sub) (Sql *handle, int n, const char *source);
 	int (*readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
 	int (*readdb_libconfig) (const char *filename);
-	int (*readdb_sql) (const char *tablename);
 	uint64 (*unique_id) (struct map_session_data *sd);
 	void (*read) (bool minimal);
 	void (*destroy_item_data) (struct item_data *self, int free_self);
@@ -619,10 +613,10 @@ struct itemdb_interface {
 	bool (*lookup_const) (const config_setting_t *it, const char *name, int *value);
 };
 
-struct itemdb_interface *itemdb;
-
 #ifdef HERCULES_CORE
 void itemdb_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct itemdb_interface *itemdb;
 
 #endif /* MAP_ITEMDB_H */

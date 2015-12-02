@@ -4,40 +4,41 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // CONSOLE_INPUT, MAX_CONSOLE_INPUT
+#include "config/core.h" // CONSOLE_INPUT, MAX_CONSOLE_INPUT
 #include "console.h"
+
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/sysinfo.h"
+
+#ifndef MINICORE
+#	include "common/atomic.h"
+#	include "common/ers.h"
+#	include "common/memmgr.h"
+#	include "common/mutex.h"
+#	include "common/spinlock.h"
+#	include "common/sql.h"
+#	include "common/strlib.h"
+#	include "common/thread.h"
+#	include "common/timer.h"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/core.h"
-#include "../common/showmsg.h"
-#include "../common/sysinfo.h"
-
-#ifndef MINICORE
-#	include "../common/atomic.h"
-#	include "../common/ers.h"
-#	include "../common/malloc.h"
-#	include "../common/mutex.h"
-#	include "../common/spinlock.h"
-#	include "../common/sql.h"
-#	include "../common/strlib.h"
-#	include "../common/thread.h"
-#	include "../common/timer.h"
-#endif
-
 #if !defined(WIN32)
 #	include <sys/time.h>
 #	include <unistd.h>
 #else
-#	include "../common/winapi.h" // Console close event handling
+#	include "common/winapi.h" // Console close event handling
 #	ifdef CONSOLE_INPUT
 #		include <conio.h> /* _kbhit() */
 #	endif
 #endif
 
 struct console_interface console_s;
+struct console_interface *console;
 #ifdef CONSOLE_INPUT
 struct console_input_interface console_input_s;
 
@@ -63,7 +64,7 @@ void display_title(void) {
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               | | | |  __/ | | (__| |_| | |  __/\\__ \\                "CL_CLL""CL_NORMAL"\n");
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"               \\_| |_/\\___|_|  \\___|\\__,_|_|\\___||___/                "CL_CLL""CL_NORMAL"\n");
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
-	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                    http://hercules.ws/board/                         "CL_CLL""CL_NORMAL"\n");
+	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                      http://herc.ws/board/                           "CL_CLL""CL_NORMAL"\n");
 	ShowMessage(""CL_BG_RED""CL_BT_WHITE"                                                                      "CL_CLL""CL_NORMAL"\n");
 
 	ShowInfo("Hercules %d-bit for %s\n", sysinfo->is64bit() ? 64 : 32, sysinfo->platform());
@@ -75,12 +76,11 @@ void display_title(void) {
 	ShowInfo("Compile Flags: %s\n", sysinfo->cflags());
 }
 #ifdef CONSOLE_INPUT
-#if defined(WIN32)
-int console_parse_key_pressed(void) {
+int console_parse_key_pressed(void)
+{
+#ifdef WIN32
 	return _kbhit();
-}
-#else /* WIN32 */
-int console_parse_key_pressed(void) {
+#else // ! WIN32
 	struct timeval tv;
 	fd_set fds;
 	tv.tv_sec = 0;
@@ -92,8 +92,8 @@ int console_parse_key_pressed(void) {
 	select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
 
 	return FD_ISSET(STDIN_FILENO, &fds);
+#endif // WIN32
 }
-#endif /* _WIN32 */
 
 /*======================================
  * CORE: Console commands
@@ -103,7 +103,7 @@ int console_parse_key_pressed(void) {
  * Stops server
  **/
 CPCMD_C(exit,server) {
-	runflag = 0;
+	core->runflag = 0;
 }
 
 /**
@@ -125,14 +125,16 @@ CPCMD_C(mem_report,server) {
 /**
  * Displays command list
  **/
-CPCMD(help) {
-	unsigned int i = 0;
-	for ( i = 0; i < console->input->cmd_list_count; i++ ) {
-		if( console->input->cmd_list[i]->next_count ) {
-			ShowInfo("- '"CL_WHITE"%s"CL_RESET"' subs\n",console->input->cmd_list[i]->cmd);
-			console->input->parse_list_subs(console->input->cmd_list[i],2);
+CPCMD(help)
+{
+	int i;
+	for (i = 0; i < VECTOR_LENGTH(console->input->command_list); i++) {
+		struct CParseEntry *entry = VECTOR_INDEX(console->input->command_list, i);
+		if (entry->type == CPET_CATEGORY) {
+			ShowInfo("- '"CL_WHITE"%s"CL_RESET"' subs\n", entry->cmd);
+			console->input->parse_list_subs(entry, 2);
 		} else {
-			ShowInfo("- '"CL_WHITE"%s"CL_RESET"'\n",console->input->cmd_list[i]->cmd);
+			ShowInfo("- '"CL_WHITE"%s"CL_RESET"'\n", entry->cmd);
 		}
 	}
 }
@@ -159,43 +161,44 @@ CPCMD_C(skip,update) {
 }
 
 /**
- * Defines a main category.
- *
- * Categories can't be used as commands!
- * E.G.
- * - sql update skip
- *   'sql' is the main category
- * CP_DEF_C(category)
- **/
-#define CP_DEF_C(x) { #x , NULL , NULL, NULL }
-/**
- * Defines a sub-category.
- *
- * Sub-categories can't be used as commands!
- * E.G.
- * - sql update skip
- *   'update' is a sub-category
- * CP_DEF_C2(command, category)
- **/
-#define CP_DEF_C2(x,y) { #x , NULL , #y, NULL }
-/**
- * Defines a command that is inside a category or sub-category
- * CP_DEF_S(command, category/sub-category)
- **/
-#define CP_DEF_S(x,y) { #x, CPCMD_C_A(x,y), #y, NULL }
-/**
- * Defines a command that is _not_ inside any category
- * CP_DEF_S(command)
- **/
-#define CP_DEF(x) { #x , CPCMD_A(x), NULL, NULL }
-
-/**
  * Loads console commands list
- * See CP_DEF_C, CP_DEF_C2, CP_DEF_S, CP_DEF
  **/
-void console_load_defaults(void) {
+void console_load_defaults(void)
+{
+	/**
+	 * Defines a main category.
+	 *
+	 * Categories can't be used as commands!
+	 * E.G.
+	 * - sql update skip
+	 *   'sql' is the main category
+	 * CP_DEF_C(category)
+	 **/
+#define CP_DEF_C(x) { #x , CPET_CATEGORY, NULL , NULL, NULL }
+	/**
+	 * Defines a sub-category.
+	 *
+	 * Sub-categories can't be used as commands!
+	 * E.G.
+	 * - sql update skip
+	 *   'update' is a sub-category
+	 * CP_DEF_C2(command, category)
+	 **/
+#define CP_DEF_C2(x,y) { #x , CPET_CATEGORY, NULL , #y, NULL }
+	/**
+	 * Defines a command that is inside a category or sub-category
+	 * CP_DEF_S(command, category/sub-category)
+	 **/
+#define CP_DEF_S(x,y) { #x, CPET_FUNCTION, CPCMD_C_A(x,y), #y, NULL }
+	/**
+	 * Defines a command that is _not_ inside any category
+	 * CP_DEF_S(command)
+	 **/
+#define CP_DEF(x) { #x , CPET_FUNCTION, CPCMD_A(x), NULL, NULL }
+
 	struct {
 		char *name;
+		int type;
 		CParseFunc func;
 		char *connect;
 		struct CParseEntry *self;
@@ -216,52 +219,66 @@ void console_load_defaults(void) {
 		CP_DEF_C2(update,sql),
 		CP_DEF_S(skip,update),
 	};
-	unsigned int i, len = ARRAYLENGTH(default_list);
+	int len = ARRAYLENGTH(default_list);
 	struct CParseEntry *cmd;
+	int i;
 
-	RECREATE(console->input->cmds,struct CParseEntry *, len);
+	VECTOR_ENSURE(console->input->commands, len, 1);
 
 	for(i = 0; i < len; i++) {
 		CREATE(cmd, struct CParseEntry, 1);
 
 		safestrncpy(cmd->cmd, default_list[i].name, CP_CMD_LENGTH);
 
-		if( default_list[i].func )
-			cmd->u.func = default_list[i].func;
-		else
-			cmd->u.next = NULL;
+		cmd->type = default_list[i].type;
 
-		cmd->next_count = 0;
-
-		console->input->cmd_count++;
-		console->input->cmds[i] = cmd;
-		default_list[i].self = cmd;
-		if( !default_list[i].connect ) {
-			RECREATE(console->input->cmd_list,struct CParseEntry *, ++console->input->cmd_list_count);
-			console->input->cmd_list[console->input->cmd_list_count - 1] = cmd;
-		}
-	}
-
-	for(i = 0; i < len; i++) {
-		unsigned int k;
-		if( !default_list[i].connect )
-			continue;
-		for(k = 0; k < console->input->cmd_count; k++) {
-			if( strcmpi(default_list[i].connect,console->input->cmds[k]->cmd) == 0 ) {
-				cmd = default_list[i].self;
-				RECREATE(console->input->cmds[k]->u.next, struct CParseEntry *, ++console->input->cmds[k]->next_count);
-				console->input->cmds[k]->u.next[console->input->cmds[k]->next_count - 1] = cmd;
+		switch (cmd->type) {
+			case CPET_FUNCTION:
+				cmd->u.func = default_list[i].func;
 				break;
-			}
+			case CPET_CATEGORY:
+				VECTOR_INIT(cmd->u.children);
+				break;
+			case CPET_UNKNOWN:
+				break;
+		}
+
+		VECTOR_PUSH(console->input->commands, cmd);
+		default_list[i].self = cmd;
+		if (!default_list[i].connect) {
+			VECTOR_ENSURE(console->input->command_list, 1, 1);
+			VECTOR_PUSH(console->input->command_list, cmd);
 		}
 	}
-}
+
+	for (i = 0; i < len; i++) {
+		int k;
+		if (!default_list[i].connect)
+			continue;
+		ARR_FIND(0, VECTOR_LENGTH(console->input->commands), k, strcmpi(default_list[i].connect, VECTOR_INDEX(console->input->commands, k)->cmd) == 0);
+		if (k != VECTOR_LENGTH(console->input->commands)) {
+			struct CParseEntry *parent = VECTOR_INDEX(console->input->commands, k);
+			Assert_retb(parent->type == CPET_CATEGORY);
+			cmd = default_list[i].self;
+			VECTOR_ENSURE(parent->u.children, 1, 1);
+			VECTOR_PUSH(parent->u.children, cmd);
+		}
+	}
 #undef CP_DEF_C
 #undef CP_DEF_C2
 #undef CP_DEF_S
 #undef CP_DEF
-void console_parse_create(char *name, CParseFunc func) {
-	unsigned int i;
+}
+
+/**
+ * Creates a new console command entry.
+ *
+ * @param name The command name.
+ * @param func The command callback.
+ */
+void console_parse_create(char *name, CParseFunc func)
+{
+	int i;
 	char *tok;
 	char sublist[CP_CMD_LENGTH * 5];
 	struct CParseEntry *cmd;
@@ -269,123 +286,135 @@ void console_parse_create(char *name, CParseFunc func) {
 	safestrncpy(sublist, name, CP_CMD_LENGTH * 5);
 	tok = strtok(sublist,":");
 
-	for ( i = 0; i < console->input->cmd_list_count; i++ ) {
-		if( strcmpi(tok,console->input->cmd_list[i]->cmd) == 0 )
-			break;
-	}
+	ARR_FIND(0, VECTOR_LENGTH(console->input->command_list), i, strcmpi(tok, VECTOR_INDEX(console->input->command_list, i)->cmd) == 0);
 
-	if( i == console->input->cmd_list_count ) {
-		RECREATE(console->input->cmds,struct CParseEntry *, ++console->input->cmd_count);
+	if (i == VECTOR_LENGTH(console->input->command_list)) {
 		CREATE(cmd, struct CParseEntry, 1);
 		safestrncpy(cmd->cmd, tok, CP_CMD_LENGTH);
-		cmd->next_count = 0;
-		console->input->cmds[console->input->cmd_count - 1] = cmd;
-		RECREATE(console->input->cmd_list,struct CParseEntry *, ++console->input->cmd_list_count);
-		console->input->cmd_list[console->input->cmd_list_count - 1] = cmd;
-		i = console->input->cmd_list_count - 1;
+		cmd->type = CPET_UNKNOWN;
+		VECTOR_ENSURE(console->input->commands, 1, 1);
+		VECTOR_PUSH(console->input->commands, cmd);
+		VECTOR_ENSURE(console->input->command_list, 1, 1);
+		VECTOR_PUSH(console->input->command_list, cmd);
 	}
 
-	cmd = console->input->cmd_list[i];
-	while( ( tok = strtok(NULL, ":") ) != NULL ) {
-		for(i = 0; i < cmd->next_count; i++) {
-			if( strcmpi(cmd->u.next[i]->cmd,tok) == 0 )
-				break;
+	cmd = VECTOR_INDEX(console->input->command_list, i);
+	while ((tok = strtok(NULL, ":")) != NULL) {
+		if (cmd->type == CPET_UNKNOWN) {
+			cmd->type = CPET_CATEGORY;
+			VECTOR_INIT(cmd->u.children);
 		}
+		Assert_retv(cmd->type == CPET_CATEGORY);
 
-		if ( i == cmd->next_count ) {
-			RECREATE(console->input->cmds,struct CParseEntry *, ++console->input->cmd_count);
-			CREATE(console->input->cmds[console->input->cmd_count-1], struct CParseEntry, 1);
-			safestrncpy(console->input->cmds[console->input->cmd_count-1]->cmd, tok, CP_CMD_LENGTH);
-			console->input->cmds[console->input->cmd_count-1]->next_count = 0;
-			RECREATE(cmd->u.next, struct CParseEntry *, ++cmd->next_count);
-			cmd->u.next[cmd->next_count - 1] = console->input->cmds[console->input->cmd_count-1];
-			cmd = console->input->cmds[console->input->cmd_count-1];
+		ARR_FIND(0, VECTOR_LENGTH(cmd->u.children), i, strcmpi(VECTOR_INDEX(cmd->u.children, i)->cmd,tok) == 0);
+		if (i == VECTOR_LENGTH(cmd->u.children)) {
+			struct CParseEntry *entry;
+			CREATE(entry, struct CParseEntry, 1);
+			safestrncpy(entry->cmd, tok, CP_CMD_LENGTH);
+			entry->type = CPET_UNKNOWN;
+			VECTOR_ENSURE(console->input->commands, 1, 1);
+			VECTOR_PUSH(console->input->commands, entry);
+			VECTOR_ENSURE(cmd->u.children, 1, 1);
+			VECTOR_PUSH(cmd->u.children, entry);
+			cmd = entry;
 			continue;
 		}
+		cmd = VECTOR_INDEX(cmd->u.children, i);
 	}
+	Assert_retv(cmd->type != CPET_CATEGORY);
+	cmd->type = CPET_FUNCTION;
 	cmd->u.func = func;
 }
-void console_parse_list_subs(struct CParseEntry *cmd, unsigned char depth) {
-	unsigned int i;
+
+/**
+ * Shows the help message for a console command category.
+ *
+ * @param cmd The command entry.
+ * @param depth The current tree depth (for display purposes).
+ */
+void console_parse_list_subs(struct CParseEntry *cmd, unsigned char depth)
+{
+	int i;
 	char msg[CP_CMD_LENGTH * 2];
-	for( i = 0; i < cmd->next_count; i++ ) {
-		if( cmd->u.next[i]->next_count ) {
-			memset(msg, '-', depth);
-			snprintf(msg + depth,( CP_CMD_LENGTH * 2 ) - depth, " '"CL_WHITE"%s"CL_RESET"'",cmd->u.next[i]->cmd);
-			ShowInfo("%s subs\n",msg);
-			console->input->parse_list_subs(cmd->u.next[i],depth + 1);
-		} else {
-			memset(msg, '-', depth);
-			snprintf(msg + depth,(CP_CMD_LENGTH * 2) - depth, " %s",cmd->u.next[i]->cmd);
+	Assert_retv(cmd->type == CPET_CATEGORY);
+	for (i = 0; i < VECTOR_LENGTH(cmd->u.children); i++) {
+		struct CParseEntry *child = VECTOR_INDEX(cmd->u.children, i);
+		memset(msg, '-', depth);
+		snprintf(msg + depth, (CP_CMD_LENGTH * 2) - depth, " '"CL_WHITE"%s"CL_RESET"'", child->cmd);
+		if (child->type == CPET_FUNCTION) {
 			ShowInfo("%s\n",msg);
+		} else {
+			ShowInfo("%s subs\n",msg);
+			console->input->parse_list_subs(child,depth + 1);
 		}
 	}
 }
-void console_parse_sub(char *line) {
+
+/**
+ * Parses a console command.
+ *
+ * @param line The input line.
+ */
+void console_parse_sub(char *line)
+{
 	struct CParseEntry *cmd;
 	char bline[200];
 	char *tok;
 	char sublist[CP_CMD_LENGTH * 5];
-	unsigned int i, len = 0;
+	int i;
 
 	memcpy(bline, line, 200);
 	tok = strtok(line, " ");
 
-	for ( i = 0; i < console->input->cmd_list_count; i++ ) {
-		if( strcmpi(tok,console->input->cmd_list[i]->cmd) == 0 )
-			break;
-	}
-
-	if( i == console->input->cmd_list_count ) {
+	ARR_FIND(0, VECTOR_LENGTH(console->input->command_list), i, strcmpi(tok, VECTOR_INDEX(console->input->command_list, i)->cmd) == 0);
+	if (i == VECTOR_LENGTH(console->input->command_list)) {
 		ShowError("'"CL_WHITE"%s"CL_RESET"' is not a known command, type '"CL_WHITE"help"CL_RESET"' to list all commands\n",line);
 		return;
 	}
 
-	cmd = console->input->cmd_list[i];
+	cmd = VECTOR_INDEX(console->input->command_list, i);
 
-	len += snprintf(sublist,CP_CMD_LENGTH * 5,"%s", cmd->cmd) + 1;
+	snprintf(sublist, sizeof(sublist), "%s", cmd->cmd);
 
-	if( cmd->next_count == 0 && console->input->cmd_list[i]->u.func ) {
-		char *r = NULL;
-		if( (tok = strtok(NULL, " ")) ) {
-			r = bline;
-			r += len + 1;
-		}
-		cmd->u.func(r);
-	} else {
-		while( ( tok = strtok(NULL, " ") ) != NULL ) {
-			for( i = 0; i < cmd->next_count; i++ ) {
-				if( strcmpi(cmd->u.next[i]->cmd,tok) == 0 )
-					break;
-			}
-			if( i == cmd->next_count ) {
-				if( strcmpi("help",tok) == 0 ) {
-					if( cmd->next_count ) {
-						ShowInfo("- '"CL_WHITE"%s"CL_RESET"' subs\n",sublist);
-						console->input->parse_list_subs(cmd,2);
-					} else {
-						ShowError("'"CL_WHITE"%s"CL_RESET"' doesn't possess any subcommands\n",sublist);
-					}
-					return;
-				}
-				ShowError("'"CL_WHITE"%s"CL_RESET"' is not a known subcommand of '"CL_WHITE"%s"CL_RESET"'\n",tok,cmd->cmd);
-				ShowError("type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
-				return;
-			}
-			if( cmd->u.next[i]->next_count == 0 && cmd->u.next[i]->u.func ) {
-				char *r = NULL;
-				if( (tok = strtok(NULL, " ")) ) {
-					r = bline;
-					r += len + strlen(cmd->u.next[i]->cmd) + 1;
-				}
-				cmd->u.next[i]->u.func(r);
-				return;
-			} else
-				cmd = cmd->u.next[i];
-			len += snprintf(sublist + len,(CP_CMD_LENGTH * 5) - len,":%s", cmd->cmd);
-		}
-		ShowError("Is only a category, type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
+	if (cmd->type == CPET_FUNCTION) {
+		tok = strtok(NULL, "");
+		cmd->u.func(tok);
+		return;
 	}
+
+	while ((tok = strtok(NULL, " ")) != NULL) {
+		struct CParseEntry *entry = NULL;
+
+		Assert_retv(cmd->type == CPET_CATEGORY);
+
+		ARR_FIND(0, VECTOR_LENGTH(cmd->u.children), i, strcmpi(VECTOR_INDEX(cmd->u.children, i)->cmd, tok) == 0);
+		if (i == VECTOR_LENGTH(cmd->u.children)) {
+			if (strcmpi("help", tok) == 0) {
+				if (VECTOR_LENGTH(cmd->u.children)) {
+					ShowInfo("- '"CL_WHITE"%s"CL_RESET"' subs\n",sublist);
+					console->input->parse_list_subs(cmd,2);
+				} else {
+					ShowError("'"CL_WHITE"%s"CL_RESET"' doesn't possess any subcommands\n",sublist);
+				}
+				return;
+			}
+			ShowError("'"CL_WHITE"%s"CL_RESET"' is not a known subcommand of '"CL_WHITE"%s"CL_RESET"'\n",tok,cmd->cmd);
+			ShowError("type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
+			return;
+		}
+		entry = VECTOR_INDEX(cmd->u.children, i);
+		if (entry->type == CPET_FUNCTION) {
+			tok = strtok(NULL, "");
+			entry->u.func(tok);
+			return;
+		}
+
+		cmd = entry;
+
+		if (strlen(sublist) < sizeof(sublist)-1)
+			snprintf(sublist+strlen(sublist), sizeof(sublist), " %s", cmd->cmd);
+	}
+	ShowError("Is only a category, type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
 }
 void console_parse(char* line) {
 	int c, i = 0, len = MAX_CONSOLE_INPUT - 1;/* we leave room for the \0 :P */
@@ -472,27 +501,33 @@ void console_setSQL(Sql *SQL_handle) {
 }
 #endif /* CONSOLE_INPUT */
 
-void console_init (void) {
+void console_init(void)
+{
 #ifdef CONSOLE_INPUT
-	console->input->cmd_count = console->input->cmd_list_count = 0;
+	VECTOR_INIT(console->input->command_list);
+	VECTOR_INIT(console->input->commands);
 	console->input->load_defaults();
 	console->input->parse_init();
 #endif
 }
-void console_final(void) {
+
+void console_final(void)
+{
 #ifdef CONSOLE_INPUT
-	unsigned int i;
 	console->input->parse_final();
-	for( i = 0; i < console->input->cmd_count; i++ ) {
-		if( console->input->cmds[i]->next_count )
-			aFree(console->input->cmds[i]->u.next);
-		aFree(console->input->cmds[i]);
+	while (VECTOR_LENGTH(console->input->commands)) {
+		struct CParseEntry *entry = VECTOR_POP(console->input->commands);
+		if (entry->type == CPET_CATEGORY)
+			VECTOR_CLEAR(entry->u.children);
+		aFree(entry);
 	}
-	aFree(console->input->cmds);
-	aFree(console->input->cmd_list);
+	VECTOR_CLEAR(console->input->commands);
+	VECTOR_CLEAR(console->input->command_list);
 #endif
 }
-void console_defaults(void) {
+
+void console_defaults(void)
+{
 	console = &console_s;
 	console->init = console_init;
 	console->final = console_final;

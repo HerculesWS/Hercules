@@ -195,7 +195,6 @@ L_Exit:
 }
 gon_test,56,91,6	duplicate(monsterreferee)	Referee#01	1_M_PUBMASTER
 
-
 // Usher //
 gon_test,58,94,6	script	Usher	4_M_04,{
 	set @marena,1;
@@ -331,7 +330,6 @@ L_Sell:
 	mes "[Monster Trainer]";
 	mes "You earned ^0000FF" + @sellearn + "^000000z.";
 	close;
-
 
 L_NoExp:
 	mes "[Monster Trainer]";
@@ -760,8 +758,6 @@ OnTouch:
 }
 gon_test,43,87,5	duplicate(SummonPad)	Summon Pad 2	HIDDEN_NPC,2,2
 gon_test,72,87,5	duplicate(SummonPad)	Summon Pad 3	HIDDEN_NPC,2,2
-
-
 
 // Skill Disabler //
 gon_test	mapflag	noskill

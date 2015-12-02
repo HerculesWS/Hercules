@@ -54,7 +54,7 @@ OnReadyCheck:
 		end;
 	set .@Guillaume, getwaitingroomstate(0,"Fl2R_Guillaume");
 	set .@Croix, getwaitingroomstate(0,"Fl2R_Croix");
-	
+
 	if( .@Guillaume < 10 || .@Croix < 10 )
 	{
 		mapannounce "bat_room","Battleground -- Flavius [80-99] G: " + .@Guillaume + "/10, C: " + .@Croix + "/10",1,0x808000;

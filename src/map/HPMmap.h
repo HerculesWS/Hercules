@@ -8,14 +8,14 @@
 #error You should never include HPMmap.h from a plugin.
 #endif
 
-#include "../common/cbasetypes.h"
-#include "../map/atcommand.h"
-#include "../common/HPM.h"
+#include "map/atcommand.h"
+#include "common/cbasetypes.h"
+#include "common/HPM.h"
 
 struct hplugin;
 struct map_session_data;
 
-bool HPM_map_grabHPData(struct HPDataOperationStorage *ret, enum HPluginDataTypes type, void *ptr);
+bool HPM_map_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize);
 
 bool HPM_map_add_atcommand(char *name, AtCommandFunc func);
 void HPM_map_atcommands(void);

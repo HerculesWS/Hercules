@@ -283,7 +283,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 	mes "a meaningful contribution";
 	mes "to all of Rune Midgard, which";
 	mes "brings me to why I am here.";
-	mes "There are many adventurers^FFFFFF ^000000 like you, but we have a problem.";
+	mes "There are many adventurers like you, but we have a problem.";
 	next;
 	mes "[Ledrion]";
 	mes "So many adventurers have";
@@ -401,7 +401,7 @@ payon,83,327,3	script	Gatan#payon::RelayGatan	4_M_04,{
 		mes "instructions, didn't you?";
 		close;
 	}
-	.@relaytime = gettime(3);
+	.@relaytime = gettime(GETTIME_HOUR);
 	if (party_relay == 28) {
 		mes "[Gatan]";
 		mes "Say, I don't think it's";
@@ -1837,7 +1837,7 @@ payon,204,221,3	script	Bafhail#payon::RelayBafhail	4_M_JOB_BLACKSMITH,{
 		mes "with any of the other guys?";
 		close;
 	}
-	.@relaytime = gettime(3);
+	.@relaytime = gettime(GETTIME_HOUR);
 	if (party_relay == 30) {
 		mes "[Bafhail]";
 		mes "Did you give that ticket";
@@ -2471,7 +2471,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 		mes "have to meet either, but...";
 		close;
 	}
-	.@relaytime = gettime(3);
+	.@relaytime = gettime(GETTIME_HOUR);
 	getmapxy(.@m$,.@x,.@y,1,strnpcinfo(3));
 	.@juwi = getareausers(.@m$,.@x-8,.@y-8,.@x+8,.@y+8);
 	if (party_relay == 32) {
@@ -3077,7 +3077,7 @@ payon,168,314,3	script	Lospii#payon::RelayLospii	4_M_KID1,{
 
 // EXP Rewards
 function	script	F_PartyRelay_Exp	{
-	if (checkre(3)) { //unconfirmed
+	if (RENEWAL_EXP) { //unconfirmed
 		if (BaseLevel > 94) getexp 104760,0;
 		else if (BaseLevel > 89) getexp 85920,0;
 		else if (BaseLevel > 79) getexp 38520,0;

@@ -6,23 +6,24 @@
 
 #include "log.h"
 
+#include "map/battle.h"
+#include "map/itemdb.h"
+#include "map/map.h"
+#include "map/mob.h"
+#include "map/pc.h"
+#include "common/cbasetypes.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/sql.h" // SQL_INNODB
+#include "common/strlib.h"
+#include "common/HPM.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "battle.h"
-#include "itemdb.h"
-#include "map.h"
-#include "mob.h"
-#include "pc.h"
-#include "../common/cbasetypes.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/sql.h" // SQL_INNODB
-#include "../common/strlib.h"
-#include "../common/HPM.h"
-
 struct log_interface log_s;
+struct log_interface *logs;
 
 /// obtain log type character for item/zeny logs
 char log_picktype2char(e_log_pick_type type) {
@@ -53,7 +54,6 @@ char log_picktype2char(e_log_pick_type type) {
 	return 'X';
 }
 
-
 /// obtain log type character for chat logs
 char log_chattype2char(e_log_chat_type type) {
 	switch( type ) {
@@ -68,7 +68,6 @@ char log_chattype2char(e_log_chat_type type) {
 	ShowDebug("log_chattype2char: Unknown chat type %d.\n", type);
 	return 'O';
 }
-
 
 /// check if this item should be logged according the settings
 bool should_log_item(int nameid, int amount, int refine, struct item_data *id) {
@@ -111,7 +110,7 @@ void log_branch_sub_txt(struct map_session_data* sd) {
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
-	
+
 	if( ( logfp = fopen(logs->config.log_branch, "a") ) == NULL )
 		return;
 	time(&curtime);
@@ -144,7 +143,7 @@ void log_pick_sub_txt(int id, int16 m, e_log_pick_type type, int amount, struct 
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
-	
+
 	if( ( logfp = fopen(logs->config.log_pick, "a") ) == NULL )
 		return;
 	time(&curtime);
@@ -173,7 +172,6 @@ void log_pick_pc(struct map_session_data* sd, e_log_pick_type type, int amount, 
 	log_pick(sd->status.char_id, sd->bl.m, type, amount, itm, data ? data : itemdb->exists(itm->nameid));
 }
 
-
 /// logs item transactions (monsters)
 void log_pick_mob(struct mob_data* md, e_log_pick_type type, int amount, struct item* itm, struct item_data *data) {
 	nullpo_retv(md);
@@ -191,7 +189,7 @@ void log_zeny_sub_txt(struct map_session_data* sd, e_log_pick_type type, struct 
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
-	
+
 	if( ( logfp = fopen(logs->config.log_zeny, "a") ) == NULL )
 		return;
 	time(&curtime);
@@ -221,7 +219,7 @@ void log_mvpdrop_sub_txt(struct map_session_data* sd, int monster_id, int* log_m
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
-	
+
 	if( ( logfp = fopen(logs->config.log_mvpdrop,"a") ) == NULL )
 		return;
 	time(&curtime);
@@ -242,7 +240,7 @@ void log_mvpdrop(struct map_session_data* sd, int monster_id, int* log_mvp)
 
 void log_atcommand_sub_sql(struct map_session_data* sd, const char* message) {
 	SqlStmt* stmt;
-	
+
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
 	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`atcommand_date`, `account_id`, `char_id`, `char_name`, `map`, `command`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_gm, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
 	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
@@ -259,7 +257,7 @@ void log_atcommand_sub_txt(struct map_session_data* sd, const char* message) {
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
-	
+
 	if( ( logfp = fopen(logs->config.log_gm, "a") ) == NULL )
 		return;
 	time(&curtime);
@@ -297,7 +295,7 @@ void log_npc_sub_txt(struct map_session_data *sd, const char *message) {
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
-	
+
 	if( ( logfp = fopen(logs->config.log_npc, "a") ) == NULL )
 		return;
 	time(&curtime);
@@ -318,7 +316,7 @@ void log_npc(struct map_session_data* sd, const char* message)
 
 void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char* dst_charname, const char* message) {
 	SqlStmt* stmt;
-	
+
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
 	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`time`, `type`, `type_id`, `src_charid`, `src_accountid`, `src_map`, `src_map_x`, `src_map_y`, `dst_charname`, `message`) VALUES (NOW(), '%c', '%d', '%d', '%d', '%s', '%d', '%d', ?, ?)", logs->config.log_chat, logs->chattype2char(type), type_id, src_charid, src_accid, mapname, x, y)
 	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, (char*)dst_charname, safestrnlen(dst_charname, NAME_LENGTH))
@@ -335,7 +333,7 @@ void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, int src
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
-	
+
 	if( ( logfp = fopen(logs->config.log_chat, "a") ) == NULL )
 		return;
 	time(&curtime);
@@ -362,12 +360,12 @@ void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, 
 void log_sql_init(void) {
 	// log db connection
 	logs->mysql_handle = SQL->Malloc();
-	
+
 	ShowInfo(""CL_WHITE"[SQL]"CL_RESET": Connecting to the Log Database "CL_WHITE"%s"CL_RESET" At "CL_WHITE"%s"CL_RESET"...\n",logs->db_name,logs->db_ip);
 	if ( SQL_ERROR == SQL->Connect(logs->mysql_handle, logs->db_id, logs->db_pw, logs->db_ip, logs->db_port, logs->db_name) )
 		exit(EXIT_FAILURE);
 	ShowStatus(""CL_WHITE"[SQL]"CL_RESET": Successfully '"CL_GREEN"connected"CL_RESET"' to Database '"CL_WHITE"%s"CL_RESET"'.\n", logs->db_name);
-	
+
 	if (map->default_codepage[0] != '\0')
 		if ( SQL_ERROR == SQL->SetEncoding(logs->mysql_handle, map->default_codepage) )
 			Sql_ShowDebug(logs->mysql_handle);
@@ -387,7 +385,6 @@ void log_set_defaults(void) {
 	logs->config.price_items_log  = 1000; // 1000z
 	logs->config.amount_items_log = 100;
 }
-
 
 int log_config_read(const char* cfgName) {
 	static int count = 0;
@@ -505,7 +502,7 @@ void log_config_complete(void) {
 }
 void log_defaults(void) {
 	logs = &log_s;
-	
+
 	sprintf(logs->db_ip,"127.0.0.1");
 	sprintf(logs->db_id,"ragnarok");
 	sprintf(logs->db_pw,"ragnarok");
@@ -514,7 +511,7 @@ void log_defaults(void) {
 	logs->db_port = 3306;
 	logs->mysql_handle = NULL;
 	/* */
-	
+
 	logs->pick_pc = log_pick_pc;
 	logs->pick_mob = log_pick_mob;
 	logs->zeny = log_zeny;
@@ -523,7 +520,7 @@ void log_defaults(void) {
 	logs->atcommand = log_atcommand;
 	logs->branch = log_branch;
 	logs->mvpdrop = log_mvpdrop;
-	
+
 	/* will be modified in a few seconds once loading is complete. */
 	logs->pick_sub = log_pick_sub_txt;
 	logs->zeny_sub = log_zeny_sub_txt;

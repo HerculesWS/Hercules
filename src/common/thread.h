@@ -4,7 +4,7 @@
 #ifndef COMMON_THREAD_H
 #define COMMON_THREAD_H
 
-#include "../common/cbasetypes.h"
+#include "common/cbasetypes.h"
 
 typedef struct rAthread rAthread;
 typedef void* (*rAthreadProc)(void*);

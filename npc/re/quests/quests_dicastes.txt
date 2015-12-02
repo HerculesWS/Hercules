@@ -693,7 +693,7 @@ dic_in01,51,270,7	script	Supply Dept. 1 Manager	4_MAN_BENKUNI,{
 	close;
 }
 
-dic_in01,48,273,8	script	Supply Dept. 2 Manager	4_MAN_BENKUNI,{
+dic_in01,48,273,1	script	Supply Dept. 2 Manager	4_MAN_BENKUNI,{
 	if (!checkweight(1201,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
@@ -901,7 +901,6 @@ dic_in01,40,270,2	script	Transport Dept. 2 Mgr	4_MAN_BENKUNI,{
 	mes "This is the first time in my 200 years of working at this department that a person comes back to complete a request without starting any.";
 	close;
 }
-
 
 dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 	if (!checkweight(1201,1)) {
@@ -3985,7 +3984,6 @@ dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 				setarray .@quest, 7194,7195,7196;
 				setarray .@item, 6306,6305,6307;
 				setarray .@str$, "bloodstain","frozen piece of skin","strange magical stone fragment";
-				
 				.@size = getarraysize(.@item);
 				for (.@i = 0; .@i < .@size; ++.@i) {
 					if (countitem(.@item[.@i])) {
@@ -4800,7 +4798,6 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 	.@size = getarraysize(.@npc$);
 	for (.@i = 0; .@i < .@size; ++.@i)
 		if (.@n$ == .@npc$[.@i]) .@type = .@i;
-	
 	if (ep13_3_secret == 10) {
 		if (.@npc$[.@type] == "Rock Pile") {
 			mes "There are many piles of rock around because of the unstable crustal movements.";
@@ -7332,7 +7329,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 		mes "I'm done. Hehe";
 		close;
 	}
-	
+
 	// Enchant Constants
 	// Ex: .@dex[1]: DEX + 1 | .@cri[5]: CRI + 5 | .@eva[12]: FLEE + 12
 	.@matk[1] = 4760; .@matk[2] = 4761;
@@ -7342,13 +7339,13 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 	.@dex[1] = 4720;  .@dex[2] = 4721;  .@dex[3] = 4722;
 	.@int[1] = 4710;  .@int[2] = 4711;  .@int[3] = 4712;
 	.@agi[1] = 4730;  .@agi[2] = 4731;  .@agi[3] = 4732;
-	
+
 	// Enchant attribute is determined by the digit position of variable value (ep13_3_<type>).
 	// For example, assume the variable value is 516:
 	// .@f_<slot>[<index>]
 	// slot:	2	3	4
-	// index:	5 	1 	6
-	
+	// index:	5	1	6
+
 	// Enchant Format
 	if (compare(.@v$,"ring")) setarray .@f_2[1],.@agi[1],.@agi[2],.@int[1],.@int[2],.@dex[1],.@dex[2];
 	else setarray .@f_2[1],.@agi[1],.@agi[2],.@agi[3],.@int[1],.@int[2],.@int[3],.@dex[1],.@dex[2],.@dex[3];

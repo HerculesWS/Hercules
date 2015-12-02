@@ -238,5 +238,3 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 		close;
 	}
 }
-
-

@@ -46,7 +46,6 @@
 			mes "I'll help you to have a nice trip";
 			mes "to Moscovia!";
 			close;
-			
 		case 2:
 			mes "[Moscovia P.R. Officer]";
 			mes "Ok then, let us start now.";
@@ -107,13 +106,12 @@ moscovia,166,53,4	script	Moscovia P.R. Officer#2	4_F_RUSWOMAN2,{
 	mes "Please come and visit soon.";
 	mes "Ok then, Let's get going.";
 	close2;
-	if (checkre(0))
+	if (RENEWAL)
 		warp "alberta",244,52;
 	else
 		warp "alberta",243,67;
 	end;
 }
-
 
 // Moscovia Palace :: mos_swan
 //============================================================

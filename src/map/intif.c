@@ -3,8 +3,31 @@
 
 #define HERCULES_CORE
 
-#include "../config/core.h" // GP_BOUND_ITEMS
+#include "config/core.h" // GP_BOUND_ITEMS
 #include "intif.h"
+
+#include "map/atcommand.h"
+#include "map/battle.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/elemental.h"
+#include "map/guild.h"
+#include "map/homunculus.h"
+#include "map/log.h"
+#include "map/mail.h"
+#include "map/map.h"
+#include "map/mercenary.h"
+#include "map/party.h"
+#include "map/pc.h"
+#include "map/pet.h"
+#include "map/quest.h"
+#include "map/storage.h"
+#include "common/memmgr.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "common/timer.h"
 
 #include <fcntl.h>
 #include <signal.h>
@@ -13,30 +36,8 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include "atcommand.h"
-#include "battle.h"
-#include "chrif.h"
-#include "clif.h"
-#include "elemental.h"
-#include "guild.h"
-#include "homunculus.h"
-#include "log.h"
-#include "mail.h"
-#include "map.h"
-#include "mercenary.h"
-#include "party.h"
-#include "pc.h"
-#include "pet.h"
-#include "quest.h"
-#include "storage.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-
 struct intif_interface intif_s;
+struct intif_interface *intif;
 
 #define inter_fd (chrif->fd) // alias
 
@@ -45,7 +46,7 @@ struct intif_interface intif_s;
 
 int CheckForCharServer(void)
 {
-	return ((chrif->fd <= 0) || session[chrif->fd] == NULL || session[chrif->fd]->wdata == NULL);
+	return ((chrif->fd <= 0) || sockt->session[chrif->fd] == NULL || sockt->session[chrif->fd]->wdata == NULL);
 }
 
 // pet
@@ -130,7 +131,7 @@ int intif_rename(struct map_session_data *sd, int type, char *name)
 // GM Send a message
 int intif_broadcast(const char* mes, size_t len, int type)
 {
-	int lp = (type|BC_COLOR_MASK) ? 4 : 0;
+	int lp = (type&BC_COLOR_MASK) ? 4 : 0;
 
 	// Send to the local players
 	clif->broadcast(NULL, mes, len, type, ALL_CLIENT);
@@ -149,9 +150,9 @@ int intif_broadcast(const char* mes, size_t len, int type)
 	WFIFOW(inter_fd,10) = 0; // fontSize not used with standard broadcast
 	WFIFOW(inter_fd,12) = 0; // fontAlign not used with standard broadcast
 	WFIFOW(inter_fd,14) = 0; // fontY not used with standard broadcast
-	if( type|BC_BLUE )
+	if (type&BC_BLUE)
 		WFIFOL(inter_fd,16) = 0x65756c62; //If there's "blue" at the beginning of the message, game client will display it in blue instead of yellow.
-	else if( type|BC_WOE )
+	else if (type&BC_WOE)
 		WFIFOL(inter_fd,16) = 0x73737373; //If there's "ssss", game client will recognize message as 'WoE broadcast'.
 	memcpy(WFIFOP(inter_fd,16 + lp), mes, len);
 	WFIFOSET(inter_fd, WFIFOW(inter_fd,2));
@@ -278,7 +279,7 @@ int intif_saveregistry(struct map_session_data *sd) {
 
 	if (intif->CheckForCharServer() || !sd->regs.vars)
 		return -1;
-	
+
 	WFIFOHEAD(inter_fd, 60000 + 300);
 	WFIFOW(inter_fd,0)  = 0x3004;
 	/* 0x2 = length (set later) */
@@ -287,78 +288,76 @@ int intif_saveregistry(struct map_session_data *sd) {
 	WFIFOW(inter_fd,12) = 0;/* count */
 
 	plen = 14;
-	
+
 	iter = db_iterator(sd->regs.vars);
 	for( data = iter->first(iter,&key); iter->exists(iter); data = iter->next(iter,&key) ) {
 		const char *varname = NULL;
 		struct script_reg_state *src = NULL;
-		
+
 		if( data->type != DB_DATA_PTR ) /* its a @number */
 			continue;
-		
+
 		varname = script->get_str(script_getvarid(key.i64));
-		
+
 		if( varname[0] == '@' ) /* @string$ can get here, so we skip */
 			continue;
-		
+
 		src = DB->data2ptr(data);
 
 		/* no need! */
 		if( !src->update )
 			continue;
-		
+
 		src->update = false;
-				
+
 		len = strlen(varname)+1;
-		
+
 		WFIFOB(inter_fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
-		
+
 		safestrncpy((char*)WFIFOP(inter_fd,plen), varname, len);
 		plen += len;
-				
+
 		WFIFOL(inter_fd, plen) = script_getvaridx(key.i64);
 		plen += 4;
-		
+
 		if( src->type ) {
 			struct script_reg_str *p = (struct script_reg_str *)src;
-						
+
 			WFIFOB(inter_fd, plen) = p->value ? 2 : 3;
 			plen += 1;
-			
+
 			if( p->value ) {
 				len = strlen(p->value)+1;
-				
+
 				WFIFOB(inter_fd, plen) = (unsigned char)len;/* won't be higher; the column size is 254 */
 				plen += 1;
-				
+
 				safestrncpy((char*)WFIFOP(inter_fd,plen), p->value, len);
 				plen += len;
 			} else {
 				script->reg_destroy_single(sd,key.i64,&p->flag);
 			}
-			
 		} else {
 			struct script_reg_num *p = (struct script_reg_num *)src;
 
 			WFIFOB(inter_fd, plen) =  p->value ? 0 : 1;
 			plen += 1;
-		
+
 			if( p->value ) {
 				WFIFOL(inter_fd, plen) = p->value;
 				plen += 4;
 			} else {
 				script->reg_destroy_single(sd,key.i64,&p->flag);
 			}
-			
 		}
-		
+
 		WFIFOW(inter_fd,12) += 1;
-		
+
 		if( plen > 60000 ) {
 			WFIFOW(inter_fd, 2) = plen;
 			WFIFOSET(inter_fd, plen);
-			
+
 			/* prepare follow up */
 			WFIFOHEAD(inter_fd, 60000 + 300);
 			WFIFOW(inter_fd,0)  = 0x3004;
@@ -366,19 +365,18 @@ int intif_saveregistry(struct map_session_data *sd) {
 			WFIFOL(inter_fd,4)  = sd->status.account_id;
 			WFIFOL(inter_fd,8)  = sd->status.char_id;
 			WFIFOW(inter_fd,12) = 0;/* count */
-			
+
 			plen = 14;
 		}
-		
 	}
 	dbi_destroy(iter);
 
 	/* mark & go. */
 	WFIFOW(inter_fd, 2) = plen;
 	WFIFOSET(inter_fd, plen);
-	
+
 	sd->vars_dirty = false;
-	
+
 	return 0;
 }
 
@@ -825,7 +823,6 @@ int intif_guild_castle_dataload(int num, int *castle_ids)
 	return 1;
 }
 
-
 // Request change castle guild owner and save data
 int intif_guild_castle_datasave(int castle_id,int index, int value)
 {
@@ -893,7 +890,6 @@ int intif_homunculus_requestdelete(int homun_id)
 	return 0;
 
 }
-
 
 //-----------------------------------------------------------------
 // Packets receive from inter server
@@ -998,13 +994,13 @@ void intif_parse_Registers(int fd)
 	else { //Normally registries should arrive for in log-in chars.
 		sd = map->id2sd(account_id);
 	}
-	
+
 	if (!sd || sd->status.char_id != char_id) {
 		return; //Character registry from another character.
 	}
-		
+
 	flag = ( sd->vars_received&PRL_ACCG && sd->vars_received&PRL_ACCL && sd->vars_received&PRL_CHAR ) ? 0 : 1;
-	
+
 	switch (RFIFOB(fd,12)) {
 		case 3: //Character Registry
 			sd->vars_received |= PRL_CHAR;
@@ -1023,14 +1019,14 @@ void intif_parse_Registers(int fd)
 	}
 	/* have it not complain about insertion of vars before loading, and not set those vars as new or modified */
 	pc->reg_load = true;
-	
+
 	if( RFIFOW(fd, 14) ) {
 		char key[32];
 		unsigned int index;
 		int max = RFIFOW(fd, 14), cursor = 16, i;
-		
+
 		script->parser_current_file = "loading char/acc variables";//for script_add_str to refer to here in case errors occur
-		
+
 		/**
 		 * Vessel!char_reg_num_db
 		 *
@@ -1042,13 +1038,13 @@ void intif_parse_Registers(int fd)
 				char sval[254];
 				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
 				cursor += RFIFOB(fd, cursor) + 1;
-				
+
 				index = RFIFOL(fd, cursor);
 				cursor += 4;
-				
+
 				safestrncpy(sval, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
 				cursor += RFIFOB(fd, cursor) + 1;
-								
+
 				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)sval, NULL);
 			}
 		/**
@@ -1062,23 +1058,22 @@ void intif_parse_Registers(int fd)
 				int ival;
 				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
 				cursor += RFIFOB(fd, cursor) + 1;
-				
+
 				index = RFIFOL(fd, cursor);
 				cursor += 4;
-				
+
 				ival = RFIFOL(fd, cursor);
 				cursor += 4;
-								
+
 				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)h64BPTRSIZE(ival), NULL);
 			}
 		}
-		
 		script->parser_current_file = NULL;/* reset */
 	}
-	
+
 	/* flag it back */
 	pc->reg_load = false;
-		
+
 	if (flag && sd->vars_received&PRL_ACCG && sd->vars_received&PRL_ACCL && sd->vars_received&PRL_CHAR)
 		pc->reg_received(sd); //Received all registry values, execute init scripts and what-not. [Skotlex]
 }
@@ -1582,7 +1577,7 @@ void intif_parse_MailInboxReceived(int fd) {
 		clif->mail_refreshinbox(sd);
 	else if( battle_config.mail_show_status && ( battle_config.mail_show_status == 1 || sd->mail.inbox.unread ) ) {
 		char output[128];
-		sprintf(output, msg_txt(510), sd->mail.inbox.unchecked, sd->mail.inbox.unread + sd->mail.inbox.unchecked);
+		sprintf(output, msg_sd(sd,510), sd->mail.inbox.unchecked, sd->mail.inbox.unread + sd->mail.inbox.unchecked);
 		clif_disp_onlyself(sd, output, strlen(output));
 	}
 }
@@ -1661,7 +1656,7 @@ void intif_parse_MailDelete(int fd) {
 	int char_id = RFIFOL(fd,2);
 	int mail_id = RFIFOL(fd,6);
 	bool failed = RFIFOB(fd,10);
-	
+
 	if ( (sd = map->charid2sd(char_id)) == NULL) {
 		ShowError("intif_parse_MailDelete: char not found %d\n", char_id);
 		return;
@@ -1986,7 +1981,7 @@ int intif_mercenary_create(struct s_mercenary *merc)
 
 void intif_parse_MercenaryReceived(int fd) {
 	int len = RFIFOW(fd,2) - 5;
-	
+
 	if (sizeof(struct s_mercenary) != len) {
 		if (battle_config.etc_log)
 			ShowError("intif: create mercenary data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_mercenary));
@@ -2066,7 +2061,7 @@ int intif_elemental_create(struct s_elemental *ele)
 
 void intif_parse_ElementalReceived(int fd) {
 	int len = RFIFOW(fd,2) - 5;
-	
+
 	if (sizeof(struct s_elemental) != len) {
 		if (battle_config.etc_log)
 			ShowError("intif: create elemental data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_elemental));
@@ -2127,8 +2122,6 @@ void intif_parse_ElementalSaved(int fd) {
 }
 
 void intif_request_accinfo( int u_fd, int aid, int group_lv, char* query ) {
-
-
 	WFIFOHEAD(inter_fd,2 + 4 + 4 + 4 + NAME_LENGTH);
 
 	WFIFOW(inter_fd,0) = 0x3007;
@@ -2145,14 +2138,14 @@ void intif_request_accinfo( int u_fd, int aid, int group_lv, char* query ) {
 void intif_parse_MessageToFD(int fd) {
 	int u_fd = RFIFOL(fd,4);
 
-	if( session[u_fd] && session[u_fd]->session_data ) {
+	if( sockt->session[u_fd] && sockt->session[u_fd]->session_data ) {
 		int aid = RFIFOL(fd,8);
-		struct map_session_data * sd = session[u_fd]->session_data;
+		struct map_session_data * sd = sockt->session[u_fd]->session_data;
 		/* matching e.g. previous fd owner didn't dc during request or is still the same */
 		if( sd && sd->bl.id == aid ) {
 			char msg[512];
 			safestrncpy(msg, (char*)RFIFOP(fd,12), RFIFOW(fd,2) - 12);
-			clif->message(u_fd,msg);
+			clif->messagecolor_self(u_fd, COLOR_DEFAULT ,msg);
 		}
 
 	}
@@ -2175,7 +2168,7 @@ void intif_itembound_req(int char_id,int aid,int guild_id) {
 		gstor->lock = 1; //Lock for retrieval process
 #endif
 }
- 
+
 //3856
 void intif_parse_Itembound_ack(int fd) {
 #ifdef GP_BOUND_ITEMS
@@ -2251,11 +2244,11 @@ int intif_parse(int fd)
 		case 0x383f: intif->pGuildEmblem(fd); break;
 		case 0x3840: intif->pGuildCastleDataLoad(fd); break;
 		case 0x3843: intif->pGuildMasterChanged(fd); break;
-			
+
 		//Quest system
 		case 0x3860: intif->pQuestLog(fd); break;
 		case 0x3861: intif->pQuestSave(fd); break;
-			
+
 		// Mail System
 		case 0x3848: intif->pMailInboxReceived(fd); break;
 		case 0x3849: intif->pMailNew(fd); break;
@@ -2286,7 +2279,7 @@ int intif_parse(int fd)
 		case 0x387c: intif->pElementalReceived(fd); break;
 		case 0x387d: intif->pElementalDeleted(fd); break;
 		case 0x387e: intif->pElementalSaved(fd); break;
-			
+
 		case 0x3880: intif->pCreatePet(fd); break;
 		case 0x3881: intif->pRecvPetData(fd); break;
 		case 0x3882: intif->pSavePetOk(fd); break;
@@ -2327,7 +2320,7 @@ void intif_defaults(void) {
 
 	/* */
 	memcpy(intif->packet_len_table,&packet_len_table,sizeof(intif->packet_len_table));
-	
+
 	/* funcs */
 	intif->parse = intif_parse;
 	intif->create_pet = intif_create_pet;

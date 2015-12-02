@@ -383,7 +383,7 @@ airplane,221,158,2	script	Pilot#airplane	4_M_EIN_SOLDIER,{
 		mes "......";
 		mes "No one ever really";
 		mes "comes into this room.";
-		mes "And the captain IS a reindeer.^FFFFFF ^000000 I could just strip to my boxers.";
+		mes "And the captain IS a reindeer. I could just strip to my boxers.";
 		next;
 		emotion e_omg;
 		mes "[Pilot]";
@@ -650,12 +650,12 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 
 airplane_01,243,73,0	script	#AirshipWarp-3	WARPNPC,1,1,{
 	end;
-	
+
 OnTouch:
 	switch ($@airplanelocation2) {
 	case 0: warp "ra_fild12",292,204; end;
 	case 1:
-		if(checkre(0))
+		if (RENEWAL)
 			warp "izlude",200,73;
 		else
 			warp "izlude",200,56;
@@ -668,7 +668,7 @@ OnHide:
 	specialeffect EF_BASH;
 	disablenpc strnpcinfo(0);
 	end;
-	
+
 OnUnhide:
 	enablenpc strnpcinfo(0);
 	specialeffect EF_SUMMONSLAVE;
@@ -1135,18 +1135,18 @@ airplane_01,32,61,4	script	Nils#ein	1_M_03,1,1,{
 		mes .@line1_1$[.@wordtest];
 		mes .@line1_2$[.@wordtest];
 		mes .@line1_3$[.@wordtest];
-		.@start_time = gettime(3)*60*60 + gettime(2)*60 + gettime(1);
+		.@start_time = gettime(GETTIME_HOUR)*60*60 + gettime(GETTIME_MINUTE)*60 + gettime(GETTIME_SECOND);
 		next;
 		input .@save1$;
-		.@end_time = gettime(3)*60*60 + gettime(2)*60 + gettime(1);
+		.@end_time = gettime(GETTIME_HOUR)*60*60 + gettime(GETTIME_MINUTE)*60 + gettime(GETTIME_SECOND);
 		.@total_time = .@end_time - .@start_time;
 		mes "[Nils]";
 		mes .@line2_1$[.@wordtest];
 		mes .@line2_2$[.@wordtest];
-		.@start_time = gettime(3)*60*60 + gettime(2)*60 + gettime(1);
+		.@start_time = gettime(GETTIME_HOUR)*60*60 + gettime(GETTIME_MINUTE)*60 + gettime(GETTIME_SECOND);
 		next;
 		input .@save2$;
-		.@end_time = gettime(3)*60*60 + gettime(2)*60 + gettime(1);
+		.@end_time = gettime(GETTIME_HOUR)*60*60 + gettime(GETTIME_MINUTE)*60 + gettime(GETTIME_SECOND);
 		.@total_time = .@total_time + (.@start_time - .@end_time);
 		.@tasoo = (.@letters[.@wordtest] / .@total_time) * 6;
 		if ((.@save1$ == .@word1$[.@wordtest]) && (.@save2$ == .@word2$[.@wordtest])) {

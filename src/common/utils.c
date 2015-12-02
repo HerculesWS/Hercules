@@ -6,33 +6,30 @@
 
 #include "utils.h"
 
-#include <math.h> // floor()
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h> // cache purposes [Ind/Hercules]
-
-#include "../common/cbasetypes.h"
-#include "../common/core.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/mmo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
 
 #ifdef WIN32
-#	include "../common/winapi.h"
+#	include "common/winapi.h"
 #	ifndef F_OK
 #		define F_OK   0x0
 #	endif  /* F_OK */
 #else
 #	include <dirent.h>
-#	include <sys/stat.h>
 #	include <unistd.h>
 #endif
 
+#include <math.h> // floor()
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h> // cache purposes [Ind/Hercules]
+
 struct HCache_interface HCache_s;
+struct HCache_interface *HCache;
 
 /// Dumps given buffer into file pointed to by a handle.
 void WriteDump(FILE* fp, const void* buffer, size_t length)
@@ -63,7 +60,6 @@ void WriteDump(FILE* fp, const void* buffer, size_t length)
 	}
 }
 
-
 /// Dumps given buffer on the console.
 void ShowDump(const void *buffer, size_t length) {
 	size_t i;
@@ -88,7 +84,6 @@ void ShowDump(const void *buffer, size_t length) {
 		ShowDebug("%03"PRIXS" %-48s  %-16s\n", i/16, hex, ascii);
 	}
 }
-
 
 #ifdef WIN32
 
@@ -140,7 +135,6 @@ void findfile(const char *p, const char *pat, void (func)(const char*))
 				func( tmppath );
 			}
 
-
 			if( FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
 			{
 				findfile(tmppath, pat, func);
@@ -158,7 +152,7 @@ static char* checkpath(char *path, const char*srcpath)
 {
 	// just make sure the char*path is not const
 	char *p=path;
-	
+
 	if(NULL!=path && NULL!=srcpath) {
 		while(*srcpath) {
 			if (*srcpath=='\\') {
@@ -351,7 +345,6 @@ const char* timestamp2string(char* str, size_t size, time_t timestamp, const cha
 	memset(str + len, '\0', size - len);
 	return str;
 }
-
 
 /* [Ind/Hercules] Caching */
 bool HCache_check(const char *file)

@@ -1235,7 +1235,7 @@ tur_dun01,165,29,4	script	Sailor#tur2	4_M_SEAMAN,{
 		mes "I certainly hope you've found what you were looking for. Alright, I guess there's always a time for an adventurer to return home...";
 		next;
 		mes "^3355FF* Choo Choo *^000000";
-		if (checkre(0))
+		if (RENEWAL)
 			warp "alberta",238,112;
 		else
 			warp "alberta",241,115;
@@ -2378,7 +2378,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		next;
 		ep13_2_hiki = 13;
 		completequest 10089;
-		getexp (checkre(3))?8000:80000,0;
+		getexp RENEWAL_EXP?8000:80000,0;
 		mes "[Iromo]";
 		mes "The world is big, there are many things...";
 		mes "I have not seen yet. Yes... I want to...";
@@ -2506,7 +2506,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 			next;
 			ep13_2_hiki = 11;
 			changequest 10087,10088;
-			getexp (checkre(3))?6700:67000,0;
+			getexp RENEWAL_EXP?6700:67000,0;
 			mes "[Iromo]";
 			mes "Nevermind... it's not unexpected...";
 			mes "To go on an adventure with my friends,";
@@ -2574,7 +2574,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		next;
 		ep13_2_hiki = 10;
 		changequest 10086,10087;
-		getexp (checkre(3))?5700:57000,0;
+		getexp RENEWAL_EXP?5700:57000,0;
 		mes "[Iromo]";
 		mes "...I'm not in a good mood, get out...";
 		close;
@@ -2631,7 +2631,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 			next;
 			ep13_2_hiki = 8;
 			changequest 10084,10085;
-			getexp (checkre(3))?4700:47000,0;
+			getexp RENEWAL_EXP?4700:47000,0;
 			mes "[Iromo]";
 			mes "Thank you for being helpful.";
 			mes "But, no thanks.";
@@ -2687,7 +2687,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		delitem 501,1; //Red_Potion
 		ep13_2_hiki = 7;
 		changequest 10083,10084;
-		getexp (checkre(3))?3750:37500,0;
+		getexp RENEWAL_EXP?3750:37500,0;
 		mes "[Iromo]";
 		mes "I don't want to see the cat again.";
 		mes "If I go out, I will see him. It is scary.";

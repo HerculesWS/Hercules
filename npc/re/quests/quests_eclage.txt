@@ -1,15 +1,15 @@
-//===== Hercules Script ====================================== 
+//===== Hercules Script ======================================
 //= Eclage Quests
-//===== By: ================================================== 
+//===== By: ==================================================
 //= Dastgir
-//===== Current Version: ===================================== 
+//===== Current Version: =====================================
 //= 1.0
-//===== Description: ========================================= 
+//===== Description: =========================================
 //= Quests of Eclage
 //= Contains All Quest of Eclage
-//===== Additional Comments: ================================= 
+//===== Additional Comments: =================================
 //= 1.0 Converted from the official Aegis script. [Dastgir]
-//============================================================ 
+//============================================================
 
 // Teleport Cats
 //============================================================
@@ -63,9 +63,9 @@ ecl_fild01,118,311,4	script	Teleport Cat No.1#1	4_M_BOSSCAT,{
 	}
 	warp .maps$[.@mindex[.@i]],.x[.@mindex[.@i]],.y[.@mindex[.@i]];
 	end;
-	
+
 OnInit:
-	setarray .maps$,"bif_fild02","ecl_fild01","spl_fild02","mid_camp","ma_fild02","dic_fild01";	//Map Names	//2,4,8,16,32,64
+	setarray .maps$,"bif_fild02","ecl_fild01","spl_fild02","mid_camp","man_fild02","dic_fild01";	//Map Names	//2,4,8,16,32,64
 	setarray .x,291,116,51,180,133,159;	//X-Co-ordinate of Maps
 	setarray .y,323,309,240,247,47,264;	//Y-Co-ordinates of Map
 	setarray .descript$,"Entrace to Mora","Near Eclage","Near Splendide","Midgard Allied Forces Post","Manuk Field","Near El Dicastes";
@@ -87,9 +87,9 @@ dic_fild01,161,266,4	duplicate(Teleport Cat No.1#1)	Teleport Cat No.6#6	4_M_BOSS
 
 // Eclage's Entrance
 //============================================================
-ecl_fild01,97,322,0	script	#ep14_2Entrance	45,3,3,{
+ecl_fild01,97,322,0	script	#ep14_2Entrance	WARPNPC,3,3,{
 	end;
-	
+
 OnTouch:
 	if (ep14_2_oliver < 3) {
 		mes "[Security Guard]";
@@ -464,7 +464,7 @@ ecl_fild01,88,315,5	script	Tourist#ep14_2f12	4_WHITE_COW,{
 
 // Oliver Wolf Hood(Dreaming Time)
 //============================================================
-eclage,101,29,0	script	#ep14_2Bridge	139,3,3,{
+eclage,101,29,0	script	#ep14_2Bridge	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	if (BaseLevel >= 120) {
@@ -552,7 +552,6 @@ eclage,102,32,4	script	Fairy Carpenter#ep14_2	4_M_FAIRYKID2,{
 				ep14_2_oliver = 4;
 				setquest 11312;
 				close;
-				
 			case 3:
 				mes "[Fairy Carpenter]";
 				mes "You can't get past here until it's repaired, so please be careful.";
@@ -792,7 +791,6 @@ eclage,102,32,4	script	Fairy Carpenter#ep14_2	4_M_FAIRYKID2,{
 		ep14_2_oliver = 7;
 		changequest 11314,11315;
 		close;
-		
 	}
 	else if (ep14_2_oliver == 7) {
 		mes "[Carpenter Fon]";
@@ -2310,9 +2308,9 @@ ecl_in01,70,88,4	script	Sack Merchant#ep14_2	4_M_MERCAT1,{
 	close;
 }
 
-eclage,292,265,0	script	#ep14_2Yube Entrance	45,2,2,{
+eclage,292,265,0	script	#ep14_2Yube Entrance	WARPNPC,2,2,{
 	end;
-	
+
 OnTouch:
 	if (ep14_2_oliver < 15) {
 		mes "- Looks like the door is locked. -";
@@ -2791,7 +2789,7 @@ ecl_in04,226,231,4	script	Du Lian#ep14_2in2	4_M_REDMAN,{
 		emotion e_dots,0,"Alp Ocart#ep14_2in2";
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem Oliver_Wolf_Hood,1; //Oliver_Wolf_Hood
+		getitem C_Oliver_Wolf_Hood,1;
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -2933,7 +2931,7 @@ ecl_in04,224,234,4	script	Mark Esha#ep14_2in2	4_M_BLUEMAN,{
 		emotion e_dots,0,"Alp Ocart#ep14_2in2";
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem Oliver_Wolf_Hood,1; //Oliver_Wolf_Hood
+		getitem C_Oliver_Wolf_Hood,1;
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -3078,7 +3076,7 @@ ecl_in04,223,234,4	script	Maggi Steen#ep14_2in2	4_F_PINKWOMAN,{
 		emotion e_dots,0,"Alp Ocart#ep14_2in2";
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem Oliver_Wolf_Hood,1; //Oliver_Wolf_Hood
+		getitem C_Oliver_Wolf_Hood,1;
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -3214,7 +3212,7 @@ ecl_in04,223,230,4	script	Alp Ocart#ep14_2in2	4_M_BLACKMAN,{
 		emotion e_dots;
 		cutin "bu_alp2",2;
 		ep14_2_oliver = 30;
-		getitem Oliver_Wolf_Hood,1; //Oliver_Wolf_Hood
+		getitem C_Oliver_Wolf_Hood,1;
 		completequest 11337;
 		close2;
 		cutin "",255;
@@ -3326,7 +3324,6 @@ eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 						mes "Oh, no, no. I am sure you are really busy. I'm sorry to have asked such a favor.";
 						ep14_2_big =  1;
 						close;
-						
 					case 2:
 						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "Sure. It's not a big deal.";
@@ -4132,11 +4129,10 @@ ecl_in02,149,117,4	script	Wuhuru#eclbig	4_M_FAIRYFREAK,{
 		mes "......";
 		close;
 	}
-end;
+	end;
 }
 
-
-eclage,200,272,4	script	Masione#eclbig	437,{
+eclage,200,272,4	script	Masione#eclbig	4_F_FAIRYKID2,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight)<2000) {
 		mes "- Stop Here!! -";
 		mes "- You have too many items. -";
@@ -4285,7 +4281,6 @@ eclage,163,228,4	script	Goatie#eclbig	4_F_FAIRYKID3,{
 	}
 }
 
-
 eclage,170,195,4	script	Svery#eclbig	4_M_FAIRYKID2,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
 		mes "- Stop Here!! -";
@@ -4412,7 +4407,6 @@ eclage,170,195,4	script	Svery#eclbig	4_M_FAIRYKID2,{
 	close;
 }
 
-
 eclage,126,151,4	script	Pompe#eclbig	4_M_FAIRYKID3,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
 		mes "- Stop Here!! -";
@@ -4502,7 +4496,6 @@ eclage,126,151,4	script	Pompe#eclbig	4_M_FAIRYKID3,{
 	changequest 14135,14136;
 	close;
 }
-
 
 ecl_fild01,70,285,4	script	Giranni#eclbig	4_F_FAIRY2,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
@@ -4608,7 +4601,7 @@ ecl_fild01,70,285,4	script	Giranni#eclbig	4_F_FAIRY2,{
 			next;
 			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hmm? Where did it go? Did I drop it on the way?";
-			close;	
+			close;
 		}
 		mes "- You describe the corpse that you found in the field and show the piece of wing -";
 		next;
@@ -4700,7 +4693,6 @@ ecl_fild01,70,285,4	script	Giranni#eclbig	4_F_FAIRY2,{
 	mes "Where did he go...?";
 	close;
 }
-
 
 ecl_fild01,269,165,4	script	A Laphine corpse#eclbig	4_FAIRYDEADLEAF,{
 	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
@@ -4996,8 +4988,7 @@ ecl_in01,50,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig03	4_M_FAI
 ecl_in01,52,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig04	4_M_FAIRYKID
 ecl_in01,54,104,4	duplicate(Choir member#eclbig01)	Choir member#eclbig05	4_M_FAIRYKID
 
-
-// Mystery Burglary Quest 
+// Mystery Burglary Quest
 //============================================================
 eclage,156,51,6	script	#hidden_eclage	HIDDEN_NPC,3,3,{
 	end;
@@ -5037,7 +5028,7 @@ OnTouch:
 				mes "It's probably nothing.";
 				mes "I should just go on my way~";
 				close;
-		}	
+		}
 	}
 }
 
@@ -7538,7 +7529,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 									mes "I'll think about it more and";
 									mes "figure out who the robber is...";
 									close;
-								}		
+								}
 							case 2:
 								mes "[" + strcharinfo(PC_NAME) + "]";
 								mes "I... I guess";
@@ -7882,7 +7873,7 @@ ecl_in04,208,194,3	script	Daughter Luen#eclage2	4_F_FAIRYKID2,{
 										ep14_2_detect = 10;
 										break;
 								}
-							break;	
+							break;
 						}
 						break;
 					case 6:
@@ -8829,7 +8820,7 @@ OnTouch:
 	}
 }
 
-ecl_in01,79,84,0	script	#kusa	139,3,3,{
+ecl_in01,79,84,0	script	#kusa	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	if (questprogress(4262) == 1) {
@@ -8862,7 +8853,7 @@ OnTouch:
 	}
 }
 
-ecl_in01,1,1,0	script	#call_ne	139,{
+ecl_in01,1,1,0	script	#call_ne	HIDDEN_WARP_NPC,{
 	end;
 OnInit:
 	initnpctimer;
@@ -8876,7 +8867,7 @@ OnCall:
 	end;
 }
 
-ecl_in01,2,2,0	script	#call_kusa	139,{
+ecl_in01,2,2,0	script	#call_kusa	HIDDEN_WARP_NPC,{
 	end;
 OnInit:
 	initnpctimer;
@@ -9449,7 +9440,6 @@ ecl_in01,82,79,4	script	Magazine#02	HIDDEN_NPC,{
 	close;
 }
 
-
 // Light and Darkness
 //============================================================
 ecl_in02,98,32,3	script	Eclage Guard#tl1b	4_M_FAIRYSOLDIER2,{
@@ -9467,9 +9457,9 @@ ecl_in02,98,32,3	script	Eclage Guard#tl1b	4_M_FAIRYSOLDIER2,{
 	close;
 }
 
-ecl_in02,133,115,0	script	#pa0829Prison Guard	139,3,3,{
+ecl_in02,133,115,0	script	#pa0829Prison Guard	HIDDEN_WARP_NPC,3,3,{
 	end;
-	
+
 OnTouch:
 	if (ep14_2_etran < 2) {
 		mes "[Clever]";
@@ -10226,7 +10216,6 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 				mes "Oh... I guess it was too much to ask for. That's too bad then.";
 				ep14_2_etran = 12;
 				close;
-				
 			case 2:
 				mes "[Hiel]";
 				mes "Wow wow! Thank you so much! I'll return the favor by operating it together when the experiments are complete! In the meantime, I'll start preparing for material combination!";
@@ -10289,7 +10278,6 @@ ecl_in04,109,215,3	script	Hiel#pa0829	4_M_FAIRYSCHOLAR,{
 				mes "[Hiel]";
 				mes "How ruthless... Saying that he won't give them after showing them to me.";
 				close;
-				
 			case 2:
 				if ((countitem(Dark_Debris)) && (countitem(Yellow_Gemstone) > 1) && (countitem(Red_Gemstone) > 1) && (countitem(Blue_Gemstone) > 1)) {
 					mes "[Hiel]";
@@ -11311,7 +11299,7 @@ ecl_tdun01,60,56,4	script	#pa0829EtranInterio	HIDDEN_NPC,{
 	close;
 }
 
-ecl_tdun01,60,56,0	script	#pa0829EtranInterioTouch	139,4,4,{
+ecl_tdun01,60,56,0	script	#pa0829EtranInterioTouch	HIDDEN_WARP_NPC,4,4,{
 	end;
 OnTouch:
 	disable_items;
@@ -11338,7 +11326,7 @@ OnTouch:
 	end;
 }
 
-ecl_fild01,183,94,0	script	#pa0829EtranExterioTouch	139,3,3,{
+ecl_fild01,183,94,0	script	#pa0829EtranExterioTouch	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11465,7 +11453,7 @@ OnTouch:
 	end;
 }
 
-eclage,291,301,0	script	#pa0829RobertExteriTouch	139,3,3,{
+eclage,291,301,0	script	#pa0829RobertExteriTouch	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11507,7 +11495,7 @@ OnTouch:
 	end;
 }
 
-ecl_fild01,110,240,0	script	#pa0829Reactor1	139,3,3,{
+ecl_fild01,110,240,0	script	#pa0829Reactor1	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11543,9 +11531,9 @@ OnTouch:
 	}
 	end;
 }
-ecl_fild01,234,266,0	duplicate(#pa0829Reactor1)	#pa0829Reactor6	139,3,3
+ecl_fild01,234,266,0	duplicate(#pa0829Reactor1)	#pa0829Reactor6	HIDDEN_WARP_NPC,3,3
 
-ecl_fild01,110,198,0	script	#pa0829Reactor2	139,3,3,{
+ecl_fild01,110,198,0	script	#pa0829Reactor2	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11572,7 +11560,6 @@ OnTouch:
 				next;
 				mes "^000099The reactor was activated, but the dimension does not seem to be related to Etran.^000000";
 				close;
-			
 			case 2:
 				mes "[????]";
 				mes "I... I did it. The restricted area!! Absolute zero ductility!!!!!! And they stole it from me. My gravitational pull of 300 grams.";
@@ -11582,7 +11569,6 @@ OnTouch:
 				next;
 				mes "^000099The reactor was activated, but the dimension does not seem to be related to Etran.^000000";
 				close;
-			
 			case 3:
 				mes "[????]";
 				mes "Is this-...(Static static) Is this guy really in the right mind?";
@@ -11594,9 +11580,9 @@ OnTouch:
 	}
 end;
 }
-ecl_fild01,179,125,0	duplicate(#pa0829Reactor2)	#pa0829Reactor7	139,3,3
+ecl_fild01,179,125,0	duplicate(#pa0829Reactor2)	#pa0829Reactor7	HIDDEN_WARP_NPC,3,3
 
-ecl_fild01,165,158,0	script	#pa0829Reactor3	139,3,3,{
+ecl_fild01,165,158,0	script	#pa0829Reactor3	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11619,14 +11605,12 @@ OnTouch:
 				next;
 				mes "^000099The reactor was activated, but the dimension does not seem to be related to Etran. It's cold somehow.^000000";
 				close;
-				
 			case 2:
 				mes "[????]";
 				mes "Human!! Human Chicken!!!!!!!!";
 				next;
 				mes "^000099The reactor was activated, but the dimension does not seem to be related to Etran. It smells delicious somehow.^000000";
 				close;
-			
 			case 3:
 				mes "[????]";
 				mes "You don't know why I'm upset, do you?";
@@ -11641,11 +11625,11 @@ OnTouch:
 				close;
 		}
 	}
-end;
+	end;
 }
-ecl_fild01,179,179,0	duplicate(#pa0829Reactor3)	#pa0829Reactor8	139,3,3
+ecl_fild01,179,179,0	duplicate(#pa0829Reactor3)	#pa0829Reactor8	HIDDEN_WARP_NPC,3,3
 
-ecl_fild01,237,166,0	script	#pa0829Reactor4	139,3,3,{
+ecl_fild01,237,166,0	script	#pa0829Reactor4	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11665,14 +11649,12 @@ OnTouch:
 				next;
 				mes "^000099The reactor was activated but... For some reason, I'm getting lonely.^000000";
 				close;
-			
 			case 2:
 				mes "[???]";
 				mes "3..8..12..33...31..The last number is erased...";
 				next;
 				mes "^000099How intriguing...^000000";
 				close;
-			
 			case 3:
 				mes "[???]";
 				mes "I'm going insane.";
@@ -11687,9 +11669,9 @@ OnTouch:
 	}
 end;
 }
-ecl_fild01,187,243,0	duplicate(#pa0829Reactor4)	#pa0829Reactor9	139,3,3
+ecl_fild01,187,243,0	duplicate(#pa0829Reactor4)	#pa0829Reactor9	HIDDEN_WARP_NPC,3,3
 
-ecl_fild01,230,206,0	script	#pa0829Reactor5	139,3,3,{
+ecl_fild01,230,206,0	script	#pa0829Reactor5	HIDDEN_WARP_NPC,3,3,{
 	end;
 OnTouch:
 	disable_items;
@@ -11710,14 +11692,12 @@ OnTouch:
 				next;
 				mes "^000099The reactor was activated. Somehow it felt like I had to do whatever they said in it.^000000";
 				close;
-			
 			case 2:
 				mes "[???]";
 				mes "3..8..12..33...31..The last number is erased...";
 				next;
 				mes "^000099How intriguing...^000000";
 				close;
-			
 			case 3:
 				mes "[????]";
 				mes "Baby, you don't know why I'm upset, do you?";
@@ -11734,7 +11714,7 @@ OnTouch:
 	}
 end;
 }
-ecl_fild01,159,278,0	duplicate(#pa0829Reactor5)	#pa0829Reactor10	139,3,3
+ecl_fild01,159,278,0	duplicate(#pa0829Reactor5)	#pa0829Reactor10	HIDDEN_WARP_NPC,3,3
 
 eclage,155,91,4	script	#pa0829Hiel's Door10	2_BOARD2,3,3,{
 	mes "[Notice]";
@@ -11953,14 +11933,12 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				next;
 				mes "^000099It's been a while since I felt that about myself. Yes, indeed... This machine is getting on my nerves.^000000";
 				close;
-			
 			case 2:
 				mes "[???]";
 				mes "CHTTTTSTATIC~~~~ ANG!?~~ CHTTTTT ~ oh my shoulder!!";
 				next;
 				mes "^000099Oh, I'm sorry. I'm going to leave this channel.^000000";
 				close;
-			
 			case 3:
 				mes "^000099Etran's sad legend^000000";
 				next;
@@ -12014,7 +11992,6 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-				
 			case 4:
 				mes "^000099What if Etran and Robert were the priosoner and the guard?^000000";
 				next;
@@ -12032,7 +12009,6 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 5:
 				mes "^000099Etran and Robert were put to work as cat merchants.^000000";
 				next;
@@ -12074,7 +12050,6 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 6:
 				mes "^000099Etran and Robert were placed in a Flight machine.^000000";
 				next;
@@ -12127,7 +12102,6 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 7:
 				mes "^000099Iron Chef Robert^000000";
 				next;
@@ -12159,7 +12133,6 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 8:
 				mes "^000099Robert actually likes beer.^000000";
 				next;
@@ -12206,7 +12179,6 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 9:
 				mes "^000099Robert the cook^000000";
 				next;
@@ -12244,7 +12216,6 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 10:
 				mes "^000099Childhood friends, Etran and Robert^000000";
 				next;
@@ -12292,19 +12263,16 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				close2;
 				cutin "",255;
 				end;
-			
 			case 11:
 				mes "^000099In boiling water~ 3 minutes~ ... Static static^000000";
 				next;
 				mes "^0000993 minutes in boiling water... What after that. Does it mean it will die 3 minutes in boiling water? Do I pour the boiling water over a monster or something?^000000";
 				close;
-				
 			case 12:
 				mes "^000099Houston~ Houston~ This is CHTTTCHTTT~ We see a large tower and a tree. It seems like there are life forms here on this planet as well~ STATIC~ ^000000";
 				next;
 				mes "^000099Some desperate voices are heard. Not sure what the words, planets and life forms, are referring to.^000000";
 				close;
-			
 			default:
 				mes "^000099There's too much static. Try adjusting the frequency. ^000000";
 				close;
@@ -12336,18 +12304,15 @@ ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 					mes "[Fili]";
 					mes "What is Eclage like? It's such a nice place.";
 					close;
-					
 				case 2:
 					mes "[Fili]";
 					mes "People wouldn't hate or hold each other at knife point if their hearts are filled with love for flowers and the earth.";
 					close;
-				
 				case 3:
 					mes "[Fili]";
 					mes "You should avoid going into the tower. It's dangerous. We can't do much for the ones who have already entered, though.";
 					close;
 			}
-			
 			case 2:
 				if (questprogress(13059,PLAYTIME) == 2) {
 					mes "[Fili]";
@@ -12365,7 +12330,7 @@ ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 						mes "[Fili]";
 						mes "There are four in the work group. Don't forget to tell everyone.";
 						close;
-					} 
+					}
 					mes "[Fili]";
 					mes "Thanks. Can you hear the earth singing? The sound of flowers and trees dancing in the wind. You'll hear it someday.";
 					emotion e_lv;
@@ -12544,7 +12509,7 @@ ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 			mes "[Fili]";
 			mes "I think their work for the field is finished for the day. By the way, ^FF0000there's another work. Ask about it if you're interested.^000000";
 			erasequest 13050;
-			ep14_2_nines = 2; 
+			ep14_2_nines = 2;
 			getitem Splendide_Coin,1; //Splendide_Coin
 			getexp 300000,300000;
 			close;
@@ -12588,7 +12553,7 @@ ecl_fild01,190,93,5	script	Fili#1	4_M_FAIRYANG,1,1,{
 					close2;
 			}
 		}
-	} 
+	}
 	if (ep14_2_oliver > 4) {
 		mes "[Fili]";
 		mes "Look at this beautiful field filled with little blades of grass and twigs breathing!";
@@ -12677,7 +12642,7 @@ ecl_fild01,83,263,5	script	Watering Laphine#1	4_M_FAIRYKID3,{
 			mes "I think this is enough for the day. I have to take a break and draw water, too. Hehe~!";
 			close;
 		}
-		else if ((questprogress(13050) == 1) && (questprogress(13052) == 1)) { 
+		else if ((questprogress(13050) == 1) && (questprogress(13052) == 1)) {
 			mes "[Watering Laphine]";
 			mes "I'll water these dying flowers and grasses again. This brings them back to life! Hehe~!";
 			erasequest 13052;
@@ -12691,7 +12656,6 @@ ecl_fild01,83,263,5	script	Watering Laphine#1	4_M_FAIRYKID3,{
 		mes "[Watering Laphine]";
 		mes "I'm sure Eclage needs a Laphine like me! Hehe~!";
 		close;
-		
 	}
 	else if (ep14_2_nines == 1){
 		if ((questprogress(13050) == 1) && (questprogress(13052) == 1)) {
@@ -12708,7 +12672,6 @@ ecl_fild01,83,263,5	script	Watering Laphine#1	4_M_FAIRYKID3,{
 		mes "[Watering Laphine]";
 		mes "Hehe~! Now that I'm done watering, I should wait for the great Fili.";
 		close;
-		
 	}
 	mes "[Watering Laphine]";
 	mes "It's my job to water the earth.";
@@ -12727,7 +12690,7 @@ ecl_fild01,163,196,5	script	Dancing Laphine#1	4_F_FAIRYKID3,{
 			mes "I would love to see the great Fili next time...";
 			close;
 		}
-		if ((questprogress(13050) == 1) && (questprogress(13053) == 1)) { 
+		if ((questprogress(13050) == 1) && (questprogress(13053) == 1)) {
 			mes "[Dancing Laphine]";
 			mes "Ah, it's you again! You're so insensitive. Anyway, you're here to tell me to start working, right? I see, I see. You can go now.";
 			emotion e_pif;
@@ -12860,13 +12823,13 @@ ecl_fild01,237,181,5	script	Cute Laphine#1	4_M_FAIRYKID5,{
 
 ecl_tdun02,99,63,5	script	Rosi#No.1	4_F_HUWOMAN,1,1,{
 	end;
-	
+
 OnInit:
 	if (atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) ) > 1){
 		disablenpc strnpcinfo(0);
 	}
 	end;
-	
+
 OnTouch:
 	if (ep14_2_nines < 2) {
 		mes "[Rosi]";
@@ -12902,7 +12865,6 @@ OnTouch:
 		mes "[Rosi]";
 		mes "This tower is very quiet yet mysterious. It's definitely something that adventurers would love, right?";
 		close;
-		
 	}
 	else if (ep14_2_nines == 2) {
 		if ((questprogress(13055) == 1) && (questprogress(13056) == 1)) {
@@ -12952,7 +12914,7 @@ ecl_tdun02,22,36,5	duplicate(Rosi#No.1)	Rosi#No.3	4_F_HUWOMAN,1,1
 
 ecl_tdun01,11,62,5	script	Euncheong#No.1	4_M_HUBOY,1,1,{
 	end;
-	
+
 OnInit:
 	if (atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) ) > 1){
 		disablenpc strnpcinfo(0);
@@ -13125,7 +13087,6 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 				close2;
 				cutin "",255;
 				end;
-				
 			case 2:
 				if (questprogress(13062,PLAYTIME) == 1) {
 					cutin "nines02",2;
@@ -13218,7 +13179,6 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 				close2;
 				cutin "",255;
 				end;
-				
 			case 3:
 				if (questprogress(13064,PLAYTIME) == 1) {
 					cutin "nines02",2;
@@ -13285,7 +13245,6 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 				close2;
 				cutin "",255;
 				end;
-				
 			case 4:
 				if (questprogress(13066,PLAYTIME) == 1) {
 					cutin "nines03",2;
@@ -13411,7 +13370,7 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 				close2;
 				cutin "",255;
 				end;
-			} 
+			}
 			cutin "nines03",2;
 			mes "[New Oz]";
 			mes "Don't worry. I'm pretty much done writing a song. I'm almost done with the lyrics as well as the melody.";
@@ -13421,7 +13380,6 @@ ecl_tdun03,68,80,3	script	New Oz#1	4_M_NEWOZ,1,1,{
 			close2;
 			cutin "",255;
 			end;
-			
 		}
 		cutin "nines02",2;
 		mes "[New Oz]";
@@ -14124,9 +14082,9 @@ ecl_tdun04,26,39,1	script	Professor Worm#worm	4_M_PROFESSORWORM,{
 	}
 }
 
-ecl_tdun04,21,41,0	script	#pf	139,2,2,{
+ecl_tdun04,21,41,0	script	#pf	HIDDEN_WARP_NPC,2,2,{
 	end;
-	
+
 OnTouch:
 .@pro = rand(1,100);
 if (ep14_2_profe == 1) {
@@ -14173,9 +14131,9 @@ if (ep14_2_profe == 1) {
 	}
 }
 
-ecl_tdun04,37,21,0	duplicate(#pf)	#pf3	139,2,2
+ecl_tdun04,37,21,0	duplicate(#pf)	#pf3	HIDDEN_WARP_NPC,2,2
 
-ecl_tdun04,39,27,0	script	#prf1	139,2,2,{
+ecl_tdun04,39,27,0	script	#prf1	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1218) == 0 && ep14_2_profe==4) {
@@ -14209,10 +14167,9 @@ OnTouch:
 		mes "But why do I have to remain in a place like this, too?";
 		close;
 	}
-	
 }
 
-ecl_tdun04,35,31,0	script	#prf2	139,2,2,{
+ecl_tdun04,35,31,0	script	#prf2	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1219) == 0 && ep14_2_profe==4) {
@@ -14251,10 +14208,9 @@ OnTouch:
 		mes "I wonder if I'll forget even my name... How it worries me...";
 		close;
 	}
-	
 }
 
-ecl_tdun04,28,43,0	script	#prf3	139,2,2,{
+ecl_tdun04,28,43,0	script	#prf3	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1220) == 0 && ep14_2_profe==4) {
@@ -14306,7 +14262,7 @@ OnTouch:
 	}
 }
 
-ecl_tdun04,39,31,0	script	#prf4	139,2,2,{
+ecl_tdun04,39,31,0	script	#prf4	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1221) == 0 && ep14_2_profe==4) {
@@ -14340,7 +14296,7 @@ OnTouch:
 	}
 }
 
-ecl_tdun04,24,31,0	script	#prf5	139,2,2,{
+ecl_tdun04,24,31,0	script	#prf5	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
 	if (questprogress(1222) == 0 && ep14_2_profe == 4 ) {
@@ -14378,7 +14334,7 @@ OnTouch:
 		next;
 		mes "[Wall Note 5]";
 		mes "Monsters, I have to create more monsters to protect me. As many as I could possibly create!";
-		close;	
+		close;
 	}
 }
 
@@ -14608,7 +14564,7 @@ ecl_fild01,173,95,7	script	Diary Frog No. 30#worm	4_FROG,{
 		mes "If you come back to late, all you'll hear are my moans and groans.";
 		changequest 1226,1227;
 		ep14_2_profe = 10;
-		close;	
+		close;
 	}
 	else if (ep14_2_profe == 10) {
 		if (countitem(Star_Shape_Mushroom) < 10) {
@@ -14672,7 +14628,7 @@ ecl_fild01,173,95,7	script	Diary Frog No. 30#worm	4_FROG,{
 		mes "I'm so mad, I oughta throw this out!";
 		next;
 		mes "It seems that a continued search for diary recordings would be meaningless. I should go back to Professor Worm.";
-		close;	
+		close;
 	}
 }
 
@@ -14797,7 +14753,6 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 				mes "Let's talk to other travelers.";
 				setquest 7411;
 				break;
-			
 			case 2:
 				mes "[Fome]";
 				mes "The main attraction of Eclage?";
@@ -14855,7 +14810,6 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 						hideonnpc "Eclage Guard#tl01";
 						warp "ecl_in03",244,89;
 						end;
-						
 					case 2:
 						mes "[Eclage Guard]";
 						mes "Oh, is that right?";
@@ -14875,7 +14829,6 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 						cutin "",255;
 						hideonnpc "Eclage Guard#tl01";
 						end;
-					
 				}
 			}
 			mes "[Fome]";
@@ -14948,7 +14901,6 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 			mes "What Fome said is interesting.";
 			mes "A distrusted king...should I listen to what other Laphines say about it?";
 			close;
-			
 		}
 		mes "[Fome]";
 		mes "I'm sure there is something.";
@@ -14959,7 +14911,7 @@ ecl_in01,32,52,5	script	Traveler Fome#tl01	4_F_DOGTRAVELER,3,3,{
 	mes "I should start planning on moving to the next region. ";
 	mes "I'm debating whether I should just go back or go to Mora Village...";
 	close;
-	
+
 OnTouch:
 	if (ep14_2_mylord == 0 && BaseLevel > 98) {
 		mes "A group of travelers of Alpheim are having a conversation.";
@@ -14971,7 +14923,6 @@ OnTouch:
 			case 1:
 				mes "They don't seem to care that much.";
 				close;
-			
 			case 2:
 				mes "When you approach, they stop talking for a second and make a seat for you.";
 				mes "Start a conversation.";
@@ -15081,7 +15032,6 @@ ecl_in01,32,51,7	script	Traveler Litrip#tl02	4_M_DOGTRAVELER,{
 						cutin "",255;
 						warp "ecl_in03",244,89;
 						end;
-					
 					case 2:
 						mes "[Eclage Guard]";
 						mes "Oh, is that right?";
@@ -15101,7 +15051,6 @@ ecl_in01,32,51,7	script	Traveler Litrip#tl02	4_M_DOGTRAVELER,{
 						hideonnpc "Eclage Guard#tl01";
 						cutin "",255;
 						end;
-					
 				}
 			}
 			mes "[Litrip]";
@@ -15270,7 +15219,6 @@ ecl_in01,35,51,3	script	Traveler Chiba#tl03	4_M_DOGTRAVELER2,{
 						warp "ecl_in03",244,89;
 						cutin "",255;
 						end;
-					
 					case 2:
 						mes "[Eclage Guard]";
 						mes "Oh, is that right?";
@@ -15290,7 +15238,6 @@ ecl_in01,35,51,3	script	Traveler Chiba#tl03	4_M_DOGTRAVELER2,{
 						hideonnpc "Eclage Guard#tl01";
 						cutin "",255;
 						end;
-					
 				}
 			}
 			mes "[Chiba]";
@@ -15338,11 +15285,11 @@ ecl_in01,31,49,7	script	Eclage Guard#tl01	4_M_FAIRYSOLDIER,{
 OnInit:
 	hideonnpc "Eclage Guard#tl01";
 	end;
-	
+
 OnEnable:
 	hideoffnpc "Eclage Guard#tl01";
 	end;
-	
+
 OnDisable:
 	hideonnpc "Eclage Guard#tl01";
 	end;
@@ -15375,7 +15322,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 				cutin "",255;
 				warp "ecl_in03",244,89;
 				end;
-			
 			case 2:
 				mes "[Eclage Guard]";
 				mes "Ah...is that right?";
@@ -15404,7 +15350,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 				warp "ecl_in03",244,89;
 				cutin "",255;
 				end;
-			
 			case 2:
 				mes "[Eclage Guard]";
 				mes "Is that right?";
@@ -15439,7 +15384,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 				warp "ecl_in03",58,72;
 				cutin "",255;
 				end;
-			
 			case 2:
 				mes "[Eclage Guard]";
 				mes "Do as you wish although Mayor Jun might be upset if you keep him waiting for too long.";
@@ -15460,7 +15404,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 				warp "ecl_in03",58,72;
 				cutin "",255;
 				end;
-			
 			case 2:
 				mes "[Eclage Guard]";
 				mes "Thank you.";
@@ -15496,7 +15439,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 					mes "Well, I understand.";
 					cutin "minuel01",2;
 					break;
-				
 				case 2:
 					mes "[Minuel]";
 					mes "Actually I don't have any time for myself since I have to be here all the time.";
@@ -15531,7 +15473,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 							mes "I'll be counting on you!";
 							setquest 7418;
 							break;
-						
 						case 2:
 							mes "[Minuel]";
 							mes "Ha, do you really think so?";
@@ -15539,7 +15480,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 							mes "Soon, in the near future. Hehehe";
 							cutin "minuel02",2;
 							break;
-						
 					}
 					close2;
 					cutin "",255;
@@ -15731,7 +15671,6 @@ ecl_in01,82,70,3	script	Eclage Guard#tl02	4_M_FAIRYSOLDIER,{
 				mes "That's too bad.";
 				mes "Maybe next time!";
 				break;
-				
 			case 2:
 				mes "[Minuel]";
 				mes "Thank you so much.";
@@ -16041,7 +15980,6 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 		mes "A scholar of magics? There's no one with that name among the scholars I know. ";
 		mes "I don't know.";
 		close;
-		
 	}
 	else if ((ep14_2_mylord > 17) && (ep14_2_mylord < 22)) {
 		mes "[Shenime]";
@@ -16232,7 +16170,6 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 		ep14_2_mylord =  26;
 		changequest 7445,7447;
 		close;
-		
 	}
 	else if (ep14_2_mylord == 26) {
 		mes "[Shenime]";
@@ -16308,7 +16245,6 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 				ep14_2_mylord =  28;
 				changequest 7448,7449;
 				close;
-			
 			case 2:
 				mes "When you held Shenime's hand, you felt a sharp pain in your hand.";
 				mes "You took your hand off quickly and examined it, but nothing was there.";
@@ -16323,7 +16259,6 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 				close2;
 				warp "ecl_hub01",129,12;
 				end;
-			
 		}
 	}
 	else if (ep14_2_mylord == 28) {
@@ -16336,7 +16271,6 @@ ecl_in03,245,93,3	script	Chief of Staff#tl01	4_F_FAIRY,{
 				mes "Shouldn't you, a foreigner, consider it as an honor and receive the offer?";
 				mes "You're hesitating too much.";
 				close;
-			
 			case 2:
 				mes "When you held Shenime's hand, you felt a sharp pain in your hand.";
 				mes "You took your hand off quickly and examined it, but nothing was there.";
@@ -17993,7 +17927,6 @@ eclage,112,40,3	script	Eclage Guard Leo#tl	4_M_FAIRYSOLDIER2,{
 			mes ".........isn't it depressing.";
 			close;
 	}
-	
 }
 
 ecl_fild01,205,86,3	script	Eclage Messenger Roy#tl	4_M_FAIRYSOLDIER2,{
@@ -18225,7 +18158,7 @@ ecl_fild01,205,86,3	script	Eclage Messenger Roy#tl	4_M_FAIRYSOLDIER2,{
 		mes "This is a little something for you.";
 		mes "I'll be looking forward to seeing you!";
 		delitem Mail_Package,1; //Mail_Package
-		changequest 7430,4731;
+		changequest 7430,7431;
 		getexp 200000,200000;
 		getitem Splendide_Coin,1; //Splendide_Coin
 		close;
@@ -18543,7 +18476,7 @@ ecl_tdun04,32,35,3	script	Hisie#tlord	4_M_FARIY_HISIE,{
 		mes "[Hisie]";
 		mes "If you climbed all the way here out of curiosity, you'd better start going down now.";
 		mes "Professor has been under the weather nowadays.";
-		close;
+		close2;
 	}
 	else if (ep14_2_mylord == 14) {
 		cutin "hisie01",0;
@@ -18825,7 +18758,6 @@ ecl_tdun04,32,35,3	script	Hisie#tlord	4_M_FARIY_HISIE,{
 		mes "I need to see what Avant is researching about.";
 		mes "Let's hurry.";
 		close2;
-		
 	}
 	else if ((ep14_2_mylord == 22) || (ep14_2_mylord == 23)) {
 		cutin "hisie03",0;
@@ -18931,7 +18863,7 @@ ecl_tdun04,32,35,3	script	Hisie#tlord	4_M_FARIY_HISIE,{
 	end;
 }
 
-eclage,280,290,0	script	#Hisie01	139,0,3,{
+eclage,280,290,0	script	#Hisie01	HIDDEN_WARP_NPC,0,3,{
 	end;
 OnTouch:
 	if (ep14_2_mylord == 19) {
@@ -19103,7 +19035,7 @@ OnTimer400000:
 	end;
 }
 
-que_avan01,26,26,0	script	#tltimer	139,0,1,{
+que_avan01,26,26,0	script	#tltimer	HIDDEN_WARP_NPC,0,1,{
 	end;
 OnTouch:
 	mes "It was definitely a small Yai when first entered, but upon regaining consciousness after being very dizzy, a huge space appeared.";
@@ -19119,18 +19051,18 @@ OnTouch:
 	close2;
 	cutin "",255;
 	end;
-	
+
 OnStop:
 	stopnpctimer;
 	end;
 OnTimer5000:
-	mapannounce "que_avan01","Welcome, Sir Avant. User certification standby for 5 minutes.",bc_map,"0xA8A8A8"; 
+	mapannounce "que_avan01","Welcome, Sir Avant. User certification standby for 5 minutes.",bc_map,"0xA8A8A8";
 	end;
 OnTimer360000:
-	mapannounce "que_avan01","Warning: Long-term use was not certified. Restrictive magic on unauthorized personnel will automatically be executed.",bc_map,"0xA8A8A8"; 
+	mapannounce "que_avan01","Warning: Long-term use was not certified. Restrictive magic on unauthorized personnel will automatically be executed.",bc_map,"0xA8A8A8";
 	end;
 OnTimer365000:
-	mapannounce "que_avan01","Research lab interior space has been distorted. Sweeping in process.",bc_map,"0x7b68ee"; 
+	mapannounce "que_avan01","Research lab interior space has been distorted. Sweeping in process.",bc_map,"0x7b68ee";
 	end;
 OnTimer368000:
 	mapwarp "que_avan01","eclage",265,275;
@@ -19383,7 +19315,7 @@ OnEnable:
 	monster "que_avan01",29,36,"DARK_PRIEST",DARK_PRIEST,1;
 	monster "que_avan01",29,32,"DARK_PRIEST",DARK_PRIEST,1;
 	end;
-	
+
 OnReset:
 	mapwarp "que_avan01","eclage",265,275;
 	killmonster "que_avan01","#avtmanager::OnMyMobDead";
@@ -19399,10 +19331,10 @@ OnReset:
 	hideoffnpc "#tltimer";
 	$111204_avantlabo =  0;
 	end;
-	
+
 OnMyMobDead:
 	if (mobcount ("que_avan01","#avtmanager::OnMyMobDead") == 0) {
-		mapannounce "que_avan01","Hisie: This is it for you! Avant!!",bc_map,"0x7b68ee"; 
+		mapannounce "que_avan01","Hisie: This is it for you! Avant!!",bc_map,"0x7b68ee";
 		hideonnpc "Hisie#tlspt";
 		hideoffnpc "Hisie#tlhunt";
 	}
@@ -19420,20 +19352,20 @@ que_avan01,26,41,3	script	Avant Magic Scholar#tlac	4_M_FAIRYAVANT,{
 	initnpctimer;
 	monster "que_avan01",26,38,"HIDDEN_MOB",HIDDEN_MOB,1;
 	end;
-	
+
 OnInit:
 	hideonnpc "Avant Magic Scholar#tlac";
 	end;
-	
+
 OnKill:
 	killmonster "que_avan01","Avant Magic Scholar#tlac::OnMyMobDead";
 	stopnpctimer;
 	end;
-	
+
 OnTimer2000:
-	mapannounce "que_avan01","Hisie: Watch out!!!",bc_map,"0x7b68ee"; 
+	mapannounce "que_avan01","Hisie: Watch out!!!",bc_map,"0x7b68ee";
 	end;
-	
+
 OnTimer8000:
 	killmonster "que_avan01","Avant Magic Scholar#tlac::OnMyMobDead";
 	stopnpctimer;

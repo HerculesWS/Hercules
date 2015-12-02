@@ -6,20 +6,18 @@
 
 #include "showmsg.h"
 
+#include "common/cbasetypes.h"
+#include "common/core.h" //[Ind] - For SERVER_TYPE
+#include "common/strlib.h" // StringBuf
+
+#include <libconfig/libconfig.h>
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h> // atexit
-#include <string.h>
-#include <time.h>
-
-#include "../../3rdparty/libconfig/libconfig.h"
-
-#include "../common/cbasetypes.h"
-#include "../common/core.h" //[Ind] - For SERVER_TYPE
-#include "../common/strlib.h" // StringBuf
 
 #ifdef WIN32
-#	include "../common/winapi.h"
+#	include "common/winapi.h"
 #else // not WIN32
 #	include <unistd.h>
 #endif // WIN32
@@ -32,16 +30,8 @@
 #define DEBUGLOGPATH "log"PATHSEP_STR"login-server.log"
 #endif
 
-///////////////////////////////////////////////////////////////////////////////
-/// behavioral parameter.
-/// when redirecting output:
-/// if true prints escape sequences
-/// if false removes the escape sequences
-int stdout_with_ansisequence = 0;
-
-int msg_silent = 0; //Specifies how silent the console is.
-
-int console_msg_log = 0;//[Ind] msg error logging
+struct showmsg_interface showmsg_s;
+struct showmsg_interface *showmsg;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// static/dynamic buffer for the messages
@@ -199,8 +189,7 @@ int VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 	// Print everything to the buffer
 	BUFVPRINTF(tempbuf,fmt,argptr);
 
-	if( !is_console(handle) && stdout_with_ansisequence )
-	{
+	if (!is_console(handle) && showmsg->stdout_with_ansisequence) {
 		WriteFile(handle, BUFVAL(tempbuf), BUFLEN(tempbuf), &written, 0);
 		return 0;
 	}
@@ -492,8 +481,7 @@ int VFPRINTF(FILE *file, const char *fmt, va_list argptr)
 	if(!fmt || !*fmt)
 		return 0;
 
-	if( is_console(file) || stdout_with_ansisequence )
-	{
+	if (is_console(file) || showmsg->stdout_with_ansisequence) {
 		vfprintf(file, fmt, argptr);
 		return 0;
 	}
@@ -598,9 +586,6 @@ int FPRINTF(FILE *file, const char *fmt, ...) {
 
 #endif// not _WIN32
 
-
-char timestamp_format[20] = ""; //For displaying Timestamps
-
 int vShowMessage_(enum msg_type flag, const char *string, va_list ap)
 {
 	va_list apcopy;
@@ -614,9 +599,9 @@ int vShowMessage_(enum msg_type flag, const char *string, va_list ap)
 		return 1;
 	}
 	if(
-		( flag == MSG_WARNING && console_msg_log&1 ) ||
-		( ( flag == MSG_ERROR || flag == MSG_SQL ) && console_msg_log&2 ) ||
-		( flag == MSG_DEBUG && console_msg_log&4 ) ) {//[Ind]
+		( flag == MSG_WARNING && showmsg->console_log&1 ) ||
+		( ( flag == MSG_ERROR || flag == MSG_SQL ) && showmsg->console_log&2 ) ||
+		( flag == MSG_DEBUG && showmsg->console_log&4 ) ) {//[Ind]
 		FILE *log = NULL;
 		if( (log = fopen(SERVER_TYPE == SERVER_TYPE_MAP ? "./log/map-msg_log.log" : "./log/unknown.log","a+")) ) {
 			char timestring[255];
@@ -637,20 +622,20 @@ int vShowMessage_(enum msg_type flag, const char *string, va_list ap)
 		}
 	}
 	if(
-	    (flag == MSG_INFORMATION && msg_silent&1) ||
-	    (flag == MSG_STATUS && msg_silent&2) ||
-	    (flag == MSG_NOTICE && msg_silent&4) ||
-	    (flag == MSG_WARNING && msg_silent&8) ||
-	    (flag == MSG_ERROR && msg_silent&16) ||
-	    (flag == MSG_SQL && msg_silent&16) ||
-	    (flag == MSG_DEBUG && msg_silent&32)
+	    (flag == MSG_INFORMATION && showmsg->silent&1) ||
+	    (flag == MSG_STATUS && showmsg->silent&2) ||
+	    (flag == MSG_NOTICE && showmsg->silent&4) ||
+	    (flag == MSG_WARNING && showmsg->silent&8) ||
+	    (flag == MSG_ERROR && showmsg->silent&16) ||
+	    (flag == MSG_SQL && showmsg->silent&16) ||
+	    (flag == MSG_DEBUG && showmsg->silent&32)
 	)
 		return 0; //Do not print it.
 
-	if (timestamp_format[0] && flag != MSG_NONE) {
+	if (showmsg->timestamp_format[0] && flag != MSG_NONE) {
 		//Display time format. [Skotlex]
 		time_t t = time(NULL);
-		strftime(prefix, 80, timestamp_format, localtime(&t));
+		strftime(prefix, 80, showmsg->timestamp_format, localtime(&t));
 	} else prefix[0]='\0';
 
 	switch (flag) {
@@ -723,7 +708,17 @@ int vShowMessage_(enum msg_type flag, const char *string, va_list ap)
 	return 0;
 }
 
-void ClearScreen(void)
+int showmsg_vShowMessage(const char *string, va_list ap)
+{
+	int ret;
+	va_list apcopy;
+	va_copy(apcopy, ap);
+	ret = vShowMessage_(MSG_NONE, string, apcopy);
+	va_end(apcopy);
+	return ret;
+}
+
+void showmsg_clearScreen(void)
 {
 #ifndef _WIN32
 	ShowMessage(CL_CLS); // to prevent empty string passed messages
@@ -740,50 +735,57 @@ int ShowMessage_(enum msg_type flag, const char *string, ...) {
 }
 
 // direct printf replacement
-void ShowMessage(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void ShowMessage(const char *string, ...) {
+void showmsg_showMessage(const char *string, ...) __attribute__((format(printf, 1, 2)));
+void showmsg_showMessage(const char *string, ...)
+{
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_NONE, string, ap);
 	va_end(ap);
 }
-void ShowStatus(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void ShowStatus(const char *string, ...) {
+void showmsg_showStatus(const char *string, ...) __attribute__((format(printf, 1, 2)));
+void showmsg_showStatus(const char *string, ...)
+{
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_STATUS, string, ap);
 	va_end(ap);
 }
-void ShowSQL(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void ShowSQL(const char *string, ...) {
+void showmsg_showSQL(const char *string, ...) __attribute__((format(printf, 1, 2)));
+void showmsg_showSQL(const char *string, ...)
+{
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_SQL, string, ap);
 	va_end(ap);
 }
-void ShowInfo(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void ShowInfo(const char *string, ...) {
+void showmsg_showInfo(const char *string, ...) __attribute__((format(printf, 1, 2)));
+void showmsg_showInfo(const char *string, ...)
+{
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_INFORMATION, string, ap);
 	va_end(ap);
 }
-void ShowNotice(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void ShowNotice(const char *string, ...) {
+void showmsg_showNotice(const char *string, ...) __attribute__((format(printf, 1, 2)));
+void showmsg_showNotice(const char *string, ...)
+{
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_NOTICE, string, ap);
 	va_end(ap);
 }
-void ShowWarning(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void ShowWarning(const char *string, ...) {
+void showmsg_showWarning(const char *string, ...) __attribute__((format(printf, 1, 2)));
+void showmsg_showWarning(const char *string, ...)
+{
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_WARNING, string, ap);
 	va_end(ap);
 }
-void ShowConfigWarning(config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
-void ShowConfigWarning(config_setting_t *config, const char *string, ...) {
+void showmsg_showConfigWarning(config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
+void showmsg_showConfigWarning(config_setting_t *config, const char *string, ...)
+{
 	StringBuf buf;
 	va_list ap;
 	StrBuf->Init(&buf);
@@ -794,24 +796,70 @@ void ShowConfigWarning(config_setting_t *config, const char *string, ...) {
 	va_end(ap);
 	StrBuf->Destroy(&buf);
 }
-void ShowDebug(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void ShowDebug(const char *string, ...) {
+void showmsg_showDebug(const char *string, ...) __attribute__((format(printf, 1, 2)));
+void showmsg_showDebug(const char *string, ...)
+{
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_DEBUG, string, ap);
 	va_end(ap);
 }
-void ShowError(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void ShowError(const char *string, ...) {
+void showmsg_showError(const char *string, ...) __attribute__((format(printf, 1, 2)));
+void showmsg_showError(const char *string, ...)
+{
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_ERROR, string, ap);
 	va_end(ap);
 }
-void ShowFatalError(const char *string, ...) __attribute__((format(printf, 1, 2)));
-void ShowFatalError(const char *string, ...) {
+void showmsg_showFatalError(const char *string, ...) __attribute__((format(printf, 1, 2)));
+void showmsg_showFatalError(const char *string, ...)
+{
 	va_list ap;
 	va_start(ap, string);
 	vShowMessage_(MSG_FATALERROR, string, ap);
 	va_end(ap);
+}
+
+void showmsg_init(void)
+{
+}
+
+void showmsg_final(void)
+{
+}
+
+void showmsg_defaults(void)
+{
+	showmsg = &showmsg_s;
+
+	///////////////////////////////////////////////////////////////////////////////
+	/// behavioral parameter.
+	/// when redirecting output:
+	/// if true prints escape sequences
+	/// if false removes the escape sequences
+	showmsg->stdout_with_ansisequence = false;
+
+	showmsg->silent = 0; //Specifies how silent the console is.
+
+	showmsg->console_log = 0;//[Ind] msg error logging
+
+	memset(showmsg->timestamp_format, '\0', sizeof(showmsg->timestamp_format));
+
+	showmsg->init = showmsg_init;
+	showmsg->final = showmsg_final;
+
+	showmsg->clearScreen = showmsg_clearScreen;
+	showmsg->showMessageV = showmsg_vShowMessage;
+
+	showmsg->showMessage = showmsg_showMessage;
+	showmsg->showStatus = showmsg_showStatus;
+	showmsg->showSQL = showmsg_showSQL;
+	showmsg->showInfo = showmsg_showInfo;
+	showmsg->showNotice = showmsg_showNotice;
+	showmsg->showWarning = showmsg_showWarning;
+	showmsg->showDebug = showmsg_showDebug;
+	showmsg->showError = showmsg_showError;
+	showmsg->showFatalError = showmsg_showFatalError;
+	showmsg->showConfigWarning = showmsg_showConfigWarning;
 }

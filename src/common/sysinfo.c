@@ -1,6 +1,6 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
-// Base Author: Haru @ http://hercules.ws
+// Base Author: Haru @ http://herc.ws
 
 /// See sysinfo.h for a description of this file
 
@@ -8,16 +8,14 @@
 
 #include "sysinfo.h"
 
+#include "common/cbasetypes.h"
+#include "common/core.h"
+#include "common/memmgr.h"
+#include "common/strlib.h"
+
 #include <stdio.h> // fopen
 #include <stdlib.h> // atoi
-
-#include "../common/cbasetypes.h"
-#include "../common/core.h"
-#include "../common/malloc.h"
-#include "../common/strlib.h"
-
 #ifdef WIN32
-#	include <string.h> // strlen
 #	include <windows.h>
 #else
 #	include <unistd.h>
@@ -41,6 +39,8 @@ struct sysinfo_private {
 /// sysinfo.c interface source
 struct sysinfo_interface sysinfo_s;
 struct sysinfo_private sysinfo_p;
+
+struct sysinfo_interface *sysinfo;
 
 #define VCSTYPE_UNKNOWN 0
 #define VCSTYPE_GIT 1
@@ -199,7 +199,9 @@ enum windows_ver_suite {
 #define SYSINFO_COMPILER "Microsoft Visual C++ 2012 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
 #elif _MSC_VER >= 1800 && _MSC_VER < 1900
 #define SYSINFO_COMPILER "Microsoft Visual C++ 2013 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#else // < 1300 || >= 1900
+#elif _MSC_VER >= 1900 && _MSC_VER < 2000
+#define SYSINFO_COMPILER "Microsoft Visual C++ 2015 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
+#else // < 1300 || >= 2000
 #define SYSINFO_COMPILER "Microsoft Visual C++ v" EXPAND_AND_QUOTE(_MSC_VER)
 #endif
 #else

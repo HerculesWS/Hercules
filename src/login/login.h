@@ -5,8 +5,10 @@
 #ifndef LOGIN_LOGIN_H
 #define LOGIN_LOGIN_H
 
-#include "../common/core.h" // CORE_ST_LAST
-#include "../common/mmo.h" // NAME_LENGTH,SEX_*
+#include "common/hercules.h"
+#include "common/core.h" // CORE_ST_LAST
+#include "common/db.h"
+#include "common/mmo.h" // NAME_LENGTH,SEX_*
 
 struct mmo_account;
 struct AccountDB;
@@ -18,8 +20,15 @@ enum E_LOGINSERVER_ST
 	LOGINSERVER_ST_LAST
 };
 
-// supported encryption types: 1- passwordencrypt, 2- passwordencrypt2, 3- both
-#define PASSWORDENC 3
+enum password_enc {
+	PWENC_NONE     = 0x0, ///< No encryption
+	PWENC_ENCRYPT  = 0x1, ///< passwordencrypt
+	PWENC_ENCRYPT2 = 0x2, ///< passwordencrypt2
+	PWENC_BOTH = PWENC_ENCRYPT|PWENC_ENCRYPT2, ///< both the above
+};
+
+#define PASSWORDENC PWENC_BOTH
+
 #define PASSWD_LEN (32+1) // 23+1 for plaintext, 32+1 for md5-ed passwords
 
 struct login_session_data {
@@ -53,9 +62,9 @@ struct mmo_char_server {
 	int fd;
 	uint32 ip;
 	uint16 port;
-	uint16 users;       // user count on this server
-	uint16 type;        // 0=normal, 1=maintenance, 2=over 18, 3=paying, 4=P2P
-	uint16 new_;        // should display as 'new'?
+	uint16 users; ///< user count on this server
+	uint16 type;  ///< 0=normal, 1=maintenance, 2=over 18, 3=paying, 4=P2P (@see e_char_server_type in mmo.h)
+	uint16 new_;  ///< should display as 'new'?
 };
 
 struct client_hash_node {
@@ -92,14 +101,6 @@ struct Login_Config {
 
 	int client_hash_check;                          ///< flags for checking client md5
 	struct client_hash_node *client_hash_nodes;     ///< linked list containg md5 hash for each gm group
-
-	/// Advanced subnet check [LuzZza]
-	struct s_subnet {
-		uint32 mask;
-		uint32 char_ip;
-		uint32 map_ip;
-	} subnet[16];
-	int subnet_count;
 };
 
 struct login_auth_node {
@@ -127,10 +128,6 @@ struct online_login_data {
 #define sex_str2num(str) ( ((str) == 'F') ? SEX_FEMALE : ((str) == 'M') ? SEX_MALE : SEX_SERVER )
 
 #define MAX_SERVERS 30
-#ifdef HERCULES_CORE
-extern struct mmo_char_server server[MAX_SERVERS];
-extern struct Login_Config login_config;
-#endif // HERCULES_CORE
 
 /**
  * Login.c Interface
@@ -154,8 +151,7 @@ struct login_interface {
 	int (*sync_ip_addresses) (int tid, int64 tick, int id, intptr_t data);
 	bool (*check_encrypted) (const char* str1, const char* str2, const char* passwd);
 	bool (*check_password) (const char* md5key, int passwdenc, const char* passwd, const char* refpass);
-	int (*lan_subnetcheck) (uint32 ip);
-	int (*lan_config_read) (const char *lancfgName);
+	uint32 (*lan_subnet_check) (uint32 ip);
 	void (*fromchar_accinfo) (int fd, int account_id, int u_fd, int u_aid, int u_group, int map_fd, struct mmo_account *acc);
 	void (*fromchar_account) (int fd, int account_id, struct mmo_account *acc);
 	void (*fromchar_account_update_other) (int account_id, unsigned int state);
@@ -195,16 +191,19 @@ struct login_interface {
 	void (*send_coding_key) (int fd, struct login_session_data* sd);
 	void (*parse_request_coding_key) (int fd, struct login_session_data* sd);
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
-	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip);
+	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
 	int (*parse_login) (int fd);
 	char *LOGIN_CONF_NAME;
-	char *LAN_CONF_NAME;
+	char *NET_CONF_NAME; ///< Network configuration filename
 };
 
-struct login_interface *login;
-
 #ifdef HERCULES_CORE
+extern struct mmo_char_server server[MAX_SERVERS];
+extern struct Login_Config login_config;
+
 void login_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct login_interface *login;
 
 #endif /* LOGIN_LOGIN_H */

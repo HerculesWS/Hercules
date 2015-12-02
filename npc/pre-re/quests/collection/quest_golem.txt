@@ -226,5 +226,3 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 		close;
 	}
 }
-
-

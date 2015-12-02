@@ -240,4 +240,3 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 		close;
 	}
 }
-

@@ -15,6 +15,12 @@
 // Black Marketeer (Buy Licenses - Non-Merchant Classes)
 //============================================================
 que_job01,68,84,1	script	Black Marketeer#Buying	4_M_SITDOWN,{
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2400) {
+		mes "[Mr. Jass]";
+		mes "You're too greedy, even compared to someone like me!";
+		mes "Why don't you go lighten your bag first?";
+		close;
+	}
 	if (getskilllv("ALL_BUYING_STORE") == 1) {
 		mes "[Mr. Jass]";
 		mes "Hey, you already made a contract with Hugh.";
@@ -61,7 +67,7 @@ que_job01,68,84,1	script	Black Marketeer#Buying	4_M_SITDOWN,{
 					mes "Ha... Ha ha ha!";
 					mes "Mr. Hugh, I'll take over your license business. You'll see!";
 					mes "*Giggle Giggle*";
-					getitem 12548,.@input; //Shabby_Purchase_Street
+					getitem Buy_Market_Permit2,.@input;
 					Zeny -= (.@input*500);
 				}
 				close;
@@ -93,6 +99,10 @@ que_job01,68,84,1	script	Black Marketeer#Buying	4_M_SITDOWN,{
 // Purchasing Team (Learn Skill - Merchant Classes)
 //============================================================
 alberta_in,58,52,4	script	Purchasing Team#Buying	1_M_ORIENT01,{
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2400) {
+		mes "- You cannot converse or perform the quest because you are carrying too many items. -";
+		close;
+	}
 	mes "[Mr. Hugh]";
 	if (BaseClass == Job_Merchant && getskilllv("MC_VENDING") >= 1) {
 		if (getskilllv("ALL_BUYING_STORE") == 1) {

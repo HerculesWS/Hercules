@@ -5,7 +5,7 @@
 #ifndef MAP_INTIF_H
 #define MAP_INTIF_H
 
-#include "../common/cbasetypes.h"
+#include "common/hercules.h"
 
 /**
  * Declarations
@@ -182,10 +182,10 @@ struct intif_interface {
 	void (*pDeleteHomunculusOk) (int fd);
 };
 
-struct intif_interface *intif;
-
 #ifdef HERCULES_CORE
 void intif_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct intif_interface *intif;
 
 #endif /* MAP_INTIF_H */

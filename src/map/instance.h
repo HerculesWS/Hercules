@@ -5,10 +5,11 @@
 #ifndef MAP_INSTANCE_H
 #define MAP_INSTANCE_H
 
-#include "script.h" // struct reg_db
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // struct point
+#include "map/script.h" // struct reg_db
+#include "common/hercules.h"
+#include "common/mmo.h" // struct point
 
+struct hplugin_data_store;
 struct block_list;
 struct map_session_data;
 
@@ -51,10 +52,7 @@ struct instance_data {
 	unsigned int original_progress_timeout;
 
 	struct point respawn; ///< reload spawn
-
-	/** HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct instance_interface {
@@ -84,10 +82,10 @@ struct instance_interface {
 	int (*destroy_timer) (int tid, int64 tick, int id, intptr_t data);
 };
 
-struct instance_interface *instance;
-
 #ifdef HERCULES_CORE
 void instance_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct instance_interface *instance;
 
 #endif /* MAP_INSTANCE_H */

@@ -57,7 +57,7 @@ jawaii,239,112,7	script	Mariner#toizu	4W_SAILOR,{
 		mes "guide you to";
 		mes "Izlude.";
 		close2;
-		if(checkre(0))
+		if (RENEWAL)
 			warp "izlude",195,212;
 		else
 			warp "izlude",176,182;
@@ -624,7 +624,7 @@ jawaii_in,30,96,4	script	Employee#jaw6	4_F_07,{
 	}
 	mes "I hope you will have a good time.";
 	close;
-	
+
 OnWelcome:
 	emotion e_kis;
 	end;
@@ -714,7 +714,7 @@ OnTouch:
 	donpcevent "Employee#jaw1::OnSolo";
 	end;
 }
-	
+
 jawaii_in,15,104,0	script	Waitress#jawaii	1_F_PUBGIRL,{
 	if (checkweight(1201,1) == 0) {
 		mes "^3355FF * Wait a minute! *";
@@ -1113,7 +1113,7 @@ S_KillChar:
 	mes "[Bartender]";
 	return;
 }
-	
+
 jawaii_in,43,115,0	script	Customer#jaw_1	4W_M_01,{
 	if (!getpartnerid()) {
 		if (Zeny > 99) {
@@ -1388,7 +1388,7 @@ prt_in,173,13,4	script	Customer#SoloHan	4_M_04,{
 	mes "Is this the third time this week I've gotten plastered? Bachewcca, help me count!";
 	close;
 }
-	
+
 prt_in,170,14,0	script	Customer#Bachewcca	4_M_ORIENT02,{
 	mes "[Bachewcca]";
 	mes "..............";

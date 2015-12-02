@@ -578,7 +578,7 @@ function	script	Func_JupHist	{
 		delitem getarg(0),1;
 		yuno_hist = 5;
 		jupe_hist = getarg(1);
-		getexp (checkre(3))?10000:100000,0;
+		getexp RENEWAL_EXP?10000:100000,0;
 		next;
 		mes "[Fayruz]";
 		mes "Everyone can relate";
@@ -654,7 +654,7 @@ function	script	Func_JupHist	{
 				else jupe_hist += 8;
 			}
 			yuno_hist = 6;
-			getexp (checkre(3))?10000:100000,0;
+			getexp RENEWAL_EXP?10000:100000,0;
 			next;
 			mes "[Fayruz]";
 			mes "By now I'm sure you've";
@@ -778,7 +778,7 @@ function	script	Func_JupHist	{
 				else jupe_hist += 8;
 			}
 			yuno_hist = 8;
-			getexp (checkre(3))?10000:100000,0;
+			getexp RENEWAL_EXP?10000:100000,0;
 			next;
 			mes "[Fayruz]";
 			mes "Well... That's just my";
@@ -875,7 +875,7 @@ function	script	Func_JupHist	{
 			else jupe_hist += 8;
 			yuno_hist = 10;
 			delitem getarg(0),1;
-			getexp (checkre(3))?10000:100000,0;
+			getexp RENEWAL_EXP?10000:100000,0;
 			next;
 			mes "[Fayruz]";
 			mes "Well, that is the";

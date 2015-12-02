@@ -9,18 +9,20 @@ CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 COMMON_D = ../common
 COMMON_H = $(wildcard $(COMMON_D)/*.h)
 SYSINFO_INC = $(COMMON_D)/sysinfo.inc
+COMMON_INCLUDE = -I..
 
-LIBCONFIG_D = ../../3rdparty/libconfig
+THIRDPARTY_D = ../../3rdparty
+THIRDPARTY_INCLUDE = -I$(THIRDPARTY_D)
+
+LIBCONFIG_D = $(THIRDPARTY_D)/libconfig
 LIBCONFIG_OBJ = $(addprefix $(LIBCONFIG_D)/, libconfig.o grammar.o scanctx.o \
                 scanner.o strbuf.o)
 LIBCONFIG_H = $(addprefix $(LIBCONFIG_D)/, libconfig.h grammar.h parsectx.h \
               scanctx.h scanner.h strbuf.h wincompat.h)
-LIBCONFIG_INCLUDE = -I$(LIBCONFIG_D)
 
-MT19937AR_D = ../../3rdparty/mt19937ar
+MT19937AR_D = $(THIRDPARTY_D)/mt19937ar
 MT19937AR_OBJ = $(MT19937AR_D)/mt19937ar.o
 MT19937AR_H = $(MT19937AR_D)/mt19937ar.h
-MT19937AR_INCLUDE = -I$(MT19937AR_D)
 
 CHAR_C = char.c HPMchar.c loginif.c mapif.c geoip.c inter.c int_auction.c int_elemental.c int_guild.c \
          int_homun.c int_mail.c int_mercenary.c int_party.c int_pet.c \
@@ -98,7 +100,7 @@ char-server: ../../char-server@EXEEXT@
 
 obj_sql/%.o: %.c $(CHAR_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj_sql
 	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(MT19937AR_INCLUDE) $(LIBCONFIG_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing object files
 $(COMMON_D)/obj_all/common.a:

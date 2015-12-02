@@ -5,11 +5,11 @@
 #ifndef MAP_PET_H
 #define MAP_PET_H
 
-#include "map.h" // struct block_list
-#include "status.h" // enum sc_type
-#include "unit.h" // struct unit_data
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // NAME_LENGTH, struct s_pet
+#include "map/map.h" // struct block_list
+#include "map/status.h" // enum sc_type
+#include "map/unit.h" // struct unit_data
+#include "common/hercules.h"
+#include "common/mmo.h" // NAME_LENGTH, struct s_pet
 
 #define MAX_PET_DB       300
 #define MAX_PETLOOT_SIZE 30
@@ -153,10 +153,10 @@ struct pet_interface {
 	int (*read_db) ();
 };
 
-struct pet_interface *pet;
-
 #ifdef HERCULES_CORE
 void pet_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct pet_interface *pet;
 
 #endif /* MAP_PET_H */

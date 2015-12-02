@@ -2519,7 +2519,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		close;
 	}
 	// NPC disabled from 12am ~ 5am.
-	if (gettime(3) >= 0 && gettime(3) < 5) {
+	if (gettime(GETTIME_HOUR) >= 0 && gettime(GETTIME_HOUR) < 5) {
 		if (ep14_1_muk > 0) {
 			mes "[Raffle Researcher]";
 			mes "Don't humans sleep?";
@@ -4466,7 +4466,7 @@ mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 	close;
 }
 
-mora,115,98,8	script	Hotcha#pa0829	4_ELEPHANT,{
+mora,115,98,0	script	Hotcha#pa0829	4_ELEPHANT,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;

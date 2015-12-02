@@ -6,25 +6,26 @@
 
 #include "trade.h"
 
+#include "map/atcommand.h"
+#include "map/battle.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/intif.h"
+#include "map/itemdb.h"
+#include "map/log.h"
+#include "map/map.h"
+#include "map/npc.h"
+#include "map/path.h"
+#include "map/pc.h"
+#include "map/storage.h"
+#include "common/nullpo.h"
+#include "common/socket.h"
+
 #include <stdio.h>
 #include <string.h>
 
-#include "atcommand.h"
-#include "battle.h"
-#include "chrif.h"
-#include "clif.h"
-#include "intif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "map.h"
-#include "npc.h"
-#include "path.h"
-#include "pc.h"
-#include "storage.h"
-#include "../common/nullpo.h"
-#include "../common/socket.h"
-
 struct trade_interface trade_s;
+struct trade_interface *trade;
 
 /*==========================================
  * Initiates a trade request.
@@ -34,7 +35,7 @@ void trade_traderequest(struct map_session_data *sd, struct map_session_data *ta
 	nullpo_retv(sd);
 
 	if (map->list[sd->bl.m].flag.notrade) {
-		clif->message (sd->fd, msg_txt(272));
+		clif->message (sd->fd, msg_sd(sd,272));
 		return; //Can't trade in notrade mapflag maps.
 	}
 
@@ -73,7 +74,7 @@ void trade_traderequest(struct map_session_data *sd, struct map_session_data *ta
 
 	if (!pc_can_give_items(sd) || !pc_can_give_items(target_sd)) //check if both GMs are allowed to trade
 	{
-		clif->message(sd->fd, msg_txt(246));
+		clif->message(sd->fd, msg_sd(sd,246));
 		clif->tradestart(sd, 2); // GM is not allowed to trade
 		return;
 	}
@@ -145,8 +146,8 @@ void trade_tradeack(struct map_session_data *sd, int type) {
 	}
 
 	//Check if you can start trade.
-	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.storage_flag
-	 || tsd->npc_id || tsd->state.vending || tsd->state.buyingstore || tsd->state.storage_flag
+	if (sd->npc_id || sd->state.vending || sd->state.buyingstore || sd->state.storage_flag != STORAGE_FLAG_CLOSED
+	 || tsd->npc_id || tsd->state.vending || tsd->state.buyingstore || tsd->state.storage_flag != STORAGE_FLAG_CLOSED
 	) {
 		//Fail
 		clif->tradestart(sd, 2);
@@ -208,14 +209,14 @@ int impossible_trade_check(struct map_session_data *sd)
 			intif->wis_message_to_gm(map->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
 			// if we block people
 			if (battle_config.ban_hack_trade < 0) {
-				chrif->char_ask_name(-1, sd->status.name, 1, 0, 0, 0, 0, 0, 0); // type: 1 - block
-				set_eof(sd->fd); // forced to disconnect because of the hack
+				chrif->char_ask_name(-1, sd->status.name, CHAR_ASK_NAME_BLOCK, 0, 0, 0, 0, 0, 0);
+				sockt->eof(sd->fd); // forced to disconnect because of the hack
 				// message about the ban
 				safestrncpy(message_to_gm, msg_txt(540), sizeof(message_to_gm)); //  This player has been definitively blocked.
 			// if we ban people
 			} else if (battle_config.ban_hack_trade > 0) {
-				chrif->char_ask_name(-1, sd->status.name, 2, 0, 0, 0, 0, battle_config.ban_hack_trade, 0); // type: 2 - ban (year, month, day, hour, minute, second)
-				set_eof(sd->fd); // forced to disconnect because of the hack
+				chrif->char_ask_name(-1, sd->status.name, CHAR_ASK_NAME_BAN, 0, 0, 0, 0, battle_config.ban_hack_trade, 0); // type: 2 - ban (year, month, day, hour, minute, second)
+				sockt->eof(sd->fd); // forced to disconnect because of the hack
 				// message about the ban
 				sprintf(message_to_gm, msg_txt(507), battle_config.ban_hack_trade); //  This player has been banned for %d minute(s).
 			} else
@@ -355,14 +356,14 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount) 
 	if( !itemdb_cantrade(item, src_lv, dst_lv) && //Can't trade
 		(pc->get_partner(sd) != target_sd || !itemdb_canpartnertrade(item, src_lv, dst_lv)) ) //Can't partner-trade
 	{
-		clif->message (sd->fd, msg_txt(260));
+		clif->message (sd->fd, msg_sd(sd,260));
 		clif->tradeitemok(sd, index+2, TIO_INDROCKS);
 		return;
 	}
 
 	if( item->expire_time )
 	{ // Rental System
-		clif->message (sd->fd, msg_txt(260));
+		clif->message (sd->fd, msg_sd(sd,260));
 		clif->tradeitemok(sd, index+2, TIO_INDROCKS);
 		return;
 	}
@@ -371,7 +372,7 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount) 
 			!( item->bound == IBT_GUILD && sd->status.guild_id == target_sd->status.guild_id ) &&
 			!( item->bound == IBT_PARTY && sd->status.party_id == target_sd->status.party_id )
 					&& !pc_can_give_bound_items(sd) ) {
-		clif->message(sd->fd, msg_txt(293));
+		clif->message(sd->fd, msg_sd(sd,293));
 		clif->tradeitemok(sd, index+2, TIO_INDROCKS);
 		return;
 	}
@@ -561,7 +562,7 @@ void trade_tradecommit(struct map_session_data *sd) {
 
 			flag = pc->additem(tsd, &sd->status.inventory[n], sd->deal.item[trade_i].amount,LOG_TYPE_TRADE);
 			if (flag == 0)
-				pc->delitem(sd, n, sd->deal.item[trade_i].amount, 1, 6, LOG_TYPE_TRADE);
+				pc->delitem(sd, n, sd->deal.item[trade_i].amount, 1, DELITEM_SOLD, LOG_TYPE_TRADE);
 			else
 				clif->additem(sd, n, sd->deal.item[trade_i].amount, 0);
 			sd->deal.item[trade_i].index = 0;
@@ -573,7 +574,7 @@ void trade_tradecommit(struct map_session_data *sd) {
 
 			flag = pc->additem(sd, &tsd->status.inventory[n], tsd->deal.item[trade_i].amount,LOG_TYPE_TRADE);
 			if (flag == 0)
-				pc->delitem(tsd, n, tsd->deal.item[trade_i].amount, 1, 6, LOG_TYPE_TRADE);
+				pc->delitem(tsd, n, tsd->deal.item[trade_i].amount, 1, DELITEM_SOLD, LOG_TYPE_TRADE);
 			else
 				clif->additem(tsd, n, tsd->deal.item[trade_i].amount, 0);
 			tsd->deal.item[trade_i].index = 0;

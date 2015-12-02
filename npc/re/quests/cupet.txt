@@ -13,9 +13,8 @@
 
 // 1st NPC
 -	script	CPM1	4_M_ALCHE_C,{
-	
 	.@npc$ = "[Cute Pet Manager]";
-	
+
 	setarray .@tame_id[0],619,620,622,623,624,627,628,629,630;
 	setarray .@tame_amount[0],3,3,3,3,3,3,3,3,3;
 	setarray .@hunt_id[0],909,909,705,916,935,919,919,940,921;
@@ -29,7 +28,6 @@
 		mes .@tame_amount + " times for a taming item.";
 		mes "You can't exchange anymore.";
 		next;
-		
 		mes "[Cute Pet Manager]";
 		mes "Besides me, there are other";
 		mes "Cute Pet Managers. If you want";
@@ -37,16 +35,14 @@
 		mes "you go and see them.";
 		close;
 	}
-	
-	callfunc "cute_pet_manager",.@tame_id,.@tame_amount,.@hunt_id,.@hunt_amount,.@mob_id,cpm_one,.@tame_gets,.@hunt_id2,.@hunt_amount2;
 
+	callfunc "cute_pet_manager",.@tame_id,.@tame_amount,.@hunt_id,.@hunt_amount,.@mob_id,cpm_one,.@tame_gets,.@hunt_id2,.@hunt_amount2;
 }
 
 // 2nd NPC
 -	script	CPM2	4_M_ALCHE_C,{
-	
 	.@npc$ = "[Cute Pet Manager]";
-	
+
 	setarray .@tame_id[0],621,625,632,631,633,634,635,636,659,637,639,640;
 	setarray .@tame_amount[0],2,2,2,2,2,2,2,2,2,2,2,2;
 	setarray .@hunt_id[0],938,935,925,7033,945,942,931,901,1094,1021,936,1035;
@@ -61,7 +57,6 @@
 		mes .@tame_amount + " times for a taming item.";
 		mes "You can't exchange anymore.";
 		next;
-		
 		mes "[Cute Pet Manager]";
 		mes "Besides me, there are other";
 		mes "Cute Pet Managers. If you want";
@@ -69,16 +64,14 @@
 		mes "you go and see them.";
 		close;
 	}
-	
-	callfunc "cute_pet_manager",.@tame_id,.@tame_amount,.@hunt_id,.@hunt_amount,.@mob_id,cpm_two,.@tame_gets,.@hunt_id2,.@hunt_amount2;
 
+	callfunc "cute_pet_manager",.@tame_id,.@tame_amount,.@hunt_id,.@hunt_amount,.@mob_id,cpm_two,.@tame_gets,.@hunt_id2,.@hunt_amount2;
 }
 
 // 3rd NPC
 -	script	CPM3	4_M_ALCHE_C,{
-	
 	.@npc$ = "[Cute Pet Manager]";
-	
+
 	setarray .@tame_id[0],638,626,641,661,660,642;
 	setarray .@tame_amount[0],1,1,1,1,1,1;
 	setarray .@hunt_id[0],1020,943,1038,7047,1970,923;
@@ -94,7 +87,6 @@
 		mes .@tame_amount + " times for a taming item.";
 		mes "You can't exchange anymore.";
 		next;
-		
 		mes "[Cute Pet Manager]";
 		mes "Besides me, there are other";
 		mes "Cute Pet Managers. If you want";
@@ -102,9 +94,8 @@
 		mes "you go and see them.";
 		close;
 	}
-	
-	callfunc "cute_pet_manager",.@tame_id,.@tame_amount,.@hunt_id,.@hunt_amount,.@mob_id,cpm_three,.@tame_gets,.@hunt_id2,.@hunt_amount2;
 
+	callfunc "cute_pet_manager",.@tame_id,.@tame_amount,.@hunt_id,.@hunt_amount,.@mob_id,cpm_three,.@tame_gets,.@hunt_id2,.@hunt_amount2;
 }
 
 function	script	cute_pet_manager	{
@@ -123,7 +114,6 @@ function	script	cute_pet_manager	{
 	mes "who is in charge of public relations";
 	mes "for the New Upgraded Cute Pet system.";
 	next;
-	
 	mes "[Cute Pet Manager]";
 	mes "If you have any concerns regarding";
 	mes "the Cute Pet system I am here to guide you.";
@@ -132,18 +122,15 @@ function	script	cute_pet_manager	{
 	mes "then I will tell you the monster";
 	mes "that you can tame with the item.";
 	next;
-	
 	mes "Also I will explain what materials";
 	mes "you need to bring in order to";
 	mes "get the taming item.";
 	next;
-	
 	mes "[Cute Pet Manager]";
 	mes "If you already brought materials";
 	mes "to exchange for the taming item,";
 	mes "I can exchange it for taming items immediately.";
 	next;
-	
 	mes "[Cute Pet Manager]";
 	mes "However, there is a limit";
 	mes "for exchanging taming items.";
@@ -151,17 +138,14 @@ function	script	cute_pet_manager	{
 	mes getarg(6) + " times. So please make sure";
 	mes "how many times you have exchanged.";
 	next;
-	
 	mes "[Cute Pet Manager]";
 	mes "So, which taming item do you want?";
 	mes "Please choose one from the list.";
 	next;
-	
 	// Create Menu System
 	for (.@a = 0; .@a < getarraysize(getarg(0)); ++.@a) {
 		.@menu$ += (.@menu$ == "" ? "" : ":") + getitemname(getelementofarray(getarg(0), .@a));
 	}
-	
 	// Query Player Choice
 	.@choice = select(.@menu$) - 1;
 
@@ -173,7 +157,6 @@ function	script	cute_pet_manager	{
 	.@mob_id = getelementofarray(getarg(4), .@choice);
 	.@hunt_id2 = getelementofarray(getarg(7), .@choice);
 	.@hunt_amount2 = getelementofarray(getarg(8), .@choice);
-	
 	dispbottom "Tame ID: " + .@tame_id;
 	dispbottom "Tame Amount: " + .@tame_amount;
 	dispbottom "Hunt ID: " + .@hunt_id;
@@ -182,28 +165,23 @@ function	script	cute_pet_manager	{
 	dispbottom "Mob ID: " + .@mob_id;
 	dispbottom "Hunt ID2: " + .@hunt_id2;
 	dispbottom "Hunt Amount2: " + .@hunt_amount2;
-	
 	if (.@hunt_id2) { .@hunt2_count = countitem(.@hunt_id2); }
 	if (countitem(.@hunt_id) >= .@hunt_amount && countitem(6083) > 0 && .@hunt2_count >= .@hunt_amount2) {
-
 		mes "[Cute Pet Manager]";
 		mes "Ah, you have gathered all items";
 		mes "with your friends. You can now";
 		mes "exchange for an " + getitemname(.@tame_id) + ".";
 		mes "Do you want to exchange with me?";
 		next;
-		
-		if  (select("Exchange:Don't Exchange") == 2) {
+		if (select("Exchange:Don't Exchange") == 2) {
 			mes "[Cute Pet Manager]";
 			mes "You don't? You will come back again.";
 			close;
 		}
-		
 		delitem .@hunt_id, .@hunt_amount;
 		delitem 6083, 1;
 		set getarg(5), getarg(5) + 1;
 		getitem .@tame_id, .@tame_amount;
-		
 		mes "[Cute Pet Manager]";
 		mes "Wise choice.";
 		mes "I hope you and your pet get along.";

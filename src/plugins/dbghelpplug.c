@@ -5,12 +5,14 @@
 // Ported from eAthena Dev Team's version @ http://eathena-project.googlecode.com/svn/trunk/src/plugins/dbghelpplug.c
 // Currently supported dbghelp 5.1
 
+#include "common/hercules.h"
+
+#include "common/sysinfo.h"
+
+#include "common/HPMDataCheck.h"
+
 #include <stdio.h>
 #include <string.h>
-#include "../common/sysinfo.h"
-#include "../common/HPMi.h"
-
-#include "../common/HPMDataCheck.h"
 
 /**
  * Plugin basic information
@@ -106,8 +108,6 @@ typedef enum _SymTag {
 } SymTag;
 */
 #endif /* _NO_CVCONST_H */
-
-struct sysinfo_interface *sysinfo;
 
 /////////////////////////////////////////////////////////////////////
 // dbghelp function prototypes
@@ -217,8 +217,8 @@ typedef struct _InternalData {
 
 // Extended information printed in the console
 #define DBG_EXTENDED_INFORMATION \
-		"Please report the crash in the bug tracker:\n" \
-		"http://hercules.ws/board/tracker/\n"
+		"Please report the crash in our Issues tracker:\n" \
+		"https://github.com/HerculesWS/Hercules/issues\n"
 
 // Print object children?
 // WARNING: This will generate huge dump files!
@@ -1799,7 +1799,6 @@ static LPTOP_LEVEL_EXCEPTION_FILTER previousFilter;
  **/
 HPExport void plugin_init (void) {
 	previousFilter = SetUnhandledExceptionFilter(Dhp__UnhandledExceptionFilter);
-	sysinfo = GET_SYMBOL("sysinfo");
 }
 
 /**

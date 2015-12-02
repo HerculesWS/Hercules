@@ -5,7 +5,7 @@
 #ifndef CHAR_GEOIP_H
 #define CHAR_GEOIP_H
 
-#include "../common/cbasetypes.h"
+#include "common/hercules.h"
 
 /**
  * GeoIP information
@@ -14,6 +14,7 @@ struct s_geoip {
 	unsigned char *cache; // GeoIP.dat information see geoip->init()
 	bool active;
 };
+
 
 /**
  * geoip interface
@@ -25,10 +26,10 @@ struct geoip_interface {
 	void (*init) (void);
 };
 
-struct geoip_interface *geoip;
-
 #ifdef HERCULES_CORE
 void geoip_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct geoip_interface *geoip;
 
 #endif /* CHAR_GEOIP_H */

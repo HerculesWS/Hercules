@@ -201,12 +201,12 @@ lhz_cube,123,26,0	script	cubew09-4	WARPNPC,1,1,{
 	callfunc "randomw";
 	end;
 }
- 
+
 //----- Function for Random Warps ----------------------------
 function	script	randomw	{
 	switch(rand(3)) {
 	case 1: warp "lhz_cube",66,136; end;
 	case 2: warp "lhz_cube",66,74; end;
- 	default: warp "lhz_cube",67,193; end;
+	default: warp "lhz_cube",67,193; end;
 	}
 }

@@ -45,7 +45,6 @@
 			mes "Let's take a look at it.";
 			next;
 			if (countitem("Captured_Soul") > 4 && countitem("Black_Soul") > 0) {
-			
 				mes "[Mighty Priest]";
 				mes "Wow, this is so strong!";
 				mes "You may be better than our priests!";
@@ -879,7 +878,7 @@ niflheim,192,182,7	script	Jack#14hal	4_JACK,{
 //= Richard
 //==============================================================================
 niflheim,190,185,5	script	Richard#14hal01	4_M_NFDEADSWDMAN,{
-	if (questprogress(14457) > -1) {
+	if (questprogress(14457)) {
 		mes "A doll which resembles Richard.";
 	} else {
 		mes "[Richard]";
@@ -994,7 +993,7 @@ niflheim,194,189,3	script	Loru#14hal	4_LOLI_RURI,{
 					getitem Trans_Candy_Yellow, 10;
 					getitem Trans_Candy_Green, 10;
 					erasequest 14461;
-					setquest 14464;                    
+					setquest 14464;
 					close;
 				} else {
 					mes "[Loru]";
@@ -1380,7 +1379,7 @@ niflheim,193,186,6	script	Bonfire Spirit#14hal	4_TRACE,{
 
 	OnTimer27000:
 		donpcevent "Bonfire Spirit#14hal::OnEnable";
-		end;    
+		end;
 }
 
 //= Sister / Nun
@@ -1558,7 +1557,7 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 			delitem Holy_Water, 6;
 			getitem Sacred_Rosary, 1;
 			erasequest 14452;
-			setquest 14453;            
+			setquest 14453;
 			close;
 		} else {
 			mes "[Sister Haley]";

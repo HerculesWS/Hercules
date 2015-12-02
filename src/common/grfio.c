@@ -6,19 +6,18 @@
 
 #include "grfio.h"
 
+#include "common/cbasetypes.h"
+#include "common/des.h"
+#include "common/memmgr.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/strlib.h"
+#include "common/utils.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/stat.h>
 #include <zlib.h>
-
-#include "../common/cbasetypes.h"
-#include "../common/des.h"
-#include "../common/malloc.h"
-#include "../common/nullpo.h"
-#include "../common/showmsg.h"
-#include "../common/strlib.h"
-#include "../common/utils.h"
 
 //----------------------------
 // file entry table struct
@@ -36,8 +35,8 @@ typedef struct FILELIST {
 } FILELIST;
 
 #define FILELIST_TYPE_FILE           0x01 // entry is a file
-#define FILELIST_TYPE_ENCRYPT_HEADER 0x04 // encryption mode 1 (header DES only)
 #define FILELIST_TYPE_ENCRYPT_MIXED  0x02 // encryption mode 0 (header DES + periodic DES/shuffle)
+#define FILELIST_TYPE_ENCRYPT_HEADER 0x04 // encryption mode 1 (header DES only)
 
 //gentry ... > 0  : data read from a grf file (gentry_table[gentry-1])
 //gentry ... 0    : data read from a local file (data directory)
@@ -47,7 +46,6 @@ typedef struct FILELIST {
 //                  (NOTE: this case is only used once (during startup) and only if GRFIO_LOCAL is enabled)
 //                  (NOTE: probably meant to be used to override grf contents by files in the data directory)
 //#define GRFIO_LOCAL
-
 
 // stores info about every loaded file
 FILELIST* filelist    = NULL;
@@ -62,13 +60,11 @@ int gentry_maxentry = 0;
 // the path to the data directory
 char data_dir[1024] = "";
 
-
 // little endian char array to uint conversion
 static unsigned int getlong(unsigned char* p)
 {
 	return (p[0] << 0 | p[1] << 8 | p[2] << 16 | p[3] << 24);
 }
-
 
 static void NibbleSwap(unsigned char* src, int len)
 {
@@ -79,7 +75,6 @@ static void NibbleSwap(unsigned char* src, int len)
 		--len;
 	}
 }
-
 
 /// Substitutes some specific values for others, leaves rest intact. Obfuscation.
 /// NOTE: Operation is symmetric (calling it twice gives back the original input).
@@ -143,7 +138,6 @@ static void grf_shuffle_dec(BIT64* src)
 	*src = out;
 }
 
-
 static void grf_decode_header(unsigned char* buf, size_t len)
 {
 	BIT64* p = (BIT64*)buf;
@@ -156,7 +150,6 @@ static void grf_decode_header(unsigned char* buf, size_t len)
 
 	// the rest is plaintext, done.
 }
-
 
 static void grf_decode_full(unsigned char* buf, size_t len, int cycle)
 {
@@ -195,7 +188,6 @@ static void grf_decode_full(unsigned char* buf, size_t len, int cycle)
 		// plaintext, do nothing.
 	}
 }
-
 
 /// Decodes grf data.
 /// @param buf data to decode (in-place)
@@ -236,7 +228,6 @@ static void grf_decode(unsigned char* buf, size_t len, char entry_type, int entr
 	}
 }
 
-
 /******************************************************
  ***                Zlib Subroutines                ***
  ******************************************************/
@@ -247,13 +238,11 @@ unsigned long grfio_crc32(const unsigned char* buf, unsigned int len)
 	return crc32(crc32(0L, Z_NULL, 0), buf, len);
 }
 
-
 /// zlib uncompress
 int decode_zip(void* dest, unsigned long* destLen, const void* source, unsigned long sourceLen)
 {
 	return uncompress((Bytef*)dest, destLen, (const Bytef*)source, sourceLen);
 }
-
 
 /// zlib compress
 int encode_zip(void* dest, unsigned long* destLen, const void* source, unsigned long sourceLen) {
@@ -264,7 +253,6 @@ int encode_zip(void* dest, unsigned long* destLen, const void* source, unsigned 
 	}
 	return compress((Bytef*)dest, destLen, (const Bytef*)source, sourceLen);
 }
-
 
 /***********************************************************
  ***                File List Subroutines                ***
@@ -371,11 +359,9 @@ static void filelist_compact(void)
 	}
 }
 
-
 /***********************************************************
  ***                  Grfio Subroutines                  ***
  ***********************************************************/
-
 
 /// Combines are resource path with the data folder location to create local resource path.
 static void grfio_localpath_create(char* buffer, size_t size, const char* filename)
@@ -399,7 +385,6 @@ static void grfio_localpath_create(char* buffer, size_t size, const char* filena
 		if( buffer[i] == '\\' )
 			buffer[i] = '/';
 }
-
 
 /// Reads a file into a newly allocated buffer (from grf or data directory).
 void *grfio_reads(const char *fname, int *size)
@@ -450,7 +435,7 @@ void *grfio_reads(const char *fname, int *size)
 		// Archive[GRF] File Read
 		char *grfname = gentry_table[entry->gentry - 1];
 		FILE *in = fopen(grfname, "rb");
-		
+
 		if (in != NULL) {
 			int fsize = entry->srclen_aligned;
 			unsigned char *buf = (unsigned char *)aMalloc(fsize);
@@ -497,7 +482,6 @@ void *grfio_reads(const char *fname, int *size)
 	return NULL;
 }
 
-
 /// Decodes encrypted filename from a version 01xx grf index.
 static char* decode_filename(unsigned char* buf, int len)
 {
@@ -508,7 +492,6 @@ static char* decode_filename(unsigned char* buf, int len)
 	}
 	return (char*)buf;
 }
-
 
 /// Compares file extension against known large file types.
 /// @return true if the file should undergo full mode 0 decryption, and true otherwise.
@@ -525,7 +508,6 @@ static bool isFullEncrypt(const char* fname)
 
 	return true;
 }
-
 
 /// Loads all entries in the specified grf file into the filelist.
 /// @param gentry index of the grf file name in the gentry_table
@@ -645,6 +627,7 @@ static int grfio_entryread(const char *grfname, int gentry)
 		aFree(rBuf);
 
 		entrys = getlong(grf_header+0x26) - 7;
+		Assert_retr(4, entrys >= 0);
 
 		// Get an entry
 		for (entry = 0, ofs = 0; entry < entrys; ++entry) {
@@ -691,7 +674,6 @@ static int grfio_entryread(const char *grfname, int gentry)
 	return 0; // 0:no error
 }
 
-
 static bool grfio_parse_restable_row(const char* row)
 {
 	char w1[256], w2[256];
@@ -732,7 +714,6 @@ static bool grfio_parse_restable_row(const char* row)
 
 	return false;
 }
-
 
 /// Grfio Resource file check.
 static void grfio_resourcecheck(void)
@@ -785,7 +766,6 @@ static void grfio_resourcecheck(void)
 	}
 }
 
-
 /// Reads a grf file and adds it to the list.
 static int grfio_add(const char* fname)
 {
@@ -801,7 +781,6 @@ static int grfio_add(const char* fname)
 
 	return grfio_entryread(fname, gentry_entrys - 1);
 }
-
 
 /// Finalizes grfio.
 void grfio_final(void)
@@ -828,7 +807,6 @@ void grfio_final(void)
 	}
 	gentry_entrys = gentry_maxentry = 0;
 }
-
 
 /// Initializes grfio.
 void grfio_init(const char* fname)

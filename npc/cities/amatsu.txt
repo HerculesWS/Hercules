@@ -135,7 +135,7 @@ amatsu,194,79,5	script	Sea Captain#ama2	4_M_SEAMAN,{
 		mes "so many things to talk about,";
 		mes "right? All aboard now.";
 		close2;
-		if (checkre(0))
+		if (RENEWAL)
 			warp "alberta",244,72;
 		else
 			warp "alberta",243,91;
@@ -165,7 +165,7 @@ amatsu,230,160,3	script	Well-side Maiden#ama	4_F_JPN2,{
 	mes "It really gives me the creeps.";
 	close;
 }
-	
+
 amatsu,179,107,4	script	John#ama	4_M_04,{
 	mes "[John]";
 	mes "Yo~";
@@ -222,7 +222,7 @@ amatsu,179,107,4	script	John#ama	4_M_04,{
 	mes "I guess it's over...";
 	close;
 }
-	
+
 amatsu,205,163,3	script	Mimi#ama	4_F_JPNCHIBI,{
 	mes "[Mimi]";
 	mes "Puhuhu~!";
@@ -240,7 +240,7 @@ amatsu,205,163,3	script	Mimi#ama	4_F_JPNCHIBI,{
 	mes "A lady can always use a little more makeup.";
 	close;
 }
-	
+
 amatsu,185,115,3	script	Drunken Man#ama	4_M_JPNOJI2,{
 	mes "[Kosake]";
 	mes "*Hiccup*...My wife is just like,";
@@ -280,7 +280,7 @@ amatsu,185,115,3	script	Drunken Man#ama	4_M_JPNOJI2,{
 	mes "If you buy me a drink, I will think about it...Hehehe...*Hiccup*..";
 	close;
 }
-	
+
 amatsu,217,179,1	script	Grandma#ama	4_F_JPNOBA2,{
 	mes "[Hatsue]";
 	mes "I'm worried about my husband.";
@@ -292,7 +292,7 @@ amatsu,217,179,1	script	Grandma#ama	4_F_JPNOBA2,{
 	mes "went to the bar and starts drinking again? The man just doesn't have any backbone. *Phew*";
 	close;
 }
-	
+
 amatsu,287,266,3	script	Jyaburo#ama	4_M_JPNOJI,{
 	mes "[Jyaburo]";
 	mes "This place is special to me.";
@@ -372,7 +372,7 @@ amatsu,269,221,1	script	Propose Girl#ama	4_F_JPN,{
 	mes "happy things will happen, if you do.";
 	close;
 }
-	
+
 amatsu,243,202,3	script	Drama Teacher#ama	4_F_JPNOBA2,{
 	jap_tree = 2;
 	mes "[Garakame sensei]";
@@ -417,7 +417,7 @@ amatsu,243,202,3	script	Drama Teacher#ama	4_F_JPNOBA2,{
 	mes "someday when you are ready.";
 	close;
 }
-	
+
 amatsu,283,203,1	script	Bonubonu#ama1	SEE_OTTER,{
 	end;
 }
@@ -451,7 +451,7 @@ amatsu,283,203,1	script	Bonubonu#ama2	HIDDEN_NPC,{
 	mes "It is really a miraculous and gracious tree...";
 	close;
 }
-	
+
 amatsu,274,178,7	script	Veterinarian#ama	4_M_JOB_WIZARD,{
 	jap_tree = 4;
 	mes "[Sakura Seiichi]";
@@ -504,7 +504,7 @@ amatsu,274,178,7	script	Veterinarian#ama	4_M_JOB_WIZARD,{
 	mes "Finally, I couldn't even hear anything. I can't even recall what he was trying to tell me...^000000";
 	close;
 }
-	
+
 amatsu,262,197,1	script	Legendary Tree	HIDDEN_NPC,{
 	if (jap_tree == 1) {
 		mes "^3355FFAs she mentioned, this tree";

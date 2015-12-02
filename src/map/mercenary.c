@@ -6,42 +6,45 @@
 
 #include "mercenary.h"
 
+#include "map/atcommand.h"
+#include "map/battle.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/guild.h"
+#include "map/intif.h"
+#include "map/itemdb.h"
+#include "map/log.h"
+#include "map/map.h"
+#include "map/mob.h"
+#include "map/npc.h"
+#include "map/party.h"
+#include "map/pc.h"
+#include "map/pet.h"
+#include "map/script.h"
+#include "map/skill.h"
+#include "map/status.h"
+#include "map/trade.h"
+#include "map/unit.h"
+#include "common/cbasetypes.h"
+#include "common/memmgr.h"
+#include "common/mmo.h"
+#include "common/nullpo.h"
+#include "common/random.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/strlib.h"
+#include "common/timer.h"
+#include "common/utils.h"
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "atcommand.h"
-#include "battle.h"
-#include "chrif.h"
-#include "clif.h"
-#include "guild.h"
-#include "intif.h"
-#include "itemdb.h"
-#include "log.h"
-#include "map.h"
-#include "mob.h"
-#include "npc.h"
-#include "party.h"
-#include "pc.h"
-#include "pet.h"
-#include "script.h"
-#include "skill.h"
-#include "status.h"
-#include "trade.h"
-#include "unit.h"
-#include "../common/cbasetypes.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/nullpo.h"
-#include "../common/random.h"
-#include "../common/showmsg.h"
-#include "../common/socket.h"
-#include "../common/strlib.h"
-#include "../common/timer.h"
-#include "../common/utils.h"
-
 struct mercenary_interface mercenary_s;
+struct s_mercenary_db mercdb[MAX_MERCENARY_CLASS];
+
+struct mercenary_interface *mercenary;
 
 int merc_search_index(int class_)
 {
@@ -449,7 +452,7 @@ bool read_mercenarydb_sub(char* str[], int columns, int current) {
 }
 
 int read_mercenarydb(void) {
-	memset(mercenary->db,0,sizeof(mercenary->db));
+	memset(mercenary->db, 0, sizeof(struct s_mercenary_db) * MAX_MERCENARY_CLASS);
 	sv->readdb(map->db_path, "mercenary_db.txt", ',', 26, 26, MAX_MERCENARY_CLASS, mercenary->read_db_sub);
 
 	return 0;
@@ -468,7 +471,7 @@ bool read_mercenary_skilldb_sub(char* str[], int columns, int current)
 		ShowError("read_mercenary_skilldb : Class %d not found in mercenary_db for skill entry.\n", class_);
 		return false;
 	}
-	
+
 	skill_id = atoi(str[1]);
 	if( skill_id < MC_SKILLBASE || skill_id >= MC_SKILLBASE + MAX_MERCSKILL )
 	{
@@ -498,7 +501,7 @@ void do_init_mercenary(bool minimal) {
 
 	mercenary->read_db();
 	mercenary->read_skilldb();
-	
+
 	timer->add_func_list(mercenary->contract_end_timer, "merc_contract_end_timer");
 }
 
@@ -511,25 +514,25 @@ void mercenary_defaults(void) {
 	mercenary = &mercenary_s;
 
 	/* vars */
-	memset(mercenary->db,0,sizeof(mercenary->db));
+	mercenary->db = mercdb;
+	memset(mercenary->db, 0, sizeof(struct s_mercenary_db) * MAX_MERCENARY_CLASS);
 
 	/* funcs */
-	
 	mercenary->init = do_init_mercenary;
-	
+
 	mercenary->class = merc_class;
 	mercenary->get_viewdata = merc_get_viewdata;
-	
+
 	mercenary->create = merc_create;
 	mercenary->data_received = merc_data_received;
 	mercenary->save = mercenary_save;
-	
+
 	mercenary->heal = mercenary_heal;
 	mercenary->dead = mercenary_dead;
-	
+
 	mercenary->delete = merc_delete;
 	mercenary->contract_stop = merc_contract_stop;
-	
+
 	mercenary->get_lifetime = mercenary_get_lifetime;
 	mercenary->get_guild = mercenary_get_guild;
 	mercenary->get_faith = mercenary_get_faith;
@@ -537,14 +540,14 @@ void mercenary_defaults(void) {
 	mercenary->get_calls = mercenary_get_calls;
 	mercenary->set_calls = mercenary_set_calls;
 	mercenary->kills = mercenary_kills;
-	
+
 	mercenary->checkskill = mercenary_checkskill;
 	mercenary->read_db = read_mercenarydb;
 	mercenary->read_skilldb = read_mercenary_skilldb;
-	
+
 	mercenary->killbonus = mercenary_killbonus;
 	mercenary->search_index = merc_search_index;
-	
+
 	mercenary->contract_end_timer = merc_contract_end_timer;
 	mercenary->read_db_sub = read_mercenarydb_sub;
 	mercenary->read_skill_db_sub = read_mercenary_skilldb_sub;

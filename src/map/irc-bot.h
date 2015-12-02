@@ -1,12 +1,12 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
-// Base Author: shennetsind @ http://hercules.ws
+// Base Author: shennetsind @ http://herc.ws
 
 
 #ifndef MAP_IRC_BOT_H
 #define MAP_IRC_BOT_H
 
-#include "../common/cbasetypes.h"
+#include "common/hercules.h"
 
 #define IRC_NICK_LENGTH 40
 #define IRC_IDENT_LENGTH 40
@@ -59,10 +59,10 @@ struct irc_bot_interface {
 	void (*usernick) (int fd, char *cmd, char *source, char *target, char *msg);
 };
 
-struct irc_bot_interface *ircbot;
-
 #ifdef HERCULES_CORE
 void ircbot_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct irc_bot_interface *ircbot;
 
 #endif /* MAP_IRC_BOT_H */

@@ -5,20 +5,21 @@
 #ifndef MAP_SCRIPT_H
 #define MAP_SCRIPT_H
 
+#include "map/map.h" //EVENT_NAME_LENGTH
+#include "common/hercules.h"
+#include "common/db.h"
+#include "common/mmo.h" // struct item
+#include "common/sql.h" // Sql
+#include "common/strlib.h" //StringBuf
+
 #include <errno.h>
 #include <setjmp.h>
-
-#include "map.h" //EVENT_NAME_LENGTH
-#include "../common/cbasetypes.h"
-#include "../common/db.h"
-#include "../common/mmo.h" // struct item
-#include "../common/sql.h" // Sql
-#include "../common/strlib.h" //StringBuf
 
 /**
  * Declarations
  **/
 struct eri;
+struct item_data;
 
 /**
  * Defines
@@ -187,6 +188,7 @@ typedef enum c_op {
 	C_USERFUNC, // internal script function
 	C_USERFUNC_POS, // internal script function label
 	C_REF, // the next call to c_op2 should push back a ref to the left operand
+	C_LSTR, //Language Str (struct script_code_str)
 
 	// operators
 	C_OP3, // a ? b : c
@@ -221,12 +223,13 @@ typedef enum c_op {
 #endif // PCRE_SUPPORT
 } c_op;
 
-enum hQueueOpt {
-	HQO_NONE,
-	HQO_onLogOut,
-	HQO_OnDeath,
-	HQO_OnMapChange,
-	HQO_MAX,
+/// Script queue options
+enum ScriptQueueOptions {
+	SQO_NONE,        ///< No options set
+	SQO_ONLOGOUT,    ///< Execute event on logout
+	SQO_ONDEATH,     ///< Execute event on death
+	SQO_ONMAPCHANGE, ///< Execute event on map change
+	SQO_MAX,
 };
 
 enum e_script_state { RUN,STOP,END,RERUNLINE,GOTO,RETFUNC,CLOSE };
@@ -389,22 +392,27 @@ struct script_stack {
 	struct reg_db scope;            ///< scope variables
 };
 
-/* [Ind/Hercules] */
-struct hQueue {
-	int id;
-	int *item;
-	int items;/* how many actual items are in the array */
-	int size;/* size of the *item array, not the current amount of items in it since it can have empty slots */
-	/* events */
-	char onLogOut[EVENT_NAME_LENGTH];
-	char onDeath[EVENT_NAME_LENGTH];
-	char onMapChange[EVENT_NAME_LENGTH];
+/**
+ * Data structure to represent a script queue.
+ * @author Ind/Hercules
+ */
+struct script_queue {
+	int id;                              ///< Queue identifier
+	VECTOR_DECL(int) entries;            ///< Items in the queue.
+	bool valid;                          ///< Whether the queue is valid.
+	/// Events
+	char event_logout[EVENT_NAME_LENGTH];    ///< Logout event
+	char event_death[EVENT_NAME_LENGTH];     ///< Death event
+	char event_mapchange[EVENT_NAME_LENGTH]; ///< Map change event
 };
 
-struct hQueueIterator {
-	int *item;
-	int items;
-	int pos;
+/**
+ * Iterator for a struct script_queue.
+ */
+struct script_queue_iterator {
+	VECTOR_DECL(int) entries; ///< Entries in the queue (iterator's cached copy)
+	bool valid;               ///< Whether the queue is valid (initialized - not necessarily having entries available)
+	int pos;                  ///< Iterator's cursor
 };
 
 struct script_state {
@@ -464,6 +472,11 @@ struct script_syntax_data {
 	} curly[256]; // Information right parenthesis
 	int curly_count; // The number of right brackets
 	int index; // Number of the syntax used in the script
+	int last_func; // buildin index of the last parsed function
+	unsigned int nested_call; //Dont really know what to call this
+	bool lang_macro_active;
+	DBMap *strings; // string map parsed (used when exporting strings only)
+	DBMap *translation_db; //non-null if this npc has any translated strings to be linked
 };
 
 struct casecheck_data {
@@ -485,6 +498,18 @@ struct script_array {
 	unsigned int *members;/* member list */
 };
 
+struct script_string_buf {
+	char *ptr;
+	size_t pos,size;
+};
+
+struct string_translation {
+	int string_id;
+	uint8 translations;
+	unsigned int len;
+	char *buf;
+};
+
 /**
  * Interface
  **/
@@ -496,9 +521,8 @@ struct script_interface {
 	struct eri *st_ers;
 	struct eri *stack_ers;
 	/* */
-	struct hQueue *hq;
-	struct hQueueIterator *hqi;
-	int hqs, hqis;
+	VECTOR_DECL(struct script_queue) hq;
+	VECTOR_DECL(struct script_queue_iterator) hqi;
 	/*  */
 	char **buildin;
 	unsigned int buildin_count;
@@ -518,6 +542,10 @@ struct script_interface {
 	/* */
 	char *word_buf;
 	size_t word_size;
+	/* Script string storage */
+	char *string_list;
+	int string_list_size;
+	int string_list_pos;
 	/*  */
 	unsigned short current_item_id;
 	/* */
@@ -564,6 +592,28 @@ struct script_interface {
 	/* */
 	unsigned int *generic_ui_array;
 	unsigned int generic_ui_array_size;
+	/* Set during startup when attempting to export the lang, unset after server initialization is over */
+	FILE *lang_export_fp;
+	char *lang_export_file;/* for lang_export_fp */
+	/* set and unset on npc_parse_script */
+	char *parser_current_npc_name;
+	/* */
+	int buildin_mes_offset;
+	int buildin_select_offset;
+	int buildin_lang_macro_offset;
+	/* */
+	DBMap *translation_db;/* npc_name => DBMap (strings) */
+	char **translation_buf;/*  */
+	uint32 translation_buf_size;
+	/* */
+	char **languages;
+	uint8 max_lang_id;
+	/* */
+	struct script_string_buf parse_simpleexpr_str;
+	struct script_string_buf lang_export_line_buf;
+	struct script_string_buf lang_export_unescaped_buf;
+	/* */
+	int parse_cleanup_timer_id;
 	/*  */
 	void (*init) (bool minimal);
 	void (*final) (void);
@@ -584,6 +634,14 @@ struct script_interface {
 	void (*detach_rid) (struct script_state* st);
 	struct script_data* (*push_val)(struct script_stack* stack, enum c_op type, int64 val, struct reg_db *ref);
 	struct script_data *(*get_val) (struct script_state* st, struct script_data* data);
+	char* (*get_val_ref_str) (struct script_state* st, struct reg_db *n, struct script_data* data);
+	char* (*get_val_scope_str) (struct script_state* st, struct reg_db *n, struct script_data* data);
+	char* (*get_val_npc_str) (struct script_state* st, struct reg_db *n, struct script_data* data);
+	char* (*get_val_instance_str) (struct script_state* st, const char* name, struct script_data* data);
+	int (*get_val_ref_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
+	int (*get_val_scope_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
+	int (*get_val_npc_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
+	int (*get_val_instance_num) (struct script_state* st, const char* name, struct script_data* data);
 	void* (*get_val2) (struct script_state* st, int64 uid, struct reg_db *ref);
 	struct script_data* (*push_str) (struct script_stack* stack, enum c_op type, char* str);
 	struct script_data* (*push_copy) (struct script_stack* stack, int pos);
@@ -592,7 +650,9 @@ struct script_interface {
 	void (*set_constant2) (const char *name, int value, bool isparameter);
 	bool (*get_constant) (const char* name, int* value);
 	void (*label_add)(int key, int pos);
-	void (*run) (struct script_code *rootscript,int pos,int rid,int oid);
+	void (*run) (struct script_code *rootscript, int pos, int rid, int oid);
+	void (*run_npc) (struct script_code *rootscript, int pos, int rid, int oid);
+	void (*run_pet) (struct script_code *rootscript, int pos, int rid, int oid);
 	void (*run_main) (struct script_state *st);
 	int (*run_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*set_var) (struct map_session_data *sd, char *name, void *val);
@@ -612,12 +672,12 @@ struct script_interface {
 	void (*setd_sub) (struct script_state *st, struct map_session_data *sd, const char *varname, int elem, void *value, struct reg_db *ref);
 	void (*attach_state) (struct script_state* st);
 	/* */
-	struct hQueue *(*queue) (int idx);
+	struct script_queue *(*queue) (int idx);
 	bool (*queue_add) (int idx, int var);
 	bool (*queue_del) (int idx);
 	bool (*queue_remove) (int idx, int var);
 	int (*queue_create) (void);
-	void (*queue_clear) (int idx);
+	bool (*queue_clear) (int idx);
 	/* */
 	const char * (*parse_curly_close) (const char *p);
 	const char * (*parse_syntax_close) (const char *p);
@@ -649,6 +709,14 @@ struct script_interface {
 	const char* (*print_line) (StringBuf *buf, const char *p, const char *mark, int line);
 	void (*errorwarning_sub) (StringBuf *buf, const char *src, const char *file, int start_line, const char *error_msg, const char *error_pos);
 	int (*set_reg) (struct script_state *st, TBL_PC *sd, int64 num, const char *name, const void *value, struct reg_db *ref);
+	void (*set_reg_ref_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
+	void (*set_reg_scope_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
+	void (*set_reg_npc_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
+	void (*set_reg_instance_str) (struct script_state* st, int64 num, const char* name, const char *str);
+	void (*set_reg_ref_num) (struct script_state* st, struct reg_db *n, int64 num, const char* name, int val);
+	void (*set_reg_scope_num) (struct script_state* st, struct reg_db *n, int64 num, const char* name, int val);
+	void (*set_reg_npc_num) (struct script_state* st, struct reg_db *n, int64 num, const char* name, int val);
+	void (*set_reg_instance_num) (struct script_state* st, int64 num, const char* name, int val);
 	void (*stack_expand) (struct script_stack *stack);
 	struct script_data* (*push_retinfo) (struct script_stack *stack, struct script_retinfo *ri, struct reg_db *ref);
 	void (*op_3) (struct script_state *st, int op);
@@ -712,12 +780,24 @@ struct script_interface {
 	/* */
 	void (*hardcoded_constants) (void);
 	unsigned short (*mapindexname2id) (struct script_state *st, const char* name);
+	int (*string_dup) (char *str);
+	void (*load_translations) (void);
+	void (*load_translation) (const char *file, uint8 lang_id, uint32 *total);
+	int (*translation_db_destroyer) (DBKey key, DBData *data, va_list ap);
+	void (*clear_translations) (bool reload);
+	int (*parse_cleanup_timer) (int tid, int64 tick, int id, intptr_t data);
+	uint8 (*add_language) (const char *name);
+	const char *(*get_translation_file_name) (const char *file);
+	void (*parser_clean_leftovers) (void);
+	void (*run_use_script) (struct map_session_data *sd, struct item_data *data, int oid);
+	void (*run_item_equip_script) (struct map_session_data *sd, struct item_data *data, int oid);
+	void (*run_item_unequip_script) (struct map_session_data *sd, struct item_data *data, int oid);
 };
-
-struct script_interface *script;
 
 #ifdef HERCULES_CORE
 void script_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct script_interface *script;
 
 #endif /* MAP_SCRIPT_H */

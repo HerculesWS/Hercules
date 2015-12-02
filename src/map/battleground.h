@@ -5,9 +5,14 @@
 #ifndef MAP_BATTLEGROUND_H
 #define MAP_BATTLEGROUND_H
 
-#include "clif.h"
-#include "guild.h"
-#include "../common/mmo.h" // struct party
+#include "map/map.h" // EVENT_NAME_LENGTH
+#include "common/hercules.h"
+#include "common/db.h"
+#include "common/mmo.h" // struct party
+
+struct hplugin_data_store;
+struct block_list;
+struct map_session_data;
 
 /**
  * Defines
@@ -48,6 +53,7 @@ struct battleground_data {
 	// Logout Event
 	char logout_event[EVENT_NAME_LENGTH];
 	char die_event[EVENT_NAME_LENGTH];
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct bg_arena {
@@ -112,16 +118,17 @@ struct battleground_interface {
 	int (*send_xy_timer_sub) (DBKey key, DBData *data, va_list ap);
 	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*afk_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*team_db_final) (DBKey key, DBData *data, va_list ap);
 	/* */
 	enum bg_queue_types (*str2teamtype) (const char *str);
 	/* */
 	void (*config_read) (void);
 };
 
-struct battleground_interface *bg;
-
 #ifdef HERCULES_CORE
 void battleground_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct battleground_interface *bg;
 
 #endif /* MAP_BATTLEGROUND_H */

@@ -185,7 +185,7 @@ S_MakeDye:
 		Zeny -= .@cost;
 		// get dyestuff
 		getitem .@dyestuff,1;
-		
+
 		mes "[Dye Maker Java Dullihan]";
 		mes "Hmm... It came out pretty well. A very rich color. Of course I'll be trying harder to make a more charming color...";
 		next;

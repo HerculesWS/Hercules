@@ -2,99 +2,108 @@
 // See the LICENSE file
 // Sample Hercules Plugin
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "../common/HPMi.h"
-#include "../common/db.h"
-#include "../common/malloc.h"
-#include "../common/mmo.h"
-#include "../common/socket.h"
+#include "common/hercules.h"
+#include "common/db.h"
+#include "common/memmgr.h"
+#include "common/mmo.h"
+#include "common/socket.h"
 
 #if defined (HPMHOOKING_LOGIN)
 #define HPM_SERVER_TYPE SERVER_TYPE_LOGIN
-#define HPM_CORE_INCLUDE "../plugins/HPMHooking/HPMHooking_login.HPMHooksCore.inc"
-#define HPM_SYMBOL_INCLUDE "../plugins/HPMHooking/HPMHooking_login.GetSymbol.inc"
-#define HPM_HOOKS_INCLUDE "../plugins/HPMHooking/HPMHooking_login.Hooks.inc"
-#define HPM_POINTS_INCLUDE "../plugins/HPMHooking/HPMHooking_login.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "../plugins/HPMHooking/HPMHooking_login.sources.inc"
-#include "../login/login.h"
+#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_login.HPMHooksCore.inc"
+#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_login.Hooks.inc"
+#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_login.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_login.sources.inc"
+#include "login/login.h"
 #elif defined (HPMHOOKING_CHAR)
 #define HPM_SERVER_TYPE SERVER_TYPE_CHAR
-#define HPM_CORE_INCLUDE "../plugins/HPMHooking/HPMHooking_char.HPMHooksCore.inc"
-#define HPM_SYMBOL_INCLUDE "../plugins/HPMHooking/HPMHooking_char.GetSymbol.inc"
-#define HPM_HOOKS_INCLUDE "../plugins/HPMHooking/HPMHooking_char.Hooks.inc"
-#define HPM_POINTS_INCLUDE "../plugins/HPMHooking/HPMHooking_char.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "../plugins/HPMHooking/HPMHooking_char.sources.inc"
-#include "../char/char.h"
-#include "../char/geoip.h"
-#include "../char/int_auction.h"
-#include "../char/int_elemental.h"
-#include "../char/int_guild.h"
-#include "../char/int_homun.h"
-#include "../char/int_mail.h"
-#include "../char/int_mercenary.h"
-#include "../char/int_party.h"
-#include "../char/int_pet.h"
-#include "../char/int_quest.h"
-#include "../char/int_storage.h"
-#include "../char/inter.h"
-#include "../char/loginif.h"
-#include "../char/mapif.h"
-#include "../char/pincode.h"
+#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_char.HPMHooksCore.inc"
+#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_char.Hooks.inc"
+#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_char.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_char.sources.inc"
+#include "char/char.h"
+#include "char/geoip.h"
+#include "char/int_auction.h"
+#include "char/int_elemental.h"
+#include "char/int_guild.h"
+#include "char/int_homun.h"
+#include "char/int_mail.h"
+#include "char/int_mercenary.h"
+#include "char/int_party.h"
+#include "char/int_pet.h"
+#include "char/int_quest.h"
+#include "char/int_storage.h"
+#include "char/inter.h"
+#include "char/loginif.h"
+#include "char/mapif.h"
+#include "char/pincode.h"
+#include "common/mapindex.h"
 #elif defined (HPMHOOKING_MAP)
 #define HPM_SERVER_TYPE SERVER_TYPE_MAP
-#define HPM_CORE_INCLUDE "../plugins/HPMHooking/HPMHooking_map.HPMHooksCore.inc"
-#define HPM_SYMBOL_INCLUDE "../plugins/HPMHooking/HPMHooking_map.GetSymbol.inc"
-#define HPM_HOOKS_INCLUDE "../plugins/HPMHooking/HPMHooking_map.Hooks.inc"
-#define HPM_POINTS_INCLUDE "../plugins/HPMHooking/HPMHooking_map.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "../plugins/HPMHooking/HPMHooking_map.sources.inc"
-#include "../map/atcommand.h"
-#include "../map/battle.h"
-#include "../map/battleground.h"
-#include "../map/channel.h"
-#include "../map/chat.h"
-#include "../map/chrif.h"
-#include "../map/clif.h"
-#include "../map/duel.h"
-#include "../map/elemental.h"
-#include "../map/guild.h"
-#include "../map/homunculus.h"
-#include "../map/instance.h"
-#include "../map/intif.h"
-#include "../map/irc-bot.h"
-#include "../map/itemdb.h"
-#include "../map/log.h"
-#include "../map/mail.h"
-#include "../map/map.h"
-#include "../map/mapreg.h"
-#include "../map/mercenary.h"
-#include "../map/mob.h"
-#include "../map/npc.h"
-#include "../map/npc.h"
-#include "../map/party.h"
-#include "../map/path.h"
-#include "../map/pc.h"
-#include "../map/pet.h"
-#include "../map/quest.h"
-#include "../map/script.h"
-#include "../map/skill.h"
-#include "../map/status.h"
-#include "../map/storage.h"
-#include "../map/trade.h"
-#include "../map/unit.h"
+#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking_map.HPMHooksCore.inc"
+#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking_map.Hooks.inc"
+#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking_map.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking_map.sources.inc"
+#include "map/atcommand.h"
+#include "map/battle.h"
+#include "map/battleground.h"
+#include "map/channel.h"
+#include "map/chat.h"
+#include "map/chrif.h"
+#include "map/clif.h"
+#include "map/duel.h"
+#include "map/elemental.h"
+#include "map/guild.h"
+#include "map/homunculus.h"
+#include "map/instance.h"
+#include "map/intif.h"
+#include "map/irc-bot.h"
+#include "map/itemdb.h"
+#include "map/log.h"
+#include "map/mail.h"
+#include "map/map.h"
+#include "map/mapreg.h"
+#include "map/mercenary.h"
+#include "map/mob.h"
+#include "map/npc.h"
+#include "map/party.h"
+#include "map/path.h"
+#include "map/pc.h"
+#include "map/pet.h"
+#include "map/quest.h"
+#include "map/script.h"
+#include "map/skill.h"
+#include "map/status.h"
+#include "map/storage.h"
+#include "map/trade.h"
+#include "map/unit.h"
+#include "common/mapindex.h"
 #else
 #define HPM_SERVER_TYPE SERVER_TYPE_UNKNOWN
-#define HPM_CORE_INCLUDE "../plugins/HPMHooking/HPMHooking.HPMHooksCore.inc"
-#define HPM_SYMBOL_INCLUDE "../plugins/HPMHooking/HPMHooking.GetSymbol.inc"
-#define HPM_HOOKS_INCLUDE "../plugins/HPMHooking/HPMHooking.Hooks.inc"
-#define HPM_POINTS_INCLUDE "../plugins/HPMHooking/HPMHooking.HookingPoints.inc"
-#define HPM_SOURCES_INCLUDE "../plugins/HPMHooking/HPMHooking.sources.inc"
+#define HPM_CORE_INCLUDE "HPMHooking/HPMHooking.HPMHooksCore.inc"
+#define HPM_HOOKS_INCLUDE "HPMHooking/HPMHooking.Hooks.inc"
+#define HPM_POINTS_INCLUDE "HPMHooking/HPMHooking.HookingPoints.inc"
+#define HPM_SOURCES_INCLUDE "HPMHooking/HPMHooking.sources.inc"
 #error HPMHooking plugin needs to be compiled for a specific server type. Please make sure your Makefiles are up to date.
 #endif
+#include "common/conf.h"
+#include "common/console.h"
+#include "common/db.h"
+#include "common/memmgr.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+#include "common/socket.h"
+#include "common/sql.h"
+#include "common/strlib.h"
+#include "common/sysinfo.h"
+#include "common/timer.h"
+#include "common/utils.h"
 
-#include "../common/HPMDataCheck.h"
+#include "common/HPMDataCheck.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 HPExport struct hplugin_info pinfo = {
 	"HPMHooking",   // Plugin name
@@ -134,20 +143,19 @@ HPExport void server_post_final (void) {
 	HPM_HP_final();
 }
 
-HPExport bool Hooked (bool *fr) {
+HPExport const char *Hooked (bool *fr) {
+	const char *ret = HPM_shared_symbols(HPM_SERVER_TYPE);
+	if (ret)
+		return ret;
 	HPMforce_return = fr;
-	DB = GET_SYMBOL("DB");
-	iMalloc = GET_SYMBOL("iMalloc");
-#include HPM_SYMBOL_INCLUDE
 	HPM_HP_load();
-	return true;
+	return NULL;
 }
-
 
 HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID) {
 	struct HookingPointData *hpd;
 
-	if( hp_db && (hpd = strdb_get(hp_db,target)) ) {
+	if (hp_db && (hpd = strdb_get(hp_db,target)) != NULL) {
 		struct HPMHookPoint **hp = NULL;
 		int *count = NULL;
 
@@ -221,4 +229,3 @@ void HPM_HP_load(void) {
 
 	#include HPM_SOURCES_INCLUDE
 }
-

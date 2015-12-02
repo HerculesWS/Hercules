@@ -66,7 +66,7 @@ amatsu,207,89,3	script	Amatsu Guide#ama	4_F_JPN,{
 		close;
 	}
 }
-	
+
 amatsu,251,283,4	script	Guide Man#2ama	8_M_JPNSOLDIER,{
 	mes "[Guide Man]";
 	mes "Welcome, tourist from Rune-Midgard.";

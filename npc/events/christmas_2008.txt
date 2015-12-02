@@ -163,81 +163,81 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 						}
 					}
 				}
+				mes "[Caroller]";
+				mes "You know about Christmas!";
+				mes "Talking about Christmas...";
+				mes "...it's carols!!!";
+				mes "I've been waiting for this for when";
+				mes "Christmas comes around!";
+				next;
+				mes "[Caroller]";
+				mes "But there's been no caroling here and there like before, so we can't feel the Christmas spirit.";
+				next;
+				mes "[Caroller]";
+				mes "So, I installed a Singing Crystal in Prontera...";
+				next;
+				mes "[Caroller]";
+				mes "but that jerk Antonio broke the crystal!";
+				next;
+				mes "[Caroller]";
+				mes "The gift boxes have been changing into monsters since Antonio placed some magic on them, so the monsters ate up the crystal fragments!";
+				next;
+				mes "[Caroller]";
+				mes "I am so devastated, since the Singing Crystal has been the hope of many children around the villages.";
+				next;
+				if (select("There's no other way to carol?:You can hear carols in Lutie.") == 2) {
 					mes "[Caroller]";
-					mes "You know about Christmas!";
-					mes "Talking about Christmas...";
-					mes "...it's carols!!!";
-					mes "I've been waiting for this for when";
-					mes "Christmas comes around!";
+					mes "And just stay there, every Christmas, for your whole life?";
+					next;
+					mes "["+strcharinfo(0)+"]";
+					mes "What? What do you mean?";
 					next;
 					mes "[Caroller]";
-					mes "But there's been no caroling here and there like before, so we can't feel the Christmas spirit.";
-					next;
-					mes "[Caroller]";
-					mes "So, I installed a Singing Crystal in Prontera...";
-					next;
-					mes "[Caroller]";
-					mes "but that jerk Antonio broke the crystal!";
-					next;
-					mes "[Caroller]";
-					mes "The gift boxes have been changing into monsters since Antonio placed some magic on them, so the monsters ate up the crystal fragments!";
-					next;
-					mes "[Caroller]";
-					mes "I am so devastated, since the Singing Crystal has been the hope of many children around the villages.";
-					next;
-					if (select("There's no other way to carol?:You can hear carols in Lutie.") == 2) {
-						mes "[Caroller]";
-						mes "And just stay there, every Christmas, for your whole life?";
-						next;
-						mes "["+strcharinfo(0)+"]";
-						mes "What? What do you mean?";
-						next;
-						mes "[Caroller]";
-						mes "Oh, nevermind.";
-						mes "Ah...";
-						close;
-					}
-					mes "[Caroller]";
-					mes "Maybe, it's quite hard to make a jukebox for the villages, but a music box might be possible.";
-					next;
-					mes "[Caroller]";
-					mes "We need the ^0000FFSinging Crystal Pieces^000000 that the monsters ate up.";
-					next;
-					mes "[Caroller]";
-					mes "Please bring me ^0000FF6 Singing Crystal Pieces^000000, and you will be rewarded with presents!";
-					next;
-					mes "[Caroller]";
-					mes "Sounds cool, huh!!";
-					next;
-					select("........................");
-					mes "[Caroller]";
-					mes "...Why are you staring at me like that?";
-					next;
-					mes "[Caroller]";
-					mes "You're thinking that we are always getting our plans spoiled, aren't you?";
-					next;
-					mes "[Caroller]";
-					mes "I know that we are not good at controlling stuff, but our rewards are good, right?";
-					next;
-					select("........................");
-					mes "[Caroller]";
-					mes "Hey, we treat you good...";
-					next;
-					select("........................");
-					mes "[Caroller]";
-					mes "You are so cruel to me!";
-					mes "Bad! Bad!";
-					next;
-					mes "[Caroller]";
-					mes "Please, for our children's hope!!!?";
-					mes "Please bring me 6 Singing Crystal Pieces from ^0000FFViolent Gift Boxes^000000!";
-					next;
-					emotion e_ok;
-					mes "[Caroller]";
-					mes "They're definitely as harsh as their name.";
-					mes "Go on please!";
-					iROxmas08carol = 1;
+					mes "Oh, nevermind.";
+					mes "Ah...";
 					close;
+				}
+				mes "[Caroller]";
+				mes "Maybe, it's quite hard to make a jukebox for the villages, but a music box might be possible.";
+				next;
+				mes "[Caroller]";
+				mes "We need the ^0000FFSinging Crystal Pieces^000000 that the monsters ate up.";
+				next;
+				mes "[Caroller]";
+				mes "Please bring me ^0000FF6 Singing Crystal Pieces^000000, and you will be rewarded with presents!";
+				next;
+				mes "[Caroller]";
+				mes "Sounds cool, huh!!";
+				next;
+				select("........................");
+				mes "[Caroller]";
+				mes "...Why are you staring at me like that?";
+				next;
+				mes "[Caroller]";
+				mes "You're thinking that we are always getting our plans spoiled, aren't you?";
+				next;
+				mes "[Caroller]";
+				mes "I know that we are not good at controlling stuff, but our rewards are good, right?";
+				next;
+				select("........................");
+				mes "[Caroller]";
+				mes "Hey, we treat you good...";
+				next;
+				select("........................");
+				mes "[Caroller]";
+				mes "You are so cruel to me!";
+				mes "Bad! Bad!";
+				next;
+				mes "[Caroller]";
+				mes "Please, for our children's hope!!!?";
+				mes "Please bring me 6 Singing Crystal Pieces from ^0000FFViolent Gift Boxes^000000!";
+				next;
+				emotion e_ok;
+				mes "[Caroller]";
+				mes "They're definitely as harsh as their name.";
+				mes "Go on please!";
+				iROxmas08carol = 1;
+				close;
 
 			case 4:
 				mes "[Caroller]";
@@ -260,7 +260,6 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 				mes "It's hot, huh?";
 				close;
 
-
 			case 5:
 				mes "[Caroller]";
 				mes "A-N-T-O-N-I-O!!!";
@@ -279,7 +278,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 				close;
 		}
 	}
-	
+
 	if (iROxmas08carol == 1) {
 		if (countitem(6092) < 6) {
 			mes "[Caroller]";
@@ -345,7 +344,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 			close;
 		}
 	}
-	
+
 	if (iROxmas08carol == 2) {
 		if (countitem(1019) < 10 || countitem(1005) < 1 || countitem(7312) < 1 || countitem(938) < 10 || countitem(732) < 1) {
 			mes "[Caroller]";
@@ -442,7 +441,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 	mes "All right, what comes to your mind when you think about Christmas?";
 	next;
 	switch(select("Carolling:Santa Claus:Gift Boxes:Santa Costume:Not much really...")) {
-	
+
 	case 1:
 		mes "[Santa Claus]";
 		mes "Carolling! That's good!";
@@ -471,7 +470,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 		mes "A bad Santa ruins us good Santa's reputations!";
 		mes "The World Santa Organization is considering this a grave situation.";
 		close;
-	
+
 	case 3:
 		mes "[Santa Claus]";
 		mes "A gift box! That sounds good!";
@@ -680,7 +679,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 		mes "There used to be designer who visited my house to make my Santa costumes.";
 		mes "Do you have any ideas?";
 		close;
-	
+
 	case 5:
 		mes "[Santa Claus]";
 		mes "........................";

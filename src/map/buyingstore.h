@@ -5,8 +5,8 @@
 #ifndef MAP_BUYINGSTORE_H
 #define MAP_BUYINGSTORE_H
 
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // MAX_SLOTS
+#include "common/hercules.h"
+#include "common/mmo.h" // MAX_SLOTS
 
 struct map_session_data;
 
@@ -71,10 +71,10 @@ struct buyingstore_interface {
 	unsigned int (*getuid) (void);
 };
 
-struct buyingstore_interface *buyingstore;
-
 #ifdef HERCULES_CORE
 void buyingstore_defaults (void);
 #endif // HERCULES_CORE
+
+HPShared struct buyingstore_interface *buyingstore;
 
 #endif  // MAP_BUYINGSTORE_H

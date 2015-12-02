@@ -1,6 +1,6 @@
 // Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // See the LICENSE file
-// Base Author: Haru @ http://hercules.ws
+// Base Author: Haru @ http://herc.ws
 
 #ifndef COMMON_SYSINFO_H
 #define COMMON_SYSINFO_H
@@ -11,7 +11,7 @@
  * cached at compile time)
  */
 
-#include "../common/cbasetypes.h"
+#include "common/hercules.h"
 
 struct sysinfo_private;
 
@@ -44,10 +44,10 @@ struct sysinfo_interface {
 	void (*final) (void);
 };
 
-struct sysinfo_interface *sysinfo;
-
 #ifdef HERCULES_CORE
 void sysinfo_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct sysinfo_interface *sysinfo;
 
 #endif /* COMMON_SYSINFO_H */

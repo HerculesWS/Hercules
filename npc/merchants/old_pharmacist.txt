@@ -181,7 +181,7 @@ alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 		mes "What a boring person. If you have something to say, why don't you say it?!";
 		close;
 	}
-	
+
 L_Making:
 	next;
 	mes "[Old Pharmacist]";

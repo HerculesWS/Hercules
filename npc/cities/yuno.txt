@@ -56,7 +56,7 @@ yuno,184,173,4	script	Freidrich#juno	4_F_NOVICE,{
 		close;
 	}
 }
-	
+
 yuno,337,227,4	script	Juno Granny#juno	8_F_GRANDMOTHER,{
 	mes "[Granny]";
 	if (rand(1,50) == 1) {
@@ -195,7 +195,7 @@ yuno,165,111,4	script	Juno Sage#juno	2_F_MAGICMASTER,,{
 		close;
 	}
 }
-	
+
 yuno,157,205,4	script	Juno Artisan#juno	1_M_JOBGUIDER,{
 	mes "[Artisan]";
 	mes "*Mumble mumble...*";
@@ -367,10 +367,10 @@ yuno,142,183,5	script	Airship Representative	4W_SAILOR,{
 	next;
 	switch(select("Prontera:Izlude:Geffen:Morroc:Payon:Alberta:Comodo:Cancel")) {
 		case 1: callsub S_Warp,"prontera",116,72;
-		case 2: if (checkre(0)) callsub S_Warp,"izlude",128,98; else callsub S_Warp,"izlude",94,103;
+		case 2: if (RENEWAL) callsub S_Warp,"izlude",128,98; else callsub S_Warp,"izlude",94,103;
 		case 3: callsub S_Warp,"geffen",120,39;
 		case 4: callsub S_Warp,"morocc",156,46;
-		case 5: if (checkre(0)) callsub S_Warp,"payon",162,59; else callsub S_Warp,"payon",69,100;
+		case 5: if (RENEWAL) callsub S_Warp,"payon",162,59; else callsub S_Warp,"payon",69,100;
 		case 6: callsub S_Warp,"alberta",117,56;
 		case 7: callsub S_Warp,"comodo",209,143;
 		case 8: close;

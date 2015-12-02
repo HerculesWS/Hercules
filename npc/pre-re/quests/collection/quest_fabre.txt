@@ -225,5 +225,3 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 		close;
 	}
 }
-
-

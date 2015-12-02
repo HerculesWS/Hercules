@@ -38,7 +38,6 @@ done:
 	mes "[Thalos]";
 	mes "Go search the 2nd Statue!";
 	close;
-	
 }
 
 tha_t09,84,99,4	script	Mediane	HIDDEN_NPC,{

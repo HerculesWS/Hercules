@@ -5,11 +5,13 @@
 #ifndef MAP_MOB_H
 #define MAP_MOB_H
 
-#include "map.h" // struct status_data, struct view_data, struct mob_skill
-#include "status.h" // struct status_data, struct status_change
-#include "unit.h" // struct unit_data
-#include "../common/cbasetypes.h"
-#include "../common/mmo.h" // struct item
+#include "map/map.h" // struct block_list
+#include "map/status.h" // struct status_data, struct status_change
+#include "map/unit.h" // struct unit_data, view_data
+#include "common/hercules.h"
+#include "common/mmo.h" // struct item
+
+struct hplugin_data_store;
 
 #define MAX_RANDOMMONSTER 5
 
@@ -38,7 +40,7 @@
 #define MOB_CLONE_END MAX_MOB_DB
 
 //Used to determine default enemy type of mobs (for use in each in range calls)
-#define DEFAULT_ENEMY_TYPE(md) ((md)->special_state.ai?BL_CHAR:BL_MOB|BL_PC|BL_HOM|BL_MER)
+#define DEFAULT_ENEMY_TYPE(md) ((md)->special_state.ai != AI_NONE ?BL_CHAR:BL_MOB|BL_PC|BL_HOM|BL_MER)
 
 #define MAX_MOB_CHAT 250 //Max Skill's messages
 
@@ -79,11 +81,23 @@ enum size {
 };
 
 enum ai {
-	AI_NONE = 0,
-	AI_ATTACK,
-	AI_SPHERE,
-	AI_FLORA,
-	AI_ZANZOU,
+	AI_NONE = 0, //0: Normal mob.
+	AI_ATTACK,   //1: Standard summon, attacks mobs.
+	AI_SPHERE,   //2: Alchemist Marine Sphere
+	AI_FLORA,    //3: Alchemist Summon Flora
+	AI_ZANZOU,   //4: Summon Zanzou
+
+	AI_MAX
+};
+
+/**
+ * Acceptable values for map_session_data.state.noks
+ */
+enum ksprotection_mode {
+	KSPROTECT_NONE  = 0,
+	KSPROTECT_SELF  = 1,
+	KSPROTECT_PARTY = 2,
+	KSPROTECT_GUILD = 3,
 };
 
 struct mob_skill {
@@ -126,10 +140,7 @@ struct mob_db {
 	int maxskill;
 	struct mob_skill skill[MAX_MOBSKILL];
 	struct spawn_info spawn[10];
-
-	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
 struct mob_data {
@@ -141,13 +152,8 @@ struct mob_data {
 	struct mob_db *db; //For quick data access (saves doing mob_db(md->class_) all the time) [Skotlex]
 	char name[NAME_LENGTH];
 	struct {
-		unsigned int size : 2; //Small/Big monsters.
-		unsigned int ai : 4; //Special AI for summoned monsters.
-							//0: Normal mob.
-							//1: Standard summon, attacks mobs.
-							//2: Alchemist Marine Sphere
-							//3: Alchemist Summon Flora
-							//4: Summon Zanzou
+		unsigned int size : 2; //Small/Big monsters. @see enum size
+		unsigned int ai : 4; //Special AI for summoned monsters. @see enum ai
 		unsigned int clone : 1;/* is clone? 1:0 */
 	} special_state; //Special mob information that does not needs to be zero'ed on mob respawn.
 	struct {
@@ -201,12 +207,8 @@ struct mob_data {
 	 * MvP Tombstone NPC ID
 	 **/
 	int tomb_nid;
-
-	/* HPM Custom Struct */
-	struct HPluginData **hdata;
-	unsigned int hdatac;
+	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
-
 
 
 enum {
@@ -265,8 +267,8 @@ struct item_drop_list {
 #define mob_stop_walking(md, type) (unit->stop_walking(&(md)->bl, (type)))
 #define mob_stop_attack(md)        (unit->stop_attack(&(md)->bl))
 
-#define mob_is_battleground(md) ( map->list[(md)->bl.m].flag.battleground && ((md)->class_ == MOBID_BARRICADE2 || ((md)->class_ >= MOBID_FOOD_STOR && (md)->class_ <= MOBID_PINK_CRYST)) )
-#define mob_is_gvg(md) (map->list[(md)->bl.m].flag.gvg_castle && ( (md)->class_ == MOBID_EMPERIUM || (md)->class_ == MOBID_BARRICADE1 || (md)->class_ == MOBID_GUARIDAN_STONE1 || (md)->class_ == MOBID_GUARIDAN_STONE2) )
+#define mob_is_battleground(md) (map->list[(md)->bl.m].flag.battleground && ((md)->class_ == MOBID_BARRICADE2 || ((md)->class_ >= MOBID_FOOD_STOR && (md)->class_ <= MOBID_PINK_CRYST)))
+#define mob_is_gvg(md) (map->list[(md)->bl.m].flag.gvg_castle && ( (md)->class_ == MOBID_EMPERIUM || (md)->class_ == MOBID_BARRICADE1 || (md)->class_ == MOBID_GUARIDAN_STONE1 || (md)->class_ == MOBID_GUARIDAN_STONE2))
 #define mob_is_treasure(md) (((md)->class_ >= MOBID_TREAS01 && (md)->class_ <= MOBID_TREAS40) || ((md)->class_ >= MOBID_TREAS41 && (md)->class_ <= MOBID_TREAS49))
 
 struct mob_interface {
@@ -361,10 +363,16 @@ struct mob_interface {
 	int (*clone_delete) (struct mob_data *md);
 	unsigned int (*drop_adjust) (int baserate, int rate_adjust, unsigned short rate_min, unsigned short rate_max);
 	void (*item_dropratio_adjust) (int nameid, int mob_id, int *rate_adjust);
-	bool (*parse_dbrow) (char **str);
-	bool (*readdb_sub) (char *fields[], int columns, int current);
 	void (*readdb) (void);
-	int (*read_sqldb) (void);
+	bool (*lookup_const) (const config_setting_t *it, const char *name, int *value);
+	bool (*get_const) (const config_setting_t *it, int *value);
+	int (*read_libconfig) (const char *filename, bool ignore_missing);
+	void (*read_db_additional_fields) (struct mob_db *entry, int class_, config_setting_t *it, int n, const char *source);
+	bool (*read_db_sub) (config_setting_t *mobt, int id, const char *source);
+	void (*read_db_drops_sub) (struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t);
+	void (*read_db_mvpdrops_sub) (struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t);
+	int (*read_db_mode_sub) (struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t);
+	void (*read_db_stats_sub) (struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t);
 	void (*name_constants) (void);
 	bool (*readdb_mobavail) (char *str[], int columns, int current);
 	int (*read_randommonster) (void);
@@ -372,7 +380,6 @@ struct mob_interface {
 	void (*readchatdb) (void);
 	bool (*parse_row_mobskilldb) (char **str, int columns, int current);
 	void (*readskilldb) (void);
-	int (*read_sqlskilldb) (void);
 	bool (*readdb_race2) (char *fields[], int columns, int current);
 	bool (*readdb_itemratio) (char *str[], int columns, int current);
 	void (*load) (bool minimal);
@@ -380,10 +387,10 @@ struct mob_interface {
 	void (*destroy_mob_db) (int index);
 };
 
-struct mob_interface *mob;
-
 #ifdef HERCULES_CORE
 void mob_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct mob_interface *mob;
 
 #endif /* MAP_MOB_H */

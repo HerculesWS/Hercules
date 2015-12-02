@@ -5,8 +5,8 @@
 #ifndef MAP_LOG_H
 #define MAP_LOG_H
 
-#include "../common/cbasetypes.h"
-#include "../common/sql.h"
+#include "common/hercules.h"
+#include "common/sql.h"
 
 /**
  * Declarations
@@ -129,10 +129,10 @@ struct log_interface {
 	bool (*should_log_item) (int nameid, int amount, int refine, struct item_data *id);
 };
 
-struct log_interface *logs;
-
 #ifdef HERCULES_CORE
 void log_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct log_interface *logs;
 
 #endif /* MAP_LOG_H */
