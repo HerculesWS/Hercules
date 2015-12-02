@@ -446,14 +446,19 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#endif // MAP_MOB_H
 	#ifdef MAP_NPC_H
 		{ "event_data", sizeof(struct event_data), SERVER_TYPE_MAP },
+		{ "npc_chat_interface", sizeof(struct npc_chat_interface), SERVER_TYPE_MAP },
 		{ "npc_data", sizeof(struct npc_data), SERVER_TYPE_MAP },
 		{ "npc_interface", sizeof(struct npc_interface), SERVER_TYPE_MAP },
 		{ "npc_item_list", sizeof(struct npc_item_list), SERVER_TYPE_MAP },
 		{ "npc_label_list", sizeof(struct npc_label_list), SERVER_TYPE_MAP },
+		{ "npc_parse", sizeof(struct npc_parse), SERVER_TYPE_MAP },
 		{ "npc_path_data", sizeof(struct npc_path_data), SERVER_TYPE_MAP },
 		{ "npc_shop_data", sizeof(struct npc_shop_data), SERVER_TYPE_MAP },
 		{ "npc_src_list", sizeof(struct npc_src_list), SERVER_TYPE_MAP },
 		{ "npc_timerevent_list", sizeof(struct npc_timerevent_list), SERVER_TYPE_MAP },
+		{ "pcre_interface", sizeof(struct pcre_interface), SERVER_TYPE_MAP },
+		{ "pcrematch_entry", sizeof(struct pcrematch_entry), SERVER_TYPE_MAP },
+		{ "pcrematch_set", sizeof(struct pcrematch_set), SERVER_TYPE_MAP },
 	#else
 		#define MAP_NPC_H
 	#endif // MAP_NPC_H
