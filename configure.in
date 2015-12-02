@@ -1309,6 +1309,7 @@ else
 		AC_CHECK_LIB([pcre], [pcre_study], [HAVE_PCRE="yes"], [])
 		if test "$HAVE_PCRE" = "yes" ; then
 			PCRE_LIBS="-lpcre"
+			PCRE_CFLAGS="-DPCRE_SUPPORT"
 		fi
 	else
 		PCRE_OLD_LDFLAGS="$LDFLAGS" ; LDFLAGS="$LDFLAGS -L$PCRE_HOME/lib"
@@ -1318,7 +1319,7 @@ else
 		LDFLAGS="$PCRE_OLD_LDFLAGS"
 		if test "$HAVE_PCRE" = "yes" ; then
 			PCRE_LIBS="-L$PCRE_HOME/lib -lpcre"
-			test -d "$PCRE_HOME/include" && PCRE_CFLAGS="-I$PCRE_HOME/include"
+			test -d "$PCRE_HOME/include" && PCRE_CFLAGS="-I$PCRE_HOME/include -DPCRE_SUPPORT"
 		fi
 	fi
 	AC_MSG_CHECKING([PCRE library (optional)])

@@ -78,7 +78,7 @@ $(TESTS_ALL): test_%: ../../test_%@EXEEXT@
 
 obj/%.o: %.c $(TEST_H) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | obj
 	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) $(PCRE_CFLAGS) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @PCRE_CFLAGS@ @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 # missing object files
 $(COMMON_D)/obj_all/common.a:

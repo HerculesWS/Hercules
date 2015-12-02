@@ -119,7 +119,7 @@ obj_all/sysinfo.o: sysinfo.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_
 
 obj_all/%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_all
 	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @PCRE_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
 
 obj_all/mini%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_all
 	@echo "	CC	$<"
