@@ -428,4 +428,7 @@ typedef char bool;
 #define ZEROED_BLOCK_POS(x) (&(x)->HERC__zeroed_block_BEGIN)
 #define ZEROED_BLOCK_SIZE(x) ((char*)&((x)->HERC__zeroed_block_END) - (char*)&((x)->HERC__zeroed_block_BEGIN) + sizeof((x)->HERC__zeroed_block_END))
 
+/** Support macros for marking structs as unavailable */
+#define UNAVAILABLE_STRUCT int8 HERC__unavailable_struct
+
 #endif /* COMMON_CBASETYPES_H */

@@ -50,8 +50,8 @@ struct CParseEntry {
 	} u;
 };
 
-#ifdef CONSOLE_INPUT
 struct console_input_interface {
+#ifdef CONSOLE_INPUT
 	/* vars */
 	SPIN_LOCK ptlock;/* parse thread lock */
 	rAthread *pthread;/* parse thread */
@@ -75,10 +75,10 @@ struct console_input_interface {
 	void (*parse_list_subs) (struct CParseEntry *cmd, unsigned char depth);
 	void (*addCommand) (char *name, CParseFunc func);
 	void (*setSQL) (Sql *SQL_handle);
-};
-#else
-struct console_input_interface;
+#else // not CONSOLE_INPUT
+	UNAVAILABLE_STRUCT;
 #endif
+};
 
 struct console_interface {
 	void (*init) (void);

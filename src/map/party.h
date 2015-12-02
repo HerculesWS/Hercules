@@ -40,32 +40,27 @@ struct party_data {
 
 #define PB_NOTICE_LENGTH (36 + 1)
 
-#ifndef PARTY_RECRUIT
 struct party_booking_detail {
 	short level;
+#ifdef PARTY_RECRUIT
+	char notice[PB_NOTICE_LENGTH];
+#else // not PARTY_RECRUIT
 	short mapid;
 	short job[PARTY_BOOKING_JOBS];
+#endif // PARTY_RECRUIT
 };
 
 struct party_booking_ad_info {
 	unsigned int index;
-	char charname[NAME_LENGTH];
-	int expiretime;
-	struct party_booking_detail p_detail;
-};
-#else /* PARTY_RECRUIT */
-struct party_booking_detail {
-	short level;
-	char notice[PB_NOTICE_LENGTH];
-};
-
-struct party_booking_ad_info {
-	unsigned int index;
+#ifdef PARTY_BOOKING
 	int expiretime;
 	char charname[NAME_LENGTH];
+#else // not PARTY_BOOKING
+	char charname[NAME_LENGTH];
+	int expiretime;
+#endif // PARTY_BOOKING
 	struct party_booking_detail p_detail;
 };
-#endif /* PARTY_RECRUIT */
 
 /*=====================================
 * Interface : party.h

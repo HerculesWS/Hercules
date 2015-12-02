@@ -455,7 +455,7 @@ struct packet_idle_unit2 {
 	unsigned char state;
 	short clevel;
 #else // ! PACKETVER < 20091103
-	char UNUSED;
+	UNAVAILABLE_STRUCT;
 #endif // PACKETVER < 20091103
 } __attribute__((packed));
 
@@ -486,7 +486,7 @@ struct packet_spawn_unit2 {
 	unsigned char xSize;
 	unsigned char ySize;
 #else // ! PACKETVER < 20091103
-	char UNUSED;
+	UNAVAILABLE_STRUCT;
 #endif // PACKETVER < 20091103
 } __attribute__((packed));
 
@@ -1097,6 +1097,7 @@ struct packet_party_leader_changed {
 } __attribute__((packed));
 
 struct packet_hotkey {
+#ifdef HOTKEY_SAVING
 	short PacketType;
 #if PACKETVER >= 20141022
 	char Rotate;
@@ -1106,6 +1107,9 @@ struct packet_hotkey {
 		unsigned int ID;	// Item/Skill ID
 		short count;		// Item Quantity/Skill Level
 	} hotkey[MAX_HOTKEYS];
+#else // not HOTKEY_SAVING
+	UNAVAILABLE_STRUCT;
+#endif // HOTKEY_SAVING
 } __attribute__((packed));
 
 /**

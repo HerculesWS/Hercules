@@ -462,13 +462,15 @@ struct s_friend {
 	char name[NAME_LENGTH];
 };
 
-#ifdef HOTKEY_SAVING
 struct hotkey {
+#ifdef HOTKEY_SAVING
 	unsigned int id;
 	unsigned short lv;
 	unsigned char type; // 0: item, 1: skill
-};
+#else // not HOTKEY_SAVING
+	UNAVAILABLE_STRUCT;
 #endif
+};
 
 struct mmo_charstatus {
 	int char_id;
