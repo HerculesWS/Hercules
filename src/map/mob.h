@@ -75,9 +75,9 @@ enum MobDamageLogFlag
 };
 
 enum mobsize {
-	MOBSIZE_SMALL = 0,
-	MOBSIZE_MEDIUM,
-	MOBSIZE_BIG,
+	UNITSIZE_SMALL = 0,
+	UNITSIZE_MEDIUM,
+	UNITSIZE_BIG,
 };
 
 enum ai {

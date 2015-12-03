@@ -2209,10 +2209,10 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		// change experience for different sized monsters [Valaris]
 		if (battle_config.mob_size_influence) {
 			switch( md->special_state.size ) {
-				case UNITSIZE_SMALL:
+				case VIEWSIZE_SMALL:
 					per /= 2.;
 					break;
-				case UNITSIZE_BIG:
+				case VIEWSIZE_BIG:
 					per *= 2.;
 					break;
 			}
@@ -2331,9 +2331,9 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 			// change drops depending on monsters size [Valaris]
 			if (battle_config.mob_size_influence)
 			{
-				if (md->special_state.size == UNITSIZE_SMALL && drop_rate >= 2)
+				if (md->special_state.size == VIEWSIZE_SMALL && drop_rate >= 2)
 					drop_rate /= 2;
-				else if( md->special_state.size == UNITSIZE_BIG)
+				else if( md->special_state.size == VIEWSIZE_BIG)
 					drop_rate *= 2;
 			}
 
@@ -3519,7 +3519,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 	sd->fd = fd;
 
 	//Finally, spawn it.
-	md = mob->once_spawn_sub(&sd->bl, m, x, y, "--en--", class_, event, UNITSIZE_NORMAL, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, m, x, y, "--en--", class_, event, VIEWSIZE_NORMAL, AI_NONE);
 	if (!md) return 0; //Failed?
 
 	md->special_state.clone = 1;
@@ -4068,7 +4068,7 @@ bool mob_read_db_sub(config_setting_t *mobt, int id, const char *source)
 		mstatus->size = i32;
 		mstatus->size = cap_value(mstatus->size, 0, 2);
 	} else if (!inherit) {
-		mstatus->size = MOBSIZE_MEDIUM;
+		mstatus->size = UNITSIZE_MEDIUM;
 	}
 
 	if (mob->lookup_const(mobt, "Race", &i32) && i32 >= 0) {

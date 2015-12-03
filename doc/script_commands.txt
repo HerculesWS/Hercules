@@ -4603,13 +4603,13 @@ for sc_type,val1,val2,val3,val4, see 'sc_start','sc_start2','sc_start4' commands
 retrieve the value of the size from the character.
 
 The size constant are :-
-	UNITSIZE_NORMAL  0
-	UNITSIZE_SMALL   1
-	UNITSIZE_BIG     2
+	VIEWSIZE_NORMAL  0
+	VIEWSIZE_SMALL   1
+	VIEWSIZE_BIG     2
 
 Examples:
-	setcharsize UNITSIZE_BIG; // make the current attached player bigger
-	if (getcharsize() == UNITSIZE_BIG)
+	setcharsize VIEWSIZE_BIG; // make the current attached player bigger
+	if (getcharsize() == VIEWSIZE_BIG)
 		dispbottom "Wow! You look like a Giant!";
 
 ---------------------------------------
@@ -5931,9 +5931,9 @@ the label given. The RID of the player attached at this execution will be
 the RID of the killing character.
 
 <size> can be:
-	UNITSIZE_NORMAL  0 (default)
-	UNITSIZE_SMALL   1
-	UNITSIZE_BIG     2
+	VIEWSIZE_NORMAL  0 (default)
+	VIEWSIZE_SMALL   1
+	VIEWSIZE_BIG     2
 	
 <ai> can be:
 	0 = none (default)
@@ -6370,7 +6370,7 @@ the message to complete the effect.
 
 Changes the display name and/or display class of the target NPC.
 Returns 0 is successful, 1 if the NPC does not exist.
-Size is UNITSIZE_NORMAL(0), UNITSIZE_SMALL(1), UNITSIZE_BIG(2).
+Size is VIEWSIZE_NORMAL(0), VIEWSIZE_SMALL(1), VIEWSIZE_BIG(2).
 
 ---------------------------------------
 //=====================================

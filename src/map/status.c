@@ -2017,7 +2017,7 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 
 	if (flag&2 && battle_config.mob_size_influence) {
 		// change for sized monsters [Valaris]
-		if (md->special_state.size==UNITSIZE_SMALL) {
+		if (md->special_state.size==VIEWSIZE_SMALL) {
 			mstatus->max_hp>>=1;
 			mstatus->max_sp>>=1;
 			if (!mstatus->max_hp) mstatus->max_hp = 1;
@@ -2036,7 +2036,7 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 			if (!mstatus->int_) mstatus->int_ = 1;
 			if (!mstatus->dex) mstatus->dex = 1;
 			if (!mstatus->luk) mstatus->luk = 1;
-		} else if (md->special_state.size==UNITSIZE_BIG) {
+		} else if (md->special_state.size==VIEWSIZE_BIG) {
 			mstatus->max_hp<<=1;
 			mstatus->max_sp<<=1;
 			mstatus->hp=mstatus->max_hp;
@@ -2280,7 +2280,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	//Give them all modes except these (useful for clones)
 	bstatus->mode = MD_MASK&~(MD_BOSS|MD_PLANT|MD_DETECTOR|MD_ANGRY|MD_TARGETWEAK);
 
-	bstatus->size = (sd->class_&JOBL_BABY)? MOBSIZE_SMALL : MOBSIZE_MEDIUM;
+	bstatus->size = (sd->class_&JOBL_BABY)? UNITSIZE_SMALL : UNITSIZE_MEDIUM;
 	if (battle_config.character_size && (pc_isridingpeco(sd) || pc_isridingdragon(sd))) { //[Lupus]
 		if (sd->class_&JOBL_BABY) {
 			if (battle_config.character_size & 2)

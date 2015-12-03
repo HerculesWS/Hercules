@@ -9710,7 +9710,7 @@ BUILDIN(monster)
 	int class_        = script_getnum(st,6);
 	int amount        = script_getnum(st,7);
 	const char *event = "";
-	unsigned int size = UNITSIZE_NORMAL;
+	unsigned int size = VIEWSIZE_NORMAL;
 	unsigned int ai   = AI_NONE;
 	int mob_id;
 
@@ -9818,7 +9818,7 @@ BUILDIN(areamonster) {
 	int class_        = script_getnum(st,8);
 	int amount        = script_getnum(st,9);
 	const char *event = "";
-	unsigned int size = UNITSIZE_NORMAL;
+	unsigned int size = VIEWSIZE_NORMAL;
 	unsigned int ai   = AI_NONE;
 	int mob_id;
 
@@ -14263,7 +14263,7 @@ BUILDIN(summon)
 
 	clif->skill_poseffect(&sd->bl,AM_CALLHOMUN,1,sd->bl.x,sd->bl.y,tick);
 
-	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, str, class_, event, UNITSIZE_NORMAL, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, sd->bl.x, sd->bl.y, str, class_, event, VIEWSIZE_NORMAL, AI_NONE);
 	if (md) {
 		md->master_id=sd->bl.id;
 		md->special_state.ai = AI_ATTACK;
@@ -16296,20 +16296,20 @@ BUILDIN(setcharsize) {
 	if (!sd)
 		return true;
 
-	if (size < UNITSIZE_NORMAL || size > UNITSIZE_BIG) {
+	if (size < VIEWSIZE_NORMAL || size > VIEWSIZE_BIG) {
 		ShowError("buildin_setcharsize: Invalid size %d.\n", size);
 		return false;
 	}
 
 	if (sd->state.size) {
-		sd->state.size = UNITSIZE_NORMAL;
+		sd->state.size = VIEWSIZE_NORMAL;
 		pc->setpos(sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_TELEPORT);
 	}
 
 	sd->state.size = size;
-	if (size == UNITSIZE_SMALL)
+	if (size == VIEWSIZE_SMALL)
 		clif->specialeffect(&sd->bl, 420, AREA);
-	else if (size == UNITSIZE_BIG)
+	else if (size == VIEWSIZE_BIG)
 		clif->specialeffect(&sd->bl, 422, AREA);
 
 	return true;

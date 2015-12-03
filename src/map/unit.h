@@ -27,9 +27,9 @@ enum unit_stopwalking_flag {
 };
 
 enum unitsize {
-	UNITSIZE_NORMAL = 0,
-	UNITSIZE_SMALL,
-	UNITSIZE_BIG,
+	VIEWSIZE_NORMAL = 0,
+	VIEWSIZE_SMALL,
+	VIEWSIZE_BIG,
 };
 
 struct unit_data {
