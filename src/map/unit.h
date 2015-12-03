@@ -26,7 +26,7 @@ enum unit_stopwalking_flag {
 	// Note: Upper bytes are reserved for duration.
 };
 
-enum unitsize {
+enum viewsize {
 	VIEWSIZE_NORMAL = 0,
 	VIEWSIZE_SMALL,
 	VIEWSIZE_BIG,

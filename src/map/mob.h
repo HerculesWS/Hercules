@@ -74,7 +74,7 @@ enum MobDamageLogFlag
 	MDLF_PET,
 };
 
-enum mobsize {
+enum unitsize {
 	UNITSIZE_SMALL = 0,
 	UNITSIZE_MEDIUM,
 	UNITSIZE_BIG,
