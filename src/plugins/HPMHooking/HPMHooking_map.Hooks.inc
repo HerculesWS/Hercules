@@ -57069,6 +57069,32 @@ int HP_pc_check_job_name(const char *name) {
 	}
 	return retVal___;
 }
+void HP_pc_update_idle_time(struct map_session_data *sd, enum e_battle_config_idletime type) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_pc_update_idle_time_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, enum e_battle_config_idletime *type);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_update_idle_time_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_update_idle_time_pre[hIndex].func;
+			preHookFunc(sd, &type);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pc.update_idle_time(sd, type);
+	}
+	if( HPMHooks.count.HP_pc_update_idle_time_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, enum e_battle_config_idletime *type);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_update_idle_time_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_update_idle_time_post[hIndex].func;
+			postHookFunc(sd, &type);
+		}
+	}
+	return;
+}
 /* pet */
 int HP_pet_init(bool minimal) {
 	int hIndex = 0;

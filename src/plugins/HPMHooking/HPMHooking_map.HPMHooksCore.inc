@@ -4263,6 +4263,8 @@ struct {
 	struct HPMHookPoint *HP_pc_autotrade_final_post;
 	struct HPMHookPoint *HP_pc_check_job_name_pre;
 	struct HPMHookPoint *HP_pc_check_job_name_post;
+	struct HPMHookPoint *HP_pc_update_idle_time_pre;
+	struct HPMHookPoint *HP_pc_update_idle_time_post;
 	struct HPMHookPoint *HP_pet_init_pre;
 	struct HPMHookPoint *HP_pet_init_post;
 	struct HPMHookPoint *HP_pet_final_pre;
@@ -10042,6 +10044,8 @@ struct {
 	int HP_pc_autotrade_final_post;
 	int HP_pc_check_job_name_pre;
 	int HP_pc_check_job_name_post;
+	int HP_pc_update_idle_time_pre;
+	int HP_pc_update_idle_time_post;
 	int HP_pet_init_pre;
 	int HP_pet_init_post;
 	int HP_pet_final_pre;
