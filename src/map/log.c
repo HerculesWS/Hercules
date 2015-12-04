@@ -95,6 +95,8 @@ bool should_log_item(int nameid, int amount, int refine, struct item_data *id) {
 }
 void log_branch_sub_sql(struct map_session_data* sd) {
 	SqlStmt* stmt;
+
+	nullpo_retv(sd);
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
 	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`branch_date`, `account_id`, `char_id`, `char_name`, `map`) VALUES (NOW(), '%d', '%d', ?, '%s')", logs->config.log_branch, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
 	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
@@ -111,6 +113,7 @@ void log_branch_sub_txt(struct map_session_data* sd) {
 	time_t curtime;
 	FILE* logfp;
 
+	nullpo_retv(sd);
 	if( ( logfp = fopen(logs->config.log_branch, "a") ) == NULL )
 		return;
 	time(&curtime);
@@ -129,6 +132,7 @@ void log_branch(struct map_session_data* sd) {
 	logs->branch_sub(sd);
 }
 void log_pick_sub_sql(int id, int16 m, e_log_pick_type type, int amount, struct item* itm, struct item_data *data) {
+	nullpo_retv(itm);
 	if( SQL_ERROR == SQL->Query(logs->mysql_handle,
 	    LOG_QUERY " INTO `%s` (`time`, `char_id`, `type`, `nameid`, `amount`, `refine`, `card0`, `card1`, `card2`, `card3`, `map`, `unique_id`) "
 	    "VALUES (NOW(), '%d', '%c', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%"PRIu64"')",
@@ -144,6 +148,7 @@ void log_pick_sub_txt(int id, int16 m, e_log_pick_type type, int amount, struct 
 	time_t curtime;
 	FILE* logfp;
 
+	nullpo_retv(itm);
 	if( ( logfp = fopen(logs->config.log_pick, "a") ) == NULL )
 		return;
 	time(&curtime);
@@ -169,15 +174,19 @@ void log_pick(int id, int16 m, e_log_pick_type type, int amount, struct item* it
 /// logs item transactions (players)
 void log_pick_pc(struct map_session_data* sd, e_log_pick_type type, int amount, struct item* itm, struct item_data *data) {
 	nullpo_retv(sd);
+	nullpo_retv(itm);
 	log_pick(sd->status.char_id, sd->bl.m, type, amount, itm, data ? data : itemdb->exists(itm->nameid));
 }
 
 /// logs item transactions (monsters)
 void log_pick_mob(struct mob_data* md, e_log_pick_type type, int amount, struct item* itm, struct item_data *data) {
 	nullpo_retv(md);
+	nullpo_retv(itm);
 	log_pick(md->class_, md->bl.m, type, amount, itm, data ? data : itemdb->exists(itm->nameid));
 }
 void log_zeny_sub_sql(struct map_session_data* sd, e_log_pick_type type, struct map_session_data* src_sd, int amount) {
+	nullpo_retv(sd);
+	nullpo_retv(src_sd);
 	if( SQL_ERROR == SQL->Query(logs->mysql_handle, LOG_QUERY " INTO `%s` (`time`, `char_id`, `src_id`, `type`, `amount`, `map`) VALUES (NOW(), '%d', '%d', '%c', '%d', '%s')",
 							   logs->config.log_zeny, sd->status.char_id, src_sd->status.char_id, logs->picktype2char(type), amount, mapindex_id2name(sd->mapindex)) )
 	{
@@ -190,6 +199,8 @@ void log_zeny_sub_txt(struct map_session_data* sd, e_log_pick_type type, struct 
 	time_t curtime;
 	FILE* logfp;
 
+	nullpo_retv(sd);
+	nullpo_retv(src_sd);
 	if( ( logfp = fopen(logs->config.log_zeny, "a") ) == NULL )
 		return;
 	time(&curtime);
@@ -208,6 +219,8 @@ void log_zeny(struct map_session_data* sd, e_log_pick_type type, struct map_sess
 	logs->zeny_sub(sd,type,src_sd,amount);
 }
 void log_mvpdrop_sub_sql(struct map_session_data* sd, int monster_id, int* log_mvp) {
+	nullpo_retv(sd);
+	nullpo_retv(log_mvp);
 	if( SQL_ERROR == SQL->Query(logs->mysql_handle, LOG_QUERY " INTO `%s` (`mvp_date`, `kill_char_id`, `monster_id`, `prize`, `mvpexp`, `map`) VALUES (NOW(), '%d', '%d', '%d', '%d', '%s') ",
 							   logs->config.log_mvpdrop, sd->status.char_id, monster_id, log_mvp[0], log_mvp[1], mapindex_id2name(sd->mapindex)) )
 	{
@@ -220,6 +233,8 @@ void log_mvpdrop_sub_txt(struct map_session_data* sd, int monster_id, int* log_m
 	time_t curtime;
 	FILE* logfp;
 
+	nullpo_retv(sd);
+	nullpo_retv(log_mvp);
 	if( ( logfp = fopen(logs->config.log_mvpdrop,"a") ) == NULL )
 		return;
 	time(&curtime);
@@ -241,6 +256,8 @@ void log_mvpdrop(struct map_session_data* sd, int monster_id, int* log_mvp)
 void log_atcommand_sub_sql(struct map_session_data* sd, const char* message) {
 	SqlStmt* stmt;
 
+	nullpo_retv(sd);
+	nullpo_retv(message);
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
 	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`atcommand_date`, `account_id`, `char_id`, `char_name`, `map`, `command`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_gm, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
 	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
@@ -258,6 +275,8 @@ void log_atcommand_sub_txt(struct map_session_data* sd, const char* message) {
 	time_t curtime;
 	FILE* logfp;
 
+	nullpo_retv(sd);
+	nullpo_retv(message);
 	if( ( logfp = fopen(logs->config.log_gm, "a") ) == NULL )
 		return;
 	time(&curtime);
@@ -279,6 +298,9 @@ void log_atcommand(struct map_session_data* sd, const char* message)
 
 void log_npc_sub_sql(struct map_session_data *sd, const char *message) {
 	SqlStmt* stmt;
+
+	nullpo_retv(sd);
+	nullpo_retv(message);
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
 	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`npc_date`, `account_id`, `char_id`, `char_name`, `map`, `mes`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_npc, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
 	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
@@ -296,6 +318,8 @@ void log_npc_sub_txt(struct map_session_data *sd, const char *message) {
 	time_t curtime;
 	FILE* logfp;
 
+	nullpo_retv(sd);
+	nullpo_retv(message);
 	if( ( logfp = fopen(logs->config.log_npc, "a") ) == NULL )
 		return;
 	time(&curtime);
@@ -317,6 +341,8 @@ void log_npc(struct map_session_data* sd, const char* message)
 void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char* dst_charname, const char* message) {
 	SqlStmt* stmt;
 
+	nullpo_retv(dst_charname);
+	nullpo_retv(message);
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
 	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`time`, `type`, `type_id`, `src_charid`, `src_accountid`, `src_map`, `src_map_x`, `src_map_y`, `dst_charname`, `message`) VALUES (NOW(), '%c', '%d', '%d', '%d', '%s', '%d', '%d', ?, ?)", logs->config.log_chat, logs->chattype2char(type), type_id, src_charid, src_accid, mapname, x, y)
 	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, (char*)dst_charname, safestrnlen(dst_charname, NAME_LENGTH))
@@ -334,6 +360,9 @@ void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, int src
 	time_t curtime;
 	FILE* logfp;
 
+	nullpo_retv(mapname);
+	nullpo_retv(dst_charname);
+	nullpo_retv(message);
 	if( ( logfp = fopen(logs->config.log_chat, "a") ) == NULL )
 		return;
 	time(&curtime);
@@ -391,6 +420,7 @@ int log_config_read(const char* cfgName) {
 	char line[1024], w1[1024], w2[1024];
 	FILE *fp;
 
+	nullpo_retr(1, cfgName);
 	if( count++ == 0 )
 		log_set_defaults();
 
@@ -489,6 +519,7 @@ int log_config_read(const char* cfgName) {
 
 	return 0;
 }
+
 void log_config_complete(void) {
 	if( logs->config.sql_logs ) {
 		logs->pick_sub = log_pick_sub_sql;
@@ -500,6 +531,7 @@ void log_config_complete(void) {
 		logs->mvpdrop_sub = log_mvpdrop_sub_sql;
 	}
 }
+
 void log_defaults(void) {
 	logs = &log_s;
 

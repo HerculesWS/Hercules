@@ -66,6 +66,7 @@ int guild_skill_get_max (int id) {
 // Retrieve skill_lv learned by guild
 int guild_checkskill(struct guild *g, int id) {
 	int idx = id - GD_SKILLBASE;
+	nullpo_ret(g);
 	if (idx < 0 || idx >= MAX_GUILDSKILL)
 		return 0;
 	return g->skill[idx].lv;
@@ -130,8 +131,10 @@ int guild_check_skill_require(struct guild *g,int id)
 bool guild_read_castledb(char* str[], int columns, int current)
 {// <castle id>,<map name>,<castle name>,<castle event>[,<reserved/unused switch flag>]
 	struct guild_castle *gc;
-	int index = mapindex->name2id(str[1]);
+	int index;
 
+	nullpo_retr(false, str);
+	index = mapindex->name2id(str[1]);
 	if (map->mapindex2mapid(index) < 0) // Map not found or on another map-server
 		return false;
 
@@ -160,6 +163,7 @@ struct guild* guild_searchname(char* str)
 	struct guild* g;
 	DBIterator *iter = db_iterator(guild->db);
 
+	nullpo_retr(NULL, str);
 	for( g = dbi_first(iter); dbi_exists(iter); g = dbi_next(iter) )
 	{
 		if( strcmpi(g->name, str) == 0 )
@@ -236,6 +240,7 @@ int guild_getposition(struct guild* g, struct map_session_data* sd)
 void guild_makemember(struct guild_member *m,struct map_session_data *sd)
 {
 	nullpo_retv(sd);
+	nullpo_retv(m);
 
 	memset(m,0,sizeof(struct guild_member));
 	m->account_id = sd->status.account_id;
@@ -326,6 +331,7 @@ int guild_send_xy_timer(int tid, int64 tick, int id, intptr_t data) {
 
 int guild_send_dot_remove(struct map_session_data *sd)
 {
+	nullpo_ret(sd);
 	if (sd->status.guild_id)
 		clif->guild_xy_remove(sd);
 	return 0;
@@ -337,6 +343,7 @@ int guild_create(struct map_session_data *sd, const char *name)
 	char tname[NAME_LENGTH];
 	struct guild_member m;
 	nullpo_ret(sd);
+	nullpo_ret(name);
 
 	safestrncpy(tname, name, NAME_LENGTH);
 	trim(tname);
@@ -716,6 +723,7 @@ void guild_member_joined(struct map_session_data *sd)
 {
 	struct guild* g;
 	int i;
+	nullpo_retv(sd);
 	g=guild->search(sd->status.guild_id);
 	if (!g) {
 		guild->request_info(sd->status.guild_id);
@@ -791,6 +799,7 @@ int guild_member_added(int guild_id,int account_id,int char_id,int flag) {
 
 /*==========================================
  * Player request leaving a given guild_id
+ * mes - non null terminated string
  *----------------------------------------*/
 int guild_leave(struct map_session_data* sd, int guild_id, int account_id, int char_id, const char* mes)
 {
@@ -819,6 +828,7 @@ int guild_leave(struct map_session_data* sd, int guild_id, int account_id, int c
 
 /*==========================================
  * Request remove a player to a given guild_id
+ * mes - non null terminated string
  *----------------------------------------*/
 int guild_expulsion(struct map_session_data* sd, int guild_id, int account_id, int char_id, const char* mes) {
 	struct map_session_data *tsd;
@@ -1071,6 +1081,7 @@ int guild_change_memberposition(int guild_id,int account_id,int char_id,short id
 int guild_memberposition_changed(struct guild *g,int idx,int pos)
 {
 	nullpo_ret(g);
+	Assert_ret(idx > 0 && idx < MAX_GUILD);
 
 	g->member[idx].position=pos;
 	clif->guild_memberpositionchanged(g,idx);
@@ -1087,6 +1098,7 @@ int guild_memberposition_changed(struct guild *g,int idx,int pos)
 int guild_change_position(int guild_id,int idx,int mode,int exp_mode,const char *name)
 {
 	struct guild_position p;
+	nullpo_ret(name);
 
 	exp_mode = cap_value(exp_mode, 0, battle_config.guild_exp_limit);
 	p.mode=mode&GPERM_BOTH; // Invite and Expel
@@ -1102,6 +1114,8 @@ int guild_position_changed(int guild_id,int idx,struct guild_position *p)
 {
 	struct guild *g=guild->search(guild_id);
 	int i;
+	nullpo_ret(p);
+	Assert_ret(idx > 0 && idx < MAX_GUILD);
 	if(g==NULL)
 		return 0;
 	memcpy(&g->position[idx],p,sizeof(struct guild_position));
@@ -1133,6 +1147,8 @@ int guild_notice_changed(int guild_id,const char *mes1,const char *mes2)
 {
 	int i;
 	struct guild *g=guild->search(guild_id);
+	nullpo_ret(mes1);
+	nullpo_ret(mes2);
 	if(g==NULL)
 		return 0;
 
@@ -1172,6 +1188,7 @@ int guild_emblem_changed(int len,int guild_id,int emblem_id,const char *data)
 	int i;
 	struct map_session_data *sd;
 	struct guild *g=guild->search(guild_id);
+	nullpo_ret(data);
 	if(g==NULL)
 		return 0;
 
@@ -1232,6 +1249,7 @@ DBData create_expcache(DBKey key, va_list args)
 	struct map_session_data *sd = va_arg(args, struct map_session_data*);
 
 	c = ers_alloc(guild->expcache_ers, struct guild_expcache);
+	nullpo_retr(DB->ptr2data(c), sd);
 	c->guild_id = sd->status.guild_id;
 	c->account_id = sd->status.account_id;
 	c->char_id = sd->status.char_id;
@@ -1324,6 +1342,7 @@ int guild_skillupack(int guild_id,uint16 skill_id,int account_id) {
 	int i;
 	if(g==NULL)
 		return 0;
+	Assert_ret(skill_id >= GD_SKILLBASE && skill_id - GD_SKILLBASE < MAX_GUILDSKILL);
 	if( sd != NULL ) {
 		clif->skillup(sd,skill_id,g->skill[skill_id-GD_SKILLBASE].lv, 0);
 
@@ -1349,6 +1368,7 @@ int guild_skillupack(int guild_id,uint16 skill_id,int account_id) {
 void guild_guildaura_refresh(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv) {
 	struct skill_unit_group* group = NULL;
 	int type = status->skill2sc(skill_id);
+	nullpo_retv(sd);
 	if( !(battle_config.guild_aura&((map->agit_flag || map->agit2_flag)?2:1))
 	 && !(battle_config.guild_aura&(map_flag_gvg2(sd->bl.m)?8:4)) )
 		return;
@@ -1598,6 +1618,8 @@ int guild_allianceack(int guild_id1,int guild_id2,int account_id1,int account_id
 	struct map_session_data *sd[2] = { NULL };
 	int j,i;
 
+	nullpo_ret(name1);
+	nullpo_ret(name2);
 	guild_id[0] = guild_id1;
 	guild_id[1] = guild_id2;
 	guild_name[0] = name1;
@@ -1851,6 +1873,7 @@ int guild_break(struct map_session_data *sd,char *name) {
 	int i;
 
 	nullpo_ret(sd);
+	nullpo_ret(name);
 
 	if( (g=sd->guild)==NULL )
 		return 0;
@@ -2135,6 +2158,7 @@ bool guild_isallied(int guild_id, int guild_id2)
 void guild_flag_add(struct npc_data *nd) {
 	int i;
 
+	nullpo_retv(nd);
 	/* check */
 	for( i = 0; i < guild->flags_count; i++ ) {
 		if( guild->flags[i] && guild->flags[i]->bl.id == nd->bl.id ) {
@@ -2151,6 +2175,7 @@ void guild_flag_add(struct npc_data *nd) {
 
 void guild_flag_remove(struct npc_data *nd) {
 	int i, cursor;
+	nullpo_retv(nd);
 	if( guild->flags_count == 0 )
 		return;
 	/* find it */
