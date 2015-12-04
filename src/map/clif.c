@@ -9544,8 +9544,7 @@ void clif_parse_WalkToXY(int fd, struct map_session_data *sd)
 	RFIFOPOS(fd, packet_db[RFIFOW(fd,0)].pos[0], &x, &y, NULL);
 
 	//Set last idle time... [Skotlex]
-	if( battle_config.idletime_criteria & BCIDLE_WALK )
-		sd->idletime = sockt->last_tick;
+	pc->update_idle_time(sd, BCIDLE_WALK);
 
 	unit->walktoxy(&sd->bl, x, y, 4);
 }
@@ -9698,8 +9697,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 		}
 	}
 
-	if( battle_config.idletime_criteria & BCIDLE_CHAT )
-		sd->idletime = sockt->last_tick;
+	pc->update_idle_time(sd, BCIDLE_CHAT);
 
 	if( sd->gcbind ) {
 		channel->send(sd->gcbind,sd,message);
@@ -9865,8 +9863,7 @@ void clif_parse_Emotion(int fd, struct map_session_data *sd)
 		}
 		sd->emotionlasttime = time(NULL);
 
-		if( battle_config.idletime_criteria & BCIDLE_EMOTION )
-			sd->idletime = sockt->last_tick;
+		pc->update_idle_time(sd, BCIDLE_EMOTION);
 
 		if(battle_config.client_reshuffle_dice && emoticon>=E_DICE1 && emoticon<=E_DICE6) {// re-roll dice
 			emoticon = rnd()%6+E_DICE1;
@@ -9947,8 +9944,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 			}
 
 			pc->delinvincibletimer(sd);
-			if( battle_config.idletime_criteria & BCIDLE_ATTACK )
-				sd->idletime = sockt->last_tick;
+			pc->update_idle_time(sd, BCIDLE_ATTACK);
 			unit->attack(&sd->bl, target_id, action_type != 0);
 		break;
 		case 0x02: // sitdown
@@ -9973,8 +9969,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 			)) //No sitting during these states either.
 				break;
 
-			if( battle_config.idletime_criteria & BCIDLE_SIT )
-				sd->idletime = sockt->last_tick;
+			pc->update_idle_time(sd, BCIDLE_SIT);
 
 			pc_setsit(sd);
 			skill->sit(sd,1);
@@ -9987,8 +9982,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 				return;
 			}
 
-			if( battle_config.idletime_criteria & BCIDLE_SIT )
-				sd->idletime = sockt->last_tick;
+			pc->update_idle_time(sd, BCIDLE_SIT);
 
 			pc->setstand(sd);
 			skill->sit(sd,0);
@@ -10073,8 +10067,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
 	}
 
-	if( battle_config.idletime_criteria & BCIDLE_CHAT )
-		sd->idletime = sockt->last_tick;
+	pc->update_idle_time(sd, BCIDLE_CHAT);
 
 	// Chat logging type 'W' / Whisper
 	logs->chat(LOG_CHAT_WHISPER, 0, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, target, message);
@@ -10269,8 +10262,7 @@ void clif_parse_DropItem(int fd, struct map_session_data *sd)
 		if (!pc->dropitem(sd, item_index, item_amount))
 			break;
 
-		if( battle_config.idletime_criteria & BCIDLE_DROPITEM )
-			sd->idletime = sockt->last_tick;
+		pc->update_idle_time(sd, BCIDLE_DROPITEM);
 
 		return;
 	}
@@ -10297,8 +10289,7 @@ void clif_parse_UseItem(int fd, struct map_session_data *sd)
 		return;
 
 	//Whether the item is used or not is irrelevant, the char ain't idle. [Skotlex]
-	if( battle_config.idletime_criteria & BCIDLE_USEITEM )
-		sd->idletime = sockt->last_tick;
+	pc->update_idle_time(sd, BCIDLE_USEITEM);
 	n = RFIFOW(fd,packet_db[RFIFOW(fd,0)].pos[0])-2;
 
 	if (n < 0 || n >= MAX_INVENTORY)
@@ -10344,8 +10335,7 @@ void clif_parse_EquipItem(int fd,struct map_session_data *sd) {
 		return;
 	}
 
-	if( battle_config.idletime_criteria & BCIDLE_USEITEM )
-		sd->idletime = sockt->last_tick;
+	pc->update_idle_time(sd, BCIDLE_USEITEM);
 
 	//Client doesn't send the position for ammo.
 	if(sd->inventory_data[p->index]->type == IT_AMMO)
@@ -10376,8 +10366,7 @@ void clif_parse_UnequipItem(int fd,struct map_session_data *sd)
 
 	index = RFIFOW(fd,2)-2;
 
-	if( battle_config.idletime_criteria & BCIDLE_USEITEM )
-		sd->idletime = sockt->last_tick;
+	pc->update_idle_time(sd, BCIDLE_USEITEM);
 
 	pc->unequipitem(sd,index, PCUNEQUIPITEM_RECALC);
 }
@@ -10953,8 +10942,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 	}
 
 	// Whether skill fails or not is irrelevant, the char ain't idle. [Skotlex]
-	if( battle_config.idletime_criteria & BCIDLE_USESKILLTOID )
-		sd->idletime = sockt->last_tick;
+	pc->update_idle_time(sd, BCIDLE_USESKILLTOID);
 
 	if( sd->npc_id || sd->state.workinprogress&1 ){
 #ifdef RENEWAL
@@ -11061,8 +11049,7 @@ void clif_parse_UseSkillToPosSub(int fd, struct map_session_data *sd, uint16 ski
 #endif
 
 	//Whether skill fails or not is irrelevant, the char ain't idle. [Skotlex]
-	if( battle_config.idletime_criteria & BCIDLE_USESKILLTOPOS )
-		sd->idletime = sockt->last_tick;
+	pc->update_idle_time(sd, BCIDLE_USESKILLTOPOS);
 
 	if( skill->not_ok(skill_id, sd) )
 		return;
@@ -11822,8 +11809,7 @@ void clif_parse_PartyMessage(int fd, struct map_session_data* sd)
 		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
 	}
 
-	if( battle_config.idletime_criteria & BCIDLE_CHAT )
-		sd->idletime = sockt->last_tick;
+	pc->update_idle_time(sd, BCIDLE_CHAT);
 
 	party->send_message(sd, text, textlen);
 }
@@ -12927,8 +12913,7 @@ void clif_parse_GuildMessage(int fd, struct map_session_data* sd)
 		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
 	}
 
-	if( battle_config.idletime_criteria & BCIDLE_CHAT )
-		sd->idletime = sockt->last_tick;
+	pc->update_idle_time(sd, BCIDLE_CHAT);
 
 	if( sd->bg_id )
 		bg->send_message(sd, text, textlen);
@@ -16024,8 +16009,7 @@ void clif_parse_BattleChat(int fd, struct map_session_data* sd)
 		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
 	}
 
-	if( battle_config.idletime_criteria & BCIDLE_CHAT )
-		sd->idletime = sockt->last_tick;
+	pc->update_idle_time(sd, BCIDLE_CHAT);
 
 	bg->send_message(sd, text, textlen);
 }
