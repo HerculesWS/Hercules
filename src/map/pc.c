@@ -11426,6 +11426,13 @@ int pc_autotrade_final(DBKey key, DBData *data, va_list ap) {
 	return 0;
 }
 
+void pc_update_idle_time(struct map_session_data* sd, enum e_battle_config_idletime type)
+{
+	nullpo_retv(sd);
+	if (battle_config.idletime_criteria&type)
+		sd->idletime = sockt->last_tick;
+}
+
 //Checks if the given class value corresponds to a player class. [Skotlex]
 //JOB_NOVICE isn't checked for class_ is supposed to be unsigned
 bool pc_db_checkid(unsigned int class_)
@@ -11802,4 +11809,5 @@ void pc_defaults(void) {
 	pc->autotrade_final = pc_autotrade_final;
 
 	pc->check_job_name = pc_check_job_name;
+	pc->update_idle_time = pc_update_idle_time;
 }

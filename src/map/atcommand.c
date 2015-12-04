@@ -9866,8 +9866,7 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 		sprintf(atcmd_msg, "%s", message);
 	}
 
-	if( battle_config.idletime_criteria & BCIDLE_ATCOMMAND )
-		sd->idletime = sockt->last_tick;
+	pc->update_idle_time(sd, BCIDLE_ATCOMMAND);
 
 	//Clearing these to be used once more.
 	memset(command, '\0', sizeof(command));

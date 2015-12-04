@@ -1066,6 +1066,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*autotrade_final) (DBKey key, DBData *data, va_list ap);
 
 	int (*check_job_name) (const char *name);
+	void (*update_idle_time) (struct map_session_data* sd, enum e_battle_config_idletime type);
 };
 
 #ifdef HERCULES_CORE

@@ -2169,8 +2169,8 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 
 	if(ud->state.attack_continue) {
 		unit->setdir(src, map->calc_dir(src, target->x, target->y));
-		if( src->type == BL_PC && battle_config.idletime_criteria & BCIDLE_ATTACK )
-			((TBL_PC*)src)->idletime = sockt->last_tick;
+		if( src->type == BL_PC )
+			pc->update_idle_time(sd, BCIDLE_ATTACK);
 		ud->attacktimer = timer->add(ud->attackabletime,unit->attack_timer,src->id,0);
 	}
 
