@@ -49,10 +49,9 @@ struct homunculus_interface *homun;
 
 //Returns the viewdata for homunculus
 struct view_data* homunculus_get_viewdata(int class_) {
-	Assert_retr(NULL, class_ >= HM_CLASS_BASE && class_ - HM_CLASS_BASE < MAX_HOMUNCULUS_CLASS);
-	if (homdb_checkid(class_))
-		return &homun->dbs->viewdb[class_-HM_CLASS_BASE];
-	return NULL;
+	Assert_retr(NULL, homdb_checkid(class_));
+
+	return &homun->dbs->viewdb[class_-HM_CLASS_BASE];
 }
 
 enum homun_type homunculus_class2type(int class_) {
@@ -127,7 +126,6 @@ int homunculus_dead(struct homun_data *hd) {
 
 	nullpo_retr(3, hd);
 	sd = hd->master;
-	nullpo_retr(3, sd);
 	clif->emotion(&hd->bl, E_WAH);
 
 	//Delete timers when dead.

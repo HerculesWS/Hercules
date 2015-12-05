@@ -1007,7 +1007,7 @@ void mapif_parse_WisToGM(int fd)
 	char *message;
 
 	mes_len =  RFIFOW(fd,2) - 32;
-	Assert_retv(mes_len > 0 && mes_len > 32000);
+	Assert_retv(mes_len > 0 && mes_len < 32000);
 	message = (char *) (mes_len >= 255 ? (char *) aMalloc(mes_len) : mbuf);
 
 	permission = RFIFOL(fd,28);

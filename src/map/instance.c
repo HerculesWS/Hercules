@@ -151,16 +151,25 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 	return i;
 }
 
-/*--------------------------------------
+/**
  * Add a map to the instance using src map "name"
- *--------------------------------------*/
+ *
+ * @param name Source map name.
+ * @param instance_id The destination instance ID.
+ * @param usebasename Whether to generate a standard instance map name (only used if map_name is not NULL).
+ * @param map_name    The name for the instanced map (may be NULL to generate a new one).
+ * @return The generated map's index.
+ * @retval -1 Map or instance not found.
+ * @retval -2 Duplicate map name.
+ * @retval -3 No more map indices available.
+ * @retval -4 Source map is already an instance.
+ **/
 int instance_add_map(const char *name, int instance_id, bool usebasename, const char *map_name) {
 	int16 m = map->mapname2mapid(name);
 	int i, im = -1;
 	size_t num_cell, size, j;
 
 	nullpo_retr(-1, name);
-	nullpo_retr(-1, map_name);
 
 	if( m < 0 )
 		return -1; // source map not found
