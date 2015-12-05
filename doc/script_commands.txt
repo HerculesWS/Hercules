@@ -3521,6 +3521,9 @@ character currently has active. Valid types are:
  4 - Pet hungry level. 100 is completely full.
  5 - Pet rename flag. 0 means this pet has not been named yet.
 
+If the invoking player doesn't own a pet, this command will return
+"null" for type 2, and return 0 for other types.
+
 ---------------------------------------
 
 *petstat(<flag>)
@@ -6117,8 +6120,8 @@ default, and it is not possible to create a spawn that lasts forever.
 If an event label is given, upon the monster being killed, the event label 
 will run as if by 'donpcevent'.
 
-// Will summon a dead branch-style monster to fight for the character.
-summon "--ja--",-1;
+// Will summon a poring to fight for the character.
+	summon "--ja--", PORING;
 
 ---------------------------------------
 
@@ -6143,6 +6146,9 @@ This function works as a direct counterpart of 'getpetinfo':
  4 - Hungry level. 100 is completely full.
  5 - Rename flag. 0 means this homunculus has not been named yet.
  6 - Homunculus level
+
+If the attached player doesn't own a homunculus, this command will return
+"null" for type 2, and return 0 for other types.
 
 ---------------------------------------
 
@@ -8745,7 +8751,6 @@ Example:
 ----------------------------------------
 
 *bg_monster <Battle Group>,"<map name>",<x>,<y>,"<name to show>",<mob id>,"<event label>";
-*bg_monster(<Battle Group>,"<map name>",<x>,<y>,"<name to show>",<mob id>,"<event label>");
 
 Similar to monster script command.
 Spawn a monster with allegiance to the given battle group.
@@ -8775,14 +8780,14 @@ Example:
 	end;
 
 OnEnable:
-	mapannounce "A guardian has been summoned for Battle Group 2!",bc_map,0xFFCE00;
+	mapannounce "bat_b01", "A guardian has been summoned for Battle Group 2!", bc_map, 0xFFCE00;
 	set $@Guardian, bg_monster($@BG_2,"bat_a01",268,204,"Guardian",B_S_GUARDIAN,"NPCNAME::OnMyMobDead");
 	initnpctimer;
 	end;
 
 OnTimer1000:
 	stopnpctimer;
-	mapannounce "Erm, sorry about that! This monster was meant for Battle Group 1.",bc_map,0xFFCE00;
+	mapannounce "bat_b01", "Erm, sorry about that! This monster was meant for Battle Group 1.", bc_map, 0xFFCE00;
 	bg_monster_set_team $@Guardian, $@BG_1;
 	end;
 
