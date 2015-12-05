@@ -2565,10 +2565,6 @@ bool npc_viewisid(const char * viewid)
 /**
  * Creates a new NPC.
  *
- * @remark
- *     When creating a npc with subtype TOMB, no ID is assigned. The caller
- *     must assign the dead mob ID after the NPC is created.
- *
  * @param subtype The NPC subtype.
  * @param m       The map id.
  * @param x       The x coordinate on map.
@@ -2584,9 +2580,7 @@ struct npc_data *npc_create_npc(enum npc_subtype subtype, int m, int x, int y, u
 	CREATE(nd, struct npc_data, 1);
 	nd->subtype = subtype;
 	nd->bl.type = BL_NPC;
-	if (subtype != TOMB) {
-		nd->bl.id = npc->get_new_npc_id();
-	}
+	nd->bl.id = npc->get_new_npc_id();
 	nd->bl.prev = nd->bl.next = NULL;
 	nd->bl.m = m;
 	nd->bl.x = x;
