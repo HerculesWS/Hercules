@@ -137,10 +137,11 @@ struct fame_list taekwon_fame_list[MAX_FAME_LIST];
 
 // Initial position (it's possible to set it in conf file)
 #ifdef RENEWAL
-	struct point start_point = { 0, 97, 90 };
+	struct point start_point[MAX_START_POINTS] = { { 0, 97, 90 } };
 #else
-	struct point start_point = { 0, 53, 111 };
+	struct point start_point[MAX_START_POINTS] = { { 0, 53, 111 } };
 #endif
+int start_point_num;
 
 unsigned short skillid2idx[MAX_SKILL_ID];
 
@@ -1645,6 +1646,7 @@ int char_make_new_char_sql(struct char_session_data* sd, char* name_, int str, i
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
 	int char_id, flag, k, l;
+	int point_id = rand() % start_point_num;
 
 	nullpo_retr(-2, sd);
 	nullpo_retr(-2, name_);
@@ -1682,7 +1684,7 @@ int char_make_new_char_sql(struct char_session_data* sd, char* name_, int str, i
 		"'%d', '%d', '%s', '%d',  '%d','%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
 		char_db, sd->account_id , slot, esc_name, start_zeny, 48, str, agi, vit, int_, dex, luk,
 		(40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
-		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y) )
+		mapindex_id2name(start_point[point_id].map), start_point[point_id].x, start_point[point_id].y, mapindex_id2name(start_point[point_id].map), start_point[point_id].x, start_point[point_id].y) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
 		return -2; //No, stop the procedure!
@@ -1694,7 +1696,7 @@ int char_make_new_char_sql(struct char_session_data* sd, char* name_, int str, i
 							   "'%d', '%d', '%s', '%d',  '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
 							   char_db, sd->account_id , slot, esc_name, start_zeny, str, agi, vit, int_, dex, luk,
 							   (40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
-							   mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y) )
+							   mapindex_id2name(start_point[point_id].map), start_point[point_id].x, start_point[point_id].y, mapindex_id2name(start_point[point_id].map), start_point[point_id].x, start_point[point_id].y) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
 		return -2; //No, stop the procedure!
@@ -5645,27 +5647,85 @@ int char_config_read(const char* cfgName)
 		}
 		#ifdef RENEWAL
 			else if (strcmpi(w1, "start_point") == 0) {
-				char map[MAP_NAME_LENGTH_EXT];
-				int x, y;
-				if (sscanf(w2, "%15[^,],%d,%d", map, &x, &y) < 3)
-					continue;
-				start_point.map = mapindex->name2id(map);
-				if (!start_point.map)
-					ShowError("Specified start_point %s not found in map-index cache.\n", map);
-				start_point.x = x;
-				start_point.y = y;
+				int i;
+				char *split;
+
+				i = 0;
+				split = strtok(w2, ",");
+				while (split != NULL && i < MAX_START_POINTS * 3) {
+					char *split2 = split;
+					split = strtok(NULL, ",");
+
+					switch (i % 3) {
+					case 0: // Map Name
+						start_point[i / 3].map = mapindex->name2id(split2);
+						if (!start_point[i / 3].map)
+							ShowError("Specified start_point_pre %s not found in map-index cache.\n", split2);
+						break;
+
+					case 1: // X
+						start_point[i / 3].x = atoi(split2);
+						break;
+
+					case 2: // Y
+						start_point[i / 3].y = atoi(split2);
+						break;
+
+					}
+
+					++i;
+
+				}
+				start_point_num = i / 3;
+
+				// Format is: map_name1, x1, y1,map_nameN, xN, yN;
+				if (i % 3)
+				{
+					ShowWarning("chr->config_read: There are not enough parameters in start_point_pre, ignoring last point...\n");
+					start_point[i / 3].map = 0;
+					--start_point_num;
+				}
 			}
 		#else
 			else if (strcmpi(w1, "start_point_pre") == 0) {
-				char map[MAP_NAME_LENGTH_EXT];
-				int x, y;
-				if (sscanf(w2, "%15[^,],%d,%d", map, &x, &y) < 3)
-					continue;
-				start_point.map = mapindex->name2id(map);
-				if (!start_point.map)
-					ShowError("Specified start_point_pre %s not found in map-index cache.\n", map);
-				start_point.x = x;
-				start_point.y = y;
+				int i;
+				char *split;
+				
+				i = 0;
+				split = strtok(w2, ",");
+				while (split != NULL && i < MAX_START_POINTS * 3) {
+					char *split2 = split;
+					split = strtok(NULL, ",");
+
+					switch (i % 3) {
+					case 0: // Map Name
+						start_point[i / 3].map = mapindex->name2id(split2);
+						if (!start_point[i / 3].map)
+							ShowError("Specified start_point_pre %s not found in map-index cache.\n", split2);
+						break;
+
+					case 1: // X
+						start_point[i / 3].x = atoi(split2);
+						break;
+
+					case 2: // Y
+						start_point[i / 3].y = atoi(split2);
+						break;
+
+					}
+
+					++i;
+
+				}
+				start_point_num = i / 3;
+				
+				// Format is: map_name1, x1, y1,map_nameN, xN, yN;
+				if (i % 3)
+				{
+					ShowWarning("chr->config_read: There are not enough parameters in start_point_pre, ignoring last point...\n");
+					start_point[i / 3].map = 0;
+					--start_point_num;
+				}
 			}
 		#endif
 		else if (strcmpi(w1, "start_items") == 0) {
@@ -5896,9 +5956,9 @@ int do_init(int argc, char **argv) {
 	mapindex->init();
 
 	#ifdef RENEWAL
-		start_point.map = mapindex->name2id("iz_int");
+		start_point[0].map = mapindex->name2id("iz_int");
 	#else
-		start_point.map = mapindex->name2id("new_1-1");
+		start_point[0].map = mapindex->name2id("new_1-1");
 	#endif
 
 	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
