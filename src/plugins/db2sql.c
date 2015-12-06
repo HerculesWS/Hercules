@@ -24,12 +24,10 @@
 #include "common/conf.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/strlib.h"
-#include "common/timer.h"
-#include "map/clif.h"
 #include "map/itemdb.h"
 #include "map/map.h"
-#include "map/pc.h"
 
 #include "common/HPMDataCheck.h"
 
@@ -49,37 +47,92 @@ HPExport struct hplugin_info pinfo = {
 #define DBSUFFIX ""
 #endif
 
+/// Conversion state tracking.
 struct {
-	FILE *fp;
+	FILE *fp; ///< Currently open file pointer
 	struct {
-		char *p;
-		size_t len;
-	} buf[4];
-	const char *db_name;
+		char *p;    ///< Buffer pointer
+		size_t len; ///< Buffer length
+	} buf[4]; ///< Output buffer
+	const char *db_name; ///< Database table name
 } tosql;
-bool torun = false;
 
+/// Whether the item_db converter will automatically run.
+bool itemdb2sql_torun = false;
+
+/// Backup of the original item_db parser function pointer.
 int (*itemdb_readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
 
-void hstr(const char *str) {
-	if( strlen(str) > tosql.buf[3].len ) {
+
+/**
+ * Normalizes and appends a string to the output buffer.
+ *
+ * @param str The string to append.
+ */
+void hstr(const char *str)
+{
+	if (strlen(str) > tosql.buf[3].len) {
 		tosql.buf[3].len = tosql.buf[3].len + strlen(str) + 1000;
 		RECREATE(tosql.buf[3].p,char,tosql.buf[3].len);
 	}
 	safestrncpy(tosql.buf[3].p,str,strlen(str));
 	normalize_name(tosql.buf[3].p,"\t\n ");
 }
-int db2sql(config_setting_t *entry, int n, const char *source) {
+
+/**
+ * Prints a SQL file header for the current item_db file.
+ */
+void db2sql_fileheader(void)
+{
+	time_t t = time(NULL);
+	struct tm *lt = localtime(&t);
+	int year = lt->tm_year+1900;
+
+	fprintf(tosql.fp,
+			"-- This file is part of Hercules.\n"
+			"-- http://herc.ws - http://github.com/HerculesWS/Hercules\n"
+			"--\n"
+			"-- Copyright (C) 2013-%d  Hercules Dev Team\n"
+			"--\n"
+			"-- Hercules is free software: you can redistribute it and/or modify\n"
+			"-- it under the terms of the GNU General Public License as published by\n"
+			"-- the Free Software Foundation, either version 3 of the License, or\n"
+			"-- (at your option) any later version.\n"
+			"--\n"
+			"-- This program is distributed in the hope that it will be useful,\n"
+			"-- but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+			"-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+			"-- GNU General Public License for more details.\n"
+			"--\n"
+			"-- You should have received a copy of the GNU General Public License\n"
+			"-- along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n"
+
+			"-- NOTE: This file was auto-generated and should never be manually edited,\n"
+			"--       as it will get overwritten. If you need to modify this file,\n"
+			"--       please consider modifying the corresponding .conf file inside\n"
+			"--       the db folder, and then re-run the db2sql plugin.\n"
+			"\n", year);
+}
+
+/**
+ * Converts an Item DB entry to SQL.
+ *
+ * @see itemdb_readdb_libconfig_sub.
+ */
+int itemdb2sql_sub(config_setting_t *entry, int n, const char *source)
+{
 	struct item_data *it = NULL;
 
-	if( (it = itemdb->exists(itemdb_readdb_libconfig_sub(entry,n,source))) ) {
+	if ((it = itemdb->exists(itemdb_readdb_libconfig_sub(entry,n,source)))) {
 		char e_name[ITEM_NAME_LENGTH*2+1];
 		const char *bonus = NULL;
 		char *str;
 		int i32;
-		unsigned int ui32;
+		uint32 ui32;
 		config_setting_t *t = NULL;
 		StringBuf buf;
+
+		nullpo_ret(entry);
 
 		StrBuf->Init(&buf);
 
@@ -98,10 +151,10 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 		StrBuf->Printf(&buf, "'%u',", it->flag.delay_consume?IT_DELAYCONSUME:it->type);
 
 		// price_buy
-		StrBuf->Printf(&buf, "'%u',", it->value_buy);
+		StrBuf->Printf(&buf, "'%d',", it->value_buy);
 
 		// price_sell
-		StrBuf->Printf(&buf, "'%u',", it->value_sell);
+		StrBuf->Printf(&buf, "'%d',", it->value_sell);
 
 		// weight
 		StrBuf->Printf(&buf, "'%u',", it->weight);
@@ -122,15 +175,15 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 		StrBuf->Printf(&buf, "'%u',", it->slot);
 
 		// equip_jobs
-		if( libconfig->setting_lookup_int(entry, "Job", &i32) ) // This is an unsigned value, do not check for >= 0
-			ui32 = (unsigned int)i32;
+		if (libconfig->setting_lookup_int(entry, "Job", &i32)) // This is an unsigned value, do not check for >= 0
+			ui32 = (uint32)i32;
 		else
 			ui32 = UINT_MAX;
 		StrBuf->Printf(&buf, "'%u',", ui32);
 
 		// equip_upper
-		if( libconfig->setting_lookup_int(entry, "Upper", &i32) && i32 >= 0 )
-			ui32 = (unsigned int)i32;
+		if (libconfig->setting_lookup_int(entry, "Upper", &i32) && i32 >= 0)
+			ui32 = (uint32)i32;
 		else
 			ui32 = ITEMUPPER_ALL;
 		StrBuf->Printf(&buf, "'%u',", ui32);
@@ -148,7 +201,7 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 		StrBuf->Printf(&buf, "'%u',", it->elv);
 
 		// equip_level_max
-		if( (t = libconfig->setting_get_member(entry, "EquipLv")) && config_setting_is_aggregate(t) && libconfig->setting_length(t) >= 2 )
+		if ((t = libconfig->setting_get_member(entry, "EquipLv")) && config_setting_is_aggregate(t) && libconfig->setting_length(t) >= 2)
 			StrBuf->Printf(&buf, "'%u',", it->elvmax);
 		else
 			StrBuf->AppendStr(&buf, "NULL,");
@@ -259,36 +312,15 @@ int db2sql(config_setting_t *entry, int n, const char *source) {
 
 	return it?it->nameid:0;
 }
-void totable(void) {
-	time_t t;
-	struct tm *lt;
-	t = time(NULL);
-	lt = localtime(&t);
-	int year = lt->tm_year+1900;
-	fprintf(tosql.fp,
-			"-- This file is part of Hercules.\n"
-			"-- http://herc.ws - http://github.com/HerculesWS/Hercules\n"
-			"--\n"
-			"-- Copyright (C) 2013-%d  Hercules Dev Team\n"
-			"--\n"
-			"-- Hercules is free software: you can redistribute it and/or modify\n"
-			"-- it under the terms of the GNU General Public License as published by\n"
-			"-- the Free Software Foundation, either version 3 of the License, or\n"
-			"-- (at your option) any later version.\n"
-			"--\n"
-			"-- This program is distributed in the hope that it will be useful,\n"
-			"-- but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-			"-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-			"-- GNU General Public License for more details.\n"
-			"--\n"
-			"-- You should have received a copy of the GNU General Public License\n"
-			"-- along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n"
 
-			"-- NOTE: This file was auto-generated and should never be manually edited,\n"
-			"--       as it will get overwritten. If you need to modify this file,\n"
-			"--       please consider modifying the corresponding .conf file inside\n"
-			"--       the db folder, and then re-run the db2sql plugin.\n"
-			"\n"
+/**
+ * Prints a SQL table header for the current item_db table.
+ */
+void itemdb2sql_tableheader(void)
+{
+	db2sql_fileheader();
+
+	fprintf(tosql.fp,
 			"--\n"
 			"-- Table structure for table `%s`\n"
 			"--\n"
@@ -332,9 +364,15 @@ void totable(void) {
 			"  `unequip_script` text,\n"
 			" PRIMARY KEY (`id`)\n"
 			") ENGINE=MyISAM;\n"
-			"\n", year, tosql.db_name,tosql.db_name,tosql.db_name);
+			"\n", tosql.db_name,tosql.db_name,tosql.db_name);
 }
-void do_db2sql(void)
+
+/**
+ * Plugin main function.
+ *
+ * Converts Item DB and Item DB2 to SQL scripts.
+ */
+void do_itemdb2sql(void)
 {
 	int i;
 	struct convert_db_files {
@@ -348,8 +386,7 @@ void do_db2sql(void)
 
 	/* link */
 	itemdb_readdb_libconfig_sub = itemdb->readdb_libconfig_sub;
-	itemdb->readdb_libconfig_sub = db2sql;
-	/* */
+	itemdb->readdb_libconfig_sub = itemdb2sql_sub;
 
 	memset(&tosql.buf, 0, sizeof(tosql.buf));
 	itemdb->clear(false);
@@ -361,7 +398,7 @@ void do_db2sql(void)
 		}
 
 		tosql.db_name = files[i].name;
-		totable();
+		itemdb2sql_tableheader();
 
 		itemdb->readdb_libconfig(files[i].source);
 
@@ -371,27 +408,62 @@ void do_db2sql(void)
 	/* unlink */
 	itemdb->readdb_libconfig_sub = itemdb_readdb_libconfig_sub;
 
-	if( tosql.buf[0].p ) aFree(tosql.buf[0].p);
-	if( tosql.buf[1].p ) aFree(tosql.buf[1].p);
-	if( tosql.buf[2].p ) aFree(tosql.buf[2].p);
-	if( tosql.buf[3].p ) aFree(tosql.buf[3].p);
+	for (i = 0; i < ARRAYLENGTH(tosql.buf); i++) {
+		if (tosql.buf[i].p)
+			aFree(tosql.buf[i].p);
+	}
 }
-CPCMD(db2sql) {
-	do_db2sql();
+
+/**
+ * Console command db2sql.
+ */
+CPCMD(db2sql)
+{
+	do_itemdb2sql();
 }
+
+/**
+ * Console command itemdb2sql.
+ */
+CPCMD(itemdb2sql)
+{
+	do_itemdb2sql();
+}
+
+/**
+ * Command line argument handler for --db2sql
+ */
 CMDLINEARG(db2sql)
 {
-	map->minimal = torun = true;
+	map->minimal = true;
+	itemdb2sql_torun = true;
 	return true;
 }
-HPExport void server_preinit(void) {
 
-	addArg("--db2sql",false,db2sql,NULL);
+/**
+ * Command line argument handler for --itemdb2sql
+ */
+CMDLINEARG(itemdb2sql)
+{
+	map->minimal = true;
+	itemdb2sql_torun = true;
+	return true;
 }
-HPExport void plugin_init(void) {
-	addCPCommand("server:tools:db2sql",db2sql);
+
+HPExport void server_preinit(void)
+{
+	addArg("--db2sql", false, db2sql, NULL);
+	addArg("--itemdb2sql", false, itemdb2sql, NULL);
 }
-HPExport void server_online(void) {
-	if( torun )
-		do_db2sql();
+
+HPExport void plugin_init(void)
+{
+	addCPCommand("server:tools:db2sql", db2sql);
+	addCPCommand("server:tools:itemdb2sql", itemdb2sql);
+}
+
+HPExport void server_online(void)
+{
+	if (itemdb2sql_torun)
+		do_itemdb2sql();
 }

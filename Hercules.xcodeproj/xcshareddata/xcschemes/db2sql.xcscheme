@@ -56,44 +56,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <PreActions>
-         <ExecutionAction
-            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
-            <ActionContent
-               title = "Run Script"
-               scriptText = "sed -e &apos;s:^\([[:blank:]]*\)//&quot;db2sql&quot;,$:\1&quot;db2sql&quot;,:&apos; -i .db2sql &quot;${PROJECT_DIR}/conf/plugins.conf&quot;"
-               shellToInvoke = "/bin/bash">
-               <EnvironmentBuildable>
-                  <BuildableReference
-                     BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "A56CC67B18564356009EB79C"
-                     BuildableName = "map-server"
-                     BlueprintName = "map-server"
-                     ReferencedContainer = "container:Hercules.xcodeproj">
-                  </BuildableReference>
-               </EnvironmentBuildable>
-            </ActionContent>
-         </ExecutionAction>
-      </PreActions>
-      <PostActions>
-         <ExecutionAction
-            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
-            <ActionContent
-               title = "Run Script"
-               scriptText = "mv &quot;${PROJECT_DIR}/conf/plugins.conf.db2sql&quot; &quot;${PROJECT_DIR}/conf/plugins.conf&quot;"
-               shellToInvoke = "/bin/bash">
-               <EnvironmentBuildable>
-                  <BuildableReference
-                     BuildableIdentifier = "primary"
-                     BlueprintIdentifier = "A56CC67B18564356009EB79C"
-                     BuildableName = "map-server"
-                     BlueprintName = "map-server"
-                     ReferencedContainer = "container:Hercules.xcodeproj">
-                  </BuildableReference>
-               </EnvironmentBuildable>
-            </ActionContent>
-         </ExecutionAction>
-      </PostActions>
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
@@ -106,7 +68,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "--db2sql"
+            argument = "--load-plugin db2sql --db2sql"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
