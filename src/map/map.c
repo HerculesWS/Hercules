@@ -2068,6 +2068,8 @@ uint32 map_race_id2mask(int race)
 		return RCMASK_NONDEMIPLAYER;
 
 	ShowWarning("map_race_id2mask: Invalid race: %d\n", race);
+	Assert_report((race >= RC_FORMLESS && race < RC_NONDEMIPLAYER) || race == RC_ALL);
+
 	return RCMASK_NONE;
 }
 
