@@ -516,7 +516,7 @@ OnTimer85000:
 	monster .@map$,145,99,"Abyss Knight",2470,1,.@label$;
 	monster .@map$,154,99,"Abyss Knight",2470,1,.@label$;
 
-	for(.@i = 1; .@i<=22; .@i++)
+	for (.@i = 1; .@i <= 22; ++.@i)
 		hideoffnpc instance_npcname(".#ghinstance"+.@i);
 
 	donpcevent instance_npcname(".#ghinstance22")+"::OnTalkK";
@@ -1480,7 +1480,7 @@ OnEnable:
 	end;
 OnMyMobDead:
 	.@map$ = instance_mapname("2@gl_k");
-	.MyMobs--;
+	--.MyMobs;
 	if (.MyMobs == 0) {
 		mapannounce .@map$, "A being with an evil aura seems to be appearing in this region.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("#ghmemorialmob06")+"::OnDisable2";
@@ -1589,7 +1589,7 @@ OnEnable:
 	end;
 OnMyMobDead:
 	.@map$ = instance_mapname("2@gl_k");
-	.MyMobs--;
+	--.MyMobs;
 	if (.MyMobs == 0) {
 		mapannounce .@map$, "A being with an evil aura seems to be appearing in this region.",bc_map,"0xFFFF00";
 		donpcevent instance_npcname("#ghmemorialmob09")+"::OnEnable";
