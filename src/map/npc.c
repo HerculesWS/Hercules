@@ -2076,6 +2076,7 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 	double z;
 	int i,skill_t, skill_idx = skill->get_index(MC_OVERCHARGE);
 	struct npc_data *nd;
+	bool duplicates[MAX_INVENTORY] = { 0 };
 
 	nullpo_retr(1, sd);
 	nullpo_retr(1, item_list);
@@ -2092,29 +2093,36 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 	z = 0;
 
 	// verify the sell list
-	for( i = 0; i < n; i++ ) {
+	for (i = 0; i < n; i++) {
 		int nameid, amount, idx, value;
 
 		idx    = item_list[i*2]-2;
 		amount = item_list[i*2+1];
 
-		if( idx >= MAX_INVENTORY || idx < 0 || amount < 0 ) {
+		if (idx >= MAX_INVENTORY || idx < 0 || amount < 0) {
 			return 1;
 		}
+
+		if (duplicates[idx]) {
+			// Sanity check. The client sends each inventory index at most once [Haru]
+			return 1;
+		}
+		duplicates[idx] = true;
 
 		nameid = sd->status.inventory[idx].nameid;
 
-		if( !nameid || !sd->inventory_data[idx] || sd->status.inventory[idx].amount < amount ) {
+		if (!nameid || !sd->inventory_data[idx] || sd->status.inventory[idx].amount < amount) {
 			return 1;
 		}
 
-		if( nd->master_nd ) {// Script-controlled shops decide by themselves, what can be sold and at what price.
+		if (nd->master_nd) {
+			// Script-controlled shops decide by themselves, what can be sold and at what price.
 			continue;
 		}
 
 		value = pc->modifysellvalue(sd, sd->inventory_data[idx]->value_sell);
 
-		z+= (double)value*amount;
+		z += (double)value*amount;
 	}
 
 	if( nd->master_nd ) { // Script-controlled shops
