@@ -40506,6 +40506,33 @@ struct mob_data* HP_map_id2boss(int id) {
 	}
 	return retVal___;
 }
+uint32 HP_map_race_id2mask(int race) {
+	int hIndex = 0;
+	uint32 retVal___ = 0;
+	if( HPMHooks.count.HP_map_race_id2mask_pre ) {
+		uint32 (*preHookFunc) (int *race);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_race_id2mask_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_race_id2mask_pre[hIndex].func;
+			retVal___ = preHookFunc(&race);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.map.race_id2mask(race);
+	}
+	if( HPMHooks.count.HP_map_race_id2mask_post ) {
+		uint32 (*postHookFunc) (uint32 retVal___, int *race);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_race_id2mask_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_race_id2mask_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &race);
+		}
+	}
+	return retVal___;
+}
 void HP_map_reloadnpc(bool clear) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_map_reloadnpc_pre ) {

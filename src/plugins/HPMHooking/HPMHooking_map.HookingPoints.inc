@@ -1553,6 +1553,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->nick2sd, HP_map_nick2sd) },
 	{ HP_POP(map->getmob_boss, HP_map_getmob_boss) },
 	{ HP_POP(map->id2boss, HP_map_id2boss) },
+	{ HP_POP(map->race_id2mask, HP_map_race_id2mask) },
 	{ HP_POP(map->reloadnpc, HP_map_reloadnpc) },
 	{ HP_POP(map->check_dir, HP_map_check_dir) },
 	{ HP_POP(map->calc_dir, HP_map_calc_dir) },

@@ -3047,6 +3047,8 @@ struct {
 	struct HPMHookPoint *HP_map_getmob_boss_post;
 	struct HPMHookPoint *HP_map_id2boss_pre;
 	struct HPMHookPoint *HP_map_id2boss_post;
+	struct HPMHookPoint *HP_map_race_id2mask_pre;
+	struct HPMHookPoint *HP_map_race_id2mask_post;
 	struct HPMHookPoint *HP_map_reloadnpc_pre;
 	struct HPMHookPoint *HP_map_reloadnpc_post;
 	struct HPMHookPoint *HP_map_check_dir_pre;
@@ -8828,6 +8830,8 @@ struct {
 	int HP_map_getmob_boss_post;
 	int HP_map_id2boss_pre;
 	int HP_map_id2boss_post;
+	int HP_map_race_id2mask_pre;
+	int HP_map_race_id2mask_post;
 	int HP_map_reloadnpc_pre;
 	int HP_map_reloadnpc_post;
 	int HP_map_check_dir_pre;
