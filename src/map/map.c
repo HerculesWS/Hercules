@@ -2040,6 +2040,39 @@ struct mob_data * map_id2boss(int id)
 	return (struct mob_data*)idb_get(map->bossid_db,id);
 }
 
+/**
+ * Returns the equivalent bitmask to the given race ID.
+ *
+ * @param race A race identifier (@see enum Race)
+ *
+ * @return The equivalent race bitmask.
+ */
+uint32 map_race_id2mask(int race)
+{
+	if (race >= RC_FORMLESS && race < RC_MAX)
+		return 1 << race;
+
+	if (race == RC_ALL)
+		return RCMASK_ALL;
+
+	if (race == RC_NONPLAYER)
+		return RCMASK_NONPLAYER;
+
+	if (race == RC_NONDEMIHUMAN)
+		return RCMASK_NONDEMIHUMAN;
+
+	if (race == RC_DEMIPLAYER)
+		return RCMASK_DEMIPLAYER;
+
+	if (race == RC_NONDEMIPLAYER)
+		return RCMASK_NONDEMIPLAYER;
+
+	ShowWarning("map_race_id2mask: Invalid race: %d\n", race);
+	Assert_report((race >= RC_FORMLESS && race < RC_NONDEMIPLAYER) || race == RC_ALL);
+
+	return RCMASK_NONE;
+}
+
 /// Applies func to all the players in the db.
 /// Stops iterating if func returns -1.
 void map_vforeachpc(int (*func)(struct map_session_data* sd, va_list args), va_list args) {
@@ -6127,6 +6160,7 @@ void map_defaults(void) {
 	map->nick2sd = map_nick2sd;
 	map->getmob_boss = map_getmob_boss;
 	map->id2boss = map_id2boss;
+	map->race_id2mask = map_race_id2mask;
 	// reload config file looking only for npcs
 	map->reloadnpc = map_reloadnpc;
 

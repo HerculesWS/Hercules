@@ -251,26 +251,64 @@ enum bl_type {
 
 enum npc_subtype { WARP, SHOP, SCRIPT, CASHSHOP, TOMB };
 
-enum {
-	RC_FORMLESS=0,
-	RC_UNDEAD,
-	RC_BRUTE,
-	RC_PLANT,
-	RC_INSECT,
-	RC_FISH,
-	RC_DEMON,
-	RC_DEMIHUMAN,
-	RC_ANGEL,
-	RC_DRAGON,
-	RC_PLAYER,
-	RC_BOSS,
-	RC_NONBOSS,
-	RC_MAX,
-	RC_NONDEMIHUMAN,
-	RC_NONPLAYER,
-	RC_DEMIPLAYER,
-	RC_NONDEMIPLAYER,
-	RC_ALL = 0xFF
+/**
+ * Race type IDs.
+ *
+ * Mostly used by scripts/bonuses.
+ */
+enum Race {
+	// Base Races
+	RC_FORMLESS = 0,  ///< Formless
+	RC_UNDEAD,        ///< Undead
+	RC_BRUTE,         ///< Beast/Brute
+	RC_PLANT,         ///< Plant
+	RC_INSECT,        ///< Insect
+	RC_FISH,          ///< Fish
+	RC_DEMON,         ///< Demon
+	RC_DEMIHUMAN,     ///< Demi-Human (not including Player)
+	RC_ANGEL,         ///< Angel
+	RC_DRAGON,        ///< Dragon
+	RC_PLAYER,        ///< Player
+	// Boss
+	RC_BOSS,          ///< Boss
+	RC_NONBOSS,       ///< Non-boss
+
+	RC_MAX,           // Array size delimiter (keep before the combination races)
+
+	// Combination Races
+	RC_NONDEMIHUMAN,   ///< Every race except Demi-Human (including Player)
+	RC_NONPLAYER,      ///< Every non-player race
+	RC_DEMIPLAYER,     ///< Demi-Human (including Player)
+	RC_NONDEMIPLAYER,  ///< Every race except Demi-Human (and except Player)
+	RC_ALL = 0xFF,     ///< Every race (implemented as equivalent to RC_BOSS and RC_NONBOSS)
+};
+
+/**
+ * Race type bitmasks.
+ *
+ * Used by several bonuses internally, to simplify handling of race combinations.
+ */
+enum RaceMask {
+	RCMASK_NONE      = 0,
+	RCMASK_FORMLESS  = 1<<RC_FORMLESS,
+	RCMASK_UNDEAD    = 1<<RC_UNDEAD,
+	RCMASK_BRUTE     = 1<<RC_BRUTE,
+	RCMASK_PLANT     = 1<<RC_PLANT,
+	RCMASK_INSECT    = 1<<RC_INSECT,
+	RCMASK_FISH      = 1<<RC_FISH,
+	RCMASK_DEMON     = 1<<RC_DEMON,
+	RCMASK_DEMIHUMAN = 1<<RC_DEMIHUMAN,
+	RCMASK_ANGEL     = 1<<RC_ANGEL,
+	RCMASK_DRAGON    = 1<<RC_DRAGON,
+	RCMASK_PLAYER    = 1<<RC_PLAYER,
+	RCMASK_BOSS      = 1<<RC_BOSS,
+	RCMASK_NONBOSS   = 1<<RC_NONBOSS,
+	RCMASK_NONDEMIPLAYER = RCMASK_FORMLESS | RCMASK_UNDEAD | RCMASK_BRUTE | RCMASK_PLANT | RCMASK_INSECT | RCMASK_FISH | RCMASK_DEMON | RCMASK_ANGEL | RCMASK_DRAGON,
+	RCMASK_NONDEMIHUMAN = RCMASK_NONDEMIPLAYER | RCMASK_PLAYER,
+	RCMASK_NONPLAYER    = RCMASK_NONDEMIPLAYER | RCMASK_DEMIHUMAN,
+	RCMASK_DEMIPLAYER   = RCMASK_DEMIHUMAN | RCMASK_PLAYER,
+	RCMASK_ALL          = RCMASK_BOSS | RCMASK_NONBOSS,
+	RCMASK_ANY          = RCMASK_NONPLAYER | RCMASK_PLAYER,
 };
 
 enum {
@@ -1010,6 +1048,7 @@ END_ZEROED_BLOCK;
 	struct map_session_data * (*nick2sd) (const char *nick);
 	struct mob_data * (*getmob_boss) (int16 m);
 	struct mob_data * (*id2boss) (int id);
+	uint32 (*race_id2mask) (int race);
 	// reload config file looking only for npcs
 	void (*reloadnpc) (bool clear);
 

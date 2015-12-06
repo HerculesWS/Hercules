@@ -3714,8 +3714,8 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 			//Ignore Defense?
 			if (!flag.imdef && (
 				sd->bonus.ignore_mdef_ele & ( 1 << tstatus->def_ele ) ||
-				sd->bonus.ignore_mdef_race & ( 1 << tstatus->race ) ||
-				sd->bonus.ignore_mdef_race & ( is_boss(target) ? 1 << RC_BOSS : 1 << RC_NONBOSS )
+				sd->bonus.ignore_mdef_race & map->race_id2mask(tstatus->race) ||
+				sd->bonus.ignore_mdef_race & map->race_id2mask(is_boss(target) ? RC_BOSS : RC_NONBOSS)
 			))
 				flag.imdef = 1;
 		}
@@ -5195,19 +5195,19 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			if( (i=pc->checkskill(sd,AB_EUCHARISTICA)) > 0 &&
 				(tstatus->race == RC_DEMON || tstatus->def_ele == ELE_DARK) )
 				ATK_ADDRATE(-i);
-			if( skill_id != PA_SACRIFICE && skill_id != MO_INVESTIGATE && skill_id != CR_GRANDCROSS && skill_id != NPC_GRANDDARKNESS && skill_id != PA_SHIELDCHAIN && !flag.cri )
-			{ //Elemental/Racial adjustments
-				if( sd->right_weapon.def_ratio_atk_ele & (1<<tstatus->def_ele) ||
-					sd->right_weapon.def_ratio_atk_race & (1<<tstatus->race) ||
-					sd->right_weapon.def_ratio_atk_race & (1<<(is_boss(target)?RC_BOSS:RC_NONBOSS))
+			if (skill_id != PA_SACRIFICE && skill_id != MO_INVESTIGATE && skill_id != CR_GRANDCROSS && skill_id != NPC_GRANDDARKNESS && skill_id != PA_SHIELDCHAIN && !flag.cri) {
+				//Elemental/Racial adjustments
+				if (sd->right_weapon.def_ratio_atk_ele & (1<<tstatus->def_ele)
+				 || sd->right_weapon.def_ratio_atk_race & map->race_id2mask(tstatus->race)
+				 || sd->right_weapon.def_ratio_atk_race & map->race_id2mask(is_boss(target) ? RC_BOSS : RC_NONBOSS)
 				)
 					flag.pdef = 1;
 
-				if( sd->left_weapon.def_ratio_atk_ele & (1<<tstatus->def_ele) ||
-					sd->left_weapon.def_ratio_atk_race & (1<<tstatus->race) ||
-					sd->left_weapon.def_ratio_atk_race & (1<<(is_boss(target)?RC_BOSS:RC_NONBOSS))
-				)
-				{ //Pass effect onto right hand if configured so. [Skotlex]
+				if (sd->left_weapon.def_ratio_atk_ele & (1<<tstatus->def_ele)
+				 || sd->left_weapon.def_ratio_atk_race & map->race_id2mask(tstatus->race)
+				 || sd->left_weapon.def_ratio_atk_race & map->race_id2mask(is_boss(target) ? RC_BOSS : RC_NONBOSS)
+				) {
+					//Pass effect onto right hand if configured so. [Skotlex]
 					if (battle_config.left_cardfix_to_right && flag.rh)
 						flag.pdef = 1;
 					else
@@ -5219,15 +5219,15 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				//Ignore Defense?
 				if (!flag.idef && (
 					sd->right_weapon.ignore_def_ele & (1<<tstatus->def_ele) ||
-					sd->right_weapon.ignore_def_race & (1<<tstatus->race) ||
-					sd->right_weapon.ignore_def_race & (is_boss(target)?1<<RC_BOSS:1<<RC_NONBOSS)
+					sd->right_weapon.ignore_def_race & map->race_id2mask(tstatus->race) ||
+					sd->right_weapon.ignore_def_race & map->race_id2mask(is_boss(target) ? RC_BOSS : RC_NONBOSS)
 				))
 					flag.idef = 1;
 
 				if (!flag.idef2 && (
 					sd->left_weapon.ignore_def_ele & (1<<tstatus->def_ele) ||
-					sd->left_weapon.ignore_def_race & (1<<tstatus->race) ||
-					sd->left_weapon.ignore_def_race & (is_boss(target)?1<<RC_BOSS:1<<RC_NONBOSS)
+					sd->left_weapon.ignore_def_race & map->race_id2mask(tstatus->race) ||
+					sd->left_weapon.ignore_def_race & map->race_id2mask(is_boss(target) ? RC_BOSS : RC_NONBOSS)
 				)) {
 						if(battle_config.left_cardfix_to_right && flag.rh) //Move effect to right hand. [Skotlex]
 							flag.idef = 1;

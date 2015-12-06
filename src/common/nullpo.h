@@ -27,10 +27,23 @@
 #include <crtdbg.h>
 #endif // !DEFCPP && WIN && !MINGW
 #define Assert(EX) assert(EX)
+/**
+ * Reports an assertion failure if the passed expression is false.
+ *
+ * @param EX The expression to test.
+ * @return false if the passed expression is true, false otherwise.
+ */
 #define Assert_chk(EX) ( (EX) ? false : (nullpo->assert_report(__FILE__, __LINE__, __func__, #EX, "failed assertion"), true) )
+/**
+ * Reports an assertion failure (without actually checking it).
+ *
+ * @param EX the expression to report.
+ */
+#define Assert_report(EX) (nullpo->assert_report(__FILE__, __LINE__, __func__, #EX, "failed assertion"))
 #else // ! ASSERT_CHECK
 #define Assert(EX) (EX)
 #define Assert_chk(EX) ((EX), false)
+#define Assert_report(EX) ((void)(EX))
 #endif // ASSERT_CHECK
 
 #if defined(NULLPO_CHECK)
