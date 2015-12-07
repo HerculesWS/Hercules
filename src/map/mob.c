@@ -3678,30 +3678,45 @@ static inline int mob_parse_dbrow_cap_value(int class_, int min, int max, int va
 	return value;
 }
 
-void mob_read_db_stats_sub(struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t)
+/**
+ * Processes the stats for a mob database entry.
+ *
+ * @param[in,out] entry The destination mob_db entry, already initialized
+ *                      (mob_id is expected to be already set).
+ * @param[in]     t     The libconfig entry.
+ */
+void mob_read_db_stats_sub(struct mob_db *entry, config_setting_t *t)
 {
 	int i32;
 	if (mob->lookup_const(t, "Str", &i32) && i32 >= 0) {
-		mstatus->str = mob_parse_dbrow_cap_value(class_, UINT16_MIN, UINT16_MAX, i32);
+		entry->status.str = mob_parse_dbrow_cap_value(entry->mob_id, UINT16_MIN, UINT16_MAX, i32);
 	}
 	if (mob->lookup_const(t, "Agi", &i32) && i32 >= 0) {
-		mstatus->agi = mob_parse_dbrow_cap_value(class_, UINT16_MIN, UINT16_MAX, i32);
+		entry->status.agi = mob_parse_dbrow_cap_value(entry->mob_id, UINT16_MIN, UINT16_MAX, i32);
 	}
 	if (mob->lookup_const(t, "Vit", &i32) && i32 >= 0) {
-		mstatus->vit = mob_parse_dbrow_cap_value(class_, UINT16_MIN, UINT16_MAX, i32);
+		entry->status.vit = mob_parse_dbrow_cap_value(entry->mob_id, UINT16_MIN, UINT16_MAX, i32);
 	}
 	if (mob->lookup_const(t, "Int", &i32) && i32 >= 0) {
-		mstatus->int_ = mob_parse_dbrow_cap_value(class_, UINT16_MIN, UINT16_MAX, i32);
+		entry->status.int_ = mob_parse_dbrow_cap_value(entry->mob_id, UINT16_MIN, UINT16_MAX, i32);
 	}
 	if (mob->lookup_const(t, "Dex", &i32) && i32 >= 0) {
-		mstatus->dex = mob_parse_dbrow_cap_value(class_, UINT16_MIN, UINT16_MAX, i32);
+		entry->status.dex = mob_parse_dbrow_cap_value(entry->mob_id, UINT16_MIN, UINT16_MAX, i32);
 	}
 	if (mob->lookup_const(t, "Luk", &i32) && i32 >= 0) {
-		mstatus->luk = mob_parse_dbrow_cap_value(class_, UINT16_MIN, UINT16_MAX, i32);
+		entry->status.luk = mob_parse_dbrow_cap_value(entry->mob_id, UINT16_MIN, UINT16_MAX, i32);
 	}
 }
 
-int mob_read_db_mode_sub(struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t)
+/**
+ * Processes the mode for a mob_db entry.
+ *
+ * @param[in] entry The destination mob_db entry, already initialized.
+ * @param[in] t     The libconfig entry.
+ *
+ * @return The parsed mode.
+ */
+int mob_read_db_mode_sub(struct mob_db *entry, config_setting_t *t)
 {
 	int mode = 0;
 	config_setting_t *t2;
@@ -3740,7 +3755,14 @@ int mob_read_db_mode_sub(struct mob_db *entry, struct status_data *mstatus, int 
 	return mode;
 }
 
-void mob_read_db_mvpdrops_sub(struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t)
+/**
+ * Processes the MVP drops for a mob_db entry.
+ *
+ * @param[in,out] entry The destination mob_db entry, already initialized
+ *                      (mob_id is expected to be already set).
+ * @param[in]     t     The libconfig entry.
+ */
+void mob_read_db_mvpdrops_sub(struct mob_db *entry, config_setting_t *t)
 {
 	config_setting_t *drop;
 	int i = 0;
@@ -3752,28 +3774,26 @@ void mob_read_db_mvpdrops_sub(struct mob_db *entry, struct status_data *mstatus,
 		int rate_adjust = battle_config.item_rate_mvp;
 		struct item_data* id = itemdb->search_name(name);
 		int value = 0;
-		if (!id)
-		{
-			ShowWarning("mob_read_db: mvp drop item %s not found in monster %d\n", name, class_);
-			i ++;
+		if (!id) {
+			ShowWarning("mob_read_db: mvp drop item %s not found in monster %d\n", name, entry->mob_id);
+			i++;
 			continue;
 		}
 		if (mob->get_const(drop, &i32) && i32 >= 0) {
 			value = i32;
 		}
-		if (value <= 0)
-		{
-			ShowWarning("mob_read_db: wrong drop chance %d for mvp drop item %s in monster %d\n", value, name, class_);
-			i ++;
+		if (value <= 0) {
+			ShowWarning("mob_read_db: wrong drop chance %d for mvp drop item %s in monster %d\n", value, name, entry->mob_id);
+			i++;
 			continue;
 		}
 		entry->mvpitem[idx].nameid = id->nameid;
 		if (!entry->mvpitem[idx].nameid) {
 			entry->mvpitem[idx].p = 0; //No item....
-			i ++;
+			i++;
 			continue;
 		}
-		mob->item_dropratio_adjust(entry->mvpitem[idx].nameid, class_, &rate_adjust);
+		mob->item_dropratio_adjust(entry->mvpitem[idx].nameid, entry->mob_id, &rate_adjust);
 		entry->mvpitem[idx].p = mob->drop_adjust(value, rate_adjust, battle_config.item_drop_mvp_min, battle_config.item_drop_mvp_max);
 
 		//calculate and store Max available drop chance of the MVP item
@@ -3787,11 +3807,18 @@ void mob_read_db_mvpdrops_sub(struct mob_db *entry, struct status_data *mstatus,
 		idx++;
 	}
 	if (idx == MAX_MVP_DROP && libconfig->setting_get_elem(t, i)) {
-		ShowWarning("mob_read_db: Too many mvp drops in mob %d\n", class_);
+		ShowWarning("mob_read_db: Too many mvp drops in mob %d\n", entry->mob_id);
 	}
 }
 
-void mob_read_db_drops_sub(struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t)
+/**
+ * Processes the drops for a mob_db entry.
+ *
+ * @param[in,out] entry The destination mob_db entry, already initialized
+ *                      (mob_id, status.mode are expected to be already set).
+ * @param[in]     t     The libconfig entry.
+ */
+void mob_read_db_drops_sub(struct mob_db *entry, config_setting_t *t)
 {
 	config_setting_t *drop;
 	int i = 0;
@@ -3805,73 +3832,72 @@ void mob_read_db_drops_sub(struct mob_db *entry, struct status_data *mstatus, in
 		unsigned short ratemin, ratemax;
 		struct item_data* id = itemdb->search_name(name);
 		int value = 0;
-		if (!id)
-		{
-			ShowWarning("mob_read_db: drop item %s not found in monster %d\n", name, class_);
-			i ++;
+		if (!id) {
+			ShowWarning("mob_read_db: drop item %s not found in monster %d\n", name, entry->mob_id);
+			i++;
 			continue;
 		}
 		if (mob->get_const(drop, &i32) && i32 >= 0) {
 			value = i32;
 		}
-		if (value <= 0)
-		{
-			ShowWarning("mob_read_db: wrong drop chance %d for drop item %s in monster %d\n", value, name, class_);
-			i ++;
+		if (value <= 0) {
+			ShowWarning("mob_read_db: wrong drop chance %d for drop item %s in monster %d\n", value, name, entry->mob_id);
+			i++;
 			continue;
 		}
 
 		entry->dropitem[idx].nameid = id->nameid;
 		if (!entry->dropitem[idx].nameid) {
 			entry->dropitem[idx].p = 0; //No drop.
-			i ++;
+			i++;
 			continue;
 		}
 		type = id->type;
-		if ((class_ >= MOBID_TREASURE_BOX1 && class_ <= MOBID_TREASURE_BOX40) || (class_ >= MOBID_TREASURE_BOX41 && class_ <= MOBID_TREASURE_BOX49)) {
+		if ((entry->mob_id >= MOBID_TREASURE_BOX1 && entry->mob_id <= MOBID_TREASURE_BOX40)
+		 || (entry->mob_id >= MOBID_TREASURE_BOX41 && entry->mob_id <= MOBID_TREASURE_BOX49)) {
 			//Treasure box drop rates [Skotlex]
 			rate_adjust = battle_config.item_rate_treasure;
 			ratemin = battle_config.item_drop_treasure_min;
 			ratemax = battle_config.item_drop_treasure_max;
-		}
-		else switch (type)
-		{ // Added support to restrict normal drops of MVP's [Reddozen]
+		} else {
+			switch (type) { // Added support to restrict normal drops of MVP's [Reddozen]
 			case IT_HEALING:
-				rate_adjust = (mstatus->mode&MD_BOSS) ? battle_config.item_rate_heal_boss : battle_config.item_rate_heal;
+				rate_adjust = (entry->status.mode&MD_BOSS) ? battle_config.item_rate_heal_boss : battle_config.item_rate_heal;
 				ratemin = battle_config.item_drop_heal_min;
 				ratemax = battle_config.item_drop_heal_max;
 				break;
 			case IT_USABLE:
 			case IT_CASH:
-				rate_adjust = (mstatus->mode&MD_BOSS) ? battle_config.item_rate_use_boss : battle_config.item_rate_use;
+				rate_adjust = (entry->status.mode&MD_BOSS) ? battle_config.item_rate_use_boss : battle_config.item_rate_use;
 				ratemin = battle_config.item_drop_use_min;
 				ratemax = battle_config.item_drop_use_max;
 				break;
 			case IT_WEAPON:
 			case IT_ARMOR:
 			case IT_PETARMOR:
-				rate_adjust = (mstatus->mode&MD_BOSS) ? battle_config.item_rate_equip_boss : battle_config.item_rate_equip;
+				rate_adjust = (entry->status.mode&MD_BOSS) ? battle_config.item_rate_equip_boss : battle_config.item_rate_equip;
 				ratemin = battle_config.item_drop_equip_min;
 				ratemax = battle_config.item_drop_equip_max;
 				break;
 			case IT_CARD:
-				rate_adjust = (mstatus->mode&MD_BOSS) ? battle_config.item_rate_card_boss : battle_config.item_rate_card;
+				rate_adjust = (entry->status.mode&MD_BOSS) ? battle_config.item_rate_card_boss : battle_config.item_rate_card;
 				ratemin = battle_config.item_drop_card_min;
 				ratemax = battle_config.item_drop_card_max;
 				break;
 			default:
-				rate_adjust = (mstatus->mode&MD_BOSS) ? battle_config.item_rate_common_boss : battle_config.item_rate_common;
+				rate_adjust = (entry->status.mode&MD_BOSS) ? battle_config.item_rate_common_boss : battle_config.item_rate_common;
 				ratemin = battle_config.item_drop_common_min;
 				ratemax = battle_config.item_drop_common_max;
 				break;
+			}
 		}
-		mob->item_dropratio_adjust(id->nameid, class_, &rate_adjust);
+		mob->item_dropratio_adjust(id->nameid, entry->mob_id, &rate_adjust);
 		entry->dropitem[idx].p = mob->drop_adjust(value, rate_adjust, ratemin, ratemax);
 
 		//calculate and store Max available drop chance of the item
 		if (entry->dropitem[idx].p
-		 && (class_ < MOBID_TREASURE_BOX1 || class_ > MOBID_TREASURE_BOX40)
-		 && (class_ < MOBID_TREASURE_BOX41 || class_ > MOBID_TREASURE_BOX49)) {
+		 && (entry->mob_id < MOBID_TREASURE_BOX1 || entry->mob_id > MOBID_TREASURE_BOX40)
+		 && (entry->mob_id < MOBID_TREASURE_BOX41 || entry->mob_id > MOBID_TREASURE_BOX49)) {
 			//Skip treasure chests.
 			if (id->maxchance == -1 || (id->maxchance < entry->dropitem[idx].p) ) {
 				id->maxchance = entry->dropitem[idx].p; //item has bigger drop chance or sold in shops
@@ -3880,361 +3906,448 @@ void mob_read_db_drops_sub(struct mob_db *entry, struct status_data *mstatus, in
 				if (id->mob[k].chance <= entry->dropitem[idx].p)
 					break;
 			}
-			if (k == MAX_SEARCH)
-			{
+			if (k == MAX_SEARCH) {
 				i++;
 				idx++;
 				continue;
 			}
 
-			if (id->mob[k].id != class_ && k != MAX_SEARCH - 1)
+			if (id->mob[k].id != entry->mob_id && k != MAX_SEARCH - 1)
 				memmove(&id->mob[k+1], &id->mob[k], (MAX_SEARCH-k-1)*sizeof(id->mob[0]));
 			id->mob[k].chance = entry->dropitem[idx].p;
-			id->mob[k].id = class_;
+			id->mob[k].id = entry->mob_id;
 		}
 		i++;
 		idx++;
 	}
 	if (idx == MAX_MOB_DROP && libconfig->setting_get_elem(t, i)) {
-		ShowWarning("mob_read_db: Too many drops in mob %d\n", class_);
+		ShowWarning("mob_read_db: Too many drops in mob %d\n", entry->mob_id);
 	}
 }
 
-/*==========================================
- * processes one mobdb entry
- *------------------------------------------*/
-bool mob_read_db_sub(config_setting_t *mobt, int id, const char *source)
+/**
+ * Validates a mob DB entry and inserts it into the database.
+ * This function is called after preparing the mob entry data, and it takes
+ * care of inserting it and cleaning up any remainders of the previous one (in
+ * case it is overwriting an existing entry).
+ *
+ * @param entry  Pointer to the new mob_db entry. Ownership is NOT taken, but
+ *               the content is modified to reflect the validation.
+ * @param n      Ordinal number of the entry, to be displayed in case of
+ *               validation errors.
+ * @param source Source of the entry (file name), to be displayed in case of
+ *               validation errors.
+ * @return Mob ID of the validated entry, or 0 in case of failure.
+ *
+ * Note: This is safe to call if the new entry is a shallow copy of the old one
+ * (i.e.  mob_db2 inheritance), as it will make sure not to free any data still
+ * in use by the new entry.
+ */
+int mob_db_validate_entry(struct mob_db *entry, int n, const char *source)
 {
-	struct mob_db *entry = NULL, tmpEntry;
-	config_setting_t *t = NULL;
-	int i32 = 0, value = 0, class_ = 0;
-	struct status_data *mstatus;
 	struct mob_data data;
+
+	if (entry->mob_id <= 1000 || entry->mob_id > MAX_MOB_DB) {
+		ShowError("mob_db_validate_entry: Invalid monster ID %d, must be in range %d-%d.\n", entry->mob_id, 1000, MAX_MOB_DB);
+		return 0;
+	}
+	if (pc->db_checkid(entry->mob_id)) {
+		ShowError("mob_read_db_sub: Invalid monster ID %d, reserved for player classes.\n", entry->mob_id);
+		return 0;
+	}
+	if (entry->mob_id >= MOB_CLONE_START && entry->mob_id < MOB_CLONE_END) {
+		ShowError("mob_read_db_sub: Invalid monster ID %d. Range %d-%d is reserved for player clones. Please increase MAX_MOB_DB (%d).\n",
+				entry->mob_id, MOB_CLONE_START, MOB_CLONE_END-1, MAX_MOB_DB);
+		return 0;
+	}
+
+	entry->lv = cap_value(entry->lv, 1, USHRT_MAX);
+
+	if (entry->status.max_sp < 1)
+		entry->status.max_sp = 1;
+	//Since mobs always respawn with full life...
+	entry->status.hp = entry->status.max_hp;
+	entry->status.sp = entry->status.max_sp;
+
+	/*
+	 * Disabled for renewal since difference of 0 and 1 still has an impact in the formulas
+	 * Just in case there is a mishandled division by zero please let us know. [malufett]
+	 */
+#ifndef RENEWAL
+	//All status should be min 1 to prevent divisions by zero from some skills. [Skotlex]
+	if (entry->status.str < 1) entry->status.str = 1;
+	if (entry->status.agi < 1) entry->status.agi = 1;
+	if (entry->status.vit < 1) entry->status.vit = 1;
+	if (entry->status.int_< 1) entry->status.int_= 1;
+	if (entry->status.dex < 1) entry->status.dex = 1;
+	if (entry->status.luk < 1) entry->status.luk = 1;
+#endif
+
+	if (entry->range2 < 1)
+		entry->range2 = 1;
+
+#if 0 // This code was (accidentally) never enabled. It'll stay commented out until it's proven to be needed.
+	//Tests showed that chase range is effectively 2 cells larger than expected [Playtester]
+	if (entry->range3 > 0)
+		entry->range3 += 2;
+#endif // 0
+
+	if (entry->range3 < entry->range2)
+		entry->range3 = entry->range2;
+
+	entry->status.size = cap_value(entry->status.size, 0, 2);
+
+	entry->status.race = cap_value(entry->status.race, 0, RC_MAX - 1);
+
+	if (entry->status.def_ele >= ELE_MAX) {
+		ShowWarning("mob_read_db_sub: Invalid element type %d for monster ID %d (max=%d).\n", entry->status.def_ele, entry->mob_id, ELE_MAX-1);
+		entry->status.def_ele = ELE_NEUTRAL;
+		entry->status.ele_lv = 1;
+	}
+	if (entry->status.ele_lv < 1 || entry->status.ele_lv > 4) {
+		ShowWarning("mob_read_db_sub: Invalid element level %d for monster ID %d, must be in range 1-4.\n", entry->status.ele_lv, entry->mob_id);
+		entry->status.ele_lv = 1;
+	}
+
+	// If the attack animation is longer than the delay, the client crops the attack animation!
+	// On aegis there is no real visible effect of having a recharge-time less than amotion anyway.
+	if (entry->status.adelay < entry->status.amotion)
+		entry->status.adelay = entry->status.amotion;
+
+	// Fill in remaining status data by using a dummy monster.
+	data.bl.type = BL_MOB;
+	data.level = entry->lv;
+	memcpy(&data.status, &entry->status, sizeof(struct status_data));
+	status->calc_misc(&data.bl, &entry->status, entry->lv);
+
+	// Finally insert monster's data into the database.
+	if (mob->db_data[entry->mob_id] == NULL) {
+		mob->db_data[entry->mob_id] = (struct mob_db*)aMalloc(sizeof(struct mob_db));
+	} else {
+		//Copy over spawn data
+		memcpy(&entry->spawn, mob->db_data[entry->mob_id]->spawn, sizeof(entry->spawn));
+	}
+	memcpy(mob->db_data[entry->mob_id], entry, sizeof(struct mob_db));
+
+	return entry->mob_id;
+}
+
+/**
+ * Processes one mobdb entry from the libconfig file, loading and inserting it
+ * into the mob database.
+ *
+ * @param mobt   Libconfig setting entry. It is expected to be valid and it
+ *               won't be freed (it is care of the caller to do so if
+ *               necessary).
+ * @param n      Ordinal number of the entry, to be displayed in case of
+ *               validation errors.
+ * @param source Source of the entry (file name), to be displayed in case of
+ *               validation errors.
+ * @return Mob ID of the validated entry, or 0 in case of failure.
+ */
+int mob_read_db_sub(config_setting_t *mobt, int n, const char *source)
+{
+	struct mob_db md = { 0 };
+	config_setting_t *t = NULL;
 	const char *str = NULL;
-	double maxhp;
-	double exp;
+	int i32 = 0;
 	bool inherit = false;
-	bool range2Updated = false;
-	bool range3Updated = false;
-	bool dmotionUpdated = false;
 	bool maxhpUpdated = false;
-	bool maxspUpdated = false;
 
-	entry = &tmpEntry;
-	if (!libconfig->setting_lookup_int(mobt, "Id", &class_)) {
-		ShowWarning("mob_read_db_sub: Missing id in \"%s\", entry #%d, skipping.\n", source, class_);
-		return false;
-	}
+	nullpo_ret(mobt);
+	/*
+	 * // Mandatory fields
+	 * Id: ID
+	 * SpriteName: "SPRITE_NAME"
+	 * Name: "Mob name"
+	 * // Optional fields
+	 * Lv: level
+	 * Hp: health
+	 * Sp: mana
+	 * Exp: basic experience
+	 * JExp: job experience
+	 * AttackRange: attack range
+	 * Attack: [attack1, attack2]
+	 * Def: defence
+	 * Mdef: magic defence
+	 * Stats: {
+	 *     Str: strength
+	 *     Agi: agility
+	 *     Vit: vitality
+	 *     Int: intelligence
+	 *     Dex: dexterity
+	 *     Luk: luck
+	 * }
+	 * ViewRange: view range
+	 * ChaseRange: chase range
+	 * Size: size
+	 * Race: race
+	 * Element: (type, level)
+	 * Mode: {
+	 *     CanMove: true/false
+	 *     Looter: true/false
+	 *     Aggressive: true/false
+	 *     Assist: true/false
+	 *     CastSensorIdle:true/false
+	 *     Boss: true/false
+	 *     Plant: true/false
+	 *     CanAttack: true/false
+	 *     Detector: true/false
+	 *     CastSensorChase: true/false
+	 *     ChangeChase: true/false
+	 *     Angry: true/false
+	 *     ChangeTargetMelee: true/false
+	 *     ChangeTargetChase: true/false
+	 *     TargetWeak: true/false
+	 * }
+	 * MoveSpeed: move speed
+	 * AttackDelay: attack delay
+	 * AttackMotion: attack motion
+	 * DamageMotion: damage motion
+	 * MvpExp: mvp experience
+	 * MvpDrops: {
+	 *     AegisName: chance
+	 *     ...
+	 * }
+	 * Drops: {
+	 *     AegisName: chance
+	 *     ...
+	 * }
+	 */
 
-	if (class_ <= 1000 || class_ > MAX_MOB_DB) {
-		ShowError("mob_read_db_sub: Invalid monster ID %d, must be in range %d-%d.\n", class_, 1000, MAX_MOB_DB);
-		return false;
+	if (!libconfig->setting_lookup_int(mobt, "Id", &i32)) {
+		ShowWarning("mob_read_db_sub: Missing id in \"%s\", entry #%d, skipping.\n", source, n);
+		return 0;
 	}
-	if (pc->db_checkid(class_)) {
-		ShowError("mob_read_db_sub: Invalid monster ID %d, reserved for player classes.\n", class_);
-		return false;
-	}
-
-	if (class_ >= MOB_CLONE_START && class_ < MOB_CLONE_END) {
-		ShowError("mob_read_db_sub: Invalid monster ID %d. Range %d-%d is reserved for player clones. Please increase MAX_MOB_DB (%d).\n", class_, MOB_CLONE_START, MOB_CLONE_END-1, MAX_MOB_DB);
-		return false;
-	}
+	md.mob_id = i32;
+	md.vd.class_ = md.mob_id;
 
 	if ((t = libconfig->setting_get_member(mobt, "Inherit")) && (inherit = libconfig->setting_get_bool(t))) {
-		if (!mob->db_data[class_]) {
-			ShowWarning("mob_read_db_sub: Trying to inherit nonexistent mob %d, default values will be used instead.\n", class_);
+		if (!mob->db_data[md.mob_id]) {
+			ShowWarning("mob_read_db_sub: Trying to inherit nonexistent mob %d, default values will be used instead.\n", md.mob_id);
 			inherit = false;
 		} else {
 			// Use old entry as default
-			struct mob_db *old_entry = mob->db_data[class_];
-			memcpy(entry, old_entry, sizeof(struct mob_db));
-			inherit = true;
+			struct mob_db *old_entry = mob->db_data[md.mob_id];
+			memcpy(&md, old_entry, sizeof(md));
 		}
 	}
-	if (!inherit) {
-		memset(&tmpEntry, 0, sizeof(tmpEntry));
-	}
-
-	mstatus = &entry->status;
-
-	entry->vd.class_ = class_;
 
 	if (!libconfig->setting_lookup_string(mobt, "SpriteName", &str) || !*str ) {
 		if (!inherit) {
-			ShowWarning("mob_read_db_sub: Missing SpriteName in mob %d of \"%s\", skipping.\n", class_, source);
-			return false;
+			ShowWarning("mob_read_db_sub: Missing SpriteName in mob %d of \"%s\", skipping.\n", md.mob_id, source);
+			return 0;
 		}
 	} else {
-		safestrncpy(entry->sprite, str, sizeof(entry->sprite));
+		safestrncpy(md.sprite, str, sizeof(md.sprite));
 	}
 
 	if (!libconfig->setting_lookup_string(mobt, "Name", &str) || !*str ) {
 		if (!inherit) {
-			ShowWarning("mob_read_db_sub: Missing Name in mob %d of \"%s\", skipping.\n", class_, source);
-			return false;
+			ShowWarning("mob_read_db_sub: Missing Name in mob %d of \"%s\", skipping.\n", md.mob_id, source);
+			return 0;
 		}
 	} else {
-		safestrncpy(entry->name, str, sizeof(entry->name));
-		safestrncpy(entry->jname, str, sizeof(entry->jname));
+		safestrncpy(md.name, str, sizeof(md.name));
+		safestrncpy(md.jname, str, sizeof(md.jname));
 	}
 
 	if (mob->lookup_const(mobt, "Lv", &i32) && i32 >= 0) {
-		entry->lv = i32;
-		entry->lv = cap_value(entry->lv, 1, USHRT_MAX);
+		md.lv = i32;
 	} else if (!inherit) {
-		entry->lv = 1;
+		md.lv = 1;
 	}
 
 	if (mob->lookup_const(mobt, "Hp", &i32) && i32 >= 0) {
-		mstatus->max_hp = i32;
-		maxhpUpdated = true;
+		md.status.max_hp = i32;
+		maxhpUpdated = true; // battle_config modifiers to max_hp are applied below
 	} else if (!inherit) {
-		mstatus->max_hp = 1;
-		maxhpUpdated = true;
+		md.status.max_hp = 1;
+		maxhpUpdated = true; // battle_config modifiers to max_hp are applied below
 	}
 
 	if (mob->lookup_const(mobt, "Sp", &i32) && i32 >= 0) {
-		mstatus->max_sp = i32;
-		maxspUpdated = true;
+		md.status.max_sp = i32;
 	} else if (!inherit) {
-		maxspUpdated = true;
+		md.status.max_sp = 1;
 	}
 
 	if (mob->lookup_const(mobt, "Exp", &i32) && i32 >= 0) {
-		exp = (double)(i32) * (double)battle_config.base_exp_rate / 100.;
-		entry->base_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
+		double exp = (double)(i32) * (double)battle_config.base_exp_rate / 100.;
+		md.base_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
 	}
 
 	if (mob->lookup_const(mobt, "JExp", &i32) && i32 >= 0) {
-		exp = (double)(i32) * (double)battle_config.job_exp_rate / 100.;
-		entry->job_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
+		double exp = (double)(i32) * (double)battle_config.job_exp_rate / 100.;
+		md.job_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
 	}
 
 	if (mob->lookup_const(mobt, "AttackRange", &i32) && i32 >= 0) {
-		mstatus->rhw.range = i32;
+		md.status.rhw.range = i32;
 	} else {
-		mstatus->rhw.range = 1;
+		md.status.rhw.range = 1;
 	}
 
 	if ((t = libconfig->setting_get_member(mobt, "Attack"))) {
 		if (config_setting_is_aggregate(t)) {
 			if (libconfig->setting_length(t) >= 2)
-				mstatus->rhw.atk2 = libconfig->setting_get_int_elem(t, 1);
+				md.status.rhw.atk2 = libconfig->setting_get_int_elem(t, 1);
 			if (libconfig->setting_length(t) >= 1)
-				mstatus->rhw.atk = libconfig->setting_get_int_elem(t, 0);
+				md.status.rhw.atk = libconfig->setting_get_int_elem(t, 0);
 		} else if (mob->lookup_const(mobt, "Attack", &i32) && i32 >= 0) {
-			mstatus->rhw.atk = i32;
-			mstatus->rhw.atk2 = i32;
+			md.status.rhw.atk = i32;
+			md.status.rhw.atk2 = i32;
 		}
 	}
 
 	if (mob->lookup_const(mobt, "Def", &i32) && i32 >= 0) {
-		mstatus->def = mob_parse_dbrow_cap_value(class_, DEFTYPE_MIN, DEFTYPE_MAX, i32);
+		md.status.def = mob_parse_dbrow_cap_value(md.mob_id, DEFTYPE_MIN, DEFTYPE_MAX, i32);
 	}
 	if (mob->lookup_const(mobt, "Mdef", &i32) && i32 >= 0) {
-		mstatus->mdef = mob_parse_dbrow_cap_value(class_, DEFTYPE_MIN, DEFTYPE_MAX, i32);
+		md.status.mdef = mob_parse_dbrow_cap_value(md.mob_id, DEFTYPE_MIN, DEFTYPE_MAX, i32);
 	}
 
 	if ((t = libconfig->setting_get_member(mobt, "Stats"))) {
 		if (config_setting_is_group(t)) {
-			mob->read_db_stats_sub(entry, mstatus, class_, t);
+			mob->read_db_stats_sub(&md, t);
 		} else if (mob->lookup_const(mobt, "Stats", &i32) && i32 >= 0) {
-			mstatus->str = mstatus->agi = mstatus->vit = mstatus->int_ = mstatus->dex = mstatus->luk =
-				mob_parse_dbrow_cap_value(class_, UINT16_MIN, UINT16_MAX, i32);
+			md.status.str = md.status.agi = md.status.vit = md.status.int_ = md.status.dex = md.status.luk =
+				mob_parse_dbrow_cap_value(md.mob_id, UINT16_MIN, UINT16_MAX, i32);
 		}
 	}
 
-	/*
-	* Disabled for renewal since difference of 0 and 1 still has an impact in the formulas
-	* Just in case there is a mishandled division by zero please let us know. [malufett]
-	*/
-#ifndef RENEWAL
-	//All status should be min 1 to prevent divisions by zero from some skills. [Skotlex]
-	if (mstatus->str < 1) mstatus->str = 1;
-	if (mstatus->agi < 1) mstatus->agi = 1;
-	if (mstatus->vit < 1) mstatus->vit = 1;
-	if (mstatus->int_< 1) mstatus->int_= 1;
-	if (mstatus->dex < 1) mstatus->dex = 1;
-	if (mstatus->luk < 1) mstatus->luk = 1;
-#endif
-
-	//Tests showed that chase range is effectively 2 cells larger than expected [Playtester]
-	if (entry->range3 > 0)
-		entry->range3 += 2;
-
 	if (mob->lookup_const(mobt, "ViewRange", &i32) && i32 >= 0) {
-		entry->range2 = i32;
-		range2Updated = true;
+		if (battle_config.view_range_rate != 100) {
+			md.range2 = i32 * battle_config.view_range_rate / 100;
+		} else {
+			md.range2 = i32;
+		}
 	} else if (!inherit) {
-		entry->range2 = 1;
-		range2Updated = true;
+		md.range2 = 1;
 	}
 
 	if (mob->lookup_const(mobt, "ChaseRange", &i32) && i32 >= 0) {
-		entry->range3 = i32;
-		range3Updated = true;
-	} else if (!inherit) {
-		entry->range3 = 1;
-		range3Updated = true;
-	}
-	if (range2Updated) {
-		if (battle_config.view_range_rate != 100) {
-			entry->range2 = entry->range2 * battle_config.view_range_rate / 100;
-			if (entry->range2 < 1)
-				entry->range2 = 1;
-		}
-	}
-	if (range3Updated) {
 		if (battle_config.chase_range_rate != 100) {
-			entry->range3 = entry->range3 * battle_config.chase_range_rate / 100;
-			if (entry->range3 < entry->range2)
-				entry->range3 = entry->range2;
+			md.range3 = i32 * battle_config.chase_range_rate / 100;
+		} else {
+			md.range3 = i32;
 		}
+	} else if (!inherit) {
+		md.range3 = 1;
 	}
 
 	if (mob->lookup_const(mobt, "Size", &i32) && i32 >= 0) {
-		mstatus->size = i32;
-		mstatus->size = cap_value(mstatus->size, 0, 2);
+		md.status.size = i32;
 	} else if (!inherit) {
-		mstatus->size = 0;
+		md.status.size = 0;
 	}
 
 	if (mob->lookup_const(mobt, "Race", &i32) && i32 >= 0) {
-		mstatus->race = i32;
-		mstatus->race = cap_value(mstatus->race, 0, RC_MAX - 1);
+		md.status.race = i32;
 	} else if (!inherit) {
-		mstatus->race = 0;
+		md.status.race = 0;
 	}
 
 	if ((t = libconfig->setting_get_member(mobt, "Element")) && config_setting_is_list(t)) {
+		int value = 0;
 		if (mob->get_const(libconfig->setting_get_elem(t, 0), &i32) && mob->get_const(libconfig->setting_get_elem(t, 1), &value)) {
-			mstatus->def_ele = i32;
-			mstatus->ele_lv = value;
+			md.status.def_ele = i32;
+			md.status.ele_lv = value;
+		} else if (!inherit) {
+			ShowWarning("mob_read_db_sub: Missing element for monster ID %d.\n", md.mob_id);
+			md.status.def_ele = ELE_NEUTRAL;
+			md.status.ele_lv = 1;
 		}
-	} else {
-		if (!inherit) {
-			ShowError("mob_read_db_sub: Missing element for monster ID %d.\n", class_);
-			return false;
-		}
-	}
-
-	if (mstatus->def_ele >= ELE_MAX) {
-		if (!inherit) {
-			ShowError("mob_read_db_sub: Invalid element type %d for monster ID %d (max=%d).\n", mstatus->def_ele, class_, ELE_MAX-1);
-			return false;
-		}
-	}
-	if (mstatus->ele_lv < 1 || mstatus->ele_lv > 4) {
-		if (!inherit) {
-			ShowError("mob_read_db_sub: Invalid element level %d for monster ID %d, must be in range 1-4.\n", mstatus->ele_lv, class_);
-			return false;
-		}
+	} else if (!inherit) {
+		ShowWarning("mob_read_db_sub: Missing element for monster ID %d.\n", md.mob_id);
+		md.status.def_ele = ELE_NEUTRAL;
+		md.status.ele_lv = 1;
 	}
 
 	if ((t = libconfig->setting_get_member(mobt, "Mode"))) {
 		if (config_setting_is_group(t)) {
-			mstatus->mode = mob->read_db_mode_sub(entry, mstatus, class_, t);
+			md.status.mode = mob->read_db_mode_sub(&md, t);
 		} else if (mob->lookup_const(mobt, "Mode", &i32) && i32 >= 0) {
-			mstatus->mode = i32;
+			md.status.mode = i32;
 		}
 	}
-
 	if (!battle_config.monster_active_enable)
-		mstatus->mode &= ~MD_AGGRESSIVE;
+		md.status.mode &= ~MD_AGGRESSIVE;
 
 	if (mob->lookup_const(mobt, "MoveSpeed", &i32) && i32 >= 0) {
-		mstatus->speed = i32;
+		md.status.speed = i32;
 	}
 
-	mstatus->aspd_rate = 1000;
+	md.status.aspd_rate = 1000;
 
 	if (mob->lookup_const(mobt, "AttackDelay", &i32) && i32 >= 0) {
-		mstatus->adelay = cap_value(i32, battle_config.monster_max_aspd*2, 4000);
+		md.status.adelay = cap_value(i32, battle_config.monster_max_aspd*2, 4000);
 	} else if (!inherit) {
-		mstatus->adelay = 4000;
+		md.status.adelay = 4000;
 	}
 
 	if (mob->lookup_const(mobt, "AttackMotion", &i32) && i32 >= 0) {
-		mstatus->amotion = cap_value(i32, battle_config.monster_max_aspd, 2000);
+		md.status.amotion = cap_value(i32, battle_config.monster_max_aspd, 2000);
 	} else if (!inherit) {
-		mstatus->amotion = 2000;
+		md.status.amotion = 2000;
 	}
-
-	//If the attack animation is longer than the delay, the client crops the attack animation!
-	//On aegis there is no real visible effect of having a recharge-time less than amotion anyway.
-	if (mstatus->adelay < mstatus->amotion)
-		mstatus->adelay = mstatus->amotion;
 
 	if (mob->lookup_const(mobt, "DamageMotion", &i32) && i32 >= 0) {
-		mstatus->dmotion = i32;
-		dmotionUpdated = true;
-	} else if (!inherit) {
-		dmotionUpdated = true;
+		if (battle_config.monster_damage_delay_rate != 100)
+			md.status.dmotion = i32 * battle_config.monster_damage_delay_rate / 100;
+		else
+			md.status.dmotion = i32;
 	}
 
-	if (dmotionUpdated && battle_config.monster_damage_delay_rate != 100)
-		mstatus->dmotion = mstatus->dmotion * battle_config.monster_damage_delay_rate / 100;
-
-	// Fill in remaining status data by using a dummy monster.
-	data.bl.type = BL_MOB;
-	data.level = entry->lv;
-	memcpy(&data.status, mstatus, sizeof(struct status_data));
-	status->calc_misc(&data.bl, mstatus, entry->lv);
-
 	// MVP EXP Bonus: MEXP
-	// Some new MVP's MEXP multiple by high exp-rate cause overflow. [LuzZza]
 	if (mob->lookup_const(mobt, "MvpExp", &i32) && i32 >= 0) {
-		exp = (double)i32 * (double)battle_config.mvp_exp_rate / 100.;
-		entry->mexp = (unsigned int)cap_value(exp, 0, UINT_MAX);
-	} else if (!inherit) {
-		exp = 0;
+		// Some new MVP's MEXP multiple by high exp-rate cause overflow. [LuzZza]
+		double exp = (double)i32 * (double)battle_config.mvp_exp_rate / 100.;
+		md.mexp = (unsigned int)cap_value(exp, 0, UINT_MAX);
 	}
 
 	if (maxhpUpdated) {
-		//Now that we know if it is an mvp or not, apply battle_config modifiers [Skotlex]
-		maxhp = (double)mstatus->max_hp;
-		if (entry->mexp > 0) { //Mvp
+		// Now that we know if it is an mvp or not, apply battle_config modifiers [Skotlex]
+		double maxhp = (double)md.status.max_hp;
+		if (md.mexp > 0) { //Mvp
 			if (battle_config.mvp_hp_rate != 100)
 				maxhp = maxhp * (double)battle_config.mvp_hp_rate / 100.;
 		} else { //Normal mob
 			if (battle_config.monster_hp_rate != 100)
 				maxhp = maxhp * (double)battle_config.monster_hp_rate / 100.;
 		}
-		mstatus->max_hp = (unsigned int)cap_value(maxhp, 1, UINT_MAX);
+		md.status.max_hp = (unsigned int)cap_value(maxhp, 1, UINT_MAX);
 	}
-	if (maxspUpdated) {
-		if(mstatus->max_sp < 1) mstatus->max_sp = 1;
-	}
-
-	//Since mobs always respawn with full life...
-	mstatus->hp = mstatus->max_hp;
-	mstatus->sp = mstatus->max_sp;
 
 	if ((t = libconfig->setting_get_member(mobt, "MvpDrops"))) {
 		if (config_setting_is_group(t)) {
-			mob->read_db_mvpdrops_sub(entry, mstatus, class_, t);
+			mob->read_db_mvpdrops_sub(&md, t);
 		}
 	}
 
 	if ((t = libconfig->setting_get_member(mobt, "Drops"))) {
 		if (config_setting_is_group(t)) {
-			mob->read_db_drops_sub(entry, mstatus, class_, t);
+			mob->read_db_drops_sub(&md, t);
 		}
 	}
 
-	mob->read_db_additional_fields(entry, class_, mobt, id, source);
-	// Finally insert monster's data into the database.
-	if (mob->db_data[class_] == NULL)
-		mob->db_data[class_] = (struct mob_db*)aMalloc(sizeof(struct mob_db));
-	else
-		//Copy over spawn data
-		memcpy(&entry->spawn, mob->db_data[class_]->spawn, sizeof(entry->spawn));
+	mob->read_db_additional_fields(&md, mobt, n, source);
 
-	memcpy(mob->db_data[class_], entry, sizeof(struct mob_db));
-	return true;
+	return mob->db_validate_entry(&md, n, source);
 }
 
-void mob_read_db_additional_fields(struct mob_db *entry, int class_, config_setting_t *it, int n, const char *source)
+/**
+ * Processes any (plugin-defined) additional fields for a mob_db entry.
+ *
+ * @param[in,out] entry  The destination mob_db entry, already initialized
+ *                       (mob_id, status.mode are expected to be already set).
+ * @param[in]     t      The libconfig entry.
+ * @param[in]     n      Ordinal number of the entry, to be displayed in case
+ *                       of validation errors.
+ * @param[in]     source Source of the entry (file name), to be displayed in
+ *                       case of validation errors.
+ */
+void mob_read_db_additional_fields(struct mob_db *entry, config_setting_t *t, int n, const char *source)
 {
 	// do nothing. plugins can do own work
 }
@@ -4282,13 +4395,23 @@ void mob_readdb(void) {
 	mob->name_constants();
 }
 
+/**
+ * Reads from a libconfig-formatted mobdb file and inserts the found entries
+ * into the mob database, overwriting duplicate ones (i.e. mob_db2 overriding
+ * mob_db.)
+ *
+ * @param filename       File name, relative to the database path.
+ * @param ignore_missing Whether to ignore errors caused by a missing db file.
+ * @return the number of found entries.
+ */
 int mob_read_libconfig(const char *filename, bool ignore_missing)
 {
+	bool duplicate[MAX_MOB_DB] = { 0 };
 	config_t mob_db_conf;
 	char filepath[256];
 	config_setting_t *mdb;
 	config_setting_t *t;
-	int i = 0;
+	int i = 0, count = 0;
 
 	nullpo_ret(filename);
 	sprintf(filepath, "%s/%s", map->db_path, filename);
@@ -4298,15 +4421,28 @@ int mob_read_libconfig(const char *filename, bool ignore_missing)
 
 	if (libconfig->read_file(&mob_db_conf, filepath) || !(mdb = libconfig->setting_get_member(mob_db_conf.root, "mob_db"))) {
 		ShowError("can't read %s\n", filepath);
-		return -1;
+		return 0;
 	}
 
 	while ((t = libconfig->setting_get_elem(mdb, i++))) {
-		mob->read_db_sub(t, i - 1, filepath);
+		int mob_id = mob->read_db_sub(t, i - 1, filename);
+
+		if (mob_id <= 0 || mob_id >= MAX_MOB_DB)
+			continue;
+
+		count++;
+
+		if (duplicate[mob_id]) {
+			ShowWarning("mob_read_libconfig:%s: duplicate entry of ID #%d (%s/%s)\n",
+					filename, mob_id, mob->db_data[mob_id]->sprite, mob->db_data[mob_id]->jname);
+		} else {
+			duplicate[mob_id] = true;
+		}
 	}
 	libconfig->destroy(&mob_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, filepath);
-	return 0;
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
+
+	return count;
 }
 
 void mob_name_constants(void) {
@@ -5127,6 +5263,7 @@ void mob_defaults(void) {
 	mob->item_dropratio_adjust = item_dropratio_adjust;
 	mob->lookup_const = mob_lookup_const;
 	mob->get_const = mob_get_const;
+	mob->db_validate_entry = mob_db_validate_entry;
 	mob->readdb = mob_readdb;
 	mob->read_libconfig = mob_read_libconfig;
 	mob->read_db_additional_fields = mob_read_db_additional_fields;

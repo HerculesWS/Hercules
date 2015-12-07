@@ -141,6 +141,7 @@ struct spawn_info {
 };
 
 struct mob_db {
+	int mob_id;
 	char sprite[NAME_LENGTH],name[NAME_LENGTH],jname[NAME_LENGTH];
 	unsigned int base_exp,job_exp;
 	unsigned int mexp;
@@ -511,13 +512,14 @@ struct mob_interface {
 	void (*readdb) (void);
 	bool (*lookup_const) (const config_setting_t *it, const char *name, int *value);
 	bool (*get_const) (const config_setting_t *it, int *value);
+	int (*db_validate_entry) (struct mob_db *entry, int n, const char *source);
 	int (*read_libconfig) (const char *filename, bool ignore_missing);
-	void (*read_db_additional_fields) (struct mob_db *entry, int class_, config_setting_t *it, int n, const char *source);
-	bool (*read_db_sub) (config_setting_t *mobt, int id, const char *source);
-	void (*read_db_drops_sub) (struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t);
-	void (*read_db_mvpdrops_sub) (struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t);
-	int (*read_db_mode_sub) (struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t);
-	void (*read_db_stats_sub) (struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t);
+	void (*read_db_additional_fields) (struct mob_db *entry, config_setting_t *it, int n, const char *source);
+	int (*read_db_sub) (config_setting_t *mobt, int id, const char *source);
+	void (*read_db_drops_sub) (struct mob_db *entry, config_setting_t *t);
+	void (*read_db_mvpdrops_sub) (struct mob_db *entry, config_setting_t *t);
+	int (*read_db_mode_sub) (struct mob_db *entry, config_setting_t *t);
+	void (*read_db_stats_sub) (struct mob_db *entry, config_setting_t *t);
 	void (*name_constants) (void);
 	bool (*readdb_mobavail) (char *str[], int columns, int current);
 	int (*read_randommonster) (void);
