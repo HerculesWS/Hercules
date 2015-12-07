@@ -1385,17 +1385,17 @@ int itemdb_gendercheck(struct item_data *id)
  * This function is called after preparing the item entry data, and it takes
  * care of inserting it and cleaning up any remainders of the previous one.
  *
- * @param *entry  Pointer to the new item_data entry. Ownership is NOT taken,
- *                but the content is modified to reflect the validation.
- * @param n       Ordinal number of the entry, to be displayed in case of
- *                validation errors.
- * @param *source Source of the entry (table or file name), to be displayed in
- *                case of validation errors.
+ * @param entry  Pointer to the new item_data entry. Ownership is NOT taken,
+ *               but the content is modified to reflect the validation.
+ * @param n      Ordinal number of the entry, to be displayed in case of
+ *               validation errors.
+ * @param source Source of the entry (file name), to be displayed in case of
+ *               validation errors.
  * @return Nameid of the validated entry, or 0 in case of failure.
  *
- * Note: This is safe to call if the new entry is a copy of the old one (i.e.
- * item_db2 inheritance), as it will make sure not to free any scripts still in
- * use in the new entry.
+ * Note: This is safe to call if the new entry is a shallow copy of the old one
+ * (i.e.  item_db2 inheritance), as it will make sure not to free any scripts
+ * still in use by the new entry.
  */
 int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	struct item_data *item;
@@ -1544,13 +1544,13 @@ void itemdb_readdb_additional_fields(int itemid, config_setting_t *it, int n, co
  * Processes one itemdb entry from the libconfig backend, loading and inserting
  * it into the item database.
  *
- * @param *it     Libconfig setting entry. It is expected to be valid and it
- *                won't be freed (it is care of the caller to do so if
- *                necessary)
- * @param n       Ordinal number of the entry, to be displayed in case of
- *                validation errors.
- * @param *source Source of the entry (file name), to be displayed in case of
- *                validation errors.
+ * @param it     Libconfig setting entry. It is expected to be valid and it
+ *               won't be freed (it is care of the caller to do so if
+ *               necessary)
+ * @param n      Ordinal number of the entry, to be displayed in case of
+ *               validation errors.
+ * @param source Source of the entry (file name), to be displayed in case of
+ *               validation errors.
  * @return Nameid of the validated entry, or 0 in case of failure.
  */
 int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source) {
@@ -1627,7 +1627,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 		} else {
 			// Use old entry as default
 			struct item_data *old_entry = itemdb->load(id.nameid);
-			memcpy(&id, old_entry, sizeof(struct item_data));
+			memcpy(&id, old_entry, sizeof(id));
 		}
 	}
 
@@ -1874,7 +1874,7 @@ bool itemdb_lookup_const(const config_setting_t *it, const char *name, int *valu
  * Reads from a libconfig-formatted itemdb file and inserts the found entries into the
  * item database, overwriting duplicate ones (i.e. item_db2 overriding item_db.)
  *
- * @param *filename File name, relative to the database path.
+ * @param filename File name, relative to the database path.
  * @return The number of found entries.
  */
 int itemdb_readdb_libconfig(const char *filename) {
