@@ -26,7 +26,9 @@
 #include "common/mmo.h"
 #include "common/nullpo.h"
 #include "common/strlib.h"
+#include "map/battle.h"
 #include "map/itemdb.h"
+#include "map/mob.h"
 #include "map/map.h"
 
 #include "common/HPMDataCheck.h"
@@ -59,10 +61,13 @@ struct {
 
 /// Whether the item_db converter will automatically run.
 bool itemdb2sql_torun = false;
+/// Whether the mob_db converter will automatically run.
+bool mobdb2sql_torun = false;
 
 /// Backup of the original item_db parser function pointer.
 int (*itemdb_readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
-
+/// Backup of the original mob_db parser function pointer.
+int (*mob_read_db_sub) (config_setting_t *it, int n, const char *source);
 
 /**
  * Normalizes and appends a string to the output buffer.
@@ -368,7 +373,7 @@ void itemdb2sql_tableheader(void)
 }
 
 /**
- * Plugin main function.
+ * Item DB Conversion.
  *
  * Converts Item DB and Item DB2 to SQL scripts.
  */
@@ -415,11 +420,287 @@ void do_itemdb2sql(void)
 }
 
 /**
+ * Converts a Mob DB entry to SQL.
+ *
+ * @see mobdb_readdb_libconfig_sub.
+ */
+int mobdb2sql_sub(config_setting_t *mobt, int n, const char *source)
+{
+	struct mob_db *md = NULL;
+	nullpo_ret(mobt);
+
+	if ((md = mob->db(mob_read_db_sub(mobt, n, source))) != mob->dummy) {
+		char e_name[NAME_LENGTH*2+1];
+		StringBuf buf;
+		int card_idx = 9, i;
+
+		StrBuf->Init(&buf);
+
+		// id
+		StrBuf->Printf(&buf, "%u,", md->mob_id);
+
+		// Sprite
+		SQL->EscapeString(NULL, e_name, md->sprite);
+		StrBuf->Printf(&buf, "'%s',", e_name);
+
+		// kName
+		SQL->EscapeString(NULL, e_name, md->name);
+		StrBuf->Printf(&buf, "'%s',", e_name);
+
+		// iName
+		SQL->EscapeString(NULL, e_name, md->jname);
+		StrBuf->Printf(&buf, "'%s',", e_name);
+
+		// LV
+		StrBuf->Printf(&buf, "%u,", md->lv);
+
+		// HP
+		StrBuf->Printf(&buf, "%u,", md->status.max_hp);
+
+		// SP
+		StrBuf->Printf(&buf, "%u,", md->status.max_sp);
+
+		// EXP
+		StrBuf->Printf(&buf, "%u,", md->base_exp);
+
+		// JEXP
+		StrBuf->Printf(&buf, "%u,", md->job_exp);
+
+		// Range1
+		StrBuf->Printf(&buf, "%u,", md->status.rhw.range);
+
+		// ATK1
+		StrBuf->Printf(&buf, "%u,", md->status.rhw.atk);
+
+		// ATK2
+		StrBuf->Printf(&buf, "%u,", md->status.rhw.atk2);
+
+		// DEF
+		StrBuf->Printf(&buf, "%u,", md->status.def);
+
+		// MDEF
+		StrBuf->Printf(&buf, "%u,", md->status.mdef);
+
+		// STR
+		StrBuf->Printf(&buf, "%u,", md->status.str);
+
+		// AGI
+		StrBuf->Printf(&buf, "%u,", md->status.agi);
+
+		// VIT
+		StrBuf->Printf(&buf, "%u,", md->status.vit);
+
+		// INT
+		StrBuf->Printf(&buf, "%u,", md->status.int_);
+
+		// DEX
+		StrBuf->Printf(&buf, "%u,", md->status.dex);
+
+		// LUK
+		StrBuf->Printf(&buf, "%u,", md->status.luk);
+
+		// Range2
+		StrBuf->Printf(&buf, "%u,", md->range2);
+
+		// Range3
+		StrBuf->Printf(&buf, "%u,", md->range3);
+
+		// Scale
+		StrBuf->Printf(&buf, "%u,", md->status.size);
+
+		// Race
+		StrBuf->Printf(&buf, "%u,", md->status.race);
+
+		// Element
+		StrBuf->Printf(&buf, "%u,", md->status.def_ele + 20 * md->status.ele_lv);
+
+		// Mode
+		StrBuf->Printf(&buf, "0x%X,", md->status.mode);
+
+		// Speed
+		StrBuf->Printf(&buf, "%u,", md->status.speed);
+
+		// aDelay
+		StrBuf->Printf(&buf, "%u,", md->status.adelay);
+
+		// aMotion
+		StrBuf->Printf(&buf, "%u,", md->status.amotion);
+
+		// dMotion
+		StrBuf->Printf(&buf, "%u,", md->status.dmotion);
+
+		// MEXP
+		StrBuf->Printf(&buf, "%u,", md->mexp);
+
+		for (i = 0; i < 3; i++) {
+			// MVP{i}id
+			StrBuf->Printf(&buf, "%u,", md->mvpitem[i].nameid);
+			// MVP{i}per
+			StrBuf->Printf(&buf, "%u,", md->mvpitem[i].p);
+		}
+
+		// Scan for cards
+		for (i = 0; i < 10; i++) {
+			struct item_data *it = NULL;
+			if (md->dropitem[i].nameid != 0 && (it = itemdb->exists(md->dropitem[i].nameid)) != NULL && it->type == IT_CARD)
+				card_idx = i;
+		}
+
+		for (i = 0; i < 10; i++) {
+			if (card_idx == i)
+				continue;
+			// Drop{i}id
+			StrBuf->Printf(&buf, "%u,", md->dropitem[i].nameid);
+			// Drop{i}per
+			StrBuf->Printf(&buf, "%u,", md->dropitem[i].p);
+		}
+
+		// DropCardid
+		StrBuf->Printf(&buf, "%u,", md->dropitem[card_idx].nameid);
+		// DropCardper
+		StrBuf->Printf(&buf, "%u", md->dropitem[card_idx].p);
+
+		fprintf(tosql.fp, "REPLACE INTO `%s` VALUES (%s);\n", tosql.db_name, StrBuf->Value(&buf));
+
+		StrBuf->Destroy(&buf);
+	}
+
+	return md ? md->mob_id : 0;
+}
+
+/**
+ * Prints a SQL table header for the current mob_db table.
+ */
+void mobdb2sql_tableheader(void)
+{
+	db2sql_fileheader();
+
+	fprintf(tosql.fp,
+			"--\n"
+			"-- Table structure for table `%s`\n"
+			"--\n"
+			"\n"
+			"DROP TABLE IF EXISTS `%s`;\n"
+			"CREATE TABLE `%s` (\n"
+			"  `ID` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Sprite` TEXT NOT NULL,\n"
+			"  `kName` TEXT NOT NULL,\n"
+			"  `iName` TEXT NOT NULL,\n"
+			"  `LV` TINYINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `HP` INT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `SP` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `EXP` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `JEXP` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Range1` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `ATK1` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `ATK2` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `DEF` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `MDEF` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `STR` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `AGI` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `VIT` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `INT` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `DEX` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `LUK` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Range2` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Range3` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Scale` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Race` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Element` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Mode` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Speed` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `aDelay` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `aMotion` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `dMotion` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `MEXP` MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `MVP1id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `MVP1per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `MVP2id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `MVP2per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `MVP3id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `MVP3per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop1id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop1per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop2id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop2per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop3id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop3per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop4id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop4per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop5id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop5per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop6id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop6per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop7id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop7per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop8id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop8per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop9id` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Drop9per` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `DropCardid` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `DropCardper` SMALLINT(9) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  PRIMARY KEY (`ID`)\n"
+			") ENGINE=MyISAM;\n"
+			"\n", tosql.db_name, tosql.db_name, tosql.db_name);
+}
+
+/**
+ * Mob DB Conversion.
+ *
+ * Converts Mob DB and Mob DB2 to SQL scripts.
+ */
+void do_mobdb2sql(void)
+{
+	int i;
+	struct convert_db_files {
+		const char *name;
+		const char *source;
+		const char *destination;
+	} files[] = {
+		{"mob_db", DBPATH"mob_db.conf", "sql-files/mob_db" DBSUFFIX ".sql"},
+		{"mob_db2", "mob_db2.conf", "sql-files/mob_db2.sql"},
+	};
+
+	/* link */
+	mob_read_db_sub = mob->read_db_sub;
+	mob->read_db_sub = mobdb2sql_sub;
+
+	if (map->minimal) {
+		// Set up modifiers
+		battle->config_set_defaults();
+	}
+
+	memset(&tosql.buf, 0, sizeof(tosql.buf));
+	for (i = 0; i < ARRAYLENGTH(files); i++) {
+		if ((tosql.fp = fopen(files[i].destination, "wt+")) == NULL) {
+			ShowError("mobdb_tosql: File not found \"%s\".\n", files[i].destination);
+			return;
+		}
+
+		tosql.db_name = files[i].name;
+		mobdb2sql_tableheader();
+
+		mob->read_libconfig(files[i].source, false);
+
+		fclose(tosql.fp);
+	}
+
+	/* unlink */
+	mob->read_db_sub = mob_read_db_sub;
+
+	for (i = 0; i < ARRAYLENGTH(tosql.buf); i++) {
+		if (tosql.buf[i].p)
+			aFree(tosql.buf[i].p);
+	}
+}
+
+/**
  * Console command db2sql.
  */
 CPCMD(db2sql)
 {
 	do_itemdb2sql();
+	do_mobdb2sql();
 }
 
 /**
@@ -431,12 +712,21 @@ CPCMD(itemdb2sql)
 }
 
 /**
+ * Console command mobdb2sql.
+ */
+CPCMD(mobdb2sql)
+{
+	do_mobdb2sql();
+}
+
+/**
  * Command line argument handler for --db2sql
  */
 CMDLINEARG(db2sql)
 {
 	map->minimal = true;
 	itemdb2sql_torun = true;
+	mobdb2sql_torun = true;
 	return true;
 }
 
@@ -450,20 +740,34 @@ CMDLINEARG(itemdb2sql)
 	return true;
 }
 
+/**
+ * Command line argument handler for --mobdb2sql
+ */
+CMDLINEARG(mobdb2sql)
+{
+	map->minimal = true;
+	mobdb2sql_torun = true;
+	return true;
+}
+
 HPExport void server_preinit(void)
 {
 	addArg("--db2sql", false, db2sql, NULL);
 	addArg("--itemdb2sql", false, itemdb2sql, NULL);
+	addArg("--mobdb2sql", false, mobdb2sql, NULL);
 }
 
 HPExport void plugin_init(void)
 {
 	addCPCommand("server:tools:db2sql", db2sql);
 	addCPCommand("server:tools:itemdb2sql", itemdb2sql);
+	addCPCommand("server:tools:mobdb2sql", mobdb2sql);
 }
 
 HPExport void server_online(void)
 {
 	if (itemdb2sql_torun)
 		do_itemdb2sql();
+	if (mobdb2sql_torun)
+		do_mobdb2sql();
 }
