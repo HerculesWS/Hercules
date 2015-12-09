@@ -338,7 +338,21 @@ void log_npc(struct map_session_data* sd, const char* message)
 	logs->npc_sub(sd,message);
 }
 
-void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char* dst_charname, const char* message) {
+/**
+ * Logs a chat message to the SQL backend.
+ *
+ * @param type         Chat type.
+ * @param type_id      Additional ID, dependent on chat type (Guild ID, Party ID, etc). Zero when unused.
+ * @param src_charid   Source character ID.
+ * @param src_accid    Source account ID.
+ * @param mapname      Source location map name
+ * @param x            Source location x coordinate
+ * @param y            Source location y coordinate
+ * @param dst_charname Destination character name. Must not be NULL.
+ * @param message      Message to log.
+ */
+void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char *dst_charname, const char *message)
+{
 	SqlStmt* stmt;
 
 	nullpo_retv(dst_charname);
@@ -355,7 +369,22 @@ void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src
 	}
 	SQL->StmtFree(stmt);
 }
-void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char* dst_charname, const char* message) {
+
+/**
+ * Logs a chat message to the TXT backend.
+ *
+ * @param type         Chat type.
+ * @param type_id      Additional ID, dependent on chat type (Guild ID, Party ID, etc). Zero when unused.
+ * @param src_charid   Source character ID.
+ * @param src_accid    Source account ID.
+ * @param mapname      Source location map name
+ * @param x            Source location x coordinate
+ * @param y            Source location y coordinate
+ * @param dst_charname Destination character name. Must not be NULL.
+ * @param message      Message to log.
+ */
+void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char *dst_charname, const char *message)
+{
 	char timestring[255];
 	time_t curtime;
 	FILE* logfp;
@@ -371,17 +400,33 @@ void log_chat_sub_txt(e_log_chat_type type, int type_id, int src_charid, int src
 	fclose(logfp);
 }
 
-/// logs chat
-void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char* dst_charname, const char* message) {
-	if( ( logs->config.chat&type ) == 0 ) {
+/**
+ * Logs a chat message.
+ *
+ * @param type         Chat type.
+ * @param type_id      Additional ID, dependent on chat type (Guild ID, Party ID, etc). Zero when unused.
+ * @param src_charid   Source character ID.
+ * @param src_accid    Source account ID.
+ * @param mapname      Source location map name
+ * @param x            Source location x coordinate
+ * @param y            Source location y coordinate
+ * @param dst_charname Destination character name. May be NULL when unused.
+ * @param message      Message to log.
+ */
+void log_chat(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char *dst_charname, const char *message)
+{
+	if ((logs->config.chat&type) == 0) {
 		// disabled
 		return;
 	}
 
-	if( logs->config.log_chat_woe_disable && ( map->agit_flag || map->agit2_flag ) ) {
+	if (logs->config.log_chat_woe_disable && (map->agit_flag || map->agit2_flag)) {
 		// no chat logging during woe
 		return;
 	}
+
+	if (dst_charname == NULL)
+		dst_charname = "";
 
 	logs->chat_sub(type,type_id,src_charid,src_accid,mapname,x,y,dst_charname,message);
 }
