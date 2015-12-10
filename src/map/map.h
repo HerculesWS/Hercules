@@ -243,6 +243,8 @@ enum {
 #define map_flag_gvg2(m) (map->list[m].flag.gvg || map->list[m].flag.gvg_castle)
 // No Kill Steal Protection
 #define map_flag_ks(m) (map->list[m].flag.town || map->list[m].flag.pvp || map->list[m].flag.gvg || map->list[m].flag.battleground)
+// No ViewID
+#define map_no_view(m, view) (map->list[m].flag.noviewid & (view))
 
 //This stackable implementation does not means a BL can be more than one type at a time, but it's
 // meant to make it easier to check for multiple types at a time on invocations such as map_foreach* calls [Skotlex]
@@ -732,6 +734,7 @@ struct map_data {
 		unsigned noknockback : 1;
 		unsigned notomb : 1;
 		unsigned nocashshop : 1;
+		unsigned noviewid : 22;
 	} flag;
 	struct point save;
 	struct npc_data *npc[MAX_NPC_PER_MAP];

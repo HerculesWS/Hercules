@@ -765,7 +765,7 @@ struct packet_maptypeproperty2 {
 		unsigned int countpk           : 1;  /// Show the PvP counter
 		unsigned int nopartyformation  : 1;  /// Prevent party creation/modification
 		unsigned int bg                : 1;  // TODO: What does this do? Probably related to Battlegrounds, but I'm not sure on the effect
-		unsigned int noitemconsumption : 1;  // TODO: What does this do? (shows a "Nothing found in the selected map" message when set)
+		unsigned int nocostume         : 1;  /// Does not show costume sprite.
 		unsigned int usecart           : 1;  /// Allow opening cart inventory
 		unsigned int summonstarmiracle : 1;  // TODO: What does this do? Related to Taekwon Masters, but I have no idea.
 		unsigned int SpareBits         : 15; /// Currently ignored, reserved for future updates

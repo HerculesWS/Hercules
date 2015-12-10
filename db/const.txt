@@ -361,6 +361,7 @@ mf_battleground	51
 mf_reset	52
 mf_notomb	53
 mf_nocashshop	54
+mf_noviewid	55
 
 cell_walkable	0
 cell_shootable	1

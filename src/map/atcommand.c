@@ -3889,6 +3889,8 @@ ACMD(mapinfo) {
 		strcat(atcmd_output, msg_fd(fd,1096)); // PartyLock |
 	if (map->list[m_id].flag.guildlock)
 		strcat(atcmd_output, msg_fd(fd,1097)); // GuildLock |
+	if (map->list[m_id].flag.noviewid)
+		strcat(atcmd_output, msg_fd(fd,1079)); // NoViewID |
 	clif->message(fd, atcmd_output);
 
 	switch (list) {
@@ -7540,7 +7542,7 @@ ACMD(mapflag) {
 		CHECKFLAG(nojobexp);          CHECKFLAG(nomobloot);          CHECKFLAG(nomvploot);    CHECKFLAG(nightenabled);
 		CHECKFLAG(nodrop);            CHECKFLAG(novending);          CHECKFLAG(loadevent);
 		CHECKFLAG(nochat);            CHECKFLAG(partylock);          CHECKFLAG(guildlock);    CHECKFLAG(src4instance);
-		CHECKFLAG(notomb);            CHECKFLAG(nocashshop);
+		CHECKFLAG(notomb);            CHECKFLAG(nocashshop);         CHECKFLAG(noviewid);
 		clif->message(sd->fd," ");
 		clif->message(sd->fd,msg_fd(fd,1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
 		clif->message(sd->fd,msg_fd(fd,1313)); // Type "@mapflag available" to list the available mapflags.
@@ -7577,7 +7579,7 @@ ACMD(mapflag) {
 	SETFLAG(nojobexp);          SETFLAG(nomobloot);          SETFLAG(nomvploot);    SETFLAG(nightenabled);
 	SETFLAG(nodrop);            SETFLAG(novending);          SETFLAG(loadevent);
 	SETFLAG(nochat);            SETFLAG(partylock);          SETFLAG(guildlock);    SETFLAG(src4instance);
-	SETFLAG(notomb);            SETFLAG(nocashshop);
+	SETFLAG(notomb);            SETFLAG(nocashshop);         SETFLAG(noviewid);
 
 	clif->message(sd->fd,msg_fd(fd,1314)); // Invalid flag name or flag.
 	clif->message(sd->fd,msg_fd(fd,1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
@@ -7589,7 +7591,7 @@ ACMD(mapflag) {
 	clif->message(sd->fd,"nozenypenalty, notrade, noskill, nowarp, nowarpto, noicewall, snow, clouds, clouds2,");
 	clif->message(sd->fd,"fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot,");
 	clif->message(sd->fd,"nomvploot, nightenabled, nodrop, novending, loadevent, nochat, partylock,");
-	clif->message(sd->fd,"guildlock, src4instance, notomb, nocashshop");
+	clif->message(sd->fd,"guildlock, src4instance, notomb, nocashshop, noviewid");
 #undef CHECKFLAG
 #undef SETFLAG
 

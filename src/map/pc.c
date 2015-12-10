@@ -9400,7 +9400,7 @@ int pc_load_combo(struct map_session_data *sd) {
 }
 
 /**
-* Equip item ad given position.
+* Equip item at given position.
 * @param sd the affected player structure. Must be checked before.
 * @param id item structure for equip. Must be checked before.
 * @param n inventory item position. Must be checked before.
@@ -9408,7 +9408,8 @@ int pc_load_combo(struct map_session_data *sd) {
 **/
 void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, int pos)
 {
-	if (pos & (EQP_HAND_R|EQP_SHADOW_WEAPON)) {
+	if ((!map_no_view(sd->bl.m,EQP_SHADOW_WEAPON) && pos & EQP_SHADOW_WEAPON) ||
+		 (pos & EQP_HAND_R)) {
 		if(id)
 			sd->weapontype1 = id->look;
 		else
@@ -9416,7 +9417,8 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, 
 		pc->calcweapontype(sd);
 		clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
 	}
-	if (pos & (EQP_HAND_L|EQP_SHADOW_SHIELD)) {
+	if ((!map_no_view(sd->bl.m,EQP_SHADOW_SHIELD) && pos & EQP_SHADOW_SHIELD) ||
+		 (pos & EQP_HAND_L)) {
 		if (id) {
 			if(id->type == IT_WEAPON) {
 				sd->status.shield = 0;
@@ -9432,42 +9434,42 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, 
 	}
 	//Added check to prevent sending the same look on multiple slots ->
 	//causes client to redraw item on top of itself. (suggested by Lupus)
-	if (pos & EQP_HEAD_LOW && pc->checkequip(sd,EQP_COSTUME_HEAD_LOW) == -1) {
+	if (!map_no_view(sd->bl.m,EQP_HEAD_LOW) && pos & EQP_HEAD_LOW && pc->checkequip(sd,EQP_COSTUME_HEAD_LOW) == -1) {
 		if (id && !(pos&(EQP_HEAD_TOP|EQP_HEAD_MID)))
 			sd->status.head_bottom = id->look;
 		else
 			sd->status.head_bottom = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_BOTTOM,sd->status.head_bottom);
 	}
-	if (pos & EQP_HEAD_TOP && pc->checkequip(sd,EQP_COSTUME_HEAD_TOP) == -1) {
+	if (!map_no_view(sd->bl.m,EQP_HEAD_TOP) && pos & EQP_HEAD_TOP && pc->checkequip(sd,EQP_COSTUME_HEAD_TOP) == -1) {
 		if (id)
 			sd->status.head_top = id->look;
 		else
 			sd->status.head_top = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_TOP,sd->status.head_top);
 	}
-	if (pos & EQP_HEAD_MID && pc->checkequip(sd,EQP_COSTUME_HEAD_MID) == -1) {
+	if (!map_no_view(sd->bl.m,EQP_HEAD_MID) && pos & EQP_HEAD_MID && pc->checkequip(sd,EQP_COSTUME_HEAD_MID) == -1) {
 		if (id && !(pos&EQP_HEAD_TOP))
 			sd->status.head_mid = id->look;
 		else
 			sd->status.head_mid = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_MID,sd->status.head_mid);
 	}
-	if (pos & EQP_COSTUME_HEAD_TOP) {
+	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_TOP) && pos & EQP_COSTUME_HEAD_TOP) {
 		if (id){
 			sd->status.head_top = id->look;
 		} else
 			sd->status.head_top = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_TOP,sd->status.head_top);
 	}
-	if (pos & EQP_COSTUME_HEAD_MID) {
+	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_MID) && pos & EQP_COSTUME_HEAD_MID) {
 		if(id && !(pos&EQP_HEAD_TOP)){
 			sd->status.head_mid = id->look;
 		} else
 			sd->status.head_mid = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_MID,sd->status.head_mid);
 	}
-	if (pos & EQP_COSTUME_HEAD_LOW) {
+	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_LOW) && pos & EQP_COSTUME_HEAD_LOW) {
 		if (id && !(pos&(EQP_HEAD_TOP|EQP_HEAD_MID))){
 			sd->status.head_bottom = id->look;
 		} else
@@ -9475,14 +9477,14 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, 
 		clif->changelook(&sd->bl,LOOK_HEAD_BOTTOM,sd->status.head_bottom);
 	}
 
-	if (pos & EQP_SHOES)
+	if (!map_no_view(sd->bl.m,EQP_SHOES) && pos & EQP_SHOES)
 		clif->changelook(&sd->bl,LOOK_SHOES,0);
-	if (pos&EQP_GARMENT && pc->checkequip(sd,EQP_COSTUME_GARMENT) == -1) {
+	if (!map_no_view(sd->bl.m,EQP_GARMENT) && pos&EQP_GARMENT && pc->checkequip(sd,EQP_COSTUME_GARMENT) == -1) {
 		sd->status.robe = id ? id->look : 0;
 		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.robe);
 	}
 
-	if (pos & EQP_COSTUME_GARMENT) {
+	if (!map_no_view(sd->bl.m,EQP_COSTUME_GARMENT) && pos & EQP_COSTUME_GARMENT) {
 		sd->status.robe = id ? id->look : 0;
 		clif->changelook(&sd->bl,LOOK_ROBE,sd->status.robe);
 	}
