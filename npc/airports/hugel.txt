@@ -36,8 +36,8 @@ OnTouch:
 	mes "Would you like to use the service?";
 	next;
 	if (select("Yes:No") == 1) {
-		if (countitem(7311) > 0) {
-			delitem 7311,1; //Free_Flying_Ship_Ticket
+		if (countitem(Free_Flying_Ship_Ticket) > 0) {
+			delitem Free_Flying_Ship_Ticket,1;
 			warp "airplane",244,58;
 			end;
 		}
