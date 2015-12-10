@@ -5644,26 +5644,26 @@ int char_config_read(const char* cfgName)
 			save_log = config_switch(w2);
 		}
 		#ifdef RENEWAL
-			else if (strcmpi(w1, "start_point") == 0) {
+			else if (strcmpi(w1, "start_point_renewal") == 0) {
 				char map[MAP_NAME_LENGTH_EXT];
 				int x, y;
 				if (sscanf(w2, "%15[^,],%d,%d", map, &x, &y) < 3)
 					continue;
 				start_point.map = mapindex->name2id(map);
 				if (!start_point.map)
-					ShowError("Specified start_point %s not found in map-index cache.\n", map);
+					ShowError("Specified start_point_renewal '%s' not found in map-index cache.\n", map);
 				start_point.x = x;
 				start_point.y = y;
 			}
 		#else
-			else if (strcmpi(w1, "start_point_pre") == 0) {
+			else if (strcmpi(w1, "start_point_pre-re") == 0) {
 				char map[MAP_NAME_LENGTH_EXT];
 				int x, y;
 				if (sscanf(w2, "%15[^,],%d,%d", map, &x, &y) < 3)
 					continue;
 				start_point.map = mapindex->name2id(map);
 				if (!start_point.map)
-					ShowError("Specified start_point_pre %s not found in map-index cache.\n", map);
+					ShowError("Specified start_point_pre-re '%s' not found in map-index cache.\n", map);
 				start_point.x = x;
 				start_point.y = y;
 			}
