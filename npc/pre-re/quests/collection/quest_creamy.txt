@@ -179,7 +179,7 @@ prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 					switch(select("I have Powder of Butterfly:What did you need?")) {
 					case 1:
 						/*
-						if (checkweight(502,5) == 0) {
+						if (checkweight(Orange_Potion,5) == 0) {
 							mes "[Laertes]";
 							mes "Hey, it looks like that the weight on";
 							mes "your back will crush you. Come back";
@@ -187,13 +187,13 @@ prt_fild04,356,148,3	script	Laertes#Creamy_Hunt	4_M_NFMAN,{
 							close;
 						}
 						*/
-						if (countitem(924) > 24) {
+						if (countitem(Powder_Of_Butterfly) > 24) {
 							mes "[Laertes]";
 							mes "Hey, thank you again.";
 							mes "Here you go, as promised.";
-							delitem 924,25; //Powder_Of_Butterfly
+							delitem Powder_Of_Butterfly,25;
 							getexp 2950,1125;
-							//getitem 502,5; //Orange_Potion
+							//getitem Orange_Potion,5;
 							close;
 						}
 						else {

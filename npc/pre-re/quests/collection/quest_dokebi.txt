@@ -176,11 +176,11 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 					next;
 					switch(select("I have some Dokebi Horns:What did you need?")) {
 					case 1:
-						if (countitem(1021) > 49) {
+						if (countitem(Dokkaebi_Horn) > 49) {
 							mes "[Li]";
 							mes "Oh, great!";
 							mes "Thank you for the horns.";
-							delitem 1021,50; //Dokkaebi_Horn
+							delitem Dokkaebi_Horn,50;
 							getexp 42000,36000;
 							close;
 						}

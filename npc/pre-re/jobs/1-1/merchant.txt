@@ -434,7 +434,7 @@ alberta_in,53,43,6	script	Merchant#mer	4_M_04,{
 				next;
 				mes "[Chief Mahnsoo]";
 				mes "Would you please give her this message when you deliver the package? Please~";
-				getitem 1072,1; //Delivery_Message
+				getitem Delivery_Message,1;
 				break;
 			}
 			next;
@@ -555,22 +555,22 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 		else if (job_merchant_q2 == 7 || job_merchant_q2 == 8)
 			mes "Oh hohohoho~! The Kafra Babe on Byalan Island?! Awesome! Anyway, did you bring the receipt?";
 
-		if (job_merchant_q2 == 1 && countitem(1073) != 0)
-			delitem 1073,1; //Merchant_Voucher_1
-		else if (job_merchant_q2 == 2 && countitem(1074) != 0)
-			delitem 1074,1; //Merchant_Voucher_2
-		else if (job_merchant_q2 == 3 && countitem(1075) != 0)
-			delitem 1075,1; //Merchant_Voucher_3
-		else if (job_merchant_q2 == 4 && countitem(1076) != 0)
-			delitem 1076,1; //Merchant_Voucher_4
-		else if (job_merchant_q2 == 5 && countitem(1077) != 0)
-			delitem 1077,1; //Merchant_Voucher_5
-		else if (job_merchant_q2 == 6 && countitem(1078) != 0)
-			delitem 1078,1; //Merchant_Voucher_6
-		else if (job_merchant_q2 == 7 && countitem(1079) != 0)
-			delitem 1079,1; //Merchant_Voucher_7
-		else if (job_merchant_q2 == 8 && countitem(1080) != 0)
-			delitem 1080,1; //Merchant_Voucher_8
+		if (job_merchant_q2 == 1 && countitem(Merchant_Voucher_1) != 0)
+			delitem Merchant_Voucher_1,1;
+		else if (job_merchant_q2 == 2 && countitem(Merchant_Voucher_2) != 0)
+			delitem Merchant_Voucher_2,1;
+		else if (job_merchant_q2 == 3 && countitem(Merchant_Voucher_3) != 0)
+			delitem Merchant_Voucher_3,1;
+		else if (job_merchant_q2 == 4 && countitem(Merchant_Voucher_4) != 0)
+			delitem Merchant_Voucher_4,1;
+		else if (job_merchant_q2 == 5 && countitem(Merchant_Voucher_5) != 0)
+			delitem Merchant_Voucher_5,1;
+		else if (job_merchant_q2 == 6 && countitem(Merchant_Voucher_6) != 0)
+			delitem Merchant_Voucher_6,1;
+		else if (job_merchant_q2 == 7 && countitem(Merchant_Voucher_7) != 0)
+			delitem Merchant_Voucher_7,1;
+		else if (job_merchant_q2 == 8 && countitem(Merchant_Voucher_8) != 0)
+			delitem Merchant_Voucher_8,1;
 		else {
 			next;
 			job_merchant_q = 9;
@@ -593,7 +593,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 			job_merchant_q = 7;
 		end;
 	}
-	else if (job_merchant_q == 4 || job_merchant_q == 3 && countitem(1081) == 0 && countitem(1082) == 0 && countitem(1091) == 0) {
+	else if (job_merchant_q == 4 || job_merchant_q == 3 && countitem(Merchant_Box_1) == 0 && countitem(Merchant_Box_2) == 0 && countitem(Merchant_Box_Etc) == 0) {
 		mes " [Union Staff Kay] ";
 		mes "Huh?";
 		mes "You're back?";
@@ -614,12 +614,12 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 		mes "Okay...";
 		close;
 	}
-	else if (job_merchant_q == 4 || job_merchant_q == 3 && countitem(1081) != 0 || countitem(1082) != 0 || countitem(1091) != 0) {
+	else if (job_merchant_q == 4 || job_merchant_q == 3 && countitem(Merchant_Box_1) != 0 || countitem(Merchant_Box_2) != 0 || countitem(Merchant_Box_Etc) != 0) {
 		mes "[Union Staff Kay]";
 		mes "Hey, what are you still doing here? Shouldn't you be on your way already?";
 		next;
 		if (select("I need a new package.:Oh, yeah. You're right!") == 1) {
-			if (countitem(1081) == 0 && countitem(1082) == 0 && countitem(1083) == 0 && countitem(1091) == 0) {
+			if (countitem(Merchant_Box_1) == 0 && countitem(Merchant_Box_2) == 0 && countitem(Merchant_Box_3) == 0 && countitem(Merchant_Box_Etc) == 0) {
 				mes "[Union Staff Kay]";
 				mes "Wha--?";
 				mes "So where did";
@@ -647,12 +647,12 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 			}
 			mes "[Union Staff Kay]";
 			mes "*Sigh* Man, you're starting to become a pain in the ass. Hold on, lemme cancel your record...";
-			if (countitem(1081) != 0)
-				delitem 1081,1; //Merchant_Box_1
-			else if (countitem(1082) != 0)
-				delitem 1082,1; //Merchant_Box_2
-			else if (countitem(1091) != 0)
-				delitem 1091,1; //Merchant_Box_Etc
+			if (countitem(Merchant_Box_1) != 0)
+				delitem Merchant_Box_1,1;
+			else if (countitem(Merchant_Box_2) != 0)
+				delitem Merchant_Box_2,1;
+			else if (countitem(Merchant_Box_Etc) != 0)
+				delitem Merchant_Box_Etc,1;
 			if (job_merchant_q == 4)
 				job_merchant_q = 2;
 			else if (job_merchant_q == 3)
@@ -739,35 +739,35 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 			}
 			if (.@where_village == 1) {
 				if (job_merchant_q2 == 1 && .@input == 2485741)
-					getitem 1081,1; //Merchant_Box_1
+					getitem Merchant_Box_1,1;
 				else if (job_merchant_q2 == 2 && .@input == 2328137)
-					getitem 1082,1; //Merchant_Box_2
+					getitem Merchant_Box_2,1;
 				else
-					getitem 1091,1; //Merchant_Box_Etc
+					getitem Merchant_Box_Etc,1;
 			}
 			else if (.@where_village == 2) {
 				if (job_merchant_q2 == 3 && .@input == 2989396)
-					getitem 1081,1; //Merchant_Box_1
+					getitem Merchant_Box_1,1;
 				else if (job_merchant_q2 == 4 && .@input == 2191737)
-					getitem 1082,1; //Merchant_Box_2
+					getitem Merchant_Box_2,1;
 				else
-					getitem 1091,1; //Merchant_Box_Etc
+					getitem Merchant_Box_Etc,1;
 			}
 			else if (.@where_village == 3) {
 				if (job_merchant_q2 == 5 && .@input == 3012685)
-					getitem 1081,1; //Merchant_Box_1
+					getitem Merchant_Box_1,1;
 				else if (job_merchant_q2 == 6 && .@input == 3487372)
-					getitem 1082,1; //Merchant_Box_2
+					getitem Merchant_Box_2,1;
 				else
-					getitem 1091,1; //Merchant_Box_Etc
+					getitem Merchant_Box_Etc,1;
 			}
 			else {
 				if (job_merchant_q2 == 7 && .@input == 3318702)
-					getitem 1081,1; //Merchant_Box_1
+					getitem Merchant_Box_1,1;
 				else if (job_merchant_q2 == 8 && .@input == 3543625)
-					getitem 1082,1; //Merchant_Box_2
+					getitem Merchant_Box_2,1;
 				else
-					getitem 1091,1; //Merchant_Box_Etc
+					getitem Merchant_Box_Etc,1;
 			}
 			if (job_merchant_q == 2)
 				job_merchant_q = 4;
@@ -804,7 +804,7 @@ morocc_in,140,102,4	script	Student#mer	4_M_04,{
 		mes "the right place.";
 		next;
 		mes "[Dyer's Student]";
-		if (countitem(1081) == 1 || countitem(1082) == 1 || countitem(1091) == 1) {
+		if (countitem(Merchant_Box_1) == 1 || countitem(Merchant_Box_2) == 1 || countitem(Merchant_Box_Etc) == 1) {
 			mes "Okay~";
 			mes "Please set the";
 			mes "package down";
@@ -822,21 +822,21 @@ morocc_in,140,102,4	script	Student#mer	4_M_04,{
 		mes "Let me check the Serial Number of the package so I can give you the receipt, okay?";
 		next;
 		mes "[Dyer's Student]";
-		if (job_merchant_q2 == 5 && countitem(1081) != 0) {
+		if (job_merchant_q2 == 5 && countitem(Merchant_Box_1) != 0) {
 			mes "3012685...";
 			mes "That's right.";
 			mes "Here's your";
 			mes "receipt.";
-			delitem 1081,1; //Merchant_Box_1
-			getitem 1077,1; //Merchant_Voucher_5
+			delitem Merchant_Box_1,1;
+			getitem Merchant_Voucher_5,1;
 		}
-		else if (job_merchant_q2 == 6 && countitem(1082) != 0) {
+		else if (job_merchant_q2 == 6 && countitem(Merchant_Box_2) != 0) {
 			mes "3487372...";
 			mes "That's right.";
 			mes "Here's your";
 			mes "receipt.";
-			delitem 1082,1; //Merchant_Box_2
-			getitem 1078,1; //Merchant_Voucher_6
+			delitem Merchant_Box_2,1;
+			getitem Merchant_Voucher_6,1;
 		}
 		else {
 			mes "Excuse me, but...";
@@ -886,7 +886,7 @@ geffen_in,155,122,4	script	Guild Staff#mer	1_M_01,{
 		mes "Ah, you must be with the Merchant Guild. Finally, my package has arrived! Alright...!";
 		next;
 		mes "[Guild Staff]";
-		if (countitem(1081) == 1 || countitem(1082) == 1 || countitem(1091) == 1) {
+		if (countitem(Merchant_Box_1) == 1 || countitem(Merchant_Box_2) == 1 || countitem(Merchant_Box_Etc) == 1) {
 			mes "You must be very tired";
 			mes "from having to travel";
 			mes "in this kind";
@@ -902,15 +902,15 @@ geffen_in,155,122,4	script	Guild Staff#mer	1_M_01,{
 		mes "[Guild Staff]";
 		mes "Alright, let me";
 		mes "check the Serial Number...";
-		if (job_merchant_q2 == 3 && countitem(1081) != 0) {
+		if (job_merchant_q2 == 3 && countitem(Merchant_Box_1) != 0) {
 			mes "2989396. Yes, this is what we ordered. Here is your receipt.";
-			delitem 1081,1; //Merchant_Box_1
-			getitem 1075,1; //Merchant_Voucher_3
+			delitem Merchant_Box_1,1;
+			getitem Merchant_Voucher_3,1;
 		}
-		else if (job_merchant_q2 == 4 && countitem(1082) != 0) {
+		else if (job_merchant_q2 == 4 && countitem(Merchant_Box_2) != 0) {
 			mes "2191737. Yes, this is what we ordered. Here is your receipt.";
-			delitem 1082,1; //Merchant_Box_2
-			getitem 1076,1; //Merchant_Voucher_4
+			delitem Merchant_Box_2,1;
+			getitem Merchant_Voucher_4,1;
 		}
 		else {
 			mes "Uh oh, this is the wrong number. This isn't what we ordered...";
@@ -978,7 +978,7 @@ prontera,248,42,0	script	Kafra Employee#mer	4_F_KAFRA2,{
 		mes "the Merchant Guild?";
 		mes "Oh, yes, please set";
 		mes "it down right over there...";
-		if (countitem(1081) == 1 || countitem(1082) == 1 || countitem(1091) == 1) {
+		if (countitem(Merchant_Box_1) == 1 || countitem(Merchant_Box_2) == 1 || countitem(Merchant_Box_Etc) == 1) {
 			mes "You must be really tired";
 			mes "after carrying it for so long!";
 		}
@@ -993,21 +993,21 @@ prontera,248,42,0	script	Kafra Employee#mer	4_F_KAFRA2,{
 		mes "[Kafra Employee]";
 		mes "Now, let me check";
 		mes "the serial number...";
-		if (job_merchant_q2 == 1 && countitem(1081) != 0) {
+		if (job_merchant_q2 == 1 && countitem(Merchant_Box_1) != 0) {
 			mes "2485741. Right, this is";
 			mes "the one we ordered. Oh,";
 			mes "and don't forget this receipt!";
 			next;
-			delitem 1081,1; //Merchant_Box_1
-			getitem 1073,1; //Merchant_Voucher_1
+			delitem Merchant_Box_1,1;
+			getitem Merchant_Voucher_1,1;
 		}
-		else if (job_merchant_q2 == 2 && countitem(1082) != 0) {
+		else if (job_merchant_q2 == 2 && countitem(Merchant_Box_2) != 0) {
 			mes "2328137. Right, this is";
 			mes "the one we ordered. Oh,";
 			mes "and don't forget this receipt!";
 			next;
-			delitem 1082,1; //Merchant_Box_2
-			getitem 1074,1; //Merchant_Voucher_2
+			delitem Merchant_Box_2,1;
+			getitem Merchant_Voucher_2,1;
 		}
 		else {
 			mes "Mmmm? Hold on. This is";
@@ -1097,7 +1097,7 @@ function	script	F_MercKafra	{
 		mes "the Merchant Guild?";
 		mes "Oh, yes, please set";
 		mes "it down right over there...";
-		if (countitem(1081) == 1 || countitem(1082) == 1 || countitem(1091) == 1) {
+		if (countitem(Merchant_Box_1) == 1 || countitem(Merchant_Box_2) == 1 || countitem(Merchant_Box_Etc) == 1) {
 			mes "You must be really tired";
 			mes "after carrying it for so long!";
 		}
@@ -1112,19 +1112,19 @@ function	script	F_MercKafra	{
 		mes "[Kafra Employee]";
 		mes "Now, let me check";
 		mes "the serial number...";
-		if (job_merchant_q2 == 7 && countitem(1081) != 0) {
+		if (job_merchant_q2 == 7 && countitem(Merchant_Box_1) != 0) {
 			mes "3318702. Right, this is";
 			mes "the one we ordered. Oh,";
 			mes "and don't forget this receipt!";
-			delitem 1081,1; //Merchant_Box_1
-			getitem 1079,1; //Merchant_Voucher_7
+			delitem Merchant_Box_1,1;
+			getitem Merchant_Voucher_7,1;
 		}
-		else if (job_merchant_q2 == 8 && countitem(1082) != 0) {
+		else if (job_merchant_q2 == 8 && countitem(Merchant_Box_2) != 0) {
 			mes "3543625. Right, this is";
 			mes "the one we ordered. Oh,";
 			mes "and don't forget this receipt!";
-			delitem 1082,1; //Merchant_Box_2
-			getitem 1080,1; //Merchant_Voucher_8
+			delitem Merchant_Box_2,1;
+			getitem Merchant_Voucher_8,1;
 		}
 		else {
 			mes "Mmmm? Hold on. This is";
@@ -1144,9 +1144,9 @@ function	script	F_MercKafra	{
 		else if (job_merchant_q == 3)
 			job_merchant_q = 5;
 		next;
-		if (countitem(1072) != 0 && quest_alb_01 == 0) {
+		if (countitem(Delivery_Message) != 0 && quest_alb_01 == 0) {
 			select("This is from Chief Mahnsoo of the Merchant Guild...");
-			delitem 1072,1; //Delivery_Message
+			delitem Delivery_Message,1;
 			quest_alb_01 = 1;
 			mes "[Kafra Employee]";
 			mes "Oh~! A letter from";
@@ -1163,7 +1163,7 @@ function	script	F_MercKafra	{
 			mes "of this. This isn't anything";
 			mes "special, but please take it.";
 			mes "Well, see you again~";
-			getitem 513,3; //Banana
+			getitem Banana,3;
 		}
 		else {
 			mes "[Kafra Employee]";
