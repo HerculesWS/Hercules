@@ -5415,7 +5415,7 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 					if( sc->data[SC_MELON_BOMB] )
 						val = max( val, sc->data[SC_MELON_BOMB]->val1 );
 					if (sc->data[SC_STOMACHACHE])
-						val = max(val, 50);
+						val = max(val, sc->data[SC_STOMACHACHE]->val3);
 						
 					if( sc->data[SC_MARSHOFABYSS] ) // It stacks to other statuses so always put this at the end.
 						val = max( 50, val + 10 * sc->data[SC_MARSHOFABYSS]->val1 );
