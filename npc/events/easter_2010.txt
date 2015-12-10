@@ -222,7 +222,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		mes "My curse has been released.";
 		mes "Thank you so much.";
 		next;
-		if (checkweight(5852,1) == 0) {
+		if (checkweight(Easter_Egg_Shell,1) == 0) {
 			mes "[Rina]";
 			mes "Your bag is too full.";
 			mes "I have a present for you";
@@ -231,7 +231,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 			close;
 		}
 		completequest 9123;
-		getitem 5852,1; //Easter_Egg_Shell
+		getitem Easter_Egg_Shell,1;
 		.@BaseExp = (BaseLevel * (BaseLevel / 4)) * ((BaseLevel / 29) + (BaseLevel / 6)) + (5 * BaseLevel / 2);
 		if (ADVJOB == 0) {
 			if (BaseLevel < 40) .@nBaseExp = .@BaseExp;
@@ -355,7 +355,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 					.@nCharge = 480000;
 			} else
 				.@nCharge = 500000;
-			if (countitem(574) < 1 || countitem(1001) < 20 || Zeny < .@nCharge) {
+			if (countitem(Egg) < 1 || countitem(Sparkling_Dust) < 20 || Zeny < .@nCharge) {
 				mes "[Rina's Little Friend]";
 				mes "Hmm.";
 				mes "The material is not enough.";
@@ -378,8 +378,8 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 			mes "^787878( A mysterious atmosphere hangs in the air. )^000000";
 			next;
 			specialeffect EF_ASPERSIO;
-			delitem 574,1; //Egg
-			delitem 1001,20; //Sparkling_Dust
+			delitem Egg,1;
+			delitem Sparkling_Dust,20;
 			Zeny -= .@nCharge;
 			.@nPercentage = rand(1,100);
 			if (.@nPercentage <= 41) {
@@ -388,21 +388,21 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 				mes "Aaaaah~ I got to take some rest.";
 				mes "Good bye~!";
 				if (.@nPercentage <= 12)
-					getitem 9003,1; //Poporing_Egg
+					getitem Poporing_Egg,1;
 				else if (.@nPercentage <= 24)
-					getitem 9005,1; //Picky_Egg
+					getitem Picky_Egg,1;
 				else if (.@nPercentage <= 36)
-					getitem 9009,1; //Savage_Bebe_Egg
+					getitem Savage_Bebe_Egg,1;
 				else
-					getitem 9023,1; //Deviruchi_Egg
+					getitem Deviruchi_Egg,1;
 				close2;
 				emotion e_yawn;
 				end;
 			} else if (.@nPercentage <= 60) {
 				if (.@nPercentage >= 42 && .@nPercentage <= 45)
-					getitem 5852,1; //Easter_Egg_Shell
+					getitem Easter_Egg_Shell,1;
 				else
-					getitem 12019,5; //Holy_Egg
+					getitem Holy_Egg,5;
 				mes "[Rina's Little Friend]";
 				mes "It seems that you have quite interesting things.";
 				mes "I need to take some rest.";
@@ -412,11 +412,11 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 				end;
 			} else if (.@nPercentage <= 85) {
 				if (.@nPercentage >= 61 && .@nPercentage <= 75) {
-					getitem 1001,20; //Sparkling_Dust
-					getitem 607,1; //Yggdrasilberry
+					getitem Sparkling_Dust,20;
+					getitem Yggdrasilberry,1;
 				} else {
-					getitem 574,1; //Egg
-					getitem 608,2; //Seed_Of_Yggdrasil
+					getitem Egg,1;
+					getitem Seed_Of_Yggdrasil,2;
 				}
 				mes "[Rina's Little Friend]";
 				mes "There was no change.";
@@ -426,7 +426,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 				emotion e_dum;
 				close;
 			} else {
-				getitem 12093,2; //Dex_Dish08
+				getitem Dex_Dish08,2;
 				mes "[Rina's Little Friend]";
 				mes "Hmm.";
 				mes "It became a dish.";

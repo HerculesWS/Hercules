@@ -103,7 +103,7 @@ prt_castle,54,34,4	script	Carl Orleans	1_M_01,{
 	mes "Well, I just might be able to fulfill your needs...";
 	next;
 	mes "[Carl Orleans]";
-	if (countitem(558) < 3) {
+	if (countitem(Chocolate) < 3) {
 		mes "I'm sorry, you don't have enough Chocolate Bars to do this.";
 		close; }
 	delitem 558,3;

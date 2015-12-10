@@ -86,24 +86,24 @@ payon_in01,193,30,4	script	Rice Mill Grandma#rat	1_F_ORIENT_04,{
 		close;
 	}
 	else if ((lunar_rat >= 1 && lunar_rat <= 2) || lunar_rat == 4) {
-		if (countitem(7770) >= 1 && lunar_rat == 2) {
+		if (countitem(Sweet_Rice) >= 1 && lunar_rat == 2) {
 			mes "Oh, is that the";
 			mes "Sweet Rice my son made?";
 			mes "Would you let me have it?";
 			mes "Please wait here a moment,";
 			mes "and I'll make you some pastry~";
-			delitem 7770,1; //Sweet_rice
+			delitem Sweet_Rice,1; //Sweet_rice
 			lunar_rat = 3;
 			close;
 		}
 		else if (lunar_rat == 4) {
-			if (countitem(7770) >= 1) {
+			if (countitem(Sweet_Rice) >= 1) {
 				mes "Oh, is that the";
 				mes "Sweet Rice my son made?";
 				mes "Would you let me have it?";
 				mes "Please wait here a moment,";
 				mes "and I'll make you some pastry~";
-				delitem 7770,1; //Sweet_rice
+				delitem Sweet_Rice,1; //Sweet_rice
 				lunar_rat = 5;
 				close;
 			}
@@ -112,7 +112,7 @@ payon_in01,193,30,4	script	Rice Mill Grandma#rat	1_F_ORIENT_04,{
 			mes "them to make more rice cakes...";
 			close;
 		}
-		else if (countitem(7869) < 1 && lunar_rat <= 2) {
+		else if (countitem(RicePouch) < 1 && lunar_rat <= 2) {
 			mes "Ooh, those white and";
 			mes "blue mouses might have";
 			mes "snatched my Rice Pouches";
@@ -134,23 +134,23 @@ payon_in01,193,30,4	script	Rice Mill Grandma#rat	1_F_ORIENT_04,{
 		.@reward = rand(1,100);
 		if (.@reward <= 5) {
 			if (lunar_rat == 3) {
-				getitem 9038,1; // New_Year_Doll_Egg
+				getitem New_Year_Doll_Egg,1; // New_Year_Doll_Egg
 				lunar_rat = 4;
 			}
 			else if (lunar_rat == 5) {
-				getitem 668,1; // Red_Envelope
+				getitem Handsei,1; // Red_Envelope
 			}
 		}
-		else if (.@reward >= 6 && .@reward <= 10) getitem 12198,2; // Lucky_Rice_Cake
-		else if (.@reward >= 11 && .@reward <= 30) getitem 12195,3; // Plain_Rice_Cake
-		else if (.@reward >= 31 && .@reward <= 40) getitem 12196,2; // Hearty_Rice_Cake
-		else if (.@reward >= 41 && .@reward <= 55) getitem 12123,2; // Honey_Pastry
-		else if (.@reward >= 56 && .@reward <= 70) getitem 12122,2; // Sesame_Pastry
-		else if (.@reward >= 71 && .@reward <= 80) getitem 12124,2; // Rainbow_Cake
-		else if (.@reward >= 81 && .@reward <= 90) getitem 12198,2; // Korean_Rice_Cake
-		else if (.@reward >= 91 && .@reward <= 100) getitem 12197,3; // Salty_Rice_Cake
+		else if (.@reward >= 6 && .@reward <= 10) getitem Lucky_Rice_Cake,2; // Lucky_Rice_Cake
+		else if (.@reward >= 11 && .@reward <= 30) getitem Plain_Rice_Cake,3; // Plain_Rice_Cake
+		else if (.@reward >= 31 && .@reward <= 40) getitem Hearty_Rice_Cake,2; // Hearty_Rice_Cake
+		else if (.@reward >= 41 && .@reward <= 55) getitem Honey_Pastry,2; // Honey_Pastry
+		else if (.@reward >= 56 && .@reward <= 70) getitem Sesame_Pastry,2; // Sesame_Pastry
+		else if (.@reward >= 71 && .@reward <= 80) getitem Rainbow_Cake,2; // Rainbow_Cake
+		else if (.@reward >= 81 && .@reward <= 90) getitem Lucky_Rice_Cake,2; // Korean_Rice_Cake
+		else if (.@reward >= 91 && .@reward <= 100) getitem Salty_Rice_Cake,3; // Salty_Rice_Cake
 		// After getting the egg there is a chance to get an envelope with each turn in
-		if (rand(1,20) <= 5 && lunar_rat == 4) getitem 668,1; // Red_Envelope
+		if (rand(1,20) <= 5 && lunar_rat == 4) getitem Handsei,1; // Red_Envelope
 		// Set the quest accordingly for repeat turn-ins.
 		if (lunar_rat == 3) lunar_rat = 2;
 		else if (lunar_rat == 5) lunar_rat = 4;
@@ -190,7 +190,7 @@ payon,215,127,4	script	Rice Mill Man#rat	1_M_JOBGUIDER,{
 		close;
 	}
 	else if (lunar_rat >= 2) {
-		if (countitem(7869) < 1) {
+		if (countitem(RicePouch) < 1) {
 			mes "If you bring me some";
 			mes "Rice Pouches, then I can";
 			mes "pound into into Sweet Rice.";
@@ -217,8 +217,8 @@ payon,215,127,4	script	Rice Mill Man#rat	1_M_JOBGUIDER,{
 		mes "be made into pastries";
 		mes "Would you please bring";
 		mes "this to my mother?";
-		delitem 7869,1; //Rice_Pouch
-		getitem 7770,1; //Sweet_Rice
+		delitem RicePouch,1; //Rice_Pouch
+		getitem Sweet_Rice,1;
 		close;
 	}
 }
@@ -226,7 +226,7 @@ payon,215,127,4	script	Rice Mill Man#rat	1_M_JOBGUIDER,{
 //payon,126,113,4	script	Miss Lunar#rat	4_F_LGTGIRL,{
 payon,126,113,4	script	Miss Lunar#rat	4_F_NACORURI,{
 	mes "[Lunar]";
-	if ((MaxWeight-Weight) < 3000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 3000 || checkweight(Knife,1) == 0) {
 		mes "Oh, I'm sorry, but we";
 		mes "can't do any business if";
 		mes "you're carry so much stuff.";
@@ -258,7 +258,7 @@ payon,126,113,4	script	Miss Lunar#rat	4_F_NACORURI,{
 		if (select("Yes:No") == 1) {
 			if (Zeny >= 3000) {
 				Zeny -= 3000;
-				getitem 554,10; // Mojji
+				getitem Mojji,10; // Mojji
 				mes "[Lunar]";
 				mes "Thank you, and I hope you";
 				mes "have a happy new year!";

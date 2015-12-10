@@ -13,7 +13,7 @@
 //============================================================
 
 prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 500) {
 		mes "[New Agent]";
 		mes "You have too many items. Please make room in your inventory and come back.";
 		close;
@@ -152,7 +152,7 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 		setquest 13000;
 		close;
 	} else if (oversea_event == 1) {
-		if (countitem(6485) && countitem(6486) && countitem(6487) > 1 && countitem(7602) && countitem(7470) && countitem(6012)) {
+		if (countitem(BlueCard_2) && countitem(BlueCard_0) && countitem(BlueCard_1) > 1 && countitem(BlueCard_R) && countitem(BlueCard_W) && countitem(Blue_Card_C)) {
 			mes "[RWC2011 Agent]";
 			mes "Have you gathered all the cards?";
 			next;
@@ -162,30 +162,30 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 			mes "[RWC2011 Agent]";
 			mes "Here are the gifts I promised... Let's see...";
 			next;
-			delitem 6485,1; //BlueCard_2
-			delitem 6486,1; //BlueCard_0
-			delitem 6487,2; //BlueCard_1
-			delitem 7602,1; //BlueCard_R
-			delitem 7470,1; //BlueCard_W
-			delitem 6012,1; //Blue_Card_C
+			delitem BlueCard_2,1;
+			delitem BlueCard_0,1;
+			delitem BlueCard_1,2;
+			delitem BlueCard_R,1;
+			delitem BlueCard_W,1;
+			delitem Blue_Card_C,1;
 			//SavePPL BlueCard_2
 			oversea_event = 2;
 			erasequest 13000;
 			setquest 13001;
 			.@i = rand(1,100);
-			     if (.@i == 1) getitem 12690,1; //Old_C_Album_Helm
-			else if (.@i == 2) getitem 12691,1; //Old_C_Album_Armor
-			else if (.@i == 3) getitem 12693,1; //Old_C_Album_Garment
-			else if (.@i == 4) getitem 12694,1; //Old_C_Album_Shoes
-			else if (.@i == 5) getitem 12698,1; //Old_C_Album_Weapon
-			else if (.@i == 6) getitem 12695,1; //Old_C_Album_Acc
-			else if (.@i == 7) getitem 12692,1; //Old_C_Album_Shield
-			else if (.@i < 28) getitem 547,10; //White_Slim_Potion
-			else if (.@i < 38) getitem 607,1; //Yggdrasilberry
-			else if (.@i < 51) getitem 608,1; //Seed_Of_Yggdrasil
+			     if (.@i == 1) getitem Old_C_Album_Helm,1;
+			else if (.@i == 2) getitem Old_C_Album_Armor,1;
+			else if (.@i == 3) getitem Old_C_Album_Garment,1;
+			else if (.@i == 4) getitem Old_C_Album_Shoes,1;
+			else if (.@i == 5) getitem Old_C_Album_Weapon,1;
+			else if (.@i == 6) getitem Old_C_Album_Acc,1;
+			else if (.@i == 7) getitem Old_C_Album_Shield,1;
+			else if (.@i < 28) getitem White_Slim_Potion,10;
+			else if (.@i < 38) getitem Yggdrasilberry,1;
+			else if (.@i < 51) getitem Seed_Of_Yggdrasil,1;
 			else {
-				getitem 12696,5; //RWC_Cele_Fire
-				getitem 12697,5; //RWC_Cele_Fire2
+				getitem RWC_Cele_Fire,5;
+				getitem RWC_Cele_Fire2,5;
 			}
 			mes "[RWC2011 Agent]";
 			mes "It's not much but please keep it! Haha, we still have lots of cards to be found. I hope you can help me tomorrow as well.";

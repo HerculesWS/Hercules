@@ -48,7 +48,7 @@ mosk_in,21,246,5	script	Pinkamenia	1_F_LIBRARYGIRL,{
 		close;
 	} else if (#V_QUE12==2) {
 		mes .@n$;
-		if (countitem(7864) < 15) {
+		if (countitem(Love_Flower) < 15) {
 			mes "You have to bring me 15 Love Flowers!";
 			close;
 		}

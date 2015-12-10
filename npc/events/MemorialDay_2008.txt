@@ -66,7 +66,7 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 		Memorial08 = 1;
 		close;
 	} else if (Memorial08 == 1) {
-		if (countitem(1059) < 30 || countitem(914) < 20) {
+		if (countitem(Transparent_Cloth) < 30 || countitem(Fluff) < 20) {
 			mes "[Mad Sago Lauds]";
 			mes "What are these? They aren't enough?!";
 			mes "*Sigh* Do I really have to tell you again?!";
@@ -256,7 +256,7 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 		Memorial08 = 4;
 		close;
 	} else if (Memorial08 == 4) {
-		if (countitem(501) < 1 || countitem(506) < 1 || countitem(656) < 1 || countitem(602) < 1) {
+		if (countitem(Red_Potion) < 1 || countitem(Green_Potion) < 1 || countitem(Awakening_Potion) < 1 || countitem(Wing_Of_Butterfly) < 1) {
 			mes "[Grast]";
 			mes "Oops, you haven't brought all materials.";
 			mes "Please make sure you need to bring me";
@@ -285,7 +285,7 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			close;
 		}
 	} else if (Memorial08 == 5) {
-		if (countitem(1065) < 1 || countitem(610) < 1 || countitem(717) < 1 || countitem(747) < 1 || countitem(517) < 1 || countitem(515) < 1) {
+		if (countitem(Booby_Trap) < 1 || countitem(Leaf_Of_Yggdrasil) < 1 || countitem(Blue_Gemstone) < 1 || countitem(Crystal_Mirror) < 1 || countitem(Meat) < 1 || countitem(Carrot) < 1) {
 			mes "[Grast]";
 			mes "Oops, you haven't brought all materials.";
 			mes "Please make sure you'll have to bring me";
@@ -310,7 +310,7 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			close;
 		}
 	} else if (Memorial08 == 6) {
-		if (countitem(643) < 1 || countitem(12018) < 1 || countitem(741) < 1 || countitem(745) < 1) {
+		if (countitem(Pet_Incubator) < 1 || countitem(Fire_Cracker) < 1 || countitem(Poring_Doll) < 1 || countitem(Wedding_Bouquet) < 1) {
 			mes "[Grast]";
 			mes "Oops, you haven't brought all materials.";
 			mes "Please make sure you need to bring me";

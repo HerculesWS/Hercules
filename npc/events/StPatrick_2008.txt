@@ -169,7 +169,7 @@ prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 		case 1:
 			mes "[O'Riley the Leprechaun]";
 			mes "Thank you. Here's your ale~";
-			if (countitem(7915) >= 10) {
+			if (countitem(Copper_Coin_) >= 10) {
 				getitem 12135,1;
 				delitem 7915,10;
 			}
@@ -177,7 +177,7 @@ prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 		case 2:
 			mes "[O'Riley the Leprechaun]";
 			mes "Thank you. Here's your ale~";
-			if (countitem(7916) >= 5) {
+			if (countitem(Silver_Coin_) >= 5) {
 				getitem 12135,1;
 				delitem 7916,5;
 			}
@@ -185,7 +185,7 @@ prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 		case 3:
 			mes "[O'Riley the Leprechaun]";
 			mes "Thank you. Here's your ale~";
-			if (countitem(7720) >= 1) {
+			if (countitem(Gold_Coin_US) >= 1) {
 				getitem 12135,1;
 				delitem 7720,1;
 			}
@@ -209,7 +209,7 @@ OnTouch:
 	if (StPatrick2008 == 1) {
 		mes "- You've found a pile of rocks covered with soil. -";
 		next;
-		if (countitem(12018) < 200) {
+		if (countitem(Fire_Cracker) < 200) {
 			mes "The rocks won't budge.";
 			mes "Maybe O'Riley knows a way to move the rocks.";
 			close;

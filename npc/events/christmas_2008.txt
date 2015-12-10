@@ -108,7 +108,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 					mes "If you can get ^0000FFSinging Crystal Pieces^000000, give them to me please?";
 					next;
 					select("Why not? Sure, I can give you some.");
-					if (countitem(6092) < 6) {
+					if (countitem(Singing_Crystal_Piece) < 6) {
 						mes "[Caroller]";
 						mes "Yes, please.";
 						next;
@@ -280,7 +280,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 	}
 
 	if (iROxmas08carol == 1) {
-		if (countitem(6092) < 6) {
+		if (countitem(Singing_Crystal_Piece) < 6) {
 			mes "[Caroller]";
 			mes "Maybe, it's quite hard to make a jukebox for the villages, but a music box might be possible.";
 			next;
@@ -346,7 +346,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 	}
 
 	if (iROxmas08carol == 2) {
-		if (countitem(1019) < 10 || countitem(1005) < 1 || countitem(7312) < 1 || countitem(938) < 10 || countitem(732) < 1) {
+		if (countitem(Wooden_Block) < 10 || countitem(Hammer_Of_Blacksmith) < 1 || countitem(Jubilee) < 1 || countitem(Sticky_Mucus) < 10 || countitem(Crystal_Jewel__) < 1) {
 			mes "[Caroller]";
 			mes "We can make a music box with Singing Crystal Pieces.";
 			mes "It's handy, you can hear carols anywhere. Sounds cool?";
@@ -778,7 +778,7 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	4_F_06,{
 	mes "[Louise Kim]";
 	mes "If you bring me all that stuff, I can make you a glamorous Santa costume.";
 	next;
-	if (countitem(2301) < 1 || countitem(501) < 3 || countitem(523) < 1 || countitem(7175) < 4 || countitem(7174) < 1) {
+	if (countitem(Cotton_Shirt) < 1 || countitem(Red_Potion) < 3 || countitem(Holy_Water) < 1 || countitem(Packing_Paper) < 4 || countitem(Packing_Ribbon) < 1) {
 			mes "[Louise Kim]";
 			mes "If you were to bring me all the stuff, I would make you a wonderful costume, for free...";
 			next;
