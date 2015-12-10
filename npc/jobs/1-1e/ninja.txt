@@ -280,7 +280,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			close;
 		}
 		else if (NINJ_Q == 4) {
-			if (countitem(7053) < 5 || countitem(1010) < 1) {
+			if (countitem(Cyfar) < 5 || countitem(Phracon) < 1) {
 				mes "[Cougar]";
 				mes "Hurry and bring";
 				mes "^3355FF5 Cyfars^000000 and";
@@ -354,9 +354,9 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "quiet as the falling shadows.";
 			callfunc "Job_Change",Job_Ninja;
 			NINJ_Q = 5;
-			delitem 7053,5; // Cyfar
-			delitem 1010,1; // Phracon
-			getitem 13010,1;	// Asura
+			delitem Cyfar,5; // Cyfar
+			delitem Phracon,1; // Phracon
+			getitem Asura,1;	// Asura
 			completequest 6018;
 			close;
 		}
@@ -457,7 +457,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		close;
 	}
 	else if (NINJ_Q == 2) {
-		if (countitem(7053) < 5 || countitem(1010) < 1) {
+		if (countitem(Cyfar) < 5 || countitem(Phracon) < 1) {
 			mes "[Suspicious Man]";
 			mes "Please bring";
 			mes "^3355FF5 Cyfars^000000 and";
@@ -544,8 +544,8 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "It'll take a while to";
 		mes "return to Amatsu, so let";
 		mes "me send you there directly...";
-		delitem 1010,1;	// Phracon
-		delitem 7053,5;	// Cyfar
+		delitem Phracon,1;	// Phracon
+		delitem Cyfar,5;	// Cyfar
 		NINJ_Q = 3;
 		changequest 6016,6017;
 		close2;

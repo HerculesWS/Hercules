@@ -208,14 +208,14 @@ gef_tower,111,37,4	script	Wizard Guildsman	1_F_GYPSY,{
 		mes "Let me see, did you get all the items?";
 		mes "Then let's check...";
 		next;
-		if (countitem(716) > 9 && countitem(717) > 9 && countitem(715) > 9) {
+		if (countitem(Red_Gemstone) > 9 && countitem(Blue_Gemstone) > 9 && countitem(Yellow_Gemstone) > 9) {
 			mes "[Catherine]";
 			mes "Perfect! You got all the items. I like!~";
 			mes "These items will be put to great use in our guild. ~Hehehee.";
 			next;
-			delitem 716,10; //Red_Gemstone
-			delitem 717,10; //Blue_Gemstone
-			delitem 715,10; //Yellow_Gemstone
+			delitem Red_Gemstone,10;
+			delitem Blue_Gemstone,10;
+			delitem Yellow_Gemstone,10;
 			WIZ_Q = 3;
 			changequest 9013,9015;
 			mes "[Catherine]";
@@ -246,15 +246,15 @@ gef_tower,111,37,4	script	Wizard Guildsman	1_F_GYPSY,{
 		mes "Did you get all the items?";
 		mes "Let's see... Do you have the right ones?...";
 		next;
-		if (countitem(991) > 4 && countitem(993) > 4 && countitem(990) > 4 && countitem(992) > 4) {
+		if (countitem(Crystal_Blue) > 4 && countitem(Yellow_Live) > 4 && countitem(Boody_Red) > 4 && countitem(Wind_Of_Verdure) > 4) {
 			mes "[Catherine]";
 			mes "Perfect! Good job...I'm satisfied! ~Hehe";
 			mes "Our guild greatly appreciates these items and will use them wisely.";
 			next;
-			delitem 991,5; //Crystal_Blue
-			delitem 993,5; //Yellow_Live
-			delitem 990,5; //Boody_Red
-			delitem 992,5; //Wind_Of_Verdure
+			delitem Crystal_Blue,5;
+			delitem Yellow_Live,5;
+			delitem Boody_Red,5;
+			delitem Wind_Of_Verdure,5;
 			WIZ_Q = 3;
 			changequest 9014,9015;
 			mes "[Catherine]";
@@ -302,8 +302,8 @@ gef_tower,111,37,4	script	Wizard Guildsman	1_F_GYPSY,{
 		next;
 		switch(select("Give me some hints, please.:I want to try again on my own!")) {
 		case 1:
-			if (countitem(531) > 0) {
-				delitem 531,1; //Apple_Juice
+			if (countitem(Apple_Juice) > 0) {
+				delitem Apple_Juice,1;
 				mes "[Catherine]";
 				mes "Yummers, Apple Juice is the best...";
 				mes "Gulp gulp gulp... Haaaaaah... ~Hehe";
@@ -451,7 +451,7 @@ gef_tower,111,37,4	script	Wizard Guildsman	1_F_GYPSY,{
 		mes "rummage rummage...";
 		mes "shuffle shuffle...";
 		next;
-		getitem 505,6; //Blue_Potion
+		getitem Blue_Potion,6;
 		mes "[Catherine]";
 		mes "Here you go. I hope you'll make good use of it when you need it. ~tehehe";
 		mes "I gave them to you as a present, so don't go out and sell it. Use it for yourself, ok?";
@@ -933,8 +933,8 @@ gef_tower,102,24,2	script	Gloomy Wizard	4_M_JOB_WIZARD,{
 				warp "job_wiz",57,154;
 				end;
 			}
-			if (countitem(618) > 0) {
-				delitem 618,1; //Worn_Out_Scroll
+			if (countitem(Worn_Out_Scroll) > 0) {
+				delitem Worn_Out_Scroll,1;
 				mes "[Raulel]";
 				mes "Hahahahahahahaha~ *Cough* *cough* So you ended up bringing one of these eh? Good job...";
 				mes "I think I can continue my research with this...";
