@@ -17452,18 +17452,18 @@ void clif_maptypeproperty2(struct block_list *bl,enum send_target t) {
 
 	p.PacketType = maptypeproperty2Type;
 	p.type = 0x28;
-	p.flag.party = map->list[bl->m].flag.pvp ? 1 : 0;
-	p.flag.guild = (map->list[bl->m].flag.battleground || map_flag_gvg(bl->m)) ? 1 : 0;
-	p.flag.siege = (map->list[bl->m].flag.battleground || map_flag_gvg2(bl->m)) ? 1: 0;
-	p.flag.mineffect = map_flag_gvg(bl->m) ? 1 : ( (sd && sd->state.lesseffect) ? 1 : 0); // Forcing /mineffect in castles during WoE (probably redundant? I'm not sure)
-	p.flag.nolockon = 0; // TODO
-	p.flag.countpk = map->list[bl->m].flag.pvp ? 1 : 0;
-	p.flag.nopartyformation = map->list[bl->m].flag.partylock ? 1 : 0;
-	p.flag.bg = map->list[bl->m].flag.battleground ? 1 : 0;
-	p.flag.noitemconsumption = 0; // TODO
-	p.flag.summonstarmiracle = 0; // TODO
-	p.flag.usecart = 1; // TODO
-	p.flag.SpareBits = 0;
+	p.flag.party = map->list[bl->m].flag.pvp ? 1 : 0;	//PARTY
+	p.flag.guild = (map->list[bl->m].flag.battleground || map_flag_gvg(bl->m)) ? 1 : 0;	// GUILD
+	p.flag.siege = (map->list[bl->m].flag.battleground || map_flag_gvg2(bl->m)) ? 1: 0;	// SIEGE
+	p.flag.mineffect = map_flag_gvg(bl->m) ? 1 : ( (sd && sd->state.lesseffect) ? 1 : 0);	// USE_SIMPLE_EFFECT - Forcing /mineffect in castles during WoE (probably redundant? I'm not sure)
+	p.flag.nolockon = 0; // DISABLE_LOCKON - TODO
+	p.flag.countpk = map->list[bl->m].flag.pvp ? 1 : 0;	// COUNT_PK
+	p.flag.nopartyformation = map->list[bl->m].flag.partylock ? 1 : 0;	// NO_PARTY_FORMATION
+	p.flag.bg = map->list[bl->m].flag.battleground ? 1 : 0;	// BATTLEFIELD
+	p.flag.nocostume = (map->list[bl->m].flag.noviewid & EQP_COSTUME) ? 1 : 0; // DISABLE_COSTUMEITEM - Disables Costume Sprite
+	p.flag.usecart = 1; // USECART - TODO
+	p.flag.summonstarmiracle = 0; // SUNMOONSTAR_MIRACLE - TODO
+	p.flag.SpareBits = 0;	// UNUSED
 
 	clif->send(&p,sizeof(p),bl,t);
 #endif
