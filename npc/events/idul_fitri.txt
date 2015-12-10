@@ -39,24 +39,24 @@ prontera,146,92,3	script	Cellerb	1_M_MERCHANT,{
 		mes "^000088~2 Green Herb, 5 Stem~.^000000";
 		next;
 		mes "[Staff Idul Fitri]";
-		if ( (countitem(552)<5 || countitem(515)<5 ||countitem(516)<5 || countitem(517)<10 || countitem(511)<2 || countitem(905)<5) ) {
+		if ( (countitem(KETUPAT)<5 || countitem(Carrot)<5 ||countitem(Sweet_Potato)<5 || countitem(Meat)<10 || countitem(Green_Herb)<2 || countitem(Stem)<5) ) {
 			mes "You don't have enough items.";
 			mes "Come back when you have them all.";
 			close;
 		}
-		delitem 552,5;
-		delitem 515,5;
-		delitem 516,2;
-		delitem 517,10;
-		delitem 511,2;
-		delitem 905,5;
+		delitem KETUPAT,5;
+		delitem Carrot,5;
+		delitem Sweet_Potato,2;
+		delitem Meat,10;
+		delitem Green_Herb,2;
+		delitem Stem,5;
 		mes "I see you already have all the items you need.";
 		mes "Just a moment, please!!";
 		next;
 		mes "^009500-Plupping snapping bubbling~^000000";
 		mes "^009500-Clinking clingking~^000000";
 		mes "^009500-Clang clang~^000000";
-		getitem 583,1;
+		getitem KETUPAT_,1;
 		next;
 		mes "[Staff Idul Fitri]";
 		mes "We appreciate your participation in this special event.";

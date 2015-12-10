@@ -24,8 +24,8 @@
 		mes "would you still like to board?";
 		next;
 		if (select("Yes:No") == 1) {
-			if (countitem(7311) > 0) {
-				delitem 7311,1; //Free_Flying_Ship_Ticket
+			if (countitem(Free_Flying_Ship_Ticket) > 0) {
+				delitem Free_Flying_Ship_Ticket,1; //Free_Flying_Ship_Ticket
 				warp "airplane_01",244,58;
 				end;
 			}

@@ -72,7 +72,7 @@ itemmall,19,74,5	script	Stylist#cash	4_F_02,{
 	mes "change your hairstyle?";
 	next;
 	if(select("Change Hairstyle:Don't Change") == 1) {
-		if (countitem(7622) > 0) {
+		if (countitem(New_Style_Coupon) > 0) {
 			mes "[Kaniki]";
 			mes "Great, you brought";
 			mes "a New Style Coupon!";
@@ -81,18 +81,18 @@ itemmall,19,74,5	script	Stylist#cash	4_F_02,{
 			next;
 			if (Sex == 1) {
 				if(select("Emergency Heal Perm:Aura Blade Cut") == 1) {
-					delitem 7622,1;	// New_Style_Coupon
+					delitem New_Style_Coupon,1;	// New_Style_Coupon
 					setlook 1,24;
 				}else{
-					delitem 7622,1;	// New_Style_Coupon
+					delitem New_Style_Coupon,1;	// New_Style_Coupon
 					setlook 1,25;
 				}
 			}else{
 				if(select("Assumptio Perm:Soul Changer Cut") == 1) {
-					delitem 7622,1;	// New_Style_Coupon
+					delitem New_Style_Coupon,1;	// New_Style_Coupon
 					setlook 1,24;
 				}else{
-					delitem 7622,1;	// New_Style_Coupon
+					delitem New_Style_Coupon,1;	// New_Style_Coupon
 					setlook 1,25;
 				}
 			}

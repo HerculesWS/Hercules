@@ -52,7 +52,7 @@
 // Stone Quest :: veins_stone
 //============================================================
 -	script	::WincingOldMan_veins	-1,{
-	if ((MaxWeight - Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight - Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you are carrying -";
 		mes "- too many items with you. -";
@@ -292,7 +292,7 @@
 		mes "I hope you like these rocks...";
 		veins_stone = 8;
 		getexp RENEWAL_EXP?30000:300000,0;
-		getitem 985,3; //Elunium
+		getitem Elunium,3; //Elunium
 		close;
 	}
 	else if (veins_stone > 7) {
@@ -403,7 +403,7 @@ ve_in,169,310,6	script	Strange Old Man#ve	2_M_MOLGENSTEIN,{
 		close;
 	}
 	else if (veins_stone == 2) {
-		if (countitem(999) > 4 && countitem(1033) > 4 && countitem(7561) > 1) {
+		if (countitem(Steel) > 4 && countitem(Root_Of_Maneater) > 4 && countitem(Ice_Heart) > 1) {
 			mes "[Absar]";
 			mes "Good, you finally";
 			mes "brought everthing.";
@@ -416,9 +416,9 @@ ve_in,169,310,6	script	Strange Old Man#ve	2_M_MOLGENSTEIN,{
 			mes "You won't have to";
 			mes "wait long to see";
 			mes "my great invention!";
-			delitem 999,5; //Steel
-			delitem 1033,5; //Root_Of_Maneater
-			delitem 7561,2; //Ice_Heart
+			delitem Steel,5; //Steel
+			delitem Root_Of_Maneater,5; //Root_Of_Maneater
+			delitem Ice_Heart,2; //Ice_Heart
 			veins_stone = 3;
 			close2;
 			specialeffect EF_FIRESPLASHHIT;
@@ -732,7 +732,7 @@ prontera,202,122,0	script	Kid#sch	4_F_KID2,{
 }
 
 prt_church,89,108,6	script	Bard#sch	2_M_BARD_ORIENT,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -974,7 +974,7 @@ prt_church,89,108,6	script	Bard#sch	2_M_BARD_ORIENT,{
 		mes "your help. Please take this";
 		mes "reward with our sincere thanks.";
 		que_sch = 26;
-		getitem 12106,1; //Accessory_Box
+		getitem Accessory_Box,1; //Accessory_Box
 		getexp RENEWAL_EXP?60000:600000,0;
 		close;
 	}
@@ -1029,7 +1029,7 @@ morocc,53,87,7	script	Prison Ward#sch	4_M_MOC_SOLDIER,{
 		close;
 	}
 	else if (que_sch == 6) {
-		if (countitem(12066) > 0) {
+		if (countitem(Luk_Dish01) > 0) {
 			mes "[Jesse]";
 			mes "Ah, that's the stuff!";
 			mes "Thanks for the Fried";
@@ -1037,7 +1037,7 @@ morocc,53,87,7	script	Prison Ward#sch	4_M_MOC_SOLDIER,{
 			mes "go talk to ^FF0000Sir Krieg^000000 in";
 			mes "Morroc Castle. Get his";
 			mes "approval, and I'll let you in.";
-			delitem 12066,1; //Luk_Dish01
+			delitem Luk_Dish01,1; //Luk_Dish01
 			que_sch = 7;
 			close;
 		}
@@ -1285,7 +1285,7 @@ ra_in01,50,387,4	script	Upset Looking Bard#sch	1_M_BARD,{
 		close;
 	}
 	else if (que_sch == 18) {
-		if (countitem(7040) > 0 && countitem(1901) > 0) {
+		if (countitem(Megaphone) > 0 && countitem(Violin) > 0) {
 			mes "[Vitre]";
 			mes "You brought me a";
 			mes "Megaphone and Violin?";
@@ -1341,8 +1341,8 @@ ra_in01,50,387,4	script	Upset Looking Bard#sch	1_M_BARD,{
 			mes "a plan comes together~";
 			mes "Let's get out of here!";
 			next;
-			delitem 1901,1; //Violin
-			delitem 7040,1; //Megaphone
+			delitem Violin,1; //Violin
+			delitem Megaphone,1; //Megaphone
 			que_sch = 19;
 			close2;
 			disablenpc "Jesse#sch";
@@ -1443,7 +1443,7 @@ ra_in01,58,389,0	script	Guant Prisoner#sch	4_M_MIDDLE,{
 
 // Escort Dancers to Schwaltzvalt Republic
 job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -1583,7 +1583,7 @@ job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 			mes "you around, adventurer~";
 			Zeny -= 500000;
 			que_sch = 18;
-			getitem 7040,1; //Megaphone
+			getitem Megaphone,1; //Megaphone
 			close;
 		}
 		mes "[Hianna]";
@@ -1628,7 +1628,7 @@ job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 				mes "you have this. Don't let";
 				mes "anyone know I gave you this!";
 				Zeny -= 500000;
-				getitem 7040,1; //Megaphone
+				getitem Megaphone,1; //Megaphone
 				close;
 			}
 			mes "[Hianna]";
@@ -2134,7 +2134,7 @@ ein_in01,170,284,4	script	Arunafeltz Figure#sch	4_F_TRAINEE,{
 }
 
 morocc,297,154,0	script	Thin-Faced Bard#sch	1_M_BARD,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -2233,7 +2233,7 @@ morocc,297,154,0	script	Thin-Faced Bard#sch	1_M_BARD,{
 			mes "something to show my";
 			mes "gratitude. Hope you like it.";
 			que_sch = 24;
-			getitem 603,1; //Old_Blue_Box
+			getitem Old_Blue_Box,1; //Old_Blue_Box
 			next;
 			mes "[Vitre]";
 			mes "Now, tell me, what";
@@ -3525,7 +3525,7 @@ veins,181,166,3	script	Lockenlock	4_M_HUMERCHANT,{
 		close;
 	}
 	else if (rachel_camel == 4) {
-		if (countitem(503) > 0) {
+		if (countitem(Yellow_Potion) > 0) {
 			mes "["+strcharinfo(0)+"]";
 			mes "Excuse me...?";
 			next;
@@ -3654,7 +3654,7 @@ veins,181,166,3	script	Lockenlock	4_M_HUMERCHANT,{
 			next;
 			mes "["+strcharinfo(0)+"]";
 			mes "...........";
-			delitem 503,1; //Yellow_Potion
+			delitem Yellow_Potion,1; //Yellow_Potion
 			changequest 3063,3064;
 			rachel_camel = 5;
 			close;
@@ -3890,7 +3890,7 @@ veins,181,166,3	script	Lockenlock	4_M_HUMERCHANT,{
 		close;
 	}
 	else if (rachel_camel == 22) {
-		if (countitem(999) > 0) {
+		if (countitem(Steel) > 0) {
 			mes "["+strcharinfo(0)+"]";
 			mes "Here's the Steel that";
 			mes "you need. Would you";
@@ -4164,7 +4164,7 @@ veins,227,127,5	script	Ivory	4_F_DESERT,{
 		close;
 	}
 	else if (rachel_camel == 6) {
-		if ((countitem(511) > 99) && (countitem(909) > 49) && (countitem(519) > 9) && (countitem(713) > 4)) {
+		if ((countitem(Green_Herb) > 99) && (countitem(Jellopy) > 49) && (countitem(Milk) > 9) && (countitem(Empty_Bottle) > 4)) {
 			mes "[Organic Soap Maker Ivory]";
 			mes "Oh, great! You brought";
 			mes "everything! Now... It's";
@@ -4517,7 +4517,7 @@ veins,115,59,5	script	Saraman	4_M_EINOLD,{
 		close;
 	}
 	else if (rachel_camel == 8) {
-		if ((countitem(528) > 4) && (countitem(503) > 0) && (countitem(619) > 0) && (countitem(713) > 0)) {
+		if ((countitem(Monster's_Feed) > 4) && (countitem(Yellow_Potion) > 0) && (countitem(Unripe_Apple) > 0) && (countitem(Empty_Bottle) > 0)) {
 			mes "[Camel Farm Owner Saraman]";
 			mes "Oh good, you're back.";
 			mes "Did you bring everything?";
@@ -4553,10 +4553,10 @@ veins,115,59,5	script	Saraman	4_M_EINOLD,{
 			mes "ingredients. That's a good";
 			mes "amount to collect since that's";
 			mes "what Ms. Ivory usually orders.";
-			delitem 528,5; //Monster's_Feed
-			delitem 503,1; //Yellow_Potion
-			delitem 619,1; //Unripe_Apple
-			delitem 713,1; //Empty_Bottle
+			delitem Monster's_Feed,5; //Monster's_Feed
+			delitem Yellow_Potion,1; //Yellow_Potion
+			delitem Unripe_Apple,1; //Unripe_Apple
+			delitem Empty_Bottle,1; //Empty_Bottle
 			changequest 3067,3068;
 			rachel_camel = 9;
 			close;
@@ -4711,7 +4711,7 @@ veins,115,59,5	script	Saraman	4_M_EINOLD,{
 		mes "Good luck with getting";
 		mes "that soap you want made.";
 		changequest 3076,3077;
-		getitem 617,1; //Old_Violet_Box
+		getitem Old_Violet_Box,1; //Old_Violet_Box
 		rachel_camel = 18;
 		close;
 	}
@@ -4806,7 +4806,7 @@ ve_fild07,235,42,3	script	Silk Sand Camel	4_DST_CAMEL,{
 		close;
 	}
 	else if (rachel_camel > 11 && rachel_camel < 17) {
-		if (countitem(511) > 19 && countitem(909) > 9 && countitem(519) > 1 && countitem(713) > 0) {
+		if (countitem(Green_Herb) > 19 && countitem(Jellopy) > 9 && countitem(Milk) > 1 && countitem(Empty_Bottle) > 0) {
 			mes "^3355FFThe camel can smell";
 			mes "that you have food for";
 			mes "it, and started salivating.";
@@ -4831,11 +4831,11 @@ ve_fild07,235,42,3	script	Silk Sand Camel	4_DST_CAMEL,{
 					mes "And... Out pops 2 Sweet";
 					mes "Potatoes. They're probably";
 					mes "safe to eat... Hopefully.^000000";
-					getitem 516,2; //Sweet_Potato
+					getitem Sweet_Potato,2; //Sweet_Potato
 				}
-				delitem 519,2; //Milk
-				delitem 511,20; //Green_Herb
-				delitem 909,10; //Jellopy
+				delitem Milk,2; //Milk
+				delitem Green_Herb,20; //Green_Herb
+				delitem Jellopy,10; //Jellopy
 				close;
 			case 2:
 				mes "[Silk Sand Camel]";
@@ -4907,10 +4907,10 @@ ve_fild07,235,42,3	script	Silk Sand Camel	4_DST_CAMEL,{
 					rachel_camel = 17;
 					changequest 3075,3076;
 				}
-				delitem 519,2; //Milk
-				delitem 511,20; //Green_Herb
-				delitem 909,10; //Jellopy
-				delitem 713,1; //Empty_Bottle
+				delitem Milk,2; //Milk
+				delitem Green_Herb,20; //Green_Herb
+				delitem Jellopy,10; //Jellopy
+				delitem Empty_Bottle,1; //Empty_Bottle
 				close;
 			default:
 				mes "[Silk Sand Camel]";
@@ -4923,10 +4923,10 @@ ve_fild07,235,42,3	script	Silk Sand Camel	4_DST_CAMEL,{
 				mes "And... Out pops a Sweet";
 				mes "Potato. It's probably";
 				mes "safe to eat... Maybe.^000000";
-				delitem 519,2; //Milk
-				delitem 511,20; //Green_Herb
-				delitem 909,10; //Jellopy
-				getitem 516,1; //Sweet_Potato
+				delitem Milk,2; //Milk
+				delitem Green_Herb,20; //Green_Herb
+				delitem Jellopy,10; //Jellopy
+				getitem Sweet_Potato,1; //Sweet_Potato
 				close;
 			}
 		}
@@ -5436,7 +5436,7 @@ ra_temin,87,118,3	script	Drawer#vol1::VeinsDrawer	HIDDEN_NPC,{
 ra_temin,83,118,3	duplicate(VeinsDrawer)	Drawer#vol2	HIDDEN_NPC
 
 ra_temin,85,118,3	script	Drawer#vol3	HIDDEN_NPC,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -5476,7 +5476,7 @@ ra_temin,85,118,3	script	Drawer#vol3	HIDDEN_NPC,{
 			mes "close the drawer.^000000";
 			changequest 2114,2115;
 			aru_vol = 5;
-			getitem 7342,1; //File01
+			getitem File01,1; //File01
 			close;
 		}
 		mes "["+strcharinfo(0)+"]";
@@ -5486,12 +5486,12 @@ ra_temin,85,118,3	script	Drawer#vol3	HIDDEN_NPC,{
 		close;
 	}
 	else if (aru_vol == 5) {
-		if (countitem(7342) < 1) {
+		if (countitem(File01) < 1) {
 			mes "["+strcharinfo(0)+"]";
 			mes "Oh! Here's another";
 			mes "copy of that report";
 			mes "I wanted! Pretty lucky~";
-			getitem 7342,1; //File01
+			getitem File01,1; //File01
 			close;
 		}
 		mes "^3355FFYou find a thick pile";
@@ -5598,7 +5598,7 @@ veins,159,171,3	script	Towner#vol	4_M_DST_GRAND,{
 }
 
 ve_in,233,116,3	script	Drunken Man#vol	4_M_HUOLDARMY,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -5836,7 +5836,7 @@ ve_in,233,116,3	script	Drunken Man#vol	4_M_HUOLDARMY,{
 		mes "You know that feeling, right?^000000";
 		changequest 2116,2117;
 		aru_vol = 8;
-		getitem 7705,1; //Note_Of_Geologist
+		getitem Note_Of_Geologist,1; //Note_Of_Geologist
 		close;
 	}
 	else if ((aru_vol > 7) && (aru_vol < 24)) {
@@ -5959,9 +5959,9 @@ ve_in,233,116,3	script	Drunken Man#vol	4_M_HUOLDARMY,{
 		mes "from my star pupil!";
 		changequest 60211,60212;
 		aru_vol = 25;
-		delitem 7342,1; //File01
-		delitem 7704,1; //Broken_Thermometer
-		delitem 7705,1; //Note_Of_Geologist
+		delitem File01,1; //File01
+		delitem Broken_Thermometer,1; //Broken_Thermometer
+		delitem Note_Of_Geologist,1; //Note_Of_Geologist
 		close;
 	}
 	mes "[Drunken Man]";
@@ -6014,7 +6014,7 @@ ve_in,234,115,3	script	Drunken Lady#2	4_F_DESERT,{
 }
 
 ve_in,277,229,3	script	Wall Closet#vol	HIDDEN_NPC,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -6024,11 +6024,11 @@ ve_in,277,229,3	script	Wall Closet#vol	HIDDEN_NPC,{
 		close;
 	}
 	if (aru_vol == 8) {
-		if (countitem(7704) == 0) {
+		if (countitem(Broken_Thermometer) == 0) {
 			mes "^3355FFYou found the";
 			mes "pyrometer inside";
 			mes "the closet.^000000";
-			getitem 7704,1; //Broken_Thermometer
+			getitem Broken_Thermometer,1; //Broken_Thermometer
 			close;
 		}
 		mes "^3355FFThere's so much junk";
@@ -6041,7 +6041,7 @@ ve_in,277,229,3	script	Wall Closet#vol	HIDDEN_NPC,{
 }
 
 ve_in,281,214,3	script	Bookshelf#vol	HIDDEN_NPC,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -6051,12 +6051,12 @@ ve_in,281,214,3	script	Bookshelf#vol	HIDDEN_NPC,{
 		close;
 	}
 	if (aru_vol == 8) {
-		if (countitem(7342) == 0) {
+		if (countitem(File01) == 0) {
 			mes "^3355FFYou find a bundle";
 			mes "of reports carelessly";
 			mes "stuck between some";
 			mes "books on this bookshelf.^000000";
-			getitem 7342,1; //File01
+			getitem File01,1; //File01
 			close;
 		}
 		mes "^3355FFThere's a lot of";
@@ -6089,16 +6089,16 @@ ve_in,281,214,3	script	Bookshelf#vol	HIDDEN_NPC,{
 		aru_vol = 26;
 		.@box_box = rand(1,20);
 		if (.@box_box < 7) {
-			getitem 12104,1; //Random_Quiver
+			getitem Random_Quiver,1; //Random_Quiver
 		}
 		else if ((.@box_box > 6) && (.@box_box < 9)) {
-			getitem 661,1; //Sway_Apron
+			getitem Sway_Apron,1; //Sway_Apron
 		}
 		else if ((.@box_box > 8) && (.@box_box < 20)) {
-			getitem 12027,5; //Giggling_Box
+			getitem Giggling_Box,5; //Giggling_Box
 		}
 		else {
-			getitem 12103,1; //Bloody_Dead_Branch
+			getitem Bloody_Dead_Branch,1; //Bloody_Dead_Branch
 		}
 		getexp RENEWAL_EXP?100000:800000,0;
 		mes "^3355FFWell, you've done all";
@@ -6116,7 +6116,7 @@ ve_in,281,214,3	script	Bookshelf#vol	HIDDEN_NPC,{
 
 thor_v01,37,234,3	script	Hot Land Surface#1	HIDDEN_NPC,{
 	if (aru_vol == 8) {
-		if ((countitem(7704) > 0) && (countitem(7342) > 0)) {
+		if ((countitem(Broken_Thermometer) > 0) && (countitem(File01) > 0)) {
 			mes "^3355FFYou use the pyrometer";
 			mes "to check the surface";
 			mes "temperature of the ground";
@@ -6154,7 +6154,7 @@ thor_v01,37,234,3	script	Hot Land Surface#1	HIDDEN_NPC,{
 
 thor_v02,165,37,3	script	Hot Land Surface#2	HIDDEN_NPC,{
 	if (aru_vol == 9) {
-		if ((countitem(7704) > 0) && (countitem(7342) > 0)) {
+		if ((countitem(Broken_Thermometer) > 0) && (countitem(File01) > 0)) {
 			mes "^3355FFYou use the pyrometer";
 			mes "to check the surface";
 			mes "temperature of the ground";
@@ -6186,7 +6186,7 @@ thor_v02,165,37,3	script	Hot Land Surface#2	HIDDEN_NPC,{
 
 thor_v02,170,100,3	script	Hot Land Surface#3	HIDDEN_NPC,{
 	if (aru_vol == 10) {
-		if ((countitem(7704) > 0) && (countitem(7342) > 0)) {
+		if ((countitem(Broken_Thermometer) > 0) && (countitem(File01) > 0)) {
 			mes "^3355FFYou use the pyrometer";
 			mes "to check the surface";
 			mes "temperature of the ground";
@@ -6289,7 +6289,7 @@ que_thor,136,66,3	duplicate(VeinsGuard)	Guard#vol2	4_DST_SOLDIER
 que_thor,127,60,5	duplicate(VeinsGuard)	Guard#vol3	4_DST_SOLDIER
 
 thor_camp,250,104,3	script	Sahedi#vol	4_M_RASWORD,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -6367,7 +6367,7 @@ thor_camp,250,104,3	script	Sahedi#vol	4_M_RASWORD,{
 		mes "safe from any disaster.";
 		changequest 2121,2122;
 		aru_vol = 13;
-		delitem 7342,1; //File01
+		delitem File01,1; //File01
 		close;
 	}
 	else if ((aru_vol > 12) && (aru_vol < 23)) {
@@ -6482,7 +6482,7 @@ thor_camp,250,104,3	script	Sahedi#vol	4_M_RASWORD,{
 		mes "do about this disaster...";
 		changequest 2128,60211;
 		aru_vol = 24;
-		getitem 7342,1; //File01
+		getitem File01,1; //File01
 		close;
 	}
 	mes "[Sahedi]";

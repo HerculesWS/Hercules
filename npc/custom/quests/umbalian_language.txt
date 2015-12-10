@@ -106,7 +106,7 @@ amatsu,267,189,4	script	Marie	4_F_ALCHE,{
 	mes "[Marie]";
 	if(umb_lang==0) goto L_NOT_GOT_QUEST;
 	if(umb_lang==2 || umb_marie==1) goto L_AGAIN;
-	if(countitem(9001)>0 && countitem(643)>0) goto L_DONE;//Items: Poring Egg, Pet Incubator,
+	if(countitem(Poring_Egg)>0 && countitem(Pet_Incubator)>0) goto L_DONE;//Items: Poring Egg, Pet Incubator,
 	mes "Hello, is there something you need?";
 	next;
 	menu "No nothing at all.",M_NO,"Your teacher sent me.",-;
@@ -134,7 +134,7 @@ L_DONE:
 	menu "Yep!",-, "Sorry, no.",M_DOH;
 
 	mes "[Marie]";
-	if(countitem(9001)==0 && countitem(643)==0) goto M_DOH;//Items: Poring Egg, Pet Incubator,
+	if(countitem(Poring_Egg)==0 && countitem(Pet_Incubator)==0) goto M_DOH;//Items: Poring Egg, Pet Incubator,
 	mes "Yatta!  Here's a lil something in return.";
 	delitem 9001,1;//Items: Poring Egg,
 	delitem 643,1;//Items: Pet Incubator,
@@ -159,7 +159,7 @@ yuno,157,366,2	script	Wise Man Fabius	2_M_SAGE_OLD,{
 	mes "You speak Umbalian fluently! So you will never forget the language of Umbalians!";
 	close;
 L_Quest:
-	if((countitem(1006) < 1) || (countitem(7118) < 1) || (countitem(7117) < 1)) goto L_DONE;//Items: Old Magic Book, Torn Scroll, Torn Spell Book,
+	if((countitem(Old_Magic_Book) < 1) || (countitem(Rent_Scroll) < 1) || (countitem(Rent_Spell_Book) < 1)) goto L_DONE;//Items: Old Magic Book, Torn Scroll, Torn Spell Book,
 	delitem 1006,1;	//Items: Old Magic Book,
 	delitem 7118,1;	//Items: Torn Scroll,
 	delitem 7117,1;//Items: Torn Spell Book,

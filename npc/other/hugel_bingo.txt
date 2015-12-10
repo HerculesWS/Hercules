@@ -656,8 +656,8 @@ OnTouch:
 	if ($@bingowinner$ != strcharinfo(0)) end;
 	specialeffect EF_SUI_EXPLOSION;
 	soundeffect "tming_success.wav",1;
-	if ($@bingoresult == 16) getitem 7515,50;
-	else getitem 7515,1;
+	if ($@bingoresult == 16) getitem Marvelous_Medal,50;
+	else getitem Marvelous_Medal,1;
 	initnpctimer;
 	end;
 

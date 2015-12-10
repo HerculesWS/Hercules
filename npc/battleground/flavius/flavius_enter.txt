@@ -14,7 +14,7 @@
 // Flavius Officer - Guillaume
 //============================================================
 bat_room,133,178,5	script	Flavius Officer#01a	4_M_KY_KNT,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -74,7 +74,7 @@ bat_room,133,178,5	script	Flavius Officer#01a	4_M_KY_KNT,{
 }
 
 bat_room,133,121,1	script	Flavius Officer#01b	4_M_CRU_KNT,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -224,7 +224,7 @@ bat_room,151,121,1	script	Croix Knight#4	4_M_CRU_SOLD,{
 // Flavius Officer - Croix
 //============================================================
 bat_room,148,178,5	script	Flavius Officer#02a	4_M_KY_KNT,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -284,7 +284,7 @@ bat_room,148,178,5	script	Flavius Officer#02a	4_M_KY_KNT,{
 }
 
 bat_room,148,121,1	script	Flavius Officer#02b	4_M_CRU_KNT,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";

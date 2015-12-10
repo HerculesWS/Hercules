@@ -320,12 +320,12 @@ xmas,117,304,4	script	Poze	4_M_06,{
 
 xmas,176,236,4	script	Uncle Hairy	4_M_05,{
 	if (xmas_npc == 4) {
-		if (countitem(1024) > 0 && countitem(938) > 0) {
+		if (countitem(Chinese_Ink) > 0 && countitem(Sticky_Mucus) > 0) {
 			mes "[Cantata]";
 			mes "Oh? Y-y-you've got the stuff? Goooooooood. It's been so long since I've been able to have some of this... G-give it to me!";
 			next;
-			delitem 1024,1; // Chinese_Ink
-			delitem 938,1; // Sticky_Mucus
+			delitem Chinese_Ink,1; // Chinese_Ink
+			delitem Sticky_Mucus,1; // Sticky_Mucus
 			mes "^3355FFYou quickly handed him the Squid Ink and Sticky Mucus and watched with a little disgust as he relished the flavor.^000000";
 			next;
 			mes "[Cantata]";
@@ -452,7 +452,7 @@ xmas,176,236,4	script	Uncle Hairy	4_M_05,{
 }
 
 xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
-	if (checkweight(1201,1) == 0 ) {
+	if (checkweight(Knife,1) == 0 ) {
 		cutin "rutie_snownow01.bmp",2;
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -660,7 +660,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 				switch(.@snownow) {
 				case 1:
 					xmas_npc = 11;
-					getitem 529,5; // Candy
+					getitem Candy,5; // Candy
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Wow~!";
@@ -669,7 +669,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 2:
 					xmas_npc = 11;
-					getitem 529,10; // Candy
+					getitem Candy,10; // Candy
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Ooh~!";
@@ -677,7 +677,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 3:
 					xmas_npc = 11;
-					getitem 530,5; // Candy_Striper
+					getitem Candy_Striper,5; // Candy_Striper
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Hoooraaaay~!";
@@ -685,7 +685,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 4:
 					xmas_npc = 11;
-					getitem 530,10; // Candy_Striper
+					getitem Candy_Striper,10; // Candy_Striper
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Wow, that's so great!";
@@ -693,7 +693,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 5:
 					xmas_npc = 11;
-					getitem 539,1; // Piece_Of_Cake
+					getitem Piece_Of_Cake,1; // Piece_Of_Cake
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Aren't you lucky!";
@@ -701,7 +701,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 6:
 					xmas_npc = 11;
-					getitem 539,2; // Piece_Of_Cake
+					getitem Piece_Of_Cake,2; // Piece_Of_Cake
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Now, isn't that nice?";
@@ -709,7 +709,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 7:
 					xmas_npc = 11;
-					getitem 538,5; // Well_Baked_Cookie
+					getitem Well_Baked_Cookie,5; // Well_Baked_Cookie
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "Oh woooooow~!";
@@ -717,7 +717,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 					break;
 				case 8:
 					xmas_npc = 11;
-					getitem 538,10; // Well_Baked_Cookie
+					getitem Well_Baked_Cookie,10; // Well_Baked_Cookie
 					cutin "rutie_snownow02.bmp",2;
 					mes "[Snowysnow]";
 					mes "*Gasp!* Ooh~";

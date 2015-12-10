@@ -11,7 +11,7 @@
 //============================================================
 
 gonryun,180,118,4	script	Iron man#gnp	4_M_03,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -89,10 +89,10 @@ gonryun,180,118,4	script	Iron man#gnp	4_M_03,{
 	close;
 
 L_Lifting:
-	if (checkweight(7049,getarg(0))) {
+	if (checkweight(Stone,getarg(0))) {
 		mes "You lifted the Stone lightly.^000000";
 		in_battle = 1;
-		getitem 7049, getarg(0); // Stone
+		getitem Stone, getarg(0); // Stone
 		next;
 		emotion e_no1;
 		mes "[Songmoodoo]";

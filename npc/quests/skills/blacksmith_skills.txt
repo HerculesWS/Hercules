@@ -164,7 +164,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				close;
 			}
 			else if (BLACK_SK == 1) {
-				if (countitem(999) > 0 && countitem(1003) > 4 && countitem(971) > 0 && countitem(613) > 0) {
+				if (countitem(Steel) > 0 && countitem(Coal) > 4 && countitem(Detrimindexta) > 0 && countitem(Iron_Hammer) > 0) {
 					if (Zeny >= 500) {
 						mes "[Akkie]";
 						mes "Oh, you came back~";
@@ -180,10 +180,10 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 						mes "Alright, now please wait";
 						mes "while I get these materials";
 						mes "ready for forging, okay?";
-						delitem 1003,5; //Coal
-						delitem 999,1; //Steel
-						delitem 971,1; //Detrimindexta
-						delitem 613,1; //Iron_Hammer
+						delitem Coal,5; //Coal
+						delitem Steel,1; //Steel
+						delitem Detrimindexta,1; //Detrimindexta
+						delitem Iron_Hammer,1; //Iron_Hammer
 						Zeny -= 500;
 						BLACK_SK = 2;
 						close;
@@ -268,7 +268,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				close;
 			}
 			else if (BLACK_SK == 3) {
-				if (countitem(999) > 0 && countitem(1003) > 2) {
+				if (countitem(Steel) > 0 && countitem(Coal) > 2) {
 					mes "[Akkie]";
 					mes "Oh, thank you so";
 					mes "much for bringing these";
@@ -276,8 +276,8 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 					mes "really hard to succeed";
 					mes "this time. Just give me";
 					mes "a minute to prepare...";
-					delitem 999,1; //Steel
-					delitem 1003,3; //Coal
+					delitem Steel,1; //Steel
+					delitem Coal,3; //Coal
 					BLACK_SK = 4;
 					close;
 				}
@@ -320,7 +320,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				close;
 			}
 			else if (BLACK_SK == 5) {
-				if (countitem(613) > 0) {
+				if (countitem(Iron_Hammer) > 0) {
 					mes "[Akkie]";
 					mes "^333333*Sniff*^000000 Did you";
 					mes "r-really bring this";
@@ -333,7 +333,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 					mes "give me a moment?";
 					mes "I'm going to try";
 					mes "one more time.";
-					delitem 613,1; //Iron_Hammer
+					delitem Iron_Hammer,1; //Iron_Hammer
 					BLACK_SK = 6;
 					close;
 				}

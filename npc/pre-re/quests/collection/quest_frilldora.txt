@@ -159,11 +159,11 @@ moc_fild17,66,273,5	script	Lemly#Frilldora_Hunt	4_F_JOB_ASSASSIN,{
 					// Item turn in
 					switch(select("I have some Frills:What did you need?")) {
 					case 1:
-						if (countitem(1012) > 24) {
+						if (countitem(Lizard_Scruff) > 24) {
 							mes "[Lemly]";
 							mes "Hey, thank you.";
 							mes "These are pretty icky though.";
-							delitem 1012,25; //Lizard_Scruff
+							delitem Lizard_Scruff,25; //Lizard_Scruff
 							getexp 30000,23000;
 							close;
 						}

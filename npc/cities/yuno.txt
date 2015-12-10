@@ -77,7 +77,7 @@ yuno,337,227,4	script	Juno Granny#juno	8_F_GRANDMOTHER,{
 				mes "*Giggle*";
 				mes "There you go~";
 				Zeny -= 1000;
-				getitem 529,1; //Candy
+				getitem Candy,1; //Candy
 				next;
 				mes "[Granny]";
 				mes "*Giggle*";
@@ -168,7 +168,7 @@ yuno,165,111,4	script	Juno Sage#juno	2_F_MAGICMASTER,,{
 				mes "[Le Morpheus]";
 				mes "As you have chosen, you will forget everything, and remain in this virtual reality.";
 				Zeny -= 5000;
-				getitem 507,1; //Red_Herb
+				getitem Red_Herb,1; //Red_Herb
 				close2;
 				warp "prontera",182,206;
 				end;
@@ -176,7 +176,7 @@ yuno,165,111,4	script	Juno Sage#juno	2_F_MAGICMASTER,,{
 			mes "[Le Morpheus]";
 			mes "You will see the truth.";
 			Zeny -= 5000;
-			getitem 510,1; //Blue_Herb
+			getitem Blue_Herb,1; //Blue_Herb
 			close2;
 			warp "pay_dun03",200,222;
 			end;

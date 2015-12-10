@@ -44,7 +44,7 @@
 6@tower	mapflag	src4instance
 //============================================================
 alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^008800Wait here!!";
 		mes "You're carrying too much stuff. Why don't you put some of it away, and then come back.^000000";
 		close;
@@ -1205,12 +1205,12 @@ function	script	F_Tower_Warp	{
 	setarray .@map$[1],"2@tower","3@tower","4@tower";
 	.@i = select("26th Level:51st Level:76th Level");
 
-	if (countitem(6000) < .@i) {
+	if (countitem(Dark_Ashes) < .@i) {
 		mes "-Warning-";
 		mes "To warp to the "+.@level$[.@i]+" Level, you need "+.@i+" Ashes of the Darkness.";
 		close;
 	}
-	delitem 6000,.@i; //Dark_Ashes
+	delitem Dark_Ashes,.@i; //Dark_Ashes
 	mapannounce instance_mapname("1@tower"), strcharinfo(0)+". You will be warped to the "+.@level$[.@i]+" Level.",bc_map,"0x00ff99";
 	warp instance_mapname(.@map$[.@i]),52,354;
 	close;
@@ -1336,7 +1336,7 @@ OnEnable:
 	end;
 
 OnTouch_:
-	getitem 6000,1; //Dark_Ashes
+	getitem Dark_Ashes,1; //Dark_Ashes
 	warp instance_mapname("2@tower"),52,354;
 	end;
 
@@ -1469,7 +1469,7 @@ OnEnable:
 	end;
 
 OnTouch_:
-	getitem 6000,1; //Dark_Ashes
+	getitem Dark_Ashes,1; //Dark_Ashes
 	warp instance_mapname("3@tower"),52,354;
 	end;
 
@@ -1585,7 +1585,7 @@ OnEnable:
 	end;
 
 OnTouch_:
-	getitem 6000,1; //Dark_Ashes
+	getitem Dark_Ashes,1; //Dark_Ashes
 	warp instance_mapname("4@tower"),52,354;
 	end;
 
@@ -1700,7 +1700,7 @@ OnEnable:
 	end;
 
 OnTouch_:
-	getitem 6000,1; //Dark_Ashes
+	getitem Dark_Ashes,1; //Dark_Ashes
 	warp instance_mapname("5@tower"),101,72;
 	end;
 
@@ -2131,7 +2131,7 @@ OnMyMobDead:
 }
 
 6@tower,169,127,2	script	Lost Soul#102	4_M_NFDEADSWDMAN,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You're carrying too much stuff. Why don't you put some of it away, and then come back?";
 		close;
 	}
@@ -2141,7 +2141,7 @@ OnMyMobDead:
 	mes "[Lost Souls]";
 	mes "Thank you so much. Now we can escape from this cold and dark place... to heaven.";
 	next;
-	if ((countitem(13412) > 0) && (countitem(13413) > 0)) {
+	if ((countitem(Twin_Edge_B) > 0) && (countitem(Twin_Edge_R) > 0)) {
 		mes "[Lost Souls]";
 		mes "Hey, you have the remnants of Nacht Sieger with you.";
 		next;
@@ -2158,9 +2158,9 @@ OnMyMobDead:
 				mes "[Lost Souls]";
 				mes "Good, then I'll combine these to create a two-handed sword.";
 				next;
-				delitem 13412,1; //Twin_Edge_B
-				delitem 13413,1; //Twin_Edge_R
-				getitem 1185,1; //Violet_Fear
+				delitem Twin_Edge_B,1; //Twin_Edge_B
+				delitem Twin_Edge_R,1; //Twin_Edge_R
+				getitem Violet_Fear,1; //Violet_Fear
 				break;
 			case 2:
 				mes "[Lost Souls]";

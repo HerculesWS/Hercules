@@ -1075,7 +1075,7 @@ louyang,174,150,5	script	Jiu Chi Ling#lou	4_F_CHNDRESS1,{
 // Doctor Quest :: dr_china
 //============================================================
 lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a minute! Right now, you're over weight, so you cannot receive more items. Please store some of your things in Kafra Storage and try again.^000000";
 		close;
 	}
@@ -1223,7 +1223,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		close;
 	}
 	else if (ch_par == 9) {
-		if (countitem(7252) < 1) {
+		if (countitem(Herb_Medicine) < 1) {
 			mes "[Hua Tuo]";
 			mes "Umm.....";
 			mes "Is that so...?";
@@ -1268,10 +1268,10 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			mes "[Hua Tuo]";
 			mes "This medicine is not that";
 			mes "great, but it's an old family secret. I hope it will be useful to you if you find yourself in great danger.";
-			delitem 7252,1; //Herb_Medicine
+			delitem Herb_Medicine,1; //Herb_Medicine
 			ch_par = 10;
 			completequest 11056;
-			getitem 679,2; //Gold_Pill
+			getitem Gold_Pill,2; //Gold_Pill
 			getexp RENEWAL_EXP?1000:10000,0;
 			next;
 			mes "[Hua Tuo]";
@@ -1350,7 +1350,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		close;
 	}
 	else if (ch_par == 16) {
-		if (countitem(7252) < 1) {
+		if (countitem(Herb_Medicine) < 1) {
 			mes "[Hua Tuo]";
 			mes "Umm.....";
 			mes "Is that so...?";
@@ -1387,10 +1387,10 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			mes "[Hua Tuo]";
 			mes "It's not much, but this medicine";
 			mes "is an old family secret. I hope that it will be of use to you in dangerous situations.";
-			delitem 7252,1; //Herb_Medicine
+			delitem Herb_Medicine,1; //Herb_Medicine
 			ch_par = 10;
 			completequest 11056;
-			getitem 679,2; //Gold_Pill
+			getitem Gold_Pill,2; //Gold_Pill
 			getexp RENEWAL_EXP?1000:10000,0;
 			next;
 			mes "[Hua Tuo]";
@@ -1423,7 +1423,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		close;
 	}
 	else if (ch_par == 17) {
-		if (countitem(7172) > 1 && countitem(7164) > 9 && countitem(7155) > 4 && countitem(7188) > 19 && countitem(7193) > 9 && countitem(7121) > 4) {
+		if (countitem(Leopard_Talon) > 1 && countitem(Hard_Peach) > 9 && countitem(Poison_Toad's_Skin) > 4 && countitem(Browny_Root) > 19 && countitem(Germinating_Sprout) > 9 && countitem(Honey_Jar) > 4) {
 			mes "[Hua Tuo]";
 			mes "Hm? Ah, you have returned.";
 			mes "Sorry, I was taking care of my other patients. Have you already gathered the medicines I'll need?";
@@ -1436,16 +1436,16 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			next;
 			mes "[Hua Tuo]";
 			mes "Please take this as a token of my appreciation. It's not much, but this medicine is an old family secret. I hope it will be helpful to you in dangerous situations.";
-			delitem 7172,2; //Leopard_Talon
-			delitem 7164,10; //Hard_Peach
-			delitem 7155,5; //Poison_Toad's_Skin
-			delitem 7188,20; //Browny_Root
-			delitem 7193,10; //Germinating_Sprout
-			delitem 7121,5; //Honey_Jar
-			delitem 7252,1; //Herb_Medicine
+			delitem Leopard_Talon,2; //Leopard_Talon
+			delitem Hard_Peach,10; //Hard_Peach
+			delitem Poison_Toad's_Skin,5; //Poison_Toad's_Skin
+			delitem Browny_Root,20; //Browny_Root
+			delitem Germinating_Sprout,10; //Germinating_Sprout
+			delitem Honey_Jar,5; //Honey_Jar
+			delitem Herb_Medicine,1; //Herb_Medicine
 			ch_par = 18;
 			completequest 11057;
-			getitem 679,5; //Gold_Pill
+			getitem Gold_Pill,5; //Gold_Pill
 			getexp RENEWAL_EXP?10000:30000,0;
 			next;
 			mes "[Hua Tuo]";
@@ -1576,7 +1576,7 @@ lou_in02,248,166,2	script	Tool Shop Master#lou	4_M_CHNOLD,{
 }
 
 lou_in02,201,166,4	script	Storage Keeper#lou	4_M_CHN8GUEK,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FF * Wait a moment!! *";
 		mes "Currently you're over weight, so you cannot receive more items into your inventory. Please store some of your items into Kafra Storage and try again.^000000";
 		close;
@@ -1799,7 +1799,7 @@ lou_in02,201,166,4	script	Storage Keeper#lou	4_M_CHN8GUEK,{
 		mes "we gotta help each other, right? Alright then, I'll see ya around.";
 		ch_par = 16;
 		changequest 11055,11056;
-		getitem 7252,1; //Herb_Medicine
+		getitem Herb_Medicine,1; //Herb_Medicine
 		close;
 	}
 	mes "[Jiang Xiayou]";
@@ -2157,7 +2157,7 @@ lou_in02,204,169,0	script	Supply Stack#1lou	HIDDEN_NPC,{
 				mes "You found a medicine.^000000";
 				ch_par = 9;
 				changequest 11050,11056;
-				getitem 7252,1; //Herb_Medicine
+				getitem Herb_Medicine,1; //Herb_Medicine
 				next;
 				mes "[Jiang Xiayou]";
 				mes "What...!";
@@ -2207,7 +2207,7 @@ lou_in02,207,168,0	script	Supply Stack#5lou	HIDDEN_NPC,{
 				mes "You found a medicine.^000000";
 				ch_par = 9;
 				changequest 11050,11056;
-				getitem 7252,1; //Herb_Medicine
+				getitem Herb_Medicine,1; //Herb_Medicine
 				next;
 				mes "[Jiang Xiayou]";
 				mes "Err...";
@@ -2259,7 +2259,7 @@ lou_in02,206,163,0	script	Supply Stack#4lou	HIDDEN_NPC,{
 				mes "You found a medicine.^000000";
 				ch_par = 9;
 				changequest 11050,11056;
-				getitem 7252,1; //Herb_Medicine
+				getitem Herb_Medicine,1; //Herb_Medicine
 				next;
 				mes "[Jiang Xiayou]";
 				mes "Err...";
@@ -2311,7 +2311,7 @@ lou_in02,198,170,0	script	Supply Stack#3lou	HIDDEN_NPC,{
 				mes "You found a medicine.^000000";
 				ch_par = 9;
 				changequest 11050,11056;
-				getitem 7252,1; //Herb_Medicine
+				getitem Herb_Medicine,1; //Herb_Medicine
 				next;
 				mes "[Jiang Xiayou]";
 				mes "Err...";
@@ -2363,7 +2363,7 @@ lou_in02,192,170,0	script	Supply Stack#2	HIDDEN_NPC,{
 				mes "You found a medicine.^000000";
 				ch_par = 9;
 				changequest 11050,11056;
-				getitem 7252,1; //Herb_Medicine
+				getitem Herb_Medicine,1; //Herb_Medicine
 				next;
 				mes "[Jiang Xiayou]";
 				mes "Err...";
@@ -2409,7 +2409,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 		// Remove outdated variable.
 		QL_POISONKING = 0;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FF * Wait a minute! *";
 		mes "Right now, you are carrying too many items with you. Please place some of your items into Kafra Storage and try again.^000000";
 		close;
@@ -2443,7 +2443,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 		mes "I lower my head";
 		mes "feeling homesick.";
 		next;
-		if ((countitem(506) > 0 || countitem(511) > 0 || countitem(716) > 0) && (ch_poison > 0 && rand(1,300) > 99)) {
+		if ((countitem(Green_Potion) > 0 || countitem(Green_Herb) > 0 || countitem(Red_Gemstone) > 0) && (ch_poison > 0 && rand(1,300) > 99)) {
 			switch(select("Ask about the poem.:Ask about his hometown.:Ask about use of Poison.:Ask about his situation.")) {
 			case 1:
 				mes "[Nagash Arses]";
@@ -3147,9 +3147,9 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 			mes "Did something happen to him?";
 			mes "I've been worried since he hasn't come to visit me since you last came to speak with me.";
 			next;
-			if (countitem(678) > 1) {
+			if (countitem(Poison_Bottle) > 1) {
 				if (select("Give him Poison Bottle.:Cancel and go to 'Song Zhi Du.") == 1) {
-					delitem 678,1; //Poison_Bottle
+					delitem Poison_Bottle,1; //Poison_Bottle
 					mes "[Nagash Arses]";
 					mes "Huh!?";
 					mes "Isn't this...!?";
@@ -3393,7 +3393,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 }
 
 lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FF * Wait a minute! *";
 		mes "You're carrying too many items with you right now. Please put some of your things into Kafra Storage and try again.^000000";
 		close;
@@ -3649,11 +3649,11 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		mes "I asked of you?";
 		next;
 		if (select("Yes.:What do you need again?") == 1) {
-			if (countitem(939) > 3 && countitem(937) > 9 && countitem(1093) > 9 && countitem(506) > 29) {
-				delitem 939,4; //Bee_Sting
-				delitem 937,10; //Posionous_Canine
-				delitem 1093,10; //Empty_Potion
-				delitem 506,30; //Green_Potion
+			if (countitem(Bee_Sting) > 3 && countitem(Posionous_Canine) > 9 && countitem(Empty_Potion) > 9 && countitem(Green_Potion) > 29) {
+				delitem Bee_Sting,4; //Bee_Sting
+				delitem Posionous_Canine,10; //Posionous_Canine
+				delitem Empty_Potion,10; //Empty_Potion
+				delitem Green_Potion,30; //Green_Potion
 				ch_poison = 8;
 				changequest 11072,11073;
 				mes "[Song Zhi Du]";
@@ -3714,8 +3714,8 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		close;
 	}
 	else if (ch_par > 9 && ch_poison == 9) {
-		if (countitem(7126) > 0) {
-			delitem 7126,countitem(7126); //Large_Jellopy
+		if (countitem(Large_Jellopy) > 0) {
+			delitem Large_Jellopy,countitem(Large_Jellopy); //Large_Jellopy
 			mes "[Song Zhi Du]";
 			mes "Ah. Thank you,";
 			mes "I needed this. Now,";
@@ -3766,7 +3766,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		close;
 	}
 	else if (ch_par > 9 && ch_poison == 10) {
-		if (countitem(939) > 3 && countitem(937) > 9 && countitem(1093) > 9 && countitem(506) > 29 && countitem(7126) > 0) {
+		if (countitem(Bee_Sting) > 3 && countitem(Posionous_Canine) > 9 && countitem(Empty_Potion) > 9 && countitem(Green_Potion) > 29 && countitem(Large_Jellopy) > 0) {
 			mes "[Song Zhi Du]";
 			mes "Oh! You brought";
 			mes "me everything I need!";
@@ -3777,11 +3777,11 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 			mes "who actually understands how";
 			mes "I feel. Thank you for gathering all of these ^FF0000materials^000000.";
 			next;
-			delitem 939,countitem(939); //Bee_Sting
-			delitem 937,countitem(937); //Posionous_Canine
-			delitem 1093,countitem(1093); //Empty_Potion
-			delitem 506,countitem(506); //Green_Potion
-			delitem 7126,countitem(7126); //Large_Jellopy
+			delitem Bee_Sting,countitem(Bee_Sting); //Bee_Sting
+			delitem Posionous_Canine,countitem(Posionous_Canine); //Posionous_Canine
+			delitem Empty_Potion,countitem(Empty_Potion); //Empty_Potion
+			delitem Green_Potion,countitem(Green_Potion); //Green_Potion
+			delitem Large_Jellopy,countitem(Large_Jellopy); //Large_Jellopy
 			mes "[Song Zhi Du]";
 			mes "Alright, now";
 			mes "to create the poison.";
@@ -3832,7 +3832,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 				mes "Now, revenge will be mine!";
 				next;
 				ch_poison = 11;
-				getitem 678,2; //Poison_Bottle
+				getitem Poison_Bottle,2; //Poison_Bottle
 				mes "[Song Zhi Du]";
 				mes "Hahaha! Now, please";
 				mes "take this bottle. But be careful. Even if you smell it just a little, it can cause your body to decompose, leading to death.";
@@ -3984,7 +3984,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		mes "But before you go, let me give you some poison and a medicinal pill.";
 		mes "I made these with the leftover materials and medicine in the storage.";
 		ch_poison = 14;
-		getitem 678,3; //Poison_Bottle
+		getitem Poison_Bottle,3; //Poison_Bottle
 		next;
 		mes "[Song Zhi Du]";
 		mes "Please take the";
@@ -4062,7 +4062,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		mes "need them any longer.";
 		ch_poison = 21;
 		completequest 11083;
-		getitem 678,5; //Poison_Bottle
+		getitem Poison_Bottle,5; //Poison_Bottle
 		next;
 		mes "[Song Zhi Du]";
 		mes "Thank you";
@@ -4083,7 +4083,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 }
 
 lou_fild01,224,348,0	script	Lady#delivery	4_F_CHNDRESS3,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FF * Wait a minute! *";
 		mes "Currently, you're carrying too many items. Please put some of your things into Kafra Storage and try again.^000000";
 		close;
@@ -4163,7 +4163,7 @@ lou_fild01,224,348,0	script	Lady#delivery	4_F_CHNDRESS3,{
 				next;
 				if (Zeny > 999) {
 					Zeny -= 1000;
-					getitem 7126,1; //Large_Jellopy
+					getitem Large_Jellopy,1; //Large_Jellopy
 					mes "[Lady]";
 					mes "Thank you~";
 					mes "Now that the fee is paid,";
@@ -4332,7 +4332,7 @@ lou_in01,107,163,0	script	 #lou_drink1	HIDDEN_NPC,{
 		mes "^3355FFYou found a drink bottle that's possibly owned by Bai Long, lord of Louyang.^00000";
 		next;
 		mes "^3355FFYou put the deadly poison into the bottle.^000000";
-		delitem 678,1; //Poison_Bottle
+		delitem Poison_Bottle,1; //Poison_Bottle
 		ch_poison = 13;
 		changequest 11076,11077;
 		close;
@@ -4342,10 +4342,10 @@ lou_in01,107,163,0	script	 #lou_drink1	HIDDEN_NPC,{
 		close;
 	}
 	else if (ch_poison == 16) {
-		if (countitem(938) > 0 && countitem(713) > 0) {
+		if (countitem(Sticky_Mucus) > 0 && countitem(Empty_Bottle) > 0) {
 			mes "^3355FFYou take the drink bottle and replace it with a bottle filled with Sticky Mucus. Hopefully Bai Long won't notice!^000000";
-			delitem 938,1; //Sticky_Mucus
-			delitem 713,1; //Empty_Bottle
+			delitem Sticky_Mucus,1; //Sticky_Mucus
+			delitem Empty_Bottle,1; //Empty_Bottle
 			ch_poison = 17;
 			changequest 11079,11080;
 			close;
@@ -4376,7 +4376,7 @@ lou_in01,118,167,0	script	 #lou_drink2	HIDDEN_NPC,{
 }
 
 lou_in01,99,158,4	script	Lord#bailong	4_M_CHNGENERL,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FF * Wait a minute! *";
 		mes "Right now you're carrying too many items. Please put some of your things into Kafra Storage and try again.^000000";
 		close;
@@ -4451,7 +4451,7 @@ lou_in01,99,158,4	script	Lord#bailong	4_M_CHNGENERL,{
 			mes "Please, take this as a token of gratitute. And please deliver this letter to Nagash and Song Zhi Du for me.";
 			ch_poison = 19;
 			changequest 11081,11802;
-			getitem 603,1; //Old_Blue_Box
+			getitem Old_Blue_Box,1; //Old_Blue_Box
 			next;
 			mes "^3355FFYou obtained ^0000FFBai Long's letter^000000.";
 			next;
@@ -4736,9 +4736,9 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 				mes "Since flammable chemicals are not allowed inside government offices, you must keep them well hidden. If the chemicals are equally divided among the eight of you, we might succeed!";
 				next;
 				QL_REVOL = 8;
-				getitem 7068,8; //Burn_Tree
-				getitem 7096,8; //Cold_Magma
-				getitem 7004,8; //Mud_Lump
+				getitem Burn_Tree,8; //Burn_Tree
+				getitem Cold_Magma,8; //Cold_Magma
+				getitem Mud_Lump,8; //Mud_Lump
 				mes "[Sun Mao]";
 				mes "There you go. Now, divide these materials equally among the eight of you. The eight of you must fully cooperate with each other, or our plan will fail. Understood?";
 				close;
@@ -4799,17 +4799,17 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 			}
 		} else if (QL_REVOL == 8) {
 			if (@partymember == 8) {
-				if (countitem(7204) > 7) {
+				if (countitem(Gunpowder) > 7) {
 					mes "[Sun Mao]";
 					mes "Welcome back! I see that the mission has been successfully accomplished! Great work, men!";
 					next;
 					mes "[Sun Mao]";
 					mes "Finally, we have a weapon to mete out severe retribution to our enemies, the corrupt government officials and the evil martial arts organizations! I appreciate your help, comrades.";
 					next;
-					delitem 7204,countitem(7204);
+					delitem Gunpowder,countitem(Gunpowder);
 					ch_make = 0;
 					QL_REVOL = 9;
-					getitem 668,8;
+					getitem Handsei,8;
 					mes "[Sun Mao]";
 					mes "Please take these funds and share them with your party members. I hope that all of you will lend your power to our cause once again.";
 					next;
@@ -4873,7 +4873,7 @@ lou_in01,43,147,3	script	Gunpowder Expert	4_M_ALCHE_C,{
 			mes "Mao's plans are flawless,";
 			mes "so I'm sticking to the scenario he's drawn up. You're either improvising needlessly, or you're not really my comrade...";
 			close;
-		} else if (countitem(7068) && countitem(7096) && countitem(7004)) {
+		} else if (countitem(Burn_Tree) && countitem(Cold_Magma) && countitem(Mud_Lump)) {
 			mes "[Hao Chenryu]";
 			mes "Ah, I see that Mao";
 			mes "has sent you. I'm sorry";
@@ -4889,13 +4889,13 @@ lou_in01,43,147,3	script	Gunpowder Expert	4_M_ALCHE_C,{
 			next;
 			switch(select("Make Gunpowder.:Cancel.")) {
 			case 1:
-				delitem 7068,1; //Burn_Tree
-				delitem 7096,1; //Cold_Magma
-				delitem 7004,1; //Mud_Lump
+				delitem Burn_Tree,1; //Burn_Tree
+				delitem Cold_Magma,1; //Cold_Magma
+				delitem Mud_Lump,1; //Mud_Lump
 				mes "[Hao Chenryu]";
 				mes "I don't want you to be caught if the soldiers inspect your goods. It will be better if one of you carry a Cart and hide the gunpowder in there.";
 				ch_make = 1;
-				getitem 7204,1; //Gunpowder
+				getitem Gunpowder,1; //Gunpowder
 				close;
 			case 2:
 				mes "[Hao Chenryu]";
@@ -4923,7 +4923,7 @@ lou_in01,43,147,3	script	Gunpowder Expert	4_M_ALCHE_C,{
 			mes "from your party leader.";
 			close;
 		}
-	} else if (countitem(7204)) {
+	} else if (countitem(Gunpowder)) {
 		mes "[Hao Chenryu]";
 		mes "Be careful!";
 		mes "It's easy for";
@@ -4940,7 +4940,7 @@ lou_in01,43,147,3	script	Gunpowder Expert	4_M_ALCHE_C,{
 }
 
 lou_in01,45,138,3	script	Soldier#1	4_M_CHNSOLDIER,{
-	if (countitem(7204)) {
+	if (countitem(Gunpowder)) {
 		mes "[Soldier]";
 		mes "Hold on there!";
 		next;
@@ -4958,7 +4958,7 @@ lou_in01,45,138,3	script	Soldier#1	4_M_CHNSOLDIER,{
 }
 
 lou_in01,82,139,7	script	Soldier#2	4_M_CHNSOLDIER,{
-	if (countitem(7068) || countitem(7096) || countitem(7004)) {
+	if (countitem(Burn_Tree) || countitem(Cold_Magma) || countitem(Mud_Lump)) {
 		mes "[Soldier]";
 		mes "I am sorry, but it is prohibited to enter with some of the products";
 		mes "you are carrying. I cannot let you in.";

@@ -63,7 +63,7 @@ prontera,152,192,5	script	Pumpkin Hat Researcher	4_M_05,{
 				mes "[Pumpkin Hat Researcher]";
 				mes "Do you want to get Pumpkin Pies? Okay, let me count the Jack o' Pumpkins you've brought.";
 				next;
-				if(countitem(1062) < 20) {
+				if(countitem(Pumpkin_Head) < 20) {
 					mes "[Pumpkin Hat Researcher]";
 					mes "I need ^4a4aff20 Jack o' Pumpkin^000000.";
 					mes "I'm not an alchemist or a wizard to create something from nothing.";
@@ -76,8 +76,8 @@ prontera,152,192,5	script	Pumpkin Hat Researcher	4_M_05,{
 				}else{
 					mes "[Pumpkin Hat Researcher]";
 					mes "I hope this will be useful to you. Don't forget to wear it while fighting to get your Pumpkin Pies.";
-					delitem 1062,20;	// Jack o' Pumpkin
-					getitem 5668,1;		// Weird Pumpkin Hat
+					delitem Pumpkin_Head,20;	// Jack o' Pumpkin
+					getitem Weird_Pumpkin_Hat,1;		// Weird Pumpkin Hat
 					next;
 					mes "[Pumpkin Hat Researcher]";
 					mes "I guess that I should get back to my research.";
@@ -114,7 +114,7 @@ OnTouch:
 	next;
 	switch(select("Candy:Candy Cane:Well-baked Cookie:Nothing")) {
 		case 1:
-			if(countitem(529) > 0) {
+			if(countitem(Candy) > 0) {
 				mes "[Trick or Treater]";
 				mes "Yay thank you!";
 				mes "Here, take this for being so nice!";
@@ -125,7 +125,7 @@ OnTouch:
 				sc_start SC_FOOD_DEX, 1800000, 5;
 				sc_start SC_FOOD_LUK, 1800000, 5;
 				sc_start SC_FOOD_BASICAVOIDANCE, 1800000, 15;
-				delitem 529,1;	// Candy
+				delitem Candy,1;	// Candy
 				close;
 			}else{
 				mes "[Trick or Treater]";
@@ -135,7 +135,7 @@ OnTouch:
 				close;
 			}
 		case 2:
-			if(countitem(530) > 0) {
+			if(countitem(Candy_Striper) > 0) {
 				mes "[Trick or Treater]";
 				mes "Yay thank you!";
 				mes "Here, take this for being so nice!";
@@ -146,7 +146,7 @@ OnTouch:
 				sc_start SC_FOOD_DEX, 1800000, 5;
 				sc_start SC_FOOD_LUK, 1800000, 5;
 				sc_start SC_FOOD_BASICAVOIDANCE, 1800000, 15;
-				delitem 530,1;	// Candy Cane
+				delitem Candy_Striper,1;	// Candy Cane
 				close;
 			}else{
 				mes "[Trick or Treater]";
@@ -156,7 +156,7 @@ OnTouch:
 				close;
 			}
 		case 3:
-			if(countitem(538) > 0) {
+			if(countitem(Well_Baked_Cookie) > 0) {
 				mes "[Trick or Treater]";
 				mes "Yay thank you!";
 				mes "Here, take this for being so nice!";
@@ -167,7 +167,7 @@ OnTouch:
 				sc_start SC_FOOD_DEX, 1800000, 5;
 				sc_start SC_FOOD_LUK, 1800000, 5;
 				sc_start SC_FOOD_BASICAVOIDANCE, 1800000, 15;
-				delitem 538,1;	// Well-baked Cookie
+				delitem Well_Baked_Cookie,1;	// Well-baked Cookie
 				close;
 			}else{
 				mes "[Trick or Treater]";
@@ -347,10 +347,10 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 					break;
 				}
 				else {
-					.@fabric = countitem(1059);
-					.@jack = countitem(1062);
-					.@worn = countitem(6299);
-					.@crushed = countitem(6298);
+					.@fabric = countitem(Transparent_Cloth);
+					.@jack = countitem(Pumpkin_Head);
+					.@worn = countitem(Worn_Cloth_Piece);
+					.@crushed = countitem(Pumpkin_Head_Crushed);
 					.@whispers = 0;
 					.@darklords = 0;
 
@@ -366,48 +366,48 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 
 					if(.@fabric > 0) {
 						if(.@fabric >= .@input) {
-							delitem 1059,.@input;
+							delitem Transparent_Cloth,.@input;
 							.@whispers += .@input;
 							.@input = 0;
 						}
 						else{
-							delitem 1059,.@fabric;
+							delitem Transparent_Cloth,.@fabric;
 							.@input -= .@fabric;
 							.@whispers += .@fabric;
 						}
 					}
 					if(.@worn > 0 && .@input != 0) {
 						if(.@worn >= .@input) {
-							delitem 6299,.@input;
+							delitem Worn_Cloth_Piece,.@input;
 							.@whispers += .@input;
 							.@input = 0;
 						}
 						else{
-							delitem 6299,.@worn;
+							delitem Worn_Cloth_Piece,.@worn;
 							.@input -= .@worn;
 							.@whispers += .@worn;
 						}
 					}
 					if(.@jack > 0 && .@input != 0) {
 						if(.@jack >= .@input) {
-							delitem 1062,.@input;
+							delitem Pumpkin_Head,.@input;
 							.@darklords += .@input;
 							.@input = 0;
 						}
 						else{
-							delitem 1062,.@jack;
+							delitem Pumpkin_Head,.@jack;
 							.@input -= .@jack;
 							.@darklords += .@jack;
 						}
 					}
 					if(.@crushed > 0 && .@input != 0) {
 						if(.@crushed >= .@input) {
-							delitem 6298,.@input;
+							delitem Pumpkin_Head_Crushed,.@input;
 							.@darklords += .@input;
 							.@input = 0;
 						}
 						else{
-							delitem 6298,.@crushed;
+							delitem Pumpkin_Head_Crushed,.@crushed;
 							.@input -= .@crushed;
 							.@darklords += .@crushed;
 						}

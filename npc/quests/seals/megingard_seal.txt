@@ -23,12 +23,12 @@
 //============================================================
 
 prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
-	if (checkweight(1301,3) == 0) {
+	if (checkweight(Axe,3) == 0) {
 		mes "- You are carrying too many items! -";
 		close;
 	}
 	cutin "god_rebeireb",2;
-	if ((countitem(7080) > 3) && (countitem(7081) > 4) && (countitem(7082) > 3) && (countitem(7084) > 2) && (countitem(7085) > 2)) {
+	if ((countitem(Foot_Step_Of_Cat) > 3) && (countitem(Beard_Of_Women) > 4) && (countitem(Root_Of_Stone) > 3) && (countitem(Saliva_Of_Bird) > 2) && (countitem(Tendon_Of_Bear) > 2)) {
 		mes "[Rebarev Doug]";
 		mes "What's this?";
 		mes "You...! You have";
@@ -41,12 +41,12 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 			mes "I'm the only human on earth";
 			mes "blessed with the ability to create Gleipnir. Aside from the Dwarves, I'm the only person that can make this item!";
 			next;
-			delitem 7080,4;  //Foot_Step_Of_Cat
-			delitem 7081,5;  //Beard_Of_Women
-			delitem 7082,4;  //Root_Of_Stone
-			delitem 7084,3;  //Saliva_Of_Bird
-			delitem 7085,3;  //Tendon_Of_Bear
-			getitem 7058,1; // Gullraifnir
+			delitem Foot_Step_Of_Cat,4;  //Foot_Step_Of_Cat
+			delitem Beard_Of_Women,5;  //Beard_Of_Women
+			delitem Root_Of_Stone,4;  //Root_Of_Stone
+			delitem Saliva_Of_Bird,3;  //Saliva_Of_Bird
+			delitem Tendon_Of_Bear,3;  //Tendon_Of_Bear
+			getitem Gullraifnir,1; // Gullraifnir
 			mes "[Rebarev Doug]";
 			mes "There you go!";
 			next;
@@ -811,7 +811,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 					mes "under dim light";
 					mes "for so long, my eyes have";
 					mes "gone bad. They should get me ^0000FFa new light^000000, otherwise I'll go blind sooner or later...";
-					if (god_eremes == 5 && (countitem(2203) > 0 || countitem(1041) > 0)) {
+					if (god_eremes == 5 && (countitem(Glasses) > 0 || countitem(Lantern) > 0)) {
 						next;
 						mes "[Librarian Jekan]";
 						mes "Hey, that's some pretty useful stuff that you've got with you. Do you mind letting me borrow it for a while? It'll help me in finding those files...";
@@ -827,15 +827,15 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 							mes "Oh, you are so kind!";
 							mes "Y-you really do want";
 							mes "to help me, don't you?";
-							if (countitem(2203) && countitem(1041)) {
-								delitem 1041,countitem(1041); //Lantern
-								delitem 2203,1; //Spectacles
+							if (countitem(Glasses) && countitem(Lantern)) {
+								delitem Lantern,countitem(Lantern); //Lantern
+								delitem Glasses,1; //Spectacles
 							}
-							else if (countitem(2203)) {
-								delitem 2203,1;
+							else if (countitem(Glasses)) {
+								delitem Glasses,1;
 							}
-							else if (countitem(1041)) {
-								delitem 1041,countitem(1041);
+							else if (countitem(Lantern)) {
+								delitem Lantern,countitem(Lantern);
 							}
 							god_eremes = 6;
 							next;
@@ -1059,7 +1059,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			close;
 		}
 		else if (god_eremes == 13) {
-			if (countitem(7111) > 1 && countitem(7151) && countitem(1024) > 2 && countitem(916) > 2 && countitem(717) > 19) {
+			if (countitem(Smooth_Paper) > 1 && countitem(Oil_Paper) && countitem(Chinese_Ink) > 2 && countitem(Feather_Of_Birds) > 2 && countitem(Blue_Gemstone) > 19) {
 				mes "[Librarian Jekan]";
 				mes "Oh, you came back.";
 				mes "I didn't expect you to return here so quickly. Whatever's inside must be really important for you to know.";
@@ -1069,11 +1069,11 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 				mes "give me a moment";
 				mes "while I make that";
 				mes "copy for you.";
-				delitem 7111,2;  //Smooth_Paper
-				delitem 7151,1;  //Oil_Paper
-				delitem 1024,3;  //Chinese_Ink
-				delitem 916,3;  //Feather_Of_Birds
-				delitem 717,20;  //Blue_Gemstone
+				delitem Smooth_Paper,2;  //Smooth_Paper
+				delitem Oil_Paper,1;  //Oil_Paper
+				delitem Chinese_Ink,3;  //Chinese_Ink
+				delitem Feather_Of_Birds,3;  //Feather_Of_Birds
+				delitem Blue_Gemstone,20;  //Blue_Gemstone
 				god_eremes = 14;
 				next;
 				mes "[Librarian Jekan]";
@@ -2016,35 +2016,35 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 				next;
 				mes "^3355FFYou try your best to calm him down and to tell him what you've found in the document.^000000";
 				next;
-				if ((countitem(740) > 0) || (countitem(741) > 0) || (countitem(742) > 0) || (countitem(743) > 0) || (countitem(750) > 0) || (countitem(751) > 0) || (countitem(752) > 0) || (countitem(753) > 0) || (countitem(754) > 0) || (countitem(7206) > 0) || (countitem(7212) > 0)){
-					if (countitem(740) > 0) {
+				if ((countitem(Stuffed_Doll) > 0) || (countitem(Poring_Doll) > 0) || (countitem(Chonchon_Doll) > 0) || (countitem(Spore_Doll) > 0) || (countitem(Baphomet_Doll) > 0) || (countitem(Osiris_Doll) > 0) || (countitem(Grasshopper_Doll) > 0) || (countitem(Monkey_Doll) > 0) || (countitem(Raccoondog_Doll) > 0) || (countitem(Black_Kitty_Doll) > 0) || (countitem(Hanging_Doll) > 0)){
+					if (countitem(Stuffed_Doll) > 0) {
 						.@toy$ = "Puppet";
 					}
-					else if (countitem(741) > 0) {
+					else if (countitem(Poring_Doll) > 0) {
 						.@toy$ = "Poring Doll";
 					}
-					else if (countitem(742) > 0) {
+					else if (countitem(Chonchon_Doll) > 0) {
 						.@toy$ = "Chonchon Doll";
 					}
-					else if (countitem(743) > 0) {
+					else if (countitem(Spore_Doll) > 0) {
 						.@toy$ = "Spore Doll";
 					}
-					else if (countitem(744) > 0) {
+					else if (countitem(Bunch_Of_Flowers) > 0) {
 						.@toy$ = "Baphomet Doll";
 					}
-					else if (countitem(751) > 0) {
+					else if (countitem(Osiris_Doll) > 0) {
 						.@toy$ = "Osiris Doll";
 					}
-					else if (countitem(752) > 0) {
+					else if (countitem(Grasshopper_Doll) > 0) {
 						.@toy$ = "Rocker Doll";
 					}
-					else if (countitem(753) > 0) {
+					else if (countitem(Monkey_Doll) > 0) {
 						.@toy$ = "Yoyo Doll";
 					}
-					else if (countitem(754) > 0) {
+					else if (countitem(Raccoondog_Doll) > 0) {
 						.@toy$ = "Racoon Doll";
 					}
-					else if (countitem(7206) > 0) {
+					else if (countitem(Black_Kitty_Doll) > 0) {
 						.@toy$ = "Black Cat Doll";
 					}
 					else {
@@ -2455,7 +2455,7 @@ alberta,196,146,0	script	Crusader#megin2	4_M_CRU,{
 }
 
 aldebaran,66,213,0	script	Lady#megin	1_F_04,{
-	if (checkweight(1301,3) == 0) {
+	if (checkweight(Axe,3) == 0) {
 		mes "- You are carrying too many items!";
 		close;
 	}
@@ -2506,7 +2506,7 @@ aldebaran,66,213,0	script	Lady#megin	1_F_04,{
 				next;
 				switch(select("About her past.:Why be a Kafra Lady?:About memories she can remember.")) {
 				case 1:
-					if (countitem(7015) > 0) {
+					if (countitem(Bookclip_In_Memory) > 0) {
 						mes "^3355FFThe scent of your";
 						mes "Memory Bookmark";
 						mes "seems to bring clarity";
@@ -2578,7 +2578,7 @@ aldebaran,66,213,0	script	Lady#megin	1_F_04,{
 					mes "I want to become a Kafra Lady.";
 					close;
 				case 3:
-					if (countitem(511) > 0 && god_megin_3 > 1) {
+					if (countitem(Green_Herb) > 0 && god_megin_3 > 1) {
 						mes "^3355FFEmma Searth clutches her head and winces as she suffers from another migraine.^000000";
 						next;
 						mes "^3355FFRemembering that a Green Herb was able to relieve Jack O, you gave a Green Herb to Emma. She takes it, and looks a little more relaxed.^000000";
@@ -2651,7 +2651,7 @@ aldebaran,66,213,0	script	Lady#megin	1_F_04,{
 			mes "[Emma Searth]";
 			mes "I really appreciate you coming here to talk to me about the old days. I, I want you to have this.";
 			god_eremes = 28;
-			getitem 603,1; // Old_Blue_Box
+			getitem Old_Blue_Box,1; // Old_Blue_Box
 			if (RENEWAL_EXP) {
 				if (BaseLevel < 56) getexp 2700,0;
 				else if ((BaseLevel > 55) && (BaseLevel < 61)) getexp 3000,0;
@@ -2851,7 +2851,7 @@ cmd_in02,190,94,3	script	Man#megin	4_M_ROGUE,{
 						close;
 					}
 					else if (god_megin_6 > 0 && god_megin_6 < 15) {
-						if (countitem(970) > 0) {
+						if (countitem(Alchol) > 0) {
 							mes "[Royal Myst]";
 							mes "Speaking of which,";
 							mes "I haven't had a drink";
@@ -2863,7 +2863,7 @@ cmd_in02,190,94,3	script	Man#megin	4_M_ROGUE,{
 							next;
 							mes "^3355FFBefore you can even think,";
 							mes "Royal Myst dips his hand into your inventory and helps himself to an Alcohol.^000000";
-							delitem 970,1;
+							delitem Alchol,1;
 							god_megin_6 += 2;
 							close;
 						}

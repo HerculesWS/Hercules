@@ -108,7 +108,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 					mes "If you can get ^0000FFSinging Crystal Pieces^000000, give them to me please?";
 					next;
 					select("Why not? Sure, I can give you some.");
-					if (countitem(6092) < 6) {
+					if (countitem(Singing_Crystal_Piece) < 6) {
 						mes "[Caroller]";
 						mes "Yes, please.";
 						next;
@@ -134,7 +134,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 							mes "If you can get ^0000FFSinging Crystal Pieces^000000, give them to me please?";
 							next;
 							emotion e_heh;
-							delitem 6092,6;
+							delitem Singing_Crystal_Piece,6;
 							getnameditem 12354,"+strcharinfo(0)+";
 							mes "[Caroller]";
 							mes "Let's care about others around you on this Christmas season!";
@@ -155,8 +155,8 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 							mes "If you can get ^0000FFSinging Crystal Pieces^000000, give them to me please?";
 							next;
 							emotion e_heh;
-							delitem 6092,6;
-							getitem 12354,1;
+							delitem Singing_Crystal_Piece,6;
+							getitem Buche_De_Noel,1;
 							mes "[Caroller]";
 							mes "Let's care about others around you on this Christmas season!";
 							close;
@@ -280,7 +280,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 	}
 
 	if (iROxmas08carol == 1) {
-		if (countitem(6092) < 6) {
+		if (countitem(Singing_Crystal_Piece) < 6) {
 			mes "[Caroller]";
 			mes "Maybe, it's quite hard to make a jukebox for the villages, but a music box might be possible.";
 			next;
@@ -335,7 +335,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 			mes "So, we need more of some materials.";
 			mes "^0000FF10 Trunk, 1 Hammer Of Blacksmith, 1 Jubilee, 10 Sticky Mucus, 3carat Diamond^000000!";
 			next;
-			delitem 6092,6;
+			delitem Singing_Crystal_Piece,6;
 			emotion e_ok;
 			iROxmas08carol = 2;
 			mes "[Caroller]";
@@ -346,7 +346,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 	}
 
 	if (iROxmas08carol == 2) {
-		if (countitem(1019) < 10 || countitem(1005) < 1 || countitem(7312) < 1 || countitem(938) < 10 || countitem(732) < 1) {
+		if (countitem(Wooden_Block) < 10 || countitem(Hammer_Of_Blacksmith) < 1 || countitem(Jubilee) < 1 || countitem(Sticky_Mucus) < 10 || countitem(Crystal_Jewel__) < 1) {
 			mes "[Caroller]";
 			mes "We can make a music box with Singing Crystal Pieces.";
 			mes "It's handy, you can hear carols anywhere. Sounds cool?";
@@ -416,13 +416,13 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 			mes "Don't worry, it tastes good.";
 			next;
 			emotion e_ok;
-			getitem 2784,1;
+			getitem Oh_Holy_Night,1;
 			getnameditem 12354,"+strcharinfo(0)+";
-			delitem 1019,10;
-			delitem 1005,1;
-			delitem 7312,1;
-			delitem 938,10;
-			delitem 732,1;
+			delitem Wooden_Block,10;
+			delitem Hammer_Of_Blacksmith,1;
+			delitem Jubilee,1;
+			delitem Sticky_Mucus,10;
+			delitem Crystal_Jewel__,1;
 			iROxmas08carol = 3;
 			mes "[Caroller]";
 			mes "Thanks a lot.";
@@ -628,40 +628,40 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 			.@SantaCardPrize = rand(1,12);
 			next;
 			if (.@SantaCardPrize == 1) {
-				getitem 12354,2;
+				getitem Buche_De_Noel,2;
 			}
 			else if (.@SantaCardPrize == 2) {
-				getitem 595,3;
+				getitem Mushroom_Pancake,3;
 			}
 			else if (.@SantaCardPrize == 3) {
-				getitem 593,3;
+				getitem Honey_Pancake,3;
 			}
 			else if (.@SantaCardPrize == 4) {
-				getitem 12236,3;
+				getitem Choco_Tart,3;
 			}
 			else if (.@SantaCardPrize == 5) {
-				getitem 538,10;
+				getitem Well_Baked_Cookie,10;
 			}
 			else if (.@SantaCardPrize == 6) {
-				getitem 14546,10;
+				getitem Fire_Cracker_Love,10;
 			}
 			else if (.@SantaCardPrize == 7) {
-				getitem 5136,1;
+				getitem Santa's_Hat_,1;
 			}
 			else if (.@SantaCardPrize == 8) {
-				getitem 603,1;
+				getitem Old_Blue_Box,1;
 			}
 			else if (.@SantaCardPrize == 9) {
-				getitem 12130,1;
+				getitem Cookie_Bag,1;
 			}
 			else if (.@SantaCardPrize == 10) {
-				getitem 14550,10;
+				getitem Fire_Cracker_Xmas,10;
 			}
 			else if (.@SantaCardPrize == 11) {
-				getitem 12132,3;
+				getitem Red_Bag,3;
 			}
 			else if (.@SantaCardPrize == 12) {
-				getitem 594,3;
+				getitem Sour_Cream_Pancake,3;
 			}
 			SantaCardTime = gettimetick(2)+3600;
 			mes "[Santa Claus]";
@@ -778,7 +778,7 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	4_F_06,{
 	mes "[Louise Kim]";
 	mes "If you bring me all that stuff, I can make you a glamorous Santa costume.";
 	next;
-	if (countitem(2301) < 1 || countitem(501) < 3 || countitem(523) < 1 || countitem(7175) < 4 || countitem(7174) < 1) {
+	if (countitem(Cotton_Shirt) < 1 || countitem(Red_Potion) < 3 || countitem(Holy_Water) < 1 || countitem(Packing_Paper) < 4 || countitem(Packing_Ribbon) < 1) {
 			mes "[Louise Kim]";
 			mes "If you were to bring me all the stuff, I would make you a wonderful costume, for free...";
 			next;
@@ -842,12 +842,12 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	4_F_06,{
 		mes "[Louise Kim]";
 		mes "I am supposed to get paid well, however I will just let it be free, since this is Christmas!";
 		next;
-		delitem 2301,1;
-		delitem 501,3;
-		delitem 523,1;
-		delitem 7175,4;
-		delitem 7174,1;
-		getitem 12132,1;
+		delitem Cotton_Shirt,1;
+		delitem Red_Potion,3;
+		delitem Holy_Water,1;
+		delitem Packing_Paper,4;
+		delitem Packing_Ribbon,1;
+		getitem Red_Bag,1;
 		mes "[Louise Kim]";
 		mes "Go brag about these wonderful clothes. There wouldn't be any without me, Louise Kim.";
 		close;

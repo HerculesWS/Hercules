@@ -3412,7 +3412,7 @@ eclage,282,255,4	script	Wuhari#eclbig	4_M_FAIRYKID6,{
 					mes "[Wuhari]";
 					mes "Sure, I'll write you another one " + strcharinfo(PC_NAME) + ". Compared to the trouble you have to go through, this is not a problem at all.";
 					getitem Younger_Bro_Letter,1; //Younger_Bro_Letter
-					//getitem 7148,1
+					//getitem Mother_Letter,1
 					close;
 				}
 			case 2:

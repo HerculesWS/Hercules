@@ -193,10 +193,10 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 				mes "like I asked you to?";
 				next;
 				if (select("There you are.:No, not yet...") == 1) {
-					if (countitem(732) > 0 && countitem(929) > 0 && countitem(748) > 0) {
-						delitem 732,1; //Crystal_Jewel__
-						delitem 929,1; //Immortal_Heart
-						delitem 748,1; //Witherless_Rose
+					if (countitem(Crystal_Jewel__) > 0 && countitem(Immortal_Heart) > 0 && countitem(Witherless_Rose) > 0) {
+						delitem Crystal_Jewel__,1; //Crystal_Jewel__
+						delitem Immortal_Heart,1; //Immortal_Heart
+						delitem Witherless_Rose,1; //Witherless_Rose
 						SOUL_Q = 2;
 						changequest 6005,6006;
 						mes "[Kid]";

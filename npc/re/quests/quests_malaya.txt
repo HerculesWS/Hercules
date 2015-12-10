@@ -26,7 +26,7 @@
 // Cautious Village & Daily Quests :: hi_malaya
 //============================================================
 malaya,266,76,3	script	Rodel the Guard#malaya	4_MAL_SOLDIER,4,4,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -146,9 +146,9 @@ malaya,266,76,3	script	Rodel the Guard#malaya	4_MAL_SOLDIER,4,4,{
 				mes "[Rodel the Guard]";
 				mes "I think there will be more Jejeling hunts in the future. Please join us again next time.";
 //				if (IsPremiumPcCafe == 10)
-					getitem 6497, 2; // Lesser_Agimat
+					getitem Lesser_Agimat, 2; // Lesser_Agimat
 //				else
-//					getitem 6497, 1; // Lesser_Agimat
+//					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				erasequest 7404;
 				setquest 7405;
@@ -182,7 +182,7 @@ OnInit:
 }
 
 malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -436,7 +436,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 				setquest 7397;
 				close;
 			} else if (malaya_diwata == 3) {
-				if ((countitem(6509) < 3) || (countitem(6510) < 3) && (countitem(6511) < 3)) {
+				if ((countitem(Mysterious_Flower) < 3) || (countitem(Elegant_Flower) < 3) && (countitem(Beautiful_Flower) < 3)) {
 					mes "[Phong in Mumbaki]";
 					mes "There are ^4d4dff3 Mystic Flowers, 3 Elegant Flowers, 3 Pretty Flowers^000000.";
 					mes "Do you understand?";
@@ -457,10 +457,10 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 				mes "[Phong in Mumbaki]";
 				mes "Now, deliver this to that child.";
 				mes "I hope she opens her heart with this and becomes willing to talk to you.";
-				delitem 6509, 3; // Mysterious_Flower
-				delitem 6510, 3; // Elegant_Flower
-				delitem 6511, 3; // Beautiful_Flower
-				getitem 6506, 1; // Memorial_Bouquet
+				delitem Mysterious_Flower, 3; // Mysterious_Flower
+				delitem Elegant_Flower, 3; // Elegant_Flower
+				delitem Beautiful_Flower, 3; // Beautiful_Flower
+				getitem Offering_Bouquet, 1; // Memorial_Bouquet
 				malaya_diwata = 4;
 				erasequest 7397;
 				setquest 7398;
@@ -488,14 +488,14 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 				mes "A tribute must be sincere. Don't forget that.";
 				close;
 			}
-			if (countitem(6506) > 0) {
+			if (countitem(Offering_Bouquet) > 0) {
 				mes "[Phong in Mumbaki]";
 				mes "Isn't it already made?";
 				mes "What is that in your hand?";
 				mes "Why are you standing around here? Go and give out those flowers.";
 				close;
 			}
-			if ((countitem(6509) < 3) || (countitem(6510) < 3) || (countitem(6511) < 3)) {
+			if ((countitem(Mysterious_Flower) < 3) || (countitem(Elegant_Flower) < 3) || (countitem(Beautiful_Flower) < 3)) {
 				mes "[Phong in Mumbaki]";
 				mes "Going to Diwata?";
 				mes "You need Mysterious Flowers, Elegant Flowers and Beautiful Flowers, 3 of each, okay?";
@@ -509,17 +509,17 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 			mes "[Phong in Mumbaki]";
 			mes "Hey, here's the Bouquet.";
 			mes "Make offerings with your soul and wish for a fruitful day.";
-			delitem 6509, 3; // Mysterious_Flower
-			delitem 6510, 3; // Elegant_Flower
-			delitem 6511, 3; // Beautiful_Flower
-			getitem 6506, 1; // Memorial_Bouquet
+			delitem Mysterious_Flower, 3; // Mysterious_Flower
+			delitem Elegant_Flower, 3; // Elegant_Flower
+			delitem Beautiful_Flower, 3; // Beautiful_Flower
+			getitem Offering_Bouquet, 1; // Memorial_Bouquet
 			close;
 		}
 	}
 }
 
 malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -611,7 +611,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 			close;
 		}
 	} else if (malaya_hi == 21) {
-		if ((countitem(6501) < 6) || (countitem(6500) < 6) || (countitem(6502) < 6)) {
+		if ((countitem(Salt_Bag) < 6) || (countitem(Sharp_Bamboo) < 6) || (countitem(Silver_Cross) < 6)) {
 			mes "[Imelda]";
 			mes "I'll approve you as worthy if you bring all the materials for the Spiritual Protection!";
 			next;
@@ -630,9 +630,9 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 		mes "Now I'm going through the holy ritual to make a traditional Spiritual Protection.";
 		mes "Give them to me! And don't bother me during the process!";
 		malaya_hi = 22;
-		delitem 6500, 6; // Sharp_Bamboo
-		delitem 6501, 6; // Salt_Bag
-		delitem 6502, 6; // Silver_Cross
+		delitem Sharp_Bamboo, 6; // Sharp_Bamboo
+		delitem Salt_Bag, 6; // Salt_Bag
+		delitem Silver_Cross, 6; // Silver_Cross
 		erasequest 7366;
 		setquest 7367;
 		close;
@@ -656,7 +656,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 			mes "Took the Spiritual Protection, despite her ridiculous logic and vigor.";
 			mes "Let's give them to the villagers.";
 			malaya_hi = 23;
-			getitem 6503, 6; // Soul_Protection
+			getitem Soul_Protection, 6; // Soul_Protection
 			erasequest 7367;
 			setquest 7368;
 			setquest 7369;
@@ -699,9 +699,9 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 		erasequest 7379;
 		setquest 7375;
 //		if (IsPremiumPcCafe == 10)
-			getitem 6497, 2; // Lesser_Agimat
+			getitem Lesser_Agimat, 2; // Lesser_Agimat
 //		else
-//			getitem 6497, 1; // Lesser_Agimat
+//			getitem Lesser_Agimat, 1; // Lesser_Agimat
 		getexp 200000,200000;
 		if (rand(2))
 			$malayaNames$[0] = strcharinfo(0);
@@ -715,7 +715,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 		switch (select("I'll help you making Spiritual Protections.:Love and Spiritual Protection for all.")) {
 		case 1:
 			if (questprogress(7380)) {
-				if ((countitem(6501) < 6) || (countitem(6502) < 6) || (countitem(6500) < 6)) {
+				if ((countitem(Salt_Bag) < 6) || (countitem(Silver_Cross) < 6) || (countitem(Sharp_Bamboo) < 6)) {
 					mes "[Imelda]";
 					mes "Materials for making a Spiritual Protection are";
 					mes "Salt Bags, Silver Crosses and Sharpened Bamboos, 6 of each.";
@@ -731,15 +731,15 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 				mes "[Imelda]";
 				mes "It'll be nice if you could help again tomorrow.";
 				mes "Here's something for your trouble.";
-				delitem 6500, 6; // Sharp_Bamboo
-				delitem 6501, 6; // Salt_Bag
-				delitem 6502, 6; // Silver_Cross
+				delitem Sharp_Bamboo, 6; // Sharp_Bamboo
+				delitem Salt_Bag, 6; // Salt_Bag
+				delitem Silver_Cross, 6; // Silver_Cross
 				erasequest 7380;
 				setquest 7381;
 //				if (IsPremiumPcCafe == 10)
-					getitem 6497, 2; // Lesser_Agimat
+					getitem Lesser_Agimat, 2; // Lesser_Agimat
 //				else
-//					getitem 6497, 1; // Lesser_Agimat
+//					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				close;
 			} else {
@@ -805,9 +805,9 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 				erasequest 7374;
 				erasequest 7379;
 //				if (IsPremiumPcCafe == 10)
-					getitem 6497, 2; // Lesser_Agimat
+					getitem Lesser_Agimat, 2; // Lesser_Agimat
 //				else
-//					getitem 6497, 1; // Lesser_Agimat
+//					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				if (rand(2))
 					$malayaNames$[0] = strcharinfo(0);
@@ -843,7 +843,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 						setquest 7371;
 						setquest 7372;
 						setquest 7373;
-						getitem 6503, 6; // Soul_Protection
+						getitem Soul_Protection, 6; // Soul_Protection
 						close;
 					} else {
 						mes "[Imelda]";
@@ -878,7 +878,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 						setquest 7371;
 						setquest 7372;
 						setquest 7373;
-						getitem 6503, 6; // Soul_Protection
+						getitem Soul_Protection, 6; // Soul_Protection
 						close;
 					} else {
 						mes "[Imelda]";
@@ -896,7 +896,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 }
 
 malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -956,7 +956,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 			mes "I'm sorry I ignored you.";
 			close;
 		}
-		if (!countitem(523) || !countitem(717)) {
+		if (!countitem(Holy_Water) || !countitem(Blue_Gemstone)) {
 			mes "^4d4dffPrepare and give Blue Gemstone and Holy Water. ^000000";
 			close;
 		}
@@ -970,8 +970,8 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 		mes "...Peace is always good. Yes.";
 		next;
 		mes "- Gave Holy Water and Blue Gemstone to Old Man Nardo.-";
-		delitem 717, 1; //Blue_Gemstone
-		delitem 523, 1; //Holy_Water
+		delitem Blue_Gemstone, 1; //Blue_Gemstone
+		delitem Holy_Water, 1; //Holy_Water
 		setquest 7360;
 		completequest 7360;
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
@@ -1028,7 +1028,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 			close;
 		case 2:
 			if (questprogress(7374) && questprogress(7369)) {
-				if (!countitem(6503)) {
+				if (!countitem(Soul_Protection)) {
 					mes "^4d4dffThere's no Spiritual Protection to give to the Old Man.^000000";
 					close;
 				}
@@ -1038,7 +1038,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 				mes "I am always in your and Imelda's debt.";
 				next;
 				mes "-Delivered the Spiritual Protection to Old Man Nardo.-";
-				delitem 6503, 1; // Soul_Protection
+				delitem Soul_Protection, 1; // Soul_Protection
 				erasequest 7369;
 				setquest 7383;
 				if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
@@ -1090,7 +1090,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 				close;
 			 } else {
 				if (questprogress(7377)) {
-					if (countitem(6503) < 5) {
+					if (countitem(Soul_Protection) < 5) {
 						mes "[Old Man Nardo]";
 						mes "Did you deliver the cauldron in one piece?";
 						mes "Kiko in Mumbaki should have given you a Spiritual Protection. Do you have it?";
@@ -1104,13 +1104,13 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 					mes "[Old Man Nardo]";
 					mes "Please stop by again.";
 					mes "I always prepare the Cast Iron Cauldron needed at Baryo.";
-					delitem 6503, 5; // Soul_Protection
+					delitem Soul_Protection, 5; // Soul_Protection
 					setquest 7378;
 					erasequest 7377;
 //					if (IsPremiumPcCafe == 10)
-						getitem 6497, 2; // Lesser_Agimat
+						getitem Lesser_Agimat, 2; // Lesser_Agimat
 //					else
-//						getitem 6497, 1; // Lesser_Agimat
+//						getitem Lesser_Agimat, 1; // Lesser_Agimat
 					getexp 200000,200000;
 					if (!rand(3))
 						$malayaNames$[2] = strcharinfo(0);
@@ -1146,7 +1146,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 							mes "This is the Cast Iron Cauldron. They have fine blacksmiths in Malaya.";
 							mes "Deliver this to Kiko in Mumbaki at the nearby town of Baryo Mahiwaga.";
 							setquest 7376;
-							getitem 6504, 5; // Cast_Iron_Caldron
+							getitem Cast_Iron_Caldron, 5; // Cast_Iron_Caldron
 							close;
 						case 3:
 							mes "[Old Man Nardo]";
@@ -1219,7 +1219,7 @@ malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 			mes "but I am braver with them.";
 			close;
 		}
-		if (!countitem(523) || !countitem(717)) {
+		if (!countitem(Holy_Water) || !countitem(Blue_Gemstone)) {
 			mes "^4d4dffPrepare and give Blue Gemstone and Holy Water. ^000000";
 			close;
 		}
@@ -1236,8 +1236,8 @@ malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 		mes "Hey... Could you give some for my daughter as well?";
 		next;
 		mes "- Gave Romel the prepared Holy Water and Blue Gemstone.-";
-		delitem 717, 1; //Blue_Gemstone
-		delitem 523, 1; //Holy_Water
+		delitem Blue_Gemstone, 1; //Blue_Gemstone
+		delitem Holy_Water, 1; //Holy_Water
 		setquest 7364;
 		completequest 7364;
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
@@ -1289,7 +1289,7 @@ malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 			mes "I'm okay for now.";
 			close;
 		}
-		if (!countitem(6503)) {
+		if (!countitem(Soul_Protection)) {
 			mes "^4d4dffThere are no Spiritual Protections to give to Romel.^000000";
 			close;
 		}
@@ -1299,7 +1299,7 @@ malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 		mes "This Spiritual Protection will also protect us.";
 		next;
 		mes "- Delivered Romel his Spiritual Protection.-";
-		delitem 6503, 1; // Soul_Protection
+		delitem Soul_Protection, 1; // Soul_Protection
 		erasequest 7373;
 		setquest 7387;
 		if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
@@ -1370,7 +1370,7 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 			mes "Daddy's braver now and that makes Talah stronger too.";
 			close;
 		}
-		if (!countitem(523) || !countitem(717)) {
+		if (!countitem(Holy_Water) || !countitem(Blue_Gemstone)) {
 			mes "^4d4dffPrepare and give Blue Gemstone and Holy Water. ^000000";
 			close;
 		}
@@ -1385,8 +1385,8 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 		mes "Is this stone going to keep Talah safe?";
 		next;
 		mes "- Delivered the Holy Water and Blue Gemstone to Talah. -";
-		delitem 717, 1; //Blue_Gemstone
-		delitem 523, 1; //Holy_Water
+		delitem Blue_Gemstone, 1; //Blue_Gemstone
+		delitem Holy_Water, 1; //Holy_Water
 		setquest 7363;
 		completequest 7363;
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
@@ -1413,7 +1413,7 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 			close;
 		}
 		if (questprogress(7374) && questprogress(7372)) {
-			if (!countitem(6503)) {
+			if (!countitem(Soul_Protection)) {
 				mes "^4d4dffThere is no Spiritual Protection to give to Talah.^000000";
 				close;
 			}
@@ -1424,7 +1424,7 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 			mes "Daddy likes it too.";
 			next;
 			mes "- Delivered new Spiritual Protection to Talah.-";
-			delitem 6503, 1; // Soul_Protection
+			delitem Soul_Protection, 1; // Soul_Protection
 			erasequest 7372;
 			setquest 7386;
 			if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
@@ -1453,7 +1453,7 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 }
 
 malaya,62,274,0	script	Sand Trap#malaya	4_SOIL,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -1461,7 +1461,7 @@ malaya,62,274,0	script	Sand Trap#malaya	4_SOIL,{
 		mes "A device to evaporate sea water is buried in the sand...";
 		close;
 	}
-	if (countitem(6501) >= 6) {
+	if (countitem(Salt_Bag) >= 6) {
 		mes "There's enough salt.";
 		close;
 	}
@@ -1473,7 +1473,7 @@ malaya,62,274,0	script	Sand Trap#malaya	4_SOIL,{
 	progressbar "0xffff00", 5;
 	disablenpc strnpcinfo(0);
 	initnpctimer;
-	getitem 6501, 1; // Salt_Bag
+	getitem Salt_Bag, 1; // Salt_Bag
 	mes "[" + strcharinfo(0) + "]";
 	mes "This should be enough.";
 	close;
@@ -1487,7 +1487,7 @@ malaya,66,277,0	duplicate(Sand Trap#malaya)	Sand Trap#malaya01	4_SOIL
 malaya,70,282,0	duplicate(Sand Trap#malaya)	Sand Trap#malaya02	4_SOIL
 
 ma_fild01,178,206,0	script	Black Bamboo#malaya	CLEAR_NPC,4,4,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -1495,7 +1495,7 @@ ma_fild01,178,206,0	script	Black Bamboo#malaya	CLEAR_NPC,4,4,{
 		mes "There's a short and black bamboo tree.";
 		close;
 	}
-	if (countitem(6500) >= 6) {
+	if (countitem(Sharp_Bamboo) >= 6) {
 		mes "There's enough Sharpened Bamboos...";
 		close;
 	}
@@ -1505,7 +1505,7 @@ ma_fild01,178,206,0	script	Black Bamboo#malaya	CLEAR_NPC,4,4,{
 	progressbar "0xffff00", 3;
 	disablenpc strnpcinfo(0);
 	initnpctimer;
-	getitem 6500, 1; //Sharp_Bamboo
+	getitem Sharp_Bamboo, 1; //Sharp_Bamboo
 	mes "[" + strcharinfo(0) + "]";
 	mes "I knew I could do this!";
 	close;
@@ -1526,7 +1526,7 @@ ma_fild01,180,273,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya04	CLEAR_N
 ma_fild01,179,145,0	duplicate(Black Bamboo#malaya)	Black Bamboo#malaya05	CLEAR_NPC,4,4
 
 malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -1588,7 +1588,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 			mes "Isn't that so?";
 			close;
 		}
-		if (!countitem(523) || !countitem(717)) {
+		if (!countitem(Holy_Water) || !countitem(Blue_Gemstone)) {
 			mes "^4d4dffPrepare and give Blue Gemstone and Holy Water. ^000000";
 			close;
 		}
@@ -1611,8 +1611,8 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 		mes "I'll call for you first when a job opens up for you.";
 		next;
 		mes "- Gave Woeon the Holy Water and Blue Gemstone.-";
-		delitem 717, 1; //Blue_Gemstone
-		delitem 523, 1; //Holy_Water
+		delitem Blue_Gemstone, 1; //Blue_Gemstone
+		delitem Holy_Water, 1; //Holy_Water
 		setquest 7362;
 		completequest 7362;
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
@@ -1635,7 +1635,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 		next;
 		if (select("Give Spiritual Protection.:The Dealer and his Collection") == 1) {
 			if (questprogress(7374) == 1 && questprogress(7371) == 1) {
-				if (!countitem(6503)) {
+				if (!countitem(Soul_Protection)) {
 					mes "^4d4dffThere is no Spiritual Protection to give to Woeon.^000000";
 					close;
 				}
@@ -1645,7 +1645,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 				mes "I'm thankful to you as well, of course.";
 				next;
 				mes "-Delivered Spiritual Protection to Woeon.-";
-				delitem 6503, 1; // Soul_Protection
+				delitem Soul_Protection, 1; // Soul_Protection
 				erasequest 7371;
 				setquest 7385;
 				if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
@@ -1707,7 +1707,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 				close;
 			} else {
 				if (questprogress(7391) == 1) {
-					if (countitem(6498) < 30) {
+					if (countitem(Jejellopy) < 30) {
 						mes "[Woeon]";
 						mes "Hmm? I don't think you have enough.";
 						mes "I asked you for 30 Jejellopys. Business is business I'm afraid.";
@@ -1721,13 +1721,13 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 					mes "[Woeon]";
 					mes "So I have all the Jejellopys...";
 					mes "Come back again!";
-					delitem 6498, countitem(6498); //Jejellopy
+					delitem Jejellopy, countitem(Jejellopy); //Jejellopy
 					setquest 7392;
 					erasequest 7391;
 //					if (IsPremiumPcCafe == 10)
-						getitem 6497, 2; // Lesser_Agimat
+						getitem Lesser_Agimat, 2; // Lesser_Agimat
 //					else
-//						getitem 6497, 1; // Lesser_Agimat
+//						getitem Lesser_Agimat, 1; // Lesser_Agimat
 					getexp 200000,200000;
 					.@memo_name = rand(1,3);
 					if (!rand(3))
@@ -1765,7 +1765,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 }
 
 malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -1830,7 +1830,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			mes "Bu... But, I'm too scared...";
 			close;
 		}
-		if (!countitem(523) || !countitem(717)) {
+		if (!countitem(Holy_Water) || !countitem(Blue_Gemstone)) {
 			mes "^4d4dffPrepare and give Blue Gemstone and Holy Water. ^000000";
 			close;
 		}
@@ -1844,8 +1844,8 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 		mes "Yes... Now that I have some of your spirit, I can rest well at night.";
 		next;
 		mes "- Gave Pandoi the Holy Water and Blue Gemstone.-";
-		delitem 717, 1; //Blue_Gemstone
-		delitem 523, 1; //Holy_Water
+		delitem Blue_Gemstone, 1; //Blue_Gemstone
+		delitem Holy_Water, 1; //Holy_Water
 		setquest 7361;
 		completequest 7361;
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
@@ -1893,7 +1893,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 				mes "When it wear's out, I'll ask you for another one!";
 				close;
 			}
-			if (!countitem(6503)) {
+			if (!countitem(Soul_Protection)) {
 				mes "^4d4dffThere is no Spiritual Protection to give to Pandoi.^000000";
 				close;
 			}
@@ -1902,7 +1902,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			mes "It's always good to know that you won't see those black things again!";
 			next;
 			mes "-Delivered Spiritual Protection to Pandoi.-";
-			delitem 6503, 1; // Soul_Protection
+			delitem Soul_Protection, 1; // Soul_Protection
 			erasequest 7370;
 			setquest 7384;
 			if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
@@ -1933,7 +1933,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			}
 			.@hunting = questprogress(7393, HUNTING);
 			if (.@hunting == 2) {
-				if (countitem(6508) < 10) {
+				if (countitem(Silver_Bracelet) < 10) {
 					mes "[Pandoi]";
 					mes "Where are the Silver Bracelets?";
 					mes "I know you're invincible...";
@@ -1956,13 +1956,13 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 				mes "[Pandoi]";
 				mes "It's not much, but here's something for the troubles you went through to get the Silver Bracelets.";
 				mes "If I fail... I'll ask of you the task again!";
-				delitem 6508, 10; //Silver_Bracelet
+				delitem Silver_Bracelet, 10; //Silver_Bracelet
 				setquest 7394;
 				erasequest 7393;
 //				if (IsPremiumPcCafe == 10)
-					getitem 6497, 2; // Lesser_Agimat
+					getitem Lesser_Agimat, 2; // Lesser_Agimat
 //				else
-//					getitem 6497, 1; // Lesser_Agimat
+//					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				if (!rand(3))
 					$malayaNames$[1] = strcharinfo(0);
@@ -2060,7 +2060,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 				.@amount = 1;
 			case 2:
 				if (!.@amount) .@amount = 6;
-				if (countitem(6508) < (.@amount * 2)) {
+				if (countitem(Silver_Bracelet) < (.@amount * 2)) {
 					mes "[Pandoi]";
 					mes "You need at least " + (.@amount * 2) + " Silver Bracelets to make " + .@amount + " Silver " + ((.@amount == 1) ? "Cross" : "Crosses") + ".";
 					close;
@@ -2083,7 +2083,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 					mes "A maximum of 50 at a time!";
 					close;
 				}
-				if (countitem(6508) < (2 * .@amount)) {
+				if (countitem(Silver_Bracelet) < (2 * .@amount)) {
 					mes "[Pandoi]";
 					mes "To make " + .@amount + " Silver " + ((.@amount == 1) ? "Cross" : "Crosses") + ", I need at least " + (2 * .@amount) + " Silver Bracelets.";
 					close;
@@ -2100,8 +2100,8 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			mes "Pandoi can do it in a jiffy!";
 			close2;
 			progressbar "0xffff00", .@time;
-			delitem 6508, .@amount * 2; //Silver_Bracelet
-			getitem 6502, .@amount; // Silver_Cross
+			delitem Silver_Bracelet, .@amount * 2; //Silver_Bracelet
+			getitem Silver_Cross, .@amount; // Silver_Cross
 			mes "[Pandoi]";
 			mes "Look at this!";
 			mes "Very nice indeed.";
@@ -2113,7 +2113,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 }
 
 malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -2186,7 +2186,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 			mes "Now's the time to charge into my ship...!";
 			close;
 		}
-		if (!countitem(523) || !countitem(717)) {
+		if (!countitem(Holy_Water) || !countitem(Blue_Gemstone)) {
 			mes "^4d4dffPrepare and give Blue Gemstone and Holy Water.^000000";
 			close;
 		}
@@ -2203,8 +2203,8 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 		mes "After you're finished with the ghosts here, I'll take on my ship to the end of the world!";
 		next;
 		mes "- Gave Pedro the Sailor the Holy Water and Blue Gemstone. -";
-		delitem 717, 1; //Blue_Gemstone
-		delitem 523, 1; //Holy_Water
+		delitem Blue_Gemstone, 1; //Blue_Gemstone
+		delitem Holy_Water, 1; //Holy_Water
 		setquest 7359;
 		completequest 7359;
 		if (questprogress(7359) == 2 && questprogress(7360) == 2 && questprogress(7361) == 2
@@ -2236,7 +2236,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 				mes "It's still up for the fight!";
 				close;
 			}
-			if (!countitem(6503)) {
+			if (!countitem(Soul_Protection)) {
 				mes "^4d4dffThere is no Spiritual Protection to give to Pedro the Sailor.^000000";
 				close;
 			}
@@ -2245,7 +2245,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 			mes "Alright. I'll go at them with this one today.";
 			next;
 			mes "-Delivered the Spiritual Protection to Pedro the Sailor.-";
-			delitem 6503, 1; // Soul_Protection
+			delitem Soul_Protection, 1; // Soul_Protection
 			erasequest 7368;
 			setquest 7382;
 			if (questprogress(7382) + questprogress(7383) + questprogress(7384) + questprogress(7385) + questprogress(7386) + questprogress(7387) > 5) {
@@ -2373,9 +2373,9 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 			erasequest 7399;
 			setquest 7401;
 //			if (IsPremiumPcCafe == 10)
-				getitem 6497, 2; // Lesser_Agimat
+				getitem Lesser_Agimat, 2; // Lesser_Agimat
 //			else
-//				getitem 6497, 1; // Lesser_Agimat
+//				getitem Lesser_Agimat, 1; // Lesser_Agimat
 			getexp 200000,200000;
 			if (!rand(3))
 				$malayaNames$[0] = strcharinfo(0);
@@ -2436,9 +2436,9 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 				setquest 7401;
 				erasequest 7403;
 //				if (IsPremiumPcCafe == 10)
-					getitem 6497, 2; // Lesser_Agimat
+					getitem Lesser_Agimat, 2; // Lesser_Agimat
 //				else
-//					getitem 6497, 1; // Lesser_Agimat
+//					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				if (!rand(3))
 					$malayaNames$[0] = strcharinfo(0);
@@ -2552,7 +2552,7 @@ OnTouch:
 		warp "malaya", 324, 66;
 		end;
 	} else if (malaya_diwata == 4) {
-		if (!countitem(6506)) {
+		if (!countitem(Offering_Bouquet)) {
 			cutin "malaya_diwata01", 2;
 			mes "- The soul of Little Girl Diwata is looking at me fiercely.";
 			mes "No Offering Bouquet...!!!";
@@ -2619,7 +2619,7 @@ OnTouch:
 		mes "[Diwata]";
 		mes "Now, g... go away!";
 		malaya_diwata = 5;
-		delitem 6506, 1; // Memorial_Boquet
+		delitem Offering_Bouquet, 1; // Memorial_Boquet
 		erasequest 7398;
 		setquest 7399;
 		close;
@@ -2688,7 +2688,7 @@ OnTouch:
 			warp "malaya", 324, 66;
 			end;
 		}
-		if (!countitem(6506)) {
+		if (!countitem(Offering_Bouquet)) {
 			mes "[Diwata]";
 			mes "What? You want me to wave?";
 			mes "You didn't bring it?";
@@ -2712,7 +2712,7 @@ OnTouch:
 		mes "[Diwata]";
 		mes "Tell Pedro the Sailor!";
 		mes "Diwata will be a goddess of sea, so set sail in my generosity.";
-		delitem 6506, 1; // Memorial_Boquet
+		delitem Offering_Bouquet, 1; // Memorial_Boquet
 		setquest 7403;
 		erasequest 7402;
 		close;
@@ -2722,7 +2722,7 @@ OnTouch:
 }
 
 ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -2757,7 +2757,7 @@ ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
 				mes "so deliver it well. Okay? Good.";
 				close;
 			}
-			if (countitem(6504) < 5) {
+			if (countitem(Cast_Iron_Caldron) < 5) {
 				mes "[Kiko in Mumbaki]";
 				mes "Oh, must be the cauldron I ordered.";
 				mes "But, where is it?";
@@ -2773,8 +2773,8 @@ ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
 			mes "I'll give you this for the cauldron.";
 			mes "I hear you're having some trouble with souls?";
 			mes "Take this. It will help you.";
-			delitem 6504, 5; // Cast_Iron_Caldron
-			getitem 6503, 5; // Soul_Protection
+			delitem Cast_Iron_Caldron, 5; // Cast_Iron_Caldron
+			getitem Soul_Protection, 5; // Soul_Protection
 			setquest 7377;
 			erasequest 7376;
 			close;
@@ -2792,7 +2792,7 @@ ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
 				mes "Quickly now.";
 				close;
 			}
-			if ((countitem(523) < 10) || (countitem(6507) < 10)) {
+			if ((countitem(Holy_Water) < 10) || (countitem(Evil_Bone) < 10)) {
 				mes "[Kiko in Mumbaki]";
 				mes "Purification of the bones the Guard Dog Vantai needs to gnaw on?";
 				mes "My work here just gets better and better.";
@@ -2817,9 +2817,9 @@ ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
 			mes "[Kiko in Mumbaki]";
 			mes "Moreover, holding on to Evil Spirit Bones will only do you harm,";
 			mes "so I'll take them all to purify.";
-			delitem 6507, countitem(6507); // Evil_Bone
-			delitem 523, 10; //Holy_Water
-			getitem 6505, 10; //Purified_Bone
+			delitem Evil_Bone, countitem(Evil_Bone); // Evil_Bone
+			delitem Holy_Water, 10; //Holy_Water
+			getitem Purified_Bone, 10; //Purified_Bone
 			setquest 7407;
 			erasequest 7406;
 			close;
@@ -2833,7 +2833,7 @@ ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
 }
 
 ma_fild01,239,253,3	script	Dhong the Guard	4_MAL_SOLDIER,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -2900,7 +2900,7 @@ ma_fild01,239,253,3	script	Dhong the Guard	4_MAL_SOLDIER,{
 			close;
 		} else {
 			if (questprogress(7407) == 1) {
-				if (countitem(6505) < 10) {
+				if (countitem(Purified_Bone) < 10) {
 					mes "[Dhong the Guard]";
 					mes "Kiko in Mumbaki asked for 10 Purified Spirit Bones.";
 					mes "He needs to have at least 10 at a time. Which of course does not last a day...";
@@ -2923,13 +2923,13 @@ ma_fild01,239,253,3	script	Dhong the Guard	4_MAL_SOLDIER,{
 				mes "[Dhong the Guard]";
 				mes "This is your reward.";
 				mes "It would be very nice if you could help us again tomorrow.";
-				delitem 6505, 10; // Purified_Bone
+				delitem Purified_Bone, 10; // Purified_Bone
 				setquest 7408;
 				erasequest 7407;
 //				if (IsPremiumPcCafe == 10)
-					getitem 6497, 2; // Lesser_Agimat
+					getitem Lesser_Agimat, 2; // Lesser_Agimat
 //				else
-//					getitem 6497, 1; // Lesser_Agimat
+//					getitem Lesser_Agimat, 1; // Lesser_Agimat
 				getexp 200000,200000;
 				if (!rand(0, 2))
 					$malayaNames$[2] = strcharinfo(0);
@@ -2980,7 +2980,7 @@ ma_fild01,238,257,2	script	Guard Dog Vantai	4_RUS_DWOLF,{
 }
 
 ma_fild01,200,190,3	script	Maries#malaya	4_F_BARYO_WOMAN,{
-	if (MaxWeight - Weight < 1000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 1000 || checkweight(Knife,1) == 0) {
 		mes "- Cannot proceed with the quest. You are carrying too many items. -";
 		close;
 	}
@@ -3023,9 +3023,9 @@ ma_fild01,200,190,3	script	Maries#malaya	4_F_BARYO_WOMAN,{
 			setquest 7390;
 			erasequest 7389;
 //			if (IsPremiumPcCafe == 10)
-				getitem 6497, 2; // Lesser_Agimat
+				getitem Lesser_Agimat, 2; // Lesser_Agimat
 //			else
-//				getitem 6497, 1; // Lesser_Agimat
+//				getitem Lesser_Agimat, 1; // Lesser_Agimat
 			getexp 200000,200000;
 			if (!rand(3))
 				$malayaNames$[2] = strcharinfo(0);
@@ -3100,7 +3100,7 @@ ma_fild01,203,189,3	script	Little Girl#malaya	4_F_BARYO_GIRL,{
 
 ma_fild01,251,93,3	script	Lost Child#malaya01	4_F_BARYO_GIRL,{
 	if (questprogress(7388)) {
-		if (!countitem(12700)) {
+		if (!countitem(Insideout_Shirt)) {
 			mes "[Little Kid]";
 			mes "Sigh. Are you lost too?";
 			mes "They are so naughty.";
@@ -3130,7 +3130,7 @@ ma_fild01,251,93,3	script	Lost Child#malaya01	4_F_BARYO_GIRL,{
 		mes "She must be worried..!";
 		mes "I'll go home now!";
 		mes "Thanks' a lot!";
-		delitem 12700, 1; // Insideout_Shirt
+		delitem Insideout_Shirt, 1; // Insideout_Shirt
 		setquest 7389;
 		erasequest 7388;
 		close2;
@@ -3262,9 +3262,9 @@ ma_fild02,241,39,5	script	Good Capre Budidai	4_MAL_BUDIDAI,{
 					setquest 7410;
 					erasequest 7409;
 //					if (IsPremiumPcCafe == 10)
-						getitem 6497, 2; // Lesser_Agimat
+						getitem Lesser_Agimat, 2; // Lesser_Agimat
 //					else
-//						getitem 6497, 1; // Lesser_Agimat
+//						getitem Lesser_Agimat, 1; // Lesser_Agimat
 					getexp 200000,200000;
 					if (!rand(3))
 						$malayaNames$[1] = strcharinfo(0);
@@ -3340,7 +3340,7 @@ ma_fild02,241,39,5	script	Good Capre Budidai	4_MAL_BUDIDAI,{
 // Traders :: malaya_npc
 //============================================================
 ma_fild01,166,214,6	script	Old Man in Dilemma#GA	4_F_BARYO_OLD,{
-	if (MaxWeight - Weight < 600 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 600 || checkweight(Knife,1) == 0) {
 		mes "Cannot proceed because you have too many items in your possession.";
 		close;
 	}
@@ -3349,7 +3349,7 @@ ma_fild01,166,214,6	script	Old Man in Dilemma#GA	4_F_BARYO_OLD,{
 	next;
 	switch(select("We need to gather items to fight them off.:Ignore.")) {
 	case 1:
-		if (countitem(6497) >= 3 && Zeny >= 1000) {
+		if (countitem(Lesser_Agimat) >= 3 && Zeny >= 1000) {
 			mes "[Old Man in Dilemma]";
 			mes "You don't seem to be strong enough to fight off demons.";
 			next;
@@ -3357,11 +3357,11 @@ ma_fild01,166,214,6	script	Old Man in Dilemma#GA	4_F_BARYO_OLD,{
 			mes "Will you create a Greater Agimat of Ancient Spirit with 3 Lesser Agimats and 1,000 Zeny?";
 			next;
 			if(select("Create.:No, thank you.") == 1) {
-				if (countitem(6497) >= 3 && Zeny >= 1000) {
+				if (countitem(Lesser_Agimat) >= 3 && Zeny >= 1000) {
 					specialeffect2 EF_CONE;
 					specialeffect EF_FORESTLIGHT2;
 					Zeny -= 1000;
-					getitem 12775,1; //Ancient_Spirit_Agimat
+					getitem Ancient_Spirit_Agimat,1; //Ancient_Spirit_Agimat
 				} else {
 					mes "[Old Man in Dilemma]";
 					mes "Short on materials.";
@@ -3414,7 +3414,7 @@ ma_fild01,166,214,6	script	Old Man in Dilemma#GA	4_F_BARYO_OLD,{
 }
 
 ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
-	if (MaxWeight - Weight < 50 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 50 || checkweight(Knife,1) == 0) {
 		mes "Cannot proceed because you have too many items in your possession.";
 		close;
 	}
@@ -3522,7 +3522,7 @@ ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
 		mes "[Tikbalang Expert]";
 		mes "Ha ha ha. Do you now know how great I am?";
 		next;
-		if (countitem(6496) >= 3 && countitem(6497) >= 5) {
+		if (countitem(Tikbalang_Thick_Spine) >= 3 && countitem(Lesser_Agimat) >= 5) {
 			mes "[Tikbalang Expert]";
 			mes "Oh! Isn't this material to make 'Tikbalang Belt' used to tame Tikbalangs?";
 			next;
@@ -3531,8 +3531,8 @@ ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
 			next;
 			switch(select("Yes, Im interested.:No, I can capture one myself.")) {
 			case 1:
-				delitem 6496,3; //Tikbalang_Thick_Spine
-				getitem 12699,1; //Tikbalang_Belt
+				delitem Tikbalang_Thick_Spine,3; //Tikbalang_Thick_Spine
+				getitem Tikbalang_Belt,1; //Tikbalang_Belt
 				mes "[Tikbalang Expert]";
 				mes "Yiiiiiiiiiiii! Yap!";
 				next;
@@ -3740,7 +3740,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 		mes "I will need an light but sturdy armor with an refinement of +9 or greater and 20 Ancient Grudges!!";
 		close;
 	}
-	if (countitem(6499) < 20) {
+	if (countitem(Ancient_Grudge) < 20) {
 		mes "[Bayani]";
 		mes "You said all preparations are done and you give me this?! I need at least 20 Ancient Grudges to refine your item.";
 		close;
@@ -3818,7 +3818,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "BAM!!";
 	next;
 
-	delitem 6499,20; //Ancient_Grudge
+	delitem Ancient_Grudge,20; //Ancient_Grudge
 	delequip .@part;
 	getitem .@newItem, 1;
 
@@ -4034,7 +4034,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		malaya_buwaya = 3;
 		close;
 	} else if (malaya_buwaya == 3) {
-		if (!countitem(506)) {
+		if (!countitem(Green_Potion)) {
 			mes "[Totoy]";
 			mes "Can't talk long. I need to heal my eyes first.";
 			mes "There should be some ^3131FFGreen Potion^000000 left inside the drawer. Will you get it for me?";
@@ -4049,7 +4049,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		} else {
 			mes "[Totoy]";
 			mes "Gulp, gulp...";
-			delitem 506,1; //Green_Potion
+			delitem Green_Potion,1; //Green_Potion
 			malaya_buwaya = 4;
 		}
 		close;
@@ -4238,7 +4238,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 			.@amount = 10;
 //		else
 //			.@amount = 5;
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 			mes "- Wait!! -";
 			mes "- You have too many items on you. -";
 			mes "- Cannot receive the item. -";
@@ -4262,7 +4262,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "[Dog]";
 		mes "Woof woof woof!!!!";
 		malaya_buwaya = 14;
-		getitem 6497,5; //Lesser_Agimat
+		getitem Lesser_Agimat,5; //Lesser_Agimat
 		disablenpc "Dog#buwaya_totoi";
 		erasequest 2279;
 		setquest 2280;
@@ -4394,7 +4394,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		setquest 2274;
 		close;
 	} else if (malaya_buwaya == 7) {
-		if (countitem(6519) < 10) {
+		if (countitem(Collected_Sample) < 10) {
 			mes "[Master of Hunting]";
 			mes "Bring me back samples if you want to prove there is a monster with two heads.";
 			close;
@@ -4403,7 +4403,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		mes "Argh! That's so foul.";
 		mes "You've really brought back the samples.";
 		mes "Ho! Leave it there and come back after washing your hands. Even god won't smile down at you with that stench.";
-		delitem 6519,10; //Collected_Sample
+		delitem Collected_Sample,10; //Collected_Sample
 		malaya_buwaya = 8;
 		erasequest 2274;
 		setquest 2275;
@@ -4517,7 +4517,7 @@ OnInit:
 }
 
 -	script	Unknown Trace#buwaya	-1,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait!! -";
 		mes "- You have too many items on you. -";
 		mes "- Cannot receive the item. -";
@@ -4526,7 +4526,7 @@ OnInit:
 		close;
 	}
 	if (malaya_buwaya == 7) {
-		if (countitem(6519) >= 10) {
+		if (countitem(Collected_Sample) >= 10) {
 			mes "- You don't have to collect any more samples. -";
 			close;
 		}
@@ -4541,7 +4541,7 @@ OnInit:
 		next;
 		mes "[" + strcharinfo(0) + "]";
 		mes "It's warm as a mother's bosom.";
-		getitem 6519,1; //Collected_Sample
+		getitem Collected_Sample,1; //Collected_Sample
 		disablenpc strnpcinfo(0);
 		initnpctimer;
 		close;
@@ -4561,7 +4561,7 @@ ma_fild02,300,98,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_6	4_SOIL
 ma_fild02,100,275,3	duplicate(Unknown Trace#buwaya)	Unknown Trace#buwaya_7	4_SOIL
 
 malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait!! -";
 		mes "- You have too many items on you. -";
 		mes "- Cannot receive the item. -";
@@ -4699,7 +4699,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 			mes "[Guard Leader]";
 			mes "Good work.";
 			erasequest 2281;
-			getitem 6497, .@amount; //Lesser_Agimat
+			getitem Lesser_Agimat, .@amount; //Lesser_Agimat
 			getexp 0,600000;
 		} else {
 			mes "[Guard Leader]";
@@ -5010,7 +5010,7 @@ malaya,272,339,5	script	Old Fortune Teller#bako1	4_F_BARYO_OLD,{
 }
 
 malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
-	if (checkweight(1301,3) == 0) {
+	if (checkweight(Axe,3) == 0) {
 		mes "You cannot start the conversation. You are carrying too many items. -";
 		close;
 	}
@@ -5222,9 +5222,9 @@ malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 			erasequest 1179;
 			malaya_bakona1 = 7;
 //			if (IsPremiumPcCafe == 10)
-				getitem 6499,5; //Ancient_Grudge
+				getitem Ancient_Grudge,5; //Ancient_Grudge
 //			else
-//				getitem 6499,3; //Ancient_Grudge
+//				getitem Ancient_Grudge,3; //Ancient_Grudge
 			getexp 500000,200000;
 			close;
 		}
@@ -5625,7 +5625,7 @@ malaya,276,262,4	script	Angry Boy#bako2	4_M_BARYO_BOY,{
 }
 
 malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
-	if (checkweight(1301,3) == 0) {
+	if (checkweight(Axe,3) == 0) {
 		mes "You cannot start the conversation. You are carrying too many items. -";
 		close;
 	}
@@ -5742,9 +5742,9 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 		setquest 1185;
 		malaya_bakona2 = 6;
 //		if (IsPremiumPcCafe == 10)
-			getitem 12700,7; //Insideout_Shirt
+			getitem Insideout_Shirt,7; //Insideout_Shirt
 //		else
-//			getitem 12700,5; //Insideout_Shirt
+//			getitem Insideout_Shirt,5; //Insideout_Shirt
 		close;
 	} else if (malaya_bakona2 == 6) {
 		mes "[Village Chief]";
@@ -5848,9 +5848,9 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 		malaya_bakona2 = 15;
 		getexp 1000000,600000;
 //		if (IsPremiumPcCafe == 10)
-			getitem 6497,7; //Lesser_Agimat
+			getitem Lesser_Agimat,7; //Lesser_Agimat
 //		else
-//			getitem 6497,5; //Lesser_Agimat
+//			getitem Lesser_Agimat,5; //Lesser_Agimat
 		close;
 	} else if (malaya_bakona2 == 15) {
 		mes "[Village Chief]";
@@ -5894,7 +5894,7 @@ OnTimer600000:
 
 OnMyMobDead:
 	if (mobcount("ma_fild01","malaya_ma_fild01_mon::OnMyMobDead") < 5 && (malaya_bakona2 == 1 || malaya_bakona2 == 2 || malaya_bakona2 == 3 || malaya_bakona2 == 4))
-		getitem 6520,1; //Lost_Belongings
+		getitem Lost_Belongings,1; //Lost_Belongings
 	end;
 }
 
@@ -5911,7 +5911,7 @@ malaya,269,267,5	script	Missing Person's Father	4_M_MALAYA,{
 		mes "He must be around here somewhere.";
 		close;
 	} else if (malaya_bakona2 == 1) {
-		if (countitem(6520) < 2) {
+		if (countitem(Lost_Belongings) < 2) {
 			mes "[Missing Person's Father]";
 			mes "You are looking for two of his ^FF0000Lost Belongings^000000?";
 			mes "Are you confident that";
@@ -5928,7 +5928,7 @@ malaya,269,267,5	script	Missing Person's Father	4_M_MALAYA,{
 		mes "Let's retrieve them from Tiyanak that roams Baryo Mahiwaga Field,";
 		mes "seven ^FF0000Lost Belongings^000000";
 		mes "and deliver them to ^0000FFMissing Person's Friend^000000.";
-		delitem 6520,2; //Lost_Belongings
+		delitem Lost_Belongings,2; //Lost_Belongings
 		erasequest 1180;
 		setquest 1181;
 		malaya_bakona2 = 2;
@@ -5966,7 +5966,7 @@ malaya,265,274,5	script	Missing Person's Friend	4_M_BARYO_BOY,{
 		mes "somewhere.";
 		close;
 	} else if (malaya_bakona2 == 2) {
-		if (countitem(6520) < 7) {
+		if (countitem(Lost_Belongings) < 7) {
 			mes "[Missing Person's Friend]";
 			mes "You are looking for seven ^FF0000Lost Belongings^000000";
 			mes "of my friend?";
@@ -5979,7 +5979,7 @@ malaya,265,274,5	script	Missing Person's Friend	4_M_BARYO_BOY,{
 		mes "of my friend... Where is my friend?";
 		mes "Bring him here, bring him here now!";
 		callsub L_Quest;
-		delitem 6520,7; //Lost_Belongings
+		delitem Lost_Belongings,7; //Lost_Belongings
 		erasequest 1181;
 		setquest 1182;
 		malaya_bakona2 = 3;
@@ -6016,7 +6016,7 @@ malaya,270,278,4	script	Missing Person's Son	4_M_BARYO_MAN,{
 		mes "Please find my father!";
 		close;
 	} else if (malaya_bakona2 == 3) {
-		if (countitem(6520) < 3) {
+		if (countitem(Lost_Belongings) < 3) {
 			mes "[Missing Person's Son]";
 			mes "You are looking for three ^FF0000Lost Belongings^000000";
 			mes "of my father? Why lost belongings and not my father?";
@@ -6028,7 +6028,7 @@ malaya,270,278,4	script	Missing Person's Son	4_M_BARYO_MAN,{
 		mes "These are ^FF0000Lost Belongings^000000 of my father.";
 		mes "Oh dear lord... father!";
 		callsub L_Quest;
-		delitem 6520,3; //Lost_Belongings
+		delitem Lost_Belongings,3; //Lost_Belongings
 		erasequest 1182;
 		setquest 1183;
 		malaya_bakona2 = 4;
@@ -6062,7 +6062,7 @@ malaya,265,284,4	script	Missing Person's Mother	4_F_BARYO_WOMAN,{
 		mes "and she still isn't back.";
 		close;
 	} else if (malaya_bakona2 == 4) {
-		if (countitem(6520) < 5) {
+		if (countitem(Lost_Belongings) < 5) {
 			mes "[Missing Person's Mother]";
 			mes "You are looking for five ^FF0000Lost Belongings^000000 of my child?";
 			mes "What does this mean?";
@@ -6083,7 +6083,7 @@ malaya,265,284,4	script	Missing Person's Mother	4_F_BARYO_WOMAN,{
 		mes "A mother that has gone mad...";
 		mes "Now that I finished finding the missing people,";
 		mes "I should report back to the Village Chief.";
-		delitem 6520,5; //Lost_Belongings
+		delitem Lost_Belongings,5; //Lost_Belongings
 		erasequest 1183;
 		setquest 1184;
 		malaya_bakona2 = 5;
@@ -6105,7 +6105,7 @@ malaya,265,284,4	script	Missing Person's Mother	4_F_BARYO_WOMAN,{
 }
 
 malaya,289,364,4	script	Young Fortune Teller	4_F_MALAYA,{
-	if (checkweight(1301,3) == 0) {
+	if (checkweight(Axe,3) == 0) {
 		mes "You cannot start the conversation. You are carrying too many items. -";
 		close;
 	}
@@ -6161,9 +6161,9 @@ malaya,289,364,4	script	Young Fortune Teller	4_F_MALAYA,{
 			setquest 1187;
 			malaya_bakona2 = 8;
 //			if (IsPremiumPcCafe == 10)
-				getitem 12699,7; //Tikbalang_Belt
+				getitem Tikbalang_Belt,7; //Tikbalang_Belt
 //			else
-//				getitem 12699,5; //Tikbalang_Belt
+//				getitem Tikbalang_Belt,5; //Tikbalang_Belt
 			close;
 		} else {
 			mes "[Young Fortune Teller]";
@@ -6575,7 +6575,7 @@ sec_in02,10,16,5	script	Bakonawa Intro Helper	4_MASK_SMOKEY,{
 	case 4:
 		mes "[Briquet Scheme]";
 		mes "Here you go!";
-		getitem 6520,17; //Lost_Belongings
+		getitem Lost_Belongings,17; //Lost_Belongings
 		close;
 	case 5:
 		mes "[Briquet Scheme]";
@@ -6734,7 +6734,7 @@ function	script	F_Malaya_Nurse	{
 	return;
 
 L_Weight:
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait !! -";
 		mes "- You have too many items. -";
 		mes "- Cannot receive item. -";
@@ -6779,13 +6779,13 @@ L_Warp:
 
 L_Reward:
 //	if (IsPremiumPcCafe == 10) {
-		getitem 6499,5; //Ancient_Grudge
-		getitem 6497,10; //Lesser_Agimat
+		getitem Ancient_Grudge,5; //Ancient_Grudge
+		getitem Lesser_Agimat,10; //Lesser_Agimat
 //	} else {
-//		getitem 6499,3; //Ancient_Grudge
-//		getitem 6497,5; //Lesser_Agimat
+//		getitem Ancient_Grudge,3; //Ancient_Grudge
+//		getitem Lesser_Agimat,5; //Lesser_Agimat
 //	}
-	getitem 617,1; //Old_Violet_Box
+	getitem Old_Violet_Box,1; //Old_Violet_Box
 	getexp 1000000,0;
 	return;
 
@@ -7029,7 +7029,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 			end;
 		}
 	} else if (malaya_bang == 1) {
-		if (countitem(930) > 1) {
+		if (countitem(Rotten_Bandage) > 1) {
 			mes "[Nurse Las]";
 			mes "Oh......";
 			mes "I know they're effective but... Not so tempting.";
@@ -7046,7 +7046,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 			mes "[Nurse Las]";
 			mes "*Squish*";
 			mes "*Squelch*";
-			delitem 930,2; //Rotten_Bandage
+			delitem Rotten_Bandage,2; //Rotten_Bandage
 			malaya_bang = 2;
 			close2;
 			cutin "",255;
@@ -7905,7 +7905,7 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 }
 
 -	script	Suspicious Wooden Stick::MalayaStick	-1,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait !! -";
 		mes "- You have too many items. -";
 		mes "- Cannot receive item. -";
@@ -7933,13 +7933,13 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 				if (rand(2)) {
 					malaya_bang = 15;
 					changequest 11295,11296;
-					getitem 6497,1; //Lesser_Agimat
+					getitem Lesser_Agimat,1; //Lesser_Agimat
 					donpcevent "Tent"+replacestr(strnpcinfo(3),"MalayaStick","")+"#ma::OnEnable";
 					next;
 					mes "Better show Las the talisman.";
 					close;
 				} else {
-					getitem 6497,1; //Lesser_Agimat
+					getitem Lesser_Agimat,1; //Lesser_Agimat
 					donpcevent "Tent"+replacestr(strnpcinfo(3),"MalayaStick","")+"#ma::OnEnable";
 					close;
 				}
@@ -8404,7 +8404,7 @@ OnDisableNPC:
 }
 
 ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "Cannot proceed because you have too many items in your possession.";
 		close;
 	}
@@ -8626,7 +8626,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 }
 
 ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "Cannot proceed because you have too many items in your possession.";
 		close;
 	}
@@ -8761,7 +8761,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 		.@name$ = "Bakonawa";
 		break;
 	}
-	if (countitem(6499) < 10 || countitem(.@spirit) == 0 || countitem(.@doll) == 0) {
+	if (countitem(Ancient_Grudge) < 10 || countitem(.@spirit) == 0 || countitem(.@doll) == 0) {
 		mes "[Tattooist]";
 		mes "I think you are short on materials.";
 		mes "Need 10 Ancient Grudges, 1 Piece of "+.@name$+"'s Spirit, and 1 "+.@name$+" Doll to create a ^EE1D11"+.@name$+" Agimat Tattoo^000000.";
@@ -8787,7 +8787,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	next;
 	if(select("Aren't you going to start?:... ... ..") == 1) {
 		emotion e_an;
-		delitem 6499,5; //Ancient_Grudge
+		delitem Ancient_Grudge,5; //Ancient_Grudge
 		mes "[Tattooist]";
 		mes "Oh no, now you ruined it.";
 		mes "I cannot draw a Tattoo for someone like you who doesn't understand art. You can take back the remaining materials.";
@@ -8809,7 +8809,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	if(select("Looks good to me.:... ... ..") == 1) {
 		emotion e_an;
 		emotion e_ag;
-		delitem 6499,5; //Ancient_Grudge
+		delitem Ancient_Grudge,5; //Ancient_Grudge
 		mes "[Tattooist]";
 		mes "Ergh! I told you not to interrupt!";
 		next;
@@ -8831,7 +8831,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	if(select("When will it be done?:... ... ..") == 1) {
 		emotion e_an;
 		emotion e_ag;
-		delitem 6499,5; //Ancient_Grudge
+		delitem Ancient_Grudge,5; //Ancient_Grudge
 		mes "[Tattooist]";
 		mes "Ergh! I told you not to interrupt!";
 		next;
@@ -8873,7 +8873,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	mes "The Piece of "+.@name$+"'s Spirit is shattered into powder. The Tattooist's hands are glowing.";
 	next;
 	if(select("Why did you break the pieces...:... ... ..") == 1) {
-		delitem 6499,5; //Ancient_Grudge
+		delitem Ancient_Grudge,5; //Ancient_Grudge
 		delitem .@spirit,1;
 		emotion e_an;
 		emotion e_ag;
@@ -8910,7 +8910,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	mes "[Tattooist]";
 	mes "Ha ha. It came out great.";
 	next;
-	delitem 6499,10; //Ancient_Grudge
+	delitem Ancient_Grudge,10; //Ancient_Grudge
 	delitem .@spirit,1;
 	delitem .@doll,1;
 	getitem .@tattoo,1;

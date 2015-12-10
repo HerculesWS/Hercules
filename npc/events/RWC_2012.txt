@@ -13,7 +13,7 @@
 
 prontera,147,61,3	script	Driller#pron	4_M_BARBER,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You're carrying too many items in your inventory. Visit Kafra storage and try again.";
 		close;
 	}
@@ -82,7 +82,7 @@ prontera,147,61,3	script	Driller#pron	4_M_BARBER,{
 
 prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You are carrying too many items. Come back after you have organized your inventory.";
 		close;
 	}
@@ -298,7 +298,7 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 			mes "Come back if you change your mind.";
 			close;
 		}
-		if (countitem(6665) == 0) {
+		if (countitem(RWC_Inicializer) == 0) {
 			mes "[Goldberg]";
 			mes "I'm sorry. But you don't have the RWC Initialization coupon. Can you check your inventory?";
 			close;
@@ -311,7 +311,7 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 		specialeffect2 EF_REPAIRWEAPON;
 		mes "[Goldberg]";
 		mes "The enchant option in your item will be initialized.";
-		delitem 6665,1; //RWC_Inicializer
+		delitem RWC_Inicializer,1; //RWC_Inicializer
 		delequip .@part;
 
 //		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]

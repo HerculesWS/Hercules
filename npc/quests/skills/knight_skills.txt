@@ -121,7 +121,7 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 			mes "strength and courage!";
 			close;
 		}
-		if (KNGT_SK == 7 && countitem(530) > 4 && countitem(748) > 2) {
+		if (KNGT_SK == 7 && countitem(Candy_Striper) > 4 && countitem(Witherless_Rose) > 2) {
 			mes "[Essofeit]";
 			mes "The concept of honor";
 			mes "seems to be lost on today's";
@@ -176,8 +176,8 @@ prt_in,85,99,3	script	Knight#kabuto	4_M_JOB_KNIGHT2,{
 				mes "been researching recently. Why";
 				mes "don't you come back after I've";
 				mes "completed the preparations?";
-				delitem 530,5; //Candy_Striper
-				delitem 748,3; //Witherless_Rose
+				delitem Candy_Striper,5; //Candy_Striper
+				delitem Witherless_Rose,3; //Witherless_Rose
 				KNGT_SK = 8;
 				close;
 			}

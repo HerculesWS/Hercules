@@ -88,7 +88,7 @@ pay_arche,109,169,3	script	Arpesto	4_M_05,{
 			}
 		}
 		else if (qskill_hunter == 1) {
-			if (countitem(724) > 4 && countitem(7115) > 4 && countitem(537) > 29) {
+			if (countitem(Cardinal_Jewel_) > 4 && countitem(Harpy's_Feather) > 4 && countitem(Pet_Food) > 29) {
 				mes "[Arpesto]";
 				mes "Hm? You're back?";
 				mes "Oh, did you bring";
@@ -207,9 +207,9 @@ pay_arche,109,169,3	script	Arpesto	4_M_05,{
 				mes "care of him, so just make";
 				mes "sure you make good use";
 				mes "of that new skill. Take care~";
-				delitem 724,5; //Cardinal_Jewel_
-				delitem 7115,5; //Harpy's_Feather
-				delitem 537,30; //Pet_Food
+				delitem Cardinal_Jewel_,5; //Cardinal_Jewel_
+				delitem Harpy's_Feather,5; //Harpy's_Feather
+				delitem Pet_Food,30; //Pet_Food
 				qskill_hunter = 100;
 				skill "HT_PHANTASMIC",1,0;
 				close;

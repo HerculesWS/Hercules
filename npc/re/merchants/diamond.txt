@@ -48,7 +48,7 @@
 	next;
 
 	.@menu$ = "^FF82FF'17 Carat Diamond'^000000?";
-	if (countitem(6024))
+	if (countitem(17Carat_Dia))
 		.@menu$ += ":Exchange my 17 Carat Diamond for zeny...";
 
 	switch(select(.@menu$)) {
@@ -128,7 +128,7 @@
 					mes "Amount has been confirmed.";
 					emotion e_loud;
 					Zeny -= 501000000;
-					getitem 6024, 1;
+					getitem 17Carat_Dia, 1;
 					next;
 					mes .@npc$;
 					mes "You may exchange the diamond back for zeny at any time.";
@@ -198,7 +198,7 @@
 				mes "Whenever you need a ^FF82FF'17 Carat Diamond'^000000,";
 				mes "come back anytime with 500 million zeny.";
 				emotion e_thx;
-				delitem 6024, 1;
+				delitem 17Carat_Dia, 1;
 				Zeny += 499000000;
 				close;
 			}

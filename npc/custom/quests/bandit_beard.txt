@@ -71,20 +71,20 @@ L_MAKE:
 	mes "[Bearded Man]";
 	mes "Let's make you your beard!";
 	next;
-	if(countitem(7200) < 1 || countitem(919) < 1 ||	countitem(983) < 1 || countitem(2241) < 1 ||
-	countitem(938) < 100 || countitem(973) < 1 || countitem(731) < 1) goto L_NOITEMS;
-	delitem 7200, 1;
-	delitem 919, 1;
-	delitem 983, 1;
-	delitem 2241, 1;
-	delitem 938, 100;
-	delitem 973, 1;
-	delitem 731, 1;
+	if(countitem(Flexible_String) < 1 || countitem(Animal's_Skin) < 1 ||	countitem(Black_Dyestuffs) < 1 || countitem(Granpa_Beard) < 1 ||
+	countitem(Sticky_Mucus) < 100 || countitem(Counteragent) < 1 || countitem(Crystal_Jewel_) < 1) goto L_NOITEMS;
+	delitem Flexible_String, 1;
+	delitem Animal's_Skin, 1;
+	delitem Black_Dyestuffs, 1;
+	delitem Granpa_Beard, 1;
+	delitem Sticky_Mucus, 100;
+	delitem Counteragent, 1;
+	delitem Crystal_Jewel_, 1;
 	mes "^8080FF~You see him cutting and sewing the beard together~^000000";
 	next;
 	mes "^8080FF~He hands you the finished beard~^000000";
 	next;
-	getitem 2237, 1;
+	getitem Weird_Goatee, 1;
 	set BEARD_QUEST, 5;
 	mes "[Bearded Man]";
 	mes "Have a nice day!";

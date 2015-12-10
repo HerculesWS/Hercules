@@ -241,7 +241,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		close;
 	}
 	else if(SAG_SK == 1) {
-		if (countitem(904) < 10 || countitem(947) < 7 || countitem(1013) < 12 || countitem(946) < 10 || countitem(7433) < 4) {
+		if (countitem(Scorpion's_Tail) < 10 || countitem(Horn) < 7 || countitem(Colorful_Shell) < 12 || countitem(Snail's_Shell) < 10 || countitem(Scroll) < 4) {
 			mes "[Mishuna]";
 			mes "Hm, you still haven't";
 			mes "gathered all of the materials";
@@ -308,11 +308,11 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 			mes "Creation skill by reviewing";
 			mes "your copy of Barmundt's scroll.^000000";
 			specialeffect2 EF_ABSORBSPIRITS;
-			delitem 904,10; // Scorpion_Tail
-			delitem 947,7; // Horn
-			delitem 1013,12; // Rainbow_Shell
-			delitem 946,10; // Snail's_Shell
-			delitem 7433,4; // Blank_Scroll
+			delitem Scorpion's_Tail,10; // Scorpion_Tail
+			delitem Horn,7; // Horn
+			delitem Colorful_Shell,12; // Rainbow_Shell
+			delitem Snail's_Shell,10; // Snail's_Shell
+			delitem Scroll,4; // Blank_Scroll
 			SAG_SK = 2;
 			skill "SA_CREATECON",1,0;
 			next;
@@ -396,7 +396,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		setarray .@ReqItem$[0],"Red Bloods","Green Lives","Wind of Verdure","Crystal Blues";
 		setarray .@skill[0],1018,1017,1019,1008;
 		setarray .@skill$[0],"Fire","Earth","Wind","Water";
-		if (countitem(.@ReqItem[.@i]) < 20 || countitem(1089) < 1 || countitem(1088) < 1) {
+		if (countitem(.@ReqItem[.@i]) < 20 || countitem(Payon_Potion) < 1 || countitem(Morocc_Potion) < 1) {
 			mes "[Mishuna]";
 			mes "Are you having trouble";
 			mes "gathering all the required";
@@ -447,8 +447,8 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		mes "@#$%^~ Yap!";
 		specialeffect2 EF_BRANDISHSPEAR;
 		delitem .@ReqItem[.@i],20;
-		delitem 1089,1; // Payon Potion
-		delitem 1088,1; // Morocc Potion
+		delitem Payon_Potion,1; // Payon Potion
+		delitem Morocc_Potion,1; // Morocc Potion
 		SAG_SK = 100;
 		skill .@skill[.@i],1,0;
 		next;

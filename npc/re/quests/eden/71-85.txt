@@ -14,7 +14,7 @@
 //============================================================
 
 moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
-	if (countitem(6219) < 1) {
+	if (countitem(Para_Team_Mark) < 1) {
 		mes "- Only members of the -";
 		mes "- Eden Group can read -";
 		mes "- this bulletin board. -";
@@ -53,7 +53,7 @@ moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
 			if (questprogress(.@quests[.@i],HUNTING) == 2)
 				.@complete[getarraysize(.@complete)] = .@quests[.@i];
 		}
-		if (questprogress(5057) && countitem(7187) >= 30)
+		if (questprogress(5057) && countitem(Festival_Mask) >= 30)
 			.@complete[getarraysize(.@complete)] = 5057;
 		if (getarraysize(.@complete)) {
 			mes "You have quests in progress.";
@@ -173,7 +173,7 @@ L_Quest:
 		mes "'"+.@name$+"' completed. Do you want to turn it in and receive your reward?";
 		next;
 		if(select("Turn in quest.:Cancel.") == 1) {
-			if (.@quest == 5057) delitem 7187,30; //Festival_Mask
+			if (.@quest == 5057) delitem Festival_Mask,30; //Festival_Mask
 			erasequest .@quest;
 			getexp .@exp,0;
 			mes "You've received EXP for finishing the quest.";
@@ -186,7 +186,7 @@ L_Quest:
 			// Quest 5057 is the only collection quest, so separate conditions are unnecessary.
 			if (!questprogress(5057))
 				.@hunting = 0;
-			else if (countitem(7187) >= 30)
+			else if (countitem(Festival_Mask) >= 30)
 				.@hunting = 2;
 		} else {
 			.@hunting = questprogress(.@quest,HUNTING);
@@ -200,7 +200,7 @@ L_Quest:
 			mes "You have completed the quest.";
 			next;
 			if(select("Turn in quest.:Cancel.") == 1) {
-				if (.@quest == 5057) delitem 7187,30; //Festival_Mask
+				if (.@quest == 5057) delitem Festival_Mask,30; //Festival_Mask
 				erasequest .@quest;
 				getexp .@exp,0;
 				mes "You've received EXP for finishing the quest.";

@@ -155,7 +155,7 @@ hu_in01,23,311,4	script	Party Supplies Shop	4_M_HUMAN_01,{
 				close;
 			}
 			Zeny -= 500;
-			getitem 12018,5;	// Fire_Cracker
+			getitem Fire_Cracker,5;	// Fire_Cracker
 			mes "[Shopkeeper]";
 			mes "Here you go!";
 			mes "Have fun with them!";

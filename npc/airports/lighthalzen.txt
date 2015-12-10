@@ -23,8 +23,8 @@ lhz_airport,143,43,5	script	Airport Staff#lhz_air1a::lhz_airport1	4_F_01,{
 		mes "a Free Ticket for Airship.";
 		next;
 		if (select("Yes:No") == 1) {
-			if (countitem(7311) > 0) {
-				delitem 7311,1; //Free_Flying_Ship_Ticket
+			if (countitem(Free_Flying_Ship_Ticket) > 0) {
+				delitem Free_Flying_Ship_Ticket,1; //Free_Flying_Ship_Ticket
 				warp "lhz_airport",148,51;
 				end;
 			}

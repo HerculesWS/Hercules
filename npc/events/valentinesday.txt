@@ -49,7 +49,7 @@ alberta,26,243,4	script	Stephen	1_M_MERCHANT,{
 		mes "I'm sorry, but it seems you can't afford to buy these off me.";
 		close; }
 	Zeny -= .@i*5000;
-	getitem 558,.@i;
+	getitem Chocolate,.@i;
 	mes "There you go!";
 	mes "You can give that to someone as a gift, or enjoy it yourself!";
 	mes "Mmm... sweet chocolate...";
@@ -103,10 +103,10 @@ prt_castle,54,34,4	script	Carl Orleans	1_M_01,{
 	mes "Well, I just might be able to fulfill your needs...";
 	next;
 	mes "[Carl Orleans]";
-	if (countitem(558) < 3) {
+	if (countitem(Chocolate) < 3) {
 		mes "I'm sorry, you don't have enough Chocolate Bars to do this.";
 		close; }
-	delitem 558,3;
+	delitem Chocolate,3;
 	mes "You got 3 pieces of pure chocolate, I see.";
 	mes "Give them to me...";
 	next;
@@ -118,7 +118,7 @@ prt_castle,54,34,4	script	Carl Orleans	1_M_01,{
 	mes "Well...";
 	next;
 	mes "[Carl Orleans]";
-	getitem 559,1;
+	getitem HandMade_Chocolate,1;
 	mes "Here.";
 	mes "I hope you give it to someone special, because its a special chocolate.";
 	mes "As you know... only I can create this.";

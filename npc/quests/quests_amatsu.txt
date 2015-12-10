@@ -19,7 +19,7 @@
 // Momotaro Event :: japan_momo_q
 //============================================================
 amatsu,223,236,3	script	Publisher#ama	4_M_JPN,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a moment!! -";
 		mes "- Currently you are carrying -";
 		mes "- too many items with you. -";
@@ -143,67 +143,67 @@ amatsu,223,236,3	script	Publisher#ama	4_M_JPN,{
 		if (.@event_momo == 3) {
 			.@gift_1 = rand(1,10);
 			if (.@gift_1 == 1) {
-				getitem 659,1; //Heart_Of_Her
+				getitem Heart_Of_Her,1; //Heart_Of_Her
 			}
 			if (.@gift_1 == 2) {
-				getitem 633,1; //Baked_Yam
+				getitem Baked_Yam,1; //Baked_Yam
 			}
 			if (.@gift_1 == 3) {
-				getitem 634,1; //Tropical_Banana
+				getitem Tropical_Banana,1; //Tropical_Banana
 			}
 			if (.@gift_1 == 4) {
-				getitem 639,1; //Armlet_Of_Obedience
+				getitem Armlet_Of_Obedience,1; //Armlet_Of_Obedience
 			}
 			if (.@gift_1 == 5) {
-				getitem 636,1; //No_Recipient
+				getitem No_Recipient,1; //No_Recipient
 			}
 			if (.@gift_1 == 6) {
-				getitem 628,1; //Well_Dried_Bone
+				getitem Well_Dried_Bone,1; //Well_Dried_Bone
 			}
 			if (.@gift_1 == 7) {
-				getitem 637,1; //Old_Broom
+				getitem Old_Broom,1; //Old_Broom
 			}
 			if (.@gift_1 == 8) {
-				getitem 635,1; //Horror_Of_Tribe
+				getitem Horror_Of_Tribe,1; //Horror_Of_Tribe
 			}
 			if (.@gift_1 == 9) {
-				getitem 626,1; //Monster_Juice
+				getitem Monster_Juice,1; //Monster_Juice
 			}
 			if (.@gift_1 == 10) {
-				getitem 641,1; //Contracts_In_Shadow
+				getitem Contracts_In_Shadow,1; //Contracts_In_Shadow
 			}
 		}
 		else {
 			.@gift_2 = rand(1,10);
 			if (.@gift_2 == 1) {
-				getitem 622,1; //Rainbow_Carrot
+				getitem Rainbow_Carrot,1; //Rainbow_Carrot
 			}
 			if (.@gift_2 == 2) {
-				getitem 627,1; //Sweet_Milk
+				getitem Sweet_Milk,1; //Sweet_Milk
 			}
 			if (.@gift_2 == 3) {
-				getitem 629,1; //Singing_Flower
+				getitem Singing_Flower,1; //Singing_Flower
 			}
 			if (.@gift_2 == 4) {
-				getitem 632,1; //Fatty_Chubby_Earthworm
+				getitem Fatty_Chubby_Earthworm,1; //Fatty_Chubby_Earthworm
 			}
 			if (.@gift_2 == 5) {
-				getitem 623,1; //Earthworm_The_Dude
+				getitem Earthworm_The_Dude,1; //Earthworm_The_Dude
 			}
 			if (.@gift_2 == 6) {
-				getitem 619,1; //Unripe_Apple
+				getitem Unripe_Apple,1; //Unripe_Apple
 			}
 			if (.@gift_2 == 7) {
-				getitem 621,1; //Bitter_Herb
+				getitem Bitter_Herb,1; //Bitter_Herb
 			}
 			if (.@gift_2 == 8) {
-				getitem 620,1; //Orange_Juice
+				getitem Orange_Juice,1; //Orange_Juice
 			}
 			if (.@gift_2 == 9) {
-				getitem 625,1; //Lusty_Iron
+				getitem Lusty_Iron,1; //Lusty_Iron
 			}
 			if (.@gift_2 == 10) {
-				getitem 624,1; //Rotten_Fish
+				getitem Rotten_Fish,1; //Rotten_Fish
 			}
 		}
 		close;
@@ -453,7 +453,7 @@ OnTouch:
 	mes "So...Do me this favor, kid~";
 	close2;
 	event_momo = 1;
-	if (countitem(9010) > 0 || countitem(9005) > 0 || countitem(9016) > 0) {
+	if (countitem(Baby_Desert_Wolf_Egg) > 0 || countitem(Picky_Egg) > 0 || countitem(Yoyo_Egg) > 0) {
 		disablenpc "Grandpa#ama";
 		disablenpc "Grandma#ama1";
 		donpcevent "Dokebi#ez::OnEnable";
@@ -812,7 +812,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		close;
 	}
 	else if (fish_r == 1) {
-		if (countitem(529) > 9) {
+		if (countitem(Candy) > 9) {
 			mes "[Magumagu]";
 			mes "Oh! I really appreciate it.";
 			mes "Right on time!";
@@ -824,8 +824,8 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 			next;
 			fish_r = 0;
 			erasequest 10036;
-			delitem 529,10; //Candy
-			getitem 544,15; //Fish_Slice
+			delitem Candy,10; //Candy
+			getitem Fish_Slice,15; //Fish_Slice
 			mes "[Magumagu]";
 			mes "Here's 15 fish slices.";
 			mes "Please enjoy this food with your friends.";
@@ -844,7 +844,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		close;
 	}
 	else if (fish_r == 2) {
-		if (countitem(964) > 9) {
+		if (countitem(Crap_Shell) > 9) {
 			mes "[Magumagu]";
 			mes "Oh! I really appreciate it.";
 			mes "Right on time!";
@@ -856,8 +856,8 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 			next;
 			fish_r = 0;
 			erasequest 10037;
-			delitem 964,10; //Crap_Shell
-			getitem 551,20; //Shusi
+			delitem Crap_Shell,10; //Crap_Shell
+			getitem Shusi,20; //Shusi
 			mes "[Magumagu]";
 			mes "Share it with your friends";
 			mes "and family members.";
@@ -876,7 +876,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		close;
 	}
 	else if (fish_r == 3) {
-		if (countitem(961) > 9) {
+		if (countitem(Conch) > 9) {
 			mes "[Magumagu]";
 			mes "Oh! I really appreciate it.";
 			mes "Right on time!";
@@ -888,8 +888,8 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 			next;
 			fish_r = 0;
 			erasequest 10038;
-			delitem 961,10; //Conch
-			getitem 551,30; //Shusi
+			delitem Conch,10; //Conch
+			getitem Shusi,30; //Shusi
 			mes "[Magumagu]";
 			mes "These are for three people,";
 			mes "so share them with your friends.";
@@ -908,7 +908,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		close;
 	}
 	else if (fish_r == 4) {
-		if (countitem(1023) > 9) {
+		if (countitem(Fish_Tail) > 9) {
 			mes "[Magumagu]";
 			mes "Oh! I really appreciate it.";
 			mes "Right on time!";
@@ -920,9 +920,9 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 			next;
 			fish_r = 0;
 			erasequest 10039;
-			delitem 1023,10; //Fish_Tail
-			getitem 544,20; //Fish_Slice
-			getitem 551,30; //Shusi
+			delitem Fish_Tail,10; //Fish_Tail
+			getitem Fish_Slice,20; //Fish_Slice
+			getitem Shusi,30; //Shusi
 			mes "[Magumagu]";
 			mes "You can feed your guild";
 			mes "with this food.";
@@ -941,7 +941,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		close;
 	}
 	else if (fish_r == 5) {
-		if (countitem(736) > 0) {
+		if (countitem(White_Platter) > 0) {
 			mes "[Magumagu]";
 			mes "Oh! I really appreciate it.";
 			mes "Right on time!";
@@ -951,10 +951,10 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 			mes "Thanks. It is nothing but";
 			mes "I will give you two sets of Sushi in return.";
 			next;
-			delitem 736,1; //White_Platter
+			delitem White_Platter,1; //White_Platter
 			fish_r = 0;
 			erasequest 10040;
-			getitem 551,20; //Shusi
+			getitem Shusi,20; //Shusi
 			mes "[Magumagu]";
 			mes "Share it with your friends";
 			mes "and family members.";
@@ -974,7 +974,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		close;
 	}
 	else if (fish_r == 6) {
-		if (countitem(950) > 99) {
+		if (countitem(Heart_Of_Mermaid) > 99) {
 			if (ama_sushi == 2) {
 				mes "[Magumagu]";
 				mes "..............................";
@@ -1010,10 +1010,10 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				mes "I'm old now. No one knows how long I can hold this knife. You have been chosen to inherit my culinary art...";
 				mes " ";
 				next;
-				delitem 950,100; //Heart_Of_Mermaid
+				delitem Heart_Of_Mermaid,100; //Heart_Of_Mermaid
 				ama_sushi = 4;
 				completequest 10041;
-				getitem 1144,1; //Sasimi
+				getitem Sasimi,1; //Sasimi
 				mes "[Magumagu]";
 				mes "Here, take my knife.";
 				mes "From now on, make fine cuisine with that knife.";
@@ -1042,33 +1042,33 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				mes "Give me a moment...";
 				mes "I shall show you my ^0000FFtrue culinary skill^000000.";
 				next;
-				delitem 950,20; //Heart_Of_Mermaid
-				getitem 551,20; //Shusi
+				delitem Heart_Of_Mermaid,20; //Heart_Of_Mermaid
+				getitem Shusi,20; //Shusi
 				mes "[Magumagu]";
 				mes "Try these first.";
 				mes "Made from the freshest ingredients.";
 				next;
-				delitem 950,20; //Heart_Of_Mermaid
-				getitem 544,20; //Fish_Slice
+				delitem Heart_Of_Mermaid,20; //Heart_Of_Mermaid
+				getitem Fish_Slice,20; //Fish_Slice
 				mes "[Magumagu]";
 				mes "Try these too.";
 				mes "My shop's fish slices are the best of the best!";
 				next;
-				delitem 950,20; //Heart_Of_Mermaid
-				getitem 551,20; //Shusi
+				delitem Heart_Of_Mermaid,20; //Heart_Of_Mermaid
+				getitem Shusi,20; //Shusi
 				mes "[Magumagu]";
 				mes "Have some more. Don't say no...!";
 				mes "Isn't it good? Huh? Isn't it good?";
 				next;
-				delitem 950,20; //Heart_Of_Mermaid
-				getitem 544,20; //Fish_Slice
+				delitem Heart_Of_Mermaid,20; //Heart_Of_Mermaid
+				getitem Fish_Slice,20; //Fish_Slice
 				mes "[Magumagu]";
 				mes "Haha~! Not done yet!";
 				mes "It's okay, have some more!";
 				next;
-				delitem 950,20; //Heart_Of_Mermaid
-				getitem 544,10; //Fish_Slice
-				getitem 551,10; //Shusi
+				delitem Heart_Of_Mermaid,20; //Heart_Of_Mermaid
+				getitem Fish_Slice,10; //Fish_Slice
+				getitem Shusi,10; //Shusi
 				mes "[Magumagu]";
 				mes "Take the leftovers.";
 				mes "You look stuffed...";
@@ -1128,7 +1128,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				close;
 			}
 			Zeny -= 700;
-			getitem 551,10; //Shusi
+			getitem Shusi,10; //Shusi
 			mes "[Magumagu]";
 			mes "There you go. If you like the taste, please order some more.";
 			close;
@@ -1141,7 +1141,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				close;
 			}
 			Zeny -= 74;
-			getitem 551,1; //Shusi
+			getitem Shusi,1; //Shusi
 			mes "[Magumagu]";
 			mes "There you go. If you like the taste, please order some more.";
 			close;
@@ -1169,7 +1169,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				close;
 			}
 			Zeny -= 350;
-			getitem 544,10; //Fish_Slice
+			getitem Fish_Slice,10; //Fish_Slice
 			mes "[Magumagu]";
 			mes "There you go. If you like the taste, please order some more.";
 			close;
@@ -1182,7 +1182,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 				close;
 			}
 			Zeny -= 37;
-			getitem 544,1; //Fish_Slice
+			getitem Fish_Slice,1; //Fish_Slice
 			mes "[Magumagu]";
 			mes "There you go. If you like the taste, please order some more.";
 			close;
@@ -1462,7 +1462,7 @@ ama_in02,170,62,4	script	Soldier#ama2	8_M_JPNSOLDIER,{
 	switch(select("Issue me a Transit Permit:I want to live in Amatsu:Nothing")) {
 	case 1:
 		if (event_amatsu == 6) {
-			if (countitem(7160) > 0) {
+			if (countitem(Lord's_Passable_Ticket) > 0) {
 				mes "[Jiro]";
 				mes "You already have one...";
 				mes "You don't need to have two of them.";
@@ -1475,7 +1475,7 @@ ama_in02,170,62,4	script	Soldier#ama2	8_M_JPNSOLDIER,{
 			next;
 			if (select("Issue one:Talk to you later") == 1) {
 				Zeny -= 10000;
-				getitem 7160,1; //Lord's_Passable_Ticket
+				getitem Lord's_Passable_Ticket,1; //Lord's_Passable_Ticket
 				mes "[Jiro]";
 				mes "There you go.";
 				mes "Don't lose it this time.";
@@ -1656,7 +1656,7 @@ ama_in02,115,177,7	script	Soldier#ama10	8_M_JPNSOLDIER,{
 		close;
 	}
 	if (event_amatsu == 6) {
-		if (countitem(7160) > 0) {
+		if (countitem(Lord's_Passable_Ticket) > 0) {
 			mes "[Jyuro]";
 			mes "You have the ticket...";
 			mes "Do you want me to send you now, or do you need a little instruction?";
@@ -1712,7 +1712,7 @@ ama_in02,115,177,7	script	Soldier#ama10	8_M_JPNSOLDIER,{
 	mes "A gate? On the top floor of the building??? Surely, you must been be mistaken.";
 	emotion e_swt;
 	next;
-	if (countitem(7160) > 0) {
+	if (countitem(Lord's_Passable_Ticket) > 0) {
 		if (select("Show him the ticket:Cancel") == 1) {
 			mes "[Jyuro]";
 			mes "What? That pass is...?";
@@ -1720,7 +1720,7 @@ ama_in02,115,177,7	script	Soldier#ama10	8_M_JPNSOLDIER,{
 			mes "the lord but I guess it has";
 			mes "been issued to the wrong person.";
 			next;
-			delitem 7160,1; //Lord's_Passable_Ticket
+			delitem Lord's_Passable_Ticket,1; //Lord's_Passable_Ticket
 			mes "[Jyuro]";
 			mes "I will keep this ticket because";
 			mes "it was issued without permission.";
@@ -1830,7 +1830,7 @@ ama_in02,200,176,4	script	Lord of Palace#ama	8_M_JPNMASTER,{
 		}
 	}
 	else if (event_amatsu == 5) {
-		if (countitem(1022) > 0) {
+		if (countitem(Fox_Tail) > 0) {
 			mes "[Ishida Yoshinaga]";
 			mes "I've hear the great news!";
 			mes "My mother seems to have gotten better. What was her disease?";
@@ -1862,8 +1862,8 @@ ama_in02,200,176,4	script	Lord of Palace#ama	8_M_JPNMASTER,{
 			next;
 			event_amatsu = 6;
 			completequest 8135;
-			delitem 1022,1; //Fox_Tail
-			getitem 7160,1; //Lord's_Passable_Ticket
+			delitem Fox_Tail,1; //Fox_Tail
+			getitem Lord's_Passable_Ticket,1; //Lord's_Passable_Ticket
 			mes "[Ishida Yoshinaga]";
 			mes "This isn't a big reward but";
 			mes "someday it will be useful for you.";
@@ -1921,7 +1921,7 @@ ama_in01,22,111,0	script	Grandma#ama2	4_F_JPNOBA,{
 		mes "it won't harm me!! Yelp!^000000";
 		next;
 		select("Taaaah!!");
-		if ((BaseJob == Job_Priest || BaseJob != Job_Acolyte && BaseJob != Job_Monk) || (countitem(523) < 1 || countitem(948) < 1 || countitem(1029) < 1)) {
+		if ((BaseJob == Job_Priest || BaseJob != Job_Acolyte && BaseJob != Job_Monk) || (countitem(Holy_Water) < 1 || countitem(Bear's_Foot) < 1 || countitem(Tiger's_Skin) < 1)) {
 			if (rand(1,4) == 1)
 				.@fox_kill = 0;
 			else
@@ -1948,7 +1948,7 @@ ama_in01,22,111,0	script	Grandma#ama2	4_F_JPNOBA,{
 			killmonsterall "ama_in01";
 			event_amatsu = 5;
 			changequest 8134,8135;
-			getitem 1022,1; //Fox_Tail
+			getitem Fox_Tail,1; //Fox_Tail
 			mes "[....]";
 			mes "^FF6060Everything that";
 			mes "Yoshinaga does will cause you";

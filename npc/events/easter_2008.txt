@@ -100,7 +100,7 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	4W_M_02,{
 						close;
 					}
 					else {
-						if (checkweight(7605,.@input) == 0) {
+						if (checkweight(Chicken_Egg,.@input) == 0) {
 							mes "[Egg Salesman]";
 							mes "Hey, I know you really";
 							mes "want to buy some Chicken";
@@ -119,7 +119,7 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	4W_M_02,{
 							mes "about that. Well, have a good";
 							mes "time, and I'll see you again!";
 							Zeny -= .@egg_zeny;
-							getitem 7605,.@input; //Chicken_Egg
+							getitem Chicken_Egg,.@input; //Chicken_Egg
 							close;
 						}
 					}
@@ -259,7 +259,7 @@ prontera,230,312,3	script	Nerlen#es07	1_F_PRIEST,{
 				next;
 			}
 			else {
-				if ((countitem(509) < .@input) || (countitem(511) < .@input) || (countitem(508) < .@input) || (countitem(523) < .@input) || (countitem(7605) < .@input)) {
+				if ((countitem(White_Herb) < .@input) || (countitem(Green_Herb) < .@input) || (countitem(Yellow_Herb) < .@input) || (countitem(Holy_Water) < .@input) || (countitem(Chicken_Egg) < .@input)) {
 					mes "[Nerlen]";
 					mes "I'm sorry, but you don't";
 					mes "have enough items to make";
@@ -280,7 +280,7 @@ prontera,230,312,3	script	Nerlen#es07	1_F_PRIEST,{
 				}
 			}
 		}
-		if (checkweight(12019,.@input) == 0) {
+		if (checkweight(Holy_Egg,.@input) == 0) {
 			mes "[Nerlen]";
 			mes "I'm sorry, but you";
 			mes "won't be able to carry";
@@ -290,12 +290,12 @@ prontera,230,312,3	script	Nerlen#es07	1_F_PRIEST,{
 			close;
 		}
 		else {
-			delitem 509,.@input; //White_Herb
-			delitem 511,.@input; //Green_Herb
-			delitem 508,.@input; //Yellow_Herb
-			delitem 523,.@input; //Holy_Water
-			delitem 7605,.@input; //Egg
-			getitem 12019,.@input; //Holy_Egg
+			delitem White_Herb,.@input; //White_Herb
+			delitem Green_Herb,.@input; //Green_Herb
+			delitem Yellow_Herb,.@input; //Yellow_Herb
+			delitem Holy_Water,.@input; //Holy_Water
+			delitem Chicken_Egg,.@input; //Egg
+			getitem Holy_Egg,.@input; //Holy_Egg
 			mes "[Nerlen]";
 			mes "Thank you!";
 			mes "I hope you enjoy";
@@ -319,7 +319,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 		mes "Death... It's inescapable.";
 		mes "Even you'll die someday. But...";
 		next;
-		if (countitem(12019) > 0) {
+		if (countitem(Holy_Egg) > 0) {
 			mes "[Corps Member]";
 			mes "Oh, yes. That's it.";
 			mes "You have it. The egg you";
@@ -380,16 +380,16 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 			mes "First, let me check if you";
 			mes "brought the Holy Eggs...";
 			next;
-			if (countitem(12019) > 9) {
+			if (countitem(Holy_Egg) > 9) {
 				mes "[Corps Member]";
 				mes "Very well. In return";
 				mes "for these Holy Eggs, let";
 				mes "me give you a small present";
 				mes "for joining us. Now, I can";
 				mes "tell you about what we do.";
-				delitem 12019,10; //Holy_Egg
+				delitem Holy_Egg,10; //Holy_Egg
 				easter2008 = 3;
-				getitem 644,2; //Gift_Box
+				getitem Gift_Box,2; //Gift_Box
 				next;
 				mes "[Corps Member]";
 				mes "^333333*Cough Cough*^000000";
@@ -452,7 +452,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 		next;
 		switch(select("Give Holy Eggs:Don't Give Holy Eggs")) {
 		case 1:
-			if (countitem(12019) > 32) {
+			if (countitem(Holy_Egg) > 32) {
 				mes "[Corps Member]";
 				mes "Ah, these will do!";
 				mes "Now, make a note of the";
@@ -636,7 +636,7 @@ pay_dun00,22,127,0	script	Trace#egg1	CLEAR_NPC,{
 		mes "Time to use all of";
 		mes "these Holy Eggs.";
 		next;
-		if (countitem(12019) > 32) {
+		if (countitem(Holy_Egg) > 32) {
 			mes "[" + strcharinfo(0) + "]";
 			mes "Here we go...";
 			mes "Will this really bring";
@@ -657,7 +657,7 @@ pay_dun00,22,127,0	script	Trace#egg1	CLEAR_NPC,{
 			mes "that Corps Member and let";
 			mes "him know that it didn't work.";
 			close2;
-			delitem 12019,33; //Holy_Egg
+			delitem Holy_Egg,33; //Holy_Egg
 			easter2008 = 9;
 			end;
 		}
@@ -688,7 +688,7 @@ iz_dun02,340,346,0	script	Trace#egg	CLEAR_NPC,{
 		mes "Time to use all of";
 		mes "these Holy Eggs.";
 		next;
-		if (countitem(12019) > 32) {
+		if (countitem(Holy_Egg) > 32) {
 			mes "[" + strcharinfo(0) + "]";
 			mes "Here we go...";
 			mes "Will this really bring";
@@ -709,7 +709,7 @@ iz_dun02,340,346,0	script	Trace#egg	CLEAR_NPC,{
 			mes "that Corps Member and let";
 			mes "him know that it didn't work.";
 			close2;
-			delitem 12019,33; //Holy_Egg
+			delitem Holy_Egg,33; //Holy_Egg
 			easter2008 = 9;
 			end;
 		}
@@ -740,7 +740,7 @@ mjo_dun03,308,256,0	script	Trace#egg2	CLEAR_NPC,{
 		mes "Time to use all of";
 		mes "these Holy Eggs.";
 		next;
-		if (countitem(12019) > 32) {
+		if (countitem(Holy_Egg) > 32) {
 			mes "[" + strcharinfo(0) + "]";
 			mes "Here we go...";
 			mes "Will this really bring";
@@ -761,7 +761,7 @@ mjo_dun03,308,256,0	script	Trace#egg2	CLEAR_NPC,{
 			mes "that Corps Member and let";
 			mes "him know that it didn't work.";
 			close2;
-			delitem 12019,33; //Holy_Egg
+			delitem Holy_Egg,33; //Holy_Egg
 			easter2008 = 9;
 			end;
 		}
@@ -792,7 +792,7 @@ gl_prison,157,176,0	script	Trace#egg3	CLEAR_NPC,{
 		mes "Time to use all of";
 		mes "these Holy Eggs.";
 		next;
-		if (countitem(12019) > 32) {
+		if (countitem(Holy_Egg) > 32) {
 			mes "[" + strcharinfo(0) + "]";
 			mes "Here we go...";
 			mes "Will this really bring";
@@ -813,7 +813,7 @@ gl_prison,157,176,0	script	Trace#egg3	CLEAR_NPC,{
 			mes "that Corps Member and let";
 			mes "him know that it didn't work.";
 			close2;
-			delitem 12019,33; //Holy_Egg
+			delitem Holy_Egg,33; //Holy_Egg
 			easter2008 = 9;
 			end;
 		}

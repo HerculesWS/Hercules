@@ -14,7 +14,7 @@
 //============================================================
 
 prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- Your pack is too heavy. -";
 		mes "- Lighten your body first -";
 		mes "- and please try again. -";
@@ -191,7 +191,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		changequest 12090,12091;
 		close;
 	} else if (job_royal == 2) {
-		if (countitem(7097) < 100) {
+		if (countitem(Burning_Heart) < 100) {
 			mes "Don't forget to bring 100 Burning Heart.";
 			close;
 		}
@@ -200,7 +200,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		next;
 		mes "[Heinrich]";
 		mes "Wait while I arrange the stuff that you brought.";
-		delitem 7097,100; //Burning_Heart
+		delitem Burning_Heart,100; //Burning_Heart
 		job_royal = 3;
 		changequest 12091,12092;
 		close;
@@ -279,7 +279,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		changequest 12092,12093;
 		close;
 	} else if (job_royal == 4) {
-		if (countitem(6274) == 0) {
+		if (countitem(Saint_Cloth_Piece) == 0) {
 			mes "Our staff has already left to find the last trace, so don't work too hard.";
 			close;
 		}
@@ -317,15 +317,15 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "[Heinrich]";
 		mes "Ok~~ now.";
 		mes "I'll be deciphering the cloth for now so I will be very busy!";
-		delitem 6274,1; //Saint_Cloth_Piece
-		getitem 6275,1; //King_Shield
+		delitem Saint_Cloth_Piece,1; //Saint_Cloth_Piece
+		getitem King_Shield,1; //King_Shield
 		job_royal = 5;
 		changequest 12093,12094;
 		close;
 	} else if (job_royal == 5) {
-		if (countitem(6275) == 0) {
+		if (countitem(King_Shield) == 0) {
 			mes "What? Did you lose the shield? What is the one on your back?";
-			getitem 6275,1; //King_Shield
+			getitem King_Shield,1; //King_Shield
 			close;
 		}
 		mes "Thanks to your help I can finish the excavation work. Thanks a lot.";
@@ -334,7 +334,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 }
 
 glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- Your pack is too heavy. -";
 		mes "- Lighten your body first -";
 		mes "- and please try again. -";
@@ -345,7 +345,7 @@ glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
 		close;
 	}
 	if (BaseJob == Job_Crusader && job_royal == 5) {
-		if (countitem(6275) == 0) {
+		if (countitem(King_Shield) == 0) {
 			mes "^000099You seem to have lost the shield. Go back to Heinrich and ask for help^000000.";
 			close;
 		}
@@ -424,24 +424,24 @@ glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
 		specialeffect2 EF_MAPPILLAR;
 		progressbar "FFFF00",7;
 		specialeffect2 EF_LORD;
-		delitem 6275,1; //King_Shield
+		delitem King_Shield,1; //King_Shield
 		erasequest 12094;
 		jobchange roclass(eaclass()|EAJL_THIRD);
-		getitem 5757,1; //Schmidt_Helm
-		getitem 2795,1; //Green_Apple_Ring
+		getitem Schmidt_Helm,1; //Schmidt_Helm
+		getitem Green_Apple_Ring,1; //Green_Apple_Ring
 		end;
 	}
 	end;
 }
 
 gl_church,173,88,0	script	Delicate trace#01	CLEAR_NPC,{
-	if (job_royal == 4 && countitem(6274) == 0) {
+	if (job_royal == 4 && countitem(Saint_Cloth_Piece) == 0) {
 		progressbar "ffff00",5;
 		.@roy_ran = rand(1,70);
 		if (.@roy_ran < 6)
-			getitem 6274,1; //Saint_Cloth_Piece
+			getitem Saint_Cloth_Piece,1; //Saint_Cloth_Piece
 		else if (.@roy_ran > 5 && .@roy_ran < 66)
-			getitem 7049,1; //Stone
+			getitem Stone,1; //Stone
 		else {
 			mes "While investigating, the topography breaks. It would be better to dig other places for a while.";
 			disablenpc strnpcinfo(0);
@@ -478,7 +478,7 @@ gl_church,105,115,0	duplicate(Delicate trace#01)	Delicate trace#11	CLEAR_NPC
 gl_church,158,100,0	script	#Clue of traces	HIDDEN_NPC,4,4,{
 	end;
 OnTouch:
-	if (job_royal == 4 && countitem(6274) == 0) {
+	if (job_royal == 4 && countitem(Saint_Cloth_Piece) == 0) {
 		specialeffect2 EF_FREEZE;
 		mes "I can feel strong power around here. It would be better to explore around here.";
 		viewpoint 1,173,88 ,1, 0xFFFF00;

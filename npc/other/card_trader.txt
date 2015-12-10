@@ -151,7 +151,7 @@ prontera,115,90,0	script	Putty	4_F_01,{
 						mes "of luck with this album. I have a";
 						mes "very good feeling about this one!";
 						oversea_event9 = .@points - 100;
-						getitem 616,1;
+						getitem Old_Card_Album,1;
 						close;
 					case 2:
 						if (.@points < 50) break;
@@ -159,7 +159,7 @@ prontera,115,90,0	script	Putty	4_F_01,{
 						mes "Oh, you must like adventures.";
 						mes "Here you go, just what you need!";
 						oversea_event9 = .@points - 50;
-						getitem 607,20;
+						getitem Yggdrasilberry,20;
 						close;
 					case 3:
 						if (.@points < 20) break;
@@ -167,7 +167,7 @@ prontera,115,90,0	script	Putty	4_F_01,{
 						mes "Blue Potions? Are you sure?";
 						mes "If that's what you want, here they are!";
 						oversea_event9 = .@points - 20;
-						getitem 505,10;
+						getitem Blue_Potion,10;
 						close;
 					case 4:
 						if (.@points < 1) break;
@@ -176,7 +176,7 @@ prontera,115,90,0	script	Putty	4_F_01,{
 						mes "to make all of this.";
 						mes "Make good use of it.";
 						oversea_event9 = .@points - 1;
-						getitem 518,4;
+						getitem Honey,4;
 						close;
 					case 5:
 						mes "[Putty]";

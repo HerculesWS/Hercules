@@ -108,7 +108,7 @@ ama_in02,61,27,7	script	Alchemist#ama	4_M_ALCHE_B,{
 		else if (.@j == 4) {
 			if (countitem(.@i) > 11) {
 				delitem .@i,12;
-				getitem 996,1;
+				getitem Rough_Wind,1;
 				mes "Kehhehheh, You know something?";
 				mes "I don't have many of those";
 				mes "so I'm going to take ^0000FF12^000000 of yours, okay?";

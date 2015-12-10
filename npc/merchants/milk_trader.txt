@@ -18,7 +18,7 @@
 //============================================================
 
 prontera,73,140,0	script	Milk Vendor	4_M_04,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFJust a minute!";
 		mes "I can't offer any of my";
 		mes "services to you because";
@@ -36,7 +36,7 @@ prontera,73,140,0	script	Milk Vendor	4_M_04,{
 	mes "does that sound?";
 	next;
 	if (select("Exchange all empty bottles.:Cancel") == 1) {
-		if (countitem(713) <= 0) {
+		if (countitem(Empty_Bottle) <= 0) {
 			mes "[Milk Vendor]";
 			mes "Hey...";
 			mes "You don't have";
@@ -46,7 +46,7 @@ prontera,73,140,0	script	Milk Vendor	4_M_04,{
 			mes "way, you know...";
 			close;
 		}
-		.@bottles = countitem(713);
+		.@bottles = countitem(Empty_Bottle);
 		.@total_weight = .@bottles * 50;
 		.@total_cost = .@bottles * 15;
 		if (Zeny < .@total_cost) {
@@ -70,8 +70,8 @@ prontera,73,140,0	script	Milk Vendor	4_M_04,{
 			close;
 		}
 		Zeny -= .@total_cost;
-		delitem 713,.@bottles; //Empty Bottles
-		getitem 519,.@bottles; //Milk
+		delitem Empty_Bottle,.@bottles; //Empty Bottles
+		getitem Milk,.@bottles; //Milk
 		close;
 	}
 	close;

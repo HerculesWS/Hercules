@@ -290,7 +290,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "know right away. For now,";
 		mes "please hold on to these pieces.";
 		sign_q = 54;
-		getitem 7177,1; //Part_Of_Star's_Sob
+		getitem Part_Of_Star's_Sob,1; //Part_Of_Star's_Sob
 	}
 	else if (sign_q == 54) {
 		if (rand(1,5) == 4) {
@@ -551,7 +551,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "proven its existence!";
 		mes "Please let me handle";
 		mes "this and come back later~";
-		delitem 7314,1; //The_Sign
+		delitem The_Sign,1; //The_Sign
 		sign_q = 138;
 		.@stime_s = gettime(GETTIME_HOUR);
 		if (.@stime_s < 1) sign_sq = 1;
@@ -658,7 +658,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 			mes "Blacksmith.";
 			sign_q = 139;
 			sign_sq = 0;
-			getitem 7314,1; //The_Sign
+			getitem The_Sign,1; //The_Sign
 		}
 		else {
 			mes "I'm sorry, but I'm";
@@ -676,7 +676,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "Sign's power for you...";
 	}
 	else if (sign_q == 141) {
-		if (countitem(2644) == 1) {
+		if (countitem(The_Sign_) == 1) {
 			mes "Ah, you're finally";
 			mes "here. I've been waiting";
 			mes "to speak with you. First,";
@@ -719,19 +719,19 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "accept this as a token";
 		mes "of my gratitude. Good luck";
 		mes "on your travels, adventurer.";
-		if (checkweight(7178,1) == 0) {
+		if (checkweight(Star's_Sob,1) == 0) {
 				next;
 				mes "^3355FFWait a second! Right now,";
 				mes "you have too many items in your inventory. Please come back after you've freed up more inventory space.^000000";
 				close;
 		}
-		delitem 7178,1; //Star's_Sob
+		delitem Star's_Sob,1; //Star's_Sob
 		sign_q = 202;
 		getexp RENEWAL_EXP?10000:100000,0;
-		getitem 617,1; //Old_Violet_Box
+		getitem Old_Violet_Box,1; //Old_Violet_Box
 	}
 	else if (sign_q > 201) {
-		if (countitem(7178) == 1) {
+		if (countitem(Star's_Sob) == 1) {
 			mes "I'm sorry...";
 			mes "But I'm taking";
 			mes "back the Sobbing";
@@ -742,7 +742,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 			mes "[Metz]";
 			mes "......";
 			mes "Farewell.";
-			delitem 7178,1; //Star's_Sob
+			delitem Star's_Sob,1; //Star's_Sob
 		}
 		else {
 			mes "I guess I can't";
@@ -1083,14 +1083,14 @@ prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
 		mes "refreshment, that";
 		mes "would be perfect...";
 		close2;
-		if (countitem(504) > 0) {
+		if (countitem(White_Potion) > 0) {
 			select("Why don't you take this?");
 			mes "[Elle]";
 			mes "Oh, you didn't";
 			mes "need to do this,";
 			mes "but that you soooo";
 			mes "much! Ahhhhhhh~";
-			delitem 504,1; //White_Potion
+			delitem White_Potion,1; //White_Potion
 			close2;
 			emotion e_kis2;
 			end;
@@ -1205,7 +1205,7 @@ prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
 
 morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 	callfunc "F_UpdateSignVars";
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second! Right now,";
 		mes "you have too many items in your inventory. Please come back after you've freed up more inventory space.^000000";
 		close;
@@ -1284,18 +1284,18 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		case 4:
 			mes "[Arian]";
 			mes "...";
-			if (countitem(914) > 99) {
-				delitem 914,100; //Fluff
-				if (countitem(7033) > 49) {
-					delitem 7033,50; //Poison_Spore
-					if (countitem(904) > 29) {
-						delitem 904,30; //Scorpion's_Tail
-						if (countitem(930) > 19) {
-							delitem 930,20; //Rotten_Bandage
-							if (countitem(1038) > 14) {
-								delitem 1038,15; //Petite_DiablOfs_Horn
-								if (countitem(7013) > 9) {
-									delitem 7013,10; //Coral_Reef
+			if (countitem(Fluff) > 99) {
+				delitem Fluff,100; //Fluff
+				if (countitem(Poison_Spore) > 49) {
+					delitem Poison_Spore,50; //Poison_Spore
+					if (countitem(Scorpion's_Tail) > 29) {
+						delitem Scorpion's_Tail,30; //Scorpion's_Tail
+						if (countitem(Rotten_Bandage) > 19) {
+							delitem Rotten_Bandage,20; //Rotten_Bandage
+							if (countitem(Petite_DiablOfs_Horn) > 14) {
+								delitem Petite_DiablOfs_Horn,15; //Petite_DiablOfs_Horn
+								if (countitem(Coral_Reef) > 9) {
+									delitem Coral_Reef,10; //Coral_Reef
 								}
 							}
 						}
@@ -1316,16 +1316,16 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		case 5:
 			mes "[Arian]";
 			mes "...";
-			if (countitem(7033) > 49) {
-				delitem 7033,50; //Poison_Spore
-				if (countitem(904) > 29) {
-					delitem 904,30; //Scorpion's_Tail
-					if (countitem(930) > 19) {
-						delitem 930,20; //Rotten_Bandage
-						if (countitem(1038) > 14) {
-							delitem 1038,15; //Petite_DiablOfs_Horn
-							if (countitem(7013) > 9) {
-								delitem 7013,10; //Coral_Reef
+			if (countitem(Poison_Spore) > 49) {
+				delitem Poison_Spore,50; //Poison_Spore
+				if (countitem(Scorpion's_Tail) > 29) {
+					delitem Scorpion's_Tail,30; //Scorpion's_Tail
+					if (countitem(Rotten_Bandage) > 19) {
+						delitem Rotten_Bandage,20; //Rotten_Bandage
+						if (countitem(Petite_DiablOfs_Horn) > 14) {
+							delitem Petite_DiablOfs_Horn,15; //Petite_DiablOfs_Horn
+							if (countitem(Coral_Reef) > 9) {
+								delitem Coral_Reef,10; //Coral_Reef
 							}
 						}
 					}
@@ -1347,14 +1347,14 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		case 6:
 			mes "[Arian]";
 			mes "...";
-			if (countitem(904) > 29) {
-				delitem 904,30; //Scorpion's_Tail
-				if (countitem(930) > 19) {
-					delitem 930,20; //Rotten_Bandage
-					if (countitem(1038) > 14) {
-						delitem 1038,15; //Petite_DiablOfs_Horn
-						if (countitem(7013) > 9) {
-							delitem 7013,10; //Coral_Reef
+			if (countitem(Scorpion's_Tail) > 29) {
+				delitem Scorpion's_Tail,30; //Scorpion's_Tail
+				if (countitem(Rotten_Bandage) > 19) {
+					delitem Rotten_Bandage,20; //Rotten_Bandage
+					if (countitem(Petite_DiablOfs_Horn) > 14) {
+						delitem Petite_DiablOfs_Horn,15; //Petite_DiablOfs_Horn
+						if (countitem(Coral_Reef) > 9) {
+							delitem Coral_Reef,10; //Coral_Reef
 						}
 					}
 				}
@@ -1375,12 +1375,12 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		case 7:
 			mes "[Arian]";
 			mes "...";
-			if (countitem(930) > 19) {
-				delitem 930,20; //Rotten_Bandage
-				if (countitem(1038) > 14) {
-					delitem 1038,15; //Petite_DiablOfs_Horn
-					if (countitem(7013) > 9) {
-						delitem 7013,10; //Coral_Reef
+			if (countitem(Rotten_Bandage) > 19) {
+				delitem Rotten_Bandage,20; //Rotten_Bandage
+				if (countitem(Petite_DiablOfs_Horn) > 14) {
+					delitem Petite_DiablOfs_Horn,15; //Petite_DiablOfs_Horn
+					if (countitem(Coral_Reef) > 9) {
+						delitem Coral_Reef,10; //Coral_Reef
 					}
 				}
 			}
@@ -1401,10 +1401,10 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		case 8:
 			mes "[Arian]";
 			mes "...";
-			if (countitem(1038) > 14) {
-				delitem 1038,15; //Petite_DiablOfs_Horn
-				if (countitem(7013) > 9) {
-					delitem 7013,10; //Coral_Reef
+			if (countitem(Petite_DiablOfs_Horn) > 14) {
+				delitem Petite_DiablOfs_Horn,15; //Petite_DiablOfs_Horn
+				if (countitem(Coral_Reef) > 9) {
+					delitem Coral_Reef,10; //Coral_Reef
 				}
 			}
 			else {
@@ -1430,8 +1430,8 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 			close;
 		case 9:
 			mes "[Arian]";
-			if (countitem(7013) > 9) {
-				delitem 7013,10; //Coral_Reef
+			if (countitem(Coral_Reef) > 9) {
+				delitem Coral_Reef,10; //Coral_Reef
 			}
 			else {
 				mes "I don't care how pretty";
@@ -1509,7 +1509,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 				else getexp 18000,0;
 			}
 			sign_q = 14;
-			getitem 7177,1; //Part_Of_Star's_Sob
+			getitem Part_Of_Star's_Sob,1; //Part_Of_Star's_Sob
 			close;
 		case 14:
 			mes "[Arian]";
@@ -1893,7 +1893,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			mes "Come and drink with me~";
 		}
 		next;
-		if (countitem(7177) > 0) {
+		if (countitem(Part_Of_Star's_Sob) > 0) {
 			.@pay_point = 1;
 			mes "["+ strcharinfo(0) +"]";
 			mes "Sure...";
@@ -2364,7 +2364,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			}
 			if (.@pay_point > 29) {
 				sign_q = 15;
-				getitem 7177,1; //Part_Of_Star's_Sob
+				getitem Part_Of_Star's_Sob,1; //Part_Of_Star's_Sob
 				if (RENEWAL_EXP) {
 					if (BaseLevel < 60) getexp 300,0;
 					else if (BaseLevel < 70) getexp 750,0;
@@ -2408,7 +2408,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 			}
 			else if ((.@pay_point > 26) && (.@pay_point < 30)) {
 				sign_q = 15;
-				getitem 7177,1; //Part_Of_Star's_Sob
+				getitem Part_Of_Star's_Sob,1; //Part_Of_Star's_Sob
 				if (RENEWAL_EXP) {
 					if (BaseLevel < 60) getexp 300,0;
 					else if (BaseLevel < 70) getexp 750,0;
@@ -2694,10 +2694,10 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 			}
 		}
 		else if (sign_q == 16) {
-			if ((countitem(1092) > 9) && (countitem(610) > 1) && (countitem(511) > 9)) {
-				delitem 1092,10; //Empty_Cylinder
-				delitem 610,2; //Leaf_Of_Yggdrasil
-				delitem 511,10; //Green_Herb
+			if ((countitem(Empty_Cylinder) > 9) && (countitem(Leaf_Of_Yggdrasil) > 1) && (countitem(Green_Herb) > 9)) {
+				delitem Empty_Cylinder,10; //Empty_Cylinder
+				delitem Leaf_Of_Yggdrasil,2; //Leaf_Of_Yggdrasil
+				delitem Green_Herb,10; //Green_Herb
 				sign_q = 17;
 				emotion e_thx;
 				mes "[Sir Jore]";
@@ -2809,7 +2809,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 				mes "relying on a rumor...";
 				next;
 				sign_q = 20;
-				getitem 7177,1; //Part_Of_Star's_Sob
+				getitem Part_Of_Star's_Sob,1; //Part_Of_Star's_Sob
 				mes "[Sir Jore]";
 				mes "Thank you very much";
 				mes "for helping me. Now I can";
@@ -3661,7 +3661,7 @@ geffen_in,59,74,4	script	Jesqurienne#sign	1_F_SIGNZISK,{
 		next;
 		mes "[Jesqurienne]";
 		sign_q = 25;
-		getitem 7177,1; //Part_Of_Star's_Sob
+		getitem Part_Of_Star's_Sob,1; //Part_Of_Star's_Sob
 		mes "Here...";
 		mes "My old friend, Metz, told";
 		mes "me to give this to someone";
@@ -4593,21 +4593,21 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 			mes "Ah, so is this";
 			mes "the stuff you brought?";
 			mes "Lemme take a look-see...";
-			if (countitem(734)) .@diaris_t += 1;
-			if (countitem(735)) .@diaris_t += 1;
-			if (countitem(736)) .@diaris_t += 1;
-			if (countitem(7149)) .@diaris_t += 1;
-			if (countitem(747)) .@diaris_t += 2;
-			if (countitem(749)) .@diaris_t += 4;
-			if (countitem(740)) .@diaris_t += 1;
-			if (countitem(741)) .@diaris_t += 1;
-			if (countitem(742)) .@diaris_t += 2;
-			if (countitem(743)) .@diaris_t += 3;
-			if (countitem(752)) .@diaris_t += 3;
-			if (countitem(753)) .@diaris_t += 4;
-			if (countitem(754)) .@diaris_t += 4;
-			if (countitem(750)) .@diaris_t += 7;
-			if (countitem(751)) .@diaris_t += 7;
+			if (countitem(Red_Frame)) .@diaris_t += 1;
+			if (countitem(Blue_Porcelain)) .@diaris_t += 1;
+			if (countitem(White_Platter)) .@diaris_t += 1;
+			if (countitem(Yellow_Plate)) .@diaris_t += 1;
+			if (countitem(Crystal_Mirror)) .@diaris_t += 2;
+			if (countitem(Frozen_Rose)) .@diaris_t += 4;
+			if (countitem(Stuffed_Doll)) .@diaris_t += 1;
+			if (countitem(Poring_Doll)) .@diaris_t += 1;
+			if (countitem(Chonchon_Doll)) .@diaris_t += 2;
+			if (countitem(Spore_Doll)) .@diaris_t += 3;
+			if (countitem(Grasshopper_Doll)) .@diaris_t += 3;
+			if (countitem(Monkey_Doll)) .@diaris_t += 4;
+			if (countitem(Raccoondog_Doll)) .@diaris_t += 4;
+			if (countitem(Baphomet_Doll)) .@diaris_t += 7;
+			if (countitem(Osiris_Doll)) .@diaris_t += 7;
 			next;
 			if (.@diaris_t > 10) {
 				mes "[Dearles]";
@@ -4622,21 +4622,21 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 				mes "I'm gonna send you to";
 				mes "Lamadin for Part Two";
 				mes "of my test. Yeah, I know...";
-				if (countitem(734)) delitem 734,1; //Red_Frame
-				if (countitem(735)) delitem 735,1; //Blue_Porcelain
-				if (countitem(736)) delitem 736,1; //White_Platter
-				if (countitem(7149)) delitem 7149,1; //Yellow_Plate
-				if (countitem(747)) delitem 747,1; //Crystal_Mirror
-				if (countitem(749)) delitem 749,1; //Frozen_Rose
-				if (countitem(740)) delitem 740,1; //Stuffed_Doll
-				if (countitem(741)) delitem 741,1; //Poring_Doll
-				if (countitem(742)) delitem 742,1; //Chonchon_Doll
-				if (countitem(743)) delitem 743,1; //Spore_Doll
-				if (countitem(752)) delitem 752,1; //Grasshopper_Doll
-				if (countitem(753)) delitem 753,1; //Monkey_Doll
-				if (countitem(754)) delitem 754,1; //Raccoondog_Doll
-				if (countitem(750)) delitem 750,1; //Baphomet_Doll
-				if (countitem(751)) delitem 751,1; //Osiris_Doll
+				if (countitem(Red_Frame)) delitem Red_Frame,1; //Red_Frame
+				if (countitem(Blue_Porcelain)) delitem Blue_Porcelain,1; //Blue_Porcelain
+				if (countitem(White_Platter)) delitem White_Platter,1; //White_Platter
+				if (countitem(Yellow_Plate)) delitem Yellow_Plate,1; //Yellow_Plate
+				if (countitem(Crystal_Mirror)) delitem Crystal_Mirror,1; //Crystal_Mirror
+				if (countitem(Frozen_Rose)) delitem Frozen_Rose,1; //Frozen_Rose
+				if (countitem(Stuffed_Doll)) delitem Stuffed_Doll,1; //Stuffed_Doll
+				if (countitem(Poring_Doll)) delitem Poring_Doll,1; //Poring_Doll
+				if (countitem(Chonchon_Doll)) delitem Chonchon_Doll,1; //Chonchon_Doll
+				if (countitem(Spore_Doll)) delitem Spore_Doll,1; //Spore_Doll
+				if (countitem(Grasshopper_Doll)) delitem Grasshopper_Doll,1; //Grasshopper_Doll
+				if (countitem(Monkey_Doll)) delitem Monkey_Doll,1; //Monkey_Doll
+				if (countitem(Raccoondog_Doll)) delitem Raccoondog_Doll,1; //Raccoondog_Doll
+				if (countitem(Baphomet_Doll)) delitem Baphomet_Doll,1; //Baphomet_Doll
+				if (countitem(Osiris_Doll)) delitem Osiris_Doll,1; //Osiris_Doll
 				sign_q = 30;
 				if (RENEWAL_EXP) {
 					if (BaseLevel < 60) getexp 300,0;
@@ -4728,7 +4728,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 			mes "go find someone named,";
 			mes "um, ''Bakerlan'' in Alberta.";
 			sign_q = 35;
-			getitem 7177,1; //Part_Of_Star's_Sob
+			getitem Part_Of_Star's_Sob,1; //Part_Of_Star's_Sob
 			if (RENEWAL_EXP) {
 				if (BaseLevel < 60) getexp 300,0;
 				else if (BaseLevel < 70) getexp 700,0;
@@ -4765,7 +4765,7 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 			mes "go find someone named,";
 			mes "um, ''Bakerlan'' in Alberta.";
 			sign_q = 35;
-			getitem 7177,1; //Part_Of_Star's_Sob
+			getitem Part_Of_Star's_Sob,1; //Part_Of_Star's_Sob
 			Zeny += 20000;
 			if (RENEWAL_EXP) {
 				if (BaseLevel < 60) getexp 300,0;
@@ -5553,7 +5553,7 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	1_M_SIGNMCNT,{
 			mes "my time is quite precious.";
 			close;
 		case 2:
-			if (countitem(7177) < 5) {
+			if (countitem(Part_Of_Star's_Sob) < 5) {
 				mes "[Bakerlan]";
 				mes "Hmm, I suppose you";
 				mes "still haven't completed";
@@ -5562,7 +5562,7 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	1_M_SIGNMCNT,{
 				mes "Starlight, you know...";
 				close;
 			}
-			else if (countitem(7177) == 5) {
+			else if (countitem(Part_Of_Star's_Sob) == 5) {
 				mes "[Bakerlan]";
 				mes "Ah, now I see that";
 				mes "you speak the truth.";
@@ -5637,7 +5637,7 @@ alberta_in,125,101,5	script	Wealthy-looking Merchant	1_M_SIGNMCNT,{
 		mes "Now bring all of the stone pieces to Metz.";
 		mes "He will tell you what you need to do next.";
 		sign_q = 53;
-		getitem 7177,1; //Part_Of_Star's_Sob
+		getitem Part_Of_Star's_Sob,1; //Part_Of_Star's_Sob
 		if (RENEWAL_EXP) {
 			if (BaseLevel < 60) getexp 500,0;
 			else if (BaseLevel < 70) getexp 800,0;
@@ -5910,7 +5910,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 			mes "the Vigorgra to me?";
 			close;
 		case 48:
-			if (countitem(7044) < 1) {
+			if (countitem(Vigorgra) < 1) {
 				mes "Oh, you know where";
 				mes "you can get Vigorgra?";
 				mes "That's great news!";
@@ -5939,7 +5939,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 				mes "you also make sure he gets";
 				mes "this? Thank you so much!";
 				sign_q = 49;
-				getitem 7183,1; //Sister_Letter
+				getitem Sister_Letter,1; //Sister_Letter
 				close;
 			}
 		case 49:
@@ -5956,7 +5956,7 @@ alberta_in,154,171,5	script	Maid#s10	4_F_JPN,{
 			mes "as a token of my gratitude.";
 			mes "You really are a kind person~";
 			sign_q = 51;
-			getitem 525,3; //Panacea
+			getitem Panacea,3; //Panacea
 			next;
 			emotion e_kis2;
 			close;
@@ -6014,7 +6014,7 @@ prt_castle,107,58,5	script	Soldier#s11	8W_SOLDIER,{
 		close;
 	}
 	else if (sign_q == 49) {
-		if ((countitem(7044) < 1) && (countitem(7183) < 1)) {
+		if ((countitem(Vigorgra) < 1) && (countitem(Sister_Letter) < 1)) {
 			mes "Welcome to";
 			mes "Prontera Castle.";
 			mes "Please be careful";
@@ -6078,8 +6078,8 @@ prt_castle,107,58,5	script	Soldier#s11	8W_SOLDIER,{
 			mes "is replenish your health.";
 			mes "I'm not really supposed to,";
 			mes "but no one will say anything.";
-			delitem 7044,1; //Vigorgra
-			delitem 7183,1; //Sister_Letter
+			delitem Vigorgra,1; //Vigorgra
+			delitem Sister_Letter,1; //Sister_Letter
 			sign_q = 50;
 			percentheal 100,100;
 			next;
@@ -6269,7 +6269,7 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 			mes "everything ready...";
 			next;
 			mes "[Melkaba]";
-			if ((countitem(526) < 10) || (countitem(518) < 20) || (countitem(948) < 30) || (countitem(520) < 1) || (countitem(708) < 1) || (countitem(713) < 1)) {
+			if ((countitem(Royal_Jelly) < 10) || (countitem(Honey) < 20) || (countitem(Bear's_Foot) < 30) || (countitem(Leaflet_Of_Hinal) < 1) || (countitem(Ment) < 1) || (countitem(Empty_Bottle) < 1)) {
 				mes "Hmm, you're still";
 				mes "missing some of the";
 				mes "ingredients. Now, listen";
@@ -6338,14 +6338,14 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 						mes "stuff is extremely potent!";
 						next;
 						Zeny -= 10000;
-						delitem 526,10; //Royal_Jelly
-						delitem 518,20; //Honey
-						delitem 948,30; //Bear's_Foot
-						delitem 520,1; //Leaflet_Of_Hinal
-						delitem 708,1; //Ment
-						delitem 713,1; //Empty_Bottle
+						delitem Royal_Jelly,10; //Royal_Jelly
+						delitem Honey,20; //Honey
+						delitem Bear's_Foot,30; //Bear's_Foot
+						delitem Leaflet_Of_Hinal,1; //Leaflet_Of_Hinal
+						delitem Ment,1; //Ment
+						delitem Empty_Bottle,1; //Empty_Bottle
 						sign_q = 48;
-						getitem 7044,1; //Vigorgra
+						getitem Vigorgra,1; //Vigorgra
 						mes "[Melkaba]";
 						mes "Um, just remember";
 						mes "not to take too much";
@@ -6356,12 +6356,12 @@ alde_alche,169,162,7	script	Alchemist#sign	4_M_ALCHE_B,{
 					}
 					else {
 						specialeffect EF_PHARMACY_FAIL;
-						delitem 526,10; //Royal_Jelly
-						delitem 518,20; //Honey
-						delitem 948,30; //Bear's_Foot
-						delitem 520,1; //Leaflet_Of_Hinal
-						delitem 708,1; //Ment
-						delitem 713,1; //Empty_Bottle
+						delitem Royal_Jelly,10; //Royal_Jelly
+						delitem Honey,20; //Honey
+						delitem Bear's_Foot,30; //Bear's_Foot
+						delitem Leaflet_Of_Hinal,1; //Leaflet_Of_Hinal
+						delitem Ment,1; //Ment
+						delitem Empty_Bottle,1; //Empty_Bottle
 						mes "It failed?!";
 						mes "Of course, the mixture";
 						mes "was too vigorous, even";
@@ -6483,7 +6483,7 @@ alberta_in,114,178,5	script	Refined Steward	4_M_MANAGER,{
 		getnameditem 7049,strcharinfo(0);
 		close;
 	}
-	else if (sign_q == 38 || (sign_q == 39 && countitem(7181) < 1)) {
+	else if (sign_q == 38 || (sign_q == 39 && countitem(Receipt_01) < 1)) {
 		mes "You haven't delivered";
 		mes "the Stone yet? Please take";
 		mes "good care of it since it's very";
@@ -6499,7 +6499,7 @@ alberta_in,114,178,5	script	Refined Steward	4_M_MANAGER,{
 		mes "well done. Let me send a";
 		mes "message to the master, so";
 		mes "please visit him later.";
-		delitem 7181,1; //Receipt_01
+		delitem Receipt_01,1; //Receipt_01
 		sign_q = 40;
 		close;
 	}
@@ -6748,7 +6748,7 @@ yuno,330,100,4	script	Knight#ss	4_M_JOB_KNIGHT2,{
 		close;
 	}
 	else if (sign_q == 38) {
-		if (countitem(7049) < 1) {
+		if (countitem(Stone) < 1) {
 			mes "Excuse me...";
 			mes "Are you from the Alchesh";
 			mes "Trading Company? I've been";
@@ -6851,7 +6851,7 @@ yuno,330,100,4	script	Knight#ss	4_M_JOB_KNIGHT2,{
 				mes "Thanks again!";
 				delitem2 7049,1,1,0,0,.@sign1,.@sign2,.@sign3,.@sign4;
 				sign_q = 39;
-				getitem 7181,1; //Receipt_01
+				getitem Receipt_01,1; //Receipt_01
 				if (RENEWAL_EXP) {
 					if (BaseLevel < 60) getexp 100,0;
 					else if (BaseLevel < 70) getexp 200,0;
@@ -6987,7 +6987,7 @@ geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 		close;
 	}
 	else if (sign_q < 62) {
-		if (countitem(7278) > 0) {
+		if (countitem(Wellbeing_Letter) > 0) {
 			mes "Thank you so much for bringing";
 			mes "this to me. I'm so happy to hear that he's fine and doing well.";
 			mes "Although he's not here often enough, it's good to know";
@@ -6997,7 +6997,7 @@ geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 			mes "Even so, I should start letting";
 			mes "him know that I want him to spend";
 			mes "a little more time at home. Oh, and why don't you talk to Liana? She's been waiting to tell you something.";
-			delitem 7278,1; //Wellbeing_Letter
+			delitem Wellbeing_Letter,1; //Wellbeing_Letter
 			sign_q += 4;
 			close;
 		}
@@ -7030,7 +7030,7 @@ geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 
 geffen_in,171,42,3	script	Cute Girl	4_F_KID2,{
 	callfunc "F_UpdateSignVars";
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second! Right now,";
 		mes "you have too many items in your inventory. Please come back after you've made more available inventory space.^000000";
 		close;
@@ -7102,7 +7102,7 @@ geffen_in,171,42,3	script	Cute Girl	4_F_KID2,{
 					mes "my dad, okay? Promise?";
 					emotion e_ho;
 					sign_q = 56;
-					getitem 7276,1; //Picture_Letter
+					getitem Picture_Letter,1; //Picture_Letter
 					close;
 				case 2:
 					mes "[Liana]";
@@ -7133,7 +7133,7 @@ geffen_in,171,42,3	script	Cute Girl	4_F_KID2,{
 		mes "Thank you for bringing my letter to my dad. Here, here!";
 		mes "You have to share my treasure with me, 'kay?";
 		sign_q += 4;
-		getitem 529,10; //Candy
+		getitem Candy,10; //Candy
 		close;
 	}
 	else {
@@ -7144,14 +7144,14 @@ geffen_in,171,42,3	script	Cute Girl	4_F_KID2,{
 
 mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 	callfunc "F_UpdateSignVars";
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second! Right now,";
 		mes "you have too many items in your inventory. Please come back after you've freed up more inventory space.^000000";
 		close;
 	}
 	mes "[Engel]";
 	if ((sign_q > 1) && (sign_q < 54)) {
-		if(countitem(1002) > 0) {
+		if(countitem(Iron_Ore) > 0) {
 			mes "Just as I suspected...";
 			mes "I didn't bring enough of them.";
 			mes "Hmm, this is serious. What";
@@ -7167,7 +7167,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 				mes "Thank you so much!";
 				mes "If it weren't for your help,";
 				mes "I'd be in big trouble. I really appreciate you stepping in and volunteering your materials like this.";
-				delitem 1002,1; //Iron_Ore
+				delitem Iron_Ore,1; //Iron_Ore
 				getexp 10,0;
 				close;
 			case 2:
@@ -7196,7 +7196,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 		end;
 	}
 	else if (sign_q == 56) {
-		if (countitem(7276) > 0) {
+		if (countitem(Picture_Letter) > 0) {
 			mes "^333333*Sigh*^000000";
 			mes "It's been a long";
 			mes "time since I've seen";
@@ -7261,8 +7261,8 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 					next;
 					mes "[Engel]";
 					mes "Right. Let me guide you to a shortcut to the exit of these mines, just in case you don't know your way out of here. Good luck~";
-					delitem 7276,1; //Picture_Letter
-					delitem 7177,7; //Part_Of_Star's_Sob
+					delitem Picture_Letter,1; //Picture_Letter
+					delitem Part_Of_Star's_Sob,7; //Part_Of_Star's_Sob
 					sign_q = 57;
 					close2;
 					warp "mjo_dun02",371,344;
@@ -7293,16 +7293,16 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 	else if (sign_q == 57) {
 		mes "As I've told you before, I'm more likely to succeed in my work if I'm able to use a higher quality anvil. Let's me see what you've brought...";
 		next;
-		if ((countitem(612) > 4) && (countitem(615) > 1) && ((countitem(986) > 0) || (countitem(987) > 0) || (countitem(988) > 0) || (countitem(989) > 0))) {
+		if ((countitem(Portable_Furnace) > 4) && (countitem(Oridecon_Hammer) > 1) && ((countitem(Anvil) > 0) || (countitem(Oridecon_Anvil) > 0) || (countitem(Golden_Anvil) > 0) || (countitem(Emperium_Anvil) > 0))) {
 			mes "[Engel]";
-			if (countitem(986) > 0) {
+			if (countitem(Anvil) > 0) {
 				mes "A...";
 				mes "Regular Anvil?";
 				mes "Alright, I guess I'll try it.";
 				mes "But I can't guarantee success.";
 				.@anvil = 0;
 			}
-			else if (countitem(987) > 0) {
+			else if (countitem(Oridecon_Anvil) > 0) {
 				mes "Ah...";
 				mes "An Oridecon Avil.";
 				mes "This isn't too bad,";
@@ -7310,13 +7310,13 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 				mes "that this might not work.";
 				.@anvil = 1;
 			}
-			else if (countitem(988) > 0) {
+			else if (countitem(Golden_Anvil) > 0) {
 				mes "Ah...";
 				mes "A Golden Anvil.";
 				mes "This just might be able to do the job. This might take a while, so I have something to ask of you.";
 				.@anvil = 2;
 			}
-			else if (countitem(989) > 0) {
+			else if (countitem(Emperium_Anvil) > 0) {
 				mes "Oh wow, an Emperium Anvil!";
 				mes "And this looks like one I might have actually made. Great, I should be able to do this so long as I don't make any critical mistakes~";
 				.@anvil = 3;
@@ -7329,11 +7329,11 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			mes "Well then...";
 			mes "I wish you safety";
 			mes "in your travels.";
-			delitem 612,5; //Portable_Furnace
-			delitem 615,2; //Oridecon_Hammer
+			delitem Portable_Furnace,5; //Portable_Furnace
+			delitem Oridecon_Hammer,2; //Oridecon_Hammer
 			delitem (986+.@anvil),1; //Anvil-Oridecon_Anvil-Golden_Anvil-Emperium_Anvil
 			sign_q = (58+.@anvil);
-			getitem 7278,1; //Wellbeing_Letter
+			getitem Wellbeing_Letter,1; //Wellbeing_Letter
 			close;
 		}
 		else {
@@ -7369,7 +7369,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			mes "While you were gone, I managed to restore this Sobbing Starlight. Why don't you go ahead and take a look?";
 			next;
 			sign_q = 71;
-			getitem 7178,1; //Star's_Sob
+			getitem Star's_Sob,1; //Star's_Sob
 			specialeffect2 EF_YUFITELHIT;
 			next;
 			mes "[Engel]";
@@ -7435,8 +7435,8 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 		}
 	}
 	else if (sign_q == 70) {
-		if ((countitem(612) > 4) && (countitem(615) > 1) && ((countitem(986) > 0) || (countitem(987) > 0) || (countitem(988) > 0) || (countitem(989) > 0))) {
-			if ((countitem(986) > 0) || (countitem(987) > 0)) {
+		if ((countitem(Portable_Furnace) > 4) && (countitem(Oridecon_Hammer) > 1) && ((countitem(Anvil) > 0) || (countitem(Oridecon_Anvil) > 0) || (countitem(Golden_Anvil) > 0) || (countitem(Emperium_Anvil) > 0))) {
+			if ((countitem(Anvil) > 0) || (countitem(Oridecon_Anvil) > 0)) {
 				mes "Didn't I tell you to bring me a Golden Anvil or an Emperium Anvil? Anything less isn't good enough to do any restoration work on this Sobbing Starlight.";
 				next;
 				mes "[Engel]";
@@ -7444,11 +7444,11 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 				mes "here, bring a Golden or Emperium Anvil and make sure to leave all of your other anvils in Kafra Storage or something, okay?";
 				close;
 			}
-			else if (countitem(988) > 0) {
+			else if (countitem(Golden_Anvil) > 0) {
 				mes "Good, good.";
 				mes "I see that you've brought a Golden Anvil. Now I can get started right away! Still, I'm a little about those monsters showing up again, so would you keep a lookout?";
 			}
-			else if (countitem(989) > 0) {
+			else if (countitem(Emperium_Anvil) > 0) {
 				mes "Excellent! You've brought an Emperium Anvil! Now, keep a lookout for monsters while I repair these ore fragments. We can't have those beasts ruin my work again, right? Thank you.";
 			}
 			next;
@@ -7486,10 +7486,10 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			next;
 			mes "[Engel]";
 			mes "We've both gone through a lot of trouble to make this, so I hope you treasure your Sobbing Starlight. Good luck on your adventures...";
-			if (countitem(988) > 0) delitem 988,1; //Golden_Anvil
-			else if (countitem(989) > 0) delitem 989,1; //Emperium_Anvil
+			if (countitem(Golden_Anvil) > 0) delitem Golden_Anvil,1; //Golden_Anvil
+			else if (countitem(Emperium_Anvil) > 0) delitem Emperium_Anvil,1; //Emperium_Anvil
 			sign_q = 71;
-			getitem 7178,1; //Star's_Sob
+			getitem Star's_Sob,1; //Star's_Sob
 			specialeffect2 EF_YUFITELHIT;
 			close;
 		}
@@ -7547,7 +7547,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 		mes "a while to work on this. Unfortunately, I can't even";
 		mes "give you a time estimate...";
 		mes "But I'll do my best for you.";
-		delitem 7314,1; //The_Sign
+		delitem The_Sign,1; //The_Sign
 		sign_q = 140;
 		.@stime_e = gettime(GETTIME_HOUR);
 		if (.@stime_e < 2) sign_sq = 1;
@@ -7642,7 +7642,7 @@ mjo_dun02,88,295,4	script	Flaming Spirit Man	4_M_03,{
 			mes "honor of working on a worthy";
 			mes "smithing challenge.";
 			sign_q = 141;
-			getitem 2644,1; //The_Sign_
+			getitem The_Sign_,1; //The_Sign_
 			close;
 		}
 		else {
@@ -7763,7 +7763,7 @@ umbala,163,256,3	script	Native#_s	4_F_UMGIRL,{
 			mes "I think I know him! Yea, I do!";
 			next;
 			mes "[Laotan]";
-			if (countitem(2278) > 0) {
+			if (countitem(Mr_Smile) > 0) {
 				mes "Oh my gosh!";
 				mes "You've got a Mr. Smile mask!";
 				mes "Would you give that to me?";
@@ -7780,7 +7780,7 @@ umbala,163,256,3	script	Native#_s	4_F_UMGIRL,{
 					mes "[Laotan]";
 					mes "Oh right~!";
 					mes "The weird man in the funny clothes was in our village for a while, but ever since he went into that big tree, nobody's seen him!";
-					delitem 2278,1; //Mr_Smile
+					delitem Mr_Smile,1; //Mr_Smile
 					sign_q = 74;
 					close;
 				case 2:
@@ -7821,7 +7821,7 @@ umbala,163,256,3	script	Native#_s	4_F_UMGIRL,{
 
 um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 	callfunc "F_UpdateSignVars";
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second! Right now,";
 		mes "you have too many items in your inventory. Please come back after you've freed up more inventory space.^000000";
 		close;
@@ -7933,7 +7933,7 @@ um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 		mes "to find some ancient";
 		mes "or really aged paper...";
 		next;
-		if (countitem(1097) > 9) {
+		if (countitem(Worn_Out_Page) > 9) {
 			mes "[Cyon]";
 			mes "How did you find these";
 			mes "Worn Out Pages? This is great,";
@@ -7953,12 +7953,12 @@ um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 			mes "Just as I thought!";
 			mes "The Sobbing Starlight is responding to these Worn Out Pages! Excellent! I've finally fulfilled my promise to Metz! Now he can leave";
 			mes "me alone!";
-			delitem 1097,10; //Worn_Out_Page
+			delitem Worn_Out_Page,10; //Worn_Out_Page
 			sign_q = 76;
-			getitem 7275,1; //Ancient_Document
+			getitem Ancient_Document,1; //Ancient_Document
 			close;
 		}
-		else if (countitem(1097) > 0) {
+		else if (countitem(Worn_Out_Page) > 0) {
 			mes "[Cyon]";
 			mes "How did you find these";
 			mes "^FF0000Worn Out Pages^000000? This is great,";
@@ -8011,7 +8011,7 @@ um_in,27,23,3	script	Fastidious-Looking Guy	2_M_MOLGENSTEIN,{
 
 alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 	callfunc "F_UpdateSignVars";
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second! Right now,";
 		mes "you have too many items in your inventory. Please come back after you've freed up more inventory space.^000000";
 		close;
@@ -8035,7 +8035,7 @@ alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 		close;
 	}
 	else if (sign_q == 78) {
-		if ((countitem(2203) > 0) && (countitem(7275) > 0)) {
+		if ((countitem(Glasses) > 0) && (countitem(Ancient_Document) > 0)) {
 			mes "My vision's getting";
 			mes "blurrier and I get headaches";
 			mes "when I read. I guess this old";
@@ -8082,8 +8082,8 @@ alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 						next;
 						mes "[Frank]";
 						mes "Hmm, as far as I can tell, this is a sophisticated language spoken by the ancient gods. It's complex and confusing, but I'll do my best for you. Come back to me later, and I'll what I've learned.";
-						delitem 2203,1; //Glasses
-						delitem 7275,1; //Ancient_Document
+						delitem Glasses,1; //Glasses
+						delitem Ancient_Document,1; //Ancient_Document
 						sign_q = 79;
 						close;
 					}
@@ -8116,7 +8116,7 @@ alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 			mes "Well, I've written down the best translation that I could for you. It's been a long time since I've had this kind of challenge. Thanks, youngster.";
 			mes "Ha ha ha~";
 			sign_q = 80;
-			getitem 7274,1; //Ancient_Translator
+			getitem Ancient_Translator,1; //Ancient_Translator
 			close;
 		}
 		else {
@@ -8134,7 +8134,7 @@ alberta,165,83,4	script	Fastidious Old Man	4_M_SAGE_C,{
 
 gef_fild07,182,241,0	script	#Valkyrie Warp	HIDDEN_NPC,1,1,{
 	callfunc "F_UpdateSignVars";
-	if ((sign_q == 80) && (countitem(907) > 3) && (countitem(953) > 11) && (countitem(7013) > 364)) {
+	if ((sign_q == 80) && (countitem(Resin) > 3) && (countitem(Stone_Heart) > 11) && (countitem(Coral_Reef) > 364)) {
 		mes "^6B8E23It seems that";
 		mes "something in the";
 		mes "vicinity is reacting";
@@ -8145,7 +8145,7 @@ gef_fild07,182,241,0	script	#Valkyrie Warp	HIDDEN_NPC,1,1,{
 	}
 
 OnTouch:
-	if ((sign_q == 80) && (countitem(907) > 3) && (countitem(953) > 11) && (countitem(7013) > 364)) {
+	if ((sign_q == 80) && (countitem(Resin) > 3) && (countitem(Stone_Heart) > 11) && (countitem(Coral_Reef) > 364)) {
 		mes "["+strcharinfo(0)+"]";
 		mes "What the...?";
 		mes "What's happening?!";
@@ -8167,9 +8167,9 @@ OnTouch:
 		mes "fall into unconsciousness...^000000";
 		specialeffect2 EF_FLASHER;
 		next;
-		delitem 907,4; //Resin
-		delitem 953,12; //Stone_Heart
-		delitem 7013,365; //Coral_Reef
+		delitem Resin,4; //Resin
+		delitem Stone_Heart,12; //Stone_Heart
+		delitem Coral_Reef,365; //Coral_Reef
 		sign_q = 81;
 		warp "himinn",49,10;
 		end;
@@ -8312,7 +8312,7 @@ himinn,48,86,5	script	Valkyrie#sign	4_F_VALKYRIE,{
 		mes "you are an honorable";
 		mes "hero worthy of praise!";
 		sign_q = 137;
-		getitem 7314,1; //The_Sign
+		getitem The_Sign,1; //The_Sign
 		close;
 	}
 	else if (sign_q < 150) {
@@ -8346,7 +8346,7 @@ himinn,48,86,5	script	Valkyrie#sign	4_F_VALKYRIE,{
 		close;
 	}
 	else {
-		if (countitem(7314) < 1) {
+		if (countitem(The_Sign) < 1) {
 			mes "Only the chosen";
 			mes "can enter this place.";
 			mes "I will not ask how you've";
@@ -8446,7 +8446,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 		mes "This could be";
 		mes "pretty dangerous";
 		mes "so please step back...";
-		delitem 7305,1; //Authority_Of_Nine_World
+		delitem Authority_Of_Nine_World,1; //Authority_Of_Nine_World
 		sign_q = 133;
 		donpcevent "Serin#dummy::OnEnable";
 		donpcevent "Serin#dummy::OnStart";
@@ -8620,7 +8620,7 @@ que_sign01,196,39,4	script	Serin#serin	4_F_01,{
 		.@fail_s3 = rand(1,600);
 		.@fail_s4 = rand(1,500);
 		.@fail_s5 = rand(1,400);
-		if (countitem(2643) == 1) {
+		if (countitem(Serin's_Gold_Ring_) == 1) {
 			if (((sign_sq == 0) && (.@fail_s3 == 356)) || ((sign_sq == 1) && (.@fail_s2 == 356)) || (.@fail_s1 == 356)) {
 				sign_q = 200;
 				mes "[Serin]";
@@ -8813,7 +8813,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		}
 	}
 	else if (sign_q == 125) {
-		if (countitem(2643) ==1) {
+		if (countitem(Serin's_Gold_Ring_) ==1) {
 			mes "[Serin]";
 			mes "If you think that";
 			mes "I can't summon Dark Lord";
@@ -8941,7 +8941,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		mes "Farewell, now.";
 		mes "And good luck on";
 		mes "your travels, my friend...";
-		delitem 7308,1; //Witch's_Potion
+		delitem Witch's_Potion,1; //Witch's_Potion
 		sign_q = 127;
 		close;
 	}
@@ -8961,9 +8961,9 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		.@fail_s3 = rand(1,800);
 		.@fail_s4 = rand(1,700);
 		.@fail_s5 = rand(1,600);
-		if (countitem(2643) == 1) {
+		if (countitem(Serin's_Gold_Ring_) == 1) {
 			if (((sign_sq == 0) && (.@fail_s3 == 356)) || ((sign_sq == 1) && (.@fail_s2 == 356)) || (.@fail_s1 == 356)) {
-				delitem 7308,1; //Witch's_Potion
+				delitem Witch's_Potion,1; //Witch's_Potion
 				sign_q = 200;
 				mes "[Serin]";
 				mes "Even though you tried";
@@ -9010,7 +9010,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		}
 		else {
 			if (((sign_sq == 0) && (.@fail_s5 == 356)) || ((sign_sq == 1) && (.@fail_s4 == 356)) || (.@fail_s3 == 356)) {
-				delitem 7308,1; //Witch's_Potion
+				delitem Witch's_Potion,1; //Witch's_Potion
 				sign_q = 200;
 				mes "[Serin]";
 				mes "Even though you tried";
@@ -9205,7 +9205,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 			mes "I want you to have this ring. It's the only way I can properly express my gratitude for your aid so far.";
 			sign_q = 85;
 			sign_sq = 0;
-			getitem 2642,1; //Serin's_Gold_Ring
+			getitem Serin's_Gold_Ring,1; //Serin's_Gold_Ring
 			close;
 		}
 		else {
@@ -9257,7 +9257,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		close;
 	}
 	else if (sign_q == 92) {
-		if (countitem(2642) > 0) {
+		if (countitem(Serin's_Gold_Ring) > 0) {
 			mes "[Serin]";
 			mes "Ah, "+strcharinfo(0)+"~";
 			mes "How is everything?";
@@ -9516,7 +9516,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "...";
 		mes "......";
 		mes "..........";
-		if (countitem(2643) == 1) {
+		if (countitem(Serin's_Gold_Ring_) == 1) {
 			next;
 			switch(select("Give Serin her ring.:Keep the ring.")) {
 			case 1:
@@ -9549,7 +9549,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 				mes "to forget her sadness. The tears streaked across her cheeks and";
 				mes "the faint smile on her lips tell you that her memories of you";
 				mes "will always remain in her heart.^000000";
-				delitem 2643,1; //Serin's_Gold_Ring_
+				delitem Serin's_Gold_Ring_,1; //Serin's_Gold_Ring_
 				getexp RENEWAL_EXP?50000:500000,0;
 				close;
 			case 2:
@@ -9715,23 +9715,23 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "of her soul and memories that";
 		mes "you can still sense somehow.";
 		mes "What could have happened to her?^000000";
-		if (countitem(2642) > 0) {
+		if (countitem(Serin's_Gold_Ring) > 0) {
 			next;
 			mes "^33555FFSuddenly, Serin's";
 			mes "gold ring sparkled";
 			mes "with a soft glow and";
 			mes "faded away.^000000";
-			delitem 2642,1; //Serin's_Gold_Ring
+			delitem Serin's_Gold_Ring,1; //Serin's_Gold_Ring
 			close;
 		}
 		close;
 	}
 	else {
-		if (countitem(2642) > 0) {
+		if (countitem(Serin's_Gold_Ring) > 0) {
 			mes "[Serin]";
 			mes "Thank you...";
 			emotion e_sob;
-			delitem 2642,1; //Serin's_Gold_Ring
+			delitem Serin's_Gold_Ring,1; //Serin's_Gold_Ring
 			next;
 			mes "^3355FFYou returned";
 			mes "Serin's gold ring.^000000";
@@ -9747,7 +9747,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 
 que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 	callfunc "F_UpdateSignVars";
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -9756,7 +9756,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		close;
 	}
 	mes "[Kirkena]";
-	if ((countitem(7313) == 1) && ((sign_q != 124) || (sign_q != 125) || (sign_q != 126))) {
+	if ((countitem(Seal_Of_Witch) == 1) && ((sign_q != 124) || (sign_q != 125) || (sign_q != 126))) {
 		mes "That Witch's Medal...";
 		mes "You must be here to";
 		mes "help your friend take";
@@ -9795,7 +9795,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		}
 	}
 	if (sign_q == 90) {
-		if (countitem(2642) == 1) {
+		if (countitem(Serin's_Gold_Ring) == 1) {
 			mes "That bastard stole";
 			mes "two spell books from me.";
 			mes "You've brought one of them";
@@ -9820,7 +9820,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		}
 	}
 	else if (sign_q == 91) {
-		if (countitem(7304) > 0) {
+		if (countitem(Witch's_Spell_Book) > 0) {
 			mes "Once that fool stole my spell";
 			mes "books, he was cursed after he";
 			mes "cast those spells without my";
@@ -9898,7 +9898,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "that the Queen of the Dead";
 			mes "is searching for her lost mother, Angrboda. Now, if you could find where Angrboda has been";
 			mes "sealed away...";
-			delitem 7304,1; //Witch's_Spell_Book
+			delitem Witch's_Spell_Book,1; //Witch's_Spell_Book
 			sign_q = 92;
 			close;
 		}
@@ -9993,7 +9993,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "sure you can find something";
 			mes "if you can find any remaining";
 			mes "trace of her.";
-			delitem 7305,1; //Authority_Of_Nine_World
+			delitem Authority_Of_Nine_World,1; //Authority_Of_Nine_World
 			sign_q = 119;
 			close;
 		case 2:
@@ -10009,12 +10009,12 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		}
 	}
 	else if (sign_q == 119) {
-		if (countitem(2642) > 0) {
+		if (countitem(Serin's_Gold_Ring) > 0) {
 			mes "This is Serin's gold ring?";
 			mes "Excellent, this has been";
 			mes "strongly infused with her";
 			mes "vibes. It's really tough to find something like this that resonates so strongly with its owner.";
-			delitem 2642,1; //Serin's_Gold_Ring
+			delitem Serin's_Gold_Ring,1; //Serin's_Gold_Ring
 			sign_q = 120;
 			close;
 		}
@@ -10191,9 +10191,9 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "of the vouchers I've";
 			mes "given you, alright?";
 			sign_q = 124;
-			getitem 7308,1; //Witch's_Potion
-			getitem 2643,1; //Serin's_Gold_Ring_
-			getitem 7313,5; //Seal_Of_Witch
+			getitem Witch's_Potion,1; //Witch's_Potion
+			getitem Serin's_Gold_Ring_,1; //Serin's_Gold_Ring_
+			getitem Seal_Of_Witch,5; //Seal_Of_Witch
 			close;
 		}
 		else if (sign_q == 123) {
@@ -10227,8 +10227,8 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "the Witch's Medals that";
 			mes "I've lent to you, alright?";
 			sign_q = 124;
-			getitem 7308,1; //Witch's_Potion
-			getitem 7313,5; //Seal_Of_Witch
+			getitem Witch's_Potion,1; //Witch's_Potion
+			getitem Seal_Of_Witch,5; //Seal_Of_Witch
 			close;
 		}
 	}
@@ -10240,7 +10240,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 			mes "these preparations...";
 			close;
 		}
-		if (countitem(2643) == 1) {
+		if (countitem(Serin's_Gold_Ring_) == 1) {
 			mes "You're finally";
 			mes "back. We might not";
 			mes "have enough time to";
@@ -10287,8 +10287,8 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		}
 	}
 	else if ((sign_q == 127) || (sign_q == 128)) {
-		if (countitem(2643) == 1) {
-			if (countitem(7313) < 5) {
+		if (countitem(Serin's_Gold_Ring_) == 1) {
+			if (countitem(Seal_Of_Witch) < 5) {
 				mes "Hmmm...?";
 				mes "Where are all the";
 				mes "vouchers I've lent to you?";
@@ -10310,14 +10310,14 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 				mes "you so much for your";
 				mes "help. Once you finish here,";
 				mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason, "+strcharinfo(0)+"...";
-				delitem 7313,5; //Seal_Of_Witch
+				delitem Seal_Of_Witch,5; //Seal_Of_Witch
 				sign_q = 129;
 				getexp RENEWAL_EXP?50000:500000,0;
 				close;
 			}
 		}
 		else {
-			if (countitem(7313) < 5) {
+			if (countitem(Seal_Of_Witch) < 5) {
 				mes "Hmmm...?";
 				mes "Where are all the";
 				mes "vouchers I've lent to you?";
@@ -10339,7 +10339,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 				mes "you so much for your";
 				mes "help. Once you finish here,";
 				mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason...";
-				delitem 7313,5; //Seal_Of_Witch
+				delitem Seal_Of_Witch,5; //Seal_Of_Witch
 				sign_q = 130;
 				getexp RENEWAL_EXP?30000:300000,0;
 				close;
@@ -10365,7 +10365,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		mes "you so much for your";
 		mes "help. Once you finish here,";
 		mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason...";
-		if (countitem(2643) == 1) sign_q = 129;
+		if (countitem(Serin's_Gold_Ring_) == 1) sign_q = 129;
 		else sign_q = 130;
 		getexp RENEWAL_EXP?30000:300000,0;
 		close;
@@ -10394,8 +10394,8 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		mes "her for that. Though, it's";
 		mes "ironic that you failed your";
 		mes "ordeals for her sake...";
-		if (countitem(2642) > 0) delitem 2642,1; //Serin's_Gold_Ring
-		if (countitem(7308) > 0) delitem 7308,1; //Witch's_Potion
+		if (countitem(Serin's_Gold_Ring) > 0) delitem Serin's_Gold_Ring,1; //Serin's_Gold_Ring
+		if (countitem(Witch's_Potion) > 0) delitem Witch's_Potion,1; //Witch's_Potion
 		sign_q = 201;
 		getexp RENEWAL_EXP?20000:200000,0;
 		close;
@@ -10428,7 +10428,7 @@ OnTouch:
 	callfunc "F_UpdateSignVars";
 	if (sign_q == 83) {
 		if (sign_sq == 2) {
-			if (countitem(7304) > 0) {
+			if (countitem(Witch's_Spell_Book) > 0) {
 				mes "[Kirkena]";
 				mes "W-what's this?";
 				mes "Why is it that";
@@ -10466,9 +10466,9 @@ OnTouch:
 						mes "give you this. It will send";
 						mes "a living human back to one";
 						mes "of the towns in your realm.";
-						delitem 7304,1; //Witch's_Spell_Book
+						delitem Witch's_Spell_Book,1; //Witch's_Spell_Book
 						sign_sq = 3;
-						getitem 7309,1; //Wing_Of_Crow
+						getitem Wing_Of_Crow,1; //Wing_Of_Crow
 						close;
 					}
 				}
@@ -10494,14 +10494,14 @@ OnTouch:
 			}
 		}
 		else if (sign_sq == 3) {
-			if (countitem(7309) < 1) {
+			if (countitem(Wing_Of_Crow) < 1) {
 				mes "[Kirkena]";
 				mes "You lost the wing?";
 				mes "Here, let me give you";
 				mes "my last one. Now, hurry";
 				mes "up and save that lost child!";
 				sign_sq = 4;
-				getitem 7309,1; //Wing_Of_Crow
+				getitem Wing_Of_Crow,1; //Wing_Of_Crow
 				close;
 			}
 			else {
@@ -10573,7 +10573,7 @@ OnTouch:
 		close;
 	}
 	else if (sign_q == 88) {
-		if (countitem(2642) > 0) {
+		if (countitem(Serin's_Gold_Ring) > 0) {
 			mes "[Kirkena]";
 			mes "As I expected,";
 			mes "there is something behind";
@@ -10793,9 +10793,9 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 		next;
 		mes "^3355FFYou received the";
 		mes "Symbol of the Nine Realms.^000000";
-		delitem 7307,1; //Whisper_Of_Soul
+		delitem Whisper_Of_Soul,1; //Whisper_Of_Soul
 		sign_q = 118;
-		getitem 7305,1; //Authority_Of_Nine_World
+		getitem Authority_Of_Nine_World,1; //Authority_Of_Nine_World
 		close;
 	}
 	else if (sign_q < 142) {
@@ -10851,7 +10851,7 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 				mes "Now, I shall show";
 				mes "you something truly";
 				mes "interesting...^000000";
-				delitem 7178,1; //Star's_Sob
+				delitem Star's_Sob,1; //Star's_Sob
 				sign_q = 143;
 				close;
 			case 2:
@@ -10899,7 +10899,7 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 		mes "Sobbing Starlight.^000000";
 		next;
 		sign_q = 144;
-		getitem 7025,1; //Lucifer's_Lament
+		getitem Lucifer's_Lament,1; //Lucifer's_Lament
 		mes "[Lady Hell]";
 		mes "^8C1717Although you may also know";
 		mes "this object as God's Tear Drop, keep in mind that history, as you humans know it, may actually be different than the truth.^000000";
@@ -10948,7 +10948,7 @@ niflheim,146,241,0	script	Depressing Man	4_M_JOB_WIZARD,{
 		close;
 	}
 	else if (sign_q == 87) {
-		if (countitem(2642) > 1) {
+		if (countitem(Serin's_Gold_Ring) > 1) {
 			mes "[Gen]";
 			mes "You lookin' for";
 			mes "something? Crayu";
@@ -11195,7 +11195,7 @@ niflheim,146,241,0	script	Depressing Man	4_M_JOB_WIZARD,{
 
 nif_in,140,177,0	script	#Switch	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
-	if (countitem(7313) == 1) {
+	if (countitem(Seal_Of_Witch) == 1) {
 		warp "que_sign01",115,135;
 		end;
 	}
@@ -11722,12 +11722,12 @@ OnTouch:
 						if (sign_q == 83) {
 							if(sign_sq == 0) {
 								sign_sq = 1;
-								getitem 7304,1; //Witch's_Spell_Book
+								getitem Witch's_Spell_Book,1; //Witch's_Spell_Book
 							}
 						}
 						else if (sign_q == 90) {
 							sign_q = 91;
-							getitem 7304,1; //Witch's_Spell_Book
+							getitem Witch's_Spell_Book,1; //Witch's_Spell_Book
 						}
 						close;
 					}
@@ -11902,12 +11902,12 @@ OnTouch:
 			close;
 		}
 		else if ((sign_sq == 3) || (sign_sq == 4)) {
-			if (countitem(7309) > 0) {
+			if (countitem(Wing_Of_Crow) > 0) {
 				mes "[Alakina Ann]";
 				mes "I... I can use";
 				mes "this to go back home?";
 				mes "Thank you! Thank you so much!";
-				delitem 7309,countitem(7309); //Wing_Of_Crow
+				delitem Wing_Of_Crow,countitem(Wing_Of_Crow); //Wing_Of_Crow
 				sign_sq = 5;
 				close;
 			}
@@ -11963,41 +11963,41 @@ function	script	F_SignSeal	{
 		mes "more powerful to break the seal...^000000";
 		close;
 	}
-	if (countitem(1558) || countitem(1963)) {
+	if (countitem(Girl's_Diary) || countitem(Rapture_Rose)) {
 		if (getarg(0) < 980) F_SealFail; }
-	else if (countitem(1227) || countitem(1228) || countitem(1240) || countitem(1241) || countitem(1962) || countitem(1813)) {
+	else if (countitem(Weeder_Knife) || countitem(Combat_Knife) || countitem(Princess_Knife) || countitem(Cursed_Dagger) || countitem(Lariat) || countitem(Kaiser_Knuckle)) {
 		if (getarg(0) < 960) F_SealFail; }
-	else if (countitem(1719) || countitem(1130) || countitem(1133) || countitem(1223) || countitem(1229) || countitem(1231) || countitem(1413) || countitem(1814) || countitem(1242)) {
+	else if (countitem(Bow_Of_Roguemaster) || countitem(Nagan) || countitem(Fire_Brand) || countitem(Forturn_Sword) || countitem(Mama's_Knife) || countitem(Bazerald) || countitem(Gungnir) || countitem(Berserk) || countitem(Counter_Dagger)) {
 		if (getarg(0) < 940) F_SealFail; }
-	else if (countitem(1131) || countitem(1230) || countitem(1232)) {
+	else if (countitem(Ice_Falchon) || countitem(House_Auger) || countitem(Assasin_Dagger)) {
 		if (getarg(0) < 920) F_SealFail; }
-	else if (countitem(1132) || countitem(1134) || countitem(1233) || countitem(1234) || countitem(1235) || countitem(1414) || countitem(1523) || countitem(1236)) {
+	else if (countitem(Edge) || countitem(Scissores_Sword) || countitem(Exercise) || countitem(Moonlight_Sword) || countitem(Azoth) || countitem(Gelerdria) || countitem(Spike) || countitem(Sucsamad)) {
 		if (getarg(0) < 900) F_SealFail; }
-	else if (countitem(1237) || countitem(1524) || countitem(1525) || countitem(1557) || countitem(1415) || countitem(1964)) {
+	else if (countitem(Grimtooth_) || countitem(Golden_Mace) || countitem(Long_Mace) || countitem(Book_Of_The_Apocalypse) || countitem(Skewer) || countitem(Chemeti)) {
 		if (getarg(0) < 880) F_SealFail; }
-	else if (countitem(1135) || countitem(1140) || countitem(1141) || countitem(1527)) {
+	else if (countitem(Cutlas) || countitem(Byeorrun_Gum) || countitem(Immaterial_Sword) || countitem(Quadrille)) {
 		if (getarg(0) < 860) F_SealFail; }
-	else if (countitem(1164) || countitem(1165) || countitem(1467) || countitem(1138) || countitem(1139) || countitem(1224) || countitem(1225) || countitem(1416) || countitem(1526)) {
+	else if (countitem(Muramasa) || countitem(Masamune) || countitem(Bill_Guisarme) || countitem(Mysteltainn_) || countitem(Tale_Fing_) || countitem(Sword_Breaker) || countitem(Mail_Breaker) || countitem(Tjungkuletti) || countitem(Slash)) {
 		if (getarg(0) < 840) F_SealFail; }
-	else if (countitem(1305) || countitem(1720) || countitem(1136) || countitem(1137) || countitem(1166)) {
+	else if (countitem(Cleaver) || countitem(Bow_Of_Rudra) || countitem(Solar_Sword) || countitem(Excalibur) || countitem(Dragon_Slayer)) {
 		if (getarg(0) < 820) F_SealFail; }
-	else if (countitem(1261) || countitem(1528) || countitem(1167)) {
+	else if (countitem(Infiltrator) || countitem(Grand_Cross) || countitem(Schweizersabel)) {
 		if (getarg(0) < 800) F_SealFail; }
-	else if (countitem(1364) || countitem(1913)) {
+	else if (countitem(Great_Axe) || countitem(Electronic_Guitar)) {
 		if (getarg(0) < 780) F_SealFail; }
-	else if (countitem(1170) || countitem(1468) || countitem(1168) || countitem(1169)) {
+	else if (countitem(Katzbalger) || countitem(Zephyrus) || countitem(Zweihander) || countitem(Executioner_)) {
 		if (getarg(0) < 760) F_SealFail; }
-	else if (countitem(1365) || countitem(1366) || countitem(1473)) {
+	else if (countitem(Sabbath) || countitem(Right_Epsilon) || countitem(Wizardy_Staff)) {
 		if (getarg(0) < 740) F_SealFail; }
-	else if (countitem(1367) || countitem(1368) || countitem(1466) || countitem(1469)) {
+	else if (countitem(Slaughter) || countitem(Tomahawk) || countitem(Crescent_Scythe) || countitem(Longinus's_Spear)) {
 		if (getarg(0) < 720) F_SealFail; }
-	else if (countitem(1369) || countitem(1470)) {
+	else if (countitem(Guillotine) || countitem(Brionac)) {
 		if (getarg(0) < 700) F_SealFail; }
-	else if (countitem(1722) || countitem(1471)) {
+	else if (countitem(Balistar) || countitem(Hell_Fire)) {
 		if (getarg(0) < 680) F_SealFail; }
-	else if (countitem(1363)) {
+	else if (countitem(Brood_Axe)) {
 		if (getarg(0) < 660) F_SealFail; }
-	else if (countitem(1530)) {
+	else if (countitem(Mjolnir)) {
 		if (getarg(0) < 500) F_SealFail; }
 	else {
 		mes "^3355FFThe weapon you're holding";
@@ -12021,9 +12021,9 @@ function	script	F_SignSeal	{
 		mes "I'm leaving my soul";
 		mes "with you. Please guide";
 		mes "me to the queen of the dead...^000000";
-		delitem 7306,3; //Fragment_Of_Soul
+		delitem Fragment_Of_Soul,3; //Fragment_Of_Soul
 		sign_q = 117;
-		getitem 7307,1; //Whisper_Of_Soul
+		getitem Whisper_Of_Soul,1; //Whisper_Of_Soul
 	}
 	else {
 		mes "^3355FFOnce you strike the seal,";
@@ -12032,7 +12032,7 @@ function	script	F_SignSeal	{
 		mes "^3355FFYou have";
 		mes "obtained a^6E7B8B";
 		mes "Piece of Spirit^3355FF.^000000";
-		getitem 7306,1; //Fragment_Of_Soul
+		getitem Fragment_Of_Soul,1; //Fragment_Of_Soul
 	}
 	return;
 }
@@ -12201,7 +12201,7 @@ que_sign01,46,56,0	script	Fountain#sign	HIDDEN_NPC,{
 		next;
 		switch(select("Bottle the water.:Don't bottle the water.")) {
 		case 1:
-			if (checkweight(1201,1) == 0) {
+			if (checkweight(Knife,1) == 0) {
 				mes "^3355FFUnfortunately, it";
 				mes "looks like you don't";
 				mes "have enough inventory";
@@ -12209,9 +12209,9 @@ que_sign01,46,56,0	script	Fountain#sign	HIDDEN_NPC,{
 				close;
 			}
 			else {
-				if (countitem(713) > 0) {
-					delitem 713,1; //Empty_Bottle
-					getitem 12020,1; //Water_Of_Darkness
+				if (countitem(Empty_Bottle) > 0) {
+					delitem Empty_Bottle,1; //Empty_Bottle
+					getitem Water_Of_Darkness,1; //Water_Of_Darkness
 					close;
 				}
 				else {
@@ -12269,7 +12269,7 @@ OnTimer45000:
 
 geffen,119,48,0	script	Fountain#s	HIDDEN_NPC,{
 	callfunc "F_UpdateSignVars";
-	if (countitem(7025) > 0) {
+	if (countitem(Lucifer's_Lament) > 0) {
 		mes "^3355FFAs you approach the fountain,";
 		mes "a strange light begins to emit from the Lucifer's Lament in your pocket and from something deep within";
 		mes "the fountain's water.^000000";
@@ -12442,7 +12442,7 @@ que_sign02,0,0,0,0	monster	Wraith Dead	1566,8,0,0,0
 que_sign02,378,235,0	script	sign_w6	WARPNPC,1,1,{
 OnTouch:
 	callfunc "F_UpdateSignVars";
-	if ((countitem(7313) == 1) && ((sign_q != 124) || (sign_q != 125) || (sign_q != 126))) {
+	if ((countitem(Seal_Of_Witch) == 1) && ((sign_q != 124) || (sign_q != 125) || (sign_q != 126))) {
 		warp "que_sign01",197,190;
 		end;
 	}
@@ -12492,7 +12492,7 @@ function	script	F_UpdateSignVars	{
 		else if ((signquest >= 14) && (signquest <= 15)) { sign_q = 54; }
 		else if ((signquest >= 16) && (signquest <= 18)) { sign_q = signquest+39; }
 		// signanvil = 58-61
-		else if ((signquest == 19) && (countitem(7278))) { sign_q = 61; }
+		else if ((signquest == 19) && (countitem(Wellbeing_Letter))) { sign_q = 61; }
 		// there is no equivilent to sign_q 62-64
 		else if (signquest == 20) { sign_q = 65; }
 		// there is no equivilent to sign_q 66-68
@@ -12555,25 +12555,25 @@ function	script	F_UpdateSignVars	{
 		// of this step.
 		if (signlaichin >= 1) {
 			mes "^FF0000You stumble and drop the your^000000";
-			if (countitem(7306)) {
+			if (countitem(Fragment_Of_Soul)) {
 				mes "^FF0000"+getitemname(7306)+"^000000";
 			}
-			if (countitem(7306) && countitem(7307)) {
+			if (countitem(Fragment_Of_Soul) && countitem(Whisper_Of_Soul)) {
 				mes "^FF0000and^000000";
 			}
-			if (countitem(7307)) {
+			if (countitem(Whisper_Of_Soul)) {
 				mes "^FF0000"+getitemname(7307)+"^000000";
 			}
 			mes "^FF0000pieces on the ground and they vanish! Perhaps you should talk to Lachin.^000000";
-			delitem 7306,countitem(7306); //Fragment_Of_Soul
-			delitem 7307,countitem(7307); //Whisper_Of_Soul
+			delitem Fragment_Of_Soul,countitem(Fragment_Of_Soul); //Fragment_Of_Soul
+			delitem Whisper_Of_Soul,countitem(Whisper_Of_Soul); //Whisper_Of_Soul
 			sign_q = rand(97,100);
 		}
 
 		// Same BS as above, unable to save pickup time for 'The Sign' from Engel.
 		if (signengelhour) {
 			mes "^FF0000You see that Engel has forgotten to look at 'The Sign', how you got it back is a mystery too you, but you should remind Engel that he needs to look at it.^000000";
-			getitem 7314,1; //The_Sign
+			getitem The_Sign,1; //The_Sign
 			sign_q = 139;
 		}
 
@@ -12598,7 +12598,7 @@ function	script	F_UpdateSignVars	{
 		// Unable to save when the Sign should be picked up from Metz
 		if (signmetzhour) {
 			mes "^FF0000You see that Metz has forgotten to look at 'The Sign', how you got it back is a mystery too you, but you should remind Metz that he needs to look at it.^000000";
-			getitem 7314,1; //The_Sign
+			getitem The_Sign,1; //The_Sign
 			sign_q = 138;
 		}
 

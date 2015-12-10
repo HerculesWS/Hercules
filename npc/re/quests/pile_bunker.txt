@@ -12,12 +12,12 @@
 //============================================================
 
 yuno,179,174,4	script	Gomer	4_M_REPAIR,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "[Gomer]";
 		mes "You are carrying so much. Drop off some of your luggage and come back to me.";
 		close;
 	}
-	if (countitem(1549)) {
+	if (countitem(Pilebuncker)) {
 		mes "[Gomer]";
 		mes "So how's that Pilebuncker working out for you?";
 		close;
@@ -82,7 +82,7 @@ yuno,179,174,4	script	Gomer	4_M_REPAIR,{
 		mes "Lastly, finding a Brocca is very hard, but you should be able to do something about it. Haha, go get it!";
 		close;
 	case 4:
-		if (countitem(999) < 200 || countitem(7325) < 30 || countitem(1415) < 1) {
+		if (countitem(Steel) < 200 || countitem(Tube) < 30 || countitem(Skewer) < 1) {
 			mes "[Gomer]";
 			mes "You haven't brought all of the materials that I asked for.";
 			next;
@@ -109,11 +109,11 @@ yuno,179,174,4	script	Gomer	4_M_REPAIR,{
 			next;
 			mes "[Gomer]";
 			mes "Oh, and it turns out that I didn't need all that Steel after all. So here, take most of it back.";
-			delitem 999,50; //Steel
-			delitem 7325,30; //Tube
-			delitem 1415,1; //Skewer
-			getitem 1549,1; //Pilebuncker
-			getitem 1360,1; //Two_Handed_Axe
+			delitem Steel,50; //Steel
+			delitem Tube,30; //Tube
+			delitem Skewer,1; //Skewer
+			getitem Pilebuncker,1; //Pilebuncker
+			getitem Two_Handed_Axe,1; //Two_Handed_Axe
 			close;
 		}
 	}

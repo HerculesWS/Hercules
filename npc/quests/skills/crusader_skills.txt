@@ -356,7 +356,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 			close;
 		}
 		else if (CRUS_SK == 2) {
-			if (countitem(501) > 0) {
+			if (countitem(Red_Potion) > 0) {
 				mes "["+ strcharinfo(0) +"]";
 				mes "Here, please take";
 				mes "this Red Potion.";
@@ -382,7 +382,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 				mes "patrol report. Some of the";
 				mes "pages are smudged with";
 				mes "the blood from his wound.^000000";
-				delitem 501,1; //Red_Potion
+				delitem Red_Potion,1; //Red_Potion
 				CRUS_SK = 3;
 				close;
 			}
@@ -649,7 +649,7 @@ prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 			close;
 		}
 		else if (CRUS_SK == 5) {
-			if (countitem(514) > 0 && countitem(619) > 0 && countitem(1003) > 0 && countitem(7053) > 2 && countitem(713) > 2 && countitem(909) > 4 && countitem(938) > 19) {
+			if (countitem(Grape) > 0 && countitem(Unripe_Apple) > 0 && countitem(Coal) > 0 && countitem(Cyfar) > 2 && countitem(Empty_Bottle) > 2 && countitem(Jellopy) > 4 && countitem(Sticky_Mucus) > 19) {
 				mes "[Father Arthur]";
 				mes "Ah, you've returned.";
 				mes "Now let me check to";
@@ -679,13 +679,13 @@ prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 				mes "to worry about collecting";
 				mes "materials again. Now, give";
 				mes "me a moment to distill this...";
-				delitem 938,20; //Sticky_Mucus
-				delitem 619,1; //Unripe_Apple
-				delitem 909,5; //Jellopy
-				delitem 514,1; //Grape
-				delitem 1003,1; //Coal
-				delitem 7053,3; //Cyfar
-				delitem 713,3; //Empty_Bottle
+				delitem Sticky_Mucus,20; //Sticky_Mucus
+				delitem Unripe_Apple,1; //Unripe_Apple
+				delitem Jellopy,5; //Jellopy
+				delitem Grape,1; //Grape
+				delitem Coal,1; //Coal
+				delitem Cyfar,3; //Cyfar
+				delitem Empty_Bottle,3; //Empty_Bottle
 				CRUS_SK = 6;
 				close;
 			}
