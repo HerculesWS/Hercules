@@ -22,8 +22,8 @@ y_airport,143,43,5	script	Airport Staff#y_air1a::y_airport1	4_F_01,{
 		mes "the boarding fee will be waived.So would you like to depart?";
 		next;
 		if (select("Yes:No") == 1) {
-			if (countitem(7311) > 0) {
-				delitem 7311,1; //Free_Flying_Ship_Ticket
+			if (countitem(Free_Flying_Ship_Ticket) > 0) {
+				delitem Free_Flying_Ship_Ticket,1;
 				warp "y_airport",148,51;
 				end;
 			}
