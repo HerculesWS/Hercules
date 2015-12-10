@@ -37,7 +37,7 @@
 //=========================================================================
 
 prontera,123,102,5	script	Merchant#pron	4_M_03,{
-	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 6301 || checkweight(Knife,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -93,7 +93,7 @@ prontera,123,102,5	script	Merchant#pron	4_M_03,{
 }
 
 morocc,180,259,3	script	Merchant#morroc	4_M_03,{
-	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 6301 || checkweight(Knife,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -150,7 +150,7 @@ morocc,180,259,3	script	Merchant#morroc	4_M_03,{
 }
 
 payon,200,134,5	script	Merchant#pay	4_M_03,{
-	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 6301 || checkweight(Knife,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -204,7 +204,7 @@ payon,200,134,5	script	Merchant#pay	4_M_03,{
 }
 
 aldebaran,152,63,5	script	Merchant#alde	4_M_03,{
-	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 6301 || checkweight(Knife,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -261,7 +261,7 @@ aldebaran,152,63,5	script	Merchant#alde	4_M_03,{
 }
 
 geffen,173,88,5	script	Merchant#geff	4_M_03,{
-	if (MaxWeight - Weight < 6301 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 6301 || checkweight(Knife,1) == 0) {
 		mes "[Merchant]";
 		mes "Haha!";
 		mes "What are you, superhuman?";
@@ -387,7 +387,7 @@ function	script	F_PotExchange	{
 			mes "Check how many Red Potions";
 			mes "I've given you, it should be good. Thanks, that was a good deal~";
 			delitem getarg(0),.@put_out_item; //Shell
-			getitem 501,.@input; //Red_Potion
+			getitem Red_Potion,.@input;
 			close;
 		}
 		mes "[Merchant]";

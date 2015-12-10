@@ -38,7 +38,7 @@
 //=========================================================================
 
 morocc_in,146,99,3	script	Java Dullihan	1_M_MERCHANT,{
-	if ((MaxWeight-Weight) < 200 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 200 || checkweight(Knife,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";

@@ -71,7 +71,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				mes "I don't think I can let ye have this with the zeny ye have. I can't lose me money because of ye.";
 				close;
 			}
-			getitem 986,1; // Anvil
+			getitem Anvil,1; // Anvil
 			Zeny -= 30000;
 			mes "[Christopher Guillenrow]";
 			mes "This is the cheapest one, but efficient enough to forge most items. Thank ye fer shopping at me workshop.  Feel free to come anytime, whenever ye need.";
@@ -82,7 +82,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				mes "I don't think I can let ye have this with the zeny ye have. I can't lose me money because of ye.";
 				close;
 			}
-			getitem 987,1; // Oridecon_Anvil
+			getitem Oridecon_Anvil,1; // Oridecon_Anvil
 			Zeny -= 120000;
 			mes "[Christopher Guillenrow]";
 			mes "Aye, friend ye have an eye for the anvil. This must be the proper anvil for a Blacksmith, eh? Thank ye fer shopping at me workshop.  Feel free to come anytime, whenever ye need.";
@@ -93,7 +93,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				mes "I don't think I can let ye have this with the zeny ye have. I can't lose me money because of ye.";
 				close;
 			}
-			getitem 988,1; // Golden_Anvil
+			getitem Golden_Anvil,1; // Golden_Anvil
 			Zeny -= 300000;
 			mes "[Christopher Guillenrow]";
 			mes "This one is the best among all me stuffs in me workshop! With this, ye can rule the Blacksmith world! Thank ye fer shopping at me workshop.  Feel free to come anytime, whenever ye need.";
@@ -141,12 +141,12 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				mes "I don't think I can let ye have this with the zeny ye have. I can't lose me money because of ye.";
 				close;
 			}
-			if (checkweight(612,.@input) == 0) {
+			if (checkweight(Portable_Furnace,.@input) == 0) {
 				mes "[Christopher Guillenrow]";
 				mes "Ye look like you don't got enough room in yer inventory. Put some stuff into your Kafra Storage, why don't ye?";
 				close;
 			}
-			getitem 612,.@input; // Portable_Furnace
+			getitem Portable_Furnace,.@input; // Portable_Furnace
 			Zeny -= .@sell;
 			mes "[Christopher Guillenrow]";
 			mes "Thank ye fer shopping at me workshop. Feel free to come anytime, whenever ye need.";
@@ -157,7 +157,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				mes "I don't think I can let ye have this with the zeny ye have. I can't lose me money because of ye.";
 				close;
 			}
-			getitem 613,1; // Iron_Hammer
+			getitem Iron_Hammer,1; // Iron_Hammer
 			Zeny -= 1000;
 			mes "[Christopher Guillenrow]";
 			mes "Thank ye fer shopping at me workshop. Feel free to come anytime, whenever ye need.";
@@ -168,7 +168,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				mes "I don't think I can let ye have this with the zeny ye have. I can't lose me money because of ye.";
 				close;
 			}
-			getitem 614,1; // Golden_Hammer
+			getitem Golden_Hammer,1; // Golden_Hammer
 			Zeny -= 3000;
 			mes "[Christopher Guillenrow]";
 			mes "Thank ye fer shopping at me workshop. Feel free to come anytime, whenever ye need.";
@@ -179,7 +179,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				mes "I don't think I can let ye have this with the zeny ye have. I can't lose me money because of ye.";
 				close;
 			}
-			getitem 615,1; // Oridecon_Hammer
+			getitem Oridecon_Hammer,1; // Oridecon_Hammer
 			Zeny -= 5000;
 			mes "[Christopher Guillenrow]";
 			mes "Thank ye fer shopping at me workshop. Feel free to come anytime, whenever ye need.";
@@ -222,12 +222,12 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				mes "Ye don't have enough money. Ye know I can't sell this at a lower price... You know how the wifey nags about Zeny.";
 				close;
 			}
-			if (checkweight(1010,.@input) == 0) {
+			if (checkweight(Phracon,.@input) == 0) {
 				mes "[Christopher Guillenrow]";
 				mes "Ye look like you don't have the room to carry anythin' new. Why don't ye put some things into Kafra Storage n' come back.";
 				close;
 			}
-			getitem 1010,.@input; // Phracon
+			getitem Phracon,.@input; // Phracon
 			Zeny -= .@sell;
 			mes "[Christopher Guillenrow]";
 			mes "Thank ye fer shopping at me workshop. Feel free to come anytime, whenever ye need.";
@@ -260,12 +260,12 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 				mes "I don't think I can let ye have this with the zeny ye have. I can't lose me money because of ye.";
 				close;
 			}
-			if (checkweight(1011,.@input) == 0) {
+			if (checkweight(Emveretarcon,.@input) == 0) {
 				mes "[Christopher Guillenrow]";
 				mes "Me friend... Seems to me ye don't have Inventory space. Why doncha put some things into Kafra Storage first?";
 				close;
 			}
-			getitem 1011,.@input; // Emveretarcon
+			getitem Emveretarcon,.@input; // Emveretarcon
 			Zeny -= .@sell;
 			mes "[Christopher Guillenrow]";
 			mes "Thank ye fer shopping at me workshop. Feel free to come anytime, whenever ye need, whenever ye want.";
@@ -281,27 +281,27 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 		next;
 		switch(select("Make Oridecon:Make Elunium:Cancel.")) {
 		case 1:
-			if (countitem(756) < 5) {
+			if (countitem(Oridecon_Stone) < 5) {
 				mes "[Christopher Guillenrow]";
 				mes "I told ye, I need 5 o'the rough Oridecons fer one Oridecon.";
 				close;
 			}
 			else {
-				delitem 756,5;  //Oridecon_Stone
-				getitem 984,1; // Oridecon
+				delitem Oridecon_Stone,5;
+				getitem Oridecon,1; // Oridecon
 				mes "[Christopher Guillenrow]";
 				mes "Here's an Oridecon fer ye. Ye will be always welcome here, I'll be waitin' for ye.";
 				close;
 			}
 		case 2:
-			if (countitem(757) < 5) {
+			if (countitem(Elunium_Stone) < 5) {
 				mes "[Christopher Guillenrow]";
 				mes "I told ye, I need 5 rough Eluniums fer one Elunium.";
 				close;
 			}
 			else {
-				delitem 757,5;  //Elunium_Stone
-				getitem 985,1; // Elunium
+				delitem Elunium_Stone,5;
+				getitem Elunium,1; // Elunium
 				mes "[Christopher Guillenrow]";
 				mes "Arrr, here's yer Elunium. Yer business is always welcome here, so feel free to come again.";
 				close;
@@ -320,7 +320,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 
 //== Paul Spanner: Einbroch Blacksmith Supplier ============
 ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -346,7 +346,7 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 				mes "With that much of money, you cannot even buy a toy anvil!";
 				close;
 			}
-			getitem 986,1; //Anvil
+			getitem Anvil,1;
 			Zeny -= 30000;
 			mes "[Paul Spanner]";
 			mes "It is the cheapest anvil which has the most basic ability.";
@@ -358,7 +358,7 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 				mes "With that much of money, you cannot even buy a toy anvil!";
 				close;
 			}
-			getitem 987,1; //Oridecon_Anvil
+			getitem Oridecon_Anvil,1;
 			Zeny -= 120000;
 			mes "[Paul Spanner]";
 			mes "Ah, you have an eye for anvil. A Blacksmith needs an anvil at least as good as this.";
@@ -370,7 +370,7 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 				mes "With that much of money, you cannot even buy a toy anvil!";
 				close;
 			}
-			getitem 988,1; //Golden_Anvil
+			getitem Golden_Anvil,1;
 			Zeny -= 300000;
 			mes "[Paul Spanner]";
 			mes "I can tell your ambition to become a good Blacksmith just by looking at you to choose this Golden Anvil!";
@@ -516,27 +516,27 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 		mes "So, which one do you want to process?";
 		switch(select("Oridecon:Elunium:Quit.")) {
 		case 1:
-			if (countitem(756) < 5) {
+			if (countitem(Oridecon_Stone) < 5) {
 				mes "[Paul Spanner]";
 				mes "You need 5 ores to process them into one pure Oridecon.";
 				close;
 			}
 			else {
-				delitem 756,5; //Oridecon_Stone
-				getitem 984,1; //Oridecon
+				delitem Oridecon_Stone,5;
+				getitem Oridecon,1;
 				mes "[Paul Spanner]";
 				mes "There you go. Thank you for using my service.";
 				close;
 			}
 		case 2:
-			if (countitem(757) < 5) {
+			if (countitem(Elunium_Stone) < 5) {
 				mes "[Paul Spanner]";
 				mes "You need 5 ores to process them into one pure Elunium.";
 				close;
 			}
 			else {
-				delitem 757,5; //Elunium_Stone
-				getitem 985,1; //Elunium
+				delitem Elunium_Stone,5;
+				getitem Elunium,1;
 				mes "[Paul Spanner]";
 				mes "There you go. Thank you for using my service.";
 				close;
@@ -913,7 +913,7 @@ lhz_in02,278,24,3	script	Krugg	4_M_04,{
 
 //== Material Salesmen Functions ===========================
 function	script	phramain	{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -1024,7 +1024,7 @@ lhz_in02,281,24,5	script	Fruel	4_M_02,{
 
 //== Ori/Elu Functions =====================================
 function	script	orimain	{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -1041,9 +1041,9 @@ function	script	orimain	{
 	next;
 	switch(select("Make Oridecon:Make Elunium:Ask about Enchanted Stones")) {
 	case 1:
-		if (countitem(756) > 4) {
-			delitem 756,5;  //Oridecon_Stone
-			getitem 984,1; // Oridecon
+		if (countitem(Oridecon_Stone) > 4) {
+			delitem Oridecon_Stone,5;
+			getitem Oridecon,1; // Oridecon
 			mes "[" + getarg(0) + "]";
 			mes "Here's your Oridecon.";
 			mes "You're welcome to come";
@@ -1057,9 +1057,9 @@ function	script	orimain	{
 			close;
 		}
 	case 2:
-		if (countitem(757) > 4) {
-			delitem 757,5;  //Elunium_Stone
-			getitem 985,1; // Elunium
+		if (countitem(Elunium_Stone) > 4) {
+			delitem Elunium_Stone,5;
+			getitem Elunium,1; // Elunium
 			mes "[" + getarg(0) + "]";
 			mes "Here's your Elunium.";
 			mes "You're welcome to come";

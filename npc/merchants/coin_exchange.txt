@@ -40,7 +40,7 @@
 	.@n$ = "["+strnpcinfo(1)+"]";
 	mes .@n$;
 	if (isequipped(2782) && ep13_2_rhea == 100) {
-		if (!checkweight(1201,1)) {
+		if (!checkweight(Knife,1)) {
 			mes "It looks like you're carrying too many things.";
 			mes "Why not put some of your items in storage and come back?";
 			close;
