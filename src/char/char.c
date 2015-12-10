@@ -5637,21 +5637,21 @@ int char_config_read(const char* cfgName)
 		} else if(strcmpi(w1, "gm_allow_group") == 0) {
 			gm_allow_group = atoi(w2);
 		} else if (strcmpi(w1, "autosave_time") == 0) {
-			autosave_interval = atoi(w2)*1000;
+			autosave_interval = atoi(w2) * 1000;
 			if (autosave_interval <= 0)
 				autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
 		} else if (strcmpi(w1, "save_log") == 0) {
 			save_log = config_switch(w2);
 		}
 		#ifdef RENEWAL
-			else if (strcmpi(w1, "start_point") == 0) {
+			else if (strcmpi(w1, "start_point_re") == 0) {
 				char map[MAP_NAME_LENGTH_EXT];
 				int x, y;
 				if (sscanf(w2, "%15[^,],%d,%d", map, &x, &y) < 3)
 					continue;
 				start_point.map = mapindex->name2id(map);
 				if (!start_point.map)
-					ShowError("Specified start_point %s not found in map-index cache.\n", map);
+					ShowError("Specified start_point_re '%s' not found in map-index cache.\n", map);
 				start_point.x = x;
 				start_point.y = y;
 			}
@@ -5663,7 +5663,7 @@ int char_config_read(const char* cfgName)
 					continue;
 				start_point.map = mapindex->name2id(map);
 				if (!start_point.map)
-					ShowError("Specified start_point_pre %s not found in map-index cache.\n", map);
+					ShowError("Specified start_point_pre '%s' not found in map-index cache.\n", map);
 				start_point.x = x;
 				start_point.y = y;
 			}
@@ -5674,7 +5674,7 @@ int char_config_read(const char* cfgName)
 
 			i = 0;
 			split = strtok(w2, ",");
-			while (split != NULL && i < MAX_START_ITEMS*3) {
+			while (split != NULL && i < MAX_START_ITEMS * 3) {
 				char *split2 = split;
 				split = strtok(NULL, ",");
 				start_items[i] = atoi(split2);
