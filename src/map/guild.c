@@ -1115,7 +1115,7 @@ int guild_position_changed(int guild_id,int idx,struct guild_position *p)
 	struct guild *g=guild->search(guild_id);
 	int i;
 	nullpo_ret(p);
-	Assert_ret(idx > 0 && idx < MAX_GUILD);
+	Assert_ret(idx >= 0 && idx < MAX_GUILD);
 	if(g==NULL)
 		return 0;
 	memcpy(&g->position[idx],p,sizeof(struct guild_position));
