@@ -283,7 +283,7 @@ izlude_in,30,163,0	script	Test Hall Staff#swd_1	8W_SOLDIER,{
 	}
 	else if (job_sword_q == 2) {
 		mes "Retesting? Try not to worry about it. It's good that you don't back down from a challenge! Here, take these and cheer up!";
-		getitem 512,5; //Apple
+		getitem Apple,5;
 		job_sword_q = 3;
 	}
 	else if (job_sword_q == 3)

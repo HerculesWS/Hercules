@@ -525,7 +525,7 @@ new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 			mes "[Kris]";
 			mes "Now, why don't you speak to Edwin? He will teach you more regarding the basic use of Skills. Ah, and let me give you a small present: a Tattered Novice Ninja Suit!";
 			nov_get_item02 = 12;
-			getitem 2352,1; //Novice_Plate
+			getitem Novice_Plate,1;
 			close;
 		case 2:
 			mes "[Kris]";
@@ -954,11 +954,11 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 			mes "[Alice]";
 			mes "Now, would you click the ^4A708Bitem^000000 tab in the Inventory Window? I just gave you a Novice Potion. You can drink it by double-clicking it. Go ahead, try it!";
 			nov_get_item04 = 10;
-			getitem 569,1; //Novice_Potion
+			getitem Novice_Potion,1;
 			percentheal -50,0;
 			next;
 			mes "[Alice]";
-			if (countitem(569) < 1) {
+			if (countitem(Novice_Potion) < 1) {
 				if (BaseLevel < 8) {
 					mes "Nice~!";
 					mes "And here's";
@@ -1000,9 +1000,9 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 			mes "I just gave you to";
 			mes "put them on.";
 			nov_get_item04 = 12;
-			getitem 2510,1; //Novice_Hood
-			getitem 2414,1; //Novice_Boots
-			getitem 5055,1; //Novice_Egg_Cap
+			getitem Novice_Hood,1;
+			getitem Novice_Boots,1;
+			getitem Novice_Egg_Cap,1;
 			next;
 			mes "[Alice]";
 			if (isequipped(2414)) {
@@ -1074,9 +1074,9 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 			mes "[Alice]";
 			mes "However, ^ff0000do not use the Fly Wing or Butterfly Wing^000000 in these Training Grounds or you could be stuck here forever. Those items are for when you graduate, okay?";
 			nov_get_item04 = 15;
-			getitem 601,10; //Wing_Of_Fly
-			getitem 602,2; //Wing_Of_Butterfly
-			getitem 569,50; //Novice_Potion
+			getitem Wing_Of_Fly,10;
+			getitem Wing_Of_Butterfly,2;
+			getitem Novice_Potion,50;
 			next;
 			mes "[Alice]";
 			mes "And lastly...";
@@ -1320,16 +1320,16 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 			close2;
 			if (nov_get_item05 < 11) {
 				nov_get_item05 = 11;
-				getitem 569,100; //Novice_Potion
-				getitem 1243,1; //Novice_Knife
-				getitem 2414,1; //Novice_Boots
-				getitem 2510,1; //Novice_Hood
-				getitem 2352,1; //Novice_Plate
-				getitem 2112,1; //Novice_Guard
-				getitem 601,10; //Wing_Of_Fly
-				getitem 602,2; //Wing_Of_Butterfly
-				getitem 7059,5; //Cargo_Free_Ticket
-				getitem 7060,5; //Warp_Free_Ticket
+				getitem Novice_Potion,100;
+				getitem Novice_Knife,1;
+				getitem Novice_Boots,1;
+				getitem Novice_Hood,1;
+				getitem Novice_Plate,1;
+				getitem Novice_Guard,1;
+				getitem Wing_Of_Fly,10;
+				getitem Wing_Of_Butterfly,2;
+				getitem Cargo_Free_Ticket,5;
+				getitem Warp_Free_Ticket,5;
 			}
 			nov_1st_cos = 0;
 			nov_2nd_cos = 0;
@@ -1391,8 +1391,8 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 			close2;
 			if (nov_get_item05 < 11) {
 				nov_get_item05 = 11;
-				getitem 7059,5; //Cargo_Free_Ticket
-				getitem 7060,5; //Warp_Free_Ticket
+				getitem Cargo_Free_Ticket,5;
+				getitem Warp_Free_Ticket,5;
 			}
 			nov_1st_cos = 0;
 			nov_2nd_cos = 0;
@@ -2505,12 +2505,12 @@ new_1-2,38,182,3	script	Entrance Guard#nv	4_F_03,{
 			else {
 				nov_2nd_cos = 29;
 			}
-			getitem 602,1; //Wing_Of_Butterfly
-			getitem 601,9; //Wing_Of_Fly
-			getitem 1243,1; //Novice_Knife
-			getitem 2112,1; //Novice_Guard
-			getitem 611,2; //Spectacles
-			getitem 569,300; //Novice_Potion
+			getitem Wing_Of_Butterfly,1;
+			getitem Wing_Of_Fly,9;
+			getitem Novice_Knife,1;
+			getitem Novice_Guard,1;
+			getitem Spectacles,2;
+			getitem Novice_Potion,300;
 			close2;
 			savepoint "new_1-2",23,188;
 			warp "new_1-3",96,21;
@@ -2575,7 +2575,7 @@ new_1-2,38,182,3	script	Entrance Guard#nv	4_F_03,{
 				getexp 200,0;
 			}
 			percentheal 100,0;
-			getitem 569,50; //Novice_Potion
+			getitem Novice_Potion,50;
 			close2;
 			warp "new_1-3",96,21;
 			end;
@@ -2730,7 +2730,7 @@ new_5-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv5	4_M_03
 new_1-2,28,185,4	shop	Potato Merchant	4_F_01,516:15
 
 new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
-	if (checkweight(909,400) == 0) {
+	if (checkweight(Jellopy,400) == 0) {
 		mes "[Hanson]";
 		mes "All of the items you are carrying must be quite a burden. Where did you get so much things? Please lighten your weight by getting rid of things you don't need.";
 		close;
@@ -3106,9 +3106,9 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			next;
 			//---------------------------------------------------------------------------------------------------------------------------------------------------
 			nov_3_swordman = 40;
-			getitem 501,4; //Red_Potion
-			getitem 503,2; //Yellow_Potion
-			getitem 506,2; //Green_Potion
+			getitem Red_Potion,4;
+			getitem Yellow_Potion,2;
+			getitem Green_Potion,2;
 			//-------------------------------------------------------------------------------------------------------------------------------------------------
 			next;
 			mes "[Hanson]";
@@ -3250,10 +3250,10 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					mes "^0000337 Phracon^000000";
 					next;
 					nov_3_swordman = 40;
-					getitem 7059,5; //Cargo_Free_Ticket
-					getitem 7060,5; //Warp_Free_Ticket
-					getitem 1104,1; //Falchion
-					getitem 1010,7; //Phracon
+					getitem Cargo_Free_Ticket,5;
+					getitem Warp_Free_Ticket,5;
+					getitem Falchion,1;
+					getitem Phracon,7;
 					////getgold 100
 					mes "[Hanson]";
 					mes "Please check your inventory to see if you have received all the supplies listed. Let me briefly inform you about the items you've received.";
@@ -3319,11 +3319,11 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					next;
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
 					nov_3_swordman = 40;
-					getitem 7059,5; //Cargo_Free_Ticket
-					getitem 7060,5; //Warp_Free_Ticket
-					getitem 1601,1; //Rod
-					getitem 1204,1; //Cutter
-					getitem 1010,7; //Phracon
+					getitem Cargo_Free_Ticket,5;
+					getitem Warp_Free_Ticket,5;
+					getitem Rod,1;
+					getitem Cutter,1;
+					getitem Phracon,7;
 					////getgold 100
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
 					mes "[Hanson]";
@@ -3392,11 +3392,11 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					next;
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
 					nov_3_swordman = 40;
-					getitem 7059,4; //Cargo_Free_Ticket
-					getitem 7060,4; //Warp_Free_Ticket
-					getitem 7061,4; //Cart_Free_Ticket
-					getitem 1351,1; //Battle_Axe
-					getitem 1010,7; //Phracon
+					getitem Cargo_Free_Ticket,4;
+					getitem Warp_Free_Ticket,4;
+					getitem Cart_Free_Ticket,4;
+					getitem Battle_Axe,1;
+					getitem Phracon,7;
 					////getgold 100
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
 					mes "[Hanson]";
@@ -3469,10 +3469,10 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					next;
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
 					nov_3_swordman = 40;
-					getitem 7059,5; //Cargo_Free_Ticket
-					getitem 7060,5; //Warp_Free_Ticket
-					getitem 1207,1; //Main_Gauche
-					getitem 1010,7; //Phracon
+					getitem Cargo_Free_Ticket,5;
+					getitem Warp_Free_Ticket,5;
+					getitem Main_Gauche,1;
+					getitem Phracon,7;
 					////getgold 100
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
 					mes "[Hanson]";
@@ -3530,10 +3530,10 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					next;
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
 					nov_3_swordman = 40;
-					getitem 7059,5; //Cargo_Free_Ticket
-					getitem 7060,5; //Warp_Free_Ticket
-					getitem 1704,1; //Composite_Bow
-					getitem 1010,7; //Phracon
+					getitem Cargo_Free_Ticket,5;
+					getitem Warp_Free_Ticket,5;
+					getitem Composite_Bow,1;
+					getitem Phracon,7;
 					////getgold 100
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
 					mes "[Hanson]";
@@ -3602,10 +3602,10 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 					next;
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
 					nov_3_swordman = 40;
-					getitem 7059,5; //Cargo_Free_Ticket
-					getitem 7060,5; //Warp_Free_Ticket
-					getitem 1504,1; //Mace
-					getitem 1010,7; //Phracon
+					getitem Cargo_Free_Ticket,5;
+					getitem Warp_Free_Ticket,5;
+					getitem Mace,1;
+					getitem Phracon,7;
 					////getgold 100
 					//---------------------------------------------------------------------------------------------------------------------------------------------------
 					mes "[Hanson]";
@@ -3842,9 +3842,9 @@ S_UserJobchoice:
 	next;
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	nov_3_swordman = 40;
-	getitem 7059,5; //Cargo_Free_Ticket
-	getitem 7060,5; //Warp_Free_Ticket
-	getitem 2305,1; //Adventure_Suit
+	getitem Cargo_Free_Ticket,5;
+	getitem Warp_Free_Ticket,5;
+	getitem Adventure_Suit,1;
 	////getgold 100
 	//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	mes "[Hanson]";

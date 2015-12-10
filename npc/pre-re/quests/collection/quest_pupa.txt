@@ -165,11 +165,11 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 					next;
 					switch(select("I have Chrysalis:What did you need?")) {
 					case 1:
-						if (countitem(915) > 24) {
+						if (countitem(Chrysalis) > 24) {
 							mes "[Halgus]";
 							mes "Amazing you found so many that fast.";
 							mes "Like I promised, give me the Chrysalis and I will reward you with my wisdom.";
-							delitem 915,25; //Chrysalis
+							delitem Chrysalis,25;
 							getexp 385,30;
 							close;
 						}

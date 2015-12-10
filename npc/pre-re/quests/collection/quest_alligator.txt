@@ -162,7 +162,7 @@ cmd_fild01,362,256,3	script	Cuir#Gator_Hunt	1_M_MOC_LORD,{
 					switch(select("I have the Anolian Skins:Gators bite!")) {
 					case 1:
 						/*
-						if (checkweight(503,10) == 0) {
+						if (checkweight(Yellow_Potion,10) == 0) {
 							mes "[Cuir]";
 							mes "Hey, it looks like that the weight on";
 							mes "your back will crush you. Come back";
@@ -170,14 +170,14 @@ cmd_fild01,362,256,3	script	Cuir#Gator_Hunt	1_M_MOC_LORD,{
 							close;
 						}
 						*/
-						if (countitem(7003) > 19) {
+						if (countitem(Anolian_Skin) > 19) {
 							mes "[Cuir]";
 							mes "Thank you for the ^00CE0020 Anolian Skins^000000!";
 							mes "I hope you can continue to help me collect these skins.";
 							mes "The armor creators around the world are clamoring for them.";
-							delitem 7003,20; //Anolian_Skin
+							delitem Anolian_Skin,20;
 							getexp 68950,43300;
-							//getitem 503,10; //Yellow_Potion
+							//getitem Yellow_Potion,10;
 							close;
 						}
 						else {
