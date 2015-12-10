@@ -188,7 +188,7 @@ prontera,216,70,2	script	Strife#pront	1_M_02,{
 			mes "train even harder!";
 			next;
 			event_prt_nov_dreamtalk = 2;
-			getitem 2501,1; //Hood
+			getitem Hood,1;
 			mes "[Strife]";
 			mes "This is, well, for you to help you get even stronger. I guess I want to thank you for being such a good example.";
 			close;
