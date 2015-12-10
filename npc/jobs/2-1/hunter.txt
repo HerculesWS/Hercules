@@ -156,7 +156,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 			mes "You can't apply to change jobs if you still have unused skill points. Use your remaining skill points first.";
 			close;
 		}
-		else if (HNTR_Q == 17 && countitem(1007) == 0) {
+		else if (HNTR_Q == 17 && countitem(Penetration) == 0) {
 			mes "[Hunter Sherin]";
 			mes "Hmm... I've been informed that you passed the test. But you don't have the necessary 'Necklace of Wisdom (Penetration)' that proves your accomplishment.";
 			next;
@@ -164,7 +164,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 			mes "I'll let you change your job, but you must bring back a 'Necklace of Wisdom (Penetration),' no matter what it takes.";
 			close;
 		}
-		else if (HNTR_Q == 17 && countitem(1007) > 0 && JobLevel > 39) {
+		else if (HNTR_Q == 17 && countitem(Penetration) > 0 && JobLevel > 39) {
 			mes "[Hunter Sherin]";
 			mes "Oh...?";
 			mes "You passed";
@@ -176,7 +176,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 			mes "I will now change";
 			mes "your job to a Hunter~";
 			next;
-			delitem 1007,1; //Penetration
+			delitem Penetration,1;
 			mes "[Hunter Sherin]";
 			mes "Tada~ Congratulations!";
 			mes "You look great as a Hunter!!";
@@ -191,9 +191,9 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 			mes "[Hunter Sherin]";
 			mes "And also, here is a little reward for all the effort you put in. It's from me, of course~";
 			if (.@joblvl > 49)
-				getitem 1718,1; //Hunter_Bow
+				getitem Hunter_Bow,1;
 			else
-				getitem 1710,1; //CrossBow
+				getitem CrossBow,1;
 			close;
 		}
 		else if ((JobLevel > 39) && ((HNTR_Q == 0) || (HNTR_Q == 1))) {
@@ -655,7 +655,7 @@ payon_in03,131,7,3	script	Hunter#htnGM	1_M_ORIENT01,{
 		mes "Well, then. Your arrows are probably still being made, so you can use mine to take the test.";
 		HNTR_Q = 12;
 		changequest 4009,4011;
-		getitem 1751,200; //Silver_Arrow
+		getitem Silver_Arrow,200;
 		close2;
 		warp "job_hunte",176,22;
 		end;
@@ -740,7 +740,7 @@ payon_in03,131,7,3	script	Hunter#htnGM	1_M_ORIENT01,{
 		mes "I mean, good job. I'll give you the item which proves that you have passed the test.";
 		HNTR_Q = 17;
 		savepoint "payon",104,99;
-		getitem 1007,1; //Penetration
+		getitem Penetration,1;
 		changequest 4012,4013;
 		next;
 		mes "[Hunter Guildmaster]";
@@ -813,7 +813,7 @@ payon_in02,21,31,1	script	Hunter#htnGM2	1_M_ORIENT01,{
 		}
 		mes "[Hunter Guildmaster]";
 		mes "Well, your arrows are probably still being made, so you can use mine to take the test.";
-		getitem 1751,200; //Silver_Arrow
+		getitem Silver_Arrow,200;
 		next;
 		mes "[Hunter Guildmaster]";
 		mes "Good luck.";
@@ -932,7 +932,7 @@ payon_in02,21,31,1	script	Hunter#htnGM2	1_M_ORIENT01,{
 		mes "I mean, good job. Well then, I'll give you the item which serves as proof that you passed the test.";
 		HNTR_Q = 17;
 		savepoint "payon",104,99;
-		getitem 1007,1; //Penetration
+		getitem Penetration,1;
 		next;
 		mes "[Hunter Guildmaster]";
 		mes "Well...";

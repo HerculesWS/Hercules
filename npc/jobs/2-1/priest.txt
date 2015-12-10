@@ -82,7 +82,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 				mes "Do you wish to help him out during the spiritual training?";
 				next;
 				if (select("Yes, I do.:Give me a second.") == 1) {
-					if (countitem(2608) > 0) {
+					if (countitem(Rosary) > 0) {
 						mes "[Bishop Paul]";
 						mes "I will now send you to the training place for Acolytes. Please send my regards to Brother Peter...";
 						next;
@@ -518,11 +518,11 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		next;
 		mes "[Bishop Paul]";
 		if (.@joblvl < 50) {
-			getitem 1550,1; //Book
+			getitem Book,1;
 			mes "This book is for you. I hope it will aid you in spreading God's message on earth.";
 		}
 		else {
-			getitem 1551,1; //Bible
+			getitem Bible,1;
 			mes "In commemoration of your job change, I am giving you a bible. This will lighten your way to the path of righteousness.";
 		}
 		next;

@@ -884,9 +884,9 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 		mes "Please take it.";
 		mes "May your performances always bring joy to your audience~";
 		if (.@jlevel == 50)
-			getitem 1953,1; //Line_
+			getitem Line_,1;
 		else
-			getitem 1950,1; //Rope
+			getitem Rope,1;
 		close;
 	}
 }

@@ -254,80 +254,80 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 		next;
 		mes "[Lalo]";
 		//Good Flowers
-		if (countitem(629) > 0) {
+		if (countitem(Singing_Flower) > 0) {
 			mes "Ooh! It's a Singing Flower!";
 			mes "It's full of my memories...";
 			next;
-			delitem 629,1; //Singing Flower
+			delitem Singing_Flower,1; //Singing Flower
 			mes "[Lalo]";
 			mes "My friend Tchaikovsky used to like it.";
 			mes "I wonder what he's doing now...";
 		}
-		else if(countitem(703) > 0) {
+		else if(countitem(Hinalle) > 0) {
 			mes "Aah... the cute Hinelle...";
 			mes "It doesn't have a scent but it's a very moderate cute flower.";
 			next;
-			delitem 703,1; //Hinalle
+			delitem Hinalle,1;
 			mes "[Lalo]";
 			mes "The leaves gave me strength when I used to fall.";
 			mes "I really like this flower, thank you.";
 		}
-		else if(countitem(704) > 0) {
+		else if(countitem(Aloe) > 0) {
 			mes "Aloe... This is a rare flower.";
 			mes "How'd you get it? Rather skilled, eh?";
 			next;
-			delitem 704,1; //Aloe
+			delitem Aloe,1;
 			mes "[Lalo]";
 			mes "The leaves are good and Aloe Vera is delicious, too..";
 			mes "but it's defnitely the most beautiful when it's a flower.";
 		}
-		else if(countitem(708) > 0) {
+		else if(countitem(Ment) > 0) {
 			mes "Ment... You can forget about all your hardships with one of these.";
 			mes "Nice to see it in such a long time!";
 			next;
-			delitem 708,1; //Ment
+			delitem Ment,1;
 			mes "[Lalo]";
 			mes "I heard you can make Anodyne with it...";
 			mes "But that would be a slight waste.. thanks!";
 		}
-		else if(countitem(709) > 0) {
+		else if(countitem(Izidor) > 0) {
 			mes "Ooh, isn't this an Izidor?";
 			mes "It's a dangerous yet beautiful flower...";
 			next;
-			delitem 709,1; //Izidor
+			delitem Izidor,1;
 			mes "[Lalo]";
 			mes "The deep purple charms a person.. ";
 			mes "Thank you, I really like this flower.";
 		}
-		else if(countitem(748) > 0) {
+		else if(countitem(Witherless_Rose) > 0) {
 			mes "Ooh, a Witherless Rose. The strong flower that doesn't wither.";
 			mes "Great to give to a girlfriend.";
 			next;
-			delitem 748,1; //Witherless_Rose
+			delitem Witherless_Rose,1;
 			mes "[Lalo]";
 			mes "I wonder if it would be ok for a wanderer like me to accept it.";
 			mes "Haha, it should be ok.. right?";
 		}
-		else if(countitem(749) > 0 ) {
+		else if(countitem(Frozen_Rose) > 0 ) {
 			mes "Frozen Rose... you can't really call this a flower,";
 			mes "But it is still beautiful... a clear Rose.";
 			next;
-			delitem 749,1; //Frozen_Rose
+			delitem Frozen_Rose,1;
 			mes "[Lalo]";
 			mes "You can call it a flower even though it doesn't have a scent anymore.";
 			mes "Then I'll greatly take this.";
 		}
-		else if(countitem(710) > 0) {
+		else if(countitem(Illusion_Flower) > 0) {
 			mes "Oh, isn't this an Illusion Flower!?";
 			mes "Wow, how did you obtain such a rare flower!!";
 			next;
-			delitem 710,1; //Illusion_Flower
+			delitem Illusion_Flower,1;
 			mes "[Lalo]";
 			mes "Than you very much, aah... I feel like heaven is in front of my eyes.";
 			mes "What a wonderful feeling! I'm really happy!";
 		}
 		//Bad Flowers
-		else if(countitem(712) > 0) {
+		else if(countitem(Flower) > 0) {
 			cutin "job_bard_aiolo02",2;
 			mes "Eh? This is just a normal flower.";
 			mes "I like it... but it's not enough.";
@@ -339,7 +339,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 			cutin "job_bard_aiolo02",255;
 			end;
 		}
-		else if(countitem(744) > 0) {
+		else if(countitem(Bunch_Of_Flowers) > 0) {
 			mes "Oh no, you brought a Bouquet?";
 			mes "You can't bring me something like this.";
 			next;
@@ -350,7 +350,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 			cutin "job_bard_aiolo01",255;
 			end;
 		}
-		else if(countitem(745) > 0) {
+		else if(countitem(Wedding_Bouquet) > 0) {
 			cutin "job_bard_aiolo02",2;
 			mes "Oy oy... did you go to a wedding or something?";
 			mes "What do you expect a guy to do with a Wedding Bouquet?";
@@ -362,7 +362,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 			cutin "job_bard_aiolo02",255;
 			end;
 		}
-		else if(countitem(2207) > 0) {
+		else if(countitem(Fancy_Flower) > 0) {
 			mes "Mmm... a Fancy Flower.";
 			mes "It's nice... but this isn't good enough.";
 			next;
@@ -373,7 +373,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 			cutin "job_bard_aiolo01",255;
 			end;
 		}
-		else if(countitem(1032) > 0) {
+		else if(countitem(Blossom_Of_Maneater) > 0) {
 			cutin "job_bard_aiolo02",2;
 			mes "...Agh, why'd you bring such a hideous thing?";
 			mes "Are you thinking at all?";
@@ -861,10 +861,10 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 			else {
 				switch(BARD_Q) {
 				case 5:
-					if(countitem(1019) > 59) callsub S_ChangeJob,1019,1901;
-					else if(countitem(1068) > 59) callsub S_ChangeJob,1068,1903;
-					else if(countitem(1067) > 59) callsub S_ChangeJob,1067,1903;
-					else if(countitem(1066) > 59) {
+					if(countitem(Wooden_Block) > 59) callsub S_ChangeJob,1019,1901;
+					else if(countitem(Tree_Of_Archer_3) > 59) callsub S_ChangeJob,1068,1903;
+					else if(countitem(Tree_Of_Archer_2) > 59) callsub S_ChangeJob,1067,1903;
+					else if(countitem(Tree_Of_Archer_1) > 59) {
 						if(JobLevel > 49) callsub S_ChangeJob,1066,1910;
 						else callsub S_ChangeJob,1066,1905;
 					}

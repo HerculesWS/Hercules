@@ -253,7 +253,7 @@ ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 			mes "If you haven't, I suggest you to do so as soon as possible.";
 			close;
 		}
-		else if (BSMITH_Q == 17 && countitem(1005) > 0 && JobLevel > 39) {
+		else if (BSMITH_Q == 17 && countitem(Hammer_Of_Blacksmith) > 0 && JobLevel > 39) {
 			mes "[Altiregen]";
 			if (checkmount() || hascashmount()) {
 				mes "You are on a riding pet, so you cannot change your job.";
@@ -272,7 +272,7 @@ ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 			mes "Always remember that we are creators, and artists over metals. Be wary that you do not fall into the pitfalls of selfishness";
 			mes "and greed.";
 			next;
-			delitem 1005,1; //Hammer_Of_Blacksmith
+			delitem Hammer_Of_Blacksmith,1;
 			completequest 2016;
 			mes "[Altiregen]";
 			mes "Here is a little";
@@ -281,9 +281,9 @@ ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 			mes "life as a Blacksmith.";
 			mes "Congratulations!!!";
 			if (.@joblvl > 48)
-				getitem 999,30; //Steel
+				getitem Steel,30;
 			else
-				getitem 999,5; //Steel
+				getitem Steel,5;
 			close;
 		}
 	}
@@ -665,7 +665,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 				switch(BSMITH_Q) {
 				case 9:
 					mes "Okay, now take this to ^8E6B23Baisulist^000000 in Geffen of Rune-Midgarts Kingdom. Simply deliver it and bring me the receipt.";
-					getitem 1610,1; //Arc_Wand
+					getitem Arc_Wand,1;
 					if (questprogress(2003)) {
 						changequest 2003,2008;
 					}
@@ -690,7 +690,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 					break;
 				case 10:
 					mes "Okay, now take this to ^8E6B23Wickebine^000000 in Morroc of Rune-Midgarts Kingdom. Simply deliver it and bring me the receipt.";
-					getitem 1219,1; //Gladius
+					getitem Gladius,1;
 					if (questprogress(2004)) {
 						changequest 2004,2009;
 					}
@@ -715,7 +715,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 					break;
 				case 11:
 					mes "Okay, now take this to ^8E6B23Krongast^000000 in Lighthalzen. Simply deliver it and bring me the receipt.";
-					getitem 1119,1; //Tsurugi
+					getitem Tsurugi,1;
 					if (questprogress(2005)) {
 						changequest 2005,2010;
 					}
@@ -741,7 +741,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 					break;
 				case 12:
 					mes "Okay, now take this to ^8E6B23Talpiz^000000 in Payon of Rune-Midgarts Kingdom. Simply deliver this and bring me the receipt.";
-					getitem 1713,1; //Arbalest
+					getitem Arbalest,1;
 					if (questprogress(2006)) {
 						changequest 2006,2011;
 					}
@@ -765,7 +765,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 					break;
 				case 13:
 					mes "Okay, now take this to ^8E6B23Bismarc^000000 in Hugel. Simply deliver this and bring back the receipt.";
-					getitem 1122,1; //Ring_Pommel_Saber
+					getitem Ring_Pommel_Saber,1;
 					if (questprogress(2007)) {
 						changequest 2007,2012;
 					}
@@ -860,9 +860,9 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 			mes "Let's see that receipt~";
 			next;
 			if (select("Yes sir, here it is.:Receipt? I, uh, have it somewhere.") == 1) {
-				if (countitem(1073) > 0) {
+				if (countitem(Merchant_Voucher_1) > 0) {
 					BSMITH_Q = 15;
-					delitem 1073,1; //Merchant_Voucher_1
+					delitem Merchant_Voucher_1,1;
 					if (questprogress(2008)) {
 						changequest 2008,2013;
 					}
@@ -945,7 +945,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 }
 
 geffen,46,164,1	script	Baisulist#BLS	1_F_04,{
-	if (BSMITH_Q == 9 && countitem(1610) > 0) {
+	if (BSMITH_Q == 9 && countitem(Arc_Wand) > 0) {
 		mes "[Baisulist]";
 		mes "Oh, hello!";
 		mes "Have you come";
@@ -969,7 +969,7 @@ geffen,46,164,1	script	Baisulist#BLS	1_F_04,{
 		mes "You're";
 		mes "absolutely sure?";
 		BSMITH_Q = 14;
-		delitem 1610,1; //Arc_Wand
+		delitem Arc_Wand,1;
 		next;
 		mes "[Baisulist]";
 		mes "Thank you so much for traveling all the way here. That Geschupenschte, please smack him for me when you meet him for being so late on this order...";
@@ -979,7 +979,7 @@ geffen,46,164,1	script	Baisulist#BLS	1_F_04,{
 		mes "a second, let";
 		mes "me give you a receipt~";
 		next;
-		getitem 1073,1; //Merchant_Voucher_1
+		getitem Merchant_Voucher_1,1;
 		mes "[Baisulist]";
 		mes "Here it is.";
 		mes "Thank you so much!";
@@ -1020,7 +1020,7 @@ geffen,46,164,1	script	Baisulist#BLS	1_F_04,{
 }
 
 morocc,27,112,4	script	Wickebine#BLS	4_F_JOB_ASSASSIN,{
-	if (BSMITH_Q == 10 && countitem(1219) > 0) {
+	if (BSMITH_Q == 10 && countitem(Gladius) > 0) {
 		cutin "Job_Black_hucke01",2;
 		mes "[Wickebine]";
 		mes "...!";
@@ -1052,7 +1052,7 @@ morocc,27,112,4	script	Wickebine#BLS	4_F_JOB_ASSASSIN,{
 		mes "- She looks very happy. -";
 		next;
 		BSMITH_Q = 14;
-		delitem 1219,1; //Gladius
+		delitem Gladius,1;
 		cutin "Job_Black_hucke01",2;
 		mes "[Wickebine]";
 		mes "Are you with the";
@@ -1071,7 +1071,7 @@ morocc,27,112,4	script	Wickebine#BLS	4_F_JOB_ASSASSIN,{
 		mes "a masterfully crafted item.";
 		mes "Tell him I'm satisfied with the quality of the workmanship.";
 		next;
-		getitem 1073,1; //Merchant_Voucher_1
+		getitem Merchant_Voucher_1,1;
 		emotion e_lv;
 		mes "[Wickebine]";
 		mes "Here's the receipt.";
@@ -1121,7 +1121,7 @@ morocc,27,112,4	script	Wickebine#BLS	4_F_JOB_ASSASSIN,{
 }
 
 lighthalzen,209,80,4	script	Krongast#BLS	4_M_JOB_KNIGHT2,{
-	if (BSMITH_Q == 11 && countitem(1119) > 0) {
+	if (BSMITH_Q == 11 && countitem(Tsurugi) > 0) {
 		mes "[Krongast]";
 		mes "Ohhhhhh~";
 		mes "Is it here?";
@@ -1146,7 +1146,7 @@ lighthalzen,209,80,4	script	Krongast#BLS	4_M_JOB_KNIGHT2,{
 		mes "Alright then, I'll take it!";
 		next;
 		BSMITH_Q = 14;
-		delitem 1119,1; //Tsurugi
+		delitem Tsurugi,1;
 		mes "[Krongast]";
 		mes "Oh ho...";
 		mes "This is good.";
@@ -1162,7 +1162,7 @@ lighthalzen,209,80,4	script	Krongast#BLS	4_M_JOB_KNIGHT2,{
 		mes "Let me give";
 		mes "you a receipt.";
 		next;
-		getitem 1073,1; //Merchant_Voucher_1
+		getitem Merchant_Voucher_1,1;
 		mes "[Krongast]";
 		mes "Here is";
 		mes "your receipt.";
@@ -1199,7 +1199,7 @@ lighthalzen,209,80,4	script	Krongast#BLS	4_M_JOB_KNIGHT2,{
 }
 
 payon,214,79,4	script	Talpiz#BLS	1_M_ORIENT01,{
-	if (BSMITH_Q == 12 && countitem(1713) > 0) {
+	if (BSMITH_Q == 12 && countitem(Arbalest) > 0) {
 		mes "[Talpiz]";
 		mes "Oh~";
 		mes "Is it finally here?";
@@ -1223,7 +1223,7 @@ payon,214,79,4	script	Talpiz#BLS	1_M_ORIENT01,{
 		mes "Let me take a look...";
 		next;
 		BSMITH_Q = 14;
-		delitem 1713,1; //Arbalest
+		delitem Arbalest,1;
 		mes "[Talpiz]";
 		mes "*wheet whoo*";
 		mes "Very nice!!";
@@ -1236,7 +1236,7 @@ payon,214,79,4	script	Talpiz#BLS	1_M_ORIENT01,{
 		mes "For something of this quality,";
 		mes "I can even sell it for a high price even after I've used it!";
 		next;
-		getitem 1073,1; //Merchant_Voucher_1
+		getitem Merchant_Voucher_1,1;
 		mes "[Talpiz]";
 		mes "Here!";
 		mes "Please take";
@@ -1273,7 +1273,7 @@ payon,214,79,4	script	Talpiz#BLS	1_M_ORIENT01,{
 }
 
 hugel,168,183,1	script	Bismarc#BLS	2_M_THIEFMASTER,{
-	if (BSMITH_Q == 13 && countitem(1122) > 0) {
+	if (BSMITH_Q == 13 && countitem(Ring_Pommel_Saber) > 0) {
 		mes "[Bismarc]";
 		mes "Sweet God...";
 		mes "Have you sent";
@@ -1304,7 +1304,7 @@ hugel,168,183,1	script	Bismarc#BLS	2_M_THIEFMASTER,{
 		mes "Pleeeease!";
 		next;
 		BSMITH_Q = 14;
-		delitem 1122,1; //Ring_Pommel_Saber
+		delitem Ring_Pommel_Saber,1;
 		mes "^3355FFBismarc stabs";
 		mes "himself, repeatedly,";
 		mes "with the Ring Pommel Saber";
@@ -1333,7 +1333,7 @@ hugel,168,183,1	script	Bismarc#BLS	2_M_THIEFMASTER,{
 		mes "antidote working now.";
 		mes "Just what I needed.";
 		next;
-		getitem 1073,1; //Merchant_Voucher_1
+		getitem Merchant_Voucher_1,1;
 		mes "[Bismarc]";
 		mes "Here is";
 		mes "your receipt.";
@@ -1537,7 +1537,7 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 				mes "[Mitehmaeeuh]";
 				mes "However, don't let your early success make you overconfident. A Blacksmith's life isn't a picnic. As proof that you have passed the test, I give you this Hammer of Blacksmith.";
 				BSMITH_Q = 17;
-				getitem 1005,1; //Hammer_Of_Blacksmith
+				getitem Hammer_Of_Blacksmith,1;
 				changequest 2014,2015;
 				next;
 				mes "[Mitehmaeeuh]";

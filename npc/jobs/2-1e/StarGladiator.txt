@@ -434,7 +434,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 			close;
 		}
 		else if (STGL_Q == 2) {
-			if (countitem(996) > 0 && countitem(997) > 0 && countitem(995) > 0 && countitem(994) > 0) {
+			if (countitem(Rough_Wind) > 0 && countitem(Great_Nature) > 0 && countitem(Mistic_Frozen) > 0 && countitem(Flame_Heart) > 0) {
 				mes "[Moogang]";
 				mes "Ah, you've completed the";
 				mes "task I've set for you. Very";
@@ -481,10 +481,10 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 				mes "and all things. Now, when you";
 				mes "are ready for the next test, then";
 				mes "I shall guide you to the altar.";
-				delitem 996,1; //Rough_Wind
-				delitem 997,1; //Great_Nature
-				delitem 995,1; //Mistic_Frozen
-				delitem 994,1; //Flame_Heart
+				delitem Rough_Wind,1;
+				delitem Great_Nature,1;
+				delitem Mistic_Frozen,1;
+				delitem Flame_Heart,1;
 				STGL_Q = 3;
 				changequest 7008,7009;
 				close;
@@ -1447,7 +1447,7 @@ job_star,161,33,0	script	Cheehee#job_star	1_F_ORIENT_03,{
 			close;
 		}
 		else if (STGL_Q == 10) {
-			if (countitem(1000) > 0 && countitem(1001) > 0) {
+			if (countitem(Star_Crumb) > 0 && countitem(Sparkling_Dust) > 0) {
 				mes "[Cheehee]";
 				mes "Oh? You've brought exactly";
 				mes "what I've asked you to bring.";
@@ -1463,8 +1463,8 @@ job_star,161,33,0	script	Cheehee#job_star	1_F_ORIENT_03,{
 				mes "Occasionally, the stars can";
 				mes "be saddening, but it's a very";
 				mes "sweet kind of sadness...";
-				delitem 1000,1; //Star_Crumb
-				delitem 1001,1; //Sparkling_Dust
+				delitem Star_Crumb,1;
+				delitem Sparkling_Dust,1;
 				STGL_Q = 11;
 				close;
 			}

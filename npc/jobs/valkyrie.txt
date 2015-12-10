@@ -159,8 +159,8 @@ valkyrie,48,86,4	script	Valkyrie#	4_F_VALKYRIE,{
 			mes "into a brand new life.";
 			mes "Please take these small gifts";
 			mes "in preparation for your new adventures.";
-			getitem 1202,1; //Knife_
-			getitem 2302,1; //Cotton_Shirt_
+			getitem Knife_,1;
+			getitem Cotton_Shirt_,1;
 			next;
 			mes "[Valkyrie]";
 			mes "I wish that the release the goddess Urd has granted you proves to be a blessing. I hope that the memories Verdandi has recorded will always honor you.";

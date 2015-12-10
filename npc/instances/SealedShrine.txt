@@ -41,7 +41,7 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 	mes "[Friar Patrick]";
 	mes "What brought you to this place?";
 	next;
-	if (countitem(6004) > 0) {
+	if (countitem(Bapho_Doll) > 0) {
 		.@doll = 1;
 		.@selection = select("What is this place?:I want to enter.:About the Cursed Baphomet Doll.:Cancel.");
 	}
@@ -216,7 +216,7 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 }
 
 monk_test,306,151,3	script	Grave of Baphomet#edq	HIDDEN_NPC,{
-	if (countitem(6002)) delitem 6002,countitem(6002); //Token_Of_Apostle
+	if (countitem(Token_Of_Apostle)) delitem Token_Of_Apostle,countitem(Token_Of_Apostle);
 	mes "This gravestone has a carving of a wicked devil with large horns. It arouses an ominous feeling.";
 	next;
 	if(select("Touch the stone.:Step back.") == 2)
@@ -271,7 +271,7 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 		mes "[Rust Blackhand]";
 		mes "Did you bring all of the ingredients?";
 		next;
-		if (countitem(6004) && countitem(2256) && (countitem(7799) > 29) && (countitem(7798) > 49) && (Zeny >= 990000)) {
+		if (countitem(Bapho_Doll) && countitem(Magestic_Goat) && (countitem(Dark_Crystal) > 29) && (countitem(Dark_Debris) > 49) && (Zeny >= 990000)) {
 			mes "[Rust Blackhand]";
 			mes "kkk... You prepared the ingredients well. Why don't you leave it there and wait?";
 			next;
@@ -284,13 +284,13 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 			next;
 			mes "... ... ...";
 			next;
-			delitem 6004,1; //Bapho_Doll
-			delitem 2256,1; //Magestic_Goat
-			delitem 7799,30; //Dark_Crystal
-			delitem 7798,50; //Dark_Debris
+			delitem Bapho_Doll,1;
+			delitem Magestic_Goat,1;
+			delitem Dark_Crystal,30;
+			delitem Dark_Debris,50;
 			Zeny -= 990000;
 			completequest 3043;
-			getitem 5374,1; //L_Magestic_Goat
+			getitem L_Magestic_Goat,1;
 			mes "[Rust Blackhand]";
 			mes "It's done. You may be excited, of course. I understand...";
 			next;
@@ -310,7 +310,7 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 			close;
 		}
 	}
-	else if (!.@new_maje && countitem(6004) > 0) {
+	else if (!.@new_maje && countitem(Bapho_Doll) > 0) {
 		switch(select("About the Cursed Baphomet Doll:Stop talking.")) {
 		case 1:
 			mes "[Rust Blackhand]";
@@ -365,12 +365,12 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 			close;
 		}
 	}
-	else if (!.@new_maje && !countitem(6004)) {
+	else if (!.@new_maje && !countitem(Bapho_Doll)) {
 		mes "[Rust Blackhand]";
 		mes "If you don't have business with me, go away! As you see, I make equipment for the Brothers at the monastery, not for adventurers like you. Do you understand?";
 		close;
 	}
-	else if (.@new_maje == 2 && countitem(6004)) {
+	else if (.@new_maje == 2 && countitem(Bapho_Doll)) {
 		switch(select("About the Cursed Baphomet Doll:Stop talking.")) {
 		case 1:
 			mes "[Rust Blackhand]";
@@ -423,7 +423,7 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 			close;
 		}
 	}
-	else if (.@new_maje == 2 && !countitem(6004)) {
+	else if (.@new_maje == 2 && !countitem(Bapho_Doll)) {
 		mes "[Rust Blackhand]";
 		mes "Why are you hanging around here? If you don't want a ^4d4dffGigantic Magestic Goat^000000, go away.";
 		close;
@@ -480,7 +480,7 @@ OnMyMobDead:
 	if (mobcount(.@map$,instance_npcname("ins_baphomet_lotto3")+"::OnMyMobDead") < 1) {
 		mapannounce .@map$, "All apostles of Baphomet are dead!",bc_map,"0x00ff99";
 	}
-	getitem 6002,1; //Token_Of_Apostle
+	getitem Token_Of_Apostle,1;
 	end;
 }
 
@@ -548,12 +548,12 @@ OnMyMobDead:
 		mes "[Voice of the Gravestone]";
 		mes "Did you find the pendant?";
 		next;
-		if (countitem(6003) > 0) {
+		if (countitem(Soul_Pendant) > 0) {
 			specialeffect EF_MAPPILLAR;
 			mes "[Voice of the Gravestone]";
 			mes "Yes... This is... My pendant...";
 			next;
-			delitem 6003,1; //Soul_Pendant
+			delitem Soul_Pendant,1;
 			enablenpc instance_npcname("Ancient Hero's Soul#1F");
 			disablenpc instance_npcname("Gravestone#");
 			mes "[Voice of the Gravestone]";
@@ -730,8 +730,8 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 		mes "[Ancient Hero's Soul]";
 		mes "Did you get 10 ^0000FFEssence of Fire^000000 and ^0000FFToken of Apostle^000000?";
 		next;
-		if ((countitem(6001) > 9) && (countitem(6002) > 0)) {
-			delitem 6001,countitem(6001); //Essence_Of_Fire
+		if ((countitem(Essence_Of_Fire) > 9) && (countitem(Token_Of_Apostle) > 0)) {
+			delitem Essence_Of_Fire,countitem(Essence_Of_Fire);
 			'ins_baphomet = 4;
 			mes "[Ancient Hero's Soul]";
 			mes "Okay. You've done your work. Now check your companions and tell me when everyone has finished their work.";
@@ -749,7 +749,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 		mes "[Ancient Hero's Soul]";
 		mes "Do you have a ^0000FFToken of Apostle^000000?";
 		next;
-		if (countitem(6002) > 0) {
+		if (countitem(Token_Of_Apostle) > 0) {
 			'ins_baphomet = 4;
 			mes "[Ancient Hero's Soul]";
 			mes "Okay. You've done your work. Tell your representative to check your companions and come to me when everyone has finished their work.";
@@ -816,8 +816,8 @@ OnInstanceInit:
 //============================================================
 1@cata,281,12,0	script	ins_bapho_to_2f	WARPNPC,1,1,{
 OnTouch:
-	if (countitem(6002) > 0) {
-		delitem 6002,countitem(6002); //Token_Of_Apostle
+	if (countitem(Token_Of_Apostle) > 0) {
+		delitem Token_Of_Apostle,countitem(Token_Of_Apostle);
 		'ins_baphomet = 5;
 		warp instance_mapname("2@cata"),80,144;
 		end;
@@ -837,7 +837,7 @@ OnInstanceInit:
 //============================================================
 -	script	Gravestone#SS1	-1,{
 	if ('ins_baphomet == 1) {
-		getitem 6003,1; //Soul_Pendant
+		getitem Soul_Pendant,1;
 		'ins_baphomet = 2;
 		mes "A small object is shining under a leaning grave.";
 		next;
@@ -887,18 +887,18 @@ OnInstanceInit:
 -	script	Bobbing Torch#SS	-1,{
 	.@party_id = getcharid(1);
 	if (getpartyleader(.@party_id,2) == getcharid(0)) {
-		if (('ins_baphomet == 3) && (countitem(6001) < 11)) {
+		if (('ins_baphomet == 3) && (countitem(Essence_Of_Fire) < 11)) {
 			mes "A huge torch appearing as if it can burn everything is bobbing up and down in front of me.";
 			next;
 			mes "The grand appearance and heat of the fire makes me step back... But I pluck up my courage and reach out to pick up the torch.";
 			next;
 			specialeffect2 EF_HOLYHIT;
-			getitem 6001,1; //Essence_Of_Fire
+			getitem Essence_Of_Fire,1;
 			mes "The symbol of inheritor shines. Then a small crystal falls into my hand from the torch.";
 			disablenpc instance_npcname(strnpcinfo(0));
 			close;
 		}
-		else if (('ins_baphomet == 3) && (countitem(6001) > 10)) {
+		else if (('ins_baphomet == 3) && (countitem(Essence_Of_Fire) > 10)) {
 			mes "You have 10 Essence of Fire already, so you don't need to collect any more.";
 			close;
 		}

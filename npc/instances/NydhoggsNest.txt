@@ -1038,7 +1038,7 @@ spl_in01,104,56,3	script	Aide Arioss#edq	4_F_FAIRYKID2,3,3,{
 			mes "[Aide Arioss]";
 			mes "It can't compare with the effort you have put in for us... but please accept our token of friendship.";
 			getexp 1500000,350000;
-			getitem 6081,10; //Splendide_Coin
+			getitem Splendide_Coin,10;
 			ins_nyd = 131;
 			mes "[Aide Arioss]";
 			mes "If we can help you with anything in the future, we will do all we can to assist you. Once again, thank you.";
@@ -1274,7 +1274,7 @@ man_in01,311,57,3	script	Neat Etorr#edq	4_MAN_NITT,3,3,{
 			mes "[Neat Etorr]";
 			mes "It's not a lot, but please this as a token of our appreciation.";
 			getexp 1500000,350000;
-			getitem 6080,10; //Manuk_Coin
+			getitem Manuk_Coin,10;
 			ins_nyd = 132;
 			close;
 		} else if (ins_nyd == 132) {
