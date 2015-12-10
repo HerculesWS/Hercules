@@ -264,7 +264,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 				mes "come and talk to me again.";
 				goto L_End;
 			}
-			else if (countitem(2613) < 1) {
+			else if (countitem(Diamond_Ring) < 1) {
 				mes "[Marry Happy]";
 				mes "Mm? Did you forget to";
 				mes "bring the Diamond Ring";
@@ -284,7 +284,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 					mes "Did you misplace your money?";
 					goto L_End;
 				}
-				else if (countitem(7170) < 1) {
+				else if (countitem(Tuxedo) < 1) {
 					mes "[Marry Happy]";
 					mes "Where's your Tuxedo?";
 					mes "You absolutely have to";
@@ -306,7 +306,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 					mes "to help you with the funds?";
 					goto L_End;
 				}
-				else if (countitem(2338) < 1) {
+				else if (countitem(Wedding_Dress) < 1) {
 					mes "[Marry Happy]";
 					mes "Oh dear, did you forget";
 					mes "your Wedding Dress?";
@@ -367,7 +367,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 				mes "bride's turn to speak to";
 				mes "Bishop Vomars.";
 				Zeny -= 1300000;
-				delitem 7170,1; //Tuxedo
+				delitem Tuxedo,1;
 			}
 			else {
 				mes "Since you're the bride,";
@@ -377,9 +377,9 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 				mes "finished, it'll be your turn";
 				mes "to speak to Bishop Vomars.";
 				Zeny -= 1200000;
-				delitem 2338,1; //Wedding_Dress
+				delitem Wedding_Dress,1;
 			}
-			delitem 2613,1; //Diamond_Ring
+			delitem Diamond_Ring,1;
 			wedding_sign = 1;
 			goto L_End;
 		}
@@ -697,11 +697,11 @@ prt_church,100,128,4	script	Bishop#w	1_M_PASTOR,{
 										wedding;
 										//Give ring to Bride, and change to wedding sprite.
 										sc_start SC_WEDDING,3600000,1;
-										getitem 2635,1; //Bride_Ring
+										getitem Bride_Ring,1;
 										//Give ring to Groom, and change to wedding sprite.
 										attachrid(getcharid(3,$@wed_groom$));
 										sc_start SC_WEDDING,3600000,1;
-										getitem 2634,1; //Bridegroom_Ring
+										getitem Bridegroom_Ring,1;
 										detachrid;
 										//Switch Script progression back to Bride
 										attachrid(getcharid(3,$@wed_bride$));

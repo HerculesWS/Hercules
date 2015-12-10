@@ -44,7 +44,7 @@
 
 comodo,219,158,6	script	Kachua	4_F_02,{
 
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
 	}
@@ -69,7 +69,7 @@ comodo,219,158,6	script	Kachua	4_F_02,{
 		end;
 	}
 
-	if (countitem(732) == 0) {
+	if (countitem(Crystal_Jewel__) == 0) {
 		cutin "katsua01.bmp",255;
 		cutin "katsua03.bmp",2;
 		mes "[Kachua]";
@@ -103,7 +103,7 @@ comodo,219,158,6	script	Kachua	4_F_02,{
 		end;
 	}
 
-	if (countitem(732) == 0) { // anti-hack
+	if (countitem(Crystal_Jewel__) == 0) { // anti-hack
 		logmes "Hack: Tried to bypass item check.";
 		cutin "katsua01.bmp",255;
 		close;
@@ -509,7 +509,7 @@ comodo,210,154,2	script	Suspicious Guy#cmd	2_M_THIEFMASTER,{
 
 mjolnir_02,85,362,3	script	Blacksmith Miner	4_F_JOB_BLACKSMITH,{
 
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
 	}
