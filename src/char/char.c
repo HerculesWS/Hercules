@@ -5637,7 +5637,7 @@ int char_config_read(const char* cfgName)
 		} else if(strcmpi(w1, "gm_allow_group") == 0) {
 			gm_allow_group = atoi(w2);
 		} else if (strcmpi(w1, "autosave_time") == 0) {
-			autosave_interval = atoi(w2)*1000;
+			autosave_interval = atoi(w2) * 1000;
 			if (autosave_interval <= 0)
 				autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
 		} else if (strcmpi(w1, "save_log") == 0) {
@@ -5647,7 +5647,7 @@ int char_config_read(const char* cfgName)
 			else if (strcmpi(w1, "start_point_re") == 0) {
 				char map[MAP_NAME_LENGTH_EXT];
 				int x, y;
-				if (sscanf(w2, "%15[^,], %d, %d", map, &x, &y) < 3)
+				if (sscanf(w2, "%15[^,],%d,%d", map, &x, &y) < 3)
 					continue;
 				start_point.map = mapindex->name2id(map);
 				if (!start_point.map)
@@ -5659,7 +5659,7 @@ int char_config_read(const char* cfgName)
 			else if (strcmpi(w1, "start_point_pre") == 0) {
 				char map[MAP_NAME_LENGTH_EXT];
 				int x, y;
-				if (sscanf(w2, "%15[^,], %d, %d", map, &x, &y) < 3)
+				if (sscanf(w2, "%15[^,],%d,%d", map, &x, &y) < 3)
 					continue;
 				start_point.map = mapindex->name2id(map);
 				if (!start_point.map)
