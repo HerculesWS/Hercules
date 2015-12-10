@@ -60,15 +60,15 @@ alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 					mes "Bunny Band together...";
 					close;
 				}
-			delitem 949,100; //Feather
-			delitem 706,1; //Four_Leaf_Clover
-			delitem 722,1; //Scarlet_Jewel
-			delitem 2213,1; //Cat_Hairband
+			delitem Feather,100; //Feather
+			delitem Four_Leaf_Clover,1; //Four_Leaf_Clover
+			delitem Scarlet_Jewel,1; //Scarlet_Jewel
+			delitem Cat_Hairband,1; //Cat_Hairband
 			mes "[Kafra Employee]";
 			mes "Ah, here you go~";
 			mes "The perfect Bunny Band!";
 			mes "Well, I hope you enjoy it.";
-			getitem 2214,1; //Bunny_Band
+			getitem Bunny_Band,1; //Bunny_Band
 			BUNYBND = 0;
 			next;
 			mes "[Kafra Employee]";

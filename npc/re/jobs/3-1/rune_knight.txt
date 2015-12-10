@@ -297,7 +297,7 @@ gl_knt02,150,55,3	script	Rune Knight Staff	4_M_01,2,2,{
 }
 
 job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "You've got too many things. You cannot proceed anymore. Please try again after losing some weight.";
 		close;
 	}
@@ -529,8 +529,8 @@ job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
 				mes "[Captain Tigris]";
 				mes "This Knight is going to walk the way of the Rune Knights with us, so please give your blessing.";
 				next;
-				getitem 5746,1; //Rune_Circlet
-				getitem 2795,1; //Green_Apple_Ring
+				getitem Rune_Circlet,1; //Rune_Circlet
+				getitem Green_Apple_Ring,1; //Green_Apple_Ring
 				job_rune_edq = 23;
 				completequest 3219;
 				jobchange roclass(eaclass()|EAJL_THIRD);
@@ -1469,7 +1469,7 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 			changequest 3216,3217;
 			close;
 		} else if (job_rune_edq > 17 && job_rune_edq < 21) {
-			if (countitem(12388)+countitem(12389)+countitem(12390) == 0) {
+			if (countitem(Runstone_Crush)+countitem(Runstone_Storm)+countitem(Runstone_Millennium) == 0) {
 				mes "[Rune Knight Velpino]";
 				mes "If all of your preparations are done, I'll send you to the final test field.";
 				job_rune_edq = 18;
@@ -1493,8 +1493,8 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 					if (Weight < 4001) {
 						$@job_rune_test1 = 1;
 						sc_start SC_INCINT,300000,40;
-						getitem 12389,30; //Runstone_Storm
-						getitem 12390,30; //Runstone_Millennium
+						getitem Runstone_Storm,30; //Runstone_Storm
+						getitem Runstone_Millennium,30; //Runstone_Millennium
 						if (questprogress(3220)) erasequest 3220;
 						setquest 3220;
 						warp "job3_rune02",38,40;
@@ -1517,9 +1517,9 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 			}
 			mes "[Rune Knight Velpino]";
 			mes "Wait, I'll collect all the rune stones provided before. There's a certain limit on using the rune stones that's made for the test.";
-			if (countitem(12388)) delitem 12388,countitem(12388); //Runstone_Crush
-			if (countitem(12389)) delitem 12389,countitem(12389); //Runstone_Storm
-			if (countitem(12390)) delitem 12390,countitem(12390); //Runstone_Millennium
+			if (countitem(Runstone_Crush)) delitem Runstone_Crush,countitem(Runstone_Crush); //Runstone_Crush
+			if (countitem(Runstone_Storm)) delitem Runstone_Storm,countitem(Runstone_Storm); //Runstone_Storm
+			if (countitem(Runstone_Millennium)) delitem Runstone_Millennium,countitem(Runstone_Millennium); //Runstone_Millennium
 			next;
 			mes "[Rune Knight Velpino]";
 			mes "I'll get new rune stones so if your preparation is all done, please talk to me again.";
@@ -1528,7 +1528,7 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 			mes "[Rune Knight Velpino]";
 			mes "You've been very successful up to the last test.";
 			next;
-			if (countitem(12388)+countitem(12389)+countitem(12390) == 0) {
+			if (countitem(Runstone_Crush)+countitem(Runstone_Storm)+countitem(Runstone_Millennium) == 0) {
 				mes "[Rune Knight Velpino]";
 				mes "Now all the tests you need to take are over. Go back to Captain Tigris and inform him of this test result, and then feel the deep emotion of being born again as a Rune Knight.";
 				next;
@@ -1541,9 +1541,9 @@ job3_rune01,114,50,3	script	Rune Knight Velpino	4_M_KNIGHT_BLACK,{
 			}
 			mes "[Rune Knight Velpino]";
 			mes "Wait, I'll collect all the rune stones provided before. There's a certain limit on using the rune stones that's made for the test.";
-			if (countitem(12388)) delitem 12388,countitem(12388); //Runstone_Crush
-			if (countitem(12389)) delitem 12389,countitem(12389); //Runstone_Storm
-			if (countitem(12390)) delitem 12390,countitem(12390); //Runstone_Millennium
+			if (countitem(Runstone_Crush)) delitem Runstone_Crush,countitem(Runstone_Crush); //Runstone_Crush
+			if (countitem(Runstone_Storm)) delitem Runstone_Storm,countitem(Runstone_Storm); //Runstone_Storm
+			if (countitem(Runstone_Millennium)) delitem Runstone_Millennium,countitem(Runstone_Millennium); //Runstone_Millennium
 			next;
 			mes "[Rune Knight Velpino]";
 			mes "I'll need to re-use these unused rune stones. Talk to me again once I have taken all the test rune stones.";

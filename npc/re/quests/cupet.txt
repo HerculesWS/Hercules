@@ -166,7 +166,7 @@ function	script	cute_pet_manager	{
 	dispbottom "Hunt ID2: " + .@hunt_id2;
 	dispbottom "Hunt Amount2: " + .@hunt_amount2;
 	if (.@hunt_id2) { .@hunt2_count = countitem(.@hunt_id2); }
-	if (countitem(.@hunt_id) >= .@hunt_amount && countitem(6083) > 0 && .@hunt2_count >= .@hunt_amount2) {
+	if (countitem(.@hunt_id) >= .@hunt_amount && countitem(Dolly_Capsule) > 0 && .@hunt2_count >= .@hunt_amount2) {
 		mes "[Cute Pet Manager]";
 		mes "Ah, you have gathered all items";
 		mes "with your friends. You can now";
@@ -179,7 +179,7 @@ function	script	cute_pet_manager	{
 			close;
 		}
 		delitem .@hunt_id, .@hunt_amount;
-		delitem 6083, 1;
+		delitem Dolly_Capsule, 1;
 		set getarg(5), getarg(5) + 1;
 		getitem .@tame_id, .@tame_amount;
 		mes "[Cute Pet Manager]";

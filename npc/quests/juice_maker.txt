@@ -99,8 +99,8 @@ prt_in,47,173,3	script	Morrison#juice	4W_M_01,{
 			mes "[Little Morrison]";
 			mes "It's a little something I've been saving to eat for later, but since you gave me Meat, I think I can pass on the sweets.";
 			close;
-			getitem 529,3; //Candy
-			getitem 530,1; //Candy_Striper
+			getitem Candy,3; //Candy
+			getitem Candy_Striper,1; //Candy_Striper
 		}
 		close;
 	}
@@ -108,7 +108,7 @@ prt_in,47,173,3	script	Morrison#juice	4W_M_01,{
 	mes "Agh....Noooo!!!";
 	mes "No, don't make me eat it! I can't bear to taste fruits!";
 	next;
-	if (countitem(517) > 0) {
+	if (countitem(Meat) > 0) {
 		switch(select("Talk:Show the Meat:Cancel")) {
 		case 1:
 			mes "[Little Morrison]";
@@ -126,7 +126,7 @@ prt_in,47,173,3	script	Morrison#juice	4W_M_01,{
 			mes "C-can I please have one?";
 			next;
 			if (select("Give Meat:Don't Give Meat") == 1) {
-				delitem 517,1; //Meat
+				delitem Meat,1; //Meat
 				++morison_meat;
 				mes "[Little Morrison]";
 				mes "Wow~!!! Meat!!";
@@ -168,7 +168,7 @@ prt_in,47,173,3	script	Morrison#juice	4W_M_01,{
 }
 
 payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -210,7 +210,7 @@ payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 				mes "See you next time.";
 				close;
 			}
-			if (countitem(.@fruit) == 0 || countitem(713) == 0 || Zeny < 3) {
+			if (countitem(.@fruit) == 0 || countitem(Empty_Bottle) == 0 || Zeny < 3) {
 				mes "[Merchant Marx Hansen]";
 				mes "Oh no...";
 				mes "You don't have all the necessary materials. To make "+getitemname(.@juice)+", I need 1 "+getitemname(.@fruit)+" and 1 Empty Bottle. I will also need a 3 zeny fee.";
@@ -226,7 +226,7 @@ payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 			switch(select("As many as I can.:I want a certain amount.:Cancel.")) {
 			case 1:
 				.@make = countitem(.@fruit);
-				if (countitem(713) < .@make) .@make = countitem(713);
+				if (countitem(Empty_Bottle) < .@make) .@make = countitem(Empty_Bottle);
 				if (Zeny/3 < .@make) .@make = Zeny/3;
 				break;
 			case 2:
@@ -261,14 +261,14 @@ payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 
 			.@total_zeny = 3 * .@make;
 
-			if (countitem(.@fruit) < .@make || countitem(713) < .@make || Zeny < .@total_zeny) {
+			if (countitem(.@fruit) < .@make || countitem(Empty_Bottle) < .@make || Zeny < .@total_zeny) {
 				mes "[Merchant Marx Hansen]";
 				mes "Oh no...";
 				mes "You don't have all the necessary materials. I can't help a situation like this. I guess you collect what you need.";
 				close;
 			}
 			delitem .@fruit,.@make;
-			delitem 713,.@make;
+			delitem Empty_Bottle,.@make;
 			Zeny -= .@total_zeny;
 			getitem .@juice,.@make;
 

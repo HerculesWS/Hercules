@@ -48,20 +48,20 @@ mosk_in,21,246,5	script	Pinkamenia	1_F_LIBRARYGIRL,{
 		close;
 	} else if (#V_QUE12==2) {
 		mes .@n$;
-		if (countitem(7864) < 15) {
+		if (countitem(Love_Flower) < 15) {
 			mes "You have to bring me 15 Love Flowers!";
 			close;
 		}
 		mes "Thank you so much for";
 		mes "getting our Flowers back!";
-		delitem 7864,15;
+		delitem Love_Flower,15;
 		next;
 		mes .@n$;
 		mes "Take this as a little";
 		mes "'thank you'.";
 		getexp 500000,400000;
-		getitem 617,1;
-		getitem 12319,2;
+		getitem Old_Violet_Box,1;
+		getitem Strawberry_Cake,2;
 		next;
 		mes .@n$;
 		mes "If you get more Love";
@@ -124,8 +124,8 @@ mosk_in,21,244,3	script	Baker Extraordinaire	4_M_NOVELIST,{
 			mes "Hat for another Cake Hat.";
 			next;
 			mes .@n$;
-			delitem 5024,1;
-			getitem 5105,1;
+			delitem Hat_Of_Cake,1;
+			getitem Hat_Of_Cake_,1;
 			equip 5105;
 			mes "Now, if you wear the";
 			mes "new Cake Hat, there";

@@ -41,14 +41,14 @@ prontera,146,91,5	script	Pandit chacha#child07	1_M_PUBMASTER,{
 			close;
 		}
 		oversea_event9 = 1;
-		getitem 11705,10; //Special_White_Potion
+		getitem Special_White_Potion,10; //Special_White_Potion
 		mes "[Pandit chacha]";
 		mes "Look. This is a child Potion.";
 		mes "The weight is just 1 but recover much HP.";
 		mes "If you want to get more, bring the 1 Wedding Bouquet and 1 Witherless Rose.";
 		close;
 	} else if (oversea_event9 == 1) {
-		if (countitem(745) > 0 && countitem(748) > 0) {
+		if (countitem(Wedding_Bouquet) > 0 && countitem(Witherless_Rose) > 0) {
 			mes "[Pandit chacha]";
 			mes "Ahha!!";
 			mes "You have remembered my beautiful composition.";
@@ -66,10 +66,10 @@ prontera,146,91,5	script	Pandit chacha#child07	1_M_PUBMASTER,{
 			mes "Here, I will exchange to the 50 child potion.";
 			mes "Once you get this 50 child potion, I won't give any more.";
 			close2;
-			delitem 745,1; //Wedding_Bouquet
-			delitem 748,1; //Witherless_Rose
+			delitem Wedding_Bouquet,1; //Wedding_Bouquet
+			delitem Witherless_Rose,1; //Witherless_Rose
 			oversea_event9 = 2;
-			getitem 11705,50; //Special_White_Potion
+			getitem Special_White_Potion,50; //Special_White_Potion
 			end;
 		}
 		mes "[Pandit chacha]";

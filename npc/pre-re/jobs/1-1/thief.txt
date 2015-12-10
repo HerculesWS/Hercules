@@ -135,7 +135,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		mes "*Sigh* Look, there's really no need for you to be in this kind of place. You oughta go where you ought to go.";
 		close;
 	}
-	if (job_thief_q == 3 && countitem(1069) > 0 || countitem(1070) > 0) {
+	if (job_thief_q == 3 && countitem(Mushroom_Of_Thief_1) > 0 || countitem(Mushroom_Of_Thief_2) > 0) {
 		mes "[Thief Guide]";
 		mes "Hmmm?";
 		mes "You gathered Mushrooms for";
@@ -377,7 +377,7 @@ moc_prydb1,42,133,2	script	Comrade	2_M_THIEFMASTER,{
 	else if (job_thief_q == 3) {
 		mes "[Comrade]";
 		mes "Ah, the guide told me about you. So, let me check your mushrooms...";
-		if (countitem(1069) == 0 && countitem(1070) == 0) {
+		if (countitem(Mushroom_Of_Thief_1) == 0 && countitem(Mushroom_Of_Thief_2) == 0) {
 			next;
 			mes "[Comrade]";
 			mes "What the hell...";
@@ -385,17 +385,17 @@ moc_prydb1,42,133,2	script	Comrade	2_M_THIEFMASTER,{
 			close;
 		}
 		next;
-		.@thief_item1 = countitem(1069) * 3;
-		.@thief_item2 = countitem(1070);
+		.@thief_item1 = countitem(Mushroom_Of_Thief_1) * 3;
+		.@thief_item2 = countitem(Mushroom_Of_Thief_2);
 		.@total_thief = .@thief_item1 + .@thief_item2;
 		.@money_thief = ((.@thief_item1 * 5) + (.@thief_item2 * 2)) + 200;
 		mes "[Comrade]";
-		if (countitem(1069) != 0) {
+		if (countitem(Mushroom_Of_Thief_1) != 0) {
 			mes "First, let me check the Orange Net Mushrooms you got.";
-			mes "Huh, " + countitem(1069) + " of them.";
+			mes "Huh, " + countitem(Mushroom_Of_Thief_1) + " of them.";
 		}
-		if (countitem(1070) != 0)
-			mes "Now I'll just check your Orange Gooey Mushrooms. That's " + countitem(1070) + " you gathered.";
+		if (countitem(Mushroom_Of_Thief_2) != 0)
+			mes "Now I'll just check your Orange Gooey Mushrooms. That's " + countitem(Mushroom_Of_Thief_2) + " you gathered.";
 		next;
 		mes "[Comrade]";
 		mes "So that would";
@@ -426,8 +426,8 @@ moc_prydb1,42,133,2	script	Comrade	2_M_THIEFMASTER,{
 		mes "[Comrade]";
 		mes strcharinfo(0) + "...";
 		mes "You have passed the official Thief Test. You are now one of us.";
-		if (countitem(1069) != 0) delitem 1069,countitem(1069); //Mushroom_Of_Thief_1
-		if (countitem(1070) != 0) delitem 1070,countitem(1070); //Mushroom_Of_Thief_2
+		if (countitem(Mushroom_Of_Thief_1) != 0) delitem Mushroom_Of_Thief_1,countitem(Mushroom_Of_Thief_1); //Mushroom_Of_Thief_1
+		if (countitem(Mushroom_Of_Thief_2) != 0) delitem Mushroom_Of_Thief_2,countitem(Mushroom_Of_Thief_2); //Mushroom_Of_Thief_2
 		callfunc "Job_Change",Job_Thief;
 		callfunc "F_ClearJobVar";
 		completequest 1013;

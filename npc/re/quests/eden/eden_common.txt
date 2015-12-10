@@ -20,7 +20,7 @@
 //============================================================
 
 moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
-	if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 2000) {
+	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -51,7 +51,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 			next;
 			break;
 		case 2:
-			if (countitem(6219) < 1) {
+			if (countitem(Para_Team_Mark) < 1) {
 				mes "[Lime Evenor]";
 				mes "You can be a Eden's member by simply registering with me.";
 				mes "Would you like to join Eden Group?";
@@ -90,7 +90,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 					next;
 					mes "[Lime Evenor]";
 					mes "Hopefully you can do great work as an Eden's member.";
-					getitem 6219,1; //Para_Team_Mark
+					getitem Para_Team_Mark,1; //Para_Team_Mark
 					next;
 					break;
 				case 2:
@@ -163,7 +163,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 			}
 			break;
 		case 4:
-			if (countitem(6219) > 0) {
+			if (countitem(Para_Team_Mark) > 0) {
 				mes "[Lime Evenor]";
 				mes "Would like to try some missions as an Eden member?";
 				next;
@@ -290,7 +290,7 @@ OnTouch:
 }
 
 moc_para01,47,39,3	script	#warp_2_pass	HIDDEN_NPC,{
-	if (countitem(6219) > 0) {
+	if (countitem(Para_Team_Mark) > 0) {
 		mes "[Lime Evenor]";
 		mes "Oh, it is an exclusive place only for Eden's members.";
 		mes "If you are a member, you can come whenever you want!";

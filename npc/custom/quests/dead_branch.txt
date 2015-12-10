@@ -77,22 +77,22 @@ M_CREATE:
 	mes "[Mister Mobry]";
 	mes "Well...let us see what you brought me...";
 	next;
-	if(countitem(7201)<3) goto L_NOLOG;
-	if(countitem(7189)<1) goto L_NOHEART;
-	if(countitem(1019)<5) goto L_NOTRUNK;
-	if(countitem(7222)<1) goto L_NOGNARL;
-	delitem 7201,3;
-	delitem 7189,1;
-	delitem 1019,5;
-	delitem 7222,1;
+	if(countitem(Log)<3) goto L_NOLOG;
+	if(countitem(Heart_Of_Tree)<1) goto L_NOHEART;
+	if(countitem(Wooden_Block)<5) goto L_NOTRUNK;
+	if(countitem(Tree_Knot)<1) goto L_NOGNARL;
+	delitem Log,3;
+	delitem Heart_Of_Tree,1;
+	delitem Wooden_Block,5;
+	delitem Tree_Knot,1;
 	mes "[Mister Mobry]";
 	mes "Heh... Hope you have fun with the tree spirits... Careful now...";
 	mes "Heh... careful now? What do I care if you di..... Never mind.";
 	if(rand(1000)==0) goto L_GIVE2;
-	getitem 604,1; //Dead Branch
+	getitem Branch_Of_Dead_Tree,1; //Dead Branch
 	close;
 L_GIVE2:
-	getitem 12103,1; //Bloody Branch
+	getitem Bloody_Dead_Branch,1; //Bloody Branch
 	close;
 
 M_End:

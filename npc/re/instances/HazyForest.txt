@@ -445,7 +445,7 @@ OnMyMobDead:
 1@mist,73,290,0	script	Mysterious Flower#1	CLEAR_NPC,{
 	specialeffect EF_LEVEL99_4;
 	disablenpc instance_npcname(strnpcinfo(0));
-	getitem 12561,1; //Mysterious_Seed
+	getitem Mysterious_Seed,1; //Mysterious_Seed
 	end;
 }
 1@mist,69,295,0	duplicate(Mysterious Flower#1)	Mysterious Flower#2	CLEAR_NPC
@@ -800,7 +800,7 @@ mora,46,152,5	script	Flower Smelling Lady	4_F_NYDHOG,{
 }
 
 mora,48,152,3	script	Sharp Eyed Man	4_M_ROKI2,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- You have too many items to do this quest. -";
 		close;
 	}
@@ -903,8 +903,8 @@ mora,48,152,3	script	Sharp Eyed Man	4_M_ROKI2,{
 		mes "May the blessing of Mother Yggdrasil be with you...";
 		ep14_1_mistwoods = 10;
 		completequest 7213;
-		getitem 2568,1; //Muffler_Of_Roki
-		getitem 2858,1; //Pendant_Of_Guardian
+		getitem Muffler_Of_Roki,1; //Muffler_Of_Roki
+		getitem Pendant_Of_Guardian,1; //Pendant_Of_Guardian
 		getexp 400000,400000;
 		close;
 	} else {
@@ -998,7 +998,7 @@ OnInstanceInit:
 //============================================================
 bif_fild01,38,374,0	script	Mysterious Flower#ep14_1	CLEAR_NPC,{
 	mes "It's a giant flower with mysterious energy.";
-	if (countitem(12561)) {
+	if (countitem(Mysterious_Seed)) {
 		mes "It's reacting to the Mysterious Flower Seeds you have with you.";
 		next;
 		switch(select("Observe the reaction.:Stop the reaction.")) {
@@ -1006,7 +1006,7 @@ bif_fild01,38,374,0	script	Mysterious Flower#ep14_1	CLEAR_NPC,{
 			mes "The flower started to shake violently";
 			mes "and swing forward as if trying to send the seeds as far away as possible!!!";
 			close2;
-			delitem 12561,1; //Mysterious_Seed
+			delitem Mysterious_Seed,1; //Mysterious_Seed
 			warp "bif_fild02",160,230;
 			end;
 		case 2:

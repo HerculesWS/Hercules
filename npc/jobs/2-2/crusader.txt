@@ -69,15 +69,15 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 		mes "As it happened one thousand years ago, evil forces will one day attack in droves in an attempt to take over the world once again.";
 		close;
 	}
-	else if(CRUS_Q <= 3 && countitem(1004) && countitem(1009)) {
+	else if(CRUS_Q <= 3 && countitem(Patriotism_Marks) && countitem(Sacred_Marks)) {
 		mes "Ah...";
 		mes "I see that you have been called to become a Crusader. We are assured of your will, but now we must test your capabilities.";
 		next;
 		mes "[Michael Halig]";
 		mes "Meet with Moorenak Miyol who is training in the underground dungeon of the Prontera Castle. Go, and speak with him first.";
 		next;
-		delitem 1004, 1;
-		delitem 1009, 1;
+		delitem Patriotism_Marks, 1;
+		delitem Sacred_Marks, 1;
 		CRUS_Q = 4;
 		mes "[Michael Halig]";
 		mes "Moorenak and others like him will test the limits of your capabilities and help you find your path. Return to me after you have completed their tests...";
@@ -139,7 +139,7 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 				mes "" + strcharinfo(0) + "...?";
 				mes "Let's see...";
 				next;
-				if (countitem(1004) && countitem(1009)) {
+				if (countitem(Patriotism_Marks) && countitem(Sacred_Marks)) {
 					mes "[Michael Halig]";
 					mes "Ah...";
 					mes "I see that you have been called to become a Crusader. We are assured of your will, but now we must test your capabilities.";
@@ -147,8 +147,8 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 					mes "[Michael Halig]";
 					mes "Meet with Moorenak Miyol who is training in the underground dungeon of the Prontera Castle. Go, and speak with him first.";
 					next;
-					delitem 1004, 1;
-					delitem 1009, 1;
+					delitem Patriotism_Marks, 1;
+					delitem Sacred_Marks, 1;
 					CRUS_Q = 4;
 					setquest 3009;
 					mes "[Michael Halig]";
@@ -296,8 +296,8 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 		if (Sex) mes "...Brother.";
 		else mes "...Comrade.";
 		next;
-		if(.@Joblevel != 50) getitem 504, 6;
-		else getitem 504, 12;
+		if(.@Joblevel != 50) getitem White_Potion, 6;
+		else getitem White_Potion, 12;
 		mes "[Michael Halig]";
 		mes "And use this in times of dire peril. It will give you strength when your wounds are most grievous.";
 		next;
@@ -896,7 +896,7 @@ prt_castle,35,151,5	script	Patron Knight	4_M_CRU,{
 				mes "have a Rosary.";
 				close;
 			}
-			else if(countitem(523) < 1) {
+			else if(countitem(Holy_Water) < 1) {
 				mes "[Bliant Piyord]";
 				mes "For the battle test, please prepare one ^3355FFHoly water^000000.";
 				mes "I told you just to purify the candidates.";
@@ -906,7 +906,7 @@ prt_castle,35,151,5	script	Patron Knight	4_M_CRU,{
 				mes "I will wait for you.";
 				close;
 			}
-			delitem 523, 1; //Holy Water
+			delitem Holy_Water, 1; //Holy Water
 			mes "[Bliant Piyord]";
 			mes "Then, I'll start";
 			mes "the test. You will";

@@ -25,8 +25,8 @@ airport,143,43,5	script	Airport Staff#airport1a::airport1	4_F_01,{
 		mes "you board the Airship?";
 		next;
 		if (select("Yes:No") == 1) {
-			if (countitem(7311) > 0) {
-				delitem 7311,1; //Free_Flying_Ship_Ticket
+			if (countitem(Free_Flying_Ship_Ticket) > 0) {
+				delitem Free_Flying_Ship_Ticket,1; //Free_Flying_Ship_Ticket
 				warp "airport",148,51;
 				end;
 			}

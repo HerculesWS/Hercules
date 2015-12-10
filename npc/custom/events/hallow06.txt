@@ -87,15 +87,15 @@ L_Treat:
 	menu "Got'em",-, "Don't Have",L_Dont_Have, "See List",L_List;
 
 	mes "[Hallows' Eve Event]";
-	if((countitem(2220) < 1) || (countitem(535) < 30) || (countitem(7205) < 20)){
+	if((countitem(Hat) < 1) || (countitem(Pumpkin) < 30) || (countitem(Piece_Of_Black_Cloth) < 20)){
 		mes "You don't have enough items. Come back when you do.";
 		emotion e_sry;
 		close;
 	}
-	delitem 2220,1;
-	delitem 535,30;
-	delitem 7205,20;
-	getitem 5134,1;
+	delitem Hat,1;
+	delitem Pumpkin,30;
+	delitem Piece_Of_Black_Cloth,20;
+	getitem Pumpkin_Hat,1;
 	set EVENT_HALWN06,EVENT_HALWN06|1;
 	mes "Good job! I hope you are happy with your item.";
 	emotion e_grat;

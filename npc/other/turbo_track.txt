@@ -4029,7 +4029,7 @@ turbo_room,67,95,5	duplicate(TurboNormalNames)	Normal Mode Records#1	4_BOARD3
 turbo_room,71,95,5	duplicate(TurboExpertNames)	Expert Mode Records#1	4_BOARD3
 
 turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many items with you.";
@@ -4133,7 +4133,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 						close;
 					}
 					tt_point -= .@total_point;
-					getitem 7060,.@input; //Warp_Free_Ticket
+					getitem Warp_Free_Ticket,.@input; //Warp_Free_Ticket
 					mes "[Item Exchange Helper]";
 					mes "Thank you for";
 					mes "your patronage.";
@@ -4305,7 +4305,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 						close;
 					}
 					tt_point -= .@total_point;
-					getitem 732,.@input; //Crystal_Jewel__
+					getitem Crystal_Jewel__,.@input; //Crystal_Jewel__
 					mes "[Item Exchange Helper]";
 					mes "Thank you for";
 					mes "your patronage.";
@@ -4352,7 +4352,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 						close;
 					}
 					tt_point -= .@total_point;
-					getitem 644,.@input; //Gift_Box
+					getitem Gift_Box,.@input; //Gift_Box
 					mes "[Item Exchange Helper]";
 					mes "Thank you for";
 					mes "your patronage.";
@@ -4399,7 +4399,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 						close;
 					}
 					tt_point -= .@total_point;
-					getitem 12016,.@input; //Speed_Up_Potion
+					getitem Speed_Up_Potion,.@input; //Speed_Up_Potion
 					mes "[Item Exchange Helper]";
 					mes "Thank you for";
 					mes "your patronage.";
@@ -4588,7 +4588,7 @@ S_ExchangePoints:
 
 alde_gld,183,204,0	script	en_turbo	WARPNPC,1,1,{
 OnTouch:
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many items with you.";

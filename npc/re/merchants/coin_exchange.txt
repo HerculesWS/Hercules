@@ -17,7 +17,7 @@
 // Malangdo
 //============================================================
 malangdo,220,167,5	script	Coin Exchanger CX-1	2_VENDING_MACHINE1,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of objects. Let's try to continue after reducing those objects.";
 		close;
 	}
@@ -108,7 +108,7 @@ malangdo,220,167,5	script	Coin Exchanger CX-1	2_VENDING_MACHINE1,{
 }
 
 malangdo,218,165,5	script	Special Vending Machine	2_DROP_MACHINE,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of objects. Let's try to continue after reducing those objects.";
 		close;
 	}
@@ -152,17 +152,17 @@ L_AddItem:
 	mes "[Special Vending Machine]";
 	mes "You choose ^005500"+getarg(.@i*3)+"^000000. For purchasing, you need ^005500"+.@cost+"^000000 unit(s) of Silvervine Fruit.";
 	next;
-	if (countitem(6417) < .@cost)
-		.@ven_menu$ = "^999999Silvervine Fruit (missing "+(.@cost - countitem(6417))+")^000000";
+	if (countitem(Silvervine) < .@cost)
+		.@ven_menu$ = "^999999Silvervine Fruit (missing "+(.@cost - countitem(Silvervine))+")^000000";
 	else
-		.@ven_menu$ = "Purchase - Silvervine Fruit (have "+countitem(6417)+")";
+		.@ven_menu$ = "Purchase - Silvervine Fruit (have "+countitem(Silvervine)+")";
 	switch(select("Stop:"+.@ven_menu$)) {
 	case 1:
 		mes "[Special Vending Machine]";
 		mes "Thank you for coming.";
 		close;
 	case 2:
-		if (countitem(6417) < .@cost) {
+		if (countitem(Silvervine) < .@cost) {
 			mes "[Special Vending Machine]";
 			mes "Not enough Silvervine Fruit.";
 			mes "Closing the transaction.";
@@ -171,14 +171,14 @@ L_AddItem:
 		}
 		mes "[Special Vending Machine]";
 		mes "The transaction is completed. Thank you for coming.";
-		delitem 6417,.@cost; //Silvervine
+		delitem Silvervine,.@cost; //Silvervine
 		getitem getarg(.@i*3+1),1;
 		close;
 	}
 }
 
 malangdo,236,179,5	script	Dark Merchant K	4_CAT_REST,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "It seems you have too much in your inventory. Let's try again after getting rid of some of your belongings.";
 		close;
 	}
@@ -194,7 +194,7 @@ malangdo,236,179,5	script	Dark Merchant K	4_CAT_REST,{
 	while(1) {
 		.@menu$ = "";
 		for(.@i = 0; .@i<getarraysize(.@coin_amount); ++.@i) {
-			if (countitem(6420) >= .@coin_amount[.@i])
+			if (countitem(Cgrade_Coin) >= .@coin_amount[.@i])
 				.@menu$ += "Exchange "+(.@coin_amount[.@i]/10)+" Mora Coin:";
 			else
 				.@menu$ += "^aaaaaaExchange "+(.@coin_amount[.@i]/10)+" Mora Coin (Not Enough)^000000:";
@@ -205,13 +205,13 @@ malangdo,236,179,5	script	Dark Merchant K	4_CAT_REST,{
 			mes "Let's exchange some other time.";
 			close;
 		}
-		if (countitem(6420) < .@coin_amount[.@i]) {
+		if (countitem(Cgrade_Coin) < .@coin_amount[.@i]) {
 			mes "[Merchant K]";
 			mes "You need ^ff0000"+.@coin_amount[.@i]+"^000000 C Grade Coin to perform the exchange. But you don't seem to have enough now.";
 			close;
 		}
-		delitem 6420,.@coin_amount[.@i]; //Cgrade_Coin
-		getitem 6380,.@coin_amount[.@i]/10; //Mora_Coin
+		delitem Cgrade_Coin,.@coin_amount[.@i]; //Cgrade_Coin
+		getitem Mora_Coin,.@coin_amount[.@i]/10; //Mora_Coin
 		mes "[Merchant K]";
 		mes "C Grade Coin ^003399"+.@coin_amount[.@i]+"^000000 well received."; //FIXME: Dialogue.
 		mes "Exchanged to ^003399"+(.@coin_amount[.@i]/10)+"^000000 Mora Coin.";
@@ -223,7 +223,7 @@ malangdo,236,179,5	script	Dark Merchant K	4_CAT_REST,{
 }
 
 malangdo,233,180,3	script	Dark MachineTX100	2_VENDING_MACHINE1,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "It seems you have too much in your inventory. Let's try again after getting rid of some of your belongings.";
 		close;
 	}
@@ -344,7 +344,7 @@ malangdo,233,180,3	script	Dark MachineTX100	2_VENDING_MACHINE1,{
 }
 
 malangdo,175,145,4	script	Can Agency Guard	4_CAT_MERMASTER,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You seem to have too many items. Give it a try after sorting out the item kinds.";
 		close;
 	}
@@ -418,7 +418,7 @@ malangdo,175,145,4	script	Can Agency Guard	4_CAT_MERMASTER,{
 		}
 	}
 	delitem 12633,.@count; //Malang_Cat_Can
-	getitem 6422,.@count*3; //Egrade_Coin
+	getitem Egrade_Coin,.@count*3; //Egrade_Coin
 	mes "[Can Agency Guard]";
 	mes "Exchanged "+.@count+" Malangdo Cat Can to "+(.@count*3)+" E Class Coin. Check it out.";
 	close;
@@ -471,7 +471,7 @@ function	script	F_mal_coin	{
 		next;
 		switch(select("Yes:No")) {
 		case 1:
-			if (checkweight(1201,1) == 0) {
+			if (checkweight(Knife,1) == 0) {
 				mes getarg(1);
 				mes "It seems that there are too many items in your inventory.";
 				mes "Please make space and come back again~";

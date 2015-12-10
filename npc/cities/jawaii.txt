@@ -414,7 +414,7 @@ jawaii,214,168,5	script	Honeymoon Helper#Jawaii	1_F_LIBRARYGIRL,{
 		mes "[Helper]";
 		if (Zeny > 49999) {
 			Zeny -= 50000;
-			getitem 681,1; //Memory_Of_Wedding
+			getitem Memory_Of_Wedding,1; //Memory_Of_Wedding
 			mes "Thank you very much~!";
 			mes "Please remember, you";
 			mes "should use this with your";
@@ -716,7 +716,7 @@ OnTouch:
 }
 
 jawaii_in,15,104,0	script	Waitress#jawaii	1_F_PUBGIRL,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FF * Wait a minute! *";
 		mes "You're carrying too many items with you right now. Please store some of your things into Kafra Storage and try again.^000000";
 		close;
@@ -738,7 +738,7 @@ jawaii_in,15,104,0	script	Waitress#jawaii	1_F_PUBGIRL,{
 				mes "[Waitress]";
 				if (Zeny > 999) {
 					Zeny -= 1000;
-					getitem 517,1; //Meat
+					getitem Meat,1; //Meat
 					mes "There you go~";
 					mes "Enjoy your meal~!";
 					close;
@@ -764,7 +764,7 @@ jawaii_in,15,104,0	script	Waitress#jawaii	1_F_PUBGIRL,{
 				mes "[Waitress]";
 				if (Zeny > 999) {
 					Zeny -= 1000;
-					getitem 503,1; //Yelow_Potion
+					getitem Yellow_Potion,1; //Yelow_Potion
 					mes "There you go~";
 					mes "Enjoy your meal~!";
 					close;

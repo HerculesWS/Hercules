@@ -49,7 +49,7 @@ prontera,165,178,8	script	Old Woman	8_F_GRANDMOTHER,{
 		close; }
 	for(set .@i,0; .@i<getarraysize(.@items); set .@i,.@i+2)
 		delitem .@items[.@i], .@items[.@i+1];
-	getitem 4145,1;
+	getitem Berzebub_Card,1;
 	set BerzQuest, 1;
 	mes "Congratulations! You have all the items. Here is your ^FF0000Berzebub Card^000000, as promised.";
 	emotion e_grat;

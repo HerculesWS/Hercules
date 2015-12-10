@@ -260,7 +260,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 		}
 		else if (PRIEST_SK == 2) {
 			if (getskilllv("ALL_RESURRECTION") > 0) {
-				if (countitem(523) > 29 && countitem(717) > 19) {
+				if (countitem(Holy_Water) > 29 && countitem(Blue_Gemstone) > 19) {
 					mes "[Sister Linus]";
 					mes "Ooh, it seems like you've";
 					mes "brought everything that you";
@@ -305,8 +305,8 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 						mes "Please remember to only";
 						mes "use this skill in the most";
 						mes "critical situations.";
-						delitem 717,20; //Blue_Gemstone
-						delitem 523,30; //Holy_Water
+						delitem Blue_Gemstone,20; //Blue_Gemstone
+						delitem Holy_Water,30; //Holy_Water
 						PRIEST_SK = 100;
 						skill "PR_REDEMPTIO",1,0;
 						close;
@@ -320,8 +320,8 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 						mes "I'll be waiting right here,";
 						mes "so we can try again when";
 						mes "you're ready, okay?";
-						delitem 717,1; //Blue_Gemstone
-						delitem 523,1; //Holy_Water
+						delitem Blue_Gemstone,1; //Blue_Gemstone
+						delitem Holy_Water,1; //Holy_Water
 						close;
 					}
 

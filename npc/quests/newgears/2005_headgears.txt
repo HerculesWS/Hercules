@@ -17,7 +17,7 @@
 //============================================================
 
 yuno,222,116,3	script	Kasis#LhzHat	4_M_REPAIR,{
-	if(countitem(519) > 49 && countitem(7031) > 49 && countitem(548) > 49 && countitem(539) > 49)
+	if(countitem(Milk) > 49 && countitem(Old_Frying_Pan) > 49 && countitem(Cheese) > 49 && countitem(Piece_Of_Cake) > 49)
 	{
 		mes "[Kasis]";
 		mes "Milk, Cheese,";
@@ -53,11 +53,11 @@ yuno,222,116,3	script	Kasis#LhzHat	4_M_REPAIR,{
 				mes "most important meal of the day!";
 				mes "Now, I better prepare those";
 				mes "lunches. Goodbye, my friend~";
-				delitem 519,50;
-				delitem 7031,50;
-				delitem 548,50;
-				delitem 539,50;
-				getitem 5107,1;
+				delitem Milk,50;
+				delitem Old_Frying_Pan,50;
+				delitem Cheese,50;
+				delitem Piece_Of_Cake,50;
+				getitem Well_Baked_Toast,1;
 				close;
 			case 2:
 				mes "[Kasis]";
@@ -120,11 +120,11 @@ yuno,222,116,3	script	Kasis#LhzHat	4_M_REPAIR,{
 						mes "most important meal of the day!";
 						mes "Now, I better prepare those";
 						mes "lunches. Goodbye, my friend~";
-						delitem 519,50;
-						delitem 7031,50;
-						delitem 548,50;
-						delitem 539,50;
-						getitem 5107,1;
+						delitem Milk,50;
+						delitem Old_Frying_Pan,50;
+						delitem Cheese,50;
+						delitem Piece_Of_Cake,50;
+						getitem Well_Baked_Toast,1;
 						close;
 					case 2:
 						mes "[Kasis]";
@@ -496,7 +496,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 				mes "look through your Inventory...";
 				next;
 				@lhzhatfailed = 0;
-				if(countitem(611) < 10)
+				if(countitem(Spectacles) < 10)
 				{
 					mes "[Morris]";
 					mes "Wait. You don't have";
@@ -507,7 +507,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 					@lhzhatfailed = 1;
 					next;
 				}
-				if(countitem(7301) < 1887 && @lhzhatfailed == 0)
+				if(countitem(Sword_Accessory) < 1887 && @lhzhatfailed == 0)
 				{
 					mes "[Morris]";
 					mes "Magnifiers. Check.";
@@ -515,7 +515,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 					@lhzhatfailed = 1;
 					next;
 				}
-				if(countitem(5120) < 1 && @lhzhatfailed == 0)
+				if(countitem(Fedora_) < 1 && @lhzhatfailed == 0)
 				{
 					mes "[Morris]";
 					mes "Magnifiers. Check.";
@@ -569,12 +569,12 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 				mes "so wear it with pride as you";
 				mes "take an active part in our club's";
 				mes "activities and promotion!";
-				delitem 7301,1887;
-				delitem 5120,1;
-				delitem 611,10;
+				delitem Sword_Accessory,1887;
+				delitem Fedora_,1;
+				delitem Spectacles,10;
 				Zeny -= 1887;
 				DTHATQ = 2;
-				getitem 5108,1;
+				getitem Detective_Hat,1;
 				next;
 				switch( select( "Wait, promotion?", "Hooray!" ) )
 				{
@@ -663,7 +663,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 				mes "brought everything...";
 				next;
 				@lhzhatfailed = 0;
-				if(countitem(611) < 10)
+				if(countitem(Spectacles) < 10)
 				{
 					mes "[Morris]";
 					mes "Hmm, you don't have";
@@ -674,7 +674,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 					@lhzhatfailed = 1;
 					next;
 				}
-				if(countitem(7301) < 1887 && @lhzhatfailed == 0)
+				if(countitem(Sword_Accessory) < 1887 && @lhzhatfailed == 0)
 				{
 					mes "[Morris]";
 					mes "Magnifiers. Check.";
@@ -682,7 +682,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 					@lhzhatfailed = 1;
 					next;
 				}
-				if(countitem(5120) < 1 && @lhzhatfailed == 0)
+				if(countitem(Fedora_) < 1 && @lhzhatfailed == 0)
 				{
 					mes "[Morris]";
 					mes "Magnifiers. Check.";
@@ -727,12 +727,12 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 				mes "to own yet another Renowned";
 				mes "Detective's Cap. Congratulations! Now, let me collect all of these";
 				mes "goods and zeny from you...";
-				delitem 7301,1887;
-				delitem 5120,1;
-				delitem 611,10;
+				delitem Sword_Accessory,1887;
+				delitem Fedora_,1;
+				delitem Spectacles,10;
 				Zeny -= 1887;
 				DTHATQ = 2;
-				getitem 5108,1;
+				getitem Detective_Hat,1;
 				next;
 				mes "[Morris]";
 				mes "Hahaha! It's what";
@@ -755,7 +755,7 @@ lighthalzen,360,313,3	script	Kid#LhzHat	4_M_KID1,{
 	mes "Um, would you do";
 	mes "me a favor, please?";
 	next;
-	if(countitem(526) && countitem(7270) && countitem(941) && countitem(10004))
+	if(countitem(Royal_Jelly) && countitem(Milk_Bottle) && countitem(Nose_Ring) && countitem(Pacifier))
 	{
 		mes "[Kid]";
 		mes "Oh! You brought me";
@@ -782,11 +782,11 @@ lighthalzen,360,313,3	script	Kid#LhzHat	4_M_KID1,{
 		mes "very own Baby Pacifier!";
 		mes "I hope you're happy with";
 		mes "yourself. Travel safe, okay?";
-		delitem 526,1;
-		delitem 7270,1;
-		delitem 941,1;
-		delitem 10004,1;
-		getitem 5110,1;
+		delitem Royal_Jelly,1;
+		delitem Milk_Bottle,1;
+		delitem Nose_Ring,1;
+		delitem Pacifier,1;
+		getitem Baby_Pacifier,1;
 		close;
 	}
 	switch( select( "What do you need?", "Sorry, kid..." ) )
@@ -809,7 +809,7 @@ lighthalzen,360,313,3	script	Kid#LhzHat	4_M_KID1,{
 			switch( select( "Help him.", "Refuse to help." ) )
 			{
 				case 1:
-					if(!countitem(526))
+					if(!countitem(Royal_Jelly))
 					{
 						mes "[Kid]";
 						mes "If you would, do you think";
@@ -830,7 +830,7 @@ lighthalzen,360,313,3	script	Kid#LhzHat	4_M_KID1,{
 					mes "if I have this Royal Jelly?";
 					mes "It would really help my mom";
 					mes "feel better. Thanks so much~";
-					delitem 526,1;
+					delitem Royal_Jelly,1;
 					next;
 					mes "[Kid]";
 					mes "Hey, to pay you back, why";
@@ -872,7 +872,7 @@ lighthalzen,360,313,3	script	Kid#LhzHat	4_M_KID1,{
 }
 
 einbech,70,222,5	script	Metelle#LhzHat	4_F_02,{
-	if(countitem(983) && countitem(7267) > 998 && countitem(749) && Zeny > 49999)
+	if(countitem(Black_Dyestuffs) && countitem(Tiger_Skin_Panties) > 998 && countitem(Frozen_Rose) && Zeny > 49999)
 	{
 		mes "[Metelle]";
 		mes "Oh, hello, what's this?";
@@ -914,11 +914,11 @@ einbech,70,222,5	script	Metelle#LhzHat	4_F_02,{
 				mes "Now, if you don't mind,";
 				mes "let me try this hat on";
 				mes "for just a little while.";
-				delitem 983,1;
-				delitem 7267,999;
-				delitem 749,1;
+				delitem Black_Dyestuffs,1;
+				delitem Tiger_Skin_Panties,999;
+				delitem Frozen_Rose,1;
 				Zeny -= 50000;
-				getitem 5115,1;
+				getitem Winter_Hat,1;
 				next;
 				mes "...";
 				mes "......";
@@ -993,7 +993,7 @@ lhz_in02,91,38,5	script	Margaret Mary#LhzHat	4_F_01,{
 	switch( select( "Make a Mystic Rose.", "End Conversation." ) )
 	{
 		case 1:
-			if(countitem(731) > 9 && countitem(748) > 2 && countitem(982) && Zeny > 49999)
+			if(countitem(Crystal_Jewel_) > 9 && countitem(Witherless_Rose) > 2 && countitem(White_Dyestuffs) && Zeny > 49999)
 			{
 				mes "[Margaret Mary]";
 				mes "Ah, I see that you've brought";
@@ -1031,11 +1031,11 @@ lhz_in02,91,38,5	script	Margaret Mary#LhzHat	4_F_01,{
 						mes "your hair in an elegant and";
 						mes "refined manner when wearing";
 						mes "the Mystic Rose so as not to disgrace these beautiful flowers.";
-						delitem 731,10;
-						delitem 748,3;
-						delitem 982,1;
+						delitem Crystal_Jewel_,10;
+						delitem Witherless_Rose,3;
+						delitem White_Dyestuffs,1;
 						Zeny -= 50000;
-						getitem 5117,1;
+						getitem Mistic_Rose,1;
 						close;
 
 					case 2:
@@ -1246,7 +1246,7 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	4_F_02,{
 		switch( select( "Yes.", "I forgot what I need." ) )
 		{
 			case 1:
-				if(countitem(10015) < 1 || countitem(10007) < 1 || countitem(975) < 1 || countitem(5032) < 1 || Zeny < 50000)
+				if(countitem(Green_Lace) < 1 || countitem(Silk_Ribbon) < 1 || countitem(Scarlet_Dyestuffs) < 1 || countitem(Picnic_Hat) < 1 || Zeny < 50000)
 				{
 					mes "[Achiha]";
 					mes "Uh oh.";
@@ -1278,12 +1278,12 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	4_F_02,{
 				mes "take this Red Bonnet.";
 				mes "I hope you like it~";
 				mes "I think I'll relax now...";
-				delitem 10015,1;
-				delitem 10007,1;
-				delitem 975,1;
-				delitem 5032,1;
+				delitem Green_Lace,1;
+				delitem Silk_Ribbon,1;
+				delitem Scarlet_Dyestuffs,1;
+				delitem Picnic_Hat,1;
 				Zeny -= 50000;
-				getitem 5109,1;
+				getitem Red_Bonnet,1;
 				LHZBTQ = 3;
 				next;
 				mes "[Achiha]";
@@ -1319,7 +1319,7 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	4_F_02,{
 		switch( select( "Yes.", "I forgot what I need." ) )
 		{
 			case 1:
-				if(countitem(10015) < 1 || countitem(10007) < 1 || countitem(975) < 1 || countitem(5032) < 1 || Zeny < 50000)
+				if(countitem(Green_Lace) < 1 || countitem(Silk_Ribbon) < 1 || countitem(Scarlet_Dyestuffs) < 1 || countitem(Picnic_Hat) < 1 || Zeny < 50000)
 				{
 					mes "[Achiha]";
 					mes "Uh oh.";
@@ -1351,12 +1351,12 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	4_F_02,{
 				mes "take this Red Bonnet.";
 				mes "I hope you like it~";
 				mes "I think I'll relax now...";
-				delitem 10015,1;
-				delitem 10007,1;
-				delitem 975,1;
-				delitem 5032,1;
+				delitem Green_Lace,1;
+				delitem Silk_Ribbon,1;
+				delitem Scarlet_Dyestuffs,1;
+				delitem Picnic_Hat,1;
 				Zeny -= 50000;
-				getitem 5109,1;
+				getitem Red_Bonnet,1;
 				next;
 				mes "[Achiha]";
 				mes "I hope you will enjoy the hat~";
@@ -1493,7 +1493,7 @@ gl_prison1,137,138,5	script	Zealotus#LhzHat	ZHERLTHSH,{
 	}
 	else if(ZLMASKQ == 7)
 	{
-		if(countitem(7263) && countitem(660) && countitem(7099) > 29)
+		if(countitem(Cat_Eyed_Stone) && countitem(Prohibition_Red_Candle) && countitem(Old_Magic_Circle) > 29)
 		{
 			mes "[Zealotus]";
 			mes "I see that you have";
@@ -1548,9 +1548,9 @@ gl_prison1,137,138,5	script	Zealotus#LhzHat	ZHERLTHSH,{
 					mes "contract. So long as you";
 					mes "carry this, I will be at your";
 					mes "side. So says Zealotus!";
-					delitem 7263,1;
-					delitem 660,1;
-					delitem 7099,30;
+					delitem Cat_Eyed_Stone,1;
+					delitem Prohibition_Red_Candle,1;
+					delitem Old_Magic_Circle,30;
 					getnameditem 5121,strcharinfo(0);
 					ZLMASKQ = 8;
 					close;
@@ -1624,14 +1624,14 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 		emotion e_sob;
 
 		if(!(
-			countitem(1950) || countitem(1951) || countitem(1952) ||
-			countitem(1953) || countitem(1954) || countitem(1955) ||
-			countitem(1956) || countitem(1957) || countitem(1958) ||
-			countitem(1959) || countitem(1960) || countitem(1961) ||
-			countitem(1962) || countitem(1963) || countitem(1964) ||
-			countitem(1965) || countitem(1966) || countitem(1967) ||
-			countitem(1968) || countitem(1969) || countitem(1970) ||
-			countitem(1971)
+			countitem(Rope) || countitem(Rope_) || countitem(Line) ||
+			countitem(Line_) || countitem(Wire) || countitem(Wire_) ||
+			countitem(Rante) || countitem(Rante_) || countitem(Tail) ||
+			countitem(Tail_) || countitem(Whip) || countitem(Whip_) ||
+			countitem(Lariat) || countitem(Rapture_Rose) || countitem(Chemeti) ||
+			countitem(Whip_Of_Red_Flame) || countitem(Whip_Of_Ice_Piece) || countitem(Whip_Of_Earth) ||
+			countitem(Jump_Rope) || countitem(Bladed_Whip) || countitem(Queen's_Whip) ||
+			countitem(Electric_Wire)
 		))
 			close; // no whip equipped or in inventory
 
@@ -1676,7 +1676,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 	}
 	else if(ZLMASKQ == 2 || ZLMASKQ == 3)
 	{
-		if(countitem(7315) > 368 && ZLMASKQ == 3)
+		if(countitem(Dark_Crystal_Fragment) > 368 && ZLMASKQ == 3)
 		{
 			mes "[Phendark]";
 			mes "Y-you again!";
@@ -1728,7 +1728,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 					mes "What... just...";
 					mes "What happened?";
 					ZLMASKQ = 4;
-					delitem 7315,369;
+					delitem Dark_Crystal_Fragment,369;
 					close;
 				case 2:
 					mes "[" + strcharinfo(0) + "]";
@@ -2115,7 +2115,7 @@ airport,148,41,3	script	Freight Manager#toast	4_M_EIN_SOLDIER,{
 	mes "yet. Where could h--Oh!";
 	mes "Hello, welcome to Einbroch~";
 	next;
-	if (isequipped(5107) || countitem(5107)) {
+	if (isequipped(5107) || countitem(Well_Baked_Toast)) {
 		mes "[Kirishu]";
 		mes "Wait a sec, that";
 		mes "Crunch Toast! You must";

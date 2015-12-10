@@ -51,7 +51,7 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 	mes "Heya.";
 	mes "What's up?";
 	next;
-	if (countitem(971) > 0 && countitem(972) > 0) {
+	if (countitem(Detrimindexta) > 0 && countitem(Karvodailnirol) > 0) {
 		switch(select("Talk:Talk about the solutions.:Cancel")) {
 		case 1:
 			mes "[Merchant Louitz]";
@@ -121,7 +121,7 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			close;
 		}
 	}
-	if (countitem(972) > 0) {
+	if (countitem(Karvodailnirol) > 0) {
 		switch(select("Talk:Talk about Karvodailnirol:Cancel")) {
 		case 1:
 			mes "[Merchant Louitz]";
@@ -191,7 +191,7 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			close;
 		}
 	}
-	if (countitem(971) > 0) {
+	if (countitem(Detrimindexta) > 0) {
 		switch(select("Talk:Talk about Detrimindexta:Cancel")) {
 		case 1:
 			mes "[Merchant Louitz]";
@@ -393,7 +393,7 @@ geffen,181,114,3	script	Aure Dupon#cm	4_KID01,{
 }
 
 geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -451,7 +451,7 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 				mes "Oh, I just can't wait to make this! Are you ready to begin?";
 				next;
 				if (select("Make:Cancel") == 1) {
-					if (countitem(970) == 0 || countitem(971) == 0 || countitem(713) == 0 || Zeny < 3000) {
+					if (countitem(Alchol) == 0 || countitem(Detrimindexta) == 0 || countitem(Empty_Bottle) == 0 || Zeny < 3000) {
 						mes "[Chemist Molgenstein]";
 						mes "Heuheuheuheuh.... not enough... not enough.. Haah...Haah... Go..... get the rest of the materials!";
 						mes "We'll postpone the fun until then... Heuheuheuheuheuh.";
@@ -461,16 +461,16 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 					mes "Ooooooooh...... heeheeheeheehee...... yes... like that...... yes... more... more........ heeheeheehee.";
 					mes ".... Aaah.... ahah... ha....ahahooooooooohoh!";
 					next;
-					if (countitem(970) < 1 || countitem(971) < 1 || countitem(713) < 1) {
+					if (countitem(Alchol) < 1 || countitem(Detrimindexta) < 1 || countitem(Empty_Bottle) < 1) {
 						mes "[Chemist Molgenstein]";
 						mes "Hohohoho.... not enough... not enough... haah...haah... go..... go get the rest of the materials!!";
 						close;
 					}
-					delitem 970,1; //Alchol
-					delitem 971,1; //Detrimindexta
-					delitem 713,1; //Empty_Bottle
+					delitem Alchol,1; //Alchol
+					delitem Detrimindexta,1; //Detrimindexta
+					delitem Empty_Bottle,1; //Empty_Bottle
 					Zeny -= 3000;
-					getitem 973,1; //Counteragent
+					getitem Counteragent,1; //Counteragent
 					mes "[Chemist Molgenstein]";
 					mes "Hee hee hee...";
 					mes "Haaaaah......";
@@ -495,7 +495,7 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 				mes "Oh, I just can't wait to make this! Are you ready to begin?";
 				next;
 				if (select("Make:Cancel") == 1) {
-					if (countitem(970) == 0 || countitem(972) == 0 || countitem(713) == 0 || Zeny < 4000) {
+					if (countitem(Alchol) == 0 || countitem(Karvodailnirol) == 0 || countitem(Empty_Bottle) == 0 || Zeny < 4000) {
 						mes "[Chemist Molgenstein]";
 						mes "Hohohoho.... not enough... not enough... haah...haah... go..... go get the rest of the materials!!";
 						mes "We'll have to postpone the fun for later... Hehehehe";
@@ -505,16 +505,16 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 					mes "Ooooooooh... heehee...... yes... like that...... yes... more... more........ heeheeheehee";
 					mes ".... Aaah.... ahah... ha....ahah...oooooooooooooooooh!!!...!!!!!!";
 					next;
-					if (countitem(970) < 1 || countitem(972) < 1 || countitem(713) < 1) {
+					if (countitem(Alchol) < 1 || countitem(Karvodailnirol) < 1 || countitem(Empty_Bottle) < 1) {
 						mes "[Chemist Molgenstein]";
 						mes "Hohohoho.... not enough... not enough... haah...haah... go..... go get the rest of the materials!!";
 						close;
 					}
-					delitem 970,1; //Alchol
-					delitem 972,1; //Karvodailnirol
-					delitem 713,1; //Empty_Bottle
+					delitem Alchol,1; //Alchol
+					delitem Karvodailnirol,1; //Karvodailnirol
+					delitem Empty_Bottle,1; //Empty_Bottle
 					Zeny -= 4000;
-					getitem 974,1; //Mixture
+					getitem Mixture,1; //Mixture
 					mes "[Chemist Molgenstein]";
 					mes "Hee hee hee...";
 					mes "Haaaaah......";

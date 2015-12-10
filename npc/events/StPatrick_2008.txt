@@ -138,7 +138,7 @@ prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 		close2;
 		StPatrick2008 = 3;
     		getexp 200000,70000;
-		delitem 7721,1;
+		delitem Treasure_Box_,1;
 		end;
 	}
 	else if (StPatrick2008 == 3) {
@@ -169,25 +169,25 @@ prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 		case 1:
 			mes "[O'Riley the Leprechaun]";
 			mes "Thank you. Here's your ale~";
-			if (countitem(7915) >= 10) {
-				getitem 12135,1;
-				delitem 7915,10;
+			if (countitem(Copper_Coin_) >= 10) {
+				getitem Green_Ale,1;
+				delitem Copper_Coin_,10;
 			}
 			close;
 		case 2:
 			mes "[O'Riley the Leprechaun]";
 			mes "Thank you. Here's your ale~";
-			if (countitem(7916) >= 5) {
-				getitem 12135,1;
-				delitem 7916,5;
+			if (countitem(Silver_Coin_) >= 5) {
+				getitem Green_Ale,1;
+				delitem Silver_Coin_,5;
 			}
 			close;
 		case 3:
 			mes "[O'Riley the Leprechaun]";
 			mes "Thank you. Here's your ale~";
-			if (countitem(7720) >= 1) {
-				getitem 12135,1;
-				delitem 7720,1;
+			if (countitem(Gold_Coin_US) >= 1) {
+				getitem Green_Ale,1;
+				delitem Gold_Coin_US,1;
 			}
 			close;
 		case 4:
@@ -209,7 +209,7 @@ OnTouch:
 	if (StPatrick2008 == 1) {
 		mes "- You've found a pile of rocks covered with soil. -";
 		next;
-		if (countitem(12018) < 200) {
+		if (countitem(Fire_Cracker) < 200) {
 			mes "The rocks won't budge.";
 			mes "Maybe O'Riley knows a way to move the rocks.";
 			close;
@@ -230,8 +230,8 @@ OnTouch:
 			mes "Let's bring the box to O'Riley.";
 			close2;
 			StPatrick2008 = 2;
-			delitem 12018,200;
-			getitem 7721,1;
+			delitem Fire_Cracker,200;
+			getitem Treasure_Box_,1;
 		}
 	}
 	end;
@@ -240,25 +240,25 @@ OnTouch:
 function	script	F_08stpattyseventbox	{
 	switch(rand(1,6)) {
 	case 1:
-		getitem 7915,1;
+		getitem Copper_Coin_,1;
 		end;
 	case 2:
-		getitem 7915,1;
-		getitem 7916,1;
-		getitem 7720,1;
+		getitem Copper_Coin_,1;
+		getitem Silver_Coin_,1;
+		getitem Gold_Coin_US,1;
 		end;
 	case 3:
-		getitem 7720,1;
+		getitem Gold_Coin_US,1;
 		end;
 	case 4:
-		getitem 7915,1;
-		getitem 7916,1;
+		getitem Copper_Coin_,1;
+		getitem Silver_Coin_,1;
 		end;
 	case 5:
-		getitem 7916,2;
+		getitem Silver_Coin_,2;
 		end;
 	case 6:
-		getitem 7915,2;
+		getitem Copper_Coin_,2;
 		end;
 	}
 }

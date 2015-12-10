@@ -14,7 +14,7 @@
 
 izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 
-	if(checkweight(7416,1) != 1)
+	if(checkweight(Letter_Of_Recommend,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -75,7 +75,7 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 			mes "to get you started on this";
 			mes "mission, alright?";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			close;
 		}
 		else if((BaseJob == Job_Swordman) || (BaseJob == Job_Swordman_High))
@@ -114,7 +114,7 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 			mes "huge. Listen, if you're going";
 			mes "to help, then let me give you this letter of recommendation...";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			close;
 		}
 		else if((Class == Job_Knight) || (Class == Job_Lord_Knight))
@@ -154,7 +154,7 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 			mes "orders. I hope you take that";
 			mes "mission for those kids' sake...";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			close;
 		}
 		else if((Class == Job_Crusader) || (Class == Job_Paladin))
@@ -187,7 +187,7 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 			mes "plan on taking the mission.";
 			mes "For the sake of those missing kids, I really hope that you do.";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			close;
 		}
 	}
@@ -277,7 +277,7 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 	}
 
 OnTouch:
-	if(checkweight(7416,1) != 1)
+	if(checkweight(Letter_Of_Recommend,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -323,7 +323,7 @@ OnTouch:
 				mes "to get you started on this";
 				mes "mission, alright?";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				close;
 			}
 			else if((BaseJob == Job_Swordman) || (BaseJob == Job_Swordman_High))
@@ -362,7 +362,7 @@ OnTouch:
 				mes "huge. Listen, if you're going";
 				mes "to help, then let me give you this letter of recommendation...";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				close;
 			}
 			else if((Class == Job_Knight) || (Class == Job_Lord_Knight))
@@ -402,7 +402,7 @@ OnTouch:
 				mes "orders. I hope you take that";
 				mes "mission for those kids' sake...";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				close;
 			}
 			else if((Class == Job_Crusader) || (Class == Job_Paladin))
@@ -435,7 +435,7 @@ OnTouch:
 				mes "plan on taking the mission.";
 				mes "For the sake of those missing kids, I really hope that you do.";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				close;
 			}
 		}
@@ -444,7 +444,7 @@ OnTouch:
 
 prontera,237,313,3	script	Nun#moc	1_F_PRIEST,3,3,{
 
-	if(checkweight(7416,1) != 1)
+	if(checkweight(Letter_Of_Recommend,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -524,7 +524,7 @@ prontera,237,313,3	script	Nun#moc	1_F_PRIEST,3,3,{
 		mes "letter of recommendation,";
 		mes "so please take it now.";
 		mao_request = 1;
-		getitem 7416,1;
+		getitem Letter_Of_Recommend,1;
 		close;
 	}
 	else if(mao_request == 1)
@@ -575,7 +575,7 @@ prontera,237,313,3	script	Nun#moc	1_F_PRIEST,3,3,{
 	}
 
 OnTouch:
-	if(checkweight(7416,1) != 1)
+	if(checkweight(Letter_Of_Recommend,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -630,7 +630,7 @@ OnTouch:
 				mes "letter of recommendation,";
 				mes "so please take it now.";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				close;
 			}
 		}
@@ -639,7 +639,7 @@ OnTouch:
 
 alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 
-	if(checkweight(7416,1) != 1)
+	if(checkweight(Letter_Of_Recommend,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -725,7 +725,7 @@ alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 			mes " ";
 			mes "^71637DOh, right! Here, take this!^000000";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			next;
 			mes "[Guildsman]";
 			mes "Alright, I did what you wanted.";
@@ -761,7 +761,7 @@ alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 			mes "help them, you'll need this";
 			mes "letter of recommendation, okay?";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			close;
 		}
 		else if((Class == Job_Blacksmith) || (Class == Job_Whitesmith))
@@ -789,7 +789,7 @@ alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 			mes "You should prepare yourself";
 			mes "if you plan to get involved...";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			close;
 		}
 		else if((Class == Job_Alchemist) || (Class == Job_Creator))
@@ -825,7 +825,7 @@ alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 			mes "as you can. If even the Assassin Guild needs help, I'm sure that";
 			mes "spells really big trouble...";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			close;
 		}
 	}
@@ -995,7 +995,7 @@ alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 	}
 
 OnTouch:
-	if(checkweight(7416,1) != 1)
+	if(checkweight(Letter_Of_Recommend,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -1065,7 +1065,7 @@ OnTouch:
 				mes " ";
 				mes "^71637DOh, right! Here, take this!^000000";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				next;
 				mes "[Guildsman]";
 				mes "Alright, I did what you wanted.";
@@ -1101,7 +1101,7 @@ OnTouch:
 				mes "help them, you'll need this";
 				mes "letter of recommendation, okay?";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				close;
 			}
 			else if((Class == Job_Blacksmith) || (Class == Job_Whitesmith))
@@ -1129,7 +1129,7 @@ OnTouch:
 				mes "You should prepare yourself";
 				mes "if you plan to get involved...";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				close;
 			}
 			else if((Class == Job_Alchemist) || (Class == Job_Creator))
@@ -1165,7 +1165,7 @@ OnTouch:
 				mes "as you can. If even the Assassin Guild needs help, I'm sure that";
 				mes "spells really big trouble...";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				close;
 			}
 		}
@@ -1174,7 +1174,7 @@ OnTouch:
 
 geffen,123,109,3	script	Academy Staff	2_M_SAGE_B,3,3,{
 
-	if(checkweight(7416,1) != 1)
+	if(checkweight(Letter_Of_Recommend,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -1225,7 +1225,7 @@ geffen,123,109,3	script	Academy Staff	2_M_SAGE_B,3,3,{
 		mes "in this mission. Please take";
 		mes "this letter of recommendation.";
 		mao_request = 1;
-		getitem 7416,1;
+		getitem Letter_Of_Recommend,1;
 		next;
 		mes "[Academy Staff]";
 		mes "If you choose to assist";
@@ -1279,7 +1279,7 @@ geffen,123,109,3	script	Academy Staff	2_M_SAGE_B,3,3,{
 	}
 
 OnTouch:
-	if(checkweight(7416,1) != 1)
+	if(checkweight(Letter_Of_Recommend,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -1317,7 +1317,7 @@ OnTouch:
 				mes "in this mission. Please take";
 				mes "this letter of recommendation.";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				next;
 				mes "[Academy Staff]";
 				mes "If you choose to assist";
@@ -1334,7 +1334,7 @@ OnTouch:
 
 morocc,155,56,3	script	Miya	4_F_04,3,3,{
 
-	if(checkweight(7416,1) != 1)
+	if(checkweight(Letter_Of_Recommend,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -1398,7 +1398,7 @@ morocc,155,56,3	script	Miya	4_F_04,3,3,{
 			mes "here in this city. Well, that's";
 			mes "all he told me, so I'll seeya~";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			close;
 		}
 		else if((BaseJob == Job_Thief) || (BaseJob == Job_Thief_High) || (Class == Job_Rogue) || (Class == Job_Stalker))
@@ -1418,7 +1418,7 @@ morocc,155,56,3	script	Miya	4_F_04,3,3,{
 			mes "of recommendation and talk to";
 			mes "Jack, our contact west in this city. You better go right away...";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			close;
 		}
 		else if((Class == Job_Assassin) || (Class == Job_Assassin_Cross))
@@ -1450,7 +1450,7 @@ morocc,155,56,3	script	Miya	4_F_04,3,3,{
 			mes "We'll need all the help that";
 			mes "we can possibly get...";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			close;
 		}
 	}
@@ -1525,7 +1525,7 @@ morocc,155,56,3	script	Miya	4_F_04,3,3,{
 	}
 
 OnTouch:
-	if(checkweight(7416,1) != 1)
+	if(checkweight(Letter_Of_Recommend,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -1563,7 +1563,7 @@ OnTouch:
 				mes "here in this city. Well, that's";
 				mes "all he told me, so I'll seeya~";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				close;
 			}
 			else if((BaseJob == Job_Thief) || (BaseJob == Job_Thief_High) || (Class == Job_Rogue) || (Class == Job_Stalker))
@@ -1583,7 +1583,7 @@ OnTouch:
 				mes "of recommendation and talk to";
 				mes "Jack, our contact west in this city. You better go right away...";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				close;
 			}
 			else if((Class == Job_Assassin) || (Class == Job_Assassin_Cross))
@@ -1623,7 +1623,7 @@ OnTouch:
 
 payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 
-	if(checkweight(7416,1) != 1)
+	if(checkweight(Letter_Of_Recommend,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -1679,7 +1679,7 @@ payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 			mes "this Letter of Recommendation";
 			mes "and bring it to the contact from the Assassin Guild in Morroc.";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			next;
 			mes "[Guildsman]";
 			mes "You can meet the";
@@ -1714,7 +1714,7 @@ payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 			mes "of the Oasis in Morroc.";
 			mes "Well, good luck, pal~";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			close;
 		}
 		else if((Class == Job_Bard) || (Class == Job_Clown))
@@ -1742,7 +1742,7 @@ payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 			mes "that you help them. Yeah.";
 			mes "Here's the letter he wrote.";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			next;
 			mes "[Guildsman]";
 			mes "Just... Just meet with the";
@@ -1784,7 +1784,7 @@ payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 			mes "I guess she thinks you'll do";
 			mes "the best job. So, um, congrats~";
 			mao_request = 1;
-			getitem 7416,1;
+			getitem Letter_Of_Recommend,1;
 			next;
 			mes "[Guildsman]";
 			mes "For now, your cooperation";
@@ -1915,7 +1915,7 @@ payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 	}
 
 OnTouch:
-	if(checkweight(7416,1) != 1)
+	if(checkweight(Letter_Of_Recommend,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -1952,7 +1952,7 @@ OnTouch:
 				mes "this Letter of Recommendation";
 				mes "and bring it to the contact from the Assassin Guild in Morroc.";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				next;
 				mes "[Guildsman]";
 				mes "You can meet the";
@@ -1987,7 +1987,7 @@ OnTouch:
 				mes "of the Oasis in Morroc.";
 				mes "Well, good luck, pal~";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				close;
 			}
 			else if((Class == Job_Bard) || (Class == Job_Clown))
@@ -2015,7 +2015,7 @@ OnTouch:
 				mes "that you help them. Yeah.";
 				mes "Here's the letter he wrote.";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				next;
 				mes "[Guildsman]";
 				mes "Just... Just meet with the";
@@ -2057,7 +2057,7 @@ OnTouch:
 				mes "I guess she thinks you'll do";
 				mes "the best job. So, um, congrats~";
 				mao_request = 1;
-				getitem 7416,1;
+				getitem Letter_Of_Recommend,1;
 				next;
 				mes "[Guildsman]";
 				mes "For now, your cooperation";
@@ -2122,7 +2122,7 @@ morocc,43,108,5	script	Sharp-Looking Kid	4_KID01,{
 			close;
 		}
 	}
-	if(mao_request == 1 && countitem(7416))
+	if(mao_request == 1 && countitem(Letter_Of_Recommend))
 	{
 		mes "[Jack]";
 		mes "Oh, hey, you must be the";
@@ -2387,7 +2387,7 @@ que_job01,81,79,5	script	Idle Knight	4_M_JOB_KNIGHT1,{
 
 que_job01,82,95,3	script	Bar Master	1_ETC_01,{
 
-	if(checkweight(12112,1) != 1)
+	if(checkweight(Tropical_Sograt,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -2439,7 +2439,7 @@ que_job01,82,95,3	script	Bar Master	1_ETC_01,{
 				case 1:
 					.@maodrink = 1;
 				case 2:
-					if(checkweight(12112,1) != 1)
+					if(checkweight(Tropical_Sograt,1) != 1)
 					{
 						mes "[Master]";
 						mes "Hey, why did you bring";
@@ -2471,8 +2471,8 @@ que_job01,82,95,3	script	Bar Master	1_ETC_01,{
 						mes "my friend, and drink it as";
 						mes "deeply as you would life.";
 						Zeny -= 800;
-						if(.@maodrink) getitem 12112,1;
-						else getitem 12113,1;
+						if(.@maodrink) getitem Tropical_Sograt,1;
+						else getitem Vermilion_The_Beach,1;
 						close;
 					}
 					if (Zeny < 1000)
@@ -2493,8 +2493,8 @@ que_job01,82,95,3	script	Bar Master	1_ETC_01,{
 					mes "already lucky to be here.";
 					mes "Hey, enjoy your drink~";
 					Zeny -= 1000;
-					if(.@maodrink) getitem 12112,1;
-					else getitem 12113,1;
+					if(.@maodrink) getitem Tropical_Sograt,1;
+					else getitem Vermilion_The_Beach,1;
 					close;
 				case 3:
 					mes "[Master]";
@@ -2532,7 +2532,7 @@ que_job01,82,95,3	script	Bar Master	1_ETC_01,{
 					case 1:
 						break;
 				}
-				if (countitem(7416))
+				if (countitem(Letter_Of_Recommend))
 				{
 					mes "[Master]";
 					mes "Ah, I see you that you";
@@ -3002,7 +3002,7 @@ OnTouch:
 
 que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 
-	if(checkweight(7417,1) != 1)
+	if(checkweight(Mission_ScrollA,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -3101,7 +3101,7 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 				mes "in the pub. He'll brief you";
 				mes "further on your mission.";
 				mao_request = 3;
-				getitem 7417,1;
+				getitem Mission_ScrollA,1;
 				next;
 				cutin "",255;
 				mes "[Valdes]";
@@ -3136,7 +3136,7 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 				mes "him that you have been assigned";
 				mes "as his personal bodyguard.";
 				mao_request = 103;
-				getitem 7418,1;
+				getitem Mission_ScrollB,1;
 				close2;
 				break;
 		}
@@ -3261,12 +3261,12 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 			mes "It's just... It's just not in";
 			mes "our vocabulary, you see?";
 		}
-		delitem 7416,countitem(7416);
-		delitem 7417,countitem(7417);
+		delitem Letter_Of_Recommend,countitem(Letter_Of_Recommend);
+		delitem Mission_ScrollA,countitem(Mission_ScrollA);
 		if(mao_request == 28) getexp 1050000,0;
 		else if(mao_request == 29) getexp 1280000,0;
 		mao_request = 30;
-		getitem 12107,1;
+		getitem Wrapped_Mask,1;
 		next;
 		mes "[Valdes]";
 		if(Class == Job_Assassin || Class == Job_Assassin_Cross)
@@ -3402,12 +3402,12 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 			mes "the Assassin Guild for";
 			mes "your efforts and hard work.";
 		}
-		delitem 7416,countitem(7416);
-		delitem 7418,countitem(7418);
+		delitem Letter_Of_Recommend,countitem(Letter_Of_Recommend);
+		delitem Mission_ScrollB,countitem(Mission_ScrollB);
 		if(mao_request == 126) getexp 1050000,0;
 		else if(mao_request == 127) getexp 1280000,0;
 		mao_request = 128;
-		getitem 12106,1;
+		getitem Accessory_Box,1;
 		next;
 		mes "[Valdes]";
 		mes "Technically, we failed to";
@@ -5145,7 +5145,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "Here you are, enjoy.";
 		mes "Take this.";
 		mao_request = 20;
-		getitem 12112,1;
+		getitem Tropical_Sograt,1;
 		next;
 		cutin "mocseal_kid01.bmp",2;
 		mes "[Kidd]";
@@ -5529,7 +5529,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 
 que_job01,89,85,5	script	Dandelion Member	4_M_MASKMAN,{
 
-	if(checkweight(12112,1) != 1)
+	if(checkweight(Tropical_Sograt,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -5846,7 +5846,7 @@ que_job01,89,85,5	script	Dandelion Member	4_M_MASKMAN,{
 		mes "Here you are, enjoy.";
 		mes "Take this.";
 		mao_request = 20;
-		getitem 12112,1;
+		getitem Tropical_Sograt,1;
 		next;
 		cutin "mocseal_kid01.bmp",2;
 		mes "[Kidd]";
@@ -6671,7 +6671,7 @@ moc_fild10,281,148,1	script	Upturned Spot#water	HIDDEN_NPC,{
 		mes "^3355FFYou find a gleaming";
 		mes "crest that looks like a";
 		mes "splashing wave of water.^000000";
-		if(countitem(996))
+		if(countitem(Rough_Wind))
 		{
 			mes "^3355FFYou take out a Rough Wind";
 			mes "to counter the crest's power.^000000";
@@ -6690,7 +6690,7 @@ moc_fild10,281,148,1	script	Upturned Spot#water	HIDDEN_NPC,{
 			mes "the Wind element neutralized";
 			mes "this crest's Water element.^000000";
 			specialeffect EF_SPHERE;
-			delitem 996,1;
+			delitem Rough_Wind,1;
 			mao_request = 15;
 			next;
 			mes "[" + strcharinfo(0) + "]";
@@ -6723,7 +6723,7 @@ moc_fild10,281,148,1	script	Upturned Spot#water	HIDDEN_NPC,{
 		mes "crest that looks like a";
 		mes "splashing wave of water.^000000";
 		cutin "mocseal_ice02.bmp",2;
-		if (countitem(995))
+		if (countitem(Mistic_Frozen))
 		{
 			mes "^3355FFYou bring out a Mystic Frozen";
 			mes "to enhance the crest's power.^000000";
@@ -6735,7 +6735,7 @@ moc_fild10,281,148,1	script	Upturned Spot#water	HIDDEN_NPC,{
 			mes "to chill and raising the";
 			mes "waves in the oasis.^000000";
 			specialeffect EF_BEGINSPELL2;
-			delitem 995,1;
+			delitem Mistic_Frozen,1;
 			mao_request = 114;
 			next;
 			mes "[" + strcharinfo(0) + "]";
@@ -6803,7 +6803,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 	}
 	else if(mao_request == 12)
 	{
-		if(countitem(997))
+		if(countitem(Great_Nature))
 		{
 			cutin "mocseal_wind01.bmp",2;
 			mes "^3355FFYou find a shining crest";
@@ -6830,7 +6830,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 			mes "causing the power of the";
 			mes "Wind in this area to stabilize.^000000";
 			specialeffect EF_SPHERE;
-			delitem 997,1;
+			delitem Great_Nature,1;
 			mao_request = 13;
 			next;
 			mes "[" + strcharinfo(0) + "]";
@@ -6922,7 +6922,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 	}
 	else if(mao_request == 111)
 	{
-		if (countitem(996))
+		if (countitem(Rough_Wind))
 		{
 			cutin "mocseal_wind02.bmp",2;
 			mes "[" + strcharinfo(0) + "]";
@@ -6938,7 +6938,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 			mes "crest to shine brighter and";
 			mes "the wind to blow stronger.^000000";
 			specialeffect EF_BEGINSPELL4;
-			delitem 996,1;
+			delitem Rough_Wind,1;
 			mao_request = 112;
 			next;
 			cutin "mocseal_wind01.bmp",2;
@@ -6978,7 +6978,7 @@ moc_fild12,280,36,1	script	Unturned Spot#earth	HIDDEN_NPC,{
 
 	if (mao_request == 13)
 	{
-		if (countitem(994))
+		if (countitem(Flame_Heart))
 		{
 			mes "^3355FFYou find a shimmering";
 			mes "crest that symbolizes";
@@ -7006,7 +7006,7 @@ moc_fild12,280,36,1	script	Unturned Spot#earth	HIDDEN_NPC,{
 			mes "is now stabilized.^000000";
 			cutin "mocseal_earth02.bmp",2;
 			specialeffect EF_SPHERE;
-			delitem 994,1;
+			delitem Flame_Heart,1;
 			mao_request = 14;
 			next;
 			mes "[" + strcharinfo(0) + "]";
@@ -7049,7 +7049,7 @@ moc_fild12,280,36,1	script	Unturned Spot#earth	HIDDEN_NPC,{
 		mes "stone to enhance its power.^000000";
 		cutin "mocseal_earth02.bmp",2;
 		next;
-		if (countitem(997))
+		if (countitem(Great_Nature))
 		{
 			mes "^3355FFYou pull out a";
 			mes "Great Nature, which";
@@ -7057,7 +7057,7 @@ moc_fild12,280,36,1	script	Unturned Spot#earth	HIDDEN_NPC,{
 			mes "ground and sand to flow";
 			mes "towards the crest.^000000";
 			specialeffect EF_BEGINSPELL5;
-			delitem 997,1;
+			delitem Great_Nature,1;
 			mao_request = 113;
 			next;
 			mes "[" + strcharinfo(0) + "]";
@@ -7093,7 +7093,7 @@ moc_fild07,192,166,1	script	Unturned Spot#fire	HIDDEN_NPC,{
 
 	if (mao_request == 15)
 	{
-		if(countitem(995))
+		if(countitem(Mistic_Frozen))
 		{
 			mes "^3355FFYou find a gleaming";
 			mes "crest that symbolizes Fire.^000000";
@@ -7120,7 +7120,7 @@ moc_fild07,192,166,1	script	Unturned Spot#fire	HIDDEN_NPC,{
 			mes "bursts into cold vapor.^000000";
 			cutin "mocseal_fire02.bmp",2;
 			specialeffect EF_SPHERE;
-			delitem 995,1;
+			delitem Mistic_Frozen,1;
 			mao_request = 16;
 			next;
 			mes "[" + strcharinfo(0) + "]";
@@ -7153,7 +7153,7 @@ moc_fild07,192,166,1	script	Unturned Spot#fire	HIDDEN_NPC,{
 		cutin "mocseal_fire02.bmp",2;
 		mes "^3355FFYou find a gleaming";
 		mes "crest that symbolizes Fire.";
-		if (countitem(994))
+		if (countitem(Flame_Heart))
 		{
 			mes "You'll need a Flame Heart";
 			mes "in order to enhance its power.^000000";
@@ -7164,7 +7164,7 @@ moc_fild07,192,166,1	script	Unturned Spot#fire	HIDDEN_NPC,{
 			mes "air around you heats up.^000000";
 			specialeffect EF_BEGINSPELL3;
 			cutin "mocseal_fire01.bmp",2;
-			delitem 994,1;
+			delitem Flame_Heart,1;
 			mao_request = 115;
 			next;
 			mes "[" + strcharinfo(0) + "]";

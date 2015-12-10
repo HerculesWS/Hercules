@@ -289,7 +289,7 @@ bat_b01,390,13,5	script	Guillaume Vintenar#fl1	4_M_KY_HEAD,{
 		}
 
 		setquest 2070;
-		getitem 7829, .@reward;
+		getitem BF_Badge2, .@reward;
 		bg_leave;
 		warp "bat_room",155,150;
 		end;
@@ -318,7 +318,7 @@ bat_b01,10,293,5	script	Croix Vintenar#fl1	4_M_CRU_HEAD,{
 		}
 
 		setquest 2070;
-		getitem 7829, .@reward;
+		getitem BF_Badge2, .@reward;
 		bg_leave;
 		warp "bat_room",155,150;
 		end;

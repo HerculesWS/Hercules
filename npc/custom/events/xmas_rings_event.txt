@@ -64,18 +64,18 @@ M_WRAP:
 	next;
 	menu "Wrap them, please!",-, "No, thanks.",M_QUEST;
 
-	set @prizes, countitem(664)+countitem(665)+countitem(666)+countitem(667);
+	set @prizes, countitem(Gift_Box_1)+countitem(Gift_Box_2)+countitem(Gift_Box_3)+countitem(Gift_Box_4);
 	if( @prizes == 0){
 		mes "[Snower]";
 		mes "I don't see any gifts in fancy boxes on you...";
-		if(countitem(644))mes "You've got only gray boxes.";
+		if(countitem(Gift_Box))mes "You've got only gray boxes.";
 		close;
 	}
-	delitem 664,countitem(664);
-	delitem 665,countitem(665);
-	delitem 666,countitem(666);
-	delitem 667,countitem(667);
-	getitem 644,@prizes;
+	delitem Gift_Box_1,countitem(Gift_Box_1);
+	delitem Gift_Box_2,countitem(Gift_Box_2);
+	delitem Gift_Box_3,countitem(Gift_Box_3);
+	delitem Gift_Box_4,countitem(Gift_Box_4);
+	getitem Gift_Box,@prizes;
 
 	mes "[Snower]";
 	mes "*shuffle* Here you go.";
@@ -114,13 +114,13 @@ louyang,224,249,4	script	Sneewy	4_F_KID3,{
 		menu "Here are your 4 Gift Boxes",-, "I don't know any Snowhatevers...",M_End;
 
 		mes "[Sneewy]";
-		if(countitem(644)<4){
+		if(countitem(Gift_Box)<4){
 			mes "Gimme 4 gifts for poor kids... Wait, you haven't got 4 of them!";
 			emotion e_sry;
 			close;
 		}
 		set Q_XMSRINGS,2;
-		delitem 644,4;
+		delitem Gift_Box,4;
 		getnameditem 2637,strcharinfo(0);
 		emotion e_kis2;
 		mes "Thank you! Here's my li'l something for you!";
@@ -166,13 +166,13 @@ izlu2dun,133,160,2	script	Snoowy	4_F_06,{
 		menu "Have these gifts!",-, "I need a li'l something in return",M_End;
 
 		mes "[Snoowy]";
-		if(countitem(644)<3){
+		if(countitem(Gift_Box)<3){
 			mes "Oops!! You haven't got 3 gray gift boxes on you.";
 			emotion e_sry;
 			close;
 		}
 		set Q_XMSRINGS,3;
-		delitem 644,3;
+		delitem Gift_Box,3;
 		getnameditem 2636,strcharinfo(0);
 		emotion e_kis;
 		mes "Thaank yoouu! Have this magic ring!";

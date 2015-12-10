@@ -134,7 +134,7 @@ N_MasterBow:
 	mes "This is just a package delivery run, no big deal or anything.";
 	mes " ";
 	mes "Take this to an archer in the Archer Village outside of Payon.";
-	getitem 1072,1; //Delivery_Box
+	getitem Delivery_Message,1; //Delivery_Box
 	set one_qset,2;
 	goto L_QuestGiven;
 
@@ -173,7 +173,7 @@ N_JobList2:
 	mes " ";
 	mes "A strange man came in here yesterday and asked me to deliver this ^FF0000Strange Letter^000000 to some woman in Morroc. Knowing us we do not ask questions so you must take care of this delivery.";
 	mes "The Woman is in located in Morroc and her name is Erika.";
-	getitem 1072,1; //Delivery_Message
+	getitem Delivery_Message,1; //Delivery_Message
 	set two_qset, 1;
 	goto L_QuestGiven;
 
@@ -225,7 +225,7 @@ N_Delivery1:
 	mes "Standard drop off quest.";
 	mes " ";
 	mes "In this quest you need to deliver a mystery box to someone names ^FF0000Flank at the bridge between Aldebaran and Juno^000000.";
-	getitem 1082,1; //Delivery_Box_
+	getitem Merchant_Box_2,1; //Delivery_Box_
 	set three_qset,2;
 	goto L_QuestGiven;
 
@@ -322,7 +322,7 @@ N_Thinkfirst:
 	mes "This sounds like another one of those ditzy girl quests...";
 	mes " ";
 	mes "Dazzy the local blond around Geffen has asked for you to deliver her these flowers. I don't know why someone would send flowers to herself...";
-	getitem 744,1; //Bouquet
+	getitem Bunch_Of_Flowers,1; //Bouquet
 	set five_qset,3;
 	goto L_QuestGiven;
 
@@ -346,7 +346,7 @@ N_JobList6:
 	mes "How ironic.";
 	mes " ";
 	mes "Deliver this Box to the Thiefs guild.";
-	getitem 1083,1; //Delivery_Box__
+	getitem Merchant_Box_3,1; //Delivery_Box__
 	set six_qset,1;
 	goto L_QuestGiven;
 
@@ -365,7 +365,7 @@ N_Delivery2:
 	mes "Well most of what we do is run packages, this is no different from other's.";
 	mes " ";
 	mes "Take this box, DO NOT OPEN IT! To a little girl in Lutie named Chirach she should be around santa.";
-	getitem 1083,1; //Delivery_Box__
+	getitem Merchant_Box_3,1; //Delivery_Box__
 	set six_qset,3;
 	goto L_QuestGiven;
 
@@ -398,7 +398,7 @@ N_Delivery3:
 	mes "So many packages so little time.";
 	mes " ";
 	mes "Take this box to a man in Alberta named Charles.";
-	getitem 1082,1; //Delivery_Box_
+	getitem Merchant_Box_2,1; //Delivery_Box_
 	set seven_qset,2;
 	goto L_QuestGiven;
 
@@ -440,7 +440,7 @@ N_Delivery4:
 	mes "Well yah box delivering is in high demand,lots of lazy people.";
 	mes " ";
 	mes "Take this package to a man in Morroc named Klye.";
-	getitem 1081,1; //Delivery_Box
+	getitem Merchant_Box_1,1; //Delivery_Box
 	set eight_qset,2;
 	goto L_QuestGiven;
 
@@ -473,7 +473,7 @@ N_JobList9:
 	mes "Oh god please get this out of here fast.";
 	mes " ";
 	mes "Oh man smells like someone died in here.Take this to the Magic School in Geffen and hurry,ahh the smell its burning my eye's!!!";
-	getitem 1082,1; //Delivery_Box_
+	getitem Merchant_Box_2,1; //Delivery_Box_
 	set nine_qset,1;
 	goto L_QuestGiven;
 
@@ -519,7 +519,7 @@ N_JobList10:
 	mes "Package to Morroc";
 	mes " ";
 	mes "There is nothing writen on this box but a notice to deliver it to a man Kreg.";
-	getitem 1082,1; //Delivery_Box_
+	getitem Merchant_Box_2,1; //Delivery_Box_
 	set ten_qset,1;
 	goto L_QuestGiven;
 

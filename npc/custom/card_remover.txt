@@ -50,7 +50,7 @@ prt_in,28,73,4	script	Wise Old Woman#eAcustom	1_F_ORIENT_04,{
 		}
 		set .@cardcount,getequipcardcnt(.@part);
 
-		if (!checkweight(1202,(.@cardcount+1))) {
+		if (!checkweight(Knife_,(.@cardcount+1))) {
 			mes "^3355FFJust a minute!";
 			mes "I can't offer any of my";
 			mes "services to you because";
@@ -67,7 +67,7 @@ prt_in,28,73,4	script	Wise Old Woman#eAcustom	1_F_ORIENT_04,{
 			mes "Very well. Return at once if you seek my services.";
 			close;
 		}
-		if((Zeny < (.zenycost+(.@cardcount * .percardcost))) || (countitem(1000) < 1) || (countitem(715) < 1)) {
+		if((Zeny < (.zenycost+(.@cardcount * .percardcost))) || (countitem(Star_Crumb) < 1) || (countitem(Yellow_Gemstone) < 1)) {
 			mes "[Wise Old Woman]";
 			mes "You do not have all the items I require to work my magic, child. Come again when you do.";
 			close;
@@ -89,8 +89,8 @@ prt_in,28,73,4	script	Wise Old Woman#eAcustom	1_F_ORIENT_04,{
 		mes "[Wise Old Woman]";
 		mes "Very well. I shall begin.";
 		Zeny -= (.zenycost+(.@cardcount * .percardcost));
-		delitem 1000,1;
-		delitem 715,1;
+		delitem Star_Crumb,1;
+		delitem Yellow_Gemstone,1;
 
 		// Replace the constants in the next 3 lines with failure chance values defined in refine_db.txt
 		// First value = Total failure chance (item and cards destroyed)

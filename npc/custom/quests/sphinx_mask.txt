@@ -44,7 +44,7 @@ L_Menu:
 		close; }
 	Zeny -= getarg(2);
 	mes "O ho ho, it's a deal, then!";
-	getitem 7114,1;
+	getitem Tutankhamen's_Mask,1;
 	set sphmask_q,1;
 	close;
 }

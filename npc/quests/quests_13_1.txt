@@ -362,7 +362,7 @@ aldebaran,127,138,3	script	Promotional Staff#alde	4W_SAILOR,{
 		close;
 	}
 	if (ep13_ryu == 2) {
-		if (countitem(909) < 300) {
+		if (countitem(Jellopy) < 300) {
 			mes "[Promotional Staff]";
 			mes "Don't forget to bring... ^FF0000300 Jellopy^000000.";
 			mes "Got it? ^FF0000300 Jellopy^000000!";
@@ -400,7 +400,7 @@ aldebaran,127,138,3	script	Promotional Staff#alde	4W_SAILOR,{
 		mes "You resolved to carry it out, didn't you?";
 		mes "Brace yourself for it.";
 		next;
-		delitem 909,300; //Jellopy
+		delitem Jellopy,300; //Jellopy
 		changequest 10058,10059;
 		ep13_ryu = 3;
 		mes "[Promotional Staff]";
@@ -464,7 +464,7 @@ geffen,90,67,3	script	Promotional Staff#gef	4W_SAILOR,{
 		close;
 	}
 	if (ep13_ryu == 5) {
-		if (countitem(723) == 0) {
+		if (countitem(Cardinal_Jewel) == 0) {
 			mes "[Promotional Staff]";
 			mes "^FF00001 Ruby!!^000000.";
 			mes "Don't you forget it!";
@@ -495,7 +495,7 @@ geffen,90,67,3	script	Promotional Staff#gef	4W_SAILOR,{
 		mes "It is a very dangerous place so you must go through these tests before we can send you....";
 		mes "We're pretty picky.";
 		next;
-		delitem 723,1; //Cardinal_Jewel
+		delitem Cardinal_Jewel,1; //Cardinal_Jewel
 		changequest 10061,10062;
 		ep13_ryu = 6;
 		mes "[Promotional Staff]";
@@ -504,7 +504,7 @@ geffen,90,67,3	script	Promotional Staff#gef	4W_SAILOR,{
 		close;
 	}
 	if (ep13_ryu == 4) {
-		if (countitem(721) == 0) {
+		if (countitem(Azure_Jewel) == 0) {
 			mes "[Promotional Staff]";
 			mes "The one you should bring me is";
 			mes "^FF0000Emerald^000000. Can you get it?";
@@ -524,7 +524,7 @@ geffen,90,67,3	script	Promotional Staff#gef	4W_SAILOR,{
 		mes "I can't judge you with only one jewel.";
 		mes "So I need one more stone.";
 		next;
-		delitem 721,1; //Azure_Jewel
+		delitem Azure_Jewel,1; //Azure_Jewel
 		changequest 10060,10061;
 		ep13_ryu = 5;
 		mes "[Promotional Staff]";
@@ -1960,7 +1960,7 @@ moc_fild22b,370,370,3	script	Allied Manager#gm	4W_SAILOR,{
 // New Surroundings :: ep13_newbs
 //============================================================
 mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "[Marian]";
 		mes "You have too many items~";
 		mes "Drop some and come back to me.";
@@ -1991,7 +1991,7 @@ mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
 				mes "Go to the right to find";
 				mes "^0000FFInstructor Lugen^000000.";
 				ep13_newbs = 1;
-				getitem 12322,1; //Chocolate_Pie
+				getitem Chocolate_Pie,1; //Chocolate_Pie
 				setquest 11084;
 				close;
 			case 2:
@@ -2010,7 +2010,7 @@ mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
 				mes "and you'll find ^0000FFInstructor Lugen^000000.";
 				mes "Talk to him, first.";
 				ep13_newbs = 1;
-				getitem 12322,1; //Chocolate_Pie
+				getitem Chocolate_Pie,1; //Chocolate_Pie
 				setquest 11084;
 				close;
 			}
@@ -2062,8 +2062,8 @@ mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
 		mes "And this is for you.";
 		mes "Go, go~~";
 		ep13_newbs = 14;
-		getitem 6045,3; //Supply_Box
-		getitem 12322,1; //Chocolate_Pie
+		getitem Supply_Box,3; //Supply_Box
+		getitem Chocolate_Pie,1; //Chocolate_Pie
 		changequest 11091,11092;
 		close;
 	}
@@ -2071,7 +2071,7 @@ mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
 		if (ep13_newbs < 16) .@i = 3;
 		else if (ep13_newbs < 18) .@i = 2;
 		else .@i = 1;
-		if (countitem(6045) < .@i) {
+		if (countitem(Supply_Box) < .@i) {
 			mes "[Marian]";
 			mes "Ha! You misplaced the Supply Box?!";
 			mes "What the~~?";
@@ -2081,7 +2081,7 @@ mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
 			mes "Ok, I have spares.";
 			mes "Let me give one to you.";
 			mes "Don't misplace this one, ok?!";
-			getitem 6045,1; //Supply_Box
+			getitem Supply_Box,1; //Supply_Box
 			close;
 		}
 		else {
@@ -2111,7 +2111,7 @@ mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
 }
 
 mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "[Instructor Lugen]";
 		mes "You are carrying too much weight.";
 		mes "Please try again after losing some weight.";
@@ -2248,7 +2248,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "with others, so make sure to";
 		mes "talk with them while you're there.";
 		ep13_newbs = 5;
-		getitem 12322,1; //Chocolate_Pie
+		getitem Chocolate_Pie,1; //Chocolate_Pie
 		completequest 11086;
 		close;
 	}
@@ -2281,7 +2281,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "you first came here and";
 		mes "get the supplies from her.";
 		ep13_newbs = 13;
-		getitem 12322,1; //Chocolate_Pie
+		getitem Chocolate_Pie,1; //Chocolate_Pie
 		setquest 11091;
 		close;
 	}
@@ -2294,7 +2294,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		close;
 	}
 	if (ep13_newbs == 14) {
-		if (countitem(6045) > 2) {
+		if (countitem(Supply_Box) > 2) {
 			mes "[Instructor Lugen]";
 			mes "Did you recieve the supplies?";
 			mes "Can you show them to me, please?";
@@ -2324,7 +2324,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		}
 	}
 	if (ep13_newbs == 15) {
-		if (countitem(6045) > 2) {
+		if (countitem(Supply_Box) > 2) {
 			mes "[Instructor Lugen]";
 			mes "The first box should be sent to";
 			mes "Jan, northwest of the camp.";
@@ -2348,7 +2348,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "for it a month ago.";
 		mes "Thanks so much.";
 		next;
-		if (countitem(6045) > 1) {
+		if (countitem(Supply_Box) > 1) {
 			mes "[Instructor Lugen]";
 			mes "Next, this box is for Gerard.";
 			mes "He is investigating across the";
@@ -2370,7 +2370,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		}
 	}
 	if (ep13_newbs == 17) {
-		if (countitem(6045) > 1) {
+		if (countitem(Supply_Box) > 1) {
 			mes "[Instructor Lugen]";
 			mes "Next, this box is for Gerard.";
 			mes "He is investigating across the";
@@ -2398,7 +2398,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "going out for the";
 		mes "investigation.";
 		next;
-		if (countitem(6045) > 0) {
+		if (countitem(Supply_Box) > 0) {
 			mes "[Instructor Lugen]";
 			mes "And the last box is for";
 			mes "Alberto at the entrance";
@@ -2426,7 +2426,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		}
 	}
 	if (ep13_newbs == 19) {
-		if (countitem(6045) > 0) {
+		if (countitem(Supply_Box) > 0) {
 			mes "[Instructor Lugen]";
 			mes "And the last box is for";
 			mes "Alberto at the entrance";
@@ -2540,7 +2540,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 				mes "on the barrier in the west.";
 				mes "Please give it to him.";
 				ep13_newbs = 23;
-				getitem 6043,1; //Letter_From_Lugen
+				getitem Letter_From_Lugen,1; //Letter_From_Lugen
 				setquest 11099;
 				close;
 			case 2:
@@ -2601,7 +2601,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			mes "My friend, Otto, is working on the barrier in the west.";
 			mes "Please give it to him.";
 			ep13_newbs = 23;
-			getitem 6043,1; //Letter_From_Lugen
+			getitem Letter_From_Lugen,1; //Letter_From_Lugen
 			setquest 11099;
 			close;
 		case 2:
@@ -2611,12 +2611,12 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		}
 	}
 	if (ep13_newbs == 23) {
-		if (countitem(6043) < 1) {
+		if (countitem(Letter_From_Lugen) < 1) {
 			mes "[Instructor Lugen]";
 			mes "Ah, did you lose the letter?";
 			mes "That's ok. It's no big deal.";
 			mes "I'll write it again.";
-			getitem 6043,1; //Letter_From_Lugen
+			getitem Letter_From_Lugen,1; //Letter_From_Lugen
 			close;
 		}
 		else {
@@ -2641,7 +2641,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "["+ strcharinfo(0) +"]";
 		mes "I have a letter from him, too.";
 		next;
-		if (countitem(6044) < 1) {
+		if (countitem(Letter_From_Otto) < 1) {
 			mes "["+ strcharinfo(0) +"]";
 			mes "Huh, ehh..?!?!";
 			next;
@@ -2671,10 +2671,10 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			next;
 			mes "[Instructor Lugen]";
 			mes "And this is for you.";
-			delitem 6044,1; //Letter_From_Otto
+			delitem Letter_From_Otto,1; //Letter_From_Otto
 			ep13_newbs = 100;
-			getitem 617,1; //Old_Violet_Box
-			getitem 12322,5; //Chocolate_Pie
+			getitem Old_Violet_Box,1; //Old_Violet_Box
+			getitem Chocolate_Pie,5; //Chocolate_Pie
 			if (RENEWAL_EXP)
 				getexp 100000,10000;
 			else
@@ -2710,7 +2710,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 }
 
 mid_camp,123,290,4	script	Otto#ep13bs	4_M_RUSMAN1,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -2739,7 +2739,7 @@ mid_camp,123,290,4	script	Otto#ep13bs	4_M_RUSMAN1,{
 		mes "That's good to hear.";
 		mes "Ah, and he wrote this letter for you.";
 		next;
-		if (countitem(6043) < 1) {
+		if (countitem(Letter_From_Lugen) < 1) {
 			mes "["+ strcharinfo(0) +"]";
 			mes "Eh, where is it...";
 			next;
@@ -2767,20 +2767,20 @@ mid_camp,123,290,4	script	Otto#ep13bs	4_M_RUSMAN1,{
 			mes "And I will have a vacation";
 			mes "in the near future and will";
 			mes "use that time to visit him.";
-			delitem 6043,1; //Letter_From_Lugen
+			delitem Letter_From_Lugen,1; //Letter_From_Lugen
 			ep13_newbs = 24;
-			getitem 6044,1; //Letter_From_Otto
-			getitem 12322,1; //Chocolate_Pie
+			getitem Letter_From_Otto,1; //Letter_From_Otto
+			getitem Chocolate_Pie,1; //Chocolate_Pie
 			changequest 11099,11100;
 			close;
 		}
 	}
 	if (ep13_newbs == 24) {
-		if (countitem(6044) < 1) {
+		if (countitem(Letter_From_Otto) < 1) {
 			mes "[Otto]";
 			mes "You lost the letter?";
 			mes "I'll write it again.";
-			getitem 6044,1; //Letter_From_Otto
+			getitem Letter_From_Otto,1; //Letter_From_Otto
 			close;
 		}
 		else {
@@ -2891,7 +2891,7 @@ mid_campin,106,122,4	script	Receptionist Brink#ep13b	4_M_ORIENT02,{
 			mes "- I guess I'm registered -";
 			mes "- I'd better go back to Lugen -";
 			ep13_newbs = 4;
-			getitem 12322,1; //Chocolate_Pie
+			getitem Chocolate_Pie,1; //Chocolate_Pie
 			changequest 11085,11086;
 			close;
 		case 2:
@@ -2999,7 +2999,7 @@ mid_camp,264,263,4	script	Diego#ep13bs	4_M_RACHMAN1,{
 		}
 	}
 	if (ep13_newbs == 6) {
-		if ((countitem(6041) > 19) && (countitem(6042) > 19)) {
+		if ((countitem(Strong_Bine) > 19) && (countitem(Ordinary_Branch) > 19)) {
 			mes "[Diego]";
 			mes "Oh!!";
 			mes "You finally brought";
@@ -3011,8 +3011,8 @@ mid_camp,264,263,4	script	Diego#ep13bs	4_M_RACHMAN1,{
 			mes "Ok, so while I hold this post,";
 			mes "please attach the branches";
 			mes "and tie it up with the vines.";
-			delitem 6041,20; //Strong_Bine
-			delitem 6042,20; //Ordinary_Branch
+			delitem Strong_Bine,20; //Strong_Bine
+			delitem Ordinary_Branch,20; //Ordinary_Branch
 			ep13_newbs = 7;
 			changequest 11087,11088;
 			close;
@@ -3039,7 +3039,7 @@ mid_camp,264,263,4	script	Diego#ep13bs	4_M_RACHMAN1,{
 		close;
 	}
 	if (ep13_newbs == 9) {
-		if (checkweight(1201,1) == 0) {
+		if (checkweight(Knife,1) == 0) {
 			mes "- Wait a minute !! -";
 			mes "- Currently you're carrying -";
 			mes "- too many items with you. -";
@@ -3073,7 +3073,7 @@ mid_camp,264,263,4	script	Diego#ep13bs	4_M_RACHMAN1,{
 			mes "take some rest for the";
 			mes "expedition tomorrow!!";
 			ep13_newbs = 10;
-			getitem 12322,5; //Chocolate_Pie
+			getitem Chocolate_Pie,5; //Chocolate_Pie
 			completequest 11090;
 			close2;
 			warp "mid_campin",291,128;
@@ -3158,7 +3158,7 @@ mid_campin,295,128,4	script	Lucas#ep13bs	4_M_ACROSS,{
 			mes "No, just ignore what I said.";
 			mes "......";
 			ep13_newbs = 12;
-			//getitem 12322,1; //Chocolate_Pie
+			//getitem Chocolate_Pie,1; //Chocolate_Pie
 			close;
 		case 2:
 			mes "[Lucas]";
@@ -3191,7 +3191,7 @@ mid_campin,292,120,4	script	Davi#ep13bs	4_M_DIEMAN,{
 
 mid_camp,160,298,4	script	Jan#ep13bs	4_LGTSCIENCE,{
 	if (ep13_newbs == 15) {
-		if (countitem(6045) > 0) {
+		if (countitem(Supply_Box) > 0) {
 			mes "[Jan]";
 			mes "Wawa, what is this~";
 			mes "Hey, is that for me?";
@@ -3210,9 +3210,9 @@ mid_camp,160,298,4	script	Jan#ep13bs	4_LGTSCIENCE,{
 			mes "Please tell the Instructor";
 			mes "I'm grateful~";
 			mes "Uhuhu.";
-			delitem 6045,1; //Supply_Box
+			delitem Supply_Box,1; //Supply_Box
 			ep13_newbs = 16;
-			getitem 12322,1; //Chocolate_Pie
+			getitem Chocolate_Pie,1; //Chocolate_Pie
 			changequest 11093,11094;
 			close;
 		}
@@ -3256,7 +3256,7 @@ mid_camp,160,298,4	script	Jan#ep13bs	4_LGTSCIENCE,{
 
 mid_camp,30,168,4	script	Gerard#ep13bs	4_DST_SOLDIER,{
 	if (ep13_newbs == 17) {
-		if (countitem(6045) > 0) {
+		if (countitem(Supply_Box) > 0) {
 			mes "["+ strcharinfo(0) +"]";
 			mes "Are you Gerard?";
 			next;
@@ -3293,9 +3293,9 @@ mid_camp,30,168,4	script	Gerard#ep13bs	4_DST_SOLDIER,{
 			mes "Please tell the instructor that";
 			mes "I won't be back for some time.";
 			emotion e_no1;
-			delitem 6045,1; //Supply_Box
+			delitem Supply_Box,1; //Supply_Box
 			ep13_newbs = 18;
-			getitem 12322,1; //Chocolate_Pie
+			getitem Chocolate_Pie,1; //Chocolate_Pie
 			changequest 11095,11096;
 			close;
 		}
@@ -3332,7 +3332,7 @@ mid_camp,30,168,4	script	Gerard#ep13bs	4_DST_SOLDIER,{
 
 man_fild01,80,248,4	script	Alberto#ep13bs	4_M_RASWORD,{
 	if (ep13_newbs == 19) {
-		if (countitem(6045) > 0) {
+		if (countitem(Supply_Box) > 0) {
 			mes "[Alberto]";
 			mes "Hhh, I am cold...";
 			next;
@@ -3375,9 +3375,9 @@ man_fild01,80,248,4	script	Alberto#ep13bs	4_M_RASWORD,{
 			mes "that I am still alive.";
 			mes "Sniff.";
 			emotion e_sob;
-			delitem 6045,1; //Supply_Box
+			delitem Supply_Box,1; //Supply_Box
 			ep13_newbs = 20;
-			getitem 12322,1; //Chocolate_Pie
+			getitem Chocolate_Pie,1; //Chocolate_Pie
 			changequest 11097,11098;
 			close;
 		}
@@ -3438,7 +3438,7 @@ mid_camp,166,248,4	script	Sorcerer#ep13bs	4_M_ARUNA_NFM1,{
 }
 
 spl_fild02,348,76,0	script	Tree#ep13bs1::ep13tree	HIDDEN_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -3455,7 +3455,7 @@ spl_fild02,348,76,0	script	Tree#ep13bs1::ep13tree	HIDDEN_NPC,{
 				mes "- Break! -";
 				mes "- Bomb, bomb~~ -";
 				mes "- You got the branch. -";
-				getitem 6042,1; //Ordinary_Branch
+				getitem Ordinary_Branch,1; //Ordinary_Branch
 				close;
 			}
 			else {
@@ -3830,7 +3830,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 			close;
 		}
 		else if (ep13_animal == 2) {
-			if (countitem(6041) > 0) {
+			if (countitem(Strong_Bine) > 0) {
 				mes "[Rumis Block]";
 				mes "I'm scared of this place.";
 				mes "But I'm not going to ask";
@@ -3936,7 +3936,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 					mes "You know what I'm.";
 					mes "asking here, don't you?";
 					mes "Help me, help me, please.";
-					delitem 6041,1; //Strong_Bine
+					delitem Strong_Bine,1; //Strong_Bine
 					ep13_animal = 3;
 					changequest 2147,2148;
 					close;
@@ -3975,7 +3975,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 			}
 		}
 		else if (ep13_animal == 3) {
-			if ((countitem(713) > 0) && (countitem(523) > 4) && (countitem(938) > 29)) {
+			if ((countitem(Empty_Bottle) > 0) && (countitem(Holy_Water) > 4) && (countitem(Sticky_Mucus) > 29)) {
 				mes "[Rumis Block]";
 				mes "Thank you.";
 				mes "you've brought the materials.";
@@ -4038,9 +4038,9 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				mes "- You have received a-";
 				mes "- Nepenthes Specimen -";
 				mes "- from Rumis Block. -";
-				delitem 713,1; //Empty_Bottle
-				delitem 523,5; //Holy_Water
-				delitem 938,30; //Sticky_Mucus
+				delitem Empty_Bottle,1; //Empty_Bottle
+				delitem Holy_Water,5; //Holy_Water
+				delitem Sticky_Mucus,30; //Sticky_Mucus
 				ep13_animal = 4;
 				changequest 2148,2149;
 				close;
@@ -4218,7 +4218,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 			}
 		}
 		else if (ep13_animal == 15) {
-			if (countitem(6033) > 0) {
+			if (countitem(Horn_Of_Tendrilion) > 0) {
 				mes "["+strcharinfo(0)+"]";
 				mes "Mr. Rumis! Take a look at this!";
 				next;
@@ -4304,7 +4304,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				next;
 				mes "- You really hope that Rumis will be able to go back home. -";
 				ep13_animal = 100;
-				delitem 6033,1; //Horn_Of_Tendrilion
+				delitem Horn_Of_Tendrilion,1; //Horn_Of_Tendrilion
 				getexp RENEWAL_EXP?50000:1000000,0;
 				close;
 			}
@@ -4583,7 +4583,7 @@ mid_camp,240,270,3	script	Botanist#ep13	4_M_ALCHE_C,{
 				mes "Please take this rotting plant stem,";
 				mes "I'll meet you at the environmental purifier standing right next to the leftward bridge on the other side.";
 				ep13_animal = 7;
-				getitem 6035,1; //Decaying_Stem
+				getitem Decaying_Stem,1; //Decaying_Stem
 				changequest 2151,2152;
 				close;
 			}
@@ -4730,8 +4730,8 @@ mid_camp,52,148,1	script	Dirt#ep13	CLEAR_NPC,{
 		next;
 		mes "- Something is growing out of the dirt. -";
 		ep13_animal = 9;
-		delitem 6035,1; //Decaying_Stem
-		getitem 7193,1; //Germinating_Sprout
+		delitem Decaying_Stem,1; //Decaying_Stem
+		getitem Germinating_Sprout,1; //Germinating_Sprout
 		close;
 	}
 	end;
@@ -4779,7 +4779,7 @@ man_fild01,92,230,3	script	Frozen Tree#evt_lumis	HIDDEN_NPC,1,1,{
 		close;
 	}
 	else if (ep13_animal == 12) {
-		if (countitem(6032) < 5) {
+		if (countitem(Horn_Of_Hilsrion) < 5) {
 			mes "[Rumis Block]";
 			mes "I'd like to study Hillsrion's Horns. Please bring 5 of them for me, okay.";
 			close;
@@ -4831,7 +4831,7 @@ man_fild01,92,230,3	script	Frozen Tree#evt_lumis	HIDDEN_NPC,1,1,{
 			mes "[Rumis Block]";
 			mes "Let's go back to the camp. Shall we? I have something to discuss with you.";
 			ep13_animal = 13;
-			delitem 6032,5; //Horn_Of_Hilsrion
+			delitem Horn_Of_Hilsrion,5; //Horn_Of_Hilsrion
 			changequest 2155,2156;
 			close;
 		}
@@ -4979,7 +4979,7 @@ mid_camp,212,237,5	script	Camp Guard Captain#man1	4_M_EIN_SOLDIER,{
 //============================================================
 mid_campin,376,120,0	script	Research Official#ep131	4_M_SAGE_A,3,3,{
 OnTouch:
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 		mes "[United Research Official]";
 		mes "How come you've got so much to carry?";
 		mes "Are you perhaps on training or something?";
@@ -5047,7 +5047,7 @@ OnTouch:
 			close;
 		}
 		else if (ep13_1_rhea == 10) {
-			if (countitem(6036) > 0) {
+			if (countitem(Invite_To_Meeting) > 0) {
 				mes "[United Research Official]";
 				mes "Aha!";
 				next;
@@ -5090,7 +5090,7 @@ OnTouch:
 				next;
 				mes "[United Research Official]";
 				mes "So, first! Can you go meet those 3 researchers and check on them to prepare for the meeting?";
-				delitem 6036,1; //Invite_To_Meeting
+				delitem Invite_To_Meeting,1; //Invite_To_Meeting
 				ep13_1_rhea = 11;
 				changequest 8198,8199;
 				close;
@@ -5398,7 +5398,7 @@ OnTouch:
 			next;
 			mes "[United Research Official]";
 			mes "Please, stop by and say hellp to us from time to time.";
-			getitem 12110,1; //First_Aid_Kit
+			getitem First_Aid_Kit,1; //First_Aid_Kit
 			close;
 		}
 		else {
@@ -5482,7 +5482,7 @@ OnTimer300000:
 }
 
 mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 		mes "[Ryosen]";
 		mes "How come you've got so much to carry?";
 		mes "Are you perhaps on training or something?";
@@ -5635,7 +5635,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			mes "- the agenda and schedule -";
 			mes "- of the whole meeting! -";
 			ep13_1_rhea = 4;
-			getitem 6036,1; //Invite_To_Meeting
+			getitem Invite_To_Meeting,1; //Invite_To_Meeting
 			changequest 8196,8197;
 			close;
 		}
@@ -5654,7 +5654,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			close;
 		}
 		else if (ep13_1_rhea == 8) {
-			if (countitem(6036) > 0) {
+			if (countitem(Invite_To_Meeting) > 0) {
 				mes "[Ryosen]";
 				mes "Ah, welcome back!";
 				next;
@@ -5667,7 +5667,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 				next;
 				mes "[Ryosen]";
 				mes "Thank you for dealing with those guys. I've got to go through the file now. Please give me the Invitation.";
-				delitem 6036,1; //Invite_To_Meeting
+				delitem Invite_To_Meeting,1; //Invite_To_Meeting
 				ep13_1_rhea = 9;
 				close;
 			}
@@ -5708,7 +5708,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			mes "[Ryosen]";
 			mes "In the meantime, I should prepare myself for the meeting.";
 			ep13_1_rhea = 10;
-			getitem 6036,1; //Invite_To_Meeting
+			getitem Invite_To_Meeting,1; //Invite_To_Meeting
 			changequest 8197,8198;
 			close;
 		}
@@ -5770,7 +5770,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			close;
 		}
 		else if (ep13_1_rhea == 14) {
-			if (countitem(6037) > 0) {
+			if (countitem(Rough_File) > 0) {
 				mes "[Ryosen]";
 				mes ".....Whew... completely soaked, so loosely binded...torn here and there... I can't even read this thing!";
 				next;
@@ -5797,7 +5797,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			}
 		}
 		else if (ep13_1_rhea == 18) {
-			if (countitem(6038) > 0) {
+			if (countitem(Neat_Report) > 0) {
 				mes "[Ryosen]";
 				mes "...Oh, this is...";
 				next;
@@ -5817,7 +5817,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 				next;
 				mes "[Ryosen]";
 				mes "Please, the meeting's gonna begin soon.";
-				delitem 6038,1; //Neat_Report
+				delitem Neat_Report,1; //Neat_Report
 				ep13_1_rhea = 19;
 				changequest 8204,8205;
 				close;
@@ -5870,7 +5870,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			mes "["+ strcharinfo(0) +"]";
 			mes "Wait! Hue wanted me to bring this to you.";
 			next;
-			if (countitem(6038) > 0) {
+			if (countitem(Neat_Report) > 0) {
 				mes "[Ryosen]";
 				mes "A report... ?";
 				mes "Ahhh... the one I left in the meeting room...";
@@ -5915,9 +5915,9 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			next;
 			mes "[Ryosen]";
 			mes "Again, thank you so much.";
-			delitem 6038,1; //Neat_Report
+			delitem Neat_Report,1; //Neat_Report
 			ep13_1_rhea = 26;
-			getitem 12319,1; //Strawberry_Cake
+			getitem Strawberry_Cake,1; //Strawberry_Cake
 			changequest 8209,8210;
 			close;
 		}
@@ -5957,7 +5957,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 				mes "If by any chance you find one, please come back to me.";
 				close;
 			case 2:
-				if (countitem(12319) > 4) {
+				if (countitem(Strawberry_Cake) > 4) {
 					mes "[Ryosen]";
 					mes "Huh?";
 					next;
@@ -5977,7 +5977,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			mes "[Ryosen]";
 			mes "... Haha, I'm joking...";
 			next;
-			if (countitem(6023) > 4) {
+			if (countitem(Mystic_Horn) > 4) {
 				mes "[Ryosen]";
 				mes "Are you really, honestly, positively sure you want to exchange them for my cake?";
 				next;
@@ -5995,8 +5995,8 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 				next;
 				mes "[Ryosen]";
 				mes "I heard you could extract some magical energy form Mystic Horns and use it. Anyway, thank you!";
-				delitem 6023,5; //Mystic_Horn
-				getitem 12319,1; //Strawberry_Cake
+				delitem Mystic_Horn,5; //Mystic_Horn
+				getitem Strawberry_Cake,1; //Strawberry_Cake
 				close;
 			}
 			else {
@@ -6028,7 +6028,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 }
 
 mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 		mes "[Hue]";
 		mes "How come you've got so much to carry?";
 		mes "Are you perhaps on training or something?";
@@ -6045,7 +6045,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 			close;
 		}
 		else if (ep13_1_rhea == 4) {
-			if (countitem(6036) > 0) {
+			if (countitem(Invite_To_Meeting) > 0) {
 				mes "[Hue]";
 				mes "What is it you want?";
 				next;
@@ -6082,7 +6082,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				next;
 				mes "[Hue]";
 				mes "You should have some Sand chips while I'm reading this. Don't expect any taste, it's from Arunafeltz.";
-				delitem 6036,1; //Invite_To_Meeting
+				delitem Invite_To_Meeting,1; //Invite_To_Meeting
 				ep13_1_rhea = 5;
 				close;
 			}
@@ -6136,7 +6136,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				mes "You'll experience some hard time talking to Hansenne... It'll be like testing your patience.";
 				mes "Good luck!";
 				ep13_1_rhea = 6;
-				getitem 6036,1; //Invite_To_Meeting
+				getitem Invite_To_Meeting,1; //Invite_To_Meeting
 				close;
 			}
 			else if (.@shu_agree00 == 3) {
@@ -6158,7 +6158,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 			close;
 		}
 		else if (ep13_1_rhea == 15) {
-			if (countitem(6037) > 0) {
+			if (countitem(Rough_File) > 0) {
 				mes "[Hue]";
 				mes "What is this stupid looking pile of documents?";
 				next;
@@ -6202,7 +6202,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 			}
 		}
 		else if (ep13_1_rhea == 16) {
-			if ((countitem(6037) > 0) && (countitem(7262) > 0) && (countitem(7031) > 0) && (countitem(7521) > 0) && (countitem(1024) > 0)) {
+			if ((countitem(Rough_File) > 0) && (countitem(Fan) > 0) && (countitem(Old_Frying_Pan) > 0) && (countitem(Flame_Stone) > 0) && (countitem(Chinese_Ink) > 0)) {
 				mes "[Hue]";
 				mes "Impressive. That was fast enough.";
 				next;
@@ -6212,11 +6212,11 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				next;
 				mes "[Hue]";
 				mes "Could you please sit there and wait for me while I restore this file?";
-				delitem 6037,1; //Rough_File
-				delitem 7262,1; //Fan
-				delitem 7031,1; //Old_Frying_Pan
-				delitem 7521,1; //Flame_Stone
-				delitem 1024,1; //Chinese_Ink
+				delitem Rough_File,1; //Rough_File
+				delitem Fan,1; //Fan
+				delitem Old_Frying_Pan,1; //Old_Frying_Pan
+				delitem Flame_Stone,1; //Flame_Stone
+				delitem Chinese_Ink,1; //Chinese_Ink
 				ep13_1_rhea = 17;
 				close;
 			}
@@ -6243,7 +6243,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				mes "[Hue]";
 				mes "Please, deliver this file before it's too late. The meeting's gonna begin soon.";
 				ep13_1_rhea = 18;
-				getitem 6038,1; //Neat_Report
+				getitem Neat_Report,1; //Neat_Report
 				changequest 8203,8204;
 				close;
 			}
@@ -6312,8 +6312,8 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 			mes "Please give this report to Ryosen.";
 			mes "Thank you.";
 			ep13_1_rhea = 25;
-			getitem 6038,1; //Neat_Report
-			getitem 12320,1; //Pineapple_Juice
+			getitem Neat_Report,1; //Neat_Report
+			getitem Pineapple_Juice,1; //Pineapple_Juice
 			changequest 8208,8209;
 			close;
 		}
@@ -6354,7 +6354,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				mes "Please give me some when you get some.";
 				close;
 			case 2:
-				if (countitem(12320) > 4) {
+				if (countitem(Pineapple_Juice) > 4) {
 					mes "[Hue]";
 					mes "Ah, oh my.";
 					next;
@@ -6370,7 +6370,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 			mes "[Hue]";
 			mes "Ah, are you sure you want to exchange?";
 			next;
-			if (countitem(6020) > 4) {
+			if (countitem(Fur) > 4) {
 				mes "[Hue]";
 				mes "Oh, so it's the thing called, Fur??";
 				next;
@@ -6390,8 +6390,8 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				next;
 				mes "[Hue]";
 				mes "I always needed this because the weather here is colder then I expected. I'm sure this will keep me warm.";
-				delitem 6020,5; //Fur
-				getitem 12320,1; //Pineapple_Juice
+				delitem Fur,5; //Fur
+				getitem Pineapple_Juice,1; //Pineapple_Juice
 				close;
 			}
 			else {
@@ -6421,7 +6421,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 }
 
 mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 		mes "[Hansenne]";
 		mes "How come you've got so much to carry?";
 		mes "Are you perhaps on training or something?";
@@ -6440,7 +6440,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 			close;
 		}
 		else if (ep13_1_rhea == 6) {
-			if (countitem(6036) > 0) {
+			if (countitem(Invite_To_Meeting) > 0) {
 				mes "[Hansenne]";
 				mes "Hmmm? What brings you here?";
 				next;
@@ -6480,7 +6480,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 				next;
 				mes "[Hansenne]";
 				mes "You should take a rest, while I'm reading this. Oh, have some Poring Candy from Rune-Midgarts. It's terribly sour and sometimes salty. Funny taste, huh?";
-				delitem 6036,1; //Invite_To_Meeting
+				delitem Invite_To_Meeting,1; //Invite_To_Meeting
 				ep13_1_rhea = 7;
 				close;
 			}
@@ -6567,7 +6567,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 				mes "Haha, you should tell him that.";
 				mes "Haha, hahaha, hahahahahahahahaha.";
 				ep13_1_rhea = 8;
-				getitem 6036,1; //Invite_To_Meeting
+				getitem Invite_To_Meeting,1; //Invite_To_Meeting
 				close;
 			}
 			else if (.@shu_agree00 == 4) {
@@ -6664,7 +6664,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 			close;
 		}
 		else if (ep13_1_rhea == 14) {
-			if (countitem(6037) > 0) {
+			if (countitem(Rough_File) > 0) {
 				mes "[Hansenne]";
 				mes "Cool, you found it!";
 				next;
@@ -6784,7 +6784,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 			mes "Thank you for doing me a favor.";
 			mes "Haha, hahaha, hahahahahahahahaha.";
 			ep13_1_rhea = 24;
-			getitem 12321,1; //Spicy_Sandwich
+			getitem Spicy_Sandwich,1; //Spicy_Sandwich
 			changequest 8207,8208;
 			close;
 		}
@@ -6818,7 +6818,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 				mes "Haha, hahaha, hahahahahahahahaha.";
 				close;
 			case 2:
-				if (countitem(12321) > 4) {
+				if (countitem(Spicy_Sandwich) > 4) {
 					mes "[Hansenne]";
 					mes "... Huh?";
 					next;
@@ -6835,7 +6835,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 			mes "[Hansenne]";
 			mes "Ah!!! You have it?";
 			next;
-			if (countitem(6021) > 4) {
+			if (countitem(Peaked_Hat) > 4) {
 				mes "[Hansenne]";
 				mes "Oh, you really have those!";
 				next;
@@ -6856,8 +6856,8 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 				mes "Ehhmmm, thank you!";
 				mes "Geeeee, thank you!";
 				mes "Haha, hahaha, hahahahahahahahaha.";
-				delitem 6021,5; //Peaked_Hat
-				getitem 12321,1; //Spicy_Sandwich
+				delitem Peaked_Hat,5; //Peaked_Hat
+				getitem Spicy_Sandwich,1; //Spicy_Sandwich
 				close;
 			}
 			else {
@@ -7193,7 +7193,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 			}
 		}
 		else if (ep13_alba == 1) {
-			if (countitem(579) > 49) {
+			if (countitem(Delicious_Fish) > 49) {
 				mes "[Taab]";
 				mes "Oh, thanks!";
 				mes "You brought them their food!";
@@ -7208,7 +7208,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				mes "material to give you.";
 				mes "How about a spiritual reward?";
 				next;
-				delitem 579,50; //Delicious_Fish
+				delitem Delicious_Fish,50; //Delicious_Fish
 				ep13_alba = 6;
 				if (RENEWAL_EXP) {
 					getexp 8000,3000;
@@ -7231,7 +7231,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 			}
 		}
 		else if (ep13_alba == 2) {
-			if ((countitem(7198) > 29) && (countitem(7188) > 29)) {
+			if ((countitem(Great_Leaf) > 29) && (countitem(Browny_Root) > 29)) {
 				mes "[Taab]";
 				mes "Oh, thanks!";
 				mes "You brought them their food!";
@@ -7246,8 +7246,8 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				mes "material to give you.";
 				mes "How about a spiritual reward?";
 				next;
-				delitem 7198,30; //Great_Leaf
-				delitem 7188,30; //Browny_Root
+				delitem Great_Leaf,30; //Great_Leaf
+				delitem Browny_Root,30; //Browny_Root
 				ep13_alba = 6;
 				if (RENEWAL_EXP) {
 					getexp 9000,4000;
@@ -7274,7 +7274,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 			}
 		}
 		else if (ep13_alba == 3) {
-			if ((countitem(528) > 19) && (countitem(537) > 29)) {
+			if ((countitem(Monster's_Feed) > 19) && (countitem(Pet_Food) > 29)) {
 				mes "[Taab]";
 				mes "Oh, thanks!";
 				mes "You brought them their";
@@ -7290,8 +7290,8 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				mes "material to give you.";
 				mes "How about a spiritual reward?";
 				next;
-				delitem 528,20; //Monster's_Feed
-				delitem 537,30; //Pet_Food
+				delitem Monster's_Feed,20; //Monster's_Feed
+				delitem Pet_Food,30; //Pet_Food
 				ep13_alba = 6;
 				if (RENEWAL_EXP) {
 					getexp 8000,3000;
@@ -7316,7 +7316,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 			}
 		}
 		else if (ep13_alba == 4) {
-			if ((countitem(517) > 49) && (countitem(537) > 29)) {
+			if ((countitem(Meat) > 49) && (countitem(Pet_Food) > 29)) {
 				mes "Oh, thanks!";
 				mes "You brought them their";
 				mes "food! Just in time too,";
@@ -7331,8 +7331,8 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				mes "material to give you.";
 				mes "How about a spiritual reward?";
 				next;
-				delitem 517,50; //Meat
-				delitem 537,30; //Pet_Food
+				delitem Meat,50; //Meat
+				delitem Pet_Food,30; //Pet_Food
 				ep13_alba = 6;
 				if (RENEWAL_EXP) {
 					getexp 8000,3000;
@@ -7357,7 +7357,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 			}
 		}
 		else if (ep13_alba == 5) {
-			if (countitem(6020) > 29) {
+			if (countitem(Fur) > 29) {
 				mes "[Taab]";
 				mes "Oh, thanks!";
 				mes "You brought me the Furs!";
@@ -7370,7 +7370,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				mes "material to give you.";
 				mes "How about a spiritual reward?";
 				next;
-				delitem 6020,30; //Fur
+				delitem Fur,30; //Fur
 				ep13_alba = 6;
 				if (RENEWAL_EXP) {
 					getexp 8000,3000;
@@ -8124,11 +8124,11 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 			close;
 		}
 		else if (ep13_yong1 == 5) {
-			if (countitem(6039) > 9) {
+			if (countitem(Piece_Of_Fish) > 9) {
 				mes "[Ferocious Gorurug]";
 				mes "You've brough Pieces of Fish!";
 				mes "GOOD JOB!";
-				delitem 6039,10; //Piece_Of_Fish
+				delitem Piece_Of_Fish,10; //Piece_Of_Fish
 				getexp RENEWAL_EXP?20000:30000,0;
 				ep13_yong1 = 10;
 				setquest 12060;
@@ -8144,11 +8144,11 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 			}
 		}
 		else if ((ep13_yong1 > 5) && (ep13_yong1 < 20)) {
-			if (countitem(6039) > 9) {
+			if (countitem(Piece_Of_Fish) > 9) {
 				mes "[Ferocious Gorurug]";
 				mes "You've brough Pieces of Fish!";
 				mes "GOOD JOB!";
-				delitem 6039,10; //Piece_Of_Fish
+				delitem Piece_Of_Fish,10; //Piece_Of_Fish
 				getexp 15000,0;
 				setquest 12060;
 				++ep13_yong1;
@@ -8165,11 +8165,11 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 			}
 		}
 		else if ((ep13_yong1 > 19) && (ep13_yong1 < 40)) {
-			if (countitem(6039) > 9) {
+			if (countitem(Piece_Of_Fish) > 9) {
 				mes "[Ferocious Gorurug]";
 				mes "You've brough Pieces of Fish!";
 				mes "GOOD JOB!";
-				delitem 6039,10; //Piece_Of_Fish
+				delitem Piece_Of_Fish,10; //Piece_Of_Fish
 				getexp 15000,0;
 				setquest 12060;
 				++ep13_yong1;
@@ -8185,11 +8185,11 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 			}
 		}
 		else if ((ep13_yong1 > 39) && (ep13_yong1 < 60)) {
-			if (countitem(6039) > 9) {
+			if (countitem(Piece_Of_Fish) > 9) {
 				mes "[Ferocious Gorurug]";
 				mes "You've brough Pieces of Fish!";
 				mes "GOOD JOB!";
-				delitem 6039,10; //Piece_Of_Fish
+				delitem Piece_Of_Fish,10; //Piece_Of_Fish
 				getexp 15000,0;
 				setquest 12060;
 				++ep13_yong1;
@@ -8207,11 +8207,11 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 		}
 		else if (ep13_yong1 > 59) {
 			npcskill "AL_HEAL",8,50,50;
-			if (countitem(6039) > 9) {
+			if (countitem(Piece_Of_Fish) > 9) {
 				mes "[Ferocious Gorurug]";
 				mes "You've brough Pieces of Fish!";
 				mes "GOOD JOB!";
-				delitem 6039,10; //Piece_Of_Fish
+				delitem Piece_Of_Fish,10; //Piece_Of_Fish
 				getexp 15000,0;
 				setquest 12060;
 				++ep13_yong1;
@@ -8252,7 +8252,7 @@ mid_camp,69,144,0	script	Ferocious Gorurug	4_M_BOSSCAT,{
 }
 
 spl_fild02,314,165,0	script	School of Fish#1::Fishinghole	CLEAR_NPC,{
-	if (!questprogress(12060,PLAYTIME) && countitem(6039) < 20) {
+	if (!questprogress(12060,PLAYTIME) && countitem(Piece_Of_Fish) < 20) {
 		specialeffect2 EF_BUBBLE;
 		specialeffect2 EF_INVENOM;
 		.@fcast = 15;
@@ -8271,38 +8271,38 @@ spl_fild02,314,165,0	script	School of Fish#1::Fishinghole	CLEAR_NPC,{
 		progressbar "ffff00",.@fcast;
 		if (ep13_1_rhea == 13) {
 			if (rand(1,20) == 2) {
-				getitem 6037,1; //Rough_File
+				getitem Rough_File,1; //Rough_File
 				ep13_1_rhea = 14;
 				specialeffect EF_BUBBLE;
 				mapannounce strcharinfo(3),strcharinfo(0) + " has caught a Messy File!!",bc_map,"0xff77ff";
 			}
 		}
 		.@rhea_ran = rand(1,70);
-		if (.@rhea_ran < 20) getitem 6039,1; //Piece_Of_Fish
-		else if (.@rhea_ran == 20) getitem 908,1; //Spawn
-		else if (.@rhea_ran == 21) getitem 909,1; //Jellopy
-		else if (.@rhea_ran == 22) getitem 963,1; //Sharp_Scale
-		else if (.@rhea_ran == 23) getitem 956,1; //Gill
-		else if (.@rhea_ran == 24) getitem 6049,1; //Marlin
-		else if (.@rhea_ran == 25) getitem 918,1; //Sticky_Webfoot
-		else if (.@rhea_ran == 26) getitem 960,1; //Nipper
-		else if (.@rhea_ran == 27) getitem 910,1; //Garlet
-		else if (.@rhea_ran == 28) getitem 938,1; //Sticky_Mucus
-		else if ((.@rhea_ran > 28) && (.@rhea_ran < 40)) getitem 7049,1; //Stone
+		if (.@rhea_ran < 20) getitem Piece_Of_Fish,1; //Piece_Of_Fish
+		else if (.@rhea_ran == 20) getitem Spawn,1; //Spawn
+		else if (.@rhea_ran == 21) getitem Jellopy,1; //Jellopy
+		else if (.@rhea_ran == 22) getitem Sharp_Scale,1; //Sharp_Scale
+		else if (.@rhea_ran == 23) getitem Gill,1; //Gill
+		else if (.@rhea_ran == 24) getitem Marlin,1; //Marlin
+		else if (.@rhea_ran == 25) getitem Sticky_Webfoot,1; //Sticky_Webfoot
+		else if (.@rhea_ran == 26) getitem Nipper,1; //Nipper
+		else if (.@rhea_ran == 27) getitem Garlet,1; //Garlet
+		else if (.@rhea_ran == 28) getitem Sticky_Mucus,1; //Sticky_Mucus
+		else if ((.@rhea_ran > 28) && (.@rhea_ran < 40)) getitem Stone,1; //Stone
 		else {
 			mes "Nothing was caught.";
 			close;
 		}
 		if (rand(1,200) == 3) {
-			getitem 644,1; //Gift_Box
+			getitem Gift_Box,1; //Gift_Box
 			mapannounce strcharinfo(3),strcharinfo(0) + " has caught a Gift Box!!",bc_map,"0x00ffff";
 		}
 		if (rand(1,500) == 3) {
-			getitem 603,1; //Old_Blue_Box
+			getitem Old_Blue_Box,1; //Old_Blue_Box
 			mapannounce strcharinfo(3),strcharinfo(0) + " has caught an Old Blue Box!!",bc_map,"0x00ffff";
 		}
 		if (rand(1,3000) == 3) {
-			getitem 617,1; //Old_Violet_Box
+			getitem Old_Violet_Box,1; //Old_Violet_Box
 			mapannounce strcharinfo(3),strcharinfo(0) + " has caught an Old Purple Box!!",bc_map,"0x44ff44";
 		}
 		end;
@@ -8318,7 +8318,7 @@ spl_fild02,326,171,0	duplicate(Fishinghole)	School of Fish#3	CLEAR_NPC
 mid_camp,75,135,0	duplicate(Fishinghole)	School of Fish#4	CLEAR_NPC
 
 mid_camp,66,122,7	script	Henry Clifford	4_M_05,{
-	if (countitem(6049) > 0) {
+	if (countitem(Marlin) > 0) {
 		mes "[Henry Clifford]";
 		mes "Congratulations, you've caught a precious Marlin.";
 		mes "I'll give you 2 Cat Trading Points in exchange for your Marlin.";
@@ -8330,7 +8330,7 @@ mid_camp,66,122,7	script	Henry Clifford	4_M_05,{
 		next;
 		switch(select("Yes.:No, thanks.")) {
 		case 1:
-			delitem 6049,1; //Marlin
+			delitem Marlin,1; //Marlin
 			ep13_yong1 += 2;
 			mes "[Henry Clifford]";
 			mes "Thank you for the Marlin.";
@@ -8369,12 +8369,12 @@ mid_camp,66,122,7	script	Henry Clifford	4_M_05,{
 
 mid_camp,88,100,7	script	Cat Hand Mining Agent	4_CAT,{
 	if (!questprogress(12062,PLAYTIME)) {
-		if ((countitem(6048) > 2) && (ep13_yong1 > 9)) {
+		if ((countitem(Unidentified_Mineral) > 2) && (ep13_yong1 > 9)) {
 			mes "[Cat Hand Mining Agent]";
 			mes "Oh, wow~";
 			mes "Thank you for collecting minerals for me.";
 			next;
-			delitem 6048,3; //Unidentified_Mineral
+			delitem Unidentified_Mineral,3; //Unidentified_Mineral
 			getexp RENEWAL_EXP?20000:30000,0;
 			setquest 12062;
 			++ep13_yong1;
@@ -8419,16 +8419,16 @@ mid_camp,88,100,7	script	Cat Hand Mining Agent	4_CAT,{
 }
 
 -	script	Mysterious Rock#0::manukrock	-1,{
-	if (countitem(6048) < 3 && !questprogress(12062,PLAYTIME)) {
+	if (countitem(Unidentified_Mineral) < 3 && !questprogress(12062,PLAYTIME)) {
 		specialeffect2 EF_REPAIRWEAPON;
 		progressbar "ffff00",10;
 		.@rhea_ran = rand(1,20);
-		if (.@rhea_ran < 13) getitem 7049,1; //Stone
-		else if (.@rhea_ran == 13) getitem 990,1; //Boody_Red
-		else if (.@rhea_ran == 14) getitem 991,1; //Crystal_Blue
-		else if (.@rhea_ran == 15) getitem 992,1; //Wind_Of_Verdure
-		else if (.@rhea_ran == 16) getitem 993,1; //Yellow_Live
-		else getitem 6048,1; //Unidentified_Mineral
+		if (.@rhea_ran < 13) getitem Stone,1; //Stone
+		else if (.@rhea_ran == 13) getitem Boody_Red,1; //Boody_Red
+		else if (.@rhea_ran == 14) getitem Crystal_Blue,1; //Crystal_Blue
+		else if (.@rhea_ran == 15) getitem Wind_Of_Verdure,1; //Wind_Of_Verdure
+		else if (.@rhea_ran == 16) getitem Yellow_Live,1; //Yellow_Live
+		else getitem Unidentified_Mineral,1; //Unidentified_Mineral
 		initnpctimer;
 		disablenpc strnpcinfo(0);
 		end;
@@ -8581,7 +8581,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		mes "[Hibba Agip]";
 		mes "Hmm... Anyways, this is not a difficult mission. All you have to do is deliver this expedition report to officials of three countries of Rune Midgard. Simple right?";
 		next;
-		getitem 11012,1; //Expedition_Report
+		getitem Expedition_Report,1; //Expedition_Report
 		ep13_1_edq = 3;
 		changequest 3086,3087;
 		mes "[Hibba Agip]";
@@ -8800,7 +8800,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		mes "[Hibba Agip]";
 		mes "This was finished more quickly than I thought. Let me see...";
 		next;
-		delitem 11012,1; //Expedition_Report
+		delitem Expedition_Report,1; //Expedition_Report
 		ep13_1_edq = 9;
 		changequest 3092,3093;
 		mes "[Hibba Agip]";
@@ -8809,7 +8809,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		mes "[Hibba Agip]";
 		mes "Now, let's go back to your original mission. I'd like you to deliver this to the national leaders of the three countries of Rune Midgard.";
 		next;
-		getitem 11012,3; //Expedition_Report
+		getitem Expedition_Report,3; //Expedition_Report
 		mes "[Hibba Agip]";
 		mes "Dont worry too much, my friend.";
 		mes "I've arranged troops in the time-space gap to protect the report.";
@@ -8825,7 +8825,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		cutin "ep13_captin_edq",255;
 		close;
 	}
-	else if ((ep13_1_edq == 9) && (countitem(11012) == 3)) {
+	else if ((ep13_1_edq == 9) && (countitem(Expedition_Report) == 3)) {
 		mes "[Hibba Agip]";
 		mes "Let me remind you again. The officials are these three people: ^0000FFMinister Laur^000000 of the Rune Midgarts Kingdom, ^0000FFPriest Nuria^000000 of Arunafeltz and ^0000FFGerhart^000000 of the Schwaltzvalt Republic.";
 		next;
@@ -8834,12 +8834,12 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		cutin "ep13_captin_edq",255;
 		close;
 	}
-	else if ((ep13_1_edq == 9) && (countitem(11012) != 3)) {
+	else if ((ep13_1_edq == 9) && (countitem(Expedition_Report) != 3)) {
 		mes "[Hibba Agip]";
 		mes "Is something wrong? Alright, we'll write another report for you.";
 		next;
-		delitem 11012,countitem(11012); //Expedition_Report
-		getitem 11012,3; //Expedition_Report
+		delitem Expedition_Report,countitem(Expedition_Report); //Expedition_Report
+		getitem Expedition_Report,3; //Expedition_Report
 		mes "[Hibba Agip]";
 		mes "Let me remind you again. The officials are these three people: ^0000FFMinister Laur^000000 of the Rune Midgarts Kingdom, ^0000FFPriest Nuria^000000 of Arunafeltz and ^0000FFGerhart^000000 of the Schwaltzvalt Republic.";
 		next;
@@ -8890,7 +8890,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 			getexp 300000,0;
 		else
 			getexp 2500000,0;
-		getitem 12110,3; //First_Aid_Kit
+		getitem First_Aid_Kit,3; //First_Aid_Kit
 		ep13_1_edq = 14;
 		completequest 3094;
 		mes "[Hibba Agip]";
@@ -9405,7 +9405,7 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 		next;
 		switch(select("Submit found pages.:Check the report's resoration status.:Quit.")) {
 		case 1:
-			if ((countitem(11013) > 0) && (countitem(11014) > 0) && (countitem(11015) > 0) && (countitem(11016) > 0)) {
+			if ((countitem(Expedition_Report_Vol1) > 0) && (countitem(Expedition_Report_Vol2) > 0) && (countitem(Expedition_Report_Vol3) > 0) && (countitem(Expedition_Report_Vol4) > 0)) {
 				mes "[Staff Officer Abidal]";
 				mes "Oh, you've collected enough pages...";
 				next;
@@ -9417,7 +9417,7 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 				mes "[Staff Officer Abidal]";
 				mes "Have you brought me pages of the lost report? Please bring them to me in increments of 10.";
 				next;
-				if (countitem(6040) > 9) {
+				if (countitem(Some_Of_Report) > 9) {
 					mes "[Staff Officer Abidal]";
 					mes "Thank you. Let me try to put them in order.";
 					next;
@@ -9426,12 +9426,12 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 						mes "Umm... This page should go here and..";
 						next;
 						.@ep13_edq_wrong = rand(1,7);
-						if ((countitem(11013) == 0) && (.@ep13_edq_wrong == 1)) {
+						if ((countitem(Expedition_Report_Vol1) == 0) && (.@ep13_edq_wrong == 1)) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
-							delitem 6040,10; //Some_Of_Report
-							getitem 11013,1; //Expedition_Report_Vol1
+							delitem Some_Of_Report,10; //Some_Of_Report
+							getitem Expedition_Report_Vol1,1; //Expedition_Report_Vol1
 							mes "[Staff Officer Abidal]";
 							mes "This is the first volume of the report. I'm glad that we've restored atleast the first part.";
 							next;
@@ -9439,21 +9439,21 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 							mes "Keep up the good work on finding the rest of the volumes.";
 							close;
 						}
-						else if ((countitem(11013) == 1) && (.@ep13_edq_wrong == 1)) {
+						else if ((countitem(Expedition_Report_Vol1) == 1) && (.@ep13_edq_wrong == 1)) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
 							mes "[Staff Officer Abidal]";
 							mes "Unfortunately, this is the first volume of the report which we've restored already. I'm sorry, but we need to find pages for the rest of the volumes.";
-							delitem 6040,10; //Some_Of_Report
+							delitem Some_Of_Report,10; //Some_Of_Report
 							close;
 						}
-						else if ((countitem(11014) == 0) && ((.@ep13_edq_wrong == 3) || (.@ep13_edq_wrong == 2))) {
+						else if ((countitem(Expedition_Report_Vol2) == 0) && ((.@ep13_edq_wrong == 3) || (.@ep13_edq_wrong == 2))) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
-							delitem 6040,10; //Some_Of_Report
-							getitem 11014,1; //Expedition_Report_Vol2
+							delitem Some_Of_Report,10; //Some_Of_Report
+							getitem Expedition_Report_Vol2,1; //Expedition_Report_Vol2
 							mes "[Staff Officer Abidal]";
 							mes "This is the second volume of the report. I'm glad that we've restored atleast the second part.";
 							next;
@@ -9461,21 +9461,21 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 							mes "Keep up the good work on finding the rest of the volumes.";
 							close;
 						}
-						else if ((countitem(11014) == 1) && ((.@ep13_edq_wrong == 3) || (.@ep13_edq_wrong == 2))) {
+						else if ((countitem(Expedition_Report_Vol2) == 1) && ((.@ep13_edq_wrong == 3) || (.@ep13_edq_wrong == 2))) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
 							mes "[Staff Officer Abidal]";
 							mes "Unfortunately, this is the second volume of the report which we've restored already. I'm sorry, but we need to find pages for the rest of the volumes.";
-							delitem 6040,10; //Some_Of_Report
+							delitem Some_Of_Report,10; //Some_Of_Report
 							close;
 						}
-						else if ((countitem(11015) == 0) && ((.@ep13_edq_wrong == 5) || (.@ep13_edq_wrong == 6))) {
+						else if ((countitem(Expedition_Report_Vol3) == 0) && ((.@ep13_edq_wrong == 5) || (.@ep13_edq_wrong == 6))) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
-							delitem 6040,10; //Some_Of_Report
-							getitem 11015,1; //Expedition_Report_Vol3
+							delitem Some_Of_Report,10; //Some_Of_Report
+							getitem Expedition_Report_Vol3,1; //Expedition_Report_Vol3
 							mes "[Staff Officer Abidal]";
 							mes "This is the third volume of the report. I'm glad that we've restored atleast the third part.";
 							next;
@@ -9483,21 +9483,21 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 							mes "Keep up the good work on finding the rest of the volumes.";
 							close;
 						}
-						else if ((countitem(11015) == 1) && ((.@ep13_edq_wrong == 5) || (.@ep13_edq_wrong == 6))) {
+						else if ((countitem(Expedition_Report_Vol3) == 1) && ((.@ep13_edq_wrong == 5) || (.@ep13_edq_wrong == 6))) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
 							mes "[Staff Officer Abidal]";
 							mes "Unfortunately, this is the third volume of the report which we've restored already. I'm sorry, but we need to find pages for the rest of the volumes.";
-							delitem 6040,10; //Some_Of_Report
+							delitem Some_Of_Report,10; //Some_Of_Report
 							close;
 						}
-						else if ((countitem(11016) == 0) && (.@ep13_edq_wrong == 7)) {
+						else if ((countitem(Expedition_Report_Vol4) == 0) && (.@ep13_edq_wrong == 7)) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
-							delitem 6040,10; //Some_Of_Report
-							getitem 11016,1; //Expedition_Report_Vol4
+							delitem Some_Of_Report,10; //Some_Of_Report
+							getitem Expedition_Report_Vol4,1; //Expedition_Report_Vol4
 							mes "[Staff Officer Abidal]";
 							mes "This is the fourth volume of the report. I'm glad that we've restored atleast the fourth part.";
 							next;
@@ -9505,8 +9505,8 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 							mes "Keep up the good work on finding the rest of the volumes.";
 							close;
 						}
-						else if ((countitem(11016) == 1) && (.@ep13_edq_wrong == 7)) {
-							delitem 6040,10; //Some_Of_Report
+						else if ((countitem(Expedition_Report_Vol4) == 1) && (.@ep13_edq_wrong == 7)) {
+							delitem Some_Of_Report,10; //Some_Of_Report
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
@@ -9516,7 +9516,7 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 						}
 						else {
 							mes "[Staff Officer Abidal]";
-							delitem 6040,10; //Some_Of_Report
+							delitem Some_Of_Report,10; //Some_Of_Report
 							mes "I'm sorry, but you've brought pages from different volumes of the report, I was unable to put them in order.";
 							next;
 							mes "[Staff Officer Abidal]";
@@ -9529,12 +9529,12 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 						mes "Umm... This page should go here and..";
 						next;
 						.@ep13_edq_wrong = rand(1,5);
-						if ((countitem(11013) == 0) && (.@ep13_edq_wrong == 1)) {
+						if ((countitem(Expedition_Report_Vol1) == 0) && (.@ep13_edq_wrong == 1)) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
-							delitem 6040,10; //Some_Of_Report
-							getitem 11013,1; //Expedition_Report_Vol1
+							delitem Some_Of_Report,10; //Some_Of_Report
+							getitem Expedition_Report_Vol1,1; //Expedition_Report_Vol1
 							mes "[Staff Officer Abidal]";
 							mes "This is the first volume of the report. I'm glad that we've restored atleast the first part.";
 							next;
@@ -9542,21 +9542,21 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 							mes "Keep up the good work on finding the rest of the volumes.";
 							close;
 						}
-						else if ((countitem(11013) == 1) && (.@ep13_edq_wrong == 1)) {
+						else if ((countitem(Expedition_Report_Vol1) == 1) && (.@ep13_edq_wrong == 1)) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
 							mes "[Staff Officer Abidal]";
 							mes "Unfortunately, this is the first volume of the report which we've restored already. I'm sorry, but we need to find pages for the rest of the volumes.";
-							delitem 6040,10; //Some_Of_Report
+							delitem Some_Of_Report,10; //Some_Of_Report
 							close;
 						}
-						else if ((countitem(11014) == 0) && (.@ep13_edq_wrong == 2)) {
+						else if ((countitem(Expedition_Report_Vol2) == 0) && (.@ep13_edq_wrong == 2)) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
-							delitem 6040,10; //Some_Of_Report
-							getitem 11014,1; //Expedition_Report_Vol2
+							delitem Some_Of_Report,10; //Some_Of_Report
+							getitem Expedition_Report_Vol2,1; //Expedition_Report_Vol2
 							mes "[Staff Officer Abidal]";
 							mes "This is the second volume of the report. I'm glad that we've restored atleast the second part.";
 							next;
@@ -9564,21 +9564,21 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 							mes "Keep up the good work on finding the rest of the volumes.";
 							close;
 						}
-						else if ((countitem(11014) == 1) && (.@ep13_edq_wrong == 2)) {
+						else if ((countitem(Expedition_Report_Vol2) == 1) && (.@ep13_edq_wrong == 2)) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
 							mes "[Staff Officer Abidal]";
 							mes "Unfortunately, this is the second volume of the report which we've restored already. I'm sorry, but we need to find pages for the rest of the volumes.";
-							delitem 6040,10; //Some_Of_Report
+							delitem Some_Of_Report,10; //Some_Of_Report
 							close;
 						}
-						else if ((countitem(11015) == 0) && ((.@ep13_edq_wrong == 3) || (.@ep13_edq_wrong == 4))) {
+						else if ((countitem(Expedition_Report_Vol3) == 0) && ((.@ep13_edq_wrong == 3) || (.@ep13_edq_wrong == 4))) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
-							delitem 6040,10; //Some_Of_Report
-							getitem 11015,1; //Expedition_Report_Vol3
+							delitem Some_Of_Report,10; //Some_Of_Report
+							getitem Expedition_Report_Vol3,1; //Expedition_Report_Vol3
 							mes "[Staff Officer Abidal]";
 							mes "This is the third volume of the report. I'm glad that we've restored atleast the third part.";
 							next;
@@ -9586,21 +9586,21 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 							mes "Keep up the good work on finding the rest of the volumes.";
 							close;
 						}
-						else if ((countitem(11015) == 1) && ((.@ep13_edq_wrong == 3) || (.@ep13_edq_wrong == 4))) {
+						else if ((countitem(Expedition_Report_Vol3) == 1) && ((.@ep13_edq_wrong == 3) || (.@ep13_edq_wrong == 4))) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
 							mes "[Staff Officer Abidal]";
 							mes "Unfortunately, this is the third volume of the report which we've restored already. I'm sorry, but we need to find pages for the rest of the volumes.";
-							delitem 6040,10; //Some_Of_Report
+							delitem Some_Of_Report,10; //Some_Of_Report
 							close;
 						}
-						else if ((countitem(11016) == 0) && (.@ep13_edq_wrong == 5)) {
+						else if ((countitem(Expedition_Report_Vol4) == 0) && (.@ep13_edq_wrong == 5)) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
-							delitem 6040,10; //Some_Of_Report
-							getitem 11016,1; //Expedition_Report_Vol4
+							delitem Some_Of_Report,10; //Some_Of_Report
+							getitem Expedition_Report_Vol4,1; //Expedition_Report_Vol4
 							mes "[Staff Officer Abidal]";
 							mes "This is the fourth volume of the report. I'm glad that we've restored atleast the fourth part.";
 							next;
@@ -9608,20 +9608,20 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 							mes "Keep up the good work on finding the rest of the volumes.";
 							close;
 						}
-						else if ((countitem(11016) == 1) && (.@ep13_edq_wrong == 5)) {
+						else if ((countitem(Expedition_Report_Vol4) == 1) && (.@ep13_edq_wrong == 5)) {
 							mes "[Staff Officer Abidal]";
 							mes "Thank you for your hard work. We were able to restore one volume of the report.";
 							next;
 							mes "[Staff Officer Abidal]";
 							mes "Unfortunately, this is the fourth volume of the report which we've restored already. I'm sorry, but we need to find pages for the rest of the volumes.";
-							delitem 6040,10; //Some_Of_Report
+							delitem Some_Of_Report,10; //Some_Of_Report
 							close;
 						}
 						else {
 							mes "[Staff Officer Abidal]";
 							mes "I'm sorry, but you've brought pages from different volumes of the report, I was unable to put them in order.";
 							next;
-							delitem 6040,10; //Some_Of_Report
+							delitem Some_Of_Report,10; //Some_Of_Report
 							mes "[Staff Officer Abidal]";
 							mes "I'm sorry, but please go try to find pages that can be bound into one volume.";
 							close;
@@ -9637,16 +9637,16 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 		case 2:
 			mes "[Staff Officer Abidal]";
 			mes "Let's see how far we've progressed on the report's restoration.";
-			if ((countitem(11013) == 1) && (countitem(11014) == 1) && (countitem(11015) == 1) && (countitem(11016) == 1)) {
+			if ((countitem(Expedition_Report_Vol1) == 1) && (countitem(Expedition_Report_Vol2) == 1) && (countitem(Expedition_Report_Vol3) == 1) && (countitem(Expedition_Report_Vol4) == 1)) {
 				next;
 				mes "[Staff Officer Abidal]";
 				mes "Oh, great! Every volume of the report has been restored. I'll bind them into one book for you.";
 				next;
-				delitem 11013,1; //Expedition_Report_Vol1
-				delitem 11014,1; //Expedition_Report_Vol2
-				delitem 11015,1; //Expedition_Report_Vol3
-				delitem 11016,1; //Expedition_Report_Vol4
-				getitem 11012,1; //Expedition_Report
+				delitem Expedition_Report_Vol1,1; //Expedition_Report_Vol1
+				delitem Expedition_Report_Vol2,1; //Expedition_Report_Vol2
+				delitem Expedition_Report_Vol3,1; //Expedition_Report_Vol3
+				delitem Expedition_Report_Vol4,1; //Expedition_Report_Vol4
+				getitem Expedition_Report,1; //Expedition_Report
 				ep13_1_edq = 8;
 				erasequest 3090;
 				erasequest 3091;
@@ -9655,67 +9655,67 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 				mes "I'm glad that we were able to make this again. Please bring this report to the commander.";
 				close;
 			}
-			else if ((countitem(11013) == 0) && (countitem(11014) == 0) && (countitem(11015) == 0) && (countitem(11016) == 0)) {
+			else if ((countitem(Expedition_Report_Vol1) == 0) && (countitem(Expedition_Report_Vol2) == 0) && (countitem(Expedition_Report_Vol3) == 0) && (countitem(Expedition_Report_Vol4) == 0)) {
 				mes "[Staff Officer Abidal]";
 				mes "Well, you haven't restored any volumes of the report yet. Please try harder.";
 				close;
 			}
-			else if ((countitem(11013) == 1) && (countitem(11014) == 0) && (countitem(11015) == 0) && (countitem(11016) == 0)) {
+			else if ((countitem(Expedition_Report_Vol1) == 1) && (countitem(Expedition_Report_Vol2) == 0) && (countitem(Expedition_Report_Vol3) == 0) && (countitem(Expedition_Report_Vol4) == 0)) {
 				mes "[Staff Officer Abidal]";
 				mes "You have restored the first volume of the report. There are 3 volumes left to restore.";
 				close;
 			}
-			else if ((countitem(11013) == 0) && (countitem(11014) == 1) && (countitem(11015) == 0) && (countitem(11016) == 0)) {
+			else if ((countitem(Expedition_Report_Vol1) == 0) && (countitem(Expedition_Report_Vol2) == 1) && (countitem(Expedition_Report_Vol3) == 0) && (countitem(Expedition_Report_Vol4) == 0)) {
 				mes "[Staff Officer Abidal]";
 				mes "You have restored the second volume of the report. There are 3 volumes left to restore.";
 				close;
 			}
-			else if ((countitem(11013) == 0) && (countitem(11014) == 0) && (countitem(11015) == 1) && (countitem(11016) == 0)) {
+			else if ((countitem(Expedition_Report_Vol1) == 0) && (countitem(Expedition_Report_Vol2) == 0) && (countitem(Expedition_Report_Vol3) == 1) && (countitem(Expedition_Report_Vol4) == 0)) {
 				mes "[Staff Officer Abidal]";
 				mes "You have restored the third volume of the report. There are 3 volumes left to restore.";
 				close;
 			}
-			else if ((countitem(11013) == 0) && (countitem(11014) == 0) && (countitem(11015) == 0) && (countitem(11016) == 1)) {
+			else if ((countitem(Expedition_Report_Vol1) == 0) && (countitem(Expedition_Report_Vol2) == 0) && (countitem(Expedition_Report_Vol3) == 0) && (countitem(Expedition_Report_Vol4) == 1)) {
 				mes "[Staff Officer Abidal]";
 				mes "You have restored the fourth volume of the report. There are 3 volumes left to restore.";
 				close;
 			}
-			else if ((countitem(11013) == 1) && (countitem(11014) == 1) && (countitem(11015) == 0) && (countitem(11016) == 0)) {
+			else if ((countitem(Expedition_Report_Vol1) == 1) && (countitem(Expedition_Report_Vol2) == 1) && (countitem(Expedition_Report_Vol3) == 0) && (countitem(Expedition_Report_Vol4) == 0)) {
 				mes "[Staff Officer Abidal]";
 				mes "You have restored the first and second volume of the report. There are 2 volumes left to restore.";
 				close;
 			}
-			else if ((countitem(11013) == 1) && (countitem(11014) == 0) && (countitem(11015) == 1) && (countitem(11016) == 0)) {
+			else if ((countitem(Expedition_Report_Vol1) == 1) && (countitem(Expedition_Report_Vol2) == 0) && (countitem(Expedition_Report_Vol3) == 1) && (countitem(Expedition_Report_Vol4) == 0)) {
 				mes "[Staff Officer Abidal]";
 				mes "You have restored the first and third volume of the report. There are 2 volumes left to restore.";
 				close;
 			}
-			else if ((countitem(11013) == 1) && (countitem(11014) == 0) && (countitem(11015) == 0) && (countitem(11016) == 1)) {
+			else if ((countitem(Expedition_Report_Vol1) == 1) && (countitem(Expedition_Report_Vol2) == 0) && (countitem(Expedition_Report_Vol3) == 0) && (countitem(Expedition_Report_Vol4) == 1)) {
 				mes "[Staff Officer Abidal]";
 				mes "You have restored the first and fourth volume of the report. There are 2 volumes left to restore.";
 				close;
 			}
-			else if ((countitem(11013) == 0) && (countitem(11014) == 1) && (countitem(11015) == 1) && (countitem(11016) == 0)) {
+			else if ((countitem(Expedition_Report_Vol1) == 0) && (countitem(Expedition_Report_Vol2) == 1) && (countitem(Expedition_Report_Vol3) == 1) && (countitem(Expedition_Report_Vol4) == 0)) {
 				mes "[Staff Officer Abidal]";
 				mes "You have restored the second and third volume of the report. There are 2 volumes left to restore.";
 				close;
 			}
-			else if ((countitem(11013) == 0) && (countitem(11014) == 1) && (countitem(11015) == 0) && (countitem(11016) == 1)) {
+			else if ((countitem(Expedition_Report_Vol1) == 0) && (countitem(Expedition_Report_Vol2) == 1) && (countitem(Expedition_Report_Vol3) == 0) && (countitem(Expedition_Report_Vol4) == 1)) {
 				mes "[Staff Officer Abidal]";
 				mes "You have restored the second and fourth volume of the report. There are 2 volumes left to restore.";
 				close;
 			}
-			else if ((countitem(11013) == 0) && (countitem(11014) == 0) && (countitem(11015) == 1) && (countitem(11016) == 1)) {
+			else if ((countitem(Expedition_Report_Vol1) == 0) && (countitem(Expedition_Report_Vol2) == 0) && (countitem(Expedition_Report_Vol3) == 1) && (countitem(Expedition_Report_Vol4) == 1)) {
 				mes "[Staff Officer Abidal]";
 				mes "You have restored the third and fourth volume of the report. There are 2 volumes left to restore.";
 				close;
 			}
-			else if ((countitem(11013) == 1) && (countitem(11014) == 1) && (countitem(11015) == 1) && (countitem(11016) == 0)) {
+			else if ((countitem(Expedition_Report_Vol1) == 1) && (countitem(Expedition_Report_Vol2) == 1) && (countitem(Expedition_Report_Vol3) == 1) && (countitem(Expedition_Report_Vol4) == 0)) {
 				mes "[Staff Officer Abidal]";
 				mes "You have restored the first, second and third volume of the report. There is 1 volume left to restore.";
 				close;
 			}
-			else if ((countitem(11013) == 0) && (countitem(11014) == 1) && (countitem(11015) == 1) && (countitem(11016) == 1)) {
+			else if ((countitem(Expedition_Report_Vol1) == 0) && (countitem(Expedition_Report_Vol2) == 1) && (countitem(Expedition_Report_Vol3) == 1) && (countitem(Expedition_Report_Vol4) == 1)) {
 				mes "[Staff Officer Abidal]";
 				mes "You have restored the second, third and fourth volume of the report. There is 1 volume left to restore.";
 				close;
@@ -9804,7 +9804,7 @@ mid_campin,85,118,7	script	Instructor Igrid	4_M_CRU,{
 }
 
 mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
-	if ((ep13_1_edq == 3) && (countitem(11012) > 0)) {
+	if ((ep13_1_edq == 3) && (countitem(Expedition_Report) > 0)) {
 		mes "[Expedition Messenger]";
 		mes "Welcome, I've been waiting for you.";
 		mes "You must be " + strcharinfo(0) + ". Nice to meet you.";
@@ -9877,7 +9877,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			mes "[Expedition Messenger]";
 			mes "Argh... " + strcharinfo(0) + ", are you alright? The report... The report...";
 			next;
-			delitem 11012,1; //Expedition_Report
+			delitem Expedition_Report,1; //Expedition_Report
 			ep13_1_edq = 4;
 			changequest 3087,3088;
 			mes "[Expedition Agent]";
@@ -9933,7 +9933,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			mes "[Expedition Agent]";
 			mes "We lost the report. The pages are blowing away!";
 			next;
-			delitem 11012,1; //Expedition_Report
+			delitem Expedition_Report,1; //Expedition_Report
 			ep13_1_edq = 5;
 			changequest 3087,3088;
 			mes "[???]";
@@ -9960,7 +9960,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			close;
 		}
 	}
-	else if ((ep13_1_edq == 3) && (countitem(11012) == 0)) {
+	else if ((ep13_1_edq == 3) && (countitem(Expedition_Report) == 0)) {
 		mes "[Expedition Messenger]";
 		mes "Were you assigned to deliver the expedition report?";
 		next;
@@ -10095,7 +10095,7 @@ man_fild01,315,95,3	script	Expedition Scout#1	4_M_MOC_SOLDIER,{
 				if (.@i) {
 					mes "Good news! I've found "+.@i+" pieces of paper that appear to be part of the report.";
 					next;
-					getitem 6040,.@i; //Some_Of_Report
+					getitem Some_Of_Report,.@i; //Some_Of_Report
 				} else {
 					mes "I'm doing my best, but I haven't found any pages yet.";
 					next;
@@ -10146,7 +10146,7 @@ prt_castle,88,165,3	script	Laur	1_M_LIBRARYMASTER,{
 		mes "[Laur]";
 		mes "I knew it was the wrong idea to out a mercenary in the commander position. See, nothing is done on time. Gosh!";
 		next;
-		delitem 11012,1; //Expedition_Report
+		delitem Expedition_Report,1; //Expedition_Report
 		if (ep13_1_edq == 9) ep13_1_edq = 101;
 		else if (ep13_1_edq == 111) ep13_1_edq = 112;
 		else if (ep13_1_edq == 121) ep13_1_edq = 122;
@@ -10200,7 +10200,7 @@ ra_temple,122,174,3	script	Nuria	4_F_RACHOLD,{
 		mes "[Nuria]";
 		mes "I regret admitting that you've brought it much later than I expected, but... I'm glad it is here safely. Please give it to me.";
 		next;
-		delitem 11012,1; //Expedition_Report
+		delitem Expedition_Report,1; //Expedition_Report
 		if (ep13_1_edq == 9) ep13_1_edq = 111;
 		else if (ep13_1_edq == 101) ep13_1_edq = 102;
 		else if (ep13_1_edq == 121) ep13_1_edq = 123;
@@ -10246,7 +10246,7 @@ lhz_in01,110,174,5	script	Gerhart	4_M_KHKYEL,{
 		mes "[Gerhart]";
 		mes "Do you know how long I waited for this report? *Sigh* ...Fine, just give it to me.";
 		next;
-		delitem 11012,1; //Expedition_Report
+		delitem Expedition_Report,1; //Expedition_Report
 		if (ep13_1_edq == 9) ep13_1_edq = 121;
 		else if (ep13_1_edq == 101) ep13_1_edq = 103;
 		else if (ep13_1_edq == 111) ep13_1_edq = 113;
@@ -10314,7 +10314,7 @@ OnTimer600000:
 
 OnMyMobDead:
 	if (mobcount("spl_fild02","ep13_spl_fild02_mon_edq::OnMyMobDead") < 10 && (ep13_1_edq == 71 || ep13_1_edq == 72))
-		getitem 6040,1; //Some_Of_Report
+		getitem Some_Of_Report,1; //Some_Of_Report
 	end;
 }
 
@@ -10346,7 +10346,7 @@ OnTimer600000:
 OnMyMobDead:
 	.@spl_fild03_mob_dead = mobcount("spl_fild03","ep13_spl_fild03_mon_edq::OnMyMobDead");
 	if (mobcount("spl_fild03","ep13_spl_fild03_mon_edq::OnMyMobDead") < 10 && (ep13_1_edq == 71 || ep13_1_edq == 72))
-		getitem 6040,1; //Some_Of_Report
+		getitem Some_Of_Report,1; //Some_Of_Report
 	end;
 }
 
@@ -10376,7 +10376,7 @@ OnTimer600000:
 
 OnMyMobDead:
 	if (mobcount("man_fild01","ep13_man_fild01_mon_edq::OnMyMobDead") < 10 && (ep13_1_edq == 71 || ep13_1_edq == 72))
-		getitem 6040,1; //Some_Of_Report
+		getitem Some_Of_Report,1; //Some_Of_Report
 	end;
 }
 
@@ -10406,14 +10406,14 @@ OnTimer600000:
 
 OnMyMobDead:
 	if (mobcount("man_fild03","ep13_man_fild03_mon_edq::OnMyMobDead") < 10 && (ep13_1_edq == 71 || ep13_1_edq == 72))
-		getitem 6040,1; //Some_Of_Report
+		getitem Some_Of_Report,1; //Some_Of_Report
 	end;
 }
 
 // Persuing Rayan Moore :: ep13_moc2
 //============================================================
 mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
-	if (checkweight(714,3) == 0) {
+	if (checkweight(Emperium,3) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
 	}
@@ -10591,8 +10591,8 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 			mes "[Echinacea]";
 			mes "We'll analyze this pattern number and detect the wavelength.";
 			mes "It'll take some time before we get the results.";
-			if (countitem(6029) > 0)
-				delitem 6029,countitem(6029); //Morocc_Tracing_Log
+			if (countitem(Morocc_Tracing_Log) > 0)
+				delitem Morocc_Tracing_Log,countitem(Morocc_Tracing_Log); //Morocc_Tracing_Log
 			mao_morocc2 = 29;
 			changequest 7031+(.@quest-23),7034;
 			close;
@@ -10675,7 +10675,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 			getexp 120000,20000;
 		else
 			getexp 1200000,200000;
-		getitem 617,1; //Old_Violet_Box
+		getitem Old_Violet_Box,1; //Old_Violet_Box
 		completequest 7036;
 		close;
 	}
@@ -10744,7 +10744,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 		close;
 	}
 	else if (mao_morocc2 == 106) {
-		if (countitem(549) > 1) {
+		if (countitem(Nice_Sweet_Potato) > 1) {
 			mes "[Echinacea]";
 			mes "What is it? I thought you've been discharged from my service.";
 			mes "..What are these sweet potatoes?";
@@ -10781,7 +10781,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 			mes "We won't do anything that you'd morally oppose.";
 			mes "You believe in peace, don't you?";
 			mes "Tell him that I'm grateful for these sweet potatoes, anyway..";
-			delitem 549,2; //Nice_Sweet_Potato
+			delitem Nice_Sweet_Potato,2; //Nice_Sweet_Potato
 			mao_morocc2 = 107;
 			changequest 7040,7041;
 			close;
@@ -10876,7 +10876,7 @@ mid_camp,191,206,3	script	Manager#moc2_finder	4_M_EIN_SOLDIER,{
 }
 
 mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
-	if (checkweight(714,1) == 0) {
+	if (checkweight(Emperium,1) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
 	}
@@ -10992,7 +10992,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 		close2;
 	}
 	else if (mao_morocc2 == 9) {
-		if ((countitem(6029) == 1) && (countitem(6027) == 1)) {
+		if ((countitem(Morocc_Tracing_Log) == 1) && (countitem(Crystal_Of_Feardoom) == 1)) {
 			cutin "mocseal_kid01",2;
 			mes "[Mr. Kidd]";
 			mes "I heard Rin is wounded and bedridden...";
@@ -11048,8 +11048,8 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			mes "[Mr. Kidd]";
 			mes "Hm, thanks for all your help.";
 			mes "Now, would you leave me alone for a while? I need to write a report based on the findings in this journal.";
-			delitem 6029,1; //Morocc_Tracing_Log
-			delitem 6027,1; //Crystal_Of_Feardoom
+			delitem Morocc_Tracing_Log,1; //Morocc_Tracing_Log
+			delitem Crystal_Of_Feardoom,1; //Crystal_Of_Feardoom
 			mao_morocc2 = 10;
 			if (RENEWAL_EXP)
 				getexp 20000,1000;
@@ -11195,7 +11195,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 		close2;
 	}
 	else if (mao_morocc2 == 17) {
-		if (countitem(14595) > 0) {
+		if (countitem(Unsealed_Magic_Spell) > 0) {
 			cutin "mocseal_kid01",2;
 			mes "[Mr. Kidd]";
 			mes "This must be the spell scroll, huh?";
@@ -11345,8 +11345,8 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 		mes "Oh, and please bring ^4d4dffthis journal to Rin^000000.";
 		mes "This will be your last assignment from me.";
 		mao_morocc2 = 21;
-		getitem 6027,1; //Crystal_Of_Feardoom
-		getitem 6029,1; //Morocc_Tracing_Log
+		getitem Crystal_Of_Feardoom,1; //Crystal_Of_Feardoom
+		getitem Morocc_Tracing_Log,1; //Morocc_Tracing_Log
 		changequest 7029,7030;
 		next;
 		mes "[Mr. Kidd]";
@@ -11436,7 +11436,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 		close2;
 	}
 	else if (mao_morocc2 == 104) {
-		if (countitem(549) > 1) {
+		if (countitem(Nice_Sweet_Potato) > 1) {
 			cutin "mocseal_kid01",2;
 			mes "[Mr. Kidd]";
 			mes "What's up?";
@@ -11447,7 +11447,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			mes "[Mr. Kidd]";
 			mes "..I guess he's finally made a fire, huh?";
 			mes "Tell him thanks for these sweet potatoes.";
-			delitem 549,2; //Nice_Sweet_Potato
+			delitem Nice_Sweet_Potato,2; //Nice_Sweet_Potato
 			mao_morocc2 = 105;
 			next;
 			switch(select("Ask about Dandelion.:Ask about Arunafeltz.")) {
@@ -11528,7 +11528,7 @@ OnTouch:
 }
 
 mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
-	if (checkweight(714,1) == 0) {
+	if (checkweight(Emperium,1) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
 	}
@@ -11616,15 +11616,15 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		}
 	}
 	else if (mao_morocc2 == 15) {
-		if ((countitem(523) > 29) && (countitem(7511) > 29) && (countitem(7563) > 29) && (countitem(6028) > 0)) {
+		if ((countitem(Holy_Water) > 29) && (countitem(Rune_Of_Darkness) > 29) && (countitem(Bloody_Rune) > 29) && (countitem(Seal_Scroll) > 0)) {
 			mes "[Defaria]";
 			mes "Oh, you've brought everything!";
 			mes "Good, it wasn't hard, was it?";
 			mes "Okay, can you come back in a little bit?";
-			delitem 523,30; //Holy_Water
-			delitem 7511,30; //Rune_Of_Darkness
-			delitem 7563,30; //Bloody_Rune
-			delitem 6028,1; //Seal_Scroll
+			delitem Holy_Water,30; //Holy_Water
+			delitem Rune_Of_Darkness,30; //Rune_Of_Darkness
+			delitem Bloody_Rune,30; //Bloody_Rune
+			delitem Seal_Scroll,1; //Seal_Scroll
 			mao_morocc2 = 16;
 			changequest 7024,7025;
 			close;
@@ -11673,7 +11673,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 			mes "Um, do you mind? Would you stop talking to yourself and just leave already?";
 			mes "I'm sorry, but this old man needs some rest, alright?";
 			mao_morocc2 = 17;
-			getitem 14595,1; //Unsealed_Magic_Spell
+			getitem Unsealed_Magic_Spell,1; //Unsealed_Magic_Spell
 			changequest 7025,7026;
 			close;
 		}
@@ -11781,7 +11781,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		}
 	}
 	else if (mao_morocc2 == 102) {
-		if ((countitem(516) > 19) && (countitem(7201) > 29)) {
+		if ((countitem(Sweet_Potato) > 19) && (countitem(Log) > 29)) {
 			mes "[Defaria]";
 			mes "Oh, you've really brought what I wanted!";
 			mes "Please give them to me..";
@@ -11801,8 +11801,8 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 			mes "[Defaria]";
 			mes "Oh, this is as great as I'd hoped!";
 			mes "I guess my magic hasn't gotten that rusty after all..";
-			delitem 516,20; //Sweet_Potato
-			delitem 7201,30; //Log
+			delitem Sweet_Potato,20; //Sweet_Potato
+			delitem Log,30; //Log
 			mao_morocc2 = 103;
 			close;
 		}
@@ -11838,7 +11838,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		next;
 		mes "- Defaria has given you 2 Nice Sweet Potatoes. -";
 		mao_morocc2 = 104;
-		getitem 549,2; //Nice_Sweet_Potato
+		getitem Nice_Sweet_Potato,2; //Nice_Sweet_Potato
 		changequest 7038,7039;
 		close;
 	}
@@ -11885,7 +11885,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		next;
 		mes "- You have received 2 steaming hot Nice Sweet Potatoes. -";
 		mao_morocc2 = 106;
-		getitem 549,2; //Nice_Sweet_Potato
+		getitem Nice_Sweet_Potato,2; //Nice_Sweet_Potato
 		changequest 7039,7040;
 		close;
 	}
@@ -11920,7 +11920,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		mes "Here, enjoy them.";
 		mes "Thank you for trying so hard to please this whimsical old man.";
 		mao_morocc2 = 108;
-		getitem 633,5; //Baked_Yam
+		getitem Baked_Yam,5; //Baked_Yam
 		completequest 7041;
 		close;
 	}
@@ -11999,7 +11999,7 @@ que_job01,17,48,0	warp	que_job01#02	2,2,que_job01,68,92
 que_job01,68,96,0	warp	que_job01#03	2,2,que_job01,17,53
 
 que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -12027,7 +12027,7 @@ que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 		next;
 		switch(select("Tropical Sograt:Vermilion on the Beach:How about a free drink?")) {
 		case 1:
-			if (checkweight(1201,1) == 0) {
+			if (checkweight(Knife,1) == 0) {
 				mes "[Karred]";
 				mes "Are you sure you can even hold a glass of alcohol?";
 				mes "You're carrying too many things on you already.";
@@ -12049,7 +12049,7 @@ que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 						mes "This drink is mainly made of fruit juice,";
 						mes "but you still shouldn't drink too much.";
 						Zeny -= 800;
-						getitem 12112,1; //Tropical_Sograt
+						getitem Tropical_Sograt,1; //Tropical_Sograt
 					}
 					close;
 				}
@@ -12067,7 +12067,7 @@ que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 						mes "This drink is mainly made of fruit juice,";
 						mes "but you still shouldn't drink too much.";
 						Zeny -= 1000;
-						getitem 12112,1; //Tropical_Sograt
+						getitem Tropical_Sograt,1; //Tropical_Sograt
 						close;
 					}
 				}
@@ -12093,7 +12093,7 @@ que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 						mes "I'll give you a special discount.";
 						mes "Here, enjoy.";
 						Zeny -= 800;
-						getitem 12113,1; //Vermilion_The_Beach
+						getitem Vermilion_The_Beach,1; //Vermilion_The_Beach
 					}
 					close;
 				}
@@ -12110,7 +12110,7 @@ que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 						mes "There you go.";
 						mes "Don't drink too much, alright?";
 						Zeny -= 1000;
-						getitem 12113,1; //Vermilion_The_Beach
+						getitem Vermilion_The_Beach,1; //Vermilion_The_Beach
 						close;
 					}
 				}
@@ -12530,24 +12530,24 @@ que_job01,16,21,5	script	Valdes#moc_master_1	1_M_JOBTESTER,{
 		mes "[Valdes]";
 		mes "I'll ask you for a help some other time.";
 		mes "You look pretty passionate after all.";
-		if (countitem(6029) > 0)
-			delitem 6029,countitem(6029); //Morocc_Tracing_Log
-		if (countitem(7418) > 0)
-			delitem 7418,countitem(7418); //Mission_ScrollB
-		if (countitem(7416) > 0)
-			delitem 7416,countitem(7416); //Letter_Of_Recommend
+		if (countitem(Morocc_Tracing_Log) > 0)
+			delitem Morocc_Tracing_Log,countitem(Morocc_Tracing_Log); //Morocc_Tracing_Log
+		if (countitem(Mission_ScrollB) > 0)
+			delitem Mission_ScrollB,countitem(Mission_ScrollB); //Mission_ScrollB
+		if (countitem(Letter_Of_Recommend) > 0)
+			delitem Letter_Of_Recommend,countitem(Letter_Of_Recommend); //Letter_Of_Recommend
 		close;
 	}
 	else {
 		mes "...Sorry, but could you please leave?";
 		mes "I'm really stressed out right now.";
 		mes "If you're here for the request that we made earlier, you can just forget about it.";
-		if (countitem(6029) > 0)
-			delitem 6029,countitem(6029); //Morocc_Tracing_Log
-		if (countitem(7418) > 0)
-			delitem 7418,countitem(7418); //Mission_ScrollB
-		if (countitem(7416) > 0)
-			delitem 7416,countitem(7416); //Letter_Of_Recommend
+		if (countitem(Morocc_Tracing_Log) > 0)
+			delitem Morocc_Tracing_Log,countitem(Morocc_Tracing_Log); //Morocc_Tracing_Log
+		if (countitem(Mission_ScrollB) > 0)
+			delitem Mission_ScrollB,countitem(Mission_ScrollB); //Mission_ScrollB
+		if (countitem(Letter_Of_Recommend) > 0)
+			delitem Letter_Of_Recommend,countitem(Letter_Of_Recommend); //Letter_Of_Recommend
 		close;
 	}
 
@@ -12727,7 +12727,7 @@ OnTouch:
 }
 
 que_job01,84,17,3	script	Rin#moc_room2_1	4_F_ACROSS,{
-	if (checkweight(714,1) == 0) {
+	if (checkweight(Emperium,1) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
 	}
@@ -12918,7 +12918,7 @@ que_job01,84,17,3	script	Rin#moc_room2_1	4_F_ACROSS,{
 		mes "- You told her you couldn't find anything regarding their whereabouts,";
 		mes "but you found the ''Bloody Crystal of Darkness'' in the bushes.";
 		next;
-		if (countitem(6027) > 0) {
+		if (countitem(Crystal_Of_Feardoom) > 0) {
 			cutin "moc2_rin01",2;
 			mes "[Rin]";
 			mes "..This is...it.";
@@ -12959,7 +12959,7 @@ que_job01,84,17,3	script	Rin#moc_room2_1	4_F_ACROSS,{
 			mes "- You received the journal from Rin.";
 			mes "Instead of a journal, it's more like a bunch of documents being exchanged. -";
 			mao_morocc2 = 9;
-			getitem 6029,1; //Morocc_Tracing_Log
+			getitem Morocc_Tracing_Log,1; //Morocc_Tracing_Log
 			changequest 7017,7018;
 			close2;
 		}
@@ -12998,12 +12998,12 @@ que_job01,84,17,3	script	Rin#moc_room2_1	4_F_ACROSS,{
 }
 
 que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
-	if (checkweight(714,1) == 0) {
+	if (checkweight(Emperium,1) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
 	}
 	if (mao_morocc2 == 21) {
-		if ((countitem(6029) > 0) && (countitem(6027) > 0)) {
+		if ((countitem(Morocc_Tracing_Log) > 0) && (countitem(Crystal_Of_Feardoom) > 0)) {
 			cutin "moc2_rin03",2;
 			mes "[Rin]";
 			mes "Hey, you've come back at just the right time.";
@@ -13163,8 +13163,8 @@ que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 			mes "[" + strcharinfo(0) + "]";
 			mes "...I don't know...";
 			mes "...I think he's gone...?";
-			delitem 6029,1; //Morocc_Tracing_Log
-			delitem 6027,1; //Crystal_Of_Feardoom
+			delitem Morocc_Tracing_Log,1; //Morocc_Tracing_Log
+			delitem Crystal_Of_Feardoom,1; //Crystal_Of_Feardoom
 			mao_morocc2 = 22;
 			close2;
 		}
@@ -13237,7 +13237,7 @@ que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 		mes "^4d4dff["+.@pattern$+"]^000000";
 		mes "Don't leave out even one character. Okay?";
 		mao_morocc2 = 22+.@rotto;
-		getitem 6029,1; //Morocc_Tracing_Log
+		getitem Morocc_Tracing_Log,1; //Morocc_Tracing_Log
 		changequest 7030,7030+.@rotto;
 		next;
 		mes "[Rin]";
@@ -13332,7 +13332,7 @@ OnEnable:
 }
 
 hu_fild04,235,103,0	script	Heap of Earth#mao2_01	CLEAR_NPC,4,4,{
-	if (checkweight(714,1) == 0) {
+	if (checkweight(Emperium,1) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
 	}
@@ -13367,7 +13367,7 @@ hu_fild04,235,103,0	script	Heap of Earth#mao2_01	CLEAR_NPC,4,4,{
 			mes "I should go back now.";
 			mes "I hope Rin will understand.";
 			mao_morocc2 = 8;
-			getitem 6027,1; //Crystal_Of_Feardoom
+			getitem Crystal_Of_Feardoom,1; //Crystal_Of_Feardoom
 			changequest 7016,7017;
 			close;
 		}
@@ -13590,7 +13590,7 @@ OnTouch:
 }
 
 que_dan01,49,36,5	script	Corpse#moc2_dead01	4_M_DSTMANDEAD,{
-	if (checkweight(714,1) == 0) {
+	if (checkweight(Emperium,1) == 0) {
 		mes "- You cannot proceed with the quest when you're carrying too many items with you. -";
 		close;
 	}
@@ -13617,7 +13617,7 @@ que_dan01,49,36,5	script	Corpse#moc2_dead01	4_M_DSTMANDEAD,{
 			mes "^4d4dffYou have obtained a Sealed Magic Scroll.";
 			mes "Let's bring this to Kidd.^000000";
 			mao_morocc2 = 11;
-			getitem 6028,1; //Seal_Scroll
+			getitem Seal_Scroll,1; //Seal_Scroll
 			donpcevent "#moc2_event_on::OnStop";
 			initnpctimer;
 			changequest 7020,7021;

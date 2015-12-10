@@ -106,7 +106,7 @@ M_CHOCO:
 	set @needmon,@flag_num*5000;
 	if (Zeny < @needmon) goto L_NOTENO;
 	Zeny -= @needmon;
-	getitem 558,@flag_num;
+	getitem Chocolate,@flag_num;
 	mes "[Stephen]";
 	mes "There you go!";
 	mes "You can give that to someone as a gift, or enjoy it yourself!";
@@ -166,10 +166,10 @@ M_CHOCO:
 	if (@flag_num > 5) goto L_ERR;
 	set @needmon,@flag_num*4500;
 	if (Zeny < @needmon) goto L_NOTENO;
-	if (countitem(519) < @flag_num) goto L_NOMILK;
+	if (countitem(Milk) < @flag_num) goto L_NOMILK;
 	Zeny -= @needmon;
-	delitem 519,@flag_num;
-	getitem 561,@flag_num;
+	delitem Milk,@flag_num;
+	getitem White_Chocolate,@flag_num;
 	mes "[Jainie]";
 	mes "There you go!";
 	mes "You can give that to someone as a gift, or enjoy it yourself!";
@@ -204,13 +204,13 @@ prt_castle,54,34,4	script	Carl Orleans#val1	1_M_01,{
 	mes "[Carl Orleans]";
 	mes "Well, I just might be able to fulfill your needs...";
 	next;
-	if (countitem(558)<3) {
+	if (countitem(Chocolate)<3) {
 		mes "[Carl Orleans]";
 		mes "I'm sorry you do not have enough Chocolate Bars to do this.";
 		if(rand(2))mes "They say Stephen from Alberta used to sell good Chocolate.";
 		close;
 	}
-	delitem 558,3;
+	delitem Chocolate,3;
 	mes "[Carl Orleans]";
 	mes "You got 3 pieces of pure chocolate I see.";
 	mes "Give them to me...";
@@ -222,7 +222,7 @@ prt_castle,54,34,4	script	Carl Orleans#val1	1_M_01,{
 	mes "....Hmmmmmm.....";
 	mes "Well...";
 	next;
-	getitem 559,1;
+	getitem HandMade_Chocolate,1;
 	mes "[Carl Orleans]";
 	mes "Here.";
 	if(rand(2))close;
@@ -237,13 +237,13 @@ M_WHITE:
 	mes "[Carl Orleans]";
 	mes "Well, I just might be able to fulfill your needs...";
 	next;
-	if (countitem(561)<3) {
+	if (countitem(White_Chocolate)<3) {
 		mes "[Carl Orleans]";
 		mes "I'm sorry you do not have enough White Chocolate Bars to do this.";
 		if(rand(2))mes "They say Jainie from Alberta used to sell good White Chocolate.";
 		close;
 	}
-	delitem 561,3;
+	delitem White_Chocolate,3;
 	mes "[Carl Orleans]";
 	mes "You got 3 pieces of pure white chocolate I see.";
 	mes "Give them to me...";
@@ -255,7 +255,7 @@ M_WHITE:
 	mes "....Hmmmmmm.....";
 	mes "Well...";
 	next;
-	getitem 560,1;
+	getitem HandMade_Chocolate_,1;
 	mes "[Carl Orleans]";
 	mes "Here.";
 	if(rand(2))close;

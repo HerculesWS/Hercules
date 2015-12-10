@@ -157,10 +157,10 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 					next;
 					switch(select("I have Stone Hearts:What did you need?")) {
 					case 1:
-						if (countitem(953) > 24) {
+						if (countitem(Stone_Heart) > 24) {
 							mes "[Private Jeremy]";
 							mes "The Morroc Guard thanks you, citizen.";
-							delitem 953,25; //Stone_Heart
+							delitem Stone_Heart,25; //Stone_Heart
 							getexp 14000,9000;
 							close;
 						}

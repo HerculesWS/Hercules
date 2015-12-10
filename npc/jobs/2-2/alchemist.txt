@@ -220,7 +220,7 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 		}
 	}
 	else if (ALCH_Q >= 1 && ALCH_Q <= 3) {
-		if (countitem(1006) > 0 && countitem(1005) > 0) {
+		if (countitem(Old_Magic_Book) > 0 && countitem(Hammer_Of_Blacksmith) > 0) {
 			mes "Well now~!";
 			mes "You've brought an";
 			mes "Old Magic Book and";
@@ -228,8 +228,8 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 			mes "We'll put these items";
 			mes "to good use.";
 			next;
-			delitem 1006,1; //Old_Magic_Book
-			delitem 1005,1; //Hammer_Of_Blacksmith
+			delitem Old_Magic_Book,1; //Old_Magic_Book
+			delitem Hammer_Of_Blacksmith,1; //Hammer_Of_Blacksmith
 			mes "[Parmy Gianino]";
 			mes "Okay, now you need to learn";
 			mes "the basics to being an Alchemist and learn the procedures for mixing chemicals and medicines.";
@@ -792,7 +792,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 }
 
 alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you are carrying -";
 		mes "- too many items with you. -";
@@ -990,7 +990,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 		mes "wishes to learn Alchemy.";
 		mes "Have you prepared everything?";
 		next;
-		if (countitem(710) > 0) {
+		if (countitem(Illusion_Flower) > 0) {
 			mes "[Darwin]";
 			mes "Wait.";
 			mes "That Illusion Flower.";
@@ -1083,7 +1083,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			mes "posuere cubilia Curae; Morbi";
 			mes "massa, fermentum vitae...";
 			next;
-			delitem 710,1; //Illusion_Flower
+			delitem Illusion_Flower,1; //Illusion_Flower
 			mes "[Darwin]";
 			mes "^666666*Gasp...*^000000";
 			mes "You are now";
@@ -1095,7 +1095,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			changequest 2033,2034;
 			close;
 		}
-		else if (countitem(7134) > 2 && countitem(713) > 2 && countitem(507) > 0 && countitem(508) > 0 && countitem(509) > 0) {
+		else if (countitem(Medicine_Bowl) > 2 && countitem(Empty_Bottle) > 2 && countitem(Red_Herb) > 0 && countitem(Yellow_Herb) > 0 && countitem(White_Herb) > 0) {
 			mes "[Darwin]";
 			mes "Seems like you have everything ready. As promised, I will teach you how to make simple medicine.";
 			next;
@@ -1110,11 +1110,11 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			next;
 			mes "[Darwin]";
 			mes "That's how you make it. If you think you have enough, gently pour the mixture into an empty bottle.";
-			delitem 7134,3; //Medicine_Bowl
-			delitem 713,3; //Empty_Bottle
-			delitem 507,1; //Red_Herb
-			delitem 508,1; //Yellow_Herb
-			delitem 509,1; //White_Herb
+			delitem Medicine_Bowl,3; //Medicine_Bowl
+			delitem Empty_Bottle,3; //Empty_Bottle
+			delitem Red_Herb,1; //Red_Herb
+			delitem Yellow_Herb,1; //Yellow_Herb
+			delitem White_Herb,1; //White_Herb
 			next;
 			mes "[Darwin]";
 			mes "There you go,";
@@ -1250,9 +1250,9 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 				mes "again until you get it right.";
 				close;
 			}
-			getitem 501,1; //Red_Potion
-			getitem 503,1; //Yellow_Potion
-			getitem 504,1; //White_Potion
+			getitem Red_Potion,1; //Red_Potion
+			getitem Yellow_Potion,1; //Yellow_Potion
+			getitem White_Potion,1; //White_Potion
 			mes "[Darwin]";
 			mes "Good job.";
 			mes "It came out pretty well considering it's your first time. Go ahead and keep the medicines that you've just made.";
@@ -1710,7 +1710,7 @@ alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 		mes "I hope you learn a lot...";
 		next;
 		if (.@jlevel == 50) {
-			getitem 7133,1; //Slim_Potion_Create_Book
+			getitem Slim_Potion_Create_Book,1; //Slim_Potion_Create_Book
 			mes "[Vincent Carsciallo]";
 			mes "Let me give you";
 			mes "something special.";
@@ -1721,22 +1721,22 @@ alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 		else {
 			switch(rand(1,6)) {
 			case 1:
-				getitem 7127,1; //Alcol_Create_Book
+				getitem Alcol_Create_Book,1; //Alcol_Create_Book
 				break;
 			case 2:
-				getitem 7128,1; //FireBottle_Create_Book
+				getitem FireBottle_Create_Book,1; //FireBottle_Create_Book
 				break;
 			case 3:
-				getitem 7129,1; //Acid_Create_Book
+				getitem Acid_Create_Book,1; //Acid_Create_Book
 				break;
 			case 4:
-				getitem 7130,1; //Plant_Create_Book
+				getitem Plant_Create_Book,1; //Plant_Create_Book
 				break;
 			case 5:
-				getitem 7131,1; //Mine_Create_Book
+				getitem Mine_Create_Book,1; //Mine_Create_Book
 				break;
 			case 6:
-				getitem 7144,1; //Normal_Potion_Book
+				getitem Normal_Potion_Book,1; //Normal_Potion_Book
 			}
 			mes "[Vincent Carsciallo]";
 			mes "And...";
@@ -1773,7 +1773,7 @@ alde_alche,101,184,4	script	Master Alchemist#am	2_M_DYEINGER,{
 }
 
 alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you are carrying -";
 		mes "- too many items with you. -";
@@ -1921,11 +1921,11 @@ alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 		mes "5 Fine Sand,";
 		mes "3 Rough Oridecon";
 		mes "and 3 Rough Elunium.";
-		getitem 974,1; //Mixture
-		getitem 7068,5; //Burn_Tree
-		getitem 7043,5; //Fine_Sand
-		getitem 756,3; //Oridecon_Stone
-		getitem 757,3; //Elunium_Stone
+		getitem Mixture,1; //Mixture
+		getitem Burn_Tree,5; //Burn_Tree
+		getitem Fine_Sand,5; //Fine_Sand
+		getitem Oridecon_Stone,3; //Oridecon_Stone
+		getitem Elunium_Stone,3; //Elunium_Stone
 		next;
 		mes "[Nicholas Flamel]";
 		mes "Alright.";

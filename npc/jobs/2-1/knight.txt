@@ -434,7 +434,7 @@ prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 		mes "Protect the weak and";
 		mes "live with honor.";
 		next;
-		getitem 656,7; //Awakening_Potion
+		getitem Awakening_Potion,7; //Awakening_Potion
 		mes "[Captain Herman]";
 		mes "Oh...";
 		mes "We have prepared a small gift to congratulate you on your job change. Please use it when you are in battle as you honorably protect others.";
@@ -2037,7 +2037,7 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 					close;
 				}
 				else {
-					if ((Zeny > 73999) && (countitem(999) > 0) && (BaseJob == Job_Knight)) {
+					if ((Zeny > 73999) && (countitem(Steel) > 0) && (BaseJob == Job_Knight)) {
 						mes "[Sir Gray]";
 						mes "You are ready!";
 						mes "You must know the";
@@ -2060,9 +2060,9 @@ prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 						mes "a fine ^3355FFClaymore^000000.";
 						mes "You attained a reliable item.";
 						mes "It'll be a good companion on your adventures.";
-						delitem 999,1; //Steel
+						delitem Steel,1; //Steel
 						Zeny -= 74000;
-						getitem 1163,1; //Claymore
+						getitem Claymore,1; //Claymore
 						close;
 					}
 					mes "[Sir Gray]";

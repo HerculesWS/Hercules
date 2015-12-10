@@ -159,7 +159,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 					switch(select("I have 50 Huge Leafs:What, sorry I was day dreaming")) {
 					case 1:
 						/*
-						if (checkweight(503,10) == 0) {
+						if (checkweight(Yellow_Potion,10) == 0) {
 							mes "[Lella]";
 							mes "Hey, it looks like that the weight on";
 							mes "your back will crush you. Come back";
@@ -167,15 +167,15 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 							close;
 						}
 						*/
-						if (countitem(7198) > 49) {
+						if (countitem(Great_Leaf) > 49) {
 							mes "[Lella]";
 							mes "Wonderful I can tell it is just a little bit quieter around here!";
 							next;
 							mes "[Lella]";
 							mes "The more leafs I collect the quieter it seems around here.";
-							delitem 7198,50; //Great_Leaf
+							delitem Great_Leaf,50; //Great_Leaf
 							getexp 25740,31512;
-							//getitem 503,10; //Yellow_Potion
+							//getitem Yellow_Potion,10; //Yellow_Potion
 							close;
 						}
 						else {

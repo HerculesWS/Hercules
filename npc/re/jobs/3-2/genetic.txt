@@ -411,7 +411,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		mes "Your study is done, Popo?";
 		mes "Give me those seeds.";
 		next;
-		if (countitem(6273) == 0 && countitem(6272) == 0) {
+		if (countitem(Altered_Seed) == 0 && countitem(Experiment_Seed) == 0) {
 			mes "[Devries]";
 			mes "What happened?";
 			mes "How could you say the study is completed without any result?";
@@ -459,7 +459,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 				mes "She is a fellow Geneticist, specializing in mini cannons.";
 				mes "Go take a look at her experiment results.";
 				mes "Could you give this message to her? Tell her to conduct her experiments quietly.";
-				delitem 6273,1; //Altered_Seed
+				delitem Altered_Seed,1; //Altered_Seed
 				job_gen = 62;
 				changequest 2215,2216;
 			} else {
@@ -469,7 +469,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 				mes "Uh oh! You failed, Popo.";
 				mes "It didn't grow at all, it's withered already.";
 				mes "Go and start over!";
-				delitem 6272,1; //Experiment_Seed
+				delitem Experiment_Seed,1; //Experiment_Seed
 				job_gen = 7;
 			}
 		}
@@ -497,7 +497,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		mes "Popo!";
 		mes "I've got good news for you!";
 		next;
-		if (checkweight(1201,2) == 0 || MaxWeight - Weight < 2000) {
+		if (checkweight(Knife,2) == 0 || MaxWeight - Weight < 2000) {
 			mes "- Wait a minute !! -";
 			mes "- Currently you're carrying -";
 			mes "- too many items with you. -";
@@ -556,8 +556,8 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		mes "You are a Geneticist from now on!!";
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		job_gen = 77;
-		getitem 5752,1; //Midas_Whisper
-		getitem 2795,1; //Green_Apple_Ring
+		getitem Midas_Whisper,1; //Midas_Whisper
+		getitem Green_Apple_Ring,1; //Green_Apple_Ring
 		next;
 		mes "[Devries]";
 		mes "Just like the word from the Union, I'm also looking forward to your awesome activities.";
@@ -729,7 +729,7 @@ job3_gen01,7,50,3	script	Testing Table#gen	CLEAR_NPC,{
 		mes "Good. Now I can let Miss Devries take a look at this seed!";
 		if (!questprogress(2209) && !questprogress(2210) && !questprogress(2211)) {
 			job_gen = 61;
-			getitem 6272,1; //Experiment_Seed
+			getitem Experiment_Seed,1; //Experiment_Seed
 			close;
 		}
 		if (questprogress(2209) == 1) job_gen += 10;
@@ -738,18 +738,18 @@ job3_gen01,7,50,3	script	Testing Table#gen	CLEAR_NPC,{
 		.@score = job_gen + JobLevel - 20;
 		if (rand(1,100) < .@score) {
 			job_gen = 60;
-			getitem 6273,1; //Altered_Seed
+			getitem Altered_Seed,1; //Altered_Seed
 			close;
 		} else {
 			job_gen = 61;
-			getitem 6272,1; //Experiment_Seed
+			getitem Experiment_Seed,1; //Experiment_Seed
 			close;
 		}
 	} else if (job_gen > 7 && job_gen < 60) {
 		mes "- It looks like the experiment has failed. I better start over. -";
 		job_gen = 7;
-		if (countitem(6273)) delitem 6273,1; //Altered_Seed
-		if (countitem(6272)) delitem 6272,1; //Experiment_Seed
+		if (countitem(Altered_Seed)) delitem Altered_Seed,1; //Altered_Seed
+		if (countitem(Experiment_Seed)) delitem Experiment_Seed,1; //Experiment_Seed
 		if (questprogress(2209) == 1) erasequest 2209;
 		if (questprogress(2210) == 1) erasequest 2210;
 		if (questprogress(2211) == 1) erasequest 2211;

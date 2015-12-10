@@ -217,7 +217,7 @@
 // Juno Pub Master/Starting point.
 //----------------------------------------------------------------------------
 yuno_in01,35,179,4	script	Pub Master#kh	1_ETC_01,5,5,{
-	if (checkweight(7487,1) == 0) {
+	if (checkweight(Tavern_Wine,1) == 0) {
 		mes "[Vandt]";
 		mes "Just a second! You're";
 		mes "carrying too many items";
@@ -354,7 +354,7 @@ yuno_in01,35,179,4	script	Pub Master#kh	1_ETC_01,5,5,{
 					mes "Mrs. ^ff0000Lecollane^000000 in the Kiel";
 					mes "Hyre Academy. I'll pay you";
 					mes "once you finish the job, okay?";
-					getitem 7487,1; //Tavern_Wine
+					getitem Tavern_Wine,1; //Tavern_Wine
 					KielHyreQuest = 2;
 					close;
 				case 2:
@@ -388,7 +388,7 @@ yuno_in01,35,179,4	script	Pub Master#kh	1_ETC_01,5,5,{
 		close;
 	}
 	else if (KielHyreQuest == 6) {
-		if (countitem(7487) == 0) {
+		if (countitem(Tavern_Wine) == 0) {
 			mes "[Vandt]";
 			mes "Oh, you're back.";
 			mes "Thanks for making that";
@@ -411,7 +411,7 @@ yuno_in01,35,179,4	script	Pub Master#kh	1_ETC_01,5,5,{
 			mes "There you go!";
 			mes "Thank you so much";
 			mes "for helping me out~";
-			getitem 7487,1; //Tavern_Wine
+			getitem Tavern_Wine,1; //Tavern_Wine
 			Zeny += 1000;
 			close;
 		}
@@ -527,8 +527,8 @@ yuno,217,114,6	script	Little Kid#kh	4W_KID,{
 			mes "Now please give this flour";
 			mes "and these eggs to Elly, and";
 			mes "send her my regards. See you~";
-			delitem 7488,1; //Delivery_Package
-			getitem 7488,1; //Delivery_Package
+			delitem Delivery_Box,1; //Delivery_Package
+			getitem Delivery_Box,1; //Delivery_Package
 			KHToastGirlEnd = 3;
 			close;
 		}
@@ -545,7 +545,7 @@ yuno,217,114,6	script	Little Kid#kh	4W_KID,{
 // Lighthalzen WindMill Owner.
 //----------------------------------------------------------------------------
 lighthalzen,366,299,4	script	Windmill Owner#kh	1_ETC_01,{
-	if (checkweight(7488,1) == 0) {
+	if (checkweight(Delivery_Box,1) == 0) {
 		mes "[Mills]";
 		mes "Hey, you've got too much";
 		mes "stuff on you right now. ";
@@ -590,7 +590,7 @@ lighthalzen,366,299,4	script	Windmill Owner#kh	1_ETC_01,{
 			mes "extra errands on my end. Yeah,";
 			mes "I know how other people treat";
 			mes "you adventurers. Well, see ya.";
-			getitem 7488,1; //Delivery_Package
+			getitem Delivery_Box,1; //Delivery_Package
 			KHToastGirlEnd = 2;
 			close;
 		case 2:
@@ -900,7 +900,7 @@ kh_school,176,60,4	script	Lady#kh	4W_F_01,{
 			mes "may go now, and please";
 			mes "don't wander needlessly";
 			mes "around the academy.";
-			delitem 7487,1; //Tavern_Wine
+			delitem Tavern_Wine,1; //Tavern_Wine
 			KielHyreQuest = 4;
 			close;
 		case 2:
@@ -929,7 +929,7 @@ kh_school,176,60,4	script	Lady#kh	4W_F_01,{
 // Elly (In school)
 //----------------------------------------------------------------------------
 kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "[Elly]";
 		mes "I'm sorry, but would you";
 		mes "put some of your things in";
@@ -1075,7 +1075,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 		}
 	}
 	else if (KielHyreQuest == 6) {
-		if ((countitem(519) < 7) || (countitem(548) < 2) || (countitem(7182) < 5) || (countitem(7487) < 1) || (countitem(7488) < 1)) {
+		if ((countitem(Milk) < 7) || (countitem(Cheese) < 2) || (countitem(Cacao) < 5) || (countitem(Tavern_Wine) < 1) || (countitem(Delivery_Box) < 1)) {
 			mes "[Elly]";
 			mes "Let's see, would you";
 			mes "like me to remind you";
@@ -1110,11 +1110,11 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 			mes "give me a moment while I bake";
 			mes "these cookies?  It shouldn't take";
 			mes "long, so hold on just a bit.";
-			delitem 519,7; //Milk
-			delitem 548,2; //Cheese
-			delitem 7182,5; //Cacao
-			delitem 7487,1; //Tavern_Wine
-			delitem 7488,1; //Delivery_Package
+			delitem Milk,7; //Milk
+			delitem Cheese,2; //Cheese
+			delitem Cacao,5; //Cacao
+			delitem Tavern_Wine,1; //Tavern_Wine
+			delitem Delivery_Box,1; //Delivery_Package
 			KielHyreQuest = 8;
 			//KHPubMasterEnd no longer needed-- deleting.
 			KHPubMasterEnd = 0;
@@ -1146,7 +1146,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 		mes "[Elly]";
 		mes ""+strcharinfo(0)+"?";
 		mes "...that name! It's wonderful!";
-		getitem 538,5; //Well_Baked_Cookie
+		getitem Well_Baked_Cookie,5; //Well_Baked_Cookie
 		KielHyreQuest = 10;
 	}
 	else if (KielHyreQuest == 10) {
@@ -1238,7 +1238,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 		mes "you can use this Cottage Key.";
 		mes "That way, you can just go";
 		mes "inside and talk to him~";
-		getitem 7489,1; //Villa_Spare_Key
+		getitem Villa_Spare_Key,1; //Villa_Spare_Key
 		KielHyreQuest = 16;
 	}
 	else if ((KielHyreQuest >= 14) && (KielHyreQuest < 20)) {
@@ -1292,7 +1292,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 		mes "this letter! Ah, does this";
 		mes "mean that he's in danger?!";
 		mes "Oh no, what should I do?";
-		delitem 7490,1; //Letter_to_Elly
+		delitem Kyll_Hire_Letter,1; //Letter_to_Elly
 		KielHyreQuest = 22;
 	}
 	else if (KielHyreQuest == 22) {
@@ -1542,7 +1542,7 @@ yuno_fild08,69,185,0	script	Window#kh	HIDDEN_NPC,{
 // Elly (In Dormitory)
 //----------------------------------------------------------------------------
 kh_school,178,180,4	script	Elly	4_F_KHELLY,{
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
 		mes "many items with you";
@@ -1605,8 +1605,8 @@ kh_school,178,180,4	script	Elly	4_F_KHELLY,{
 				mes "and a ^000000Button^3355FF drop from Elly's";
 				mes "hands. It looks like she woke";
 				mes "up, but only for an instant.^000000";
-				getitem 7493,1; //Golden_Key
-				getitem 7494,1; //Kiel_Button
+				getitem Golden_Key,1; //Golden_Key
+				getitem Kiel_Button,1; //Kiel_Button
 				KielHyreQuest = 34;
 				close;
 			}
@@ -1628,7 +1628,7 @@ kh_school,178,180,4	script	Elly	4_F_KHELLY,{
 		}
 	}
 	else if (KielHyreQuest == 34) {
-		if (countitem(7491) < 1) {
+		if (countitem(Iron_Box) < 1) {
 			//Missing text, needs another run through.
 			mes "^3355FFMaybe the golden key^000000";
 			mes "unlocks something in the^000000";
@@ -1674,8 +1674,8 @@ kh_school,178,180,4	script	Elly	4_F_KHELLY,{
 			mes "^FFFFFF_^000000";
 			mes "Sorry about that,";
 			mes "Grandpa";
-			getitem 7495,1; //Blue_Key_Card
-			delitem 7491,1; //Iron_Box
+			getitem Blue_Key_Card,1; //Blue_Key_Card
+			delitem Iron_Box,1; //Iron_Box
 			KielHyreQuest = 36;
 			close;
 		}
@@ -1848,7 +1848,7 @@ yuno_fild08,71,170,0	script	Grave#kh	HIDDEN_NPC,{
 		close;
 	}
 	else if (KielHyreQuest == 36) {
-		if (countitem(7492) < 1) {
+		if (countitem(Yellow_Key_Card) < 1) {
 			mes "^3355FFIt's just a grave.";
 			mes "It might be important";
 			mes "to you later, but now";
@@ -1921,7 +1921,7 @@ yuno_fild08,71,170,0	script	Grave#kh	HIDDEN_NPC,{
 	}
 
 	else if (KielHyreQuest >= 106) {
-		if (countitem(7509) < 1) {
+		if (countitem(Fancy_Key_Card) < 1) {
 			mes "^3355FFThe secret entrance";
 			mes "has now been sealed.^000000";
 			close;
@@ -2167,7 +2167,7 @@ kh_vila,179,11,0	script	Letter#kh	-1,1,1,{
 //OnTouch2:
 OnTouch:
 	if (KielHyreQuest == 18) {
-		if (checkweight(7490,1) == 0) {
+		if (checkweight(Kyll_Hire_Letter,1) == 0) {
 			mes "^3355FFJust a minute...!";
 			mes "There's something on";
 			mes "the floor here, but you";
@@ -2181,7 +2181,7 @@ OnTouch:
 		mes "you pick it up, despite";
 		mes "the fact that it's not";
 		mes "addressed to you.^000000";
-		getitem 7490,1; //Kyll_Hire_Letter
+		getitem Kyll_Hire_Letter,1; //Kyll_Hire_Letter
 		KielHyreQuest = 20;
 		close;
 	} else {
@@ -2226,7 +2226,7 @@ kh_vila,16,175,0	script	Box#khp1	HIDDEN_NPC,{
 			mes "at all! It's just";
 			mes "normal Pet Food!";
 			Zeny -= 1100;
-			getitem 537,1;	//Pet_Food
+			getitem Pet_Food,1;	//Pet_Food
 			close;
 		}
 	case 2:
@@ -2424,8 +2424,8 @@ kh_vila,33,184,0	script	Pot#khp1	HIDDEN_NPC,{
 // Cottage interior, fire place; Calabash
 //----------------------------------------------------------------------------
 kh_vila,14,55,0	script	Calabash#khp1	HIDDEN_NPC,{
-	if ((countitem(7329) < 1) && (countitem(7516) < 1) && (countitem(7491) < 1) && (KielHyreQuest < 38)) {
-		if (checkweight(7329,1) == 0) {
+	if ((countitem(Old_Copper_Key) < 1) && (countitem(Green_Key_Card) < 1) && (countitem(Iron_Box) < 1) && (KielHyreQuest < 38)) {
+		if (checkweight(Old_Copper_Key,1) == 0) {
 			mes "^3355FFThat's a nice looking";
 			mes "calabash. You might even";
 			mes "get something from it...";
@@ -2456,7 +2456,7 @@ kh_vila,14,55,0	script	Calabash#khp1	HIDDEN_NPC,{
 			mes "feel around with your";
 			mes "fingers until you retrieve";
 			mes "an Old Bronze Key.^000000";
-			getitem 7329,1; //Old_Bronze_Key
+			getitem Old_Copper_Key,1; //Old_Bronze_Key
 			close;
 		case 3:
 			mes "^3355FFThere's probably";
@@ -2572,7 +2572,7 @@ OnTouch:
 	next;
 	switch(select("March forward:Run away")) {
 	case 1:
-		if (countitem(537) >= 1) {
+		if (countitem(Pet_Food) >= 1) {
 			mes "^3355FFWait! Perhaps you can";
 			mes "use food to soothe the";
 			mes "savage beast. Why don't";
@@ -2587,7 +2587,7 @@ OnTouch:
 				mes "it devours the food. You'd";
 				mes "better pass this dog now";
 				mes "while you have the chance!^000000";
-				delitem 537,1; //Pet_Food
+				delitem Pet_Food,1; //Pet_Food
 				close2;
 				warp "kh_vila",173,182;
 				end;
@@ -2625,7 +2625,7 @@ OnTouch:
 // Cottage interior, upstairs; Drawer, first room nightstand
 //----------------------------------------------------------------------------
 kh_vila,115,186,0	script	Drawer#khp1	HIDDEN_NPC,{
-	if (checkweight(7492,1) == 0) {
+	if (checkweight(Yellow_Key_Card,1) == 0) {
 		mes "^3355FFThere's something inside";
 		mes "this drawer, but you can't";
 		mes "take it since you're carrying";
@@ -2634,7 +2634,7 @@ kh_vila,115,186,0	script	Drawer#khp1	HIDDEN_NPC,{
 		mes "trusty Kafra Storage first.^000000";
 		close;
 	}
-	if ((countitem(7492) < 1) && (KielHyreQuest <= 36)) {
+	if ((countitem(Yellow_Key_Card) < 1) && (KielHyreQuest <= 36)) {
 		mes "^3355FFYou find an old drawer";
 		mes "^that has been closed.";
 		mes "^If you open it, then you";
@@ -2648,7 +2648,7 @@ kh_vila,115,186,0	script	Drawer#khp1	HIDDEN_NPC,{
 			mes "Keycard from inside the";
 			mes "drawer. Opening that drawer";
 			mes "turned out to be worthwhile.^000000";
-			getitem 7492,1; //Yellow_Key_Card
+			getitem Yellow_Key_Card,1; //Yellow_Key_Card
 			close;
 		case 2:
 			mes "^3355FFForget opening that";
@@ -2669,14 +2669,14 @@ kh_vila,115,186,0	script	Drawer#khp1	HIDDEN_NPC,{
 // Cottage interior, upstairs; Box
 //----------------------------------------------------------------------------
 kh_vila,107,126,0	script	Box#khp2	HIDDEN_NPC,{
-	if ((countitem(7329) < 1) && (countitem(7516) < 1) && (countitem(7491) < 1) && (KielHyreQuest < 38)) {
+	if ((countitem(Old_Copper_Key) < 1) && (countitem(Green_Key_Card) < 1) && (countitem(Iron_Box) < 1) && (KielHyreQuest < 38)) {
 		mes "^3355FFA solid box is laid";
 		mes "on the floor in which";
 		mes "a smaller, locked box";
 		mes "has been placed inside.^000000";
 		close;
 	}
-	else if ((countitem(7329) >= 1) && (countitem(7516) < 1) && (countitem(7491) < 1) && (KielHyreQuest < 38)) {
+	else if ((countitem(Old_Copper_Key) >= 1) && (countitem(Green_Key_Card) < 1) && (countitem(Iron_Box) < 1) && (KielHyreQuest < 38)) {
 		mes "^3355FFA solid box is laid";
 		mes "on the floor in which";
 		mes "a smaller, locked box";
@@ -2692,8 +2692,8 @@ kh_vila,107,126,0	script	Box#khp2	HIDDEN_NPC,{
 			mes "open the inner box and";
 			mes "obtain the Green Keycard";
 			mes "that was locked inside.";
-			getitem 7516,1; //Green_Key_Card
-			delitem 7329,1; //Old_Bronze_Key
+			getitem Green_Key_Card,1; //Green_Key_Card
+			delitem Old_Copper_Key,1; //Old_Bronze_Key
 			close;
 		case 2:
 			mes "^3355FFWhat...?";
@@ -2716,7 +2716,7 @@ kh_vila,107,126,0	script	Box#khp2	HIDDEN_NPC,{
 // Cottage interior, upstairs; Bookshelf.
 //----------------------------------------------------------------------------
 kh_vila,181,138,0	script	Bookshelf#khp1	HIDDEN_NPC,{
-	if ((countitem(7491) < 1) && (countitem(7329) >= 1) || (countitem(7516) >= 1)) {
+	if ((countitem(Iron_Box) < 1) && (countitem(Old_Copper_Key) >= 1) || (countitem(Green_Key_Card) >= 1)) {
 		mes "^3355FFOne of the books on";
 		mes "this crammed bookshelf";
 		mes "is labeled with the note,";
@@ -2747,7 +2747,7 @@ kh_vila,181,138,0	script	Bookshelf#khp1	HIDDEN_NPC,{
 					mes "you insert into";
 					mes "the first keyhole?^000000";
 					next;
-					if (countitem(7329) >= 1) {
+					if (countitem(Old_Copper_Key) >= 1) {
 						select("Old Bronze Key:Cottage Key");
 						mes "^3355FFWhich key will";
 						mes "you insert into";
@@ -2755,7 +2755,7 @@ kh_vila,181,138,0	script	Bookshelf#khp1	HIDDEN_NPC,{
 						next;
 						select("Old Bronze Key:Cottage Key");
 					}
-					else if (countitem(7516) >= 1) {
+					else if (countitem(Green_Key_Card) >= 1) {
 						switch(select("Green Keycard:Cottage Key")) {
 						case 1:
 							.@KHFirstKeyhole = 1;
@@ -2785,9 +2785,9 @@ kh_vila,181,138,0	script	Bookshelf#khp1	HIDDEN_NPC,{
 							mes "You take the Grey Box";
 							mes "with you, hoping that it";
 							mes "will come in handy later.^000000";
-							delitem 7489,1; //Villa_Spare_Key
-							delitem 7516,1; //Green_Key_Card
-							getitem 7491,1; //Iron_Box
+							delitem Villa_Spare_Key,1; //Villa_Spare_Key
+							delitem Green_Key_Card,1; //Green_Key_Card
+							getitem Iron_Box,1; //Iron_Box
 							close;
 						}
 
@@ -3221,7 +3221,7 @@ kh_vila,185,68,0	script	Test Tube::TestTubeKHQ2	HIDDEN_NPC,{
 		}
 	}
 	else if (KielHyreQuest >= 30) {
-		if ((countitem(7491) > 0) && (countitem(7492) > 0)){
+		if ((countitem(Iron_Box) > 0) && (countitem(Yellow_Key_Card) > 0)){
 			mes "^3355FFWhat could the";
 			mes "number 4772961";
 			mes "mean? For now, you've";
@@ -3442,7 +3442,7 @@ kh_school,121,149,4	duplicate(BeatifulLadyKHQ1)	Beautiful lady#kh5	4_F_KHELLISIA
 // Beautiful Lady "Allysia"
 //----------------------------------------------------------------------------
 kh_school,122,186,4	script	Beautiful Lady#kh6	4_F_KHELLISIA,{
-	if (checkweight(7496,1) == 0) {
+	if (checkweight(Red_Key_Card,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
 		mes "many items with you";
@@ -3517,7 +3517,7 @@ kh_school,122,186,4	script	Beautiful Lady#kh6	4_F_KHELLISIA,{
 			mes "inside this factory. If you";
 			mes "locate Kiel Hyre, please";
 			mes "let me know right away.";
-			getitem 7496,1; //Red_Key_Card
+			getitem Red_Key_Card,1; //Red_Key_Card
 			KielHyreQuest = 40;
 			break;
 		}
@@ -3561,7 +3561,7 @@ kh_school,122,186,4	script	Beautiful Lady#kh6	4_F_KHELLISIA,{
 		mes "Alright, I've recieved";
 		mes "Kiel Hyre's orders, and";
 		mes "must carry them out...";
-		delitem 7497,1; //Steel_Piece
+		delitem Steel_Piece,1; //Steel_Piece
 		KielHyreQuest = 44;
 		close2;
 		cutin "",255;
@@ -3582,9 +3582,9 @@ kh_school,122,186,4	script	Beautiful Lady#kh6	4_F_KHELLISIA,{
 		mes "Hyre Mansion in Lighthalzen.";
 		mes "Present the Golden Key to";
 		mes "be admitted to the premises.";
-		delitem 7492,1; //Yellow_Key_Card
-		delitem 7495,1; //Blue_Key_Card
-		delitem 7496,1; //Red_Key_Card
+		delitem Yellow_Key_Card,1; //Yellow_Key_Card
+		delitem Blue_Key_Card,1; //Blue_Key_Card
+		delitem Red_Key_Card,1; //Red_Key_Card
 		KielHyreQuest = 46;
 		next;
 		mes "[Allysia]";
@@ -3639,7 +3639,7 @@ kh_dun01,166,223,0	script	Mechanical Device#kh::KHKeyardReader	HIDDEN_NPC,{
 		mes "correct keycard into the slot.^000000";
 		close;
 	}
-	else if ((KielHyreQuest == 40) && (countitem(7496) >= 1)) {
+	else if ((KielHyreQuest == 40) && (countitem(Red_Key_Card) >= 1)) {
 		mes "^3355FFYou encounter";
 		mes "a mechanical device.";
 		mes "It looks like it can be";
@@ -3685,7 +3685,7 @@ kh_dun01,224,233,0	script	Factory B Area Door	-1,5,5,{
 //OnTouch2:
 OnTouch:
 	if (KielHyreQuest == 40) {
-		if (checkweight(7497,1) == 0) {
+		if (checkweight(Steel_Piece,1) == 0) {
 			mes "^3355FFJust a second...";
 			mes "You're carrying too";
 			mes "many items with you";
@@ -3738,7 +3738,7 @@ OnTouch:
 		mes "fragment through";
 		mes "the gap between the";
 		mes "door and the floor.^000000";
-		getitem 7497,1; //Steel_Piece
+		getitem Steel_Piece,1; //Steel_Piece
 		KielHyreQuest = 42;
 		close;
 	}
@@ -3754,7 +3754,7 @@ OnTouch:
 // Robot Factory Second Floor Entrances
 //----------------------------------------------------------------------------
 kh_dun01,44,203,0	script	Entrance Device#khd2::KHAccess	HIDDEN_NPC,{
-	if (countitem(7509) < 1) {
+	if (countitem(Fancy_Key_Card) < 1) {
 		mes "^3355FFYou encounter";
 		mes "a mechanical device.";
 		mes "It looks like it can be";
@@ -3912,7 +3912,7 @@ kh_mansion,78,55,5	script	Steward#kh	4_M_MANAGER,{
 // Kiel Hyre
 //----------------------------------------------------------------------------
 kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
 		mes "many items with you";
@@ -4025,8 +4025,8 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 				mes "let me rest?? I'm still not";
 				mes "feeling well from the time";
 				mes "I was locked up in the factory.";
-				delitem 7493,1; //Golden_Key
-				delitem 7494,1; //Kiel_Button
+				delitem Golden_Key,1; //Golden_Key
+				delitem Kiel_Button,1; //Kiel_Button
 				KielHyreQuest = 48;
 				break;
 			}
@@ -4038,7 +4038,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "Please, take this as";
 		mes "a little reward for";
 		mes "saving my life.";
-		getitem 12105,1; //Taming_Gift_Set
+		getitem Set_Of_Taiming_Item,1; //Taming_Gift_Set
 		getexp RENEWAL_EXP?70000:700000,0;
 		KielHyreQuest = 50;
 	}
@@ -4378,11 +4378,11 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "wrong... and she just... just...";
 		mes "The river swallowed her...";
 		mes "I felt empty. She was gone. ";
-		delitem 7499,1; //Family_Portrait
-		delitem 7500,1; //Elysia_Portrait
-		delitem 7501,1; //Kyll_Hyre_Letter2
-		delitem 7502,1; //Piece_Memo_Of_James
-		delitem 7503,1; //Man_Portrait
+		delitem Family_Portrait,1; //Family_Portrait
+		delitem Elysia_Portrait,1; //Elysia_Portrait
+		delitem Kyll_Hire_Letter2,1; //Kyll_Hyre_Letter2
+		delitem Piece_Memo_Of_James,1; //Piece_Memo_Of_James
+		delitem Man_Portrait,1; //Man_Portrait
 		KielHyreQuest = 70;
 		close2;
 		cutin "",255;
@@ -4562,7 +4562,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "on him anymore. Use this";
 		mes "device that will cause his";
 		mes "power supply to fluctuate.";
-		getitem 7504,1; //Toy_Motor
+		getitem Toy_Motor,1; //Toy_Motor
 		next;
 		cutin "kh_kyel03",2;
 		mes "[Kiel Hyre]";
@@ -4615,7 +4615,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "to retrieve Allysia's";
 		mes "Ring from Kiehl's heart?";
 		next;
-		if (countitem(7508) < 1) {
+		if (countitem(Elysia_Ring) < 1) {
 			mes "[Kiel Hyre]";
 			mes "You mean... You don't have it?";
 			mes "Please, retrieve Allysia's Ring";
@@ -4649,7 +4649,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "enter and investigate the";
 		mes "deepest levels of the factory.";
 		mes "I'll investigate Kiehl's room.";
-		getitem 7509,1; //Fancy_Key_Card
+		getitem Fancy_Key_Card,1; //Fancy_Key_Card
 		KielHyreQuest = 108;
 		next;
 		if (Sex == 0) {
@@ -4664,8 +4664,8 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "and here, please take this";
 		mes "with my thanks for all of";
 		mes "your help, "+.@KHTitle$+" "+strcharinfo(0)+".";
-		getitem 616,1;  //Old Card Album
-		delitem 7508,1; //Elysia_Ring
+		getitem Old_Card_Album,1;  //Old Card Album
+		delitem Elysia_Ring,1; //Elysia_Ring
 		getexp RENEWAL_EXP?100000:1000000,0;
 	}
 	else if (KielHyreQuest >= 108) {
@@ -5237,7 +5237,7 @@ yuno,257,140,4	script	Odd Grandma	4_F_EINOLD,{
 		mes "you go? You were";
 		mes "supposed to come";
 		mes "home a while ago!";
-		if (countitem(7500) < 1)
+		if (countitem(Elysia_Portrait) < 1)
 			close;
 		next;
 		select("Allysia? Isn't she...");
@@ -5277,7 +5277,7 @@ yuno,250,132,0	script	Old Lady#kh	4_F_05,{
 		close;
 	}
 	else if (KielHyreQuest == 56) {
-		if (checkweight(7498,1) == 0) {
+		if (checkweight(Rosimier_Key,1) == 0) {
 			mes "^3355FFJust a second...";
 			mes "You're carrying too";
 			mes "many items with you";
@@ -5358,17 +5358,17 @@ yuno,250,132,0	script	Old Lady#kh	4_F_05,{
 			mes "from City Hall ask me for it.";
 			mes "Alright then, I hope you find";
 			mes "what you're looking for.";
-			getitem 7498,1; //Rosimier_Key
+			getitem Rosimier_Key,1; //Rosimier_Key
 			KielHyreQuest = 58;
 			close;
 		}
 	}
 
 	else if ((KielHyreQuest == 58) &&
-		(countitem(7499) < 1) ||
-		(countitem(7500) < 1) ||
-		(countitem(7501) < 1) ||
-		(countitem(7502) < 1)) {
+		(countitem(Family_Portrait) < 1) ||
+		(countitem(Elysia_Portrait) < 1) ||
+		(countitem(Kyll_Hire_Letter2) < 1) ||
+		(countitem(Piece_Memo_Of_James) < 1)) {
 		mes "[Old Lady]";
 		mes "Please hurry and find";
 		mes "whatever you're searching";
@@ -5380,10 +5380,10 @@ yuno,250,132,0	script	Old Lady#kh	4_F_05,{
 	}
 
 	else if ((KielHyreQuest == 58) &&
-		(countitem(7499) == 1) &&
-		(countitem(7500) == 1) &&
-		(countitem(7501) == 1) &&
-		(countitem(7502) == 1)) {
+		(countitem(Family_Portrait) == 1) &&
+		(countitem(Elysia_Portrait) == 1) &&
+		(countitem(Kyll_Hire_Letter2) == 1) &&
+		(countitem(Piece_Memo_Of_James) == 1)) {
 		mes "[Old Lady]";
 		mes "Oh, you're finished";
 		mes "searching the mansion?";
@@ -5420,7 +5420,7 @@ yuno,250,132,0	script	Old Lady#kh	4_F_05,{
 		mes "Allysia's body in the river,";
 		mes "so he might have a better";
 		mes "idea of what had happened.";
-		delitem 7498,1; //Rosimier_Key
+		delitem Rosimier_Key,1; //Rosimier_Key
 		KielHyreQuest = 60;
 		close;
 	}
@@ -5438,7 +5438,7 @@ yuno,250,132,0	script	Old Lady#kh	4_F_05,{
 //----------------------------------------------------------------------------
 yuno,273,141,0	script	Rosimmir_Entrance	WARPNPC,2,2,{
 OnTouch:
-	if (countitem(7498) < 1) {
+	if (countitem(Rosimier_Key) < 1) {
 		mes "That mansion seems to have";
 		mes "been destroyed by the time.";
 		mes "However, the door looks like";
@@ -5456,7 +5456,7 @@ OnTouch:
 // Rosimier Mansion, first floor; Table
 //----------------------------------------------------------------------------
 kh_rossi,23,23,0	script	Table#khr2	HIDDEN_NPC,{
-	if (checkweight(7499,1) == 0) {
+	if (checkweight(Family_Portrait,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
 		mes "many items with you";
@@ -5471,12 +5471,12 @@ kh_rossi,23,23,0	script	Table#khr2	HIDDEN_NPC,{
 		close;
 	}
 	else if (KielHyreQuest < 60) {
-		if (countitem(7499) < 1) {
+		if (countitem(Family_Portrait) < 1) {
 			cutin "kh_family_port",1;
 			mes "^3355FFYou examine the table,";
 			mes "and find a framed portrait";
 			mes "inside the open drawer.^000000";
-			getitem 7499,1; //Family_Portrait
+			getitem Family_Portrait,1; //Family_Portrait
 		}
 		else {
 			mes "^3355FFThe open drawer of";
@@ -5499,7 +5499,7 @@ kh_rossi,23,23,0	script	Table#khr2	HIDDEN_NPC,{
 // Rosimier Mansion, first floor; Shelf
 //----------------------------------------------------------------------------
 kh_rossi,92,40,0	script	Shelf#khr	HIDDEN_NPC,{
-	if (checkweight(7500,1) == 0) {
+	if (checkweight(Elysia_Portrait,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
 		mes "many items with you";
@@ -5514,7 +5514,7 @@ kh_rossi,92,40,0	script	Shelf#khr	HIDDEN_NPC,{
 		close;
 	}
 	else if (KielHyreQuest < 60) {
-		if (countitem(7500) < 1) {
+		if (countitem(Elysia_Portrait) < 1) {
 			mes "^3355FFThere are locked";
 			mes "boxes on these bookshelves.";
 			mes "Perhaps if you used this";
@@ -5538,7 +5538,7 @@ kh_rossi,92,40,0	script	Shelf#khr	HIDDEN_NPC,{
 					mes "^3355FFThe message, ''To my love,";
 					mes "Allysia. From James.'' is";
 					mes "written on the back.^000000";
-					getitem 7500,1; //Elysia_Portrait
+					getitem Elysia_Portrait,1; //Elysia_Portrait
 					close2;
 					cutin "",255;
 					end;
@@ -5572,7 +5572,7 @@ kh_rossi,92,40,0	script	Shelf#khr	HIDDEN_NPC,{
 // Rosimier Mansion, top floor; Desk
 //----------------------------------------------------------------------------
 kh_rossi,144,286,0	script	Desk#khr3	HIDDEN_NPC,{
-	if (checkweight(7501,1) == 0) {
+	if (checkweight(Kyll_Hire_Letter2,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
 		mes "many items with you";
@@ -5594,13 +5594,13 @@ kh_rossi,144,286,0	script	Desk#khr3	HIDDEN_NPC,{
 			mes "^3355FFThe first drawer is locked.^000000";
 			close;
 		case 2:
-			if (countitem(7501) < 1) {
+			if (countitem(Kyll_Hire_Letter2) < 1) {
 				mes "^3355FFThere is a letter inside";
 				mes "this second drawer. It";
 				mes "was sent by a person";
 				mes "with the initials, K.H.,";
 				mes "and addressed to Allysia.^000000";
-				getitem 7501,1; //Kyll_Hyre_Letter2
+				getitem Kyll_Hire_Letter2,1; //Kyll_Hyre_Letter2
 				close;
 			}
 			else {
@@ -5637,7 +5637,7 @@ kh_rossi,144,286,0	script	Desk#khr3	HIDDEN_NPC,{
 // Rosimier Mansion, top floor; Bookshelf
 //----------------------------------------------------------------------------
 kh_rossi,148,288,0	script	Bookshelf#khr	HIDDEN_NPC,{
-	if (checkweight(7502,1) == 0) {
+	if (checkweight(Piece_Memo_Of_James,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
 		mes "many items with you";
@@ -5653,13 +5653,13 @@ kh_rossi,148,288,0	script	Bookshelf#khr	HIDDEN_NPC,{
 		close;
 	}
 	else if (KielHyreQuest < 60) {
-		if (countitem(7502) < 1) {
+		if (countitem(Piece_Memo_Of_James) < 1) {
 			mes "^3355FFYou encounter a dusty";
 			mes "bookshelf filled with";
 			mes "numerous books. You";
 			mes "find a folded note between";
 			mes "the books as you examine them.^000000";
-			getitem 7502,1; //Piece_Memo_Of_James
+			getitem Piece_Memo_Of_James,1; //Piece_Memo_Of_James
 			close;
 		}
 		else {
@@ -5738,7 +5738,7 @@ yuno_fild12,232,222,0	script	Old Fisherman	4_M_SEAMAN,{
 		mes "but you're not getting any.";
 		mes "Now, if you bring me some";
 		mes "Raw Fish, I'd be more friendly~";
-		if (countitem(544) >= 10)  {
+		if (countitem(Fish_Slice) >= 10)  {
 			next;
 			mes "[Fisherman]";
 			mes "Oh, is all this fish";
@@ -5804,7 +5804,7 @@ yuno_fild12,232,222,0	script	Old Fisherman	4_M_SEAMAN,{
 			mes "Let's see, he lived in";
 			mes "a hut near the northeast";
 			mes "forest guard camp.";
-			delitem 544,10; //Fish_Slice
+			delitem Fish_Slice,10; //Fish_Slice
 			KielHyreQuest = 62;
 			close;
 		}
@@ -5828,7 +5828,7 @@ yuno_fild12,232,222,0	script	Old Fisherman	4_M_SEAMAN,{
 // Kiel Hyre's hut; Wooden Board
 //----------------------------------------------------------------------------
 yuno_fild09,158,217,0	script	Wooden Board#kh	HIDDEN_NPC,{
-	if (checkweight(7503,1) == 0) {
+	if (checkweight(Man_Portrait,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
 		mes "many items with you";
@@ -5855,7 +5855,7 @@ yuno_fild09,158,217,0	script	Wooden Board#kh	HIDDEN_NPC,{
 		mes "of Kiel Hyre, in a broken";
 		mes "picture frame underneath";
 		mes "the old wooden board.^000000";
-		getitem 7503,1;	//Man_Portrait
+		getitem Man_Portrait,1;	//Man_Portrait
 		KielHyreQuest = 64;
 		next;
 		cutin "",255;
@@ -5970,7 +5970,7 @@ kh_kiehl01,13,40,0	script	Flower Vase#kh1	HIDDEN_NPC,{
 // Kiehl's Room; Box
 //----------------------------------------------------------------------------
 kh_kiehl01,19,25,0	script	Box#kh1	HIDDEN_NPC,{
-	if (checkweight(7505,1) == 0) {
+	if (checkweight(Toy_Key,1) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
 		mes "many items with you";
@@ -5989,7 +5989,7 @@ kh_kiehl01,19,25,0	script	Box#kh1	HIDDEN_NPC,{
 		close;
 	}
 	if (KielHyreQuest >= 74) {
-		if (countitem(7505) < 1) {
+		if (countitem(Toy_Key) < 1) {
 			mes "^3355FFYou found a box with";
 			mes "a button for each letter";
 			mes "of the alphabet on top of it.^000000";
@@ -6001,7 +6001,7 @@ kh_kiehl01,19,25,0	script	Box#kh1	HIDDEN_NPC,{
 				mes "emits a pleasant chiming";
 				mes "sound, and the box pops";
 				mes "open to reveal a small key.^000000";
-				getitem 7505,1; //Toy_Key
+				getitem Toy_Key,1; //Toy_Key
 				close;
 			}
 			else {
@@ -6037,12 +6037,12 @@ kh_kiehl01,44,33,0	script	Big Door#BigDoorKHQ1	HIDDEN_NPC,{
 		next;
 		input .@KHInput$;
 		if (.@KHInput$ == "Black Keycard") {
-			if (countitem(7506) >= 1) {
+			if (countitem(Black_Key_Card) >= 1) {
 				mes "^3355FFYou insert the";
 				mes "Black Keycard into the";
 				mes "slot, and successfully";
 				mes "unlock and open the door.^000000";
-				delitem 7506,1; //Black_Key_Card
+				delitem Black_Key_Card,1; //Black_Key_Card
 				donpcevent "Big_Door_1_Warp::OnEnable";
 				enablenpc "Big_Door_1_Warp";
 				.KHDoor1Opened = 1;
@@ -6098,12 +6098,12 @@ kh_kiehl01,174,40,0	script	Big Door#BigDoorKHQ2	HIDDEN_NPC,{
 		next;
 		input .@KHInput$;
 		if (.@KHInput$ == "Toy Key") {
-			if (countitem(7505) >= 1) {
+			if (countitem(Toy_Key) >= 1) {
 				mes "^3355FFYou insert the key into";
 				mes "the keyhole, and the door";
 				mes "unlocks with a click as";
 				mes "you turn the key.^000000";
-				delitem 7505,1; //Toy_Key
+				delitem Toy_Key,1; //Toy_Key
 				donpcevent "Big_Door_2_Warp::OnEnable";
 				enablenpc "Big_Door_2_Warp";
 				.KHDoor2Opened = 1;
@@ -6158,12 +6158,12 @@ kh_kiehl01,77,108,0	script	Big Door#BigDoorKHQ3	HIDDEN_NPC,{
 		next;
 		input .@KHInput$;
 		if (.@KHInput$ == "Black Keycard") {
-			if (countitem(7506) >= 1) {
+			if (countitem(Black_Key_Card) >= 1) {
 				mes "^3355FFYou insert the";
 				mes "Black Keycard into the";
 				mes "slot, and successfully";
 				mes "unlock and open the door.^000000";
-				delitem 7506,1; //Black_Key_Card
+				delitem Black_Key_Card,1; //Black_Key_Card
 				donpcevent "Big_Door_3_Warp::OnEnable";
 				enablenpc "Big_Door_3_Warp";
 				.KHDoor3Opened = 1;
@@ -6218,12 +6218,12 @@ kh_kiehl01,42,177,0	script	Big Door#BigDoorKHQ4	HIDDEN_NPC,{
 		next;
 		input .@KHInput$;
 		if (.@KHInput$ == "Black Keycard") {
-			if (countitem(7506) >= 2) {
+			if (countitem(Black_Key_Card) >= 2) {
 				mes "^3355FFYou insert the";
 				mes "Black Keycard into the";
 				mes "slot, and successfully";
 				mes "unlock and open the door.^000000";
-				delitem 7506,2; //Black_Key_Card
+				delitem Black_Key_Card,2; //Black_Key_Card
 				donpcevent "Big_Door_4_Warp::OnEnable";
 				enablenpc "Big_Door_4_Warp";
 				.KHDoor4Opened = 1;
@@ -6358,7 +6358,7 @@ kh_kiehl01,166,187,0	script	Big Door#BigDoorKHQ5	HIDDEN_NPC,{
 				.@KHPryingItem$ = "Rusty Iron Piece";
 				break;
 			case 3:
-				if (countitem(7507) >= 1) {
+				if (countitem(Sturdy_Iron_Piece) >= 1) {
 					if (KielHyreQuest < 92) {
 						mes "^3355FFYou insert one end of";
 						mes "a Solid Iron Piece into the";
@@ -6367,7 +6367,7 @@ kh_kiehl01,166,187,0	script	Big Door#BigDoorKHQ5	HIDDEN_NPC,{
 						mes "The gap widens a little bit,";
 						mes "but you break one of your";
 						mes "Solid Iron Pieces.^000000";
-						delitem 7507,1; //Hard_Piece_of_Steel
+						delitem Sturdy_Iron_Piece,1; //Hard_Piece_of_Steel
 						KielHyreQuest += 2;
 						close;
 					}
@@ -6379,7 +6379,7 @@ kh_kiehl01,166,187,0	script	Big Door#BigDoorKHQ5	HIDDEN_NPC,{
 						mes "Unable the withstand the";
 						mes "awesome force, this Solid";
 						mes "Iron Piece shatters into dust.^000000";
-						delitem 7507,1; //Hard_Piece_of_Steel
+						delitem Sturdy_Iron_Piece,1; //Hard_Piece_of_Steel
 						KielHyreQuest = 94;
 						close;
 					}
@@ -6523,7 +6523,7 @@ OnGlobalTimerOff:
 // - Timer will drop to 3 minutes once Kiehl is defeated.
 //----------------------------------------------------------------------------
 kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFJust a second...";
 		mes "You're carrying too";
 		mes "many items with you";
@@ -6938,7 +6938,7 @@ kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 		mes "again, but who knows?";
 		mes "Anyway, I'll open up the";
 		mes "exit for you. Farewell~";
-		delitem 7504,1; //Toy_Motor
+		delitem Toy_Motor,1; //Toy_Motor
 		KielHyreQuest = 104;
 		hideonnpc "Kiehl#Copy";
 		donpcevent "Kiehl_Room_Exit::OnEnable";
@@ -6952,7 +6952,7 @@ kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 		mes "^3355FFYou retrieve the";
 		mes "ring from the heart of";
 		mes "Kiehl's old robotic body.^000000";
-		getitem 7508,1; //Elysia_Ring
+		getitem Elysia_Ring,1; //Elysia_Ring
 		KielHyreQuest = 106;
 		close2;
 		cutin "",255;

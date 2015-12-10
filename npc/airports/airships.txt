@@ -522,7 +522,7 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 			mes "purchase fewer Apples.";
 			close;
 		}
-		else if (checkweight(512,.@input) == 0) {
+		else if (checkweight(Apple,.@input) == 0) {
 			mes "[Fruitz]";
 			mes "Hmmm, I don't think";
 			mes "you've got enough room in";
@@ -532,7 +532,7 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 		}
 		else {
 			Zeny -= .@pay;
-			getitem 512,.@input; //Apple
+			getitem Apple,.@input; //Apple
 			mes "[Fruitz]";
 			mes "Thanks for stopping by";
 			mes "my shop. I hope you enjoy";
@@ -548,7 +548,7 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 		next;
 		switch (select("Yes:No")) {
 		case 1:
-			if (countitem(512) < 3 || countitem(713) < 1) {
+			if (countitem(Apple) < 3 || countitem(Empty_Bottle) < 1) {
 				mes "[Fruitz]";
 				mes "I'm sorry, but you don't";
 				mes "have enough materials to";
@@ -567,9 +567,9 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 				mes "*Grind grind*";
 				mes "*Clang...!*^000000";
 				next;
-				delitem 512,3; //Apple
-				delitem 713,1; //Empty_Bottle
-				getitem 531,1; //Apple_Juice
+				delitem Apple,3; //Apple
+				delitem Empty_Bottle,1; //Empty_Bottle
+				getitem Apple_Juice,1; //Apple_Juice
 				mes "[Fruitz]";
 				mes "There you go~";
 				mes "I hope you enjoy!";
@@ -814,7 +814,7 @@ airplane_01,250,58,2	script	Airship Staff#airplane01	1_F_02,{
 }
 
 airplane_01,50,66,5	script	Apple Merchant#air01	4_M_04,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -885,7 +885,7 @@ airplane_01,50,66,5	script	Apple Merchant#air01	4_M_04,{
 			mes "purchase less Apples.";
 			close;
 		}
-		else if (checkweight(512,.@input) == 0) {
+		else if (checkweight(Apple,.@input) == 0) {
 			mes "[Meltz]";
 			mes "Hmm, I don't think you've";
 			mes "got enough room to carry";
@@ -896,7 +896,7 @@ airplane_01,50,66,5	script	Apple Merchant#air01	4_M_04,{
 		}
 		else {
 			Zeny -= .@pay;
-			getitem 512,.@input; //Apple
+			getitem Apple,.@input; //Apple
 			mes "[Meltz]";
 			mes "Thanks for stopping by";
 			mes "my shop. I hope you enjoy";
@@ -912,7 +912,7 @@ airplane_01,50,66,5	script	Apple Merchant#air01	4_M_04,{
 		next;
 		switch (select("Yes:No")) {
 		case 1:
-			if (countitem(512) < 3 || countitem(713) < 1) {
+			if (countitem(Apple) < 3 || countitem(Empty_Bottle) < 1) {
 				mes "[Meltz]";
 				mes "I'm sorry, but you don't";
 				mes "have enough materials to";
@@ -929,9 +929,9 @@ airplane_01,50,66,5	script	Apple Merchant#air01	4_M_04,{
 				mes "*Grind* *Grind*";
 				mes "*Clang...!*^000000";
 				next;
-				delitem 512,3; //Apple
-				delitem 713,1; //Empty_Bottle
-				getitem 531,1; //Apple_Juice
+				delitem Apple,3; //Apple
+				delitem Empty_Bottle,1; //Empty_Bottle
+				getitem Apple_Juice,1; //Apple_Juice
 				mes "[Meltz]";
 				mes "There you go~";
 				mes "Please come again.";
@@ -1345,7 +1345,7 @@ function	script	applegamble	{
 			next;
 			continue;
 		}
-		if (countitem(512) <.@amount) {
+		if (countitem(Apple) <.@amount) {
 			mes "I'm sorry, but you";
 			mes "don't seem to have";
 			mes "enough Apples for this";
@@ -1354,7 +1354,7 @@ function	script	applegamble	{
 			next;
 			continue;
 		}
-		delitem 512,.@amount;
+		delitem Apple,.@amount;
 		mes "["+getarg(0)+"]";
 		mes "Good!";
 		mes "Now we can start";
@@ -1416,7 +1416,7 @@ function	script	applegamble	{
 			if (.@tablesub > 8) {
 				mes "^FF0000" + strcharinfo(0) + "^000000, you got ^FF0000" + .@player3 + "^000000 and the total is now ^FF0000" + .@playertotal + "^000000. I don't want to take any risk, let's end this game in a draw. Let's play again some other time~";
 				close2;
-				getitem 512,.@amount; //Apple
+				getitem Apple,.@amount; //Apple
 				end;
 			}
 		}
@@ -1433,7 +1433,7 @@ function	script	applegamble	{
 			if (.@tablesub > 8) {
 				mes "I see, you don't want to take risk of losing this game. Neither do I, let's end this game in a draw. Let's play again some other time~";
 				close2;
-				getitem 512,.@amount; //Apple
+				getitem Apple,.@amount; //Apple
 				end;
 			}
 			mes "Alright.";
@@ -1457,19 +1457,19 @@ function	script	applegamble	{
 	if (.@tabletotal > 12) {
 		mes "I got ^0000FF" + .@table3 + "^000000 and the total is now ^0000FF" + .@tabletotal + "^000000. I lost this game since my total exceeded 12. Let me give you my apples. Congratulations, that was a great game.";
 		close2;
-		getitem 512,.@giveapple; //Apple
+		getitem Apple,.@giveapple; //Apple
 		end;
 	}
 	else if (.@playertotal > .@tabletotal) {
 		mes "I got ^0000FF" + .@table3 + "^000000 and the total is now ^0000FF" + .@tabletotal + "^000000. With total ^FF0000" + .@playertotal + "^000000 you won this game, ^FF0000" + strcharinfo(0) + "^000000. Let me give you my apples. It was a great game and I hope we will play again some other time.";
 		close2;
-		getitem 512,.@giveapple; //Apple
+		getitem Apple,.@giveapple; //Apple
 		end;
 	}
 	else if (.@playertotal == .@tabletotal) {
 		mes "I got ^0000FF" + .@table3 + "^000000 and the total is now ^0000FF" + .@tabletotal + "^000000. With total ^FF0000" + .@playertotal + "^000000 this game came out even, ^FF0000" + strcharinfo(0) + "^000000. Let me give you your apple back. It was a great game and I hope we will play again some other time.";
 		close2;
-		getitem 512,.@amount; //Apple
+		getitem Apple,.@amount; //Apple
 		end;
 	}
 	else if (.@playertotal < .@tabletotal) {

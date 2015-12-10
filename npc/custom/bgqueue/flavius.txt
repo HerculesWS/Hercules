@@ -439,7 +439,7 @@ OnTouch:
 bat_b01,10,294,3	script	Guillaume Vintenar#b01_a	4_M_RASWORD,{
 	if ($@FlaviusBG1_id1 == getcharid(4)) {
 		if ($@FlaviusBG1_Victory == 1) {
-			set .@your_medal,countitem(7829);
+			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 8) {
 				mes "[Axl Rose]";
@@ -447,7 +447,7 @@ bat_b01,10,294,3	script	Guillaume Vintenar#b01_a	4_M_RASWORD,{
 				mes "Let's enjoy our glorious victory!";
 				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
 				close2;
-				getitem 7829,9; //BF_Badge2
+				getitem BF_Badge2,9; //BF_Badge2
 			}
 			else {
 				mes "[Axl Rose]";
@@ -455,11 +455,11 @@ bat_b01,10,294,3	script	Guillaume Vintenar#b01_a	4_M_RASWORD,{
 				mes "Let's enjoy our glorious victory!";
 				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
 				close2;
-				getitem 7829,.@medal_gap; //BF_Badge2
+				getitem BF_Badge2,.@medal_gap; //BF_Badge2
 			}
 		}
 		else {
-			set .@your_medal,countitem(7829);
+			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 2) {
 				mes "[Axl Rose]";
@@ -467,7 +467,7 @@ bat_b01,10,294,3	script	Guillaume Vintenar#b01_a	4_M_RASWORD,{
 				mes "This is a reward for your great dedication by Guillaume Marollo!";
 				mes "Just take this defeat as a lesson, next time you will definitely win.";
 				close2;
-				getitem 7829,3; //BF_Badge2
+				getitem BF_Badge2,3; //BF_Badge2
 			}
 			else {
 				mes "[Axl Rose]";
@@ -475,7 +475,7 @@ bat_b01,10,294,3	script	Guillaume Vintenar#b01_a	4_M_RASWORD,{
 				mes "This is a reward for your great dedication by Guillaume Marollo!";
 				mes "Just take this defeat as a lesson, next time you will definitely win.";
 				close2;
-				getitem 7829,.@medal_gap; //BF_Badge2
+				getitem BF_Badge2,.@medal_gap; //BF_Badge2
 			}
 		}
 	}
@@ -491,7 +491,7 @@ OnInit:
 bat_b01,389,14,3	script	Croix Vintenar#b01_b	4_M_RASWORD,{
 	if ($@FlaviusBG1_id2 == getcharid(4)) {
 		if ($@FlaviusBG1_Victory == 2) {
-			set .@your_medal,countitem(7829);
+			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 8) {
 				mes "[Swandery]";
@@ -499,7 +499,7 @@ bat_b01,389,14,3	script	Croix Vintenar#b01_b	4_M_RASWORD,{
 				mes "Let's enjoy our glorious victory!";
 				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
 				close2;
-				getitem 7829,9; //BF_Badge2
+				getitem BF_Badge2,9; //BF_Badge2
 			}
 			else {
 				mes "[Swandery]";
@@ -507,11 +507,11 @@ bat_b01,389,14,3	script	Croix Vintenar#b01_b	4_M_RASWORD,{
 				mes "Let's enjoy our glorious victory!";
 				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
 				close2;
-				getitem 7829,.@medal_gap; //BF_Badge2
+				getitem BF_Badge2,.@medal_gap; //BF_Badge2
 			}
 		}
 		else {
-			set .@your_medal,countitem(7829);
+			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 2) {
 				mes "[Swandery]";
@@ -519,7 +519,7 @@ bat_b01,389,14,3	script	Croix Vintenar#b01_b	4_M_RASWORD,{
 				mes "Even though we didn't win, we did our best.";
 				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
 				close2;
-				getitem 7829,3; //BF_Badge2
+				getitem BF_Badge2,3; //BF_Badge2
 			}
 			else {
 				mes "[Swandery]";
@@ -527,7 +527,7 @@ bat_b01,389,14,3	script	Croix Vintenar#b01_b	4_M_RASWORD,{
 				mes "Even though we didn't win, we did our best.";
 				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
 				close2;
-				getitem 7829,.@medal_gap; //BF_Badge2
+				getitem BF_Badge2,.@medal_gap; //BF_Badge2
 			}
 		}
 	}
@@ -625,7 +625,7 @@ bat_b01,10,294,3	script	Vintenar#bat_b01_aover	4_M_KY_HEAD,{
 	set .@A_B_gap,$@Guill_ScoreBG1 - $@Croix_ScoreBG1;
 	if ($@FlaviusBG1_id1 == getcharid(4)) {
 		if (.@A_B_gap > 0) {
-			set .@your_medal,countitem(7829);
+			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 8) {
 				mes "[Axl Rose]";
@@ -633,7 +633,7 @@ bat_b01,10,294,3	script	Vintenar#bat_b01_aover	4_M_KY_HEAD,{
 				mes "Let's enjoy our glorious victory!";
 				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
 				close2;
-				getitem 7829,9; //BF_Badge2
+				getitem BF_Badge2,9; //BF_Badge2
 			}
 			else {
 				mes "[Axl Rose]";
@@ -641,11 +641,11 @@ bat_b01,10,294,3	script	Vintenar#bat_b01_aover	4_M_KY_HEAD,{
 				mes "Let's enjoy our glorious victory!";
 				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
 				close2;
-				getitem 7829,.@medal_gap; //BF_Badge2
+				getitem BF_Badge2,.@medal_gap; //BF_Badge2
 			}
 		}
 		else if (.@A_B_gap == 0) {
-			set .@your_medal,countitem(7829);
+			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 2) {
 				mes "[Axl Rose]";
@@ -653,7 +653,7 @@ bat_b01,10,294,3	script	Vintenar#bat_b01_aover	4_M_KY_HEAD,{
 				mes "This is a reward for your great dedication by Guillaume Marollo!";
 				mes "Just take this defeat as a lesson, next time you will definitely win.";
 				close2;
-				getitem 7829,3; //BF_Badge2
+				getitem BF_Badge2,3; //BF_Badge2
 			}
 			else {
 				mes "[Axl Rose]";
@@ -661,11 +661,11 @@ bat_b01,10,294,3	script	Vintenar#bat_b01_aover	4_M_KY_HEAD,{
 				mes "This is a reward for your great dedication by Guillaume Marollo!";
 				mes "Just take this defeat as a lesson, next time you will definitely win.";
 				close2;
-				getitem 7829,.@medal_gap; //BF_Badge2
+				getitem BF_Badge2,.@medal_gap; //BF_Badge2
 			}
 		}
 		else {
-			set .@your_medal,countitem(7829);
+			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 2) {
 				mes "[Axl Rose]";
@@ -673,7 +673,7 @@ bat_b01,10,294,3	script	Vintenar#bat_b01_aover	4_M_KY_HEAD,{
 				mes "This is a reward for your great dedication by Guillaume Marollo!";
 				mes "Just take this defeat as a lesson, next time you will definitely win.";
 				close2;
-				getitem 7829,3; //BF_Badge2
+				getitem BF_Badge2,3; //BF_Badge2
 			}
 			else {
 				mes "[Axl Rose]";
@@ -681,7 +681,7 @@ bat_b01,10,294,3	script	Vintenar#bat_b01_aover	4_M_KY_HEAD,{
 				mes "This is a reward for your great dedication by Guillaume Marollo!";
 				mes "Just take this defeat as a lesson, next time you will definitely win.";
 				close2;
-				getitem 7829,.@medal_gap; //BF_Badge2
+				getitem BF_Badge2,.@medal_gap; //BF_Badge2
 			}
 		}
 	}
@@ -703,7 +703,7 @@ bat_b01,389,14,3	script	Vintenar#bat_b01_bover	4_M_CRU_HEAD,{
 	set .@A_B_gap,$@Guill_ScoreBG1 - $@Croix_ScoreBG1;
 	if ($@FlaviusBG1_id2 == getcharid(4)) {
 		if (.@A_B_gap > 0) {
-			set .@your_medal,countitem(7829);
+			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 2) {
 				mes "[Swandery]";
@@ -711,7 +711,7 @@ bat_b01,389,14,3	script	Vintenar#bat_b01_bover	4_M_CRU_HEAD,{
 				mes "Even though we didn't win, we did our best.";
 				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
 				close2;
-				getitem 7829,3; //BF_Badge2
+				getitem BF_Badge2,3; //BF_Badge2
 			}
 			else {
 				mes "[Swandery]";
@@ -719,11 +719,11 @@ bat_b01,389,14,3	script	Vintenar#bat_b01_bover	4_M_CRU_HEAD,{
 				mes "Even though we didn't win, we did our best.";
 				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
 				close2;
-				getitem 7829,.@medal_gap; //BF_Badge2
+				getitem BF_Badge2,.@medal_gap; //BF_Badge2
 			}
 		}
 		else if (.@A_B_gap == 0) {
-			set .@your_medal,countitem(7829);
+			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 2) {
 				mes "[Swandery]";
@@ -731,7 +731,7 @@ bat_b01,389,14,3	script	Vintenar#bat_b01_bover	4_M_CRU_HEAD,{
 				mes "Even though we didn't win, we did our best.";
 				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
 				close2;
-				getitem 7829,3; //BF_Badge2
+				getitem BF_Badge2,3; //BF_Badge2
 			}
 			else {
 				mes "[Swandery]";
@@ -739,11 +739,11 @@ bat_b01,389,14,3	script	Vintenar#bat_b01_bover	4_M_CRU_HEAD,{
 				mes "Even though we didn't win, we did our best.";
 				mes "This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.";
 				close2;
-				getitem 7829,.@medal_gap; //BF_Badge2
+				getitem BF_Badge2,.@medal_gap; //BF_Badge2
 			}
 		}
 		else {
-			set .@your_medal,countitem(7829);
+			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
 			if (.@medal_gap > 8) {
 				mes "[Swandery]";
@@ -751,7 +751,7 @@ bat_b01,389,14,3	script	Vintenar#bat_b01_bover	4_M_CRU_HEAD,{
 				mes "Let's enjoy our glorious victory!";
 				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
 				close2;
-				getitem 7829,9; //BF_Badge2
+				getitem BF_Badge2,9; //BF_Badge2
 			}
 			else {
 				mes "[Swandery]";
@@ -759,7 +759,7 @@ bat_b01,389,14,3	script	Vintenar#bat_b01_bover	4_M_CRU_HEAD,{
 				mes "Let's enjoy our glorious victory!";
 				mes ""+strcharinfo(0)+", it's a sign reflecting victory.";
 				close2;
-				getitem 7829,.@medal_gap; //BF_Badge2
+				getitem BF_Badge2,.@medal_gap; //BF_Badge2
 			}
 		}
 	}

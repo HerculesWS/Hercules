@@ -92,7 +92,7 @@ prt_church,179,15,1	script	Priest Praupin	4_M_MINISTER,{
 		mes "Ah, he's away at the convent right now. If you want to meet Bishop Maugins in the Saint Capitolina Convent, travel ^3131FFnorth^000000, ^3131FFeast^000000, ^3131FFeast^000000 and then ^3131FFeast^000000 from Prontera.";
 		close;
 	case 22:
-		if(countitem(7181) > 0){	// Receipt_01
+		if(countitem(Receipt_01) > 0){	// Receipt_01
 			emotion e_gasp;
 			mes "Oh my, you seem";
 			mes "to be growing quickly";
@@ -119,14 +119,14 @@ prt_church,179,15,1	script	Priest Praupin	4_M_MINISTER,{
 			next;
 			switch(select("Wand:Flail")) {
 			case 1:
-				delitem 7181,1; //Receipt_01
+				delitem Receipt_01,1; //Receipt_01
 				tu_acolyte01 = 23;
-				getitem 1604,1; //Wand
+				getitem Wand,1; //Wand
 				break;
 			case 2:
-				delitem 7181,1; //Receipt_01
+				delitem Receipt_01,1; //Receipt_01
 				tu_acolyte01 = 23;
-				getitem 1510,1; //Flail
+				getitem Flail,1; //Flail
 				break;
 			}
 			close;
@@ -331,8 +331,8 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 			mes "I hope you";
 			mes "have a safe trip.";
 			tu_acolyte01 = 4;
-			getitem 1504,1; //Mace
-			getitem 602,1; //Wing_Of_Butterfly
+			getitem Mace,1; //Mace
+			getitem Wing_Of_Butterfly,1; //Wing_Of_Butterfly
 			savepoint "prt_monk",30,250;
 			close;
 		} else {
@@ -354,7 +354,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		break;
 	case 4:
 		if(getskilllv("AL_HEAL") > 2){
-			if(countitem(1504) > 0){
+			if(countitem(Mace) > 0){
 				mes "Oh my!";
 				mes "Welcome back~";
 				mes "I see that you've";
@@ -381,7 +381,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 				mes "You have returned the Mace.";
 				emotion e_heh;
 				tu_acolyte01 = 5;
-				delitem 1504, 1; //Mace
+				delitem Mace, 1; //Mace
 				if(Class == Job_Acolyte_High) {
 					getexp 2000,1000;
 					specialeffect2 EF_CONE;
@@ -445,7 +445,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		mes "However, I'm a little busy with";
 		mes "my work right now, so would you deliver this to Priest Gardron in the next building for me?";
 		tu_acolyte01 = 7;
-		getitem 7148,1; //Mother_Letter
+		getitem Mother_Letter,1; //Mother_Letter
 		close;
 	case 7:
 		mes "Would you please";
@@ -692,10 +692,10 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 			mes "Why don't you put some of your things in Kafra Storage first?";
 		} else {
 			tu_acolyte01 = 18;
-			getitem 7183,1; //Sister_Letter
-			getitem 7181,1; //Receipt_01
-			getitem 1081,2; //Merchant_Box_1
-			getitem 7148,1; //Mother_Letter
+			getitem Sister_Letter,1; //Sister_Letter
+			getitem Receipt_01,1; //Receipt_01
+			getitem Merchant_Box_1,2; //Merchant_Box_1
+			getitem Mother_Letter,1; //Mother_Letter
 		}
 		close;
 	case 18:
@@ -803,7 +803,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 	mes "[Priest Gardron]";
 	if(tu_acolyte01 == 7){
-		if(countitem(7148) >= 1){
+		if(countitem(Mother_Letter) >= 1){
 			mes "Hmm...?";
 			mes "What's that?";
 			mes "You have something for me?";
@@ -817,7 +817,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 			mes "her, especially since";
 			mes "she is getting old now, but I'm relieved to hear that her health";
 			mes "is good. We are truly blessed...";
-			delitem 7148,1; //Mother_Letter
+			delitem Mother_Letter,1; //Mother_Letter
 			tu_acolyte01 = 8;
 			close;
 		} else {
@@ -860,7 +860,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 			else
 				getexp 2000,2000;
 			specialeffect2 EF_CONE;
-			//getitem 505,1; //Blue_Potion
+			//getitem Blue_Potion,1; //Blue_Potion
 			close;
 		} else {
 			if (RENEWAL) {
@@ -1214,7 +1214,7 @@ prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 //============================================================
 prt_monk,197,228,3	script	Veiner	4_M_ORIENT02,{
 	mes "[Veiner]";
-	if(countitem(1081) && tu_acolyte01 == 18){
+	if(countitem(Merchant_Box_1) && tu_acolyte01 == 18){
 		mes "So very exhausted...";
 		mes "Should I just go back home?";
 		next;
@@ -1237,7 +1237,7 @@ prt_monk,197,228,3	script	Veiner	4_M_ORIENT02,{
 		mes "Thank you very much for delivering this to me. Sorry, but I'm always excited to hear from my cutie pie~";
 		emotion e_thx;
 		tu_acolyte01 = 19;
-		delitem 1081,1; //Merchant_Box_1
+		delitem Merchant_Box_1,1; //Merchant_Box_1
 		close;
 	} else if(tu_acolyte01 > 18){
 		mes "I can't wait";
@@ -1263,7 +1263,7 @@ prt_monk,28,260,5	script	Hedrick	1_M_04,{
 	mes "And so efficiently too!";
 	mes "Awesome job as usual,";
 	mes "Hedrick. You're number one!";
-	if(countitem(7148)==0 || tu_acolyte01 != 19) close;
+	if(countitem(Mother_Letter)==0 || tu_acolyte01 != 19) close;
 	next;
 	mes "[Hedrick]";
 	mes "Oh...?";
@@ -1284,9 +1284,9 @@ prt_monk,28,260,5	script	Hedrick	1_M_04,{
 	mes "Here, why don't";
 	mes "you have one of the";
 	mes "cookies she sent me?";
-	delitem 7148,1; //Mother_Letter
+	delitem Mother_Letter,1; //Mother_Letter
 	tu_acolyte01 = 20;
-	getitem 538,1; //Well_Baked_Cookie
+	getitem Well_Baked_Cookie,1; //Well_Baked_Cookie
 	close;
 }
 
@@ -1294,7 +1294,7 @@ prt_monk,28,260,5	script	Hedrick	1_M_04,{
 //============================================================
 prt_monk,136,261,0	script	Weapon Merchant#tu	HIDDEN_WARP_NPC,9,9,{
 OnTouch:
-	if(tu_acolyte01 != 20 || countitem(1081)==0) end;
+	if(tu_acolyte01 != 20 || countitem(Merchant_Box_1)==0) end;
 	mes "[Weapon Merchant]";
 	mes "The stuff I requested from the guild is finally here!";
 	mes "It's pretty tough to keep everything in stock since this is such a remote place.";
@@ -1303,7 +1303,7 @@ OnTouch:
 	mes "Hey, thanks so much!";
 	mes "Oh, and come here if";
 	mes "you need anything, okay?";
-	delitem 1081,1; //Merchant_Box_1
+	delitem Merchant_Box_1,1; //Merchant_Box_1
 	tu_acolyte01 = 21;
 	close;
 }
@@ -1313,8 +1313,8 @@ OnTouch:
 monk_in,103,176,7	script	Karven	1_M_PASTOR,{
 	mes "[Karven]";
 	mes "May you rest";
-	if(tu_acolyte01 == 21 && countitem(7183)){
-		delitem 7183, 1;
+	if(tu_acolyte01 == 21 && countitem(Sister_Letter)){
+		delitem Sister_Letter, 1;
 		tu_acolyte01 = 22;
 		mes "in peace forever...";
 		next;

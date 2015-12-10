@@ -21,7 +21,7 @@
 //============================================================
 
 alberta,43,244,0	script	Tourist#thai	4W_M_03,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -193,7 +193,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				close;
 			}
 		case 3:
-			if (countitem(517) == 0) {
+			if (countitem(Meat) == 0) {
 				mes "[Tourist]";
 				mes "I see...I can understand that you";
 				mes "can't help me. It's alright...";
@@ -207,13 +207,13 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 			}
 			.@th_rand = rand(1,100);
 			if (.@th_rand > 0 && .@th_rand < 10) {
-				if (countitem(517) == 10) {
+				if (countitem(Meat) == 10) {
 					mes "[Tourist]";
 					mes "Ah...thanks! Thank you so much!";
-					delitem 517,10; //Meat
+					delitem Meat,10; //Meat
 					next;
 				}
-				else if (countitem(517) < 10) {
+				else if (countitem(Meat) < 10) {
 					mes "[Tourist]";
 					mes "I appreciate that you're";
 					mes "helping me out of the";
@@ -228,7 +228,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 					mes "more Meat!";
 					close;
 				}
-				else if (countitem(517) > 10) {
+				else if (countitem(Meat) > 10) {
 					mes "[Tourist]";
 					mes "I appreciate you bringing";
 					mes "all this for me but...";
@@ -242,13 +242,13 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				}
 			}
 			else if (.@th_rand > 11 && .@th_rand < 80) {
-				if (countitem(517) == 20) {
+				if (countitem(Meat) == 20) {
 					mes "[Tourist]";
 					mes "Ah...thanks! Thank you so much!";
-					delitem 517,20; //Meat
+					delitem Meat,20; //Meat
 					next;
 				}
-				else if (countitem(517) < 20) {
+				else if (countitem(Meat) < 20) {
 					mes "[Tourist]";
 					mes "I appreciate that you're";
 					mes "helping me out of the";
@@ -263,7 +263,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 					mes "more Meat!";
 					close;
 				}
-				else if (countitem(517) > 20) {
+				else if (countitem(Meat) > 20) {
 					mes "[Tourist]";
 					mes "I appreciate you bringing";
 					mes "all this for me but...";
@@ -277,13 +277,13 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				}
 			}
 			else {
-				if (countitem(517) == 40) {
+				if (countitem(Meat) == 40) {
 					mes "[Tourist]";
 					mes "Ah...thanks! Thank you so much!";
-					delitem 517,40; //Meat
+					delitem Meat,40; //Meat
 					next;
 				}
-				else if (countitem(517) < 40) {
+				else if (countitem(Meat) < 40) {
 					mes "[Tourist]";
 					mes "I appreciate that you're";
 					mes "helping me out of the";
@@ -298,7 +298,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 					mes "more Meat!";
 					close;
 				}
-				else if (countitem(517) > 40) {
+				else if (countitem(Meat) > 40) {
 					mes "[Tourist]";
 					mes "Geez, you want I should";
 					mes "choke myself to death?";
@@ -312,9 +312,9 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 			mes "starving for a long time.";
 			mes "He ate all the meat I gave him";
 			mes "and it was all gone in a flash.^000000";
-			if (countitem(538) > 0) {
+			if (countitem(Well_Baked_Cookie) > 0) {
 				mes "^0000FF...Oh my! He took my cookies without even asking and ate all of those too!!^000000";
-				delitem 538,countitem(538); //Well_Baked_Cookie
+				delitem Well_Baked_Cookie,countitem(Well_Baked_Cookie); //Well_Baked_Cookie
 			}
 			next;
 			mes "[Tourist]";
@@ -363,14 +363,14 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 			mes "For me, it's impossible!!";
 			close;
 		case 4:
-			if (countitem(538) > 19) {
+			if (countitem(Well_Baked_Cookie) > 19) {
 				mes "[Tourist]";
 				mes "Ah~!! Thank you so much!!";
 				mes "There really are many good";
 				mes "people like you in this world.";
 				next;
 				thai_head = 5;
-				delitem 538,20; //Well_Baked_Cookie
+				delitem Well_Baked_Cookie,20; //Well_Baked_Cookie
 				mes "[Tourist]";
 				mes "I appreciate what you've done for";
 				mes "me...now I can see her smile with";
@@ -461,7 +461,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				close;
 			}
 			thai_head = 6;
-			getitem 1205,1; //Cutter_
+			getitem Cutter_,1; //Cutter_
 			next;
 			mes "[Tourist]";
 			mes "Heh...once gain, thanks for";
@@ -690,8 +690,8 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 			mes "^FF0000Munak Munak Munak Munak!!^000000";
 			close;
 		case 7:
-			if (countitem(636) > 0) {
-				delitem 636,1; //No_Recipient
+			if (countitem(No_Recipient) > 0) {
+				delitem No_Recipient,1; //No_Recipient
 				mes "[Tommy]";
 				mes "^FF0000Munak Munak Munak Munak!!^000000";
 				next;
@@ -1061,7 +1061,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 }
 
 comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -1410,20 +1410,20 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 			mes "^3355FFYou feel there may be something you missed.^000000";
 			close;
 		case 15:
-			if (countitem(7054) > 9 && countitem(965) > 14 && countitem(964) > 9 && countitem(7053) > 49) {
+			if (countitem(Brigan) > 9 && countitem(Clam_Shell) > 14 && countitem(Crap_Shell) > 9 && countitem(Cyfar) > 49) {
 				mes "[Elder Creek]";
 				mes "I see you know how the world";
 				mes "works. When you need something";
 				mes "from someone, you must give";
 				mes "in order to receive.";
 				mes "Thank you for your kindness.";
-				delitem 7054,10; //Brigan
-				delitem 965,15; //Clam_Shell
-				delitem 964,10; //Crap_Shell
-				delitem 7053,50; //Cyfar
+				delitem Brigan,10; //Brigan
+				delitem Clam_Shell,15; //Clam_Shell
+				delitem Crap_Shell,10; //Crap_Shell
+				delitem Cyfar,50; //Cyfar
 				next;
 				thai_head = 16;
-				getitem 603,1; //Old_Blue_Box
+				getitem Old_Blue_Box,1; //Old_Blue_Box
 				mes "[Elder Creek]";
 				mes "Please, take this first.";
 				mes "If you would, please go talk to my";

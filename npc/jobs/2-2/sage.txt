@@ -124,7 +124,7 @@ yuno_in02,38,61,5	script	Dean of the Academy#sa	2_M_SAGE_OLD,{
 		end;
 	}
 	else if (SAGE_Q == 15) {
-		if (countitem(1550) > 0) {
+		if (countitem(Book) > 0) {
 			if (JobLevel < 40) {
 				SAGE_Q = 0;
 				mes "You don't seem to be qualified yet.";
@@ -360,9 +360,9 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 					mes "Please make sure you have at least 70,000 zeny to enroll in classes.";
 					close;
 				}
-				if (countitem(1006) > 0 && countitem(1007) > 0) {
-					delitem 1006,1; //Old_Magic_Book
-					delitem 1007,1; //Penetration
+				if (countitem(Old_Magic_Book) > 0 && countitem(Penetration) > 0) {
+					delitem Old_Magic_Book,1; //Old_Magic_Book
+					delitem Penetration,1; //Penetration
 					mes "[Metheus Sylphe]";
 					mes "Thank you, your application has been accepted.";
 					mes "Next, you will take the entrance test.";
@@ -506,9 +506,9 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 	else if (SAGE_Q >= 1 && SAGE_Q <= 3) {
 		mes "Welcome, once again.";
 		next;
-		if (countitem(1006) > 0 && countitem(1007) > 0) {
-			delitem 1006,1; //Old_Magic_Book
-			delitem 1007,1; //Penetration
+		if (countitem(Old_Magic_Book) > 0 && countitem(Penetration) > 0) {
+			delitem Old_Magic_Book,1; //Old_Magic_Book
+			delitem Penetration,1; //Penetration
 			mes "[Metheus Sylphe]";
 			mes "Well done. Let me proceed with your application request.";
 			SAGE_Q = 4;
@@ -1354,7 +1354,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			close;
 		}
 		else {
-			if (countitem(607) > 0) {
+			if (countitem(Yggdrasilberry) > 0) {
 				mes "[Saphien Layless]";
 				mes "Oh, did you bring them with you? Excellent!";
 				mes "You brought Yggdrasilberry!";
@@ -1364,7 +1364,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				mes "Listen carefully, I will not accept dozing off in the middle of class.";
 				next;
 			}
-			else if (countitem(608) > 0) {
+			else if (countitem(Seed_Of_Yggdrasil) > 0) {
 				mes "[Saphien Layless]";
 				mes "Hmm, did you prepare for class? Let's see...";
 				mes "Oh! So you brought me the Yggdrasil Seed?";
@@ -1374,7 +1374,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				mes "Listen carefully, I will not accept dozing off in the middle of class.";
 				next;
 			}
-			else if (countitem(610) > 0) {
+			else if (countitem(Leaf_Of_Yggdrasil) > 0) {
 				mes "[Saphien Layless]";
 				mes "Hmm, did you prepare for class? Let's see...";
 				mes "Yggdrasil Leaf...";
@@ -1481,12 +1481,12 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 		}
 	}
 	else if (SAGE_Q == 10) {
-		if (countitem(916) > 0 && countitem(919) > 0 && countitem(1019) > 0 && countitem(1024) > 0 && countitem(713) > 0) {
-			delitem 916,1; //Feather_Of_Birds
-			delitem 919,1; //Animal's_Skin
-			delitem 1019,1; //Wooden_Block
-			delitem 1024,1; //Chinese_Ink
-			delitem 713,1; //Empty_Bottle
+		if (countitem(Feather_Of_Birds) > 0 && countitem(Animal's_Skin) > 0 && countitem(Wooden_Block) > 0 && countitem(Chinese_Ink) > 0 && countitem(Empty_Bottle) > 0) {
+			delitem Feather_Of_Birds,1; //Feather_Of_Birds
+			delitem Animal's_Skin,1; //Animal's_Skin
+			delitem Wooden_Block,1; //Wooden_Block
+			delitem Chinese_Ink,1; //Chinese_Ink
+			delitem Empty_Bottle,1; //Empty_Bottle
 			mes "Now, you're writing your thesis.";
 			mes "I will assist you with your writing.";
 			next;
@@ -1656,7 +1656,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			mes "[Saphien Layless]";
 			mes "Oh, did you finish already? Well done.";
 			mes "Please handle this with care, because you won't be able to do this ever again.";
-			getitem 1550,1; //Book
+			getitem Book,1; //Book
 			next;
 			mes "[Saphien Layless]";
 			mes "I assume you're ready to submit your work to the dean.";
@@ -2032,12 +2032,12 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 		close;
 	}
 	else if (SAGE_Q == 12) {
-		if (countitem(916) > 0 && countitem(919) > 0 && countitem(1019) > 0 && countitem(1024) > 0 && countitem(713) > 0) {
-			delitem 916,1; //Feather_Of_Birds
-			delitem 919,1; //Animal's_Skin
-			delitem 1019,1; //Wooden_Block
-			delitem 1024,1; //Chinese_Ink
-			delitem 713,1; //Empty_Bottle
+		if (countitem(Feather_Of_Birds) > 0 && countitem(Animal's_Skin) > 0 && countitem(Wooden_Block) > 0 && countitem(Chinese_Ink) > 0 && countitem(Empty_Bottle) > 0) {
+			delitem Feather_Of_Birds,1; //Feather_Of_Birds
+			delitem Animal's_Skin,1; //Animal's_Skin
+			delitem Wooden_Block,1; //Wooden_Block
+			delitem Chinese_Ink,1; //Chinese_Ink
+			delitem Empty_Bottle,1; //Empty_Bottle
 			mes "Hmph. Lucky brat brought all of the items.";
 			mes "Well, I don't expect you to write an outrageously great thesis though...";
 			next;
@@ -2079,7 +2079,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 			mes "[Lucius Celsus]";
 			mes "Are you done? Okay, then it's over.";
 			mes "You won't be able to write another thesis again, handle this with care.";
-			getitem 1550,1; //Book
+			getitem Book,1; //Book
 			next;
 			mes "[Lucius Celsus]";
 			mes "Show this masterpiece to the dean.";
@@ -2187,7 +2187,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 			close;
 		}
 		else if (SAGE_Q2 == 1) {
-			if (countitem(7049) > 29) {
+			if (countitem(Stone) > 29) {
 				mes "Oh~ how sweet! You brought them all~ thank you~";
 				mes "Oh, can you wait a little bit? I need to do something before we start. Tee hee~";
 				next;
@@ -2200,7 +2200,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "[Aebecee George]";
 				mes "Ho~cus~fo~cus!!";
 				next;
-				delitem 7049,30; //Stone
+				delitem Stone,30; //Stone
 				mes "[Aebecee George]";
 				mes "Tee hee, you naughty stone~";
 				mes "Only 3 of them worked for me. Tee hee~";
@@ -2209,9 +2209,9 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "Here's my other favor to ask of you. Oh, are those tears of...joy?";
 				mes "Oh, I'm sooo excited too! Tee hee~";
 				next;
-				getitem 991,1; //Crystal_Blue
-				getitem 993,1; //Yellow_Live
-				getitem 992,1; //Wind_Of_Verdure
+				getitem Crystal_Blue,1; //Crystal_Blue
+				getitem Yellow_Live,1; //Yellow_Live
+				getitem Wind_Of_Verdure,1; //Wind_Of_Verdure
 				mes "[Aebecee George]";
 				mes "I will give you these elemental ores...but...they are not for free.";
 				mes "Whoa there cowboy! Don't pull out so soon~ Listen, tee hee~";
@@ -2240,7 +2240,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 			}
 		}
 		else if (SAGE_Q2 == 2) {
-			if (countitem(1754) > 49 && countitem(1756) > 49 && countitem(1755) > 49) {
+			if (countitem(Crystal_Arrow) > 49 && countitem(Stone_Arrow) > 49 && countitem(Arrow_Of_Wind) > 49) {
 				mes "Oh~ how sweet! You brought them all~ Oh thank you~";
 				mes "Well now, let's get down to business. Tee hee~";
 				next;
@@ -2268,9 +2268,9 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "...Oh my gosh! Time flies sooo fast!";
 				mes "Let's call it a day, dear, tee hee~";
 				next;
-				delitem 1754,50; //Crystal_Arrow
-				delitem 1756,50; //Stone_Arrow
-				delitem 1755,50; //Arrow_Of_Wind
+				delitem Crystal_Arrow,50; //Crystal_Arrow
+				delitem Stone_Arrow,50; //Stone_Arrow
+				delitem Arrow_Of_Wind,50; //Arrow_Of_Wind
 				mes "[Aebecee George]";
 				mes "When you come to the next class, bring ^3355FF1 Holy Water^000000~";
 				mes "I hope you have at least one Priest friend. Oh, you don't? Well, it couldn't hurt to get friendly with one.";
@@ -2291,7 +2291,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 			}
 		}
 		else if (SAGE_Q2 == 3) {
-			if (countitem(523) > 0) {
+			if (countitem(Holy_Water) > 0) {
 				mes "Oh~ how sweet! You brought some Holy Water~ thanks honey~";
 				mes "Oh righty, we should start class. Tee hee~";
 				next;
@@ -2319,7 +2319,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 				mes "Oh, it's the end of the class~ tee hee.";
 				mes "So? Do you think you've learned a lot? You can thank me, honey!";
 				next;
-				delitem 523,1; //Holy_Water
+				delitem Holy_Water,1; //Holy_Water
 				mes "[Aebecee George]";
 				mes "Well, that's it. You can write your thesis with what I've taught you!";
 				mes "Tee hee~ yes! Yes! I am the best teacher in the world! Oh, I am on fire! Tee hee~";
@@ -2355,12 +2355,12 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 		}
 	}
 	else if (SAGE_Q == 14) {
-		if (countitem(916) > 0 && countitem(919) > 0 && countitem(1019) > 0 && countitem(1024) > 0 && countitem(713) > 0) {
-			delitem 916,1; //Feather_Of_Birds
-			delitem 919,1; //Animal's_Skin
-			delitem 1019,1; //Wooden_Block
-			delitem 1024,1; //Chinese_Ink
-			delitem 713,1; //Empty_Bottle
+		if (countitem(Feather_Of_Birds) > 0 && countitem(Animal's_Skin) > 0 && countitem(Wooden_Block) > 0 && countitem(Chinese_Ink) > 0 && countitem(Empty_Bottle) > 0) {
+			delitem Feather_Of_Birds,1; //Feather_Of_Birds
+			delitem Animal's_Skin,1; //Animal's_Skin
+			delitem Wooden_Block,1; //Wooden_Block
+			delitem Chinese_Ink,1; //Chinese_Ink
+			delitem Empty_Bottle,1; //Empty_Bottle
 			mes "Okay~ so its now or never~ tee hee~";
 			mes "I taught you everything I know. Don't be nervous, you'll be okay~";
 			next;
@@ -2496,7 +2496,7 @@ yuno_in03,244,31,3	script	Physics Professor#sa	2_M_PHARMACIST,{
 			mes "[Aebecee George]";
 			mes "Tee hee, so... are you done with your thesis? What do you think of your work? I think you did fine~";
 			mes "Don't forget, this is the first and the last time you'll write a thesis, okay? Tee hee~";
-			getitem 1550,1; //Book
+			getitem Book,1; //Book
 			next;
 			mes "[Aebecee George]";
 			mes "Okay, now you can show the dean your thesis~";

@@ -287,7 +287,7 @@ OnTouch:
 			close;
 		}
 		Zeny -= .@Red_potion_hap;
-		getitem 501,.@input; //Red_Potion
+		getitem Red_Potion,.@input; //Red_Potion
 		break;
 	case 2:
 		mes "[Suspicious Guy]";
@@ -352,7 +352,7 @@ OnTouch:
 			close;
 		}
 		Zeny -= .@Main_gauche_hap;
-		getitem 1207,.@input; //Main_Gauche
+		getitem Main_Gauche,.@input; //Main_Gauche
 		break;
 	case 3:
 		mes "[Suspicious Guy]";
@@ -404,7 +404,7 @@ OnTouch:
 			close;
 		}
 		Zeny -= .@Hood__hap;
-		getitem 2501,.@input; //Hood
+		getitem Hood,.@input; //Hood
 		break;
 	case 4:
 		mes "[Suspicious Guy]";
