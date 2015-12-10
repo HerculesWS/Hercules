@@ -20,7 +20,7 @@ lighthalzen,108,229,2	script	La Fenn	4_M_JPNOJI,{
 			mes "[La Fenn]";
 			mes "Here is your prize. It's yours for good.";
 			set Q_99LVL,0;
-			getitem 12106,1; //Jewel Case
+			getitem Accessory_Box,1; //Jewel Case
 			emotion e_grat;
 		} else {
 			mes callfunc("F_Hi");
