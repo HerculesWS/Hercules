@@ -98,13 +98,13 @@ L_Start:
 		close;
 	case 2: // Give proof
 		mes "[Santa Claus]";
-		if(countitem(7034) < 3) goto L_NotEnuf;
+		if(countitem(Red_Socks_With_Holes) < 3) goto L_NotEnuf;
 		delitem 7034,3;
 		mes "Seems you've been doing a";
 		mes "good job of taking down those";
 		mes "fake Santas. Keep it up!";
 		next;
-		getitem 644,1; //Gift Box Prototype
+		getitem Gift_Box,1; //Gift Box Prototype
 		++#event_xmas;
 		mes "[Santa Claus]";
 		mes "There's your reward.";
