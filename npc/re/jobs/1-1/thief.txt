@@ -190,7 +190,7 @@ moc_prydb1,42,133,2	script	Thief Guildsman#thief	2_M_THIEFMASTER,{
 		mes "'For those who are ready, the moonlight shall open the way. Now you are fully ready, I now officially allow you to become a member of the Thief Guild.'";
 		callfunc "Job_Change",Job_Thief;
 		q_job_thief = 0;
-		getitem 13041,1; // N_Main_Gauche
+		getitem N_Main_Gauche,1; // N_Main_Gauche
 		next;
 		mes "[Commander of Thief Guild]";
 		mes "'Congratulations on becoming a Thief.'";

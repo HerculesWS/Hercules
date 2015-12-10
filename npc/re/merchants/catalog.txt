@@ -36,7 +36,7 @@
 //=========================================================================
 
 moc_para01,22,16,5	script	Catalog Magician#catal01	4_M_BIBI,{
-	if (!checkweight(1301,3)) {
+	if (!checkweight(Axe,3)) {
 		mes "- You have too many items. Please make space. -";
 		close;
 	}
@@ -97,7 +97,7 @@ moc_para01,22,16,5	script	Catalog Magician#catal01	4_M_BIBI,{
 		}
 		mes "Ok, here you go.";
 		Zeny -= .@sell;
-		getitem 12580,.@input; //Vending_Search_Scroll
+		getitem Vending_Search_Scroll,.@input;
 		close;
 	case 2:
 		mes "[Catalog Magician]";

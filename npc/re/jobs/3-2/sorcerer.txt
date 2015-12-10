@@ -36,7 +36,7 @@
 
 gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 	mes "[Merito]";
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "You packed so much in your bag. Try again after emptying your bag.";
 		close;
 	}
@@ -148,7 +148,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 
 gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 	mes "[Karacas]";
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "Oh, it seems that you're too heavy. Empty your bag and then come again.";
 		close;
 	}
@@ -249,7 +249,7 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		changequest 12096,12097;
 		close;
 	} else if (job_soc == 3) {
-		if (countitem(992) > 2 && countitem(991) > 2 && countitem(990) > 2 && countitem(993) > 2) {
+		if (countitem(Wind_Of_Verdure) > 2 && countitem(Crystal_Blue) > 2 && countitem(Boody_Red) > 2 && countitem(Yellow_Live) > 2) {
 			mes "Oh, you have all the materials.";
 			next;
 			select("What should I do next?");
@@ -332,16 +332,16 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		mes "When you bring these basic things, I'll guide you to the next step.";
 		close;
 	} else if (job_soc == 4) {
-		if (countitem(6276) && countitem(6278) && countitem(6277)) {
+		if (countitem(Clear_Reagent) && countitem(Black_Reagent) && countitem(Red_Reagent)) {
 			mes "Wow~ your skill is good.";
 			mes "I thought you'd be overwhelmed by the spirits but you've managed to get the effective medicine!";
 			next;
 			select("Is this all I need to do?");
 			mes "[Karacas]";
 			mes "Well done. First, I will organize the miraculous medicine so please wait a moment.";
-			delitem 6276,1; //Clear_Reagent
-			delitem 6278,1; //Black_Reagent
-			delitem 6277,1; //Red_Reagent
+			delitem Clear_Reagent,1;
+			delitem Black_Reagent,1;
+			delitem Red_Reagent,1;
 			job_soc = 5;
 			completequest 12098;
 			close;
@@ -382,8 +382,8 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		mes "[Karacas]";
 		mes "Congratulations, [" + strcharinfo(0) + "]";
 		jobchange roclass(eaclass()|EAJL_THIRD);
-		getitem 5756,1; //Wind_Whisper
-		getitem 2795,1; //Green_Apple_Ring
+		getitem Wind_Whisper,1;
+		getitem Green_Apple_Ring,1;
 		next;
 		mes "[Karacas]";
 		mes "I hope that you gain more communion with spirits from now on.";

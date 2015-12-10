@@ -64,7 +64,7 @@
 	next;
 
 	.@menu$ = "^FF82FF'17 Carat Diamond'^000000?";
-	if (countitem(6024))
+	if (countitem(17Carat_Dia))
 		.@menu$ += ":Exchange my 17 Carat Diamond for zeny...";
 
 	switch(select(.@menu$)) {

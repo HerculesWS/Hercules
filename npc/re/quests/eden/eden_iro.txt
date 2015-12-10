@@ -124,7 +124,7 @@ moc_para01,166,51,3	script	Phelix#edco	4_M_03,{
 	mes "[Phelix]";
 	mes "Alright, let's see what ya got...";
 	next;
-	if (countitem(909) < 3) {
+	if (countitem(Jellopy) < 3) {
 		mes "[Phelix]";
 		mes "Hmm, look dude, I said 3 Jellopies for 1 Carrot... got it?";
 		close;
@@ -135,10 +135,10 @@ moc_para01,166,51,3	script	Phelix#edco	4_M_03,{
 	next;
 	switch(select("As many as I can get, please.:I want to choose.:Never mind, I like my Jellopy.")) {
 	case 1:
-		.@amount = countitem(909) / 3;
+		.@amount = countitem(Jellopy) / 3;
 		break;
 	case 2:
-		.@available = countitem(909) / 3;
+		.@available = countitem(Jellopy) / 3;
 		mes "[Phelix]";
 		mes "How many do you want?";
 		mes "^ff0000You have enough for up to " + .@available + " Carrots.^000000";
@@ -161,7 +161,7 @@ moc_para01,166,51,3	script	Phelix#edco	4_M_03,{
 		mes "Don't bother me if you don't want to trade.";
 		close;
 	}
-	if (checkweight(515,.@amount) == 0) {
+	if (checkweight(Carrot,.@amount) == 0) {
 		mes "[Phelix]";
 		mes "You are overweight.";
 		close;
@@ -169,8 +169,8 @@ moc_para01,166,51,3	script	Phelix#edco	4_M_03,{
 	mes "[Phelix]";
 	mes "There you go~! As I promised.";
 	mes "Try not to stuff yer face.";
-	delitem 909,.@amount*3; //Jellopy
-	getitem 515,.@amount; //Carrot
+	delitem Jellopy,.@amount*3;
+	getitem Carrot,.@amount;
 	end;
 }
 
@@ -250,13 +250,13 @@ moc_para01,163,51,7	script	Izaac#edco	4_M_04,{
 			mes "to an adventurer like you?";
 			close;
 		}
-		if (checkweight(501,.@amount) == 0) { //custom check
+		if (checkweight(Red_Potion,.@amount) == 0) { //custom check
 			mes "[Izaac]";
 			mes "You are overweight.";
 			close;
 		}
 		delitem .@item,.@trade_amount;
-		getitem 501,.@amount; //Red_Potion
+		getitem Red_Potion,.@amount;
 		mes "[Izaac]";
 		mes "There you go!";
 		mes "Check how many "+.@item$;
@@ -342,9 +342,9 @@ moc_para01,50,39,4	script	Eve Natalia	4_F_SITDOWN,{
 		for(.@i = 0; .@i<.@amount; ++.@i) {
 			// Note: iRO lists item 6235 as "Safe to 7 Headgear Certificate", but it's Guarantee_Armor_6Up in our database.
 			if (rand(2))
-				getitem 6230,1; //Guarantee_Weapon_7Up
+				getitem Guarantee_Weapon_7Up,1;
 			else
-				getitem 6234,1; //Guarantee_Armor_7Up
+				getitem Guarantee_Armor_7Up,1;
 		}
 		close;
 	case 3:
@@ -389,7 +389,7 @@ moc_para01,48,184,2	script	Gum & Manual Exchanger	2_DROP_MACHINE,{
 		mes "[Trader Machine]";
 		mes "I can give you 1 Battle Manual X3 for 1 Costume Corsair.";
 		next;
-		if (countitem(19619) == 0) {
+		if (countitem(C_Corsair) == 0) {
 			mes "[Trader Machine]";
 			mes "You don't have a Costume Corsair hat to make that trade.";
 			close;
@@ -403,8 +403,8 @@ moc_para01,48,184,2	script	Gum & Manual Exchanger	2_DROP_MACHINE,{
 		next;
 		mes "[Trader Machine]";
 		mes "The Machine has given you an item in return!";
-		delitem 19619,1; //C_Corsair
-		getitem 14545,1; //Battle_Manual_X3
+		delitem C_Corsair,1;
+		getitem Battle_Manual_X3,1;
 		close;
 	case 6:
 		close;

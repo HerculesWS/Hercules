@@ -44,7 +44,7 @@
 
 //== Utility NPCs :: cat_merchant ==========================
 mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
-	if (MaxWeight - Weight < 100 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 100 || checkweight(Knife,1) == 0) {
 		mes "[Investment Cat Helper]";
 		mes "You have a heavy load. Maybe you're a peddler? No peddlers in this area.";
 		close;
@@ -81,7 +81,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 		while(1) {
 			switch(select("Open an account:Ask about benefits:Cancel")) {
 			case 1:
-				if (countitem(12636) < 10) {
+				if (countitem(Malang_Sp_Can) < 10) {
 					mes "[Investment Cat Helper]";
 					mes "Hmm!";
 					mes "I'd love to give you account for";
@@ -89,7 +89,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 					mes "advertising investers of the trader group, sorry.";
 					close;
 				}
-				delitem 12636,10; //Malang_Sp_Can
+				delitem Malang_Sp_Can,10;
 				ep13_yong1 = 10;
 				mes "[Investment Cat Helper]";
 				mes "Good!";
@@ -207,7 +207,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 				mes "Please check again~";
 				close;
 			}
-			if (countitem(12636) < .@required) {
+			if (countitem(Malang_Sp_Can) < .@required) {
 				mes "[Investment Cat Helper]";
 				mes "Ahhh!";
 				mes "You don't have enough cans.";
@@ -215,7 +215,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 				close;
 			}
 			if (ep13_yong1 < 10000) {
-				delitem 12636,.@required; //Malang_Sp_Can
+				delitem Malang_Sp_Can,.@required;
 				ep13_yong1 += .@input;
 				mes "[Investment Cat Helper]";
 				mes .@input+" accounts were invested in.";
@@ -229,7 +229,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 				close;
 			} else {
 				if (.@input + ep13_yong1 > 20000) {
-					delitem 12636,.@required; //Malang_Sp_Can
+					delitem Malang_Sp_Can,.@required;
 					ep13_yong1 = 20000;
 					mes "[Investment Cat Helper]";
 					mes "You can have 20,000 accounts max";
@@ -243,7 +243,7 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 					mes "Thank you so much~";
 					close;
 				} else {
-					delitem 12636,.@required; //Malang_Sp_Can
+					delitem Malang_Sp_Can,.@required;
 					ep13_yong1 += .@input;
 					mes "[Investment Cat Helper]";
 					mes .@input+" accounts have been invested in.";
@@ -304,12 +304,12 @@ mal_in02,134,31,5	script	Investment Cat Helper	4_WHITETIGER,{
 			mes "[Investment Cat Helper]";
 			mes "The can donation can range from a minimum of 20 to a maximum of 10,000.";
 			close;
-		} else if (countitem(12636) < .@input) { // Malang_Sp_Can
+		} else if (countitem(Malang_Sp_Can) < .@input) { // Malang_Sp_Can
 			mes "[Investment Cat Helper]";
 			mes "Hmm? You don't have enough cans.";
 			close;
 		} else {
-			delitem 12636,.@input; //Malang_Sp_Can
+			delitem Malang_Sp_Can,.@input;
 			mes "[Investment Cat Helper]";
 			mes "Ohh! Thank you~";
 			next;
@@ -351,12 +351,12 @@ malangdo,184,139,4	script	Storekeeper#mal	4_CAT_ADV2,{
 	}
 	switch(.@i) {
 	case 1:
-		if (countitem(12636) < .@cans) {
+		if (countitem(Malang_Sp_Can) < .@cans) {
 			mes "[Storekeeper]";
 			mes "You don't have enough cans...";
 			close;
 		}
-		delitem 12636,.@cans; //Malang_Sp_Can
+		delitem Malang_Sp_Can,.@cans;
 		break;
 	case 2:
 		if (Zeny < .@zeny) {
@@ -630,7 +630,7 @@ mal_in02,22,62,3	script	Tomas#mal	4_CAT_ADMIRAL,{
 		mes "Then, as village chief and the admiral of the cat association, I'd like you to get along with me as well!";
 		ma_tomas = 100;
 		completequest 11237;
-		getitem 6422,30; //Egrade_Coin
+		getitem Egrade_Coin,30;
 		close2;
 		cutin "",255;
 		end;
@@ -945,7 +945,7 @@ mal_in02,174,64,5	script	Linguist Devore#mal	4_CAT_MERMASTER,{
 		emotion e_hlp;
 		ma_tomas = 35;
 		changequest 11236,11237;
-		getitem 6422,30; //Egrade_Coin
+		getitem Egrade_Coin,30;
 		close;
 	} else if (ma_tomas == 35) {
 		mes "[Linguist Devore]";
@@ -1113,7 +1113,7 @@ mal_in02,179,57,1	script	Geologist Mali#mal	4_CAT_ADV1,{
 		completequest 11224;
 		setquest 11225;
 		setquest 11243;
-		getitem 6422,20; //Egrade_Coin
+		getitem Egrade_Coin,20;
 		close;
 	} else if (ma_tomas > 99) {
 		if (questprogress(11240) || questprogress(11241)) {
@@ -1126,7 +1126,7 @@ mal_in02,179,57,1	script	Geologist Mali#mal	4_CAT_ADV1,{
 			mes "Ah! Bob complimented you so much on your great job, mew~";
 			mes "Please help us next time again when you can, mew~";
 			changequest 11242,11243;
-			getitem 6422,4; //Egrade_Coin
+			getitem Egrade_Coin,4;
 			close;
 		} else {
 			if (questprogress(11243,PLAYTIME) == 1) {
@@ -1187,7 +1187,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 		mes "Are you here for voluntary service?!";
 		emotion e_omg;
 		next;
-		if (checkweight(1201,1) == 0) {
+		if (checkweight(Knife,1) == 0) {
 			mes "[Bob]";
 			mes "Ummm... be lightened with your mind and body when doing voluntary service!";
 			mes "You seem to have too much stuff, so get yourself lightened~";
@@ -1239,7 +1239,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 				changequest 11221,11222;
 			} else
 				changequest 11240,11241;
-			getitem 6434,1; //Fix_Kit
+			getitem Fix_Kit,1;
 			close;
 		case 2:
 			mes "[Bob]";
@@ -1252,7 +1252,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 		}
 	} else if (ma_tomas == 15) {
 	L_Quest2:
-		if (checkweight(1201,1) == 0) {
+		if (checkweight(Knife,1) == 0) {
 			mes " - Notice !! -";
 			mes " - Since you have too many items - ";
 			mes " - you cannot get the item. - ";
@@ -1271,8 +1271,8 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 		mes "[Bob]";
 		mes "Repairing the cracks is rather simple.";
 		mes "Anyone can do it easily with just this ^0000FFFix Kit^000000!";
-		if (countitem(6434) == 0)
-			getitem 6434,1; //Fix_Kit
+		if (countitem(Fix_Kit) == 0)
+			getitem Fix_Kit,1;
 		next;
 		mes "[Bob]";
 		mes "Fill in the part with this mixture of gray and white clay, and fix the cracks with a stapler.";
@@ -1302,8 +1302,8 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 		mes "[Bob]";
 		mes "You did a great job indeed!!!";
 		mes "I will tell Dr. Mali!";
-		if (countitem(6434) > 0)
-			delitem 6434,1; //Fix_Kit
+		if (countitem(Fix_Kit) > 0)
+			delitem Fix_Kit,1;
 		ma_tomas = 17;
 		changequest 11223,11224;
 		close;
@@ -1324,7 +1324,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 -	script	Crack#mal0	-1,{
 	if (.off) end;	// Official script uses a 1-second timer to disable cracks. Added to prevent abuse.
 	if (ma_tomas == 15 || questprogress(11241)) {
-		if (countitem(6434) < 1) {
+		if (countitem(Fix_Kit) < 1) {
 			mes "- To repair the crack -";
 			mes "- you need a Fix Kit. -";
 			close;
@@ -1748,7 +1748,7 @@ mal_in01,114,169,5	script	Rican#mal	4_CAT_SAILOR4,{
 			close;
 		}
 	} else if (ma_tomas == 9) {
-		if (countitem(6435) < 30) {
+		if (countitem(Fresh_Fruit) < 30) {
 			mes "[Rican]";
 			mes "You can get it on Malangdo Island easily. Bring me about 30.";
 			mes "Ah! Keep the secret to my son for sure~";
@@ -1778,7 +1778,7 @@ mal_in01,114,169,5	script	Rican#mal	4_CAT_SAILOR4,{
 		mes "Then would you put it in the machine in front of me?";
 		close;
 	} else if (ma_tomas == 11) {
-		if (checkweight(1201,1) == 0) {
+		if (checkweight(Knife,1) == 0) {
 			mes " - Notice !! -";
 			mes " - Since you have too many items - ";
 			mes " - you cannot get the item. - ";
@@ -1810,7 +1810,7 @@ mal_in01,114,169,5	script	Rican#mal	4_CAT_SAILOR4,{
 		mes "If you see my son, please tell him to get back soon~";
 		mes "And this is for you to buy something delicious with, since you did hard work.";
 		ma_tomas = 12;
-		getitem 6422,20; //Egrade_Coin
+		getitem Egrade_Coin,20;
 		changequest 11219,11220;
 		setquest 11239;
 		close;
@@ -1822,7 +1822,7 @@ mal_in01,114,169,5	script	Rican#mal	4_CAT_SAILOR4,{
 		close;
 	} else if (ma_tomas > 99) {
 		if (questprogress(11238)) {
-			if (countitem(6435) < 30) {
+			if (countitem(Fresh_Fruit) < 30) {
 				mes "[Rican]";
 				mes "You need exactly 30 to get a set!";
 				close;
@@ -1830,10 +1830,10 @@ mal_in01,114,169,5	script	Rican#mal	4_CAT_SAILOR4,{
 			mes "[Rican]";
 			mes "Very reliable!";
 			mes "Don't you want to do your business with Yggdrasil Berry?";
-			delitem 6435,30; //Fresh_Fruit
+			delitem Fresh_Fruit,30;
 			erasequest 11238;
 			setquest 11239;
-			getitem 6422,5; //Egrade_Coin
+			getitem Egrade_Coin,5;
 			close;
 		} else if (questprogress(11239,PLAYTIME) == 1) {
 			mes "[Rican]";
@@ -1879,7 +1879,7 @@ mal_in01,114,169,5	script	Rican#mal	4_CAT_SAILOR4,{
 
 mal_in01,116,168,0	script	Dry Machine#mal	2_SLOT_MACHINE,{
 	if (ma_tomas == 10) {
-		if (countitem(6435) < 30) {
+		if (countitem(Fresh_Fruit) < 30) {
 			mes "[Rican]";
 			mes "You need exactly 30 to get a set!";
 			close;
@@ -1892,7 +1892,7 @@ mal_in01,116,168,0	script	Dry Machine#mal	2_SLOT_MACHINE,{
 			next;
 			mes "- The machine starts operating -";
 			mes "- when he presses the button. -";
-			delitem 6435,30; //Fresh_Fruit
+			delitem Fresh_Fruit,30;
 			ma_tomas = 11;
 			changequest 11218,11219;
 			close;
@@ -1912,7 +1912,7 @@ mal_in01,116,168,0	script	Dry Machine#mal	2_SLOT_MACHINE,{
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
@@ -1920,7 +1920,7 @@ mal_in01,116,168,0	script	Dry Machine#mal	2_SLOT_MACHINE,{
 		if (rand(1,5) == 4) {
 			mes "- As I put my hand in the sand -";
 			mes "- a fresh smell comes out. -";
-			getitem 6435,1; //Fresh_Fruit
+			getitem Fresh_Fruit,1;
 		} else {
 			mes "- As I put my hand in the sand -";
 			mes "- I feel like I'm touching -";
@@ -2224,7 +2224,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 	L_Quest:
 		.@i = @mal_bob_q;
 		@mal_bob_q = 0;
-		if (countitem(12624) < 30) {
+		if (countitem(Delicious_Jelly) < 30) {
 			mes "[Biscuit]";
 			mes "It's not enough at all~";
 			mes "I need at least 30 Delicious Jelly.";
@@ -2233,14 +2233,14 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		mes "[Biscuit]";
 		mes "You got them well.";
 		mes "There won't be any problem to prepare her meal.";
-		delitem 12624,30; //Delicious_Jelly
+		delitem Delicious_Jelly,30;
 		if (.@i == 1) {
 			ma_tomas = 27;
 			changequest 11231,11232;
 		} else {
 			erasequest 11244;
 			setquest 11245;
-			getitem 6422,5; //Egrade_Coin
+			getitem Egrade_Coin,5;
 		}
 		next;
 		mes "[Biscuit]";
@@ -2314,7 +2314,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		changequest 11232,11233;
 		close;
 	} else if (ma_tomas == 28) {
-		if (countitem(6433) && countitem(6432)) {
+		if (countitem(Clean_Brush) && countitem(Full_Bucket)) {
 			mes "[Biscuit]";
 			mes "Oh!";
 			mes "You brought the tools successfully.";
@@ -2323,7 +2323,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 			ma_tomas = 29;
 			changequest 11233,11234;
 			close;
-		} else if (countitem(6433) && countitem(6431)) {
+		} else if (countitem(Clean_Brush) && countitem(Bucket)) {
 			mes "[Biscuit]";
 			mes "Oh!";
 			mes "You brought the tools successfully.";
@@ -2354,7 +2354,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		mes "Right, then from her left leg...!";
 		close;
 	} else if (ma_tomas == 33) {
-		if (checkweight(1201,1) == 0) {
+		if (checkweight(Knife,1) == 0) {
 			mes " - Notice !! -";
 			mes " - Since you have too many items - ";
 			mes " - you cannot get the item. - ";
@@ -2397,8 +2397,8 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 		ma_tomas = 34;
 		erasequest 11235;
 		setquest 11236;
-		getitem 6422,100; //Egrade_Coin
-		getitem 12636,20; //Malang_Sp_Can
+		getitem Egrade_Coin,100;
+		getitem Malang_Sp_Can,20;
 		close;
 	} else if (ma_tomas > 99) {
 		if (questprogress(11244)) {
@@ -2438,7 +2438,7 @@ mal_dun01,136,122,3	script	Biscuit#mal	4_ASTER,{
 
 mal_in02,102,94,3	script	Cleaning Staff#mal	4_CAT_SAILOR1,2,2,{
 OnTouch:
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes " - Notice !! -";
 		mes " - Since you have too many items - ";
 		mes " - you cannot get the item. - ";
@@ -2466,7 +2466,7 @@ OnTouch:
 		mes "[Cleaning Staff]";
 		mes "Please give the cleaning tool back to any merchant.";
 		mes "Thanks for coming~";
-		getitem 6431,1; //Bucket
+		getitem Bucket,1;
 		close;
 	case 2:
 		mes "[Cleaning Staff]";
@@ -2476,7 +2476,7 @@ OnTouch:
 		mes "[Cleaning Staff]";
 		mes "Please give the cleaning tool back to any merchant.";
 		mes "Thanks for coming~";
-		getitem 6433,1; //Clean_Brush
+		getitem Clean_Brush,1;
 		close;
 	case 3:
 		mes "[Cleaning Staff]";
@@ -2487,7 +2487,7 @@ OnTouch:
 }
 
 malangdo,246,184,0	script	1st Rate Point	HIDDEN_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes " - Notice !! -";
 		mes " - Since you have too many items - ";
 		mes " - you cannot get the item. - ";
@@ -2503,7 +2503,7 @@ malangdo,246,184,0	script	1st Rate Point	HIDDEN_NPC,{
 		mes " - and try this again. - ";
 		close;
 	}
-	if (countitem(6431) == 0) {
+	if (countitem(Bucket) == 0) {
 		mes "- To get water -";
 		mes "- you need a ^0000FFBucket^000000. -";
 		close;
@@ -2515,8 +2515,8 @@ malangdo,246,184,0	script	1st Rate Point	HIDDEN_NPC,{
 		mes "- The bucket gets remarkably -";
 		mes "- heavy as water fills it up. -";
 		specialeffect EF_POTION8;
-		delitem 6431,1; //Bucket
-		getitem 6432,1; //Full_Bucket
+		delitem Bucket,1;
+		getitem Full_Bucket,1;
 		close;
 	case 2:
 		mes "- Didn't get water. -";
@@ -2618,15 +2618,15 @@ mal_dun01,133,125,5	script	Star Candy#mal	4_F_STARFISHGIRL,{
 		mes "- to be so "+.@str$+". -";
 		close;
 	}
-	if (!countitem(6433) || !countitem(6432)) {
+	if (!countitem(Clean_Brush) || !countitem(Full_Bucket)) {
 		mes "- You need -";
 		mes "- a cleaning brush -";
 		mes "- and a full bucket. -";
 		close;
 	}
 	mes "- Poured water on the "+.@str$+" skin. -";
-	delitem 6432,1; //Full_Bucket
-	getitem 6431,1; //Bucket
+	delitem Full_Bucket,1;
+	getitem Bucket,1;
 	next;
 	if (rand(1,2) == 1)
 		.@menu$ = "Brush.:Stop.:";
@@ -2713,7 +2713,7 @@ malangdo,190,167,7	script	Portali#mal	4_CAT_SAILOR3,{
 	next;
 	switch(select("Go.:Don't go.:Prices?")) {
 	case 1:
-		if (countitem(12636) < 4) {
+		if (countitem(Malang_Sp_Can) < 4) {
 			mes "[Portali]";
 			mes "Where are you going without canned food...?";
 			close;
@@ -2754,14 +2754,14 @@ malangdo,190,167,7	script	Portali#mal	4_CAT_SAILOR3,{
 	}
 	end;
 L_Warp:
-	if (countitem(12636) < getarg(1)) {
+	if (countitem(Malang_Sp_Can) < getarg(1)) {
 		mes "[Portali]";
 		mes "Where are you going without canned food...?";
 		close;
 	}
 	mes "[Portali]";
 	mes "Then to "+getarg(0)+"~";
-	delitem 12636,getarg(1); //Malang_Sp_Can
+	delitem Malang_Sp_Can,getarg(1);
 	close2;
 	warp getarg(2),getarg(3),getarg(4);
 	end;
@@ -2773,7 +2773,7 @@ malangdo,137,200,6	script	Pipielle	4_CAT_MERMASTER,{
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
@@ -2788,10 +2788,10 @@ malangdo,137,200,6	script	Pipielle	4_CAT_MERMASTER,{
 		close;
 	}
 	.@fish_ss1$ = "What are you doing?";
-	if (countitem(6451) > 29)
+	if (countitem(Unknown_Fish) > 29)
 		.@fish_ss2$ = "I caught a lot of strange fishes!";
 	else
-		.@fish_ss2$ = (30-countitem(6451))+" of ^bbbbbbUnidentified Fish are required.^000000";
+		.@fish_ss2$ = (30-countitem(Unknown_Fish))+" of ^bbbbbbUnidentified Fish are required.^000000";
 	if (ma_tomas == 100)
 		.@fish_ss3$ = "I met an Admiral Tomas...";
 	mes "[Pipielle]";
@@ -2847,9 +2847,9 @@ malangdo,137,200,6	script	Pipielle	4_CAT_MERMASTER,{
 		mes "You can get Unidentified Fish from the Pouring monsters, so please collect 30 of them.";
 		close;
 	case 2:
-		if (countitem(6451) > 29) {
+		if (countitem(Unknown_Fish) > 29) {
 			//saveppl Unknown_Fish
-			delitem 6451,30; //Unknown_Fish
+			delitem Unknown_Fish,30;
 			mes "[Pipielle]";
 			mes "Oh, thank you! I will take these specimens.";
 			next;
@@ -2892,7 +2892,7 @@ malangdo,137,200,6	script	Pipielle	4_CAT_MERMASTER,{
 		mes "[Pipielle]";
 		mes "And this is a small gift for looking after admiral Tomas.";
 		ma_tomas = 101;
-		getitem 6422,200; //Egrade_Coin
+		getitem Egrade_Coin,200;
 		mes "^0000ffReceived 200 E Class Coins.^000000";
 		close;
 	}
@@ -2900,7 +2900,7 @@ malangdo,137,200,6	script	Pipielle	4_CAT_MERMASTER,{
 
 //== Help the Bad Cats in Danger :: mal_bad_guys ===========
 malangdo,175,206,3	script	Gobonge#ml	4_CAT_SAILOR5,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Can't go next step due to having too many items. -";
 		close;
 	}
@@ -3010,7 +3010,7 @@ malangdo,175,206,3	script	Gobonge#ml	4_CAT_SAILOR5,{
 		mes "lack of forbidden bad activity.";
 		close;
 	} else if (malang_bad_guys == 7) {
-		if (countitem(6426) > 29) {
+		if (countitem(Bad_Can) > 29) {
 			mes "[Gobonge]";
 			mes "Was it from raccoon that made us pain in stomach?";
 			mes "Oh bad raccoon!";
@@ -3023,9 +3023,9 @@ malangdo,175,206,3	script	Gobonge#ml	4_CAT_SAILOR5,{
 			mes "You can go now!";
 			erasequest 1151;
 			malang_bad_guys = 8;
-			getitem 12636,20; //Malang_Sp_Can
-			delitem 6427,1; //Bad_Can_Sack
-			delitem 6426,30; //Bad_Can
+			getitem Malang_Sp_Can,20;
+			delitem Bad_Can_Sack,1;
+			delitem Bad_Can,30;
 			close;
 		}
 		mes "[Gobonge]";
@@ -3086,7 +3086,7 @@ malangdo,175,206,3	script	Gobonge#ml	4_CAT_SAILOR5,{
 		erasequest 1155;
 		setquest 1152;
 		malang_bad_guys = 13;
-		getitem 6422,5; //Egrade_Coin
+		getitem Egrade_Coin,5;
 		close;
 	} else if (malang_bad_guys == 13) {
 		mes "[Gobonge]";
@@ -3290,7 +3290,7 @@ malangdo,171,163,3	script	Awfully Suspious Dealer	4_MASK_SMOKEY,{
 		mes "I do not recommend.";
 		close;
 	} else if (malang_bad_guys == 6) {
-		if (countitem(6427) == 0) {
+		if (countitem(Bad_Can_Sack) == 0) {
 			mes "[Awfully Suspious Dealer]";
 			mes "You searched the lounge of ship Navi?";
 			mes "But still nothing in hand.";
@@ -3390,7 +3390,7 @@ mal_in02,184,72,3	script	Gozangee#ml	4_CAT_SAILOR4,{
 
 mal_in02,184,77,0	script	#ml3	-1,2,2,{
 OnTouch:
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items. -";
 		close;
 	}
@@ -3411,7 +3411,7 @@ OnTouch:
 		erasequest 1149;
 		setquest 1150;
 		malang_bad_guys = 6;
-		getitem 6427,1; //Bad_Can_Sack
+		getitem Bad_Can_Sack,1;
 		close;
 	} else if (malang_bad_guys == 6) {
 		mes "I saw a sack of bad cans.";
@@ -3424,7 +3424,7 @@ OnTouch:
 }
 
 malangdo,125,147,3	script	Patrol Leader#ml	4_CAT_SAILOR2,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Can't go next step due to having too many items. -";
 		close;
 	}
@@ -3557,7 +3557,7 @@ malangdo,3,1,3	script	Guidance for quest#ml	4_MASK_SMOKEY,{
 	case 4:
 		mes "[Helper]";
 		mes "Owing?";
-		getitem 6426,30; //Bad_Can
+		getitem Bad_Can,30;
 		close;
 	case 5:
 		mes "[Helper]";
@@ -3576,7 +3576,7 @@ malangdo,3,1,3	script	Guidance for quest#ml	4_MASK_SMOKEY,{
 
 //== Clean the Ship :: mal_day_qook ========================
 mal_in02,76,63,7	script	Cleanyang	4_CAT_SAILOR1,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
@@ -3819,7 +3819,7 @@ mal_in02,76,63,7	script	Cleanyang	4_CAT_SAILOR1,{
 		mes "So let me see you everyday from provided cat's ship biscuit tomorrow.";
 		mes "You did good job. This is a token of thanks.";
 		mal_qook = 6;
-		getitem 12636,30; //Malang_Sp_Can
+		getitem Malang_Sp_Can,30;
 		getexp 80000,80000;
 		setquest 7267;
 		close;
@@ -3932,7 +3932,7 @@ mal_in02,76,63,7	script	Cleanyang	4_CAT_SAILOR1,{
 			erasequest 7274;
 			erasequest 7275;
 			getexp 30000,40000;
-			getitem 12636,10; //Malang_Sp_Can
+			getitem Malang_Sp_Can,10;
 			close;
 		}
 		mes "[Cleanyang]";
@@ -3961,7 +3961,7 @@ mal_in02,76,63,7	script	Cleanyang	4_CAT_SAILOR1,{
 }
 
 mal_in02,29,67,0	script	#CaptainRoom3	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
@@ -3998,7 +3998,7 @@ mal_in02,29,67,0	script	#CaptainRoom3	CLEAR_NPC,{
 					case 2: monster "mal_in02",29,65,"Quick Dark Shadow",2209,1;
 				}
 				setquest 7261;
-				getitem 11536,1; //Cat_Hard_Biscuit
+				getitem Cat_Hard_Biscuit,1;
 				next;
 				if (questprogress(7261) && questprogress(7262) && questprogress(7263)) {
 					mes "I guess I searched pretty enough.";
@@ -4028,7 +4028,7 @@ mal_in02,29,67,0	script	#CaptainRoom3	CLEAR_NPC,{
 				case 2: monster "mal_in02",29,65,"Quick Dark Shadow",2209,1;
 			}
 			setquest 7261;
-			getitem 11536,1; //Cat_Hard_Biscuit
+			getitem Cat_Hard_Biscuit,1;
 			close;
 		}
 		mes "It used to be habitat of insects because someone left cat's ship biscuit.";
@@ -4040,7 +4040,7 @@ mal_in02,29,67,0	script	#CaptainRoom3	CLEAR_NPC,{
 }
 
 mal_in02,183,49,0	script	#MeetingFloor4	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
@@ -4066,7 +4066,7 @@ mal_in02,183,49,0	script	#MeetingFloor4	CLEAR_NPC,{
 					case 1: monster "mal_in02",184,50,"Quick Dark Shadow",2209,1;
 				}
 				setquest 7263;
-				getitem 11536,1; //Cat_Hard_Biscuit
+				getitem Cat_Hard_Biscuit,1;
 				if (mal_qook == 1) {
 					next;
 					if (questprogress(7261) && questprogress(7262) && questprogress(7263)) {
@@ -4087,7 +4087,7 @@ mal_in02,183,49,0	script	#MeetingFloor4	CLEAR_NPC,{
 }
 
 mal_in02,103,22,0	script	#MalBed5	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
@@ -4106,7 +4106,7 @@ mal_in02,103,22,0	script	#MalBed5	CLEAR_NPC,{
 				emotion e_omg;
 				monster "mal_in02",102,23,"Quick Dark Shadow",2209,1;
 				setquest 7262;
-				getitem 11536,1; //Cat_Hard_Biscuit
+				getitem Cat_Hard_Biscuit,1;
 				if (mal_qook == 1) {
 					next;
 					if (questprogress(7261) && questprogress(7262) && questprogress(7263)) {
@@ -4132,7 +4132,7 @@ mal_in02,103,22,0	script	#MalBed5	CLEAR_NPC,{
 }
 
 malangdo,141,178,0	script	#Darkweed6	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
@@ -4151,7 +4151,7 @@ malangdo,141,178,0	script	#Darkweed6	CLEAR_NPC,{
 				emotion e_omg;
 				monster "malangdo",141,178,"Quick Dark Shadow",2209,1;
 				setquest 7269;
-				getitem 11536,1; //Cat_Hard_Biscuit
+				getitem Cat_Hard_Biscuit,1;
 				close;
 			case 2:
 				mes "I searched under the chair in rest area, but I didn't find any problem.";
@@ -4169,7 +4169,7 @@ malangdo,141,178,0	script	#Darkweed6	CLEAR_NPC,{
 }
 
 malangdo,133,134,0	script	Strange Pile of Sand#7	4_SOIL,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
@@ -4199,7 +4199,7 @@ malangdo,133,134,0	script	Strange Pile of Sand#7	4_SOIL,{
 					getmapxy(.@map$,.@x,.@y,1);
 					monster .@map$,.@x,.@y,"Quick Dark Shadow",2209,1;
 				} else
-					getitem 11536,1; //Cat_Hard_Biscuit
+					getitem Cat_Hard_Biscuit,1;
 				close;
 			}
 		}
@@ -4213,7 +4213,7 @@ malangdo,133,134,0	script	Strange Pile of Sand#7	4_SOIL,{
 malangdo,197,237,0	duplicate(Strange Pile of Sand#7)	Strange Pile of Sand#12	4_SOIL
 
 malangdo,232,131,0	script	#UnderStairs8	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
@@ -4232,7 +4232,7 @@ malangdo,232,131,0	script	#UnderStairs8	CLEAR_NPC,{
 				emotion e_omg;
 				monster "malangdo",231,130,"Quick Dark Shadow",2209,1;
 			} else
-				getitem 11536,1; //Cat_Hard_Biscuit
+				getitem Cat_Hard_Biscuit,1;
 			close;
 		}
 		mes "Sometimes, someone played with pulling people's ankle under the stairs";
@@ -4247,7 +4247,7 @@ malangdo,232,131,0	script	#UnderStairs8	CLEAR_NPC,{
 }
 
 mal_in01,74,20,0	script	#CornerTower9	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
@@ -4266,7 +4266,7 @@ mal_in01,74,20,0	script	#CornerTower9	CLEAR_NPC,{
 				emotion e_omg;
 				monster "mal_in01",73,19,"Quick Dark Shadow",2209,1;
 			} else
-				getitem 11536,1; //Cat_Hard_Biscuit
+				getitem Cat_Hard_Biscuit,1;
 			close;
 		}
 		mes "We already collected buried cat's ship biscuit.";
@@ -4278,7 +4278,7 @@ mal_in01,74,20,0	script	#CornerTower9	CLEAR_NPC,{
 }
 
 mal_in01,159,225,0	script	#CornerLocker10	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
@@ -4297,7 +4297,7 @@ mal_in01,159,225,0	script	#CornerLocker10	CLEAR_NPC,{
 				emotion e_omg;
 				monster "mal_in01",159,225,"Quick Dark Shadow",2209,1;
 			} else
-				getitem 11536,1; //Cat_Hard_Biscuit
+				getitem Cat_Hard_Biscuit,1;
 			close;
 		}
 		mes "We already collected buried cat's ship biscuit.";
@@ -4309,7 +4309,7 @@ mal_in01,159,225,0	script	#CornerLocker10	CLEAR_NPC,{
 }
 
 mal_in01,24,72,0	script	#FootholdTower11	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
@@ -4328,7 +4328,7 @@ mal_in01,24,72,0	script	#FootholdTower11	CLEAR_NPC,{
 				emotion e_omg;
 				monster "mal_in01",24,71,"Quick Dark Shadow",2209,1;
 			} else
-				getitem 11536,1; //Cat_Hard_Biscuit
+				getitem Cat_Hard_Biscuit,1;
 			close;
 		}
 		mes "There is mark that shows something used to be jammed in gap of foothold in very bottom of cat tower.";
@@ -4342,7 +4342,7 @@ mal_in01,24,72,0	script	#FootholdTower11	CLEAR_NPC,{
 
 //== Help Chef Nyas :: mal_day_qook ========================
 mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items so you can't continue the quest. -";
 		close;
 	}
@@ -4466,7 +4466,7 @@ mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 		mes "Maybe need more time.";
 		close;
 	} else if (mal_qook == 4) {
-		if (countitem(577) >= 10 && countitem(7454) > 0) {
+		if (countitem(Grain) >= 10 && countitem(Plain_Sauce) > 0) {
 			mes "[Chef Nyas]";
 			mes "Finally here. Wow, this land is pretty different.";
 			mes "That is enough to process.";
@@ -4474,8 +4474,8 @@ mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 			mes "[Chef Nyas]";
 			mes "If you are ok, I want to get these food everyday.";
 			mes "If you don't mind, just come back tomorrow.";
-			delitem 577,10; //Grain
-			delitem 7454,1; //Plain_Sauce
+			delitem Grain,10;
+			delitem Plain_Sauce,1;
 			mal_qook = 5;
 			erasequest 7266;
 			setquest 7276;
@@ -4613,13 +4613,13 @@ mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 		setarray .@StartID[0],12061,12091,12041,12071,12056,12086,12051,12081,12046,12076,12066,12096,12429,12434;
 		.@food = .@StartID[(.@i-1)/5]+((.@i-1)%5);
 
-		if (countitem(577) >= 10 && countitem(7454) > 0 && countitem(.@food) > 0) {
+		if (countitem(Grain) >= 10 && countitem(Plain_Sauce) > 0 && countitem(.@food) > 0) {
 			mes "[Chef Nyas]";
 			mes "Great.";
 			mes "This is that food!";
 			mes "It will be good reference. Well done.";
-			delitem 577,10; //Grain
-			delitem 7454,1; //Plain_Sauce
+			delitem Grain,10;
+			delitem Plain_Sauce,1;
 			delitem .@food,1;
 			setquest 7276;
 			mal_food = 0;
@@ -4628,7 +4628,7 @@ mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 			// Quantities grouped in 10s repeating.
 			// [ 3, 3, 6, 6, 9, 9, 12, 12, 15, 18 ]
 			// Last group [ 61 - 66 ] receives 25 constant.
-			getitem 6422, ((.@i < 61)?((.@i%10)?3*(((.@i%10)+1)/2):18):25); //Egrade_Coin
+			getitem Egrade_Coin, ((.@i < 61)?((.@i%10)?3*(((.@i%10)+1)/2):18):25);
 
 			getexp 50000,80000;
 			next;
@@ -4656,7 +4656,7 @@ mal_in02,187,58,3	script	Chef Nyas	4_CAT_CHEF,{
 
 //== Play with Baby Cats :: mal_nyadventurer ===============
 malangdo,165,223,4	script	Expert Cat#nya_01	4_CAT_SAILOR5,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 4000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 4000) {
 		mes "- You have too many items to proceed in this quest. -";
 		close;
 	}
@@ -4752,7 +4752,7 @@ malangdo,165,223,4	script	Expert Cat#nya_01	4_CAT_SAILOR5,{
 		mes "Rato seems to be in brown study.";
 		close;
 	} else if (nyadven == 13) {
-		if (countitem(6430) < 6) {
+		if (countitem(Picture_Piece) < 6) {
 			mes "You didn't bring the pieces of the painting.";
 			mes "Please take it with you.";
 			close;
@@ -4782,9 +4782,9 @@ malangdo,165,223,4	script	Expert Cat#nya_01	4_CAT_SAILOR5,{
 		mes "[Rato]";
 		mes "It's very kind of you to play with the kids.";
 		mes "This is for you.";
-		delitem 6430,6; //Picture_Piece
+		delitem Picture_Piece,6;
 		nyadven = 14;
-		getitem 6422,100; //Egrade_Coin
+		getitem Egrade_Coin,100;
 		completequest 7259;
 		next;
 		mes "[Rato]";
@@ -4816,7 +4816,7 @@ malangdo,165,223,4	script	Expert Cat#nya_01	4_CAT_SAILOR5,{
 }
 
 malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 4000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 4000) {
 		mes "- You have too many items to proceed in this quest. -";
 		close;
 	}
@@ -4853,7 +4853,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 			next;
 			switch(select("I have a spare Glass Bead!:Why are you guys staring at me?")) {
 			case 1:
-				if (countitem(746) == 0) {
+				if (countitem(Glass_Bead) == 0) {
 					mes "[Roku]";
 					mes "There is no glass bead.";
 					mes "Don't lie to us.";
@@ -4887,9 +4887,9 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 				mes "you would clear all Nyadventures";
 				mes "made by the Meow Bravery Team!";
 				mes "Challenge it whenever you want to!";
-				delitem 746,1; //Glass_Bead
+				delitem Glass_Bead,1;
 				nyadven = 2;
-				getitem 12636,30; //Malang_Sp_Can
+				getitem Malang_Sp_Can,30;
 				close;
 			case 2:
 				mes "[Rosy]";
@@ -4933,7 +4933,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 			mes "Got Adventure Card from the yellow cat Charo.";
 			mes "It seems to work if I put this card in the slot in the Beginning Compass.";
 			nyadven = 3;
-			getitem 6428,1; //Bravery_Card_A
+			getitem Bravery_Card_A,1;
 			changequest 7242,7243;
 			next;
 			mes "[Charo]";
@@ -4975,7 +4975,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 		mes "Ring the New bell!^000000";
 		close;
 	} else if (nyadven == 4) {
-		if (countitem(6428) == 0) {
+		if (countitem(Bravery_Card_A) == 0) {
 			mes "[Charo]";
 			mes "Where is your Adventure Card?";
 			mes "You should bring it with you.";
@@ -5008,7 +5008,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 			mes "And this island could explode!";
 			mes "Oh, you might shut your eyes to the fact.";
 			mes "Give the Adventure Card back!";
-			delitem 6428,1; //Bravery_Card_A
+			delitem Bravery_Card_A,1;
 			nyadven = 5;
 			erasequest 7243;
 			close;
@@ -5023,9 +5023,9 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 			mes "It shouldn't happen that the detective misunderstands you as an enemy!";
 			next;
 			mes "- Changed Adventure Card A into Adventure Card B. -";
-			delitem 6428,1; //Bravery_Card_A
+			delitem Bravery_Card_A,1;
 			nyadven = 6;
-			getitem 6429,1; //Bravery_Card_B
+			getitem Bravery_Card_B,1;
 			setquest 7246;
 			erasequest 7243;
 			next;
@@ -5051,7 +5051,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 			next;
 			mes "- Changed Adventure Card A into Adventure Card B. -";
 			nyadven = 6;
-			getitem 6429,1; //Bravery_Card_B
+			getitem Bravery_Card_B,1;
 			setquest 7246;
 			next;
 			mes "[Charo]";
@@ -5077,7 +5077,7 @@ malangdo,211,203,4	script	[Meow Team] Charo#nya_11	4_CAT_ADV2,{
 		mes "Let me see it quickly!";
 		mes "Take it out!";
 		next;
-		if (countitem(6430) < 6) {
+		if (countitem(Picture_Piece) < 6) {
 			mes "[Charo]";
 			mes "What? You don't have it?";
 			mes "It can't be true.";
@@ -5215,7 +5215,7 @@ malangdo,214,204,3	script	[Meow Team] Rosy#nya_09	4_CAT_ADV1,{
 }
 
 malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 4000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 4000) {
 		mes "- You have too many items to proceed in this quest. -";
 		close;
 	}
@@ -5245,7 +5245,7 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 	next;
 	switch(select("Report results of the race.:Challenge the race.:Nothing.")) {
 	case 1:
-		if (countitem(6428) == 0) {
+		if (countitem(Bravery_Card_A) == 0) {
 			mes "[Roku]";
 			mes "Bubi, no confirmation stamps and card.";
 			mes "You will be in trouble if you are like this.";
@@ -5261,9 +5261,9 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 			mes "[Roku]";
 			mes "Charo likes you so much.";
 			mes "He will be happy if you come.";
-			delitem 6428,1; //Bravery_Card_A
+			delitem Bravery_Card_A,1;
 			nyadven02 = 29;
-			getitem 6422,3; //Egrade_Coin
+			getitem Egrade_Coin,3;
 			getexp 20000,20000;
 			erasequest 7244;
 			erasequest 7245;
@@ -5273,13 +5273,13 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 			mes "Failed...";
 			mes "...is it too difficult for you?";
 			mes "But the race is available only once a day.";
-			delitem 6428,1; //Bravery_Card_A
+			delitem Bravery_Card_A,1;
 			erasequest 7244;
 			erasequest 7245;
 			next;
 			switch(select("Give me one more chance!:Okay.I will try tomorrow.")) {
 			case 1:
-				if (countitem(12636) == 0) {
+				if (countitem(Malang_Sp_Can) == 0) {
 					mes "[Roku]";
 					mes "Um... Um... Well...";
 					mes "If you bring a Malangdo Can,";
@@ -5291,7 +5291,7 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 				next;
 				switch(select("Exchange for Adventure Card A.:Stop it.")) {
 				case 1:
-					if (countitem(6428)) {
+					if (countitem(Bravery_Card_A)) {
 						mes "[Roku]";
 						mes "You have it already?";
 						close;
@@ -5299,8 +5299,8 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 					mes "[Roku]";
 					mes "Here is your Adventure Card.";
 					mes "Beginning Compass, start!";
-					delitem 12636,1; //Malang_Sp_Can
-					getitem 6428,1; //Bravery_Card_A
+					delitem Malang_Sp_Can,1;
+					getitem Bravery_Card_A,1;
 					nyadven02 = 0;
 					if (questprogress(7257))
 						erasequest 7257;
@@ -5334,7 +5334,7 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 			mes "[Roku]";
 			mes "Is this because of the machine?";
 			mes "Let's make void for this race.";
-			delitem 6428,1; //Bravery_Card_A
+			delitem Bravery_Card_A,1;
 			nyadven02 = 0;
 			erasequest 7244;
 			erasequest 7245;
@@ -5367,12 +5367,12 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 		next;
 		switch(select("Buy Adventure Card.:Just stop it.")) {
 		case 1:
-			if (countitem(6428)) {
+			if (countitem(Bravery_Card_A)) {
 				mes "[Roku]";
 				mes "You have it already?";
 				close;
 			}
-			if (countitem(12636) == 0) {
+			if (countitem(Malang_Sp_Can) == 0) {
 				mes "[Roku]";
 				mes "There is nothing for free.";
 				mes "You need a Malangdo Can.";
@@ -5381,8 +5381,8 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 			mes "[Roku]";
 			mes "Here is your Adventure Card.";
 			mes "Beginning Compass, start!";
-			delitem 12636,1; //Malang_Sp_Can
-			getitem 6428,1; //Bravery_Card_A
+			delitem Malang_Sp_Can,1;
+			getitem Bravery_Card_A,1;
 			nyadven02 = 0;
 			close;
 		case 2:
@@ -5398,7 +5398,7 @@ malangdo,215,201,3	script	[Meow Team] Roku#nya_10	4_CAT_DOWN,{
 }
 
 malangdo,212,204,0	script	Beginning Compass#nya_02	CLEAR_NPC,{
-	if (countitem(6428) == 0) {
+	if (countitem(Bravery_Card_A) == 0) {
 		mes "There is a strange machine.";
 		mes "The kids said this was the ride called Duruduru compass of the Meow Bravery Team.";
 		close;
@@ -5482,7 +5482,7 @@ L_Viewpoint:
 }
 
 -	script	#malangdo_compass	-1,{
-	if (countitem(6428) == 0) {
+	if (countitem(Bravery_Card_A) == 0) {
 		mes "There is a strange machine.";
 		mes "This is the Duruduru compass from the Meow Bravery Team.";
 		close;
@@ -5596,7 +5596,7 @@ malangdo,153,146,0	duplicate(#malangdo_compass)	Forest Compass#4	CLEAR_NPC
 malangdo,111,178,0	duplicate(#malangdo_compass)	Cloud Compass#5	CLEAR_NPC
 
 malangdo,175,163,0	script	Meowbell#nya_12	CLEAR_NPC,{
-	if (countitem(6428) == 0) {
+	if (countitem(Bravery_Card_A) == 0) {
 		mes "There is a fancy bell which doesn't fit in with the ship.";
 		mes "This bell is used in a game by the Meow Bravery Team.";
 		viewpoint 2,1,1,0,0xFFFFFF;
@@ -5844,7 +5844,7 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 		next;
 		switch(select("Buy Adventure Card.:Do not buy.")) {
 		case 1:
-			if (countitem(12636) == 0) {
+			if (countitem(Malang_Sp_Can) == 0) {
 				mes "[Homnya]";
 				mes "I said I can exchange Adventure Card with one Malango Can~";
 				close2;
@@ -5854,9 +5854,9 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 			mes "See, this is a scary machine.";
 			mes "Here is your Adventure Card.";
 			mes "Stop this machine this time.";
-			delitem 12636,1; //Malang_Sp_Can
+			delitem Malang_Sp_Can,1;
 			nyadven = 7;
-			getitem 6429,1; //Bravery_Card_B
+			getitem Bravery_Card_B,1;
 			close2;
 			break;
 		case 2:
@@ -5919,7 +5919,7 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 		mes "Come here right after you find treasure!";
 		close2;
 	} else if (nyadven == 11) {
-		if (countitem(6430) > 5) {
+		if (countitem(Picture_Piece) > 5) {
 			mes "[Homnya]";
 			mes "You've found all the treasure.";
 			mes "Yes, exactly.";
@@ -5964,7 +5964,7 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 			next;
 			mes "[Nyangson]";
 			mes "Go get the treasure again!";
-			delitem 6430,countitem(6430); //Picture_Piece
+			delitem Picture_Piece,countitem(Picture_Piece);
 			erasequest 7251;
 			erasequest 7252;
 			erasequest 7253;
@@ -5985,7 +5985,7 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 		mes "It's good to take a break for little bit but now we don't have any spare time.";
 		close2;
 	} else {
-		if (countitem(6429) > 0) {
+		if (countitem(Bravery_Card_B) > 0) {
 			mes "[Homnya]";
 			mes "Stop this noisy machine!";
 			mes "Insert your Adventure Card, and take a look at the reaction of the machine carefully. Then do the proper action!";
@@ -6033,7 +6033,7 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 				next;
 				switch(select("Buy Adventure Card B.:Don't buy it.")) {
 				case 1:
-					if (countitem(12636) == 0) {
+					if (countitem(Malang_Sp_Can) == 0) {
 						mes "[Homnya]";
 						mes "How many Malangdo Cans for an Adventure Card?";
 						next;
@@ -6049,8 +6049,8 @@ malangdo,172,178,7	script	Cat Detective#nya_14	4_CAT_ADV2,{
 					next;
 					mes "[Nyangson]";
 					mes "Please do it.";
-					delitem 12636,1; //Malang_Sp_Can
-					getitem 6429,1; //Bravery_Card_B
+					delitem Malang_Sp_Can,1;
+					getitem Bravery_Card_B,1;
 					close2;
 					break;
 				case 2:
@@ -6123,7 +6123,7 @@ malangdo,174,175,0	script	Noisy Machine#nya_13	CLEAR_NPC,{
 		mes "We also have break time...";
 		close;
 	}
-	if (countitem(6429) == 0) {
+	if (countitem(Bravery_Card_B) == 0) {
 		mes "[Homnya]";
 		mes "You can't try this without Adventure Card B.";
 		mes "Please bring it with you.";
@@ -6176,9 +6176,9 @@ malangdo,174,175,0	script	Noisy Machine#nya_13	CLEAR_NPC,{
 		nyadven = 9;
 		erasequest 7247;
 	}
-	delitem 6429,1; //Bravery_Card_B
+	delitem Bravery_Card_B,1;
 	setquest 7249;
-	getitem 6422,3; //Egrade_Coin
+	getitem Egrade_Coin,3;
 	getexp 20000,20000;
 	next;
 	if (nyadven == 9) {
@@ -6283,7 +6283,7 @@ L_ShowLights:
 		cutin "",255;
 		mes "Adventure Card B burned off";
 		mes "with a huge explosion.";
-		delitem 6429,1; //Bravery_Card_B
+		delitem Bravery_Card_B,1;
 		if (nyadven == 7)
 			nyadven = 8;
 		close;
@@ -6311,7 +6311,7 @@ L_ShowLights:
 // 3    - Player has already found the picture piece.
 // null - Success.
 function	script	F_Mal_Picture	{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 4000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 4000) {
 		mes "- You have too many items to proceed in this quest. -";
 		close;
 	}
@@ -6328,7 +6328,7 @@ function	script	F_Mal_Picture	{
 		mes getarg(4);
 		mes "You found a piece of the painting.";
 		setquest getarg(0);
-		getitem 6430,1; //Picture_Piece
+		getitem Picture_Piece,1;
 		next;
 		if (questprogress(7251) && questprogress(7252) && questprogress(7253) && questprogress(7254) && questprogress(7255) && questprogress(7256)) {
 			mes "It looks like you can put these pieces of paintings together.";
@@ -6526,7 +6526,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
@@ -6970,7 +6970,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			mes "Heh~";
 			malang_gamer = 11;
 			erasequest 5068;
-			getitem 6422,100; //Egrade_Coin
+			getitem Egrade_Coin,100;
 			next;
 			mes "[Cat Gamers Director]";
 			mes "Heh~ Please come back if you change your mind.";
@@ -6993,7 +6993,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 			malang_gamer = 12;
 			erasequest 5068;
 			setquest 5069;
-			getitem 6422,100; //Egrade_Coin
+			getitem Egrade_Coin,100;
 			next;
 			mes "[Cat Gamers Director]";
 			mes "Heh~ Ok, "+strcharinfo(0)+". I will see you in an hour. Heh~";
@@ -7062,7 +7062,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 		mes "Heh~ Take this and show us what you've got.";
 		erasequest 5069;
 		malang_gamer = 20;
-		getitem 2872,1; //G_Honor_Certificate
+		getitem G_Honor_Certificate,1;
 		next;
 		mes "[Cat Gamers Director]";
 		mes "Heh~ I may be worrying too much... But, please wear this '^0000FFCat Gamers Certificate^000000', and play the game. Heh~";
@@ -7146,8 +7146,8 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 	if (questprogress(5074,HUNTING)) {
 		mes "Heh~ It's not like I didn't feed them right... Heh~ I hope it was not too much for you, "+strcharinfo(0)+".";
 		next;
-		if (questprogress(5074,HUNTING) == 2 && countitem(1023) >= 10) {
-			delitem 1023,10; //Fish_Tail
+		if (questprogress(5074,HUNTING) == 2 && countitem(Fish_Tail) >= 10) {
+			delitem Fish_Tail,10;
 			callsub L_CompleteQuest,5074,
 				"Heh~ So, you brought 30 Phens and 10 Fish Tails, just as ordered.";
 		} else {
@@ -7158,8 +7158,8 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 	} else if (questprogress(5075,HUNTING)) {
 		mes "Heh~ Hmm, 50 Marses, and 30 Milk Bottles... Heh~";
 		next;
-		if (questprogress(5075,HUNTING) == 2 && countitem(519) >= 30) {
-			delitem 519,30; //Milk
+		if (questprogress(5075,HUNTING) == 2 && countitem(Milk) >= 30) {
+			delitem Milk,30;
 			callsub L_CompleteQuest,5075,
 				"Heh~ Guess they wanted some healthy food. Heh~ They should have just told me... Let me show you my skills. Heh~";
 		} else {
@@ -7204,8 +7204,8 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 	} else if (questprogress(5079)) {
 		mes "Heh~ Hmm... let me see... Heh~ That's right, I was worrying about our team getting so nervous before the actual game... But, they won't even talk to me about it.";
 		next;
-		if (countitem(7038) >= 20) {
-			delitem 7038,20; //Yarn
+		if (countitem(Yarn) >= 20) {
+			delitem Yarn,20;
 			callsub L_CompleteQuest,5079,
 				"Heh~ How could I miss that? I shall give some to my team for sure.";
 		} else {
@@ -7216,8 +7216,8 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 	} else if (questprogress(5080)) {
 		mes "Heh~ The note says, get me 30 Rat Tails for a snack.";
 		next;
-		if (countitem(1016) >= 30) {
-			delitem 1016,30; //Rat_Tail
+		if (countitem(Rat_Tail) >= 30) {
+			delitem Rat_Tail,30;
 			callsub L_CompleteQuest,5080,
 				"Heh~ I think I've fed them good snacks... Didn't I? Lately I was little busy, they should have some patience... Heh~ Poor manager...";
 		} else {
@@ -7228,8 +7228,8 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 	} else if (questprogress(5081)) {
 		mes "Heh~ It says 5 on the note... 5 of what? What?! Lemons?";
 		next;
-		if (countitem(568) >= 5) {
-			delitem 568,5; //Lemon
+		if (countitem(Lemon) >= 5) {
+			delitem Lemon,5;
 			callsub L_CompleteQuest,5081,
 				"Heh~ Lemon is forbidden before the actual game... heh? They won't eat it at game time, right? Heh~";
 		} else {
@@ -7240,12 +7240,12 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 	} else if (questprogress(5082)) {
 		mes "Heh~ Give us 10 Ice Pieces or 10 Ice Creams!! Heh~ I personally prefer Ice Cream, just so you know.";
 		next;
-		if (countitem(7066) >= 10) {
-			delitem 7066,10; //Ice_Piece
+		if (countitem(Ice_Piece) >= 10) {
+			delitem Ice_Piece,10;
 			callsub L_CompleteQuest,5082,
 				"Heh~ Oh, you brought Ice Pieces. Heh~ The players will love it.";
-		} else if (countitem(536) >= 10) {
-			delitem 536,10; //Ice_Cream
+		} else if (countitem(Ice_Cream) >= 10) {
+			delitem Ice_Cream,10;
 			callsub L_CompleteQuest,5082,
 				"Heh~ Oh, you brought Ice Creams. Heh~ The players will love it.";
 		} else {
@@ -7305,7 +7305,7 @@ mal_in01,31,210,2	script	Cat Gamers Director	4_CAT_MERMASTER,{
 // callsub L_CompleteQuest,<quest ID>,"<message>";
 L_CompleteQuest:
 	erasequest getarg(0);
-	getitem 12636,3; //Malang_Sp_Can
+	getitem Malang_Sp_Can,3;
 	mes "[Cat Gamers Director]";
 	mes getarg(1);
 	next;
@@ -7320,7 +7320,7 @@ malangdo,127,111,4	script	Strange Cat#gamer	4_CAT_SAILOR4,{
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
@@ -7612,7 +7612,7 @@ malangdo,161,197,4	script	Eryu#gamer	4_CAT,{
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
@@ -7828,7 +7828,7 @@ malangdo,230,197,4	script	Stew#gamer	4_CAT_3COLOR,{
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
@@ -8057,7 +8057,7 @@ malangdo,244,144,4	script	Ketchup#gamer	4_CAT_SAILOR3,{
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
@@ -8246,7 +8246,7 @@ malangdo,181,119,7	script	Eff#gamer	4_CAT_ADV2,{
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
@@ -8507,7 +8507,7 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
@@ -8522,7 +8522,7 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 		}
 	}
 	if (malang_gamer < 20) {
-		if (countitem(2872)) {
+		if (countitem(G_Honor_Certificate)) {
 			mes "[Ser]";
 			mes "You seem like a first timer! Where did you get the certificate? Someone lost it, I guess.";
 			close;
@@ -8681,9 +8681,9 @@ mal_in01,91,216,4	script	Ser#gamer	4_CAT_SAILOR1,{
 		mes "Good bye~ Come back tomorrow for more practice~";
 		if (.@win == 5) {
 			mes "Oh! You won all 5 matches. Here are some more extra Cans.";
-			getitem 12636,10; //Malang_Sp_Can
+			getitem Malang_Sp_Can,10;
 		} else
-			getitem 12636,5; //Malang_Sp_Can
+			getitem Malang_Sp_Can,5;
 		setquest 5070;
 		close;
 	}
@@ -8851,7 +8851,7 @@ mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
@@ -8866,7 +8866,7 @@ mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 		}
 	}
 	if (malang_gamer < 20) {
-		if (countitem(2872)) {
+		if (countitem(G_Honor_Certificate)) {
 			mes "[Paa]";
 			mes "You seem like a first timer meow! Where did you get the certificate meow? Someone lost it, I guess meow.";
 			close;
@@ -9013,9 +9013,9 @@ mal_in01,86,222,4	script	Paa#gamer	4_CAT_SAILOR1,{
 		mes "Good bye meow~ Come back tomorrow for more practice meow~";
 		if (.@win == 5) {
 			mes "Oh! You won all 5 matches meow. Here are some more extra Cans meow!";
-			getitem 12636,10; //Malang_Sp_Can
+			getitem Malang_Sp_Can,10;
 		} else
-			getitem 12636,5; //Malang_Sp_Can
+			getitem Malang_Sp_Can,5;
 		setquest 5070;
 		close;
 	}
@@ -9181,7 +9181,7 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
@@ -9196,7 +9196,7 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 		}
 	}
 	if (malang_gamer < 20) {
-		if (countitem(2872)) {
+		if (countitem(G_Honor_Certificate)) {
 			mes "[Kuka]";
 			mes "You seem like a first timer yo~ Where did you get the certificate yo~ You better give that back yo~";
 			close;
@@ -9348,14 +9348,14 @@ mal_in01,91,222,4	script	Kuka#gamer	4_M_BABYCAT,{
 			mes "[Kuka]";
 			mes "I'll give you 1 random coin pocket as a special present yo~ Well done yo~ Come back tomorrow yo~";
 			setquest 5071;
-			getitem 12636, .@cans; //Malang_Sp_Can
-			getitem 12621,1; //Egrade_Pocket
+			getitem Malang_Sp_Can, .@cans;
+			getitem Egrade_Pocket,1;
 			close;
 		} else {
 			mes "[Kuka]";
 			mes "Congrats yo~ For winning "+.@win+" times I'll give you "+.@cans+" cans yo~ Well done yo~ Come back tomorrow yo~";
 			setquest 5071;
-			getitem 12636, .@cans; //Malang_Sp_Can
+			getitem Malang_Sp_Can, .@cans;
 			close;
 		}
 	}
@@ -9503,7 +9503,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
@@ -9515,7 +9515,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 		}
 	}
 	if (malang_gamer < 20) {
-		if (countitem(2872)) {
+		if (countitem(G_Honor_Certificate)) {
 			mes "[KungKung]";
 			mes "You are not qualified. Hmm... I am not sure how you got this, but we cannot practice with you. Go back.";
 			close;
@@ -9755,7 +9755,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 		mes "Hmm... That wasn't necessary, I guess.";
 		mes "This is for you, Human!";
 		setquest 5072;
-		getitem 12636,5; //Malang_Sp_Can
+		getitem Malang_Sp_Can,5;
 		next;
 		mes "[KungKung]";
 		mes "Come again tomorrow. I will beat you next time.";
@@ -9921,7 +9921,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
 		close;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "Your inventory is too full to proceed. Come back after reducing your load.";
 		close;
 	}
@@ -9933,7 +9933,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 		}
 	}
 	if (malang_gamer < 20) {
-		if (countitem(2872)) {
+		if (countitem(G_Honor_Certificate)) {
 			mes "[Leader]";
 			mes "Not everyone can challenge just because they have the certificate.";
 			close;
@@ -10242,7 +10242,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 	if (.@you_flag == 1 && .@cat_flags_waved == 0) {
 		setquest 5073;
 		if (.@flag_point_cat[1]+.@flag_point_cat[2]+.@flag_point_cat[3]+.@flag_point_cat[4]+.@flag_point_cat[5] < 5) {
-			getitem 12636,3; //Malang_Sp_Can
+			getitem Malang_Sp_Can,3;
 			mes "[Leader]";
 			mes "Congratulations. You have won the Flag-Waving Game.";
 			next;
@@ -10256,7 +10256,7 @@ mal_in01,133,214,6	script	Leader#gamer	4_CAT_SAILOR3,{
 				case 3: .@cans = 15; break;
 				case 4: .@cans = 20; break;
 			}
-			getitem 12636, .@cans; //Malang_Sp_Can
+			getitem Malang_Sp_Can, .@cans;
 			mes "[Leader]";
 			mes "Congratulations. You have won the Flag-Waving Game. "+.@cans+" Canned Foods will be given as the present.";
 		}
@@ -10525,7 +10525,7 @@ malangdo,234,153,6	script	Notice Board#mal	2_BULLETIN_BOARD,{
 
 mal_in01,15,16,3	script	Fallen Angel#mal	4_F_VALKYRIE2,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You are carrying too many items, please reduce them and come back!";
 		close;
 	}
@@ -10678,7 +10678,7 @@ mal_in01,15,16,3	script	Fallen Angel#mal	4_F_VALKYRIE2,{
 			mes "Oh... you have unequipped the Archangel Wing!";
 			close;
 		}
-		if (countitem(6417) < 3) {
+		if (countitem(Silvervine) < 3) {
 			mes "[Fallen Angel]";
 			mes "I can't do it if you can't pay!";
 			close;
@@ -10690,7 +10690,7 @@ mal_in01,15,16,3	script	Fallen Angel#mal	4_F_VALKYRIE2,{
 		}
 		.@equip_refine = getequiprefinerycnt(EQI_GARMENT);
 		setarray .@equip_card[0], getequipcardid(EQI_GARMENT,0),getequipcardid(EQI_GARMENT,1),getequipcardid(EQI_GARMENT,2);
-		delitem 6417,3; //Silvervine
+		delitem Silvervine,3;
 		delequip EQI_GARMENT;
 		getitem2 2573,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@equip_card[2],0; //Archangel_Wing
 		mes "[Fallen Angel]";

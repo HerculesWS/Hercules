@@ -50,7 +50,7 @@
 	mes "3.Cabinet fee is";
 	mes "  ^4d4dff500 zeny^000000!";
 	next;
-	if (countitem(6219) > 0) {
+	if (countitem(Para_Team_Mark) > 0) {
 		mes "You need to insert zeny to use the cabinet.";
 		mes "Cost : 500 Zeny ";
 		mes "Would you like to use it?";

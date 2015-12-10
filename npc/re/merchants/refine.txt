@@ -349,7 +349,7 @@ function	script	refinenew	{
 
 //== Ori/Elu to Carnium/Bradium Refiners ===================
 -	script	Austri#ref	-1,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";

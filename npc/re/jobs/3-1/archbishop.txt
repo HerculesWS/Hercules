@@ -517,7 +517,7 @@ OnTouch:
 		mes "^3131FF[Priest Dayan]^000000";
 		mes "^3131FFYou're drinking the Holy Water.^000000";
 		next;
-		if (countitem(523) == 0) {
+		if (countitem(Holy_Water) == 0) {
 			mes "[" + strcharinfo(0) + "]";
 			mes "Oh no! I forgot to bring a Holy Water!";
 			close;
@@ -767,7 +767,7 @@ OnInit:
 }
 
 job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
-	if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 2000) {
+	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
 		mes "- Wait a Sec !! -";
 		mes "- You are carrying too many items, -";
 		mes "- you won't be able to obtain any new items. -";
@@ -934,8 +934,8 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 				$@archbs = 0;
 				close2;
 				nude;
-				if (countitem(2798))
-					delitem 2798,countitem(2798); //Will_Of_Exhausted_Angel
+				if (countitem(Will_Of_Exhausted_Angel))
+					delitem Will_Of_Exhausted_Angel,countitem(Will_Of_Exhausted_Angel);
 				donpcevent "start#arch::OnEnable";
 				job_arch = 7;
 				changequest 2190,2191;
@@ -947,8 +947,8 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 			mes "I'm talking with another person now, so give me a second.";
 			close;
 		} else if (job_arch == 7) {
-			if (countitem(12381)) delitem 12381,countitem(12381); //ValkyrieA_Scroll
-			if (countitem(12382)) delitem 12382,countitem(12382); //ValkyrieB_Scroll
+			if (countitem(ValkyrieA_Scroll)) delitem ValkyrieA_Scroll,countitem(ValkyrieA_Scroll);
+			if (countitem(ValkyrieB_Scroll)) delitem ValkyrieB_Scroll,countitem(ValkyrieB_Scroll);
 			if ($@archbs == 0) {
 				$@archbs = 1;
 				mes "[Valkyrie Anguhilde]";
@@ -971,8 +971,8 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 				mes "But you have to be careful if an impersonation falls down.";
 				close2;
 				nude;
-				if (countitem(2798))
-					delitem 2798,countitem(2798); //Will_Of_Exhausted_Angel
+				if (countitem(Will_Of_Exhausted_Angel))
+					delitem Will_Of_Exhausted_Angel,countitem(Will_Of_Exhausted_Angel);
 				donpcevent "start#arch::OnEnable";
 				job_arch = 7;
 				warp "job3_arch02",119,49;
@@ -994,8 +994,8 @@ OnBc:
 
 job3_arch02,119,49,0	script	#arch_1_start	HIDDEN_WARP_NPC,6,6,{
 OnTouch:
-	if (countitem(12381) == 0)
-		getitem 12381,1; //ValkyrieA_Scroll
+	if (countitem(ValkyrieA_Scroll) == 0)
+		getitem ValkyrieA_Scroll,1;
 	mapannounce "job3_arch02","Whispering of an impersonation: I feel heavy! Set me free!",bc_map,"0xFFCE00";
 	disablenpc "#arch_1_start";
 	end;
@@ -1003,8 +1003,8 @@ OnTouch:
 
 -	script	#arch_1_01_0::archbjcq	-1,{
 OnTouch:
-	if (countitem(12381)) {
-		delitem 12381,1; //ValkyrieA_Scroll
+	if (countitem(ValkyrieA_Scroll)) {
+		delitem ValkyrieA_Scroll,1;
 		// fall through
 	} else if (getmercinfo(1) == 2037) {
 		if (strnpcinfo(0) == "#arch_1_10")
@@ -1035,8 +1035,8 @@ job3_arch02,245,289,0	duplicate(archbjcq)	#arch_1_12	HIDDEN_WARP_NPC,5,5
 
 job3_arch02,203,286,0	script	#arch_1_boss	HIDDEN_WARP_NPC,5,5,{
 OnTouch:
-	if (countitem(12381)) {
-		delitem 12381,1; //ValkyrieA_Scroll
+	if (countitem(ValkyrieA_Scroll)) {
+		delitem ValkyrieA_Scroll,1;
 		// fall through
 	} else if (getmercinfo(1) == 2037) {
 		mapannounce "job3_arch02","Valkyrie's Nightmare: An incompetent illusion of Valkyrie came here with the assistance of humans. You wanna have that nightmare?",bc_map,"0xFF0000";
@@ -1140,7 +1140,7 @@ job3_arch02,113,327,5	script	Valkyrie#arch_01	4_F_VALKYRIE2,{
 	mes "[Valkyrie Anguhilde]";
 	mes "Then I look forward a good news.";
 	close2;
-	getitem 12382,1; //ValkyrieB_Scroll
+	getitem ValkyrieB_Scroll,1;
 	viewpoint 1,244,46,1,0xFFFF99;
 	hideonnpc "Valkyrie#arch_01";
 	donpcevent "#arch_2_start::OnEnable";
@@ -1151,11 +1151,11 @@ job3_arch02,244,46,5	script	Valkyrie#arch_02	4_F_VALKYRIE2,{
 	mes "[Valkyrie Anguhilde]";
 	mes "Did you find the rest of the pieces?";
 	next;
-	if (countitem(6154) < 2) {
+	if (countitem(Broken_Horn_Pipe) < 2) {
 		mes "[Valkyrie Anguhilde]";
 		mes "Hum?";
 		mes "I can see this one beside you.";
-		getitem 6154,2; //Broken_Horn_Pipe
+		getitem Broken_Horn_Pipe,2;
 		next;
 	}
 	mes "[Valkyrie Anguhilde]";
@@ -1178,7 +1178,7 @@ job3_arch02,244,46,5	script	Valkyrie#arch_02	4_F_VALKYRIE2,{
 	mes "Take care.";
 	mes "Please, hurry up!";
 	close2;
-	getitem 2798,1; //Will_Of_Exhausted_Angel
+	getitem Will_Of_Exhausted_Angel,1;
 	hideonnpc "Valkyrie#arch_02";
 	donpcevent "#arch_3_start::OnEnable";
 	end;
@@ -1192,7 +1192,7 @@ OnTouch:
 	donpcevent "#arch_3_03::OnKill";
 	donpcevent "mob#arch_2::OnKill";
 	hideoffnpc "Valkyrie Anguhilde#end";
-	if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 2000) {
+	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
 		mes "- Wait a Sec !! -";
 		mes "- You are carrying too many items, -";
 		mes "- you won't be able to obtain any new items. -";
@@ -1206,7 +1206,7 @@ OnTouch:
 		mes "Please unequip your riding pet and try again!";
 		close;
 	}
-	if (countitem(6154) < 2) {
+	if (countitem(Broken_Horn_Pipe) < 2) {
 		mes "[Valkyrie Anguhilde]";
 		mes "Did you collect all of the pieces of my horn pipe?";
 		next;
@@ -1217,9 +1217,9 @@ OnTouch:
 		mes "It can be dangerous, so let's go back.";
 		close2;
 		nude;
-		if (countitem(2798))
-			delitem 2798,(2798); //Will_Of_Exhausted_Angel
-		delitem 6154,countitem(6154); //Broken_Horn_Pipe
+		if (countitem(Will_Of_Exhausted_Angel))
+			delitem Will_Of_Exhausted_Angel,(2798);
+		delitem Broken_Horn_Pipe,countitem(Broken_Horn_Pipe);
 		mapwarp "job3_arch02","job3_arch01",29,29;
 		end;
 	}
@@ -1302,13 +1302,13 @@ OnTouch:
 	mes "Don't forget an altruistic minister's spirit like today forever.";
 	mes "I hope we see each other in Valhalla sometime.";
 	nude;
-	if (countitem(2798))
-		delitem 2798,countitem(2798); //Will_Of_Exhausted_Angel
-	delitem 6154,countitem(6154); //Broken_Horn_Pipe
+	if (countitem(Will_Of_Exhausted_Angel))
+		delitem Will_Of_Exhausted_Angel,countitem(Will_Of_Exhausted_Angel);
+	delitem Broken_Horn_Pipe,countitem(Broken_Horn_Pipe);
 	job_arch = 100;
 	completequest 2191;
-	getitem 5747,1; //Mitra
-	getitem 2795,1; //Green_Apple_Ring
+	getitem Mitra,1;
+	getitem Green_Apple_Ring,1;
 	jobchange roclass(eaclass()|EAJL_THIRD);
 	close;
 OnInit:
@@ -1345,15 +1345,15 @@ OnInit:
 job3_arch02,132,323,0	script	#arch_2_01	HIDDEN_WARP_NPC,5,5,{
 	end;
 OnTouch:
-	if (countitem(12382))
+	if (countitem(ValkyrieB_Scroll))
 		mapannounce "job3_arch02","Whispering of Valkyrie: I see a new ancient scroll!",bc_map;
 	end;
 }
 
 -	script	#arch_2_02_0::archbjcq2	-1,{
 OnTouch:
-	if (countitem(12382)) {
-		delitem 12382,1; //ValkyrieB_Scroll
+	if (countitem(ValkyrieB_Scroll)) {
+		delitem ValkyrieB_Scroll,1;
 		// fall through
 	} else if (getmercinfo(1) == 2038) {
 		.@randht = rand(1,10);
@@ -1397,8 +1397,8 @@ OnTouch:
 
 job3_arch02,206,113,0	script	#arch_2_boss	HIDDEN_WARP_NPC,5,5,{
 OnTouch:
-	if (countitem(12382)) {
-		delitem 12382,1; //ValkyrieB_Scroll
+	if (countitem(ValkyrieB_Scroll)) {
+		delitem ValkyrieB_Scroll,1;
 		// fall through
 	} else if (getmercinfo(1) == 2038) {
 		mapannounce "job3_arch02","A shout of devil: You are so childish. I invite you a party of devil. I'll make you have a fun!",bc_map,"0xFF0000";
@@ -1647,10 +1647,10 @@ OnTouch:
 /*
 job_arch01,26,25,0	script	#archremove	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
-	if (countitem(6154)) delitem 6154, countitem(6154); //Broken_Horn_Pipe
-	if (countitem(12381)) delitem 12381, countitem(12381); //ValkyrieA_Scroll
-	if (countitem(12382)) delitem 12382, countitem(12382); //ValkyrieB_Scroll
-	if (countitem(2798)) delitem 2798, countitem(2798); //Will_Of_Exhausted_Angel
+	if (countitem(Broken_Horn_Pipe)) delitem Broken_Horn_Pipe, countitem(Broken_Horn_Pipe);
+	if (countitem(ValkyrieA_Scroll)) delitem ValkyrieA_Scroll, countitem(ValkyrieA_Scroll);
+	if (countitem(ValkyrieB_Scroll)) delitem ValkyrieB_Scroll, countitem(ValkyrieB_Scroll);
+	if (countitem(Will_Of_Exhausted_Angel)) delitem Will_Of_Exhausted_Angel, countitem(Will_Of_Exhausted_Angel);
 	end;
 }
 */

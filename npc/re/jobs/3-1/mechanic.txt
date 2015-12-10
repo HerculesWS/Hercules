@@ -96,10 +96,10 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 			job__mechanic = 12;
 			completequest 10101;
 			if (Sex)
-				getitem 5749,1; //Driver_Band
+				getitem Driver_Band,1;
 			else
-				getitem 5760,1; //Driver_Band_
-			getitem 2795,1; //Green_Apple_Ring
+				getitem Driver_Band_,1;
+			getitem Green_Apple_Ring,1;
 			jobchange roclass(eaclass()|EAJL_THIRD);
 			mes "[Chainheart]";
 			mes "This is a gift that I give to you.";
@@ -316,7 +316,7 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 }
 
 jupe_cave,37,55,5	script	Scholar#Mechanic	4_M_ALCHE_D,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 300) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 300) {
 		mes "- Your pack is too heavy. -";
 		mes "- Lighten your body first -";
 		mes "- and please try again. -";

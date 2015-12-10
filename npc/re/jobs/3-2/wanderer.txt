@@ -915,7 +915,7 @@ xmas,147,135,5	script	Dancer Kim#xmas	4_F_WANDERER,{
 			mes "- You can't continue the quest because you have remaining skill points. -";
 			close;
 		}
-		if (checkweight(1201,2) == 0) {
+		if (checkweight(Knife,2) == 0) {
 			mes "- You need to empty your inventory if you want to continue the quest. -";
 			close;
 		}
@@ -1003,8 +1003,8 @@ xmas,147,135,5	script	Dancer Kim#xmas	4_F_WANDERER,{
 		mes "This rising Wanderer star, " + strcharinfo(0) + "!";
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		job_wan = 10;
-		getitem 2795,1; //Green_Apple_Ring
-		getitem 5758,1; //Dying_Swan
+		getitem Green_Apple_Ring,1;
+		getitem Dying_Swan,1;
 		completequest 2222;
 		next;
 		mes "[Dancer Kim]";

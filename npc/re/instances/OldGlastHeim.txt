@@ -1238,7 +1238,7 @@ OnTalk6:
 			mes "[Varmunt]";
 			mes "There's something unusual about this thing's aura. Maybe someday we will be able to understand what is behind all of this.";
 			cutin "gl_barmund1",2;
-			getitem 6608,1; //Coagulated Spell
+			getitem Coagulated_Spell,1; //Coagulated Spell
 			setquest 12319;
 			close2;
 			cutin "gl_barmund1",255;
@@ -1942,7 +1942,7 @@ OnTimer80000:
 		mes "Well, you are pretty ridiculous. Beginners shouldn't get the loot Amdarias drops.";
 		erasequest 12318;
 		erasequest 12319;
-		getitem 6608,1; //Coagulated Spell
+		getitem Coagulated_Spell,1; //Coagulated Spell
 		next;
 		mes "[Hugin]";
 		mes "Varmunt, I have arbitrarily stopped time. And soon, the time gap will be gone.";

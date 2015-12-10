@@ -116,10 +116,10 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 			mes "Congratulations! You are now an Archer! Also, we hope that you actively participate in many programs for the revival of the Archer Guild.";
 			mes "Ah, items have arrived from the Production Department. Here, take these! These are all yours!";
 			callfunc "Job_Change",Job_Archer;
-			getitem 1742,1;	// N_Composite_Bow
-			getitem 12004,1;	// Arrow_Container
-			getitem 12009,1;	// Silver_Arrow_Container
-			getitem 12008,1;	// Fire_Arrow_Container
+			getitem N_Composite_Bow,1;	// N_Composite_Bow
+			getitem Arrow_Container,1;	// Arrow_Container
+			getitem Silver_Arrow_Container,1;	// Silver_Arrow_Container
+			getitem Fire_Arrow_Container,1;	// Fire_Arrow_Container
 			next;
 			mes "[Archer Guildsman]";
 			mes "Having a bow and arrows, now you became a real Archer.";

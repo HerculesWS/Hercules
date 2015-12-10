@@ -774,7 +774,7 @@ sword_1-1,223,167,2	script	Master#job_shu	4_M_SURA,{
 			mes "You can't become a Sura unless you use all your skill points.";
 			close;
 		}
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 			mes "You seem to be heavily burdened. Please remove some of it.";
 			close;
 		}
@@ -827,8 +827,8 @@ sword_1-1,223,167,2	script	Master#job_shu	4_M_SURA,{
 		job_shu = 100;
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		completequest 11158;
-		getitem 5754,1; //Blazing_Soul
-		getitem 2795,1; //Green_Apple_Ring
+		getitem Blazing_Soul,1;
+		getitem Green_Apple_Ring,1;
 		close;
 	} else if (job_shu > 5) {
 		mes "Once I was also an ordinary young man who traveled a lot and met many friends.";
