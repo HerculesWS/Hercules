@@ -6553,6 +6553,8 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
 
 	if (sd->sc.data[SC_CASH_PLUSEXP])
 		bonus += sd->sc.data[SC_CASH_PLUSEXP]->val1;
+	if (sd->sc.data[SC_OVERLAPEXPUP])
+		bonus += sd->sc.data[SC_OVERLAPEXPUP]->val1;
 
 	*base_exp = (unsigned int) cap_value(*base_exp + (double)*base_exp * bonus/100., 1, UINT_MAX);
 

@@ -830,6 +830,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_ATKER_ASPD] = SI_ATKER_ASPD;
 	status->dbs->IconChangeTable[SC_ATKER_MOVESPEED] = SI_ATKER_MOVESPEED;
 	status->dbs->IconChangeTable[SC_CUP_OF_BOZA] = SI_CUP_OF_BOZA;
+	status->dbs->IconChangeTable[SC_OVERLAPEXPUP] = SI_OVERLAPEXPUP;
 	
 	// Eden Crystal Synthesis
 	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
@@ -8524,6 +8525,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC_CASH_PLUSEXP:
 			case SC_CASH_PLUSONLYJOBEXP:
+			case SC_OVERLAPEXPUP:
 				if (val1 < 0)
 					val1 = 0;
 				break;
@@ -9374,6 +9376,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_CASH_PLUSONLYJOBEXP:
 		case SC_MONSTER_TRANSFORM:
 		case SC_CASH_RECEIVEITEM:
+		case SC_OVERLAPEXPUP:
 			val_flag |= 1;
 			break;
 	}
