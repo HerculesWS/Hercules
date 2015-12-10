@@ -4711,7 +4711,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 		case ITEMID_THICK_MANUAL50:
 		case ITEMID_NOBLE_NAMEPLATE:
 		case ITEMID_BATTLE_MANUAL25:
-		case ITEMIDBATTLE_MANUAL100:
+		case ITEMID_BATTLE_MANUAL100:
 		case ITEMID_BATTLE_MANUAL_X3:
 			if( sd->sc.data[SC_CASH_PLUSEXP] )
 				return 0;
