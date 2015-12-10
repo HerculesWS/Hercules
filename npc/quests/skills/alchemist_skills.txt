@@ -190,11 +190,11 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 					mes "make sure you didn't";
 					mes "forget anything. Hm...";
 					next;
-					if (countitem(715) > 4 && countitem(1093) > 3 && countitem(950) > 9 && countitem(1057) > 9) {
-						delitem 715,5; //Yellow_Gemstone
-						delitem 1093,4; //Empty_Potion
-						delitem 950,10; //Heart_Of_Mermaid
-						delitem 1057,10; //Moth_Dust
+					if (countitem(Yellow_Gemstone) > 4 && countitem(Empty_Potion) > 3 && countitem(Heart_Of_Mermaid) > 9 && countitem(Moth_Dust) > 9) {
+						delitem Yellow_Gemstone,5;
+						delitem Empty_Potion,4;
+						delitem Heart_Of_Mermaid,10;
+						delitem Moth_Dust,10;
 						ALCHE_SK = 3;
 						mes "[Pisruik]";
 						mes "Great, it looks like";
@@ -371,7 +371,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 							close;
 						}
 					}
-					else if (countitem(715) == 0 && countitem(1093) == 0 && countitem(950) == 0 && countitem(1057) == 0) {
+					else if (countitem(Yellow_Gemstone) == 0 && countitem(Empty_Potion) == 0 && countitem(Heart_Of_Mermaid) == 0 && countitem(Moth_Dust) == 0) {
 						mes "[Pisruik]";
 						mes "So you knew what";
 						mes "you had to bring, came";
@@ -659,8 +659,8 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			close;
 		}
 		else if (ALCHE_SK == 6) {
-			if (countitem(1032) > 19) {
-				delitem 1032,20; //Blossom_Of_Maneater
+			if (countitem(Blossom_Of_Maneater) > 19) {
+				delitem Blossom_Of_Maneater,20;
 				ALCHE_SK = 7;
 				mes "[Pisruik]";
 				mes "Thanks so much for";
@@ -763,8 +763,8 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			close;
 		}
 		else if (ALCHE_SK == 8) {
-			if (countitem(1032) > 0) {
-				delitem 1032,1; //Blossom_Of_Maneater
+			if (countitem(Blossom_Of_Maneater) > 0) {
+				delitem Blossom_Of_Maneater,1;
 				ALCHE_SK = 7;
 				mes "[Pisruik]";
 				mes "Thanks so much!";
@@ -864,8 +864,8 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			mes "dorky without them.^000000";
 			next;
 			if (select("Let him try a pair of your glasses:Don't give him anything") == 1) {
-				if (countitem(2243) > 0) {
-					delitem 2243,1; //Spinning_Eyes
+				if (countitem(Spinning_Eyes) > 0) {
+					delitem Spinning_Eyes,1;
 					ALCHE_SK = 10;
 					//changes the quest steps by deicision.
 					mes "["+ strcharinfo(0) +"]";
@@ -923,7 +923,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 						mes "the medicine's side effects.^000000";
 						next;
 						ALCHE_SK = 11;
-						getitem 7434,1; //Elemental_Create_Book
+						getitem Elemental_Potion_Book,1; //Elemental_Create_Book
 						mes "[Pisruik]";
 						mes "Well, you should be";
 						mes "ready to make your own";
@@ -1010,7 +1010,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "the medicine's side effects.^000000";
 				next;
 				ALCHE_SK = 11;
-				getitem 7434,1; //Elemental_Create_Book
+				getitem Elemental_Potion_Book,1; //Elemental_Create_Book
 				mes "[Pisruik]";
 				mes "Well, you should be";
 				mes "ready to make your own";
@@ -1050,7 +1050,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			close;
 		}
 		else if (ALCHE_SK == 11) {
-			if (countitem(7434) == 0) {
+			if (countitem(Elemental_Potion_Book) == 0) {
 				mes "[Pisruik]";
 				mes "Uh oh...";
 				mes "You lost the thesis";
@@ -1059,7 +1059,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "another one for you now...";
 				close;
 			}
-			else if (countitem(7434) == 1) {
+			else if (countitem(Elemental_Potion_Book) == 1) {
 				mes "[Pisruik]";
 				mes "So, how have you been";
 				mes "using the potions that";
@@ -1068,7 +1068,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "in handy in your adventures.";
 				close;
 			}
-			else if (countitem(7434) > 1) {
+			else if (countitem(Elemental_Potion_Book) > 1) {
 				mes "[Pisruik]";
 				mes "Huh, so copies of my";
 				mes "thesis are circulating";

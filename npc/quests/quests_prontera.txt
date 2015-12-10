@@ -136,9 +136,9 @@ S_Volunteer:
 	mes "3 Red Potions, 1 Milk,";
 	mes "and 1 Orange Potion";
 	mes "...to give you hope.";
-	getitem 501,3; //Red_Potion
-	getitem 519,1; //Milk
-	getitem 502,1; //Orange_Potion
+	getitem Red_Potion,3;
+	getitem Milk,1;
+	getitem Orange_Potion,1;
 	next;
 	return;
 }
@@ -167,7 +167,7 @@ prt_fild05,270,212,5	script	Culvert Guardian	8W_SOLDIER,{
 // Ph.D Hat Quest :: npc_6cript
 //============================================================
 prt_in,38,108,4	script	Teacher	1_M_INNKEEPER,{
-	if ((countitem(710) > 0) && (countitem(703) > 0) && (countitem(704) > 0) && (countitem(708) > 0)) {
+	if ((countitem(Illusion_Flower) > 0) && (countitem(Hinalle) > 0) && (countitem(Aloe) > 0) && (countitem(Ment) > 0)) {
 		mes "[Teacher]";
 		mes "Oh...";
 		mes "Those Flowers in your hand are...";
@@ -183,11 +183,11 @@ prt_in,38,108,4	script	Teacher	1_M_INNKEEPER,{
 			mes "I'll give you my precious item.";
 			close;
 		case 2:
-			if ((countitem(710) > 0) && (countitem(703) > 0) && (countitem(704) > 0) && (countitem(708) > 0)) {
-				delitem 710,1;  //Illusion_Flower
-				delitem 703,1;  //Hinalle
-				delitem 704,1;  //Aloe
-				delitem 708,1;  //Ment
+			if ((countitem(Illusion_Flower) > 0) && (countitem(Hinalle) > 0) && (countitem(Aloe) > 0) && (countitem(Ment) > 0)) {
+				delitem Illusion_Flower,1;
+				delitem Hinalle,1;
+				delitem Aloe,1;
+				delitem Ment,1;
 				getitem 5012,1;	//Ph.D_Hat
 				mes "[Teacher]";
 				mes "I really really appreciate you what you've done for me. I'm truly grateful. I will give my precious item to you as promised.";
@@ -563,13 +563,13 @@ S_GetBooks:
 		mes "thanks for doing this for me.";
 		mes "I was really at my wit's end...";
 		prt_curse = 3;
-		getitem 7431,1; //Books
+		getitem Several_Books,1; //Books
 		close;
 	}
 	return;
 
 S_CheckWeight:
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -582,7 +582,7 @@ S_CheckWeight:
 }
 
 yuno,311,195,3	script	Historian#prt01	4_M_SAGE_A,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -641,7 +641,7 @@ yuno,311,195,3	script	Historian#prt01	4_M_SAGE_A,{
 		mes "I cannot proceed without more";
 		mes "new material to study.";
 		next;
-		if (countitem(7431) > 0) {
+		if (countitem(Several_Books) > 0) {
 			select("Excuse me, but what's your name?");
 			mes "[Historian]";
 			mes "Hm? I'm Karlomoff, the";
@@ -714,7 +714,7 @@ yuno,311,195,3	script	Historian#prt01	4_M_SAGE_A,{
 		mes "Just give me a minute to get";
 		mes "a cool drink of water first~";
 		prt_curse = 4;
-		delitem 7431,1; //Books
+		delitem Several_Books,1; //Books
 		close;
 	}
 	else if (prt_curse == 4) {
@@ -861,7 +861,7 @@ yuno,311,195,3	script	Historian#prt01	4_M_SAGE_A,{
 		mes "I'm certain you can find her";
 		mes "somewhere in that desert town.";
 		prt_curse = 6;
-		getitem 7342,1; //File01
+		getitem File01,1;
 		close;
 	}
 	else if (prt_curse == 6) {
@@ -933,7 +933,7 @@ yuno,311,195,3	script	Historian#prt01	4_M_SAGE_A,{
 }
 
 morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -943,7 +943,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 		close;
 	}
 	if (prt_curse == 6) {
-		if (countitem(7342) < 0) {
+		if (countitem(File01) < 0) {
 			mes "^3355FFYou seem to have lost";
 			mes "Karlomoff's Report. You";
 			mes "needed to deliver here to";
@@ -1063,7 +1063,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 					mes "That doesn't sound";
 					mes "right at all. Are you sure";
 					mes "that's the lyric you heard?";
-					delitem 7342,1; //File01
+					delitem File01,1;
 					prt_curse = 7;
 					close;
 				}
@@ -1127,7 +1127,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 					mes "That doesn't sound right";
 					mes "at all. Are you sure those";
 					mes "are the lyrics you heard?";
-					delitem 7342,1; //File01
+					delitem File01,1;
 					prt_curse = 7;
 					close;
 				}
@@ -1360,14 +1360,14 @@ S_GiveName:
 	mes "a silly errand, but I actually";
 	mes "need to know this song's lyrics";
 	mes "for the sake of my research...";
-	if (getarg(0) == 1) delitem 7342,1; //File01
+	if (getarg(0) == 1) delitem File01,1;
 	prt_curse = 8;
 	changequest 18031,18032;
 	close;
 }
 
 mjolnir_01,135,168,3	script	Historian#prt03	4_M_SAGE_A,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -1758,7 +1758,7 @@ mjolnir_01,313,269,5	script	Dazed Boy#prt	4_M_KID1,{
 }
 
 mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -1942,7 +1942,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 		mes "I should deliver these";
 		mes "herbs to Prontera Church";
 		mes "before I talk to Rodafrian.)^000000";
-		getitem 7432,1; //Leather_Pouch
+		getitem Leather_Pouch,1;
 		prt_curse = 13;
 		changequest 18033,18034;
 		close;
@@ -2185,7 +2185,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "these hallowed halls.";
 		next;
 		select("Give him the herb pouch.");
-		if (countitem(7432) < 1) {
+		if (countitem(Leather_Pouch) < 1) {
 			mes "["+strcharinfo(0)+"]";
 			mes "Ack!";
 			mes "Now, where did I put";
@@ -2272,7 +2272,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "me the opportunity to tell you";
 		mes "something very important. But, you must not tell anyone else...";
 		prt_curse = 14;
-		delitem 7432,1; //Leather_Pouch
+		delitem Leather_Pouch,1;
 		close;
 	}
 	else if (prt_curse == 14) {
@@ -3319,7 +3319,7 @@ prt_church,24,111,5	script	#prince3	4_M_LIEMAN,{
 		close;
 	}
 	else if (prt_curse == 32 || prt_curse == 41 || prt_curse == 51) {
-		if (countitem(506) > 0 && countitem(715) > 0) {
+		if (countitem(Green_Potion) > 0 && countitem(Yellow_Gemstone) > 0) {
 			mes "^3355FFYou open a bottle of";
 			mes "Green Potion and insert a";
 			mes "Yellow Gemstone. The gem";
@@ -3337,8 +3337,8 @@ prt_church,24,111,5	script	#prince3	4_M_LIEMAN,{
 			mes "and the serpent scale marks";
 			mes "on the prince's body slowly";
 			mes "fade until they disappear.^000000";
-			delitem 506,1; //Green_Potion
-			delitem 715,1; //Yellow_Gemstone
+			delitem Green_Potion,1;
+			delitem Yellow_Gemstone,1;
 			if (prt_curse == 32) prt_curse = 33;
 			else if (prt_curse == 41) prt_curse = 42;
 			else prt_curse = 52;
@@ -3605,7 +3605,7 @@ OnTouch:
 }
 
 prt_in,162,99,4	script	Librarian#curse	1_F_02,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -3615,7 +3615,7 @@ prt_in,162,99,4	script	Librarian#curse	1_F_02,{
 		close;
 	}
 	if (prt_curse == 3) {
-		if (countitem(7431) < 1) {
+		if (countitem(Several_Books) < 1) {
 			mes "[Librarian]";
 			mes "Please make sure to return";
 			mes "library books to the correct";
@@ -3640,7 +3640,7 @@ prt_in,162,99,4	script	Librarian#curse	1_F_02,{
 					mes "and try not to lose";
 					mes "them again. Thank you.";
 					Zeny -= 700;
-					getitem 7431,1; //Books
+					getitem Several_Books,1; //Books
 					close;
 				}
 				mes "[Librarian]";

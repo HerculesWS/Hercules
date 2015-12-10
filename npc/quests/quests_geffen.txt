@@ -44,13 +44,13 @@ geffen_in,144,166,4	script	Blacksmith	1_M_SMITH,{
 		next;
 		switch(select("Hm... Not bad. Alright.:How does it work again?")) {
 		case 1:
-			if ((countitem(999) > 49) && (Zeny > 1999)){
+			if ((countitem(Steel) > 49) && (Zeny > 1999)){
 				mes "[Blacksmith]";
 				mes "Ah, I see that you appreciate a Blacksmith's work! Alright, I'll do it right away !!";
 				next;
-				delitem 999,50;  //Steel
+				delitem Steel,50;
 				Zeny -= 2000;
-				getitem 2292,1; // Welding_Mask
+				getitem Welding_Mask,1; // Welding_Mask
 				mes "[Blacksmith]";
 				mes "Hahaha~! Make good use of that!";
 				close;
@@ -130,12 +130,12 @@ geffen_in,30,71,4	script	Eric	4_M_01,{
 		mes "These are the things I need for Grandfather's masterpiece.";
 		close;
 	case 3:
-		if ((countitem(999) > 39) && (countitem(984) > 0) && (countitem(970) > 0) && (countitem(1003) > 0)) {
-			delitem 999,40; //Steel
-			delitem 984,1; //Oridecon
-			delitem 970,1; //Alchol
-			delitem 1003,1; //Coal
-			getitem 5001,1; //Headset
+		if ((countitem(Steel) > 39) && (countitem(Oridecon) > 0) && (countitem(Alchol) > 0) && (countitem(Coal) > 0)) {
+			delitem Steel,40;
+			delitem Oridecon,1;
+			delitem Alchol,1;
+			delitem Coal,1;
+			getitem Headset,1;
 			mes "*Tap! Tap! Tap!*";
 			next;
 			mes "[Eric]";

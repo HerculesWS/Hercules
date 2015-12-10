@@ -46,15 +46,15 @@
 		mes "And will try to make Ragnarok the most enjoyable game in the world.";
 		close;
 	case 2:
-		if (countitem(909) > 9 && countitem(914) > 9 && countitem(705) > 9) {
+		if (countitem(Jellopy) > 9 && countitem(Fluff) > 9 && countitem(Clover) > 9) {
 			mes "[Smile Girl]";
 			mes "Congratulations !";
 			mes "Now please take this Mr.Smile.";
 			next;
-			delitem 909,10; //Jellopy
-			delitem 914,10; //Fluff
-			delitem 705,10; //Clover
-			getitem 2278,1; //Mr_Smile
+			delitem Jellopy,10;
+			delitem Fluff,10;
+			delitem Clover,10;
+			getitem Mr_Smile,1;
 			mes "[Smile Girl]";
 			mes "His majesty,Tristram the 3rd";
 			mes "has promised to try his best to make Ragnarok better and more enjoyable.";

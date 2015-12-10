@@ -76,7 +76,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 				mes "you really need to relax.";
 				mes "Here, have a drink on me.";
 				next;
-				if (countitem(12112) > 0) {
+				if (countitem(Tropical_Sograt) > 0) {
 					mes "[Timid Young Man]";
 					mes "Oh~! Isn't that";
 					mes "a Tropical Sograt?";
@@ -201,7 +201,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 								mes "of power, I can't really";
 								mes "stop you. Thankfully, nobody";
 								mes "has any idea of where he is~";
-								delitem 12112,1; //Tropical_Sograt
+								delitem Tropical_Sograt,1;
 								qskill_bard = 1;
 							}
 							else {
@@ -212,7 +212,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 								mes "he mentioned something about";
 								mes "being at least ^660000Job Level 40^000000 to";
 								mes "be able to handle that power...";
-								delitem 12112,1; //Tropical_Sograt
+								delitem Tropical_Sograt,1;
 							}
 							close;
 						case 2:
@@ -295,7 +295,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 								mes "of power, I can't really";
 								mes "stop you. Thankfully, nobody";
 								mes "has any idea of where he is~";
-								delitem 12112,1; //Tropical_Sograt
+								delitem Tropical_Sograt,1;
 								qskill_bard = 1;
 							}
 							else {
@@ -306,7 +306,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 								mes "he mentioned something about";
 								mes "being at least ^660000Job Level 40^000000 to";
 								mes "be able to handle that power...";
-								delitem 12112,1; //Tropical_Sograt
+								delitem Tropical_Sograt,1;
 							}
 							close;
 						}
@@ -454,7 +454,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 			close;
 		}
 		else if (qskill_bard == 8) {
-			if (countitem(7277) > 0) {
+			if (countitem(Munak_Doll) > 0) {
 				mes "[Riott]";
 				mes "Ah, you've brought me";
 				mes "a Munak Doll made by";
@@ -486,7 +486,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 				mes "mine. Head spinning, head";
 				mes "spinning, head spinning...!''";
 				specialeffect2 EF_TALK_FROSTJOKE;
-				delitem 7277,1; //Munak_Doll
+				delitem Munak_Doll,1;
 				skill "BA_PANGVOICE",1,0;
 				qskill_bard = 9;
 				next;
@@ -536,7 +536,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 			close;
 		}
 		else if (qskill_bard == 7) {
-			if (countitem(574) > 4) {
+			if (countitem(Egg) > 4) {
 				mes "[Riott]";
 				mes "Ah, you've brought me";
 				mes "some fresh eggs laid by";
@@ -568,7 +568,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 				mes "mine. Head spinning, head";
 				mes "spinning, head spinning...!''";
 				specialeffect2 EF_TALK_FROSTJOKE;
-				delitem 574,5; //Egg
+				delitem Egg,5;
 				skill 1010,1,0;
 				qskill_bard = 9;
 				next;
@@ -627,12 +627,12 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 				mes "an avid collector of her work.";
 				next;
 				mes "[Riott]";
-				if (countitem(574) > 0) {
+				if (countitem(Egg) > 0) {
 					mes "In the meanwhile,";
 					mes "I'll enjoy the few";
 					mes "eggs that you do have!";
 					mes "Bweh heh heh heh heh!";
-					delitem 574,countitem(574); //Egg
+					delitem Egg,countitem(Egg);
 				}
 				qskill_bard = 8;
 				close;
@@ -1164,7 +1164,7 @@ morocc_in,175,70,7	script	Customer#bard_skill02	1_M_04,{
 // Bartender
 //============================================================
 morocc_in,166,76,7	script	Bartender#bard_qskill	1_ETC_01,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
@@ -1203,7 +1203,7 @@ morocc_in,166,76,7	script	Bartender#bard_qskill	1_ETC_01,{
 		mes "careful, you'll pass out";
 		mes "in no time flat. Take it easy.";
 		Zeny -= 1000;
-		getitem 12112,1; //Tropical_Sograt
+		getitem Tropical_Sograt,1;
 		close;
 
 	case 2:
@@ -1233,7 +1233,7 @@ morocc_in,166,76,7	script	Bartender#bard_qskill	1_ETC_01,{
 		mes "enjoy your drinking";
 		mes "without going crazy.";
 		Zeny -= 1000;
-		getitem 12113,1; //Vermilion_The_Beach
+		getitem Vermilion_The_Beach,1;
 		close;
 
 	case 3:
@@ -1247,7 +1247,7 @@ morocc_in,166,76,7	script	Bartender#bard_qskill	1_ETC_01,{
 // Function
 //============================================================
 function	script	F_BardSkillYhelle	{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 2000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
@@ -1269,7 +1269,7 @@ function	script	F_BardSkillYhelle	{
 			mes "place where Yhelle the";
 			mes "Hen was roosting.^000000";
 			++qskill_bard;
-			getitem 574,1; //Egg
+			getitem Egg,1;
 		}
 	}
 	else {

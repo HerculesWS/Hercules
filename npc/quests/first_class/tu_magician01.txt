@@ -466,7 +466,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "all 10 Chrysalis from hunting";
 		mes "all of those Pupa. Hmmmm...";
 		next;
-		if (countitem(915) < 10) {
+		if (countitem(Chrysalis) < 10) {
 			mes "[Mana]";
 			mes "Aw, you don't";
 			mes "have enough of";
@@ -497,7 +497,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "like I asked? I hope so...";
 		mes "Because I'm going to check~";
 		next;
-		if(countitem(915) < 10){
+		if(countitem(Chrysalis) < 10){
 			mes "[Mana]";
 			mes "Whoa, you need";
 			mes "more than just this.";
@@ -691,7 +691,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "training. I hope it comes";
 				mes "in handy when fighting...";
 				tu_magician01 = 6;
-				getitem 1604,1; //Wand
+				getitem Wand,1;
 				specialeffect2 EF_HIT5;
 				if(.@skill_e1) getexp 300,100;
 				if(.@skill_e2) getexp 300,100;
@@ -785,7 +785,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "out both of our guilds. Once";
 		mes "again, thanks very much~";
 		tu_magician01 = 28;
-		getitem 2321,1; //Silk_Robe
+		getitem Silk_Robe,1;
 		Zeny += 3000;
 		getexp 3000,1000;
 		close;

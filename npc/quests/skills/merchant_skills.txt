@@ -60,7 +60,7 @@ alberta,83,96,5	script	Necko	4W_M_02,7,7,{
 			mes "Kyukwakakakakakakakakakaka!";
 			close;
 		}
-		else if ((countitem(722) > 6) && (countitem(532) > 0) && (countitem(921) > 49) && (JobLevel >= 15 || (BaseJob == Job_Blacksmith || BaseJob == Job_Alchemist))) {
+		else if ((countitem(Scarlet_Jewel) > 6) && (countitem(Banana_Juice) > 0) && (countitem(Mushroom_Spore) > 49) && (JobLevel >= 15 || (BaseJob == Job_Blacksmith || BaseJob == Job_Alchemist))) {
 			mes "[Necko]";
 			mes "Oh! You!";
 			mes "You are qualified to learn how to shout!";
@@ -74,9 +74,9 @@ alberta,83,96,5	script	Necko	4W_M_02,7,7,{
 				mes "That's the spirit!";
 				mes "Here we go!";
 				next;
-				delitem 722,7; //Scarlet_Jewel
-				delitem 532,1; //Banana_Juice
-				delitem 921,50; //Mushroom_Spore
+				delitem Scarlet_Jewel,7;
+				delitem Banana_Juice,1;
+				delitem Mushroom_Spore,50;
 				skill "MC_LOUD",1,0;
 				mes "[Necko]";
 				mes "You have learned Crazy Uproar!!";
@@ -212,15 +212,15 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 			next;
 			switch (select("That's why I came here.:What about my cart?:Two pairs is pitiful?")) {
 			case 1:
-				if ((countitem(1019) > 49) && (countitem(998) > 9) && (countitem(919) > 19)) {
+				if ((countitem(Wooden_Block) > 49) && (countitem(Iron) > 9) && (countitem(Animal's_Skin) > 19)) {
 					mes "[Charlron]";
 					mes "Haha! Ok, ok!";
 					mes "With the things you brought";
 					mes "I will change your cart.";
 					next;
-					delitem 1019,50; //Wooden_Block
-					delitem 998,10; //Iron
-					delitem 919,20; //Animal's_Skin
+					delitem Wooden_Block,50;
+					delitem Iron,10;
+					delitem Animal's_Skin,20;
 					skill "MC_CHANGECART",1,0;
 					mes "[Charlron]";
 					mes "Congratulations.";
@@ -358,7 +358,7 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 			case 1:
 				.@care_random = rand(1,3);
 				if (.@care_random == 1) {
-					if ((countitem(533) > 1) && (countitem(998) > 19) && (countitem(938) > 29) && (countitem(601) > 19) && (countitem(962) > 4)) {
+					if ((countitem(Grape_Juice) > 1) && (countitem(Iron) > 19) && (countitem(Sticky_Mucus) > 29) && (countitem(Wing_Of_Fly) > 19) && (countitem(Tentacle) > 4)) {
 						mes "[Gershaun]";
 						mes "Hoho!";
 						mes "Got it! I shall teach you";
@@ -369,11 +369,11 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 						mes "I shall reward those who";
 						mes "eagerly swing their carts!";
 						next;
-						delitem 533,2; //Grape_Juice
-						delitem 998,20; //Iron
-						delitem 938,30; //Sticky_Mucus
-						delitem 601,20; //Wing_Of_Fly
-						delitem 962,5; //Tentacle
+						delitem Grape_Juice,2;
+						delitem Iron,20;
+						delitem Sticky_Mucus,30;
+						delitem Wing_Of_Fly,20;
+						delitem Tentacle,5;
 						skill "MC_CARTREVOLUTION",1,0;
 						mes "Now you can use Cart Revolution";
 						mes "I expect you to make merchants";
@@ -384,13 +384,13 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 						mes "Have a great day!!";
 						close;
 					}
-					else if (countitem(532) > 0) {
+					else if (countitem(Banana_Juice) > 0) {
 						mes "[Gershaun]";
 						mes "Ooh!";
 						mes "It's banana juice!";
 						mes "Thank you very much!";
 						mes "...............Kaah!";
-						delitem 532,1; //Banana_Juice
+						delitem Banana_Juice,1;
 						mes "Very refreshing! Thank you! Goodbye!";
 						next;
 						mes "[Gershaun]";
@@ -430,7 +430,7 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 					close;
 				}
 				if (.@care_random == 2) {
-					if ((countitem(533) > 1) && (countitem(998) > 14) && (countitem(938) > 24) && (countitem(601) > 14) && (countitem(962) > 4)) {
+					if ((countitem(Grape_Juice) > 1) && (countitem(Iron) > 14) && (countitem(Sticky_Mucus) > 24) && (countitem(Wing_Of_Fly) > 14) && (countitem(Tentacle) > 4)) {
 						mes "[Gershaun]";
 						mes "Mmm that's good!";
 						mes "Great! I shall teach you";
@@ -441,11 +441,11 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 						mes "I shall reward those who";
 						mes "eagerly swing their carts!";
 						next;
-						delitem 533,2; //Grape_Juice
-						delitem 998,15; //Iron
-						delitem 938,25; //Sticky_Mucus
-						delitem 601,15; //Wing_Of_Fly
-						delitem 962,5; //Tentacle
+						delitem Grape_Juice,2;
+						delitem Iron,15;
+						delitem Sticky_Mucus,25;
+						delitem Wing_Of_Fly,15;
+						delitem Tentacle,5;
 						skill "MC_CARTREVOLUTION",1,0;
 						mes "Now you can use Cart Revolution";
 						mes "I expect you to make merchants";
@@ -456,13 +456,13 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 						mes "Have a good day!!";
 						close;
 					}
-					else if (countitem(532) > 0) {
+					else if (countitem(Banana_Juice) > 0) {
 						mes "[Gershaun]";
 						mes "Ooh!";
 						mes "It's banana juice!";
 						mes "Thanks a lot!";
 						mes "...............Kaaah!";
-						delitem 532,1; //Banana_Juice
+						delitem Banana_Juice,1;
 						mes "Very good! Thank you! Good-bye!";
 						next;
 						mes "[Gershaun]";
@@ -503,7 +503,7 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 					close;
 				}
 				if (.@care_random == 3) {
-					if ((countitem(533) > 1) && (countitem(998) > 22) && (countitem(938) > 31) && (countitem(601) > 22) && (countitem(962) > 5)) {
+					if ((countitem(Grape_Juice) > 1) && (countitem(Iron) > 22) && (countitem(Sticky_Mucus) > 31) && (countitem(Wing_Of_Fly) > 22) && (countitem(Tentacle) > 5)) {
 						mes "[Gershaun]";
 						mes "Mmm that's good!";
 						mes "Great! I shall teach you";
@@ -514,11 +514,11 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 						mes "I shall reward those who";
 						mes "eagerly swing their carts!";
 						next;
-						delitem 533,2; //Grape_Juice
-						delitem 998,23; //Iron
-						delitem 938,32; //Sticky_Mucus
-						delitem 601,23; //Wing_Of_Fly
-						delitem 962,6; //Tentacle
+						delitem Grape_Juice,2;
+						delitem Iron,23;
+						delitem Sticky_Mucus,32;
+						delitem Wing_Of_Fly,23;
+						delitem Tentacle,6;
 						skill "MC_CARTREVOLUTION",1,0;
 						mes "Now you can use Cart Revolution";
 						mes "I expect you to make merchants";
@@ -529,13 +529,13 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 						mes "Have a good day!!";
 						close;
 					}
-					else if (countitem(532) > 0) {
+					else if (countitem(Banana_Juice) > 0) {
 						mes "[Gershaun]";
 						mes "Ooh!";
 						mes "It's Banana Juice!";
 						mes "Thanks a lot!";
 						mes "...............Kaaah!";
-						delitem 532,1; //Banana_Juice
+						delitem Banana_Juice,1;
 						mes "Very good! Thank you! Good-bye!";
 						next;
 						mes "[Gershaun]";

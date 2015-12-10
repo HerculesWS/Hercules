@@ -47,7 +47,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 	next;
 	switch(select("Cross Hat:Bulb Band:Stripe Hairband:Blue Hairband")) {
 	case 1:
-		if ((countitem(2608) > 0) && (countitem(7069) > 499)) {
+		if ((countitem(Rosary) > 0) && (countitem(Broken_Armor_Piece) > 499)) {
 			mes "[Hair Ornament Girl]";
 			mes "You've chosen the Cross Hat?";
 			mes "If you brought all the required items, I will make it for you~";
@@ -68,12 +68,12 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			case 2:
 				mes "^3355FFSwish swish snip snip^000000";
 				next;
-				delitem 2608,1;  //Rosary
-				delitem 7069,500;  //Broken_Armor_Piece
+				delitem Rosary,1;
+				delitem Broken_Armor_Piece,500;
 				mes "[Hair Ornament Girl]";
 				mes "Look at this! Well done~";
 				mes "Please come again~ hoooo!";
-				getitem 5036,1; // Cross_Band
+				getitem Cross_Band,1; // Cross_Band
 				close;
 			}
 		}
@@ -93,7 +93,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			close;
 		}
 	case 2:
-		if ((countitem(2233) > 0) && (countitem(746) > 19)) {
+		if ((countitem(Circlet_) > 0) && (countitem(Glass_Bead) > 19)) {
 			mes "[Hair Ornament Girl]";
 			mes "You've chosen Bulb band?";
 			mes "If you brought all the required items, I will make it for you~";
@@ -113,12 +113,12 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			case 2:
 				mes "^3355FFSwish swish snip snip^000000";
 				next;
-				delitem 2233,1;  //Circlet_
-				delitem 746,20;  //Glass_Bead
+				delitem Circlet_,1;
+				delitem Glass_Bead,20;
 				mes "[Hair Ornament Girl]";
 				mes "Look at this! Well done~";
 				mes "Please come again~ hoooo!";
-				getitem 5034,1; // Light_Bulb_Band
+				getitem Light_Bulb_Band,1; // Light_Bulb_Band
 				close;
 			}
 		}
@@ -138,7 +138,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			close;
 		}
 	case 3:
-		if (countitem(1099) > 1499) {
+		if (countitem(Worn_Out_Prison_Uniform) > 1499) {
 			mes "[Hair Ornament Girl]";
 			mes "You've chosen Stripe band?";
 			mes "If you brought all the required items, I will make it for you~";
@@ -154,11 +154,11 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			case 2:
 				mes "^3355FFSwish swish snip snip^000000";
 				next;
-				delitem 1099,1500;  //Worn_Out_Prison_Uniform
+				delitem Worn_Out_Prison_Uniform,1500;
 				mes "[Hair Ornament Girl]";
 				mes "Look at this! Well done~";
 				mes "Please come again~";
-				getitem 5049,1; // Stripe_Band
+				getitem Stripe_Band,1; // Stripe_Band
 				close;
 			}
 		}
@@ -176,7 +176,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			close;
 		}
 	case 4:
-		if ((countitem(2211) > 0) && (countitem(978) > 0) && (countitem(7003) > 299)) {
+		if ((countitem(Bandana) > 0) && (countitem(Cobaltblue_Dyestuffs) > 0) && (countitem(Anolian_Skin) > 299)) {
 			mes "[Hair Ornament Girl]";
 			mes "You've chosen Blue Hairband?";
 			mes "If you brought all the required items, I will make it for you~";
@@ -196,13 +196,13 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			case 2:
 				mes "^3355FFSwish swish snip snip^000000";
 				next;
-				delitem 2211,1;  //Bandana
-				delitem 978,1;  //Cobaltblue_Dyestuffs
-				delitem 7003,300;  //Anolian_Skin
+				delitem Bandana,1;
+				delitem Cobaltblue_Dyestuffs,1;
+				delitem Anolian_Skin,300;
 				mes "[Hair Ornament Girl]";
 				mes "Look, at this! Well done!";
 				mes "Please come again~ ";
-				getitem 5052,1; // Blue_Hair_Band
+				getitem Blue_Hair_Band,1; // Blue_Hair_Band
 				close;
 			}
 		}
@@ -237,7 +237,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 	next;
 	switch(select("Mine Helmet:Parcel Hat:Grief for Greed:Opera Phantom Mask")) {
 	case 1:
-		if ((countitem(5009) > 0) && (countitem(5028) > 0) && (countitem(999) > 24) && (countitem(747) > 0)) {
+		if ((countitem(Safety_Helmet) > 0) && (countitem(Candle) > 0) && (countitem(Steel) > 24) && (countitem(Crystal_Mirror) > 0)) {
 			mes "[Isac Mari]";
 			mes "Mine Helmet was designed for the miners in the coal mines to have light in the dark. If you brought all the required items, I will go ahead and make it for you~";
 			next;
@@ -259,13 +259,13 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 				mes "[Isac Mari]";
 				mes "Whew! This is pretty hard!";
 				next;
-				delitem 5009,1;  //Safety_Helmet
-				delitem 5028,1;  //Candle
-				delitem 747,1;  //Crystal_Mirror
-				delitem 999,25;  //Steel
+				delitem Safety_Helmet,1;
+				delitem Candle,1;
+				delitem Crystal_Mirror,1;
+				delitem Steel,25;
 				mes "[Isac Mari]";
 				mes "I'm not quite sure if this is the right one, but it looks about right. Ha ha~";
-				getitem 5031,1; // Mine_Helm
+				getitem Mine_Helm,1; // Mine_Helm
 				close;
 			}
 		}
@@ -289,7 +289,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			close;
 		}
 	case 2:
-		if ((countitem(1059) > 149) && (countitem(907) > 99) && (countitem(978) > 0)) {
+		if ((countitem(Transparent_Cloth) > 149) && (countitem(Resin) > 99) && (countitem(Cobaltblue_Dyestuffs) > 0)) {
 			mes "[Isac Mari]";
 			mes "Parcel Hat seems to be useful for business people to carry around their products. If you brought everything I need, I will make it for you.";
 			mes "If you brought all the required items, I will make it for you~";
@@ -314,13 +314,13 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 				mes "I think I messed up!";
 				mes "No, wait, I think I can fix this...";
 				next;
-				delitem 1059,150;  //Transparent_Cloth
-				delitem 907,100;  //Resin
-				delitem 978,1;  //Cobaltblue_Dyestuffs
+				delitem Transparent_Cloth,150;
+				delitem Resin,100;
+				delitem Cobaltblue_Dyestuffs,1;
 				mes "[Isac Mari]";
 				mes "Well...";
 				mes "Um, it looks like a Parcel Hat. So that's good enough for me! Ha ha~";
-				getitem 5023,1; // Hat_Of_Bundle
+				getitem Hat_Of_Bundle,1; // Hat_Of_Bundle
 				close;
 			}
 		}
@@ -346,7 +346,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			close;
 		}
 	case 3:
-		if ((countitem(2233) > 0) && (countitem(969) > 0) && (countitem(949) > 79) && (countitem(999) > 19) && (countitem(938) > 799)) {
+		if ((countitem(Circlet_) > 0) && (countitem(Gold) > 0) && (countitem(Feather) > 79) && (countitem(Steel) > 19) && (countitem(Sticky_Mucus) > 799)) {
 			mes "[Isac Mari]";
 			mes "Grief for Greed...";
 			mes "If you brought all the required items, I'll go ahead and make it for you~";
@@ -369,14 +369,14 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 				mes "[Isac Mari]";
 				mes "Whew! This is pretty hard!";
 				next;
-				delitem 2233,1;  //Circlet_
-				delitem 969,1;  //Gold
-				delitem 949,80;  //Feather
-				delitem 999,20;  //Steel
-				delitem 938,800;  //Sticky_Mucus
+				delitem Circlet_,1;
+				delitem Gold,1;
+				delitem Feather,80;
+				delitem Steel,20;
+				delitem Sticky_Mucus,800;
 				mes "[Isac Mari]";
 				mes "I might have made a few mistakes, but it looks good enough. Here you go, your own Grief for Greed hat!";
-				getitem 5021,1; // Bankruptcy_Of_Heart
+				getitem Bankruptcy_Of_Heart,1; // Bankruptcy_Of_Heart
 				close;
 			}
 		}
@@ -407,7 +407,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			close;
 		}
 	case 4:
-		if ((countitem(2281) > 0) && (countitem(1048) > 49)) {
+		if ((countitem(Phantom_Of_Opera) > 0) && (countitem(Slender_Snake) > 49)) {
 			mes "[Isac Mari]";
 			mes "Opera Phantom Mask...";
 			mes "Frightening, but also tragic and romantic. If you brought all the required items, I will make it for you~";
@@ -430,12 +430,12 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 				mes "[Isac Mari]";
 				mes "Whew! This is pretty hard!";
 				next;
-				delitem 2281,1;  //Phantom_Of_Opera
-				delitem 1048,50;  //Slender_Snake
+				delitem Phantom_Of_Opera,1;
+				delitem Slender_Snake,50;
 				mes "[Isac Mari]";
 				mes "I'm not quite sure if this is the right one.";
 				mes "But it looks fine. Ha ha";
-				getitem 5043,1; // Opera_Ghost_Mask
+				getitem Opera_Ghost_Mask,1; // Opera_Ghost_Mask
 				close;
 			}
 		}
@@ -2013,7 +2013,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 		dmdswrd_Q = 15;
 		break;
 	case 15:
-		if (countitem(717) > 0 && countitem(726) > 0 && countitem(721) > 0 && countitem(640) > 0 && countitem(757) > 0) {
+		if (countitem(Blue_Gemstone) > 0 && countitem(Blue_Jewel) > 0 && countitem(Azure_Jewel) > 0 && countitem(Shining_Stone) > 0 && countitem(Elunium_Stone) > 0) {
 			mes "[Meteurengut]";
 			mes "You've already found";
 			mes "all of the items I require to";
@@ -2021,11 +2021,11 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 			mes "Fantastic. Now I can begin work";
 			mes "on this. However, there is one";
 			mes "more thing I must ask of you.";
-			delitem 717,1; //Blue_Gemstone
-			delitem 726,1; //Blue_Jewel
-			delitem 721,1; //Azure_Jewel
-			delitem 640,1; //Shining_Stone
-			delitem 757,1; //Elunium_Stone
+			delitem Blue_Gemstone,1;
+			delitem Blue_Jewel,1;
+			delitem Azure_Jewel,1;
+			delitem Shining_Stone,1;
+			delitem Elunium_Stone,1;
 			dmdswrd_Q = 16;
 			next;
 			mes "[Meteurengut]";
@@ -2060,7 +2060,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 		mes "^3355FF1 Blue Gemstone^000000.";
 		break;
 	case 16:
-		if (countitem(1025) > 0) {
+		if (countitem(Spiderweb) > 0) {
 			mes "[Meteurengut]";
 			mes "I see that you've brought";
 			mes "me a Cobweb. It's hard to";
@@ -2069,7 +2069,7 @@ aldebaran,44,53,4	script	Meteurengut#cmd	1_M_WIZARD,{
 			mes "Now, if you'll wait a moment,";
 			mes "I shall complete the slate...";
 			next;
-			delitem 1025,1; //Spiderweb
+			delitem Spiderweb,1;
 			mes "*^3355FFClang Clang Clang!*";
 			mes "*Zaaaaaaaaaaaaaap*";
 			mes "*Ching tink t-t-t-tap*^000000";
@@ -2204,8 +2204,8 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 		dmdswrd_Q = 18;
 		break;
 	case 18:
-		if (countitem(926) > 1) {
-			delitem 926,2; //Scale_Of_Snakes
+		if (countitem(Scale_Of_Snakes) > 1) {
+			delitem Scale_Of_Snakes,2;
 			dmdswrd_Q = 19;
 			mes "[Zaka]";
 			mes "Ah, you've brought";
@@ -2233,7 +2233,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 		mes "alright? I'll be right here.";
 		break;
 	case 19:
-		if (countitem(936) > 0) {
+		if (countitem(Scales_Shell) > 0) {
 			mes "[Zaka]";
 			mes "Oh, nice! You've brought";
 			mes "this Scale Shell for me,";
@@ -2248,7 +2248,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 			mes "and bring you to me before";
 			mes "I finish this part of the process, okay? Wait, actually, I think";
 			mes "you can take your time...";
-			delitem 936,1; //Scales_Shell
+			delitem Scales_Shell,1;
 			dmdswrd_Q = 20;
 			close;
 		}
@@ -2261,7 +2261,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 		mes "finish this Book of the Lamb.";
 		break;
 	case 20:
-		if (countitem(954) > 0) {
+		if (countitem(Shining_Scales) > 0) {
 			mes "[Zaka]";
 			mes "Ah, you're just in time!";
 			mes "Have you got the Shining";
@@ -2269,7 +2269,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 			mes "is just one more item that";
 			mes "I want to ask you to bring me:";
 			mes "^3355FF1 Stinky Scale^000000. Easy, right?";
-			delitem 954,1; //Shining_Scales
+			delitem Shining_Scales,1;
 			dmdswrd_Q = 21;
 			next;
 			mes "[Zaka]";
@@ -2290,7 +2290,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 		mes "no way to work around it...";
 		break;
 	case 21:
-		if (countitem(959) > 0) {
+		if (countitem(Rotten_Scale) > 0) {
 			mes "[Zaka]";
 			mes "What's that sme--?";
 			mes "Oh, right. I asked you to";
@@ -2302,7 +2302,7 @@ morocc,201,30,4	script	Zaka#cmd	4W_M_03,{
 			mes "^3355FFZaka completes";
 			mes "the creation of the";
 			mes "Book of the Lamb.^000000";
-			delitem 959,1; //Rotten_Scale
+			delitem Rotten_Scale,1;
 			dmdswrd_Q = 22;
 			next;
 			mes "[Zaka]";

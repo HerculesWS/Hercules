@@ -53,7 +53,7 @@ OnMyMobDead:
 }
 
 lighthalzen,267,200,3	script	Guard#lhz01	4_M_LGTGUARD,{
-	if (countitem(7350) > 0) {
+	if (countitem(Pass) > 0) {
 		mes "[Guard]";
 		mes "Hold it right th--!";
 		mes "Oh. I'm sorry. I didn't";
@@ -120,7 +120,7 @@ lighthalzen,267,200,3	script	Guard#lhz01	4_M_LGTGUARD,{
 }
 
 lighthalzen,294,223,7	script	Guard#lhz02	4_M_LGTGUARD,{
-	if (countitem(7350) > 0) {
+	if (countitem(Pass) > 0) {
 		mes "[Guard]";
 		mes "Hold it right th--!";
 		mes "Oh. I'm sorry. I didn't";
@@ -444,7 +444,7 @@ lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 				mes "It's 20 friggin' Jellopies!";
 				close;
 			case 2:
-				if (countitem(909) > 19) {
+				if (countitem(Jellopy) > 19) {
 					mes "[Fishbone]";
 					mes "Ooh. Hey, good work.";
 					mes "Okay, I can see you're";
@@ -468,7 +468,7 @@ lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 					mes "get some stuff ready and";
 					mes "then I'll tell you what you";
 					mes "really need to know.";
-					delitem 909,20; //Jellopy
+					delitem Jellopy,20;
 					lhz_sincube = 6;
 					close;
 				}
@@ -1514,7 +1514,7 @@ lhz_cube,224,197,0	script	Experiment Tube#cube	HIDDEN_NPC,{
 			next;
 			input .@input$;
 			if (.@input$ == "Laboratory Permit") {
-				if (countitem(2657)) {
+				if (countitem(Lab_Passport)) {
 					mes "^3355FFYou insert the";
 					mes "Laboratory Permit";
 					mes "into the slot and the";
@@ -1671,7 +1671,7 @@ lhz_cube,248,193,0	script	Box#cube1	HIDDEN_NPC,{
 			mes "Permit^3355FF, knowing that you";
 			mes "will be needing it later.";
 			lhz_sincube = 10;
-			getitem 2657,1; //Lab_Passport
+			getitem Lab_Passport,1;
 		}
 		close;
 	}
@@ -2018,7 +2018,7 @@ OnTouch:
 						mes "into each other ever again!";
 					}
 					Zeny -= .@price;
-					getitem 12016,.@number; //Speed_Up_Potion
+					getitem Speed_Up_Potion,.@number;
 				}
 			}
 		}
@@ -2125,7 +2125,7 @@ lhz_in02,201,210,5	script	Digotz	4_M_LGTMAN,{
 		next;
 		friendship = 15;
 		changequest 12005,12006;
-		getitem 1201,1; //Knife
+		getitem Knife,1;
 		close;
 	}
 	if (friendship == 13) {
@@ -2138,7 +2138,7 @@ lhz_in02,201,210,5	script	Digotz	4_M_LGTMAN,{
 		mes "my fashionable street clothes?";
 		close;
 	}
-	if ((friendship == 12 && countitem(7351) > 0)) {
+	if ((friendship == 12 && countitem(Friend's_Diary) > 0)) {
 		mes "[Digotz]";
 		mes "Even if Benkaistein";
 		mes "did come back, I don't";
@@ -2545,7 +2545,7 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 		cutin "lhz_macu05",255;
 		end;
 	}
-	if (friendship == 13 && countitem(7351) > 0) {
+	if (friendship == 13 && countitem(Friend's_Diary) > 0) {
 		cutin "lhz_macu06",2;
 		mes "[Maku]";
 		mes "Hey, what is that? You want";
@@ -2693,7 +2693,7 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 		mes "that I'm grateful or anything.";
 		cutin "lhz_macu07",255;
 		next;
-		delitem 7351,1; //Friend's_Diary
+		delitem Friend's_Diary,1;
 		friendship = 14;
 		if (RENEWAL_EXP) {
 			if (BaseLevel > 90) getexp 70000,0;
@@ -3112,7 +3112,7 @@ yuno_in04,107,14,5	script	Student	4_M_SAGE_A,{
 }
 
 yuno_in04,96,106,5	script	Passionate Student	4_M_SAGE_A,{
-	if ((MaxWeight-Weight) < 300 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 300 || checkweight(Knife,1) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -3156,7 +3156,7 @@ yuno_in04,96,106,5	script	Passionate Student	4_M_SAGE_A,{
 			else if (BaseLevel > 75) getexp 400000,0;
 			else getexp 200000,0;
 		}
-		getitem 7350,1; //Pass
+		getitem Pass,1;
 		mes "[Benkaistein]";
 		mes "Anyway, I wish you";
 		mes "safety in your travels,";
@@ -3165,7 +3165,7 @@ yuno_in04,96,106,5	script	Passionate Student	4_M_SAGE_A,{
 		mes "sure to let you know~";
 		close;
 	}
-	if ((friendship == 11 && countitem(7351) > 0)) {
+	if ((friendship == 11 && countitem(Friend's_Diary) > 0)) {
 		mes "[Benkaistein]";
 		mes "Aw nuts, this is";
 		mes "taking much longer";
@@ -3341,7 +3341,7 @@ yuno_in04,168,117,3	script	Book#lhz	HIDDEN_NPC,{
 	}
 	if (friendship == 10) {
 		friendship = 11;
-		getitem 7351,1; //Friend's_Diary
+		getitem Friend's_Diary,1;
 		mes "^3355FFThis book is labeled,";
 		mes "''Benkaistein's Journal";
 		mes "Vol. 6.'' This is probably";
@@ -3360,7 +3360,7 @@ yuno_in04,168,117,3	script	Book#lhz	HIDDEN_NPC,{
 //============================================================
 lhz_dun01,147,106,0	script	#kiz01-1	-1,3,3,{
 OnTouch_:
-	if (countitem(7345) > 0 ) {
+	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
 			soundeffect "loli_ruri_stand.wav",0;
 			lhz_curse = 1;
@@ -3400,7 +3400,7 @@ lhz_dun01,225,198,0	duplicate(#kiz01-1)	#kiz01-4	-1,3,3
 
 lhz_dun02,244,229,0	script	#kiz02-1	-1,3,3,{
 OnTouch_:
-	if (countitem(7345) > 0 ) {
+	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
 			soundeffect "tao_gunka_stand.wav",0;
 			lhz_curse = 1;
@@ -3440,7 +3440,7 @@ lhz_dun02,94,199,0	duplicate(#kiz02-1)	#kiz02-4	-1,3,3
 
 lhz_dun03,244,51,0	script	#kiz03-1	-1,3,3,{
 OnTouch_:
-	if (countitem(7345) > 0 ) {
+	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
 			soundeffect "tao_gunka_stand.wav",0;
 			lhz_curse = 1;
@@ -3479,7 +3479,7 @@ lhz_dun03,74,140,0	duplicate(#kiz03-1)	#kiz03-3	-1,3,3
 
 lighthalzen,344,278,0	script	#kiz03	-1,2,2,{
 OnTouch_:
-	if (countitem(7345) > 0 ) {
+	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
 			soundeffect "tao_gunka_stand.wav",0;
 			sc_start SC_CURSE,1000,0;
@@ -3530,7 +3530,7 @@ OnTouch_:
 
 lhz_in03,178,22,0	script	#kiz04	-1,2,2,{
 OnTouch_:
-	if (countitem(7345) > 0 ) {
+	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
 			sc_start SC_CURSE,1000,0;
 			soundeffect "tao_gunka_stand.wav",0;
@@ -3609,7 +3609,7 @@ OnTouch_:
 
 lighthalzen,295,227,0	script	#kiz05	-1,2,2,{
 OnTouch_:
-	if (countitem(7345) > 0 ) {
+	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
 			sc_start SC_CURSE,1000,0;
 		}
@@ -3655,7 +3655,7 @@ OnTouch_:
 
 lighthalzen,364,315,0	script	#kiz06	-1,3,3,{
 OnTouch_:
-	if (countitem(7345) > 0 ) {
+	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
 			sc_start SC_CURSE,1000,0;
 		}
@@ -3714,7 +3714,7 @@ OnTouch_:
 
 lhz_in01,113,150,0	script	#kiz07	-1,3,3,{
 OnTouch_:
-	if (countitem(7345) > 0 ) {
+	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
 			sc_start SC_CURSE,1000,0;
 		}
@@ -3768,7 +3768,7 @@ OnTouch_:
 
 lhz_in01,272,227,0	script	#kiz08	-1,2,2,{
 OnTouch_:
-	if (countitem(7345) > 0 ) {
+	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
 			sc_start SC_CURSE,1000,0;
 		}
@@ -3852,7 +3852,7 @@ OnTouch_:
 
 lhz_in01,206,129,0	script	#kiz09	-1,5,5,{
 OnTouch_:
-	if (countitem(7345) > 0) {
+	if (countitem(Armlet_Of_Prisoner) > 0) {
 		if (lhz_curse == 12) {
 			mes "............";
 			next;
@@ -3870,7 +3870,7 @@ OnTouch_:
 }
 
 lhz_que01,21,31,5	script	#li_Varmunt	4_M_SAGE_C,{
-	if (countitem(7345) > 0) {
+	if (countitem(Armlet_Of_Prisoner) > 0) {
 		if (lhz_curse == 12) {
 			mes "[??]";
 			mes "Doctor Varmunt,";
@@ -4006,7 +4006,7 @@ lhz_que01,21,31,5	script	#li_Varmunt	4_M_SAGE_C,{
 }
 
 lhz_que01,29,24,3	script	#li_researcher	4_M_SAGE_A,{
-	if (countitem(7345) > 0) {
+	if (countitem(Armlet_Of_Prisoner) > 0) {
 		if (lhz_curse == 12) {
 			mes "Doctor Varmunt,";
 			mes "you've finally agreed";
@@ -4142,9 +4142,9 @@ lhz_que01,29,24,3	script	#li_researcher	4_M_SAGE_A,{
 
 lhz_in01,282,166,0	script	#kiz10	-1,3,3,{
 OnTouch_:
-	if (countitem(7345) > 0) {
+	if (countitem(Armlet_Of_Prisoner) > 0) {
 		if (lhz_curse == 16) {
-			if (checkweight(1201,1) == 0) {
+			if (checkweight(Knife,1) == 0) {
 				mes "^3355FFThere's something on";
 				mes "the floor, but you can't";
 				mes "really take a good look at";
@@ -4298,7 +4298,7 @@ lhz_que01,99,74,5	script	#li_Man	1_M_02,{
 		mes "what this pendant contains.^000000";
 		lhz_curse = 17;
 		changequest 2090,2091;
-		getitem 7341,1; //Worn_Out_Pendant
+		getitem Worn_Out_Pendant,1;
 		close2;
 		warp "lhz_in01",278,162;
 	}
@@ -4324,7 +4324,7 @@ OnTouch_:
 }
 
 lighthalzen,346,263,3	script	Elder#lhz	4_F_EINOLD,{
-	if (countitem(7345) > 0) {
+	if (countitem(Armlet_Of_Prisoner) > 0) {
 		if ((lhz_curse == 1) && (lhz_spi01 == 1) && (lhz_spi02 == 1) && (lhz_spi03 == 1) && (lhz_spi04 == 1)) {
 			mes "[Elder]";
 			mes "No wonder you look";
@@ -4467,7 +4467,7 @@ lighthalzen,346,263,3	script	Elder#lhz	4_F_EINOLD,{
 			close;
 		}
 		else if (lhz_curse == 17) {
-			if (countitem(7341) > 0) {
+			if (countitem(Worn_Out_Pendant) > 0) {
 				mes "[Elder]";
 				mes "Greetings, adventurer.";
 				mes "How goes your search for";
@@ -4524,7 +4524,7 @@ lighthalzen,346,263,3	script	Elder#lhz	4_F_EINOLD,{
 			}
 		}
 		else if (lhz_curse == 18) {
-			if ((countitem(523) > 4) && (countitem(744) > 0) && (countitem(7341) > 0)) {
+			if ((countitem(Holy_Water) > 4) && (countitem(Bunch_Of_Flowers) > 0) && (countitem(Worn_Out_Pendant) > 0)) {
 				mes "[Elder]";
 				mes "Good, good.";
 				mes "All is in readiness.";
@@ -4564,8 +4564,8 @@ lighthalzen,346,263,3	script	Elder#lhz	4_F_EINOLD,{
 				mes "the picture, sitting uncomfortably^FFFFFF^3355FF in an old chair, looks familiar...^000000";
 				lhz_curse = 19;
 				changequest 2092,2093;
-				delitem 523,5; //Holy_Water
-				delitem 744,1; //Bunch_Of_Flowers
+				delitem Holy_Water,5;
+				delitem Bunch_Of_Flowers,1;
 				close;
 			}
 			else {
@@ -4793,7 +4793,7 @@ lighthalzen,346,263,3	script	Elder#lhz	4_F_EINOLD,{
 
 lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 	if (lhz_curse == 23) {
-		if (countitem(7341) > 0) {
+		if (countitem(Worn_Out_Pendant) > 0) {
 			mes "["+strcharinfo(0)+"]";
 			mes "Hey there, are";
 			mes "you feeling alright?";
@@ -4867,7 +4867,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 			mes "["+strcharinfo(0)+"]";
 			mes "Well...";
 			mes "This is awkward.";
-			delitem 7341,1; //Worn_Out_Pendant
+			delitem Worn_Out_Pendant,1;
 			lhz_curse = 24;
 			close;
 		}
@@ -4941,7 +4941,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 			mes "any idea who might";
 			mes "have owned this pendant?";
 			next;
-			if (countitem(7341) < 1) {
+			if (countitem(Worn_Out_Pendant) < 1) {
 				mes "[Crippled Girl]";
 				mes "What are you talking about?";
 				close;
@@ -4994,7 +4994,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 				warp "lighthalzen",322,323;
 				end;
 			case 2:
-				if (countitem(7341) > 0) {
+				if (countitem(Worn_Out_Pendant) > 0) {
 					mes "[Crippled Girl]";
 					mes "Did you meet my";
 					mes "big brother...?";
@@ -5081,7 +5081,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 						next;
 						mes "["+strcharinfo(0)+"]";
 						mes "Yes, I'm sure of that.";
-						delitem 7341,1; //Worn_Out_Pendant
+						delitem Worn_Out_Pendant,1;
 						lhz_curse = 25;
 						close;
 					case 2:
@@ -5118,7 +5118,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 						next;
 						mes "[Setsu]";
 						mes "I'll try hard!";
-						delitem 7341,1; //Worn_Out_Pendant
+						delitem Worn_Out_Pendant,1;
 						lhz_curse = 25;
 						close;
 					}
@@ -5646,8 +5646,8 @@ lhz_in01,273,121,1	script	Mad Scientist#li	4_LGTSCIENCE,{
 		}
 	}
 	else if (lhz_curse == 15) {
-		if (countitem(746) > 0) {
-			delitem 746,1; //Glass_Bead
+		if (countitem(Glass_Bead) > 0) {
+			delitem Glass_Bead,1;
 			mes "[Wolfchev]";
 			mes "Yes...! Beads!";
 			mes "You brought them!";
@@ -5977,7 +5977,7 @@ lhz_in01,286,226,3	script	Secretary Slierre#li	4_F_ZONDAGIRL,{
 				next;
 				switch(select("Show Evidence:Cancel")) {
 				case 1:
-					if (countitem(7345) > 0) {
+					if (countitem(Armlet_Of_Prisoner) > 0) {
 						mes "^3355FFYou reveal the Handcuffs";
 						mes "you found in the laboratory,";
 						mes "and Secretary Slierre's face";
@@ -6085,7 +6085,7 @@ lhz_in01,286,226,3	script	Secretary Slierre#li	4_F_ZONDAGIRL,{
 		mes "have any evidence, then you";
 		mes "shouldn't be making rumors...";
 		next;
-		if (countitem(7345) > 0) {
+		if (countitem(Armlet_Of_Prisoner) > 0) {
 			mes "^3355FFYou reveal the Handcuffs";
 			mes "you found in the laboratory,";
 			mes "and Secretary Slierre's face";
@@ -6177,7 +6177,7 @@ lhz_in01,286,226,3	script	Secretary Slierre#li	4_F_ZONDAGIRL,{
 	else if (lhz_curse == 30) {
 		.@li_keka = rand(1,10);
 		if (.@li_keka > 7) {
-			if (checkweight(1201,1) == 0) {
+			if (checkweight(Knife,1) == 0) {
 				mes "[Sueii Slierre]";
 				mes "Oh, I'd like to have";
 				mes "a word with you. Would";
@@ -6219,8 +6219,8 @@ lhz_in01,286,226,3	script	Secretary Slierre#li	4_F_ZONDAGIRL,{
 			mes "our gratitude, adventurer.";
 			lhz_curse = 31;
 			changequest 2094,2095;
-			getitem 603,1; //Old_Blue_Box
-			getitem 12016,10; //Speed_Up_Potion
+			getitem Old_Blue_Box,1;
+			getitem Speed_Up_Potion,10;
 			next;
 			mes "[Sueii Slierre]";
 			mes "Let me promise you";
@@ -6871,7 +6871,7 @@ lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 			mes "An error occurred.";
 			close;
 		}
-		if ((countitem(7346)) && (countitem(7347) > 9) && (countitem(7345) > 9))
+		if ((countitem(Pile_Of_Ymir_Heart)) && (countitem(Lab_Staff_Record) > 9) && (countitem(Armlet_Of_Prisoner) > 9))
 		{
 			mes "[Ghalstein]";
 			mes "Ah, this looks like a";
@@ -6896,15 +6896,15 @@ lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 			mes "next mission. Show this to";
 			mes "him to prove that you are";
 			mes "working with us. Don't forget.";
-			delitem 7346,1; //Pile_Of_Ymir_Heart
-			delitem 7347,10; //Lab_Staff_Record
-			delitem 7345,10; //Armlet_Of_Prisoner
+			delitem Pile_Of_Ymir_Heart,1;
+			delitem Lab_Staff_Record,10;
+			delitem Armlet_Of_Prisoner,10;
 			lhz_boss = 8;
-			getitem 7348,1; //Indication_Of_Member01
+			getitem Indication_Of_Member01,1;
 			changequest 12016,12017;
 			close;
 		}
-		else if((!countitem(7346)) && (!countitem(7347)) && (!countitem(7345)))
+		else if((!countitem(Pile_Of_Ymir_Heart)) && (!countitem(Lab_Staff_Record)) && (!countitem(Armlet_Of_Prisoner)))
 		{
 			mes "[Ghalstein]";
 			mes "When you get inside the";
@@ -7000,7 +7000,7 @@ lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 		mes "we weren't able to accomplish";
 		mes "what we set out to do. Still...";
 		lhz_boss = 44;
-		getitem 617,1; //Old_Violet_Box
+		getitem Old_Violet_Box,1;
 		getexp RENEWAL_EXP?180000:1800000,0;
 		completequest 12028;
 		next;
@@ -7161,7 +7161,7 @@ yuno_fild04,165,245,4	script	Dismal Guy	4_M_ORIENT02,{
 				switch( select( "Oh, right!","What are you talking about?" ) )
 				{
 					case 1:
-						if(!countitem(7348))
+						if(!countitem(Indication_Of_Member01))
 						{
 							mes "[Gushaar]";
 							mes "Hey... Umm...";
@@ -7369,7 +7369,7 @@ yuno_pre,69,20,4	script	Secretary#1	4_F_LGTGIRL,{
 		switch( select( "Show Secret Wing Card.","I'm here to see the president.","Nothing." ) )
 		{
 			case 1:
-				if(!countitem(7348))
+				if(!countitem(Indication_Of_Member01))
 				{
 					mes "^3355FFWait a second...";
 					mes "You don't seem to";
@@ -7454,7 +7454,7 @@ yuno_pre,69,20,4	script	Secretary#1	4_F_LGTGIRL,{
 	}
 	else if(lhz_boss == 16)
 	{
-		if(!countitem(7342))
+		if(!countitem(File01))
 		{
 			mes "[Hes O'Neil]";
 			mes "Hm? I thought the";
@@ -7685,7 +7685,7 @@ OnInit:
 
 yuno_pre,69,79,4	script	Mr. President	4_M_PRESIDENT,{
 
-	if(checkweight(7342,1) != 1)
+	if(checkweight(File01,1) != 1)
 	{
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";
@@ -7879,7 +7879,7 @@ L_Mission:
 		mes "for me before you leave.";
 		mes "Thank you very much.";
 		lhz_boss = 16;
-		getitem 7342,1; //File01
+		getitem File01,1;
 		changequest 12018,12019;
 		close2;
 		cutin "",255;
@@ -7900,7 +7900,7 @@ L_Mission:
 	}
 	else if(lhz_boss == 21)
 	{
-		if(!countitem(7343))
+		if(!countitem(File02))
 		{
 			mes "[Karl]";
 			mes "Hm? I was expecting";
@@ -8235,7 +8235,7 @@ L_Mission:
 	}
 	else if(lhz_boss == 37)
 	{
-		if(!countitem(7344))
+		if(!countitem(File03))
 		{
 			mes "[Karl]";
 			mes "Did you find any";
@@ -8300,7 +8300,7 @@ L_Mission:
 	}
 	else if(lhz_boss == 39)
 	{
-		if(!countitem(7343))
+		if(!countitem(File02))
 		{
 			mes "[Karl]";
 			mes "You don't have the";
@@ -8496,7 +8496,7 @@ L_Mission:
 	}
 	else if(hg_tre == 56)
 	{
-		if(!countitem(7342))
+		if(!countitem(File01))
 		{
 			mes "["+strcharinfo(0)+"]";
 			mes "Ah, where did I put the record?";
@@ -8569,7 +8569,7 @@ L_Mission:
 		mes "Thank you so much. ";
 		mes "You can count on me to right what was wrong.";
 		hg_tre = 57;
-		delitem 7342,1; //File01
+		delitem File01,1;
 		getexp RENEWAL_EXP?200000:2000000,0;
 		getitem 617,1;
 		close2;
@@ -8722,7 +8722,7 @@ aldebaran,58,225,4	script	Kafra Employee#l1	4_F_KAFRA2,{
 
 aldeba_in,155,240,5	script	Kafra Employee#l2	4_F_AGENTKAFRA,{
 
-	if(checkweight(7343,1) != 1)
+	if(checkweight(File02,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -8846,7 +8846,7 @@ aldeba_in,155,240,5	script	Kafra Employee#l2	4_F_AGENTKAFRA,{
 								close;
 
 							case 2:
-								if(!countitem(7348))
+								if(!countitem(Indication_Of_Member01))
 								{
 									mes "^3355FFWait...";
 									mes "You can't show";
@@ -8927,7 +8927,7 @@ aldeba_in,155,240,5	script	Kafra Employee#l2	4_F_AGENTKAFRA,{
 	}
 	else if(lhz_boss == 19)
 	{
-		if(!countitem(7343))
+		if(!countitem(File02))
 		{
 			mes "[Benith]";
 			mes "Please hurry!";
@@ -8980,7 +8980,7 @@ aldeba_in,155,240,5	script	Kafra Employee#l2	4_F_AGENTKAFRA,{
 		mes "The Secret Wing is counting";
 		mes "on you, brave adventurer.";
 		lhz_boss = 21;
-		getitem 7343,1; //File02
+		getitem File02,1;
 		changequest 12021,12022;
 		next;
 		mes "[Benith]";
@@ -9005,7 +9005,7 @@ aldeba_in,155,240,5	script	Kafra Employee#l2	4_F_AGENTKAFRA,{
 
 lhz_fild02,228,214,0	script	Wounded Man	4_M_DIEMAN,{
 
-	if(checkweight(7343,1) != 1)
+	if(checkweight(File02,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -9069,7 +9069,7 @@ lhz_fild02,228,214,0	script	Wounded Man	4_M_DIEMAN,{
 					mes "I'd be a goner. H-here,";
 					mes "t-take this with you...";
 					lhz_boss = 19;
-					getitem 7343,1; //File02
+					getitem File02,1;
 					changequest 12020,12021;
 					next;
 					mes "[Jargeah]";
@@ -9137,7 +9137,7 @@ lhz_fild01,66,219,4	script	Mysterious Woman	4_F_AGENTKAFRA,{
 
 	if(lhz_boss == 26)
 	{
-		if(checkweight(7343,1) != 1)
+		if(checkweight(File02,1) != 1)
 		{
 			mes "^3355FFWait a second!";
 			mes "Right now, you're carrying";
@@ -9380,7 +9380,7 @@ lhz_in01,93,45,4	script	Researcher#1	4_LGTSCIENCE,{
 					mes "Heh, yeah, just like";
 					mes "in the movies. I like";
 					mes "the way you think~";
-					if(!countitem(7348)) close;
+					if(!countitem(Indication_Of_Member01)) close;
 					next;
 					mes "^3355FFYou surrepticiously";
 					mes "check the researcher's";
@@ -9453,7 +9453,7 @@ lhz_in01,93,45,4	script	Researcher#1	4_LGTSCIENCE,{
 
 lhz_in01,285,169,3	script	Researcher#2	4_LGTSCIENCE,{
 
-	if(checkweight(7349,1) != 1)
+	if(checkweight(Indication_Of_Member02,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -9494,7 +9494,7 @@ lhz_in01,285,169,3	script	Researcher#2	4_LGTSCIENCE,{
 		mes "stick around for 3 minutes";
 		mes "at a time. The Secret Archive is to the right of this laboratory.";
 		lhz_boss = 28;
-		getitem 7349,1; //Indication_Of_Member02
+		getitem Indication_Of_Member02,1;
 		changequest 12025,12026;
 		next;
 		mes "[Lestin]";
@@ -9541,7 +9541,7 @@ lhz_in01,285,169,3	script	Researcher#2	4_LGTSCIENCE,{
 	}
 	else if(lhz_boss == 35)
 	{
-		if((!countitem(7349)) || (!countitem(7344)))
+		if((!countitem(Indication_Of_Member02)) || (!countitem(File03)))
 		{
 			mes "[Lestin]";
 			mes "My pass will get you inside,";
@@ -9586,7 +9586,7 @@ lhz_in01,285,169,3	script	Researcher#2	4_LGTSCIENCE,{
 		mes "Lighthalzen where you";
 		mes "found her last time. She'll";
 		mes "know that you're coming.";
-		delitem 7349,1; //Indication_Of_Member02
+		delitem Indication_Of_Member02,1;
 		lhz_boss = 36;
 		changequest 12026,12027;
 		close;
@@ -9660,7 +9660,7 @@ OnTouch:
 					switch( select( "Insert Card","Retreat" ) )
 					{
 						case 1:
-							if(!countitem(7349))
+							if(!countitem(Indication_Of_Member02))
 							{
 								mes "^3355FFYou forgot to bring";
 								mes "the card pass that";
@@ -9956,7 +9956,7 @@ lhz_in01,177,31,0	script	Door#sneak	HIDDEN_NPC,{
 
 lhz_in01,184,40,0	script	Area 1-5	HIDDEN_NPC,{
 
-	if(checkweight(7344,1) != 1)
+	if(checkweight(File03,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -10227,7 +10227,7 @@ lhz_in01,177,56,0	script	Area 6-1	HIDDEN_NPC,{
 
 lhz_dun02,282,278,0	script	Broken Machine	HIDDEN_NPC,{
 
-	if(checkweight(7346,1) != 1)
+	if(checkweight(Pile_Of_Ymir_Heart,1) != 1)
 	{
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
@@ -11270,7 +11270,7 @@ airplane_01,96,48,3	script	Man#Lyozien	4_M_LGTGUARD,{
 		mes "out for myself. Oh, hey...";
 		next;
 		lhz_rekenber = 20;
-		getitem 504,1; //White_Potion
+		getitem White_Potion,1;
 		cutin "lhz_ryo12",2;
 		mes "[Lyozien]";
 		mes "Here's a little";

@@ -64,9 +64,9 @@ moc_ruins,113,181,4	script	William	4_M_ORIENT02,{
 		mes "[William]";
 		mes "To produce a ^3355FFStop Post^000000, we need ^3355FF91100 Zeny^000000, ^3355FF50 Trunk^000000 and ^3355FF1 Black Dyestuffs^000000.";
 		next;
-		if ((countitem(1019) > 49) && (countitem(983) > 0) && (Zeny > 91099)) {
-			delitem 1019,50;  //Wooden_Block
-			delitem 983,1;  //Black_Dyestuffs
+		if ((countitem(Wooden_Block) > 49) && (countitem(Black_Dyestuffs) > 0) && (Zeny > 91099)) {
+			delitem Wooden_Block,50;
+			delitem Black_Dyestuffs,1;
 			Zeny -= 91100;
 			mes "[William]";
 			mes "Here you are~!";
@@ -75,7 +75,7 @@ moc_ruins,113,181,4	script	William	4_M_ORIENT02,{
 			mes "just for you!";
 			mes "Thank you for stopping by!";
 			mes "...Get the joke?";
-			getitem 2272,1; // Stop_Post
+			getitem Stop_Post,1; // Stop_Post
 			close;
 		}
 		else {
@@ -126,19 +126,19 @@ moc_ruins,118,176,4	script	Alchemist	1_M_WIZARD,{
 		mes "And ^3355FF50000 Zeny^000000!";
 		close;
 	case 2:
-		if ((countitem(2243) > 0) && (countitem(999) > 99) && (Zeny > 49999)) {
+		if ((countitem(Spinning_Eyes) > 0) && (countitem(Steel) > 99) && (Zeny > 49999)) {
 			mes "[Marius]";
 			mes "Perfect, perfect !";
 			mes "Now my masterpiece will be complete!";
 			mes "Muhahahaha !";
 			next;
-			delitem 2243,1;  //Spinning_Eyes
-			delitem 999,100;  //Steel
+			delitem Spinning_Eyes,1;
+			delitem Steel,100;
 			Zeny -= 50000;
 			mes "[Marius]";
 			mes "Here you are!";
 			mes "Binoculars !";
-			getitem 2296,1; // Binoculars
+			getitem Binoculars,1; // Binoculars
 			next;
 			mes "[Marius]";
 			mes "Just remember...";
@@ -175,7 +175,7 @@ morocc,43,108,5	script	Sharp-Looking Kid#dan_07	4_KID01,{
 		close;
 	}
 	else {
-		if (countitem(7416) > 0) {
+		if (countitem(Letter_Of_Recommend) > 0) {
 			mes "[Jack]";
 			mes "A letter of recommendation?";
 			mes "Oh, boy. Looks like you've brought me a very, very old relic from the past.";
@@ -335,7 +335,7 @@ que_job01,81,79,5	script	Idle Knight#dan_08	4_M_JOB_KNIGHT1,{
 }
 
 que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -377,7 +377,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 		next;
 		switch(select("Tropical Sograt:Vermilion on the Beach:Do you offer any free drinks?")) {
 		case 1:
-			if (checkweight(908,200) == 0) {
+			if (checkweight(Spawn,200) == 0) {
 				mes "[Master]";
 				mes "Hey, why did you bring";
 				mes "so much stuff with you?";
@@ -407,7 +407,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 						mes "my friend, and drink it as";
 						mes "deeply as you would life.";
 						Zeny -= 800;
-						getitem 12112,1; //Tropical_Sograt
+						getitem Tropical_Sograt,1;
 					}
 					close;
 				}
@@ -430,13 +430,13 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 						mes "already lucky to be here.";
 						mes "Hey, enjoy your drink~";
 						Zeny -= 1000;
-						getitem 12112,1; //Tropical_Sograt
+						getitem Tropical_Sograt,1;
 						close;
 					}
 				}
 			}
 		case 2:
-			if (checkweight(908,200) == 0) {
+			if (checkweight(Spawn,200) == 0) {
 				mes "[Master]";
 				mes "Hey, why did you bring";
 				mes "so much stuff with you?";
@@ -466,7 +466,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 						mes "my friend, and drink it as";
 						mes "deeply as you would life.";
 						Zeny -= 800;
-						getitem 12113,1; //Vermilion_The_Beach
+						getitem Vermilion_The_Beach,1;
 					}
 					close;
 				}
@@ -489,7 +489,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 						mes "already lucky to be here.";
 						mes "Hey, enjoy your drink~";
 						Zeny -= 1000;
-						getitem 12113,1; //Vermilion_The_Beach
+						getitem Vermilion_The_Beach,1;
 						close;
 					}
 				}
@@ -519,7 +519,7 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 				mes "Huh?";
 				next;
 				select("Show him the Letter of Recommendation.");
-				if (countitem(7416) > 0) {
+				if (countitem(Letter_Of_Recommend) > 0) {
 					mes "[Master]";
 					mes "Ah.. I think you're little too late.";
 					mes "I've got nothing to say if this's about the request sent to each guild.";
@@ -810,14 +810,14 @@ que_job01,16,21,5	script	Valdes#moc_master_1	1_M_JOBTESTER,{
 		mes "I'm really stressed out right now.";
 		mes "If you're here for the request that we made earlier, you can just forget about it.";
 	}
-	if (countitem(7417) > 0) {
-		delitem 7417,countitem(7417); //Mission_ScrollA
+	if (countitem(Mission_ScrollA) > 0) {
+		delitem Mission_ScrollA,countitem(Mission_ScrollA);
 	}
-	if (countitem(7418) > 0) {
-		delitem 7418,countitem(7418); //Mission_ScrollB
+	if (countitem(Mission_ScrollB) > 0) {
+		delitem Mission_ScrollB,countitem(Mission_ScrollB);
 	}
-	if (countitem(7416) > 0) {
-		delitem 7416,countitem(7416); //Letter_Of_Recommend
+	if (countitem(Letter_Of_Recommend) > 0) {
+		delitem Letter_Of_Recommend,countitem(Letter_Of_Recommend);
 	}
 	close;
 
@@ -955,7 +955,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 					}
 					--.@partymembercount;
 				}
-				if ((.@onlinemembers > 1) && (countitem(7826) > 0)) {
+				if ((.@onlinemembers > 1) && (countitem(Continental_Guard_Paper) > 0)) {
 					mes "[Continental Guard]";
 					mes "......";
 					next;
@@ -968,7 +968,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 					warp "moc_fild21",38,193;
 					end;
 				}
-				else if ((.@onlinemembers < 2) && (countitem(7826) > 0)) {
+				else if ((.@onlinemembers < 2) && (countitem(Continental_Guard_Paper) > 0)) {
 					mes "[Continental Guard]";
 					mes "Welcome, members of the Continental Guards. I have a special order from Chief Balrog for you, so let me read it for you.";
 					next;
@@ -979,7 +979,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 					mes "...You understand that, right? Please go back to the site, and come back in a party of at least 2 members. Thank you.";
 					close;
 				}
-				else if (countitem(7826) < 1) {
+				else if (countitem(Continental_Guard_Paper) < 1) {
 					mes "[Continental Guard]";
 					mes "Only members of the Continental Guards with Continental Guard Certificates are allowed to proceed beyond this point.";
 					close;
@@ -1020,7 +1020,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 		}
 		switch(select("Enter the First Field to Investigate:Enter the Second Field to Investigate:Return to Morroc's Accident Site:Cancel Conversation")) {
 		case 1:
-			if ((.@onlinemembers > 1) && (countitem(7826) > 0)) {
+			if ((.@onlinemembers > 1) && (countitem(Continental_Guard_Paper) > 0)) {
 				mes "[Continental Guard]";
 				mes "......";
 				next;
@@ -1033,7 +1033,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 				warp "moc_fild21",38,193;
 				end;
 			}
-			else if ((.@onlinemembers < 2) && (countitem(7826) > 0)) {
+			else if ((.@onlinemembers < 2) && (countitem(Continental_Guard_Paper) > 0)) {
 				mes "[Continental Guard]";
 				mes "Welcome, members of the Continental Guards. I have a special order from Chief Balrog for you, so let me read it for you.";
 				next;
@@ -1044,7 +1044,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 				mes "...You understand that, right? Please go back to the site, and come back in a party of at least 2 members. Thank you.";
 				close;
 			}
-			else if (countitem(7826) < 1) {
+			else if (countitem(Continental_Guard_Paper) < 1) {
 				mes "[Continental Guard]";
 				mes "Only members of the Continental Guards with Continental Guard Certificates are allowed to proceed beyond this point.";
 				close;
@@ -1053,7 +1053,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 				close;
 			}
 		case 2:
-			if ((.@onlinemembers > 1) && (countitem(7826) > 0)) {
+			if ((.@onlinemembers > 1) && (countitem(Continental_Guard_Paper) > 0)) {
 				mes "[Continental Guard]";
 				mes "......";
 				next;
@@ -1066,7 +1066,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 				warp "moc_fild22",38,193;
 				end;
 			}
-			else if ((.@onlinemembers < 2) && (countitem(7826) > 0)) {
+			else if ((.@onlinemembers < 2) && (countitem(Continental_Guard_Paper) > 0)) {
 				mes "[Continental Guard]";
 				mes "Welcome, members of the Continental Guards. I have a special order from Chief Balrog for you, so let me read it for you.";
 				next;
@@ -1077,7 +1077,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 				mes "...So please go back to the site, and come back in a party of at least 2 members. Thank you.";
 				close;
 			}
-			else if (countitem(7826) < 1) {
+			else if (countitem(Continental_Guard_Paper) < 1) {
 				mes "[Continental Guard]";
 				mes "Only members of the Continental Guards with Continental Guard Certificates are allowed to proceed beyond this point.";
 				close;
@@ -1430,7 +1430,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 		mes "[Chief Balrog]";
 		mes "So, did you find ^0000FF30 Live Coals^000000? You didn't come empty-handed, did you?";
 		next;
-		if (countitem(7098) > 29) {
+		if (countitem(Live_Coal) > 29) {
 			mes "[Chief Balrog]";
 			mes "Let's see... One, two, three... Thirty, you've brought them all. Well, this was a pretty simple task. All it takes is time and a little effort. Anyone could do it.";
 			next;
@@ -1478,7 +1478,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				next;
 				mes "[Chief Balrog]";
 				mes "Please bring me ^0000FF50 Glacial Hearts^000000. The faster you get them here, the better.";
-				delitem 7098,30; //Live_Coal
+				delitem Live_Coal,30;
 				rebirth_moc_edq = 3;
 				changequest 3051,3052;
 				close;
@@ -1497,14 +1497,14 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 		mes "[Chief Balrog]";
 		mes "So, did you find 50 Glacial Hearts?";
 		next;
-		if (countitem(7561) > 49) {
+		if (countitem(Ice_Heart) > 49) {
 			mes "[Chief Balrog]";
 			mes "Thank you. I'm sure that my soldiers will appreciate these... Those guys aren't used to the desert, and could use the relief.";
 			next;
 			mes "[Chief Balrog]";
 			mes "Well... It looks like you earned this.";
-			delitem 7561,50; //Ice_Heart
-			getitem 7826,1; //Continental_Guard_Paper
+			delitem Ice_Heart,50;
+			getitem Continental_Guard_Paper,1;
 			rebirth_moc_edq = 4;
 			changequest 3052,3053;
 			next;
@@ -1596,7 +1596,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 		mes "[Chief Balrog]";
 		mes "How? Do you have any proof of your victory?";
 		next;
-		if (countitem(7820) > 0) {
+		if (countitem(Morroc_Skin) > 0) {
 			mes "[Chief Balrog]";
 			mes "Is... Isn't this?";
 			next;
@@ -1615,7 +1615,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			mes "[Chief Balrog]";
 			mes "Once again, I thank you for your distinguished service on behalf of the Continental Guard and the Rune-Midgarts Kingdom. I'll report your great achievement to His Majesty right away.";
 			next;
-			delitem 7820,1; //Morroc_Skin
+			delitem Morroc_Skin,1;
 			getexp RENEWAL_EXP?200000:2000000,0;
 			rebirth_moc_edq = 7;
 			changequest 3055,3056;
@@ -1638,7 +1638,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 					mes "[Chief Balrog]";
 					mes "Great, then I'll reward you with the Seal of Continental Guard. Congratulations.";
 					next;
-					getitem 2730,1; //Morroc_Seal
+					getitem Morroc_Seal,1;
 					rebirth_moc_edq = 8;
 					completequest 3056;
 					mes "[Chief Balrog]";
@@ -1670,7 +1670,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 					mes "[Chief Balrog]";
 					mes "Great, then I'll reward you with a Morroc Charm Stone. Congratulations.";
 					next;
-					getitem 2731,1; //Morroc_Charm_Stone
+					getitem Morroc_Charm_Stone,1;
 					rebirth_moc_edq = 8;
 					completequest 3056;
 					mes "[Chief Balrog]";
@@ -1702,7 +1702,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 					mes "[Chief Balrog]";
 					mes "Great, then I'll reward you with a Morroc Ring. Congratulations.";
 					next;
-					getitem 2732,1; //Morroc_Ring
+					getitem Morroc_Ring,1;
 					rebirth_moc_edq = 8;
 					completequest 3056;
 					mes "[Chief Balrog]";
@@ -1750,7 +1750,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "[Chief Balrog]";
 				mes "Great, then I'll reward you with the Seal of Continental Guard. Congratulations.";
 				next;
-				getitem 2730,1; //Morroc_Seal
+				getitem Morroc_Seal,1;
 				rebirth_moc_edq = 8;
 				completequest 3056;
 				mes "[Chief Balrog]";
@@ -1782,7 +1782,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "[Chief Balrog]";
 				mes "Great, then I'll reward you with a Morroc Charm Stone. Congratulations.";
 				next;
-				getitem 2731,1; //Morroc_Charm_Stone
+				getitem Morroc_Charm_Stone,1;
 				rebirth_moc_edq = 8;
 				completequest 3056;
 				mes "[Chief Balrog]";
@@ -1814,7 +1814,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "[Chief Balrog]";
 				mes "Great, then I'll reward you with a Morroc Ring. Congratulations.";
 				next;
-				getitem 2732,1; //Morroc_Ring
+				getitem Morroc_Ring,1;
 				rebirth_moc_edq = 8;
 				completequest 3056;
 				mes "[Chief Balrog]";
@@ -1943,7 +1943,7 @@ moc_fild21,177,239,0	script	Time-Space Gap#edq	CLEAR_NPC,1,1,{
 		mes "You can see the fragments floating in the gap, and the radiating lights are now slowing their movement.";
 		next;
 		mes "You stretch your hand and pick up a lusterless fragment.";
-		getitem 7820,1; //Morroc_Skin
+		getitem Morroc_Skin,1;
 		rebirth_moc_edq = 6;
 		changequest 3053,3055;
 		close;
@@ -2105,7 +2105,7 @@ moc_fild21,5,5,5	duplicate(MorrocAdmin_sec)	Morroc GlobalVar Admin::MorrocAdmin_
 // ============================================================
 moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 	if (BaseLevel > 59) {
-		if (checkweight(703,3) == 0) {
+		if (checkweight(Hinalle,3) == 0) {
 			mes "- You have too many items in your inventory to proceed with this quest. -";
 			close;
 		}
@@ -2338,7 +2338,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			mes "^660000Quickly blinking his eyes, he made you take Mammi's picture book in your arms";
 			mes "demanding that you must encase the book so it would not be damaged.^000000";
 			barmunt_crow = 11;
-			getitem 7795,1; //Mami_Photo_Album
+			getitem Mami_Photo_Album,1;
 			next;
 			mes "[Benjamin]";
 			mes "Oh, right. If you're interested in this author, Oliver Hilpert, I suggest you read the prequel of <The Crow of the Fate>, ^3131FF<The Trace of the Fate>^000000 as well as the sequel.";
@@ -2368,7 +2368,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			close;
 		}
 		else if (barmunt_crow == 15) {
-			if ((countitem(7797) == 1) && (countitem(7796) == 1)) {
+			if ((countitem(Author_Memo) == 1) && (countitem(Author_Autograph) == 1)) {
 				mes "["+ strcharinfo(0) +"]";
 				mes "Hey, Benjamin!";
 				mes "I've got the perfect thing to help you appeal to Mammi. Do you want to see?";
@@ -2393,8 +2393,8 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 					mes "[Benjamin]";
 					mes "Maaaammmiii!";
 					mes "I'm going to see her tomorrow as soon as the morning comes! Mammi, I'm coming!";
-					delitem 7797,1; //Author_Memo
-					delitem 7796,1; //Author_Autograph
+					delitem Author_Memo,1;
+					delitem Author_Autograph,1;
 					barmunt_crow = 16;
 					if (RENEWAL_EXP)
 						getexp 90000,90000;
@@ -3121,7 +3121,7 @@ yuno_in04,117,102,3	script	Old News Scrapbook	CLEAR_NPC,{
 }
 
 yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
-	if (checkweight(617,3) == 0) {
+	if (checkweight(Old_Violet_Box,3) == 0) {
 		mes "- You have too many items in your inventory to proceed with this quest. -";
 		close;
 	}
@@ -3134,7 +3134,7 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 	}
 	else if (barmunt_crow == 13) {
 		cutin "oliver_pre",2;
-		if (countitem(7795) < 1) {
+		if (countitem(Mami_Photo_Album) < 1) {
 			mes "[Oliver Hilpert]";
 			mes "Lady Mammi...";
 			close2;
@@ -3194,11 +3194,11 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 		mes "^3131FFThe stepmother = Lover from a past life?!^000000";
 		close2;
 		specialeffect2 EF_ENHANCE;
-		delitem 7795,1; //Mami_Photo_Album
+		delitem Mami_Photo_Album,1;
 		barmunt_crow = 14;
-		getitem 7796,1; //Author_Autograph
-		getitem 7797,1; //Author_Memo
-		getitem 617,1; //Old_Violet_Box
+		getitem Author_Autograph,1;
+		getitem Author_Memo,1;
+		getitem Old_Violet_Box,1;
 		warp "que_ba",270,270;
 		end;
 	}
@@ -3334,12 +3334,12 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 }
 
 yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
-	if (checkweight(617,3) == 0) {
+	if (checkweight(Old_Violet_Box,3) == 0) {
 		mes "- You have too many items in your inventory to proceed with this quest. -";
 		close;
 	}
 	if (barmunt_crow == 12) {
-		if (countitem(7795) < 1) {
+		if (countitem(Mami_Photo_Album) < 1) {
 			mes "- You felt as if you have left something important behind. -";
 			close;
 		}
@@ -3564,11 +3564,11 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "^3131FFThe stepmother = Lover from a past life?!^000000";
 		close2;
 		specialeffect2 EF_ENHANCE;
-		delitem 7795,1; //Mami_Photo_Album
+		delitem Mami_Photo_Album,1;
 		barmunt_crow = 14;
-		getitem 7796,1; //Author_Autograph
-		getitem 7797,1; //Author_Memo
-		getitem 617,1; //Old_Violet_Box
+		getitem Author_Autograph,1;
+		getitem Author_Memo,1;
+		getitem Old_Violet_Box,1;
 		warp "que_ba",270,270;
 		cutin "",255;
 		end;
@@ -4842,14 +4842,14 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "[Inspector]";
 		mes "Do you have the 2 reins I mentioned?";
 		next;
-		if (countitem(1064) > 1) {
+		if (countitem(Reins) > 1) {
 			mes "[Inspector]";
 			mes "Ooh!";
 			mes "Frankly, I didn't expect you to bring them. You are great.";
 			next;
 			mes "[Inspector]";
 			mes "Alright, good. You proved your strength for yourself. Now you passed one exam. All but one.";
-			delitem 1064,2; //Reins
+			delitem Reins,2;
 			nk_prince = 3;
 			changequest 10001,10002;
 			next;
@@ -5991,7 +5991,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 				mes "[Peter]";
 				mes "Anyhow, thanks for your good work. I really feel sorry about bothering you with trifle things. This is my sense of gratitude. Don't feel so much burden and take this.";
 				completequest 10014;
-				getitem 644,1; //Gift_Box
+				getitem Gift_Box,1;
 				close;
 			}
 			mes "[Peter]";
@@ -6007,7 +6007,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 				mes "[Peter]";
 				mes "I really feel sorry about bothering you with trifle things. Please take this.";
 				completequest 10014;
-				getitem 644,1; //Gift_Box
+				getitem Gift_Box,1;
 				close;
 			}
 			mes "[Peter]";
@@ -6041,7 +6041,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 			mes "[Peter]";
 			mes "Anyhow, thanks for your good work. I really feel sorry about bothering you with trifle things. This is my sense of gratitude. Don't feel so much burden and take this.";
 			completequest 10014;
-			getitem 644,1; //Gift_Box
+			getitem Gift_Box,1;
 			close;
 		}
 		else {
@@ -6122,7 +6122,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 						mes "[Peter]";
 						mes "Yeah, thank you very much.";
 						mes "Please take care.";
-						getitem 744,1; //Bunch_Of_Flowers
+						getitem Bunch_Of_Flowers,1;
 						setquest 10013;
 						if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
 						 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
@@ -6149,7 +6149,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 
 aldebaran,132,184,3	script	Girl#prince	4W_KID,{
 	if (questprogress(10013) == 1) {
-		if (countitem(744) > 0) {
+		if (countitem(Bunch_Of_Flowers) > 0) {
 			mes "[Girl]";
 			mes "Wooah, Uncle Peter sent these flowers";
 			mes "for me?";
@@ -6166,7 +6166,7 @@ aldebaran,132,184,3	script	Girl#prince	4W_KID,{
 			mes "I will go home early and";
 			mes "Put these flowers in a vase.";
 			mes "Lalala~";
-			delitem 744,1; //Bunch_Of_Flowers
+			delitem Bunch_Of_Flowers,1;
 			changequest 10013,10014;
 			close;
 		}

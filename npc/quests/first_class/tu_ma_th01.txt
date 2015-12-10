@@ -282,7 +282,7 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 			mes "^3355FFThe traces of the battle";
 			mes "now split and head towards";
 			mes "the north and south. However,^000000";
-			if(countitem(506) == 0){
+			if(countitem(Green_Potion) == 0){
 				mes "^3355FFthere is a puddle of strong poison that you must neutralize before you can investigate this scene.^000000";
 				close;
 			} else {
@@ -351,7 +351,7 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 			mes "^3355FFThe traces of the battle";
 			mes "now split and head towards";
 			mes "the north and south. However,^000000";
-			if(countitem(506) == 0){
+			if(countitem(Green_Potion) == 0){
 				mes "^3355FFthere is a puddle of strong poison that you must neutralize before you can investigate this scene.^000000";
 				close;
 			} else {
@@ -974,7 +974,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 				next;
 				switch(select("Pour Green Potion.:Don't use Green Potion.")){
 				case 1:
-					if(countitem(506) < 1){
+					if(countitem(Green_Potion) < 1){
 						mes "^3355FFUnfortunately, you";
 						mes "don't have a Green";
 						mes "Potion that you can";
@@ -986,7 +986,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 						mes "really make anything";
 						mes "happen. Perhaps you";
 						mes "should try something else.^000000";
-						delitem 506,1; //Green_Potion
+						delitem Green_Potion,1;
 						tu_thief01 = 23;
 						close;
 					}
@@ -1007,8 +1007,8 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 				close;
 			}
 		} else if(tu_thief01 == 23){
-			if(countitem(511) > 0 || countitem(716) > 0){
-				if(countitem(511) > 0 && countitem(716) > 0){
+			if(countitem(Green_Herb) > 0 || countitem(Red_Gemstone) > 0){
+				if(countitem(Green_Herb) > 0 && countitem(Red_Gemstone) > 0){
 					mes "^3355FFYou try grinding";
 					mes "a Green Herb and";
 					mes "sprinkling it on the";
@@ -1024,11 +1024,11 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 					mes "to successfully dismantle";
 					mes "the trap. Now you can safely";
 					mes "check what might be inside.^000000";
-					delitem 511,1; //Green_Herb
-					delitem 716,1; //Red_Gemstone
+					delitem Green_Herb,1;
+					delitem Red_Gemstone,1;
 					tu_thief01 = 24;
 					close;
-				} else if(countitem(511) > 0){
+				} else if(countitem(Green_Herb) > 0){
 					mes "^3355FFYou should try to";
 					mes "dismantle this trap";
 					mes "by using other catalysts";
@@ -1128,7 +1128,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 				next;
 				switch(select("Pour Green Potion.:Don't use Green Potion.")){
 				case 1:
-					if(countitem(506) < 1){
+					if(countitem(Green_Potion) < 1){
 						mes "^3355FFUnfortunately, you";
 						mes "don't have a Green";
 						mes "Potion that you can";
@@ -1140,7 +1140,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 						mes "really make anything";
 						mes "happen. Perhaps you";
 						mes "should try something else.^000000";
-						delitem 506,1; //Green_Potion
+						delitem Green_Potion,1;
 						tu_magician01 = 23;
 						close;
 					}
@@ -1161,8 +1161,8 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 				close;
 			}
 		} else if(tu_magician01 == 23){
-			if(countitem(511) > 0 || countitem(716) > 0){
-				if(countitem(511) > 0 && countitem(716) > 0){
+			if(countitem(Green_Herb) > 0 || countitem(Red_Gemstone) > 0){
+				if(countitem(Green_Herb) > 0 && countitem(Red_Gemstone) > 0){
 					mes "^3355FFYou try grinding";
 					mes "a Green Herb and";
 					mes "sprinkling it on the";
@@ -1178,11 +1178,11 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 					mes "to successfully dismantle";
 					mes "the trap. Now you can safely";
 					mes "check what might be inside.^000000";
-					delitem 511,1; //Green_Herb
-					delitem 716,1; //Red_Gemstone
+					delitem Green_Herb,1;
+					delitem Red_Gemstone,1;
 					tu_magician01 = 24;
 					close;
-				} else if(countitem(511) > 0){
+				} else if(countitem(Green_Herb) > 0){
 					mes "^3355FFYou should try to";
 					mes "dismantle this trap";
 					mes "by using other catalysts";

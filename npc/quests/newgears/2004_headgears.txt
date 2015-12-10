@@ -39,7 +39,7 @@
 //============================================================
 payon,115,131,3	script	Neko Neko#1	4_F_JOB_ASSASSIN,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -47,7 +47,7 @@ payon,115,131,3	script	Neko Neko#1	4_F_JOB_ASSASSIN,{
 		mes "- you put some items into Kafra Storage. -";
 		close;
 	}
-	if (countitem(2213) > 0 && countitem(983) > 0 && countitem(914) > 199 && Zeny > 9999) {
+	if (countitem(Cat_Hairband) > 0 && countitem(Black_Dyestuffs) > 0 && countitem(Fluff) > 199 && Zeny > 9999) {
 		mes "[Neko Neko]";
 		mes "Heh? You brought all the items~";
 		mes "Okay, give me some time.";
@@ -65,11 +65,11 @@ payon,115,131,3	script	Neko Neko#1	4_F_JOB_ASSASSIN,{
 		mes "Now you can wear";
 		mes "Black Cat Ears";
 		mes "of your very own~";
-		delitem 2213,1; //Cat_Hairband
-		delitem 983,1; //Black_Dyestuffs
-		delitem 914,200; //Fluff
+		delitem Cat_Hairband,1;
+		delitem Black_Dyestuffs,1;
+		delitem Fluff,200;
 		Zeny -= 10000;
-		getitem 5057,1; //Ear_Of_Black_Cat
+		getitem Ear_Of_Black_Cat,1;
 		next;
 		mes "[Neko Neko]";
 		mes "Thank you for using my service~!";
@@ -107,7 +107,7 @@ payon,115,131,3	script	Neko Neko#1	4_F_JOB_ASSASSIN,{
 //============================================================
 geffen,129,148,3	script	Argen#1	4_M_YOYOROGUE,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "[Argen]";
 		mes "Hey~ why are you carrying so many items?";
 		mes "You mind sharing them with me?";
@@ -154,7 +154,7 @@ geffen,129,148,3	script	Argen#1	4_M_YOYOROGUE,{
 	emotion e_heh;
 	switch(select("^3131FFX Hairpin^000000:^3131FFBand Aid^000000:^3131FFFlower Hairpin^000000:No thanks.")) {
 	case 1:
-		if (countitem(2294) > 0 && countitem(7220) > 399) {
+		if (countitem(Star_Dust) > 0 && countitem(Ectoplasm) > 399) {
 			mes "[Argen]";
 			mes "X Hairpin!";
 			mes "Nice choice~!";
@@ -178,9 +178,9 @@ geffen,129,148,3	script	Argen#1	4_M_YOYOROGUE,{
 				mes "Alright, I'm done!";
 				mes "So what do you think?";
 				mes "Pretty cool, eh?";
-				delitem 2294,1; //Star_Dust
-				delitem 7220,400; //Ectoplasm
-				getitem 5079,1; //Crossed_Hair_Band
+				delitem Star_Dust,1;
+				delitem Ectoplasm,400;
+				getitem Crossed_Hair_Band,1;
 				next;
 				break;
 			case 2:
@@ -203,7 +203,7 @@ geffen,129,148,3	script	Argen#1	4_M_YOYOROGUE,{
 		}
 		break;
 	case 2:
-		if (countitem(970) > 0 && countitem(930) > 499) {
+		if (countitem(Alchol) > 0 && countitem(Rotten_Bandage) > 499) {
 			mes "[Argen]";
 			mes "Band Aid, eh?";
 			mes "Got it! Hold on";
@@ -218,9 +218,9 @@ geffen,129,148,3	script	Argen#1	4_M_YOYOROGUE,{
 			mes "*Whew~!*";
 			mes "I'm finished!";
 			mes "Pretty cool, huh?";
-			delitem 970,1; //Alchol
-			delitem 930,500; //Rotten_Bandage
-			getitem 5063,1; //Plaster
+			delitem Alchol,1;
+			delitem Rotten_Bandage,500;
+			getitem Plaster,1;
 			next;
 		}
 		else {
@@ -236,7 +236,7 @@ geffen,129,148,3	script	Argen#1	4_M_YOYOROGUE,{
 		}
 		break;
 	case 3:
-		if (countitem(2269) > 0 && countitem(999) > 9 && Zeny > 19999) {
+		if (countitem(Centimental_Flower) > 0 && countitem(Steel) > 9 && Zeny > 19999) {
 			mes "[Argen]";
 			mes "You wanna a Flower Hairpin~?";
 			mes "Alright, gimmie a minute, yeah?";
@@ -248,11 +248,11 @@ geffen,129,148,3	script	Argen#1	4_M_YOYOROGUE,{
 			mes "[Argen]";
 			mes "Ah... It's done!";
 			mes "Hey, that looks pretty smooth! Oh, and uh, you can keep this leftover Stem.";
-			delitem 2269,1; //Centimental_Flower
-			delitem 999,10; //Steel
+			delitem Centimental_Flower,1;
+			delitem Steel,10;
 			Zeny -= 20000;
-			getitem 5061,1; //Flower_Hairpin
-			getitem 905,1; //Stem
+			getitem Flower_Hairpin,1;
+			getitem Stem,1;
 			next;
 		}
 		else {
@@ -297,7 +297,7 @@ geffen,129,148,3	script	Argen#1	4_M_YOYOROGUE,{
 //============================================================
 yuno,300,188,5	script	Zhenbolt#1	4_M_MONK,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -305,7 +305,7 @@ yuno,300,188,5	script	Zhenbolt#1	4_M_MONK,{
 		mes "- you put some items into Kafra Storage. -";
 		close;
 	}
-	if (countitem(7216) > 299 && countitem(7097) > 299 && countitem(2211) > 0 && countitem(982) > 0) {
+	if (countitem(Red_Scarf) > 299 && countitem(Burning_Heart) > 299 && countitem(Bandana) > 0 && countitem(White_Dyestuffs) > 0) {
 		mes "[Zhenbolt]";
 		mes "What's this?!";
 		mes "You've already brought everything I've asked! Good job, hero~! Let me get to work right away...";
@@ -322,11 +322,11 @@ yuno,300,188,5	script	Zhenbolt#1	4_M_MONK,{
 		mes "[Zhenbolt]";
 		mes "Take this...";
 		mes "It's known as the ^FF0000Hot-blooded Headband^000000, my personal symbol of fighting spirit! With this on your head, nothing can stop you!";
-		delitem 7216,300; //Red_Scarf
-		delitem 7097,300; //Burning_Heart
-		delitem 2211,1; //Bandana
-		delitem 982,1; //White_Dyestuffs
-		getitem 5070,1; //Headband_Of_Power
+		delitem Red_Scarf,300;
+		delitem Burning_Heart,300;
+		delitem Bandana,1;
+		delitem White_Dyestuffs,1;
+		getitem Headband_Of_Power,1;
 		next;
 		mes "[Zhenbolt]";
 		mes "Now, go!";
@@ -393,7 +393,7 @@ yuno,300,188,5	script	Zhenbolt#1	4_M_MONK,{
 //============================================================
 prontera,165,232,3	script	Nephia#1	4_F_ALCHE,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -401,7 +401,7 @@ prontera,165,232,3	script	Nephia#1	4_F_ALCHE,{
 		mes "- you put some items into Kafra Storage. -";
 		close;
 	}
-	if (countitem(2244) > 0 && countitem(2209) > 0 && countitem(10007) > 0) {
+	if (countitem(Big_Sis'_Ribbon) > 0 && countitem(Ribbon_) > 0 && countitem(Silk_Ribbon) > 0) {
 		mes "[Nephia]";
 		mes "Oh...";
 		mes "You've brought all these ribbons! I can't wait to tie you a new ribbon to put on your ^FF66CCbeautiful hair!^000000";
@@ -417,10 +417,10 @@ prontera,165,232,3	script	Nephia#1	4_F_ALCHE,{
 		next;
 		mes "[Nephia]";
 		mes "That's it~! We're done! Oh, I just know you're going to look precious wearing this.";
-		delitem 2244,1; //Big_Sis'_Ribbon
-		delitem 2209,1; //Ribbon_
-		delitem 10007,1; //Silk_Ribbon
-		getitem 5083,1; //Red_Tailed_Ribbon
+		delitem Big_Sis'_Ribbon,1;
+		delitem Ribbon_,1;
+		delitem Silk_Ribbon,1;
+		getitem Red_Tailed_Ribbon,1;
 		next;
 		mes "[Nephia]";
 		mes "Hopefully, we can get together and do each other's hair sometime! Wouldn't that be soooo much fun?";
@@ -507,7 +507,7 @@ prontera,165,232,3	script	Nephia#1	4_F_ALCHE,{
 // Indian Headband
 //============================================================
 comodo,237,217,5	script	Meruntei#1	4_M_JOB_HUNTER,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -515,17 +515,17 @@ comodo,237,217,5	script	Meruntei#1	4_M_JOB_HUNTER,{
 		mes "- you put some items into Kafra Storage. -";
 		close;
 	}
-	if (countitem(5010) > 0 && countitem(5049) > 0 && countitem(7101) > 9 && Zeny > 9999) {
+	if (countitem(Indian_Hair_Piece) > 0 && countitem(Stripe_Band) > 0 && countitem(Peco_Wing_Feather) > 9 && Zeny > 9999) {
 		mes "[Meruntei]";
 		mes "Oh! You brought all of them! Now I shall make you an Indian Headband of your very own.";
 		next;
 		mes "[Meruntei]";
 		mes "Take this! The items you have brought will be very useful for continuing my work in spreading headbands around Rune-Midgard.";
-		delitem 5010,1; //Indian_Hair_Piece
-		delitem 5049,1; //Stripe_Band
-		delitem 7101,10; //Peco_Wing_Feather
+		delitem Indian_Hair_Piece,1;
+		delitem Stripe_Band,1;
+		delitem Peco_Wing_Feather,10;
 		Zeny -= 10000;
-		getitem 5071,1; //Indian_Headband
+		getitem Indian_Headband,1;
 		next;
 		mes "[Meruntei]";
 		mes "iiiyiyiyiyiyiyiiiiii~~!";
@@ -561,7 +561,7 @@ comodo,237,217,5	script	Meruntei#1	4_M_JOB_HUNTER,{
 // Mushroom Band
 //============================================================
 geffen,67,87,3	script	Ipore#1	8_F_GIRL,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -569,7 +569,7 @@ geffen,67,87,3	script	Ipore#1	8_F_GIRL,{
 		mes "- you put some items into Kafra Storage. -";
 		close;
 	}
-	if (countitem(921) > 299) {
+	if (countitem(Mushroom_Spore) > 299) {
 		mes "[Ipore]";
 		mes "Wow! Did you really gather these 300 Mushroom Spores all by yoruself? Nice! Now it's time to use my magic~";
 		next;
@@ -601,8 +601,8 @@ geffen,67,87,3	script	Ipore#1	8_F_GIRL,{
 		next;
 		mes "[Ipore]";
 		mes "Anyway, now you can wear that mushroom at a rakish angle, the way it's supposed to be worn. Stay cool, you fashion rebel, you.";
-		delitem 921,300; //Mushroom_Spore
-		getitem 5082,1; //Mushroom_Band
+		delitem Mushroom_Spore,300;
+		getitem Mushroom_Band,1;
 		close;
 	}
 	mes "[Ipore]";
@@ -642,7 +642,7 @@ geffen,67,87,3	script	Ipore#1	8_F_GIRL,{
 //============================================================
 yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -657,7 +657,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 	mes "[Skillful Looking Artisan]";
 	mes "Allow me to introduce myself. My name is Hatbyr Mhore, a travelling Blacksmith.";
 	next;
-	if (countitem(2254) > 0 && countitem(2286) > 0) {
+	if (countitem(Angelic_Chain) > 0 && countitem(Elven_Ears) > 0) {
 		mes "[Hatbyr Mhore]";
 		mes "Oh? It seems that you're carrying some valuable stuff with you.";
 		next;
@@ -696,7 +696,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 					close;
 				}
 				else {
-					if (countitem(2254) > 0 && countitem(2286) > 0 && Zeny > 19999) {
+					if (countitem(Angelic_Chain) > 0 && countitem(Elven_Ears) > 0 && Zeny > 19999) {
 						mes "[Hatbyr Mhore]";
 						mes "Alright...";
 						mes "Let's get a groove on!";
@@ -706,10 +706,10 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 						mes "There you go, buddy.";
 						mes "I am proud to say this is my masterpiece. Please take this item. I call it...";
 						mes "'Angel Wing Ears!'";
-						delitem 2254,1; //Angelic_Chain
-						delitem 2286,1; //Elven_Ears
+						delitem Angelic_Chain,1;
+						delitem Elven_Ears,1;
 						Zeny -= 20000;
-						getitem 5074,1; //Ear_Of_Angel's_Wing
+						getitem Ear_Of_Angel's_Wing,1;
 						next;
 						mes "[Hatbyr Mhore]";
 						mes "There's no doubt that you'll be the talk of the town sporting these fashionable things.";
@@ -754,17 +754,17 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 					close;
 				}
 				else {
-					if (countitem(2255) > 0 && countitem(2286) > 0 && Zeny > 19999) {
+					if (countitem(Satanic_Chain) > 0 && countitem(Elven_Ears) > 0 && Zeny > 19999) {
 						mes "[Hatbyr Mhore]";
 						mes "Alright, it's time to roll!";
 						specialeffect EF_REPAIRWEAPON;
 						next;
 						mes "[Hatbyr Mhore]";
 						mes "There you go, buddy. I am proud to say this is my masterpiece. I call it... 'Devil Wing Ears!'";
-						delitem 2255,1; //Satanic_Chain
-						delitem 2286,1; //Elven_Ears
+						delitem Satanic_Chain,1;
+						delitem Elven_Ears,1;
 						Zeny -= 20000;
-						getitem 5068,1; //Ear_Of_Devil's_Wing
+						getitem Ear_Of_Devil's_Wing,1;
 						next;
 						mes "[Hatbyr Mhore]";
 						mes "You'll be wowing everyone on the streets with your fashionable new look that says 'It feels so good to be so bad.' Glad to be of service~!";
@@ -782,7 +782,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 			close;
 		}
 	}
-	else if (countitem(2255) > 0 && countitem(2286) > 0) {
+	else if (countitem(Satanic_Chain) > 0 && countitem(Elven_Ears) > 0) {
 		mes "[Hatbyr Mhore]";
 		mes "Oh? It seems that you're carrying some valuable stuff with you.";
 		next;
@@ -822,7 +822,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 					close;
 				}
 				else {
-					if (countitem(2255) > 0 && countitem(2286) > 0 && Zeny > 19999) {
+					if (countitem(Satanic_Chain) > 0 && countitem(Elven_Ears) > 0 && Zeny > 19999) {
 						mes "[Hatbyr Mhore]";
 						mes "Alright...";
 						mes "Let's get a groove on!";
@@ -831,10 +831,10 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 						mes "[Hatbyr Mhore]";
 						mes "There you go, buddy.";
 						mes "I am proud to say this is my masterpiece. Please take this item. I call it... 'Devil Wing Ears!'";
-						delitem 2255,1; //Satanic_Chain
-						delitem 2286,1; //Elven_Ears
+						delitem Satanic_Chain,1;
+						delitem Elven_Ears,1;
 						Zeny -= 20000;
-						getitem 5068,1; //Ear_Of_Devil's_Wing
+						getitem Ear_Of_Devil's_Wing,1;
 						next;
 						mes "[Hatbyr Mhore]";
 						mes "You'll be wowing everyone on the streets with your fashionable new look that says 'It feels so good to be so bad.' Glad to be of service~!";
@@ -877,7 +877,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 					close;
 				}
 				else {
-					if (countitem(2254) > 0 && countitem(2286) > 0 && Zeny > 19999) {
+					if (countitem(Angelic_Chain) > 0 && countitem(Elven_Ears) > 0 && Zeny > 19999) {
 						mes "Alright...";
 						mes "Let's get a groove on!";
 						specialeffect EF_REPAIRWEAPON;
@@ -885,10 +885,10 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 						mes "[Hatbyr Mhore]";
 						mes "There you go, buddy.";
 						mes "I am proud to say this is my masterpiece. Please take this item. I call it... 'Angel Wing Ears!'";
-						delitem 2254,1; //Angelic_Chain
-						delitem 2286,1; //Elven_Ears
+						delitem Angelic_Chain,1;
+						delitem Elven_Ears,1;
 						Zeny -= 20000;
-						getitem 5074,1; //Ear_Of_Angel's_Wing
+						getitem Ear_Of_Angel's_Wing,1;
 						next;
 						mes "[Hatbyr Mhore]";
 						mes "There's no doubt that you'll be the talk of the town sporting these fashionable things.";
@@ -963,7 +963,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 //============================================================
 xmas,183,267,3	script	Pretty Lindsay#1	4_F_NFLOSTGIRL,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -976,7 +976,7 @@ xmas,183,267,3	script	Pretty Lindsay#1	4_F_NFLOSTGIRL,{
 		mes "I know you brought everything you need for me to make you a hat, but you're carrying too much stuff. Why don't you put some of your things in Kafra Storage?";
 		close;
 	}
-	else if (countitem(5033) > 0 && countitem(5064) > 0) {
+	else if (countitem(Smokie_Hat) > 0 && countitem(Leaf_Headgear) > 0) {
 		emotion e_gasp;
 		mes "[Pretty Lindsay]";
 		mes "Whoa~";
@@ -999,9 +999,9 @@ xmas,183,267,3	script	Pretty Lindsay#1	4_F_NFLOSTGIRL,{
 		mes "Gosh! I think I";
 		mes "spent all my energy.";
 		mes "Okay, take this~";
-		delitem 5033,1; //Smokie_Hat
-		delitem 5064,1; //Leaf_Headgear
-		getitem 5078,1; //Sea_Otter_Cap
+		delitem Smokie_Hat,1;
+		delitem Leaf_Headgear,1;
+		getitem Sea_Otter_Cap,1;
 		next;
 		mes "[Pretty Lindsay]";
 		mes "I made this hat with all my heart, so you gotta promise me you will take care of this, okay?";
@@ -1078,7 +1078,7 @@ xmas,183,267,3	script	Pretty Lindsay#1	4_F_NFLOSTGIRL,{
 //============================================================
 xmas,175,156,3	script	Fuzzy Fuzz#1	4_M_05,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -1086,7 +1086,7 @@ xmas,175,156,3	script	Fuzzy Fuzz#1	4_M_05,{
 		mes "- you put some items into Kafra Storage. -";
 		close;
 	}
-	if (countitem(5030) > 0 && countitem(7213) > 99  && countitem(7217) > 99 && countitem(7161) > 299) {
+	if (countitem(Panda_Cap) > 0 && countitem(Needle_Pouch) > 99  && countitem(Spool) > 99 && countitem(Black_Bear's_Skin) > 299) {
 		if ((MaxWeight-Weight) < 2000) {
 			mes "[Fuzzy Fuzz]";
 			mes "You brought every material I need, but unfortunately you don't have enough space in your inventory. Try and place some of your items into Kafra Storage first.";
@@ -1109,11 +1109,11 @@ xmas,175,156,3	script	Fuzzy Fuzz#1	4_M_05,{
 		mes "[Fuzzy Fuzz]";
 		emotion e_ic;
 		mes "It's complete! There you go. I think this one will look really good on you! Please take good care of this hat.";
-		delitem 5030,1; //Panda_Cap
-		delitem 7213,100; //Needle_Pouch
-		delitem 7217,100; //Spool
-		delitem 7161,300; //Black_Bear's_Skin
-		getitem 5059,1; //Brown_Bear_Cap
+		delitem Panda_Cap,1;
+		delitem Needle_Pouch,100;
+		delitem Spool,100;
+		delitem Black_Bear's_Skin,300;
+		getitem Brown_Bear_Cap,1;
 		close;
 	}
 	emotion e_gasp;
@@ -1166,7 +1166,7 @@ xmas,175,156,3	script	Fuzzy Fuzz#1	4_M_05,{
 //============================================================
 payon_in03,8,193,4	script	Nanhyang#1	1_F_ORIENT_03,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -1180,7 +1180,7 @@ payon_in03,8,193,4	script	Nanhyang#1	1_F_ORIENT_03,{
 		mes "You look like you're having trouble carrying all of your things. Why don't you place some of your extra items into the Kafra Storage?";
 		close;
 	}
-	if (countitem(5073) > 0 && countitem(1750) > 0) {
+	if (countitem(Cap_Of_Concentration) > 0 && countitem(Arrow) > 0) {
 		mes "[Nanhyang]";
 		mes "Hello, there.";
 		mes "Ah, I can tell that you already have a ^8C1717'Model Training Hat'^000000. I see that using it has corrected your posture.";
@@ -1204,10 +1204,10 @@ payon_in03,8,193,4	script	Nanhyang#1	1_F_ORIENT_03,{
 			mes " . . . . . . . . . . . . . ";
 			next;
 			mes "[Nanhyang]";
-			delitem 5073,1; //Cap_Of_Concentration
-			delitem 1750,1; //Arrow
-			getitem 2285,1; //Apple_Of_Archer
-			getitem 1550,1; //Book
+			delitem Cap_Of_Concentration,1;
+			delitem Arrow,1;
+			getitem Apple_Of_Archer,1;
+			getitem Book,1;
 			mes "There you go.";
 			next;
 			mes "[Nanhyang]";
@@ -1224,7 +1224,7 @@ payon_in03,8,193,4	script	Nanhyang#1	1_F_ORIENT_03,{
 		mes "and glamorous poise.";
 		close;
 	}
-	if (countitem(2285) > 0 && countitem(1550) > 0) {
+	if (countitem(Apple_Of_Archer) > 0 && countitem(Book) > 0) {
 		mes "[Nanhyang]";
 		emotion e_heh;
 		mes "You brought the materials~";
@@ -1265,13 +1265,13 @@ payon_in03,8,193,4	script	Nanhyang#1	1_F_ORIENT_03,{
 			mes "[Nanhyang]";
 			mes "Here it is.";
 			mes "Oh, right, this arrow from the Apple of Archer is left over, so you can go ahead and take that.";
-			delitem 2285,1; //Apple_Of_Archer
-			delitem 1550,1; //Book
-			getitem 5073,1; //Cap_Of_Concentration
+			delitem Apple_Of_Archer,1;
+			delitem Book,1;
+			getitem Cap_Of_Concentration,1;
 			next;
 			mes "[Nanhyang]";
 			mes "Also, I can disassemble the Model Training Hat into its original materials. So if you want the original items back, bring the Model Training Hat and the arrow I gave you.";
-			getitem 1750,1; //Arrow
+			getitem Arrow,1;
 			next;
 			mes "[Nanhyang]";
 			mes "I hope you";
@@ -1327,7 +1327,7 @@ payon_in03,8,193,4	script	Nanhyang#1	1_F_ORIENT_03,{
 //============================================================
 geffen,83,189,5	script	Seth#1	4_M_KID2,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes " [Seth]";
 		mes "Whoa, why are you carrying so many items with you?";
 		mes "You look so heavy...! Maybe you can walk more easily if you put some of your stuff away?";
@@ -1342,7 +1342,7 @@ geffen,83,189,5	script	Seth#1	4_M_KID2,{
 	mes "Today at school, I learned how to make a paper flower! The flower was sort of hard, but now I can do it! Then I made a tiny tiny flower and put in on my head~";
 	emotion e_lv;
 	next;
-	if (countitem(2278) > 0 && countitem(975) > 0) {
+	if (countitem(Mr_Smile) > 0 && countitem(Scarlet_Dyestuffs) > 0) {
 		mes "[Seth]";
 		mes "Hey~!";
 		mes "You have a Mr. Smile and Scarlet Dyestuffs! Yaaay~! I could use those and make you a paper flower. C'mon, lemme show you!";
@@ -1372,9 +1372,9 @@ geffen,83,189,5	script	Seth#1	4_M_KID2,{
 			mes "[Seth]";
 			mes "Tah dah~!";
 			next;
-			delitem 2278,1; //Mr_Smile
-			delitem 975,1; //Scarlet_Dyestuffs
-			getitem 5077,1; //Tulip_Hairpin
+			delitem Mr_Smile,1;
+			delitem Scarlet_Dyestuffs,1;
+			getitem Tulip_Hairpin,1;
 			mes "[Seth]";
 			mes "Heheheh~!";
 			mes "I'm done!";
@@ -1383,7 +1383,7 @@ geffen,83,189,5	script	Seth#1	4_M_KID2,{
 			if (BaseJob == Job_Novice || BaseJob == Job_SuperNovice) {
 				mes "[Seth]";
 				mes "Oh, here's the leftovers. Mommy says that we should always save things. Heh heh~";
-				getitem 935,1; //Shell
+				getitem Shell,1;
 				next;
 			}
 			mes "[Seth]";
@@ -1446,7 +1446,7 @@ geffen,83,189,5	script	Seth#1	4_M_KID2,{
 //============================================================
 xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -1466,7 +1466,7 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 	next;
 	switch(select("Party Hat:Straw Hat:Cowboy Hat:Sombrero:Beanie")) {
 	case 1:
-		if (countitem(2236) > 0 && countitem(7151) > 99 && countitem(7111) > 99) {
+		if (countitem(Santa's_Hat) > 0 && countitem(Oil_Paper) > 99 && countitem(Smooth_Paper) > 99) {
 			mes "[Mad Hatter]";
 			mes "Party Hat! It's a Santa Hat I've remade by adding colorful paper for a festive look. Celebrate good times with a Party Hat! Come on!";
 			next;
@@ -1489,16 +1489,16 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			mes "^3355FF*Squick Squick Grind Grind*^000000";
 			mes "^3355FF*Swish Swish Rustle Rustle*^000000";
 			next;
-			delitem 2236,1; //Santa's_Hat
-			delitem 7151,100; //Oil_Paper
-			delitem 7111,100; //Smooth_Paper
+			delitem Santa's_Hat,1;
+			delitem Oil_Paper,100;
+			delitem Smooth_Paper,100;
 			mes "[Mad Hatter]";
 			mes "It's done! Your new life, as the life of the party, has officially begun. All you need to do is wear this Party Hat. Though, knowing a couple jokes would probably help too.";
-			getitem 5060,1; //Party_Hat
+			getitem Party_Hat,1;
 			next;
 			mes "[Mad Hatter]";
 			mes "Oh by the way, there's some stuff left over. I guess you should hold onto it. You know, in case you need it later.";
-			getitem 914,10; //Fluff
+			getitem Fluff,10;
 			close;
 		}
 		else {
@@ -1521,7 +1521,7 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			close;
 		}
 	case 2:
-		if (countitem(2280) > 0 && countitem(7197) > 299 && countitem(7150) > 299) {
+		if (countitem(Sahkkat) > 0 && countitem(Tough_Vines) > 299 && countitem(Bamboo_Cut) > 299) {
 			mes "[Mad Hatter]";
 			mes "A Straw Hat! Made out of a Sakkat with bamboo and tough vines, it gives you a relaxed, rustic feeling when you wear it.";
 			next;
@@ -1545,14 +1545,14 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			mes "^3355FF*Squish Squish Fwsht Fwsht*^000000";
 			mes "^3355FF*Crunch Crunch Tap Tap*^000000";
 			next;
-			delitem 2280,1; //Sahkkat
-			delitem 7197,300; //Tough_Vines
-			delitem 7150,300; //Bamboo_Cut
+			delitem Sahkkat,1;
+			delitem Tough_Vines,300;
+			delitem Bamboo_Cut,300;
 			mes "[Mad Hatter]";
 			mes "It's done!";
 			mes "Now you can wear this hat, feel cool, and relax with style.";
 			mes "Please come again~";
-			getitem 5062,1; //Straw_Hat
+			getitem Straw_Hat,1;
 			close;
 		}
 		else {
@@ -1570,7 +1570,7 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			close;
 		}
 	case 3:
-		if (countitem(2248) > 0 && countitem(7030) > 107 && countitem(7194) > 107 && countitem(7120) > 3) {
+		if (countitem(Western_Grace) > 0 && countitem(Claw_Of_Desert_Wolf) > 107 && countitem(Soft_Leaf) > 107 && countitem(Burning_Horse_Shoe) > 3) {
 			mes "[Mad Hatter]";
 			mes "I take a Western Grace, add some manliness, um, do some finangling, and Voila~! A Cowboy Hat!";
 			next;
@@ -1597,13 +1597,13 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			mes "^3355FF*Bang Bang Ping Ping*^000000";
 			mes "^3355FF*Uk Uk Uk Uk Uhoh Uhoh*^000000";
 			next;
-			delitem 2248,1; //Western_Grace
-			delitem 7030,108; //Claw_Of_Desert_Wolf
-			delitem 7194,108; //Soft_Leaf
-			delitem 7120,4; //Burning_Horse_Shoe
+			delitem Western_Grace,1;
+			delitem Claw_Of_Desert_Wolf,108;
+			delitem Soft_Leaf,108;
+			delitem Burning_Horse_Shoe,4;
 			mes "[Mad Hatter]";
 			mes "Yeeeeehaw! With this hat on, you can tame broncos, rob stagecoaches, and look really stylish in duels!";
-			getitem 5075,1; //Cowboy_Hat
+			getitem Cowboy_Hat,1;
 			close;
 		}
 		else {
@@ -1625,7 +1625,7 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			close;
 		}
 	case 4:
-		if (countitem(5062) > 0 && countitem(952) > 49 && countitem(1907) > 0) {
+		if (countitem(Straw_Hat) > 0 && countitem(Cactus_Needle) > 49 && countitem(Guitar) > 0) {
 			mes "[Mad Hatter]";
 			mes "Ah yes. Now here's a classy hat for mariachi heroes and Latin lovers. You can't deny the sex appeal that just pours from someone wearing a Sombrero.";
 			next;
@@ -1649,12 +1649,12 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			mes "^3355FFDing Ding Ding Dan Dan Dan^000000";
 			mes "^3355FFAdios Amigo^000000";
 			next;
-			delitem 5062,1; //Straw_Hat
-			delitem 952,50; //Cactus_Needle
-			delitem 1907,1; //Guitar
+			delitem Straw_Hat,1;
+			delitem Cactus_Needle,50;
+			delitem Guitar,1;
 			mes "[Mad Hatter]";
 			mes "With this Sombrero, you'll look like you have all kinds of style. Adios, cool guy~";
-			getitem 5067,1; //Sombrero
+			getitem Sombrero,1;
 			close;
 		}
 		else {
@@ -1676,7 +1676,7 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			close;
 		}
 	case 5:
-		if (countitem(2226) > 0 && countitem(7038) > 499) {
+		if (countitem(Cap) > 0 && countitem(Yarn) > 499) {
 			mes "[Mad Hatter]";
 			mes "A Beanie...!";
 			mes "Whaddup, broham. This hat keeps your head toasty, but let's you play things cool with your homeys. And, um, fly girls.";
@@ -1701,15 +1701,15 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			mes "^3355FF*Squish Squish Fwsht Fwsht*^000000";
 			mes "^3355FF*Crunch Crunch Tap Tap*^000000";
 			next;
-			delitem 2226,1; //Cap
-			delitem 7038,500; //Yarn
+			delitem Cap,1;
+			delitem Yarn,500;
 			mes "[Mad Hatter]";
 			mes "There you go! Your very own Beanie! Cute, but still 'dope!'";
 			next;
 			mes "[Mad Hatter]";
 			mes "Uh! Uh!";
 			mes "I'm in da house!";
-			getitem 5076,1; //Fur_Hat
+			getitem Fur_Hat,1;
 			close;
 		}
 		else {
@@ -1737,7 +1737,7 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 //============================================================
 yuno_in03,20,18,6	script	Nehris#1	4_F_JOB_BLACKSMITH,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -1767,7 +1767,7 @@ yuno_in03,20,18,6	script	Nehris#1	4_F_JOB_BLACKSMITH,{
 		mes "[Nehris]";
 		mes "This Golden Bell is fashioned after the one worn by the 'Sohee' monster. It's a cute accessory I personally recommend for us ladies. A little oversized, but I believe you'll like it a lot.";
 		next;
-		if (countitem(10016) > 0 && countitem(714) > 0 && countitem(969) > 2 && Zeny > 19999) {
+		if (countitem(Golden_Bell) > 0 && countitem(Emperium) > 0 && countitem(Gold) > 2 && Zeny > 19999) {
 			mes "[Nehris]";
 			mes "Thank you for";
 			mes "bringing everything.";
@@ -1775,11 +1775,11 @@ yuno_in03,20,18,6	script	Nehris#1	4_F_JOB_BLACKSMITH,{
 			next;
 			mes "^3355FF* Clang Clang! Scrape Scrape! Jingle Jingle! *^000000";
 			next;
-			delitem 10016,1; //Golden_Bell
-			delitem 714,1; //Emperium
-			delitem 969,3; //Gold
+			delitem Golden_Bell,1;
+			delitem Emperium,1;
+			delitem Gold,3;
 			Zeny -= 20000;
-			getitem 5091,1; //Big_Golden_Bell
+			getitem Big_Golden_Bell,1;
 			mes "[Nehris]";
 			mes "Yoohoo~";
 			mes "There you go. Here's your beautiful Golden Bell. I doubt it will jingle if you shake your head, though.";
@@ -1805,7 +1805,7 @@ yuno_in03,20,18,6	script	Nehris#1	4_F_JOB_BLACKSMITH,{
 		mes "[Nehris]";
 		mes "This crown is inspired by the the one worn by the 'Isis' monster. It has a elegant look fitting for ancient royalty.";
 		next;
-		if (countitem(10006) > 0 && countitem(714) > 0 && countitem(969) > 2 && Zeny > 19999) {
+		if (countitem(Queen's_Hair_Ornament) > 0 && countitem(Emperium) > 0 && countitem(Gold) > 2 && Zeny > 19999) {
 			mes "[Nehris]";
 			mes "Thank you for";
 			mes "bringing everything.";
@@ -1813,11 +1813,11 @@ yuno_in03,20,18,6	script	Nehris#1	4_F_JOB_BLACKSMITH,{
 			next;
 			mes "^3355FF* Clang Clang! Scrape Scrape! Jingle Jingle! *^000000";
 			next;
-			delitem 10006,1; //Queen's_Hair_Ornament
-			delitem 714,1; //Emperium
-			delitem 969,3; //Gold
+			delitem Queen's_Hair_Ornament,1;
+			delitem Emperium,1;
+			delitem Gold,3;
 			Zeny -= 20000;
-			getitem 5080,1; //Headgear_Of_Queen
+			getitem Headgear_Of_Queen,1;
 			mes "[Nehris]";
 			mes "Tah dah!";
 			mes "Here's your Crown of Ancient Queen! I don't know if you can get anyone to bow before you while wearing this, but at least you'll look elegant.";
@@ -1840,7 +1840,7 @@ yuno_in03,20,18,6	script	Nehris#1	4_F_JOB_BLACKSMITH,{
 		mes "[Nehris]";
 		mes "This crown is an imitation of the one worn by the 'Mistress' monster. Wearing this will give you a look of brusque authority.";
 		next;
-		if (countitem(2249) > 0 && countitem(714) > 0 && countitem(969) > 2 && Zeny > 39999) {
+		if (countitem(Coronet) > 0 && countitem(Emperium) > 0 && countitem(Gold) > 2 && Zeny > 39999) {
 			mes "[Nehris]";
 			mes "Thank you for";
 			mes "bringing everything.";
@@ -1863,11 +1863,11 @@ yuno_in03,20,18,6	script	Nehris#1	4_F_JOB_BLACKSMITH,{
 				next;
 				mes "^3355FF* Clang Clang! Scrape Scrape! Jingle Jingle! *^000000";
 				next;
-				delitem 2249,1; //Coronet
-				delitem 714,1; //Emperium
-				delitem 969,3; //Gold
+				delitem Coronet,1;
+				delitem Emperium,1;
+				delitem Gold,3;
 				Zeny -= 40000;
-				getitem 5081,1; //Mistress_Crown
+				getitem Mistress_Crown,1;
 				mes "[Nehris]";
 				mes "Yay! You've got a great looking crown!";
 				next;
@@ -1901,7 +1901,7 @@ yuno_in03,20,18,6	script	Nehris#1	4_F_JOB_BLACKSMITH,{
 // Alarm Mask
 //============================================================
 alde_alche,88,180,0	script	Muscle Man#Alarm Mask	4_M_ALCHE_A,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "[Muscle Man]";
 		mes "Hmmm...";
 		mes "It's seems you're carrying too much stuff for me to give anything to you.";
@@ -1929,7 +1929,7 @@ alde_alche,88,180,0	script	Muscle Man#Alarm Mask	4_M_ALCHE_A,{
 	specialeffect EF_CLAYMORE,AREA," #Alarm Mask Man3";
 	specialeffect EF_CLAYMORE,AREA," #Alarm Mask Man4";
 	initnpctimer;
-	if (countitem(1095) > 2999 && countitem(2288) > 0) {
+	if (countitem(Needle_Of_Alarm) > 2999 && countitem(Mr_Scream) > 0) {
 		if (select("Give him items:Cancel") == 1) {
 			mes "[Muscle Man]";
 			mes "Ooh... Finally!";
@@ -1940,9 +1940,9 @@ alde_alche,88,180,0	script	Muscle Man#Alarm Mask	4_M_ALCHE_A,{
 			mes "Alright...";
 			mes "Now I can use this Mr.Scream and all these clock hands to continue my testing.";
 			next;
-			delitem 1095,3000; //Needle_Of_Alarm
-			delitem 2288,1; //Mr_Scream
-			getitem 5086,1; //Alarm_Mask
+			delitem Needle_Of_Alarm,3000;
+			delitem Mr_Scream,1;
+			getitem Alarm_Mask,1;
 			mes "[Muscle Man]";
 			mes "And, this is yours. All yours.";
 			next;
@@ -2075,7 +2075,7 @@ OnInit:
 //============================================================
 morocc,273,79,4	script	Educated Traveller	4W_M_03,{
 	disable_items;
-	if ((MaxWeight-Weight) < 5000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 5000 || checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're over weight -";
 		mes "- to receive more items from this NPC. -";
@@ -2083,7 +2083,7 @@ morocc,273,79,4	script	Educated Traveller	4W_M_03,{
 		mes "- you put some items into Kafra Storage. -";
 		close;
 	}
-	if (countitem(7030) > 0) {
+	if (countitem(Claw_Of_Desert_Wolf) > 0) {
 		mes "[Lee Hester]";
 		mes "Hm...?";
 		mes "What's that";
@@ -2106,7 +2106,7 @@ morocc,273,79,4	script	Educated Traveller	4W_M_03,{
 		next;
 		switch(select("Drooping Cat:Smokie Leaf:Lazy Smokie:Blue Fish:That's... okay.")) {
 		case 1:
-			if (countitem(2233) > 0 && countitem(983) > 0 && countitem(7206) > 299) {
+			if (countitem(Circlet_) > 0 && countitem(Black_Dyestuffs) > 0 && countitem(Black_Kitty_Doll) > 299) {
 				mes "[Lee Hester]";
 				mes "Ah...";
 				mes "You brought everything.";
@@ -2139,11 +2139,11 @@ morocc,273,79,4	script	Educated Traveller	4W_M_03,{
 				mes "[Lee Hester]";
 				mes "There you go. *Phew~*";
 				mes "Your own 'Drooping Cat' hat, powered by a scientific principle! Also, would you mind if I keep that Desert Wolf Claw? Heh heh, thanks~";
-				delitem 2233,1; //Circlet_
-				delitem 983,1; //Black_Dyestuffs
-				delitem 7206,300; //Black_Kitty_Doll
-				delitem 7030,1; //Claw_Of_Desert_Wolf
-				getitem 5058,1; //Drooping_Kitty
+				delitem Circlet_,1;
+				delitem Black_Dyestuffs,1;
+				delitem Black_Kitty_Doll,300;
+				delitem Claw_Of_Desert_Wolf,1;
+				getitem Drooping_Kitty,1;
 				emotion e_ho;
 				close;
 			}
@@ -2176,7 +2176,7 @@ morocc,273,79,4	script	Educated Traveller	4W_M_03,{
 				close;
 			}
 		case 2:
-			if (countitem(945) > 599) {
+			if (countitem(Raccoon_Leaf) > 599) {
 				mes "[Lee Hester]";
 				mes "Ah...";
 				mes "You brought everything.";
@@ -2211,9 +2211,9 @@ morocc,273,79,4	script	Educated Traveller	4W_M_03,{
 				mes "[Lee Hester]";
 				mes "There you go. *Phew~*";
 				mes "Your own 'Smokie Leaf' hat, powered by a scientific principle! Also, would you mind if I keep that Desert Wolf Claw? Heh heh, thanks~";
-				delitem 945,600; //Raccoon_Leaf
-				delitem 7030,1; //Claw_Of_Desert_Wolf
-				getitem 5064,1; //Leaf_Headgear
+				delitem Raccoon_Leaf,600;
+				delitem Claw_Of_Desert_Wolf,1;
+				getitem Leaf_Headgear,1;
 				emotion e_gasp;
 				close;
 			}
@@ -2249,7 +2249,7 @@ morocc,273,79,4	script	Educated Traveller	4W_M_03,{
 				close;
 			}
 		case 3:
-			if (countitem(1026) > 999 && countitem(7065) > 99 && countitem(945) > 9) {
+			if (countitem(Acorn) > 999 && countitem(Sea_Otter_Leather) > 99 && countitem(Raccoon_Leaf) > 9) {
 				mes "[Lee Hester]";
 				mes "Ah....";
 				mes "You brought everything.";
@@ -2286,11 +2286,11 @@ morocc,273,79,4	script	Educated Traveller	4W_M_03,{
 				mes "[Lee Hester]";
 				mes "There you go. *Phew~*";
 				mes "Your own 'Lazy Smokie' hat, powered by a scientific principle! Also, would you mind if I keep that Desert Wolf Claw? Heh heh, thanks~";
-				delitem 1026,1000; //Acorn
-				delitem 7065,100; //Sea_Otter_Leather
-				delitem 945,10; //Raccoon_Leaf
-				delitem 7030,1; //Claw_Of_Desert_Wolf
-				getitem 5084,1; //Lazy_Raccoon
+				delitem Acorn,1000;
+				delitem Sea_Otter_Leather,100;
+				delitem Raccoon_Leaf,10;
+				delitem Claw_Of_Desert_Wolf,1;
+				getitem Lazy_Raccoon,1;
 				emotion e_heh;
 				close;
 			}
@@ -2338,7 +2338,7 @@ morocc,273,79,4	script	Educated Traveller	4W_M_03,{
 				close;
 			}
 		case 4:
-			if (countitem(624) > 0 && countitem(959) > 299 && countitem(551) > 49 && countitem(1023) > 0 && countitem(938) > 99) {
+			if (countitem(Rotten_Fish) > 0 && countitem(Rotten_Scale) > 299 && countitem(Shusi) > 49 && countitem(Fish_Tail) > 0 && countitem(Sticky_Mucus) > 99) {
 				mes "[Lee Hester]";
 				mes "Ah...";
 				mes "You brought everything.";
@@ -2371,13 +2371,13 @@ morocc,273,79,4	script	Educated Traveller	4W_M_03,{
 				mes "[Lee Hester]";
 				mes "There you go. *Phew~*";
 				mes "Your own 'Blue Fish' hat, powered by a scientific principle! Also, would you mind if I keep that Desert Wolf Claw? Heh heh, thanks~";
-				delitem 624,1; //Rotten_Fish
-				delitem 959,300; //Rotten_Scale
-				delitem 551,50; //Shusi
-				delitem 1023,1; //Fish_Tail
-				delitem 938,100; //Sticky_Mucus
-				delitem 7030,1; //Claw_Of_Desert_Wolf
-				getitem 5065,1; //Fish_On_Head
+				delitem Rotten_Fish,1;
+				delitem Rotten_Scale,300;
+				delitem Shusi,50;
+				delitem Fish_Tail,1;
+				delitem Sticky_Mucus,100;
+				delitem Claw_Of_Desert_Wolf,1;
+				getitem Fish_On_Head,1;
 				emotion e_ic;
 				close;
 			}
@@ -2512,7 +2512,7 @@ OnTouch:
 
 pay_dun03,48,84,4	script	Nine Tails#Kitsune Man	4_M_JPN2,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you are carrying -";
 		mes "- too many items with you. -";
@@ -2520,13 +2520,13 @@ pay_dun03,48,84,4	script	Nine Tails#Kitsune Man	4_M_JPN2,{
 		mes "- you put some items into Kafra Storage. -";
 		close;
 	}
-	if (countitem(1022) > 998) {
+	if (countitem(Fox_Tail) > 998) {
 		mes "[Nine Tails]";
 		mes "Oh! You finally brought what I've asked, human. Okay, now I can bring her back to life!";
 		next;
 		if (select("Give items:Cancel") == 1) {
-			delitem 1022,999; //Fox_Tail
-			getitem 5069,1; //Mask_Of_Fox
+			delitem Fox_Tail,999;
+			getitem Mask_Of_Fox,1;
 			mes "[Nine Tails]";
 			mes "Now...";
 			mes "Take this";
@@ -2634,7 +2634,7 @@ OnMyMobDead2:
 in_orcs01,31,93,1	script	Orc Warrior#1	ORK_WARRIOR,2,2,{
 OnTouch:
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -2695,7 +2695,7 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat == 1) {
-		if (countitem(909) > 999) {
+		if (countitem(Jellopy) > 999) {
 			mes "[Orc Warrior]";
 			mes "WHAT?!";
 			mes "That's so much Jellopy!!";
@@ -2757,7 +2757,7 @@ OnTouch:
 			mes "[Orc Warrior]";
 			mes "I hate humans! In fact, all Orcs hate humans! Hate you hate you hate you with a passion!";
 			next;
-			delitem 909,1000; //Jellopy
+			delitem Jellopy,1000;
 			orcs_hero_hat = 2;
 			mes "[Orc Warrior]";
 			mes "So...";
@@ -2781,7 +2781,7 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat == 2) {
-		if (countitem(909) > 999) {
+		if (countitem(Jellopy) > 999) {
 			mes "[Orc Warrior]";
 			mes "No.... Not again!!";
 			mes "What are you doing with so much Jellopy?!";
@@ -2816,7 +2816,7 @@ OnTouch:
 			mes "[Orc Warrior]";
 			mes "Bah! Humans have built their own towns and cities. Do they keep their senseless killing amongst each other?! NO! Humans have to rampage and ravage everything!!";
 			next;
-			delitem 909,1000; //Jellopy
+			delitem Jellopy,1000;
 			orcs_hero_hat = 3;
 			mes "[Orc Warrior]";
 			mes "Now, if you want";
@@ -2837,7 +2837,7 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat == 3) {
-		if (countitem(909) > 999) {
+		if (countitem(Jellopy) > 999) {
 			mes "[Orc Warrior]";
 			mes ".....";
 			mes "Again, human, you confound me with your stubborness. I see that humans are masochists. Or just like to annoy Orcs by making them count a thousand Jellopies.";
@@ -2881,7 +2881,7 @@ OnTouch:
 			mes "I don't understand why I am sharing this story about my tribe.";
 			mes "That's enough for today!";
 			next;
-			delitem 909,1000; //Jellopy
+			delitem Jellopy,1000;
 			orcs_hero_hat = 4;
 			mes "[Orc Warrior]";
 			mes "Grrr~! If you want to listen longer go bring me ^FF00001000 Jellopy^000000 again.";
@@ -2896,7 +2896,7 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat == 4) {
-		if (countitem(909) > 999) {
+		if (countitem(Jellopy) > 999) {
 			mes "[Orc Warrior]";
 			mes "Oh... it's you again.";
 			mes "I can see the Jellopy in your hands, and I'm pretty sure you've brought a thousand again, so let's get this over with.";
@@ -2917,7 +2917,7 @@ OnTouch:
 			mes "...I've talked too much already.";
 			mes "That's the end of the conversation for today.";
 			next;
-			delitem 909,1000; //Jellopy
+			delitem Jellopy,1000;
 			orcs_hero_hat = 5;
 			mes "[Orc Warrior]";
 			mes "Now, if you want to listen some more, go bring me";
@@ -2933,7 +2933,7 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat == 5) {
-		if (countitem(909) > 999) {
+		if (countitem(Jellopy) > 999) {
 			mes "[Orc Warrior]";
 			mes "*Sigh...*";
 			mes "You're too tough to get rid of.";
@@ -2953,7 +2953,7 @@ OnTouch:
 			mes "[Orc Warrior]";
 			mes "Orcs never restore health during battle using your silly medicines. Hmpf. Humans can be so weak, drinking bottles of Potion to keep up in a fight. Oh well, though, I'm not sure if you're the same.";
 			next;
-			delitem 909,1000; //Jellopy
+			delitem Jellopy,1000;
 			orcs_hero_hat = 6;
 			mes "[Orc Warrior]";
 			mes "Now, if you want";
@@ -2972,7 +2972,7 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat == 6) {
-		if (countitem(909) > 999) {
+		if (countitem(Jellopy) > 999) {
 			mes "[Orc Warrior]";
 			mes "What the...! Don't you know when to stop? I do not believe a human would like to hear about Orcs so much. But...";
 			mes "We Orcs are a proud race, and I shall oblige.";
@@ -2995,7 +2995,7 @@ OnTouch:
 			mes "[Orc Warrior]";
 			mes "Hm, well to you humans, we may all look the same, but we Orcs can tell each other apart. How about you, human? Do I look the same as every Warrior outside to you?";
 			next;
-			delitem 909,1000; //Jellopy
+			delitem Jellopy,1000;
 			orcs_hero_hat = 7;
 			mes "[Orc Warrior]";
 			mes "Now...";
@@ -3015,7 +3015,7 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat == 7) {
-		if (countitem(909) > 999) {
+		if (countitem(Jellopy) > 999) {
 			mes "[Orc Warrior]";
 			mes "I expected you to quit by now. But I was wrong, because you're here once again. We made a deal and I will keep my promise.";
 			next;
@@ -3042,7 +3042,7 @@ OnTouch:
 			mes "[Orc Warrior]";
 			mes "Well, humans rarely get the chance to see this helmet unless they're in battle with an Orc Hero themselves...";
 			next;
-			delitem 909,1000; //Jellopy
+			delitem Jellopy,1000;
 			orcs_hero_hat = 8;
 			mes "[Orc Warrior]";
 			mes "Now, if you want";
@@ -3063,7 +3063,7 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat == 8) {
-		if (countitem(909) > 999) {
+		if (countitem(Jellopy) > 999) {
 			mes "[Orc Warrior]";
 			mes "Oh, hello. You're back.";
 			mes "Go ahead and put the 1000 Jellopies over there on the table by the skulls.";
@@ -3086,7 +3086,7 @@ OnTouch:
 			mes "[Orc Warrior]";
 			mes "Every Orc can recognize him by his distinguished helm with the three horns.";
 			next;
-			delitem 909,1000; //Jellopy
+			delitem Jellopy,1000;
 			orcs_hero_hat = 9;
 			mes "[Orc Warrior]";
 			mes "Now...";
@@ -3106,7 +3106,7 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat == 9) {
-		if (countitem(909) > 999) {
+		if (countitem(Jellopy) > 999) {
 			mes "[Orc Warrior]";
 			mes "It's been a while I've seen such a determined human such as yourself. Just leave the Jellopy near the bed.";
 			next;
@@ -3132,7 +3132,7 @@ OnTouch:
 			mes "[Orc Warrior]";
 			mes "I don't think there is a curse which transforms humans into a totally ugly creature depending on their deeds. So it is difficult to tell which humans are honorable...";
 			next;
-			delitem 909,1000; //Jellopy
+			delitem Jellopy,1000;
 			orcs_hero_hat = 10;
 			mes "[Orc Warrior]";
 			mes "Now...";
@@ -3152,7 +3152,7 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat == 10) {
-		if (countitem(909) > 999) {
+		if (countitem(Jellopy) > 999) {
 			mes "[Orc Warrior]";
 			mes "With these...";
 			mes "You have brought me 10,000 Jellopies. I must say that I am impressed. Since you have shown me your respect, I will repay you with my honesty.";
@@ -3163,9 +3163,9 @@ OnTouch:
 			mes "[Orc Warrior]";
 			mes "I suggest you that you experience more battles with the many different Orcs out there. That's the best way of understanding and learning about the Orc tribe.";
 			next;
-			delitem 909,1000; //Jellopy
+			delitem Jellopy,1000;
 			orcs_hero_hat = 11;
-			getitem 1304,1; //Orcish_Axe
+			getitem Orcish_Axe,1;
 			mes "[Orc Warrior]";
 			mes "This is a small token of my gratitue. This axe used to aid me in many battles and is very precious to me. I hope you will take care of this.";
 			next;
@@ -3182,12 +3182,12 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat == 11) {
-		if (countitem(1304) > 0) {
+		if (countitem(Orcish_Axe) > 0) {
 			mes "[Orc Warrior]";
 			mes "You have made a lot of effort to show me your respect. Now, if you want to learn more about Orcs, feel free to come back anytime, my friend.";
 			close;
 		}
-		else if (countitem(931) > 99) {
+		else if (countitem(Orcish_Voucher) > 99) {
 			if (rand(1,5) == 5) {
 				mes "[Orc Warrior]";
 				mes "Oh, I see you've taken my advice and have been meeting many other Orcs through battle.";
@@ -3222,7 +3222,7 @@ OnTouch:
 				mes "[Orc Warrior]";
 				mes "Ah, spoken like a true warrior. Alright then, go forth and do battle with others of my tribe, and bring me 10,000 Orcish Vouchers.";
 				next;
-				delitem 931,100; //Orcish_Voucher
+				delitem Orcish_Voucher,100;
 				orcs_hero_hat = 13;
 				orcs_hero_hat2 = 100;
 				mes "[Orc Warrior]";
@@ -3249,7 +3249,7 @@ OnTouch:
 		}
 	}
 	else if (orcs_hero_hat2 > 99 && orcs_hero_hat2 < 10000) {
-		if (countitem(931) > 0) {
+		if (countitem(Orcish_Voucher) > 0) {
 			if (orcs_hero_hat2 > 9999)
 				orcs_hero_hat2 = 10000;
 			mes "[Orc Warrior]";
@@ -3265,9 +3265,9 @@ OnTouch:
 			mes "victory with me?";
 			next;
 			if (select("Yes, I do.:I will do it later.") == 1) {
-				.@total_vouchers = orcs_hero_hat2+countitem(931);
+				.@total_vouchers = orcs_hero_hat2+countitem(Orcish_Voucher);
 				if (.@total_vouchers < 10000) {
-					delitem 931,countitem(931); //Orcish_Voucher
+					delitem Orcish_Voucher,countitem(Orcish_Voucher);
 					orcs_hero_hat2 = .@total_vouchers;
 					mes "[Orc Warrior]";
 					mes "I hope you will";
@@ -3305,14 +3305,14 @@ OnTouch:
 					else
 						mes "an Orc Lady!!";
 					next;
-					delitem 931,countitem(931); //Orcish_Voucher
+					delitem Orcish_Voucher,countitem(Orcish_Voucher);
 					orcs_hero_hat = 14;
 					orcs_hero_hat2 = 10000;
-					getitem 2299,1; //Viking_Helm
+					getitem Viking_Helm,1;
 					mes "[Orc Warrior]";
 					mes "This is a present for you. I am not sure if it will fit to your head or not, but try it. If your head is too big to wear this, I suggest that you carry this with you.";
 					next;
-					getitem 931,1; //Orcish_Voucher
+					getitem Orcish_Voucher,1;
 					mes "[Orc Warrior]";
 					mes "As an Orc Warrior,";
 					mes "I will now give you";
@@ -3341,12 +3341,12 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat == 14) {
-		if (countitem(931) == 1 && (countitem(2299) > 0 || isequipped(2299))) {
+		if (countitem(Orcish_Voucher) == 1 && (countitem(Viking_Helm) > 0 || isequipped(2299))) {
 			mes "[Orc Warrior]";
 			mes "Hm? You don't think you cannot come back to where you originally came, just because now you're an Orc Warrior, do you? Hahahahaha!";
 			close;
 		}
-		else if (countitem(2299) > 0 || isequipped(2299)) {
+		else if (countitem(Viking_Helm) > 0 || isequipped(2299)) {
 			mes "[Orc Warrior]";
 			mes "Warrior...";
 			mes "May a fresh";
@@ -3400,7 +3400,7 @@ OnTouch:
 		}
 	}
 	else if (orcs_hero_hat == 15) {
-		if (countitem(968) > 99) {
+		if (countitem(Voucher_Of_Orcish_Hero) > 99) {
 			mes "[Orc Warrior]";
 			mes "Ah...";
 			mes "I knew you would succeed!";
@@ -3442,13 +3442,13 @@ OnTouch:
 				mes "[Orc Warrior]";
 				mes "You deserve to be an Orc Hero, the most powerful Orc warrior! As of today, you are now an Orc Hero!";
 				next;
-				delitem 968,100; //Voucher_Of_Orcish_Hero
+				delitem Voucher_Of_Orcish_Hero,100;
 				orcs_hero_hat = 16;
-				getitem 1124,1; //Orcish_Sword
+				getitem Orcish_Sword,1;
 				mes "[Orc Warrior]";
 				mes "This is a sword only given to our heroes. I am not sure if you can use this or not, but as an Orc Hero, you're obligated to carry this with you always.";
 				next;
-				getitem 968,1; //Voucher_Of_Orcish_Hero
+				getitem Voucher_Of_Orcish_Hero,1;
 				mes "[Orc Warrior]";
 				mes "Now that you";
 				mes "are an Orc Hero,";
@@ -3477,12 +3477,12 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat > 15) {
-		if (countitem(968) < 1) {
+		if (countitem(Voucher_Of_Orcish_Hero) < 1) {
 			mes "[Orc Warrior]";
 			mes "Warrior, where did you leave your Heroic Emblem? Without the token, I cannot recognize you as an Orc Hero. Please find it and keep it with you anywhere you go.";
 			close;
 		}
-		else if (countitem(1124) < 1 && isequipped(1124) == 0) {
+		else if (countitem(Orcish_Sword) < 1 && isequipped(1124) == 0) {
 			mes "[Orc Warrior]";
 			mes "Warrior, where did you leave your sword? Without the sword, I cannot recognize you as an Orc Hero. Please find it and keep it with you anywhere you go.";
 			close;
@@ -3504,7 +3504,7 @@ OnTouch:
 
 in_orcs01,162,33,1	script	Orc Hero#1	ORK_HERO,2,2,{
 OnTouch:
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -3526,14 +3526,14 @@ OnTouch:
 		close;
 	}
 	else if (orcs_hero_hat == 16) {
-		if (countitem(968) == 1 && (countitem(1124) > 0 || isequipped(1124) == 1)) {
+		if (countitem(Voucher_Of_Orcish_Hero) == 1 && (countitem(Orcish_Sword) > 0 || isequipped(1124) == 1)) {
 			if (rand(1,10) == 1) {
 				mes "[Orc Hero]";
 				mes "Hm, are you the human who was granted status as an Orc Hero?";
 				next;
 				mes "[Orc Hero]";
 				mes "I hope you know the meaning of returning my Emblem. I expect that we will meet again on the battlefield.";
-				if (countitem(2299) > 0) {
+				if (countitem(Viking_Helm) > 0) {
 					next;
 					mes "[Orc Hero]";
 					mes "Wait...";
@@ -3577,7 +3577,7 @@ OnTouch:
 					mes "[Orc Hero]";
 					mes "Although you're a human, you're an Orc Hero amongst us now, so you should have a helm suitable for your position...";
 					next;
-					delitem 2299,1; //Viking_Helm
+					delitem Viking_Helm,1;
 					orcs_hero_hat = 17;
 					getnameditem 5094,strcharinfo(0); //Orc_Hero_Helm
 					mes "[Orc Hero]";

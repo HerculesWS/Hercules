@@ -24,7 +24,7 @@ hu_fild05,168,304,0	script	Column#abyss1	HIDDEN_NPC,{
 	mes "certain dragon body parts";
 	mes "would fit perfectly into";
 	mes "the column grooves.^000000";
-	if((countitem(1035)) && (countitem(1036)) && (countitem(1037)))
+	if((countitem(Dragon_Canine)) && (countitem(Dragon_Scale)) && (countitem(Dragon_Train)))
 	{
 		next;
 		switch( select( "Insert Dragon Body Parts","Eat Dragon Body Parts" ) )

@@ -410,7 +410,7 @@ ra_in01,384,246,3	script	Vincent#ra_in01	1_M_01,{
 		mes "quite valuable nowadays...";
 		lost_boy = 12;
 		changequest 8098,8099;
-		getitem 617,1; //Old_Violet_Box
+		getitem Old_Violet_Box,1;
 		next;
 		mes "[Vincent]";
 		mes "Ah, and this note is a";
@@ -1238,7 +1238,7 @@ ra_in01,235,194,5	script	Katinshuell	4_M_RACHMAN1,{
 		mes "could have had a chance...";
 		close;
 	}
-	else if ((rach_vice == 21) && (countitem(1201) > 0)) {
+	else if ((rach_vice == 21) && (countitem(Knife) > 0)) {
 		mes "[Katinshuell]";
 		mes "Please... Please just";
 		mes "leave me alone. I've lost";
@@ -1246,7 +1246,7 @@ ra_in01,235,194,5	script	Katinshuell	4_M_RACHMAN1,{
 		mes "of something stupid I did";
 		mes "in the past. If you want to";
 		mes "turn me in, go ahead...";
-		delitem 1201,1; //Knife
+		delitem Knife,1;
 		rach_vice = 22;
 		changequest 8121,8122;
 		close;
@@ -1260,7 +1260,7 @@ ra_in01,235,194,5	script	Katinshuell	4_M_RACHMAN1,{
 		mes "truly happy. Bruspetti...";
 		close;
 	}
-	else if ((rach_vice == 20) && (countitem(1201) > 0)) {
+	else if ((rach_vice == 20) && (countitem(Knife) > 0)) {
 		mes "[Katinshuell]";
 		mes "I suppose there's";
 		mes "no reason to hide";
@@ -1374,7 +1374,7 @@ ra_in01,235,194,5	script	Katinshuell	4_M_RACHMAN1,{
 		mes "h-haunt me... Ha ha ha...";
 		close;
 	}
-	else if ((rach_vice == 20) && (countitem(1201) > 0)) {
+	else if ((rach_vice == 20) && (countitem(Knife) > 0)) {
 		mes "[Katinshuell]";
 		mes "I...";
 		mes "I don't deserve this!";
@@ -1728,7 +1728,7 @@ ra_in01,235,194,5	script	Katinshuell	4_M_RACHMAN1,{
 			close;
 		}
 	}
-	else if ((rach_vice == 15) && (countitem(7571))) {
+	else if ((rach_vice == 15) && (countitem(Diary_Of_Blue))) {
 		mes "[Katinshuell]";
 		mes "Oh, it's you again.";
 		mes "What do you want now?";
@@ -1780,7 +1780,7 @@ ra_in01,235,194,5	script	Katinshuell	4_M_RACHMAN1,{
 		next;
 		mes "[Katinshuell]";
 		mes "......!";
-		delitem 7571,1; //Diary_Of_Blue
+		delitem Diary_Of_Blue,1;
 		rach_vice = 16;
 		changequest 8119,8120;
 		close;
@@ -2622,7 +2622,7 @@ ra_in01,255,25,0	script	Book#ra_in	HIDDEN_NPC,{
 	else if (rach_vice == 14) {
 		rach_vice = 15;
 		changequest 8118,8119;
-		getitem 7571,1; //Diary_Of_Blue
+		getitem Diary_Of_Blue,1;
 		mes "^3355FFThis must be";
 		mes "Bruspetti's diary!";
 		mes "You now have permission";
@@ -2655,7 +2655,7 @@ ra_in01,255,25,0	script	Book#ra_in	HIDDEN_NPC,{
 //rachel,157,183,3	script	Sincere Follower Urstia	4_F_MASK,{
 rachel,157,183,3	script	Sincere Follower Urstia	4_F_MASK1,{
 	cutin "ra_usti1",2;
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -2795,7 +2795,7 @@ rachel,157,183,3	script	Sincere Follower Urstia	4_F_MASK1,{
 			mes "it'll be a fitting tribute to";
 			mes "our loving goddess Freya.";
 			setquest 2109;
-			getitem 7572,1; //Magic_Necklace
+			getitem Magic_Necklace,1;
 			ice_necklace_q = 1;
 			close2;
 			cutin "",255;
@@ -2819,7 +2819,7 @@ rachel,157,183,3	script	Sincere Follower Urstia	4_F_MASK1,{
 		mes "ice cave to the north.";
 	}
 	else if (ice_necklace_q == 5) {
-		if (countitem(7573) > 0) {
+		if (countitem(Magic_Necklace_) > 0) {
 			mes "[Urstialla]";
 			mes "Oh! My necklace! Thank you!";
 			mes "It's so beautiful! It will";
@@ -2832,7 +2832,7 @@ rachel,157,183,3	script	Sincere Follower Urstia	4_F_MASK1,{
 			mes "but please accept this as a";
 			mes "token of my appreication for";
 			mes " what you have done for me.";
-			delitem 7573,1; //Magic_Necklace_
+			delitem Magic_Necklace_,1;
 			getexp RENEWAL_EXP?90000:700000,0;
 			ice_necklace_q = 6;
 			completequest 2113;
@@ -2867,7 +2867,7 @@ rachel,157,183,3	script	Sincere Follower Urstia	4_F_MASK1,{
 }
 
 ice_dun02,120,105,3	script	Man Stuck in Ice#cave	4_M_FROZEN1,5,5,{
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -3079,8 +3079,8 @@ ice_dun02,120,105,3	script	Man Stuck in Ice#cave	4_M_FROZEN1,5,5,{
 		close;
 	}
 	else if (ice_necklace_q == 4) {
-		if (countitem(7569) > 0) {
-			if (countitem(7572) > 0) {
+		if (countitem(Hammer_Of_Wind) > 0) {
+			if (countitem(Magic_Necklace) > 0) {
 				mes "[Maheo]";
 				mes "Oh, you're back!";
 				mes "So did my master have";
@@ -3187,10 +3187,10 @@ ice_dun02,120,105,3	script	Man Stuck in Ice#cave	4_M_FROZEN1,5,5,{
 		mes "in ice to anyone else, okay?";
 		ice_necklace_q = 5;
 		changequest 2112,2113;
-		delitem 7569,1; //Hammer_Of_Wind
-		delitem 7572,1; //Magic_Necklace
-		getitem 7573,1; //Magic_Necklace_
-		getitem 7574,4; //Ice_Particle
+		delitem Hammer_Of_Wind,1;
+		delitem Magic_Necklace,1;
+		getitem Magic_Necklace_,1;
+		getitem Ice_Particle,4;
 		close2;
 		cutin "",255;
 		setnpcdisplay "Man Stuck in Ice#cave", 4_M_FROZEN1;
@@ -3230,7 +3230,7 @@ OnTimer10800000:
 }
 
 rachel,265,98,3	script	Hamion#aru	4_M_RACHMAN2,{
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -3300,7 +3300,7 @@ rachel,265,98,3	script	Hamion#aru	4_M_RACHMAN2,{
 		close;
 	}
 	else if (ice_necklace_q == 3) {
-		if ((countitem(996) < 5) || (countitem(1354) < 1) || (countitem(7433) < 1)) {
+		if ((countitem(Rough_Wind) < 5) || (countitem(Hammer) < 1) || (countitem(Scroll) < 1)) {
 			mes "[Hamion]";
 			mes "I need to create";
 			mes "a magical artifact";
@@ -3362,12 +3362,12 @@ rachel,265,98,3	script	Hamion#aru	4_M_RACHMAN2,{
 		mes "This hammer will only work";
 		mes "once, so make sure that you";
 		mes "smash that ice properly!";
-		delitem 1354,1; //Hammer
-		delitem 996,5; //Rough_Wind
-		delitem 7433,1; //Scroll
+		delitem Hammer,1;
+		delitem Rough_Wind,5;
+		delitem Scroll,1;
 		ice_necklace_q = 4;
 		changequest 2111,2112;
-		getitem 7569,1; //Hammer_of_Wind
+		getitem Hammer_Of_Wind,1; //Hammer_of_Wind
 		close;
 	}
 	else if (ice_necklace_q >= 4) {
@@ -3445,7 +3445,7 @@ rachel,113,96,5	script	Mohadian	4_M_MIDDLE,10,10,{
 		close;
 	}
 	else if (ice_necklace_q == 7) {
-		if (countitem(7561) < 1) {
+		if (countitem(Ice_Heart) < 1) {
 			mes "[Mohadian]";
 			mes "Bring me some Glacial";
 			mes "Hearts from the Ice Cave,";
@@ -3468,7 +3468,7 @@ rachel,113,96,5	script	Mohadian	4_M_MIDDLE,10,10,{
 		mes "Wine. Anyway, let me see";
 		mes "how many you've brought me.";
 		next;
-		.@hearts = countitem(7561);
+		.@hearts = countitem(Ice_Heart);
 		.@totalprice = 375*.@hearts;
 		mes "[Mohadian]";
 		mes .@hearts +" Glacial Hearts";
@@ -3477,7 +3477,7 @@ rachel,113,96,5	script	Mohadian	4_M_MIDDLE,10,10,{
 		mes .@totalprice +" zeny. Here you are!";
 		mes "It's always a pleasure";
 		mes "doing business with you~";
-		delitem 7561,.@hearts; //Glacial Hearts
+		delitem Ice_Heart,.@hearts; //Glacial Hearts
 		Zeny += .@totalprice;
 		close;
 	}
@@ -3501,24 +3501,24 @@ ice_dun03,126,126,3	script	Blazing Fire#ice1	4_NFWISP,{
 	mes "with conventional means.^000000";
 	if (ice_necklace_q > 4) {
 		if ($@ktullanux_summon < 4) {
-			if (countitem(7574) > 0) {
+			if (countitem(Ice_Particle) > 0) {
 				next;
 				select("Use Freezing Snow Powder.");
 				mes "^3355FFYou sprinkle the Freezing Snow";
 				mes "Powder onto the flame. It";
 				mes "flickers before extinguising.^000000";
-				delitem 7574,1; //Freezing Snow Powder
+				delitem Ice_Particle,1; //Freezing Snow Powder
 				hideonnpc "Blazing Fire#ice1";
 				++$@ktullanux_summon;
 				if ($@ktullanux_summon == 4) donpcevent "ice_boss#broad::OnStart";
 			}
-			else if (countitem(7562) > 0) {
+			else if (countitem(Ice_Scale) > 0) {
 				next;
 				select("Use Ice Scale.");
 				mes "^3355FFYou throw the Ice Scale into";
 				mes "the flame, it crackles before";
 				mes "extinguising.^000000";
-				delitem 7562,1; //Ice Scale
+				delitem Ice_Scale,1; //Ice Scale
 				hideonnpc "Blazing Fire#ice1";
 				++$@ktullanux_summon;
 				if ($@ktullanux_summon == 4) donpcevent "ice_boss#broad::OnStart";
@@ -3538,24 +3538,24 @@ ice_dun03,172,126,0	script	Blazing Fire#ice2	4_NFWISP,{
 	mes "with conventional means.^000000";
 	if (ice_necklace_q > 4) {
 		if ($@ktullanux_summon < 4) {
-			if (countitem(7574) > 0) {
+			if (countitem(Ice_Particle) > 0) {
 				next;
 				select("Use Freezing Snow Powder.");
 				mes "^3355FFYou sprinkle the Freezing Snow";
 				mes "Powder onto the flame. It";
 				mes "flickers before extinguising.^000000";
-				delitem 7574,1; //Freezing Snow Powder
+				delitem Ice_Particle,1; //Freezing Snow Powder
 				hideonnpc "Blazing Fire#ice2";
 				++$@ktullanux_summon;
 				if ($@ktullanux_summon == 4) donpcevent "ice_boss#broad::OnStart";
 			}
-			else if (countitem(7562) > 0) {
+			else if (countitem(Ice_Scale) > 0) {
 				next;
 				select("Use Ice Scale.");
 				mes "^3355FFYou throw the Ice Scale into";
 				mes "the flame, it crackles before";
 				mes "extinguising.^000000";
-				delitem 7562,1; //Ice Scale
+				delitem Ice_Scale,1; //Ice Scale
 				hideonnpc "Blazing Fire#ice2";
 				++$@ktullanux_summon;
 				if ($@ktullanux_summon == 4) donpcevent "ice_boss#broad::OnStart";
@@ -3574,24 +3574,24 @@ ice_dun03,172,172,0	script	Blazing Fire#ice3	4_NFWISP,{
 	mes "with conventional means.^000000";
 	if (ice_necklace_q > 4) {
 		if ($@ktullanux_summon < 4) {
-			if (countitem(7574) > 0) {
+			if (countitem(Ice_Particle) > 0) {
 				next;
 				select("Use Freezing Snow Powder.");
 				mes "^3355FFYou sprinkle the Freezing Snow";
 				mes "Powder onto the flame. It";
 				mes "flickers before extinguising.^000000";
-				delitem 7574,1; //Freezing Snow Powder
+				delitem Ice_Particle,1; //Freezing Snow Powder
 				hideonnpc "Blazing Fire#ice3";
 				++$@ktullanux_summon;
 				if ($@ktullanux_summon == 4) donpcevent "ice_boss#broad::OnStart";
 			}
-			else if (countitem(7562) > 0) {
+			else if (countitem(Ice_Scale) > 0) {
 				next;
 				select("Use Ice Scale.");
 				mes "^3355FFYou throw the Ice Scale into";
 				mes "the flame, it crackles before";
 				mes "extinguising.^000000";
-				delitem 7562,1; //Ice Scale
+				delitem Ice_Scale,1; //Ice Scale
 				hideonnpc "Blazing Fire#ice3";
 				++$@ktullanux_summon;
 				if ($@ktullanux_summon == 4) donpcevent "ice_boss#broad::OnStart";
@@ -3610,24 +3610,24 @@ ice_dun03,127,172,0	script	Blazing Fire#ice4	4_NFWISP,{
 	mes "with conventional means.^000000";
 	if (ice_necklace_q > 4) {
 		if ($@ktullanux_summon < 4) {
-			if (countitem(7574) > 0) {
+			if (countitem(Ice_Particle) > 0) {
 				next;
 				select("Use Freezing Snow Powder.");
 				mes "^3355FFYou sprinkle the Freezing Snow";
 				mes "Powder onto the flame. It";
 				mes "flickers before extinguising.^000000";
-				delitem 7574,1; //Freezing Snow Powder
+				delitem Ice_Particle,1; //Freezing Snow Powder
 				hideonnpc "Blazing Fire#ice4";
 				++$@ktullanux_summon;
 				if ($@ktullanux_summon == 4) donpcevent "ice_boss#broad::OnStart";
 			}
-			else if (countitem(7562) > 0) {
+			else if (countitem(Ice_Scale) > 0) {
 				next;
 				select("Use Ice Scale.");
 				mes "^3355FFYou throw the Ice Scale into";
 				mes "the flame, it crackles before";
 				mes "extinguising.^000000";
-				delitem 7562,1; //Ice Scale
+				delitem Ice_Scale,1; //Ice Scale
 				hideonnpc "Blazing Fire#ice4";
 				++$@ktullanux_summon;
 				if ($@ktullanux_summon == 4) donpcevent "ice_boss#broad::OnStart";
@@ -4095,9 +4095,9 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 				mes "[Priestess Nemma]";
 				mes "Let's see...";
 				next;
-				if (countitem(12018) >= 20) {
+				if (countitem(Fire_Cracker) >= 20) {
 					cutin "ra_nemma04",2;
-					delitem 12018,20; //Fire_Cracker
+					delitem Fire_Cracker,20;
 					getexp RENEWAL_EXP?50000:200000,0;
 					ra_tem_q = 14;
 					mes "[Priestess Nemma]";
@@ -4173,7 +4173,7 @@ S_Donate:
 		return;
 	}
 	if (Zeny >= getarg(0)*50000) {
-		if (!checkweight(7570,getarg(0))) {
+		if (!checkweight(Temple_Lottery_Ticket,getarg(0))) {
 			cutin "ra_nemma02",2;
 			mes "[Priestess Nemma]";
 			mes "I can scarcely believe it...";
@@ -4193,7 +4193,7 @@ S_Donate:
 			return;
 		}
 		$rachel_donate += getarg(0);
-		getitem 7570,getarg(0); //Temple_Lottery_Ticket
+		getitem Temple_Lottery_Ticket,getarg(0);
 		Zeny -= getarg(0)*50000;
 		ra_have_donated = 1;
 		if ($rachel_donate > 9999) {
@@ -4326,7 +4326,7 @@ rachel,243,37,3	script	Kid#Candy Addict	4_M_CHILD1,{
 				mes "Hurry, give me one!";
 				mes "Gimmie gimmie~!";
 				next;
-				if (countitem(529) > 0) {
+				if (countitem(Candy) > 0) {
 					mes "[Kid]";
 					mes "Mmm...";
 					mes "If you give me";
@@ -4747,7 +4747,7 @@ que_rachel,169,18,0	script	Quest Temple Exit#ra_tem	WARPNPC,2,2,{
 
 ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 	if ((ra_tem_q > 14) || (MISC_QUEST&8192)) lost_boy = 14;
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -5673,7 +5673,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 			}
 			else if (aru_vol == 5) {
 				cutin "ra_gman",2;
-				if (countitem(7342) > 0) {
+				if (countitem(File01) > 0) {
 					mes "["+strcharinfo(0)+"]";
 					mes "Would you please";
 					mes "take a look at this";
@@ -5748,7 +5748,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 					mes "south of Rachel. He's your";
 					mes "best chance of entering the Thor";
 					mes "Volcano camp without suspicion.";
-					delitem 7342,1; //File01
+					delitem File01,1;
 					aru_vol = 6;
 					changequest 2115,2116;
 				}
@@ -6661,7 +6661,7 @@ ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 	goto L_End;
 
 L_Lottery:
-	if(checkweight(607,1) == 0){
+	if(checkweight(Yggdrasilberry,1) == 0){
 		cutin "ra_fano02",2;
 		mes "[Priestess Panno]";
 		mes "You're carrying too much";
@@ -6681,7 +6681,7 @@ L_Lottery:
 	mes "for this ticket is...";
 	next;
 	cutin "ra_fano02",2;
-	if (countitem(7570) > 0) {
+	if (countitem(Temple_Lottery_Ticket) > 0) {
 		mes "[Priestess Panno]";
 		mes "^FF0000This^000000. It's been in our";
 		mes "storage for a while, but";
@@ -6693,19 +6693,19 @@ L_Lottery:
 		.@bonus_donate = rand(100);
 		if (.@bonus_donate == 99) {
 			.@bonus_donate2 = rand(100);
-			if (.@bonus_donate2 > 0 && .@bonus_donate2 < 11) getitem 616,1;		//Old Card Album 0.1%
-			else if (.@bonus_donate2 > 10 && .@bonus_donate2 < 31) getitem 617,1;	//Old Violet Box 0.2%
-			else if (.@bonus_donate2 > 30 && .@bonus_donate2 < 61) getitem 603,1;	//Old Blue Box 0.3%
-			else getitem 607,1; //Yggdrasil Berry 0.4+%
+			if (.@bonus_donate2 > 0 && .@bonus_donate2 < 11) getitem Old_Card_Album,1;		//Old Card Album 0.1%
+			else if (.@bonus_donate2 > 10 && .@bonus_donate2 < 31) getitem Old_Violet_Box,1;	//Old Violet Box 0.2%
+			else if (.@bonus_donate2 > 30 && .@bonus_donate2 < 61) getitem Old_Blue_Box,1;	//Old Blue Box 0.3%
+			else getitem Yggdrasilberry,1; //Yggdrasil Berry 0.4+%
 		}
-		else if (.@bonus_donate > 88 && .@bonus_donate < 96) getitem 644,1;	//Gift Box 7%
-		else if (.@bonus_donate > 76 && .@bonus_donate < 89) getitem 607,1;	//Yggdrasil Berry 12%
-		else if (.@bonus_donate > 65 && .@bonus_donate < 77) getitem 505,1;	//Blue Potion 11%
-		else if (.@bonus_donate > 57 && .@bonus_donate < 66) getitem 604,1;	//Dead Branch 8%
-		else if (.@bonus_donate > 45 && .@bonus_donate < 58) getitem 608,1;	//Yggdrasil Seed 12%
-		else if (.@bonus_donate > 5 && .@bonus_donate < 11) getitem 518,1;	//Honey 5%
-		else if (.@bonus_donate > 0 && .@bonus_donate < 6) getitem 526,1;	//Royal Jelly 5%
-		else getitem 547,1; //Condensed White Potion 39%
+		else if (.@bonus_donate > 88 && .@bonus_donate < 96) getitem Gift_Box,1;	//Gift Box 7%
+		else if (.@bonus_donate > 76 && .@bonus_donate < 89) getitem Yggdrasilberry,1;	//Yggdrasil Berry 12%
+		else if (.@bonus_donate > 65 && .@bonus_donate < 77) getitem Blue_Potion,1;	//Blue Potion 11%
+		else if (.@bonus_donate > 57 && .@bonus_donate < 66) getitem Branch_Of_Dead_Tree,1;	//Dead Branch 8%
+		else if (.@bonus_donate > 45 && .@bonus_donate < 58) getitem Seed_Of_Yggdrasil,1;	//Yggdrasil Seed 12%
+		else if (.@bonus_donate > 5 && .@bonus_donate < 11) getitem Honey,1;	//Honey 5%
+		else if (.@bonus_donate > 0 && .@bonus_donate < 6) getitem Royal_Jelly,1;	//Royal Jelly 5%
+		else getitem White_Slim_Potion,1; //Condensed White Potion 39%
 		goto L_End;
 	}
 	mes "[Priestess Panno]";
@@ -6735,7 +6735,7 @@ L_End:
 }
 
 ra_temin,134,128,3	script	Pope's Office Guard#rac::raofficeguard	4_M_MASK1,{
-	if ((ra_tem_q == 15) && (countitem(7561) > 39)) {
+	if ((ra_tem_q == 15) && (countitem(Ice_Heart) > 39)) {
 		mes "[Pope's Office Guard]";
 		mes "Hm? What's that you have";
 		mes "there? Oh, you've gathered";
@@ -6751,7 +6751,7 @@ ra_temin,134,128,3	script	Pope's Office Guard#rac::raofficeguard	4_M_MASK1,{
 		mes "Welcome, brave "+strcharinfo(0)+".";
 		close2;
 		ra_tem_q = 16;
-		delitem 7561,40; //Ice_Heart
+		delitem Ice_Heart,40;
 		end;
 	}
 	else if (ra_tem_q == 16) {

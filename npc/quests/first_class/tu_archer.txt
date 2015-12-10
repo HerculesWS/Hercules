@@ -750,7 +750,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 					mes "[Reidin Corse]";
 					mes "Here's a little something to encourage you. Since Mandagora are Earth property monsters, these Fire Arrows will work really well.";
 					tu_archer01 = 8;
-					getitem 1752,300; //Fire_Arrow
+					getitem Fire_Arrow,300;
 					next;
 				}
 				mes "[Reidin Corse]";
@@ -785,7 +785,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				mes "learned Vulture's Eye!";
 				mes "Why did I spend so much time explaining about it? Well, I guess we're ready to move on to the next lesson...";
 				tu_archer01 = 9;
-				getitem 1752,500; //Fire_Arrow
+				getitem Fire_Arrow,500;
 				close;
 			}
 		} else if(tu_archer01 == 8){
@@ -823,7 +823,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				mes "Ah, so you've learned";
 				mes "a little something about Vulture's Eye! What do you think about it now? Ah, and here's a little reward for you before I start the next lesson~";
 				tu_archer01 = 9;
-				getitem 1752,500; //Fire_Arrow
+				getitem Fire_Arrow,500;
 				close;
 			}
 		} else if(tu_archer01 == 9){
@@ -929,12 +929,12 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 			tu_archer01 = 11;
 			close;
 		} else if(tu_archer01 == 11){
-			if (RENEWAL && countitem(940) < 10) {
+			if (RENEWAL && countitem(Grasshopper's_Leg) < 10) {
 				mes "Hey...";
 				mes "You gotta bring";
 				mes "^3131FF10 Grasshopper's Leg^000000 to pass my midterm! Go back to the southwest area of Prontera and get them!";
 				close;
-			} else if (!RENEWAL && (countitem(962) < 10 || countitem(991) == 0)) {
+			} else if (!RENEWAL && (countitem(Tentacle) < 10 || countitem(Crystal_Blue) == 0)) {
 				mes "Hey...";
 				mes "You gotta bring";
 				mes "^3131FF10 Tentacles^000000 and";
@@ -956,9 +956,9 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				specialeffect2 EF_WIND;
 				tu_archer01 = 12;
 				if (RENEWAL)
-					delitem 940,10; //Grasshopper's_Leg
+					delitem Grasshopper's_Leg,10;
 				getexp 1000,1000;
-				getitem 1707,1; //Great_Bow
+				getitem Great_Bow,1;
 				close;
 			}
 		} else if(tu_archer01 == 12){
@@ -1028,20 +1028,20 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				mes "This stuff is just a little something to encourage you, so don't take it the wrong way! Now hurry up, get what I asked for,";
 				mes "and come back!";
 				tu_archer01 = 14;
-				getitem 601,10; //Wing_Of_Fly
-				getitem 501,10; //Red_Potion
-				getitem 602,1; //Wing_Of_Butterfly
+				getitem Wing_Of_Fly,10;
+				getitem Red_Potion,10;
+				getitem Wing_Of_Butterfly,1;
 				close;
 			}
 		} else if((tu_archer01 == 14) || (tu_archer01 == 15)){
-			if (RENEWAL && (countitem(906) < 10 || countitem(921) < 10)) {
+			if (RENEWAL && (countitem(Pointed_Scale) < 10 || countitem(Mushroom_Spore) < 10)) {
 				mes "Remember, you";
 				mes "need to head into";
 				mes "the forest east of Payon and get me";
 				mes "^3131FF10 Mushroom Spores^000000";
 				mes "and ^3131FF10 Pointed Scales^000000.";
 				close;
-			} else if (!RENEWAL && (countitem(1032) < 5 || countitem(905) < 20)) {
+			} else if (!RENEWAL && (countitem(Blossom_Of_Maneater) < 5 || countitem(Stem) < 20)) {
 				mes "Remember, you";
 				mes "need to head over to";
 				mes "Mt. Mjolnir and get me";
@@ -1092,7 +1092,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				getexp 1000,1000;
 			else
 				getexp 3000,3000;
-			getitem 1770,500; //Iron_Arrow
+			getitem Iron_Arrow,500;
 			next;
 			mes "[Reidin Corse]";
 			mes "Well, it's like you're a full fledged Archer now. Honestly,";
@@ -1554,7 +1554,7 @@ pay_arche,76,135,3	script	#Target	HIDDEN_NPC,{ end; }
 pay_arche,130,113,3	script	Alchemist Guildmember#tu	2_M_ALCHE,{
 	mes "[Alchemist Guildmember]";
 	if(tu_archer02 > 0){
-		if((countitem(1032) > 0) || (countitem(905) > 0 )){	// Blossom_Of_Maneater & Stem
+		if((countitem(Blossom_Of_Maneater) > 0) || (countitem(Stem) > 0 )){	// Blossom_Of_Maneater & Stem
 			mes "Great...!";
 			mes "I've been waiting";
 			mes "for the Icarus Guild";
@@ -1578,18 +1578,18 @@ pay_arche,130,113,3	script	Alchemist Guildmember#tu	2_M_ALCHE,{
 				mes "Flora field! I really";
 				mes "appreciate your help~";
 
-				.@alche_f = countitem(1032); // Blossom_Of_Maneater
-				.@alche_s = countitem(905); // Stem
+				.@alche_f = countitem(Blossom_Of_Maneater); // Blossom_Of_Maneater
+				.@alche_s = countitem(Stem); // Stem
 				.@f_zeny = .@alche_f * 130;
 				.@s_zeny = .@alche_s * 30;
 				.@total_zeny = .@f_zeny + .@s_zeny;
-				if(countitem(1032) == 0){
-					delitem 905, .@alche_s; //Stem
-				} else if(countitem(905) == 0){
-					delitem 1032, .@alche_f; //Blossom_Of_Maneater
+				if(countitem(Blossom_Of_Maneater) == 0){
+					delitem Stem, .@alche_s;
+				} else if(countitem(Stem) == 0){
+					delitem Blossom_Of_Maneater, .@alche_f;
 				} else {
-					delitem 1032, .@alche_f; //Blossom_Of_Maneater
-					delitem 905, .@alche_s; //Stem
+					delitem Blossom_Of_Maneater, .@alche_f;
+					delitem Stem, .@alche_s;
 				}
 				Zeny += .@total_zeny;
 				close;

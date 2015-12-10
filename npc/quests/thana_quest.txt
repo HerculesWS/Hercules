@@ -813,7 +813,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			thana_tower = 10;
 			completequest 7053;
 			getexp 120000,10000;
-			getitem 617,1; //Old_Violet_Box
+			getitem Old_Violet_Box,1;
 			close;
 		}
 		else {
@@ -889,7 +889,7 @@ OnTimer30000:
 }
 
 tha_t03,67,70,0	script	Rune Device#tt1	HIDDEN_NPC,4,4,{
-	if ((countitem(7421) == 0) && (countitem(7426) == 0)) {
+	if ((countitem(Key_Red) == 0) && (countitem(Magic_Gem_Red) == 0)) {
 		mes "^3355FFA mysterious field of";
 		mes "energy seems to surround";
 		mes "the mechanical device and";
@@ -941,7 +941,7 @@ tha_t03,67,70,0	script	Rune Device#tt1	HIDDEN_NPC,4,4,{
 	close;
 
 OnTouch:
-	if ((countitem(7421) == 0) && (countitem(7426) == 0))
+	if ((countitem(Key_Red) == 0) && (countitem(Magic_Gem_Red) == 0))
 		specialeffect EF_LEVEL99_4;
 	end;
 
@@ -952,7 +952,7 @@ L_Key:
 	mes "and you see that a red object inside was the origin of the magical power.";
 	next;
 	mes "- You acquired the powerful Red Key. -";
-	getitem 7421,1; //Key_Red
+	getitem Key_Red,1;
 	if (thana_tower != 4) close;
 	mes "^4d4dffOnce you hold the key, a shocking feeling passes through your head.";
 	mes "You see an illusion of light...^000000";
@@ -1007,7 +1007,7 @@ L_Key:
 }
 
 tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
-	if ((countitem(7422) == 0) && (countitem(7427) == 0)) {
+	if ((countitem(Key_Yellow) == 0) && (countitem(Magic_Gem_Yellow) == 0)) {
 		mes "^3355FFYou find a screen";
 		mes "with three tiny panels and";
 		mes "a numeric keypad underneath.";
@@ -1082,7 +1082,7 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 				mes "surface. An object forms...^000000";
 				next;
 				mes "^4d4dffThe powerful Yellow Key appears.^000000";
-				getitem 7422,1; //Key_Yellow
+				getitem Key_Yellow,1;
 				if (thana_tower != 5) close;
 				mes "^4d4dffA fierce feeling passes through your head.";
 				mes "You seen an illusion of light, like when you acquired the first key.^000000";
@@ -1152,13 +1152,13 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 	close;
 
 OnTouch:
-	if ((countitem(7422) == 0) && (countitem(7427) == 0))
+	if ((countitem(Key_Yellow) == 0) && (countitem(Magic_Gem_Yellow) == 0))
 		specialeffect EF_LEVEL99_4;
 	end;
 }
 
 tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
-	if ((countitem(7423) == 0) && (countitem(7428) == 0)) {
+	if ((countitem(Key_Blue) == 0) && (countitem(Magic_Gem_Blue) == 0)) {
 		mes "I can feel some magical power from this beautiful stone statue.";
 		mes "There's a little crack between the wings.";
 		next;
@@ -1170,7 +1170,7 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 			mes "the statue alone.^000000";
 			close;
 		}
-		if ((countitem(7421) > 0) && (countitem(7422) > 0)) {
+		if ((countitem(Key_Red) > 0) && (countitem(Key_Yellow) > 0)) {
 			mes "["+strcharinfo(0)+"]";
 			mes "I'll try the left wing first.";
 			mes "What key should I put in?";
@@ -1196,7 +1196,7 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 			mes "There's a key-shaped object inside...";
 			next;
 			mes "^4d4dffThe powerful Blue Key appears.^000000";
-			getitem 7423,1; //Key_Blue
+			getitem Key_Blue,1;
 			if (thana_tower != 6) close;
 			mes "^4d4dffOnce you hold the key, a shocking feeling passes through your head.";
 			mes "You see an illusion of light...^000000";
@@ -1237,13 +1237,13 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 	close;
 
 OnTouch:
-	if ((countitem(7423) == 0) && (countitem(7428) == 0))
+	if ((countitem(Key_Blue) == 0) && (countitem(Magic_Gem_Blue) == 0))
 		specialeffect EF_LEVEL99_4;
 	end;
 }
 
 tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
-	if ((countitem(7424) == 0) && (countitem(7429) == 0)) {
+	if ((countitem(Key_Green) == 0) && (countitem(Magic_Gem_Green) == 0)) {
 		mes "I can feel some magical power from this brilliant statue.";
 		mes "This must be one of the seals.";
 		next;
@@ -1257,7 +1257,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 			mes "peculiar or out of place...^000000";
 			close;
 		}
-		if ((countitem(7421) > 0) && (countitem(7422) > 0) && (countitem(7423) > 0)) {
+		if ((countitem(Key_Red) > 0) && (countitem(Key_Yellow) > 0) && (countitem(Key_Blue) > 0)) {
 			mes "When you insert the key into the keyhole of the ornament";
 			mes "and match them by corresponding color, the Stone Statue will snap open.";
 			mes "You can see small wheels are moving inside.";
@@ -1441,7 +1441,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 				specialeffect EF_POTION6;
 				next;
 				mes "^4d4dffAll of a sudden, the Green Key appears and you can feel great power from it.^000000";
-				getitem 7424,1; //Key_Green
+				getitem Key_Green,1;
 				if (thana_tower != 7) close;
 				mes "^4d4dffWhen you pick up the key,";
 				mes "your body trembles";
@@ -1509,17 +1509,17 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 	close;
 
 OnTouch:
-	if ((countitem(7424) == 0) && (countitem(7429) == 0))
+	if ((countitem(Key_Green) == 0) && (countitem(Magic_Gem_Green) == 0))
 		specialeffect EF_LEVEL99_4;
 	end;
 }
 
 tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
-	if ((countitem(7425) == 0) && (countitem(7430) == 0)) {
+	if ((countitem(Key_Black) == 0) && (countitem(Magic_Gem_Black) == 0)) {
 		mes "An old, worn sword hangs above the splendid table.";
 		mes "It emits a gloomy aura.";
 		next;
-		if ((countitem(7421) > 0) && (countitem(7422) > 0) && (countitem(7423) > 0) && (countitem(7424) > 0)) {
+		if ((countitem(Key_Red) > 0) && (countitem(Key_Yellow) > 0) && (countitem(Key_Blue) > 0) && (countitem(Key_Green) > 0)) {
 			mes "As you approach, the keys in your pocket";
 			mes "suddenly respond with a mysterious power.";
 			specialeffect2 EF_ABSORBSPIRITS;
@@ -1563,7 +1563,7 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 					specialeffect EF_CHANGEDARK;
 					next;
 					mes "^4d4dff All of a sudden, a Black Key appears from the smoke and you feel a great cursed power from it.^000000";
-					getitem 7425,1; //Key_Black
+					getitem Key_Black,1;
 					if (thana_tower != 8) close;
 					next;
 					mes "A drawer had snapped open under the table while you picked up the key and observed it.";
@@ -1576,7 +1576,7 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 					mes "You received Varmunt's Journal.^000000";
 					thana_tower = 9;
 					changequest 7052,7053;
-					getitem 11011,1; //Barmund_Note
+					getitem Barmund_Note,1;
 					close;
 				case 3:
 					mes "When you lift the sword, you feel a shock from numerous conflicting spells.";
@@ -1599,7 +1599,7 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 	close;
 
 OnTouch:
-	if ((countitem(7425) == 0) && (countitem(7430) == 0))
+	if ((countitem(Key_Black) == 0) && (countitem(Magic_Gem_Black) == 0))
 		specialeffect EF_LEVEL99_4;
 	end;
 }
@@ -1656,7 +1656,7 @@ OnTimer2400000:
 }
 
 tha_t08,90,153,0	script	Shining Crystal#tt_r1	CLEAR_NPC,{
-	if (countitem(7421) > 0) {
+	if (countitem(Key_Red) > 0) {
 		mes "The Crystal ball is emitting mysterious power.";
 		next;
 		mes "Beside the crystal ball, you find faded patterns marked on the floor.";
@@ -1669,8 +1669,8 @@ tha_t08,90,153,0	script	Shining Crystal#tt_r1	CLEAR_NPC,{
 		mes "You feel isolated and depressed deep inside your heart...";
 		next;
 		mes "^4d4dffYou have found a Red Charm Stone that is concentrated with cruel fate and a deep darkness.^000000";
-		delitem 7421,1; //Key_Red
-		getitem 7426,1; //Magic_Gem_Red
+		delitem Key_Red,1;
+		getitem Magic_Gem_Red,1;
 		close;
 	}
 	mes "The Crystal ball is emitting mysterious power.";
@@ -1690,7 +1690,7 @@ tha_t08,49,59,0	duplicate(Shining Crystal#tt_r1)	Shining Crystal#tt_r3	CLEAR_NPC
 tha_t08,49,144,0	duplicate(Shining Crystal#tt_r1)	Shining Crystal#tt_r4	CLEAR_NPC
 
 tha_t08,49,153,0	script	Shining Crystal#tt_y1	CLEAR_NPC,{
-	if (countitem(7422) > 0) {
+	if (countitem(Key_Yellow) > 0) {
 		mes "The Crystal ball is emitting mysterious power.";
 		next;
 		mes "Beside the crystal ball, you find faded patterns marked on the floor.";
@@ -1703,8 +1703,8 @@ tha_t08,49,153,0	script	Shining Crystal#tt_y1	CLEAR_NPC,{
 		mes "Your heart begins to throb as though you are suffering from a broken heart.";
 		next;
 		mes "^4d4dffYou have found a Yellow Charm Stone that is concentrated with grief and mysterious power.^000000";
-		delitem 7422,1; //Key_Yellow
-		getitem 7427,1; //Magic_Gem_Yellow
+		delitem Key_Yellow,1;
+		getitem Magic_Gem_Yellow,1;
 		close;
 	}
 	mes "The Crystal ball is emitting mysterious power.";
@@ -1724,7 +1724,7 @@ tha_t08,90,59,0	duplicate(Shining Crystal#tt_y1)	Shining Crystal#tt_y3	CLEAR_NPC
 tha_t08,49,56,0	duplicate(Shining Crystal#tt_y1)	Shining Crystal#tt_y4	CLEAR_NPC
 
 tha_t08,49,65,0	script	Shining Crystal#tt_b1	CLEAR_NPC,{
-	if (countitem(7423) > 0) {
+	if (countitem(Key_Blue) > 0) {
 		mes "The Crystal ball is emitting mysterious power.";
 		next;
 		mes "Beside the crystal ball, you find faded patterns marked on the floor.";
@@ -1737,8 +1737,8 @@ tha_t08,49,65,0	script	Shining Crystal#tt_b1	CLEAR_NPC,{
 		mes "Someone's sobbing comes into your ears as you smell blood on the wind and suddenly you become angry.";
 		next;
 		mes "^4d4dffYou have found a Blue Charm Stone that is concentrated with grudge and mysterious power.^000000";
-		delitem 7423,1; //Key_Blue
-		getitem 7428,1; //Magic_Gem_Blue
+		delitem Key_Blue,1;
+		getitem Magic_Gem_Blue,1;
 		close;
 	}
 	mes "The Crystal ball is emitting mysterious power.";
@@ -1758,7 +1758,7 @@ tha_t08,90,147,0	duplicate(Shining Crystal#tt_b1)	Shining Crystal#tt_b3	CLEAR_NP
 tha_t08,90,56,0	duplicate(Shining Crystal#tt_b1)	Shining Crystal#tt_b4	CLEAR_NPC
 
 tha_t08,90,65,0	script	Shining Crystal#tt_g1	CLEAR_NPC,{
-	if (countitem(7424) > 0) {
+	if (countitem(Key_Green) > 0) {
 		mes "The Crystal ball is emitting mysterious power.";
 		next;
 		mes "Beside the crystal ball, you find faded patterns marked on the floor.";
@@ -1771,8 +1771,8 @@ tha_t08,90,65,0	script	Shining Crystal#tt_g1	CLEAR_NPC,{
 		mes "Your head starts to ache and you feel worried and anxious about something.";
 		next;
 		mes "^4d4dffYou have found a Green Charm Stone that is concentrated with deep suffering.^000000";
-		delitem 7424,1; //Key_Green
-		getitem 7429,1; //Magic_Gem_Green
+		delitem Key_Green,1;
+		getitem Magic_Gem_Green,1;
 		close;
 	}
 	mes "The Crystal ball is emitting mysterious power.";
@@ -1793,7 +1793,7 @@ tha_t08,90,144,0	duplicate(Shining Crystal#tt_g1)	Shining Crystal#tt_g4	CLEAR_NP
 
 tha_t12,161,57,0	script	Gold Religious Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 0) {
-		if (countitem(7427) > 0) {
+		if (countitem(Magic_Gem_Yellow) > 0) {
 			mes "It's a statue giving off a golden light.";
 			mes "The sword appears to be missing a gem.";
 			mes "As I draw closer to the statue, the Yellow Charm Stone emits a bright light.";
@@ -1804,7 +1804,7 @@ tha_t12,161,57,0	script	Gold Religious Statue#tt	HIDDEN_NPC,{
 			if ($@thana_summon == 0) {
 				mes "After inserting the Yellow Charm Stone into the sword, the statue begins to react.";
 				specialeffect EF_BEGINSPELL5;
-				delitem 7427,1; //Magic_Gem_Yellow
+				delitem Magic_Gem_Yellow,1;
 				$@thana_summon = 1;
 				donpcevent "#tteffect01::OnEnable";
 				mapannounce "tha_t12","The golden magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
@@ -1823,7 +1823,7 @@ tha_t12,161,57,0	script	Gold Religious Statue#tt	HIDDEN_NPC,{
 
 tha_t12,154,17,0	script	Green Wiseman Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 1) {
-		if (countitem(7429) > 0) {
+		if (countitem(Magic_Gem_Green) > 0) {
 			mes "A statue gives off green light.";
 			mes "The wiseman's wand seems to be missing a gem.";
 			mes "As I draw closer to the statue, the Green Charm Stone emits a bright light.";
@@ -1834,7 +1834,7 @@ tha_t12,154,17,0	script	Green Wiseman Statue#tt	HIDDEN_NPC,{
 			if ($@thana_summon == 1) {
 				mes "After inserting the Green Charm Stone into the wand, the statue begins to react.";
 				specialeffect EF_BEGINSPELL4;
-				delitem 7429,1; //Magic_Gem_Green
+				delitem Magic_Gem_Green,1;
 				$@thana_summon = 2;
 				donpcevent "#tteffect02::OnEnable";
 				mapannounce "tha_t12","The green magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
@@ -1853,7 +1853,7 @@ tha_t12,154,17,0	script	Green Wiseman Statue#tt	HIDDEN_NPC,{
 
 tha_t12,103,17,0	script	Blue Angel Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 2) {
-		if (countitem(7428) > 0) {
+		if (countitem(Magic_Gem_Blue) > 0) {
 			mes "An angel statue is covered with a blue light.";
 			mes "A gem seems to be missing from the statue's belt.";
 			mes "As I draw closer to the statue, the Blue Charm Stone emits a bright light.";
@@ -1864,7 +1864,7 @@ tha_t12,103,17,0	script	Blue Angel Statue#tt	HIDDEN_NPC,{
 			if ($@thana_summon == 2) {
 				mes "After inserting the Blue Charm Stone into the belt, the statue begins to react.";
 				specialeffect EF_BEGINSPELL2;
-				delitem 7428,1; //Magic_Gem_Blue
+				delitem Magic_Gem_Blue,1;
 				$@thana_summon = 3;
 				donpcevent "#tteffect03::OnEnable";
 				mapannounce "tha_t12","The blue magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
@@ -1883,7 +1883,7 @@ tha_t12,103,17,0	script	Blue Angel Statue#tt	HIDDEN_NPC,{
 
 tha_t12,96,57,0	script	Bloody Knight Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 3) {
-		if (countitem(7426) > 0) {
+		if (countitem(Magic_Gem_Red) > 0) {
 			mes "A statue is shining like blood.";
 			mes "A gem seems to be missing from the heart area of its armor.";
 			mes "As I draw closer to the statue, the Red Charm Stone emits a bright light.";
@@ -1894,7 +1894,7 @@ tha_t12,96,57,0	script	Bloody Knight Statue#tt	HIDDEN_NPC,{
 			if ($@thana_summon == 3) {
 				mes "After inserting the Red Charm Stone into the armor, the statue begins to react.";
 				specialeffect EF_BEGINSPELL3;
-				delitem 7426,1; //Magic_Gem_Red
+				delitem Magic_Gem_Red,1;
 				$@thana_summon = 4;
 				donpcevent "#tteffect04::OnEnable";
 				mapannounce "tha_t12","The red magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
@@ -1913,7 +1913,7 @@ tha_t12,96,57,0	script	Bloody Knight Statue#tt	HIDDEN_NPC,{
 
 tha_t12,129,86,0	script	Dark Devil Statue#tt	HIDDEN_NPC,{
 	if ($@thana_summon == 4) {
-		if (countitem(7430) > 0) {
+		if (countitem(Magic_Gem_Black) > 0) {
 			mes "A devil statue emits dark light.";
 			mes "The right eye seems to be missing a gem.";
 			mes "As I draw closer to the statue, the Black Charm Stone emits a bright light.";
@@ -1924,7 +1924,7 @@ tha_t12,129,86,0	script	Dark Devil Statue#tt	HIDDEN_NPC,{
 			if ($@thana_summon == 4) {
 				mes "After inserting the Red Charm Stone into the eye socket, the statue begins to react.";
 				specialeffect EF_BEGINSPELL7;
-				delitem 7430,1; //Magic_Gem_Black
+				delitem Magic_Gem_Black,1;
 				$@thana_summon = 5;
 				donpcevent "#gateto_thanatos::OnEnable";
 				donpcevent "#tteffect01::OnStop";
@@ -2291,7 +2291,7 @@ tha_t06,119,120,0	script	to 7th Floor	WARPNPC,1,1,{
 	end;
 OnTouch:
 	if (eaclass()&(EAJL_2|EAJL_UPPER) || eaclass()&EAJL_THIRD || ((Class == Job_SuperNovice || Class == Job_Taekwon || Class == Job_Star_Gladiator || Class == Job_Soul_Linker || BaseClass == Job_Ninja || Class == Job_Gunslinger) && BaseLevel > 94)) {
-		if (countitem(7425) > 0) {
+		if (countitem(Key_Black) > 0) {
 			mes "The shadow of a Black Key is gleaming in the center of the portal.";
 			mes "To pass this way, looks like I need something.";
 			next;
@@ -2300,8 +2300,8 @@ OnTouch:
 			mes "The key seems to separate into many particles and suddenly collapses into a ball.";
 			mes "The barricade is removed through the power from newly formed black magic gem.";
 			close2;
-			delitem 7425,1; //Key_Black
-			getitem 7430,1; //Magic_Gem_Black
+			delitem Key_Black,1;
+			getitem Magic_Gem_Black,1;
 			warp "thana_step",69,369;
 			end;
 		}

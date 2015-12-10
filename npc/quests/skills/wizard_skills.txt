@@ -216,7 +216,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			close;
 		}
 		else if (WIZ_SK == 3) {
-			if (countitem(991) < 10 || countitem(993) < 10 || countitem(990) < 10 || countitem(992) < 10) {
+			if (countitem(Crystal_Blue) < 10 || countitem(Yellow_Live) < 10 || countitem(Boody_Red) < 10 || countitem(Wind_Of_Verdure) < 10) {
 				mes "[Meow]";
 				mes "^333333*Yaaaaaawn~*^000000 Hm?";
 				mes "H-how dare you come";
@@ -288,10 +288,10 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			mes "That took way too much effort,";
 			mes "but at least we're done here.";
 			specialeffect2 EF_ABSORBSPIRITS;
-			delitem 991,10; //Crystal_Blue
-			delitem 993,10; //Yellow_Live
-			delitem 990,10; //Boody_Red
-			delitem 992,10; //Wind_Of_Verdure
+			delitem Crystal_Blue,10;
+			delitem Yellow_Live,10;
+			delitem Boody_Red,10;
+			delitem Wind_Of_Verdure,10;
 			WIZ_SK = 100;
 			skill "WZ_SIGHTBLASTER",1,0;
 			next;

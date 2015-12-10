@@ -66,7 +66,7 @@ prt_church,173,23,4	script	Cleric	1_F_PRIEST,{
 			mes "this skill for the work of good . .";
 			close;
 		}
-		if ((countitem(727) > 0) && (countitem(991) > 0) && (countitem(2608) > 0) && (JobLevel > 29 || (BaseJob == Job_Priest || BaseJob == Job_Monk)) && (BaseClass == Job_Acolyte)) {
+		if ((countitem(White_Jewel) > 0) && (countitem(Crystal_Blue) > 0) && (countitem(Rosary) > 0) && (JobLevel > 29 || (BaseJob == Job_Priest || BaseJob == Job_Monk)) && (BaseClass == Job_Acolyte)) {
 			mes "[Acolyte Klift]";
 			mes "Your faith has proven worthy";
 			mes "for you to gain the ' Holy Light ' skill.";
@@ -74,9 +74,9 @@ prt_church,173,23,4	script	Cleric	1_F_PRIEST,{
 			mes "to use this skill.";
 			mes "Use it wisely. . .";
 			next;
-			delitem 727,1; //White_Jewel
-			delitem 991,1; //Crystal_Blue
-			delitem 2608,1; //Rosary
+			delitem White_Jewel,1;
+			delitem Crystal_Blue,1;
+			delitem Rosary,1;
 			skill "AL_HOLYLIGHT",1,0;
 			mes "[Acolyte Klift]";
 			mes "You now know ' Holy Light '";

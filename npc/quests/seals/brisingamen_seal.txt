@@ -841,7 +841,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 }
 
 yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
-	if (checkweight(908,200) == 0) {
+	if (checkweight(Spawn,200) == 0) {
 		mes "^3355FFWait a second! Right now, you're carrying too many items with you. Please come back after putting some of your things into Kafra Storage.^000000";
 		close;
 	}
@@ -889,7 +889,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 			mes "Please...";
 			mes "Take this.";
 			god_brising = 50;
-			getitem 616,1; // Old_Card_Album
+			getitem Old_Card_Album,1; // Old_Card_Album
 			getexp RENEWAL_EXP?60000:600000,0;
 			next;
 			mes "[Enrico Kaili]";
