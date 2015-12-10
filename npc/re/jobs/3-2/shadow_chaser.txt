@@ -2276,8 +2276,8 @@ s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 		next;
 		.@i = select("I need a make-up brush.:I need a paint brush.:Nothing.");
 		mes "[Max]";
-		if (.@i == 1) setarray .@i[1],6121,1,10,100000;
-		else if (.@i == 2) setarray .@i[1],6122,2,30,200000;
+		if (.@i == 1) setarray .@i[1],Makeover_Brush,1,10,100000;
+		else if (.@i == 2) setarray .@i[1],Paint_Brush,2,30,200000;
 		else {
 			mes "If you need more";
 			mes "just visit me!";

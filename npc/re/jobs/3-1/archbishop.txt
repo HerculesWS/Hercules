@@ -1206,7 +1206,7 @@ OnTouch:
 		close2;
 		nude;
 		if (countitem(Will_Of_Exhausted_Angel))
-			delitem Will_Of_Exhausted_Angel,(2798);
+			delitem Will_Of_Exhausted_Angel,countitem(Will_Of_Exhausted_Angel);
 		delitem Broken_Horn_Pipe,countitem(Broken_Horn_Pipe);
 		mapwarp "job3_arch02","job3_arch01",29,29;
 		end;

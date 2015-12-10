@@ -15,9 +15,9 @@
 -	script	CPM1	4_M_ALCHE_C,{
 	.@npc$ = "[Cute Pet Manager]";
 
-	setarray .@tame_id[0],619,620,622,623,624,627,628,629,630;
+	setarray .@tame_id[0],Unripe_Apple,Orange_Juice,Rainbow_Carrot,Earthworm_The_Dude,Rotten_Fish,Sweet_Milk,Well_Dried_Bone,Singing_Flower,Dew_Laden_Moss;
 	setarray .@tame_amount[0],3,3,3,3,3,3,3,3,3;
-	setarray .@hunt_id[0],909,909,705,916,935,919,919,940,921;
+	setarray .@hunt_id[0],Jellopy,Jellopy,Clover,Feather_Of_Birds,Shell,Animal's_Skin,Animal's_Skin,Grasshopper's_Leg,Mushroom_Spore;
 	setarray .@hunt_amount[0],500,600,500,500,500,500,600,500,500;
 	setarray .@mob_id[0],1002,1113,1063,1049,1011,1167,1107,1052,1014;
 	.@tame_gets = 3;
@@ -43,9 +43,9 @@
 -	script	CPM2	4_M_ALCHE_C,{
 	.@npc$ = "[Cute Pet Manager]";
 
-	setarray .@tame_id[0],621,625,632,631,633,634,635,636,659,637,639,640;
+	setarray .@tame_id[0],Bitter_Herb,Lusty_Iron,Fatty_Chubby_Earthworm,Deadly_Noxious_Herb,Baked_Yam,Tropical_Banana,Horror_Of_Tribe,No_Recipient,Heart_Of_Her,Old_Broom,Armlet_Of_Obedience,Shining_Stone;
 	setarray .@tame_amount[0],2,2,2,2,2,2,2,2,2,2,2,2;
-	setarray .@hunt_id[0],938,935,925,7033,945,942,931,901,1094,1021,936,1035;
+	setarray .@hunt_id[0],Sticky_Mucus,Shell,Bill_Of_Birds,Poison_Spore,Raccoon_Leaf,Yoyo_Tail,Orcish_Voucher,Danggie,Short_Daenggie,Dokkaebi_Horn,Scales_Shell,Dragon_Canine;
 	setarray .@hunt_amount[0],500,600,500,300,500,500,500,500,500,500,500,500;
 	setarray .@hunt_item_count[0],1,1,1,1,1,1,1,1,1;
 	setarray .@mob_id[0],1031,1042,1019,1077,1056,1057,1023,1026,1188,1110,1029;
@@ -72,11 +72,11 @@
 -	script	CPM3	4_M_ALCHE_C,{
 	.@npc$ = "[Cute Pet Manager]";
 
-	setarray .@tame_id[0],638,626,641,661,660,642;
+	setarray .@tame_id[0],Silver_Knife_Of_Chaste,Monster_Juice,Contracts_In_Shadow,Sway_Apron,Prohibition_Red_Candle,Book_Of_Devil;
 	setarray .@tame_amount[0],1,1,1,1,1,1;
-	setarray .@hunt_id[0],1020,943,1038,7047,1970,923;
+	setarray .@hunt_id[0],Long_Hair,Solid_Shell,Petite_DiablOfs_Horn,Alice's_Apron,Queen's_Whip,Evil_Horn;
 	setarray .@hunt_amount[0],600,600,600,500,1,100;
-	setarray .@hunt_id2[0],0,0,0,0,7017,0;
+	setarray .@hunt_id2[0],0,0,0,0,Executioner's_Mitten,0;
 	setarray .@hunt_amount2[0],0,0,0,0,20,0;
 	setarray .@mob_id[0],1170,1035,1109,1275,1200,1101;
 	.@tame_gets = 1;

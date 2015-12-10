@@ -40,7 +40,7 @@ prt_fild08,159,371,3	script	Poring War Recruiter#wop	4_PORING,{
 			mes "[Poring]";
 			mes "Oh, and there's an entrance fee of 500 zeny, ring.";
 			mes "Have a good time, ring.";
-			delitem 7773,countitem(War_Badge);
+			delitem War_Badge,countitem(War_Badge);
 			Zeny -= 500;
 			close2;
 			warp "poring_w01",112,138;
@@ -81,22 +81,22 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 		next;
 		switch(select("Marvelous Medal - 4 P.Co:Union of Tribe - 20 P.Co:Poring Box - 30 P.Co:Next")) {
 		case 1:
-			callsub S_PoringVending,7515,4;
+			callsub S_PoringVending,Marvelous_Medal,4;
 		case 2:
-			callsub S_PoringVending,658,20;
+			callsub S_PoringVending,Union_Of_Tribe,20;
 		case 3:
-			callsub S_PoringVending,12109,30;
+			callsub S_PoringVending,Poring_Box,30;
 		case 4:
 			mes "This is a special item.";
 			mes "Item name - Poring Coin(P.Co)";
 			next;
 			switch(select("Wild Rose - 15 P.Co:Doppelganger - 20 P.Co:Egnigem Cenia - 20 P.Co:Collection Item")) {
 			case 1:
-				callsub S_PoringVending,12300,15;
+				callsub S_PoringVending,Wild_Rose_Scroll,15;
 			case 2:
-				callsub S_PoringVending,12301,20;
+				callsub S_PoringVending,Doppelganger_Scroll,20;
 			case 3:
-				callsub S_PoringVending,12302,20;
+				callsub S_PoringVending,Ygnizem_Scroll,20;
 			case 4:
 				mes "Figures of 1st Job Class Characters including Novice are finally on sale!";
 				mes "Figures except for Novice are all ^4d4dffCharacter bound items^000000.";
@@ -105,19 +105,19 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 				next;
 				switch(select("Novice Figure - 50 P.Co:Swordman Figure - 100 P.Co:Thief Figure - 100 P.Co:Merchant Figure - 100 P.Co:Acolyte Figure - 100 P.Co:Mage Figure - 100 P.Co:Archer Figure - 100 P.Co:Random Draw - 50 P.Co:Cancel")) {
 				case 1:
-					callsub S_PoringVending,2765,50;
+					callsub S_PoringVending,Novice_Figure,50;
 				case 2:
-					callsub S_PoringVending,2766,100;
+					callsub S_PoringVending,Swordman_Figure,100;
 				case 3:
-					callsub S_PoringVending,2770,100;
+					callsub S_PoringVending,Thief_Figure,100;
 				case 4:
-					callsub S_PoringVending,2771,100;
+					callsub S_PoringVending,Merchant_Figure,100;
 				case 5:
-					callsub S_PoringVending,2767,100;
+					callsub S_PoringVending,Acolyte_Figure,100;
 				case 6:
-					callsub S_PoringVending,2768,100;
+					callsub S_PoringVending,Mage_Figure,100;
 				case 7:
-					callsub S_PoringVending,2769,100;
+					callsub S_PoringVending,Archer_Figure,100;
 				case 8:
 					mes "You have chosen Random Draw.";
 					mes "1 of 7 diffeent kinds of figures will be selected.";
@@ -308,7 +308,7 @@ OnPCLogoutEvent:
 			WoP_SaveMap_X = 0;
 			WoP_SaveMap_Y = 0;
 		}
-		delitem 7773,countitem(War_Badge);
+		delitem War_Badge,countitem(War_Badge);
 		wop_team = 0;
 	}
 	end;
@@ -333,7 +333,7 @@ OnPCDieEvent:
 OnPCKillEvent:
 	getmapxy .@map$,.@x,.@y,0;
 	if (.@map$ == "poring_w02" && wop_team) {
-		getnameditem 7773,rid2name(killedrid);
+		getnameditem War_Badge,rid2name(killedrid);
 	}
 	end;
 
@@ -658,7 +658,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 				case 2:
 					mes "[Mr. Doppel]";
 					mes "Very well. Nice you have done everything on time.";
-					delitem 7773,countitem(War_Badge);
+					delitem War_Badge,countitem(War_Badge);
 					close2;
 					wop_team = 0;
 					warp "poring_w02",44,82;
@@ -669,7 +669,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 				mes "[Mr. Doppel]";
 				mes "Right. I'm gonna send you to the battle staging area.";
 				mes "Wait for all the other party members there.";
-				delitem 7773,countitem(War_Badge);
+				delitem War_Badge,countitem(War_Badge);
 				close2;
 				wop_team = 0;
 				warp "poring_w02",44,82;
@@ -789,7 +789,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 				case 2:
 					mes "[Mr. Doppel]";
 					mes "Very well. Nice you have done everything on time.";
-					delitem 7773,countitem(War_Badge);
+					delitem War_Badge,countitem(War_Badge);
 					close2;
 					wop_team = 0;
 					warp "poring_w02",153,82;
@@ -799,7 +799,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 				mes "[Mr. Doppel]";
 				mes "Right. I'm gonna send you to the battle staging area.";
 				mes "Wait for all the other party members there.";
-				delitem 7773,countitem(War_Badge);
+				delitem War_Badge,countitem(War_Badge);
 				close2;
 				wop_team = 0;
 				warp "poring_w02",153,82;
