@@ -53,7 +53,7 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 		case 1:
 			switch (skill_thief_1) {
 			case 0:
-				if ((countitem(7041) > 4) && ((JobLevel > 24) || (BaseJob == Job_Assassin || BaseJob == Job_Rogue))) {
+				if ((countitem(Fine_Grit) > 4) && ((JobLevel > 24) || (BaseJob == Job_Assassin || BaseJob == Job_Rogue))) {
 					mes "[Alcouskou]";
 					mes "Luckily, you have brought some";
 					mes "sand with you. It is very important";
@@ -82,7 +82,7 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 					mes "return. Find RuRumuni in";
 					mes "west Payon. That is where I";
 					mes "heard he is these days.";
-					delitem 7041,5; //Fine_Grit
+					delitem Fine_Grit,5;
 					skill_thief_1 = 1;
 					close;
 				}
@@ -170,12 +170,12 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 				mes "that I can teach you.";
 				mes "I hope that this skill will";
 				mes "aid you in the future. -";
-				delitem 7042,1; //Leather_Bag_Of_Infinity
+				delitem Leather_Bag_Of_Infinity,1;
 				skill "TF_SPRINKLESAND",1,0;
 				close;
 			}
 	case 2:
-		if ((countitem(940) > 19) && ((JobLevel > 34) || (BaseJob == Job_Assassin || BaseJob == Job_Rogue))) {
+		if ((countitem(Grasshopper's_Leg) > 19) && ((JobLevel > 34) || (BaseJob == Job_Assassin || BaseJob == Job_Rogue))) {
 			mes "[Alcouskou]";
 			mes "Okay! Let's practice!";
 			next;
@@ -192,7 +192,7 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 			mes "Great! -At this level,";
 			mes "I am sure you can increase";
 			mes "your skill on your own.";
-			delitem 940,20; //Grasshopper's_Leg
+			delitem Grasshopper's_Leg,20;
 			skill "TF_BACKSLIDING",1,0;
 			close;
 		}
@@ -252,7 +252,7 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 		mes "If not, I cannot teach you.";
 		close;
 	case 3:
-		if ((countitem(912) > 0) && (countitem(948) > 0) && (countitem(908) > 4) && ((JobLevel > 19) || (BaseJob == Job_Assassin || BaseJob == Job_Rogue))) {
+		if ((countitem(Zargon) > 0) && (countitem(Bear's_Foot) > 0) && (countitem(Spawn) > 4) && ((JobLevel > 19) || (BaseJob == Job_Assassin || BaseJob == Job_Rogue))) {
 			mes "[Alcouskou]";
 			mes "Wow, you have already prepared?";
 			mes "Great, I see promise in you. -";
@@ -282,9 +282,9 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 			mes "practice on your own time.";
 			mes "I hope it aids you in the future.";
 			mes ". . . . . Hope to see you soon";
-			delitem 912,1; //Zargon
-			delitem 948,1; //Bear's_Foot
-			delitem 908,5; //Spawn
+			delitem Zargon,1;
+			delitem Bear's_Foot,1;
+			delitem Spawn,5;
 			skill "TF_PICKSTONE",1,0;
 			close;
 		}
@@ -342,7 +342,7 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 		mes "Retrieve these items by any means you see fit.";
 		close;
 	case 4:
-		if ((countitem(910) > 1) && (countitem(911) > 1) && ((JobLevel > 14) || (BaseJob == Job_Assassin || BaseJob == Job_Rogue))) {
+		if ((countitem(Garlet) > 1) && (countitem(Scell) > 1) && ((JobLevel > 14) || (BaseJob == Job_Assassin || BaseJob == Job_Rogue))) {
 			mes "[Alcouskou]";
 			mes "Wow! Have you already gathered the items!";
 			mes "Very well, do you wish to begin?";
@@ -365,8 +365,8 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 			mes "to it. How you use it in";
 			mes "the future is up to you ..";
 			mes "I wish you luck!";
-			delitem 910,2; //Garlet
-			delitem 911,2; //Scell
+			delitem Garlet,2;
+			delitem Scell,2;
 			skill "TF_THROWSTONE",1,0;
 			close;
 		}
@@ -474,7 +474,7 @@ payon,91,77,3	script	Bag Seller	4W_M_03,{
 		mes "They visit my store often.";
 		close;
 	case 1:
-		if ((countitem(952) > 0) && (countitem(1055) > 0) && (countitem(1025) > 0)) {
+		if ((countitem(Cactus_Needle) > 0) && (countitem(Earthworm_Peeling) > 0) && (countitem(Spiderweb) > 0)) {
 			mes "[RuRumuni]";
 			mes "Ahhh... You have come for a leather bag.";
 			mes "Very good, very good.";
@@ -490,11 +490,11 @@ payon,91,77,3	script	Bag Seller	4W_M_03,{
 			mes "If you take him this, he will";
 			mes "teach you the skill that you ";
 			mes "wish to learn.";
-			delitem 952,1; //Cactus_Needle
-			delitem 1055,1; //Earthworm_Peeling
-			delitem 1025,1; //Spiderweb
+			delitem Cactus_Needle,1;
+			delitem Earthworm_Peeling,1;
+			delitem Spiderweb,1;
 			skill_thief_1 = 2;
-			getitem 7042,1; //Leather_Bag_Of_Infinity
+			getitem Leather_Bag_Of_Infinity,1;
 			close;
 		}
 		mes "[RuRumuni]";

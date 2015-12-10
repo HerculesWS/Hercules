@@ -81,7 +81,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 		mes "time for me! Oho ho ho ho ho!";
 		close;
 	} else if (thai_find == 2) {
-		if (countitem(7288)) {
+		if (countitem(Thai_Ring)) {
 			mes "[Shuda]";
 			mes "Ah... Is it...?!!";
 			mes "Yes, that's it!";
@@ -149,7 +149,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 				mes "I got my ring back so he can come back to me now? I hope you'll remember that for me, adventurer.";
 				break;
 			}
-			delitem 7288,1; //Thai_Ring
+			delitem Thai_Ring,1;
 			changequest 12030,12031;
 			thai_find = 3;
 			close;
@@ -598,12 +598,12 @@ ayo_dun02,91,264,3	script	Haggard Man	4_M_THAIAYO,{
 			mes "[" +strcharinfo(0)+ "]";
 			mes "Anyway, I think you need to be treated. Let me check if I have some potions.";
 			next;
-			if (countitem(504)) {
+			if (countitem(White_Potion)) {
 				mes "["+strcharinfo(0)+"]";
 				mes "Ah...";
 				mes "Here we are,";
 				mes "a White Potion.";
-				delitem 504,1; //White_Potion
+				delitem White_Potion,1;
 				next;
 				mes "[Haggard Man]";
 				mes "You mean the White Potion,";
@@ -859,7 +859,7 @@ ayothaya,253,99,3	script	Fisherman	4_M_THAIONGBAK,{
 		next;
 		switch(select("Yes.:No, thanks.")) {
 		case 1:
-			if (countitem(528) && Zeny > 49) {
+			if (countitem(Monster's_Feed) && Zeny > 49) {
 				mes "^3355FFYou cast your";
 				mes "fishing line";
 				mes "into the water.^000000";
@@ -871,46 +871,46 @@ ayothaya,253,99,3	script	Fisherman	4_M_THAIONGBAK,{
 				next;
 				mes "^3355FFYou've hooked a Phen!^000000";
 				next;
-				delitem 528,1; //Monster's_Feed
+				delitem Monster's_Feed,1;
 				Zeny -= 50;
 				.@randfish = rand(1,100);
 				if (.@randfish > 0 && .@randfish < 40) {
 					mes "^3355FFWhile cooking the Phen, you";
 					mes "find that it's swallowed a Stone.^000000";
 					close2;
-					getitem 7049,1; //Stone
+					getitem Stone,1;
 					end;
 				} else if (.@randfish > 39 && .@randfish < 60) {
 					mes "^3355FFInside of the Phen,";
 					mes "you find a Red Potion.^000000";
 					close2;
-					getitem 501,1; //Red_Potion
+					getitem Red_Potion,1;
 					end;
 				} else if (.@randfish > 59 && .@randfish < 70) {
 					mes "^3355FFInside of the Phen,";
 					mes "you find a Yellow Potion.^000000";
 					close2;
-					getitem 503,1; //Yellow_Potion
+					getitem Yellow_Potion,1;
 					end;
 				} else if (.@randfish > 69 && .@randfish < 80) {
 					mes "^3355FFThere's nothing inside...";
 					mes "But now you can eat Sushi!^000000";
 					close2;
-					getitem 551,1; //Shusi
+					getitem Shusi,1;
 					end;
 				} else if (.@randfish > 79 && .@randfish < 90) {
 					mes "^3355FFYou find";
 					mes "a Flower Ring";
 					mes "inside the Phen.^000000";
 					close2;
-					getitem 2612,1; //Flower_Ring
+					getitem Flower_Ring,1;
 					end;
 				} else if (.@randfish == 90) {
 					mes "^3355FFYou find";
 					mes "a Diamond Ring";
 					mes "inside the Phen.^000000";
 					close2;
-					getitem 2613,1; //Diamond_Ring
+					getitem Diamond_Ring,1;
 					end;
 				} else if (.@randfish > 90 && .@randfish < 101) {
 					mes "^3355FFYou find a ring";
@@ -922,7 +922,7 @@ ayothaya,253,99,3	script	Fisherman	4_M_THAIONGBAK,{
 					close2;
 					thai_find = 2;
 					changequest 12029,12030;
-					getitem 7288,1; //Thai_Ring
+					getitem Thai_Ring,1;
 					end;
 				}
 			} else {
@@ -1078,7 +1078,7 @@ OnTouch:
 					mes "I better look";
 					mes "into this.";
 					thai_find = 10;
-					getitem 504,10; //White_Potion
+					getitem White_Potion,10;
 					close;
 				} else if (.@randayo > 2 && .@randayo < 5) {
 					mes "["+strcharinfo(0)+"]";
@@ -1092,7 +1092,7 @@ OnTouch:
 					mes "I better look";
 					mes "into this.";
 					thai_find = 10;
-					getitem 503,10; //Yellow potion
+					getitem Yellow_Potion,10; //Yellow potion
 					close;
 				} else {
 					mes "[Rat]";
@@ -1810,7 +1810,7 @@ ayo_in01,181,193,4	script	Shaman#thai	4_F_THAISHAMAN,{
 }
 
 ayo_fild01,129,197,0	script	Puraim#thai1	4_M_THAIOLD,{
-	if ((ayodunquest > 2 && countitem(7285) > 0) || (ayodunquest > 2 && countitem(7287) > 0)) {
+	if ((ayodunquest > 2 && countitem(Thread_Skein) > 0) || (ayodunquest > 2 && countitem(Thread_Skein_) > 0)) {
 		mes "[Puraim]";
 		mes "Huh...?";
 		mes "I feel it!";
@@ -2058,7 +2058,7 @@ ayo_dun01,16,188,0	script	 #hun_thai_6	HIDDEN_NPC,{
 
 ayo_dun01,24,283,0	script	 #2_dun_in	HIDDEN_NPC,{
 	if (ayodunquest > 10) {
-		if (countitem(7287) > 0) {
+		if (countitem(Thread_Skein_) > 0) {
 			mes "^3355FFThe holy threads";
 			mes "emanate a powerful sense";
 			mes "of safety and security.";
@@ -2081,7 +2081,7 @@ ayo_dun01,24,283,0	script	 #2_dun_in	HIDDEN_NPC,{
 }
 
 ayo_dun02,268,108,0	script	 #reward_tiger	HIDDEN_NPC,{
-	if (ayodunquest == 11 && countitem(7287) > 0) {
+	if (ayodunquest == 11 && countitem(Thread_Skein_) > 0) {
 		mes "^3355FFYou find half of the skeletal remains of a person sticking out from the ground. It seems to be the remains of Boonthom's comrade.^000000";
 		next;
 		mes "^3355FFYou find a piece of paper beside the skeleton, as well as a box.^000000";
@@ -2096,7 +2096,7 @@ ayo_dun02,268,108,0	script	 #reward_tiger	HIDDEN_NPC,{
 		mes "up the box.^000000";
 		ayodunquest = 12;
 		completequest 12039;
-		getitem 603,1; //Old_Blue_Box
+		getitem Old_Blue_Box,1;
 		close;
 	}
 }
@@ -2245,7 +2245,7 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 			close;
 		}
 	} else if (tomyumgoong > 1 && tomyumgoong < 4) {
-		if (tomyumgoong == 2 && countitem(567) > 19) {
+		if (tomyumgoong == 2 && countitem(Prawn) > 19) {
 			mes "[Mali the Spicy]";
 			mes "Errr...";
 			mes "What's wrong with these Shrimp?";
@@ -2264,7 +2264,7 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 			mes "Tom Yum Goong?";
 			close;
 		} else if (tomyumgoong == 3) {
-			if (countitem(567) > 19) {
+			if (countitem(Prawn) > 19) {
 				mes "[Mali the Spicy]";
 				mes "Ah, you came back!";
 				mes "Now, let me see what";
@@ -2277,7 +2277,7 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 				mes "I've been looking for! Well done~";
 				mes "With these big and fresh Shrimp,";
 				mes "I can cook the best Tom Yum Goong for you! Thank you so much!";
-				delitem 567,20; //Prawn
+				delitem Prawn,20;
 				next;
 				mes "[Mali the Spicy]";
 				mes "It will be a perfect food with the natural sweetness of the Shrimp, the sourness of Lemons and a little bit of fish sauce!";
@@ -2329,7 +2329,7 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 		mes "Now hurry~";
 		close;
 	} else if (tomyumgoong > 3 && tomyumgoong < 6) {
-		if (tomyumgoong == 4 && countitem(568) > 9) {
+		if (tomyumgoong == 4 && countitem(Lemon) > 9) {
 			mes "[Mali the Spicy]";
 			mes "You think these are";
 			mes "the best quality Lemons?";
@@ -2343,7 +2343,7 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 			mes "common Lemons!";
 			close;
 		} else if (tomyumgoong == 5) {
-			if (countitem(568) > 9) {
+			if (countitem(Lemon) > 9) {
 				emotion e_gasp;
 				mes "[Mali the Spicy]";
 				mes "Welcome back!";
@@ -2369,7 +2369,7 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 				mes "will know what you want.";
 				next;
 				if (select("Okay, I'll be right back.:Ah, I'm tired now. Let me take a rest first...") == 1) {
-					delitem 568,10; //Lemon
+					delitem Lemon,10;
 					tomyumgoong = 6;
 					changequest 8125,8126;
 					mes "[Mali the Spicy]";
@@ -2404,7 +2404,7 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 		mes "some Tom Yum Goong!";
 		close;
 	} else if (tomyumgoong == 6) {
-		if (countitem(7286) > 29) {
+		if (countitem(Chilli) > 29) {
 			mes "[Mali the Spicy]";
 			mes "I don't understand...";
 			mes "Where did you get these";
@@ -2422,8 +2422,8 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 		close;
 	} else if (tomyumgoong == 7) {
 		if (MaxWeight - Weight > 1499) {
-			if (countitem(7286) > 29) {
-				delitem 7286,30; //Chilli
+			if (countitem(Chilli) > 29) {
+				delitem Chilli,30;
 				emotion e_gasp;
 				mes "[Mali the Spicy]";
 				mes "Now...";
@@ -2470,7 +2470,7 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 				next;
 				tomyumgoong = 8;
 				completequest 8126;
-				getitem 566,10; //Tomyumkung
+				getitem Tomyumkung,10;
 				emotion e_no1;
 				mes "[Mali the Spicy]";
 				mes "Here's your";
@@ -2520,7 +2520,7 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 }
 
 ayothaya,153,86,5	script	Thongpool#ayo	4_M_THAIONGBAK,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -2561,7 +2561,7 @@ ayothaya,153,86,5	script	Thongpool#ayo	4_M_THAIONGBAK,{
 					if (MaxWeight - Weight > 3999) {
 						Zeny -= 11000;
 						tomyumgoong = 3;
-						getitem 567,20; //Prawn
+						getitem Prawn,20;
 						emotion e_no1;
 						mes "[Thongpool]";
 						mes "Good, now you have the";
@@ -2604,7 +2604,7 @@ ayothaya,153,86,5	script	Thongpool#ayo	4_M_THAIONGBAK,{
 			if (Zeny > 10999) {
 				if (MaxWeight - Weight > 3999) {
 					Zeny -= 11000;
-					getitem 567,20; //Prawn
+					getitem Prawn,20;
 					mes "[Thongpool]";
 					mes "There you go~";
 					mes "The freshest Shrimp you can ever get in this village, and maybe even the world!";
@@ -2633,7 +2633,7 @@ ayothaya,153,86,5	script	Thongpool#ayo	4_M_THAIONGBAK,{
 }
 
 ayothaya,121,240,7	script	Mr. Jun#ayo	4_M_THAIOLD,1,1,{
-	if (MaxWeight - Weight < 2000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 2000 || checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -2681,7 +2681,7 @@ ayothaya,121,240,7	script	Mr. Jun#ayo	4_M_THAIOLD,1,1,{
 	close;
 
 OnTouch:
-	if (MaxWeight - Weight < 2000 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 2000 || checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -2889,7 +2889,7 @@ OnTouch:
 						mes "^3355FFYou have plucked";
 						mes "10 Lemons from the tree.^000000";
 						tomyumgoong = 5;
-						getitem 568,10; //Lemon
+						getitem Lemon,10;
 						next;
 						emotion e_dots;
 						mes "[Mr. Jun]";
@@ -2956,7 +2956,7 @@ ayothaya,213,94,7	script	Merchant#ayo	4_M_THAIAYO,{
 				if (MaxWeight - Weight > 1199) {
 					Zeny -= 2000;
 					tomyumgoong = 7;
-					getitem 7286,30; //Chilli
+					getitem Chilli,30;
 					mes "[Merchant Thongdum]";
 					mes "Thank you.";
 					mes "I hope you will enjoy";
@@ -3011,7 +3011,7 @@ ayothaya,213,94,7	script	Merchant#ayo	4_M_THAIAYO,{
 		if (Zeny > 1999) {
 			if (MaxWeight - Weight > 1199) {
 				Zeny -= 2000;
-				getitem 7286,30; //Chilli
+				getitem Chilli,30;
 				mes "[Merchant Thongdum]";
 				mes "Thank you,";
 				mes "come again!";

@@ -501,7 +501,7 @@ in_moc_16,23,27,5	script	Assassin#realgirl	4_F_ACROSS,{
 		mes "I trust that you've completed";
 		mes "that task I assigned for you.";
 		next;
-		if ((ASSN_SK == 5 && countitem(726) > 0) || (ASSN_SK == 5 && countitem(723) > 0) || (ASSN_SK == 5 && countitem(720) > 0)) {
+		if ((ASSN_SK == 5 && countitem(Blue_Jewel) > 0) || (ASSN_SK == 5 && countitem(Cardinal_Jewel) > 0) || (ASSN_SK == 5 && countitem(Skyblue_Jewel) > 0)) {
 			select("How's this for treasure?");
 			mes "[Esmille]";
 			mes "Oh, that jewel...!";
@@ -870,7 +870,7 @@ OnTouch:
 					mes "coffin. You have obtained";
 					mes "a Sapphire for Esmille.^000000";
 					ASSN_SK = 5;
-					getitem 726,1; //Blue_Jewel
+					getitem Blue_Jewel,1;
 					close;
 				}
 			case 2:
@@ -939,7 +939,7 @@ OnTouch:
 			mes "to escape its effects. You've";
 			mes "retrieved a Ruby for Esmille.^000000";
 			ASSN_SK = 5;
-			getitem 723,1; //Cardinal_Jewel
+			getitem Cardinal_Jewel,1;
 		}
 		close;
 	}
@@ -1009,7 +1009,7 @@ OnTouch:
 			mes "freeze you. You obtained";
 			mes "an Aquamarine for Esmille.^000000";
 			ASSN_SK = 5;
-			getitem 720,1; //Skyblue_Jewel
+			getitem Skyblue_Jewel,1;
 		}
 		close;
 	}

@@ -986,7 +986,7 @@ OnInit:
 			mes "^3355FFWork canceled.^000000";
 			close;
 		}
-		if ((countitem(984) > 0) && (countitem(985) > 0) && (countitem(7049) > 29) && (countitem(717) > 4) && (countitem(715) > 4) && (countitem(716) > 4)) {
+		if ((countitem(Oridecon) > 0) && (countitem(Elunium) > 0) && (countitem(Stone) > 29) && (countitem(Blue_Gemstone) > 4) && (countitem(Yellow_Gemstone) > 4) && (countitem(Red_Gemstone) > 4)) {
 			mes "^3355FFArrange Stones, Elunium, and";
 			mes "Oridecon, in that order, in the";
 			mes "center. Then you must arrange";
@@ -1060,12 +1060,12 @@ OnInit:
 						mes "^3355FFThe Gemstones have been";
 						mes "arranged, and the Guardian";
 						mes "Stone is successfully repaired.^000000";
-						delitem 984,1; //Oridecon
-						delitem 985,1; //Elunium
-						delitem 7049,30; //Stone
-						delitem 717,5; //Blue_Gemstone
-						delitem 715,5; //Yellow_Gemstone
-						delitem 716,5; //Red_Gemstone
+						delitem Oridecon,1;
+						delitem Elunium,1;
+						delitem Stone,30;
+						delitem Blue_Gemstone,5;
+						delitem Yellow_Gemstone,5;
+						delitem Red_Gemstone,5;
 						close2;
 						donpcevent "df"+.@num+"#"+strnpcinfo(4)+"::OnEnable";
 						specialeffect EF_ICECRASH;
@@ -1088,10 +1088,10 @@ OnInit:
 				mes "It looks like you failed";
 				mes "to fix the Guardian Stone,";
 				mes "and lost some materials.^000000";
-				delitem 7049,10; //Stone
-				delitem 717,2; //Blue_Gemstone
-				delitem 715,2; //Yellow_Gemstone
-				delitem 716,2; //Red_Gemstone
+				delitem Stone,10;
+				delitem Blue_Gemstone,2;
+				delitem Yellow_Gemstone,2;
+				delitem Red_Gemstone,2;
 				close;
 			}
 		}
@@ -1134,7 +1134,7 @@ OnEnable:
 				mes "^4D4DFF10 Emveretarcon^000000.";
 				next;
 				select("Continue");
-				if ((countitem(1019) > 29) && (countitem(999) > 9) && (countitem(1011) > 9) && (countitem(984) > 4)) {
+				if ((countitem(Wooden_Block) > 29) && (countitem(Steel) > 9) && (countitem(Emveretarcon) > 9) && (countitem(Oridecon) > 4)) {
 					mes "^3355FFYou will need Trunks to";
 					mes "repair the support frame,";
 					mes "Oridecon to enhance the";
@@ -1304,10 +1304,10 @@ OnEnable:
 						if (.@rp_temp == .@ro_of01) {
 							mes "^3355FFThe Fortress Gate has";
 							mes "been successfully repaired!^000000";
-							delitem 1019,30; //Wooden_Block
-							delitem 999,10; //Steel
-							delitem 1011,10; //Emveretarcon
-							delitem 984,5; //Oridecon
+							delitem Wooden_Block,30;
+							delitem Steel,10;
+							delitem Emveretarcon,10;
+							delitem Oridecon,5;
 							close2;
 							donpcevent "RL"+.@num+"#"+strnpcinfo(4)+"::OnEnable";
 							disablenpc strnpcinfo(0);
@@ -1328,10 +1328,10 @@ OnEnable:
 							mes "Fortress Gate has failed.";
 							mes "You lost some of your";
 							mes "repair resources...^000000";
-							delitem 984,2; //Oridecon
-							delitem 999,4; //Steel
-							delitem 1019,14; //Wooden_Block
-							delitem 1011,3; //Emveretarcon
+							delitem Oridecon,2;
+							delitem Steel,4;
+							delitem Wooden_Block,14;
+							delitem Emveretarcon,3;
 							close;
 						}
 					}

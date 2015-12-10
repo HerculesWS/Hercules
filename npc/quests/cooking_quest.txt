@@ -429,7 +429,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		goto L_End;
 	}
 	else if (cooking_q == 1) {
-		if (countitem(940) > 4 && countitem(7031) > 0 && countitem(7457) > 0) {
+		if (countitem(Grasshopper's_Leg) > 4 && countitem(Old_Frying_Pan) > 0 && countitem(Cooking_Oil) > 0) {
 			cutin "orleans_4",0;
 			emotion e_an;
 			mes "[Charles Orleans]";
@@ -462,11 +462,11 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "know this recipe now. That's";
 			mes "all for today, so please go";
 			mes "and practice on your own now.";
-			delitem 940,5; //Grasshopper's_Leg
-			delitem 7031,1; //Old_Frying_Pan
-			delitem 7457,1; //Cooking_Oil
+			delitem Grasshopper's_Leg,5;
+			delitem Old_Frying_Pan,1;
+			delitem Cooking_Oil,1;
 			cooking_q = 7;
-			getitem 12041,1; //Str_Dish01
+			getitem Str_Dish01,1;
 			goto L_End;
 		}
 		cutin "orleans_6",0;
@@ -489,7 +489,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		goto L_End;
 	}
 	else if (cooking_q == 2) {
-		if (countitem(514) > 2 && countitem(501) > 1) {
+		if (countitem(Grape) > 2 && countitem(Red_Potion) > 1) {
 			cutin "orleans_4",0;
 			mes "[Charles Orleans]";
 			mes "Finally, you're here! Never";
@@ -520,10 +520,10 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "know this recipe now. That's";
 			mes "all for today, so please go";
 			mes "and practice on your own now.";
-			delitem 514,3; //Grape
-			delitem 501,2; //Red_Potion
+			delitem Grape,3;
+			delitem Red_Potion,2;
 			cooking_q = 7;
-			getitem 12046,1; //Int_Dish01
+			getitem Int_Dish01,1;
 			goto L_End;
 		}
 		cutin "orleans_6",0;
@@ -546,7 +546,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		goto L_End;
 	}
 	else if (cooking_q == 3) {
-		if (countitem(518) > 0 && countitem(514) > 1 && countitem(501) > 0) {
+		if (countitem(Honey) > 0 && countitem(Grape) > 1 && countitem(Red_Potion) > 0) {
 			cutin "orleans_4",0;
 			mes "[Charles Orleans]";
 			mes "Finally, you're here! Never";
@@ -580,11 +580,11 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "know this recipe now. That's";
 			mes "all for today, so please go";
 			mes "and practice on your own now.";
-			delitem 518,1; //Honey
-			delitem 514,2; //Grape
-			delitem 501,1; //Red_Potion
+			delitem Honey,1;
+			delitem Grape,2;
+			delitem Red_Potion,1;
 			cooking_q = 7;
-			getitem 12061,1; //Dex_Dish01
+			getitem Dex_Dish01,1;
 			goto L_End;
 		}
 		cutin "orleans_6",0;
@@ -608,7 +608,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		goto L_End;
 	}
 	else if (cooking_q == 4) {
-		if (countitem(577) > 0 && countitem(908) > 9 && countitem(1024) > 0) {
+		if (countitem(Grain) > 0 && countitem(Spawn) > 9 && countitem(Chinese_Ink) > 0) {
 			cutin "orleans_4",0;
 			mes "[Charles Orleans]";
 			mes "Finally, you're here! Never";
@@ -641,11 +641,11 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "know this recipe now. That's";
 			mes "all for today, so please go";
 			mes "and practice on your own now.";
-			delitem 577,1; //Grain
-			delitem 908,10; //Spawn
-			delitem 1024,1; //Chinese_ink
+			delitem Grain,1;
+			delitem Spawn,10;
+			delitem Chinese_Ink,1; //Chinese_ink
 			cooking_q = 7;
-			getitem 12056,1; //Agi_Dish01
+			getitem Agi_Dish01,1;
 			goto L_End;
 		}
 		cutin "orleans_6",0;
@@ -668,7 +668,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		goto L_End;
 	}
 	else if (cooking_q == 5) {
-		if (countitem(960) > 9 && countitem(511) > 9 && countitem(503) > 0) {
+		if (countitem(Nipper) > 9 && countitem(Green_Herb) > 9 && countitem(Yellow_Potion) > 0) {
 			cutin "orleans_4",0;
 			mes "[Charles Orleans]";
 			mes "Finally, you're here! Never";
@@ -701,11 +701,11 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "know this recipe now. That's";
 			mes "all for today, so please go";
 			mes "and practice on your own now.";
-			delitem 960,10; //Nipper
-			delitem 511,10; //Green_Herb
-			delitem 503,1; //Yellow_Potion
+			delitem Nipper,10;
+			delitem Green_Herb,10;
+			delitem Yellow_Potion,1;
 			cooking_q = 7;
-			getitem 12051,1; //Vit_Dish01
+			getitem Vit_Dish01,1;
 			goto L_End;
 		}
 		cutin "orleans_6",0;
@@ -729,7 +729,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		goto L_End;
 	}
 	else if (cooking_q == 6) {
-		if (countitem(942) > 4 && countitem(7031) > 0 && countitem(7457) > 0) {
+		if (countitem(Yoyo_Tail) > 4 && countitem(Old_Frying_Pan) > 0 && countitem(Cooking_Oil) > 0) {
 			cutin "orleans_4",0;
 			mes "[Charles Orleans]";
 			mes "Finally, you're here! Never";
@@ -762,11 +762,11 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 			mes "know this recipe now. That's";
 			mes "all for today, so please go";
 			mes "and practice on your own now.";
-			delitem 942,5; //Yoyo_Tail
-			delitem 7031,1; //Old_Frying_Pan
-			delitem 7457,1; //Cooking_Oil
+			delitem Yoyo_Tail,5;
+			delitem Old_Frying_Pan,1;
+			delitem Cooking_Oil,1;
 			cooking_q = 7;
-			getitem 12066,1; //Luk_Dish01
+			getitem Luk_Dish01,1;
 			goto L_End;
 		}
 		cutin "orleans_6",0;
@@ -1247,7 +1247,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "If you bring me 10 Pumpkins,";
 				mes "I will let you borrow one of";
 				mes "my Level 1 Cookbooks.";
-				if (countitem(535) > 9) {
+				if (countitem(Pumpkin) > 9) {
 					next;
 					if (select("Give 10 Pumpkins and Current Cookbook:Cancel") == 1) {
 						cutin "orleans_6",0;
@@ -1278,7 +1278,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "crackers or cookies. Please";
 				mes "bring me 5 Well-Baked Cookies";
 				mes "to borrow my Level 2 Cookbook.";
-				if (countitem(538) > 4) {
+				if (countitem(Well_Baked_Cookie) > 4) {
 					next;
 					if (select("Give Cookies and Current Cookbook:Cancel") == 1) {
 						cutin "orleans_6",0;
@@ -1312,7 +1312,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "Please bring me 5 Sushi,";
 				mes "and I'll let you borrow a";
 				mes "Level 3 Cookbook, okay?";
-				if (countitem(551) > 4) {
+				if (countitem(Shusi) > 4) {
 					next;
 					if (select("Give Sushi and Current Cookbook:Cancel")) {
 						cutin "orleans_6",0;
@@ -1344,7 +1344,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "that delicious Bao? 5 would";
 				mes "be perfect. Then, I'll let you";
 				mes "borrow my Level 4 Cookbook.";
-				if (countitem(553) > 4) {
+				if (countitem(Bun) > 4) {
 					next;
 					if (select("Give Bao and Current Cookbook:Cancel") == 1) {
 						cutin "orleans_6",0;
@@ -1378,7 +1378,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				mes "unignorable health value. Bring";
 				mes "me 10 of those, and you can";
 				mes "borrow a Level 5 Cookbook.";
-				if (countitem(711) > 9) {
+				if (countitem(Shoot) > 9) {
 					next;
 					if (select("Give Shoots and Current Cookbook:Quit") == 1) {
 						cutin "orleans_6",0;
@@ -1402,30 +1402,30 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 				else goto L_End;
 			}
 
-			if (.@old_book == 1) delitem 7472,1; //Cookbook01
-			else if (.@old_book == 2) delitem 7473,1; //Cookbook02
-			else if (.@old_book == 3) delitem 7474,1; //Cookbook03
-			else if (.@old_book == 4) delitem 7475,1; //Cookbook04
-			else if (.@old_book == 5) delitem 7476,1; //Cookbook05
+			if (.@old_book == 1) delitem Cookbook01,1;
+			else if (.@old_book == 2) delitem Cookbook02,1;
+			else if (.@old_book == 3) delitem Cookbook03,1;
+			else if (.@old_book == 4) delitem Cookbook04,1;
+			else if (.@old_book == 5) delitem Cookbook05,1;
 			if (.@new_book == 1) {
-				delitem 535,10; //Pumpkin
-				getitem 7472,1; //Cookbook01
+				delitem Pumpkin,10;
+				getitem Cookbook01,1;
 			}
 			else if (.@new_book== 2) {
-				delitem 538,5; //Well_Baked_Cookie
-				getitem 7473,1; //Cookbook02
+				delitem Well_Baked_Cookie,5;
+				getitem Cookbook02,1;
 			}
 			else if (.@new_book== 3) {
-				delitem 551,5; //Shusi
-				getitem 7474,1; //Cookbook03
+				delitem Shusi,5;
+				getitem Cookbook03,1;
 			}
 			else if (.@new_book== 4) {
-				delitem 553,5; //Bun
-				getitem 7475,1; //Cookbook05
+				delitem Bun,5;
+				getitem Cookbook04,1; //Cookbook05
 			}
 			else if (.@new_book== 5) {
-				delitem 711,10; //Shoot
-				getitem 7476,1; //Cookbook05
+				delitem Shoot,10;
+				getitem Cookbook05,1;
 			}
 			mes "[Charles Orleans]";
 			mes "Well, as promised,";
@@ -1701,14 +1701,14 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 		mes "Please take this cookbook";
 		mes "with the basic Level 1 recipes.";
 		cooking_q = 8;
-		getitem 7472,1; //Cookbook01
+		getitem Cookbook01,1;
 		next;
 		mes "[Madeleine Chu]";
 		mes "Once you learn all the recipes,";
 		mes "feel free to come back to me for more, okay? Also, you'll need";
 		mes "these cooking kits to practice.";
 		mes "You can have these for free, and you can buy more from me later~";
-		getitem 12125,10; //Outdoor_Cooking_Kits
+		getitem Outdoor_Cooking_Kits,10;
 		close;
 	}
 	else if (cooking_q == 8) {
@@ -1749,7 +1749,7 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 			}
 
 		case 2:
-			if (countitem(12041) > 0 && countitem(12046) > 0 && countitem(12061) > 0 && countitem(12056) > 0 && countitem(12051) > 0 && countitem(12066) > 0) {
+			if (countitem(Str_Dish01) > 0 && countitem(Int_Dish01) > 0 && countitem(Dex_Dish01) > 0 && countitem(Agi_Dish01) > 0 && countitem(Vit_Dish01) > 0 && countitem(Luk_Dish01) > 0) {
 				mes "[Madeleine Chu]";
 				mes "Oh, you've made a sample";
 				mes "of every recipe detailed in";
@@ -1772,14 +1772,14 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 				mes "them? Here, I'll wrap your";
 				mes "food in this handy cloth...";
 				next;
-				delitem 12041,1; //Str_Dish01
-				delitem 12046,1; //Int_Dish01
-				delitem 12061,1; //Dex_Dish01
-				delitem 12056,1; //Agi_Dish01
-				delitem 12051,1; //Vit_Dish01
-				delitem 12066,1; //Luk_Dish01
+				delitem Str_Dish01,1;
+				delitem Int_Dish01,1;
+				delitem Dex_Dish01,1;
+				delitem Agi_Dish01,1;
+				delitem Vit_Dish01,1;
+				delitem Luk_Dish01,1;
 				cooking_q = 9;
-				getitem 12111,1; //Food_Package
+				getitem Food_Package,1;
 				mes "[Madeleine Chu]";
 				mes "There you go, it's ready";
 				mes "to be delivered. Now, make";
@@ -1814,7 +1814,7 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 			close;
 
 		case 3:
-			if (countitem(12041) > 0 || countitem(12046) > 0 || countitem(12061) > 0 || countitem(12056) > 0 || countitem(12051) > 0 || countitem(12066) > 0) {
+			if (countitem(Str_Dish01) > 0 || countitem(Int_Dish01) > 0 || countitem(Dex_Dish01) > 0 || countitem(Agi_Dish01) > 0 || countitem(Vit_Dish01) > 0 || countitem(Luk_Dish01) > 0) {
 				mes "[Madeleine Chu]";
 				mes "Oh, I see that you've";
 				mes "tried some recipes in that";
@@ -1835,7 +1835,7 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 		}
 	}
 	else if (cooking_q == 9) {
-		if (countitem(12111) > 0) {
+		if (countitem(Food_Package) > 0) {
 			mes "[Madeleine Chu]";
 			mes "Please find my friend";
 			mes "Chulsoo in Payon and";
@@ -1866,7 +1866,7 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 				mes "it soon, alright? See you~";
 				close;
 			}
-			if (countitem(7472) > 0) {
+			if (countitem(Cookbook01) > 0) {
 				mes "[Madeleine Chu]";
 				mes "You lost it? Oh, that's";
 				mes "not good. How can you ";
@@ -1874,7 +1874,7 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 				mes "arts in that way? I'm so";
 				mes "very ashamed of you...";
 				next;
-				delitem 7472,1; //Cookbook01
+				delitem Cookbook01,1;
 				cooking_q = 0;
 				mes "[Madeleine Chu]";
 				mes "First of all, I'd like";
@@ -1910,7 +1910,7 @@ prt_castle,45,35,5	script	Madeleine Chu#cook	4_COOK,{
 		mes "factor in quality cuisine.";
 		next;
 		cooking_q = 11;
-		getitem 12126,10; //Indoor_Cooking_Kits
+		getitem Indoor_Cooking_Kits,10;
 		mes "[Madeleine Chu]";
 		mes "Please try these Indoor";
 		mes "Cooking Kits to help you";
@@ -2168,7 +2168,7 @@ OnDisable:
 }
 
 payon,209,127,3	script	Servant	4_M_ORIENT01,{
-	if (!checkweight(555,1)) {
+	if (!checkweight(Rice_Cake,1)) {
 		mes "[Chulsoo]";
 		mes "Hold on, you're carrying";
 		mes "too many items with you.";
@@ -2207,7 +2207,7 @@ payon,209,127,3	script	Servant	4_M_ORIENT01,{
 				close;
 			}
 			Zeny -= 200;
-			getitem 555,1; //Rice_Cake
+			getitem Rice_Cake,1;
 			mes "[Chulsoo]";
 			mes "Thank you very";
 			mes "much! I hope you";
@@ -2225,7 +2225,7 @@ payon,209,127,3	script	Servant	4_M_ORIENT01,{
 			close;
 
 		case 3:
-			if (countitem(12111) > 0) {
+			if (countitem(Food_Package) > 0) {
 				mes "["+strcharinfo(0)+"]";
 				mes "Actually, Madeleine";
 				mes "sent me here to find";
@@ -2297,9 +2297,9 @@ payon,209,127,3	script	Servant	4_M_ORIENT01,{
 				mes "what my old teacher was trying";
 				mes "to tell me. In return, please have one of my humble Rice Cakes.";
 				next;
-				delitem 12111,1; //Food_Package
+				delitem Food_Package,1;
 				cooking_q = 10;
-				getitem 555,1; //Rice_Cake
+				getitem Rice_Cake,1;
 				mes "[Chulsoo]";
 				mes "I better visit Prontera";
 				mes "again soon. It's been a long";
@@ -2378,7 +2378,7 @@ payon,209,127,3	script	Servant	4_M_ORIENT01,{
 				close;
 			}
 			Zeny -= 200;
-			getitem 555,1; //Rice_Cake
+			getitem Rice_Cake,1;
 			mes "[Chulsoo]";
 			mes "Thank you very";
 			mes "much! I hope you";

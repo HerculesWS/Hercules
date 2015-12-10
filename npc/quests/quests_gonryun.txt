@@ -210,7 +210,7 @@ gon_in,17,93,5	script	Chief#gon	4_M_TWMASKMAN,{
 				mes "you're doing good work.";
 				mes "Take this old family medicine, it might be of use sometime soon.";
 				b_sword = 7;
-				getitem 504,3; //White_Potion
+				getitem White_Potion,3;
 				close;
 			case 7:
 				mes "[Shi Yan Wen]";
@@ -268,7 +268,7 @@ gon_in,17,93,5	script	Chief#gon	4_M_TWMASKMAN,{
 					mes "Please accept this as a";
 					mes "token of my gratitude...";
 					b_sword = 15;
-					getitem 603,1; //Old_Blue_Box
+					getitem Old_Blue_Box,1;
 					next;
 					mes "[Shi Yan Wen]";
 					mes "If you find any information";
@@ -303,7 +303,7 @@ gon_in,17,93,5	script	Chief#gon	4_M_TWMASKMAN,{
 				mes "but a trinket, but please";
 				mes "accept this gift from me.";
 				b_sword = 14;
-				getitem 603,1; //Old_Blue_Box
+				getitem Old_Blue_Box,1;
 				close;
 			case 11:
 				mes "[Shi Yan Wen]";
@@ -323,7 +323,7 @@ gon_in,17,93,5	script	Chief#gon	4_M_TWMASKMAN,{
 				mes "Here...take this.";
 				mes "Have a good time in Kunlun~";
 				b_sword = 13;
-				getitem 504,1; //White_Potion
+				getitem White_Potion,1;
 				close;
 			case 13:
 				mes "[Shi Yan Wen]";
@@ -367,7 +367,7 @@ gon_in,17,93,5	script	Chief#gon	4_M_TWMASKMAN,{
 			close;
 		}
 		else if (b_sword == 32) {
-			if (countitem(1123) < 1) {
+			if (countitem(Haedonggum) < 1) {
 				mes "[Shi Yan Wen]";
 				mes "Hm.....";
 				mes "Not finished yet, huh?";
@@ -386,9 +386,9 @@ gon_in,17,93,5	script	Chief#gon	4_M_TWMASKMAN,{
 			mes "[Shi Yan Wen]";
 			mes "This is a small gift for you.";
 			mes "Please take it as thanks for a job well done!";
-			delitem 1123,1; //Haedonggum
+			delitem Haedonggum,1;
 			b_sword = 33;
-			getitem 2404,1; //Shoes_
+			getitem Shoes_,1;
 			next;
 			mes "[Shi Yan Wen]";
 			mes "Thank you for all of your efforts.";
@@ -542,7 +542,7 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 	else if (b_sword < 6) {
 		switch(b_sword) {
 		case 4:
-			if (countitem(506) < 1) {
+			if (countitem(Green_Potion) < 1) {
 				mes "[Xue Bong]";
 				mes "*Urk!* I feel sick...";
 				mes "Can somebody bring me a potion?";
@@ -572,7 +572,7 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 					b_sword = 12;
 					close;
 				case 2:
-					delitem 506,1; //Green_Potion
+					delitem Green_Potion,1;
 					b_sword = 5;
 					mes "[Xue Bong]";
 					mes "Oh man...thanks.";
@@ -616,7 +616,7 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 					close;
 				}
 			case 2:
-				delitem 506,1; //Green_Potion
+				delitem Green_Potion,1;
 				b_sword = 5;
 				emotion e_thx;
 				mes "[Xue Bong]";
@@ -2945,18 +2945,18 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 				close;
 			}
 		case 30:
-			if (countitem(986) > 0 && countitem(756) > 1 && countitem(7110) > 4 && countitem(999) > 1 && countitem(1005) > 0 && countitem(1000) > 1 && countitem(7098) > 4) {
+			if (countitem(Anvil) > 0 && countitem(Oridecon_Stone) > 1 && countitem(Vroken_Sword) > 4 && countitem(Steel) > 1 && countitem(Hammer_Of_Blacksmith) > 0 && countitem(Star_Crumb) > 1 && countitem(Live_Coal) > 4) {
 				mes "[Aumgarl]";
 				mes "Oh, good! You got them all.";
 				mes "Alright, come back later,";
 				mes "and I'll have it repaired.";
-				delitem 986,1; //Anvil
-				delitem 756,2; //Oridecon_Stone
-				delitem 7110,5; //Vroken_Sword
-				delitem 999,2; //Steel
-				delitem 1005,1; //Hammer_Of_Blacksmith
-				delitem 1000,2; //Star_Crumb
-				delitem 7098,5; //Live_Coal
+				delitem Anvil,1;
+				delitem Oridecon_Stone,2;
+				delitem Vroken_Sword,5;
+				delitem Steel,2;
+				delitem Hammer_Of_Blacksmith,1;
+				delitem Star_Crumb,2;
+				delitem Live_Coal,5;
 				b_sword = 31;
 				close;
 			}
@@ -2998,7 +2998,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 				mes "'You received repaired";
 				mes "'^FF0000SaYumMoon's sword^000000'.";
 				b_sword = 32;
-				getitem 1123,1; //Haedonggum
+				getitem Haedonggum,1;
 				close;
 			}
 			mes "[Aumgarl]";
@@ -3116,7 +3116,7 @@ geffen_in,106,106,7	script	Girl#gnbs2	4_M_KID2,{
 		mes "received from Cylrnel.";
 		mes "After taking the medicine, Lyroo";
 		mes "fell asleep.^000000";
-		delitem 606,1; //Aloebera
+		delitem Aloebera,1;
 		b_sword = 28;
 		close;
 	}
@@ -3549,7 +3549,7 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 			mes "There isn't much time for Lyroo.";
 			close;
 		case 25:
-			if (countitem(608) > 0 && countitem(704) > 0 && countitem(1061) > 2 && countitem(7066) > 2) {
+			if (countitem(Seed_Of_Yggdrasil) > 0 && countitem(Aloe) > 0 && countitem(Starsand_Of_Witch) > 2 && countitem(Ice_Piece) > 2) {
 				mes "[Cylrnel]";
 				mes "Hmm...";
 				mes "Good, you got them all.";
@@ -3569,11 +3569,11 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 				mes "...";
 				mes "Hey you...";
 				mes "You gave me the wrong information!";
-				delitem 608,1; //Seed_Of_Yggdrasil
-				delitem 704,1; //Aloe
-				delitem 1061,5; //Starsand_Of_Witch
-				delitem 7097,3; //Burning_Heart
-				delitem 7066,3; //Ice_Piece
+				delitem Seed_Of_Yggdrasil,1;
+				delitem Aloe,1;
+				delitem Starsand_Of_Witch,5;
+				delitem Burning_Heart,3;
+				delitem Ice_Piece,3;
 				b_sword = 24;
 				next;
 				mes "[Cylrnel]";
@@ -3606,7 +3606,7 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 			warp "yuno",246,143;
 			end;
 		case 26:
-			if (countitem(608) > 1 && countitem(704) > 2 && countitem(748) > 0 && countitem(1061) > 9 && countitem(7097) > 4 && countitem(7066) > 4) {
+			if (countitem(Seed_Of_Yggdrasil) > 1 && countitem(Aloe) > 2 && countitem(Witherless_Rose) > 0 && countitem(Starsand_Of_Witch) > 9 && countitem(Burning_Heart) > 4 && countitem(Ice_Piece) > 4) {
 				mes "[Cylrnel]";
 				mes "Hmm...";
 				mes "Good, you got them all.";
@@ -3630,14 +3630,14 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 				mes "It wasn't easy to make this";
 				mes "medicine. Take care, bring";
 				mes "this to Lyroo and give her my regards...";
-				delitem 608,2; //Seed_Of_Yggdrasil
-				delitem 704,3; //Aloe
-				delitem 748,1; //Witherless_Rose
-				delitem 1061,10; //Starsand_Of_Witch
-				delitem 7097,5; //Burning_Heart
-				delitem 7066,5; //Ice_Piece
+				delitem Seed_Of_Yggdrasil,2;
+				delitem Aloe,3;
+				delitem Witherless_Rose,1;
+				delitem Starsand_Of_Witch,10;
+				delitem Burning_Heart,5;
+				delitem Ice_Piece,5;
 				b_sword = 27;
-				getitem 606,1; //Aloebera
+				getitem Aloebera,1;
 				close;
 			}
 			mes "[Cylrnel]";
@@ -3746,7 +3746,7 @@ gonryun,237,226,3	script	Han Ran Jiao#gon	4_M_TWMIDMAN,{
 		mes "I'm so scared... What should I do?!";
 		close;
 	}
-	if (nakha == 2 && countitem(1201) > 0) {
+	if (nakha == 2 && countitem(Knife) > 0) {
 		mes "[Han Ran Jiao]";
 		mes "Ehhhh... what should I do...";
 		mes "Oh~! I didn't notice you there.";
@@ -3773,13 +3773,13 @@ gonryun,237,226,3	script	Han Ran Jiao#gon	4_M_TWMIDMAN,{
 		next;
 		if (select("Return the knife.:Refuse.") == 1) {
 			nakha = 3;
-			delitem 1201,1; //Knife
+			delitem Knife,1;
 			mes "[Han Ran Jiao]";
 			mes "Thank you! Thank you so much!";
 			mes "Please take these potions.";
 			mes "They may not be much, but they";
 			mes "are the best I can give you.";
-			getitem 505,2; //Blue_Potion
+			getitem Blue_Potion,2;
 			next;
 			mes "[Han Ran Jiao]";
 			mes "You kept my family heirloom safe!";
@@ -3823,7 +3823,7 @@ OnTouch:
 		mes " ";
 		mes "- You have found an old knife -";
 		close2;
-		getitem 1201,1; //Knife
+		getitem Knife,1;
 	}
 	end;
 }

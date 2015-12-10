@@ -161,7 +161,7 @@ mjolnir_02,186,193,4	script	Middle-Aged Man#magum1	1_M_LIBRARYMASTER,{
 			close;
 		}
 		else if (dmdswrd_Q == 33) {
-			if (countitem(714) > 0 && countitem(962) > 2 && countitem(1003) > 0 && countitem(609) > 24 && countitem(1008) > 0) {
+			if (countitem(Emperium) > 0 && countitem(Tentacle) > 2 && countitem(Coal) > 0 && countitem(Amulet) > 24 && countitem(Frozen_Heart) > 0) {
 				mes "[Walker]";
 				mes "Ah, very good.";
 				mes "You've brought";
@@ -169,11 +169,11 @@ mjolnir_02,186,193,4	script	Middle-Aged Man#magum1	1_M_LIBRARYMASTER,{
 				mes "Now, please wait for";
 				mes "a moment while I finish";
 				mes "the preparations...";
-				delitem 714,1; //Emperium
-				delitem 962,3; //Tentacle
-				delitem 1003,1; //Coal
-				delitem 609,25; //Amulet
-				delitem 1008,1; //Frozen_Heart
+				delitem Emperium,1;
+				delitem Tentacle,3;
+				delitem Coal,1;
+				delitem Amulet,25;
+				delitem Frozen_Heart,1;
 				dmdswrd_Q = 34;
 				close;
 			}
@@ -417,7 +417,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 		close;
 	}
 	else if (dmdswrd_Q == 36) {
-		if (countitem(503) > 19) {
+		if (countitem(Yellow_Potion) > 19) {
 			mes "[Old Man]";
 			mes "Oh, thank goodness you've";
 			mes "brought me the potions! Now,";
@@ -452,7 +452,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 			mes "continue forming the doomed";
 			mes "sword pentagram. I'll just be";
 			mes "waiting for you right here.";
-			delitem 503,20; //Yellow_Potion
+			delitem Yellow_Potion,20;
 			dmdswrd_Q = 37;
 			close;
 		}
@@ -465,7 +465,7 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 		close;
 	}
 	else if (dmdswrd_Q == 37) {
-		if (countitem(7022) > 2 && countitem(1003) > 0 && countitem(1019) > 2 && countitem(7021) > 0 && countitem(7002) > 49) {
+		if (countitem(Old_Hilt) > 2 && countitem(Coal) > 0 && countitem(Wooden_Block) > 2 && countitem(Foolishness_Of_Blind) > 0 && countitem(Ogre_Tooth) > 49) {
 			mes "[Morf]";
 			mes "Hey, you've brought";
 			mes "everything? Good, the";
@@ -574,11 +574,11 @@ payon,248,159,1	script	Old Man#magum1	2_M_PHARMACIST,{
 			mes "Just...";
 			mes "Just give me a";
 			mes "few more minutes...";
-			delitem 7022,3; //Old_Hilt
-			delitem 1003,1; //Coal
-			delitem 1019,3; //Wooden_Block
-			delitem 7021,1; //Foolishness_Of_Blind
-			delitem 7002,50; //Ogre_Tooth
+			delitem Old_Hilt,3;
+			delitem Coal,1;
+			delitem Wooden_Block,3;
+			delitem Foolishness_Of_Blind,1;
+			delitem Ogre_Tooth,50;
 			dmdswrd_Q = 38;
 			close;
 		}
@@ -896,7 +896,7 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		close;
 	}
 	else if (dmdswrd_Q == 40) {
-		if (countitem(7024) == 9 && countitem(7023) == 6 && countitem(723) == 9 && countitem(7019) == 1) {
+		if (countitem(Bloody_Edge) == 9 && countitem(Blade_Lost_In_Darkness) == 6 && countitem(Cardinal_Jewel) == 9 && countitem(Loki's_Whispers) == 1) {
 			mes "[Huey]";
 			mes "Oh, you're back. Did";
 			mes "you bring everything";
@@ -911,10 +911,10 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 			mes "time, but trust me, we're";
 			mes "almost done. All your hard";
 			mes "work will pay off soon~";
-			delitem 7024,9; //Bloody_Edge
-			delitem 7023,6; //Blade_Lost_In_Darkness
-			delitem 723,9; //Cardinal_Jewel
-			delitem 7019,1; //Loki's_Whispers
+			delitem Bloody_Edge,9;
+			delitem Blade_Lost_In_Darkness,6;
+			delitem Cardinal_Jewel,9;
+			delitem Loki's_Whispers,1;
 			dmdswrd_Q = 41;
 			close;
 		}
@@ -997,33 +997,33 @@ morocc,248,159,4	script	Young Man#magum1	4_M_04,{
 		.@random = rand(1,10);
 		if (.@random >= 1 && .@random <= 5) {
 			callsub S_GetSword,1237,0,1,42;
-			getitem 1237,1; //Grimtooth_
+			getitem Grimtooth_,1;
 			close;
 		}
 		else if (.@random >= 6 && .@random <= 8) {
 			callsub S_GetSword,1138,1,1,43;
-			getitem 1138,1; //Mysteltainn_
+			getitem Mysteltainn_,1;
 			close;
 		}
 		else {
 			callsub S_GetSword,1169,2,1,44;
-			getitem 1169,1; //Executioner_
+			getitem Executioner_,1;
 			close;
 		}
 	}
 	else if (dmdswrd_Q == 42) {
 		callsub S_GetSword,1237,0,0,0;
-		getitem 1237,1; //Grimtooth_
+		getitem Grimtooth_,1;
 		close;
 	}
 	else if (dmdswrd_Q == 43) {
 		callsub S_GetSword,1138,1,0,0;
-		getitem 1138,1; //Mysteltainn_
+		getitem Mysteltainn_,1;
 		close;
 	}
 	else if (dmdswrd_Q == 44) {
 		callsub S_GetSword,1169,2,0,0;
-		getitem 1169,1; //Executioner_
+		getitem Executioner_,1;
 		close;
 	}
 	else if (dmdswrd_Q == 45) {

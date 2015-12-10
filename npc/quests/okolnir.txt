@@ -90,7 +90,7 @@ function	script	F_Okolnir	{
 					next;
 					switch(select("Sure let's go there.:No.")) {
 					case 1:
-						if (countitem(7839)) delitem 7839,countitem(7839); //Crystal_Key
+						if (countitem(Crystal_Key)) delitem Crystal_Key,countitem(Crystal_Key);
 						mes "[Guide]";
 						mes "Ok......";
 						mes "Please follow me...";
@@ -121,8 +121,8 @@ function	script	F_Okolnir	{
 			next;
 			switch(select("Enter now.:No.")) {
 			case 1:
-				if (countitem(7839) > 0) {
-					delitem 7839,countitem(7839); //Crystal_Key
+				if (countitem(Crystal_Key) > 0) {
+					delitem Crystal_Key,countitem(Crystal_Key);
 				}
 				mes "[Guide]";
 				mes "Hope you get everything you want...";
@@ -957,9 +957,9 @@ que_qsch05,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch05	CLEAR_NPC
 
 OnTouch:
 	.@sub$ = callfunc("F_Okolnir");
-	if (countitem(7839)) {
+	if (countitem(Crystal_Key)) {
 		mes "The Warp Gate responds to the Crystal Key.";
-		delitem 7839,1; //Crystal_Key
+		delitem Crystal_Key,1;
 		close2;
 		warp "que_q"+.@sub$,114,158;
 		end;
@@ -2197,7 +2197,7 @@ que_qsch05,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch05_boss	WIS
 				for (.@i = 0; .@i < getarraysize(.@n); .@i += 2)
 					delitem .@n[.@i],.@n[.@i+1];
 				getitem .@rwd,1;
-				getitem 7840,1; //Valkyrie_Gift
+				getitem Valkyrie_Gift,1;
 				announce "["+ strcharinfo(0) +"], of guild ["+ getguildname(.@GID) +"] has brought a "+getitemname(.@rwd)+" into this world.",bc_all,"0x70dbdb";
 				close2;
 				cutin "wish_maiden11",255;
