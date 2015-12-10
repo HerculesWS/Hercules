@@ -19,7 +19,7 @@
 // Giacomo Girolam
 //==============================================================================
 lighthalzen,303,303,6	script	Giacomo Girolamo#kiup2	4_M_KHMAN,3,3,{
-	if ((MaxWeight - Weight) < 1000 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {
 		mes "^FF0000 Check up your inventory. You got too many items to carry out the quest. ^000000";
 		close;
 	}
@@ -297,7 +297,7 @@ lighthalzen,303,303,6	script	Giacomo Girolamo#kiup2	4_M_KHMAN,3,3,{
 // Weird Old Man (Rewards)
 //==============================================================================
 lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
-	if ((MaxWeight - Weight) < 2800 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 2800 || !checkweight(Knife, 1)) {
 		mes "^FF0000 Check up your inventory. You got too many items to carry out the quest. ^000000";
 		close;
 	}
@@ -673,7 +673,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 // Sorcerer (Rewards)
 //==============================================================================
 lhz_cube,233,24,4	script	Sorcerer#Bio4Reward	4_M_UMDANCEKID,{
-	if ((MaxWeight - Weight) < 1200 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1200 || !checkweight(Knife, 1)) {
 		mes "^FF0000 Check up your inventory. You got too many items to carry out the quest. ^000000";
 		close;
 	}
@@ -1441,7 +1441,7 @@ que_lhz,206,74,4	script	Researcher#02	4_LGTSCIENCE,3,3,{
 // Wolfchev
 //==============================================================================
 que_lhz,94,119,4	script	Researcher#03	4_LGTSCIENCE,{
-	if ((MaxWeight - Weight) < 1000 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {
 		mes "^FF0000 Check up your inventory. You got too many items to carry out the quest. ^000000";
 		close;
 	}
@@ -1483,7 +1483,7 @@ que_lhz,94,119,4	script	Researcher#03	4_LGTSCIENCE,{
 // Wolfchev
 //==============================================================================
 que_lhz,147,224,4	script	Researcher#04	4_LGTSCIENCE,{
-	if ((MaxWeight - Weight) < 1000 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {
 		mes "^FF0000 Check up your inventory. You got too many items to carry out the quest. ^000000";
 		close;
 	}
@@ -1687,7 +1687,7 @@ que_lhz,140,224,2	duplicate(Human Guinea pig#01)	Human Guinea pig#08	CHEN
 // Wolfchev
 //==============================================================================
 lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
-	if ((MaxWeight - Weight) < 1000 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {
 		mes "^FF0000You cannot continue the process due to possessing too many belongings.^000000";
 		close;
 	}
@@ -1905,7 +1905,7 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 //
 //==============================================================================
 lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
-	if ((MaxWeight - Weight) < 1000 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {
 		mes "^FF0000You cannot continue the process due to possessing too many belongings.^000000";
 		close;
 	}
@@ -3106,7 +3106,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 // Wolfchev - Final encounter
 //==============================================================================
 1@lhz,137,156,7	script	Wolfchev#last	4_LGTSCIENCE,{
-	if ((MaxWeight - Weight) < 1000 || !checkweight(1201, 1)) {
+	if ((MaxWeight - Weight) < 1000 || !checkweight(Knife, 1)) {
 		mes "^FF0000 Check up your inventory. You got too many items to carry out the quest. ^000000";
 		close;
 	}

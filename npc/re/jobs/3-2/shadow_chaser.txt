@@ -643,7 +643,7 @@ s_atelier,168,65,5	script	Manager#sc08_ra	4_M_DOCTOR,{
 			mes "Graham?";
 			mes "Why?";
 			next;
-			if (countitem(6266) == 0) {
+			if (countitem(Cheat_Key) == 0) {
 				mes "You don't seem to have brought it here.";
 				next;
 				mes "[Manager]";
@@ -1004,7 +1004,7 @@ s_atelier,167,129,3	script	Manager#sc06_yuno	1_M_SIGNART,{
 		mes "Did you find something?";
 		next;
 		select("Show the key of pleasure.");
-		if (countitem(6268)) {
+		if (countitem(Mirth_Key)) {
 			mes "[Haled]";
 			mes "Ha..........akkk.";
 			mes "Another key?";
@@ -1354,7 +1354,7 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 		mes "HuhuHuhu...";
 		close;
 	}
-	if (checkweight(1201,4) == 0) {
+	if (checkweight(Knife,4) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
 	}
@@ -1408,7 +1408,7 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 			mes "It's you? You are the one who found the brush?";
 			next;
 			select("Show the brush to him.");
-			if (countitem(6269)) {
+			if (countitem(Master_Brush)) {
 				mes "[Dumk]";
 				mes "That's it.";
 				mes "Did you find it by yourself?";
@@ -1496,7 +1496,7 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 				mes "I need it again.";
 				mes "I'm so thirsty.";
 				mes "Wait a minute.";
-				delitem 6269,1; //Master_Brush
+				delitem Master_Brush,1;
 				job_sha = 30;
 				close;
 			}
@@ -1592,11 +1592,11 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 				mes "Congratulations.";
 				mes "Welcome to your new life.";
 				jobchange roclass(eaclass()|EAJL_THIRD);
-				getitem 6121,1; //Makeover_Brush
-				getitem 6122,1; //Paint_Brush
+				getitem Makeover_Brush,1;
+				getitem Paint_Brush,1;
 				job_sha = 32;
-				getitem 2795,1; //Green_Apple_Ring
-				getitem 5750,1; //Shadow_Handicraft
+				getitem Green_Apple_Ring,1;
+				getitem Shadow_Handicraft,1;
 				next;
 				mes "[Dumk]";
 				mes "It's a fashionable uniform.";
@@ -1921,7 +1921,7 @@ niflheim,230,276,1	script	Red Flame#sc_f03	4_NFWISP,{
 // Boxes
 //============================================================
 job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
 	}
@@ -1974,7 +1974,7 @@ job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 			next;
 			mes "- You get the Key of Deception. -";
 			job_sha = 8;
-			getitem 6266,1; //Cheat_Key
+			getitem Cheat_Key,1;
 			setquest 7165;
 			close;
 		}
@@ -1991,7 +1991,7 @@ job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 }
 
 job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
 	}
@@ -2039,7 +2039,7 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 				mes "Key again...";
 				mes "How can I escape from here...?";
 				job_sha = 17;
-				getitem 6267,1; //Virtual_Key
+				getitem Virtual_Key,1;
 				erasequest 7171;
 				changequest 7168+.@i,7172;
 				next;
@@ -2070,7 +2070,7 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 }
 
 job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
 	}
@@ -2175,7 +2175,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 						mes "I better go back.";
 						job_sha = 25;
 						setquest 7176;
-						getitem 6268,1; //Mirth_Key
+						getitem Mirth_Key,1;
 						close;
 					}
 					break;
@@ -2207,7 +2207,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 }
 
 job3_sha01,71,27,0	script	????#keybox04	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- You can't continue on in this quest because you are overweight. -";
 		close;
 	}
@@ -2222,7 +2222,7 @@ job3_sha01,71,27,0	script	????#keybox04	CLEAR_NPC,{
 		mes "deception, illusion and pleasure.";
 		next;
 		select("Place the key in the holes.");
-		if (countitem(6266) && countitem(6267) && countitem(6268)) {
+		if (countitem(Cheat_Key) && countitem(Virtual_Key) && countitem(Mirth_Key)) {
 			mes "["+strcharinfo(0)+"]";
 			mes "At first, Deception...";
 			mes "then Illusion...";
@@ -2233,11 +2233,11 @@ job3_sha01,71,27,0	script	????#keybox04	CLEAR_NPC,{
 			mes "something comes out.";
 			next;
 			mes "- You got a brush with a fabulous pattern on it. -";
-			delitem 6266,1; //Cheat_Key
-			delitem 6267,1; //Virtual_Key
-			delitem 6268,1; //Mirth_Key
+			delitem Cheat_Key,1;
+			delitem Virtual_Key,1;
+			delitem Mirth_Key,1;
 			job_sha = 28;
-			getitem 6269,1; //Master_Brush
+			getitem Master_Brush,1;
 			changequest 7178,7179;
 			next;
 			mes "["+strcharinfo(0)+"]";
@@ -2292,7 +2292,7 @@ s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 			mes "Visit later and use what you have!";
 			close;
 		}
-		if (countitem(7150) >= .@i[2] && countitem(949) >= .@i[3] && Zeny >= .@i[4]) {
+		if (countitem(Bamboo_Cut) >= .@i[2] && countitem(Feather) >= .@i[3] && Zeny >= .@i[4]) {
 			mes "Oh you brought all the things required.";
 			mes "Hold on a bit.";
 			next;
@@ -2302,8 +2302,8 @@ s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 			mes "[Max]";
 			mes "Take it.";
 			mes "Good luck!";
-			delitem 7150,.@i[2]; //Bamboo_Cut
-			delitem 949,.@i[3]; //Feather
+			delitem Bamboo_Cut,.@i[2];
+			delitem Feather,.@i[3];
 			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
@@ -2352,11 +2352,11 @@ s_atelier,136,70,3	script	Titika#sc09_ra	4_F_CHILD,{
 			mes "I think it's enough...";
 			close;
 		}
-		if (countitem(7150) >= .@i[2] && countitem(949) >= .@i[3] && Zeny >= .@i[4]) {
+		if (countitem(Bamboo_Cut) >= .@i[2] && countitem(Feather) >= .@i[3] && Zeny >= .@i[4]) {
 			mes "You brought all the materials.";
 			mes "I'll exchange it with the goods that I made.";
-			delitem 7150,.@i[2]; //Bamboo_Cut
-			delitem 949,.@i[3]; //Feather
+			delitem Bamboo_Cut,.@i[2];
+			delitem Feather,.@i[3];
 			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
@@ -2402,11 +2402,11 @@ s_atelier,124,128,3	script	RimiGX#sc07_yuno	4_F_LGTGIRL,{
 			mes "Visit here when you lost stuff.";
 			close;
 		}
-		if (countitem(7150) >= .@i[2] && countitem(949) >= .@i[3] && Zeny >= .@i[4]) {
+		if (countitem(Bamboo_Cut) >= .@i[2] && countitem(Feather) >= .@i[3] && Zeny >= .@i[4]) {
 			mes "You brought stuff you need.";
 			mes "It will be fast when I exchange the stuff made?";
-			delitem 7150,.@i[2]; //Bamboo_Cut
-			delitem 949,.@i[3]; //Feather
+			delitem Bamboo_Cut,.@i[2];
+			delitem Feather,.@i[3];
 			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;
@@ -2452,11 +2452,11 @@ s_atelier,26,68,3	script	Vito#sc11_lgt	4_M_KHMAN,{
 			mes "We can't offer extra blushes.";
 			close;
 		}
-		if (countitem(7150) >= .@i[2] && countitem(949) >= .@i[3] && Zeny >= .@i[4]) {
+		if (countitem(Bamboo_Cut) >= .@i[2] && countitem(Feather) >= .@i[3] && Zeny >= .@i[4]) {
 			mes "You brought all what you need.";
 			mes "I'm going to exchange the blush I made before.";
-			delitem 7150,.@i[2]; //Bamboo_Cut
-			delitem 949,.@i[3]; //Feather
+			delitem Bamboo_Cut,.@i[2];
+			delitem Feather,.@i[3];
 			Zeny -= .@i[4];
 			getitem .@i[1],1; //Makeover_Brush,Paint_Brush
 			close;

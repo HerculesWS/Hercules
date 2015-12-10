@@ -166,12 +166,12 @@ dewata,221,237,5	script	Young Man#dew-1	4_M_DEWMAN,{
 }
 
 dewata,114,243,6	script	Lazy Young Man#dew	4_M_DEWMAN,1,1,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 500) {
 		mes "[Lazy Young Man]";
 		mes "Why are you carrying so much? Isn't it heavy?";
 		close;
 	}
-	if (countitem(11534)) {
+	if (countitem(Coco_Juice)) {
 		mes "[Lazy Young Man]";
 		mes "Wewt~!! Isn't that Palm Juice?";
 		mes "Can you give me that? I just woke";
@@ -181,7 +181,7 @@ dewata,114,243,6	script	Lazy Young Man#dew	4_M_DEWMAN,1,1,{
 		case 1:
 			mes "[Lazy Young Man]";
 			mes "Really? For me?? I'll give you this in return... Thanks... Hehe~";
-			delitem 11534,1; //Coco_Juice
+			delitem Coco_Juice,1;
 			getrandgroupitem(IG_GiftBox),1;
 			close;
 		case 2:
@@ -195,7 +195,7 @@ dewata,114,243,6	script	Lazy Young Man#dew	4_M_DEWMAN,1,1,{
 	mes "juice for me?~";
 	close;
 OnTouch:
-	if (countitem(11534) == 0) {
+	if (countitem(Coco_Juice) == 0) {
 		mes "[Lazy Young Man]";
 		mes "Arrgg~ I'm thirsty~~ so thirsty~~";
 		mes "Give me Palm juice... Palm Juuiice~~";
@@ -227,7 +227,7 @@ dewata,159,81,4	script	Tourist#dew-1	4_M_SITDOWN,{
 }
 
 dewata,146,109,5	script	Restauranteur#dew	4_COOK,{
-	if (checkweight(11532,1) == 0 || checkweight(11533,1) == 0 || MaxWeight - Weight < 500) {
+	if (checkweight(Nasi_Goreng,1) == 0 || checkweight(Satay,1) == 0 || MaxWeight - Weight < 500) {
 		mes "[Restauranteur]";
 		mes "You came to taste my dish? It is always good to eat with an empty stomach.";
 		close;
@@ -1037,7 +1037,7 @@ dewata,280,236,4	script	Settler#dew	4_F_JOB_BLACKSMITH,{
 }
 
 dewata,204,230,6	script	Dieting Lady#dew	4_M_DEWWOMAN,{
-	if (countitem(11533) == 0) {
+	if (countitem(Satay) == 0) {
 		mes "[Dieting Lady]";
 		mes "Ah~ I'm starving!!";
 		mes "I should be on a diet now.";
@@ -1055,14 +1055,14 @@ dewata,204,230,6	script	Dieting Lady#dew	4_M_DEWWOMAN,{
 	next;
 	switch(select("Yes, want a taste?:No, it's for me!")) {
 	case 1:
-		delitem 11533,1; //Satay
+		delitem Satay,1;
 		mes "[Dieting Lady]";
 		mes "Thanks so much!";
 		mes "I've been so hungry~!!";
 		mes "This smell of this ^006400Satay^000000";
 		mes "is so good~!";
 		next;
-		getitem 11533,1; //Satay
+		getitem Satay,1;
 		mes "[Dieting Lady]";
 		mes "Ah... gotta come back to my senses,";
 		mes "too much of a good thing is bad...";

@@ -105,7 +105,7 @@ L_Menu:
 					mes "Looks like you need more time to decide.";
 					close;
 				}
-                if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 2000) {
+                if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
 					mes "- Hold on!! -";
 					mes "- You cannot receive items -";
 					mes "- because you carry too much. -";
@@ -275,7 +275,7 @@ L_Menu:
 					mes "Think carefully~~";
 					close;
 				}
-                if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 2000) {
+                if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
 					mes "- Hold on!! -";
 					mes "- You cannot receive items -";
 					mes "- because you carry too much. -";

@@ -165,7 +165,7 @@ function	script	F_Invest_Abyss	{
 		mes "Not much but this is a small gift. You can exchange it with items in Malangdo.";
 		Zeny -= .@zeny;
 		setd getarg(0), getd(getarg(0)) + .@units;
-		getitem 6488,.@units; //Thanks_Invest_Ticket
+		getitem Thanks_Invest_Ticket,.@units;
 		close;
 	case 2:
 		mes getarg(1);
@@ -202,7 +202,7 @@ function	script	F_Invest_Abyss	{
 			mes "Canceled.";
 			close;
 		}
-		if (countitem(6489) < .@tickets) {
+		if (countitem(Cats_Invest_Certif) < .@tickets) {
 			mes getarg(1);
 			mes "Looks like you have fewer Investment Certificates than you want to submit.";
 			close;
@@ -211,9 +211,9 @@ function	script	F_Invest_Abyss	{
 		mes getarg(1);
 		mes .@tickets+" Investment Certificate"+((.@tickets == 1)?" is":"s are")+" the same as an investment of "+.@units+" units ("+((.@units < 100)?.@units:insertchar(""+.@units,",",1))+"0,000z)"+getarg(2,"")+".";
 		mes "Not much but this is a small gift. You can exchange it with items in Malangdo.";
-		delitem 6489,.@tickets; //Cats_Invest_Certif
+		delitem Cats_Invest_Certif,.@tickets;
 		setd getarg(0), getd(getarg(0)) + .@units;
-		getitem 6488,.@units; //Thanks_Invest_Ticket
+		getitem Thanks_Invest_Ticket,.@units;
 		close;
 	case 3:
 		mes getarg(1);
@@ -870,14 +870,14 @@ OnAgitInvest:
 			close;
 		}
 	case 3:
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 			mes "- Currently you're carrying -";
 			mes "- too many items with you. -";
 			mes "- Please try again after you -";
 			mes "- lose some weight. -";
 			close;
 		}
-		if (countitem(6488) >= 4800) {
+		if (countitem(Thanks_Invest_Ticket) >= 4800) {
 			mes .@n$;
 			mes "You have too many Thank You Tickets to receive any more.";
 			mes "Cannot give you any more tickets. Please use your ticket and come back.";
@@ -1115,13 +1115,13 @@ OnAgitInvest:
 	next;
 	switch(select("Invest for gate connection:Deepest Layer Dungeon Access:Abyss Gate Access:Cancel")) {
 	case 1:
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 			mes "[Gate Manager]";
 			mes "You have too many items to receive the Thank You Ticket as a small gift for your investment.";
 			mes "Please come back after making room in your inventory.";
 			close;
 		}
-		if (countitem(6488) >= 4800) {
+		if (countitem(Thanks_Invest_Ticket) >= 4800) {
 			mes "[Gate Manager]";
 			mes "You have too many Thank You Tickets to receive any more.";
 			mes "Cannot give you any more tickets. Please use your ticket and come back.";
@@ -1326,7 +1326,7 @@ malangdo,218,126,4	script	Cat Paw Merchants Notice	4_BOARD3,{
 }
 
 malangdo,218,123,1	script	Namis#invest	4_CAT_SAILOR2,4,4,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
 		mes "- Please try again after you -";
@@ -1451,7 +1451,7 @@ L_Check:
 	delitem getarg(1),getarg(2);
 	if (.@items == 2)
 		delitem getarg(5),getarg(6);
-	getitem 6489,1; //Cats_Invest_Certif
+	getitem Cats_Invest_Certif,1;
 	mes "[Namis]";
 	mes "Here's your Certificate. Always be grateful to the Merchants for these events!";
 	close;
@@ -1466,7 +1466,7 @@ OnTouch:
 // Investment Rewards
 //============================================================
 malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
-	if (MaxWeight - Weight < 4500 || checkweight(1201,1) == 0) {
+	if (MaxWeight - Weight < 4500 || checkweight(Knife,1) == 0) {
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
 		mes "- Please try again after you -";
@@ -1507,11 +1507,11 @@ malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 	case 3:
 		mes "Red Paw Jelly Bag Button chosen. Need to insert 5 ^FF0000Invest Thanks Ticket^000000 and a random item will appear.";
 		next;
-		if (countitem(6488) < 5) {
+		if (countitem(Thanks_Invest_Ticket) < 5) {
 			mes "You don't have enough ^FF0000Invest Thanks Ticket^000000 to proceed.";
 			close;
 		}
-		delitem 6488,5; //Thanks_Invest_Ticket
+		delitem Thanks_Invest_Ticket,5;
 		.@i = rand(1,10000);
 		     if (.@i <= 100) callsub L_Bag,12531,1; //White_Potion_Box
 		else if (.@i <= 200) callsub L_Bag,12549,1; //White_Slim_Pot_Box2
@@ -1576,11 +1576,11 @@ malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 	case 4:
 		mes "Black Paw Jelly Bag Button chosen. Need to insert 50 ^FF0000Invest Thanks Ticket^000000 and a random item will appear.";
 		next;
-		if (countitem(6488) < 50) {
+		if (countitem(Thanks_Invest_Ticket) < 50) {
 			mes "You don't have enough ^FF0000Invest Thanks Ticket^000000 to proceed.";
 			close;
 		}
-		delitem 6488,50; //Thanks_Invest_Ticket
+		delitem Thanks_Invest_Ticket,50;
 		.@i = rand(1,10000);
 		     if (.@i <= 100) callsub L_Bag,12531,1; //White_Potion_Box
 		else if (.@i <= 200) callsub L_Bag,12549,1; //White_Slim_Pot_Box2
@@ -1655,11 +1655,11 @@ malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 
 //callsub L_Purchase,<ticket cost>,<reward ID>,<reward amount>{,<reward name>};
 L_Purchase:
-	if (countitem(6488) < getarg(0)) {
+	if (countitem(Thanks_Invest_Ticket) < getarg(0)) {
 		mes "You don't have enough ^FF0000Invest Thanks Ticket^000000 to proceed.";
 		close;
 	}
-	delitem 6488,getarg(0); //Thanks_Invest_Ticket
+	delitem Thanks_Invest_Ticket,getarg(0);
 	getitem getarg(1),getarg(2);
 	mes "- Done! -";
 	next;

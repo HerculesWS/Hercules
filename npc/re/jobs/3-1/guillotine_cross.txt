@@ -259,7 +259,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 				if (Zeny > 799) {
 					mes "Here you are, take it.";
 					Zeny -= 800;
-					getitem 12112,1; //Tropical_Sograt
+					getitem Tropical_Sograt,1;
 					close;
 				}
 				mes "It's 800 zeny per glass of Tropical Sograt.";
@@ -269,7 +269,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 				if (Zeny > 799) {
 					mes "Here you are, take it.";
 					Zeny -= 800;
-					getitem 12113,1; //Vermilion_The_Beach
+					getitem Vermilion_The_Beach,1;
 					close;
 				}
 				mes "It's 800 zeny per glass of Vermilion on the Beach.";
@@ -714,7 +714,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 						mes "Here you are. Milk.";
 						mes "Then take a rest.";
 						Zeny -= 500;
-						getitem 519,1; //Milk
+						getitem Milk,1;
 						close;
 					}
 					mes "I told you, it's 500 zeny.";
@@ -754,7 +754,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			if (Zeny > 799) {
 				mes "Here you are, take it.";
 				Zeny -= 800;
-				getitem 12112,1; //Tropical_Sograt
+				getitem Tropical_Sograt,1;
 				close;
 			}
 			mes "It's 800 zeny per 1 glass of Tropical Sograt.";
@@ -764,7 +764,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			if (Zeny > 799) {
 				mes "Here you are, take it.";
 				Zeny -= 800;
-				getitem 12113,1; //Vermilion_The_Beach
+				getitem Vermilion_The_Beach,1;
 				close;
 			}
 			mes "[Daora]";
@@ -781,7 +781,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 					mes "I feel sorry to take 500 zeny per bottle, but I have to.";
 					mes "It's very hard to get milk in Veins.";
 					Zeny -= 500;
-					getitem 519,1; //Milk
+					getitem Milk,1;
 					close;
 				}
 				mes "Umm... I think I can't help you.";
@@ -816,7 +816,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			if (Zeny > 999) {
 				mes "Here you are, take it.";
 				Zeny -= 1000;
-				getitem 12112,1; //Tropical_Sograt
+				getitem Tropical_Sograt,1;
 				close;
 			}
 			mes "It's 1000 zeny per glass of Tropical Sograt.";
@@ -826,7 +826,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 			if (Zeny > 999) {
 				mes "Here you are, take it.";
 				Zeny -= 1000;
-				getitem 12113,1; //Vermilion_The_Beach
+				getitem Vermilion_The_Beach,1;
 				close;
 			}
 			mes "It's 1000 zeny per glass of Vermilion on the Beach.";
@@ -842,7 +842,7 @@ job3_guil01,82,95,3	script	Daora#3rdgc02	4_F_DESERT,{
 }
 
 job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
-	if (!checkweight(1201,2)) {
+	if (!checkweight(Knife,2)) {
 		mes "- You can't continue this quest because you have too many items. -";
 		close;
 	}
@@ -929,7 +929,7 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		next;
 		select("Give a key to him.");
 		mes "[Mayshell]";
-		if (countitem(6150) == 0) {
+		if (countitem(Key_Of_The_Mansion) == 0) {
 			mes "You didn't bring a key?";
 			mes "I'll be in lots of trouble.";
 			close;
@@ -951,7 +951,7 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		mes "[Mayshell]";
 		mes "This is the last step.";
 		mes "Don't make any mistakes.";
-		delitem 6150,1; //Key_Of_The_Mansion
+		delitem Key_Of_The_Mansion,1;
 		job_3rd_gc = 15;
 		changequest 7108,7109;
 		close;
@@ -1051,7 +1051,7 @@ job3_guil01,16,20,4	script	Mayshell#3rdgc03	4_F_KHELLISIA,{
 		mes "I reward you for your labor, and I'm going to give you a present.";
 		mes "I got this one from guild, I hope it's helpful to you.";
 		job_3rd_gc = 20;
-		getitem 12106,1; //Accessory_Box
+		getitem Accessory_Box,1;
 		erasequest 7091;
 		erasequest 7092;
 		erasequest 7093;
@@ -2491,7 +2491,7 @@ OnTimer61000:
 }
 
 job3_guil02,49,43,5	script	Dandelion#3rdgc12	4_M_DSTMANDEAD,{
-	if (!checkweight(1201,2)) {
+	if (!checkweight(Knife,2)) {
 		mes "- You can't continue this quest because you have too many items. -";
 		close;
 	}
@@ -2513,7 +2513,7 @@ job3_guil02,49,43,5	script	Dandelion#3rdgc12	4_M_DSTMANDEAD,{
 		mes "He passed away.";
 		mes "You find a key with a fancy decoration around his neck.";
 		job_3rd_gc = 13;
-		getitem 6150,1; //Key_Of_The_Mansion
+		getitem Key_Of_The_Mansion,1;
 		changequest 7107,7108;
 		close;
 	} else {
@@ -3594,7 +3594,7 @@ OnDisable:
 }
 
 job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
-	if (!checkweight(1201,2)) {
+	if (!checkweight(Knife,2)) {
 		mes "- You can't continue this quest because you have too many items. -";
 		close;
 	}
@@ -3684,8 +3684,8 @@ job3_guil01,148,53,3	script	Bercasell#3rdgc16	4_M_GUILLOTINE,{
 									job_3rd_gc = 28;
 									erasequest 7099;
 								}
-								getitem 2795,1; //Green_Apple_Ring
-								getitem 5755,1; //Silent_Executer
+								getitem Green_Apple_Ring,1;
+								getitem Silent_Executer,1;
 								next;
 								mes "[Bercasell]";
 								mes "And... these are presents to celebrate your becoming a Guillotine Cross.";

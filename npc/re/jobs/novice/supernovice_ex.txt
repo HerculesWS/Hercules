@@ -544,16 +544,16 @@ beach_dun2,119,92,4	script	Fishing Novice#sp2	4_M_SIT_NOVICE,{
 		mes "[Nodor]";
 		mes "There are what I used to wear when I was younger,";
 		mes "but they are still good.";
-		if (EXSUPNOV_Q_ == 3) getitem 2522,1; // Undershirt
+		if (EXSUPNOV_Q_ == 3) getitem Undershirt,1; // Undershirt
 		else if (EXSUPNOV_Q_ == 4) {
-			getitem 2628,1; // Novice Armlet [1]
-			getitem 2113,1; // Novice Shield [1]
-			getitem 2416,1; // Novice Shoes [1]
-			getitem 5119,1; // Super Novice Hat [1]
-			getitem 2512,1; // Novice Manteau [1]
-			getitem 2340,1; // Novice Breastplate [1]
+			getitem Novice_Armlet,1; // Novice Armlet [1]
+			getitem Novice_Shield,1; // Novice Shield [1]
+			getitem Novice_Shoes,1; // Novice Shoes [1]
+			getitem Super_Novice_Hat_,1; // Super Novice Hat [1]
+			getitem Novice_Manteau,1; // Novice Manteau [1]
+			getitem Novice_Breast,1; // Novice Breastplate [1]
 		}
-		else getitem 2340,1; // Novice Breastplate [1]
+		else getitem Novice_Breast,1; // Novice Breastplate [1]
 		next;
 		select("Second-hand stuff, huh?");
 		mes "[Nodor]";

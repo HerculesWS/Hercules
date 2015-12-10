@@ -26,7 +26,7 @@ OnTouch:
 		mes " - There is a strange distortion here - ";
 		if (strnpcinfo(0) == "#distorted_space_1" && (Class == Job_Warlock || Class == Job_Warlock_T || Class == Job_Baby_Warlock)) {
 			close2;
-			if (countitem(6153) > 0)
+			if (countitem(Special_Exchange_Coupon) > 0)
 				warp "spl_in02",79,102;
 			end;
 		}
@@ -266,7 +266,7 @@ spl_in02,77,107,5	script	Assistant#Warlock1	4_M_FAIRYKID5,{
 		callsub L_Quest,1;
 		close;
 	} else if (job_wl == 4) {
-		if (countitem(6152) == 0 || countitem(6151) == 0)
+		if (countitem(Glittering_Crystal) == 0 || countitem(Peice_Of_Great_Bradium) == 0)
 			callsub L_Quest,0;
 		else {
 			mes "[Yoop]";
@@ -304,8 +304,8 @@ L_Quest:
 		mes "[Yoop]";
 		mes "Show us how strong you are. And don't forget to wear this.";
 		job_wl = 4;
-		getitem 2796,1; //Magical_Stone
-		getitem 2797,1; //Magical_Stone_
+		getitem Magical_Stone,1;
+		getitem Magical_Stone_,1;
 		changequest 11106,11107;
 		next;
 	}
@@ -333,7 +333,7 @@ spl_in02,60,231,5	script	Yoop#Warlock	4_M_FAIRYKID5,{
 		switch(select("I brought the materials.:I've lost the Magical Stones.:Nothing.")) {
 		case 1:
 			mes "[Yoop]";
-			if (countitem(6152) == 0 || countitem(6151) == 0) {
+			if (countitem(Glittering_Crystal) == 0 || countitem(Peice_Of_Great_Bradium) == 0) {
 				mes "......";
 				mes "......Where?";
 				mes "Don't bother me!";
@@ -353,12 +353,12 @@ spl_in02,60,231,5	script	Yoop#Warlock	4_M_FAIRYKID5,{
 				mes "Bring these stones with you or else you won't be able to return!";
 				mes "Be careful!";
 				close;
-			} else if (countitem(6152) && countitem(6151)) {
+			} else if (countitem(Glittering_Crystal) && countitem(Peice_Of_Great_Bradium)) {
 				if (isequipped(2796) || isequipped(2797)) {
 					mes "Bring me back the magical stones.";
 					close;
 				}
-				if (countitem(2796) == 0 || countitem(2797) == 0) {
+				if (countitem(Magical_Stone) == 0 || countitem(Magical_Stone_) == 0) {
 					mes "It seems that you don't have it?";
 					mes "You lost it?";
 					next;
@@ -369,10 +369,10 @@ spl_in02,60,231,5	script	Yoop#Warlock	4_M_FAIRYKID5,{
 				mes "Alright! All the materials are ready!";
 				mes "While I am concentrating on working on this stone. Can you go back to my master?";
 				mes "I will follow up once it's done.";
-				delitem 2796,countitem(2796); //Magical_Stone
-				delitem 2797,countitem(2797); //Magical_Stone_
-				delitem 6152,countitem(6152); //Glittering_Crystal
-				delitem 6151,countitem(6151); //Peice_Of_Great_Bradium
+				delitem Magical_Stone,countitem(Magical_Stone);
+				delitem Magical_Stone_,countitem(Magical_Stone_);
+				delitem Glittering_Crystal,countitem(Glittering_Crystal);
+				delitem Peice_Of_Great_Bradium,countitem(Peice_Of_Great_Bradium);
 				job_wl = 5;
 				changequest 11107,11108;
 				close;
@@ -392,18 +392,18 @@ spl_in02,60,231,5	script	Yoop#Warlock	4_M_FAIRYKID5,{
 				mes "It's not hard to tell if you have it or not!";
 				close;
 			case 2:
-				if ((isequipped(2796) == 0 && countitem(2796) == 0) || (isequipped(2797) == 0 && countitem(2797) == 0)) {
-					if (countitem(732) > 0) {
+				if ((isequipped(2796) == 0 && countitem(Magical_Stone) == 0) || (isequipped(2797) == 0 && countitem(Magical_Stone_) == 0)) {
+					if (countitem(Crystal_Jewel__) > 0) {
 						switch(select("Give 3 carat diamond.:Just quit it.")) {
 						case 1:
 							mes "[Yoop]";
 							mes "I will overlook your fault.";
 							mes "Please be careful with it.";
-							delitem 732,1; //Crystal_Jewel__
-							if (isequipped(2796) == 0 && countitem(2796) == 0)
-								getitem 2796,1; //Magical_Stone
-							if (isequipped(2797) == 0 && countitem(2797) == 0)
-								getitem 2797,1; //Magical_Stone_
+							delitem Crystal_Jewel__,1;
+							if (isequipped(2796) == 0 && countitem(Magical_Stone) == 0)
+								getitem Magical_Stone,1;
+							if (isequipped(2797) == 0 && countitem(Magical_Stone_) == 0)
+								getitem Magical_Stone_,1;
 							close;
 						case 2:
 							mes "[Yoop]";
@@ -463,7 +463,7 @@ spl_in02,84,103,3	script	Assistant#Warlock2	4_F_FAIRYKID4,{
 		mes "It's not me you are looking for currently.";
 		close;
 	} else if (job_wl == 6) {
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 			mes "You're carring out too many items.";
 			mes "You'd better minimize your weight.";
 			close;
@@ -481,15 +481,15 @@ spl_in02,84,103,3	script	Assistant#Warlock2	4_F_FAIRYKID4,{
 		mes "I will guide you into the magic room.";
 		job_wl = 7;
 		changequest 11109,11110;
-		getitem 12384,5; //Rainbow_Ruby_Water
-		getitem 12386,5; //Rainbow_Ruby_Wind
-		getitem 12387,5; //Rainbow_Ruby_Earth
-		getitem 12385,5; //Rainbow_Ruby_Fire
+		getitem Rainbow_Ruby_Water,5;
+		getitem Rainbow_Ruby_Wind,5;
+		getitem Rainbow_Ruby_Earth,5;
+		getitem Rainbow_Ruby_Fire,5;
 		close2;
 		warp "job3_war01",23,20;
 		end;
 	} else if (job_wl == 7) {
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 			mes "You're carring out too many items.";
 			mes "You'd better minimize your weight.";
 			close;
@@ -498,14 +498,14 @@ spl_in02,84,103,3	script	Assistant#Warlock2	4_F_FAIRYKID4,{
 		mes "Would you like to try it again?";
 		mes "Let me give you more rubies.";
 		next;
-		if (countitem(12384)) delitem 12384,countitem(12384); //Rainbow_Ruby_Water
-		if (countitem(12386)) delitem 12386,countitem(12386); //Rainbow_Ruby_Wind
-		if (countitem(12387)) delitem 12387,countitem(12387); //Rainbow_Ruby_Earth
-		if (countitem(12385)) delitem 12385,countitem(12385); //Rainbow_Ruby_Fire
-		getitem 12384,5; //Rainbow_Ruby_Water
-		getitem 12386,5; //Rainbow_Ruby_Wind
-		getitem 12387,5; //Rainbow_Ruby_Earth
-		getitem 12385,5; //Rainbow_Ruby_Fire
+		if (countitem(Rainbow_Ruby_Water)) delitem Rainbow_Ruby_Water,countitem(Rainbow_Ruby_Water);
+		if (countitem(Rainbow_Ruby_Wind)) delitem Rainbow_Ruby_Wind,countitem(Rainbow_Ruby_Wind);
+		if (countitem(Rainbow_Ruby_Earth)) delitem Rainbow_Ruby_Earth,countitem(Rainbow_Ruby_Earth);
+		if (countitem(Rainbow_Ruby_Fire)) delitem Rainbow_Ruby_Fire,countitem(Rainbow_Ruby_Fire);
+		getitem Rainbow_Ruby_Water,5;
+		getitem Rainbow_Ruby_Wind,5;
+		getitem Rainbow_Ruby_Earth,5;
+		getitem Rainbow_Ruby_Fire,5;
 		close2;
 		warp "job3_war01",23,20;
 		end;
@@ -513,10 +513,10 @@ spl_in02,84,103,3	script	Assistant#Warlock2	4_F_FAIRYKID4,{
 		mes "[Yoop]";
 		mes "You have successfully crystallized the Hollow Stone.";
 		mes "I'm sorry that I've doubted you.";
-		if (countitem(12384)) delitem 12384,countitem(12384); //Rainbow_Ruby_Water
-		if (countitem(12386)) delitem 12386,countitem(12386); //Rainbow_Ruby_Wind
-		if (countitem(12387)) delitem 12387,countitem(12387); //Rainbow_Ruby_Earth
-		if (countitem(12385)) delitem 12385,countitem(12385); //Rainbow_Ruby_Fire
+		if (countitem(Rainbow_Ruby_Water)) delitem Rainbow_Ruby_Water,countitem(Rainbow_Ruby_Water);
+		if (countitem(Rainbow_Ruby_Wind)) delitem Rainbow_Ruby_Wind,countitem(Rainbow_Ruby_Wind);
+		if (countitem(Rainbow_Ruby_Earth)) delitem Rainbow_Ruby_Earth,countitem(Rainbow_Ruby_Earth);
+		if (countitem(Rainbow_Ruby_Fire)) delitem Rainbow_Ruby_Fire,countitem(Rainbow_Ruby_Fire);
 		next;
 		mes "[Yoop]";
 		mes "All of the tests are done. Now talk to Master Engoloria.";
@@ -662,7 +662,7 @@ spl_in02,80,108,5	script	Guild Master#Warlock	4_F_FAIRY1,{
 			mes "How did you come this far...";
 			close;
 		}
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 			mes "You've got too many items.";
 			mes "Please come back after reducing the number of items you have.";
 			close;
@@ -699,8 +699,8 @@ spl_in02,80,108,5	script	Guild Master#Warlock	4_F_FAIRY1,{
 		else job_wl = 10;
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		completequest 11112;
-		getitem 5753,1; //Magic_Stone_Hat
-		getitem 2795,1; //Green_Apple_Ring
+		getitem Magic_Stone_Hat,1;
+		getitem Green_Apple_Ring,1;
 		close;
 	} else if (job_wl > 9) {
 		mes "[Master Egnoloria]";

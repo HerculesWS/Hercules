@@ -296,8 +296,8 @@ malangdo,147,117,3	script	Innkeeper#malang	4_CAT_REST,{
 		next;
 		switch(select("Here you go.:Never mind.")) {
 		case 1:
-			if (countitem(12636) > 4) {
-				delitem 12636,5; //Malang_Sp_Can
+			if (countitem(Malang_Sp_Can) > 4) {
+				delitem Malang_Sp_Can,5;
 				percentheal 100,100;
 				specialeffect2 EF_HEALSP;
 				mes "[Innkeeper]";

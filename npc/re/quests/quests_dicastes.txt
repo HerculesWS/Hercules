@@ -102,7 +102,7 @@ dic_dun01,266,113,5	script	Curious Sapha#ep13_3_	4_MAN_BENKUNI,{
 		mes "I might be able to use this perfume's reaction to Scarabas and make progress in research.";
 		close;
 	case 2:
-		if (checkweight(1201,1) == 0) {
+		if (checkweight(Knife,1) == 0) {
 			mes "[Curious Sapha]";
 			mes "You don't seem to have enough space.";
 			close;
@@ -141,7 +141,7 @@ dic_dun01,266,113,5	script	Curious Sapha#ep13_3_	4_MAN_BENKUNI,{
 			close;
 		}
 		Zeny -= .@deal;
-		getitem 6437,.@input; //Scaraba_Perfume
+		getitem Scaraba_Perfume,.@input;
 		mes "[Curious Sapha]";
 		mes "Here you go. Scaraba might flock around you so don't use it near Scaraba Hall.";
 		close;
@@ -183,8 +183,8 @@ sec_in02,16,43,5	script	Scaraba Dungeon Entrance	4_MAN_BENKUNI,{
 	mes "You will be able to go through if the password is correct.";
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
 		ep13_3_secret = 6;
-		getitem 2782,1; //Ring_Of_Wise_King
-		getitem 6437,2; //Scaraba_Perfume
+		getitem Ring_Of_Wise_King,1;
+		getitem Scaraba_Perfume,2;
 		mes "Setting Complete";
 	} else
 		mes "Wrong Password";
@@ -269,7 +269,7 @@ dic_dun01,284,102,5	script	Dirty Vigilante#ep13_3	4_MAN_GALTUN,{
 		mes "Those Scaraba can snatch you away!";
 		close;
 	}
-	if (countitem(6437)) {
+	if (countitem(Scaraba_Perfume)) {
 		mes "[Vigilante]";
 		mes "Do you need something from the cave?";
 		next;
@@ -279,13 +279,13 @@ dic_dun01,284,102,5	script	Dirty Vigilante#ep13_3	4_MAN_GALTUN,{
 			mes "Be careful. The smell from the Scaraba Secretion was picked up by other Scarabas.";
 			next;
 			if (select("Enter after spraying perfume.:Do not enter because it's dangerous.") == 1) {
-				if (!countitem(6437)) {
+				if (!countitem(Scaraba_Perfume)) {
 					mes "- Your Scaraba Perfume disappeared. -";
 					close;
 				}
 				mes "[Vigilante]";
 				mes "Okay. Then good luck to you. Be careful.";
-				delitem 6437,1; //Scaraba_Perfume
+				delitem Scaraba_Perfume,1;
 				close2;
 				warp "dic_dun03",101,142;
 				end;
@@ -484,7 +484,7 @@ function	script	que_dic	{
 }
 
 dic_in01,48,263,5	script	Hunting Dept. 1 Manager	4_MAN_BENKUNI,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
 	}
@@ -554,7 +554,7 @@ dic_in01,48,263,5	script	Hunting Dept. 1 Manager	4_MAN_BENKUNI,{
 }
 
 dic_in01,51,266,6	script	Hunting Dept. 2 Manager	4_MAN_BENKUNI,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
 	}
@@ -623,7 +623,7 @@ dic_in01,51,266,6	script	Hunting Dept. 2 Manager	4_MAN_BENKUNI,{
 }
 
 dic_in01,51,270,7	script	Supply Dept. 1 Manager	4_MAN_BENKUNI,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
 	}
@@ -694,7 +694,7 @@ dic_in01,51,270,7	script	Supply Dept. 1 Manager	4_MAN_BENKUNI,{
 }
 
 dic_in01,48,273,1	script	Supply Dept. 2 Manager	4_MAN_BENKUNI,{
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
 	}
@@ -761,7 +761,7 @@ dic_in01,48,273,1	script	Supply Dept. 2 Manager	4_MAN_BENKUNI,{
 }
 
 dic_in01,43,273,1	script	Transport Dept. 1 Mgr	4_MAN_BENKUNI,{
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
 	}
@@ -835,7 +835,7 @@ dic_in01,43,273,1	script	Transport Dept. 1 Mgr	4_MAN_BENKUNI,{
 }
 
 dic_in01,40,270,2	script	Transport Dept. 2 Mgr	4_MAN_BENKUNI,{
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
 	}
@@ -903,7 +903,7 @@ dic_in01,40,270,2	script	Transport Dept. 2 Mgr	4_MAN_BENKUNI,{
 }
 
 dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "You have too many items in your inventory.";
 		close;
 	}
@@ -933,7 +933,7 @@ dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 	else if (.@map_hi == 3) mes "This is the very place where Ancient Sapha forefathers created history";
 	else mes "The Archive room holds transcendent knowledge beyond that of Midgard and Asgard";
 	next;
-	if (countitem(6308) > 29) {
+	if (countitem(Unidentified_Relic) > 29) {
 		mes "[Papyrus]";
 		mes "Oh... You've brought back plenty of unknown relics";
 		next;
@@ -947,11 +947,11 @@ dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 		}
 		mes "[Papyrus]";
 		mes "Ok here's your 11 Sapha Certifications.";
-		delitem 6308,30; //Unidentified_Relic
-		getitem 6304,11; //Sapa_Feat_Cert
+		delitem Unidentified_Relic,30;
+		getitem Sapa_Feat_Cert,11;
 		close;
 	}
-	if (countitem(6308) > 2) {
+	if (countitem(Unidentified_Relic) > 2) {
 		mes "[Papyrus]";
 		mes "Wow~ ";
 		mes "You've found an Unknown Relic.";
@@ -964,8 +964,8 @@ dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 		}
 		mes "[Papyrus]";
 		mes "Ok here's your 1 Sapha Certifications.";
-		delitem 6308,3; //Unidentified_Relic
-		getitem 6304,1; //Sapa_Feat_Cert
+		delitem Unidentified_Relic,3;
+		getitem Sapa_Feat_Cert,1;
 		close;
 	}
 	mes "[Papyrus]";
@@ -1135,7 +1135,7 @@ function	script	unknown_d	{
 		next;
 		mes "In addition, you've obtained an unknown relic to report back to the Saphas.";
 		specialeffect2 EF_STEAL;
-		getitem 6308,1; //Unidentified_Relic
+		getitem Unidentified_Relic,1;
 	}
 	close;
 }
@@ -1288,12 +1288,12 @@ dic_in01,263,193,3	script	Diel Guard#ep133_20	4_MAN_GALTUN,{
 			mes "He is waiting inside.";
 			mes "Please go in.";
 		}
-		else if (countitem(6304) > 0) {
+		else if (countitem(Sapa_Feat_Cert) > 0) {
 			mes "[Diel Guard]";
 			mes "Are you here to meet Ahat?";
 			mes "You are on the list.";
 			mes "Please go in.";
-			delitem 6304,1; //Sapa_Feat_Cert
+			delitem Sapa_Feat_Cert,1;
 		}
 		else {
 			mes "[Diel Guard]";
@@ -1400,15 +1400,15 @@ dic_in01,294,276,5	script	Secret Adjutant#ep133_2	4_M_CATMAN2,{
 		close2;
 	}
 	else if (ep13_3_secret == 17) {
-		if (countitem(6306) > 9 && countitem(6305) > 9 && countitem(6307) > 9) {
+		if (countitem(Solid_Bloodstain) > 9 && countitem(Frozen_Skin_Piece) > 9 && countitem(Suspicious_Magic_Stone) > 9) {
 			mes "[Cheshire]";
 			mes "..... ..you";
 			mes "Are useful, aren't you?";
 			mes "That will be all for today.";
 			mes "We will need to work little by little so we don't draw attention.";
-			delitem 6306,10; //Solid_Bloodstain
-			delitem 6305,10; //Frozen_Skin_Piece
-			delitem 6307,10; //Suspicious_Magic_Stone
+			delitem Solid_Bloodstain,10;
+			delitem Frozen_Skin_Piece,10;
+			delitem Suspicious_Magic_Stone,10;
 			ep13_3_secret = 18;
 			erasequest 7199;
 			setquest 7200;
@@ -1434,7 +1434,7 @@ dic_in01,294,276,5	script	Secret Adjutant#ep133_2	4_M_CATMAN2,{
 	}
 	else {
 		if (ep13_3_ahtdayq == 1) {
-			if ((countitem(6306) > 9) && (countitem(6305) > 9) && (countitem(6307) > 9)) {
+			if ((countitem(Solid_Bloodstain) > 9) && (countitem(Frozen_Skin_Piece) > 9) && (countitem(Suspicious_Magic_Stone) > 9)) {
 				mes "[Cheshire]";
 				mes "Ok. Confirmed.";
 				mes "Good.";
@@ -1445,11 +1445,11 @@ dic_in01,294,276,5	script	Secret Adjutant#ep133_2	4_M_CATMAN2,{
 				mes "We will do this again tomorrow.";
 				mes "Ahat seems to trust you very much.";
 				mes "Let's do are best.";
-				delitem 6306,10; //Solid_Bloodstain
-				delitem 6305,10; //Frozen_Skin_Piece
-				delitem 6307,10; //Suspicious_Magic_Stone
+				delitem Solid_Bloodstain,10;
+				delitem Frozen_Skin_Piece,10;
+				delitem Suspicious_Magic_Stone,10;
 				ep13_3_ahtdayq = 2;
-				getitem 6304,1; //Sapa_Feat_Cert
+				getitem Sapa_Feat_Cert,1;
 				getexp 70000,0;
 				getexp 0,30000;
 				erasequest 7201;
@@ -1776,7 +1776,7 @@ dic_in01,300,280,5	script	Minister Ahat#ep133_21	4_HUMAN_GERUTOO,{
 		mes "And this is something to reward you for your deeds.";
 		mes "Nothing much but I hope you like it.";
 		ep13_3_secret = 19;
-		getitem 2790,1; //Bradium_Brooch
+		getitem Bradium_Brooch,1;
 		close2;
 	}
 	else {
@@ -2315,7 +2315,7 @@ dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 }
 
 dicastes01,223,190,1	script	Calyon#pa8029	4_MAN_NITT,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
 	}
@@ -2488,7 +2488,7 @@ dicastes01,223,190,1	script	Calyon#pa8029	4_MAN_NITT,{
 }
 
 dicastes01,211,178,2	script	Moltuka#pa0829	4_MAN_NITT,{
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
 	}
@@ -2712,7 +2712,7 @@ dicastes01,211,178,2	script	Moltuka#pa0829	4_MAN_NITT,{
 }
 
 dicastes01,175,217,5	script	Kalipo#pa0829	4_MAN_NITT,{
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
 	}
@@ -2854,7 +2854,7 @@ dicastes01,175,217,5	script	Kalipo#pa0829	4_MAN_NITT,{
 }
 
 dicastes01,187,230,5	script	Laponte#pa0829	4_MAN_NITT,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
 	}
@@ -3025,7 +3025,7 @@ dicastes01,187,230,5	script	Laponte#pa0829	4_MAN_NITT,{
 }
 
 dicastes01,208,230,3	script	Pura#pa0829	4_MAN_NITT,{
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
 	}
@@ -3216,7 +3216,7 @@ dicastes01,208,230,3	script	Pura#pa0829	4_MAN_NITT,{
 }
 
 dicastes01,225,211,3	script	Tragis#pa0829	4_MAN_NITT,{
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";
 		close;
 	}
@@ -3388,7 +3388,7 @@ dicastes01,225,211,3	script	Tragis#pa0829	4_MAN_NITT,{
 // Doha's Secret Orders
 //============================================================
 mid_campin,168,170,3	script	Inspector Doha#ep133	1_M_ORIENT01,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- You can too many items to proceed with the quest. -";
 		close;
 	}
@@ -3602,7 +3602,7 @@ mid_campin,168,170,3	script	Inspector Doha#ep133	1_M_ORIENT01,{
 		close;
 	}
 	else if (ep13_3_secret == 22) {
-		if (countitem(6306) && countitem(6305) && countitem(6307)) {
+		if (countitem(Solid_Bloodstain) && countitem(Frozen_Skin_Piece) && countitem(Suspicious_Magic_Stone)) {
 			mes "[Doha]";
 			mes "How is the investigation going?";
 			mes "Do you have any significant status?";
@@ -3631,11 +3631,11 @@ mid_campin,168,170,3	script	Inspector Doha#ep133	1_M_ORIENT01,{
 			mes "Please have this.";
 			mes "This is a reward for your services up to now.";
 			mes "You deserve this for the hardship you are going through in another world.";
-			delitem 6306,1; //Solid_Bloodstain
-			delitem 6305,1; //Frozen_Skin_Piece
-			delitem 6307,1; //Suspicious_Magic_Stone
+			delitem Solid_Bloodstain,1;
+			delitem Frozen_Skin_Piece,1;
+			delitem Suspicious_Magic_Stone,1;
 			ep13_3_secret = 23;
-			getitem 2553,1; //Dragon_Manteau
+			getitem Dragon_Manteau,1;
 			erasequest 7202;
 			completequest 7203;
 			next;
@@ -4641,7 +4641,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 			mes "Give an Exploit certification of Sapha to BK.";
 			close;
 		}
-		if (countitem(6304)) {
+		if (countitem(Sapa_Feat_Cert)) {
 			mes "[BK]";
 			mes "Haha.. good, good.";
 			mes "I don't know anything outside of our race";
@@ -4651,7 +4651,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 			mes "I even saw him meet the ^4d4dffnew minister^000000 alone.";
 			mes "Hu hu...";
 			mes "Satisfied?";
-			delitem 6304,1; //Sapa_Feat_Cert
+			delitem Sapa_Feat_Cert,1;
 			ep13_3_secret = 7;
 			next;
 			mes "- BK says this and takes the exploit certification out of your hand.";
@@ -4697,7 +4697,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 				mes "I have nothing to say if you don't give me a certification.";
 				close;
 			}
-			if (!countitem(6304)) {
+			if (!countitem(Sapa_Feat_Cert)) {
 				mes "[BK]";
 				mes "I have nothing to say if you don't give me a certification.";
 				close;
@@ -4709,7 +4709,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 			mes "[BK]";
 			mes "The new minister was picked up ^4d4dffnear the crack^000000.";
 			mes "He must be an alien!";
-			delitem 6304,1; //Sapa_Feat_Cert
+			delitem Sapa_Feat_Cert,1;
 			ep13_3_secret = 8;
 			next;
 			select("What do you think so?");
@@ -4732,7 +4732,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 				close;
 			}
 		}
-		if (countitem(6304)) {
+		if (countitem(Sapa_Feat_Cert)) {
 			mes "[BK]";
 			mes "Because he isn't Sapha!";
 			next;
@@ -4750,7 +4750,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 			mes "[BK]";
 			mes "Well, I don't understand why because all Saphas";
 			mes "are beautiful.";
-			delitem 6304,1; //Sapa_Feat_Cert
+			delitem Sapa_Feat_Cert,1;
 			ep13_3_secret = 9;
 			changequest 7191,7192;
 			next;
@@ -5084,7 +5084,7 @@ dic_in01,165,104,0	script	Frede#13_3_in	4_MAN_PIOM,{
 			mes "The cats outside gave it to me. It doesn't do much good for Saphas but I heard it's suppose to help you humans.";
 			ep13_3_bra = 2;
 			setquest 11171;
-			getitem 513,1; //Banana
+			getitem Banana,1;
 			close;
 		}
 		else if (ep13_3_bra == 2) {
@@ -5296,7 +5296,7 @@ dic_in01,165,104,0	script	Frede#13_3_in	4_MAN_PIOM,{
 			close;
 		}
 		else if (ep13_3_bra == 8) {
-			if (checkweight(1201,1) == 0) {
+			if (checkweight(Knife,1) == 0) {
 				mes "[Frede]";
 				mes "You have too many kinds of items.";
 				mes "Please return after reducing the number of items.";
@@ -5331,7 +5331,7 @@ dic_in01,165,104,0	script	Frede#13_3_in	4_MAN_PIOM,{
 				mes "We may be from different races but we can be great friends.";
 				completequest 11176;
 				ep13_3_bra = 9;
-				getitem 2788,1; //Bradium_Earing
+				getitem Bradium_Earing,1;
 				for (.@i = 0; .@i < .@size; ++.@i)
 					erasequest .@quest_id[.@i];
 				close;
@@ -6027,7 +6027,7 @@ dic_in01,349,129,5	script	Bouy#13_3	4_MAN_BENKUNI,{
 			close;
 		}
 		else if (ep13_3_bra == 6) {
-			if (countitem(6319) > 29) {
+			if (countitem(Small_Bradium) > 29) {
 				mes "[Bouy]";
 				mes "You've brought back the Bradium.";
 				mes "I've been waiting for the Galtens to return because I'm not accustomed to battle since I'm Venknick. Thank you very much.";
@@ -6037,7 +6037,7 @@ dic_in01,349,129,5	script	Bouy#13_3	4_MAN_BENKUNI,{
 				next;
 				mes "[Bouy]";
 				mes "Please go rest while I get to work.";
-				delitem 6319,30; //Small_Bradium
+				delitem Small_Bradium,30;
 				changequest 11174,11175;
 				ep13_3_bra = 7;
 				close;
@@ -6797,7 +6797,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 				mes "You can use it to return to El Dicastes whenever you wish.";
 				next;
 				ep13_3_invite = 6;
-				getitem 2844,1; //El_Dicastes_Light
+				getitem El_Dicastes_Light,1;
 				completequest 7184;
 				mes "[Clerk Rhawyne]";
 				mes "There is a special place for humans located beneath the residential area of Pioms.";
@@ -6823,7 +6823,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 					mes "Ravail cannot be met in person even with exploit certifications.";
 					next;
 					if (select("Ahat:Another minister") == 1) {
-						if (countitem(6304) > 2) {
+						if (countitem(Sapa_Feat_Cert) > 2) {
 							mes "[Clerk Rhawyne]";
 							mes "You've really collected 3 exploit certification of Sapha already.";
 							mes "Alright. I will send a request.";
@@ -6835,7 +6835,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 							mes "[Clerk Rhawyne]";
 							mes "It is a separate elevator that leads to the high minister's office";
 							mes "You will be guided in front of the office.";
-							delitem 6304,3; //Sapa_Feat_Cert
+							delitem Sapa_Feat_Cert,3;
 							ep13_3_secret = 13;
 							changequest 7197,7198;
 							close;
@@ -6976,7 +6976,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 			mes "Are you sure you want to do this?";
 			next;
 			if(select("No, let me think about it.:Take my Light of El Dicastes.") == 2) {
-				if (countitem(2844) == 0 || countitem(6304) < 6) {
+				if (countitem(El_Dicastes_Light) == 0 || countitem(Sapa_Feat_Cert) < 6) {
 					mes "[Kareka]";
 					mes "You need to bring the Light of El Dicastes and 6 Sapha Certifications!";
 					mes "Don't try to cheat me!";
@@ -6988,14 +6988,14 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 				mes "Haaap--!";
 				specialeffect2 EF_REPAIRWEAPON;
 				progressbar "ffff00",3;
-				delitem 6304,6; //Sapa_Feat_Cert
-				delitem 2844,1; //El_Dicastes_Light
-				getitem 2844,1; //El_Dicastes_Light
+				delitem Sapa_Feat_Cert,6;
+				delitem El_Dicastes_Light,1;
+				getitem El_Dicastes_Light,1;
 				ep13_3_ring2 = 0;
 			}
 			close;
 		}
-		if (countitem(6304) < 1) {
+		if (countitem(Sapa_Feat_Cert) < 1) {
 			mes "[Kareka]";
 			mes "The Exploit Certifications of Sapha that you collect by helping throughout the city has other uses besides meeting the minister.";
 			next;
@@ -7023,7 +7023,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 			mes "But of course, since this is adding spells on top of its original magic, I cannot guarantee that you will get what you want on one try.";
 			close;
 		}
-		if (countitem(2844) < 1) {
+		if (countitem(El_Dicastes_Light) < 1) {
 			mes "[Kareka]";
 			mes "Either you are not wearing or don't have the equipment to upgrade on you.";
 			close;
@@ -7053,7 +7053,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 		else mes "Hmm... This may not be important to you but.";
 		next;
 		mes .@n$;
-		if (countitem(6304) < 1) {
+		if (countitem(Sapa_Feat_Cert) < 1) {
 			if (.@re$ == "Brare") {
 				mes "Oh... no luck on Sapha Certifications?";
 				next;
@@ -7268,7 +7268,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 		mes "Please come back again.";
 		close;
 	}
-	if (countitem(6304) < .@req) {
+	if (countitem(Sapa_Feat_Cert) < .@req) {
 		mes .@n$;
 		mes "But you don't have enough exploit certifications. You need "+.@req+" exploit certification of Sapha for the "+((.@req == 3)?"third":((.@req == 2)?"second":"first"))+" step of upgrade.";
 		close;
@@ -7379,7 +7379,7 @@ dic_in01,353,37,5	duplicate(dic_enc#main)	Kareka#pa0829	4_MAN_PIOM
 
 dic_fild01,228,159,4	script	Jahbong#pa0829	4_M_MERCAT2,{
 	mes "[Jahbong]";
-	if (countitem(6304) < 1) {
+	if (countitem(Sapa_Feat_Cert) < 1) {
 		mes "You haven't received a Sapha Certification yet?";
 		next;
 		mes "[Jahbong]";

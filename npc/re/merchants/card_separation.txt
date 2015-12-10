@@ -14,7 +14,7 @@
 
 -	script	::CardSeparation_mal	-1,{
 	disable_items;
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of objects. Let's try to continue after reducing those objects.";
 		close;
 	}
@@ -184,8 +184,8 @@
 		next;
 		.@menu$ = "Next time...:"+
 			((Zeny >= 1000000)?"Use 1,000,000z (Do not use special item):":"^999999Use 1,000,000z (Insufficient)^000000:")+
-			((countitem(6441))?"Use Premium Lubricant:":"^999999Premium Lubricant (Insufficient)^000000:")+
-			((countitem(6440))?"Use Ordinary Lubricant":"^999999Ordinary Lubricant (Insufficient)^000000");
+			((countitem(High_RankLubricant))?"Use Premium Lubricant:":"^999999Premium Lubricant (Insufficient)^000000:")+
+			((countitem(General_Lubricant))?"Use Ordinary Lubricant":"^999999Ordinary Lubricant (Insufficient)^000000");
 		switch(select(.@menu$)) {
 		case 1:
 			mes .@n$;
@@ -211,7 +211,7 @@
 			Zeny -= 1000000;
 			break;
 		case 3:
-			if (countitem(6441) == 0) {
+			if (countitem(High_RankLubricant) == 0) {
 				mes .@n$;
 				mes "You don't have Premium Lubricant.";
 				close;
@@ -227,10 +227,10 @@
 			.@sf_c_num = 75;
 			.@sf_r_num = 75;
 			.@sf_w_num = 75;
-			delitem 6441,1; //High_RankLubricant
+			delitem High_RankLubricant,1;
 			break;
 		case 4:
-			if (countitem(6440) == 0) {
+			if (countitem(General_Lubricant) == 0) {
 				mes .@n$;
 				mes "You don't have Ordinary Lubricant.";
 				close;
@@ -246,7 +246,7 @@
 			.@sf_c_num = 75;
 			.@sf_r_num = 150;
 			.@sf_w_num = 150;
-			delitem 6440,1; //General_Lubricant
+			delitem General_Lubricant,1;
 			break;
 		}
 	} else {
@@ -259,7 +259,7 @@
 			mes "Whenever you need the work, visit me here.";
 			close;
 		case 2:
-			if (countitem(6443) == 0) {
+			if (countitem(Sillit_Pong_Bottle) == 0) {
 				mes .@n$;
 				mes "You don't have Sillit Pong.";
 				close;
@@ -284,7 +284,7 @@
 			.@sf_c_num = 60;
 			.@sf_r_num = 60;
 			.@sf_w_num = 60;
-			delitem 6443,1; //Sillit_Pong_Bottle
+			delitem Sillit_Pong_Bottle,1;
 			break;
 		}
 	}

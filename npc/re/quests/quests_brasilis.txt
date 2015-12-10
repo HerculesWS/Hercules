@@ -58,8 +58,8 @@ brasilis,297,307,5	script	Angelo#br	1_M_04,{
 		specialeffect2 EF_ASSUMPTIO;
 		consumeitem 607; //Yggdrasilberry
 		.@rand = rand(1,10);
-		if (.@rand > 4 && .@rand < 9) getitem 504,2; //White_Potion
-		else if (.@rand > 8) getitem 608,1; //Seed_Of_Yggdrasil
+		if (.@rand > 4 && .@rand < 9) getitem White_Potion,2;
+		else if (.@rand > 8) getitem Seed_Of_Yggdrasil,1;
 		close;
 	}
 	mes "[Angelo]";
@@ -149,13 +149,13 @@ bra_fild01,176,63,5	duplicate(Puppy#bra)	Puppy#d3	4_DOG01
 //============================================================
 brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 	/* -------------- Hydra Ball -------------------------
-	if (countitem(12408) > 0) {
-		delitem 12408,1; //Leaf_Cat_Ball
-		getitem 12408,1; //Leaf_Cat_Ball
+	if (countitem(Leaf_Cat_Ball) > 0) {
+		delitem Leaf_Cat_Ball,1;
+		getitem Leaf_Cat_Ball,1;
 	}
-	else if (countitem(6221) > 0) {
-		delitem 6221,1; //Mystic_Leaf_Cat_Ball
-		getitem 6221,1; //Mystic_Leaf_Cat_Ball
+	else if (countitem(Mystic_Leaf_Cat_Ball) > 0) {
+		delitem Mystic_Leaf_Cat_Ball,1;
+		getitem Mystic_Leaf_Cat_Ball,1;
 	}
 	--------------------------------------------------- */
 	if (BaseLevel < 40) {
@@ -178,7 +178,7 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 			switch(select("Yes.:No.:^006400What is happening here?^000000")) {
 			case 1:
 				setquest 9028;
-				getitem 12408,1; //Hydra_Ball
+				getitem Leaf_Cat_Ball,1; //Hydra_Ball
 				mes "[Lucia]";
 				mes "Here, take this ^006400Hydra Ball^000000.";
 				mes "Use it to capture a ^FF0000Strange Hydra^8B4513.^000000";
@@ -215,15 +215,15 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 			}
 		}
 		else if (.@nQState == 1) {
-			if (countitem(6221) > 0) {
+			if (countitem(Mystic_Leaf_Cat_Ball) > 0) {
 				mes "[Lucia]";
 				mes "Hello, you really did it!";
-				if (checkweight(11502,3)) {
+				if (checkweight(Light_Blue_Pot,3)) {
 					//mes "I don't have enough ^006400Hydra Ball^000000s to give you."; //Poorly translated by iRO?
 					mes "I hope you will come";
 					mes "again to help me.";
 					mes "Have a nice day~!";
-					delitem 6221,1; //Mystic_Leaf_Cat_Ball
+					delitem Mystic_Leaf_Cat_Ball,1;
 					completequest 9028;
 					//recall_completequest 9029;
 					if (questprogress(9029)) erasequest 9029;
@@ -232,7 +232,7 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 					consumeitem 12070; //Luk_Dish05
 					consumeitem 12055; //Vit_Dish05
 					consumeitem 12065; //Dex_Dish05
-					getitem 11502,3; //Light_Blue_Pot
+					getitem Light_Blue_Pot,3;
 					close;
 				}
 				else {
@@ -245,10 +245,10 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 			}
 			else {
 				mes "[Lucia]";
-				if (countitem(12408) < 1) {
+				if (countitem(Leaf_Cat_Ball) < 1) {
 					mes "Did you need another ^006400Hydra Ball^000000?";
 					mes "I will give you one more.";
-					getitem 12408,1; //Leaf_Cat_Ball
+					getitem Leaf_Cat_Ball,1;
 					close;
 				}
 				else {
@@ -304,7 +304,7 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 				switch(select("Yes.:No.:^006400What is happening here?^000000")) {
 				case 1:
 					setquest 9028;
-					getitem 12408,1; //Leaf_Cat_Ball
+					getitem Leaf_Cat_Ball,1;
 					mes "[Lucia]";
 					mes "Here, take this ^006400Hydra Ball^000000.";
 					mes "Use it to capture a ^FF0000Strange Hydra^8B4513.^000000";
@@ -358,7 +358,7 @@ OnTimer7000:
 // Guarana Quest :: brazil_tre.sc
 //============================================================
 brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "- You can't start the quest. Please reduce the weight in your inventory. -";
 		close;
 	}
@@ -424,11 +424,11 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 		close;
 	}
 	else if (brazil_gua == 10) {
-		if (!countitem(6237)) {
+		if (!countitem(Guarana_Fruit)) {
 			mes "- The guarana that I had has disappeared. -";
 			close;
 		}
-		delitem 6237,1; //Guarana_Fruit
+		delitem Guarana_Fruit,1;
 		mes "[Candy Maker]";
 		mes "Did you get the guarana?";
 		next;
@@ -450,7 +450,7 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 		mes "Try to savor its amazing taste hey~ take it easy. hahaha!!";
 		brazil_gua = 11;
 		completequest 2200;
-		getitem 12414,1; //Guarana_Candy
+		getitem Guarana_Candy,1;
 		getexp 70000,10000;
 		close;
 	}
@@ -472,7 +472,7 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 				mes "[Candy Maker]";
 				mes "Here is a delicious guarana candy.";
 				Zeny -= 4000;
-				getitem 12414,1; //Guarana_Candy
+				getitem Guarana_Candy,1;
 				close;
 			}
 			else {
@@ -792,14 +792,14 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "I better find that Candy Maker!";
 		brazil_gua = 10;
 		changequest 2199,2200;
-		getitem 6237,1; //Guarana_Fruit
+		getitem Guarana_Fruit,1;
 		close;
 	}
 	else if (brazil_gua == 10) {
-		if (!countitem(6237)) {
+		if (!countitem(Guarana_Fruit)) {
 			mes "[Strange Kid]";
 			mes "He.........";
-			getitem 6237,1; //Guarana_Fruit
+			getitem Guarana_Fruit,1;
 			close;
 		}
 	}
@@ -1413,7 +1413,7 @@ bra_in01,145,27,3	script	Brasilis Boy#bra	4_M_BRZ_INDIAN,{
 }
 
 brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
-	if (!checkweight(1201,1)) {
+	if (!checkweight(Knife,1)) {
 		mes "- wait a second!! -";
 		mes "- you have too many items -";
 		mes "- so you can't get any more items. -";
@@ -1669,7 +1669,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		next;
 		mes "[Jasira]";
 		mes "I know, I know! I'm the best...";
-		delitem 7553,1; //Lotus_Flower
+		delitem Lotus_Flower,1;
 		brazil_regia = 9;
 		changequest 2206,2207;
 		setarray .@card[0],4195,4177,4188; //Leaf_Cat_Card, Dryad_Card, Leib_Olmai_Card
@@ -1744,7 +1744,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		mes "This is a gift from Jasira to say sorry for that time.";
 		mes "She is really sad that can't come here by herself due to private difficulties.";
 		next;
-		if (countitem(513) < 10) {
+		if (countitem(Banana) < 10) {
 			mes "[Jasi]";
 			mes "What are you saying?";
 			next;
@@ -1779,7 +1779,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		close;
 	}
 	else if (brazil_regia == 6) {
-		if (countitem(11515) < 5) {
+		if (countitem(Coconut) < 5) {
 			mes "[Jasi]";
 			mes "I forgot what the name of that fruit was...";
 			close;
@@ -1807,7 +1807,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 			mes "[Jasi]";
 			mes "Oh, can you tell that girl Jasira something for me?";
 			mes "Tell her that I am not the moon from the story, but I want to become the moon to shine only for her.";
-			delitem 11515,5; //Coconut
+			delitem Coconut,5;
 			brazil_regia = 7;
 			changequest 2205,2206;
 			close;
@@ -1846,7 +1846,7 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		mes "["+strcharinfo(0)+"]";
 		mes "Hey man~ I brought these delicious fruits for you... try it! They are really well matured and fresh bananas.";
 		next;
-		if (countitem(513) < 10) {
+		if (countitem(Banana) < 10) {
 			mes "[Jasi]";
 			mes "What are you saying?";
 			next;
@@ -1900,7 +1900,7 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		next;
 		mes "[Jasi]";
 		mes "If you bring 5 of those things, I will reconsider your suggestion.";
-		delitem 513,10; //Banana
+		delitem Banana,10;
 		brazil_regia = 5;
 		changequest 2203,2204;
 		next;
@@ -1919,7 +1919,7 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		close;
 	}
 	else if (brazil_regia == 7) {
-		if (!checkweight(1201,1)) {
+		if (!checkweight(Knife,1)) {
 			mes "- wait a second!! -";
 			mes "- you have too many items -";
 			mes "- so you can't get any more items. -";
@@ -1929,7 +1929,7 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 		}
 		mes "- You take a beautiful water lily carefully in your hands. -";
 		brazil_regia = 8;
-		getitem 7553,1; //Lotus_Flower
+		getitem Lotus_Flower,1;
 		close;
 	}
 }
@@ -2680,7 +2680,7 @@ bra_in01,7,181,5	script	Curator#bra	4_M_BRZ_MAN2,{
 		close;
 	}
 	if ((brazil_ghost > 0) && (brazil_ghost < 7)) {
-		if (countitem(11515) > 0) {
+		if (countitem(Coconut) > 0) {
 			mes "[Curator]";
 			mes "What can I do for you?";
 			next;
@@ -2711,7 +2711,7 @@ bra_in01,7,181,5	script	Curator#bra	4_M_BRZ_MAN2,{
 				mes "Ok I'll let you through this one time.";
 				next;
 				mes "The curator looks around calmly then opens the door.";
-				delitem 11515,1; //Coconut
+				delitem Coconut,1;
 				brazil_ghost = 2;
 				close2;
 				warp "bra_in01",138,176;
@@ -2866,7 +2866,7 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 			mes "Did you bring the materials";
 			mes "to make the purifying potion?";
 			next;
-			if ((countitem(950) > 19) && (countitem(7172) > 9) && (countitem(1054) > 2)) {
+			if ((countitem(Heart_Of_Mermaid) > 19) && (countitem(Leopard_Talon) > 9) && (countitem(Lip_Of_Ancient_Fish) > 2)) {
 				mes "[Anori]";
 				mes "Um... it seems to be okay.";
 				mes "I'll make you a potion which will";
@@ -2881,10 +2881,10 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 				erasequest 4133;
 				setquest 4134;
 				completequest 4134;
-				delitem 950,20; //Heart_Of_Mermaid
-				delitem 7172,10; //Leopard_Talon
-				delitem 1054,3; //Lip_Of_Ancient_Fish
-				getitem 11517,2; //Puri_Potion
+				delitem Heart_Of_Mermaid,20;
+				delitem Leopard_Talon,10;
+				delitem Lip_Of_Ancient_Fish,3;
+				getitem Puri_Potion,2;
 				mes "[Anori]";
 				mes "Here, it's completed.";
 				mes "Take this.";
@@ -3044,7 +3044,7 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 }
 
 bra_dun02,157,74,5	script	Iara#nk	4_F_BRZ_WOMAN,2,2,{
-	if (countitem(11517) > 0) {
+	if (countitem(Puri_Potion) > 0) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "Should I use a Purification Potion?";
 		next;
@@ -3067,7 +3067,7 @@ bra_dun02,157,74,5	script	Iara#nk	4_F_BRZ_WOMAN,2,2,{
 			mes "Ah... Thank you for helping me recover my consciousness for a while.";
 			mes "But... I think that the curse has been with me too long.";
 			mes "Get away from me quickly.";
-			delitem 11517,1; //Puri_Potion
+			delitem Puri_Potion,1;
 			percentheal 100,100;
 			sc_start SC_INCFLEE,3600000,20;
 			sc_start SC_CRITICALPERCENT,3600000,10;
@@ -3109,7 +3109,7 @@ bra_dun02,157,74,5	script	Iara#nk	4_F_BRZ_WOMAN,2,2,{
 	end;
 
 OnTouch:
-	if (countitem(11517) < 1) {
+	if (countitem(Puri_Potion) < 1) {
 		mes "[Iara]";
 		mes "Aaaaaaaaaaaaaaaaaaaaaah.";
 		mes "Eeeeeeeeeeeeeeeeeeeh.";

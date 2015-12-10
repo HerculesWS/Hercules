@@ -147,7 +147,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 		setquest 9168;
 		close;
 	} else if (questprogress(9168) == 1) {
-		if (checkweight(607,1) == 0) {
+		if (checkweight(Yggdrasilberry,1) == 0) {
 			if (MaxWeight - Weight < getiteminfo(607,6)) {
 				mes "[Tutorial Instructor]";
 				mes "You seemed to be sluggish with a lot of items";
@@ -238,7 +238,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 		mes "come find and talk to me again.";
 		close;
 	} else if (questprogress(9169) == 1) {
-		if (countitem(12580) == 0) {
+		if (countitem(Vending_Search_Scroll) == 0) {
 			mes "[Tutorial Instructor]";
 			mes "Hmm? So I noticed that";
 			mes "you haven't gone and picked up a";
@@ -281,7 +281,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 		setquest 9170;
 		close;
 	} else if (questprogress(9170) == 1) {
-		if (countitem(12580)) {
+		if (countitem(Vending_Search_Scroll)) {
 			mes "[Tutorial Instructor]";
 			mes "Hmm... It seems that you still have";
 			mes "the ^006400Universal Silver Catalog^000000 in your inventory.";
@@ -320,7 +320,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 		setquest 9171;
 		close;
 	} else if (questprogress(9171) == 1) {
-		if (countitem(909) < 10) {
+		if (countitem(Jellopy) < 10) {
 			mes "[Tutorial Instructor]";
 			mes "It seems you didn't bring";
 			mes "enough materials. Did you forget";
@@ -349,7 +349,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 				close;
 			}
 		}
-		if (checkweight(607,6) == 0) {
+		if (checkweight(Yggdrasilberry,6) == 0) {
 			if (MaxWeight - Weight < getiteminfo(607,6)) {
 				mes "[Tutorial Instructor]";
 				mes "Your inventory seems to be really full";
@@ -387,12 +387,12 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 		next;
 		mes "[Tutorial Instructor]";
 		mes "There. The Enchant is done. You can't understand the the process by just watching me, so I'll let you look at the items themselves.";
-		delitem 909,10; //Jellopy
+		delitem Jellopy,10;
 		completequest 9171;
 		setquest 9172;
 		getitem2 15033,1,1,0,0,0,0,0,4702; //Tutorial_Mattle[Strength3]
-		getitem 15033,1; //Tutorial_Mattle
-		getitem 15034,1; //Tutorial_Mattle_
+		getitem Tutorial_Mattle,1;
+		getitem Tutorial_Mattle_,1;
 		next;
 		mes "[Tutorial Instructor]";
 		mes "Those items cannot be";
@@ -402,7 +402,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 		mes "give them back to me.";
 		close;
 	} else if (questprogress(9172) == 1) {
-		if (countitem(15033) == 0 || countitem(15034) == 0) {
+		if (countitem(Tutorial_Mattle) == 0 || countitem(Tutorial_Mattle_) == 0) {
 			mes "[Tutorial Instructor]";
 			mes "What did you do with the Enchanted";
 			mes "items I lent to you to look at?";
@@ -568,7 +568,7 @@ moc_para01,34,178,3	script	Tutorial Instructor	4_M_KHMAN,{
 }
 
 moc_para01,32,179,4	script	Tutorial Goal	4_F_KHELLY,{
-	if (checkweight(608,7) == 0) {
+	if (checkweight(Seed_Of_Yggdrasil,7) == 0) {
 		if (MaxWeight - Weight < getiteminfo(608,7)) {
 			mes "[Tutorial Goal]";
 			mes "You seem to be overweight with items. Go put some stuff away then come back.";
@@ -616,10 +616,10 @@ moc_para01,32,179,4	script	Tutorial Goal	4_F_KHELLY,{
 		mes "[Tutorial Goal]";
 		mes "I think it'll be useful to you during your adventures. I wish you luck on your future adventures~";
 		completequest 4166;
-		getitem 510,5; //Blue_Herb
-		getitem 511,5; //Green_Herb
-		getitem 504,5; //White_Potion
-		getitem 608,1; //Seed_Of_Yggdrasil
+		getitem Blue_Herb,5;
+		getitem Green_Herb,5;
+		getitem White_Potion,5;
+		getitem Seed_Of_Yggdrasil,1;
 		close;
 	} else if (questprogress(4166) == 2) {
 		mes "[Tutorial Goal]";

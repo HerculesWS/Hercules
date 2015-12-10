@@ -301,13 +301,13 @@ new_5-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv5b	4_F_01
 			mes "Basic equipments and recovery potions.";
 		}
 		job_novice_q = 4;
-		getitem 2352,1; //Novice_Plate
-		getitem 2510,1; //Novice_Hood
-		getitem 2414,1; //Novice_Boots
-		getitem 5055,1; //Novice_Egg_Cap
-		getitem 1243,1; //Novice_Knife
-		getitem 2112,1; //Novice_Guard
-		getitem 569,300; //Novice_Potion
+		getitem Novice_Plate,1;
+		getitem Novice_Hood,1;
+		getitem Novice_Boots,1;
+		getitem Novice_Egg_Cap,1;
+		getitem Novice_Knife,1;
+		getitem Novice_Guard,1;
+		getitem Novice_Potion,300;
 		setquest 7119;
 		next;
 		mes "[Instructor Brade]";
@@ -360,8 +360,8 @@ new_5-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv5b	4_F_01
 		mes "You are coming along just fine.";
 		job_novice_q = 5;
 		getexp 1200,15;
-		getitem 12323,50; //N_Fly_Wing
-		getitem 12324,20; //N_Butterfly_Wing
+		getitem N_Fly_Wing,50;
+		getitem N_Butterfly_Wing,20;
 		completequest 7119;
 		next;
 		mes "[Instructor Brade]";
@@ -430,7 +430,7 @@ new_5-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv5b	4_F_01
 		mes "You've come along fine this far.";
 		mes "This is not much, but take this as a reward.";
 		job_novice_q = 7;
-		getitem 2393,1; //N_Adventurer's_Suit
+		getitem N_Adventurer's_Suit,1;
 		completequest 7120;
 		close;
 	} else if (job_novice_q == 7) {
@@ -716,8 +716,8 @@ new_5-2,115,120,3	duplicate(NvJinha)	Jinha#nv5	1_M_ORIENT01
 		job_novice_q = 12;
 		completequest 7121;
 		getexp 1800,20;
-		getitem 7059,20; //Cargo_Free_Ticket
-		getitem 7060,30; //Warp_Free_Ticket
+		getitem Cargo_Free_Ticket,20;
+		getitem Warp_Free_Ticket,30;
 		next;
 		mes "[Chocolat]";
 		mes "You've completed all the quests I gave you.";
@@ -1170,7 +1170,7 @@ new_5-2,36,176,4	duplicate(NvGuide)	Guide#nv5	8W_SOLDIER
 		mes "Please hunt 'Poring's on Level 1 of the training grounds.";
 		job_novice_q = 13;
 		setquest 7122;
-		getitem 569,100; //Novice_Potion
+		getitem Novice_Potion,100;
 		savepoint strnpcinfo(4),96,21;
 		next;
 		mes "^4d4dff- You've received a quest from Instructor Brade.";
@@ -1183,7 +1183,7 @@ new_5-2,36,176,4	duplicate(NvGuide)	Guide#nv5	8W_SOLDIER
 				mes "You can see it is not so hard, huh?";
 				mes "Nice job.";
 				job_novice_q = 14;
-				getitem 13040,1; //N_Cutter
+				getitem N_Cutter,1;
 				getexp 3000,30;
 				completequest 7122;
 				next;
@@ -1355,7 +1355,7 @@ new_5-3,96,30,4	duplicate(NvBradeB)	Brade#nv5b	4_M_JOB_KNIGHT1
 		mes "As a Swordman you can advance to a ^8E2323Knight^000000 or ^8E2323Crusader^000000 class as your 2nd class profession.";
 		mes "And just recently third professions have been discovered.";
 		next;
-		if (isequipped(2819) || countitem(2819)) {
+		if (isequipped(2819) || countitem(Swordman_Manual)) {
 			mes "[Swordman Guildsman]";
 			mes "Try the Swordman skills listed in the manual.";
 			mes "Open your skill menu by pressing Alt + S";
@@ -1373,7 +1373,7 @@ new_5-3,96,30,4	duplicate(NvBradeB)	Brade#nv5b	4_M_JOB_KNIGHT1
 			mes "I'll just take any manuals from any other classes you have.";
 			next;
 			callfunc "F_NvErase";
-			getitem 2819,1; //Swordman_Manual
+			getitem Swordman_Manual,1;
 			next;
 			mes "[Swordman Guildsman]";
 			mes "After equipping the Manual, open your Skill menu by pressing ALT+S.";
@@ -1439,7 +1439,7 @@ new_5-3,96,30,4	duplicate(NvBradeB)	Brade#nv5b	4_M_JOB_KNIGHT1
 				mes "I think that you're good enough to be a Swordman.";
 				mes "I'll give you some potions as a reward.";
 				completequest 7123;
-				getitem 569,200; //Novice_Potion
+				getitem Novice_Potion,200;
 				getexp 5000,100;
 				close;
 			} else {
@@ -1496,7 +1496,7 @@ new_5-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv5	4_F_JOB_KNIGHT
 		mes "[Prontera Acolyte]";
 		mes "^8E2323As an Acolyte, you can upgrade your future job to Priest or Monk^8E2323.";
 		next;
-		if (isequipped(2821) || countitem(2821)) {
+		if (isequipped(2821) || countitem(Acolyte_Manual)) {
 			mes "[Prontera Acolyte]";
 			mes "Try the Acolyte Skills with the manual you have. It will help you understand the job easier.";
 			mes "Open your Skill Tree by pressing ^4d4dffAlt + S^000000 and minimize the window by pressing the ^4d4dff'-'^000000 button on the top right corner of the window to see the available skills.";
@@ -1513,7 +1513,7 @@ new_5-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv5	4_F_JOB_KNIGHT
 			mes "I will take away those other job's manuals while you study this one.";
 			next;
 			callfunc "F_NvErase";
-			getitem 2821,1; //Acolyte_Manual
+			getitem Acolyte_Manual,1;
 			next;
 			mes "[Prontera Acolyte]";
 			mes "Make sure to equip the Skill Manual by double-clicking it in the Inventory Window.";
@@ -1591,7 +1591,7 @@ new_5-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv5	4_F_SISTER
 		mes "[Thief Guild Member]";
 		mes "Thieves can change their jobs to ^8E2323Assassins^000000 or ^8E2323Rogues^000000.";
 		next;
-		if (isequipped(2820) || countitem(2820)) {
+		if (isequipped(2820) || countitem(Thief_Manual)) {
 			mes "[Thief Guild Member]";
 			mes "The class manual can help you understand what it is to be a Thief by using the skills that are essential to all Thieves.";
 			close;
@@ -1607,7 +1607,7 @@ new_5-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv5	4_F_SISTER
 			mes "I'll just take the other class manuals while I'm at it.";
 			next;
 			callfunc "F_NvErase";
-			getitem 2820,1; //Thief_Manual
+			getitem Thief_Manual,1;
 			next;
 			mes "[Thief Guild Member]";
 			mes "Make sure to equip the Skill Manual by double-clicking it in the Inventory Window.";
@@ -1668,7 +1668,7 @@ new_5-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv5	4_F_SISTER
 				mes "You are very strong.";
 				mes "These are not many but let me give you a reward for your effort.";
 				completequest 7127;
-				getitem 12323,50; //N_Fly_Wing
+				getitem N_Fly_Wing,50;
 				getexp 5000,100;
 				close;
 			} else {
@@ -1730,7 +1730,7 @@ new_5-3,105,41,3	duplicate(NvThief)	Thief Guide#nv5	2_M_THIEFMASTER
 		mes "^8E2323Merchants can transform to a Blacksmith";
 		mes "^8E2323or an Alchemist^000000 as their second job.";
 		next;
-		if (isequipped(2823) || countitem(2823)) {
+		if (isequipped(2823) || countitem(Merchant_Manual)) {
 			mes "[Merchant Guildsman]";
 			mes "I think you should test Merchant skills before you decide what to do.";
 			close;
@@ -1745,7 +1745,7 @@ new_5-3,105,41,3	duplicate(NvThief)	Thief Guide#nv5	2_M_THIEFMASTER
 			mes "I will take other job manuals from you while I'm at it.";
 			next;
 			callfunc "F_NvErase";
-			getitem 2823,1; //Merchant_Manual
+			getitem Merchant_Manual,1;
 			next;
 			mes "[Merchant Guildsman]";
 			mes "Make sure to equip the Skill Manual by double-clicking it in the Inventory Window.";
@@ -1816,7 +1816,7 @@ new_5-3,105,41,3	duplicate(NvThief)	Thief Guide#nv5	2_M_THIEFMASTER
 				mes "Alright! What about Phracon?";
 				mes "Phracon is a metallic element which you can use for refining weapons.";
 				completequest 7126;
-				getitem 1010,7; //Phracon
+				getitem Phracon,7;
 				getexp 5000,100;
 				close;
 			} else {
@@ -1887,7 +1887,7 @@ new_5-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv5	4W_M_01
 		mes "Besides Hunters, Archers can transform to a Bard, if they are male.";
 		mes "They can transform to a Dancer, if they are female^000000.";
 		next;
-		if (isequipped(2822) || countitem(2822)) {
+		if (isequipped(2822) || countitem(Archer_Manual)) {
 			mes "[Archer Guildsman]";
 			mes "I think you should test Archer skills before you decide what to do.";
 			mes "I can provide you our test skill manual.";
@@ -1904,7 +1904,7 @@ new_5-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv5	4W_M_01
 			mes "I will take the other job manuals from you while you test the Archer manual out.";
 			next;
 			callfunc "F_NvErase";
-			getitem 2822,1; //Archer_Manual
+			getitem Archer_Manual,1;
 			next;
 			mes "[Archer Guildsman]";
 			mes "Make sure to equip the Skill Manual by double-clicking it in the Inventory Window.";
@@ -1990,7 +1990,7 @@ new_5-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv5	4_F_JOB_HUNTER
 		mes "^8E2323Mages can transform to Wizards";
 		mes "^8E2323or Sages as their second job^000000.";
 		next;
-		if (isequipped(2824) || countitem(2824)) {
+		if (isequipped(2824) || countitem(Mage_Manual)) {
 			mes "[Mage Guild Member]";
 			mes "I think you should test Mage skills before you decide what to do.";
 			mes "I can provide you with our test skill registration form.";
@@ -2007,7 +2007,7 @@ new_5-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv5	4_F_JOB_HUNTER
 			mes "I will take the other job registration forms and manuals from you.";
 			next;
 			callfunc "F_NvErase";
-			getitem 2824,1; //Mage_Manual
+			getitem Mage_Manual,1;
 			next;
 			mes "[Mage Guild Member]";
 			mes "After equipping the Manual, open your Skill menu by pressing ALT+S.";
@@ -2070,7 +2070,7 @@ new_5-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv5	4_F_JOB_HUNTER
 				mes "Alright. I will give something...";
 				mes "Here are Novice Butterfly Wings, please take them.";
 				completequest 7124;
-				getitem 12324,30; //N_Butterfly_Wing
+				getitem N_Butterfly_Wing,30;
 				getexp 5000,100;
 				close;
 			} else {
@@ -2449,13 +2449,13 @@ function	script	F_NvErase	{
 		if (questprogress(7127)) erasequest 7127;
 	}
 	nude;
-	setarray .@manuals[0],countitem(2819),countitem(2820),countitem(2821),countitem(2822),countitem(2823),countitem(2824);
-	if (.@manuals[0]) delitem 2819,.@manuals[0]; //Swordman_Manual
-	if (.@manuals[1]) delitem 2820,.@manuals[1]; //Thief_Manual
-	if (.@manuals[2]) delitem 2821,.@manuals[2]; //Acolyte_Manual
-	if (.@manuals[3]) delitem 2822,.@manuals[3]; //Archer_Manual
-	if (.@manuals[4]) delitem 2823,.@manuals[4]; //Merchant_Manual
-	if (.@manuals[5]) delitem 2824,.@manuals[5]; //Mage_Manual
+	setarray .@manuals[0],countitem(Swordman_Manual),countitem(Thief_Manual),countitem(Acolyte_Manual),countitem(Archer_Manual),countitem(Merchant_Manual),countitem(Mage_Manual);
+	if (.@manuals[0]) delitem Swordman_Manual,.@manuals[0];
+	if (.@manuals[1]) delitem Thief_Manual,.@manuals[1];
+	if (.@manuals[2]) delitem Acolyte_Manual,.@manuals[2];
+	if (.@manuals[3]) delitem Archer_Manual,.@manuals[3];
+	if (.@manuals[4]) delitem Merchant_Manual,.@manuals[4];
+	if (.@manuals[5]) delitem Mage_Manual,.@manuals[5];
 	return;
 }
 
@@ -2600,10 +2600,10 @@ L_Supplies:
 	mes "[Hanson]";
 	mes "Free tickets for Kafra storage and transportation can be used for Kafra storage and teleport services.";
 	nov_3_swordman = 40;
-	getitem 7059,20; //Cargo_Free_Ticket
-	getitem 7060,30; //Warp_Free_Ticket
-	getitem 2393,1; //N_Adventurer's_Suit
-	getitem 13040,1; //N_Cutter
+	getitem Cargo_Free_Ticket,20;
+	getitem Warp_Free_Ticket,30;
+	getitem N_Adventurer's_Suit,1;
+	getitem N_Cutter,1;
 	next;
 	mes "[Hanson]";
 	mes "You will now";

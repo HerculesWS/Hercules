@@ -139,14 +139,14 @@ brasilis,137,77,5	script	Ice-Cream Maker	4_M_03,{
 			mes "It's only ^3355FF100 Zeny^000000~ Seriously!";
 			close;
 		}
-		if (!checkweight(536,.@input)) {
+		if (!checkweight(Ice_Cream,.@input)) {
 			mes "[Ice Cream Maker]";
 			mes "You seem to have too much stuff.";
 			mes "Lighten your pack before buying this.";
 			close;
 		}
 		Zeny -= .@icecream_hap;
-		getitem 536,.@input; //Ice_Cream
+		getitem Ice_Cream,.@input;
 		close;
 	case 2:
 		mes "[Ice Cream Maker]";

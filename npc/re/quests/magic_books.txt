@@ -15,7 +15,7 @@
 //============================================================
 
 geffen_in,176,105,4	script	Master Velofos	1_M_WIZARD,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You're carrying too many items. Please make some room in your bag first.";
 		close;
 	}
@@ -269,7 +269,7 @@ geffen_in,176,105,4	script	Master Velofos	1_M_WIZARD,{
 }
 
 geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You're carrying too many items. Please make some room in your bag first.";
 		close;
 	}
@@ -313,7 +313,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 				mes "Your life is more important than anything else, you know?";
 				close;
 			}
-			if ((.@Payment == 1 && Zeny > 10000) || (.@Payment == 2 && countitem(1006) > 1) || (.@Payment == 3 && countitem(1097) > 49)) {
+			if ((.@Payment == 1 && Zeny > 10000) || (.@Payment == 2 && countitem(Old_Magic_Book) > 1) || (.@Payment == 3 && countitem(Worn_Out_Page) > 49)) {
 				mes "What kind of Magic Book do you want?";
 				next;
 				.@i = select("Let me think.:Magic Book (Fire Bolt):Magic Book (Cold Bolt):Magic Book (Lightning Bolt)")-1;
@@ -329,14 +329,14 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 					mes "Don't you know how many others would want the book you already have? It's a bit selfish to want more than one, you know.";
 					close;
 				}
-				if ((.@Payment == 1 && Zeny > 10000) || (.@Payment == 2 && countitem(1006) > 1) || (.@Payment == 3 && countitem(1097) > 49)) {
+				if ((.@Payment == 1 && Zeny > 10000) || (.@Payment == 2 && countitem(Old_Magic_Book) > 1) || (.@Payment == 3 && countitem(Worn_Out_Page) > 49)) {
 					mes "The book's return date is written on the lending card on the back cover of the book.";
 					next;
 					mes "[Lea]";
 					mes "Please try not to lose or damage the book to avoid paying any extra charges.";
 					if (.@Payment == 1) Zeny -= 10000;
-					else if (.@Payment == 2) delitem 1006,2; //Old_Magic_Book
-					else delitem 1097,50; //Worn_Out_Page
+					else if (.@Payment == 2) delitem Old_Magic_Book,2;
+					else delitem Worn_Out_Page,50;
 					getitem 6188+.@i,1; //Magic_Book_FB, Magic_Book_CB, Magic_Book_LB
 					close;
 				}
@@ -357,7 +357,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 				mes "Eluniums can be obtained from Hyeguns, Zombie Prisoners, Teddy Bears, Obsedians, and Loli Ruris. Or you can refine Rough Eluniums to Eluniums at the Forge in town, and that may be easier.";
 				close;
 			}
-			if ((.@Payment == 1 && Zeny > 50000) || (.@Payment == 2 && countitem(603) > 1) || (.@Payment == 3 && countitem(985) > 8)) {
+			if ((.@Payment == 1 && Zeny > 50000) || (.@Payment == 2 && countitem(Old_Blue_Box) > 1) || (.@Payment == 3 && countitem(Elunium) > 8)) {
 				mes "What kind of Magic Book do you want?";
 				next;
 				.@i = select("Let me think.:Magic Book (Storm Gust):Magic Book (Lord of Vermillion):Magic Book (Meteor Storm):Magic Book (Thunderstorm):Magic Book (Jupitel Thunder):Magic Book (Water Ball):Magic Book (Heaven's Drive):Magic Book (Earth Spike)")-1;
@@ -374,14 +374,14 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 					mes "Don't you know how many others would want the book you already have? It's a bit selfish to want more than one, you know.";
 					close;
 				}
-				if ((.@Payment == 1 && Zeny > 50000) || (.@Payment == 2 && countitem(603) > 1) || (.@Payment == 3 && countitem(985) > 8)) {
+				if ((.@Payment == 1 && Zeny > 50000) || (.@Payment == 2 && countitem(Old_Blue_Box) > 1) || (.@Payment == 3 && countitem(Elunium) > 8)) {
 					mes "Thank you for your deposit. The book's return date is written on the lending card on the back cover of the book. Please try not to lose or damage the book and avoid paying compensation.";
 					next;
 					mes "[Lea]";
 					mes "The Intermediate and Superior Magic Books must be returned upon borrowing the Ultimate Magic Book. Remember that you're just borrowing them, so make sure you take good care of those books.";
 					if (.@Payment == 1) Zeny -= 50000;
-					else if (.@Payment == 2) delitem 603,2; //Old_Blue_Box
-					else delitem 985,9; //Elunium
+					else if (.@Payment == 2) delitem Old_Blue_Box,2;
+					else delitem Elunium,9;
 					getitem .@Books[.@i-1],1; //Magic_Book_SG, Magic_Book_LOV, Magic_Book_MS, Magic_Book_TS, Magic_Book_JT, Magic_Book_WB, Magic_Book_HD, Magic_Book_ES
 					close;
 				}
@@ -430,7 +430,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 				}
 				mes "[Lea]";
 			}
-			if ((.@Payment == 1 && Zeny > 199999) || (Zeny > 99999 && ((.@Payment == 2 && countitem(7094) > 11) || (.@Payment == 3 && countitem(984) > 6) || (.@Payment == 4 && countitem(617))))) {
+			if ((.@Payment == 1 && Zeny > 199999) || (Zeny > 99999 && ((.@Payment == 2 && countitem(Mystery_Piece) > 11) || (.@Payment == 3 && countitem(Oridecon) > 6) || (.@Payment == 4 && countitem(Old_Violet_Box))))) {
 				mes "What kind of Magic Book do you want?";
 				next;
 				.@i = select("Let me think.:Magic Book (Earth Strain):Magic Book (Chain Lightning):Magic Book (Crimson Rock):Magic Book (Drain Life)")-1;
@@ -446,15 +446,15 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 					mes "Don't you know how many others would want the book you already have? It's a bit selfish to want more than one, you know.";
 					close;
 				}
-				if ((.@Payment == 1 && Zeny > 199999) || (Zeny > 99999 && ((.@Payment == 2 && countitem(7094) > 11) || (.@Payment == 3 && countitem(984) > 6) || (.@Payment == 4 && countitem(617))))) {
+				if ((.@Payment == 1 && Zeny > 199999) || (Zeny > 99999 && ((.@Payment == 2 && countitem(Mystery_Piece) > 11) || (.@Payment == 3 && countitem(Oridecon) > 6) || (.@Payment == 4 && countitem(Old_Violet_Box))))) {
 					mes "Thank you for your deposit. The book's return date is written on the lending card on the back cover of the book. Please try not to lose or damage the book and avoid paying compensation.";
 					next;
 					mes "[Lea]";
 					mes "The Intermediate and Superior Magic Books must be returned upon borrowing the Ultimate Magic Book. Remember that you're just borrowing them, so make sure you take good care of those books.";
 					if (.@Payment == 1) Zeny -= 200000;
-					else if (.@Payment == 2) delitem 7094,12; //Mystery_Piece
-					else if (.@Payment == 3) delitem 984,7; //Oridecon
-					else delitem 617,1; //Old_Violet_Box
+					else if (.@Payment == 2) delitem Mystery_Piece,12;
+					else if (.@Payment == 3) delitem Oridecon,7;
+					else delitem Old_Violet_Box,1;
 					if (.@Payment > 1) Zeny -= 100000;
 					getitem 6201+.@i,1; //Magic_Book_ES_, Magic_Book_CL, Magic_Book_CR, Magic_Book_DL
 					close;
@@ -505,7 +505,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 }
 
 mid_camp,255,244,4	script	Galfos	4_M_JOB_WIZARD,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You're carrying too many items. Please make some room in your bag first.";
 		close;
 	}
@@ -622,7 +622,7 @@ mid_camp,255,244,4	script	Galfos	4_M_JOB_WIZARD,{
 		next;
 		.@i = select("I've discovered everything about Comet.:I've mastered the zenith of Tetra Vortex.");
 		mes "[Galfos]";
-		if ((.@i == 1 && countitem(6195)) || (.@i == 2 && countitem(6196))) {
+		if ((.@i == 1 && countitem(Magic_Book_CM)) || (.@i == 2 && countitem(Magic_Book_TV))) {
 			mes "Are you kidding me? You already have the book!";
 			close;
 		}
