@@ -87,7 +87,7 @@ function	script	Bullet_Trade	{
 		mes "items for some bullets.";
 		close;
 	}
-	if (countitem(1010) >= .@amount && countitem(1011) >= .@amount && countitem(getarg(0)) >= (.@amount*getarg(1))) {
+	if (countitem(Phracon) >= .@amount && countitem(Emveretarcon) >= .@amount && countitem(getarg(0)) >= (.@amount*getarg(1))) {
 		if (checkweight(getarg(2),.@amount * 30) == 0) {
 			mes "[Tony]";
 			mes "Eh? Your Inventory doesn't";

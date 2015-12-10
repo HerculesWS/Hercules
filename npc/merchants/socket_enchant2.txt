@@ -14,7 +14,7 @@
 //============================================================
 
 -	script	Leablem#dummy::SocketEnchant2	-1,{
-	if (checkweight(1201,1) == 0)
+	if (checkweight(Knife,1) == 0)
 	{
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -271,7 +271,7 @@
 					mes "We don't have time to waste,";
 					mes "so let's get down to business right away.";
 					next;
-					if ((Zeny > 199999999) && (countitem(969) > 1) && (countitem(5022) > 0))
+					if ((Zeny > 199999999) && (countitem(Gold) > 1) && (countitem(Helm_Of_Sun) > 0))
 					{
 						mes "[Leablem]";
 						mes "Shall we start now?";
@@ -285,10 +285,10 @@
 							mes "Excellent! Wow, I guess the 90% success chance is true!";
 							mes "Look, the slot was added in the perfect place.";
 							mes "Congratulations.";
-							delitem 5022,1; //Helm_Of_Sun
-							delitem 969,2; //Gold
+							delitem Helm_Of_Sun,1;
+							delitem Gold,2;
 							Zeny -= 200000000;
-							getitem 5353,1; //Helm_Of_Sun_
+							getitem Helm_Of_Sun_,1;
 							next;
 							mes "[Leablem]";
 							mes "This is the first and last time I will do this for you.";
@@ -304,8 +304,8 @@
 							mes "My god, I guess we had the worst kind of luck...";
 							mes "What should we do? ...This is why";
 							mes "I didn't want to do in the first place!";
-							delitem 5022,1; //Helm_Of_Sun
-							delitem 969,2; //Gold
+							delitem Helm_Of_Sun,1;
+							delitem Gold,2;
 							Zeny -= 200000000;
 							next;
 							mes "[Leablem]";
