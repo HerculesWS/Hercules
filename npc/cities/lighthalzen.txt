@@ -581,8 +581,8 @@ lighthalzen,182,102,3	script	Lucius#zen5	4_M_LGTGRAND,{
 				mes "my gratitude, adventurer. Bless";
 				mes "you, youngster and take care.";
 				$donatedzeny = 0;
-				getitem 603,1; //Old_Blue_Box
-				getitem 12016,1; //Speed_Up_Potion
+				getitem Old_Blue_Box,1;
+				getitem Speed_Up_Potion,1;
 			}
 			close;
 		}

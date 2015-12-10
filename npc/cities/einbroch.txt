@@ -149,14 +149,14 @@ function	script	EinTower	{
 			mes "your safety before I give";
 			mes "you the Apple Combo Set.";
 			next;
-			if (checkweight(512,1)) {
+			if (checkweight(Apple,1)) {
 				mes "[" + getarg(0) + "]";
 				mes "Thank you for";
 				mes "using our services.";
 				mes "Let me guide you to";
 				mes "the tower right away.";
 				Zeny -= 20;
-				getitem 512,1; //Apple
+				getitem Apple,1;
 				close2;
 				warp "einbroch",174,204;
 				end;

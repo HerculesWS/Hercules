@@ -310,19 +310,19 @@ alberta,190,173,4	script	Phelix	4_M_03,{
 			mes "what'cha got...";
 			next;
 			mes "[Phelix]";
-			if (countitem(909) < 10) {
+			if (countitem(Jellopy) < 10) {
 				mes "Hey! Weren't you listening?. I said 10 jellopies for 1 Red Potion.. are ya deaf?";
 				close;
 			} else {
-				.@max = countitem(909)/10;
+				.@max = countitem(Jellopy)/10;
 				mes "Hmm, not bad...";
 				mes "How many potions";
 				mes "do you want to get?";
 				next;
 				switch(select("As many as I can, please.","I want this many.","Never mind, I like my jellopy.")) {
 				case 1:
-					delitem 909,.@max*10;	// Jellopy
-					getitem 501,.@max;	// Red_Potion
+					delitem Jellopy,.@max*10;	// Jellopy
+					getitem Red_Potion,.@max;	// Red_Potion
 					break;
 				case 2:
 					mes "[Phelix]";
@@ -339,12 +339,12 @@ alberta,190,173,4	script	Phelix	4_M_03,{
 						mes "Hey, what'd I say? 100 at a time at most, you're trying to kill me aren't you!";
 						close;
 					}
-					if (countitem(909) < .@amount*10) {
+					if (countitem(Jellopy) < .@amount*10) {
 						mes "Hmm, it looks like you don't have enough. Go get more jellopies if you want anything else from me.";
 						close;
 					}
-					delitem 909,.@amount*10;	// Jellopy
-					getitem 501,.@amount;	// Red_Potion
+					delitem Jellopy,.@amount*10;	// Jellopy
+					getitem Red_Potion,.@amount;	// Red_Potion
 					break;
 				case 3:
 					mes "[Phelix]";
@@ -361,18 +361,18 @@ alberta,190,173,4	script	Phelix	4_M_03,{
 			mes "Alright, let's see what ya got...";
 			next;
 			mes "[Phelix]";
-			if (countitem(909) < 3) {
+			if (countitem(Jellopy) < 3) {
 				mes "Hmm, look pansy ass, I said 3 jellopies for 1 Carrot.. got it?";
 				close;
 			} else {
-				.@max = countitem(909)/3;
+				.@max = countitem(Jellopy)/3;
 				mes "Not too bad pansy...";
 				mes "How many do you want?";
 				next;
 				switch(select("As many as I can get, please","I want this many.","Never mind, I like my jellopy.")) {
 				case 1:
-					delitem 909,.@max*3;	// Jellopy
-					getitem 515,.@max;	// Carrot
+					delitem Jellopy,.@max*3;	// Jellopy
+					getitem Carrot,.@max;	// Carrot
 					break;
 				case 2:
 					mes "[Phelix]";
@@ -388,12 +388,12 @@ alberta,190,173,4	script	Phelix	4_M_03,{
 						mes "Hey pansy ass, I said 100 at most, no more then that! I'm not going to break my back for the likes of you!";
 						close;
 					}
-					if (countitem(909) < .@amount*10) {
+					if (countitem(Jellopy) < .@amount*10) {
 						mes "Seems you don't have enough. Go get some more if you want anything else.";
 						close;
 					}
-					delitem 909,.@amount*3;	// Jellopy
-					getitem 515,.@amount;	// Carrot
+					delitem Jellopy,.@amount*3;	// Jellopy
+					getitem Carrot,.@amount;	// Carrot
 					break;
 				case 3:
 					mes "[Phelix]";

@@ -274,8 +274,8 @@ umbala,70,106,3	script	Utan Kid#um	4_F_UMGIRL,{
 			mes "Thank you so much, yay~!";
 			if (Zeny > 1000) {
 				Zeny -= 1000;
-				if (checkweight(517,1)) {
-					getitem 517,1; //Meat
+				if (checkweight(Meat,1)) {
+					getitem Meat,1;
 				}
 				emotion e_swt2;
 			}
@@ -335,8 +335,8 @@ umbala,70,106,3	script	Utan Kid#um	4_F_UMGIRL,{
 			mes "Um~baumbah~ um~baumbah~";
 			if (Zeny > 1000) {
 				Zeny -= 1000;
-				if (checkweight(517,1)) {
-					getitem 517,1; //Meat
+				if (checkweight(Meat,1)) {
+					getitem Meat,1;
 				}
 				emotion e_swt2;
 			}
@@ -371,15 +371,15 @@ umbala,59,243,5	script	Utan Kid#1	4_M_UMKID,{
 		emotion e_rock;
 		next;
 		if (select("Give him Meat.:Refuse.") == 1) {
-			if (countitem(517) > 0) {
+			if (countitem(Meat) > 0) {
 				mes "[Kotan]";
 				mes "Whoa, are you really giving me";
 				mes "Meat? Thanks! I will pay you";
 				mes "back with these.";
-				delitem 517,1; //Meat
-				getitem 909,2; //Jellopy
-				getitem 914,2; //Fluff
-				getitem 705,2; //Clover
+				delitem Meat,1;
+				getitem Jellopy,2;
+				getitem Fluff,2;
+				getitem Clover,2;
 				emotion e_scissors;
 				close;
 			}
@@ -409,14 +409,14 @@ umbala,59,243,5	script	Utan Kid#1	4_M_UMKID,{
 		emotion e_rock;
 		next;
 		if (select("Umbah:Umbaboo") == 1) {
-			if (countitem(517) > 0) {
+			if (countitem(Meat) > 0) {
 				mes "[???]";
 				mes "Umbaumbaumbabababah.";
 				mes "Umbababahum.";
-				delitem 517,1; //Meat
-				getitem 909,2; //Jellopy
-				getitem 914,2; //Fluff
-				getitem 705,2; //Clover
+				delitem Meat,1;
+				getitem Jellopy,2;
+				getitem Fluff,2;
+				getitem Clover,2;
 				emotion e_scissors;
 				close;
 			}
