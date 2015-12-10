@@ -226,7 +226,7 @@ geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 			mes "Please double check";
 			mes "that you have the admission or viewing ticket.";
 			next;
-			if ((countitem(7028) == 0) && (countitem(7029) == 0)) {
+			if ((countitem(Invite_For_Duel) == 0) && (countitem(Admission_For_Duel) == 0)) {
 				mes "[Gate Keeper]";
 				mes "Eh? You don't have it? Then I";
 				mes "am sorry, this fight square is";
@@ -317,7 +317,7 @@ function	script	F_PVP_FSRS	{
 // Event Contestant Entrance
 //============================================================
 pvp_room,54,85,4	script	Registration Staff#1	8W_SOLDIER,{
-	if (countitem(7028) == 0) {
+	if (countitem(Invite_For_Duel) == 0) {
 		mes "[PVP Combat Square Register Staff]";
 		mes "Eh? How did you get in here?";
 		mes "This is the entrance for players only.";
@@ -339,7 +339,7 @@ pvp_room,54,85,4	script	Registration Staff#1	8W_SOLDIER,{
 			mes "OK! I will send you inside";
 			mes "Good luck!";
 			close2;
-			delitem 7028,1; //Invite_For_Duel
+			delitem Invite_For_Duel,1;
 			.@rand = rand(.@size);
 			warp "pvp_2vs2", .warp_x[.@rand], .warp_y[.@rand];
 			deletearray .warp_x[.@rand],1;
@@ -360,7 +360,7 @@ OnInit:
 // Spectator Entrance
 //============================================================
 -	script	Spectator's Entrance#dum::PVPSpectator	-1,{
-	if (countitem(7029) == 0) {
+	if (countitem(Admission_For_Duel) == 0) {
 		mes "[PVP Compete Square Register Staff]";
 		mes "This is the entrance for viewers.";
 		mes "For details about players entrance please proceed to the Register Staff on your left.";
@@ -370,7 +370,7 @@ OnInit:
 		mes "[PVP Combat Square Register Staff]";
 		mes "You got it, thanks for participating. Have fun!";
 		close2;
-		delitem 7029,1; //Admission_For_Duel
+		delitem Admission_For_Duel,1;
 		switch(rand(1,4)) {
 			case 1: warp "pvp_2vs2",39,7; end;
 			case 2: warp "pvp_2vs2",39,73; end;

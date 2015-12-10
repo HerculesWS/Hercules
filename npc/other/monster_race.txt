@@ -206,7 +206,7 @@ p_track01,73,22,1	script	Ticket Helper#single	4_M_HUMAN_02,{
 			mes "until the start of the race is";
 			mes "announced. If the monster you";
 			mes "picked wins, then please use this ticket to redeem your prize.";
-			getitem 7514,1; //Monster_Ticket
+			getitem Monster_Ticket,1;
 			monster_race_1 = .@m;
 			close;
 		}
@@ -368,9 +368,9 @@ p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 						mes "exchange these with";
 						mes "Wayne in Hugel for some";
 						mes "interesting items. Thank you~";
-						delitem 7514,1; //Monster_Ticket
+						delitem Monster_Ticket,1;
 						monster_race_1 = 0;
-						getitem 7515,4; //Marvelous_Medal
+						getitem Marvelous_Medal,4;
 						close;
 					}
 					mes "[Medal Distributor]";
@@ -505,7 +505,7 @@ p_track01,76,36,1	script	Exit Guide#single	4_M_NFMAN,{
 		mes "ready to leave.";
 		close;
 	}
-	if (!countitem(7514)) {
+	if (!countitem(Monster_Ticket)) {
 		mes "[Exit Guide]";
 		mes "Thank you for";
 		mes "your patronage, and";
@@ -519,7 +519,7 @@ p_track01,76,36,1	script	Exit Guide#single	4_M_NFMAN,{
 		mes "Thank you for your patronage,";
 		mes "and I hope you enjoy your time";
 		mes "here in the Monster Race Arena.";
-		delitem 7514,1; //Monster_Ticket
+		delitem Monster_Ticket,1;
 	}
 	monster_race_1 = 0;
 	close2;
@@ -617,7 +617,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 		mes "with an expired Racing Ticket?";
 		mes "Well, I better get rid of it for you before it can get mixed up";
 		mes "with your new Racing Ticket.";
-		delitem 7514,1; //Monster_Ticket
+		delitem Monster_Ticket,1;
 		next;
 		if ($@mon_time_1_1 == 1) {
 			if (Zeny < 2000) {
@@ -1208,13 +1208,13 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 		mes "2,000 zeny entrance fee. ";
 		close;
 	}
-	if (countitem(7514)) {
+	if (countitem(Monster_Ticket)) {
 		mes "[Eckar Erenes]";
 		mes "Hm? What are you doing";
 		mes "with an expired Racing Ticket?";
 		mes "Well, I better get rid of it for you before it can get mixed up";
 		mes "with your new Racing Ticket.";
-		delitem 7514,1; //Monster_Ticket
+		delitem Monster_Ticket,1;
 		next;
 		if ($@mon_time_2_1 == 1) {
 			mes "[Eckar Erenes]";
@@ -1614,7 +1614,7 @@ p_track02,67,45,5	script	Medal Distributor#medal	4_F_RACING,{
 	mes "your game ticket here for";
 	mes "some Prize Medals.";
 	next;
-	if (!countitem(7514)) {
+	if (!countitem(Monster_Ticket)) {
 		mes "[Medal Distributor]";
 		mes "Please remember that you can";
 		mes "only exchange winning Game";
@@ -1649,10 +1649,10 @@ p_track02,67,45,5	script	Medal Distributor#medal	4_F_RACING,{
 			mes "medals for items, please";
 			mes "visit Wayne in Hugel. We hope";
 			mes "you enjoyed the Monster Race~";
-			delitem 7514,1; //Monster_Ticket
+			delitem Monster_Ticket,1;
 			monster_race_2_1 = 7;
 			monster_race_2_2 = 7;
-			getitem 7515,15; //Marvelous_Medal
+			getitem Marvelous_Medal,15;
 			close;
 		}
 		mes "[Medal Distributor]";
@@ -1712,7 +1712,7 @@ p_track02,76,38,1	script	Exit Guide#double	4_M_NFMAN,{
 		mes "ready to leave.";
 		close;
 	}
-	if (!countitem(7514)) {
+	if (!countitem(Monster_Ticket)) {
 		mes "[Exit Guide]";
 		mes "Thank you for";
 		mes "your patronage, and";
@@ -1726,7 +1726,7 @@ p_track02,76,38,1	script	Exit Guide#double	4_M_NFMAN,{
 		mes "Thank you for your patronage,";
 		mes "and I hope you enjoy your time";
 		mes "here in the Monster Race Arena.";
-		delitem 7514,1; //Monster_Ticket
+		delitem Monster_Ticket,1;
 	}
 	monster_race_2_1 = 0;
 	monster_race_2_2 = 0;
@@ -2326,7 +2326,7 @@ S_Reward:
 			mes "*Phew* How's that?";
 			mes "Now do you see the";
 			mes "power of hope?";
-			delitem 7515,1; //Marvelous_Medal
+			delitem Marvelous_Medal,1;
 			if (RENEWAL_EXP) {
 				if (BaseLevel < 21) getexp 110,0;
 				else if ((BaseLevel > 20) && (BaseLevel < 31)) getexp 280,0;
@@ -2388,7 +2388,7 @@ S_Reward:
 			mes "Your mind will work on";
 			mes "whatever you feed it.";
 			mes "Placebos and psychosomatic symptoms-- it all ties together.";
-			delitem 7515,1; //Marvelous_Medal
+			delitem Marvelous_Medal,1;
 			if (RENEWAL_EXP) {
 				if (Class == Job_Novice) {
 					getexp 0,15;
