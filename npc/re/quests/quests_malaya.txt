@@ -8753,21 +8753,21 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 		mes "Hope you enjoy the '^7A96E0Pintados Festival^000000'.";
 		close;
 	case 2:
-		.@tattoo = 2911; //Bangungot_Tattoo
-		.@doll = 6517; //Bangungot_Doll
-		.@spirit = 6524; //Bangungot_Spirit_Piece
+		.@tattoo = Bangungot_Tattoo;
+		.@doll = Bangungot_Doll;
+		.@spirit = Bangungot_Spirit_Piece;
 		.@name$ = "Bangungot";
 		break;
 	case 3:
-		.@tattoo = 2907; //Buwaya_Tattoo
-		.@doll = 6518; //Buwaya_Doll
-		.@spirit = 6525; //Buwaya_Spirit_Piece
+		.@tattoo = Buwaya_Tattoo;
+		.@doll = Buwaya_Doll;
+		.@spirit = Buwaya_Spirit_Piece;
 		.@name$ = "Buwaya";
 		break;
 	case 4:
-		.@tattoo = 2910; //Bakonawa_Tattoo
-		.@doll = 6516; //Bakonawa_Doll
-		.@spirit = 6523; //Bakonawa_Spirit_Piece
+		.@tattoo = Bakonawa_Tattoo;
+		.@doll = Bakonawa_Doll;
+		.@spirit = Bakonawa_Spirit_Piece;
 		.@name$ = "Bakonawa";
 		break;
 	}

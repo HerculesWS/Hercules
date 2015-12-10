@@ -8204,7 +8204,7 @@ iz_ac02,70,85,5	script	Arang#ac	4_F_TAEKWON,{
 						mes "[Arang]";
 						mes "It is not an easy way. So I don't like to recommend it to you if you aren't fully prepared. But it is definitely a nice and great way to follow!!";
 						next;
-						if (isequipped(2942) > 0 || countitem(Taekwon_Manual) > 0) {
+						if (isequipped(Taekwon_Manual) > 0 || countitem(Taekwon_Manual) > 0) {
 							mes "[Arang]";
 							mes "Introduction to the class may let you know about what Taekwon in more detail.";
 							next;
@@ -9215,7 +9215,7 @@ iz_ac02,148,110,3	script	Mage Chuck#ac	4_M_JOB_WIZARD,{
 						mes "Anything else you want to know about Mages?";
 						break;
 					case 4:
-						if (isequippedcnt(2824) > 0 || countitem(Mage_Manual) > 0) {
+						if (isequippedcnt(Mage_Manual) > 0 || countitem(Mage_Manual) > 0) {
 							mes "[Mage Chuck]";
 							mes "I think you already received a ^FF0000Mage Manual^000000~!";
 							mes "I can't offer you two of them.";
@@ -12110,7 +12110,7 @@ iz_ac02,152,165,5	script	A Nun#2	4_F_SISTER,{
 				mes "murmuring";
 				close;
 			}
-			if (isequippedcnt(2821) > 0 || countitem(Acolyte_Manual) > 0) {
+			if (isequippedcnt(Acolyte_Manual) > 0 || countitem(Acolyte_Manual) > 0) {
 				mes "[A nun]";
 				mes "You already have one.";
 				mes "We do not give two.";
