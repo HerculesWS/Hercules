@@ -39,18 +39,18 @@ L1_4:
 	mes "[Zac]";
 	mes "Let me check the items you have brought here.";
 	next;
-	if(countitem(609) < 10) goto L_ITEM_1c;//Items: Amulet,
-	if(countitem(978) < 1) goto L_ITEM_2c;//Items: Cobaltblue Dyestuff,
-	if(countitem(2264) < 1) goto L_ITEM_3c;//Items: Munak Hat,
-	delitem 609,10;//Items: Amulet,
-	delitem 978,1;//Items: Cobaltblue Dyestuff,
-	delitem 2264,1;	//Items: Munak Hat,
+	if(countitem(Amulet) < 10) goto L_ITEM_1c;//Items: Amulet,
+	if(countitem(Cobaltblue_Dyestuffs) < 1) goto L_ITEM_2c;//Items: Cobaltblue Dyestuff,
+	if(countitem(Munak_Turban) < 1) goto L_ITEM_3c;//Items: Munak Hat,
+	delitem Amulet,10;//Items: Amulet,
+	delitem Cobaltblue_Dyestuffs,1;//Items: Cobaltblue Dyestuff,
+	delitem Munak_Turban,1;	//Items: Munak Hat,
 	mes "[Zac]";
 	mes "Wow!! Well done! Finally you have gathered all items needed! We will make the Bongun Hat for you right away. Please Wait a Moment.";
    	next;
 	mes "[Zac]";
 	mes "Tah Dah! ^FF0000Bongun Hat^000000...! Please Take it!";
-	getitem 5046,1;//Items: Bongun Hat,
+	getitem Bongun_Hat,1;//Items: Bongun Hat,
 	next;
 	mes "[Zac]";
 	mes "I liked that, I look forward to making more. Thank you.";
@@ -99,16 +99,16 @@ L1_9:
 	mes "[Blac]";
 	mes "Let me check the items you have brought here.";
 	next;
-	if(countitem(5041) < 1) goto L_ITEM_1;//Items: Heart Hairpin,
-	if(countitem(999) < 10) goto L_ITEM_2;//Items: Steel,
-	delitem 5041,1;//Items: Heart Hairpin,
-	delitem 999,10;	//Items: Steel,
+	if(countitem(Heart_Hair_Pin) < 1) goto L_ITEM_1;//Items: Heart Hairpin,
+	if(countitem(Steel) < 10) goto L_ITEM_2;//Items: Steel,
+	delitem Heart_Hair_Pin,1;//Items: Heart Hairpin,
+	delitem Steel,10;	//Items: Steel,
 	mes "[Blac]";
 	mes "Wow!! Well done! Finally you have gathered all items needed! We will make the Crescent Hairpin for you right away. Please Wait a Moment.";
    	next;
 	mes "[Blac]";
 	mes "Tah Dah! ^FF0000Crescent Hairpin^000000...! Please Take it!";
-	getitem 5048,1;//Items: Cresent Hairpin,
+	getitem First_Moon_Hair_Pin,1;//Items: Cresent Hairpin,
 	next;
 	mes "[Blac]";
 	mes "I liked that, I look forward to making more. Thank you.";
@@ -153,16 +153,16 @@ L1_19:
 	mes "[Jac]";
 	mes "Let me check the items you have brought here.";
 	next;
-	if(countitem(10007) < 1) goto L_ITEM_1b;//Items: Silk Ribbon,
-	if(countitem(10009) < 1) goto L_ITEM_2b;//Items: Wild Flower,
-	delitem 10007,1;//Items: Silk Ribbon,
-	delitem 10009,1;	//Items: Wild Flower,
+	if(countitem(Silk_Ribbon) < 1) goto L_ITEM_1b;//Items: Silk Ribbon,
+	if(countitem(Wild_Flower) < 1) goto L_ITEM_2b;//Items: Wild Flower,
+	delitem Silk_Ribbon,1;//Items: Silk Ribbon,
+	delitem Wild_Flower,1;	//Items: Wild Flower,
 	mes "[Jac]";
 	mes "Wow!! Well done! Finally you have gathered all items needed! We will make the Kafra Band for you right away. Please Wait a Moment.";
    	next;
 	mes "[Jac]";
 	mes "Tah Dah! ^FF0000Kafra Band^000000...! Please Take it!";
-	getitem 5020,1;//Items: Kafra's Band,
+	getitem Kafra_Band,1;//Items: Kafra's Band,
 	next;
 	mes "[Jac]";
 	mes "I liked that, I look forward to making more. Thank you.";
@@ -179,16 +179,16 @@ L1_24:
 	mes "[Jac]";
 	mes "Let me check the items you have brought here.";
 	next;
-	if(countitem(999) < 10) goto L_ITEM_1g;//Items: Steel,
-	if(countitem(948) < 200) goto L_ITEM_2g;//Items: Bears Footskin,
-	delitem 999,10;//Items: Steel,
-	delitem 948,200;	//Items: Bears Footskin,
+	if(countitem(Steel) < 10) goto L_ITEM_1g;//Items: Steel,
+	if(countitem(Bear's_Foot) < 200) goto L_ITEM_2g;//Items: Bears Footskin,
+	delitem Steel,10;//Items: Steel,
+	delitem Bear's_Foot,200;	//Items: Bears Footskin,
 	mes "[Jac]";
 	mes "Wow!! Well done! Finally you have gathered all items needed! We will make the Panda Hat for you right away. Please Wait a Moment.";
    	next;
 	mes "[Jac]";
 	mes "Tah Dah! ^FF0000Panda Hat^000000...! Please Take it!";
-	getitem 5030,1;//Items: Panda Hat,
+	getitem Panda_Cap,1;//Items: Panda Hat,
 	next;
 	mes "[Jac]";
 	mes "I liked that, I look forward to making more. Thank you.";
@@ -237,16 +237,16 @@ L1_26:
 	mes "[Pac]";
 	mes "Let me check the items you have brought here.";
 	next;
-	if(countitem(741) < 1) goto L_ITEM_1a;//Items: Poring Doll,
-	if(countitem(909) < 300) goto L_ITEM_2a;//Items: Jellopy,
-	delitem 741,1;//Items: Poring Doll,
-	delitem 909,300;//Items: Jellopy,
+	if(countitem(Poring_Doll) < 1) goto L_ITEM_1a;//Items: Poring Doll,
+	if(countitem(Jellopy) < 300) goto L_ITEM_2a;//Items: Jellopy,
+	delitem Poring_Doll,1;//Items: Poring Doll,
+	delitem Jellopy,300;//Items: Jellopy,
 	mes "[Pac]";
 	mes "Wow!! Well done! Finally you have gathered all items needed! We will make the Poring Hat for you right away. Please Wait a Moment.";
    	next;
 	mes "[Pac]";
 	mes "Tah Dah! ^FF0000Poring Hat^000000...! Please Take it!";
-	getitem 5035,1;//Items: Poring Hat,
+	getitem Poring_Hat,1;//Items: Poring Hat,
 	next;
 	mes "[Pac]";
 	mes "I liked that, I look forward to making more. Thank you.";
@@ -263,22 +263,22 @@ L1_29:
 	mes "[Pac]";
 	mes "Let me check the items you have brought here.";
 	next;
-	if(countitem(999) < 25) goto L_ITEM_1d;//Items: Steel,
-	if(countitem(979) < 1) goto L_ITEM_2d;//Items: Darkgreen Dyestuff,
-	if(countitem(976) < 1) goto L_ITEM_3d;//Items: Lemon Dyestuffs,
-	if(countitem(1059) < 150) goto L_ITEM_4d;//Items: Fabric,
-	if(countitem(969) < 2) goto L_ITEM_5d;//Items: Gold,
-	delitem 999,25;//Items: Steel,
-	delitem 979,1;//Items: Darkgreen Dyestuff,
-	delitem 976,1;//Items: Lemon Dyestuffs,
-	delitem 1059,150;//Items: Fabric,
-	delitem 969,2; 	//Items: Gold,
+	if(countitem(Steel) < 25) goto L_ITEM_1d;//Items: Steel,
+	if(countitem(Darkgreen_Dyestuffs) < 1) goto L_ITEM_2d;//Items: Darkgreen Dyestuff,
+	if(countitem(Lemon_Dyestuffs) < 1) goto L_ITEM_3d;//Items: Lemon Dyestuffs,
+	if(countitem(Transparent_Cloth) < 150) goto L_ITEM_4d;//Items: Fabric,
+	if(countitem(Gold) < 2) goto L_ITEM_5d;//Items: Gold,
+	delitem Steel,25;//Items: Steel,
+	delitem Darkgreen_Dyestuffs,1;//Items: Darkgreen Dyestuff,
+	delitem Lemon_Dyestuffs,1;//Items: Lemon Dyestuffs,
+	delitem Transparent_Cloth,150;//Items: Fabric,
+	delitem Gold,2; 	//Items: Gold,
 	mes "[Pac]";
 	mes "Wow!! Well done! Finally you have gathered all items needed! We will make the Sphinx Hat for you right away. Please Wait a Moment.";
    	next;
 	mes "[Pac]";
 	mes "Tah Dah! ^FF0000Sphinx Hat^000000...! Please Take it!";
-	getitem 5053,1;//Items: Sphinx Hat,
+	getitem Spinx_Helm,1;//Items: Sphinx Hat,
 	next;
 	mes "[Pac]";
 	mes "I liked that, I look forward to making more. Thank you.";

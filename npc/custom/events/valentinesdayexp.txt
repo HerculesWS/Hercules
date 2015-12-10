@@ -166,7 +166,7 @@ M_CHOCO:
 	if (@flag_num > 5) goto L_ERR;
 	set @needmon,@flag_num*4500;
 	if (Zeny < @needmon) goto L_NOTENO;
-	if (countitem(519) < @flag_num) goto L_NOMILK;
+	if (countitem(Milk) < @flag_num) goto L_NOMILK;
 	Zeny -= @needmon;
 	delitem 519,@flag_num;
 	getitem 561,@flag_num;
@@ -204,7 +204,7 @@ prt_castle,54,34,4	script	Carl Orleans#val1	1_M_01,{
 	mes "[Carl Orleans]";
 	mes "Well, I just might be able to fulfill your needs...";
 	next;
-	if (countitem(558)<3) {
+	if (countitem(Chocolate)<3) {
 		mes "[Carl Orleans]";
 		mes "I'm sorry you do not have enough Chocolate Bars to do this.";
 		if(rand(2))mes "They say Stephen from Alberta used to sell good Chocolate.";
@@ -237,7 +237,7 @@ M_WHITE:
 	mes "[Carl Orleans]";
 	mes "Well, I just might be able to fulfill your needs...";
 	next;
-	if (countitem(561)<3) {
+	if (countitem(White_Chocolate)<3) {
 		mes "[Carl Orleans]";
 		mes "I'm sorry you do not have enough White Chocolate Bars to do this.";
 		if(rand(2))mes "They say Jainie from Alberta used to sell good White Chocolate.";
