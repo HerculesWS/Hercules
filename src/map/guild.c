@@ -1081,7 +1081,7 @@ int guild_change_memberposition(int guild_id,int account_id,int char_id,short id
 int guild_memberposition_changed(struct guild *g,int idx,int pos)
 {
 	nullpo_ret(g);
-	Assert_ret(idx > 0 && idx < MAX_GUILD);
+	Assert_ret(idx >= 0 && idx < MAX_GUILD);
 
 	g->member[idx].position=pos;
 	clif->guild_memberpositionchanged(g,idx);
