@@ -84,7 +84,7 @@ Makefile: Makefile.in
 
 ../../plugins/%@DLLEXT@: %.c $(ALL_H) $$(shell ls %/* 2>/dev/null)
 	@echo "	CC	$<"
-	@$(CC) @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<
+	@$(CC) -lpcre @PLUGINSTATIC@ @DEFS@ @CFLAGS@ @CPPFLAGS@ @LDFLAGS@ @SOFLAGS@ -o $@ $<
 
 ../../plugins/HPMHooking_login@DLLEXT@: HPMHOOKINGTYPE = LOGIN
 ../../plugins/HPMHooking_char@DLLEXT@: HPMHOOKINGTYPE = CHAR
