@@ -4,7 +4,7 @@
 -- Remember to make a backup before applying.
 -- We are not liable for any data loss this may cause.
 -- Apply in the same database you applied your logs.sql
--- Last revised: July 22, 2014 20:45 GMT
+-- Last revised: October 13, 2015 22:00 CET
 
 -- Drop table `cashlog` since it's not used in Hercules
 -- Comment it if you wish to keep the table
@@ -20,3 +20,7 @@ ALTER TABLE `picklog` MODIFY `card0` INT(11) NOT NULL DEFAULT '0';
 ALTER TABLE `picklog` MODIFY `card1` INT(11) NOT NULL DEFAULT '0';
 ALTER TABLE `picklog` MODIFY `card2` INT(11) NOT NULL DEFAULT '0';
 ALTER TABLE `picklog` MODIFY `card3` INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE `picklog` DROP COLUMN `bound`;
+
+-- Upgrades to table `zenylog`
+ALTER TABLE `zenylog` MODIFY `type` ENUM('T','V','P','M','S','N','D','C','A','E','I','B') NOT NULL DEFAULT 'S';

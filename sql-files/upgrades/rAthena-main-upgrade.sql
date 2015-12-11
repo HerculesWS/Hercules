@@ -4,7 +4,7 @@
 -- Remember to make a backup before applying.
 -- We are not liable for any data loss this may cause.
 -- Apply in the same database you applied your main.sql
--- Last revised: July 22, 2014 21:45 GMT
+-- Last revised: October 13, 2015 05:00 CET
 
 -- Drop table contents from `sc_data` since we use a different status order than rAthena
 -- /!\ WARNING /!\ This will remove _ALL_ of the status effects active on the server
@@ -17,59 +17,53 @@ DROP TABLE IF EXISTS `skillcooldown`;
 
 -- Upgrades for table `auction`
 ALTER TABLE `auction` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0';
+    MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0';
 
 -- Upgrades for table `cart_inventory`
 ALTER TABLE `cart_inventory` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
+    MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
 
 -- Upgrades for table `char`
 ALTER TABLE `char` CHANGE `moves` `slotchange` SMALLINT(3) UNSIGNED NOT NULL DEFAULT '0',
-	ADD `char_opt` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `slotchange`,
-	MODIFY `font` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `char_opt`,
-	ADD `uniqueitem_counter` BIGINT(20) UNSIGNED NOT NULL DEFAULT '0' AFTER `unban_time`;
+    ADD `char_opt` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `slotchange`,
+    MODIFY `font` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `char_opt`;
 
 -- Upgrades for table `charlog`
 ALTER TABLE `charlog` ADD COLUMN `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `account_id`;
 
 -- Upgrades for table `guild_storage`
 ALTER TABLE `guild_storage` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
+    MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
 
 -- Upgrades for table `inventory`
 ALTER TABLE `inventory` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
+    MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
 
 -- Login table will be upgraded at a later point on this file
 -- so that we can save the bank vault.
 
 -- Upgrades for table `mail`
 ALTER TABLE `mail` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0';
-
--- Upgrades for table `mapreg`
-ALTER TABLE `mapreg` MODIFY `varname` VARCHAR(32) BINARY NOT NULL,
-	DROP KEY `varname`,
-	DROP KEY `index`,
-	ADD PRIMARY KEY (`varname`,`index`);
+    MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+    DROP COLUMN `bound`;
 
 -- Upgrades for table `pet`
 ALTER TABLE `pet` MODIFY `egg_id` SMALLINT(11) UNSIGNED NOT NULL DEFAULT '0';
@@ -116,14 +110,19 @@ INSERT INTO `sql_updates` (`timestamp`) VALUES (1395789302); -- 2014-03-25--23-5
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1396893866); -- 2014-04-07--22-04.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1398477600); -- 2014-04-26--10-00.sql
 INSERT INTO `sql_updates` (`timestamp`) VALUES (1400256139); -- 2014-05-17--00-06.sql
-
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1409590380); -- 2014-09-01--16-53.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1414975503); -- 2014-11-03--00-45.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1435860840); -- 2014-07-02--18-14.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1436360978); -- 2015-07-08--13-08.sql
+INSERT INTO `sql_updates` (`timestamp`) VALUES (1440688342); -- 2015-08-27--13-08.sql
+--
 -- Updates to table `storage`
 ALTER TABLE `storage` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
-	MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
-	MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
+    MODIFY `card0` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card1` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card2` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `card3` SMALLINT(11) NOT NULL DEFAULT '0',
+    MODIFY `bound` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0';
 
 --
 -- Table structure for table `account_data`
@@ -132,20 +131,15 @@ ALTER TABLE `storage` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0',
 CREATE TABLE IF NOT EXISTS `account_data` (
   `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `bank_vault` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `base_exp` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '100',
-  `base_drop` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '100',
-  `base_death` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '100',
+  `base_exp` SMALLINT(6) UNSIGNED NOT NULL DEFAULT  '100',
+  `base_drop` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '100',
+  `base_death` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '100',
   PRIMARY KEY (`account_id`)
 ) ENGINE=MyISAM;
 
--- Saving bank_vault data from rAthena's login table
--- to our account_data table. There may be some not working cases.
-INSERT INTO `account_data` (`account_id`, `bank_vault`) SELECT `account_id`, `bank_vault` FROM `login` WHERE `bank_vault` > 0 ;
-
 -- Upgrades for table `login`
 ALTER TABLE `login` DROP COLUMN `vip_time`,
-	DROP COLUMN `old_group`,
-	DROP COLUMN `bank_vault`;
+    DROP COLUMN `old_group`;
 
 -- Drop table `bonus_script` since it's not used in Hercules
 DROP TABLE IF EXISTS `bonus_script`;
@@ -160,6 +154,32 @@ CREATE TABLE IF NOT EXISTS `npc_market_data` (
   `amount` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`name`,`itemid`)
 ) ENGINE=MyISAM;
+
+--
+-- Customised script for transfering data from rA's market to npc_market_data
+--
+DROP TABLE IF EXISTS `npc_market_data`;
+
+ALTER TABLE `market`
+  DROP `flag`,
+  DROP `price`,
+  MODIFY `name` varchar(24) NOT NULL DEFAULT '',
+  CHANGE `nameid` `itemid` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  MODIFY `amount` INT(11) UNSIGNED NOT NULL DEFAULT '0';
+
+RENAME TABLE `market` TO `npc_market_data`;
+
+--
+-- Renaming rA tables to fit with the Hercules format
+--
+
+RENAME TABlE `acc_reg_num` to `acc_reg_num_db`;
+RENAME TABlE `acc_reg_str` to `acc_reg_str_db`;
+RENAME TABlE `char_reg_num` to `char_reg_num_db`;
+RENAME TABlE `char_reg_str` to `char_reg_str_db`;
+RENAME TABlE `global_acc_reg_num` to `global_acc_reg_num_db`;
+RENAME TABlE `global_acc_reg_str` to `global_acc_reg_str_db`;
+
 
 -- Autotrade saving. Very special thanks to Dastgir Pojee!
 --
@@ -193,12 +213,12 @@ ALTER TABLE `vendings`
   DROP `x`,
   DROP `y`,
   DROP `autotrade`;
-  
+ 
 ALTER TABLE `vendings`
   CHANGE `sex` `sex_ref` ENUM('F','M') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'M';
 
 ALTER TABLE `vendings`
-  MODIFY `account_id` INT(11) NOT NULL DEFAULT '0', 
+  MODIFY `account_id` INT(11) NOT NULL DEFAULT '0',
   MODIFY `char_id` INT(11) NOT NULL DEFAULT '0',
   ADD `sex` TINYINT(2) NOT NULL DEFAULT '0' AFTER `char_id`,
   MODIFY `title` VARCHAR(80) NOT NULL DEFAULT 'Buy From Me!';
@@ -206,7 +226,7 @@ ALTER TABLE `vendings`
 UPDATE `vendings`
   SET `sex` = 0
   WHERE `sex_ref` = 'F';
-  
+ 
 UPDATE `vendings`
   SET `sex` = 1
   WHERE `sex_ref` = 'M';
@@ -224,96 +244,8 @@ RENAME TABLE `vendings` TO `autotrade_merchants`;
 -- Comment next statement if you want to preserve them anyways
 DROP TABLE IF EXISTS `buyingstores`, `buyingstore_items`;
 
-
--- Saving contents of `global_reg_value`
-
---
--- Table structure for table `acc_reg_num_db`
---
-
-CREATE TABLE IF NOT EXISTS `acc_reg_num_db` (
-  `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
-  `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `value` INT(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`account_id`,`key`,`index`),
-  KEY `account_id` (`account_id`)
-) ENGINE=MyISAM;
-
-
---
--- Table structure for table `acc_reg_str_db`
---
-
-CREATE TABLE IF NOT EXISTS `acc_reg_str_db` (
-  `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
-  `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `value` VARCHAR(254) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`account_id`,`key`,`index`),
-  KEY `account_id` (`account_id`)
-) ENGINE=MyISAM;
-
---
--- Table structure for table `char_reg_num_db`
---
-
-CREATE TABLE IF NOT EXISTS `char_reg_num_db` (
-  `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
-  `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `value` INT(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`char_id`,`key`,`index`),
-  KEY `char_id` (`char_id`)
-) ENGINE=MyISAM;
-
---
--- Table structure for table `char_reg_str_db`
---
-
-CREATE TABLE IF NOT EXISTS `char_reg_str_db` (
-  `char_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
-  `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `value` VARCHAR(254) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`char_id`,`key`,`index`),
-  KEY `char_id` (`char_id`)
-) ENGINE=MyISAM;
-
---
--- Table structure for table `global_acc_reg_num_db`
---
-
-CREATE TABLE IF NOT EXISTS `global_acc_reg_num_db` (
-  `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
-  `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `value` INT(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`account_id`,`key`,`index`),
-  KEY `account_id` (`account_id`)
-) ENGINE=MyISAM;
-
---
--- Table structure for table `global_acc_reg_str_db`
---
-
-CREATE TABLE IF NOT EXISTS `global_acc_reg_str_db` (
-  `account_id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `key` VARCHAR(32) BINARY NOT NULL DEFAULT '',
-  `index` INT(11) UNSIGNED NOT NULL DEFAULT '0',
-  `value` VARCHAR(254) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`account_id`,`key`,`index`),
-  KEY `account_id` (`account_id`)
-) ENGINE=MyISAM;
-
--- Saving the data
-INSERT INTO `acc_reg_num_db` (`account_id`, `key`, `index`, `value`) SELECT `account_id`, `str`, 0, `value` FROM `global_reg_value` WHERE `type` = 2 AND `str` NOT LIKE '%$';
-INSERT INTO `acc_reg_str_db` (`account_id`, `key`, `index`, `value`) SELECT `account_id`, `str`, 0, `value` FROM `global_reg_value` WHERE `type` = 2 AND `str` LIKE '%$';
-INSERT INTO `char_reg_num_db` (`char_id`, `key`, `index`, `value`) SELECT `char_id`, `str`, 0, `value` FROM `global_reg_value` WHERE `type` = 3 AND `str` NOT LIKE '%$';
-INSERT INTO `char_reg_str_db` (`char_id`, `key`, `index`, `value`) SELECT `char_id`, `str`, 0, `value` FROM `global_reg_value` WHERE `type` = 3 AND `str` LIKE '%$';
-INSERT INTO `global_acc_reg_num_db` (`account_id`, `key`, `index`, `value`) SELECT `account_id`, `str`, 0, `value` FROM `global_reg_value` WHERE `type` = 1 AND `str` NOT LIKE '%$';
-INSERT INTO `global_acc_reg_str_db` (`account_id`, `key`, `index`, `value`) SELECT `account_id`, `str`, 0, `value` FROM `global_reg_value` WHERE `type` = 1 AND `str` LIKE '%$';
-
--- Dropping now useless table
+-- Dropping now useless tables
 DROP TABLE `global_reg_value`;
-
+DROP TABLE IF EXISTS interreg;
+DROP TABLE IF EXISTS sstatus;
+DROP TABLE IF EXISTS db_roulette;
