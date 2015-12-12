@@ -183,19 +183,19 @@ enum HPluginConfType {
 /* HPMi->addPacket */
 #define addPacket(cmd,len,receive,point) HPMi->addPacket(cmd,len,receive,point,HPMi->pid)
 /* HPMi->addBattleConf */
-#define addBattleConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_BATTLE,bcname,funcname)
+#define addBattleConf(bcname,funcname,returnfunc) HPMi->addConf(HPMi->pid,HPCT_BATTLE,bcname,funcname,returnfunc)
 /* HPMi->addLogin */
-#define addLoginConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_LOGIN,bcname,funcname)
+#define addLoginConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_LOGIN,bcname,funcname,NULL)
 /* HPMi->addChar */
-#define addCharConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_CHAR,bcname,funcname)
+#define addCharConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_CHAR,bcname,funcname,NULL)
 /* HPMi->addCharInter */
-#define addCharInterConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_CHAR_INTER,bcname,funcname)
+#define addCharInterConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_CHAR_INTER,bcname,funcname,NULL)
 /* HPMi->addMapInter */
-#define addMapInterConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_MAP_INTER,bcname,funcname)
+#define addMapInterConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_MAP_INTER,bcname,funcname,NULL)
 /* HPMi->addLog */
-#define addLogConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_LOG,bcname,funcname)
+#define addLogConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_LOG,bcname,funcname,NULL)
 /* HPMi->addScript */
-#define addScriptConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_SCRIPT,bcname,funcname)
+#define addScriptConf(bcname,funcname) HPMi->addConf(HPMi->pid,HPCT_SCRIPT,bcname,funcname,NULL)
 
 /* HPMi->addPCGPermission */
 #define addGroupPermission(pcgname,maskptr) HPMi->addPCGPermission(HPMi->pid,pcgname,&maskptr)
@@ -222,7 +222,7 @@ struct HPMi_interface {
 	/* program --arg/-a */
 	bool (*addArg) (unsigned int pluginID, char *name, bool has_param, CmdlineExecFunc func, const char *help);
 	/* battle-config recv param */
-	bool (*addConf) (unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val));
+	bool (*addConf) (unsigned int pluginID, enum HPluginConfType type, char *name, void (*parse_func) (const char *key, const char *val), int (*return_func) (const char *key));
 	/* pc group permission */
 	void (*addPCGPermission) (unsigned int pluginID, char *name, unsigned int *mask);
 

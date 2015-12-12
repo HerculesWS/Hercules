@@ -40,6 +40,8 @@ struct sample_data_struct {
 	unsigned int someNumber;
 };
 
+int my_setting;
+
 /* sample packet implementation */
 /* cmd 0xf3 - it is a client-server existent id, for clif_parse_GlobalMessage */
 /* in this sample we do nothing and simply redirect */
@@ -111,10 +113,31 @@ int my_pc_dropitem_post(int retVal, struct map_session_data *sd,int *n,int *amou
 	}
 	return 1;
 }
-void parse_my_setting(const char *val) {
-	ShowDebug("Received 'my_setting:%s'\n",val);
+/*
+* Key is the setting name in our example it's 'my_setting' while val is the value of it.
+* this way you can manage more than one setting in one function instead of define multiable ones
+*/
+
+void parse_my_setting(const char *key, const char *val) {
+	ShowDebug("Received '%s:%s'\n",key,val);
 	/* do anything with the var e.g. config_switch(val) */
+	/* for our example we will save it in global variable */
+
+	/* please note, battle settings can be only returned as int for scripts and other usage */
+	if (strcmpi(key,"my_setting") == 0)
+		my_setting = atoi(val);
 }
+
+/* Battle Config Settings need to have return function in-case scripts need to read it */
+int return_my_setting(const char *key)
+{
+	/* first we check the key to know what setting we need to return with strcmpi then return it */
+	if (strcmpi(key, "my_setting") == 0)
+		return my_setting;
+
+	return 0;
+}
+
 /* run when server starts */
 HPExport void plugin_init (void) {
 	ShowInfo("Server type is ");
@@ -171,8 +194,8 @@ HPExport void plugin_init (void) {
 HPExport void server_preinit (void) {
 	/* makes map server listen to mysetting:value in any "battleconf" file (including imported or custom ones) */
 	/* value is not limited to numbers, its passed to our plugins handler (parse_my_setting) as const char *,
-	 * and thus can be manipulated at will */
-	addBattleConf("my_setting",parse_my_setting);
+	 * however for battle config to be returned to our script engine we need it to be number (int) so keep use it as int only */
+	addBattleConf("my_setting",parse_my_setting,return_my_setting);
 }
 /* run when server is ready (online) */
 HPExport void server_online (void) {

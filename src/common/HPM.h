@@ -101,7 +101,8 @@ struct HPMFileNameCache {
 struct HPConfListenStorage {
 	unsigned int pluginID;
 	char key[HPM_ADDCONF_LENGTH];
-	void (*func) (const char *val);
+	void (*parse_func) (const char *key, const char *val);
+	int (*return_func) (const char *key);
 };
 
 /* Hercules Plugin Manager Interface */
@@ -145,6 +146,7 @@ struct HPM_interface {
 	bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
 	/* for custom config parsing */
 	bool (*parseConf) (const char *w1, const char *w2, enum HPluginConfType point);
+	bool (*getBattleConf) (const char* w1, int *value);
 	/* validates plugin data */
 	bool (*DataCheck) (struct s_HPMDataCheck *src, unsigned int size, int version, char *name);
 	void (*datacheck_init) (const struct s_HPMDataCheck *src, unsigned int length, int version);
