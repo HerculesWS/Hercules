@@ -51,7 +51,7 @@ bool buyingstore_setup(struct map_session_data* sd, unsigned char slots)
 		return false;
 	}
 
-	if( sd->sc.data[SC_NOCHAT] && (sd->sc.data[SC_NOCHAT]->val1&MANNER_NOROOM) )
+	if(pc_ismuted(&sd->sc, MANNER_NOROOM))
 	{// custom: mute limitation
 		return false;
 	}
@@ -105,7 +105,7 @@ void buyingstore_create(struct map_session_data* sd, int zenylimit, unsigned cha
 		return;
 	}
 
-	if( sd->sc.data[SC_NOCHAT] && (sd->sc.data[SC_NOCHAT]->val1&MANNER_NOROOM) )
+	if(pc_ismuted(&sd->sc, MANNER_NOROOM))
 	{// custom: mute limitation
 		return;
 	}
