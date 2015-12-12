@@ -2,16 +2,22 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\src\login\account_sql.c">
-      <Filter>login_sql</Filter>
+      <Filter>login</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\login\HPMlogin.c">
+      <Filter>login</Filter>
     </ClCompile>
     <ClCompile Include="..\src\login\ipban_sql.c">
-      <Filter>login_sql</Filter>
+      <Filter>login</Filter>
     </ClCompile>
     <ClCompile Include="..\src\login\login.c">
-      <Filter>login_sql</Filter>
+      <Filter>login</Filter>
     </ClCompile>
     <ClCompile Include="..\src\login\loginlog_sql.c">
-      <Filter>login_sql</Filter>
+      <Filter>login</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\conf.c">
+      <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\core.c">
       <Filter>common</Filter>
@@ -85,27 +91,30 @@
     <ClCompile Include="..\src\common\mutex.c">
       <Filter>common</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\common\conf.c">
+    <ClCompile Include="..\src\common\des.c">
       <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\login\HPMlogin.c">
-      <Filter>login_sql</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\login\account.h">
-      <Filter>login_sql</Filter>
+      <Filter>login</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\login\HPMlogin.h">
+      <Filter>login</Filter>
     </ClInclude>
     <ClInclude Include="..\src\login\ipban.h">
-      <Filter>login_sql</Filter>
+      <Filter>login</Filter>
     </ClInclude>
     <ClInclude Include="..\src\login\loginlog.h">
-      <Filter>login_sql</Filter>
+      <Filter>login</Filter>
     </ClInclude>
     <ClInclude Include="..\src\login\login.h">
-      <Filter>login_sql</Filter>
+      <Filter>login</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\cbasetypes.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\conf.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\core.h">
@@ -195,19 +204,43 @@
     <ClInclude Include="..\src\common\mutex.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\common\conf.h">
+    <ClInclude Include="..\src\common\atomic.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\login\HPMlogin.h">
-      <Filter>login_sql</Filter>
+    <ClInclude Include="..\src\common\des.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\hercules.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\HPMDataCheck.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\HPMSymbols.inc.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\spinlock.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\const.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\core.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\renewal.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\secure.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\classes\general.h">
+      <Filter>config</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
       <UniqueIdentifier>{b50ee803-e71d-4d41-8f7d-2dad5839df50}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="login_sql">
-      <UniqueIdentifier>{8eea96ed-d379-4694-ae2e-ffb0be95170c}</UniqueIdentifier>
     </Filter>
     <Filter Include="3rdparty">
       <UniqueIdentifier>{ab5c90ec-923d-4847-a214-45b40818211e}</UniqueIdentifier>
@@ -217,6 +250,12 @@
     </Filter>
     <Filter Include="3rdparty\libconfig">
       <UniqueIdentifier>{779e8145-9bb2-4a88-9149-60586ab0bdd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="login">
+      <UniqueIdentifier>{8eea96ed-d379-4694-ae2e-ffb0be95170c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{d8fb6ac7-c87d-4d6b-aea4-98a0ea800666}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

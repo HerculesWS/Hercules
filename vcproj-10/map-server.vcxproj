@@ -134,6 +134,7 @@
     <ClInclude Include="..\3rdparty\libconfig\strbuf.h" />
     <ClInclude Include="..\3rdparty\libconfig\wincompat.h" />
     <ClInclude Include="..\3rdparty\mt19937ar\mt19937ar.h" />
+    <ClInclude Include="..\src\common\atomic.h" />
     <ClInclude Include="..\src\common\cbasetypes.h" />
     <ClInclude Include="..\src\common\conf.h" />
     <ClInclude Include="..\src\common\core.h" />
@@ -141,9 +142,12 @@
     <ClInclude Include="..\src\common\db.h" />
     <ClInclude Include="..\src\common\des.h" />
     <ClInclude Include="..\src\common\ers.h" />
-    <ClInclude Include="..\src\common\HPM.h" />
-    <ClInclude Include="..\src\common\HPMi.h" />
     <ClInclude Include="..\src\common\grfio.h" />
+    <ClInclude Include="..\src\common\hercules.h" />
+    <ClInclude Include="..\src\common\HPM.h" />
+    <ClInclude Include="..\src\common\HPMDataCheck.h" />
+    <ClInclude Include="..\src\common\HPMi.h" />
+    <ClInclude Include="..\src\common\HPMSymbols.inc.h" />
     <ClInclude Include="..\src\common\memmgr.h" />
     <ClInclude Include="..\src\common\mapindex.h" />
     <ClInclude Include="..\src\common\md5calc.h" />
@@ -153,6 +157,7 @@
     <ClInclude Include="..\src\common\random.h" />
     <ClInclude Include="..\src\common\showmsg.h" />
     <ClInclude Include="..\src\common\socket.h" />
+    <ClInclude Include="..\src\common\spinlock.h" />
     <ClInclude Include="..\src\common\sql.h" />
     <ClInclude Include="..\src\common\strlib.h" />
     <ClInclude Include="..\src\common\sysinfo.h" />
