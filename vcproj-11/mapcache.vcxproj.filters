@@ -75,7 +75,21 @@
     <ClInclude Include="..\src\common\nullpo.h">
       <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\config\renewal.h" />
+    <ClInclude Include="..\src\config\renewal.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\const.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\core.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\secure.h">
+      <Filter>config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\config\classes\general.h">
+      <Filter>config</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -83,6 +97,9 @@
     </Filter>
     <Filter Include="mapcache">
       <UniqueIdentifier>{5ea9d6f7-0a10-4bfb-ad39-478e4b1d8a0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{4d14995f-43fd-4eb0-abcb-78d1d05a8606}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
