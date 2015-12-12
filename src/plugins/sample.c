@@ -127,13 +127,19 @@ HPExport void plugin_init (void) {
 
 	ShowInfo("I'm being run from the '%s' filename\n", SERVER_NAME);
 
-	/* addAtcommand("command-key",command-function) tells map server to call ACMD(sample) when "sample" command is used */
-	/* - it will print a warning when used on a non-map-server plugin */
-	addAtcommand("sample",sample);//link our '@sample' command
+	// Atcommands only make sense on the map server
+	if (SERVER_TYPE == SERVER_TYPE_MAP) {
+		/* addAtcommand("command-key",command-function) tells map server to call ACMD(sample) when "sample" command is used */
+		/* - it will print a warning when used on a non-map-server plugin */
+		addAtcommand("sample",sample);//link our '@sample' command
+	}
 
-	/* addScriptCommand("script-command-name","script-command-params-info",script-function) tells map server to call BUILDIN(sample) for the "sample(i)" command */
-	/* - it will print a warning when used on a non-map-server plugin */
-	addScriptCommand("sample","i",sample);
+	// Script commands only make sense on the map server
+	if (SERVER_TYPE == SERVER_TYPE_MAP) {
+		/* addScriptCommand("script-command-name","script-command-params-info",script-function) tells map server to call BUILDIN(sample) for the "sample(i)" command */
+		/* - it will print a warning when used on a non-map-server plugin */
+		addScriptCommand("sample","i",sample);
+	}
 
 	/* addCPCommand("console-command-name",command-function) tells server to call CPCMD(sample) for the 'this is a sample <optional-args>' console call */
 	/* in "console-command-name" usage of ':' indicates a category, for example 'this:is:a:sample' translates to 'this is a sample',
@@ -147,16 +153,19 @@ HPExport void plugin_init (void) {
 	 * to trigger packetFunction in the packetIncomingPoint section ( available points listed in enum HPluginPacketHookingPoints within src/common/HPMi.h ) */
 	addPacket(0xf3,-1,sample_packet0f3,hpClif_Parse);
 
-	/* in this sample we add a PreHook to pc->dropitem */
-	/* to identify whether the item being dropped is on amount higher than 1 */
-	/* if so, it stores the amount on a variable (my_pc_dropitem_storage) and changes the amount to 1 */
-	addHookPre("pc->dropitem",my_pc_dropitem_pre);
+	// The following hooks would show an error message where pc->dropitem doesn't exist (login or char server)
+	if (SERVER_TYPE == SERVER_TYPE_MAP) {
+		/* in this sample we add a PreHook to pc->dropitem */
+		/* to identify whether the item being dropped is on amount higher than 1 */
+		/* if so, it stores the amount on a variable (my_pc_dropitem_storage) and changes the amount to 1 */
+		addHookPre("pc->dropitem",my_pc_dropitem_pre);
 
-	/* in this sample we add a PostHook to pc->dropitem */
-	/* if the original pc->dropitem was successful and the amount stored on my_pc_dropitem_storage is higher than 1, */
-	/* our posthook will display a message to the user about the cap */
-	/* - by checking whether it was successful (retVal value) it allows for the originals conditions to take place */
-	addHookPost("pc->dropitem",my_pc_dropitem_post);
+		/* in this sample we add a PostHook to pc->dropitem */
+		/* if the original pc->dropitem was successful and the amount stored on my_pc_dropitem_storage is higher than 1, */
+		/* our posthook will display a message to the user about the cap */
+		/* - by checking whether it was successful (retVal value) it allows for the originals conditions to take place */
+		addHookPost("pc->dropitem",my_pc_dropitem_post);
+	}
 }
 /* triggered when server starts loading, before any server-specific data is set */
 HPExport void server_preinit (void) {
