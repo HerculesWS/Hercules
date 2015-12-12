@@ -151,7 +151,11 @@
     <ClInclude Include="..\src\common\utils.h" />
     <ClInclude Include="..\src\common\winapi.h" />
     <ClInclude Include="..\src\common\nullpo.h" />
+    <ClInclude Include="..\src\config\classes\general.h" />
+    <ClInclude Include="..\src\config\const.h" />
+    <ClInclude Include="..\src\config\core.h" />
     <ClInclude Include="..\src\config\renewal.h" />
+    <ClInclude Include="..\src\config\secure.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
