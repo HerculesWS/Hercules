@@ -52,6 +52,8 @@ struct mmo_map_server {
 	VECTOR_DECL(uint16) maps;
 };
 
+#define MAX_START_POINTS 5
+
 #define MAX_MAP_SERVERS 2
 
 #define DEFAULT_AUTOSAVE_INTERVAL (300*1000)
