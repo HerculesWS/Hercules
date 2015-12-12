@@ -149,6 +149,9 @@ struct mercenary_interface *mercenary;
 #ifdef MAP_MOB_H /* mob */
 struct mob_interface *mob;
 #endif // MAP_MOB_H
+#ifdef MAP_NPC_H /* npc_chat */
+struct npc_chat_interface *npc_chat;
+#endif // MAP_NPC_H
 #ifdef MAP_NPC_H /* npc */
 struct npc_interface *npc;
 #endif // MAP_NPC_H
@@ -167,6 +170,9 @@ struct pc_groups_interface *pcg;
 #ifdef MAP_PC_H /* pc */
 struct pc_interface *pc;
 #endif // MAP_PC_H
+#ifdef MAP_NPC_H /* libpcre */
+struct pcre_interface *libpcre;
+#endif // MAP_NPC_H
 #ifdef MAP_PET_H /* pet */
 struct pet_interface *pet;
 #endif // MAP_PET_H
@@ -372,6 +378,9 @@ if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("mercenary", mercenary)) retu
 #ifdef MAP_MOB_H /* mob */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("mob", mob)) return "mob";
 #endif // MAP_MOB_H
+#ifdef MAP_NPC_H /* npc_chat */
+if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("npc_chat", npc_chat)) return "npc_chat";
+#endif // MAP_NPC_H
 #ifdef MAP_NPC_H /* npc */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("npc", npc)) return "npc";
 #endif // MAP_NPC_H
@@ -390,6 +399,9 @@ if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("pc_groups", pcg)) return "pc
 #ifdef MAP_PC_H /* pc */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("pc", pc)) return "pc";
 #endif // MAP_PC_H
+#ifdef MAP_NPC_H /* libpcre */
+if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("libpcre", libpcre)) return "libpcre";
+#endif // MAP_NPC_H
 #ifdef MAP_PET_H /* pet */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("pet", pet)) return "pet";
 #endif // MAP_PET_H

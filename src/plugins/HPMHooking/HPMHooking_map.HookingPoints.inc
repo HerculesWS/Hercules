@@ -1775,6 +1775,16 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mob->load, HP_mob_load) },
 	{ HP_POP(mob->clear_spawninfo, HP_mob_clear_spawninfo) },
 	{ HP_POP(mob->destroy_mob_db, HP_mob_destroy_mob_db) },
+/* npc_chat */
+	{ HP_POP(npc_chat->sub, HP_npc_chat_sub) },
+	{ HP_POP(npc_chat->finalize, HP_npc_chat_finalize) },
+	{ HP_POP(npc_chat->def_pattern, HP_npc_chat_def_pattern) },
+	{ HP_POP(npc_chat->create_pcrematch_entry, HP_npc_chat_create_pcrematch_entry) },
+	{ HP_POP(npc_chat->delete_pcreset, HP_npc_chat_delete_pcreset) },
+	{ HP_POP(npc_chat->deactivate_pcreset, HP_npc_chat_deactivate_pcreset) },
+	{ HP_POP(npc_chat->activate_pcreset, HP_npc_chat_activate_pcreset) },
+	{ HP_POP(npc_chat->lookup_pcreset, HP_npc_chat_lookup_pcreset) },
+	{ HP_POP(npc_chat->finalize_pcrematch_entry, HP_npc_chat_finalize_pcrematch_entry) },
 /* npc */
 	{ HP_POP(npc->init, HP_npc_init) },
 	{ HP_POP(npc->final, HP_npc_final) },
@@ -2174,6 +2184,15 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->autotrade_final, HP_pc_autotrade_final) },
 	{ HP_POP(pc->check_job_name, HP_pc_check_job_name) },
 	{ HP_POP(pc->update_idle_time, HP_pc_update_idle_time) },
+/* libpcre */
+	{ HP_POP(libpcre->compile, HP_libpcre_compile) },
+	{ HP_POP(libpcre->study, HP_libpcre_study) },
+	{ HP_POP(libpcre->exec, HP_libpcre_exec) },
+	{ HP_POP(libpcre->free, HP_libpcre_free) },
+	{ HP_POP(libpcre->copy_substring, HP_libpcre_copy_substring) },
+	{ HP_POP(libpcre->free_substring, HP_libpcre_free_substring) },
+	{ HP_POP(libpcre->copy_named_substring, HP_libpcre_copy_named_substring) },
+	{ HP_POP(libpcre->get_substring, HP_libpcre_get_substring) },
 /* pet */
 	{ HP_POP(pet->init, HP_pet_init) },
 	{ HP_POP(pet->final, HP_pet_final) },
