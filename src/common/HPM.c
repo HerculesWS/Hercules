@@ -389,10 +389,20 @@ bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecF
  * @retval true if the listener was added successfully.
  * @retval false in case of error.
  */
-bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*func) (const char *val))
+bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*parse_func) (const char *key, const char *val), int (*return_func) (const char *key))
 {
 	struct HPConfListenStorage *conf;
 	int i;
+
+	if (parse_func == NULL) {
+		ShowError("HPM->addConf:%s: missing setter function for config '%s'\n",HPM->pid2name(pluginID),name);
+		return false;
+	}
+
+	if (type == HPCT_BATTLE && return_func == NULL) {
+		ShowError("HPM->addConf:%s: missing getter function for config '%s'\n",HPM->pid2name(pluginID),name);
+		return false;
+	}
 
 	if (type >= HPCT_MAX) {
 		ShowError("HPM->addConf:%s: unknown point '%u' specified for config '%s'\n",HPM->pid2name(pluginID),type,name);
@@ -412,7 +422,8 @@ bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *na
 
 	conf->pluginID = pluginID;
 	safestrncpy(conf->key, name, HPM_ADDCONF_LENGTH);
-	conf->func = func;
+	conf->parse_func = parse_func;
+	conf->return_func = return_func;
 
 	return true;
 }
@@ -798,7 +809,29 @@ bool hplugins_parse_conf(const char *w1, const char *w2, enum HPluginConfType po
 	if (i == VECTOR_LENGTH(HPM->config_listeners[point]))
 		return false;
 
-	VECTOR_INDEX(HPM->config_listeners[point], i).func(w2);
+	VECTOR_INDEX(HPM->config_listeners[point], i).parse_func(w1, w2);
+	return true;
+}
+
+/**
+ * Get a battle configuration entry through the registered plugins.
+ *
+ * @param w1    The configuration entry name.
+ * @param value where the config result will be saved
+ * @retval true in case of data found
+ * @retval false in case of no data found
+ */
+bool hplugins_get_battle_conf(const char *w1, int *value)
+{
+	int i;
+
+	nullpo_retr(false, value);
+
+	ARR_FIND(0, VECTOR_LENGTH(HPM->config_listeners[HPCT_BATTLE]), i, strcmpi(w1, VECTOR_INDEX(HPM->config_listeners[HPCT_BATTLE], i).key) == 0);
+	if (i == VECTOR_LENGTH(HPM->config_listeners[HPCT_BATTLE]))
+		return false;
+
+	*value = VECTOR_INDEX(HPM->config_listeners[HPCT_BATTLE], i).return_func(w1);
 	return true;
 }
 
@@ -1020,6 +1053,7 @@ void hpm_defaults(void)
 	HPM->load_sub = NULL;
 	HPM->addhook_sub = NULL;
 	HPM->parseConf = hplugins_parse_conf;
+	HPM->getBattleConf = hplugins_get_battle_conf;
 	HPM->DataCheck = HPM_DataCheck;
 	HPM->datacheck_init = HPM_datacheck_init;
 	HPM->datacheck_final = HPM_datacheck_final;
