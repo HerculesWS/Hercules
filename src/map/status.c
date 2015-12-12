@@ -1797,7 +1797,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 					(sc->data[SC_VOLCANO] && skill_id == WZ_ICEWALL) ||
 					(sc->data[SC_ROKISWEIL] && skill_id != BD_ADAPTATION) ||
 					(sc->data[SC_HERMODE] && skill->get_inf(skill_id) & INF_SUPPORT_SKILL) ||
-					(sc->data[SC_NOCHAT] && sc->data[SC_NOCHAT]->val1&MANNER_NOSKILL)
+					pc_ismuted(sc, MANNER_NOSKILL)
 					)
 					return 0;
 
