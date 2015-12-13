@@ -3,6 +3,7 @@ Hercules
 
 Build Status:  
 [![Build Status](https://travis-ci.org/HerculesWS/Hercules.svg)](https://travis-ci.org/HerculesWS/Hercules)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/cm9xbwurpbltqjop?svg=true)](https://ci.appveyor.com/project/Haru/hercules)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/3892/badge.svg)](https://scan.coverity.com/projects/herculesws-hercules)
 
 Issues and pull requests:  
@@ -15,6 +16,7 @@ Development and Community:
 [![Waffle Board](https://img.shields.io/badge/waffle-HerculesWS/Hercules-6699dd.svg)](https://waffle.io/HerculesWS/Hercules)  
 [![IRC](https://img.shields.io/badge/IRC-Rizon/Hercules-yellow.svg)](irc://rizon.net/Hercules)
 [![Community Forum](https://img.shields.io/badge/forum-herc.ws-orange.svg)](http://herc.ws)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/HerculesWS/Hercules)  
 [![Twitter](https://img.shields.io/badge/twitter-@HerculesWS-blue.svg)](https://twitter.com/HerculesWS)
 
 Project Info:  
