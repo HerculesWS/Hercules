@@ -2344,15 +2344,15 @@ int HP_battle_config_set_value(const char *w1, const char *w2) {
 	}
 	return retVal___;
 }
-int HP_battle_config_get_value(const char *w1) {
+bool HP_battle_config_get_value(const char *w1, int *value) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_battle_config_get_value_pre ) {
-		int (*preHookFunc) (const char *w1);
+		bool (*preHookFunc) (const char *w1, int *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_get_value_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_battle_config_get_value_pre[hIndex].func;
-			retVal___ = preHookFunc(w1);
+			retVal___ = preHookFunc(w1, value);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -2360,13 +2360,13 @@ int HP_battle_config_get_value(const char *w1) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.battle.config_get_value(w1);
+		retVal___ = HPMHooks.source.battle.config_get_value(w1, value);
 	}
 	if( HPMHooks.count.HP_battle_config_get_value_post ) {
-		int (*postHookFunc) (int retVal___, const char *w1);
+		bool (*postHookFunc) (bool retVal___, const char *w1, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_get_value_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_battle_config_get_value_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, w1);
+			retVal___ = postHookFunc(retVal___, w1, value);
 		}
 	}
 	return retVal___;
