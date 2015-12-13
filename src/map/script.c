@@ -14630,7 +14630,6 @@ BUILDIN(getbattleflag)
 	} else {
 		script_pushint(st,0);
 		ShowWarning("buildin_getbattleflag: non-exist battle config requested %s \n", flag);
-		script->reportsrc(st);
 		return false;
 	}
 
