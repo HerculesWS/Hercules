@@ -391,3 +391,12 @@ function	script	F_ShuffleNumbers	{
 	}
 	return .@count;
 }
+
+//////////////////////////////////////////////////////////////////////////////////
+// *** Function to colorize npc dialog without memorize the color code
+// Examples:
+//    mes callfunc("F_MesColor", C_BLUE) +"This message is now in BLUE";
+//////////////////////////////////////////////////////////////////////////////////
+function	script	F_MesColor	{
+	return sprintf("^%06X", getarg(0));
+}
