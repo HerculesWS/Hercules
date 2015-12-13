@@ -5415,7 +5415,7 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 					if( sc->data[SC_MELON_BOMB] )
 						val = max( val, sc->data[SC_MELON_BOMB]->val1 );
 					if (sc->data[SC_STOMACHACHE])
-						val = max(val, 50);
+						val = max(val, sc->data[SC_STOMACHACHE]->val2);
 						
 					if( sc->data[SC_MARSHOFABYSS] ) // It stacks to other statuses so always put this at the end.
 						val = max( 50, val + 10 * sc->data[SC_MARSHOFABYSS]->val1 );
@@ -9087,7 +9087,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val1 = 15;
 				break;
 			case SC_STOMACHACHE:
-				val2 = 8; // SP consume.
+				val3 = 8; // SP consume.
 				val4 = tick / 10000;
 				tick_time = 10000; // [GodLesZ] tick time
 				break;
@@ -11426,10 +11426,10 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			break;
 
 		case SC_STOMACHACHE:
-			if( --(sce->val4) > 0 ) {
-				status->charge(bl,0,sce->val2); // Reduce 8 every 10 seconds.
-				if( sd && !pc_issit(sd) ) {     // Force to sit every 10 seconds.
-					pc_stop_walking(sd, STOPWALKING_FLAG_FIXPOS|STOPWALKING_FLAG_NEXTCELL);
+			if (--(sce->val4) > 0) {
+				status->charge(bl, 0, sce->val3); // Reduce 8 every 10 seconds.
+				if (sd && !pc_issit(sd)) {     // Force to sit every 10 seconds.
+					pc_stop_walking(sd, STOPWALKING_FLAG_FIXPOS | STOPWALKING_FLAG_NEXTCELL);
 					pc_stop_attack(sd);
 					pc_setsit(sd);
 					clif->sitting(bl);
