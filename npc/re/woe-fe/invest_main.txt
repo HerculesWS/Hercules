@@ -478,17 +478,17 @@ OnInit:
 	end;
 OnCalculate:
 	switch($2011_agit_invest) {
-		case 11: setarray.@cas$[0],"prt","pay"; break;
-		case 12: setarray.@cas$[0],"prt","alde"; break;
-		case 13: setarray.@cas$[0],"prt","gef"; break;
-		case 14: setarray.@cas$[0],"alde","pay"; break;
-		case 15: setarray.@cas$[0],"gef","pay"; break;
-		case 16: setarray.@cas$[0],"alde","gef"; break;
-		case 17: setarray.@cas$[0],"prt","pay","alde"; break;
-		case 18: setarray.@cas$[0],"prt","pay","gef"; break;
-		case 19: setarray.@cas$[0],"prt","alde","gef"; break;
-		case 20: setarray.@cas$[0],"alde","pay","gef"; break;
-		case 21: setarray.@cas$[0],"prt","pay","alde","gef"; break;
+		case 11: setarray .@cas$[0],"prt","pay"; break;
+		case 12: setarray .@cas$[0],"prt","alde"; break;
+		case 13: setarray .@cas$[0],"prt","gef"; break;
+		case 14: setarray .@cas$[0],"alde","pay"; break;
+		case 15: setarray .@cas$[0],"gef","pay"; break;
+		case 16: setarray .@cas$[0],"alde","gef"; break;
+		case 17: setarray .@cas$[0],"prt","pay","alde"; break;
+		case 18: setarray .@cas$[0],"prt","pay","gef"; break;
+		case 19: setarray .@cas$[0],"prt","alde","gef"; break;
+		case 20: setarray .@cas$[0],"alde","pay","gef"; break;
+		case 21: setarray .@cas$[0],"prt","pay","alde","gef"; break;
 		default: end;
 	}
 	.@max = getd("$fund_"+.@cas$[0]+"_extra");
