@@ -3105,7 +3105,7 @@ parameters given were not variables or the search was not successful.
 
 Type is the type of object to search for:
 
-	UNITTYPE_PC    - Character object
+	UNITTYPE_PC   - Character object
 	UNITTYPE_NPC  - NPC object
 	UNITTYPE_PET  - Pet object
 	UNITTYPE_MOB  - Monster object
@@ -6194,13 +6194,13 @@ and will return the following values:
 Returns the type of object from the given Game ID. Returns -1 if the given GID
 does not exist. The return values are :-
 
-	UNITTYPE_PC		0
-	UNITTYPE_NPC	1
-	UNITTYPE_PET	2
-	UNITTYPE_MOB	3
-	UNITTYPE_HOM	4
-	UNITTYPE_MER	5
-	UNITTYPE_ELEM	6
+	UNITTYPE_PC     0
+	UNITTYPE_NPC    1
+	UNITTYPE_PET    2
+	UNITTYPE_MOB    3
+	UNITTYPE_HOM    4
+	UNITTYPE_MER    5
+	UNITTYPE_ELEM   6
 
 ---------------------------------------
 
