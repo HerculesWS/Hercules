@@ -87,9 +87,8 @@ Type:
 	7	Pet egg
 	8	Pet equipment
 	10	Ammo (Arrows/Bullets/etc)
-	11	Usable with delayed consumption (item is lost from inventory
-		after selecting a target, for use with skills and pet lures)
-	18	Another delayed consume that requires user confirmation before
+	11	Restricted Usable item ( for now the knowing behaviour is not able to use while sit/mount)
+	18	delayed consume that requires user confirmation before
 		using item.
 
 Buy: Default buying price. When not specified, becomes double the sell price.

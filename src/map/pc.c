@@ -4872,18 +4872,12 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		return 0;
 
 	/* Items with delayed consume are not meant to work while in mounts except reins of mount(12622) */
-	if( sd->inventory_data[n]->flag.delay_consume && nameid != ITEMID_REINS_OF_MOUNT ) {
+	if( sd->inventory_data[n]->flag.restricted_consume && nameid != ITEMID_REINS_OF_MOUNT ) {
 		if( sd->sc.data[SC_ALL_RIDING] )
 			return 0;
 		else if( pc_issit(sd) )
 			return 0;
 	}
-	//Since most delay-consume items involve using a "skill-type" target cursor,
-	//perform a skill-use check before going through. [Skotlex]
-	//resurrection was picked as testing skill, as a non-offensive, generic skill, it will do.
-	//FIXME: Is this really needed here? It'll be checked in unit.c after all and this prevents skill items using when silenced [Inkfish]
-	if( sd->inventory_data[n]->flag.delay_consume && ( sd->ud.skilltimer != INVALID_TIMER /*|| !status->check_skilluse(&sd->bl, &sd->bl, ALL_RESURRECTION, 0)*/ ) )
-		return 0;
 
 	if( sd->inventory_data[n]->delay > 0 ) {
 		ARR_FIND(0, MAX_ITEMDELAYS, i, sd->item_delay[i].nameid == nameid );
@@ -4936,16 +4930,10 @@ int pc_useitem(struct map_session_data *sd,int n) {
 
 	amount = sd->status.inventory[n].amount;
 	//Check if the item is to be consumed immediately [Skotlex]
-	if (sd->inventory_data[n]->flag.delay_consume || sd->inventory_data[n]->flag.keepafteruse)
-		clif->useitemack(sd,n,amount,true);
-	else {
-		if (sd->status.inventory[n].expire_time == 0) {
-			clif->useitemack(sd, n, amount - 1, true);
-			removeItem = true;
-		} else {
-			clif->useitemack(sd, n, 0, false);
-		}
-	}
+	if (sd->inventory_data[n]->flag.keepafteruse)
+		removeItem = false;
+	else
+		removeItem = true;
 
 	if(sd->status.inventory[n].card[0]==CARD0_CREATE &&
 		pc->famerank(MakeDWord(sd->status.inventory[n].card[2],sd->status.inventory[n].card[3]), MAPID_ALCHEMIST))
@@ -4963,8 +4951,13 @@ int pc_useitem(struct map_session_data *sd,int n) {
 	script->run_use_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
 	script->potion_flag = 0;
 
-	if (removeItem)
+	if (removeItem) {
 		pc->delitem(sd, n, 1, 1, DELITEM_NORMAL, LOG_TYPE_CONSUME);
+		clif->useitemack(sd, n, amount - 1, true);	
+	} else {
+		clif->useitemack(sd, n, amount, true);
+	}
+
 	return 1;
 }
 

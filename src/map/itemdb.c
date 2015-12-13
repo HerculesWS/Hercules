@@ -320,7 +320,7 @@ const char* itemdb_typename(int type)
 		case IT_PETEGG:         return "Pet Egg";
 		case IT_PETARMOR:       return "Pet Accessory";
 		case IT_AMMO:           return "Arrow/Ammunition";
-		case IT_DELAYCONSUME:   return "Delay-Consume Usable";
+		case IT_RESTRICTEDCONSUME:   return "Restricted-Consume Usable";
 		case IT_CASH:           return "Cash Usable";
 	}
 	return "Unknown Type";
@@ -1404,16 +1404,16 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	}
 
 	if( entry->type < 0 || entry->type == IT_UNKNOWN || entry->type == IT_UNKNOWN2
-	 || (entry->type > IT_DELAYCONSUME && entry->type < IT_CASH ) || entry->type >= IT_MAX
+		|| (entry->type > IT_RESTRICTEDCONSUME && entry->type < IT_CASH ) || entry->type >= IT_MAX
 	) {
 		// catch invalid item types
 		ShowWarning("itemdb_validate_entry: Invalid item type %d for item %d in '%s'. IT_ETC will be used.\n",
 		            entry->type, entry->nameid, source);
 		entry->type = IT_ETC;
-	} else if( entry->type == IT_DELAYCONSUME ) {
+	} else if( entry->type == IT_RESTRICTEDCONSUME ) {
 		//Items that are consumed only after target confirmation
 		entry->type = IT_USABLE;
-		entry->flag.delay_consume = 1;
+		entry->flag.restricted_consume = 1;
 	}
 
 	//When a particular price is not given, we should base it off the other one
