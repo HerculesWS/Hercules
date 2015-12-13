@@ -3642,7 +3642,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 	switch(type){
 		case SP_ADD_MONSTER_DROP_ITEM:
 		{
-			uint32 race_mask = map->race_id2mask(type2);
+			uint32 race_mask = map->race_id2mask(type3);
 			if (race_mask == RCMASK_NONE) {
 				ShowWarning("pc_bonus2: SP_ADD_MONSTER_DROP_ITEM: Invalid Race (%d)\n", type3);
 				break;
