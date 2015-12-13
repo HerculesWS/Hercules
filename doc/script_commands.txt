@@ -1201,11 +1201,14 @@ contain three hexadecimal numbers representing colors as if they were HTML
 colors - ^FF0000 is bright red, ^00FF00 is bright green, ^0000FF is bright 
 blue, ^000000 is black. ^FF00FF is a pure magenta, but it's also a color 
 that is considered transparent whenever the client is drawing windows on 
-screen, so printing text in that color will have kind of a weird effect. 
-Once you've set a text's color to something, you have to set it back to 
-black unless you want all the rest of the text be in that color:
+screen, so printing text in that color will have kind of a weird effect.
+You may also use C_ constants accompany with "F_MesColor" function for the
+color effect, see the full list of the available ones in 'db/const.txt'
+under 'C_'. Once you've set a text's color to something, you have to set
+it back to black unless you want all the rest of the text be in that color:
 
     mes "This is ^FF0000 red ^000000 and this is ^00FF00 green, ^000000 so.";
+    mes callfunc("F_MesColor", C_BLUE) +"This message is now in BLUE";
     
 Notice that the text coloring is handled purely by the client. If you use 
 non-English characters, the color codes might get screwed if they stick to 
@@ -6591,7 +6594,7 @@ client and appears always green.
 This command will broadcast a message to all or most players, similar to 
 @kami/@kamib GM commands.
 
-	announce "This will be shown to everyone at all in yellow.",0;
+	announce "This will be shown to everyone at all in yellow.", bc_all;
 
 The region the broadcast is heard in (target), source of the broadcast and 
 the color the message will come up as is determined by the flags.
@@ -6628,12 +6631,16 @@ special flag is ignored. Optional parameters may not work well (or at all)
 depending on a game client used.
 
 The color parameter is a single number which can be in hexadecimal 
-notation.
+notation. C_ constant can also be used for color effects, see the full list
+of the available ones in 'db/const.txt' under 'C_'.
 
 For example:
-	announce "This will be shown to everyone at all in green.",bc_all,0x00FF00;
+	announce "This announcement will be shown to everyone in green.",bc_all,0x00FF00;
 Will display a global announce in green. The color format is in RGB 
 (0xRRGGBB).
+
+Another example:
+	announce "This announcement will shown to everyone in purple.",bc_all,C_PURPLE;
 
 In official scripts only two font-weights (types) are used:
  - normal (FW_NORMAL = 400, default),
