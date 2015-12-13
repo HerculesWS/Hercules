@@ -631,7 +631,7 @@ struct battle_interface {
 	int (*config_read) (const char *cfgName);
 	void (*config_set_defaults) (void);
 	int (*config_set_value) (const char* w1, const char* w2);
-	int (*config_get_value) (const char* w1);
+	bool (*config_get_value) (const char* w1, int* value);
 	void (*config_adjust) (void);
 	/* ----------------------------------------- */
 	/* picks a random enemy within the specified range */

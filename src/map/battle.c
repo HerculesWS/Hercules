@@ -7329,15 +7329,23 @@ int battle_set_value(const char* w1, const char* w2)
 	return 1;
 }
 
-int battle_get_value(const char* w1)
+bool battle_get_value(const char *w1, int *value)
 {
 	int i;
-	nullpo_retr(1, w1);
+
+	nullpo_retr(false, w1);
+	nullpo_retr(false, value);
+
 	ARR_FIND(0, ARRAYLENGTH(battle_data), i, strcmpi(w1, battle_data[i].str) == 0);
-	if (i == ARRAYLENGTH(battle_data))
-		return 0; // not found
-	else
-		return *battle_data[i].val;
+	if (i == ARRAYLENGTH(battle_data)) {
+		if (HPM->getBattleConf(w1,value)) 
+			return true;
+	} else {
+		*value = *battle_data[i].val;
+		return true;
+	}
+
+	return false;
 }
 
 void battle_set_defaults(void) {
