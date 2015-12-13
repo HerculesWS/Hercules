@@ -3603,13 +3603,13 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 			break;
 		case SP_ADD_MONSTER_DROP_CHAINITEM:
 		{
-			uint32 race_mask = map->race_id2mask(type2);
+			uint32 race_mask = map->race_id2mask(val);
 			if (race_mask == RCMASK_NONE) {
-				ShowWarning("pc_bonus2: SP_ADD_MONSTER_DROP_CHAINITEM: Invalid Race (%d)\n", type2);
+				ShowWarning("pc_bonus2: SP_ADD_MONSTER_DROP_CHAINITEM: Invalid Race (%d)\n", val);
 				break;
 			}
 			if (sd->state.lr_flag != 2)
-				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), 0, val, race_mask, 10000);
+				pc->bonus_item_drop(sd->add_drop, ARRAYLENGTH(sd->add_drop), 0, type2, race_mask, 10000);
 		}
 			break;
 #ifdef RENEWAL
