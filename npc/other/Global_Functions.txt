@@ -398,5 +398,5 @@ function	script	F_ShuffleNumbers	{
 //    mes callfunc("F_MesColor", C_BLUE) +"This message is now in BLUE";
 //////////////////////////////////////////////////////////////////////////////////
 function	script	F_MesColor	{
-	return sprintf("^%06X", getarg(0));
+	return sprintf("^%06X", min(getarg(0), 0xFFFFFF));
 }
