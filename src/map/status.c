@@ -803,6 +803,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_PLUSATTACKPOWER] = SI_PLUSATTACKPOWER;
 	status->dbs->IconChangeTable[SC_PLUSMAGICPOWER] = SI_PLUSMAGICPOWER;
 	status->dbs->IconChangeTable[SC_FOOD_CRITICALSUCCESSVALUE] = SI_FOOD_CRITICALSUCCESSVALUE;
+	status->dbs->IconChangeTable[SC_MORA_BUFF] = SI_MORA_BUFF;
 
 	// Cash Items
 	status->dbs->IconChangeTable[SC_FOOD_STR_CASH] = SI_FOOD_STR_CASH;
@@ -8581,6 +8582,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_SPL_ATK:
 			case SC_SPL_MATK:
 				val2 = 2; // Splendide group
+				break;
+			case SC_MORA_BUFF:
+				val2 = 3; // Mora group
 				break;
 				/**
 				* General
