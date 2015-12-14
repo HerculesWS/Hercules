@@ -14588,7 +14588,7 @@ BUILDIN(equip2)
 
 	sd = script->rid2sd(st);
 
-	if ( sd == NULL ) {
+	if (sd == NULL) {
 		script_pushint(st,0);
 		return true;
 	}
