@@ -928,6 +928,11 @@ int pc_isequip(struct map_session_data *sd,int n)
 	if(item == NULL)
 		return 0;
 
+#if PACKETVER <= 20100707
+	if (itemdb_is_shadowequip(item->equip) || itemdb_is_costumeequip(item->equip))
+		return 0;
+#endif
+
 	if(pc_has_permission(sd, PC_PERM_USE_ALL_EQUIPMENT))
 		return 1;
 
