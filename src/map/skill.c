@@ -5648,7 +5648,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					break;
 				}
-				class_ = skill_id==SA_MONOCELL?1002:mob->get_random_id(4, 1, 0);
+				class_ = skill_id == SA_MONOCELL ? MOBID_PORING : mob->get_random_id(4, 1, 0);
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 				mob->class_change(dstmd,class_);
 				if( tsc && dstmd->status.mode&MD_BOSS )

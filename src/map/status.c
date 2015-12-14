@@ -9317,7 +9317,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				int max = val1*3;
 				val3 = rnd()%(max-min)+min;
 					val2 = val1;
-					val1 = 1002; // Monster ID
+					val1 = MOBID_PORING;
 				}
 				break;
 			case SC_KAGEMUSYA:
@@ -9432,8 +9432,8 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val2 = 30 * val1;
 				break;
 			case SC_MONSTER_TRANSFORM:
-				if( !mob->db_checkid(val1) )
-					val1 = 1002; // default poring
+				if (!mob->db_checkid(val1))
+					val1 = MOBID_PORING;
 				break;
 			case SC_ALL_RIDING:
 				tick = -1;

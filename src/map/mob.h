@@ -272,6 +272,8 @@ enum {
  * Mob IDs
  */
 enum mob_id {
+	MOBID_PORING           = 1002, ///<           PORING / Poring
+
 	MOBID_HORNET           = 1004, ///<           HORNET / Hornet
 
 	MOBID_RED_PLANT        = 1078, ///<        RED_PLANT / Red Plant

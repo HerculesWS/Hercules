@@ -4388,7 +4388,7 @@ int mob_read_randommonster(void)
 	for (i = 0; i < ARRAYLENGTH(mobfile) && i < MAX_RANDOMMONSTER; i++) {
 		FILE *fp;
 		unsigned int count = 0;
-		mob->db_data[0]->summonper[i] = 1002; // Default fallback value, in case the database does not provide one
+		mob->db_data[0]->summonper[i] = MOBID_PORING; // Default fallback value, in case the database does not provide one
 		sprintf(line, "%s/%s", map->db_path, mobfile[i]);
 		fp=fopen(line,"r");
 		if(fp==NULL){
