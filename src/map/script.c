@@ -7364,8 +7364,8 @@ BUILDIN(getnameditem) {
 		return true;
 	}
 
-	if( script_isstringtype(st, 3) ) //Char Name
-		tsd=map->nick2sd(script_getstr(st, 3));
+	if (script_isstringtype(st, 3)) //Char Name
+		tsd = script->nick2sd(st, script_getstr(st, 3));
 	else //Char Id was given
 		tsd = script->charid2sd(st, script_getnum(st, 3));
 
@@ -7752,12 +7752,12 @@ BUILDIN(readparam) {
 	TBL_PC *sd;
 
 	type=script_getnum(st,2);
-	if( script_hasdata(st,3) )
-		sd=map->nick2sd(script_getstr(st,3));
+	if (script_hasdata(st,3))
+		sd = script->nick2sd(st, script_getstr(st,3));
 	else
 		sd=script->rid2sd(st);
 
-	if(sd==NULL) {
+	if (sd == NULL) {
 		script_pushint(st,-1);
 		return true;
 	}
@@ -9727,9 +9727,9 @@ BUILDIN(guildchangegm) {
 
 	guild_id = script_getnum(st,2);
 	name = script_getstr(st,3);
-	sd=map->nick2sd(name);
+	sd = script->nick2sd(st, name);
 
-	if (!sd)
+	if (sd == NULL)
 		script_pushint(st,0);
 	else
 		script_pushint(st,guild->gm_change(guild_id, sd));
@@ -10347,16 +10347,14 @@ BUILDIN(attachnpctimer) {
 		return false;
 	}
 
-	if( script_hasdata(st,2) )
-		sd = map->nick2sd(script_getstr(st,2));
+	if (script_hasdata(st,2))
+		sd = script->nick2sd(st, script_getstr(st,2));
 	else
 		sd = script->rid2sd(st);
 
-	if( !sd )
-	{
+	if (sd == NULL) {
 		script_pushint(st,1);
-		ShowWarning("attachnpctimer: Invalid player.\n");
-		return false;
+		return true;
 	}
 
 	nd->u.scr.rid = sd->bl.id;
@@ -12045,13 +12043,13 @@ BUILDIN(emotion) {
 	if( script_hasdata(st,3) )
 		player=script_getnum(st,3);
 
-	if (player) {
+	if (player != 0) {
 		TBL_PC *sd = NULL;
-		if( script_hasdata(st,4) )
-			sd = map->nick2sd(script_getstr(st,4));
+		if (script_hasdata(st,4))
+			sd = script->nick2sd(st, script_getstr(st,4));
 		else
 			sd = script->rid2sd(st);
-		if (sd)
+		if (sd != NULL)
 			clif->emotion(&sd->bl,type);
 	} else if( script_hasdata(st,4) ) {
 		TBL_NPC *nd = npc->name2id(script_getstr(st,4));
@@ -12557,9 +12555,9 @@ BUILDIN(mobcount) {
 BUILDIN(marriage) {
 	const char *partner=script_getstr(st,2);
 	TBL_PC *sd=script->rid2sd(st);
-	TBL_PC *p_sd=map->nick2sd(partner);
+	TBL_PC *p_sd = script->nick2sd(st, partner);
 
-	if(sd==NULL || p_sd==NULL || pc->marriage(sd,p_sd) < 0) {
+	if (sd == NULL || p_sd == NULL || pc->marriage(sd,p_sd) < 0) {
 		script_pushint(st,0);
 		return true;
 	}
@@ -13537,12 +13535,12 @@ BUILDIN(specialeffect2) {
 	int type = script_getnum(st,2);
 	enum send_target target = script_hasdata(st,3) ? (send_target)script_getnum(st,3) : AREA;
 
-	if( script_hasdata(st,4) )
-		sd = map->nick2sd(script_getstr(st,4));
+	if (script_hasdata(st,4))
+		sd = script->nick2sd(st, script_getstr(st,4));
 	else
 		sd = script->rid2sd(st);
 
-	if (sd)
+	if (sd != NULL)
 		clif->specialeffect(&sd->bl, type, target);
 
 	return true;
@@ -13841,7 +13839,7 @@ BUILDIN(message) {
 	player = script_getstr(st,2);
 	msg = script_getstr(st,3);
 
-	if((pl_sd=map->nick2sd((char *) player)) == NULL)
+	if ((pl_sd = script->nick2sd(st, (char*)player)) == NULL)
 		return true;
 	clif->message(pl_sd->fd, msg);
 
@@ -16236,12 +16234,12 @@ BUILDIN(checkvending) // check vending [Nab4]
 {
 	TBL_PC *sd = NULL;
 
-	if(script_hasdata(st,2))
-		sd = map->nick2sd(script_getstr(st,2));
+	if (script_hasdata(st,2))
+		sd = script->nick2sd(st, script_getstr(st,2));
 	else
 		sd = script->rid2sd(st);
 
-	if(sd)
+	if (sd != NULL)
 		script_pushint(st, sd->state.autotrade ? 2 : sd->state.vending);
 	else
 		script_pushint(st,0);
@@ -16253,12 +16251,12 @@ BUILDIN(checkvending) // check vending [Nab4]
 BUILDIN(checkchatting) {
 	TBL_PC *sd = NULL;
 
-	if(script_hasdata(st,2))
-		sd = map->nick2sd(script_getstr(st,2));
+	if (script_hasdata(st,2))
+		sd = script->nick2sd(st, script_getstr(st,2));
 	else
 		sd = script->rid2sd(st);
 
-	if(sd)
+	if (sd != NULL)
 		script_pushint(st,(sd->chatID != 0));
 	else
 		script_pushint(st,0);
@@ -16270,11 +16268,11 @@ BUILDIN(checkidle) {
 	TBL_PC *sd = NULL;
 
 	if (script_hasdata(st, 2))
-		sd = map->nick2sd(script_getstr(st, 2));
+		sd = script->nick2sd(st, script_getstr(st, 2));
 	else
 		sd = script->rid2sd(st);
 
-	if (sd)
+	if (sd != NULL)
 		script_pushint(st, DIFF_TICK32(sockt->last_tick, sd->idletime)); // TODO: change this to int64 when we'll support 64 bit script values
 	else
 		script_pushint(st, 0);
@@ -16549,12 +16547,13 @@ BUILDIN(unitattack) {
 		return true;
 	}
 
-	if( script_isstringtype(st, 3) ) {
-		TBL_PC* sd = map->nick2sd(script_getstr(st, 3));
-		if( sd != NULL )
+	if (script_isstringtype(st, 3)) {
+		TBL_PC* sd = script->nick2sd(st, script_getstr(st, 3));
+		if (sd != NULL)
 			target_bl = &sd->bl;
-	} else
+	} else {
 		target_bl = map->id2bl(script_getnum(st, 3));
+	}
 	// request the attack
 	if( target_bl == NULL )
 	{
@@ -18435,13 +18434,13 @@ BUILDIN(freeloop) {
 BUILDIN(sit) {
 	struct map_session_data *sd = NULL;
 
-	if( script_hasdata(st, 2) )
-		sd = map->nick2sd(script_getstr(st, 2));
+	if (script_hasdata(st, 2))
+		sd = script->nick2sd(st, script_getstr(st, 2));
 	else
 		sd = script->rid2sd(st);
 
-	if( sd == NULL )
-		return false;
+	if (sd == NULL)
+		return true;
 
 	if (!pc_issit(sd))
 	{
@@ -18455,13 +18454,13 @@ BUILDIN(sit) {
 BUILDIN(stand) {
 	struct map_session_data *sd = NULL;
 
-	if( script_hasdata(st, 2) )
-		sd = map->nick2sd(script_getstr(st, 2));
+	if (script_hasdata(st, 2))
+		sd = script->nick2sd(st, script_getstr(st, 2));
 	else
 		sd = script->rid2sd(st);
 
-	if( sd == NULL )
-		return false;
+	if (sd == NULL)
+		return true;
 
 	if (pc_issit(sd))
 	{
@@ -18475,13 +18474,13 @@ BUILDIN(stand) {
 BUILDIN(issit) {
 	struct map_session_data *sd = NULL;
 
-	if( script_hasdata(st, 2) )
-		sd = map->nick2sd(script_getstr(st, 2));
+	if (script_hasdata(st, 2))
+		sd = script->nick2sd(st, script_getstr(st, 2));
 	else
 		sd = script->rid2sd(st);
 
-	if( sd == NULL )
-		return false;
+	if (sd == NULL)
+		return true;
 
 	if (pc_issit(sd))
 		script_pushint(st, 1);
