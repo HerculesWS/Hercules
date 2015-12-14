@@ -127,11 +127,11 @@ int mercenary_get_guild(struct mercenary_data *md)
 
 	class_ = md->db->class_;
 
-	if( class_ >= 6017 && class_ <= 6026 )
+	if (class_ >= MERID_MER_ARCHER01 && class_ <= MERID_MER_ARCHER10)
 		return ARCH_MERC_GUILD;
-	if( class_ >= 6027 && class_ <= 6036 )
+	if (class_ >= MERID_MER_LANCER01 && class_ <= MERID_MER_LANCER10)
 		return SPEAR_MERC_GUILD;
-	if( class_ >= 6037 && class_ <= 6046 )
+	if (class_ >= MERID_MER_SWORDMAN01 && class_ <= MERID_MER_SWORDMAN10)
 		return SWORD_MERC_GUILD;
 
 	return -1;
@@ -147,11 +147,11 @@ int mercenary_get_faith(struct mercenary_data *md)
 
 	class_ = md->db->class_;
 
-	if( class_ >= 6017 && class_ <= 6026 )
+	if (class_ >= MERID_MER_ARCHER01 && class_ <= MERID_MER_ARCHER10)
 		return sd->status.arch_faith;
-	if( class_ >= 6027 && class_ <= 6036 )
+	if (class_ >= MERID_MER_LANCER01 && class_ <= MERID_MER_LANCER10)
 		return sd->status.spear_faith;
-	if( class_ >= 6037 && class_ <= 6046 )
+	if (class_ >= MERID_MER_SWORDMAN01 && class_ <= MERID_MER_SWORDMAN10)
 		return sd->status.sword_faith;
 
 	return 0;
@@ -167,11 +167,11 @@ int mercenary_set_faith(struct mercenary_data *md, int value)
 
 	class_ = md->db->class_;
 
-	if( class_ >= 6017 && class_ <= 6026 )
+	if (class_ >= MERID_MER_ARCHER01 && class_ <= MERID_MER_ARCHER10)
 		faith = &sd->status.arch_faith;
-	else if( class_ >= 6027 && class_ <= 6036 )
+	else if (class_ >= MERID_MER_LANCER01 && class_ <= MERID_MER_LANCER10)
 		faith = &sd->status.spear_faith;
-	else if( class_ >= 6037 && class_ <= 6046 )
+	else if (class_ >= MERID_MER_SWORDMAN01 && class_ <= MERID_MER_SWORDMAN10)
 		faith = &sd->status.sword_faith;
 	else
 		return 0;
@@ -193,11 +193,11 @@ int mercenary_get_calls(struct mercenary_data *md)
 
 	class_ = md->db->class_;
 
-	if( class_ >= 6017 && class_ <= 6026 )
+	if (class_ >= MERID_MER_ARCHER01 && class_ <= MERID_MER_ARCHER10)
 		return sd->status.arch_calls;
-	if( class_ >= 6027 && class_ <= 6036 )
+	if (class_ >= MERID_MER_LANCER01 && class_ <= MERID_MER_LANCER10)
 		return sd->status.spear_calls;
-	if( class_ >= 6037 && class_ <= 6046 )
+	if (class_ >= MERID_MER_SWORDMAN01 && class_ <= MERID_MER_SWORDMAN10)
 		return sd->status.sword_calls;
 
 	return 0;
@@ -213,11 +213,11 @@ int mercenary_set_calls(struct mercenary_data *md, int value)
 
 	class_ = md->db->class_;
 
-	if( class_ >= 6017 && class_ <= 6026 )
+	if (class_ >= MERID_MER_ARCHER01 && class_ <= MERID_MER_ARCHER10)
 		calls = &sd->status.arch_calls;
-	else if( class_ >= 6027 && class_ <= 6036 )
+	else if (class_ >= MERID_MER_LANCER01 && class_ <= MERID_MER_LANCER10)
 		calls = &sd->status.spear_calls;
-	else if( class_ >= 6037 && class_ <= 6046 )
+	else if (class_ >= MERID_MER_SWORDMAN01 && class_ <= MERID_MER_SWORDMAN10)
 		calls = &sd->status.sword_calls;
 	else
 		return 0;
