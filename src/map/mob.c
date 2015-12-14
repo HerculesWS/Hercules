@@ -5010,9 +5010,30 @@ int do_final_mob(void)
 
 void mob_defaults(void) {
 	// Defines the Manuk/Splendide/Mora mob groups for the status reductions [Epoque & Frost]
-	const int mob_manuk[8] = { 1986, 1987, 1988, 1989, 1990, 1997, 1998, 1999 };
-	const int mob_splendide[5] = { 1991, 1992, 1993, 1994, 1995 };
-	const int mob_mora[5] = { 2137, 2136, 2134, 2133, 2132 };
+	const int mob_manuk[8] = {
+		MOBID_TATACHO,
+		MOBID_CENTIPEDE,
+		MOBID_NEPENTHES,
+		MOBID_HILLSRION,
+		MOBID_HARDROCK_MOMMOTH,
+		MOBID_G_TATACHO,
+		MOBID_G_HILLSRION,
+		MOBID_CENTIPEDE_LARVA,
+	};
+	const int mob_splendide[5] = {
+		MOBID_TENDRILRION,
+		MOBID_CORNUS,
+		MOBID_NAGA,
+		MOBID_LUCIOLA_VESPA,
+		MOBID_PINGUICULA,
+	};
+	const int mob_mora[5] = {
+		MOBID_POM_SPIDER,
+		MOBID_ANGRA_MANTIS,
+		MOBID_PARUS,
+		MOBID_LITTLE_FATUM,
+		MOBID_MIMING,
+	};
 
 	mob = &mob_s;
 

@@ -337,11 +337,38 @@ enum mob_id {
 	MOBID_TREASURE_BOX48   = 1945, ///<   TREASURE_BOX48 / Treasure Chest
 	MOBID_TREASURE_BOX49   = 1946, ///<   TREASURE_BOX49 / Treasure Chest
 
+	// Manuk
+	MOBID_TATACHO          = 1986, ///<          TATACHO / Tatacho
+	MOBID_CENTIPEDE        = 1987, ///<        CENTIPEDE / Centipede
+	MOBID_NEPENTHES        = 1988, ///<        NEPENTHES / Nepenthes
+	MOBID_HILLSRION        = 1989, ///<        HILLSRION / Hillslion
+	MOBID_HARDROCK_MOMMOTH = 1990, ///< HARDROCK_MOMMOTH / Hardrock Mammoth
+
+	// Splendide
+	MOBID_TENDRILRION      = 1991, ///<      TENDRILRION / Tenrillion
+	MOBID_CORNUS           = 1992, ///<           CORNUS / Cornus
+	MOBID_NAGA             = 1993, ///<             NAGA / Naga
+	MOBID_LUCIOLA_VESPA    = 1994, ///<    LUCIOLA_VESPA / Luciola Vespa
+	MOBID_PINGUICULA       = 1995, ///<       PINGUICULA / Pinguicola
+
+	// Manuk (continue)
+	MOBID_G_TATACHO        = 1997, ///<        G_TATACHO / Tatacho
+	MOBID_G_HILLSRION      = 1998, ///<      G_HILLSRION / Hillslion
+	MOBID_CENTIPEDE_LARVA  = 1999, ///<  CENTIPEDE_LARVA / Centipede Larva
+
 	MOBID_SILVERSNIPER     = 2042, ///<     SILVERSNIPER / Silver Sniper
 	MOBID_MAGICDECOY_FIRE  = 2043, ///<  MAGICDECOY_FIRE / Magic Decoy
 	MOBID_MAGICDECOY_WATER = 2044, ///< MAGICDECOY_WATER / Magic Decoy
 	MOBID_MAGICDECOY_EARTH = 2045, ///< MAGICDECOY_EARTH / Magic Decoy
 	MOBID_MAGICDECOY_WIND  = 2046, ///<  MAGICDECOY_WIND / Magic Decoy
+
+	// Mora
+	MOBID_POM_SPIDER       = 2132, ///<       POM_SPIDER / Pom Spider
+	MOBID_ANGRA_MANTIS     = 2133, ///<     ANGRA_MANTIS / Angra Mantis
+	MOBID_PARUS            = 2134, ///<            PARUS / Parus
+	//...
+	MOBID_LITTLE_FATUM     = 2136, ///<     LITTLE_FATUM / Little Fatum
+	MOBID_MIMING           = 2137, ///<           MIMING / Miming
 };
 
 // The data structures for storing delayed item drops
