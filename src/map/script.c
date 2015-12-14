@@ -2631,7 +2631,7 @@ TBL_PC *script_rid2sd(struct script_state *st) {
 TBL_PC *script_id2sd(struct script_state *st, int account_id) {
 	TBL_PC *sd;
 	if (!(sd = map->id2sd(account_id))) {
-		ShowError("script_id2sd: Player with account ID '%d' not found!\n", account_id);
+		ShowWarning("script_id2sd: Player with account ID '%d' not found!\n", account_id);
 		script->reportfunc(st);
 		script->reportsrc(st);
 	}
@@ -2641,7 +2641,7 @@ TBL_PC *script_id2sd(struct script_state *st, int account_id) {
 TBL_PC *script_charid2sd(struct script_state *st, int char_id) {
 	TBL_PC *sd;
 	if (!(sd = map->charid2sd(char_id))) {
-		ShowError("script_charid2sd: Player with char ID '%d' not found!\n", char_id);
+		ShowWarning("script_charid2sd: Player with char ID '%d' not found!\n", char_id);
 		script->reportfunc(st);
 		script->reportsrc(st);
 	}
@@ -2651,7 +2651,7 @@ TBL_PC *script_charid2sd(struct script_state *st, int char_id) {
 TBL_PC *script_nick2sd(struct script_state *st, const char *name) {
 	TBL_PC *sd;
 	if (!(sd = map->nick2sd(name))) {
-		ShowError("script_nick2sd: Player name '%s' not found!\n", name);
+		ShowWarning("script_nick2sd: Player name '%s' not found!\n", name);
 		script->reportfunc(st);
 		script->reportsrc(st);
 	}
@@ -14261,7 +14261,7 @@ BUILDIN(logmes)
 
 	sd = script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 
 	str = script_getstr(st,2);
 	logs->npc(sd,str);
@@ -18299,13 +18299,21 @@ BUILDIN(getcharip) {
 			int id = script_getnum(st, 2);
 			sd = (map->id2sd(id) ? map->id2sd(id) : map->charid2sd(id));
 		}
-	} else {
-		sd = script->rid2sd(st);
+	}
+	else if (!(sd = script->rid2sd(st))) {
+		script_pushconststr(st, "");
+		return true;
 	}
 
-	/* check for sd and IP */
-	if (!sd || !sockt->session[sd->fd]->client_addr)
-	{
+	if (!sd) {
+		ShowWarning("buildin_getcharip: Player not found!\n");
+		script_pushconststr(st, "");
+		script->reportfunc(st);
+		return false;
+	}
+
+	/* check for IP */
+	if (!sockt->session[sd->fd]->client_addr) {
 		script_pushconststr(st, "");
 		return true;
 	}
