@@ -18365,20 +18365,27 @@ BUILDIN(getcharip) {
 	struct map_session_data* sd = NULL;
 
 	/* check if a character name is specified */
-	if( script_hasdata(st, 2) ) {
+	if (script_hasdata(st, 2)) {
 		if (script_isstringtype(st, 2)) {
 			sd = map->nick2sd(script_getstr(st, 2));
 		} else {
 			int id = script_getnum(st, 2);
 			sd = (map->id2sd(id) ? map->id2sd(id) : map->charid2sd(id));
 		}
-	} else {
-		sd = script->rid2sd(st);
+	} else if ((sd = script->rid2sd(st)) == NULL) {
+		script_pushconststr(st, "");
+		return true;
 	}
 
-	/* check for sd and IP */
-	if (!sd || !sockt->session[sd->fd]->client_addr)
-	{
+	if (sd == NULL) {
+		ShowWarning("buildin_getcharip: Player not found!\n");
+		script_pushconststr(st, "");
+		script->reportfunc(st);
+		return false;
+	}
+
+	/* check for IP */
+	if (!sockt->session[sd->fd]->client_addr) {
 		script_pushconststr(st, "");
 		return true;
 	}
