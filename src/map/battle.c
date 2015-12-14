@@ -3045,15 +3045,21 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if (src->type == BL_MOB) {
 			int i;
 			if (sc->data[SC_MANU_DEF])
-				for (i=0;ARRAYLENGTH(mob->manuk)>i;i++)
-					if (mob->manuk[i]==((TBL_MOB*)src)->class_) {
+				for (i = 0; ARRAYLENGTH(mob->manuk) > i; i++)
+					if (mob->manuk[i] == ((TBL_MOB*)src)->class_) {
 						damage -= damage * sc->data[SC_MANU_DEF]->val1 / 100;
 						break;
 					}
 			if (sc->data[SC_SPL_DEF])
-				for (i=0;ARRAYLENGTH(mob->splendide)>i;i++)
-					if (mob->splendide[i]==((TBL_MOB*)src)->class_) {
+				for (i = 0; ARRAYLENGTH(mob->splendide) > i; i++)
+					if (mob->splendide[i] == ((TBL_MOB*)src)->class_) {
 						damage -= damage * sc->data[SC_SPL_DEF]->val1 / 100;
+						break;
+					}
+			if (sc->data[SC_MORA_BUFF])
+				for (i = 0; ARRAYLENGTH(mob->mora) > i; i++)
+					if (mob->mora[i] == ((TBL_MOB*)src)->class_) {
+						damage -= damage * sc->data[SC_MORA_BUFF]->val1 / 100;
 						break;
 					}
 		}

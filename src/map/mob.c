@@ -4981,9 +4981,10 @@ int do_final_mob(void)
 }
 
 void mob_defaults(void) {
-	//Defines the Manuk/Splendide mob groups for the status reductions [Epoque]
+	// Defines the Manuk/Splendide/Mora mob groups for the status reductions [Epoque & Frost]
 	const int mob_manuk[8] = { 1986, 1987, 1988, 1989, 1990, 1997, 1998, 1999 };
 	const int mob_splendide[5] = { 1991, 1992, 1993, 1994, 1995 };
+	const int mob_mora[5] = { 2137, 2136, 2134, 2133, 2132 };
 
 	mob = &mob_s;
 
@@ -4993,6 +4994,8 @@ void mob_defaults(void) {
 
 	memcpy(mob->manuk, mob_manuk, sizeof(mob->manuk));
 	memcpy(mob->splendide, mob_splendide, sizeof(mob->splendide));
+	memcpy(mob->mora, mob_mora, sizeof(mob->mora));
+
 	/* */
 	mob->reload = mob_reload;
 	mob->init = do_init_mob;
