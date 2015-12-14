@@ -7147,12 +7147,12 @@ BUILDIN(getitem) {
 		offset += 1;
 	}
 
-	if( script_hasdata(st,4+offset) )
-		sd=map->id2sd(script_getnum(st,4+offset)); // <Account ID>
+	if (script_hasdata(st,4+offset))
+		sd = script->id2sd(st, script_getnum(st,4+offset)); // <Account ID>
 	else
 		sd=script->rid2sd(st); // Attached player
 
-	if( sd == NULL ) // no target
+	if (sd == NULL) // no target
 		return true;
 
 	//Check if it's stackable.
@@ -7193,12 +7193,12 @@ BUILDIN(getitem2)
 		offset += 1;
 	}
 
-	if( script_hasdata(st,11+offset) )
-		sd=map->id2sd(script_getnum(st,11+offset)); // <Account ID>
+	if (script_hasdata(st,11+offset))
+		sd = script->id2sd(st, script_getnum(st,11+offset)); // <Account ID>
 	else
 		sd=script->rid2sd(st); // Attached player
 
-	if( sd == NULL ) // no target
+	if (sd == NULL) // no target
 		return true;
 
 	if( script_isstringtype(st, 2) ) {
@@ -7613,11 +7613,10 @@ BUILDIN(delitem) {
 
 	if (script_hasdata(st,4)) {
 		int account_id = script_getnum(st,4);
-		sd = map->id2sd(account_id); // <account id>
+		sd = script->id2sd(st, account_id); // <account id>
 		if (sd == NULL) {
-			ShowError("script:delitem: player not found (AID=%d).\n", account_id);
 			st->state = END;
-			return false;
+			return true;
 		}
 	} else {
 		sd = script->rid2sd(st);// attached player
@@ -7670,11 +7669,10 @@ BUILDIN(delitem2) {
 
 	if (script_hasdata(st,11)) {
 		int account_id = script_getnum(st,11);
-		sd = map->id2sd(account_id); // <account id>
+		sd = script->id2sd(st, account_id); // <account id>
 		if (sd == NULL) {
-			ShowError("script:delitem2: player not found (AID=%d).\n", account_id);
 			st->state = END;
-			return false;
+			return true;
 		}
 	} else {
 		sd = script->rid2sd(st);// attached player
@@ -10296,16 +10294,14 @@ BUILDIN(getnpctimer) {
 	switch( type ) {
 		case 0: val = (int)npc->gettimerevent_tick(nd); break; // FIXME: change this to int64 when we'll support 64 bit script values
 		case 1:
-			if( nd->u.scr.rid ) {
-				sd = map->id2sd(nd->u.scr.rid);
-				if( !sd ) {
-					ShowError("buildin_getnpctimer: Attached player not found!\n");
+			if (nd->u.scr.rid) {
+				sd = script->id2sd(st, nd->u.scr.rid);
+				if (sd == NULL)
 					break;
-				}
 				val = (sd->npc_timer_id != INVALID_TIMER);
-			}
-			else
+			} else {
 				val = (nd->u.scr.timerid != INVALID_TIMER);
+			}
 			break;
 		case 2: val = nd->u.scr.timeramount; break;
 	}
@@ -11264,12 +11260,12 @@ BUILDIN(changebase) {
 	TBL_PC *sd=NULL;
 	int vclass;
 
-	if( script_hasdata(st,3) )
-		sd=map->id2sd(script_getnum(st,3));
+	if (script_hasdata(st,3))
+		sd = script->id2sd(st, script_getnum(st,3));
 	else
 		sd=script->rid2sd(st);
 
-	if(sd == NULL)
+	if (sd == NULL)
 		return true;
 
 	vclass = script_getnum(st,2);
@@ -16380,12 +16376,12 @@ BUILDIN(pcblockmove) {
 	id = script_getnum(st,2);
 	flag = script_getnum(st,3);
 
-	if(id)
-		sd = map->id2sd(id);
+	if (id != 0)
+		sd = script->id2sd(st, id);
 	else
 		sd = script->rid2sd(st);
 
-	if(sd)
+	if (sd != NULL)
 		sd->state.blockedmove = flag > 0;
 
 	return true;
@@ -16398,12 +16394,12 @@ BUILDIN(pcfollow) {
 	id = script_getnum(st,2);
 	targetid = script_getnum(st,3);
 
-	if(id)
-		sd = map->id2sd(id);
+	if (id != 0)
+		sd = script->id2sd(st, id);
 	else
 		sd = script->rid2sd(st);
 
-	if(sd)
+	if (sd != NULL)
 		pc->follow(sd, targetid);
 
 	return true;
@@ -16416,12 +16412,12 @@ BUILDIN(pcstopfollow)
 
 	id = script_getnum(st,2);
 
-	if(id)
-		sd = map->id2sd(id);
+	if (id != 0)
+		sd = script->id2sd(st, id);
 	else
 		sd = script->rid2sd(st);
 
-	if(sd)
+	if (sd != NULL)
 		pc->stop_following(sd);
 
 	return true;
@@ -18877,12 +18873,12 @@ BUILDIN(montransform) {
 	if (script_hasdata(st, 8))
 		val4 = script_getnum(st, 8);
 
-	if( tick != 0 ) {
-		struct map_session_data *sd = map->id2sd(bl->id);
+	if (tick != 0) {
+		struct map_session_data *sd = script->id2sd(st, bl->id);
 		struct mob_db *monster =  mob->db(mob_id);
 		char msg[CHAT_SIZE_MAX];
 
-		if( !sd )
+		if (sd == NULL)
 			return true;
 
 		if( battle_config.mon_trans_disable_in_gvg && map_flag_gvg2(sd->bl.m) ) {
@@ -19442,12 +19438,12 @@ BUILDIN(bg_join_team) {
 	struct map_session_data *sd;
 	int team_id = script_getnum(st, 2);
 
-	if( script_hasdata(st, 3) )
-		sd = map->id2sd(script_getnum(st, 3));
+	if (script_hasdata(st, 3))
+		sd = script->id2sd(st, script_getnum(st, 3));
 	else
 		sd = script->rid2sd(st);
 
-	if( !sd )
+	if (sd == NULL)
 		script_pushint(st, -1);
 	else
 		script_pushint(st,bg->team_join(team_id, sd)?0:1);
