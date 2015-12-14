@@ -12121,7 +12121,7 @@ int buildin_maprespawnguildid_sub_mob(struct block_list *bl,va_list ap)
 {
 	struct mob_data *md=(struct mob_data *)bl;
 
-	if(!md->guardian_data && md->class_ != MOBID_EMPERIUM)
+	if (md->guardian_data == NULL && md->class_ != MOBID_EMPELIUM)
 		status_kill(bl);
 
 	return 0;

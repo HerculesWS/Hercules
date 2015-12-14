@@ -2088,7 +2088,7 @@ int skill_blown(struct block_list* src, struct block_list* target, int count, in
 	switch (target->type) {
 		case BL_MOB: {
 				struct mob_data* md = BL_CAST(BL_MOB, target);
-				if( md->class_ == MOBID_EMPERIUM )
+				if (md->class_ == MOBID_EMPELIUM)
 					return 0;
 				if(src != target && is_boss(target)) // Bosses can't be knocked-back
 					return 0;
@@ -3032,7 +3032,7 @@ int skill_check_unit_range2_sub (struct block_list *bl, va_list ap) {
 	if( skill_id == HP_BASILICA && bl->type == BL_PC )
 		return 0;
 
-	if( skill_id == AM_DEMONSTRATION && bl->type == BL_MOB && ((TBL_MOB*)bl)->class_ == MOBID_EMPERIUM )
+	if (skill_id == AM_DEMONSTRATION && bl->type == BL_MOB && ((TBL_MOB*)bl)->class_ == MOBID_EMPELIUM)
 		return 0; //Allow casting Bomb/Demonstration Right under emperium [Skotlex]
 	return 1;
 }
@@ -4999,15 +4999,13 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 				break;
 			}
 
-			if( ud->skill_id >= SL_SKE && ud->skill_id <= SL_SKA && target->type == BL_MOB )
-			{
-				if( ((TBL_MOB*)target)->class_ == MOBID_EMPERIUM )
+			if (ud->skill_id >= SL_SKE && ud->skill_id <= SL_SKA && target->type == BL_MOB) {
+				if (((TBL_MOB*)target)->class_ == MOBID_EMPELIUM)
 					break;
-			}
-			else if (inf && battle->check_target(src, target, inf) <= 0){
+			} else if (inf && battle->check_target(src, target, inf) <= 0) {
 				if (sd) clif->skill_fail(sd,ud->skill_id,USESKILL_FAIL_LEVEL,0);
 				break;
-			} else if( ud->skill_id == RK_PHANTOMTHRUST && target->type != BL_MOB ) {
+			} else if (ud->skill_id == RK_PHANTOMTHRUST && target->type != BL_MOB) {
 				if( !map_flag_vs(src->m) && battle->check_target(src,target,BCT_PARTY) <= 0 )
 					break; // You can use Phantom Thurst on party members in normal maps too. [pakpil]
 			}
@@ -5404,7 +5402,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if (skill_id == AB_HIGHNESSHEAL) {
 					heal = heal * (17 + 3 * skill_lv) / 10;
 				}
-				if (status->isimmune(bl) || (dstmd && (dstmd->class_ == MOBID_EMPERIUM || mob_is_battleground(dstmd))))
+				if (status->isimmune(bl) || (dstmd != NULL && (dstmd->class_ == MOBID_EMPELIUM || mob_is_battleground(dstmd))))
 					heal = 0;
 
 				if (sd && dstsd && sd->status.partner_id == dstsd->status.char_id && (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.sex == 0)
@@ -6652,7 +6650,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				break;
 			}
-			if( dstmd && dstmd->class_ == MOBID_EMPERIUM )
+			if (dstmd && dstmd->class_ == MOBID_EMPELIUM)
 				break; // Cannot be Used on Emperium
 
 			clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
@@ -6845,7 +6843,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			{
 				int i,sp = 0;
 				int64 hp = 0;
-				if( dstmd && dstmd->class_ == MOBID_EMPERIUM ) {
+				if (dstmd && dstmd->class_ == MOBID_EMPELIUM) {
 					map->freeblock_unlock();
 					return 1;
 				}
@@ -7622,7 +7620,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		// Slim Pitcher
 		case CR_SLIMPITCHER:
 			// Updated to block Slim Pitcher from working on barricades and guardian stones.
-			if (dstmd && (dstmd->class_ == MOBID_EMPERIUM || (dstmd->class_ >= MOBID_BARRICADE1 && dstmd->class_ <= MOBID_GUARDIAN_STONE2)))
+			if (dstmd != NULL && (dstmd->class_ == MOBID_EMPELIUM || (dstmd->class_ >= MOBID_BARRICADE && dstmd->class_ <= MOBID_S_EMPEL_2)))
 				break;
 			if (script->potion_hp || script->potion_sp) {
 				int hp = script->potion_hp, sp = script->potion_sp;
@@ -7702,8 +7700,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					map->freeblock_unlock();
 					return 0;
 				}
-				if (rnd() % 100 > skill_lv * 8 || (dstmd && ((dstmd->guardian_data && dstmd->class_ == MOBID_EMPERIUM) || mob_is_battleground(dstmd)))) {
-					if (sd)
+				if (rnd() % 100 > skill_lv * 8 || (dstmd && ((dstmd->guardian_data && dstmd->class_ == MOBID_EMPELIUM) || mob_is_battleground(dstmd)))) {
+					if (sd != NULL)
 						clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
 
 					map->freeblock_unlock();
@@ -8740,7 +8738,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			{
 				if( bl->type != BL_MOB ) break;
 				md = map->id2md(bl->id);
-				if( md && md->class_ >= MOBID_SILVERSNIPER && md->class_ <= MOBID_MAGICDECOY_WIND )
+				if (md && md->class_ >= MOBID_SILVERSNIPER && md->class_ <= MOBID_MAGICDECOY_WIND)
 					status_kill(bl);
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 			}
@@ -11910,7 +11908,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				int heal = skill->calc_heal(ss,bl,sg->skill_id,sg->skill_lv,true);
 				struct mob_data *md = BL_CAST(BL_MOB, bl);
 #ifdef RENEWAL
-				if (md && md->class_ == MOBID_EMPERIUM)
+				if (md != NULL && md->class_ == MOBID_EMPELIUM)
 					break;
 #endif
 				if (md && mob_is_battleground(md))
@@ -12132,7 +12130,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			int heal;
 #ifdef RENEWAL
 			struct mob_data *md = BL_CAST(BL_MOB, bl);
-			if (md && md->class_ == MOBID_EMPERIUM)
+			if (md && md->class_ == MOBID_EMPELIUM)
 				break;
 #endif
 			if ((sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
@@ -13666,7 +13664,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		case SR_CURSEDCIRCLE:
 			if (map_flag_gvg2(sd->bl.m)) {
 				if (map->foreachinrange(mob->count_sub, &sd->bl, skill->get_splash(skill_id, skill_lv), BL_MOB,
-				                        MOBID_EMPERIUM, MOBID_GUARDIAN_STONE1, MOBID_GUARDIAN_STONE2)) {
+				                        MOBID_EMPELIUM, MOBID_S_EMPEL_1, MOBID_S_EMPEL_2)) {
 					char output[128];
 					sprintf(output, "You're too close to a stone or emperium to do this skill"); /* TODO official response? or message.conf it */
 					clif->messagecolor_self(sd->fd, COLOR_RED, output);
