@@ -5942,7 +5942,7 @@ BUILDIN(warpchar) {
 	y=script_getnum(st,4);
 	a=script_getnum(st,5);
 
-	sd = map->charid2sd(a);
+	sd = script->charid2sd(st, a);
 	if( sd == NULL )
 		return true;
 
@@ -7351,7 +7351,7 @@ BUILDIN(getnameditem) {
 	if( script_isstringtype(st, 3) ) //Char Name
 		tsd=map->nick2sd(script_getstr(st, 3));
 	else //Char Id was given
-		tsd=map->charid2sd(script_getnum(st, 3));
+		tsd = script->charid2sd(st, script_getnum(st, 3));
 
 	if( tsd == NULL ) {
 		//Failed
@@ -10034,7 +10034,7 @@ BUILDIN(clone) {
 	m = map->mapname2mapid(mapname);
 	if (m < 0) return true;
 
-	sd = map->charid2sd(char_id);
+	sd = script->charid2sd(st, char_id);
 
 	if (master_id) {
 		msd = map->charid2sd(master_id);
@@ -12579,7 +12579,7 @@ BUILDIN(ispartneron) {
 	TBL_PC *sd=script->rid2sd(st);
 
 	if (sd==NULL || !pc->ismarried(sd)
-	 || map->charid2sd(sd->status.partner_id) == NULL) {
+	 || script->charid2sd(st, sd->status.partner_id) == NULL) {
 		script_pushint(st,0);
 		return true;
 	}
@@ -12633,7 +12633,7 @@ BUILDIN(warppartner)
 	TBL_PC *p_sd=NULL;
 
 	if ( sd==NULL || !pc->ismarried(sd)
-	 || (p_sd=map->charid2sd(sd->status.partner_id)) == NULL) {
+	 || (p_sd = script->charid2sd(st, sd->status.partner_id)) == NULL) {
 		script_pushint(st,0);
 		return true;
 	}
@@ -13711,10 +13711,9 @@ BUILDIN(getmercinfo)
 	if (script_hasdata(st,3)) {
 		int char_id = script_getnum(st,3);
 
-		if ((sd = map->charid2sd(char_id)) == NULL) {
-			ShowError("buildin_getmercinfo: No such character (char_id=%d).\n", char_id);
+		if ((sd = script->charid2sd(st, char_id)) == NULL) {
 			script_pushnil(st);
-			return false;
+			return true;
 		}
 	} else {
 		if ((sd = script->rid2sd(st)) == NULL)
