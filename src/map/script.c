@@ -2644,6 +2644,36 @@ TBL_PC *script_rid2sd(struct script_state *st) {
 	return sd;
 }
 
+TBL_PC *script_id2sd(struct script_state *st, int account_id) {
+	TBL_PC *sd;
+	if ((sd = map->id2sd(account_id)) == NULL) {
+		ShowWarning("script_id2sd: Player with account ID '%d' not found!\n", account_id);
+		script->reportfunc(st);
+		script->reportsrc(st);
+	}
+	return sd;
+}
+
+TBL_PC *script_charid2sd(struct script_state *st, int char_id) {
+	TBL_PC *sd;
+	if ((sd = map->charid2sd(char_id)) == NULL) {
+		ShowWarning("script_charid2sd: Player with char ID '%d' not found!\n", char_id);
+		script->reportfunc(st);
+		script->reportsrc(st);
+	}
+	return sd;
+}
+
+TBL_PC *script_nick2sd(struct script_state *st, const char *name) {
+	TBL_PC *sd;
+	if ((sd = map->nick2sd(name)) == NULL) {
+		ShowWarning("script_nick2sd: Player name '%s' not found!\n", name);
+		script->reportfunc(st);
+		script->reportsrc(st);
+	}
+	return sd;
+}
+
 char *get_val_npcscope_str(struct script_state* st, struct reg_db *n, struct script_data* data) {
 	if (n)
 		return (char*)i64db_get(n->vars, reference_getuid(data));
@@ -20855,6 +20885,9 @@ void script_defaults(void) {
 	script->conv_num = conv_num;
 	script->conv_str = conv_str;
 	script->rid2sd = script_rid2sd;
+	script->id2sd = script_id2sd;
+	script->charid2sd = script_charid2sd;
+	script->nick2sd = script_nick2sd;
 	script->detach_rid = script_detach_rid;
 	script->push_val = push_val;
 	script->get_val = get_val;
