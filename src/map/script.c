@@ -10340,7 +10340,7 @@ BUILDIN(attachnpctimer) {
 	if( !sd )
 	{
 		script_pushint(st,1);
-		return false;
+		return true;
 	}
 
 	nd->u.scr.rid = sd->bl.id;
