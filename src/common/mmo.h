@@ -196,9 +196,6 @@
 #define MAX_ELEMENTALSKILL 42
 #define EL_SKILLBASE 8401
 #define MAX_ELESKILLTREE 3
-#define MAX_ELEMENTAL_CLASS 12
-#define EL_CLASS_BASE 2114
-#define EL_CLASS_MAX (EL_CLASS_BASE+MAX_ELEMENTAL_CLASS-1)
 
 // The following system marks a different job ID system used by the map server,
 // which makes a lot more sense than the normal one. [Skotlex]

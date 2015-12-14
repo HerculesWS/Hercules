@@ -9423,13 +9423,17 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if( !sd->ed )
 					break;
 
-				switch(sd->ed->db->class_){
-					case 2115:case 2124:
-					case 2118:case 2121:
+				switch (sd->ed->db->class_) {
+					case ELEID_EL_AGNI_M:
+					case ELEID_EL_AQUA_M:
+					case ELEID_EL_VENTUS_M:
+					case ELEID_EL_TERA_M:
 						duration = 6000;
 						break;
-					case 2116:case 2119:
-					case 2122:case 2125:
+					case ELEID_EL_AGNI_L:
+					case ELEID_EL_AQUA_L:
+					case ELEID_EL_VENTUS_L:
+					case ELEID_EL_TERA_L:
 						duration = 9000;
 						break;
 				}
@@ -18570,11 +18574,11 @@ int skill_block_check(struct block_list *bl, sc_type type , uint16 skill_id) {
 int skill_get_elemental_type( uint16 skill_id , uint16 skill_lv ) {
 	int type = 0;
 
-	switch( skill_id ) {
-		case SO_SUMMON_AGNI:   type = 2114; break;
-		case SO_SUMMON_AQUA:   type = 2117; break;
-		case SO_SUMMON_VENTUS: type = 2120; break;
-		case SO_SUMMON_TERA:   type = 2123; break;
+	switch (skill_id) {
+		case SO_SUMMON_AGNI:   type = ELEID_EL_AGNI_S;   break;
+		case SO_SUMMON_AQUA:   type = ELEID_EL_AQUA_S;   break;
+		case SO_SUMMON_VENTUS: type = ELEID_EL_VENTUS_S; break;
+		case SO_SUMMON_TERA:   type = ELEID_EL_TERA_S;   break;
 	}
 
 	type += skill_lv - 1;

@@ -121,28 +121,32 @@ int elemental_create(struct map_session_data *sd, int class_, unsigned int lifet
 
 	//per individual bonuses
 	switch(db->class_){
-	case 2114:
-	case 2115:
-	case 2116: //ATK + (Summon Agni Skill Level x 20) / HIT + (Summon Agni Skill Level x 10)
+	case ELEID_EL_AGNI_S:
+	case ELEID_EL_AGNI_M:
+	case ELEID_EL_AGNI_L:
+		//ATK + (Summon Agni Skill Level x 20) / HIT + (Summon Agni Skill Level x 10)
 		ele.atk += summon_level * 20;
 		ele.atk2 += summon_level * 20;
 		ele.hit += summon_level * 10;
 		break;
-	case 2117:
-	case 2118:
-	case 2119: //MDEF + (Summon Aqua Skill Level x 10) / MATK + (Summon Aqua Skill Level x 20)
+	case ELEID_EL_AQUA_S:
+	case ELEID_EL_AQUA_M:
+	case ELEID_EL_AQUA_L:
+		//MDEF + (Summon Aqua Skill Level x 10) / MATK + (Summon Aqua Skill Level x 20)
 		ele.mdef += summon_level * 10;
 		ele.matk += summon_level * 20;
 		break;
-	case 2120:
-	case 2121:
-	case 2122: //FLEE + (Summon Ventus Skill Level x 20) / MATK + (Summon Ventus Skill Level x 10)
+	case ELEID_EL_VENTUS_S:
+	case ELEID_EL_VENTUS_M:
+	case ELEID_EL_VENTUS_L:
+		//FLEE + (Summon Ventus Skill Level x 20) / MATK + (Summon Ventus Skill Level x 10)
 		ele.flee += summon_level * 20;
 		ele.matk += summon_level * 10;
 		break;
-	case 2123:
-	case 2124:
-	case 2125: //DEF + (Summon Tera Skill Level x 25) / ATK + (Summon Tera Skill Level x 5)
+	case ELEID_EL_TERA_S:
+	case ELEID_EL_TERA_M:
+	case ELEID_EL_TERA_L:
+		//DEF + (Summon Tera Skill Level x 25) / ATK + (Summon Tera Skill Level x 5)
 		ele.def += summon_level * 25;
 		ele.atk += summon_level * 5;
 		ele.atk2 += summon_level * 5;
@@ -687,17 +691,17 @@ int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_data *s
 	if( DIFF_TICK(tick,ed->last_spdrain_time) >= 10000 ){// Drain SP every 10 seconds
 		int sp = 5;
 
-		switch(ed->vd->class_){
-			case 2115:
-			case 2118:
-			case 2121:
-			case 2124:
+		switch (ed->vd->class_) {
+			case ELEID_EL_AGNI_M:
+			case ELEID_EL_AQUA_M:
+			case ELEID_EL_VENTUS_M:
+			case ELEID_EL_TERA_M:
 				sp = 8;
 				break;
-			case 2116:
-			case 2119:
-			case 2122:
-			case 2125:
+			case ELEID_EL_AGNI_L:
+			case ELEID_EL_AQUA_L:
+			case ELEID_EL_VENTUS_L:
+			case ELEID_EL_TERA_L:
 				sp = 11;
 				break;
 		}
