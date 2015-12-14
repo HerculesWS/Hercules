@@ -1167,7 +1167,7 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 			clif->authfail_fd(sd->fd, 0);
 			return false;
 		}
-	} else if (map->getcell(sd->status.last_point.map, &sd->bl, sd->status.last_point.x, sd->status.last_point.y, CELL_CHKNOPASS)) {
+	} else if (map->getcell(map->mapindex2mapid(sd->status.last_point.map), &sd->bl, sd->status.last_point.x, sd->status.last_point.y, CELL_CHKNOPASS)) {
 		//warp player stuck in invaild cell
 		pc->setpos(sd,sd->status.last_point.map,0,0,CLR_OUTSIGHT);
 	}
