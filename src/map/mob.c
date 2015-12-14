@@ -3832,7 +3832,7 @@ void mob_read_db_drops_sub(struct mob_db *entry, struct status_data *mstatus, in
 			continue;
 		}
 		type = id->type;
-		if ((class_ >= 1324 && class_ <= 1363) || (class_ >= 1938 && class_ <= 1946)) {
+		if ((class_ >= MOBID_TREASURE_BOX1 && class_ <= MOBID_TREASURE_BOX40) || (class_ >= MOBID_TREASURE_BOX41 && class_ <= MOBID_TREASURE_BOX49)) {
 			//Treasure box drop rates [Skotlex]
 			rate_adjust = battle_config.item_rate_treasure;
 			ratemin = battle_config.item_drop_treasure_min;
@@ -3873,8 +3873,10 @@ void mob_read_db_drops_sub(struct mob_db *entry, struct status_data *mstatus, in
 		entry->dropitem[idx].p = mob->drop_adjust(value, rate_adjust, ratemin, ratemax);
 
 		//calculate and store Max available drop chance of the item
-		if (entry->dropitem[idx].p && (class_ < 1324 || class_ > 1363) && (class_ < 1938 || class_ > 1946))
-		{ //Skip treasure chests.
+		if (entry->dropitem[idx].p
+		 && (class_ < MOBID_TREASURE_BOX1 || class_ > MOBID_TREASURE_BOX40)
+		 && (class_ < MOBID_TREASURE_BOX41 || class_ > MOBID_TREASURE_BOX49)) {
+			//Skip treasure chests.
 			if (id->maxchance == -1 || (id->maxchance < entry->dropitem[idx].p) ) {
 				id->maxchance = entry->dropitem[idx].p; //item has bigger drop chance or sold in shops
 			}
