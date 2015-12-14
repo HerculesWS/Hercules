@@ -6990,7 +6990,7 @@ BUILDIN(checkweight2)
 	TBL_PC *sd = script->rid2sd(st);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	data_it = script_getdata(st, 2);
 	data_nb = script_getdata(st, 3);
@@ -8951,7 +8951,7 @@ BUILDIN(guildskill) {
 
 	sd = script->rid2sd(st);
 	if( sd == NULL )
-		return false; // no player attached, report source
+		return true; // no player attached, report source
 
 	if( (gd = sd->guild) == NULL )
 		return true;
@@ -9049,7 +9049,7 @@ BUILDIN(getgroupid)
 
 	sd = script->rid2sd(st);
 	if (sd == NULL)
-		return false; // no player attached, report source
+		return true; // no player attached, report source
 	script_pushint(st, pc_get_group_id(sd));
 
 	return true;
@@ -9429,7 +9429,7 @@ BUILDIN(savepoint) {
 
 	sd = script->rid2sd(st);
 	if( sd == NULL )
-		return false;// no player attached, report source
+		return true;// no player attached, report source
 
 	str   = script_getstr(st,2);
 	x     = script_getnum(st,3);
@@ -10451,7 +10451,7 @@ BUILDIN(itemeffect) {
 
 	sd = script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 
 	nd = (TBL_NPC *)map->id2bl(sd->npc_id);
 	if( nd == NULL )
@@ -10653,7 +10653,7 @@ BUILDIN(getareausers)
 		TBL_PC *sd = script->rid2sd(st);
 		if (!sd) {
 			script_pushint(st, -1);
-			return false;
+			return true;
 		}
 		m = sd->bl.m;
 	}
@@ -11210,7 +11210,7 @@ BUILDIN(resetstatus)
 	TBL_PC *sd;
 	sd=script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 	pc->resetstate(sd);
 	return true;
 }
@@ -11222,7 +11222,7 @@ BUILDIN(resetskill) {
 	TBL_PC *sd;
 	sd=script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 	pc->resetskill(sd, PCRESETSKILL_RESYNC);
 	return true;
 }
@@ -11234,7 +11234,7 @@ BUILDIN(skillpointcount) {
 	TBL_PC *sd;
 	sd=script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 	script_pushint(st,sd->status.skill_point + pc->resetskill(sd, PCRESETSKILL_RECOUNT));
 	return true;
 }
@@ -11291,7 +11291,7 @@ BUILDIN(changesex)
 {
 	TBL_PC *sd = prepareChangeSex(st);
 	if (sd == NULL)
-		return false;
+		return true;
 	chrif->changesex(sd, true);
 	return true;
 }
@@ -11303,7 +11303,7 @@ BUILDIN(changecharsex)
 {
 	TBL_PC *sd = prepareChangeSex(st);
 	if (sd == NULL)
-		return false;
+		return true;
 	chrif->changesex(sd, false);
 	return true;
 }
@@ -12265,7 +12265,7 @@ BUILDIN(getequipcardcnt)
 	sd=script->rid2sd(st);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	if (num > 0 && num <= ARRAYLENGTH(script->equip))
 		i=pc->checkequip(sd,script->equip[num-1]);
@@ -12301,7 +12301,7 @@ BUILDIN(successremovecards)
 	int num = script_getnum(st,2);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	if (num > 0 && num <= ARRAYLENGTH(script->equip))
 		i=pc->checkequip(sd,script->equip[num-1]);
@@ -12373,7 +12373,7 @@ BUILDIN(failedremovecards)
 	int typefail = script_getnum(st,3);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	if (num > 0 && num <= ARRAYLENGTH(script->equip))
 		i=pc->checkequip(sd,script->equip[num-1]);
@@ -12522,7 +12522,7 @@ BUILDIN(mobcount) {
 		struct map_session_data *sd = script->rid2sd(st);
 
 		if( sd == NULL )
-			return false;
+			return true;
 
 		m = sd->bl.m;
 	} else if( (m = map->mapname2mapid(mapname)) < 0 ) {
@@ -12557,7 +12557,7 @@ BUILDIN(wedding_effect) {
 	struct block_list *bl;
 
 	if( sd == NULL )
-		return false; //bl=map->id2bl(st->oid);
+		return true; //bl=map->id2bl(st->oid);
 
 	bl=&sd->bl;
 	clif->wedding_effect(bl);
@@ -12590,7 +12590,7 @@ BUILDIN(ispartneron) {
 BUILDIN(getpartnerid) {
 	TBL_PC *sd=script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 
 	script_pushint(st,sd->status.partner_id);
 	return true;
@@ -12599,7 +12599,7 @@ BUILDIN(getpartnerid) {
 BUILDIN(getchildid) {
 	TBL_PC *sd=script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 
 	script_pushint(st,sd->status.child);
 	return true;
@@ -12608,7 +12608,7 @@ BUILDIN(getchildid) {
 BUILDIN(getmotherid) {
 	TBL_PC *sd=script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 
 	script_pushint(st,sd->status.mother);
 	return true;
@@ -12617,7 +12617,7 @@ BUILDIN(getmotherid) {
 BUILDIN(getfatherid) {
 	TBL_PC *sd=script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 
 	script_pushint(st,sd->status.father);
 	return true;
@@ -12944,7 +12944,7 @@ BUILDIN(getequipcardid)
 	sd=script->rid2sd(st);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	if (num > 0 && num <= ARRAYLENGTH(script->equip))
 		i=pc->checkequip(sd,script->equip[num-1]);
@@ -13454,7 +13454,7 @@ BUILDIN(skilleffect) {
 	sd=script->rid2sd(st);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	/* ensure we're standing because the following packet causes the client to virtually set the char to stand,
 	 * which leaves the server thinking it still is sitting. */
@@ -13573,7 +13573,7 @@ BUILDIN(atcommand) {
 	if (st->rid) {
 		sd = script->rid2sd(st);
 		if( sd == NULL )
-			return false;
+			return true;
 		fd = sd->fd;
 	} else { //Use a dummy character.
 		sd = dummy_sd = pc->get_dummy_sd();
@@ -13756,7 +13756,7 @@ BUILDIN(checkequipedcard)
 	TBL_PC *sd=script->rid2sd(st);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	c = script_getnum(st,2);
 
@@ -14024,7 +14024,7 @@ BUILDIN(getlook)
 	TBL_PC *sd;
 	sd=script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 
 	type=script_getnum(st,2);
 	val = -1;
@@ -14055,7 +14055,7 @@ BUILDIN(getsavepoint)
 
 	sd = script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 
 	type = script_getnum(st,2);
 
@@ -14324,7 +14324,7 @@ BUILDIN(isequippedcnt)
 
 	sd = script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 
 	for (i=0; id!=0; i++) {
 		script_fetch(st,i+2, id);
@@ -14378,7 +14378,7 @@ BUILDIN(isequipped)
 	sd = script->rid2sd(st);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	setitem_hash = sd->bonus.setitem_hash;
 	setitem_hash2 = sd->bonus.setitem_hash2;
@@ -14457,7 +14457,7 @@ BUILDIN(cardscnt) {
 	sd = script->rid2sd(st);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	for (i=0; id!=0; i++) {
 		script_fetch(st,i+2, id);
@@ -14496,7 +14496,7 @@ BUILDIN(getrefine) {
 
 	sd = script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 
 	script_pushint(st,sd->status.inventory[status->current_equip_item_index].refine);
 	return true;
@@ -15831,7 +15831,7 @@ BUILDIN(callshop)
 	int flag = 0;
 	sd = script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 	shopname = script_getstr(st, 2);
 	if( script_hasdata(st,3) )
 		flag = script_getnum(st,3);
@@ -17147,7 +17147,7 @@ BUILDIN(setquest) {
 	int quest_id;
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	quest_id = script_getnum(st, 2);
 
@@ -17173,7 +17173,7 @@ BUILDIN(erasequest)
 	struct map_session_data *sd = script->rid2sd(st);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	if (script_hasdata(st, 3)) {
 		int quest_id;
@@ -17196,7 +17196,7 @@ BUILDIN(completequest)
 	struct map_session_data *sd = script->rid2sd(st);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	if (script_hasdata(st, 3)) {
 		int quest_id;
@@ -17218,7 +17218,7 @@ BUILDIN(changequest) {
 	struct map_session_data *sd = script->rid2sd(st);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	quest->change(sd, script_getnum(st, 2),script_getnum(st, 3));
 	return true;
@@ -17229,8 +17229,7 @@ BUILDIN(questactive) {
 	int qid, i;
 
 	if (sd == NULL) {
-		ShowError("questactive: no player attached!");
-		return false;
+		return true;
 	}
 
 	qid = script_getnum(st, 2);
@@ -17256,7 +17255,7 @@ BUILDIN(questprogress) {
 	int quest_progress = 0;
 
 	if (sd == NULL)
-		return false;
+		return true;
 
 	if (script_hasdata(st, 3))
 		type = (enum quest_check_type)script_getnum(st, 3);
@@ -18363,7 +18362,7 @@ BUILDIN(sit) {
 		sd = script->rid2sd(st);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	if (!pc_issit(sd))
 	{
@@ -18383,7 +18382,7 @@ BUILDIN(stand) {
 		sd = script->rid2sd(st);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	if (pc_issit(sd))
 	{
@@ -18403,7 +18402,7 @@ BUILDIN(issit) {
 		sd = script->rid2sd(st);
 
 	if( sd == NULL )
-		return false;
+		return true;
 
 	if (pc_issit(sd))
 		script_pushint(st, 1);
@@ -18516,7 +18515,7 @@ BUILDIN(useatcmd) {
 	if( st->rid ) {
 		sd = script->rid2sd(st);
 		if( sd == NULL )
-			return false;
+			return true;
 		fd = sd->fd;
 	} else {
 		// Use a dummy character.
@@ -18708,7 +18707,7 @@ BUILDIN(npcskill) {
 	npc_level   = script_getnum(st, 5);
 
 	if( !(sd = script->rid2sd(st)) )
-		return false;
+		return true;
 
 	nd = (struct npc_data *)map->id2bl(sd->npc_id);
 
@@ -19387,7 +19386,7 @@ BUILDIN(countbound)
 	TBL_PC *sd;
 
 	if( (sd = script->rid2sd(st)) == NULL )
-		return false;
+		return true;
 
 	type = script_hasdata(st,2)?script_getnum(st,2):0;
 
@@ -19424,7 +19423,7 @@ BUILDIN(checkbound)
 
 	sd = script->rid2sd(st);
 	if( sd == NULL )
-		return false;
+		return true;
 
 	if( !(itemdb->exists(nameid)) ){
 		ShowError("script_checkbound: Invalid item ID = %d\n", nameid);
