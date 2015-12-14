@@ -6863,8 +6863,8 @@ ACMD(hommutate) {
 		return false;
 	}
 
-	if (!*message) {
-		homun_id = 6048 + (rnd() % 4);
+	if (*message == '\0') {
+		homun_id = HOMID_EIRA + (rnd() % 4);
 	} else {
 		homun_id = atoi(message);
 	}

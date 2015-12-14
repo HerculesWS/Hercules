@@ -73,23 +73,31 @@ struct view_data* homunculus_get_viewdata(int class_) {
 enum homun_type homunculus_class2type(int class_) {
 	switch(class_) {
 		// Normal Homunculus
-		case 6001: case 6005:
-		case 6002: case 6006:
-		case 6003: case 6007:
-		case 6004: case 6008:
+		case HOMID_LIF:
+		case HOMID_AMISTR:
+		case HOMID_FILIR:
+		case HOMID_VANILMIRTH:
+		case HOMID_LIF2:
+		case HOMID_AMISTR2:
+		case HOMID_FILIR2:
+		case HOMID_VANILMIRTH2:
 			return HT_REG;
 		// Evolved Homunculus
-		case 6009: case 6013:
-		case 6010: case 6014:
-		case 6011: case 6015:
-		case 6012: case 6016:
+		case HOMID_LIF_E:
+		case HOMID_AMISTR_E:
+		case HOMID_FILIR_E:
+		case HOMID_VANILMIRTH_E:
+		case HOMID_LIF2_E:
+		case HOMID_AMISTR2_E:
+		case HOMID_FILIR2_E:
+		case HOMID_VANILMIRTH2_E:
 			return HT_EVO;
 		// Homunculus S
-		case 6048:
-		case 6049:
-		case 6050:
-		case 6051:
-		case 6052:
+		case HOMID_EIRA:
+		case HOMID_BAYERI:
+		case HOMID_SERA:
+		case HOMID_DIETR:
+		case HOMID_ELEANOR:
 			return HT_S;
 		default:
 			return HT_INVALID;
