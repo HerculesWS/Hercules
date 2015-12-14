@@ -272,6 +272,17 @@ enum {
  * Mob IDs
  */
 enum mob_id {
+	MOBID_RED_PLANT        = 1078, ///<        RED_PLANT / Red Plant
+	MOBID_BLUE_PLANT       = 1079, ///<       BLUE_PLANT / Blue Plant
+	MOBID_GREEN_PLANT      = 1080, ///<      GREEN_PLANT / Green Plant
+	MOBID_YELLOW_PLANT     = 1081, ///<     YELLOW_PLANT / Yellow Plant
+	MOBID_WHITE_PLANT      = 1082, ///<      WHITE_PLANT / White Plant
+	MOBID_SHINING_PLANT    = 1083, ///<    SHINING_PLANT / Shining Plant
+	MOBID_BLACK_MUSHROOM   = 1084, ///<   BLACK_MUSHROOM / Black Mushroom
+	MOBID_RED_MUSHROOM     = 1085, ///<     RED_MUSHROOM / Red Mushroom
+
+	MOBID_MARINE_SPHERE    = 1142, ///<    MARINE_SPHERE / Marine Sphere
+
 	MOBID_EMPELIUM         = 1288, ///<         EMPELIUM / Emperium
 
 	MOBID_TREASURE_BOX1    = 1324, ///<    TREASURE_BOX1 / Treasure Chest
@@ -314,6 +325,12 @@ enum mob_id {
 	MOBID_TREASURE_BOX38   = 1361, ///<   TREASURE_BOX38 / Treasure Chest
 	MOBID_TREASURE_BOX39   = 1362, ///<   TREASURE_BOX39 / Treasure Chest
 	MOBID_TREASURE_BOX40   = 1363, ///<   TREASURE_BOX40 / Treasure Chest
+
+	MOBID_G_PARASITE       = 1555, ///<       G_PARASITE / Parasite
+	MOBID_G_FLORA          = 1575, ///<          G_FLORA / Flora
+	MOBID_G_HYDRA          = 1579, ///<          G_HYDRA / Hydra
+	MOBID_G_MANDRAGORA     = 1589, ///<     G_MANDRAGORA / Mandragora
+	MOBID_G_GEOGRAPHER     = 1590, ///<     G_GEOGRAPHER / Geographer
 
 	MOBID_BARRICADE        = 1905, ///<        BARRICADE / Barricade
 	MOBID_BARRICADE_       = 1906, ///<       BARRICADE_ / Barricade

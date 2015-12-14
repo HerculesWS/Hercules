@@ -10520,10 +10520,20 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case AM_SPHEREMINE:
 		case AM_CANNIBALIZE:
 			{
-				int summons[5] = { 1589, 1579, 1575, 1555, 1590 };
-				//int summons[5] = { 1020, 1068, 1118, 1500, 1368 };
-				int class_ = skill_id==AM_SPHEREMINE?1142:summons[skill_lv-1];
 				struct mob_data *md;
+				int class_ = 0;
+				if (skill_id == AM_SPHEREMINE) {
+					class_ = MOBID_MARINE_SPHERE;
+				} else {
+					Assert_retb(skill_lv > 0 && skill_lv <= 5);
+					switch (skill_lv) {
+					case 1: class_ = MOBID_G_MANDRAGORA; break;
+					case 2: class_ = MOBID_G_HYDRA;      break;
+					case 3: class_ = MOBID_G_FLORA;      break;
+					case 4: class_ = MOBID_G_PARASITE;   break;
+					case 5: class_ = MOBID_G_GEOGRAPHER; break;
+					}
+				}
 
 				// Correct info, don't change any of this! [Celest]
 				md = mob->once_spawn_sub(src, src->m, x, y, status->get_name(src), class_, "", SZ_SMALL, AI_NONE);
@@ -10624,7 +10634,8 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 				if (rnd()%100 < 50) {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				} else {
-					TBL_MOB* md = mob->once_spawn_sub(src, src->m, x, y, "--ja--",(skill_lv < 2 ? 1084+rnd()%2 : 1078+rnd()%6),"", SZ_SMALL, AI_NONE);
+					int mob_id = skill_lv < 2 ? MOBID_BLACK_MUSHROOM + rnd()%2 : MOBID_RED_PLANT + rnd()%6;
+					TBL_MOB* md = mob->once_spawn_sub(src, src->m, x, y, "--ja--", mob_id, "", SZ_SMALL, AI_NONE);
 					int i;
 					if (!md) break;
 					if ((i = skill->get_time(skill_id, skill_lv)) > 0)
@@ -14018,10 +14029,22 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 		case AM_CANNIBALIZE:
 		case AM_SPHEREMINE: {
 			int c=0;
-			int summons[5] = { 1589, 1579, 1575, 1555, 1590 };
-			//int summons[5] = { 1020, 1068, 1118, 1500, 1368 };
-			int maxcount = (skill_id==AM_CANNIBALIZE)? 6-skill_lv : skill->get_maxcount(skill_id,skill_lv);
-			int mob_class = (skill_id==AM_CANNIBALIZE)? summons[skill_lv-1] :1142;
+			int maxcount = 0;
+			int mob_class = 0;
+			if (skill_id == AM_CANNIBALIZE) {
+				Assert_retb(skill_lv > 0 && skill_lv <= 5);
+				maxcount = 6-skill_lv;
+				switch (skill_lv) {
+					case 1: mob_class = MOBID_G_MANDRAGORA; break;
+					case 2: mob_class = MOBID_G_HYDRA;      break;
+					case 3: mob_class = MOBID_G_FLORA;      break;
+					case 4: mob_class = MOBID_G_PARASITE;   break;
+					case 5: mob_class = MOBID_G_GEOGRAPHER; break;
+				}
+			} else {
+				maxcount = skill->get_maxcount(skill_id,skill_lv);
+				mob_class = MOBID_MARINE_SPHERE;
+			}
 			if(battle_config.land_skill_limit && maxcount>0 && (battle_config.land_skill_limit&BL_PC)) {
 				i = map->foreachinmap(skill->check_condition_mob_master_sub ,sd->bl.m, BL_MOB, sd->bl.id, mob_class, skill_id, &c);
 				if( c >= maxcount
