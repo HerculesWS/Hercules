@@ -272,6 +272,8 @@ enum {
  * Mob IDs
  */
 enum mob_id {
+	MOBID_HORNET           = 1004, ///<           HORNET / Hornet
+
 	MOBID_RED_PLANT        = 1078, ///<        RED_PLANT / Red Plant
 	MOBID_BLUE_PLANT       = 1079, ///<       BLUE_PLANT / Blue Plant
 	MOBID_GREEN_PLANT      = 1080, ///<      GREEN_PLANT / Green Plant
@@ -284,6 +286,8 @@ enum mob_id {
 	MOBID_MARINE_SPHERE    = 1142, ///<    MARINE_SPHERE / Marine Sphere
 
 	MOBID_EMPELIUM         = 1288, ///<         EMPELIUM / Emperium
+
+	MOBID_GIANT_HONET      = 1303, ///<      GIANT_HONET / Giant Hornet
 
 	MOBID_TREASURE_BOX1    = 1324, ///<    TREASURE_BOX1 / Treasure Chest
 	MOBID_TREASURE_BOX2    = 1325, ///<    TREASURE_BOX2 / Treasure Chest

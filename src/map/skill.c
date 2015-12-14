@@ -9792,18 +9792,27 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 		case MH_SUMMON_LEGION:
 		{
-			int summons[5] = {1004, 1303, 1303, 1994, 1994};
-			int qty[5] =     {3   , 3   , 4   , 4   , 5};
-			struct mob_data *summon_md;
+			struct {
+				int mob_id;
+				int quantity;
+			} summons[5] = {
+				{ MOBID_HORNET,        3 },
+				{ MOBID_GIANT_HONET,   3 },
+				{ MOBID_GIANT_HONET,   4 },
+				{ MOBID_LUCIOLA_VESPA, 4 },
+				{ MOBID_LUCIOLA_VESPA, 5 },
+			};
 			int i, dummy = 0;
+			Assert_retb(skill_lv < ARRAYLENGTH(summons));
 
-			i = map->foreachinmap(skill->check_condition_mob_master_sub, src->m, BL_MOB, src->id, summons[skill_lv-1], skill_id, &dummy);
-			if(i >= qty[skill_lv-1])
+			i = map->foreachinmap(skill->check_condition_mob_master_sub, src->m, BL_MOB, src->id, summons[skill_lv-1].mob_id, skill_id, &dummy);
+			if(i >= summons[skill_lv-1].quantity)
 				break;
 
-			for(i=0; i<qty[skill_lv - 1]; i++){ //easy way
-				summon_md = mob->once_spawn_sub(src, src->m, src->x, src->y, status->get_name(src), summons[skill_lv - 1], "", SZ_SMALL, AI_ATTACK);
-				if (summon_md) {
+			for (i = 0; i < summons[skill_lv-1].quantity; i++) {
+				struct mob_data *summon_md = mob->once_spawn_sub(src, src->m, src->x, src->y, status->get_name(src),
+				                                                 summons[skill_lv-1].mob_id, "", SZ_SMALL, AI_ATTACK);
+				if (summon_md != NULL) {
 					summon_md->master_id = src->id;
 					if (summon_md->deletetimer != INVALID_TIMER)
 						timer->delete(summon_md->deletetimer, mob->timer_delete);
