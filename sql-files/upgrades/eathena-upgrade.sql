@@ -56,7 +56,7 @@ ALTER TABLE `item_db_re` MODIFY COLUMN `atk:matk` VARCHAR(11) DEFAULT '';
 
 ALTER TABLE `item_db_re` MODIFY COLUMN `defence` SMALLINT(5) UNSIGNED DEFAULT NULL;
 
-ALTER TABLE  `homunculus` ADD  `prev_class` MEDIUMINT( 9 ) NOT NULL AFTER  `class`
+ALTER TABLE  `homunculus` ADD  `prev_class` MEDIUMINT( 9 ) NOT NULL AFTER  `class`;
 
 ALTER TABLE `item_db_re` MODIFY `defence` SMALLINT(5) DEFAULT NULL;
 
