@@ -422,6 +422,7 @@ SC_GEFFEN_MAGIC3, 2
 //SC_FENRIR_CARD, ??
 
 SC_OVERLAPEXPUP, 12
+SC_MORA_BUFF, 2
 
 // Guild Auras should not be saved
 SC_LEADERSHIP,78

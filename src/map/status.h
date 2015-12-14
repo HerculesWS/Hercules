@@ -776,6 +776,7 @@ typedef enum sc_type {
 	SC_FOOD_CRITICALSUCCESSVALUE, // 610
 	SC_CUP_OF_BOZA,
 	SC_OVERLAPEXPUP,
+	SC_MORA_BUFF,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;

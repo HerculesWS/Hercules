@@ -272,14 +272,15 @@ struct item_drop_list {
 #define mob_is_treasure(md) (((md)->class_ >= MOBID_TREAS01 && (md)->class_ <= MOBID_TREAS40) || ((md)->class_ >= MOBID_TREAS41 && (md)->class_ <= MOBID_TREAS49))
 
 struct mob_interface {
-	//Dynamic mob database, allows saving of memory when there's big gaps in the mob_db [Skotlex]
-	struct mob_db *db_data[MAX_MOB_DB+1];
+	// Dynamic mob database, allows saving of memory when there's big gaps in the mob_db [Skotlex]
+	struct mob_db *db_data[MAX_MOB_DB + 1];
 	struct mob_db *dummy; //Dummy mob to be returned when a non-existant one is requested.
-	//Dynamic mob chat database
-	struct mob_chat *chat_db[MAX_MOB_CHAT+1];
-	//Defines the Manuk/Splendide mob groups for the status reductions [Epoque]
+	// Dynamic mob chat database
+	struct mob_chat *chat_db[MAX_MOB_CHAT + 1];
+	// Defines the Manuk/Splendide/Mora mob groups for the status reductions [Epoque & Frost]
 	int manuk[8];
 	int splendide[5];
+	int mora[5];
 	/* */
 	int (*init) (bool mimimal);
 	int (*final) (void);

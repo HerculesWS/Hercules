@@ -3044,18 +3044,30 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		// Compressed code, fixed by map.h [Epoque]
 		if (src->type == BL_MOB) {
 			int i;
-			if (sc->data[SC_MANU_DEF])
-				for (i=0;ARRAYLENGTH(mob->manuk)>i;i++)
-					if (mob->manuk[i]==((TBL_MOB*)src)->class_) {
+			if (sc->data[SC_MANU_DEF] != NULL) {
+				for (i = 0; i < ARRAYLENGTH(mob->manuk); i++) {
+					if (mob->manuk[i] == ((TBL_MOB*)src)->class_) {
 						damage -= damage * sc->data[SC_MANU_DEF]->val1 / 100;
 						break;
 					}
-			if (sc->data[SC_SPL_DEF])
-				for (i=0;ARRAYLENGTH(mob->splendide)>i;i++)
-					if (mob->splendide[i]==((TBL_MOB*)src)->class_) {
+				}
+			}
+			if (sc->data[SC_SPL_DEF] != NULL) {
+				for (i = 0; i < ARRAYLENGTH(mob->splendide); i++) {
+					if (mob->splendide[i] == ((TBL_MOB*)src)->class_) {
 						damage -= damage * sc->data[SC_SPL_DEF]->val1 / 100;
 						break;
 					}
+				}
+			}
+			if (sc->data[SC_MORA_BUFF] != NULL) {
+				for (i = 0; i < ARRAYLENGTH(mob->mora); i++) {
+					if (mob->mora[i] == ((TBL_MOB*)src)->class_) {
+						damage -= damage * sc->data[SC_MORA_BUFF]->val1 / 100;
+						break;
+					}
+				}
+			}
 		}
 
 		if((sce=sc->data[SC_ARMOR]) && //NPC_DEFENDER
