@@ -7599,9 +7599,8 @@ BUILDIN(delitem) {
 		int account_id = script_getnum(st,4);
 		sd = script->id2sd(st, account_id); // <account id>
 		if (sd == NULL) {
-			ShowError("script:delitem: player not found (AID=%d).\n", account_id);
 			st->state = END;
-			return false;
+			return true;
 		}
 	} else {
 		sd = script->rid2sd(st);// attached player
@@ -7656,9 +7655,8 @@ BUILDIN(delitem2) {
 		int account_id = script_getnum(st,11);
 		sd = script->id2sd(st, account_id); // <account id>
 		if (sd == NULL) {
-			ShowError("script:delitem2: player not found (AID=%d).\n", account_id);
 			st->state = END;
-			return false;
+			return true;
 		}
 	} else {
 		sd = script->rid2sd(st);// attached player
