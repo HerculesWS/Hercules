@@ -390,6 +390,8 @@ enum mob_id {
 	//...
 	MOBID_LITTLE_FATUM     = 2136, ///<     LITTLE_FATUM / Little Fatum
 	MOBID_MIMING           = 2137, ///<           MIMING / Miming
+
+	MOBID_KO_KAGE          = 2308, ///<          KO_KAGE / Zanzou
 };
 
 // The data structures for storing delayed item drops
