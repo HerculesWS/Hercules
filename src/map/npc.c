@@ -3645,7 +3645,25 @@ void npc_parse_mob2(struct spawn_data* mobspawn)
 	}
 }
 
-const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int *retval) {
+/**
+ * Parses a mob permanent spawn.
+ *
+ * @param[in]  w1       First tab-delimited part of the string to parse.
+ * @param[in]  w2       Second tab-delimited part of the string to parse.
+ * @param[in]  w3       Third tab-delimited part of the string to parse.
+ * @param[in]  w4       Fourth tab-delimited part of the string to parse.
+ * @param[in]  start    Pointer to the beginning of the string inside buffer.
+ *                      This must point to the same buffer as `buffer`.
+ * @param[in]  buffer   Pointer to the buffer containing the script. For
+ *                      single-line mapflags not inside a script, this may be
+ *                      an empty (but initialized) single-character buffer.
+ * @param[in]  filepath Source file path.
+ * @param[out] retval   Pointer to return the success (EXIT_SUCCESS) or failure
+ *                      (EXIT_FAILURE) status. May be NULL.
+ * @return A pointer to the advanced buffer position.
+ */
+const char *npc_parse_mob(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
+{
 	int num, class_, m,x,y,xs,ys, i,j;
 	int mob_lv = -1, ai = -1, size = -1;
 	char mapname[32], mobname[NAME_LENGTH];

@@ -256,7 +256,7 @@ struct npc_interface {
 	int (*do_atcmd_event) (struct map_session_data *sd, const char *command, const char *message, const char *eventname);
 	const char *(*parse_function) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	void (*parse_mob2) (struct spawn_data *mobspawn);
-	const char* (*parse_mob) (char *w1, char *w2, char *w3, char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
+	const char *(*parse_mob) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	const char *(*parse_mapflag) (const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	void (*parse_unknown_mapflag) (const char *name, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval);
 	int (*parsesrcfile) (const char *filepath, bool runOnInit);
