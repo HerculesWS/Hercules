@@ -2630,8 +2630,25 @@ struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short 
 	return nd;
 }
 
-/// Parses a warp npc.
-const char* npc_parse_warp(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int *retval) {
+/**
+ * Parses a warp NPC.
+ *
+ * @param[in]  w1       First tab-delimited part of the string to parse.
+ * @param[in]  w2       Second tab-delimited part of the string to parse.
+ * @param[in]  w3       Third tab-delimited part of the string to parse.
+ * @param[in]  w4       Fourth tab-delimited part of the string to parse.
+ * @param[in]  start    Pointer to the beginning of the string inside buffer.
+ *                      This must point to the same buffer as `buffer`.
+ * @param[in]  buffer   Pointer to the buffer containing the script. For
+ *                      single-line mapflags not inside a script, this may be
+ *                      an empty (but initialized) single-character buffer.
+ * @param[in]  filepath Source file path.
+ * @param[out] retval   Pointer to return the success (EXIT_SUCCESS) or failure
+ *                      (EXIT_FAILURE) status. May be NULL.
+ * @return A pointer to the advanced buffer position.
+ */
+const char *npc_parse_warp(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
+{
 	int x, y, xs, ys, to_x, to_y, m;
 	unsigned short i;
 	char mapname[32], to_mapname[32];
