@@ -3207,14 +3207,43 @@ bool npc_duplicate_sub(struct npc_data *nd, const struct npc_data *snd, int xs, 
 	return false;
 }
 
-/// Duplicate a warp, shop, cashshop or script. [Orcao]
-/// warp: <map name>,<x>,<y>,<facing>%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<spanx>,<spany>
-/// shop/cashshop/npc: -%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<sprite id>
-/// shop/cashshop/npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<sprite id>
-/// npc: -%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>
-/// npc: <map name>,<x>,<y>,<facing>%TAB%duplicate(<name of target>)%TAB%<NPC Name>%TAB%<sprite id>,<triggerX>,<triggerY>
-/// !!Only NPO_ONINIT is available trough options!!
-const char* npc_parse_duplicate(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int options, int *retval) {
+/**
+ * Parses a duplicate warp, shop, cashshop or script NPC. [Orcao]
+ *
+ * Example:
+ * @code
+ * warp:
+ *   <map name>,<x>,<y>,<facing><TAB>duplicate(<name of target>)<TAB><NPC Name><TAB><spanx>,<spany>
+ * shop/cashshop/npc:
+ *   -<TAB>duplicate(<name of target>)<TAB><NPC Name><TAB><sprite id>
+ * shop/cashshop/npc:
+ *   <map name>,<x>,<y>,<facing><TAB>duplicate(<name of target>)<TAB><NPC Name><TAB><sprite id>
+ * npc:
+ *   -<TAB>duplicate(<name of target>)<TAB><NPC Name><TAB><sprite id>,<triggerX>,<triggerY>
+ * npc:
+ *   <map name>,<x>,<y>,<facing><TAB>duplicate(<name of target>)<TAB><NPC Name><TAB><sprite id>,<triggerX>,<triggerY>
+ * @endcode
+ *
+ * @param[in]  w1       First tab-delimited part of the string to parse.
+ * @param[in]  w2       Second tab-delimited part of the string to parse.
+ * @param[in]  w3       Third tab-delimited part of the string to parse.
+ * @param[in]  w4       Fourth tab-delimited part of the string to parse.
+ * @param[in]  start    Pointer to the beginning of the string inside buffer.
+ *                      This must point to the same buffer as `buffer`.
+ * @param[in]  buffer   Pointer to the buffer containing the script. For
+ *                      single-line mapflags not inside a script, this may be
+ *                      an empty (but initialized) single-character buffer.
+ * @param[in]  filepath Source file path.
+ * @param[in]  options  NPC parse/load options (@see enum npc_parse_options).
+ * @param[out] retval   Pointer to return the success (EXIT_SUCCESS) or failure
+ *                      (EXIT_FAILURE) status. May be NULL.
+ * @return A pointer to the advanced buffer position.
+ *
+ * @remark
+ *   Only `NPO_ONINIT` is available trough the options argument.
+ */
+const char *npc_parse_duplicate(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int options, int *retval)
+{
 	int x, y, dir, m, xs = -1, ys = -1;
 	char srcname[128];
 	const char *end;
