@@ -293,7 +293,6 @@ int npc_rr_secure_timeout_timer(int tid, int64 tick, int id, intptr_t data) {
 			sd->st->state = END;
 		sd->state.menu_or_input = 0;
 		sd->npc_menu = 0;
-		clif->scriptmes(sd, sd->npc_id, " ");
 		/**
 		 * This guy's been idle for longer than allowed, close him.
 		 **/
