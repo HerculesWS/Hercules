@@ -1014,7 +1014,6 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_ARMOR_RESIST] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_ATKER_BLOOD] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_WALKSPEED] |= SCB_SPEED;
-	status->dbs->ChangeFlagTable[SC_ITEMSCRIPT] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_TARGET_BLOOD] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_TARGET_ASPD] |= SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_ATKER_ASPD] |= SCB_MAXHP | SCB_ALL;
@@ -2540,12 +2539,6 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 					return 1;
 			}
 		}
-	}
-
-	if( sc->count && sc->data[SC_ITEMSCRIPT] ) {
-		struct item_data *data = itemdb->exists(sc->data[SC_ITEMSCRIPT]->val1);
-		if( data && data->script )
-			script->run_use_script(sd, data, 0);
 	}
 
 	status->calc_pc_additional(sd, opt);
@@ -9494,31 +9487,6 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			if (battle_config.sc_castcancel&bl->type)
 				unit->skillcastcancel(bl, 0);
 			break;
-			/* */
-		case SC_ITEMSCRIPT:
-			if( sd ) {
-				switch( val1 ) {
-					case ITEMID_PHREEONI_CARD:
-						clif->status_change(bl, SI_FOOD_BASICHIT, 1, tick, 0, 0, 0);
-						break;
-					case ITEMID_GHOSTRING_CARD:
-						clif->status_change(bl,SI_ARMOR_PROPERTY,1,tick,0,0,0);
-						break;
-					case ITEMID_TAO_GUNKA_CARD:
-						clif->status_change(bl,SI_MVPCARD_TAOGUNKA,1,tick,0,0,0);
-						break;
-					case ITEMID_MISTRESS_CARD:
-						clif->status_change(bl,SI_MVPCARD_MISTRESS,1,tick,0,0,0);
-						break;
-					case ITEMID_ORC_HERO_CARD:
-						clif->status_change(bl,SI_MVPCARD_ORCHERO,1,tick,0,0,0);
-						break;
-					case ITEMID_ORC_LOAD_CARD:
-						clif->status_change(bl,SI_MVPCARD_ORCLORD,1,tick,0,0,0);
-						break;
-				}
-			}
-			break;
 	}
 
 	// Set option as needed.
@@ -10384,30 +10352,6 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		case SC_MONSTER_TRANSFORM:
 			if( sce->val2 )
 				status_change_end(bl, (sc_type)sce->val2, INVALID_TIMER);
-			break;
-		case SC_ITEMSCRIPT:
-			if( sd ) {
-				switch( sce->val1 ) {
-				case ITEMID_PHREEONI_CARD:
-					clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_FOOD_BASICHIT);
-					break;
-				case ITEMID_GHOSTRING_CARD:
-					clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_ARMOR_PROPERTY);
-					break;
-				case ITEMID_TAO_GUNKA_CARD:
-					clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_TAOGUNKA);
-					break;
-				case ITEMID_MISTRESS_CARD:
-					clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_MISTRESS);
-					break;
-				case ITEMID_ORC_HERO_CARD:
-					clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_ORCHERO);
-					break;
-				case ITEMID_ORC_LOAD_CARD:
-					clif->sc_end(&sd->bl, sd->bl.id, SELF, SI_MVPCARD_ORCLORD);
-					break;
-				}
-			}
 			break;
 		case SC_OVERED_BOOST:
 			switch( bl->type ){
