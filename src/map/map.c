@@ -3912,7 +3912,7 @@ struct map_zone_data *map_merge_zone(struct map_zone_data *main, struct map_zone
 }
 
 void map_zone_change2(int m, struct map_zone_data *zone) {
-	char empty[1] = "\0";
+	char *empty = "";
 
 	if( map->list[m].zone == zone )
 		return;
@@ -3941,7 +3941,7 @@ void map_zone_change(int m, struct map_zone_data *zone, const char* start, const
 void map_zone_remove(int m) {
 	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
 	unsigned short k;
-	char empty[1] = "\0";
+	char *empty = "";
 	for(k = 0; k < map->list[m].zone_mf_count; k++) {
 		size_t len = strlen(map->list[m].zone_mf[k]),j;
 		params[0] = '\0';
@@ -4667,7 +4667,7 @@ bool map_zone_mf_cache(int m, char *flag, char *params) {
 }
 void map_zone_apply(int m, struct map_zone_data *zone, const char* start, const char* buffer, const char* filepath) {
 	int i;
-	char empty[1] = "\0";
+	char *empty = "";
 	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
 	map->list[m].zone = zone;
 	for(i = 0; i < zone->mapflags_count; i++) {
@@ -4693,7 +4693,7 @@ void map_zone_apply(int m, struct map_zone_data *zone, const char* start, const 
 void map_zone_init(void) {
 	char flag[MAP_ZONE_MAPFLAG_LENGTH], params[MAP_ZONE_MAPFLAG_LENGTH];
 	struct map_zone_data *zone;
-	char empty[1] = "\0";
+	char *empty = "";
 	int i,k,j;
 
 	zone = &map->zone_all;
