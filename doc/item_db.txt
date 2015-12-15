@@ -104,8 +104,8 @@ item_db: (
 
 Id: Item id
 
-AegisName: Server name to reference the item in scripts and lookups,
-           should use no spaces.
+AegisName: Server name to reference the item in scripts and lookups.
+           Allowed characters: [A-Za-z0-9_'.]
 
 Name: Name in English for displaying as output for @ and script commands.
 

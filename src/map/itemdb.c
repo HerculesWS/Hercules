@@ -1535,6 +1535,30 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 		return 0;
 	}
 
+	{
+		const char *c = entry->name;
+		while (ISALNUM(*c) || *c == '_' || *c == '\'' || *c == '.')
+			++c;
+
+		if (*c != '\0') {
+			ShowWarning("itemdb_validate_entry: Invalid characters in the AegisName '%s' for item %d om '%s'. Skipping.\n",
+					entry->name, entry->nameid, source);
+			if (entry->script) {
+				script->free_code(entry->script);
+				entry->script = NULL;
+			}
+			if (entry->equip_script) {
+				script->free_code(entry->equip_script);
+				entry->equip_script = NULL;
+			}
+			if (entry->unequip_script) {
+				script->free_code(entry->unequip_script);
+				entry->unequip_script = NULL;
+			}
+			return 0;
+		}
+	}
+
 	if( entry->type < 0 || entry->type == IT_UNKNOWN || entry->type == IT_UNKNOWN2
 	 || (entry->type > IT_DELAYCONSUME && entry->type < IT_CASH ) || entry->type >= IT_MAX
 	) {
