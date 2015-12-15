@@ -11747,9 +11747,9 @@ BUILDIN(setmapflag) {
 			case MF_NOWARPTO:           map->list[m].flag.nowarpto = 1; break;
 			case MF_NIGHTMAREDROP:      map->list[m].flag.pvp_nightmaredrop = 1; break;
 			case MF_ZONE:
-				if( val2 ) {
-					char zone[6] = "zone\0";
-					char empty[1] = "\0";
+				if (val2 != NULL) {
+					const char *zone = "zone";
+					const char *empty = "";
 					char params[MAP_ZONE_MAPFLAG_LENGTH];
 					memcpy(params, val2, MAP_ZONE_MAPFLAG_LENGTH);
 					npc->parse_mapflag(map->list[m].name, empty, zone, params, empty, empty, empty, NULL);
