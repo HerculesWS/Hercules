@@ -11748,8 +11748,8 @@ BUILDIN(setmapflag) {
 			case MF_NIGHTMAREDROP:      map->list[m].flag.pvp_nightmaredrop = 1; break;
 			case MF_ZONE:
 				if( val2 ) {
-					char zone[6] = "zone\0";
-					char empty[1] = "\0";
+					char *zone = "zone";
+					char *empty = "";
 					char params[MAP_ZONE_MAPFLAG_LENGTH];
 					memcpy(params, val2, MAP_ZONE_MAPFLAG_LENGTH);
 					npc->parse_mapflag(map->list[m].name, empty, zone, params, empty, empty, empty, NULL);
