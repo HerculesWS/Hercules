@@ -844,6 +844,12 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_GEFFEN_MAGIC3] = SI_GEFFEN_MAGIC3;
 	status->dbs->IconChangeTable[SC_FENRIR_CARD] = SI_FENRIR_CARD;
 	
+	// MVP Scrolls
+	status->dbs->IconChangeTable[SC_MVPCARD_TAOGUNKA] = SI_MVPCARD_TAOGUNKA;
+	status->dbs->IconChangeTable[SC_MVPCARD_MISTRESS] = SI_MVPCARD_MISTRESS;
+	status->dbs->IconChangeTable[SC_MVPCARD_ORCHERO] = SI_MVPCARD_ORCHERO;
+	status->dbs->IconChangeTable[SC_MVPCARD_ORCLORD] = SI_MVPCARD_ORCLORD;
+	
 	// Mercenary Bonus Effects
 	status->dbs->IconChangeTable[SC_MER_FLEE] = SI_MER_FLEE;
 	status->dbs->IconChangeTable[SC_MER_ATK] = SI_MER_ATK;
@@ -1079,6 +1085,12 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_GEFFEN_MAGIC2] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_GEFFEN_MAGIC3] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_FENRIR_CARD] |= SCB_MATK | SCB_ALL;
+	
+	// MVP Scrolls
+	status->dbs->ChangeFlagTable[SC_MVPCARD_TAOGUNKA] |= SCB_MAXHP | SCB_DEF | SCB_MDEF;
+	status->dbs->ChangeFlagTable[SC_MVPCARD_MISTRESS] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCHERO] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCLORD] |= SCB_ALL;
 	
 	// Costume
 	status->dbs->ChangeFlagTable[SC_MOONSTAR] |= SCB_NONE;
@@ -5133,14 +5145,16 @@ defType status_calc_def(struct block_list *bl, struct status_change *sc, int def
 		def += sc->data[SC_SHIELDSPELL_REF]->val2;
 	if (sc->data[SC_PRESTIGE])
 		def += sc->data[SC_PRESTIGE]->val1;
-	if (sc->data[SC_VOLCANIC_ASH] && (bl->type==BL_MOB)) {
-		if (status_get_race(bl)==RC_PLANT)
+	if (sc->data[SC_VOLCANIC_ASH] && (bl->type == BL_MOB)) {
+		if (status_get_race(bl) == RC_PLANT)
 			def /= 2;
 	}
 	if (sc->data[SC_UNLIMIT])
 		return 1;
 	if (sc->data[SC_ARMORSCROLL])
 		def += sc->data[SC_ARMORSCROLL]->val1;
+	if (sc->data[SC_MVPCARD_TAOGUNKA])
+		def -= sc->data[SC_MVPCARD_TAOGUNKA]->val2;
 
 	return (defType)cap_value(def,DEFTYPE_MIN,DEFTYPE_MAX);
 }
@@ -5271,6 +5285,8 @@ defType status_calc_mdef(struct block_list *bl, struct status_change *sc, int md
 		return 1;
 	if (sc->data[SC_FREYJASCROLL])
 		mdef += sc->data[SC_FREYJASCROLL]->val1;
+	if (sc->data[SC_MVPCARD_TAOGUNKA])
+		mdef -= sc->data[SC_MVPCARD_TAOGUNKA]->val3;
 
 	return (defType)cap_value(mdef,DEFTYPE_MIN,DEFTYPE_MAX);
 }
@@ -5875,6 +5891,8 @@ unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, 
 		maxhp += maxhp * sc->data[SC_SOULSCROLL]->val1 / 100;
 	if (sc->data[SC_ATKER_ASPD])
 		maxhp += maxhp * sc->data[SC_ATKER_ASPD]->val1 / 100;
+	if (sc->data[SC_MVPCARD_TAOGUNKA])
+		maxhp += maxhp * sc->data[SC_MVPCARD_TAOGUNKA]->val1 / 100;
 
 	return (unsigned int)cap_value(maxhp,1,UINT_MAX);
 }
@@ -6483,30 +6501,30 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 	//Status that are blocked by Golden Thief Bug card or Wand of Hermod
 	if (status->isimmune(bl))
 		switch (type) {
-		case SC_DEC_AGI:
-		case SC_SILENCE:
-		case SC_COMA:
-		case SC_INC_AGI:
-		case SC_BLESSING:
-		case SC_SLOWPOISON:
-		case SC_IMPOSITIO:
-		case SC_LEXAETERNA:
-		case SC_SUFFRAGIUM:
-		case SC_BENEDICTIO:
-		case SC_PROVIDENCE:
-		case SC_KYRIE:
-		case SC_ASSUMPTIO:
-		case SC_ANGELUS:
-		case SC_MAGNIFICAT:
-		case SC_GLORIA:
-		case SC_WINDWALK:
-		case SC_MAGICROD:
-		case SC_ILLUSION:
-		case SC_STONE:
-		case SC_QUAGMIRE:
-		case SC_NJ_SUITON:
-		case SC_SWING:
-			return 0;
+			case SC_DEC_AGI:
+			case SC_SILENCE:
+			case SC_COMA:
+			case SC_INC_AGI:
+			case SC_BLESSING:
+			case SC_SLOWPOISON:
+			case SC_IMPOSITIO:
+			case SC_LEXAETERNA:
+			case SC_SUFFRAGIUM:
+			case SC_BENEDICTIO:
+			case SC_PROVIDENCE:
+			case SC_KYRIE:
+			case SC_ASSUMPTIO:
+			case SC_ANGELUS:
+			case SC_MAGNIFICAT:
+			case SC_GLORIA:
+			case SC_WINDWALK:
+			case SC_MAGICROD:
+			case SC_ILLUSION:
+			case SC_STONE:
+			case SC_QUAGMIRE:
+			case SC_NJ_SUITON:
+			case SC_SWING:
+				return 0;
 		}
 
 	sd = BL_CAST(BL_PC,bl);
@@ -6738,9 +6756,11 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 
 	if (sc) {
 		if (sc->data[SC_SCRESIST])
-			sc_def += sc->data[SC_SCRESIST]->val1*100; //Status resist
+			sc_def += sc->data[SC_SCRESIST]->val1 * 100; //Status resist
 		else if (sc->data[SC_SIEGFRIED])
-			sc_def += sc->data[SC_SIEGFRIED]->val3*100; //Status resistance.
+			sc_def += sc->data[SC_SIEGFRIED]->val3 * 100; //Status resistance.
+		if (sc && sc->data[SC_MVPCARD_ORCHERO])
+			sc_def += sc->data[SC_MVPCARD_ORCHERO]->val1 * 100;
 	}
 
 	//When tick def not set, reduction is the same for both.
