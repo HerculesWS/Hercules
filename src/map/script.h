@@ -596,7 +596,7 @@ struct script_interface {
 	FILE *lang_export_fp;
 	char *lang_export_file;/* for lang_export_fp */
 	/* set and unset on npc_parse_script */
-	char *parser_current_npc_name;
+	const char *parser_current_npc_name;
 	/* */
 	int buildin_mes_offset;
 	int buildin_select_offset;
