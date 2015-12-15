@@ -4279,7 +4279,24 @@ const char *npc_parse_mapflag(const char *w1, const char *w2, const char *w3, co
 	return strchr(start,'\n');// continue
 }
 
-const char* npc_parse_unknown_object(char *w1, char *w2, char *w3, char *w4, const char* start, const char* buffer, const char* filepath, int *retval)
+/**
+ * Parses an unknown NPC object. This function may be used as override or hooking point by plugins.
+ *
+ * @param[in]  w1       First tab-delimited part of the string to parse.
+ * @param[in]  w2       Second tab-delimited part of the string to parse.
+ * @param[in]  w3       Third tab-delimited part of the string to parse.
+ * @param[in]  w4       Fourth tab-delimited part of the string to parse.
+ * @param[in]  start    Pointer to the beginning of the string inside buffer.
+ *                      This must point to the same buffer as `buffer`.
+ * @param[in]  buffer   Pointer to the buffer containing the script. For
+ *                      single-line mapflags not inside a script, this may be
+ *                      an empty (but initialized) single-character buffer.
+ * @param[in]  filepath Source file path.
+ * @param[out] retval   Pointer to return the success (EXIT_SUCCESS) or failure
+ *                      (EXIT_FAILURE) status. May be NULL.
+ * @return A pointer to the advanced buffer position.
+ */
+const char *npc_parse_unknown_object(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
 {
 	ShowError("npc_parsesrcfile: Unable to parse, probably a missing or extra TAB in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 	start = strchr(start,'\n');// skip and continue
