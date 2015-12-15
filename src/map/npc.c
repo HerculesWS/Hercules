@@ -3705,19 +3705,47 @@ const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const char* st
 	return strchr(start,'\n');// continue
 }
 
-void npc_parse_unknown_mapflag(const char *name, char *w3, char *w4, const char* start, const char* buffer, const char* filepath, int *retval)
+/**
+ * Parses an unknown mapflag.
+ *
+ * The purpose of this function is to be an override or hooking point for plugins.
+ *
+ * @see npc_parse_mapflag
+ */
+void npc_parse_unknown_mapflag(const char *name, const char *w3, const char *w4, const char* start, const char* buffer, const char* filepath, int *retval)
 {
 	ShowError("npc_parse_mapflag: unrecognized mapflag '%s' in file '%s', line '%d'.\n", w3, filepath, strline(buffer,start-buffer));
 	if (retval)
 		*retval = EXIT_FAILURE;
 }
 
-/*==========================================
- * Set or disable mapflag on map
- * eg : bat_c01<TAB>mapflag<TAB>battleground<TAB>2
- * also chking if mapflag conflict with another
- *------------------------------------------*/
-const char* npc_parse_mapflag(char* w1, char* w2, char* w3, char* w4, const char* start, const char* buffer, const char* filepath, int *retval) {
+/**
+ * Parses a mapflag and sets or disables it on a map.
+ *
+ * @remark
+ *   This also checks if the mapflag conflicts with another.
+ *
+ * Example:
+ * @code
+ *   bat_c01<TAB>mapflag<TAB>battleground<TAB>2
+ * @endcode
+ *
+ * @param[in]  w1       First tab-delimited part of the string to parse.
+ * @param[in]  w2       Second tab-delimited part of the string to parse.
+ * @param[in]  w3       Third tab-delimited part of the string to parse.
+ * @param[in]  w4       Fourth tab-delimited part of the string to parse.
+ * @param[in]  start    Pointer to the beginning of the string inside buffer.
+ *                      This must point to the same buffer as `buffer`.
+ * @param[in]  buffer   Pointer to the buffer containing the script. For
+ *                      single-line mapflags not inside a script, this may be
+ *                      an empty (but initialized) single-character buffer.
+ * @param[in]  filepath Source file path.
+ * @param[out] retval   Pointer to return the success (EXIT_SUCCESS) or failure
+ *                      (EXIT_FAILURE) status. May be NULL.
+ * @return A pointer to the advanced buffer position.
+ */
+const char *npc_parse_mapflag(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
+{
 	int16 m;
 	char mapname[32];
 	int state = 1;
