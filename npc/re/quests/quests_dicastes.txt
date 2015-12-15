@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Gennosuke Kouga, Muad_Dib
 //===== Current Version: =====================================
-//= 2.4
+//= 2.5
 //===== File Encoding ========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //===== Description: =========================================
@@ -34,6 +34,7 @@
 //= 2.2 Added Izlude duplicates. [Euphy]
 //= 2.3 Added GM management NPCs. [Euphy]
 //= 2.4 Corrected NPC Location. [Dastgir]
+//= 2.5 Fixed Incorrect variable. [Frost]
 //============================================================
 
 // Entrance
@@ -357,7 +358,7 @@ OnEnable:
 		mes "- Cannot communicate with him. -";
 		close;
 	}
-	if (ep13_3_invite < 4) {
+	if (ep13_3_invite < 5) {
 		mes "[Capital City Guard]";
 		mes "Access to the city is restricted from other races without permits.";
 		mes "Please go back.";
