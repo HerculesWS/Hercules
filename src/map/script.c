@@ -751,14 +751,22 @@ const char* script_skip_space(const char* p)
 	return p;
 }
 
-/// Skips a word.
-/// A word consists of undercores and/or alphanumeric characters,
-/// and valid variable prefixes/postfixes.
-const char* skip_word(const char* p)
+/**
+ * Skips a word.
+ *
+ * A word consists of an optional variable prefix (`@`, `#`, `'`, `.`, `$`,
+ * `.@`, `$@`), followed by a sequence of uppercase or lowercase letters,
+ * numbers, underscores `_`, apostrophes `'` or periods `.`, followed by an
+ * optional variable suffix (`$`).
+ *
+ * @param p The buffer to parse.
+ * @return A pointer to the new buffer position.
+ */
+const char *skip_word(const char *p)
 {
 	nullpo_retr(NULL, p);
 	// prefix
-	switch( *p ) {
+	switch (*p) {
 		case '@':// temporary char variable
 			++p; break;
 		case '#':// account variable
@@ -771,11 +779,11 @@ const char* skip_word(const char* p)
 			p += ( p[1] == '@' ? 2 : 1 ); break;
 	}
 
-	while( ISALNUM(*p) || *p == '_' || *p == '\'' )
+	while (ISALNUM(*p) || *p == '_' || *p == '\'' || *p == '.')
 		++p;
 
-	// postfix
-	if( *p == '$' )// string
+	// suffix
+	if (*p == '$')// string
 		p++;
 
 	return p;
