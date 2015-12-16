@@ -804,6 +804,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_PLUSMAGICPOWER] = SI_PLUSMAGICPOWER;
 	status->dbs->IconChangeTable[SC_FOOD_CRITICALSUCCESSVALUE] = SI_FOOD_CRITICALSUCCESSVALUE;
 	status->dbs->IconChangeTable[SC_MORA_BUFF] = SI_MORA_BUFF;
+	status->dbs->IconChangeTable[SC_BUCHEDENOEL] = SI_BUCHEDENOEL;
 
 	// Cash Items
 	status->dbs->IconChangeTable[SC_FOOD_STR_CASH] = SI_FOOD_STR_CASH;
@@ -999,6 +1000,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_ATKER_MOVESPEED] |= SCB_MAXSP | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_FOOD_CRITICALSUCCESSVALUE] |= SCB_CRI;
 	status->dbs->ChangeFlagTable[SC_CUP_OF_BOZA] |= SCB_VIT | SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_BUCHEDENOEL] |= SCB_REGEN | SCB_HIT | SCB_CRI;
 	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] = SCB_STR;
@@ -3436,6 +3438,10 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 		regen->rate.hp += regen->rate.hp * sc->data[SC_ATKER_ASPD]->val2 / 100;
 	if (sc->data[SC_ATKER_MOVESPEED])
 		regen->rate.sp += regen->rate.sp * sc->data[SC_ATKER_MOVESPEED]->val2 / 100;
+	if (sc->data[SC_BUCHEDENOEL]) {
+		regen->rate.hp += regen->rate.hp * sc->data[SC_BUCHEDENOEL]->val1 / 100;
+		regen->rate.sp += regen->rate.sp * sc->data[SC_BUCHEDENOEL]->val2 / 100;
+	}
 }
 /// Recalculates parts of an object's battle status according to the specified flags.
 /// @param flag bitfield of values from enum scb_flag
@@ -4871,6 +4877,8 @@ signed short status_calc_critical(struct block_list *bl, struct status_change *s
 		critical -= critical * sc->data[SC__UNLUCKY]->val2 / 100;
 	if(sc->data[SC_BEYOND_OF_WARCRY])
 		critical += 10 * sc->data[SC_BEYOND_OF_WARCRY]->val3;
+	if (sc->data[SC_BUCHEDENOEL])
+		critical += sc->data[SC_BUCHEDENOEL]->val4;
 
 	return (short)cap_value(critical,10,SHRT_MAX);
 }
@@ -4921,10 +4929,12 @@ signed short status_calc_hit(struct block_list *bl, struct status_change *sc, in
 		hit -= hit * 20 / 100;
 	if (sc->data[SC_VOLCANIC_ASH])
 		hit /= 2;
-	if(sc->data[SC_ILLUSIONDOPING])
+	if (sc->data[SC_ILLUSIONDOPING])
 		hit -= hit * (5 + sc->data[SC_ILLUSIONDOPING]->val1) / 100; //custom
 	if (sc->data[SC_ACARAJE])
 		hit += sc->data[SC_ACARAJE]->val1;
+	if (sc->data[SC_BUCHEDENOEL])
+		hit += sc->data[SC_BUCHEDENOEL]->val3;
 		
 	return (short)cap_value(hit,1,SHRT_MAX);
 }
