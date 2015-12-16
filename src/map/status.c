@@ -3050,7 +3050,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		if (sc->data[SC_CUP_OF_BOZA])
 			sd->subele[ELE_FIRE] += sc->data[SC_CUP_OF_BOZA]->val2;
 		if (sc->data[SC_PHI_DEMON]) {
-			sd->right_weapon.addrace[RC_DEMON] += sc->data[SC_PHI_DEMON]->val1;;
+			sd->right_weapon.addrace[RC_DEMON] += sc->data[SC_PHI_DEMON]->val1;
 			sd->left_weapon.addrace[RC_DEMON] += sc->data[SC_PHI_DEMON]->val2;
 		}
 	}
