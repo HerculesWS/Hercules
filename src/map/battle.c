@@ -5824,7 +5824,7 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 
 					if (tsd)
 						battle->drain(tsd, src, rdamage, rdamage, status_get_race(src), 0);
-						battle->delay_damage(tick, wd->amotion, target, src, 0, CR_REFLECTSHIELD, 0, rdamage, ATK_DEF, rdelay, true);
+					battle->delay_damage(tick, wd->amotion, target, src, 0, CR_REFLECTSHIELD, 0, rdamage, ATK_DEF, rdelay, true);
 
 					delay += 100;
 				}
