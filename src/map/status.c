@@ -4878,7 +4878,7 @@ signed short status_calc_critical(struct block_list *bl, struct status_change *s
 	if(sc->data[SC_BEYOND_OF_WARCRY])
 		critical += 10 * sc->data[SC_BEYOND_OF_WARCRY]->val3;
 	if (sc->data[SC_BUCHEDENOEL])
-		critical += sc->data[SC_BUCHEDENOEL]->val4;
+		critical += critical * sc->data[SC_BUCHEDENOEL]->val4 / 100;
 
 	return (short)cap_value(critical,10,SHRT_MAX);
 }
