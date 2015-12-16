@@ -4381,6 +4381,7 @@ int pc_search_inventory(struct map_session_data *sd, int item_id) {
 int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_log_pick_type log_type)
 {
 	struct item_data *data;
+	struct item_data *originalitem = NULL;
 	int i;
 	unsigned int w;
 
@@ -4393,6 +4394,8 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
 		return 5;
 
 	data = itemdb->search(item_data->nameid);
+	if (script->current_item_id)
+		originalitem = itemdb->search(script->current_item_id);
 
 	if( data->stack.inventory && amount > data->stack.amount )
 	{// item stack limitation
@@ -4461,7 +4464,7 @@ int pc_additem(struct map_session_data *sd,struct item *item_data,int amount,e_l
 		clif->additem(sd,i,amount,0);
 	}
 
-	if( ( !itemdb->isstackable2(data) || data->flag.force_serial || data->type == IT_CASH) && !item_data->unique_id )
+	if( ( !itemdb->isstackable2(data) || data->flag.force_serial || data->type == IT_CASH || (originalitem && originalitem->type == IT_CASH) ) && !item_data->unique_id )
 			sd->status.inventory[i].unique_id = itemdb->unique_id(sd);
 
 	logs->pick_pc(sd, log_type, amount, &sd->status.inventory[i],sd->inventory_data[i]);
