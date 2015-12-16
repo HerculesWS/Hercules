@@ -4562,6 +4562,32 @@ void HP_console_display_title(void) {
 	}
 	return;
 }
+void HP_console_display_gplnotice(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_console_display_gplnotice_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_console_display_gplnotice_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_console_display_gplnotice_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.console.display_gplnotice();
+	}
+	if( HPMHooks.count.HP_console_display_gplnotice_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_console_display_gplnotice_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_console_display_gplnotice_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 /* core */
 void HP_core_shutdown_callback(void) {
 	int hIndex = 0;
