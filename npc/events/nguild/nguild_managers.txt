@@ -1,26 +1,44 @@
-//===== Hercules Script ======================================
-//= War of Emperium Managers for N Guild Castles
-//===== By: ==================================================
-//= kobra_k88
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//==============================================
-//= Break down of arguments used in the function:
-//=   arg(0): name of Castle Manager
-//=   arg(1): name of guild castle.
-//=   arg(2): x1 coordinate for warp to treasure room
-//=   arg(3): y1 coordinate for warp to treasure room
-//=   arg(4): guild script suffix for kafra, etc.
-//===== Additional Comments: =================================
-//= 1.0 Based off existing guild scripts.  Do not know if it is accurate.[kobra_k88]
-//= 1.1 Added modified guild manager function. [L0ne_W0lf]
-//= 	Removed guardian summoning.
-//= 1.2 Corrected function name. (bugreport:1728) [L0ne_W0lf]
-//============================================================
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= War of Emperium Managers for N Guild Castles
+//================= Description ===========================================
+//= War of Emperium Managers for Novice Guild Castles
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-//==============================================
+// Arguments:
+// - 0: name of Castle Manager
+// - 1: name of guild castle.
+// - 2: x1 coordinate for warp to treasure room
+// - 3: y1 coordinate for warp to treasure room
+// - 4: guild script suffix for kafra, etc.
 function	script	F_GldManager	{
 
 	@GID = getcastledata(getarg(1),1);
@@ -129,28 +147,28 @@ function	script	F_GldManager	{
 	}
 }
 
-// Castle 1 ==================================================================================
+//== Castle 1 ==============================================
 nguild_alde,218,175,0	script	Frolo	1_M_JOBTESTER,{
 	callfunc "F_GldManager","Frolo","nguild_alde",119,223,"N01";
 	close;
 }
 
 
-// Castle 2 ==================================================================================
+//== Castle 2 ==============================================
 nguild_gef,40,48,5	script	Leiber	1_M_JOBTESTER,{
 	callfunc "F_GldManager","Leiber","nguild_gef",155,112,"N02";
 	close;
 }
 
 
-// Castle 3 ==================================================================================
+//== Castle 3 ==============================================
 nguild_pay,120,58,4	script	Dundar	1_M_JOBTESTER,{
 	callfunc "F_GldManager","Dundar","nguild_pay",290,7,"N03";
 	close;
 }
 
 
-// Castle 4 ==================================================================================
+//== Castle 4 ==============================================
 nguild_prt,112,181,0	script	Thefton	1_M_JOBTESTER,{
 	callfunc "F_GldManager","Thefton","nguild_prt",15,209,"N04";
 	close;

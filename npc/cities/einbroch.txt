@@ -1,34 +1,43 @@
-//===== Hercules Script ======================================
-//= Einbroch Town
-//===== By: ==================================================
-//= Everybody mentioned in the comments
-//===== Current Version: =====================================
-//= 1.7
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//===== Additional Comments: =================================
-//= 0.2 Added some NPCs [MasterOfMuppets]
-//= 0.3 Added a few npcs by reddozen [MasterOfMuppets]
-//= 0.4 Added a crappy quest, have fun guys... [MasterOfMuppets]
-//= 0.4a Added exp bonus for the factory quest, borrowed from a Korean fansite.
-//= 0.4b Added missing close [Komurka]
-//= 0.5 Added Temporal Locations of Gunslinger Job Change map.
-//=     Info provided by RockmanEXE [erKURITA]
-//= 0.6 Implemented a crap quest [MasterOfMuppets]
-//= 0.7 Implemented an inn NPC [MasterOfMuppets]
-//= 0.8 Implemented the Shinokas quest, thanks to [MasterOfMuppets]
-//=      Dj-Yhn for scripting it.
-//= 0.9 Removed Duplicates [Silent]
-//= 1.0 Implemented the Lover's quest. [MasterOfMuppets]
-//= 1.1 Split quests into quests/cities_einbroch.txt [Evera]
-//= 1.2 Split more quests into above file [Evera]
-//= 1.3 Added (finally) the Garrison quest npc [erKURITA]
-//= 1.4 Implemented the polution script. [MasterOfMuppets]
-//= 1.5 Updated Hotel Employee to work with Airship Ticket Quest [Samuray22]
-//= 1.6 Optimized several NPCs [DZeroX]
-//= 1.7 Replaced outdated variable with getarg. [L0ne_W0lf]
-//= 1.8 Fixed Occurances of PcName. [L0ne_W0lf]
-//============================================================
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  DZeroX
+//= Copyright (C)  Samuray22
+//= Copyright (C)  Evera
+//= Copyright (C)  Silent
+//= Copyright (C)  erKURITA
+//= Copyright (C)  Komurka
+//= Copyright (C)  MasterOfMuppets
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Einbroch Town
+//================= Description ===========================================
+//= Einbroch Town NPCs
+//================= Current Version =======================================
+//= 1.7
+//=========================================================================
 
 einbroch,218,198,5	script	Mark#ein	4_M_EINMAN,{
 	callfunc "EinTower","Mark";

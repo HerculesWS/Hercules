@@ -1,7 +1,23 @@
-// Copyright (c) Hercules Dev Team, licensed under GNU GPL.
-// See the LICENSE file
-// Portions Copyright (c) Athena Dev Teams
-
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C)  Athena Dev Teams
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #define HERCULES_CORE
 
 #include "config/core.h" // CONSOLE_INPUT, MAX_CONSOLE_INPUT
@@ -75,6 +91,16 @@ void display_title(void) {
 	ShowInfo("Compiled with %s\n", sysinfo->compiler());
 	ShowInfo("Compile Flags: %s\n", sysinfo->cflags());
 }
+
+/**
+ * Shows a license notice as per GNU GPL recommendation.
+ */
+void display_gplnotice(void)
+{
+	ShowInfo("Hercules, Copyright (C) 2012-2015, Hercules Dev Team and others.\n");
+	ShowInfo("Licensed under the GNU General Public License, version 3 or later.\n");
+}
+
 #ifdef CONSOLE_INPUT
 int console_parse_key_pressed(void)
 {
@@ -532,6 +558,7 @@ void console_defaults(void)
 	console->init = console_init;
 	console->final = console_final;
 	console->display_title = display_title;
+	console->display_gplnotice = display_gplnotice;
 #ifdef CONSOLE_INPUT
 	console->input = &console_input_s;
 	console->input->parse_init = console_parse_init;

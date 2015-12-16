@@ -1,56 +1,55 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  SinSloth
+//= Copyright (C)  Samuray22
+//= Copyright (C)  Evera
+//= Copyright (C)  Silent
+//= Copyright (C)  Lupus
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Prontera
-//===== By: ==================================================
-//= kobra_k88; L0ne_W0lf
-//===== Current Version: =====================================
-//= 2.9
-//===== Description: =========================================
+//================= Description ===========================================
 //= Collection of Prontera-based quests.
-//= * Culvert Access
-//= * Ph.D Hat Quest
-//= * Gaebolg Family Curse
-//===== Comments: ============================================
+//= - Culvert Access
+//= - Ph.D Hat Quest
+//= - Gaebolg Family Curse
+//================= Current Version =======================================
+//= 2.9
+//================= Variables Used ========================================
 //= Culvert Access:
-//= - [Official Conversion]
-//= - Variable in use: MISC_QUEST (bit 8)
+//= - MISC_QUEST (bit 8)
 //= Ph.D Hat Quest:
-//= - [Official Conversion]
 //= - n/a
 //= Gaebolg Family Curse:
-//= - [Official Conversion]
-//= - Variable in use: prt_curse (max 61)
-//===== Additional Comments: =================================
-//= Fixed flower name Dreamy -> Illusion
-//= 1.2 Fixed exploit [Lupus]
-//= 1.3 Removed Duplicates [Silent]
-//= 1.4 Moved Culvert from cities/prontera.txt [Evera]
-//= 1.5 Culvert has been rescripted from the ground up. [L0ne_W0lf]
-//= 1.6 Added Gaebolg Family Curse quest. [L0ne_W0lf]
-//= 1.6a Fixed a couple spelling mistakes. [L0ne_W0lf]
-//= 1.7 Updated "Ph.D Quest" Dialogs. [Samuray22]
-//= 1.7b Fixed some minor typos. [SinSloth]
-//= 1.7c replaced item "names" with item id. [Lupus]
-//= 1.8 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 1.9 Fixed "him" -> "her" in Ph.D hat quest. THansk to yyCC. [L0ne_W0lf]
-//= 2.0 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 2.0a Corrected a Typo error ";;". [Samuray22]
-//= 2.0b Corrected a Typo error. (bugreport:950) [Samuray22]
-//= 2.1 Added missing checkweights. [L0ne_W0lf]
-//= 2.2 Added Nameless Island quest addition. [L0ne_W0lf]
-//= 2.3 Bamph will now talk to those who failed the Gaebolg quest. [L0ne_W0lf]
-//= 2.3a Touch up to Bamph fo other fail-points. [L0ne_W0lf]
-//= 2.3b Hopefully the last change needed for Nameless quest. [L0ne_W0lf]
-//= 2.4 Updated Headgear Quest. [L0ne_W0lf]
-//= 2.5 Fixed requirements for PH D. Hat. [L0ne_W0lf]
-//= 2.5a Fixed requirements for PH D. Hat agian lol. [L0ne_W0lf]
-//= 2.6 Replaced effect numerics with constants. [L0ne_W0lf]
-//= 2.7 Corrected 'IProntera' typo. (bugreport:4522) [L0ne_W0lf]
-//= 2.8 Updated RE/Pre-RE EXP. [Euphy]
-//= 2.9 Updated Nameless Island addition and added questlog support. [Euphy]
-//============================================================
+//= - prt_curse (max 61)
+//=========================================================================
 
-// Prontera Culvert :: prt_npc
-//============================================================
+//== Prontera Culvert :: prt_npc ===========================
 prt_in,88,105,2	script	Recruiter	8W_SOLDIER,{
 	if (MISC_QUEST & 8) {
 		mes "[Recruiter]";
@@ -164,8 +163,7 @@ prt_fild05,270,212,5	script	Culvert Guardian	8W_SOLDIER,{
 	close;
 }
 
-// Ph.D Hat Quest :: npc_6cript
-//============================================================
+//== Ph.D Hat Quest :: npc_6cript ==========================
 prt_in,38,108,4	script	Teacher	1_M_INNKEEPER,{
 	if ((countitem(710) > 0) && (countitem(703) > 0) && (countitem(704) > 0) && (countitem(708) > 0)) {
 		mes "[Teacher]";
@@ -248,8 +246,7 @@ prt_in,38,108,4	script	Teacher	1_M_INNKEEPER,{
 	}
 }
 
-// Gaebolg Family Curse :: prt_curse
-//============================================================
+//== Gaebolg Family Curse :: prt_curse =====================
 prontera,248,212,3	script	Busy Boy#prt	4_M_KID1,3,3,{
 	callsub S_CheckWeight; //Check Player's weight
 	if (BaseLevel > 59) {

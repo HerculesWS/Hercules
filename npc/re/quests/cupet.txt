@@ -1,17 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Z3RO
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Cute Pet Manager
-//===== By: ==================================================
-//= Z3R0
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Exchanges Hunted Items for Tames
-//===== Additional Comments: =================================
-//= 1.0 First / Optimized Version
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-// 1st NPC
+//== 1st NPC ===============================================
 -	script	CPM1	4_M_ALCHE_C,{
 	.@npc$ = "[Cute Pet Manager]";
 
@@ -39,7 +60,7 @@
 	callfunc "cute_pet_manager",.@tame_id,.@tame_amount,.@hunt_id,.@hunt_amount,.@mob_id,cpm_one,.@tame_gets,.@hunt_id2,.@hunt_amount2;
 }
 
-// 2nd NPC
+//== 2nd NPC ===============================================
 -	script	CPM2	4_M_ALCHE_C,{
 	.@npc$ = "[Cute Pet Manager]";
 
@@ -68,7 +89,7 @@
 	callfunc "cute_pet_manager",.@tame_id,.@tame_amount,.@hunt_id,.@hunt_amount,.@mob_id,cpm_two,.@tame_gets,.@hunt_id2,.@hunt_amount2;
 }
 
-// 3rd NPC
+//== 3rd NPC ===============================================
 -	script	CPM3	4_M_ALCHE_C,{
 	.@npc$ = "[Cute Pet Manager]";
 
@@ -200,7 +221,7 @@ function	script	cute_pet_manager	{
 	}
 }
 
-// NPC Duplicates
+//== NPC Duplicates ========================================
 prontera,67,212,5	duplicate(CPM1)	Cute Pet Manager#1	4_M_ALCHE_C
 prontera,242,92,3	duplicate(CPM2)	Cute Pet Manager#2	4_M_ALCHE_C
 prontera,179,92,3	duplicate(CPM3)	Cute Pet Manager#3	4_M_ALCHE_C

@@ -1,25 +1,47 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Mora Quest NPCs
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.1
-//===== File Encoding ========================================
+//================= File Encoding =========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//===== Description: =========================================
-//= [Official Conversion]
+//= -If the encoding is correct, the next three lines have the same length-
+//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
+//= ============ ============================================= ============
+//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
+//================= Description ===========================================
 //= Quest NPCs related to Mora:
-//== Theore's Request, Chesire's New Day,
-//== Helping Lope and Euridi, Mora Daily Quests,
-//== Find the Research Tools, Knights of the Neighborhood
-//===== Additional Comments: =================================
-//= 0.1 NPCs are currently placeholders. [Euphy]
-//= 1.0 Implemented all official quests. [Euphy]
-//= 1.1 Added GM management function and NPCs. [Euphy]
-//============================================================
+//= - Theore's Request, Chesire's New Day,
+//= - Helping Lope and Euridi, Mora Daily Quests,
+//= - Find the Research Tools, Knights of the Neighborhood
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
-// Theore's Request :: ep14_1_bs
-//============================================================
+//== Theore's Request :: ep14_1_bs =========================
 mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 	if (BaseLevel < 100) {
 		mes "- A person with a white gown -";
@@ -1460,8 +1482,7 @@ sec_in02,35,175,0	script	Theore Set Guid	4_F_FAIRYKID,{
 	}
 }
 
-// Chesire's New Day :: ep14_1_cheshir2
-//============================================================
+//== Chesire's New Day :: ep14_1_cheshir2 ==================
 dic_in01,262,191,0	script	#ep14_1_xq02	HIDDEN_WARP_NPC,0,3,{
 	end;
 OnTouch:
@@ -1952,8 +1973,7 @@ OnTimer600000:
 	end;
 }
 
-// Helping Lope and Euridi :: ep14_1_rofe
-//============================================================
+//== Helping Lope and Euridi :: ep14_1_rofe ================
 mora,117,66,3	script	Euridi#pa	4_F_MORAFINE2,{
 	if (BaseLevel < 100) {
 		mes "[Euridi]";
@@ -2506,8 +2526,7 @@ OnTouch:
 	}
 }
 
-// Find the Research Tools :: ep14_1_muk
-//============================================================
+//== Find the Research Tools :: ep14_1_muk =================
 mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
 		mes "^FF0000- Warning message -";
@@ -4356,8 +4375,7 @@ bif_fild02,65,109,0	duplicate(#mora_puddle)	Puddle#ep14_muk02	CLEAR_NPC
 bif_fild02,223,71,0	duplicate(#mora_puddle)	Puddle#ep14_muk03	CLEAR_NPC
 bif_fild02,113,340,0	duplicate(#mora_puddle)	Puddle#ep14_muk04	CLEAR_NPC
 
-// Mora Daily Quests :: ep14_1_dealer
-//============================================================
+//== Mora Daily Quests :: ep14_1_dealer ====================
 mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 	if (checkweight(1201,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
@@ -5098,8 +5116,7 @@ sec_in02,29,34,5	script	Initializing Mora Sanjo	4_MAN_NITT,{
 	}
 }
 
-// Mora Daily Quests - Souls :: md_cadaver_in
-//============================================================
+//== Mora Daily Quests - Souls :: md_cadaver_in ============
 // callfunc "mora_remains",<quest ID>,<NPC name>,<Mora Coin amount>,<reward ID>,<max reward amount>;
 function	script	mora_remains	{
 	if (MaxWeight - Weight < 1000) {
@@ -5136,8 +5153,7 @@ function	script	mora_remains	{
 1@mist,170,54,0	script	Tsaihokin's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12251,"Tsaihokin",2,929,5; }	//Immortal_Heart
 1@mist,118,43,0	script	Tuar's Remains#33	CLEAR_NPC,{ callfunc "mora_remains",12252,"Tuar",3,6380,20; }	//Mora_Coin
 
-// Knights of the Neighborhood :: ep14_1_mora_knight
-//============================================================
+//== Knights of the Neighborhood :: ep14_1_mora_knight =====
 mora,118,166,6	script	Knights Chief#mo	4_F_RAFLE_VI,{
 	mes "[Order of the Knights Chief]";
 	mes "We are the legendary order of the Neighborhood Knights, founded just five minutes ago!";

@@ -1,20 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Morroc Quest NPCs
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quest NPCs related to Morroc.
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//= 1.0a Gathered remaining dialogues. [Euphy]
-//= 1.1 Added new warpers for Satan Morroc maps. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
-// Resurrection of Satan Morroc
-// ============================================================
+//== Resurrection of Satan Morroc ==========================
 -	script	Continental Guard#man	-1,{
 	mes "[Continental Guard]";
 	mes "We've received orders from Headquarters to block access to this area since an unusual space-time phenomenon has been detected.";
@@ -47,8 +65,7 @@ moc_fild16,124,381,4	duplicate(Continental Guard#man)	Continental Guard#man7	4_M
 moc_fild16,333,380,4	duplicate(Continental Guard#man)	Continental Guard#man8	4_M_EIN_SOLDIER
 moc_fild01,84,19,1	duplicate(Continental Guard#man)	Continental Guard#man9	4_M_EIN_SOLDIER
 
-// Pyramids Nightmare Mode
-//============================================================
+//== Pyramids Nightmare Mode ===============================
 moc_prydb1,103,54,3	script	Suspicious Cat#night	4_CAT_SAILOR4,{
 	mes "[Suspicious Cat]";
 	mes "I can't believe a mummy could do this to me. Oh man, it hurts. Nobody should find out about this....";

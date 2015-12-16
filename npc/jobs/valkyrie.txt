@@ -1,42 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Silent
+//= Copyright (C)  Vicious
+//= Copyright (C)  Silentdragon
+//= Copyright (C)  Mass Zero
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Lupus
+//= Copyright (C)  Poki
+//= Copyright (C)  Nana
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Valkyrie Realm
-//===== By: ==================================================
-//= Nana, fixes by Poki
-//= finished, optimized and tested by Lupus
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 3.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Quest to become a Tranceded Class. (Advanced/Rebirthed)
-//===== Additional Comments: =================================
-//= 1.1 Made all into functions,additional checks,quest skills,now Valhallana can return you back. She also makes reborn process only when you got no Zeny/items (as in kRO) [Lupus]
-//= 1.2 now alternative classes can use their 1-1 job NPC to become Advanced 1st Class [Lupus]
-//= 1.4 added Baby Class support [Lupus]
-//= 1.5 Fixed loads of gramatical errors. [Mass Zero]
-//= 1.6 Added a func which prevent advanced classes passing 2nd Job Quests again. It also guides adv classes where to go. [Lupus]
-//= 1.7 On reborn reset some Job Quest Vars and Reset Girls Counter [Lupus]
-//= 1.8 Added Taekwondo classes check [Lupus]
-//= 1.9 Added support for Job NPC Fase pics, sorrected one dialogue stuff [Lupus]
-//= 2.0 Removed callfunc Is_####_Class in favor of baseClass [Silentdragon]
-//= 2.1 Changed all numbers into constants. [Vicious]
-//= 2.2 Now ALL quests skills are saved/restored [Lupus]
-//= 2.3 Removed Duplicates [Silent]
-//= 2.4 Fixed typos, optimized [Lupus]
-//= 2.5 Fixed a stuck bug [Lupus]
-//= 2.6a Adding proper dialogues [Lupus]
-//= 2.7 Rescripted to Aegis 10.3 standards. [L0ne_W0;f]
-//=     Removed all functions as they are no longer required.
-//=     Correct job level requirements for 1-1 -> 2-x.
-//= 2.7a Added Function "F_BlockHigh" back in until rewriteing of the 2-x [L0ne_W0lf]
-//=     scripts are comepleted.
-//= 2.7b Removed function "F_BlockHigh" as it's no longer used. [L0ne_W0lf]
-//= 2.8 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 2.9 Corrected Valkyrie case spicifying where to warp after rebirthing. [L0ne_W0lf]
-//= 2.9b Fixed Verdandi typo, fixed resetting vars [Lupus]
-//= 3.0 Added quest log commands. [L0ne_W0lf]
-//= 3.1 Added Izlude Renewal coordinates.
-//============================================================
+//================= Current Version =======================================
+//= 3.1
+//=========================================================================
 
 valkyrie,48,86,4	script	Valkyrie#	4_F_VALKYRIE,{
 	if (ADVJOB != 0 || Upper == 1) {
@@ -394,7 +395,6 @@ S_Warpchar:
 	end;
 }
 
-// Warps
-//============================================================
+//== Warps =================================================
 valkyrie,48,73,0	warp	valk01#1	1,1,valkyrie,48,64
 valkyrie,48,66,0	warp	valk01#2	1,1,valkyrie,48,75

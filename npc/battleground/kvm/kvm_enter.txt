@@ -1,22 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 // BattleGround System - KvM Entrance NPCs
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Kreiger Von Midgard Battleground Entrance NPCs
 //= Original NPCs scrapped from bg_common.
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//= 1.1 Corrected some typos, and shifted messages around.
-//=     Corrected iRO style quest log entries, however it's
-//=     advisable that you not use them, as they conflict.
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
-// KvM Officer - Guillaume
-//============================================================
+//== KvM Officer - Guillaume ===============================
 bat_room,164,178,5	script	KVM Mercenary Officer#1	4_M_KY_KNT,{
 	/*
 	.@kvm = questprogress(6026,PLAYTIME);
@@ -55,8 +72,7 @@ bat_room,164,178,5	script	KVM Mercenary Officer#1	4_M_KY_KNT,{
 	}
 }
 
-// Guillaume Knight - KvM
-//============================================================
+//== Guillaume Knight - KvM ================================
 bat_room,167,178,5	script	Guillaume Knight#kvm	4_M_KY_SOLD,{
 	mes "[Guillaume Knight]";
 	mes "Hello.";
@@ -115,8 +131,7 @@ bat_room,167,178,5	script	Guillaume Knight#kvm	4_M_KY_SOLD,{
 	}
 }
 
-// KvM Officer - Croix
-//============================================================
+//== KvM Officer - Croix ===================================
 bat_room,164,121,1	script	KVM Mercenary Officer#2	4_M_CRU_KNT,{
 	/*
 	.@kvm = questprogress(6025,PLAYTIME);
@@ -155,8 +170,7 @@ bat_room,164,121,1	script	KVM Mercenary Officer#2	4_M_CRU_KNT,{
 	}
 }
 
-// Croix Knight - KvM
-//============================================================
+//== Croix Knight - KvM ====================================
 bat_room,167,121,1	script	Croix Knight#kvm	4_M_CRU_SOLD,{
 	mes "[Croix Knight]";
 	mes "Hello.";

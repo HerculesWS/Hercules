@@ -1,21 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Masao
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Homunculus S Mutation Quest
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Genetic quest to mutate a level 99 evolved Homunculus into a Homunculus
+//= S.
+//================= Current Version =======================================
 //= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
-//= Genetic quest to mutate a level 99 evolved Homunculus
-//= into a Homunculus S.
-//===== Additional Comments: =================================
-//= 1.0 First Version, entirely custom. [Masao]
-//= 1.1 Cleaning. [Euphy]
-//= 1.2 Replaced with official script. [Euphy]
-//============================================================
+//=========================================================================
 
-// Main NPCs
-//============================================================
+//== Main NPCs =============================================
 job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 	if (countitem(6415)) {
 		if (Class == Job_Genetic || Class == Job_Genetic_T || Class == Job_Baby_Genetic) {
@@ -825,14 +844,13 @@ L_CheckHomunculus:
 	return;
 }
 
-// Magic Board
-//============================================================
+//== Magic Board ===========================================
 que_house_s,83,47,3	script	Magic Board#homun_s	4_BOARD3,{
 	playbgm "26.mp3"; // Everlasting Wanderers
 	callfunc "F_HomMutateInfo","[Magic Board Posts]";
 	mes "[Magic Board Posts]";
 	mes ":: ^0000FFHomunculus^000000 research is";
- 	mes ":: so much fun.";
+	mes ":: so much fun.";
 	mes ":: Be an Alchemist";
 	mes ":: who always enjoys";
 	mes ":: one's research.";
@@ -990,8 +1008,7 @@ function	script	F_HomMutateInfo	{
 	return;
 }
 
-// Books
-//============================================================
+//== Books =================================================
 que_house_s,13,52,3	script	Open Book#01homun_s	HIDDEN_NPC,{
 	switch(rand(1,7)) {
 	case 1:
@@ -1304,8 +1321,7 @@ que_house_s,16,52,3	script	Open Book#02homun_s	HIDDEN_NPC,{
 	}
 }
 
-// Notifiers
-//============================================================
+//== Notifiers =============================================
 que_house_s,11,52,3	script	#03homun_s	HIDDEN_NPC,{
 	end;
 OnInit:
@@ -1325,8 +1341,7 @@ que_house_s,14,52,3	script	#04homun_s	HIDDEN_NPC,{
 	end;
 }
 
-// Researcher's Pet
-//============================================================
+//== Researcher's Pet ======================================
 que_house_s,24,46,3	script	Jonathan#homun_s	MER_AMISTR,{
 	end;
 }

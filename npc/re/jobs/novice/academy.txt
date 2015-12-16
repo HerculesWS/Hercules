@@ -1,21 +1,45 @@
-//===== Hercules Script ========================================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2015  Hercules Dev Team
+//= Copyright (C) 2015  Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Criatura Academy
-//===== By: ====================================================================
-//= Kisuka (1.0)
-//===== Current Version: =======================================================
-//= 1.0.1
-//===== File Encoding ==========================================================
+//================= File Encoding =========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//===== Description: ===========================================================
+//= -If the encoding is correct, the next three lines have the same length-
+//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
+//= ============ ============================================= ============
+//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
+//================= Description ===========================================
 //= Teaches the player about the basics.
 //= Also contains Novice skill quests for First Aid and Trick Dead.
-//===== Additional Comments: ===================================================
-//= 1.0.0 Initial Release. [Kisuka]
-//= 1.0.1 Converted item constants to IDs and added hair coupon. [Kisuka]
-//==============================================================================
+//================= Current Version =======================================
+//= 1.0.1
+//=========================================================================
 
-// - Captain Carocc (Ship)
-// -----------------------------------------------------------------------------
+//== Captain Carocc (Ship) =================================
 iz_int,100,91,3	script	Captain Carocc#iz_int	4_M_REINDEER,{
 	if(Class == Job_Novice) {
 		cutin "fly_trock", 2;
@@ -76,8 +100,7 @@ iz_int02,100,91,3	duplicate(Captain Carocc#iz_int)	Captain Carocc#iz_int02	4_M_R
 iz_int03,100,91,3	duplicate(Captain Carocc#iz_int)	Captain Carocc#iz_int03	4_M_REINDEER
 iz_int04,100,91,3	duplicate(Captain Carocc#iz_int)	Captain Carocc#iz_int04	4_M_REINDEER
 
-// - Lumin (Ship)
-// -----------------------------------------------------------------------------
+//== Lumin (Ship) ==========================================
 iz_int,91,81,3	script	Lumin#iz_int	4_M_NOV_RUMIN,{
 	if(Class == Job_Novice) {
 		if(!questprogress(7471)) {
@@ -173,8 +196,7 @@ iz_int02,91,81,3	duplicate(Lumin#iz_int)	Lumin#iz_int02	4_M_NOV_RUMIN
 iz_int03,91,81,3	duplicate(Lumin#iz_int)	Lumin#iz_int03	4_M_NOV_RUMIN
 iz_int04,91,81,3	duplicate(Lumin#iz_int)	Lumin#iz_int04	4_M_NOV_RUMIN
 
-// - Captain Carocc
-// -----------------------------------------------------------------------------
+//== Captain Carocc ========================================
 izlude,198,213,3	script	Captain Carocc#iz	4_M_REINDEER,5,5,{
 	cutin "fly_trock.bmp", 2;
 	if (Class == Job_Novice && BaseLevel < 15) {
@@ -599,9 +621,8 @@ izlude_b,198,213,3	duplicate(Captain Carocc#iz)	Captain Carocc#iz_b	4_M_REINDEER
 izlude_c,198,213,3	duplicate(Captain Carocc#iz)	Captain Carocc#iz_c	4_M_REINDEER,5,5
 izlude_d,198,213,3	duplicate(Captain Carocc#iz)	Captain Carocc#iz_d	4_M_REINDEER,5,5
 
-// - Criatura Academy Staff
+//== Criatura Academy Staff ================================
 // - Teaches the player about the Inventory.
-// -----------------------------------------------------------------------------
 izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 	if (!checkweight(1304, 3)) {
 		mes "Quest cannot be continued due to the overfilled inventory.";
@@ -920,9 +941,8 @@ izlude_b,122,207,3	duplicate(Criatura Academy Staff#0)	Criatura Academy Staff#b	
 izlude_c,122,207,3	duplicate(Criatura Academy Staff#0)	Criatura Academy Staff#c	4_M_KHKYEL,3,3
 izlude_d,122,207,3	duplicate(Criatura Academy Staff#0)	Criatura Academy Staff#d	4_M_KHKYEL,3,3
 
-// - Information Staff
+//== Information Staff =====================================
 // - Teaches the player about the Mini-Map through a quick quest.
-// -----------------------------------------------------------------------------
 izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 	if (!checkweight(1304, 3)) {
 		mes "Quest cannot be continued due to the invenory being full.";
@@ -1440,8 +1460,7 @@ izlude_b,120,207,4	duplicate(Information Staff#0)	Information Staff#b	8W_SOLDIER
 izlude_c,120,207,4	duplicate(Information Staff#0)	Information Staff#c	8W_SOLDIER
 izlude_d,120,207,4	duplicate(Information Staff#0)	Information Staff#d	8W_SOLDIER
 
-// - Airship Sign
-// -----------------------------------------------------------------------------
+//- Airship Sign -
 izlude,179,75,3	script	Airship#iz	4_BULLETIN_BOARD2,3,3,{
 	.@total = questprogress(7475) + questprogress(7476) + questprogress(7477);
 	if (questprogress(7474)) {
@@ -1585,8 +1604,7 @@ izlude_b,179,75,3	duplicate(Airship#iz)	Airship#iz_b	4_BULLETIN_BOARD2,3,3
 izlude_c,179,75,3	duplicate(Airship#iz)	Airship#iz_c	4_BULLETIN_BOARD2,3,3
 izlude_d,179,75,3	duplicate(Airship#iz)	Airship#iz_d	4_BULLETIN_BOARD2,3,3
 
-// - Arena Sign
-// -----------------------------------------------------------------------------
+//- Arena Sign -
 izlude,207,167,3	script	Arena#iz	4_BULLETIN_BOARD2,3,3,{
 	.@total = questprogress(7475) + questprogress(7476) + questprogress(7477);
 	if (questprogress(7474) == 1) {
@@ -1731,8 +1749,7 @@ izlude_b,207,167,3	duplicate(Arena#iz)	Arena#iz_b	4_BULLETIN_BOARD2,3,3
 izlude_c,207,167,3	duplicate(Arena#iz)	Arena#iz_c	4_BULLETIN_BOARD2,3,3
 izlude_d,207,167,3	duplicate(Arena#iz)	Arena#iz_d	4_BULLETIN_BOARD2,3,3
 
-// - Bulletin Board
-// -----------------------------------------------------------------------------
+//- Bulletin Board -
 izlude,45,94,3	script	Bulletin Board#iz	4_BULLETIN_BOARD2,3,3,{
 	.@total = questprogress(7475) + questprogress(7476) + questprogress(7477);
 	if (questprogress(7474) == 1) {
@@ -1877,9 +1894,8 @@ izlude_b,45,94,3	duplicate(Bulletin Board#iz)	Bulletin Board#iz_b	4_BULLETIN_BOA
 izlude_c,45,94,3	duplicate(Bulletin Board#iz)	Bulletin Board#iz_c	4_BULLETIN_BOARD2,3,3
 izlude_d,45,94,3	duplicate(Bulletin Board#iz)	Bulletin Board#iz_d	4_BULLETIN_BOARD2,3,3
 
-// - Therapist (Red Herb Quest + First Aid)
+//== Therapist (Red Herb Quest + First Aid) ================
 // - Gives the player a basic quest and teaches them First Aid.
-// -----------------------------------------------------------------------------
 iz_ac01,59,43,3	script	Therapist#ac	4_M_6THPRIN1,{
 	if (!checkweight(1304, 3)) {
 		mes "Quest cannot be continued due to the overfilled inventory.";
@@ -2086,8 +2102,7 @@ iz_ac01_b,59,43,3	duplicate(Therapist#ac)	Therapist#ac_b	4_M_6THPRIN1
 iz_ac01_c,59,43,3	duplicate(Therapist#ac)	Therapist#ac_c	4_M_6THPRIN1
 iz_ac01_d,59,43,3	duplicate(Therapist#ac)	Therapist#ac_d	4_M_6THPRIN1
 
-// - Cultivated Red Plant (Red Herb Quest)
-// -----------------------------------------------------------------------------
+//- Cultivated Red Plant (Red Herb Quest) -
 izlude,141,251,0	script	Cultivated Red Plant#0	RED_PLANT,3,3,{
 	end;
 
@@ -2115,8 +2130,7 @@ izlude_b,141,251,0	duplicate(Cultivated Red Plant#0)	Cultivated Red Plant#b	RED_
 izlude_c,141,251,0	duplicate(Cultivated Red Plant#0)	Cultivated Red Plant#c	RED_PLANT,3,3
 izlude_d,141,251,0	duplicate(Cultivated Red Plant#0)	Cultivated Red Plant#d	RED_PLANT,3,3
 
-// - Academy Student (Red Herb Quest)
-// -----------------------------------------------------------------------------
+//- Academy Student (Red Herb Quest) -
 izlude,140,249,7	script	Academy Student#0	4_M_NOV_RUMIN,{
 	if (!checkweight(1304, 3)) {
 		mes "Your inventory is too full so you can't continue this quest.";
@@ -2229,8 +2243,7 @@ izlude_b,140,249,7	duplicate(Academy Student#0)	Academy Student#b	4_M_NOV_RUMIN
 izlude_c,140,249,7	duplicate(Academy Student#0)	Academy Student#c	4_M_NOV_RUMIN
 izlude_d,140,249,7	duplicate(Academy Student#0)	Academy Student#d	4_M_NOV_RUMIN
 
-// - Instructor Argos (Trick Dead Quest)
-// -----------------------------------------------------------------------------
+//- Instructor Argos (Trick Dead Quest) -
 izlude,140,260,3	script	Instructor Argos#iz	4_M_LIEMAN,{
 	if (Class != Job_Novice && getskilllv("NV_TRICKDEAD") != 0) {
 		mes "[Instructor Argos]";
@@ -2398,9 +2411,8 @@ izlude_b,140,260,3	duplicate(Instructor Argos#iz)	Instructor Argos#iz_b	4_M_LIEM
 izlude_c,140,260,3	duplicate(Instructor Argos#iz)	Instructor Argos#iz_c	4_M_LIEMAN
 izlude_d,140,260,3	duplicate(Instructor Argos#iz)	Instructor Argos#iz_d	4_M_LIEMAN
 
-// - Academy Receptionist
+//== Academy Receptionist ==================================
 // - Gives player some basic equipment and starts Academy quests.
-// -----------------------------------------------------------------------------
 iz_ac01,100,39,5	script	Academy Receptionist#1	4_F_01,{
 	if (questprogress(7117) == 1) { erasequest 7117; }
 	if (questprogress(7118) == 1) { erasequest 7118; }
@@ -2610,9 +2622,8 @@ iz_ac01_b,100,39,5	duplicate(Academy Receptionist#1)	Academy Receptionist#1_b	4_
 iz_ac01_c,100,39,5	duplicate(Academy Receptionist#1)	Academy Receptionist#1_c	4_F_01
 iz_ac01_d,100,39,5	duplicate(Academy Receptionist#1)	Academy Receptionist#1_d	4_F_01
 
-// - Trainer Mainz
+//== Trainer Mainz =========================================
 // - Teaches the player about Status Effects (poison, stun, etc).
-// -----------------------------------------------------------------------------
 iz_ac01,134,47,5	script	Trainer Mainz#ac	4_M_KY_KNT,4,4,{
 	if (!questprogress(4269)) {
 		mes "[Mainz]";
@@ -3075,9 +3086,8 @@ iz_ac01_b,134,47,5	duplicate(Trainer Mainz#ac)	Trainer Mainz#ac_b	4_M_KY_KNT,4,4
 iz_ac01_c,134,47,5	duplicate(Trainer Mainz#ac)	Trainer Mainz#ac_c	4_M_KY_KNT,4,4
 iz_ac01_d,134,47,5	duplicate(Trainer Mainz#ac)	Trainer Mainz#ac_d	4_M_KY_KNT,4,4
 
-// - Odd Novice
+//== Odd Novice ============================================
 // - Introduces the player to the concept of Super Novices.
-// -----------------------------------------------------------------------------
 iz_ac01,36,52,3	script	Odd Novice#ac	4_M_SIT_NOVICE,{
 	mes "[Odd Novice]";
 	mes "Ahaaa~~ sticking at the dispensary.";
@@ -3274,9 +3284,8 @@ iz_ac01_b,36,52,3	duplicate(Odd Novice#ac)	Odd Novice#ac_b	4_M_SIT_NOVICE
 iz_ac01_c,36,52,3	duplicate(Odd Novice#ac)	Odd Novice#ac_c	4_M_SIT_NOVICE
 iz_ac01_d,36,52,3	duplicate(Odd Novice#ac)	Odd Novice#ac_d	4_M_SIT_NOVICE
 
-// - Shop Helper
+//== Shop Helper ===========================================
 // - Teaches the player about Shops and Currency.
-// -----------------------------------------------------------------------------
 izlude,115,181,5	script	Shop Helper#iz	4_F_KHELLISIA,{
 	if (!checkweight(1301, 3)) {
 		mes "- Quest cannot be continued due to your overfilled inventory. -";
@@ -3490,9 +3499,8 @@ izlude_b,115,181,5	duplicate(Shop Helper#iz)	Shop Helper#iz_b	4_F_KHELLISIA
 izlude_c,115,181,5	duplicate(Shop Helper#iz)	Shop Helper#iz_c	4_F_KHELLISIA
 izlude_d,115,181,5	duplicate(Shop Helper#iz)	Shop Helper#iz_d	4_F_KHELLISIA
 
-// - Attribute Expert
+//== Attribute Expert ======================================
 // - Teaches the player about Attributes.
-// -----------------------------------------------------------------------------
 iz_ac01,53,74,3	script	Attribute Expert#ac	1_M_WIZARD,{
 	mes "[Attribute Expert]";
 	mes "Are you a new student? Ask me anything if you have questions about atttribute. I am an attribute expert.";
@@ -3701,9 +3709,8 @@ iz_ac01_d,50,68,0,0	monster	Lv 10 (Fire)	2413,1,5000,0,0
 iz_ac01_d,53,68,0,0	monster	Lv 10	2408,1,5000,0,0
 iz_ac01_d,56,68,0,0	monster	Lv 10	2408,1,5000,0,0
 
-// - Dacquoise
+//== Dacquoise =============================================
 // - Teaches the player about Cooking.
-// -----------------------------------------------------------------------------
 iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 	if (!checkweight(1304, 3)) {
 		mes "Why are you carrying so much stuff?";
@@ -4232,9 +4239,8 @@ iz_ac01_b,147,50,3	duplicate(Dacquoise#ac)	Dacquoise#ac_b	4_COOK
 iz_ac01_c,147,50,3	duplicate(Dacquoise#ac)	Dacquoise#ac_c	4_COOK
 iz_ac01_d,147,50,3	duplicate(Dacquoise#ac)	Dacquoise#ac_d	4_COOK
 
-// - General Store Owner
+//== General Store Owner ===================================
 // - Sells the player the Novice Combination Book and Kit.
-// -----------------------------------------------------------------------------
 iz_ac01,68,49,3	script	General Store Owner#ac	4_F_03,{
 	if (!checkweight(1304, 3)) {
 		mes "Quest cannot be continued due to the overfilled inventory.";
@@ -4333,9 +4339,8 @@ iz_ac01_b,68,49,3	duplicate(General Store Owner#ac)	General Store Owner#ac_b	4_F
 iz_ac01_c,68,49,3	duplicate(General Store Owner#ac)	General Store Owner#ac_c	4_F_03
 iz_ac01_d,68,49,3	duplicate(General Store Owner#ac)	General Store Owner#ac_d	4_F_03
 
-// - Battle Instructor
+//== Battle Instructor =====================================
 // - Gives the player monster hunting quests.
-// -----------------------------------------------------------------------------
 iz_ac01,59,83,3	script	Battle Instructor#08	4_M_NOV_HUNT,{
 	if(!checkweight(1201, 1) || (MaxWeight - Weight) < 2000) {
 		mes "- You have too many items.";
@@ -4570,9 +4575,8 @@ iz_ac01_b,59,83,3	duplicate(Battle Instructor#08)	Battle Instructor#08b	4_M_NOV_
 iz_ac01_c,59,83,3	duplicate(Battle Instructor#08)	Battle Instructor#08c	4_M_NOV_HUNT
 iz_ac01_d,59,83,3	duplicate(Battle Instructor#08)	Battle Instructor#08d	4_M_NOV_HUNT
 
-// - Adept Adventurer
+//== Adept Adventurer ======================================
 // - Teaches the player about Pets.
-// -----------------------------------------------------------------------------
 iz_ac01,45,80,5	script	Adept Adventurer#ac	4_M_JOB_BLACKSMITH,{
 	if (questprogress(2298) > 1) {
 		mes "[Adept Adventurer]";
@@ -4730,8 +4734,7 @@ iz_ac01_b,45,80,5	duplicate(Adept Adventurer#ac)	Adept Adventurer#ac_b	4_M_JOB_B
 iz_ac01_c,45,80,5	duplicate(Adept Adventurer#ac)	Adept Adventurer#ac_c	4_M_JOB_BLACKSMITH
 iz_ac01_d,45,80,5	duplicate(Adept Adventurer#ac)	Adept Adventurer#ac_d	4_M_JOB_BLACKSMITH
 
-// - Adventurer's Pet
-// -----------------------------------------------------------------------------
+//- Adventurer's Pet -
 iz_ac01,43,80,7	script	Adventurer's Pet#ac	4_DEVIRUCHI,{
 	end;
 
@@ -4764,13 +4767,10 @@ iz_ac01_b,43,80,7	duplicate(Adventurer's Pet#ac)	Adventurer's Pet#ac_b	4_DEVIRUC
 iz_ac01_c,43,80,7	duplicate(Adventurer's Pet#ac)	Adventurer's Pet#ac_c	4_DEVIRUCHI
 iz_ac01_d,43,80,7	duplicate(Adventurer's Pet#ac)	Adventurer's Pet#ac_d	4_DEVIRUCHI
 
-// - Monster Spawn
-// -----------------------------------------------------------------------------
+//- Monster Spawn -
 new_1-3,0,0,0,0	monster	Little Poring	2398,30,50000,0,0
 
-// - Adept Adventurer (Cont...)
-// - Teaches the player about Pets.
-// -----------------------------------------------------------------------------
+//- Adept Adventurer (Cont...) -
 new_1-3,92,169,5	script	Adept Adventurer#new_1-3	4_M_JOB_BLACKSMITH,{
 	if (questprogress(2298) == 2) {
 		mes "[Adept Adventurer]";
@@ -4914,8 +4914,7 @@ new_1-3,92,169,5	script	Adept Adventurer#new_1-3	4_M_JOB_BLACKSMITH,{
 	}
 }
 
-// - Friendly Poring
-// -----------------------------------------------------------------------------
+//== Friendly Poring =======================================
 new_1-3,99,169,3	script	Friendly Poring#ac	4_PORING,{
 	if (!checkweight(1301, 3)) {
 		mes "[Poring]";
@@ -5124,23 +5123,20 @@ new_1-3,99,169,3	script	Friendly Poring#ac	4_PORING,{
 	}
 }
 
-// - Ghostring
-// -----------------------------------------------------------------------------
+//== Ghostring =============================================
 new_1-3,108,165,3	script	Ghostring#cupet	4_GHOSTRING,{
 	mes "[Ghostring]";
 	mes "I am da biggest and da meanest Ghostring!";
 	close;
 }
 
-// - Little Porings
-// -----------------------------------------------------------------------------
+//== Little Porings ========================================
 new_1-3,105,165,5	script	Cowardly Poring#pet_1	LITTLE_PORING,{ end; }
 new_1-3,105,164,5	script	Unskillful Poring#pet_2	LITTLE_PORING,{ end; }
 new_1-3,105,163,5	script	Foolish Poring#pet_3	LITTLE_PORING,{ end; }
 
-// - Kafra Guide Trainer
+//== Kafra Guide Trainer ===================================
 // - Teaches the player about Kafra Services.
-// -----------------------------------------------------------------------------
 iz_ac01,95,46,5	script	Kafra Guide Trainer#ac	4_F_KAFRA1,{
 	cutin "kafra_01.bmp", 2;
 	if (questprogress(4269) == 2) {
@@ -5348,13 +5344,10 @@ iz_ac02_b,101,176,5	duplicate(Kafra Guide Trainer#ac)	Kafra Guide Trainer#02_b	4
 iz_ac02_c,101,176,5	duplicate(Kafra Guide Trainer#ac)	Kafra Guide Trainer#02_c	4_F_KAFRA1
 iz_ac02_d,101,176,5	duplicate(Kafra Guide Trainer#ac)	Kafra Guide Trainer#02_d	4_F_KAFRA1
 
-// =============================================================================
-// = Miscellaneous NPCS
-// =============================================================================
+//== Miscellaneous NPCS ====================================
 
-// - Wedding Secretary
+//- Wedding Secretary -
 // - Teaches the player about in-game Marriage & Adoption mechanics.
-// -----------------------------------------------------------------------------
 izlude,102,150,5	script	Wedding Secretary#iz	1_F_LIBRARYGIRL,{
 	if (Class == Job_Novice) {
 		mes "[Wedding Secretary]";
@@ -5463,8 +5456,7 @@ izlude_b,102,150,5	duplicate(Wedding Secretary#iz)	Wedding Secretary#iz_b	1_F_LI
 izlude_c,102,150,5	duplicate(Wedding Secretary#iz)	Wedding Secretary#iz_c	1_F_LIBRARYGIRL
 izlude_d,102,150,5	duplicate(Wedding Secretary#iz)	Wedding Secretary#iz_d	1_F_LIBRARYGIRL
 
-// - Mom
-// -----------------------------------------------------------------------------
+//- Mom -
 izlude,95,146,5	script	Mom#iz	4_F_CAVE1,{
 	mes "[Mom]";
 	mes "Honey~~~";
@@ -5529,8 +5521,7 @@ izlude_b,95,146,5	duplicate(Mom#iz)	Mom#iz_b	4_F_CAVE1
 izlude_c,95,146,5	duplicate(Mom#iz)	Mom#iz_c	4_F_CAVE1
 izlude_d,95,146,5	duplicate(Mom#iz)	Mom#iz_d	4_F_CAVE1
 
-// - Dad
-// -----------------------------------------------------------------------------
+//- Dad -
 izlude,97,147,3	script	Dad#iz	1_M_JOBGUIDER,{
 	mes "[Dad]";
 	mes "Got this boy ten years ago after years of childlessness.";
@@ -5551,8 +5542,7 @@ izlude_b,97,147,3	duplicate(Dad#iz)	Dad#iz_b	1_M_JOBGUIDER
 izlude_c,97,147,3	duplicate(Dad#iz)	Dad#iz_c	1_M_JOBGUIDER
 izlude_d,97,147,3	duplicate(Dad#iz)	Dad#iz_d	1_M_JOBGUIDER
 
-// - Etinifni
-// -----------------------------------------------------------------------------
+//- Etinifni -
 izlude,97,144,1	script	Etinifni#iz	4_M_DEWBOY,{
 	mes "[Etinifni]";
 	mes "Once you have time, come to Orc Dungeon!";
@@ -5568,8 +5558,7 @@ izlude_b,97,144,1	duplicate(Etinifni#iz)	Etinifni#iz_b	4_M_DEWBOY
 izlude_c,97,144,1	duplicate(Etinifni#iz)	Etinifni#iz_c	4_M_DEWBOY
 izlude_d,97,144,1	duplicate(Etinifni#iz)	Etinifni#iz_d	4_M_DEWBOY
 
-// - Romantic Male
-// -----------------------------------------------------------------------------
+//- Romantic Male -
 izlude,99,138,3	script	Romantic Male#iz	4_M_SITDOWN,{
 	emotion e_ho;
 	mes "[Romantic Male]";
@@ -5598,8 +5587,7 @@ izlude_b,99,138,3	duplicate(Romantic Male#iz)	Romantic Male#iz_b	4_M_SITDOWN
 izlude_c,99,138,3	duplicate(Romantic Male#iz)	Romantic Male#iz_c	4_M_SITDOWN
 izlude_d,99,138,3	duplicate(Romantic Male#iz)	Romantic Male#iz_d	4_M_SITDOWN
 
-// - Romantic Female
-// -----------------------------------------------------------------------------
+//- Romantic Female -
 izlude,97,138,5	script	Romantic Female#iz	4_F_SITDOWN,{
 	mes "[Romantic Female]";
 	mes "Shout like this when I miss you, honey!!";
@@ -5641,8 +5629,7 @@ izlude_b,97,138,5	duplicate(Romantic Female#iz)	Romantic Female#iz_b	4_F_SITDOWN
 izlude_c,97,138,5	duplicate(Romantic Female#iz)	Romantic Female#iz_c	4_F_SITDOWN
 izlude_d,97,138,5	duplicate(Romantic Female#iz)	Romantic Female#iz_d	4_F_SITDOWN
 
-// - Manufacturing Maniac
-// -----------------------------------------------------------------------------
+//- Manufacturing Maniac -
 izlude,93,143,3	script	Manufacturing Maniac#0	-1,{
 	mes "[Manufacturing Maniac]";
 	mes "Hi~! I am an Alchemist.";
@@ -5679,8 +5666,7 @@ izlude_b,93,143,3	duplicate(Manufacturing Maniac#0)	Manufacturing Maniac#b	2_M_A
 izlude_c,93,143,3	duplicate(Manufacturing Maniac#0)	Manufacturing Maniac#c	2_M_ALCHE
 izlude_d,93,143,3	duplicate(Manufacturing Maniac#0)	Manufacturing Maniac#d	2_M_ALCHE
 
-// - Repairing Blacksmith
-// -----------------------------------------------------------------------------
+//- Repairing Blacksmith -
 izlude,147,131,5	script	Repairing Blacksmith#0	4_F_JOB_BLACKSMITH,5,7,{
 	mes "[Working Blacksmith]";
 	mes "The guy sitting over there has been staring at Wagzak. I was told that only one knife is left after losing all weapons?";
@@ -5699,8 +5685,7 @@ izlude_b,147,131,5	duplicate(Repairing Blacksmith#0)	Repairing Blacksmith#b	4_F_
 izlude_c,147,131,5	duplicate(Repairing Blacksmith#0)	Repairing Blacksmith#c	4_F_JOB_BLACKSMITH,5,7
 izlude_d,147,131,5	duplicate(Repairing Blacksmith#0)	Repairing Blacksmith#d	4_F_JOB_BLACKSMITH,5,7
 
-// - Refining Maniac
-// -----------------------------------------------------------------------------
+//- Refining Maniac -
 izlude,148,122,5	script	Refining Maniac#iz	4_M_SITDOWN,{
 	mes "[Refining Maniac]";
 	mes "Shh...! Be quiet.";
@@ -5734,9 +5719,8 @@ izlude_b,148,122,5	duplicate(Refining Maniac#iz)	Refining Maniac#iz_b	4_M_SITDOW
 izlude_c,148,122,5	duplicate(Refining Maniac#iz)	Refining Maniac#iz_c	4_M_SITDOWN
 izlude_d,148,122,5	duplicate(Refining Maniac#iz)	Refining Maniac#iz_d	4_M_SITDOWN
 
-// - Otter Samssoon
+//- Otter Samssoon -
 // - Allows the player to change their hair style and color once.
-// -----------------------------------------------------------------------------
 iz_ac01,69,36,3	script	Otter Samssoon#ac	4W_SAILOR,{
 	mes "[Otter Samssoon]";
 	mes "Welcome~";
@@ -6091,8 +6075,7 @@ iz_ac01_b,69,36,3	duplicate(Otter Samssoon#ac)	Otter Samssoon#ac_b	4W_SAILOR
 iz_ac01_c,69,36,3	duplicate(Otter Samssoon#ac)	Otter Samssoon#ac_c	4W_SAILOR
 iz_ac01_d,69,36,3	duplicate(Otter Samssoon#ac)	Otter Samssoon#ac_d	4W_SAILOR
 
-// - Lady
-// -----------------------------------------------------------------------------
+//- Lady -
 iz_ac01,138,69,3	script	Lady#ac	1_F_ORIENT_02,{
 	mes "[Lady]";
 	mes "^3377FF Is the east window enlightened? Pecopeco is singing.^000000";
@@ -6117,8 +6100,7 @@ iz_ac01_b,138,69,3	duplicate(Lady#ac)	Lady#ac_b	1_F_ORIENT_02
 iz_ac01_c,138,69,3	duplicate(Lady#ac)	Lady#ac_c	1_F_ORIENT_02
 iz_ac01_d,138,69,3	duplicate(Lady#ac)	Lady#ac_d	1_F_ORIENT_02
 
-// - Eclaire
-// -----------------------------------------------------------------------------
+//- Eclaire -
 iz_ac01,149,46,3	script	Eclaire#ac	4_F_KAFRA7,{
 	mes "[Eclaire]";
 	mes "Cooking is caring!";
@@ -6130,8 +6112,7 @@ iz_ac01_b,149,46,3	duplicate(Eclaire#ac)	Eclaire#ac_b	4_F_KAFRA7
 iz_ac01_c,149,46,3	duplicate(Eclaire#ac)	Eclaire#ac_c	4_F_KAFRA7
 iz_ac01_d,149,46,3	duplicate(Eclaire#ac)	Eclaire#ac_d	4_F_KAFRA7
 
-// - Mille Feuille
-// -----------------------------------------------------------------------------
+//- Mille Feuille -
 iz_ac01,150,50,3	script	Mille Feuille#ac	4_F_KAFRA8,{
 	emotion e_lv;
 	mes "[Mille Feuille]";
@@ -6144,8 +6125,7 @@ iz_ac01_b,150,50,3	duplicate(Mille Feuille#ac)	Mille Feuille#ac_b	4_F_KAFRA8
 iz_ac01_c,150,50,3	duplicate(Mille Feuille#ac)	Mille Feuille#ac_c	4_F_KAFRA8
 iz_ac01_d,150,50,3	duplicate(Mille Feuille#ac)	Mille Feuille#ac_d	4_F_KAFRA8
 
-// - Chef
-// -----------------------------------------------------------------------------
+//- Chef -
 iz_ac01,160,50,3	script	Chef#ac	4_F_GODEMOM,{
 	mes "[Chef]";
 	mes "Are you the new Criatura trainee?";
@@ -6165,8 +6145,7 @@ iz_ac01_b,160,50,3	duplicate(Chef#ac)	Chef#ac_b	4_F_GODEMOM
 iz_ac01_c,160,50,3	duplicate(Chef#ac)	Chef#ac_c	4_F_GODEMOM
 iz_ac01_d,160,50,3	duplicate(Chef#ac)	Chef#ac_d	4_F_GODEMOM
 
-// - Hungry Trainee
-// -----------------------------------------------------------------------------
+//- Hungry Trainee -
 iz_ac01,159,32,3	script	Hungry Trainee#ac	4_M_SIT_NOVICE,{
 	mes "[Hungry Trainee]";
 	mes "Wonder when my order will get taken... it's already been an hour...";
@@ -6192,8 +6171,7 @@ iz_ac01_b,159,32,3	duplicate(Hungry Trainee#ac)	Hungry Trainee#ac_b	4_M_SIT_NOVI
 iz_ac01_c,159,32,3	duplicate(Hungry Trainee#ac)	Hungry Trainee#ac_c	4_M_SIT_NOVICE
 iz_ac01_d,159,32,3	duplicate(Hungry Trainee#ac)	Hungry Trainee#ac_d	4_M_SIT_NOVICE
 
-// - Scholarship Trainee
-// -----------------------------------------------------------------------------
+//- Scholarship Trainee -
 iz_ac01,164,36,3	script	Scholarship Trainee#ac	1_F_PUBGIRL,{
 	mes "[Scholarship Trainee]";
 	mes "I've worked at many different places, but this place is the strangest.";
@@ -6205,8 +6183,7 @@ iz_ac01_b,164,36,3	duplicate(Scholarship Trainee#ac)	Scholarship Trainee#ac_b	1_
 iz_ac01_c,164,36,3	duplicate(Scholarship Trainee#ac)	Scholarship Trainee#ac_c	1_F_PUBGIRL
 iz_ac01_d,164,36,3	duplicate(Scholarship Trainee#ac)	Scholarship Trainee#ac_d	1_F_PUBGIRL
 
-// - Broke Trainee
-// -----------------------------------------------------------------------------
+//- Broke Trainee -
 iz_ac01,133,34,5	script	Broke Trainee#ac	4_M_SITDOWN,{
 	mes "[Broke Trainee]";
 	mes "Since the prices have risen I try to get my belly full at every chance I get.";
@@ -6226,8 +6203,7 @@ iz_ac01_b,133,34,5	duplicate(Broke Trainee#ac)	Broke Trainee#ac_b	4_M_SITDOWN
 iz_ac01_c,133,34,5	duplicate(Broke Trainee#ac)	Broke Trainee#ac_c	4_M_SITDOWN
 iz_ac01_d,133,34,5	duplicate(Broke Trainee#ac)	Broke Trainee#ac_d	4_M_SITDOWN
 
-// - Noisy Trainee
-//-----------------------------------------------------------------------------
+//- Noisy Trainee -
 iz_ac02,152,79,3	script	Noisy Trainee#ac	4_M_HUBOY,{
 	if (Class == Job_Novice) {
 		mes "[Noisy Trainee]";
@@ -6267,8 +6243,7 @@ iz_ac02_b,152,79,3	duplicate(Noisy Trainee#ac)	Noisy Trainee#ac_b	4_M_HUBOY
 iz_ac02_c,152,79,3	duplicate(Noisy Trainee#ac)	Noisy Trainee#ac_c	4_M_HUBOY
 iz_ac02_d,152,79,3	duplicate(Noisy Trainee#ac)	Noisy Trainee#ac_d	4_M_HUBOY
 
-// - Quiet Trainee
-// -----------------------------------------------------------------------------
+//- Quiet Trainee -
 iz_ac02,143,77,3	script	Quite Trainee#ac	4_F_KID2,{
 	if (Class == Job_Novice) {
 		mes "[Quiet Trainee]";
@@ -6308,8 +6283,7 @@ iz_ac02_b,143,77,3	duplicate(Quite Trainee#ac)	Quite Trainee#ac_b	4_F_KID2
 iz_ac02_c,143,77,3	duplicate(Quite Trainee#ac)	Quite Trainee#ac_c	4_F_KID2
 iz_ac02_d,143,77,3	duplicate(Quite Trainee#ac)	Quite Trainee#ac_d	4_F_KID2
 
-// - Frightened Trainee
-// -----------------------------------------------------------------------------
+//- Frightened Trainee -
 iz_ac02,159,79,7	script	Frightened Trainee#ac	4_F_HUGIRL,{
 	mes "[Frightened Trainee]";
 	mes "That man looks too scary.";
@@ -6321,9 +6295,8 @@ iz_ac02_b,159,79,7	duplicate(Frightened Trainee#ac)	Frightened Trainee#ac_b	4_F_
 iz_ac02_c,159,79,7	duplicate(Frightened Trainee#ac)	Frightened Trainee#ac_c	4_F_HUGIRL
 iz_ac02_d,159,79,7	duplicate(Frightened Trainee#ac)	Frightened Trainee#ac_d	4_F_HUGIRL
 
-// - Ragie
+//- Ragie -
 // - Teaches the player about Transcendent and Third classes.
-// -----------------------------------------------------------------------------
 iz_ac02,149,43,3	script	Ragie#ac	1_M_BARD,{
 	mes "[Ragie]";
 	mes "A sudden poetic inspiration hit me!";
@@ -6439,8 +6412,7 @@ iz_ac02_b,149,43,3	duplicate(Ragie#ac)	Ragie#ac_b	1_M_BARD
 iz_ac02_c,149,43,3	duplicate(Ragie#ac)	Ragie#ac_c	1_M_BARD
 iz_ac02_d,149,43,3	duplicate(Ragie#ac)	Ragie#ac_d	1_M_BARD
 
-// - Lady Harvesting Herbs
-// -----------------------------------------------------------------------------
+//- Lady Harvesting Herbs -
 pay_fild08,153,83,1	script	Lady Harvesting Herbs#2	1_F_ORIENT_02,{
 	mes "[Lady]";
 	mes "There is a town called Payon to the east. Taking a long way to the south, you can even reach Alberta.";
@@ -6451,8 +6423,7 @@ pay_fild08,153,83,1	script	Lady Harvesting Herbs#2	1_F_ORIENT_02,{
 	close;
 }
 
-// - Signs
-// -----------------------------------------------------------------------------
+//- Signs -
 -	script	::ac_board	-1,{
 	end;
 }
@@ -6554,13 +6525,10 @@ iz_ac02_c,107,180,3	duplicate(ac_board)	[Principal's Office]#ac	2_BULLETIN_BOARD
 iz_ac02_d,107,180,3	duplicate(ac_board)	[Principal's Office]#ad	2_BULLETIN_BOARD
 
 
-// =============================================================================
-// = Job NPCs
-// =============================================================================
+//== Job NPCs ==============================================
 
-//= Cream Puff
-//= Gives the player a personality test to determine the class they should be.
-//==============================================================================
+//- Cream Puff -
+// - Gives the player a personality test to determine the class they should be.
 iz_ac02,143,55,3	script	Cream Puff#ac	4_M_KID1,{
 	cutin "choucream_n.bmp", 2;
 	if (Class == Job_Novice) {
@@ -7131,13 +7099,10 @@ iz_ac02_b,143,55,3	duplicate(Cream Puff#ac)	Cream Puff#ac_b	4_M_KID1
 iz_ac02_c,143,55,3	duplicate(Cream Puff#ac)	Cream Puff#ac_c	4_M_KID1
 iz_ac02_d,143,55,3	duplicate(Cream Puff#ac)	Cream Puff#ac_d	4_M_KID1
 
-// =============================================================================
-// = Gunslinger
-// =============================================================================
+//== Gunslinger ============================================
 
-// - Lusa
+//- Lusa -
 // - Teaches the player about Gunslinger class.
-// -----------------------------------------------------------------------------
 iz_ac02,142,85,6	script	Lusa#ac	4_F_GUNSLINGER,{
 	if (!checkweight(1301, 1)) {
 		mes "- Quest can't be continued as your overloaded items. -";
@@ -7886,8 +7851,7 @@ iz_ac02_b,142,85,6	duplicate(Lusa#ac)	Lusa#ac_b	4_F_GUNSLINGER
 iz_ac02_c,142,85,6	duplicate(Lusa#ac)	Lusa#ac_c	4_F_GUNSLINGER
 iz_ac02_d,142,85,6	duplicate(Lusa#ac)	Lusa#ac_d	4_F_GUNSLINGER
 
-// - Lusa's desk
-// -----------------------------------------------------------------------------
+//- Lusa's desk -
 iz_ac02,131,82,4	script	Lusa's Desk#ac	CLEAR_NPC,{
 	if (nov_3_guns == 8) {
 		mes "[Lusa's Desk]";
@@ -8039,8 +8003,7 @@ iz_ac02_b,131,82,4	duplicate(Lusa's Desk#ac)	Lusa's Desk#ac_b	CLEAR_NPC
 iz_ac02_c,131,82,4	duplicate(Lusa's Desk#ac)	Lusa's Desk#ac_c	CLEAR_NPC
 iz_ac02_d,131,82,4	duplicate(Lusa's Desk#ac)	Lusa's Desk#ac_d	CLEAR_NPC
 
-// - Staff sent by guild
-// -----------------------------------------------------------------------------
+//- Staff sent by guild -
 iz_ac02,162,86,4	script	Guild Staff#ac	4W_M_02,{
 	if (!checkweight(1301, 1)) {
 		mes "- You are carrying too many items. -";
@@ -8208,12 +8171,9 @@ iz_ac02_b,162,86,4	duplicate(Guild Staff#ac)	Guild Staff#ac_b	4W_M_02
 iz_ac02_c,162,86,4	duplicate(Guild Staff#ac)	Guild Staff#ac_c	4W_M_02
 iz_ac02_d,162,86,4	duplicate(Guild Staff#ac)	Guild Staff#ac_d	4W_M_02
 
-// =============================================================================
-// = Taekwon
-// =============================================================================
+//== Taekwon ===============================================
 
-// - Arang
-// -----------------------------------------------------------------------------
+//- Arang -
 iz_ac02,70,85,5	script	Arang#ac	4_F_TAEKWON,{
 	mes "[Arang]";
 	mes "Hi, Good morning!";
@@ -8417,12 +8377,9 @@ iz_ac01_b,53,49,0	duplicate(#acKick)	#acKick_b	HIDDEN_NPC,5,5
 iz_ac01_c,53,49,0	duplicate(#acKick)	#acKick_c	HIDDEN_NPC,5,5
 iz_ac01_d,53,49,0	duplicate(#acKick)	#acKick_d	HIDDEN_NPC,5,5
 
-// =============================================================================
-// = Archer
-// =============================================================================
+//== Archer ================================================
 
-// - Archer Teacher (Marlbron)
-// -----------------------------------------------------------------------------
+//- Archer Teacher (Marlbron) -
 iz_ac02,65,109,5	script	Archer Teacher#ac	4_M_ARCHER,{
 	if (!checkweight(1304, 3)) {
 		mes "Why are you carrying so much with you? Unload it somewhere and come back.";
@@ -8733,13 +8690,10 @@ iz_ac02_b,65,109,5	duplicate(Archer Teacher#ac)	Archer Teacher#ac_b	4_M_ARCHER
 iz_ac02_c,65,109,5	duplicate(Archer Teacher#ac)	Archer Teacher#ac_c	4_M_ARCHER
 iz_ac02_d,65,109,5	duplicate(Archer Teacher#ac)	Archer Teacher#ac_d	4_M_ARCHER
 
-// =============================================================================
-// = Swordsman
-// =============================================================================
+//== Swordsman =============================================
 
-// - Swordman Trainer (Adric)
-// - Teaches the player about the Swordman class.
-// -----------------------------------------------------------------------------
+//- Swordman Trainer (Adric) -
+// - Teaches the player about the Swordsman class.
 iz_ac02,60,51,5	script	Swordman Trainer#ac	4_M_SWORDMAN,{
 	if (!checkweight(1301, 3)) {
 		mes "- Quest cannot be continued due to your overfilled inventory. -";
@@ -9020,8 +8974,7 @@ iz_ac02_b,60,51,5	duplicate(Swordman Trainer#ac)	Swordman Trainer#ac_b	4_M_SWORD
 iz_ac02_c,60,51,5	duplicate(Swordman Trainer#ac)	Swordman Trainer#ac_c	4_M_SWORDMAN
 iz_ac02_d,60,51,5	duplicate(Swordman Trainer#ac)	Swordman Trainer#ac_d	4_M_SWORDMAN
 
-// - Swordman Assistant (Neals)
-// -----------------------------------------------------------------------------
+//- Swordman Assistant (Neals) -
 iz_ac02,53,48,5	script	Swordman Assistant#ac	4_M_KY_KNT,{
 	if (questprogress(4269) != 2) {
 		mes "[Assitant Trainer Neals]";
@@ -9130,12 +9083,9 @@ iz_ac02_b,53,48,5	duplicate(Swordman Assistant#ac)	Swordman Assistant#ac_b	4_M_K
 iz_ac02_c,53,48,5	duplicate(Swordman Assistant#ac)	Swordman Assistant#ac_c	4_M_KY_KNT
 iz_ac02_d,53,48,5	duplicate(Swordman Assistant#ac)	Swordman Assistant#ac_d	4_M_KY_KNT
 
-// =============================================================================
-// = Magician
-// =============================================================================
+//== Magician ==============================================
 
-// - Mage Chuck
-// -----------------------------------------------------------------------------
+//- Mage Chuck -
 iz_ac02,148,110,3	script	Mage Chuck#ac	4_M_JOB_WIZARD,{
 	cutin "nov_magicsoul01.bmp", 2;
 	if (Class == Job_Novice) {
@@ -9403,8 +9353,7 @@ iz_ac02_b,148,110,3	duplicate(Mage Chuck#ac)	Mage Chuck#ac_b	4_M_JOB_WIZARD
 iz_ac02_c,148,110,3	duplicate(Mage Chuck#ac)	Mage Chuck#ac_c	4_M_JOB_WIZARD
 iz_ac02_d,148,110,3	duplicate(Mage Chuck#ac)	Mage Chuck#ac_d	4_M_JOB_WIZARD
 
-// - Magician's Guild Guide
-// -----------------------------------------------------------------------------
+//- Magician's Guild Guide -
 gef_fild07,90,208,6	script	#acmageguide	HIDDEN_NPC,7,7,{
 	end;
 
@@ -9434,8 +9383,7 @@ gef_fild07,90,208,6	script	#acmageguide	HIDDEN_NPC,7,7,{
 		}
 }
 
-// - Magician's Guild Guide
-// -----------------------------------------------------------------------------
+//- Magician's Guild Guide -
 gef_fild07,89,208,6	script	Magician's Guild Guide#1	2_F_MAGICMASTER,{
 	if (questprogress(9265) == 1) {
 		mes "[Magician's Guild Guide]";
@@ -9460,8 +9408,7 @@ gef_fild07,89,208,6	script	Magician's Guild Guide#1	2_F_MAGICMASTER,{
 		end;
 }
 
-// - Magician's Guild Guide
-// -----------------------------------------------------------------------------
+//- Magician's Guild Guide -
 geffen,43,123,6	script	Magician's Guild Guide#2	2_F_MAGICMASTER,{
 	if (questprogress(9265) == 1) {
 		mes "[Magician's Guild Guide]";
@@ -9505,12 +9452,9 @@ geffen,43,123,6	script	Magician's Guild Guide#2	2_F_MAGICMASTER,{
 		end;
 }
 
-// =============================================================================
-// = Merchant
-// =============================================================================
+//== Merchant ==============================================
 
-// - Salim Hamid
-// -----------------------------------------------------------------------------
+//- Salim Hamid -
 iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 	disable_items;
 	if (!checkweight(714, 3) || (MaxWeight - Weight) < 10000) {
@@ -9922,8 +9866,7 @@ iz_ac02_b,50,169,3	duplicate(Salim Hamid#ac)	Salim Hamid#ac_b	1_M_MERCHANT
 iz_ac02_c,50,169,3	duplicate(Salim Hamid#ac)	Salim Hamid#ac_c	1_M_MERCHANT
 iz_ac02_d,50,169,3	duplicate(Salim Hamid#ac)	Salim Hamid#ac_d	1_M_MERCHANT
 
-// - Steward Aydin
-// -----------------------------------------------------------------------------
+//- Steward Aydin -
 iz_ac02,53,171,3	script	Steward Aydin#ac	4_M_MANAGER,{
 	disable_items;
 	if (!checkweight(714, 3) || (MaxWeight - Weight) < 10000) {
@@ -10044,13 +9987,10 @@ iz_ac02_b,53,171,3	duplicate(Steward Aydin#ac)	Steward Aydin#ac_b	4_M_MANAGER
 iz_ac02_c,53,171,3	duplicate(Steward Aydin#ac)	Steward Aydin#ac_c	4_M_MANAGER
 iz_ac02_d,53,171,3	duplicate(Steward Aydin#ac)	Steward Aydin#ac_d	4_M_MANAGER
 
-// =============================================================================
-// = Thief
-// =============================================================================
+//== Thief =================================================
 
-// - Guest Lecturer Mayssel
+//- Guest Lecturer Mayssel -
 // - Teaches the player about the Thief class.
-// -----------------------------------------------------------------------------
 iz_ac02,52,136,3	script	Guest Lecturer Mayssel#0	4_F_MAYSEL,{
 	if (!checkweight(1301, 3)) {
 		mes "Quest cannot be continued due to the overfilled inventory.";
@@ -10710,9 +10650,8 @@ iz_ac02_b,52,136,3	duplicate(Guest Lecturer Mayssel#0)	Guest Lecturer Mayssel#b	
 iz_ac02_c,52,136,3	duplicate(Guest Lecturer Mayssel#0)	Guest Lecturer Mayssel#c	4_F_MAYSEL
 iz_ac02_d,52,136,3	duplicate(Guest Lecturer Mayssel#0)	Guest Lecturer Mayssel#d	4_F_MAYSEL
 
-// - Vicente
+//- Vicente -
 // - Teaches the player about the Thief class.
-// -----------------------------------------------------------------------------
 iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 	if (questprogress(4269) > 0 && Class == Job_Novice) {
 		if (!questprogress(7480)) {
@@ -11235,9 +11174,8 @@ iz_ac02_b,49,134,5	duplicate(Vicente#ac)	Vicente#ac_b	4_M_HUMAN_02
 iz_ac02_c,49,134,5	duplicate(Vicente#ac)	Vicente#ac_c	4_M_HUMAN_02
 iz_ac02_d,49,134,5	duplicate(Vicente#ac)	Vicente#ac_d	4_M_HUMAN_02
 
-// - Verkhasel
+//- Verkhasel -
 // - Teaches the player about the Thief class.
-// -----------------------------------------------------------------------------
 iz_ac02,55,134,3	script	Verkhasel#ac	4_M_GUILLOTINE,{
 	if (questprogress(4269) > 0 && Class == Job_Novice) {
 		if (!questprogress(7480)) {
@@ -11675,8 +11613,7 @@ iz_ac02_b,55,134,3	duplicate(Verkhasel#ac)	Verkhasel#ac_b	4_M_GUILLOTINE
 iz_ac02_c,55,134,3	duplicate(Verkhasel#ac)	Verkhasel#ac_c	4_M_GUILLOTINE
 iz_ac02_d,55,134,3	duplicate(Verkhasel#ac)	Verkhasel#ac_d	4_M_GUILLOTINE
 
-// - Lumin
-// -----------------------------------------------------------------------------
+//- Lumin -
 iz_ac02,62,139,3	script	Lumin#ac	4_M_NOV_RUMIN,{
 	if (!checkweight(1301, 3)) {
 		mes "Quest cannot be continued due to the overfilled inventory.";
@@ -11844,8 +11781,7 @@ iz_ac02_b,62,139,3	duplicate(Lumin#ac)	Lumin#ac_b	4_M_NOV_RUMIN
 iz_ac02_c,62,139,3	duplicate(Lumin#ac)	Lumin#ac_c	4_M_NOV_RUMIN
 iz_ac02_d,62,139,3	duplicate(Lumin#ac)	Lumin#ac_d	4_M_NOV_RUMIN
 
-// - Porings
-// -----------------------------------------------------------------------------
+//- Porings -
 iz_ac02,1,1,0	script	#nbacStone01	CLEAR_NPC,{
 	end;
 
@@ -11941,12 +11877,9 @@ iz_ac02_b,1,1,0	duplicate(#nbacStone03)	#nbacStone03_b	CLEAR_NPC
 iz_ac02_c,1,1,0	duplicate(#nbacStone03)	#nbacStone03_c	CLEAR_NPC
 iz_ac02_d,1,1,0	duplicate(#nbacStone03)	#nbacStone03_d	CLEAR_NPC
 
-// =============================================================================
-// = Acolyte
-// =============================================================================
+//== Acolyte ===============================================
 
-// - Acolyte Leader Alice
-// -----------------------------------------------------------------------------
+//- Acolyte Leader Alice -
 iz_ac02,156,169,5	script	Acolyte Leader Alice#2	4_F_ACOLYTE,{
 	if (questprogress(4269) < 1) {
 		mes "[Alice Yisha]";
@@ -12141,8 +12074,7 @@ iz_ac02_b,156,169,5	duplicate(Acolyte Leader Alice#2)	Acolyte Leader Alice#2_b	4
 iz_ac02_c,156,169,5	duplicate(Acolyte Leader Alice#2)	Acolyte Leader Alice#2_c	4_F_ACOLYTE
 iz_ac02_d,156,169,5	duplicate(Acolyte Leader Alice#2)	Acolyte Leader Alice#2_d	4_F_ACOLYTE
 
-// - A nun
-// -----------------------------------------------------------------------------
+//- A nun -
 iz_ac02,152,165,5	script	A Nun#2	4_F_SISTER,{
 	if (JobLevel > 10 || Class != Job_Novice) {
 		mes "[A nun]";
@@ -12199,13 +12131,10 @@ iz_ac02_b,152,165,5	duplicate(A Nun#2)	A Nun#2_b	4_F_SISTER
 iz_ac02_c,152,165,5	duplicate(A Nun#2)	A Nun#2_c	4_F_SISTER
 iz_ac02_d,152,165,5	duplicate(A Nun#2)	A Nun#2_d	4_F_SISTER
 
-// =============================================================================
-// = Ninja
-// =============================================================================
+//== Ninja =================================================
 
-// - Ninja Guide (Ko Ori)
+//- Ninja Guide (Ko Ori) -
 // - Teaches the player about the Ninja class.
-// -----------------------------------------------------------------------------
 iz_ac02,140,139,5	script	Ninja Guide#ac	4_M_NINJA_BLUE,{
 	cutin "aca_ninja_k.bmp", 2;
 	if (Class != Job_Novice) {
@@ -12433,12 +12362,9 @@ iz_ac02_c,140,139,5	duplicate(Ninja Guide#ac)	Ninja Guide#ac_c	4_M_NINJA_BLUE
 iz_ac02_d,140,139,5	duplicate(Ninja Guide#ac)	Ninja Guide#ac_d	4_M_NINJA_BLUE
 
 
-// =============================================================================
-// = Enchanting / Upgrading NPCs
-// =============================================================================
+//== Enchanting / Upgrading NPCs ===========================
 
-// - Refinery Owner Han
-// -----------------------------------------------------------------------------
+//- Refinery Owner Han -
 izlude,153,126,1	script	Refinery Owner Han#iz	4_M_02,{
 	if (!checkweight(1301, 1)) {
 		mes "- Cannot progress with the dialogue because you have too many items. -";
@@ -12693,8 +12619,7 @@ izlude_b,153,126,1	duplicate(Refinery Owner Han#iz)	Refinery Owner Han#iz_b	4_M_
 izlude_c,153,126,1	duplicate(Refinery Owner Han#iz)	Refinery Owner Han#iz_c	4_M_02
 izlude_d,153,126,1	duplicate(Refinery Owner Han#iz)	Refinery Owner Han#iz_d	4_M_02
 
-// - Refining Machine Wagjak
-// -----------------------------------------------------------------------------
+//- Refining Machine Wagjak -
 -	script	::izludeWagjak	-1,{
 	disable_items;
 	mes "[Refining Machine Wagjak]";
@@ -12880,8 +12805,7 @@ izlude_b,153,121,3	duplicate(izludeWagjak)	Refining Machine Wagjak::iz_b	2_MONEM
 izlude_c,153,121,3	duplicate(izludeWagjak)	Refining Machine Wagjak::iz_c	2_MONEMUS
 izlude_d,153,121,3	duplicate(izludeWagjak)	Refining Machine Wagjak::iz_d	2_MONEMUS
 
-// - Tadde
-// -----------------------------------------------------------------------------
+//- Tadde -
 izlude,145,122,7	script	Tadde#iz	4_M_04,{
 	if (!checkweight(1301, 1)) {
 		mes "- As you have too many items in your inventory, Quest can't be continued -";
@@ -13138,8 +13062,7 @@ izlude_b,145,122,7	duplicate(Tadde#iz)	Tadde#iz_b	4_M_04
 izlude_c,145,122,7	duplicate(Tadde#iz)	Tadde#iz_c	4_M_04
 izlude_d,145,122,7	duplicate(Tadde#iz)	Tadde#iz_d	4_M_04
 
-// - Locas
-// -----------------------------------------------------------------------------
+//- Locas -
 izlude,155,132,3	script	Locas#iz	4_M_02,{
 	if (!checkweight(1301, 1)) {
 		mes "- As you have too many items in your inventory, Quest can't be continued. -";
@@ -13497,9 +13420,8 @@ izlude_b,155,132,3	duplicate(Locas#iz)	Locas#iz_b	4_M_02
 izlude_c,155,132,3	duplicate(Locas#iz)	Locas#iz_c	4_M_02
 izlude_d,155,132,3	duplicate(Locas#iz)	Locas#iz_d	4_M_02
 
-// - Enchanter Mounds
+//- Enchanter Mounds -
 // - Teaches the player about enchanting.
-// -----------------------------------------------------------------------------
 izlude,96,125,7	script	Enchanter Mounds#iz	4_CAT_SAILOR2,{
 	if (!checkweight(1301, 1)) {
 		mes "- As you have too many items in your inventory, Quest can't be continued -";
@@ -13864,9 +13786,8 @@ izlude_b,96,125,7	duplicate(Enchanter Mounds#iz)	Enchanter Mounds#iz_b	4_CAT_SAI
 izlude_c,96,125,7	duplicate(Enchanter Mounds#iz)	Enchanter Mounds#iz_c	4_CAT_SAILOR2
 izlude_d,96,125,7	duplicate(Enchanter Mounds#iz)	Enchanter Mounds#iz_d	4_CAT_SAILOR2
 
-// - Enchanter Almond J
+//- Enchanter Almond J -
 // - Teaches the player about enchanting.
-// -----------------------------------------------------------------------------
 izlude,108,139,7	script	Enchanter Almond J#iz	4_CAT_SAILOR3,{
 	if (!checkweight(1301, 1)) {
 		mes "- As you have too many items in your inventory, Quest can't be continued -";
@@ -14086,8 +14007,7 @@ izlude_b,108,139,7	duplicate(Enchanter Almond J#iz)	Enchanter Almond J#iz_b	4_CA
 izlude_c,108,139,7	duplicate(Enchanter Almond J#iz)	Enchanter Almond J#iz_c	4_CAT_SAILOR3
 izlude_d,108,139,7	duplicate(Enchanter Almond J#iz)	Enchanter Almond J#iz_d	4_CAT_SAILOR3
 
-// = Repair Man
-// =============================================================================
+//== Repair Man ============================================
 izlude,158,130,4	script	Repair Man#iz	4_M_04,{
 	mes "[Repair Man]";
 	mes "Repairing broken equipment!! If you have broken equipment, bring it to me anytime.";
@@ -14152,10 +14072,8 @@ izlude_b,158,130,4	duplicate(Repair Man#iz)	Repair Man#iz_b	4_M_04
 izlude_c,158,130,4	duplicate(Repair Man#iz)	Repair Man#iz_c	4_M_04
 izlude_d,158,130,4	duplicate(Repair Man#iz)	Repair Man#iz_d	4_M_04
 
-// =============================================================================
-// = Old Novice Training Grounds
-// = These NPCs will teleport any stuck player to the new starting area.
-// =============================================================================
+//== Old Novice Training Grounds ===========================
+// - These NPCs will teleport any stuck player to the new starting area.
 new_1-1,53,114,3	script	Training Instructor#1a	4_F_03,{
 	mes "[Training Instructor]";
 	mes "The training grounds have been revised.";

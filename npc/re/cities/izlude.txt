@@ -1,20 +1,39 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Masao
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Izlude Town Renewal
-//===== By: ==================================================
-//= Masao
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Izlude town NPCs.
-//===== Additional Comments: =================================
-//= 1.0 First Version. Still missing many new NPCs and their dialogues. [Masao]
-//= 1.1 Updated to match the official script. [Euphy]
-//= 1.2 Added Channel Warper and Izlude duplicates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// Izlude
-//============================================================
+//== Izlude ================================================
 izlude,197,205,1	duplicate(Sailor_izlude)	Sailor#izlude	4W_SAILOR
 izlude_a,197,205,1	duplicate(Sailor_izlude)	Sailor#izlude_a	4W_SAILOR
 izlude_b,197,205,1	duplicate(Sailor_izlude)	Sailor#izlude_b	4W_SAILOR
@@ -80,8 +99,7 @@ prt_fild08b,350,219,4	duplicate(Guard_izlude)	Guard#izlude_b	8W_SOLDIER
 prt_fild08c,350,219,4	duplicate(Guard_izlude)	Guard#izlude_c	8W_SOLDIER
 prt_fild08d,350,219,4	duplicate(Guard_izlude)	Guard#izlude_d	8W_SOLDIER
 
-// Channel Warper
-//============================================================
+//== Channel Warper ========================================
 function	script	F_IzludeChannel	{
 	mes "[Channel Warp Official]";
 	mes "Izlude is a verly lively place is it not?";
@@ -105,8 +123,7 @@ izlude_b,122,105,5	script	Channel Warp Official#_b	1_M_WIZARD,{ callfunc "F_Izlu
 izlude_c,122,105,5	script	Channel Warp Official#_c	1_M_WIZARD,{ callfunc "F_IzludeChannel","Go to copy 1:Go to copy 2:Go to copy 3::Go to copy 5"; }
 izlude_d,122,105,5	script	Channel Warp Official#_d	1_M_WIZARD,{ callfunc "F_IzludeChannel","Go to copy 1:Go to copy 2:Go to copy 3:Go to copy 4:"; }
 
-// Talking NPCs
-//============================================================
+//== Talking NPCs ==========================================
 izlude,143,205,7	script	Talkative Kid#iz	4_F_KID2,{
 	end;
 

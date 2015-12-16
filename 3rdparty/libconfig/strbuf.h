@@ -1,5 +1,6 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
+   Copyright (C) 2013-2015  Hercules Dev Team
    Copyright (C) 2005-2010  Mark A Lindner
 
    This file is part of libconfig.

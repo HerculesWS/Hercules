@@ -1,19 +1,39 @@
-//===== Hercules Script ======================================
-//= War of Emperium (Geffen)
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Masao
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= War of Emperium (Bergel)
+//================= Description ===========================================
 //= NPCs that relate to Geffen Guild Castle 4
-//===== Additional Comments: =================================
-//= 1.0 First Version. No longer uses functions. [L0ne_W0lf]
-//= 1.1 Removed dialog from interior flags. [L0ne_W0lf]
-//= 1.2 Partially rewrote Script. [Masao]
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// Guild Flag (Outside Castle)
-//============================================================
+//== Guild Flags (Outside Castle) ==========================
 -	script	Bergel#1::OutsideFlagsG4	GUILD_FLAG,{
 
 	.@GID = getcastledata("gefg_cas04",1);
@@ -67,8 +87,7 @@ OnRecvCastleG04:
 gef_fild13,190,283,3	duplicate(OutsideFlagsG4)	Bergel#1-2	GUILD_FLAG
 gef_fild13,199,274,3	duplicate(OutsideFlagsG4)	Bergel#2	GUILD_FLAG
 
-// Guild Flag (Inside Castle)
-//============================================================
+//== Guild Flags (Inside Castle) ===========================
 -	script	Bergel#3::InsideFlagsG4	GUILD_FLAG,{
 	end;
 
@@ -86,20 +105,16 @@ gefg_cas04,29,212,1	duplicate(InsideFlagsG4)	Bergel#8	GUILD_FLAG
 gefg_cas04,24,73,1	duplicate(InsideFlagsG4)	Bergel#9	GUILD_FLAG
 gefg_cas04,35,73,4	duplicate(InsideFlagsG4)	Bergel#10	GUILD_FLAG
 
-// Guild Flag (Town)
-//============================================================
+//== Guild Flag (Town) =====================================
 geffen,127,130,7	duplicate(InsideFlagsG4)	Bergel#11	GUILD_FLAG
 
-// Kafra Employee
-//============================================================
+//== Kafra Employee ========================================
 gefg_cas04,59,70,3	duplicate(guildkafra)	Kafra Staff#gefg_cas04	4_F_KAFRA1
 
-// Steward
-//============================================================
+//== Steward ===============================================
 gefg_cas04,73,46,3	duplicate(cm)	Kellvahni#gefg_cas04	1_M_JOBTESTER
 
-// Treasure Room Exit
-//============================================================
+//== Treasure Room Exit ====================================
 gefg_cas04,116,123,0	script	#lever_G04	HIDDEN_NPC,{
 
 	mes " ";
@@ -113,18 +128,14 @@ gefg_cas04,116,123,0	script	#lever_G04	HIDDEN_NPC,{
 	close;
 }
 
-// Guild Dungeon Switch
-//============================================================
+//== Guild Dungeon Switch ==================================
 gefg_cas04,58,75,0	duplicate(gdlever)	#gefg_cas04	HIDDEN_NPC
 
-// Guild Treasure Spawns
-//============================================================
+//== Guild Treasure Spawns =================================
 gefg_cas04,116,119,0	duplicate(Gld_Trea_Spawn)	Treasure#gefg_cas04	-1
 
-// AGIT Manager
-//============================================================
+//== AGIT Manager ==========================================
 gefg_cas04,174,178,0	duplicate(Gld_Agit_Manager)	Agit#gefg_cas04	-1
 
-// Guardians
-//============================================================
+//== Guardians =============================================
 gefg_cas04,73,46,3	duplicate(Gld_Guard_Template)	Guardian#gefg_cas04	-1

@@ -1,29 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Panikon
+//= Copyright (C)  Michieru
+//= Copyright (C)  Euphy
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Brasilis Quests
-//===== By ===================================================
-//= L0ne_W0lf
-//===== Version ==============================================
-//= 1.2c
-//===== Description ==========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Lost Puppies (Repeatable, 24 hours.)
 //= Suspicious Beach (Repeatable, 24 hours. iRO/cRO version.)
 //= Guarana Candy Quest
 //= Brasilis Water Lily Quest
 //= Brasilis Dungeon Access Quest
 //= Iara (Buff reward. Repeatable, 24 hours.)
-//===== Comments =============================================
-//= 1.0 First version.
-//= 1.1 Hydra Ball (12408)
-//= 1.2 Optimization. [Euphy]
-//= 1.2a Added 'consumeitem' command. [Euphy]
-//= 1.2b Updated RE EXP. [Michieru]
-//= 1.2c Put end; before OnTouch events in npcs that
-//= have view id of a mob [Panikon]
-//============================================================
+//================= Current Version =======================================
+//= 1.2c
+//=========================================================================
 
-// Lost Puppies :: dogdog.sc
-//============================================================
+//== Lost Puppies :: dogdog.sc =============================
 brasilis,297,307,5	script	Angelo#br	1_M_04,{
 	if (BaseLevel < 40) {
 		mes "[Angelo]";
@@ -145,8 +162,7 @@ bra_fild01,234,101,3	duplicate(Puppy#bra)	Puppy#d1	4_DOG01
 bra_fild01,200,84,3	duplicate(Puppy#bra)	Puppy#d2	4_DOG01
 bra_fild01,176,63,5	duplicate(Puppy#bra)	Puppy#d3	4_DOG01
 
-// Suspicious Beach :: Suspicious_Beach.sc
-//============================================================
+//== Suspicious Beach :: Suspicious_Beach.sc ===============
 brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 	/* -------------- Hydra Ball -------------------------
 	if (countitem(12408) > 0) {
@@ -355,8 +371,7 @@ OnTimer7000:
 	end;
 }
 
-// Guarana Quest :: brazil_tre.sc
-//============================================================
+//== Guarana Quest :: brazil_tre.sc ========================
 brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 	if (!checkweight(1201,1)) {
 		mes "- You can't start the quest. Please reduce the weight in your inventory. -";
@@ -1037,8 +1052,7 @@ bra_fild01,245,52,3	script	Monkey#bra	HIDDEN_NPC,{
 	}
 }
 
-// Water Lily Quest :: brazil_tre.sc
-//============================================================
+//== Water Lily Quest :: brazil_tre.sc =====================
 brasilis,203,286,3	script	Botanist Karmen#bra	4_F_HUWOMAN,{
 	if (brazil_regia == 0) {
 		mes "[Karmen]";
@@ -1934,8 +1948,7 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 	}
 }
 
-// Dungeon Access Quest :: brazil_tre.sc
-//============================================================
+//== Dungeon Access Quest :: brazil_tre.sc =================
 brasilis,185,246,5	script	Pedro#bra	1_M_SIZ,{
 	if (brazil_ghost == 0) {
 		OnTalk:
@@ -2844,8 +2857,7 @@ OnInit:
 	end;
 }
 
-// Iara :: iara.sc
-//============================================================
+//== Iara :: iara.sc =======================================
 brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 	if (questprogress(4135,PLAYTIME) == 1) {
 		mes "[Anori]";

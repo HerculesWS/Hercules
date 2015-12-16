@@ -1,17 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Malangdo Enchants
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Adds enchantments to many high level weapons in exchange for Malangdo
+//= coins.
+//================= Current Version =======================================
 //= 1.0a
-//===== Description: =========================================
-//= [Official Conversion]
-//= Adds enchantments to many high level weapons in exchange
-//= for Malangdo coins.
-//===== Additional Comments: =================================
-//= 1.0 First Version. [Euphy]
-//= 1.0a Added 'delequip' command. [Euphy]
-//============================================================
+//=========================================================================
 
 malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 	disable_items;
@@ -593,7 +614,7 @@ L_Socket:
 		delitem .@coin[.@coin_select],.@total[.@coin_select];
 		delequip EQI_HAND_R;
 
-//		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
+		// GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
 		getitem2 .@equip_id,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@equip_card[2],.@equip_card[3];
 
 		close;
@@ -627,7 +648,7 @@ L_Socket:
 		delitem 6417,1; //Silvervine
 		delequip EQI_HAND_R;
 
-//		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
+		// GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@equip_card[3]
 		for(.@i = 0; .@i<4; ++.@i) {
 			if (.@equip_card[.@i] >= 4700) // Armor Enchant System
 				.@equip_card[.@i] = 0;

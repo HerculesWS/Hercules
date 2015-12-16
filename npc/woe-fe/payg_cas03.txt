@@ -1,21 +1,39 @@
-//===== Hercules Script ======================================
-//= War of Emperium (Payon)
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Masao
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= War of Emperium (Holy Shadow)
+//================= Description ===========================================
 //= NPCs that relate to Payon Guild Castle 1
-//===== Additional Comments: =================================
-//= 1.0 First Version. No longer uses functions. [L0ne_W0lf]
-//= 1.1 Corrected flag-in spawn point. [L0ne_W0lf]
-//= 1.2 Removed dialog from interior flags. [L0ne_W0lf]
-//=     Fixed position of Guild dungeon switch.
-//= 1.3 Partially rewrote Script. [Masao]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
-// Guild Flags (Outside Castle)
-//============================================================
+//== Guild Flags (Outside Castle) ==========================
 -	script	Holy Shadow#1::OutsideFlagsPA3	GUILD_FLAG,{
 
 	.@GID = getcastledata("payg_cas03",1);
@@ -71,8 +89,7 @@ pay_gld,321,289,2	duplicate(OutsideFlagsPA3)	Holy Shadow#2	GUILD_FLAG
 pay_gld,327,304,1	duplicate(OutsideFlagsPA3)	Holy Shadow#3	GUILD_FLAG
 pay_gld,333,254,4	duplicate(OutsideFlagsPA3)	Holy Shadow#4	GUILD_FLAG
 
-// Guild Flags (Inside Castle)
-//============================================================
+//== Guild Flags (Inside Castle) ===========================
 -	script	Holy Shadow#5::InsideFlagsPA3	GUILD_FLAG,{
 	end;
 
@@ -88,21 +105,17 @@ payg_cas03,266,66,4	duplicate(InsideFlagsPA3)	Holy Shadow#8	GUILD_FLAG
 payg_cas03,34,31,4	duplicate(InsideFlagsPA3)	Holy Shadow#9	GUILD_FLAG
 payg_cas03,43,31,4	duplicate(InsideFlagsPA3)	Holy Shadow#10	GUILD_FLAG
 
-// Guild Flag (Town)
-//============================================================
+//== Guild Flag (Town) =====================================
 payon,113,322,4	duplicate(InsideFlagsPA3)	Holy Shadow#11	GUILD_FLAG
 payon,166,169,3	duplicate(InsideFlagsPA3)	Holy Shadow#12	GUILD_FLAG
 
-// Kafra Employee
-//============================================================
+//== Kafra Employee ========================================
 payg_cas03,9,263,5	duplicate(guildkafra)	Kafra Staff#payg_cas03	4_F_KAFRA1
 
-// Steward
-//============================================================
+//== Steward ===============================================
 payg_cas03,50,261,3	duplicate(cm)	Gheriot#payg_cas03	1_M_JOBTESTER
 
-// Treasure Room Exit
-//============================================================
+//== Treasure Room Exit ====================================
 payg_cas03,163,167,0	script	#lever_PA03	HIDDEN_NPC,{
 
 	mes " ";
@@ -116,18 +129,14 @@ payg_cas03,163,167,0	script	#lever_PA03	HIDDEN_NPC,{
 	close;
 }
 
-// Guild Dungeon Switch
-//============================================================
+//== Guild Dungeon Switch ==================================
 payg_cas03,38,42,0	duplicate(gdlever)	#payg_cas03	HIDDEN_NPC
 
-// Guild Treasure Spawns
-//============================================================
+//== Guild Treasure Spawns =================================
 payg_cas03,159,168,0	duplicate(Gld_Trea_Spawn)	Treasure#payg_cas03	-1
 
-// AGIT Manager
-//============================================================
+//== AGIT Manager ==========================================
 payg_cas03,269,265,0	duplicate(Gld_Agit_Manager)	Agit#payg_cas03	-1
 
-// Guardians
-//============================================================
+//== Guardians =============================================
 payg_cas03,10,277,0	duplicate(Gld_Guard_Template)	Guardian#payg_cas03	-1

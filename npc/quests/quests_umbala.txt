@@ -1,44 +1,57 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  rAthena Team
+//= Copyright (C)  eAthena Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  SinSloth
+//= Copyright (C)  Evera
+//= Copyright (C)  Lupus
+//= Copyright (C)  sabernet09
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Quest NPCs related to Umbala
-//===== By: ==================================================
-//= sabernet09 & rAthena Team
-//===== Current Version: =====================================
-//= 2.2a
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Umbalian Language Quest, Umbala Skeletal Gate Quest,
 //= Umbala Event, Create Essence/Dismantle Stone
-//	Phase 1. Learning the Language
-//	  (Elder) First discussion
-//	  (Elder) Asking about learning the language
-//	  (Elder) Final step (understanding NPC speech)
-//	------------------------------------------
-//	Phase 2. Create Essence/Dismantle Stone
-//	 (Shaman) Get permission to speak with her from the chief
-//	  (Elder) Ask about conditions needed to be fulfilled to get permission
-//	  (Elder) Get permission
-//	 (Shaman) Use the shaman to create essences and dismantle elemental stones.
+//=   Phase 1. Learning the Language
+//=       (Elder) First discussion
+//=       (Elder) Asking about learning the language
+//=       (Elder) Final step (understanding NPC speech)
+//=   Phase 2. Create Essence/Dismantle Stone
+//=       (Shaman) Get permission to speak with her from the chief
+//=       (Elder) Ask about conditions needed to be fulfilled to get permission
+//=       (Elder) Get permission
+//=       (Shaman) Use the shaman to create essences and dismantle elemental stones.
 //= Umbala Domestic Dispute?
 //= - This quest is only avaliable if you have not done language quest.
 //= - Variables in use: um_wind, MISC_QUEST (Bit 32768)
-//===== Additional Comments: =================================
-//= fixed by x[tsk], Lupus, PoW
-//= Quest completion is now registered
-//= 1.1 fixed Poporing Egg ID -> Poring Egg, fixed condition
-//= 1.2-1.6 fixed some Umbalian Language quests [Lupus]
-//= 1.7 Moved Umbala Event, Create Essence/Dismantle Stone, and Skeletal Gate from npc/cities/umbala.txt [Evera]
-//= 1.7a Removed all custom quests to custom folder [Lupus]
-//= 1.8 Added official chance of failure to Create Essence/Dismantle Stone [Lupus]
-//= 1.9 Added functionality to allow players to dismantle more
-//=     than a stone at once, up to 10. [SinSloth]
-//= 2.0 Updated hack check and added a weight check to dismantling. [SinSloth]
-//= 2.1 Rescripted to Aegis 10.3 standards. Added strange quest. [L0ne_W0lf]
-//= 2.2 Readded the ability to dismantle multiple stones at once. [L0ne_W0lf]
-//= 2.2a Fixed weight check from previous update. [L0ne_w0lf]
-//============================================================
+//================= Current Version =======================================
+//= 2.2a
+//=========================================================================
 
-// Umbalian Language Quest :: um_trans
-//============================================================
+//== Umbalian Language Quest :: um_trans ===================
 um_in,39,122,5	script	Utan Chief	4_M_UMCHIEF,{
 	if (event_umbala == 0) {
 		mes "[Karkatan]";
@@ -360,8 +373,7 @@ um_in,39,122,5	script	Utan Chief	4_M_UMCHIEF,{
 	}
 }
 
-// Create Essence/Dismantle Stone Quest :: um_npc
-//============================================================
+//== Create Essence/Dismantle Stone Quest :: um_npc ========
 um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 	if (checkweight(908,600) == 0) {
 		mes "^3355FFWait a second!";
@@ -977,8 +989,7 @@ umbala,221,193,1	script	#Skulldoor	HIDDEN_NPC,{
 	}
 }
 
-// Umbala Domestic Dispute Quest :: um_npc_ryu
-//============================================================
+//== Umbala Domestic Dispute Quest :: um_npc_ryu ===========
 um_in,139,48,5	script	Phrenetan	4_F_UMWOMAN,{
 	if (event_umbala >= 3) {
 		mes "[Phrenetan]";

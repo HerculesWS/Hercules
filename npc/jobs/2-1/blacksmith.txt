@@ -1,45 +1,48 @@
-//===== Hercules Script =======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Kisuka
+//= Copyright (C)  Yommy
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Silent
+//= Copyright (C)  Vicious
+//= Copyright (C)  Poki#3
+//= Copyright (C)  celest
+//= Copyright (C)  Lupus
+//= Copyright (C)  kobra_k88
+//= Copyright (C)  Komurka
+//= Copyright (C)  yoshiki
+//= Copyright (C)  EREMES THE CANIVALIZER(Aegis)
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Blacksmith Job Quest
-//===== By: ==================================================
-//= EREMES THE CANIVALIZER(Aegis)
-//= Translated by: yoshiki.
-//= Converted by: Komurka.
-//= Optimized and further edited by kobra_k88.
-//= Further bugfixed and tested by Lupus
-//===== Current Version: =====================================
-//= 2.9
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job Change quest for Blacksmith class.
-//===== Additional Comments: =================================
-//= Changed some npc names to the iRO names. Changed some variable
-//= names and labels. Edited some text.[kobra_k88]
-//= Removed "if (JobLevel > 48) goto higher". It was a left over line.
-//= Thx to "Decker".[kobra_k88]
-//= Fixed some typos, thanks to Riotblade [celest]
-//= 1.3-1.5 Added Baby Class support [Lupus]
-//= 1.6 Added a func which prevent advanced classes passing
-//=     2nd Job Quests again. It also guides adv classes where
-//=     to go. [Lupus]
-//= 1.7 item quantity/ids typos fix
-//= 1.8 Moved the Quest to Einbroch [Poki#3]
-//= 2.0 Changed numbers to constants. [Vicious]
-//= 2.1 Removed Duplicates [Silent]
-//= 2.2 Merged Jfunc, changed job numbers to constants [Lupus]
-//= 2.3 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 2.4 Several bugfixes with the help of Barron-Monster. [L0ne_W0lf]
-//= 2.4a Changed a BaseJob to baseclass. [L0ne_W0lf]
-//= 2.4b Further bug fixes with teh hel of Barron-Monster. [L0ne_W0lf]
-//= 2.4c More fixes courtosy of Micktu. [L0ne_W0lf]
-//= 2.4d Fixed an incorrect answer in the quiz. (Trojal) [L0ne_W0lf]
-//= 2.4e Touched up a few issues as pointed out by Ultramage. [L0ne_W0lf]
-//= 2.5 Krongast is in Lighthalzen. (DarkValmir) [L0ne_W0lf]
-//= 2.6 Fixed 4 bugs [Lupus]
-//= 2.6a Typo fix [Yommy]
-//= 2.7 Added Quest Log commands. [Kisuka]
-//= 2.8 Removed the need for use of 'goto.' [L0ne_W0lf]
-//= 2.9 Updated with some extra conditions. [Euphy]
-//==============================================================
+//================= Current Version =======================================
+//= 2.9
+//=========================================================================
 
 ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 	if (Upper == 1) {

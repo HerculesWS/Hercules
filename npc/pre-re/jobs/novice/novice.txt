@@ -1,29 +1,46 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Kisuka
+//= Copyright (C)  Samuray22
+//= Copyright (C)  Lupus
+//= Copyright (C)  Toms
+//= Copyright (C)  Silent
+//= Copyright (C)  Vicious
+//= Copyright (C)  MasterOfMuppets
+//= Copyright (C)  Dr.Evil
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Novice Training Grounds (Pre-Renewal)
+//================= Description ===========================================
 //= Ep 10+ Novice Training Grounds
-//===== By: ==================================================
-//= Dr.Evil & MasterOfMuppets
-//===== Current Version: =====================================
+//================= Current Version =======================================
 //= 2.4
-//===== Description: =========================================
-//= [Official Conversion]
-//= Novice Training Grounds
-//===== Additional Comments: =================================
-//= 1.7D Added confirm character name thing on receptionist. [Kisuka]
-//= 1.8 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//=     NPCs are not backwards compatable, and will remove
-//=     old variables used in the previous novice grounds.
-//= 1.9 Fixed problem with Hanson's dialog. (bugreport:1703) [L0ne_W0lf]
-//=     Fixed Entrance Guard clearing vars. (bugreport:1695)
-//=     Added duplicate NPCs to combat training maps.
-//= 2.0 Fixed savepoint not being changed sometimes. [L0ne_W0lf]
-//= 2.1 Corrected spacing issue in welcome message. [L0ne_W0lf]
-//= 2.2 Corrected Leo's endless dialog. [L0ne_W0lf]
-//= 2.3 Added fix to Hanson from GM-windsor- and Saithis. [L0ne_W0lf]
-//= 2.3a Correct a wrong variable name. (bugreport:2293) [Samuray22]
-//= 2.4 Corrected an error in Hanson. (bugreport:2374) [L0ne_W0lf]
-//============================================================
+//=========================================================================
 
-// Bulletin Board
+//== Bulletin Board ========================================
 new_1-1,66,114,4	script	Bulletin Board#nv	HIDDEN_NPC,{
 	mes "^FF0000=================================^000000";
 	mes "^FF0000 ^000000 ^E40CAA[Welcome]^CC0000 to ^FF9000Novice^7FFF00 Training ^00FF00Grounds ^E40CAA[Welcome]^FF0000^000000";
@@ -59,7 +76,7 @@ new_1-1,144,107,2	script	Guard#nv2	8W_SOLDIER,{
 	close;
 }
 
-// Receptionist
+//== Receptionist ==========================================
 new_1-2,100,29,4	script	Receptionist#nv1	4_M_04,{
 	mes "[Training Grounds Receptionist]";
 	mes "Hello, you look to be new here.";
@@ -348,7 +365,7 @@ new_1-1,53,114,4	script	Shion#nv1	4_F_JOB_HUNTER,{
 	}
 }
 
-// Interfaces Tutor
+//== Interfaces Tutor ======================================
 new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 	if (nov_get_item02 > 9 && nov_get_item03 > 9 && nov_get_item04 > 9) {
 		mes "[Kris]";
@@ -1529,7 +1546,7 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 	}
 }
 
-//Interface Assistant
+//== Interface Assistant ===================================
 new_1-2,161,182,5	script	Instructor#nv	4_F_03,{
 	mes "[Edwin]";
 	mes "Welcome to my class.";
@@ -2616,7 +2633,7 @@ new_1-2,38,182,3	script	Entrance Guard#nv	4_F_03,{
 	}
 }
 
-//Teleport NPC
+//== Teleport NPC ==========================================
 new_1-3,95,30,4	script	Trainer#nv1::NovHoffman	4_M_02,{
 	mes "[Hoffman]";
 	mes "Hey there~";
@@ -2726,7 +2743,7 @@ new_3-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv3	4_M_03
 new_4-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv4	4_M_03
 new_5-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv5	4_M_03
 
-//Potato Merchant
+//== Potato Merchant =======================================
 new_1-2,28,185,4	shop	Potato Merchant	4_F_01,516:15
 
 new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
@@ -3899,7 +3916,7 @@ S_UserJobchoice:
 	return;
 }
 
-//Novice Instructor
+//== Novice Instructor =====================================
 new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 	if (Class == Job_Novice) {
 		if (nov_3_swordman == 20) {
@@ -4190,7 +4207,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 	}
 }
 
-// Training Ground Mobs
+//== Training Ground Mobs ==================================
 new_1-3,0,0,0,0	monster	Poring	1002,10,0,0,0
 new_1-3,0,0,0,0	monster	Drops	1113,10,0,0,0
 new_1-3,0,0,0,0	monster	Lunatic	1063,10,0,0,0
@@ -4216,20 +4233,3 @@ new_2-3,0,0,0,0	monster	Fabre	1184,5,0,0,0
 new_3-3,0,0,0,0	monster	Fabre	1184,5,0,0,0
 new_4-3,0,0,0,0	monster	Fabre	1184,5,0,0,0
 new_5-3,0,0,0,0	monster	Fabre	1184,5,0,0,0
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.0 Added the New Novice Training Grounds, a big thanks [MasterOfMuppets]
-//=     to Dr.Evil who did 90% of the work =)
-//= 1.0b Temp measure to stop exploits. [Vicious]
-//= 1.2 Removed Duplicates [Silent]
-//= 1.3 Removed Duplicates [Toms]
-//= 1.4 Added Kafra Free Cart Tickets, as in official one [Lupus]
-//= 1.5 Fixed warps, removed map duplicates, typos [Lupus]
-//= 1.6 Changed clone maps new_1-? -> new_zone0? [Lupus]
-//= 1.7 Now Kafra Tickets are given at correct NPC/Actions [Lupus]
-//= 1.7a a bit of optimization [Lupus]
-//= 1.7b Corrected a little Typo Error. (bugreport:728) [Samuray22]
-//= 1.7C Corrected another Typo Error. (bugreport:740) [Samuray22]
-//============================================================

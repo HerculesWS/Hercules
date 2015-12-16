@@ -1,23 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Bangungot Hospital 2F
-//===== By: ==================================================
-//= Euphy
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Save the hospital in Port Malaya from Bangungot.
 //= Part of the "Nurse in Port Malaya" quest.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//= 1.1 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 1@ma_h	mapflag	src4instance
-//============================================================
 
-// Instance Creation
-//============================================================
+//== Instance Creation =====================================
 ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 	if (BaseLevel < 100) end;
 
@@ -359,8 +377,7 @@ sec_in02,27,30,0	script	Bangungot Gate	2_MONEMUS,{
 	}
 }
 
-// Instance Scripts
-//============================================================
+//== Instance Scripts ======================================
 1@ma_h,43,157,0	script	#Memorial Start	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
@@ -1024,8 +1041,7 @@ OnTimer30000:
 1@ma_h,99,132,7	script	Patient in Cold Sweat#b	4_F_PATIENT,{ end; }
 1@ma_h,87,132,7	script	Howling Patient#b	4_M_PATIENT,{ end; }
 
-// Warp Portals
-//============================================================
+//== Warp Portals ==========================================
 1@ma_h,35,156,0	warp	#Boss Room Exit	2,2,ma_dun01,150,9
 1@ma_h,105,157,0	warp	#Boss Room Door	2,2,1@ma_h,116,157
 1@ma_h,112,157,0	warp	#Boss Room Door1	2,2,1@ma_h,100,157
@@ -1080,7 +1096,7 @@ OnTimer30000:
 1@ma_h,131,49,0	warp	#Patternwarp32	10,10,1@ma_h,116,157
 1@ma_h,146,49,0	warp	#Patternwarp33	10,10,1@ma_h,116,157
 
-// Disable select warps.
+//- Disable select warps -
 // Custom, but saves processing and lines.
 1@ma_h,1,1,0	script	#ma_hos_warp_init	CLEAR_NPC,{
 	end;

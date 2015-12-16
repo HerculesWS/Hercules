@@ -1,22 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Joseph
+//= Copyright (C)  Euphy
+//= Copyright (C)  Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Guillotine Cross Job Quest
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job change Quest from Assassin / Assassin Cross -> Guillotine Cross.
-//===== Additional Comments: =================================
-//= 1.0 Adapted from original script. [Euphy]
-//= 1.0a Added 'npcskill' command. [Euphy]
-//= 1.0b Moved warps to separate file. [Euphy]
-//= 1.1 Fixed some minor bugs. [Euphy]
-//= 1.2 Moved "Girl" NPC off ve_fild05. [Euphy]
-//= 1.3 Added missing OnMyMobDead labels. [Euphy]
-//= 1.4 Added missing labels. [Joseph]
-//= 1.5 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 que_job01,75,96,3	script	Guild Member#3rdgc01	4_M_MOCASS1,{
 	if (job_3rd_gc == 0) {
@@ -3804,8 +3820,7 @@ L_Info:
 	return;
 }
 
-// Warp Portals
-//============================================================
+//== Warp Portals ==========================================
 job3_guil01,80,77,0	script	#gate_to_guil05	WARPNPC,1,1,{
 	end;
 OnTouch:

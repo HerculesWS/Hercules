@@ -1,20 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2015  Hercules Dev Team
+//= Copyright (C)  Kisuka
+//= Copyright (C)  Euphy
+//= Copyright (C)  M45T3R
+//= Copyright (C)  Dastgir
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Kagerou / Oboro Job Quest
-//===== By: ==================================================
-//= (1.0) Dastgir, M45T3R
-//===== Current Version: =====================================
-//= 1.1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job change Quest from Ninja -> Kagerou / Oboro.
-//===== Additional Comments: =================================
-//= 1.0.0 Initial Release. [Dastgir, M45T3R]
-//= 1.1.0 Structure Clean-Up. [Euphy]
-//= 1.1.1 Updated questlog commands. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 1.1.1
+//=========================================================================
 
-// Starting the Quest
-//============================================================
+//== Starting the Quest ====================================
 que_ng,28,156,0	script	Start#ko	HIDDEN_WARP_NPC,1,1,{
 	end;
 
@@ -753,8 +774,7 @@ L_StartTest:
 	}
 }
 
-// Test of Knowledge
-//============================================================
+//== Test of Knowledge =====================================
 job_ko,81,124,4	script	Cougar#ko	4_M_JOB_ASSASSIN,{
 	if (BaseJob != Job_Ninja) {
 		for (set .@i,5131; .@i<=5146; set .@i,.@i+1)
@@ -979,12 +999,9 @@ L_Question:
 	return;
 }
 
-// Test of Survival
-//============================================================
+//== Test of Survival ======================================
 
-// -----------------------------------------------------------
-//  Functions
-// -----------------------------------------------------------
+//- Functions -
 function	script	F_KO_Survival_mes	{
 	mes "[No. " + getarg(0) + "]";
 	mes "^1A95E6Other letters are too small to read. Let's look up close.^000000";
@@ -1121,9 +1138,7 @@ function	script	F_KO_Survival_rps	{
 	}
 }
 
-// -----------------------------------------------------------
-//  Templates
-// -----------------------------------------------------------
+//- Templates -
 -	script	Sight#ko_trap	-1,{
 	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(2),3,4));
 	end;
@@ -1266,10 +1281,7 @@ OnTouch:
 	end;
 }
 
-// -----------------------------------------------------------
-//  Blocks (00-40)
-// -----------------------------------------------------------
-
+//- Blocks (00-40) -
 job_ko,57,16,4	script	Sight#ko_00	4_BULLETIN_BOARD2,1,1,{
 	callfunc "F_KO_Survival_mes",0;
 	end;
@@ -1914,8 +1926,7 @@ OnTouch:
 	end;
 }
 
-// Test of Weaponry
-//============================================================
+//== Test of Weaponry ======================================
 job_ko,127,125,4	script	Red Leopard Joe#ko	4_M_JOB_ASSASSIN,{
 	if (MaxWeight - Weight < 1000 || checkweight("Knife",1) == 0) {
 		mes "[Red Leopard Joe]";
@@ -2493,8 +2504,7 @@ job_ko,121,121,0	script	Refinement Tools#ko_01	CLEAR_NPC,{
 }
 job_ko,127,121,0	duplicate(Refinement Tools#ko_01)	Refinement Tools#ko_02	CLEAR_NPC
 
-// Test of Battle
-//============================================================
+//== Test of Battle ========================================
 job_ko,148,46,4	script	Guide Gion#ko2	4_M_KAGE_OLD,{
 	if (MaxWeight - Weight < 2000 || checkweight("Knife",1) == 0) {
 		mes "[Guide Gion]";
@@ -2734,8 +2744,7 @@ OnMyMobDead:
 	end;
 }
 
-// GM Control Panel
-//============================================================
+//== GM Control Panel ======================================
 job_ko,3,1,4	script	Battle Test Control#ko	4_M_KAGE_OLD,{
 	callfunc "F_GM_NPC";
 	if (callfunc("F_GM_NPC",1854,0) == 1) {

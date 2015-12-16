@@ -1,22 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  SinSloth
+//= Copyright (C)  Lupus
+//= Copyright (C)  Jukka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Merchant Class Tutorial and Job Specific Quest
-//===== By: ==================================================
-//= Fix up by Jukka
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Merchant training quest.
-//===== Additional Comments: =================================
-//= 1.0 Fully working
-//= 1.1 Fixed bugs, optimized [Lupus]
-//= 1.2 fixed Weight check
-//= 1.2 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 1.3 Misc. updates. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
-// Guarnien
-//============================================================
+//== Guarnien ==============================================
 alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 	mes "[Guarnien]";
 	if(Class != Job_Merchant && Class != Job_Baby_Merchant){
@@ -655,8 +674,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 	}
 }
 
-// Sagle
-//============================================================
+//== Sagle =================================================
 prontera,66,111,3	script	Sagle	4_KID01,{
 	mes "[Sagle]";
 	if(tu_merchant == 8){
@@ -814,8 +832,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 	close;
 }
 
-// Kellion
-//============================================================
+//== Kellion ===============================================
 prontera,93,330,3	script	Kellion	4W_M_01,{
 	mes "[Kellion]";
 	if(tu_merchant == 8){
@@ -948,8 +965,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 	close;
 }
 
-// Aigie
-//============================================================
+//== Aigie =================================================
 prt_in,169,11,3	script	Aigie	4_F_03,{
 	if(tu_merchant == 8){
 		mes "[Aigie]";
@@ -1094,8 +1110,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 	close;
 }
 
-// Jayon
-//============================================================
+//== Jayon =================================================
 prontera,247,129,3	script	Jayon	4_M_03,{
 	if(tu_merchant == 8){
 		mes "[Jayon]";
@@ -1246,8 +1261,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 	close;
 }
 
-// Maos
-//============================================================
+//== Maos ==================================================
 prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 	if(tu_merchant == 8){
 		mes "[Maos]";

@@ -1,32 +1,41 @@
-//===== Hercules Script ======================================
-//= Merchant Job Quest
-//===== By: ==================================================
-//= kobra_k88; L0ne_W0lf
-//===== Current Version: =====================================
-//= 2.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Kisuka
+//= Copyright (C)  Silent
+//= Copyright (C)  massdriller
+//= Copyright (C)  Lupus
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Merchant Job Quest (Pre-Renewal)
+//================= Description ===========================================
 //= Job quest for Merchant classes
-//===== Additional Comments: =================================
-//= 1.0 Fully working.
-//= 1.1 Added instant job change for High Novice [Lupus]
-//= 1.3 Added Baby Class support [Lupus]
-//= 1.4 Optimised and moved first checker to Jfunc1-1 [massdriller]
-//= 1.5 Changed Prontera->Izlude teleport price to 600 [Lupus]
-//= 1.5.1 Removed Duplicates [Silent]
-//= 1.5.2 Now saves/restores all quest skills [Lupus]
-//= 1.6 Merged back JFunc, CHANGED NUMBERS TO CONSTANTS [Lupus]
-//= 1.7 Updated to use Free Ticket for Kafra [Lupus]
-//= 1.8 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=     No longer uses function "F_ToHigh"
-//= 1.9 Bugfixes, thanks to Barron-Monster. [L0ne_W0lf]
-//= 1.9a Added a missing next; (Barron-Monster) [L0ne_W0lf]
-//= 1.9b Typo. "nextl" -> "next;" (Barron-Monster) [L0ne_W0lf]
-//= 2.0 Should "fix" the problem with the Biliban Kafra. [L0ne_W0lf]
-//= 2.1 Fixed mistake in condition check. [L0ne_W0lf]
-//= 2.2 Added Quest Log commands. [L0ne_W0lf]
-//= 2.3 Fixed an issue with completequest by adding checkquest. [Kisuka]
-//============================================================
+//================= Current Version =======================================
+//= 2.3
+//=========================================================================
 
 alberta_in,53,43,6	script	Merchant#mer	4_M_04,{
 	if (Upper == 1) {

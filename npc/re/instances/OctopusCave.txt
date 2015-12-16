@@ -1,22 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Octopus Cave
-//===== By: ==================================================
-//= Muad_Dib
-//===== Current Version: =====================================
-//= 1.1
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Defeat the Disgusting Octopus.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Euphy]
-//= 1.1 Instance system rewrite. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.1
+//=========================================================================
 
 1@cash	mapflag	src4instance
-//============================================================
 
-// Instance Creation
-//============================================================
+//== Instance Creation =====================================
 mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 
 	.@party_id = getcharid(1);
@@ -160,8 +179,7 @@ mal_dun01,153,237,5	script	Weird Entrance	CLEAR_NPC,{
 	}
 }
 
-// Instance Scripts
-//============================================================
+//== Instance Scripts ======================================
 1@cash,199,99,0	script	oct_enter	HIDDEN_WARP_NPC,4,4,{
 	end;
 OnTouch:
@@ -700,8 +718,7 @@ OnTouch:
 // This is never enabled in the official script.
 //1@cash,200,161,0	duplicate(oct_exit_1)	oct_exit_3	WARPNPC,2,2
 
-// Warp Portals
-//============================================================
+//== Warp Portals ==========================================
 1@cash,193,82,0	warp	oct_door1	2,2,1@cash,151,48
 1@cash,154,53,0	warp	oct_door2	2,2,1@cash,197,87
 1@cash,187,99,0	warp	oct_door3	2,2,1@cash,148,128

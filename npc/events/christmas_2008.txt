@@ -1,25 +1,49 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Kisuka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= iRO 2008 Christmas Event
-//===== By: ==================================================
-//= Kisuka
-//===== Current Version: =====================================
-//= 1.1
-//===== File Encoding ========================================
+//================= File Encoding =========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//===== Description: =========================================
+//= -If the encoding is correct, the next three lines have the same length-
+//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
+//= ============ ============================================= ============
+//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
+//================= Description ===========================================
 //= iRO Christmas Event. (2008)
 //= Create Music Box and Cake.
 //= Play card game with Santa.
 //= Create Santa Suits.
-//==========================================
+//================= Current Version =======================================
+//= 1.1
+//================= Additional Comments ===================================
 //= Must enable X-mas08 mobs in mob_db2.
-//===== Additional Comments: =================================
-//= 1.0 First version. [Kisuka]
-//= 1.1 Fixed some issues, revamped the whole script. [Kisuka]
-//============================================================
+//=========================================================================
 
-// Caroller - Music Box
-//============================================================
+//== Caroller - Music Box ==================================
 prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 	if (iROxmas08carol < 1 || iROxmas08carol == 3) {
 		if (iROxmas08carol == 3) {
@@ -433,8 +457,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 	}
 }
 
-// Santa Claus - Card Game
-//============================================================
+//== Santa Claus - Card Game ===============================
 -	script	Santa Claus#iROxmas08::08santa	4_M_SANTA,{
 	mes "[Santa Claus]";
 	mes "Wow! Were you naughty or nice this year?";
@@ -714,8 +737,7 @@ alberta,117,66,4	duplicate(08santa)	Santa Claus#0803	4_M_SANTA
 geffen,119,70,4	duplicate(08santa)	Santa Claus#0804	4_M_SANTA
 morocc,158,104,4	duplicate(08santa)	Santa Claus#0805	4_M_SANTA
 
-// Louise Kim - Santa Suit
-//============================================================
+//== Louise Kim - Santa Suit ===============================
 xmas_in,89,92,4	script	Louise Kim#iROxmas08	4_F_06,{
 	mes "[Louise Kim]";
 	mes "I always thought about how boring Santa Claus is wearing a too boring costume.";
@@ -854,8 +876,7 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	4_F_06,{
 	}
 }
 
-// Monsters
-//============================================================
+//== Monsters ==============================================
 prt_fild00,0,0,0,0	monster	Christmas Jakk	1244,5,0,0,0
 prt_fild00,0,0,0,0	monster	Christmas Goblin	1245,5,0,0,0
 prt_fild00,0,0,0,0	monster	Christmas Cookie	1246,5,0,0,0

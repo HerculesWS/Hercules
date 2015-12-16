@@ -1,29 +1,47 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  rAthena Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  eAthena Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Evera
+//= Copyright (C)  Silent
+//= Copyright (C)  Nexon
+//= Copyright (C)  massdriller
+//= Copyright (C)  Lupus
+//= Copyright (C)  kobra_k88
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Comodo Town
-//===== By: ==================================================
-//= rAthena Dev Team
-//===== Current Version: =====================================
-//= 2.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Comodo Town NPCs
-//===== Additional Comments: =================================
-//= Not complete.
-//= 1.1 Rolled back from the wrong Kashy's fix
-//= Implemented the 'Cheese'/Stone of Awakening quest.  Re-organized stuff. [kobra_k88]
-//= 1.2b Added Baby Class support [Lupus]
-//= 1.3 Spell Checked and Fixed [massdriller]
-//= 1.4 Fixed typos [Nexon]
-//= 1.5 Removed Duplicates [Silent]
-//= 1.6 Split doomed sword quest to quests/quests_comodo.txt [Evera]
-//= 1.7 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.8 Fixed a small bug. (close -> close2) [L0ne_W0lf]
-//= 1.9 Added a missing Kafra NPC. [L0ne_W0lf]
-//= 2.0 Added Izlude RE coordinates. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.0
+//=========================================================================
 
-// Inside Comodo
-//============================================================
+//== Inside Comodo =========================================
 cmd_in02,73,81,4	script	Martine#cmd	1_M_02,{
 	mes "[Martine]";
 	mes "Gambling...? The games";
@@ -234,8 +252,7 @@ cmd_in02,57,62,4	script	Moo#cmd	4_M_MANAGER,{
 	}
 }
 
-// Comodo Field
-//============================================================
+//== Comodo Field ==========================================
 cmd_fild04,188,74,4	script	Zyosegirl#cmd	4_F_04,{
 	mes "[Zyosegirl]";
 	mes "People call me the";
@@ -398,8 +415,7 @@ cmd_in02,146,180,4	script	Kafra Employee::kaf_comodo2	4_F_KAFRA7,{
 	end;
 }
 
-// Morroc Field
-//============================================================
+//== Morroc Field ==========================================
 moc_fild12,35,303,4	script	Serutero#cmd	1_M_ORIENT01,{
 	mes "[Serutero]";
 	mes "Hello, I'm Serutero,";

@@ -1,58 +1,57 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Lupus
+//= Copyright (C)  Silent
+//= Copyright (C)  Evera
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Dungeon Teleport Service
-//===== By: ==================================================
-//= Evera
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= Cool Event Corp (a.k.a. Zonda Corp) vs. Kafra Dungeon Teleport Service
+//= and voting system.
+//= This is a special event on official servers where there's a big
+//= competition between Kafra Corp. and Cool Event Corp. to warp to
+//= selected levels of certain dungeons.
+//================= Current Version =======================================
 //= 2.9
-//===== Description: =========================================
-//= [Official Conversion]
-//= Cool Event Corp NPCs vs. Kafra Dungeon Teleport Service and voting system.
-//= This is a special event on official servers where there's a
-//= big competition between Kafra Corp. and Cool Event Corp.
-//= To warp to selected levels of certain dungeons.
-//
-// Global Variables in use:
-//	Voting Time check:		$DTS_Time
-//	Cool Event Corp. Vote Numbers:	$DTS_JondaVotes
-//	Kafra Vote Numbers:		$DTS_KafraVotes
-//	Winner:				$DTS_Result
-//	Teleport Service Period Check:	$DTS_PeriodCheck
-//	Kafra Points:			$DTS_KafraWins
-//	Cool Event Corp. Points:	$DTS_JondaWins
-//	Setitem Check:			$DTS_VoteCount
-// For Detailed information on what each varibale does, see
-// the "Vote Globalvar Girl#yuno" NPC at the end of the file.
-// Character Variable in use: lhz_vote (how many times player has voted, keeps htem from re-voting.)
-//===== Additional Comments: =================================
-//= 1.0 Initial release [Evera]
-//= 1.1 SVN release, removed from major town (found true info after research),
-//=     put more arg(2) parameters, fixed a few bugs [Evera]
-//= 1.2 Mushed some variables together, optimized a bit [Evera]
-//= 1.3 Removed selfconfig [Evera]
-//= 1.4 Changed global variables to read from 3 global variables, updated names,
-//=      fixed array bug [Evera]
-//= 1.5 Mushed voting varialbes into 1 variable. [Evera]
-//= 1.6 Removed Duplicates [Silent]
-//= 1.7 Fixed bug of DTS_Admin not running by itself [Evera]
-//= 1.8 Changed requirement to lvl 60 [Evera]
-//= 1.9 Removed global eligibility option [Evera]
-//= 2.0 Fixed zeny bug [Evera]
-//= 2.1 Fixed headers with and updated with newer information [Evera]
-//= 2.2 Changed dtseligible 2 to MISC_QUEST|128, to clean up variable usage. [Evera]
-//=     Also added F_ClearGarbage function to the scripts. [Evera]
-//= 2.3 Changed dtseligible to be $dtsday when MISC_QUEST|128
-//=     Added $dtsday for vote session counter
-//=     Fixed bug that involved having both warpers enabled at the same time. [Evera]
-//=     New $dtsday system and bug fix[Evera]
-//= 2.3a fixed 2 bugs with comparision [Lupus]
-//= 2.3b corrected Glast warp coords [Lupus] 2.3c Bailand -> Bayalan
-//= 2.4 Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 2.5 Converted from Aegis file. (11.3) [L0ne_W0lf]
-//= 2.6 Moved Morroc NPCs to Morroc Ruins. [L0ne_W0lf]
-//= 2.7 Fixed a typo, a - to a +. Not sure how that happened. [L0ne_w0lf]
-//= 2.8 Corrected another typo this time in a variable.
-//= 2.9 Added GM management function. [Euphy]
-//============================================================
+//================= Variables Used ========================================
+//= - lhz_vote         : How many times player has voted, keeps htem from
+//=                      re-voting.
+//= - $DTS_Time        : Voting Time check
+//= - $DTS_JondaVotes  : Cool Event Corp. Vote Numbers
+//= - $DTS_KafraVotes  : Kafra Vote Numbers
+//= - $DTS_Result      : Winner
+//= - $DTS_PeriodCheck : Teleport Service Period Check
+//= - $DTS_KafraWins   : Kafra Points
+//= - $DTS_JondaWins   : Cool Event Corp. Points
+//= - $DTS_VoteCount   : Setitem Check
+//= For detailed information on what each varibale does, see the
+//= "Vote Globalvar Girl#yuno" NPC at the end of the file.
+//=========================================================================
 
 einbroch,246,70,0	script	Vote Timer#ein	-1,{
 OnInit:
@@ -291,9 +290,9 @@ OnTimer60000:
 	end;
 }
 
-// Voting Poll NPCs Kafras and Cool Corp.
-// Cool Event Staff should actually be Cool Event Voting Staff
-// names had to be shortened to keep them unique.
+//== Voting Poll NPCs Kafras and Cool Corp. ================
+// Cool Event Staff should actually be Cool Event Voting Staff names had to be
+// shortened to keep them unique.
 function	script	F_VoteKafra	{
 	callfunc "F_ClearGarbage";				//Clear outdated, unused variables
 	switch(getarg(0)){

@@ -1,27 +1,45 @@
-//===== Hercules Script ======================================
-//= Shops
-//===== By: ==================================================
-//= Hercules Dev Team
-//===== Current Version: =====================================
-//= 1.9
-//===== Description: =========================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Frost
+//= Copyright (C)  rAthena Dev Team
+//= Copyright (C)  Lemongrass
+//= Copyright (C)  Streusel
+//= Copyright (C)  Euphy
+//= Copyright (C)  Joseph
+//= Copyright (C)  eAthena Dev Team
+//= Copyright (C)  Kenpachi
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
+//= Shops (Renewal)
+//================= Description ===========================================
 //= Renewal-specific town shop NPCs.
-//===== Additional Comments: =================================
-//= 1.0 Moved some merchants to a separate renewal file. [Kenpachi]
-//= 1.1 Added Dicastes merchants. [Joseph]
-//= 1.2 Moved more shops to Renewal file. [Euphy]
-//= 1.3 Added Malangdo tool dealer. [Euphy]
-//= 1.4 Moved Izlude merchants. [Streusel]
-//= 1.5 Added Dewata merchants. [Lemongrass]
-//= 1.6 Added Mora and Port Malaya merchants.
-//= 1.7 Added Izlude duplicates. [Euphy]
-//= 1.8 Converted to trader format. [Frost]
-//= 1.9 Change the item sequence of Black Marketeer according to kRO. [Frost]
-//============================================================
+//================= Current Version =======================================
+//= 1.9
+//=========================================================================
 
-//=======================================================
-// Comodo
-//=======================================================
+//== Comodo ================================================
 comodo,106,213,5	trader	Tropic Fruit Dealer	4_F_07,{
 OnInit:
 	sellitem Comodo_Tropic_Fruit;
@@ -33,9 +51,7 @@ OnInit:
 	sellitem Heartbroken_Tears;
 }
 
-//=======================================================
-// Dewata
-//=======================================================
+//== Dewata ================================================
 dewata,218,164,4	trader	Weapon Dealer	4_M_DEWMAN,{
 OnInit:
 	sellitem Main_Gauche;
@@ -92,9 +108,7 @@ OnInit:
 	sellitem Belt;
 }
 
-//=======================================================
-// Einbroch
-//=======================================================
+//== Einbroch ==============================================
 einbroch,122,250,4	trader	Black Marketeer#ein	1_M_03,{
 OnInit:
 	sellitem Flame_Thrower;
@@ -121,9 +135,7 @@ OnInit:
 	sellitem RepairC;
 }
 
-//=======================================================
-// El Dicastes
-//=======================================================
+//== El Dicastes ===========================================
 dic_in01,238,107,5	trader	Peddler#dic	4_M_HUMERCHANT,{
 OnInit:
 	sellitem Wing_Of_Fly;
@@ -140,9 +152,7 @@ OnInit:
 	sellitem Lime_Green_Pts;
 }
 
-//=======================================================
-// Izlude
-//=======================================================
+//== Izlude ================================================
 izlude,124,165,4	trader	Fruit Gardener#iz	1_M_INNKEEPER,{
 OnInit:
 	sellitem Apple;
@@ -219,18 +229,14 @@ OnInit:
 	sellitem Thunder_P;
 }
 
-//=======================================================
-// Juno
-//=======================================================
+//== Juno ==================================================
 s_atelier,114,117,1	trader	Part-Timer#sc_yuno	4_F_03,{
 OnInit:
 	sellitem Surface_Paint;
 	sellitem Face_Paint;
 }
 
-//=======================================================
-// Lighthalzen
-//=======================================================
+//== Lighthalzen ===========================================
 lighthalzen,337,240,4	trader	Trap Specialist#lhz	1_F_01,{
 OnInit:
 	sellitem Special_Alloy_Trap;
@@ -269,9 +275,7 @@ OnInit:
 	sellitem Face_Paint;
 }
 
-//=======================================================
-// Malangdo
-//=======================================================
+//== Malangdo ==============================================
 malangdo,232,163,5	trader	Tool Dealer Myo	4_CAT_ADV2,{
 OnInit:
 	sellitem Spectacles;
@@ -284,9 +288,7 @@ OnInit:
 	sellitem Empty_Bottle;
 }
 
-//=======================================================
-// Mora
-//=======================================================
+//== Mora ==================================================
 mora,100,118,4	trader	Tool Dealer#mora	4_M_RAFLE_OLD,{
 OnInit:
 	sellitem Red_Raffle_Sap;
@@ -304,9 +306,7 @@ OnInit:
 	sellitem Beef_Toast;
 }
 
-//=======================================================
-// Mid Camp
-//=======================================================
+//== Mid Camp ==============================================
 mid_camp,129,284,4	trader	Trap Specialist#mid	1_F_01,{
 OnInit:
 	sellitem Special_Alloy_Trap;
@@ -339,18 +339,14 @@ OnInit:
 	sellitem RepairC;
 }
 
-//=======================================================
-// Payon
-//=======================================================
+//== Payon =================================================
 payon,123,109,4	trader	Trap Specialist#pay	1_F_01,{
 OnInit:
 	sellitem Special_Alloy_Trap;
 	sellitem Special_Alloy_Trap_Box;
 }
 
-//=======================================================
-// Port Malaya
-//=======================================================
+//== Port Malaya ===========================================
 ma_in01,73,22,3	trader	Weapon Dealer#ma	4_M_DEWMAN,{
 OnInit:
 	sellitem Main_Gauche;
@@ -406,9 +402,7 @@ OnInit:
 	sellitem Belt;
 }
 
-//=======================================================
-// Prontera
-//=======================================================
+//== Prontera ==============================================
 /*
 prontera,104,88,5	trader	Stuff Gimme	4_M_MASKMAN,{
 OnInit:
@@ -454,6 +448,7 @@ OnInit:
 	sellitem Face_Paint;
 }
 
+//- Ninja Shops -
 prontera,178,244,3	trader	Amatsu Trader#nin	4_M_01,{
 OnInit:
 	sellitem Shuriken;
@@ -476,9 +471,7 @@ OnInit:
 	sellitem Charm_Earth;
 }
 
-//=======================================================
-// Rachel
-//=======================================================
+//== Rachel ================================================
 ra_in01,263,281,4	trader	Trap Specialist#ra	1_F_01,{
 OnInit:
 	sellitem Special_Alloy_Trap;

@@ -1,25 +1,47 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Kisuka
+//= Copyright (C)  Brainstorm
+//= Copyright (C)  Samuray22
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Skotlex
+//= Copyright (C)  Lance
+//= Copyright (C)  Vicious
+//= Copyright (C)  Lupus
+//= Copyright (C)  Fredzilla
+//= Copyright (C)  Athena
+//= Copyright (C)  Kalen
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Dancer Job Quest
-//===== By: ==================================================
-//= Kalen - Original jAthena
-//= Fredzilla - Converted, Lupus
-//===== Current Version: =====================================
-//= 3.7a
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job quest for Dancer classes
-//===== Additional Comments: =================================
-//= 3.2 Rescripted to Aegis 10.3 stadards. [L0ne_W0lf]
-//=     No longer uses function "F_BlockHigh"
-//= 3.2a Deleted unused variables. [Samuray22]
-//= 3.3 Updated waiting room. (Removes global var) [L0ne_W0lf]
-//= 3.4 Fixed bad variables, bugreport:1685 [Brainstorm]
-//= 3.5 Minor corrections to script. (bugreport:1766) [L0ne_W0lf]
-//= 3.6 Applied Correction bug with for loop. [L0ne_W0lf]
-//= 3.6a Fixed a little Exploit to bug the quest with a timeout. (bugreport:2252) [Samuray22]
-//= 3.7 Added Quest Log commands. [Kisuka]
-//= 3.7a Fixed a label execution. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 3.7a
+//=========================================================================
 
 comodo,180,153,4	script	Sonotora#1	4_F_01,{
 	mes "[Athena Sonotora]";
@@ -891,8 +913,7 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 	}
 }
 
-// Waiting Room
-//============================================================
+//== Waiting Room ==========================================
 job_duncer,32,154,1	script	Waiting Room#dance	1_F_01,{
 	end;
 
@@ -933,8 +954,7 @@ job_duncer,32,154,1	script	Waiting Room#click	1_F_01,{
 	close;
 }
 
-// Dance Timer
-//============================================================
+//== Dance Timer ===========================================
 job_duncer,69,105,0	script	Bijou#dance_timer	-1,{
 OnEnable:
 	initnpctimer;
@@ -1286,8 +1306,7 @@ OnEnable:
 	end;
 }
 
-// Dance Move Triggers
-//============================================================
+//== Dance Move Triggers ===================================
 -	script	dancestep::StepTrigger	-1,1,1,{
 OnTouch:
 	donpcevent "Backdancer#1::OnOmg";
@@ -1320,8 +1339,7 @@ OnDisable:
 
 }
 
-// Backup Dancers
-//============================================================
+//== Backup Dancers ========================================
 job_duncer,63,110,4	script	Backdancer#1	4_F_07,{
 	end;
 
@@ -1375,28 +1393,3 @@ OnOmg:
 	emotion e_omg;
 	end;
 }
-
-//============================================================
-// Old changelog
-//============================================================
-//= 1.1 Removed the warp I left here my accident, added a check for using
-//=     Improved Concentration and arrow shower, people could get away with it
-//=     [Fredzilla]
-//= 1.0 I tried to keep as much the same from the Jap version as possible
-//=     this turned out to be quite hard, but on the whole it is the same script
-//=     I have added some new things, and changed some of the used commands,
-//=     along with some optimization. [Fredzilla]
-//= 1.5 Added Baby Class Support [Fredzilla]
-//= 1.6 Added a func which prevent advanced classes passing
-//=     2nd Job Quests again. It also guides adv classes where
-//=     to go. [Lupus]
-//= 2.0 Changed numbers to constants. [Vicious]
-//= 2.1 Script check #1. [Lance]
-//= 2.2 Fixed unpassable part, thx2 Alis [Lupus]
-//= 2.3 Updated initnpctimer to attach player to jobDq script [Skotlex]
-//= 2.4 Attached chrid to be able obtain player's SP on mobs death, optimized a bit [Lupus]
-//= 2.5 Final fix of chrid issues, changed 'Improved
-//=     Concentration' to 'Attention Concentrate' [Lupus]
-//= 3.0 Some optimization, typos, added missing dialogues (4Kb lighter) [Lupus]
-//= 3.1 Implemented JOBLVL as in other quests [Lupus]
-//============================================================

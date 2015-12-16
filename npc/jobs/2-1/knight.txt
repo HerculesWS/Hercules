@@ -1,44 +1,45 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Joseph
+//= Copyright (C)  Euphy
+//= Copyright (C)  Vali
+//= Copyright (C)  Kisuka
+//= Copyright (C)  Samuray22
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Vicious
+//= Copyright (C)  Lupus
+//= Copyright (C)  kobra_k88
+//= Copyright (C)  PGRO TEAM (Aegis)
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Knight Job Quest
-//===== By: ==================================================
-//= PGRO TEAM (Aegis).
-//= Converted by kobra_k88
-//= Further bugfixed and tested by Lupus
-//===== Current Version: =====================================
-//= 3.3
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Job Change quest for Knight class.
-//===== Additional Comments: =================================
-//= 1.0 Fully working.  Please comment out any pre-existing warps for the
-//= test rooms in any other files so that the ones specified here can work.
-//= 1.1 Fixed a major bug.  Now using the initnpctimer command,
-//= donpcevent, and new waitingroom event commands.  No more addtimer
-//= spamming.  No longer have to talk to the npc to take the test.  Just enter the chat room.
-//= 1.2 More bug fixes.  Changed global variable names to unique ones.
-//= Added second set of items to first test. Added Awake pots award for job change.
-//= 1.3 Added Baby Class support [Lupus]
-//= 1.5 Fixed possible EXP abuse [Lupus]
-//= 1.6 Added a func which prevent advanced classes passing
-//= 2nd Job Quests again. It also guides adv classes where
-//= to go. [Lupus]
-//= 2.0 Changed numbers to constants. [Vicious]
-//= 2.1 Merged JFunc [Lupus]
-//= 2.2 Rescripted to Aegis 10.3 standards. [L0ne_W0lf]
-//= 2.3 Several bugfixes with the help of Barron-Monster. [L0ne_W0lf]
-//= 2.4 Minor fixes to timer#knt. [L0ne_W0lf]
-//= 2.5 Fixes a small bug with making claymores. [L0ne_W0lf]
-//=     Corrected usages of killmonster and killmonsterall.
-//= 2.6 Corrected an improper areawarp destination. [L0ne_W0lf]
-//= 2.7 Deleted unused variables. [Samuray22]
-//= 2.7a Corrected a Typo error ";;". [Samuray22]
-//= 2.8 Now uses enable and disable waitingroomevent. [L0ne_W0lf]
-//= 2.9 Added Quest Log commands. [Kisuka]
-//= 3.0 Removed the need for use of 'goto.' [L0ne_W0lf]
-//= 3.1 Modified the quest to renewal. [Vali] (Thanks to Muad_Dib for the necessary info).
-//= 3.2 More Renewal updates and some optimization. [Euphy]
-//= 3.3 Fixed missing changequest. [Joseph]
-//============================================================
+//================= Current Version =======================================
+//= 3.3
+//=========================================================================
 
 prt_in,88,101,4	script	Chivalry Captain#knt	1_M_KNIGHTMASTER,{
 	mes "[Captain Herman]";
@@ -1147,8 +1148,7 @@ prt_in,79,94,4	script	Sir Windsor#knt	4_M_JOB_KNIGHT1,{
 	}
 }
 
-// Test 2 part 1
-//==========================================================
+//== Test 2 part 1 =========================================
 job_knt,89,106,4	script	Knight Windsor#knt	4_M_JOB_KNIGHT1,{
 	mes "[Sir Windsor]";
 	mes "...";
@@ -1308,8 +1308,7 @@ OnTimer182000:
 	end;
 }
 
-// Test 2 part 2
-//==========================================================
+//== Test 2 part 2 =========================================
 -	script	Knight2	-1,{
 OnInit:
 	disablenpc "Knight2";
@@ -1372,8 +1371,7 @@ OnTimer182000:
 	end;
 }
 
-// Test 2 part 3
-//==========================================================
+//== Test 2 part 3 =========================================
 -	script	Knight3	-1,{
 OnInit:
 	disablenpc "Knight3";
@@ -1439,8 +1437,7 @@ OnTimer182000:
 	end;
 }
 
-// Test 3 (Manners)
-//==========================================================
+//== Test 3 (Manners) ======================================
 prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 	mes "[Lady Amy]";
 	if (BaseJob != Job_Swordman) {
@@ -1782,8 +1779,7 @@ prt_in,69,107,6	script	Lady Amy#knt	4_F_JOB_KNIGHT,{
 	}
 }
 
-// Test 4 (patience)
-//==========================================================
+//== Test 4 (patience) =====================================
 prt_in,70,99,6	script	Sir Edmond#knt	4_M_JOB_KNIGHT2,{
 	mes "[Sir Edmond]";
 	if (BaseJob != Job_Swordman) {
@@ -1997,8 +1993,7 @@ OnTouch:
 	end;
 }
 
-// Test 5, and creates Claymores for knights
-//==========================================================
+//== Test 5, and creates Claymores for knights =============
 prt_in,87,92,4	script	Sir Gray#knt	2_M_SWORDMASTER,{
 	mes "[Sir Gray]";
 	if (BaseJob != Job_Swordman) {

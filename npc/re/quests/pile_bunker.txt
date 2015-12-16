@@ -1,15 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Masao
+//= Copyright (C)  JayPee Mateo
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Pile Bunker Quest
-//===== By: ==================================================
-//= JayPee Mateo
-//===== Current Version: =====================================
+//================= Description ===========================================
+//= A Pile Bunker Quest.
+//================= Current Version =======================================
 //= 2.2
-//===== Description: =========================================
-//= 1.0 A Pile Bunker quest based on iRO WiKi. [JayPee Mateo]
-//= 2.0 Rewrited the Script a little so it looks a bit better. [Masao]
-//= 2.1 Switched to official script, coded by Gennosuke Kouga. [Euphy]
-//= 2.2 Updated to match the official script. [Euphy]
-//============================================================
+//=========================================================================
 
 yuno,179,174,4	script	Gomer	4_M_REPAIR,{
 	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {

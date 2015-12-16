@@ -1,24 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 // BattleGround System - KvM 80-99
-//===== By: ==================================================
-//= ???, L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.2
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Kreiger Von Midgard Battleground for levels 80 to 99
 //= - Winning Team: 5 points
 //= - Losing Team: 1 point
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//= 1.1 Updated using official Aegis files. [L0ne_W0lf]
-//= 1.2 Upated some announces and dialogs from iRO.
-//=     Changed how the scoreboard works slightly.
-//=     Removed the areapercentheals, and minor things.
-//============================================================
+//================= Current Version =======================================
+//= 1.2
+//=========================================================================
 
-// Waiting Room NPCs
-//============================================================
+//== Waiting Room NPCs =====================================
 bat_room,169,226,5	script	KVM Waiting Room#a::KvM01R_Guillaume	4_M_KY_KNT,{
 	end;
 
@@ -47,8 +63,7 @@ OnEnterBG:
 
 bat_room,169,211,0	warp	#kvm802	2,2,bat_room,154,150
 
-// Starting Line
-//============================================================
+//== Starting Line =========================================
 -	script	KVM01::CellEffect	-1,{
 	end;
 
@@ -119,8 +134,7 @@ OnTouch:
 	end;
 }
 
-// Battleground Engine
-//============================================================
+//== Battleground Engine ===================================
 -	script	KvM01_BG	-1,{
 	end;
 
@@ -365,8 +379,7 @@ OnTimer60000:
 	end;
 }
 
-// Battleground rewards
-//============================================================
+//== Battleground rewards ==================================
 bat_c01,51,130,5	script	KVM Officer#KVM01A	4_M_KY_HEAD,{
 	if( $@KvM01BG_Victory )
 	{

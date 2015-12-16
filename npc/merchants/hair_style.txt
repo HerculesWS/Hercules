@@ -1,20 +1,43 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Silent
+//= Copyright (C)  Nexon
+//= Copyright (C)  Kisuka
+//= Copyright (C)  Samuray22
+//= Copyright (C)  Muad_Dib
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Hair Dresser
-//===== By: ==================================================
-//= Muad_Dib, Samuray22, Kisuka
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Allows you to change your hairstyle.
-//===== Additional Comments: =================================
-//= 1.2 Rescripted to the Aegis 10.3 Standards. [Samuray22]
-//= 1.3 Updated to match AEGIS script. [Kisuka]
-//= 1.4 Added Lighthalzen Hair Dresser. [L0ne_W0lf]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
-// Hair Dresser Veronica
-// ============================================================
+//== Hair Dresser Veronica =================================
 alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 	mes "[Veronica]";
 	mes "Welcome to Veronica's hair salon.";
@@ -520,8 +543,7 @@ L_cutin:
 	return;
 }
 
-// Roving Hair Dresser
-// ============================================================
+//== Roving Hair Dresser ===================================
 alberta,33,141,7	script	Roving Hair Dresser	4_M_BARBER,{
 	mes "[Rui Vishop]";
 	mes "That Veronica...";
@@ -682,7 +704,7 @@ alberta,33,141,7	script	Roving Hair Dresser	4_M_BARBER,{
 }
 
 
-// Lighthalzen
+//== Lighthalzen ===========================================
 lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 	mes "[Prince Shammi]";
 	mes "Welcome to Prince Shammi's";
@@ -1293,9 +1315,3 @@ lhz_in02,91,155,5	script	Assistant Beautician#li	4_F_LGTGIRL,{
 		close;
 	}
 }
-
-//===== Old Changelog: =================================
-//= 07/06/05 : Added 1st Version. [Muad_Dib]
-//= Converted to rAthena format by Dr.Evil Fixed typos [Nexon]
-//= 1.1 Removed Duplicates [Silent]
-//============================================================

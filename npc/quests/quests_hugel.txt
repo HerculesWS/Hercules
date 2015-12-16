@@ -1,34 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  Samuray22
+//= Copyright (C)  SinSloth
+//= Copyright (C)  MasterOfMuppets
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Hugel Quest NPCs
-//===== By: ==================================================
-//= MasterOfMuppets & SinSloth
-//===== Current Version: =====================================
-//= 2.3
-//===== Description: =========================================
+//================= Description ===========================================
 //= Quest NPCs related to Hugel
-//===== Additional Comments: =================================
-//= 1.0 First version. [MasterOfMuppets]
-//= 1.1 Added most of Hugel quests. Thanks to MasterOfMuppets
-//= for scripting most of them. [SinSloth]
-//= 1.2 Added Odin Temple Excavation quest. [SinSloth]
-//= 1.3 Added a Missing "close;". [Samuray22]
-//=     -Thanks to Elfange
-//= 1.4 Fixed experience gains to match upcoming rate adjustments. [SinSloth]
-//= 1.5a Corrected NPC names to fall within proper restrictions. [L0ne_W0lf]
-//= 1.5b Fixed a variable name. [SinSloth]
-//= 1.6 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
-//= 1.7 Corrected locations of warpinside#1. (DarkValmir) [L0ne_W0lf]
-//= 1.8 Added missing checkweight. [L0ne_W0lf]
-//= 1.9 Replaced effect numerics with constants. [Samuray22]
-//= 2.0 Commented a break out to fix a script hang.
-//= 2.1 Added quest log entries for:
-//=     - Juno Remedy Quest
-//= 2.2 Updated RE/Pre-RE EXP. [Euphy]
-//= 2.3 Added questlog support. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.3
+//=========================================================================
 
-// Medicine Quest :: hg_herv
-//============================================================
+//== Medicine Quest :: hg_herv =============================
 hu_in01,387,245,0	script	Allen Schuwell	4_M_DIEMAN,2,2,{
 	if (BaseLevel > 49) {
 		if (hg_herb == 0) {
@@ -721,8 +729,7 @@ OnTimer4500:
 	end;
 }
 
-// Biological Weapon Quest :: hg_bio
-//============================================================
+//== Biological Weapon Quest :: hg_bio =====================
 ein_in01,16,36,3	script	Morriphen	4_M_04,{
 	if (hg_bio == 0) {
 		if (hg_herb == 13) {
@@ -1891,8 +1898,7 @@ lhz_in03,193,28,3	script	Makkie	4_M_01,{
 	}
 }
 
-// Rebellion Quest :: hg_tre
-//============================================================
+//== Rebellion Quest :: hg_tre =============================
 hugel,70,137,5	script	Shede	4_F_CAPEGIRL,{
 	cutin "siide1.bmp",2;
 	if (hg_tre == 0) {
@@ -4174,8 +4180,7 @@ hu_in01,377,106,3	script	Pub Granny	4_F_HUGRANMA,{
 	close;
 }
 
-// Memory Quest :: hg_memo
-//============================================================
+//== Memory Quest :: hg_memo ===============================
 hugel,198,169,0	script	#HugelTree	HIDDEN_WARP_NPC,2,2,{
 	if (BaseLevel > 49) {
 		if (!hg_memory) {
@@ -4885,8 +4890,7 @@ hugel,196,164,3	script	El Schatt	1_M_04,{
 
 }
 
-// Hide and Seek Quest :: hg_c_child
-//============================================================
+//== Hide and Seek Quest :: hg_c_child =====================
 hugel,107,67,3	script	Torpy	4_M_KID1,{
 	if (BaseLevel > 49) {
 		if (!hg_ubu01) {
@@ -5451,8 +5455,7 @@ OnTimer60000:
 	end;
 }
 
-// Fish Cake Soup Delivery Quest :: hg_odeng
-//============================================================
+//== Fish Cake Soup Delivery Quest :: hg_odeng =============
 hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 	if (!hg_odeng) {
 		mes "[Cellette]";
@@ -6133,8 +6136,7 @@ hugel,102,161,3	script	Erjan	4W_SAILOR,{
 	}
 }
 
-// Juno Remedy Quest :: hg_ma1
-//============================================================
+//== Juno Remedy Quest :: hg_ma1 ===========================
 yuno,111,156,3	script	Euslan	4_F_01,{
 	if (BaseLevel < 60) {
 		mes "[Euslan]";
@@ -6883,8 +6885,7 @@ OnTouch:
 	}
 }
 
-// Cow Milking Quest :: hg_milkingcow
-//============================================================
+//== Cow Milking Quest :: hg_milkingcow ====================
 hugel,56,104,3	script	Kurupe	4_M_SEAMAN,3,3,{
 	if (hg_milk == 1) {
 		mes "[Kurupe]";
@@ -7668,8 +7669,7 @@ L_MilkCow:
 	close;
 }
 
-// Odin Temple Excavation Quest :: hg_tem
-//============================================================
+//== Odin Temple Excavation Quest :: hg_tem ================
 hugel,91,152,1	script	Sign	2_BULLETIN_BOARD,{
 	mes "**Recruitment Notice**";
 	mes " ";

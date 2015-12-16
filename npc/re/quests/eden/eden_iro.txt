@@ -1,21 +1,41 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2013-2015  Hercules Dev Team
+//= Copyright (C)  Frost
+//= Copyright (C)  Euphy
+//= Copyright (C)  -SkittleNugget-
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Eden iRO NPCs
-//===== By: ==================================================
-//= -SkittleNugget-
-//===== Current Version: =====================================
-//= 1.3
-//===== Description: =========================================
+//================= Description ===========================================
 //= Eden scripts custom to iRO (disabled by default).
 //= You may need iRO's data.grf to view some of the items.
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Edited and added more NPCs, lots of placeholders. [Euphy]
-//= 1.2 Added Mail Annex Station scripts, commented out. [Euphy]
-//= 1.3 Converted Kafra Cash Shop NPC's and Mail Annex Tool Dealer to trader format. [Frost]
-//============================================================
+//================= Current Version =======================================
+//= 1.3
+//=========================================================================
 
-// Acolyte Warper (part of other/acolyte_warp.txt)
-//============================================================
+//== Acolyte Warper (part of other/acolyte_warp.txt) =======
 moc_para01,14,32,5	script	Aperture#acolytewarp	4_F_01,{
 	mes "[Aperture]";
 	mes "Hello there, adventurer.";
@@ -90,8 +110,7 @@ moc_para01,14,32,5	script	Aperture#acolytewarp	4_F_01,{
 	}
 }
 
-// Carrot & Red Potion Traders
-//============================================================
+//== Carrot & Red Potion Traders ===========================
 moc_para01,166,51,3	script	Phelix#edco	4_M_03,{
 	mes "[Phelix]";
 	mes "Oh... I see from that look that you want me to work and give you Meat and Carrots...";
@@ -259,8 +278,7 @@ moc_para01,163,51,7	script	Izaac#edco	4_M_04,{
 	}
 }
 
-// Safe to 7 Certificate Exchanger
-//============================================================
+//== Safe to 7 Certificate Exchanger =======================
 moc_para01,50,39,4	script	Eve Natalia	4_F_SITDOWN,{
 	mes "[Eve Natalia]";
 	mes "So I'm in town for a while to see if I can strike up some commerce with MVP hunters!";
@@ -337,8 +355,7 @@ moc_para01,50,39,4	script	Eve Natalia	4_F_SITDOWN,{
 	close;
 }
 
-// Bubble Gum & Battle Manual Exchanger
-//============================================================
+//== Bubble Gum & Battle Manual Exchanger ==================
 moc_para01,48,184,2	script	Gum & Manual Exchanger	2_DROP_MACHINE,{
 	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "You're carrying too many items right now.";
@@ -428,8 +445,7 @@ L_Exchange:
 	close;
 }
 
-// Merry Badger
-//============================================================
+//== Merry Badger ==========================================
 moc_para01,13,22,4	script	Merry Badger#xch	4_F_SITDOWN,{
 	mes "[Merry Badger]";
 	mes "Hello there!  I'm Merry Badger and I was hired to exchange the ^00CC00Eden Merit Badges^000000!";
@@ -604,8 +620,7 @@ L_Exchange:
 	return;
 }
 
-// Kafra Stacker
-//============================================================
+//== Kafra Stacker =========================================
 moc_para01,41,169,2	script	Kafra Stacker#eden	4_M_ALCHE_B,{
 	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait a moment! -";
@@ -639,8 +654,7 @@ moc_para01,41,169,2	script	Kafra Stacker#eden	4_M_ALCHE_B,{
 	close;
 }
 
-// Code Redeemer
-//============================================================
+//== Code Redeemer =========================================
 moc_para01,38,162,2	script	Code the Redeemer#Give1	4_M_YOUNGKNIGHT,{
 	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "^0000ffHold it right there!";
@@ -670,10 +684,8 @@ moc_para01,38,162,2	script	Code the Redeemer#Give1	4_M_YOUNGKNIGHT,{
 	close;
 }
 
-// Cash Shops
-//============================================================
+//== Cash Shops ============================================
 /* Due to the irregularity of iRO's databases, some of these sprites may not display properly. */
-
 moc_para01,32,171,6	trader	Kafra Headgears#eden1	4_F_KAFRA3,{
 OnInit:
 	tradertype(NST_CASH);
@@ -801,24 +813,23 @@ OnInit:
 	sellitem F_Token_Of_Siegfried_Box,100;
 }
 
-// Duplicate NPCs
-//============================================================
+//== Duplicate NPCs ========================================
 /* Technically these NPC names are different, but it's not worth editing the original scripts. */
 
-// Weapon/Armor Refiner "Normalson" (merchants/refine.txt)
+//- Weapon/Armor Refiner "Normalson" (merchants/refine.txt) -
 moc_para01,14,185,4	script	Normalson#ed	4_M_DWARF,{
 	callfunc "refinemain","Normalson",0;
 	end;
 }
 
-// Advanced Refiner "Suhnmi" (merchants/advanced_refiner.txt)
+//- Advanced Refiner "Suhnmi" (merchants/advanced_refiner.txt) -
 moc_para01,26,185,4	duplicate(Suhnbi#cash)	Suhnmi#eden	4_M_03
 
-// HD Refiner "Blacksmith Mighty Hammer" (re/merchants/hd_refiner.txt)
+//- HD Refiner "Blacksmith Mighty Hammer" (re/merchants/hd_refiner.txt) -
 // A combination of the +7~9 and +10 and up refiner, currently a placeholder.
 moc_para01,38,185,4	duplicate(MightyHammer)	Mighty Hammer#ed	4_M_DWARF
 
-// Refiner Effect
+//- Refiner Effect -
 -	script	#eden_refine_effect	-1,{
 OnInit:
 	initnpctimer;
@@ -830,25 +841,23 @@ OnTimer5000:
 	end;
 }
 
-// Gym Pass Trainer "Ripped Cabus" (other/gympass)
+//- Gym Pass Trainer "Ripped Cabus" (other/gympass) -
 moc_para01,33,162,6	duplicate(Ripped Cabus#GymPass)	Ripped Callus#ed	4_M_HUMAN_02
 
-// RWC 2012 Enchanter "Goldenthiefberg" (events/RWC_2012.txt)
+//- RWC 2012 Enchanter "Goldenthiefberg" (events/RWC_2012.txt) -
 // A combination of the slotter and enchanter, currently a placeholder.
 moc_para01,27,179,4	script	RWC Enchanter#new10	4_M_BARBER,{ end; }
 
-// Cash Headgear Dyer "Alora" (merchants/cashheadgear_dye.txt)
+//- Cash Headgear Dyer "Alora" (merchants/cashheadgear_dye.txt) -
 // Also converts some +8 and up headgears into costumes, currently a placeholder.
 moc_para01,21,185,4	duplicate(Alora)	Alora#headgear_dye2	4_F_LGTGIRL
 
-// Stylist "Dinorah Lacostt" (?)
+//- Stylist "Dinorah Lacostt" (?) -
 // Dyes clothing for an Omni Clothing Dye, currently a placeholder.
 moc_para01,33,185,4	script	Dinorah Lacostt#ed	4_F_LGTGIRL,{ end; }
 
-// Commonly Updated NPCs
-//============================================================
+//== Commonly Updated NPCs =================================
 /* These scripts change on a regular basis, so they're mostly just placeholders for now. */
-
 moc_para01,29,35,4	script	Gramps#huntquests	4_M_LGTGRAND,{
 	mes "[Gramps]";
 	mes "When you get to being my";
@@ -895,8 +904,7 @@ moc_para01,174,33,3	script	Bathory#2012spirits	BATHORY,{
 
 moc_para01,26,174,4	script	Grandma Boxter#boxx	4_F_THAISHAMAN,{ end; }
 
-// Mail Annex Station
-//============================================================
+//== Mail Annex Station ====================================
 /* Map "auction_03" is a duplicate of "auction_02".
 
 moc_para01,30,187,4	script	Mail Annex Station	2_POSTBOX,{

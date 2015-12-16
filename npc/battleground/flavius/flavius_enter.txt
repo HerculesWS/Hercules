@@ -1,18 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 // BattleGround System - Flavius Entrance NPCs
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.0
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Flavius Battleground Entrance NPCs
-//===== Additional Comments: =================================
-//= 1.0 First Version.
-//============================================================
+//================= Current Version =======================================
+//= 1.0
+//=========================================================================
 
-// Flavius Officer - Guillaume
-//============================================================
+//== Flavius Officer - Guillaume ===========================
 bat_room,133,178,5	script	Flavius Officer#01a	4_M_KY_KNT,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";
@@ -221,8 +241,7 @@ bat_room,151,121,1	script	Croix Knight#4	4_M_CRU_SOLD,{
 	close;
 }
 
-// Flavius Officer - Croix
-//============================================================
+//== Flavius Officer - Croix ===============================
 bat_room,148,178,5	script	Flavius Officer#02a	4_M_KY_KNT,{
 	if (checkweight(1201,1) == 0) {
 		mes "- Wait a minute !! -";

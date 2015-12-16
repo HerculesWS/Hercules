@@ -1,19 +1,38 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  SinSloth
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Izlude Arena Room
-//===== By: ==================================================
-//= SinSloth
-//===== Current Version: =====================================
-//= 1.4
-//===== Description: =========================================
+//================= Description ===========================================
 //= Izlude Battle Arena Main Room
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Fixed a small reward typo (was giving potato.) [L0ne_W0lf]
-//= 1.2 Label standardization, disabled GM NPCs. [Euphy]
-//= 1.2a Added Renewal level checksk. [Euphy]
-//= 1.3 Script updates. [Euphy]
-//= 1.4 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 1.4
+//=========================================================================
 
 arena_room,94,93,5	script	Vendigos	4W_M_01,{
 	mes "[Vendigos]";

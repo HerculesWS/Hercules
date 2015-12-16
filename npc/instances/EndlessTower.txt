@@ -1,40 +1,40 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Euphy
+//= Copyright (C)  Joseph
+//= Copyright (C)  Gepard
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Endless Tower
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 2.4
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Endless Tower Memorial Dungeon.
 //= Consists of 101 floors.
-//===== Additional Comments: =================================
-//= 1.0 First version.
-//= 1.1 Removed a disablenpc from #102FShadowDust1. (bugreport:4415)
-//= 1.2 Added ends to several NPCs which would allow you to restart timers.
-//=     Added some missing stopnpctimers to npcs. (bugreport:4418)
-//= 1.3 Fixed a couple copy/paste errors :D I fail. [L0ne_W0lf]
-//      Timer no longer resets when re-entering.
-//= 1.4 Added quest log entries based on iRO. [L0ne_W0lf]
-//=     You may need to update your questid2display.
-//=     Changed White lady spawn to MVP White Lady. (bugreport:4601)
-//= 1.5 Corrected some grammar and typos.
-//= 1.6 Corrected the tower re-entry blocked condition. (bugreport:4677) [L0ne_W0lf]
-//=     Corrected floor 75 warp disabling the wrong NPC. (bugreport:4711)
-//= 1.7 Added missing end's to prevent accidental disabling of
-//=     warps between floors. (bugreport:4623)
-//=     Added missing end's to prevent infinite mobspawn (bugreport:4540)
-//=     Commented out remaining GM-only NPCs. [Gepard]
-//= 1.8 Adjusted Instance Attach Map to Validate ALL Maps, instead of
-//=     only 1@tower -> 5@tower (bugreport:4983)
-//= 1.9 Added 'instance_check_party' command to the script for proper checking if
-//=     the invoking party meets the requirements to join the Memorial Dungeon.
-//= 2.0 Fixed broken else/if chaining. [Joseph]
-//= 2.1 Updated to match latest official script. [Euphy]
-//= 2.2 Instance system rewrite. [Euphy]
-//= 2.3 Added some missing announcements. [Euphy]
-//= 2.4 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.4
+//=========================================================================
 
 1@tower	mapflag	src4instance
 2@tower	mapflag	src4instance
@@ -42,7 +42,7 @@
 4@tower	mapflag	src4instance
 5@tower	mapflag	src4instance
 6@tower	mapflag	src4instance
-//============================================================
+
 alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
 	if (checkweight(1201,1) == 0) {
 		mes "^008800Wait here!!";
@@ -401,8 +401,7 @@ e_tower,151,185,4	script	Purification Stone#et2	CLEAR_NPC,{
 	end;
 }
 
-// Core Functions
-//============================================================
+//== Core Functions ========================================
 function	script	F_Tower_Monster	{
 
 	.@level = getarg(0);
@@ -1194,8 +1193,7 @@ function	script	F_Tower_Warp	{
 	return;
 }
 
-// Levels 1-25
-//============================================================
+//== Levels 1-25 ===========================================
 1@tower,50,360,0	script	Immortal Brazier#	CLEAR_NPC,{
 	mes "- A Message is Engraved on the Brazier -";
 	mes "The one who scatters the ashes of the darkness in this place shall become one step closer to Nacht Sieger, the Hegemon King of the Darkness...";
@@ -1401,8 +1399,7 @@ OnTimer120000:
 	close;
 }
 
-// Levels 26-50
-//============================================================
+//== Levels 26-50 ==========================================
 2@tower,29,365,2	script	Immortal Furnace#1	CLEAR_NPC,{
 	end;
 
@@ -1517,8 +1514,7 @@ OnTouch_:
 	close;
 }
 
-// Levels 51-75
-//============================================================
+//== Levels 51-75 ==========================================
 3@tower,29,365,2	script	Immortal Furnace#2	CLEAR_NPC,{
 	end;
 
@@ -1633,8 +1629,7 @@ OnTouch_:
 	close;
 }
 
-// Levels 76-99
-//============================================================
+//== Levels 76-99 ==========================================
 4@tower,29,365,2	script	Immortal Furnace#3	CLEAR_NPC,{
 	end;
 
@@ -1748,8 +1743,7 @@ OnTouch_:
 	close;
 }
 
-// Level 100
-//============================================================
+//== Level 100 =============================================
 5@tower,106,109,2	script	Lucid Crystal#102	CLEAR_NPC,{
 	if (in_102tower < 10) {
 		mes "^0000ffA mysterious voice echoes through the room as you touch the lucid crystal radiating a strong light.^000000";
@@ -1932,8 +1926,7 @@ OnEnable:
 	close;
 }
 
-// Level 101
-//============================================================
+//== Level 101 =============================================
 6@tower,45,89,2	script	Life Spring#1	CLEAR_NPC,{
 	mes "^0066ffYou took a sip of the spring's clear water, and you feel invigorated.^000000";
 	heal (MaxHp-Hp),(MaxSp-Sp);

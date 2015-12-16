@@ -1,26 +1,42 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Lupus
+//= Copyright (C)  L0ne_W0lf
+//= Copyright (C)  LightFighter
+//= Copyright (C)  Scriptor
+//= Copyright (C)  Perkka
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Divorcing Deviruchi
-//===== By: ==================================================
-//= Perkka, Scriptor, LightFighter
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 1.5
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Official Divorce script.
-//= Added isloggedin() check, even though Aegis doesn't do it;
-//= should be able to divorce even when the spouse is not online.
-//===== Additional Comments: =================================
-//= Both players should be online to get divorced
-//= Fixed menu [Lupus]
-//= 1.1 Added check if the patner's online, added effects [Lupus]
-//= 1.2 Updated to Aegis 10.3 standards. [L0ne_W0lf]
-//= 1.2a Commented out check of 'wedding_sign' to let
-//=     old married players divorcing, optimized, fixed a bug [Lupus]
-//= 1.3 Wedding variable 'wedding_sign' is now unset on divorce. [L0ne_W0lf]
-//= 1.4 Removed ifpartneron check, fixed typo in percentheal. [L0ne_W0lf]
-//= 1.5 Replaced effect numerics with constants. [L0ne_W0lf]
-//============================================================
+//= Added isloggedin() check, even though Aegis doesn't do it; should be
+//= able to divorce even when the spouse is not online.
+//================= Current Version =======================================
+//= 1.5
+//=========================================================================
 
 nif_in,190,112,5	script	Deviruchi#divorce	4_DEVIRUCHI,{
 	mes "[Deviruchi]";

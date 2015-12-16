@@ -1,11 +1,36 @@
-//===== Hercules Script ======================================
+//================= Hercules Script =======================================
+//=       _   _                     _
+//=      | | | |                   | |
+//=      | |_| | ___ _ __ ___ _   _| | ___  ___
+//=      |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|
+//=      | | | |  __/ | | (__| |_| | |  __/\__ \
+//=      \_| |_/\___|_|  \___|\__,_|_|\___||___/
+//================= License ===============================================
+//= This file is part of Hercules.
+//= http://herc.ws - http://github.com/HerculesWS/Hercules
+//=
+//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Joseph
+//= Copyright (C)  Euphy
+//= Copyright (C)  Masao
+//= Copyright (C)  Gepard
+//= Copyright (C)  L0ne_W0lf
+//=
+//= Hercules is free software: you can redistribute it and/or modify
+//= it under the terms of the GNU General Public License as published by
+//= the Free Software Foundation, either version 3 of the License, or
+//= (at your option) any later version.
+//=
+//= This program is distributed in the hope that it will be useful,
+//= but WITHOUT ANY WARRANTY; without even the implied warranty of
+//= MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//= GNU General Public License for more details.
+//=
+//= You should have received a copy of the GNU General Public License
+//= along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//=========================================================================
 //= Collection of episode 13.2 quests.
-//===== By: ==================================================
-//= L0ne_W0lf
-//===== Current Version: =====================================
-//= 2.8
-//===== Description: =========================================
-//= [Official Conversion]
+//================= Description ===========================================
 //= Cat Hand Addition. (Leads to 13.2 areas)
 //= Two Tribes
 //= Monster Suppression
@@ -19,38 +44,11 @@
 //= - Alfheim Perfume
 //= Secret note of Bazett
 //= Yggdrasil Dungeon Floor 2 puzzle.
-//===== Additional Comments: =================================
-//= 1.0 First version
-//= 1.1 Fixed unidentified_coin -> unidentified_mineral. (bugreport:4086)
-//= 1.2 Fixed Half-buried Gem#1 not re-enabling. (bugreport:4129)
-//= 1.3 Moved misc NPCs to the their respective city file. [L0ne_W0lf]
-//= 1.3 Added the "Two Tribes" quest. [L0ne_W0lf]
-//= 1.4 Corrected issues with Otherworld Language. (Bugreport:4147)
-//= 1.5 Added daily quests: Midgard Ore, and Alfheim Perfume.
-//= 1.6 Added the Yggdrasil Dungeon floor 2 puzzle.
-//= 1.7 Added daily quest 'Dragon Egg collection.'
-//= 1.7a Fixed a translation typo. Tabb -> Taab.
-//= 1.8 Added a missing " in the GM only NPC.
-//= 1.9 Added Monster Suppression, Bradium Collection, and
-//=     Laphine Craftsman quests.
-//= 2.0 Added missing global var check in Yggdrasil Dungeon
-//=     floor 2 puzzle. Fixed a typo. Commented out untranslated
-//=     line. [Gepard]
-//= 2.1 Fixed Myterious Rock 31, and Cart Hand Agents.
-//= 2.2 Added a missing close. (bugreport:4520) [L0ne_W0lf]
-//= 2.3 Fixed EF_Wind not showing. (bugreport:5149) [Masao]
-//= 2.4 Optimized (6000+ lines reduced!). [Euphy]
-//= 2.4a Fixed an invisible NPC clashing with a warp portal. [Euphy]
-//= 2.5 Updated EXP rewards.
-//= 2.6 Fixed incorrect use of 'close'. [Joseph]
-//= 2.6a Disabled GM NPC. [Euphy]
-//= 2.7 Updated RE/Pre-RE EXP. [Euphy]
-//= 2.7a Added Izlude RE coordinates. [Euphy]
-//= 2.8 Added GM management function. [Euphy]
-//============================================================
+//================= Current Version =======================================
+//= 2.8
+//=========================================================================
 
-// Cat Hand Addition :: cat_enhance
-//============================================================
+//== Cat Hand Addition :: cat_enhance ======================
 spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 	function Catwarp;
 	if (ep13_yong1 < 3) {
@@ -529,8 +527,7 @@ spl_fild01,55,269,0	duplicate(FishingHole_spl3)	School of Fish#12	CLEAR_NPC
 spl_fild01,332,131,0	duplicate(FishingHole_spl3)	School of Fish#13	CLEAR_NPC
 spl_fild01,170,74,0	duplicate(FishingHole_spl3)	School of Fish#14	CLEAR_NPC
 
-// Two Tribes :: ep13_2_msg
-//============================================================
+//== Two Tribes :: ep13_2_msg ==============================
 spl_in01,32,306,3	script	Splendide Guard#ep13md01	4_M_FAIRYSOLDIER,2,2,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
@@ -2701,8 +2698,7 @@ spl_fild01,329,29,0	script	???#ep13mdf03	CLEAR_NPC,{
 	}
 }
 
-// Monster Suppression :: ep13_2_dayquest
-//============================================================
+//== Monster Suppression :: ep13_2_dayquest ================
 manuk,252,116,3	script	Manuk Galtun#ep13_2day	4_MAN_GALTUN,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
@@ -2812,11 +2808,10 @@ manuk,252,116,3	script	Manuk Galtun#ep13_2day	4_MAN_GALTUN,{
 	close;
 }
 
-// Daily Quests :: ep13_2_dayquest
+//== Daily Quests :: ep13_2_dayquest =======================
 // - Bradium Collection
 // - Laphine Craftsman
 // - Draco Egg Collection (NPC includes 'Wanted' quest)
-//============================================================
 man_in01,378,276,3	script	Manuk Engineer#ep13_2	4_MAN_NITT,{
 	if (checkweight(1201,2) == 0) {
 		mes "Wait a moment!!";
@@ -3506,8 +3501,7 @@ OnTimer300000:
 	end;
 }
 
-// Otherworld language :: ep13_2_rhea
-//============================================================
+//== Otherworld language :: ep13_2_rhea ====================
 mid_camp,197,237,3	script	Schwartzvalt Mechanic#1	4_M_LGTMAN,{
 	if (ep13_1_edq > 2 || ep13_start == 100) {
 		if (ep13_2_rhea < 1) {
@@ -4627,10 +4621,9 @@ mid_camp,7,3,0	script	Translator Preparation#1	4_M_PAY_SOLDIER,{
 	}
 }
 
-// Daily Quests :: ep13_2_tre
+//== Daily Quests :: ep13_2_tre ============================
 // - Midgard Ore
 // - Alfheim Perfume
-//============================================================
 man_in01,372,221,5	script	Scientist#lifeguard	4_MAN_BENKUNI,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Dr. Lifeguard]";
@@ -6202,8 +6195,7 @@ OnTimer60000:
 	end;
 }
 
-// Secret note of Bazett :: ep13_2_dailybs
-//============================================================
+//== Secret note of Bazett :: ep13_2_dailybs ===============
 mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 	if (checkweight(1201,1) == 0) {
 		mes " - Hold on!! -";
@@ -6868,8 +6860,7 @@ manuk,193,135,0	script	Worker#ep13bs	4_MAN_PIOM,{
 	}
 }
 
-// Yggdrasil Dungeon Floor 2 puzzle :: ny_dun02_puzzle
-//============================================================
+//== Yggdrasil Dungeon Floor 2 puzzle :: ny_dun02_puzzle ===
 nyd_dun02,178,255,0	script	Strange Device#ep13_out	CLEAR_NPC,3,3,{
 	mes "There's something strange here.";
 	mes "Maybe that device can be controlled from here.";
