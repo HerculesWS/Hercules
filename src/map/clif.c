@@ -18515,6 +18515,19 @@ void clif_cancelmergeitem (int fd, struct map_session_data *sd)
 	return;
 }
 
+void clif_dressroom_open(struct map_session_data *sd, int view)
+{
+	int fd;
+
+	nullpo_retv(sd);
+
+	fd = sd->fd;
+	WFIFOHEAD(fd,packet_len(0xa02));
+	WFIFOW(fd,0)=0xa02;
+	WFIFOW(fd,2)=view;
+	WFIFOSET(fd,packet_len(0xa02));
+}
+
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -19570,4 +19583,5 @@ void clif_defaults(void) {
 	/* */
 	clif->add_random_options = clif_add_random_options;
 	clif->pHotkeyRowShift = clif_parse_HotkeyRowShift;
+	clif->dressroom_open = clif_dressroom_open;
 }
