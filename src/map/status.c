@@ -6510,30 +6510,30 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 	//Status that are blocked by Golden Thief Bug card or Wand of Hermod
 	if (status->isimmune(bl))
 		switch (type) {
-		case SC_DEC_AGI:
-		case SC_SILENCE:
-		case SC_COMA:
-		case SC_INC_AGI:
-		case SC_BLESSING:
-		case SC_SLOWPOISON:
-		case SC_IMPOSITIO:
-		case SC_LEXAETERNA:
-		case SC_SUFFRAGIUM:
-		case SC_BENEDICTIO:
-		case SC_PROVIDENCE:
-		case SC_KYRIE:
-		case SC_ASSUMPTIO:
-		case SC_ANGELUS:
-		case SC_MAGNIFICAT:
-		case SC_GLORIA:
-		case SC_WINDWALK:
-		case SC_MAGICROD:
-		case SC_ILLUSION:
-		case SC_STONE:
-		case SC_QUAGMIRE:
-		case SC_NJ_SUITON:
-		case SC_SWING:
-			return 0;
+			case SC_DEC_AGI:
+			case SC_SILENCE:
+			case SC_COMA:
+			case SC_INC_AGI:
+			case SC_BLESSING:
+			case SC_SLOWPOISON:
+			case SC_IMPOSITIO:
+			case SC_LEXAETERNA:
+			case SC_SUFFRAGIUM:
+			case SC_BENEDICTIO:
+			case SC_PROVIDENCE:
+			case SC_KYRIE:
+			case SC_ASSUMPTIO:
+			case SC_ANGELUS:
+			case SC_MAGNIFICAT:
+			case SC_GLORIA:
+			case SC_WINDWALK:
+			case SC_MAGICROD:
+			case SC_ILLUSION:
+			case SC_STONE:
+			case SC_QUAGMIRE:
+			case SC_NJ_SUITON:
+			case SC_SWING:
+				return 0;
 		}
 
 	sd = BL_CAST(BL_PC,bl);
