@@ -390,8 +390,8 @@ typedef enum sc_type {
 	//SC_DEFRATIOATK,
 	//SC_HPDRAIN,
 	//SC_SKILLATKBONUS,
-	SC_ITEMSCRIPT = 290,
-	SC_S_LIFEPOTION,
+	//SC_ITEMSCRIPT,
+	SC_S_LIFEPOTION = 291,
 	SC_L_LIFEPOTION,
 	SC_CASH_PLUSONLYJOBEXP,
 	//SC_IGNOREDEF,
@@ -793,6 +793,12 @@ typedef enum sc_type {
 	SC_CUP_OF_BOZA,
 	SC_OVERLAPEXPUP,
 	SC_MORA_BUFF,
+	
+	// MVP Scrolls
+	SC_MVPCARD_TAOGUNKA,
+	SC_MVPCARD_MISTRESS,
+	SC_MVPCARD_ORCHERO,
+	SC_MVPCARD_ORCLORD,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
