@@ -303,12 +303,14 @@
 15091:18820:20721:22033,{ bonus2 bSubEle,Ele_Neutral,15; bonus bMaxHPrate,25; bonus bMaxSPrate,25; bonus bMatkRate,10; }
 15117:20744:22047,{ bonus bMaxHP,25; bonus bMaxSP,25; bonus bSpeedRate,25; if (getequiprefinerycnt(EQI_GARMENT)+getequiprefinerycnt(EQI_SHOES)+getequiprefinerycnt(EQI_ARMOR) >= 30) { bonus bMaxHP,5; bonus bMaxSP,5; } }
 18510:18511,{ bonus2 bAddRace,RC_Angel,3; }
+18728:15061:2495:20700,{ bonus bAllStats, 1; bonus2 bSubEle, Ele_Water, 50; }
 18776:20710,{ bonus bAgi,5; bonus bFlee,10; }
 18824:18825,{ bonus bMaxHP,100; bonus2 bSubEle,Ele_Neutral,getequiprefinerycnt(EQI_HEAD_TOP); }
 18997:28326:28327,{ bonus bSpeedRate,10; bonus bBaseAtk,50; bonus bMatk,50; if(getequiprefinerycnt(EQI_HEAD_TOP)>=9){ bonus bMaxHPrate,10; bonus bMaxSPrate,50; } }
-19026:20756,{ set .@c, getequiprefinerycnt(EQI_GARMENT); bonus2 bSPGainRace,RC_Fish,10; bonus3 bAddMonsterDropItem,551,RC_Fish,(5+.@c); bonus2 bAddItemHealRate,551,5; bonus bHPrecovRate,(5+.@c); }
-19026:22059,{ bonus2 bCriticalAddRace,RC_Fish,(10+getequiprefinerycnt(EQI_SHOES)); }
-19026:20756:22059:15138,{ bonus bMaxHP,1000; bonus bMaxSP,100; bonus2 bExpAddRace,RC_Fish,20; bonus2 bMagicAddRace,RC_Fish,50; bonus2 bSubEle,Ele_Water,50; }
+19026:15138,{ bonus2 bAddRaceTolerance, RC_Fish, 10 + getequiprefinerycnt(EQI_ARMOR); }
+19026:20756,{ .@r = getequiprefinerycnt(EQI_GARMENT); bonus2 bSPGainRace, RC_Fish, 10; bonus3 bAddMonsterDropItem, Shusi, RC_Fish, (5 + .@r); bonus3 bAddMonsterDropItem, Fish_Slice, RC_Fish, (5 + .@r); bonus2 bAddItemHealRate, Shusi, 5; bonus2 bAddItemHealRate, Fish_Slice, 5; bonus bHPrecovRate, (5 + .@r); }
+19026:22059,{ bonus2 bCriticalAddRace, RC_Fish, 10 + getequiprefinerycnt(EQI_SHOES); }
+19026:15138:22059:20756,{ bonus bMaxHP, 1000; bonus bMaxSP, 100; bonus2 bExpAddRace, RC_Fish, 20; bonus2 bAddRace, RC_Fish, 50; bonus2 bMagicAddRace, RC_Fish, 50; bonus2 bSubEle, Ele_Water, 50; }
 19827:20763,{ bonus2 bAddRaceTolerance,RC_Player,4; }
 20717:22000,{ bonus bMaxHPrate,15; bonus bMaxSPrate,5; }
 20717:22001,{ bonus bMaxHPrate,15; bonus bMaxSPrate,5; }
