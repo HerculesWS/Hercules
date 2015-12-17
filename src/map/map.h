@@ -486,6 +486,7 @@ enum look {
 	LOOK_BODY,
 	LOOK_FLOOR,
 	LOOK_ROBE,
+	LOOK_BODY2,
 };
 
 // used by map_setcell()

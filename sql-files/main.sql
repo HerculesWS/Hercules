@@ -169,6 +169,7 @@ CREATE TABLE IF NOT EXISTS `char` (
   `hair` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
   `hair_color` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
   `clothes_color` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `body` SMALLINT(5) unsigned NOT NULL default '0',
   `weapon` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `shield` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `head_top` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
@@ -821,6 +822,7 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1414975503); -- 2014-11-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1435860840); -- 2015-07-02--18-14.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1436360978); -- 2015-07-08--13-08.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1440688342); -- 2015-08-27--20-42.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1450367880); -- 2015-12-17--15-58.sql
 
 --
 -- Table structure for table `storage`

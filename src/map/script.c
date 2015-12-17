@@ -14109,6 +14109,7 @@ BUILDIN(getlook)
 		case LOOK_SHIELD:        val = sd->status.shield;        break; //8
 		case LOOK_SHOES:                                         break; //9
 		case LOOK_ROBE:          val = sd->status.robe;          break; //12
+		case LOOK_BODY2:         val=sd->status.body;            break; //13
 	}
 
 	script_pushint(st,val);
