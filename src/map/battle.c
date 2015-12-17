@@ -5833,6 +5833,17 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 
 					delay += 100;/* gradual increase so the numbers don't clip in the client */
 				}
+				if (sc->data[SC_MVPCARD_ORCLORD]) {
+					NORMALIZE_RDAMAGE(damage * sc->data[SC_MVPCARD_ORCLORD]->val1 / 100);
+
+					rdelay = clif->delay_damage(tick + delay, src, src, status_get_amotion(src), status_get_dmotion(src), rdamage, 1, BDT_ENDURE);
+
+					if (tsd)
+						battle->drain(tsd, src, rdamage, rdamage, status_get_race(src), 0);
+					battle->delay_damage(tick, wd->amotion, target, src, 0, CR_REFLECTSHIELD, 0, rdamage, ATK_DEF, rdelay, true);
+
+					delay += 100;
+				}
 			}
 			if( ( ssc = status->get_sc(src) ) ) {
 				if( ssc->data[SC_INSPIRATION] ) {

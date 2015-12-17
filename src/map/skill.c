@@ -14343,6 +14343,8 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 			req.sp -= req.sp * sc->data[SC_TELEKINESIS_INTENSE]->val2 / 100;
 		if (sc->data[SC_TARGET_ASPD])
 			req.sp -= req.sp * sc->data[SC_TARGET_ASPD]->val1 / 100;
+		if (sc->data[SC_MVPCARD_MISTRESS])
+			req.sp -= req.sp * sc->data[SC_MVPCARD_MISTRESS]->val1 / 100;
 	}
 
 	req.zeny = skill->dbs->db[idx].zeny[skill_lv-1];
@@ -14422,22 +14424,24 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 		if (itemid_isgemstone(req.itemid[i]) && skill_id != HW_GANBANTEIN) {
 			if (sd->special_state.no_gemstone) {
 				// All gem skills except Hocus Pocus and Ganbantein can cast for free with Mistress card [helvetica]
-				if( skill_id != SA_ABRACADABRA )
+				if (skill_id != SA_ABRACADABRA)
 					req.itemid[i] = req.amount[i] = 0;
-				else if( --req.amount[i] < 1 )
+				else if (--req.amount[i] < 1)
 					req.amount[i] = 1; // Hocus Pocus always use at least 1 gem
 			}
-			if(sc && sc->data[SC_INTOABYSS])
-			{
-				if( skill_id != SA_ABRACADABRA )
+			if (sc && sc->data[SC_INTOABYSS]) {
+				if (skill_id != SA_ABRACADABRA)
 					req.itemid[i] = req.amount[i] = 0;
-				else if( --req.amount[i] < 1 )
+				else if (--req.amount[i] < 1)
 					req.amount[i] = 1; // Hocus Pocus always use at least 1 gem
+			}
+			if (sc && sc->data[SC_MVPCARD_MISTRESS]) {
+				req.itemid[i] = req.amount[i] = 0;
 			}
 		}
-		if( skill_id >= HT_SKIDTRAP && skill_id <= HT_TALKIEBOX && pc->checkskill(sd, RA_RESEARCHTRAP) > 0){
+		if (skill_id >= HT_SKIDTRAP && skill_id <= HT_TALKIEBOX && pc->checkskill(sd, RA_RESEARCHTRAP) > 0) {
 			int16 item_index;
-			if ((item_index = pc->search_inventory(sd,req.itemid[i])) == INDEX_NOT_FOUND
+			if ((item_index = pc->search_inventory(sd, req.itemid[i])) == INDEX_NOT_FOUND
 			  || sd->status.inventory[item_index].amount < req.amount[i]
 			) {
 				req.itemid[i] = ITEMID_TRAP_ALLOY;
