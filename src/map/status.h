@@ -800,6 +800,15 @@ typedef enum sc_type {
 	SC_MVPCARD_ORCHERO,
 	SC_MVPCARD_ORCLORD,
 
+	SC_HAT_EFFECT,
+	SC_FLOWERSMOKE,
+	SC_FSTONE, // 620
+	SC_HAPPINESS_STAR,
+	SC_MAPLE_FALLS,
+	SC_TIME_ACCESSORY,
+	SC_MAGICAL_FEATHER,
+	SC_BLOSSOM_FLUTTERING,
+
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
 
@@ -1404,7 +1413,16 @@ enum si_type {
 	SI_ODINS_POWER                           = 583,
 	SI_STYLE_CHANGE                          = 584,
 	SI_SONIC_CLAW_POSTDELAY                  = 585,
-	/* IDs 586 - 595 Currently Unused */
+	//SI_                                    = 586,
+	//SI_                                    = 587,
+	//SI_                                    = 588,
+	//SI_                                    = 589,
+	//SI_                                    = 590,
+	//SI_                                    = 591,
+	//SI_                                    = 592,
+	//SI_                                    = 593,
+	//SI_                                    = 594,
+	//SI_                                    = 595,
 	SI_SILVERVEIN_RUSH_POSTDELAY             = 596,
 	SI_MIDNIGHT_FRENZY_POSTDELAY             = 597,
 	SI_GOLDENE_FERSE                         = 598,
@@ -1635,7 +1653,10 @@ enum si_type {
 	//SI_MTF_RANGEATK2                       = 818,
 	//SI_MTF_ASPD2                           = 819,
 	//SI_MTF_MATK2                           = 820,
-	/* IDs 821 - 824 Currently Unused */
+	//SI_SHOW_NPCHPBAR                       = 821,
+	SI_FLOWERSMOKE                           = 822,
+	SI_FSTONE                                = 823,
+	//SI_DAILYSENDMAILCNT                    = 824,
 	//SI_QSCARABA                            = 825,
 	SI_LJOSALFAR                             = 826,
 	//SI_PAD_READER_KNIGHT                   = 827,
@@ -1656,18 +1677,35 @@ enum si_type {
 	//SI_PAD_READER_GUNSLINGER               = 842,
 	//SI_PAD_READER_SUPERNOVICE              = 843,
 	//SI_ESSENCE_OF_TIME                     = 844,
+	//SI_MINIGAME_ROULETTE                   = 845,
+	//SI_MINIGAME_GOLD_POINT                 = 846,
+	//SI_MINIGAME_SILVER_POINT               = 847,
+	//SI_MINIGAME_BRONZE_POINT               = 848,
+	SI_HAPPINESS_STAR                        = 849,
 
-	/* IDs 845 - 859 Currently Unused */
+	//SI_SUMMEREVENT01                       = 850,
+	//SI_SUMMEREVENT02                       = 851,
+	//SI_SUMMEREVENT03                       = 852,
+	//SI_SUMMEREVENT04                       = 853,
+	//SI_SUMMEREVENT05                       = 854,
+	//SI_MINIGAME_ROULETTE_BONUS_ITEM        = 855,
+	//SI_DRESS_UP                            = 856,
+	SI_MAPLE_FALLS                           = 857,
+	//SI_ALL_NIFLHEIM_RECALL                 = 858,
+	//SI_                                    = 859,
 	//SI_MTF_MARIONETTE                      = 860,
 	//SI_MTF_LUDE                            = 861,
 	//SI_MTF_CRUISER                         = 862,
 	SI_MERMAID_LONGING                       = 863,
-	/* IDs 864 Currently Unused */
+	SI_MAGICAL_FEATHER                       = 864,
 	//SI_DRACULA_CARD                        = 865,
-	/* ID 866 Currently Unused */
+	//SI_                                    = 866,
 	//SI_LIMIT_POWER_BOOSTER                 = 867,
-	/* IDs 868 - 871 Currently Unused */
-	//SI_TIME_ACCESSORY                      = 872,
+	//SI_                                    = 868,
+	//SI_                                    = 869,
+	//SI_                                    = 870,
+	//SI_                                    = 871,
+	SI_TIME_ACCESSORY                        = 872,
 	//SI_EP16_DEF                            = 873,
 	//SI_NORMAL_ATKED_SP                     = 874,
 	//SI_BODYSTATE_STONECURSE                = 875,
@@ -1690,7 +1728,7 @@ enum si_type {
 	//SI_CHERRY_BLOSSOM_CAKE                 = 892,
 	//SI_SU_STOOP                            = 893,
 	//SI_CATNIPPOWDER                        = 894,
-	/* ID 895 Currently Unused */
+	SI_BLOSSOM_FLUTTERING                    = 895,
 	//SI_SV_ROOTTWIST                        = 896,
 	//SI_ATTACK_PROPERTY_NOTHING             = 897,
 	//SI_ATTACK_PROPERTY_WATER               = 898,
@@ -1730,7 +1768,7 @@ enum si_type {
 	//SI_HELM_ASIR                           = 931,
 	//SI_HELM_URJ                            = 932,
 	//SI_SUHIDE                              = 933,
-	/* ID 934 Currently Unused */
+	//SI_                                    = 934,
 	//SI_DORAM_BUF_01                        = 935,
 	//SI_DORAM_BUF_02                        = 936,
 	//SI_SPRITEMABLE                         = 937,

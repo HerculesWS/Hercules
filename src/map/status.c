@@ -959,13 +959,23 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_REBOUND] = SI_REBOUND;
 	status->dbs->IconChangeTable[SC_ALL_RIDING] = SI_ALL_RIDING;
 	status->dbs->IconChangeTable[SC_MONSTER_TRANSFORM] = SI_MONSTER_TRANSFORM;
+	
+	// Costumes
 	status->dbs->IconChangeTable[SC_MOONSTAR] = SI_MOONSTAR;
 	status->dbs->IconChangeTable[SC_SUPER_STAR] = SI_SUPER_STAR;
 	status->dbs->IconChangeTable[SC_STRANGELIGHTS] = SI_STRANGELIGHTS;
 	status->dbs->IconChangeTable[SC_DECORATION_OF_MUSIC] = SI_DECORATION_OF_MUSIC;
 	status->dbs->IconChangeTable[SC_LJOSALFAR] = SI_LJOSALFAR;
 	status->dbs->IconChangeTable[SC_MERMAID_LONGING] = SI_MERMAID_LONGING;
-
+	status->dbs->IconChangeTable[SC_HAT_EFFECT] = SI_HAT_EFFECT;
+	status->dbs->IconChangeTable[SC_FLOWERSMOKE] = SI_FLOWERSMOKE;
+	status->dbs->IconChangeTable[SC_FSTONE] = SI_FSTONE;
+	status->dbs->IconChangeTable[SC_HAPPINESS_STAR] = SI_HAPPINESS_STAR;
+	status->dbs->IconChangeTable[SC_MAPLE_FALLS] = SI_MAPLE_FALLS;
+	status->dbs->IconChangeTable[SC_TIME_ACCESSORY] = SI_TIME_ACCESSORY;
+	status->dbs->IconChangeTable[SC_MAGICAL_FEATHER] = SI_MAGICAL_FEATHER;
+	status->dbs->IconChangeTable[SC_BLOSSOM_FLUTTERING] = SI_BLOSSOM_FLUTTERING;
+	
 	// Other SC which are not necessarily associated to skills.
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION1] = SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION2] = SCB_ASPD;
@@ -1107,13 +1117,21 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCHERO] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCLORD] |= SCB_ALL;
 	
-	// Costume
+	// Costumes
 	status->dbs->ChangeFlagTable[SC_MOONSTAR] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_SUPER_STAR] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_STRANGELIGHTS] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_DECORATION_OF_MUSIC] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_LJOSALFAR] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_MERMAID_LONGING] |= SCB_NONE;
+	status->dbs->ChangeFlagTable[SC_HAT_EFFECT] |= SCB_NONE;
+	status->dbs->ChangeFlagTable[SC_FLOWERSMOKE] |= SCB_NONE;
+	status->dbs->ChangeFlagTable[SC_FSTONE] |= SCB_NONE;
+	status->dbs->ChangeFlagTable[SC_HAPPINESS_STAR] |= SCB_NONE;
+	status->dbs->ChangeFlagTable[SC_MAPLE_FALLS] |= SCB_NONE;
+	status->dbs->ChangeFlagTable[SC_TIME_ACCESSORY] |= SCB_NONE;
+	status->dbs->ChangeFlagTable[SC_MAGICAL_FEATHER] |= SCB_NONE;
+	status->dbs->ChangeFlagTable[SC_BLOSSOM_FLUTTERING] |= SCB_NONE;
 
 	/* status->dbs->DisplayType Table [Ind/Hercules] */
 	status->dbs->DisplayType[SC_ALL_RIDING]          = true;
@@ -1138,12 +1156,22 @@ void initChangeTables(void) {
 	status->dbs->DisplayType[SC_BLOOD_SUCKER]        = true;
 	status->dbs->DisplayType[SC__SHADOWFORM]         = true;
 	status->dbs->DisplayType[SC_MONSTER_TRANSFORM]   = true;
+	
+	// Costumes
 	status->dbs->DisplayType[SC_MOONSTAR]            = true;
 	status->dbs->DisplayType[SC_SUPER_STAR]          = true;
 	status->dbs->DisplayType[SC_STRANGELIGHTS]       = true;
 	status->dbs->DisplayType[SC_DECORATION_OF_MUSIC] = true;
 	status->dbs->DisplayType[SC_LJOSALFAR]           = true;
 	status->dbs->DisplayType[SC_MERMAID_LONGING]     = true;
+	status->dbs->DisplayType[SC_HAT_EFFECT]          = true;
+	status->dbs->DisplayType[SC_FLOWERSMOKE]         = true;
+	status->dbs->DisplayType[SC_FSTONE]              = true;
+	status->dbs->DisplayType[SC_HAPPINESS_STAR]      = true;
+	status->dbs->DisplayType[SC_MAPLE_FALLS]         = true;
+	status->dbs->DisplayType[SC_TIME_ACCESSORY]      = true;
+	status->dbs->DisplayType[SC_MAGICAL_FEATHER]     = true;
+	status->dbs->DisplayType[SC_BLOSSOM_FLUTTERING]  = true;
 
 	if( !battle_config.display_hallucination ) //Disable Hallucination.
 		status->dbs->IconChangeTable[SC_ILLUSION] = SI_BLANK;
