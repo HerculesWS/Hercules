@@ -596,6 +596,10 @@ int pc_makesavestatus(struct map_session_data *sd)
 	if(!battle_config.save_clothcolor)
 		sd->status.clothes_color=0;
 
+	if (!battle_config.save_body_style)
+		sd->status.body = 0;
+
+
 	//Only copy the Cart/Peco/Falcon options, the rest are handled via
 	//status change load/saving. [Skotlex]
 #ifdef NEW_CARTS
@@ -1066,6 +1070,9 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	}
 	if( sd->status.clothes_color < MIN_CLOTH_COLOR || sd->status.clothes_color > MAX_CLOTH_COLOR ) {
 		sd->status.clothes_color = MIN_CLOTH_COLOR;
+	}
+	if (sd->status.body < MIN_BODY_STYLE || sd->status.body > MAX_BODY_STYLE) {
+		sd->status.body = MIN_BODY_STYLE;
 	}
 
 	//Initializations to null/0 unneeded since map_session_data was filled with 0 upon allocation.
@@ -8450,6 +8457,8 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_); // move sprite update to prevent client crashes with incompatible equipment [Valaris]
 	if(sd->vd.cloth_color)
 		clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
+	if (sd->vd.body_style)
+		clif->changelook(&sd->bl,LOOK_BODY2,sd->vd.body_style);
 
 	//Update skill tree.
 	pc->calc_skilltree(sd);
@@ -8546,6 +8555,8 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 			clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
 			if (sd->vd.cloth_color)
 				clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
+			if (sd->vd.body_style)
+				clif->changelook(&sd->bl,LOOK_BODY2,sd->vd.body_style);
 			clif->skillinfoblock(sd);
 			return 0;
 			break;
@@ -8593,6 +8604,10 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 			break;
 		case LOOK_ROBE:
 			sd->status.robe = val;
+			break;
+		case LOOK_BODY2:
+			val = cap_value(val, MIN_BODY_STYLE, MAX_BODY_STYLE);
+			sd->status.body=val;
 			break;
 	}
 	clif->changelook(&sd->bl,type,val);
@@ -8690,6 +8705,8 @@ int pc_setoption(struct map_session_data *sd,int type)
 	clif->changelook(&sd->bl,LOOK_BASE,new_look);
 	if (sd->vd.cloth_color)
 		clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
+	if( sd->vd.body_style )
+		clif->changelook(&sd->bl,LOOK_BODY2,sd->vd.body_style);
 	clif->skillinfoblock(sd); // Skill list needs to be updated after base change.
 
 	return 0;

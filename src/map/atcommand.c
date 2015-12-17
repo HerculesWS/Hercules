@@ -1703,6 +1703,32 @@ ACMD(model)
 }
 
 /*==========================================
+ * @bodystyle [Rytech]
+ *------------------------------------------*/
+ACMD(bodystyle)
+{
+	int body_style = 0;
+
+	memset(atcmd_output, '\0', sizeof(atcmd_output));
+
+	if (!*message || sscanf(message, "%d", &body_style) < 1) {
+		sprintf(atcmd_output, "Please, enter a body style (usage: @bodystyle <body ID: %d-%d>).", MIN_BODY_STYLE, MAX_BODY_STYLE);
+		clif->message(fd, atcmd_output);
+		return false;
+	}
+
+	if (body_style >= MIN_BODY_STYLE && body_style <= MAX_BODY_STYLE) {
+		pc->changelook(sd, LOOK_BODY2, body_style);
+		clif->message(fd, msg_txt(36)); // Appearence changed.
+	} else {
+		clif->message(fd, msg_txt(37)); // An invalid number was specified.
+		return false;
+	}
+
+	return true;
+}
+
+/*==========================================
  * @dye && @ccolor
  *------------------------------------------*/
 ACMD(dye)
@@ -5484,7 +5510,7 @@ ACMD(divorce)
 ACMD(changelook)
 {
 	int i, j = 0, k = 0;
-	int pos[7] = { LOOK_HEAD_TOP,LOOK_HEAD_MID,LOOK_HEAD_BOTTOM,LOOK_WEAPON,LOOK_SHIELD,LOOK_SHOES,LOOK_ROBE };
+	int pos[8] = { LOOK_HEAD_TOP,LOOK_HEAD_MID,LOOK_HEAD_BOTTOM,LOOK_WEAPON,LOOK_SHIELD,LOOK_SHOES,LOOK_ROBE,LOOK_BODY2 };
 
 	if((i = sscanf(message, "%12d %12d", &j, &k)) < 1) {
 		clif->message(fd, msg_fd(fd,1177)); // Usage: @changelook {<position>} <view id>
@@ -9648,6 +9674,7 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(skdebug),
 		ACMD_DEF(cddebug),
 		ACMD_DEF(lang),
+		ACMD_DEF(bodystyle),
 	};
 	int i;
 
