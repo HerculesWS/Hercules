@@ -928,8 +928,15 @@ enum {
 	JOB_KAGEROU = 4211,
 	JOB_OBORO,
 	JOB_REBELLION = 4215,
+	
+	JOB_SUMMONER = 4218,
 
 	JOB_MAX,
+};
+
+enum {
+	RACE_HUMAN = 0,
+	RACE_DORAM
 };
 
 //Total number of classes (for data storage)
