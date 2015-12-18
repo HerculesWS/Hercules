@@ -12,6 +12,7 @@
 //= Copyright (C) 2012-2015  Hercules Dev Team
 //= Copyright (C)  Yommy
 //= Copyright (C)  Streusel
+//= Copyright (C)  Frost
 //= Copyright (C)  Euphy
 //= Copyright (C)  Spre
 //= Copyright (C)  Kenpachi
@@ -46,7 +47,7 @@
 //================= Description ===========================================
 //= Town shop NPCs.
 //================= Current Version =======================================
-//= 3.5
+//= 3.6
 //=========================================================================
 
 //== Alberta ===============================================
@@ -208,13 +209,15 @@ OnInit:
 	sellitem Life_Force_Pot;
 	sellitem Yggdrasilberry_Dew;
 	sellitem Seed_Of_Life;
-	sellitem Melange_Pot;
-	sellitem Cooking_Skewer;
-	sellitem Black_Charcoal;
-	sellitem Large_Cookpot;
-	sellitem Fine_Noodle;
-	sellitem Cool_Gravy;
-	sellitem Bottle_To_Throw;
+	if (RENEWAL){
+		sellitem Melange_Pot;
+		sellitem Cooking_Skewer;
+		sellitem Black_Charcoal;
+		sellitem Large_Cookpot;
+		sellitem Fine_Noodle;
+		sellitem Cool_Gravy;
+		sellitem Bottle_To_Throw;
+	}
 }
 
 //== Amatsu ================================================
