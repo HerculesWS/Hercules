@@ -245,7 +245,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 		mes "I will put all my efforts into it.";
 		mes "I want to challenge my skills!!";
 		next;
-		if (countitem(2250) > 0 || countitem(5441) > 0 || countitem(5439) > 0 || countitem(5440) > 0 || countitem(5438) > 0) {
+		if (countitem(Fillet) > 0 || countitem(Fillet_White) > 0 || countitem(Fillet_Red) > 0 || countitem(Fillet_Blue) > 0 || countitem(Fillet_Green) > 0) {
 			mes "["+strcharinfo(0)+"]";
 			mes "(I have a Cute Ribbon...what should I do..?)";
 			next;
@@ -258,14 +258,14 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 				next;
 				switch(select("Yellow one..:White one..:Blue one..:Red one..:Green one..:Never mind.")){
 				case 1:
-					if(countitem(2250) > 0) {
+					if(countitem(Fillet) > 0) {
 						mes "[Elgo]";
 						mes "Ok Ok, Yellow Cute Ribbon, huh?";
 						mes "What color do you want it to be dyed?";
 						next;
 						switch(select("White:Blue:Red:Green")){
 						case 1:
-							if(countitem(982) > 0) {
+							if(countitem(White_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Wow, pure and innocent white!";
 								mes "Ok, let's do it.";
@@ -286,7 +286,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it white, bring me ^4d4dff1 White Dyestuffs^000000.";
 							close;
 						case 2:
-							if(countitem(978) > 0) {
+							if(countitem(Cobaltblue_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Cool blue!!";
 								mes "Let's do it!";
@@ -307,7 +307,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it blue, bring me ^4d4dff1 Blue Dyestuffs^000000.";
 							close;
 						case 3:
-							if(countitem(975) > 0) {
+							if(countitem(Scarlet_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Cute Red!";
 								mes "Let's do it!";
@@ -328,7 +328,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it red, bring me ^4d4dff1 Red Dyestuffs^000000.";
 							close;
 						case 4:
-							if(countitem(979) > 0) {
+							if(countitem(Darkgreen_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Nature's Green!";
 								mes "Let's do it!";
@@ -355,14 +355,14 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 					mes "But you don't even have one.";
 					close;
 				case 2:
-					if(countitem(5441) > 0) {
+					if(countitem(Fillet_White) > 0) {
 						mes "[Elgo]";
 						mes "Ok Ok, This white Cute Ribbon, huh?";
 						mes "What color do you want it to be dyed?";
 						next;
 						switch(select("Yellow:Blue:Red:Green")) {
 						case 1:
-							if(countitem(976) > 0) {
+							if(countitem(Lemon_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Basic Yellow!";
 								mes "Let's do it!";
@@ -383,7 +383,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it yellow, bring me ^4d4dff1 yellow Dyestuffs^000000.";
 							close;
 						case 2:
-							if(countitem(978) > 0) {
+							if(countitem(Cobaltblue_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Cool blue!!";
 								mes "Let's do it!";
@@ -404,7 +404,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it blue, bring me ^4d4dff1 Blue Dyestuffs^000000.";
 							close;
 						case 3:
-							if(countitem(975) > 0) {
+							if(countitem(Scarlet_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Cute Red!";
 								mes "Let's do it!";
@@ -425,7 +425,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it red, bring me ^4d4dff1 Red Dyestuffs^000000.";
 							close;
 						case 4:
-							if(countitem(979) > 0) {
+							if(countitem(Darkgreen_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Nature's Green!";
 								mes "Let's do it!";
@@ -452,14 +452,14 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 					mes "But you don't even have one.";
 					close;
 				case 3:
-					if(countitem(5440) > 0) {
+					if(countitem(Fillet_Blue) > 0) {
 						mes "[Elgo]";
 						mes "Ok Ok, This blue Cute Ribbon, huh?";
 						mes "What color do you want it to be dyed?";
 						next;
 						switch(select("White:Yellow:Red:Green")) {
 						case 1:
-							if(countitem(982) > 0) {
+							if(countitem(White_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Wow, pure and innocent white!";
 								mes "Ok, let's do it.";
@@ -480,7 +480,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it white, bring me ^4d4dff1 White Dyestuffs^000000.";
 							close;
 						case 2:
-							if(countitem(976) > 0) {
+							if(countitem(Lemon_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Basic Yellow!";
 								mes "Let's do it!";
@@ -501,7 +501,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it yellow, bring me ^4d4dff1 yellow Dyestuffs^000000.";
 							close;
 						case 3:
-							if(countitem(975) > 0) {
+							if(countitem(Scarlet_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Cute Red!";
 								mes "Let's do it!";
@@ -522,7 +522,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it red, bring me ^4d4dff1 Red Dyestuffs^000000.";
 							close;
 						case 4:
-							if(countitem(979) > 0) {
+							if(countitem(Darkgreen_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Nature's Green!";
 								mes "Let's do it!";
@@ -549,14 +549,14 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 					mes "But you don't even have one.";
 					close;
 				case 4:
-					if(countitem(5439) > 0) {
+					if(countitem(Fillet_Red) > 0) {
 						mes "[Elgo]";
 						mes "Ok Ok, This Red Cute Ribbon, huh?";
 						mes "What color do you want it to be dyed?";
 						next;
 						switch(select("White:Blue:Yellow:Green")){
 						case 1:
-							if (countitem(982) > 0){
+							if (countitem(White_Dyestuffs) > 0){
 								mes "[Elgo]";
 								mes "Wow, pure and innocent white!";
 								mes "Ok, let's do it.";
@@ -577,7 +577,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it white, bring me ^4d4dff1 White Dyestuffs^000000.";
 							close;
 						case 2:
-							if(countitem(978) > 0) {
+							if(countitem(Cobaltblue_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Cool blue!!";
 								mes "Let's do it!";
@@ -598,7 +598,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it blue, bring me ^4d4dff1 Blue Dyestuffs^000000.";
 							close;
 						case 3:
-							if(countitem(976) > 0) {
+							if(countitem(Lemon_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Basic Yellow!";
 								mes "Let's do it!";
@@ -619,7 +619,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it yellow, bring me ^4d4dff1 yellow Dyestuffs^000000.";
 							close;
 						case 4:
-							if(countitem(979) > 0) {
+							if(countitem(Darkgreen_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Nature's Green!";
 								mes "Let's do it!";
@@ -646,14 +646,14 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 					mes "But you don't even have one.";
 					close;
 				case 5:
-					if(countitem(5438) > 0) {
+					if(countitem(Fillet_Green) > 0) {
 						mes "[Elgo]";
 						mes "Ok Ok, This Green Cute Ribbon, huh?";
 						mes "What color do you want it to be dyed?";
 						next;
 						switch(select("White:Blue:Red:Yellow")) {
 						case 1:
-							if(countitem(982) > 0) {
+							if(countitem(White_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Wow, pure and innocent white!";
 								mes "Ok, let's do it.";
@@ -674,7 +674,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it white, bring me ^4d4dff1 White Dyestuffs^000000.";
 							close;
 						case 2:
-							if(countitem(978) > 0) {
+							if(countitem(Cobaltblue_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Cool blue!!";
 								mes "Let's do it!";
@@ -695,7 +695,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it blue, bring me ^4d4dff1 Blue Dyestuffs^000000.";
 							close;
 						case 3:
-							if(countitem(975) > 0) {
+							if(countitem(Scarlet_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Cute Red!";
 								mes "Let's do it!";
@@ -716,7 +716,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 							mes "If you want to dye it red, bring me ^4d4dff1 Red Dyestuffs^000000.";
 							close;
 						case 4:
-							if(countitem(976) > 0) {
+							if(countitem(Lemon_Dyestuffs) > 0) {
 								mes "[Elgo]";
 								mes "Basic Yellow!";
 								mes "Let's do it!";
@@ -802,7 +802,7 @@ OnTouch:
 			mes "Brides...wear...Corollas..";
 			next;
 			select("Would you make one for me?");
-			if((countitem(10007) > 0) && (countitem(1032) > 999)) {
+			if((countitem(Silk_Ribbon) > 0) && (countitem(Blossom_Of_Maneater) > 999)) {
 				mes "[Aite]";
 				mes ".. Materials..you..have..";
 				mes "..Too much time to make one.";

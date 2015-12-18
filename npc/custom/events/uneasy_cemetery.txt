@@ -33,7 +33,7 @@ OnInit:
 	end;
 
 OnHour06:
-	killmonsterall "prontera";	//The Sun kills undead in the morning
+	killmonster "Uneasy_Check::OnZombieDead";	//The Sun kills undead in the morning
 	end;
 
 OnHour01:
@@ -52,7 +52,7 @@ OnZombieDead:
 	end;
 
 L_Start_Undead:
-	killmonsterall "prontera";	//kills any left monsters
+	killmonster "Uneasy_Check::OnZombieDead";	//kills any left monsters
 	enablenpc "Mother Mathana";
 //call some monsters in the city
 	set $@UNEASY_MOB, 65;
@@ -82,9 +82,9 @@ L_Undead_Walk:
 	next;
 	menu "Yes, have all my Holy Water!",-, "Nope, I need it.",M_NO, "I don't have any.",M_DONT_HAVE;
 
-	if ( countitem(523)<1 ) goto M_DONT_HAVE;
-	set $UNEASY_BL,$UNEASY_BL-countitem(523);
-	delitem 523,countitem(523);
+	if ( countitem(Holy_Water)<1 ) goto M_DONT_HAVE;
+	set $UNEASY_BL,$UNEASY_BL-countitem(Holy_Water);
+	delitem 523,countitem(Holy_Water);
 
 	if ( $UNEASY_BL > 0 ) goto L_NEED_MORE;
 //set quiet days!!! no more undead for this period!
@@ -96,7 +96,7 @@ L_Undead_Walk:
 	mes "[Mother Mathana]";
 	mes "Upon pouring the cemetery with that water we'll get " + $UNEASY_DL + " safe nights!";
 	next;
-	killmonsterall "prontera";	//kills any left monsters
+	killmonster "Uneasy_Check::OnZombieDead";	//kills any left monsters
 	mes "[Mother Mathana]";
 	mes "See, "+ $UNEASY_H$ +"? They all are gone now!";
 	next;
@@ -107,7 +107,7 @@ L_Undead_Walk:
 	if (Sex==0) mapannounce "prontera","[Mother Mathana]: In the name of Odin we declare beautiful "+$UNEASY_H$+" as a Prontera savior!",0;
 	mes "[Mother Mathana]";
 	mes "In the name of Odin we bless you and decently present a modest gift just from Mareusis' wine-cellar.";
-	getitem 505,1; //Blue_Potion
+	getitem Blue_Potion,1;
 	set JobExp,JobExp+100;
 	set BaseExp,BaseExp+50;
 	close;

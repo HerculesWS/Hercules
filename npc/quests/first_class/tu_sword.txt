@@ -131,7 +131,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 				getexp 186,0;
 			else
 				getexp 1860,0;
-			getitem 1113,1; //Scimiter
+			getitem Scimiter,1;
 			next;
 			mes "[Shurank]";
 			mes "That is all I have to teach you about Swordman skills. Hopefully, I've been able to clear up anything you haven't understood about your job and skills.";
@@ -186,7 +186,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 		mes "I hope that you make good use of it as you train to become stronger and stronger. Good luck out there.";
 		tu_swordman = 23;
 		completequest 8228;
-		getitem 1113,1; //Scimiter
+		getitem Scimiter,1;
 		close;
 	case 21:
 		mes "Ah, you've returned. I've just received a communique from";
@@ -748,7 +748,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 				getexp 97,0;
 			else
 				getexp 970,0;
-			getitem 2503,1; //Muffler
+			getitem Muffler,1;
 			close;
 		} else {
 			mes "[Shurank]";
@@ -802,7 +802,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 				getexp 97,0;
 			else
 				getexp 970,0;
-			getitem 2503,1; //Muffler
+			getitem Muffler,1;
 			close;
 		} else {
 			mes "[Shurank]";
@@ -892,7 +892,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 				getexp 97,0;
 			else
 				getexp 970,0;
-			getitem 2503,1; //Muffler
+			getitem Muffler,1;
 			close;
 		} else {
 			mes "[Shurank]";
@@ -1000,7 +1000,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 				getexp 97,0;
 			else
 				getexp 970,0;
-			getitem 2503,1; //Muffler
+			getitem Muffler,1;
 			close;
 		}
 	}

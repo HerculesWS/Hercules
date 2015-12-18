@@ -383,7 +383,7 @@ alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 			mes "your current hairstyle. Why don't you";
 			mes "try a new hair accessory rather than changing your look?";
 			close;
-		} else if((countitem(973) < 3) || (countitem(974) < 3) || (countitem(901) <100) || (countitem(1094) <100) || (countitem(1020) <100) || (countitem(1060) <100) || (countitem(7152) <100) || (Zeny < 99800)) {
+		} else if((countitem(Counteragent) < 3) || (countitem(Mixture) < 3) || (countitem(Danggie) <100) || (countitem(Short_Daenggie) <100) || (countitem(Long_Hair) <100) || (countitem(Golden_Hair) <100) || (countitem(Glossy_Hair) <100) || (Zeny < 99800)) {
 			mes "[Veronica]";
 			mes "If you wish to change your";
 			mes "hairstyle, you should meet some";
@@ -494,13 +494,13 @@ alberta_in,55,142,7	script	Hair Dresser	4_F_02,{
 				mes "- *bzzzzzzz bzzzzzzz bzzzzzzz bzzzzzzz* -";
 				next;
 				Zeny -= 99800;
-				delitem 973,3;	// Counteragent
-				delitem 974,3;	// Mixture
-				delitem 901,100;	// Danggie
-				delitem 1094,100;	// Short_Daenggie
-				delitem 1020,100;	// Long_Hair
-				delitem 1060,100;	// Golden_Hair
-				delitem 7152,100;	// Glossy_Hair
+				delitem Counteragent,3;	// Counteragent
+				delitem Mixture,3;	// Mixture
+				delitem Danggie,100;	// Danggie
+				delitem Short_Daenggie,100;	// Short_Daenggie
+				delitem Long_Hair,100;	// Long_Hair
+				delitem Golden_Hair,100;	// Golden_Hair
+				delitem Glossy_Hair,100;	// Glossy_Hair
 				setlook 1,.@style;
 				setlook 6,.@pallete;
 				cutin "",255;
@@ -924,7 +924,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 			mes "come back once you do, okay?";
 			close;
 		}
-		else if ((countitem(973) < 3) || (countitem(974) < 3) || (countitem(901) < 100) || (countitem(1094) < 100) || (countitem(1020) < 100) || (countitem(1060) < 100) || (countitem(7152) < 100) || (Zeny < 99800)) {
+		else if ((countitem(Counteragent) < 3) || (countitem(Mixture) < 3) || (countitem(Danggie) < 100) || (countitem(Short_Daenggie) < 100) || (countitem(Long_Hair) < 100) || (countitem(Golden_Hair) < 100) || (countitem(Glossy_Hair) < 100) || (Zeny < 99800)) {
 			mes "[Prince Shammi]";
 			mes "If you've already decided";
 			mes "what hairstyle you'd like,";
@@ -1065,13 +1065,13 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 				mes "*Bzzzzzzzzzzzzzzzzzzzz*^000000";
 				next;
 				Zeny -= 99800;
-				delitem 973,3; //Counteragent
-				delitem 974,3; //Mixture
-				delitem 901,100; //Danggie
-				delitem 1094,100; //Short_Daenggie
-				delitem 1020,100; //Long_Hair
-				delitem 1060,100; //Golden_Hair
-				delitem 7152,100; //Glossy_Hair
+				delitem Counteragent,3;
+				delitem Mixture,3;
+				delitem Danggie,100;
+				delitem Short_Daenggie,100;
+				delitem Long_Hair,100;
+				delitem Golden_Hair,100;
+				delitem Glossy_Hair,100;
 				setlook VAR_HEAD,.@input;
 				setlook VAR_HEADPALETTE,.@headpalette;
 				mes "[Prince Shammi]";

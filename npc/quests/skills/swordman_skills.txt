@@ -116,7 +116,7 @@ izlude_in,118,175,4	script	Knight De Thomas	4W_M_02,{
 		next;
 		switch (select("Yes.:No, I'm not ready yet.")) {
 		case 1:
-			if ((JobLevel > 34 || (BaseJob == Job_Knight || BaseJob == Job_Crusader)) && (countitem(713) > 199) && (countitem(1058) > 0)) {
+			if ((JobLevel > 34 || (BaseJob == Job_Knight || BaseJob == Job_Crusader)) && (countitem(Empty_Bottle) > 199) && (countitem(Wing_Of_Moth) > 0)) {
 				mes "[De Thomas]";
 				mes "Let's see.....";
 				next;
@@ -124,8 +124,8 @@ izlude_in,118,175,4	script	Knight De Thomas	4W_M_02,{
 				mes "Ok! I shall now teach you...";
 				mes "...The Body Movin' skill!";
 				next;
-				delitem 713,200; //Empty_Bottle
-				delitem 1058,1; //Wing_Of_Moth
+				delitem Empty_Bottle,200;
+				delitem Wing_Of_Moth,1;
 				skill "SM_MOVINGRECOVERY",1,0;
 				sm_movingrecovery_x = 2;
 				mes "[De Thomas]";
@@ -145,7 +145,7 @@ izlude_in,118,175,4	script	Knight De Thomas	4W_M_02,{
 				mes "Come back when it is.";
 				close;
 			}
-			else if ((countitem(713) < 200) || (countitem(1058) < 1)) {
+			else if ((countitem(Empty_Bottle) < 200) || (countitem(Wing_Of_Moth) < 1)) {
 				mes "[De Thomas]";
 				mes "You do not have all the items I asked for.";
 				next;
@@ -186,7 +186,7 @@ prt_in,75,88,5	script	Leon Von Frich	4_M_03,3,3,{
 			mes "Be careful! Hahaha!";
 			close;
 		}
-		else if ((countitem(1752) > 9) && (countitem(1751) > 9) && (countitem(532) > 0) && (countitem(962) > 29) && (countitem(526) > 4)) {
+		else if ((countitem(Fire_Arrow) > 9) && (countitem(Silver_Arrow) > 9) && (countitem(Banana_Juice) > 0) && (countitem(Tentacle) > 29) && (countitem(Royal_Jelly) > 4)) {
 			mes "[Leon]";
 			mes "Ooh! You are more than ready";
 			mes "to learn Fatal Blow!";
@@ -197,11 +197,11 @@ prt_in,75,88,5	script	Leon Von Frich	4_M_03,3,3,{
 				mes "[Leon]";
 				mes "OK, lets begin!";
 				next;
-				delitem 1752,10; //Fire_Arrow
-				delitem 1751,10; //Silver_Arrow
-				delitem 532,1; //Banana_Juice
-				delitem 962,30; //Tentacle
-				delitem 526,5; //Royal_Jelly
+				delitem Fire_Arrow,10;
+				delitem Silver_Arrow,10;
+				delitem Banana_Juice,1;
+				delitem Tentacle,30;
+				delitem Royal_Jelly,5;
 				skill "SM_FATALBLOW",1,0;
 				mes "[Leon]";
 				mes "Success!";
@@ -353,7 +353,7 @@ prt_in,94,57,3	script	Juan	4_M_03,4,4,{
 			mes "You can be on your way. (smiley~)";
 			close;
 		}
-		else if ((countitem(924) > 34) && (countitem(958) > 9) && (countitem(957) > 9) && (countitem(518) > 9)) {
+		else if ((countitem(Powder_Of_Butterfly) > 34) && (countitem(Horrendous_Mouth) > 9) && (countitem(Decayed_Nail) > 9) && (countitem(Honey) > 9)) {
 			mes "[Juan]";
 			mes "Ooh. Young swordsman!";
 			mes "You are ready to learn the";
@@ -364,10 +364,10 @@ prt_in,94,57,3	script	Juan	4_M_03,4,4,{
 				mes "[Juan]";
 				mes "Ok. Then...";
 				next;
-				delitem 924,35; //Powder_Of_Butterfly
-				delitem 958,10; //Horrendous_Mouth
-				delitem 957,10; //Decayed_Nail
-				delitem 518,10; //Honey
+				delitem Powder_Of_Butterfly,35;
+				delitem Horrendous_Mouth,10;
+				delitem Decayed_Nail,10;
+				delitem Honey,10;
 				skill "SM_AUTOBERSERK",1,0;
 				mes "[Juan]";
 				mes "You have just become a swordsman";

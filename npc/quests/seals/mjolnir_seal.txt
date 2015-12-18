@@ -39,7 +39,7 @@
 //=========================================================================
 
 prontera,124,297,3	script	Tialfi	4_M_KID1,{
-	if (checkweight(1301,3) == 0) {
+	if (checkweight(Axe,3) == 0) {
 		mes "- You are carrying too many items! -";
 		close;
 	}
@@ -62,7 +62,7 @@ prontera,124,297,3	script	Tialfi	4_M_KID1,{
 		}
 		else if (god_mjo_1 == 2 && god_mjo_2 == 2 && god_mjo_3 == 2 && god_mjo_4 == 2) {
 			if (god_mjo_0 == 10) {
-				if ((countitem(756) > 49) && (countitem(757) > 49)) {
+				if ((countitem(Oridecon_Stone) > 49) && (countitem(Elunium_Stone) > 49)) {
 					.@gift = 0;
 					if (BaseJob == Job_Knight) {
 						.@gift = 1;
@@ -142,47 +142,47 @@ prontera,124,297,3	script	Tialfi	4_M_KID1,{
 					mes "It must be around--Ah!";
 					mes "Here we are~";
 					next;
-					delitem 756,50; //Oridecon_Stone
-					delitem 757,50; //Elunium_Stone
+					delitem Oridecon_Stone,50;
+					delitem Elunium_Stone,50;
 					god_mjo_0 = 11;
 					if (.@gift == 1) {
-						getitem 1471,1; // Hell_Fire
+						getitem Hell_Fire,1; // Hell_Fire
 					}
 					else if (.@gift == 2) {
-						getitem 1526,1; // Slash
+						getitem Slash,1; // Slash
 					}
 					else if (.@gift == 3) {
-						getitem 1231,1; // Bazerald
+						getitem Bazerald,1; // Bazerald
 					}
 					else if (.@gift == 4) {
-						getitem 1367,1; // Slaughter
+						getitem Slaughter,1; // Slaughter
 					}
 					else if (.@gift == 5) {
-						getitem 1722,1; // Balistar
+						getitem Balistar,1; // Balistar
 					}
 					else if (.@gift == 6) {
-						getitem 1230,1; // House_Auger
+						getitem House_Auger,1; // House_Auger
 					}
 					else if (.@gift == 7) {
-						getitem 1141,1; // Immaterial_Sword
+						getitem Immaterial_Sword,1; // Immaterial_Sword
 					}
 					else if (.@gift == 8) {
-						getitem 1813,1; // Kaiser_Knuckle
+						getitem Kaiser_Knuckle,1; // Kaiser_Knuckle
 					}
 					else if (.@gift == 9) {
-						getitem 1557,1; // Book_Of_The_Apocalypse
+						getitem Book_Of_The_Apocalypse,1; // Book_Of_The_Apocalypse
 					}
 					else if (.@gift == 10) {
-						getitem 1235,1; // Azoth
+						getitem Azoth,1; // Azoth
 					}
 					else if (.@gift == 11) {
-						getitem 1227,1; // Weeder_Knife
+						getitem Weeder_Knife,1; // Weeder_Knife
 					}
 					else if (.@gift == 12) {
-						getitem 1913,1; // Electronic_Guitar
+						getitem Electronic_Guitar,1; // Electronic_Guitar
 					}
 					else if (.@gift == 13) {
-						getitem 1963,1; // Rapture_Rose
+						getitem Rapture_Rose,1; // Rapture_Rose
 					}
 					else {
 						mes "Unknown error occurred.";
@@ -508,7 +508,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 					mes "...";
 					close;
 				case 2:
-					if (countitem(1005) > 0) { //Hammer_Of_Blacksmith
+					if (countitem(Hammer_Of_Blacksmith) > 0) { //Hammer_Of_Blacksmith
 						mes "[Austri]";
 						mes "Ah, I see that the entire human race is not worthy of scorn. Unlike many of your kind, I see that you respect your elders.";
 						next;
@@ -764,7 +764,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 					mes "...";
 					close;
 				case 2:
-					if (countitem(1005) > 0) {
+					if (countitem(Hammer_Of_Blacksmith) > 0) {
 						mes "[Austri]";
 						mes "Ah, I see that the entire human race is not worthy of scorn. Unlike many of your kind, I see that you respect your elders.";
 						next;
@@ -2041,8 +2041,8 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 					close;
 				}
 
-				if (countitem(984) > 0) {
-					delitem 984,1; //Oridecon
+				if (countitem(Oridecon) > 0) {
+					delitem Oridecon,1;
 				}
 				else {
 					mes "[Vestri]";
@@ -2251,8 +2251,8 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 					mes "to work!";
 					close;
 				}
-				if (countitem(984) > 0) {
-					delitem 984,1; //Oridecon
+				if (countitem(Oridecon) > 0) {
+					delitem Oridecon,1;
 				}
 				else {
 					mes "[Vestri]";
@@ -2433,8 +2433,8 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 				}
 			}
 			else if (god_mjo_4 == 1) {
-				if (countitem(501) > 0) {
-					delitem 501,1;  //Red_Potion
+				if (countitem(Red_Potion) > 0) {
+					delitem Red_Potion,1;
 					mes "[Nordri]";
 					mes "Ah, you've brought";
 					mes "me a Red Potion, just";
@@ -2622,9 +2622,9 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 				}
 			}
 			else if (god_mjo_1 == 1) {
-				if (countitem(501) > 0) {
+				if (countitem(Red_Potion) > 0) {
 
-					delitem 501,1;  //Red_Potion
+					delitem Red_Potion,1;
 					mes "[Nordri]";
 					mes "Ah, you've brought";
 					mes "me a Red Potion...?";

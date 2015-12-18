@@ -153,7 +153,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 						end;
 					}
 				} else {
-					if (checkweight(607,1) == 0) {
+					if (checkweight(Yggdrasilberry,1) == 0) {
 						mes "[Nurse Maenne]";
 						mes "You have too much stuff.";
 						mes "Please reduce your stuff and";
@@ -162,7 +162,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 						cutin "",255;
 						end;
 					}
-					if (checkweight(607,11) == 0) {
+					if (checkweight(Yggdrasilberry,11) == 0) {
 						mes "[Nurse Maenne]";
 						mes "It's too heavy.";
 						mes "Please reduce the weight and";
@@ -179,9 +179,9 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 					setquest 9223;
 					getexp 500000,0;
 //					if (IsPremiumPcCafe == 10)
-						getitem 6499,7; //Ancient_Grudge
+						getitem Ancient_Grudge,7;
 //					else
-//						getitem 6499,5; //Ancient_Grudge
+//						getitem Ancient_Grudge,5;
 					close2;
 					cutin "",255;
 					end;

@@ -95,7 +95,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 		warp "in_moc_16",18,14;
 		end;
 	}
-	if (BaseJob == Job_Thief && countitem(1008) == 0 && ASSIN_Q > 7) {
+	if (BaseJob == Job_Thief && countitem(Frozen_Heart) == 0 && ASSIN_Q > 7) {
 		mes "[Assassin Expert 'Huey']";
 		mes "Hey, what happened...? How come you didn't bring the ^006699Necklace of Oblivion^000000? You're supposed to carry that with you, so where is it?";
 		next;
@@ -106,7 +106,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 		mes "When you finally succeed in getting it, bring it to me! ^666666*Sigh...*^000000";
 		close;
 	}
-	if (BaseJob == Job_Thief && countitem(1008) > 0 && ASSIN_Q > 7) {
+	if (BaseJob == Job_Thief && countitem(Frozen_Heart) > 0 && ASSIN_Q > 7) {
 		mes "[Assassin Expert 'Huey']";
 		mes "Well well well, you got it. Congratulations! But since it's been clearly scratched, I can't accept it. You'll never become an Assassin!";
 		next;
@@ -120,7 +120,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 		mes "...";
 		mes "......";
 		next;
-		delitem 1008,1; //Frozen_Heart
+		delitem Frozen_Heart,1;
 		changequest 8007,8008;
 		mes "[Assassin Expert 'Huey']";
 		mes "Alright!";
@@ -133,7 +133,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 		mes "Now! Do your best to be a great Assassin! Travel with faith and kill with dignity. Come by anytime and pay us a visit. Once again, congratulations.";
 		close;
 	}
-	else if (countitem(1008) > 0 && BaseJob == Job_Thief && ASSIN_Q < 7) {
+	else if (countitem(Frozen_Heart) > 0 && BaseJob == Job_Thief && ASSIN_Q < 7) {
 		mes "[Ferocious-looking guy]";
 		mes "Eh?";
 		mes "What do you want?";
@@ -2063,7 +2063,7 @@ OnTouch:
 				mes "[Guildmaster]";
 				mes "A Jur...";
 				mes "Good choice. There you are. I hope it will serve you well.";
-				getitem 1251,1; //Jur_
+				getitem Jur_,1;
 				break;
 			case 2:
 				mes "[Guildmaster]";
@@ -2072,18 +2072,18 @@ OnTouch:
 				mes "Although it's used,";
 				mes "I know it will";
 				mes "serve you well.";
-				getitem 1253,1; //Katar_
+				getitem Katar_,1;
 				break;
 			case 3:
 				mes "[Guildmaster]";
 				mes "I see. You want to use both hands. Here, take your Main Gauche.";
-				getitem 1208,1; //Main_Gauche_
+				getitem Main_Gauche_,1;
 				break;
 			case 4:
 				mes "[Guildmaster]";
 				mes "A Gladius...";
 				mes "It used to rule over the Assassin weapon market. Please take care of my gladius.";
-				getitem 1220,1; //Gladius_
+				getitem Gladius_,1;
 			}
 			next;
 		}
@@ -2095,19 +2095,19 @@ OnTouch:
 			next;
 			switch(rand(1,5)) {
 			case 1:
-				getitem 1207,1; //Main_Gauche
+				getitem Main_Gauche,1;
 				break;
 			case 2:
-				getitem 1250,1; //Jur
+				getitem Jur,1;
 				break;
 			case 3:
-				getitem 1216,1; //Stiletto
+				getitem Stiletto,1;
 				break;
 			case 4:
-				getitem 1201,1; //Knife
+				getitem Knife,1;
 				break;
 			case 5:
-				getitem 1252,1; //Katar
+				getitem Katar,1;
 			}
 		}
 		mes "[Guildmaster]";
@@ -2119,7 +2119,7 @@ OnTouch:
 		mes "[Guildmaster]";
 		mes "You, " + strcharinfo(0) + ", have chosen to live as an Assassin. May you learn our ways and be an honorable example to others.";
 		savepoint "morocc",100,100;
-		getitem 1008,1; //Frozen_Heart
+		getitem Frozen_Heart,1;
 		changequest 8006,8007;
 		next;
 		mes "[Guildmaster]";

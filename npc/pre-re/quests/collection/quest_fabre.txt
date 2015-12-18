@@ -180,11 +180,11 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 					next;
 					switch(select("I have some Fluff:What was that again?")) {
 					case 1:
-						if (countitem(914) > 24) {
+						if (countitem(Fluff) > 24) {
 							mes "[Langry]";
 							mes "Thank you for the Fluff. This helps me out greatly.";
 							mes "Oh and here you go, this should help you get stronger, faster!";
-							delitem 914,25; //Fluff
+							delitem Fluff,25;
 							getexp 385,30;
 							close;
 						}

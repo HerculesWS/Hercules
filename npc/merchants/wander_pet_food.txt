@@ -51,7 +51,7 @@ prontera,218,218,3	script	Pet Enthusiast	4W_KID,{
 	next;
 	switch(select("Yes:No")) {
 	case 1:
-		if ((countitem(7158) > 19) && (countitem(970) > 0)) {
+		if ((countitem(Broken_Wine_Vessel) > 19) && (countitem(Alchol) > 0)) {
 			mes "[Pet Enthusiast Jenny]";
 			mes "Oh, you have ^ff000020 Broken Liquor Jar^000000s and ^ff00001 Alcohol^000000!";
 			mes "Do you want to exchange them for";
@@ -63,9 +63,9 @@ prontera,218,218,3	script	Pet Enthusiast	4W_KID,{
 				mes "Ok here you go then.";
 				mes "I hope it keeps your";
 				mes "cute pet happy.";
-				delitem 7158,20; //Broken_Wine_Vessel
-				delitem 970,1; //Alchol
-				getitem 7824,20; //Spirit_Liquor
+				delitem Broken_Wine_Vessel,20;
+				delitem Alchol,1;
+				getitem Spirit_Liquor,20;
 				close;
 			case 2:
 				mes "[Pet Enthusiast Jenny]";

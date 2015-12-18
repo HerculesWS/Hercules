@@ -575,7 +575,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 				tu_merchant = 2;
 				changequest 8229, 8230;
 				getexp 58,11;
-				getitem 1351,1; //Battle_Axe
+				getitem Battle_Axe,1;
 				next;
 				mes "[Guarnien]";
 				mes "Alright, next time";
@@ -642,7 +642,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 				tu_merchant = 2;
 				setquest 8230;
 				getexp 58,11;
-				getitem 1351,1; //Battle_Axe
+				getitem Battle_Axe,1;
 				next;
 				mes "[Guarnien]";
 				mes "Alright, next time";
@@ -711,7 +711,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 			} else {
 				Zeny -= 420;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -759,7 +759,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 			} else {
 				Zeny -= 410;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -806,7 +806,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 			} else {
 				Zeny -= 390;
 				tu_merchant = 9;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -862,7 +862,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 			} else {
 				Zeny -= 340;
 				tu_merchant = 10;
-				getitem 569,10; //Novice_Potion
+				getitem Novice_Potion,10;
 				close;
 			}
 		case 2:
@@ -901,7 +901,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 			} else {
 				Zeny -= 390;
 				tu_merchant = 9;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -940,7 +940,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 			} else {
 				Zeny -= 400;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -999,7 +999,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 			} else {
 				Zeny -= 390;
 				tu_merchant = 9;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1044,7 +1044,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 			} else {
 				Zeny -= 420;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1089,7 +1089,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 			} else {
 				Zeny -= 340;
 				tu_merchant = 10;
-				getitem 569,10; //Novice_Potion
+				getitem Novice_Potion,10;
 				close;
 			}
 		case 2:
@@ -1143,7 +1143,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 			} else {
 				Zeny -= 410;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1189,7 +1189,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 			} else {
 				Zeny -= 400;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1236,7 +1236,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 			} else {
 				Zeny -= 410;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1290,7 +1290,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 			} else {
 				Zeny -= 420;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1325,7 +1325,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 			} else {
 				Zeny -= 340;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:
@@ -1360,7 +1360,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 			} else {
 				Zeny -= 400;
 				tu_merchant = 10;
-				getitem 501,10; //Red_Potion
+				getitem Red_Potion,10;
 				close;
 			}
 		case 2:

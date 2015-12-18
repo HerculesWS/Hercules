@@ -36,11 +36,11 @@ gonryun,187,140,4	script	Yakima	4_F_EINWOMAN,{
 	next;
 	menu "Yeah.",-,"Nay.",M_Exit;
 
-	if(countitem(5067) < 1 || countitem(916) < 920 || countitem(925) < 310) goto l_noitem;//Items: Sombrero, Feather_of_Birds, Bill_of_Birds,
-	delitem 5067,1;//Items: Sombrero,
-	delitem 916,920;//Items: Feather_of_Birds,
-	delitem 925,310;//Items: Bill_of_Birds,
-	getitem 5129,1;//Items: Bird_Nest,
+	if(countitem(Sombrero) < 1 || countitem(Feather_Of_Birds) < 920 || countitem(Bill_Of_Birds) < 310) goto l_noitem;//Items: Sombrero, Feather_of_Birds, Bill_of_Birds,
+	delitem Sombrero,1;//Items: Sombrero,
+	delitem Feather_Of_Birds,920;//Items: Feather_of_Birds,
+	delitem Bill_Of_Birds,310;//Items: Bill_of_Birds,
+	getitem Bird_Nest,1;//Items: Bird_Nest,
 	mes "[Yakima]";
 	mes "Thank you very very much!";
 	mes callfunc("F_Bye");
@@ -63,12 +63,12 @@ M_2:
 	next;
 	menu "Yeah.",-,"Nay.",M_Exit;
 
-	if(countitem(5098) < 1 || countitem(1030) < 10 || countitem(1029) < 30 || countitem(7267) < 300) goto l_noitem;//Items: Tiger_Mask, Tiger_Skin, Tiger's_Footskin, Tiger_Panty,
-	delitem 5098,1;//Items: Tiger_Mask,
-	delitem 1030,10;//Items: Tiger's_Footskin,
-	delitem 1029,30;//Items: Tiger_Skin,
-	delitem 7267,300;//Items: Tiger_Panty,
-	getitem 5130,1;//Items: Lion_Mask,
+	if(countitem(Tiger_Mask) < 1 || countitem(Tiger_Footskin) < 10 || countitem(Tiger's_Skin) < 30 || countitem(Tiger_Skin_Panties) < 300) goto l_noitem;//Items: Tiger_Mask, Tiger_Skin, Tiger's_Footskin, Tiger_Panty,
+	delitem Tiger_Mask,1;//Items: Tiger_Mask,
+	delitem Tiger_Footskin,10;//Items: Tiger's_Footskin,
+	delitem Tiger's_Skin,30;//Items: Tiger_Skin,
+	delitem Tiger_Skin_Panties,300;//Items: Tiger_Panty,
+	getitem Lion_Mask,1;//Items: Lion_Mask,
 	mes "[Yakima]";
 	mes "Thank you very very much!";
 	mes callfunc("F_Bye");
@@ -92,12 +92,12 @@ M_3:
 	next;
 	menu "Yeah.",-,"Nay.",M_Exit;
 
-	if(countitem(2508) < 1 || countitem(2506) < 2 || countitem(2609) < 3 || countitem(7207) < 10) goto l_noitem;//Items: Ragamuffin_Manteau, Manteau_, Skull_Ring, Old_Manteau,
-	delitem 2508,1;//Items: Ragamuffin_Manteau,
-	delitem 2506,2;//Items: Manteau_,
-	delitem 2609,3;//Items: Skull_Ring,
-	delitem 7207,10;//Items: Old_Manteau,
-	getitem 2511,1;//Items: Skeleton_Manteau,
+	if(countitem(Ragamuffin_Cape) < 1 || countitem(Manteau_) < 2 || countitem(Skul_Ring) < 3 || countitem(Old_Manteau) < 10) goto l_noitem;//Items: Ragamuffin_Manteau, Manteau_, Skull_Ring, Old_Manteau,
+	delitem Ragamuffin_Cape,1;//Items: Ragamuffin_Manteau,
+	delitem Manteau_,2;//Items: Manteau_,
+	delitem Skul_Ring,3;//Items: Skull_Ring,
+	delitem Old_Manteau,10;//Items: Old_Manteau,
+	getitem Skeleton's_Cape,1;//Items: Skeleton_Manteau,
 	mes "[Yakima]";
 	mes "Thank you very very much!";
 	mes callfunc("F_Bye");
@@ -121,12 +121,12 @@ M_4:
 	next;
 	menu "Yeah.",-,"Nay.",M_Exit;
 
-	if(countitem(2269) < 3 || countitem(2207) < 3 || countitem(2612) < 2 || countitem(2287)<3 ) goto l_noitem;//Items: Romantic_Flower, Fancy_Flower, Flower_Ring,
-	delitem 2269,3;//Items: Romantic_Flower,
-	delitem 2207,3;//Items: Fancy_Flower,
-	delitem 2612,2;//Items: Flower_Ring,
-	delitem 2287,3;//Items: Pirate_Bandana
-	getitem 2641,1;//Items: Fashion_Hip_Sack,
+	if(countitem(Centimental_Flower) < 3 || countitem(Fancy_Flower) < 3 || countitem(Flower_Ring) < 2 || countitem(Pirate_Bandana)<3 ) goto l_noitem;//Items: Romantic_Flower, Fancy_Flower, Flower_Ring,
+	delitem Centimental_Flower,3;//Items: Romantic_Flower,
+	delitem Fancy_Flower,3;//Items: Fancy_Flower,
+	delitem Flower_Ring,2;//Items: Flower_Ring,
+	delitem Pirate_Bandana,3;//Items: Pirate_Bandana
+	getitem Fashionable_Sack,1;//Items: Fashion_Hip_Sack,
 	mes "[Yakima]";
 	mes "Thank you very very much!";
 	mes callfunc("F_Bye");
@@ -152,14 +152,14 @@ M_5:
 	next;
 	menu "Yeah.",-,"Nay.",M_Exit;
 
-	if(countitem(975) < 1 || countitem(980) < 1 || countitem(2272) < 2 || countitem(2262) < 3 || countitem(7298) < 180 || countitem(7164) < 20) goto l_noitem;//Items: Scarlet_Dyestuff, Orange_Dyestuff, Stop_Post, Clown_Nose, Fig_Leaf, Solid_Peach,
-	delitem 975,1;//Items: Scarlet_Dyestuff,
-	delitem 980,1;//Items: Orange_Dyestuff,
-	delitem 2272,2;//Items: Stop_Post,
-	delitem 2262,3;//Items: Clown_Nose,
-	delitem 7298,180;//Items: Fig_Leaf,
-	delitem 7164,20;//Items: Solid_Peach,
-	getitem 5100,1;//Items: Sales_Banner,
+	if(countitem(Scarlet_Dyestuffs) < 1 || countitem(Orange_Dyestuffs) < 1 || countitem(Stop_Post) < 2 || countitem(Pierrot_Nose) < 3 || countitem(Leaf_Clothes) < 180 || countitem(Hard_Peach) < 20) goto l_noitem;//Items: Scarlet_Dyestuff, Orange_Dyestuff, Stop_Post, Clown_Nose, Fig_Leaf, Solid_Peach,
+	delitem Scarlet_Dyestuffs,1;//Items: Scarlet_Dyestuff,
+	delitem Orange_Dyestuffs,1;//Items: Orange_Dyestuff,
+	delitem Stop_Post,2;//Items: Stop_Post,
+	delitem Pierrot_Nose,3;//Items: Clown_Nose,
+	delitem Leaf_Clothes,180;//Items: Fig_Leaf,
+	delitem Hard_Peach,20;//Items: Solid_Peach,
+	getitem Sales_Signboard,1;//Items: Sales_Banner,
 	mes "[Yakima]";
 	mes "Thank you very very much!";
 	mes callfunc("F_Bye");

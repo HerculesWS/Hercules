@@ -40,7 +40,7 @@
 
 //== Quest NPCs ============================================
 mal_in01,172,28,2	script	Albo#mal	4_CAT_SAILOR5,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of objects. Try to continue after reducing those objects.";
 		close;
 	}
@@ -164,7 +164,7 @@ L_GiveQuest:
 }
 
 mal_in01,172,26,2	script	Madeca#mal	4_CAT_SAILOR1,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of objects. Try to continue after reducing those objects.";
 		close;
 	}
@@ -394,7 +394,7 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 		in_canal_n = 1;
 		close;
 	}
-	if (countitem(6436) == 0) {
+	if (countitem(Ptotection_Seagod) == 0) {
 		mes "[Missing, the Cleaner]";
 		mes "You don't look like you have Seagod Protection. I can't open door at the moment!";
 		close;

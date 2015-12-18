@@ -54,9 +54,9 @@ aldeba_in,223,167,3	script	Tzerero#sn	4_M_SEAMAN,{
 		mes "...and a master of none.";
 		close;
 	}
-	if (countitem(938) > 29 && countitem(907) > 29 && SUPNOV_Q == 1) {
-		delitem 938,30; //Sticky_Mucus
-		delitem 907,30; //Resin
+	if (countitem(Sticky_Mucus) > 29 && countitem(Resin) > 29 && SUPNOV_Q == 1) {
+		delitem Sticky_Mucus,30;
+		delitem Resin,30;
 		mes "[Tzerero]";
 		mes "Ah, you've brought the";
 		mes "items I've requested!";
@@ -77,7 +77,7 @@ aldeba_in,223,167,3	script	Tzerero#sn	4_M_SEAMAN,{
 		next;
 		completequest 6010;
 		callfunc "F_ClearJobVar";
-		getitem 2339,1; //G_Strings
+		getitem G_Strings,1;
 		if (Upper==0) jobchange Job_SuperNovice;
 		if (Upper==2) jobchange Job_Super_Baby;
 		mes "[Tzerero]";

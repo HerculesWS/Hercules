@@ -414,17 +414,17 @@ function Catwarp {
 man_fild02,132,47,4	duplicate(Cat Hand Agent#spl)	Cat Hand Agent#man	4_M_BOSSCAT
 
 -	script	Mysterious Rock#30::manukrock2	-1,{
-	if (countitem(6048) < 3 && !questprogress(12062,PLAYTIME)) {
+	if (countitem(Unidentified_Mineral) < 3 && !questprogress(12062,PLAYTIME)) {
 		specialeffect2 EF_REPAIRWEAPON;
 		progressbar "ffff00",10;
 		.@rhea_ran = rand(1,20);
-		if (.@rhea_ran < 13) getitem 7049,1; //Stone
-		else if (.@rhea_ran == 13) getitem 990,1; //Boody_Red
-		else if (.@rhea_ran == 14) getitem 991,1; //Crystal_Blue
-		else if (.@rhea_ran == 15) getitem 992,1; //Wind_Of_Verdure
-		else if (.@rhea_ran == 16) getitem 993,1; //Yellow_Live
-		else if (.@rhea_ran == 17) getitem 6080,1; //Manuk_Coin
-		else getitem 6048,1; //Unidentified_Mineral
+		if (.@rhea_ran < 13) getitem Stone,1;
+		else if (.@rhea_ran == 13) getitem Boody_Red,1;
+		else if (.@rhea_ran == 14) getitem Crystal_Blue,1;
+		else if (.@rhea_ran == 15) getitem Wind_Of_Verdure,1;
+		else if (.@rhea_ran == 16) getitem Yellow_Live,1;
+		else if (.@rhea_ran == 17) getitem Manuk_Coin,1;
+		else getitem Unidentified_Mineral,1;
 		initnpctimer;
 		disablenpc strnpcinfo(0);
 		end;
@@ -454,7 +454,7 @@ man_fild02,358,174,0	duplicate(manukrock2)	Mysterious Rock#39	CLEAR_NPC
 man_fild02,241,227,0	duplicate(manukrock2)	Mysterious Rock#40	CLEAR_NPC
 
 spl_fild03,226,151,0	script	School of Fish#5::FishingHole_spl3	CLEAR_NPC,{
-	if (!questprogress(12060,PLAYTIME) && countitem(6039) < 20) {
+	if (!questprogress(12060,PLAYTIME) && countitem(Piece_Of_Fish) < 20) {
 		specialeffect2 EF_BUBBLE;
 		specialeffect2 EF_INVENOM;
 		.@fcast = 15;
@@ -473,41 +473,41 @@ spl_fild03,226,151,0	script	School of Fish#5::FishingHole_spl3	CLEAR_NPC,{
 		progressbar "ffff00",.@fcast;
 		if (ep13_1_rhea == 13) {
 			if (rand(1,20) == 2) {
-				getitem 6037,1; //Rough_File
+				getitem Rough_File,1;
 				ep13_1_rhea = 14;
 				specialeffect2 EF_BUBBLE;
 				mapannounce strcharinfo(3),strcharinfo(0) + " has caught a Loose File.",bc_map,"0xff77ff";
 			}
 		}
 		.@rhea_ran = rand(1,70);
-		if (.@rhea_ran < 20) getitem 6039,1; //Piece_Of_Fish
-		else if (.@rhea_ran == 20) getitem 908,1; //Spawn
-		else if (.@rhea_ran == 21) getitem 909,1; //Jellopy
-		else if (.@rhea_ran == 22) getitem 963,1; //Sharp_Scale
-		else if (.@rhea_ran == 23) getitem 956,1; //Gill
-		else if (.@rhea_ran == 24) getitem 6049,1; //Marlin
-		else if (.@rhea_ran == 25) getitem 918,1; //Sticky_Webfoot
-		else if (.@rhea_ran == 26) getitem 960,1; //Nipper
-		else if (.@rhea_ran == 27) getitem 910,1; //Garlet
-		else if (.@rhea_ran == 28) getitem 6081,1; //Splendide_Coin
-		else if ((.@rhea_ran > 28) && (.@rhea_ran < 40)) getitem 7049,1; //Stone
+		if (.@rhea_ran < 20) getitem Piece_Of_Fish,1;
+		else if (.@rhea_ran == 20) getitem Spawn,1;
+		else if (.@rhea_ran == 21) getitem Jellopy,1;
+		else if (.@rhea_ran == 22) getitem Sharp_Scale,1;
+		else if (.@rhea_ran == 23) getitem Gill,1;
+		else if (.@rhea_ran == 24) getitem Marlin,1;
+		else if (.@rhea_ran == 25) getitem Sticky_Webfoot,1;
+		else if (.@rhea_ran == 26) getitem Nipper,1;
+		else if (.@rhea_ran == 27) getitem Garlet,1;
+		else if (.@rhea_ran == 28) getitem Splendide_Coin,1;
+		else if ((.@rhea_ran > 28) && (.@rhea_ran < 40)) getitem Stone,1;
 		else {
 			mes "Nothing was caught.";
 			close;
 		}
 		.@rhea_ran5 = rand(1,200);
 		if (.@rhea_ran5 == 3) {
-			getitem 644,1; //Gift_Box
+			getitem Gift_Box,1;
 			mapannounce strcharinfo(3),strcharinfo(0) + " has caught a Gift Box.",bc_map,"0x00ffff";
 		}
 		.@rhea_ran3 = rand(1,500);
 		if (.@rhea_ran3 == 3) {
-			getitem 603,1; //Old_Blue_Box
+			getitem Old_Blue_Box,1;
 			mapannounce strcharinfo(3),strcharinfo(0) + " has caught an Old Blue Box.",bc_map,"0x00ffff";
 		}
 		.@rhea_ran4 = rand(1,3000);
 		if (.@rhea_ran4 == 3) {
-			getitem 617,1; //Old_Violet_Box
+			getitem Old_Violet_Box,1;
 			mapannounce strcharinfo(3),strcharinfo(0) + " has caught an Old Purple Box.",bc_map,"0x44ff44";
 		}
 	}
@@ -529,7 +529,7 @@ spl_fild01,170,74,0	duplicate(FishingHole_spl3)	School of Fish#14	CLEAR_NPC
 
 //== Two Tribes :: ep13_2_msg ==============================
 spl_in01,32,306,3	script	Splendide Guard#ep13md01	4_M_FAIRYSOLDIER,2,2,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -839,7 +839,7 @@ spl_in01,32,306,3	script	Splendide Guard#ep13md01	4_M_FAIRYSOLDIER,2,2,{
 			mes "Sometimes you can find Yggdrasilberries around there.";
 			mes "Go find few more and bring them with you. Hurry!";
 			ep13_mdrama = 14;
-			getitem 607,3; //Yggdrasilberry
+			getitem Yggdrasilberry,3;
 			changequest 7062,7063;
 			close;
 		}
@@ -1095,7 +1095,7 @@ OnTouch:
 }
 
 nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	CLEAR_NPC,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -1203,8 +1203,8 @@ nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	CLEAR_NPC,{
 				mes "You pick up a fragment of Bradium scattered on the ground.";
 				mes "This should be enough.";
 				ep13_mdrama = 22;
-				getitem 6085,1; //Shaggy_Muffler
-				getitem 6084,1; //Bradium_Fragments
+				getitem Shaggy_Muffler,1;
+				getitem Bradium_Fragments,1;
 				changequest 7066,7067;
 				close;
 			}
@@ -1225,8 +1225,8 @@ nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	CLEAR_NPC,{
 				mes "We will see if this muffler belongs to Ogen or not...";
 				mes "This should be enough.";
 				ep13_mdrama = 22;
-				getitem 6085,1; //Shaggy_Muffler
-				getitem 6084,1; //Bradium_Fragments
+				getitem Shaggy_Muffler,1;
+				getitem Bradium_Fragments,1;
 				changequest 7066,7067;
 				close;
 			case 3:
@@ -1347,7 +1347,7 @@ OnTouch:
 	}
 }
 manuk,278,177,5	script	Villager#ep13_11	4_MAN_PIOM,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -1445,7 +1445,7 @@ manuk,278,177,5	script	Villager#ep13_11	4_MAN_PIOM,{
 }
 
 manuk,281,177,3	script	Villager#ep13_12	4_MAN_BENKUNI,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -1547,7 +1547,7 @@ manuk,281,177,3	script	Villager#ep13_12	4_MAN_BENKUNI,{
 }
 
 man_in01,175,59,5	script	Snorren#ep13_13	4_MAN_PIOM,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -1747,7 +1747,7 @@ man_in01,175,59,5	script	Snorren#ep13_13	4_MAN_PIOM,{
 			close;
 		}
 		else if (ep13_mdrama == 17) {
-			if (countitem(607) > 5) {
+			if (countitem(Yggdrasilberry) > 5) {
 				mes "[Snorren]";
 				mes "Did you find a cure?";
 				mes "This.. is one strange looking fruit.";
@@ -1755,8 +1755,8 @@ man_in01,175,59,5	script	Snorren#ep13_13	4_MAN_PIOM,{
 				next;
 				mes "[Snorren]";
 				mes "I will take everything you've brought with you!";
-				.@temp_ig = countitem(607);
-				delitem 607,.@temp_ig; //Yggdrasilberry
+				.@temp_ig = countitem(Yggdrasilberry);
+				delitem Yggdrasilberry,.@temp_ig;
 				ep13_mdrama = 18;
 				next;
 				mes "[Snorren]";
@@ -1831,7 +1831,7 @@ man_in01,175,59,5	script	Snorren#ep13_13	4_MAN_PIOM,{
 			mes "Come back anytime...";
 			mes "Ok?";
 			ep13_mdrama = 25;
-			getitem 6080,15; //Manuk_Coin
+			getitem Manuk_Coin,15;
 			changequest 7069,7070;
 			close;
 		}
@@ -1879,7 +1879,7 @@ man_in01,10,125,0	warp	to_out1#ep13mdwarp02	1,1,man_in01,179,58
 man_in01,65,125,0	warp	to_out2#ep13mdwarp03	1,1,man_in01,179,58
 
 man_in01,22,126,3	script	Captured Laphine#ep13md	4_F_FAIRYKID6,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -2054,7 +2054,7 @@ man_in01,22,126,3	script	Captured Laphine#ep13md	4_F_FAIRYKID6,{
 }
 
 man_in01,17,128,5	script	Snorren#ep13md_15	4_MAN_PIOM,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -2108,7 +2108,7 @@ man_in01,17,128,5	script	Snorren#ep13md_15	4_MAN_PIOM,{
 			close;
 		}
 		else if (ep13_mdrama == 22) {
-			if ((countitem(6085) > 0) && (countitem(6084) > 0)) {
+			if ((countitem(Shaggy_Muffler) > 0) && (countitem(Bradium_Fragments) > 0)) {
 				mes "[Luik]";
 				mes "...This Bradium has not been refined properly...";
 				mes "This would be no help...";
@@ -2142,8 +2142,8 @@ man_in01,17,128,5	script	Snorren#ep13md_15	4_MAN_PIOM,{
 				mes "[Luik]";
 				mes "I will talk to my superiors to try and settle this matter...";
 				mes "Please save Ogen.";
-				delitem 6085,1; //Shaggy_Muffler
-				delitem 6084,1; //Bradium_Fragments
+				delitem Shaggy_Muffler,1;
+				delitem Bradium_Fragments,1;
 				ep13_mdrama = 23;
 				changequest 7067,7068;
 				close;
@@ -2184,7 +2184,7 @@ man_in01,17,128,5	script	Snorren#ep13md_15	4_MAN_PIOM,{
 }
 
 man_in01,19,126,3	script	Luik#ep13md16	4_MAN_GALTUN,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -2278,7 +2278,7 @@ man_in01,19,126,3	script	Luik#ep13md16	4_MAN_GALTUN,{
 			close;
 		}
 		else if (ep13_mdrama == 22) {
-			if ((countitem(6085) > 0) && (countitem(6084) > 0)) {
+			if ((countitem(Shaggy_Muffler) > 0) && (countitem(Bradium_Fragments) > 0)) {
 				mes "[Luik]";
 				mes "...This Bradium has not been refined properly...";
 				mes "This would be no help...";
@@ -2312,8 +2312,8 @@ man_in01,19,126,3	script	Luik#ep13md16	4_MAN_GALTUN,{
 				mes "[Luik]";
 				mes "I will talk to my superiors to try and settle this matter...";
 				mes "Please save Ogen.";
-				delitem 6085,1; //Shaggy_Muffler
-				delitem 6084,1; //Bradium_Fragments
+				delitem Shaggy_Muffler,1;
+				delitem Bradium_Fragments,1;
 				ep13_mdrama = 23;
 				changequest 7067,7068;
 				close;
@@ -2361,7 +2361,7 @@ OnTouch:
 }
 
 spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -2454,7 +2454,7 @@ spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
 			mes "[Arc]";
 			mes "I'm sorry this is all I can give you for now.";
 			ep13_mdrama = 27;
-			getitem 6081,25; //Splendide_Coin
+			getitem Splendide_Coin,25;
 			if (RENEWAL_EXP)
 				getexp 120000,10000;
 			else
@@ -2546,7 +2546,7 @@ OnTouch:
 spl_in02,236,86,0	warp	terrashome_out	1,1,splendide,285,139
 
 spl_fild01,357,44,0	script	???#ep13mdf01	CLEAR_NPC,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -2559,8 +2559,8 @@ spl_fild01,357,44,0	script	???#ep13mdf01	CLEAR_NPC,{
 		mes "I see a small berry inside of a big outer shell...";
 		mes "It is a Yggdrasil!";
 		ep13_mdrama = 15;
-		getitem 607,1; //Yggdrasilberry
-		getitem 522,1; //Fruit_Of_Mastela
+		getitem Yggdrasilberry,1;
+		getitem Fruit_Of_Mastela,1;
 		close;
 	}
 	else if (ep13_mdrama == 15) {
@@ -2575,7 +2575,7 @@ spl_fild01,357,44,0	script	???#ep13mdf01	CLEAR_NPC,{
 		}
 		else if (.@apple == 50) {
 			mes "I found an apple.";
-			getitem 512,1; //Apple
+			getitem Apple,1;
 			close;
 		}
 		else {
@@ -2595,7 +2595,7 @@ spl_fild01,357,44,0	script	???#ep13mdf01	CLEAR_NPC,{
 }
 
 spl_fild01,312,79,0	script	???#ep13mdf02	CLEAR_NPC,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -2608,8 +2608,8 @@ spl_fild01,312,79,0	script	???#ep13mdf02	CLEAR_NPC,{
 		mes "I see a small berry inside of a big outer shell...";
 		mes "It is a Yggdrasil!";
 		ep13_mdrama = 16;
-		getitem 607,1; //Yggdrasilberry
-		getitem 522,1; //Fruit_Of_Mastela
+		getitem Yggdrasilberry,1;
+		getitem Fruit_Of_Mastela,1;
 		close;
 	}
 	else if (ep13_mdrama == 16) {
@@ -2624,7 +2624,7 @@ spl_fild01,312,79,0	script	???#ep13mdf02	CLEAR_NPC,{
 		}
 		else if (.@apple == 50) {
 			mes "I found an apple.";
-			getitem 512,1; //Apple
+			getitem Apple,1;
 			close;
 		}
 		else {
@@ -2644,7 +2644,7 @@ spl_fild01,312,79,0	script	???#ep13mdf02	CLEAR_NPC,{
 }
 
 spl_fild01,329,29,0	script	???#ep13mdf03	CLEAR_NPC,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -2657,8 +2657,8 @@ spl_fild01,329,29,0	script	???#ep13mdf03	CLEAR_NPC,{
 		mes "I see a small berry inside of a big outer shell...";
 		mes "It is a Yggdrasil!";
 		ep13_mdrama = 17;
-		getitem 607,1; //Yggdrasilberry
-		getitem 522,1; //Fruit_Of_Mastela
+		getitem Yggdrasilberry,1;
+		getitem Fruit_Of_Mastela,1;
 		changequest 7063,7064;
 		next;
 		mes "[" + strcharinfo(0) + "]";
@@ -2679,7 +2679,7 @@ spl_fild01,329,29,0	script	???#ep13mdf03	CLEAR_NPC,{
 		}
 		else if (.@apple == 50) {
 			mes "I found an apple.";
-			getitem 512,1; //Apple
+			getitem Apple,1;
 			close;
 		}
 		else {
@@ -2700,7 +2700,7 @@ spl_fild01,329,29,0	script	???#ep13mdf03	CLEAR_NPC,{
 
 //== Monster Suppression :: ep13_2_dayquest ================
 manuk,252,116,3	script	Manuk Galtun#ep13_2day	4_MAN_GALTUN,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -2778,7 +2778,7 @@ manuk,252,116,3	script	Manuk Galtun#ep13_2day	4_MAN_GALTUN,{
 					getexp 50000,30000;
 				else
 					getexp 500000,300000;
-				getitem 6080,10; //Manuk_Coin
+				getitem Manuk_Coin,10;
 				close;
 			}
 			else {
@@ -2813,7 +2813,7 @@ manuk,252,116,3	script	Manuk Galtun#ep13_2day	4_MAN_GALTUN,{
 // - Laphine Craftsman
 // - Draco Egg Collection (NPC includes 'Wanted' quest)
 man_in01,378,276,3	script	Manuk Engineer#ep13_2	4_MAN_NITT,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -2839,16 +2839,16 @@ man_in01,378,276,3	script	Manuk Engineer#ep13_2	4_MAN_NITT,{
 		}
 		else {
 			if (questprogress(7079) == 1) {
-				if (countitem(6090) > 19) {
+				if (countitem(Purified_Bradium) > 19) {
 					mes "[Manuk Engineer]";
 					mes "Oh, that will do very well.";
 					mes "On behalf of the Sapha, I extend our thanks to you.";
 					mes "I hope you can help us again.";
-					delitem 6090,20; //Purified_Bradium
+					delitem Purified_Bradium,20;
 					erasequest 7079;
 					setquest 7080;
 					getexp 40000,40000;
-					getitem 6080,3; //Manuk_Coin
+					getitem Manuk_Coin,3;
 					close;
 				}
 				else {
@@ -2917,7 +2917,7 @@ man_in01,378,276,3	script	Manuk Engineer#ep13_2	4_MAN_NITT,{
 }
 
 spl_in01,97,313,3	script	Laphine Craftsman#ep13	4_M_FAIRYKID5,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -2941,17 +2941,17 @@ spl_in01,97,313,3	script	Laphine Craftsman#ep13	4_M_FAIRYKID5,{
 				close;
 			}
 			if (questprogress(7081) == 1) {
-				if ((countitem(7326) > 14) && (countitem(6075) > 14)) {
+				if ((countitem(Fluorescent_Liquid) > 14) && (countitem(Crystalized_Teardrop) > 14)) {
 					mes "[Laphine craftsman]";
 					mes "Oh, fantastic.";
 					mes "These are enough materials for today.";
 					mes "I'll let you know if I need more.";
-					delitem 7326,15; //Fluorescent_Liquid
-					delitem 6075,15; //Crystalized_Teardrop
+					delitem Fluorescent_Liquid,15;
+					delitem Crystalized_Teardrop,15;
 					erasequest 7081;
 					setquest 7082;
 					getexp 30000,30000;
-					getitem 6081,3; //Splendide_Coin
+					getitem Splendide_Coin,3;
 					close;
 				}
 				else {
@@ -3033,7 +3033,7 @@ spl_in01,97,313,3	script	Laphine Craftsman#ep13	4_M_FAIRYKID5,{
 }
 
 mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "Wait a moment!!";
 		mes "You have too many items.";
 		mes "You can't receive this.";
@@ -3100,7 +3100,7 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 				mes "This is enough payment, right?";
 				completequest 7076;
 				ep13_2_wanted = 2;
-				getitem 7444,1; //Treasure_Box
+				getitem Treasure_Box,1;
 				close;
 			}
 			mes "[Pinedel]";
@@ -3125,7 +3125,7 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 		close;
 	}
 	if (ep13_2_dayegg == 1) {
-		if (countitem(6093) > 9) {
+		if (countitem(Egg_Of_Draco) > 9) {
 			mes "[Pinedel]";
 			mes "Oh! Nice!";
 			mes "I can go through this study deeper with your assistance.";
@@ -3134,13 +3134,13 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 			mes "I will try to make these Dragon eggs into cute pets.";
 			mes "Don't expect much!";
 			mes "Come back after a day to check on the progress.";
-			delitem 6093,10; //Egg_Of_Draco
+			delitem Egg_Of_Draco,10;
 			erasequest 7077;
 			setquest 7078;
 			ep13_2_dayegg = 2;
 			getexp 40000,40000;
-			getitem 6081,1; //Splendide_Coin
-			getitem 6080,1; //Manuk_Coin
+			getitem Splendide_Coin,1;
+			getitem Manuk_Coin,1;
 			close;
 		}
 		mes "[Pinedel]";
@@ -3263,13 +3263,13 @@ mid_camp,192,239,4	script	Wanted Sign#ep13_2ect01	4_BOARD3,{
 }
 
 -	script	Dragon Egg#ep13_degg_0	-1,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "- You're carrying too many items. -";
 		close;
 	}
-	if ((ep13_2_dayegg == 1) && (countitem(6093) < 10)) {
+	if ((ep13_2_dayegg == 1) && (countitem(Egg_Of_Draco) < 10)) {
 		mes "We just got fresh eggs from the dragon nest.";
-		getitem 6093,1; //Egg_Of_Draco
+		getitem Egg_Of_Draco,1;
 		disablenpc strnpcinfo(0);
 		initnpctimer;
 		close;
@@ -3298,13 +3298,13 @@ nyd_dun01,244,157,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg05	4_D
 nyd_dun01,59,185,0	duplicate(Dragon Egg#ep13_degg_0)	Dragon Egg#ep13_degg06	4_DRAGON_EGG
 
 nyd_dun02,68,256,0	script	Dragon Egg#ep13_degg_1	4_DRAGON_EGG,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "- You're carrying too many items. -";
 		close;
 	}
-	if ((ep13_2_dayegg == 1) && (countitem(6093) < 10)) {
+	if ((ep13_2_dayegg == 1) && (countitem(Egg_Of_Draco) < 10)) {
 		mes "We just got fresh eggs from the dragon nest.";
-		getitem 6093,1; //Egg_Of_Draco
+		getitem Egg_Of_Draco,1;
 		disablenpc strnpcinfo(0);
 		initnpctimer;
 		close;
@@ -3329,13 +3329,13 @@ nyd_dun02,202,166,0	duplicate(Dragon Egg#ep13_degg_1)	Dragon Egg#ep13_degg12	4_D
 nyd_dun02,200,165,0	duplicate(Dragon Egg#ep13_degg_1)	Dragon Egg#ep13_degg13	4_DRAGON_EGG
 
 nyd_dun02,201,166,0	script	Dragon Egg#ep13_degg_2	4_DRAGON_EGG,{
-	if (checkweight(1201,2) == 0) {
+	if (checkweight(Knife,2) == 0) {
 		mes "- You're carrying too many items. -";
 		close;
 	}
-	if ((ep13_2_dayegg == 1) && (countitem(6093) < 10)) {
+	if ((ep13_2_dayegg == 1) && (countitem(Egg_Of_Draco) < 10)) {
 		mes "We just got fresh eggs from the dragon nest.";
-		getitem 6093,1; //Egg_Of_Draco
+		getitem Egg_Of_Draco,1;
 		disablenpc strnpcinfo(0);
 		initnpctimer;
 		close;
@@ -3693,7 +3693,7 @@ mid_camp,197,237,3	script	Schwartzvalt Mechanic#1	4_M_LGTMAN,{
 					getexp 200000,5000;
 				else
 					getexp 1000000,300000;
-				getitem 2782,1; //Ring_Of_Wise_King
+				getitem Ring_Of_Wise_King,1;
 				close;
 			}
 			else {
@@ -4238,7 +4238,7 @@ mid_camp,147,256,3	script	Rune Midgarts Magician#1	4_M_JOB_WIZARD,{
 	}
 	else if (ep13_2_rhea == 5) {
 		if (questprogress(8241) && questprogress(8242)) {
-			if (countitem(7575) > 0) && (countitem(7576) > 0) {
+			if (countitem(Red_Jewel_) > 0) && (countitem(Blue_Jewel_) > 0) {
 				mes "[Magician Whisper]";
 				mes "Wow, You are back already!";
 				mes "Well then, let me see them!";
@@ -4262,8 +4262,8 @@ mid_camp,147,256,3	script	Rune Midgarts Magician#1	4_M_JOB_WIZARD,{
 				completequest 8242;
 				completequest 8246;
 				setquest 8247;
-				delitem 7575,1; //Red_Jewel_
-				delitem 7576,1; //Blue_Jewel_
+				delitem Red_Jewel_,1;
+				delitem Blue_Jewel_,1;
 				ep13_2_rhea = 6;
 				close;
 			}
@@ -4331,7 +4331,7 @@ mid_camp,147,256,3	script	Rune Midgarts Magician#1	4_M_JOB_WIZARD,{
 		close;
 	}
 	else if (ep13_2_rhea == 9) {
-		if (countitem(6048) > 0) {
+		if (countitem(Unidentified_Mineral) > 0) {
 			mes "[Magician Whisper]";
 			mes "Oh! Is this that ore?";
 			next;
@@ -4363,7 +4363,7 @@ mid_camp,147,256,3	script	Rune Midgarts Magician#1	4_M_JOB_WIZARD,{
 			mes "Take some rest while I craft this ore into a gem and put the magical data into it. You look exhausted...";
 			completequest 8250;
 			setquest 8251;
-			delitem 6048,1; //Unidentified_Mineral
+			delitem Unidentified_Mineral,1;
 			ep13_2_rhea = 10;
 			close;
 		}
@@ -4689,7 +4689,7 @@ man_in01,372,221,5	script	Scientist#lifeguard	4_MAN_BENKUNI,{
 			close;
 		}
 		else if ((ep13_2_tre == 1) || (ep13_2_tre == 100)) {
-			if (checkweight(1201,1) == 0) {
+			if (checkweight(Knife,1) == 0) {
 				mes "It looks like you're carrying too many things.";
 				mes "Why not put some of your items in storage and come back?";
 				close;
@@ -4744,12 +4744,12 @@ man_in01,372,221,5	script	Scientist#lifeguard	4_MAN_BENKUNI,{
 				mes "the minerals I need.";
 				ep13_2_tre = atoi(.@rand_dayq$[2]);
 				setquest 2179+(atoi(.@rand_dayq$[2])-2);
-				getitem 6076,1; //Portable_Toolbox
+				getitem Portable_Toolbox,1;
 				close;
 			}
 		}
 		else if (ep13_2_tre == 2 || ep13_2_tre == 3 || ep13_2_tre == 4) {
-			if ((ep13_2_tre == 2 && countitem(6077) > 9) || (ep13_2_tre != 2 && countitem(6077) > 4)) {
+			if ((ep13_2_tre == 2 && countitem(Rough_Mineral) > 9) || (ep13_2_tre != 2 && countitem(Rough_Mineral) > 4)) {
 				mes "Oh! Yes, that's it!";
 				mes "This much will be enough!";
 				next;
@@ -4763,12 +4763,12 @@ man_in01,372,221,5	script	Scientist#lifeguard	4_MAN_BENKUNI,{
 				mes "[Dr. Lifeguard]";
 				mes "If you want to help my study for the sake of the Sapha, come to me at any time.";
 				mes "I will be very happy for any help you can give.";
-				.@stone_chk = countitem(6077);
-				.@stoneelse_chk = countitem(6078);
-				delitem 6077,.@stone_chk; //Rough_Mineral
-				delitem 6078,.@stoneelse_chk; //Stone_Fragments
-				delitem 6076,1; //Portable_Toolbox
-				getitem 6080,3; //Manuk_Coin
+				.@stone_chk = countitem(Rough_Mineral);
+				.@stoneelse_chk = countitem(Stone_Fragments);
+				delitem Rough_Mineral,.@stone_chk;
+				delitem Stone_Fragments,.@stoneelse_chk;
+				delitem Portable_Toolbox,1;
+				getitem Manuk_Coin,3;
 				getexp 0,RENEWAL_EXP?50000:700000; //unconfirmed (RE)
 				changequest 2179+(ep13_2_tre-2),2182;
 				ep13_2_tre = 100;
@@ -4802,7 +4802,7 @@ function	script	find_13_2	{
 		case 1: setarray .@check[0],3,5;  .@str$ = "Abyss Lake"; break;
 		case 2: setarray .@check[0],4,5;  .@str$ = "Thor Volcano"; break;
 	}
-	if (ep13_2_tre != .@check[0] || countitem(6076) != 1 || countitem(6077) >= .@check[1]) end;
+	if (ep13_2_tre != .@check[0] || countitem(Portable_Toolbox) != 1 || countitem(Rough_Mineral) >= .@check[1]) end;
 	mes "- Just arrived at "+.@str$+". I think I can find the mineral by using the Mineral Detector in the Portable Toolbox. -";
 	next;
 	switch(select("Check current location.:Do nothing.")) {
@@ -4854,8 +4854,8 @@ mjolnir_12,44,25,0	duplicate(mjo_no_find)	#mj12_find_2	-1,5,5
 mjolnir_12,220,37,0	duplicate(mjo_no_find)	#mj12_find_3	-1,5,5
 
 -	script	mjo_find	-1,{
-	if ((ep13_2_tre == 2) && (countitem(6076) == 1)) {
-		if (countitem(6077) < 10) {
+	if ((ep13_2_tre == 2) && (countitem(Portable_Toolbox) == 1)) {
+		if (countitem(Rough_Mineral) < 10) {
 			mes "- I can see some different colored minerals where the detector pointed to. This must be the mineral that Mr. Lifeguard told me about. -";
 			next;
 			switch(select("Mine minerals.:Do nothing.")) {
@@ -4865,16 +4865,16 @@ mjolnir_12,220,37,0	duplicate(mjo_no_find)	#mj12_find_3	-1,5,5
 				progressbar "ffff00",4;
 				if (rand(1,6) < 4) {
 					mes "- You failed to mine minerals. -";
-					getitem 6078,1; //Stone_Fragments
+					getitem Stone_Fragments,1;
 					close;
 				}
 				else {
 					mes "- You succeeded to mine minerals. -";
 					emotion e_ic,1;
 					.@stst = rand(1,5);
-					if (.@stst == 5) getitem 6077,5; //Rough_Mineral
-					else if (.@stst == 1) getitem 6077,1; //Rough_Mineral
-					else getitem 6077,2; //Rough_Mineral
+					if (.@stst == 5) getitem Rough_Mineral,5;
+					else if (.@stst == 1) getitem Rough_Mineral,1;
+					else getitem Rough_Mineral,2;
 					close2;
 					donpcevent strnpcinfo(0)+"_t::OnEnable";
 					disablenpc strnpcinfo(0);
@@ -4897,7 +4897,7 @@ OnInit:
 	end;
 
 OnTouch:
-	if (ep13_2_tre == 2 && countitem(6076) == 1 && countitem(6077) < 10)
+	if (ep13_2_tre == 2 && countitem(Portable_Toolbox) == 1 && countitem(Rough_Mineral) < 10)
 		specialeffect EF_COUPLECASTING;
 	end;
 }
@@ -5205,8 +5205,8 @@ OnTouch:
 }
 
 -	script	hu_find	-1,{
-	if ((ep13_2_tre == 3) && (countitem(6076) == 1)) {
-		if (countitem(6077) < 5) {
+	if ((ep13_2_tre == 3) && (countitem(Portable_Toolbox) == 1)) {
+		if (countitem(Rough_Mineral) < 5) {
 			mes "- I can see some different colored minerals where the detector pointed to. This must be the mineral that Mr. Lifeguard told me about. -";
 			next;
 			switch(select("Mine minerals.:Do nothing.")) {
@@ -5216,16 +5216,16 @@ OnTouch:
 				progressbar "ffff00",4;
 				if (rand(1,6) < 4) {
 					mes "- You failed to mine minerals. -";
-					getitem 6078,1; //Stone_Fragments
+					getitem Stone_Fragments,1;
 					close;
 				}
 				else {
 					mes "- You succeeded to mine minerals. -";
 					emotion e_ic,1;
 					.@stst = rand(1,5);
-					if (.@stst == 5) getitem 6077,5; //Rough_Mineral
-					else if (.@stst == 1) getitem 6077,2; //Rough_Mineral
-					else getitem 6077,1; //Rough_Mineral
+					if (.@stst == 5) getitem Rough_Mineral,5;
+					else if (.@stst == 1) getitem Rough_Mineral,2;
+					else getitem Rough_Mineral,1;
 					donpcevent strnpcinfo(0)+"_t::OnEnable";
 					disablenpc strnpcinfo(0);
 					close;
@@ -5247,7 +5247,7 @@ OnInit:
 	end;
 
 OnTouch:
-	if (ep13_2_tre == 3 && countitem(6076) == 1 && countitem(6077) < 5)
+	if (ep13_2_tre == 3 && countitem(Portable_Toolbox) == 1 && countitem(Rough_Mineral) < 5)
 		specialeffect EF_COUPLECASTING;
 	end;
 }
@@ -5338,8 +5338,8 @@ OnTouch:
 }
 
 -	script	ve_find	-1,{
-	if ((ep13_2_tre == 4) && (countitem(6076) == 1)) {
-		if (countitem(6077) < 5) {
+	if ((ep13_2_tre == 4) && (countitem(Portable_Toolbox) == 1)) {
+		if (countitem(Rough_Mineral) < 5) {
 			mes "- I can see some different colored minerals where the detector pointed to. This must be the mineral that Mr. Lifeguard told me about. -";
 			next;
 			switch(select("Mine minerals.:Do nothing.")) {
@@ -5349,16 +5349,16 @@ OnTouch:
 				progressbar "ffff00",4;
 				if (rand(1,6) < 4) {
 					mes "- You failed to mine minerals. -";
-					getitem 6078,1; //Stone_Fragments
+					getitem Stone_Fragments,1;
 					close;
 				}
 				else {
 					mes "- You succeeded to mine minerals. -";
 					emotion e_ic,1;
 					.@stst = rand(1,5);
-					if (.@stst == 5) getitem 6077,5; //Rough_Mineral
-					else if (.@stst == 1) getitem 6077,2; //Rough_Mineral
-					else getitem 6077,1; //Rough_Mineral
+					if (.@stst == 5) getitem Rough_Mineral,5;
+					else if (.@stst == 1) getitem Rough_Mineral,2;
+					else getitem Rough_Mineral,1;
 					donpcevent strnpcinfo(0)+"_t::OnEnable";
 					disablenpc strnpcinfo(0);
 					close;
@@ -5380,7 +5380,7 @@ OnInit:
 	end;
 
 OnTouch:
-	if (ep13_2_tre == 4 && countitem(6076) == 1 && countitem(6077) < 5)
+	if (ep13_2_tre == 4 && countitem(Portable_Toolbox) == 1 && countitem(Rough_Mineral) < 5)
 		specialeffect EF_COUPLECASTING;
 	end;
 }
@@ -5436,7 +5436,7 @@ OnTimer40000:
 
 spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
-		if (checkweight(1201,1) == 0) {
+		if (checkweight(Knife,1) == 0) {
 			mes "[Grenouille]";
 			mes "It looks like you're carrying too many things.";
 			mes "Why not put some of your items in storage and come back?";
@@ -5536,7 +5536,7 @@ spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 				close;
 			}
 			else if (ep13_2_tre1 == 3) {
-				if (countitem(6079) == 1) {
+				if (countitem(Flower_Of_Alfheim) == 1) {
 					emotion e_swt;
 					emotion e_swt,1;
 					mes "[Grenouille]";
@@ -5557,7 +5557,7 @@ spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 					mes "Would you please wait a while?";
 					changequest 2183,2184;
 					ep13_2_tre1 = 4;
-					delitem 6079,1; //Flower_Of_Alfheim
+					delitem Flower_Of_Alfheim,1;
 					close;
 				}
 				else {
@@ -5610,13 +5610,13 @@ spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 					mes "help the exhausted soldiers and";
 					mes "let me know the result, please!";
 					ep13_2_tre1 = 5;
-					getitem 6082,5; //Spirit_Of_Alfheim
+					getitem Spirit_Of_Alfheim,5;
 					changequest 2184,2185;
 					close;
 				}
 			}
 			else if (ep13_2_tre1 == 5) {
-				if (countitem(6082) < 1) {
+				if (countitem(Spirit_Of_Alfheim) < 1) {
 					mes "[Grenouille]";
 					mes "Oh! How's the reaction of the soldiers?";
 					next;
@@ -5635,7 +5635,7 @@ spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 					mes "If you have something to talk to me about, come to me whenever. Nice to meet you, human from Rune Midgard.";
 					ep13_2_tre1 = 6;
 					changequest 2185,2186;
-					getitem 6081,3; //Splendide_Coin
+					getitem Splendide_Coin,3;
 					getexp 0,RENEWAL_EXP?50000:700000; //unconfirmed (RE)
 					close;
 				}
@@ -5669,7 +5669,7 @@ spl_in01,30,324,3	script	High Laphine#grenouille	4_M_FAIRYKID5,{
 
 spl_in02,139,65,3	script	Middle-Ranked Laphine#la	4_F_FAIRYKID3,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
-		if (checkweight(1201,1) == 0) {
+		if (checkweight(Knife,1) == 0) {
 			mes "[Flowery]";
 			mes "It looks like you're carrying too many things.";
 			mes "Why not put some of your items in storage and come back?";
@@ -5720,7 +5720,7 @@ spl_in02,139,65,3	script	Middle-Ranked Laphine#la	4_F_FAIRYKID3,{
 			mes "any other seed of flower..";
 			mes "So, just bring this, here you are~";
 			ep13_2_tre1 = 2;
-			getitem 7193,1; //Germinating_Sprout
+			getitem Germinating_Sprout,1;
 			close;
 		}
 		else if (ep13_2_tre1 == 2) {
@@ -5746,7 +5746,7 @@ spl_in02,139,65,3	script	Middle-Ranked Laphine#la	4_F_FAIRYKID3,{
 
 -	script	Purifier	-1,{
 	if (ep13_2_tre1 == 2) {
-		if (countitem(7193) > 0) {
+		if (countitem(Germinating_Sprout) > 0) {
 			mes "- You put the seed in the";
 			mes "device and watched it";
 			mes "as Grenouille told you. -";
@@ -5757,9 +5757,9 @@ spl_in02,139,65,3	script	Middle-Ranked Laphine#la	4_F_FAIRYKID3,{
 			mes "- When the lights gone,";
 			mes "a big flower of Alfheim was lied";
 			mes "in your hand, instead of the seed. -";
-			delitem 7193,1; //Germinating_Sprout
+			delitem Germinating_Sprout,1;
 			ep13_2_tre1 = 3;
-			getitem 6079,1; //Flower_Of_Alfheim
+			getitem Flower_Of_Alfheim,1;
 			close;
 		}
 		else {
@@ -5781,7 +5781,7 @@ splendide,134,280,3	duplicate(Purifier)	Purifier#6	CLEAR_NPC
 splendide,205,139,5	script	Exhausted Soldier#1	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
-			if (countitem(6082) > 0) {
+			if (countitem(Spirit_Of_Alfheim) > 0) {
 				mes "[Exhausted Soldier]";
 				mes "Oh my hometown...";
 				next;
@@ -5798,7 +5798,7 @@ splendide,205,139,5	script	Exhausted Soldier#1	4_M_FAIRYSOLDIER,{
 					mes "[Exhausted Soldier]";
 					mes "Ahh! Feeling much better!";
 					emotion e_heh;
-					delitem 6082,1; //Spirit_Of_Alfheim
+					delitem Spirit_Of_Alfheim,1;
 					close2;
 					donpcevent "#tukare_1::OnEnable";
 					disablenpc "Exhausted Soldier#1";
@@ -5841,7 +5841,7 @@ OnTimer60000:
 splendide,181,135,5	script	Exhausted Soldier#2	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
-			if (countitem(6082) > 0) {
+			if (countitem(Spirit_Of_Alfheim) > 0) {
 				mes "[Exhausted Soldier]";
 				mes "Want to take a rest...";
 				next;
@@ -5855,7 +5855,7 @@ splendide,181,135,5	script	Exhausted Soldier#2	4_M_FAIRYSOLDIER,{
 					mes "Feel better suddenly! I'm so happy now!";
 					mes "Let's go to work!";
 					emotion e_heh;
-					delitem 6082,1; //Spirit_Of_Alfheim
+					delitem Spirit_Of_Alfheim,1;
 					close2;
 					donpcevent "#tukare_2::OnEnable";
 					disablenpc "Exhausted Soldier#2";
@@ -5898,7 +5898,7 @@ OnTimer60000:
 splendide,139,178,5	script	Exhausted Soldier#3	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
-			if (countitem(6082) > 0) {
+			if (countitem(Spirit_Of_Alfheim) > 0) {
 				mes "[Exhausted Soldier]";
 				mes "My hometown Alfheim...";
 				next;
@@ -5915,7 +5915,7 @@ splendide,139,178,5	script	Exhausted Soldier#3	4_M_FAIRYSOLDIER,{
 					mes "[Exhausted Soldier]";
 					mes "Let's beat Sapha and go back home!";
 					emotion e_heh;
-					delitem 6082,1; //Spirit_Of_Alfheim
+					delitem Spirit_Of_Alfheim,1;
 					close2;
 					donpcevent "#tukare_3::OnEnable";
 					disablenpc "Exhausted Soldier#3";
@@ -5958,7 +5958,7 @@ OnTimer60000:
 splendide,164,188,5	script	Exhausted Soldier#4	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
-			if (countitem(6082) > 0) {
+			if (countitem(Spirit_Of_Alfheim) > 0) {
 				mes "[Exhausted Soldier]";
 				mes "Huu...";
 				next;
@@ -5975,7 +5975,7 @@ splendide,164,188,5	script	Exhausted Soldier#4	4_M_FAIRYSOLDIER,{
 					mes "[Exhausted Soldier]";
 					mes "Ahh! Feels like at home!!";
 					emotion e_sob;
-					delitem 6082,1; //Spirit_Of_Alfheim
+					delitem Spirit_Of_Alfheim,1;
 					close2;
 					donpcevent "#tukare_4::OnEnable";
 					disablenpc "Exhausted Soldier#4";
@@ -6018,7 +6018,7 @@ OnTimer60000:
 splendide,177,257,5	script	Exhausted Soldier#5	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
-			if (countitem(6082) > 0) {
+			if (countitem(Spirit_Of_Alfheim) > 0) {
 				mes "[Exhausted Soldier]";
 				mes "Oh my hometown...";
 				next;
@@ -6035,7 +6035,7 @@ splendide,177,257,5	script	Exhausted Soldier#5	4_M_FAIRYSOLDIER,{
 					mes "[Exhausted Soldier]";
 					mes "Ahh! Feeling much better!";
 					emotion e_heh;
-					delitem 6082,1; //Spirit_Of_Alfheim
+					delitem Spirit_Of_Alfheim,1;
 					close2;
 					donpcevent "#tukare_5::OnEnable";
 					disablenpc "Exhausted Soldier#5";
@@ -6078,7 +6078,7 @@ OnTimer60000:
 splendide,124,212,5	script	Exhausted Soldier#6	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
-			if (countitem(6082) > 0) {
+			if (countitem(Spirit_Of_Alfheim) > 0) {
 				mes "[Exhausted Soldier]";
 				mes "Huu...";
 				next;
@@ -6095,7 +6095,7 @@ splendide,124,212,5	script	Exhausted Soldier#6	4_M_FAIRYSOLDIER,{
 					mes "Yes, Splendide also a part of Alfheim!";
 					mes "Go Laphines!";
 					emotion e_heh;
-					delitem 6082,1; //Spirit_Of_Alfheim
+					delitem Spirit_Of_Alfheim,1;
 					close2;
 					donpcevent "#tukare_6::OnEnable";
 					disablenpc "Exhausted Soldier#6";
@@ -6138,7 +6138,7 @@ OnTimer60000:
 splendide,196,153,5	script	Exhausted Soldier#7	4_M_FAIRYSOLDIER,{
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		if (ep13_2_tre1 == 5) {
-			if (countitem(6082) > 0) {
+			if (countitem(Spirit_Of_Alfheim) > 0) {
 				mes "[Exhausted Soldier]";
 				mes "Oh my hometown...";
 				next;
@@ -6155,7 +6155,7 @@ splendide,196,153,5	script	Exhausted Soldier#7	4_M_FAIRYSOLDIER,{
 					mes "[Exhausted Soldier]";
 					mes "Ahh! Feeling much better!";
 					emotion e_heh;
-					delitem 6082,1; //Spirit_Of_Alfheim
+					delitem Spirit_Of_Alfheim,1;
 					close2;
 					donpcevent "#tukare_7::OnEnable";
 					disablenpc "Exhausted Soldier#7";
@@ -6197,7 +6197,7 @@ OnTimer60000:
 
 //== Secret note of Bazett :: ep13_2_dailybs ===============
 mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes " - Hold on!! -";
 		mes " - You are carrying too many different items - ";
 		mes " - You cannot receive the reward - ";
@@ -6495,7 +6495,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 		ep13_2_bs2 = 1;
 		ep13_2_bs3 = 1;
 		ep13_2_bs4 = 1;
-		getitem 6074,1; //Bazett's_Order
+		getitem Bazett's_Order,1;
 		changequest 11101,11102;
 		close;
 	}
@@ -6503,7 +6503,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 		mes "[Bazett]";
 		mes "How's the search going?";
 		next;
-		if (countitem(6074) < 1) {
+		if (countitem(Bazett's_Order) < 1) {
 			mes "[Bazett]";
 			mes "!!!!!!!";
 			mes "You lost the notes!!?";
@@ -6512,7 +6512,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 			mes "[Bazett]";
 			mes "What's done has been done.";
 			mes "I'll give you a new one.";
-			getitem 6074,1; //Bazett's_Order
+			getitem Bazett's_Order,1;
 			close;
 		}
 		else {
@@ -6527,7 +6527,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 		next;
 		switch(select("Yes.:Not yet...")) {
 		case 1:
-			if (countitem(6074) < 1) {
+			if (countitem(Bazett's_Order) < 1) {
 				mes "[Bazett]";
 				mes "!!!!!!!";
 				mes "You lost the notes!!?";
@@ -6570,12 +6570,12 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 				mes "[Bazett]";
 				mes "Ah... this isn't much, but it's a coin that the giants use.";
 				mes "Maybe you can buy something from them with this.";
-				delitem 6074,1; //Bazett's_Order
+				delitem Bazett's_Order,1;
 				ep13_2_busut = 7;
-				if (ep13_2_bs1 == 3) getitem 6080,1; //Manuk_Coin
-				if (ep13_2_bs2 == 3) getitem 6080,1; //Manuk_Coin
-				if (ep13_2_bs3 == 3) getitem 6080,1; //Manuk_Coin
-				if (ep13_2_bs4 == 3) getitem 6080,1; //Manuk_Coin
+				if (ep13_2_bs1 == 3) getitem Manuk_Coin,1;
+				if (ep13_2_bs2 == 3) getitem Manuk_Coin,1;
+				if (ep13_2_bs3 == 3) getitem Manuk_Coin,1;
+				if (ep13_2_bs4 == 3) getitem Manuk_Coin,1;
 				erasequest 11102;
 				setquest 11104;
 				close;
@@ -6683,7 +6683,7 @@ manuk,193,135,0	script	Worker#ep13bs	4_MAN_PIOM,{
 				close;
 			}
 			else if (ep13_2_bs1 == 2) {
-				if (countitem(6032) > 29) {
+				if (countitem(Horn_Of_Hilsrion) > 29) {
 					mes "[Gill]";
 					mes "You helped me collect all of the Horns of Hillslion?";
 					mes "Thank you so much.";
@@ -6691,7 +6691,7 @@ manuk,193,135,0	script	Worker#ep13bs	4_MAN_PIOM,{
 					mes "[Gill]";
 					mes "It's all because of you, we are able to prevent anything disastrous.";
 					mes "^0000FFEven though you're also an alien race, but compared to the vile fairies^000000, I'm glad to have met someone like "+strcharinfo(0)+".";
-					delitem 6032,30; //Horn_Of_Hilsrion
+					delitem Horn_Of_Hilsrion,30;
 					ep13_2_bs1 = 3;
 					ep13_2_busut = 4;
 					completequest 11105;
@@ -6805,7 +6805,7 @@ manuk,193,135,0	script	Worker#ep13bs	4_MAN_PIOM,{
 				close;
 			}
 			else if (ep13_2_bs1 == 2) {
-				if (countitem(6032) > 29) {
+				if (countitem(Horn_Of_Hilsrion) > 29) {
 					mes "[Gill]";
 					mes "You helped me collect all of the Horns of Hillslion?";
 					mes "Thank you so much.";
@@ -6813,7 +6813,7 @@ manuk,193,135,0	script	Worker#ep13bs	4_MAN_PIOM,{
 					mes "[Gill]";
 					mes "It's all because of you, we are able to prevent anything disastrous.";
 					mes "^0000FFEven though you're also an alien race, but compared to the vile fairies^000000, I'm glad to have met someone like "+strcharinfo(0)+".";
-					delitem 6032,30; //Horn_Of_Hilsrion
+					delitem Horn_Of_Hilsrion,30;
 					ep13_2_bs1 = 3;
 					completequest 11105;
 					close;

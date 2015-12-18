@@ -37,9 +37,9 @@
 
 prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	disable_items;
-	if (countitem(6238) || countitem(6228) || countitem(6229) || countitem(6230) || countitem(6231) || countitem(6456))
+	if (countitem(Guarantee_Weapon_11Up) || countitem(Guarantee_Weapon_9Up) || countitem(Guarantee_Weapon_8Up) || countitem(Guarantee_Weapon_7Up) || countitem(Guarantee_Weapon_6Up) || countitem(Guarantee_Weapon_5Up))
 		.@bWeaponUp = 1;
-	if (countitem(6239) || countitem(6232) || countitem(6233) || countitem(6234) || countitem(6235) || countitem(6457))
+	if (countitem(Guarantee_Armor_11Up) || countitem(Guarantee_Armor_9Up) || countitem(Guarantee_Armor_8Up) || countitem(Guarantee_Armor_7Up) || countitem(Guarantee_Armor_6Up) || countitem(Guarantee_Armor_5Up))
 		.@bArmorUp = 1;
 	if (!.@bWeaponUp && !.@bArmorUp) {
 		mes "[Refine Master]";

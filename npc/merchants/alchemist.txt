@@ -40,7 +40,7 @@
 //=========================================================================
 
 alde_alche,24,188,3	script	Guild Dealer	2_M_ALCHE,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute! -";
 		mes "- Currently you are carrying -";
 		mes "- too many items with you. -";
@@ -100,7 +100,7 @@ alde_alche,24,188,3	script	Guild Dealer	2_M_ALCHE,{
 				close;
 			}
 			Zeny -= .@sell;
-			getitem 7134,.@input; //Medicine_Bowl
+			getitem Medicine_Bowl,.@input;
 			mes "[Gever Al Sharp]";
 			mes "Thank you.";
 			mes "Come again.";

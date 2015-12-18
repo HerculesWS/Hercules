@@ -34,7 +34,7 @@
 //=========================================================================
 
 prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "I think you have too many items. Let's try it again after you take some out.";
 		close;
 	}
@@ -95,7 +95,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 			mes "Please unequip the Magical Stone or Magical Stone Ring and try again.";
 			close;
 		}
-		if (countitem(2796) || countitem(2797)) {
+		if (countitem(Magical_Stone) || countitem(Magical_Stone_)) {
 			if (isequipped(2796) || isequipped(2797)) {
 				mes "[Valerie]";
 				mes "Please talk to me after your replace all Magical Stones.";

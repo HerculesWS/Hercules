@@ -122,7 +122,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 				mes "He stole my Pickaxe!";
 				mes "I can't live without it...";
 				next;
-				if (countitem(6010) > 0) {
+				if (countitem(Pickaxe) > 0) {
 					mes "[" + strcharinfo(0) + "]";
 					mes "Is this the pickaxe that you've been looking for?";
 					next;
@@ -172,7 +172,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 						mes "Alright! Let's go.";
 						mes "If your friends visit me again later, I will guide them to that area again.";
 						mes "Don't forget, dwarves are grateful beings! Hahaha!";
-						delitem 6010,1; //Pickaxe
+						delitem Pickaxe,1;
 						$@gdeventv_s1 = 1;
 						$@gdevents_s$ = .@chk_yourgdname$;
 						close2;
@@ -254,7 +254,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 					mes "He stole my Pickaxe!";
 					mes "I can't live without it...";
 					next;
-					if (countitem(6010) > 0) {
+					if (countitem(Pickaxe) > 0) {
 						mes "[" + strcharinfo(0) + "]";
 						mes "Is this the pickaxe that you've been looking for?";
 						next;
@@ -304,7 +304,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 							mes "Alright! Let's go.";
 							mes "If your friends visit me again later, I will guide them to that area again.";
 							mes "Don't forget, dwarves are grateful beings! Hahaha!";
-							delitem 6010,1; //Pickaxe
+							delitem Pickaxe,1;
 							$@gdeventv_s1 = 1;
 							$@gdevents_s$ = .@chk_yourgdname$;
 							close2;
@@ -396,7 +396,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 					mes "He stole my Pickaxe!";
 					mes "I can't live without it...";
 					next;
-					if (countitem(6010) > 0) {
+					if (countitem(Pickaxe) > 0) {
 						mes "[" + strcharinfo(0) + "]";
 						mes "Is this the pickaxe that you've been looking for?";
 						next;
@@ -446,7 +446,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 							mes "Alright! Let's go.";
 							mes "If your friends visit me again later, I will guide them to that area again.";
 							mes "Don't forget, dwarves are grateful beings! Hahaha!";
-							delitem 6010,1; //Pickaxe
+							delitem Pickaxe,1;
 							$@gdeventv_s1 = 1;
 							$@gdevents_s$ = .@chk_yourgdname$;
 							close2;
@@ -512,7 +512,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 	else {
 		setnpcdisplay "Pierrot Pier#sch_gd", 4_CAT;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait!! -";
 		mes "- You're carrying too many items, -";
 		mes "- you can't receive the materials. -";
@@ -692,7 +692,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 			mes "[Pierrot Pier]";
 			mes "Let me see...";
 			next;
-			if (countitem(6031) > 0) {
+			if (countitem(Glitering_PaperB) > 0) {
 				donpcevent "Controller#gdevent_s::OnStop";
 				$@gdeventv_s2 = 3;
 				donpcevent "eff_mvp#sch_gd::OnMVP";
@@ -701,11 +701,11 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 				mes "Success~!!";
 				mes "What a success~!!";
 				mapannounce "schg_que01", "Pierrot Pier: Wow~~!! Success~!! What a success~!!",bc_map,"0x99CC00";
-				delitem 6031,1; //Glitering_PaperB
+				delitem Glitering_PaperB,1;
 				close;
 			}
 			else {
-				if (countitem(6030) > 0) {
+				if (countitem(Glitering_PaperA) > 0) {
 					mes "[Pierrot Pier]";
 					mes "Ahh, what a shame, it seems like you haven't found the treasure map yet.";
 					mes "Quickly! Your time is running out! Hurry up!";
@@ -803,7 +803,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 			mapannounce "schg_que01", "Pierrot Pier: Here, take Pierre's Treasure Boxes.",bc_map,"0x99CC00";
 			donpcevent "eff_mvp#sch_gd::OnMVP";
 			$@gdeventv_s2 = 5;
-			getitem 14596,10; //Pierre_Treasurebox
+			getitem Pierre_Treasurebox,10;
 			close;
 		}
 		else if ($@gdeventv_s2 == 4) {
@@ -833,7 +833,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 			mes "[Pierrot Pier]";
 			mes "Let me see.";
 			next;
-			if (countitem(6031) > 0) {
+			if (countitem(Glitering_PaperB) > 0) {
 				donpcevent "Controller#gdevent_s::OnStop";
 				$@gdeventv_s2 = 3;
 				donpcevent "eff_mvp#sch_gd::OnMVP";
@@ -841,11 +841,11 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 				mes "Wow~~!!";
 				mes "Success~!!";
 				mes "What a success~!!";
-				delitem 6031,1; //Glitering_PaperB
+				delitem Glitering_PaperB,1;
 				close;
 			}
 			else {
-				if (countitem(6030) > 0) {
+				if (countitem(Glitering_PaperA) > 0) {
 					mes "[Pierrot Pier]";
 					mes "Ahh, what a shame, it seems like you haven't found the treasure map yet.";
 					mes "Quickly! Your time is running out! Hurry up!";
@@ -943,7 +943,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 			mes "[Pierrot Pier]";
 			mes "Let me see...";
 			next;
-			if (countitem(6031) > 0) {
+			if (countitem(Glitering_PaperB) > 0) {
 				donpcevent "Controller#gdevent_s::OnStop";
 				$@gdeventv_s2 = 3;
 				donpcevent "eff_mvp#sch_gd::OnMVP";
@@ -952,11 +952,11 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 				mes "Success~!!";
 				mes "What a success~!!";
 				mapannounce "schg_que01", "Pierrot Pier: Wow~~!! Success~!! What a success~!!",bc_map,"0x99CC00";
-				delitem 6031,1; //Glitering_PaperB
+				delitem Glitering_PaperB,1;
 				close;
 			}
 			else {
-				if (countitem(6030) > 0) {
+				if (countitem(Glitering_PaperA) > 0) {
 					mes "[Pierrot Pier]";
 					mes "Ahh, what a shame, it seems like you haven't found the treasure map yet.";
 					mes "Quickly! Your time is running out! Hurry up!";
@@ -1007,7 +1007,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 			mes "[Pierrot Pier]";
 			mes "Let me see...";
 			next;
-			if (countitem(6031) > 0) {
+			if (countitem(Glitering_PaperB) > 0) {
 				donpcevent "Controller#gdevent_s::OnStop";
 				$@gdeventv_s2 = 3;
 				donpcevent "eff_mvp#sch_gd::OnMVP";
@@ -1015,11 +1015,11 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 				mes "Wow~~!!";
 				mes "Success~!!";
 				mes "What a success~!!";
-				delitem 6031,1; //Glitering_PaperB
+				delitem Glitering_PaperB,1;
 				close;
 			}
 			else {
-				if (countitem(6030) > 0) {
+				if (countitem(Glitering_PaperA) > 0) {
 					mes "[Pierrot Pier]";
 					mes "Ahh, what a shame, it seems like you haven't found the treasure map yet.";
 					mes "Quickly! Your time is running out! Hurry up!";
@@ -1331,11 +1331,11 @@ OnInit:
 	end;
 
 OnTouch2:
-	.@paper_sch_gd = countitem(6030);
-	.@spaper_sch_gd = countitem(6031);
+	.@paper_sch_gd = countitem(Glitering_PaperA);
+	.@spaper_sch_gd = countitem(Glitering_PaperB);
 	if ((.@paper_sch_gd > 0) || (.@spaper_sch_gd > 0)) {
-		delitem 6030,.@paper_sch_gd; //Glitering_PaperA
-		delitem 6031,.@spaper_sch_gd; //Glitering_PaperB
+		delitem Glitering_PaperA,.@paper_sch_gd;
+		delitem Glitering_PaperB,.@spaper_sch_gd;
 	}
 	end;
 }

@@ -286,7 +286,7 @@ monk_test,316,69,5	script	Monk#qsk_mo	4_M_CHNMONK,{
 			mes "for now, my friend.";
 			close;
 		}
-		if (MONK_SK == 4 && countitem(905) > 19 && countitem(711) > 2) {
+		if (MONK_SK == 4 && countitem(Stem) > 19 && countitem(Shoot) > 2) {
 			mes "[Monk]";
 			mes "What's that...?";
 			mes "You've learned the";
@@ -301,8 +301,8 @@ monk_test,316,69,5	script	Monk#qsk_mo	4_M_CHNMONK,{
 			mes "good number of Mandragoras.";
 			mes "All right. You seem to be ready. Come back in a little while so";
 			mes "that I can finish preparations.";
-			delitem 905,20; //Stem
-			delitem 711,3; //Shoot
+			delitem Stem,20;
+			delitem Shoot,3;
 			MONK_SK = 5;
 			close;
 		}

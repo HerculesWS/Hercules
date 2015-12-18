@@ -368,14 +368,14 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "You can go ahead and kill Pickies to get those. It really shouldn't be that hard. Oh, and use this Wing thingee to come back.";
 			tu_thief01 = 5;
 			savepoint "moc_ruins",80,164;
-			getitem 602,1; //Wing_Of_Butterfly
+			getitem Wing_Of_Butterfly,1;
 			getexp 100,50;
 			specialeffect2 EF_HIT5;
 			close2;
 			warp "moc_fild12",158,373;
 			end;
 		} else if(tu_thief01 == 5 || tu_thief01 == 6){
-			if(countitem(916) < 10){
+			if(countitem(Feather_Of_Birds) < 10){
 				mes "'Ey, you don't have the 10 ^ff0000Feather of Birds^000000 I asked you for! You gotta apply what you know, you know.";
 				mes "Now hurry up and do it!";
 				close2;
@@ -426,7 +426,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 						mes "to the poison! That stuff";
 						mes "is pretty strong!";
 						tu_thief01 = 8;
-						getitem 1207,1; //Main_Gauche
+						getitem Main_Gauche,1;
 						getexp 1000,500;
 						specialeffect2 EF_HIT5;
 						close;
@@ -436,7 +436,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 						mes "Less work for me!";
 						mes "Alright, you better get stronger the next time I see you. Oh, and you can have this stuff. You know, since you're so gangster and all.";
 						tu_thief01 = 7;
-						getitem 1207,1; //Main_Gauche
+						getitem Main_Gauche,1;
 						getexp 500,200;
 						specialeffect2 EF_HIT5;
 						close;
@@ -463,7 +463,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 						break;
 					}
 					tu_thief01 = 7;
-					getitem 1207,1; //Main_Gauche
+					getitem Main_Gauche,1;
 					getexp 500,200;
 					specialeffect2 EF_HIT5;
 					close;
@@ -589,7 +589,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 				mes "[Yierhan]";
 				mes "Hey, this stuff is yours. Think of it as a reward for helping us out. Take care of yourself now~";
 				tu_thief01 = 27;
-				getitem 2307,1; //Mantle
+				getitem Mantle,1;
 				Zeny += 5000;
 				getexp 8000,3000;
 				close;

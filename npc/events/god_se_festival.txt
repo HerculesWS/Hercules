@@ -67,7 +67,7 @@ yuno,1,1,0	script	Festival Manager#gq_fes0	4_F_HUGIRL,{
 
 yuno,118,192,5	script	Rmimi Ravies#gq_fes01	4_F_HUGIRL,{
 	.@GID = getcharid(2);
-	if (countitem(7840) > 0) {
+	if (countitem(Valkyrie_Gift) > 0) {
 		mes "[Rmimi Ravies]";
 		mes "This is the flower.";
 		mes "This is just a formality, but let me check your qualifications.";
@@ -136,7 +136,7 @@ yuno,118,192,5	script	Rmimi Ravies#gq_fes01	4_F_HUGIRL,{
 			if ($@gqse_festival == 0) {
 				mes "[Rmimi Ravies]";
 				mes "Ok, we would ge started to summon monsters.";
-				delitem 7840,1; //Valkyrie's_Gift
+				delitem Valkyrie_Gift,1; //Valkyrie's_Gift
 				next;
 				mes "[Rmimi Ravies]";
 				mes "Have a good time.";
@@ -443,7 +443,7 @@ rachel,1,1,0	script	Festival Manager#gq_fes2	4_F_HUGIRL,{
 
 rachel,132,117,3	script	Rhehe Ravies#gq_fes03	4_F_HUGIRL,{
 	.@GID = getcharid(2);
-	if (countitem(7840) > 0) {
+	if (countitem(Valkyrie_Gift) > 0) {
 		mes "[Rhehe Ravies]";
 		mes "A flower!!";
 		mes "Shall we proceed?";
@@ -516,7 +516,7 @@ rachel,132,117,3	script	Rhehe Ravies#gq_fes03	4_F_HUGIRL,{
 			if ($@gqse_festival == 0) {
 				mes "[Rhehe Ravies]";
 				mes "Good! Now seems like a good time, so let's begin!";
-				delitem 7840,1; //Valkyrie_Gift
+				delitem Valkyrie_Gift,1;
 				next;
 				mes "[Rhehe Ravies]";
 				mes "I hope you enjoy yourself!";

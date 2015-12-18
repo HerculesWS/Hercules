@@ -60,7 +60,7 @@ prt_fild08,159,371,3	script	Poring War Recruiter#wop	4_PORING,{
 			mes "[Poring]";
 			mes "Oh, and there's an entrance fee of 500 zeny, ring.";
 			mes "Have a good time, ring.";
-			delitem 7773,countitem(7773);
+			delitem War_Badge,countitem(War_Badge);
 			Zeny -= 500;
 			close2;
 			warp "poring_w01",112,138;
@@ -87,7 +87,7 @@ prt_fild08,159,371,3	script	Poring War Recruiter#wop	4_PORING,{
 
 //== Poring Vending Machine ================================
 poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
-	if (checkweight(714,3) == 0) {
+	if (checkweight(Emperium,3) == 0) {
 		mes "- You are carrying too much items in order to use the Vending Machine. -";
 		close;
 	}
@@ -100,22 +100,22 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 		next;
 		switch(select("Marvelous Medal - 4 P.Co:Union of Tribe - 20 P.Co:Poring Box - 30 P.Co:Next")) {
 		case 1:
-			callsub S_PoringVending,7515,4;
+			callsub S_PoringVending,Marvelous_Medal,4;
 		case 2:
-			callsub S_PoringVending,658,20;
+			callsub S_PoringVending,Union_Of_Tribe,20;
 		case 3:
-			callsub S_PoringVending,12109,30;
+			callsub S_PoringVending,Poring_Box,30;
 		case 4:
 			mes "This is a special item.";
 			mes "Item name - Poring Coin(P.Co)";
 			next;
 			switch(select("Wild Rose - 15 P.Co:Doppelganger - 20 P.Co:Egnigem Cenia - 20 P.Co:Collection Item")) {
 			case 1:
-				callsub S_PoringVending,12300,15;
+				callsub S_PoringVending,Wild_Rose_Scroll,15;
 			case 2:
-				callsub S_PoringVending,12301,20;
+				callsub S_PoringVending,Doppelganger_Scroll,20;
 			case 3:
-				callsub S_PoringVending,12302,20;
+				callsub S_PoringVending,Ygnizem_Scroll,20;
 			case 4:
 				mes "Figures of 1st Job Class Characters including Novice are finally on sale!";
 				mes "Figures except for Novice are all ^4d4dffCharacter bound items^000000.";
@@ -124,25 +124,25 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 				next;
 				switch(select("Novice Figure - 50 P.Co:Swordman Figure - 100 P.Co:Thief Figure - 100 P.Co:Merchant Figure - 100 P.Co:Acolyte Figure - 100 P.Co:Mage Figure - 100 P.Co:Archer Figure - 100 P.Co:Random Draw - 50 P.Co:Cancel")) {
 				case 1:
-					callsub S_PoringVending,2765,50;
+					callsub S_PoringVending,Novice_Figure,50;
 				case 2:
-					callsub S_PoringVending,2766,100;
+					callsub S_PoringVending,Swordman_Figure,100;
 				case 3:
-					callsub S_PoringVending,2770,100;
+					callsub S_PoringVending,Thief_Figure,100;
 				case 4:
-					callsub S_PoringVending,2771,100;
+					callsub S_PoringVending,Merchant_Figure,100;
 				case 5:
-					callsub S_PoringVending,2767,100;
+					callsub S_PoringVending,Acolyte_Figure,100;
 				case 6:
-					callsub S_PoringVending,2768,100;
+					callsub S_PoringVending,Mage_Figure,100;
 				case 7:
-					callsub S_PoringVending,2769,100;
+					callsub S_PoringVending,Archer_Figure,100;
 				case 8:
 					mes "You have chosen Random Draw.";
 					mes "1 of 7 diffeent kinds of figures will be selected.";
 					next;
 					if(select("Draw:Cancel") == 1) {
-						if (countitem(7539) >= 50) {
+						if (countitem(Poring_Coin) >= 50) {
 							mes "Insert the Poring coin and pull the lever.";
 							mes "Click~ The item came out of the mouth of the Poring with a rumbling sound.";
 							mes "What could it be?";
@@ -157,7 +157,7 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 							default: .@Random_Figure = 2765; break; // Novice_Figure
 							}
 							mes "A nice " + getitemname(.@Random_Figure) + ".";
-							delitem 7539,50; // Poring_Coin
+							delitem Poring_Coin,50; // Poring_Coin
 							getitem .@Random_Figure,1;
 							close;
 						} else {
@@ -227,9 +227,9 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 	end;
 
 S_PoringVending:
-	if (countitem(7539) >= getarg(1)) {
+	if (countitem(Poring_Coin) >= getarg(1)) {
 		mes "Click~ The item came out of the mouth of the Poring with a rumbling sound.";
-		delitem 7539,getarg(1); // Poring_Coin
+		delitem Poring_Coin,getarg(1); // Poring_Coin
 		getitem getarg(0),1;
 	} else {
 		mes "Not enough coins.";
@@ -239,7 +239,7 @@ S_PoringVending:
 
 //== Information ===========================================
 poring_w01,96,97,3	script	Sweet Devi#wop	4_DEVIRUCHI,{
-	if (MaxWeight-Weight < 2000 || checkweight(1201,1) == 0) {
+	if (MaxWeight-Weight < 2000 || checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -326,7 +326,7 @@ OnPCLogoutEvent:
 			WoP_SaveMap_X = 0;
 			WoP_SaveMap_Y = 0;
 		}
-		delitem 7773,countitem(7773);
+		delitem War_Badge,countitem(War_Badge);
 		wop_team = 0;
 	}
 	end;
@@ -351,7 +351,7 @@ OnPCDieEvent:
 OnPCKillEvent:
 	getmapxy .@map$,.@x,.@y,0;
 	if (.@map$ == "poring_w02" && wop_team) {
-		getnameditem 7773,rid2name(killedrid);
+		getnameditem War_Badge,rid2name(killedrid);
 	}
 	end;
 
@@ -635,7 +635,7 @@ OnTimer65000:
 
 //== Mr. Doppel ============================================
 poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
-	if (checkweight(714,3) == 0) {
+	if (checkweight(Emperium,3) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -674,7 +674,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 				case 2:
 					mes "[Mr. Doppel]";
 					mes "Very well. Nice you have done everything on time.";
-					delitem 7773,countitem(7773);
+					delitem War_Badge,countitem(War_Badge);
 					close2;
 					wop_team = 0;
 					warp "poring_w02",44,82;
@@ -685,7 +685,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 				mes "[Mr. Doppel]";
 				mes "Right. I'm gonna send you to the battle staging area.";
 				mes "Wait for all the other party members there.";
-				delitem 7773,countitem(7773);
+				delitem War_Badge,countitem(War_Badge);
 				close2;
 				wop_team = 0;
 				warp "poring_w02",44,82;
@@ -766,7 +766,7 @@ OnDisable:
 }
 
 poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
-	if (checkweight(714,3) == 0) {
+	if (checkweight(Emperium,3) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -805,7 +805,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 				case 2:
 					mes "[Mr. Doppel]";
 					mes "Very well. Nice you have done everything on time.";
-					delitem 7773,countitem(7773);
+					delitem War_Badge,countitem(War_Badge);
 					close2;
 					wop_team = 0;
 					warp "poring_w02",153,82;
@@ -815,7 +815,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 				mes "[Mr. Doppel]";
 				mes "Right. I'm gonna send you to the battle staging area.";
 				mes "Wait for all the other party members there.";
-				delitem 7773,countitem(7773);
+				delitem War_Badge,countitem(War_Badge);
 				close2;
 				wop_team = 0;
 				warp "poring_w02",153,82;
@@ -1228,7 +1228,7 @@ OnTimer120000:
 
 //== Deviruchi =============================================
 poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
-	if (MaxWeight-Weight < 2000 || checkweight(1201,1) == 0) {
+	if (MaxWeight-Weight < 2000 || checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -1249,7 +1249,7 @@ poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 				mes "[Devi]";
 				mes "Goodbye, my human friend.";
 				close2;
-				getitem 7539,3; // Poring_Coin
+				getitem Poring_Coin,3; // Poring_Coin
 				warp "prt_fild08",150,370;
 				end;
 			}
@@ -1275,7 +1275,7 @@ poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 				mes "[Devi]";
 				mes "Goodbye, my human friend.";
 				close2;
-				getitem 7539,1; // Poring_Coin
+				getitem Poring_Coin,1; // Poring_Coin
 				warp "prt_fild08",150,370;
 				end;
 			}
@@ -1330,7 +1330,7 @@ poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 				mes "[Devi]";
 				mes "Goodbye, my human friend.";
 				close2;
-				getitem 7539,3; // Poring_Coin
+				getitem Poring_Coin,3; // Poring_Coin
 				warp "prt_fild08",150,370;
 				end;
 			}
@@ -1356,7 +1356,7 @@ poring_w02,99,201,3	script	Deviruchi#wop_endmaster	4_DEVIRUCHI,{
 				mes "[Devi]";
 				mes "Goodbye, my human friend.";
 				close2;
-				getitem 7539,1; // Poring_Coin
+				getitem Poring_Coin,1; // Poring_Coin
 				warp "prt_fild08",150,370;
 				end;
 			}
@@ -1470,10 +1470,10 @@ poring_w02,99,52,0	script	Angeling Guardian#wop_da	HIDDEN_NPC,{
 			next;
 			switch(select("Equip War Badge.:Cancel.")) {
 			case 1:
-				if (countitem(7773)) {
+				if (countitem(War_Badge)) {
 					if ($@wop_doorcount_a < 4) {
 						mes "War Badge equipped.";
-						delitem 7773,1; // War_Badge
+						delitem War_Badge,1; // War_Badge
 						++$@wop_doorcount_a;
 						cutin "wop_emb0" + $@wop_doorcount_a,1;
 						if ($@wop_doorcount_a == 4) {
@@ -1567,10 +1567,10 @@ poring_w02,98,113,0	script	Deviling Guardian#wop_dd	HIDDEN_NPC,{
 			next;
 			switch(select("Equip War Badge.:Cancel.")) {
 			case 1:
-				if (countitem(7773)) {
+				if (countitem(War_Badge)) {
 					if ($@wop_doorcount_d < 4) {
 						mes "War Badge equipped.";
-						delitem 7773,1; // War_Badge
+						delitem War_Badge,1; // War_Badge
 						++$@wop_doorcount_d;
 						cutin "wop_emb0" + $@wop_doorcount_d,1;
 						if ($@wop_doorcount_d == 4) {

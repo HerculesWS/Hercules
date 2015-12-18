@@ -264,7 +264,7 @@ mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 			mes "Or they may have left something behind.";
 			close;
 		} else if (ep14_1_bs2 < 7) {
-			if (countitem(6390) == 0) {
+			if (countitem(Small_Pocket) == 0) {
 				mes "[Theore]";
 				mes "They may have left a clue, can you please look around the area?";
 				mes "If they were looking through the bushes, they may have been looking for something they've lost.";
@@ -350,7 +350,7 @@ mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 		mes "Oh yeah!!!!";
 		ep14_1_bs = 19;
 		getexp 0,200000;
-		getitem 6380,5; //Mora_Coin
+		getitem Mora_Coin,5;
 		close;
 	} else if (ep14_1_bs > 18) {
 		mes "[Theore]";
@@ -414,8 +414,8 @@ OnDisable:
 OnTouch:
 	.@i = atoi(charat(strnpcinfo(2),9));
 	if (ep14_1_bs == .@i+3) {
-		if (countitem(6390) == 0) {
-			if (checkweight(1201,1) == 0) {
+		if (countitem(Small_Pocket) == 0) {
+			if (checkweight(Knife,1) == 0) {
 				mes " - Hang on there !! -";
 				mes " - You are carrying too many kinds of items - ";
 				mes " - to receive any more items. - ";
@@ -438,7 +438,7 @@ OnTouch:
 				if (ep14_1_bs2 > 0 && ep14_1_bs2 < 4)
 					ep14_1_bs2 += 3;
 				changequest 11184,11185;
-				getitem 6390,1; //Small_Pocket
+				getitem Small_Pocket,1;
 				close;
 			} else {
 				mes "- You didn't find anything. -";
@@ -659,7 +659,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 		mes "And who mayy you be?";
 		next;
 		select("Show the pouch.");
-		if (countitem(6390) == 0) {
+		if (countitem(Small_Pocket) == 0) {
 			mes "[Kusmi]";
 			mes "What is it that you want to show mee?";
 			close;
@@ -679,7 +679,7 @@ splendide,119,138,4	script	Kusmi#ep14_1_bs	4_F_FAIRYKID5,{
 			mes "[Kusmi]";
 			mes "Promise me you won't tell anyonee!";
 			mes "If you can promise, please talk to me againn.";
-			delitem 6390,1; //Small_Pocket
+			delitem Small_Pocket,1;
 			ep14_1_bs = 10;
 			changequest 11187,11188;
 			close;
@@ -854,7 +854,7 @@ splendide,304,295,4	script	Theodore#ep14_1_bs	4_M_FAIRYKID4,{
 		mes "Who are you!";
 		next;
 		select("Show the pouch.");
-		if (countitem(6390) == 0) {
+		if (countitem(Small_Pocket) == 0) {
 			mes "[Theodore]";
 			mes "Hmm? What do you mean?";
 			close;
@@ -874,7 +874,7 @@ splendide,304,295,4	script	Theodore#ep14_1_bs	4_M_FAIRYKID4,{
 			mes "[Theodore]";
 			mes "If you really want to hear the answer, talk to me again.";
 			mes "I need time to think.";
-			delitem 6390,1; //Small_Pocket
+			delitem Small_Pocket,1;
 			ep14_1_bs = 10;
 			changequest 11187,11194;
 			close;
@@ -1036,7 +1036,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 		mes "What can I do for you, sir?";
 		next;
 		select("Show the pouch.");
-		if (countitem(6390) == 0) {
+		if (countitem(Small_Pocket) == 0) {
 			mes "[Pauchon]";
 			mes "Huh? Do you see something?";
 			mes "I don't see anything...";
@@ -1054,7 +1054,7 @@ splendide,168,301,4	script	Pauchon#ep14_1_bs	4_F_FAIRYKID4,{
 			mes "That's not easy for me to answer...";
 			mes "I do appreciate you finding my pouch.... Hmm...";
 			mes "Please give me some time to think..";
-			delitem 6390,1; //Small_Pocket
+			delitem Small_Pocket,1;
 			ep14_1_bs = 10;
 			changequest 11187,11200;
 			close;
@@ -1383,7 +1383,7 @@ mora,55,124,2	script	Jones#ep14_1_bs	4_M_MERCAT1,{
 			close;
 		}
 	} else if (ep14_1_bs == 16) {
-		if (checkweight(1201,1) == 0) {
+		if (checkweight(Knife,1) == 0) {
 			mes "[Jones]";
 			mes "You have too many kinds of items. Please lighten your load and come back.";
 			close;
@@ -1397,7 +1397,7 @@ mora,55,124,2	script	Jones#ep14_1_bs	4_M_MERCAT1,{
 		mes "Please take good care of it.";
 		mes "It's for Daphrer in Splendide.";
 		ep14_1_bs = 17;
-		getitem 6391,1; //Splendid_Supply_Kit
+		getitem Splendid_Supply_Kit,1;
 		changequest 11207,11208;
 		close;
 	} else if (ep14_1_bs == 17) {
@@ -1426,7 +1426,7 @@ splendide,121,260,4	script	Daphrer#ep14_1_bs	4_F_FAIRY,{
 		mes "DRHSfhsdfGSDH FGkkmvoifk DFG DFHshfeksmn fgg FDbbd fjnnvk n skncki dfgd F FHdfkdfjkmv";
 		close;
 	}
-	if (countitem(6391)) {
+	if (countitem(Splendid_Supply_Kit)) {
 		mes "[Daphrer]";
 		mes "Oh....";
 		mes "I've been waiting for you.";
@@ -1436,14 +1436,14 @@ splendide,121,260,4	script	Daphrer#ep14_1_bs	4_F_FAIRY,{
 		next;
 		mes "[Daphrer]";
 		mes "This is probably too small to be a reward, but please accept this as a sign of my gratitude.";
-		delitem 6391,1; //Splendid_Supply_Kit
+		delitem Splendid_Supply_Kit,1;
 		if (ep14_1_bs == 17) {
 			ep14_1_bs = 18;
 			completequest 11208;
 			getexp 0,500000;
-			getitem 6380,5; //Mora_Coin
+			getitem Mora_Coin,5;
 		} else
-			getitem 6380,2; //Mora_Coin
+			getitem Mora_Coin,2;
 		close;
 	}
 	if (ep14_1_bs == 17) {
@@ -1458,7 +1458,7 @@ splendide,121,260,4	script	Daphrer#ep14_1_bs	4_F_FAIRY,{
 		ep14_1_bs = 18;
 		completequest 11208;
 		getexp 0,200000;
-		getitem 6380,2; //Mora_Coin
+		getitem Mora_Coin,2;
 		close;
 	}
 	mes "[Daphrer]";
@@ -1524,7 +1524,7 @@ OnInit:
 }
 
 dic_dun01,274,114,0	script	Stacked Boxes of Goods	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- You have too many items to do this quest. -";
 		close;
 	}
@@ -1543,7 +1543,7 @@ dic_dun01,274,114,0	script	Stacked Boxes of Goods	CLEAR_NPC,{
 			mes "You promised to take the box of Bradium to Cheshire, who will be waiting for you near the Crevice of Bifrost.";
 			erasequest 7208;
 			setquest 7210;
-			getitem 6392,1; //Bradium_Box
+			getitem Bradium_Box,1;
 			close;
 		case 2:
 			mes "You decided to give up delivering the box.";
@@ -1563,7 +1563,7 @@ dic_dun01,274,114,0	script	Stacked Boxes of Goods	CLEAR_NPC,{
 				mes "You decide to take it to the location shown on the piece of paper.";
 				completequest 7206;
 				setquest 7207;
-				getitem 6392,1; //Bradium_Box
+				getitem Bradium_Box,1;
 				close;
 			}
 		} else if (questprogress(7207) != 2) {
@@ -1578,13 +1578,13 @@ dic_dun01,274,114,0	script	Stacked Boxes of Goods	CLEAR_NPC,{
 }
 
 bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 1000) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 		mes "- You have too many items to do this quest. -";
 		close;
 	}
 	cutin "ep13_cheshire",1;
 	if (questprogress(7209)) {
-		if (countitem(6090) < 20) {
+		if (countitem(Purified_Bradium) < 20) {
 			mes "[Cheshire]";
 			mes "Bring me 20 pieces of refined Bradium.";
 			mes "In exchange for the box, which you carelessly and irresponsibly sold to somebody.";
@@ -1604,17 +1604,17 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 		mes "You made a mistake of losing the box, you have to be content with this.";
 		mes "And starting tomorrow, get the box here intact.";
 		mes "Every day.";
-		delitem 6090,20; //Purified_Bradium
+		delitem Purified_Bradium,20;
 		erasequest 7209;
 		setquest 7208;
-		getitem 6304,1; //Sapa_Feat_Cert
+		getitem Sapa_Feat_Cert,1;
 		close2;
 		cutin "",255;
 		end;
 	}
 	callsub L_CheckPlaytime;
 	if (questprogress(7210)) {
-		if (countitem(6392) == 0)
+		if (countitem(Bradium_Box) == 0)
 			callsub L_LostQuest,7210;
 		else {
 			mes "[Cheshire]";
@@ -1628,8 +1628,8 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 			mes "Now, leave this place before the Laphines grow suspicious.";
 			erasequest 7210;
 			setquest 7208;
-			delitem 6392,1; //Bradium_Box
-			getitem 6304,1; //Sapa_Feat_Cert
+			delitem Bradium_Box,1;
+			getitem Sapa_Feat_Cert,1;
 			getexp 50000,40000;
 			close2;
 			cutin "",255;
@@ -1707,7 +1707,7 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 				end;
 			}
 		} else if (questprogress(7207) != 2) {
-			if (countitem(6392) == 0)
+			if (countitem(Bradium_Box) == 0)
 				callsub L_LostQuest,7207;
 			else {
 				mes "[Cheshire]";
@@ -1755,10 +1755,10 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 				mes "Well, I'll leave the matter to you.";
 				mes "Try to bring the box to me every day.";
 				mes "Okay?";
-				delitem 6392,1; //Bradium_Box
+				delitem Bradium_Box,1;
 				completequest 7207;
 				setquest 7208;
-				getitem 6304,1; //Sapa_Feat_Cert
+				getitem Sapa_Feat_Cert,1;
 				getexp 50000,40000;
 				next;
 				mes "[Cheshire]";
@@ -2101,9 +2101,9 @@ mora,117,66,3	script	Euridi#pa	4_F_MORAFINE2,{
 		mes "Let's go show the letter to Pitt.";
 		changequest 1112,1113;
 
-		//delitem 6383,30; //Clue_Of_Lope
-		.@count = countitem(6383);
-		if (.@count) delitem 6383,((.@count > 30)?30:.@count); //Clue_Of_Lope
+		//delitem Clue_Of_Lope,30;
+		.@count = countitem(Clue_Of_Lope);
+		if (.@count) delitem Clue_Of_Lope,((.@count > 30)?30:.@count);
 
 		ep14_1_rope = 5;
 		close;
@@ -2148,8 +2148,8 @@ mora,117,66,3	script	Euridi#pa	4_F_MORAFINE2,{
 			changequest 1116,1117;
 			ep14_1_rope = 10;
 
-			//delitem 6384,1; //Ring_Of_Lope
-			if (countitem(6384)) delitem 6384,1; //Ring_Of_Lope
+			//delitem Ring_Of_Lope,1;
+			if (countitem(Ring_Of_Lope)) delitem Ring_Of_Lope,1;
 
 			close;
 		}
@@ -2239,7 +2239,7 @@ mora,115,68,3	script	Euridi's Friend#pa	4_F_MORAFINE1,{
 		mes "Maybe we're responsible";
 		mes "for what happened.";
 		next;
-		if (checkweight(6380,1) == 0) {
+		if (checkweight(Mora_Coin,1) == 0) {
 			mes "[Euridi's Friend]";
 			mes "You have too many things with you.";
 			mes "Can you throw out some of them?";
@@ -2251,7 +2251,7 @@ mora,115,68,3	script	Euridi's Friend#pa	4_F_MORAFINE1,{
 		completequest 1117;
 		ep14_1_rope = 11;
 		getexp 1000000,2000000;
-		getitem 6380,10; //Mora_Coin
+		getitem Mora_Coin,10;
 		close;
 	} else if (ep14_1_rope > 10) {
 		mes "[Euridi's Friend]";
@@ -2296,7 +2296,7 @@ mora,65,145,3	script	Pitt#pa	4_M_LYINGDOG,{
 		mes "I hate Laphines!";
 		close;
 	} else if (ep14_1_rope == 3) {
-		if (countitem(6383) < 30) {
+		if (countitem(Clue_Of_Lope) < 30) {
 			mes "[Pitt]";
 			mes "This is all because of";
 			mes "the stupid guide!";
@@ -2316,7 +2316,7 @@ mora,65,145,3	script	Pitt#pa	4_M_LYINGDOG,{
 			mes "So I swallow it like this,";
 			mes "and voila! Evidence gone!";
 			mes "Now I can sleep soundly, thank you!";
-			delitem 6383,5; //Clue_Of_Lope
+			delitem Clue_Of_Lope,5;
 			close;
 		case 2:
 			mes "[Pitt]";
@@ -2337,7 +2337,7 @@ mora,65,145,3	script	Pitt#pa	4_M_LYINGDOG,{
 		mes "This is so totally unfair!";
 		close;
 	} else if (ep14_1_rope == 5) {
-		if (checkweight(6384,1) == 0) {
+		if (checkweight(Ring_Of_Lope,1) == 0) {
 			mes "[Pitt]";
 			mes "What are you, a professional mover?";
 			mes "Stomping about with a ton of stuff on your back!";
@@ -2390,7 +2390,7 @@ mora,65,145,3	script	Pitt#pa	4_M_LYINGDOG,{
 		mes "in whatever form he might be in.";
 		changequest 1113,1114;
 		ep14_1_rope = 6;
-		getitem 6384,1; //Ring_Of_Lope
+		getitem Ring_Of_Lope,1;
 		close;
 	} else if (ep14_1_rope == 6 || ep14_1_rope == 7) {
 		mes "[Pitt]";
@@ -2528,7 +2528,7 @@ OnTouch:
 
 //== Find the Research Tools :: ep14_1_muk =================
 mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 500) {
 		mes "^FF0000- Warning message -";
 		mes "- Hang on there!! -";
 		mes "- You have too many items -";
@@ -2681,7 +2681,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		emotion e_paper;
 		close;
 	} else if (ep14_1_muk == 1) {
-		if (questprogress(5016) && countitem(6385) == 0) {
+		if (questprogress(5016) && countitem(Research_Tool_Bag) == 0) {
 			mes "[Raffle Researcher]";
 			mes "You're back? Where are my research tools?";
 			emotion e_what;
@@ -2716,7 +2716,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "I've always wanted a capable research assistant,";
 		mes "but it hasn't been easy to find one.";
 		next;
-		if (checkweight(6380,1) == 0) {
+		if (checkweight(Mora_Coin,1) == 0) {
 			mes "[Raffle Researcher]";
 			mes "By the way... Was it that difficult to";
 			mes "reclaim the research tools?";
@@ -2728,9 +2728,9 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "It must've been hard work to retrieve the tools.";
 		mes "Why don't you take this and go to the inn";
 		mes "and rest up? There's nothing for you to do right now.";
-		delitem 6385,1; //Research_Tool_Bag
+		delitem Research_Tool_Bag,1;
 		ep14_1_muk = 2;
-		getitem 6380,1; //Mora_Coin
+		getitem Mora_Coin,1;
 		erasequest 5016;
 		close;
 	} else if (ep14_1_muk == 2) {
@@ -2850,7 +2850,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "You can collect the samples";
 		mes "from that area.";
 		next;
-		if (MaxWeight - Weight < 100 || checkweight(1092,10) == 0) {
+		if (MaxWeight - Weight < 100 || checkweight(Empty_Cylinder,10) == 0) {
 			mes "[Raffle Researcher]";
 			mes "You are carrying too much weight.";
 			mes "I can't give you the sample tube.";
@@ -2861,12 +2861,12 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "Here is the sample tube for collecting.";
 		mes "Go and collect 10 samples!";
 		ep14_1_muk = 7;
-		getitem 1092,10; //Empty_Cylinder
+		getitem Empty_Cylinder,10;
 		erasequest 5018;
 		setquest 5019;
 		close;
 	} else if (ep14_1_muk == 7) {
-		if (questprogress(5019) && countitem(6386) < 10) {
+		if (questprogress(5019) && countitem(Bathtub_R_Sample) < 10) {
 			mes "[Raffle Researcher]";
 			mes "Have you collected the samples yet?";
 			mes "Please hurry up.";
@@ -2878,7 +2878,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 			mes "from that area.";
 			close;
 		}
-		if (checkweight(6380,1) == 0) {
+		if (checkweight(Mora_Coin,1) == 0) {
 			mes "[Raffle Researcher]";
 			mes "I know that you've done a lot...";
 			mes "but you are carrying too many things.";
@@ -2894,8 +2894,8 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "with the bath water samples.";
 		mes "It usually takes about 24 hours.";
 		mes "Why don't you come back then?";
-		delitem 6386,10; //Bathtub_R_Sample
-		getitem 6380,1; //Mora_Coin
+		delitem Bathtub_R_Sample,10;
+		getitem Mora_Coin,1;
 		ep14_1_muk = 8;
 		erasequest 5019;
 		setquest 5020;
@@ -2966,7 +2966,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 			mes "As humans say,";
 			mes "I've been waiting forever for them.";
 			next;
-			if (checkweight(6380,1) == 0) {
+			if (checkweight(Mora_Coin,1) == 0) {
 				mes "[Raffle Researcher]";
 				mes "I know that you've done a lot...";
 				mes "but you are carrying too many things.";
@@ -2981,7 +2981,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 			mes "Why don't you go for a walk";
 			mes "and come back then?";
 			delitem .@item,10;
-			getitem 6380,1; //Mora_Coin
+			getitem Mora_Coin,1;
 			erasequest .@quest;
 			setquest 5023;
 			close;
@@ -3065,7 +3065,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 			mes "like you did collecting";
 			mes "the bath water samples.";
 			ep14_1_muk = 10;
-			getitem 1092,1; //Empty_Cylinder
+			getitem Empty_Cylinder,1;
 			erasequest 5023;
 			setquest 5024;
 			next;
@@ -3077,7 +3077,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 			close;
 		}
 	} else if (ep14_1_muk == 10) {
-		if (countitem(6389) == 0) {
+		if (countitem(Puddle_R_Sample) == 0) {
 			mes "[Raffle Researcher]";
 			mes "You still haven't gone to collect the puddle sample?";
 			mes "Go to the puddle to the east of the village,";
@@ -3096,9 +3096,9 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "It's not completely to the west...";
 		mes "The puddle should be at 7 o'clock";
 		mes "from the village.";
-		delitem 6389,1; //Puddle_R_Sample
+		delitem Puddle_R_Sample,1;
 		ep14_1_muk = 11;
-		getitem 1092,1; //Empty_Cylinder
+		getitem Empty_Cylinder,1;
 		changequest 5024,5025;
 		next;
 		mes "[Raffle Researcher]";
@@ -3106,7 +3106,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "Good luck!";
 		close;
 	} else if (ep14_1_muk == 11) {
-		if (countitem(6389) == 0) {
+		if (countitem(Puddle_R_Sample) == 0) {
 			mes "[Raffle Researcher]";
 			mes "You still haven't gone to collect the puddle sample?";
 			mes "Go to the puddle to the west of the village,";
@@ -3124,9 +3124,9 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "Get me a sample from the puddle from the south.";
 		mes "The puddle to the south";
 		mes "should be... at 6 o'clock from here.";
-		delitem 6389,1; //Puddle_R_Sample
+		delitem Puddle_R_Sample,1;
 		ep14_1_muk = 12;
-		getitem 1092,1; //Empty_Cylinder
+		getitem Empty_Cylinder,1;
 		changequest 5025,5026;
 		next;
 		mes "[Raffle Researcher]";
@@ -3135,7 +3135,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "the sample is not damaged.";
 		close;
 	} else if (ep14_1_muk == 12) {
-		if (countitem(6389) == 0) {
+		if (countitem(Puddle_R_Sample) == 0) {
 			mes "You still haven't gone to collect the puddle sample?";
 			mes "Get me a sample from the puddle from the south.";
 			mes "The puddle to the south is located";
@@ -3156,9 +3156,9 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "Please get me the sample from the puddle to the north.";
 		mes "It's not completely to the north.";
 		mes "it's at 11 o'clock from the village.";
-		delitem 6389,1; //Puddle_R_Sample
+		delitem Puddle_R_Sample,1;
 		ep14_1_muk = 13;
-		getitem 1092,1; //Empty_Cylinder
+		getitem Empty_Cylinder,1;
 		changequest 5026,5027;
 		next;
 		mes "[Raffle Researcher]";
@@ -3166,7 +3166,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "Be careful.";
 		close;
 	} else if (ep14_1_muk == 13) {
-		if (countitem(6389) == 0) {
+		if (countitem(Puddle_R_Sample) == 0) {
 			mes "[Raffle Researcher]";
 			mes "You still haven't gone to collect the puddle sample?";
 			mes "Please get me a sample from the puddle to the north.";
@@ -3185,7 +3185,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "looking at the relationship between";
 		mes "these puddles and the bath.";
 		next;
-		if (checkweight(6380,4) == 0) {
+		if (checkweight(Mora_Coin,4) == 0) {
 			mes "[Raffle Researcher]";
 			mes "I know that you've done a lot...";
 			mes "but you are carrying too many things.";
@@ -3197,9 +3197,9 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "If I finish this experiment...";
 		mes "There's probably nothing else to do. While I run the experiment,";
 		mes "why don't you go and entertain yourself?";
-		delitem 6389,1; //Puddle_R_Sample
+		delitem Puddle_R_Sample,1;
 		ep14_1_muk = 14;
-		getitem 6380,4; //Mora_Coin
+		getitem Mora_Coin,4;
 		erasequest 5027;
 		setquest 5028;
 		next;
@@ -3312,7 +3312,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		mes "But thank you anyhow. I've been researching for a while,";
 		mes "but I've never met such an excellent research assistant as you.";
 		next;
-		if (MaxWeight - Weight < 100 || checkweight(1092,1) == 0) {
+		if (MaxWeight - Weight < 100 || checkweight(Empty_Cylinder,1) == 0) {
 			mes "[Raffle Researcher]";
 			mes "Hmm? By the way...";
 			mes "You are carrying too much weight.";
@@ -3329,7 +3329,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		ep14_1_muk = 15;
 		completequest 5028;
 		getexp 1000000,4000000;
-		getitem 6380,30; //Mora_Coin
+		getitem Mora_Coin,30;
 		next;
 		mes "[Raffle Researcher]";
 		mes "If we happen to run into each other again,";
@@ -3455,7 +3455,7 @@ L_ShowReport:
 	next;
 	return;
 L_CheckWeight:
-	if (MaxWeight - Weight < 100 || checkweight(1092,1) == 0) {
+	if (MaxWeight - Weight < 100 || checkweight(Empty_Cylinder,1) == 0) {
 		mes "[Raffle Researcher]";
 		mes "You are carrying too much weight.";
 		mes "I can't give you the sample tube.";
@@ -3466,7 +3466,7 @@ L_CheckWeight:
 }
 
 mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
-	if (checkweight(1201,1) == 0 || MaxWeight - Weight < 500) {
+	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 500) {
 		mes "^FF0000- Warning message -";
 		mes "- Hang on there!! -";
 		mes "- You have too many items -";
@@ -3587,7 +3587,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			mes "You tell me my family do okay.";
 			close;
 		} else if (questprogress(5034) == 1) {
-			if (MaxWeight - Weight < 100 || checkweight(5792,1) == 0) {
+			if (MaxWeight - Weight < 100 || checkweight(Fish_Pin,1) == 0) {
 				mes "[Fishee]";
 				mes "You have lots.";
 				mes "I give. To you.";
@@ -3610,7 +3610,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			mes "No. Someone left it.";
 			mes "... ... Good guy. I give you.";
 			completequest 5034;
-			getitem 5792,1; //Fish_Pin
+			getitem Fish_Pin,1;
 			close;
 		} else if (questprogress(5034) == 2) {
 			mes "[Fishee]";
@@ -3730,11 +3730,11 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 		if (.@npc_hp <= 0) {
 			mes "You won. The unidentified creature is unconscious.";
 			next;
-			if (questprogress(5016) && countitem(6385) == 0) {
+			if (questprogress(5016) && countitem(Research_Tool_Bag) == 0) {
 				mes "What will you do?";
 				next;
 				select("Look for the research tools.");
-				if (checkweight(6385,1) == 0) {
+				if (checkweight(Research_Tool_Bag,1) == 0) {
 					mes "You attempted to look for the research tools,";
 					mes "but you are carrying too many things.";
 					mes "You'd better lighten your load";
@@ -3745,7 +3745,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 				}
 				mes "Found Researcher Raffle's ^0000FF Research tool ^000000.";
 				ep14_1_goki += 1;
-				getitem 6385,1; //Research_Tool_Bag
+				getitem Research_Tool_Bag,1;
 				setquest 5029;
 				next;
 				mes "The creature wakes up and disappears into the dark hole.";
@@ -3787,7 +3787,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 					end;
 				}
 				if (rand(1,30) == 7) {
-					if (checkweight(6380,1) == 0) {
+					if (checkweight(Mora_Coin,1) == 0) {
 						mes "While you were checking the body of the unidentified creature, your fingers touch something. You got lucky, but due to your heavy load you failed to obtain a ^0000FF Mora Coin^000000.";
 						ep14_1_goki += 1;
 						setquest 5029;
@@ -3797,7 +3797,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 					}
 					mes "While you were checking the body of the unidentified creature, your fingers touch something. Lucky. Obtained a ^0000FF Mora Coin^000000.";
 					ep14_1_goki += 1;
-					getitem 6380,1; //Mora_Coin
+					getitem Mora_Coin,1;
 					setquest 5029;
 					next;
 					mes "The creature wakes up and disappears into the dark hole.";
@@ -4104,13 +4104,13 @@ OnFullon:
 			donpcevent strnpcinfo(0)+"::OnDisable";
 			end;
 		}
-		if (countitem(6386) >= 10) {
+		if (countitem(Bathtub_R_Sample) >= 10) {
 			mes "You will not need additional samples.";
 			close2;
 			donpcevent strnpcinfo(0)+"::OnDisable";
 			end;
 		}
-		if (countitem(1092) == 0) {
+		if (countitem(Empty_Cylinder) == 0) {
 			mes "To obtain a sample, you need a sample tube.";
 			close2;
 			donpcevent strnpcinfo(0)+"::OnDisable";
@@ -4120,7 +4120,7 @@ OnFullon:
 		next;
 		progressbar "ffff00",3;
 		if (!rand(3)) {
-			if (checkweight(6386,1) == 0) {
+			if (checkweight(Bathtub_R_Sample,1) == 0) {
 				mes "You have so many items";
 				mes "that it is difficult to collect samples.";
 				mes "You will have to lighten your load and come back.";
@@ -4129,8 +4129,8 @@ OnFullon:
 				end;
 			}
 			mes "Bath water sample collection complete.";
-			delitem 1092,1; //Empty_Cylinder
-			getitem 6386,1; //Bathtub_R_Sample
+			delitem Empty_Cylinder,1;
+			getitem Bathtub_R_Sample,1;
 		} else {
 			mes "Bath water sample collection failed.";
 			percentheal 5,5;
@@ -4245,27 +4245,27 @@ mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 	setarray .@dir$[1],"east","west","south","north";
 
 	if (questprogress(.@quest1[.@i])) {
-		if (countitem(6389) == 0) {
+		if (countitem(Puddle_R_Sample) == 0) {
 			mes "This appears to be the puddle to the "+.@dir$[.@i];
 			mes "that the researcher talked about.";
 			mes "Will you collect a sample?";
 			next;
 			if(select("Collect a sample.:Don't collect a sample.") == 2)
 				close;
-			if (countitem(1092) == 0) {
+			if (countitem(Empty_Cylinder) == 0) {
 				mes "You have no empty sample tubes.";
 				close;
 			}
 			progressbar "ffff00",5;
-			if (checkweight(6389,1) == 0) {
+			if (checkweight(Puddle_R_Sample,1) == 0) {
 				mes "You have so many items";
 				mes "that it is difficult to collect samples.";
 				mes "You will have to lighten your load and come back.";
 				close;
 			}
 			mes "You have collected a sample from the puddle to the "+.@dir$[.@i]+".";
-			delitem 1092,1; //Empty_Cylinder
-			getitem 6389,1; //Puddle_R_Sample
+			delitem Empty_Cylinder,1;
+			getitem Puddle_R_Sample,1;
 			close;
 		} else {
 			mes "You already have a sample.";
@@ -4377,7 +4377,7 @@ bif_fild02,113,340,0	duplicate(#mora_puddle)	Puddle#ep14_muk04	CLEAR_NPC
 
 //== Mora Daily Quests :: ep14_1_dealer ====================
 mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -4485,7 +4485,7 @@ mora,133,80,6	script	Elephantine#pa0829	4_ELEPHANT,{
 }
 
 mora,115,98,0	script	Hotcha#pa0829	4_ELEPHANT,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -4548,7 +4548,7 @@ mora,115,98,0	script	Hotcha#pa0829	4_ELEPHANT,{
 				getexp 0, ((JobLevel < 50)?JobLevel * JobLevel * (110/100) * 50:0);
 			else
 				getexp 0, ((JobLevel < 70)?JobLevel * JobLevel * (110/100) * 10:0);
-			getitem 6380,3; //Mora_Coin
+			getitem Mora_Coin,3;
 			close;
 		}
 	}
@@ -4560,7 +4560,7 @@ mora,115,98,0	script	Hotcha#pa0829	4_ELEPHANT,{
 }
 
 mora,119,103,4	script	Bow-wow#pa0829	4_M_DOGTRAVELER,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -4668,7 +4668,7 @@ mora,119,103,4	script	Bow-wow#pa0829	4_M_DOGTRAVELER,{
 }
 
 mora,119,118,4	script	General Good Dealer#pa0	4_M_RAFLE_GR,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -4749,14 +4749,14 @@ L_CheckQuest:
 			getexp 0, ((JobLevel < 50)?JobLevel * JobLevel * (110/100) * 50:0);
 		else
 			getexp 0, ((JobLevel < 70)?JobLevel * JobLevel * (110/100) * 10:0);
-		getitem 6380,1; //Mora_Coin
+		getitem Mora_Coin,1;
 		close;
 	}
 	return;
 }
 
 mora,124,108,7	script	Woof-grrr#pa0829	4_M_DOGTRAVELER2,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -4864,7 +4864,7 @@ mora,124,108,7	script	Woof-grrr#pa0829	4_M_DOGTRAVELER2,{
 }
 
 mora,127,112,4	script	Commodities Dealer#pa08	4_F_RAFLE_PK,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -4945,14 +4945,14 @@ L_CheckQuest:
 			getexp 0, ((JobLevel < 50)?JobLevel * JobLevel * (110/100) * 50:0);
 		else
 			getexp 0, ((JobLevel < 70)?JobLevel * JobLevel * (110/100) * 10:0);
-		getitem 6380,1; //Mora_Coin
+		getitem Mora_Coin,1;
 		close;
 	}
 	return;
 }
 
 mora,170,101,4	script	Soul Guide#pa0829	4_F_DOGTRAVELER,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of things with you to do that. Throw out some of them and try again.";
 		close;
 	}
@@ -5135,7 +5135,7 @@ function	script	mora_remains	{
 			next;
 			mes "You picked up "+getarg(2)+" Mora Coins next to the remains.";
 			specialeffect2 EF_STEAL;
-			getitem 6380,getarg(2); //Mora_Coin
+			getitem Mora_Coin,getarg(2);
 		}
 		close;
 	}
@@ -5179,13 +5179,13 @@ mora,116,165,5	script	Knights Boss#mo	4_M_RAFLE_VI,{
 		close;
 	} else if (.@playtime == 2)
 		erasequest 1119;
-	if (checkweight(6380,1) == 0) {
+	if (checkweight(Mora_Coin,1) == 0) {
 		mes "[Order of the Knights Boss]";
 		mes "You have a lot of things with you!";
 		mes "Why not dump some of them in my pocket?";
 		close;
 	}
-	if (countitem(12561) >= 200) {
+	if (countitem(Mysterious_Seed) >= 200) {
 		mes "[Order of the Knights Boss]";
 		mes "So you've brought back";
 		mes "200 ^FF0000Mysterious Seeds^000000.";
@@ -5198,8 +5198,8 @@ mora,116,165,5	script	Knights Boss#mo	4_M_RAFLE_VI,{
 		mes "You made sure everyone knows";
 		mes "it's the Order of the Neighborhood Knights's work, right?";
 		setquest 1119;
-		delitem 12561,200; //Mysterious_Seed
-		getitem 6380,1; //Mora_Coin
+		delitem Mysterious_Seed,200;
+		getitem Mora_Coin,1;
 		close;
 	}
 	mes "[Order of the Knights Boss]";
@@ -5233,7 +5233,7 @@ mora,116,165,5	script	Knights Boss#mo	4_M_RAFLE_VI,{
 }
 
 mora,114,163,5	script	Knights Head#mo	4_M_RAFLE_OR,{
-	if (checkweight(6380,1) == 0) {
+	if (checkweight(Mora_Coin,1) == 0) {
 		mes "[Order of the Knights Head]";
 		mes "You have a lot of things with you!";
 		mes "Why not dump some of them in my pocket?";
@@ -5300,7 +5300,7 @@ mora,114,163,5	script	Knights Head#mo	4_M_RAFLE_OR,{
 			close;
 		}
 	} else if (ep14_1_rope == 12) {
-		if (countitem(6383) < 30) {
+		if (countitem(Clue_Of_Lope) < 30) {
 			mes "[Order of the Knights Head]";
 			mes "You still haven't gathered";
 			mes "^0000FFLope's Clues^000000?";
@@ -5329,9 +5329,9 @@ mora,114,163,5	script	Knights Head#mo	4_M_RAFLE_OR,{
 		mes "It's too much for us.";
 		mes "It's no use trying to do it.";
 		completequest 1118;
-		delitem 6383,30; //Clue_Of_Lope
+		delitem Clue_Of_Lope,30;
 		ep14_1_rope = 13;
-		getitem 6380,2; //Mora_Coin
+		getitem Mora_Coin,2;
 		getexp 1000000,1000000;
 		close;
 	} else if (ep14_1_rope > 12) {

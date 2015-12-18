@@ -728,7 +728,7 @@ hu_in01,361,103,3	script	Tone-deaf person	4_M_CASMAN1,{
 
 tha_scene01,140,200,0	script	#min_receipt	HIDDEN_WARP_NPC,3,3,{
 OnTouch:
-	if (job_min == 10 || (job_min == 11 && countitem(6271) == 0)) {
+	if (job_min == 10 || (job_min == 11 && countitem(Mins_Receipt) == 0)) {
 		mes "-There is a piece of paper on the ground.-";
 		next;
 		mes "["+strcharinfo(0)+"]";
@@ -749,7 +749,7 @@ OnTouch:
 		mes "- Juno's store manager : Mr. Click.";
 		next;
 		mes "- Directions : Around Juno's plaza.";
-		getitem 6271,1; //Mins_Receipt
+		getitem Mins_Receipt,1;
 		next;
 		mes "["+strcharinfo(0)+"]";
 		mes "Photo exchange receipt?";
@@ -948,7 +948,7 @@ yuno,143,170,6	script	Mr. Click#job_min	4_M_ALCHE_A,{
 		mes "I'll get the 33 Teddy Bears.";
 		donpcevent "Karian#cmd2::OnDisable";
 		job_min = 12;
-		getitem 6270,1; //Mins_Picture
+		getitem Mins_Picture,1;
 		changequest 11144,11145;
 		close;
 	} else if (job_min == 12) {
@@ -1804,7 +1804,7 @@ OnTouch:
 			mes "You should use them.";
 			close;
 		}
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 			mes "^3355FFWait a minute! You're";
 			mes "carrying too many items";
 			mes "right now, store some of";
@@ -1845,7 +1845,7 @@ OnTouch:
 
 prt_in,94,172,4	script	Karian#job_min3	4_M_MINSTREL1,{
 	if (job_min == 27) {
-		if (checkweight(1201,1) == 0 || MaxWeight - Weight < 3500) {
+		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 3500) {
 			mes "While you are on a trip, you gain lots of stuff. Make yourself lighter.";
 			close;
 		}
@@ -1898,8 +1898,8 @@ prt_in,94,172,4	script	Karian#job_min3	4_M_MINSTREL1,{
 		job_min = 100;
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		completequest 11154;
-		getitem 5751,1; //Minstrel_Song_Hat
-		getitem 2795,1; //Green_Apple_Ring
+		getitem Minstrel_Song_Hat,1;
+		getitem Green_Apple_Ring,1;
 		close;
 	} else if (job_min > 99) {
 		switch(select("Talk.:Leave.")) {

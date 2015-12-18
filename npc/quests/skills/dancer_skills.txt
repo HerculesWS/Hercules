@@ -128,7 +128,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			close;
 		}
 		else if (DANCER_SK == 1) {
-			if (countitem(747) > 0) {
+			if (countitem(Crystal_Mirror) > 0) {
 				mes "[Canell]";
 				mes "Finally, you've come";
 				mes "with the mirror. Now,";
@@ -171,7 +171,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 				mes "sky rocketed. Fortunately,";
 				mes "you've managed to avoid";
 				mes "becoming a prima donna.^000000";
-				delitem 747,1; //Crystal_Mirror
+				delitem Crystal_Mirror,1;
 				DANCER_SK = 2;
 				close;
 			}
@@ -512,7 +512,7 @@ prontera,183,333,1	script	Aelle#qsk_dan02	1_F_PRIEST,{
 			close;
 		}
 		else if (DANCER_SK == 5) {
-			if (countitem(970) > 0 && countitem(512) > 0 && countitem(513) > 2 && countitem(538) > 4 && countitem(736) > 0) {
+			if (countitem(Alchol) > 0 && countitem(Apple) > 0 && countitem(Banana) > 2 && countitem(Well_Baked_Cookie) > 4 && countitem(White_Platter) > 0) {
 				mes "[Aelle]";
 				mes "Great, you've brought";
 				mes "the food! It's a good thing";
@@ -585,11 +585,11 @@ prontera,183,333,1	script	Aelle#qsk_dan02	1_F_PRIEST,{
 				percentheal -10,0;
 				specialeffect2 EF_HIT2;
 				emotion e_dots,1;
-				delitem 970,1; //Alchol
-				delitem 512,1; //Apple
-				delitem 513,3; //Banana
-				delitem 538,5; //Well_Baked_Cookie
-				delitem 736,1; //White_Platter
+				delitem Alchol,1;
+				delitem Apple,1;
+				delitem Banana,3;
+				delitem Well_Baked_Cookie,5;
+				delitem White_Platter,1;
 				DANCER_SK = 6;
 				close;
 			}

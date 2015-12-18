@@ -42,7 +42,7 @@
 //=========================================================================
 
 morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
@@ -343,7 +343,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 57) {
-		if (countitem(7333) > 0 && countitem(7334) > 0) {
+		if (countitem(Piece_Of_Slate_1) > 0 && countitem(Piece_Of_Slate_2) > 0) {
 			mes "[Sir Chilias'Tyus]";
 			mes "While you were gone,";
 			mes "I felt a little bad that you";
@@ -377,7 +377,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "greatest wish and forever";
 			mes "seal away the Hellion's gem.";
 			HELLIONQ = 58;
-			getitem 7335,1; //Piece_Of_Slate_3
+			getitem Piece_Of_Slate_3,1;
 			next;
 			mes "[Sir Chilias'Tyus]";
 			mes "When you get to Geffen,";
@@ -408,7 +408,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 66) {
-		if (countitem(7333) > 0 && countitem(7334) > 0 && countitem(7335) > 0 && countitem(7336) > 0) {
+		if (countitem(Piece_Of_Slate_1) > 0 && countitem(Piece_Of_Slate_2) > 0 && countitem(Piece_Of_Slate_3) > 0 && countitem(Piece_Of_Slate_4) > 0) {
 			mes "[Sir Chilias'Tyus]";
 			mes "You have all four";
 			mes "pieces of the tablet?";
@@ -449,7 +449,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 68) {
-		if (countitem(7332) > 0 && countitem(7337) > 0) {
+		if (countitem(Slate) > 0 && countitem(Eye_Of_Hellion) > 0) {
 			mes "[Sir Chilias'Tyus]";
 			mes "At long last. We have";
 			mes "everything. The Tablet";
@@ -560,11 +560,11 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "in check. I trust that you will";
 			mes "keep its secret and protect it";
 			mes "from those motivated by greed.";
-			delitem 7332,1; //Slate
-			delitem 7337,countitem(7337); //Eye_Of_Hellion
+			delitem Slate,1;
+			delitem Eye_Of_Hellion,countitem(Eye_Of_Hellion);
 			HELLIONQ = 69;
-			getitem 2658,1; //Nile_Rose_
-			getitem 603,1; //Old_Blue_Box
+			getitem Nile_Rose_,1;
+			getitem Old_Blue_Box,1;
 			getexp RENEWAL_EXP?120000:1200000,0;
 			next;
 			mes "[Sir Chilias'Tyus]";
@@ -583,7 +583,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "through its strange powers.^000000";
 			close;
 		}
-		else if (countitem(7332) > 0) {
+		else if (countitem(Slate) > 0) {
 			mes "[Sir Chilias'Tyus]";
 			mes "At long last. We have";
 			mes "everything. The Tablet";
@@ -629,9 +629,9 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "in check. I trust that you will";
 			mes "keep its secret and protect it";
 			mes "from those motivated by greed.";
-			delitem 7332,1; //Slate
+			delitem Slate,1;
 			HELLIONQ = 70;
-			getitem 2658,1; //Nile_Rose_
+			getitem Nile_Rose_,1;
 			getexp RENEWAL_EXP?100000:1000000,0;
 			next;
 			mes "[Sir Chilias'Tyus]";
@@ -651,7 +651,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		close;
 	}
 	else if (HELLIONQ > 68 && HELLIONQ < 71) {
-		if (countitem(7337) > 0) {
+		if (countitem(Eye_Of_Hellion) > 0) {
 			mes "[Sir Chilias'Tyus]";
 			mes "Long time no see. So, are you doing well to keep the promise with me?";
 			mes "Please handle it with care";
@@ -661,7 +661,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "You still have the Hellion's Eye.";
 			mes "I can see the pain in your eyes.";
 			mes "Let me lighten your burden. It will be better this way.";
-			delitem 7337,countitem(7337); //Eye_Of_Hellion
+			delitem Eye_Of_Hellion,countitem(Eye_Of_Hellion);
 			next;
 			mes "[Sir Chilias'Tyus]";
 			mes "May God bless you.";
@@ -678,7 +678,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 	close;
 
 OnTouch:
-	if (HELLIONQ == 57 && countitem(7334) > 0) {
+	if (HELLIONQ == 57 && countitem(Piece_Of_Slate_2) > 0) {
 		specialeffect2 EF_HEAL2;
 		specialeffect EF_HEAL2;
 		mes "^3355FFOne of the Tablet Pieces";
@@ -691,7 +691,7 @@ OnTouch:
 }
 
 prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
@@ -871,7 +871,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 			mes "And give this to the old guy";
 			mes "to prove I found it, will you?";
 			HELLIONQ = 41;
-			getitem 7093,1; //Wheel
+			getitem Wheel,1;
 			next;
 			mes "[Clanux Heffron]";
 			mes "That's all I know.";
@@ -903,7 +903,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "to me and let me know!";
 		mes "That's an order, got it?";
 		HELLIONQ = 41;
-		getitem 7093,1; //Wheel
+		getitem Wheel,1;
 		close;
 	}
 	else if (HELLIONQ == 41) {
@@ -943,7 +943,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "that clue, the sooner I'll";
 		mes "get that Hellion's gem.";
 		HELLIONQ = 43;
-		getitem 7093,1; //Wheel
+		getitem Wheel,1;
 		close;
 	}
 	else if (HELLIONQ == 43) {
@@ -1172,7 +1172,7 @@ OnTouch:
 }
 
 prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
@@ -1185,7 +1185,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 		mes "cogwheel that you have";
 		mes "would fit perfectly in it...^000000";
 		next;
-		if (countitem(7093) > 0) {
+		if (countitem(Wheel) > 0) {
 			if (select("Insert Cogwheel.:Ignore it.") == 1) {
 				mes "[" + strcharinfo(0) + "]";
 				mes "I just know this";
@@ -1201,7 +1201,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 				mes "turned, the device hums";
 				mes "to life and a panel opens,";
 				mes "revealing a numeric keypad.^000000";
-				delitem 7093,1; //Wheel
+				delitem Wheel,1;
 				HELLIONQ = 44;
 				next;
 				mes "[" + strcharinfo(0) + "]";
@@ -1235,7 +1235,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 					mes "and confirm that this was";
 					mes "made by his grandfather...^000000";
 					HELLIONQ = 45;
-					getitem 7333,1; //Piece_Of_Slate_1
+					getitem Piece_Of_Slate_1,1;
 					close;
 				}
 				mes "The machine responds to";
@@ -1286,7 +1286,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 			mes "and confirm that this was";
 			mes "made by his grandfather...^000000";
 			HELLIONQ = 45;
-			getitem 7333,1; //Piece_Of_Slate_1
+			getitem Piece_Of_Slate_1,1;
 			close;
 		}
 		mes "[" + strcharinfo(0) + "]";
@@ -1303,7 +1303,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 }
 
 payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
@@ -1391,10 +1391,10 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 					mes "I guess you can ask me later~";
 					Zeny -= 10000;
 					HELLIONQ = 48;
-					getitem 953,1; //Stone_Heart
-					getitem 511,1; //Green_Herb
-					getitem 533,1; //Grape_Juice
-					getitem 1049,1; //Skirt_Of_Virgin
+					getitem Stone_Heart,1;
+					getitem Green_Herb,1;
+					getitem Grape_Juice,1;
+					getitem Skirt_Of_Virgin,1;
 					close;
 				}
 				mes "[Grout'he]";
@@ -1731,7 +1731,7 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 		mes "can I do about all of";
 		mes "this nasty dirt in the air?";
 		next;
-		if (countitem(953) > 0 && countitem(533) > 0 && countitem(511) > 0 && countitem(1049) > 0) {
+		if (countitem(Stone_Heart) > 0 && countitem(Grape_Juice) > 0 && countitem(Green_Herb) > 0 && countitem(Skirt_Of_Virgin) > 0) {
 			mes "[" + strcharinfo(0) + "]";
 			mes "Well, there are all these";
 			mes "clues Grout'he found. It sucks,";
@@ -1760,10 +1760,10 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 			mes "it. Fortunately, the juice from";
 			mes "the Green Herb makes the";
 			mes "engraving appear more clearly.^000000";
-			delitem 953,1; //Stone_Heart
-			delitem 511,1; //Green_Herb
-			delitem 533,1; //Grape_Juice
-			delitem 1049,1; //Skirt_Of_Virgin
+			delitem Stone_Heart,1;
+			delitem Green_Herb,1;
+			delitem Grape_Juice,1;
+			delitem Skirt_Of_Virgin,1;
 			HELLIONQ = 54;
 			next;
 			mes "[Stone Engraving]";
@@ -1809,7 +1809,7 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 }
 
 pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
@@ -1880,7 +1880,7 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 			mes "tablet that will lead you";
 			mes "to the Hellion's gem.";
 			HELLIONQ = 57;
-			getitem 7334,1; //Piece_Of_Slate_2
+			getitem Piece_Of_Slate_2,1;
 			close;
 		case 4:
 			mes "[Echoing Voice]";
@@ -1895,7 +1895,7 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 	}
 
 OnTouch:
-	if (HELLIONQ == 56 && countitem(7333) > 0) {
+	if (HELLIONQ == 56 && countitem(Piece_Of_Slate_1) > 0) {
 		specialeffect2 EF_HEAL2;
 		specialeffect EF_HEAL2;
 		mes "^3355FFThe piece of tablet";
@@ -1908,7 +1908,7 @@ OnTouch:
 }
 
 geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
-	if ((MaxWeight-Weight) < 2000 || checkweight(1201,1) == 0) {
+	if ((MaxWeight-Weight) < 2000 || checkweight(Knife,1) == 0) {
 		mes "^3355FFHold it right there!";
 		mes "You're carrying too many items and don't have enough inventory space to receive any rewards. Please make more inventory space available and come back to take this challenge.";
 		close;
@@ -1999,7 +1999,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 61) {
-		if (countitem(504) > 0) {
+		if (countitem(White_Potion) > 0) {
 			mes "[Welshyun]";
 			mes "Oh, a White Potion?";
 			mes "Yes, may I please have";
@@ -2028,7 +2028,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 			mes "please remember that.";
 			mes "Ah, and my student's";
 			mes "name is Enoz.";
-			delitem 504,1; //White_Potion
+			delitem White_Potion,1;
 			HELLIONQ = 62;
 			close;
 		}
@@ -2091,7 +2091,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 65) {
-		if (countitem(717) > 0) {
+		if (countitem(Blue_Gemstone) > 0) {
 			mes "[Welshyun]";
 			mes "Thank you. You've";
 			mes "brought the book to Enoz";
@@ -2115,9 +2115,9 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 				mes "you are brave. As promised,";
 				mes "you may have this piece of";
 				mes "the tablet, which I've already found. The clues were too simple...";
-				delitem 717,1; //Blue_Gemstone
+				delitem Blue_Gemstone,1;
 				HELLIONQ = 66;
-				getitem 7336,1; //Piece_Of_Slate_4
+				getitem Piece_Of_Slate_4,1;
 				next;
 				mes "[Welshyun]";
 				mes "Please send my regards";
@@ -2154,7 +2154,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 		close;
 	}
 	else if (HELLIONQ == 67) {
-		if (countitem(7333) > 0 && countitem(7334) > 0 && countitem(7335) > 0 && countitem(7336) > 0) {
+		if (countitem(Piece_Of_Slate_1) > 0 && countitem(Piece_Of_Slate_2) > 0 && countitem(Piece_Of_Slate_3) > 0 && countitem(Piece_Of_Slate_4) > 0) {
 			mes "[Welshyun]";
 			mes "Hm? Did you need";
 			mes "me to combine all four";
@@ -2188,12 +2188,12 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 			mes "complete tablet.";
 			mes "Please bring this";
 			mes "safely back to Chilias.";
-			delitem 7333,1; //Piece_Of_Slate_1
-			delitem 7334,1; //Piece_Of_Slate_2
-			delitem 7335,1; //Piece_Of_Slate_3
-			delitem 7336,1; //Piece_Of_Slate_4
+			delitem Piece_Of_Slate_1,1;
+			delitem Piece_Of_Slate_2,1;
+			delitem Piece_Of_Slate_3,1;
+			delitem Piece_Of_Slate_4,1;
 			HELLIONQ = 68;
-			getitem 7332,1; //Slate
+			getitem Slate,1;
 			next;
 			mes "[Welshyun]";
 			mes "Wait, take a look!";
@@ -2264,7 +2264,7 @@ geffen,110,200,3	script	Sage Welshyun#hellion	4_M_SAGE_A,3,3,{
 	}
 
 OnTouch:
-	if (HELLIONQ == 58 && countitem(7335) > 0) {
+	if (HELLIONQ == 58 && countitem(Piece_Of_Slate_3) > 0) {
 		specialeffect2 EF_HEAL2;
 		specialeffect EF_HEAL2;
 		mes "^3355FFThe piece of tablet";
@@ -2443,7 +2443,7 @@ gef_fild09,296,59,0	script	Hidden Cave#hellion	HIDDEN_NPC,3,3,{
 	}
 
 OnTouch:
-	if (HELLIONQ == 68 && countitem(7332) > 0) {
+	if (HELLIONQ == 68 && countitem(Slate) > 0) {
 		specialeffect2 EF_HEAL2;
 		specialeffect EF_HEAL2;
 		mes "^3355FFThe tablet in your";

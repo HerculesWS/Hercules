@@ -408,7 +408,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 		mes "^3355FFYou better fulfill Kain's request to find his wife's journal in Einbech before you speak to him again.^000000";
 		close;
 	} else if (kain_ticket == 14) {
-		if (countitem(7276)==1) {
+		if (countitem(Picture_Letter)==1) {
 			mes "^3355FFYou gave Kain his wife's journal and told him that Tarsha really is is daughter, and currently has a job in Einbech.^000000";
 			next;
 			mes "^3355FFKain's eyes welled with tears as he trembled with joy.^000000";
@@ -534,7 +534,7 @@ OnTouch:
 		close;
 	} else if (kain_ticket == 13) {
 		next;
-		if (checkweight(7276,1) == 0) {
+		if (checkweight(Picture_Letter,1) == 0) {
 			mes "[Elle Cherno]";
 			mes "Hey! I have something to give you, but you have too much stuff already. Will you come back later?";
 			close;
@@ -553,7 +553,7 @@ OnTouch:
 			mes "in your hand.^000000";
 			changequest 2084,2085;
 			kain_ticket = 14;
-			getitem 7276, 1; //Picture_Letter
+			getitem Picture_Letter, 1;
 			close;
 		}
 	}
@@ -2250,7 +2250,7 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 			cutin "",255;
 			end;
 		} else if (lght_air == 3) {
-			if (countitem(7340) >= 2 && countitem(576) >= 2) {
+			if (countitem(Will_Of_Darkness) >= 2 && countitem(Prickly_Fruit) >= 2) {
 				delitem 7340, 2;
 				delitem 576, 2;
 				changequest 8033,8034;
@@ -2504,7 +2504,7 @@ airplane,236,63,4	script	Hallen	4_M_KID1,{
 			mes "I do. You and me, we're";
 			mes "on the same wavelength~";
 			next;
-			if (checkweight(501,1) != 1) {
+			if (checkweight(Red_Potion,1) != 1) {
 				mes "[Hallen]";
 				mes "Oh... Hey, I was";
 				mes "going to give you";
@@ -2693,7 +2693,7 @@ airplane,236,63,4	script	Hallen	4_M_KID1,{
 		mes "the trouble of learning that";
 		mes "secret information for me...";
 		next;
-		if (checkweight(501,1) != 1) {
+		if (checkweight(Red_Potion,1) != 1) {
 			mes "[Hallen]";
 			mes "Aw, nuts...";
 			mes "You don't have";

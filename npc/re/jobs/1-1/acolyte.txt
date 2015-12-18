@@ -109,7 +109,7 @@ prt_church,184,41,4	script	Cleric#aco	1_M_PASTOR,{
 			mes "[Father Mareusis]";
 			mes "Always remember to be thankful to God, who takes care of us all the time. In chaos and times of difficulty, face your hardships with unwavering faith.";
 			callfunc "Job_Change",Job_Acolyte;
-			getitem 1545,1;	// N_Mace
+			getitem N_Mace,1;	// N_Mace
 			next;
 			mes "[Father Mareusis]";
 			mes "Lastly, I want to sincerely congratulate you on persevering through your trial of penance.";

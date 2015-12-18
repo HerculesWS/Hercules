@@ -80,13 +80,13 @@ einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 		next;
 		switch(select("Yes.:No, not yet.")) {
 		case 1:
-			if ((countitem(1011) > 9) && (countitem(1003) > 2) && (countitem(912) > 9) && (countitem(7126) > 39)) {
+			if ((countitem(Emveretarcon) > 9) && (countitem(Coal) > 2) && (countitem(Zargon) > 9) && (countitem(Large_Jellopy) > 39)) {
 				mes "[Cavitar]";
 				mes "Let me check the items";
 				mes "that you brought before";
 				mes "I give you an Oridecon.";
 				next;
-				if (checkweight(618,1)) {
+				if (checkweight(Worn_Out_Scroll,1)) {
 					mes "[Cavitar]";
 					mes "Good, you brought";
 					mes "everything! Now let me";
@@ -98,12 +98,12 @@ einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 					mes "Alright then,";
 					mes "adventurer. I hope";
 					mes "you travel in safety.";
-					delitem 1003,3;  //Coal
-					delitem 7126,40;  //Large_Jellopy
-					delitem 1011,10;  //Emveretarcon
-					delitem 912,10;  //Zargon
+					delitem Coal,3;
+					delitem Large_Jellopy,40;
+					delitem Emveretarcon,10;
+					delitem Zargon,10;
 					ein_gear1 = 0;
-					getitem 615,1; // Oridecon
+					getitem Oridecon_Hammer,1; // Oridecon
 					close;
 				}
 				else {
@@ -245,7 +245,7 @@ einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 					next;
 					switch(select("Help Him.:Quit.")) {
 					case 1:
-						if (checkweight(908,10) == 0) {
+						if (checkweight(Spawn,10) == 0) {
 							mes "[Cavitar]";
 							mes "Hmmm, it seems you're";
 							mes "carrying too many things";
@@ -280,25 +280,25 @@ einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 									ein_gear1 = 2;
 									switch(rand(1,7)) {
 									case 1:
-										getitem 7290,1; // Phlogopite
+										getitem Phlogopite,1; // Phlogopite
 										break;
 									case 2:
-										getitem 7291,1; // Agate
+										getitem Agate,1; // Agate
 										break;
 									case 3:
-										getitem 7293,1; // Rose_Quartz
+										getitem Rose_Quartz,1; // Rose_Quartz
 										break;
 									case 4:
-										getitem 7294,1; // Turquoise
+										getitem Turquoise,1; // Turquoise
 										break;
 									case 5:
-										getitem 7295,1; // Citrine
+										getitem Citrine,1; // Citrine
 										break;
 									case 6:
-										getitem 7296,1; // Pyroxene
+										getitem Pyroxene,1; // Pyroxene
 										break;
 									case 7:
-										getitem 7289,1; // Olivine
+										getitem Olivine,1; // Olivine
 									}
 									next;
 									mes "[Cavitar]";
@@ -358,7 +358,7 @@ einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 										mes "as a token of";
 										mes "my gratitude.";
 										Zeny -= 1000;
-										getitem 1010,1; // Phracon
+										getitem Phracon,1; // Phracon
 										close;
 									}
 								}
@@ -412,7 +412,7 @@ einbech,97,167,5	script	Cavitar	4_M_EINOLD,{
 									mes "as a token of";
 									mes "my gratitude.";
 									Zeny -= 1000;
-									getitem 1010,1; // Phracon
+									getitem Phracon,1; // Phracon
 									close;
 								}
 							}
@@ -505,7 +505,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					next;
 					break;
 				}
-				if (checkweight(908,200) == 0) {
+				if (checkweight(Spawn,200) == 0) {
 					mes "[Uwe]";
 					mes "Oh, I was going to give";
 					mes "you a little something,";
@@ -516,7 +516,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					close;
 				}
 				ein_cook = 219;
-				getitem 612,10; //Portable_Furnace
+				getitem Portable_Furnace,10;
 				mes "[Uwe]";
 				mes "I had these lying";
 				mes "around, so why don't";
@@ -552,8 +552,8 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				next;
 				switch(select("There you go.:I want to quit.:Can I do it later?")) {
 				case 1:
-					if (countitem(7126) > 5) {
-						if (checkweight(908,199) == 0) {
+					if (countitem(Large_Jellopy) > 5) {
+						if (checkweight(Spawn,199) == 0) {
 							mes "[Uwe]";
 							mes "Oh, I was going to give";
 							mes "you a little something,";
@@ -567,10 +567,10 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						mes "Thank you ^EEA9B8so^000000 much!";
 						mes "Here's the Coal I promised~";
 						mes "Oh, and take these Mini Furnaces. They were just lying around, so you know, I thought, well, why don't you take them? *Tee hee hee~*";
-						delitem 7126,6; //Large_Jellopy
+						delitem Large_Jellopy,6;
 						ein_cook = 219;
-						getitem 1003,1; //Coal
-						getitem 612,10; //Portable_Furnace
+						getitem Coal,1;
+						getitem Portable_Furnace,10;
 						next;
 						mes "[Uwe]";
 						mes "I hope you enjoy!";
@@ -581,7 +581,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						mes "sweaty^000000. Ooh, how exciting~!";
 						close;
 					}
-					else if (countitem(7126) > 0) {
+					else if (countitem(Large_Jellopy) > 0) {
 						mes "[Uwe]";
 						mes "Ooh, you're missing";
 						mes "some. I guess you can";
@@ -595,7 +595,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						}
 						switch(select("Give him all.:Cancel.")) {
 						case 1:
-							if (checkweight(1201,1) == 0) {
+							if (checkweight(Knife,1) == 0) {
 								mes "[Uwe]";
 								mes "Oh, I was going to give";
 								mes "you a little something,";
@@ -609,7 +609,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 							mes "Just kidding~";
 							mes "Don't be so nervous, I don't really need those anymore. But since I know you're hard working, I'll throw in a little something extra...";
 							next;
-							if (checkweight(908,220) == 0) {
+							if (checkweight(Spawn,220) == 0) {
 								mes "[Uwe]";
 								mes "Oh, I was going to give";
 								mes "you a little something,";
@@ -627,13 +627,13 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 								mes "I usually give you cutie Blacksmiths 10 Mini Furnaces, but you can have ^EEA9B811^000000. There's the little something extra I was talking about.";
 							}
 							ein_cook = 219;
-							getitem 612,11; //Portable_Furnace
+							getitem Portable_Furnace,11;
 							next;
 							mes "[Uwe]";
 							mes "I know it's not very extravagant, but these will come in handy next time you're smithing. So make the best use of them, 'kay?";
 							close;
 						case 2:
-							if (checkweight(1201,1) == 0) {
+							if (checkweight(Knife,1) == 0) {
 								mes "[Uwe]";
 								mes "Oh, I was going to give";
 								mes "you a little something,";
@@ -661,7 +661,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 							}
 							break;
 						}
-						if (checkweight(908,100) == 0) {
+						if (checkweight(Spawn,100) == 0) {
 							next;
 							mes "Oh, I was going to give";
 							mes "you a little something,";
@@ -672,7 +672,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 							close;
 						}
 						ein_cook = 219;
-						getitem 612,5; //Portable_Furnace
+						getitem Portable_Furnace,5;
 						next;
 						mes "[Uwe]";
 						mes "I know it's not very extravagant, but these will come in handy next time you're smithing. So make the best use of them, 'kay?";
@@ -689,7 +689,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						close;
 					}
 				case 2:
-					if (checkweight(908,200) == 0) {
+					if (checkweight(Spawn,200) == 0) {
 						mes "[Uwe]";
 						mes "Oh, I was going to give";
 						mes "you a little something,";
@@ -715,7 +715,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						mes "...You ^EEA9B8naughty girl^000000.";
 					}
 					ein_cook = 219;
-					getitem 612,10; //Portable_Furnace
+					getitem Portable_Furnace,10;
 					next;
 					mes "[Uwe]";
 					mes "I know it's not very extravagant, but these will come in handy next time you're smithing. So make the best use of them, 'kay?";
@@ -726,7 +726,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					next;
 					switch(select("Here you go~:I want to quit.")) {
 					case 1:
-						if (checkweight(908,199) == 0) {
+						if (checkweight(Spawn,199) == 0) {
 							mes "[Uwe]";
 							mes "Oh, I was going to give";
 							mes "you a little something,";
@@ -736,18 +736,18 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 							mes "in your Kafra Storage?";
 							close;
 						}
-						if (countitem(7126) > 5) {
+						if (countitem(Large_Jellopy) > 5) {
 							mes "[Uwe]";
 							mes "Thank you ^EEA9B8so^000000 much!";
 							mes "Here's the Coal I promised~";
 							mes "Oh, and take these Mini Furnaces. They were just lying around, so you know, I thought, well, why don't you take them? *Tee hee hee~*";
-							delitem 7126,6; //Large_Jellopy
+							delitem Large_Jellopy,6;
 							ein_cook = 219;
-							getitem 1003,1; //Coal
-							getitem 612,10; //Portable_Furnace
+							getitem Coal,1;
+							getitem Portable_Furnace,10;
 							close;
 						}
-						else if (countitem(7126) > 0) {
+						else if (countitem(Large_Jellopy) > 0) {
 							mes "[Uwe]";
 							mes "Ooh, you're missing";
 							mes "some. I guess you can";
@@ -761,7 +761,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 							}
 							switch(select("Give them all.:Cancel.")) {
 							case 1:
-								if (checkweight(908,220) == 0) {
+								if (checkweight(Spawn,220) == 0) {
 									mes "[Uwe]";
 									mes "Oh, I was going to give";
 									mes "you a little something,";
@@ -783,13 +783,13 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 									mes "I usually give you cutie Blacksmiths 10 Mini Furnaces, but you can have ^EEA9B811^000000. There's the little something extra I was talking about.";
 								}
 								ein_cook = 219;
-								getitem 612,11; //Portable_Furnace
+								getitem Portable_Furnace,11;
 								next;
 								mes "[Uwe]";
 								mes "I know it's not very extravagant, but these will come in handy next time you're smithing. So make the best use of them, 'kay?";
 								close;
 							case 2:
-								if (checkweight(908,200) == 0) {
+								if (checkweight(Spawn,200) == 0) {
 									mes "[Uwe]";
 									mes "Oh, I was going to give";
 									mes "you a little something,";
@@ -812,7 +812,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 									mes "...you ^EEA9B8naughty girl^000000.";
 								}
 								ein_cook = 219;
-								getitem 612,10; //Portable_Furnace
+								getitem Portable_Furnace,10;
 								next;
 								mes "[Uwe]";
 								mes "This Portable Furnace is not expensive";
@@ -833,7 +833,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 							close;
 						}
 					case 2:
-						if (checkweight(908,200) == 0) {
+						if (checkweight(Spawn,200) == 0) {
 							mes "[Uwe]";
 							mes "Oh, I was going to give";
 							mes "you a little something,";
@@ -861,7 +861,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 							}
 						}
 						ein_cook = 219;
-						getitem 612,10; //Portable_Furnace
+						getitem Portable_Furnace,10;
 						next;
 						mes "[Uwe]";
 						mes "I know it's not very extravagant, but these will come in handy next time you're smithing. So make the best use of them, 'kay?";
@@ -935,7 +935,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					mes "so please have one, 'kay?";
 					mes "Welcome to Einbroch, cutie~";
 					ein_cook = 1;
-					getitem 1011,1; //Emveretarcon
+					getitem Emveretarcon,1;
 					break;
 				case 2:
 					mes "[Uwe]";
@@ -959,7 +959,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					mes "Steel. Why don't you have 2 of";
 					mes "them as my little way of saying, ''Welcome to Einbroch, cutie~!''";
 					ein_cook = 3;
-					getitem 998,2; //Iron
+					getitem Iron,2;
 					break;
 				case 3:
 					mes "[Uwe]";
@@ -996,7 +996,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					mes "so please have one, 'kay?";
 					mes "Welcome to Einbroch, cutie~";
 					ein_cook = 5;
-					getitem 1011,1; //Emveretarcon
+					getitem Emveretarcon,1;
 					break;
 				case 4:
 					mes "[Uwe]";
@@ -1025,7 +1025,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					mes "my way of saying ''Welcome";
 					mes "to Einbroch, sugar honey~''";
 					ein_cook = 7;
-					getitem 613,1; //Iron_Hammer
+					getitem Iron_Hammer,1;
 					break;
 				}
 				next;
@@ -1156,7 +1156,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						mes "new hammers today.";
 						mes "Would you like a couple?";
 						next;
-						if (checkweight(908,50) == 0) {
+						if (checkweight(Spawn,50) == 0) {
 							mes "[Uwe]";
 							mes "Mmmm...?";
 							mes "You're holding too many";
@@ -1167,8 +1167,8 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 							close;
 						}
 						ein_cook = 11;
-						getitem 614,1; //Golden_Hammer
-						getitem 613,1; //Iron_Hammer
+						getitem Golden_Hammer,1;
+						getitem Iron_Hammer,1;
 						mes "[Uwe]";
 						mes "Well, I hope";
 						mes "you like them~";
@@ -1269,7 +1269,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						mes "new hammers today.";
 						mes "Would you like a couple?";
 						next;
-						if (checkweight(908,50) == 0) {
+						if (checkweight(Spawn,50) == 0) {
 							mes "[Uwe]";
 							mes "Mmmm...?";
 							mes "You're holding too many";
@@ -1280,8 +1280,8 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 							close;
 						}
 						ein_cook = 13;
-						getitem 614,1; //Golden_Hammer
-						getitem 613,1; //Iron_Hammer
+						getitem Golden_Hammer,1;
+						getitem Iron_Hammer,1;
 						mes "[Uwe]";
 						mes "Well, I hope";
 						mes "you like them~";
@@ -1385,7 +1385,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						mes "new hammers today.";
 						mes "Would you like a couple?";
 						next;
-						if (checkweight(908,50) == 0) {
+						if (checkweight(Spawn,50) == 0) {
 							mes "[Uwe]";
 							mes "Mmmm...?";
 							mes "You're holding too many";
@@ -1396,8 +1396,8 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 							close;
 						}
 						ein_cook = 15;
-						getitem 614,1; //Golden_Hammer
-						getitem 613,1; //Iron_Hammer
+						getitem Golden_Hammer,1;
+						getitem Iron_Hammer,1;
 						next;
 						mes "[Uwe]";
 						mes "Well, I hope";
@@ -1650,7 +1650,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 						mes "new hammers today.";
 						mes "Would you like a couple?";
 						next;
-						if (checkweight(908,50) == 0) {
+						if (checkweight(Spawn,50) == 0) {
 							mes "[Uwe]";
 							mes "Mmmm...?";
 							mes "You're holding too many";
@@ -1661,8 +1661,8 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 							close;
 						}
 						ein_cook = 19;
-						getitem 614,1; //Golden_Hammer
-						getitem 613,1; //Iron_Hammer
+						getitem Golden_Hammer,1;
+						getitem Iron_Hammer,1;
 						next;
 						mes "[Uwe]";
 						mes "Well, I hope";
@@ -1997,10 +1997,10 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				next;
 				switch(select("Sure.:No, thanks.")) {
 				case 1:
-					if ((countitem(7312) > 29) && (countitem(7126) > 3)) {
-						delitem 7312,30; //Jubilee
-						delitem 7126,4; //Large_Jellopy
-						getitem 1003,1; //Coal
+					if ((countitem(Jubilee) > 29) && (countitem(Large_Jellopy) > 3)) {
+						delitem Jubilee,30;
+						delitem Large_Jellopy,4;
+						getitem Coal,1;
 						mes "[Uwe]";
 						mes "Hooray!";
 						mes "Thank you";
@@ -2057,7 +2057,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 				mes "cookies I just baked~";
 				next;
 				ein_cook = 9;
-				getitem 538,5; //Well_Baked_Cookie
+				getitem Well_Baked_Cookie,5;
 				mes "[Uwe]";
 				mes "Okay, enjoy!";
 				mes "I hope you have";
@@ -2684,19 +2684,19 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 					mes "you a good weapon~";
 					close;
 				case 3:
-					if (countitem(7126) > 5) {
+					if (countitem(Large_Jellopy) > 5) {
 						mes "[Uwe]";
 						mes "Thank you ^EEA9B8so^000000 much!";
 						mes "Here's the Coal I promised~";
-						delitem 7126,6; //Large_Jellopy
+						delitem Large_Jellopy,6;
 						ein_cook += 100;
-						getitem 1003,1; //Coal
+						getitem Coal,1;
 						next;
 					}
 					else {
 						mes "[Uwe]";
 						mes "Huh...?";
-						if (countitem(7126) == 0) {
+						if (countitem(Large_Jellopy) == 0) {
 							mes "You brought";
 							mes "none at all...?";
 						}
@@ -3490,7 +3490,7 @@ ein_in01,67,242,3	script	Zelmeto	4_M_REPAIR,{
 		mes "a little while longer.";
 		close;
 	}
-	if ((EinFactory == 15) && (countitem(7325) > 19) && (countitem(7317) > 9) && (countitem(7319) > 9)) {
+	if ((EinFactory == 15) && (countitem(Tube) > 19) && (countitem(Screw) > 9) && (countitem(Old_Steel_Plate) > 9)) {
 		mes "[Zelmeto]";
 		mes "Ah, it's you again.";
 		mes "It's shameful letting";
@@ -3549,9 +3549,9 @@ ein_in01,67,242,3	script	Zelmeto	4_M_REPAIR,{
 			mes "Go for broke!";
 			mes "Losers are quitters";
 			mes "and quitters are losers!";
-			delitem 7325,20; //Tube
-			delitem 7317,10; //Screw
-			delitem 7319,10; //Old_Steel_Plate
+			delitem Tube,20;
+			delitem Screw,10;
+			delitem Old_Steel_Plate,10;
 			++$EinPolution;
 			completequest 8031;
 			EinFactory = 16;
@@ -5415,10 +5415,10 @@ airplane,31,77,5	script	Drunken Man#ein	4_M_YURI,{
 		mes "Waaaaaahhhhhhhhh!";
 		mes "Apples! My apples!";
 		mes "Apples, I need more...!";
-		if (countitem(512) < 11) {
+		if (countitem(Apple) < 11) {
 			close;
 		}
-		else if ((countitem(512) > 10) && (countitem(512) < 100)) {
+		else if ((countitem(Apple) > 10) && (countitem(Apple) < 100)) {
 			next;
 			mes "["+strcharinfo(0)+"]";
 			mes "Do you want";
@@ -5433,7 +5433,7 @@ airplane,31,77,5	script	Drunken Man#ein	4_M_YURI,{
 			close;
 		}
 		else {
-			delitem 512,countitem(512); //Apple
+			delitem Apple,countitem(Apple);
 			next;
 			mes "["+strcharinfo(0)+"]";
 			mes "Do you want";
@@ -5825,7 +5825,7 @@ OnTouch:
 
 //== Lovers Quest :: ein_ryu ===============================
 ein_in01,31,138,3	script	Calla#ein	4_F_01,{
-	if (checkweight(908,70) == 0) {
+	if (checkweight(Spawn,70) == 0) {
 		mes "^3355FFWait a second!";
 		mes "Right now, you're carrying";
 		mes "too many things with you.";
@@ -5964,7 +5964,7 @@ ein_in01,31,138,3	script	Calla#ein	4_F_01,{
 		completequest 8088;
 		close;
 	}
-	if ((EIN_LOVERQ == 5) && (countitem(712) > 0)) {
+	if ((EIN_LOVERQ == 5) && (countitem(Flower) > 0)) {
 		mes "[Calla]";
 		mes "You've spoken";
 		mes "with Klitzer? How";
@@ -5999,7 +5999,7 @@ ein_in01,31,138,3	script	Calla#ein	4_F_01,{
 			mes "Please tell him that";
 			mes "I really miss him a lot.";
 			mes "^333333*Sob Sob...*^000000";
-			delitem 712,1; //Flower
+			delitem Flower,1;
 			EIN_LOVERQ = 6;
 			changequest 8079,808;
 			close;
@@ -6036,7 +6036,7 @@ ein_in01,31,138,3	script	Calla#ein	4_F_01,{
 		mes "for your help~";
 		EIN_LOVERQ = 3;
 		changequest 8078,8077;
-		getitem 1901,1; //Violin
+		getitem Violin,1;
 		close;
 	}
 	if ((EIN_LOVERQ == 3) || (EIN_LOVERQ == 5)) {
@@ -6079,7 +6079,7 @@ ein_in01,31,138,3	script	Calla#ein	4_F_01,{
 		next;
 		EIN_LOVERQ = 3;
 		changequest 8076,8077;
-		getitem 1901,1; //Violin
+		getitem Violin,1;
 		mes "[Calla]";
 		mes "I'm sorry to trouble you,";
 		mes "but please understand";
@@ -6129,7 +6129,7 @@ ein_in01,200,101,5	script	Klitzer#ein	4_M_EINMAN2,{
 		mes "parents will approve me!";
 		close;
 	}
-	if ((EIN_LOVERQ == 15) && (countitem(7170) > 0)) {
+	if ((EIN_LOVERQ == 15) && (countitem(Tuxedo) > 0)) {
 		mes "[Klitzer]";
 		mes "Waaaah!";
 		mes "What should I wear?!";
@@ -6167,30 +6167,30 @@ ein_in01,200,101,5	script	Klitzer#ein	4_M_EINMAN2,{
 			mes "valuable it is, but I know";
 			mes "that it's pretty rare. It may";
 			mes "even be useful to you later~";
-			delitem 7170,1; //Tuxedo
+			delitem Tuxedo,1;
 			EIN_LOVERQ = 16;
 			changequest 8087,8088;
 			switch(rand(1,7)) {
 			case 1:
-				getitem 7289,1; //Olivine
+				getitem Olivine,1;
 				break;
 			case 2:
-				getitem 7290,1; //Phlogopite
+				getitem Phlogopite,1;
 				break;
 			case 3:
-				getitem 7291,1; //Agate
+				getitem Agate,1;
 				break;
 			case 4:
-				getitem 7293,1; //Rose_Quartz
+				getitem Rose_Quartz,1;
 				break;
 			case 5:
-				getitem 7294,1; //Turquoise
+				getitem Turquoise,1;
 				break;
 			case 6:
-				getitem 7295,1; //Citrine
+				getitem Citrine,1;
 				break;
 			case 7:
-				getitem 7296,1; //Pyroxene
+				getitem Pyroxene,1;
 			}
 			next;
 			mes "[Klitzer]";
@@ -6353,7 +6353,7 @@ ein_in01,200,101,5	script	Klitzer#ein	4_M_EINMAN2,{
 		mes "should be just fine.";
 		close;
 	}
-	if ((EIN_LOVERQ == 3) && (countitem(1901) == 1)) {
+	if ((EIN_LOVERQ == 3) && (countitem(Violin) == 1)) {
 		mes "[Klitzer]";
 		mes "What brings you here?";
 		mes "Aren't you tired of hearing";
@@ -6407,7 +6407,7 @@ ein_in01,200,101,5	script	Klitzer#ein	4_M_EINMAN2,{
 		mes "Hell yeah!";
 		mes "That's the stuff!";
 		percentheal 100,0;
-		delitem 1901,1; //Violin
+		delitem Violin,1;
 		EIN_LOVERQ = 5;
 		changequest 8077,8079;
 		if (RENEWAL_EXP) {
@@ -6527,7 +6527,7 @@ OnTouch:
 		warp "einbroch",112,245;
 		end;
 	}
-	if ((EIN_LOVERQ == 3) && (countitem(1901) > 0)) {
+	if ((EIN_LOVERQ == 3) && (countitem(Violin) > 0)) {
 		mes "[Megass]";
 		mes "That's...";
 		mes "That's my";
@@ -6549,7 +6549,7 @@ OnTouch:
 		mes "else that might be inside!";
 		mes "Make sure that if this punk";
 		mes "wakes up, it won't be today!";
-		delitem 1901,1; //Violin
+		delitem Violin,1;
 		EIN_LOVERQ = 4;
 		changequest 8077,8078;
 		percentheal -90,0;
@@ -6591,7 +6591,7 @@ ein_in01,31,151,3	script	Satra#ein	4_F_EINWOMAN,{
 		mes "honor of speaking with me.";
 		close;
 	}
-	if ((EIN_LOVERQ == 12) && (countitem(1003) > 9)) {
+	if ((EIN_LOVERQ == 12) && (countitem(Coal) > 9)) {
 		mes "[Satra]";
 		mes "Ho ho ho ho~";
 		mes "Welcome adventurer,";
@@ -6664,7 +6664,7 @@ ein_in01,31,151,3	script	Satra#ein	4_F_EINWOMAN,{
 			mes "the girls say? Ah, but I did";
 			mes "marry that oafish Megass~";
 			next;
-			delitem 1003,10; //Coal
+			delitem Coal,10;
 			EIN_LOVERQ = 13;
 			changequest 8084,8085;
 			mes "[Satra]";
@@ -6700,7 +6700,7 @@ ein_in01,31,151,3	script	Satra#ein	4_F_EINWOMAN,{
 		mes "I'm willing to overlook.";
 		close;
 	}
-	if ((EIN_LOVERQ == 11) && (countitem(1003) > 9)) {
+	if ((EIN_LOVERQ == 11) && (countitem(Coal) > 9)) {
 		mes "[Satra]";
 		mes "Why hello~";
 		mes "Your visits have";
@@ -6750,7 +6750,7 @@ ein_in01,31,151,3	script	Satra#ein	4_F_EINWOMAN,{
 		mes "mean I will not give them a";
 		mes "chance to prove their worth.";
 		next;
-		delitem 1003,10; //Coal
+		delitem Coal,10;
 		EIN_LOVERQ = 12;
 		mes "[Satra]";
 		mes "Why should I deprive";
@@ -6788,7 +6788,7 @@ ein_in01,31,151,3	script	Satra#ein	4_F_EINWOMAN,{
 		mes "any ^FF0000Coal^000000. Ho ho ho ho~";
 		close;
 	}
-	if ((EIN_LOVERQ == 10) && (countitem(1003) > 9)) {
+	if ((EIN_LOVERQ == 10) && (countitem(Coal) > 9)) {
 		mes "[Satra]";
 		mes "^333333*Titter~*^000000";
 		mes "Why, if it isn't my";
@@ -6832,7 +6832,7 @@ ein_in01,31,151,3	script	Satra#ein	4_F_EINWOMAN,{
 		mes "is a higher standard of";
 		mes "living here than in Einbech.";
 		next;
-		delitem 1003,10; //Coal
+		delitem Coal,10;
 		EIN_LOVERQ = 11;
 		mes "[Satra]";
 		mes "Goodness, I believe";
@@ -6867,7 +6867,7 @@ ein_in01,31,151,3	script	Satra#ein	4_F_EINWOMAN,{
 		mes "Ho ho ho ho~";
 		close;
 	}
-	if ((EIN_LOVERQ == 9) && (countitem(1003) > 9)) {
+	if ((EIN_LOVERQ == 9) && (countitem(Coal) > 9)) {
 		mes "[Satra]";
 		mes "My, you've already";
 		mes "brought the Coal?";
@@ -6890,7 +6890,7 @@ ein_in01,31,151,3	script	Satra#ein	4_F_EINWOMAN,{
 		mes "country. It's quite quaint";
 		mes "and Jawaii is very lovely.";
 		next;
-		delitem 1003,10; //Coal
+		delitem Coal,10;
 		EIN_LOVERQ = 10;
 		changequest 8083,8084;
 		mes "[Satra]";

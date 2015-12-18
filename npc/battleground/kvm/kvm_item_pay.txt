@@ -37,8 +37,8 @@
 //=========================================================================
 
 bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
-	if (countitem(7773)) {
-		.@pointstoadd = countitem(7773);
+	if (countitem(War_Badge)) {
+		.@pointstoadd = countitem(War_Badge);
 		delitem 7773,.@pointstoadd;
 		kvm_point += .@pointstoadd;
 		mes "[Logistics]";
@@ -49,7 +49,7 @@ bat_room,151,144,3	script	KVM Logistic Officer#a	4_M_JOB_KNIGHT2,{
 		mes "Alright, all set, you now have ^580080"+ kvm_point +"^000000 KVM Points.";
 		next;
 	}
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";

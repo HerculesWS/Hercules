@@ -36,7 +36,7 @@
 //=========================================================================
 
 alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";
@@ -68,16 +68,16 @@ alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 			case 2:
 				next;
 				mes "[Old Pharmacist]";
-				if (countitem(507) < countitem(713)) {
-					.@max = countitem(507);
+				if (countitem(Red_Herb) < countitem(Empty_Bottle)) {
+					.@max = countitem(Red_Herb);
 				}
-				else if (countitem(508) < countitem(713)) {
-					.@max = countitem(508);
+				else if (countitem(Yellow_Herb) < countitem(Empty_Bottle)) {
+					.@max = countitem(Yellow_Herb);
 				}
 				else {
-					.@max = countitem(713);
+					.@max = countitem(Empty_Bottle);
 				}
-				if ((countitem(507) < 1) || (countitem(508) < 1) || (countitem(713) == 0)) {
+				if ((countitem(Red_Herb) < 1) || (countitem(Yellow_Herb) < 1) || (countitem(Empty_Bottle) == 0)) {
 					mes "You rascal! What did you expect?! Coming here with nothing. Tsk!";
 					mes "Get lost!";
 					close;
@@ -91,16 +91,16 @@ alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 				switch(select("Make as many as I can.:I want to choose an amount.:Actually, I don't want anything.")) {
 				case 1:
 					next;
-					if ((countitem(507) < .@max) || (countitem(508) < .@max) || (countitem(713) < .@max) || (Zeny < .@max*3)) {
+					if ((countitem(Red_Herb) < .@max) || (countitem(Yellow_Herb) < .@max) || (countitem(Empty_Bottle) < .@max) || (Zeny < .@max*3)) {
 						mes "[Old Pharmacist]";
 						mes "You rascal! You don't even have all the materials and you want me to make you potions?!";
 						close;
 					}
 					Zeny -= (.@max*5);
-					delitem 507,.@max; //Red_Herb
-					delitem 508,.@max; //Yellow_Herb
-					delitem 713,.@max; //Empty_Bottle
-					getitem 502,.@max; //Orange_Potion
+					delitem Red_Herb,.@max;
+					delitem Yellow_Herb,.@max;
+					delitem Empty_Bottle,.@max;
+					getitem Orange_Potion,.@max;
 					break;
 				case 2:
 					next;
@@ -119,7 +119,7 @@ alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 						mes "Are you deaf? I said less than 100!";
 						close;
 					}
-					if ((countitem(507) < .@amount) || (countitem(508) < .@amount) || (countitem(713) < .@amount) || (Zeny < .@amount*3)) {
+					if ((countitem(Red_Herb) < .@amount) || (countitem(Yellow_Herb) < .@amount) || (countitem(Empty_Bottle) < .@amount) || (Zeny < .@amount*3)) {
 						next;
 						mes "[Old Pharmacist]";
 						mes "You rascal! You don't even have all the materials and you want me to make you potions?!";
@@ -127,10 +127,10 @@ alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 					}
 					next;
 					Zeny -= (.@amount*5);
-					delitem 507,.@amount; //Red_Herb
-					delitem 508,.@amount; //Yellow_Herb
-					delitem 713,.@amount; //Empty_Bottle
-					getitem 502,.@amount; //Orange_Potion
+					delitem Red_Herb,.@amount;
+					delitem Yellow_Herb,.@amount;
+					delitem Empty_Bottle,.@amount;
+					getitem Orange_Potion,.@amount;
 					break;
 				case 3:
 					next;
@@ -202,12 +202,12 @@ alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 L_Making:
 	next;
 	mes "[Old Pharmacist]";
-	if ((countitem(getarg(0))/2) < countitem(713)) {
+	if ((countitem(getarg(0))/2) < countitem(Empty_Bottle)) {
 		.@max = countitem(getarg(0))/2;
 	} else {
-		.@max = countitem(713);
+		.@max = countitem(Empty_Bottle);
 	}
-	if ((countitem(getarg(0)) < 2) || (countitem(713) == 0)) {
+	if ((countitem(getarg(0)) < 2) || (countitem(Empty_Bottle) == 0)) {
 		mes "You rascal! What did you expect?! Coming here with nothing. Tsk!";
 		mes "Get lost!";
 		close;
@@ -221,14 +221,14 @@ L_Making:
 	switch(select("Make as many as I can.:I want to choose an amount.:Actually, I don't want anything.")) {
 	case 1:
 		next;
-		if ((countitem(getarg(0)) < .@max*2) || (countitem(713) < .@max) || (Zeny < .@max*getarg(1))) {
+		if ((countitem(getarg(0)) < .@max*2) || (countitem(Empty_Bottle) < .@max) || (Zeny < .@max*getarg(1))) {
 			mes "[Old Pharmacist]";
 			mes "You rascal! You don't even have all the materials and you want me to make you potions?!";
 			close;
 		}
 		Zeny -= (.@max*getarg(1));
 		delitem getarg(0),.@max*2;
-		delitem 713,.@max; //Empty_Bottle
+		delitem Empty_Bottle,.@max;
 		getitem getarg(2),.@max;
 		break;
 	case 2:
@@ -247,14 +247,14 @@ L_Making:
 			mes "Are you deaf? I said less than 100!";
 			close;
 		}
-		if ((countitem(getarg(0)) < .@amount*2) || (countitem(713) < .@amount) || (Zeny < .@amount*getarg(1))) {
+		if ((countitem(getarg(0)) < .@amount*2) || (countitem(Empty_Bottle) < .@amount) || (Zeny < .@amount*getarg(1))) {
 			mes "[Old Pharmacist]";
 			mes "You rascal! You don't even have all the materials and you want me to make you potions?!";
 			close;
 		}
 		Zeny -= (.@amount*getarg(1));
 		delitem getarg(0),.@amount*2;
-		delitem 713,.@amount; //Empty_Bottle
+		delitem Empty_Bottle,.@amount;
 		getitem getarg(2),.@amount;
 		break;
 	case 3:

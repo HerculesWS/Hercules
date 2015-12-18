@@ -89,7 +89,7 @@ prontera,164,174,4	script	Trader#Val09	1_M_MERCHANT,{
 					next;
 				}
 			}
-			if (!checkweight(558, .@input)) {
+			if (!checkweight(Chocolate, .@input)) {
 				mes "[Marco Bassinio]";
 				mes "You're carrying too many items.";
 				mes "Please use the Kafra Services.";
@@ -123,7 +123,7 @@ prontera,164,174,4	script	Trader#Val09	1_M_MERCHANT,{
 			mes "You also need to pay 500 zeny to carve your name on the box.";
 			mes "Are you all prepared...?";
 			next;
-			if (countitem(7175) < 1 || countitem(7174) < 1 || countitem(7948) < 1 || Zeny < 500) {
+			if (countitem(Packing_Paper) < 1 || countitem(Packing_Ribbon) < 1 || countitem(Box) < 1 || Zeny < 500) {
 				mes "[Marco Bassinio]";
 				mes "Hmm.. Looks like you don't have enough materials to decorate the gift box..";
 				mes "You can't just put your gift into some plain looking box..";
@@ -134,7 +134,7 @@ prontera,164,174,4	script	Trader#Val09	1_M_MERCHANT,{
 				mes "Oh, also bring 500 zeny, and don't forget to bring your true loving heart with you!!";
 				close;
 			}
-			if (countitem(558) < 1) {
+			if (countitem(Chocolate) < 1) {
 				mes "[Marco Bassinio]";
 				mes "Hey, look, adventurer!";
 				mes "I can't create something right away!";
@@ -144,7 +144,7 @@ prontera,164,174,4	script	Trader#Val09	1_M_MERCHANT,{
 				mes "You're not saying that you want an empty chocolate box without any chocolate in it, am I right?";
 				close;
 			}
-			if (!checkweight(12744,1)) {
+			if (!checkweight(Chocotate_Box,1)) {
 				mes "[Marco Bassinio]";
 				mes "You're carrying too many items.";
 				mes "Please use the Kafra Services.";
@@ -208,7 +208,7 @@ prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 					next;
 					break;
 				}
-				if (!checkweight(7175,.@input)) {
+				if (!checkweight(Packing_Paper,.@input)) {
 					mes "[Packs Trader]";
 					mes "You're carrying too many items.";
 					mes "Please use the Kafra Services.";
@@ -249,7 +249,7 @@ prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 					next;
 					break;
 				}
-				if (!checkweight(7174,.@input)) {
+				if (!checkweight(Packing_Ribbon,.@input)) {
 					mes "[Packs Trader]";
 					mes "You're carrying too many items.";
 					mes "Please use the Kafra Services.";
@@ -290,7 +290,7 @@ prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 					next;
 					break;
 				}
-				if (!checkweight(7948,.@input)) {
+				if (!checkweight(Box,.@input)) {
 					mes "[Packs Trader]";
 					mes "You're carrying too many items.";
 					mes "Please use the Kafra Services.";
@@ -381,7 +381,7 @@ prontera,154,185,5	script	Event Ring Maker#Val09	4_F_KAFRA7,{
 		mes "Just follow your heart!";
 		close;
 	}
-	if (countitem(7175) < 1 || countitem(7174) < 1 || countitem(7948) < 1 || Zeny < 1000) {
+	if (countitem(Packing_Paper) < 1 || countitem(Packing_Ribbon) < 1 || countitem(Box) < 1 || Zeny < 1000) {
 		mes "[Event Ring Maker]";
 		mes "Well, you don't have enough materials to make a gift box.";
 		mes "Check what you have, and come back later with all the materials.";
@@ -454,7 +454,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 				}
 
 				if (Sex) {
-					if (countitem(7947) > .@input) {
+					if (countitem(Valentine_Silver_Ring) > .@input) {
 						mes "[Valentine Vote Manager]";
 						mes "Seems like the value you entered is too small.";
 						mes "I know you've got more. Be honest, dear.";
@@ -462,7 +462,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 						break;
 					}
 
-					if (countitem(7947) < .@input) {
+					if (countitem(Valentine_Silver_Ring) < .@input) {
 						mes "[Valentine Vote Manager]";
 						mes "Seems like the value you entered is too large.";
 						mes "I know you've got less. Be honest, dear.";
@@ -482,7 +482,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 					next;
 					break;
 				} else {
-					if (countitem(7946) > .@input) {
+					if (countitem(Valentine_Gold_Ring) > .@input) {
 						mes "[Valentine Vote Manager]";
 						mes "Seems like the value you entered is too small.";
 						mes "I know you've got more. Be honest, dear.";
@@ -490,7 +490,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 						break;
 					}
 
-					if (countitem(7946) < .@input) {
+					if (countitem(Valentine_Gold_Ring) < .@input) {
 						mes "[Valentine Vote Manager]";
 						mes "Seems like the value you entered is too large.";
 						mes "I know you've got less. Be honest, dear.";
@@ -568,7 +568,7 @@ prt_castle,42,35,3	script	Dessert Manager#Val09	1_M_01,{
 		mes "Please.. I feel like my soul is lost..";
 		close;
 	}
-	if (countitem(558) < 3) {
+	if (countitem(Chocolate) < 3) {
 		mes "[Charles Orleans]";
 		mes "Ahhh, Mademoiselle.";
 		mes "I'm not an alchemist, or a magician.";
@@ -607,7 +607,7 @@ prt_castle,42,35,3	script	Dessert Manager#Val09	1_M_01,{
 		mes "I'll be waiting for you.";
 		close;
 	} else {
-		if (!checkweight(559,1)) {
+		if (!checkweight(HandMade_Chocolate,1)) {
 			mes "[Charles Orleans]";
 			mes "You're carrying too many items.";
 			mes "Please use the Kafra Services.";

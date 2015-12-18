@@ -386,7 +386,7 @@ bat_room,1,151,3	script	Switch#batgnd	4_DOG01,{
 
 //== Badges Exchange =======================================
 bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
-	if (checkweight(1201,1) == 0) {
+	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";

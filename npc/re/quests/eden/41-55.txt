@@ -35,11 +35,11 @@
 //=========================================================================
 
 moc_para01,40,38,3	script	Mission [41 - 55]	4_BOARD3,{
-	if (countitem(6219) < 1) {
+	if (countitem(Para_Team_Mark) < 1) {
 		mes "You are not an Eden group member. You are not qualified to access the bulletin board.";
 		close;
 	}
-	if (checkweight(1201,1) == 0 || (MaxWeight - Weight) < 1000) {
+	if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 1000) {
 		mes "^008800Wait a sec!!";
 		mes "You cannot receive any more items because you're carrying too many items. Please try again after you lighten up.^000000";
 		close;

@@ -198,9 +198,9 @@ que_ng,152,167,3	script	Master Miller	4_M_HUOLDARMY,{
 			GUNS_Q = 6;
 			completequest 6024;
 			if (rand(1,2) == 1) {
-				getitem 13100,1; // Six_Shooter
+				getitem Six_Shooter,1; // Six_Shooter
 			} else {
-				getitem 13150,1; // Branch
+				getitem Branch,1; // Branch
 			}
 			close;
 		}
@@ -281,7 +281,7 @@ payon,184,65,3	script	Wise Bull Horn	4_M_LGTGRAND,{
 		close;
 	}
 	else if (GUNS_Q == 2) {
-		if (countitem(912) < 3 || countitem(914) < 3 || countitem(1019) < 1 || countitem(935) < 10 || countitem(511) < 3 || countitem(1013) < 3) {
+		if (countitem(Zargon) < 3 || countitem(Fluff) < 3 || countitem(Wooden_Block) < 1 || countitem(Shell) < 10 || countitem(Green_Herb) < 3 || countitem(Colorful_Shell) < 3) {
 			mes "[Wise Bull Horn]";
 			mes "I can make a voucher that";
 			mes "will demonstrate your desire";
@@ -307,12 +307,12 @@ payon,184,65,3	script	Wise Bull Horn	4_M_LGTGRAND,{
 			mes "a Gunslinger.";
 			close;
 		}
-		delitem 912,3; // Zargon
-		delitem 914,3; // Fluff
-		delitem 1019,1; // Wooden_Block
-		delitem 935,10; // Shell
-		delitem 511,3; // Green_Herb
-		delitem 1013,3; // Colorful_Shell
+		delitem Zargon,3; // Zargon
+		delitem Fluff,3; // Fluff
+		delitem Wooden_Block,1; // Wooden_Block
+		delitem Shell,10; // Shell
+		delitem Green_Herb,3; // Green_Herb
+		delitem Colorful_Shell,3; // Colorful_Shell
 		GUNS_Q = 3;
 		changequest 6021,6022;
 		mes "[Wise Bull Horn]";
@@ -365,7 +365,7 @@ payon,184,65,3	script	Wise Bull Horn	4_M_LGTGRAND,{
 		close;
 	}
 	else if (GUNS_Q == 4) {
-		if (countitem(519) < 1) {
+		if (countitem(Milk) < 1) {
 			mes "[Wise Bull Horn]";
 			mes "I'm an old man that will";
 			mes "soon be reunited with mother";
@@ -374,7 +374,7 @@ payon,184,65,3	script	Wise Bull Horn	4_M_LGTGRAND,{
 			mes "a cold glass of Milk, please?";
 			close;
 		}
-		delitem 519,1; // Milk
+		delitem Milk,1; // Milk
 		GUNS_Q = 5;
 		changequest 6023,6024;
 		mes "[Wise Bull Horn]";

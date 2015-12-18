@@ -585,7 +585,7 @@ arena_room,105,93,5	script	Teleporter#arena	1_M_JOBTESTER,{
 }
 
 prt_are_in,98,14,3	script	Givu#arena	4_F_JOB_KNIGHT,{
-	if (checkweight(526,5) == 0) {
+	if (checkweight(Royal_Jelly,5) == 0) {
 		mes "- Wait a moment! -";
 		mes "- Currently you're carrying -";
 		mes "- too many items with you. -";

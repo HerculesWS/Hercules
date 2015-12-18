@@ -180,7 +180,7 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 					switch(select("I have some Sharp Leafs:What did you need?")) {
 					case 1:
 						/*
-						if (checkweight(504,10) == 0) {
+						if (checkweight(White_Potion,10) == 0) {
 							mes "[Lilla]";
 							mes "Hey, it looks like that the weight on";
 							mes "your back will crush you. Come back";
@@ -188,7 +188,7 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 							close;
 						}
 						*/
-						if (countitem(7100) > 49) {
+						if (countitem(Sharp_Leaf) > 49) {
 							mes "[Lilla]";
 							mes "Hey, your a sweet little thing.";
 							mes "Thanks so much for helping me!";
@@ -196,9 +196,9 @@ um_fild01,34,281,5	script	Lilla#Dryad_Hunt	4_F_07,{
 							mes "[Lilla]";
 							mes "Oh, I almost forgot. I have something for you ^_^";
 							mes "Thank you so much again for your help.";
-							delitem 7100,50; //Sharp_Leaf
+							delitem Sharp_Leaf,50;
 							getexp 262485,141835;
-							//getitem 504,10; //White_Potion
+							//getitem White_Potion,10;
 							close;
 						}
 						else {
