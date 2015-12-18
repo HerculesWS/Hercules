@@ -978,12 +978,10 @@ Within executable script code, some lines can be labels:
 Labels are points of reference in your script, which can be used to route 
 execution with 'goto' and 'menu' commands, invoked with 'doevent', 'donpcevent'
 and 'callsub' commands and are otherwise essential. A label's name may not be
-longer than 22 characters. (23rd is the ':'.) There is some confusion in the
-source about whether it's 22, 23 or 24 all over the place, so keeping labels
-under 22 characters could be wise. It may only contain alphanumeric characters
-and underscore. In addition to labels you name yourself, there are also some
-special labels which the script engine will start execution from if a special
-event happens:
+longer than 23 characters. (24th is the ':'.) It may only contain alphanumeric
+characters and underscore. In addition to labels you name yourself, there are
+also some special labels which the script engine will start execution from if
+a special event happens:
 
 OnClock<hour><minute>:
 OnMinute<minute>:
@@ -9005,7 +9003,7 @@ When the QUEUEOPT_MAPCHANGE event is triggered, it sets a temp char var
 @Queue_Destination_Map$ with the destination map name.
 
 Example:
-	queueopt(.@queue_id, QUEUEOPT_DEATH, "MyNPC::MyOnQueueMemberDeathEventName");
+	queueopt(.@queue_id, QUEUEOPT_DEATH, "MyNPC::OnQueueMemberDeathEvent");
 	
 ---------------------------------------
 
