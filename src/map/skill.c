@@ -7383,9 +7383,9 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case NPC_AGIUP:
-			sc_start(src,bl,SC_MOVHASTE_INFINITY,100,skill_lv,skill->get_time(skill_id, skill_lv));
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,
-				sc_start(src,bl,type,100,100,skill->get_time(skill_id, skill_lv)));
+			sc_start(src, bl, SC_MOVHASTE_INFINITY, 100, 100, skill->get_time(skill_id, skill_lv));
+			clif->skill_nodamage(src, bl, skill_id, skill_lv,
+				sc_start(src, bl, type, 100, 100, skill->get_time(skill_id, skill_lv)));
 			break;
 
 		case NPC_INVISIBLE:
