@@ -9969,6 +9969,9 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 				break;
 			}
 
+			if (sd->sc.data[SC_SITDOWN_FORCE] || sd->sc.data[SC_BANANA_BOMB_SITDOWN_POSTDELAY])
+				return;
+
 			if(pc_issit(sd)) {
 				//Bugged client? Just refresh them.
 				clif->sitting(&sd->bl);
@@ -9992,6 +9995,10 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 			clif->sitting(&sd->bl);
 		break;
 		case 0x03: // standup
+
+			if (sd->sc.data[SC_SITDOWN_FORCE] || sd->sc.data[SC_BANANA_BOMB_SITDOWN_POSTDELAY])
+				return;
+			
 			if (!pc_issit(sd)) {
 				//Bugged client? Just refresh them.
 				clif->standing(&sd->bl);

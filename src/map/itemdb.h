@@ -42,11 +42,15 @@ struct hplugin_data_store;
 #define CARD0_CREATE 0x00FE
 #define CARD0_PET ((short)0xFF00)
 
-//Marks if the card0 given is "special" (non-item id used to mark pets/created items. [Skotlex]
+// Marks if the card0 given is "special" (non-item id used to mark pets/created items. [Skotlex]
 #define itemdb_isspecial(i) ((i) == CARD0_FORGE || (i) == CARD0_CREATE || (i) == CARD0_PET)
 
-//Use apple for unknown items.
+// Use apple for unknown items.
 #define UNKNOWN_ITEM_ID 512
+
+// Genetic throwable items
+#define itemid_is_sling_atk(id) ((id) >= ITEMID_APPLE_BOMB && (id) <= ITEMID_VERY_HARD_DARK_LUMP)
+#define itemid_is_sling_buff(id) ((id) >= ITEMID_MYSTERIOUS_POWDER && (id) <= ITEMID_THROW_OVERDONE_FOOD)
 
 enum item_itemid {
 	ITEMID_RED_POTION            = 501,
@@ -282,7 +286,7 @@ enum rune_item_list {
  * Geneticist
  */
 enum geneticist_item_list {
-	/// Pharmacy / Cooking
+	// Pharmacy / Cooking
 	ITEMID_SEED_OF_HORNY_PLANT      = 6210,
 	ITEMID_BLOODSUCK_PLANT_SEED,   // 6211
 	ITEMID_BOMB_MUSHROOM_SPORE,    // 6212
@@ -302,39 +306,41 @@ enum geneticist_item_list {
 	ITEMID_VITATA500,              // 12436
 	ITEMID_ENRICH_CELERMINE_JUICE, // 12437
 	ITEMID_CURE_FREE,              // 12475
-	/// Bombs
+
+	// Bombs
 	ITEMID_APPLE_BOMB               = 13260,
 	ITEMID_COCONUT_BOMB,           // 13261
 	ITEMID_MELON_BOMB,             // 13262
 	ITEMID_PINEAPPLE_BOMB,         // 13263
 	ITEMID_BANANA_BOMB,            // 13264
-	ITEMID_BLACK_LUMP,             // 13265
-	ITEMID_BLACK_HARD_LUMP,        // 13266
-	ITEMID_VERY_HARD_LUMP,         // 13267
-	/// Throwables
+	ITEMID_DARK_LUMP,              // 13265
+	ITEMID_HARD_DARK_LUMP,         // 13266
+	ITEMID_VERY_HARD_DARK_LUMP,    // 13267
+
+	// Throwables
 	ITEMID_MYSTERIOUS_POWDER,      // 13268
-	ITEMID_BOOST500_TO_THROW,      // 13269
-	ITEMID_FULL_SWINGK_TO_THROW,   // 13270
-	ITEMID_MANA_PLUS_TO_THROW,     // 13271
-	ITEMID_CURE_FREE_TO_THROW,     // 13272
-	ITEMID_STAMINA_UP_M_TO_THROW,  // 13273
-	ITEMID_DIGESTIVE_F_TO_THROW,   // 13274
-	ITEMID_HP_INC_POTS_TO_THROW,   // 13275
-	ITEMID_HP_INC_POTM_TO_THROW,   // 13276
-	ITEMID_HP_INC_POTL_TO_THROW,   // 13277
-	ITEMID_SP_INC_POTS_TO_THROW,   // 13278
-	ITEMID_SP_INC_POTM_TO_THROW,   // 13279
-	ITEMID_SP_INC_POTL_TO_THROW,   // 13280
-	ITEMID_EN_WHITE_POTZ_TO_THROW, // 13281
-	ITEMID_VITATA500_TO_THROW,     // 13282
-	ITEMID_EN_CEL_JUICE_TO_THROW,  // 13283
-	ITEMID_SAVAGE_BBQ_TO_THROW,    // 13284
-	ITEMID_WUG_COCKTAIL_TO_THROW,  // 13285
-	ITEMID_M_BRISKET_TO_THROW,     // 13286
-	ITEMID_SIROMA_ICETEA_TO_THROW, // 13287
-	ITEMID_DROCERA_STEW_TO_THROW,  // 13288
-	ITEMID_PETTI_NOODLE_TO_THROW,  // 13289
-	ITEMID_BLACK_THING_TO_THROW,   // 13290
+	ITEMID_THROW_BOOST500,         // 13269
+	ITEMID_THROW_FULL_SWING_K,     // 13270
+	ITEMID_THROW_MANA_PLUS,        // 13271
+	ITEMID_THROW_CURE_FREE,        // 13272
+	ITEMID_THROW_MUSTLE_M,         // 13273
+	ITEMID_THROW_LIFE_FORCE_F,     // 13274
+	ITEMID_THROW_HP_POTION_SMALL,  // 13275
+	ITEMID_THROW_HP_POTION_MEDIUM, // 13276
+	ITEMID_THROW_HP_POTION_LARGE,  // 13277
+	ITEMID_THROW_SP_POTION_SMALL,  // 13278
+	ITEMID_THROW_SP_POTION_MEDIUM, // 13279
+	ITEMID_THROW_SP_POTION_LARGE,  // 13280
+	ITEMID_THROW_EXTRACT_WHITE_POTION_Z, // 13281
+	ITEMID_THROW_VITATA_500,       // 13282
+	ITEMID_THROW_EXTRACT_SALAMINE_JUICE, // 13283
+	ITEMID_THROW_SAVAGE_STEAK,     // 13284
+	ITEMID_THROW_COCKTAIL_WARG_BLOOD,    // 13285
+	ITEMID_THROW_MINOR_BBQ,        // 13286
+	ITEMID_THROW_SIROMA_ICE_TEA,   // 13287
+	ITEMID_THROW_DROCERA_HERB_STEAMED,   // 13288
+	ITEMID_THROW_PUTTI_TAILS_NOODLES,    // 13289
+	ITEMID_THROW_OVERDONE_FOOD,    // 13290
 };
 
 //
@@ -533,8 +539,6 @@ struct item_data {
 #define itemdb_is_poison(n)      ((n) >= ITEMID_POISON_PARALYSIS && (n) <= ITEMID_POISON_FATIGUE)
 #define itemid_isgemstone(n)     ((n) >= ITEMID_YELLOW_GEMSTONE && (n) <= ITEMID_BLUE_GEMSTONE)
 #define itemdb_iscashfood(n)     ((n) >= ITEMID_STR_DISH10_ && (n) <= ITEMID_VIT_DISH10_)
-#define itemdb_is_GNbomb(n)      ((n) >= ITEMID_APPLE_BOMB && (n) <= ITEMID_VERY_HARD_LUMP)
-#define itemdb_is_GNthrowable(n) ((n) >= ITEMID_MYSTERIOUS_POWDER && (n) <= ITEMID_BLACK_THING_TO_THROW)
 
 //Item trade restrictions [Skotlex]
 #define itemdb_isdropable(item, gmlv)             (itemdb->isrestricted((item), (gmlv), 0, itemdb->isdropable_sub))

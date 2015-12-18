@@ -349,7 +349,7 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 sk
 	int skill2_lv, hp;
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 	struct map_session_data *tsd = BL_CAST(BL_PC, target);
-	struct status_change* sc;
+	struct status_change* sc, *tsc;
 
 	nullpo_ret(src);
 
@@ -402,17 +402,23 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 sk
 		if( skill_id == AB_HIGHNESSHEAL || skill_id == AB_CHEAL || skill_id == PR_SANCTUARY || skill_id == AL_HEAL )
 			hp += hp * sc->data[SC_OFFERTORIUM]->val2 / 100;
 	}
-	sc = status->get_sc(target);
-	if (sc && sc->count) {
-		if(sc->data[SC_CRITICALWOUND] && heal) // Critical Wound has no effect on offensive heal. [Inkfish]
-			hp -= hp * sc->data[SC_CRITICALWOUND]->val2/100;
-		if(sc->data[SC_DEATHHURT] && heal)
-			hp -= hp * 20/100;
-		if(sc->data[SC_HEALPLUS] && skill_id != NPC_EVILLAND && skill_id != BA_APPLEIDUN)
-			hp += hp * sc->data[SC_HEALPLUS]->val1/100; // Only affects Heal, Sanctuary and PotionPitcher.(like bHealPower) [Inkfish]
-		if(sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 2)
+	tsc = status->get_sc(target);
+	if (tsc && tsc->count) {
+		if (skill_id != NPC_EVILLAND && skill_id != BA_APPLEIDUN) {
+			if (tsc->data[SC_HEALPLUS])
+				hp += hp * tsc->data[SC_HEALPLUS]->val1 / 100; // Only affects Heal, Sanctuary and PotionPitcher.(like bHealPower) [Inkfish]
+			if (tsc->data[SC_EXTRACT_WHITE_POTION_Z])
+				hp += hp * tsc->data[SC_EXTRACT_WHITE_POTION_Z]->val1 / 100;
+			if (tsc->data[SC_ATKER_ASPD])
+				hp += hp * tsc->data[SC_ATKER_ASPD]->val2 / 100;
+		}
+		if (tsc->data[SC_CRITICALWOUND] && heal) // Critical Wound has no effect on offensive heal. [Inkfish]
+			hp -= hp * tsc->data[SC_CRITICALWOUND]->val2 / 100;
+		if (tsc->data[SC_DEATHHURT] && heal)
+			hp -= hp * 20 / 100;
+		if (tsc->data[SC_WATER_INSIGNIA] && tsc->data[SC_WATER_INSIGNIA]->val1 == 2)
 			hp += hp / 10;
-		if (sc->data[SC_VITALITYACTIVATION])
+		if (tsc && tsc->data[SC_VITALITYACTIVATION])
 			hp = hp * 150 / 100;
 	}
 
@@ -1323,19 +1329,19 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			sc_start(src, bl, SC_STUN, 5 + 5 * skill_lv, skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case GN_SLINGITEM_RANGEMELEEATK:
-			if( sd ) {
-				switch( sd->itemid ) {
+			if (sd) {
+				switch (sd->itemid) {
 					// Starting SCs here instead of do it in skill->additional_effect to simplify the code.
 					case ITEMID_COCONUT_BOMB:
-						sc_start(src, bl, SC_STUN, 100, skill_lv, 5000); // 5 seconds until I get official
-						sc_start(src, bl, SC_BLOODING, 100, skill_lv, 10000);
+						sc_start(src, bl, SC_STUN, 5 + sd->status.job_level / 2, skill_lv, 1000 * sd->status.job_level / 3);
+						sc_start(src, bl, SC_BLOODING, 3 + sd->status.job_level / 2, skill_lv, 1000 * (status->get_lv(src) / 4 + sd->status.job_level / 3));
 						break;
 					case ITEMID_MELON_BOMB:
-						sc_start(src, bl, SC_MELON_BOMB, 100, skill_lv, 60000); // Reduces ASPD and movement speed
+						sc_start4(src, bl, SC_MELON_BOMB, 100, skill_lv, 20 + sd->status.job_level, 10 + sd->status.job_level / 2, 0, 1000 * status->get_lv(src) / 4);
 						break;
 					case ITEMID_BANANA_BOMB:
-						sc_start(src, bl, SC_BANANA_BOMB, 100, skill_lv, 60000); // Reduces LUK? Needed confirm it, may be it's bugged in kRORE?
-						sc_start(src, bl, SC_BANANA_BOMB_SITDOWN_POSTDELAY, (sd? sd->status.job_level:0) + sstatus->dex / 6 + tstatus->agi / 4 - tstatus->luk / 5 - status->get_lv(bl) + status->get_lv(src), skill_lv, 1000); // Sit down for 3 seconds.
+						sc_start(src, bl, SC_BANANA_BOMB_SITDOWN_POSTDELAY, status->get_lv(src) + sd->status.job_level + sstatus->dex / 6 - status->get_lv(bl) - tstatus->agi / 4 - tstatus->luk / 5, skill_lv, 1000 * sd->status.job_level / 4);
+						//sc_start(src, bl, SC_BANANA_BOMB, 100, skill_lv, 60000); // Disabled Temporarily, need further tests in official servers.
 						break;
 				}
 				sd->itemid = -1;
@@ -9506,31 +9512,124 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case GN_SLINGITEM:
-			if( sd ) {
-				short ammo_id;
-				int equip_idx = sd->equip_index[EQI_AMMO];
-				if( equip_idx <= 0 )
+			if (sd) {
+				short ammo_id = 0;
+				int i;
+
+				// Check if there's any ammo equipped.
+				i = sd->equip_index[EQI_AMMO];
+				if (1 <= 0)
 					break; // No ammo.
-				ammo_id = sd->inventory_data[equip_idx]->nameid;
-				if( ammo_id <= 0 )
+
+				// Check if ammo ID is that of a Genetic throwing item.
+				ammo_id = sd->inventory_data[i]->nameid;
+				if (!(itemid_is_sling_atk(ammo_id) || itemid_is_sling_buff(ammo_id)))
 					break;
+
+				// Used to tell other parts of the code which damage formula and status to use.
 				sd->itemid = ammo_id;
-				if( itemdb_is_GNbomb(ammo_id) ) {
-					if(battle->check_target(src,bl,BCT_ENEMY) > 0) {// Only attack if the target is an enemy.
-						if( ammo_id == ITEMID_PINEAPPLE_BOMB )
-							map->foreachincell(skill->area_sub,bl->m,bl->x,bl->y,BL_CHAR,src,GN_SLINGITEM_RANGEMELEEATK,skill_lv,tick,flag|BCT_ENEMY|1,skill->castend_damage_id);
-						else
-							skill->attack(BF_WEAPON,src,src,bl,GN_SLINGITEM_RANGEMELEEATK,skill_lv,tick,flag);
-					} else //Otherwise, it fails, shows animation and removes items.
-						clif->skill_fail(sd,GN_SLINGITEM_RANGEMELEEATK,0xa,0);
-				} else if( itemdb_is_GNthrowable(ammo_id) ) {
-					struct script_code *scriptroot = sd->inventory_data[equip_idx]->script;
-					if( !scriptroot )
+				
+				// If thrown item is a bomb or a lump, then its a attack type ammo.
+				if (itemid_is_sling_atk(ammo_id)) {
+					if (battle->check_target(src, bl, BCT_ENEMY) > 0) {
+						// Pineapple Bombs deal 5x5 splash damage on targeted enemy.
+						if (ammo_id == ITEMID_PINEAPPLE_BOMB)
+							map->foreachincell(skill->area_sub, bl->m, bl->x, bl->y, BL_CHAR, src, GN_SLINGITEM_RANGEMELEEATK, skill_lv, tick, flag | BCT_ENEMY | 1, skill->castend_damage_id);
+						else // All other bombs and lumps hits one enemy.
+							skill->attack(BF_WEAPON, src, src, bl, GN_SLINGITEM_RANGEMELEEATK, skill_lv, tick, flag);
+					}
+					else //Otherwise, it fails, shows animation and removes items.
+						clif->skill_fail(sd, GN_SLINGITEM_RANGEMELEEATK, 0xa, 0);
+				}
+				else if (itemid_is_sling_buff(ammo_id)) {
+					switch (ammo_id) {
+					case ITEMID_MYSTERIOUS_POWDER: // MaxHP -2%
+						sc_start(src, bl, SC_MYSTERIOUS_POWDER, 100, 20, 10000);
 						break;
-					if( dstsd )
-						script->run(scriptroot,0,dstsd->bl.id,npc->fake_nd->bl.id);
-					else
-						script->run(scriptroot,0,src->id,0);
+					case ITEMID_THROW_BOOST500: // Aspd +10%
+						sc_start(src, bl, SC_BOOST500, 100, 10, 500000);
+						break;
+					case ITEMID_THROW_FULL_SWING_K: // Watk +50
+						sc_start(src, bl, SC_FULL_SWING_K, 100, 50, 500000);
+						break;
+					case ITEMID_THROW_MANA_PLUS: // Matk +50
+						sc_start(src, bl, SC_MANA_PLUS, 100, 50, 500000);
+						break;
+					case ITEMID_THROW_CURE_FREE: // Cures Silence, Bleeding, Poison, Curse, Orcish, Undead, Blind, Confusion, DPoison and heals 500 HP
+						status_change_end(bl, SC_SILENCE, INVALID_TIMER);
+						status_change_end(bl, SC_BLOODING, INVALID_TIMER);
+						status_change_end(bl, SC_POISON, INVALID_TIMER);
+						status_change_end(bl, SC_CURSE, INVALID_TIMER);
+						status_change_end(bl, SC_ORCISH, INVALID_TIMER);
+						status_change_end(bl, SC_PROPERTYUNDEAD, INVALID_TIMER);
+						status_change_end(bl, SC_BLIND, INVALID_TIMER);
+						status_change_end(bl, SC_CONFUSION, INVALID_TIMER);
+						status_change_end(bl, SC_DPOISON, INVALID_TIMER);
+						status_heal(bl, 500, 0, 0);
+						break;
+					case ITEMID_THROW_MUSTLE_M: // MaxHP +5%
+						sc_start(src, bl, SC_MUSTLE_M, 100, 5, 500000);
+						break;
+					case ITEMID_THROW_LIFE_FORCE_F: // MaxSP +5%
+						sc_start(src, bl, SC_LIFE_FORCE_F, 100, 5, 500000);
+						break;
+					case ITEMID_THROW_HP_POTION_SMALL: // MaxHP +(500 + Thrower BaseLv * 10 / 3) and heals 1% MaxHP
+						sc_start4(src, bl, SC_PROMOTE_HEALTH_RESERCH, 100, 2, 1, status->get_lv(src), 0, 500000);
+						status_percent_heal(bl, 1, 0);
+						break;
+					case ITEMID_THROW_HP_POTION_MEDIUM: // MaxHP +(1500 + Thrower BaseLv * 10 / 3) and heals 2% MaxHP
+						sc_start4(src, bl, SC_PROMOTE_HEALTH_RESERCH, 100, 2, 2, status->get_lv(src), 0, 500000);
+						status_percent_heal(bl, 2, 0);
+						break;
+					case ITEMID_THROW_HP_POTION_LARGE: // MaxHP +(2500 + Thrower BaseLv * 10 / 3) and heals 5% MaxHP
+						sc_start4(src, bl, SC_PROMOTE_HEALTH_RESERCH, 100, 2, 3, status->get_lv(src), 0, 500000);
+						status_percent_heal(bl, 5, 0);
+						break;
+					case ITEMID_THROW_SP_POTION_SMALL: // MaxSP +(Thrower BaseLv / 10 - 5)% and recovers 2% MaxSP
+						sc_start4(src, bl, SC_ENERGY_DRINK_RESERCH, 100, 2, 1, status->get_lv(src), 0, 500000);
+						status_percent_heal(bl, 0, 2);
+						break;
+					case ITEMID_THROW_SP_POTION_MEDIUM: // MaxSP +(Thrower BaseLv / 10)% and recovers 4% MaxSP
+						sc_start4(src, bl, SC_ENERGY_DRINK_RESERCH, 100, 2, 2, status->get_lv(src), 0, 500000);
+						status_percent_heal(bl, 0, 4);
+						break;
+					case ITEMID_THROW_SP_POTION_LARGE: // MaxSP +(Thrower BaseLv / 10 + 5)% and recovers 8% MaxSP
+						sc_start4(src, bl, SC_ENERGY_DRINK_RESERCH, 100, 2, 3, status->get_lv(src), 0, 500000);
+						status_percent_heal(bl, 0, 8);
+						break;
+					case ITEMID_THROW_EXTRACT_WHITE_POTION_Z: // Natural HP Recovery +20% and heals 1000 HP
+						sc_start(src, bl, SC_EXTRACT_WHITE_POTION_Z, 100, 20, 500000);
+						pc_itemheal((TBL_PC *)bl, ITEMID_THROW_EXTRACT_WHITE_POTION_Z, 1000, 0);
+						break;
+					case ITEMID_THROW_VITATA_500: // Natural SP Recovery +20%, MaxSP +5%, and recovers 200 SP
+						sc_start2(src, bl, SC_VITATA_500, 100, 20, 5, 500000);
+						pc_itemheal((TBL_PC *)bl, ITEMID_THROW_VITATA_500, 0, 200);
+						break;
+					case ITEMID_THROW_EXTRACT_SALAMINE_JUICE: // Aspd +10
+						sc_start(src, bl, SC_EXTRACT_SALAMINE_JUICE, 100, 10, 500000);
+						break;
+					case ITEMID_THROW_SAVAGE_STEAK: // Str +20
+						sc_start(src, bl, SC_SAVAGE_STEAK, 100, 20, 300000);
+						break;
+					case ITEMID_THROW_DROCERA_HERB_STEAMED: // Agi +20
+						sc_start(src, bl, SC_DROCERA_HERB_STEAMED, 100, 20, 300000);
+						break;
+					case ITEMID_THROW_MINOR_BBQ: // Vit +20
+						sc_start(src, bl, SC_MINOR_BBQ, 100, 20, 300000);
+						break;
+					case ITEMID_THROW_COCKTAIL_WARG_BLOOD: // Int +20
+						sc_start(src, bl, SC_COCKTAIL_WARG_BLOOD, 100, 20, 300000);
+						break;
+					case ITEMID_THROW_SIROMA_ICE_TEA: // Dex +20
+						sc_start(src, bl, SC_SIROMA_ICE_TEA, 100, 20, 300000);
+						break;
+					case ITEMID_THROW_PUTTI_TAILS_NOODLES: // Luk +20
+						sc_start(src, bl, SC_PUTTI_TAILS_NOODLES, 100, 20, 300000);
+						break;
+					case ITEMID_THROW_OVERDONE_FOOD: // Reduces all stats by random 5 - 10 and reduces movement speed.
+						sc_start2(src, bl, SC_STOMACHACHE, 100, rnd_value(5, 10), 75, 60000);
+						break;
+					}
 				}
 			}
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -17452,9 +17551,9 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 			case GN_MIX_COOKING: {
 					struct item tmp_item;
 					const int compensation[5] = {
-						ITEMID_BLACK_LUMP,
-						ITEMID_BLACK_HARD_LUMP,
-						ITEMID_VERY_HARD_LUMP,
+						ITEMID_DARK_LUMP,
+						ITEMID_HARD_DARK_LUMP,
+						ITEMID_VERY_HARD_DARK_LUMP,
 						ITEMID_BLACK_THING,
 						ITEMID_MYSTERIOUS_POWDER,
 					};

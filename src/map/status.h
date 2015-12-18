@@ -799,6 +799,9 @@ typedef enum sc_type {
 	SC_MVPCARD_MISTRESS,
 	SC_MVPCARD_ORCHERO,
 	SC_MVPCARD_ORCLORD,
+	
+	SC_PROMOTE_HEALTH_RESERCH,
+	SC_ENERGY_DRINK_RESERCH,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;

@@ -8180,74 +8180,86 @@ void pc_heal(struct map_session_data *sd,unsigned int hp,unsigned int sp, int ty
  * Heal player hp and/or sp linearly.
  * Calculate bonus by status.
  *------------------------------------------*/
-int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp)
+int pc_itemheal(struct map_session_data *sd, int itemid, int hp, int sp)
 {
-	int bonus, tmp;
+	int bonus, tmp, penalty = 0;
 
-	if(hp) {
+	if (hp) {
 		int i;
-		bonus = 100 + (sd->battle_status.vit<<1)
-			+ pc->checkskill(sd,SM_RECOVERY)*10
-			+ pc->checkskill(sd,AM_LEARNINGPOTION)*5;
+		bonus = 100 + (sd->battle_status.vit << 1)
+			+ pc->checkskill(sd, SM_RECOVERY) * 10
+			+ pc->checkskill(sd, AM_LEARNINGPOTION) * 5;
 		// A potion produced by an Alchemist in the Fame Top 10 gets +50% effect [DracoRPG]
 		if (script->potion_flag > 1)
-			bonus += bonus*(script->potion_flag-1)*50/100;
+			bonus += bonus * (script->potion_flag - 1) * 50 / 100;
 		//All item bonuses.
 		bonus += sd->bonus.itemhealrate2;
 		//Individual item bonuses.
 		for(i = 0; i < ARRAYLENGTH(sd->itemhealrate) && sd->itemhealrate[i].nameid; i++) {
 			struct item_data *it = itemdb->exists(sd->itemhealrate[i].nameid);
-			if (sd->itemhealrate[i].nameid == itemid || (it && it->group && itemdb->in_group(it->group,itemid))) {
-				bonus += bonus*sd->itemhealrate[i].rate/100;
+			if (sd->itemhealrate[i].nameid == itemid || (it && it->group && itemdb->in_group(it->group, itemid))) {
+				bonus += bonus * sd->itemhealrate[i].rate / 100;
 				break;
 			}
 		}
 
-		tmp = hp*bonus/100;
-		if(bonus != 100 && tmp > hp)
+		tmp = hp * bonus / 100;
+		if (bonus != 100 && tmp > hp)
 			hp = tmp;
 
-		// Recovery Potion
-		if( sd->sc.data[SC_HEALPLUS] )
-			hp += (int)(hp * sd->sc.data[SC_HEALPLUS]->val1/100.);
+		// HP Recovery Items
+		if (sd->sc.data[SC_HEALPLUS])
+			hp += (int)(hp * sd->sc.data[SC_HEALPLUS]->val1 / 100.);
+		if (sd->sc.data[SC_EXTRACT_WHITE_POTION_Z])
+			hp += (int)(hp * sd->sc.data[SC_EXTRACT_WHITE_POTION_Z]->val1 / 100.);
+		if (sd->sc.data[SC_ATKER_ASPD])
+			hp += (int)(hp * sd->sc.data[SC_ATKER_ASPD]->val2 / 100.);
 
 		// 2014 Halloween Event : Pumpkin Bonus
-		if ( sd->sc.data[SC_MTF_PUMPKIN] && itemid == ITEMID_PUMPKIN )
-			hp += (int)(hp * sd->sc.data[SC_MTF_PUMPKIN]->val1/100);
+		if (sd->sc.data[SC_MTF_PUMPKIN] && itemid == ITEMID_PUMPKIN)
+			hp += (int)(hp * sd->sc.data[SC_MTF_PUMPKIN]->val1 / 100);
 	}
-	if(sp) {
-		bonus = 100 + (sd->battle_status.int_<<1)
-			+ pc->checkskill(sd,MG_SRECOVERY)*10
-			+ pc->checkskill(sd,AM_LEARNINGPOTION)*5;
+	if (sp) {
+		bonus = 100 + (sd->battle_status.int_ << 1)
+			+ pc->checkskill(sd, MG_SRECOVERY) * 10
+			+ pc->checkskill(sd, AM_LEARNINGPOTION) * 5;
 		if (script->potion_flag > 1)
-			bonus += bonus*(script->potion_flag-1)*50/100;
+			bonus += bonus * (script->potion_flag - 1) * 50 / 100;
 
-		tmp = sp*bonus/100;
-		if(bonus != 100 && tmp > sp)
+		tmp = sp * bonus / 100;
+		if (bonus != 100 && tmp > sp)
 			sp = tmp;
+		
+		// SP Recovery Items
+		if (sd->sc.data[SC_VITATA_500])
+			sp += (int)(sp * sd->sc.data[SC_VITATA_500]->val1 / 100.);
+		if (sd->sc.data[SC_ATKER_MOVESPEED])
+			sp += (int)(sp * sd->sc.data[SC_ATKER_MOVESPEED]->val2 / 100.);
 	}
-	if( sd->sc.count ) {
-		if ( sd->sc.data[SC_CRITICALWOUND] ) {
-			hp -= hp * sd->sc.data[SC_CRITICALWOUND]->val2 / 100;
-			sp -= sp * sd->sc.data[SC_CRITICALWOUND]->val2 / 100;
+	
+	if (sd->sc.count) {
+		// Critical Wound and Death Hurt stacks with each other.
+		if (sd->sc.data[SC_CRITICALWOUND])
+			penalty += sd->sc.data[SC_CRITICALWOUND]->val2 / 100;
+		
+		if (sd->sc.data[SC_DEATHHURT])
+			penalty += 20;
+		
+		if (penalty > 0) {
+			hp -= hp * penalty / 100;
+			sp -= sp * penalty / 100;
 		}
 
-		if( sd->sc.data[SC_VITALITYACTIVATION] ){
+		if (sd->sc.data[SC_VITALITYACTIVATION])
 			hp += hp / 2; // 1.5 times
 			sp -= sp / 2;
-		}
 
-		if ( sd->sc.data[SC_DEATHHURT] ) {
-			hp -= hp * 20 / 100;
-			sp -= sp * 20 / 100;
-		}
-
-		if( sd->sc.data[SC_WATER_INSIGNIA] && sd->sc.data[SC_WATER_INSIGNIA]->val1 == 2 ) {
+		if (sd->sc.data[SC_WATER_INSIGNIA] && sd->sc.data[SC_WATER_INSIGNIA]->val1 == 2) {
 			hp += hp / 10;
 			sp += sp / 10;
 		}
 #ifdef RENEWAL
-		if( sd->sc.data[SC_EXTREMITYFIST2] )
+		if (sd->sc.data[SC_EXTREMITYFIST2])
 			sp = 0;
 #endif
 	}
