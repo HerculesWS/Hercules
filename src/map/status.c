@@ -983,6 +983,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_INFINITY] = SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_MOVHASTE_HORSE] = SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_MOVHASTE_INFINITY] = SCB_SPEED;
+	status->dbs->ChangeFlagTable[SC_SLOWDOWN] |= SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_PLUSATTACKPOWER] = SCB_BATK;
 	status->dbs->ChangeFlagTable[SC_PLUSMAGICPOWER] = SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_INCALLSTATUS] |= SCB_STR|SCB_AGI|SCB_VIT|SCB_INT|SCB_DEX|SCB_LUK;
@@ -5443,8 +5444,8 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 						val = max( val, sc->data[SC_CLOAKING]->val1 < 3 ? 300 : 30 - 3 * sc->data[SC_CLOAKING]->val1 );
 					if( sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_ENEMY )
 						val = max( val, 75 );
-					if( sc->data[SC_SLOWDOWN] ) // Slow Potion
-						val = max( val, 100 );
+					if (sc->data[SC_SLOWDOWN]) // Slow Potion
+						val = max(val, sc->data[SC_SLOWDOWN]->val1);
 					if( sc->data[SC_GS_GATLINGFEVER] )
 						val = max( val, 100 );
 					if( sc->data[SC_NJ_SUITON] )
@@ -5486,8 +5487,8 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 		{
 			int val = 0;
 
-			if( sc->data[SC_MOVHASTE_INFINITY] ) //FIXME: used both by NPC_AGIUP and Speed Potion script
-				val = max( val, 50 );
+			if (sc->data[SC_MOVHASTE_INFINITY])
+				val = max(val, sc->data[SC_MOVHASTE_INFINITY]->val1);
 			if( sc->data[SC_INC_AGI] )
 				val = max( val, 25 );
 			if( sc->data[SC_WINDWALK] )
@@ -7091,18 +7092,14 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			if((type == SC_FREEZE || type == SC_FROSTMISTY || type == SC_COLD) && sc->data[SC_WARMER])
 				return 0; //Immune to Frozen and Freezing status if under Warmer status. [Jobbie]
 			break;
-
-			//There all like berserk, do not everlap each other
-		case SC_BERSERK:
+		case SC_BERSERK: //There all like berserk, do not everlap each other
 			if( sc->data[SC__BLOODYLUST] )
 				return 0;
 			break;
-
 		case SC_BURNING:
 			if(sc->opt1 || sc->data[SC_FROSTMISTY])
 				return 0;
 			break;
-
 		case SC_CRUCIS:
 			//Only affects demons and undead element (but not players)
 			if((!undead_flag && st->race!=RC_DEMON) || bl->type == BL_PC)
@@ -7124,20 +7121,21 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				return 0; //Overthrust and Overthrust Max cannot be used on Mado Gear [Ind]
 			break;
 		case SC_ADRENALINE:
-			if(sd && !pc_check_weapontype(sd,skill->get_weapontype(BS_ADRENALINE)))
+			if (sd && !pc_check_weapontype(sd, skill->get_weapontype(BS_ADRENALINE)))
 				return 0;
-			if (sc->data[SC_QUAGMIRE] ||
-				sc->data[SC_DEC_AGI] ||
-				sc->option&OPTION_MADOGEAR //Adrenaline doesn't affect Mado Gear [Ind]
-				)
+			if (sc->data[SC_QUAGMIRE] || sc->data[SC_DEC_AGI] || sc->option&OPTION_MADOGEAR) //Adrenaline doesn't affect Mado Gear [Ind]
 				return 0;
 			break;
 		case SC_ADRENALINE2:
-			if(sd && !pc_check_weapontype(sd,skill->get_weapontype(BS_ADRENALINE2)))
+			if (sd && !pc_check_weapontype(sd, skill->get_weapontype(BS_ADRENALINE2)))
 				return 0;
-			if (sc->data[SC_QUAGMIRE] ||
-				sc->data[SC_DEC_AGI]
-			)
+			if (sc->data[SC_QUAGMIRE] || sc->data[SC_DEC_AGI])
+				return 0;
+			break;
+		case SC_QUAGMIRE:
+		case SC_DEC_AGI:
+		case SC_DONTFORGETME:
+			if (sc->data[SC_MOVHASTE_INFINITY]) // Doesn't affect by Quagmire, Decrease Agi, Slow Grace [Frost]
 				return 0;
 			break;
 		case SC_MAGNIFICAT:
@@ -7149,7 +7147,6 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_TWOHANDQUICKEN:
 			if(sc->data[SC_DEC_AGI])
 				return 0;
-
 		case SC_CONCENTRATION:
 		case SC_SPEARQUICKEN:
 		case SC_TRUESIGHT:
@@ -8629,7 +8626,6 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_REBIRTH:
 				val2 = 20*val1; //% of life to be revived with
 				break;
-
 			case SC_MANU_DEF:
 			case SC_MANU_ATK:
 			case SC_MANU_MATK:
