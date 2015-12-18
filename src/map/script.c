@@ -14132,58 +14132,93 @@ BUILDIN(getmapxy)
 
 	switch (type) {
 		case 0: //Get Character Position
-			if( script_hasdata(st,6) )
-				sd=map->nick2sd(script_getstr(st,6));
+			if (script_hasdata(st,6)) {
+				if (script_isstringtype(st,6))
+					sd = map->nick2sd(script_getstr(st,6));
+				else
+					sd = map->id2sd(script_getnum(st,6));
+			}
 			else
-				sd=script->rid2sd(st);
+				sd = script->rid2sd(st);
 
 			if (sd)
 				bl = &sd->bl;
 			break;
 		case 1: //Get NPC Position
-			if( script_hasdata(st,6) )
-			{
+			if (script_hasdata(st,6)) {
 				struct npc_data *nd;
-				nd=npc->name2id(script_getstr(st,6));
+				if (script_isstringtype(st,6))
+					nd = npc->name2id(script_getstr(st,6));
+				else
+					nd = map->id2nd(script_getnum(st,6));
 				if (nd)
 					bl = &nd->bl;
 			} else //In case the origin is not an npc?
-				bl=map->id2bl(st->oid);
+				bl = map->id2bl(st->oid);
 			break;
 		case 2: //Get Pet Position
-			if(script_hasdata(st,6))
-				sd=map->nick2sd(script_getstr(st,6));
+			if (script_hasdata(st,6)) {
+				if (script_isstringtype(st,6))
+					sd = map->nick2sd(script_getstr(st,6));
+				else {
+					bl = map->id2bl(script_getnum(st,6));
+					break;
+				}
+			}
 			else
-				sd=script->rid2sd(st);
+				sd = script->rid2sd(st);
 
 			if (sd && sd->pd)
 				bl = &sd->pd->bl;
 			break;
 		case 3: //Get Mob Position
-			break; //Not supported?
+			if (script_hasdata(st,6)) {
+				if (script_isstringtype(st,6))
+					break;
+				bl = map->id2bl(script_getnum(st,6));
+			}
+			break;
 		case 4: //Get Homun Position
-			if(script_hasdata(st,6))
-				sd=map->nick2sd(script_getstr(st,6));
+			if (script_hasdata(st,6)) {
+				if (script_isstringtype(st,6))
+					sd = map->nick2sd(script_getstr(st,6));
+				else {
+					bl = map->id2bl(script_getnum(st,6));
+					break;
+				}
+			}
 			else
-				sd=script->rid2sd(st);
+				sd = script->rid2sd(st);
 
 			if (sd && sd->hd)
 				bl = &sd->hd->bl;
 			break;
 		case 5: //Get Mercenary Position
-			if(script_hasdata(st,6))
-				sd=map->nick2sd(script_getstr(st,6));
+			if (script_hasdata(st,6)) {
+				if (script_isstringtype(st,6))
+					sd = map->nick2sd(script_getstr(st,6));
+				else {
+					bl = map->id2bl(script_getnum(st,6));
+					break;
+				}
+			}
 			else
-				sd=script->rid2sd(st);
+				sd = script->rid2sd(st);
 
 			if (sd && sd->md)
 				bl = &sd->md->bl;
 			break;
 		case 6: //Get Elemental Position
-			if(script_hasdata(st,6))
-				sd=map->nick2sd(script_getstr(st,6));
+			if (script_hasdata(st,6)) {
+				if (script_isstringtype(st,6))
+					sd = map->nick2sd(script_getstr(st,6));
+				else {
+					bl = map->id2bl(script_getnum(st,6));
+					break;
+				}
+			}
 			else
-				sd=script->rid2sd(st);
+				sd = script->rid2sd(st);
 
 			if (sd && sd->ed)
 				bl = &sd->ed->bl;
@@ -16362,6 +16397,33 @@ BUILDIN(pcstopfollow)
 // <--- [zBuffer] List of player cont commands
 // [zBuffer] List of mob control commands --->
 //## TODO always return if the request/whatever was successfull [FlavioJS]
+
+BUILDIN(getunittype) {
+	struct block_list* bl;
+	int value;
+
+	bl = map->id2bl(script_getnum(st,2));
+
+	if (!bl) {
+		ShowWarning("buildin_getunittype: Error in finding object GID %d!\n", script_getnum(st,2));
+		script_pushint(st,-1);
+		return false;
+	}
+
+	switch (bl->type) {
+		case BL_PC:   value = 0; break;
+		case BL_NPC:  value = 1; break;
+		case BL_PET:  value = 2; break;
+		case BL_MOB:  value = 3; break;
+		case BL_HOM:  value = 4; break;
+		case BL_MER:  value = 5; break;
+		case BL_ELEM: value = 6; break;
+		default:      value = -1; break;
+	}
+
+	script_pushint(st, value);
+	return true;
+}
 
 /// Makes the unit walk to target position or target id
 /// Returns if it was successfull
@@ -20382,6 +20444,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(pcblockmove,"ii"),
 		// <--- [zBuffer] List of player cont commands
 		// [zBuffer] List of mob control commands --->
+		BUILDIN_DEF(getunittype,"i"),
 		BUILDIN_DEF(unitwalk,"ii?"),
 		BUILDIN_DEF(unitkill,"i"),
 		BUILDIN_DEF(unitwarp,"isii"),
