@@ -46,7 +46,7 @@
 //================= Description ===========================================
 //= Town shop NPCs.
 //================= Current Version =======================================
-//= 3.5
+//= 3.5.1
 //=========================================================================
 
 //== Alberta ===============================================
@@ -208,13 +208,15 @@ OnInit:
 	sellitem Life_Force_Pot;
 	sellitem Yggdrasilberry_Dew;
 	sellitem Seed_Of_Life;
-	sellitem Melange_Pot;
-	sellitem Cooking_Skewer;
-	sellitem Black_Charcoal;
-	sellitem Large_Cookpot;
-	sellitem Fine_Noodle;
-	sellitem Cool_Gravy;
-	sellitem Bottle_To_Throw;
+	if (RENEWAL) {
+		sellitem Melange_Pot;
+		sellitem Cooking_Skewer;
+		sellitem Black_Charcoal;
+		sellitem Large_Cookpot;
+		sellitem Fine_Noodle;
+		sellitem Cool_Gravy;
+		sellitem Bottle_To_Throw;
+	}
 }
 
 //== Amatsu ================================================
