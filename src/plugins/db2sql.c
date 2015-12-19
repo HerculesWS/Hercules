@@ -43,6 +43,12 @@ HPExport struct hplugin_info pinfo = {
 	HPM_VERSION,     // HPM Version (don't change, macro is automatically updated)
 };
 
+#ifdef RENEWAL
+#define DBSUFFIX "_re"
+#else // not RENEWAL
+#define DBSUFFIX ""
+#endif
+
 struct {
 	FILE *fp;
 	struct {
@@ -336,8 +342,7 @@ void do_db2sql(void)
 		const char *source;
 		const char *destination;
 	} files[] = {
-		{"item_db", "re/item_db.conf", "sql-files/item_db_re.sql"},
-		{"item_db", "pre-re/item_db.conf", "sql-files/item_db.sql"},
+		{"item_db", DBPATH"item_db.conf", "sql-files/item_db" DBSUFFIX ".sql"},
 		{"item_db2", "item_db2.conf", "sql-files/item_db2.sql"},
 	};
 
