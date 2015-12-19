@@ -49,7 +49,7 @@ struct {
 		char *p;
 		size_t len;
 	} buf[4];
-	char *db_name;
+	const char *db_name;
 } tosql;
 bool torun = false;
 
@@ -328,52 +328,40 @@ void totable(void) {
 			") ENGINE=MyISAM;\n"
 			"\n", year, tosql.db_name,tosql.db_name,tosql.db_name);
 }
-void do_db2sql(void) {
+void do_db2sql(void)
+{
+	int i;
+	struct convert_db_files {
+		const char *name;
+		const char *source;
+		const char *destination;
+	} files[] = {
+		{"item_db", "re/item_db.conf", "sql-files/item_db_re.sql"},
+		{"item_db", "pre-re/item_db.conf", "sql-files/item_db.sql"},
+		{"item_db2", "item_db2.conf", "sql-files/item_db2.sql"},
+	};
+
 	/* link */
 	itemdb_readdb_libconfig_sub = itemdb->readdb_libconfig_sub;
 	itemdb->readdb_libconfig_sub = db2sql;
 	/* */
 
-	if ((tosql.fp = fopen("sql-files/item_db_re.sql", "wt+")) == NULL) {
-		ShowError("itemdb_tosql: File not found \"%s\".\n", "sql-files/item_db_re.sql");
-		return;
-	}
-
-	tosql.db_name = "item_db";
-	totable();
-
-	memset(&tosql.buf, 0, sizeof(tosql.buf) );
-
+	memset(&tosql.buf, 0, sizeof(tosql.buf));
 	itemdb->clear(false);
-	itemdb->readdb_libconfig("re/item_db.conf");
 
-	fclose(tosql.fp);
+	for (i = 0; i < ARRAYLENGTH(files); i++) {
+		if ((tosql.fp = fopen(files[i].destination, "wt+")) == NULL) {
+			ShowError("itemdb_tosql: File not found \"%s\".\n", files[i].destination);
+			return;
+		}
 
-	if ((tosql.fp = fopen("sql-files/item_db.sql", "wt+")) == NULL) {
-		ShowError("itemdb_tosql: File not found \"%s\".\n", "sql-files/item_db.sql");
-		return;
+		tosql.db_name = files[i].name;
+		totable();
+
+		itemdb->readdb_libconfig(files[i].source);
+
+		fclose(tosql.fp);
 	}
-
-	tosql.db_name = "item_db";
-	totable();
-
-	itemdb->clear(false);
-	itemdb->readdb_libconfig("pre-re/item_db.conf");
-
-	fclose(tosql.fp);
-
-	if ((tosql.fp = fopen("sql-files/item_db2.sql", "wt+")) == NULL) {
-		ShowError("itemdb_tosql: File not found \"%s\".\n", "sql-files/item_db2.sql");
-		return;
-	}
-
-	tosql.db_name = "item_db2";
-	totable();
-
-	itemdb->clear(false);
-	itemdb->readdb_libconfig("item_db2.conf");
-
-	fclose(tosql.fp);
 
 	/* unlink */
 	itemdb->readdb_libconfig_sub = itemdb_readdb_libconfig_sub;
