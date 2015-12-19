@@ -25,6 +25,7 @@
 #include "common/cbasetypes.h"
 #include "common/core.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/strlib.h"
@@ -350,6 +351,48 @@ unsigned int get_percentage(const unsigned int A, const unsigned int B)
 	}
 
 	return (unsigned int)floor(result);
+}
+
+/**
+ * Applies a percentual rate modifier.
+ *
+ * @param value The base value.
+ * @param rate  The rate modifier to apply.
+ * @param stdrate The rate modifier's divider (rate == stdrate => 100%).
+ * @return The modified value.
+ */
+int64 apply_percentrate64(int64 value, int rate, int stdrate)
+{
+	Assert_ret(stdrate > 0);
+	Assert_ret(rate >= 0);
+	if (rate == stdrate)
+		return value;
+	if (rate == 0)
+		return 0;
+	if (INT64_MAX / rate < value) {
+		// Give up some precision to prevent overflows
+		return value / stdrate * rate;
+	}
+	return value * rate / stdrate;
+}
+
+/**
+ * Applies a percentual rate modifier.
+ *
+ * @param value The base value.
+ * @param rate  The rate modifier to apply. Must be <= maxrate.
+ * @param maxrate The rate modifier's divider (maxrate = 100%).
+ * @return The modified value.
+ */
+int apply_percentrate(int value, int rate, int maxrate)
+{
+	Assert_ret(maxrate > 0);
+	Assert_ret(rate >= 0);
+	if (rate == maxrate)
+		return value;
+	if (rate == 0)
+		return 0;
+	return (int)(value * (int64)rate / maxrate);
 }
 
 //-----------------------------------------------------
