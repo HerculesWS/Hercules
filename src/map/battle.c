@@ -1188,9 +1188,9 @@ int64 battle_calc_cardfix(int attack_type, struct block_list *src, struct block_
 					else if( cardfix != 1000 )
 						damage = damage * cardfix / 1000;
 #else
-					if ( (cflag & 1) && cardfix_ != 100 )
-						damage += damage * (cardfix - 100) / 100;
-					else if ( cardfix != 100 )
+					if ((cflag & 1) && cardfix_ != 100)
+						damage += damage * (cardfix_ - 100) / 100;
+					else if (cardfix != 100)
 						damage += damage * (cardfix - 100) / 100;
 #endif
 				}
