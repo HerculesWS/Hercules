@@ -848,6 +848,8 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_ATKER_MOVESPEED] = SI_ATKER_MOVESPEED;
 	status->dbs->IconChangeTable[SC_CUP_OF_BOZA] = SI_CUP_OF_BOZA;
 	status->dbs->IconChangeTable[SC_OVERLAPEXPUP] = SI_OVERLAPEXPUP;
+	status->dbs->IconChangeTable[SC_GM_BATTLE] = SI_GM_BATTLE;
+	status->dbs->IconChangeTable[SC_GM_BATTLE2] = SI_GM_BATTLE2;
 	
 	// Eden Crystal Synthesis
 	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
@@ -1031,6 +1033,8 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_ATKER_MOVESPEED] |= SCB_MAXSP | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_FOOD_CRITICALSUCCESSVALUE] |= SCB_CRI;
 	status->dbs->ChangeFlagTable[SC_CUP_OF_BOZA] |= SCB_VIT | SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_GM_BATTLE] |= SCB_BATK | SCB_MATK | SCB_MAXHP | SCB_MAXSP;
+	status->dbs->ChangeFlagTable[SC_GM_BATTLE2] |= SCB_BATK | SCB_MATK | SCB_MAXHP | SCB_MAXSP;
 	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] = SCB_STR;
@@ -4703,6 +4707,11 @@ unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc,
 	if (sc->data[SC_QUEST_BUFF3])
 		batk += sc->data[SC_QUEST_BUFF3]->val1;
 
+	if (sc->data[SC_GM_BATTLE])
+		batk += sc->data[SC_GM_BATTLE]->val1;
+	if (sc->data[SC_GM_BATTLE2])
+		batk += sc->data[SC_GM_BATTLE2]->val1;
+
 	return (unsigned short)cap_value(batk,0,USHRT_MAX);
 }
 
@@ -4882,6 +4891,11 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 	// Geffen Magic Tournament
 	if (sc->data[SC_FENRIR_CARD])
 		matk += sc->data[SC_FENRIR_CARD]->val1;
+
+	if (sc->data[SC_GM_BATTLE])
+		matk += sc->data[SC_GM_BATTLE]->val1;
+	if (sc->data[SC_GM_BATTLE2])
+		matk += sc->data[SC_GM_BATTLE2]->val1;
 
 	return (unsigned short)cap_value(matk,0,USHRT_MAX);
 }
@@ -5931,6 +5945,10 @@ unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, 
 		maxhp += maxhp * sc->data[SC_ATKER_ASPD]->val1 / 100;
 	if (sc->data[SC_MVPCARD_TAOGUNKA])
 		maxhp += maxhp * sc->data[SC_MVPCARD_TAOGUNKA]->val1 / 100;
+	if (sc->data[SC_GM_BATTLE])
+		maxhp -= maxhp * sc->data[SC_GM_BATTLE]->val1 / 100;
+	if (sc->data[SC_GM_BATTLE2])
+		maxhp -= maxhp * sc->data[SC_GM_BATTLE2]->val1 / 100;
 
 	return (unsigned int)cap_value(maxhp,1,UINT_MAX);
 }
@@ -5964,6 +5982,10 @@ unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, 
 		maxsp += maxsp * sc->data[SC_SOULSCROLL]->val1 / 100;
 	if (sc->data[SC_ATKER_MOVESPEED])
 		maxsp += maxsp * sc->data[SC_ATKER_MOVESPEED]->val1 / 100;
+	if (sc->data[SC_GM_BATTLE])
+		maxsp -= maxsp * sc->data[SC_GM_BATTLE]->val1 / 100;
+	if (sc->data[SC_GM_BATTLE2])
+		maxsp -= maxsp * sc->data[SC_GM_BATTLE2]->val1 / 100;
 
 	return cap_value(maxsp,1,UINT_MAX);
 }

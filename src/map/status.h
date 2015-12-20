@@ -809,6 +809,9 @@ typedef enum sc_type {
 	SC_MAGICAL_FEATHER,
 	SC_BLOSSOM_FLUTTERING,
 
+	SC_GM_BATTLE,
+	SC_GM_BATTLE2,
+
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
 
