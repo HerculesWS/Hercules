@@ -1043,7 +1043,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20150000 //actual 20120221
-	if( bl->type == BL_MOB ) {
+	if (bl->type == BL_MOB && battle_config.show_monster_hp_bar) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
 		p.isBoss = ( ((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss ) ? 1 : 0;
@@ -1174,7 +1174,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20150000 //actual 20120221
-	if( bl->type == BL_MOB ) {
+	if (bl->type == BL_MOB && battle_config.show_monster_hp_bar) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
 		p.isBoss = ( ((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss ) ? 1 : 0;
@@ -1256,7 +1256,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20150000 //actual 20120221
-	if( bl->type == BL_MOB ) {
+	if (bl->type == BL_MOB && battle_config.show_monster_hp_bar) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
 		p.isBoss = ( ((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss ) ? 1 : 0;
