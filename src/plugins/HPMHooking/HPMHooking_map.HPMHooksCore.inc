@@ -4456,6 +4456,12 @@ struct {
 	struct HPMHookPoint *HP_script_conv_str_post;
 	struct HPMHookPoint *HP_script_rid2sd_pre;
 	struct HPMHookPoint *HP_script_rid2sd_post;
+	struct HPMHookPoint *HP_script_id2sd_pre;
+	struct HPMHookPoint *HP_script_id2sd_post;
+	struct HPMHookPoint *HP_script_charid2sd_pre;
+	struct HPMHookPoint *HP_script_charid2sd_post;
+	struct HPMHookPoint *HP_script_nick2sd_pre;
+	struct HPMHookPoint *HP_script_nick2sd_post;
 	struct HPMHookPoint *HP_script_detach_rid_pre;
 	struct HPMHookPoint *HP_script_detach_rid_post;
 	struct HPMHookPoint *HP_script_push_val_pre;
@@ -10275,6 +10281,12 @@ struct {
 	int HP_script_conv_str_post;
 	int HP_script_rid2sd_pre;
 	int HP_script_rid2sd_post;
+	int HP_script_id2sd_pre;
+	int HP_script_id2sd_post;
+	int HP_script_charid2sd_pre;
+	int HP_script_charid2sd_post;
+	int HP_script_nick2sd_pre;
+	int HP_script_nick2sd_post;
 	int HP_script_detach_rid_pre;
 	int HP_script_detach_rid_post;
 	int HP_script_push_val_pre;
