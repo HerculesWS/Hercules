@@ -14969,6 +14969,7 @@ BUILDIN(explode)
 	script->set_reg(st, sd, reference_uid(id, start), name, (void*)temp, reference_getref(data));
 
 	aFree(temp);
+	script_pushint(st, (start + 1));
 	return true;
 }
 
