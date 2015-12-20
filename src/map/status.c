@@ -851,6 +851,8 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_GM_BATTLE] = SI_GM_BATTLE;
 	status->dbs->IconChangeTable[SC_GM_BATTLE2] = SI_GM_BATTLE2;
 	status->dbs->IconChangeTable[SC_2011RWC] = SI_2011RWC;
+	status->dbs->IconChangeTable[SC_STR_SCROLL] = SI_STR_SCROLL;
+	status->dbs->IconChangeTable[SC_INT_SCROLL] = SI_INT_SCROLL;
 	
 	// Eden Crystal Synthesis
 	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
@@ -1037,6 +1039,8 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_GM_BATTLE] |= SCB_BATK | SCB_MATK | SCB_MAXHP | SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_GM_BATTLE2] |= SCB_BATK | SCB_MATK | SCB_MAXHP | SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_2011RWC] |= SCB_STR | SCB_AGI | SCB_VIT | SCB_INT | SCB_DEX | SCB_LUK | SCB_BATK | SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_STR_SCROLL] |= SCB_STR;
+	status->dbs->ChangeFlagTable[SC_INT_SCROLL] |= SCB_INT;
 	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] = SCB_STR;
@@ -4348,6 +4352,8 @@ unsigned short status_calc_str(struct block_list *bl, struct status_change *sc, 
 		str -= sc->data[SC_KYOUGAKU]->val3;
 	if (sc->data[SC_2011RWC])
 		str += sc->data[SC_2011RWC]->val1;
+	if (sc->data[SC_STR_SCROLL])
+		str += sc->data[SC_STR_SCROLL]->val1;
 
 	return (unsigned short)cap_value(str,0,USHRT_MAX);
 }
@@ -4516,6 +4522,8 @@ unsigned short status_calc_int(struct block_list *bl, struct status_change *sc, 
 		int_ -= sc->data[SC_KYOUGAKU]->val3;
 	if (sc->data[SC_2011RWC])
 		int_ += sc->data[SC_2011RWC]->val1;
+	if (sc->data[SC_INT_SCROLL])
+		int_ += sc->data[SC_INT_SCROLL]->val1;
 
 	if(bl->type != BL_PC){
 		if(sc->data[SC_NOEQUIPHELM])

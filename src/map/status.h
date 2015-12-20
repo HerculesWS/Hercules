@@ -812,6 +812,8 @@ typedef enum sc_type {
 	SC_GM_BATTLE,
 	SC_GM_BATTLE2,
 	SC_2011RWC,
+	SC_STR_SCROLL,
+	SC_INT_SCROLL, // 630
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
