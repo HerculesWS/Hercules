@@ -14918,17 +14918,14 @@ BUILDIN(explode)
 	const char delimiter = script_getstr(st, 4)[0];
 	int32 id;
 	size_t len = strlen(str);
-	int i = 0, j = 0;
+	int i = 0, j = 0, k = 0;
 	int start;
-	char *temp;
-	const char* name;
+	char *temp = NULL;
+	const char *name;
 
 	TBL_PC* sd = NULL;
 
-	temp = (char*)aMalloc(len + 1);
-
-	if( !data_isreference(data) )
-	{
+	if (!data_isreference(data)) {
 		ShowError("script:explode: not a variable\n");
 		script->reportdata(data);
 		st->state = END;
@@ -14939,34 +14936,35 @@ BUILDIN(explode)
 	start = reference_getindex(data);
 	name = reference_getname(data);
 
-	if( !is_string_variable(name) )
-	{
+	if (!is_string_variable(name)) {
 		ShowError("script:explode: not string array\n");
 		script->reportdata(data);
 		st->state = END;
 		return false;// data type mismatch
 	}
 
-	if( not_server_variable(*name) )
-	{
+	if (not_server_variable(*name)) {
 		sd = script->rid2sd(st);
-		if( sd == NULL )
+		if (sd == NULL)
 			return true;// no player attached
 	}
 
-	while(str[i] != '\0') {
-		if(str[i] == delimiter && start < SCRIPT_MAX_ARRAYSIZE-1) { //break at delimiter but ignore after reaching last array index
+	temp = aMalloc(len + 1);
+
+	for (i = 0; str[i] != '\0'; i++) {
+		if (str[i] == delimiter && (int64)start + k < (int64)(SCRIPT_MAX_ARRAYSIZE-1)) { // FIXME[Haru]: SCRIPT_MAX_ARRAYSIZE should really be unsigned (and INT32_MAX)
+			//break at delimiter but ignore after reaching last array index
 			temp[j] = '\0';
-			script->set_reg(st, sd, reference_uid(id, start++), name, (void*)temp, reference_getref(data));
+			script->set_reg(st, sd, reference_uid(id, start + k), name, (void*)temp, reference_getref(data));
+			k++;
 			j = 0;
-			++i;
 		} else {
-			temp[j++] = str[i++];
+			temp[j++] = str[i];
 		}
 	}
 	//set last string
 	temp[j] = '\0';
-	script->set_reg(st, sd, reference_uid(id, start), name, (void*)temp, reference_getref(data));
+	script->set_reg(st, sd, reference_uid(id, start + k), name, (void*)temp, reference_getref(data));
 
 	aFree(temp);
 	return true;
