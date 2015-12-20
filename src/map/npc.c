@@ -1769,7 +1769,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	if( w + sd->weight > sd->max_weight )
 		return ERROR_TYPE_INVENTORY_WEIGHT;
 
-	if( (double)shop[i].value * amount > INT_MAX ) {
+	if ((int64)shop[i].value * amount > INT_MAX) {
 		ShowWarning("npc_cashshop_buy: Item '%s' (%d) price overflow attempt!\n", item->name, nameid);
 		ShowDebug("(NPC:'%s' (%s,%d,%d), player:'%s' (%d/%d), value:%d, amount:%d)\n",
 				nd->exname, map->list[nd->bl.m].name, nd->bl.x, nd->bl.y,
@@ -1812,7 +1812,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 	struct npc_data* nd;
 	struct npc_item_list *shop = NULL;
-	double z;
+	int64 z;
 	int i,j,w,skill_t,new_, idx = skill->get_index(MC_DISCOUNT);
 	unsigned short shop_size = 0;
 
@@ -1883,21 +1883,21 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 
 		value = pc->modifybuyvalue(sd,value);
 
-		z += (double)value * amount;
+		z += (int64)value * amount;
 		w += itemdb_weight(nameid) * amount;
 	}
 
 	if( nd->master_nd != NULL ) //Script-based shops.
 		return npc->buylist_sub(sd,n,item_list,nd->master_nd);
 
-	if( z > (double)sd->status.zeny )
+	if (z > sd->status.zeny)
 		return 1; // Not enough Zeny
 	if( w + sd->weight > sd->max_weight )
 		return 2; // Too heavy
 	if( pc->inventoryblank(sd) < new_ )
 		return 3; // Not enough space to store items
 
-	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
+	pc->payzeny(sd, (int)z, LOG_TYPE_NPC, NULL);
 
 	for( i = 0; i < n; ++i ) {
 		int nameid = item_list[i*2+1];
@@ -1921,10 +1921,10 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 			skill_t = sd->status.skill[idx].flag - SKILL_FLAG_REPLACED_LV_0;
 
 		if( skill_t > 0 ) {
-			z = z * (double)skill_t * (double)battle_config.shop_exp/10000.;
-			if( z < 1 )
+			z = apply_percentrate64(z, skill_t * battle_config.shop_exp, 10000);
+			if (z < 1)
 				z = 1;
-			pc->gainexp(sd,NULL,0,(int)z, false);
+			pc->gainexp(sd, NULL, 0, (int)z, false);
 		}
 	}
 
@@ -1937,7 +1937,7 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, struct packet_npc_market_purchase *p) {
 	struct npc_data* nd;
 	struct npc_item_list *shop = NULL;
-	double z;
+	int64 z;
 	int i,j,w,new_;
 	unsigned short shop_size = 0;
 
@@ -1997,11 +1997,11 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 				return 1;
 		}
 
-		z += (double)value * amount;
+		z += (int64)value * amount;
 		w += itemdb_weight(nameid) * amount;
 	}
 
-	if( z > (double)sd->status.zeny ) /* TODO find official response for this */
+	if (z > sd->status.zeny) /* TODO find official response for this */
 		return 1; // Not enough Zeny
 
 	if( w + sd->weight > sd->max_weight ) /* TODO find official response for this */
@@ -2098,7 +2098,7 @@ int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_li
 /// @param item_list 'n' pairs <index,amount>
 /// @return result code for clif->parse_NpcSellListSend
 int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) {
-	double z;
+	int64 z;
 	int i,skill_t, skill_idx = skill->get_index(MC_OVERCHARGE);
 	struct npc_data *nd;
 	bool duplicates[MAX_INVENTORY] = { 0 };
@@ -2147,7 +2147,7 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 
 		value = pc->modifysellvalue(sd, sd->inventory_data[idx]->value_sell);
 
-		z += (double)value*amount;
+		z += (int64)value * amount;
 	}
 
 	if( nd->master_nd ) { // Script-controlled shops
@@ -2181,8 +2181,8 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 			skill_t = sd->status.skill[skill_idx].flag - SKILL_FLAG_REPLACED_LV_0;
 
 		if( skill_t > 0 ) {
-			z = z * (double)skill_t * (double)battle_config.shop_exp/10000.;
-			if( z < 1 )
+			z = apply_percentrate64(z, skill_t * battle_config.shop_exp, 10000);
+			if (z < 1)
 				z = 1;
 			pc->gainexp(sd, NULL, 0, (int)z, false);
 		}
