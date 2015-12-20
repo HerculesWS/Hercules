@@ -2482,15 +2482,15 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	if(mvp_sd && md->db->mexp > 0 && md->special_state.ai == AI_NONE) {
 		int log_mvp[2] = {0};
 		unsigned int mexp;
-		double exp;
+		int64 exp;
 
 		//mapflag: noexp check [Lorky]
-		if (map->list[m].flag.nobaseexp || type&2)
-			exp =1;
-		else {
+		if (map->list[m].flag.nobaseexp || type&2) {
+			exp = 1;
+		} else {
 			exp = md->db->mexp;
 			if (count > 1)
-				exp += exp*(battle_config.exp_bonus_attacker*(count-1))/100.; //[Gengar]
+				exp += apply_percentrate64(exp, battle_config.exp_bonus_attacker * (count-1), 100); //[Gengar]
 		}
 
 		mexp = (unsigned int)cap_value(exp, 1, UINT_MAX);
@@ -3632,7 +3632,7 @@ int mob_makedummymobdb(int class_)
 //Adjusts the drop rate of item according to the criteria given. [Skotlex]
 unsigned int mob_drop_adjust(int baserate, int rate_adjust, unsigned short rate_min, unsigned short rate_max)
 {
-	double rate = baserate;
+	int64 rate = baserate;
 
 	if (battle_config.logarithmic_drops && rate_adjust > 0 && rate_adjust != 100 && baserate > 0) //Logarithmic drops equation by Ishizu-Chan
 		//Equation: Droprate(x,y) = x * (5 - log(x)) ^ (ln(y) / ln(5))
@@ -3640,7 +3640,7 @@ unsigned int mob_drop_adjust(int baserate, int rate_adjust, unsigned short rate_
 		rate = rate * pow((5.0 - log10(rate)), (log(rate_adjust/100.) / log(5.0))) + 0.5;
 	else
 		//Classical linear rate adjustment.
-		rate = rate * rate_adjust/100;
+		rate = apply_percentrate64(rate, rate_adjust, 100);
 
 	return (unsigned int)cap_value(rate,rate_min,rate_max);
 }
@@ -4173,12 +4173,12 @@ int mob_read_db_sub(config_setting_t *mobt, int n, const char *source)
 	}
 
 	if (mob->lookup_const(mobt, "Exp", &i32) && i32 >= 0) {
-		double exp = (double)(i32) * (double)battle_config.base_exp_rate / 100.;
+		int64 exp = apply_percentrate64(i32, battle_config.base_exp_rate, 100);
 		md.base_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
 	}
 
 	if (mob->lookup_const(mobt, "JExp", &i32) && i32 >= 0) {
-		double exp = (double)(i32) * (double)battle_config.job_exp_rate / 100.;
+		int64 exp = apply_percentrate64(i32, battle_config.job_exp_rate, 100);
 		md.job_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
 	}
 
@@ -4302,19 +4302,17 @@ int mob_read_db_sub(config_setting_t *mobt, int n, const char *source)
 	// MVP EXP Bonus: MEXP
 	if (mob->lookup_const(mobt, "MvpExp", &i32) && i32 >= 0) {
 		// Some new MVP's MEXP multiple by high exp-rate cause overflow. [LuzZza]
-		double exp = (double)i32 * (double)battle_config.mvp_exp_rate / 100.;
+		int64 exp = apply_percentrate64(i32, battle_config.mvp_exp_rate, 100);
 		md.mexp = (unsigned int)cap_value(exp, 0, UINT_MAX);
 	}
 
 	if (maxhpUpdated) {
 		// Now that we know if it is an mvp or not, apply battle_config modifiers [Skotlex]
-		double maxhp = (double)md.status.max_hp;
+		int64 maxhp = md.status.max_hp;
 		if (md.mexp > 0) { //Mvp
-			if (battle_config.mvp_hp_rate != 100)
-				maxhp = maxhp * (double)battle_config.mvp_hp_rate / 100.;
+			maxhp = apply_percentrate64(maxhp, battle_config.mvp_hp_rate, 100);
 		} else { //Normal mob
-			if (battle_config.monster_hp_rate != 100)
-				maxhp = maxhp * (double)battle_config.monster_hp_rate / 100.;
+			maxhp = apply_percentrate64(maxhp, battle_config.monster_hp_rate, 100);
 		}
 		md.status.max_hp = (unsigned int)cap_value(maxhp, 1, UINT_MAX);
 	}

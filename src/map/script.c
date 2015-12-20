@@ -3851,7 +3851,7 @@ void op_2str(struct script_state* st, int op, const char* s1, const char* s2)
 void op_2num(struct script_state* st, int op, int i1, int i2)
 {
 	int ret;
-	double ret_double;
+	int64 ret64;
 
 	switch( op ) {
 	case C_AND:     ret = i1 & i2;    break;
@@ -3883,25 +3883,21 @@ void op_2num(struct script_state* st, int op, int i1, int i2)
 			ret = i1 % i2;
 		break;
 	default:
-		switch( op )
-		{// operators that can overflow/underflow
-		case C_ADD: ret = i1 + i2; ret_double = (double)i1 + (double)i2; break;
-		case C_SUB: ret = i1 - i2; ret_double = (double)i1 - (double)i2; break;
-		case C_MUL: ret = i1 * i2; ret_double = (double)i1 * (double)i2; break;
+		switch (op) { // operators that can overflow/underflow
+		case C_ADD: ret = i1 + i2; ret64 = (int64)i1 + i2; break;
+		case C_SUB: ret = i1 - i2; ret64 = (int64)i1 - i2; break;
+		case C_MUL: ret = i1 * i2; ret64 = (int64)i1 * i2; break;
 		default:
 			ShowError("script:op_2num: unexpected number operator %s i1=%d i2=%d\n", script->op2name(op), i1, i2);
 			script->reportsrc(st);
 			script_pushnil(st);
 			return;
 		}
-		if( ret_double < (double)INT_MIN )
-		{
+		if (ret64 < INT_MIN) {
 			ShowWarning("script:op_2num: underflow detected op=%s i1=%d i2=%d\n", script->op2name(op), i1, i2);
 			script->reportsrc(st);
 			ret = INT_MIN;
-		}
-		else if( ret_double > (double)INT_MAX )
-		{
+		} else if (ret64 > INT_MAX) {
 			ShowWarning("script:op_2num: overflow detected op=%s i1=%d i2=%d\n", script->op2name(op), i1, i2);
 			script->reportsrc(st);
 			ret = INT_MAX;
@@ -9710,20 +9706,18 @@ BUILDIN(makepet)
 BUILDIN(getexp)
 {
 	int base=0,job=0;
-	double bonus;
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
 		return true;
 
-	base=script_getnum(st,2);
-	job =script_getnum(st,3);
-	if(base<0 || job<0)
+	base = script_getnum(st,2);
+	job = script_getnum(st,3);
+	if (base < 0 || job < 0)
 		return true;
 
 	// bonus for npc-given exp
-	bonus = battle_config.quest_exp_rate / 100.;
-	base = (int) cap_value(base * bonus, 0, INT_MAX);
-	job = (int) cap_value(job * bonus, 0, INT_MAX);
+	base = cap_value(apply_percentrate(base, battle_config.quest_exp_rate, 100), 0, INT_MAX);
+	job = cap_value(apply_percentrate(job, battle_config.quest_exp_rate, 100), 0, INT_MAX);
 
 	pc->gainexp(sd, &sd->bl, base, job, true);
 
