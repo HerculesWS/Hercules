@@ -850,6 +850,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_OVERLAPEXPUP] = SI_OVERLAPEXPUP;
 	status->dbs->IconChangeTable[SC_GM_BATTLE] = SI_GM_BATTLE;
 	status->dbs->IconChangeTable[SC_GM_BATTLE2] = SI_GM_BATTLE2;
+	status->dbs->IconChangeTable[SC_2011RWC] = SI_2011RWC;
 	
 	// Eden Crystal Synthesis
 	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
@@ -1035,6 +1036,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_CUP_OF_BOZA] |= SCB_VIT | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_GM_BATTLE] |= SCB_BATK | SCB_MATK | SCB_MAXHP | SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_GM_BATTLE2] |= SCB_BATK | SCB_MATK | SCB_MAXHP | SCB_MAXSP;
+	status->dbs->ChangeFlagTable[SC_2011RWC] |= SCB_STR | SCB_AGI | SCB_VIT | SCB_INT | SCB_DEX | SCB_LUK | SCB_BATK | SCB_MATK;
 	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] = SCB_STR;
@@ -1092,7 +1094,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_DISTRUCTIONSCROLL] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_ROYALSCROLL] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_IMMUNITYSCROLL] |= SCB_ALL;
-	status->dbs->ChangeFlagTable[SC_MYSTICSCROLL] |= SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_MYSTICSCROLL] |= SCB_MATK | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_BATTLESCROLL] |= SCB_BATK | SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_ARMORSCROLL] |= SCB_DEF | SCB_FLEE;
 	status->dbs->ChangeFlagTable[SC_FREYJASCROLL] |= SCB_MDEF | SCB_FLEE2;
@@ -4344,6 +4346,8 @@ unsigned short status_calc_str(struct block_list *bl, struct status_change *sc, 
 		str -= sc->data[SC_STOMACHACHE]->val1;
 	if(sc->data[SC_KYOUGAKU])
 		str -= sc->data[SC_KYOUGAKU]->val3;
+	if (sc->data[SC_2011RWC])
+		str += sc->data[SC_2011RWC]->val1;
 
 	return (unsigned short)cap_value(str,0,USHRT_MAX);
 }
@@ -4399,6 +4403,8 @@ unsigned short status_calc_agi(struct block_list *bl, struct status_change *sc, 
 		agi -= sc->data[SC_STOMACHACHE]->val1;
 	if(sc->data[SC_KYOUGAKU])
 		agi -= sc->data[SC_KYOUGAKU]->val3;
+	if (sc->data[SC_2011RWC])
+		agi += sc->data[SC_2011RWC]->val1;
 
 	if(sc->data[SC_MARSHOFABYSS])
 		agi -= agi * sc->data[SC_MARSHOFABYSS]->val2 / 100;
@@ -4451,6 +4457,8 @@ unsigned short status_calc_vit(struct block_list *bl, struct status_change *sc, 
 		vit -= vit * sc->data[SC_NOEQUIPARMOR]->val2 / 100;
 	if (sc->data[SC_CUP_OF_BOZA])
 		vit += sc->data[SC_CUP_OF_BOZA]->val1;
+	if (sc->data[SC_2011RWC])
+		vit += sc->data[SC_2011RWC]->val1;
 
 	return (unsigned short)cap_value(vit,0,USHRT_MAX);
 }
@@ -4506,6 +4514,8 @@ unsigned short status_calc_int(struct block_list *bl, struct status_change *sc, 
 		int_ -= sc->data[SC_STOMACHACHE]->val1;
 	if(sc->data[SC_KYOUGAKU])
 		int_ -= sc->data[SC_KYOUGAKU]->val3;
+	if (sc->data[SC_2011RWC])
+		int_ += sc->data[SC_2011RWC]->val1;
 
 	if(bl->type != BL_PC){
 		if(sc->data[SC_NOEQUIPHELM])
@@ -4568,6 +4578,8 @@ unsigned short status_calc_dex(struct block_list *bl, struct status_change *sc, 
 		dex -= sc->data[SC_STOMACHACHE]->val1;
 	if(sc->data[SC_KYOUGAKU])
 		dex -= sc->data[SC_KYOUGAKU]->val3;
+	if (sc->data[SC_2011RWC])
+		dex += sc->data[SC_2011RWC]->val1;
 
 	if(sc->data[SC_MARSHOFABYSS])
 		dex -= dex * sc->data[SC_MARSHOFABYSS]->val2 / 100;
@@ -4618,11 +4630,12 @@ unsigned short status_calc_luk(struct block_list *bl, struct status_change *sc, 
 		luk -= sc->data[SC_KYOUGAKU]->val3;
 	if(sc->data[SC_LAUDARAMUS])
 		luk += 4 + sc->data[SC_LAUDARAMUS]->val1;
-
 	if(sc->data[SC__STRIPACCESSARY] && bl->type != BL_PC)
 		luk -= luk * sc->data[SC__STRIPACCESSARY]->val2 / 100;
 	if(sc->data[SC_BANANA_BOMB])
 		luk -= luk * sc->data[SC_BANANA_BOMB]->val1 / 100;
+	if (sc->data[SC_2011RWC])
+		luk += sc->data[SC_2011RWC]->val1;
 
 	return (unsigned short)cap_value(luk,0,USHRT_MAX);
 }
@@ -4698,6 +4711,8 @@ unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc,
 		batk -= batk * sc->data[SC__ENERVATION]->val2 / 100;
 	if(sc->data[SC_SATURDAY_NIGHT_FEVER])
 		batk += 100 * sc->data[SC_SATURDAY_NIGHT_FEVER]->val1;
+	if (sc->data[SC_BATTLESCROLL])
+		batk += batk * sc->data[SC_BATTLESCROLL]->val1 / 100;
 		
 	// Eden Crystal Synthesis
 	if (sc->data[SC_QUEST_BUFF1])
@@ -4708,9 +4723,11 @@ unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc,
 		batk += sc->data[SC_QUEST_BUFF3]->val1;
 
 	if (sc->data[SC_GM_BATTLE])
-		batk += sc->data[SC_GM_BATTLE]->val1;
+		batk += batk * sc->data[SC_GM_BATTLE]->val1 / 100;
 	if (sc->data[SC_GM_BATTLE2])
-		batk += sc->data[SC_GM_BATTLE2]->val1;
+		batk += batk * sc->data[SC_GM_BATTLE2]->val1 / 100;
+	if (sc->data[SC_2011RWC])
+		batk += batk * sc->data[SC_2011RWC]->val2 / 100;
 
 	return (unsigned short)cap_value(batk,0,USHRT_MAX);
 }
@@ -4893,9 +4910,11 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += sc->data[SC_FENRIR_CARD]->val1;
 
 	if (sc->data[SC_GM_BATTLE])
-		matk += sc->data[SC_GM_BATTLE]->val1;
+		matk += matk * sc->data[SC_GM_BATTLE]->val1 / 100;
 	if (sc->data[SC_GM_BATTLE2])
-		matk += sc->data[SC_GM_BATTLE2]->val1;
+		matk += matk * sc->data[SC_GM_BATTLE2]->val1 / 100;
+	if (sc->data[SC_2011RWC])
+		matk += matk * sc->data[SC_2011RWC]->val2 / 100;
 
 	return (unsigned short)cap_value(matk,0,USHRT_MAX);
 }
@@ -7560,6 +7579,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			break;
 		case SC_FOOD_LUK_CASH:
 			status_change_end(bl, SC_FOOD_LUK, INVALID_TIMER);
+			break;
+		case SC_GM_BATTLE:
+			status_change_end(bl, SC_GM_BATTLE2, INVALID_TIMER);
+			break;
+		case SC_GM_BATTLE2:
+			status_change_end(bl, SC_GM_BATTLE, INVALID_TIMER);
 			break;
 		case SC_ENDURE:
 			if( val4 == 1 )
