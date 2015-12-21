@@ -202,7 +202,7 @@
 2777:2778:5479,{ bonus bMaxHP,300; bonus bMatkRate,5; bonus2 bSubEle,Ele_Neutral,5; }
 2779:2780:5482,{ bonus bMatkRate,10; bonus bInt,5; bonus2 bSubRace,RC_Angel,10; }
 2779:2780:5577,{ bonus bMatkRate,10; bonus bInt,5; bonus2 bSubRace,RC_Angel,10; }
-2950:15067:20709:22012,{ bonus2 bExpAddClass,Class_All,10; }
+2950:15067:20709:22012,{ bonus2 bExpAddRace,RC_All,10; }
 2963:15073,{ bonus bAspdRate,5; }
 2963:15074,{ bonus bDelayrate,-5; bonus2 bAddRaceTolerance,RC_DemiPlayer,5; }
 2964:15073,{ bonus bDelayrate,-5; bonus2 bAddRaceTolerance,RC_DemiPlayer,5; }
