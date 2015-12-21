@@ -13834,16 +13834,21 @@ BUILDIN(movenpc) {
 /*==========================================
  * message [MouseJstr]
  *------------------------------------------*/
-BUILDIN(message) {
-	const char *msg,*player;
-	TBL_PC *pl_sd = NULL;
+BUILDIN(message)
+{
+	const char *message;
+	TBL_PC *sd = NULL;
 
-	player = script_getstr(st,2);
-	msg = script_getstr(st,3);
+	if (script_isstringtype(st,2))
+		sd = script->nick2sd(st, script_getstr(st,2));
+	else
+		sd = script->id2sd(st, script_getnum(st,2));
 
-	if ((pl_sd = script->nick2sd(st, (char*)player)) == NULL)
+	if (sd == NULL)
 		return true;
-	clif->message(pl_sd->fd, msg);
+
+	message = script_getstr(st,3);
+	clif->message(sd->fd, message);
 
 	return true;
 }
@@ -20358,7 +20363,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(atcommand,"s"), // [MouseJstr]
 		BUILDIN_DEF2(atcommand,"charcommand","s"), // [MouseJstr]
 		BUILDIN_DEF(movenpc,"sii?"), // [MouseJstr]
-		BUILDIN_DEF(message,"ss"), // [MouseJstr]
+		BUILDIN_DEF(message,"vs"), // [MouseJstr]
 		BUILDIN_DEF(npctalk,"s?"), // [Valaris]
 		BUILDIN_DEF(mobcount,"ss"),
 		BUILDIN_DEF(getlook,"i"),

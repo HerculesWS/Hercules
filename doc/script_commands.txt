@@ -4091,11 +4091,12 @@ Note: rid2name may not produce correct character names since rid means
 
 ---------------------------------------
 
+*message <account ID>,"<message>";
 *message "<character name>","<message>";
 
 That command will send a message to the chat window of the character 
-specified by name. The text will also appear above the head of that 
-character. It will not be seen by anyone else.
+specified by account ID or name. The text will also appear above the head
+of that character. It will not be seen by anyone else.
 
 ---------------------------------------
 
