@@ -13610,16 +13610,28 @@ BUILDIN(atcommand) {
 	return ret;
 }
 
-/*==========================================
- * Displays a message for the player only (like system messages like "you got an apple" )
- *------------------------------------------*/
+/**
+ * Displays a message for the player only (like system messages like "you got an apple")
+ *
+ * @code
+ *   dispbottom "<message>"{,<color>};
+ * @endcode
+ */
 BUILDIN(dispbottom)
 {
-	TBL_PC *sd=script->rid2sd(st);
-	const char *message;
-	message=script_getstr(st,2);
-	if(sd)
-		clif_disp_onlyself(sd,message,(int)strlen(message));
+	TBL_PC *sd = script->rid2sd(st);
+	const char *message = script_getstr(st,2);
+
+	if (sd == NULL)
+		return true;
+
+	if (script_hasdata(st,3)) {
+		int color = script_getnum(st,3);
+		clif->messagecolor_self(sd->fd, color, message);
+	} else {
+		clif_disp_onlyself(sd, message, (int)strlen(message));
+	}
+
 	return true;
 }
 
@@ -20396,7 +20408,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(deletepset,"i"), // Delete a pattern set [MouseJstr]
 		BUILDIN_DEF(pcre_match,"ss"),
 #endif
-		BUILDIN_DEF(dispbottom,"s"), //added from jA [Lupus]
+		BUILDIN_DEF(dispbottom,"s?"), //added from jA [Lupus]
 		BUILDIN_DEF(getusersname,""),
 		BUILDIN_DEF(recovery,""),
 		BUILDIN_DEF(getpetinfo,"i"),
