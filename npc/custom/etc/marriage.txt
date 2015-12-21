@@ -13,7 +13,7 @@
 //============================================================
 
 // Configuration Variables:
--	script	marriage_init	-1,{
+-	script	marriage_init	FAKE_NPC,{
 OnInit:
 	set $@wed_allow, 0;	//If 1, allows same sex marriages.
 	set $@wed_veil, 0;	//Set to 0 to disable veil check on the bride

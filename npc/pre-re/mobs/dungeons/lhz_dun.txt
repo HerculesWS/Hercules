@@ -229,7 +229,7 @@ lhz_dun03,139,117,20,11	monster	Sniper Cecil	1644,1,2700000,2500000,1
 lhz_dun03,138,138,36,34	monster	High Priest Margaretha	1643,1,3300000,3000000,1
 lhz_dun03,138,138,36,34	monster	High Wizard Kathryne	1645,1,2580000,2460000,1
 
-lhz_dun03,2,2,0	script	summon_boss_lt	-1,{
+lhz_dun03,2,2,0	script	summon_boss_lt	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	end;

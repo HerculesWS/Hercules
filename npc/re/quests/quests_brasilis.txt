@@ -105,7 +105,7 @@ OnGo:
 	end;
 }
 
--	script	Puppy#bra	-1,{
+-	script	Puppy#bra	FAKE_NPC,{
 	if (questprogress(9030) == 1) {
 		if (brazil_kid < 3) {
 			mes "[Puppy]";

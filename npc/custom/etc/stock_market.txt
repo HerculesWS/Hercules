@@ -15,7 +15,7 @@
 //=        so use it on your own risk
 //============================================================
 
--	script	sharenames	-1,{
+-	script	sharenames	FAKE_NPC,{
 	end;
 OnInit:
 	// Sets the names of the shares //

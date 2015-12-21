@@ -3056,7 +3056,7 @@ OnTimer5000:
 	end;
 }
 
--	script	#3rdgc_guard00	-1,{
+-	script	#3rdgc_guard00	FAKE_NPC,{
 	end;
 OnInit:
 OnDisable:

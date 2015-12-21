@@ -4529,7 +4529,7 @@ OnInit:
 	end;
 }
 
--	script	Unknown Trace#buwaya	-1,{
+-	script	Unknown Trace#buwaya	FAKE_NPC,{
 	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait!! -";
 		mes "- You have too many items on you. -";
@@ -5881,7 +5881,7 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 	}
 }
 
-ma_fild01,1,1,0	script	malaya_ma_fild01_mon	-1,{
+ma_fild01,1,1,0	script	malaya_ma_fild01_mon	FAKE_NPC,{
 OnInit:
 	enablenpc "malaya_ma_fild01_mon";
 	donpcevent "malaya_ma_fild01_mon::OnEnable";
@@ -7915,7 +7915,7 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 	}
 }
 
--	script	Suspicious Wooden Stick::MalayaStick	-1,{
+-	script	Suspicious Wooden Stick::MalayaStick	FAKE_NPC,{
 	if (checkweight(Knife,1) == 0) {
 		mes "- Wait !! -";
 		mes "- You have too many items. -";
@@ -7986,7 +7986,7 @@ malaya,48,79,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick8	4_BU
 malaya,50,46,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick9	4_BULLETIN_BOARD2
 malaya,59,84,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick10	4_BULLETIN_BOARD2
 
--	script	Tent#ma	-1,{ //557
+-	script	Tent#ma	FAKE_NPC,{ //557
 	end;
 OnInit:
 	disablenpc strnpcinfo(0);

@@ -33,7 +33,7 @@
 //= 1.1
 //=========================================================================
 
--	script	Gld_Trea_Protect::Gld_Trea_Protect	-1,{
+-	script	Gld_Trea_Protect::Gld_Trea_Protect	FAKE_NPC,{
 end;
 
 OnTouch:

@@ -35,7 +35,7 @@
 //=========================================================================
 
 //== WoE Start/Stop times ==================================
--	script	Agit2_Event	-1,{
+-	script	Agit2_Event	FAKE_NPC,{
 	end;
 
 OnClock1800:	//start time for Tues(2), Thurs(4)

@@ -3211,7 +3211,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 }
 
 //== Factory Quest :: ein_factory ==========================
-einbroch,1,1,0	script	Einbroch Smog Alert	-1,{
+einbroch,1,1,0	script	Einbroch Smog Alert	FAKE_NPC,{
 	end;
 
 OnEnable:

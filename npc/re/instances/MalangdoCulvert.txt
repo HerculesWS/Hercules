@@ -707,7 +707,7 @@ OnTimer520000:
 	end;
 }
 
-1@pump,1,1,4	script	Monster Hole#n	-1,{
+1@pump,1,1,4	script	Monster Hole#n	FAKE_NPC,{
 	end;
 OnSpawn:
 	.@i$ = charat(strnpcinfo(2),0);
@@ -789,7 +789,7 @@ OnTouch:
 1@pump,75,80,4	duplicate(#Culvert_n1)	#Culvert_n5	CLEAR_NPC,14,14
 1@pump,58,101,4	duplicate(#Culvert_n1)	#Culvert_n6	CLEAR_NPC,14,14
 
-1@pump,1,1,4	script	Boss Creation#n	-1,{
+1@pump,1,1,4	script	Boss Creation#n	FAKE_NPC,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname(strnpcinfo(0));
@@ -909,7 +909,7 @@ OnTouch:
 }
 
 //MD_Putmob "1@pump" 0 0 0 0 20 HYDRA 0 0 2
-1@pump,1,1,4	script	Hydra#n	-1,{
+1@pump,1,1,4	script	Hydra#n	FAKE_NPC,{
 OnInstanceInit:
 	monster strnpcinfo(4),0,0,"Hydra",1068,20;
 	end;

@@ -3113,7 +3113,7 @@ OnTouch:
 	end;
 }
 
-prt_maze02,132,132,0	script	#skill	-1,{
+prt_maze02,132,132,0	script	#skill	FAKE_NPC,{
 OnEnable:
 	monster "prt_maze02",14,177,"Flora",1118,1,"#skill::OnMyMobDead";
 	monster "prt_maze02",17,171,"Flora",1118,1,"#skill::OnMyMobDead";
@@ -5044,7 +5044,7 @@ OnReset:
 	end;
 }
 
-cmd_in01,1,1,0	script	s_dance_timer	-1,{
+cmd_in01,1,1,0	script	s_dance_timer	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -12339,7 +12339,7 @@ OnEnable:
 	end;
 }
 
-que_sign01,1,0,0	script	Timer#serin	-1,{
+que_sign01,1,0,0	script	Timer#serin	FAKE_NPC,{
 OnStart:
 	initnpctimer;
 	end;
@@ -12360,7 +12360,7 @@ OnTimer620000:
 	end;
 }
 
-que_sign01,50,1,0	script	CallMonster#serin	-1,{
+que_sign01,50,1,0	script	CallMonster#serin	FAKE_NPC,{
 OnCall:
 	monster "que_sign01",196,44,"Dark Lord Incarnation",1605,1,"CallMonster#serin::OnMyMobDead";
 	end;
@@ -12385,7 +12385,7 @@ OnEnable:
 	end;
 }
 
-que_sign01,1,1,0	script	Timer#witch	-1,{
+que_sign01,1,1,0	script	Timer#witch	FAKE_NPC,{
 OnStart:
 	initnpctimer;
 	end;
@@ -12419,7 +12419,7 @@ OnTouch:
 	end;
 }
 
-que_sign01,1,2,0	script	CallMonster#witch	-1,{
+que_sign01,1,2,0	script	CallMonster#witch	FAKE_NPC,{
 OnCall:
 	monster "que_sign01",196,195,"Dark Lord Incarnation",1605,1,"CallMonster#witch::OnMyMobDead";
 	monster "que_sign01",180,180,"Ancient Mummy",1522,1,"CallMonster#witch::OnMyMobDead";

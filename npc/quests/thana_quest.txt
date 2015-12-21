@@ -2235,7 +2235,7 @@ OnDisable:
 	end;
 }
 
-thana_boss,141,218,0	script	#sommon_thanatos	-1,{
+thana_boss,141,218,0	script	#sommon_thanatos	FAKE_NPC,{
 OnEnable:
 	specialeffect EF_MAPPILLAR2,AREA,"#sommon_thanatos";
 	specialeffect EF_SEISMICWEAPON,AREA,"#sommon_thanatos";

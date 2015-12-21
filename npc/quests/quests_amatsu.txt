@@ -490,7 +490,7 @@ OnTouch:
 	end;
 }
 
-ama_test,34,15,0	script	Dokebi#ez	-1,{
+ama_test,34,15,0	script	Dokebi#ez	FAKE_NPC,{
 OnInit:
 	disablenpc "Dokebi#ez";
 	end;
@@ -538,7 +538,7 @@ OnMyMobDead:
 	end;
 }
 
-ama_test,34,16,0	script	Dokebi#hd	-1,{
+ama_test,34,16,0	script	Dokebi#hd	FAKE_NPC,{
 OnInit:
 	disablenpc "Dokebi#hd";
 	end;
@@ -691,7 +691,7 @@ OnTouch:
 	close;
 }
 
-ama_test,34,17,0	script	Am Mut#ama	-1,{
+ama_test,34,17,0	script	Am Mut#ama	FAKE_NPC,{
 OnInit:
 	disablenpc "Am Mut#ama";
 	end;
@@ -759,7 +759,7 @@ OnTouch:
 	end;
 }
 
-ama_test,34,18,0	script	Timer#ama	-1,{
+ama_test,34,18,0	script	Timer#ama	FAKE_NPC,{
 OnInit:
 	disablenpc "Timer#ama";
 	end;

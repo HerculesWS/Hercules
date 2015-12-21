@@ -37,7 +37,7 @@
 //= 1.8
 //=========================================================================
 
-in_rogue,359,177,0	script	#killershow01	-1,{
+in_rogue,359,177,0	script	#killershow01	FAKE_NPC,{
 OnInit:
 	disablenpc "#killershow01";
 	end;
@@ -1061,7 +1061,7 @@ OnTouch:
 	end;
 }
 
-prt_are01,135,135,0	script	#1st5min	-1,{
+prt_are01,135,135,0	script	#1st5min	FAKE_NPC,{
 OnInit:
 	disablenpc "#1st5min";
 	end;
@@ -1106,7 +1106,7 @@ OnTimer315000:
 	end;
 }
 
-prt_are01,135,135,0	script	#1stmove	-1,{
+prt_are01,135,135,0	script	#1stmove	FAKE_NPC,{
 OnInit:
 	disablenpc "#1stmove";
 	end;

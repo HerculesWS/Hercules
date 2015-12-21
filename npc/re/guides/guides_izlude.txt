@@ -34,7 +34,7 @@
 //= 1.4
 //=========================================================================
 
--	script	::GuideIzlude	-1,{
+-	script	::GuideIzlude	FAKE_NPC,{
 	cutin "prt_soldier",2;
 	mes "[Izlude Guide]";
 	mes "Welcome to ^8B4513Izlude^000000,";

@@ -1683,7 +1683,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 	end;
 }
 
-1@nyd,1,1,0	script	nyd_call_mon_1	-1,{
+1@nyd,1,1,0	script	nyd_call_mon_1	FAKE_NPC,{
 OnInstanceInit:
 	enablenpc instance_npcname("nyd_call_mon_1");
 	end;
@@ -1722,7 +1722,7 @@ OnMyMobDead:
 	end;
 }
 
-1@nyd,1,2,0	script	ins_nyd_1f_timer	-1,{
+1@nyd,1,2,0	script	ins_nyd_1f_timer	FAKE_NPC,{
 OnInstanceInit:
 	disablenpc instance_npcname("ins_nyd_1f_timer");
 	end;
@@ -1782,7 +1782,7 @@ OnTouch:
 	end;
 }
 
-1@nyd,1,1,0	script	ins_nyd1_spawn_mobs	-1,{
+1@nyd,1,1,0	script	ins_nyd1_spawn_mobs	FAKE_NPC,{
 OnInstanceInit:
 	.@map$ = instance_mapname("1@nyd");
 	monster .@map$,0,0,"Ancient Tree",2019,40,instance_npcname("ins_nyd1_spawn_mobs")+"::OnMyTreeDead";
@@ -1821,7 +1821,7 @@ OnTouch_:
 	end;
 }
 
-2@nyd,1,1,0	script	nyd_2f_enter_broad	-1,{
+2@nyd,1,1,0	script	nyd_2f_enter_broad	FAKE_NPC,{
 OnInstanceInit:
 OnDisable:
 	disablenpc instance_npcname("nyd_2f_enter_broad");
@@ -1868,7 +1868,7 @@ OnTouch_:
 	end;
 }
 
-2@nyd,2,2,0	script	nyd_2f_boss_enter_call	-1,{
+2@nyd,2,2,0	script	nyd_2f_boss_enter_call	FAKE_NPC,{
 OnInstanceInit:
 	disablenpc instance_npcname("nyd_2f_boss_enter_call");
 	end;
@@ -1944,7 +1944,7 @@ OnMyMobDead:
 	end;
 }
 
-2@nyd,2,4,0	script	nyd_2f_boss_enter_logic	-1,{
+2@nyd,2,4,0	script	nyd_2f_boss_enter_logic	FAKE_NPC,{
 OnInstanceInit:
 	disablenpc instance_npcname("nyd_2f_boss_enter_logic");
 	end;
@@ -2056,7 +2056,7 @@ OnTimer10000:
 	end;
 }
 
-2@nyd,6,6,0	script	nyd_2f_red_c	-1,{
+2@nyd,6,6,0	script	nyd_2f_red_c	FAKE_NPC,{
 OnInstanceInit:
 	disablenpc instance_npcname(strnpcinfo(0));
 	end;
@@ -2166,7 +2166,7 @@ OnTouch:
 2@nyd,260,356,0	duplicate(nyd_2f_red_warp1)	nyd_2f_green_warp2	-1,6,6
 2@nyd,258,368,0	duplicate(nyd_2f_red_warp1)	nyd_2f_green_warp3	-1,6,6
 
-2@nyd,1,1,0	script	ins_nyd2_spawn_mobs	-1,{
+2@nyd,1,1,0	script	ins_nyd2_spawn_mobs	FAKE_NPC,{
 OnInstanceInit:
 	.@map$ = instance_mapname("2@nyd");
 	areamonster .@map$,200,92,180,80,"Rhyncho",2020,40,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyRhynDead";

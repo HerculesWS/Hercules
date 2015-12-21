@@ -37,7 +37,7 @@
 //=========================================================================
 
 //== Edgar's Offer :: iz_npc ===============================
--	script	::Edgar_izlude	-1,{
+-	script	::Edgar_izlude	FAKE_NPC,{
 	if (MISC_QUEST & 16) {
 		mes "[Edgar]";
 		mes "So are you heading to Alberta again? Let me give you the same discount and only charge 250 Zeny, just like the last time.";

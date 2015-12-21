@@ -207,7 +207,7 @@ M_NO:
 }
 
 //mobsummons -------
-alberta,1,1,1	script	BRDQ_MOBS	-1,{
+alberta,1,1,1	script	BRDQ_MOBS	FAKE_NPC,{
 OnStart:
 	set $@beardmob,10;
 	set $@beardMobD,0;

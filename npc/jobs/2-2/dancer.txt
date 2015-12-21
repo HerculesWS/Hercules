@@ -955,7 +955,7 @@ job_duncer,32,154,1	script	Waiting Room#click	1_F_01,{
 }
 
 //== Dance Timer ===========================================
-job_duncer,69,105,0	script	Bijou#dance_timer	-1,{
+job_duncer,69,105,0	script	Bijou#dance_timer	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -1324,7 +1324,7 @@ job_duncer,66,110,0	duplicate(StepTrigger)	dance#left	-1,1,1
 job_duncer,72,110,0	duplicate(StepTrigger)	dance#right	-1,1,1
 job_duncer,69,110,0	duplicate(StepTrigger)	dance#cen	-1,1,1
 
-job_duncer,10,10,0	script	dance#poring	-1,{
+job_duncer,10,10,0	script	dance#poring	FAKE_NPC,{
 OnEnable:
 	monster "job_duncer",69,106,"Poring",1002,1,"dance#poring::OnMyMobDead";
 	end;

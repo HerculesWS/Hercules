@@ -586,7 +586,7 @@ geffen,90,67,3	script	Promotional Staff#gef	4W_SAILOR,{
 	end;
 }
 
--	script	::PromotionalStaff_izlude	-1,{
+-	script	::PromotionalStaff_izlude	FAKE_NPC,{
 	if (ep13_ryu > 8) {
 		mes "[Promotional Staff]";
 		mes "I bless you for your future! May it be full of happiness!";
@@ -1814,7 +1814,7 @@ moc_fild22b,230,197,5	script	Munkenro#2	4_M_RUSMAN1,{
 	}
 }
 
-moc_fild22b,1,1,0	script	Head of the Alliance#moo	-1,{
+moc_fild22b,1,1,0	script	Head of the Alliance#moo	FAKE_NPC,{
 OnInit:
 	disablenpc "Head of the Alliance#moo";
 	end;
@@ -8432,7 +8432,7 @@ mid_camp,88,100,7	script	Cat Hand Mining Agent	4_CAT,{
 	}
 }
 
--	script	Mysterious Rock#0::manukrock	-1,{
+-	script	Mysterious Rock#0::manukrock	FAKE_NPC,{
 	if (countitem(Unidentified_Mineral) < 3 && !questprogress(12062,PLAYTIME)) {
 		specialeffect2 EF_REPAIRWEAPON;
 		progressbar "ffff00",10;
@@ -10301,7 +10301,7 @@ lhz_in01,110,174,5	script	Gerhart	4_M_KHKYEL,{
 	}
 }
 
-spl_fild02,1,1,0	script	ep13_spl_fild02_mon_edq	-1,{
+spl_fild02,1,1,0	script	ep13_spl_fild02_mon_edq	FAKE_NPC,{
 OnInit:
 	enablenpc "ep13_spl_fild02_mon_edq";
 	donpcevent "ep13_spl_fild02_mon_edq::OnEnable";
@@ -10331,7 +10331,7 @@ OnMyMobDead:
 	end;
 }
 
-spl_fild03,1,1,0	script	ep13_spl_fild03_mon_edq	-1,{
+spl_fild03,1,1,0	script	ep13_spl_fild03_mon_edq	FAKE_NPC,{
 OnInit:
 	enablenpc "ep13_spl_fild03_mon_edq";
 	donpcevent "ep13_spl_fild03_mon_edq::OnEnable";
@@ -10363,7 +10363,7 @@ OnMyMobDead:
 	end;
 }
 
-man_fild01,1,1,0	script	ep13_man_fild01_mon_edq	-1,{
+man_fild01,1,1,0	script	ep13_man_fild01_mon_edq	FAKE_NPC,{
 OnInit:
 	enablenpc "ep13_man_fild01_mon_edq";
 	donpcevent "ep13_man_fild01_mon_edq::OnEnable";
@@ -10393,7 +10393,7 @@ OnMyMobDead:
 	end;
 }
 
-man_fild03,1,1,0	script	ep13_man_fild03_mon_edq	-1,{
+man_fild03,1,1,0	script	ep13_man_fild03_mon_edq	FAKE_NPC,{
 OnInit:
 	enablenpc "ep13_man_fild03_mon_edq";
 	donpcevent "ep13_man_fild03_mon_edq::OnEnable";
@@ -13705,7 +13705,7 @@ OnTimer11000:
 	end;
 }
 
--	script	#dandelion_duplicates	-1,{
+-	script	#dandelion_duplicates	FAKE_NPC,{
 	end;
 
 OnInit:

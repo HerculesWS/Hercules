@@ -44,7 +44,7 @@
 //=========================================================================
 
 //== Gangster Alert [Official Conversion] ==================
-lighthalzen,1,1,0	script	Law Enforcement	-1,{
+lighthalzen,1,1,0	script	Law Enforcement	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -11639,7 +11639,7 @@ OnStop:
 	end;
 }
 
--	script	::Scamp	-1,{
+-	script	::Scamp	FAKE_NPC,{
 
 	if(lhz_rekenber > 21)
 	{
@@ -11822,7 +11822,7 @@ OnStop:
 	close;
 }
 
-airplane_01,1,1,1	script	#bully1	-1,{
+airplane_01,1,1,1	script	#bully1	FAKE_NPC,{
 
 OnInit:
 	disablenpc "#bully1";
@@ -11865,7 +11865,7 @@ OnTimer120000:
 	end;
 }
 
-airplane_01,2,2,1	script	#bully2	-1,{
+airplane_01,2,2,1	script	#bully2	FAKE_NPC,{
 
 OnInit:
 	disablenpc "#bully2";

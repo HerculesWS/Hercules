@@ -12,7 +12,7 @@
 //= 1.2 Fix variables and character stuck at healing
 //============================================================
 
--	script	Healer	-1,{
+-	script	Healer	FAKE_NPC,{
 
 	.@price = 0;	// Zeny required for heal
 	.@Buffs = 0;	// Also buff players? (1: yes / 0: no)

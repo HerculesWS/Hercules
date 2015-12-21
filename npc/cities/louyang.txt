@@ -46,7 +46,7 @@
 //=========================================================================
 
 //== Louyang Transportation ================================
--	script	::Girl_louyang	-1,{
+-	script	::Girl_louyang	FAKE_NPC,{
 	mes "[Girl]";
 	mes "La la la la~";
 	mes "I feel so good today~";

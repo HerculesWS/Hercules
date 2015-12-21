@@ -35,7 +35,7 @@
 //= 1.2a
 //=========================================================================
 
--	script	Falcon Flute Trader::fflute	-1,{
+-	script	Falcon Flute Trader::fflute	FAKE_NPC,{
 	mes "[Falcon Flute Trader]";
 	if (BaseJob == Job_Hunter) {
 		mes "Do you need a Falcon?";

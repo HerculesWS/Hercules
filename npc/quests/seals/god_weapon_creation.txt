@@ -817,7 +817,7 @@ OnTimer615000:
 	end;
 }
 
-que_god01,169,82,0	script	god_wep_warpmaster	-1,{
+que_god01,169,82,0	script	god_wep_warpmaster	FAKE_NPC,{
 OnEnable:
 	for(.@i = 1; .@i<=6; ++.@i)
 		enablenpc "god_failwarp#"+.@i;

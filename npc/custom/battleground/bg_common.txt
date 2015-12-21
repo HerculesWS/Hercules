@@ -1157,7 +1157,7 @@ bat_room,161,158,3	duplicate(bat_aid)	General Guillaume's Aid::bat_aid4	4_M_KY_H
 
 // Exit from Registration
 // *********************************************************************
--	script	warp2bat_room	-1,{
+-	script	warp2bat_room	FAKE_NPC,{
 	end;
 
 OnTouch:
