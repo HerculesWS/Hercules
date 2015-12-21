@@ -10,7 +10,6 @@
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
 //= Copyright (C) 2012-2015  Hercules Dev Team
-//= Copyright (C)  Frost
 //= Copyright (C)  rAthena Dev Team
 //= Copyright (C)  Euphy
 //= Copyright (C)  eAthena Dev Team
