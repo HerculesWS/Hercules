@@ -853,6 +853,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_2011RWC] = SI_2011RWC;
 	status->dbs->IconChangeTable[SC_STR_SCROLL] = SI_STR_SCROLL;
 	status->dbs->IconChangeTable[SC_INT_SCROLL] = SI_INT_SCROLL;
+	status->dbs->IconChangeTable[SC_STEAMPACK] = SI_STEAMPACK;
 	
 	// Eden Crystal Synthesis
 	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
@@ -1041,6 +1042,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_2011RWC] |= SCB_STR | SCB_AGI | SCB_VIT | SCB_INT | SCB_DEX | SCB_LUK | SCB_BATK | SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_STR_SCROLL] |= SCB_STR;
 	status->dbs->ChangeFlagTable[SC_INT_SCROLL] |= SCB_INT;
+	status->dbs->ChangeFlagTable[SC_STEAMPACK] |= SCB_BATK | SCB_ASPD | SCB_ALL;
 	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] = SCB_STR;
@@ -4736,6 +4738,8 @@ unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc,
 		batk += batk * sc->data[SC_GM_BATTLE2]->val1 / 100;
 	if (sc->data[SC_2011RWC])
 		batk += batk * sc->data[SC_2011RWC]->val2 / 100;
+	if (sc->data[SC_STEAMPACK])
+		batk += sc->data[SC_STEAMPACK]->val1;
 
 	return (unsigned short)cap_value(batk,0,USHRT_MAX);
 }
@@ -5718,6 +5722,8 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 			bonus += sc->data[SC_ACARAJE]->val2;
 		if (sc->data[SC_BATTLESCROLL])
 			bonus += sc->data[SC_BATTLESCROLL]->val1;
+		if (sc->data[SC_STEAMPACK])
+			bonus += sc->data[SC_STEAMPACK]->val2;
 	}
 
 	return (bonus + pots);
@@ -5883,6 +5889,8 @@ short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int
 		aspd_rate += sc->data[SC_ACARAJE]->val2 * 10;
 	if (sc->data[SC_BATTLESCROLL])
 		aspd_rate += sc->data[SC_BATTLESCROLL]->val1 * 10;
+	if (sc->data[SC_STEAMPACK])
+		aspd_rate += sc->data[SC_STEAMPACK]->val2 * 10;
 
 	return (short)cap_value(aspd_rate,0,SHRT_MAX);
 }
@@ -9205,6 +9213,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val4 = tick / 10000;
 				tick_time = 10000; // [GodLesZ] tick time
 				break;
+			case SC_STEAMPACK: // [Frost]
+				val3 = 100; // HP Consume.
+				val4 = tick / 10000;
+				tick_time = 10000;
+				sc_start(src, bl, SC_ENDURE, 100, 10, -1); // Endure effect
+				break;
 			case SC_KYOUGAKU: {
 				int min = val1*2;
 				int max = val1*3;
@@ -11490,10 +11504,9 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				if (bl->type == BL_ELEM)
 					elemental->change_mode(BL_CAST(BL_ELEM,bl),MAX_ELESKILLTREE);
 			break;
-
 		case SC_STOMACHACHE:
 			if (--(sce->val4) > 0) {
-				status->charge(bl, 0, sce->val3); // Reduce 8 every 10 seconds.
+				status->charge(bl, 0, sce->val3); // Reduce 8 SP every 10 seconds.
 				if (sd && !pc_issit(sd)) {     // Force to sit every 10 seconds.
 					pc_stop_walking(sd, STOPWALKING_FLAG_FIXPOS | STOPWALKING_FLAG_NEXTCELL);
 					pc_stop_attack(sd);
@@ -11502,6 +11515,12 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				}
 				sc_timer_next(10000 + tick, status->change_timer, bl->id, data);
 				return 0;
+			}
+			break;
+		case SC_STEAMPACK:
+			if (--(sce->val4) > 0) {
+				status->charge(bl, sce->val3, 0); // Reduce 100 HP every 10 seconds.
+				sc_timer_next(10000 + tick, status->change_timer, bl->id, data);
 			}
 			break;
 		case SC_LEADERSHIP:
