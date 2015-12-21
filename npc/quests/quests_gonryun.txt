@@ -802,7 +802,7 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 	close;
 }
 
-gon_dun01,148,156,0	script	start01#gnbs	-1,{
+gon_dun01,148,156,0	script	start01#gnbs	FAKE_NPC,{
 OnInit:
 	sleep 10000;
 OnCommandOn:
@@ -833,7 +833,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun01,2,1,0	script	timer1-1	-1,{
+gon_dun01,2,1,0	script	timer1-1	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -901,7 +901,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun01,3,1,0	script	timer1-2	-1,{
+gon_dun01,3,1,0	script	timer1-2	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -969,7 +969,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun01,4,1,0	script	timer1-3	-1,{
+gon_dun01,4,1,0	script	timer1-3	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1037,7 +1037,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun01,5,1,0	script	timer1-4	-1,{
+gon_dun01,5,1,0	script	timer1-4	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1105,7 +1105,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun01,6,1,0	script	timer1-5	-1,{
+gon_dun01,6,1,0	script	timer1-5	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1150,7 +1150,7 @@ OnCommandOff:
 	end;
 }
 
-gon_dun02,1,1,0	script	start02#gnbs	-1,{
+gon_dun02,1,1,0	script	start02#gnbs	FAKE_NPC,{
 OnInit:
 	sleep 10000;
 OnCommandOn:
@@ -1181,7 +1181,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun02,2,1,0	script	timer2-1	-1,{
+gon_dun02,2,1,0	script	timer2-1	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1249,7 +1249,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun02,3,1,0	script	timer2-2	-1,{
+gon_dun02,3,1,0	script	timer2-2	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1317,7 +1317,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun02,4,1,0	script	timer2-3	-1,{
+gon_dun02,4,1,0	script	timer2-3	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1385,7 +1385,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun02,5,1,0	script	timer2-4	-1,{
+gon_dun02,5,1,0	script	timer2-4	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1453,7 +1453,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun02,6,1,0	script	timer2-5	-1,{
+gon_dun02,6,1,0	script	timer2-5	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1521,7 +1521,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun02,7,1,0	script	timer2-6	-1,{
+gon_dun02,7,1,0	script	timer2-6	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1566,7 +1566,7 @@ OnCommandOff:
 	end;
 }
 
-gon_dun03,1,1,0	script	start03#gnbs	-1,{
+gon_dun03,1,1,0	script	start03#gnbs	FAKE_NPC,{
 OnInit:
 	sleep 10000;
 OnCommandOn:
@@ -1597,7 +1597,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun03,2,1,0	script	timer3-1	-1,{
+gon_dun03,2,1,0	script	timer3-1	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1669,7 +1669,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun03,3,1,0	script	timer3-2	-1,{
+gon_dun03,3,1,0	script	timer3-2	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1741,7 +1741,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun03,4,1,0	script	timer3-3	-1,{
+gon_dun03,4,1,0	script	timer3-3	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1813,7 +1813,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun03,5,1,0	script	timer3-4	-1,{
+gon_dun03,5,1,0	script	timer3-4	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1885,7 +1885,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun03,6,1,0	script	timer3-5	-1,{
+gon_dun03,6,1,0	script	timer3-5	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -1957,7 +1957,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun03,7,1,0	script	timer3-6	-1,{
+gon_dun03,7,1,0	script	timer3-6	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;
@@ -2029,7 +2029,7 @@ OnCommandOn:
 	end;
 }
 
-gon_dun03,6,1,0	script	timer3-7	-1,{
+gon_dun03,6,1,0	script	timer3-7	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	stopnpctimer;

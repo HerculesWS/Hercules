@@ -36,7 +36,7 @@
 //= 1.4
 //=========================================================================
 
--	script	#distorted_space_	-1,{
+-	script	#distorted_space_	FAKE_NPC,{
 OnTouch:
 	if (job_wl > 1) {
 		mes " - There is a strange distortion here - ";
@@ -799,7 +799,7 @@ OnDisable:
 	end;
 }
 
--	script	The chamber of magic#2	-1,{
+-	script	The chamber of magic#2	FAKE_NPC,{
 OnInit:
 	disablenpc strnpcinfo(0);
 	end;
@@ -879,7 +879,7 @@ OnTimer305000:
 }
 -	duplicate(The chamber of magic#2)	The chamber of magic#3	-1
 
--	script	The chamber of magic#4	-1,{
+-	script	The chamber of magic#4	FAKE_NPC,{
 OnInit:
 	disablenpc "The chamber of magic#4";
 	end;
@@ -944,7 +944,7 @@ OnTimer65000:
 	end;
 }
 
--	script	Hollow Stone#Warlock	-1,{
+-	script	Hollow Stone#Warlock	FAKE_NPC,{
 OnInit:
 	disablenpc "Hollow Stone#Warlock";
 	end;
@@ -1024,7 +1024,7 @@ OnTimer607000:
 	end;
 }
 
--	script	Ebein#E1	-1,{
+-	script	Ebein#E1	FAKE_NPC,{
 OnInit:
 	disablenpc "Ebein#E1";
 	end;
@@ -1047,7 +1047,7 @@ OnTimer6000:
 	end;
 }
 
--	script	Ebein#E2	-1,{
+-	script	Ebein#E2	FAKE_NPC,{
 OnInit:
 	disablenpc "Ebein#E2";
 	end;

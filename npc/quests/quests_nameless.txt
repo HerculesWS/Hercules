@@ -3768,7 +3768,7 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 	close;
 }
 
--	script	::Dorian_izlude	-1,{
+-	script	::Dorian_izlude	FAKE_NPC,{
 	if (checkweight(Resin,200) == 0) {
 		mes "[Dorian]";
 		mes "Ugh, just like a member";
@@ -8847,7 +8847,7 @@ OnTimer350000:
 	end;
 }
 
--	script	#ZGuard	-1,{
+-	script	#ZGuard	FAKE_NPC,{
 OnInit:
 	disablenpc "#ZGuard";
 	end;

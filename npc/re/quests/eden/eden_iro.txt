@@ -830,7 +830,7 @@ moc_para01,26,185,4	duplicate(Suhnbi#cash)	Suhnmi#eden	4_M_03
 moc_para01,38,185,4	duplicate(MightyHammer)	Mighty Hammer#ed	4_M_DWARF
 
 //- Refiner Effect -
--	script	#eden_refine_effect	-1,{
+-	script	#eden_refine_effect	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	end;

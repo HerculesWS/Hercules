@@ -38,7 +38,7 @@
 //=========================================================================
 
 //== Monster Race - Single Monster Race ====================
-hugel,51,61,0	script	#race_timer1-1	-1,{
+hugel,51,61,0	script	#race_timer1-1	FAKE_NPC,{
 OnEnable:
 	enablenpc "#race_timer1-1";
 OnInit:
@@ -80,7 +80,7 @@ OnTimer330000:
 	end;
 }
 
-p_track01,58,0,0	script	Race Progress Timer	-1,{
+p_track01,58,0,0	script	Race Progress Timer	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	enablenpc "Race Progress Timer";
@@ -233,7 +233,7 @@ OnInit:
 	end;
 }
 
--	script	Runner_main	-1,{
+-	script	Runner_main	FAKE_NPC,{
 	function F_Num;
 	function F_Ord;
 	end;
@@ -828,7 +828,7 @@ p_track01,39,49,3	script	Game Guide#single	4_F_RACING,{
 	close;
 }
 
--	script	starting_1	-1,{
+-	script	starting_1	FAKE_NPC,{
 OnTouchNPC:
 	.@start = rand(1,100);
 	if (.@start < 11) .@speed = 60;
@@ -849,7 +849,7 @@ OnInit:
 	end;
 }
 
--	script	Luk_1	-1,{
+-	script	Luk_1	FAKE_NPC,{
 OnTouchNPC:
 	.@start = rand(1,100);
 	if (.@start < 61) .@speed = 110;
@@ -865,7 +865,7 @@ OnInit:
 	end;
 }
 
--	script	Luk_2	-1,{
+-	script	Luk_2	FAKE_NPC,{
 OnTouchNPC:
 	.@start = rand(1,100);
 	if (.@start < 61) .@time = 1000;
@@ -880,7 +880,7 @@ OnInit:
 	end;
 }
 
--	script	Tire_1	-1,{
+-	script	Tire_1	FAKE_NPC,{
 OnTouchNPC:
 	.@start = rand(1,100);
 	if (.@start < 61) .@time = 1000;
@@ -978,7 +978,7 @@ p_track01,51,28,0	duplicate(Tire_1)	Tire6#5	-1,0,0
 p_track01,47,28,0	duplicate(Tire_1)	Tire6#6	-1,0,0
 
 //== Monster Race - Dual Monster Race ======================
-hugel,47,56,0	script	#race_timer2-1	-1,{
+hugel,47,56,0	script	#race_timer2-1	FAKE_NPC,{
 OnEnable:
 	enablenpc "#race_timer2-1";
 OnInit:
@@ -1022,7 +1022,7 @@ OnTimer330000:
 	end;
 }
 
-p_track02,42,23,0	script	#race_timer2-2	-1,{
+p_track02,42,23,0	script	#race_timer2-2	FAKE_NPC,{
 OnEnable:
 	enablenpc "#race_timer2-2";
 	$@mon_time_2_2 = 0;
@@ -1073,7 +1073,7 @@ OnInit:
 	end;
 }
 
-p_track02,80,43,0	script	#race_timer2-3	-1,{
+p_track02,80,43,0	script	#race_timer2-3	FAKE_NPC,{
 OnEnable:
 	enablenpc "#race_timer2-3";
 	initnpctimer;
@@ -1745,7 +1745,7 @@ p_track02,76,38,1	script	Exit Guide#double	4_M_NFMAN,{
 	end;
 }
 
--	script	mob1#main	-1,{
+-	script	mob1#main	FAKE_NPC,{
 	function	MN;
 OnEnable:
 	enablenpc strnpcinfo(0);
@@ -1810,7 +1810,7 @@ p_track02,30,32,0	duplicate(mob1#main)	#desertwolf1	HIDDEN_WARP_NPC,0,0
 p_track02,30,30,0	duplicate(mob1#main)	#deviruchi1	HIDDEN_WARP_NPC,0,0
 p_track02,30,28,0	duplicate(mob1#main)	#baphomet1	HIDDEN_WARP_NPC,0,0
 
-p_track02,19,48,0	script	TrapGlobal#race02	-1,{
+p_track02,19,48,0	script	TrapGlobal#race02	FAKE_NPC,{
 OnEnable:
 	enablenpc "TrapGlobal#race02";
 	for (.@c = 1; .@c <= 6; ++.@c) {
@@ -1876,7 +1876,7 @@ OnInit:
 	end;
 }
 
--	script	starting_2	-1,{
+-	script	starting_2	FAKE_NPC,{
 OnTouchNPC:
 	.@start = rand(1,100);
 	if (.@start < 11) .@speed = 60;

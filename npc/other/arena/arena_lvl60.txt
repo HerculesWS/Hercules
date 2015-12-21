@@ -214,7 +214,7 @@ On09_End:
 	end;
 }
 
--	script	arena#60	-1,{
+-	script	arena#60	FAKE_NPC,{
 OnReset_01:
 	donpcevent "force_01ex#60::OnReset";
 	donpcevent "force_01mob#60::OnReset";
@@ -393,13 +393,13 @@ OnTouch:
 	end;
 }
 
--	script	force_01start#60	-1,{
+-	script	force_01start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_01mob#60::OnEnable";
 	end;
 }
 
--	script	force_01ex#60	-1,{
+-	script	force_01ex#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_01ex#60::OnMyMobDead";
 	end;
@@ -412,7 +412,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_01mob#60	-1,{
+-	script	force_01mob#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_01mob#60::OnMyMobDead";
 	end;
@@ -439,13 +439,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_02start#60	-1,{
+-	script	force_02start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_02mob#60::OnEnable";
 	end;
 }
 
--	script	force_02mob#60	-1,{
+-	script	force_02mob#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_02mob#60::OnMyMobDead";
 	end;
@@ -486,13 +486,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_03start#60	-1,{
+-	script	force_03start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_03mob#60::OnEnable";
 	end;
 }
 
--	script	force_03ex#60	-1,{
+-	script	force_03ex#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_03ex#60::OnMyMobDead";
 	end;
@@ -514,7 +514,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_03mob#60	-1,{
+-	script	force_03mob#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_03ex#60::OnEnable";
 	monster "force_2-1",23,174,"Mantis",1457,1,"force_03mob#60::OnMyMobDead";
@@ -535,13 +535,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_04start#60	-1,{
+-	script	force_04start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_04mob#60::OnEnable";
 	end;
 }
 
--	script	force_04ex#60	-1,{
+-	script	force_04ex#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_04ex#60::OnMyMobDead";
 	end;
@@ -560,7 +560,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_04mob#60	-1,{
+-	script	force_04mob#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_04mob#60::OnMyMobDead";
 	end;
@@ -580,13 +580,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_05start#60	-1,{
+-	script	force_05start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_05mob#60::OnEnable";
 	end;
 }
 
--	script	force_05ex#60	-1,{
+-	script	force_05ex#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_05ex#60::OnMyMobDead";
 	end;
@@ -610,7 +610,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_05mob#60	-1,{
+-	script	force_05mob#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_05mob#60::OnMyMobDead";
 	end;
@@ -632,13 +632,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_06start#60	-1,{
+-	script	force_06start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_06mob#60::OnEnable";
 	end;
 }
 
--	script	force_06ex#60	-1,{
+-	script	force_06ex#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_06ex#60::OnMyMobDead";
 	end;
@@ -688,7 +688,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_06mob#60	-1,{
+-	script	force_06mob#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_06mob#60::OnMyMobDead";
 	end;
@@ -708,13 +708,13 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_07start#60	-1,{
+-	script	force_07start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_07mob#60::OnEnable";
 	end;
 }
 
--	script	force_07mob#60	-1,{
+-	script	force_07mob#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_07mob#60::OnMyMobDead";
 	end;
@@ -734,25 +734,25 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_08start#60	-1,{
+-	script	force_08start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_08ex#60::OnEnable";
 	end;
 }
 
--	script	force_08ex#60	-1,{
+-	script	force_08ex#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "arena#60::OnReset_08";
 	end;
 }
 
--	script	force_09start#60	-1,{
+-	script	force_09start#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_09mob#60::OnEnable";
 	end;
 }
 
--	script	force_09ex#60	-1,{
+-	script	force_09ex#60	FAKE_NPC,{
 OnReset:
 	killmonster "force_2-1","force_09ex#60::OnMyMobDead";
 	end;
@@ -790,7 +790,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_09mob#60	-1,{
+-	script	force_09mob#60	FAKE_NPC,{
 OnEnable:
 	donpcevent "force_09ex#60::OnSummonMob_09";
 	monster "force_2-1",99,99,"Goblin Leader",1539,1,"force_09mob#60::OnMyMobDead";
@@ -951,7 +951,7 @@ prt_are_in,25,135,3	script	Staff#60-2	1_F_02,{
 	}
 }
 
--	script	#arn_timer_60	-1,{
+-	script	#arn_timer_60	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -981,13 +981,13 @@ OnStop:
 	end;
 }
 
--	script	arn_warp_60	-1,{
+-	script	arn_warp_60	FAKE_NPC,{
 OnOut:
 	areawarp "prt_are_in",14,143,29,126,"arena_room",100,75;
 	end;
 }
 
--	script	cast#60	-1,{
+-	script	cast#60	FAKE_NPC,{
 OnTimeOver1:
 	mapannounce "force_2-1","Arena will be reactivated due to an error occurred during battle.",0,0xFFCE00;
 	end;
@@ -1005,7 +1005,7 @@ OnTimeOver2:
 	end;
 }
 
--	script	alloff#60	-1,{
+-	script	alloff#60	FAKE_NPC,{
 OnEnable:
 	mapwarp "force_2-1","prt_are_in",126,139,0,0;
 	donpcevent "force_01mob#60::OnReset";

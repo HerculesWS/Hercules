@@ -5630,7 +5630,7 @@ izlude_c,97,138,5	duplicate(Romantic Female#iz)	Romantic Female#iz_c	4_F_SITDOWN
 izlude_d,97,138,5	duplicate(Romantic Female#iz)	Romantic Female#iz_d	4_F_SITDOWN
 
 //- Manufacturing Maniac -
-izlude,93,143,3	script	Manufacturing Maniac#0	-1,{
+izlude,93,143,3	script	Manufacturing Maniac#0	FAKE_NPC,{
 	mes "[Manufacturing Maniac]";
 	mes "Hi~! I am an Alchemist.";
 	mes "It's one of the second jobs after Merchant.";
@@ -6424,7 +6424,7 @@ pay_fild08,153,83,1	script	Lady Harvesting Herbs#2	1_F_ORIENT_02,{
 }
 
 //- Signs -
--	script	::ac_board	-1,{
+-	script	::ac_board	FAKE_NPC,{
 	end;
 }
 
@@ -12620,7 +12620,7 @@ izlude_c,153,126,1	duplicate(Refinery Owner Han#iz)	Refinery Owner Han#iz_c	4_M_
 izlude_d,153,126,1	duplicate(Refinery Owner Han#iz)	Refinery Owner Han#iz_d	4_M_02
 
 //- Refining Machine Wagjak -
--	script	::izludeWagjak	-1,{
+-	script	::izludeWagjak	FAKE_NPC,{
 	disable_items;
 	mes "[Refining Machine Wagjak]";
 	mes "-Ddarritt!-";

@@ -36,7 +36,7 @@
 //=========================================================================
 
 //== Main NPCs =============================================
--	script	Sprakki#newbe01::NvSprakkiA	-1,{
+-	script	Sprakki#newbe01::NvSprakkiA	FAKE_NPC,{
 	if (job_novice_q == 0) {
 		mes "[Sprakki]";
 		mes "Hello there! Welcome to the World of Ragnarok Online. My name is Sprakki and I'm in charge of giving you basic gameplay tips.";
@@ -98,7 +98,7 @@ new_3-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv3a	4_F_01
 new_4-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv4a	4_F_01
 new_5-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv5a	4_F_01
 
--	script	Sprakki#newbe05::NvSprakkiB	-1,{
+-	script	Sprakki#newbe05::NvSprakkiB	FAKE_NPC,{
 	if (job_novice_q == 0) {
 		mes "[Sprakki]";
 		mes "Hello there! Welcome to the World of Ragnarok Online.";
@@ -229,7 +229,7 @@ new_3-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv3b	4_F_01
 new_4-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv4b	4_F_01
 new_5-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv5b	4_F_01
 
--	script	Brade#newbe02::NvBradeA	-1,{
+-	script	Brade#newbe02::NvBradeA	FAKE_NPC,{
 	if (job_novice_q < 2) {
 		mes "[Instructor Brade]";
 		mes "Hello there! Welcome to the World of Ragnarok Online.";
@@ -499,7 +499,7 @@ new_3-2,100,105,3	duplicate(NvBradeA)	Brade#nv3a	4_M_JOB_KNIGHT1
 new_4-2,100,105,3	duplicate(NvBradeA)	Brade#nv4a	4_M_JOB_KNIGHT1
 new_5-2,100,105,3	duplicate(NvBradeA)	Brade#nv5a	4_M_JOB_KNIGHT1
 
--	script	Jinha#newbe03::NvJinha	-1,{
+-	script	Jinha#newbe03::NvJinha	FAKE_NPC,{
 	if (job_novice_q < 5) {
 		mes "[Jinha]";
 		mes "What can I help you with?";
@@ -595,7 +595,7 @@ new_4-2,115,120,3	duplicate(NvJinha)	Jinha#nv4	1_M_ORIENT01
 new_5-2,115,120,3	duplicate(NvJinha)	Jinha#nv5	1_M_ORIENT01
 
 //== People/Services in Ragnarok ===========================
--	script	Chocolat#newbe06::NvChocolat	-1,{
+-	script	Chocolat#newbe06::NvChocolat	FAKE_NPC,{
 	if (job_novice_q < 7) {
 		mes "[Chocolat]";
 		mes "Hmm? Strange.";
@@ -777,7 +777,7 @@ new_3-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv3	4W_KID
 new_4-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv4	4W_KID
 new_5-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv5	4W_KID
 
--	script	Kafra Employee#newbe07::NvKafra	-1,{
+-	script	Kafra Employee#newbe07::NvKafra	FAKE_NPC,{
 	if (job_novice_q < 8) {
 		mes "[Kafra Employee]";
 		mes "Hello.";
@@ -1021,7 +1021,7 @@ new_3-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv3	4_F_KAFRA1
 new_4-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv4	4_F_KAFRA1
 new_5-2,30,176,4	duplicate(NvKafra)	Kafra Employee#nv5	4_F_KAFRA1
 
--	script	Cool Event Corp. Staff::NvCool	-1,{
+-	script	Cool Event Corp. Staff::NvCool	FAKE_NPC,{
 	if (job_novice_q < 9) {
 		mes "[Cool Event Corp. Staff]";
 		mes "This is not my turn.";
@@ -1061,7 +1061,7 @@ new_3-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool3	4_M_ZONDAMAN
 new_4-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool4	4_M_ZONDAMAN
 new_5-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool5	4_M_ZONDAMAN
 
--	script	Guide::NvGuide	-1,{
+-	script	Guide::NvGuide	FAKE_NPC,{
 	if (job_novice_q < 10) {
 		mes "[Guide]";
 		mes "It ain't my turn yet.";
@@ -1116,7 +1116,7 @@ new_4-2,36,176,4	duplicate(NvGuide)	Guide#nv4	8W_SOLDIER
 new_5-2,36,176,4	duplicate(NvGuide)	Guide#nv5	8W_SOLDIER
 
 //== Real Combat Training ==================================
--	script	Brade#newbe04::NvBradeB	-1,{
+-	script	Brade#newbe04::NvBradeB	FAKE_NPC,{
 	if (job_novice_q < 12) {
 		if (job_novice_q < 2) {
 			mes "[Brade]";
@@ -1328,7 +1328,7 @@ new_3-3,96,30,4	duplicate(NvBradeB)	Brade#nv3b	4_M_JOB_KNIGHT1
 new_4-3,96,30,4	duplicate(NvBradeB)	Brade#nv4b	4_M_JOB_KNIGHT1
 new_5-3,96,30,4	duplicate(NvBradeB)	Brade#nv5b	4_M_JOB_KNIGHT1
 
--	script	Swordman Guide#newbe10::NvSwordman	-1,{
+-	script	Swordman Guide#newbe10::NvSwordman	FAKE_NPC,{
 	if (job_novice_q < 15) {
 		mes "[Swordman Guildsman]";
 		mes "I won't help you until you finish Brade's instructions.";
@@ -1488,7 +1488,7 @@ new_3-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv3	4_F_JOB_KNIGHT
 new_4-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv4	4_F_JOB_KNIGHT
 new_5-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv5	4_F_JOB_KNIGHT
 
--	script	Acolyte Guide#newbe10::NvAcolyte	-1,{
+-	script	Acolyte Guide#newbe10::NvAcolyte	FAKE_NPC,{
 	if (job_novice_q < 15) {
 		mes "[Prontera Acolyte]";
 		mes "You look like you are not done with Instructor Brade's lessons.";
@@ -1578,7 +1578,7 @@ new_3-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv3	4_F_SISTER
 new_4-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv4	4_F_SISTER
 new_5-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv5	4_F_SISTER
 
--	script	Thief Guide#newbe10::NvThief	-1,{
+-	script	Thief Guide#newbe10::NvThief	FAKE_NPC,{
 	if (job_novice_q < 15) {
 		mes "[Thief Guild Member]";
 		mes "You look like you are not done with Instructor Brade's lessons.";
@@ -1715,7 +1715,7 @@ new_3-3,105,41,3	duplicate(NvThief)	Thief Guide#nv3	2_M_THIEFMASTER
 new_4-3,105,41,3	duplicate(NvThief)	Thief Guide#nv4	2_M_THIEFMASTER
 new_5-3,105,41,3	duplicate(NvThief)	Thief Guide#nv5	2_M_THIEFMASTER
 
--	script	Merchant Guide#newbe10::NvMerchant	-1,{
+-	script	Merchant Guide#newbe10::NvMerchant	FAKE_NPC,{
 	if (job_novice_q < 15) {
 		mes "[Merchant Guildsman]";
 		mes "You are still in the process of training with sir Brad.";
@@ -1871,7 +1871,7 @@ new_3-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv3	4W_M_01
 new_4-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv4	4W_M_01
 new_5-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv5	4W_M_01
 
--	script	Archer Guide#newbe10::NvArcher	-1,{
+-	script	Archer Guide#newbe10::NvArcher	FAKE_NPC,{
 	if (job_novice_q < 15) {
 		mes "[Archer Guildsman]";
 		mes "You are still in the process of training with sir Brade.";
@@ -1968,7 +1968,7 @@ new_3-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv3	4_F_JOB_HUNTER
 new_4-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv4	4_F_JOB_HUNTER
 new_5-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv5	4_F_JOB_HUNTER
 
--	script	Mage Guide#newbe10::NvMage	-1,{
+-	script	Mage Guide#newbe10::NvMage	FAKE_NPC,{
 	if (job_novice_q < 15) {
 		mes "[Mage Guild Member]";
 		mes "You are still in the process of training with Instructor Brade.";
@@ -2118,7 +2118,7 @@ new_3-3,117,41,3	duplicate(NvMage)	Mage Guide#nv3	2_F_MAGICMASTER
 new_4-3,117,41,3	duplicate(NvMage)	Mage Guide#nv4	2_F_MAGICMASTER
 new_5-3,117,41,3	duplicate(NvMage)	Mage Guide#nv5	2_F_MAGICMASTER
 
--	script	Bruce#nv::NvBruce	-1,{
+-	script	Bruce#nv::NvBruce	FAKE_NPC,{
 	mes "[Bruce]";
 	mes "Hello?";
 	mes "I'm here to guide you about extra jobs and special classes.";
@@ -2183,7 +2183,7 @@ new_5-3,121,41,3	duplicate(NvBruce)	Bruce#nv5	1_M_LIBRARYMASTER
 
 //== Eden Group Officer (iRO only) =========================
 /*
--	script	Eden Group Officer::NvEden	-1,{
+-	script	Eden Group Officer::NvEden	FAKE_NPC,{
 	if (BaseLevel < 10) {
 		mes "[Eden Group Officer]";
 		mes "Hello, I am a representative of the Eden Group.";
@@ -2292,7 +2292,7 @@ new_5-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv5	4_F_NOVICE,5,5
 */
 
 //== Trainer ===============================================
--	script	::NvBrutus	-1,{
+-	script	::NvBrutus	FAKE_NPC,{
 	mes "[Trainer Brutus]";
 	mes "These monsters are all weak and easy to kill. But be careful, a lot of them are aggressive and out for blood!";
 	next;
@@ -2389,7 +2389,7 @@ new_4-3,100,50,3	duplicate(NvPotato)	Potato Merchant#nv4	4_F_04
 new_5-3,100,50,3	duplicate(NvPotato)	Potato Merchant#nv5	4_F_04
 
 //== Random Stuff ==========================================
--	script	Bulletin Board::NvBulletin	-1,{
+-	script	Bulletin Board::NvBulletin	FAKE_NPC,{
 	mes "^FF0000=================================";
 	mes "  ^E40CAA[Welcome] ^CC0000to^FF9000Novice^7FFF00 Training^00FF00 Grounds^E40CAA [Welcome] ";
 	mes "^FF0000=================================^000000";
@@ -2401,7 +2401,7 @@ new_3-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv3	HIDDEN_NPC
 new_4-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv4	HIDDEN_NPC
 new_5-1,66,114,4	duplicate(NvBulletin)	Bulletin Board#nv5	HIDDEN_NPC
 
--	script	Guard::NvGuardA	-1,{
+-	script	Guard::NvGuardA	FAKE_NPC,{
 	mes "[Training Grounds Guard]";
 	mes "Welcome to the Training Grounds.";
 	mes "You are now in the outer court yard. Please go inside the castle to begin your training.";
@@ -2413,7 +2413,7 @@ new_3-1,144,116,2	duplicate(NvGuardA)	Guard#nv3a	8W_SOLDIER
 new_4-1,144,116,2	duplicate(NvGuardA)	Guard#nv4a	8W_SOLDIER
 new_5-1,144,116,2	duplicate(NvGuardA)	Guard#nv5a	8W_SOLDIER
 
--	script	Guard::NvGuardB	-1,{
+-	script	Guard::NvGuardB	FAKE_NPC,{
 	mes "[Training Grounds Guard]";
 	if (rand(2)) {
 		mes "Come in! I would like to welcome you to the Training Grounds!";
@@ -2430,7 +2430,7 @@ new_3-1,144,107,2	duplicate(NvGuardB)	Guard#nv3b	8W_SOLDIER
 new_4-1,144,107,2	duplicate(NvGuardB)	Guard#nv4b	8W_SOLDIER
 new_5-1,144,107,2	duplicate(NvGuardB)	Guard#nv5b	8W_SOLDIER
 
--	script	Instructor#Edwin::NvEdwin	-1,{
+-	script	Instructor#Edwin::NvEdwin	FAKE_NPC,{
 	mes "[Edwin]";
 	mes "Eh? Why are you still here?";
 	mes "There are no more courses that you need to take.";
@@ -2468,7 +2468,7 @@ function	script	F_NvErase	{
 }
 
 //== Pre-Renewal Backwards Compatibility ===================
--	script	Final Tester::NvHanson	-1,{
+-	script	Final Tester::NvHanson	FAKE_NPC,{
 	if (nov_3_swordman < 40) {
 		mes "[Hanson]";
 		mes "Eh? Weird?";
@@ -2667,7 +2667,7 @@ new_4-4,100,29,1	duplicate(NvHanson)	Final Tester#nv4	1_ETC_01
 new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 
 //== Job Test ==============================================
--	script	Job Guide Lark::NvLark	-1,{
+-	script	Job Guide Lark::NvLark	FAKE_NPC,{
 	mes "[Lark]";
 	mes "Have you decided what job you're going to choose?";
 	next;

@@ -35,7 +35,7 @@
 //= 1.4
 //=========================================================================
 
--	script	Mercenary Manager#main	-1,{
+-	script	Mercenary Manager#main	FAKE_NPC,{
 	setarray .@name$, 	"Spear", 			"Sword", 			"Bow";
 	setarray .@faith$, 	"SPEAR_MERC_GUILD",	"SWORD_MERC_GUILD",	"ARCH_MERC_GUILD";
 	setarray .@item, 	12182,				12172,				12162;
@@ -230,7 +230,7 @@ prontera,41,337,5	duplicate(Mercenary Manager#main)	Mercenary Manager#Spear	8W_S
 pay_arche,99,167,4	duplicate(Mercenary Manager#main)	Mercenary Manager#Bow	4_M_JOB_HUNTER
 
 //== Mercenary Merchant NPCs ===============================
--	script	Mercenary Merchant#dummy::MercMerchant	-1,{
+-	script	Mercenary Merchant#dummy::MercMerchant	FAKE_NPC,{
 	mes "[Mercenary Goods Merchant]";
 	mes "Hello, I sell goods";
 	mes "that Mercenaries can";

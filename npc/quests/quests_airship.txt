@@ -1184,7 +1184,7 @@ ein_in01,117,80,5	script	Unidentified Machine#as	HIDDEN_NPC,{
 //== "How Does The Airship Work" Quest :: lght_air & lght_ymir =
 
 //- Monsters Attack :: lght_air -
-airplane_01,1,1,0	script	Airship#airplane02	-1,{
+airplane_01,1,1,0	script	Airship#airplane02	FAKE_NPC,{
 	end;
 OnEnable:
 	initnpctimer;

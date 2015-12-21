@@ -787,7 +787,7 @@ prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1251	KNIGHT_OF_WINDSTORM
 prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_1159	PHREEONI
 prt_are_in,1,1,5	duplicate(#arena_1039)	#arena_7777	4_F_VALKYRIE
 
--	script	npctime#arena	-1,{
+-	script	npctime#arena	FAKE_NPC,{
 OnStop:
 	stopnpctimer;
 	end;

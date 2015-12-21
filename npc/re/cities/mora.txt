@@ -922,7 +922,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	close;
 }
 
--	script	#mora_traveler	-1,{
+-	script	#mora_traveler	FAKE_NPC,{
 	mes "[Upset Traveler]";
 	mes "You... you dare play a game with me?";
 	emotion e_ag,0,"Traveler#ep14_1_1";

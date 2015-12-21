@@ -2518,7 +2518,7 @@ OnTouch:
 }
 
 //- Triggers -
-mosk_ship,1,1,4	script	Baehideun#ship	-1,{
+mosk_ship,1,1,4	script	Baehideun#ship	FAKE_NPC,{
 OnInit:
 	$@mos1_edq = 0;
 	end;
@@ -2567,7 +2567,7 @@ OnTimer300000:
 	end;
 }
 
--	script	Baehideun#main	-1,{
+-	script	Baehideun#main	FAKE_NPC,{
 OnInit:
 	if (compare(strnpcinfo(0),"main")) end;
 	disablenpc strnpcinfo(0);
@@ -3986,7 +3986,7 @@ moscovia,208,182,7	script	Acorn Dealer#mos	4_M_RUSMAN1,{
 }
 
 //- Big Squirrel - Trade Acorns for Gems -
--	script	Squirrel#mos_main	-1,{
+-	script	Squirrel#mos_main	FAKE_NPC,{
 	if (compare(strnpcinfo(0),"mos_sq")) end;
 OnTouch:
 	if ((MaxWeight-Weight) < 2000) {
@@ -7363,7 +7363,7 @@ OnTimer300000:
 }
 
 //- Gray Wolf & Maria Morebna -
--	script	mos_rus#main	-1,{
+-	script	mos_rus#main	FAKE_NPC,{
 	end;
 OnInit:
 	if (compare(strnpcinfo(0),"main")) end;
@@ -8444,7 +8444,7 @@ mosk_fild02,157,233,0	script	Shepherdess#rus10	1_F_04,{
 }
 
 //- Pointed Trees (Wooden Flute) -
--	script	PTree#rusmain	-1,{
+-	script	PTree#rusmain	FAKE_NPC,{
 	if (rhea_rus_ring == 6) {
 		if (countitem(Pointed_Branch) < 50) {
 			if (rand(1,3) == 2) {

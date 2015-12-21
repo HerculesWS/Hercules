@@ -1980,7 +1980,7 @@ OnTouch:
 	end;
 }
 
-in_rogue,3,3,0	script	resetter#rogue	-1,{
+in_rogue,3,3,0	script	resetter#rogue	FAKE_NPC,{
 OnTimer500000:
 	donpcevent "mob_rogue#1::OnDisable";
 	donpcevent "mob_rogue#2::OnDisable";

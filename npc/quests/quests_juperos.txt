@@ -1695,7 +1695,7 @@ OnTimer2000:
 }
 
 //- 2nd Floor -
-juperos_02,97,70,0	script	3F Gate Switch#jupe	-1,{
+juperos_02,97,70,0	script	3F Gate Switch#jupe	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	end;
@@ -1961,7 +1961,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#1-1	-1,{
+-	script	Red Alarm On#1-1	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#1-1";
 	end;
@@ -1998,7 +1998,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#1-1	-1,{
+-	script	Monster1#1-1	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#1-1";
 	end;
@@ -2043,7 +2043,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#1-1	-1,{
+-	script	Monster2#1-1	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#1-1";
 	end;
@@ -2251,7 +2251,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#1-2	-1,{
+-	script	Red Alarm On#1-2	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#1-2";
 	end;
@@ -2284,7 +2284,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#1-2	-1,{
+-	script	Monster1#1-2	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#1-2";
 	end;
@@ -2329,7 +2329,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#1-2	-1,{
+-	script	Monster2#1-2	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#1-2";
 	end;
@@ -2536,7 +2536,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#1-3	-1,{
+-	script	Red Alarm On#1-3	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#1-3";
 	end;
@@ -2569,7 +2569,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#1-3	-1,{
+-	script	Monster1#1-3	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#1-3";
 	end;
@@ -2613,7 +2613,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#1-3	-1,{
+-	script	Monster2#1-3	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#1-3";
 	end;
@@ -2827,7 +2827,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#1-4	-1,{
+-	script	Red Alarm On#1-4	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#1-4";
 	end;
@@ -2860,7 +2860,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#1-4	-1,{
+-	script	Monster1#1-4	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#1-4";
 	end;
@@ -2905,7 +2905,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#1-4	-1,{
+-	script	Monster2#1-4	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#1-4";
 	end;
@@ -3160,7 +3160,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#2-1	-1,{
+-	script	Red Alarm On#2-1	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#2-1";
 	end;
@@ -3197,7 +3197,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#2-1	-1,{
+-	script	Monster1#2-1	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#2-1";
 	end;
@@ -3242,7 +3242,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#2-1	-1,{
+-	script	Monster2#2-1	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#2-1";
 	end;
@@ -3450,7 +3450,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#2-2	-1,{
+-	script	Red Alarm On#2-2	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#2-2";
 	end;
@@ -3483,7 +3483,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#2-2	-1,{
+-	script	Monster1#2-2	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#2-2";
 	end;
@@ -3528,7 +3528,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#2-2	-1,{
+-	script	Monster2#2-2	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#2-2";
 	end;
@@ -3735,7 +3735,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#2-3	-1,{
+-	script	Red Alarm On#2-3	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#2-3";
 	end;
@@ -3769,7 +3769,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#2-3	-1,{
+-	script	Monster1#2-3	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#2-3";
 	end;
@@ -3813,7 +3813,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#2-3	-1,{
+-	script	Monster2#2-3	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#2-3";
 	end;
@@ -4028,7 +4028,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#2-4	-1,{
+-	script	Red Alarm On#2-4	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#2-4";
 	end;
@@ -4061,7 +4061,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#2-4	-1,{
+-	script	Monster1#2-4	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#2-4";
 	end;
@@ -4106,7 +4106,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#2-4	-1,{
+-	script	Monster2#2-4	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#2-4";
 	end;
@@ -4382,7 +4382,7 @@ OnInit:
 }
 
 //- Elevator Reception Guards -
-jupe_ele_r,10,50,0	script	Elevator Guard1#ufe	-1,{
+jupe_ele_r,10,50,0	script	Elevator Guard1#ufe	FAKE_NPC,{
 OnInit:
 	disablenpc "Elevator Guard1#ufe";
 	end;
@@ -4451,7 +4451,7 @@ OnMyMobDead:
 	end;
 }
 
-jupe_ele_r,10,52,0	script	Elevator Safety#ufe	-1,{
+jupe_ele_r,10,52,0	script	Elevator Safety#ufe	FAKE_NPC,{
 OnInit:
 	disablenpc "Elevator Safety#ufe";
 	end;
@@ -4514,7 +4514,7 @@ OnTouch:
 	end;
 }
 
-jupe_ele_r,10,54,0	script	Elevator On#ufe	-1,{
+jupe_ele_r,10,54,0	script	Elevator On#ufe	FAKE_NPC,{
 OnInit:
 	disablenpc "Elevator On#ufe";
 	end;

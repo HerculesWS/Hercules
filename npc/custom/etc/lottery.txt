@@ -15,7 +15,7 @@
 //= 1.2.1a fix due to new script engine
 //============================================================
 
--	script	lotterygenerator	-1,{
+-	script	lotterygenerator	FAKE_NPC,{
 OnInit:
 	set $L_TicketPrice,4750; // TICKET COST
 	set $L_Prize_Money,5000000; // JACKPOT AMOUNT

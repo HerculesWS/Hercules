@@ -6729,7 +6729,7 @@ OnTimer1000:
 }
 
 //- Kiehl's Room; NPC for mob control, timers, and other junk. -
-kh_kiehl02,1,1,0	script	KiehlRoom	-1,{
+kh_kiehl02,1,1,0	script	KiehlRoom	FAKE_NPC,{
 	end;
 
 OnKiehlMobDead:

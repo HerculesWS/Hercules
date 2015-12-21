@@ -28,7 +28,7 @@ OnEnterBG:
 // Battleground Engine
 // *********************************************************************
 
--	script	Flavius_BG1	-1,{
+-	script	Flavius_BG1	FAKE_NPC,{
 	end;
 
 OnInit:

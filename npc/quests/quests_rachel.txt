@@ -3217,7 +3217,7 @@ OnMyMobDead:
 	end;
 }
 
-ice_dun02,120,3,0	script	#cave_vos	-1,{
+ice_dun02,120,3,0	script	#cave_vos	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	end;
@@ -3646,7 +3646,7 @@ ice_dun03,127,172,0	script	Blazing Fire#ice4	4_NFWISP,{
 	close;
 }
 
-ice_dun03,1,173,5	script	ice_boss#broad	-1,{
+ice_dun03,1,173,5	script	ice_boss#broad	FAKE_NPC,{
 OnStop:
 	stopnpctimer;
 	end;
@@ -3685,7 +3685,7 @@ OnTimer21000:
 	end;
 }
 
-ice_dun03,1,174,3	script	ice_boss#on	-1,{
+ice_dun03,1,174,3	script	ice_boss#on	FAKE_NPC,{
 OnStart:
 	monster "ice_dun03",150,135,"Ktullanux",1779,1,"ice_boss#on::OnMyMobDead";
 	end;
@@ -3715,7 +3715,7 @@ OnTimer7200000:
 	end;
 }
 
-ice_dun03,1,175,3	script	#ice_sec	-1,{
+ice_dun03,1,175,3	script	#ice_sec	FAKE_NPC,{
 OnStart:
 	initnpctimer;
 	enablenpc "#ice_4f_1";

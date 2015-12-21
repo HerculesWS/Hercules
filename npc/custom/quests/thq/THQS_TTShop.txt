@@ -19,7 +19,7 @@
 prt_in,159,172,0	warp	thqwrp	3,3,yuno_in01,123,155
 
 // Main configuration object
--	script	THQS#Configuration	-1,{
+-	script	THQS#Configuration	FAKE_NPC,{
 OnInit:
 	// Axes
 	setarray $THQS_menu_weapons_1[0], Sabbath, Slaughter, Tomahawk, Great_Axe, Guillotine;

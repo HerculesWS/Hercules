@@ -37,7 +37,7 @@
 //= 1.0
 //=========================================================================
 
--	script	::BlacksmithDister	-1,{
+-	script	::BlacksmithDister	FAKE_NPC,{
 	disable_items;
 	mes "[Blacksmith Dister]";
 	mes "In this highly competitive society, we must be different in order to survive!";

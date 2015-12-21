@@ -1399,7 +1399,7 @@ prt_in,170,14,0	script	Customer#Bachewcca	4_M_ORIENT02,{
 }
 
 //== Izlude ================================================
--	script	::Honeymoon_Helper_Izlude	-1,{
+-	script	::Honeymoon_Helper_Izlude	FAKE_NPC,{
 	mes "[Helper]";
 	mes "Newlyweds and";
 	mes "long time couples...";

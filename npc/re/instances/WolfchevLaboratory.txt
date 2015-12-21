@@ -1598,7 +1598,7 @@ que_lhz,148,251,0	script	#Move2lab	-1,12,0,{
 }
 
 //== Event Controller ======================================
-que_lhz,1,1,0	script	#Eventctrl	-1,{
+que_lhz,1,1,0	script	#Eventctrl	FAKE_NPC,{
 	end;
 
 	OnEnable:
@@ -1662,14 +1662,14 @@ que_lhz,1,1,0	script	#Eventctrl	-1,{
 			killmonster "que_lhz", "#Eventctrl::OnMyMobDead";
 }
 
-que_lhz,139,232,0	script	#01	-1,{ end; }
-que_lhz,147,232,0	script	#02	-1,{ end; }
-que_lhz,156,232,0	script	#03	-1,{ end; }
-que_lhz,156,224,0	script	#04	-1,{ end; }
-que_lhz,156,215,0	script	#05	-1,{ end; }
-que_lhz,147,215,0	script	#06	-1,{ end; }
-que_lhz,139,215,0	script	#07	-1,{ end; }
-que_lhz,139,224,0	script	#08	-1,{ end; }
+que_lhz,139,232,0	script	#01	FAKE_NPC,{ end; }
+que_lhz,147,232,0	script	#02	FAKE_NPC,{ end; }
+que_lhz,156,232,0	script	#03	FAKE_NPC,{ end; }
+que_lhz,156,224,0	script	#04	FAKE_NPC,{ end; }
+que_lhz,156,215,0	script	#05	FAKE_NPC,{ end; }
+que_lhz,147,215,0	script	#06	FAKE_NPC,{ end; }
+que_lhz,139,215,0	script	#07	FAKE_NPC,{ end; }
+que_lhz,139,224,0	script	#08	FAKE_NPC,{ end; }
 
 //== Human Guinea pigs =====================================
 que_lhz,140,231,1	script	Human Guinea pig#01	CHEN,{
@@ -2568,7 +2568,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 }
 
 //== The Lab No.2 Valves ===================================
--	script	bio4FLab2Valve	-1,{
+-	script	bio4FLab2Valve	FAKE_NPC,{
 	if (getpartyleader(getcharid(1),2) == getcharid(0)) {
 		progressbar "0xffff00", 20;
 		stopnpctimer;
@@ -2989,7 +2989,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 1@lhz,148,156,3	script	Type_**Dree#boss16	4_M_DWARF,{ end; }
 
 //== Bosses ================================================
--	script	bio4FBoss	-1,{
+-	script	bio4FBoss	FAKE_NPC,{
   end;
 
   OnEnable:

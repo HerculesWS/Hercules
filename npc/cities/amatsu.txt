@@ -47,7 +47,7 @@
 //=========================================================================
 
 //= Amatsu Transportation ==================================
--	script	::Sea_Captain_amatsu	-1,{
+-	script	::Sea_Captain_amatsu	FAKE_NPC,{
 	mes "[Walter Moers]";
 	mes "Hey, there.";
 	mes "Have you ever heard that there";

@@ -1194,7 +1194,7 @@ OnTouch:
 	}
 }
 
-in_moc_16,1,1,0	script	Beholder#ASNTEST	-1,{
+in_moc_16,1,1,0	script	Beholder#ASNTEST	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -1465,7 +1465,7 @@ OnDisable:
 	end;
 }
 
-in_moc_16,3,3,0	script	timestopper#1	-1,{
+in_moc_16,3,3,0	script	timestopper#1	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -2174,7 +2174,7 @@ in_moc_16,186,81,1	script	Master Assist	1_M_JOBTESTER,1,1,{
 	close;
 }
 
-in_moc_16,170,90,0	script	info 1	-1,{
+in_moc_16,170,90,0	script	info 1	FAKE_NPC,{
 OnTouch:
 	mes "[Guildmaster]";
 	mes "Huh.";
@@ -2206,7 +2206,7 @@ OnTouch:
 	close;
 }
 
-in_moc_16,164,88,0	script	info 5	-1,{
+in_moc_16,164,88,0	script	info 5	FAKE_NPC,{
 OnTouch:
 	mes "[Guildmaster]";
 	mes "Well done...";
@@ -2235,7 +2235,7 @@ OnTouch:
 	close;
 }
 
--	script	#moc_assin_dup	-1,{
+-	script	#moc_assin_dup	FAKE_NPC,{
 	end;
 
 OnInit:

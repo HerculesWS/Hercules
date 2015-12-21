@@ -28,7 +28,7 @@ OnEnterBG:
 // Battleground Engine
 // *********************************************************************
 
--	script	Tierra_BG1	-1,{
+-	script	Tierra_BG1	FAKE_NPC,{
 	end;
 
 OnInit:
@@ -262,7 +262,7 @@ bat_a01,119,336,1	duplicate(Guillaume camp#bat)	Guillaume camp#bat18	1_FLAG_LION
 // Barricades
 // *********************************************************************
 
--	script	Guillaume_TV1B	-1,{
+-	script	Guillaume_TV1B	FAKE_NPC,{
 	end;
 
 OnBuild:
@@ -288,7 +288,7 @@ OnWall:
 	end;
 }
 
--	script	Croix_TV1B	-1,{
+-	script	Croix_TV1B	FAKE_NPC,{
 	end;
 
 OnBuild:

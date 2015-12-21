@@ -37,7 +37,7 @@
 //= Usage: ./map-server --load-plugin script_mapquit --load-script npc/dev/test.txt --load-script npc/dev/ci_test.txt
 //=========================================================================
 
--	script	HerculesSelfTestCI	-1,{
+-	script	HerculesSelfTestCI	FAKE_NPC,{
 	end;
 
 OnInit:

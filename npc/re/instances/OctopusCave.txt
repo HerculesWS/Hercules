@@ -189,7 +189,7 @@ OnTouch:
 	end;
 }
 
-1@cash,1,1,0	script	oct_enter_broad	-1,{
+1@cash,1,1,0	script	oct_enter_broad	FAKE_NPC,{
 	end;
 OnInstanceInit:
 	donpcevent instance_npcname("oct_enter_broad")+"::OnDisable";
@@ -216,7 +216,7 @@ OnTimer7000:
 	end;
 }
 
-1@cash,3,3,0	script	oct_foot_4	-1,{
+1@cash,3,3,0	script	oct_foot_4	FAKE_NPC,{
 	end;
 OnInstanceInit:
 	donpcevent instance_npcname("oct_foot_4")+"::OnDisable";
@@ -389,7 +389,7 @@ OnTouch:
 1@cash,312,214,0	duplicate(oct_foot_exit1)	oct_foot_exit3	WARPNPC,2,2
 1@cash,370,139,0	duplicate(oct_foot_exit1)	oct_foot_exit4	WARPNPC,2,2
 
-1@cash,15,15,0	script	oct_mob_con	-1,{
+1@cash,15,15,0	script	oct_mob_con	FAKE_NPC,{
 	end;
 OnInstanceInit:
 	donpcevent instance_npcname("oct_mob_con")+"::OnDisable";
@@ -579,7 +579,7 @@ OnEnable:
 	end;
 }
 
-1@cash,2,2,0	script	oct_boss_con	-1,{
+1@cash,2,2,0	script	oct_boss_con	FAKE_NPC,{
 	end;
 OnInstanceInit:
 	donpcevent instance_npcname("oct_boss_con")+"::OnDisable";
@@ -654,7 +654,7 @@ OnMyMobDead:
 	end;
 }
 
-1@cash,4,4,0	script	oct_boss_foot	-1,{
+1@cash,4,4,0	script	oct_boss_foot	FAKE_NPC,{
 	end;
 OnInstanceInit:
 	donpcevent instance_npcname("oct_boss_foot")+"::OnDisable";

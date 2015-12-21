@@ -38,7 +38,7 @@
 //=========================================================================
 
 //== Information ===========================================
--	script	PVP Narrator::pvpe	-1,{
+-	script	PVP Narrator::pvpe	FAKE_NPC,{
 	mes "[PVP Narrator]";
 	mes "Hello and welcome!";
 	mes "I am in charge of";
@@ -192,7 +192,7 @@ payon_in01,142,50,4	duplicate(pvpe)	PVP Narrator#pe5	4_M_02
 geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 
 //== Mode Select ===========================================
--	script	Gate Keeper::gkut	-1,{
+-	script	Gate Keeper::gkut	FAKE_NPC,{
 	mes "[Gate Keeper]";
 	mes "Glad to be of service.";
 	mes "I will open the PVP fight";
@@ -374,7 +374,7 @@ OnInit:
 }
 
 //== Spectator Entrance ====================================
--	script	Spectator's Entrance#dum::PVPSpectator	-1,{
+-	script	Spectator's Entrance#dum::PVPSpectator	FAKE_NPC,{
 	if (countitem(Admission_For_Duel) == 0) {
 		mes "[PVP Compete Square Register Staff]";
 		mes "This is the entrance for viewers.";
@@ -405,7 +405,7 @@ pvp_room,78,85,4	duplicate(PVPSpectator)	Spectator's Entrance#3	8W_SOLDIER
 pvp_room,86,85,4	duplicate(PVPSpectator)	Spectator's Entrance#4	8W_SOLDIER
 
 //== Spectator Warps =======================================
--	script	Combat Square Staff#dum::PVPSpecWarp	-1,{
+-	script	Combat Square Staff#dum::PVPSpecWarp	FAKE_NPC,{
 OnTouch:
 	mes "[Combat Square Staff]";
 	mes "May I help you?";

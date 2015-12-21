@@ -111,7 +111,7 @@ function	script	F_TestVarOfAnotherNPC	{
 	return getvariableofnpc(.x, getarg(0));
 }
 
--	script	TestVarOfAnotherNPC	-1,{
+-	script	TestVarOfAnotherNPC	FAKE_NPC,{
 	// Used to test getvariableofnpc()
 	end;
 }
@@ -787,7 +787,7 @@ OnSetReference:
 	return getarg(0);
 }
 
--	script	HerculesSelfTest	-1,{
+-	script	HerculesSelfTest	FAKE_NPC,{
 	end;
 
 OnInit:

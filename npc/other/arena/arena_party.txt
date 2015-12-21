@@ -333,7 +333,7 @@ On10_End:
 	end;
 }
 
--	script	arena_p	-1,{
+-	script	arena_p	FAKE_NPC,{
 OnStart:
 	mapwarp "force_1-2","prt_are_in",177,138;
 	disablenpc "force_01_00";
@@ -448,7 +448,7 @@ OnTouch:
 	end;
 }
 
--	script	force_01mob#party	-1,{
+-	script	force_01mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",15,35,"Penomena",1441,1,"force_01mob#party::OnMyMobDead";
 	monster "force_1-2",35,35,"Penomena",1441,1,"force_01mob#party::OnMyMobDead";
@@ -503,7 +503,7 @@ OnTouch:
 	end;
 }
 
--	script	force_02mob#party	-1,{
+-	script	force_02mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",163,36,"Penomena",1441,1,"force_02mob#party::OnMyMobDead";
 	monster "force_1-2",184,36,"Penomena",1441,1,"force_02mob#party::OnMyMobDead";
@@ -562,7 +562,7 @@ OnTouch:
 	end;
 }
 
--	script	force_03mob#party	-1,{
+-	script	force_03mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",89,81,"Merman",1451,1,"force_03mob#party::OnMyMobDead";
 	monster "force_1-2",90,81,"Merman",1451,1,"force_03mob#party::OnMyMobDead";
@@ -617,7 +617,7 @@ OnTouch:
 	end;
 }
 
--	script	force_04mob#party	-1,{
+-	script	force_04mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",174,78,"Penomena",1441,1,"force_04mob#party::OnMyMobDead";
 	monster "force_1-2",184,78,"Penomena",1441,1,"force_04mob#party::OnMyMobDead";
@@ -664,7 +664,7 @@ OnTouch:
 	end;
 }
 
--	script	force_05mob#party	-1,{
+-	script	force_05mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",25,68,"Penomena",1441,1,"force_05mob#party::OnMyMobDead";
 	monster "force_1-2",36,68,"Penomena",1441,1,"force_05mob#party::OnMyMobDead";
@@ -711,7 +711,7 @@ OnTouch:
 	end;
 }
 
--	script	force_06mob#party	-1,{
+-	script	force_06mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",19,135,"Cloud Hermit",1531,1,"force_06mob#party::OnMyMobDead";
 	monster "force_1-2",24,135,"Cloud Hermit",1531,1,"force_06mob#party::OnMyMobDead";
@@ -757,7 +757,7 @@ OnTouch:
 	end;
 }
 
--	script	force_07mob#party	-1,{
+-	script	force_07mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",104,134,"Greatest General",1541,1,"force_07mob#party::OnMyMobDead";
 	monster "force_1-2",104,136,"Greatest General",1541,1,"force_07mob#party::OnMyMobDead";
@@ -793,7 +793,7 @@ OnTouch:
 	end;
 }
 
--	script	force_08mob#party	-1,{
+-	script	force_08mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",172,154,"Khalitzburg",1438,1,"force_08mob#party::OnMyMobDead";
 	monster "force_1-2",174,145,"Ghostring",1576,1,"force_08mob#party::OnMyMobDead";
@@ -836,7 +836,7 @@ OnTouch:
 	end;
 }
 
--	script	force_09mob#party	-1,{
+-	script	force_09mob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",86,180,"Elder",1573,1,"force_09mob#party::OnMyMobDead";
 	monster "force_1-2",86,176,"Elder",1573,1,"force_09mob#party::OnMyMobDead";
@@ -876,7 +876,7 @@ OnTouch:
 	end;
 }
 
--	script	force_10mob-1#party	-1,{
+-	script	force_10mob-1#party	FAKE_NPC,{
 OnEnable:
 	switch(rand(1,2)) {
 	case 1:
@@ -898,7 +898,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	force_10mob-2#party	-1,{
+-	script	force_10mob-2#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",16,179,"Samurai Spector",1542,1,"force_10mob-2#party::OnMyMobDead";
 	monster "force_1-2",16,179,"Shinobi",1560,1,"force_10mob-2#party::OnMyMobDead";
@@ -928,7 +928,7 @@ OnTouch:
 	end;
 }
 
--	script	force_exitmob#party	-1,{
+-	script	force_exitmob#party	FAKE_NPC,{
 OnEnable:
 	monster "force_1-2",95,177,"Farewell",1393,1,"force_exitmob#party::OnMyMobDead";
 	monster "force_1-2",95,177,"I hate you",1543,1,"force_exitmob#party::OnMyMobDead";
@@ -1142,7 +1142,7 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 	}
 }
 
--	script	#arn_timer_pt	-1,{
+-	script	#arn_timer_pt	FAKE_NPC,{
 OnEnter:
 	initnpctimer;
 	end;
@@ -1172,13 +1172,13 @@ OnStop:
 	end;
 }
 
--	script	arn_warp_pt	-1,{
+-	script	arn_warp_pt	FAKE_NPC,{
 OnOut:
 	areawarp "prt_are_in",66,143,81,126,"arena_room",100,75;
 	end;
 }
 
--	script	cast#pt	-1,{
+-	script	cast#pt	FAKE_NPC,{
 OnTimeOver1:
 	mapannounce "force_2-1","Arena will be reactivated due to an error occurred during battle.",0,0xFFCE00;
 	end;
@@ -1196,7 +1196,7 @@ OnTimeOver2:
 	end;
 }
 
--	script	alloff#pt	-1,{
+-	script	alloff#pt	FAKE_NPC,{
 OnEnable:
 	mapwarp "force_1-2","prt_are_in",126,139,0,0;
 	donpcevent "force_01mob#party::OnReset";

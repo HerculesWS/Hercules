@@ -150,7 +150,7 @@ ma_in01,30,94,4	script	Inn Keeper#ma	4_F_MALAYA,{
 	}
 }
 
--	script	Unidentified Creature#i	-1,{
+-	script	Unidentified Creature#i	FAKE_NPC,{
 	end;
 OnInit:
 	switch(atoi(strnpcinfo(2))) {
@@ -208,7 +208,7 @@ ma_fild01,74,367,6	duplicate(Unidentified Creature#i)	Unidentified Creature#01	4
 ma_fild02,282,41,4	duplicate(Unidentified Creature#i)	Unidentified Creature#05	4_MAL_BUDIDAI,2,2
 ma_scene01,195,92,4	duplicate(Unidentified Creature#i)	Unidentified Creature#09	4_MAL_BUDIDAI,2,2
 
--	script	Unidentified Creature#j	-1,{
+-	script	Unidentified Creature#j	FAKE_NPC,{
 	end;
 OnEnable:
 	enablenpc strnpcinfo(0);

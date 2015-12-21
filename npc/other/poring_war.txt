@@ -892,7 +892,7 @@ OnDisable:
 	end;
 }
 
-poring_w02,1,1,0	script	#wop_master	-1,{
+poring_w02,1,1,0	script	#wop_master	FAKE_NPC,{
 	end;
 
 OnReset:
@@ -1088,7 +1088,7 @@ OnTouch:
 }
 
 //== Poring Spawn ==========================================
-poring_w02,80,82,0	script	#wop_angellium1	-1,{
+poring_w02,80,82,0	script	#wop_angellium1	FAKE_NPC,{
 	end;
 
 OnReset:
@@ -1122,7 +1122,7 @@ OnTimer120000:
 	stopnpctimer;
 }
 
-poring_w02,98,41,0	script	#wop_angellium2	-1,{
+poring_w02,98,41,0	script	#wop_angellium2	FAKE_NPC,{
 	end;
 
 OnReset:
@@ -1157,7 +1157,7 @@ OnTimer120000:
 	end;
 }
 
-poring_w02,116,82,0	script	#wop_devillium1	-1,{
+poring_w02,116,82,0	script	#wop_devillium1	FAKE_NPC,{
 	end;
 
 OnReset:
@@ -1192,7 +1192,7 @@ OnTimer120000:
 	end;
 }
 
-poring_w02,98,124,0	script	#wop_devillium2	-1,{
+poring_w02,98,124,0	script	#wop_devillium2	FAKE_NPC,{
 	end;
 
 OnReset:
@@ -1656,11 +1656,11 @@ OnTouch:
 }
 
 //== Other NPCs ============================================
--	script	Angeling Side Poring#wpa	-1,{
+-	script	Angeling Side Poring#wpa	FAKE_NPC,{
 	end;
 }
 
--	script	Deviling Side Marin#wpd	-1,{
+-	script	Deviling Side Marin#wpd	FAKE_NPC,{
 	end;
 }
 
