@@ -2731,6 +2731,66 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	return code;
 }
 
+/**
+ * Validates a variable name.
+ *
+ * A variable names consists of an optional variable prefix (`@`, `#`, `'`,
+ * `.`, `$`, `.@`, `$@`), followed by a sequence of uppercase or lowercase
+ * letters, numbers, underscores `_`, followed by an optional variable suffix
+ * (`$`).
+ * Not all valid words (or constant names) are also valid variable names.
+ *
+ * @param p The variable name to test.
+ * @retval true if it's a valid variable name.
+ * @retval false otherwise.
+ */
+// TODO[Haru]: This could be changed so that it identifies and returns the variable type (to avoid code duplication).
+bool validate_varname(const char *p)
+{
+	int len = 0;
+
+	nullpo_retr(false, p);
+
+	if (!*p)
+		return false;
+
+	// prefix
+	switch (*p) {
+	case '@': // temporary char variable
+	case '\'': // instance variable
+		p++;
+		break;
+	case '#': // account variable
+		p++;
+		if (*p == '#')
+			p++;
+		break;
+	case '.': // npc variable (or scope variable)
+	case '$': // global variable (or global temporary variable)
+		p++;
+		if (*p == '@')
+			p++;
+		break;
+	}
+
+	while (ISALNUM(*p) || *p == '_') {
+		len++;
+		p++;
+	}
+
+	if (len == 0)
+		return false;
+
+	// suffix
+	if (*p == '$') // string
+		p++;
+
+	if (*p != '\0') // trailing characters - not a valid variable name
+		return false;
+
+	return true;
+}
+
 /// Returns the player attached to this script, identified by the rid.
 /// If there is no player attached, the script is terminated.
 struct map_session_data *script_rid2sd(struct script_state *st)
@@ -2860,7 +2920,11 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 		// string variable
 		const char *str = NULL;
 
-		switch (prefix) {
+		if (!validate_varname(name)) {
+			ShowWarning("script_get_val: invalid variable name '%s', defaulting to \"\"\n", name);
+			data->u.str = NULL;
+		} else {
+			switch (prefix) {
 			case '@':
 				str = pc->readregstr(sd, data->u.num);
 				break;
@@ -2887,6 +2951,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 			default:
 				str = pc_readglobalreg_str(sd, data->u.num);
 				break;
+			}
 		}
 
 		if (str == NULL || str[0] == '\0') {
@@ -2898,16 +2963,18 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 			data->u.mutstr = aStrdup(str);
 		}
 
-	} else {// integer variable
-
+	} else { // integer variable
 		data->type = C_INT;
 
-		if( reference_toconstant(data) ) {
+		if (reference_toconstant(data)) {
 			data->u.num = reference_getconstant(data);
-		} else if( reference_toparam(data) ) {
+		} else if (reference_toparam(data)) {
 			data->u.num = pc->readparam(sd, reference_getparamtype(data));
-		} else
-			switch( prefix ) {
+		} else if (!validate_varname(name)) {
+			ShowWarning("script_get_val: invalid variable name '%s', defaulting to 0\n", name);
+			data->u.num = 0;
+		} else {
+			switch (prefix) {
 				case '@':
 					data->u.num = pc->readreg(sd, data->u.num);
 					break;
@@ -2935,6 +3002,7 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 					data->u.num = pc_readglobalreg(sd, data->u.num);
 					break;
 			}
+		}
 
 	}
 	data->ref = NULL;
@@ -3289,6 +3357,16 @@ int set_reg(struct script_state *st, struct map_session_data *sd, int64 num, con
 			script->reportsrc(st);
 			st->state = END;
 		}
+		return 0;
+	}
+	if (!validate_varname(name)) {
+		if (is_string_variable(name)) {
+			ShowError("script:set_reg: failed to set value for invalid variable name '%s' to \"%s\"\n", name, (const char *)value);
+		} else {
+			ShowError("script:set_reg: failed to set value for invalid variable name '%s' to '%d'\n", name, (int)h64BPTRSIZE(value));
+		}
+		script->reportsrc(st);
+		st->state = END;
 		return 0;
 	}
 
