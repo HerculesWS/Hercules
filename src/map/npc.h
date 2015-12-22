@@ -138,7 +138,7 @@ enum actor_classes {
 #define MAX_NPC_CLASS 1000
 // New NPC range
 #define MAX_NPC_CLASS2_START 10001
-#define MAX_NPC_CLASS2_END 10174
+#define MAX_NPC_CLASS2_END 10178
 
 //Script NPC events.
 enum npce_event {
