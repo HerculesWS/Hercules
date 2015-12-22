@@ -796,9 +796,11 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_ATTHASTE_POTION1] = SI_ATTHASTE_POTION1;
 	status->dbs->IconChangeTable[SC_ATTHASTE_POTION2] = SI_ATTHASTE_POTION2;
 	status->dbs->IconChangeTable[SC_ATTHASTE_POTION3] = SI_ATTHASTE_POTION3;
+	status->dbs->IconChangeTable[SC_MOVHASTE_POTION] = SI_MOVHASTE_POTION;
 	status->dbs->IconChangeTable[SC_ATTHASTE_INFINITY] = SI_ATTHASTE_INFINITY;
 	status->dbs->IconChangeTable[SC_MOVHASTE_HORSE] = SI_MOVHASTE_HORSE;
 	status->dbs->IconChangeTable[SC_MOVHASTE_INFINITY] = SI_MOVHASTE_INFINITY;
+	status->dbs->IconChangeTable[SC_MOVESLOW_POTION] = SI_MOVESLOW_POTION;
 	status->dbs->IconChangeTable[SC_CHASEWALK2] = SI_INCSTR;
 	status->dbs->IconChangeTable[SC_MIRACLE] = SI_SOULLINK;
 	status->dbs->IconChangeTable[SC_CLAIRVOYANCE] = SI_CLAIRVOYANCE;
@@ -983,16 +985,18 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_BLOSSOM_FLUTTERING] = SI_BLOSSOM_FLUTTERING;
 	
 	// Other SC which are not necessarily associated to skills.
-	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION1] = SCB_ASPD;
-	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION2] = SCB_ASPD;
-	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION3] = SCB_ASPD;
-	status->dbs->ChangeFlagTable[SC_ATTHASTE_INFINITY] = SCB_ASPD;
-	status->dbs->ChangeFlagTable[SC_MOVHASTE_HORSE] = SCB_SPEED;
-	status->dbs->ChangeFlagTable[SC_MOVHASTE_INFINITY] = SCB_SPEED;
+	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION1] |= SCB_ASPD;
+	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION2] |= SCB_ASPD;
+	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION3] |= SCB_ASPD;
+	status->dbs->ChangeFlagTable[SC_MOVHASTE_POTION] |= SCB_SPEED;
+	status->dbs->ChangeFlagTable[SC_ATTHASTE_INFINITY] |= SCB_ASPD;
+	status->dbs->ChangeFlagTable[SC_MOVHASTE_HORSE] |= SCB_SPEED;
+	status->dbs->ChangeFlagTable[SC_MOVHASTE_INFINITY] |= SCB_SPEED;
+	status->dbs->ChangeFlagTable[SC_MOVESLOW_POTION] |= SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_SLOWDOWN] |= SCB_SPEED;
-	status->dbs->ChangeFlagTable[SC_PLUSATTACKPOWER] = SCB_BATK;
-	status->dbs->ChangeFlagTable[SC_PLUSMAGICPOWER] = SCB_MATK;
-	status->dbs->ChangeFlagTable[SC_INCALLSTATUS] |= SCB_STR|SCB_AGI|SCB_VIT|SCB_INT|SCB_DEX|SCB_LUK;
+	status->dbs->ChangeFlagTable[SC_PLUSATTACKPOWER] |= SCB_BATK;
+	status->dbs->ChangeFlagTable[SC_PLUSMAGICPOWER] |= SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_INCALLSTATUS] |= SCB_STR | SCB_AGI | SCB_VIT | SCB_INT | SCB_DEX | SCB_LUK;
 	status->dbs->ChangeFlagTable[SC_CHASEWALK2] |= SCB_STR;
 	status->dbs->ChangeFlagTable[SC_INCAGI] |= SCB_AGI;
 	status->dbs->ChangeFlagTable[SC_INCVIT] |= SCB_VIT;
@@ -1003,7 +1007,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_INCHITRATE] |= SCB_HIT;
 	status->dbs->ChangeFlagTable[SC_INCFLEE] |= SCB_FLEE;
 	status->dbs->ChangeFlagTable[SC_INCFLEERATE] |= SCB_FLEE;
-	status->dbs->ChangeFlagTable[SC_MTF_HITFLEE] |= SCB_HIT|SCB_FLEE;
+	status->dbs->ChangeFlagTable[SC_MTF_HITFLEE] |= SCB_HIT | SCB_FLEE;
 	status->dbs->ChangeFlagTable[SC_CRITICALPERCENT] |= SCB_CRI;
 	status->dbs->ChangeFlagTable[SC_INCASPDRATE] |= SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_PLUSAVOIDVALUE] |= SCB_FLEE2;
@@ -1013,7 +1017,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_MTF_MHP] |= SCB_MAXHP;
 	status->dbs->ChangeFlagTable[SC_INCMSP] |= SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_MTF_MSP] |= SCB_MAXSP;
-	status->dbs->ChangeFlagTable[SC_INCATKRATE] |= SCB_BATK|SCB_WATK;
+	status->dbs->ChangeFlagTable[SC_INCATKRATE] |= SCB_BATK | SCB_WATK;
 	status->dbs->ChangeFlagTable[SC_INCMATKRATE] |= SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_INCDEFRATE] |= SCB_DEF;
 	status->dbs->ChangeFlagTable[SC_FOOD_STR] |= SCB_STR;
@@ -1045,12 +1049,12 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_STEAMPACK] |= SCB_BATK | SCB_ASPD | SCB_ALL;
 	
 	// Cash Items
-	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] = SCB_STR;
-	status->dbs->ChangeFlagTable[SC_FOOD_AGI_CASH] = SCB_AGI;
-	status->dbs->ChangeFlagTable[SC_FOOD_VIT_CASH] = SCB_VIT;
-	status->dbs->ChangeFlagTable[SC_FOOD_DEX_CASH] = SCB_DEX;
-	status->dbs->ChangeFlagTable[SC_FOOD_INT_CASH] = SCB_INT;
-	status->dbs->ChangeFlagTable[SC_FOOD_LUK_CASH] = SCB_LUK;
+	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
+	status->dbs->ChangeFlagTable[SC_FOOD_AGI_CASH] |= SCB_AGI;
+	status->dbs->ChangeFlagTable[SC_FOOD_VIT_CASH] |= SCB_VIT;
+	status->dbs->ChangeFlagTable[SC_FOOD_DEX_CASH] |= SCB_DEX;
+	status->dbs->ChangeFlagTable[SC_FOOD_INT_CASH] |= SCB_INT;
+	status->dbs->ChangeFlagTable[SC_FOOD_LUK_CASH] |= SCB_LUK;
 	
 	// Mercenary Bonus Effects
 	status->dbs->ChangeFlagTable[SC_MER_FLEE] |= SCB_FLEE;
@@ -1060,11 +1064,11 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_MER_HIT] |= SCB_HIT;
 	
 	// Guillotine Cross Poison Effects
-	status->dbs->ChangeFlagTable[SC_PARALYSE] |= SCB_FLEE|SCB_SPEED|SCB_ASPD;
+	status->dbs->ChangeFlagTable[SC_PARALYSE] |= SCB_FLEE | SCB_SPEED | SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_VENOMBLEED] |= SCB_MAXHP;
 	status->dbs->ChangeFlagTable[SC_MAGICMUSHROOM] |= SCB_REGEN;
 	status->dbs->ChangeFlagTable[SC_DEATHHURT] |= SCB_REGEN;
-	status->dbs->ChangeFlagTable[SC_PYREXIA] |= SCB_HIT|SCB_FLEE;
+	status->dbs->ChangeFlagTable[SC_PYREXIA] |= SCB_HIT | SCB_FLEE;
 	status->dbs->ChangeFlagTable[SC_OBLIVIONCURSE] |= SCB_REGEN;
 	
 	// RG status
@@ -1106,11 +1110,11 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_FREYJASCROLL] |= SCB_MDEF | SCB_FLEE2;
 	status->dbs->ChangeFlagTable[SC_SOULSCROLL] |= SCB_MAXHP | SCB_MAXSP;
 
-	status->dbs->ChangeFlagTable[SC_ALL_RIDING] = SCB_SPEED;
-	status->dbs->ChangeFlagTable[SC_WEDDING] = SCB_SPEED;
+	status->dbs->ChangeFlagTable[SC_ALL_RIDING] |= SCB_SPEED;
+	status->dbs->ChangeFlagTable[SC_WEDDING] |= SCB_SPEED;
 
-	status->dbs->ChangeFlagTable[SC_MTF_ASPD] = SCB_ASPD | SCB_HIT;
-	status->dbs->ChangeFlagTable[SC_MTF_MATK] = SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_MTF_ASPD] |= SCB_ASPD | SCB_HIT;
+	status->dbs->ChangeFlagTable[SC_MTF_MATK] |= SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_MTF_MLEATKED] |= SCB_ALL;
 	
 	// Eden Crystal Synthesis
@@ -5489,8 +5493,10 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 						val = max( val, sc->data[SC_CLOAKING]->val1 < 3 ? 300 : 30 - 3 * sc->data[SC_CLOAKING]->val1 );
 					if( sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_ENEMY )
 						val = max( val, 75 );
-					if (sc->data[SC_SLOWDOWN]) // Slow Potion
-						val = max(val, sc->data[SC_SLOWDOWN]->val1);
+					if (sc->data[SC_SLOWDOWN])
+						val = max(val, 100);
+					if (sc->data[SC_MOVESLOW_POTION]) // Used by Slow_Down_Potion [Frost]
+						val = max(val, sc->data[SC_MOVESLOW_POTION]->val1);
 					if( sc->data[SC_GS_GATLINGFEVER] )
 						val = max( val, 100 );
 					if( sc->data[SC_NJ_SUITON] )
@@ -5532,8 +5538,10 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 		{
 			int val = 0;
 
-			if (sc->data[SC_MOVHASTE_INFINITY])
+			if (sc->data[SC_MOVHASTE_INFINITY]) // Used by NPC_AGIUP [Frost]
 				val = max(val, sc->data[SC_MOVHASTE_INFINITY]->val1);
+			if (sc->data[SC_MOVHASTE_POTION]) // Used by Speed_Up_Potion and Guyak_Pudding [Frost]
+				val = max(val, sc->data[SC_MOVHASTE_POTION]->val1);
 			if( sc->data[SC_INC_AGI] )
 				val = max( val, 25 );
 			if( sc->data[SC_WINDWALK] )
@@ -5564,9 +5572,8 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 				val = max( val, sc->data[SC_WIND_STEP_OPTION]->val2 );
 			if( sc->data[SC_FULL_THROTTLE] )
 				val = max( val, 25);
-			//FIXME: official items use a single bonus for this [ultramage]
-			if( sc->data[SC_MOVHASTE_HORSE] ) // temporary item-based speedup
-				val = max( val, 25 );
+			if (sc->data[SC_MOVHASTE_HORSE])
+				val = max(val, sc->data[SC_MOVHASTE_HORSE]->val1);
 			if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate < 0 ) // permanent item-based speedup
 				val = max( val, -(sd->bonus.speed_rate + sd->bonus.speed_add_rate) );
 
@@ -7191,7 +7198,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_QUAGMIRE:
 		case SC_DEC_AGI:
 		case SC_DONTFORGETME:
-			if (sc->data[SC_MOVHASTE_INFINITY]) // Doesn't affect by Quagmire, Decrease Agi, Slow Grace [Frost]
+			if (sc->data[SC_MOVHASTE_POTION]) // Doesn't affect by Quagmire, Decrease Agi, Slow Grace [Frost]
 				return 0;
 			break;
 		case SC_MAGNIFICAT:

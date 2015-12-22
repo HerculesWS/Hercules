@@ -815,6 +815,8 @@ typedef enum sc_type {
 	SC_STR_SCROLL,
 	SC_INT_SCROLL, // 630
 	SC_STEAMPACK,
+	SC_MOVHASTE_POTION,
+	SC_MOVESLOW_POTION,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
@@ -1011,7 +1013,7 @@ enum si_type {
 	SI_INCSTR                                = 182,
 	//SI_NOT_EXTREMITYFIST                   = 183,
 	SI_CLAIRVOYANCE                          = 184,
-	//SI_MOVESLOW_POTION                     = 185,
+	SI_MOVESLOW_POTION                       = 185,
 	SI_DOUBLECASTING                         = 186,
 	//SI_GRAVITATION                         = 187,
 	SI_OVERTHRUSTMAX                         = 188,
