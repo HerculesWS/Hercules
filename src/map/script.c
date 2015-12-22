@@ -13610,16 +13610,28 @@ BUILDIN(atcommand) {
 	return ret;
 }
 
-/*==========================================
- * Displays a message for the player only (like system messages like "you got an apple" )
- *------------------------------------------*/
+/**
+ * Displays a message for the player only (like system messages like "you got an apple")
+ *
+ * @code
+ *   dispbottom "<message>"{,<color>};
+ * @endcode
+ */
 BUILDIN(dispbottom)
 {
-	TBL_PC *sd=script->rid2sd(st);
-	const char *message;
-	message=script_getstr(st,2);
-	if(sd)
-		clif_disp_onlyself(sd,message,(int)strlen(message));
+	TBL_PC *sd = script->rid2sd(st);
+	const char *message = script_getstr(st,2);
+
+	if (sd == NULL)
+		return true;
+
+	if (script_hasdata(st,3)) {
+		int color = script_getnum(st,3);
+		clif->messagecolor_self(sd->fd, color, message);
+	} else {
+		clif_disp_onlyself(sd, message, (int)strlen(message));
+	}
+
 	return true;
 }
 
@@ -13834,16 +13846,21 @@ BUILDIN(movenpc) {
 /*==========================================
  * message [MouseJstr]
  *------------------------------------------*/
-BUILDIN(message) {
-	const char *msg,*player;
-	TBL_PC *pl_sd = NULL;
+BUILDIN(message)
+{
+	const char *message;
+	TBL_PC *sd = NULL;
 
-	player = script_getstr(st,2);
-	msg = script_getstr(st,3);
+	if (script_isstringtype(st,2))
+		sd = script->nick2sd(st, script_getstr(st,2));
+	else
+		sd = script->id2sd(st, script_getnum(st,2));
 
-	if ((pl_sd = script->nick2sd(st, (char*)player)) == NULL)
+	if (sd == NULL)
 		return true;
-	clif->message(pl_sd->fd, msg);
+
+	message = script_getstr(st,3);
+	clif->message(sd->fd, message);
 
 	return true;
 }
@@ -20358,7 +20375,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(atcommand,"s"), // [MouseJstr]
 		BUILDIN_DEF2(atcommand,"charcommand","s"), // [MouseJstr]
 		BUILDIN_DEF(movenpc,"sii?"), // [MouseJstr]
-		BUILDIN_DEF(message,"ss"), // [MouseJstr]
+		BUILDIN_DEF(message,"vs"), // [MouseJstr]
 		BUILDIN_DEF(npctalk,"s?"), // [Valaris]
 		BUILDIN_DEF(mobcount,"ss"),
 		BUILDIN_DEF(getlook,"i"),
@@ -20391,7 +20408,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(deletepset,"i"), // Delete a pattern set [MouseJstr]
 		BUILDIN_DEF(pcre_match,"ss"),
 #endif
-		BUILDIN_DEF(dispbottom,"s"), //added from jA [Lupus]
+		BUILDIN_DEF(dispbottom,"s?"), //added from jA [Lupus]
 		BUILDIN_DEF(getusersname,""),
 		BUILDIN_DEF(recovery,""),
 		BUILDIN_DEF(getpetinfo,"i"),
