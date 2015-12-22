@@ -8436,14 +8436,15 @@ ACMD(accinfo) {
 }
 
 /* [Ind] */
-ACMD(set) {
-	char reg[32], val[128];
+ACMD(set)
+{
+	char reg[SCRIPT_VARNAME_LENGTH+1], val[254];
 	struct script_data* data;
 	int toset = 0;
 	bool is_str = false;
 	size_t len;
 
-	if (!*message || (toset = sscanf(message, "%31s %127[^\n]s", reg, val)) < 1) {
+	if (!*message || (toset = sscanf(message, "%32s %253[^\n]", reg, val)) < 1) {
 		clif->message(fd, msg_fd(fd,1367)); // Usage: @set <variable name> <value>
 		clif->message(fd, msg_fd(fd,1368)); // Usage: ex. "@set PoringCharVar 50"
 		clif->message(fd, msg_fd(fd,1369)); // Usage: ex. "@set PoringCharVarSTR$ Super Duper String"
