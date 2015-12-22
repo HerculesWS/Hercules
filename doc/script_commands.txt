@@ -4091,18 +4091,20 @@ Note: rid2name may not produce correct character names since rid means
 
 ---------------------------------------
 
+*message <account ID>,"<message>";
 *message "<character name>","<message>";
 
 That command will send a message to the chat window of the character 
-specified by name. The text will also appear above the head of that 
-character. It will not be seen by anyone else.
+specified by account ID or name. The text will also appear above the head
+of that character. It will not be seen by anyone else.
 
 ---------------------------------------
 
-*dispbottom "<message>";
+*dispbottom "<message>"{,<color>};
 
-This command will send the given message into the invoking character's 
-chat window.
+This command will send the given message into the invoking character's
+chat window. The color format is in RGB (0xRRGGBB), and default to green
+if <color> field is left out.
 
 ---------------------------------------
 
