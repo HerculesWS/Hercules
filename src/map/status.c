@@ -9224,7 +9224,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val3 = 100; // HP Consume.
 				val4 = tick / 10000;
 				tick_time = 10000;
-				sc_start(src, bl, SC_ENDURE, 100, 10, -1); // Endure effect
+				sc_start(src, bl, SC_ENDURE, 100, 10, tick); // Endure effect
 				break;
 			case SC_KYOUGAKU: {
 				int min = val1*2;
