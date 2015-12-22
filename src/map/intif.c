@@ -333,6 +333,11 @@ int intif_saveregistry(struct map_session_data *sd) {
 		if( varname[0] == '@' ) /* @string$ can get here, so we skip */
 			continue;
 
+		if (strlen(varname) > 31)
+		{
+			ShowError("Variable name too big: %s\n", varname);
+			continue;
+		}
 		src = DB->data2ptr(data);
 
 		/* no need! */
