@@ -525,7 +525,8 @@ If a variable was never set, it is considered to equal zero for integer
 variables or an empty string ("", nothing between the quotes) for string 
 variables. Once you set it to that, the variable is as good as forgotten 
 forever, and no trace remains of it even if it was stored with character 
-or account data.
+or account data. The maximum length of variable name including prefix and
+postfix is 31.
 
 Some variables are special, that is, they are already defined for you by 
 the scripting engine. You can see the full list somewhere in 

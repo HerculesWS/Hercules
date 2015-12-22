@@ -49,6 +49,8 @@ struct item_data;
 
 #define NUM_WHISPER_VAR 10
 
+#define SCRIPT_VARNAME_LENGTH 31 // char-server crash when saving >= 32 name length into sql table
+
 /// Maximum amount of elements in script arrays
 #define SCRIPT_MAX_ARRAYSIZE (UINT_MAX - 1)
 
