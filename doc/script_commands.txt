@@ -7779,6 +7779,19 @@ Example:
 
 ---------------------------------------
 
+*swap <variable>,<variable>;
+
+Swap the value of 2 variables. Both sides must be same integer or string type.
+
+Example:
+	.@var1 = 111;
+	.@var2 = 222;
+	swap .@var1, .@var2;
+	mes "var1 = "+ .@var1; // return 222
+	mes "var2 = "+ .@var2; // return 111
+
+---------------------------------------
+
 *query_sql("your MySQL query"{, <array variable>{, <array variable>{, ...}}});
 *query_logsql("your MySQL query"{, <array variable>{, <array variable>{, ...}}});
 
