@@ -79,7 +79,7 @@
 1188,BON_GUN,Bon Gun,659,9025,10020,537,80,60,30,100,250,20,500,150,1,0,600,200,400,{ petskillattack "NPC_DARKNESSATTACK",555,1,1,1; },{ bonus bVit,1; bonus2 bResEff,Eff_Stun,100; }
 1200,ZHERLTHSH,Zealotus,660,9026,0,929,80,60,10,100,250,20,300,150,0,0,1000,100,500,{ petskillattack "AS_SONICBLOW",1,0,0,3; },{ bonus2 bAddRace,RC_DemiPlayer,2; bonus2 bMagicAddRace,RC_DemiPlayer,2; }
 1245,GOBLINE_XMAS,Christmas Goblin,12225,9029,0,911,80,60,50,100,250,20,2000,150,0,0,300,300,800,{ petskillattack "MG_SIGHT",5,0,5,5; },{ bonus bMaxHP,30; bonus2 bSubEle,Ele_Water,1; }
-1275,ALICE,Alice,661,9027,0,504,80,60,20,100,250,20,800,150,0,0,100,1000,200,{ petskillsupport "AL_HEAL",5,60,25,100; },{ bonus bMdef,1; if (RENEWAL) { bonus2 bAddRaceTolerance,RC_DemiPlayer,1; } else { bonus2 bSubRace,RC_DemiPlayer,1; } }
+1275,ALICE,Alice,661,9027,0,504,80,60,20,100,250,20,800,150,0,0,100,1000,200,{ petskillsupport "AL_HEAL",5,60,25,100; },{ bonus bMdef,1; bonus2 bAddRaceTolerance,RC_DemiPlayer,1; }
 
 // New Pets
 1122,GOBLIN_1,Goblin,14569,9032,0,7821,80,60,50,100,250,20,800,150,0,0,300,300,800,{ petskillattack "NPC_WINDATTACK",5,0,5,5; },{}
@@ -113,8 +113,8 @@
 1504,DULLAHAN,Dullahan,12367,9049,10031,6107,80,60,10,100,250,20,200,150,0,0,300,300,800,{},{ bonus bCritAtkRate,5; }
 1505,LOLI_RURI,Loli Ruri,12360,9042,10024,6097,80,60,15,100,250,20,200,150,0,0,300,300,800,{},{ bonus bMaxHPrate,3; bonus3 bAutoSpellWhenHit,"AL_HEAL",1,50; }
 1513,CIVIL_SERVANT,Mao Guai,12358,9040,10022,6095,80,60,10,100,250,20,500,150,0,0,300,300,800,{},{ bonus bMaxSP,10; }
-1519,CHUNG_E,Green Maiden,12395,9030,0,6115,80,60,50,100,250,20,2000,150,0,0,300,300,800,{ petskillattack "CR_SHIELDCHARGE",5,0,5,5; },{ bonus bDef,1; if (RENEWAL) { bonus2 bAddRaceTolerance,RC_DemiPlayer,1; } else { bonus2 bSubRace,RC_DemiPlayer,1; } }
-1586,LEAF_CAT,Leaf Cat,12359,9041,10023,6096,80,60,20,100,250,20,200,150,0,0,300,300,800,{},{ if (RENEWAL) { bonus2 bAddRaceTolerance,RC_Brute,2; } else { bonus2 bSubRace,RC_Brute,3; } }
+1519,CHUNG_E,Green Maiden,12395,9030,0,6115,80,60,50,100,250,20,2000,150,0,0,300,300,800,{ petskillattack "CR_SHIELDCHARGE",5,0,5,5; },{ bonus bDef,1; bonus2 bAddRaceTolerance,RC_DemiPlayer,1; }
+1586,LEAF_CAT,Leaf Cat,12359,9041,10023,6096,80,60,20,100,250,20,200,150,0,0,300,300,800,{},{ bonus2 bAddRaceTolerance,RC_Brute,2; }
 1630,BACSOJIN_,White Lady,12357,9039,10021,6094,80,60,10,100,250,20,2000,150,0,0,300,300,800,{},{}
 1837,IMP,Fire Imp,12374,9056,10038,6114,80,60,10,100,250,20,200,150,0,0,300,300,800,{},{ bonus2 bSubEle,Ele_Fire,2; bonus2 bAddEle,Ele_Fire,2; }
 
