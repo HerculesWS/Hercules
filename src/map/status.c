@@ -5553,6 +5553,11 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 					if( sc->data[SC_MARSHOFABYSS] ) // It stacks to other statuses so always put this at the end.
 						val = max( 50, val + 10 * sc->data[SC_MARSHOFABYSS]->val1 );
 
+					if (sc->data[SC_MOVHASTE_POTION]) { // Doesn't affect the movement speed by Quagmire, Decrease Agi, Slow Grace [Frost]
+						if (sc->data[SC_DEC_AGI] || sc->data[SC_QUAGMIRE] || sc->data[SC_DONTFORGETME])
+							return 0;
+					}
+
 					if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate > 0 ) // permanent item-based speedup
 						val = max( val, sd->bonus.speed_rate + sd->bonus.speed_add_rate );
 				}
@@ -7223,12 +7228,6 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			if (sd && !pc_check_weapontype(sd,skill->get_weapontype(BS_ADRENALINE2)))
 				return 0;
 			if (sc->data[SC_QUAGMIRE] || sc->data[SC_DEC_AGI])
-				return 0;
-			break;
-		case SC_QUAGMIRE:
-		case SC_DEC_AGI:
-		case SC_DONTFORGETME:
-			if (sc->data[SC_MOVHASTE_POTION]) // Doesn't affect by Quagmire, Decrease Agi, Slow Grace [Frost]
 				return 0;
 			break;
 		case SC_MAGNIFICAT:
