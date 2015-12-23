@@ -6738,29 +6738,30 @@ void clif_pet_roulette(struct map_session_data *sd,int data)
 
 /// Presents a list of pet eggs that can be hatched (ZC_PETEGG_LIST).
 /// 01a6 <packet len>.W { <index>.W }*
-void clif_sendegg(struct map_session_data *sd)
-{
-	int i,n=0,fd;
+void clif_sendegg(struct map_session_data *sd) {
+	int i, n, fd;
 
 	nullpo_retv(sd);
 
-	fd=sd->fd;
+	fd = sd->fd;
 	if (battle_config.pet_no_gvg && map_flag_gvg2(sd->bl.m)) { //Disable pet hatching in GvG grounds during Guild Wars [Skotlex]
-		clif->message(fd, msg_sd(sd,866)); // "Pets are not allowed in Guild Wars."
+		clif->message(fd, msg_sd(sd, 866)); // "Pets are not allowed in Guild Wars."
 		return;
 	}
+
 	WFIFOHEAD(fd, MAX_INVENTORY * 2 + 4);
-	WFIFOW(fd,0)=0x1a6;
-	for(i=0,n=0;i<MAX_INVENTORY;i++){
-		if(sd->status.inventory[i].nameid<=0 || sd->inventory_data[i] == NULL ||
-		   sd->inventory_data[i]->type!=IT_PETEGG ||
-		   sd->status.inventory[i].amount<=0)
+	WFIFOW(fd,0) = 0x1a6;
+	for (i = n = 0; i < MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].nameid <= 0 || sd->inventory_data[i] == NULL || sd->inventory_data[i]->type!=IT_PETEGG || sd->status.inventory[i].amount <= 0)
 			continue;
-		WFIFOW(fd,n*2+4)=i+2;
+		WFIFOW(fd, n * 2 + 4) = i + 2;
 		n++;
 	}
-	WFIFOW(fd,2)=4+n*2;
-	WFIFOSET(fd,WFIFOW(fd,2));
+
+	if (!n) return;
+
+	WFIFOW(fd, 2) = 4 + n * 2;
+	WFIFOSET(fd, WFIFOW(fd, 2));
 
 	sd->menuskill_id = SA_TAMINGMONSTER;
 	sd->menuskill_val = -1;
