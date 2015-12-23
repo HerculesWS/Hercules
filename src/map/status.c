@@ -822,6 +822,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_PLUSMAGICPOWER] = SI_PLUSMAGICPOWER;
 	status->dbs->IconChangeTable[SC_FOOD_CRITICALSUCCESSVALUE] = SI_FOOD_CRITICALSUCCESSVALUE;
 	status->dbs->IconChangeTable[SC_MORA_BUFF] = SI_MORA_BUFF;
+	status->dbs->IconChangeTable[SC_BUCHEDENOEL] = SI_BUCHEDENOEL;
 
 	// Cash Items
 	status->dbs->IconChangeTable[SC_FOOD_STR_CASH] = SI_FOOD_STR_CASH;
@@ -1047,6 +1048,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_STR_SCROLL] |= SCB_STR;
 	status->dbs->ChangeFlagTable[SC_INT_SCROLL] |= SCB_INT;
 	status->dbs->ChangeFlagTable[SC_STEAMPACK] |= SCB_BATK | SCB_ASPD | SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_BUCHEDENOEL] |= SCB_REGEN | SCB_HIT | SCB_CRI;
 	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
@@ -3502,6 +3504,10 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 		regen->rate.hp += regen->rate.hp * sc->data[SC_ATKER_ASPD]->val2 / 100;
 	if (sc->data[SC_ATKER_MOVESPEED])
 		regen->rate.sp += regen->rate.sp * sc->data[SC_ATKER_MOVESPEED]->val2 / 100;
+	if (sc->data[SC_BUCHEDENOEL]) {
+		regen->rate.hp += regen->rate.hp * sc->data[SC_BUCHEDENOEL]->val1 / 100;
+		regen->rate.sp += regen->rate.sp * sc->data[SC_BUCHEDENOEL]->val2 / 100;
+	}
 }
 /// Recalculates parts of an object's battle status according to the specified flags.
 /// @param flag bitfield of values from enum scb_flag
@@ -4937,12 +4943,12 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 
 signed short status_calc_critical(struct block_list *bl, struct status_change *sc, int critical, bool viewable) {
 
-	if(!sc || !sc->count)
-		return cap_value(critical,10,SHRT_MAX);
+	if (!sc || !sc->count)
+		return cap_value(critical, 10, SHRT_MAX);
 
-	if( !viewable ){
+	if (!viewable) {
 		/* some statuses that are hidden in the status window */
-		return (short)cap_value(critical,10,SHRT_MAX);
+		return (short)cap_value(critical, 10, SHRT_MAX);
 	}
 
 	if (sc->data[SC_CRITICALPERCENT])
@@ -4955,77 +4961,80 @@ signed short status_calc_critical(struct block_list *bl, struct status_change *s
 		critical += sc->data[SC_FORTUNE]->val2;
 	if (sc->data[SC_TRUESIGHT])
 		critical += sc->data[SC_TRUESIGHT]->val2;
-	if(sc->data[SC_CLOAKING])
+	if (sc->data[SC_CLOAKING])
 		critical += critical;
-	if(sc->data[SC_STRIKING])
+	if (sc->data[SC_STRIKING])
 		critical += sc->data[SC_STRIKING]->val1;
 #ifdef RENEWAL
 	if (sc->data[SC_SPEARQUICKEN])
-		critical += 3*sc->data[SC_SPEARQUICKEN]->val1*10;
+		critical += 3*sc->data[SC_SPEARQUICKEN]->val1 * 10;
 #endif
 
-	if(sc->data[SC__INVISIBILITY])
+	if (sc->data[SC__INVISIBILITY])
 		critical += sc->data[SC__INVISIBILITY]->val3;
-	if(sc->data[SC__UNLUCKY])
+	if (sc->data[SC__UNLUCKY])
 		critical -= critical * sc->data[SC__UNLUCKY]->val2 / 100;
-	if(sc->data[SC_BEYOND_OF_WARCRY])
-		critical += 10 * sc->data[SC_BEYOND_OF_WARCRY]->val3;
+	if (sc->data[SC_BEYOND_OF_WARCRY])
+		critical += sc->data[SC_BEYOND_OF_WARCRY]->val3 * 10;
+	if (sc->data[SC_BUCHEDENOEL])
+		critical += sc->data[SC_BUCHEDENOEL]->val4 * 10;
 
-	return (short)cap_value(critical,10,SHRT_MAX);
+	return (short)cap_value(critical, 10, SHRT_MAX);
 }
 
 signed short status_calc_hit(struct block_list *bl, struct status_change *sc, int hit, bool viewable)
 {
 
-	if(!sc || !sc->count)
-		return cap_value(hit,1,SHRT_MAX);
+	if (!sc || !sc->count)
+		return cap_value(hit, 1, SHRT_MAX);
 
-	if( !viewable ){
+	if (!viewable) {
 		/* some statuses that are hidden in the status window */
-		if(sc->data[SC_MTF_ASPD])
+		if (sc->data[SC_MTF_ASPD])
 			hit += 5;
-		return (short)cap_value(hit,1,SHRT_MAX);
+		return (short)cap_value(hit, 1, SHRT_MAX);
 	}
 
-	if(sc->data[SC_INCHIT])
+	if (sc->data[SC_INCHIT])
 		hit += sc->data[SC_INCHIT]->val1;
-	if(sc->data[SC_MTF_HITFLEE])
+	if (sc->data[SC_MTF_HITFLEE])
 		hit += sc->data[SC_MTF_HITFLEE]->val1;
-	if(sc->data[SC_FOOD_BASICHIT])
+	if (sc->data[SC_FOOD_BASICHIT])
 		hit += sc->data[SC_FOOD_BASICHIT]->val1;
-	if(sc->data[SC_TRUESIGHT])
+	if (sc->data[SC_TRUESIGHT])
 		hit += sc->data[SC_TRUESIGHT]->val3;
-	if(sc->data[SC_HUMMING])
+	if (sc->data[SC_HUMMING])
 		hit += sc->data[SC_HUMMING]->val2;
-	if(sc->data[SC_LKCONCENTRATION])
+	if (sc->data[SC_LKCONCENTRATION])
 		hit += sc->data[SC_LKCONCENTRATION]->val3;
-	if(sc->data[SC_INSPIRATION])
+	if (sc->data[SC_INSPIRATION])
 		hit += 5 * sc->data[SC_INSPIRATION]->val1 + 25;
-	if(sc->data[SC_GS_ADJUSTMENT])
+	if (sc->data[SC_GS_ADJUSTMENT])
 		hit -= 30;
-	if(sc->data[SC_GS_ACCURACY])
+	if (sc->data[SC_GS_ACCURACY])
 		hit += 20; // RockmanEXE; changed based on updated [Reddozen]
-	if(sc->data[SC_MER_HIT])
+	if (sc->data[SC_MER_HIT])
 		hit += sc->data[SC_MER_HIT]->val2;
-
-	if(sc->data[SC_INCHITRATE])
+	if (sc->data[SC_INCHITRATE])
 		hit += hit * sc->data[SC_INCHITRATE]->val1/100;
-	if(sc->data[SC_BLIND])
+	if (sc->data[SC_BLIND])
 		hit -= hit * 25/100;
-	if(sc->data[SC_FIRE_EXPANSION_TEAR_GAS])
+	if (sc->data[SC_FIRE_EXPANSION_TEAR_GAS])
 		hit -= hit * 50 / 100;
-	if(sc->data[SC__GROOMY])
+	if (sc->data[SC__GROOMY])
 		hit -= hit * sc->data[SC__GROOMY]->val3 / 100;
-	if(sc->data[SC_FEAR])
+	if (sc->data[SC_FEAR])
 		hit -= hit * 20 / 100;
 	if (sc->data[SC_VOLCANIC_ASH])
 		hit /= 2;
-	if(sc->data[SC_ILLUSIONDOPING])
+	if (sc->data[SC_ILLUSIONDOPING])
 		hit -= hit * (5 + sc->data[SC_ILLUSIONDOPING]->val1) / 100; //custom
 	if (sc->data[SC_ACARAJE])
 		hit += sc->data[SC_ACARAJE]->val1;
+	if (sc->data[SC_BUCHEDENOEL])
+		hit += sc->data[SC_BUCHEDENOEL]->val3;
 		
-	return (short)cap_value(hit,1,SHRT_MAX);
+	return (short)cap_value(hit, 1, SHRT_MAX);
 }
 
 signed short status_calc_flee(struct block_list *bl, struct status_change *sc, int flee, bool viewable) {
