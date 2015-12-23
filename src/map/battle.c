@@ -3327,16 +3327,16 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
  * Calculates BG related damage adjustments.
  *------------------------------------------*/
 // FIXME: flag is undocumented
-int64 battle_calc_bg_damage(struct block_list *src, struct block_list *bl, int64 damage, int div_, uint16 skill_id, uint16 skill_lv, int flag)
-{
-	if( !damage )
+int64 battle_calc_bg_damage(struct block_list *src, struct block_list *bl, int64 damage, int div_, uint16 skill_id, uint16 skill_lv, int flag) {
+
+	if (!damage)
 		return 0;
 
 	nullpo_retr(damage, bl);
-	if( bl->type == BL_MOB ) {
+	if (bl->type == BL_MOB) {
 		struct mob_data* md = BL_CAST(BL_MOB, bl);
 
-		if( flag&BF_SKILL && (md->class_ == MOBID_BLUE_CRYST || md->class_ == MOBID_PINK_CRYST) )
+		if (flag&BF_SKILL && (md->class_ == MOBID_BLUE_CRYSTAL || md->class_ == MOBID_PINK_CRYSTAL))
 			return 0; // Crystal cannot receive skill damage on battlegrounds
 	}
 

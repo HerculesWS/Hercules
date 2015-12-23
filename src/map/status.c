@@ -7064,23 +7064,23 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 	sc = status->get_sc(bl);
 	st = status->get_status_data(bl);
 
-	if( type <= SC_NONE || type >= SC_MAX ) {
+	if (type <= SC_NONE || type >= SC_MAX) {
 		ShowError("status_change_start: invalid status change (%d)!\n", type);
 		return 0;
 	}
 
-	if( !sc )
+	if (!sc)
 		return 0; //Unable to receive status changes
 
-	if( status->isdead(bl) && type != SC_NOCHAT ) // SC_NOCHAT should work even on dead characters
+	if (status->isdead(bl) && type != SC_NOCHAT) // SC_NOCHAT should work even on dead characters
 		return 0;
 
-	if( bl->type == BL_MOB) {
-		struct mob_data *md = BL_CAST(BL_MOB,bl);
-		if(md && (md->class_ == MOBID_EMPERIUM || mob_is_battleground(md)) && type != SC_SAFETYWALL && type != SC_PNEUMA)
+	if (bl->type == BL_MOB) {
+		struct mob_data *md = BL_CAST(BL_MOB, bl);
+		if (md && (md->class_ == MOBID_EMPERIUM || mob_is_battleground(md)) && type != SC_SAFETYWALL && type != SC_PNEUMA)
 			return 0; //Emperium/BG Monsters can't be afflicted by status changes
 #if 0
-		if(md && mob_is_gvg(md) && status->sc2scb_flag(type)&SCB_MAXHP)
+		if (md && mob_is_gvg(md) && status->sc2scb_flag(type)&SCB_MAXHP)
 			return 0; //prevent status addinh hp to gvg mob (like bloodylust=hp*3 etc...
 #endif // 0
 	}
