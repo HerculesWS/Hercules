@@ -333,6 +333,10 @@ int intif_saveregistry(struct map_session_data *sd) {
 		if( varname[0] == '@' ) /* @string$ can get here, so we skip */
 			continue;
 
+		if (strlen(varname) > SCRIPT_VARNAME_LENGTH) {
+			ShowError("Variable name too big: %s\n", varname);
+			continue;
+		}
 		src = DB->data2ptr(data);
 
 		/* no need! */
@@ -1077,8 +1081,8 @@ void intif_parse_Registers(int fd)
 	/* have it not complain about insertion of vars before loading, and not set those vars as new or modified */
 	pc->reg_load = true;
 
-	if( RFIFOW(fd, 14) ) {
-		char key[32];
+	if (RFIFOW(fd, 14) != 0) {
+		char key[SCRIPT_VARNAME_LENGTH+1];
 		unsigned int index;
 		int max = RFIFOW(fd, 14), cursor = 16, i;
 
@@ -1091,16 +1095,18 @@ void intif_parse_Registers(int fd)
 		 * { keyLength(B), key(<keyLength>), index(L), valLength(B), val(<valLength>) }
 		 **/
 		if (type) {
-			for(i = 0; i < max; i++) {
-				char sval[254];
-				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
-				cursor += RFIFOB(fd, cursor) + 1;
+			char sval[254];
+			for (i = 0; i < max; i++) {
+				int len = RFIFOB(fd, cursor);
+				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
+				cursor += len + 1;
 
 				index = RFIFOL(fd, cursor);
 				cursor += 4;
 
-				safestrncpy(sval, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
-				cursor += RFIFOB(fd, cursor) + 1;
+				len = RFIFOB(fd, cursor);
+				safestrncpy(sval, (char*)RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
+				cursor += len + 1;
 
 				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)sval, NULL);
 			}
@@ -1111,10 +1117,12 @@ void intif_parse_Registers(int fd)
 		 * { keyLength(B), key(<keyLength>), index(L), value(L) }
 		 **/
 		} else {
-			for(i = 0; i < max; i++) {
+			for (i = 0; i < max; i++) {
 				int ival;
-				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), RFIFOB(fd, cursor));
-				cursor += RFIFOB(fd, cursor) + 1;
+
+				int len = RFIFOB(fd, cursor);
+				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
+				cursor += len + 1;
 
 				index = RFIFOL(fd, cursor);
 				cursor += 4;

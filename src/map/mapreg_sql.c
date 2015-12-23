@@ -94,9 +94,9 @@ bool mapreg_setreg(int64 uid, int val) {
 			m->save = false;
 			m->is_string = false;
 
-			if(name[1] != '@' && !mapreg->skip_insert) {// write new variable to database
-				char tmp_str[32*2+1];
-				SQL->EscapeStringLen(map->mysql_handle, tmp_str, name, strnlen(name, 32));
+			if (name[1] != '@' && !mapreg->skip_insert) {// write new variable to database
+				char tmp_str[(SCRIPT_VARNAME_LENGTH+1)*2+1];
+				SQL->EscapeStringLen(map->mysql_handle, tmp_str, name, strnlen(name, SCRIPT_VARNAME_LENGTH+1));
 				if( SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s`(`varname`,`index`,`value`) VALUES ('%s','%d','%d')", mapreg->table, tmp_str, i, val) )
 					Sql_ShowDebug(map->mysql_handle);
 			}
@@ -166,9 +166,9 @@ bool mapreg_setregstr(int64 uid, const char* str) {
 			m->is_string = true;
 
 			if(name[1] != '@' && !mapreg->skip_insert) { //put returned null, so we must insert.
-				char tmp_str[32*2+1];
+				char tmp_str[(SCRIPT_VARNAME_LENGTH+1)*2+1];
 				char tmp_str2[255*2+1];
-				SQL->EscapeStringLen(map->mysql_handle, tmp_str, name, strnlen(name, 32));
+				SQL->EscapeStringLen(map->mysql_handle, tmp_str, name, strnlen(name, SCRIPT_VARNAME_LENGTH+1));
 				SQL->EscapeStringLen(map->mysql_handle, tmp_str2, str, strnlen(str, 255));
 				if( SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s`(`varname`,`index`,`value`) VALUES ('%s','%d','%s')", mapreg->table, tmp_str, i, tmp_str2) )
 					Sql_ShowDebug(map->mysql_handle);
@@ -191,7 +191,7 @@ void script_load_mapreg(void) {
 	   +-------------------------+
 	                                */
 	SqlStmt* stmt = SQL->StmtMalloc(map->mysql_handle);
-	char varname[32+1];
+	char varname[SCRIPT_VARNAME_LENGTH+1];
 	int index;
 	char value[255+1];
 	uint32 length;

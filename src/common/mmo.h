@@ -214,6 +214,8 @@
 #define JOBL_BABY 0x2000  //8192
 #define JOBL_THIRD 0x4000 //16384
 
+#define SCRIPT_VARNAME_LENGTH 32 ///< Maximum length of a script variable
+
 struct hplugin_data_store;
 
 enum item_types {
