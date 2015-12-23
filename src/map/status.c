@@ -823,6 +823,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_FOOD_CRITICALSUCCESSVALUE] = SI_FOOD_CRITICALSUCCESSVALUE;
 	status->dbs->IconChangeTable[SC_MORA_BUFF] = SI_MORA_BUFF;
 	status->dbs->IconChangeTable[SC_BUCHEDENOEL] = SI_BUCHEDENOEL;
+	status->dbs->IconChangeTable[SC_PHI_DEMON] = SI_PHI_DEMON;
 
 	// Cash Items
 	status->dbs->IconChangeTable[SC_FOOD_STR_CASH] = SI_FOOD_STR_CASH;
@@ -1049,6 +1050,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_INT_SCROLL] |= SCB_INT;
 	status->dbs->ChangeFlagTable[SC_STEAMPACK] |= SCB_BATK | SCB_ASPD | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_BUCHEDENOEL] |= SCB_REGEN | SCB_HIT | SCB_CRI;
+	status->dbs->ChangeFlagTable[SC_PHI_DEMON] |= SCB_ALL;
 	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
@@ -3115,6 +3117,10 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		}
 		if (sc->data[SC_CUP_OF_BOZA])
 			sd->subele[ELE_FIRE] += sc->data[SC_CUP_OF_BOZA]->val2;
+		if (sc->data[SC_PHI_DEMON]) {
+			sd->right_weapon.addrace[RC_DEMON] += sc->data[SC_PHI_DEMON]->val1;
+			sd->left_weapon.addrace[RC_DEMON] += sc->data[SC_PHI_DEMON]->val1;
+		}
 	}
 	status_cpy(&sd->battle_status, bstatus);
 
@@ -3496,6 +3502,8 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 		regen->rate.hp *= 2;
 	if (sc->data[SC_VITALITYACTIVATION])
 		regen->flag &=~RGN_SP;
+
+	// Recovery Items
 	if (sc->data[SC_EXTRACT_WHITE_POTION_Z])
 		regen->rate.hp += regen->rate.hp * sc->data[SC_EXTRACT_WHITE_POTION_Z]->val1 / 100;
 	if (sc->data[SC_VITATA_500])

@@ -818,6 +818,7 @@ typedef enum sc_type {
 	SC_MOVHASTE_POTION,
 	SC_MOVESLOW_POTION,
 	SC_BUCHEDENOEL,
+	SC_PHI_DEMON,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
