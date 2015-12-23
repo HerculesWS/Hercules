@@ -118,7 +118,7 @@
 1630,BACSOJIN_,White Lady,12357,9039,10021,6094,80,60,10,100,250,20,2000,150,0,0,300,300,800,{},{}
 1837,IMP,Fire Imp,12374,9056,10038,6114,80,60,10,100,250,20,200,150,0,0,300,300,800,{},{ bonus2 bSubEle,Ele_Fire,2; bonus2 bAddEle,Ele_Fire,2; }
 
-// Episode 13.2 Brasilis (Start of RE)
+// Episode 13.2 Brasilis
 2057,E_CRAMP,Strange Cramp,12408,6221,0,0,0,0,0,0,0,0,50,0,0,0,350,400,800,{},{} // kRO version
 2081,E_HYDRA,Strange Hydra,12408,6221,0,0,0,0,0,0,0,0,50,0,0,0,350,400,800,{},{} // iRO/cRO version
 
