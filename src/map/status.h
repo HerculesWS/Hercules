@@ -821,6 +821,7 @@ typedef enum sc_type {
 	SC_PHI_DEMON,
 	SC_PROMOTE_HEALTH_RESERCH,
 	SC_ENERGY_DRINK_RESERCH,
+	SC_MAGIC_CANDY,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;

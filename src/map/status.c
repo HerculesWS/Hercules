@@ -858,6 +858,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_STR_SCROLL] = SI_STR_SCROLL;
 	status->dbs->IconChangeTable[SC_INT_SCROLL] = SI_INT_SCROLL;
 	status->dbs->IconChangeTable[SC_STEAMPACK] = SI_STEAMPACK;
+	status->dbs->IconChangeTable[SC_MAGIC_CANDY] = SI_MAGIC_CANDY;
 	
 	// Eden Crystal Synthesis
 	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
@@ -1055,6 +1056,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_STEAMPACK] |= SCB_BATK | SCB_ASPD | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_BUCHEDENOEL] |= SCB_REGEN | SCB_HIT | SCB_CRI;
 	status->dbs->ChangeFlagTable[SC_PHI_DEMON] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_MAGIC_CANDY] |= SCB_MATK | SCB_ALL;
 	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
@@ -4890,16 +4892,16 @@ unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc
 	return 0;
 #endif
 }
-unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc, int matk, bool viewable)
-{
-	if(!sc || !sc->count)
+unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc, int matk, bool viewable) {
+
+	if (!sc || !sc->count)
 		return cap_value(matk,0,USHRT_MAX);
 
-	if( !viewable ){
+	if (!viewable) {
 		/* some statuses that are hidden in the status window */
 		if (sc->data[SC_MINDBREAKER])
-			matk += matk * sc->data[SC_MINDBREAKER]->val2/100;
-		return (unsigned short)cap_value(matk,0,USHRT_MAX);
+			matk += matk * sc->data[SC_MINDBREAKER]->val2 / 100;
+		return (unsigned short)cap_value(matk, 0, USHRT_MAX);
 	}
 
 #ifndef RENEWAL
@@ -4914,7 +4916,7 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += sc->data[SC_AQUAPLAY_OPTION]->val2;
 	if (sc->data[SC_CHILLY_AIR_OPTION])
 		matk += sc->data[SC_CHILLY_AIR_OPTION]->val2;
-	if(sc->data[SC_COOLER_OPTION])
+	if (sc->data[SC_COOLER_OPTION])
 		matk += sc->data[SC_COOLER_OPTION]->val2;
 	if (sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 3)
 		matk += 50;
@@ -4923,14 +4925,14 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 	if (sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
 #endif
-	if( sc->data[SC_ZANGETSU] )
+	if (sc->data[SC_ZANGETSU])
 		matk += sc->data[SC_ZANGETSU]->val3;
 	if (sc->data[SC_MAGICPOWER] && sc->data[SC_MAGICPOWER]->val4)
-		matk += matk * sc->data[SC_MAGICPOWER]->val3/100;
+		matk += matk * sc->data[SC_MAGICPOWER]->val3 / 100;
 	if (sc->data[SC_INCMATKRATE])
-		matk += matk * sc->data[SC_INCMATKRATE]->val1/100;
+		matk += matk * sc->data[SC_INCMATKRATE]->val1 / 100;
 	if (sc->data[SC_MOONLIT_SERENADE])
-		matk += matk * sc->data[SC_MOONLIT_SERENADE]->val2/100;
+		matk += matk * sc->data[SC_MOONLIT_SERENADE]->val2 / 100;
 	if (sc->data[SC_MTF_MATK])
 		matk += matk * sc->data[SC_MTF_MATK]->val1 / 100;
 	if (sc->data[SC_MYSTICSCROLL])
@@ -4954,8 +4956,10 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += matk * sc->data[SC_GM_BATTLE2]->val1 / 100;
 	if (sc->data[SC_2011RWC])
 		matk += matk * sc->data[SC_2011RWC]->val2 / 100;
+	if (sc->data[SC_MAGIC_CANDY])
+		matk += sc->data[SC_MAGIC_CANDY]->val1;
 
-	return (unsigned short)cap_value(matk,0,USHRT_MAX);
+	return (unsigned short)cap_value(matk, 0, USHRT_MAX);
 }
 
 signed short status_calc_critical(struct block_list *bl, struct status_change *sc, int critical, bool viewable) {
@@ -9255,11 +9259,16 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				tick_time = 10000;
 				sc_start(src, bl, SC_ENDURE, 100, 10, tick); // Endure effect
 				break;
+			case SC_MAGIC_CANDY: // [Frost]
+				val3 = 90; // SP Consume.
+				val4 = tick / 10000;
+				tick_time = 10000;
+				break;
 			case SC_PROMOTE_HEALTH_RESERCH:
 				// Val1: 1 = Regular Potion, 2 = Thrown Potion
 				// Val2: 1 = Small Potion, 2 = Medium Potion, 3 = Large Potion
 				// Val3: MaxHP Increase By Fixed Amount
-				// Val4: MaxHP Heal Percentage
+				// Val4: HP Heal Percentage
 				if (val1 == 1) // If potion was normally used, take the user's BaseLv.
 					val3 = 1000 * val2 - 500 + status->get_lv(bl) * 10 / 3;
 				else if (val1 == 2) // If potion was thrown at someone, take the thrower's BaseLv.
@@ -9271,7 +9280,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				// Val1: 1 = Regular Potion, 2 = Thrown Potion
 				// Val2: 1 = Small Potion, 2 = Medium Potion, 3 = Large Potion
 				// Val3: MaxSP Increase By Fixed Amount
-				// Val4: MaxSP Heal Percentage
+				// Val4: SP Heal Percentage
 				if (val1 == 1) // If potion was normally used, take the user's BaseLv.
 					val3 = status->get_lv(bl) / 10 + 5 * val2 - 10;
 				else if (val1 == 2) // If potion was thrown at someone, take the thrower's BaseLv.
@@ -11586,6 +11595,12 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 		case SC_STEAMPACK:
 			if (--(sce->val4) > 0) {
 				status->charge(bl, sce->val3, 0); // Reduce 100 HP every 10 seconds.
+				sc_timer_next(10000 + tick, status->change_timer, bl->id, data);
+			}
+			break;
+		case SC_MAGIC_CANDY:
+			if (--(sce->val4) > 0) {
+				status->charge(bl, 0, sce->val3); // Reduce 100 SP every 10 seconds.
 				sc_timer_next(10000 + tick, status->change_timer, bl->id, data);
 			}
 			break;
