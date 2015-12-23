@@ -15708,6 +15708,66 @@ BUILDIN(md5)
 	return true;
 }
 
+BUILDIN(swap)
+{
+	TBL_PC *sd = NULL;
+	struct script_data *data1, *data2;
+	const char *varname1, *varname2;
+	int64 uid1, uid2;
+
+	data1 = script_getdata(st,2);
+	data2 = script_getdata(st,3);
+
+	if (!data_isreference(data1) || !data_isreference(data2)) {
+		st->state = END;
+		return true; // avoid print error message twice
+	}
+
+	varname1 = reference_getname(data1);
+	varname2 = reference_getname(data2);
+
+	if ((is_string_variable(varname1) && !is_string_variable(varname2)) || (!is_string_variable(varname1) && is_string_variable(varname2))) {
+		ShowError("script:swap: both sides must be same integer or string type.\n");
+		script->reportdata(data1);
+		script->reportdata(data2);
+		st->state = END;
+		return false;
+	}
+
+	if (not_server_variable(*varname1) || not_server_variable(*varname2)) {
+		sd = script->rid2sd(st);
+		if (sd == NULL)
+			return true; // avoid print error message twice
+	}
+
+	uid1 = reference_getuid(data1);
+	uid2 = reference_getuid(data2);
+
+	if (is_string_variable(varname1)) {
+		const char *value1, *value2;
+
+		value1 = script_getstr(st,2);
+		value2 = script_getstr(st,3);
+
+		if (strcmpi(value1, value2)) {
+			script->set_reg(st, sd, uid1, varname1, (void*)(value2), script_getref(st,3));
+			script->set_reg(st, sd, uid2, varname2, (void*)(value1), script_getref(st,2));
+		}
+	}
+	else {
+		int value1, value2;
+
+		value1 = script_getnum(st,2);
+		value2 = script_getnum(st,3);
+
+		if (value1 != value2) {
+			script->set_reg(st, sd, uid1, varname1, (void*)h64BPTRSIZE(value2), script_getref(st,3));
+			script->set_reg(st, sd, uid2, varname2, (void*)h64BPTRSIZE(value1), script_getref(st,2));
+		}
+	}
+	return true;
+}
+
 // [zBuffer] List of dynamic var commands --->
 
 BUILDIN(setd)
@@ -20464,6 +20524,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(min, "i*"),
 		BUILDIN_DEF(max, "i*"),
 		BUILDIN_DEF(md5,"s"),
+		BUILDIN_DEF(swap,"rr"),
 		// [zBuffer] List of dynamic var commands --->
 		BUILDIN_DEF(getd,"s"),
 		BUILDIN_DEF(setd,"sv"),
