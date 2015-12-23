@@ -899,11 +899,13 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_SPELLBOOK6] = SI_SPELLBOOK6;
 	status->dbs->IconChangeTable[SC_SPELLBOOK7] = SI_SPELLBOOK7;
 
+	// Mechanic status icon
 	status->dbs->IconChangeTable[SC_NEUTRALBARRIER_MASTER] = SI_NEUTRALBARRIER_MASTER;
 	status->dbs->IconChangeTable[SC_STEALTHFIELD_MASTER] = SI_STEALTHFIELD_MASTER;
 	status->dbs->IconChangeTable[SC_OVERHEAT] = SI_OVERHEAT;
 	status->dbs->IconChangeTable[SC_OVERHEAT_LIMITPOINT] = SI_OVERHEAT_LIMITPOINT;
 
+	// Guillotine Cross status icons
 	status->dbs->IconChangeTable[SC_HALLUCINATIONWALK_POSTDELAY] = SI_HALLUCINATIONWALK_POSTDELAY;
 	status->dbs->IconChangeTable[SC_TOXIN] = SI_TOXIN;
 	status->dbs->IconChangeTable[SC_PARALYSE] = SI_PARALYSE;
@@ -914,27 +916,22 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_OBLIVIONCURSE] = SI_OBLIVIONCURSE;
 	status->dbs->IconChangeTable[SC_LEECHESEND] = SI_LEECHESEND;
 
+	// Royal Guard status icons
 	status->dbs->IconChangeTable[SC_SHIELDSPELL_DEF] = SI_SHIELDSPELL_DEF;
 	status->dbs->IconChangeTable[SC_SHIELDSPELL_MDEF] = SI_SHIELDSPELL_MDEF;
 	status->dbs->IconChangeTable[SC_SHIELDSPELL_REF] = SI_SHIELDSPELL_REF;
 	status->dbs->IconChangeTable[SC_BANDING_DEFENCE] = SI_BANDING_DEFENCE;
 
+	// Sura status icon
 	status->dbs->IconChangeTable[SC_CURSEDCIRCLE_ATKER] = SI_CURSEDCIRCLE_ATKER;
 
-	status->dbs->IconChangeTable[SC_STOMACHACHE] = SI_STOMACHACHE;
-	status->dbs->IconChangeTable[SC_MYSTERIOUS_POWDER] = SI_MYSTERIOUS_POWDER;
-	status->dbs->IconChangeTable[SC_MELON_BOMB] = SI_MELON_BOMB;
-	status->dbs->IconChangeTable[SC_BANANA_BOMB] = SI_BANANA_BOMB;
-	status->dbs->IconChangeTable[SC_BANANA_BOMB_SITDOWN_POSTDELAY] = SI_BANANA_BOMB_SITDOWN_POSTDELAY;
-
-	// Genetics New Food Items Status Icons
+	// Genetics Food items / Throwable items status icons
 	status->dbs->IconChangeTable[SC_SAVAGE_STEAK] = SI_SAVAGE_STEAK;
 	status->dbs->IconChangeTable[SC_COCKTAIL_WARG_BLOOD] = SI_COCKTAIL_WARG_BLOOD;
 	status->dbs->IconChangeTable[SC_MINOR_BBQ] = SI_MINOR_BBQ;
 	status->dbs->IconChangeTable[SC_SIROMA_ICE_TEA] = SI_SIROMA_ICE_TEA;
 	status->dbs->IconChangeTable[SC_DROCERA_HERB_STEAMED] = SI_DROCERA_HERB_STEAMED;
 	status->dbs->IconChangeTable[SC_PUTTI_TAILS_NOODLES] = SI_PUTTI_TAILS_NOODLES;
-
 	status->dbs->IconChangeTable[SC_BOOST500] |= SI_BOOST500;
 	status->dbs->IconChangeTable[SC_FULL_SWING_K] |= SI_FULL_SWING_K;
 	status->dbs->IconChangeTable[SC_MANA_PLUS] |= SI_MANA_PLUS;
@@ -943,6 +940,13 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_EXTRACT_WHITE_POTION_Z] |= SI_EXTRACT_WHITE_POTION_Z;
 	status->dbs->IconChangeTable[SC_VITATA_500] |= SI_VITATA_500;
 	status->dbs->IconChangeTable[SC_EXTRACT_SALAMINE_JUICE] |= SI_EXTRACT_SALAMINE_JUICE;
+	status->dbs->IconChangeTable[SC_STOMACHACHE] = SI_STOMACHACHE;
+	status->dbs->IconChangeTable[SC_MYSTERIOUS_POWDER] = SI_MYSTERIOUS_POWDER;
+	status->dbs->IconChangeTable[SC_MELON_BOMB] = SI_MELON_BOMB;
+	status->dbs->IconChangeTable[SC_BANANA_BOMB] = SI_BANANA_BOMB;
+	status->dbs->IconChangeTable[SC_BANANA_BOMB_SITDOWN_POSTDELAY] = SI_BANANA_BOMB_SITDOWN_POSTDELAY;
+	status->dbs->IconChangeTable[SC_PROMOTE_HEALTH_RESERCH] = SI_PROMOTE_HEALTH_RESERCH;
+	status->dbs->IconChangeTable[SC_ENERGY_DRINK_RESERCH] = SI_ENERGY_DRINK_RESERCH;
 
 	// Elemental Spirit's 'side' status change icons.
 	status->dbs->IconChangeTable[SC_CIRCLE_OF_FIRE] = SI_CIRCLE_OF_FIRE;
@@ -1009,16 +1013,13 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_INCHITRATE] |= SCB_HIT;
 	status->dbs->ChangeFlagTable[SC_INCFLEE] |= SCB_FLEE;
 	status->dbs->ChangeFlagTable[SC_INCFLEERATE] |= SCB_FLEE;
-	status->dbs->ChangeFlagTable[SC_MTF_HITFLEE] |= SCB_HIT | SCB_FLEE;
 	status->dbs->ChangeFlagTable[SC_CRITICALPERCENT] |= SCB_CRI;
 	status->dbs->ChangeFlagTable[SC_INCASPDRATE] |= SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_PLUSAVOIDVALUE] |= SCB_FLEE2;
 	status->dbs->ChangeFlagTable[SC_INCMHPRATE] |= SCB_MAXHP;
 	status->dbs->ChangeFlagTable[SC_INCMSPRATE] |= SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_INCMHP] |= SCB_MAXHP;
-	status->dbs->ChangeFlagTable[SC_MTF_MHP] |= SCB_MAXHP;
 	status->dbs->ChangeFlagTable[SC_INCMSP] |= SCB_MAXSP;
-	status->dbs->ChangeFlagTable[SC_MTF_MSP] |= SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_INCATKRATE] |= SCB_BATK | SCB_WATK;
 	status->dbs->ChangeFlagTable[SC_INCMATKRATE] |= SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_INCDEFRATE] |= SCB_DEF;
@@ -1033,6 +1034,8 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_BATKFOOD] |= SCB_BATK;
 	status->dbs->ChangeFlagTable[SC_WATKFOOD] |= SCB_WATK;
 	status->dbs->ChangeFlagTable[SC_MATKFOOD] |= SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_ALL_RIDING] |= SCB_SPEED;
+	status->dbs->ChangeFlagTable[SC_WEDDING] |= SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_ARMORPROPERTY] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_ARMOR_RESIST] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_ATKER_BLOOD] |= SCB_ALL;
@@ -1041,6 +1044,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_TARGET_ASPD] |= SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_ATKER_ASPD] |= SCB_MAXHP | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_ATKER_MOVESPEED] |= SCB_MAXSP | SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_ACARAJE] |= SCB_HIT | SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_FOOD_CRITICALSUCCESSVALUE] |= SCB_CRI;
 	status->dbs->ChangeFlagTable[SC_CUP_OF_BOZA] |= SCB_VIT | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_GM_BATTLE] |= SCB_BATK | SCB_MATK | SCB_MAXHP | SCB_MAXSP;
@@ -1075,13 +1079,19 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_PYREXIA] |= SCB_HIT | SCB_FLEE;
 	status->dbs->ChangeFlagTable[SC_OBLIVIONCURSE] |= SCB_REGEN;
 	
-	// RG status
+	// Royal Guard status
 	status->dbs->ChangeFlagTable[SC_SHIELDSPELL_DEF] |= SCB_WATK;
 	status->dbs->ChangeFlagTable[SC_SHIELDSPELL_REF] |= SCB_DEF;
 	
-	// Meca status
+	// Mechanic status
 	status->dbs->ChangeFlagTable[SC_STEALTHFIELD_MASTER] |= SCB_SPEED;
 
+	// Other skills status
+	status->dbs->ChangeFlagTable[SC_REBOUND] |= SCB_SPEED | SCB_REGEN;
+	status->dbs->ChangeFlagTable[SC_DEFSET] |= SCB_DEF | SCB_DEF2;
+	status->dbs->ChangeFlagTable[SC_MDEFSET] |= SCB_MDEF | SCB_MDEF2;
+
+	// Geneticist Foods / Throwable items
 	status->dbs->ChangeFlagTable[SC_SAVAGE_STEAK] |= SCB_STR;
 	status->dbs->ChangeFlagTable[SC_COCKTAIL_WARG_BLOOD] |= SCB_INT;
 	status->dbs->ChangeFlagTable[SC_MINOR_BBQ] |= SCB_VIT;
@@ -1096,12 +1106,10 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_EXTRACT_WHITE_POTION_Z] |= SCB_REGEN;
 	status->dbs->ChangeFlagTable[SC_VITATA_500] |= SCB_REGEN | SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_EXTRACT_SALAMINE_JUICE] |= SCB_ASPD;
-	status->dbs->ChangeFlagTable[SC_REBOUND] |= SCB_SPEED | SCB_REGEN;
-	status->dbs->ChangeFlagTable[SC_DEFSET] |= SCB_DEF | SCB_DEF2;
-	status->dbs->ChangeFlagTable[SC_MDEFSET] |= SCB_MDEF | SCB_MDEF2;
 	status->dbs->ChangeFlagTable[SC_MYSTERIOUS_POWDER] |= SCB_MAXHP;
-	status->dbs->ChangeFlagTable[SC_ACARAJE] |= SCB_HIT | SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_STOMACHACHE] |= SCB_STR | SCB_AGI | SCB_VIT | SCB_INT | SCB_DEX | SCB_LUK | SCB_SPEED;
+	status->dbs->ChangeFlagTable[SC_PROMOTE_HEALTH_RESERCH] |= SCB_MAXHP | SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_ENERGY_DRINK_RESERCH] |= SCB_MAXSP | SCB_ALL;
 	
 	// Geffen Scrolls
 	status->dbs->ChangeFlagTable[SC_SKELSCROLL] |= SCB_ALL;
@@ -1114,12 +1122,13 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_FREYJASCROLL] |= SCB_MDEF | SCB_FLEE2;
 	status->dbs->ChangeFlagTable[SC_SOULSCROLL] |= SCB_MAXHP | SCB_MAXSP;
 
-	status->dbs->ChangeFlagTable[SC_ALL_RIDING] |= SCB_SPEED;
-	status->dbs->ChangeFlagTable[SC_WEDDING] |= SCB_SPEED;
-
+	// Monster Transform
 	status->dbs->ChangeFlagTable[SC_MTF_ASPD] |= SCB_ASPD | SCB_HIT;
 	status->dbs->ChangeFlagTable[SC_MTF_MATK] |= SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_MTF_MLEATKED] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_MTF_HITFLEE] |= SCB_HIT | SCB_FLEE;
+	status->dbs->ChangeFlagTable[SC_MTF_MHP] |= SCB_MAXHP;
+	status->dbs->ChangeFlagTable[SC_MTF_MSP] |= SCB_MAXSP;
 	
 	// Eden Crystal Synthesis
 	status->dbs->ChangeFlagTable[SC_QUEST_BUFF1] |= SCB_BATK | SCB_MATK;
@@ -5937,66 +5946,68 @@ unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *
 
 unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, uint64 maxhp)
 {
-	if(!sc || !sc->count)
-		return (unsigned int)cap_value(maxhp,1,UINT_MAX);
+	if (!sc || !sc->count)
+		return (unsigned int)cap_value(maxhp, 1, UINT_MAX);
 
-	if(sc->data[SC_INCMHPRATE])
-		maxhp += maxhp * sc->data[SC_INCMHPRATE]->val1/100;
-	if(sc->data[SC_INCMHP])
+	if (sc->data[SC_INCMHPRATE])
+		maxhp += maxhp * sc->data[SC_INCMHPRATE]->val1 / 100;
+	if (sc->data[SC_INCMHP])
 		maxhp += (sc->data[SC_INCMHP]->val1);
-	if(sc->data[SC_MTF_MHP])
+	if (sc->data[SC_MTF_MHP])
 		maxhp += (sc->data[SC_MTF_MHP]->val1);
-	if(sc->data[SC_APPLEIDUN])
-		maxhp += maxhp * sc->data[SC_APPLEIDUN]->val2/100;
-	if(sc->data[SC_DELUGE])
-		maxhp += maxhp * sc->data[SC_DELUGE]->val2/100;
-	if(sc->data[SC_BERSERK])
+	if (sc->data[SC_APPLEIDUN])
+		maxhp += maxhp * sc->data[SC_APPLEIDUN]->val2 / 100;
+	if (sc->data[SC_DELUGE])
+		maxhp += maxhp * sc->data[SC_DELUGE]->val2 / 100;
+	if (sc->data[SC_BERSERK])
 		maxhp += maxhp * 2;
-	if(sc->data[SC_MARIONETTE_MASTER])
+	if (sc->data[SC_MARIONETTE_MASTER])
 		maxhp -= 1000;
-	if(sc->data[SC_SOLID_SKIN_OPTION])
+	if (sc->data[SC_SOLID_SKIN_OPTION])
 		maxhp += 2000;// Fix amount.
-	if(sc->data[SC_POWER_OF_GAIA])
+	if (sc->data[SC_POWER_OF_GAIA])
 		maxhp += 3000;
-	if(sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 2)
+	if (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 2)
 		maxhp += 500;
-	if(sc->data[SC_MER_HP])
-		maxhp += maxhp * sc->data[SC_MER_HP]->val2/100;
-	if(sc->data[SC_EPICLESIS])
+	if (sc->data[SC_MER_HP])
+		maxhp += maxhp * sc->data[SC_MER_HP]->val2 / 100;
+	if (sc->data[SC_EPICLESIS])
 		maxhp += maxhp * 5 * sc->data[SC_EPICLESIS]->val1 / 100;
-	if(sc->data[SC_VENOMBLEED])
+	if (sc->data[SC_VENOMBLEED])
 		maxhp -= maxhp * 15 / 100;
-	if(sc->data[SC__WEAKNESS])
+	if (sc->data[SC__WEAKNESS])
 		maxhp -= maxhp * sc->data[SC__WEAKNESS]->val2 / 100;
-	if(sc->data[SC_LERADS_DEW])
+	if (sc->data[SC_LERADS_DEW])
 		maxhp += sc->data[SC_LERADS_DEW]->val3;
-	if(sc->data[SC_BEYOND_OF_WARCRY])
+	if (sc->data[SC_BEYOND_OF_WARCRY])
 		maxhp -= maxhp * sc->data[SC_BEYOND_OF_WARCRY]->val4 / 100;
-	if(sc->data[SC_FORCEOFVANGUARD])
+	if (sc->data[SC_FORCEOFVANGUARD])
 		maxhp += maxhp * 3 * sc->data[SC_FORCEOFVANGUARD]->val1 / 100;
-	if(sc->data[SC_INSPIRATION])
+	if (sc->data[SC_INSPIRATION])
 		maxhp += maxhp * 5 * sc->data[SC_INSPIRATION]->val1 / 100 + 600 * sc->data[SC_INSPIRATION]->val1;
-	if(sc->data[SC_RAISINGDRAGON])
+	if (sc->data[SC_RAISINGDRAGON])
 		maxhp += maxhp * (2 + sc->data[SC_RAISINGDRAGON]->val1) / 100;
-	if(sc->data[SC_GENTLETOUCH_CHANGE]) // Max HP decrease: [Skill Level x 4] %
+	if (sc->data[SC_GENTLETOUCH_CHANGE]) // Max HP decrease: [Skill Level x 4] %
 		maxhp -= maxhp * (4 * sc->data[SC_GENTLETOUCH_CHANGE]->val1) / 100;
-	if(sc->data[SC_GENTLETOUCH_REVITALIZE])// Max HP increase: [Skill Level x 2] %
+	if (sc->data[SC_GENTLETOUCH_REVITALIZE])// Max HP increase: [Skill Level x 2] %
 		maxhp += maxhp * (2 * sc->data[SC_GENTLETOUCH_REVITALIZE]->val1) / 100;
-	if(sc->data[SC_MUSTLE_M])
-		maxhp += maxhp * sc->data[SC_MUSTLE_M]->val1/100;
-	if(sc->data[SC_MYSTERIOUS_POWDER])
-		maxhp -= sc->data[SC_MYSTERIOUS_POWDER]->val1 / 100;
-	if(sc->data[SC_PETROLOGY_OPTION])
+	if (sc->data[SC_MUSTLE_M])
+		maxhp += maxhp * sc->data[SC_MUSTLE_M]->val1 / 100;
+	if (sc->data[SC_PROMOTE_HEALTH_RESERCH])
+		maxhp += sc->data[SC_PROMOTE_HEALTH_RESERCH]->val3;
+	if (sc->data[SC_MYSTERIOUS_POWDER])
+		maxhp -= maxhp * sc->data[SC_MYSTERIOUS_POWDER]->val1 / 100;
+	if (sc->data[SC_PETROLOGY_OPTION])
 		maxhp += maxhp * sc->data[SC_PETROLOGY_OPTION]->val2 / 100;
-	if(sc->data[SC_CURSED_SOIL_OPTION])
+	if (sc->data[SC_CURSED_SOIL_OPTION])
 		maxhp += maxhp * sc->data[SC_CURSED_SOIL_OPTION]->val2 / 100;
-	if(sc->data[SC_UPHEAVAL_OPTION])
+	if (sc->data[SC_UPHEAVAL_OPTION])
 		maxhp += maxhp * sc->data[SC_UPHEAVAL_OPTION]->val3 / 100;
 	if (sc->data[SC_ANGRIFFS_MODUS])
 		maxhp += maxhp * 5 * sc->data[SC_ANGRIFFS_MODUS]->val1 /100;
 	if (sc->data[SC_GOLDENE_FERSE])
 		maxhp += maxhp * sc->data[SC_GOLDENE_FERSE]->val2 / 100;
-	if(sc->data[SC_FRIGG_SONG])
+	if (sc->data[SC_FRIGG_SONG])
 		maxhp += maxhp * sc->data[SC_FRIGG_SONG]->val2 / 100;
 	if (sc->data[SC_SOULSCROLL])
 		maxhp += maxhp * sc->data[SC_SOULSCROLL]->val1 / 100;
@@ -6009,32 +6020,34 @@ unsigned int status_calc_maxhp(struct block_list *bl, struct status_change *sc, 
 	if (sc->data[SC_GM_BATTLE2])
 		maxhp -= maxhp * sc->data[SC_GM_BATTLE2]->val1 / 100;
 
-	return (unsigned int)cap_value(maxhp,1,UINT_MAX);
+	return (unsigned int)cap_value(maxhp, 1, UINT_MAX);
 }
 
 unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, unsigned int maxsp)
 {
-	if(!sc || !sc->count)
-		return cap_value(maxsp,1,UINT_MAX);
+	if (!sc || !sc->count)
+		return cap_value(maxsp, 1, UINT_MAX);
 
-	if(sc->data[SC_INCMSPRATE])
-		maxsp += maxsp * sc->data[SC_INCMSPRATE]->val1/100;
-	if(sc->data[SC_INCMSP])
+	if (sc->data[SC_INCMSPRATE])
+		maxsp += maxsp * sc->data[SC_INCMSPRATE]->val1 / 100;
+	if (sc->data[SC_INCMSP])
 		maxsp += (sc->data[SC_INCMSP]->val1);
-	if(sc->data[SC_MTF_MSP])
+	if (sc->data[SC_MTF_MSP])
 		maxsp += (sc->data[SC_MTF_MSP]->val1);
-	if(sc->data[SC_SERVICEFORYOU])
-		maxsp += maxsp * sc->data[SC_SERVICEFORYOU]->val2/100;
-	if(sc->data[SC_MER_SP])
-		maxsp += maxsp * sc->data[SC_MER_SP]->val2/100;
-	if(sc->data[SC_RAISINGDRAGON])
+	if (sc->data[SC_SERVICEFORYOU])
+		maxsp += maxsp * sc->data[SC_SERVICEFORYOU]->val2 / 100;
+	if (sc->data[SC_MER_SP])
+		maxsp += maxsp * sc->data[SC_MER_SP]->val2 / 100;
+	if (sc->data[SC_RAISINGDRAGON])
 		maxsp += maxsp * (2 + sc->data[SC_RAISINGDRAGON]->val1) / 100;
-	if(sc->data[SC_LIFE_FORCE_F])
-		maxsp += maxsp * sc->data[SC_LIFE_FORCE_F]->val1/100;
-	if(sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 3)
+	if (sc->data[SC_LIFE_FORCE_F])
+		maxsp += maxsp * sc->data[SC_LIFE_FORCE_F]->val1 / 100;
+	if (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 3)
 		maxsp += 50;
 	if (sc->data[SC_VITATA_500])
 		maxsp += maxsp * sc->data[SC_VITATA_500]->val2 / 100;
+	if (sc->data[SC_ENERGY_DRINK_RESERCH])
+		maxsp += maxsp * sc->data[SC_ENERGY_DRINK_RESERCH]->val3 / 100;
 	if (sc->data[SC_TARGET_ASPD])
 		maxsp += maxsp * sc->data[SC_TARGET_ASPD]->val1 / 100;
 	if (sc->data[SC_SOULSCROLL])
@@ -6046,7 +6059,7 @@ unsigned int status_calc_maxsp(struct block_list *bl, struct status_change *sc, 
 	if (sc->data[SC_GM_BATTLE2])
 		maxsp -= maxsp * sc->data[SC_GM_BATTLE2]->val1 / 100;
 
-	return cap_value(maxsp,1,UINT_MAX);
+	return cap_value(maxsp, 1, UINT_MAX);
 }
 
 unsigned char status_calc_element(struct block_list *bl, struct status_change *sc, int element)
@@ -9243,6 +9256,30 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				tick_time = 10000;
 				sc_start(src, bl, SC_ENDURE, 100, 10, tick); // Endure effect
 				break;
+			case SC_PROMOTE_HEALTH_RESERCH:
+				// Val1: 1 = Regular Potion, 2 = Thrown Potion
+				// Val2: 1 = Small Potion, 2 = Medium Potion, 3 = Large Potion
+				// Val3: MaxHP Increase By Fixed Amount
+				// Val4: MaxHP Heal Percentage
+				if (val1 == 1) // If potion was normally used, take the user's BaseLv.
+					val3 = 1000 * val2 - 500 + status->get_lv(bl) * 10 / 3;
+				else if (val1 == 2) // If potion was thrown at someone, take the thrower's BaseLv.
+					val3 = 1000 * val2 - 500 + status->get_lv(src) * 10 / 3;
+				if (val3 <= 0) // Prevents a negeative value from happening.
+					val3 = 0;
+				break;
+			case SC_ENERGY_DRINK_RESERCH:
+				// Val1: 1 = Regular Potion, 2 = Thrown Potion
+				// Val2: 1 = Small Potion, 2 = Medium Potion, 3 = Large Potion
+				// Val3: MaxSP Increase By Fixed Amount
+				// Val4: MaxSP Heal Percentage
+				if (val1 == 1) // If potion was normally used, take the user's BaseLv.
+					val3 = status->get_lv(bl) / 10 + 5 * val2 - 10;
+				else if (val1 == 2) // If potion was thrown at someone, take the thrower's BaseLv.
+					val3 = status->get_lv(src) / 10 + 5 * val2 - 10;
+				if (val3 <= 0) // Prevents a negeative value from happening.
+					val3 = 0;
+				break;
 			case SC_KYOUGAKU: {
 				int min = val1*2;
 				int max = val1*3;
@@ -9866,6 +9903,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			break;
 		case SC_MER_SP:
 			status_percent_heal(bl, 0, 100); // Recover Full SP
+			break;
+		case SC_PROMOTE_HEALTH_RESERCH:
+			status_percent_heal(bl, sce->val4, 0);
+			break;
+		case SC_ENERGY_DRINK_RESERCH:
+			status_percent_heal(bl, 0, sce->val4);
 			break;
 			/**
 			* Ranger
