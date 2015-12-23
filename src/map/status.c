@@ -859,6 +859,8 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_INT_SCROLL] = SI_INT_SCROLL;
 	status->dbs->IconChangeTable[SC_STEAMPACK] = SI_STEAMPACK;
 	status->dbs->IconChangeTable[SC_MAGIC_CANDY] = SI_MAGIC_CANDY;
+	status->dbs->IconChangeTable[SC_M_LIFEPOTION] = SI_M_LIFEPOTION;
+	status->dbs->IconChangeTable[SC_G_LIFEPOTION] = SI_G_LIFEPOTION;
 	
 	// Eden Crystal Synthesis
 	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
@@ -7751,6 +7753,8 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC_S_LIFEPOTION:
 			case SC_L_LIFEPOTION:
+			case SC_M_LIFEPOTION:
+			case SC_G_LIFEPOTION:
 			case SC_CASH_BOSS_ALARM:
 			case SC_STUN:
 			case SC_SLEEP:
@@ -8135,12 +8139,14 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC_S_LIFEPOTION:
 			case SC_L_LIFEPOTION:
-				if( val1 == 0 ) return 0;
+			case SC_M_LIFEPOTION:
+			case SC_G_LIFEPOTION:
+				if (val1 == 0) return 0;
 				// val1 = heal percent/amout
 				// val2 = seconds between heals
 				// val4 = total of heals
-				if( val2 < 1 ) val2 = 1;
-				if( (val4 = tick/(val2 * 1000)) < 1 )
+				if (val2 < 1) val2 = 1;
+				if ((val4 = tick / (val2 * 1000)) < 1)
 					val4 = 1;
 				tick_time = val2 * 1000; // [GodLesZ] tick time
 				break;
@@ -10982,10 +10988,12 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 
 		case SC_S_LIFEPOTION:
 		case SC_L_LIFEPOTION:
-			if( sd && --(sce->val4) >= 0 ) {
+		case SC_M_LIFEPOTION:
+		case SC_G_LIFEPOTION:
+			if (sd && --(sce->val4) >= 0) {
 				// val1 < 0 = per max% | val1 > 0 = exact amount
 				int hp = 0;
-				if( st->hp < st->max_hp )
+				if (st->hp < st->max_hp)
 					hp = (sce->val1 < 0) ? (int)(sd->status.max_hp * -1 * sce->val1 / 100.) : sce->val1 ;
 				status->heal(bl, hp, 0, 2);
 				sc_timer_next((sce->val2 * 1000) + tick, status->change_timer, bl->id, data);
@@ -11600,7 +11608,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			break;
 		case SC_MAGIC_CANDY:
 			if (--(sce->val4) > 0) {
-				status->charge(bl, 0, sce->val3); // Reduce 100 SP every 10 seconds.
+				status->charge(bl, 0, sce->val3); // Reduce 90 SP every 10 seconds.
 				sc_timer_next(10000 + tick, status->change_timer, bl->id, data);
 			}
 			break;
