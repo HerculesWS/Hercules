@@ -2117,7 +2117,7 @@ void char_mmo_char_send_slots_info(int fd, struct char_session_data* sd) {
 	WFIFOW(fd,2) = 29;
 	WFIFOB(fd,4) = sd->char_slots;
 	WFIFOB(fd,5) = MAX_CHARS - sd->char_slots;
-	WFIFOB(fd,6) = MAX_CHARS - sd->char_slots;
+	WFIFOB(fd,6) = 0;
 	WFIFOB(fd,7) = sd->char_slots;
 	WFIFOB(fd,8) = sd->char_slots;
 	memset(WFIFOP(fd,9), 0, 20); // unused bytes
