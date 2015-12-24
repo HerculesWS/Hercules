@@ -3168,11 +3168,18 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				sd->left_weapon.sp_drain[RC_BOSS].type = val;
 			}
 			break;
+		case SP_HP_VANISH_RATE:
+			if (sd->state.lr_flag != 2) {
+				sd->bonus.hp_vanish_rate += type2;
+				sd->bonus.hp_vanish_per = max(sd->bonus.hp_vanish_per, val);
+				sd->bonus.hp_vanish_trigger = 0;
+			}
+			break;
 		case SP_SP_VANISH_RATE:
-			if(sd->state.lr_flag != 2) {
+			if (sd->state.lr_flag != 2) {
 				sd->bonus.sp_vanish_rate += type2;
-				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per,val);
-				sd->bonus.sp_vanish_trigger=0;
+				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per, val);
+				sd->bonus.sp_vanish_trigger = 0;
 			}
 			break;
 		case SP_GET_ZENY_NUM:
@@ -3812,11 +3819,18 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 				}
 			}
 			break;
+		case SP_HP_VANISH_RATE:
+			if (sd->state.lr_flag != 2) {
+				sd->bonus.hp_vanish_rate += type2;
+				sd->bonus.hp_vanish_per = max(sd->bonus.hp_vanish_per, type3);
+				sd->bonus.hp_vanish_trigger = val;
+			}
+			break;
 		case SP_SP_VANISH_RATE:
-			if(sd->state.lr_flag != 2) {
+			if (sd->state.lr_flag != 2) {
 				sd->bonus.sp_vanish_rate += type2;
-				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per,type3);
-				sd->bonus.sp_vanish_trigger=val;
+				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per, type3);
+				sd->bonus.sp_vanish_trigger = val;
 			}
 			break;
 
