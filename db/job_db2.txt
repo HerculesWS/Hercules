@@ -289,3 +289,8 @@
 4212,5,0,4,0,2,3,0,1,6,0,5,1,2,0,4,6,3,0,1,5,2,0,6,3,4,0,5,0,2,0,1,4,0,5,4,0,3,5,1,0,2,4,1,0,5,6,2,1,0,5
 // Rebellion
 4215,0,5,0,4,0,3,5,4,2,6,0,0,3,4,0,2,5,4,3,6,0,0,3,5,1,4,2,0,0,6,3,0,5,4,1,0,0,5,0,2,6,0,5,3,4,0,0,0,0,1
+//================================
+// Note: Summoner is a entirely new job unlike any other and is a 1st job. Its currently unknown what its bonus stats are
+// or what its max job level is. For now well assume its 50 and just use novice bonus stat for now.
+// Summoner
+4218,0,6,5,0,2,3,0,1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

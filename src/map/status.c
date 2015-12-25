@@ -2267,6 +2267,10 @@ unsigned int status_get_base_maxsp(const struct map_session_data *sd, const stru
 		val = val * 70 / 100;
 	if ( (sd->class_&MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->famerank(sd->status.char_id, MAPID_TAEKWON) )
 		val *= 3; //Triple max SP for top ranking Taekwons over level 90.
+	if((sd->class_&MAPID_BASEMASK) == MAPID_SUMMONER) {	// Summoner starts at 8 SP and gain 2 SP per even base lv and 3 SP per odd base lv.
+		val -= 4;
+		val += (sd->status.base_level-1)/2;
+	}
 
 	val += val * st->int_ / 100;
 
@@ -2281,6 +2285,13 @@ unsigned int status_get_base_maxhp(const struct map_session_data *sd, const stru
 
 	if ( (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.base_level >= 99 )
 		val += 2000; //Supernovice lvl99 hp bonus.
+	if((sd->class_&MAPID_BASEMASK) == MAPID_SUMMONER) {	// Summoner starts with 60 HP and gains HP in according to hp_coefficient 1 and 2.
+		val += 18;	// Also gains additional HP by base level calculations.
+		if (sd->status.base_level > 2)
+			val += sd->status.base_level-2;
+		if (sd->status.base_level > 14)
+			val += (sd->status.base_level-13)/2;
+	}
 	if ( (sd->class_&MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E && sd->status.base_level >= 150 )
 		val += 2000; //Extented Supernovice lvl150 hp bonus.
 
