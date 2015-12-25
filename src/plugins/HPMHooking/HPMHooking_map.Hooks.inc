@@ -24041,6 +24041,32 @@ void HP_clif_pHotkeyRowShift(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
+void HP_clif_dressroom_open(struct map_session_data *sd, int view) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_dressroom_open_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, int *view);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_dressroom_open_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_dressroom_open_pre[hIndex].func;
+			preHookFunc(sd, &view);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.dressroom_open(sd, view);
+	}
+	if( HPMHooks.count.HP_clif_dressroom_open_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, int *view);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_dressroom_open_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_dressroom_open_post[hIndex].func;
+			postHookFunc(sd, &view);
+		}
+	}
+	return;
+}
 /* cmdline */
 void HP_cmdline_init(void) {
 	int hIndex = 0;

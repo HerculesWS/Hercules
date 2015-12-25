@@ -943,6 +943,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pNPCMarketPurchase, HP_clif_pNPCMarketPurchase) },
 	{ HP_POP(clif->add_random_options, HP_clif_add_random_options) },
 	{ HP_POP(clif->pHotkeyRowShift, HP_clif_pHotkeyRowShift) },
+	{ HP_POP(clif->dressroom_open, HP_clif_dressroom_open) },
 /* cmdline */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },

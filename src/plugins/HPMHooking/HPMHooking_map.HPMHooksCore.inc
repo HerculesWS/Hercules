@@ -1846,6 +1846,8 @@ struct {
 	struct HPMHookPoint *HP_clif_add_random_options_post;
 	struct HPMHookPoint *HP_clif_pHotkeyRowShift_pre;
 	struct HPMHookPoint *HP_clif_pHotkeyRowShift_post;
+	struct HPMHookPoint *HP_clif_dressroom_open_pre;
+	struct HPMHookPoint *HP_clif_dressroom_open_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -7671,6 +7673,8 @@ struct {
 	int HP_clif_add_random_options_post;
 	int HP_clif_pHotkeyRowShift_pre;
 	int HP_clif_pHotkeyRowShift_post;
+	int HP_clif_dressroom_open_pre;
+	int HP_clif_dressroom_open_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;
