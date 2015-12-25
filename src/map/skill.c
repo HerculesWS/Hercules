@@ -454,8 +454,8 @@ int can_copy (struct map_session_data *sd, uint16 skill_id, struct block_list* b
 		skill_id == MER_INCAGI || skill_id == MER_BLESSING))
 		return 0;
 
-	// Couldn't preserve 3rd Class skills except only when using Reproduce skill. [Jobbie]
-	if( !(sd->sc.data[SC__REPRODUCE]) && ((skill_id >= RK_ENCHANTBLADE && skill_id <= LG_OVERBRAND_PLUSATK) || (skill_id >= RL_GLITTERING_GREED && skill_id <= OB_AKAITSUKI) || (skill_id >= GC_DARKCROW && skill_id <= NC_MAGMA_ERUPTION_DOTDAMAGE)))
+	// Couldn't preserve 3rd Class/Summoner skills except only when using Reproduce skill. [Jobbie]
+	if( !(sd->sc.data[SC__REPRODUCE]) && ((skill_id >= RK_ENCHANTBLADE && skill_id <= LG_OVERBRAND_PLUSATK) || (skill_id >= RL_GLITTERING_GREED && skill_id <= OB_AKAITSUKI) || (skill_id >= GC_DARKCROW && skill_id <= SU_FRESHSHRIMP)))
 		return 0;
 	// Reproduce will only copy skills according on the list. [Jobbie]
 	else if( sd->sc.data[SC__REPRODUCE] && !skill->dbs->reproduce_db[skill->get_index(skill_id)] )
@@ -3948,6 +3948,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case KO_BAKURETSU:
 		case GN_ILLUSIONDOPING:
 		case MH_XENO_SLASHER:
+		case SU_SCRATCH:
 			if( flag&1 ) {//Recursive invocation
 				// skill->area_temp[0] holds number of targets in area
 				// skill->area_temp[1] holds the id of the original target
@@ -3972,6 +3973,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					case NJ_BAKUENRYU:
 					case LG_EARTHDRIVE:
 					case GN_CARTCANNON:
+					case SU_SCRATCH:
 						clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 						break;
 					case SR_TIGERCANNON:
@@ -4822,6 +4824,11 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					clif->skill_nodamage(src,bl,skill_id,skill_lv,
 				sc_start4(src,bl,SC_RG_CCONFINE_S,100,skill_lv,src->id,0,0,skill->get_time(skill_id,skill_lv)));
 					skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
+			break;
+
+		case SU_BITE:
+			clif->skill_nodamage(src, bl, skillid, skilllv, 1);
+			skill->attack(BF_WEAPON, src, src, bl, skillid, skilllv, tick, flag);
 			break;
 
 		case 0:/* no skill - basic/normal attack */
@@ -5944,6 +5951,15 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,
 				sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
 			break;
+			
+		// Works just like the above list of skills, except animation caused by
+		// status must trigger AFTER the skill cast animation or it will cancel
+		// out the status's animation.
+		case SU_STOOP:
+			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+			sc_start(bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+			break;
+		
 		case KN_AUTOCOUNTER:
 				sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
 				skill->addtimerskill(src, tick + 100, bl->id, 0, 0, skill_id, skill_lv, BF_WEAPON, flag);
@@ -9387,6 +9403,17 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			clif->skill_damage(src,bl,tick, status_get_amotion(src), 0, 0, 1, skill_id, -2, BDT_SKILL);
 			break;
 
+		case SU_HIDE:
+			if (tsce) {
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+				status_change_end(bl, type, INVALID_TIMER);
+				map->freeblock_unlock();
+				return 0;
+			}
+			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+			sc_start(bl,type,100,skill_lv,skill_get_time(skill_id,skill_lv));
+			break;
+
 		case GM_SANDMAN:
 			if( tsc ) {
 				if( tsc->opt1 == OPT1_SLEEP )
@@ -9864,6 +9891,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 		case SO_ELEMENTAL_SHIELD:/* somehow its handled outside this switch, so we need a empty case otherwise default would be triggered. */
 			break;
+
 		default:
 			if (skill->castend_nodamage_id_unknown(src, bl, &skill_id, &skill_lv, &tick, &flag))
 				return 1;
@@ -10569,6 +10597,22 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			}
 			status_change_end(src, SC_HIDING, INVALID_TIMER);
 			break;
+		case SU_LOPE:
+		{
+			if( map[src->m].flag.noteleport && !(map[src->m].flag.battleground || map_flag_gvg2(src->m) ))
+			{
+				x = src->x;
+				y = src->y;
+			}
+			clif->skill_nodamage(src,src,SU_LOPE,skill_lv,1);
+			if(!map->count_oncell(src->m,x,y,BL_PC|BL_NPC|BL_MOB) && map->getcell(src->m,x,y,CELL_CHKREACH))
+			{
+				clif->slide(src,x,y);
+				unit->movepos(src, x, y, 1, 0);
+			}
+		}
+		break;
+		
 		case AM_SPHEREMINE:
 		case AM_CANNIBALIZE:
 			{
@@ -13212,6 +13256,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		case SG_FUSION:
 		case RA_WUGDASH:
 		case KO_YAMIKUMO:
+		case SU_HIDE:
 			if( sc && sc->data[status->skill2sc(skill_id)] )
 				return 1;
 		default:
@@ -14413,6 +14458,7 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 		case TK_READYTURN:
 		case SG_FUSION:
 		case KO_YAMIKUMO:
+		case SU_HIDE:
 			if( sc && sc->data[status->skill2sc(skill_id)] )
 				return req;
 			/* Fall through */

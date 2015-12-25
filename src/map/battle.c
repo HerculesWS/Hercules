@@ -2285,6 +2285,15 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += 100 * (skill_lv - 1);
 					break;
 				/**
+				 * Summoner
+				**/
+				case SU_BITE:
+					skillratio = 200;
+					break;
+				case SU_SCRATCH:
+					skillratio = 50 + 50 * skill_lv;
+					break;
+				/**
 					* Arch Bishop
 					**/
 				case AB_DUPLELIGHT_MELEE:
@@ -3063,6 +3072,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			else if( (flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON) )
 				damage -= 50 * damage / 100;//50% reduction to physical ranged attacks
 		}
+		
+		if ( sc->data[SC_SU_STOOP] )
+			damage -= damage * 90 / 100;
 
 		// Compressed code, fixed by map.h [Epoque]
 		if (src->type == BL_MOB) {
