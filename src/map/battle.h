@@ -528,6 +528,9 @@ struct Battle_Config {
 	int show_monster_hp_bar; // [Frost]
 
 	int fix_warp_hit_delay_abuse;
+	
+	int costume_refine_def, shadow_refine_def;
+	int shadow_refine_atk;
 };
 
 /* criteria for battle_config.idletime_critera */
