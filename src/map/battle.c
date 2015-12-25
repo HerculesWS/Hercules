@@ -5668,16 +5668,14 @@ struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct bl
 	} else // Some skills like Weaponry Research will cause damage even if attack is dodged
 		d.dmg_lv = ATK_DEF;
 
-	// HPVanishRate
 	if (sd && d.damage + d.damage2 > 1) {
+		// HPVanishRate
 		if (sd->bonus.hp_vanish_rate && sd->bonus.hp_vanish_trigger && rnd() % 1000 < sd->bonus.hp_vanish_rate &&
 			((d.flag&sd->bonus.hp_vanish_trigger&BF_WEAPONMASK) || (d.flag&sd->bonus.hp_vanish_trigger&BF_RANGEMASK)
 			|| (d.flag&sd->bonus.hp_vanish_trigger&BF_SKILLMASK)))
 			status_percent_damage(&sd->bl, target, -sd->bonus.hp_vanish_per, 0, false);
-	}
 
-	// SPVanishRate
-	if (sd && d.damage + d.damage2 > 1) {
+		// SPVanishRate
 		if (sd->bonus.sp_vanish_rate && sd->bonus.sp_vanish_trigger && rnd() % 1000 < sd->bonus.sp_vanish_rate &&
 			((d.flag&sd->bonus.sp_vanish_trigger&BF_WEAPONMASK) || (d.flag&sd->bonus.sp_vanish_trigger&BF_RANGEMASK)
 			|| (d.flag&sd->bonus.sp_vanish_trigger&BF_SKILLMASK)))
