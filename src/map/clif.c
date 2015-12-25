@@ -1006,7 +1006,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 #endif
 #if PACKETVER >= 20131223
 	p.AID = bl->id;
-	p.GID = (sd)?sd->status.char_id:0;	// CCODE
+	p.GID = (sd) ? sd->status.char_id : 0;	// CCODE
 #else
 	p.GID = bl->id;
 #endif
@@ -1048,7 +1048,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20120221
-	if( battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl) ) {
+	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
 		p.isBoss = ( ((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss ) ? 1 : 0;
@@ -1146,7 +1146,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 #endif
 #if PACKETVER >= 20131223
 	p.AID = bl->id;
-	p.GID = (sd)?sd->status.char_id:0;	// CCODE
+	p.GID = (sd) ? sd->status.char_id : 0;	// CCODE
 #else
 	p.GID = bl->id;
 #endif
@@ -1187,7 +1187,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20120221
-	if( battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl) ) {
+	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
 		p.isBoss = ( ((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss ) ? 1 : 0;
@@ -1240,7 +1240,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 #endif
 #if PACKETVER >= 20131223
 	p.AID = bl->id;
-	p.GID = (tsd)?tsd->status.char_id:0;	// CCODE
+	p.GID = (tsd) ? tsd->status.char_id : 0;	// CCODE
 #else
 	p.GID = bl->id;
 #endif
@@ -1277,7 +1277,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	p.font = (sd) ? sd->status.font : 0;
 #endif
 #if PACKETVER >= 20120221
-	if( battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl) ) {
+	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
 		p.isBoss = ( ((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss ) ? 1 : 0;
@@ -4981,92 +4981,92 @@ int clif_skill_damage(struct block_list *src, struct block_list *dst, int64 tick
 	nullpo_ret(src);
 	nullpo_ret(dst);
 
-	damage = (int)cap_value(in_damage,INT_MIN,INT_MAX);
-	type = clif_calc_delay(type,div,damage,ddelay);
+	damage = (int)cap_value(in_damage, INT_MIN, INT_MAX);
+	type = clif_calc_delay(type, div, damage, ddelay);
 
 #if PACKETVER >= 20131223
-	if( type == 6 ) type = 8; //bugreport:8263
+	if (type == BDT_SKILL) type = BDT_MULTIHIT; //bugreport:8263
 #endif
 
-	if( ( sc = status->get_sc(dst) ) && sc->count ) {
-		if(sc->data[SC_ILLUSION] && damage)
-			damage = damage*(sc->data[SC_ILLUSION]->val2) + rnd()%100;
+	if ((sc = status->get_sc(dst)) && sc->count) {
+		if (sc->data[SC_ILLUSION] && damage)
+			damage = damage * (sc->data[SC_ILLUSION]->val2) + rnd() % 100;
 	}
 
 #if PACKETVER < 3
-	WBUFW(buf,0)=0x114;
-	WBUFW(buf,2)=skill_id;
-	WBUFL(buf,4)=src->id;
-	WBUFL(buf,8)=dst->id;
-	WBUFL(buf,12)=(uint32)tick;
-	WBUFL(buf,16)=sdelay;
-	WBUFL(buf,20)=ddelay;
+	WBUFW(buf, 0) = 0x114;
+	WBUFW(buf, 2) = skill_id;
+	WBUFL(buf, 4) = src->id;
+	WBUFL(buf, 8) = dst->id;
+	WBUFL(buf, 12) = (uint32)tick;
+	WBUFL(buf, 16) = sdelay;
+	WBUFL(buf, 20) = ddelay;
 	if (battle_config.hide_woe_damage && map_flag_gvg2(src->m)) {
-		WBUFW(buf,24)=damage?div:0;
+		WBUFW(buf, 24) = damage ? div : 0;
 	} else {
-		WBUFW(buf,24)=damage;
+		WBUFW(buf, 24) = damage;
 	}
-	WBUFW(buf,26)=skill_lv;
-	WBUFW(buf,28)=div;
-	WBUFB(buf,30)=type;
+	WBUFW(buf, 26) = skill_lv;
+	WBUFW(buf, 28) = div;
+	WBUFB(buf, 30) = type;
 	if (disguised(dst)) {
-		clif->send(buf,packet_len(0x114),dst,AREA_WOS);
-		WBUFL(buf,8)=-dst->id;
-		clif->send(buf,packet_len(0x114),dst,SELF);
+		clif->send(buf, packet_len(0x114), dst, AREA_WOS);
+		WBUFL(buf, 8) = -dst->id;
+		clif->send(buf, packet_len(0x114), dst, SELF);
 	} else
-		clif->send(buf,packet_len(0x114),dst,AREA);
+		clif->send(buf, packet_len(0x114), dst, AREA);
 
-	if(disguised(src)) {
-		WBUFL(buf,4)=-src->id;
+	if (disguised(src)) {
+		WBUFL(buf, 4) = -src->id;
 		if (disguised(dst))
-			WBUFL(buf,8)=dst->id;
-		if(damage > 0)
-			WBUFW(buf,24)=-1;
-		clif->send(buf,packet_len(0x114),src,SELF);
+			WBUFL(buf, 8) = dst->id;
+		if (damage > 0)
+			WBUFW(buf, 24) = -1;
+		clif->send(buf, packet_len(0x114), src, SELF);
 	}
 #else
-	WBUFW(buf,0)=0x1de;
-	WBUFW(buf,2)=skill_id;
-	WBUFL(buf,4)=src->id;
-	WBUFL(buf,8)=dst->id;
-	WBUFL(buf,12)=(uint32)tick;
-	WBUFL(buf,16)=sdelay;
-	WBUFL(buf,20)=ddelay;
+	WBUFW(buf, 0) = 0x1de;
+	WBUFW(buf, 2) = skill_id;
+	WBUFL(buf, 4) = src->id;
+	WBUFL(buf, 8) = dst->id;
+	WBUFL(buf, 12) = (uint32)tick;
+	WBUFL(buf, 16) = sdelay;
+	WBUFL(buf, 20) = ddelay;
 	if (battle_config.hide_woe_damage && map_flag_gvg2(src->m)) {
-		WBUFL(buf,24)=damage?div:0;
+		WBUFL(buf, 24) = damage ? div : 0;
 	} else {
-		WBUFL(buf,24)=damage;
+		WBUFL(buf, 24) = damage;
 	}
-	WBUFW(buf,28)=skill_lv;
-	WBUFW(buf,30)=div;
+	WBUFW(buf, 28) = skill_lv;
+	WBUFW(buf, 30) = div;
 	// For some reason, late 2013 and newer clients have
 	// a issue that causes players and monsters to endure
 	// type 6 (ACTION_SKILL) skills. So we have to do a small
 	// hack to set all type 6 to be sent as type 8 ACTION_ATTACK_MULTIPLE
 #if PACKETVER < 20131223
- 	WBUFB(buf,32)=type;
+ 	WBUFB(buf, 32) = type;
 #else
-	WBUFB(buf,32)=(type==6)?8:type;
+	WBUFB(buf, 32) = (type == BDT_SKILL) ? BDT_MULTIHIT : type;
 #endif
 	if (disguised(dst)) {
-		clif->send(buf,packet_len(0x1de),dst,AREA_WOS);
+		clif->send(buf, packet_len(0x1de), dst, AREA_WOS);
 		WBUFL(buf,8)=-dst->id;
-		clif->send(buf,packet_len(0x1de),dst,SELF);
+		clif->send(buf, packet_len(0x1de), dst, SELF);
 	} else
-		clif->send(buf,packet_len(0x1de),dst,AREA);
+		clif->send(buf, packet_len(0x1de), dst, AREA);
 
-	if(disguised(src)) {
-		WBUFL(buf,4)=-src->id;
+	if (disguised(src)) {
+		WBUFL(buf, 4) = -src->id;
 		if (disguised(dst))
-			WBUFL(buf,8)=dst->id;
-		if(damage > 0)
-			WBUFL(buf,24)=-1;
-		clif->send(buf,packet_len(0x1de),src,SELF);
+			WBUFL(buf, 8) = dst->id;
+		if (damage > 0)
+			WBUFL(buf, 24) = -1;
+		clif->send(buf, packet_len(0x1de), src, SELF);
 	}
 #endif
 
 	//Because the damage delay must be synced with the client, here is where the can-walk tick must be updated. [Skotlex]
-	return clif->calc_walkdelay(dst,ddelay,type,damage,div);
+	return clif->calc_walkdelay(dst, ddelay, type, damage, div);
 }
 
 /// Ground skill attack effect and damage (ZC_NOTIFY_SKILL_POSITION).
