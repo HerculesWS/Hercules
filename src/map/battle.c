@@ -4558,10 +4558,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	{
 		short cri = sstatus->cri;
 		if (sd)	{
-			// Check for katar here as katar crit bonus should not be displayed
-			if (sd->status.weapon == W_KATAR) {
+			// if show_katar_crit_bonus is enabled, it already done the calculation in status.c
+			if (!battle_config.show_katar_crit_bonus && sd->status.weapon == W_KATAR)
 				cri <<= 1;
-			}
 
 			cri+= sd->critaddrace[tstatus->race];
 
@@ -7078,6 +7077,7 @@ static const struct battle_data {
 	{ "mob_remove_damaged",                 &battle_config.mob_remove_damaged,              1,      0,      1,              },
 	{ "show_hp_sp_drain",                   &battle_config.show_hp_sp_drain,                0,      0,      1,              },
 	{ "show_hp_sp_gain",                    &battle_config.show_hp_sp_gain,                 1,      0,      1,              },
+	{ "show_katar_crit_bonus",              &battle_config.show_katar_crit_bonus,           0,      0,      1,              },
 	{ "mob_npc_event_type",                 &battle_config.mob_npc_event_type,              1,      0,      1,              },
 	{ "character_size",                     &battle_config.character_size,                  1|2,    0,      1|2,            },
 	{ "retaliate_to_master",                &battle_config.retaliate_to_master,             1,      0,      1,              },
