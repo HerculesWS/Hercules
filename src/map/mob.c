@@ -2747,39 +2747,39 @@ int mob_random_class (int *value, size_t count)
 /*==========================================
  * Change mob base class
  *------------------------------------------*/
-int mob_class_change (struct mob_data *md, int class_)
-{
+int mob_class_change (struct mob_data *md, int class_) {
+
 	int64 tick = timer->gettick(), c = 0;
 	int i, hp_rate;
 
 	nullpo_ret(md);
 
-	if( md->bl.prev == NULL )
+	if (md->bl.prev == NULL)
 		return 0;
 
-	//Disable class changing for some targets...
+	// Disable class changing for some targets...
 	if (md->guardian_data)
-		return 0; //Guardians/Emperium
+		return 0; // Guardians/Emperium
 
-	if( mob_is_treasure(md) )
-		return 0; //Treasure Boxes
+	if (mob_is_treasure(md))
+		return 0; // Treasure Boxes
 
-	if( md->special_state.ai > AI_ATTACK )
-		return 0; //Marine Spheres and Floras.
+	if (md->special_state.ai > AI_ATTACK)
+		return 0; // Marine Spheres and Floras.
 
-	if( mob->is_clone(md->class_) )
-		return 0; //Clones
+	if (mob->is_clone(md->class_))
+		return 0; // Clones
 
-	if( md->class_ == class_ )
-		return 0; //Nothing to change.
+	if (md->class_ == class_)
+		return 0; // Nothing to change.
 
 	hp_rate = get_percentage(md->status.hp, md->status.max_hp);
 	md->class_ = class_;
 	md->db = mob->db(class_);
-	if (battle_config.override_mob_names==1)
-		memcpy(md->name,md->db->name,NAME_LENGTH);
+	if (battle_config.override_mob_names == 1)
+		memcpy(md->name, md->db->name, NAME_LENGTH);
 	else
-		memcpy(md->name,md->db->jname,NAME_LENGTH);
+		memcpy(md->name, md->db->jname, NAME_LENGTH);
 
 	mob_stop_attack(md);
 	mob_stop_walking(md, STOPWALKING_FLAG_NONE);

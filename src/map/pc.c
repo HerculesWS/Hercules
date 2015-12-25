@@ -3168,11 +3168,18 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				sd->left_weapon.sp_drain[RC_BOSS].type = val;
 			}
 			break;
+		case SP_HP_VANISH_RATE:
+			if (sd->state.lr_flag != 2) {
+				sd->bonus.hp_vanish_rate += type2;
+				sd->bonus.hp_vanish_per = max(sd->bonus.hp_vanish_per, val);
+				sd->bonus.hp_vanish_trigger = 0;
+			}
+			break;
 		case SP_SP_VANISH_RATE:
-			if(sd->state.lr_flag != 2) {
+			if (sd->state.lr_flag != 2) {
 				sd->bonus.sp_vanish_rate += type2;
-				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per,val);
-				sd->bonus.sp_vanish_trigger=0;
+				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per, val);
+				sd->bonus.sp_vanish_trigger = 0;
 			}
 			break;
 		case SP_GET_ZENY_NUM:
@@ -3812,11 +3819,18 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 				}
 			}
 			break;
+		case SP_HP_VANISH_RATE:
+			if (sd->state.lr_flag != 2) {
+				sd->bonus.hp_vanish_rate += type2;
+				sd->bonus.hp_vanish_per = max(sd->bonus.hp_vanish_per, type3);
+				sd->bonus.hp_vanish_trigger = val;
+			}
+			break;
 		case SP_SP_VANISH_RATE:
-			if(sd->state.lr_flag != 2) {
+			if (sd->state.lr_flag != 2) {
 				sd->bonus.sp_vanish_rate += type2;
-				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per,type3);
-				sd->bonus.sp_vanish_trigger=val;
+				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per, type3);
+				sd->bonus.sp_vanish_trigger = val;
 			}
 			break;
 
@@ -5246,7 +5260,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	sd_status= status->get_status_data(&sd->bl);
 	md_status= status->get_status_data(bl);
 
-	if( md->master_id || md_status->mode&MD_BOSS || mob_is_treasure(md) ||
+	if (md->master_id || md_status->mode&MD_BOSS || mob_is_treasure(md) ||
 		map->list[bl->m].flag.nomobloot || // check noloot map flag [Lorky]
 		(battle_config.skill_steal_max_tries && //Reached limit of steal attempts. [Lupus]
 			md->state.steal_flag++ >= battle_config.skill_steal_max_tries)
@@ -5312,20 +5326,21 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 int pc_steal_coin(struct map_session_data *sd, struct block_list *target) {
 	int rate, skill_lv;
 	struct mob_data *md;
-	if(!sd || !target || target->type != BL_MOB)
+
+	if (!sd || !target || target->type != BL_MOB)
 		return 0;
 
 	md = (TBL_MOB*)target;
-	if( md->state.steal_coin_flag || md->sc.data[SC_STONE] || md->sc.data[SC_FREEZE] || md->status.mode&MD_BOSS )
+	if (md->state.steal_coin_flag || md->sc.data[SC_STONE] || md->sc.data[SC_FREEZE] || md->status.mode&MD_BOSS)
 		return 0;
 
-	if( mob_is_treasure(md) )
+	if (mob_is_treasure(md))
 		return 0;
 
 	skill_lv = pc->checkskill(sd, RG_STEALCOIN);
-	rate = skill_lv*10 + (sd->status.base_level - md->level)*2 + sd->battle_status.dex/2 + sd->battle_status.luk/2;
+	rate = skill_lv * 10 + (sd->status.base_level - md->level) * 2 + sd->battle_status.dex / 2 + sd->battle_status.luk / 2;
 	if(rnd()%1000 < rate) {
-		int amount = md->level * skill_lv / 10 + md->level*8 + rnd()%(md->level*2 + 1); // mob_lv * skill_lv / 10 + random [mob_lv*8; mob_lv*10]
+		int amount = md->level * skill_lv / 10 + md->level * 8 + rnd()%(md->level * 2 + 1); // mob_lv * skill_lv / 10 + random [mob_lv*8; mob_lv*10]
 
 		pc->getzeny(sd, amount, LOG_TYPE_STEAL, NULL);
 		md->state.steal_coin_flag = 1;

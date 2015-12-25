@@ -3327,16 +3327,16 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
  * Calculates BG related damage adjustments.
  *------------------------------------------*/
 // FIXME: flag is undocumented
-int64 battle_calc_bg_damage(struct block_list *src, struct block_list *bl, int64 damage, int div_, uint16 skill_id, uint16 skill_lv, int flag)
-{
-	if( !damage )
+int64 battle_calc_bg_damage(struct block_list *src, struct block_list *bl, int64 damage, int div_, uint16 skill_id, uint16 skill_lv, int flag) {
+
+	if (!damage)
 		return 0;
 
 	nullpo_retr(damage, bl);
-	if( bl->type == BL_MOB ) {
+	if (bl->type == BL_MOB) {
 		struct mob_data* md = BL_CAST(BL_MOB, bl);
 
-		if( flag&BF_SKILL && (md->class_ == MOBID_BLUE_CRYST || md->class_ == MOBID_PINK_CRYST) )
+		if (flag&BF_SKILL && (md->class_ == MOBID_BLUE_CRYSTAL || md->class_ == MOBID_PINK_CRYSTAL))
 			return 0; // Crystal cannot receive skill damage on battlegrounds
 	}
 
@@ -4905,7 +4905,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					if(flag.cri && sd->bonus.crit_atk_rate)
 						ATK_ADDRATE(sd->bonus.crit_atk_rate);
 					if(flag.cri && sc && sc->data[SC_MTF_CRIDAMAGE])
-						ATK_ADDRATE(25);// temporary it should be 'bonus.crit_atk_rate'
+						ATK_ADDRATE(sc->data[SC_MTF_CRIDAMAGE]->val1);// temporary it should be 'bonus.crit_atk_rate'
 #ifndef RENEWAL
 
 					if(sd->status.party_id && (temp=pc->checkskill(sd,TK_POWER)) > 0){
@@ -5218,7 +5218,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			if( wd.flag&BF_LONG )
 				ATK_ADDRATE(sd->bonus.long_attack_atk_rate);
 			if( sc && sc->data[SC_MTF_RANGEATK] )
-				ATK_ADDRATE(25);// temporary it should be 'bonus.long_attack_atk_rate'
+				ATK_ADDRATE(sc->data[SC_MTF_RANGEATK]->val1);// temporary it should be 'bonus.long_attack_atk_rate'
 	#endif
 			if( (i=pc->checkskill(sd,AB_EUCHARISTICA)) > 0 &&
 				(tstatus->race == RC_DEMON || tstatus->def_ele == ELE_DARK) )
@@ -5668,11 +5668,18 @@ struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct bl
 	} else // Some skills like Weaponry Research will cause damage even if attack is dodged
 		d.dmg_lv = ATK_DEF;
 
-	if(sd && d.damage+d.damage2>1) {
-		if(sd->bonus.sp_vanish_rate && sd->bonus.sp_vanish_trigger && rnd()%10000<sd->bonus.sp_vanish_rate &&
-			( (d.flag&sd->bonus.sp_vanish_trigger&BF_WEAPONMASK) || (d.flag&sd->bonus.sp_vanish_trigger&BF_RANGEMASK)
-			|| (d.flag&sd->bonus.sp_vanish_trigger&BF_SKILLMASK) ))
-			status_percent_damage(&sd->bl,target,0,-sd->bonus.sp_vanish_per,false);
+	if (sd && d.damage + d.damage2 > 1) {
+		// HPVanishRate
+		if (sd->bonus.hp_vanish_rate && sd->bonus.hp_vanish_trigger && rnd() % 1000 < sd->bonus.hp_vanish_rate &&
+			((d.flag&sd->bonus.hp_vanish_trigger&BF_WEAPONMASK) || (d.flag&sd->bonus.hp_vanish_trigger&BF_RANGEMASK)
+			|| (d.flag&sd->bonus.hp_vanish_trigger&BF_SKILLMASK)))
+			status_percent_damage(&sd->bl, target, -sd->bonus.hp_vanish_per, 0, false);
+
+		// SPVanishRate
+		if (sd->bonus.sp_vanish_rate && sd->bonus.sp_vanish_trigger && rnd() % 1000 < sd->bonus.sp_vanish_rate &&
+			((d.flag&sd->bonus.sp_vanish_trigger&BF_WEAPONMASK) || (d.flag&sd->bonus.sp_vanish_trigger&BF_RANGEMASK)
+			|| (d.flag&sd->bonus.sp_vanish_trigger&BF_SKILLMASK)))
+			status_percent_damage(&sd->bl, target, 0, -sd->bonus.sp_vanish_per, false);
 	}
 	return d;
 }
@@ -5902,7 +5909,7 @@ void battle_drain(TBL_PC *sd, struct block_list *tbl, int64 rdamage, int64 ldama
 		if (i == 0 || i == 2)
 			type = race;
 		else
-			type = boss?RC_BOSS:RC_NONBOSS;
+			type = boss ? RC_BOSS : RC_NONBOSS;
 
 		hp = wd->hp_drain[type].value;
 		if (wd->hp_drain[type].rate)
@@ -5911,6 +5918,14 @@ void battle_drain(TBL_PC *sd, struct block_list *tbl, int64 rdamage, int64 ldama
 		sp = wd->sp_drain[type].value;
 		if (wd->sp_drain[type].rate)
 			sp += battle->calc_drain(*damage, wd->sp_drain[type].rate, wd->sp_drain[type].per);
+
+		// HPVanishRate
+		if (sd->bonus.hp_vanish_rate && rnd() % 1000 < sd->bonus.hp_vanish_rate && !sd->bonus.hp_vanish_trigger)
+			status_percent_damage(&sd->bl, tbl, (unsigned char)sd->bonus.hp_vanish_per, 0, false);
+
+		// SPVanishRate
+		if (sd->bonus.sp_vanish_rate && rnd() % 1000 < sd->bonus.sp_vanish_rate && !sd->bonus.sp_vanish_trigger)
+			status_percent_damage(&sd->bl, tbl, 0, (unsigned char)sd->bonus.sp_vanish_per, false);
 
 		if (hp) {
 			if (wd->hp_drain[type].type)
@@ -5924,17 +5939,14 @@ void battle_drain(TBL_PC *sd, struct block_list *tbl, int64 rdamage, int64 ldama
 		}
 	}
 
-	if (sd->bonus.sp_vanish_rate && rnd()%1000 < sd->bonus.sp_vanish_rate && !sd->bonus.sp_vanish_trigger)
-		status_percent_damage(&sd->bl, tbl, 0, (unsigned char)sd->bonus.sp_vanish_per, false);
-
-	if( sd->sp_gain_race_attack[race] )
+	if (sd->sp_gain_race_attack[race])
 		tsp += sd->sp_gain_race_attack[race];
-	if( sd->hp_gain_race_attack[race] )
+	if (sd->hp_gain_race_attack[race])
 		thp += sd->hp_gain_race_attack[race];
 
 	if (!thp && !tsp) return;
 
-	status->heal(&sd->bl, thp, tsp, battle_config.show_hp_sp_drain?3:1);
+	status->heal(&sd->bl, thp, tsp, battle_config.show_hp_sp_drain ? 3 : 1);
 
 	if (rhp || rsp)
 		status_zap(tbl, rhp, rsp);

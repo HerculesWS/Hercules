@@ -5401,19 +5401,18 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				int heal = skill->calc_heal(src, bl, (skill_id == AB_HIGHNESSHEAL)?AL_HEAL:skill_id, (skill_id == AB_HIGHNESSHEAL)?10:skill_lv, true);
 				int heal_get_jobexp;
 				//Highness Heal: starts at 1.7 boost + 0.3 for each level
-				if( skill_id == AB_HIGHNESSHEAL ) {
-					heal = heal * ( 17 + 3 * skill_lv ) / 10;
+				if (skill_id == AB_HIGHNESSHEAL) {
+					heal = heal * (17 + 3 * skill_lv) / 10;
 				}
-				if( status->isimmune(bl) ||
-						(dstmd && (dstmd->class_ == MOBID_EMPERIUM || mob_is_battleground(dstmd))) )
-					heal=0;
+				if (status->isimmune(bl) || (dstmd && (dstmd->class_ == MOBID_EMPERIUM || mob_is_battleground(dstmd))))
+					heal = 0;
 
-				if( sd && dstsd && sd->status.partner_id == dstsd->status.char_id && (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.sex == 0 )
-					heal = heal*2;
+				if (sd && dstsd && sd->status.partner_id == dstsd->status.char_id && (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.sex == 0)
+					heal = heal * 2;
 
-				if( tsc && tsc->count )
+				if (tsc && tsc->count)
 				{
-					if( tsc->data[SC_KAITE] && !(sstatus->mode&MD_BOSS) )
+					if (tsc->data[SC_KAITE] && !(sstatus->mode&MD_BOSS))
 					{ //Bounce back heal
 						if (--tsc->data[SC_KAITE]->val2 <= 0)
 							status_change_end(bl, SC_KAITE, INVALID_TIMER);
@@ -7623,7 +7622,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		// Slim Pitcher
 		case CR_SLIMPITCHER:
 			// Updated to block Slim Pitcher from working on barricades and guardian stones.
-			if( dstmd && (dstmd->class_ == MOBID_EMPERIUM || (dstmd->class_ >= MOBID_BARRICADE1 && dstmd->class_ <= MOBID_GUARIDAN_STONE2)) )
+			if (dstmd && (dstmd->class_ == MOBID_EMPERIUM || (dstmd->class_ >= MOBID_BARRICADE1 && dstmd->class_ <= MOBID_GUARDIAN_STONE2)))
 				break;
 			if (script->potion_hp || script->potion_sp) {
 				int hp = script->potion_hp, sp = script->potion_sp;
@@ -7703,9 +7702,9 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					map->freeblock_unlock();
 					return 0;
 				}
-				if( rnd() % 100 > skill_lv * 8 || (dstmd && ((dstmd->guardian_data && dstmd->class_ == MOBID_EMPERIUM) || mob_is_battleground(dstmd))) ) {
-					if( sd )
-						clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				if (rnd() % 100 > skill_lv * 8 || (dstmd && ((dstmd->guardian_data && dstmd->class_ == MOBID_EMPERIUM) || mob_is_battleground(dstmd)))) {
+					if (sd)
+						clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
 
 					map->freeblock_unlock();
 					return 0;
@@ -11911,24 +11910,24 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				int heal = skill->calc_heal(ss,bl,sg->skill_id,sg->skill_lv,true);
 				struct mob_data *md = BL_CAST(BL_MOB, bl);
 #ifdef RENEWAL
-				if( md && md->class_ == MOBID_EMPERIUM )
+				if (md && md->class_ == MOBID_EMPERIUM)
 					break;
 #endif
-				if( md && mob_is_battleground(md) )
+				if (md && mob_is_battleground(md))
 					break;
-				if( tstatus->hp >= tstatus->max_hp )
+				if (tstatus->hp >= tstatus->max_hp)
 					break;
-				if( status->isimmune(bl) )
+				if (status->isimmune(bl))
 					heal = 0;
 				clif->skill_nodamage(&src->bl, bl, AL_HEAL, heal, 1);
-				if( tsc && tsc->data[SC_AKAITSUKI] && heal )
+				if (tsc && tsc->data[SC_AKAITSUKI] && heal)
 					heal = ~heal + 1;
 				status->heal(bl, heal, 0, 0);
-				if( diff >= 500 )
+				if (diff >= 500)
 					sg->val1--;
 			}
-			if( sg->val1 <= 0 )
-				skill->del_unitgroup(sg,ALC_MARK);
+			if (sg->val1 <= 0)
+				skill->del_unitgroup(sg, ALC_MARK);
 			break;
 
 		case UNT_EVILLAND:
@@ -13667,7 +13666,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		case SR_CURSEDCIRCLE:
 			if (map_flag_gvg2(sd->bl.m)) {
 				if (map->foreachinrange(mob->count_sub, &sd->bl, skill->get_splash(skill_id, skill_lv), BL_MOB,
-				                        MOBID_EMPERIUM, MOBID_GUARIDAN_STONE1, MOBID_GUARIDAN_STONE2)) {
+				                        MOBID_EMPERIUM, MOBID_GUARDIAN_STONE1, MOBID_GUARDIAN_STONE2)) {
 					char output[128];
 					sprintf(output, "You're too close to a stone or emperium to do this skill"); /* TODO official response? or message.conf it */
 					clif->messagecolor_self(sd->fd, COLOR_RED, output);
@@ -14778,6 +14777,8 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 		}
 		if (sc->data[SC_FENRIR_CARD])
 			fixcast_r = max(fixcast_r, sc->data[SC_FENRIR_CARD]->val2);
+		if (sc->data[SC_MAGIC_CANDY])
+			fixcast_r = max(fixcast_r, sc->data[SC_MAGIC_CANDY]->val2);
 
 		// Fixed cast non percentage bonuses
 		if( sc->data[SC_MANDRAGORA] )
