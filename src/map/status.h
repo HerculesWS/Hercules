@@ -825,6 +825,18 @@ typedef enum sc_type {
 	SC_M_LIFEPOTION,
 	SC_G_LIFEPOTION, // 640
 	SC_MYSTICPOWDER,
+	
+	//Summoner
+	SC_SUHIDE,
+	SC_SU_STOOP,
+	SC_SPRITEMABLE,
+	SC_CATNIPPOWDER,
+	SC_SV_ROOTTWIST,
+	SC_BITESCAR,
+	SC_ARCLOUSEDASH,
+	SC_TUNAPARTY,
+	SC_SHRIMP,	// 650
+	SC_FRESHSHRIMP,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
