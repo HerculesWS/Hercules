@@ -128,7 +128,7 @@
 #define MAX_LEVEL 175
 #define MAX_FAME 1000000000
 #define MAX_CART 100
-#define MAX_SKILL 1504
+#define MAX_SKILL 1506
 #define MAX_SKILL_ID 10015   // [Ind/Hercules] max used skill ID
 // Update this max as necessary. 86 is the value needed for Expanded Super Novice.
 #define MAX_SKILL_TREE 86
