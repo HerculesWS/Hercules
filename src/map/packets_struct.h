@@ -267,7 +267,9 @@ enum packet_headers {
 #else
 	unequipitemackType = 0xac,
 #endif
-#if PACKETVER >= 20120925
+#if PACKETVER >= 20150226
+	viewequipackType = 0xa2d,
+#elif PACKETVER >= 20120925
 	viewequipackType = 0x997,
 #elif PACKETVER >= 20101124
 	viewequipackType = 0x859,
