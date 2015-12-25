@@ -528,6 +528,7 @@ struct Battle_Config {
 	int show_monster_hp_bar; // [Frost]
 
 	int fix_warp_hit_delay_abuse;
+	int cash_item_stack;
 };
 
 /* criteria for battle_config.idletime_critera */

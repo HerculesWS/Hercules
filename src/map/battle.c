@@ -7192,6 +7192,7 @@ static const struct battle_data {
 	{ "feature.roulette",                   &battle_config.feature_roulette,                1,      0,      1,              },
 	{ "show_monster_hp_bar",                &battle_config.show_monster_hp_bar,             1,      0,      1,              },
 	{ "fix_warp_hit_delay_abuse",           &battle_config.fix_warp_hit_delay_abuse,        0,      0,      1,              },
+	{ "cash_item_stack",                    &battle_config.cash_item_stack,                 0,      0,      1,              },
 };
 #ifndef STATS_OPT_OUT
 /**
