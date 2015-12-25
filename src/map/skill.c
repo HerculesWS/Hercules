@@ -126,7 +126,7 @@ int skill_get_index( uint16 skill_id ) {
 			skill_id = (1077) + skill_id - 2201;
 		else if ( skill_id < 3036 ) // 2549 - 3000 are empty - 1020+57+348
 			skill_id = (1425) + skill_id - 3001;
-		else if ( skill_id < 5019 ) // 3036 - 5000 are empty - 1020+57+348+35
+		else if ( skill_id < 5044 ) // 3036 - 5000 are empty - 1020+57+348+35
 			skill_id = (1460) + skill_id - 5001;
 		else
 			ShowWarning("skill_get_index: skill id '%d' is not being handled!\n",skill_id);
@@ -4827,8 +4827,8 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 			break;
 
 		case SU_BITE:
-			clif->skill_nodamage(src, bl, skillid, skilllv, 1);
-			skill->attack(BF_WEAPON, src, src, bl, skillid, skilllv, tick, flag);
+			clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
+			skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
 			break;
 
 		case 0:/* no skill - basic/normal attack */
@@ -5957,7 +5957,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		// out the status's animation.
 		case SU_STOOP:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-			sc_start(bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+			sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
 			break;
 		
 		case KN_AUTOCOUNTER:
@@ -9411,7 +9411,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				return 0;
 			}
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-			sc_start(bl,type,100,skill_lv,skill_get_time(skill_id,skill_lv));
+			sc_start(src,bl,type,100,skill_lv,skill_get_time(skill_id,skill_lv));
 			break;
 
 		case GM_SANDMAN:
@@ -10599,13 +10599,13 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			break;
 		case SU_LOPE:
 		{
-			if( map[src->m].flag.noteleport && !(map[src->m].flag.battleground || map_flag_gvg2(src->m) ))
+			if( map->list[src->m].flag.noteleport && !(map->list[src->m].flag.battleground || map_flag_gvg2(src->m) ))
 			{
 				x = src->x;
 				y = src->y;
 			}
 			clif->skill_nodamage(src,src,SU_LOPE,skill_lv,1);
-			if(!map->count_oncell(src->m,x,y,BL_PC|BL_NPC|BL_MOB) && map->getcell(src->m,x,y,CELL_CHKREACH))
+			if(!map->count_oncell(src->m, x, y, BL_PC | BL_NPC | BL_MOB, 0) && map->getcell(src->m, src, x, y, CELL_CHKREACH))
 			{
 				clif->slide(src,x,y);
 				unit->movepos(src, x, y, 1, 0);

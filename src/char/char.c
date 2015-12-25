@@ -1578,7 +1578,7 @@ int char_make_new_char_sql(struct char_session_data* sd, const char* name_, int 
 	//Insert the new char entry to the database
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `status_point`,`str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
 		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`) VALUES ("
-		"'%d', '%d', '%s', '%d',  '%d','%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
+		"'%d', '%d', '%s', '%d', '%d',  '%d','%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
 		char_db, sd->account_id , slot, esc_name, starting_job, start_zeny, 48, str, agi, vit, int_, dex, luk,
 		(40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
 		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y) )
@@ -4639,7 +4639,7 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 	}
 #if PACKETVER >= 20151001
 	RFIFOSKIP(fd,36);
-#if PACKETVER >= 20120307
+#elif PACKETVER >= 20120307
 	RFIFOSKIP(fd,31);
 #else
 	RFIFOSKIP(fd,37);
@@ -5026,7 +5026,7 @@ int char_parse_char(int fd)
 			case 0xa39:
 			{
 				FIFOSD_CHECK(36);			
-#if PACKETVER >= 20120307
+#elif PACKETVER >= 20120307
 			// S 0970 <name>.24B <slot>.B <hair color>.W <hair style>.W
 			case 0x970:
 			{

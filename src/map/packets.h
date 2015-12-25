@@ -2955,7 +2955,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 #endif
 
 // 2015-10-29aRagexe
-#if PACKETVER >= 20151001
+#if PACKETVER >= 20151029
 	packet(0x0369,7,clif->pActionRequest,2,6);
 	packet(0x083C,10,clif->pUseSkillToId,2,4,6);
 	packet(0x0437,5,clif->pWalkToXY,2);
@@ -2986,6 +2986,39 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0361,5,clif->pHomMenu,2,4);
 	packet(0x0960,36,clif->pStoragePassword,0);
 	packet(0x0a39,36);
+#endif
+
+// 2015-12-16aRagexe
+#if PACKETVER >= 20151216
+	packet(0x089D,7,clif->pActionRequest,2,6);
+	packet(0x0968,10,clif->pUseSkillToId,2,4,6);
+	packet(0x08A2,5,clif->pWalkToXY,2);
+	packet(0x085B,6,clif->pTickSend,2);
+	packet(0x022D,5,clif->pChangeDir,2,4);
+	packet(0x08A9,6,clif->pTakeItem,2);
+	packet(0x0966,6,clif->pDropItem,2,4);
+	packet(0x08AC,8,clif->pMoveToKafra,2,4);
+	packet(0x0864,8,clif->pMoveFromKafra,2,4);
+	packet(0x0865,10,clif->pUseSkillToPos,2,4,6,8);
+	packet(0x0874,90,clif->pUseSkillToPosMoreInfo,2,4,6,8,10);
+	packet(0x088B,6,clif->pGetCharNameRequest,2);
+	packet(0x089E,6,clif->pSolveCharName,2);
+	packet(0x0436,12,clif->pSearchStoreInfoListItemClick,2,6,10);
+	packet(0x0960,2,clif->pSearchStoreInfoNextPage,0);
+	packet(0x0944,-1,clif->pSearchStoreInfo,2,4,5,9,13,14,15);
+	packet(0x0954,-1,clif->pReqTradeBuyingStore,2,4,8,12);
+	packet(0x0361,6,clif->pReqClickBuyingStore,2);
+	packet(0x083C,2,clif->pReqCloseBuyingStore,0);
+	packet(0x0870,-1,clif->pReqOpenBuyingStore,2,4,8,9,89);
+	packet(0x0365,18,clif->pPartyBookingRegisterReq,2,4);
+	packet(0x086A,8); // CZ_JOIN_BATTLE_FIELD
+	packet(0x0949,-1,clif->pItemListWindowSelected,2,4,8);
+	packet(0x0947,19,clif->pWantToConnection,2,6,10,14,18);
+	packet(0x086E,26,clif->pPartyInvite2,2);
+	packet(0x0364,4); // CZ_GANGSI_RANK
+	packet(0x091D,26,clif->pFriendsListAdd,2);
+	packet(0x0362,5,clif->pHomMenu,2,4);
+	packet(0x0885,36,clif->pStoragePassword,0);
 #endif
 
 /* PacketKeys: http://herc.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
@@ -3239,6 +3272,10 @@ packet(0x96e,-1,clif->ackmergeitems);
 
 #if PACKETVER >= 20151029
 	packetKeys(0x45B945B9,0x45B945B9,0x45B945B9); /* Dastgir */
+#endif
+
+#if PACKETVER >= 20151216
+	packetKeys(0x25DD643D,0x61AC39DE,0x77A8206D); /* Dastgir */
 #endif
 
 #if defined(OBFUSCATIONKEY1) && defined(OBFUSCATIONKEY2) && defined(OBFUSCATIONKEY3)

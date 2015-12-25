@@ -2763,7 +2763,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	if((skill_lv=pc->checkskill(sd,CR_TRUST))>0)
 		bstatus->max_hp += skill_lv*200;
 	if( (skill_lv = pc->checkskill(sd,SU_SPRITEMABLE)) )
-		status->max_hp += 1000;
+		bstatus->max_hp += 1000;
 
 	// Apply relative modifiers from equipment
 	if(sd->hprate < 0)
@@ -2798,7 +2798,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	if( (skill_lv = pc->checkskill(sd,WM_LESSON)) > 0 )
 		bstatus->max_sp += 30 * skill_lv;
 	if( (skill_lv = pc->checkskill(sd,SU_SPRITEMABLE)) )
-		status->max_sp += 100;
+		bstatus->max_sp += 100;
 
 	// Apply relative modifiers from equipment
 	if(sd->sprate < 0)
@@ -3209,8 +3209,8 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 	// Spirit Marble status activates automatically for a infinite
 	// amount of time when the skill is learned. Felt this was the
 	// best place to put this. [Rytech]
-	if( (skill_lv = pc_checkskill(sd,SU_SPRITEMABLE)))
-		sc_start(&sd->bl,SC_SPRITEMABLE,100,1,-1);
+	if ( (skill_lv = pc->checkskill(sd, SU_SPRITEMABLE)))
+		sc_start(&sd->bl, &sd->bl, SC_SPRITEMABLE, 100, 1, -1);
 
 	calculating = 0;
 

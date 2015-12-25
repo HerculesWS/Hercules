@@ -6444,6 +6444,7 @@ int pc_check_job_name(const char *name) {
 		{ "Kagerou", JOB_KAGEROU },
 		{ "Oboro", JOB_OBORO },
 		{ "Rebellion", JOB_REBELLION },
+		{ "Summoner", JOB_SUMMONER },
 	};
 
 	len = ARRAYLENGTH(names);
@@ -11512,7 +11513,7 @@ bool pc_db_checkid(unsigned int class_)
 		|| (class_ >= JOB_BABY_RUNE      && class_ <= JOB_BABY_MECHANIC2 )
 		|| (class_ >= JOB_SUPER_NOVICE_E && class_ <= JOB_SUPER_BABY_E   )
 		|| (class_ >= JOB_KAGEROU        && class_ <= JOB_OBORO          )
-		|| (class_ >= JOB_REBELLION      || class_ ==  JOB_SUMMONER      );
+		|| (class_ == JOB_REBELLION      || class_ ==  JOB_SUMMONER      );
 }
 
 /**
