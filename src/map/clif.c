@@ -1004,7 +1004,12 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	p.PacketLength = sizeof(p);
 	p.objecttype = clif_bl_type(bl);
 #endif
+#if PACKETVER >= 20131223
+	p.AID = bl->id;
+	p.GID = (sd)?sd->status.char_id:0;	// CCODE
+#else
 	p.GID = bl->id;
+#endif
 	p.speed = status->get_speed(bl);
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
@@ -1042,8 +1047,8 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->status.font : 0;
 #endif
-#if PACKETVER >= 20150000 //actual 20120221
-	if (bl->type == BL_MOB && battle_config.show_monster_hp_bar) {
+#if PACKETVER >= 20120221
+	if( battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl) ) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
 		p.isBoss = ( ((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss ) ? 1 : 0;
@@ -1052,6 +1057,9 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 		p.HP = -1;
 		p.isBoss = 0;
 	}
+#endif
+#if PACKETVER >= 20150513
+	p.body = 0;
 #endif
 
 	clif->send(&p,sizeof(p),tsd?&tsd->bl:bl,target);
@@ -1136,7 +1144,12 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	p.PacketLength = sizeof(p);
 	p.objecttype = clif_bl_type(bl);
 #endif
+#if PACKETVER >= 20131223
+	p.AID = bl->id;
+	p.GID = (sd)?sd->status.char_id:0;	// CCODE
+#else
 	p.GID = bl->id;
+#endif
 	p.speed = status->get_speed(bl);
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
@@ -1173,8 +1186,8 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->status.font : 0;
 #endif
-#if PACKETVER >= 20150000 //actual 20120221
-	if (bl->type == BL_MOB && battle_config.show_monster_hp_bar) {
+#if PACKETVER >= 20120221
+	if( battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl) ) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
 		p.isBoss = ( ((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss ) ? 1 : 0;
@@ -1183,6 +1196,9 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 		p.HP = -1;
 		p.isBoss = 0;
 	}
+#endif
+#if PACKETVER >= 20150513
+	p.body = 0;
 #endif
 	if( disguised(bl) ) {
 		nullpo_retv(sd);
@@ -1222,7 +1238,12 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 #if PACKETVER >= 20071106
 	p.objecttype = clif_bl_type(bl);
 #endif
+#if PACKETVER >= 20131223
+	p.AID = bl->id;
+	p.GID = (tsd)?tsd->status.char_id:0;	// CCODE
+#else
 	p.GID = bl->id;
+#endif
 	p.speed = status->get_speed(bl);
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
@@ -1255,8 +1276,8 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 #if PACKETVER >= 20080102
 	p.font = (sd) ? sd->status.font : 0;
 #endif
-#if PACKETVER >= 20150000 //actual 20120221
-	if (bl->type == BL_MOB && battle_config.show_monster_hp_bar) {
+#if PACKETVER >= 20120221
+	if( battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl) ) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
 		p.isBoss = ( ((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss ) ? 1 : 0;
@@ -1265,6 +1286,9 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 		p.HP = -1;
 		p.isBoss = 0;
 	}
+#endif
+#if PACKETVER >= 20150513
+	p.body = 0;
 #endif
 
 	clif->send(&p,sizeof(p),tsd?&tsd->bl:bl,target);
@@ -4173,7 +4197,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 					clif->specialeffect_single(bl,423,sd->fd);
 				else if(md->special_state.size==SZ_MEDIUM)
 					clif->specialeffect_single(bl,421,sd->fd);
-#if PACKETVER >= 20120404
+#if (PACKETVER >= 20120404 && PACKETVER < 20131223)
 				if (battle_config.show_monster_hp_bar && !(md->status.mode&MD_BOSS)) {
 					int i;
 					for(i = 0; i < DAMAGELOG_SIZE; i++) {// must show hp bar to all char who already hit the mob.
@@ -4224,6 +4248,7 @@ int clif_calc_walkdelay(struct block_list *bl,int delay, int type, int damage, i
 /// Sends a 'damage' packet (src performs action on dst)
 /// 008a <src ID>.L <dst ID>.L <server tick>.L <src speed>.L <dst speed>.L <damage>.W <div>.W <type>.B <damage2>.W (ZC_NOTIFY_ACT)
 /// 02e1 <src ID>.L <dst ID>.L <server tick>.L <src speed>.L <dst speed>.L <damage>.L <div>.W <type>.B <damage2>.L (ZC_NOTIFY_ACT2)
+/// 08c8 <src ID>.L <dst ID>.L <server tick>.L <src speed>.L <dst speed>.L <damage>.L <IsSPDamage>.B <div>.W <type>.B <damage2>.L (ZC_NOTIFY_ACT2)
 /// type: @see enum battle_dmg_type
 ///     for BDT_NORMAL: [ damage: total damage, div: amount of hits, damage2: assassin dual-wield damage ]
 int clif_damage(struct block_list* src, struct block_list* dst, int sdelay, int ddelay, int64 in_damage, short div, unsigned char type, int64 in_damage2) {
@@ -4271,6 +4296,9 @@ int clif_damage(struct block_list* src, struct block_list* dst, int sdelay, int 
 		p.damage = damage;
 		p.leftDamage = damage2;
 	}
+#if PACKETVER >= 20131223
+	p.is_sp_damaged = 0;	// [ToDo] IsSPDamage - Displays blue digits.
+#endif
 
 	if(disguised(dst)) {
 		clif->send(&p,sizeof(p),dst,AREA_WOS);
@@ -5011,7 +5039,15 @@ int clif_skill_damage(struct block_list *src, struct block_list *dst, int64 tick
 	}
 	WBUFW(buf,28)=skill_lv;
 	WBUFW(buf,30)=div;
-	WBUFB(buf,32)=type;
+	// For some reason, late 2013 and newer clients have
+	// a issue that causes players and monsters to endure
+	// type 6 (ACTION_SKILL) skills. So we have to do a small
+	// hack to set all type 6 to be sent as type 8 ACTION_ATTACK_MULTIPLE
+#if PACKETVER < 20131223
+ 	WBUFB(buf,32)=type;
+#else
+	WBUFB(buf,32)=(type==6)?8:type;
+#endif
 	if (disguised(dst)) {
 		clif->send(buf,packet_len(0x1de),dst,AREA_WOS);
 		WBUFL(buf,8)=-dst->id;

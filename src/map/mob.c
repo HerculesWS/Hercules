@@ -2068,11 +2068,17 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
 
 	if (battle_config.show_mob_info&3)
 		clif->charnameack (0, &md->bl);
+	
+#if PACKETVER >= 20131223
+	// Resend ZC_NOTIFY_MOVEENTRY to Update the HP
+	if (battle_config.show_monster_hp_bar)
+		clif->set_unit_walking(&md->bl, NULL, unit->bl2ud(&md->bl), AREA);
+#endif
 
 	if (!src)
 		return;
 
-#if PACKETVER >= 20120404
+#if (PACKETVER >= 20120404 && PACKETVER < 20131223)
 	if (battle_config.show_monster_hp_bar && !(md->status.mode&MD_BOSS)) {
 		int i;
 		for(i = 0; i < DAMAGELOG_SIZE; i++){ // must show hp bar to all char who already hit the mob.
@@ -2813,8 +2819,13 @@ void mob_heal(struct mob_data *md, unsigned int heal)
 {
 	if (battle_config.show_mob_info&3)
 		clif->charnameack (0, &md->bl);
+#if PACKETVER >= 20131223
+	// Resend ZC_NOTIFY_MOVEENTRY to Update the HP
+	if (battle_config.show_monster_hp_bar)
+		clif->set_unit_walking(&md->bl, NULL, unit->bl2ud(&md->bl), AREA);
+#endif
 
-#if PACKETVER >= 20120404
+#if (PACKETVER >= 20120404 && PACKETVER < 20131223)
 	if (battle_config.show_monster_hp_bar && !(md->status.mode&MD_BOSS)) {
 		int i;
 		for(i = 0; i < DAMAGELOG_SIZE; i++){ // must show hp bar to all char who already hit the mob.

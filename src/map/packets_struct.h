@@ -84,10 +84,14 @@ enum packet_headers {
 	idle_unitType = 0x2ee,
 #elif PACKETVER < 20101124
 	idle_unitType = 0x7f9,
-#elif PACKETVER < 20150000 //actual 20120221
+#elif PACKETVER < 20120221
 	idle_unitType = 0x857,
-#else
+#elif PACKETVER < 20131223
 	idle_unitType = 0x915,
+#elif PACKETVER < 20150513
+	idle_unitType = 0x9dd,
+#else
+	idle_unitType = 0x9ff,
 #endif
 #if PACKETVER >= 20120618
 	status_changeType = 0x983,
@@ -104,8 +108,10 @@ enum packet_headers {
 #endif
 #if PACKETVER < 20071113
 	damageType = 0x8a,
-#else
+#elif PACKETVER < 20131223
 	damageType = 0x2e1,
+#else
+	damageType = 0x8c8,
 #endif
 #if PACKETVER < 4
 	spawn_unitType = 0x79,
@@ -117,10 +123,14 @@ enum packet_headers {
 	spawn_unitType = 0x2ed,
 #elif PACKETVER < 20101124
 	spawn_unitType = 0x7f8,
-#elif PACKETVER < 20150000 //actual 20120221
+#elif PACKETVER < 20120221
 	spawn_unitType = 0x858,
-#else
+#elif PACKETVER < 20131223
 	spawn_unitType = 0x90f,
+#elif PACKETVER < 20150513
+	spawn_unitType = 0x9dc,
+#else
+	spawn_unitType = 0x9fe,
 #endif
 #if PACKETVER < 20080102
 	authokType = 0x73,
@@ -142,10 +152,14 @@ enum packet_headers {
 	unit_walkingType = 0x2ec,
 #elif PACKETVER < 20101124
 	unit_walkingType = 0x7f7,
-#elif PACKETVER < 20150000 //actual 20120221
+#elif PACKETVER < 20120221
 	unit_walkingType = 0x856,
-#else
+#elif PACKETVER < 20131223
 	unit_walkingType = 0x914,
+#elif PACKETVER < 20150513
+	unit_walkingType = 0x9db,
+#else
+	unit_walkingType = 0x9fd,
 #endif
 	bgqueue_ackType = 0x8d8,
 	bgqueue_notice_deleteType = 0x8db,
@@ -253,7 +267,9 @@ enum packet_headers {
 #else
 	unequipitemackType = 0xac,
 #endif
-#if PACKETVER >= 20120925
+#if PACKETVER >= 20150226
+	viewequipackType = 0xa2d,
+#elif PACKETVER >= 20120925
 	viewequipackType = 0x997,
 #elif PACKETVER >= 20101124
 	viewequipackType = 0x859,
@@ -513,6 +529,9 @@ struct packet_spawn_unit {
 	short PacketLength;
 	unsigned char objecttype;
 #endif
+#if PACKETVER >= 20131223
+	unsigned int AID;
+#endif
 	unsigned int GID;
 	short speed;
 	short bodyState;
@@ -558,10 +577,13 @@ struct packet_spawn_unit {
 #if PACKETVER >= 20080102
 	short font;
 #endif
-#if PACKETVER >= 20150000 //actual 20120221
+#if PACKETVER >= 20120221
 	int maxHP;
 	int HP;
 	unsigned char isBoss;
+#endif
+#if PACKETVER >= 20150513
+	short body;
 #endif
 } __attribute__((packed));
 
@@ -572,6 +594,9 @@ struct packet_unit_walking {
 #endif
 #if PACKETVER > 20071106
 	unsigned char objecttype;
+#endif
+#if PACKETVER >= 20131223
+	unsigned int AID;
 #endif
 	unsigned int GID;
 	short speed;
@@ -619,10 +644,13 @@ struct packet_unit_walking {
 #if PACKETVER >= 20080102
 	short font;
 #endif
-#if PACKETVER >= 20150000 //actual 20120221
+#if PACKETVER >= 20120221
 	int maxHP;
 	int HP;
 	unsigned char isBoss;
+#endif
+#if PACKETVER >= 20150513
+	short body;
 #endif
 } __attribute__((packed));
 
@@ -631,6 +659,9 @@ struct packet_idle_unit {
 #if PACKETVER >= 20091103
 	short PacketLength;
 	unsigned char objecttype;
+#endif
+#if PACKETVER >= 20131223
+	unsigned int AID;
 #endif
 	unsigned int GID;
 	short speed;
@@ -678,10 +709,13 @@ struct packet_idle_unit {
 #if PACKETVER >= 20080102
 	short font;
 #endif
-#if PACKETVER >= 20150000 //actual 20120221
+#if PACKETVER >= 20120221
 	int maxHP;
 	int HP;
 	unsigned char isBoss;
+#endif
+#if PACKETVER >= 20150513
+	short body;
 #endif
 } __attribute__((packed));
 
@@ -1043,6 +1077,9 @@ struct packet_damage {
 	short damage;
 #else
 	int damage;
+#endif
+#if PACKETVER >= 20131223
+	unsigned char is_sp_damaged;
 #endif
 	short count;
 	unsigned char action;
