@@ -880,10 +880,10 @@ void SqlStmt_Free(struct SqlStmt *self)
 }
 /* receives mysql error codes during runtime (not on first-time-connects) */
 void hercules_mysql_error_handler(unsigned int ecode) {
-	static unsigned int retry = 1;
 	switch( ecode ) {
 	case 2003:/* Can't connect to MySQL (this error only happens here when failing to reconnect) */
 		if( mysql_reconnect_type == 1 ) {
+			static unsigned int retry = 1;
 			if( ++retry > mysql_reconnect_count ) {
 				ShowFatalError("MySQL has been unreachable for too long, %u reconnects were attempted. Shutting Down\n", retry);
 				exit(EXIT_FAILURE);

@@ -11014,18 +11014,18 @@ int pc_readdb(void) {
 		ShowError("can't read %s\n", line);
 		return 1;
 	}
-	while(fgets(line, sizeof(line), fp))
-	{
+	while (fgets(line, sizeof(line), fp)) {
 		char *split[10];
 		int lv,n;
-		if(line[0]=='/' && line[1]=='/')
+		if (line[0]=='/' && line[1]=='/')
 			continue;
-		for(j=0,p=line;j<3 && p;j++){
-			split[j]=p;
-			p=strchr(p,',');
-			if(p) *p++=0;
+		for (j = 0, p = line; j < 3 && p != NULL; j++) {
+			split[j] = p;
+			p = strchr(p,',');
+			if (p != NULL)
+				*p++ = 0;
 		}
-		if( j < 2 )
+		if (j < 2)
 			continue;
 
 		lv=atoi(split[0]);
@@ -11037,8 +11037,8 @@ int pc_readdb(void) {
 			if(line[0]=='/' && line[1]=='/')
 				continue;
 
-			for ( j = ELE_NEUTRAL, p = line; j<n && j<ELE_MAX && p; j++ ) {
-				while(*p==32 && *p>0)
+			for (j = ELE_NEUTRAL, p = line; j < n && j < ELE_MAX && p != NULL; j++) {
+				while (*p == ' ')
 					p++;
 				battle->attr_fix_table[lv-1][i][j]=atoi(p);
 #ifndef RENEWAL
@@ -11046,7 +11046,8 @@ int pc_readdb(void) {
 					battle->attr_fix_table[lv-1][i][j] = 0;
 #endif
 				p=strchr(p,',');
-				if(p) *p++=0;
+				if (p != NULL)
+					*p++ = 0;
 			}
 
 			i++;

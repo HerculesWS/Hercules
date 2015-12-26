@@ -15995,14 +15995,14 @@ int skill_enchant_elemental_end (struct block_list *bl, int type) {
 
 bool skill_check_cloaking(struct block_list *bl, struct status_change_entry *sce)
 {
-	static int dx[] = { 0, 1, 0, -1, -1,  1, 1, -1};
-	static int dy[] = {-1, 0, 1,  0, -1, -1, 1,  1};
 	bool wall = true;
 
 	if( (bl->type == BL_PC && battle_config.pc_cloak_check_type&1)
 	 || (bl->type != BL_PC && battle_config.monster_cloak_check_type&1)
 	) {
 		//Check for walls.
+		static int dx[] = { 0, 1, 0, -1, -1,  1, 1, -1};
+		static int dy[] = {-1, 0, 1,  0, -1, -1, 1,  1};
 		int i;
 		ARR_FIND( 0, 8, i, map->getcell(bl->m, bl, bl->x+dx[i], bl->y+dy[i], CELL_CHKNOPASS) != 0 );
 		if( i == 8 )
@@ -16060,11 +16060,11 @@ int skill_check_cloaking_end(struct block_list *bl, va_list ap)
 
 bool skill_check_camouflage(struct block_list *bl, struct status_change_entry *sce)
 {
-	static int dx[] = { 0, 1, 0, -1, -1,  1, 1, -1};
-	static int dy[] = {-1, 0, 1,  0, -1, -1, 1,  1};
 	bool wall = true;
 
 	if( bl->type == BL_PC ) { //Check for walls.
+		static int dx[] = { 0, 1, 0, -1, -1,  1, 1, -1};
+		static int dy[] = {-1, 0, 1,  0, -1, -1, 1,  1};
 		int i;
 		ARR_FIND( 0, 8, i, map->getcell(bl->m, bl, bl->x+dx[i], bl->y+dy[i], CELL_CHKNOPASS) != 0 );
 		if( i == 8 )

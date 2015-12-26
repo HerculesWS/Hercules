@@ -14771,7 +14771,6 @@ void clif_parse_Mail_getattach(int fd, struct map_session_data *sd)
 {
 	int mail_id = RFIFOL(fd,2);
 	int i;
-	bool fail = false;
 
 	if( !chrif->isconnected() )
 		return;
@@ -14795,6 +14794,7 @@ void clif_parse_Mail_getattach(int fd, struct map_session_data *sd)
 	if( sd->mail.inbox.msg[i].item.nameid > 0 ) {
 		struct item_data *data;
 		unsigned int weight;
+		bool fail = false;
 
 		if ((data = itemdb->exists(sd->mail.inbox.msg[i].item.nameid)) == NULL)
 			return;

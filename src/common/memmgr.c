@@ -154,8 +154,8 @@ void* aReallocz_(void *p, size_t size, const char *file, int line, const char *f
 #ifdef USE_MEMMGR
 	ret = REALLOC(p, size, file, line, func);
 #else
-	size_t newSize;
-	if (p) {
+	if (p != NULL) {
+		size_t newSize;
 		size_t oldSize = BUFFER_SIZE(p);
 		ret = REALLOC(p, size, file, line, func);
 		newSize = BUFFER_SIZE(ret);
@@ -167,7 +167,7 @@ void* aReallocz_(void *p, size_t size, const char *file, int line, const char *f
 			memset(ret, 0, BUFFER_SIZE(ret));
 	}
 #endif
-	if (ret == NULL){
+	if (ret == NULL) {
 		ShowFatalError("%s:%d: in func %s: aRealloc error out of memory!\n",file,line,func);
 		exit(EXIT_FAILURE);
 	}

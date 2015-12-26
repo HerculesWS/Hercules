@@ -11613,7 +11613,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			if( --(sce->val4) > 0 ) {
 				struct block_list *src = map->id2bl(sce->val2);
 				int damage;
-				if( !src || (src && (status->isdead(src) || src->m != bl->m || distance_bl(src, bl) >= 12)) )
+				if (src == NULL || (status->isdead(src) || src->m != bl->m || distance_bl(src, bl) >= 12))
 					break;
 				map->freeblock_lock();
 				damage =  sce->val3;
@@ -12964,7 +12964,7 @@ int status_readdb_refine_libconfig(const char *filename) {
 	struct config_t refine_db_conf;
 	struct config_setting_t *r;
 	char filepath[256];
-	int i = 0, count = 0,type = 0;
+	int i = 0, count = 0;
 
 	sprintf(filepath, "%s/%s", map->db_path, filename);
 	if (!libconfig->load_file(&refine_db_conf, filepath))
@@ -12974,10 +12974,13 @@ int status_readdb_refine_libconfig(const char *filename) {
 
 	while((r = libconfig->setting_get_elem(refine_db_conf.root,i++))) {
 		char *name = config_setting_name(r);
-		if((type=status->readdb_refine_libconfig_sub(r, name, filename))) {
-			if( duplicate[type-1] ) {
+		int type = status->readdb_refine_libconfig_sub(r, name, filename);
+		if (type != 0) {
+			if (duplicate[type-1]) {
 				ShowWarning("status_readdb_refine_libconfig: duplicate entry for %s in \"%s\", overwriting previous entry...\n", name, filename);
-			} else duplicate[type-1] = true;
+			} else {
+				duplicate[type-1] = true;
+			}
 			count++;
 		}
 	}

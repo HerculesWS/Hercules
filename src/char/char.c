@@ -1890,7 +1890,7 @@ int char_mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 
 	//When the weapon is sent and your option is riding, the client crashes on login!?
 	// FIXME[Haru]: is OPTION_HANBOK intended to be part of this list? And if it is, should the list also include other OPTION_ costumes?
-	WBUFW(buf,56) = p->option&(OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR|OPTION_HANBOK) ? 0 : p->weapon;
+	WBUFW(buf,56) = (p->option&(OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR|OPTION_HANBOK)) ? 0 : p->weapon;
 
 	WBUFW(buf,58) = p->base_level;
 	WBUFW(buf,60) = min(p->skill_point, INT16_MAX);

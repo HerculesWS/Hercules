@@ -113,6 +113,7 @@ static const char *test_libconfig_read(void)
 		libconfig->destroy(&config);
 		return "Unable to read from file '" FILENAME "'.";
 	}
+	fclose(fp);
 #undef FILENAME
 	if (config.root == NULL) {
 		libconfig->destroy(&config);
@@ -200,7 +201,6 @@ static const char *test_libconfig_set_include_dir(void)
 static const char *test_libconfig_lookup(void)
 {
 	struct config_t config;
-	struct config_setting_t *t = NULL;
 	int32 i32;
 	int64 i64;
 	double f;
@@ -221,12 +221,12 @@ static const char *test_libconfig_lookup(void)
 		return "Unable to parse configuration.";
 	}
 
-	if ((t = libconfig->lookup(&config, "Setting_Int")) == NULL) {
+	if (libconfig->lookup(&config, "Setting_Int") == NULL) {
 		libconfig->destroy(&config);
 		return "libconfig->lookup failed.";
 	}
 
-	if ((t = libconfig->setting_lookup(config.root, "Setting_Int")) == NULL) {
+	if (libconfig->setting_lookup(config.root, "Setting_Int") == NULL) {
 		libconfig->destroy(&config);
 		return "libconfig->setting_lookup failed.";
 	}
