@@ -242,7 +242,7 @@ int bg_team_get_id(struct block_list *bl) {
 				return ((struct mercenary_data *)bl)->master->bg_id;
 			break;
 		case BL_SKILL:
-			return ((TBL_SKILL*)bl)->group->bg_id;
+			return ((struct skill_unit *)bl)->group->bg_id;
 	}
 
 	return 0;

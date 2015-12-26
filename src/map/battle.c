@@ -3571,7 +3571,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 	//Skill Range Criteria
 	ad.flag |= battle->range_type(src, target, skill_id, skill_lv);
 	flag.infdef = (tstatus->mode&MD_PLANT) ? 1 : 0;
-	if( !flag.infdef && target->type == BL_SKILL && ((TBL_SKILL*)target)->group->unit_id == UNT_REVERBERATION )
+	if (!flag.infdef && target->type == BL_SKILL && ((struct skill_unit *)target)->group->unit_id == UNT_REVERBERATION)
 		flag.infdef = 1; // Reverberation takes 1 damage
 
 	switch(skill_id) {
@@ -4312,7 +4312,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		&& skill_id != HT_FREEZINGTRAP
 #endif
 		?1:0);
-	if( !flag.infdef && target->type == BL_SKILL && ((TBL_SKILL*)target)->group->unit_id == UNT_REVERBERATION )
+	if (!flag.infdef && target->type == BL_SKILL && ((struct skill_unit *)target)->group->unit_id == UNT_REVERBERATION)
 		flag.infdef = 1; // Reverberation takes 1 damage
 
 	//Initial Values
@@ -6187,7 +6187,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 	if (sd && sd->bonus.splash_range > 0 && damage > 0)
 		skill->castend_damage_id(src, target, 0, 1, tick, 0);
 	if ( target->type == BL_SKILL && damage > 0 ){
-		TBL_SKILL *su = (TBL_SKILL*)target;
+		struct skill_unit *su = (struct skill_unit *)target;
 		if( su->group && su->group->skill_id == HT_BLASTMINE)
 			skill->blown(src, target, 3, -1, 0);
 	}
@@ -6409,8 +6409,8 @@ struct block_list* battle_get_master(struct block_list *src) {
 					src = (struct block_list*)((TBL_ELEM*)src)->master;
 				break;
 			case BL_SKILL:
-				if (((TBL_SKILL*)src)->group && ((TBL_SKILL*)src)->group->src_id)
-					src = map->id2bl(((TBL_SKILL*)src)->group->src_id);
+				if (((struct skill_unit *)src)->group != NULL && ((struct skill_unit *)src)->group->src_id != 0)
+					src = map->id2bl(((struct skill_unit *)src)->group->src_id);
 				break;
 		}
 	} while (src && src != prev);
@@ -6505,7 +6505,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 		}
 		case BL_SKILL:
 		{
-			TBL_SKILL *su = (TBL_SKILL*)target;
+			struct skill_unit *su = (struct skill_unit *)target;
 			if( !su->group )
 				return 0;
 			if( skill->get_inf2(su->group->skill_id)&INF2_TRAP &&

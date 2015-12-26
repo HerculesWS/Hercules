@@ -6344,8 +6344,8 @@ int status_get_party_id(struct block_list *bl) {
 			return ((struct mercenary_data *)bl)->master->status.party_id;
 		break;
 	case BL_SKILL:
-		if (((TBL_SKILL*)bl)->group)
-			return ((TBL_SKILL*)bl)->group->party_id;
+		if (((struct skill_unit *)bl)->group != NULL)
+			return ((struct skill_unit *)bl)->group->party_id;
 		break;
 	case BL_ELEM:
 		if (((TBL_ELEM*)bl)->master)
@@ -6389,8 +6389,8 @@ int status_get_guild_id(struct block_list *bl) {
 			return ((TBL_NPC*)bl)->u.scr.guild_id;
 		break;
 	case BL_SKILL:
-		if (((TBL_SKILL*)bl)->group)
-				return ((TBL_SKILL*)bl)->group->guild_id;
+		if (((struct skill_unit *)bl)->group != NULL)
+				return ((struct skill_unit *)bl)->group->guild_id;
 			break;
 	case BL_ELEM:
 		if (((TBL_ELEM*)bl)->master)

@@ -2877,7 +2877,7 @@ void skill_attack_display_unknown(int *attack_type, struct block_list* src, stru
 	if (*flag & SD_ANIMATION && dmg->div_ < 2) //Disabling skill animation doesn't works on multi-hit.
 		*type = BDT_SPLASH;
 	if (bl->type == BL_SKILL ) {
-		TBL_SKILL *su = (TBL_SKILL*)bl;
+		struct skill_unit *su = (struct skill_unit *)bl;
 		if (su->group && skill->get_inf2(su->group->skill_id) & INF2_TRAP)  // show damage on trap targets
 			clif->skill_damage(src, bl, *tick, dmg->amotion, dmg->dmotion, *damage, dmg->div_, *skill_id, (*flag & SD_LEVEL) ? -1 : *skill_lv, BDT_SPLASH);
 	}
@@ -2895,7 +2895,7 @@ int skill_attack_dir_unknown(int *attack_type, struct block_list* src, struct bl
 void skill_attack_blow_unknown(int *attack_type, struct block_list* src, struct block_list *dsrc, struct block_list *bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag, int *type, struct Damage *dmg, int64 *damage, int8 *dir) {
 	skill->blown(dsrc, bl, dmg->blewcount, *dir, 0x0);
 	if (!dmg->blewcount && bl->type == BL_SKILL && *damage > 0){
-		TBL_SKILL *su = (TBL_SKILL*)bl;
+		struct skill_unit *su = (struct skill_unit *)bl;
 		if (su->group && su->group->skill_id == HT_BLASTMINE)
 			skill->blown(src, bl, 3, -1, 0);
 	}
@@ -3507,7 +3507,7 @@ bool skill_cleartimerskill_exception(int skill_id)
 }
 
 int skill_activate_reverberation(struct block_list *bl, va_list ap) {
-	struct skill_unit *su = (TBL_SKILL*)bl;
+	struct skill_unit *su = (struct skill_unit *)bl;
 	struct skill_unit_group *sg;
 	if( bl->type != BL_SKILL )
 		return 0;
@@ -3522,7 +3522,7 @@ int skill_activate_reverberation(struct block_list *bl, va_list ap) {
 }
 
 int skill_reveal_trap (struct block_list *bl, va_list ap) {
-	TBL_SKILL *su = (TBL_SKILL*)bl;
+	struct skill_unit *su = (struct skill_unit *)bl;
 	if (su->alive && su->group && skill->get_inf2(su->group->skill_id)&INF2_TRAP) { //Reveal trap.
 		//Change look is not good enough, the client ignores it as an actual trap still. [Skotlex]
 		//clif->changetraplook(bl, su->group->unit_id);
@@ -11135,7 +11135,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			} else { // previous implementation (not used anymore)
 				//Warp Portal morphing to active mode, extract relevant data from src. [Skotlex]
 				if( src->type != BL_SKILL ) return NULL;
-				group = ((TBL_SKILL*)src)->group;
+				group = ((struct skill_unit *)src)->group;
 				src = map->id2bl(group->src_id);
 				if( !src ) return NULL;
 				val2 = group->val2; //Copy the (x,y) position you warp to
