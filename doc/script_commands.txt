@@ -3167,6 +3167,14 @@ behave specially when talked to by GMs.
 
 ---------------------------------------
 
+*setgroupid(<new group id>{,"<character name>"|<account id>})
+
+This function will temporary adjust the id of player group the account to which the 
+player specified if the new group id is available. 
+Return 1 if success, otherwise it will return 0.
+
+---------------------------------------
+
 *getgroupid()
 
 This function will return the id of player group the account to which the 
