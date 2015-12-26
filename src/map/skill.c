@@ -2771,7 +2771,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		struct block_list *d_bl = map->id2bl(sce->val1);
 
 		if (d_bl != NULL
-		 && ((d_bl->type == BL_MER && ((TBL_MER *)d_bl)->master && ((TBL_MER *)d_bl)->master->bl.id == bl->id)
+		 && ((d_bl->type == BL_MER && ((struct mercenary_data *)d_bl)->master && ((struct mercenary_data *)d_bl)->master->bl.id == bl->id)
 		  || (d_bl->type == BL_PC && ((struct map_session_data *)d_bl)->devotion[sce->val2] == bl->id)
 		    )
 		 && check_distance_bl(bl, d_bl, sce->val3)
@@ -3093,7 +3093,7 @@ int skill_check_condition_mercenary(struct block_list *bl, int skill_id, int lv,
 
 	switch( bl->type ) {
 		case BL_HOM: sd = ((struct homun_data *)bl)->master; break;
-		case BL_MER: sd = ((TBL_MER*)bl)->master; break;
+		case BL_MER: sd = ((struct mercenary_data *)bl)->master; break;
 	}
 
 	st = status->get_status_data(bl);
@@ -5817,7 +5817,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			if( sd )
 				skill->blockpc_start(sd, skill_id, skill->get_time(skill_id, skill_lv));
 			else if( bl->type == BL_MER )
-				skill->blockmerc_start((TBL_MER*)bl, skill_id, skill->get_time(skill_id, skill_lv));
+				skill->blockmerc_start((struct mercenary_data *)bl, skill_id, skill->get_time(skill_id, skill_lv));
 			break;
 
 		case TK_JUMPKICK:
@@ -18052,7 +18052,7 @@ int skill_blockhomun_start(struct homun_data *hd, uint16 skill_id, int tick) { /
 }
 
 int skill_blockmerc_end(int tid, int64 tick, int id, intptr_t data) {// [orn]
-	struct mercenary_data *md = (TBL_MER*)map->id2bl(id);
+	struct mercenary_data *md = (struct mercenary_data *)map->id2bl(id);
 	if( data <= 0 || data >= MAX_SKILL )
 		return 0;
 	if( md ) md->blockskill[data] = 0;

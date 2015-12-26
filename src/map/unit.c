@@ -2800,7 +2800,7 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 		}
 		case BL_MER:
 		{
-			struct mercenary_data *md = (TBL_MER*)bl;
+			struct mercenary_data *md = (struct mercenary_data *)bl;
 			struct map_session_data *sd = md->master;
 			if( mercenary->get_lifetime(md) > 0 )
 				mercenary->save(md);

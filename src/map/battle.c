@@ -2870,7 +2870,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				// Autoguard will be disabled later on
 				struct block_list *d_bl = map->id2bl(sce_d->val1);
 				if (d_bl && check_distance_bl(bl, d_bl, sce_d->val3)
-				  && ((d_bl->type == BL_MER && ((TBL_MER*)d_bl)->master && ((TBL_MER*)d_bl)->master->bl.id == bl->id)
+				  && ((d_bl->type == BL_MER && ((struct mercenary_data *)d_bl)->master && ((struct mercenary_data *)d_bl)->master->bl.id == bl->id)
 				    || (d_bl->type == BL_PC && ((struct map_session_data *)d_bl)->devotion[sce_d->val2] == bl->id))
 				) {
 					// if player is target of devotion, show guard effect on the devotion caster rather than the target
@@ -6206,7 +6206,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 			struct block_list *d_bl = map->id2bl(sce->val1);
 
 			if (d_bl != NULL
-			 && ((d_bl->type == BL_MER && ((TBL_MER *)d_bl)->master && ((TBL_MER *)d_bl)->master->bl.id == target->id)
+			 && ((d_bl->type == BL_MER && ((struct mercenary_data *)d_bl)->master && ((struct mercenary_data *)d_bl)->master->bl.id == target->id)
 			  || (d_bl->type == BL_PC && ((struct map_session_data *)d_bl)->devotion[sce->val2] == target->id)
 			    )
 			 && check_distance_bl(target, d_bl, sce->val3)
@@ -6401,8 +6401,8 @@ struct block_list* battle_get_master(struct block_list *src) {
 					src = (struct block_list *)((struct homun_data *)src)->master;
 				break;
 			case BL_MER:
-				if (((TBL_MER*)src)->master)
-					src = (struct block_list*)((TBL_MER*)src)->master;
+				if (((struct mercenary_data *)src)->master != NULL)
+					src = (struct block_list *)((struct mercenary_data *)src)->master;
 				break;
 			case BL_ELEM:
 				if (((TBL_ELEM*)src)->master)

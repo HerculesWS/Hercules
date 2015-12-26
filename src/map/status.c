@@ -1352,7 +1352,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 				struct block_list *d_bl = map->id2bl(sce->val1);
 
 				if (d_bl != NULL
-				 && ((d_bl->type == BL_MER && ((TBL_MER *)d_bl)->master && ((TBL_MER *)d_bl)->master->bl.id == target->id)
+				 && ((d_bl->type == BL_MER && ((struct mercenary_data *)d_bl)->master && ((struct mercenary_data *)d_bl)->master->bl.id == target->id)
 				  || (d_bl->type == BL_PC && ((struct map_session_data *)d_bl)->devotion[sce->val2] == target->id)
 				    )
 				 && check_distance_bl(target, d_bl, sce->val3)
@@ -1419,7 +1419,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 		case BL_PC:  pc->damage((struct map_session_data *)target, src, hp, sp); break;
 		case BL_MOB: mob->damage((struct mob_data *)target, src, hp); break;
 		case BL_HOM: homun->damaged((struct homun_data *)target); break;
-		case BL_MER: mercenary->heal((TBL_MER*)target,hp,sp); break;
+		case BL_MER: mercenary->heal((struct mercenary_data *)target, hp, sp); break;
 		case BL_ELEM: elemental->heal((TBL_ELEM*)target,hp,sp); break;
 	}
 
@@ -1445,7 +1445,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 		case BL_PC:  flag = pc->dead((struct map_session_data *)target, src); break;
 		case BL_MOB: flag = mob->dead((struct mob_data *)target, src, (flag&4) ? 3 : 0); break;
 		case BL_HOM: flag = homun->dead((struct homun_data *)target); break;
-		case BL_MER: flag = mercenary->dead((TBL_MER*)target); break;
+		case BL_MER: flag = mercenary->dead((struct mercenary_data *)target); break;
 		case BL_ELEM: flag = elemental->dead((TBL_ELEM*)target); break;
 		default: //Unhandled case, do nothing to object.
 			flag = 0;
@@ -1585,7 +1585,7 @@ int status_heal(struct block_list *bl,int64 in_hp,int64 in_sp, int flag) {
 		case BL_PC:  pc->heal((struct map_session_data *)bl,hp,sp,(flag&2) ? 1 : 0); break;
 		case BL_MOB: mob->heal((struct mob_data *)bl,hp); break;
 		case BL_HOM: homun->healed((struct homun_data *)bl); break;
-		case BL_MER: mercenary->heal((TBL_MER*)bl,hp,sp); break;
+		case BL_MER: mercenary->heal((struct mercenary_data *)bl,hp,sp); break;
 		case BL_ELEM: elemental->heal((TBL_ELEM*)bl,hp,sp); break;
 	}
 
@@ -4076,7 +4076,7 @@ void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_status_ca
 		if (hd->master != NULL && memcmp(&bst, st, sizeof(struct status_data)) != 0)
 			clif->hominfo(hd->master,hd,0);
 	} else if( bl->type == BL_MER ) {
-		TBL_MER* md = BL_CAST(BL_MER, bl);
+		struct mercenary_data *md = BL_CAST(BL_MER, bl);
 		if( bst.rhw.atk != st->rhw.atk || bst.rhw.atk2 != st->rhw.atk2 )
 			clif->mercenary_updatestatus(md->master, SP_ATK1);
 		if( bst.matk_max != st->matk_max )
@@ -6227,7 +6227,7 @@ int status_get_class(struct block_list *bl) {
 		case BL_MOB: return ((struct mob_data *)bl)->vd->class_; //Class used on all code should be the view class of the mob.
 		case BL_PET: return ((TBL_PET*)bl)->pet.class_;
 		case BL_HOM: return ((struct homun_data *)bl)->homunculus.class_;
-		case BL_MER: return ((TBL_MER*)bl)->mercenary.class_;
+		case BL_MER: return ((struct mercenary_data *)bl)->mercenary.class_;
 		case BL_NPC: return ((TBL_NPC*)bl)->class_;
 		case BL_ELEM: return ((TBL_ELEM*)bl)->elemental.class_;
 	}
@@ -6246,7 +6246,7 @@ int status_get_lv(struct block_list *bl) {
 		case BL_MOB: return ((struct mob_data *)bl)->level;
 		case BL_PET: return ((TBL_PET*)bl)->pet.level;
 		case BL_HOM: return ((struct homun_data *)bl)->homunculus.level;
-		case BL_MER: return ((TBL_MER*)bl)->db->lv;
+		case BL_MER: return ((struct mercenary_data *)bl)->db->lv;
 		case BL_ELEM: return ((TBL_ELEM*)bl)->db->lv;
 		case BL_NPC: return ((TBL_NPC*)bl)->level;
 	}
@@ -6259,7 +6259,7 @@ struct regen_data *status_get_regen_data(struct block_list *bl)
 	switch (bl->type) {
 		case BL_PC:  return &((struct map_session_data *)bl)->regen;
 		case BL_HOM: return &((struct homun_data *)bl)->regen;
-		case BL_MER: return &((TBL_MER*)bl)->regen;
+		case BL_MER: return &((struct mercenary_data *)bl)->regen;
 		case BL_ELEM: return &((TBL_ELEM*)bl)->regen;
 		default:
 			return NULL;
@@ -6275,7 +6275,7 @@ struct status_data *status_get_status_data(struct block_list *bl)
 		case BL_MOB: return &((struct mob_data *)bl)->status;
 		case BL_PET: return &((TBL_PET*)bl)->status;
 		case BL_HOM: return &((struct homun_data *)bl)->battle_status;
-		case BL_MER: return &((TBL_MER*)bl)->battle_status;
+		case BL_MER: return &((struct mercenary_data *)bl)->battle_status;
 		case BL_ELEM: return &((TBL_ELEM*)bl)->battle_status;
 		case BL_NPC:  return ((mob->db_checkid(((TBL_NPC*)bl)->class_) == 0) ? &((TBL_NPC*)bl)->status : &status->dummy);
 		default:
@@ -6291,7 +6291,7 @@ struct status_data *status_get_base_status(struct block_list *bl)
 		case BL_MOB: return ((struct mob_data *)bl)->base_status ? ((struct mob_data *)bl)->base_status : &((struct mob_data *)bl)->db->status;
 		case BL_PET: return &((TBL_PET*)bl)->db->status;
 		case BL_HOM: return &((struct homun_data *)bl)->base_status;
-		case BL_MER: return &((TBL_MER*)bl)->base_status;
+		case BL_MER: return &((struct mercenary_data *)bl)->base_status;
 		case BL_ELEM: return &((TBL_ELEM*)bl)->base_status;
 		case BL_NPC:  return ((mob->db_checkid(((TBL_NPC*)bl)->class_) == 0) ? &((TBL_NPC*)bl)->status : NULL);
 		default:
@@ -6340,8 +6340,8 @@ int status_get_party_id(struct block_list *bl) {
 			return ((struct homun_data *)bl)->master->status.party_id;
 		break;
 	case BL_MER:
-		if (((TBL_MER*)bl)->master)
-			return ((TBL_MER*)bl)->master->status.party_id;
+		if (((struct mercenary_data *)bl)->master != NULL)
+			return ((struct mercenary_data *)bl)->master->status.party_id;
 		break;
 	case BL_SKILL:
 		if (((TBL_SKILL*)bl)->group)
@@ -6381,8 +6381,8 @@ int status_get_guild_id(struct block_list *bl) {
 			return ((struct homun_data *)bl)->master->status.guild_id;
 		break;
 	case BL_MER:
-		if (((TBL_MER*)bl)->master)
-			return ((TBL_MER*)bl)->master->status.guild_id;
+		if (((struct mercenary_data *)bl)->master != NULL)
+			return ((struct mercenary_data *)bl)->master->status.guild_id;
 		break;
 	case BL_NPC:
 		if (((TBL_NPC*)bl)->subtype == SCRIPT)
@@ -6424,8 +6424,8 @@ int status_get_emblem_id(struct block_list *bl) {
 			return ((struct homun_data *)bl)->master->guild_emblem_id;
 		break;
 	case BL_MER:
-		if (((TBL_MER*)bl)->master)
-			return ((TBL_MER*)bl)->master->guild_emblem_id;
+		if (((struct mercenary_data *)bl)->master)
+			return ((struct mercenary_data *)bl)->master->guild_emblem_id;
 		break;
 	case BL_NPC:
 		if (((TBL_NPC*)bl)->subtype == SCRIPT && ((TBL_NPC*)bl)->u.scr.guild_id > 0) {
@@ -6485,7 +6485,7 @@ struct view_data* status_get_viewdata(struct block_list *bl)
 		case BL_PET: return &((TBL_PET*)bl)->vd;
 		case BL_NPC: return ((TBL_NPC*)bl)->vd;
 		case BL_HOM: return ((struct homun_data *)bl)->vd;
-		case BL_MER: return ((TBL_MER*)bl)->vd;
+		case BL_MER: return ((struct mercenary_data *)bl)->vd;
 		case BL_ELEM: return ((TBL_ELEM*)bl)->vd;
 	}
 	return NULL;
@@ -6619,13 +6619,13 @@ void status_set_viewdata(struct block_list *bl, int class_)
 	}
 		break;
 	case BL_MER:
-		{
-			struct mercenary_data *md = (struct mercenary_data*)bl;
-			if (vd)
-				md->vd = vd;
-			else
-				ShowError("status_set_viewdata (MERCENARY): No view data for class %d\n", class_);
-		}
+	{
+		struct mercenary_data *md = (struct mercenary_data *)bl;
+		if (vd != NULL)
+			md->vd = vd;
+		else
+			ShowError("status_set_viewdata (MERCENARY): No view data for class %d\n", class_);
+	}
 		break;
 	case BL_ELEM:
 		{
@@ -6647,7 +6647,7 @@ struct status_change *status_get_sc(struct block_list *bl) {
 		case BL_MOB: return &((struct mob_data *)bl)->sc;
 		case BL_NPC: return NULL;
 		case BL_HOM: return &((struct homun_data *)bl)->sc;
-		case BL_MER: return &((TBL_MER*)bl)->sc;
+		case BL_MER: return &((struct mercenary_data *)bl)->sc;
 		case BL_ELEM: return &((TBL_ELEM*)bl)->sc;
 		}
 	}
@@ -7917,7 +7917,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
 								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, tick, SCFLAG_ALL);
 						}
-					} else if (bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag && (tsd = ((TBL_MER*)bl)->master) != NULL) {
+					} else if (bl->type == BL_MER && ((struct mercenary_data *)bl)->devotion_flag && (tsd = ((struct mercenary_data *)bl)->master) != NULL) {
 						status->change_start(bl, &tsd->bl, type, 10000, val1, val2, val3, val4, tick, SCFLAG_ALL);
 					}
 				}
@@ -8017,7 +8017,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 							if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
 								status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
 						}
-					} else if (bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag && (tsd = ((TBL_MER*)bl)->master) != NULL) {
+					} else if (bl->type == BL_MER && ((struct mercenary_data *)bl)->devotion_flag && (tsd = ((struct mercenary_data *)bl)->master) != NULL) {
 						status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
 					}
 				}
@@ -8278,8 +8278,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 								if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL)
 									status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
 							}
-						}
-						else if (bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag && (tsd = ((TBL_MER*)bl)->master) != NULL) {
+						} else if (bl->type == BL_MER && ((struct mercenary_data *)bl)->devotion_flag && (tsd = ((struct mercenary_data *)bl)->master) != NULL) {
 							status->change_start(bl, &tsd->bl, type, 10000, val1, val2, 0, 0, tick, SCFLAG_ALL);
 						}
 					}
@@ -10228,10 +10227,10 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 						if (sd->devotion[i] && (tsd = map->id2sd(sd->devotion[i])) != NULL && tsd->sc.data[type])
 							status_change_end(&tsd->bl, type, INVALID_TIMER);
 					}
-				} else if( bl->type == BL_MER && ((TBL_MER*)bl)->devotion_flag ) {
+				} else if (bl->type == BL_MER && ((struct mercenary_data *)bl)->devotion_flag) {
 					// Clear Status from Master
-					tsd = ((TBL_MER*)bl)->master;
-					if( tsd && tsd->sc.data[type] )
+					tsd = ((struct mercenary_data *)bl)->master;
+					if (tsd != NULL && tsd->sc.data[type] != NULL)
 						status_change_end(&tsd->bl, type, INVALID_TIMER);
 				}
 			}
@@ -10243,7 +10242,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 					if( d_bl->type == BL_PC )
 						((struct map_session_data*)d_bl)->devotion[sce->val2] = 0;
 					else if( d_bl->type == BL_MER )
-						((TBL_MER*)d_bl)->devotion_flag = 0;
+						((struct mercenary_data *)d_bl)->devotion_flag = 0;
 					clif->devotion(d_bl, NULL);
 				}
 
@@ -11922,8 +11921,8 @@ void status_get_matk_sub(struct block_list *bl, int flag, unsigned short *matk_m
 			}
 			break;
 		case BL_MER:
-			*matk_min += 70 * ((TBL_MER*)bl)->battle_status.rhw.atk2 / 100;
-			*matk_max += 130 * ((TBL_MER*)bl)->battle_status.rhw.atk2 / 100;
+			*matk_min += 70 * ((struct mercenary_data *)bl)->battle_status.rhw.atk2 / 100;
+			*matk_max += 130 * ((struct mercenary_data *)bl)->battle_status.rhw.atk2 / 100;
 			break;
 		case BL_MOB:
 			*matk_min += 70 * ((struct mob_data *)bl)->status.rhw.atk2 / 100;

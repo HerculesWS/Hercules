@@ -16385,10 +16385,10 @@ BUILDIN(rid2name) {
 		switch(bl->type) {
 			case BL_MOB: script_pushstrcopy(st, ((struct mob_data *)bl)->name); break;
 			case BL_PC:  script_pushstrcopy(st, ((struct map_session_data *)bl)->status.name); break;
-			case BL_NPC: script_pushstrcopy(st,((TBL_NPC*)bl)->exname); break;
+			case BL_NPC: script_pushstrcopy(st, ((struct npc_data *)bl)->exname); break;
 			case BL_PET: script_pushstrcopy(st,((TBL_PET*)bl)->pet.name); break;
 			case BL_HOM: script_pushstrcopy(st, ((struct homun_data *)bl)->homunculus.name); break;
-			case BL_MER: script_pushstrcopy(st,((TBL_MER*)bl)->db->name); break;
+			case BL_MER: script_pushstrcopy(st, ((struct mercenary_data *)bl)->db->name); break;
 			default:
 				ShowError("buildin_rid2name: BL type unknown.\n");
 				script_pushconststr(st,"");
