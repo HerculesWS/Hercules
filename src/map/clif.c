@@ -1052,7 +1052,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
-		p.isBoss = ( ((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss ) ? 1 : 0;
+		p.isBoss = (((struct mob_data *)bl)->spawn != NULL && ((struct mob_data *)bl)->spawn->state.boss) ? 1 : 0;
 	} else {
 		p.maxHP = -1;
 		p.HP = -1;
@@ -1191,7 +1191,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
-		p.isBoss = ( ((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss ) ? 1 : 0;
+		p.isBoss = (((struct mob_data *)bl)->spawn != NULL && ((struct mob_data *)bl)->spawn->state.boss) ? 1 : 0;
 	} else {
 		p.maxHP = -1;
 		p.HP = -1;
@@ -1281,7 +1281,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
-		p.isBoss = ( ((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss ) ? 1 : 0;
+		p.isBoss = (((struct mob_data*)bl)->spawn != NULL && ((struct mob_data *)bl)->spawn->state.boss) ? 1 : 0;
 	} else {
 		p.maxHP = -1;
 		p.HP = -1;
@@ -1444,13 +1444,13 @@ bool clif_spawn(struct block_list *bl)
 		}
 			break;
 		case BL_MOB:
-			{
-				TBL_MOB *md = ((TBL_MOB*)bl);
-				if(md->special_state.size==SZ_BIG) // tiny/big mobs [Valaris]
-					clif->specialeffect(&md->bl,423,AREA);
-				else if(md->special_state.size==SZ_MEDIUM)
-					clif->specialeffect(&md->bl,421,AREA);
-			}
+		{
+			struct mob_data *md = ((struct mob_data *)bl);
+			if (md->special_state.size==SZ_BIG) // tiny/big mobs [Valaris]
+				clif->specialeffect(&md->bl,423,AREA);
+			else if (md->special_state.size==SZ_MEDIUM)
+				clif->specialeffect(&md->bl,421,AREA);
+		}
 			break;
 		case BL_NPC:
 			{
@@ -1699,13 +1699,13 @@ void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *u
 		}
 			break;
 		case BL_MOB:
-			{
-				TBL_MOB *md = ((TBL_MOB*)bl);
-				if(md->special_state.size==SZ_BIG) // tiny/big mobs [Valaris]
-					clif->specialeffect(&md->bl,423,AREA);
-				else if(md->special_state.size==SZ_MEDIUM)
-					clif->specialeffect(&md->bl,421,AREA);
-			}
+		{
+			struct mob_data *md = ((struct mob_data *)bl);
+			if (md->special_state.size == SZ_BIG) // tiny/big mobs [Valaris]
+				clif->specialeffect(&md->bl,423,AREA);
+			else if (md->special_state.size == SZ_MEDIUM)
+				clif->specialeffect(&md->bl,421,AREA);
+		}
 			break;
 		case BL_PET:
 			if( vd->head_bottom ) // needed to display pet equip properly
@@ -4212,24 +4212,24 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 			}
 			break;
 		case BL_MOB:
-			{
-				TBL_MOB* md = (TBL_MOB*)bl;
-				if(md->special_state.size==SZ_BIG) // tiny/big mobs [Valaris]
-					clif->specialeffect_single(bl,423,sd->fd);
-				else if(md->special_state.size==SZ_MEDIUM)
-					clif->specialeffect_single(bl,421,sd->fd);
+		{
+			struct mob_data *md = (struct mob_data *)bl;
+			if (md->special_state.size == SZ_BIG) // tiny/big mobs [Valaris]
+				clif->specialeffect_single(bl,423,sd->fd);
+			else if (md->special_state.size == SZ_MEDIUM)
+				clif->specialeffect_single(bl,421,sd->fd);
 #if (PACKETVER >= 20120404 && PACKETVER < 20131223)
-				if (battle_config.show_monster_hp_bar && !(md->status.mode&MD_BOSS)) {
-					int i;
-					for(i = 0; i < DAMAGELOG_SIZE; i++) {// must show hp bar to all char who already hit the mob.
-						if (md->dmglog[i].id == sd->status.char_id) {
-							clif->monster_hp_bar(md, sd);
-							break;
-						}
+			if (battle_config.show_monster_hp_bar && !(md->status.mode&MD_BOSS)) {
+				int i;
+				for (i = 0; i < DAMAGELOG_SIZE; i++) {// must show hp bar to all char who already hit the mob.
+					if (md->dmglog[i].id == sd->status.char_id) {
+						clif->monster_hp_bar(md, sd);
+						break;
 					}
 				}
-#endif
 			}
+#endif
+		}
 			break;
 		case BL_PET:
 			if (vd->head_bottom)
@@ -8421,39 +8421,35 @@ void clif_charnameack (int fd, struct block_list *bl)
 			memcpy(WBUFP(buf,6), ((TBL_NPC*)bl)->name, NAME_LENGTH);
 			break;
 		case BL_MOB:
-			{
-				struct mob_data *md = (struct mob_data *)bl;
-				nullpo_retv(md);
+		{
+			struct mob_data *md = (struct mob_data *)bl;
+			nullpo_retv(md);
 
-				memcpy(WBUFP(buf,6), md->name, NAME_LENGTH);
-				if( md->guardian_data && md->guardian_data->g )
-				{
-					WBUFW(buf, 0) = cmd = 0x195;
-					WBUFB(buf,30) = 0;
-					memcpy(WBUFP(buf,54), md->guardian_data->g->name, NAME_LENGTH);
-					memcpy(WBUFP(buf,78), md->guardian_data->castle->castle_name, NAME_LENGTH);
-				}
-				else if( battle_config.show_mob_info )
-				{
-					char mobhp[50], *str_p = mobhp;
-					WBUFW(buf, 0) = cmd = 0x195;
-					if( battle_config.show_mob_info&4 )
-						str_p += sprintf(str_p, "Lv. %d | ", md->level);
-					if( battle_config.show_mob_info&1 )
-						str_p += sprintf(str_p, "HP: %u/%u | ", md->status.hp, md->status.max_hp);
-					if( battle_config.show_mob_info&2 )
-						str_p += sprintf(str_p, "HP: %u%% | ", get_percentage(md->status.hp, md->status.max_hp));
-					//Even thought mobhp ain't a name, we send it as one so the client
-					//can parse it. [Skotlex]
-					if( str_p != mobhp )
-					{
-						*(str_p-3) = '\0'; //Remove trailing space + pipe.
-						memcpy(WBUFP(buf,30), mobhp, NAME_LENGTH);
-						WBUFB(buf,54) = 0;
-						WBUFB(buf,78) = 0;
-					}
+			memcpy(WBUFP(buf,6), md->name, NAME_LENGTH);
+			if (md->guardian_data && md->guardian_data->g) {
+				WBUFW(buf, 0) = cmd = 0x195;
+				WBUFB(buf,30) = 0;
+				memcpy(WBUFP(buf,54), md->guardian_data->g->name, NAME_LENGTH);
+				memcpy(WBUFP(buf,78), md->guardian_data->castle->castle_name, NAME_LENGTH);
+			} else if (battle_config.show_mob_info) {
+				char mobhp[50], *str_p = mobhp;
+				WBUFW(buf, 0) = cmd = 0x195;
+				if (battle_config.show_mob_info&4)
+					str_p += sprintf(str_p, "Lv. %d | ", md->level);
+				if (battle_config.show_mob_info&1)
+					str_p += sprintf(str_p, "HP: %u/%u | ", md->status.hp, md->status.max_hp);
+				if (battle_config.show_mob_info&2)
+					str_p += sprintf(str_p, "HP: %u%% | ", get_percentage(md->status.hp, md->status.max_hp));
+				//Even thought mobhp ain't a name, we send it as one so the client
+				//can parse it. [Skotlex]
+				if (str_p != mobhp) {
+					*(str_p-3) = '\0'; //Remove trailing space + pipe.
+					memcpy(WBUFP(buf,30), mobhp, NAME_LENGTH);
+					WBUFB(buf,54) = 0;
+					WBUFB(buf,78) = 0;
 				}
 			}
+		}
 			break;
 		case BL_CHAT:
 #if 0 //FIXME: Clients DO request this... what should be done about it? The chat's title may not fit... [Skotlex]

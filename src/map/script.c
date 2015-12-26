@@ -9874,8 +9874,9 @@ BUILDIN(areamonster) {
  * KillMonster subcheck, verify if mob to kill ain't got an even to handle, could be force kill by allflag
  *------------------------------------------*/
 int buildin_killmonster_sub_strip(struct block_list *bl,va_list ap)
-{ //same fix but with killmonster instead - stripping events from mobs.
-	TBL_MOB* md = (TBL_MOB*)bl;
+{
+	//same fix but with killmonster instead - stripping events from mobs.
+	struct mob_data *md = (struct mob_data *)bl;
 	char *event=va_arg(ap,char *);
 	int allflag=va_arg(ap,int);
 
@@ -9893,7 +9894,7 @@ int buildin_killmonster_sub_strip(struct block_list *bl,va_list ap)
 }
 int buildin_killmonster_sub(struct block_list *bl,va_list ap)
 {
-	TBL_MOB* md = (TBL_MOB*)bl;
+	struct mob_data *md = (struct mob_data *)bl;
 	char *event=va_arg(ap,char *);
 	int allflag=va_arg(ap,int);
 
@@ -16382,7 +16383,7 @@ BUILDIN(rid2name) {
 	int rid = script_getnum(st,2);
 	if((bl = map->id2bl(rid))) {
 		switch(bl->type) {
-			case BL_MOB: script_pushstrcopy(st,((TBL_MOB*)bl)->name); break;
+			case BL_MOB: script_pushstrcopy(st, ((struct mob_data *)bl)->name); break;
 			case BL_PC:  script_pushstrcopy(st, ((struct map_session_data *)bl)->status.name); break;
 			case BL_NPC: script_pushstrcopy(st,((TBL_NPC*)bl)->exname); break;
 			case BL_PET: script_pushstrcopy(st,((TBL_PET*)bl)->pet.name); break;
@@ -16607,7 +16608,7 @@ BUILDIN(unitattack) {
 			script_pushint(st, 1);
 			return true;
 		case BL_MOB:
-			((TBL_MOB *)unit_bl)->target_id = target_bl->id;
+			((struct mob_data *)unit_bl)->target_id = target_bl->id;
 			break;
 		case BL_PET:
 			((TBL_PET *)unit_bl)->target_id = target_bl->id;
@@ -16636,7 +16637,7 @@ BUILDIN(unitstop) {
 		unit->stop_attack(bl);
 		unit->stop_walking(bl, STOPWALKING_FLAG_NEXTCELL);
 		if( bl->type == BL_MOB )
-			((TBL_MOB*)bl)->target_id = 0;
+			((struct mob_data *)bl)->target_id = 0;
 	}
 
 	return true;
@@ -17565,7 +17566,7 @@ BUILDIN(bg_monster_set_team) {
 
 	if( (mbl = map->id2bl(id)) == NULL || mbl->type != BL_MOB )
 		return true;
-	md = (TBL_MOB *)mbl;
+	md = (struct mob_data *)mbl;
 	md->bg_id = bg_id;
 
 	mob_stop_attack(md);
@@ -18125,7 +18126,7 @@ BUILDIN(setfont)
 
 int buildin_mobuseskill_sub(struct block_list *bl,va_list ap)
 {
-	TBL_MOB* md     = (TBL_MOB*)bl;
+	struct mob_data *md = (struct mob_data *)bl;
 	struct block_list *tbl;
 	int mobid       = va_arg(ap,int);
 	uint16 skill_id = va_arg(ap,int);

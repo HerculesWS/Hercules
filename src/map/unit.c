@@ -448,7 +448,7 @@ int unit_walktoxy_timer(int tid, int64 tick, int id, intptr_t data) {
 			//Cancel chase.
 			ud->to_x = bl->x;
 			ud->to_y = bl->y;
-			if (tbl && bl->type == BL_MOB && mob->warpchase((TBL_MOB*)bl, tbl) )
+			if (tbl && bl->type == BL_MOB && mob->warpchase((struct mob_data *)bl, tbl))
 				return 0;
 			ud->target_to = 0;
 			return 0;
@@ -917,9 +917,9 @@ int unit_warp(struct block_list *bl,short m,short x,short y,clr_type type)
 
 	switch (bl->type) {
 		case BL_MOB:
-			if (map->list[bl->m].flag.monster_noteleport && ((TBL_MOB*)bl)->master_id == 0)
+			if (map->list[bl->m].flag.monster_noteleport && ((struct mob_data *)bl)->master_id == 0)
 				return 1;
-			if (m != bl->m && map->list[m].flag.nobranch && battle_config.mob_warp&4 && !(((TBL_MOB *)bl)->master_id))
+			if (m != bl->m && map->list[m].flag.nobranch && battle_config.mob_warp&4 && ((struct mob_data *)bl)->master_id == 0)
 				return 1;
 			break;
 		case BL_PC:
@@ -1164,7 +1164,7 @@ int unit_set_walkdelay(struct block_list *bl, int64 tick, int delay, int type) {
 
 	if (type) {
 		//Bosses can ignore skill induced walkdelay (but not damage induced)
-		if(bl->type == BL_MOB && (((TBL_MOB*)bl)->status.mode&MD_BOSS))
+		if (bl->type == BL_MOB && (((struct mob_data *)bl)->status.mode&MD_BOSS))
 			return 0;
 		//Make sure walk delay is not decreased
 		if (DIFF_TICK(ud->canmove_tick, tick+delay) > 0)
@@ -1386,7 +1386,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 			case NPC_SUMMONSLAVE:
 			case NPC_SUMMONMONSTER:
 			case AL_TELEPORT:
-				if (((TBL_MOB*)src)->master_id && ((TBL_MOB*)src)->special_state.ai != AI_NONE)
+				if (((struct mob_data *)src)->master_id && ((struct mob_data *)src)->special_state.ai != AI_NONE)
 					return 0;
 		}
 
@@ -1566,7 +1566,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	{
 		if (sd && target->type == BL_MOB)
 		{
-			TBL_MOB *md = (TBL_MOB*)target;
+			struct mob_data *md = (struct mob_data *)target;
 			mob->skill_event(md, src, tick, -1); //Cast targeted skill event.
 			if (tstatus->mode&(MD_CASTSENSOR_IDLE|MD_CASTSENSOR_CHASE) &&
 				battle->check_target(target, src, BCT_ENEMY) > 0)
@@ -2088,7 +2088,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 
 	if( src->m != target->m )
 	{
-		if( src->type == BL_MOB && mob->warpchase((TBL_MOB*)src, target) )
+		if (src->type == BL_MOB && mob->warpchase((struct mob_data *)src, target))
 			return 1; // Follow up.
 		return 0;
 	}
@@ -2256,7 +2256,8 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 		}
 	}
 
-	if(bl->type==BL_MOB) ((TBL_MOB*)bl)->skill_idx  = -1;
+	if (bl->type == BL_MOB)
+		((struct mob_data *)bl)->skill_idx = -1;
 
 	clif->skillcastcancel(bl);
 	return 1;
@@ -2313,7 +2314,7 @@ int unit_changeviewsize(struct block_list *bl,short size)
 	if(bl->type == BL_PC) {
 		((struct map_session_data *)bl)->state.size = size;
 	} else if(bl->type == BL_MOB) {
-		((TBL_MOB*)bl)->special_state.size=size;
+		((struct mob_data *)bl)->special_state.size = size;
 	} else
 		return 0;
 	if(size!=0)

@@ -684,7 +684,7 @@ int mob_spawn_guardian(const char* mapname, short x, short y, const char* mobnam
 
 	if( has_index && gc->guardian[guardian].id ) {
 		//Check if guardian already exists, refuse to spawn if so.
-		struct mob_data *md2 = (TBL_MOB*)map->id2bl(gc->guardian[guardian].id);
+		struct mob_data *md2 = (struct mob_data *)map->id2bl(gc->guardian[guardian].id);
 		if (md2 && md2->bl.type == BL_MOB
 		        && md2->guardian_data
 		        && md2->guardian_data->number == guardian
@@ -889,7 +889,7 @@ int mob_count_sub(struct block_list *bl, va_list ap) {
 	int mobid[10] = { 0 }, i;
 	ARR_FIND(0, 10, i, (mobid[i] = va_arg(ap, int)) == 0); //fetch till 0
 	if (mobid[0]) { //if there one let's check it otherwise go backward
-		TBL_MOB *md = BL_CAST(BL_MOB, bl);
+		struct mob_data *md = BL_CAST(BL_MOB, bl);
 		nullpo_ret(md);
 		ARR_FIND(0, 10, i, md->class_ == mobid[i]);
 		return (i < 10) ? 1 : 0;
@@ -1984,7 +1984,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 		}
 		case BL_MOB:
 		{
-			struct mob_data* md2 = (TBL_MOB*)src;
+			struct mob_data* md2 = (struct mob_data *)src;
 			if (md2->special_state.ai != AI_NONE && md2->master_id) {
 				struct map_session_data* msd = map->id2sd(md2->master_id);
 				if( msd )

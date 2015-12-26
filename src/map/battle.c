@@ -3070,7 +3070,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			int i;
 			if (sc->data[SC_MANU_DEF] != NULL) {
 				for (i = 0; i < ARRAYLENGTH(mob->manuk); i++) {
-					if (mob->manuk[i] == ((TBL_MOB*)src)->class_) {
+					if (mob->manuk[i] == ((struct mob_data *)src)->class_) {
 						damage -= damage * sc->data[SC_MANU_DEF]->val1 / 100;
 						break;
 					}
@@ -3078,7 +3078,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			}
 			if (sc->data[SC_SPL_DEF] != NULL) {
 				for (i = 0; i < ARRAYLENGTH(mob->splendide); i++) {
-					if (mob->splendide[i] == ((TBL_MOB*)src)->class_) {
+					if (mob->splendide[i] == ((struct mob_data *)src)->class_) {
 						damage -= damage * sc->data[SC_SPL_DEF]->val1 / 100;
 						break;
 					}
@@ -3086,7 +3086,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			}
 			if (sc->data[SC_MORA_BUFF] != NULL) {
 				for (i = 0; i < ARRAYLENGTH(mob->mora); i++) {
-					if (mob->mora[i] == ((TBL_MOB*)src)->class_) {
+					if (mob->mora[i] == ((struct mob_data *)src)->class_) {
 						damage -= damage * sc->data[SC_MORA_BUFF]->val1 / 100;
 						break;
 					}
@@ -3227,7 +3227,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				 ((sce=tsc->data[SC_MANU_MATK]) && (flag&BF_MAGIC))
 				)
 				for (i=0;ARRAYLENGTH(mob->manuk)>i;i++)
-					if (((TBL_MOB*)bl)->class_==mob->manuk[i]) {
+					if (((struct mob_data *)bl)->class_ == mob->manuk[i]) {
 						damage += damage * sce->val1 / 100;
 						break;
 					}
@@ -3235,7 +3235,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				 ((sce=tsc->data[SC_SPL_MATK]) && (flag&BF_MAGIC))
 				)
 				for (i=0;ARRAYLENGTH(mob->splendide)>i;i++)
-					if (((TBL_MOB*)bl)->class_==mob->splendide[i]) {
+					if (((struct mob_data *)bl)->class_ == mob->splendide[i]) {
 						damage += damage * sce->val1 / 100;
 						break;
 					}
@@ -3301,9 +3301,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 
 	if( bl->type == BL_MOB && !status->isdead(bl) && src != bl) {
 		if ( damage > 0 )
-			mob->skill_event((TBL_MOB*)bl,src,timer->gettick(),flag);
+			mob->skill_event((struct mob_data *)bl, src, timer->gettick(), flag);
 		if (skill_id)
-			mob->skill_event((TBL_MOB*)bl,src,timer->gettick(),MSC_SKILLUSED|(skill_id<<16));
+			mob->skill_event((struct mob_data *)bl, src, timer->gettick(), MSC_SKILLUSED|(skill_id<<16));
 	}
 	if (sd && pc_ismadogear(sd) && rnd()%100 < 50) {
 		int element = -1;
@@ -3701,9 +3701,11 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 			for(i = 0; i < map->list[target->m].zone->capped_skills_count; i++) {
 				if( skill_id == map->list[target->m].zone->capped_skills[i]->nameid && (map->list[target->m].zone->capped_skills[i]->type & target->type) ) {
 					if( target->type == BL_MOB && map->list[target->m].zone->capped_skills[i]->subtype != MZS_NONE ) {
-						if( (((TBL_MOB*)target)->status.mode&MD_BOSS) && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
+						if ((((struct mob_data *)target)->status.mode&MD_BOSS)
+						 && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS))
 							continue;
-						if( ((TBL_MOB*)target)->special_state.clone && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE) )
+						if (((struct mob_data *)target)->special_state.clone
+						 && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE))
 							continue;
 					}
 					if( ad.damage > map->list[target->m].zone->capped_skills[i]->cap )
@@ -4175,9 +4177,11 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 		for(i = 0; i < map->list[target->m].zone->capped_skills_count; i++) {
 			if( skill_id == map->list[target->m].zone->capped_skills[i]->nameid && (map->list[target->m].zone->capped_skills[i]->type & target->type) ) {
 				if( target->type == BL_MOB && map->list[target->m].zone->capped_skills[i]->subtype != MZS_NONE ) {
-					if( (((TBL_MOB*)target)->status.mode&MD_BOSS) && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
+					if ((((struct mob_data *)target)->status.mode&MD_BOSS)
+					 && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS))
 						continue;
-					if( ((TBL_MOB*)target)->special_state.clone && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE) )
+					if (((struct mob_data *)target)->special_state.clone
+					 && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE))
 						continue;
 				}
 				if( md.damage > map->list[target->m].zone->capped_skills[i]->cap )
@@ -5394,9 +5398,11 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		for(i = 0; i < map->list[target->m].zone->capped_skills_count; i++) {
 			if( skill_id == map->list[target->m].zone->capped_skills[i]->nameid && (map->list[target->m].zone->capped_skills[i]->type & target->type) ) {
 				if( target->type == BL_MOB && map->list[target->m].zone->capped_skills[i]->subtype != MZS_NONE ) {
-					if( (((TBL_MOB*)target)->status.mode&MD_BOSS) && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
+					if ((((struct mob_data *)target)->status.mode&MD_BOSS)
+					 && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS))
 						continue;
-					if( ((TBL_MOB*)target)->special_state.clone && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE) )
+					if (((struct mob_data *)target)->special_state.clone
+					 && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE))
 						continue;
 				}
 				if( wd.damage > map->list[target->m].zone->capped_skills[i]->cap )
@@ -5651,9 +5657,11 @@ struct Damage battle_calc_attack(int attack_type,struct block_list *bl,struct bl
 		for(i = 0; i < map->list[target->m].zone->capped_skills_count; i++) {
 			if( skill_id == map->list[target->m].zone->capped_skills[i]->nameid && (map->list[target->m].zone->capped_skills[i]->type & target->type) ) {
 				if( target->type == BL_MOB && map->list[target->m].zone->capped_skills[i]->subtype != MZS_NONE ) {
-					if( (((TBL_MOB*)target)->status.mode&MD_BOSS) && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS) )
+					if ((((struct mob_data *)target)->status.mode&MD_BOSS)
+					 && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_BOSS))
 						continue;
-					if( ((TBL_MOB*)target)->special_state.clone && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE) )
+					if (((struct mob_data *)target)->special_state.clone
+					 && !(map->list[target->m].zone->disabled_skills[i]->subtype&MZS_CLONE))
 						continue;
 				}
 				if( d.damage > map->list[target->m].zone->capped_skills[i]->cap )
@@ -5970,7 +5978,7 @@ int battle_damage_area(struct block_list *bl, va_list ap) {
 	amotion=va_arg(ap,int);
 	dmotion=va_arg(ap,int);
 	damage=va_arg(ap,int);
-	if (bl->type == BL_MOB && ((TBL_MOB*)bl)->class_ == MOBID_EMPELIUM)
+	if (bl->type == BL_MOB && ((struct mob_data *)bl)->class_ == MOBID_EMPELIUM)
 		return 0;
 	if( bl != src && battle->check_target(src,bl,BCT_ENEMY) > 0 ) {
 		nullpo_ret(src);
@@ -6384,8 +6392,8 @@ struct block_list* battle_get_master(struct block_list *src) {
 					src = (struct block_list*)((TBL_PET*)src)->msd;
 				break;
 			case BL_MOB:
-				if (((TBL_MOB*)src)->master_id)
-					src = map->id2bl(((TBL_MOB*)src)->master_id);
+				if (((struct mob_data *)src)->master_id != 0)
+					src = map->id2bl(((struct mob_data *)src)->master_id);
 				break;
 			case BL_HOM:
 				if (((TBL_HOM*)src)->master)
@@ -6481,7 +6489,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			break;
 		case BL_MOB:
 		{
-			TBL_MOB *md = BL_CAST(BL_MOB, target);
+			struct mob_data *md = BL_CAST(BL_MOB, target);
 			if((
 			     (md->special_state.ai == AI_SPHERE || (md->special_state.ai == AI_FLORA && battle_config.summon_flora&1))
 			     && s_bl->type == BL_PC && src->type != BL_MOB
@@ -6597,7 +6605,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 		case BL_PET:
 			if (t_bl->type != BL_MOB && flag&BCT_ENEMY)
 				return 0; //Pet may not attack non-mobs.
-			if (t_bl->type == BL_MOB && ((TBL_MOB*)t_bl)->guardian_data && flag&BCT_ENEMY)
+			if (t_bl->type == BL_MOB && ((struct mob_data *)t_bl)->guardian_data && flag&BCT_ENEMY)
 				return 0; //pet may not attack Guardians/Emperium
 			break;
 		case BL_SKILL: {
@@ -6621,7 +6629,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			}
 			break;
 		case BL_MER:
-			if (t_bl->type == BL_MOB && ((TBL_MOB*)t_bl)->class_ == MOBID_EMPELIUM && flag&BCT_ENEMY)
+			if (t_bl->type == BL_MOB && ((struct mob_data *)t_bl)->class_ == MOBID_EMPELIUM && flag&BCT_ENEMY)
 				return 0; //mercenary may not attack Emperium
 			break;
 	} //end switch actual src
@@ -6643,7 +6651,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 						return 0;
 				}
 			}
-			if (map_flag_gvg(m) && !sd->status.guild_id && t_bl->type == BL_MOB && ((TBL_MOB*)t_bl)->class_ == MOBID_EMPELIUM)
+			if (map_flag_gvg(m) && !sd->status.guild_id && t_bl->type == BL_MOB && ((struct mob_data *)t_bl)->class_ == MOBID_EMPELIUM)
 				return 0; //If you don't belong to a guild, can't target emperium.
 			if( t_bl->type != BL_PC )
 				state |= BCT_ENEMY; //Natural enemy.
@@ -6659,13 +6667,13 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			if (md->special_state.ai == AI_NONE) {
 				//Normal mobs
 				struct mob_data *target_md = BL_CAST(BL_MOB, target);
-				if( (target_md && t_bl->type == BL_PC && target_md->special_state.ai != AI_ZANZOU && target_md->special_state.ai != AI_ATTACK)
-				 || (t_bl->type == BL_MOB && !((TBL_MOB*)t_bl)->special_state.ai) )
+				if ((target_md != NULL && t_bl->type == BL_PC && target_md->special_state.ai != AI_ZANZOU && target_md->special_state.ai != AI_ATTACK)
+				 || (t_bl->type == BL_MOB && !((struct mob_data *)t_bl)->special_state.ai))
 					state |= BCT_PARTY; //Normal mobs with no ai are friends.
 				else
 					state |= BCT_ENEMY; //However, all else are enemies.
 			} else {
-				if (t_bl->type == BL_MOB && ((TBL_MOB*)t_bl)->special_state.ai == AI_NONE)
+				if (t_bl->type == BL_MOB && ((struct mob_data *)t_bl)->special_state.ai == AI_NONE)
 					state |= BCT_ENEMY; //Natural enemy for AI mobs are normal mobs.
 			}
 			break;

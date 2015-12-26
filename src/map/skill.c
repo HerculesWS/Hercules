@@ -3032,7 +3032,7 @@ int skill_check_unit_range2_sub (struct block_list *bl, va_list ap) {
 	if( skill_id == HP_BASILICA && bl->type == BL_PC )
 		return 0;
 
-	if (skill_id == AM_DEMONSTRATION && bl->type == BL_MOB && ((TBL_MOB*)bl)->class_ == MOBID_EMPELIUM)
+	if (skill_id == AM_DEMONSTRATION && bl->type == BL_MOB && ((struct mob_data *)bl)->class_ == MOBID_EMPELIUM)
 		return 0; //Allow casting Bomb/Demonstration Right under emperium [Skotlex]
 	return 1;
 }
@@ -5000,7 +5000,7 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 			}
 
 			if (ud->skill_id >= SL_SKE && ud->skill_id <= SL_SKA && target->type == BL_MOB) {
-				if (((TBL_MOB*)target)->class_ == MOBID_EMPELIUM)
+				if (((struct mob_data *)target)->class_ == MOBID_EMPELIUM)
 					break;
 			} else if (inf && battle->check_target(src, target, inf) <= 0) {
 				if (sd) clif->skill_fail(sd,ud->skill_id,USESKILL_FAIL_LEVEL,0);
@@ -5582,7 +5582,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 						if (ud->target)
 							target_id = ud->target;
 						else switch (src->type) {
-							case BL_MOB: target_id = ((TBL_MOB*)src)->target_id; break;
+							case BL_MOB: target_id = ((struct mob_data *)src)->target_id; break;
 							case BL_PET: target_id = ((TBL_PET*)src)->target_id; break;
 						}
 						if (!target_id)
@@ -9003,7 +9003,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if( is_boss(bl) ) break;
 				if( sc_start2(src,bl, type, 100, skill_lv, src->id, skill->get_time(skill_id, skill_lv))) {
 					if( bl->type == BL_MOB )
-						mob->unlocktarget((TBL_MOB*)bl,timer->gettick());
+						mob->unlocktarget((struct mob_data *)bl, timer->gettick());
 					unit->stop_attack(bl);
 					clif->bladestop(src, bl->id, 1);
 					map->freeblock_unlock();
@@ -9270,7 +9270,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 						if (ud->target)
 							target_id = ud->target;
 						else switch (src->type) {
-							case BL_MOB: target_id = ((TBL_MOB*)src)->target_id; break;
+							case BL_MOB: target_id = ((struct mob_data *)src)->target_id; break;
 							case BL_PET: target_id = ((TBL_PET*)src)->target_id; break;
 						}
 						if (!target_id)
@@ -10648,9 +10648,10 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				} else {
 					int mob_id = skill_lv < 2 ? MOBID_BLACK_MUSHROOM + rnd()%2 : MOBID_RED_PLANT + rnd()%6;
-					TBL_MOB* md = mob->once_spawn_sub(src, src->m, x, y, "--ja--", mob_id, "", SZ_SMALL, AI_NONE);
+					struct mob_data *md = mob->once_spawn_sub(src, src->m, x, y, "--ja--", mob_id, "", SZ_SMALL, AI_NONE);
 					int i;
-					if (!md) break;
+					if (md == NULL)
+						break;
 					if ((i = skill->get_time(skill_id, skill_lv)) > 0)
 					{
 						if( md->deletetimer != INVALID_TIMER )
@@ -12559,7 +12560,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 	}
 
 	if (bl->type == BL_MOB && ss != bl)
-		mob->skill_event((TBL_MOB*)bl, ss, tick, MSC_SKILLUSED|(skill_id<<16));
+		mob->skill_event((struct mob_data *)bl, ss, tick, MSC_SKILLUSED|(skill_id<<16));
 
 	return skill_id;
 }

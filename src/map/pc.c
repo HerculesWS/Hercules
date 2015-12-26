@@ -5259,7 +5259,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	if(!sd || !bl || bl->type!=BL_MOB)
 		return 0;
 
-	md = (TBL_MOB *)bl;
+	md = (struct mob_data *)bl;
 
 	if(md->state.steal_flag == UCHAR_MAX || ( md->sc.opt1 && md->sc.opt1 != OPT1_BURNING && md->sc.opt1 != OPT1_CRYSTALIZE ) ) //already stolen from / status change check
 		return 0;
@@ -5337,7 +5337,7 @@ int pc_steal_coin(struct map_session_data *sd, struct block_list *target) {
 	if (!sd || !target || target->type != BL_MOB)
 		return 0;
 
-	md = (TBL_MOB*)target;
+	md = (struct mob_data *)target;
 	if (md->state.steal_coin_flag || md->sc.data[SC_STONE] || md->sc.data[SC_FREEZE] || md->status.mode&MD_BOSS)
 		return 0;
 

@@ -6081,7 +6081,7 @@ ACMD(mobsearch)
 	it = mapit_geteachmob();
 	for(;;)
 	{
-		TBL_MOB* md = (TBL_MOB*)mapit->next(it);
+		struct mob_data *md = (struct mob_data *)mapit->next(it);
 		if( md == NULL )
 			break;// no more mobs
 
@@ -6775,7 +6775,7 @@ ACMD(showmobs)
 	it = mapit_geteachmob();
 	for(;;)
 	{
-		TBL_MOB* md = (TBL_MOB*)mapit->next(it);
+		struct mob_data *md = (struct mob_data *)mapit->next(it);
 		if( md == NULL )
 			break;// no more mobs
 

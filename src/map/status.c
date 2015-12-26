@@ -1417,7 +1417,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 
 	switch (target->type) {
 		case BL_PC:  pc->damage((struct map_session_data *)target, src, hp, sp); break;
-		case BL_MOB: mob->damage((TBL_MOB*)target, src, hp); break;
+		case BL_MOB: mob->damage((struct mob_data *)target, src, hp); break;
 		case BL_HOM: homun->damaged((TBL_HOM*)target); break;
 		case BL_MER: mercenary->heal((TBL_MER*)target,hp,sp); break;
 		case BL_ELEM: elemental->heal((TBL_ELEM*)target,hp,sp); break;
@@ -1443,7 +1443,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 	//&4: Also delete object from memory.
 	switch (target->type) {
 		case BL_PC:  flag = pc->dead((struct map_session_data *)target, src); break;
-		case BL_MOB: flag = mob->dead((TBL_MOB*)target, src, (flag&4) ? 3 : 0); break;
+		case BL_MOB: flag = mob->dead((struct mob_data *)target, src, (flag&4) ? 3 : 0); break;
 		case BL_HOM: flag = homun->dead((TBL_HOM*)target); break;
 		case BL_MER: flag = mercenary->dead((TBL_MER*)target); break;
 		case BL_ELEM: flag = elemental->dead((TBL_ELEM*)target); break;
@@ -1486,16 +1486,16 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 		sc_start(target,target,status->skill2sc(PR_KYRIE),100,10,time);
 
 		if( target->type == BL_MOB )
-			((TBL_MOB*)target)->state.rebirth = 1;
+			((struct mob_data *)target)->state.rebirth = 1;
 
 		return (int)(hp+sp);
 	}
 
-	if (target->type == BL_MOB && sc && sc->data[SC_REBIRTH] && !((TBL_MOB*) target)->state.rebirth) {
+	if (target->type == BL_MOB && sc && sc->data[SC_REBIRTH] && !((struct mob_data *) target)->state.rebirth) {
 		// Ensure the monster has not already rebirthed before doing so.
 		status->revive(target, sc->data[SC_REBIRTH]->val2, 0);
 		status->change_clear(target,0);
-		((TBL_MOB*)target)->state.rebirth = 1;
+		((struct mob_data *)target)->state.rebirth = 1;
 
 		return (int)(hp+sp);
 	}
@@ -1583,7 +1583,7 @@ int status_heal(struct block_list *bl,int64 in_hp,int64 in_sp, int flag) {
 	// send hp update to client
 	switch(bl->type) {
 		case BL_PC:  pc->heal((struct map_session_data *)bl,hp,sp,(flag&2) ? 1 : 0); break;
-		case BL_MOB: mob->heal((TBL_MOB*)bl,hp); break;
+		case BL_MOB: mob->heal((struct mob_data *)bl,hp); break;
 		case BL_HOM: homun->healed((TBL_HOM*)bl); break;
 		case BL_MER: mercenary->heal((TBL_MER*)bl,hp,sp); break;
 		case BL_ELEM: elemental->heal((TBL_ELEM*)bl,hp,sp); break;
@@ -1680,7 +1680,7 @@ int status_revive(struct block_list *bl, unsigned char per_hp, unsigned char per
 
 	switch (bl->type) {
 		case BL_PC:  pc->revive((struct map_session_data *)bl, hp, sp); break;
-		case BL_MOB: mob->revive((TBL_MOB*)bl, hp); break;
+		case BL_MOB: mob->revive((struct mob_data *)bl, hp); break;
 		case BL_HOM: homun->revive((TBL_HOM*)bl, hp, sp); break;
 	}
 	return 1;
@@ -1715,7 +1715,7 @@ int status_fixed_revive(struct block_list *bl, unsigned int per_hp, unsigned int
 		clif->resurrection(bl, 1);
 	switch (bl->type) {
 		case BL_PC:  pc->revive((struct map_session_data *)bl, hp, sp); break;
-		case BL_MOB: mob->revive((TBL_MOB*)bl, hp); break;
+		case BL_MOB: mob->revive((struct mob_data *)bl, hp); break;
 		case BL_HOM: homun->revive((TBL_HOM*)bl, hp, sp); break;
 	}
 	return 1;
@@ -2084,7 +2084,7 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 		//Max HP setting from Summon Flora/marine Sphere
 		struct unit_data *ud = unit->bl2ud(mbl);
 		//Remove special AI when this is used by regular mobs.
-		if (mbl->type == BL_MOB && ((TBL_MOB*)mbl)->special_state.ai == AI_NONE)
+		if (mbl->type == BL_MOB && ((struct mob_data *)mbl)->special_state.ai == AI_NONE)
 			md->special_state.ai = AI_NONE;
 		if (ud) {
 			// different levels of HP according to skill level
@@ -4120,7 +4120,7 @@ int status_check_visibility(struct block_list *src, struct block_list *target) {
 
 	switch ( src->type ) {
 	case BL_MOB:
-		view_range = ((TBL_MOB*)src)->min_chase;
+		view_range = ((struct mob_data *)src)->min_chase;
 		break;
 	case BL_PET:
 		view_range = ((TBL_PET*)src)->db->range2;
@@ -4253,7 +4253,7 @@ unsigned short status_base_atk(const struct block_list *bl, const struct status_
 #ifdef RENEWAL
 		str = (int)(dstr + (float)dex / 5 + (float)st->luk / 3 + (float)((struct map_session_data *)bl)->status.base_level / 4);
 	else if ( bl->type == BL_MOB || bl->type == BL_MER )
-		str = dstr + ((TBL_MOB*)bl)->level;
+		str = dstr + ((struct mob_data *)bl)->level;
 #else
 		str += dex / 5 + st->luk / 5;
 #endif
@@ -5978,7 +5978,7 @@ short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int
 
 unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *sc, int dmotion) {
 	// It has been confirmed on official servers that MvP mobs have no dmotion even without endure
-	if( bl->type == BL_MOB && (((TBL_MOB*)bl)->status.mode&MD_BOSS) )
+	if (bl->type == BL_MOB && (((struct mob_data *)bl)->status.mode&MD_BOSS))
 		return 0;
 
 	if( !sc || !sc->count || map_flag_gvg2(bl->m) || map->list[bl->m].flag.battleground )
@@ -6206,7 +6206,7 @@ const char* status_get_name(struct block_list *bl) {
 	nullpo_ret(bl);
 	switch (bl->type) {
 		case BL_PC:  return ((struct map_session_data *)bl)->fakename[0] != '\0' ? ((struct map_session_data *)bl)->fakename : ((struct map_session_data *)bl)->status.name;
-		case BL_MOB: return ((TBL_MOB*)bl)->name;
+		case BL_MOB: return ((struct mob_data *)bl)->name;
 		case BL_PET: return ((TBL_PET*)bl)->pet.name;
 		case BL_HOM: return ((TBL_HOM*)bl)->homunculus.name;
 		case BL_NPC: return ((TBL_NPC*)bl)->name;
@@ -6224,7 +6224,7 @@ int status_get_class(struct block_list *bl) {
 	nullpo_ret(bl);
 	switch( bl->type ) {
 		case BL_PC:  return ((struct map_session_data *)bl)->status.class_;
-		case BL_MOB: return ((TBL_MOB*)bl)->vd->class_; //Class used on all code should be the view class of the mob.
+		case BL_MOB: return ((struct mob_data *)bl)->vd->class_; //Class used on all code should be the view class of the mob.
 		case BL_PET: return ((TBL_PET*)bl)->pet.class_;
 		case BL_HOM: return ((TBL_HOM*)bl)->homunculus.class_;
 		case BL_MER: return ((TBL_MER*)bl)->mercenary.class_;
@@ -6243,7 +6243,7 @@ int status_get_lv(struct block_list *bl) {
 	nullpo_ret(bl);
 	switch (bl->type) {
 		case BL_PC:  return ((struct map_session_data *)bl)->status.base_level;
-		case BL_MOB: return ((TBL_MOB*)bl)->level;
+		case BL_MOB: return ((struct mob_data *)bl)->level;
 		case BL_PET: return ((TBL_PET*)bl)->pet.level;
 		case BL_HOM: return ((TBL_HOM*)bl)->homunculus.level;
 		case BL_MER: return ((TBL_MER*)bl)->db->lv;
@@ -6272,7 +6272,7 @@ struct status_data *status_get_status_data(struct block_list *bl)
 
 	switch (bl->type) {
 		case BL_PC:  return &((struct map_session_data *)bl)->battle_status;
-		case BL_MOB: return &((TBL_MOB*)bl)->status;
+		case BL_MOB: return &((struct mob_data *)bl)->status;
 		case BL_PET: return &((TBL_PET*)bl)->status;
 		case BL_HOM: return &((TBL_HOM*)bl)->battle_status;
 		case BL_MER: return &((TBL_MER*)bl)->battle_status;
@@ -6288,7 +6288,7 @@ struct status_data *status_get_base_status(struct block_list *bl)
 	nullpo_retr(NULL, bl);
 	switch (bl->type) {
 		case BL_PC:  return &((struct map_session_data *)bl)->base_status;
-		case BL_MOB: return ((TBL_MOB*)bl)->base_status ? ((TBL_MOB*)bl)->base_status : &((TBL_MOB*)bl)->db->status;
+		case BL_MOB: return ((struct mob_data *)bl)->base_status ? ((struct mob_data *)bl)->base_status : &((struct mob_data *)bl)->db->status;
 		case BL_PET: return &((TBL_PET*)bl)->db->status;
 		case BL_HOM: return &((TBL_HOM*)bl)->base_status;
 		case BL_MER: return &((TBL_MER*)bl)->base_status;
@@ -6324,16 +6324,17 @@ int status_get_party_id(struct block_list *bl) {
 		if (((TBL_PET*)bl)->msd)
 			return ((TBL_PET*)bl)->msd->status.party_id;
 		break;
-	case BL_MOB: {
-		struct mob_data *md=(TBL_MOB*)bl;
-		if( md->master_id > 0 ) {
+	case BL_MOB:
+	{
+		struct mob_data *md = (struct mob_data *)bl;
+		if (md->master_id > 0) {
 			struct map_session_data *msd;
 			if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
 				return msd->status.party_id;
 			return -md->master_id;
 		}
-				 }
-				 break;
+	}
+		break;
 	case BL_HOM:
 		if (((TBL_HOM*)bl)->master)
 			return ((TBL_HOM*)bl)->master->status.party_id;
@@ -6408,15 +6409,16 @@ int status_get_emblem_id(struct block_list *bl) {
 		if (((TBL_PET*)bl)->msd)
 			return ((TBL_PET*)bl)->msd->guild_emblem_id;
 		break;
-	case BL_MOB: {
+	case BL_MOB:
+	{
 		struct map_session_data *msd;
 		struct mob_data *md = (struct mob_data *)bl;
 		if (md->guardian_data) //Guardian's guild [Skotlex]
 			return (md->guardian_data->g) ? md->guardian_data->g->emblem_id:0;
 		if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
 			return msd->guild_emblem_id; //Alchemist's mobs [Skotlex]
-				 }
-				 break;
+	}
+		break;
 	case BL_HOM:
 		if (((TBL_HOM*)bl)->master)
 			return ((TBL_HOM*)bl)->master->guild_emblem_id;
@@ -6479,7 +6481,7 @@ struct view_data* status_get_viewdata(struct block_list *bl)
 	nullpo_retr(NULL, bl);
 	switch (bl->type) {
 		case BL_PC:  return &((struct map_session_data *)bl)->vd;
-		case BL_MOB: return ((TBL_MOB*)bl)->vd;
+		case BL_MOB: return ((struct mob_data *)bl)->vd;
 		case BL_PET: return &((TBL_PET*)bl)->vd;
 		case BL_NPC: return ((TBL_NPC*)bl)->vd;
 		case BL_HOM: return ((TBL_HOM*)bl)->vd;
@@ -6573,13 +6575,13 @@ void status_set_viewdata(struct block_list *bl, int class_)
 	}
 		break;
 	case BL_MOB:
-		{
-			TBL_MOB* md = (TBL_MOB*)bl;
-			if (vd)
-				md->vd = vd;
-			else
-				ShowError("status_set_viewdata (MOB): No view data for class %d\n", class_);
-		}
+	{
+		struct mob_data *md = (struct mob_data *)bl;
+		if (vd != NULL)
+			md->vd = vd;
+		else
+			ShowError("status_set_viewdata (MOB): No view data for class %d\n", class_);
+	}
 		break;
 	case BL_PET:
 		{
@@ -6642,7 +6644,7 @@ struct status_change *status_get_sc(struct block_list *bl) {
 	if( bl ) {
 		switch (bl->type) {
 		case BL_PC:  return &((struct map_session_data *)bl)->sc;
-		case BL_MOB: return &((TBL_MOB*)bl)->sc;
+		case BL_MOB: return &((struct mob_data *)bl)->sc;
 		case BL_NPC: return NULL;
 		case BL_HOM: return &((TBL_HOM*)bl)->sc;
 		case BL_MER: return &((TBL_MER*)bl)->sc;
@@ -8158,7 +8160,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					if( val2 && bl->type == BL_MOB ) {
 						struct block_list* src2 = map->id2bl(val2);
 						if( src2 )
-							mob->log_damage((TBL_MOB*)bl,src2,diff);
+							mob->log_damage((struct mob_data *)bl, src2, diff);
 					}
 					status_zap(bl, diff, 0);
 				}
@@ -8232,7 +8234,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				//val4&1 signals the presence of a wall.
 				//val4&2 makes cloak not end on normal attacks [Skotlex]
 				//val4&4 makes cloak not end on using skills
-				if (bl->type == BL_PC || (bl->type == BL_MOB && ((TBL_MOB*)bl)->special_state.clone) ) //Standard cloaking.
+				if (bl->type == BL_PC || (bl->type == BL_MOB && ((struct mob_data *)bl)->special_state.clone)) //Standard cloaking.
 					val4 |= battle_config.pc_cloak_check_type&7;
 				else
 					val4 |= battle_config.monster_cloak_check_type&7;
@@ -8453,7 +8455,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				if( val3 && bl->type == BL_MOB ) {
 					struct block_list* src2 = map->id2bl(val3);
 					if( src2 )
-						mob->log_damage((TBL_MOB*)bl,src2,st->hp - 1);
+						mob->log_damage((struct mob_data *)bl,src2,st->hp - 1);
 				}
 				status_zap(bl, st->hp-1, val2 ? 0 : st->sp);
 				return 1;
@@ -10996,8 +10998,8 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				if (!sc->data[SC_SLOWPOISON]) {
 					if( sce->val2 && bl->type == BL_MOB ) {
 						struct block_list* src = map->id2bl(sce->val2);
-						if( src )
-							mob->log_damage((TBL_MOB*)bl,src,sce->val4);
+						if (src != NULL)
+							mob->log_damage((struct mob_data *)bl,src,sce->val4);
 					}
 					map->freeblock_lock();
 					status_zap(bl, sce->val4, 0);
@@ -11036,7 +11038,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				int hp =  rnd()%600 + 200;
 				struct block_list* src = map->id2bl(sce->val2);
 				if( src && bl && bl->type == BL_MOB ) {
-					mob->log_damage((TBL_MOB*)bl,src,sd||hp<st->hp?hp:st->hp-1);
+					mob->log_damage((struct mob_data *)bl, src, sd != NULL || hp < st->hp ? hp : st->hp-1);
 				}
 				map->freeblock_lock();
 				status_fix_damage(src, bl, sd||hp<st->hp?hp:st->hp-1, 1);
@@ -11924,8 +11926,8 @@ void status_get_matk_sub(struct block_list *bl, int flag, unsigned short *matk_m
 			*matk_max += 130 * ((TBL_MER*)bl)->battle_status.rhw.atk2 / 100;
 			break;
 		case BL_MOB:
-			*matk_min += 70 * ((TBL_MOB*)bl)->status.rhw.atk2 / 100;
-			*matk_max += 130 * ((TBL_MOB*)bl)->status.rhw.atk2 / 100;
+			*matk_min += 70 * ((struct mob_data *)bl)->status.rhw.atk2 / 100;
+			*matk_max += 130 * ((struct mob_data *)bl)->status.rhw.atk2 / 100;
 			break;
 		case BL_HOM:
 			*matk_min += (status_get_homint(bl) + status_get_homdex(bl)) / 5;

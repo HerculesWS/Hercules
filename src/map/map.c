@@ -1743,10 +1743,8 @@ void map_addiddb(struct block_list *bl)
 		struct map_session_data *sd = (struct map_session_data *)bl;
 		idb_put(map->pc_db,sd->bl.id,sd);
 		idb_put(map->charid_db,sd->status.char_id,sd);
-	}
-	else if( bl->type == BL_MOB )
-	{
-		TBL_MOB* md = (TBL_MOB*)bl;
+	} else if (bl->type == BL_MOB) {
+		struct mob_data* md = (struct mob_data*)bl;
 		idb_put(map->mobid_db,bl->id,bl);
 
 		if( md->state.boss )
