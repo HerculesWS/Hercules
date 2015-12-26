@@ -2434,7 +2434,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 			sd->status.inventory[index].refine = MAX_REFINE;
 
 		if(sd->inventory_data[index]->type == IT_WEAPON) {
-			int r,wlv = sd->inventory_data[index]->wlv;
+			int r = sd->status.inventory[index].refine,wlv = sd->inventory_data[index]->wlv;
 			struct weapon_data *wd;
 			struct weapon_atk *wa;
 			if (wlv >= REFINE_TYPE_MAX)
@@ -2447,7 +2447,10 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 				wa = &bstatus->rhw;
 			}
 			wa->atk += sd->inventory_data[index]->atk;
-			if ( (r = sd->status.inventory[index].refine) )
+			if ( !battle_config.shadow_refine_atk && itemdb_is_shadowequip(sd->inventory_data[index]->equip) )
+				r = 0;
+
+			if (r)
 				wa->atk2 = status->dbs->refine_info[wlv].bonus[r-1] / 100;
 
 #ifdef RENEWAL
@@ -2485,9 +2488,16 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 			}
 		}
 		else if(sd->inventory_data[index]->type == IT_ARMOR) {
-			int r;
-			if ( (r = sd->status.inventory[index].refine) )
+			int r = sd->status.inventory[index].refine;
+			
+			if ( (!battle_config.costume_refine_def && itemdb_is_costumeequip(sd->inventory_data[index]->equip)) ||
+				 (!battle_config.shadow_refine_def && itemdb_is_shadowequip(sd->inventory_data[index]->equip))
+				)
+				r = 0;
+
+			if (r)
 				refinedef += status->dbs->refine_info[REFINE_TYPE_ARMOR].bonus[r-1];
+
 			if(sd->inventory_data[index]->script) {
 				if( i == EQI_HAND_L ) //Shield
 					sd->state.lr_flag = 3;
@@ -3744,6 +3754,8 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 		else
 			st->cri = status->calc_critical(bl, sc, bst->cri + 3*(st->luk - bst->luk), true);
 	}
+	if (battle_config.show_katar_crit_bonus && bl->type == BL_PC && ((TBL_PC*)bl)->status.weapon == W_KATAR)
+		st->cri <<= 1;
 
 	if(flag&SCB_FLEE2 && bst->flee2) {
 		if (st->luk == bst->luk)

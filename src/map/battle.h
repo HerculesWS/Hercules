@@ -399,6 +399,7 @@ struct Battle_Config {
 	int boss_active_time;
 
 	int show_hp_sp_drain, show_hp_sp_gain; //[Skotlex]
+	int show_katar_crit_bonus;
 
 	int mob_npc_event_type; //Determines on who the npc_event is executed. [Skotlex]
 
@@ -528,6 +529,9 @@ struct Battle_Config {
 	int show_monster_hp_bar; // [Frost]
 
 	int fix_warp_hit_delay_abuse;
+	
+	int costume_refine_def, shadow_refine_def;
+	int shadow_refine_atk;
 };
 
 /* criteria for battle_config.idletime_critera */
