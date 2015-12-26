@@ -8056,6 +8056,20 @@ BUILDIN(getguildmember)
 }
 
 /*==========================================
+ * Checks if two guilds are allies.
+ * Return boolean.
+ *------------------------------------------*/
+BUILDIN(isguildally)
+{
+	int check;
+
+	check = guild->check_alliance(script_getnum(st,2), script_getnum(st,3), 0);
+
+	script_pushint(st, check);
+	return true;
+}
+
+/*==========================================
  * Get char string information by type :
  * Return by @type :
  * 0 : char_name
@@ -20243,6 +20257,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getguildmaster,"i"),
 		BUILDIN_DEF(getguildmasterid,"i"),
 		BUILDIN_DEF(getguildmember,"i?"),
+		BUILDIN_DEF(isguildally,"ii"),
 		BUILDIN_DEF(strcharinfo,"i"),
 		BUILDIN_DEF(strnpcinfo,"i"),
 		BUILDIN_DEF(charid2rid,"i"),

@@ -1,4 +1,4 @@
-//===== Hercules Documentation ===============================
+﻿//===== Hercules Documentation ===============================
 //= Hercules Script Commands
 //===== By: ==================================================
 //= Hercules Dev Team
@@ -3459,6 +3459,20 @@ Be sure to use $@guildmembercount to go through this array, and not
 'getarraysize', because it is not cleared between runs of 'getguildmember'.
 
 For usage examples, see 'getpartymember'.
+
+---------------------------------------
+
+*isguildally(<guild id>, <guild id2>)
+
+This command will check if two guilds have an alliance together and return
+either true or false based on the results.
+
+Example:
+
+if (isguildally(1, 5)) {
+	mes "These guilds are allies.";
+	close;
+}
 
 ---------------------------------------
 //=====================================
