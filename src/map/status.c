@@ -1351,8 +1351,12 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 			if (src && (sce = sc->data[SC_DEVOTION]) != NULL) {
 				struct block_list *d_bl = map->id2bl(sce->val1);
 
-				if(d_bl &&((d_bl->type == BL_MER && ((TBL_MER *)d_bl)->master && ((TBL_MER *)d_bl)->master->bl.id == target->id)
-						   || (d_bl->type == BL_PC && ((TBL_PC *)d_bl)->devotion[sce->val2] == target->id)) && check_distance_bl(target, d_bl, sce->val3)) {
+				if (d_bl != NULL
+				 && ((d_bl->type == BL_MER && ((TBL_MER *)d_bl)->master && ((TBL_MER *)d_bl)->master->bl.id == target->id)
+				  || (d_bl->type == BL_PC && ((struct map_session_data *)d_bl)->devotion[sce->val2] == target->id)
+				    )
+				 && check_distance_bl(target, d_bl, sce->val3)
+				) {
 					clif->damage(d_bl, d_bl, 0, 0, hp, 0, BDT_NORMAL, 0);
 					status_fix_damage(NULL, d_bl, hp, 0);
 					return 0;
@@ -1412,14 +1416,15 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 	}
 
 	switch (target->type) {
-		case BL_PC:  pc->damage((TBL_PC*)target,src,hp,sp); break;
+		case BL_PC:  pc->damage((struct map_session_data *)target, src, hp, sp); break;
 		case BL_MOB: mob->damage((TBL_MOB*)target, src, hp); break;
 		case BL_HOM: homun->damaged((TBL_HOM*)target); break;
 		case BL_MER: mercenary->heal((TBL_MER*)target,hp,sp); break;
 		case BL_ELEM: elemental->heal((TBL_ELEM*)target,hp,sp); break;
 	}
 
-	if( src && target->type == BL_PC && (((TBL_PC*)target)->disguise) > 0 ) {// stop walking when attacked in disguise to prevent walk-delay bug
+	if (src != NULL && target->type == BL_PC && ((struct map_session_data *)target)->disguise > 0) {
+		// stop walking when attacked in disguise to prevent walk-delay bug
 		unit->stop_walking(target, STOPWALKING_FLAG_FIXPOS);
 	}
 
@@ -1437,7 +1442,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 	//&2: Also remove object from map.
 	//&4: Also delete object from memory.
 	switch (target->type) {
-		case BL_PC:  flag = pc->dead((TBL_PC*)target,src); break;
+		case BL_PC:  flag = pc->dead((struct map_session_data *)target, src); break;
 		case BL_MOB: flag = mob->dead((TBL_MOB*)target, src, (flag&4) ? 3 : 0); break;
 		case BL_HOM: flag = homun->dead((TBL_HOM*)target); break;
 		case BL_MER: flag = mercenary->dead((TBL_MER*)target); break;
@@ -1577,7 +1582,7 @@ int status_heal(struct block_list *bl,int64 in_hp,int64 in_sp, int flag) {
 
 	// send hp update to client
 	switch(bl->type) {
-		case BL_PC:  pc->heal((TBL_PC*)bl,hp,sp,(flag&2) ? 1 : 0); break;
+		case BL_PC:  pc->heal((struct map_session_data *)bl,hp,sp,(flag&2) ? 1 : 0); break;
 		case BL_MOB: mob->heal((TBL_MOB*)bl,hp); break;
 		case BL_HOM: homun->healed((TBL_HOM*)bl); break;
 		case BL_MER: mercenary->heal((TBL_MER*)bl,hp,sp); break;
@@ -1674,7 +1679,7 @@ int status_revive(struct block_list *bl, unsigned char per_hp, unsigned char per
 		clif->resurrection(bl, 1);
 
 	switch (bl->type) {
-		case BL_PC:  pc->revive((TBL_PC*)bl, hp, sp); break;
+		case BL_PC:  pc->revive((struct map_session_data *)bl, hp, sp); break;
 		case BL_MOB: mob->revive((TBL_MOB*)bl, hp); break;
 		case BL_HOM: homun->revive((TBL_HOM*)bl, hp, sp); break;
 	}
@@ -1709,7 +1714,7 @@ int status_fixed_revive(struct block_list *bl, unsigned int per_hp, unsigned int
 	if (bl->prev) //Animation only if character is already on a map.
 		clif->resurrection(bl, 1);
 	switch (bl->type) {
-		case BL_PC:  pc->revive((TBL_PC*)bl, hp, sp); break;
+		case BL_PC:  pc->revive((struct map_session_data *)bl, hp, sp); break;
 		case BL_MOB: mob->revive((TBL_MOB*)bl, hp); break;
 		case BL_HOM: homun->revive((TBL_HOM*)bl, hp, sp); break;
 	}
@@ -1750,13 +1755,14 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 
 	if( skill_id ) {
 
-		if( src && !(src->type == BL_PC && ((TBL_PC*)src)->skillitem)) { // Items that cast skills using 'itemskill' will not be handled by map_zone_db.
+		if (src != NULL && !(src->type == BL_PC && ((struct map_session_data *)src)->skillitem)) {
+			// Items that cast skills using 'itemskill' will not be handled by map_zone_db.
 			int i;
 
 			for(i = 0; i < map->list[src->m].zone->disabled_skills_count; i++) {
 				if( skill_id == map->list[src->m].zone->disabled_skills[i]->nameid && (map->list[src->m].zone->disabled_skills[i]->type&src->type) ) {
 					if (src->type == BL_PC) {
-						clif->msgtable((TBL_PC*)src, MSG_SKILL_CANT_USE_AREA); // This skill cannot be used within this area
+						clif->msgtable((struct map_session_data *)src, MSG_SKILL_CANT_USE_AREA); // This skill cannot be used within this area
 					} else if (src->type == BL_MOB && map->list[src->m].zone->disabled_skills[i]->subtype != MZS_NONE) {
 						if( st->mode&MD_BOSS ) { /* is boss */
 							if( !( map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS ) )
@@ -1786,9 +1792,10 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 				break;
 			case AL_TELEPORT:
 				//Should fail when used on top of Land Protector [Skotlex]
-				if (src && map->getcell(src->m, src, src->x, src->y, CELL_CHKLANDPROTECTOR)
-					&& !(st->mode&MD_BOSS)
-					&& (src->type != BL_PC || ((TBL_PC*)src)->skillitem != skill_id))
+				if (src != NULL
+				 && map->getcell(src->m, src, src->x, src->y, CELL_CHKLANDPROTECTOR)
+				 && !(st->mode&MD_BOSS)
+				 && (src->type != BL_PC || ((struct map_session_data *)src)->skillitem != skill_id))
 					return 0;
 				break;
 			default:
@@ -1838,9 +1845,9 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		}
 
 		if (sc->data[SC_DANCING] && flag!=2) {
-			if( src->type == BL_PC && skill_id >= WA_SWING_DANCE && skill_id <= WM_UNLIMITED_HUMMING_VOICE )
-			{ // Lvl 5 Lesson or higher allow you use 3rd job skills while dancing.v
-				if( pc->checkskill((TBL_PC*)src,WM_LESSON) < 5 )
+			if (src->type == BL_PC && skill_id >= WA_SWING_DANCE && skill_id <= WM_UNLIMITED_HUMMING_VOICE) {
+				// Lvl 5 Lesson or higher allow you use 3rd job skills while dancing.v
+				if (pc->checkskill((struct map_session_data *)src, WM_LESSON) < 5)
 					return 0;
 			} else if(sc->data[SC_LONGING]) { //Allow everything except dancing/re-dancing. [Skotlex]
 				if (skill_id == BD_ENCORE ||
@@ -1862,8 +1869,8 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 				return 0; //Can't amp out of Wand of Hermode :/ [Skotlex]
 		}
 
-		if (skill_id && //Do not block item-casted skills.
-			(src->type != BL_PC || ((TBL_PC*)src)->skillitem != skill_id)
+		if (skill_id != 0 //Do not block item-casted skills.
+		 && (src->type != BL_PC || ((struct map_session_data *)src)->skillitem != skill_id)
 		) {
 			//Skills blocked through status changes...
 				if (!flag && ( //Blocked only from using the skill (stuff like autospell may still go through
@@ -1963,23 +1970,26 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		hide_flag &= ~OPTION_HIDE;
 
 	switch( target->type ) {
-		case BL_PC: {
-				struct map_session_data *sd = (TBL_PC*) target;
-				bool is_boss = (st->mode&MD_BOSS);
-				bool is_detect = ((st->mode&MD_DETECTOR)?true:false);//god-knows-why gcc doesn't shut up until this happens
-				if (pc_isinvisible(sd))
+		case BL_PC:
+		{
+			struct map_session_data *sd = (struct map_session_data *)target;
+			bool is_boss = (st->mode&MD_BOSS);
+			bool is_detect = ((st->mode&MD_DETECTOR)?true:false);//god-knows-why gcc doesn't shut up until this happens
+			if (pc_isinvisible(sd))
+				return 0;
+			if (tsc != NULL) {
+				if (tsc->option&hide_flag
+				 && !is_boss
+				 && ((sd->special_state.perfect_hiding || !is_detect)
+				  || (tsc->data[SC_CLOAKINGEXCEED] != NULL && is_detect)
+				))
 					return 0;
-				if( tsc ) {
-					if (tsc->option&hide_flag && !is_boss &&
-						((sd->special_state.perfect_hiding || !is_detect) ||
-						(tsc->data[SC_CLOAKINGEXCEED] && is_detect)))
-						return 0;
-					if( tsc->data[SC_CAMOUFLAGE] && !(is_boss || is_detect) && (!skill_id || (flag == 0 && src && src->type != BL_PC)) )
-						return 0;
-					if( tsc->data[SC_STEALTHFIELD] && !is_boss )
-						return 0;
-				}
+				if (tsc->data[SC_CAMOUFLAGE] && !(is_boss || is_detect) && (!skill_id || (flag == 0 && src && src->type != BL_PC)))
+					return 0;
+				if (tsc->data[SC_STEALTHFIELD] && !is_boss)
+					return 0;
 			}
+		}
 			break;
 		case BL_ITEM:
 			//Allow targeting of items to pick'em up (or in the case of mobs, to loot them).
@@ -3492,10 +3502,17 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 	)
 		regen->flag = 0; //No regen
 
-	if ( sc->data[SC_DANCING] || sc->data[SC_OBLIVIONCURSE] || sc->data[SC_MAXIMIZEPOWER] || sc->data[SC_REBOUND]
-	   || ( bl->type == BL_PC && (((TBL_PC*)bl)->class_&MAPID_UPPERMASK) == MAPID_MONK
-	      && (sc->data[SC_EXTREMITYFIST] || (sc->data[SC_EXPLOSIONSPIRITS] && (!sc->data[SC_SOULLINK] || sc->data[SC_SOULLINK]->val2 != SL_MONK)))
+	if (sc->data[SC_DANCING] != NULL
+	 || sc->data[SC_OBLIVIONCURSE] != NULL
+	 || sc->data[SC_MAXIMIZEPOWER] != NULL
+	 || sc->data[SC_REBOUND] != NULL
+	 || (bl->type == BL_PC && (((struct map_session_data *)bl)->class_&MAPID_UPPERMASK) == MAPID_MONK
+	  && (sc->data[SC_EXTREMITYFIST] != NULL
+	   || (sc->data[SC_EXPLOSIONSPIRITS] != NULL
+	    && (sc->data[SC_SOULLINK] == NULL || sc->data[SC_SOULLINK]->val2 != SL_MONK)
 	      )
+	     )
+	    )
 	) {
 		regen->flag &=~RGN_SP; //No natural SP regen
 	}
@@ -3548,7 +3565,7 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 	const struct status_data *bst = status->get_base_status(bl);
 	struct status_data *st = status->get_status_data(bl);
 	struct status_change *sc = status->get_sc(bl);
-	TBL_PC *sd = BL_CAST(BL_PC,bl);
+	struct map_session_data *sd = BL_CAST(BL_PC,bl);
 	int temp;
 
 	if (!bst || !st)
@@ -3754,7 +3771,7 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 		else
 			st->cri = status->calc_critical(bl, sc, bst->cri + 3*(st->luk - bst->luk), true);
 	}
-	if (battle_config.show_katar_crit_bonus && bl->type == BL_PC && ((TBL_PC*)bl)->status.weapon == W_KATAR)
+	if (battle_config.show_katar_crit_bonus && bl->type == BL_PC && ((struct map_session_data *)bl)->status.weapon == W_KATAR)
 		st->cri <<= 1;
 
 	if(flag&SCB_FLEE2 && bst->flee2) {
@@ -3922,11 +3939,11 @@ void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_status_ca
 	struct status_data bst; // previous battle status
 	struct status_data *st; // pointer to current battle status
 
-	if( bl->type == BL_PC && ((TBL_PC*)bl)->delayed_damage != 0 ) {
-		if( opt&SCO_FORCE )
-			((TBL_PC*)bl)->state.hold_recalc = 0;/* clear and move on */
-		else {
-			((TBL_PC*)bl)->state.hold_recalc = 1;/* flag and stop */
+	if (bl->type == BL_PC && ((struct map_session_data *)bl)->delayed_damage != 0) {
+		if (opt&SCO_FORCE) {
+			((struct map_session_data *)bl)->state.hold_recalc = 0;/* clear and move on */
+		} else {
+			((struct map_session_data *)bl)->state.hold_recalc = 1;/* flag and stop */
 			return;
 		}
 	}
@@ -3964,7 +3981,7 @@ void status_calc_bl_(struct block_list *bl, enum scb_flag flag, enum e_status_ca
 
 	// compare against new values and send client updates
 	if( bl->type == BL_PC ) {
-		TBL_PC* sd = BL_CAST(BL_PC, bl);
+		struct map_session_data *sd = BL_CAST(BL_PC, bl);
 		if(bst.str != st->str)
 			clif->updatestatus(sd,SP_STR);
 		if(bst.agi != st->agi)
@@ -4125,8 +4142,13 @@ int status_check_visibility(struct block_list *src, struct block_list *target) {
 		case BL_PC:
 			if ( tsc->data[SC_CLOAKINGEXCEED] && !(st->mode&MD_BOSS) )
 				return 0;
-			if ( (tsc->option&(OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK) || tsc->data[SC_STEALTHFIELD] || tsc->data[SC__INVISIBILITY] || tsc->data[SC_CAMOUFLAGE]) && !(st->mode&MD_BOSS) &&
-				(((TBL_PC*)target)->special_state.perfect_hiding || !(st->mode&MD_DETECTOR)) )
+			if ((tsc->option&(OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK)
+			  || tsc->data[SC_STEALTHFIELD] != NULL
+			  || tsc->data[SC__INVISIBILITY] != NULL
+			  || tsc->data[SC_CAMOUFLAGE] != NULL
+			    )
+			 && !(st->mode&MD_BOSS)
+			 && (((struct map_session_data *)target)->special_state.perfect_hiding || !(st->mode&MD_DETECTOR)))
 				return 0;
 			break;
 		default:
@@ -4193,7 +4215,7 @@ unsigned short status_base_atk(const struct block_list *bl, const struct status_
 		return 0;
 
 	if ( bl->type == BL_PC )
-		switch ( ((TBL_PC*)bl)->status.weapon ) {
+		switch (((struct map_session_data *)bl)->status.weapon) {
 		case W_BOW:
 		case W_MUSICAL:
 		case W_WHIP:
@@ -4229,7 +4251,7 @@ unsigned short status_base_atk(const struct block_list *bl, const struct status_
 #endif
 	if ( bl->type == BL_PC )
 #ifdef RENEWAL
-		str = (int)(dstr + (float)dex / 5 + (float)st->luk / 3 + (float)((TBL_PC*)bl)->status.base_level / 4);
+		str = (int)(dstr + (float)dex / 5 + (float)st->luk / 3 + (float)((struct map_session_data *)bl)->status.base_level / 4);
 	else if ( bl->type == BL_MOB || bl->type == BL_MER )
 		str = dstr + ((TBL_MOB*)bl)->level;
 #else
@@ -4833,10 +4855,10 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 
 #ifndef RENEWAL
 	if(sc->data[SC_NIBELUNGEN]) {
-		if (bl->type != BL_PC)
+		if (bl->type != BL_PC) {
 			watk += sc->data[SC_NIBELUNGEN]->val2;
-		else {
-			TBL_PC *sd = (TBL_PC*)bl;
+		} else {
+			struct map_session_data *sd = (struct map_session_data *)bl;
 			int index = sd->equip_index[sd->state.lr_flag?EQI_HAND_L:EQI_HAND_R];
 			if(index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->wlv == 4)
 				watk += sc->data[SC_NIBELUNGEN]->val2;
@@ -5469,7 +5491,7 @@ signed short status_calc_mdef2(struct block_list *bl, struct status_change *sc, 
 
 unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc, int speed)
 {
-	TBL_PC* sd = BL_CAST(BL_PC, bl);
+	struct map_session_data *sd = BL_CAST(BL_PC, bl);
 	int speed_rate;
 
 	if( sc == NULL || ( sd && sd->state.permanent_speed ) )
@@ -5701,8 +5723,7 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 			if (bl->type!=BL_PC)
 				bonus = sc->data[SC_ASSNCROS]->val2;
 			else {
-				switch (((TBL_PC*)bl)->status.weapon)
-				{
+				switch (((struct map_session_data *)bl)->status.weapon) {
 					case W_BOW:
 					case W_REVOLVER:
 					case W_RIFLE:
@@ -5802,7 +5823,7 @@ short status_calc_fix_aspd(struct block_list *bl, struct status_change *sc, int 
 	|| sc->data[SC_WILD_STORM_OPTION]))
 		aspd -= 50; // +5 ASPD
 	if (sc->data[SC_FIGHTINGSPIRIT] && sc->data[SC_FIGHTINGSPIRIT]->val2)
-		aspd -= (bl->type==BL_PC?pc->checkskill((TBL_PC *)bl, RK_RUNEMASTERY):10) / 10 * 40;
+		aspd -= (bl->type == BL_PC ? pc->checkskill((struct map_session_data *)bl, RK_RUNEMASTERY) : 10) / 10 * 40;
 	if (sc->data[SC_MTF_ASPD])
 		aspd -= sc->data[SC_MTF_ASPD]->val1;
 
@@ -5857,14 +5878,11 @@ short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int
 			max < sc->data[SC_HLIF_FLEET]->val2)
 			max = sc->data[SC_HLIF_FLEET]->val2;
 
-		if(sc->data[SC_ASSNCROS] &&
-			max < sc->data[SC_ASSNCROS]->val2)
-		{
-			if (bl->type!=BL_PC)
+		if (sc->data[SC_ASSNCROS] && max < sc->data[SC_ASSNCROS]->val2) {
+			if (bl->type!=BL_PC) {
 				max = sc->data[SC_ASSNCROS]->val2;
-			else
-				switch(((TBL_PC*)bl)->status.weapon)
-			{
+			} else {
+				switch (((struct map_session_data *)bl)->status.weapon) {
 				case W_BOW:
 				case W_REVOLVER:
 				case W_RIFLE:
@@ -5874,6 +5892,7 @@ short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int
 					break;
 				default:
 					max = sc->data[SC_ASSNCROS]->val2;
+				}
 			}
 		}
 
@@ -6186,7 +6205,7 @@ unsigned short status_calc_mode(struct block_list *bl, struct status_change *sc,
 const char* status_get_name(struct block_list *bl) {
 	nullpo_ret(bl);
 	switch (bl->type) {
-		case BL_PC:  return ((TBL_PC *)bl)->fakename[0] != '\0' ? ((TBL_PC*)bl)->fakename : ((TBL_PC*)bl)->status.name;
+		case BL_PC:  return ((struct map_session_data *)bl)->fakename[0] != '\0' ? ((struct map_session_data *)bl)->fakename : ((struct map_session_data *)bl)->status.name;
 		case BL_MOB: return ((TBL_MOB*)bl)->name;
 		case BL_PET: return ((TBL_PET*)bl)->pet.name;
 		case BL_HOM: return ((TBL_HOM*)bl)->homunculus.name;
@@ -6204,7 +6223,7 @@ const char* status_get_name(struct block_list *bl) {
 int status_get_class(struct block_list *bl) {
 	nullpo_ret(bl);
 	switch( bl->type ) {
-		case BL_PC:  return ((TBL_PC*)bl)->status.class_;
+		case BL_PC:  return ((struct map_session_data *)bl)->status.class_;
 		case BL_MOB: return ((TBL_MOB*)bl)->vd->class_; //Class used on all code should be the view class of the mob.
 		case BL_PET: return ((TBL_PET*)bl)->pet.class_;
 		case BL_HOM: return ((TBL_HOM*)bl)->homunculus.class_;
@@ -6223,7 +6242,7 @@ int status_get_class(struct block_list *bl) {
 int status_get_lv(struct block_list *bl) {
 	nullpo_ret(bl);
 	switch (bl->type) {
-		case BL_PC:  return ((TBL_PC*)bl)->status.base_level;
+		case BL_PC:  return ((struct map_session_data *)bl)->status.base_level;
 		case BL_MOB: return ((TBL_MOB*)bl)->level;
 		case BL_PET: return ((TBL_PET*)bl)->pet.level;
 		case BL_HOM: return ((TBL_HOM*)bl)->homunculus.level;
@@ -6238,7 +6257,7 @@ struct regen_data *status_get_regen_data(struct block_list *bl)
 {
 	nullpo_retr(NULL, bl);
 	switch (bl->type) {
-		case BL_PC:  return &((TBL_PC*)bl)->regen;
+		case BL_PC:  return &((struct map_session_data *)bl)->regen;
 		case BL_HOM: return &((TBL_HOM*)bl)->regen;
 		case BL_MER: return &((TBL_MER*)bl)->regen;
 		case BL_ELEM: return &((TBL_ELEM*)bl)->regen;
@@ -6252,7 +6271,7 @@ struct status_data *status_get_status_data(struct block_list *bl)
 	nullpo_retr(&status->dummy, bl);
 
 	switch (bl->type) {
-		case BL_PC:  return &((TBL_PC*)bl)->battle_status;
+		case BL_PC:  return &((struct map_session_data *)bl)->battle_status;
 		case BL_MOB: return &((TBL_MOB*)bl)->status;
 		case BL_PET: return &((TBL_PET*)bl)->status;
 		case BL_HOM: return &((TBL_HOM*)bl)->battle_status;
@@ -6268,7 +6287,7 @@ struct status_data *status_get_base_status(struct block_list *bl)
 {
 	nullpo_retr(NULL, bl);
 	switch (bl->type) {
-		case BL_PC:  return &((TBL_PC*)bl)->base_status;
+		case BL_PC:  return &((struct map_session_data *)bl)->base_status;
 		case BL_MOB: return ((TBL_MOB*)bl)->base_status ? ((TBL_MOB*)bl)->base_status : &((TBL_MOB*)bl)->db->status;
 		case BL_PET: return &((TBL_PET*)bl)->db->status;
 		case BL_HOM: return &((TBL_HOM*)bl)->base_status;
@@ -6300,7 +6319,7 @@ int status_get_party_id(struct block_list *bl) {
 	nullpo_ret(bl);
 	switch (bl->type) {
 	case BL_PC:
-		return ((TBL_PC*)bl)->status.party_id;
+		return ((struct map_session_data *)bl)->status.party_id;
 	case BL_PET:
 		if (((TBL_PET*)bl)->msd)
 			return ((TBL_PET*)bl)->msd->status.party_id;
@@ -6339,7 +6358,7 @@ int status_get_guild_id(struct block_list *bl) {
 	nullpo_ret(bl);
 	switch (bl->type) {
 	case BL_PC:
-		return ((TBL_PC*)bl)->status.guild_id;
+		return ((struct map_session_data *)bl)->status.guild_id;
 	case BL_PET:
 		if (((TBL_PET*)bl)->msd)
 			return ((TBL_PET*)bl)->msd->status.guild_id;
@@ -6384,7 +6403,7 @@ int status_get_emblem_id(struct block_list *bl) {
 	nullpo_ret(bl);
 	switch (bl->type) {
 	case BL_PC:
-		return ((TBL_PC*)bl)->guild_emblem_id;
+		return ((struct map_session_data *)bl)->guild_emblem_id;
 	case BL_PET:
 		if (((TBL_PET*)bl)->msd)
 			return ((TBL_PET*)bl)->msd->guild_emblem_id;
@@ -6450,9 +6469,8 @@ int status_isimmune(struct block_list *bl) {
 	if (sc && sc->data[SC_HERMODE])
 		return 100;
 
-	if (bl->type == BL_PC &&
-		((TBL_PC*)bl)->special_state.no_magic_damage >= battle_config.gtb_sc_immunity)
-		return ((TBL_PC*)bl)->special_state.no_magic_damage;
+	if (bl->type == BL_PC && ((struct map_session_data *)bl)->special_state.no_magic_damage >= battle_config.gtb_sc_immunity)
+		return ((struct map_session_data *)bl)->special_state.no_magic_damage;
 	return 0;
 }
 
@@ -6460,7 +6478,7 @@ struct view_data* status_get_viewdata(struct block_list *bl)
 {
 	nullpo_retr(NULL, bl);
 	switch (bl->type) {
-		case BL_PC:  return &((TBL_PC*)bl)->vd;
+		case BL_PC:  return &((struct map_session_data *)bl)->vd;
 		case BL_MOB: return ((TBL_MOB*)bl)->vd;
 		case BL_PET: return &((TBL_PET*)bl)->vd;
 		case BL_NPC: return ((TBL_NPC*)bl)->vd;
@@ -6490,66 +6508,69 @@ void status_set_viewdata(struct block_list *bl, int class_)
 
 	switch (bl->type) {
 	case BL_PC:
-		{
-			TBL_PC* sd = (TBL_PC*)bl;
-			if (pc->db_checkid(class_)) {
-				if (pc_isridingpeco(sd)) {
-					switch (class_) {
-						//Adapt class to a Mounted one.
-						case JOB_KNIGHT:
-							class_ = JOB_KNIGHT2;
-							break;
-						case JOB_CRUSADER:
-							class_ = JOB_CRUSADER2;
-							break;
-						case JOB_LORD_KNIGHT:
-							class_ = JOB_LORD_KNIGHT2;
-							break;
-						case JOB_PALADIN:
-							class_ = JOB_PALADIN2;
-							break;
-						case JOB_BABY_KNIGHT:
-							class_ = JOB_BABY_KNIGHT2;
-							break;
-						case JOB_BABY_CRUSADER:
-							class_ = JOB_BABY_CRUSADER2;
-							break;
-					}
+	{
+		struct map_session_data *sd = (struct map_session_data *)bl;
+		if (pc->db_checkid(class_)) {
+			if (pc_isridingpeco(sd)) {
+				switch (class_) {
+					//Adapt class to a Mounted one.
+					case JOB_KNIGHT:
+						class_ = JOB_KNIGHT2;
+						break;
+					case JOB_CRUSADER:
+						class_ = JOB_CRUSADER2;
+						break;
+					case JOB_LORD_KNIGHT:
+						class_ = JOB_LORD_KNIGHT2;
+						break;
+					case JOB_PALADIN:
+						class_ = JOB_PALADIN2;
+						break;
+					case JOB_BABY_KNIGHT:
+						class_ = JOB_BABY_KNIGHT2;
+						break;
+					case JOB_BABY_CRUSADER:
+						class_ = JOB_BABY_CRUSADER2;
+						break;
 				}
-				sd->vd.class_ = class_;
-				clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
-				sd->vd.head_top = sd->status.head_top;
-				sd->vd.head_mid = sd->status.head_mid;
-				sd->vd.head_bottom = sd->status.head_bottom;
-				sd->vd.hair_style = cap_value(sd->status.hair,0,battle_config.max_hair_style);
-				sd->vd.hair_color = cap_value(sd->status.hair_color,0,battle_config.max_hair_color);
-				sd->vd.cloth_color = cap_value(sd->status.clothes_color,0,battle_config.max_cloth_color);
-				sd->vd.robe = sd->status.robe;
-				sd->vd.body_style = sd->status.body;
-				sd->vd.sex = sd->status.sex;
+			}
+			sd->vd.class_ = class_;
+			clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
+			sd->vd.head_top = sd->status.head_top;
+			sd->vd.head_mid = sd->status.head_mid;
+			sd->vd.head_bottom = sd->status.head_bottom;
+			sd->vd.hair_style = cap_value(sd->status.hair,0,battle_config.max_hair_style);
+			sd->vd.hair_color = cap_value(sd->status.hair_color,0,battle_config.max_hair_color);
+			sd->vd.cloth_color = cap_value(sd->status.clothes_color,0,battle_config.max_cloth_color);
+			sd->vd.robe = sd->status.robe;
+			sd->vd.body_style = sd->status.body;
+			sd->vd.sex = sd->status.sex;
 
-				if ( sd->vd.cloth_color ) {
-					if( sd->sc.option&OPTION_WEDDING && battle_config.wedding_ignorepalette )
-						sd->vd.cloth_color = 0;
-					if( sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette )
-						sd->vd.cloth_color = 0;
-					if( sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette )
-						sd->vd.cloth_color = 0;
-					if( sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette )
-						sd->vd.cloth_color = 0;
-					if( sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */ )
-						sd->vd.cloth_color = 0;
-				}
-				if ( sd->vd.body_style && (
-					sd->sc.option&OPTION_WEDDING || sd->sc.option&OPTION_XMAS ||
-					sd->sc.option&OPTION_SUMMER || sd->sc.option&OPTION_HANBOK ||
-					sd->sc.option&OPTION_OKTOBERFEST))
-					sd->vd.body_style = 0;
-			} else if (vd)
-				memcpy(&sd->vd, vd, sizeof(struct view_data));
-			else
-				ShowError("status_set_viewdata (PC): No view data for class %d\n", class_);
+			if (sd->vd.cloth_color) {
+				if (sd->sc.option&OPTION_WEDDING && battle_config.wedding_ignorepalette)
+				       sd->vd.cloth_color = 0;
+				if (sd->sc.option&OPTION_XMAS && battle_config.xmas_ignorepalette)
+				       sd->vd.cloth_color = 0;
+				if (sd->sc.option&OPTION_SUMMER && battle_config.summer_ignorepalette)
+				       sd->vd.cloth_color = 0;
+				if (sd->sc.option&OPTION_HANBOK && battle_config.hanbok_ignorepalette)
+				       sd->vd.cloth_color = 0;
+				if (sd->sc.option&OPTION_OKTOBERFEST /* TODO: config? */)
+					sd->vd.cloth_color = 0;
+			}
+			if (sd->vd.body_style
+			 && (sd->sc.option&OPTION_WEDDING
+			  || sd->sc.option&OPTION_XMAS
+			  || sd->sc.option&OPTION_SUMMER
+			  || sd->sc.option&OPTION_HANBOK
+			  || sd->sc.option&OPTION_OKTOBERFEST))
+				sd->vd.body_style = 0;
+		} else if (vd != NULL) {
+			memcpy(&sd->vd, vd, sizeof(struct view_data));
+		} else {
+			ShowError("status_set_viewdata (PC): No view data for class %d\n", class_);
 		}
+	}
 		break;
 	case BL_MOB:
 		{
@@ -6620,7 +6641,7 @@ void status_set_viewdata(struct block_list *bl, int class_)
 struct status_change *status_get_sc(struct block_list *bl) {
 	if( bl ) {
 		switch (bl->type) {
-		case BL_PC:  return &((TBL_PC*)bl)->sc;
+		case BL_PC:  return &((struct map_session_data *)bl)->sc;
 		case BL_MOB: return &((TBL_MOB*)bl)->sc;
 		case BL_NPC: return NULL;
 		case BL_HOM: return &((TBL_HOM*)bl)->sc;
@@ -6876,13 +6897,13 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		sc_def = (st->vit + st->luk)*20;
 		break;
 	case SC_SIREN:
-		tick_def2 = (status->get_lv(bl) * 100) + ((bl->type == BL_PC)?((TBL_PC*)bl)->status.job_level : 0);
+		tick_def2 = status->get_lv(bl) * 100 + (bl->type == BL_PC ? ((struct map_session_data *)bl)->status.job_level : 0);
 		break;
 	case SC_NEEDLE_OF_PARALYZE:
 		tick_def2 = (st->vit + st->luk) * 50;
 		break;
 	case SC_NETHERWORLD:
-		tick_def2 = 1000 * (((bl->type == BL_PC) ? ((TBL_PC*)bl)->status.job_level : 0) / 10 + status->get_lv(bl) / 50);
+		tick_def2 = 1000 * ((bl->type == BL_PC ? ((struct map_session_data *)bl)->status.job_level : 0) / 10 + status->get_lv(bl) / 50);
 		break;
 	default:
 		//Effect that cannot be reduced? Likely a buff.
@@ -10218,7 +10239,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 				struct block_list *d_bl = map->id2bl(sce->val1);
 				if( d_bl ) {
 					if( d_bl->type == BL_PC )
-						((TBL_PC*)d_bl)->devotion[sce->val2] = 0;
+						((struct map_session_data*)d_bl)->devotion[sce->val2] = 0;
 					else if( d_bl->type == BL_MER )
 						((TBL_MER*)d_bl)->devotion_flag = 0;
 					clif->devotion(d_bl, NULL);

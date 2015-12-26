@@ -220,7 +220,7 @@ int bg_team_get_id(struct block_list *bl) {
 	nullpo_ret(bl);
 	switch( bl->type ) {
 		case BL_PC:
-			return ((TBL_PC*)bl)->bg_id;
+			return ((struct map_session_data *)bl)->bg_id;
 		case BL_PET:
 			if( ((TBL_PET*)bl)->msd )
 				return ((TBL_PET*)bl)->msd->bg_id;
@@ -655,7 +655,7 @@ int bg_afk_timer(int tid, int64 tick, int id, intptr_t data) {
 	int count = 0;
 
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
+	for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter)) {
 		if( !sd->bg_queue.arena || !sd->bg_id )
 			continue;
 		if( DIFF_TICK(sockt->last_tick, sd->idletime) > bg->mafksec )

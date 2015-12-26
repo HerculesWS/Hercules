@@ -1073,8 +1073,8 @@ int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 
 	switch (bl->type) {
 		case BL_PC:
-			if (((TBL_PC*)bl)->state.gangsterparadise &&
-				!(status_get_mode(&md->bl)&MD_BOSS))
+			if (((struct map_session_data *)bl)->state.gangsterparadise
+			 && !(status_get_mode(&md->bl)&MD_BOSS))
 				return 0; //Gangster paradise protection.
 		default:
 			if (battle_config.hom_setting&0x4 &&
@@ -1444,9 +1444,9 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 		if (!tbl || tbl->m != md->bl.m
 		 || (md->ud.attacktimer == INVALID_TIMER && !status->check_skilluse(&md->bl, tbl, 0, 0))
 		 || (md->ud.walktimer != INVALID_TIMER && !(battle_config.mob_ai&0x1) && !check_distance_bl(&md->bl, tbl, md->min_chase))
-		 || ( tbl->type == BL_PC
-		   && ((((TBL_PC*)tbl)->state.gangsterparadise && !(mode&MD_BOSS))
-		     || ((TBL_PC*)tbl)->invincible_timer != INVALID_TIMER)
+		 || (tbl->type == BL_PC
+		   && ((((struct map_session_data *)tbl)->state.gangsterparadise && !(mode&MD_BOSS))
+		     || ((struct map_session_data *)tbl)->invincible_timer != INVALID_TIMER)
 		    )
 		) {
 			//No valid target
@@ -1847,7 +1847,7 @@ int mob_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
  *------------------------------------------*/
 void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, struct item_drop *ditem, int loot, int drop_rate, unsigned short flag)
 {
-	TBL_PC* sd;
+	struct map_session_data *sd = NULL;
 
 	//Logs items, dropped by mobs [Lupus]
 	logs->pick_mob(md, loot?LOG_TYPE_LOOT:LOG_TYPE_PICKDROP_MONSTER, -ditem->item_data.amount, &ditem->item_data, NULL);
@@ -1945,7 +1945,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 	{
 		case BL_PC:
 		{
-			struct map_session_data *sd = (TBL_PC*)src;
+			struct map_session_data *sd = (struct map_session_data *)src;
 			char_id = sd->status.char_id;
 			if( damage )
 				md->attacked_id = src->id;

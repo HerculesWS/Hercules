@@ -190,8 +190,9 @@ static inline void RFIFOPOS2(int fd, unsigned short pos, short* x0, short* y0, s
 #endif // 0
 
 //To identify disguised characters.
-static inline bool disguised(struct block_list* bl) {
-	return (bool)( bl->type == BL_PC && ((TBL_PC*)bl)->disguise != -1 );
+static inline bool disguised(struct block_list* bl)
+{
+	return (bool)(bl->type == BL_PC && ((struct map_session_data *)bl)->disguise != -1);
 }
 
 //Guarantees that the given string does not exceeds the allowed size, as well as making sure it's null terminated. [Skotlex]
@@ -404,7 +405,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 
 		case ALL_CLIENT: //All player clients.
 			iter = mapit_getallusers();
-			while( (tsd = (TBL_PC*)mapit->next(iter)) != NULL ) {
+			while ((tsd = (struct map_session_data *)mapit->next(iter)) != NULL) {
 				WFIFOHEAD(tsd->fd, len);
 				memcpy(WFIFOP(tsd->fd,0), buf, len);
 				WFIFOSET(tsd->fd,len);
@@ -414,7 +415,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 
 		case ALL_SAMEMAP: //All players on the same map
 			iter = mapit_getallusers();
-			while ((tsd = (TBL_PC*)mapit->next(iter)) != NULL) {
+			while ((tsd = (struct map_session_data *)mapit->next(iter)) != NULL) {
 				if (bl && bl->m == tsd->bl.m) {
 					WFIFOHEAD(tsd->fd, len);
 					memcpy(WFIFOP(tsd->fd,0), buf, len);
@@ -505,7 +506,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 					break;
 
 				iter = mapit_getallusers();
-				while( (tsd = (TBL_PC*)mapit->next(iter)) != NULL ) {
+				while ((tsd = (struct map_session_data *)mapit->next(iter)) != NULL) {
 					if( tsd->partyspy == p->party.party_id ) {
 						WFIFOHEAD(tsd->fd, len);
 						memcpy(WFIFOP(tsd->fd,0), buf, len);
@@ -521,7 +522,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 			if (!sd || !sd->duel_group) break; //Invalid usage.
 
 			iter = mapit_getallusers();
-			while( (tsd = (TBL_PC*)mapit->next(iter)) != NULL ) {
+			while ((tsd = (struct map_session_data *)mapit->next(iter)) != NULL) {
 				if( type == DUEL_WOS && bl->id == tsd->bl.id )
 					continue;
 				if( sd->duel_group == tsd->duel_group ) {
@@ -584,7 +585,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 					break;
 
 				iter = mapit_getallusers();
-				while( (tsd = (TBL_PC*)mapit->next(iter)) != NULL ) {
+				while ((tsd = (struct map_session_data *)mapit->next(iter)) != NULL) {
 					if( tsd->guildspy == g->guild_id ) {
 						WFIFOHEAD(tsd->fd, len);
 						memcpy(WFIFOP(tsd->fd,0), buf, len);
@@ -1422,25 +1423,25 @@ bool clif_spawn(struct block_list *bl)
 
 	switch (bl->type) {
 		case BL_PC:
-			{
-				TBL_PC *sd = ((TBL_PC*)bl);
-				int i;
-				if (sd->spiritball > 0)
-					clif->spiritball(&sd->bl);
-				if(sd->state.size==SZ_BIG) // tiny/big players [Valaris]
-					clif->specialeffect(bl,423,AREA);
-				else if(sd->state.size==SZ_MEDIUM)
-					clif->specialeffect(bl,421,AREA);
-				if( sd->bg_id && map->list[sd->bl.m].flag.battleground )
-					clif->sendbgemblem_area(sd);
-				for( i = 0; i < sd->sc_display_count; i++ ) {
-					clif->sc_load(&sd->bl, sd->bl.id,AREA,status->dbs->IconChangeTable[sd->sc_display[i]->type],sd->sc_display[i]->val1,sd->sc_display[i]->val2,sd->sc_display[i]->val3);
-				}
-				if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
-					clif->spiritcharm(sd);
-				if (sd->status.robe)
-					clif->refreshlook(bl,bl->id,LOOK_ROBE,sd->status.robe,AREA);
+		{
+			struct map_session_data *sd = ((struct map_session_data *)bl);
+			int i;
+			if (sd->spiritball > 0)
+				clif->spiritball(&sd->bl);
+			if (sd->state.size == SZ_BIG) // tiny/big players [Valaris]
+				clif->specialeffect(bl,423,AREA);
+			else if (sd->state.size == SZ_MEDIUM)
+				clif->specialeffect(bl,421,AREA);
+			if (sd->bg_id != 0 && map->list[sd->bl.m].flag.battleground)
+				clif->sendbgemblem_area(sd);
+			for (i = 0; i < sd->sc_display_count; i++) {
+				clif->sc_load(&sd->bl, sd->bl.id,AREA,status->dbs->IconChangeTable[sd->sc_display[i]->type],sd->sc_display[i]->val1,sd->sc_display[i]->val2,sd->sc_display[i]->val3);
 			}
+			if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
+				clif->spiritcharm(sd);
+			if (sd->status.robe)
+				clif->refreshlook(bl,bl->id,LOOK_ROBE,sd->status.robe,AREA);
+		}
 			break;
 		case BL_MOB:
 			{
@@ -1688,14 +1689,14 @@ void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *u
 
 	switch(bl->type) {
 		case BL_PC:
-			{
-				TBL_PC *sd = ((TBL_PC*)bl);
-				//clif_movepc(sd);
-				if(sd->state.size==SZ_BIG) // tiny/big players [Valaris]
-					clif->specialeffect(&sd->bl,423,AREA);
-				else if(sd->state.size==SZ_MEDIUM)
-					clif->specialeffect(&sd->bl,421,AREA);
-			}
+		{
+			struct map_session_data *sd = ((struct map_session_data *)bl);
+			//clif_movepc(sd);
+			if(sd->state.size==SZ_BIG) // tiny/big players [Valaris]
+				clif->specialeffect(&sd->bl,423,AREA);
+			else if(sd->state.size==SZ_MEDIUM)
+				clif->specialeffect(&sd->bl,421,AREA);
+		}
 			break;
 		case BL_MOB:
 			{
@@ -2774,7 +2775,7 @@ int clif_hpmeter_sub(struct block_list *bl, va_list ap) {
 #endif
 
 	sd = va_arg(ap, struct map_session_data *);
-	tsd = (TBL_PC *)bl;
+	tsd = (struct map_session_data *)bl;
 
 	nullpo_ret(sd);
 	nullpo_ret(tsd);
@@ -4182,18 +4183,18 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 
 	switch (bl->type) {
 		case BL_PC:
-			{
-				TBL_PC* tsd = (TBL_PC*)bl;
-				clif->getareachar_pc(sd, tsd);
-				if(tsd->state.size==SZ_BIG) // tiny/big players [Valaris]
-					clif->specialeffect_single(bl,423,sd->fd);
-				else if(tsd->state.size==SZ_MEDIUM)
-					clif->specialeffect_single(bl,421,sd->fd);
-				if( tsd->bg_id && map->list[tsd->bl.m].flag.battleground )
-					clif->sendbgemblem_single(sd->fd,tsd);
-				if ( tsd->status.robe )
-					clif->refreshlook(&sd->bl,bl->id,LOOK_ROBE,tsd->status.robe,SELF);
-			}
+		{
+			struct map_session_data *tsd = (struct map_session_data *)bl;
+			clif->getareachar_pc(sd, tsd);
+			if (tsd->state.size == SZ_BIG) // tiny/big players [Valaris]
+				clif->specialeffect_single(bl,423,sd->fd);
+			else if (tsd->state.size == SZ_MEDIUM)
+				clif->specialeffect_single(bl,421,sd->fd);
+			if (tsd->bg_id != 0 && map->list[tsd->bl.m].flag.battleground)
+				clif->sendbgemblem_single(sd->fd,tsd);
+			if (tsd->status.robe)
+				clif->refreshlook(&sd->bl,bl->id,LOOK_ROBE,tsd->status.robe,SELF);
+		}
 			break;
 		case BL_MER: // Devotion Effects
 			if( ((TBL_MER*)bl)->devotion_flag )
@@ -4523,7 +4524,7 @@ void clif_getareachar_skillunit(struct block_list *bl, struct skill_unit *su, en
 	clif->send(&p,sizeof(p),bl,target);
 
 	if(su->group->skill_id == WZ_ICEWALL)
-		clif->changemapcell(bl->type == BL_PC ? ((TBL_PC*)bl)->fd : 0,su->bl.m,su->bl.x,su->bl.y,5,SELF);
+		clif->changemapcell(bl->type == BL_PC ? ((struct map_session_data *)bl)->fd : 0, su->bl.m, su->bl.x, su->bl.y, 5, SELF);
 }
 
 /*==========================================
@@ -4603,7 +4604,7 @@ int clif_outsight(struct block_list *bl,va_list ap)
 {
 	struct block_list *tbl;
 	struct view_data *vd;
-	TBL_PC *sd, *tsd;
+	struct map_session_data *sd, *tsd;
 	tbl=va_arg(ap,struct block_list*);
 	if(bl == tbl) return 0;
 	// bl can be null pointer? and after if BL_PC, sd will be null pointer too
@@ -4660,7 +4661,7 @@ int clif_outsight(struct block_list *bl,va_list ap)
 int clif_insight(struct block_list *bl,va_list ap)
 {
 	struct block_list *tbl;
-	TBL_PC *sd, *tsd;
+	struct map_session_data *sd, *tsd;
 	tbl=va_arg(ap,struct block_list*);
 
 	if (bl == tbl) return 0;
@@ -5669,11 +5670,12 @@ void clif_resurrection(struct block_list *bl,int type)
 
 	clif->send(buf,packet_len(0x148),bl, type == 1 ? AREA : AREA_WOS);
 	if (disguised(bl)) {
-		if( ((TBL_PC*)bl)->fontcolor ) {
+		if (((struct map_session_data *)bl)->fontcolor) {
 			WBUFL(buf,2)=-bl->id;
 			clif->send(buf,packet_len(0x148),bl, SELF);
-		} else
+		} else {
 			clif->spawn(bl);
+		}
 	}
 }
 
@@ -7013,7 +7015,7 @@ void clif_devotion(struct block_list *src, struct map_session_data *tsd)
  *------------------------------------------*/
 void clif_spiritball(struct block_list *bl) {
 	unsigned char buf[16];
-	TBL_PC *sd = BL_CAST(BL_PC,bl);
+	struct map_session_data *sd = BL_CAST(BL_PC,bl);
 	TBL_HOM *hd = BL_CAST(BL_HOM,bl);
 
 	nullpo_retv(bl);
@@ -8468,9 +8470,9 @@ void clif_charnameack (int fd, struct block_list *bl)
 	}
 
 	// if no recipient specified just update nearby clients
-	if (fd == 0)
+	if (fd == 0) {
 		clif->send(buf, packet_len(cmd), bl, AREA);
-	else {
+	} else {
 		WFIFOHEAD(fd, packet_len(cmd));
 		memcpy(WFIFOP(fd, 0), buf, packet_len(cmd));
 		WFIFOSET(fd, packet_len(cmd));
@@ -9087,7 +9089,7 @@ void clif_parse_WantToConnection(int fd, struct map_session_data* sd) {
 		return;
 	}
 
-	CREATE(sd, TBL_PC, 1);
+	CREATE(sd, struct map_session_data, 1);
 	sd->fd = fd;
 
 	sd->cryptKey = (( ((( clif->cryptKey[0] * clif->cryptKey[1] ) + clif->cryptKey[2]) & 0xFFFFFFFF)
@@ -9890,7 +9892,7 @@ void clif_changed_dir(struct block_list *bl, enum send_target target)
 	nullpo_retv(bl);
 	WBUFW(buf,0) = 0x9c;
 	WBUFL(buf,2) = bl->id;
-	WBUFW(buf,6) = bl->type==BL_PC?((TBL_PC*)bl)->head_dir:0;
+	WBUFW(buf,6) = bl->type == BL_PC ? ((struct map_session_data *)bl)->head_dir : 0;
 	WBUFB(buf,8) = unit->getdir(bl);
 
 	clif->send(buf, packet_len(0x9c), bl, target);
@@ -17604,7 +17606,7 @@ void clif_status_change_end(struct block_list *bl, int tid, enum send_target tar
 
 	nullpo_retv(bl);
 
-	if( bl->type == BL_PC && !((TBL_PC*)bl)->state.active )
+	if (bl->type == BL_PC && !((struct map_session_data *)bl)->state.active)
 		return;
 
 	p.PacketType = status_change_endType;
@@ -18638,7 +18640,7 @@ unsigned short clif_parse_cmd_optional( int fd, struct map_session_data *sd ) {
  *------------------------------------------*/
 int clif_parse(int fd) {
 	int cmd, packet_len;
-	TBL_PC* sd;
+	struct map_session_data *sd;
 	int pnum;
 
 	//TODO apply delays or disconnect based on packet throughput [FlavioJS]
@@ -18648,7 +18650,7 @@ int clif_parse(int fd) {
 		unsigned short (*parse_cmd_func)(int fd, struct map_session_data *sd);
 		// begin main client packet processing loop
 
-		sd = (TBL_PC *)sockt->session[fd]->session_data;
+		sd = (struct map_session_data *)sockt->session[fd]->session_data;
 
 		if (sockt->session[fd]->flag.eof) {
 			if (sd) {

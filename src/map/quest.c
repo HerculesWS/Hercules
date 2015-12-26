@@ -75,7 +75,7 @@ struct quest_db *quest_db(int quest_id) {
  * @param sd Player's data
  * @return 0 in case of success, nonzero otherwise (i.e. the player has no quests)
  */
-int quest_pc_login(TBL_PC *sd)
+int quest_pc_login(struct map_session_data *sd)
 {
 #if PACKETVER < 20141022
 	int i;
@@ -106,7 +106,8 @@ int quest_pc_login(TBL_PC *sd)
  * @param quest_id ID of the quest to add.
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_add(TBL_PC *sd, int quest_id) {
+int quest_add(struct map_session_data *sd, int quest_id)
+{
 	int n;
 	struct quest_db *qi = quest->db(quest_id);
 
@@ -157,7 +158,8 @@ int quest_add(TBL_PC *sd, int quest_id) {
  * @param qid2 New quest to add
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_change(TBL_PC *sd, int qid1, int qid2) {
+int quest_change(struct map_session_data *sd, int qid1, int qid2)
+{
 	int i;
 	struct quest_db *qi = quest->db(qid2);
 
@@ -207,7 +209,8 @@ int quest_change(TBL_PC *sd, int qid1, int qid2) {
  * @param quest_id ID of the quest to remove
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_delete(TBL_PC *sd, int quest_id) {
+int quest_delete(struct map_session_data *sd, int quest_id)
+{
 	int i;
 
 	//Search for quest
@@ -276,7 +279,7 @@ int quest_update_objective_sub(struct block_list *bl, va_list ap) {
  * @param sd     Character's data
  * @param mob_id Monster ID
  */
-void quest_update_objective(TBL_PC *sd, int mob_id)
+void quest_update_objective(struct map_session_data *sd, int mob_id)
 {
 	int i,j;
 
@@ -331,7 +334,8 @@ void quest_update_objective(TBL_PC *sd, int mob_id)
  * @param qs       New quest state
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_update_status(TBL_PC *sd, int quest_id, enum quest_state qs) {
+int quest_update_status(struct map_session_data *sd, int quest_id, enum quest_state qs)
+{
 	int i;
 
 	ARR_FIND(0, sd->avail_quests, i, sd->quest_log[i].quest_id == quest_id);
@@ -380,7 +384,7 @@ int quest_update_status(TBL_PC *sd, int quest_id, enum quest_state qs) {
  *                    1 if the quest's timeout has expired
  *                    0 otherwise
  */
-int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type)
+int quest_check(struct map_session_data *sd, int quest_id, enum quest_check_type type)
 {
 	int i;
 

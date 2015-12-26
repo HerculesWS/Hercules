@@ -148,8 +148,8 @@ int unit_walktoxy_sub(struct block_list *bl)
 	ud->state.change_walk_target=0;
 
 	if (bl->type == BL_PC) {
-		((TBL_PC *)bl)->head_dir = 0;
-		clif->walkok((TBL_PC*)bl);
+		((struct map_session_data *)bl)->head_dir = 0;
+		clif->walkok((struct map_session_data *)bl);
 	}
 	clif->move(ud);
 
@@ -813,7 +813,7 @@ int unit_setdir(struct block_list *bl,unsigned char dir)
 	if (!ud) return 0;
 	ud->dir = dir;
 	if (bl->type == BL_PC)
-		((TBL_PC *)bl)->head_dir = 0;
+		((struct map_session_data *)bl)->head_dir = 0;
 	clif->changed_dir(bl, AREA);
 	return 0;
 }
@@ -947,7 +947,7 @@ int unit_warp(struct block_list *bl,short m,short x,short y,clr_type type)
 	}
 
 	if (bl->type == BL_PC) //Use pc_setpos
-		return pc->setpos((TBL_PC*)bl, map_id2index(m), x, y, type);
+		return pc->setpos((struct map_session_data *)bl, map_id2index(m), x, y, type);
 
 	if (!unit->remove_map(bl, type, ALC_MARK))
 		return 3;
@@ -1137,7 +1137,7 @@ int unit_can_move(struct block_list *bl) {
 int unit_resume_running(int tid, int64 tick, int id, intptr_t data) {
 
 	struct unit_data *ud = (struct unit_data *)data;
-	TBL_PC * sd = map->id2sd(id);
+	struct map_session_data *sd = map->id2sd(id);
 
 	if(sd && pc_isridingwug(sd))
 		clif->skill_nodamage(ud->bl,ud->bl,RA_WUGDASH,ud->skill_lv,
@@ -1873,7 +1873,7 @@ int unit_attack(struct block_list *src,int target_id,int continuous) {
 	}
 
 	if( src->type == BL_PC ) {
-		TBL_PC* sd = (TBL_PC*)src;
+		struct map_session_data *sd = (struct map_session_data *)src;
 		if( target->type == BL_NPC ) { // monster npcs [Valaris]
 			npc->click(sd,(TBL_NPC*)target); // submitted by leinsirk10 [Celest]
 			return 0;
@@ -2311,7 +2311,7 @@ int unit_changeviewsize(struct block_list *bl,short size)
 	size=(size<0)?-1:(size>0)?1:0;
 
 	if(bl->type == BL_PC) {
-		((TBL_PC*)bl)->state.size=size;
+		((struct map_session_data *)bl)->state.size = size;
 	} else if(bl->type == BL_MOB) {
 		((TBL_MOB*)bl)->special_state.size=size;
 	} else

@@ -3976,7 +3976,7 @@ int pc_bonus5(struct map_session_data *sd,int type,int type2,int type3,int type4
  * Grants a player a given skill.
  * Flag values: @see enum pc_skill_flag
  *------------------------------------------*/
-int pc_skill(TBL_PC* sd, int id, int level, int flag)
+int pc_skill(struct map_session_data *sd, int id, int level, int flag)
 {
 	uint16 index = 0;
 	nullpo_ret(sd);
@@ -8778,7 +8778,7 @@ int pc_setcart(struct map_session_data *sd,int type) {
  * @param sd Target player.
  * @param flag New state.
  **/
-void pc_setfalcon(TBL_PC* sd, bool flag)
+void pc_setfalcon(struct map_session_data *sd, bool flag)
 {
 	if (flag) {
 		if (pc->checkskill(sd,HT_FALCON) > 0) // add falcon if he have the skill
@@ -8796,7 +8796,7 @@ void pc_setfalcon(TBL_PC* sd, bool flag)
  * @param sd Target player.
  * @param flag New state.
  **/
-void pc_setridingpeco(TBL_PC* sd, bool flag)
+void pc_setridingpeco(struct map_session_data *sd, bool flag)
 {
 	if (flag) {
 		if (pc->checkskill(sd, KN_RIDING))
@@ -8832,7 +8832,7 @@ void pc_setmadogear(struct map_session_data *sd, bool flag)
  * @param sd Target player.
  * @param type New state. This must be a valid OPTION_DRAGON* or 0.
  **/
-void pc_setridingdragon(TBL_PC* sd, unsigned int type)
+void pc_setridingdragon(struct map_session_data *sd, unsigned int type)
 {
 	if (type&OPTION_DRAGON) {
 		// Ensure only one dragon is set at a time.
@@ -8864,7 +8864,7 @@ void pc_setridingdragon(TBL_PC* sd, unsigned int type)
  * @param sd Target player.
  * @param flag New state.
  **/
-void pc_setridingwug(TBL_PC* sd, bool flag)
+void pc_setridingwug(struct map_session_data *sd, bool flag)
 {
 	if (flag) {
 		if (pc->checkskill(sd, RA_WUGRIDER) > 0)
@@ -10259,8 +10259,7 @@ int pc_autosave(int tid, int64 tick, int id, intptr_t data) {
 		save_flag = 1; //Noone was saved, so save first found char.
 
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
-	{
+	for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter)) {
 		if(sd->bl.id == last_save_id && save_flag != 1) {
 			save_flag = 1;
 			continue;
@@ -10814,7 +10813,7 @@ void pc_read_skill_tree(void)
 
 	/* lets update all players skill tree */
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
+	for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter))
 		clif->skillinfoblock(sd);
 	mapit->free(iter);
 }
@@ -11197,7 +11196,7 @@ int pc_global_expiration_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data* sd;
 
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
+	for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter)) {
 		if( sd->expiration_time )
 			pc->expire_check(sd);
 	}
@@ -11243,7 +11242,7 @@ void pc_autotrade_load(void)
 		SQL->GetData(map->mysql_handle, 2, &data, NULL); sex = atoi(data);
 		SQL->GetData(map->mysql_handle, 3, &data, NULL); safestrncpy(title, data, sizeof(title));
 
-		CREATE(sd, TBL_PC, 1);
+		CREATE(sd, struct map_session_data, 1);
 
 		pc->setnewpc(sd, account_id, char_id, 0, 0, sex, 0);
 
@@ -11389,7 +11388,7 @@ void pc_autotrade_prepare(struct map_session_data *sd) {
 	map->quit(sd);
 	chrif->auth_delete(account_id, char_id, ST_LOGOUT);
 
-	CREATE(sd, TBL_PC, 1);
+	CREATE(sd, struct map_session_data, 1);
 
 	pc->setnewpc(sd, account_id, char_id, 0, 0, sex, 0);
 

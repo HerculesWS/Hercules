@@ -21,10 +21,12 @@
 #ifndef MAP_GUILD_H
 #define MAP_GUILD_H
 
-#include "map/map.h" // EVENT_NAME_LENGTH, TBL_PC
+#include "map/map.h" // EVENT_NAME_LENGTH
 #include "common/hercules.h"
 #include "common/db.h"
 #include "common/mmo.h"
+
+struct map_session_data;
 
 /**
  * Defines
@@ -161,7 +163,7 @@ struct guild_interface {
 	void (*retrieveitembound) (int char_id,int aid,int guild_id);
 	/* */
 	int (*payexp_timer) (int tid, int64 tick, int id, intptr_t data);
-	TBL_PC* (*sd_check) (int guild_id, int account_id, int char_id);
+	struct map_session_data *(*sd_check) (int guild_id, int account_id, int char_id);
 	bool (*read_guildskill_tree_db) (char* split[], int columns, int current);
 	bool (*read_castledb) (char* str[], int columns, int current);
 	int (*payexp_timer_sub) (DBKey key, DBData *data, va_list ap);

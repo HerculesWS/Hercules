@@ -580,7 +580,7 @@ void homunculus_healed (struct homun_data *hd) {
 
 void homunculus_save(struct homun_data *hd) {
 	// copy data that must be saved in homunculus struct ( hp / sp )
-	TBL_PC * sd;
+	struct map_session_data *sd = NULL;
 	//Do not check for max_hp/max_sp caps as current could be higher to max due
 	//to status changes/skills (they will be capped as needed upon stat
 	//calculation on login)

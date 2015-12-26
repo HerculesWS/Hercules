@@ -647,10 +647,10 @@ struct script_interface {
 	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st), bool isDeprecated);
 	int (*conv_num) (struct script_state *st,struct script_data *data);
 	const char* (*conv_str) (struct script_state *st,struct script_data *data);
-	TBL_PC *(*rid2sd) (struct script_state *st);
-	TBL_PC *(*id2sd) (struct script_state *st, int account_id);
-	TBL_PC *(*charid2sd) (struct script_state *st, int char_id);
-	TBL_PC *(*nick2sd) (struct script_state *st, const char *name);
+	struct map_session_data *(*rid2sd) (struct script_state *st);
+	struct map_session_data *(*id2sd) (struct script_state *st, int account_id);
+	struct map_session_data *(*charid2sd) (struct script_state *st, int char_id);
+	struct map_session_data *(*nick2sd) (struct script_state *st, const char *name);
 	void (*detach_rid) (struct script_state* st);
 	struct script_data* (*push_val)(struct script_stack* stack, enum c_op type, int64 val, struct reg_db *ref);
 	struct script_data *(*get_val) (struct script_state* st, struct script_data* data);
@@ -728,7 +728,7 @@ struct script_interface {
 	void (*read_constdb) (void);
 	const char* (*print_line) (StringBuf *buf, const char *p, const char *mark, int line);
 	void (*errorwarning_sub) (StringBuf *buf, const char *src, const char *file, int start_line, const char *error_msg, const char *error_pos);
-	int (*set_reg) (struct script_state *st, TBL_PC *sd, int64 num, const char *name, const void *value, struct reg_db *ref);
+	int (*set_reg) (struct script_state *st, struct map_session_data *sd, int64 num, const char *name, const void *value, struct reg_db *ref);
 	void (*set_reg_ref_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
 	void (*set_reg_scope_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);
 	void (*set_reg_npc_str) (struct script_state* st, struct reg_db *n, int64 num, const char* name, const char *str);

@@ -640,7 +640,7 @@ ACMD(who) {
 	StrBuf->Init(&buf);
 
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter)) {
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter)) {
 		if (!((pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) || pc_isinvisible(pl_sd)) && pc_get_group_level(pl_sd) > level)) { // you can look only lower or same level
 			if (stristr(pl_sd->status.name, player_name) == NULL // search with no case sensitive
 				|| (map_id >= 0 && pl_sd->bl.m != map_id))
@@ -731,7 +731,7 @@ ACMD(whogm)
 	level = pc_get_group_level(sd);
 
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter)) {
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter)) {
 		int pl_level = pc_get_group_level(pl_sd);
 		if (!pl_level)
 			continue;
@@ -1563,7 +1563,7 @@ int atcommand_stopattack(struct block_list *bl,va_list ap)
  *------------------------------------------*/
 int atcommand_pvpoff_sub(struct block_list *bl,va_list ap)
 {
-	TBL_PC* sd = (TBL_PC*)bl;
+	struct map_session_data *sd = (struct map_session_data *)bl;
 	nullpo_ret(bl);
 	clif->pvpset(sd, 0, 0, 2);
 	if (sd->pvp_timer != INVALID_TIMER) {
@@ -1598,7 +1598,7 @@ ACMD(pvpoff)
  *------------------------------------------*/
 int atcommand_pvpon_sub(struct block_list *bl,va_list ap)
 {
-	TBL_PC* sd = (TBL_PC*)bl;
+	struct map_session_data *sd = (struct map_session_data *)bl;
 	nullpo_ret(bl);
 	if (sd->pvp_timer == INVALID_TIMER) {
 		sd->pvp_timer = timer->add(timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
@@ -2959,10 +2959,8 @@ ACMD(doom)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
-	{
-		if (pl_sd->fd != fd && pc_get_group_level(sd) >= pc_get_group_level(pl_sd))
-		{
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter)) {
+		if (pl_sd->fd != fd && pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) {
 			status_kill(&pl_sd->bl);
 			clif->specialeffect(&pl_sd->bl,450,AREA);
 			clif->message(pl_sd->fd, msg_fd(fd,61)); // The holy messenger has given judgment.
@@ -2984,10 +2982,8 @@ ACMD(doommap)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
-	{
-		if (pl_sd->fd != fd && sd->bl.m == pl_sd->bl.m && pc_get_group_level(sd) >= pc_get_group_level(pl_sd))
-		{
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter)) {
+		if (pl_sd->fd != fd && sd->bl.m == pl_sd->bl.m && pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) {
 			status_kill(&pl_sd->bl);
 			clif->specialeffect(&pl_sd->bl,450,AREA);
 			clif->message(pl_sd->fd, msg_fd(fd,61)); // The holy messenger has given judgment.
@@ -3021,7 +3017,7 @@ ACMD(raise)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter))
 		if( pc_isdead(pl_sd) )
 			atcommand->raise_sub(pl_sd);
 	mapit->free(iter);
@@ -3040,7 +3036,7 @@ ACMD(raisemap)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter))
 		if (sd->bl.m == pl_sd->bl.m && pc_isdead(pl_sd) )
 			atcommand->raise_sub(pl_sd);
 	mapit->free(iter);
@@ -3089,8 +3085,7 @@ ACMD(kickall)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter))
-	{
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter)) {
 		if (pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) { // you can kick only lower or same gm level
 			if (sd->status.account_id != pl_sd->status.account_id)
 				clif->GM_kick(NULL, pl_sd);
@@ -3424,7 +3419,7 @@ ACMD(recallall)
 
 	count = 0;
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter)) {
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter)) {
 		if (sd->status.account_id != pl_sd->status.account_id && pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) {
 			if (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y)
 				continue; // Don't waste time warping the character to the same place.
@@ -3484,8 +3479,7 @@ ACMD(guildrecall)
 	count = 0;
 
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter))
-	{
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter)) {
 		if (sd->status.account_id != pl_sd->status.account_id && pl_sd->status.guild_id == g->guild_id) {
 			if (pc_get_group_level(pl_sd) > pc_get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
 				continue; // Skip GMs greater than you...             or chars already on the cell
@@ -3541,7 +3535,7 @@ ACMD(partyrecall)
 	count = 0;
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) ) {
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter)) {
 		if (sd->status.account_id != pl_sd->status.account_id && pl_sd->status.party_id == p->party.party_id) {
 			if (pc_get_group_level(pl_sd) > pc_get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
 				continue; // Skip GMs greater than you...             or chars already on the cell
@@ -3704,7 +3698,7 @@ ACMD(reloadscript) {
 	//atcommand_broadcast( fd, sd, "@broadcast", "You will feel a bit of lag at this point !" );
 
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter)) {
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter)) {
 		if (pl_sd->npc_id || pl_sd->npc_shopid) {
 			if (pl_sd->state.using_fake_npc) {
 				clif->clearunit_single(pl_sd->npc_id, CLR_OUTSIGHT, pl_sd->fd);
@@ -3780,7 +3774,7 @@ ACMD(mapinfo) {
 	// count chats (for initial message)
 	chat_num = 0;
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) ) {
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter)) {
 		if( pl_sd->mapindex == m_index ) {
 			if( pl_sd->state.vending )
 				vend_num++;
@@ -3925,8 +3919,7 @@ ACMD(mapinfo) {
 		case 1:
 			clif->message(fd, msg_fd(fd,1098)); // ----- Players in Map -----
 			iter = mapit_getallusers();
-			for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter))
-			{
+			for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter)) {
 				if (pl_sd->mapindex == m_index) {
 					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1099), // Player '%s' (session #%d) | Location: %d,%d
 							pl_sd->status.name, pl_sd->fd, pl_sd->bl.x, pl_sd->bl.y);
@@ -3963,8 +3956,7 @@ ACMD(mapinfo) {
 		case 3:
 			clif->message(fd, msg_fd(fd,1113)); // ----- Chats in Map -----
 			iter = mapit_getallusers();
-			for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter))
-			{
+			for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter)) {
 				if ((cd = (struct chat_data*)map->id2bl(pl_sd->chatID)) != NULL &&
 						pl_sd->mapindex == m_index &&
 						cd->usersd[0] == pl_sd)
@@ -4749,7 +4741,7 @@ ACMD(disguiseall)
 	}
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter))
 		pc->disguise(pl_sd, mob_id);
 	mapit->free(iter);
 
@@ -4829,7 +4821,7 @@ ACMD(undisguiseall) {
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter))
 		if( pl_sd->disguise != -1 )
 			pc->disguise(pl_sd, -1);
 	mapit->free(iter);
@@ -6536,7 +6528,7 @@ ACMD(refreshall)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for (iter_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); iter_sd = (TBL_PC*)mapit->next(iter))
+	for (iter_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); iter_sd = (struct map_session_data *)mapit->next(iter))
 		clif->refresh(iter_sd);
 	mapit->free(iter);
 	return true;
@@ -7419,7 +7411,7 @@ ACMD(sizeall)
 	size = cap_value(size,0,2);
 
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter)) {
+	for (pl_sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); pl_sd = (struct map_session_data *)mapit->next(iter)) {
 		if (pl_sd->state.size != size) {
 			if (pl_sd->state.size) {
 				pl_sd->state.size = SZ_SMALL;
@@ -9822,7 +9814,7 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 	//Reconstructed message
 	char atcmd_msg[CHAT_SIZE_MAX];
 
-	TBL_PC * ssd = NULL; //sd for target
+	struct map_session_data *ssd = NULL; //sd for target
 	AtCommandInfo * info;
 
 	nullpo_retr(false, sd);

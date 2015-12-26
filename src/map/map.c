@@ -350,12 +350,13 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 
 		skill->unit_move(bl,tick,3);
 
-		if( bl->type == BL_PC && ((TBL_PC*)bl)->shadowform_id ) {//Shadow Form Target Moving
+		if (bl->type == BL_PC && ((struct map_session_data *)bl)->shadowform_id != 0) {
+			//Shadow Form Target Moving
 			struct block_list *d_bl;
-			if( (d_bl = map->id2bl(((TBL_PC*)bl)->shadowform_id)) == NULL || !check_distance_bl(bl,d_bl,10) ) {
+			if ((d_bl = map->id2bl(((struct map_session_data *)bl)->shadowform_id)) == NULL || !check_distance_bl(bl,d_bl,10)) {
 				if( d_bl )
 					status_change_end(d_bl,SC__SHADOWFORM,INVALID_TIMER);
-				((TBL_PC*)bl)->shadowform_id = 0;
+				((struct map_session_data *)bl)->shadowform_id = 0;
 			}
 		}
 
@@ -391,7 +392,7 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 				}
 			}
 			/* Guild Aura Moving */
-			if( bl->type == BL_PC && ((TBL_PC*)bl)->state.gmaster_flag ) {
+			if (bl->type == BL_PC && ((struct map_session_data *)bl)->state.gmaster_flag) {
 				if (sc->data[SC_LEADERSHIP])
 					skill->unit_move_unit_group(skill->id2group(sc->data[SC_LEADERSHIP]->val4), bl->m, x1-x0, y1-y0);
 				if (sc->data[SC_GLORYWOUNDS])
@@ -1738,9 +1739,8 @@ void map_addiddb(struct block_list *bl)
 {
 	nullpo_retv(bl);
 
-	if( bl->type == BL_PC )
-	{
-		TBL_PC* sd = (TBL_PC*)bl;
+	if (bl->type == BL_PC) {
+		struct map_session_data *sd = (struct map_session_data *)bl;
 		idb_put(map->pc_db,sd->bl.id,sd);
 		idb_put(map->charid_db,sd->status.char_id,sd);
 	}
@@ -1766,14 +1766,11 @@ void map_deliddb(struct block_list *bl)
 {
 	nullpo_retv(bl);
 
-	if( bl->type == BL_PC )
-	{
-		TBL_PC* sd = (TBL_PC*)bl;
+	if (bl->type == BL_PC) {
+		struct map_session_data *sd = (struct map_session_data *)bl;
 		idb_remove(map->pc_db,sd->bl.id);
 		idb_remove(map->charid_db,sd->status.char_id);
-	}
-	else if( bl->type == BL_MOB )
-	{
+	} else if (bl->type == BL_MOB) {
 		idb_remove(map->mobid_db,bl->id);
 		idb_remove(map->bossid_db,bl->id);
 	}
@@ -1982,8 +1979,7 @@ struct map_session_data * map_nick2sd(const char *nick)
 	iter = mapit_getallusers();
 
 	found_sd = NULL;
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
-	{
+	for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter)) {
 		if( battle_config.partial_name_scan )
 		{// partial name search
 			if( strnicmp(sd->status.name, nick, nicklen) == 0 )
@@ -5384,7 +5380,7 @@ int do_final(void) {
 
 	//Ladies and babies first.
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
+	for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter))
 		map->quit(sd);
 	mapit->free(iter);
 
@@ -5528,7 +5524,7 @@ void do_shutdown(void)
 		{
 			struct map_session_data* sd;
 			struct s_mapiterator* iter = mapit_getallusers();
-			for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
+			for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter))
 				clif->GM_kick(NULL, sd);
 			mapit->free(iter);
 			sockt->flush_fifos();
