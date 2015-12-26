@@ -13623,7 +13623,7 @@ BUILDIN(recovery)
 BUILDIN(getpetinfo)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	TBL_PET *pd;
+	struct pet_data *pd;
 	int type=script_getnum(st,2);
 
 	if (sd == NULL || sd->pd == NULL) {
@@ -16386,7 +16386,7 @@ BUILDIN(rid2name) {
 			case BL_MOB: script_pushstrcopy(st, ((struct mob_data *)bl)->name); break;
 			case BL_PC:  script_pushstrcopy(st, ((struct map_session_data *)bl)->status.name); break;
 			case BL_NPC: script_pushstrcopy(st, ((struct npc_data *)bl)->exname); break;
-			case BL_PET: script_pushstrcopy(st,((TBL_PET*)bl)->pet.name); break;
+			case BL_PET: script_pushstrcopy(st, ((struct pet_data *)bl)->pet.name); break;
 			case BL_HOM: script_pushstrcopy(st, ((struct homun_data *)bl)->homunculus.name); break;
 			case BL_MER: script_pushstrcopy(st, ((struct mercenary_data *)bl)->db->name); break;
 			default:
@@ -16611,7 +16611,7 @@ BUILDIN(unitattack) {
 			((struct mob_data *)unit_bl)->target_id = target_bl->id;
 			break;
 		case BL_PET:
-			((TBL_PET *)unit_bl)->target_id = target_bl->id;
+			((struct pet_data *)unit_bl)->target_id = target_bl->id;
 			break;
 		default:
 			ShowError("script:unitattack: unsupported source unit type %d\n", unit_bl->type);

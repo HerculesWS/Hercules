@@ -2231,8 +2231,8 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 	dmg = battle->calc_attack(attack_type,src,bl,skill_id,skill_lv,flag&0xFFF);
 
 	//Skotlex: Adjusted to the new system
-	if( src->type == BL_PET ) { // [Valaris]
-		struct pet_data *pd = (TBL_PET*)src;
+	if (src->type == BL_PET) { // [Valaris]
+		struct pet_data *pd = (struct pet_data *)src;
 		if (pd->a_skill && pd->a_skill->div_ && pd->a_skill->id == skill_id) {
 			int element = skill->get_ele(skill_id, skill_lv);
 			/*if (skill_id == -1) Does it ever worked?
@@ -5574,8 +5574,9 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					if (!ud) break;
 					if (inf&INF_SELF_SKILL || inf&INF_SUPPORT_SKILL) {
 						if (src->type == BL_PET)
-							bl = (struct block_list*)((TBL_PET*)src)->msd;
-						if (!bl) bl = src;
+							bl = (struct block_list *)((struct pet_data *)src)->msd;
+						if (bl == NULL)
+							bl = src;
 						unit->skilluse_id(src, bl->id, abra_skill_id, abra_skill_lv);
 					} else { //Assume offensive skills
 						int target_id = 0;
@@ -5583,7 +5584,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 							target_id = ud->target;
 						else switch (src->type) {
 							case BL_MOB: target_id = ((struct mob_data *)src)->target_id; break;
-							case BL_PET: target_id = ((TBL_PET*)src)->target_id; break;
+							case BL_PET: target_id = ((struct pet_data *)src)->target_id; break;
 						}
 						if (!target_id)
 							break;
@@ -9262,8 +9263,9 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					if (!ud) break;
 					if (inf&INF_SELF_SKILL || inf&INF_SUPPORT_SKILL) {
 						if (src->type == BL_PET)
-							bl = (struct block_list*)((TBL_PET*)src)->msd;
-						if (!bl) bl = src;
+							bl = (struct block_list *)((struct pet_data *)src)->msd;
+						if (bl == NULL)
+							bl = src;
 						unit->skilluse_id(src, bl->id, improv_skill_id, improv_skill_lv);
 					} else {
 						int target_id = 0;
@@ -9271,7 +9273,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 							target_id = ud->target;
 						else switch (src->type) {
 							case BL_MOB: target_id = ((struct mob_data *)src)->target_id; break;
-							case BL_PET: target_id = ((TBL_PET*)src)->target_id; break;
+							case BL_PET: target_id = ((struct pet_data *)src)->target_id; break;
 						}
 						if (!target_id)
 							break;

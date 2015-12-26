@@ -1463,7 +1463,7 @@ bool clif_spawn(struct block_list *bl)
 			break;
 		case BL_PET:
 			if (vd->head_bottom)
-				clif->send_petdata(NULL, (TBL_PET*)bl, 3, vd->head_bottom); // needed to display pet equip properly
+				clif->send_petdata(NULL, (struct pet_data *)bl, 3, vd->head_bottom); // needed to display pet equip properly
 			break;
 	}
 	return true;
@@ -1709,7 +1709,7 @@ void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *u
 			break;
 		case BL_PET:
 			if( vd->head_bottom ) // needed to display pet equip properly
-				clif->send_petdata(NULL, (TBL_PET*)bl, 3, vd->head_bottom);
+				clif->send_petdata(NULL, (struct pet_data *)bl, 3, vd->head_bottom);
 			break;
 	}
 #ifdef ANTI_MAYAP_CHEAT
@@ -4233,7 +4233,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 			break;
 		case BL_PET:
 			if (vd->head_bottom)
-				clif->send_petdata(NULL, (TBL_PET*)bl, 3, vd->head_bottom); // needed to display pet equip properly
+				clif->send_petdata(NULL, (struct pet_data *)bl, 3, vd->head_bottom); // needed to display pet equip properly
 			break;
 	}
 }
@@ -8415,7 +8415,7 @@ void clif_charnameack (int fd, struct block_list *bl)
 			memcpy(WBUFP(buf,6), ((struct mercenary_data *)bl)->db->name, NAME_LENGTH);
 			break;
 		case BL_PET:
-			memcpy(WBUFP(buf,6), ((TBL_PET*)bl)->pet.name, NAME_LENGTH);
+			memcpy(WBUFP(buf,6), ((struct pet_data *)bl)->pet.name, NAME_LENGTH);
 			break;
 		case BL_NPC:
 			memcpy(WBUFP(buf,6), ((TBL_NPC*)bl)->name, NAME_LENGTH);

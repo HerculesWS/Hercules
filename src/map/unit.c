@@ -2161,7 +2161,7 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 				map->foreachinrange(mob->linksearch, src, md->db->range2, BL_MOB, md->class_, target, tick);
 			}
 		}
-		if(src->type == BL_PET && pet->attackskill((TBL_PET*)src, target->id))
+		if (src->type == BL_PET && pet->attackskill((struct pet_data *)src, target->id))
 			return 1;
 
 		map->freeblock_lock();

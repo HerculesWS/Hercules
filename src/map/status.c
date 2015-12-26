@@ -4123,7 +4123,7 @@ int status_check_visibility(struct block_list *src, struct block_list *target) {
 		view_range = ((struct mob_data *)src)->min_chase;
 		break;
 	case BL_PET:
-		view_range = ((TBL_PET*)src)->db->range2;
+		view_range = ((struct pet_data *)src)->db->range2;
 		break;
 	default:
 		view_range = AREA_SIZE;
@@ -6207,7 +6207,7 @@ const char* status_get_name(struct block_list *bl) {
 	switch (bl->type) {
 		case BL_PC:  return ((struct map_session_data *)bl)->fakename[0] != '\0' ? ((struct map_session_data *)bl)->fakename : ((struct map_session_data *)bl)->status.name;
 		case BL_MOB: return ((struct mob_data *)bl)->name;
-		case BL_PET: return ((TBL_PET*)bl)->pet.name;
+		case BL_PET: return ((struct pet_data *)bl)->pet.name;
 		case BL_HOM: return ((struct homun_data *)bl)->homunculus.name;
 		case BL_NPC: return ((TBL_NPC*)bl)->name;
 	}
@@ -6225,7 +6225,7 @@ int status_get_class(struct block_list *bl) {
 	switch( bl->type ) {
 		case BL_PC:  return ((struct map_session_data *)bl)->status.class_;
 		case BL_MOB: return ((struct mob_data *)bl)->vd->class_; //Class used on all code should be the view class of the mob.
-		case BL_PET: return ((TBL_PET*)bl)->pet.class_;
+		case BL_PET: return ((struct pet_data *)bl)->pet.class_;
 		case BL_HOM: return ((struct homun_data *)bl)->homunculus.class_;
 		case BL_MER: return ((struct mercenary_data *)bl)->mercenary.class_;
 		case BL_NPC: return ((TBL_NPC*)bl)->class_;
@@ -6244,7 +6244,7 @@ int status_get_lv(struct block_list *bl) {
 	switch (bl->type) {
 		case BL_PC:  return ((struct map_session_data *)bl)->status.base_level;
 		case BL_MOB: return ((struct mob_data *)bl)->level;
-		case BL_PET: return ((TBL_PET*)bl)->pet.level;
+		case BL_PET: return ((struct pet_data *)bl)->pet.level;
 		case BL_HOM: return ((struct homun_data *)bl)->homunculus.level;
 		case BL_MER: return ((struct mercenary_data *)bl)->db->lv;
 		case BL_ELEM: return ((TBL_ELEM*)bl)->db->lv;
@@ -6273,7 +6273,7 @@ struct status_data *status_get_status_data(struct block_list *bl)
 	switch (bl->type) {
 		case BL_PC:  return &((struct map_session_data *)bl)->battle_status;
 		case BL_MOB: return &((struct mob_data *)bl)->status;
-		case BL_PET: return &((TBL_PET*)bl)->status;
+		case BL_PET: return &((struct pet_data *)bl)->status;
 		case BL_HOM: return &((struct homun_data *)bl)->battle_status;
 		case BL_MER: return &((struct mercenary_data *)bl)->battle_status;
 		case BL_ELEM: return &((TBL_ELEM*)bl)->battle_status;
@@ -6289,7 +6289,7 @@ struct status_data *status_get_base_status(struct block_list *bl)
 	switch (bl->type) {
 		case BL_PC:  return &((struct map_session_data *)bl)->base_status;
 		case BL_MOB: return ((struct mob_data *)bl)->base_status ? ((struct mob_data *)bl)->base_status : &((struct mob_data *)bl)->db->status;
-		case BL_PET: return &((TBL_PET*)bl)->db->status;
+		case BL_PET: return &((struct pet_data *)bl)->db->status;
 		case BL_HOM: return &((struct homun_data *)bl)->base_status;
 		case BL_MER: return &((struct mercenary_data *)bl)->base_status;
 		case BL_ELEM: return &((TBL_ELEM*)bl)->base_status;
@@ -6321,8 +6321,8 @@ int status_get_party_id(struct block_list *bl) {
 	case BL_PC:
 		return ((struct map_session_data *)bl)->status.party_id;
 	case BL_PET:
-		if (((TBL_PET*)bl)->msd)
-			return ((TBL_PET*)bl)->msd->status.party_id;
+		if (((struct pet_data *)bl)->msd != NULL)
+			return ((struct pet_data *)bl)->msd->status.party_id;
 		break;
 	case BL_MOB:
 	{
@@ -6361,8 +6361,8 @@ int status_get_guild_id(struct block_list *bl) {
 	case BL_PC:
 		return ((struct map_session_data *)bl)->status.guild_id;
 	case BL_PET:
-		if (((TBL_PET*)bl)->msd)
-			return ((TBL_PET*)bl)->msd->status.guild_id;
+		if (((struct pet_data *)bl)->msd != NULL)
+			return ((struct pet_data *)bl)->msd->status.guild_id;
 		break;
 	case BL_MOB:
 	{
@@ -6406,8 +6406,8 @@ int status_get_emblem_id(struct block_list *bl) {
 	case BL_PC:
 		return ((struct map_session_data *)bl)->guild_emblem_id;
 	case BL_PET:
-		if (((TBL_PET*)bl)->msd)
-			return ((TBL_PET*)bl)->msd->guild_emblem_id;
+		if (((struct pet_data *)bl)->msd != NULL)
+			return ((struct pet_data *)bl)->msd->guild_emblem_id;
 		break;
 	case BL_MOB:
 	{
@@ -6482,7 +6482,7 @@ struct view_data* status_get_viewdata(struct block_list *bl)
 	switch (bl->type) {
 		case BL_PC:  return &((struct map_session_data *)bl)->vd;
 		case BL_MOB: return ((struct mob_data *)bl)->vd;
-		case BL_PET: return &((TBL_PET*)bl)->vd;
+		case BL_PET: return &((struct pet_data *)bl)->vd;
 		case BL_NPC: return ((TBL_NPC*)bl)->vd;
 		case BL_HOM: return ((struct homun_data *)bl)->vd;
 		case BL_MER: return ((struct mercenary_data *)bl)->vd;
@@ -6584,21 +6584,22 @@ void status_set_viewdata(struct block_list *bl, int class_)
 	}
 		break;
 	case BL_PET:
-		{
-			TBL_PET* pd = (TBL_PET*)bl;
-			if (vd) {
-				memcpy(&pd->vd, vd, sizeof(struct view_data));
-				if (!pc->db_checkid(vd->class_)) {
-					pd->vd.hair_style = battle_config.pet_hair_style;
-					if(pd->pet.equip) {
-						pd->vd.head_bottom = itemdb_viewid(pd->pet.equip);
-						if (!pd->vd.head_bottom)
-							pd->vd.head_bottom = pd->pet.equip;
-					}
+	{
+		struct pet_data *pd = (struct pet_data *)bl;
+		if (vd != NULL) {
+			memcpy(&pd->vd, vd, sizeof(struct view_data));
+			if (!pc->db_checkid(vd->class_)) {
+				pd->vd.hair_style = battle_config.pet_hair_style;
+				if(pd->pet.equip) {
+					pd->vd.head_bottom = itemdb_viewid(pd->pet.equip);
+					if (!pd->vd.head_bottom)
+						pd->vd.head_bottom = pd->pet.equip;
 				}
-			} else
-				ShowError("status_set_viewdata (PET): No view data for class %d\n", class_);
+			}
+		} else {
+			ShowError("status_set_viewdata (PET): No view data for class %d\n", class_);
 		}
+	}
 		break;
 	case BL_NPC:
 		{

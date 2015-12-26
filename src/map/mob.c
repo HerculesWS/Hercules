@@ -1972,7 +1972,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 		}
 		case BL_PET:
 		{
-			struct pet_data *pd = (TBL_PET*)src;
+			struct pet_data *pd = (struct pet_data *)src;
 			flag = MDLF_PET;
 			if( pd->msd )
 			{
@@ -2582,7 +2582,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		md->status.hp = 0; //So that npc_event invoked functions KNOW that mob is dead
 		if( src ) {
 			switch( src->type ) {
-				case BL_PET: sd = ((TBL_PET*)src)->msd; break;
+				case BL_PET: sd = ((struct pet_data *)src)->msd; break;
 				case BL_HOM: sd = ((struct homun_data *)src)->master; break;
 				case BL_MER: sd = ((struct mercenary_data *)src)->master; break;
 				case BL_ELEM: sd = ((TBL_ELEM*)src)->master; break;

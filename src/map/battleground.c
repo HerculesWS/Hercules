@@ -222,8 +222,8 @@ int bg_team_get_id(struct block_list *bl) {
 		case BL_PC:
 			return ((struct map_session_data *)bl)->bg_id;
 		case BL_PET:
-			if( ((TBL_PET*)bl)->msd )
-				return ((TBL_PET*)bl)->msd->bg_id;
+			if (((struct pet_data *)bl)->msd != NULL)
+				return ((struct pet_data *)bl)->msd->bg_id;
 			break;
 		case BL_MOB:
 		{
