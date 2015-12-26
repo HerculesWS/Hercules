@@ -823,7 +823,7 @@ uint8 unit_getdir(struct block_list *bl) {
 	nullpo_ret(bl);
 
 	if( bl->type == BL_NPC )
-		return ((TBL_NPC*)bl)->dir;
+		return ((struct npc_data *)bl)->dir;
 	ud = unit->bl2ud(bl);
 	if (!ud) return 0;
 	return ud->dir;
@@ -1875,7 +1875,7 @@ int unit_attack(struct block_list *src,int target_id,int continuous) {
 	if( src->type == BL_PC ) {
 		struct map_session_data *sd = (struct map_session_data *)src;
 		if( target->type == BL_NPC ) { // monster npcs [Valaris]
-			npc->click(sd,(TBL_NPC*)target); // submitted by leinsirk10 [Celest]
+			npc->click(sd, (struct npc_data *)target); // submitted by leinsirk10 [Celest]
 			return 0;
 		}
 		if( pc_is90overweight(sd) || pc_isridingwug(sd) ) { // overweight or mounted on warg - stop attacking

@@ -1184,7 +1184,7 @@ int mob_warpchase_sub(struct block_list *bl,va_list ap) {
 	target_nd= va_arg(ap, struct npc_data**);
 	min_distance= va_arg(ap, int*);
 
-	nd = (TBL_NPC*) bl;
+	nd = (struct npc_data *)bl;
 
 	if(nd->subtype != WARP)
 		return 0; //Not a warp

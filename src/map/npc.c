@@ -1171,7 +1171,7 @@ struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* b
 	nullpo_retr(NULL, sd);
 	if (bl == NULL) return NULL;
 	if (bl->type != BL_NPC) return NULL;
-	nd = (TBL_NPC*)bl;
+	nd = (struct npc_data *)bl;
 
 	if (sd->npc_id == bl->id)
 		return nd;
@@ -1296,8 +1296,8 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing) {
 	nullpo_retr(1, sd);
 
 	if( id != sd->npc_id ){
-		TBL_NPC* nd_sd=(TBL_NPC*)map->id2bl(sd->npc_id);
-		TBL_NPC* nd = BL_CAST(BL_NPC, target);
+		struct npc_data *nd_sd = (struct npc_data *)map->id2bl(sd->npc_id);
+		struct npc_data *nd = BL_CAST(BL_NPC, target);
 		ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
 			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
 			nd?(char*)nd->name:"'Unknown NPC'", (int)id);

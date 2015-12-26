@@ -8101,13 +8101,12 @@ BUILDIN(strcharinfo)
  * 3 : ::str
  * 4 : map name
  *------------------------------------------*/
-BUILDIN(strnpcinfo) {
-	TBL_NPC* nd;
+BUILDIN(strnpcinfo)
+{
 	int num;
 	char *buf,*name=NULL;
-
-	nd = map->id2nd(st->oid);
-	if (!nd) {
+	struct npc_data *nd = map->id2nd(st->oid);
+	if (nd == NULL) {
 		script_pushconststr(st, "");
 		return true;
 	}
@@ -10415,14 +10414,15 @@ int buildin_announce_sub(struct block_list *bl, va_list ap)
 /* Runs item effect on attached character.
  * itemeffect <item id>;
  * itemeffect "<item name>"; */
-BUILDIN(itemeffect) {
-	TBL_NPC *nd;
+BUILDIN(itemeffect)
+{
+	struct npc_data *nd;
 	struct item_data *item_data;
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
 		return true;
 
-	nd = (TBL_NPC *)map->id2bl(sd->npc_id);
+	nd = (struct npc_data *)map->id2bl(sd->npc_id);
 	if( nd == NULL )
 		return false;
 
@@ -10750,8 +10750,9 @@ BUILDIN(hideonnpc)
  * sc_start4 <effect_id>,<duration>,<val1>,<val2>,<val3>,<val4>{,<rate,<flag>,{<unit_id>}};
  * <flag>: @see enum scstart_flag
  */
-BUILDIN(sc_start) {
-	TBL_NPC * nd = map->id2nd(st->oid);
+BUILDIN(sc_start)
+{
+	struct npc_data *nd = map->id2nd(st->oid);
 	struct block_list* bl;
 	enum sc_type type;
 	int tick, val1, val2, val3, val4=0, rate, flag;
@@ -12001,11 +12002,12 @@ BUILDIN(emotion) {
 		if (sd != NULL)
 			clif->emotion(&sd->bl,type);
 	} else if( script_hasdata(st,4) ) {
-		TBL_NPC *nd = npc->name2id(script_getstr(st,4));
-		if(nd)
+		struct npc_data *nd = npc->name2id(script_getstr(st,4));
+		if (nd == NULL)
 			clif->emotion(&nd->bl,type);
-	} else
+	} else {
 		clif->emotion(map->id2bl(st->oid),type);
+	}
 	return true;
 }
 
@@ -12100,13 +12102,14 @@ BUILDIN(agitcheck2) {
 /// Sets the guild_id of this npc.
 ///
 /// flagemblem <guild_id>;
-BUILDIN(flagemblem) {
-	TBL_NPC* nd;
+BUILDIN(flagemblem)
+{
+	struct npc_data *nd;
 	int g_id = script_getnum(st,2);
 
 	if(g_id < 0) return true;
 
-	nd = (TBL_NPC*)map->id2nd(st->oid);
+	nd = (struct npc_data *)map->id2nd(st->oid);
 	if( nd == NULL ) {
 		ShowError("script:flagemblem: npc %d not found\n", st->oid);
 	} else if( nd->subtype != SCRIPT ) {
@@ -13471,14 +13474,11 @@ BUILDIN(specialeffect) {
 	if(bl==NULL)
 		return true;
 
-	if( script_hasdata(st,4) )
-	{
-		TBL_NPC *nd = npc->name2id(script_getstr(st,4));
-		if(nd)
+	if (script_hasdata(st,4)) {
+		struct npc_data *nd = npc->name2id(script_getstr(st,4));
+		if (nd != NULL)
 			clif->specialeffect(&nd->bl, type, target);
-	}
-	else
-	{
+	} else {
 		if (target == SELF) {
 			struct map_session_data *sd = script->rid2sd(st);
 			if (sd != NULL)
@@ -13557,7 +13557,7 @@ BUILDIN(atcommand)
 			struct block_list* bl = map->id2bl(st->oid);
 			memcpy(&sd->bl, bl, sizeof(struct block_list));
 			if (bl->type == BL_NPC)
-				safestrncpy(sd->status.name, ((TBL_NPC*)bl)->name, NAME_LENGTH);
+				safestrncpy(sd->status.name, ((struct npc_data *)bl)->name, NAME_LENGTH);
 		}
 	}
 
@@ -13784,8 +13784,9 @@ BUILDIN(__jump_zero)
 /*==========================================
  * movenpc [MouseJstr]
  *------------------------------------------*/
-BUILDIN(movenpc) {
-	TBL_NPC *nd = NULL;
+BUILDIN(movenpc)
+{
+	struct npc_data *nd = NULL;
 	const char *npc_name;
 	int x,y;
 
@@ -16501,7 +16502,7 @@ BUILDIN(unitwalk) {
 	}
 
 	if( bl->type == BL_NPC ) {
-		unit->bl2ud2(bl); // ensure the ((TBL_NPC*)bl)->ud is safe to edit
+		unit->bl2ud2(bl); // ensure the ((struct npc_data*)bl)->ud is safe to edit
 	}
 	if( script_hasdata(st,4) ) {
 		int x = script_getnum(st,3);
@@ -16555,7 +16556,7 @@ BUILDIN(unitwarp) {
 		mapid = map->mapname2mapid(mapname);
 
 	if( mapid >= 0 && bl != NULL ) {
-		unit->bl2ud2(bl); // ensure ((TBL_NPC*)bl)->ud is safe to edit
+		unit->bl2ud2(bl); // ensure ((struct npc_data *)bl)->ud is safe to edit
 		script_pushint(st, unit->warp(bl,mapid,x,y,CLR_OUTSIGHT));
 	} else {
 		script_pushint(st, 0);
@@ -16633,7 +16634,7 @@ BUILDIN(unitstop) {
 
 	bl = map->id2bl(unit_id);
 	if( bl != NULL ) {
-		unit->bl2ud2(bl); // ensure ((TBL_NPC*)bl)->ud is safe to edit
+		unit->bl2ud2(bl); // ensure ((struct npc_data *)bl)->ud is safe to edit
 		unit->stop_attack(bl);
 		unit->stop_walking(bl, STOPWALKING_FLAG_NEXTCELL);
 		if( bl->type == BL_MOB )
@@ -16705,10 +16706,10 @@ BUILDIN(unitskilluseid) {
 
 	if( bl != NULL ) {
 		if( bl->type == BL_NPC ) {
-			if (!((TBL_NPC*)bl)->status.hp) {
-				status_calc_npc(((TBL_NPC*)bl), SCO_FIRST);
+			if (((struct npc_data *)bl)->status.hp == 0) {
+				status_calc_npc((struct npc_data *)bl, SCO_FIRST);
 			} else {
-				status_calc_npc(((TBL_NPC*)bl), SCO_NONE);
+				status_calc_npc((struct npc_data *)bl, SCO_NONE);
 			}
 		}
 		unit->skilluse_id(bl, target_id, skill_id, skill_lv);
@@ -16739,10 +16740,10 @@ BUILDIN(unitskillusepos) {
 
 	if( bl != NULL ) {
 		if( bl->type == BL_NPC ) {
-			if (!((TBL_NPC*)bl)->status.hp) {
-				status_calc_npc(((TBL_NPC*)bl), SCO_FIRST);
+			if (((struct npc_data*)bl)->status.hp == 0) {
+				status_calc_npc((struct npc_data *)bl, SCO_FIRST);
 			} else {
-				status_calc_npc(((TBL_NPC*)bl), SCO_NONE);
+				status_calc_npc((struct npc_data *)bl, SCO_NONE);
 			}
 		}
 		unit->skilluse_pos(bl, skill_x, skill_y, skill_id, skill_lv);
@@ -18648,8 +18649,8 @@ BUILDIN(useatcmd) {
 		if( st->oid ) {
 			struct block_list* bl = map->id2bl(st->oid);
 			memcpy(&sd->bl, bl, sizeof(struct block_list));
-			if( bl->type == BL_NPC )
-				safestrncpy(sd->status.name, ((TBL_NPC*)bl)->name, NAME_LENGTH);
+			if (bl->type == BL_NPC)
+				safestrncpy(sd->status.name, ((struct npc_data *)bl)->name, NAME_LENGTH);
 		}
 	}
 

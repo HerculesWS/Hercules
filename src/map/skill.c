@@ -10051,8 +10051,9 @@ int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 
 }
-static int check_npc_chaospanic(struct block_list* bl, va_list args) {
-	TBL_NPC* nd = (TBL_NPC*)bl;
+static int check_npc_chaospanic(struct block_list *bl, va_list args)
+{
+	struct npc_data *nd = (struct npc_data *)bl;
 
 	if( nd->option&(OPTION_HIDE|OPTION_INVISIBLE) || nd->class_ != 45 )
 		return 0;

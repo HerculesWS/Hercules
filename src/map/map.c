@@ -332,8 +332,9 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 		if (sc && sc->data[SC_PROPERTYWALK] &&
 			sc->data[SC_PROPERTYWALK]->val3 >= skill->get_maxcount(sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2) )
 			status_change_end(bl,SC_PROPERTYWALK,INVALID_TIMER);
-	} else if (bl->type == BL_NPC)
-		npc->unsetcells((TBL_NPC*)bl);
+	} else if (bl->type == BL_NPC) {
+		npc->unsetcells((struct npc_data *)bl);
+	}
 
 	if (moveblock) map->delblock(bl);
 #ifdef CELL_NOSTACK
@@ -403,8 +404,9 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 					skill->unit_move_unit_group(skill->id2group(sc->data[SC_HAWKEYES]->val4), bl->m, x1-x0, y1-y0);
 			}
 		}
-	} else if (bl->type == BL_NPC)
-		npc->setcells((TBL_NPC*)bl);
+	} else if (bl->type == BL_NPC) {
+		npc->setcells((struct npc_data *)bl);
+	}
 
 	return 0;
 }
