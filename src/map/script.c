@@ -9068,6 +9068,30 @@ BUILDIN(getgmlevel)
 	return true;
 }
 
+/// set the group ID of the player.
+/// setgroupid(<new group id>{,"<character name>"|<account id>})
+/// return 1 on success, 0 if failed.
+BUILDIN(setgroupid) {
+	struct map_session_data* sd = NULL;
+	int new_group = script_getnum(st, 2);
+
+	if (script_hasdata(st, 3)) {
+		if (script_isstringtype(st, 3))
+			sd = script->nick2sd(st, script_getstr(st, 3));
+		else
+			sd = script->id2sd(st, script_getnum(st, 3));
+	}
+	else
+		sd = script->rid2sd(st);
+
+	if (sd == NULL)
+		return true; // no player attached, report source
+
+	script_pushint(st, !pc->set_group(sd, new_group));
+
+	return true;
+}
+
 /// Returns the group ID of the player.
 ///
 /// getgroupid() -> <int>
@@ -20254,6 +20278,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getgdskilllv,"iv"),
 		BUILDIN_DEF(basicskillcheck,""),
 		BUILDIN_DEF(getgmlevel,""),
+		BUILDIN_DEF(setgroupid, "i?"),
 		BUILDIN_DEF(getgroupid,""),
 		BUILDIN_DEF(end,""),
 		BUILDIN_DEF(checkoption,"i"),
