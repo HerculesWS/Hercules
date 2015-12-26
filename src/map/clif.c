@@ -10874,6 +10874,25 @@ void clif_parse_ChangeCart(int fd,struct map_session_data *sd)
 		pc->setcart(sd,type);
 }
 
+/// Request to select cart's visual look for new cart design (CZ_SELECTCART).
+/// 0980 <identity>.L <type>.B
+void clif_parse_SelectCart(int fd, struct map_session_data *sd)
+{
+#if PACKETVER >= 20150805 // RagexeRE
+	int type;
+
+	if (!sd || !pc->checkskill(sd, MC_CARTDECORATE) || RFIFOL(fd, 2) != sd->status.account_id)
+		return;
+
+	type = (int)RFIFOB(fd, 6);
+
+	if (type <= MAX_BASE_CARTS || type > MAX_CARTS)
+		return;
+
+	pc->setcart(sd, type);
+#endif
+}
+
 void clif_parse_StatusUp(int fd,struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Request to increase status (CZ_STATUS_CHANGE).
 /// 00bb <status id>.W <amount>.B
@@ -18607,6 +18626,28 @@ void clif_dressroom_open(struct map_session_data *sd, int view)
 	WFIFOSET(fd,packet_len(0xa02));
 }
 
+/// Request to select cart's visual look for new cart design (ZC_SELECTCART).
+/// 097f <Length>.W <identity>.L <type>.B
+void clif_selectcart(struct map_session_data *sd)
+{
+#if PACKETVER >= 20150805
+	int i = 0, fd;
+
+	fd = sd->fd;
+
+	WFIFOHEAD(fd, 8 + MAX_CART_DECORATION);
+	WFIFOW(fd, 0) = 0x97f;
+	WFIFOW(fd, 2) = 8 + MAX_CART_DECORATION;
+	WFIFOL(fd, 4) = sd->status.account_id;
+
+	for (i = 0; i < MAX_CART_DECORATION; i++) {
+		WFIFOB(fd, 8 + i) = MAX_BASE_CARTS + 1 + i;
+	}
+
+	WFIFOSET(fd, 8 + MAX_CART_DECORATION);
+#endif
+}
+
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -19419,6 +19460,8 @@ void clif_defaults(void) {
 	clif->cancelmergeitem = clif_cancelmergeitem;
 	clif->comparemergeitem = clif_comparemergeitem;
 	clif->ackmergeitems = clif_ackmergeitems;
+	/* Cart Deco */
+	clif->selectcart = clif_selectcart;
 
 	/*------------------------
 	 *- Parse Incoming Packet
@@ -19467,6 +19510,7 @@ void clif_defaults(void) {
 	clif->pGetItemFromCart = clif_parse_GetItemFromCart;
 	clif->pRemoveOption = clif_parse_RemoveOption;
 	clif->pChangeCart = clif_parse_ChangeCart;
+	clif->pSelectCart = clif_parse_SelectCart;
 	clif->pStatusUp = clif_parse_StatusUp;
 	clif->pSkillUp = clif_parse_SkillUp;
 	clif->pUseSkillToId = clif_parse_UseSkillToId;
