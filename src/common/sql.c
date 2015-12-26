@@ -778,8 +778,6 @@ int SqlStmt_NextRow(struct SqlStmt *self)
 	// check for errors
 	if (err == MYSQL_NO_DATA)
 		return SQL_NO_DATA;
-#if defined(MYSQL_DATA_TRUNCATED)
-	// MySQL 5.0/5.1 defines and returns MYSQL_DATA_TRUNCATED [FlavioJS]
 	if (err == MYSQL_DATA_TRUNCATED) {
 		my_bool truncated;
 
@@ -804,7 +802,6 @@ int SqlStmt_NextRow(struct SqlStmt *self)
 		ShowSQL("DB error - data truncated (unknown source)\n");
 		return SQL_ERROR;
 	}
-#endif
 	if (err) {
 		ShowSQL("DB error - %s\n", mysql_stmt_error(self->stmt));
 		hercules_mysql_error_handler(mysql_stmt_errno(self->stmt));
@@ -816,18 +813,6 @@ int SqlStmt_NextRow(struct SqlStmt *self)
 	for (i = 0; i < cols; ++i) {
 		unsigned long length = self->column_lengths[i].length;
 		MYSQL_BIND *column = &self->columns[i];
-#if !defined(MYSQL_DATA_TRUNCATED)
-		// MySQL 4.1/(below?) returns success even if data is truncated, so we test truncation manually [FlavioJS]
-		if (column->buffer_length < length) {
-			// report truncated column
-			if (column->buffer_type == MYSQL_TYPE_STRING || column->buffer_type == MYSQL_TYPE_BLOB) {
-				// string/enum/blob column
-				SqlStmt_P_ShowDebugTruncatedColumn(self, i);
-				return SQL_ERROR;
-			}
-			// FIXME numeric types and null [FlavioJS]
-		}
-#endif
 		if (self->column_lengths[i].out_length)
 			*self->column_lengths[i].out_length = (uint32)length;
 		if (column->buffer_type == MYSQL_TYPE_STRING) {
