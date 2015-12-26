@@ -2915,6 +2915,11 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0a02,4);	// ZC_DRESSROOM_OPEN
 #endif
 
+#if PACKETVER >= 20150805 // RagexeRE
+	packet(0x097f,-1); // ZC_SELECTCART
+	packet(0x0980,7,clif->pSelectCart); // CZ_SELECTCART
+#endif
+
 /* PacketKeys: http://herc.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */
 #if PACKETVER >= 20110817
 	packetKeys(0x053D5CED,0x3DED6DED,0x6DED6DED); /* Thanks to Shakto */
