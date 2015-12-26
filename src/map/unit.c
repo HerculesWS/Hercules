@@ -2817,7 +2817,7 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 			break;
 		}
 		case BL_ELEM: {
-			struct elemental_data *ed = (TBL_ELEM*)bl;
+			struct elemental_data *ed = (struct elemental_data *)bl;
 			struct map_session_data *sd = ed->master;
 			if( elemental->get_lifetime(ed) > 0 )
 				elemental->save(ed);

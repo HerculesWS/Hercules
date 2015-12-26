@@ -2001,7 +2001,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 		}
 		case BL_ELEM:
 		{
-			struct elemental_data *ele = (TBL_ELEM*)src;
+			struct elemental_data *ele = (struct elemental_data *)src;
 			if( ele->master )
 				char_id = ele->master->status.char_id;
 			if( damage )
@@ -2585,7 +2585,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 				case BL_PET: sd = ((struct pet_data *)src)->msd; break;
 				case BL_HOM: sd = ((struct homun_data *)src)->master; break;
 				case BL_MER: sd = ((struct mercenary_data *)src)->master; break;
-				case BL_ELEM: sd = ((TBL_ELEM*)src)->master; break;
+				case BL_ELEM: sd = ((struct elemental_data *)src)->master; break;
 			}
 		}
 

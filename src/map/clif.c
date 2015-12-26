@@ -8458,7 +8458,7 @@ void clif_charnameack (int fd, struct block_list *bl)
 #endif
 			return;
 		case BL_ELEM:
-			memcpy(WBUFP(buf,6), ((TBL_ELEM*)bl)->db->name, NAME_LENGTH);
+			memcpy(WBUFP(buf,6), ((struct elemental_data *)bl)->db->name, NAME_LENGTH);
 			break;
 		default:
 			ShowError("clif_charnameack: bad type %d(%d)\n", bl->type, bl->id);

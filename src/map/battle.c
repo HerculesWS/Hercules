@@ -6405,8 +6405,8 @@ struct block_list* battle_get_master(struct block_list *src) {
 					src = (struct block_list *)((struct mercenary_data *)src)->master;
 				break;
 			case BL_ELEM:
-				if (((TBL_ELEM*)src)->master)
-					src = (struct block_list*)((TBL_ELEM*)src)->master;
+				if (((struct elemental_data *)src)->master != NULL)
+					src = (struct block_list *)((struct elemental_data *)src)->master;
 				break;
 			case BL_SKILL:
 				if (((struct skill_unit *)src)->group != NULL && ((struct skill_unit *)src)->group->src_id != 0)
