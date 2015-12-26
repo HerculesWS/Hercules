@@ -214,7 +214,7 @@ int npc_enable_sub(struct block_list *bl, va_list ap)
 	nullpo_ret(nd=va_arg(ap,struct npc_data *));
 	if(bl->type == BL_PC)
 	{
-		TBL_PC *sd = (TBL_PC*)bl;
+		struct map_session_data *sd = (struct map_session_data*)bl;
 
 		if (nd->option&OPTION_INVISIBLE)
 			return 1;
@@ -1172,7 +1172,7 @@ struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* b
 	nullpo_retr(NULL, sd);
 	if (bl == NULL) return NULL;
 	if (bl->type != BL_NPC) return NULL;
-	nd = (TBL_NPC*)bl;
+	nd = (struct npc_data*)bl;
 
 	if (sd->npc_id == bl->id)
 		return nd;
@@ -1297,8 +1297,8 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing) {
 	nullpo_retr(1, sd);
 
 	if( id != sd->npc_id ){
-		TBL_NPC* nd_sd=(TBL_NPC*)map->id2bl(sd->npc_id);
-		TBL_NPC* nd = BL_CAST(BL_NPC, target);
+		struct npc_data* nd_sd=(struct npc_data*)map->id2bl(sd->npc_id);
+		struct npc_data* nd = BL_CAST(BL_NPC, target);
 		ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
 			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
 			nd?(char*)nd->name:"'Unknown NPC'", (int)id);
@@ -2296,7 +2296,7 @@ int npc_unload(struct npc_data* nd, bool single)
 
 		iter = mapit_geteachpc();
 		for( bl = (struct block_list*)mapit->first(iter); mapit->exists(iter); bl = (struct block_list*)mapit->next(iter) ) {
-			struct map_session_data *sd = ((TBL_PC*)bl);
+			struct map_session_data *sd = ((struct map_session_data*)bl);
 			if( sd && sd->npc_timer_id != INVALID_TIMER ) {
 				const struct TimerData *td = timer->get(sd->npc_timer_id);
 
