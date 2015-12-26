@@ -7626,7 +7626,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 				src = &((TBL_PET*)src)->msd->bl;
 			break;
 			case BL_HOM:
-				src = &((TBL_HOM*)src)->master->bl;
+				src = &((struct homun_data *)src)->master->bl;
 			break;
 			case BL_MER:
 				src = &((TBL_MER*)src)->master->bl;

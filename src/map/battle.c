@@ -3202,7 +3202,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				clif->millenniumshield(bl, sc->fv_counter++);
 
 		if (sc->data[SC_STYLE_CHANGE] && rnd()%2) {
-			TBL_HOM *hd = BL_CAST(BL_HOM,bl);
+			struct homun_data *hd = BL_CAST(BL_HOM,bl);
 			if (hd) homun->addspiritball(hd, 10); //add a sphere
 		}
 
@@ -3254,7 +3254,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if (tsc->data[SC_SHIELDSPELL_REF] && tsc->data[SC_SHIELDSPELL_REF]->val1 == 1 && damage > 0)
 			skill->break_equip(bl,EQP_ARMOR,10000,BCT_ENEMY );
 		if (tsc->data[SC_STYLE_CHANGE] && rnd()%2) {
-			TBL_HOM *hd = BL_CAST(BL_HOM,bl);
+			struct homun_data *hd = BL_CAST(BL_HOM,bl);
 			if (hd) homun->addspiritball(hd, 10);
 		}
 		if (src->type == BL_PC && damage > 0 && (sce = tsc->data[SC_GENTLETOUCH_ENERGYGAIN]) != NULL) {
@@ -4860,7 +4860,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				break;
 			case HFLI_SBR44: //[orn]
 				if(src->type == BL_HOM) {
-					wd.damage = ((TBL_HOM*)src)->homunculus.intimacy ;
+					wd.damage = ((struct homun_data *)src)->homunculus.intimacy;
 					break;
 				}
 			default:
@@ -5166,8 +5166,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			}
 #endif
 			if(sc->data[SC_STYLE_CHANGE]){
-				TBL_HOM *hd = BL_CAST(BL_HOM,src);
-				if (hd) ATK_ADD(hd->homunculus.spiritball * 3);
+				struct homun_data *hd = BL_CAST(BL_HOM, src);
+				if (hd != NULL)
+					ATK_ADD(hd->homunculus.spiritball * 3);
 			}
 		}
 
@@ -6396,8 +6397,8 @@ struct block_list* battle_get_master(struct block_list *src) {
 					src = map->id2bl(((struct mob_data *)src)->master_id);
 				break;
 			case BL_HOM:
-				if (((TBL_HOM*)src)->master)
-					src = (struct block_list*)((TBL_HOM*)src)->master;
+				if (((struct homun_data *)src)->master != NULL)
+					src = (struct block_list *)((struct homun_data *)src)->master;
 				break;
 			case BL_MER:
 				if (((TBL_MER*)src)->master)

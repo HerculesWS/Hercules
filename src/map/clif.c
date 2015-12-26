@@ -7016,7 +7016,7 @@ void clif_devotion(struct block_list *src, struct map_session_data *tsd)
 void clif_spiritball(struct block_list *bl) {
 	unsigned char buf[16];
 	struct map_session_data *sd = BL_CAST(BL_PC,bl);
-	TBL_HOM *hd = BL_CAST(BL_HOM,bl);
+	struct homun_data *hd = BL_CAST(BL_HOM,bl);
 
 	nullpo_retv(bl);
 
@@ -8409,7 +8409,7 @@ void clif_charnameack (int fd, struct block_list *bl)
 			break;
 		//[blackhole89]
 		case BL_HOM:
-			memcpy(WBUFP(buf,6), ((TBL_HOM*)bl)->homunculus.name, NAME_LENGTH);
+			memcpy(WBUFP(buf,6), ((struct homun_data *)bl)->homunculus.name, NAME_LENGTH);
 			break;
 		case BL_MER:
 			memcpy(WBUFP(buf,6), ((TBL_MER*)bl)->db->name, NAME_LENGTH);

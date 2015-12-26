@@ -234,8 +234,8 @@ int bg_team_get_id(struct block_list *bl) {
 			return md->bg_id;
 		}
 		case BL_HOM:
-			if( ((TBL_HOM*)bl)->master )
-				return ((TBL_HOM*)bl)->master->bg_id;
+			if (((struct homun_data *)bl)->master != NULL)
+				return ((struct homun_data*)bl)->master->bg_id;
 			break;
 		case BL_MER:
 			if( ((TBL_MER*)bl)->master )

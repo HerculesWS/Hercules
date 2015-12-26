@@ -6800,7 +6800,7 @@ ACMD(showmobs)
  * homunculus level up [orn]
  *------------------------------------------*/
 ACMD(homlevel) {
-	TBL_HOM * hd;
+	struct homun_data *hd;
 	int level = 0;
 	enum homun_type htype;
 

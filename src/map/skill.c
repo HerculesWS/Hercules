@@ -383,7 +383,7 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 sk
 #endif // RENEWAL
 			if (sd && (skill2_lv = pc->checkskill(sd, HP_MEDITATIO)) > 0)
 				hp += hp * skill2_lv * 2 / 100;
-			else if( src->type == BL_HOM && (skill2_lv = homun->checkskill(((TBL_HOM*)src), HLIF_BRAIN)) > 0 )
+			else if (src->type == BL_HOM && (skill2_lv = homun->checkskill(((struct homun_data *)src), HLIF_BRAIN)) > 0)
 				hp += hp * skill2_lv * 2 / 100;
 			break;
 	}
@@ -1765,8 +1765,8 @@ int skill_counter_additional_effect(struct block_list* src, struct block_list *b
 			break;
 		case HFLI_SBR44: // [orn]
 		case HVAN_EXPLOSION:
-			if(src->type == BL_HOM){
-				TBL_HOM *hd = (TBL_HOM*)src;
+			if (src->type == BL_HOM) {
+				struct homun_data *hd = (struct homun_data *)src;
 				hd->homunculus.intimacy = 200;
 				if (hd->master)
 					clif->send_homdata(hd->master,SP_INTIMATE,hd->homunculus.intimacy/100);
@@ -3092,7 +3092,7 @@ int skill_check_condition_mercenary(struct block_list *bl, int skill_id, int lv,
 	nullpo_ret(bl);
 
 	switch( bl->type ) {
-		case BL_HOM: sd = ((TBL_HOM*)bl)->master; break;
+		case BL_HOM: sd = ((struct homun_data *)bl)->master; break;
 		case BL_MER: sd = ((TBL_MER*)bl)->master; break;
 	}
 
@@ -18028,7 +18028,7 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick)
 }
 
 int skill_blockhomun_end(int tid, int64 tick, int id, intptr_t data) { // [orn]
-	struct homun_data *hd = (TBL_HOM*)map->id2bl(id);
+	struct homun_data *hd = (struct homun_data *)map->id2bl(id);
 	if (data <= 0 || data >= MAX_SKILL)
 		return 0;
 	if (hd) hd->blockskill[data] = 0;

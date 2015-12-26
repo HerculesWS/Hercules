@@ -2784,7 +2784,7 @@ int unit_free(struct block_list *bl, clr_type clrtype) {
 		}
 		case BL_HOM:
 		{
-			struct homun_data *hd = (TBL_HOM*)bl;
+			struct homun_data *hd = (struct homun_data *)bl;
 			struct map_session_data *sd = hd->master;
 			homun->hunger_timer_delete(hd);
 			if( hd->homunculus.intimacy > 0 )
