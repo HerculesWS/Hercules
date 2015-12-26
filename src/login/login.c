@@ -46,7 +46,7 @@
 
 struct login_interface login_s;
 struct login_interface *login;
-struct Login_Config login_config;
+struct Login_Config login_config_;
 struct mmo_char_server server[MAX_SERVERS]; // char server data
 
 struct Account_engine account_engine[] = {
@@ -559,7 +559,7 @@ void login_fromchar_parse_ban(int fd, int id, const char *const ip)
 			ShowNotice("Char-server '%s': Error of ban request (account: %d, new date unbans the account, ip: %s).\n", server[id].name, account_id, ip);
 		} else {
 			char tmpstr[24];
-			timestamp2string(tmpstr, sizeof(tmpstr), timestamp, login_config.date_format);
+			timestamp2string(tmpstr, sizeof(tmpstr), timestamp, login->config->date_format);
 			ShowNotice("Char-server '%s': Ban request (account: %d, new final date of banishment: %ld (%s), ip: %s).\n",
 			           server[id].name, account_id, (long)timestamp, tmpstr, ip);
 
@@ -995,12 +995,12 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 	//Account Registration Flood Protection by [Kevin]
 	if( new_reg_tick == 0 )
 		new_reg_tick = timer->gettick();
-	if( DIFF_TICK(tick, new_reg_tick) < 0 && num_regs >= login_config.allowed_regs ) {
+	if (DIFF_TICK(tick, new_reg_tick) < 0 && num_regs >= login->config->allowed_regs) {
 		ShowNotice("Account registration denied (registration limit exceeded)\n");
 		return 3;
 	}
 
-	if( login_config.new_acc_length_limit && ( strlen(userid) < 4 || strlen(pass) < 4 ) )
+	if (login->config->new_acc_length_limit && (strlen(userid) < 4 || strlen(pass) < 4))
 		return 1;
 
 	// check for invalid inputs
@@ -1019,7 +1019,7 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 	safestrncpy(acc.pass, pass, sizeof(acc.pass));
 	acc.sex = sex;
 	safestrncpy(acc.email, "a@a.com", sizeof(acc.email));
-	acc.expiration_time = ( login_config.start_limited_time != -1 ) ? time(NULL) + login_config.start_limited_time : 0;
+	acc.expiration_time = (login->config->start_limited_time != -1) ? time(NULL) + login->config->start_limited_time : 0;
 	safestrncpy(acc.lastlogin, "0000-00-00 00:00:00", sizeof(acc.lastlogin));
 	safestrncpy(acc.last_ip, last_ip, sizeof(acc.last_ip));
 	safestrncpy(acc.birthdate, "0000-00-00", sizeof(acc.birthdate));
@@ -1034,7 +1034,7 @@ int login_mmo_auth_new(const char* userid, const char* pass, const char sex, con
 
 	if( DIFF_TICK(tick, new_reg_tick) > 0 ) {// Update the registration check.
 		num_regs = 0;
-		new_reg_tick = tick + login_config.time_allowed*1000;
+		new_reg_tick = tick + login->config->time_allowed*1000;
 	}
 	++num_regs;
 
@@ -1054,7 +1054,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	sockt->ip2str(sockt->session[sd->fd]->client_addr, ip);
 
 	// DNS Blacklist check
-	if( login_config.use_dnsbl ) {
+	if (login->config->use_dnsbl) {
 		char r_ip[16];
 		char ip_dnsbl[256];
 		char* dnsbl_serv;
@@ -1062,7 +1062,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 
 		sprintf(r_ip, "%u.%u.%u.%u", sin_addr[0], sin_addr[1], sin_addr[2], sin_addr[3]);
 
-		for( dnsbl_serv = strtok(login_config.dnsbl_servs,","); dnsbl_serv != NULL; dnsbl_serv = strtok(NULL,",") ) {
+		for (dnsbl_serv = strtok(login->config->dnsbl_servs,","); dnsbl_serv != NULL; dnsbl_serv = strtok(NULL,",")) {
 			sprintf(ip_dnsbl, "%s.%s", r_ip, trim(dnsbl_serv));
 			if (sockt->host2ip(ip_dnsbl)) {
 				ShowInfo("DNSBL: (%s) Blacklisted. User Kicked.\n", r_ip);
@@ -1073,13 +1073,13 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	}
 
 	//Client Version check
-	if( login_config.check_client_version && sd->version != login_config.client_version_to_connect )
+	if (login->config->check_client_version && sd->version != login->config->client_version_to_connect)
 		return 5;
 
 	len = strnlen(sd->userid, NAME_LENGTH);
 
 	// Account creation with _M/_F
-	if( login_config.new_account_flag ) {
+	if (login->config->new_account_flag) {
 		if (len > 2 && sd->passwd[0] != '\0' && // valid user and password lengths
 			sd->passwdenc == PWENC_NONE && // unencoded password
 			sd->userid[len-2] == '_' && memchr("FfMm", sd->userid[len-1], 4)) // _M/_F suffix
@@ -1113,7 +1113,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 
 	if( acc.unban_time != 0 && acc.unban_time > time(NULL) ) {
 		char tmpstr[24];
-		timestamp2string(tmpstr, sizeof(tmpstr), acc.unban_time, login_config.date_format);
+		timestamp2string(tmpstr, sizeof(tmpstr), acc.unban_time, login->config->date_format);
 		ShowNotice("Connection refused (account: %s, pass: %s, banned until %s, ip: %s)\n", sd->userid, sd->passwd, tmpstr, ip);
 		return 6; // 6 = Your are Prohibited to log in until %s
 	}
@@ -1123,11 +1123,11 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 		return acc.state - 1;
 	}
 
-	if( login_config.client_hash_check && !isServer ) {
+	if (login->config->client_hash_check && !isServer) {
 		struct client_hash_node *node = NULL;
 		bool match = false;
 
-		for( node = login_config.client_hash_nodes; node; node = node->next ) {
+		for (node = login->config->client_hash_nodes; node; node = node->next) {
 			if( acc.group_id < node->group_id )
 				continue;
 			if( *node->hash == '\0' // Allowed to login without hash
@@ -1216,12 +1216,12 @@ void login_auth_ok(struct login_session_data* sd)
 		return;
 	}
 
-	if( login_config.group_id_to_connect >= 0 && sd->group_id != login_config.group_id_to_connect ) {
-		ShowStatus("Connection refused: the required group id for connection is %d (account: %s, group: %d).\n", login_config.group_id_to_connect, sd->userid, sd->group_id);
+	if (login->config->group_id_to_connect >= 0 && sd->group_id != login->config->group_id_to_connect) {
+		ShowStatus("Connection refused: the required group id for connection is %d (account: %s, group: %d).\n", login->config->group_id_to_connect, sd->userid, sd->group_id);
 		login->connection_problem(fd, 1); // 01 = server closed
 		return;
-	} else if( login_config.min_group_id_to_connect >= 0 && login_config.group_id_to_connect == -1 && sd->group_id < login_config.min_group_id_to_connect ) {
-		ShowStatus("Connection refused: the minimum group id required for connection is %d (account: %s, group: %d).\n", login_config.min_group_id_to_connect, sd->userid, sd->group_id);
+	} else if (login->config->min_group_id_to_connect >= 0 && login->config->group_id_to_connect == -1 && sd->group_id < login->config->min_group_id_to_connect) {
+		ShowStatus("Connection refused: the minimum group id required for connection is %d (account: %s, group: %d).\n", login->config->min_group_id_to_connect, sd->userid, sd->group_id);
 		login->connection_problem(fd, 1); // 01 = server closed
 		return;
 	}
@@ -1331,8 +1331,7 @@ void login_auth_failed(struct login_session_data* sd, int result)
 
 	fd = sd->fd;
 	ip = sockt->session[fd]->client_addr;
-	if (login_config.log_login)
-	{
+	if (login->config->log_login) {
 		const char* error;
 		switch( result ) {
 		case   0: error = "Unregistered ID."; break; // 0 = Unregistered ID
@@ -1363,7 +1362,7 @@ void login_auth_failed(struct login_session_data* sd, int result)
 		login_log(ip, sd->userid, result, error); // FIXME: result can be 100, conflicting with the value 100 we use for successful login...
 	}
 
-	if (result == 1 && login_config.dynamic_pass_failure_ban && !sockt->trusted_ip_check(ip))
+	if (result == 1 && login->config->dynamic_pass_failure_ban && !sockt->trusted_ip_check(ip))
 		ipban_log(ip); // log failed password attempt
 
 #if PACKETVER >= 20120000 /* not sure when this started */
@@ -1375,7 +1374,7 @@ void login_auth_failed(struct login_session_data* sd, int result)
 	else { // 6 = Your are Prohibited to log in until %s
 		struct mmo_account acc;
 		time_t unban_time = ( accounts->load_str(accounts, &acc, sd->userid) ) ? acc.unban_time : 0;
-		timestamp2string((char*)WFIFOP(fd,6), 20, unban_time, login_config.date_format);
+		timestamp2string((char*)WFIFOP(fd,6), 20, unban_time, login->config->date_format);
 	}
 	WFIFOSET(fd,26);
 #else
@@ -1387,7 +1386,7 @@ void login_auth_failed(struct login_session_data* sd, int result)
 	else { // 6 = Your are Prohibited to log in until %s
 		struct mmo_account acc;
 		time_t unban_time = ( accounts->load_str(accounts, &acc, sd->userid) ) ? acc.unban_time : 0;
-		timestamp2string((char*)WFIFOP(fd,3), 20, unban_time, login_config.date_format);
+		timestamp2string((char*)WFIFOP(fd,3), 20, unban_time, login->config->date_format);
 	}
 	WFIFOSET(fd,23);
 #endif
@@ -1471,7 +1470,7 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 	{
 		ShowStatus("Request for connection of %s (ip: %s).\n", sd->userid, ip);
 		safestrncpy(sd->passwd, password, PASSWD_LEN);
-		if( login_config.use_md5_passwds )
+		if (login->config->use_md5_passwds)
 			MD5_String(sd->passwd, sd->passwd);
 		sd->passwdenc = PWENC_NONE;
 	}
@@ -1482,7 +1481,7 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 		sd->passwdenc = PASSWORDENC;
 	}
 
-	if (sd->passwdenc != PWENC_NONE && login_config.use_md5_passwds) {
+	if (sd->passwdenc != PWENC_NONE && login->config->use_md5_passwds) {
 		login->auth_failed(sd, 3); // send "rejected from server"
 		return true;
 	}
@@ -1538,10 +1537,10 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 
 	safestrncpy(sd->userid, (char*)RFIFOP(fd,2), NAME_LENGTH);
 	safestrncpy(sd->passwd, (char*)RFIFOP(fd,26), NAME_LENGTH);
-	if( login_config.use_md5_passwds )
+	if (login->config->use_md5_passwds)
 		MD5_String(sd->passwd, sd->passwd);
 	sd->passwdenc = PWENC_NONE;
-	sd->version = login_config.client_version_to_connect; // hack to skip version check
+	sd->version = login->config->client_version_to_connect; // hack to skip version check
 	server_ip = ntohl(RFIFOL(fd,54));
 	server_port = ntohs(RFIFOW(fd,58));
 	safestrncpy(server_name, (char*)RFIFOP(fd,60), 20);
@@ -1606,8 +1605,7 @@ int login_parse_login(int fd)
 	if( sd == NULL )
 	{
 		// Perform ip-ban check
-		if (login_config.ipban && !sockt->trusted_ip_check(ipl) && ipban_check(ipl))
-		{
+		if (login->config->ipban && !sockt->trusted_ip_check(ipl) && ipban_check(ipl)) {
 			ShowStatus("Connection refused: IP isn't authorized (deny/allow, ip: %s).\n", ip);
 			login_log(ipl, "unknown", -3, "ip banned");
 			login->login_error(fd, 3); // 3 = Rejected from Server
@@ -1701,40 +1699,40 @@ int login_parse_login(int fd)
 }
 
 
-void login_set_defaults(void)
+void login_config_set_defaults(void)
 {
-	login_config.login_ip = INADDR_ANY;
-	login_config.login_port = 6900;
-	login_config.ipban_cleanup_interval = 60;
-	login_config.ip_sync_interval = 0;
-	login_config.log_login = true;
-	safestrncpy(login_config.date_format, "%Y-%m-%d %H:%M:%S", sizeof(login_config.date_format));
-	login_config.new_account_flag = true;
-	login_config.new_acc_length_limit = true;
-	login_config.use_md5_passwds = false;
-	login_config.group_id_to_connect = -1;
-	login_config.min_group_id_to_connect = -1;
-	login_config.check_client_version = false;
-	login_config.client_version_to_connect = 20;
-	login_config.allowed_regs = 1;
-	login_config.time_allowed = 10;
+	login->config->login_ip = INADDR_ANY;
+	login->config->login_port = 6900;
+	login->config->ipban_cleanup_interval = 60;
+	login->config->ip_sync_interval = 0;
+	login->config->log_login = true;
+	safestrncpy(login->config->date_format, "%Y-%m-%d %H:%M:%S", sizeof(login->config->date_format));
+	login->config->new_account_flag = true;
+	login->config->new_acc_length_limit = true;
+	login->config->use_md5_passwds = false;
+	login->config->group_id_to_connect = -1;
+	login->config->min_group_id_to_connect = -1;
+	login->config->check_client_version = false;
+	login->config->client_version_to_connect = 20;
+	login->config->allowed_regs = 1;
+	login->config->time_allowed = 10;
 
-	login_config.ipban = true;
-	login_config.dynamic_pass_failure_ban = true;
-	login_config.dynamic_pass_failure_ban_interval = 5;
-	login_config.dynamic_pass_failure_ban_limit = 7;
-	login_config.dynamic_pass_failure_ban_duration = 5;
-	login_config.use_dnsbl = false;
-	safestrncpy(login_config.dnsbl_servs, "", sizeof(login_config.dnsbl_servs));
+	login->config->ipban = true;
+	login->config->dynamic_pass_failure_ban = true;
+	login->config->dynamic_pass_failure_ban_interval = 5;
+	login->config->dynamic_pass_failure_ban_limit = 7;
+	login->config->dynamic_pass_failure_ban_duration = 5;
+	login->config->use_dnsbl = false;
+	safestrncpy(login->config->dnsbl_servs, "", sizeof(login->config->dnsbl_servs));
 
-	login_config.client_hash_check = 0;
-	login_config.client_hash_nodes = NULL;
+	login->config->client_hash_check = 0;
+	login->config->client_hash_nodes = NULL;
 }
 
 //-----------------------------------
 // Reading main configuration file
 //-----------------------------------
-int login_config_read(const char* cfgName)
+int login_config_read(const char *cfgName)
 {
 	char line[1024], w1[1024], w2[1024];
 	FILE* fp;
@@ -1761,50 +1759,50 @@ int login_config_read(const char* cfgName)
 				ShowInfo("Console Silent Setting: %d\n", atoi(w2));
 		}
 		else if( !strcmpi(w1, "bind_ip") ) {
-			login_config.login_ip = sockt->host2ip(w2);
-			if( login_config.login_ip ) {
+			login->config->login_ip = sockt->host2ip(w2);
+			if (login->config->login_ip) {
 				char ip_str[16];
-				ShowStatus("Login server binding IP address : %s -> %s\n", w2, sockt->ip2str(login_config.login_ip, ip_str));
+				ShowStatus("Login server binding IP address : %s -> %s\n", w2, sockt->ip2str(login->config->login_ip, ip_str));
 			}
 		}
 		else if( !strcmpi(w1, "login_port") ) {
-			login_config.login_port = (uint16)atoi(w2);
+			login->config->login_port = (uint16)atoi(w2);
 		}
 		else if(!strcmpi(w1, "log_login"))
-			login_config.log_login = (bool)config_switch(w2);
+			login->config->log_login = (bool)config_switch(w2);
 
 		else if(!strcmpi(w1, "new_account"))
-			login_config.new_account_flag = (bool)config_switch(w2);
+			login->config->new_account_flag = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "new_acc_length_limit"))
-			login_config.new_acc_length_limit = (bool)config_switch(w2);
+			login->config->new_acc_length_limit = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "start_limited_time"))
-			login_config.start_limited_time = atoi(w2);
+			login->config->start_limited_time = atoi(w2);
 		else if(!strcmpi(w1, "check_client_version"))
-			login_config.check_client_version = (bool)config_switch(w2);
+			login->config->check_client_version = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "client_version_to_connect"))
-			login_config.client_version_to_connect = (unsigned int)strtoul(w2, NULL, 10);
+			login->config->client_version_to_connect = (unsigned int)strtoul(w2, NULL, 10);
 		else if(!strcmpi(w1, "use_MD5_passwords"))
-			login_config.use_md5_passwds = (bool)config_switch(w2);
+			login->config->use_md5_passwds = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "group_id_to_connect"))
-			login_config.group_id_to_connect = atoi(w2);
+			login->config->group_id_to_connect = atoi(w2);
 		else if(!strcmpi(w1, "min_group_id_to_connect"))
-			login_config.min_group_id_to_connect = atoi(w2);
+			login->config->min_group_id_to_connect = atoi(w2);
 		else if(!strcmpi(w1, "date_format"))
-			safestrncpy(login_config.date_format, w2, sizeof(login_config.date_format));
+			safestrncpy(login->config->date_format, w2, sizeof(login->config->date_format));
 		else if(!strcmpi(w1, "allowed_regs")) //account flood protection system
-			login_config.allowed_regs = atoi(w2);
+			login->config->allowed_regs = atoi(w2);
 		else if(!strcmpi(w1, "time_allowed"))
-			login_config.time_allowed = atoi(w2);
+			login->config->time_allowed = atoi(w2);
 		else if(!strcmpi(w1, "use_dnsbl"))
-			login_config.use_dnsbl = (bool)config_switch(w2);
+			login->config->use_dnsbl = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "dnsbl_servers"))
-			safestrncpy(login_config.dnsbl_servs, w2, sizeof(login_config.dnsbl_servs));
+			safestrncpy(login->config->dnsbl_servs, w2, sizeof(login->config->dnsbl_servs));
 		else if(!strcmpi(w1, "ipban_cleanup_interval"))
-			login_config.ipban_cleanup_interval = (unsigned int)atoi(w2);
+			login->config->ipban_cleanup_interval = (unsigned int)atoi(w2);
 		else if(!strcmpi(w1, "ip_sync_interval"))
-			login_config.ip_sync_interval = (unsigned int)1000*60*atoi(w2); //w2 comes in minutes.
+			login->config->ip_sync_interval = (unsigned int)1000*60*atoi(w2); //w2 comes in minutes.
 		else if(!strcmpi(w1, "client_hash_check"))
-			login_config.client_hash_check = config_switch(w2);
+			login->config->client_hash_check = config_switch(w2);
 		else if(!strcmpi(w1, "client_hash")) {
 			int group = 0;
 			char md5[33];
@@ -1831,9 +1829,9 @@ int login_config_read(const char* cfgName)
 				}
 
 				nnode->group_id = group;
-				nnode->next = login_config.client_hash_nodes;
+				nnode->next = login->config->client_hash_nodes;
 
-				login_config.client_hash_nodes = nnode;
+				login->config->client_hash_nodes = nnode;
 			}
 		}
 		else if(!strcmpi(w1, "import"))
@@ -1858,7 +1856,7 @@ int login_config_read(const char* cfgName)
 //--------------------------------------
 int do_final(void) {
 	int i;
-	struct client_hash_node *hn = login_config.client_hash_nodes;
+	struct client_hash_node *hn = login->config->client_hash_nodes;
 
 	ShowStatus("Terminating...\n");
 
@@ -1872,7 +1870,7 @@ int do_final(void) {
 
 	login_log(0, "login server", 100, "login server shutdown");
 
-	if( login_config.log_login )
+	if (login->config->log_login)
 		loginlog_final();
 
 	ipban_final();
@@ -1986,7 +1984,7 @@ int do_init(int argc, char** argv)
 	login_defaults();
 
 	// read login-server configuration
-	login_set_defaults();
+	login->config_set_defaults();
 
 	login->LOGIN_CONF_NAME = aStrdup("conf/login-server.conf");
 	login->NET_CONF_NAME   = aStrdup("conf/network.conf");
@@ -2004,7 +2002,7 @@ int do_init(int argc, char** argv)
 		chrif_server_init(i);
 
 	// initialize logging
-	if( login_config.log_login )
+	if (login->config->log_login)
 		loginlog_init();
 
 	// initialize static and dynamic ipban system
@@ -2025,9 +2023,9 @@ int do_init(int argc, char** argv)
 	timer->add_interval(timer->gettick() + 600*1000, login->online_data_cleanup, 0, 0, 600*1000);
 
 	// add timer to detect ip address change and perform update
-	if (login_config.ip_sync_interval) {
+	if (login->config->ip_sync_interval) {
 		timer->add_func_list(login->sync_ip_addresses, "login->sync_ip_addresses");
-		timer->add_interval(timer->gettick() + login_config.ip_sync_interval, login->sync_ip_addresses, 0, 0, login_config.ip_sync_interval);
+		timer->add_interval(timer->gettick() + login->config->ip_sync_interval, login->sync_ip_addresses, 0, 0, login->config->ip_sync_interval);
 	}
 
 	// Account database init
@@ -2039,8 +2037,8 @@ int do_init(int argc, char** argv)
 	HPM->event(HPET_INIT);
 
 	// server port open & binding
-	if ((login->fd = sockt->make_listen_bind(login_config.login_ip,login_config.login_port)) == -1) {
-		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",login_config.login_port);
+	if ((login->fd = sockt->make_listen_bind(login->config->login_ip,login->config->login_port)) == -1) {
+		ShowFatalError("Failed to bind to port '"CL_WHITE"%d"CL_RESET"'\n",login->config->login_port);
 		exit(EXIT_FAILURE);
 	}
 
@@ -2053,7 +2051,7 @@ int do_init(int argc, char** argv)
 	console->display_gplnotice();
 #endif // CONSOLE_INPUT
 
-	ShowStatus("The login-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %u).\n\n", login_config.login_port);
+	ShowStatus("The login-server is "CL_GREEN"ready"CL_RESET" (Server is listening on the port %u).\n\n", login->config->login_port);
 	login_log(0, "login server", 100, "login server started");
 
 	HPM->event(HPET_READY);
@@ -2064,7 +2062,7 @@ int do_init(int argc, char** argv)
 void login_defaults(void) {
 	login = &login_s;
 
-	login->lc = &login_config;
+	login->config = &login_config_;
 	login->accounts = accounts;
 
 	login->mmo_auth = login_mmo_auth;
@@ -2124,6 +2122,8 @@ void login_defaults(void) {
 	login->login_error = login_login_error;
 	login->send_coding_key = login_send_coding_key;
 
+	login->config_set_defaults = login_config_set_defaults;
+	login->config_read = login_config_read;
 	login->LOGIN_CONF_NAME = NULL;
 	login->NET_CONF_NAME = NULL;
 }
