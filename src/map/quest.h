@@ -21,7 +21,7 @@
 #ifndef MAP_QUEST_H
 #define MAP_QUEST_H
 
-#include "map/map.h" // TBL_PC
+#include "map/map.h" // struct map_session_data
 #include "common/hercules.h"
 #include "common/conf.h"
 
@@ -64,14 +64,14 @@ struct quest_interface {
 	void (*reload) (void);
 	/* */
 	struct quest_db *(*db) (int quest_id);
-	int (*pc_login) (TBL_PC *sd);
-	int (*add) (TBL_PC *sd, int quest_id);
-	int (*change) (TBL_PC *sd, int qid1, int qid2);
-	int (*delete) (TBL_PC *sd, int quest_id);
+	int (*pc_login) (struct map_session_data *sd);
+	int (*add) (struct map_session_data *sd, int quest_id);
+	int (*change) (struct map_session_data *sd, int qid1, int qid2);
+	int (*delete) (struct map_session_data *sd, int quest_id);
 	int (*update_objective_sub) (struct block_list *bl, va_list ap);
-	void (*update_objective) (TBL_PC *sd, int mob_id);
-	int (*update_status) (TBL_PC *sd, int quest_id, enum quest_state qs);
-	int (*check) (TBL_PC *sd, int quest_id, enum quest_check_type type);
+	void (*update_objective) (struct map_session_data *sd, int mob_id);
+	int (*update_status) (struct map_session_data *sd, int quest_id, enum quest_state qs);
+	int (*check) (struct map_session_data *sd, int quest_id, enum quest_check_type type);
 	void (*clear) (void);
 	int (*read_db) (void);
 	struct quest_db *(*read_db_sub) (config_setting_t *cs, int n, const char *source);
