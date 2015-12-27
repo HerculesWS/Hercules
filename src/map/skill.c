@@ -11829,6 +11829,16 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 				break;
 			skill->blown(ss,bl,skill->get_blewcount(sg->skill_id,sg->skill_lv),unit->getdir(bl),0);
 			break;
+			
+		case UNT_FIRE_EXPANSION_SMOKE_POWDER:
+			if ( !sce )
+				sc_start(ss, bl, type, 100, sg->skill_lv, sg->limit);
+			break;
+
+		case UNT_FIRE_EXPANSION_TEAR_GAS:
+			if ( !sce && sc_start4(ss, bl, type, 100, sg->skill_lv, 0, ss->id, 0, sg->limit) )
+				sc_start(ss, bl, SC_FIRE_EXPANSION_TEAR_GAS_SOB, 100, sg->skill_lv, sg->limit);
+			break;
 
 		case UNT_WALLOFTHORN:
 			if( status_get_mode(bl)&MD_BOSS )
@@ -12499,14 +12509,6 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 
 				}
 			}
-			break;
-
-		case UNT_FIRE_EXPANSION_SMOKE_POWDER:
-			sc_start(ss, bl, SC_FIRE_EXPANSION_SMOKE_POWDER, 100, sg->skill_lv, 1000);
-			break;
-
-		case UNT_FIRE_EXPANSION_TEAR_GAS:
-			sc_start(ss, bl, SC_FIRE_EXPANSION_TEAR_GAS, 100, sg->skill_lv, 1000);
 			break;
 
 		case UNT_HELLS_PLANT:
