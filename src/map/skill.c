@@ -8843,7 +8843,9 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				rate -= rnd_value( tstatus->agi / 6, tstatus->agi / 3 ) + tstatus->luk / 10 + ( dstsd ? (dstsd->max_weight / 10 - dstsd->weight / 10 ) / 100 : 0 ) + status->get_lv(bl) / 10;
 				//Finally we set the minimum success chance cap based on the caster's skill level and DEX.
 				rate = cap_value( rate, skill_lv + sstatus->dex / 20, 100);
-				clif->skill_nodamage(src,bl,skill_id,0,sc_start(src,bl,type,rate,skill_lv,skill->get_time(skill_id,skill_lv)));
+				if ( (rnd_value(0,20000)%100) < rate) {
+					clif->skill_nodamage(src,bl,skill_id,0,sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
+				}
 				if ( tsc && tsc->data[SC__IGNORANCE] && skill_id == SC_IGNORANCE) {
 					//If the target was successfully inflected with the Ignorance status, drain some of the targets SP.
 					int sp = 100 * skill_lv;
