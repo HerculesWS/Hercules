@@ -454,7 +454,7 @@ int can_copy (struct map_session_data *sd, uint16 skill_id, struct block_list* b
 		return 0;
 
 	// Couldn't preserve 3rd Class skills except only when using Reproduce skill. [Jobbie]
-	if( !(sd->sc.data[SC__REPRODUCE]) && ((skill_id >= RK_ENCHANTBLADE && skill_id <= LG_OVERBRAND_PLUSATK) || (skill_id >= RL_GLITTERING_GREED && skill_id <= OB_AKAITSUKI) || (skill_id >= GC_DARKCROW && skill_id <= NC_MAGMA_ERUPTION_DOTDAMAGE)))
+	if( !(sd->sc.data[SC__REPRODUCE]) && ((skill_id >= RK_ENCHANTBLADE && skill_id <= LG_OVERBRAND_PLUSATK) || (skill_id >= GC_DARKCROW && skill_id <= NC_MAGMA_ERUPTION_DOTDAMAGE)))
 		return 0;
 	// Reproduce will only copy skills according on the list. [Jobbie]
 	else if( sd->sc.data[SC__REPRODUCE] && !skill->dbs->reproduce_db[skill->get_index(skill_id)] )
