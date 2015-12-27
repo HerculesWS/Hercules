@@ -4746,6 +4746,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 			break;
 		case ITEMID_BUBBLE_GUM:
 		case ITEMID_COMP_BUBBLE_GUM:
+		case ITEMID_HE_BUBBLE_GUM:
 			if( sd->sc.data[SC_CASH_RECEIVEITEM] )
 				return 0;
 			break;
