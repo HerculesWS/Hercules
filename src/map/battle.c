@@ -826,18 +826,18 @@ int64 battle_calc_masteryfix(struct block_list *src, struct block_list *target, 
 		if(sc->data[SC_IMPOSITIO])
 			damage += sc->data[SC_IMPOSITIO]->val2;
 		if(sc->data[SC_DRUMBATTLE]){
-			if(tstatus->size == SZ_SMALL)
+			if(tstatus->size == UNITSIZE_SMALL)
 				damage += sc->data[SC_DRUMBATTLE]->val2;
-			else if(tstatus->size == SZ_MEDIUM)
+			else if(tstatus->size == UNITSIZE_MEDIUM)
 				damage += 10 * sc->data[SC_DRUMBATTLE]->val1;
 			//else no bonus for large target
 		}
 		if(sc->data[SC_GS_MADNESSCANCEL])
 			damage += 100;
 		if(sc->data[SC_GS_GATLINGFEVER]){
-			if(tstatus->size == SZ_SMALL)
+			if(tstatus->size == UNITSIZE_SMALL)
 				damage += 10 * sc->data[SC_GS_GATLINGFEVER]->val1;
-			else if(tstatus->size == SZ_MEDIUM)
+			else if(tstatus->size == UNITSIZE_MEDIUM)
 				damage += -5 * sc->data[SC_GS_GATLINGFEVER]->val1;
 			else
 				damage += sc->data[SC_GS_GATLINGFEVER]->val1;
@@ -1584,10 +1584,10 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += 10 * skill_lv - 30;
 					break;
 				case SL_STIN:
-					skillratio += (tst->size!=SZ_SMALL?-99:10*skill_lv); //target size must be small (0) for full damage.
+					skillratio += (tst->size!=UNITSIZE_SMALL?-99:10*skill_lv); //target size must be small (0) for full damage.
 					break;
 				case SL_STUN:
-					skillratio += (tst->size!=SZ_BIG?5*skill_lv:-99); //Full damage is dealt on small/medium targets
+					skillratio += (tst->size!=UNITSIZE_BIG?5*skill_lv:-99); //Full damage is dealt on small/medium targets
 					break;
 				case SL_SMA:
 					skillratio += -60 + status->get_lv(src); //Base damage is 40% + lv%
@@ -2339,9 +2339,9 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 				case NC_ARMSCANNON:
 					switch( tst->size ) {
-						case SZ_SMALL: skillratio = 300 + 350 * skill_lv; break; // Medium
-						case SZ_MEDIUM: skillratio = 300 + 400 * skill_lv; break;  // Small
-						case SZ_BIG: skillratio = 300 + 300 * skill_lv; break;    // Large
+						case UNITSIZE_SMALL: skillratio = 300 + 300 * skill_lv; break;  // Small
+						case UNITSIZE_MEDIUM: skillratio = 300 + 350 * skill_lv; break; // Medium
+						case UNITSIZE_BIG: skillratio = 300 + 400 * skill_lv; break;    // Large
 					}
 					RE_LVL_DMOD(120);
 					break;
@@ -4821,11 +4821,11 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				i*=i;
 				ATK_ADD(i); //Add str bonus.
 				switch (tstatus->size) { //Size-fix. Is this modified by weapon perfection?
-					case SZ_SMALL: //Small: 125%
+					case UNITSIZE_SMALL: //Small: 125%
 						ATK_RATE(125);
 						break;
-					//case SZ_MEDIUM: //Medium: 100%
-					case SZ_BIG: //Large: 75%
+					//case UNITSIZE_MEDIUM: //Medium: 100%
+					case UNITSIZE_BIG: //Large: 75%
 						ATK_RATE(75);
 						break;
 				}
@@ -5032,10 +5032,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 						ATK_ADD(sd->inventory_data[index]->weight * 7 / 100);
 
 					switch (tstatus->size) {
-						case SZ_SMALL: //Small: 115%
+						case UNITSIZE_SMALL: //Small: 115%
 							ATK_RATE(115);
 							break;
-						case SZ_BIG: //Large: 85%
+						case UNITSIZE_BIG: //Large: 85%
 							ATK_RATE(85);
 					}
 					wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);

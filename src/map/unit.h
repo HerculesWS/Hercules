@@ -42,6 +42,12 @@ enum unit_stopwalking_flag {
 	// Note: Upper bytes are reserved for duration.
 };
 
+enum viewsize {
+	VIEWSIZE_NORMAL = 0,
+	VIEWSIZE_SMALL,
+	VIEWSIZE_BIG,
+};
+
 struct unit_data {
 	struct block_list *bl;
 	struct walkpath_data walkpath;

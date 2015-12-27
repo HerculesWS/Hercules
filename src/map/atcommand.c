@@ -1978,11 +1978,11 @@ ACMD(monster)
 		number = battle_config.atc_spawn_quantity_limit;
 
 	if (strcmpi(info->command, "monstersmall") == 0)
-		size = SZ_MEDIUM;
+		size = VIEWSIZE_SMALL;
 	else if (strcmpi(info->command, "monsterbig") == 0)
-		size = SZ_BIG;
+		size = VIEWSIZE_BIG;
 	else
-		size = SZ_SMALL;
+		size = VIEWSIZE_NORMAL;
 
 	if (battle_config.etc_log)
 		ShowInfo("%s monster='%s' name='%s' id=%d count=%d (%d,%d)\n", command, monster, name, mob_id, number, sd->bl.x, sd->bl.y);
@@ -6307,7 +6307,7 @@ ACMD(summon)
 		return false;
 	}
 
-	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, "--ja--", mob_id, "", SZ_SMALL, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, -1, -1, "--ja--", mob_id, "", VIEWSIZE_NORMAL, AI_NONE);
 
 	if(!md)
 		return false;
@@ -7368,17 +7368,17 @@ ACMD(size)
 {
 	int size = 0;
 
-	size = cap_value(atoi(message),SZ_SMALL,SZ_BIG);
+	size = cap_value(atoi(message),VIEWSIZE_NORMAL,VIEWSIZE_BIG);
 
 	if(sd->state.size) {
-		sd->state.size = SZ_SMALL;
+		sd->state.size = VIEWSIZE_NORMAL;
 		pc->setpos(sd, sd->mapindex, sd->bl.x, sd->bl.y, CLR_TELEPORT);
 	}
 
 	sd->state.size = size;
-	if( size == SZ_MEDIUM )
+	if( size == VIEWSIZE_SMALL )
 		clif->specialeffect(&sd->bl,420,AREA);
-	else if( size == SZ_BIG )
+	else if( size == VIEWSIZE_BIG )
 		clif->specialeffect(&sd->bl,422,AREA);
 
 	clif->message(fd, msg_fd(fd,1303)); // Size change applied.
@@ -7398,14 +7398,14 @@ ACMD(sizeall)
 	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter)) {
 		if (pl_sd->state.size != size) {
 			if (pl_sd->state.size) {
-				pl_sd->state.size = SZ_SMALL;
+				pl_sd->state.size = VIEWSIZE_NORMAL;
 				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
 			}
 
 			pl_sd->state.size = size;
-			if (size == SZ_MEDIUM)
+			if (size == VIEWSIZE_SMALL)
 				clif->specialeffect(&pl_sd->bl,420,AREA);
-			else if (size == SZ_BIG)
+			else if (size == VIEWSIZE_BIG)
 				clif->specialeffect(&pl_sd->bl,422,AREA);
 		}
 	}
@@ -7434,19 +7434,19 @@ ACMD(sizeguild)
 		return false;
 	}
 
-	size = cap_value(size,SZ_SMALL,SZ_BIG);
+	size = cap_value(size,VIEWSIZE_NORMAL,VIEWSIZE_BIG);
 
 	for (i = 0; i < g->max_member; i++) {
 		if ((pl_sd = g->member[i].sd) && pl_sd->state.size != size) {
 			if( pl_sd->state.size ) {
-				pl_sd->state.size = SZ_SMALL;
+				pl_sd->state.size = VIEWSIZE_NORMAL;
 				pc->setpos(pl_sd, pl_sd->mapindex, pl_sd->bl.x, pl_sd->bl.y, CLR_TELEPORT);
 			}
 
 			pl_sd->state.size = size;
-			if( size == SZ_MEDIUM )
+			if( size == VIEWSIZE_SMALL )
 				clif->specialeffect(&pl_sd->bl,420,AREA);
-			else if( size == SZ_BIG )
+			else if( size == VIEWSIZE_BIG )
 				clif->specialeffect(&pl_sd->bl,422,AREA);
 		}
 	}
