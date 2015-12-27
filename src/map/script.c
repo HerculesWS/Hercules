@@ -8074,7 +8074,10 @@ BUILDIN(checkguildally)
 	g2 = guild->search(gid2);
 
 	if (g1 == NULL || g2 == NULL) {
-		ShowWarning("buildin_checkguildally: requesting non-existent guild ID.\n"); //guild->search already tell the guild ID
+		if (g1 == NULL)
+			ShowWarning("buildin_checkguildally: requesting non-existent guild ID '%d'.\n", gid1);
+		if (g2 == NULL)
+			ShowWarning("buildin_checkguildally: requesting non-existent guild ID '%d'.\n", gid2);
 		script_pushint(st, -1);
 		return false;
 	}
