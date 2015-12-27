@@ -1264,7 +1264,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			}
 			break;
 		case LG_PINPOINTATTACK:
-			rate = 30 + 5 * (sd ? pc->checkskill(sd,LG_PINPOINTATTACK) : 1) + (sstatus->agi + status->get_lv(src)) / 10;
+			rate = 5 * (sd ? pc->checkskill(sd,LG_PINPOINTATTACK) : 5) + (sstatus->agi + status->get_lv(src)) / 10;
 			switch( skill_lv ) {
 				case 1:
 					sc_start(src, bl,SC_BLOODING,rate,skill_lv,skill->get_time(skill_id,skill_lv));
