@@ -1109,7 +1109,7 @@
 // EP 14.3 Part 2 3rd Job Skills
 5001,1,8,1,-1,0,0,5,3,no,0,0,0,weapon,0,	GC_DARKCROW,Dark Claw
 5002,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		RA_UNLIMIT,Unlimited
-5003,7,6,1,-1,0x2,4:5:6:7:8,5,1,no,0,0,0,weapon,0,	GN_ILLUSIONDOPING,Illusion Doping
+5003,7,6,1,-1,0x2,4:5:6:7:-1,5,1,no,0,0,0,weapon,0,	GN_ILLUSIONDOPING,Illusion Doping
 5004,9,6,2,1,0x2,1:1:1:2:2:2:3:3:4:4,10,1,no,0,0,0,weapon,0,	RK_DRAGONBREATH_WATER,Dragon Breath - Water
 5005,0,6,4,0,0x3,3,1,1,no,0,0,0,none,0,		RK_LUXANIMA,Lux Anima
 5006,1,6,2,3,0,0,5,1,no,0,0,3,misc,0,		NC_MAGMA_ERUPTION,Magma Eruption

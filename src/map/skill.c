@@ -1375,7 +1375,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			sc_start(src, bl, SC_NEEDLE_OF_PARALYZE, 40 + (5*skill_lv), skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case GN_ILLUSIONDOPING:
-			if( sc_start(src, bl, SC_ILLUSIONDOPING, 10 * skill_lv, skill_lv, skill->get_time(skill_id, skill_lv)) ) //custom rate.
+			if( sc_start(src, bl, SC_ILLUSIONDOPING, 100 - skill_lv * 10, skill_lv, skill->get_time(skill_id, skill_lv)) )
 				sc_start(src, bl, SC_ILLUSION, 100, skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 		case MH_XENO_SLASHER:
@@ -2521,6 +2521,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		case EL_TYPOON_MIS:
 		case EL_TYPOON_MIS_ATK:
 		case GN_CRAZYWEED_ATK:
+		case GN_ILLUSIONDOPING:
 		case KO_BAKURETSU:
 		case NC_MAGMA_ERUPTION:
 			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,dmg.div_,skill_id,-1,BDT_SPLASH);
