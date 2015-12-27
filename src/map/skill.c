@@ -2992,6 +2992,7 @@ int skill_check_unit_range_sub (struct block_list *bl, va_list ap) {
 		case SC_BLOODYLUST:
 		case SC_CHAOSPANIC:
 		case GN_HELLS_PLANT:
+		case GN_THORNS_TRAP:
 			//Non stackable on themselves and traps (including venom dust which does not has the trap inf2 set)
 			if (skill_id != g_skill_id && !(skill->get_inf2(g_skill_id)&INF2_TRAP) && g_skill_id != AS_VENOMDUST && g_skill_id != MH_POISON_MIST)
 				return 0;
@@ -11159,6 +11160,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			break;
 		case WZ_QUAGMIRE: //The target changes to "all" if used in a gvg map. [Skotlex]
 		case AM_DEMONSTRATION:
+		case GN_THORNS_TRAP:
 		case GN_HELLS_PLANT:
 			if (skill_id == GN_HELLS_PLANT && map->getcell(src->m, src, x, y, CELL_CHKLANDPROTECTOR))
 				return NULL;
