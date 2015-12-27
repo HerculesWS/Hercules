@@ -526,6 +526,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 		case AL_TELEPORT:
 		case SC_FATALMENACE:
 		case SC_DIMENSIONDOOR:
+		case ALL_ODINS_RECALL:
 			if(map->list[m].flag.noteleport) {
 				clif->skill_mapinfomessage(sd,0);
 				return 1;
@@ -575,6 +576,7 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 			break;
 
 		case SC_MANHOLE:
+		case SO_ARRULLO:
 		case WM_SOUND_OF_DESTRUCTION:
 		case WM_SATURDAY_NIGHT_FEVER:
 		case WM_LULLABY_DEEPSLEEP:
@@ -6718,6 +6720,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case AL_TELEPORT:
+		case ALL_ODINS_RECALL:
 			if(sd) {
 				if (map->list[bl->m].flag.noteleport && skill_lv <= 2) {
 					clif->skill_mapinfomessage(sd,0);
@@ -6731,7 +6734,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 				if( sd->state.autocast || ( (sd->skillitem == AL_TELEPORT || battle_config.skip_teleport_lv1_menu) && skill_lv == 1 ) || skill_lv == 3 )
 				{
-					if( skill_lv == 1 )
+					if( skill_lv == 1 && skill_id != ALL_ODINS_RECALL )
 						pc->randomwarp(sd,CLR_TELEPORT);
 					else
 						pc->setpos(sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
@@ -18595,7 +18598,6 @@ int skill_block_check(struct block_list *bl, sc_type type , uint16 skill_id) {
 				case SO_WARMER:
 				case SO_VACUUM_EXTREME:
 				case SO_VARETYR_SPEAR:
-				case SO_ARRULLO:
 					return 1; // Can't do it.
 			}
 			break;
