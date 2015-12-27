@@ -2486,12 +2486,10 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		case SR_EARTHSHAKER:
 			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,1,skill_id,-2,BDT_SKILL);
 			break;
-		case KO_MUCHANAGE:
-			if( dmg.dmg_lv == ATK_FLEE )
-				break;
 		case WL_SOULEXPANSION:
 		case WL_COMET:
 		case NJ_HUUMA:
+		case KO_MUCHANAGE:
 			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,dmg.div_,skill_id,skill_lv,BDT_MULTIHIT);
 			break;
 		case WL_CHAINLIGHTNING_ATK:
@@ -10416,7 +10414,6 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case SO_WIND_INSIGNIA:
 		case SO_EARTH_INSIGNIA:
 		case KO_HUUMARANKA:
-		case KO_MUCHANAGE:
 		case KO_BAKURETSU:
 		case KO_ZENKAI:
 		case MH_LAVA_SLIDE:
@@ -10931,6 +10928,16 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 				status_change_end(src,type,INVALID_TIMER);
 			clif->skill_nodamage(src, src ,skill_id, skill_lv,
 								sc_start2(src,src, type, 100, skill_id, skill_lv, skill->get_time(skill_id, skill_lv)));
+			break;
+
+		case KO_MUCHANAGE: {
+				int i, rate = 0;
+				i = skill->get_splash(skill_id,skill_lv);
+				rate = (int)((10 - ((float)1.0 / (status_get_dex(src) + status_get_luk(src))) * 500) * ((float)skill_lv / 2 + 5));
+				skill->area_temp[0] = map->foreachinarea(skill_area_sub,src->m,x-i,y-i,x+i,y+i, BL_CHAR, src, skill_id, skill_lv, tick, BCT_ENEMY, skill->area_sub_count);
+				if ( rand()%100 < rate )
+					map->foreachinarea(skill_area_sub,src->m,x-i,y-i,x+i,y+i,BL_CHAR,src,skill_id,skill_lv,tick,flag|BCT_ENEMY|1,skill->castend_damage_id);
+			}
 			break;
 
 		case KO_MAKIBISHI:

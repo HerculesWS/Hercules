@@ -3260,7 +3260,6 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			//case PA_PRESSURE: /* pressure also belongs to this list but it doesn't reach this area -- so don't worry about it */
 			case HW_GRAVITATION:
 			case NJ_ZENYNAGE:
-			case KO_MUCHANAGE:
 				break;
 			default:
 				if (flag & BF_SKILL) { //Skills get a different reduction than non-skills. [Skotlex]
@@ -3384,7 +3383,6 @@ int64 battle_calc_gvg_damage(struct block_list *src,struct block_list *bl,int64 
 		case PA_PRESSURE:
 		case HW_GRAVITATION:
 		case NJ_ZENYNAGE:
-		case KO_MUCHANAGE:
 		case NC_SELFDESTRUCTION:
 			break;
 		default:
@@ -3984,13 +3982,6 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 			//Not capped to INT_MAX to give some room for further damage increase.
 			md.damage = INT_MAX>>1;
 		break;
-
-	case KO_MUCHANAGE:
-		md.damage = skill->get_zeny(skill_id ,skill_lv);
-		md.damage = md.damage * (50 + rnd()%50) / 100;
-		if ( is_boss(target) || (sd && !pc->checkskill(sd,NJ_TOBIDOUGU)) )
-			md.damage >>= 1;
-		break;
 	case NJ_ZENYNAGE:
 		md.damage = skill->get_zeny(skill_id ,skill_lv);
 		if (!md.damage) md.damage = 2;
@@ -4094,6 +4085,12 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 
 		}
 		break;
+	case KO_MUCHANAGE:
+		md.damage = skill->get_zeny(skill_id ,skill_lv);
+		md.damage =  md.damage * rnd_value( 50, 100 ) / 100;
+		if (is_boss(target) || (tsd) || !pc->checkskill(sd,NJ_TOBIDOUGU))
+			md.damage >>= 1;
+		break;
 	default:
 		battle->calc_misc_attack_unknown(src, target, &skill_id, &skill_lv, &mflag, &md);
 		break;
@@ -4140,8 +4137,6 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 			if( sd ) //in Renewal hit bonus from Vultures Eye is not anymore shown in status window
 				hitrate += pc->checkskill(sd,AC_VULTURE);
 #endif
-			if( skill_id == KO_MUCHANAGE )
-				hitrate = (int)((10 - ((float)1 / (status_get_dex(src) + status_get_luk(src))) * 500) * ((float)skill_lv / 2 + 5));
 
 			hitrate = cap_value(hitrate, battle_config.min_hitrate, battle_config.max_hitrate);
 
