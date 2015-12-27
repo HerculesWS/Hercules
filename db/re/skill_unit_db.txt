@@ -106,8 +106,8 @@
 
 2032,0xe1,    ,  2, 0,2000,enemy, 0x018	//GC_POISONSMOKE
 
-2213,0x86,    ,  0, 8, 100,enemy, 0x018	//WL_COMET
-2216,0xcb,    , -1, 0, 100,enemy, 0x018	//WL_EARTHSTRAIN
+2213,0x86,    ,  0, 8, 150,enemy, 0x018	//WL_COMET
+2216,0xcb,    , -1, 0, 500,enemy, 0x018	//WL_EARTHSTRAIN
 
 2238,0xd8,    ,  0, 2,1000,enemy, 0x006	//RA_ELECTRICSHOCKER
 2239,0xd9,    ,  0, 0,1000,enemy, 0x006	//RA_CLUSTERBOMB

@@ -18528,7 +18528,6 @@ int skill_block_check(struct block_list *bl, sc_type type , uint16 skill_id) {
 				case WL_SUMMONSTONE:
 				case WL_SIENNAEXECRATE:
 				case WL_RELEASE:
-				case WL_EARTHSTRAIN:
 				case WL_RECOGNIZEDSPELL:
 				case WL_READING_SB:
 				case SA_MAGICROD:
