@@ -5022,16 +5022,17 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 				break;
 			}
 
-			if (ud->skill_id >= SL_SKE && ud->skill_id <= SL_SKA && target->type == BL_MOB) {
-				if (((TBL_MOB*)target)->class_ == MOBID_EMPELIUM)
+			if ( ud->skill_id >= SL_SKE && ud->skill_id <= SL_SKA && target->type == BL_MOB )
+			{
+				if( ((TBL_MOB*)target)->class_ == MOBID_EMPERIUM )
 					break;
-			} else if (inf && battle->check_target(src, target, inf) <= 0) {
-				if (sd) clif->skill_fail(sd,ud->skill_id,USESKILL_FAIL_LEVEL,0);
-				break;
-			} else if (ud->skill_id == RK_PHANTOMTHRUST && target->type != BL_MOB) {
+			} else if ( ud->skill_id == RK_PHANTOMTHRUST && target->type != BL_MOB ) {
 				if( !map_flag_vs(src->m) && battle->check_target(src,target,BCT_PARTY) <= 0 )
 					break; // You can use Phantom Thurst on party members in normal maps too. [pakpil]
-			}
+			} else if (inf && battle->check_target(src, target, inf) <= 0){
+				if (sd) clif->skill_fail(sd,ud->skill_id,USESKILL_FAIL_LEVEL,0);
+				break;
+			} 
 
 			if( inf&BCT_ENEMY
 			 && (sc = status->get_sc(target)) != NULL && sc->data[SC_FOGWALL]
