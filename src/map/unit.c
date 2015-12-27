@@ -1612,6 +1612,11 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	ud->skilly       = 0;
 	ud->skill_id      = skill_id;
 	ud->skill_lv      = skill_lv;
+	
+	if( sc && sc->data[SC__MANHOLE] ) {
+		status_change_end(src,SC__MANHOLE,INVALID_TIMER);
+		if (!src->prev) return 0; //Warped away!
+	}
 
 	if( casttime > 0 ) {
 		if (src->id != target->id) // self-targeted skills shouldn't show different direction
@@ -1669,6 +1674,11 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 		 **/
 		if (skill_id == WZ_ICEWALL && map->getcell(src->m, src, skill_x, skill_y, CELL_CHKNOICEWALL))
 			return 0;
+	}
+	
+	if(sc && sc->data[SC__MAELSTROM] && (skill_id >= SC_MANHOLE && skill_id <= SC_FEINTBOMB) && skill_id == GN_HELLS_PLANT) {
+		clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
+		return 0;
 	}
 
 	if (!status->check_skilluse(src, NULL, skill_id, 0))
@@ -1752,7 +1762,10 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 		} else if (sc->data[SC_CLOAKINGEXCEED] && !(sc->data[SC_CLOAKINGEXCEED]->val4&4)) {
 			status_change_end(src, SC_CLOAKINGEXCEED, INVALID_TIMER);
 			if (!src->prev) return 0;
-		}
+		} else if (sc->data[SC__MANHOLE]) {
+			status_change_end(src, SC__MANHOLE, INVALID_TIMER);
+			if (!src->prev) return 0;
+ 		}
 	}
 
 	unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);

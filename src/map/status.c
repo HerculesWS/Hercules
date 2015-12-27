@@ -1890,19 +1890,10 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 					(sc->data[SC_VOLCANO] && skill_id == WZ_ICEWALL) ||
 					(sc->data[SC_ROKISWEIL] && skill_id != BD_ADAPTATION) ||
 					(sc->data[SC_HERMODE] && skill->get_inf(skill_id) & INF_SUPPORT_SKILL) ||
-					pc_ismuted(sc, MANNER_NOSKILL)
+					pc_ismuted(sc, MANNER_NOSKILL) ||
+					(sc->data[SC__MANHOLE] || ((tsc = status->get_sc(target)) && tsc->data[SC__MANHOLE]) && skill_id != SC_SHADOWFORM)
 					)
 					return 0;
-
-				if( sc->data[SC__MANHOLE] || ((tsc = status->get_sc(target)) && tsc->data[SC__MANHOLE]) ) {
-					switch(skill_id) {//##TODO## make this a flag in skill_db?
-						// Skills that can be used even under Man Hole effects.
-					case SC_SHADOWFORM:
-						break;
-					default:
-						return 0;
-					}
-				}
 
 		}
 	}
@@ -1952,6 +1943,8 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		if(skill_id == PR_LEXAETERNA && (tsc->data[SC_FREEZE] || (tsc->data[SC_STONE] && tsc->opt1 == OPT1_STONE)))
 			return 0;
 		if( ( tsc->data[SC_STEALTHFIELD] || tsc->data[SC_CAMOUFLAGE] ) && !(st->mode&(MD_BOSS|MD_DETECTOR)) && flag == 4 )
+			return 0;
+		if (skill_id == SC__MANHOLE && tsc->data[SC_MANHOLE])
 			return 0;
 	}
 	//If targeting, cloak+hide protect you, otherwise only hiding does.
@@ -7505,6 +7498,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			// Other Effects
 			case SC_VACUUM_EXTREME:
 			case SC_NETHERWORLD:
+			case SC__MANHOLE:
 
 				return 0;
 		}
