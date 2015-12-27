@@ -8954,44 +8954,6 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			}
 			break;
-		case LG_KINGS_GRACE:
-			if( flag&1 ){
-				int i;
-				sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
-				for(i=0; i<SC_MAX; i++)
-				{
-					if (!tsc->data[i])
-					continue;
-					switch(i){
-						case SC_POISON:
-						case SC_BLIND:
-						case SC_FREEZE:
-						case SC_STONE:
-						case SC_STUN:
-						case SC_SLEEP:
-						case SC_BLOODING:
-						case SC_CURSE:
-						case SC_CONFUSION:
-						case SC_ILLUSION:
-						case SC_SILENCE:
-						case SC_BURNING:
-						case SC_COLD:
-						case SC_FROSTMISTY:
-						case SC_DEEP_SLEEP:
-						case SC_FEAR:
-						case SC_MANDRAGORA:
-						case SC__CHAOS:
-							status_change_end(bl, (sc_type)i, INVALID_TIMER);
-					}
-				}
-			}else {
-				skill->area_temp[2] = 0;
-				if( !map_flag_vs(src->m) && !map_flag_gvg(src->m) )
-					flag |= BCT_GUILD;
-				map->foreachinrange(skill->area_sub,bl,skill->get_splash(skill_id,skill_lv),BL_PC,src,skill_id,skill_lv,tick,flag|SD_PREAMBLE|BCT_PARTY|BCT_SELF|1,skill->castend_nodamage_id);
-				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-			}
-			break;
 		case LG_INSPIRATION:
 			if( sd && !map->list[sd->bl.m].flag.noexppenalty && sd->status.base_level != MAX_LEVEL ) {
 					sd->status.base_exp -= min(sd->status.base_exp, pc->nextbaseexp(sd) * 1 / 100); // 1% penalty.
@@ -10419,9 +10381,10 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case MH_POISON_MIST:
 		case MH_STEINWAND:
 		case NC_MAGMA_ERUPTION:
+		case LG_KINGS_GRACE:
 		case RL_B_TRAP:
 		case MH_XENO_SLASHER:
-			flag|=1;//Set flag to 1 to prevent deleting ammo (it will be deleted on group-delete).
+			flag |= 1;//Set flag to 1 to prevent deleting ammo (it will be deleted on group-delete).
 		case GS_GROUNDDRIFT: //Ammo should be deleted right away.
 			if ( skill_id == WM_SEVERE_RAINSTORM )
 				sc_start(src,src,SC_NO_SWITCH_EQUIP,100,0,skill->get_time(skill_id,skill_lv));
@@ -11823,6 +11786,16 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 				sc_start(ss, bl, SC_VOLCANIC_ASH, 100, sg->skill_lv, skill->get_time(MH_VOLCANIC_ASH, sg->skill_lv));
 			break;
 
+		case UNT_KINGS_GRACE:
+			if (!sce) {
+				int state = 0;
+				if ( !map_flag_vs(ss->m) && !map_flag_gvg2(ss->m) )
+					state |= BCT_GUILD;
+				if ( battle->check_target(&src->bl,bl,BCT_SELF|BCT_PARTY|state) > 0 )
+					sc_start4(ss,bl,type,100,sg->skill_lv,0,sg->group_id,0,sg->limit);
+			}
+			break;
+
 		case UNT_GD_LEADERSHIP:
 		case UNT_GD_GLORYWOUNDS:
 		case UNT_GD_SOULCOLD:
@@ -12704,6 +12677,7 @@ int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick) {
 		case SC_BLOODYLUST:
 		case GN_FIRE_EXPANSION_SMOKE_POWDER:
 		case GN_FIRE_EXPANSION_TEAR_GAS:
+		case LG_KINGS_GRACE:
 			if (sce)
 				status_change_end(bl, type, INVALID_TIMER);
 			break;
@@ -16683,7 +16657,7 @@ int skill_unit_move_sub(struct block_list* bl, va_list ap) {
 	if( !su->alive || target->prev == NULL )
 		return 0;
 
-	if( flag&1 && ( su->group->skill_id == PF_SPIDERWEB || su->group->skill_id == GN_THORNS_TRAP ) )
+	if ( flag&1 && ( su->group->skill_id == PF_SPIDERWEB || su->group->skill_id == GN_THORNS_TRAP || su->group->skill_id == LG_KINGS_GRACE ) )
 		return 0; // Fiberlock is never supposed to trigger on skill->unit_move. [Inkfish]
 
 	dissonance = skill->dance_switch(su, 0);

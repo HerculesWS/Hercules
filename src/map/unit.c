@@ -1095,6 +1095,7 @@ int unit_can_move(struct block_list *bl) {
 		    ||  sc->data[SC_VACUUM_EXTREME]
 		    || (sc->data[SC_FEAR] && sc->data[SC_FEAR]->val2 > 0)
 			|| sc->data[SC_NETHERWORLD]
+			|| sc->data[SC_KINGS_GRACE]
 		    || (sc->data[SC_SPIDERWEB] && sc->data[SC_SPIDERWEB]->val1)
 		    || (sc->data[SC_CLOAKING] && sc->data[SC_CLOAKING]->val1 < 3 && !(sc->data[SC_CLOAKING]->val4&1)) //Need wall at level 1-2
 		    || (

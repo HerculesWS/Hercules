@@ -1880,7 +1880,8 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 					(sc->data[SC_MARIONETTE_MASTER] && skill_id != CG_MARIONETTE) || //Only skill you can use is marionette again to cancel it
 					(sc->data[SC_MARIONETTE] && skill_id == CG_MARIONETTE) || //Cannot use marionette if you are being buffed by another
 					(sc->data[SC_STASIS] && skill->block_check(src, SC_STASIS, skill_id)) ||
-					(sc->data[SC_KG_KAGEHUMI] && skill->block_check(src, SC_KG_KAGEHUMI, skill_id))
+					(sc->data[SC_KG_KAGEHUMI] && skill->block_check(src, SC_KG_KAGEHUMI, skill_id)) ||
+					sc->data[SC_KINGS_GRACE]
 					))
 					return 0;
 
@@ -6687,31 +6688,6 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 	if( sc && !sc->count )
 		sc = NULL;
 
-	if (sc && sc->data[SC_KINGS_GRACE]) {
-		// Protects against status effects
-		switch (type) {
-			case SC_POISON:
-			case SC_BLIND:
-			case SC_FREEZE:
-			case SC_STONE:
-			case SC_STUN:
-			case SC_SLEEP:
-			case SC_BLOODING:
-			case SC_CURSE:
-			case SC_CONFUSION:
-			case SC_ILLUSION:
-			case SC_SILENCE:
-			case SC_BURNING:
-			case SC_COLD:
-			case SC_FROSTMISTY:
-			case SC_DEEP_SLEEP:
-			case SC_FEAR:
-			case SC_MANDRAGORA:
-			case SC__CHAOS:
-				return 0;
-		}
-	}
-
 	switch (type) {
 	case SC_STUN:
 		sc_def = st->vit*100;
@@ -7162,6 +7138,30 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				return 0;
 		}
 	}
+	if( sc->data[SC_KINGS_GRACE] ) {
+		if( type >= SC_COMMON_MIN && type <= SC_COMMON_MAX )
+			return 0;
+		switch( type ) {
+			case SC_POISON:
+			case SC_BLIND:
+			case SC_FREEZE:
+			case SC_STONE:
+			case SC_STUN:
+			case SC_SLEEP:
+			case SC_BLOODING:
+			case SC_CURSE:
+			case SC__CHAOS:
+			case SC_CONFUSION:
+			case SC_ILLUSION:
+			case SC_SILENCE:
+			case SC_BURNING:
+			case SC_COLD:
+			case SC_DEEP_SLEEP:
+			case SC_FEAR:
+			case SC_MANDRAGORA:
+				return 0;
+		}
+	}
 
 	sd = BL_CAST(BL_PC, bl);
 
@@ -7445,6 +7445,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			break;
 		case SC_OFFERTORIUM:
 			if (sc->data[SC_MAGNIFICAT])
+				return 0;
+			break;
+		case SC_KINGS_GRACE:
+			if(sc->data[SC_DEVOTION] || sc->data[SC_WHITEIMPRISON])
 				return 0;
 			break;
 	}
@@ -7741,6 +7745,25 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			break;
 		case SC_MAGICPOWER:
 			status_change_end(bl, type, INVALID_TIMER);
+			break;
+		case SC_KINGS_GRACE:
+			status_change_end(bl, SC_POISON, INVALID_TIMER);
+			status_change_end(bl, SC_BLIND, INVALID_TIMER);
+			status_change_end(bl, SC_FREEZE, INVALID_TIMER);
+			status_change_end(bl, SC_STONE, INVALID_TIMER);
+			status_change_end(bl, SC_STUN, INVALID_TIMER);
+			status_change_end(bl, SC_SLEEP, INVALID_TIMER);
+			status_change_end(bl, SC_BLOODING, INVALID_TIMER);
+			status_change_end(bl, SC_CURSE, INVALID_TIMER);
+			status_change_end(bl, SC_CONFUSION, INVALID_TIMER);
+			status_change_end(bl, SC__CHAOS, INVALID_TIMER);
+			status_change_end(bl, SC_ILLUSION, INVALID_TIMER);
+			status_change_end(bl, SC_SILENCE, INVALID_TIMER);
+			status_change_end(bl, SC_BURNING, INVALID_TIMER);
+			status_change_end(bl, SC_COLD, INVALID_TIMER);
+			status_change_end(bl, SC_DEEP_SLEEP, INVALID_TIMER);
+			status_change_end(bl, SC_FEAR, INVALID_TIMER);
+			status_change_end(bl, SC_MANDRAGORA, INVALID_TIMER);
 			break;
 	}
 
