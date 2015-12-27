@@ -3199,7 +3199,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			if (hd) homun->addspiritball(hd, 10); //add a sphere
 		}
 
-		if( sc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * sc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
+		if( sc->data[SC__DEADLYINFECT] && flag&BF_WEAPON && rnd()%100 < 30 + 10 * sc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
 			status->change_spread(bl, src); // Deadly infect attacked side
 
 		if (sd && damage > 0 && (sce = sc->data[SC_GENTLETOUCH_ENERGYGAIN]) != NULL) {
@@ -3242,7 +3242,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				sc_start(src,bl,tsc->data[SC_POISONINGWEAPON]->val2,rate,tsc->data[SC_POISONINGWEAPON]->val1,skill->get_time2(GC_POISONINGWEAPON,1) - (tstatus->vit + tstatus->luk) / 2 * 1000);
 			}
 		}
-		if( tsc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * tsc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
+		if( tsc->data[SC__DEADLYINFECT] && flag&BF_WEAPON && rnd()%100 < 30 + 10 * tsc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
 			status->change_spread(src, bl);
 		if (tsc->data[SC_SHIELDSPELL_REF] && tsc->data[SC_SHIELDSPELL_REF]->val1 == 1 && damage > 0)
 			skill->break_equip(bl,EQP_ARMOR,10000,BCT_ENEMY );
