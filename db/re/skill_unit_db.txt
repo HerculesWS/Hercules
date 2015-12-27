@@ -164,7 +164,6 @@
 3010,0xfc,    ,  0, 0,5000,enemy, 0x018	//KO_MAKIBISHI
 
 5006,0x101,   ,  0, 3,2000,enemy, 0x018	//NC_MAGMA_ERUPTION
-5008,0x7e,    ,  0, 0,  -1,all,   0x003	//SO_ELEMENTAL_SHIELD
 5010,0xfe,    ,  0, 2,  -1,enemy, 0x000	//SC_ESCAPE
 
 8020,0xf5,    ,  0, 3,2300:2100:1900:1700:1500,enemy,   0x018	//MH_POISON_MIST

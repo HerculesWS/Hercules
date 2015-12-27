@@ -2959,8 +2959,7 @@ int skill_check_unit_range_sub (struct block_list *bl, va_list ap) {
 		case MG_SAFETYWALL:
 		case MH_STEINWAND:
 		case SC_MAELSTROM:
-		case SO_ELEMENTAL_SHIELD:
-			if(g_skill_id != MH_STEINWAND && g_skill_id != MG_SAFETYWALL && g_skill_id != AL_PNEUMA && g_skill_id != SC_MAELSTROM && g_skill_id != SO_ELEMENTAL_SHIELD)
+			if(g_skill_id != MH_STEINWAND && g_skill_id != MG_SAFETYWALL && g_skill_id != AL_PNEUMA && g_skill_id != SC_MAELSTROM)
 				return 0;
 			break;
 		case AL_WARP:
@@ -5313,8 +5312,6 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 				if(sd == NULL || !sd->ed)
 					break;
-				if((p = party->search(sd->status.party_id)) == NULL)
-					break;
 
 				range = skill->get_splash(skill_id,skill_lv);
 				x0 = sd->bl.x - range;
@@ -5322,23 +5319,25 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				x1 = sd->bl.x + range;
 				y1 = sd->bl.y + range;
 
-				elemental->delete(sd->ed,0);
-
-				if(!skill->check_unit_range(src,src->x,src->y,skill_id,skill_lv))
-					ret = skill->castend_pos2(src,src->x,src->y,skill_id,skill_lv,tick,flag);
-				for(i = 0; i < MAX_PARTY; i++) {
-					struct map_session_data *psd = p->data[i].sd;
-					if(!psd)
-						continue;
-					if(psd->bl.m != sd->bl.m || !psd->bl.prev)
-						continue;
-					if(range && (psd->bl.x < x0 || psd->bl.y < y0 ||
-						psd->bl.x > x1 || psd->bl.y > y1))
-						continue;
-					if(!skill->check_unit_range(bl,psd->bl.x,psd->bl.y,skill_id,skill_lv))
-						ret |= skill->castend_pos2(bl,psd->bl.x,psd->bl.y,skill_id,skill_lv,tick,flag);
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+ 				elemental->delete(sd->ed,0);
+				skill->unitsetting(src,MG_SAFETYWALL,skill_lv + 5,src->x,src->y,0);
+				skill->unitsetting(src,AL_PNEUMA,1,src->x,src->y,0);
+				if ( (p = party->search(sd->status.party_id)) ) {
+					for(i = 0; i < MAX_PARTY; i++) {
+						struct map_session_data *psd = p->data[i].sd;
+						
+						if(!psd || psd->bl.m != sd->bl.m || !psd->bl.prev || psd->bl.id == sd->bl.id)
+							continue;
+						if(range && 
+							(psd->bl.x < x0 || psd->bl.y < y0 || psd->bl.x > x1 || psd->bl.y > y1)
+							)
+							continue;
+						skill->unitsetting(&psd->bl,MG_SAFETYWALL,skill_lv + 5,psd->bl.x,psd->bl.y,0);
+						skill->unitsetting(&psd->bl,AL_PNEUMA,1,psd->bl.x,psd->bl.y,0);
+					}
 				}
-				return ret;
+				return 0;
 			}
 			break;
 		case NPC_SMOKING: //Since it is a self skill, this one ends here rather than in damage_id. [Skotlex]
@@ -9834,8 +9833,6 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				skill->blockhomun_start(hd, skill_id, skill->get_cooldown(skill_id, skill_lv));
 		}
 			break;
-		case SO_ELEMENTAL_SHIELD:/* somehow its handled outside this switch, so we need a empty case otherwise default would be triggered. */
-			break;
 		default:
 			if (skill->castend_nodamage_id_unknown(src, bl, &skill_id, &skill_lv, &tick, &flag))
 				return 1;
@@ -10422,7 +10419,6 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case MH_POISON_MIST:
 		case MH_STEINWAND:
 		case NC_MAGMA_ERUPTION:
-		case SO_ELEMENTAL_SHIELD:
 		case RL_B_TRAP:
 		case MH_XENO_SLASHER:
 			flag|=1;//Set flag to 1 to prevent deleting ammo (it will be deleted on group-delete).
@@ -11125,9 +11121,6 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 	sc = status->get_sc(src); // for traps, firewall and fogwall - celest
 
 	switch( skill_id ) {
-		case SO_ELEMENTAL_SHIELD:
-			val2 = 300 * skill_lv + 65 * (st->int_ + status->get_lv(src)) + st->max_sp;
-			break;
 		case MH_STEINWAND:
 			val2 = 4 + skill_lv; //nb of attack blocked
 			break;
@@ -12708,7 +12701,6 @@ int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick) {
 		case EL_WATER_BARRIER:
 		case EL_ZEPHYR:
 		case EL_POWER_OF_GAIA:
-		case SO_ELEMENTAL_SHIELD:
 		case SC_BLOODYLUST:
 		case GN_FIRE_EXPANSION_SMOKE_POWDER:
 		case GN_FIRE_EXPANSION_TEAR_GAS:

@@ -2796,13 +2796,6 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 						skill->del_unitgroup(group,ALC_MARK);
 					return 0;
 				}
-				if( skill_id == SO_ELEMENTAL_SHIELD ) {
-					if ( ( group->val2 - damage) > 0 ) {
-						group->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
-					} else
-						skill->del_unitgroup(group,ALC_MARK);
-					return 0;
-				}
 				/**
 				 * in RE, SW possesses a lifetime equal to 3 times the caster's health
 				 **/
