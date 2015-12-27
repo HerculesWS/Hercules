@@ -2938,14 +2938,17 @@ int skill_area_sub(struct block_list *bl, va_list ap) {
 	return 0;
 }
 
-int skill_check_unit_range_sub (struct block_list *bl, va_list ap) {
-	struct skill_unit *su;
+int skill_check_unit_range_sub(struct block_list *bl, va_list ap)
+{
+	const struct skill_unit *su = NULL;
 	uint16 skill_id,g_skill_id;
 
-	su = (struct skill_unit *)bl;
+	nullpo_ret(bl);
 
-	if(bl->prev == NULL || bl->type != BL_SKILL)
+	if (bl->type != BL_SKILL || bl->prev == NULL)
 		return 0;
+
+	su = BL_UCCAST(BL_SKILL, bl);
 
 	if(!su->alive)
 		return 0;
@@ -3032,7 +3035,7 @@ int skill_check_unit_range2_sub (struct block_list *bl, va_list ap) {
 	if( skill_id == HP_BASILICA && bl->type == BL_PC )
 		return 0;
 
-	if (skill_id == AM_DEMONSTRATION && bl->type == BL_MOB && ((struct mob_data *)bl)->class_ == MOBID_EMPELIUM)
+	if (skill_id == AM_DEMONSTRATION && bl->type == BL_MOB && BL_UCCAST(BL_MOB, bl)->class_ == MOBID_EMPELIUM)
 		return 0; //Allow casting Bomb/Demonstration Right under emperium [Skotlex]
 	return 1;
 }
@@ -3506,11 +3509,16 @@ bool skill_cleartimerskill_exception(int skill_id)
 	return false;
 }
 
-int skill_activate_reverberation(struct block_list *bl, va_list ap) {
-	struct skill_unit *su = (struct skill_unit *)bl;
-	struct skill_unit_group *sg;
-	if( bl->type != BL_SKILL )
+int skill_activate_reverberation(struct block_list *bl, va_list ap)
+{
+	struct skill_unit *su = NULL;
+	struct skill_unit_group *sg = NULL;
+
+	nullpo_ret(bl);
+	if (bl->type != BL_SKILL)
 		return 0;
+	su = BL_UCAST(BL_SKILL, bl);
+
 	if( su->alive && (sg = su->group) != NULL && sg->skill_id == WM_REVERBERATION && sg->unit_id == UNT_REVERBERATION ) {
 		int64 tick = timer->gettick();
 		clif->changetraplook(bl,UNT_USED_TRAPS);
@@ -3521,8 +3529,14 @@ int skill_activate_reverberation(struct block_list *bl, va_list ap) {
 	return 0;
 }
 
-int skill_reveal_trap (struct block_list *bl, va_list ap) {
-	struct skill_unit *su = (struct skill_unit *)bl;
+int skill_reveal_trap(struct block_list *bl, va_list ap)
+{
+	struct skill_unit *su = NULL;
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_SKILL);
+	su = BL_UCAST(BL_SKILL, bl);
+
 	if (su->alive && su->group && skill->get_inf2(su->group->skill_id)&INF2_TRAP) { //Reveal trap.
 		//Change look is not good enough, the client ignores it as an actual trap still. [Skotlex]
 		//clif->changetraplook(bl, su->group->unit_id);
@@ -10051,11 +10065,16 @@ int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 
 }
+
 static int check_npc_chaospanic(struct block_list *bl, va_list args)
 {
-	struct npc_data *nd = (struct npc_data *)bl;
+	const struct npc_data *nd = NULL;
 
-	if( nd->option&(OPTION_HIDE|OPTION_INVISIBLE) || nd->class_ != 45 )
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_NPC);
+	nd = BL_UCCAST(BL_NPC, bl);
+
+	if (nd->option&(OPTION_HIDE|OPTION_INVISIBLE) || nd->class_ != WARP_CLASS)
 		return 0;
 
 	return 1;
@@ -10972,10 +10991,15 @@ bool skill_castend_pos2_unknown(struct block_list* src, int *x, int *y, uint16 *
 }
 
 /// transforms 'target' skill unit into dissonance (if conditions are met)
-int skill_dance_overlap_sub(struct block_list* bl, va_list ap) {
-	struct skill_unit* target = (struct skill_unit*)bl;
-	struct skill_unit* src = va_arg(ap, struct skill_unit*);
+int skill_dance_overlap_sub(struct block_list *bl, va_list ap)
+{
+	struct skill_unit *target = NULL;
+	struct skill_unit *src = va_arg(ap, struct skill_unit*);
 	int flag = va_arg(ap, int);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_SKILL);
+	target = BL_UCAST(BL_SKILL, bl);
 
 	if (src == target)
 		return 0;
@@ -12820,21 +12844,21 @@ int skill_unit_ondamaged(struct skill_unit *src, struct block_list *bl, int64 da
 /*==========================================
  *
  *------------------------------------------*/
-int skill_check_condition_char_sub (struct block_list *bl, va_list ap) {
-	int *c, skill_id;
-	struct block_list *src;
-	struct map_session_data *sd;
-	struct map_session_data *tsd;
-	int *p_sd; //Contains the list of characters found.
+int skill_check_condition_char_sub (struct block_list *bl, va_list ap)
+{
+	struct map_session_data *tsd = NULL;
+	struct block_list *src = va_arg(ap, struct block_list *);
+	struct map_session_data *sd = NULL;
+	int *c = va_arg(ap, int *);
+	int *p_sd = va_arg(ap, int *); //Contains the list of characters found.
+	int skill_id = va_arg(ap, int);
 
 	nullpo_ret(bl);
-	nullpo_ret(tsd=(struct map_session_data*)bl);
-	nullpo_ret(src=va_arg(ap,struct block_list *));
-	nullpo_ret(sd=(struct map_session_data*)src);
-
-	c=va_arg(ap,int *);
-	p_sd = va_arg(ap, int *);
-	skill_id = va_arg(ap,int);
+	nullpo_ret(src);
+	Assert_ret(bl->type == BL_PC);
+	Assert_ret(src->type == BL_PC);
+	tsd = BL_UCAST(BL_PC, bl);
+	sd = BL_UCAST(BL_PC, src);
 
 	if ( ((skill_id != PR_BENEDICTIO && *c >=1) || *c >=2) && !(skill->get_inf2(skill_id)&INF2_CHORUS_SKILL) )
 		return 0; //Partner found for ensembles, or the two companions for Benedictio. [Skotlex]
@@ -12962,15 +12986,18 @@ int skill_check_pc_partner (struct map_session_data *sd, uint16 skill_id, uint16
 /*==========================================
  *
  *------------------------------------------*/
-int skill_check_condition_mob_master_sub (struct block_list *bl, va_list ap) {
-	int *c,src_id,mob_class,skill_id;
-	struct mob_data *md;
+int skill_check_condition_mob_master_sub (struct block_list *bl, va_list ap)
+{
+	const struct mob_data *md = NULL;
+	int src_id = va_arg(ap, int);
+	int mob_class = va_arg(ap, int);
+	int skill_id = va_arg(ap, int);
+	int *c = va_arg(ap, int *);
 
-	md=(struct mob_data*)bl;
-	src_id=va_arg(ap,int);
-	mob_class=va_arg(ap,int);
-	skill_id=va_arg(ap,int);
-	c=va_arg(ap,int *);
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCCAST(BL_MOB, bl);
+
 	if( md->master_id != src_id
 	 || md->special_state.ai != (skill_id == AM_SPHEREMINE?AI_SPHERE:skill_id == KO_ZANZOU?AI_ZANZOU:skill_id == MH_SUMMON_LEGION?AI_ATTACK:AI_FLORA) )
 		return 0; //Non alchemist summoned mobs have nothing to do here.
@@ -15313,10 +15340,14 @@ int skill_autospell (struct map_session_data *sd, uint16 skill_id)
 /*==========================================
  * Sitting skills functions.
  *------------------------------------------*/
-int skill_sit_count (struct block_list *bl, va_list ap) {
-	struct map_session_data *sd;
-	int type =va_arg(ap,int);
-	sd=(struct map_session_data*)bl;
+int skill_sit_count(struct block_list *bl, va_list ap)
+{
+	int type = va_arg(ap, int);
+	struct map_session_data *sd = NULL;
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
 
 	if(!pc_issit(sd))
 		return 0;
@@ -15330,11 +15361,14 @@ int skill_sit_count (struct block_list *bl, va_list ap) {
 	return 0;
 }
 
-int skill_sit_in (struct block_list *bl, va_list ap) {
-	struct map_session_data *sd;
-	int type =va_arg(ap,int);
+int skill_sit_in(struct block_list *bl, va_list ap)
+{
+	int type = va_arg(ap, int);
+	struct map_session_data *sd = NULL;
 
-	sd=(struct map_session_data*)bl;
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
 
 	if(!pc_issit(sd))
 		return 0;
@@ -15351,10 +15385,15 @@ int skill_sit_in (struct block_list *bl, va_list ap) {
 	return 0;
 }
 
-int skill_sit_out (struct block_list *bl, va_list ap) {
-	struct map_session_data *sd;
-	int type =va_arg(ap,int);
-	sd=(struct map_session_data*)bl;
+int skill_sit_out(struct block_list *bl, va_list ap)
+{
+	int type = va_arg(ap, int);
+	struct map_session_data *sd = NULL;
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
+
 	if(sd->state.gangsterparadise && type&1)
 		sd->state.gangsterparadise=0;
 	if(sd->state.rest && type&2) {
@@ -15405,7 +15444,8 @@ int skill_sit (struct map_session_data *sd, int type)
 /*==========================================
  *
  *------------------------------------------*/
-int skill_frostjoke_scream(struct block_list *bl, va_list ap) {
+int skill_frostjoke_scream(struct block_list *bl, va_list ap)
+{
 	struct block_list *src;
 	uint16 skill_id,skill_lv;
 	int64 tick;
@@ -15421,9 +15461,9 @@ int skill_frostjoke_scream(struct block_list *bl, va_list ap) {
 	if (src == bl || status->isdead(bl))
 		return 0;
 	if (bl->type == BL_PC) {
-		struct map_session_data *sd = (struct map_session_data *)bl;
-		if (sd && (pc_isinvisible(sd) || pc_ismadogear(sd)))
-			return 0;//Frost Joke / Scream cannot target invisible or MADO Gear characters [Ind]
+		const struct map_session_data *sd = BL_UCCAST(BL_PC, bl);
+		if (pc_isinvisible(sd) || pc_ismadogear(sd))
+			return 0; //Frost Joke / Scream cannot target invisible or MADO Gear characters [Ind]
 	}
 	//It has been reported that Scream/Joke works the same regardless of woe-setting. [Skotlex]
 	if(battle->check_target(src,bl,BCT_ENEMY) > 0)
@@ -15555,15 +15595,15 @@ struct skill_unit_group *skill_locate_element_field(struct block_list *bl) {
 }
 
 // for graffiti cleaner [Valaris]
-int skill_graffitiremover (struct block_list *bl, va_list ap) {
-	struct skill_unit *su=NULL;
+int skill_graffitiremover(struct block_list *bl, va_list ap)
+{
+	struct skill_unit *su = NULL;
 
 	nullpo_ret(bl);
 
-	if(bl->type != BL_SKILL)
+	if (bl->type != BL_SKILL)
 		return 0;
-
-	su = ((struct skill_unit *)bl);
+	su = BL_UCAST(BL_SKILL, bl);
 
 	if((su->group) && (su->group->unit_id == UNT_GRAFFITI))
 		skill->delunit(su);
@@ -15571,30 +15611,35 @@ int skill_graffitiremover (struct block_list *bl, va_list ap) {
 	return 0;
 }
 
-int skill_greed (struct block_list *bl, va_list ap) {
-	struct block_list *src;
+int skill_greed(struct block_list *bl, va_list ap)
+{
+	struct block_list *src = va_arg(ap, struct block_list *);
 
 	nullpo_ret(bl);
-	nullpo_ret(src = va_arg(ap, struct block_list *));
+	nullpo_ret(src);
 
-	if(src->type == BL_PC && bl->type==BL_ITEM )
-		pc->takeitem((struct map_session_data *)src, (struct flooritem_data *)bl);
+	if (src->type == BL_PC && bl->type == BL_ITEM) {
+		struct map_session_data *sd = BL_UCAST(BL_PC, src);
+		struct flooritem_data *fitem = BL_UCAST(BL_ITEM, bl);
+		pc->takeitem(sd, fitem);
+	}
 
 	return 0;
 }
+
 //For Ranger's Detonator [Jobbie/3CeAM]
-int skill_detonator(struct block_list *bl, va_list ap) {
-	struct skill_unit *su=NULL;
-	struct block_list *src;
+int skill_detonator(struct block_list *bl, va_list ap)
+{
+	struct skill_unit *su = NULL;
+	struct block_list *src = va_arg(ap,struct block_list *);
 	int unit_id;
 
 	nullpo_ret(bl);
-	src = va_arg(ap,struct block_list *);
+	nullpo_ret(src);
 
-	if( bl->type != BL_SKILL )
+	if (bl->type != BL_SKILL)
 		return 0;
-
-	su = (struct skill_unit *)bl;
+	su = BL_UCAST(BL_SKILL, bl);
 
 	if( !su->group || su->group->src_id != src->id )
 		return 0;
@@ -15634,16 +15679,21 @@ int skill_detonator(struct block_list *bl, va_list ap) {
 /*==========================================
  *
  *------------------------------------------*/
-int skill_cell_overlap(struct block_list *bl, va_list ap) {
+int skill_cell_overlap(struct block_list *bl, va_list ap)
+{
 	uint16 skill_id;
 	int *alive;
-	struct skill_unit *su;
+	struct skill_unit *su = NULL;
 
 	skill_id = va_arg(ap,int);
 	alive = va_arg(ap,int *);
-	su = (struct skill_unit *)bl;
 
-	if( su == NULL || su->group == NULL || (*alive) == 0 )
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_SKILL);
+	nullpo_ret(alive);
+	su = BL_UCAST(BL_SKILL, bl);
+
+	if (bl->type != BL_SKILL || su->group == NULL || (*alive) == 0)
 		return 0;
 
 	if( su->group->state.guildaura ) /* guild auras are not canceled! */
@@ -15727,38 +15777,44 @@ int skill_cell_overlap(struct block_list *bl, va_list ap) {
 /*==========================================
  *
  *------------------------------------------*/
-int skill_chastle_mob_changetarget(struct block_list *bl,va_list ap)
+int skill_chastle_mob_changetarget(struct block_list *bl, va_list ap)
 {
-	struct mob_data* md;
-	struct unit_data*ud = unit->bl2ud(bl);
-	struct block_list *from_bl;
-	struct block_list *to_bl;
-	md = (struct mob_data*)bl;
-	from_bl = va_arg(ap,struct block_list *);
-	to_bl = va_arg(ap,struct block_list *);
+	struct unit_data *ud = unit->bl2ud(bl);
+	struct block_list *from_bl = va_arg(ap, struct block_list *);
+	struct block_list *to_bl = va_arg(ap, struct block_list *);
 
-	if(ud && ud->target == from_bl->id)
+	nullpo_ret(bl);
+	nullpo_ret(from_bl);
+	nullpo_ret(to_bl);
+
+	if (ud != NULL && ud->target == from_bl->id)
 		ud->target = to_bl->id;
 
-	if(md->bl.type == BL_MOB && md->target_id == from_bl->id)
-		md->target_id = to_bl->id;
+	if (bl->type == BL_MOB) {
+		struct mob_data *md = BL_UCAST(BL_MOB, bl);
+		if (md->target_id == from_bl->id)
+			md->target_id = to_bl->id;
+	}
 	return 0;
 }
 
 /*==========================================
  *
  *------------------------------------------*/
-int skill_trap_splash(struct block_list *bl, va_list ap) {
-	struct block_list *src;
-	int64 tick;
-	struct skill_unit *src_su;
+int skill_trap_splash(struct block_list *bl, va_list ap)
+{
+	struct block_list *src = va_arg(ap, struct block_list *);
+	int64 tick = va_arg(ap, int64);
+	struct skill_unit *src_su = NULL;
 	struct skill_unit_group *sg;
 	struct block_list *ss;
-	src = va_arg(ap,struct block_list *);
-	src_su = (struct skill_unit *)src;
-	tick = va_arg(ap,int64);
 
-	if( !src_su->alive || bl->prev == NULL )
+	nullpo_ret(bl);
+	nullpo_ret(src);
+	Assert_ret(src->type == BL_SKILL);
+	src_su = BL_UCAST(BL_SKILL, src);
+
+	if (!src_su->alive || bl->prev == NULL)
 		return 0;
 
 	nullpo_ret(sg = src_su->group);
@@ -15811,21 +15867,24 @@ int skill_trap_splash(struct block_list *bl, va_list ap) {
 			break;
 		case UNT_FIRINGTRAP:
 		case UNT_ICEBOUNDTRAP:
-			if( src->id == bl->id ) break;
-			if( bl->type == BL_SKILL ){
-				struct skill_unit *su = (struct skill_unit *)bl;
-				if( su->group->unit_id == UNT_USED_TRAPS )
+			if (src->id == bl->id)
+				break;
+			if (bl->type == BL_SKILL) {
+				struct skill_unit *su = BL_UCAST(BL_SKILL, bl);
+				if (su->group->unit_id == UNT_USED_TRAPS)
 					break;
 			}
+			/* Fall through */
 		case UNT_CLUSTERBOMB:
 			if( ss != bl )
 				skill->attack(BF_MISC,ss,src,bl,sg->skill_id,sg->skill_lv,tick,sg->val1|SD_LEVEL);
 			break;
 		case UNT_CLAYMORETRAP:
-			if( src->id == bl->id ) break;
-			if( bl->type == BL_SKILL ){
-				struct skill_unit *su = (struct skill_unit *)bl;
-				switch( su->group->unit_id ){
+			if (src->id == bl->id)
+				break;
+			if (bl->type == BL_SKILL) {
+				struct skill_unit *su = BL_UCAST(BL_SKILL, bl);
+				switch (su->group->unit_id) {
 					case UNT_CLAYMORETRAP:
 					case UNT_LANDMINE:
 					case UNT_BLASTMINE:
@@ -15841,6 +15900,7 @@ int skill_trap_splash(struct block_list *bl, va_list ap) {
 				}
 				break;
 			}
+			/* Fall through */
 		default:
 			skill->attack(skill->get_type(sg->skill_id),ss,src,bl,sg->skill_id,sg->skill_lv,tick,0);
 			break;
@@ -16651,9 +16711,10 @@ int skill_unit_timer(int tid, int64 tick, int id, intptr_t data) {
 /*==========================================
  *
  *------------------------------------------*/
-int skill_unit_move_sub(struct block_list* bl, va_list ap) {
-	struct skill_unit* su = (struct skill_unit *)bl;
-	struct skill_unit_group* group = su->group;
+int skill_unit_move_sub(struct block_list* bl, va_list ap)
+{
+	struct skill_unit *su = NULL;
+	struct skill_unit_group *group = NULL;
 
 	struct block_list* target = va_arg(ap,struct block_list*);
 	int64 tick = va_arg(ap,int64);
@@ -16663,6 +16724,10 @@ int skill_unit_move_sub(struct block_list* bl, va_list ap) {
 	uint16 skill_id;
 	int i;
 
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_SKILL);
+	su = BL_UCAST(BL_SKILL, bl);
+	group = su->group;
 	nullpo_ret(group);
 
 	if( !su->alive || target->prev == NULL )
@@ -17862,13 +17927,15 @@ int skill_changematerial(struct map_session_data *sd, int n, unsigned short *ite
 /**
  * for Royal Guard's LG_TRAMPLE
  **/
-int skill_destroy_trap(struct block_list *bl, va_list ap) {
-	struct skill_unit *su = (struct skill_unit *)bl;
+int skill_destroy_trap(struct block_list *bl, va_list ap)
+{
+	struct skill_unit *su = NULL;
 	struct skill_unit_group *sg;
-	int64 tick;
+	int64 tick = va_arg(ap, int64);
 
-	nullpo_ret(su);
-	tick = va_arg(ap, int64);
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_SKILL);
+	su = BL_UCAST(BL_SKILL, bl);
 
 	if (su->alive && (sg = su->group) != NULL && skill->get_inf2(sg->skill_id)&INF2_TRAP) {
 		switch( sg->unit_id ) {

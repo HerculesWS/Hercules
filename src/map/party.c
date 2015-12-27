@@ -1049,7 +1049,11 @@ int party_send_dot_remove(struct map_session_data *sd)
 // party_foreachsamemap(party->sub_count, sd, 0, &c);
 int party_sub_count(struct block_list *bl, va_list ap)
 {
-	struct map_session_data *sd = (struct map_session_data *)bl;
+	const struct map_session_data *sd = NULL;
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCCAST(BL_PC, bl);
 
 	if (sd->state.autotrade)
 		return 0;
@@ -1112,7 +1116,11 @@ int party_vforeachsamemap(int (*func)(struct block_list*,va_list), struct map_se
 // Special check for Minstrel's and Wanderer's chorus skills.
 int party_sub_count_chorus(struct block_list *bl, va_list ap)
 {
-	struct map_session_data *sd = (struct map_session_data *)bl;
+	const struct map_session_data *sd = NULL;
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCCAST(BL_PC, bl);
 
 	if (sd->state.autotrade)
 		return 0;

@@ -5849,10 +5849,15 @@ BUILDIN(warp)
 /*==========================================
  * Warp a specified area
  *------------------------------------------*/
-int buildin_areawarp_sub(struct block_list *bl,va_list ap)
+int buildin_areawarp_sub(struct block_list *bl, va_list ap)
 {
 	int x2,y2,x3,y3;
 	unsigned int index;
+	struct map_session_data *sd = NULL;
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
 
 	index = va_arg(ap,unsigned int);
 	x2 = va_arg(ap,int);
@@ -5861,7 +5866,7 @@ int buildin_areawarp_sub(struct block_list *bl,va_list ap)
 	y3 = va_arg(ap,int);
 
 	if (index == 0) {
-		pc->randomwarp((struct map_session_data *)bl, CLR_TELEPORT);
+		pc->randomwarp(sd, CLR_TELEPORT);
 	} else if (x3 != 0 && y3 != 0) {
 		int max, tx, ty, j = 0;
 
@@ -5876,9 +5881,9 @@ int buildin_areawarp_sub(struct block_list *bl,va_list ap)
 			j++;
 		} while (map->getcell(index, bl, tx, ty, CELL_CHKNOPASS) && j < max);
 
-		pc->setpos((struct map_session_data *)bl, index, tx, ty, CLR_OUTSIGHT);
+		pc->setpos(sd, index, tx, ty, CLR_OUTSIGHT);
 	} else {
-		pc->setpos((struct map_session_data *)bl,index,x2,y2,CLR_OUTSIGHT);
+		pc->setpos(sd, index, x2, y2, CLR_OUTSIGHT);
 	}
 	return 0;
 }
@@ -5924,14 +5929,20 @@ BUILDIN(areawarp)
 /*==========================================
  * areapercentheal <map>,<x1>,<y1>,<x2>,<y2>,<hp>,<sp>
  *------------------------------------------*/
-int buildin_areapercentheal_sub(struct block_list *bl,va_list ap)
+int buildin_areapercentheal_sub(struct block_list *bl, va_list ap)
 {
-	int hp, sp;
-	hp = va_arg(ap, int);
-	sp = va_arg(ap, int);
-	pc->percentheal((struct map_session_data *)bl, hp, sp);
+	int hp = va_arg(ap, int);
+	int sp = va_arg(ap, int);
+	struct map_session_data *sd = NULL;
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
+
+	pc->percentheal(sd, hp, sp);
 	return 0;
 }
+
 BUILDIN(areapercentheal) {
 	int hp,sp,m;
 	const char *mapname;
@@ -9872,12 +9883,16 @@ BUILDIN(areamonster) {
 /*==========================================
  * KillMonster subcheck, verify if mob to kill ain't got an even to handle, could be force kill by allflag
  *------------------------------------------*/
-int buildin_killmonster_sub_strip(struct block_list *bl,va_list ap)
+int buildin_killmonster_sub_strip(struct block_list *bl, va_list ap)
 {
 	//same fix but with killmonster instead - stripping events from mobs.
-	struct mob_data *md = (struct mob_data *)bl;
-	char *event=va_arg(ap,char *);
-	int allflag=va_arg(ap,int);
+	struct mob_data *md = NULL;
+	char *event = va_arg(ap,char *);
+	int allflag = va_arg(ap,int);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
 	md->state.npc_killmonster = 1;
 
@@ -9891,11 +9906,15 @@ int buildin_killmonster_sub_strip(struct block_list *bl,va_list ap)
 	md->state.npc_killmonster = 0;
 	return 0;
 }
-int buildin_killmonster_sub(struct block_list *bl,va_list ap)
+int buildin_killmonster_sub(struct block_list *bl, va_list ap)
 {
-	struct mob_data *md = (struct mob_data *)bl;
-	char *event=va_arg(ap,char *);
-	int allflag=va_arg(ap,int);
+	struct mob_data *md = NULL;
+	char *event = va_arg(ap,char *);
+	int allflag = va_arg(ap,int);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
 	if(!allflag) {
 		if(strcmp(event,md->npc_event)==0)
@@ -10665,17 +10684,22 @@ BUILDIN(getareausers)
 
 /*==========================================
  *------------------------------------------*/
-int buildin_getareadropitem_sub(struct block_list *bl,va_list ap)
+int buildin_getareadropitem_sub(struct block_list *bl, va_list ap)
 {
-	int item=va_arg(ap,int);
-	int *amount=va_arg(ap,int *);
-	struct flooritem_data *drop=(struct flooritem_data *)bl;
+	int item = va_arg(ap, int);
+	int *amount = va_arg(ap, int *);
+	const struct flooritem_data *drop = NULL;
 
-	if(drop->item_data.nameid==item)
-		(*amount)+=drop->item_data.amount;
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_ITEM);
+	drop = BL_UCCAST(BL_ITEM, bl);
+
+	if (drop->item_data.nameid == item)
+		(*amount) += drop->item_data.amount;
 
 	return 0;
 }
+
 BUILDIN(getareadropitem) {
 	const char *str;
 	int16 m,x0,y0,x1,y1;
@@ -11653,7 +11677,12 @@ BUILDIN(getmapflag)
 /* pvp timer handling */
 int script_mapflag_pvp_sub(struct block_list *bl, va_list ap)
 {
-	struct map_session_data *sd = (struct map_session_data *)bl;
+	struct map_session_data *sd = NULL;
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
+
 	if (sd->pvp_timer == INVALID_TIMER) {
 		sd->pvp_timer = timer->add(timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
 		sd->pvp_rank = 0;
@@ -11666,6 +11695,7 @@ int script_mapflag_pvp_sub(struct block_list *bl, va_list ap)
 	clif->maptypeproperty2(&sd->bl,SELF);
 	return 0;
 }
+
 BUILDIN(setmapflag) {
 	int16 m,i;
 	const char *str, *val2 = NULL;
@@ -11903,7 +11933,12 @@ BUILDIN(pvpon)
 
 int buildin_pvpoff_sub(struct block_list *bl, va_list ap)
 {
-	struct map_session_data *sd = (struct map_session_data *)bl;
+	struct map_session_data *sd = NULL;
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
+
 	clif->pvpset(sd, 0, 0, 2);
 	if (sd->pvp_timer != INVALID_TIMER) {
 		timer->delete(sd->pvp_timer, pc->calc_pvprank_timer);
@@ -12029,9 +12064,13 @@ int buildin_maprespawnguildid_sub_pc(struct map_session_data* sd, va_list ap)
 	return 1;
 }
 
-int buildin_maprespawnguildid_sub_mob(struct block_list *bl,va_list ap)
+int buildin_maprespawnguildid_sub_mob(struct block_list *bl, va_list ap)
 {
-	struct mob_data *md=(struct mob_data *)bl;
+	struct mob_data *md = NULL;
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
 	if (md->guardian_data == NULL && md->class_ != MOBID_EMPELIUM)
 		status_kill(bl);
@@ -12463,9 +12502,15 @@ BUILDIN(mapwarp) {
 }
 
 // Added by RoVeRT
-int buildin_mobcount_sub(struct block_list *bl,va_list ap) {
-	char *event=va_arg(ap,char *);
-	struct mob_data *md = ((struct mob_data *)bl);
+int buildin_mobcount_sub(struct block_list *bl, va_list ap)
+{
+	char *event = va_arg(ap,char *);
+	const struct mob_data *md = NULL;
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCCAST(BL_MOB, bl);
+
 	if( md->status.hp > 0 && (!event || strcmp(event,md->npc_event) == 0) )
 		return 1;
 	return 0;
@@ -13263,12 +13308,17 @@ BUILDIN(soundeffect)
 	return true;
 }
 
-int soundeffect_sub(struct block_list* bl,va_list ap)
+int soundeffect_sub(struct block_list *bl, va_list ap)
 {
-	char* name = va_arg(ap,char*);
-	int type = va_arg(ap,int);
+	struct map_session_data *sd = NULL;
+	char *name = va_arg(ap, char *);
+	int type = va_arg(ap, int);
 
-	clif->soundeffect((struct map_session_data *)bl, bl, name, type);
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
+
+	clif->soundeffect(sd, bl, name, type);
 
 	return true;
 }
@@ -17950,12 +18000,17 @@ BUILDIN(has_instance) {
 		script_pushconststr(st, map->list[m].name);
 	return true;
 }
-int buildin_instance_warpall_sub(struct block_list *bl,va_list ap)
+
+int buildin_instance_warpall_sub(struct block_list *bl, va_list ap)
 {
-	struct map_session_data *sd = (struct map_session_data*)bl;
+	struct map_session_data *sd = NULL;
 	int map_index = va_arg(ap,int);
 	int x = va_arg(ap,int);
 	int y = va_arg(ap,int);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
 
 	pc->setpos(sd,map_index,x,y,CLR_TELEPORT);
 
@@ -18126,9 +18181,9 @@ BUILDIN(setfont)
 	return true;
 }
 
-int buildin_mobuseskill_sub(struct block_list *bl,va_list ap)
+int buildin_mobuseskill_sub(struct block_list *bl, va_list ap)
 {
-	struct mob_data *md = (struct mob_data *)bl;
+	struct mob_data *md = NULL;
 	struct block_list *tbl;
 	int mobid       = va_arg(ap,int);
 	uint16 skill_id = va_arg(ap,int);
@@ -18137,6 +18192,10 @@ int buildin_mobuseskill_sub(struct block_list *bl,va_list ap)
 	int cancel      = va_arg(ap,int);
 	int emotion     = va_arg(ap,int);
 	int target      = va_arg(ap,int);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
 	if( md->class_ != mobid )
 		return 0;

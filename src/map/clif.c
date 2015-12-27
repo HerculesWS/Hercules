@@ -314,7 +314,8 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 	int len, type, fd;
 
 	nullpo_ret(bl);
-	nullpo_ret(sd = (struct map_session_data *)bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
 
 	fd = sd->fd;
 	if (!fd || sockt->session[fd] == NULL) //Don't send to disconnected clients.
@@ -335,15 +336,14 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 				return 0;
 		break;
 		case AREA_WOSC: {
-			if(src_bl->type == BL_PC){
-				struct map_session_data *ssd = (struct map_session_data *)src_bl;
-				if (ssd && sd->chatID && (sd->chatID == ssd->chatID))
-				return 0;
-			}
-			else if(src_bl->type == BL_NPC) {
-				struct npc_data *nd = (struct npc_data *)src_bl;
-				if (nd && sd->chatID && (sd->chatID == nd->chat_id))
-				return 0;
+			if (src_bl->type == BL_PC) {
+				const struct map_session_data *ssd = BL_UCCAST(BL_PC, src_bl);
+				if (ssd != NULL && sd->chatID != 0 && (sd->chatID == ssd->chatID))
+					return 0;
+			} else if (src_bl->type == BL_NPC) {
+				const struct npc_data *nd = BL_UCCAST(BL_NPC, src_bl);
+				if (nd != NULL && sd->chatID != 0 && (sd->chatID == nd->chat_id))
+					return 0;
 			}
 		}
 		break;
@@ -2765,16 +2765,15 @@ void clif_guild_xy_remove(struct map_session_data *sd)
 /*==========================================
  *
  *------------------------------------------*/
-int clif_hpmeter_sub(struct block_list *bl, va_list ap) {
-	struct map_session_data *sd, *tsd;
+int clif_hpmeter_sub(struct block_list *bl, va_list ap)
+{
 #if PACKETVER < 20100126
 	const int cmd = 0x106;
 #else
 	const int cmd = 0x80e;
 #endif
-
-	sd = va_arg(ap, struct map_session_data *);
-	tsd = (struct map_session_data *)bl;
+	struct map_session_data *sd = va_arg(ap, struct map_session_data *);
+	struct map_session_data *tsd = BL_CAST(BL_PC, bl);
 
 	nullpo_ret(sd);
 	nullpo_ret(tsd);
@@ -4582,10 +4581,10 @@ int clif_getareachar(struct block_list* bl,va_list ap) {
 
 	switch(bl->type){
 		case BL_ITEM:
-			clif->getareachar_item(sd,(struct flooritem_data*) bl);
+			clif->getareachar_item(sd, BL_UCAST(BL_ITEM, bl));
 			break;
 		case BL_SKILL:
-			clif->getareachar_skillunit(&sd->bl, (struct skill_unit *)bl, SELF);
+			clif->getareachar_skillunit(&sd->bl, BL_UCAST(BL_SKILL, bl), SELF);
 			break;
 		default:
 			if(&sd->bl == bl)
@@ -4628,13 +4627,13 @@ int clif_outsight(struct block_list *bl,va_list ap)
 					clif->buyingstore_disappear_entry_single(tsd, sd);
 				break;
 			case BL_ITEM:
-				clif->clearflooritem((struct flooritem_data*)bl,tsd->fd);
+				clif->clearflooritem(BL_UCAST(BL_ITEM, bl), tsd->fd);
 				break;
 			case BL_SKILL:
-				clif->clearchar_skillunit((struct skill_unit *)bl,tsd->fd);
+				clif->clearchar_skillunit(BL_UCAST(BL_SKILL, bl), tsd->fd);
 				break;
 			case BL_NPC:
-				if (!(((struct npc_data *)bl)->option&OPTION_INVISIBLE))
+				if (!(BL_UCAST(BL_NPC, bl)->option&OPTION_INVISIBLE))
 					clif->clearunit_single(bl->id,CLR_OUTSIGHT,tsd->fd);
 				break;
 			default:
@@ -4646,9 +4645,9 @@ int clif_outsight(struct block_list *bl,va_list ap)
 	if (sd && sd->fd) { //sd is watching tbl go out of view.
 		nullpo_ret(tbl);
 		if (tbl->type == BL_SKILL) //Trap knocked out of sight
-			clif->clearchar_skillunit((struct skill_unit *)tbl,sd->fd);
+			clif->clearchar_skillunit(BL_UCAST(BL_SKILL, tbl), sd->fd);
 		else if ((vd = status->get_viewdata(tbl)) && vd->class_ != INVISIBLE_CLASS
-		      && !(tbl->type == BL_NPC && (((struct npc_data *)tbl)->option&OPTION_INVISIBLE)))
+		      && !(tbl->type == BL_NPC && (BL_UCAST(BL_NPC, tbl)->option&OPTION_INVISIBLE)))
 			clif->clearunit_single(tbl->id,CLR_OUTSIGHT,sd->fd);
 	}
 	return 0;
@@ -4672,10 +4671,10 @@ int clif_insight(struct block_list *bl,va_list ap)
 		nullpo_ret(bl);
 		switch(bl->type) {
 			case BL_ITEM:
-				clif->getareachar_item(tsd,(struct flooritem_data*)bl);
+				clif->getareachar_item(tsd, BL_UCAST(BL_ITEM, bl));
 				break;
 			case BL_SKILL:
-				clif->getareachar_skillunit(&tsd->bl, (struct skill_unit *)bl, SELF);
+				clif->getareachar_skillunit(&tsd->bl, BL_UCAST(BL_SKILL, bl), SELF);
 				break;
 			default:
 				clif->getareachar_unit(tsd,bl);

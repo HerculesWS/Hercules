@@ -369,20 +369,30 @@ int instance_mapid2imapid(int16 m, int instance_id) {
 /*--------------------------------------
  * Used on Init instance. Duplicates each script on source map
  *--------------------------------------*/
-int instance_map_npcsub(struct block_list* bl, va_list args) {
-	struct npc_data* nd = (struct npc_data*)bl;
+int instance_map_npcsub(struct block_list* bl, va_list args)
+{
+	struct npc_data *nd = NULL;
 	int16 m = va_arg(args, int); // Destination Map
 
-	if ( npc->duplicate4instance(nd, m) )
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_NPC);
+	nd = BL_UCAST(BL_NPC, bl);
+
+	if (npc->duplicate4instance(nd, m))
 		ShowDebug("instance_map_npcsub:npc_duplicate4instance failed (%s/%d)\n",nd->name,m);
 
 	return 1;
 }
 
-int instance_init_npc(struct block_list* bl, va_list args) {
-	struct npc_data *nd = (struct npc_data*)bl;
+int instance_init_npc(struct block_list* bl, va_list args)
+{
+	struct npc_data *nd = NULL;
 	struct event_data *ev;
 	char evname[EVENT_NAME_LENGTH];
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_NPC);
+	nd = BL_UCAST(BL_NPC, bl);
 
 	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnInstanceInit", nd->exname);
 
@@ -430,10 +440,10 @@ int instance_cleanup_sub(struct block_list *bl, va_list ap) {
 
 	switch(bl->type) {
 		case BL_PC:
-			map->quit((struct map_session_data *) bl);
+			map->quit(BL_UCAST(BL_PC, bl));
 			break;
 		case BL_NPC:
-			npc->unload((struct npc_data *)bl,true);
+			npc->unload(BL_UCAST(BL_NPC, bl), true);
 			break;
 		case BL_MOB:
 			unit->free(bl,CLR_OUTSIGHT);
@@ -445,7 +455,7 @@ int instance_cleanup_sub(struct block_list *bl, va_list ap) {
 			map->clearflooritem(bl);
 			break;
 		case BL_SKILL:
-			skill->delunit((struct skill_unit *) bl);
+			skill->delunit(BL_UCAST(BL_SKILL, bl));
 			break;
 	}
 

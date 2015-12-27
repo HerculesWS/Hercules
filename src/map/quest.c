@@ -252,15 +252,15 @@ int quest_delete(struct map_session_data *sd, int quest_id)
  *           int Party ID
  *           int Mob ID
  */
-int quest_update_objective_sub(struct block_list *bl, va_list ap) {
-	struct map_session_data *sd;
-	int mob_id, party_id;
+int quest_update_objective_sub(struct block_list *bl, va_list ap)
+{
+	struct map_session_data *sd = NULL;
+	int party_id = va_arg(ap, int);
+	int mob_id = va_arg(ap, int);
 
 	nullpo_ret(bl);
-	nullpo_ret(sd = (struct map_session_data *)bl);
-
-	party_id = va_arg(ap,int);
-	mob_id = va_arg(ap,int);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
 
 	if( !sd->avail_quests )
 		return 0;

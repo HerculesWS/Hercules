@@ -147,8 +147,13 @@ int npc_get_new_npc_id(void) {
 	}
 }
 
-int npc_isnear_sub(struct block_list* bl, va_list args) {
-	struct npc_data *nd = (struct npc_data*)bl;
+int npc_isnear_sub(struct block_list *bl, va_list args)
+{
+	const struct npc_data *nd = NULL;
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_NPC);
+	nd = BL_UCCAST(BL_NPC, bl);
 
 	if( nd->option & (OPTION_HIDE|OPTION_INVISIBLE) )
 		return 0;
@@ -212,8 +217,9 @@ int npc_enable_sub(struct block_list *bl, va_list ap)
 
 	nullpo_ret(bl);
 	nullpo_ret(nd=va_arg(ap,struct npc_data *));
+
 	if (bl->type == BL_PC) {
-		struct map_session_data *sd = (struct map_session_data *)bl;
+		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 
 		if (nd->option&OPTION_INVISIBLE)
 			return 1;
@@ -3428,10 +3434,17 @@ void npc_setcells(struct npc_data* nd) {
 	}
 }
 
-int npc_unsetcells_sub(struct block_list* bl, va_list ap) {
-	struct npc_data *nd = (struct npc_data*)bl;
-	int id =  va_arg(ap,int);
-	if (nd->bl.id == id) return 0;
+int npc_unsetcells_sub(struct block_list *bl, va_list ap)
+{
+	struct npc_data *nd = NULL;
+	int id = va_arg(ap, int);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_NPC);
+	nd = BL_UCAST(BL_NPC, bl);
+
+	if (nd->bl.id == id)
+		return 0;
 	npc->setcells(nd);
 	return 1;
 }

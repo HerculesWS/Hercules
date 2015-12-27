@@ -964,15 +964,16 @@ int pet_ai_hard(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-int pet_ai_sub_hard_lootsearch(struct block_list *bl,va_list ap)
+int pet_ai_sub_hard_lootsearch(struct block_list *bl, va_list ap)
 {
-	struct pet_data* pd;
-	struct flooritem_data *fitem = (struct flooritem_data *)bl;
-	struct block_list **target;
-	int sd_charid =0;
+	struct pet_data *pd = va_arg(ap,struct pet_data *);
+	struct block_list **target = va_arg(ap,struct block_list**);
+	struct flooritem_data *fitem = NULL;
+	int sd_charid = 0;
 
-	pd=va_arg(ap,struct pet_data *);
-	target=va_arg(ap,struct block_list**);
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_ITEM);
+	fitem = BL_UCAST(BL_ITEM, bl);
 
 	sd_charid = fitem->first_get_charid;
 

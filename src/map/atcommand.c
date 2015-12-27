@@ -1563,8 +1563,11 @@ int atcommand_stopattack(struct block_list *bl,va_list ap)
  *------------------------------------------*/
 int atcommand_pvpoff_sub(struct block_list *bl,va_list ap)
 {
-	struct map_session_data *sd = (struct map_session_data *)bl;
+	struct map_session_data *sd = NULL;
 	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
+
 	clif->pvpset(sd, 0, 0, 2);
 	if (sd->pvp_timer != INVALID_TIMER) {
 		timer->delete(sd->pvp_timer, pc->calc_pvprank_timer);
@@ -1598,8 +1601,11 @@ ACMD(pvpoff)
  *------------------------------------------*/
 int atcommand_pvpon_sub(struct block_list *bl,va_list ap)
 {
-	struct map_session_data *sd = (struct map_session_data *)bl;
+	struct map_session_data *sd = NULL;
 	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
+
 	if (sd->pvp_timer == INVALID_TIMER) {
 		sd->pvp_timer = timer->add(timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
 		sd->pvp_rank = 0;
@@ -2041,10 +2047,12 @@ ACMD(monster)
  *------------------------------------------*/
 int atkillmonster_sub(struct block_list *bl, va_list ap)
 {
-	struct mob_data *md = (struct mob_data *)bl;
+	struct mob_data *md = NULL;
 	int flag = va_arg(ap, int);
-
 	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
+
 	if (md->guardian_data)
 		return 0; //Do not touch WoE mobs!
 
@@ -7285,7 +7293,7 @@ int atcommand_mutearea_sub(struct block_list *bl, va_list ap)
 { // As it is being used [ACMD(mutearea)] there's no need to be a bool, but if there's need to reuse it, it's better to be this way
 
 	int time, id;
-	struct map_session_data *pl_sd = (struct map_session_data *)bl;
+	struct map_session_data *pl_sd = BL_CAST(BL_PC, bl);
 	if (pl_sd == NULL)
 		return 0;
 

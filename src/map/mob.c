@@ -794,17 +794,16 @@ int mob_can_reach(struct mob_data *md,struct block_list *bl,int range, int state
 /*==========================================
  * Links nearby mobs (supportive mobs)
  *------------------------------------------*/
-int mob_linksearch(struct block_list *bl,va_list ap) {
-	struct mob_data *md;
-	int class_;
-	struct block_list *target;
-	int64 tick;
+int mob_linksearch(struct block_list *bl,va_list ap)
+{
+	struct mob_data *md = NULL;
+	int class_ = va_arg(ap, int);
+	struct block_list *target = va_arg(ap, struct block_list *);
+	int64 tick = va_arg(ap, int64);
 
 	nullpo_ret(bl);
-	md=(struct mob_data *)bl;
-	class_ = va_arg(ap, int);
-	target = va_arg(ap, struct block_list *);
-	tick = va_arg(ap, int64);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
 	if (md->class_ == class_ && DIFF_TICK(md->last_linktime, tick) < MIN_MOBLINKTIME
 		&& !md->target_id)
@@ -1073,8 +1072,7 @@ int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 
 	switch (bl->type) {
 		case BL_PC:
-			if (((struct map_session_data *)bl)->state.gangsterparadise
-			 && !(status_get_mode(&md->bl)&MD_BOSS))
+			if (BL_UCCAST(BL_PC, bl)->state.gangsterparadise && !(status_get_mode(&md->bl)&MD_BOSS))
 				return 0; //Gangster paradise protection.
 		default:
 			if (battle_config.hom_setting&0x4 &&
@@ -1174,17 +1172,15 @@ int mob_ai_sub_hard_lootsearch(struct block_list *bl,va_list ap)
 }
 
 int mob_warpchase_sub(struct block_list *bl,va_list ap) {
-	struct block_list *target;
-	struct npc_data **target_nd;
-	struct npc_data *nd;
-	int *min_distance;
 	int cur_distance;
+	struct block_list *target = va_arg(ap, struct block_list *);
+	struct npc_data **target_nd = va_arg(ap, struct npc_data **);
+	int *min_distance = va_arg(ap, int *);
+	struct npc_data *nd = NULL;
 
-	target= va_arg(ap, struct block_list*);
-	target_nd= va_arg(ap, struct npc_data**);
-	min_distance= va_arg(ap, int*);
-
-	nd = (struct npc_data *)bl;
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_NPC);
+	nd = BL_UCAST(BL_NPC, bl);
 
 	if(nd->subtype != WARP)
 		return 0; //Not a warp
@@ -1687,9 +1683,15 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 	return true;
 }
 
-int mob_ai_sub_hard_timer(struct block_list *bl, va_list ap) {
-	struct mob_data *md = (struct mob_data*)bl;
+int mob_ai_sub_hard_timer(struct block_list *bl, va_list ap)
+{
+	struct mob_data *md = NULL;
 	int64 tick = va_arg(ap, int64);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
+
 	if (mob->ai_sub_hard(md, tick)) {
 		//Hard AI triggered.
 		if(!md->state.spotted)
@@ -1900,13 +1902,13 @@ int mob_timer_delete(int tid, int64 tick, int id, intptr_t data) {
  *------------------------------------------*/
 int mob_deleteslave_sub(struct block_list *bl,va_list ap)
 {
-	struct mob_data *md;
-	int id;
+	struct mob_data *md = NULL;
+	int id = va_arg(ap, int);
 
 	nullpo_ret(bl);
-	nullpo_ret(md = (struct mob_data *)bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
-	id=va_arg(ap,int);
 	if(md->master_id > 0 && md->master_id == id )
 		status_kill(bl);
 	return 0;
@@ -2843,12 +2845,17 @@ void mob_heal(struct mob_data *md, unsigned int heal)
 /*==========================================
  * Added by RoVeRT
  *------------------------------------------*/
-int mob_warpslave_sub(struct block_list *bl,va_list ap) {
-	struct mob_data *md=(struct mob_data *)bl;
+int mob_warpslave_sub(struct block_list *bl, va_list ap)
+{
+	struct mob_data *md = NULL;
 	struct block_list *master;
 	short x,y,range=0;
 	master = va_arg(ap, struct block_list*);
 	range = va_arg(ap, int);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
 	if(md->master_id!=master->id)
 		return 0;
@@ -2873,14 +2880,16 @@ int mob_warpslave(struct block_list *bl, int range) {
 /*==========================================
  *  Counts slave sub, currently checking if mob master is the given ID.
  *------------------------------------------*/
-int mob_countslave_sub(struct block_list *bl,va_list ap)
+int mob_countslave_sub(struct block_list *bl, va_list ap)
 {
-	int id;
-	struct mob_data *md;
-	id=va_arg(ap,int);
+	int id = va_arg(ap, int);
+	struct mob_data *md = NULL;
 
-	md = (struct mob_data *)bl;
-	if( md->master_id==id )
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
+
+	if (md->master_id == id)
 		return 1;
 	return 0;
 }
@@ -3064,11 +3073,12 @@ struct block_list *mob_getmasterhpltmaxrate(struct mob_data *md,int rate) {
 int mob_getfriendstatus_sub(struct block_list *bl,va_list ap)
 {
 	int cond1,cond2;
-	struct mob_data **fr, *md, *mmd;
+	struct mob_data **fr = NULL, *md = NULL, *mmd = NULL;
 	int flag=0;
 
 	nullpo_ret(bl);
-	nullpo_ret(md=(struct mob_data *)bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 	nullpo_ret(mmd=va_arg(ap,struct mob_data *));
 
 	if( mmd->bl.id == bl->id && !(battle_config.mob_ai&0x10) )
