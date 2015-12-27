@@ -1866,7 +1866,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					else skillratio += 400 + 100 * skill_lv; //700:900
 					break;
 				case MH_HEILIGE_STANGE:
-					skillratio += 400 + 250 * skill_lv;
+					skillratio += 400 + 250 * skill_lv * status->get_lv(src) / 150;
 					break;
 				case MH_POISON_MIST:
 					skillratio += 100 * skill_lv;
@@ -2484,8 +2484,9 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case SR_TIGERCANNON:// ATK [((Caster consumed HP + SP) / 4) x Caster Base Level / 100] %
 					{
 						int hp = status_get_max_hp(src) * (10 + 2 * skill_lv) / 100,
-							sp = status_get_max_sp(src) * (6 + skill_lv) / 100;
-						if( sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == SR_FALLENEMPIRE ) // ATK [((Caster consumed HP + SP) / 2) x Caster Base Level / 100] %
+							sp = status_get_max_sp(src) * (5 + skill_lv) / 100;
+
+						if ( sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == SR_FALLENEMPIRE ) // ATK [((Caster consumed HP + SP) / 2) x Caster Base Level / 100] %
 							skillratio += -100 + (hp+sp) / 2;
 						else
 							skillratio += -100 + (hp+sp) / 4;
