@@ -8601,19 +8601,31 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case WL_SIENNAEXECRATE:
-			if( flag&1 ) {
-				if( status->isimmune(bl) || !tsc )
-					break;
+			if ( status->isimmune(bl) || !tsc )
+				break;
+			
+			if ( flag&1 ) {
+				if( bl->id == skill->area_temp[1] )
+					break; // Already work on this target
 				if( tsc && tsc->data[SC_STONE] )
 					status_change_end(bl,SC_STONE,INVALID_TIMER);
 				else
-					status->change_start(src,bl,SC_STONE,10000,skill_lv,0,0,500,skill->get_time(skill_id, skill_lv),SCFLAG_FIXEDTICK);
+					status->change_start(src, bl, SC_STONE, 10000, skill_lv, 0, 0, 1000, (7+2*skill_lv)*1000, SCFLAG_FIXEDTICK);
 			} else {
 				int rate = 45 + 5 * skill_lv;
-				if( rnd()%100 < rate ){
-					clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
-					map->foreachinrange(skill->area_sub,bl,skill->get_splash(skill_id,skill_lv),BL_CHAR,src,skill_id,skill_lv,tick,flag|BCT_ENEMY|1,skill->castend_nodamage_id);
-				}else if( sd ) // Failure on Rate
+				if ( rnd()%100 < rate ){
+					rate = 0;
+					if( !tsc->data[SC_STONE] )
+						rate = status->change_start(src,bl,SC_STONE,10000,skill_lv,0,0,1000,(7+2*skill_lv)*1000,SCFLAG_FIXEDTICK);
+					else {
+						rate = 1;
+						status_change_end(bl,SC_STONE,INVALID_TIMER);
+					} if( rate ) {
+						skill->area_temp[1] = bl->id;
+						map->foreachinrange(skill->area_sub,bl,skill->get_splash(skill_id,skill_lv),BL_CHAR,src,skill_id,skill_lv,tick,flag|BCT_ENEMY|1,skill->castend_nodamage_id);
+					}
+					// Doesn't send failure packet if it fails on defence.
+				} else if ( sd ) // Failure on Rate
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			}
 			break;
