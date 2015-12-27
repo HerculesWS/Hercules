@@ -1088,6 +1088,8 @@ END_ZEROED_BLOCK; /* End */
 
 	int (*check_job_name) (const char *name);
 	void (*update_idle_time) (struct map_session_data* sd, enum e_battle_config_idletime type);
+	
+	int (*have_magnifier) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE
