@@ -1831,15 +1831,14 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					if( sc && sc->data[SC_CURSED_SOIL_OPTION] )
 						skillratio += sc->data[SC_CURSED_SOIL_OPTION]->val3;
 					break;
-				case GN_DEMONIC_FIRE: {
-						int fire_expansion_lv = skill_lv / 100;
-						skill_lv = skill_lv % 100;
-						skillratio = 110 + 20 * skill_lv;
-						if ( fire_expansion_lv == 1 )
-							skillratio += status_get_int(src) + (sd?sd->status.job_level:50);
-						else if ( fire_expansion_lv == 2 )
-							skillratio += status_get_int(src) * 10;
-					}
+				case GN_DEMONIC_FIRE: 
+					if(skill_lv > 20) //Fire Expansion Level 2
+						skillratio += 10 + 20 * (skill_lv - 20) + 10 * st->int_;
+					else if(skill_lv > 10) { //Fire Expansion Level 1
+						skillratio += 10 + 20 * (skill_lv - 10) + (sd ? sd->status.job_level + st->int_ : st->int_);
+						RE_LVL_DMOD(100);
+					} else //Normal Demonic Fire Damage
+						skillratio += 10 + 20 * skill_lv;
 					break;
 				// Magical Elemental Spirits Attack Skills
 				case EL_FIRE_MANTLE:

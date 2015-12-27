@@ -4702,6 +4702,11 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 				skill->addtimerskill(src, timer->gettick() + skill->get_time(skill_id, skill_lv), bl->id, 0, 0, skill_id, skill_lv, 0, 0);
 			}
 			break;
+			
+		case GN_DEMONIC_FIRE:
+			if (flag&1)
+				skill->attack(skill->get_type(skill_id),src,src,bl,skill_id,skill_lv,tick,flag);
+			break;
 
 		case EL_FIRE_BOMB:
 		case EL_FIRE_WAVE:
@@ -10403,7 +10408,6 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case GN_THORNS_TRAP:
 		case GN_DEMONIC_FIRE:
 		case GN_HELLS_PLANT:
-		case GN_FIRE_EXPANSION_SMOKE_POWDER:
 		case GN_FIRE_EXPANSION_TEAR_GAS:
 		case SO_EARTHGRAVE:
 		case SO_DIAMONDDUST:
@@ -10870,8 +10874,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			break;
 
 		case GN_FIRE_EXPANSION: {
-			int i;
-			int aciddemocast = 5;//If player doesent know Acid Demonstration or knows level 5 or lower, effect 5 will cast level 5 Acid Demo.
+			uint8 i, aciddemocast = 5;	// If player doesent know Acid Demonstration or knows level 5 or lower, effect 5 will cast level 5 Acid Demo.
 			struct unit_data *ud = unit->bl2ud(src);
 
 			if( !ud ) break;
@@ -10886,13 +10889,26 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 					continue;
 				if (distance_xy(x, y, ud->skillunit[i]->unit.data[0].bl.x, ud->skillunit[i]->unit.data[0].bl.y) < r) {
 					switch (skill_lv) {
+						case 1:
+							ud->skillunit[i]->unit->val2 = skill_lv;
+							ud->skillunit[i]->unit->group->val2 = skill_lv;
+							break;
+						case 2:
+							map->foreachinarea(skill_area_sub,src->m,
+								ud->skillunit[i]->unit->bl.x - 2,ud->skillunit[i]->unit->bl.y - 2,
+								ud->skillunit[i]->unit->bl.x + 2,ud->skillunit[i]->unit->bl.y + 2,BL_CHAR,
+								src,GN_DEMONIC_FIRE,skill_lv + 20,tick,flag|BCT_ENEMY|SD_LEVEL|1,skill->castend_damage_id);
+							skill->delunit(ud->skillunit[i]->unit);
+							break;
 						case 3:
-							ud->skillunit[i]->unit_id = UNT_FIRE_EXPANSION_SMOKE_POWDER;
-							clif->changetraplook(&ud->skillunit[i]->unit.data[0].bl, UNT_FIRE_EXPANSION_SMOKE_POWDER);
+							skill->delunit(ud->skillunit[i]->unit);
+							skill->unitsetting(src,GN_FIRE_EXPANSION_SMOKE_POWDER,1,x,y,0);
+							flag |= 1;
 							break;
 						case 4:
-							ud->skillunit[i]->unit_id = UNT_FIRE_EXPANSION_TEAR_GAS;
-							clif->changetraplook(&ud->skillunit[i]->unit.data[0].bl, UNT_FIRE_EXPANSION_TEAR_GAS);
+							skill->delunit(ud->skillunit[i]->unit);
+							skill->unitsetting(src,GN_FIRE_EXPANSION_TEAR_GAS,1,x,y,0);
+							flag |= 1;
 							break;
 						case 5:// If player knows a level of Acid Demonstration greater then 5, that level will be casted.
 							if ( pc->checkskill(sd, CR_ACIDDEMONSTRATION) > 5 )
@@ -10902,10 +10918,6 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 							                   ud->skillunit[i]->unit.data[0].bl.x + 2, ud->skillunit[i]->unit.data[0].bl.y + 2, BL_CHAR,
 							                   src, CR_ACIDDEMONSTRATION, aciddemocast, tick, flag|BCT_ENEMY|1|SD_LEVEL, skill->castend_damage_id);
 							skill->delunit(&ud->skillunit[i]->unit.data[0]);
-							break;
-						default:
-							ud->skillunit[i]->unit.data[0].val2 = skill_lv;
-							ud->skillunit[i]->val2 = skill_lv;
 							break;
 						}
 					}
@@ -11421,6 +11433,10 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			if( flag&1 )
 				limit = 3000;
 			val3 = (x<<16)|y;
+			break;
+		case GN_FIRE_EXPANSION_SMOKE_POWDER:
+		case GN_FIRE_EXPANSION_TEAR_GAS:
+			limit = ((sd ? pc->checkskill(sd,GN_DEMONIC_FIRE) : 1) + 1) * limit;
 			break;
 		case KO_ZENKAI:
 			if (sd) {
@@ -12686,6 +12702,8 @@ int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick) {
 		case EL_POWER_OF_GAIA:
 		case SO_ELEMENTAL_SHIELD:
 		case SC_BLOODYLUST:
+		case GN_FIRE_EXPANSION_SMOKE_POWDER:
+		case GN_FIRE_EXPANSION_TEAR_GAS:
 			if (sce)
 				status_change_end(bl, type, INVALID_TIMER);
 			break;
