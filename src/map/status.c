@@ -650,6 +650,7 @@ void initChangeTables(void) {
 	add_sc( SC_CHAOSPANIC        , SC__CHAOS );
 	add_sc( SC_MAELSTROM         , SC__MAELSTROM );
 	add_sc( SC_BLOODYLUST        , SC_BERSERK );
+	add_sc( SC_ESCAPE            , SC_ANKLESNARE );
 
 	/**
 	* Sura

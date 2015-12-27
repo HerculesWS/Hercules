@@ -2994,6 +2994,7 @@ int skill_check_unit_range_sub (struct block_list *bl, va_list ap) {
 		case SC_CHAOSPANIC:
 		case GN_HELLS_PLANT:
 		case GN_THORNS_TRAP:
+		case SC_ESCAPE:
 			//Non stackable on themselves and traps (including venom dust which does not has the trap inf2 set)
 			if (skill_id != g_skill_id && !(skill->get_inf2(g_skill_id)&INF2_TRAP) && g_skill_id != AS_VENOMDUST && g_skill_id != MH_POISON_MIST)
 				return 0;
@@ -4946,6 +4947,7 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 				ud->skilltimer=tid;
 				return skill->castend_pos(tid,tick,id,data);
 			case GN_WALLOFTHORN:
+			case SC_ESCAPE:
 				ud->skillx = target->x;
 				ud->skilly = target->y;
 				ud->skilltimer = tid;
@@ -10786,9 +10788,10 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			break;
 
 		case SC_ESCAPE:
-			clif->skill_nodamage(src,src,skill_id,-1,1);
-			skill->unitsetting(src,HT_ANKLESNARE,skill_lv,x,y,2);
-			skill->addtimerskill(src,tick,src->id,0,0,skill_id,skill_lv,0,0);
+			clif->skill_nodamage(src, src, skill_id, skill_lv, 1);
+			skill->unitsetting(src, skill_id, skill_lv, x, y, 2);
+			skill->addtimerskill(src, tick, src->id, 0, 0, skill_id, skill_lv, 0, 0);
+			flag |= 1;
 			break;
 
 		case LG_OVERBRAND:
@@ -11184,6 +11187,10 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 		case RA_VERDURETRAP:
 		case RA_FIRINGTRAP:
 		case RA_ICEBOUNDTRAP:
+		/**
+		 * Shadow Chaser
+		 */
+		case SC_ESCAPE:
 			{
 				struct skill_condition req = skill->get_requirement(sd,skill_id,skill_lv);
 				ARR_FIND(0, MAX_SKILL_ITEM_REQUIRE, i, req.itemid[i] && (req.itemid[i] == ITEMID_TRAP || req.itemid[i] == ITEMID_TRAP_ALLOY));
@@ -11514,6 +11521,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 			case RA_VERDURETRAP:
 			case RA_FIRINGTRAP:
 			case RA_ICEBOUNDTRAP:
+			case SC_ESCAPE:
 				val1 = 3500;
 				break;
 			case GS_DESPERADO:
@@ -14483,7 +14491,8 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 				req.itemid[i] = req.amount[i] = 0;
 			}
 		}
-		if (skill_id >= HT_SKIDTRAP && skill_id <= HT_TALKIEBOX && pc->checkskill(sd, RA_RESEARCHTRAP) > 0) {
+		if ( (skill_id >= HT_SKIDTRAP && skill_id <= HT_TALKIEBOX && pc->checkskill(sd, RA_RESEARCHTRAP) > 0) ||
+				skill_id == SC_ESCAPE ){
 			int16 item_index;
 			if ((item_index = pc->search_inventory(sd, req.itemid[i])) == INDEX_NOT_FOUND
 			  || sd->status.inventory[item_index].amount < req.amount[i]
@@ -16080,6 +16089,7 @@ int skill_delunit (struct skill_unit* su) {
 	// perform ondelete actions
 	switch (group->skill_id) {
 		case HT_ANKLESNARE:
+		case SC_ESCAPE:
 		{
 			struct block_list* target = map->id2bl(group->val2);
 			if( target )
@@ -16469,7 +16479,7 @@ int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap) {
 
 			case UNT_ANKLESNARE:
 			case UNT_ELECTRICSHOCKER:
-				if( group->val2 > 0 || group->val3 == SC_ESCAPE ) {
+				if( group->val2 > 0 ) {
 					// Used Trap don't returns back to item
 					skill->delunit(su);
 					break;
