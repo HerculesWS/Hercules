@@ -12999,7 +12999,7 @@ int skill_check_pc_partner (struct map_session_data *sd, uint16 skill_id, uint16
 	static int c=0;
 	static int p_sd[2] = { 0, 0 };
 	int i;
-	bool is_chorus = ( skill->get_inf2(skill_id)&INF2_CHORUS_SKILL );
+	bool is_chorus = ( skill->get_inf2(skill_id)&INF2_CHORUS_SKILL ) ? true : false;
 
 	if (!battle_config.player_skill_partner_check || pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL))
 		return is_chorus ? MAX_PARTY : 99; //As if there were infinite partners.
@@ -14474,6 +14474,8 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 			req.sp -= req.sp * sc->data[SC_TARGET_ASPD]->val1 / 100;
 		if (sc->data[SC_MVPCARD_MISTRESS])
 			req.sp -= req.sp * sc->data[SC_MVPCARD_MISTRESS]->val1 / 100;
+		if (sc->data[SC_OFFERTORIUM])
+			req.sp += req.sp * sc->data[SC_OFFERTORIUM]->val3 / 100;
 	}
 
 	req.zeny = skill->dbs->db[idx].zeny[skill_lv-1];
