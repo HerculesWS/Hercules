@@ -9514,23 +9514,35 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case GN_SLINGITEM:
 			if( sd ) {
-				short ammo_id;
+				short ammo_id = 0;
 				int equip_idx = sd->equip_index[EQI_AMMO];
-				if( equip_idx <= 0 )
+				
+				// Check if there's any ammo equipped.
+				if ( equip_idx <= 0 )
 					break; // No ammo.
+				
+				// Check if ammo ID is that of a Genetic throwing item.
 				ammo_id = sd->inventory_data[equip_idx]->nameid;
-				if( ammo_id <= 0 )
+				if ( !(itemid_is_sling_atk(ammo_id) || itemid_is_sling_buff(ammo_id)) )
 					break;
+				
+				// Used to tell other parts of the code which damage formula and status to use.
 				sd->itemid = ammo_id;
-				if ( !(itemid_is_sling_atk(ammo_id) || itemid_is_sling_buff(ammo_id)) ) {
-					if(battle->check_target(src,bl,BCT_ENEMY) > 0) {// Only attack if the target is an enemy.
-						if( ammo_id == ITEMID_PINEAPPLE_BOMB )
-							map->foreachincell(skill->area_sub,bl->m,bl->x,bl->y,BL_CHAR,src,GN_SLINGITEM_RANGEMELEEATK,skill_lv,tick,flag|BCT_ENEMY|1,skill->castend_damage_id);
-						else
-							skill->attack(BF_WEAPON,src,src,bl,GN_SLINGITEM_RANGEMELEEATK,skill_lv,tick,flag);
+				
+				// If thrown item is a bomb or a lump, then its a attack type ammo.
+				if ( itemid_is_sling_atk(ammo_id) )
+					// Only attack if the target is an enemy.
+					if (battle->check_target(src,bl,BCT_ENEMY) > 0) {
+						// Pineapple Bombs deal 5x5 splash damage on targeted enemy.
+						if ( ammo_id == ITEMID_PINEAPPLE_BOMB )
+							map->foreachinrange(skill->area_sub, bl, 2, BL_CHAR, src, GN_SLINGITEM_RANGEMELEEATK, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_damage_id);
+						else	// All other bombs and lumps hits one enemy.
+							skill_attack(BF_WEAPON,src,src,bl,GN_SLINGITEM_RANGEMELEEATK,skill_lv,tick,flag);
 					} else //Otherwise, it fails, shows animation and removes items.
-						clif->skill_fail(sd,GN_SLINGITEM_RANGEMELEEATK,0xa,0);
-				} else if( itemid_is_sling_buff(ammo_id) ) {
+						clif->skill_fail(sd, GN_SLINGITEM, USESKILL_FAIL, 0);
+				}
+				// If thrown item is a potion, food, powder, or overcooked food, then its a buff type ammo.
+				else if( itemid_is_sling_buff(ammo_id) ) {
 					struct script_code *scriptroot = sd->inventory_data[equip_idx]->script;
 					if( !scriptroot )
 						break;
