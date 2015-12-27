@@ -8245,57 +8245,57 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case RK_LUXANIMA:
 			if( sd == NULL || sd->status.party_id == 0 || flag&1 ){
-				if( src == bl )
+				int i = 0;
+				if ( src->id == bl->id )
 					break;
-				while( skill->area_temp[5] >= 0x10 ){
-					int value = 0;
-					type = SC_NONE;
-					if( skill->area_temp[5]&0x10 ){
-						value = (rnd()%100<50) ? 4 : ((rnd()%100<80) ? 3 : 2);
-						clif->millenniumshield(bl,value);
-						skill->area_temp[5] &= ~0x10;
-						type = SC_MILLENNIUMSHIELD;
-					}else if( skill->area_temp[5]&0x20 ){
-						value = status_get_max_hp(bl) * 25 / 100;
-						status->change_clear_buffs(bl,4);
-						skill->area_temp[5] &= ~0x20;
-						status->heal(bl,value,0,1);
-						type = SC_REFRESH;
-					}else if( skill->area_temp[5]&0x40 ){
-						skill->area_temp[5] &= ~0x40;
-						type = SC_GIANTGROWTH;
-					}else if( skill->area_temp[5]&0x80 ){
-						if( dstsd ){
-							value = sstatus->hp / 4;
-							if( status->charge(bl,value,0) )
-								type = SC_STONEHARDSKIN;
-							skill->area_temp[5] &= ~0x80;
-						}
-					}else if( skill->area_temp[5]&0x100 ){
-						skill->area_temp[5] &= ~0x100;
-						type = SC_VITALITYACTIVATION;
-					}else if( skill->area_temp[5]&0x200 ){
-						skill->area_temp[5] &= ~0x200;
-						type = SC_ABUNDANCE;
-					}
-					if( type > SC_NONE )
-						clif->skill_nodamage(bl, bl, skill_id, skill_lv,
-							sc_start4(src,bl, type, 100, skill_lv, value, 0, 1, skill->get_time(skill_id, skill_lv)));
+				clif->skill_nodamage(bl, bl, skill_id, skill_lv, 1);
+				if ( skill->area_temp[5]&0x10 ) {
+					i = rnd()%100 + 1;
+					if( i >= 1 && i <= 20 )
+						i = 4;
+					else if( i >= 21 && i <= 50 )
+						i = 3;
+					else if( i >= 51 && i <= 100 )
+						i = 2;
+					sc_start4(src, bl, SC_MILLENNIUMSHIELD, 100, skill_lv, i, 1000, 0,s kill->get_time(skill_id, skill_lv));
+					clif->millenniumshield(bl,i);
 				}
-			}else if( sd ){
-				if( tsc && tsc->count ){
-					if(tsc->data[SC_MILLENNIUMSHIELD])
-						skill->area_temp[5] |= 0x10;
-					if(tsc->data[SC_REFRESH])
-						skill->area_temp[5] |= 0x20;
-					if(tsc->data[SC_GIANTGROWTH])
-						skill->area_temp[5] |= 0x40;
-					if(tsc->data[SC_STONEHARDSKIN])
-						skill->area_temp[5] |= 0x80;
-					if(tsc->data[SC_VITALITYACTIVATION])
-						skill->area_temp[5] |= 0x100;
-					if(tsc->data[SC_ABUNDANCE])
-						skill->area_temp[5] |= 0x200;
+				if ( skill->area_temp[5]&0x20 ) {
+					i = status_get_max_hp(bl) * 25 / 100;
+					sc_start(src,bl, SC_REFRESH, 100, skill_lv, skill->get_time(skill_id, skill_lv));
+					status->heal(bl, i, 0, 1);
+					status->change_clear_buffs(bl, 4);
+				}
+				if ( skill->area_temp[5]&0x40 )
+					sc_start(src, bl, SC_GIANTGROWTH, 100, skill_lv, skill->get_time(skill_id, skill_lv));
+				if ( skill->area_temp[5]&0x80 ) {
+					if ( dstsd ) {
+						i = sstatus->hp / 5;
+						if ( status->charge(bl, i, 0) )
+							sc_start2(src, bl, SC_STONEHARDSKIN, 100, skill_lv, i, skill->get_time(skill_id, skill_lv));
+ 					}
+				//
+				}
+				if ( skill->area_temp[5]&0x100 )
+					sc_start(src,bl,SC_VITALITYACTIVATION,100,skill_lv,skill->get_time(skill_id,skill_lv));
+				if ( skill->area_temp[5]&0x200 )
+					sc_start(src,bl,SC_ABUNDANCE,100,skill_lv,skill->get_time(skill_id,skill_lv));
+				status->change_clear_buffs(bl,8); //For bonus_script
+			} else if ( sd ) {
+				skill->area_temp[5] = 0;
+				if ( tsc && tsc->count ) {
+					if ( tsc->data[SC_MILLENNIUMSHIELD] )
+						skill->area_temp[5] = 0x10;
+					else if ( tsc->data[SC_REFRESH] )
+						skill->area_temp[5] = 0x20;
+					else if ( tsc->data[SC_GIANTGROWTH] )
+						skill->area_temp[5] = 0x40;
+					else if ( tsc->data[SC_STONEHARDSKIN] )
+						skill->area_temp[5] = 0x80;
+					else if ( tsc->data[SC_VITALITYACTIVATION] )
+						skill->area_temp[5] = 0x100;
+					else if ( tsc->data[SC_ABUNDANCE] )
+						skill->area_temp[5] = 0x200;
 				}
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 				party->foreachsamemap(skill->area_sub, sd, skill->get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag|BCT_PARTY|1, skill->castend_nodamage_id);
@@ -8519,9 +8519,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				for(i = 0; i < SC_MAX; i++) {
 					if ( !tsc->data[i] )
 						continue;
-					if( SC_COMMON_MAX > i )
-						if ( status->get_sc_type(i)&SC_NO_CLEARANCE )
-							continue;
+					if ( status->get_sc_type(i)&SC_NO_CLEARANCE )
+						continue;
 					switch (i) {
 						case SC_ASSUMPTIO:
 							if( bl->type == BL_MOB )
