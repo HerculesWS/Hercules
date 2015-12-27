@@ -9705,12 +9705,12 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				if (unit->movepos(src, bl->x, bl->y, 0, 0)) {
 					clif->skill_nodamage(src, src, skill_id, skill_lv, 1);
 					clif->slide(src, bl->x, bl->y) ;
-					sc_start(src, src, SC_CONFUSION, 25, skill_lv, skill->get_time(skill_id, skill_lv));
-					if ( !is_boss(bl) && unit->stop_walking(&sd->bl, STOPWALKING_FLAG_FIXPOS) && unit->movepos(bl, x, y, 0, 0) ) {
+					sc_start(src, src, SC__CHAOS, 25, skill_lv, skill->get_time(skill_id, skill_lv));
+					if ( !is_boss(bl) && unit->movepos(bl, x, y, 0, 0) ) {
 						if( dstsd && pc_issit(dstsd) )
 							pc->setstand(dstsd);
 						clif->slide(bl, x, y) ;
-						sc_start(src, bl, SC_CONFUSION, 75, skill_lv, skill->get_time(skill_id, skill_lv));
+						sc_start(src, bl, SC__CHAOS, 75, skill_lv, skill->get_time(skill_id, skill_lv));
 					}
 				}
 			}
@@ -11410,7 +11410,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 				return NULL;
 			val2 = sc->data[SC_POISONINGWEAPON]->val2; // Type of Poison
 			val3 = sc->data[SC_POISONINGWEAPON]->val1;
-			limit = 4000 + 2000 * skill_lv;
+			limit = skill->get_time(skill_id,skill_lv);
 			break;
 		case GD_LEADERSHIP:
 		case GD_GLORYWOUNDS:
