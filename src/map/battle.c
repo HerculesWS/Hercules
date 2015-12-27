@@ -405,10 +405,10 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 				status_change_end(target, SC_THORNS_TRAP, INVALID_TIMER);
 			if( tsc->data[SC_COLD] && target->type != BL_MOB)
 				status_change_end(target, SC_COLD, INVALID_TIMER);
-			if( tsc->data[SC_EARTH_INSIGNIA]) damage += damage/2;
+			if( tsc->data[SC_EARTH_INSIGNIA])
+				damage += damage/2;
 			if( tsc->data[SC_FIRE_CLOAK_OPTION])
 				damage -= damage * tsc->data[SC_FIRE_CLOAK_OPTION]->val2 / 100;
-			if( tsc->data[SC_VOLCANIC_ASH]) damage += damage/2; //150%
 			break;
 		case ELE_HOLY:
 			if( tsc->data[SC_ORATIO]) ratio += tsc->data[SC_ORATIO]->val1 * 2;
