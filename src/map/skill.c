@@ -17554,9 +17554,9 @@ int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int nameid, 
 			case GN_MIX_COOKING: {
 					struct item tmp_item;
 					const int compensation[5] = {
-						ITEMID_BLACK_LUMP,
-						ITEMID_BLACK_HARD_LUMP,
-						ITEMID_VERY_HARD_LUMP,
+						ITEMID_DARK_LUMP,
+						ITEMID_HARD_DARK_LUMP,
+						ITEMID_VERY_HARD_DARK_LUMP,
 						ITEMID_BLACK_THING,
 						ITEMID_MYSTERIOUS_POWDER,
 					};
