@@ -349,7 +349,7 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 sk
 	int skill2_lv, hp;
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
 	struct map_session_data *tsd = BL_CAST(BL_PC, target);
-	struct status_change* sc;
+	struct status_change *sc, *tsc;
 
 	nullpo_ret(src);
 
@@ -398,21 +398,26 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 sk
 		hp += hp*skill2_lv/100;
 
 	sc = status->get_sc(src);
+	tsc = status->get_sc(target);
 	if( sc && sc->count && sc->data[SC_OFFERTORIUM] ) {
 		if( skill_id == AB_HIGHNESSHEAL || skill_id == AB_CHEAL || skill_id == PR_SANCTUARY || skill_id == AL_HEAL )
 			hp += hp * sc->data[SC_OFFERTORIUM]->val2 / 100;
 	}
-	sc = status->get_sc(target);
-	if (sc && sc->count) {
-		if(sc->data[SC_CRITICALWOUND] && heal) // Critical Wound has no effect on offensive heal. [Inkfish]
-			hp -= hp * sc->data[SC_CRITICALWOUND]->val2/100;
-		if(sc->data[SC_DEATHHURT] && heal)
+	
+	if (tsc && tsc->count) {
+		if ( skill_id != NPC_EVILLAND && skill_id != BA_APPLEIDUN ) {
+			if( tsc->data[SC_HEALPLUS] )
+				hp += hp * tsc->data[SC_HEALPLUS]->val1/100;
+			if( tsc->data[SC_EXTRACT_WHITE_POTION_Z] )
+				hp += hp * tsc->data[SC_EXTRACT_WHITE_POTION_Z]->val1 / 100;
+		}
+		if (tsc->data[SC_CRITICALWOUND] && heal) // Critical Wound has no effect on offensive heal. [Inkfish]
+			hp -= hp * tsc->data[SC_CRITICALWOUND]->val2/100;
+		if (tsc->data[SC_DEATHHURT] && heal)
 			hp -= hp * 20/100;
-		if(sc->data[SC_HEALPLUS] && skill_id != NPC_EVILLAND && skill_id != BA_APPLEIDUN)
-			hp += hp * sc->data[SC_HEALPLUS]->val1/100; // Only affects Heal, Sanctuary and PotionPitcher.(like bHealPower) [Inkfish]
-		if(sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 2)
+		if (tsc->data[SC_WATER_INSIGNIA] && tsc->data[SC_WATER_INSIGNIA]->val1 == 2)
 			hp += hp / 10;
-		if (sc->data[SC_VITALITYACTIVATION])
+		if (tsc->data[SC_VITALITYACTIVATION])
 			hp = hp * 150 / 100;
 	}
 
