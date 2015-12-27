@@ -405,7 +405,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 
 		case ALL_CLIENT: //All player clients.
 			iter = mapit_getallusers();
-			while ((tsd = (struct map_session_data *)mapit->next(iter)) != NULL) {
+			while ((tsd = BL_UCAST(BL_PC, mapit->next(iter))) != NULL) {
 				WFIFOHEAD(tsd->fd, len);
 				memcpy(WFIFOP(tsd->fd,0), buf, len);
 				WFIFOSET(tsd->fd,len);
@@ -415,7 +415,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 
 		case ALL_SAMEMAP: //All players on the same map
 			iter = mapit_getallusers();
-			while ((tsd = (struct map_session_data *)mapit->next(iter)) != NULL) {
+			while ((tsd = BL_UCAST(BL_PC, mapit->next(iter))) != NULL) {
 				if (bl && bl->m == tsd->bl.m) {
 					WFIFOHEAD(tsd->fd, len);
 					memcpy(WFIFOP(tsd->fd,0), buf, len);
@@ -506,7 +506,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 					break;
 
 				iter = mapit_getallusers();
-				while ((tsd = (struct map_session_data *)mapit->next(iter)) != NULL) {
+				while ((tsd = BL_UCAST(BL_PC, mapit->next(iter))) != NULL) {
 					if( tsd->partyspy == p->party.party_id ) {
 						WFIFOHEAD(tsd->fd, len);
 						memcpy(WFIFOP(tsd->fd,0), buf, len);
@@ -522,7 +522,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 			if (!sd || !sd->duel_group) break; //Invalid usage.
 
 			iter = mapit_getallusers();
-			while ((tsd = (struct map_session_data *)mapit->next(iter)) != NULL) {
+			while ((tsd = BL_UCAST(BL_PC, mapit->next(iter))) != NULL) {
 				if( type == DUEL_WOS && bl->id == tsd->bl.id )
 					continue;
 				if( sd->duel_group == tsd->duel_group ) {
@@ -585,7 +585,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 					break;
 
 				iter = mapit_getallusers();
-				while ((tsd = (struct map_session_data *)mapit->next(iter)) != NULL) {
+				while ((tsd = BL_UCAST(BL_PC, mapit->next(iter))) != NULL) {
 					if( tsd->guildspy == g->guild_id ) {
 						WFIFOHEAD(tsd->fd, len);
 						memcpy(WFIFOP(tsd->fd,0), buf, len);
@@ -1388,8 +1388,7 @@ void clif_weather(int16 m)
 	struct map_session_data *sd=NULL;
 
 	iter = mapit_getallusers();
-	for( sd = (struct map_session_data*)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data*)mapit->next(iter) )
-	{
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if( sd->bl.m == m )
 			clif->weather_check(sd);
 	}

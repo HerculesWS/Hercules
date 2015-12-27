@@ -10259,7 +10259,7 @@ int pc_autosave(int tid, int64 tick, int id, intptr_t data) {
 		save_flag = 1; //Noone was saved, so save first found char.
 
 	iter = mapit_getallusers();
-	for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter)) {
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if(sd->bl.id == last_save_id && save_flag != 1) {
 			save_flag = 1;
 			continue;
@@ -10813,7 +10813,7 @@ void pc_read_skill_tree(void)
 
 	/* lets update all players skill tree */
 	iter = mapit_getallusers();
-	for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter))
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter)))
 		clif->skillinfoblock(sd);
 	mapit->free(iter);
 }
@@ -11196,7 +11196,7 @@ int pc_global_expiration_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data* sd;
 
 	iter = mapit_getallusers();
-	for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter)) {
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if( sd->expiration_time )
 			pc->expire_check(sd);
 	}

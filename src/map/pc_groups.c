@@ -508,7 +508,7 @@ void pc_groups_reload(void) {
 
 	/* refresh online users permissions */
 	iter = mapit_getallusers();
-	for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter)) {
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if (pc->set_group(sd, sd->group_id) != 0) {
 			ShowWarning("pc_groups_reload: %s (AID:%d) has unknown group id (%d)! kicking...\n",
 				sd->status.name, sd->status.account_id, pc_get_group_id(sd));

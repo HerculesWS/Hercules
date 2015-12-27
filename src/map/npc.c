@@ -1630,7 +1630,7 @@ void npc_trader_update(int master) {
 	CREATE(master_nd->u.scr.shop,struct npc_shop_data,1);
 
 	iter = db_iterator(map->id_db);
-	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) ) {
+	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
 		if( bl->type == BL_NPC ) {
 			struct npc_data* nd = (struct npc_data*)bl;
 
@@ -2286,7 +2286,7 @@ int npc_unload(struct npc_data* nd, bool single)
 		aFree(nd->u.shop.shop_item);
 	else if( nd->subtype == SCRIPT ) {
 		struct s_mapiterator* iter;
-		struct block_list* bl;
+		struct map_session_data *sd = NULL;
 
 		if( single ) {
 			npc->ev_db->foreach(npc->ev_db,npc->unload_ev,nd->exname); //Clean up all events related
@@ -2294,8 +2294,7 @@ int npc_unload(struct npc_data* nd, bool single)
 		}
 
 		iter = mapit_geteachpc();
-		for( bl = (struct block_list*)mapit->first(iter); mapit->exists(iter); bl = (struct block_list*)mapit->next(iter) ) {
-			struct map_session_data *sd = (struct map_session_data *)bl;
+		for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 			if( sd && sd->npc_timer_id != INVALID_TIMER ) {
 				const struct TimerData *td = timer->get(sd->npc_timer_id);
 
@@ -4662,7 +4661,7 @@ int npc_reload(void) {
 
 	//Remove all npcs/mobs. [Skotlex]
 	iter = mapit_geteachiddb();
-	for( bl = (struct block_list*)mapit->first(iter); mapit->exists(iter); bl = (struct block_list*)mapit->next(iter) ) {
+	for (bl = mapit->first(iter); mapit->exists(iter); bl = mapit->next(iter)) {
 		switch(bl->type) {
 			case BL_NPC:
 				if( bl->id != npc->fake_nd->bl.id )// don't remove fake_nd

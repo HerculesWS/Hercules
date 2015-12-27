@@ -655,7 +655,7 @@ int bg_afk_timer(int tid, int64 tick, int id, intptr_t data) {
 	int count = 0;
 
 	iter = mapit_getallusers();
-	for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter)) {
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if( !sd->bg_queue.arena || !sd->bg_id )
 			continue;
 		if( DIFF_TICK(sockt->last_tick, sd->idletime) > bg->mafksec )

@@ -1979,7 +1979,7 @@ struct map_session_data * map_nick2sd(const char *nick)
 	iter = mapit_getallusers();
 
 	found_sd = NULL;
-	for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter)) {
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if( battle_config.partial_name_scan )
 		{// partial name search
 			if( strnicmp(sd->status.name, nick, nicklen) == 0 )
@@ -2033,10 +2033,8 @@ struct mob_data * map_getmob_boss(int16 m)
 	bool found = false;
 
 	iter = db_iterator(map->bossid_db);
-	for( md = (struct mob_data*)dbi_first(iter); dbi_exists(iter); md = (struct mob_data*)dbi_next(iter) )
-	{
-		if( md->bl.m == m )
-		{
+	for (md = dbi_first(iter); dbi_exists(iter); md = dbi_next(iter)) {
+		if (md->bl.m == m) {
 			found = true;
 			break;
 		}
@@ -2124,7 +2122,7 @@ void map_vforeachmob(int (*func)(struct mob_data* md, va_list args), va_list arg
 	struct mob_data* md;
 
 	iter = db_iterator(map->mobid_db);
-	for( md = (struct mob_data*)dbi_first(iter); dbi_exists(iter); md = (struct mob_data*)dbi_next(iter) ) {
+	for (md = dbi_first(iter); dbi_exists(iter); md = dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
 
@@ -2155,7 +2153,7 @@ void map_vforeachnpc(int (*func)(struct npc_data* nd, va_list args), va_list arg
 	struct block_list* bl;
 
 	iter = db_iterator(map->id_db);
-	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) ) {
+	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
 		if( bl->type == BL_NPC ) {
 			struct npc_data* nd = (struct npc_data*)bl;
 			va_list argscopy;
@@ -2189,7 +2187,7 @@ void map_vforeachregen(int (*func)(struct block_list* bl, va_list args), va_list
 	struct block_list* bl;
 
 	iter = db_iterator(map->regen_db);
-	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) ) {
+	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
 
@@ -2220,7 +2218,7 @@ void map_vforeachiddb(int (*func)(struct block_list* bl, va_list args), va_list 
 	struct block_list* bl;
 
 	iter = db_iterator(map->id_db);
-	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) ) {
+	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
 
@@ -2301,7 +2299,7 @@ struct block_list* mapit_first(struct s_mapiterator* iter) {
 
 	nullpo_retr(NULL,iter);
 
-	for( bl = (struct block_list*)dbi_first(iter->dbi); bl != NULL; bl = (struct block_list*)dbi_next(iter->dbi) ) {
+	for (bl = dbi_first(iter->dbi); bl != NULL; bl = dbi_next(iter->dbi) ) {
 		if( MAPIT_MATCHES(iter,bl) )
 			break;// found match
 	}
@@ -2318,7 +2316,7 @@ struct block_list* mapit_last(struct s_mapiterator* iter) {
 
 	nullpo_retr(NULL,iter);
 
-	for( bl = (struct block_list*)dbi_last(iter->dbi); bl != NULL; bl = (struct block_list*)dbi_prev(iter->dbi) ) {
+	for (bl = dbi_last(iter->dbi); bl != NULL; bl = dbi_prev(iter->dbi)) {
 		if( MAPIT_MATCHES(iter,bl) )
 			break;// found match
 	}
@@ -2336,7 +2334,7 @@ struct block_list* mapit_next(struct s_mapiterator* iter) {
 	nullpo_retr(NULL,iter);
 
 	for( ; ; ) {
-		bl = (struct block_list*)dbi_next(iter->dbi);
+		bl = dbi_next(iter->dbi);
 		if( bl == NULL )
 			break;// end
 		if( MAPIT_MATCHES(iter,bl) )
@@ -2357,7 +2355,7 @@ struct block_list* mapit_prev(struct s_mapiterator* iter) {
 	nullpo_retr(NULL,iter);
 
 	for( ; ; ) {
-		bl = (struct block_list*)dbi_prev(iter->dbi);
+		bl = dbi_prev(iter->dbi);
 		if( bl == NULL )
 			break;// end
 		if( MAPIT_MATCHES(iter,bl) )
@@ -5380,7 +5378,7 @@ int do_final(void) {
 
 	//Ladies and babies first.
 	iter = mapit_getallusers();
-	for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter))
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter)))
 		map->quit(sd);
 	mapit->free(iter);
 
@@ -5524,7 +5522,7 @@ void do_shutdown(void)
 		{
 			struct map_session_data* sd;
 			struct s_mapiterator* iter = mapit_getallusers();
-			for (sd = (struct map_session_data *)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data *)mapit->next(iter))
+			for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter)))
 				clif->GM_kick(NULL, sd);
 			mapit->free(iter);
 			sockt->flush_fifos();
