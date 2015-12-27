@@ -12528,6 +12528,9 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			{
 				// It has effect on everything, including monsters, undead property and demon
 				int hp = 0;
+				struct mob_data *md = BL_CAST(BL_MOB, bl);
+				if( md && md->class_ == MOBID_EMPERIUM )
+					break;
 				if( ssc && ssc->data[SC_HEATER_OPTION] )
 					hp = tstatus->max_hp * 3 * sg->skill_lv / 100;
 				else
