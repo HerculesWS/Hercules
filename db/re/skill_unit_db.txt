@@ -104,7 +104,7 @@
 
 2044,0xca,    ,  0, 2,1000,all,   0x018	//AB_EPICLESIS
 
-2032,0xe1,    ,  2, 0,1000,enemy, 0x018	//GC_POISONSMOKE
+2032,0xe1,    ,  2, 0,2000,enemy, 0x018	//GC_POISONSMOKE
 
 2213,0x86,    ,  0, 8, 100,enemy, 0x018	//WL_COMET
 2216,0xcb,    , -1, 0, 100,enemy, 0x018	//WL_EARTHSTRAIN
