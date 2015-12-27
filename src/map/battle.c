@@ -5741,7 +5741,7 @@ void battle_reflect_damage(struct block_list *target, struct block_list *src, st
 					uint8 dir = map->calc_dir(target,src->x,src->y),
 					t_dir = unit->getdir(target);
 
-					if( !map->check_dir(dir,t_dir) ) {
+					if( distance_bl(src,target) <= 0 || !map->check_dir(dir,t_dir) ) {
 						int64 rd1 = damage * sc->data[SC_DEATHBOUND]->val2 / 100; // Amplify damage.
 
 						trdamage += rdamage = rd1 - (damage = rd1 * 30 / 100); // not normalized as intended.
