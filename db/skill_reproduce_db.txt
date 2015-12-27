@@ -202,3 +202,10 @@
 2482	// Wall of Thorns
 2483	// Crazy Weed
 2490	// Hell's Plant
+
+// Kagero - Oboro
+3004	// Cross Slash
+3005	// Soul Cutter
+3008	// Rapid Throw
+3013	// Illusion - Shock
+3014	// Illusion - Death
