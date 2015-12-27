@@ -13766,6 +13766,16 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				return 0;
 			}
 			break;
+		
+		case KO_JYUMONJIKIRI:
+			if ( sd->weapontype1 && (sd->weapontype2 || sd->status.shield) )
+				return true;
+			else {
+				clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				return false;
+			}
+			break;
+
 		case KO_KAHU_ENTEN:
 		case KO_HYOUHU_HUBUKI:
 		case KO_KAZEHU_SEIRAN:
@@ -18541,6 +18551,7 @@ int skill_block_check(struct block_list *bl, sc_type type , uint16 skill_id) {
 				case RK_DRAGONBREATH:
 				case RK_DRAGONHOWLING:
 				case GN_CARTCANNON:
+				case KO_JYUMONJIKIRI:
 
 				// Skills that need to be confirmed.
 				case SO_FIREWALK:
