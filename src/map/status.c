@@ -1880,7 +1880,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 					sc->data[SC_CURSEDCIRCLE_TARGET] ||
 					(sc->data[SC_MARIONETTE_MASTER] && skill_id != CG_MARIONETTE) || //Only skill you can use is marionette again to cancel it
 					(sc->data[SC_MARIONETTE] && skill_id == CG_MARIONETTE) || //Cannot use marionette if you are being buffed by another
-					(sc->data[SC_STASIS] && skill->block_check(src, SC_STASIS, skill_id)) ||
+					(sc->data[SC_STASIS] && skill->block_check(src, sc->data[SC_STASIS]->val2, skill_id)) ||
 					(sc->data[SC_KG_KAGEHUMI] && skill->block_check(src, SC_KG_KAGEHUMI, skill_id)) ||
 					sc->data[SC_KINGS_GRACE]
 					))

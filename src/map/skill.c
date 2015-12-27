@@ -8550,8 +8550,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		 * Warlock
 		 **/
 		case WL_STASIS:
-			if( flag&1 )
-				sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+			if ( flag&1 )
+				sc_start2(src, bl, type, 100, skill_lv, src->id, skill->get_time(skill_id, skill_lv));
 			else {
 				map->foreachinrange(skill->area_sub,src,skill->get_splash(skill_id, skill_lv),BL_CHAR,src,skill_id,skill_lv,tick,(map_flag_vs(src->m)?BCT_ALL:BCT_ENEMY|BCT_SELF)|flag|1,skill->castend_nodamage_id);
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
@@ -10086,7 +10086,7 @@ int skill_castend_map (struct map_session_data *sd, uint16 skill_id, const char 
 		sd->sc.data[SC_BASILICA] ||
 		sd->sc.data[SC_MARIONETTE_MASTER] ||
 		sd->sc.data[SC_WHITEIMPRISON] ||
-		(sd->sc.data[SC_STASIS] && skill->block_check(&sd->bl, SC_STASIS, skill_id)) ||
+		(sd->sc.data[SC_STASIS] && skill->block_check(&sd->bl, sd->sc.data[SC_STASIS]->val2, skill_id)) ||
 		(sd->sc.data[SC_KG_KAGEHUMI] && skill->block_check(&sd->bl, SC_KG_KAGEHUMI, skill_id)) ||
 		sd->sc.data[SC_OBLIVIONCURSE] ||
 		sd->sc.data[SC__MANHOLE] ||
@@ -11608,6 +11608,7 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 	struct skill_unit_group *sg;
 	struct block_list *ss;
 	struct status_change *sc;
+	struct status_change *ssc;
 	struct status_change_entry *sce;
 	enum sc_type type;
 	uint16 skill_id;
@@ -11624,6 +11625,7 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 	if (skill->get_type(sg->skill_id) == BF_MAGIC && map->getcell(src->bl.m, &src->bl, src->bl.x, src->bl.y, CELL_CHKLANDPROTECTOR) && sg->skill_id != SA_LANDPROTECTOR)
 		return 0; //AoE skills are ineffective. [Skotlex]
 	sc = status->get_sc(bl);
+	ssc = status->get_sc(ss);
 
 	if (sc && sc->option&OPTION_HIDE && sg->skill_id != WZ_HEAVENDRIVE && sg->skill_id != WL_EARTHSTRAIN )
 		return 0; //Hidden characters are immune to AoE skills except to these. [Skotlex]
@@ -11740,6 +11742,8 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 			 //Needed to check when a dancer/bard leaves their ensemble area.
 			if (sg->src_id==bl->id && !(sc && sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
 				return skill_id;
+			if ( ssc && ssc->data[SC_STASIS] )
+				return 0;
 			if (!sce)
 				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->limit);
 			break;
@@ -11752,6 +11756,9 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 		case UNT_FORTUNEKISS:
 		case UNT_SERVICEFORYOU:
 			if (sg->src_id==bl->id && !(sc && sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
+				return 0;
+			
+			if( ssc && ssc->data[SC_STASIS] )
 				return 0;
 
 			if (!sc) return 0;
@@ -12158,16 +12165,21 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 		case UNT_LULLABY:
 			if (ss->id == bl->id)
 				break;
+			if ( ssc && ssc->data[SC_STASIS] )
+				break;
 			skill->additional_effect(ss, bl, sg->skill_id, sg->skill_lv, BF_LONG|BF_SKILL|BF_MISC, ATK_DEF, tick);
 			break;
 
 		case UNT_UGLYDANCE:
+			if ( ssc && ssc->data[SC_STASIS] )
+				break;
 			if (ss->id != bl->id)
 				skill->additional_effect(ss, bl, sg->skill_id, sg->skill_lv, BF_LONG|BF_SKILL|BF_MISC, ATK_DEF, tick);
 			break;
 
 		case UNT_DISSONANCE:
-			skill->attack(BF_MISC, ss, &src->bl, bl, sg->skill_id, sg->skill_lv, tick, 0);
+			if ( !(ssc && ssc->data[SC_STASIS]) )
+				skill->attack(BF_MISC, ss, &src->bl, bl, sg->skill_id, sg->skill_lv, tick, 0);
 			break;
 
 		case UNT_APPLEIDUN: //Apple of Idun [Skotlex]
@@ -12179,7 +12191,9 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				break;
 #endif
 			if ((sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
-			  || (!(battle_config.song_timer_reset) && tsc && tsc->data[type] && tsc->data[type]->val4 == 1))
+			  || (!(battle_config.song_timer_reset) && tsc && tsc->data[type] && tsc->data[type]->val4 == 1)
+			  || (ssc && ssc->data[SC_STASIS])
+				)
 				break;
 
 			heal = skill->calc_heal(ss,bl,sg->skill_id, sg->skill_lv, true);
@@ -12213,6 +12227,8 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			break;
 
 		case UNT_GOSPEL:
+			if ( ssc && ssc->data[SC_STASIS] )
+				break;
 			if (rnd()%100 > sg->skill_lv*10 || ss == bl)
 				break;
 			if (battle->check_target(ss,bl,BCT_PARTY)>0)
@@ -18480,152 +18496,147 @@ void skill_init_unit_layout (void)
 
 }
 
-int skill_block_check(struct block_list *bl, sc_type type , uint16 skill_id) {
+int skill_block_check(struct block_list *bl, int src_id, uint16 skill_id) {
 	int inf = 0;
-	struct status_change *sc = status->get_sc(bl);
 
-	if( !sc || !bl || !skill_id )
+	if( !bl || skill_id < 1 )
 		return 0; // Can do it
 
-	switch(type){
-		case SC_STASIS:
-			inf = skill->get_inf2(skill_id);
-			if( inf == INF2_SONG_DANCE || skill->get_inf2(skill_id) == INF2_CHORUS_SKILL || inf == INF2_SPIRIT_SKILL )
-				return 1; // Can't do it.
-			switch( skill_id ) {
-				case NV_FIRSTAID:
-				case TF_HIDING:
-				case AS_CLOAKING:
-				case WZ_SIGHTRASHER:
-				case RG_STRIPWEAPON:
-				case RG_STRIPSHIELD:
-				case RG_STRIPARMOR:
-				case WZ_METEOR:
-				case RG_STRIPHELM:
-				case SC_STRIPACCESSARY:
-				case ST_FULLSTRIP:
-				case WZ_SIGHTBLASTER:
-				case ST_CHASEWALK:
-				case SC_ENERVATION:
-				case SC_GROOMY:
-				case WZ_ICEWALL:
-				case SC_IGNORANCE:
-				case SC_LAZINESS:
-				case SC_UNLUCKY:
-				case WZ_STORMGUST:
-				case SC_WEAKNESS:
-				case AL_RUWACH:
-				case AL_PNEUMA:
-				case WZ_JUPITEL:
-				case AL_HEAL:
-				case AL_BLESSING:
-				case AL_INCAGI:
-				case WZ_VERMILION:
-				case AL_TELEPORT:
-				case AL_WARP:
-				case AL_HOLYWATER:
-				case WZ_EARTHSPIKE:
-				case AL_HOLYLIGHT:
-				case PR_IMPOSITIO:
-				case PR_ASPERSIO:
-				case WZ_HEAVENDRIVE:
-				case PR_SANCTUARY:
-				case PR_STRECOVERY:
-				case PR_MAGNIFICAT:
-				case WZ_QUAGMIRE:
-				case ALL_RESURRECTION:
-				case PR_LEXDIVINA:
-				case PR_LEXAETERNA:
-				case HW_GRAVITATION:
-				case PR_MAGNUS:
-				case PR_TURNUNDEAD:
-				case MG_SRECOVERY:
-				case HW_MAGICPOWER:
-				case MG_SIGHT:
-				case MG_NAPALMBEAT:
-				case MG_SAFETYWALL:
-				case HW_GANBANTEIN:
-				case MG_SOULSTRIKE:
-				case MG_COLDBOLT:
-				case MG_FROSTDIVER:
-				case WL_DRAINLIFE:
-				case MG_STONECURSE:
-				case MG_FIREBALL:
-				case MG_FIREWALL:
-				case WL_SOULEXPANSION:
-				case MG_FIREBOLT:
-				case MG_LIGHTNINGBOLT:
-				case MG_THUNDERSTORM:
-				case MG_ENERGYCOAT:
-				case WL_WHITEIMPRISON:
-				case WL_SUMMONFB:
-				case WL_SUMMONBL:
-				case WL_SUMMONWB:
-				case WL_SUMMONSTONE:
-				case WL_SIENNAEXECRATE:
-				case WL_RELEASE:
-				case WL_RECOGNIZEDSPELL:
-				case WL_READING_SB:
-				case SA_MAGICROD:
-				case SA_SPELLBREAKER:
-				case SA_DISPELL:
-				case SA_FLAMELAUNCHER:
-				case SA_FROSTWEAPON:
-				case SA_LIGHTNINGLOADER:
-				case SA_SEISMICWEAPON:
-				case SA_VOLCANO:
-				case SA_DELUGE:
-				case SA_VIOLENTGALE:
-				case SA_LANDPROTECTOR:
-				case PF_HPCONVERSION:
-				case PF_SOULCHANGE:
-				case PF_SPIDERWEB:
-				case PF_FOGWALL:
-				case TK_RUN:
-				case TK_HIGHJUMP:
-				case TK_SEVENWIND:
-				case SL_KAAHI:
-				case SL_KAUPE:
-				case SL_KAITE:
-				case RK_DRAGONBREATH:
-				case RK_DRAGONHOWLING:
-				case GN_CARTCANNON:
-				case KO_JYUMONJIKIRI:
-
-				// Skills that need to be confirmed.
-				case SO_FIREWALK:
-				case SO_ELECTRICWALK:
-				case SO_SPELLFIST:
-				case SO_EARTHGRAVE:
-				case SO_DIAMONDDUST:
-				case SO_POISON_BUSTER:
-				case SO_PSYCHIC_WAVE:
-				case SO_STRIKING:
-				case SO_WARMER:
-				case SO_VACUUM_EXTREME:
-				case SO_VARETYR_SPEAR:
-					return 1; // Can't do it.
-			}
-			break;
-		case SC_KG_KAGEHUMI:
-			switch(skill_id) {
-				case TF_HIDING:
-				case AS_CLOAKING:
-				case GC_CLOAKINGEXCEED:
-				case SC_SHADOWFORM:
-				case MI_HARMONIZE:
-				case CG_MARIONETTE:
-				case AL_TELEPORT:
-				case TF_BACKSLIDING:
-				case RA_CAMOUFLAGE:
-				case ST_CHASEWALK:
-				case GD_EMERGENCYCALL:
-					return 1; // needs more info
-			}
-			break;
+	switch( skill_id ) {
+		case SM_BASH:
+		case SM_MAGNUM:
+		case KN_PIERCE:
+		case AL_WARP:
+		case KN_SPEARSTAB:
+		case KN_SPEARBOOMERANG:
+		case KN_BOWLINGBASH:
+		case KN_CHARGEATK:		
+		case HW_MAGICCRASHER:
+		case LK_SPIRALPIERCE:
+		case LK_HEADCRUSH:
+		case LK_JOINTBEAT:	
+		case RK_SONICWAVE:
+		case RK_HUNDREDSPEAR:
+		case RK_WINDCUTTER:
+		case RK_IGNITIONBREAK:
+		case RK_DRAGONBREATH:
+		case RK_DRAGONHOWLING:
+		case RK_MILLENNIUMSHIELD:
+		case RK_CRUSHSTRIKE:
+		case RK_REFRESH:
+		case RK_GIANTGROWTH:
+		case RK_STONEHARDSKIN:
+		case RK_VITALITYACTIVATION:
+		case RK_STORMBLAST:
+		case RK_FIGHTINGSPIRIT:
+		case RK_ABUNDANCE:
+		case RK_PHANTOMTHRUST:	
+		case MO_INVESTIGATE:
+		case MO_FINGEROFFENSIVE:
+		case MO_EXTREMITYFIST:
+		case MO_BALKYOUNG:
+		case CH_PALMSTRIKE:
+		case SR_DRAGONCOMBO:
+		case SR_SKYNETBLOW:
+		case SR_EARTHSHAKER:
+		case SR_FALLENEMPIRE:
+		case SR_TIGERCANNON:
+		case SR_RAMPAGEBLASTER:
+		case SR_KNUCKLEARROW:
+		case SR_WINDMILL:
+		case SR_GATEOFHELL:
+		case SR_HOWLINGOFLION:
+		case SR_RIDEINLIGHTNING:
+		case TF_POISON:
+		case AS_SONICBLOW:
+		case AS_GRIMTOOTH:
+		case ASC_METEORASSAULT:
+		case GC_CROSSIMPACT:
+		case GC_DARKILLUSION:
+		case GC_VENOMPRESSURE:
+		case GC_PHANTOMMENACE:
+		case GC_ROLLINGCUTTER:
+		case GC_CROSSRIPPERSLASHER:
+		case AC_DOUBLE:
+		case AC_SHOWER:
+		case AC_CHARGEARROW:
+		case SN_SHARPSHOOTING:
+		case RA_ARROWSTORM:
+		case RA_AIMEDBOLT:
+		case RA_WUGDASH:
+		case RA_WUGSTRIKE:
+		case RA_WUGBITE:
+		case RA_SENSITIVEKEEN:
+		case RA_FIRINGTRAP:
+		case RA_ICEBOUNDTRAP:
+		case NJ_SYURIKEN:
+		case NJ_KUNAI:
+		case NJ_HUUMA:
+		case NJ_KASUMIKIRI:
+		case NJ_ISSEN:
+		case KO_JYUMONJIKIRI:
+		case KO_SETSUDAN:
+		case KO_BAKURETSU:
+		case MC_MAMMONITE:
+		case MC_CARTREVOLUTION:
+		case MC_CHANGECART:
+		case NC_BOOSTKNUCKLE:
+		case NC_PILEBUNKER:
+		case NC_VULCANARM:
+		case NC_FLAMELAUNCHER:
+		case NC_COLDSLOWER:
+		case NC_ARMSCANNON:
+		case NC_SELFDESTRUCTION:
+		case NC_AXEBOOMERANG:
+		case NC_POWERSWING:
+		case NC_AXETORNADO:	
+		case CR_SHIELDBOOMERANG:
+		case CR_SHIELDCHARGE:
+		case CR_HOLYCROSS:
+		case PA_PRESSURE:
+		case PA_SACRIFICE:
+		case PA_SHIELDCHAIN:
+		case LG_CANNONSPEAR:
+		case LG_BANISHINGPOINT:
+		case LG_SHIELDPRESS:
+		case LG_PINPOINTATTACK:
+		case LG_RAGEBURST:
+		case LG_EXEEDBREAK:
+		case LG_OVERBRAND_BRANDISH:
+		case LG_MOONSLASHER:
+		case LG_EARTHDRIVE:
+		case LG_OVERBRAND:
+		case LG_OVERBRAND_PLUSATK:	
+		case BA_MUSICALSTRIKE:
+		case CG_ARROWVULCAN:
+		case WM_SEVERE_RAINSTORM:
+		case WM_SEVERE_RAINSTORM_MELEE:	
+		case GN_CART_TORNADO:
+		case GN_CARTCANNON:
+		case GN_SPORE_EXPLOSION:
+		case GN_WALLOFTHORN:
+		case GN_SLINGITEM:
+		case RG_BACKSTAP:
+		case RG_RAID:
+		case RG_INTIMIDATE:	
+		case SC_FATALMENACE:
+		case TK_STORMKICK:
+		case TK_DOWNKICK:
+		case TK_TURNKICK:
+		case TK_COUNTER:
+		case SG_SUN_WARM:
+		case SG_MOON_WARM:
+		case SG_STAR_WARM:
+		case GS_TRIPLEACTION:	
+		case GS_TRACKING:
+		case GS_PIERCINGSHOT:
+		case GS_RAPIDSHOWER:
+		case GS_DESPERADO:
+		case GS_DUST:
+		case GS_FULLBUSTER:
+			return 0;	// Can do it.
 	}
-
-	return 0;
+	return 1; // Can't do
 }
 
 int skill_get_elemental_type( uint16 skill_id , uint16 skill_lv ) {
