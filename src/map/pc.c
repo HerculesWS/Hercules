@@ -1512,6 +1512,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 				case WL_SUMMON_ATK_GROUND:
 				case LG_OVERBRAND_BRANDISH:
 				case LG_OVERBRAND_PLUSATK:
+				case NC_MAGMA_ERUPTION_DOTDAMAGE:
 					continue;
 				default:
 					break;

@@ -1233,8 +1233,10 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 				skill->castend_damage_id(src, bl, NC_AXEBOOMERANG, pc->checkskill(sd, NC_AXEBOOMERANG), tick, 1);
 			break;
 		case NC_MAGMA_ERUPTION:
-			sc_start4(src, bl, SC_BURNING, 10 * skill_lv, skill_lv, 0, src->id, 0, skill->get_time2(skill_id, skill_lv));
-			sc_start(src, bl, SC_STUN, 10 * skill_lv, skill_lv, skill->get_time(skill_id, skill_lv));
+			sc_start4(src, bl, SC_BURNING, 10 * skill_lv, skill_lv, 1000, src->id, 0, skill->get_time2(skill_id, skill_lv));
+			break;
+		case NC_MAGMA_ERUPTION_DOTDAMAGE:
+			sc_start(src,bl,SC_STUN,90,skill_lv,skill->get_time2(skill_id,skill_lv));
 			break;
 		case GC_WEAPONCRUSH:
 			skill->castend_nodamage_id(src,bl,skill_id,skill_lv,tick,BCT_ENEMY);
@@ -2497,9 +2499,11 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			break;
 		case LG_OVERBRAND_BRANDISH:
 		case LG_OVERBRAND:
+		case NC_MAGMA_ERUPTION_DOTDAMAGE:
 			/* Fall through */
 			dmg.amotion = status_get_amotion(src) * 2;
 		case LG_OVERBRAND_PLUSATK:
+		case NC_MAGMA_ERUPTION:
 			dmg.dmotion = clif->skill_damage(dsrc,bl,tick,status_get_amotion(src),dmg.dmotion,damage,dmg.div_,skill_id,-1,BDT_SPLASH);
 			break;
 		case EL_FIRE_BOMB:
@@ -2523,7 +2527,6 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 		case GN_CRAZYWEED_ATK:
 		case GN_ILLUSIONDOPING:
 		case KO_BAKURETSU:
-		case NC_MAGMA_ERUPTION:
 			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,dmg.div_,skill_id,-1,BDT_SPLASH);
 			break;
 		case GN_SLINGITEM_RANGEMELEEATK:
@@ -3410,6 +3413,9 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 					map->foreachinpath(skill->attack_area,src->m,src->x,src->y,skl->x,skl->y,4,2,BL_CHAR,
 						skill->get_type(skl->skill_id),src,src,skl->skill_id,skl->skill_lv,tick,skl->flag,BCT_ENEMY);
 					break;
+				case NC_MAGMA_ERUPTION:
+					skill->unitsetting(src,skl->skill_id,skl->skill_lv,skl->x,skl->y,0);
+					break;
 				default:
 					skill->timerskill_notarget_unknown(tid, tick, src, ud, skl);
 					break;
@@ -3685,6 +3691,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case GN_SLINGITEM_RANGEMELEEATK:
 		case KO_SETSUDAN:
 		case GC_DARKCROW:
+		case NC_MAGMA_ERUPTION_DOTDAMAGE:
 		case LG_OVERBRAND_BRANDISH:
 		case LG_OVERBRAND:
 			skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
@@ -10380,7 +10387,6 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case MH_VOLCANIC_ASH:
 		case MH_POISON_MIST:
 		case MH_STEINWAND:
-		case NC_MAGMA_ERUPTION:
 		case LG_KINGS_GRACE:
 		case RL_B_TRAP:
 		case MH_XENO_SLASHER:
@@ -10909,6 +10915,13 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 				skill->unitsetting(src,skill_id,skill_lv,x,y,0);
 			}
 		}
+			break;
+		
+		case NC_MAGMA_ERUPTION:
+			r = skill->get_splash(NC_MAGMA_ERUPTION_DOTDAMAGE, skill_lv);
+			map->foreachinarea(skill_area_sub, src->m, x - r, y - r, x + r, y + r, splash_target(src), src,
+				NC_MAGMA_ERUPTION_DOTDAMAGE, skill_lv, tick,flag | BCT_ENEMY | SD_ANIMATION | 1, skill->castend_damage_id);
+			skill->addtimerskill(src,tick + status_get_amotion(src) * 2 + 500, 0, x, y, skill_id, skill_lv, 0, flag);
 			break;
 
 		default:
@@ -13193,7 +13206,6 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 				case NC_DISJOINT:
 				case NC_MAGMA_ERUPTION:
 				case ALL_FULL_THROTTLE:
-				case NC_MAGMA_ERUPTION_DOTDAMAGE:
 					break;
 				default:
 				{

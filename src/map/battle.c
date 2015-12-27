@@ -2364,6 +2364,9 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					if ( distance_bl(src, target) > 2 ) // Will deal 75% damage outside of 5x5 area.
 						skillratio = skillratio * 75 / 100;
 					break;
+				case NC_MAGMA_ERUPTION_DOTDAMAGE:
+					skillratio += 350 + 50 * skill_lv;
+					break;
 				case SC_FATALMENACE:
 					skillratio = 100 * (skill_lv+1);
 					RE_LVL_DMOD(100);
@@ -4057,7 +4060,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 		}
 		break;
 	case NC_MAGMA_ERUPTION:
-		md.damage = 1200 + 400 * skill_lv;
+		md.damage = 800 + 200 * skill_lv;
 		break;
 	case GN_THORNS_TRAP:
 		md.damage = 100 + 200 * skill_lv + sstatus->int_;
@@ -5169,6 +5172,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			switch(skill_id){
 				case AB_DUPLELIGHT_MELEE:
 					rskill = AB_DUPLELIGHT;
+					break;
+				case NC_MAGMA_ERUPTION_DOTDAMAGE:
+					rskill = NC_MAGMA_ERUPTION;
 					break;
 				case LG_OVERBRAND_BRANDISH:
 				case LG_OVERBRAND_PLUSATK:
