@@ -3661,7 +3661,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 
 				if (sc){
 					if( sc->data[SC_TELEKINESIS_INTENSE] && s_ele == ELE_GHOST )
-						ad.damage += sc->data[SC_TELEKINESIS_INTENSE]->val3;
+						MATK_RATE(sc->data[SC_TELEKINESIS_INTENSE]->val3);
 				}
 				switch(skill_id){
 					case MG_FIREBOLT:
@@ -3987,7 +3987,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	case NJ_ZENYNAGE:
 		md.damage = skill->get_zeny(skill_id ,skill_lv);
 		if (!md.damage) md.damage = 2;
-		md.damage = rnd()%md.damage + md.damage;
+		md.damage += rnd()%md.damage;
 		if (is_boss(target))
 			md.damage=md.damage / 3;
 		else if (tsd)
@@ -4072,6 +4072,7 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	case GN_HELLS_PLANT_ATK:
 		md.damage = skill_lv * status->get_lv(target) * 10 + sstatus->int_ * 7 / 2 * (18 + (sd ? sd->status.job_level : 0) / 4) * (5 / (10 - (sd ? pc->checkskill(sd, AM_CANNIBALIZE) : 0)));
 		md.damage = md.damage*(1000 + tstatus->mdef) / (1000 + tstatus->mdef * 10) - tstatus->mdef2;
+		md.flag |= BF_MAGIC;
 		break;
 	case KO_HAPPOKUNAI:
 		{
