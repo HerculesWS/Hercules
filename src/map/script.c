@@ -8056,16 +8056,40 @@ BUILDIN(getguildmember)
 }
 
 /*==========================================
- * Checks if two guilds are allies.
- * Return boolean.
+ * Checks the relationship between 2 guilds.
+ * Return :-
+ * -1 - either of the guild is not exist
+ *  0 - they don't have any relationship
+ *  1 - they are in alliance
+ *  2 - they are in antagonist
  *------------------------------------------*/
-BUILDIN(isguildally)
+BUILDIN(checkguildally)
 {
-	int check;
+	struct guild *g1, *g2;
+	int gid1, gid2, i = 0;
 
-	check = guild->check_alliance(script_getnum(st,2), script_getnum(st,3), 0);
+	gid1 = script_getnum(st,2);
+	gid2 = script_getnum(st,3);
+	g1 = guild->search(gid1);
+	g2 = guild->search(gid2);
 
-	script_pushint(st, check);
+	if (g1 == NULL || g2 == NULL) {
+		ShowWarning("buildin_checkguildally: requesting non-existent guild ID.\n"); //guild->search already tell the guild ID
+		script_pushint(st, -1);
+		return false;
+	}
+		
+	ARR_FIND(0, MAX_GUILDALLIANCE, i, g1->alliance[i].guild_id == gid2);
+	if (i == MAX_GUILDALLIANCE) {
+		script_pushint(st, 0);
+		return true;
+	}
+
+	if (g1->alliance[i].opposition)
+		script_pushint(st, 2);
+	else
+		script_pushint(st, 1);
+
 	return true;
 }
 
@@ -20257,7 +20281,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getguildmaster,"i"),
 		BUILDIN_DEF(getguildmasterid,"i"),
 		BUILDIN_DEF(getguildmember,"i?"),
-		BUILDIN_DEF(isguildally,"ii"),
+		BUILDIN_DEF(checkguildally,"ii"),
 		BUILDIN_DEF(strcharinfo,"i"),
 		BUILDIN_DEF(strnpcinfo,"i"),
 		BUILDIN_DEF(charid2rid,"i"),

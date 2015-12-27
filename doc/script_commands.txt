@@ -3462,14 +3462,18 @@ For usage examples, see 'getpartymember'.
 
 ---------------------------------------
 
-*isguildally(<guild id>, <guild id2>)
+*checkguildally(<guild id1>,<guild id2>);
 
-This command will check if two guilds have an alliance together and return
-either true or false based on the results.
+This command will check the relationship between 2 guilds.
+It return :-
+	-1 - either of the guild is not exist in memory
+	 0 - they don't have any relationship
+	 1 - they are in alliance
+	 2 - they are in antagonist
 
 Example:
 
-if (isguildally(1, 5)) {
+if (checkguildally(1, 5) == 1) {
 	mes "These guilds are allies.";
 	close;
 }
