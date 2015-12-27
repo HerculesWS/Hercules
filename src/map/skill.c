@@ -18534,6 +18534,7 @@ int skill_block_check(struct block_list *bl, sc_type type , uint16 skill_id) {
 				case SL_KAITE:
 				case RK_DRAGONBREATH:
 				case RK_DRAGONHOWLING:
+				case GN_CARTCANNON:
 
 				// Skills that need to be confirmed.
 				case SO_FIREWALK:
