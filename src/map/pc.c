@@ -11479,6 +11479,20 @@ bool pc_db_checkid(unsigned int class_)
 		|| (class_ >= JOB_REBELLION      && class_ <  JOB_MAX            );
 }
 
+/**
+ * checks if player have any kind of magnifier in inventory
+ * @param sd map_session_data of Player
+ * @return index of magnifer, INDEX_NOT_FOUND if it is not found
+ */
+int pc_have_magnifier(struct map_session_data *sd)
+{
+	int n;
+	n = pc->search_inventory(sd, ITEMID_MAGNIFIER);
+	if (n == INDEX_NOT_FOUND)
+		n = pc->search_inventory(sd, ITEMID_NOVICE_MAGNIFIER);
+	return n;
+}
+
 void do_final_pc(void) {
 	db_destroy(pc->itemcd_db);
 	pc->at_db->destroy(pc->at_db,pc->autotrade_final);
@@ -11846,4 +11860,6 @@ void pc_defaults(void) {
 
 	pc->check_job_name = pc_check_job_name;
 	pc->update_idle_time = pc_update_idle_time;
+	
+	pc->have_magnifier = pc_have_magnifier;
 }
