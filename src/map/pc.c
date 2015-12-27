@@ -123,10 +123,11 @@ bool pc_should_log_commands(struct map_session_data *sd)
 	return pcg->should_log_commands(sd->group);
 }
 
-int pc_invincible_timer(int tid, int64 tick, int id, intptr_t data) {
-	struct map_session_data *sd;
+int pc_invincible_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	struct map_session_data *sd = map->id2sd(id);
 
-	if( (sd=(struct map_session_data *)map->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
+	if (sd == NULL)
 		return 1;
 
 	if(sd->invincible_timer != tid){
@@ -162,10 +163,10 @@ void pc_delinvincibletimer(struct map_session_data* sd)
 }
 
 int pc_spiritball_timer(int tid, int64 tick, int id, intptr_t data) {
-	struct map_session_data *sd;
+	struct map_session_data *sd = map->id2sd(id);
 	int i;
 
-	if( (sd=(struct map_session_data *)map->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
+	if (sd == NULL)
 		return 1;
 
 	if( sd->spiritball <= 0 )
@@ -1861,9 +1862,9 @@ int pc_disguise(struct map_session_data *sd, int class_) {
 			clif->updatestatus(sd,SP_CARTINFO);
 		}
 		if (sd->chatID) {
-			struct chat_data* cd;
+			struct chat_data *cd = map->id2cd(sd->chatID);
 
-			if( (cd = (struct chat_data*)map->id2bl(sd->chatID)) )
+			if (cd != NULL)
 				clif->dispchat(cd,0);
 		}
 	}
@@ -10414,10 +10415,10 @@ bool pc_can_use_command(struct map_session_data *sd, const char *command) {
  */
 int pc_charm_timer(int tid, int64 tick, int id, intptr_t data)
 {
-	struct map_session_data *sd;
+	struct map_session_data *sd = map->id2sd(id);
 	int i;
 
-	if( (sd=(struct map_session_data *)map->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
+	if (sd == NULL)
 		return 1;
 
 	if (sd->charm_count <= 0) {

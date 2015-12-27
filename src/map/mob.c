@@ -824,7 +824,7 @@ int mob_linksearch(struct block_list *bl,va_list ap)
  * mob spawn with delay (timer function)
  *------------------------------------------*/
 int mob_delayspawn(int tid, int64 tick, int id, intptr_t data) {
-	struct block_list* bl = map->id2bl(id);
+	struct block_list* bl = map->id2bl(id); // TODO: Why does this not use map->bl2md?
 	struct mob_data* md = BL_CAST(BL_MOB, bl);
 
 	if( md )
@@ -1880,7 +1880,7 @@ void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, struct ite
 }
 
 int mob_timer_delete(int tid, int64 tick, int id, intptr_t data) {
-	struct block_list* bl = map->id2bl(id);
+	struct block_list* bl = map->id2bl(id); // TODO: Why does this not use map->id2md?
 	struct mob_data* md = BL_CAST(BL_MOB, bl);
 
 	if( md )

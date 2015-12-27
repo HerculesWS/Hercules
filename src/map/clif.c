@@ -446,12 +446,12 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 		case CHAT_WOS:
 			nullpo_retr(true, bl);
 			{
-				struct chat_data *cd;
-				if (sd) {
-					cd = (struct chat_data*)map->id2bl(sd->chatID);
-				} else if (bl->type == BL_CHAT) {
-					cd = (struct chat_data*)bl;
-				} else break;
+				const struct chat_data *cd = NULL;
+				if (sd != NULL) {
+					cd = map->id2cd(sd->chatID);
+				} else {
+					cd = BL_CCAST(BL_CHAT, bl);
+				}
 				if (cd == NULL)
 					break;
 				for(i = 0; i < cd->users; i++) {
@@ -4119,8 +4119,8 @@ void clif_getareachar_pc(struct map_session_data* sd,struct map_session_data* ds
 	nullpo_retv(sd);
 	nullpo_retv(dstsd);
 	if( dstsd->chatID ) {
-		struct chat_data *cd = NULL;
-		if( (cd = (struct chat_data*)map->id2bl(dstsd->chatID)) && cd->usersd[0]==dstsd)
+		struct chat_data *cd = map->id2cd(dstsd->chatID);
+		if (cd != NULL && cd->usersd[0] == dstsd)
 			clif->dispchat(cd,sd->fd);
 	} else if( dstsd->state.vending )
 		clif->showvendingboard(&dstsd->bl,dstsd->message,sd->fd);
@@ -4202,7 +4202,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 		{
 			struct npc_data *nd = (struct npc_data *)bl;
 			if (nd->chat_id != 0)
-				clif->dispchat((struct chat_data *)map->id2bl(nd->chat_id),sd->fd);
+				clif->dispchat(map->id2cd(nd->chat_id), sd->fd);
 			if (nd->size == SZ_BIG)
 				clif->specialeffect_single(bl,423,sd->fd);
 			else if (nd->size == SZ_MEDIUM)
@@ -4615,9 +4615,8 @@ int clif_outsight(struct block_list *bl,va_list ap)
 			case BL_PC:
 				if (sd->vd.class_ != INVISIBLE_CLASS)
 					clif->clearunit_single(bl->id,CLR_OUTSIGHT,tsd->fd);
-				if(sd->chatID){
-					struct chat_data *cd;
-					cd=(struct chat_data*)map->id2bl(sd->chatID);
+				if (sd->chatID) {
+					struct chat_data *cd = map->id2cd(sd->chatID);
 					if(cd->usersd[0]==sd)
 						clif->dispchat(cd,tsd->fd);
 				}
@@ -9969,9 +9968,8 @@ void clif_parse_HowManyConnections(int fd, struct map_session_data *sd) {
 	clif->user_count(sd, map->getusers());
 }
 
-void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, int target_id, int64 tick) {
-	struct block_list *target = NULL;
-
+void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, int target_id, int64 tick)
+{
 	nullpo_retv(sd);
 	if (pc_isdead(sd)) {
 		clif->clearunit_area(&sd->bl, CLR_DEAD);
@@ -9998,8 +9996,10 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 	switch(action_type) {
 		case 0x00: // once attack
 		case 0x07: // continuous attack
-			if( (target = map->id2bl(target_id)) && target->type == BL_NPC ) {
-				npc->click(sd, (struct npc_data *)target);
+		{
+			struct npc_data *nd = map->id2nd(target_id);
+			if (nd != NULL) {
+				npc->click(sd, nd);
 				return;
 			}
 
@@ -10019,6 +10019,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 			pc->delinvincibletimer(sd);
 			pc->update_idle_time(sd, BCIDLE_ATTACK);
 			unit->attack(&sd->bl, target_id, action_type != 0);
+		}
 		break;
 		case 0x02: // sitdown
 			if (battle_config.basic_skill_check && pc->checkskill(sd, NV_BASIC) < 3) {
@@ -10276,13 +10277,10 @@ void clif_parse_TakeItem(int fd, struct map_session_data *sd) __attribute__((non
 /// 009f <id>.L (CZ_ITEM_PICKUP)
 /// 0362 <id>.L (CZ_ITEM_PICKUP2)
 /// There are various variants of this packet, some of them have padding between fields.
-void clif_parse_TakeItem(int fd, struct map_session_data *sd) {
-	struct flooritem_data *fitem;
-	int map_object_id;
-
-	map_object_id = RFIFOL(fd,packet_db[RFIFOW(fd,0)].pos[0]);
-
-	fitem = (struct flooritem_data*)map->id2bl(map_object_id);
+void clif_parse_TakeItem(int fd, struct map_session_data *sd)
+{
+	int map_object_id = RFIFOL(fd,packet_db[RFIFOW(fd,0)].pos[0]);
+	struct flooritem_data *fitem = map->id2fi(map_object_id);
 
 	do {
 		if (pc_isdead(sd)) {
@@ -10290,7 +10288,7 @@ void clif_parse_TakeItem(int fd, struct map_session_data *sd) {
 			break;
 		}
 
-		if (fitem == NULL || fitem->bl.type != BL_ITEM || fitem->bl.m != sd->bl.m)
+		if (fitem == NULL || fitem->bl.m != sd->bl.m)
 			break;
 
 		if( sd->sc.count && (

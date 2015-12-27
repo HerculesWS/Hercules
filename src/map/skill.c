@@ -18097,11 +18097,14 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick)
 	return 0;
 }
 
-int skill_blockhomun_end(int tid, int64 tick, int id, intptr_t data) { // [orn]
-	struct homun_data *hd = (struct homun_data *)map->id2bl(id);
+// [orn]
+int skill_blockhomun_end(int tid, int64 tick, int id, intptr_t data)
+{
+	struct homun_data *hd = map->id2hd(id);
 	if (data <= 0 || data >= MAX_SKILL)
 		return 0;
-	if (hd) hd->blockskill[data] = 0;
+	if (hd != NULL)
+		hd->blockskill[data] = 0;
 
 	return 1;
 }
@@ -18121,11 +18124,14 @@ int skill_blockhomun_start(struct homun_data *hd, uint16 skill_id, int tick) { /
 	return timer->add(timer->gettick() + tick, skill->blockhomun_end, hd->bl.id, idx);
 }
 
-int skill_blockmerc_end(int tid, int64 tick, int id, intptr_t data) {// [orn]
-	struct mercenary_data *md = (struct mercenary_data *)map->id2bl(id);
-	if( data <= 0 || data >= MAX_SKILL )
+// [orn]
+int skill_blockmerc_end(int tid, int64 tick, int id, intptr_t data)
+{
+	struct mercenary_data *md = map->id2mc(id);
+	if (data <= 0 || data >= MAX_SKILL)
 		return 0;
-	if( md ) md->blockskill[data] = 0;
+	if (md != NULL)
+		md->blockskill[data] = 0;
 
 	return 1;
 }

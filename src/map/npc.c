@@ -571,10 +571,11 @@ struct timer_event_data {
 /*==========================================
  * triger 'OnTimerXXXX' events
  *------------------------------------------*/
-int npc_timerevent(int tid, int64 tick, int id, intptr_t data) {
+int npc_timerevent(int tid, int64 tick, int id, intptr_t data)
+{
 	int old_rid, old_timer;
 	int64 old_tick;
-	struct npc_data* nd=(struct npc_data *)map->id2bl(id);
+	struct npc_data *nd = map->id2nd(id);
 	struct npc_timerevent_list *te;
 	struct timer_event_data *ted = (struct timer_event_data*)data;
 	struct map_session_data *sd=NULL;
@@ -741,14 +742,13 @@ void npc_timerevent_quit(struct map_session_data* sd)
 	}
 
 	// Delete timer
-	nd = (struct npc_data *)map->id2bl(td->id);
+	nd = map->id2nd(td->id);
 	ted = (struct timer_event_data*)td->data;
 	timer->delete(sd->npc_timer_id, npc->timerevent);
 	sd->npc_timer_id = INVALID_TIMER;
 
 	// Execute OnTimerQuit
-	if( nd && nd->bl.type == BL_NPC )
-	{
+	if (nd != NULL) {
 		char buf[EVENT_NAME_LENGTH];
 		struct event_data *ev;
 
@@ -1032,15 +1032,14 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
  *------------------------------------------*/
 int npc_untouch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 {
-	struct npc_data *nd;
+	struct npc_data *nd = NULL;
 	nullpo_retr(1, sd);
 
 	if (!sd->areanpc_id)
 		return 0;
 
-	nd = (struct npc_data *) map->id2bl(sd->areanpc_id);
-	if (!nd)
-	{
+	nd = map->id2nd(sd->areanpc_id);
+	if (nd == NULL) {
 		sd->areanpc_id = 0;
 		return 1;
 	}
@@ -1302,7 +1301,7 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing) {
 	nullpo_retr(1, sd);
 
 	if( id != sd->npc_id ){
-		struct npc_data *nd_sd = (struct npc_data *)map->id2bl(sd->npc_id);
+		struct npc_data *nd_sd = map->id2nd(sd->npc_id);
 		struct npc_data *nd = BL_CAST(BL_NPC, target);
 		ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
 			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
@@ -1402,7 +1401,8 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 	if( points < 0 )
 		return ERROR_TYPE_MONEY;
 
-	if( !(nd = (struct npc_data *)map->id2bl(sd->npc_shopid)) )
+	nd = map->id2nd(sd->npc_shopid);
+	if (nd == NULL)
 		return ERROR_TYPE_NPC;
 
 	if( nd->subtype != CASHSHOP ) {
@@ -1725,7 +1725,8 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	if( sd->state.trading )
 		return ERROR_TYPE_EXCHANGE;
 
-	if( !(nd = (struct npc_data *)map->id2bl(sd->npc_shopid)) )
+	nd = map->id2nd(sd->npc_shopid);
+	if (nd == NULL)
 		return ERROR_TYPE_NPC;
 
 	if( (item = itemdb->exists(nameid)) == NULL )

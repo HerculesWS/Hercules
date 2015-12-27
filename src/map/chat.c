@@ -140,7 +140,7 @@ bool chat_joinchat(struct map_session_data* sd, int chatid, const char* pass) {
 
 	nullpo_ret(sd);
 	nullpo_ret(pass);
-	cd = (struct chat_data*)map->id2bl(chatid);
+	cd = map->id2cd(chatid);
 
 	if( cd == NULL || cd->bl.type != BL_CHAT || cd->bl.m != sd->bl.m || sd->state.vending || sd->state.buyingstore || sd->chatID || ((cd->owner->type == BL_NPC) ? cd->users+1 : cd->users) >= cd->limit )
 	{
@@ -204,7 +204,7 @@ int chat_leavechat(struct map_session_data* sd, bool kicked) {
 
 	nullpo_retr(0, sd);
 
-	cd = (struct chat_data*)map->id2bl(sd->chatID);
+	cd = map->id2cd(sd->chatID);
 	if( cd == NULL ) {
 		pc_setchatid(sd, 0);
 		return 0;
@@ -279,7 +279,7 @@ bool chat_changechatowner(struct map_session_data* sd, const char* nextownername
 	nullpo_ret(sd);
 	nullpo_ret(nextownername);
 
-	cd = (struct chat_data*)map->id2bl(sd->chatID);
+	cd = map->id2cd(sd->chatID);
 	if( cd == NULL || (struct block_list*) sd != cd->owner )
 		return false;
 
@@ -324,7 +324,7 @@ bool chat_changechatstatus(struct map_session_data* sd, const char* title, const
 	nullpo_ret(title);
 	nullpo_ret(pass);
 
-	cd = (struct chat_data*)map->id2bl(sd->chatID);
+	cd = map->id2cd(sd->chatID);
 	if( cd==NULL || (struct block_list *)sd != cd->owner )
 		return false;
 
@@ -352,7 +352,7 @@ bool chat_kickchat(struct map_session_data* sd, const char* kickusername) {
 	nullpo_ret(sd);
 	nullpo_ret(kickusername);
 
-	cd = (struct chat_data *)map->id2bl(sd->chatID);
+	cd = map->id2cd(sd->chatID);
 
 	if( cd==NULL || (struct block_list *)sd != cd->owner )
 		return false;
@@ -409,8 +409,8 @@ bool chat_deletenpcchat(struct npc_data* nd) {
 	struct chat_data *cd;
 	nullpo_ret(nd);
 
-	cd = (struct chat_data*)map->id2bl(nd->chat_id);
-	if( cd == NULL )
+	cd = map->id2cd(nd->chat_id);
+	if (cd == NULL)
 		return false;
 
 	chat->npc_kick_all(cd);

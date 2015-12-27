@@ -400,38 +400,46 @@ int npc_chat_sub(struct block_list* bl, va_list ap)
 }
 
 // Various script built-ins used to support these functions
-BUILDIN(defpattern) {
+BUILDIN(defpattern)
+{
 	int setid = script_getnum(st,2);
 	const char* pattern = script_getstr(st,3);
 	const char* label = script_getstr(st,4);
-	struct npc_data* nd = (struct npc_data *)map->id2bl(st->oid);
+	struct npc_data *nd = map->id2nd(st->oid);
+	nullpo_retr(false, nd);
 
 	npc_chat->def_pattern(nd, setid, pattern, label);
 
 	return true;
 }
 
-BUILDIN(activatepset) {
+BUILDIN(activatepset)
+{
 	int setid = script_getnum(st,2);
-	struct npc_data* nd = (struct npc_data *)map->id2bl(st->oid);
+	struct npc_data *nd = map->id2nd(st->oid);
+	nullpo_retr(false, nd);
 
 	npc_chat->activate_pcreset(nd, setid);
 
 	return true;
 }
 
-BUILDIN(deactivatepset) {
+BUILDIN(deactivatepset)
+{
 	int setid = script_getnum(st,2);
-	struct npc_data* nd = (struct npc_data *)map->id2bl(st->oid);
+	struct npc_data *nd = map->id2nd(st->oid);
+	nullpo_retr(false, nd);
 
 	npc_chat->deactivate_pcreset(nd, setid);
 
 	return true;
 }
 
-BUILDIN(deletepset) {
+BUILDIN(deletepset)
+{
 	int setid = script_getnum(st,2);
-	struct npc_data* nd = (struct npc_data *)map->id2bl(st->oid);
+	struct npc_data *nd = map->id2nd(st->oid);
+	nullpo_retr(false, nd);
 
 	npc_chat->delete_pcreset(nd, setid);
 

@@ -1898,42 +1898,185 @@ int map_quit(struct map_session_data *sd) {
 	return 0;
 }
 
-/*==========================================
- * Lookup, id to session (player,mob,npc,homon,merc..)
- *------------------------------------------*/
-struct map_session_data *map_id2sd(int id) {
-	if (id <= 0) return NULL;
-	return (struct map_session_data*)idb_get(map->pc_db,id);
+/**
+ * Looks up a session data by ID.
+ *
+ * The search is performed using the pc_db.
+ *
+ * @param id The bl ID to search.
+ * @return The searched map_session_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a player unit.
+ */
+struct map_session_data *map_id2sd(int id)
+{
+	struct block_list *bl = NULL;
+	if (id <= 0)
+		return NULL;
+
+	bl = idb_get(map->pc_db,id);
+
+	Assert_retr(NULL, bl->type == BL_PC);
+	return BL_UCAST(BL_PC, bl);
 }
 
-struct mob_data *map_id2md(int id) {
-	if (id <= 0) return NULL;
-	return (struct mob_data*)idb_get(map->mobid_db,id);
-}
-
-struct npc_data *map_id2nd(int id) {
+/**
+ * Looks up a NPC data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched npc_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a NPC.
+ */
+struct npc_data *map_id2nd(int id)
+{
 	// just a id2bl lookup because there's no npc_db
 	struct block_list* bl = map->id2bl(id);
 
 	return BL_CAST(BL_NPC, bl);
 }
 
-struct homun_data *map_id2hd(int id) {
+/**
+ * Looks up a mob data by ID.
+ *
+ * The search is performed using the mobid_db.
+ *
+ * @param id The bl ID to search.
+ * @return The searched mob_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a mob unit.
+ */
+struct mob_data *map_id2md(int id)
+{
+	struct block_list *bl = NULL;
+	if (id <= 0)
+		return NULL;
+
+	bl = idb_get(map->mobid_db,id);
+
+	Assert_retr(NULL, bl->type == BL_MOB);
+	return BL_UCAST(BL_MOB, bl);
+}
+
+/**
+ * Looks up a floor item data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched flooritem_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a floor item.
+ */
+struct flooritem_data *map_id2fi(int id)
+{
+	struct block_list* bl = map->id2bl(id);
+
+	return BL_CAST(BL_ITEM, bl);
+}
+
+/**
+ * Looks up a chat data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched chat_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a chat.
+ */
+struct chat_data *map_id2cd(int id)
+{
+	struct block_list* bl = map->id2bl(id);
+
+	return BL_CAST(BL_CHAT, bl);
+}
+
+/**
+ * Looks up a skill unit data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched skill_unit data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a skill unit.
+ */
+struct skill_unit *map_id2su(int id)
+{
+	struct block_list* bl = map->id2bl(id);
+
+	return BL_CAST(BL_SKILL, bl);
+}
+
+/**
+ * Looks up a pet data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched pet_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a pet.
+ */
+struct pet_data *map_id2pd(int id)
+{
+	struct block_list* bl = map->id2bl(id);
+
+	return BL_CAST(BL_PET, bl);
+}
+
+/**
+ * Looks up a homunculus data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched homun_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a homunculus.
+ */
+struct homun_data *map_id2hd(int id)
+{
 	struct block_list* bl = map->id2bl(id);
 
 	return BL_CAST(BL_HOM, bl);
 }
 
-struct mercenary_data *map_id2mc(int id) {
+/**
+ * Looks up a mercenary data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched mercenary_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a mercenary.
+ */
+struct mercenary_data *map_id2mc(int id)
+{
 	struct block_list* bl = map->id2bl(id);
 
 	return BL_CAST(BL_MER, bl);
 }
 
-struct chat_data *map_id2cd(int id) {
+/**
+ * Looks up an elemental data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched elemental_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to an elemental.
+ */
+struct elemental_data *map_id2ed(int id)
+{
 	struct block_list* bl = map->id2bl(id);
 
-	return BL_CAST(BL_CHAT, bl);
+	return BL_CAST(BL_ELEM, bl);
+}
+
+/**
+ * Looks up a block_list by ID.
+ *
+ * The search is performed using the id_db.
+ *
+ * @param id The bl ID to search.
+ * @return The searched block_list, if it exists.
+ * @retval NULL if the ID is invalid.
+ */
+struct block_list *map_id2bl(int id)
+{
+	return idb_get(map->id_db, id);
+}
+
+/**
+ * Verifies whether a block list ID is valid.
+ *
+ * @param id The bl ID to search.
+ * @retval true if the ID exists and is valid.
+ * @retval false otherwise.
+ */
+bool map_blid_exists(int id)
+{
+	return (idb_exists(map->id_db,id));
 }
 
 /// Returns the nick of the target charid or NULL if unknown (requests the nick to the char server).
@@ -2007,20 +2150,6 @@ struct map_session_data * map_nick2sd(const char *nick)
 		found_sd = NULL;
 
 	return found_sd;
-}
-
-/*==========================================
- * Looksup id_db DBMap and returns BL pointer of 'id' or NULL if not found
- *------------------------------------------*/
-struct block_list * map_id2bl(int id) {
-	return (struct block_list*)idb_get(map->id_db,id);
-}
-
-/**
- * Same as map->id2bl except it only checks for its existence
- **/
-bool map_blid_exists( int id ) {
-	return (idb_exists(map->id_db,id));
 }
 
 /*==========================================
@@ -6159,11 +6288,15 @@ void map_defaults(void) {
 	map->foreachininstance = map_foreachininstance;
 
 	map->id2sd = map_id2sd;
-	map->id2md = map_id2md;
 	map->id2nd = map_id2nd;
+	map->id2md = map_id2md;
+	map->id2fi = map_id2fi;
+	map->id2cd = map_id2cd;
+	map->id2su = map_id2su;
+	map->id2pd = map_id2pd;
 	map->id2hd = map_id2hd;
 	map->id2mc = map_id2mc;
-	map->id2cd = map_id2cd;
+	map->id2ed = map_id2ed;
 	map->id2bl = map_id2bl;
 	map->blid_exists = map_blid_exists;
 	map->mapindex2mapid = map_mapindex2mapid;

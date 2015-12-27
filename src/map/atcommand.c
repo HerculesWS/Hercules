@@ -3744,10 +3744,11 @@ ACMD(reloadscript) {
  * 3 = Shows the chats in that map
  TODO# add the missing mapflags e.g. adjust_skill_damage to display
  *------------------------------------------*/
-ACMD(mapinfo) {
+ACMD(mapinfo)
+{
 	const struct map_session_data *pl_sd;
 	struct s_mapiterator* iter;
-	struct chat_data *cd = NULL;
+	const struct chat_data *cd = NULL;
 	char direction[12];
 	int i, m_id, chat_num = 0, list = 0, vend_num = 0;
 	unsigned short m_index;
@@ -3786,7 +3787,7 @@ ACMD(mapinfo) {
 		if( pl_sd->mapindex == m_index ) {
 			if( pl_sd->state.vending )
 				vend_num++;
-			else if( (cd = (struct chat_data*)map->id2bl(pl_sd->chatID)) != NULL && cd->usersd[0] == pl_sd )
+			else if ((cd = map->id2cd(pl_sd->chatID)) != NULL && cd->usersd[0] == pl_sd)
 				chat_num++;
 		}
 	}
@@ -3965,10 +3966,7 @@ ACMD(mapinfo) {
 			clif->message(fd, msg_fd(fd,1113)); // ----- Chats in Map -----
 			iter = mapit_getallusers();
 			for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
-				if ((cd = (struct chat_data*)map->id2bl(pl_sd->chatID)) != NULL &&
-						pl_sd->mapindex == m_index &&
-						cd->usersd[0] == pl_sd)
-				{
+				if ((cd = map->id2cd(pl_sd->chatID)) != NULL && pl_sd->mapindex == m_index && cd->usersd[0] == pl_sd) {
 					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1114), // Chat: %s | Player: %s | Location: %d %d
 							cd->title, pl_sd->status.name, cd->bl.x, cd->bl.y);
 					clif->message(fd, atcmd_output);
