@@ -310,9 +310,9 @@ enum geneticist_item_list {
 	ITEMID_MELON_BOMB,             // 13262
 	ITEMID_PINEAPPLE_BOMB,         // 13263
 	ITEMID_BANANA_BOMB,            // 13264
-	ITEMID_BLACK_LUMP,             // 13265
-	ITEMID_BLACK_HARD_LUMP,        // 13266
-	ITEMID_VERY_HARD_LUMP,         // 13267
+	ITEMID_DARK_LUMP,              // 13265
+	ITEMID_HARD_DARK_LUMP,         // 13266
+	ITEMID_VERY_HARD_DARK_LUMP,    // 13267
 	/// Throwables
 	ITEMID_MYSTERIOUS_POWDER,      // 13268
 	ITEMID_BOOST500_TO_THROW,      // 13269
