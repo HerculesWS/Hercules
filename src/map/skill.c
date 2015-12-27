@@ -11421,7 +11421,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 				if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0) {
 					val1 = sd->charm_count; // no. of aura
 					val2 = sd->charm_type; // aura type
-					limit += val1 * 1000;
+					limit = 6000 * val1;
 					subunt = sd->charm_type - 1;
 					pc->del_charm(sd, sd->charm_count, sd->charm_type);
 				}
@@ -12531,21 +12531,40 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			if( battle->check_target(&src->bl,bl,BCT_ENEMY) > 0 ){
 				switch( sg->unit_id ){
 					case UNT_ZENKAI_WATER:
-						sc_start(ss, bl, SC_COLD, sg->val1*5, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
-						sc_start(ss, bl, SC_FREEZE, sg->val1*5, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
-						sc_start(ss, bl, SC_FROSTMISTY, sg->val1*5, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
+						switch (rnd()%2 + 1) {
+							case 1:
+								sc_start(ss, bl, SC_FREEZE, 100, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
+								break;
+							case 2:
+								sc_start(ss, bl, SC_FROSTMISTY, 100, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
+								break;
+						}
 						break;
 					case UNT_ZENKAI_LAND:
-						sc_start(ss, bl, SC_STONE, sg->val1*5, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
-						sc_start(ss, bl, SC_POISON, sg->val1*5, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
+						switch (rnd()%2 + 1) {
+							case 1:
+								sc_start(ss, bl, SC_STONE, 100, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
+								break;
+							case 2:
+								sc_start(ss, bl, SC_POISON, 100, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
+								break;
+						}
 						break;
 					case UNT_ZENKAI_FIRE:
-						sc_start4(ss, bl, SC_BURNING, sg->val1*5, sg->skill_lv, 0, ss->id, 0, skill->get_time2(sg->skill_id, sg->skill_lv));
+						sc_start4(ss, bl, SC_BURNING, 100, sg->skill_lv, 0, ss->id, 0, skill->get_time2(sg->skill_id, sg->skill_lv));
 						break;
 					case UNT_ZENKAI_WIND:
-						sc_start(ss, bl, SC_SILENCE, sg->val1*5, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
-						sc_start(ss, bl, SC_SLEEP, sg->val1*5, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
-						sc_start(ss, bl, SC_DEEP_SLEEP, sg->val1*5, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
+						switch (rnd()%2 + 1) {
+							case 1:
+								sc_start(ss, bl, SC_SILENCE, 100, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
+								break;
+							case 2:
+								sc_start(ss, bl, SC_SLEEP, 100, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
+								break;
+							case 3:
+								sc_start(ss, bl, SC_DEEP_SLEEP, 100, sg->skill_lv, skill->get_time2(sg->skill_id, sg->skill_lv));
+								break;
+						}
 						break;
 				}
 			}else
