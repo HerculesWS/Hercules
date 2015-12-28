@@ -93,9 +93,10 @@ struct unit_data* unit_bl2ud(struct block_list *bl)
  * @param bl block_list to process
  * @return a pointer to the given object's unit_data
  */
-struct unit_data* unit_bl2ud2(struct block_list *bl) {
-	if( bl && bl->type == BL_NPC && ((struct npc_data*)bl)->ud == &npc->base_ud ) {
-		struct npc_data *nd = (struct npc_data *)bl;
+struct unit_data *unit_bl2ud2(struct block_list *bl)
+{
+	struct npc_data *nd = BL_CAST(BL_NPC, bl);
+	if (nd != NULL && nd->ud == &npc->base_ud) {
 		nd->ud = NULL;
 		CREATE(nd->ud, struct unit_data, 1);
 		unit->dataset(&nd->bl);
@@ -1261,13 +1262,17 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 				break;
 			case WE_MALE:
 			case WE_FEMALE:
+			{
+				struct map_session_data *p_sd = NULL;
 				if (!sd->status.partner_id)
 					return 0;
-				target = (struct block_list*)map->charid2sd(sd->status.partner_id);
-				if (!target) {
+				p_sd = map->charid2sd(sd->status.partner_id);
+				if (p_sd == NULL) {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					return 0;
 				}
+				target = &p_sd->bl;
+			}
 				break;
 			case GC_WEAPONCRUSH:
 				if( sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == GC_WEAPONBLOCKING ) {

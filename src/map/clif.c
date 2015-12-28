@@ -192,7 +192,10 @@ static inline void RFIFOPOS2(int fd, unsigned short pos, short* x0, short* y0, s
 //To identify disguised characters.
 static inline bool disguised(struct block_list* bl)
 {
-	return (bool)(bl->type == BL_PC && ((struct map_session_data *)bl)->disguise != -1);
+	struct map_session_data *sd = BL_CAST(BL_PC, bl);
+	if (sd == NULL || sd->disguise == -1)
+		return false;
+	return true;
 }
 
 //Guarantees that the given string does not exceeds the allowed size, as well as making sure it's null terminated. [Skotlex]
@@ -4532,8 +4535,10 @@ void clif_getareachar_skillunit(struct block_list *bl, struct skill_unit *su, en
 
 	clif->send(&p,sizeof(p),bl,target);
 
-	if(su->group->skill_id == WZ_ICEWALL)
-		clif->changemapcell(bl->type == BL_PC ? ((struct map_session_data *)bl)->fd : 0, su->bl.m, su->bl.x, su->bl.y, 5, SELF);
+	if (su->group->skill_id == WZ_ICEWALL) {
+		struct map_session_data *sd = BL_CAST(BL_PC, bl);
+		clif->changemapcell(sd != NULL ? sd->fd : 0, su->bl.m, su->bl.x, su->bl.y, 5, SELF);
+	}
 }
 
 /*==========================================
@@ -18654,7 +18659,7 @@ int clif_parse(int fd) {
 		unsigned short (*parse_cmd_func)(int fd, struct map_session_data *sd);
 		// begin main client packet processing loop
 
-		sd = (struct map_session_data *)sockt->session[fd]->session_data;
+		sd = sockt->session[fd]->session_data;
 
 		if (sockt->session[fd]->flag.eof) {
 			if (sd) {

@@ -995,7 +995,7 @@ void intif_parse_WisEnd(int fd) {
 
 	if (battle_config.etc_log)
 		ShowInfo("intif_parse_wisend: player: %s, flag: %d\n", RFIFOP(fd,2), RFIFOB(fd,26)); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-	sd = (struct map_session_data *)map->nick2sd((char *) RFIFOP(fd,2));
+	sd = map->nick2sd((char *)RFIFOP(fd,2));
 	if (sd != NULL)
 		clif->wis_end(sd->fd, RFIFOB(fd,26));
 

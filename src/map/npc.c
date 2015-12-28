@@ -277,9 +277,9 @@ int npc_enable(const char* name, int flag)
 /*==========================================
  * NPC lookup (get npc_data through npcname)
  *------------------------------------------*/
-struct npc_data* npc_name2id(const char* name)
+struct npc_data *npc_name2id(const char *name)
 {
-	return (struct npc_data *) strdb_get(npc->name_db, name);
+	return strdb_get(npc->name_db, name);
 }
 /**
  * For the Secure NPC Timeout option (check config/Secure.h) [RR]
@@ -1170,13 +1170,13 @@ int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range) {
  *------------------------------------------*/
 struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* bl)
 {
-	struct npc_data *nd;
+	struct npc_data *nd = BL_CAST(BL_NPC, bl);
 	int distance = AREA_SIZE + 1;
 
 	nullpo_retr(NULL, sd);
-	if (bl == NULL) return NULL;
-	if (bl->type != BL_NPC) return NULL;
-	nd = (struct npc_data *)bl;
+
+	if (nd == NULL)
+		return NULL;
 
 	if (sd->npc_id == bl->id)
 		return nd;
@@ -2288,10 +2288,11 @@ int npc_unload(struct npc_data* nd, bool single)
 	if( single && nd->bl.m != -1 )
 		map->remove_questinfo(nd->bl.m,nd);
 
-	if( nd->src_id == 0 && ( nd->subtype == SHOP || nd->subtype == CASHSHOP ) ) //src check for duplicate shops [Orcao]
+	if (nd->src_id == 0 && ( nd->subtype == SHOP || nd->subtype == CASHSHOP)) {
+		//src check for duplicate shops [Orcao]
 		aFree(nd->u.shop.shop_item);
-	else if( nd->subtype == SCRIPT ) {
-		struct s_mapiterator* iter;
+	} else if (nd->subtype == SCRIPT) {
+		struct s_mapiterator *iter;
 		struct map_session_data *sd = NULL;
 
 		if( single ) {
@@ -2301,7 +2302,7 @@ int npc_unload(struct npc_data* nd, bool single)
 
 		iter = mapit_geteachpc();
 		for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
-			if( sd && sd->npc_timer_id != INVALID_TIMER ) {
+			if (sd->npc_timer_id != INVALID_TIMER ) {
 				const struct TimerData *td = timer->get(sd->npc_timer_id);
 
 				if( td && td->id != nd->bl.id )
@@ -4889,7 +4890,7 @@ int do_init_npc(bool minimal) {
 	}
 
 	// Init dummy NPC
-	npc->fake_nd = (struct npc_data *)aCalloc(1,sizeof(struct npc_data));
+	CREATE(npc->fake_nd, struct npc_data, 1);
 	npc->fake_nd->bl.m = -1;
 	npc->fake_nd->bl.id = npc->get_new_npc_id();
 	npc->fake_nd->class_ = FAKE_NPC;

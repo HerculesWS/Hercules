@@ -359,9 +359,10 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 		sd->status.pet_id = 0;
 		return 1;
 	}
-	sd->pd = pd = (struct pet_data *)aCalloc(1,sizeof(struct pet_data));
+	CREATE(pd, struct pet_data, 1);
 	pd->bl.type = BL_PET;
 	pd->bl.id = npc->get_new_npc_id();
+	sd->pd = pd;
 
 	pd->msd = sd;
 	pd->petDB = &pet->db[i];
@@ -505,13 +506,15 @@ int pet_catch_process1(struct map_session_data *sd,int target_class)
 }
 
 int pet_catch_process2(struct map_session_data* sd, int target_id) {
-	struct mob_data* md;
+	struct mob_data *md = NULL;
+	struct block_list *bl = NULL;
 	int i = 0, pet_catch_rate = 0;
 
 	nullpo_retr(1, sd);
 
-	md = (struct mob_data*)map->id2bl(target_id);
-	if(!md || md->bl.type != BL_MOB || md->bl.prev == NULL) {
+	bl = map->id2bl(target_id); // TODO: Why does this not use map->id2md?
+	md = BL_CAST(BL_MOB, bl);
+	if (md == NULL || md->bl.prev == NULL) {
 		// Invalid inputs/state, abort capture.
 		clif->pet_roulette(sd,0);
 		sd->catch_target_class = -1;

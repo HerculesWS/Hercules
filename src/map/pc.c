@@ -5261,14 +5261,12 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	int i,itemid,flag;
 	double rate;
 	struct status_data *sd_status, *md_status;
-	struct mob_data *md;
+	struct mob_data *md = BL_CAST(BL_MOB, bl);
 	struct item tmp_item;
 	struct item_data *data = NULL;
 
-	if(!sd || !bl || bl->type!=BL_MOB)
+	if (sd == NULL || md == NULL)
 		return 0;
-
-	md = (struct mob_data *)bl;
 
 	if(md->state.steal_flag == UCHAR_MAX || ( md->sc.opt1 && md->sc.opt1 != OPT1_BURNING && md->sc.opt1 != OPT1_CRYSTALIZE ) ) //already stolen from / status change check
 		return 0;
@@ -5341,12 +5339,11 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
  **/
 int pc_steal_coin(struct map_session_data *sd, struct block_list *target) {
 	int rate, skill_lv;
-	struct mob_data *md;
+	struct mob_data *md = BL_CAST(BL_MOB, target);
 
-	if (!sd || !target || target->type != BL_MOB)
+	if (sd == NULL || md == NULL)
 		return 0;
 
-	md = (struct mob_data *)target;
 	if (md->state.steal_coin_flag || md->sc.data[SC_STONE] || md->sc.data[SC_FREEZE] || md->status.mode&MD_BOSS)
 		return 0;
 

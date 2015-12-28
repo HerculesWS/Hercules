@@ -274,7 +274,8 @@ int mob_parse_dataset(struct spawn_data *data)
  * Generates the basic mob data using the spawn_data provided.
  *------------------------------------------*/
 struct mob_data* mob_spawn_dataset(struct spawn_data *data) {
-	struct mob_data *md = (struct mob_data*)aCalloc(1, sizeof(struct mob_data));
+	struct mob_data *md = NULL;
+	CREATE(md, struct mob_data, 1);
 	md->bl.id= npc->get_new_npc_id();
 	md->bl.type = BL_MOB;
 	md->bl.m = data->m;
@@ -591,12 +592,9 @@ int mob_spawn_guardian_sub(int tid, int64 tick, int id, intptr_t data) {
 	if( bl == NULL ) //It is possible mob was already removed from map when the castle has no owner. [Skotlex]
 		return 0;
 
-	if( bl->type != BL_MOB ) {
-		ShowError("mob_spawn_guardian_sub: Block error!\n");
-		return 0;
-	}
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
-	md = (struct mob_data*)bl;
 	nullpo_ret(md->guardian_data);
 	g = guild->search((int)data);
 
@@ -684,11 +682,9 @@ int mob_spawn_guardian(const char* mapname, short x, short y, const char* mobnam
 
 	if( has_index && gc->guardian[guardian].id ) {
 		//Check if guardian already exists, refuse to spawn if so.
-		struct mob_data *md2 = (struct mob_data *)map->id2bl(gc->guardian[guardian].id);
-		if (md2 && md2->bl.type == BL_MOB
-		        && md2->guardian_data
-		        && md2->guardian_data->number == guardian
-		) {
+		struct block_list *bl2 = map->id2bl(gc->guardian[guardian].id); // TODO: Why does this not use map->id2md?
+		struct mob_data *md2 = BL_CAST(BL_MOB, bl2);
+		if (md2 != NULL && md2->guardian_data != NULL && md2->guardian_data->number == guardian) {
 			ShowError("mob_spawn_guardian: Attempted to spawn guardian in position %d which already has a guardian (castle map %s)\n", guardian, map->list[m].name);
 			return 0;
 		}
@@ -1436,14 +1432,13 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 
 	if (md->target_id) {
 		//Check validity of current target. [Skotlex]
+		struct map_session_data *tsd = NULL;
 		tbl = map->id2bl(md->target_id);
-		if (!tbl || tbl->m != md->bl.m
+		tsd = BL_CAST(BL_PC, tbl);
+		if (tbl == NULL || tbl->m != md->bl.m
 		 || (md->ud.attacktimer == INVALID_TIMER && !status->check_skilluse(&md->bl, tbl, 0, 0))
 		 || (md->ud.walktimer != INVALID_TIMER && !(battle_config.mob_ai&0x1) && !check_distance_bl(&md->bl, tbl, md->min_chase))
-		 || (tbl->type == BL_PC
-		   && ((((struct map_session_data *)tbl)->state.gangsterparadise && !(mode&MD_BOSS))
-		     || ((struct map_session_data *)tbl)->invincible_timer != INVALID_TIMER)
-		    )
+		 || (tsd != NULL && ((tsd->state.gangsterparadise && !(mode&MD_BOSS)) || tsd->invincible_timer != INVALID_TIMER))
 		) {
 			//No valid target
 			if (mob->warpchase(md, tbl))
@@ -2099,9 +2094,9 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
  *------------------------------------------*/
 int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	struct status_data *mstatus;
-	struct map_session_data *sd = NULL;
+	struct map_session_data *sd = BL_CAST(BL_PC, src);
 	struct map_session_data *tmpsd[DAMAGELOG_SIZE] = { NULL };
-	struct map_session_data *mvp_sd = NULL, *second_sd = NULL, *third_sd = NULL;
+	struct map_session_data *mvp_sd = sd, *second_sd = NULL, *third_sd = NULL;
 
 	struct {
 		struct party_data *p;
@@ -2115,12 +2110,6 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	bool rebirth, homkillonly;
 
 	mstatus = &md->status;
-
-	if( src && src->type == BL_PC )
-	{
-		sd = (struct map_session_data *)src;
-		mvp_sd = sd;
-	}
 
 	if( md->guardian_data && md->guardian_data->number >= 0 && md->guardian_data->number < MAX_GUARDIANS )
 		guild->castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number,0);

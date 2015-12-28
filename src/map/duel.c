@@ -134,7 +134,7 @@ void duel_invite(const unsigned int did, struct map_session_data* sd, struct map
 
 	// "Blue -- Player %s invites you to PVP duel (@accept/@reject) --"
 	sprintf(output, msg_sd(target_sd,374), sd->status.name);
-	clif->broadcast((struct block_list *)target_sd, output, strlen(output)+1, BC_BLUE, SELF);
+	clif->broadcast(&target_sd->bl, output, strlen(output)+1, BC_BLUE, SELF);
 }
 
 static int duel_leave_sub(struct map_session_data* sd, va_list va)

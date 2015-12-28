@@ -955,8 +955,8 @@ int party_exp_share(struct party_data* p, struct block_list* src, unsigned int b
 
 	for (i = 0; i < c; i++) {
 #ifdef RENEWAL_EXP
-		if (!(src != NULL && src->type == BL_MOB && ((struct mob_data *)src)->db->mexp)) {
-			struct mob_data *md = (struct mob_data *)src;
+		struct mob_data *md = BL_CAST(BL_MOB, src);
+		if (md != NULL && md->db->mexp == 0) {
 			int rate = pc->level_penalty_mod(md->level - (sd[i])->status.base_level, md->status.race, md->status.mode, 1);
 
 			base_exp = (unsigned int)cap_value(base_exp_bonus * rate / 100, 1, UINT_MAX);

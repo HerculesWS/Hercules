@@ -348,16 +348,17 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 #endif
 
 	if (bl->type&BL_CHAR) {
+		struct map_session_data *sd = BL_CAST(BL_PC, bl);
 
 		skill->unit_move(bl,tick,3);
 
-		if (bl->type == BL_PC && ((struct map_session_data *)bl)->shadowform_id != 0) {
+		if (sd != NULL && sd->shadowform_id != 0) {
 			//Shadow Form Target Moving
 			struct block_list *d_bl;
-			if ((d_bl = map->id2bl(((struct map_session_data *)bl)->shadowform_id)) == NULL || !check_distance_bl(bl,d_bl,10)) {
+			if ((d_bl = map->id2bl(sd->shadowform_id)) == NULL || !check_distance_bl(bl,d_bl,10)) {
 				if( d_bl )
 					status_change_end(d_bl,SC__SHADOWFORM,INVALID_TIMER);
-				((struct map_session_data *)bl)->shadowform_id = 0;
+				sd->shadowform_id = 0;
 			}
 		}
 
@@ -393,7 +394,7 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 				}
 			}
 			/* Guild Aura Moving */
-			if (bl->type == BL_PC && ((struct map_session_data *)bl)->state.gmaster_flag) {
+			if (sd != NULL && sd->state.gmaster_flag) {
 				if (sc->data[SC_LEADERSHIP])
 					skill->unit_move_unit_group(skill->id2group(sc->data[SC_LEADERSHIP]->val4), bl->m, x1-x0, y1-y0);
 				if (sc->data[SC_GLORYWOUNDS])
@@ -1373,10 +1374,12 @@ int map_get_new_object_id(void)
  * Timered function to clear the floor (remove remaining item)
  * Called each flooritem_lifetime ms
  *------------------------------------------*/
-int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data) {
-	struct flooritem_data* fitem = (struct flooritem_data*)idb_get(map->id_db, id);
+int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	struct block_list *bl = idb_get(map->id_db, id);
+	struct flooritem_data *fitem = BL_CAST(BL_ITEM, bl);
 
-	if (fitem == NULL || fitem->bl.type != BL_ITEM || (fitem->cleartimer != tid)) {
+	if (fitem == NULL || fitem->cleartimer != tid) {
 		ShowError("map_clearflooritem_timer : error\n");
 		return 1;
 	}
@@ -1394,8 +1397,11 @@ int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data) {
 /*
  * clears a single bl item out of the bazooonga.
  */
-void map_clearflooritem(struct block_list *bl) {
-	struct flooritem_data* fitem = (struct flooritem_data*)bl;
+void map_clearflooritem(struct block_list *bl)
+{
+	struct flooritem_data *fitem = BL_CAST(BL_ITEM, bl);
+
+	nullpo_retv(fitem);
 
 	if( fitem->cleartimer != INVALID_TIMER )
 		timer->delete(fitem->cleartimer,map->clearflooritem_timer);
@@ -2099,7 +2105,9 @@ const char *map_charid2nick(int charid) {
 /// Returns the struct map_session_data of the charid or NULL if the char is not online.
 struct map_session_data* map_charid2sd(int charid)
 {
-	return (struct map_session_data*)idb_get(map->charid_db, charid);
+	struct block_list *bl = idb_get(map->charid_db, charid);
+	Assert_retr(NULL, bl->type == BL_PC);
+	return BL_UCAST(BL_PC, bl);
 }
 
 /*==========================================
@@ -2173,10 +2181,14 @@ struct mob_data * map_getmob_boss(int16 m)
 	return (found)? md : NULL;
 }
 
-struct mob_data * map_id2boss(int id)
+struct mob_data *map_id2boss(int id)
 {
-	if (id <= 0) return NULL;
-	return (struct mob_data*)idb_get(map->bossid_db,id);
+	struct block_list *bl = NULL;
+	if (id <= 0)
+		return NULL;
+	bl = idb_get(map->bossid_db,id);
+	Assert_retr(NULL, bl->type == BL_MOB);
+	return BL_UCAST(BL_MOB, bl);
 }
 
 /**

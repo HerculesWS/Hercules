@@ -242,55 +242,37 @@ int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data) {
 	struct delay_damage *dat = (struct delay_damage *)data;
 
 	if ( dat ) {
-		struct block_list* src = NULL;
-		struct block_list* target = map->id2bl(dat->target_id);
+		struct block_list *src = map->id2bl(dat->src_id);
+		struct map_session_data *sd = BL_CAST(BL_PC, src);
+		struct block_list *target = map->id2bl(dat->target_id);
 
-		if( !target || status->isdead(target) ) {/* nothing we can do */
-			if (dat->src_type == BL_PC
-			 && (src = map->id2bl(dat->src_id)) != NULL
-			 && --((struct map_session_data *)src)->delayed_damage == 0
-			 && ((struct map_session_data *)src)->state.hold_recalc
-			) {
-				((struct map_session_data *)src)->state.hold_recalc = 0;
-				status_calc_pc((struct map_session_data *)src, SCO_FORCE);
+		if (target != NULL && !status->isdead(target)) {
+			//Check to see if you haven't teleported. [Skotlex]
+			if (src != NULL && (
+			    battle_config.fix_warp_hit_delay_abuse ?
+			    (dat->skill_id == MO_EXTREMITYFIST || target->m != src->m || check_distance_bl(src, target, dat->distance))
+			    :
+			    ((target->type != BL_PC || BL_UCAST(BL_PC, target)->invincible_timer == INVALID_TIMER)
+			    && (dat->skill_id == MO_EXTREMITYFIST || (target->m == src->m && check_distance_bl(src, target, dat->distance))))
+			)) {
+				map->freeblock_lock();
+				status_fix_damage(src, target, dat->damage, dat->delay);
+				if (dat->attack_type && !status->isdead(target) && dat->additional_effects)
+					skill->additional_effect(src,target,dat->skill_id,dat->skill_lv,dat->attack_type,dat->dmg_lv,tick);
+				if (dat->dmg_lv > ATK_BLOCK && dat->attack_type)
+					skill->counter_additional_effect(src,target,dat->skill_id,dat->skill_lv,dat->attack_type,tick);
+				map->freeblock_unlock();
+			} else if (src == NULL && dat->skill_id == CR_REFLECTSHIELD) {
+				// it was monster reflected damage, and the monster died, we pass the damage to the character as expected
+				map->freeblock_lock();
+				status_fix_damage(target, target, dat->damage, dat->delay);
+				map->freeblock_unlock();
 			}
-			ers_free(battle->delay_damage_ers, dat);
-			return 0;
 		}
 
-		src = map->id2bl(dat->src_id);
-
-		//Check to see if you haven't teleported. [Skotlex]
-		if (src && (
-		    battle_config.fix_warp_hit_delay_abuse ?
-		    (dat->skill_id == MO_EXTREMITYFIST || target->m != src->m || check_distance_bl(src, target, dat->distance))
-		    :
-		    ((target->type != BL_PC || ((struct map_session_data *)target)->invincible_timer == INVALID_TIMER)
-		    && (dat->skill_id == MO_EXTREMITYFIST || (target->m == src->m && check_distance_bl(src, target, dat->distance))))
-		)) {
-			map->freeblock_lock();
-			status_fix_damage(src, target, dat->damage, dat->delay);
-			if( dat->attack_type && !status->isdead(target) && dat->additional_effects )
-				skill->additional_effect(src,target,dat->skill_id,dat->skill_lv,dat->attack_type,dat->dmg_lv,tick);
-			if( dat->dmg_lv > ATK_BLOCK && dat->attack_type )
-				skill->counter_additional_effect(src,target,dat->skill_id,dat->skill_lv,dat->attack_type,tick);
-			map->freeblock_unlock();
-		} else if( !src && dat->skill_id == CR_REFLECTSHIELD ) {
-			/**
-			 * it was monster reflected damage, and the monster died, we pass the damage to the character as expected
-			 **/
-			map->freeblock_lock();
-			status_fix_damage(target, target, dat->damage, dat->delay);
-			map->freeblock_unlock();
-		}
-
-		if (src != NULL
-		 && src->type == BL_PC
-		 && --((struct map_session_data *)src)->delayed_damage == 0
-		 && ((struct map_session_data*)src)->state.hold_recalc
-		) {
-			((struct map_session_data *)src)->state.hold_recalc = 0;
-			status_calc_pc((struct map_session_data *)src, SCO_FORCE);
+		if (sd != NULL && --sd->delayed_damage == 0 && sd->state.hold_recalc) {
+			sd->state.hold_recalc = 0;
+			status_calc_pc(sd, SCO_FORCE);
 		}
 	}
 	ers_free(battle->delay_damage_ers, dat);
@@ -546,17 +528,20 @@ int64 battle_calc_base_damage(struct block_list *src, struct block_list *bl, uin
 	int64 damage;
 	struct status_data *st = status->get_status_data(src);
 	struct status_change *sc = status->get_sc(src);
-
+	const struct map_session_data *sd = NULL;
 	nullpo_retr(0, src);
+
+	sd = BL_CCAST(BL_PC, src);
+
 	if ( !skill_id ) {
 		s_ele = st->rhw.ele;
 		s_ele_ = st->lhw.ele;
-		if ( src->type == BL_PC ) {
-			if (((struct map_session_data *)src)->charm_type != CHARM_TYPE_NONE && ((struct map_session_data *)src)->charm_count >= MAX_SPIRITCHARM) {
-				s_ele = s_ele_ = ((struct map_session_data*)src)->charm_type;
+		if (sd != NULL) {
+			if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count >= MAX_SPIRITCHARM) {
+				s_ele = s_ele_ = sd->charm_type;
 			}
-			if (flag&2 && ((struct map_session_data *)src)->bonus.arrow_ele)
-				s_ele = ((struct map_session_data *)src)->bonus.arrow_ele;
+			if (flag&2 && sd->bonus.arrow_ele != 0)
+				s_ele = sd->bonus.arrow_ele;
 		}
 	}
 	if (src->type == BL_PC) {
@@ -570,8 +555,7 @@ int64 battle_calc_base_damage(struct block_list *src, struct block_list *bl, uin
 			damage = batk + 3 * battle->calc_weapon_damage(src, bl, skill_id, skill_lv, &st->lhw, nk, n_ele, s_ele, s_ele_, status_get_size(bl), type, flag, flag2) / 4;
 		else
 			damage = (batk << 1) + battle->calc_weapon_damage(src, bl, skill_id, skill_lv, &st->rhw, nk, n_ele, s_ele, s_ele_, status_get_size(bl), type, flag, flag2);
-	}
-	else{
+	} else {
 		damage = st->batk + battle->calc_weapon_damage(src, bl, skill_id, skill_lv, &st->rhw, nk, n_ele, s_ele, s_ele_, status_get_size(bl), type, flag, flag2);
 	}
 
@@ -2740,6 +2724,8 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 
 	nullpo_ret(bl);
 	nullpo_ret(d);
+
+	sd = BL_CAST(BL_PC, bl);
 	div_ = d->div_;
 	flag = d->flag;
 
@@ -2749,8 +2735,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		return 0;
 	if( battle_config.ksprotection && mob->ksprotected(src, bl) )
 		return 0;
-	if (bl->type == BL_PC) {
-		sd=(struct map_session_data *)bl;
+	if (sd != NULL) {
 		//Special no damage states
 		if(flag&BF_WEAPON && sd->special_state.no_weapon_damage)
 			damage -= damage * sd->special_state.no_weapon_damage / 100;
@@ -2881,9 +2866,11 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				// If the target is too far away from the devotion caster, autoguard has no effect
 				// Autoguard will be disabled later on
 				struct block_list *d_bl = map->id2bl(sce_d->val1);
-				if (d_bl && check_distance_bl(bl, d_bl, sce_d->val3)
-				  && ((d_bl->type == BL_MER && ((struct mercenary_data *)d_bl)->master && ((struct mercenary_data *)d_bl)->master->bl.id == bl->id)
-				    || (d_bl->type == BL_PC && ((struct map_session_data *)d_bl)->devotion[sce_d->val2] == bl->id))
+				struct mercenary_data *d_md = BL_CAST(BL_MER, d_bl);
+				struct map_session_data *d_sd = BL_CAST(BL_PC, d_bl);
+				if (d_bl != NULL && check_distance_bl(bl, d_bl, sce_d->val3)
+				  && ((d_bl->type == BL_MER && d_md->master != NULL && d_md->master->bl.id == bl->id)
+				    || (d_bl->type == BL_PC && d_sd->devotion[sce_d->val2] == bl->id))
 				) {
 					// if player is target of devotion, show guard effect on the devotion caster rather than the target
 					clif->skill_nodamage(d_bl, d_bl, CR_AUTOGUARD, sce->val1, 1);
@@ -3325,8 +3312,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if (!skill_id || (element = skill->get_ele(skill_id, skill_lv)) == -1) {
 			// Take weapon's element
 			struct status_data *sstatus = NULL;
-			if (src->type == BL_PC && ((struct map_session_data *)src)->bonus.arrow_ele) {
-				element = ((struct map_session_data *)src)->bonus.arrow_ele;
+			struct map_session_data *ssd = BL_CAST(BL_PC, src);
+			if (src->type == BL_PC && ssd->bonus.arrow_ele != 0) {
+				element = ssd->bonus.arrow_ele;
 			} else if ((sstatus = status->get_status_data(src)) != NULL) {
 				element = sstatus->rhw.ele;
 			}
@@ -3394,7 +3382,13 @@ int64 battle_calc_gvg_damage(struct block_list *src,struct block_list *bl,int64 
 			}
 		}
 		if(src->type != BL_MOB) {
-			struct guild *g = src->type == BL_PC ? ((struct map_session_data *)src)->guild : guild->search(status->get_guild_id(src));
+			struct guild *g = NULL;
+			if (src->type == BL_PC) {
+				struct map_session_data *sd = BL_UCAST(BL_PC, src);
+				g = sd->guild;
+			} else {
+				g = guild->search(status->get_guild_id(src));
+			}
 
 			if (class_ == MOBID_EMPELIUM && (!g || guild->checkskill(g,GD_APPROVAL) <= 0))
 				return 0;
@@ -5632,8 +5626,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 		}
 	}
 	//Reject Sword bugreport:4493 by Daegaladh
-	if (wd.damage != 0
-	 && tsc != NULL && tsc->data[SC_SWORDREJECT] != NULL
+	if (wd.damage != 0 && tsc != NULL && tsc->data[SC_SWORDREJECT] != NULL
 	 && (sd == NULL || sd->weapontype1 == W_DAGGER || sd->weapontype1 == W_1HSWORD || sd->status.weapon == W_2HSWORD)
 	 && rnd()%100 < tsc->data[SC_SWORDREJECT]->val2
 	) {
@@ -6227,10 +6220,12 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 		if( tsc->data[SC_DEVOTION] ) {
 			struct status_change_entry *sce = tsc->data[SC_DEVOTION];
 			struct block_list *d_bl = map->id2bl(sce->val1);
+			struct mercenary_data *d_md = BL_CAST(BL_MER, d_bl);
+			struct map_session_data *d_sd = BL_CAST(BL_PC, d_bl);
 
 			if (d_bl != NULL
-			 && ((d_bl->type == BL_MER && ((struct mercenary_data *)d_bl)->master && ((struct mercenary_data *)d_bl)->master->bl.id == target->id)
-			  || (d_bl->type == BL_PC && ((struct map_session_data *)d_bl)->devotion[sce->val2] == target->id)
+			 && ((d_bl->type == BL_MER && d_md->master != NULL && d_md->master->bl.id == target->id)
+			  || (d_bl->type == BL_PC && d_sd->devotion[sce->val2] == target->id)
 			    )
 			 && check_distance_bl(target, d_bl, sce->val3)
 			) {

@@ -2208,7 +2208,7 @@ void guild_flag_remove(struct npc_data *nd) {
 			continue;
 
 		if( cursor != i ) {
-			memmove(&guild->flags[cursor], &guild->flags[i], sizeof(struct npc_data*));
+			memmove(&guild->flags[cursor], &guild->flags[i], sizeof(guild->flags[0]));
 		}
 		cursor++;
 	}

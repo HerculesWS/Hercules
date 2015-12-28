@@ -273,9 +273,10 @@ int elemental_data_received(struct s_elemental *ele, bool flag) {
 	db = &elemental->db[i];
 	if( !sd->ed ) {
 		// Initialize it after first summon.
-		sd->ed = ed = (struct elemental_data*)aCalloc(1,sizeof(struct elemental_data));
+		CREATE(ed, struct elemental_data, 1);
 		ed->bl.type = BL_ELEM;
 		ed->bl.id = npc->get_new_npc_id();
+		sd->ed = ed;
 		ed->master = sd;
 		ed->db = db;
 		memcpy(&ed->elemental, ele, sizeof(struct s_elemental));

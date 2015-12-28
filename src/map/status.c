@@ -1350,11 +1350,12 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 #ifdef DEVOTION_REFLECT_DAMAGE
 			if (src && (sce = sc->data[SC_DEVOTION]) != NULL) {
 				struct block_list *d_bl = map->id2bl(sce->val1);
+				struct mercenary_data *d_md = BL_CAST(BL_MER, d_bl);
+				struct map_session_data *d_sd = BL_CAST(BL_PC, d_bl);
 
 				if (d_bl != NULL
-				 && ((d_bl->type == BL_MER && ((struct mercenary_data *)d_bl)->master && ((struct mercenary_data *)d_bl)->master->bl.id == target->id)
-				  || (d_bl->type == BL_PC && ((struct map_session_data *)d_bl)->devotion[sce->val2] == target->id)
-				    )
+				 && ((d_md != NULL && d_md->master != NULL && d_md->master->bl.id == target->id)
+				  || (d_sd != NULL && d_sd->devotion[sce->val2] == target->id))
 				 && check_distance_bl(target, d_bl, sce->val3)
 				) {
 					clif->damage(d_bl, d_bl, 0, 0, hp, 0, BDT_NORMAL, 0);
@@ -1739,10 +1740,11 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 	struct status_data *st;
 	struct status_change *sc=NULL, *tsc;
 	int hide_flag;
+	struct map_session_data *sd = BL_CAST(BL_PC, src);
 
 	st = src ? status->get_status_data(src) : &status->dummy;
 
-	if (src && src->type != BL_PC && status->isdead(src))
+	if (src != NULL && src->type != BL_PC && status->isdead(src))
 		return 0;
 
 	if (!skill_id) { //Normal attack checks.
@@ -1757,15 +1759,14 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 	}
 
 	if( skill_id ) {
-
-		if (src != NULL && !(src->type == BL_PC && ((struct map_session_data *)src)->skillitem)) {
+		if (src != NULL && (sd == NULL || sd->skillitem == 0)) {
 			// Items that cast skills using 'itemskill' will not be handled by map_zone_db.
 			int i;
 
 			for(i = 0; i < map->list[src->m].zone->disabled_skills_count; i++) {
 				if( skill_id == map->list[src->m].zone->disabled_skills[i]->nameid && (map->list[src->m].zone->disabled_skills[i]->type&src->type) ) {
 					if (src->type == BL_PC) {
-						clif->msgtable((struct map_session_data *)src, MSG_SKILL_CANT_USE_AREA); // This skill cannot be used within this area
+						clif->msgtable(sd, MSG_SKILL_CANT_USE_AREA); // This skill cannot be used within this area
 					} else if (src->type == BL_MOB && map->list[src->m].zone->disabled_skills[i]->subtype != MZS_NONE) {
 						if( st->mode&MD_BOSS ) { /* is boss */
 							if( !( map->list[src->m].zone->disabled_skills[i]->subtype&MZS_BOSS ) )
@@ -1798,7 +1799,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 				if (src != NULL
 				 && map->getcell(src->m, src, src->x, src->y, CELL_CHKLANDPROTECTOR)
 				 && !(st->mode&MD_BOSS)
-				 && (src->type != BL_PC || ((struct map_session_data *)src)->skillitem != skill_id))
+				 && (src->type != BL_PC || sd->skillitem != skill_id))
 					return 0;
 				break;
 			default:
@@ -1828,7 +1829,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 			struct block_list *winkcharm_target = map->id2bl(sc->data[SC_DC_WINKCHARM]->val2);
 			if (winkcharm_target != NULL) {
 				if (unit->bl2ud(src) && (unit->bl2ud(src))->walktimer == INVALID_TIMER)
-					unit->walktobl(src, map->id2bl(sc->data[SC_DC_WINKCHARM]->val2), 3, 1);
+					unit->walktobl(src, winkcharm_target, 3, 1);
 				clif->emotion(src, E_LV);
 				return 0;
 			} else {
@@ -1850,7 +1851,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 		if (sc->data[SC_DANCING] && flag!=2) {
 			if (src->type == BL_PC && skill_id >= WA_SWING_DANCE && skill_id <= WM_UNLIMITED_HUMMING_VOICE) {
 				// Lvl 5 Lesson or higher allow you use 3rd job skills while dancing.v
-				if (pc->checkskill((struct map_session_data *)src, WM_LESSON) < 5)
+				if (pc->checkskill(sd, WM_LESSON) < 5)
 					return 0;
 			} else if(sc->data[SC_LONGING]) { //Allow everything except dancing/re-dancing. [Skotlex]
 				if (skill_id == BD_ENCORE ||
@@ -1872,48 +1873,45 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 				return 0; //Can't amp out of Wand of Hermode :/ [Skotlex]
 		}
 
-		if (skill_id != 0 //Do not block item-casted skills.
-		 && (src->type != BL_PC || ((struct map_session_data *)src)->skillitem != skill_id)
-		) {
+		if (skill_id != 0 /* Do not block item-casted skills.*/ && (src->type != BL_PC || sd->skillitem != skill_id)) {
 			//Skills blocked through status changes...
-				if (!flag && ( //Blocked only from using the skill (stuff like autospell may still go through
-					sc->data[SC_SILENCE] ||
-					sc->data[SC_STEELBODY] ||
-					sc->data[SC_BERSERK] ||
-					sc->data[SC_OBLIVIONCURSE] ||
-					sc->data[SC_WHITEIMPRISON] ||
-					sc->data[SC__INVISIBILITY] ||
-					(sc->data[SC_COLD] && src->type != BL_MOB) ||
-					sc->data[SC__IGNORANCE] ||
-					sc->data[SC_DEEP_SLEEP] ||
-					sc->data[SC_SATURDAY_NIGHT_FEVER] ||
-					sc->data[SC_CURSEDCIRCLE_TARGET] ||
-					(sc->data[SC_MARIONETTE_MASTER] && skill_id != CG_MARIONETTE) || //Only skill you can use is marionette again to cancel it
-					(sc->data[SC_MARIONETTE] && skill_id == CG_MARIONETTE) || //Cannot use marionette if you are being buffed by another
-					(sc->data[SC_STASIS] && skill->block_check(src, SC_STASIS, skill_id)) ||
-					(sc->data[SC_KG_KAGEHUMI] && skill->block_check(src, SC_KG_KAGEHUMI, skill_id))
-					))
-					return 0;
+			if (!flag && ( //Blocked only from using the skill (stuff like autospell may still go through
+				sc->data[SC_SILENCE] ||
+				sc->data[SC_STEELBODY] ||
+				sc->data[SC_BERSERK] ||
+				sc->data[SC_OBLIVIONCURSE] ||
+				sc->data[SC_WHITEIMPRISON] ||
+				sc->data[SC__INVISIBILITY] ||
+				(sc->data[SC_COLD] && src->type != BL_MOB) ||
+				sc->data[SC__IGNORANCE] ||
+				sc->data[SC_DEEP_SLEEP] ||
+				sc->data[SC_SATURDAY_NIGHT_FEVER] ||
+				sc->data[SC_CURSEDCIRCLE_TARGET] ||
+				(sc->data[SC_MARIONETTE_MASTER] && skill_id != CG_MARIONETTE) || //Only skill you can use is marionette again to cancel it
+				(sc->data[SC_MARIONETTE] && skill_id == CG_MARIONETTE) || //Cannot use marionette if you are being buffed by another
+				(sc->data[SC_STASIS] && skill->block_check(src, SC_STASIS, skill_id)) ||
+				(sc->data[SC_KG_KAGEHUMI] && skill->block_check(src, SC_KG_KAGEHUMI, skill_id))
+				))
+				return 0;
 
-				//Skill blocking.
-				if (
-					(sc->data[SC_VOLCANO] && skill_id == WZ_ICEWALL) ||
-					(sc->data[SC_ROKISWEIL] && skill_id != BD_ADAPTATION) ||
-					(sc->data[SC_HERMODE] && skill->get_inf(skill_id) & INF_SUPPORT_SKILL) ||
-					pc_ismuted(sc, MANNER_NOSKILL)
-					)
-					return 0;
+			//Skill blocking.
+			if (
+				(sc->data[SC_VOLCANO] && skill_id == WZ_ICEWALL) ||
+				(sc->data[SC_ROKISWEIL] && skill_id != BD_ADAPTATION) ||
+				(sc->data[SC_HERMODE] && skill->get_inf(skill_id) & INF_SUPPORT_SKILL) ||
+				pc_ismuted(sc, MANNER_NOSKILL)
+				)
+				return 0;
 
-				if( sc->data[SC__MANHOLE] || ((tsc = status->get_sc(target)) && tsc->data[SC__MANHOLE]) ) {
-					switch(skill_id) {//##TODO## make this a flag in skill_db?
-						// Skills that can be used even under Man Hole effects.
-					case SC_SHADOWFORM:
-						break;
-					default:
-						return 0;
-					}
+			if( sc->data[SC__MANHOLE] || ((tsc = status->get_sc(target)) && tsc->data[SC__MANHOLE]) ) {
+				switch(skill_id) {//##TODO## make this a flag in skill_db?
+					// Skills that can be used even under Man Hole effects.
+				case SC_SHADOWFORM:
+					break;
+				default:
+					return 0;
 				}
-
+			}
 		}
 	}
 
@@ -2065,7 +2063,7 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 		return 0;
 	}
 	if (!md->base_status)
-		md->base_status = (struct status_data*)aCalloc(1, sizeof(struct status_data));
+		CREATE(md->base_status, struct status_data, 1);
 
 	mstatus = md->base_status;
 	memcpy(mstatus, &md->db->status, sizeof(struct status_data));

@@ -786,9 +786,10 @@ bool homunculus_create(struct map_session_data *sd, struct s_homunculus *hom) {
 		intif->homunculus_requestdelete(hom->hom_id);
 		return false;
 	}
-	sd->hd = hd = (struct homun_data*)aCalloc(1,sizeof(struct homun_data));
+	CREATE(hd, struct homun_data, 1);
 	hd->bl.type = BL_HOM;
 	hd->bl.id = npc->get_new_npc_id();
+	sd->hd = hd;
 
 	hd->master = sd;
 	hd->homunculusDB = &homun->dbs->db[i];

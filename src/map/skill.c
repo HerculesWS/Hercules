@@ -260,6 +260,7 @@ int skill_get_casttype2 (uint16 index) {
 //Returns actual skill range taking into account attack range and AC_OWL [Skotlex]
 int skill_get_range2 (struct block_list *bl, uint16 skill_id, uint16 skill_lv) {
 	int range;
+	struct map_session_data *sd = BL_CAST(BL_PC, bl);
 	if( bl->type == BL_MOB && battle_config.mob_ai&0x400 )
 		return 9; //Mobs have a range of 9 regardless of skill used.
 
@@ -288,8 +289,8 @@ int skill_get_range2 (struct block_list *bl, uint16 skill_id, uint16 skill_lv) {
 		case RA_ARROWSTORM:
 		case RA_AIMEDBOLT:
 		case RA_WUGBITE:
-			if (bl->type == BL_PC)
-				range += pc->checkskill((struct map_session_data *)bl, AC_VULTURE);
+			if (sd != NULL)
+				range += pc->checkskill(sd, AC_VULTURE);
 			else
 				range += 10; //Assume level 10?
 			break;
@@ -299,14 +300,14 @@ int skill_get_range2 (struct block_list *bl, uint16 skill_id, uint16 skill_lv) {
 		case GS_FULLBUSTER:
 		case GS_SPREADATTACK:
 		case GS_GROUNDDRIFT:
-			if (bl->type == BL_PC)
-				range += pc->checkskill((struct map_session_data *)bl, GS_SNAKEEYE);
+			if (sd != NULL)
+				range += pc->checkskill(sd, GS_SNAKEEYE);
 			else
 				range += 10; //Assume level 10?
 			break;
 		case NJ_KIRIKAGE:
-			if (bl->type == BL_PC)
-				range = skill->get_range(NJ_SHADOWJUMP, pc->checkskill((struct map_session_data *)bl, NJ_SHADOWJUMP));
+			if (sd != NULL)
+				range = skill->get_range(NJ_SHADOWJUMP, pc->checkskill(sd, NJ_SHADOWJUMP));
 			break;
 		/**
 		 * Warlock
@@ -323,8 +324,8 @@ int skill_get_range2 (struct block_list *bl, uint16 skill_id, uint16 skill_lv) {
 		case WL_TETRAVORTEX:
 		case WL_EARTHSTRAIN:
 		case WL_RELEASE:
-			if (bl->type == BL_PC)
-				range += pc->checkskill((struct map_session_data *)bl, WL_RADIUS);
+			if (sd != NULL)
+				range += pc->checkskill(sd, WL_RADIUS);
 			break;
 		/**
 		 * Ranger Bonus
@@ -336,8 +337,8 @@ int skill_get_range2 (struct block_list *bl, uint16 skill_id, uint16 skill_lv) {
 		case RA_CLUSTERBOMB:
 		case RA_FIRINGTRAP:
 		case RA_ICEBOUNDTRAP:
-			if (bl->type == BL_PC)
-				range += (1 + pc->checkskill((struct map_session_data *)bl, RA_RESEARCHTRAP))/2;
+			if (sd != NULL)
+				range += (1 + pc->checkskill(sd, RA_RESEARCHTRAP))/2;
 	}
 
 	if( !range && bl->type != BL_PC )
@@ -2773,11 +2774,11 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 	if( sc && sc->data[SC_DEVOTION] && skill_id != PA_PRESSURE ) {
 		struct status_change_entry *sce = sc->data[SC_DEVOTION];
 		struct block_list *d_bl = map->id2bl(sce->val1);
+		struct mercenary_data *d_md = BL_CAST(BL_MER, d_bl);
+		struct map_session_data *d_sd = BL_CAST(BL_PC, d_bl);
 
 		if (d_bl != NULL
-		 && ((d_bl->type == BL_MER && ((struct mercenary_data *)d_bl)->master && ((struct mercenary_data *)d_bl)->master->bl.id == bl->id)
-		  || (d_bl->type == BL_PC && ((struct map_session_data *)d_bl)->devotion[sce->val2] == bl->id)
-		    )
+		 && ((d_md != NULL && d_md->master && d_md->master->bl.id == bl->id) || (d_sd != NULL && d_sd->devotion[sce->val2] == bl->id))
 		 && check_distance_bl(bl, d_bl, sce->val3)
 		) {
 			if(!rmdamage){
@@ -5581,24 +5582,24 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				abra_skill_lv = min(skill_lv, skill->get_max(abra_skill_id));
 				clif->skill_nodamage (src, bl, skill_id, skill_lv, 1);
 
-				if( sd )
-				{// player-casted
+				if (sd) {
+					// player-casted
 					sd->state.abra_flag = 1;
 					sd->skillitem = abra_skill_id;
 					sd->skillitemlv = abra_skill_lv;
 					clif->item_skill(sd, abra_skill_id, abra_skill_lv);
-				}
-				else
-				{// mob-casted
+				} else {
+					// mob-casted
 					struct unit_data *ud = unit->bl2ud(src);
 					int inf = skill->get_inf(abra_skill_id);
-					if (!ud) break;
+					if (ud == NULL)
+						break;
 					if (inf&INF_SELF_SKILL || inf&INF_SUPPORT_SKILL) {
-						if (src->type == BL_PET)
-							bl = (struct block_list *)((struct pet_data *)src)->msd;
-						if (bl == NULL)
-							bl = src;
-						unit->skilluse_id(src, bl->id, abra_skill_id, abra_skill_lv);
+						int id = src->id;
+						struct pet_data *pd = BL_CAST(BL_PET, src);
+						if (pd != NULL && pd->msd != NULL)
+							id = pd->msd->bl.id;
+						unit->skilluse_id(src, id, abra_skill_id, abra_skill_lv);
 					} else { //Assume offensive skills
 						int target_id = 0;
 						if (ud->target)
@@ -9273,7 +9274,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				improv_skill_lv = 4 + skill_lv;
 				clif->skill_nodamage (src, bl, skill_id, skill_lv, 1);
 
-				if( sd ) {
+				if (sd == NULL) {
 					sd->state.abra_flag = 2;
 					sd->skillitem = improv_skill_id;
 					sd->skillitemlv = improv_skill_lv;
@@ -9281,13 +9282,14 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				} else {
 					struct unit_data *ud = unit->bl2ud(src);
 					int inf = skill->get_inf(improv_skill_id);
-					if (!ud) break;
+					if (ud == NULL)
+						break;
 					if (inf&INF_SELF_SKILL || inf&INF_SUPPORT_SKILL) {
-						if (src->type == BL_PET)
-							bl = (struct block_list *)((struct pet_data *)src)->msd;
-						if (bl == NULL)
-							bl = src;
-						unit->skilluse_id(src, bl->id, improv_skill_id, improv_skill_lv);
+						int id = src->id;
+						struct pet_data *pd = BL_CAST(BL_PET, src);
+						if (pd != NULL && pd->msd != NULL)
+							id = pd->msd->bl.id;
+						unit->skilluse_id(src, id, improv_skill_id, improv_skill_lv);
 					} else {
 						int target_id = 0;
 						if (ud->target) {
@@ -11170,10 +11172,13 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 				limit=2000;
 			} else { // previous implementation (not used anymore)
 				//Warp Portal morphing to active mode, extract relevant data from src. [Skotlex]
-				if( src->type != BL_SKILL ) return NULL;
-				group = ((struct skill_unit *)src)->group;
+				struct skill_unit *su = BL_CAST(BL_SKILL, src);
+				if (su == NULL)
+					return NULL;
+				group = su->group;
 				src = map->id2bl(group->src_id);
-				if( !src ) return NULL;
+				if (src == NULL)
+					return NULL;
 				val2 = group->val2; //Copy the (x,y) position you warp to
 				val3 = group->val3; //as well as the mapindex to warp to.
 			}
@@ -16036,6 +16041,7 @@ bool skill_check_shadowform(struct block_list *bl, int64 damage, int hit)
 
 	if (sc && sc->data[SC__SHADOWFORM] && damage) {
 		struct block_list *src = map->id2bl(sc->data[SC__SHADOWFORM]->val2);
+		struct map_session_data *sd = BL_CAST(BL_PC, src);
 
 		if( !src || src->m != bl->m ) {
 			status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
@@ -16043,8 +16049,8 @@ bool skill_check_shadowform(struct block_list *bl, int64 damage, int hit)
 		}
 
 		if( src && (status->isdead(src) || !battle->check_target(bl,src,BCT_ENEMY)) ){
-			if( src->type == BL_PC )
-				((struct map_session_data *)src)->shadowform_id = 0;
+			if (sd != NULL)
+				sd->shadowform_id = 0;
 			status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
 			return false;
 		}
@@ -16054,8 +16060,8 @@ bool skill_check_shadowform(struct block_list *bl, int64 damage, int hit)
 		/* because damage can cancel it */
 		if( sc->data[SC__SHADOWFORM] && (--sc->data[SC__SHADOWFORM]->val3) <= 0 ) {
 			status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
-			if( src->type == BL_PC )
-				((struct map_session_data *)src)->shadowform_id = 0;
+			if (sd != NULL)
+				sd->shadowform_id = 0;
 		}
 		return true;
 	}
@@ -16252,7 +16258,7 @@ struct skill_unit_group* skill_initunitgroup (struct block_list* src, int count,
 	group->guild_id    = status->get_guild_id(src);
 	group->bg_id       = bg->team_get_id(src);
 	group->group_id    = skill->get_new_group_id();
-	group->unit.data   = (struct skill_unit *)aCalloc(count,sizeof(struct skill_unit));
+	CREATE(group->unit.data, struct skill_unit, 1);
 	group->unit.count  = count;
 	group->alive_count = 0;
 	group->val1        = 0;
@@ -16279,24 +16285,27 @@ struct skill_unit_group* skill_initunitgroup (struct block_list* src, int count,
 /*==========================================
  *
  *------------------------------------------*/
-int skill_delunitgroup(struct skill_unit_group *group, const char* file, int line, const char* func) {
+int skill_delunitgroup(struct skill_unit_group *group, const char *file, int line, const char *func)
+{
 	struct block_list* src;
 	struct unit_data *ud;
 	int i,j;
+	struct map_session_data *sd = NULL;
 
 	if( group == NULL ) {
 		ShowDebug("skill_delunitgroup: group is NULL (source=%s:%d, %s)! Please report this! (#3504)\n", file, line, func);
 		return 0;
 	}
 
-	src=map->id2bl(group->src_id);
+	src = map->id2bl(group->src_id);
 	ud = unit->bl2ud(src);
-	if(!src || !ud) {
+	sd = BL_CAST(BL_PC, src);
+	if (src == NULL || ud == NULL) {
 		ShowError("skill_delunitgroup: Group's source not found! (src_id: %d skill_id: %d)\n", group->src_id, group->skill_id);
 		return 0;
 	}
 
-	if (src->type == BL_PC && !status->isdead(src) && ((struct map_session_data *)src)->state.warping && !((struct map_session_data *)src)->state.changemap) {
+	if (sd != NULL && !status->isdead(src) && sd->state.warping && !sd->state.changemap) {
 		switch( group->skill_id ) {
 			case BA_DISSONANCE:
 			case BA_POEMBRAGI:
@@ -16308,7 +16317,7 @@ int skill_delunitgroup(struct skill_unit_group *group, const char* file, int lin
 			case DC_DONTFORGETME:
 			case DC_FORTUNEKISS:
 			case DC_SERVICEFORYOU:
-				skill->usave_add((struct map_session_data *)src, group->skill_id, group->skill_lv);
+				skill->usave_add(sd, group->skill_id, group->skill_lv);
 				break;
 		}
 	}
@@ -16373,8 +16382,8 @@ int skill_delunitgroup(struct skill_unit_group *group, const char* file, int lin
 			break;
 	}
 
-	if (src->type==BL_PC && group->state.ammo_consume)
-		battle->consume_ammo((struct map_session_data *)src, group->skill_id, group->skill_lv);
+	if (sd != NULL && group->state.ammo_consume)
+		battle->consume_ammo(sd, group->skill_id, group->skill_lv);
 
 	group->alive_count=0;
 

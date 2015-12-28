@@ -10395,7 +10395,15 @@ BUILDIN(announce) {
 	if( flag&(BC_TARGET_MASK|BC_SOURCE_MASK) ) {
 		// Broadcast source or broadcast region defined
 		send_target target;
-		struct block_list *bl = (flag&BC_NPC) ? map->id2bl(st->oid) : (struct block_list *)script->rid2sd(st); // If bc_npc flag is set, use NPC as broadcast source
+		struct block_list *bl = NULL;
+		if (flag&BC_NPC) {
+			// If bc_npc flag is set, use NPC as broadcast source
+			bl = map->id2bl(st->oid);
+		} else {
+			struct map_session_data *sd = script->rid2sd(st);
+			if (sd != NULL)
+				bl = &sd->bl;
+		}
 		if (bl == NULL)
 			return true;
 
@@ -17614,15 +17622,15 @@ BUILDIN(bg_monster)
 	return true;
 }
 
-BUILDIN(bg_monster_set_team) {
-	struct mob_data *md;
-	struct block_list *mbl;
+BUILDIN(bg_monster_set_team)
+{
 	int id = script_getnum(st,2),
 	bg_id = script_getnum(st,3);
+	struct block_list *mbl = map->id2bl(id); // TODO: Why does this not use map->id2md?
+	struct mob_data *md = BL_CAST(BL_MOB, mbl);
 
-	if( (mbl = map->id2bl(id)) == NULL || mbl->type != BL_MOB )
+	if (md == NULL)
 		return true;
-	md = (struct mob_data *)mbl;
 	md->bg_id = bg_id;
 
 	mob_stop_attack(md);
