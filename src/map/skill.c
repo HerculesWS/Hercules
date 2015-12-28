@@ -14762,6 +14762,8 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 		}
 		if (sc->data[SC_MYSTICSCROLL])
 			VARCAST_REDUCTION(sc->data[SC_MYSTICSCROLL]->val1);
+		if (sc->data[SC_SKF_CAST])
+			VARCAST_REDUCTION(sc->data[SC_SKF_CAST]->val1);
 			
 		// Fixed cast reduction bonuses
 		if( sc->data[SC__LAZINESS] )

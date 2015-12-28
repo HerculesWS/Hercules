@@ -825,6 +825,10 @@ typedef enum sc_type {
 	SC_M_LIFEPOTION,
 	SC_G_LIFEPOTION, // 640
 	SC_MYSTICPOWDER,
+	SC_SKF_CAST,
+	SC_SKF_ASPD,
+	SC_SKF_ATK,
+	SC_SKF_MATK,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
@@ -1641,10 +1645,10 @@ enum si_type {
 	//SI_CHUSEOK_WEEKEND                     = 790,
 	//SI_ALL_LIGHTGUARD                      = 791,
 	//SI_ALL_LIGHTGUARD_COOL_TIME            = 792,
-	//SI_MTF_MHP                             = 793,
-	//SI_MTF_MSP                             = 794,
-	//SI_MTF_PUMPKIN                         = 795,
-	//SI_MTF_HITFLEE                         = 796,
+	SI_MTF_MHP                               = 793,
+	SI_MTF_MSP                               = 794,
+	SI_MTF_PUMPKIN                           = 795,
+	SI_MTF_HITFLEE                           = 796,
 	//SI_MTF_CRIDAMAGE2                      = 797,
 	//SI_MTF_SPDRAIN                         = 798,
 	//SI_ACUO_MINT_GUM                       = 799,
