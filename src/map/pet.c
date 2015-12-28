@@ -937,7 +937,7 @@ int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int64 tick
 				pet->unlocktarget(pd);
 			return 0;
 		} else{
-			struct flooritem_data *fitem = (struct flooritem_data *)target;
+			struct flooritem_data *fitem = BL_UCAST(BL_ITEM, target);
 			if(pd->loot->count < pd->loot->max){
 				memcpy(&pd->loot->item[pd->loot->count++],&fitem->item_data,sizeof(pd->loot->item[0]));
 				pd->loot->weight += itemdb_weight(fitem->item_data.nameid)*fitem->item_data.amount;

@@ -1637,10 +1637,9 @@ void npc_trader_update(int master) {
 
 	iter = db_iterator(map->id_db);
 	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
-		if( bl->type == BL_NPC ) {
-			struct npc_data* nd = (struct npc_data*)bl;
-
-			if( nd->src_id == master ) {
+		if (bl->type == BL_NPC) {
+			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
+			if (nd->src_id == master) {
 				nd->u.scr.shop = master_nd->u.scr.shop;
 			}
 		}
@@ -4679,7 +4678,7 @@ int npc_reload(void) {
 		switch(bl->type) {
 			case BL_NPC:
 				if( bl->id != npc->fake_nd->bl.id )// don't remove fake_nd
-					npc->unload((struct npc_data *)bl, false);
+					npc->unload(BL_UCAST(BL_NPC, bl), false);
 				break;
 			case BL_MOB:
 				unit->free(bl,CLR_OUTSIGHT);

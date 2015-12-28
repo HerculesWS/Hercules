@@ -7606,11 +7606,11 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 		pc->del_charm(sd, sd->charm_count, sd->charm_type);
 
-	if (src) {
+	if (src != NULL) {
 		switch (src->type) {
 			case BL_MOB:
 			{
-				struct mob_data *md=(struct mob_data *)src;
+				struct mob_data *md = BL_UCAST(BL_MOB, src);
 				if (md->target_id==sd->bl.id)
 					mob->unlocktarget(md,tick);
 				if (battle_config.mobs_level_up && md->status.hp
@@ -7632,19 +7632,19 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			}
 			break;
 			case BL_PET: //Pass on to master...
-				src = &((struct pet_data *)src)->msd->bl;
+				src = &BL_UCAST(BL_PET, src)->msd->bl;
 			break;
 			case BL_HOM:
-				src = &((struct homun_data *)src)->master->bl;
+				src = &BL_UCAST(BL_HOM, src)->master->bl;
 			break;
 			case BL_MER:
-				src = &((struct mercenary_data *)src)->master->bl;
+				src = &BL_UCAST(BL_MER, src)->master->bl;
 			break;
 		}
 	}
 
-	if (src && src->type == BL_PC) {
-		struct map_session_data *ssd = (struct map_session_data *)src;
+	if (src != NULL && src->type == BL_PC) {
+		struct map_session_data *ssd = BL_UCAST(BL_PC, src);
 		pc->setparam(ssd, SP_KILLEDRID, sd->bl.id);
 		npc->script_event(ssd, NPCE_KILLPC);
 
@@ -7830,9 +7830,8 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	if( map->list[sd->bl.m].flag.pvp && !battle_config.pk_mode && !map->list[sd->bl.m].flag.pvp_nocalcrank ) {
 		sd->pvp_point -= 5;
 		sd->pvp_lost++;
-		if( src && src->type == BL_PC )
-		{
-			struct map_session_data *ssd = (struct map_session_data *)src;
+		if (src != NULL && src->type == BL_PC) {
+			struct map_session_data *ssd = BL_UCAST(BL_PC, src);
 			ssd->pvp_point++;
 			ssd->pvp_won++;
 		}

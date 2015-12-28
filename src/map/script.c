@@ -226,10 +226,13 @@ void script_reportsrc(struct script_state *st) {
 
 	switch( bl->type ) {
 		case BL_NPC:
-			if( bl->m >= 0 )
-				ShowDebug("Source (NPC): %s at %s (%d,%d)\n", ((struct npc_data *)bl)->name, map->list[bl->m].name, bl->x, bl->y);
+		{
+			const struct npc_data *nd = BL_UCCAST(BL_NPC, bl);
+			if (bl->m >= 0)
+				ShowDebug("Source (NPC): %s at %s (%d,%d)\n", nd->name, map->list[bl->m].name, bl->x, bl->y);
 			else
-				ShowDebug("Source (NPC): %s (invisible/not on a map)\n", ((struct npc_data *)bl)->name);
+				ShowDebug("Source (NPC): %s (invisible/not on a map)\n", nd->name);
+		}
 			break;
 		default:
 			if( bl->m >= 0 )
@@ -13613,7 +13616,7 @@ BUILDIN(atcommand)
 			struct block_list* bl = map->id2bl(st->oid);
 			memcpy(&sd->bl, bl, sizeof(struct block_list));
 			if (bl->type == BL_NPC)
-				safestrncpy(sd->status.name, ((struct npc_data *)bl)->name, NAME_LENGTH);
+				safestrncpy(sd->status.name, BL_UCAST(BL_NPC, bl)->name, NAME_LENGTH);
 		}
 	}
 
@@ -16428,17 +16431,18 @@ BUILDIN(searchitem)
 }
 
 // [zBuffer] List of player cont commands --->
-BUILDIN(rid2name) {
+BUILDIN(rid2name)
+{
 	struct block_list *bl = NULL;
 	int rid = script_getnum(st,2);
 	if((bl = map->id2bl(rid))) {
 		switch(bl->type) {
-			case BL_MOB: script_pushstrcopy(st, ((struct mob_data *)bl)->name); break;
-			case BL_PC:  script_pushstrcopy(st, ((struct map_session_data *)bl)->status.name); break;
-			case BL_NPC: script_pushstrcopy(st, ((struct npc_data *)bl)->exname); break;
-			case BL_PET: script_pushstrcopy(st, ((struct pet_data *)bl)->pet.name); break;
-			case BL_HOM: script_pushstrcopy(st, ((struct homun_data *)bl)->homunculus.name); break;
-			case BL_MER: script_pushstrcopy(st, ((struct mercenary_data *)bl)->db->name); break;
+			case BL_MOB: script_pushstrcopy(st, BL_UCCAST(BL_MOB, bl)->name); break;
+			case BL_PC:  script_pushstrcopy(st, BL_UCCAST(BL_PC, bl)->status.name); break;
+			case BL_NPC: script_pushstrcopy(st, BL_UCCAST(BL_NPC, bl)->exname); break;
+			case BL_PET: script_pushstrcopy(st, BL_UCCAST(BL_PET, bl)->pet.name); break;
+			case BL_HOM: script_pushstrcopy(st, BL_UCCAST(BL_HOM, bl)->homunculus.name); break;
+			case BL_MER: script_pushstrcopy(st, BL_UCCAST(BL_MER, bl)->db->name); break;
 			default:
 				ShowError("buildin_rid2name: BL type unknown.\n");
 				script_pushconststr(st,"");
@@ -16654,14 +16658,14 @@ BUILDIN(unitattack) {
 	switch( unit_bl->type )
 	{
 		case BL_PC:
-			clif->pActionRequest_sub((struct map_session_data *)unit_bl, actiontype > 0 ? 0x07 : 0x00, target_bl->id, timer->gettick());
+			clif->pActionRequest_sub(BL_UCAST(BL_PC, unit_bl), actiontype > 0 ? 0x07 : 0x00, target_bl->id, timer->gettick());
 			script_pushint(st, 1);
 			return true;
 		case BL_MOB:
-			((struct mob_data *)unit_bl)->target_id = target_bl->id;
+			BL_UCAST(BL_MOB, unit_bl)->target_id = target_bl->id;
 			break;
 		case BL_PET:
-			((struct pet_data *)unit_bl)->target_id = target_bl->id;
+			BL_UCAST(BL_PET, unit_bl)->target_id = target_bl->id;
 			break;
 		default:
 			ShowError("script:unitattack: unsupported source unit type %d\n", unit_bl->type);
@@ -16687,7 +16691,7 @@ BUILDIN(unitstop) {
 		unit->stop_attack(bl);
 		unit->stop_walking(bl, STOPWALKING_FLAG_NEXTCELL);
 		if( bl->type == BL_MOB )
-			((struct mob_data *)bl)->target_id = 0;
+			BL_UCAST(BL_MOB, bl)->target_id = 0;
 	}
 
 	return true;
@@ -16753,12 +16757,13 @@ BUILDIN(unitskilluseid) {
 
 	bl = map->id2bl(unit_id);
 
-	if( bl != NULL ) {
-		if( bl->type == BL_NPC ) {
-			if (((struct npc_data *)bl)->status.hp == 0) {
-				status_calc_npc((struct npc_data *)bl, SCO_FIRST);
+	if (bl != NULL) {
+		if (bl->type == BL_NPC) {
+			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
+			if (nd->status.hp == 0) {
+				status_calc_npc(nd, SCO_FIRST);
 			} else {
-				status_calc_npc((struct npc_data *)bl, SCO_NONE);
+				status_calc_npc(nd, SCO_NONE);
 			}
 		}
 		unit->skilluse_id(bl, target_id, skill_id, skill_lv);
@@ -16787,12 +16792,13 @@ BUILDIN(unitskillusepos) {
 
 	bl = map->id2bl(unit_id);
 
-	if( bl != NULL ) {
-		if( bl->type == BL_NPC ) {
-			if (((struct npc_data*)bl)->status.hp == 0) {
-				status_calc_npc((struct npc_data *)bl, SCO_FIRST);
+	if (bl != NULL) {
+		if (bl->type == BL_NPC) {
+			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
+			if (nd->status.hp == 0) {
+				status_calc_npc(nd, SCO_FIRST);
 			} else {
-				status_calc_npc((struct npc_data *)bl, SCO_NONE);
+				status_calc_npc(nd, SCO_NONE);
 			}
 		}
 		unit->skilluse_pos(bl, skill_x, skill_y, skill_id, skill_lv);
@@ -18708,7 +18714,7 @@ BUILDIN(useatcmd) {
 			struct block_list* bl = map->id2bl(st->oid);
 			memcpy(&sd->bl, bl, sizeof(struct block_list));
 			if (bl->type == BL_NPC)
-				safestrncpy(sd->status.name, ((struct npc_data *)bl)->name, NAME_LENGTH);
+				safestrncpy(sd->status.name, BL_UCAST(BL_NPC, bl)->name, NAME_LENGTH);
 		}
 	}
 

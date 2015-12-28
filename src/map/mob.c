@@ -1576,7 +1576,7 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 	//Target exists, attack or loot as applicable.
 	if (tbl->type == BL_ITEM) {
 		//Loot time.
-		struct flooritem_data *fitem;
+		struct flooritem_data *fitem = BL_UCAST(BL_ITEM, tbl);
 		if (md->ud.target == tbl->id && md->ud.walktimer != INVALID_TIMER)
 			return true; //Already locked.
 		if (md->lootitem == NULL) {
@@ -1602,7 +1602,6 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 		if (md->ud.attacktimer != INVALID_TIMER)
 			return true; //Busy attacking?
 
-		fitem = (struct flooritem_data *)tbl;
 		//Logs items, taken by (L)ooter Mobs [Lupus]
 		logs->pick_mob(md, LOG_TYPE_LOOT, fitem->item_data.amount, &fitem->item_data, NULL);
 
@@ -1947,7 +1946,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 	{
 		case BL_PC:
 		{
-			struct map_session_data *sd = (struct map_session_data *)src;
+			const struct map_session_data *sd = BL_UCCAST(BL_PC, src);
 			char_id = sd->status.char_id;
 			if( damage )
 				md->attacked_id = src->id;
@@ -1955,7 +1954,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 		}
 		case BL_HOM:
 		{
-			struct homun_data *hd = (struct homun_data *)src;
+			const struct homun_data *hd = BL_UCCAST(BL_HOM, src);
 			flag = MDLF_HOMUN;
 			if( hd->master )
 				char_id = hd->master->status.char_id;
@@ -1965,7 +1964,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 		}
 		case BL_MER:
 		{
-			struct mercenary_data *mer = (struct mercenary_data *)src;
+			const struct mercenary_data *mer = BL_UCCAST(BL_MER, src);
 			if( mer->master )
 				char_id = mer->master->status.char_id;
 			if( damage )
@@ -1974,7 +1973,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 		}
 		case BL_PET:
 		{
-			struct pet_data *pd = (struct pet_data *)src;
+			const struct pet_data *pd = BL_UCCAST(BL_PET, src);
 			flag = MDLF_PET;
 			if( pd->msd )
 			{
@@ -1986,7 +1985,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 		}
 		case BL_MOB:
 		{
-			struct mob_data* md2 = (struct mob_data *)src;
+			const struct mob_data *md2 = BL_UCCAST(BL_MOB, src);
 			if (md2->special_state.ai != AI_NONE && md2->master_id) {
 				struct map_session_data* msd = map->id2sd(md2->master_id);
 				if( msd )
@@ -2003,7 +2002,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 		}
 		case BL_ELEM:
 		{
-			struct elemental_data *ele = (struct elemental_data *)src;
+			const struct elemental_data *ele = BL_UCCAST(BL_ELEM, src);
 			if( ele->master )
 				char_id = ele->master->status.char_id;
 			if( damage )
@@ -2100,14 +2099,15 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
  *------------------------------------------*/
 int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	struct status_data *mstatus;
-	struct map_session_data *sd = NULL, *tmpsd[DAMAGELOG_SIZE];
+	struct map_session_data *sd = NULL;
+	struct map_session_data *tmpsd[DAMAGELOG_SIZE] = { NULL };
 	struct map_session_data *mvp_sd = NULL, *second_sd = NULL, *third_sd = NULL;
 
 	struct {
 		struct party_data *p;
 		int id,zeny;
 		unsigned int base_exp,job_exp;
-	} pt[DAMAGELOG_SIZE];
+	} pt[DAMAGELOG_SIZE] = { { 0 } };
 	int i, temp, count, m = md->bl.m;
 	int dmgbltypes = 0;  // bitfield of all bl types, that caused damage to the mob and are eligible for exp distribution
 	unsigned int mvp_damage;
@@ -2133,13 +2133,10 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 
 	map->freeblock_lock();
 
-	memset(pt,0,sizeof(pt));
-
-	if(src && src->type == BL_MOB)
-		mob->unlocktarget((struct mob_data *)src,tick);
+	if (src != NULL && src->type == BL_MOB)
+		mob->unlocktarget(BL_UCAST(BL_MOB, src), tick);
 
 	// filter out entries not eligible for exp distribution
-	memset(tmpsd,0,sizeof(tmpsd));
 	for(i = 0, count = 0, mvp_damage = 0; i < DAMAGELOG_SIZE && md->dmglog[i].id; i++) {
 		struct map_session_data* tsd = map->charid2sd(md->dmglog[i].id);
 
@@ -2584,10 +2581,10 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		md->status.hp = 0; //So that npc_event invoked functions KNOW that mob is dead
 		if( src ) {
 			switch( src->type ) {
-				case BL_PET: sd = ((struct pet_data *)src)->msd; break;
-				case BL_HOM: sd = ((struct homun_data *)src)->master; break;
-				case BL_MER: sd = ((struct mercenary_data *)src)->master; break;
-				case BL_ELEM: sd = ((struct elemental_data *)src)->master; break;
+				case BL_PET: sd = BL_UCAST(BL_PET, src)->msd; break;
+				case BL_HOM: sd = BL_UCAST(BL_HOM, src)->master; break;
+				case BL_MER: sd = BL_UCAST(BL_MER, src)->master; break;
+				case BL_ELEM: sd = BL_UCAST(BL_ELEM, src)->master; break;
 			}
 		}
 

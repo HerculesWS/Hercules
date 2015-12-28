@@ -220,29 +220,46 @@ int bg_team_get_id(struct block_list *bl) {
 	nullpo_ret(bl);
 	switch( bl->type ) {
 		case BL_PC:
-			return ((struct map_session_data *)bl)->bg_id;
+		{
+			const struct map_session_data *sd = BL_UCCAST(BL_PC, bl);
+			return sd->bg_id;
+		}
 		case BL_PET:
-			if (((struct pet_data *)bl)->msd != NULL)
-				return ((struct pet_data *)bl)->msd->bg_id;
+		{
+			const struct pet_data *pd = BL_UCCAST(BL_PET, bl);
+			if (pd->msd != NULL)
+				return pd->msd->bg_id;
+		}
 			break;
 		case BL_MOB:
 		{
-			struct map_session_data *msd;
-			struct mob_data *md = (struct mob_data *)bl;
+			const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+			const struct map_session_data *msd;
 			if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
 				return msd->bg_id;
 			return md->bg_id;
 		}
 		case BL_HOM:
-			if (((struct homun_data *)bl)->master != NULL)
-				return ((struct homun_data*)bl)->master->bg_id;
+		{
+			const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
+			if (hd->master != NULL)
+				return hd->master->bg_id;
+		}
 			break;
 		case BL_MER:
-			if (((struct mercenary_data *)bl)->master != NULL)
-				return ((struct mercenary_data *)bl)->master->bg_id;
+		{
+			const struct mercenary_data *md = BL_UCCAST(BL_MER, bl);
+			if (md->master != NULL)
+				return md->master->bg_id;
+		}
 			break;
 		case BL_SKILL:
-			return ((struct skill_unit *)bl)->group->bg_id;
+		{
+			const struct skill_unit *su = BL_UCCAST(BL_SKILL, bl);
+			if (su->group != NULL)
+				return su->group->bg_id;
+		}
+			break;
 	}
 
 	return 0;

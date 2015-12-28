@@ -333,7 +333,7 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 			sc->data[SC_PROPERTYWALK]->val3 >= skill->get_maxcount(sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2) )
 			status_change_end(bl,SC_PROPERTYWALK,INVALID_TIMER);
 	} else if (bl->type == BL_NPC) {
-		npc->unsetcells((struct npc_data *)bl);
+		npc->unsetcells(BL_UCAST(BL_NPC, bl));
 	}
 
 	if (moveblock) map->delblock(bl);
@@ -405,7 +405,7 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 			}
 		}
 	} else if (bl->type == BL_NPC) {
-		npc->setcells((struct npc_data *)bl);
+		npc->setcells(BL_UCAST(BL_NPC, bl));
 	}
 
 	return 0;
@@ -487,7 +487,7 @@ struct skill_unit* map_find_skill_unit_oncell(struct block_list* target,int16 x,
 		if (bl->x != x || bl->y != y || bl->type != BL_SKILL)
 			continue;
 
-		su = (struct skill_unit *) bl;
+		su = BL_UCAST(BL_SKILL, bl);
 		if( su == out_unit || !su->alive || !su->group || su->group->skill_id != skill_id )
 			continue;
 		if( !(flag&1) || battle->check_target(&su->bl,target,su->group->target_flag) > 0 )
@@ -1742,11 +1742,11 @@ void map_addiddb(struct block_list *bl)
 	nullpo_retv(bl);
 
 	if (bl->type == BL_PC) {
-		struct map_session_data *sd = (struct map_session_data *)bl;
+		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 		idb_put(map->pc_db,sd->bl.id,sd);
 		idb_put(map->charid_db,sd->status.char_id,sd);
 	} else if (bl->type == BL_MOB) {
-		struct mob_data* md = (struct mob_data*)bl;
+		struct mob_data *md = BL_UCAST(BL_MOB, bl);
 		idb_put(map->mobid_db,bl->id,bl);
 
 		if( md->state.boss )
@@ -1767,7 +1767,7 @@ void map_deliddb(struct block_list *bl)
 	nullpo_retv(bl);
 
 	if (bl->type == BL_PC) {
-		struct map_session_data *sd = (struct map_session_data *)bl;
+		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 		idb_remove(map->pc_db,sd->bl.id);
 		idb_remove(map->charid_db,sd->status.char_id);
 	} else if (bl->type == BL_MOB) {
@@ -2283,8 +2283,8 @@ void map_vforeachnpc(int (*func)(struct npc_data* nd, va_list args), va_list arg
 
 	iter = db_iterator(map->id_db);
 	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
-		if( bl->type == BL_NPC ) {
-			struct npc_data* nd = (struct npc_data*)bl;
+		if (bl->type == BL_NPC) {
+			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
 			va_list argscopy;
 			int ret;
 

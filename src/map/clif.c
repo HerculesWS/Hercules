@@ -947,7 +947,7 @@ void clif_set_unit_idle2(struct block_list* bl, struct map_session_data *tsd, en
 	p.speed = status->get_speed(bl);
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
-	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? ((struct npc_data *)bl)->option : 0);
+	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
 	p.job = vd->class_;
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
@@ -1014,7 +1014,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 	p.speed = status->get_speed(bl);
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
-	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? ((struct npc_data *)bl)->option : 0);
+	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
 	p.job = vd->class_;
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
@@ -1050,9 +1050,10 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 #endif
 #if PACKETVER >= 20120221
 	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
+		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
-		p.isBoss = (((struct mob_data *)bl)->spawn != NULL && ((struct mob_data *)bl)->spawn->state.boss) ? 1 : 0;
+		p.isBoss = (md->spawn != NULL && md->spawn->state.boss) ? 1 : 0;
 	} else {
 		p.maxHP = -1;
 		p.HP = -1;
@@ -1096,7 +1097,7 @@ void clif_spawn_unit2(struct block_list* bl, enum send_target target) {
 	p.speed = status->get_speed(bl);
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
-	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? ((struct npc_data *)bl)->option : 0);
+	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
 	p.accessory = vd->head_bottom;
@@ -1154,7 +1155,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	p.speed = status->get_speed(bl);
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
-	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? ((struct npc_data *)bl)->option : 0);
+	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
 	p.job = vd->class_;
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
@@ -1189,9 +1190,10 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 #endif
 #if PACKETVER >= 20120221
 	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
+		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
-		p.isBoss = (((struct mob_data *)bl)->spawn != NULL && ((struct mob_data *)bl)->spawn->state.boss) ? 1 : 0;
+		p.isBoss = (md->spawn != NULL && md->spawn->state.boss) ? 1 : 0;
 	} else {
 		p.maxHP = -1;
 		p.HP = -1;
@@ -1248,7 +1250,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 	p.speed = status->get_speed(bl);
 	p.bodyState = (sc) ? sc->opt1 : 0;
 	p.healthState = (sc) ? sc->opt2 : 0;
-	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? ((struct npc_data *)bl)->option : 0);
+	p.effectState = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
 	p.job = vd->class_;
 	p.head = vd->hair_style;
 	p.weapon = vd->weapon;
@@ -1279,9 +1281,10 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 #endif
 #if PACKETVER >= 20120221
 	if (battle_config.show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
+		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 		p.maxHP = status_get_max_hp(bl);
 		p.HP = status_get_hp(bl);
-		p.isBoss = (((struct mob_data*)bl)->spawn != NULL && ((struct mob_data *)bl)->spawn->state.boss) ? 1 : 0;
+		p.isBoss = (md->spawn != NULL && md->spawn->state.boss) ? 1 : 0;
 	} else {
 		p.maxHP = -1;
 		p.HP = -1;
@@ -1406,12 +1409,14 @@ bool clif_spawn(struct block_list *bl)
 	if( !vd )
 		return false;
 
-	if ((bl->type == BL_NPC
-	  && ((struct npc_data *)bl)->chat_id == 0
-	  && (((struct npc_data *)bl)->option&OPTION_INVISIBLE)) // Hide NPC from maya purple card.
-	 || vd->class_ == INVISIBLE_CLASS
-	)
+	if (vd->class_ == INVISIBLE_CLASS)
 		return true; // Doesn't need to be spawned, so everything is alright
+
+	if (bl->type == BL_NPC) {
+		struct npc_data *nd = BL_UCAST(BL_NPC, bl);
+		if (nd->chat_id == 0 && (nd->option&OPTION_INVISIBLE)) // Hide NPC from maya purple card.
+			return true; // Doesn't need to be spawned, so everything is alright
+	}
 
 	clif->spawn_unit(bl,AREA_WOS);
 
@@ -1423,7 +1428,7 @@ bool clif_spawn(struct block_list *bl)
 	switch (bl->type) {
 		case BL_PC:
 		{
-			struct map_session_data *sd = ((struct map_session_data *)bl);
+			struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 			int i;
 			if (sd->spiritball > 0)
 				clif->spiritball(&sd->bl);
@@ -1444,7 +1449,7 @@ bool clif_spawn(struct block_list *bl)
 			break;
 		case BL_MOB:
 		{
-			struct mob_data *md = ((struct mob_data *)bl);
+			struct mob_data *md = BL_UCAST(BL_MOB, bl);
 			if (md->special_state.size==SZ_BIG) // tiny/big mobs [Valaris]
 				clif->specialeffect(&md->bl,423,AREA);
 			else if (md->special_state.size==SZ_MEDIUM)
@@ -1453,7 +1458,7 @@ bool clif_spawn(struct block_list *bl)
 			break;
 		case BL_NPC:
 		{
-			struct npc_data *nd = ((struct npc_data *)bl);
+			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
 			if (nd->size == SZ_BIG)
 				clif->specialeffect(&nd->bl,423,AREA);
 			else if (nd->size == SZ_MEDIUM)
@@ -1462,7 +1467,7 @@ bool clif_spawn(struct block_list *bl)
 			break;
 		case BL_PET:
 			if (vd->head_bottom)
-				clif->send_petdata(NULL, (struct pet_data *)bl, 3, vd->head_bottom); // needed to display pet equip properly
+				clif->send_petdata(NULL, BL_UCAST(BL_PET, bl), 3, vd->head_bottom); // needed to display pet equip properly
 			break;
 	}
 	return true;
@@ -1689,7 +1694,7 @@ void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *u
 	switch(bl->type) {
 		case BL_PC:
 		{
-			struct map_session_data *sd = ((struct map_session_data *)bl);
+			struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 			//clif_movepc(sd);
 			if(sd->state.size==SZ_BIG) // tiny/big players [Valaris]
 				clif->specialeffect(&sd->bl,423,AREA);
@@ -1699,7 +1704,7 @@ void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *u
 			break;
 		case BL_MOB:
 		{
-			struct mob_data *md = ((struct mob_data *)bl);
+			struct mob_data *md = BL_UCAST(BL_MOB, bl);
 			if (md->special_state.size == SZ_BIG) // tiny/big mobs [Valaris]
 				clif->specialeffect(&md->bl,423,AREA);
 			else if (md->special_state.size == SZ_MEDIUM)
@@ -1708,7 +1713,7 @@ void clif_move2(struct block_list *bl, struct view_data *vd, struct unit_data *u
 			break;
 		case BL_PET:
 			if( vd->head_bottom ) // needed to display pet equip properly
-				clif->send_petdata(NULL, (struct pet_data *)bl, 3, vd->head_bottom);
+				clif->send_petdata(NULL, BL_UCAST(BL_PET, bl), 3, vd->head_bottom);
 			break;
 	}
 #ifdef ANTI_MAYAP_CHEAT
@@ -1735,11 +1740,12 @@ void clif_move(struct unit_data *ud)
 	if (!vd || vd->class_ == INVISIBLE_CLASS)
 		return; //This performance check is needed to keep GM-hidden objects from being notified to bots.
 
-	/**
-	* Hide NPC from maya purple card.
-	**/
-	if (bl->type == BL_NPC && ((struct npc_data *)bl)->chat_id == 0 && (((struct npc_data *)bl)->option&OPTION_INVISIBLE))
-		return;
+	if (bl->type == BL_NPC) {
+		// Hide NPC from maya purple card.
+		struct npc_data *nd = BL_UCAST(BL_NPC, bl);
+		if (nd->chat_id == 0 && (nd->option&OPTION_INVISIBLE))
+			return;
+	}
 
 	if (ud->state.speed_changed) {
 		// Since we don't know how to update the speed of other objects,
@@ -3490,7 +3496,7 @@ void clif_changeoption(struct block_list* bl)
 	WBUFL(buf,2) = bl->id;
 	WBUFW(buf,6) = (sc) ? sc->opt1 : 0;
 	WBUFW(buf,8) = (sc) ? sc->opt2 : 0;
-	WBUFL(buf,10) = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? ((struct npc_data *)bl)->option : 0);
+	WBUFL(buf,10) = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
 	WBUFB(buf,14) = (sd)? sd->status.karma : 0;
 	if(disguised(bl)) {
 		clif->send(buf,packet_len(0x229),bl,AREA_WOS);
@@ -3506,7 +3512,7 @@ void clif_changeoption(struct block_list* bl)
 	WBUFL(buf,2) = bl->id;
 	WBUFW(buf,6) = (sc) ? sc->opt1 : 0;
 	WBUFW(buf,8) = (sc) ? sc->opt2 : 0;
-	WBUFL(buf,10) = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? ((struct npc_data *)bl)->option : 0);
+	WBUFL(buf,10) = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
 	WBUFB(buf,12) = (sd)? sd->status.karma : 0;
 	if(disguised(bl)) {
 		clif->send(buf,packet_len(0x119),bl,AREA_WOS);
@@ -3531,7 +3537,7 @@ void clif_changeoption2(struct block_list* bl) {
 
 	WBUFW(buf,0) = 0x28a;
 	WBUFL(buf,2) = bl->id;
-	WBUFL(buf,6) = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? ((struct npc_data *)bl)->option : 0);
+	WBUFL(buf,6) = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
 	WBUFL(buf,10) = clif_setlevel(bl);
 	WBUFL(buf,14) = (sc) ? sc->opt3 : 0;
 	if(disguised(bl)) {
@@ -3741,10 +3747,11 @@ void clif_joinchatok(struct map_session_data *sd,struct chat_data* cd)
 	WFIFOW(fd, 2) = 8 + (28*(cd->users+t));
 	WFIFOL(fd, 4) = cd->bl.id;
 
-	if(cd->owner->type == BL_NPC){
+	if(cd->owner->type == BL_NPC) {
+		const struct npc_data *nd = BL_UCCAST(BL_NPC, cd->owner);
 		WFIFOL(fd, 30) = 1;
 		WFIFOL(fd, 8) = 0;
-		memcpy(WFIFOP(fd, 12), ((struct npc_data *)cd->owner)->name, NAME_LENGTH);
+		memcpy(WFIFOP(fd, 12), nd->name, NAME_LENGTH);
 		for (i = 0; i < cd->users; i++) {
 			WFIFOL(fd, 8+(i+1)*28) = 1;
 			memcpy(WFIFOP(fd, 8+(i+t)*28+4), cd->usersd[i]->status.name, NAME_LENGTH);
@@ -4163,11 +4170,12 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 	if (!vd || vd->class_ == INVISIBLE_CLASS)
 		return;
 
-	/**
-	* Hide NPC from maya purple card.
-	**/
-	if (bl->type == BL_NPC && ((struct npc_data *)bl)->chat_id == 0 && (((struct npc_data *)bl)->option&OPTION_INVISIBLE))
-		return;
+	if (bl->type == BL_NPC) {
+		// Hide NPC from maya purple card.
+		struct npc_data *nd = BL_UCAST(BL_NPC, bl);
+		if (nd->chat_id == 0 && (nd->option&OPTION_INVISIBLE))
+			return;
+	}
 
 	if ( ( ud = unit->bl2ud(bl) ) && ud->walktimer != INVALID_TIMER )
 		clif->set_unit_walking(bl,sd,ud,SELF);
@@ -4182,7 +4190,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 	switch (bl->type) {
 		case BL_PC:
 		{
-			struct map_session_data *tsd = (struct map_session_data *)bl;
+			struct map_session_data *tsd = BL_UCAST(BL_PC, bl);
 			clif->getareachar_pc(sd, tsd);
 			if (tsd->state.size == SZ_BIG) // tiny/big players [Valaris]
 				clif->specialeffect_single(bl,423,sd->fd);
@@ -4195,12 +4203,15 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 		}
 			break;
 		case BL_MER: // Devotion Effects
-			if (((struct mercenary_data *)bl)->devotion_flag)
+		{
+			struct mercenary_data *md = BL_UCAST(BL_MER, bl);
+			if (md->devotion_flag)
 				clif->devotion(bl, sd);
+		}
 			break;
 		case BL_NPC:
 		{
-			struct npc_data *nd = (struct npc_data *)bl;
+			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
 			if (nd->chat_id != 0)
 				clif->dispchat(map->id2cd(nd->chat_id), sd->fd);
 			if (nd->size == SZ_BIG)
@@ -4211,7 +4222,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 			break;
 		case BL_MOB:
 		{
-			struct mob_data *md = (struct mob_data *)bl;
+			struct mob_data *md = BL_UCAST(BL_MOB, bl);
 			if (md->special_state.size == SZ_BIG) // tiny/big mobs [Valaris]
 				clif->specialeffect_single(bl,423,sd->fd);
 			else if (md->special_state.size == SZ_MEDIUM)
@@ -4231,7 +4242,7 @@ void clif_getareachar_unit(struct map_session_data* sd,struct block_list *bl) {
 			break;
 		case BL_PET:
 			if (vd->head_bottom)
-				clif->send_petdata(NULL, (struct pet_data *)bl, 3, vd->head_bottom); // needed to display pet equip properly
+				clif->send_petdata(NULL, BL_UCAST(BL_PET, bl), 3, vd->head_bottom); // needed to display pet equip properly
 			break;
 	}
 }
@@ -5667,7 +5678,8 @@ void clif_resurrection(struct block_list *bl,int type)
 
 	clif->send(buf,packet_len(0x148),bl, type == 1 ? AREA : AREA_WOS);
 	if (disguised(bl)) {
-		if (((struct map_session_data *)bl)->fontcolor) {
+		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
+		if (sd->fontcolor) {
 			WBUFL(buf,2)=-bl->id;
 			clif->send(buf,packet_len(0x148),bl, SELF);
 		} else {
@@ -8352,75 +8364,75 @@ void clif_charnameack (int fd, struct block_list *bl)
 
 	switch( bl->type ) {
 		case BL_PC:
-			{
-				struct map_session_data *ssd = (struct map_session_data *)bl;
-				struct party_data *p = NULL;
-				struct guild *g = NULL;
-				int ps = -1;
+		{
+			const struct map_session_data *ssd = BL_UCCAST(BL_PC, bl);
+			const struct party_data *p = NULL;
+			const struct guild *g = NULL;
+			int ps = -1;
 
-				//Requesting your own "shadow" name. [Skotlex]
-				if (ssd->fd == fd && ssd->disguise != -1)
-					WBUFL(buf,2) = -bl->id;
+			//Requesting your own "shadow" name. [Skotlex]
+			if (ssd->fd == fd && ssd->disguise != -1)
+				WBUFL(buf,2) = -bl->id;
 
-				if( ssd->fakename[0] ) {
-					WBUFW(buf, 0) = cmd = 0x195;
-					memcpy(WBUFP(buf,6), ssd->fakename, NAME_LENGTH);
-					WBUFB(buf,30) = WBUFB(buf,54) = WBUFB(buf,78) = 0;
-					break;
-				}
-				memcpy(WBUFP(buf,6), ssd->status.name, NAME_LENGTH);
-
-				if( ssd->status.party_id ) {
-					p = party->search(ssd->status.party_id);
-				}
-				if( ssd->status.guild_id ) {
-					if ((g = ssd->guild ) != NULL) {
-						int i;
-						ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
-						if( i < g->max_member ) ps = g->member[i].position;
-					}
-				}
-
-				if( !battle_config.display_party_name && g == NULL ) {// do not display party unless the player is also in a guild
-					p = NULL;
-				}
-
-				if (p == NULL && g == NULL)
-					break;
-
+			if (ssd->fakename[0] != '\0') {
 				WBUFW(buf, 0) = cmd = 0x195;
-				if (p)
-					memcpy(WBUFP(buf,30), p->party.name, NAME_LENGTH);
-				else
-					WBUFB(buf,30) = 0;
+				memcpy(WBUFP(buf,6), ssd->fakename, NAME_LENGTH);
+				WBUFB(buf,30) = WBUFB(buf,54) = WBUFB(buf,78) = 0;
+				break;
+			}
+			memcpy(WBUFP(buf,6), ssd->status.name, NAME_LENGTH);
 
-				if (g && ps >= 0 && ps < MAX_GUILDPOSITION)
-				{
-					memcpy(WBUFP(buf,54), g->name,NAME_LENGTH);
-					memcpy(WBUFP(buf,78), g->position[ps].name, NAME_LENGTH);
-				} else { //Assume no guild.
-					WBUFB(buf,54) = 0;
-					WBUFB(buf,78) = 0;
+			if (ssd->status.party_id != 0) {
+				p = party->search(ssd->status.party_id);
+			}
+			if (ssd->status.guild_id != 0) {
+				if ((g = ssd->guild) != NULL) {
+					int i;
+					ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
+					if (i < g->max_member)
+						ps = g->member[i].position;
 				}
 			}
+
+			if (!battle_config.display_party_name && g == NULL) {
+				// do not display party unless the player is also in a guild
+				p = NULL;
+			}
+
+			if (p == NULL && g == NULL)
+				break;
+
+			WBUFW(buf, 0) = cmd = 0x195;
+			if (p != NULL)
+				memcpy(WBUFP(buf,30), p->party.name, NAME_LENGTH);
+			else
+				WBUFB(buf,30) = 0;
+
+			if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
+				memcpy(WBUFP(buf,54), g->name,NAME_LENGTH);
+				memcpy(WBUFP(buf,78), g->position[ps].name, NAME_LENGTH);
+			} else { //Assume no guild.
+				WBUFB(buf,54) = 0;
+				WBUFB(buf,78) = 0;
+			}
+		}
 			break;
 		//[blackhole89]
 		case BL_HOM:
-			memcpy(WBUFP(buf,6), ((struct homun_data *)bl)->homunculus.name, NAME_LENGTH);
+			memcpy(WBUFP(buf,6), BL_UCCAST(BL_HOM, bl)->homunculus.name, NAME_LENGTH);
 			break;
 		case BL_MER:
-			memcpy(WBUFP(buf,6), ((struct mercenary_data *)bl)->db->name, NAME_LENGTH);
+			memcpy(WBUFP(buf,6), BL_UCCAST(BL_MER, bl)->db->name, NAME_LENGTH);
 			break;
 		case BL_PET:
-			memcpy(WBUFP(buf,6), ((struct pet_data *)bl)->pet.name, NAME_LENGTH);
+			memcpy(WBUFP(buf,6), BL_UCCAST(BL_PET, bl)->pet.name, NAME_LENGTH);
 			break;
 		case BL_NPC:
-			memcpy(WBUFP(buf,6), ((struct npc_data *)bl)->name, NAME_LENGTH);
+			memcpy(WBUFP(buf,6), BL_UCCAST(BL_NPC, bl)->name, NAME_LENGTH);
 			break;
 		case BL_MOB:
 		{
-			struct mob_data *md = (struct mob_data *)bl;
-			nullpo_retv(md);
+			const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 
 			memcpy(WBUFP(buf,6), md->name, NAME_LENGTH);
 			if (md->guardian_data && md->guardian_data->g) {
@@ -8450,12 +8462,12 @@ void clif_charnameack (int fd, struct block_list *bl)
 			break;
 		case BL_CHAT:
 #if 0 //FIXME: Clients DO request this... what should be done about it? The chat's title may not fit... [Skotlex]
-			memcpy(WBUFP(buf,6), (struct chat*)->title, NAME_LENGTH);
+			memcpy(WBUFP(buf,6), BL_UCCAST(BL_CHAT, bl)->title, NAME_LENGTH);
 			break;
 #endif
 			return;
 		case BL_ELEM:
-			memcpy(WBUFP(buf,6), ((struct elemental_data *)bl)->db->name, NAME_LENGTH);
+			memcpy(WBUFP(buf,6), BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
 			break;
 		default:
 			ShowError("clif_charnameack: bad type %d(%d)\n", bl->type, bl->id);
@@ -9885,7 +9897,7 @@ void clif_changed_dir(struct block_list *bl, enum send_target target)
 	nullpo_retv(bl);
 	WBUFW(buf,0) = 0x9c;
 	WBUFL(buf,2) = bl->id;
-	WBUFW(buf,6) = bl->type == BL_PC ? ((struct map_session_data *)bl)->head_dir : 0;
+	WBUFW(buf,6) = bl->type == BL_PC ? BL_UCCAST(BL_PC, bl)->head_dir : 0;
 	WBUFB(buf,8) = unit->getdir(bl);
 
 	clif->send(buf, packet_len(0x9c), bl, target);
@@ -10484,7 +10496,7 @@ void clif_parse_NpcClicked(int fd,struct map_session_data *sd)
 				break;
 			}
 			if( bl->m != -1 )// the user can't click floating npcs directly (hack attempt)
-				npc->click(sd, (struct npc_data *)bl);
+				npc->click(sd, BL_UCAST(BL_NPC, bl));
 			break;
 	}
 }
@@ -13214,7 +13226,7 @@ void clif_parse_GMKick(int fd, struct map_session_data *sd) {
 
 		case BL_NPC:
 		{
-			struct npc_data* nd = (struct npc_data *)target;
+			struct npc_data *nd = BL_UCAST(BL_NPC, target);
 			if( !pc->can_use_command(sd, "@unloadnpc")) {
 				clif->GM_kickack(sd, 0);
 				return;
@@ -17598,7 +17610,7 @@ void clif_status_change_end(struct block_list *bl, int tid, enum send_target tar
 
 	nullpo_retv(bl);
 
-	if (bl->type == BL_PC && !((struct map_session_data *)bl)->state.active)
+	if (bl->type == BL_PC && !BL_UCAST(BL_PC, bl)->state.active)
 		return;
 
 	p.PacketType = status_change_endType;
