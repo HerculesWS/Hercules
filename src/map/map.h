@@ -843,6 +843,20 @@ typedef struct elemental_data   TBL_ELEM;
 	( ((bl) == (struct block_list *)NULL || (bl)->type != (type_)) ? (T ## type_ *)NULL : (T ## type_ *)(bl) )
 
 /**
+ * Casts a const block list to a specific type.
+ *
+ * @remark
+ *   The `bl` argument may be evaluated more than once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ * @retval NULL if bl is the wrong type or NULL.
+ */
+#define BL_CCAST(type_, bl) \
+	( ((bl) == (const struct block_list *)NULL || (bl)->type != (type_)) ? (const T ## type_ *)NULL : (const T ## type_ *)(bl) )
+
+/**
  * Helper function for `BL_UCAST`.
  *
  * @warning
@@ -869,6 +883,34 @@ static inline struct block_list *BL_UCAST_(struct block_list *bl)
  */
 #define BL_UCAST(type_, bl) \
 	((T ## type_ *)BL_UCAST_(bl))
+
+/**
+ * Helper function for `BL_UCCAST`.
+ *
+ * @warning
+ *   This function shouldn't be called on it own.
+ *
+ * The purpose of this function is to produce a compile-timer error if a non-bl
+ * object is passed to BL_UCAST. It's declared as static inline to let the
+ * compiler optimize out the function call overhead.
+ */
+static inline const struct block_list *BL_UCCAST_(const struct block_list *bl)
+{
+	return bl;
+}
+
+/**
+ * Casts a const block list to a specific type, without performing any type checks.
+ *
+ * @remark
+ *   The `bl` argument is guaranteed to be evaluated once and only once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ */
+#define BL_UCCAST(type_, bl) \
+	((const T ## type_ *)BL_UCCAST_(bl))
 
 struct charid_request {
 	struct charid_request* next;
