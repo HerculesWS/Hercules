@@ -1992,7 +1992,7 @@ ACMD(monster)
 	for (i = 0; i < number; i++) {
 		int k;
 		map->search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
-		k = mob->once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, eventname, size, AI_NONE|(mob_id == MOBID_EMPERIUM?0x200:0x0));
+		k = mob->once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, eventname, size, AI_NONE|(mob_id == MOBID_EMPELIUM?0x200:0x0));
 		count += (k != 0) ? 1 : 0;
 	}
 
@@ -6863,8 +6863,8 @@ ACMD(hommutate) {
 		return false;
 	}
 
-	if (!*message) {
-		homun_id = 6048 + (rnd() % 4);
+	if (*message == '\0') {
+		homun_id = HOMID_EIRA + (rnd() % 4);
 	} else {
 		homun_id = atoi(message);
 	}

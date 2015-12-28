@@ -2095,9 +2095,9 @@ void itemdb_reload(void) {
 
 	//Epoque's awesome @reloaditemdb fix - thanks! [Ind]
 	//- Fixes the need of a @reloadmobdb after a @reloaditemdb to re-link monster drop data
-	for( i = 0; i < MAX_MOB_DB; i++ ) {
+	for (i = 0; i < MAX_MOB_DB; i++) {
 		struct mob_db *entry;
-		if( !((i < 1324 || i > 1363) && (i < 1938 || i > 1946)) )
+		if ((i >= MOBID_TREASURE_BOX1 && i <= MOBID_TREASURE_BOX40) || (i >= MOBID_TREASURE_BOX41 && i <= MOBID_TREASURE_BOX49))
 			continue;
 		entry = mob->db(i);
 		for(d = 0; d < MAX_MOB_DROP; d++) {

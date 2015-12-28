@@ -182,9 +182,6 @@
 // Base Homun skill.
 #define HM_SKILLBASE 8001
 #define MAX_HOMUNSKILL 43
-#define MAX_HOMUNCULUS_CLASS 52 // [orn] Increased to 60 from 16 to allow new Homun-S.
-#define HM_CLASS_BASE 6001
-#define HM_CLASS_MAX (HM_CLASS_BASE+MAX_HOMUNCULUS_CLASS-1)
 
 // Mail System
 #define MAIL_MAX_INBOX 30
@@ -194,15 +191,11 @@
 // Mercenary System
 #define MC_SKILLBASE 8201
 #define MAX_MERCSKILL 40
-#define MAX_MERCENARY_CLASS 61
 
 // Elemental System
 #define MAX_ELEMENTALSKILL 42
 #define EL_SKILLBASE 8401
 #define MAX_ELESKILLTREE 3
-#define MAX_ELEMENTAL_CLASS 12
-#define EL_CLASS_BASE 2114
-#define EL_CLASS_MAX (EL_CLASS_BASE+MAX_ELEMENTAL_CLASS-1)
 
 // The following system marks a different job ID system used by the map server,
 // which makes a lot more sense than the normal one. [Skotlex]

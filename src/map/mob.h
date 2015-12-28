@@ -268,6 +268,134 @@ enum {
 	MSC_SPAWN,
 };
 
+/**
+ * Mob IDs
+ */
+enum mob_id {
+	MOBID_PORING           = 1002, ///<           PORING / Poring
+
+	MOBID_HORNET           = 1004, ///<           HORNET / Hornet
+
+	MOBID_RED_PLANT        = 1078, ///<        RED_PLANT / Red Plant
+	MOBID_BLUE_PLANT       = 1079, ///<       BLUE_PLANT / Blue Plant
+	MOBID_GREEN_PLANT      = 1080, ///<      GREEN_PLANT / Green Plant
+	MOBID_YELLOW_PLANT     = 1081, ///<     YELLOW_PLANT / Yellow Plant
+	MOBID_WHITE_PLANT      = 1082, ///<      WHITE_PLANT / White Plant
+	MOBID_SHINING_PLANT    = 1083, ///<    SHINING_PLANT / Shining Plant
+	MOBID_BLACK_MUSHROOM   = 1084, ///<   BLACK_MUSHROOM / Black Mushroom
+	MOBID_RED_MUSHROOM     = 1085, ///<     RED_MUSHROOM / Red Mushroom
+
+	MOBID_MARINE_SPHERE    = 1142, ///<    MARINE_SPHERE / Marine Sphere
+
+	MOBID_EMPELIUM         = 1288, ///<         EMPELIUM / Emperium
+
+	MOBID_GIANT_HONET      = 1303, ///<      GIANT_HONET / Giant Hornet
+
+	MOBID_TREASURE_BOX1    = 1324, ///<    TREASURE_BOX1 / Treasure Chest
+	MOBID_TREASURE_BOX2    = 1325, ///<    TREASURE_BOX2 / Treasure Chest
+	MOBID_TREASURE_BOX3    = 1326, ///<    TREASURE_BOX3 / Treasure Chest
+	MOBID_TREASURE_BOX4    = 1327, ///<    TREASURE_BOX4 / Treasure Chest
+	MOBID_TREASURE_BOX5    = 1328, ///<    TREASURE_BOX5 / Treasure Chest
+	MOBID_TREASURE_BOX6    = 1329, ///<    TREASURE_BOX6 / Treasure Chest
+	MOBID_TREASURE_BOX7    = 1330, ///<    TREASURE_BOX7 / Treasure Chest
+	MOBID_TREASURE_BOX8    = 1331, ///<    TREASURE_BOX8 / Treasure Chest
+	MOBID_TREASURE_BOX9    = 1332, ///<    TREASURE_BOX9 / Treasure Chest
+	MOBID_TREASURE_BOX10   = 1333, ///<   TREASURE_BOX10 / Treasure Chest
+	MOBID_TREASURE_BOX11   = 1334, ///<   TREASURE_BOX11 / Treasure Chest
+	MOBID_TREASURE_BOX12   = 1335, ///<   TREASURE_BOX12 / Treasure Chest
+	MOBID_TREASURE_BOX13   = 1336, ///<   TREASURE_BOX13 / Treasure Chest
+	MOBID_TREASURE_BOX14   = 1337, ///<   TREASURE_BOX14 / Treasure Chest
+	MOBID_TREASURE_BOX15   = 1338, ///<   TREASURE_BOX15 / Treasure Chest
+	MOBID_TREASURE_BOX16   = 1339, ///<   TREASURE_BOX16 / Treasure Chest
+	MOBID_TREASURE_BOX17   = 1340, ///<   TREASURE_BOX17 / Treasure Chest
+	MOBID_TREASURE_BOX18   = 1341, ///<   TREASURE_BOX18 / Treasure Chest
+	MOBID_TREASURE_BOX19   = 1342, ///<   TREASURE_BOX19 / Treasure Chest
+	MOBID_TREASURE_BOX20   = 1343, ///<   TREASURE_BOX20 / Treasure Chest
+	MOBID_TREASURE_BOX21   = 1344, ///<   TREASURE_BOX21 / Treasure Chest
+	MOBID_TREASURE_BOX22   = 1345, ///<   TREASURE_BOX22 / Treasure Chest
+	MOBID_TREASURE_BOX23   = 1346, ///<   TREASURE_BOX23 / Treasure Chest
+	MOBID_TREASURE_BOX24   = 1347, ///<   TREASURE_BOX24 / Treasure Chest
+	MOBID_TREASURE_BOX25   = 1348, ///<   TREASURE_BOX25 / Treasure Chest
+	MOBID_TREASURE_BOX26   = 1349, ///<   TREASURE_BOX26 / Treasure Chest
+	MOBID_TREASURE_BOX27   = 1350, ///<   TREASURE_BOX27 / Treasure Chest
+	MOBID_TREASURE_BOX28   = 1351, ///<   TREASURE_BOX28 / Treasure Chest
+	MOBID_TREASURE_BOX29   = 1352, ///<   TREASURE_BOX29 / Treasure Chest
+	MOBID_TREASURE_BOX30   = 1353, ///<   TREASURE_BOX30 / Treasure Chest
+	MOBID_TREASURE_BOX31   = 1354, ///<   TREASURE_BOX31 / Treasure Chest
+	MOBID_TREASURE_BOX32   = 1355, ///<   TREASURE_BOX32 / Treasure Chest
+	MOBID_TREASURE_BOX33   = 1356, ///<   TREASURE_BOX33 / Treasure Chest
+	MOBID_TREASURE_BOX34   = 1357, ///<   TREASURE_BOX34 / Treasure Chest
+	MOBID_TREASURE_BOX35   = 1358, ///<   TREASURE_BOX35 / Treasure Chest
+	MOBID_TREASURE_BOX36   = 1359, ///<   TREASURE_BOX36 / Treasure Chest
+	MOBID_TREASURE_BOX37   = 1360, ///<   TREASURE_BOX37 / Treasure Chest
+	MOBID_TREASURE_BOX38   = 1361, ///<   TREASURE_BOX38 / Treasure Chest
+	MOBID_TREASURE_BOX39   = 1362, ///<   TREASURE_BOX39 / Treasure Chest
+	MOBID_TREASURE_BOX40   = 1363, ///<   TREASURE_BOX40 / Treasure Chest
+
+	MOBID_G_PARASITE       = 1555, ///<       G_PARASITE / Parasite
+	MOBID_G_FLORA          = 1575, ///<          G_FLORA / Flora
+	MOBID_G_HYDRA          = 1579, ///<          G_HYDRA / Hydra
+	MOBID_G_MANDRAGORA     = 1589, ///<     G_MANDRAGORA / Mandragora
+	MOBID_G_GEOGRAPHER     = 1590, ///<     G_GEOGRAPHER / Geographer
+
+	MOBID_BARRICADE        = 1905, ///<        BARRICADE / Barricade
+	MOBID_BARRICADE_       = 1906, ///<       BARRICADE_ / Barricade
+	MOBID_S_EMPEL_1        = 1907, ///<        S_EMPEL_1 / Guardian Stone
+	MOBID_S_EMPEL_2        = 1908, ///<        S_EMPEL_2 / Guardian Stone
+	MOBID_OBJ_A            = 1909, ///<            OBJ_A / Food Storage
+	MOBID_OBJ_B            = 1910, ///<            OBJ_B / Food Depot
+	MOBID_OBJ_NEUTRAL      = 1911, ///<      OBJ_NEUTRAL / Neutrality Flag
+	MOBID_OBJ_FLAG_A       = 1912, ///<       OBJ_FLAG_A / Lion Flag
+	MOBID_OBJ_FLAG_B       = 1913, ///<       OBJ_FLAG_B / Eagle Flag
+	MOBID_OBJ_A2           = 1914, ///<           OBJ_A2 / Blue Crystal
+	MOBID_OBJ_B2           = 1915, ///<           OBJ_B2 / Pink Crystal
+
+	MOBID_TREASURE_BOX41   = 1938, ///<   TREASURE_BOX41 / Treasure Chest
+	MOBID_TREASURE_BOX42   = 1939, ///<   TREASURE_BOX42 / Treasure Chest
+	MOBID_TREASURE_BOX43   = 1940, ///<   TREASURE_BOX43 / Treasure Chest
+	MOBID_TREASURE_BOX44   = 1941, ///<   TREASURE_BOX44 / Treasure Chest
+	MOBID_TREASURE_BOX45   = 1942, ///<   TREASURE_BOX45 / Treasure Chest
+	MOBID_TREASURE_BOX46   = 1943, ///<   TREASURE_BOX46 / Treasure Chest
+	MOBID_TREASURE_BOX47   = 1944, ///<   TREASURE_BOX47 / Treasure Chest
+	MOBID_TREASURE_BOX48   = 1945, ///<   TREASURE_BOX48 / Treasure Chest
+	MOBID_TREASURE_BOX49   = 1946, ///<   TREASURE_BOX49 / Treasure Chest
+
+	// Manuk
+	MOBID_TATACHO          = 1986, ///<          TATACHO / Tatacho
+	MOBID_CENTIPEDE        = 1987, ///<        CENTIPEDE / Centipede
+	MOBID_NEPENTHES        = 1988, ///<        NEPENTHES / Nepenthes
+	MOBID_HILLSRION        = 1989, ///<        HILLSRION / Hillslion
+	MOBID_HARDROCK_MOMMOTH = 1990, ///< HARDROCK_MOMMOTH / Hardrock Mammoth
+
+	// Splendide
+	MOBID_TENDRILRION      = 1991, ///<      TENDRILRION / Tenrillion
+	MOBID_CORNUS           = 1992, ///<           CORNUS / Cornus
+	MOBID_NAGA             = 1993, ///<             NAGA / Naga
+	MOBID_LUCIOLA_VESPA    = 1994, ///<    LUCIOLA_VESPA / Luciola Vespa
+	MOBID_PINGUICULA       = 1995, ///<       PINGUICULA / Pinguicola
+
+	// Manuk (continue)
+	MOBID_G_TATACHO        = 1997, ///<        G_TATACHO / Tatacho
+	MOBID_G_HILLSRION      = 1998, ///<      G_HILLSRION / Hillslion
+	MOBID_CENTIPEDE_LARVA  = 1999, ///<  CENTIPEDE_LARVA / Centipede Larva
+
+	MOBID_SILVERSNIPER     = 2042, ///<     SILVERSNIPER / Silver Sniper
+	MOBID_MAGICDECOY_FIRE  = 2043, ///<  MAGICDECOY_FIRE / Magic Decoy
+	MOBID_MAGICDECOY_WATER = 2044, ///< MAGICDECOY_WATER / Magic Decoy
+	MOBID_MAGICDECOY_EARTH = 2045, ///< MAGICDECOY_EARTH / Magic Decoy
+	MOBID_MAGICDECOY_WIND  = 2046, ///<  MAGICDECOY_WIND / Magic Decoy
+
+	// Mora
+	MOBID_POM_SPIDER       = 2132, ///<       POM_SPIDER / Pom Spider
+	MOBID_ANGRA_MANTIS     = 2133, ///<     ANGRA_MANTIS / Angra Mantis
+	MOBID_PARUS            = 2134, ///<            PARUS / Parus
+	//...
+	MOBID_LITTLE_FATUM     = 2136, ///<     LITTLE_FATUM / Little Fatum
+	MOBID_MIMING           = 2137, ///<           MIMING / Miming
+
+	MOBID_KO_KAGE          = 2308, ///<          KO_KAGE / Zanzou
+};
+
 // The data structures for storing delayed item drops
 struct item_drop {
 	struct item item_data;
@@ -283,9 +411,9 @@ struct item_drop_list {
 #define mob_stop_walking(md, type) (unit->stop_walking(&(md)->bl, (type)))
 #define mob_stop_attack(md)        (unit->stop_attack(&(md)->bl))
 
-#define mob_is_battleground(md) (map->list[(md)->bl.m].flag.battleground && ((md)->class_ == MOBID_BARRICADE2 || ((md)->class_ >= MOBID_FOOD_STORAGE && (md)->class_ <= MOBID_PINK_CRYSTAL)))
-#define mob_is_gvg(md) (map->list[(md)->bl.m].flag.gvg_castle && ( (md)->class_ == MOBID_EMPERIUM || (md)->class_ == MOBID_BARRICADE1 || (md)->class_ == MOBID_GUARDIAN_STONE1 || (md)->class_ == MOBID_GUARDIAN_STONE2))
-#define mob_is_treasure(md) (((md)->class_ >= MOBID_TREASURE_01 && (md)->class_ <= MOBID_TREASURE_40) || ((md)->class_ >= MOBID_TREASURE_41 && (md)->class_ <= MOBID_TREASURE_49))
+#define mob_is_battleground(md) (map->list[(md)->bl.m].flag.battleground && ((md)->class_ == MOBID_BARRICADE_ || ((md)->class_ >= MOBID_OBJ_A && (md)->class_ <= MOBID_OBJ_B2)))
+#define mob_is_gvg(md) (map->list[(md)->bl.m].flag.gvg_castle && ( (md)->class_ == MOBID_EMPELIUM || (md)->class_ == MOBID_BARRICADE || (md)->class_ == MOBID_S_EMPEL_1 || (md)->class_ == MOBID_S_EMPEL_2))
+#define mob_is_treasure(md) (((md)->class_ >= MOBID_TREASURE_BOX1 && (md)->class_ <= MOBID_TREASURE_BOX40) || ((md)->class_ >= MOBID_TREASURE_BOX41 && (md)->class_ <= MOBID_TREASURE_BOX49))
 
 struct mob_interface {
 	// Dynamic mob database, allows saving of memory when there's big gaps in the mob_db [Skotlex]

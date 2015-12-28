@@ -2152,7 +2152,7 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 		if (!gc)
 			ShowError("status_calc_mob: No castle set at map %s\n", map->list[md->bl.m].name);
 		else
-			if(gc->castle_id < 24 || md->class_ == MOBID_EMPERIUM) {
+			if (gc->castle_id < 24 || md->class_ == MOBID_EMPELIUM) {
 #ifdef RENEWAL
 				mstatus->max_hp += 50 * gc->defense;
 				mstatus->max_sp += 70 * gc->defense;
@@ -2165,7 +2165,7 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 				mstatus->def += (gc->defense+2)/3;
 				mstatus->mdef += (gc->defense+2)/3;
 			}
-			if(md->class_ != MOBID_EMPERIUM) {
+			if (md->class_ != MOBID_EMPELIUM) {
 				mstatus->batk += mstatus->batk * 10*guardup_lv/100;
 				mstatus->rhw.atk += mstatus->rhw.atk * 10*guardup_lv/100;
 				mstatus->rhw.atk2 += mstatus->rhw.atk2 * 10*guardup_lv/100;
@@ -7095,7 +7095,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 
 	if (bl->type == BL_MOB) {
 		struct mob_data *md = BL_CAST(BL_MOB, bl);
-		if (md && (md->class_ == MOBID_EMPERIUM || mob_is_battleground(md)) && type != SC_SAFETYWALL && type != SC_PNEUMA)
+		if (md && (md->class_ == MOBID_EMPELIUM || mob_is_battleground(md)) && type != SC_SAFETYWALL && type != SC_PNEUMA)
 			return 0; //Emperium/BG Monsters can't be afflicted by status changes
 #if 0
 		if (md && mob_is_gvg(md) && status->sc2scb_flag(type)&SCB_MAXHP)
@@ -9317,7 +9317,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				int max = val1*3;
 				val3 = rnd()%(max-min)+min;
 					val2 = val1;
-					val1 = 1002; // Monster ID
+					val1 = MOBID_PORING;
 				}
 				break;
 			case SC_KAGEMUSYA:
@@ -9432,8 +9432,8 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val2 = 30 * val1;
 				break;
 			case SC_MONSTER_TRANSFORM:
-				if( !mob->db_checkid(val1) )
-					val1 = 1002; // default poring
+				if (!mob->db_checkid(val1))
+					val1 = MOBID_PORING;
 				break;
 			case SC_ALL_RIDING:
 				tick = -1;
