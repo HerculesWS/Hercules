@@ -2123,13 +2123,6 @@ struct status_change {
 #define status_get_size(bl)                  (status->get_status_data(bl)->size)
 #define status_get_mode(bl)                  (status->get_status_data(bl)->mode)
 
-#define status_get_homstr(bl)                   (st->str + ((struct homun_data *)bl)->homunculus.str_value)
-#define status_get_homagi(bl)                   (st->agi + ((struct homun_data *)bl)->homunculus.agi_value)
-#define status_get_homvit(bl)                   (st->vit + ((struct homun_data *)bl)->homunculus.vit_value)
-#define status_get_homint(bl)                   (st->int_ + ((struct homun_data *)bl)->homunculus.int_value)
-#define status_get_homdex(bl)                   (st->dex + ((struct homun_data *)bl)->homunculus.dex_value)
-#define status_get_homluk(bl)                   (st->luk + ((struct homun_data *)bl)->homunculus.luk_value)
-
 //Short version, receives rate in 1->100 range, and does not uses a flag setting.
 #define sc_start(src, bl, type, rate, val1, tick)                    (status->change_start((src),(bl),(type),100*(rate),(val1),0,0,0,(tick),SCFLAG_NONE))
 #define sc_start2(src, bl, type, rate, val1, val2, tick)             (status->change_start((src),(bl),(type),100*(rate),(val1),(val2),0,0,(tick),SCFLAG_NONE))

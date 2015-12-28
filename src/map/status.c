@@ -3559,6 +3559,14 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 		regen->rate.sp += regen->rate.sp * sc->data[SC_BUCHEDENOEL]->val2 / 100;
 	}
 }
+
+#define status_get_homstr(st, hd) ((st)->str + (hd)->homunculus.str_value)
+#define status_get_homagi(st, hd) ((st)->agi + (hd)->homunculus.agi_value)
+#define status_get_homvit(st, hd) ((st)->vit + (hd)->homunculus.vit_value)
+#define status_get_homint(st, hd) ((st)->int_ + (hd)->homunculus.int_value)
+#define status_get_homdex(st, hd) ((st)->dex + (hd)->homunculus.dex_value)
+#define status_get_homluk(st, hd) ((st)->luk + (hd)->homunculus.luk_value)
+
 /// Recalculates parts of an object's battle status according to the specified flags.
 /// @param flag bitfield of values from enum scb_flag
 void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
@@ -3877,12 +3885,13 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 	if(flag&SCB_ASPD) {
 		int amotion;
 		if ( bl->type&BL_HOM ) {
+			const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
 #ifdef RENEWAL
-			amotion = ((struct homun_data *)bl)->homunculusDB->baseASPD;
-			amotion = amotion - amotion * status_get_homdex(bl) / 1000 - status_get_homagi(bl) * amotion / 250;
+			amotion = hd->homunculusDB->baseASPD;
+			amotion = amotion - amotion * status_get_homdex(st, hd) / 1000 - status_get_homagi(st, hd) * amotion / 250;
 			amotion = (amotion * status->calc_aspd(bl, sc, 1) + status->calc_aspd(bl, sc, 2)) / -100 + amotion;
 #else
-			amotion = (1000 - 4 * st->agi - st->dex) * ((struct homun_data *)bl)->homunculusDB->baseASPD / 1000;
+			amotion = (1000 - 4 * st->agi - st->dex) * hd->homunculusDB->baseASPD / 1000;
 
 			amotion = status->calc_aspd_rate(bl, sc, amotion);
 
@@ -4243,8 +4252,10 @@ unsigned short status_base_atk(const struct block_list *bl, const struct status_
 	// equation, hinting that perhaps non-players should use this for batk.
 	// [Skotlex]
 #ifdef RENEWAL
-	if ( bl->type == BL_HOM )
-		str = 2 * (((struct homun_data *)bl)->homunculus.level + status_get_homstr(bl));
+	if (bl->type == BL_HOM) {
+		const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
+		str = 2 * (hd->homunculus.level + status_get_homstr(st, hd));
+	}
 #else
 	dstr = str / 10;
 	str += dstr*dstr;
@@ -4271,7 +4282,7 @@ unsigned short status_base_matk(struct block_list *bl, const struct status_data 
 		case BL_MOB:
 			return st->int_ + level;
 		case BL_HOM:
-			return status_get_homint(bl) + level;
+			return status_get_homint(st, BL_UCCAST(BL_HOM, bl)) + level;
 		case BL_MER:
 			return st->int_ + st->int_ / 5 * st->int_ / 5;
 		case BL_PC:
@@ -4294,14 +4305,15 @@ void status_calc_misc(struct block_list *bl, struct status_data *st, int level) 
 
 #ifdef RENEWAL // renewal formulas
 	if ( bl->type == BL_HOM ) {
-		st->def2 = status_get_homvit(bl) + status_get_homagi(bl) / 2;
-		st->mdef2 = (status_get_homvit(bl) + status_get_homint(bl)) / 2;
-		st->def += status_get_homvit(bl) + level / 2; // Increase. Already initialized in status_calc_homunculus_
-		st->mdef = (int)(((float)status_get_homvit(bl) + level) / 4 + (float)status_get_homint(bl) / 2);
+		const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
+		st->def2 = status_get_homvit(st, hd) + status_get_homagi(st, hd) / 2;
+		st->mdef2 = (status_get_homvit(st, hd) + status_get_homint(st, hd)) / 2;
+		st->def += status_get_homvit(st, hd) + level / 2; // Increase. Already initialized in status_calc_homunculus_
+		st->mdef = (int)(((float)status_get_homvit(st, hd) + level) / 4 + (float)status_get_homint(st, hd) / 2);
 		st->hit = level + st->dex + 150;
-		st->flee = level + status_get_homagi(bl);
-		st->rhw.atk = (status_get_homstr(bl) + status_get_homdex(bl)) / 5;
-		st->rhw.atk2 = (status_get_homluk(bl) + status_get_homstr(bl) + status_get_homdex(bl)) / 3;
+		st->flee = level + status_get_homagi(st, hd);
+		st->rhw.atk = (status_get_homstr(st, hd) + status_get_homdex(st, hd)) / 5;
+		st->rhw.atk2 = (status_get_homluk(st, hd) + status_get_homstr(st, hd) + status_get_homdex(st, hd)) / 3;
 	} else {
 		st->hit += level + st->dex + (bl->type == BL_PC ? st->luk / 3 + 175 : 150); //base level + ( every 1 dex = +1 hit ) + (every 3 luk = +1 hit) + 175
 		st->flee += level + st->agi + (bl->type == BL_MER ? 0: (bl->type == BL_PC ? st->luk / 5 : 0) + 100); //base level + ( every 1 agi = +1 flee ) + (every 5 luk = +1 flee) + 100
@@ -11933,8 +11945,11 @@ void status_get_matk_sub(struct block_list *bl, int flag, unsigned short *matk_m
 			*matk_max += 130 * ((struct mob_data *)bl)->status.rhw.atk2 / 100;
 			break;
 		case BL_HOM:
-			*matk_min += (status_get_homint(bl) + status_get_homdex(bl)) / 5;
-			*matk_max += (status_get_homluk(bl) + status_get_homint(bl) + status_get_homdex(bl)) / 3;
+		{
+			const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
+			*matk_min += (status_get_homint(st, hd) + status_get_homdex(st, hd)) / 5;
+			*matk_max += (status_get_homluk(st, hd) + status_get_homint(st, hd) + status_get_homdex(st, hd)) / 3;
+		}
 			break;
 	}
 
@@ -11969,6 +11984,13 @@ void status_get_matk_sub(struct block_list *bl, int flag, unsigned short *matk_m
 
 	return;
 }
+
+#undef status_get_homstr
+#undef status_get_homagi
+#undef status_get_homvit
+#undef status_get_homint
+#undef status_get_homdex
+#undef status_get_homluk
 
 /**
 * Gets a random matk value depending on min matk and max matk
