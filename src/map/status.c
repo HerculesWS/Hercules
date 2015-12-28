@@ -862,6 +862,10 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_M_LIFEPOTION] = SI_M_LIFEPOTION;
 	status->dbs->IconChangeTable[SC_G_LIFEPOTION] = SI_G_LIFEPOTION;
 	status->dbs->IconChangeTable[SC_MYSTICPOWDER] = SI_MYSTICPOWDER;
+	status->dbs->IconChangeTable[SC_SKF_CAST] = SI_SKF_CAST;
+	status->dbs->IconChangeTable[SC_SKF_ASPD] = SI_SKF_ASPD;
+	status->dbs->IconChangeTable[SC_SKF_ATK] = SI_SKF_ATK;
+	status->dbs->IconChangeTable[SC_SKF_MATK] = SI_SKF_MATK;
 	
 	// Eden Crystal Synthesis
 	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
@@ -1061,6 +1065,10 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_PHI_DEMON] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MAGIC_CANDY] |= SCB_MATK | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MYSTICPOWDER] |= SCB_FLEE | SCB_LUK;
+	status->dbs->ChangeFlagTable[SC_SKF_CAST] |= SCB_ALL;
+	status->dbs->ChangeFlagTable[SC_SKF_ASPD] |= SCB_ASPD;
+	status->dbs->ChangeFlagTable[SC_SKF_ATK] |= SCB_BATK;
+	status->dbs->ChangeFlagTable[SC_SKF_MATK] |= SCB_MATK;
 	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
@@ -4698,75 +4706,75 @@ unsigned short status_calc_luk(struct block_list *bl, struct status_change *sc, 
 }
 unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc, int batk, bool viewable)
 {
-	if(!sc || !sc->count)
+	if (!sc || !sc->count)
 		return cap_value(batk,0,USHRT_MAX);
 
-	if( !viewable ){
+	if (!viewable) {
 		/* some statuses that are hidden in the status window */
-		if(sc->data[SC_PLUSATTACKPOWER])
+		if (sc->data[SC_PLUSATTACKPOWER])
 			batk += sc->data[SC_PLUSATTACKPOWER]->val1;
-		return (unsigned short)cap_value(batk,0,USHRT_MAX);
+		return (unsigned short)cap_value(batk, 0, USHRT_MAX);
 	}
 #ifndef RENEWAL
-	if(sc->data[SC_PLUSATTACKPOWER])
+	if (sc->data[SC_PLUSATTACKPOWER])
 		batk += sc->data[SC_PLUSATTACKPOWER]->val1;
-	if(sc->data[SC_GS_MADNESSCANCEL])
+	if (sc->data[SC_GS_MADNESSCANCEL])
 		batk += 100;
-	if(sc->data[SC_GS_GATLINGFEVER])
+	if (sc->data[SC_GS_GATLINGFEVER])
 		batk += sc->data[SC_GS_GATLINGFEVER]->val3;
 #endif
-	if(sc->data[SC_BATKFOOD])
+	if (sc->data[SC_BATKFOOD])
 		batk += sc->data[SC_BATKFOOD]->val1;
-	if(sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 2)
+	if (sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 2)
 		batk += 50;
-	if(bl->type == BL_ELEM
+	if (bl->type == BL_ELEM
 		&& ((sc->data[SC_FIRE_INSIGNIA] && sc->data[SC_FIRE_INSIGNIA]->val1 == 1)
 		|| (sc->data[SC_WATER_INSIGNIA] && sc->data[SC_WATER_INSIGNIA]->val1 == 1)
 		|| (sc->data[SC_WIND_INSIGNIA] && sc->data[SC_WIND_INSIGNIA]->val1 == 1)
 		|| (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 1))
 		)
 		batk += batk / 5;
-	if(sc->data[SC_FULL_SWING_K])
+	if (sc->data[SC_FULL_SWING_K])
 		batk += sc->data[SC_FULL_SWING_K]->val1;
-	if(sc->data[SC_VOLCANIC_ASH] && (bl->type==BL_MOB)){
+	if (sc->data[SC_VOLCANIC_ASH] && (bl->type == BL_MOB)) {
 		if(status_get_element(bl) == ELE_WATER) //water type
 			batk /= 2;
 	}
-	if(sc->data[SC_PYROCLASTIC])
+	if (sc->data[SC_PYROCLASTIC])
 		batk += sc->data[SC_PYROCLASTIC]->val2;
 	if (sc->data[SC_ANGRIFFS_MODUS])
 		batk += sc->data[SC_ANGRIFFS_MODUS]->val2;
 
-	if(sc->data[SC_INCATKRATE])
-		batk += batk * sc->data[SC_INCATKRATE]->val1/100;
-	if(sc->data[SC_PROVOKE])
-		batk += batk * sc->data[SC_PROVOKE]->val3/100;
+	if (sc->data[SC_INCATKRATE])
+		batk += batk * sc->data[SC_INCATKRATE]->val1 / 100;
+	if (sc->data[SC_PROVOKE])
+		batk += batk * sc->data[SC_PROVOKE]->val3 / 100;
 #ifndef RENEWAL
-	if(sc->data[SC_LKCONCENTRATION])
-		batk += batk * sc->data[SC_LKCONCENTRATION]->val2/100;
+	if (sc->data[SC_LKCONCENTRATION])
+		batk += batk * sc->data[SC_LKCONCENTRATION]->val2 / 100;
 #else
-	if ( sc->data[SC_NOEQUIPWEAPON] && bl->type != BL_PC )
+	if (sc->data[SC_NOEQUIPWEAPON] && bl->type != BL_PC)
 		batk -= batk * sc->data[SC_NOEQUIPWEAPON]->val2 / 100;
 #endif
-	if(sc->data[SC_SKE])
+	if (sc->data[SC_SKE])
 		batk += batk * 3;
-	if(sc->data[SC_HAMI_BLOODLUST])
-		batk += batk * sc->data[SC_HAMI_BLOODLUST]->val2/100;
-	if(sc->data[SC_JOINTBEAT] && sc->data[SC_JOINTBEAT]->val2&BREAK_WAIST)
-		batk -= batk * 25/100;
-	if(sc->data[SC_CURSE])
-		batk -= batk * 25/100;
-	if( sc->data[SC_ZANGETSU] )
+	if (sc->data[SC_HAMI_BLOODLUST])
+		batk += batk * sc->data[SC_HAMI_BLOODLUST]->val2 / 100;
+	if (sc->data[SC_JOINTBEAT] && sc->data[SC_JOINTBEAT]->val2&BREAK_WAIST)
+		batk -= batk * 25 / 100;
+	if (sc->data[SC_CURSE])
+		batk -= batk * 25 / 100;
+	if (sc->data[SC_ZANGETSU])
 		batk += sc->data[SC_ZANGETSU]->val2;
 #if 0 //Curse shouldn't effect on this?  <- Curse OR Bleeding??
 	if(sc->data[SC_BLOODING])
 		batk -= batk * 25/100;
 #endif // 0
-	if(sc->data[SC_HLIF_FLEET])
-		batk += batk * sc->data[SC_HLIF_FLEET]->val3/100;
-	if(sc->data[SC__ENERVATION])
+	if (sc->data[SC_HLIF_FLEET])
+		batk += batk * sc->data[SC_HLIF_FLEET]->val3 / 100;
+	if (sc->data[SC__ENERVATION])
 		batk -= batk * sc->data[SC__ENERVATION]->val2 / 100;
-	if(sc->data[SC_SATURDAY_NIGHT_FEVER])
+	if (sc->data[SC_SATURDAY_NIGHT_FEVER])
 		batk += 100 * sc->data[SC_SATURDAY_NIGHT_FEVER]->val1;
 	if (sc->data[SC_BATTLESCROLL])
 		batk += batk * sc->data[SC_BATTLESCROLL]->val1 / 100;
@@ -4787,8 +4795,10 @@ unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc,
 		batk += batk * sc->data[SC_2011RWC]->val2 / 100;
 	if (sc->data[SC_STEAMPACK])
 		batk += sc->data[SC_STEAMPACK]->val1;
+	if (sc->data[SC_SKF_ATK])
+		batk += sc->data[SC_SKF_ATK]->val1;
 
-	return (unsigned short)cap_value(batk,0,USHRT_MAX);
+	return (unsigned short)cap_value(batk, 0, USHRT_MAX);
 }
 
 unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc, int watk, bool viewable)
@@ -4976,6 +4986,8 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += matk * sc->data[SC_2011RWC]->val2 / 100;
 	if (sc->data[SC_MAGIC_CANDY])
 		matk += sc->data[SC_MAGIC_CANDY]->val1;
+	if (sc->data[SC_SKF_MATK])
+		matk += sc->data[SC_SKF_MATK]->val1;
 
 	return (unsigned short)cap_value(matk, 0, USHRT_MAX);
 }
@@ -5786,6 +5798,8 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 			bonus += sc->data[SC_BATTLESCROLL]->val1;
 		if (sc->data[SC_STEAMPACK])
 			bonus += sc->data[SC_STEAMPACK]->val2;
+		if (sc->data[SC_SKF_ASPD])
+			bonus += sc->data[SC_SKF_ASPD]->val1;
 	}
 
 	return (bonus + pots);
@@ -5953,8 +5967,10 @@ short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int
 		aspd_rate += sc->data[SC_BATTLESCROLL]->val1 * 10;
 	if (sc->data[SC_STEAMPACK])
 		aspd_rate += sc->data[SC_STEAMPACK]->val2 * 10;
+	if (sc->data[SC_SKF_ASPD])
+		aspd_rate += sc->data[SC_SKF_ASPD]->val1 * 10;
 
-	return (short)cap_value(aspd_rate,0,SHRT_MAX);
+	return (short)cap_value(aspd_rate, 0, SHRT_MAX);
 }
 
 unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *sc, int dmotion) {
