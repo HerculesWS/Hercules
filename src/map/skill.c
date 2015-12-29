@@ -1336,7 +1336,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 				short baselv, joblv, tbaselv;
 					baselv = status->get_lv(src);
 					joblv = sd->status.job_level;
-					tbaselv = status->get_lv(bl
+					tbaselv = status->get_lv(bl);
 				switch( sd->itemid ) {
 					// Starting SCs here instead of do it in skill->additional_effect to simplify the code.
 					case ITEMID_COCONUT_BOMB:
@@ -5022,9 +5022,8 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 				break;
 			}
 
-			if ( ud->skill_id >= SL_SKE && ud->skill_id <= SL_SKA && target->type == BL_MOB )
-			{
-				if( ((TBL_MOB*)target)->class_ == MOBID_EMPERIUM )
+			if ( ud->skill_id >= SL_SKE && ud->skill_id <= SL_SKA && target->type == BL_MOB ) {
+				if ( ((TBL_MOB*)target)->class_ == MOBID_EMPELIUM )
 					break;
 			} else if ( ud->skill_id == RK_PHANTOMTHRUST && target->type != BL_MOB ) {
 				if( !map_flag_vs(src->m) && battle->check_target(src,target,BCT_PARTY) <= 0 )
@@ -5327,7 +5326,6 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case SO_ELEMENTAL_SHIELD:
 			{
 				struct party_data *p;
-				short ret = 0;
 				int x0, y0, x1, y1, range, i;
 
 				if(sd == NULL || !sd->ed)
@@ -8257,7 +8255,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 						i = 3;
 					else if( i >= 51 && i <= 100 )
 						i = 2;
-					sc_start4(src, bl, SC_MILLENNIUMSHIELD, 100, skill_lv, i, 1000, 0,s kill->get_time(skill_id, skill_lv));
+					sc_start4(src, bl, SC_MILLENNIUMSHIELD, 100, skill_lv, i, 1000, 0, skill->get_time(skill_id, skill_lv));
 					clif->millenniumshield(bl,i);
 				}
 				if ( skill->area_temp[5]&0x20 ) {
@@ -9530,16 +9528,18 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				sd->itemid = ammo_id;
 				
 				// If thrown item is a bomb or a lump, then its a attack type ammo.
-				if ( itemid_is_sling_atk(ammo_id) )
+				if ( itemid_is_sling_atk(ammo_id) ) {
 					// Only attack if the target is an enemy.
 					if (battle->check_target(src,bl,BCT_ENEMY) > 0) {
 						// Pineapple Bombs deal 5x5 splash damage on targeted enemy.
-						if ( ammo_id == ITEMID_PINEAPPLE_BOMB )
+						if ( ammo_id == ITEMID_PINEAPPLE_BOMB ) {
 							map->foreachinrange(skill->area_sub, bl, 2, BL_CHAR, src, GN_SLINGITEM_RANGEMELEEATK, skill_lv, tick, flag|BCT_ENEMY|1, skill->castend_damage_id);
-						else	// All other bombs and lumps hits one enemy.
+						} else {	// All other bombs and lumps hits one enemy.
 							skill_attack(BF_WEAPON,src,src,bl,GN_SLINGITEM_RANGEMELEEATK,skill_lv,tick,flag);
-					} else //Otherwise, it fails, shows animation and removes items.
+						}
+					} else { //Otherwise, it fails, shows animation and removes items.
 						clif->skill_fail(sd, GN_SLINGITEM, USESKILL_FAIL, 0);
+					}
 				}
 				// If thrown item is a potion, food, powder, or overcooked food, then its a buff type ammo.
 				else if( itemid_is_sling_buff(ammo_id) ) {
@@ -10893,23 +10893,23 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 				if (distance_xy(x, y, ud->skillunit[i]->unit.data[0].bl.x, ud->skillunit[i]->unit.data[0].bl.y) < r) {
 					switch (skill_lv) {
 						case 1:
-							ud->skillunit[i]->unit->val2 = skill_lv;
-							ud->skillunit[i]->unit->group->val2 = skill_lv;
+							ud->skillunit[i]->val2 = skill_lv;
+							ud->skillunit[i]->unit.data[0].val2 = skill_lv;
 							break;
 						case 2:
 							map->foreachinarea(skill_area_sub,src->m,
-								ud->skillunit[i]->unit->bl.x - 2,ud->skillunit[i]->unit->bl.y - 2,
-								ud->skillunit[i]->unit->bl.x + 2,ud->skillunit[i]->unit->bl.y + 2,BL_CHAR,
+								ud->skillunit[i]->unit.data[0].bl.x - 2,ud->skillunit[i]->unit.data[0].bl.y - 2,
+								ud->skillunit[i]->unit.data[0].bl.x + 2,ud->skillunit[i]->unit.data[0].bl.y + 2,BL_CHAR,
 								src,GN_DEMONIC_FIRE,skill_lv + 20,tick,flag|BCT_ENEMY|SD_LEVEL|1,skill->castend_damage_id);
-							skill->delunit(ud->skillunit[i]->unit);
+							skill->delunit(&ud->skillunit[i]->unit.data[0]);
 							break;
 						case 3:
-							skill->delunit(ud->skillunit[i]->unit);
+							skill->delunit(&ud->skillunit[i]->unit.data[0]);
 							skill->unitsetting(src,GN_FIRE_EXPANSION_SMOKE_POWDER,1,x,y,0);
 							flag |= 1;
 							break;
 						case 4:
-							skill->delunit(ud->skillunit[i]->unit);
+							skill->delunit(&ud->skillunit[i]->unit.data[0]);
 							skill->unitsetting(src,GN_FIRE_EXPANSION_TEAR_GAS,1,x,y,0);
 							flag |= 1;
 							break;
@@ -12529,7 +12529,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				// It has effect on everything, including monsters, undead property and demon
 				int hp = 0;
 				struct mob_data *md = BL_CAST(BL_MOB, bl);
-				if( md && md->class_ == MOBID_EMPERIUM )
+				if( md && md->class_ == MOBID_EMPELIUM )
 					break;
 				if( ssc && ssc->data[SC_HEATER_OPTION] )
 					hp = tstatus->max_hp * 3 * sg->skill_lv / 100;
@@ -18530,8 +18530,6 @@ void skill_init_unit_layout (void)
 }
 
 int skill_block_check(struct block_list *bl, int src_id, uint16 skill_id) {
-	int inf = 0;
-
 	if( !bl || skill_id < 1 )
 		return 0; // Can do it
 

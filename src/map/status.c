@@ -1734,7 +1734,6 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 	struct status_data *st;
 	struct status_change *sc=NULL, *tsc;
 	int hide_flag;
-	struct map_session_data *sd = BL_CAST(BL_PC,src);
 
 	st = src ? status->get_status_data(src) : &status->dummy;
 
@@ -1896,7 +1895,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 					(sc->data[SC_ROKISWEIL] && skill_id != BD_ADAPTATION) ||
 					(sc->data[SC_HERMODE] && skill->get_inf(skill_id) & INF_SUPPORT_SKILL) ||
 					pc_ismuted(sc, MANNER_NOSKILL) ||
-					(sc->data[SC__MANHOLE] || ((tsc = status->get_sc(target)) && tsc->data[SC__MANHOLE]) && skill_id != SC_SHADOWFORM)
+					( ( sc->data[SC__MANHOLE] || ((tsc = status->get_sc(target)) && tsc->data[SC__MANHOLE]) ) && skill_id != SC_SHADOWFORM)
 					)
 					return 0;
 
@@ -1949,7 +1948,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 			return 0;
 		if( ( tsc->data[SC_STEALTHFIELD] || tsc->data[SC_CAMOUFLAGE] ) && !(st->mode&(MD_BOSS|MD_DETECTOR)) && flag == 4 )
 			return 0;
-		if (skill_id == SC__MANHOLE && tsc->data[SC_MANHOLE])
+		if (skill_id == SC__MANHOLE && tsc->data[SC__MANHOLE])
 			return 0;
 	}
 	//If targeting, cloak+hide protect you, otherwise only hiding does.
@@ -1962,14 +1961,14 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 
 	switch( target->type ) {
 		case BL_PC: {
-				struct map_session_data *sd = (TBL_PC*) target;
+				struct map_session_data *tsd = (struct map_session_data *) target;
 				bool is_boss = (st->mode&MD_BOSS);
 				bool is_detect = ((st->mode&MD_DETECTOR)?true:false);//god-knows-why gcc doesn't shut up until this happens
-				if (pc_isinvisible(sd))
+				if (pc_isinvisible(tsd))
 					return 0;
 				if( tsc ) {
 					if (tsc->option&hide_flag && !is_boss &&
-						((sd->special_state.perfect_hiding || !is_detect) ||
+						((tsd->special_state.perfect_hiding || !is_detect) ||
 						(tsc->data[SC_CLOAKINGEXCEED] && is_detect)))
 						return 0;
 					if( tsc->data[SC_CAMOUFLAGE] && !(is_boss || is_detect) && (!skill_id || (flag == 0 && src && src->type != BL_PC)) )
@@ -8862,24 +8861,24 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC_TOXIN:
 				tick_time = 10000; // [GodLesZ] tick time
-				val4 = tick / tick_time
+				val4 = tick / tick_time;
 				break;
 			case SC_MAGICMUSHROOM:
 				tick_time = 4000; // [GodLesZ] tick time
-				val4 = tick / tick_time
+				val4 = tick / tick_time;
 				break;
 			case SC_PYREXIA:
 				tick_time = 3000; // [GodLesZ] tick time
-				val4 = tick / tick_time
+				val4 = tick / tick_time;
 				status->change_start(src, bl,SC_BLIND,10000,val1,0,0,0,30000,SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_FIXEDRATE); // Blind status that last for 30 seconds
 				break;
 			case SC_LEECHESEND:
 				tick_time = 1000; // [GodLesZ] tick time
-				val4 = tick / tick_time
+				val4 = tick / tick_time;
 				break;
 			case SC_OBLIVIONCURSE:
 				tick_time = 3000; // [GodLesZ] tick time
-				val4 = tick / tick_time
+				val4 = tick / tick_time;
 				break;
 			case SC_CLOAKINGEXCEED:
 				val2 = ( val1 + 1 ) / 2; // Hits
