@@ -18577,7 +18577,7 @@ BUILDIN(setcashmount)
 		if (sd->sc.data[SC_ALL_RIDING])
 			status_change_end(&sd->bl, SC_ALL_RIDING, INVALID_TIMER);
 		else
-			sc_start(NULL,&sd->bl, SC_ALL_RIDING, 100, 0, -1);
+			sc_start(NULL,&sd->bl, SC_ALL_RIDING, 100, 25, -1);
 		script_pushint(st,1);//in both cases, return 1.
 	}
 	return true;

@@ -5546,8 +5546,10 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 			if(sc->data[SC_FUSION]) {
 				val = 25;
 			} else if (sd) {
-				if (pc_isridingpeco(sd) || pc_isridingdragon(sd) || sd->sc.data[SC_ALL_RIDING])
+				if (pc_isridingpeco(sd) || pc_isridingdragon(sd))
 					val = 25;//Same bonus
+				else if (sd->sc.data[SC_ALL_RIDING])
+					val = sd->sc.data[SC_ALL_RIDING]->val1;
 				else if (pc_isridingwug(sd))
 					val = 15 + 5 * pc->checkskill(sd, RA_WUGRIDER);
 				else if (pc_ismadogear(sd)) {
