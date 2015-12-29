@@ -7123,7 +7123,8 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_MANDRAGORA:
 				return 0;
 		}
-	} else if( sc->data[SC_INSPIRATION] ) {
+	}
+	if ( sc->data[SC_INSPIRATION] ) {
 		if( type >= SC_COMMON_MIN && type <= SC_COMMON_MAX )
 			return 0; // Immune to status ailements
 		switch( type ) {
@@ -7494,11 +7495,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_BURNING:
 			case SC_MARSHOFABYSS:
 			case SC_ADORAMUS:
-			case SC_NEEDLE_OF_PARALYZE:
 			case SC_DEEP_SLEEP:
 			case SC_COLD:
+			case SC_FIRE_EXPANSION_TEAR_GAS:
+			case SC_FIRE_EXPANSION_TEAR_GAS_SOB:
 
-				// Exploit prevention - kRO Fix
+			// Exploit prevention - kRO Fix
 			case SC_PYREXIA:
 			case SC_DEATHHURT:
 			case SC_TOXIN:
@@ -7508,7 +7510,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_OBLIVIONCURSE:
 			case SC_LEECHESEND:
 
-				// Ranger Effects
+			// Ranger Effects
 			case SC_WUGBITE:
 			case SC_ELECTRICSHOCKER:
 			case SC_MAGNETICFIELD:
@@ -7525,6 +7527,8 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_VACUUM_EXTREME:
 			case SC_NETHERWORLD:
 			case SC__MANHOLE:
+			case SC__BLOODYLUST:
+			case SC__CHAOS:
 
 				return 0;
 		}
