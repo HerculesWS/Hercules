@@ -11387,7 +11387,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			break;
 
 		case SC_FEAR:
-			if( --(sce->val4) > 0 ) {
+			if( --(sce->val4) >= 0 ) {
 				if( sce->val2 > 0 )
 					sce->val2--;
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
@@ -11487,9 +11487,33 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				return 0;
 			}
 			break;
+			
+		case SC_FIRE_EXPANSION_TEAR_GAS:
+			if( --(sce->val4) >= 0 ) {
+				struct block_list *src = map->id2bl(sce->val3);
+				int damage = sce->val2;
+				if (src){
+					map->freeblock_lock();
+					status->damage(src,bl,damage,0,clif->damage(bl,bl,0,0,damage,0,4,0),1);
+					if( sc->data[type] ) {
+						sc_timer_next(2000 + tick,status->change_timer,bl->id,data);
+					}
+					map->freeblock_unlock();
+				}
+				return 0;
+			}
+			break;
+
+		case SC_FIRE_EXPANSION_TEAR_GAS_SOB:
+			if ( --(sce->val4) >= 0 ) {
+				clif->emotion(bl,E_SOB);
+				sc_timer_next(3000 + tick,status->change_timer,bl->id,data);
+				return 0;
+			}
+			break;
 
 		case SC_SIREN:
-			if( --(sce->val4) > 0 ) {
+			if ( --(sce->val4) > 0 ) {
 				clif->emotion(bl,E_LV);
 				sc_timer_next(2000 + tick, status->change_timer, bl->id, data);
 				return 0;
@@ -11711,7 +11735,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			return 0;
 		case SC_MEIKYOUSISUI:
 			if( --(sce->val4) > 0 ) {
-				status->heal(bl, st->max_hp * (sce->val1+1) / 100, st->max_sp * sce->val1 / 100, 0);
+				status->heal(bl, st->max_hp * (sce->val1*2) / 100, st->max_sp * sce->val1 / 100, 0);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
 			}
@@ -11735,6 +11759,13 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			if( --(sce->val4) >= 0 ) {
 				status_percent_damage(bl, bl, 0, sce->val2, false);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
+				return 0;
+			}
+			break;
+		case SC_REBOUND:
+			if (--(sce->val2)>0) {
+				clif->emotion(bl,E_SWT);
+				sc_timer_next(2000+tick, status->change_timer,bl->id, data);
 				return 0;
 			}
 			break;
@@ -12093,6 +12124,7 @@ int status_change_clear_buffs (struct block_list* bl, int type) {
 				continue;
 		}
 		switch (i) {
+		case SC_FEAR:
 		case SC_DEEP_SLEEP:
 		case SC_FROSTMISTY:
 		case SC_COLD:
