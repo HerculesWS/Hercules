@@ -5528,7 +5528,7 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 
 					if( sc->data[SC_DEC_AGI] )
 						val = max( val, 25 );
-					if( sc->data[SC_QUAGMIRE] || sc->data[SC_HALLUCINATIONWALK_POSTDELAY] )
+					if( sc->data[SC_QUAGMIRE] )
 						val = max( val, 50 );
 					if( sc->data[SC_DONTFORGETME] )
 						val = max( val, sc->data[SC_DONTFORGETME]->val3 );
@@ -5554,6 +5554,10 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 						val = max( val, sc->data[SC_NJ_SUITON]->val3 );
 					if( sc->data[SC_SWOO] )
 						val = max( val, 300 );
+					if( sc->data[SC_ADORAMUS] )
+						val = max( val, 25 );
+					if( sc->data[SC_HALLUCINATIONWALK_POSTDELAY] )
+						val = max( val, 50 );
 					if( sc->data[SC_FROSTMISTY] )
 						val = max( val, 50 );
 					if( sc->data[SC_CAMOUFLAGE] && (sc->data[SC_CAMOUFLAGE]->val3&1) == 0 )
@@ -5571,12 +5575,15 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 					if( sc->data[SC_POWER_OF_GAIA] )
 						val = max( val, sc->data[SC_POWER_OF_GAIA]->val2 );
 					if( sc->data[SC_MELON_BOMB] )
-						val = max( val, sc->data[SC_MELON_BOMB]->val1 );
+						val = max( val, sc->data[SC_MELON_BOMB]->val2 );
 					if (sc->data[SC_STOMACHACHE])
 						val = max(val, sc->data[SC_STOMACHACHE]->val2);
 						
 					if( sc->data[SC_MARSHOFABYSS] ) // It stacks to other statuses so always put this at the end.
 						val = max( 50, val + 10 * sc->data[SC_MARSHOFABYSS]->val1 );
+
+					if( sc->data[SC_NEEDLE_OF_PARALYZE] )
+						val = max( val, is_boss(bl) ? 50 : 100000);
 
 					if (sc->data[SC_MOVHASTE_POTION]) { // Doesn't affect the movement speed by Quagmire, Decrease Agi, Slow Grace [Frost]
 						if (sc->data[SC_DEC_AGI] || sc->data[SC_QUAGMIRE] || sc->data[SC_DONTFORGETME])
@@ -5616,18 +5623,18 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 				val = max( val, 10 * sc->data[SC_HLIF_AVOID]->val1 );
 			if( sc->data[SC_INVINCIBLE] && !sc->data[SC_INVINCIBLEOFF] )
 				val = max( val, 75 );
+			if( sc->data[SC_ACCELERATION] )
+				val = max( val, 25 );
 			if( sc->data[SC_CLOAKINGEXCEED] )
 				val = max( val, sc->data[SC_CLOAKINGEXCEED]->val3);
-			if( sc->data[SC_HOVERING] )
-				val = max( val, 10 );
+			if( sc->data[SC_SWING] )
+				val = max( val, 25 );
 			if( sc->data[SC_GN_CARTBOOST] )
 				val = max( val, sc->data[SC_GN_CARTBOOST]->val2 );
-			if( sc->data[SC_SWING] )
-				val = max( val, sc->data[SC_SWING]->val3 );
 			if( sc->data[SC_WIND_STEP_OPTION] )
 				val = max( val, sc->data[SC_WIND_STEP_OPTION]->val2 );
 			if( sc->data[SC_FULL_THROTTLE] )
-				val = max( val, 25);
+				val = max( val, 100);
 			if (sc->data[SC_MOVHASTE_HORSE])
 				val = max(val, sc->data[SC_MOVHASTE_HORSE]->val1);
 			if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate < 0 ) // permanent item-based speedup
@@ -5761,7 +5768,7 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 		if (sc->data[SC_EARTHDRIVE])
 			bonus -= 25;
 		if (sc->data[SC_MELON_BOMB])
-			bonus -= sc->data[SC_MELON_BOMB]->val1;
+			bonus -= sc->data[SC_MELON_BOMB]->val3;
 		if (sc->data[SC_PAIN_KILLER])
 			bonus -= sc->data[SC_PAIN_KILLER]->val2;
 
@@ -5937,7 +5944,7 @@ short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int
 	if( sc->data[SC_GENTLETOUCH_CHANGE] )
 		aspd_rate -= sc->data[SC_GENTLETOUCH_CHANGE]->val3 * 10;
 	if( sc->data[SC_MELON_BOMB] )
-		aspd_rate += sc->data[SC_MELON_BOMB]->val1 * 10;
+		aspd_rate += sc->data[SC_MELON_BOMB]->val3 * 10;
 	if( sc->data[SC_BOOST500] )
 		aspd_rate -= sc->data[SC_BOOST500]->val1 *10;
 	if( sc->data[SC_EXTRACT_SALAMINE_JUICE] )
