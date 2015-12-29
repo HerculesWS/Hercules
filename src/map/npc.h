@@ -150,6 +150,7 @@ enum npce_event {
 	NPCE_DIE,
 	NPCE_KILLPC,
 	NPCE_KILLNPC,
+	NPCE_RENTALEXPIRE,
 	NPCE_MAX
 };
 
