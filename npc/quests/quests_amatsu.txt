@@ -408,7 +408,7 @@ OnReset:
 	end;
 }
 
-ama_test,34,25,0	script	Hanako chan#ama	-1,2,2,{
+ama_test,34,25,0	script	Hanako chan#ama	FAKE_NPC,2,2,{
 OnTouch:
 	mes "[Hanako chan]";
 	mes ".......Eeeeheeheehee";
@@ -801,7 +801,7 @@ OnTimer362500:
 	end;
 }
 
-ama_test,50,100,0	script	backwarp#ama	-1,25,25,{
+ama_test,50,100,0	script	backwarp#ama	FAKE_NPC,25,25,{
 OnInit:
 	disablenpc "backwarp#ama";
 	end;

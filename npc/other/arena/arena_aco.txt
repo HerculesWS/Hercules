@@ -65,7 +65,7 @@ OnStart:
 	end;
 }
 
-force_5-1,100,12,0	script	arena#aco	-1,5,5,{
+force_5-1,100,12,0	script	arena#aco	FAKE_NPC,5,5,{
 OnTouch:
 	donpcevent "allkill#aco::OnEnable";
 	if (BaseJob == Job_Acolyte) {
@@ -290,7 +290,7 @@ On09_End:
 	end;
 }
 
-force_5-1,40,26,0	script	force_01start#aco	-1,1,1,{
+force_5-1,40,26,0	script	force_01start#aco	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_01mob#aco::OnEnable";
 	disablenpc "force_01start#aco";
@@ -319,7 +319,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,25,69,0	script	force_02start#aco	-1,1,1,{
+force_5-1,25,69,0	script	force_02start#aco	FAKE_NPC,1,1,{
 OnTouch:
 	$@drop_gate = 0;
 	donpcevent "force_02mob#aco::OnEnable";
@@ -346,7 +346,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,25,159,0	script	force_03start#aco	-1,1,1,{
+force_5-1,25,159,0	script	force_03start#aco	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_03mob#aco::OnEnable";
 	disablenpc "force_03start#aco";
@@ -370,7 +370,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,69,174,0	script	force_04start#aco	-1,1,1,{
+force_5-1,69,174,0	script	force_04start#aco	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "Trocco#aco1::On04_Start";
 	donpcevent "arena_aco1::OnReset_04";
@@ -379,7 +379,7 @@ OnTouch:
 	end;
 }
 
-force_5-1,159,174,0	script	force_05start#aco	-1,1,1,{
+force_5-1,159,174,0	script	force_05start#aco	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_05mob#aco::OnEnable";
 	disablenpc "force_05start#aco";
@@ -404,7 +404,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,174,130,0	script	force_06start#aco	-1,1,1,{
+force_5-1,174,130,0	script	force_06start#aco	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_06mob#aco::OnEnable";
 	donpcevent "arena_aco1::OnReset_06";
@@ -442,7 +442,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,174,40,0	script	force_07start#aco	-1,1,1,{
+force_5-1,174,40,0	script	force_07start#aco	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_07mob#aco::OnEnable";
 	disablenpc "force_07start#aco";
@@ -470,7 +470,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,132,26,0	script	force_08start#aco	-1,1,1,{
+force_5-1,132,26,0	script	force_08start#aco	FAKE_NPC,1,1,{
 OnTouch:
 	percentheal 50,50;
 	donpcevent "Trocco#aco1::On08_Start";
@@ -479,7 +479,7 @@ OnTouch:
 	end;
 }
 
-force_5-1,99,82,0	script	force_09start#aco	-1,1,1,{
+force_5-1,99,82,0	script	force_09start#aco	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "Trocco#aco1::On09_Start";
 	donpcevent "force_09mob#aco::OnEnable";
@@ -726,7 +726,7 @@ On09_End:
 	end;
 }
 
-force_5-1,40,26,0	script	force_01start#pri	-1,1,1,{
+force_5-1,40,26,0	script	force_01start#pri	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_01mob#pri::OnEnable";
 	disablenpc "force_01start#pri";
@@ -751,7 +751,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,25,69,0	script	force_02start#pri	-1,1,1,{
+force_5-1,25,69,0	script	force_02start#pri	FAKE_NPC,1,1,{
 OnTouch:
 	if (BaseLevel < 70) {
 		donpcevent "force_02mob#pri::OnOn1";
@@ -786,7 +786,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,25,159,0	script	force_03start#pri	-1,1,1,{
+force_5-1,25,159,0	script	force_03start#pri	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_03mob#pri::OnEnable";
 	disablenpc "force_03start#pri";
@@ -811,7 +811,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,69,174,0	script	force_04start#pri	-1,1,1,{
+force_5-1,69,174,0	script	force_04start#pri	FAKE_NPC,1,1,{
 OnTouch:
 	if (BaseLevel < 90) {
 		donpcevent "force_04mob#pri::OnOn1";
@@ -852,7 +852,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,159,174,0	script	force_05start#pri	-1,1,1,{
+force_5-1,159,174,0	script	force_05start#pri	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_05mob#pri::OnEnable";
 	if (BaseLevel < 70) {
@@ -901,7 +901,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,174,130,0	script	force_06start#pri	-1,1,1,{
+force_5-1,174,130,0	script	force_06start#pri	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_06ex#pri::OnEnable";
 	if (BaseLevel < 70) {
@@ -959,7 +959,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,174,40,0	script	force_07start#pri	-1,1,1,{
+force_5-1,174,40,0	script	force_07start#pri	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "force_07mob#pri::OnEnable";
 	disablenpc "force_07start#pri";
@@ -984,7 +984,7 @@ OnMyMobDead:
 	end;
 }
 
-force_5-1,132,26,0	script	force_08start#pri	-1,1,1,{
+force_5-1,132,26,0	script	force_08start#pri	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "Trocco#aco2::On08_Start";
 	donpcevent "arena_aco2::OnReset_08";
@@ -992,7 +992,7 @@ OnTouch:
 	end;
 }
 
-force_5-1,99,82,0	script	force_09start#pri	-1,1,1,{
+force_5-1,99,82,0	script	force_09start#pri	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "Trocco#aco2::On09_Start";
 	if (BaseLevel < 70) {
@@ -1490,7 +1490,7 @@ OnStop:
 	end;
 }
 
-prt_are_in,22,29,0	script	arn_warp_aco	-1,20,20,{
+prt_are_in,22,29,0	script	arn_warp_aco	FAKE_NPC,20,20,{
 OnInit:
 	disablenpc "arn_warp_aco";
 	end;

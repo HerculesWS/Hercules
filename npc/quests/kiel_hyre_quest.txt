@@ -1986,7 +1986,7 @@ kh_vila,178,20,0	duplicate(BookKHQ1)	Book#kh3	HIDDEN_NPC
 kh_vila,175,19,0	duplicate(BookKHQ1)	Book#kh4	HIDDEN_NPC
 
 //- Store room interior; Letter to Elly on the floor. -
-kh_vila,179,11,0	script	Letter#kh	-1,1,1,{
+kh_vila,179,11,0	script	Letter#kh	FAKE_NPC,1,1,{
 //OnTouch2:
 OnTouch:
 	if (KielHyreQuest == 18) {
@@ -3443,19 +3443,19 @@ kh_dun01,162,206,0	duplicate(KHKeyardReader)	Mechanical Device	HIDDEN_NPC
 
 //- Keep monsters out of the quest area -
 // Silly really since the rest of it's a dungeon
-//kh_dun01,180,220,0	script	Monster Warp#kh1::KHMobWarp	-1,5,20,{
+//kh_dun01,180,220,0	script	Monster Warp#kh1::KHMobWarp	FAKE_NPC,5,20,{
 //OnTouchNPC:
 //	warp "kh_dun01",178,138;
 //	end;
 //}
 
-//kh_dun01,190,220,0	duplicate(KHMobWarp)	Monster Warp#kh2	-1,5,20
-//kh_dun01,200,250,0	duplicate(KHMobWarp)	Monster Warp#kh3	-1,5,20
-//kh_dun01,210,220,0	duplicate(KHMobWarp)	Monster Warp#kh4	-1,5,20
-//kh_dun01,220,220,0	duplicate(KHMobWarp)	Monster Warp#kh5	-1,5,10
+//kh_dun01,190,220,0	duplicate(KHMobWarp)	Monster Warp#kh2	FAKE_NPC,5,20
+//kh_dun01,200,250,0	duplicate(KHMobWarp)	Monster Warp#kh3	FAKE_NPC,5,20
+//kh_dun01,210,220,0	duplicate(KHMobWarp)	Monster Warp#kh4	FAKE_NPC,5,20
+//kh_dun01,220,220,0	duplicate(KHMobWarp)	Monster Warp#kh5	FAKE_NPC,5,10
 
 //- Kiel Hyre - OnTouch -
-kh_dun01,224,233,0	script	Factory B Area Door	-1,5,5,{
+kh_dun01,224,233,0	script	Factory B Area Door	FAKE_NPC,5,5,{
 //OnTouch2:
 OnTouch:
 	if (KielHyreQuest == 40) {
@@ -4611,7 +4611,7 @@ kh_mansion,18,30,4	script	Allysia	4_F_KHELLISIA,{
 }
 
 //- Abduction triggering NPC -
-lighthalzen,188,200,0	script	Abduction_trigger	-1,3,1,{
+lighthalzen,188,200,0	script	Abduction_trigger	FAKE_NPC,3,1,{
 //OnTouch2:
 OnTouch:
 	if (KielHyreQuest == 50) {
@@ -6191,7 +6191,7 @@ OnTouch:
 }
 
 //- Kiehl's Room; Kiehl_Room_Trap (Entry way trap) -
-kh_kiehl02,49,10,0	script	Kiehl_Room_Trap	-1,5,3,{
+kh_kiehl02,49,10,0	script	Kiehl_Room_Trap	FAKE_NPC,5,3,{
 	end;
 
 OnTouch:

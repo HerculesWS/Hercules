@@ -1437,16 +1437,16 @@ OnTimer30000:
 	donpcevent strnpcinfo(0)+"::OnDisable";
 	end;
 }
--	duplicate(Crackt0#mal)	Crackt1#mal	-1
--	duplicate(Crackt0#mal)	Crackt2#mal	-1
--	duplicate(Crackt0#mal)	Crackt3#mal	-1
--	duplicate(Crackt0#mal)	Crackt4#mal	-1
--	duplicate(Crackt0#mal)	Crackt5#mal	-1
--	duplicate(Crackt0#mal)	Crackt6#mal	-1
--	duplicate(Crackt0#mal)	Crackt7#mal	-1
--	duplicate(Crackt0#mal)	Crackt8#mal	-1
--	duplicate(Crackt0#mal)	Crackt9#mal	-1
--	duplicate(Crackt0#mal)	Crackt10#mal	-1
+-	duplicate(Crackt0#mal)	Crackt1#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt2#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt3#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt4#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt5#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt6#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt7#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt8#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt9#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt10#mal	FAKE_NPC
 
 mal_in02,181,55,3	script	Brie#mal	4_CAT_SAILOR2,{
 	if (ma_tomas < 6) {
@@ -1974,16 +1974,16 @@ OnTimer30000:
 	donpcevent strnpcinfo(0)+"::OnDisable";
 	end;
 }
--	duplicate(Water Sand0#mal)	Water Sand1#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand2#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand3#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand4#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand5#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand6#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand7#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand8#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand9#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand10#mal	-1
+-	duplicate(Water Sand0#mal)	Water Sand1#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand2#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand3#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand4#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand5#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand6#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand7#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand8#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand9#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand10#mal	FAKE_NPC
 
 mal_dun01,136,120,6	script	Linguist Devore#mald	4_CAT_MERMASTER,{
 	end;
@@ -3172,7 +3172,7 @@ malangdo,197,120,5	script	A Foolish Cat#ml	4_CAT_SAILOR3,{
 	close;
 }
 
-malangdo,196,120,0	script	#ml1	-1,2,2,{
+malangdo,196,120,0	script	#ml1	FAKE_NPC,2,2,{
 OnTouch:
 	if (malang_bad_guys == 1 || malang_bad_guys == 2) {
 		mes "You hear a conversation between the Suspious Dealers.";
@@ -3231,7 +3231,7 @@ OnTouch:
 	end;
 }
 
-malangdo,155,179,0	script	#ml2	-1,2,2,{
+malangdo,155,179,0	script	#ml2	FAKE_NPC,2,2,{
 OnTouch:
 	if (malang_bad_guys == 2 || malang_bad_guys == 3) {
 		mes "There's a memo.";
@@ -3388,7 +3388,7 @@ mal_in02,184,72,3	script	Gozangee#ml	4_CAT_SAILOR4,{
 	close;
 }
 
-mal_in02,184,77,0	script	#ml3	-1,2,2,{
+mal_in02,184,77,0	script	#ml3	FAKE_NPC,2,2,{
 OnTouch:
 	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items. -";

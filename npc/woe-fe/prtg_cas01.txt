@@ -136,10 +136,10 @@ prtg_cas01,15,208,0	script	#Lever_PR01	HIDDEN_NPC,{
 prtg_cas01,94,200,0	duplicate(gdlever)	#prtg_cas01	HIDDEN_NPC
 
 //== Guild Treasure Spawns =================================
-prtg_cas01,11,208,0	duplicate(Gld_Trea_Spawn)	Treasure#prtg_cas01	-1
+prtg_cas01,11,208,0	duplicate(Gld_Trea_Spawn)	Treasure#prtg_cas01	FAKE_NPC
 
 //== AGIT Manager ==========================================
-prtg_cas01,197,197,0	duplicate(Gld_Agit_Manager)	Agit#prtg_cas01	-1
+prtg_cas01,197,197,0	duplicate(Gld_Agit_Manager)	Agit#prtg_cas01	FAKE_NPC
 
 //== Guardians =============================================
-prtg_cas01,112,181,0	duplicate(Gld_Guard_Template)	Guardian#prtg_cas01	-1
+prtg_cas01,112,181,0	duplicate(Gld_Guard_Template)	Guardian#prtg_cas01	FAKE_NPC

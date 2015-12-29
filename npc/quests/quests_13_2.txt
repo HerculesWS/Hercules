@@ -1050,7 +1050,7 @@ spl_fild01,341,109,0	script	????#ep13_mdplant05	CLEAR_NPC,{
 	}
 }
 
-spl_fild01,375,109,0	script	to_dun01#ep13_2	-1,2,2,{
+spl_fild01,375,109,0	script	to_dun01#ep13_2	FAKE_NPC,2,2,{
 OnTouch:
 	if (ep13_mdrama == 5) {
 		mes "There's a stem entangled inside an opening in the roots of a huge tree...";
@@ -2353,7 +2353,7 @@ man_in01,19,126,3	script	Luik#ep13md16	4_MAN_GALTUN,{
 	}
 }
 
-man_in01,71,125,0	script	Terra gone	-1,3,3,{
+man_in01,71,125,0	script	Terra gone	FAKE_NPC,3,3,{
 OnTouch:
 	mes "There's nothing else.";
 	mes "Only traces of the cage with something confined.";
@@ -4829,29 +4829,29 @@ OnTouch:
 	end;
 }
 
-mjolnir_03,76,258,0	duplicate(mjo_no_find)	#mj03_find_1	-1,5,5
-mjolnir_03,227,204,0	duplicate(mjo_no_find)	#mj03_find_2	-1,5,5
-mjolnir_05,82,171,0	duplicate(mjo_no_find)	#mj05_find_1	-1,5,5
-mjolnir_05,219,375,0	duplicate(mjo_no_find)	#mj05_find_2	-1,5,5
-mjolnir_06,28,332,0	duplicate(mjo_no_find)	#mj06_find_1	-1,5,5
-mjolnir_06,275,50,0	duplicate(mjo_no_find)	#mj06_find_2	-1,5,5
-mjolnir_06,371,78,0	duplicate(mjo_no_find)	#mj06_find_3	-1,5,5
-mjolnir_07,26,373,0	duplicate(mjo_no_find)	#mj07_find_1	-1,5,5
-mjolnir_07,214,373,0	duplicate(mjo_no_find)	#mj07_find_2	-1,5,5
-mjolnir_07,372,355,0	duplicate(mjo_no_find)	#mj07_find_3	-1,5,5
-mjolnir_07,375,233,0	duplicate(mjo_no_find)	#mj07_find_4	-1,5,5
-mjolnir_07,26,78,0	duplicate(mjo_no_find)	#mj07_find_5	-1,5,5
-mjolnir_07,157,25,0	duplicate(mjo_no_find)	#mj07_find_6	-1,5,5
-mjolnir_08,39,239,0	duplicate(mjo_no_find)	#mj08_find_1	-1,5,5
-mjolnir_08,36,344,0	duplicate(mjo_no_find)	#mj08_find_2	-1,5,5
-mjolnir_08,160,349,0	duplicate(mjo_no_find)	#mj08_find_3	-1,5,5
-mjolnir_08,359,258,0	duplicate(mjo_no_find)	#mj08_find_4	-1,5,5
-mjolnir_08,193,62,0	duplicate(mjo_no_find)	#mj08_find_5	-1,5,5
-mjolnir_11,29,220,0	duplicate(mjo_no_find)	#mj11_find_1	-1,5,5
-mjolnir_11,175,29,0	duplicate(mjo_no_find)	#mj11_find_2	-1,5,5
-mjolnir_12,199,370,0	duplicate(mjo_no_find)	#mj12_find_1	-1,5,5
-mjolnir_12,44,25,0	duplicate(mjo_no_find)	#mj12_find_2	-1,5,5
-mjolnir_12,220,37,0	duplicate(mjo_no_find)	#mj12_find_3	-1,5,5
+mjolnir_03,76,258,0	duplicate(mjo_no_find)	#mj03_find_1	FAKE_NPC,5,5
+mjolnir_03,227,204,0	duplicate(mjo_no_find)	#mj03_find_2	FAKE_NPC,5,5
+mjolnir_05,82,171,0	duplicate(mjo_no_find)	#mj05_find_1	FAKE_NPC,5,5
+mjolnir_05,219,375,0	duplicate(mjo_no_find)	#mj05_find_2	FAKE_NPC,5,5
+mjolnir_06,28,332,0	duplicate(mjo_no_find)	#mj06_find_1	FAKE_NPC,5,5
+mjolnir_06,275,50,0	duplicate(mjo_no_find)	#mj06_find_2	FAKE_NPC,5,5
+mjolnir_06,371,78,0	duplicate(mjo_no_find)	#mj06_find_3	FAKE_NPC,5,5
+mjolnir_07,26,373,0	duplicate(mjo_no_find)	#mj07_find_1	FAKE_NPC,5,5
+mjolnir_07,214,373,0	duplicate(mjo_no_find)	#mj07_find_2	FAKE_NPC,5,5
+mjolnir_07,372,355,0	duplicate(mjo_no_find)	#mj07_find_3	FAKE_NPC,5,5
+mjolnir_07,375,233,0	duplicate(mjo_no_find)	#mj07_find_4	FAKE_NPC,5,5
+mjolnir_07,26,78,0	duplicate(mjo_no_find)	#mj07_find_5	FAKE_NPC,5,5
+mjolnir_07,157,25,0	duplicate(mjo_no_find)	#mj07_find_6	FAKE_NPC,5,5
+mjolnir_08,39,239,0	duplicate(mjo_no_find)	#mj08_find_1	FAKE_NPC,5,5
+mjolnir_08,36,344,0	duplicate(mjo_no_find)	#mj08_find_2	FAKE_NPC,5,5
+mjolnir_08,160,349,0	duplicate(mjo_no_find)	#mj08_find_3	FAKE_NPC,5,5
+mjolnir_08,359,258,0	duplicate(mjo_no_find)	#mj08_find_4	FAKE_NPC,5,5
+mjolnir_08,193,62,0	duplicate(mjo_no_find)	#mj08_find_5	FAKE_NPC,5,5
+mjolnir_11,29,220,0	duplicate(mjo_no_find)	#mj11_find_1	FAKE_NPC,5,5
+mjolnir_11,175,29,0	duplicate(mjo_no_find)	#mj11_find_2	FAKE_NPC,5,5
+mjolnir_12,199,370,0	duplicate(mjo_no_find)	#mj12_find_1	FAKE_NPC,5,5
+mjolnir_12,44,25,0	duplicate(mjo_no_find)	#mj12_find_2	FAKE_NPC,5,5
+mjolnir_12,220,37,0	duplicate(mjo_no_find)	#mj12_find_3	FAKE_NPC,5,5
 
 -	script	mjo_find	FAKE_NPC,{
 	if ((ep13_2_tre == 2) && (countitem(Portable_Toolbox) == 1)) {
@@ -4911,7 +4911,7 @@ mjolnir_04,220,130,3	duplicate(mjo_find)	#mj04_02	HIDDEN_NPC,7,7
 mjolnir_09,229,214,3	duplicate(mjo_find)	#mj09_01	HIDDEN_NPC,10,10
 mjolnir_10,188,260,3	duplicate(mjo_find)	#mj10_01	HIDDEN_NPC,10,10
 
-mjolnir_01,364,256,0	script	#mj01_find	-1,5,5,{
+mjolnir_01,364,256,0	script	#mj01_find	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -4945,7 +4945,7 @@ OnTimer60000:
 	end;
 }
 
-mjolnir_02,313,289,0	script	#mj02_find_1	-1,5,5,{
+mjolnir_02,313,289,0	script	#mj02_find_1	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -4955,7 +4955,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_02,78,258,0	script	#mj02_find_2	-1,5,5,{
+mjolnir_02,78,258,0	script	#mj02_find_2	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -4988,7 +4988,7 @@ OnTimer60000:
 	end;
 }
 
-mjolnir_04,147,208,0	script	#mj04_find_1	-1,5,5,{
+mjolnir_04,147,208,0	script	#mj04_find_1	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -4998,7 +4998,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_04,160,77,0	script	#mj04_find_2	-1,5,5,{
+mjolnir_04,160,77,0	script	#mj04_find_2	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5008,7 +5008,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_04,361,174,0	script	#mj04_find_3	-1,5,5,{
+mjolnir_04,361,174,0	script	#mj04_find_3	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5040,7 +5040,7 @@ OnTimer60000:
 	end;
 }
 
-mjolnir_09,201,355,0	script	#mj09_find_1	-1,5,5,{
+mjolnir_09,201,355,0	script	#mj09_find_1	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5049,7 +5049,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_09,38,243,0	script	#mj09_find_2	-1,5,5,{
+mjolnir_09,38,243,0	script	#mj09_find_2	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5058,7 +5058,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_09,106,36,0	script	#mj09_find_3	-1,5,5,{
+mjolnir_09,106,36,0	script	#mj09_find_3	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5067,7 +5067,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_09,306,36,0	script	#mj09_find_4	-1,5,5,{
+mjolnir_09,306,36,0	script	#mj09_find_4	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5076,7 +5076,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_09,369,279,0	script	#mj09_find_5	-1,5,5,{
+mjolnir_09,369,279,0	script	#mj09_find_5	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5096,7 +5096,7 @@ OnTimer60000:
 	end;
 }
 
-mjolnir_10,201,355,0	script	#mj10_find_1	-1,5,5,{
+mjolnir_10,201,355,0	script	#mj10_find_1	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5105,7 +5105,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_10,374,215,0	script	#mj10_find_2	-1,5,5,{
+mjolnir_10,374,215,0	script	#mj10_find_2	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5114,7 +5114,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_10,272,20,0	script	#mj10_find_3	-1,5,5,{
+mjolnir_10,272,20,0	script	#mj10_find_3	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5123,7 +5123,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_10,75,22,0	script	#mj10_find_4	-1,5,5,{
+mjolnir_10,75,22,0	script	#mj10_find_4	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5132,7 +5132,7 @@ OnTouch:
 	close;
 }
 
-mjolnir_10,27,258,0	script	#mj10_find_5	-1,5,5,{
+mjolnir_10,27,258,0	script	#mj10_find_5	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5152,7 +5152,7 @@ OnTimer60000:
 	end;
 }
 
-hu_fild05,335,152,0	script	#hu_find_1	-1,5,5,{
+hu_fild05,335,152,0	script	#hu_find_1	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5165,7 +5165,7 @@ OnTouch:
 	close;
 }
 
-hu_fild05,89,52,0	script	#hu_find_2	-1,5,5,{
+hu_fild05,89,52,0	script	#hu_find_2	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5178,7 +5178,7 @@ OnTouch:
 	close;
 }
 
-hu_fild05,42,205,0	script	#hu_find_3	-1,5,5,{
+hu_fild05,42,205,0	script	#hu_find_3	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5191,7 +5191,7 @@ OnTouch:
 	close;
 }
 
-hu_fild05,276,349,0	script	#hu_find_4	-1,5,5,{
+hu_fild05,276,349,0	script	#hu_find_4	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -5313,7 +5313,7 @@ OnTimer60000:
 	end;
 }
 
-ve_fild03,351,219,0	script	#ve_find_1	-1,3,3,{
+ve_fild03,351,219,0	script	#ve_find_1	FAKE_NPC,3,3,{
 	end;
 
 OnTouch:
@@ -5325,7 +5325,7 @@ OnTouch:
 	close;
 }
 
-ve_fild03,223,51,0	script	#ve_find_2	-1,5,5,{
+ve_fild03,223,51,0	script	#ve_find_2	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:

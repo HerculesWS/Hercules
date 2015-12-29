@@ -62,7 +62,7 @@
 //=========================================================================
 
 //== Nameless Island and Cursed Monestary Access Quest :: aru_monas =
-airplane_01,90,63,0	script	Event Switch#pc	-1,3,3,{
+airplane_01,90,63,0	script	Event Switch#pc	FAKE_NPC,3,3,{
 	end;
 
 OnTouch:
@@ -285,7 +285,7 @@ ra_in01,297,50,7	script	Suspicious-Looking Man	4_M_MASK1,{
 	close;
 }
 
-ra_in01,301,43,0	script	MealConversation Trigger	-1,3,3,{
+ra_in01,301,43,0	script	MealConversation Trigger	FAKE_NPC,3,3,{
 	end;
 
 OnTouch:
@@ -919,7 +919,7 @@ OnInit:
 	end;
 }
 
-nameless_i,212,184,0	script	Outside Island#Aru	-1,2,3,{
+nameless_i,212,184,0	script	Outside Island#Aru	FAKE_NPC,2,3,{
 	end;
 
 OnTouch:
@@ -940,7 +940,7 @@ OnTouch:
 	end;
 }
 
-nameless_in,21,176,0	script	Inside Island#Aru	-1,2,2,{
+nameless_in,21,176,0	script	Inside Island#Aru	FAKE_NPC,2,2,{
 	end;
 
 OnTouch:
@@ -955,7 +955,7 @@ OnTouch:
 	end;
 }
 
-nameless_i,129,218,0	script	Grass Behind#Aru	-1,4,3,{
+nameless_i,129,218,0	script	Grass Behind#Aru	FAKE_NPC,4,3,{
 	end;
 
 OnTouch:
@@ -1017,7 +1017,7 @@ nameless_i,127,207,0	script	Dead Crow#Aru	HIDDEN_NPC,{
 	end;
 }
 
-nameless_in,15,61,0	script	Pass Out#Aru	-1,2,3,{
+nameless_in,15,61,0	script	Pass Out#Aru	FAKE_NPC,2,3,{
 	end;
 
 OnTouch:
@@ -1157,7 +1157,7 @@ OnTouch:
 	close;
 }
 
-nameless_n,169,254,0	script	Night#Aru2	-1,3,3,{
+nameless_n,169,254,0	script	Night#Aru2	FAKE_NPC,3,3,{
 	end;
 
 OnTouch:
@@ -2439,7 +2439,7 @@ OnTouch:
 	end;
 }
 
-moc_ruins,86,149,0	script	#ForeignMerchant1	-1,3,3,{
+moc_ruins,86,149,0	script	#ForeignMerchant1	FAKE_NPC,3,3,{
 OnTouch:
 	if (aru_em == 4) {
 		aru_em = 5;
@@ -2447,7 +2447,7 @@ OnTouch:
 	end;
 }
 
-moc_ruins,88,136,0	script	#ForeignMerchant2	-1,3,3,{
+moc_ruins,88,136,0	script	#ForeignMerchant2	FAKE_NPC,3,3,{
 OnTouch:
 	if (aru_em == 1) {
 		aru_em = 2;
@@ -2464,7 +2464,7 @@ OnTouch:
 	end;
 }
 
-moc_ruins,106,133,0	script	#ForeignMerchant3	-1,3,3,{
+moc_ruins,106,133,0	script	#ForeignMerchant3	FAKE_NPC,3,3,{
 OnTouch:
 	if (aru_em == 2) {
 		aru_em = 3;
@@ -2472,7 +2472,7 @@ OnTouch:
 	end;
 }
 
-moc_ruins,115,147,0	script	#ForeignMerchant4	-1,3,3,{
+moc_ruins,115,147,0	script	#ForeignMerchant4	FAKE_NPC,3,3,{
 OnTouch:
 	if (aru_em == 3) {
 		aru_em = 4;
@@ -2861,7 +2861,7 @@ que_temsky,99,100,6	script	Pope#rachel2	4_F_ARUNA_POP,{
 	end;
 }
 
-que_temsky,100,93,0	script	#em_sky_s	-1,5,2,{
+que_temsky,100,93,0	script	#em_sky_s	FAKE_NPC,5,2,{
 //OnTouch2:
 OnTouch:
 	if (aru_em == 21) {
@@ -3143,7 +3143,7 @@ OnTouch:
 	end;
 }
 
-rachel,142,136,0	script	#em_end	-1,5,5,{
+rachel,142,136,0	script	#em_end	FAKE_NPC,5,5,{
 OnInit:
 	stopnpctimer;
 	end;
@@ -8716,7 +8716,7 @@ OnTouch:
 	end;
 }
 
-z_agit,98,44,0	script	EntranceCheck#1	-1,10,10,{
+z_agit,98,44,0	script	EntranceCheck#1	FAKE_NPC,10,10,{
 OnTouch:
 	if (((zdan_edq == 15) || (zdan_edq == 16)) && ($@monster_zgang == 0)) {
 		$@monster_zgang = 1;
@@ -8745,7 +8745,7 @@ OnTouch:
 	end;
 }
 
-z_agit,98,92,0	script	EntranceCheck#2	-1,10,10,{
+z_agit,98,92,0	script	EntranceCheck#2	FAKE_NPC,10,10,{
 OnTouch:
 	if (((zdan_edq == 15) || (zdan_edq == 16)) && ($@monster_zgang == 0)) {
 		$@monster_zgang = 1;
@@ -11644,7 +11644,7 @@ OnTimer60000:
 	end;
 }
 
-gef_fild08,182,182,0	script	#CallGhost	-1,2,2,{
+gef_fild08,182,182,0	script	#CallGhost	FAKE_NPC,2,2,{
 	end;
 
 //OnTouch2:

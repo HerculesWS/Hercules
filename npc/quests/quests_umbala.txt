@@ -1271,7 +1271,7 @@ umbala,145,217,3	script	Chabimatan	4_F_UMWOMAN,{
 	}
 }
 
-um_in,141,46,0	script	#!@#$%	-1,8,8,{
+um_in,141,46,0	script	#!@#$%	FAKE_NPC,8,8,{
 OnInit:
 	disablenpc "#!@#$%";
 	end;
@@ -1300,7 +1300,7 @@ OnTouch:
 	end;
 }
 
-umbala,94,181,0	script	#unpc	-1,1,1,{
+umbala,94,181,0	script	#unpc	FAKE_NPC,1,1,{
 OnInit:
 	disablenpc "#unpc";
 	end;

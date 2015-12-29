@@ -1260,7 +1260,7 @@ OnTimer63000:
 	end;
 }
 
-job_wiz,114,169,0	script	Room of Water#Failed	-1,16,16,{
+job_wiz,114,169,0	script	Room of Water#Failed	FAKE_NPC,16,16,{
 OnInit:
 	disablenpc "Room of Water#Failed";
 	end;
@@ -1437,7 +1437,7 @@ OnTimer63000:
 	end;
 }
 
-job_wiz,116,97,0	script	Room of Earth#Failed	-1,16,16,{
+job_wiz,116,97,0	script	Room of Earth#Failed	FAKE_NPC,16,16,{
 OnInit:
 	disablenpc "Room of Earth#Failed";
 	end;
@@ -1617,7 +1617,7 @@ OnTimer123000:
 	donpcevent "Arena Assistant::OnStart";
 }
 
-job_wiz,46,99,0	script	Room of Fire#Failed	-1,16,16,{
+job_wiz,46,99,0	script	Room of Fire#Failed	FAKE_NPC,16,16,{
 OnInit:
 	disablenpc "Room of Fire#Failed";
 	end;

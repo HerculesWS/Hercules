@@ -133,10 +133,10 @@ gefg_cas02,145,114,0	script	#lever_G02	HIDDEN_NPC,{
 gefg_cas02,167,40,0	duplicate(gdlever)	#gefg_cas02	HIDDEN_NPC
 
 //== Guild Treasure Spawns =================================
-gefg_cas02,140,116,0	duplicate(Gld_Trea_Spawn)	Treasure#gefg_cas02	-1
+gefg_cas02,140,116,0	duplicate(Gld_Trea_Spawn)	Treasure#gefg_cas02	FAKE_NPC
 
 //== AGIT Manager ==========================================
-gefg_cas02,176,178,0	duplicate(Gld_Agit_Manager)	Agit#gefg_cas02	-1
+gefg_cas02,176,178,0	duplicate(Gld_Agit_Manager)	Agit#gefg_cas02	FAKE_NPC
 
 //== Guardians =============================================
-gefg_cas02,12,66,5	duplicate(Gld_Guard_Template)	Guardian#gefg_cas02	-1
+gefg_cas02,12,66,5	duplicate(Gld_Guard_Template)	Guardian#gefg_cas02	FAKE_NPC

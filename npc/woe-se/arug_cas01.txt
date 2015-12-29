@@ -32,15 +32,15 @@
 //= 1.0
 //=========================================================================
 
--	duplicate(Manager#template)	Manager#arug_cas01	-1
--	duplicate(gard#template)	gard1#arug_cas01	-1
--	duplicate(gard#template)	gard2#arug_cas01	-1
--	duplicate(df#template)	df1#arug_cas01	-1
--	duplicate(df#template)	df2#arug_cas01	-1
--	duplicate(RL#template)	RL0#arug_cas01	-1
--	duplicate(RL#template)	RL1#arug_cas01	-1
--	duplicate(RL#template)	RL2#arug_cas01	-1
--	duplicate(RL#template)	RL3#arug_cas01	-1
+-	duplicate(Manager#template)	Manager#arug_cas01	FAKE_NPC
+-	duplicate(gard#template)	gard1#arug_cas01	FAKE_NPC
+-	duplicate(gard#template)	gard2#arug_cas01	FAKE_NPC
+-	duplicate(df#template)	df1#arug_cas01	FAKE_NPC
+-	duplicate(df#template)	df2#arug_cas01	FAKE_NPC
+-	duplicate(RL#template)	RL0#arug_cas01	FAKE_NPC
+-	duplicate(RL#template)	RL1#arug_cas01	FAKE_NPC
+-	duplicate(RL#template)	RL2#arug_cas01	FAKE_NPC
+-	duplicate(RL#template)	RL3#arug_cas01	FAKE_NPC
 
 arug_cas01,92,380,3	duplicate(Steward#template)	Steward#ar01	1_M_JOBTESTER
 arug_cas01,112,193,1	duplicate(Guardian#template)	Brace#ar01	4_M_LGTGUARD

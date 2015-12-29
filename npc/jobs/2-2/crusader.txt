@@ -1248,7 +1248,7 @@ OnStart:
 	end;
 }
 
-job_cru,168,17,0	script	Zombie Guide	-1,2,2,{
+job_cru,168,17,0	script	Zombie Guide	FAKE_NPC,2,2,{
 OnTouch:
 	mes "[Bliant Piyord]";
 	mes "Go forth and defeat all";
@@ -1315,7 +1315,7 @@ OnReset:
 	end;
 }
 
-job_cru,168,45,0	script	Monster Summon#cr1	-1,15,1,{
+job_cru,168,45,0	script	Monster Summon#cr1	FAKE_NPC,15,1,{
 OnInit:
 	disablenpc "Monster Summon#cr1";
 	end;
@@ -1334,7 +1334,7 @@ OnEnd:
 	end;
 }
 
-job_cru,168,80,0	script	Monster Summon#cr2	-1,15,1,{
+job_cru,168,80,0	script	Monster Summon#cr2	FAKE_NPC,15,1,{
 OnInit:
 	disablenpc "Monster Summon#cr2";
 	end;
@@ -1353,7 +1353,7 @@ OnEnd:
 	end;
 }
 
-job_cru,165,115,0	script	Monster Summon#cr3	-1,15,1,{
+job_cru,165,115,0	script	Monster Summon#cr3	FAKE_NPC,15,1,{
 OnInit:
 	disablenpc "Monster Summon#cr3";
 	end;
@@ -1372,7 +1372,7 @@ OnEnd:
 	end;
 }
 
-job_cru,168,150,0	script	Monster Summon#cr4	-1,15,1,{
+job_cru,168,150,0	script	Monster Summon#cr4	FAKE_NPC,15,1,{
 OnInit:
 	disablenpc "Monster Summon#cr4";
 	end;

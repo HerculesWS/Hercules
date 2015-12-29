@@ -2947,7 +2947,7 @@ const char* npc_skip_script(const char* start, const char* buffer, const char* f
  *
  * Example:
  * @code
- * -<TAB>script<TAB><NPC Name><TAB>-1,{
+ * -<TAB>script<TAB><NPC Name><TAB>FAKE_NPC,{
  *   <code>
  * }
  * <map name>,<x>,<y>,<facing><TAB>script<TAB><NPC Name><TAB><sprite id>,{

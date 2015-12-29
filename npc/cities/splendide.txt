@@ -456,7 +456,7 @@ spl_in01,287,306,3	script	#spl_prs	HIDDEN_NPC,{
 	}
 }
 
-spl_in01,265,315,0	script	#spl_prs1	-1,5,5,{
+spl_in01,265,315,0	script	#spl_prs1	FAKE_NPC,5,5,{
 OnTouch:
 	if ((isequipped(2782) == 1) && (ep13_2_rhea == 100)) {
 		mes "[Voice from another side]";

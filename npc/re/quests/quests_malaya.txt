@@ -8007,16 +8007,16 @@ OnTimer30000:
 	donpcevent strnpcinfo(0)+"::OnDisable";
 	end;
 }
--	duplicate(Tent#ma)	Tent1#ma	-1
--	duplicate(Tent#ma)	Tent2#ma	-1
--	duplicate(Tent#ma)	Tent3#ma	-1
--	duplicate(Tent#ma)	Tent4#ma	-1
--	duplicate(Tent#ma)	Tent5#ma	-1
--	duplicate(Tent#ma)	Tent6#ma	-1
--	duplicate(Tent#ma)	Tent7#ma	-1
--	duplicate(Tent#ma)	Tent8#ma	-1
--	duplicate(Tent#ma)	Tent9#ma	-1
--	duplicate(Tent#ma)	Tent10#ma	-1
+-	duplicate(Tent#ma)	Tent1#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent2#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent3#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent4#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent5#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent6#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent7#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent8#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent9#ma	FAKE_NPC
+-	duplicate(Tent#ma)	Tent10#ma	FAKE_NPC
 
 malaya,114,183,3	script	Bent Old Lady#ma	4_F_BARYO_OLD,{
 	if (malaya_bang == 16) {
