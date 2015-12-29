@@ -7623,6 +7623,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
 			break;
 		case SC_CARTBOOST:
+		case SC_GN_CARTBOOST:
 			if (sc->data[SC_DEC_AGI] || sc->data[SC_ADORAMUS]) {
 				//Cancel Decrease Agi, but take no further effect [Skotlex]
 				status_change_end(bl, SC_DEC_AGI, INVALID_TIMER);
@@ -7826,6 +7827,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_BLIND:
 			case SC_BLOODING:
 			case SC_DPOISON:
+			case SC_BURNING:
+			case SC_WHITEIMPRISON:// Can't recast imprison on enemy with this status, put here to be safe.
+			case SC_FEAR:
+			case SC_DEEP_SLEEP:
+			case SC_FROSTMISTY:
+			case SC_COLD:
 			case SC_RG_CCONFINE_S: //Can't be re-closed in.
 			case SC_MARIONETTE_MASTER:
 			case SC_MARIONETTE:
