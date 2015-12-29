@@ -287,7 +287,7 @@ struct npc_interface {
 	void (*debug_warps) (void);
 	/* */
 	void (*trader_count_funds) (struct npc_data *nd, struct map_session_data *sd);
-	bool (*trader_pay) (struct npc_data *nd, struct map_session_data *sd, int price, int points);
+	bool (*trader_pay) (struct npc_data *nd, struct map_session_data *sd, int price, int points, unsigned short* item_list, int n);
 	void (*trader_update) (int master);
 	int (*market_buylist) (struct map_session_data* sd, unsigned short list_size, struct packet_npc_market_purchase *p);
 	bool (*trader_open) (struct map_session_data *sd, struct npc_data *nd);
