@@ -9714,7 +9714,6 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_CURSEDCIRCLE_TARGET:
 		case SC_FEAR:
 		case SC_MEIKYOUSISUI:
-		case SC_NEEDLE_OF_PARALYZE:
 		case SC_DEATHBOUND:
 		case SC_NETHERWORLD:
 			unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
@@ -9764,6 +9763,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_ANGELUS:      sc->opt2 |= OPT2_ANGELUS;      break;
 		case SC_BLOODING:     sc->opt2 |= OPT2_BLEEDING;     break;
 		case SC_DPOISON:      sc->opt2 |= OPT2_DPOISON;      break;
+		case SC_FEAR:         sc->opt2 |= OPT2_FEAR;         break;
 		//OPT3
 		case SC_TWOHANDQUICKEN:
 		case SC_ONEHANDQUICKEN:
@@ -10544,6 +10544,9 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 				s_sd->shadowform_id = 0;
 			}
 			break;
+		case SC_FIRE_EXPANSION_TEAR_GAS:
+			status_change_end(bl,SC_FIRE_EXPANSION_TEAR_GAS_SOB,INVALID_TIMER);
+			break;
 		case SC_SITDOWN_FORCE:
 			if( sd && pc_issit(sd) ) {
 				pc->setstand(sd);
@@ -10703,7 +10706,10 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		case SC_FUSION:
 			sc->option &= ~OPTION_FLYING;
 			break;
-			//opt3
+		case SC_FEAR:
+			sc->opt2 &= ~OPT2_FEAR;
+			break;
+		//opt3
 		case SC_TWOHANDQUICKEN:
 		case SC_ONEHANDQUICKEN:
 		case SC_SPEARQUICKEN:
@@ -11366,14 +11372,16 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 				struct block_list *src = map->id2bl(sce->val3);
 				int damage = 1000 + 3 * status_get_max_hp(bl) / 100; // Deals fixed (1000 + 3%*MaxHP)
 
-				map->freeblock_lock();
-				clif->damage(bl,bl,0,0,damage,1,BDT_MULTIENDURE,0); //damage is like endure effect with no walk delay
-				status->damage(src, bl, damage, 0, 0, 1);
+				if (src) {
+					map->freeblock_lock();
+					clif->damage(bl,bl,0,0,damage,1,BDT_MULTIENDURE,0); //damage is like endure effect with no walk delay
+					status->damage(src, bl, damage, 0, 0, 1);
 
-				if( sc->data[type]){ // Target still lives. [LimitLine]
-					sc_timer_next(3000 + tick, status->change_timer, bl->id, data);
+					if ( sc->data[type]) { // Target still lives. [LimitLine]
+						sc_timer_next(3000 + tick, status->change_timer, bl->id, data);
+					}
+					map->freeblock_unlock();
 				}
-				map->freeblock_unlock();
 				return 0;
 			}
 			break;
