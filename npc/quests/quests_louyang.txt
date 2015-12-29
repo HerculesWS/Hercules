@@ -4245,7 +4245,7 @@ lou_fild01,225,350,0	script	 #fire	HIDDEN_WARP_NPC,{
 	end;
 }
 
-lou_in01,101,125,0	script	Trap#lou_in1	-1,20,1,{
+lou_in01,101,125,0	script	Trap#lou_in1	FAKE_NPC,20,1,{
 OnTouch:
 	if (ch_poison == 12 || ch_poison == 16) {
 		mes "[Soldier]";
@@ -4259,7 +4259,7 @@ OnTouch:
 	end;
 }
 
-lou_in01,101,129,0	script	Trap#lou_in2	-1,20,1,{
+lou_in01,101,129,0	script	Trap#lou_in2	FAKE_NPC,20,1,{
 OnTouch:
 	if (ch_poison == 12 || ch_poison == 16) {
 		mes "[Soldier]";
@@ -4275,7 +4275,7 @@ OnTouch:
 	end;
 }
 
-lou_in01,101,134,0	script	Trap#lou_in3	-1,20,1,{
+lou_in01,101,134,0	script	Trap#lou_in3	FAKE_NPC,20,1,{
 OnTouch:
 	if (ch_poison == 12 || ch_poison == 16) {
 		mes "[Soldier]";
@@ -4290,7 +4290,7 @@ OnTouch:
 	end;
 }
 
-lou_in01,114,163,0	script	Trap#lou_in4	-1,6,1,{
+lou_in01,114,163,0	script	Trap#lou_in4	FAKE_NPC,6,1,{
 OnTouch:
 	if (ch_poison == 12 || ch_poison == 16) {
 		mes "[Soldier]";
@@ -4304,7 +4304,7 @@ OnTouch:
 	end;
 }
 
-lou_in01,114,165,0	script	Trap#lou_in5	-1,1,0,{
+lou_in01,114,165,0	script	Trap#lou_in5	FAKE_NPC,1,0,{
 OnTouch:
 	if (ch_poison == 12 || ch_poison == 16) {
 		mes "[Soldier]";

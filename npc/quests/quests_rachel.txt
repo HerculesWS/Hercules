@@ -4494,7 +4494,7 @@ rachel,243,37,3	script	Kid#Candy Addict	4_M_CHILD1,{
 	}
 }
 
-ra_temple,67,209,0	script	zawa00	-1,3,3,{
+ra_temple,67,209,0	script	zawa00	FAKE_NPC,3,3,{
 OnTouch:
 	if (ra_tem_q == 2) {
 		mes "^3355FFYou notice a slightly";
@@ -4547,7 +4547,7 @@ que_rachel,63,82,0	script	Window#ra_temple	HIDDEN_NPC,{
 	close;
 }
 
-que_rachel,60,80,0	script	zawa01	-1,5,5,{
+que_rachel,60,80,0	script	zawa01	FAKE_NPC,5,5,{
 OnTouch:
 	if (ra_tem_q == 2) {
 		mes "^3355FFIt's strangely";
@@ -4558,7 +4558,7 @@ OnTouch:
 	end;
 }
 
-que_rachel,59,112,0	script	zawa02	-1,10,10,{
+que_rachel,59,112,0	script	zawa02	FAKE_NPC,10,10,{
 OnTouch:
 	if (ra_tem_q == 3) {
 		mes "^3355FFYou hear some";
@@ -4572,7 +4572,7 @@ OnTouch:
 	end;
 }
 
-que_rachel,94,139,0	script	zawa03	-1,10,10,{
+que_rachel,94,139,0	script	zawa03	FAKE_NPC,10,10,{
 OnTouch:
 	if (ra_tem_q == 4) {
 		mes "^3355FFYou hear noises of some";
@@ -4583,7 +4583,7 @@ OnTouch:
 	end;
 }
 
-que_rachel,132,70,0	script	zawa04	-1,10,10,{
+que_rachel,132,70,0	script	zawa04	FAKE_NPC,10,10,{
 OnTouch:
 	if (ra_tem_q == 5) {
 		mes " ";
@@ -4600,7 +4600,7 @@ OnTouch:
 	end;
 }
 
-que_rachel,28,315,0	script	Bloody Spot	-1,5,5,{
+que_rachel,28,315,0	script	Bloody Spot	FAKE_NPC,5,5,{
 OnTouch:
 	if (ra_tem_q == 6) {
 		mes "^3355FFThere's a spot on the";
@@ -4670,7 +4670,7 @@ OnTouch:
 	end;
 }
 
-que_rachel,170,37,0	script	nemma01::nemma01	-1,5,5,{
+que_rachel,170,37,0	script	nemma01::nemma01	FAKE_NPC,5,5,{
 OnTouch:
 	if (ra_tem_q == 8) {
 		mes "[???]";
@@ -4699,10 +4699,10 @@ OnTouch:
 	end;
 }
 
-que_rachel,175,37,0	duplicate(nemma01)	nemma02	-1,5,5
-que_rachel,180,37,0	duplicate(nemma01)	nemma03	-1,5,5
-que_rachel,165,37,0	duplicate(nemma01)	nemma04	-1,5,5
-que_rachel,160,37,0	duplicate(nemma01)	nemma05	-1,5,5
+que_rachel,175,37,0	duplicate(nemma01)	nemma02	FAKE_NPC,5,5
+que_rachel,180,37,0	duplicate(nemma01)	nemma03	FAKE_NPC,5,5
+que_rachel,165,37,0	duplicate(nemma01)	nemma04	FAKE_NPC,5,5
+que_rachel,160,37,0	duplicate(nemma01)	nemma05	FAKE_NPC,5,5
 
 que_rachel,169,18,0	script	Quest Temple Exit#ra_tem	WARPNPC,2,2,{
 	mes "^3355FFThe gate is closed.^000000";
@@ -7067,7 +7067,7 @@ OnTimer120000:
 	end;
 }
 
-ra_temin,293,144,0	script	out1#rachel	-1,3,3,{
+ra_temin,293,144,0	script	out1#rachel	FAKE_NPC,3,3,{
 OnTouch:
 	if (ra_tem_q == 18) {
 		mes "^3355FFIt sounds like they're";
@@ -7088,7 +7088,7 @@ OnTouch:
 	end;
 }
 
-ra_temin,288,151,0	script	hidden1#rachel	-1,1,6,{
+ra_temin,288,151,0	script	hidden1#rachel	FAKE_NPC,1,6,{
 OnTouch:
 	if (ra_tem_q == 18) {
 		mes "^3355FFAt this distance you";
@@ -7250,7 +7250,7 @@ OnTouch:
 	end;
 }
 
-ra_temin,272,143,0	script	key1#rachel	-1,3,3,{
+ra_temin,272,143,0	script	key1#rachel	FAKE_NPC,3,3,{
 OnTouch:
 	if (ra_tem_q == 20) {
 		mes "^3355FFYou find a small";
@@ -7301,7 +7301,7 @@ OnTouch:
 	close;
 }
 
-que_san04,119,115,0	script	imir1#rachel	-1,2,2,{
+que_san04,119,115,0	script	imir1#rachel	FAKE_NPC,2,2,{
 OnTouch:
 	if (ra_tem_q == 21) {
 		mes "^3355FFThis large area looks";
@@ -7318,7 +7318,7 @@ OnTouch:
 	end;
 }
 
-que_san04,119,133,0	script	imir2#rachel	-1,20,5,{
+que_san04,119,133,0	script	imir2#rachel	FAKE_NPC,20,5,{
 OnTouch:
 	if (ra_tem_q == 21) {
 		mes "^3355FFThere's something here";
@@ -7329,7 +7329,7 @@ OnTouch:
 	end;
 }
 
-que_san04,119,203,0	script	imir3#rachel	-1,7,7,{
+que_san04,119,203,0	script	imir3#rachel	FAKE_NPC,7,7,{
 OnTouch:
 	if (ra_tem_q == 21) {
 		mes "^3355FFNo wonder this object";
@@ -7418,7 +7418,7 @@ OnTimer120000:
 	end;
 }
 
-rachel,163,152,0	script	imir3#rachel2	-1,3,3,{
+rachel,163,152,0	script	imir3#rachel2	FAKE_NPC,3,3,{
 OnTouch:
 	if (ra_tem_q == 22) {
 		mes "^3355FFYou feel a slight headache";

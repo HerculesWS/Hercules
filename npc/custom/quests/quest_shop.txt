@@ -223,8 +223,8 @@ function	script	qshop	{
 
 // Dummy shop data -- copy as needed.
 //============================================================
--	shop	qshop1	-1,909:-1
--	shop	qshop2	-1,909:-1
--	shop	qshop3	-1,909:-1
--	shop	qshop4	-1,909:-1
--	shop	qshop5	-1,909:-1
+-	shop	qshop1	FAKE_NPC,909:-1
+-	shop	qshop2	FAKE_NPC,909:-1
+-	shop	qshop3	FAKE_NPC,909:-1
+-	shop	qshop4	FAKE_NPC,909:-1
+-	shop	qshop5	FAKE_NPC,909:-1

@@ -2998,7 +2998,7 @@ lhz_in01,139,48,7	script	Leimi#mimir	1_F_MERCHANT_01,{
 	close;
 }
 
-lhz_in01,138,47,0	script	#mimir_camera	-1,2,2,{
+lhz_in01,138,47,0	script	#mimir_camera	FAKE_NPC,2,2,{
 OnTouch:
 	if (BaseJob == Job_Assassin) {
 		if (Sex) {

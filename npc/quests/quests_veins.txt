@@ -2022,7 +2022,7 @@ ein_in01,166,282,4	script	Employee#sch	4_M_KHMAN,{
 	close;
 }
 
-ein_in01,176,285,0	script	Bard Trigger#sch	-1,1,1,{
+ein_in01,176,285,0	script	Bard Trigger#sch	FAKE_NPC,1,1,{
 OnTouch:
 	if (que_sch == 15) {
 		disablenpc "Corporate Figure#sch";
@@ -5271,7 +5271,7 @@ ra_temin,115,140,1	script	Flower Vase#vol	HIDDEN_NPC,{
 	close;
 }
 
-ra_temin,85,131,0	script	path_vol1	-1,5,0,{
+ra_temin,85,131,0	script	path_vol1	FAKE_NPC,5,0,{
 OnTouch:
 	if ((aru_vol != 3) && (aru_vol != 4)) {
 		warp "ra_temin",85,137;
@@ -5279,7 +5279,7 @@ OnTouch:
 	end;
 }
 
-ra_temin,82,131,0	script	path_vol1#2	-1,5,0,{
+ra_temin,82,131,0	script	path_vol1#2	FAKE_NPC,5,0,{
 OnTouch:
 	if (aru_vol != 4) {
 		warp "ra_temin",85,137;
@@ -5287,7 +5287,7 @@ OnTouch:
 	end;
 }
 
-ra_temin,82,127,0	script	path_vol1#3	-1,5,1,{
+ra_temin,82,127,0	script	path_vol1#3	FAKE_NPC,5,1,{
 OnTouch:
 	if (aru_vol == 5) {
 		warp "ra_temin",84,124;
@@ -5536,7 +5536,7 @@ ra_temin,73,126,1	script	Ladder#vol1	HIDDEN_NPC,{
 	end;
 }
 
-ve_in,280,223,0	script	#volroom	-1,2,2,{
+ve_in,280,223,0	script	#volroom	FAKE_NPC,2,2,{
 OnTouch:
 	if (aru_vol == 6) {
 		mes "^3355FFThis house looks like";
@@ -6489,7 +6489,7 @@ thor_camp,250,104,3	script	Sahedi#vol	4_M_RASWORD,{
 }
 
 
-thor_camp,194,220,0	script	#Colonel1	-1,5,5,{
+thor_camp,194,220,0	script	#Colonel1	FAKE_NPC,5,5,{
 OnTouch:
 	if (aru_vol == 13) {
 		enablenpc "Colonel Vito#1";
@@ -6544,7 +6544,7 @@ OnTouch:
 	end;
 }
 
-thor_camp,162,182,0	script	#Colonel2	-1,7,7,{
+thor_camp,162,182,0	script	#Colonel2	FAKE_NPC,7,7,{
 OnTouch:
 	if (aru_vol == 13) {
 		enablenpc "Colonel Vito#2";
@@ -6934,7 +6934,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 	close;
 }
 
-thor_camp,141,62,0	script	#vol_study1::VeinsWarp	-1,3,3,{
+thor_camp,141,62,0	script	#vol_study1::VeinsWarp	FAKE_NPC,3,3,{
 OnTouch:
 	if ((aru_vol > 13 && aru_vol < 17) || (aru_vol == 19)) {
 		warp "thor_camp",156,67;
@@ -6942,10 +6942,10 @@ OnTouch:
 	end;
 }
 
-thor_camp,172,72,0	duplicate(VeinsWarp)	#vol_study2	-1,3,3
-thor_camp,172,38,0	duplicate(VeinsWarp)	#vol_study3	-1,3,3
+thor_camp,172,72,0	duplicate(VeinsWarp)	#vol_study2	FAKE_NPC,3,3
+thor_camp,172,38,0	duplicate(VeinsWarp)	#vol_study3	FAKE_NPC,3,3
 
-thor_camp,172,132,0	script	#sita_vol	-1,3,3,{
+thor_camp,172,132,0	script	#sita_vol	FAKE_NPC,3,3,{
 OnTouch:
 	if (aru_vol == 21) {
 		mes "^3355FFThere's a stream of";
@@ -6963,7 +6963,7 @@ OnTouch:
 	end;
 }
 
-thor_camp,148,310,0	script	#buki_vol	-1,5,5,{
+thor_camp,148,310,0	script	#buki_vol	FAKE_NPC,5,5,{
 OnTouch:
 	if (aru_vol == 22) {
 		mes "^3355FFPeople are carrying";
@@ -7274,7 +7274,7 @@ OnTouch_:
 	end;
 }
 
-thor_camp,62,98,0	script	#volbq	-1,5,5,{
+thor_camp,62,98,0	script	#volbq	FAKE_NPC,5,5,{
 OnTouch:
 	mes "^3355FFThere is an old man";
 	mes "in high priest robes";
@@ -7305,7 +7305,7 @@ thor_camp,246,191,3	script	Guard#goto	4_DST_SOLDIER,{
 	close;
 }
 
-veins,302,166,0	script	#whoau	-1,2,2,{
+veins,302,166,0	script	#whoau	FAKE_NPC,2,2,{
 OnTouch_:
 	mes "[House Owner]";
 	mes "Wh-who the hell";

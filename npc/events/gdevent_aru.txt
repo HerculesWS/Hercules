@@ -1326,7 +1326,7 @@ OnBingo:
 	end;
 }
 
-arug_que01,100,80,0	script	removepp_aru_gd	-1,5,5,{
+arug_que01,100,80,0	script	removepp_aru_gd	FAKE_NPC,5,5,{
 	end;
 
 OnInit:

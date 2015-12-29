@@ -3367,7 +3367,7 @@ yuno_in04,168,117,3	script	Book#lhz	HIDDEN_NPC,{
 }
 
 //== Cursed Spirit Quest ===================================
-lhz_dun01,147,106,0	script	#kiz01-1	-1,3,3,{
+lhz_dun01,147,106,0	script	#kiz01-1	FAKE_NPC,3,3,{
 OnTouch_:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
@@ -3403,11 +3403,11 @@ OnTouch_:
 	end;
 }
 
-lhz_dun01,239,135,0	duplicate(#kiz01-1)	#kiz01-2	-1,3,3
-lhz_dun01,66,212,0	duplicate(#kiz01-1)	#kiz01-3	-1,3,3
-lhz_dun01,225,198,0	duplicate(#kiz01-1)	#kiz01-4	-1,3,3
+lhz_dun01,239,135,0	duplicate(#kiz01-1)	#kiz01-2	FAKE_NPC,3,3
+lhz_dun01,66,212,0	duplicate(#kiz01-1)	#kiz01-3	FAKE_NPC,3,3
+lhz_dun01,225,198,0	duplicate(#kiz01-1)	#kiz01-4	FAKE_NPC,3,3
 
-lhz_dun02,244,229,0	script	#kiz02-1	-1,3,3,{
+lhz_dun02,244,229,0	script	#kiz02-1	FAKE_NPC,3,3,{
 OnTouch_:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
@@ -3443,11 +3443,11 @@ OnTouch_:
 	end;
 }
 
-lhz_dun02,60,298,0	duplicate(#kiz02-1)	#kiz02-2	-1,3,3
-lhz_dun02,267,278,0	duplicate(#kiz02-1)	#kiz02-3	-1,3,3
-lhz_dun02,94,199,0	duplicate(#kiz02-1)	#kiz02-4	-1,3,3
+lhz_dun02,60,298,0	duplicate(#kiz02-1)	#kiz02-2	FAKE_NPC,3,3
+lhz_dun02,267,278,0	duplicate(#kiz02-1)	#kiz02-3	FAKE_NPC,3,3
+lhz_dun02,94,199,0	duplicate(#kiz02-1)	#kiz02-4	FAKE_NPC,3,3
 
-lhz_dun03,244,51,0	script	#kiz03-1	-1,3,3,{
+lhz_dun03,244,51,0	script	#kiz03-1	FAKE_NPC,3,3,{
 OnTouch_:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
@@ -3483,10 +3483,10 @@ OnTouch_:
 	end;
 }
 
-lhz_dun03,123,191,0	duplicate(#kiz03-1)	#kiz03-2	-1,3,3
-lhz_dun03,74,140,0	duplicate(#kiz03-1)	#kiz03-3	-1,3,3
+lhz_dun03,123,191,0	duplicate(#kiz03-1)	#kiz03-2	FAKE_NPC,3,3
+lhz_dun03,74,140,0	duplicate(#kiz03-1)	#kiz03-3	FAKE_NPC,3,3
 
-lighthalzen,344,278,0	script	#kiz03	-1,2,2,{
+lighthalzen,344,278,0	script	#kiz03	FAKE_NPC,2,2,{
 OnTouch_:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
@@ -3537,7 +3537,7 @@ OnTouch_:
 	end;
 }
 
-lhz_in03,178,22,0	script	#kiz04	-1,2,2,{
+lhz_in03,178,22,0	script	#kiz04	FAKE_NPC,2,2,{
 OnTouch_:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
@@ -3616,7 +3616,7 @@ OnTouch_:
 	end;
 }
 
-lighthalzen,295,227,0	script	#kiz05	-1,2,2,{
+lighthalzen,295,227,0	script	#kiz05	FAKE_NPC,2,2,{
 OnTouch_:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
@@ -3662,7 +3662,7 @@ OnTouch_:
 	end;
 }
 
-lighthalzen,364,315,0	script	#kiz06	-1,3,3,{
+lighthalzen,364,315,0	script	#kiz06	FAKE_NPC,3,3,{
 OnTouch_:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
@@ -3721,7 +3721,7 @@ OnTouch_:
 	end;
 }
 
-lhz_in01,113,150,0	script	#kiz07	-1,3,3,{
+lhz_in01,113,150,0	script	#kiz07	FAKE_NPC,3,3,{
 OnTouch_:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
@@ -3775,7 +3775,7 @@ OnTouch_:
 	end;
 }
 
-lhz_in01,272,227,0	script	#kiz08	-1,2,2,{
+lhz_in01,272,227,0	script	#kiz08	FAKE_NPC,2,2,{
 OnTouch_:
 	if (countitem(Armlet_Of_Prisoner) > 0 ) {
 		if (lhz_curse == 0) {
@@ -3859,7 +3859,7 @@ OnTouch_:
 	end;
 }
 
-lhz_in01,206,129,0	script	#kiz09	-1,5,5,{
+lhz_in01,206,129,0	script	#kiz09	FAKE_NPC,5,5,{
 OnTouch_:
 	if (countitem(Armlet_Of_Prisoner) > 0) {
 		if (lhz_curse == 12) {
@@ -4149,7 +4149,7 @@ lhz_que01,29,24,3	script	#li_researcher	4_M_SAGE_A,{
 	end;
 }
 
-lhz_in01,282,166,0	script	#kiz10	-1,3,3,{
+lhz_in01,282,166,0	script	#kiz10	FAKE_NPC,3,3,{
 OnTouch_:
 	if (countitem(Armlet_Of_Prisoner) > 0) {
 		if (lhz_curse == 16) {
@@ -5197,7 +5197,7 @@ OnTouch_:
 
 lhz_in03,12,162,0	warp	#to_lhz	1,1,lighthalzen,321,322
 
-lighthalzen,319,321,0	script	#li_bother	-1,2,2,{ //3,3
+lighthalzen,319,321,0	script	#li_bother	FAKE_NPC,2,2,{ //3,3
 OnTouch_:
 	if ((lhz_curse == 24 ) || (lhz_curse == 25)) {
 		mes ".............";
@@ -6271,7 +6271,7 @@ lhz_in01,286,226,3	script	Secretary Slierre#li	4_F_ZONDAGIRL,{
 	}
 }
 
-lhz_que01,94,24,0	script	#li_end	-1,2,2,{
+lhz_que01,94,24,0	script	#li_end	FAKE_NPC,2,2,{
 OnTouch_:
 	if (lhz_curse > 30) {
 		mes "^3131FFThere's no trace of";
@@ -7034,7 +7034,7 @@ lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 	}
 }
 
-lighthalzen,173,167,1	script	Switch	-1,2,4,{
+lighthalzen,173,167,1	script	Switch	FAKE_NPC,2,4,{
 
 OnTouch:
 	if(lhz_boss == 1)
@@ -8622,7 +8622,7 @@ OnInit:
 	end;
 }
 
-yuno_pre,117,60,0	script	Eavesdrop	-1,10,5,{
+yuno_pre,117,60,0	script	Eavesdrop	FAKE_NPC,10,5,{
 
 OnTouch:
 	if(lhz_boss == 16)
@@ -9112,7 +9112,7 @@ OnInit:
 	end;
 }
 
-lhz_fild02,224,220,0	script	Wounded Man Switch	-1,3,3,{
+lhz_fild02,224,220,0	script	Wounded Man Switch	FAKE_NPC,3,3,{
 
 OnTouch:
 	if(lhz_boss == 18)
@@ -9126,7 +9126,7 @@ OnTouch:
 	}
 }
 
-lhz_fild01,76,214,0	script	Esuna Trigger	-1,5,5,{
+lhz_fild01,76,214,0	script	Esuna Trigger	FAKE_NPC,5,5,{
 
 OnTouch:
 	if((lhz_boss == 26) || (lhz_boss == 36) || (lhz_boss == 38) || (lhz_boss == 40))
@@ -9769,7 +9769,7 @@ L_Enter:
 	}
 }
 
-lhz_in01,177,44,0	script	Timer_Sneak	-1,8,12,{
+lhz_in01,177,44,0	script	Timer_Sneak	FAKE_NPC,8,12,{
 
 OnTouch:
 	warp "lhz_in01",191,49;

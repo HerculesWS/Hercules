@@ -292,12 +292,12 @@ OnInit:
 		disablenpc strnpcinfo(0);
 	end;
 }
-p_track01,30,38,0	duplicate(Runner_main)	Runner No. 1#1	-1,1,0
-p_track01,30,36,0	duplicate(Runner_main)	Runner No. 2#2	-1,1,0
-p_track01,30,34,0	duplicate(Runner_main)	Runner No. 3#3	-1,1,0
-p_track01,30,32,0	duplicate(Runner_main)	Runner No. 4#4	-1,1,0
-p_track01,30,30,0	duplicate(Runner_main)	Runner No. 5#5	-1,1,0
-p_track01,30,28,0	duplicate(Runner_main)	Runner No. 6#6	-1,1,0
+p_track01,30,38,0	duplicate(Runner_main)	Runner No. 1#1	FAKE_NPC,1,0
+p_track01,30,36,0	duplicate(Runner_main)	Runner No. 2#2	FAKE_NPC,1,0
+p_track01,30,34,0	duplicate(Runner_main)	Runner No. 3#3	FAKE_NPC,1,0
+p_track01,30,32,0	duplicate(Runner_main)	Runner No. 4#4	FAKE_NPC,1,0
+p_track01,30,30,0	duplicate(Runner_main)	Runner No. 5#5	FAKE_NPC,1,0
+p_track01,30,28,0	duplicate(Runner_main)	Runner No. 6#6	FAKE_NPC,1,0
 
 p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 	if (!checkweight(Spawn,200)) {
@@ -895,87 +895,87 @@ OnInit:
 	end;
 }
 
-p_track01,56,38,0	duplicate(starting_1)	starting#1	-1,0,0
-p_track01,56,36,0	duplicate(starting_1)	starting#2	-1,0,0
-p_track01,56,34,0	duplicate(starting_1)	starting#3	-1,0,0
-p_track01,56,32,0	duplicate(starting_1)	starting#4	-1,0,0
-p_track01,56,30,0	duplicate(starting_1)	starting#5	-1,0,0
-p_track01,56,28,0	duplicate(starting_1)	starting#6	-1,0,0
+p_track01,56,38,0	duplicate(starting_1)	starting#1	FAKE_NPC,0,0
+p_track01,56,36,0	duplicate(starting_1)	starting#2	FAKE_NPC,0,0
+p_track01,56,34,0	duplicate(starting_1)	starting#3	FAKE_NPC,0,0
+p_track01,56,32,0	duplicate(starting_1)	starting#4	FAKE_NPC,0,0
+p_track01,56,30,0	duplicate(starting_1)	starting#5	FAKE_NPC,0,0
+p_track01,56,28,0	duplicate(starting_1)	starting#6	FAKE_NPC,0,0
 
-p_track01,33,38,0	duplicate(Luk_1)	Luk1#1	-1,0,0
-p_track01,37,38,0	duplicate(Luk_1)	Luk1#2	-1,0,0
-p_track01,53,38,0	duplicate(Luk_1)	Luk1#3	-1,0,0
-p_track01,45,38,0	duplicate(Luk_1)	Luk1#4	-1,0,0
-p_track01,33,36,0	duplicate(Luk_1)	Luk2#1	-1,0,0
-p_track01,37,36,0	duplicate(Luk_1)	Luk2#2	-1,0,0
-p_track01,53,36,0	duplicate(Luk_1)	Luk2#3	-1,0,0
-p_track01,45,36,0	duplicate(Luk_1)	Luk2#4	-1,0,0
-p_track01,33,34,0	duplicate(Luk_1)	Luk3#1	-1,0,0
-p_track01,37,34,0	duplicate(Luk_1)	Luk3#2	-1,0,0
-p_track01,53,34,0	duplicate(Luk_1)	Luk3#3	-1,0,0
-p_track01,45,34,0	duplicate(Luk_1)	Luk3#4	-1,0,0
-p_track01,33,32,0	duplicate(Luk_1)	Luk4#1	-1,0,0
-p_track01,37,32,0	duplicate(Luk_1)	Luk4#2	-1,0,0
-p_track01,53,32,0	duplicate(Luk_1)	Luk4#3	-1,0,0
-p_track01,45,32,0	duplicate(Luk_1)	Luk4#4	-1,0,0
-p_track01,33,30,0	duplicate(Luk_1)	Luk5#1	-1,0,0
-p_track01,37,30,0	duplicate(Luk_1)	Luk5#2	-1,0,0
-p_track01,53,30,0	duplicate(Luk_1)	Luk5#3	-1,0,0
-p_track01,45,30,0	duplicate(Luk_1)	Luk5#4	-1,0,0
-p_track01,33,28,0	duplicate(Luk_1)	Luk6#1	-1,0,0
-p_track01,37,28,0	duplicate(Luk_1)	Luk6#2	-1,0,0
-p_track01,53,28,0	duplicate(Luk_1)	Luk6#3	-1,0,0
-p_track01,45,28,0	duplicate(Luk_1)	Luk6#4	-1,0,0
+p_track01,33,38,0	duplicate(Luk_1)	Luk1#1	FAKE_NPC,0,0
+p_track01,37,38,0	duplicate(Luk_1)	Luk1#2	FAKE_NPC,0,0
+p_track01,53,38,0	duplicate(Luk_1)	Luk1#3	FAKE_NPC,0,0
+p_track01,45,38,0	duplicate(Luk_1)	Luk1#4	FAKE_NPC,0,0
+p_track01,33,36,0	duplicate(Luk_1)	Luk2#1	FAKE_NPC,0,0
+p_track01,37,36,0	duplicate(Luk_1)	Luk2#2	FAKE_NPC,0,0
+p_track01,53,36,0	duplicate(Luk_1)	Luk2#3	FAKE_NPC,0,0
+p_track01,45,36,0	duplicate(Luk_1)	Luk2#4	FAKE_NPC,0,0
+p_track01,33,34,0	duplicate(Luk_1)	Luk3#1	FAKE_NPC,0,0
+p_track01,37,34,0	duplicate(Luk_1)	Luk3#2	FAKE_NPC,0,0
+p_track01,53,34,0	duplicate(Luk_1)	Luk3#3	FAKE_NPC,0,0
+p_track01,45,34,0	duplicate(Luk_1)	Luk3#4	FAKE_NPC,0,0
+p_track01,33,32,0	duplicate(Luk_1)	Luk4#1	FAKE_NPC,0,0
+p_track01,37,32,0	duplicate(Luk_1)	Luk4#2	FAKE_NPC,0,0
+p_track01,53,32,0	duplicate(Luk_1)	Luk4#3	FAKE_NPC,0,0
+p_track01,45,32,0	duplicate(Luk_1)	Luk4#4	FAKE_NPC,0,0
+p_track01,33,30,0	duplicate(Luk_1)	Luk5#1	FAKE_NPC,0,0
+p_track01,37,30,0	duplicate(Luk_1)	Luk5#2	FAKE_NPC,0,0
+p_track01,53,30,0	duplicate(Luk_1)	Luk5#3	FAKE_NPC,0,0
+p_track01,45,30,0	duplicate(Luk_1)	Luk5#4	FAKE_NPC,0,0
+p_track01,33,28,0	duplicate(Luk_1)	Luk6#1	FAKE_NPC,0,0
+p_track01,37,28,0	duplicate(Luk_1)	Luk6#2	FAKE_NPC,0,0
+p_track01,53,28,0	duplicate(Luk_1)	Luk6#3	FAKE_NPC,0,0
+p_track01,45,28,0	duplicate(Luk_1)	Luk6#4	FAKE_NPC,0,0
 
-p_track01,49,38,0	duplicate(Luk_2)	Luk1#5	-1,0,0
-p_track01,41,38,0	duplicate(Luk_2)	Luk1#6	-1,0,0
-p_track01,49,36,0	duplicate(Luk_2)	Luk2#5	-1,0,0
-p_track01,41,36,0	duplicate(Luk_2)	Luk2#6	-1,0,0
-p_track01,49,34,0	duplicate(Luk_2)	Luk3#5	-1,0,0
-p_track01,41,34,0	duplicate(Luk_2)	Luk3#6	-1,0,0
-p_track01,49,32,0	duplicate(Luk_2)	Luk4#5	-1,0,0
-p_track01,41,32,0	duplicate(Luk_2)	Luk4#6	-1,0,0
-p_track01,49,30,0	duplicate(Luk_2)	Luk5#5	-1,0,0
-p_track01,41,30,0	duplicate(Luk_2)	Luk5#6	-1,0,0
-p_track01,49,28,0	duplicate(Luk_2)	Luk6#5	-1,0,0
-p_track01,41,28,0	duplicate(Luk_2)	Luk6#6	-1,0,0
+p_track01,49,38,0	duplicate(Luk_2)	Luk1#5	FAKE_NPC,0,0
+p_track01,41,38,0	duplicate(Luk_2)	Luk1#6	FAKE_NPC,0,0
+p_track01,49,36,0	duplicate(Luk_2)	Luk2#5	FAKE_NPC,0,0
+p_track01,41,36,0	duplicate(Luk_2)	Luk2#6	FAKE_NPC,0,0
+p_track01,49,34,0	duplicate(Luk_2)	Luk3#5	FAKE_NPC,0,0
+p_track01,41,34,0	duplicate(Luk_2)	Luk3#6	FAKE_NPC,0,0
+p_track01,49,32,0	duplicate(Luk_2)	Luk4#5	FAKE_NPC,0,0
+p_track01,41,32,0	duplicate(Luk_2)	Luk4#6	FAKE_NPC,0,0
+p_track01,49,30,0	duplicate(Luk_2)	Luk5#5	FAKE_NPC,0,0
+p_track01,41,30,0	duplicate(Luk_2)	Luk5#6	FAKE_NPC,0,0
+p_track01,49,28,0	duplicate(Luk_2)	Luk6#5	FAKE_NPC,0,0
+p_track01,41,28,0	duplicate(Luk_2)	Luk6#6	FAKE_NPC,0,0
 
-p_track01,43,38,0	duplicate(Tire_1)	Tire1#1	-1,0,0
-p_track01,39,38,0	duplicate(Tire_1)	Tire1#2	-1,0,0
-p_track01,35,38,0	duplicate(Tire_1)	Tire1#3	-1,0,0
-p_track01,55,38,0	duplicate(Tire_1)	Tire1#4	-1,0,0
-p_track01,51,38,0	duplicate(Tire_1)	Tire1#5	-1,0,0
-p_track01,47,38,0	duplicate(Tire_1)	Tire1#6	-1,0,0
-p_track01,43,36,0	duplicate(Tire_1)	Tire2#1	-1,0,0
-p_track01,39,36,0	duplicate(Tire_1)	Tire2#2	-1,0,0
-p_track01,35,36,0	duplicate(Tire_1)	Tire2#3	-1,0,0
-p_track01,55,36,0	duplicate(Tire_1)	Tire2#4	-1,0,0
-p_track01,51,36,0	duplicate(Tire_1)	Tire2#5	-1,0,0
-p_track01,47,36,0	duplicate(Tire_1)	Tire2#6	-1,0,0
-p_track01,43,34,0	duplicate(Tire_1)	Tire3#1	-1,0,0
-p_track01,39,34,0	duplicate(Tire_1)	Tire3#2	-1,0,0
-p_track01,35,34,0	duplicate(Tire_1)	Tire3#3	-1,0,0
-p_track01,55,34,0	duplicate(Tire_1)	Tire3#4	-1,0,0
-p_track01,51,34,0	duplicate(Tire_1)	Tire3#5	-1,0,0
-p_track01,47,34,0	duplicate(Tire_1)	Tire3#6	-1,0,0
-p_track01,43,32,0	duplicate(Tire_1)	Tire4#1	-1,0,0
-p_track01,39,32,0	duplicate(Tire_1)	Tire4#2	-1,0,0
-p_track01,35,32,0	duplicate(Tire_1)	Tire4#3	-1,0,0
-p_track01,55,32,0	duplicate(Tire_1)	Tire4#4	-1,0,0
-p_track01,51,32,0	duplicate(Tire_1)	Tire4#5	-1,0,0
-p_track01,47,32,0	duplicate(Tire_1)	Tire4#6	-1,0,0
-p_track01,43,30,0	duplicate(Tire_1)	Tire5#1	-1,0,0
-p_track01,39,30,0	duplicate(Tire_1)	Tire5#2	-1,0,0
-p_track01,35,30,0	duplicate(Tire_1)	Tire5#3	-1,0,0
-p_track01,55,30,0	duplicate(Tire_1)	Tire5#4	-1,0,0
-p_track01,51,30,0	duplicate(Tire_1)	Tire5#5	-1,0,0
-p_track01,47,30,0	duplicate(Tire_1)	Tire5#6	-1,0,0
-p_track01,43,28,0	duplicate(Tire_1)	Tire6#1	-1,0,0
-p_track01,39,28,0	duplicate(Tire_1)	Tire6#2	-1,0,0
-p_track01,35,28,0	duplicate(Tire_1)	Tire6#3	-1,0,0
-p_track01,55,28,0	duplicate(Tire_1)	Tire6#4	-1,0,0
-p_track01,51,28,0	duplicate(Tire_1)	Tire6#5	-1,0,0
-p_track01,47,28,0	duplicate(Tire_1)	Tire6#6	-1,0,0
+p_track01,43,38,0	duplicate(Tire_1)	Tire1#1	FAKE_NPC,0,0
+p_track01,39,38,0	duplicate(Tire_1)	Tire1#2	FAKE_NPC,0,0
+p_track01,35,38,0	duplicate(Tire_1)	Tire1#3	FAKE_NPC,0,0
+p_track01,55,38,0	duplicate(Tire_1)	Tire1#4	FAKE_NPC,0,0
+p_track01,51,38,0	duplicate(Tire_1)	Tire1#5	FAKE_NPC,0,0
+p_track01,47,38,0	duplicate(Tire_1)	Tire1#6	FAKE_NPC,0,0
+p_track01,43,36,0	duplicate(Tire_1)	Tire2#1	FAKE_NPC,0,0
+p_track01,39,36,0	duplicate(Tire_1)	Tire2#2	FAKE_NPC,0,0
+p_track01,35,36,0	duplicate(Tire_1)	Tire2#3	FAKE_NPC,0,0
+p_track01,55,36,0	duplicate(Tire_1)	Tire2#4	FAKE_NPC,0,0
+p_track01,51,36,0	duplicate(Tire_1)	Tire2#5	FAKE_NPC,0,0
+p_track01,47,36,0	duplicate(Tire_1)	Tire2#6	FAKE_NPC,0,0
+p_track01,43,34,0	duplicate(Tire_1)	Tire3#1	FAKE_NPC,0,0
+p_track01,39,34,0	duplicate(Tire_1)	Tire3#2	FAKE_NPC,0,0
+p_track01,35,34,0	duplicate(Tire_1)	Tire3#3	FAKE_NPC,0,0
+p_track01,55,34,0	duplicate(Tire_1)	Tire3#4	FAKE_NPC,0,0
+p_track01,51,34,0	duplicate(Tire_1)	Tire3#5	FAKE_NPC,0,0
+p_track01,47,34,0	duplicate(Tire_1)	Tire3#6	FAKE_NPC,0,0
+p_track01,43,32,0	duplicate(Tire_1)	Tire4#1	FAKE_NPC,0,0
+p_track01,39,32,0	duplicate(Tire_1)	Tire4#2	FAKE_NPC,0,0
+p_track01,35,32,0	duplicate(Tire_1)	Tire4#3	FAKE_NPC,0,0
+p_track01,55,32,0	duplicate(Tire_1)	Tire4#4	FAKE_NPC,0,0
+p_track01,51,32,0	duplicate(Tire_1)	Tire4#5	FAKE_NPC,0,0
+p_track01,47,32,0	duplicate(Tire_1)	Tire4#6	FAKE_NPC,0,0
+p_track01,43,30,0	duplicate(Tire_1)	Tire5#1	FAKE_NPC,0,0
+p_track01,39,30,0	duplicate(Tire_1)	Tire5#2	FAKE_NPC,0,0
+p_track01,35,30,0	duplicate(Tire_1)	Tire5#3	FAKE_NPC,0,0
+p_track01,55,30,0	duplicate(Tire_1)	Tire5#4	FAKE_NPC,0,0
+p_track01,51,30,0	duplicate(Tire_1)	Tire5#5	FAKE_NPC,0,0
+p_track01,47,30,0	duplicate(Tire_1)	Tire5#6	FAKE_NPC,0,0
+p_track01,43,28,0	duplicate(Tire_1)	Tire6#1	FAKE_NPC,0,0
+p_track01,39,28,0	duplicate(Tire_1)	Tire6#2	FAKE_NPC,0,0
+p_track01,35,28,0	duplicate(Tire_1)	Tire6#3	FAKE_NPC,0,0
+p_track01,55,28,0	duplicate(Tire_1)	Tire6#4	FAKE_NPC,0,0
+p_track01,51,28,0	duplicate(Tire_1)	Tire6#5	FAKE_NPC,0,0
+p_track01,47,28,0	duplicate(Tire_1)	Tire6#6	FAKE_NPC,0,0
 
 //== Monster Race - Dual Monster Race ======================
 hugel,47,56,0	script	#race_timer2-1	FAKE_NPC,{
@@ -1905,87 +1905,87 @@ OnInit:
 	end;
 }
 
-p_track02,56,38,0	duplicate(starting_2)	starting#race02_1	-1,0,0
-p_track02,56,36,0	duplicate(starting_2)	starting#race02_2	-1,0,0
-p_track02,56,34,0	duplicate(starting_2)	starting#race02_3	-1,0,0
-p_track02,56,32,0	duplicate(starting_2)	starting#race02_4	-1,0,0
-p_track02,56,30,0	duplicate(starting_2)	starting#race02_5	-1,0,0
-p_track02,56,28,0	duplicate(starting_2)	starting#race02_6	-1,0,0
+p_track02,56,38,0	duplicate(starting_2)	starting#race02_1	FAKE_NPC,0,0
+p_track02,56,36,0	duplicate(starting_2)	starting#race02_2	FAKE_NPC,0,0
+p_track02,56,34,0	duplicate(starting_2)	starting#race02_3	FAKE_NPC,0,0
+p_track02,56,32,0	duplicate(starting_2)	starting#race02_4	FAKE_NPC,0,0
+p_track02,56,30,0	duplicate(starting_2)	starting#race02_5	FAKE_NPC,0,0
+p_track02,56,28,0	duplicate(starting_2)	starting#race02_6	FAKE_NPC,0,0
 
-p_track02,33,38,0	duplicate(Luk_1)	Luk#race02_1_1	-1,0,0
-p_track02,37,38,0	duplicate(Luk_1)	Luk#race02_1_2	-1,0,0
-p_track02,53,38,0	duplicate(Luk_1)	Luk#race02_1_3	-1,0,0
-p_track02,45,38,0	duplicate(Luk_1)	Luk#race02_1_4	-1,0,0
-p_track02,33,36,0	duplicate(Luk_1)	Luk#race02_2_1	-1,0,0
-p_track02,37,36,0	duplicate(Luk_1)	Luk#race02_2_2	-1,0,0
-p_track02,53,36,0	duplicate(Luk_1)	Luk#race02_2_3	-1,0,0
-p_track02,45,36,0	duplicate(Luk_1)	Luk#race02_2_4	-1,0,0
-p_track02,33,34,0	duplicate(Luk_1)	Luk#race02_3_1	-1,0,0
-p_track02,37,34,0	duplicate(Luk_1)	Luk#race02_3_2	-1,0,0
-p_track02,53,34,0	duplicate(Luk_1)	Luk#race02_3_3	-1,0,0
-p_track02,45,34,0	duplicate(Luk_1)	Luk#race02_3_4	-1,0,0
-p_track02,33,32,0	duplicate(Luk_1)	Luk#race02_4_1	-1,0,0
-p_track02,37,32,0	duplicate(Luk_1)	Luk#race02_4_2	-1,0,0
-p_track02,53,32,0	duplicate(Luk_1)	Luk#race02_4_3	-1,0,0
-p_track02,45,32,0	duplicate(Luk_1)	Luk#race02_4_4	-1,0,0
-p_track02,33,30,0	duplicate(Luk_1)	Luk#race02_5_1	-1,0,0
-p_track02,37,30,0	duplicate(Luk_1)	Luk#race02_5_2	-1,0,0
-p_track02,53,30,0	duplicate(Luk_1)	Luk#race02_5_3	-1,0,0
-p_track02,45,30,0	duplicate(Luk_1)	Luk#race02_5_4	-1,0,0
-p_track02,33,28,0	duplicate(Luk_1)	Luk#race02_6_1	-1,0,0
-p_track02,37,28,0	duplicate(Luk_1)	Luk#race02_6_2	-1,0,0
-p_track02,53,28,0	duplicate(Luk_1)	Luk#race02_6_3	-1,0,0
-p_track02,45,28,0	duplicate(Luk_1)	Luk#race02_6_4	-1,0,0
+p_track02,33,38,0	duplicate(Luk_1)	Luk#race02_1_1	FAKE_NPC,0,0
+p_track02,37,38,0	duplicate(Luk_1)	Luk#race02_1_2	FAKE_NPC,0,0
+p_track02,53,38,0	duplicate(Luk_1)	Luk#race02_1_3	FAKE_NPC,0,0
+p_track02,45,38,0	duplicate(Luk_1)	Luk#race02_1_4	FAKE_NPC,0,0
+p_track02,33,36,0	duplicate(Luk_1)	Luk#race02_2_1	FAKE_NPC,0,0
+p_track02,37,36,0	duplicate(Luk_1)	Luk#race02_2_2	FAKE_NPC,0,0
+p_track02,53,36,0	duplicate(Luk_1)	Luk#race02_2_3	FAKE_NPC,0,0
+p_track02,45,36,0	duplicate(Luk_1)	Luk#race02_2_4	FAKE_NPC,0,0
+p_track02,33,34,0	duplicate(Luk_1)	Luk#race02_3_1	FAKE_NPC,0,0
+p_track02,37,34,0	duplicate(Luk_1)	Luk#race02_3_2	FAKE_NPC,0,0
+p_track02,53,34,0	duplicate(Luk_1)	Luk#race02_3_3	FAKE_NPC,0,0
+p_track02,45,34,0	duplicate(Luk_1)	Luk#race02_3_4	FAKE_NPC,0,0
+p_track02,33,32,0	duplicate(Luk_1)	Luk#race02_4_1	FAKE_NPC,0,0
+p_track02,37,32,0	duplicate(Luk_1)	Luk#race02_4_2	FAKE_NPC,0,0
+p_track02,53,32,0	duplicate(Luk_1)	Luk#race02_4_3	FAKE_NPC,0,0
+p_track02,45,32,0	duplicate(Luk_1)	Luk#race02_4_4	FAKE_NPC,0,0
+p_track02,33,30,0	duplicate(Luk_1)	Luk#race02_5_1	FAKE_NPC,0,0
+p_track02,37,30,0	duplicate(Luk_1)	Luk#race02_5_2	FAKE_NPC,0,0
+p_track02,53,30,0	duplicate(Luk_1)	Luk#race02_5_3	FAKE_NPC,0,0
+p_track02,45,30,0	duplicate(Luk_1)	Luk#race02_5_4	FAKE_NPC,0,0
+p_track02,33,28,0	duplicate(Luk_1)	Luk#race02_6_1	FAKE_NPC,0,0
+p_track02,37,28,0	duplicate(Luk_1)	Luk#race02_6_2	FAKE_NPC,0,0
+p_track02,53,28,0	duplicate(Luk_1)	Luk#race02_6_3	FAKE_NPC,0,0
+p_track02,45,28,0	duplicate(Luk_1)	Luk#race02_6_4	FAKE_NPC,0,0
 
-p_track02,49,38,0	duplicate(Luk_2)	Luk#race02_1_5	-1,0,0
-p_track02,41,38,0	duplicate(Luk_2)	Luk#race02_1_6	-1,0,0
-p_track02,49,36,0	duplicate(Luk_2)	Luk#race02_2_5	-1,0,0
-p_track02,41,36,0	duplicate(Luk_2)	Luk#race02_2_6	-1,0,0
-p_track02,49,34,0	duplicate(Luk_2)	Luk#race02_3_5	-1,0,0
-p_track02,41,34,0	duplicate(Luk_2)	Luk#race02_3_6	-1,0,0
-p_track02,49,32,0	duplicate(Luk_2)	Luk#race02_4_5	-1,0,0
-p_track02,41,32,0	duplicate(Luk_2)	Luk#race02_4_6	-1,0,0
-p_track02,49,30,0	duplicate(Luk_2)	Luk#race02_5_5	-1,0,0
-p_track02,41,30,0	duplicate(Luk_2)	Luk#race02_5_6	-1,0,0
-p_track02,49,28,0	duplicate(Luk_2)	Luk#race02_6_5	-1,0,0
-p_track02,41,28,0	duplicate(Luk_2)	Luk#race02_6_6	-1,0,0
+p_track02,49,38,0	duplicate(Luk_2)	Luk#race02_1_5	FAKE_NPC,0,0
+p_track02,41,38,0	duplicate(Luk_2)	Luk#race02_1_6	FAKE_NPC,0,0
+p_track02,49,36,0	duplicate(Luk_2)	Luk#race02_2_5	FAKE_NPC,0,0
+p_track02,41,36,0	duplicate(Luk_2)	Luk#race02_2_6	FAKE_NPC,0,0
+p_track02,49,34,0	duplicate(Luk_2)	Luk#race02_3_5	FAKE_NPC,0,0
+p_track02,41,34,0	duplicate(Luk_2)	Luk#race02_3_6	FAKE_NPC,0,0
+p_track02,49,32,0	duplicate(Luk_2)	Luk#race02_4_5	FAKE_NPC,0,0
+p_track02,41,32,0	duplicate(Luk_2)	Luk#race02_4_6	FAKE_NPC,0,0
+p_track02,49,30,0	duplicate(Luk_2)	Luk#race02_5_5	FAKE_NPC,0,0
+p_track02,41,30,0	duplicate(Luk_2)	Luk#race02_5_6	FAKE_NPC,0,0
+p_track02,49,28,0	duplicate(Luk_2)	Luk#race02_6_5	FAKE_NPC,0,0
+p_track02,41,28,0	duplicate(Luk_2)	Luk#race02_6_6	FAKE_NPC,0,0
 
-p_track02,43,38,0	duplicate(Tire_1)	Tire#race02_1_1	-1,0,0
-p_track02,39,38,0	duplicate(Tire_1)	Tire#race02_1_2	-1,0,0
-p_track02,35,38,0	duplicate(Tire_1)	Tire#race02_1_3	-1,0,0
-p_track02,55,38,0	duplicate(Tire_1)	Tire#race02_1_4	-1,0,0
-p_track02,51,38,0	duplicate(Tire_1)	Tire#race02_1_5	-1,0,0
-p_track02,47,38,0	duplicate(Tire_1)	Tire#race02_1_6	-1,0,0
-p_track02,43,36,0	duplicate(Tire_1)	Tire#race02_2_1	-1,0,0
-p_track02,39,36,0	duplicate(Tire_1)	Tire#race02_2_2	-1,0,0
-p_track02,35,36,0	duplicate(Tire_1)	Tire#race02_2_3	-1,0,0
-p_track02,55,36,0	duplicate(Tire_1)	Tire#race02_2_4	-1,0,0
-p_track02,51,36,0	duplicate(Tire_1)	Tire#race02_2_5	-1,0,0
-p_track02,47,36,0	duplicate(Tire_1)	Tire#race02_2_6	-1,0,0
-p_track02,43,34,0	duplicate(Tire_1)	Tire#race02_3_1	-1,0,0
-p_track02,39,34,0	duplicate(Tire_1)	Tire#race02_3_2	-1,0,0
-p_track02,35,34,0	duplicate(Tire_1)	Tire#race02_3_3	-1,0,0
-p_track02,55,34,0	duplicate(Tire_1)	Tire#race02_3_4	-1,0,0
-p_track02,51,34,0	duplicate(Tire_1)	Tire#race02_3_5	-1,0,0
-p_track02,47,34,0	duplicate(Tire_1)	Tire#race02_3_6	-1,0,0
-p_track02,43,32,0	duplicate(Tire_1)	Tire#race02_4_1	-1,0,0
-p_track02,39,32,0	duplicate(Tire_1)	Tire#race02_4_2	-1,0,0
-p_track02,35,32,0	duplicate(Tire_1)	Tire#race02_4_3	-1,0,0
-p_track02,55,32,0	duplicate(Tire_1)	Tire#race02_4_4	-1,0,0
-p_track02,51,32,0	duplicate(Tire_1)	Tire#race02_4_5	-1,0,0
-p_track02,47,32,0	duplicate(Tire_1)	Tire#race02_4_6	-1,0,0
-p_track02,43,30,0	duplicate(Tire_1)	Tire#race02_5_1	-1,0,0
-p_track02,39,30,0	duplicate(Tire_1)	Tire#race02_5_2	-1,0,0
-p_track02,35,30,0	duplicate(Tire_1)	Tire#race02_5_3	-1,0,0
-p_track02,55,30,0	duplicate(Tire_1)	Tire#race02_5_4	-1,0,0
-p_track02,51,30,0	duplicate(Tire_1)	Tire#race02_5_5	-1,0,0
-p_track02,47,30,0	duplicate(Tire_1)	Tire#race02_5_6	-1,0,0
-p_track02,43,28,0	duplicate(Tire_1)	Tire#race02_6_1	-1,0,0
-p_track02,39,28,0	duplicate(Tire_1)	Tire#race02_6_2	-1,0,0
-p_track02,35,28,0	duplicate(Tire_1)	Tire#race02_6_3	-1,0,0
-p_track02,55,28,0	duplicate(Tire_1)	Tire#race02_6_4	-1,0,0
-p_track02,51,28,0	duplicate(Tire_1)	Tire#race02_6_5	-1,0,0
-p_track02,47,28,0	duplicate(Tire_1)	Tire#race02_6_6	-1,0,0
+p_track02,43,38,0	duplicate(Tire_1)	Tire#race02_1_1	FAKE_NPC,0,0
+p_track02,39,38,0	duplicate(Tire_1)	Tire#race02_1_2	FAKE_NPC,0,0
+p_track02,35,38,0	duplicate(Tire_1)	Tire#race02_1_3	FAKE_NPC,0,0
+p_track02,55,38,0	duplicate(Tire_1)	Tire#race02_1_4	FAKE_NPC,0,0
+p_track02,51,38,0	duplicate(Tire_1)	Tire#race02_1_5	FAKE_NPC,0,0
+p_track02,47,38,0	duplicate(Tire_1)	Tire#race02_1_6	FAKE_NPC,0,0
+p_track02,43,36,0	duplicate(Tire_1)	Tire#race02_2_1	FAKE_NPC,0,0
+p_track02,39,36,0	duplicate(Tire_1)	Tire#race02_2_2	FAKE_NPC,0,0
+p_track02,35,36,0	duplicate(Tire_1)	Tire#race02_2_3	FAKE_NPC,0,0
+p_track02,55,36,0	duplicate(Tire_1)	Tire#race02_2_4	FAKE_NPC,0,0
+p_track02,51,36,0	duplicate(Tire_1)	Tire#race02_2_5	FAKE_NPC,0,0
+p_track02,47,36,0	duplicate(Tire_1)	Tire#race02_2_6	FAKE_NPC,0,0
+p_track02,43,34,0	duplicate(Tire_1)	Tire#race02_3_1	FAKE_NPC,0,0
+p_track02,39,34,0	duplicate(Tire_1)	Tire#race02_3_2	FAKE_NPC,0,0
+p_track02,35,34,0	duplicate(Tire_1)	Tire#race02_3_3	FAKE_NPC,0,0
+p_track02,55,34,0	duplicate(Tire_1)	Tire#race02_3_4	FAKE_NPC,0,0
+p_track02,51,34,0	duplicate(Tire_1)	Tire#race02_3_5	FAKE_NPC,0,0
+p_track02,47,34,0	duplicate(Tire_1)	Tire#race02_3_6	FAKE_NPC,0,0
+p_track02,43,32,0	duplicate(Tire_1)	Tire#race02_4_1	FAKE_NPC,0,0
+p_track02,39,32,0	duplicate(Tire_1)	Tire#race02_4_2	FAKE_NPC,0,0
+p_track02,35,32,0	duplicate(Tire_1)	Tire#race02_4_3	FAKE_NPC,0,0
+p_track02,55,32,0	duplicate(Tire_1)	Tire#race02_4_4	FAKE_NPC,0,0
+p_track02,51,32,0	duplicate(Tire_1)	Tire#race02_4_5	FAKE_NPC,0,0
+p_track02,47,32,0	duplicate(Tire_1)	Tire#race02_4_6	FAKE_NPC,0,0
+p_track02,43,30,0	duplicate(Tire_1)	Tire#race02_5_1	FAKE_NPC,0,0
+p_track02,39,30,0	duplicate(Tire_1)	Tire#race02_5_2	FAKE_NPC,0,0
+p_track02,35,30,0	duplicate(Tire_1)	Tire#race02_5_3	FAKE_NPC,0,0
+p_track02,55,30,0	duplicate(Tire_1)	Tire#race02_5_4	FAKE_NPC,0,0
+p_track02,51,30,0	duplicate(Tire_1)	Tire#race02_5_5	FAKE_NPC,0,0
+p_track02,47,30,0	duplicate(Tire_1)	Tire#race02_5_6	FAKE_NPC,0,0
+p_track02,43,28,0	duplicate(Tire_1)	Tire#race02_6_1	FAKE_NPC,0,0
+p_track02,39,28,0	duplicate(Tire_1)	Tire#race02_6_2	FAKE_NPC,0,0
+p_track02,35,28,0	duplicate(Tire_1)	Tire#race02_6_3	FAKE_NPC,0,0
+p_track02,55,28,0	duplicate(Tire_1)	Tire#race02_6_4	FAKE_NPC,0,0
+p_track02,51,28,0	duplicate(Tire_1)	Tire#race02_6_5	FAKE_NPC,0,0
+p_track02,47,28,0	duplicate(Tire_1)	Tire#race02_6_6	FAKE_NPC,0,0
 
 //== NPCs for Redeeming Prize Medals (Einbroch and Hugel) ==
 ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{

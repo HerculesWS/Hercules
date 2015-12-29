@@ -5629,7 +5629,7 @@ airplane,31,77,5	script	Drunken Man#ein	4_M_YURI,{
 	}
 }
 
-ein_in01,231,170,0	script	#kenka	-1,2,2,{
+ein_in01,231,170,0	script	#kenka	FAKE_NPC,2,2,{
 OnTouch:
 	if (Shinokas_Quest > 8) {
 		mes "^3355FFThe open window rattles";

@@ -692,7 +692,7 @@ OnSolo:
 	end;
 }
 
-jawaii_in,28,96,0	script	jaw_em_order#Jawaii	-1,3,3,{
+jawaii_in,28,96,0	script	jaw_em_order#Jawaii	FAKE_NPC,3,3,{
 OnTouch:
 	if (getpartnerid()) {
 		donpcevent "Employee#jaw8::OnWelcome";

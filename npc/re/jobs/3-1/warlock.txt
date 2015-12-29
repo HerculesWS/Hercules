@@ -877,7 +877,7 @@ OnTimer305000:
 	stopnpctimer;
 	end;
 }
--	duplicate(The chamber of magic#2)	The chamber of magic#3	-1
+-	duplicate(The chamber of magic#2)	The chamber of magic#3	FAKE_NPC
 
 -	script	The chamber of magic#4	FAKE_NPC,{
 OnInit:

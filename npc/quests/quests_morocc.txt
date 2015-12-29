@@ -759,7 +759,7 @@ OnTimer250000:
 	end;
 }
 
-que_job01,12,13,0	script	#room1_warp	-1,15,15,{
+que_job01,12,13,0	script	#room1_warp	FAKE_NPC,15,15,{
 OnInit:
 	disablenpc "#room1_warp";
 	end;
@@ -1850,7 +1850,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 	}
 }
 
-moc_fild21,38,193,0	script	Morocc Timer#edq	-1,6,6,{
+moc_fild21,38,193,0	script	Morocc Timer#edq	FAKE_NPC,6,6,{
 //OnInit:
 //	$@re_moc = 0;
 //	$@re_moc_time$ = "";
@@ -3571,7 +3571,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 	}
 }
 
-que_ba,247,33,0	script	#bpast_1_1	-1,1,1,{
+que_ba,247,33,0	script	#bpast_1_1	FAKE_NPC,1,1,{
 //OnTouch2:
 OnTouch:
 	if (barmunt_crow < 4) {
@@ -3639,7 +3639,7 @@ que_ba,181,14,7	script	Researcher#bpast_2_2	4_LGTSCIENCE,{
 que_ba,183,25,0	warp	#bpast_2to3_1	1,1,que_ba,72,25
 que_ba,183,52,0	warp	#bpast_2to3_2	1,1,que_ba,72,51
 
-que_ba,102,56,0	script	#3room_barmunt	-1,3,3,{
+que_ba,102,56,0	script	#3room_barmunt	FAKE_NPC,3,3,{
 //OnTouch2:
 OnTouch:
 	if (barmunt_crow < 4) {
@@ -6809,7 +6809,7 @@ prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
 	}
 }
 
-prt_castle,163,319,0	script	#twonoble	-1,3,3,{
+prt_castle,163,319,0	script	#twonoble	FAKE_NPC,3,3,{
 //OnTouch2:
 OnTouch:
 	if (nkprince_eisen == 7) {
