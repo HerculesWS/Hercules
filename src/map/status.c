@@ -9318,6 +9318,15 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_POWER_OF_GAIA:
 				val2 = 33;
 				break;
+			case SC_FIRE_EXPANSION_TEAR_GAS:
+				val2 = st->max_hp * 5 / 100; //Drain 5% HP
+				tick_time = 2000;
+				val4 = tick / tick_time;
+				break;
+			case SC_FIRE_EXPANSION_TEAR_GAS_SOB:
+				tick_time = 3000;
+				val4 = tick / tick_time;
+ 				break;
 			case SC_MELON_BOMB:
 			case SC_BANANA_BOMB:
 				val1 = 15;
@@ -9460,6 +9469,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				tick_time = 1000;
 				val4 = tick / tick_time;
 				break;
+			case SC_REBOUND:
+				val2 = tick / 2000;
+				tick = 2000;
+				break;
 			case SC_KINGS_GRACE:
 				val2 = 3 + val1;
 				tick_time = 1000;
@@ -9471,6 +9484,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC_OFFERTORIUM:
 				val2 = 30 * val1;
+				val3 = 100 + 20 * val1;
 				break;
 			case SC_FRIGG_SONG:
 				val2 = 5 * val1;
