@@ -6712,7 +6712,13 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 	case SC_POISON:
 	case SC_DPOISON:
 		sc_def = st->vit*100;
-		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
+		sc_def2 =
+#ifdef RENEWAL
+		(st->vit + st->luk) * 5
+#else
+		st->luk*10
+#endif
+		+ SCDEF_LVL_DIFF(bl, src, 99, 10);
 		if (sd) {
 			//For players: 60000 - 450*vit - 100*luk
 			tick_def = st->vit*75;
@@ -6786,9 +6792,14 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		tick_def2 = st->luk*10;
 		break;
 	case SC_BLIND:
-		sc_def = (st->vit + st->int_)*50;
-		sc_def2 = st->luk*10 + SCDEF_LVL_DIFF(bl, src, 99, 10);
-		tick_def2 = st->luk*10;
+#ifdef RENEWAL
+		sc_def = st->int_ * 100;
+		sc_def2 = (st->vit + st->luk) * 5 + SCDEF_LVL_DIFF(bl,src,99,10);
+#else
+		sc_def = st->vit * 100;
+		sc_def2 = st->luk * 10 + SCDEF_LVL_DIFF(bl,src,99,10);
+#endif
+		tick_def2 = st->luk * 10;
 		break;
 	case SC_CONFUSION:
 		sc_def = (st->str + st->int_)*50;
@@ -6854,9 +6865,6 @@ int status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_typ
 		break;
 	case SC_SIREN:
 		tick_def2 = (status->get_lv(bl) * 100) + ((bl->type == BL_PC)?((TBL_PC*)bl)->status.job_level : 0);
-		break;
-	case SC_NEEDLE_OF_PARALYZE:
-		tick_def2 = (st->vit + st->luk) * 50;
 		break;
 	case SC_NETHERWORLD:
 		tick_def2 = 1000 * (((bl->type == BL_PC) ? ((TBL_PC*)bl)->status.job_level : 0) / 10 + status->get_lv(bl) / 50);
