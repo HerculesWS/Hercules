@@ -8857,29 +8857,29 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC_WEAPONBLOCKING:
 				val2 = 10 + 2 * val1; // Chance
-				val4 = tick / 5000;
 				tick_time = 5000; // [GodLesZ] tick time
+				val4 = tick / tick_time;
 				break;
 			case SC_TOXIN:
-				val4 = tick / 10000;
 				tick_time = 10000; // [GodLesZ] tick time
+				val4 = tick / tick_time
 				break;
 			case SC_MAGICMUSHROOM:
-				val4 = tick / 4000;
 				tick_time = 4000; // [GodLesZ] tick time
+				val4 = tick / tick_time
 				break;
 			case SC_PYREXIA:
-				status->change_start(src, bl,SC_BLIND,10000,val1,0,0,0,30000,SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_FIXEDRATE); // Blind status that last for 30 seconds
-				val4 = tick / 3000;
 				tick_time = 3000; // [GodLesZ] tick time
+				val4 = tick / tick_time
+				status->change_start(src, bl,SC_BLIND,10000,val1,0,0,0,30000,SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_FIXEDRATE); // Blind status that last for 30 seconds
 				break;
 			case SC_LEECHESEND:
-				val4 = tick / 1000;
 				tick_time = 1000; // [GodLesZ] tick time
+				val4 = tick / tick_time
 				break;
 			case SC_OBLIVIONCURSE:
-				val4 = tick / 3000;
 				tick_time = 3000; // [GodLesZ] tick time
+				val4 = tick / tick_time
 				break;
 			case SC_CLOAKINGEXCEED:
 				val2 = ( val1 + 1 ) / 2; // Hits
@@ -9053,7 +9053,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			}
 				break;
 			case SC_SWING:
-				val3 = 5 * val1 + val2;//Movement Speed And ASPD Increase
+				val3 = 5 * val1 + val2; // ASPD Increase
 				break;
 			case SC_SYMPHONY_LOVE:
 				val2 = 12 * val1 + val2 + (sd ? sd->status.job_level : 70) / 4;//MDEF Increase In %
