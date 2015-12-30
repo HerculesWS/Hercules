@@ -6010,8 +6010,31 @@ static CMDLINEARG(loadscript)
 static CMDLINEARG(generatetranslations) {
 	script->lang_export_file = aStrdup("./generated_translations.pot");
 
-	if( !(script->lang_export_fp = fopen(script->lang_export_file,"wb")) ) {
+	if (!(script->lang_export_fp = fopen(script->lang_export_file,"wb"))) {
 		ShowError("export-dialog: failed to open '%s' for writing\n",script->lang_export_file);
+	} else {
+		time_t t = time(NULL);
+		struct tm *lt = localtime(&t);
+		int year = lt->tm_year+1900;
+		fprintf(script->lang_export_fp,
+				"# This file is part of Hercules.\n"
+				"# http://herc.ws - http://github.com/HerculesWS/Hercules\n"
+				"#\n"
+				"# Copyright (C) 2013-%d  Hercules Dev Team\n"
+				"#\n"
+				"# Hercules is free software: you can redistribute it and/or modify\n"
+				"# it under the terms of the GNU General Public License as published by\n"
+				"# the Free Software Foundation, either version 3 of the License, or\n"
+				"# (at your option) any later version.\n"
+				"#\n"
+				"# This program is distributed in the hope that it will be useful,\n"
+				"# but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+				"# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+				"# GNU General Public License for more details.\n"
+				"#\n"
+				"# You should have received a copy of the GNU General Public License\n"
+				"# along with this program.  If not, see <http://www.gnu.org/licenses/>.\n",
+				year);
 	}
 	core->runflag = CORE_ST_STOP;
 	return true;

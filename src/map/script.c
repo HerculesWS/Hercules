@@ -1411,7 +1411,7 @@ void script_add_translatable_string(const struct script_string_buf *string, cons
 				"\"");
 		VECTOR_PUSH(script->lang_export_escaped_buf, '\0');
 
-		fprintf(script->lang_export_fp, "#: %s\n"
+		fprintf(script->lang_export_fp, "\n#: %s\n"
 				"# %s\n"
 				"msgctxt \"%s\"\n"
 				"msgid \"%s\"\n"
