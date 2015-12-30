@@ -20440,7 +20440,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getskilllist,""),
 		BUILDIN_DEF(clearitem,""),
 		BUILDIN_DEF(classchange,"ii"),
-		BUILDIN_DEF(misceffect,"i"),
+		BUILDIN_DEF(misceffect,"c"),
 		BUILDIN_DEF(playbgm,"s"),
 		BUILDIN_DEF(playbgmall,"s?????"),
 		BUILDIN_DEF(soundeffect,"si"),
@@ -20455,8 +20455,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(petskillsupport,"viiii"), // [Skotlex]
 		BUILDIN_DEF(skilleffect,"vi"), // skill effect [Celest]
 		BUILDIN_DEF(npcskilleffect,"viii"), // npc skill effect [Valaris]
-		BUILDIN_DEF(specialeffect,"i??"), // npc skill effect [Valaris]
-		BUILDIN_DEF(specialeffect2,"i??"), // skill effect on players[Valaris]
+		BUILDIN_DEF(specialeffect,"c??"), // npc skill effect [Valaris]
+		BUILDIN_DEF(specialeffect2,"c??"), // skill effect on players[Valaris]
 		BUILDIN_DEF(nude,""), // nude command [Valaris]
 		BUILDIN_DEF(mapwarp,"ssii??"), // Added by RoVeRT
 		BUILDIN_DEF(atcommand,"s"), // [MouseJstr]
