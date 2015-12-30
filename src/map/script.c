@@ -10847,6 +10847,15 @@ BUILDIN(sc_start) {
 	int tick, val1, val2, val3, val4=0, rate, flag;
 	char start_type;
 	const char* command = script->getfuncname(st);
+	struct script_data *data = script_getdata(st,2);
+
+	if (data->type == C_NAME && data_isreference(data)) {
+		const char *varname = reference_getname(data);
+		if (not_server_variable(*varname)) {
+			ShowWarning( "script:%s: Detected player variable '%s'.\n", command, varname );
+			return false;
+		}
+	}
 
 	if(strstr(command, "4"))
 		start_type = 4;
@@ -10910,6 +10919,15 @@ BUILDIN(sc_start) {
 BUILDIN(sc_end) {
 	struct block_list* bl;
 	int type;
+	struct script_data *data = script_getdata(st,2);
+
+	if (data->type == C_NAME && data_isreference(data)) {
+		const char *varname = reference_getname(data);
+		if (not_server_variable(*varname)) {
+			ShowWarning( "script:sc_end: Detected player variable '%s'.\n", varname );
+			return false;
+		}
+	}
 
 	type = script_getnum(st, 2);
 	if (script_hasdata(st, 3))
@@ -10957,6 +10975,15 @@ BUILDIN(sc_end) {
 BUILDIN(getscrate) {
 	struct block_list *bl;
 	int type,rate;
+	struct script_data *data = script_getdata(st,2);
+
+	if (data->type == C_NAME && data_isreference(data)) {
+		const char *varname = reference_getname(data);
+		if (not_server_variable(*varname)) {
+			ShowWarning( "script:getscrate: Detected player variable '%s'.\n", varname );
+			return false;
+		}
+	}
 
 	type=script_getnum(st,2);
 	rate=script_getnum(st,3);
@@ -10979,6 +11006,15 @@ BUILDIN(getstatus)
 {
 	int id, type;
 	struct map_session_data* sd = script->rid2sd(st);
+	struct script_data *data = script_getdata(st,2);
+
+	if (data->type == C_NAME && data_isreference(data)) {
+		const char *varname = reference_getname(data);
+		if (not_server_variable(*varname)) {
+			ShowWarning( "script:getstatus: Detected player variable '%s'.\n", varname );
+			return false;
+		}
+	}
 
 	if( sd == NULL )
 	{// no player attached
