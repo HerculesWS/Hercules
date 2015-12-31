@@ -1944,26 +1944,26 @@ ayo_dun01,273,27,0	duplicate(AyoTrap1)	 #th_dun1_1_2	HIDDEN_NPC
 ayo_dun01,272,27,0	duplicate(AyoTrap1)	 #th_dun1_1_3	HIDDEN_NPC,0,4
 ayo_dun01,272,26,0	duplicate(AyoTrap1)	 #th_dun1_1_4	HIDDEN_NPC
 
-ayo_dun01,26,27,0	script	 #th_dun1_1::AyoTrap2	-1,1,1,{
+ayo_dun01,26,27,0	script	 #th_dun1_1::AyoTrap2	FAKE_NPC,1,1,{
 OnTouch:
 	percentheal -100,0;
 	end;
 }
 
-ayo_dun01,28,27,0	duplicate(AyoTrap2)	 #th_dun1_2	-1,0,1
-ayo_dun01,27,25,0	duplicate(AyoTrap2)	 #th_dun1_3	-1,1,0
-ayo_dun01,25,25,0	duplicate(AyoTrap2)	 #th_dun1_4	-1
-ayo_dun01,272,273,0	duplicate(AyoTrap2)	 #th_dun1_5	-1,1,1
-ayo_dun01,274,273,0	duplicate(AyoTrap2)	 #th_dun1_6	-1,0,1
-ayo_dun01,273,271,0	duplicate(AyoTrap2)	 #th_dun1_7	-1,1,0
-ayo_dun01,271,271,0	duplicate(AyoTrap2)	 #th_dun1_8	-1
-ayo_dun01,26,273,0	duplicate(AyoTrap2)	 #th_dun1_9	-1,1,1
-ayo_dun01,28,273,0	duplicate(AyoTrap2)	 #th_dun1_10	-1,0,1
-ayo_dun01,27,271,0	duplicate(AyoTrap2)	 #th_dun1_11	-1,1,0
-ayo_dun01,25,271,0	duplicate(AyoTrap2)	 #th_dun1_12	-1
+ayo_dun01,28,27,0	duplicate(AyoTrap2)	 #th_dun1_2	FAKE_NPC,0,1
+ayo_dun01,27,25,0	duplicate(AyoTrap2)	 #th_dun1_3	FAKE_NPC,1,0
+ayo_dun01,25,25,0	duplicate(AyoTrap2)	 #th_dun1_4	FAKE_NPC
+ayo_dun01,272,273,0	duplicate(AyoTrap2)	 #th_dun1_5	FAKE_NPC,1,1
+ayo_dun01,274,273,0	duplicate(AyoTrap2)	 #th_dun1_6	FAKE_NPC,0,1
+ayo_dun01,273,271,0	duplicate(AyoTrap2)	 #th_dun1_7	FAKE_NPC,1,0
+ayo_dun01,271,271,0	duplicate(AyoTrap2)	 #th_dun1_8	FAKE_NPC
+ayo_dun01,26,273,0	duplicate(AyoTrap2)	 #th_dun1_9	FAKE_NPC,1,1
+ayo_dun01,28,273,0	duplicate(AyoTrap2)	 #th_dun1_10	FAKE_NPC,0,1
+ayo_dun01,27,271,0	duplicate(AyoTrap2)	 #th_dun1_11	FAKE_NPC,1,0
+ayo_dun01,25,271,0	duplicate(AyoTrap2)	 #th_dun1_12	FAKE_NPC
 
 //- Hints -
-ayo_dun01,156,148,0	script	 #hint01::AyoHint	-1,0,4,{
+ayo_dun01,156,148,0	script	 #hint01::AyoHint	FAKE_NPC,0,4,{
 OnTouch:
 	if (rand(1,100) > 60 && ayodunquest < 11) {
 		mes "^3355FFThe Holy Thread in your pocket suddenly began to glow. You feel that something is near you...^000000";
@@ -1978,9 +1978,9 @@ OnTouch:
 	end;
 }
 
-ayo_dun01,259,42,0	duplicate(AyoHint)	 #hint02	-1,2,0
-ayo_dun01,259,44,0	duplicate(AyoHint)	 #hint02_2	-1,2,0
-ayo_dun01,259,46,0	duplicate(AyoHint)	 #hint02_3	-1,2,0
+ayo_dun01,259,42,0	duplicate(AyoHint)	 #hint02	FAKE_NPC,2,0
+ayo_dun01,259,44,0	duplicate(AyoHint)	 #hint02_2	FAKE_NPC,2,0
+ayo_dun01,259,46,0	duplicate(AyoHint)	 #hint02_3	FAKE_NPC,2,0
 
 //- Puzzle pieces -
 ayo_dun01,198,164,0	script	 #hun_thai_1	HIDDEN_NPC,{

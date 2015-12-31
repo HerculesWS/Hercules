@@ -253,7 +253,7 @@ yuno,157,205,4	script	Juno Artisan#juno	1_M_JOBGUIDER,{
 	}
 }
 
--	script	::JunoSoldier1	-1,{
+-	script	::JunoSoldier1	FAKE_NPC,{
 	mes "[Juno Soldier]";
 	mes "Welcome to Juno, the city of noble-mindedness.";
 	next;
@@ -268,7 +268,7 @@ yuno,157,205,4	script	Juno Artisan#juno	1_M_JOBGUIDER,{
 	close;
 }
 
--	script	::JunoSoldier2	-1,{
+-	script	::JunoSoldier2	FAKE_NPC,{
 	mes "[Juno Soldier]";
 	mes "Welcome to Juno, the city of noble-mindedness.";
 	next;
@@ -284,7 +284,7 @@ yuno,157,205,4	script	Juno Artisan#juno	1_M_JOBGUIDER,{
 	close;
 }
 
--	script	::JunoSoldier3	-1,{
+-	script	::JunoSoldier3	FAKE_NPC,{
 	mes "[Juno Soldier]";
 	mes "Welcome to Juno, the city of noble-mindedness.";
 	next;
@@ -296,7 +296,7 @@ yuno,157,205,4	script	Juno Artisan#juno	1_M_JOBGUIDER,{
 	close;
 }
 
--	script	::JunoSoldier4	-1,{
+-	script	::JunoSoldier4	FAKE_NPC,{
 	mes "[Juno Soldier]";
 	mes "Welcome to Juno, the city of noble-mindedness.";
 	next;
@@ -311,7 +311,7 @@ yuno,157,205,4	script	Juno Artisan#juno	1_M_JOBGUIDER,{
 	close;
 }
 
--	script	::JunoSoldier5	-1,{
+-	script	::JunoSoldier5	FAKE_NPC,{
 	mes "[Juno Soldier]";
 	mes "Welcome to Juno, the city of noble-mindedness.";
 	next;
@@ -327,7 +327,7 @@ yuno,157,205,4	script	Juno Artisan#juno	1_M_JOBGUIDER,{
 	close;
 }
 
--	script	::JunoSoldier6	-1,{
+-	script	::JunoSoldier6	FAKE_NPC,{
 	mes "[Juno Soldier]";
 	mes "Welcome to Juno, the city of noble-mindedness.";
 	next;
@@ -339,7 +339,7 @@ yuno,157,205,4	script	Juno Artisan#juno	1_M_JOBGUIDER,{
 	close;
 }
 
--	script	::JunoSoldier7	-1,{
+-	script	::JunoSoldier7	FAKE_NPC,{
 	mes "[Juno Soldier]";
 	mes "Welcome to Juno, the city of noble-mindedness.";
 	next;

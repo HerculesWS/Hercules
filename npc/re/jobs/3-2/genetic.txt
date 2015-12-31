@@ -963,7 +963,7 @@ job3_gen01,91,48,3	script	Demi Calberine#gen	4_F_SCIENCE,{
 	}
 }
 
--	script	Scattered Stuff#gen	-1,{
+-	script	Scattered Stuff#gen	FAKE_NPC,{
 	if (job_gen > 62 && job_gen < 74) {
 		mes "- There are so many scattered things on the floor that the lab is in chaos. -";
 		next;

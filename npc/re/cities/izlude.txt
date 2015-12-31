@@ -88,7 +88,7 @@ izlude_b,165,156,2	duplicate(Soldier_izlude)	Soldier#izlude_b	8W_SOLDIER
 izlude_c,165,156,2	duplicate(Soldier_izlude)	Soldier#izlude_c	8W_SOLDIER
 izlude_d,165,156,2	duplicate(Soldier_izlude)	Soldier#izlude_d	8W_SOLDIER
 
--	script	::Guard_izlude	-1,{
+-	script	::Guard_izlude	FAKE_NPC,{
 	mes "[Izlude Guard]";
 	mes "Welcome to Izlude.";
 	close;

@@ -82,7 +82,7 @@ function	script	F_GldTreasSw	{
 //== Castle 1 ==============================================
 
 //- Treasure Spawn -
-nguild_alde,1,1,1	script	Treasure_N01	-1,{
+nguild_alde,1,1,1	script	Treasure_N01	FAKE_NPC,{
 
 OnRecvCastleN01:
 	end;
@@ -108,7 +108,7 @@ nguild_alde,123,223,0	script	Switch#TresN01	HIDDEN_NPC,{
 //== Castle 2 ==============================================
 
 //- Treasure Spawn -
-nguild_gef,1,1,1	script	Treasure_N02	-1,{
+nguild_gef,1,1,1	script	Treasure_N02	FAKE_NPC,{
 
 OnRecvCastleN02:
 	end;
@@ -134,7 +134,7 @@ nguild_gef,152,117,0	script	Switch#TresN02	HIDDEN_NPC,{
 //== Castle 3 ==============================================
 
 //- Treasure Spawn -
-nguild_pay,1,1,0	script	Treasure_N03	-1,{
+nguild_pay,1,1,0	script	Treasure_N03	FAKE_NPC,{
 OnRecvCastleN03:
 	end;
 OnInit:
@@ -159,7 +159,7 @@ nguild_pay,295,8,0	script	Switch#TresN03	HIDDEN_NPC,{
 //== Castle 4 ==============================================
 
 //- Treasure Spawn -
-nguild_prt,1,1,0	script	Treasure_N04	-1,{
+nguild_prt,1,1,0	script	Treasure_N04	FAKE_NPC,{
 OnRecvCastleN04:
 	end;
 OnInit:

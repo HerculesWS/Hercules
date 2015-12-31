@@ -2569,8 +2569,7 @@ int npc_parseview(const char* w4, const char* start, const char* buffer, const c
 	} else {
 		// NPC has an ID specified for view id.
 		val = atoi(w4);
-		if (val != FAKE_NPC) // TODO: Add this to the constants table and replace -1 with FAKE_NPC in the scripts, then remove this check.
-			ShowWarning("npc_parseview: Use of numeric NPC view IDs is deprecated and may be removed in a future update. Please use NPC view constants instead. ID '%d' specified in file '%s', line '%d'.\n", val, filepath, strline(buffer, start-buffer));
+		ShowWarning("npc_parseview: Use of numeric NPC view IDs is deprecated and may be removed in a future update. Please use NPC view constants instead. ID '%d' specified in file '%s', line '%d'.\n", val, filepath, strline(buffer, start-buffer));
 	}
 
 	return val;
@@ -2947,7 +2946,7 @@ const char* npc_skip_script(const char* start, const char* buffer, const char* f
  *
  * Example:
  * @code
- * -<TAB>script<TAB><NPC Name><TAB>-1,{
+ * -<TAB>script<TAB><NPC Name><TAB>FAKE_NPC,{
  *   <code>
  * }
  * <map name>,<x>,<y>,<facing><TAB>script<TAB><NPC Name><TAB><sprite id>,{

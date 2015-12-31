@@ -203,7 +203,7 @@ sec_in02,16,43,5	script	Scaraba Dungeon Entrance	4_MAN_BENKUNI,{
 }
 
 //== Vigilantes ============================================
--	script	Vigilante#main	-1,{
+-	script	Vigilante#main	FAKE_NPC,{
 	if (compare(strnpcinfo(0),"ep133_26")) {
 		if (!isequipped(2782)) {
 			mes "[Vigilante]";
@@ -1020,7 +1020,7 @@ dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 }
 
 //== Document Packages =====================================
--	script	Document Package#main	-1,{
+-	script	Document Package#main	FAKE_NPC,{
 	function	eldicastes_dp;
 	if (isequipped(2782) < 1) {
 		mes "You can't make sense of the writing.";
@@ -4792,7 +4792,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 	close;
 }
 
--	script	ep133_crack#main	-1,{
+-	script	ep133_crack#main	FAKE_NPC,{
 	// if ((GetInventoryRemainCount 1301 3 == 2) || (GetInventoryRemainCount 1301 3 == 3)) {
 	if ((MaxWeight - Weight) < 1000) {
 		mes "- You can too many items to proceed with the quest. -";
@@ -6102,7 +6102,7 @@ dic_in01,349,129,5	script	Bouy#13_3	4_MAN_BENKUNI,{
 }
 
 //== Sapha's Visit =========================================
--	script	Expedition#ep133_is	-1,{
+-	script	Expedition#ep133_is	FAKE_NPC,{
 	if (ep13_3_invite) {
 		if (compare(strnpcinfo(1),"Maha")) {
 			mes "[Maha]";
@@ -6949,7 +6949,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 	}
 }
 //== Enchantment NPCs ======================================
--	script	dic_enc#main	-1,{
+-	script	dic_enc#main	FAKE_NPC,{
 	.@re$ = strnpcinfo(1);
 	.@n$ = "["+.@re$+"]";
 	if (!checkweight (1201,1)) {

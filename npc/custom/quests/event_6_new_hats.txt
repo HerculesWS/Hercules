@@ -324,7 +324,7 @@ L3:
 
 
 //these scripts make our brothers to appear and disappear in order
--	script	EDZac	-1,{
+-	script	EDZac	FAKE_NPC,{
 OnInit:
 OnMinute15:
 	disablenpc "Zac";
@@ -335,7 +335,7 @@ OnMinute01:
 	end;
 }
 
--	script	EDJac	-1,{
+-	script	EDJac	FAKE_NPC,{
 OnInit:
 OnMinute30:
 	disablenpc "Jac";
@@ -346,7 +346,7 @@ OnMinute16:
 	end;
 }
 
--	script	EDPac	-1,{
+-	script	EDPac	FAKE_NPC,{
 OnInit:
 OnMinute45:
 	disablenpc "Pac";
@@ -357,7 +357,7 @@ OnMinute31:
 	end;
 }
 
--	script	EDBlac	-1,{
+-	script	EDBlac	FAKE_NPC,{
 OnInit:
 OnMinute00:
 	disablenpc "Blac";

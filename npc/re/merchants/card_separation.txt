@@ -33,7 +33,7 @@
 //= 1.1
 //=========================================================================
 
--	script	::CardSeparation_mal	-1,{
+-	script	::CardSeparation_mal	FAKE_NPC,{
 	disable_items;
 	if (checkweight(Knife,1) == 0) {
 		mes "You have too many kinds of objects. Let's try to continue after reducing those objects.";

@@ -2518,7 +2518,7 @@ OnTouch:
 }
 
 //- Triggers -
-mosk_ship,1,1,4	script	Baehideun#ship	-1,{
+mosk_ship,1,1,4	script	Baehideun#ship	FAKE_NPC,{
 OnInit:
 	$@mos1_edq = 0;
 	end;
@@ -2567,7 +2567,7 @@ OnTimer300000:
 	end;
 }
 
--	script	Baehideun#main	-1,{
+-	script	Baehideun#main	FAKE_NPC,{
 OnInit:
 	if (compare(strnpcinfo(0),"main")) end;
 	disablenpc strnpcinfo(0);
@@ -2619,10 +2619,10 @@ OnTimer300000:
 	donpcevent strnpcinfo(0)+"::OnDisable";
 	end;
 }
-mosk_ship,2,2,4	duplicate(Baehideun#main)	Baehideun1#ship	-1
-mosk_ship,3,3,4	duplicate(Baehideun#main)	Baehideun2#ship	-1
-mosk_ship,5,5,4	duplicate(Baehideun#main)	Baehideun3#ship	-1
-mosk_ship,15,15,4	duplicate(Baehideun#main)	Baehideun4#ship	-1
+mosk_ship,2,2,4	duplicate(Baehideun#main)	Baehideun1#ship	FAKE_NPC
+mosk_ship,3,3,4	duplicate(Baehideun#main)	Baehideun2#ship	FAKE_NPC
+mosk_ship,5,5,4	duplicate(Baehideun#main)	Baehideun3#ship	FAKE_NPC
+mosk_ship,15,15,4	duplicate(Baehideun#main)	Baehideun4#ship	FAKE_NPC
 
 //== Help Mikhail :: mos_swan & mos_swan_pt2 ===============
 
@@ -3682,7 +3682,7 @@ mosk_in,147,202,3	script	Victor#mos	4_M_RUSMAN2,{
 	close;
 }
 
-mosk_in,215,181,0	script	#swan_inn	-1,1,1,{
+mosk_in,215,181,0	script	#swan_inn	FAKE_NPC,1,1,{
 	end;
 OnTouch:
 	if (mos_swan != 4) end;
@@ -3986,7 +3986,7 @@ moscovia,208,182,7	script	Acorn Dealer#mos	4_M_RUSMAN1,{
 }
 
 //- Big Squirrel - Trade Acorns for Gems -
--	script	Squirrel#mos_main	-1,{
+-	script	Squirrel#mos_main	FAKE_NPC,{
 	if (compare(strnpcinfo(0),"mos_sq")) end;
 OnTouch:
 	if ((MaxWeight-Weight) < 2000) {
@@ -4102,7 +4102,7 @@ mosk_fild01,113,108,5	duplicate(Squirrel#mos_main)	#mos_sq	COCO,2,2
 //== Banish Winter :: mos_nowinter =========================
 
 //- Baba Yaga, the Horrible - Starting Point -
-mosk_in,215,46,5	script	#babayaga	-1,7,7,{
+mosk_in,215,46,5	script	#babayaga	FAKE_NPC,7,7,{
 	end;
 OnTouch:
 	if (!mos_nowinter) {
@@ -6299,7 +6299,7 @@ mosk_dun03,225,233,0	script	Pile of skeletons#mosk	HIDDEN_NPC,{
 	close;
 }
 
-mosk_dun03,225,233,0	script	#Magic_Bottle	-1,5,5,{
+mosk_dun03,225,233,0	script	#Magic_Bottle	FAKE_NPC,5,5,{
 	end;
 OnTouch:
 	if (mos_nowinter == 8) {
@@ -6350,7 +6350,7 @@ OnTouch:
 }
 
 //- Csar Alexsay III -
-mosk_in,131,92,3	script	#Csar	-1,7,7,{
+mosk_in,131,92,3	script	#Csar	FAKE_NPC,7,7,{
 	if (mos_nowinter == 12) {
 		mes "[Csar Alexsay III]";
 		mes "You!!!";
@@ -7328,7 +7328,7 @@ OnMyMobDead:
 }
 
 //- Koshei, The Immortal -
-mosk_dun01,5,5,0	script	Koshei#rus47	-1,0,0,{
+mosk_dun01,5,5,0	script	Koshei#rus47	FAKE_NPC,0,0,{
 	end;
 OnInit:
 	disablenpc "Koshei#rus47";
@@ -7363,7 +7363,7 @@ OnTimer300000:
 }
 
 //- Gray Wolf & Maria Morebna -
--	script	mos_rus#main	-1,{
+-	script	mos_rus#main	FAKE_NPC,{
 	end;
 OnInit:
 	if (compare(strnpcinfo(0),"main")) end;
@@ -8444,7 +8444,7 @@ mosk_fild02,157,233,0	script	Shepherdess#rus10	1_F_04,{
 }
 
 //- Pointed Trees (Wooden Flute) -
--	script	PTree#rusmain	-1,{
+-	script	PTree#rusmain	FAKE_NPC,{
 	if (rhea_rus_ring == 6) {
 		if (countitem(Pointed_Branch) < 50) {
 			if (rand(1,3) == 2) {
@@ -8599,7 +8599,7 @@ mosk_fild02,101,204,0	duplicate(NoSwim)	Caution#rus01	2_BULLETIN_BOARD
 mosk_fild02,101,200,0	duplicate(NoSwim)	Caution#rus02	2_BULLETIN_BOARD
 
 //- Lusalka Trigger (Lusalka's Hair) -
-mosk_fild02,116,202,3	script	Lusalka#07russai_22	-1,3,3,{
+mosk_fild02,116,202,3	script	Lusalka#07russai_22	FAKE_NPC,3,3,{
 	end;
 OnTouch:
 	if (rhea_rus_main != 8) {
@@ -9250,7 +9250,7 @@ mosk_que,0,0,0,0	monster	Freezer	1887,10,20000,0,0
 mosk_que,0,0,0,0	monster	Hatii Baby	1888,3,300000,0,0
 mosk_que,0,0,0,0	monster	Sasquatch	1243,15,10000,0,0
 
-mosk_que,49,22,3	script	#rus27	-1,3,3,{
+mosk_que,49,22,3	script	#rus27	FAKE_NPC,3,3,{
 	end;
 OnTouch:
 	if (rhea_rus_main == 8) {

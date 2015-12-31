@@ -317,4 +317,4 @@ OnInit:
 		npcshopadditem "mission_shop", .Shop[.@i], .Shop[.@i+1];
 	end;
 }
--	shop	mission_shop	-1,512:-1
+-	shop	mission_shop	FAKE_NPC,512:-1

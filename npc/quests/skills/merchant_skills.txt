@@ -356,7 +356,7 @@ alberta,119,221,6	script	Charlron	1_M_PAY_ELDER,{
 	close;
 }
 
--	script	::Gershaun_alberta	-1,{
+-	script	::Gershaun_alberta	FAKE_NPC,{
 	if (BaseClass == Job_Merchant) {
 		if (getskilllv("MC_CARTREVOLUTION") == 1) {
 			mes "[Gershaun]";

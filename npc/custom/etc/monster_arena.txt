@@ -557,154 +557,154 @@ L_Heal:
 
 // Kill Trigger //
 // 6/Final. ---Change to Add Monsters--- //
-gon_test,56,91,6	script	OnPoringKilled	-1,{
+gon_test,56,91,6	script	OnPoringKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+1;
 	announce "You killed a Poring - Gained 1 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnFaberKilled	-1,{
+gon_test,56,91,6	script	OnFaberKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+2;
 	announce "You killed a Faber - Gained 2 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnLunaticKilled	-1,{
+gon_test,56,91,6	script	OnLunaticKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+4;
 	announce "You killed a Lunatic - Gained 4 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnDropsKilled	-1,{
+gon_test,56,91,6	script	OnDropsKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+4;
 	announce "You killed a Drops - Gained 4 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnPickyKilled	-1,{
+gon_test,56,91,6	script	OnPickyKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+4;
 	announce "You killed a Picky - Gained 4 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnChonChonKilled	-1,{
+gon_test,56,91,6	script	OnChonChonKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+8;
 	announce "You killed a ChonChon - Gained 8 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnSPickyKilled	-1,{
+gon_test,56,91,6	script	OnSPickyKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+8;
 	announce "You killed a Super Picky - Gained 8 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnWillowKilled	-1,{
+gon_test,56,91,6	script	OnWillowKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+8;
 	announce "You killed a Willow - Gained 8 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnRodaKilled	-1,{
+gon_test,56,91,6	script	OnRodaKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+16;
 	announce "You killed a Roda Frog - Gained 16 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnCondorKilled	-1,{
+gon_test,56,91,6	script	OnCondorKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+16;
 	announce "You killed a Condor - Gained 16 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnThiefKilled	-1,{
+gon_test,56,91,6	script	OnThiefKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+32;
 	announce "You killed a Theif Bug Larva - Gained 32 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnSavageKilled	-1,{
+gon_test,56,91,6	script	OnSavageKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+64;
 	announce "You killed a Savage Babe - Gained 64 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnFamiliarKilled	-1,{
+gon_test,56,91,6	script	OnFamiliarKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+128;
 	announce "You killed a Familiar - Gained 128 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnHornetKilled	-1,{
+gon_test,56,91,6	script	OnHornetKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+128;
 	announce "You killed a Hornet - Gained 128 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnPuppyKilled	-1,{
+gon_test,56,91,6	script	OnPuppyKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+256;
 	announce "You killed a Desert Wolf Puppy - Gained 256 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnRockerKilled	-1,{
+gon_test,56,91,6	script	OnRockerKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+256;
 	announce "You killed a Rocker - Gained 256 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnSporeKilled	-1,{
+gon_test,56,91,6	script	OnSporeKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+256;
 	announce "You killed a Spore - Gained 256 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnSkeletonKilled	-1,{
+gon_test,56,91,6	script	OnSkeletonKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+512;
 	announce "You killed a Skeleton - Gained 512 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnPlanktonKilled	-1,{
+gon_test,56,91,6	script	OnPlanktonKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+512;
 	announce "You killed a Plankton - Gained 512 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnAntonioKilled	-1,{
+gon_test,56,91,6	script	OnAntonioKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+512;
 	announce "You killed an Antonio - Gained 512 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnThiefFemaleKilled	-1,{
+gon_test,56,91,6	script	OnThiefFemaleKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+512;
 	announce "You killed a Thief Bug Female - Gained 512 exp",19;
 	callfunc "duelkill";
 }
 
-gon_test,56,91,6	script	OnSpecialKilled	-1,{
+gon_test,56,91,6	script	OnSpecialKilled	FAKE_NPC,{
 	if (@marena == 0) callfunc "illegalkill";
 	set #monpoints,#monpoints+512;
 	announce "You killed a Special Monster - Gained 1024 exp",19;

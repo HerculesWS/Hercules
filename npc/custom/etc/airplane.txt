@@ -13,7 +13,7 @@
 //= 2.2 Added missing next;'s [Evera]
 //============================================================
 
-payon,153,43,5	script	itinsetter	-1,{
+payon,153,43,5	script	itinsetter	FAKE_NPC,{
 	//This is just OnInit stuff to set the hourly intinerary.
 OnInit:
 	deletearray $locationsname$[0],500;

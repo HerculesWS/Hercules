@@ -390,7 +390,7 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		close;
 	}
 }
--	script	Spirit Detecting Staff#0	-1,{
+-	script	Spirit Detecting Staff#0	FAKE_NPC,{
 
 	if (strnpcinfo(4) == "thor_v01") setarray .@id[0],990,994,6276,6278;
 	else if (strnpcinfo(4) == "ice_dun01") setarray .@id[0],991,995,6278,6276;

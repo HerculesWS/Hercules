@@ -692,7 +692,7 @@ OnSolo:
 	end;
 }
 
-jawaii_in,28,96,0	script	jaw_em_order#Jawaii	-1,3,3,{
+jawaii_in,28,96,0	script	jaw_em_order#Jawaii	FAKE_NPC,3,3,{
 OnTouch:
 	if (getpartnerid()) {
 		donpcevent "Employee#jaw8::OnWelcome";
@@ -1399,7 +1399,7 @@ prt_in,170,14,0	script	Customer#Bachewcca	4_M_ORIENT02,{
 }
 
 //== Izlude ================================================
--	script	::Honeymoon_Helper_Izlude	-1,{
+-	script	::Honeymoon_Helper_Izlude	FAKE_NPC,{
 	mes "[Helper]";
 	mes "Newlyweds and";
 	mes "long time couples...";

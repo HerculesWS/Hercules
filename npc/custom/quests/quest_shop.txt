@@ -26,7 +26,7 @@ prontera,164,203,6	script	Quest Shop#1	4_M_MOCASS2,{ callfunc "qshop"; }
 
 // Script Core
 //============================================================
--	script	quest_shop	-1,{
+-	script	quest_shop	FAKE_NPC,{
 function Add; function Chk; function Slot; function A_An;
 OnInit:
 	freeloop(1);
@@ -223,8 +223,8 @@ function	script	qshop	{
 
 // Dummy shop data -- copy as needed.
 //============================================================
--	shop	qshop1	-1,909:-1
--	shop	qshop2	-1,909:-1
--	shop	qshop3	-1,909:-1
--	shop	qshop4	-1,909:-1
--	shop	qshop5	-1,909:-1
+-	shop	qshop1	FAKE_NPC,909:-1
+-	shop	qshop2	FAKE_NPC,909:-1
+-	shop	qshop3	FAKE_NPC,909:-1
+-	shop	qshop4	FAKE_NPC,909:-1
+-	shop	qshop5	FAKE_NPC,909:-1

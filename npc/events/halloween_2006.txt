@@ -661,7 +661,7 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 	close;
 }
 
--	script	HwChicken::HwChicken	-1,{
+-	script	HwChicken::HwChicken	FAKE_NPC,{
 	if ((halloween == 102) || (halloween == 103)) {
 		mes "Oh, this must be Chicken Masta's chicken.";
 		mes "I should insert the magic word.";
@@ -690,7 +690,7 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 	}
 }
 
--	script	HwChicken2::HwChicken2	-1,{
+-	script	HwChicken2::HwChicken2	FAKE_NPC,{
 	@egg_temp = rand(1,4);
 	if( @egg_temp == 3) {
 		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
@@ -706,7 +706,7 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 	}
 }
 
--	script	HwChicken3::HwChicken3	-1,{
+-	script	HwChicken3::HwChicken3	FAKE_NPC,{
 	@egg_temp = rand(1,4);
 	if( @egg_temp == 3) {
 		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
@@ -739,7 +739,7 @@ nif_fild01,185,325,8	duplicate(HwChicken)	Masta's chicken#06_hw07	4_NFCOCK
 nif_fild01,133,105,1	duplicate(HwChicken)	Masta's chicken#06_hw08	4_NFCOCK
 nif_fild01,331,329,2	duplicate(HwChicken)	Masta's chicken#06_hw09	4_NFCOCK
 
-pay_dun03,1,1,0	script	#06_hw_timer01	-1,{
+pay_dun03,1,1,0	script	#06_hw_timer01	FAKE_NPC,{
 OnInit:
 	disablenpc "Chicken#06_hw_p01";
 	disablenpc "Chicken#06_hw_p02";
@@ -920,7 +920,7 @@ pay_dun03,157,131,3	duplicate(HwChicken2)	Chicken#06_hw_p40	4_NFCOCK
 pay_dun03,158,131,3	duplicate(HwChicken3)	Chicken#06_hw_p41	4_NFCOCK
 
 //== Payon Field chickens ==================================
-pay_fild08,1,1,0	script	#06_hw_timer02	-1,{
+pay_fild08,1,1,0	script	#06_hw_timer02	FAKE_NPC,{
 OnInit:
 	disablenpc "Chicken#06_hw_pf01";
 	disablenpc "Chicken#06_hw_pf02";

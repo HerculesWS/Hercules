@@ -3086,7 +3086,7 @@ prt_maze02,57,151,1	script	Pleur#warp	4_F_02,{
 	end;
 }
 
-prt_maze02,58,150,0	script	#movesign	-1,5,5,{
+prt_maze02,58,150,0	script	#movesign	FAKE_NPC,5,5,{
 OnTouch:
 	mes "^3355FFYou catch a glimpse";
 	mes "of a girl heading directly";
@@ -3101,19 +3101,19 @@ OnTouch:
 	end;
 }
 
-prt_maze02,18,126,0	script	#mazewarp	-1,3,3,{
+prt_maze02,18,126,0	script	#mazewarp	FAKE_NPC,3,3,{
 OnTouch:
 	warp "prt_maze02",90,170;
 	end;
 }
 
-prt_maze02,25,161,0	script	#music	-1,7,7,{
+prt_maze02,25,161,0	script	#music	FAKE_NPC,7,7,{
 OnTouch:
 	soundeffect "effect\\석양의 어쌔신.wav",1;
 	end;
 }
 
-prt_maze02,132,132,0	script	#skill	-1,{
+prt_maze02,132,132,0	script	#skill	FAKE_NPC,{
 OnEnable:
 	monster "prt_maze02",14,177,"Flora",1118,1,"#skill::OnMyMobDead";
 	monster "prt_maze02",17,171,"Flora",1118,1,"#skill::OnMyMobDead";
@@ -5044,7 +5044,7 @@ OnReset:
 	end;
 }
 
-cmd_in01,1,1,0	script	s_dance_timer	-1,{
+cmd_in01,1,1,0	script	s_dance_timer	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -5481,7 +5481,7 @@ OnTouch:
 	end;
 }
 
-cmd_in01,14,14,0	script	Examiner#sd	-1,6,6,{
+cmd_in01,14,14,0	script	Examiner#sd	FAKE_NPC,6,6,{
 OnInit:
 	disablenpc "Examiner#sd";
 	end;
@@ -10438,7 +10438,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 	}
 }
 
-nif_in,186,168,1	script	#witch	-1,1,1,{
+nif_in,186,168,1	script	#witch	FAKE_NPC,1,1,{
 OnTouch:
 	callfunc "F_UpdateSignVars";
 	if (sign_q == 83) {
@@ -11662,7 +11662,7 @@ niflheim,102,54,4	script	Mad Man#s	8_DOPPEL,{
 	}
 }
 
-niflheim,348,257,1	script	#Cursed Soul	-1,1,1,{
+niflheim,348,257,1	script	#Cursed Soul	FAKE_NPC,1,1,{
 OnTouch:
 	callfunc "F_UpdateSignVars";
 	if ((sign_q == 83) || (sign_q == 90)) {
@@ -11777,7 +11777,7 @@ OnMyMobDead:
 	end;
 }
 
-nif_in,102,81,1	script	#Crayu	-1,1,1,{
+nif_in,102,81,1	script	#Crayu	FAKE_NPC,1,1,{
 OnTouch:
 	callfunc "F_UpdateSignVars";
 	if (sign_q < 75) end;
@@ -11869,7 +11869,7 @@ OnTouch:
 	end;
 }
 
-nif_in,156,91,1	script	#kidniff	-1,1,1,{
+nif_in,156,91,1	script	#kidniff	FAKE_NPC,1,1,{
 OnTouch:
 	callfunc "F_UpdateSignVars";
 	if (sign_q == 83) {
@@ -12313,7 +12313,7 @@ geffen,119,48,0	script	Fountain#s	HIDDEN_NPC,{
 	}
 }
 
-que_sign01,196,44,0	script	Starter#serin	-1,32,32,{
+que_sign01,196,44,0	script	Starter#serin	FAKE_NPC,32,32,{
 OnTouch:
 	donpcevent "Timer#serin::OnStart";
 	disablenpc "Starter#serin";
@@ -12324,7 +12324,7 @@ OnEnable:
 	end;
 }
 
-que_sign01,196,44,0	script	Warp#serin	-1,35,35,{
+que_sign01,196,44,0	script	Warp#serin	FAKE_NPC,35,35,{
 OnDisable:
 OnInit:
 	disablenpc "Warp#serin";
@@ -12339,7 +12339,7 @@ OnEnable:
 	end;
 }
 
-que_sign01,1,0,0	script	Timer#serin	-1,{
+que_sign01,1,0,0	script	Timer#serin	FAKE_NPC,{
 OnStart:
 	initnpctimer;
 	end;
@@ -12360,7 +12360,7 @@ OnTimer620000:
 	end;
 }
 
-que_sign01,50,1,0	script	CallMonster#serin	-1,{
+que_sign01,50,1,0	script	CallMonster#serin	FAKE_NPC,{
 OnCall:
 	monster "que_sign01",196,44,"Dark Lord Incarnation",1605,1,"CallMonster#serin::OnMyMobDead";
 	end;
@@ -12374,7 +12374,7 @@ OnReset:
 	killmonster "que_sign01","CallMonster#serin::OnMyMobDead";
 }
 
-que_sign01,197,195,0	script	Starter#witch	-1,32,32,{
+que_sign01,197,195,0	script	Starter#witch	FAKE_NPC,32,32,{
 OnTouch:
 	donpcevent "Timer#witch::OnStart";
 	disablenpc "Starter#witch";
@@ -12385,7 +12385,7 @@ OnEnable:
 	end;
 }
 
-que_sign01,1,1,0	script	Timer#witch	-1,{
+que_sign01,1,1,0	script	Timer#witch	FAKE_NPC,{
 OnStart:
 	initnpctimer;
 	end;
@@ -12404,7 +12404,7 @@ OnTimer620000:
 	end;
 }
 
-que_sign01,197,195,0	script	Warp#witch	-1,35,35,{
+que_sign01,197,195,0	script	Warp#witch	FAKE_NPC,35,35,{
 OnDisable:
 OnInit:
 	disablenpc "Warp#witch";
@@ -12419,7 +12419,7 @@ OnTouch:
 	end;
 }
 
-que_sign01,1,2,0	script	CallMonster#witch	-1,{
+que_sign01,1,2,0	script	CallMonster#witch	FAKE_NPC,{
 OnCall:
 	monster "que_sign01",196,195,"Dark Lord Incarnation",1605,1,"CallMonster#witch::OnMyMobDead";
 	monster "que_sign01",180,180,"Ancient Mummy",1522,1,"CallMonster#witch::OnMyMobDead";

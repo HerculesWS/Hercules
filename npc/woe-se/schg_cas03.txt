@@ -32,15 +32,15 @@
 //= 1.0
 //=========================================================================
 
--	duplicate(Manager#template)	Manager#schg_cas03	-1
--	duplicate(gard#template)	gard1#schg_cas03	-1
--	duplicate(gard#template)	gard2#schg_cas03	-1
--	duplicate(df#template)	df1#schg_cas03	-1
--	duplicate(df#template)	df2#schg_cas03	-1
--	duplicate(RL#template)	RL0#schg_cas03	-1
--	duplicate(RL#template)	RL1#schg_cas03	-1
--	duplicate(RL#template)	RL2#schg_cas03	-1
--	duplicate(RL#template)	RL3#schg_cas03	-1
+-	duplicate(Manager#template)	Manager#schg_cas03	FAKE_NPC
+-	duplicate(gard#template)	gard1#schg_cas03	FAKE_NPC
+-	duplicate(gard#template)	gard2#schg_cas03	FAKE_NPC
+-	duplicate(df#template)	df1#schg_cas03	FAKE_NPC
+-	duplicate(df#template)	df2#schg_cas03	FAKE_NPC
+-	duplicate(RL#template)	RL0#schg_cas03	FAKE_NPC
+-	duplicate(RL#template)	RL1#schg_cas03	FAKE_NPC
+-	duplicate(RL#template)	RL2#schg_cas03	FAKE_NPC
+-	duplicate(RL#template)	RL3#schg_cas03	FAKE_NPC
 
 schg_cas03,88,90,3	duplicate(Steward#template)	Steward#sc03	1_M_JOBTESTER
 schg_cas03,287,226,5	duplicate(Guardian#template)	Elzee#sc03	4_M_LGTGUARD

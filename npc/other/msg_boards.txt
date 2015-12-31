@@ -237,7 +237,7 @@ aldebaran,54,223,1	script	Billboard#Alde3	HIDDEN_NPC,{
 	close;
 }
 
-aldebaran,197,228,1	script	#Alde4	-1,1,1,{
+aldebaran,197,228,1	script	#Alde4	FAKE_NPC,1,1,{
 OnTouch:
 	mes "[Home Owner]";
 	mes "Get off my roof you no good leecher!";

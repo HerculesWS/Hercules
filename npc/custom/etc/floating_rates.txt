@@ -13,7 +13,7 @@
 //= You can make incredible scripts with 'setbattleflag'!
 //============================================================
 
--	script	FloatingRates	-1,{
+-	script	FloatingRates	FAKE_NPC,{
 OnInit:
 //add any other HOURS
 OnHour00:

@@ -1608,7 +1608,7 @@ binget:
 }
 //============================Warpras==============================
 
--	script	Warpra#0	-1,{ callfunc "Q_Warpra",1; }
+-	script	Warpra#0	FAKE_NPC,{ callfunc "Q_Warpra",1; }
 alb2trea,73,101,4	duplicate(Warpra#0)	Warpra#1	4_F_KAFRA5
 ama_fild01,178,325,1	duplicate(Warpra#0)	Warpra#2	4_F_KAFRA5
 gef_fild10,71,339,4	duplicate(Warpra#0)	Warpra#3	4_F_KAFRA5

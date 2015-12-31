@@ -454,7 +454,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 }
 
 //- Empty Room 201 -
-ein_in01,227,279,3	script	#door_ein	-1,5,5,{
+ein_in01,227,279,3	script	#door_ein	FAKE_NPC,5,5,{
 OnTouch:
 	if (kain_ticket == 5) {
 		kain_ticket = 6;
@@ -1184,7 +1184,7 @@ ein_in01,117,80,5	script	Unidentified Machine#as	HIDDEN_NPC,{
 //== "How Does The Airship Work" Quest :: lght_air & lght_ymir =
 
 //- Monsters Attack :: lght_air -
-airplane_01,1,1,0	script	Airship#airplane02	-1,{
+airplane_01,1,1,0	script	Airship#airplane02	FAKE_NPC,{
 	end;
 OnEnable:
 	initnpctimer;

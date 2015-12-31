@@ -33,7 +33,7 @@
 //=========================================================================
 
 //== Resurrection of Satan Morroc ==========================
--	script	Continental Guard#man	-1,{
+-	script	Continental Guard#man	FAKE_NPC,{
 	mes "[Continental Guard]";
 	mes "We've received orders from Headquarters to block access to this area since an unusual space-time phenomenon has been detected.";
 	next;

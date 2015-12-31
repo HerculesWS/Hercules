@@ -37,7 +37,7 @@
 //=========================================================================
 
 //== Floating mailbox npc that all NPCs duplicate from =====
--	script	Mailbox#dummy::MailBox	-1,{
+-	script	Mailbox#dummy::MailBox	FAKE_NPC,{
 	mes "[Mailbox]";
 	mes "To use the mailbox service,";
 	mes "you are required to pay 130 zeny.";

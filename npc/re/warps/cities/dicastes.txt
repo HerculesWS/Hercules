@@ -65,7 +65,7 @@ dic_in01,242,182,0	script	#eldicastes0016	CLEAR_NPC,{
 }
 
 // Elevators
--	script	Elevator#main	-1,{
+-	script	Elevator#main	FAKE_NPC,{
 	.@n = atoi(strnpcinfo(2));
 	.@eq = (isequipped(2782))?1:0;
 	if (.@n <= 4) {

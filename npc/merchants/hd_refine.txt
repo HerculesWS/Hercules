@@ -38,7 +38,7 @@
 //=========================================================================
 
 //== Blacksmith Mighty Hammer (+7~9) =======================
--	script	::MightyHammer	-1,{
+-	script	::MightyHammer	FAKE_NPC,{
 	disable_items;
 	mes "[Blacksmith Mighty Hammer]";
 	mes "Unlike others, I am a blacksmith who refines a very limited number of items.";
@@ -178,7 +178,7 @@ lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 //payon,174,133,4	duplicate(MightyHammer)	Mighty Hammer#im	4_M_DWARF
 
 //== Basta (+10 and up) ====================================
--	script	::Basta	-1,{
+-	script	::Basta	FAKE_NPC,{
 	disable_items;
 	mes "[Basta]";
 	mes "I'm the best Blacksmith in the whole world, Basta.";

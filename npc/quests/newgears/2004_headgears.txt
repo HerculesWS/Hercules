@@ -2610,7 +2610,7 @@ OnInit:
 	end;
 }
 
-pay_dun03,48,84,4	script	SpawnManager#Kitsune	-1,{
+pay_dun03,48,84,4	script	SpawnManager#Kitsune	FAKE_NPC,{
 OnInit:
 	.MyMobs1 = 1;
 	.MyMobs2 = 1;
