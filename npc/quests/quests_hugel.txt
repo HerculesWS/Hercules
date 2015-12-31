@@ -706,7 +706,7 @@ OnTouch:
 	}
 }
 
-hu_in01,1,1,0	script	#DrawerOpener	-1,{
+hu_in01,1,1,0	script	#DrawerOpener	FAKE_NPC,{
 OnInit:
 	disablenpc "#DrawerOpener";
 	end;
@@ -9539,7 +9539,7 @@ odin_tem01,93,146,4	script	Boatman	4_M_SEAMAN,{
 	}
 }
 
-odin_tem03,4,2,0	script	OdinInit	-1,{
+odin_tem03,4,2,0	script	OdinInit	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	end;

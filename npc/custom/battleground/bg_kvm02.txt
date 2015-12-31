@@ -49,7 +49,7 @@ bat_c02,145,60,0	duplicate(#bat_c02a)	#bat_c02f	HIDDEN_NPC
 // Battleground Engine
 // *********************************************************************
 
--	script	KvM02_BG	-1,{
+-	script	KvM02_BG	FAKE_NPC,{
 	end;
 
 OnInit:
@@ -258,7 +258,7 @@ OnReset:
 	end;
 }
 
--	script	KvM02_BG_Out	-1,{
+-	script	KvM02_BG_Out	FAKE_NPC,{
 	end;
 
 OnBegin:

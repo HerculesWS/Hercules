@@ -37,7 +37,7 @@
 //=========================================================================
 
 //== Core, triggers all other events =======================
--	script	Manager#template	-1,{
+-	script	Manager#template	FAKE_NPC,{
 OnAgitInit2:
 OnRecvCastle2:
 	if (strnpcinfo(2) == "template") end;
@@ -219,7 +219,7 @@ OnTreasureDied:
 }
 
 //== Guild Manager =========================================
--	script	Steward#template	-1,{
+-	script	Steward#template	FAKE_NPC,{
 	.@GID = getcastledata(strnpcinfo(4),1);
 	if (!.@GID) {
 		mes "[ Steward ]";
@@ -652,7 +652,7 @@ OnStartArena:
 }
 
 //== Castle Guardians ======================================
--	script	Guardian#template	-1,{
+-	script	Guardian#template	FAKE_NPC,{
 	.@GID = getcastledata(strnpcinfo(4),1);
 	.@n$ = "["+strnpcinfo(1)+"]";
 	if (!.@GID) {
@@ -851,7 +851,7 @@ OnInit:
 }
 
 //== Guild Kafras ==========================================
--	script	Kafra#template	-1,{
+-	script	Kafra#template	FAKE_NPC,{
 	cutin "kafra_01",2;
 	.@GID = getcastledata(strnpcinfo(4),1);
 	if (getcharid(2) == .@GID && getgdskilllv(.@GID,10001)) {
@@ -963,7 +963,7 @@ OnInit:
 }
 
 //== Guardian Stones (2) ===================================
--	script	Guardian Stone#template	-1,{
+-	script	Guardian Stone#template	FAKE_NPC,{
 	.@GID = getcastledata(strnpcinfo(4),1);
 	.@num = atoi(charat(strnpcinfo(1),0));
 	.@var$ = "$agit_"+strnpcinfo(2);
@@ -1116,7 +1116,7 @@ OnEnable:
 }
 
 //== Control Devices (3) ===================================
--	script	Control#template	-1,{
+-	script	Control#template	FAKE_NPC,{
 	.@GID = getcastledata(strnpcinfo(4),1);
 	.@num = atoi(charat(strnpcinfo(1),15));
 	.@var$ = "$agit_"+strnpcinfo(2);
@@ -1358,7 +1358,7 @@ OnEnable:
 }
 
 //== Guardian Summoners (2) ================================
--	script	gard#template	-1,{
+-	script	gard#template	FAKE_NPC,{
 OnEnable:
 	// .@x[i],.@y[i]: Normal coordinates, #0-21.
 	// .@w[x],.@w[y]: Special coordinates if 'defence' is under 11.
@@ -1479,7 +1479,7 @@ OnReset:
 }
 
 //== Guardian Stone Summoners (2) ==========================
--	script	df#template	-1,{
+-	script	df#template	FAKE_NPC,{
 OnEnable:
 	if (compare(strnpcinfo(2),"arug")) {
 		if (strnpcinfo(2) == "arug_cas01") setarray .@i[0],210,234,308,189;
@@ -1531,7 +1531,7 @@ OnTimer300000:
 }
 
 //== Barrier Summoners (4) =================================
--	script	RL#template	-1,{
+-	script	RL#template	FAKE_NPC,{
 OnEnable:
 	.@num = atoi(charat(strnpcinfo(1),2));
 	if (.@num == 0) {
@@ -1792,7 +1792,7 @@ function	script	ReturnFlag	{
 }
 
 //== Treasure Room Switches ================================
--	script	Switch#template	-1,{
+-	script	Switch#template	FAKE_NPC,{
 	mes " ";
 	mes "^3355FFWill you pull";
 	mes "this small lever?^000000";
@@ -1813,7 +1813,7 @@ function	script	ReturnFlag	{
 }
 
 //== Guild Dungeon Warps ===================================
--	script	Sunflower#template	-1,{
+-	script	Sunflower#template	FAKE_NPC,{
 	if (getcharid(2) == getcastledata(strnpcinfo(4),1)) {
 		mes "- It's an amazingly huge sunflower; as big as a human! ... You feel something mysterious emanating from the flower. -";
 		next;

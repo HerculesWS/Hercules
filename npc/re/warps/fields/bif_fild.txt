@@ -39,7 +39,7 @@ mora,182,74,0	warp	bifrost_field0003	1,1,bif_fild02,286,327
 mora,20,159,0	warp	bifrost_field0004	1,1,bif_fild02,99,308
 mora,56,25,0	warp	bifrost_field0005	1,1,bif_fild02,176,162
 
--	script	bifrost_field0000	-1,{
+-	script	bifrost_field0000	FAKE_NPC,{
 	mes "At the end of the small path through the bright flower garden";
 	mes "is an entrance to something that looks like a small hill.";
 	next;

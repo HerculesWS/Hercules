@@ -1631,7 +1631,7 @@ juperos_01,215,127,4	script	Machine Statue	CLEAR_NPC,{
 
 //== Jupers Core access Story Event ========================
 //- 1rd Floor -> 2nd Floor -
-juperos_01,100,91,0	script	jupe_goto#1	-1,2,2,{
+juperos_01,100,91,0	script	jupe_goto#1	FAKE_NPC,2,2,{
 	end;
 
 OnTouch:
@@ -1673,7 +1673,7 @@ OnTimer10000:
 	end;
 }
 
-juperos_01,100,91,0	script	jupe_goto#2	-1,2,2,{
+juperos_01,100,91,0	script	jupe_goto#2	FAKE_NPC,2,2,{
 OnInit:
 	disablenpc "jupe_goto#2";
 	end;
@@ -1695,7 +1695,7 @@ OnTimer2000:
 }
 
 //- 2nd Floor -
-juperos_02,97,70,0	script	3F Gate Switch#jupe	-1,{
+juperos_02,97,70,0	script	3F Gate Switch#jupe	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	end;
@@ -1947,7 +1947,7 @@ OnTimer22500:
 	end;
 }
 
-jupe_area1,47,259,0	script	Red Alarm#1-1	-1,2,2,{
+jupe_area1,47,259,0	script	Red Alarm#1-1	FAKE_NPC,2,2,{
 OnInit:
 	disablenpc "Red Alarm#1-1";
 	end;
@@ -1961,7 +1961,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#1-1	-1,{
+-	script	Red Alarm On#1-1	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#1-1";
 	end;
@@ -1998,7 +1998,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#1-1	-1,{
+-	script	Monster1#1-1	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#1-1";
 	end;
@@ -2043,7 +2043,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#1-1	-1,{
+-	script	Monster2#1-1	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#1-1";
 	end;
@@ -2238,7 +2238,7 @@ OnTimer22500:
 	end;
 }
 
-jupe_area1,21,191,0	script	Red Alarm#1-2	-1,2,2,{
+jupe_area1,21,191,0	script	Red Alarm#1-2	FAKE_NPC,2,2,{
 OnInit:
 	disablenpc "Red Alarm#1-2";
 	end;
@@ -2251,7 +2251,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#1-2	-1,{
+-	script	Red Alarm On#1-2	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#1-2";
 	end;
@@ -2284,7 +2284,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#1-2	-1,{
+-	script	Monster1#1-2	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#1-2";
 	end;
@@ -2329,7 +2329,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#1-2	-1,{
+-	script	Monster2#1-2	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#1-2";
 	end;
@@ -2523,7 +2523,7 @@ OnTimer22500:
 	end;
 }
 
-jupe_area1,33,105,0	script	Red Alarm#1-3	-1,0,4,{
+jupe_area1,33,105,0	script	Red Alarm#1-3	FAKE_NPC,0,4,{
 OnInit:
 	disablenpc "Red Alarm#1-3";
 	end;
@@ -2536,7 +2536,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#1-3	-1,{
+-	script	Red Alarm On#1-3	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#1-3";
 	end;
@@ -2569,7 +2569,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#1-3	-1,{
+-	script	Monster1#1-3	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#1-3";
 	end;
@@ -2613,7 +2613,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#1-3	-1,{
+-	script	Monster2#1-3	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#1-3";
 	end;
@@ -2810,7 +2810,7 @@ OnTimer5000:
 	end;
 }
 
-jupe_area1,83,157,0	script	Red Alarm#1-4	-1,2,2,{
+jupe_area1,83,157,0	script	Red Alarm#1-4	FAKE_NPC,2,2,{
 OnInit:
 	disablenpc "Red Alarm#1-4";
 	end;
@@ -2827,7 +2827,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#1-4	-1,{
+-	script	Red Alarm On#1-4	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#1-4";
 	end;
@@ -2860,7 +2860,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#1-4	-1,{
+-	script	Monster1#1-4	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#1-4";
 	end;
@@ -2905,7 +2905,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#1-4	-1,{
+-	script	Monster2#1-4	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#1-4";
 	end;
@@ -3146,7 +3146,7 @@ OnTimer22500:
 	end;
 }
 
-jupe_area2,116,259,0	script	Red Alarm#2-1	-1,2,2,{
+jupe_area2,116,259,0	script	Red Alarm#2-1	FAKE_NPC,2,2,{
 OnInit:
 	disablenpc "Red Alarm#2-1";
 	end;
@@ -3160,7 +3160,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#2-1	-1,{
+-	script	Red Alarm On#2-1	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#2-1";
 	end;
@@ -3197,7 +3197,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#2-1	-1,{
+-	script	Monster1#2-1	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#2-1";
 	end;
@@ -3242,7 +3242,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#2-1	-1,{
+-	script	Monster2#2-1	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#2-1";
 	end;
@@ -3437,7 +3437,7 @@ OnTimer22500:
 	end;
 }
 
-jupe_area2,142,191,0	script	Red Alarm#2-2	-1,2,2,{
+jupe_area2,142,191,0	script	Red Alarm#2-2	FAKE_NPC,2,2,{
 OnInit:
 	disablenpc "Red Alarm#2-2";
 	end;
@@ -3450,7 +3450,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#2-2	-1,{
+-	script	Red Alarm On#2-2	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#2-2";
 	end;
@@ -3483,7 +3483,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#2-2	-1,{
+-	script	Monster1#2-2	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#2-2";
 	end;
@@ -3528,7 +3528,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#2-2	-1,{
+-	script	Monster2#2-2	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#2-2";
 	end;
@@ -3722,7 +3722,7 @@ OnTimer22500:
 	end;
 }
 
-jupe_area2,130,105,0	script	Red Alarm#2-3	-1,0,4,{
+jupe_area2,130,105,0	script	Red Alarm#2-3	FAKE_NPC,0,4,{
 OnInit:
 	disablenpc "Red Alarm#2-3";
 	end;
@@ -3735,7 +3735,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#2-3	-1,{
+-	script	Red Alarm On#2-3	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#2-3";
 	end;
@@ -3769,7 +3769,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#2-3	-1,{
+-	script	Monster1#2-3	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#2-3";
 	end;
@@ -3813,7 +3813,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#2-3	-1,{
+-	script	Monster2#2-3	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#2-3";
 	end;
@@ -4011,7 +4011,7 @@ OnTimer5000:
 	end;
 }
 
-jupe_area2,80,157,0	script	Red Alarm#2-4	-1,2,2,{
+jupe_area2,80,157,0	script	Red Alarm#2-4	FAKE_NPC,2,2,{
 OnInit:
 	disablenpc "Red Alarm#2-4";
 	end;
@@ -4028,7 +4028,7 @@ OnTouch:
 	end;
 }
 
--	script	Red Alarm On#2-4	-1,{
+-	script	Red Alarm On#2-4	FAKE_NPC,{
 OnInit:
 	disablenpc "Red Alarm On#2-4";
 	end;
@@ -4061,7 +4061,7 @@ OnTimer8000:
 	end;
 }
 
--	script	Monster1#2-4	-1,{
+-	script	Monster1#2-4	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster1#2-4";
 	end;
@@ -4106,7 +4106,7 @@ OnMyMobDead:
 	end;
 }
 
--	script	Monster2#2-4	-1,{
+-	script	Monster2#2-4	FAKE_NPC,{
 OnInit:
 	disablenpc "Monster2#2-4";
 	end;
@@ -4382,7 +4382,7 @@ OnInit:
 }
 
 //- Elevator Reception Guards -
-jupe_ele_r,10,50,0	script	Elevator Guard1#ufe	-1,{
+jupe_ele_r,10,50,0	script	Elevator Guard1#ufe	FAKE_NPC,{
 OnInit:
 	disablenpc "Elevator Guard1#ufe";
 	end;
@@ -4451,7 +4451,7 @@ OnMyMobDead:
 	end;
 }
 
-jupe_ele_r,10,52,0	script	Elevator Safety#ufe	-1,{
+jupe_ele_r,10,52,0	script	Elevator Safety#ufe	FAKE_NPC,{
 OnInit:
 	disablenpc "Elevator Safety#ufe";
 	end;
@@ -4476,7 +4476,7 @@ OnTimer10000:
 	end;
 }
 
-jupe_ele_r,50,89,0	script	Annihilation#ufe	-1,35,50,{
+jupe_ele_r,50,89,0	script	Annihilation#ufe	FAKE_NPC,35,50,{
 OnInit:
 	disablenpc "Annihilation#ufe";
 	end;
@@ -4504,7 +4504,7 @@ OnTimer3000:
 	end;
 }
 
-jupe_ele_r,50,89,0	script	Elevator Escape#ufe	-1,35,50,{
+jupe_ele_r,50,89,0	script	Elevator Escape#ufe	FAKE_NPC,35,50,{
 OnInit:
 	disablenpc "Elevator Escape#ufe";
 	end;
@@ -4514,7 +4514,7 @@ OnTouch:
 	end;
 }
 
-jupe_ele_r,10,54,0	script	Elevator On#ufe	-1,{
+jupe_ele_r,10,54,0	script	Elevator On#ufe	FAKE_NPC,{
 OnInit:
 	disablenpc "Elevator On#ufe";
 	end;
@@ -4893,7 +4893,7 @@ OnTouch:
 }
 
 //- Warps -
-jupe_gate,50,173,0	script	gate#start	-1,2,3,{
+jupe_gate,50,173,0	script	gate#start	FAKE_NPC,2,3,{
 	end;
 
 OnTouch:
@@ -4927,7 +4927,7 @@ OnTimer10000:
 	end;
 }
 
-jupe_gate,50,171,0	script	gate#start#2	-1,2,2,{
+jupe_gate,50,171,0	script	gate#start#2	FAKE_NPC,2,2,{
 OnInit:
 	disablenpc "gate#start#2";
 	end;

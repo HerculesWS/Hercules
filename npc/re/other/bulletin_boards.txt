@@ -33,7 +33,7 @@
 //=========================================================================
 
 /*
--	script	::BulletinBoard_iz	-1,{
+-	script	::BulletinBoard_iz	FAKE_NPC,{
 	mes "[Izlude: The Satellite City]";
 	mes "Welcome to Izlude, the satellite of Prontera. Izlude was built to support Prontera's defense and to accomodate its burgeoning population.";
 	next;

@@ -34,7 +34,7 @@
 //= 1.1a
 //=========================================================================
 
--	script	Leablem#dummy::SocketEnchant2	-1,{
+-	script	Leablem#dummy::SocketEnchant2	FAKE_NPC,{
 	if (checkweight(Knife,1) == 0)
 	{
 		mes "- Wait a minute !! -";

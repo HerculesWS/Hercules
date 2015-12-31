@@ -1514,7 +1514,7 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 	close;
 }
 
--	script	::DewataPalm	-1,{
+-	script	::DewataPalm	FAKE_NPC,{
 	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 5000) {
 		mes "You are carrying too much.";
 		close;

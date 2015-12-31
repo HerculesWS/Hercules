@@ -215,7 +215,7 @@ prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 	}
 }
 
-mjolnir_01,272,363,4	script	Rocks#08StPattysDay	-1,1,1,{
+mjolnir_01,272,363,4	script	Rocks#08StPattysDay	FAKE_NPC,1,1,{
 	end;
 
 OnTouch:

@@ -1245,7 +1245,7 @@ OnStart:
 	end;
 }
 
--	script	Knight1	-1,{
+-	script	Knight1	FAKE_NPC,{
 OnInit:
 	disablenpc "Knight1";
 	end;
@@ -1309,7 +1309,7 @@ OnTimer182000:
 }
 
 //== Test 2 part 2 =========================================
--	script	Knight2	-1,{
+-	script	Knight2	FAKE_NPC,{
 OnInit:
 	disablenpc "Knight2";
 	end;
@@ -1372,7 +1372,7 @@ OnTimer182000:
 }
 
 //== Test 2 part 3 =========================================
--	script	Knight3	-1,{
+-	script	Knight3	FAKE_NPC,{
 OnInit:
 	disablenpc "Knight3";
 	end;

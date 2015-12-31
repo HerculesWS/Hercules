@@ -1323,7 +1323,7 @@ OnBingo:
 	end;
 }
 
-schg_que01,100,80,0	script	removepp_sch_gd	-1,5,5,{
+schg_que01,100,80,0	script	removepp_sch_gd	FAKE_NPC,5,5,{
 	end;
 
 OnInit:

@@ -36,7 +36,7 @@
 //=========================================================================
 
 //== Poison Herb Merchants (Guillotine Cross) ==============
--	script	::phs	-1,{
+-	script	::phs	FAKE_NPC,{
 	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -101,7 +101,7 @@ morocc,191,94,4	duplicate(phs)	Poison Herb Merchant#moc	4_F_YUNYANG	//Official: 
 lhz_in02,16,205,4	duplicate(phs)	Poison Herb Merchant#lhz	4_F_YUNYANG
 
 //== Rune Stone Merchants (Rune Knight) ====================
--	script	::runesale	-1,{
+-	script	::runesale	FAKE_NPC,{
 	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -230,7 +230,7 @@ job3_guil01,91,93,3	script	Rare Herb Collector	1_M_03,{
 }
 
 //== Point Merchants (Sorcerer) ============================
--	script	::pss	-1,{
+-	script	::pss	FAKE_NPC,{
 	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";

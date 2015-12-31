@@ -70,7 +70,7 @@ niflheim,0,0,0,0	monster	Heirozoist	1510,10,1200000,600000,0
 niflheim,0,0,0,0	monster	Quve	1508,20,300000,150000,0
 niflheim,0,0,0,0	monster	Lude	1509,20,300000,150000,0
 
-niflheim,1,1,0	script	NifInvasion	-1,{
+niflheim,1,1,0	script	NifInvasion	FAKE_NPC,{
 OnInit:
 
 	while(1)

@@ -3211,7 +3211,7 @@ einbroch,215,180,6	script	Uwe Kleine#ein	4_M_03,{
 }
 
 //== Factory Quest :: ein_factory ==========================
-einbroch,1,1,0	script	Einbroch Smog Alert	-1,{
+einbroch,1,1,0	script	Einbroch Smog Alert	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -5629,7 +5629,7 @@ airplane,31,77,5	script	Drunken Man#ein	4_M_YURI,{
 	}
 }
 
-ein_in01,231,170,0	script	#kenka	-1,2,2,{
+ein_in01,231,170,0	script	#kenka	FAKE_NPC,2,2,{
 OnTouch:
 	if (Shinokas_Quest > 8) {
 		mes "^3355FFThe open window rattles";

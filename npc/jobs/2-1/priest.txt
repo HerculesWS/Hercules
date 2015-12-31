@@ -1166,7 +1166,7 @@ OnTimer302000:
 	end;
 }
 
--	script	Z_C#prst	-1,{
+-	script	Z_C#prst	FAKE_NPC,{
 	end;
 
 OnMyMobDead:
@@ -1174,7 +1174,7 @@ OnMyMobDead:
 	end;
 }
 
-job_prist,24,44,0	script	Zombie Info	-1,1,1,{
+job_prist,24,44,0	script	Zombie Info	FAKE_NPC,1,1,{
 OnTouch:
 	if (BaseJob == Job_Priest) {
 		mes "[Father Peter]";
@@ -1201,7 +1201,7 @@ OnTouch:
 	end;
 }
 
-job_prist,24,52,0	script	Zombie1_1	-1,14,1,{
+job_prist,24,52,0	script	Zombie1_1	FAKE_NPC,14,1,{
 OnInit:
 	disablenpc "Zombie1_1";
 	end;
@@ -1222,7 +1222,7 @@ OnDisable:
 	end;
 }
 
-job_prist,21,62,0	script	Zombie2_1	-1,17,1,{
+job_prist,21,62,0	script	Zombie2_1	FAKE_NPC,17,1,{
 OnInit:
 	disablenpc "Zombie2_1";
 	end;
@@ -1243,7 +1243,7 @@ OnDisable:
 	end;
 }
 
-job_prist,24,72,0	script	Zombie3_1	-1,14,1,{
+job_prist,24,72,0	script	Zombie3_1	FAKE_NPC,14,1,{
 OnInit:
 	disablenpc "Zombie3_1";
 	end;
@@ -1264,7 +1264,7 @@ OnDisable:
 	end;
 }
 
-job_prist,21,82,0	script	Zombie4_1	-1,17,1,{
+job_prist,21,82,0	script	Zombie4_1	FAKE_NPC,17,1,{
 OnInit:
 	disablenpc "Zombie4_1";
 	end;
@@ -1284,7 +1284,7 @@ OnDisable:
 	disablenpc "Zombie4_1";
 }
 
-job_prist,24,92,0	script	Zombie5_1	-1,14,1,{
+job_prist,24,92,0	script	Zombie5_1	FAKE_NPC,14,1,{
 OnInit:
 	disablenpc "Zombie5_1";
 	end;
@@ -1651,7 +1651,7 @@ OnDisable:
 	end;
 }
 
-job_prist,90,55,0	script	Mummy1_1	-1,15,1,{
+job_prist,90,55,0	script	Mummy1_1	FAKE_NPC,15,1,{
 OnInit:
 	disablenpc "Mummy1_1";
 	end;
@@ -1672,7 +1672,7 @@ OnDisable:
 	end;
 }
 
-job_prist,90,70,0	script	Mummy2_1	-1,15,1,{
+job_prist,90,70,0	script	Mummy2_1	FAKE_NPC,15,1,{
 OnInit:
 	disablenpc "Mummy2_1";
 	end;
@@ -1693,7 +1693,7 @@ OnDisable:
 	end;
 }
 
-job_prist,90,85,0	script	Mummy3_1	-1,15,1,{
+job_prist,90,85,0	script	Mummy3_1	FAKE_NPC,15,1,{
 OnInit:
 	disablenpc "Mummy3_1";
 	end;

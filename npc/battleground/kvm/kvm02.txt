@@ -65,7 +65,7 @@ OnEnterBG:
 bat_room,197,211,0	warp	#kvm602	2,2,bat_room,154,150
 
 //== Starting Line =========================================
--	script	KVM02::CellEffect2	-1,{
+-	script	KVM02::CellEffect2	FAKE_NPC,{
 	end;
 
 OnKvM02One:
@@ -136,7 +136,7 @@ OnTouch:
 }
 
 //== Battleground Engine ===================================
--	script	KvM02_BG	-1,{
+-	script	KvM02_BG	FAKE_NPC,{
 	end;
 
 OnInit:
@@ -349,7 +349,7 @@ OnReset:
 	end;
 }
 
--	script	KvM02_BG_Out	-1,{
+-	script	KvM02_BG_Out	FAKE_NPC,{
 	end;
 
 OnBegin:

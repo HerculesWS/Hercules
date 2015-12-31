@@ -42,7 +42,7 @@
 //=========================================================================
 
 //== Izlude ================================================
--	script	::Sailor_izlude	-1,{
+-	script	::Sailor_izlude	FAKE_NPC,{
 	mes "[Sailor]";
 	mes "Hey everybody!";
 	mes "Attention, attention!";
@@ -76,7 +76,7 @@
 	}
 }
 
--	script	::Bonne_izlude	-1,{
+-	script	::Bonne_izlude	FAKE_NPC,{
 	mes "[Bonne]";
 	mes "Greetings!";
 	mes "Izlude welcomes you.";
@@ -100,7 +100,7 @@
 	close;
 }
 
--	script	::Charfri_izlude	-1,{
+-	script	::Charfri_izlude	FAKE_NPC,{
 	mes "[Charfri]";
 	switch(rand(2)) {
 	case 1:
@@ -131,7 +131,7 @@
 	}
 }
 
--	script	::Cuskoal_izlude	-1,{
+-	script	::Cuskoal_izlude	FAKE_NPC,{
 	mes "[Cuskoal]";
 	switch(rand(2)) {
 	case 1:
@@ -155,7 +155,7 @@
 	}
 }
 
--	script	::Dega_izlude	-1,{
+-	script	::Dega_izlude	FAKE_NPC,{
 	mes "[Dega]";
 	switch(rand(3)) {
 	case 1:
@@ -230,7 +230,7 @@
 	}
 }
 
--	script	::Kylick_izlude	-1,{
+-	script	::Kylick_izlude	FAKE_NPC,{
 	if (!RENEWAL && rand(2)) {
 		mes "[Kylick]";
 		mes "I was thinking, even though the people of Izlude live so close to the ocean...";
@@ -262,7 +262,7 @@
 	}
 }
 
--	script	::Red_izlude	-1,{
+-	script	::Red_izlude	FAKE_NPC,{
 	mes "[Red]";
 	mes "The only skill that's needed for a Swordman is ^FF2400Bash^000000! Bash, Bash and ONLY ^FF2400Bash^000000! No need to waste time and effort for smaller skills! Everything else is for cowards and wusses!";
 	next;
@@ -332,7 +332,7 @@
 	close;
 }
 
--	script	::Cebalis_izlude	-1,{
+-	script	::Cebalis_izlude	FAKE_NPC,{
 	mes "[Red]";
 	mes "The only skill that's needed for a Swordman is ^FF2400Bash^000000! Bash, Bash and ONLY ^FF2400Bash^000000! No need to waste time and effort on smaller skills~~ Everything else is for cowards and wusses!";
 	next;
@@ -409,7 +409,7 @@
 	close;
 }
 
--	script	::Soldier_izlude	-1,{
+-	script	::Soldier_izlude	FAKE_NPC,{
 	mes "[Soldier]";
 	mes "HeHeHeHe..HaHaHaHa ";
 	mes "Huh? Why am I so happy?";

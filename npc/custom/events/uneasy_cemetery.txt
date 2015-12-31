@@ -17,7 +17,7 @@
 //= 1.2a Changed item names to item IDs. [Samuray22]
 //============================================================
 
-prontera,3,3,3	script	Uneasy_Check	-1,{
+prontera,3,3,3	script	Uneasy_Check	FAKE_NPC,{
 	end;
 
 OnHour00:

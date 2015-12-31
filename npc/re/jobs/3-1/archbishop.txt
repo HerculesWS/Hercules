@@ -1001,7 +1001,7 @@ OnTouch:
 	end;
 }
 
--	script	#arch_1_01_0::archbjcq	-1,{
+-	script	#arch_1_01_0::archbjcq	FAKE_NPC,{
 OnTouch:
 	if (countitem(ValkyrieA_Scroll)) {
 		delitem ValkyrieA_Scroll,1;
@@ -1048,7 +1048,7 @@ OnTouch:
 	end;
 }
 
--	script	#arch_redcell	-1,{
+-	script	#arch_redcell	FAKE_NPC,{
 OnInit:
 	setcell "job3_arch02",276,290,280,294,cell_walkable,0;
 	setcell "job3_arch02",276,290,280,294,cell_shootable,0;
@@ -1350,7 +1350,7 @@ OnTouch:
 	end;
 }
 
--	script	#arch_2_02_0::archbjcq2	-1,{
+-	script	#arch_2_02_0::archbjcq2	FAKE_NPC,{
 OnTouch:
 	if (countitem(ValkyrieB_Scroll)) {
 		delitem ValkyrieB_Scroll,1;

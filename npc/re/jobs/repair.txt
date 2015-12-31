@@ -225,7 +225,7 @@ L_Third:
 		return;
 }
 
--	script	Valerie#sign	-1,{
+-	script	Valerie#sign	FAKE_NPC,{
 	mes "^ff00ffI couldn't pay the office rent so I am temporarily relocating to the building across from the Prontera Refinery.^000000";
 	mes " ";
 	mes "^ff00ffValerie^000000";

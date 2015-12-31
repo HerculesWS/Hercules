@@ -586,7 +586,7 @@ geffen,90,67,3	script	Promotional Staff#gef	4W_SAILOR,{
 	end;
 }
 
--	script	::PromotionalStaff_izlude	-1,{
+-	script	::PromotionalStaff_izlude	FAKE_NPC,{
 	if (ep13_ryu > 8) {
 		mes "[Promotional Staff]";
 		mes "I bless you for your future! May it be full of happiness!";
@@ -1814,7 +1814,7 @@ moc_fild22b,230,197,5	script	Munkenro#2	4_M_RUSMAN1,{
 	}
 }
 
-moc_fild22b,1,1,0	script	Head of the Alliance#moo	-1,{
+moc_fild22b,1,1,0	script	Head of the Alliance#moo	FAKE_NPC,{
 OnInit:
 	disablenpc "Head of the Alliance#moo";
 	end;
@@ -4663,7 +4663,7 @@ mid_camp,336,171,1	script	Camp Guard#man1	4_M_EIN_SOLDIER,{
 mid_camp,13,143,5	duplicate(Camp Guard#man1)	Camp Guard#man2	4_M_EIN_SOLDIER
 mid_camp,9,215,5	duplicate(Camp Guard#man1)	Camp Guard#man3	4_M_EIN_SOLDIER
 
-mid_camp,49,154,0	script	#env_clear	-1,3,3,{
+mid_camp,49,154,0	script	#env_clear	FAKE_NPC,3,3,{
 OnTouch:
 	if (ep13_animal == 7) {
 		enablenpc "Botanist#ep13_1";
@@ -4755,7 +4755,7 @@ mid_camp,52,148,1	script	Dirt#ep13	CLEAR_NPC,{
 	end;
 }
 
-man_fild01,59,261,0	script	#evt_lumis	-1,5,5,{
+man_fild01,59,261,0	script	#evt_lumis	FAKE_NPC,5,5,{
 OnTouch:
 	if (ep13_animal == 11) {
 		mes "[Rumis Block]";
@@ -8432,7 +8432,7 @@ mid_camp,88,100,7	script	Cat Hand Mining Agent	4_CAT,{
 	}
 }
 
--	script	Mysterious Rock#0::manukrock	-1,{
+-	script	Mysterious Rock#0::manukrock	FAKE_NPC,{
 	if (countitem(Unidentified_Mineral) < 3 && !questprogress(12062,PLAYTIME)) {
 		specialeffect2 EF_REPAIRWEAPON;
 		progressbar "ffff00",10;
@@ -10301,7 +10301,7 @@ lhz_in01,110,174,5	script	Gerhart	4_M_KHKYEL,{
 	}
 }
 
-spl_fild02,1,1,0	script	ep13_spl_fild02_mon_edq	-1,{
+spl_fild02,1,1,0	script	ep13_spl_fild02_mon_edq	FAKE_NPC,{
 OnInit:
 	enablenpc "ep13_spl_fild02_mon_edq";
 	donpcevent "ep13_spl_fild02_mon_edq::OnEnable";
@@ -10331,7 +10331,7 @@ OnMyMobDead:
 	end;
 }
 
-spl_fild03,1,1,0	script	ep13_spl_fild03_mon_edq	-1,{
+spl_fild03,1,1,0	script	ep13_spl_fild03_mon_edq	FAKE_NPC,{
 OnInit:
 	enablenpc "ep13_spl_fild03_mon_edq";
 	donpcevent "ep13_spl_fild03_mon_edq::OnEnable";
@@ -10363,7 +10363,7 @@ OnMyMobDead:
 	end;
 }
 
-man_fild01,1,1,0	script	ep13_man_fild01_mon_edq	-1,{
+man_fild01,1,1,0	script	ep13_man_fild01_mon_edq	FAKE_NPC,{
 OnInit:
 	enablenpc "ep13_man_fild01_mon_edq";
 	donpcevent "ep13_man_fild01_mon_edq::OnEnable";
@@ -10393,7 +10393,7 @@ OnMyMobDead:
 	end;
 }
 
-man_fild03,1,1,0	script	ep13_man_fild03_mon_edq	-1,{
+man_fild03,1,1,0	script	ep13_man_fild03_mon_edq	FAKE_NPC,{
 OnInit:
 	enablenpc "ep13_man_fild03_mon_edq";
 	donpcevent "ep13_man_fild03_mon_edq::OnEnable";
@@ -11527,7 +11527,7 @@ OnInit:
 	end;
 }
 
-mid_camp,205,312,0	script	#moc2_talkevent01	-1,1,1,{
+mid_camp,205,312,0	script	#moc2_talkevent01	FAKE_NPC,1,1,{
 //OnTouch2:
 OnTouch:
 	if (mao_morocc2 == 11) {
@@ -12511,7 +12511,7 @@ OnTimer250000:
 	stopnpctimer;
 }
 
-que_job01,12,13,0	script	#room1_warp13	-1,15,15,{
+que_job01,12,13,0	script	#room1_warp13	FAKE_NPC,15,15,{
 OnInit:
 OnDisable:
 	disablenpc "#room1_warp13";
@@ -12694,7 +12694,7 @@ OnTimer250000:
 	stopnpctimer;
 }
 
-que_job01,80,17,0	script	#room2_1_warp	-1,15,15,{
+que_job01,80,17,0	script	#room2_1_warp	FAKE_NPC,15,15,{
 OnInit:
 OnDisable:
 	disablenpc "#room2_1_warp";
@@ -12709,7 +12709,7 @@ OnTouch:
 	end;
 }
 
-que_job01,144,51,0	script	#room2_2_warp	-1,15,15,{
+que_job01,144,51,0	script	#room2_2_warp	FAKE_NPC,15,15,{
 OnInit:
 OnDisable:
 	disablenpc "#room2_2_warp";
@@ -13429,7 +13429,7 @@ hu_fild04,368,180,0	script	Traces#mao2_object03	CLEAR_NPC,{
 	}
 }
 
-que_dan01,32,27,0	script	#moc2_event_on	-1,1,1,{
+que_dan01,32,27,0	script	#moc2_event_on	FAKE_NPC,1,1,{
 OnEnable:
 	enablenpc "#moc2_event_on";
 	end;
@@ -13489,7 +13489,7 @@ OnTimer308000:
 	stopnpctimer;
 }
 
-que_dan01,31,27,0	script	#moc2_event01	-1,2,2,{
+que_dan01,31,27,0	script	#moc2_event01	FAKE_NPC,2,2,{
 OnInit:
 OnDisable:
 	disablenpc "#moc2_event01";
@@ -13705,7 +13705,7 @@ OnTimer11000:
 	end;
 }
 
--	script	#dandelion_duplicates	-1,{
+-	script	#dandelion_duplicates	FAKE_NPC,{
 	end;
 
 OnInit:
@@ -13730,7 +13730,7 @@ que_dan01,25,32,7	duplicate(#dandelion_duplicates)	Dandelion Member#moc2_5	4_M_D
 yuno_fild09,234,133,0	warp	#moc2_fild09-que_dan02	1,1,que_dan02,13,10
 que_dan02,13,6,0	warp	#moc_que_dan02-fild09	1,1,yuno_fild09,234,129
 
-que_dan02,21,37,0	script	#moc2_b1_gate	-1,1,1,{
+que_dan02,21,37,0	script	#moc2_b1_gate	FAKE_NPC,1,1,{
 //OnTouch2:
 OnTouch:
 	if (mao_morocc2 == 17) {

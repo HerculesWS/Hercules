@@ -133,10 +133,10 @@ payg_cas01,295,8,0	script	#lever_PA01	HIDDEN_NPC,{
 payg_cas01,101,25,0	duplicate(gdlever)	#payg_cas01	HIDDEN_NPC
 
 //== Guild Treasure Spawns =================================
-payg_cas01,291,8,0	duplicate(Gld_Trea_Spawn)	Treasure#payg_cas01	-1
+payg_cas01,291,8,0	duplicate(Gld_Trea_Spawn)	Treasure#payg_cas01	FAKE_NPC
 
 //== AGIT Manager ==========================================
-payg_cas01,139,139,0	duplicate(Gld_Agit_Manager)	Agit#payg_cas01	-1
+payg_cas01,139,139,0	duplicate(Gld_Agit_Manager)	Agit#payg_cas01	FAKE_NPC
 
 //== Guardians =============================================
-payg_cas01,120,58,4	duplicate(Gld_Guard_Template)	Guardian#payg_cas01	-1
+payg_cas01,120,58,4	duplicate(Gld_Guard_Template)	Guardian#payg_cas01	FAKE_NPC

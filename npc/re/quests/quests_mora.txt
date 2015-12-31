@@ -377,7 +377,7 @@ OnTouch:
 	end;
 }
 
--	script	#mora_bush	-1,{
+-	script	#mora_bush	FAKE_NPC,{
 	if (ep14_1_bs != 3 || rand(5)) {
 		mes "- It's just an ordinary bush. -";
 		close;
@@ -409,7 +409,7 @@ OnDisable:
 	end;
 }
 
--	script	#mora_pouch	-1,{
+-	script	#mora_pouch	FAKE_NPC,{
 	end;
 OnTouch:
 	.@i = atoi(charat(strnpcinfo(2),9));
@@ -449,7 +449,7 @@ OnTouch:
 	end;
 }
 
--	script	#mora_fairy	-1,{
+-	script	#mora_fairy	FAKE_NPC,{
 	end;
 OnInit:
 	disablenpc strnpcinfo(0);
@@ -504,7 +504,7 @@ spl_fild02,186,260,6	duplicate(#mora_fairy)	Fairy#cmd61	4_F_FAIRYKID5
 spl_fild02,186,260,6	duplicate(#mora_fairy)	Fairy#cmd62	4_M_FAIRYKID4
 spl_fild02,186,260,6	duplicate(#mora_fairy)	Fairy#cmd63	4_F_FAIRYKID4
 
--	script	#mora_bush_timer	-1,{
+-	script	#mora_bush_timer	FAKE_NPC,{
 	end;
 OnInit:
 	disablenpc strnpcinfo(0);
@@ -4094,7 +4094,7 @@ OnFullon:
 	end;
 }
 
--	script	???#mora	-1,{
+-	script	???#mora	FAKE_NPC,{
 	if (questprogress(5019)) {
 		mes "You find an area emitting a distinct aura.";
 		mes "You may be able to collect bath water samples.";
@@ -4236,7 +4236,7 @@ mora,113,84,0	duplicate(???#mora)	???#ep14_muk03	CLEAR_NPC,2,2
 mora,116,81,0	duplicate(???#mora)	???#ep14_muk04	CLEAR_NPC,2,2
 mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 
--	script	#mora_puddle	-1,{
+-	script	#mora_puddle	FAKE_NPC,{
 	.@i = atoi(charat(strnpcinfo(2),9));
 
 	// This script has a lot of checks,

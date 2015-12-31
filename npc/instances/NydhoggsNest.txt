@@ -1073,7 +1073,7 @@ spl_in01,104,56,3	script	Aide Arioss#edq	4_F_FAIRYKID2,3,3,{
 	}
 }
 
-spl_in01,110,21,0	script	trap#s_edq	-1,10,10,{
+spl_in01,110,21,0	script	trap#s_edq	FAKE_NPC,10,10,{
 OnTouch_:
 	if ((isequipped(2782) == 1) && (ins_nyd == 51)) {
 		mes "[Splendide Guard]";
@@ -1515,7 +1515,7 @@ man_in01,291,62,3	script	Laphine Prisoner#edq	4_F_FAIRYKID2,3,3,{
 	}
 }
 
-man_in01,282,42,0	script	trap#edq2	-1,10,10,{
+man_in01,282,42,0	script	trap#edq2	FAKE_NPC,10,10,{
 OnTouch_:
 	if ((isequipped(2782) == 1) && (ins_nyd == 52)) {
 		mes "[Manuk Field Elite Soldier]";
@@ -1683,7 +1683,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 	end;
 }
 
-1@nyd,1,1,0	script	nyd_call_mon_1	-1,{
+1@nyd,1,1,0	script	nyd_call_mon_1	FAKE_NPC,{
 OnInstanceInit:
 	enablenpc instance_npcname("nyd_call_mon_1");
 	end;
@@ -1722,7 +1722,7 @@ OnMyMobDead:
 	end;
 }
 
-1@nyd,1,2,0	script	ins_nyd_1f_timer	-1,{
+1@nyd,1,2,0	script	ins_nyd_1f_timer	FAKE_NPC,{
 OnInstanceInit:
 	disablenpc instance_npcname("ins_nyd_1f_timer");
 	end;
@@ -1782,7 +1782,7 @@ OnTouch:
 	end;
 }
 
-1@nyd,1,1,0	script	ins_nyd1_spawn_mobs	-1,{
+1@nyd,1,1,0	script	ins_nyd1_spawn_mobs	FAKE_NPC,{
 OnInstanceInit:
 	.@map$ = instance_mapname("1@nyd");
 	monster .@map$,0,0,"Ancient Tree",2019,40,instance_npcname("ins_nyd1_spawn_mobs")+"::OnMyTreeDead";
@@ -1814,14 +1814,14 @@ OnMyPingDead:
 }
 
 //== Second Floor ==========================================
-2@nyd,200,14,0	script	nyd_2f_enter	-1,6,6,{
+2@nyd,200,14,0	script	nyd_2f_enter	FAKE_NPC,6,6,{
 OnTouch_:
 	donpcevent instance_npcname("nyd_2f_enter_broad")+"::OnEnable";
 	disablenpc instance_npcname("nyd_2f_enter");
 	end;
 }
 
-2@nyd,1,1,0	script	nyd_2f_enter_broad	-1,{
+2@nyd,1,1,0	script	nyd_2f_enter_broad	FAKE_NPC,{
 OnInstanceInit:
 OnDisable:
 	disablenpc instance_npcname("nyd_2f_enter_broad");
@@ -1847,7 +1847,7 @@ OnTimer18000:
 	end;
 }
 
-2@nyd,199,178,0	script	nyd_2f_ddr_control	-1,6,6,{
+2@nyd,199,178,0	script	nyd_2f_ddr_control	FAKE_NPC,6,6,{
 OnTouch:
 	specialeffect2 EF_HOLYHIT;
 	mes "From below the gorgeous stones, a strange breeze is forming.";
@@ -1858,7 +1858,7 @@ OnTouch:
 	end;
 }
 
-2@nyd,199,268,0	script	nyd_2f_boss_enter	-1,8,8,{
+2@nyd,199,268,0	script	nyd_2f_boss_enter	FAKE_NPC,8,8,{
 OnTouch_:
 	if (getcharid(0) == getpartyleader(getcharid(1),2)) {
 		donpcevent instance_npcname("nyd_2f_boss_enter_call")+"::OnEnable";
@@ -1868,7 +1868,7 @@ OnTouch_:
 	end;
 }
 
-2@nyd,2,2,0	script	nyd_2f_boss_enter_call	-1,{
+2@nyd,2,2,0	script	nyd_2f_boss_enter_call	FAKE_NPC,{
 OnInstanceInit:
 	disablenpc instance_npcname("nyd_2f_boss_enter_call");
 	end;
@@ -1944,7 +1944,7 @@ OnMyMobDead:
 	end;
 }
 
-2@nyd,2,4,0	script	nyd_2f_boss_enter_logic	-1,{
+2@nyd,2,4,0	script	nyd_2f_boss_enter_logic	FAKE_NPC,{
 OnInstanceInit:
 	disablenpc instance_npcname("nyd_2f_boss_enter_logic");
 	end;
@@ -2011,7 +2011,7 @@ OnEnable:
 	end;
 }
 
-2@nyd,115,278,0	script	nyd_2f_red	-1,5,5,{
+2@nyd,115,278,0	script	nyd_2f_red	FAKE_NPC,5,5,{
 OnInstanceInit:
 	disablenpc instance_npcname(strnpcinfo(0));
 	end;
@@ -2056,7 +2056,7 @@ OnTimer10000:
 	end;
 }
 
-2@nyd,6,6,0	script	nyd_2f_red_c	-1,{
+2@nyd,6,6,0	script	nyd_2f_red_c	FAKE_NPC,{
 OnInstanceInit:
 	disablenpc instance_npcname(strnpcinfo(0));
 	end;
@@ -2124,7 +2124,7 @@ OnTimer180000:
 	end;
 }
 
-2@nyd,130,298,0	script	nyd_2f_red_warp1	-1,6,6,{
+2@nyd,130,298,0	script	nyd_2f_red_warp1	FAKE_NPC,6,6,{
 OnInstanceInit:
 OnDisable:
 	disablenpc instance_npcname(strnpcinfo(0));
@@ -2145,28 +2145,28 @@ OnTouch:
 		warp instance_mapname("2@nyd"),284,374;
 	end;
 }
-2@nyd,142,296,0	duplicate(nyd_2f_red_warp1)	nyd_2f_red_warp2	-1,6,6
-2@nyd,145,283,0	duplicate(nyd_2f_red_warp1)	nyd_2f_red_warp3	-1,6,6
+2@nyd,142,296,0	duplicate(nyd_2f_red_warp1)	nyd_2f_red_warp2	FAKE_NPC,6,6
+2@nyd,145,283,0	duplicate(nyd_2f_red_warp1)	nyd_2f_red_warp3	FAKE_NPC,6,6
 
-2@nyd,115,373,0	duplicate(nyd_2f_red)	nyd_2f_white	-1,5,5
-2@nyd,6,7,0	duplicate(nyd_2f_red_c)	nyd_2f_white_c	-1
-2@nyd,127,354,0	duplicate(nyd_2f_red_warp1)	nyd_2f_white_warp1	-1,6,6,
-2@nyd,140,357,0	duplicate(nyd_2f_red_warp1)	nyd_2f_white_warp2	-1,6,6
-2@nyd,145,367,0	duplicate(nyd_2f_red_warp1)	nyd_2f_white_warp3	-1,6,6
+2@nyd,115,373,0	duplicate(nyd_2f_red)	nyd_2f_white	FAKE_NPC,5,5
+2@nyd,6,7,0	duplicate(nyd_2f_red_c)	nyd_2f_white_c	FAKE_NPC
+2@nyd,127,354,0	duplicate(nyd_2f_red_warp1)	nyd_2f_white_warp1	FAKE_NPC,6,6
+2@nyd,140,357,0	duplicate(nyd_2f_red_warp1)	nyd_2f_white_warp2	FAKE_NPC,6,6
+2@nyd,145,367,0	duplicate(nyd_2f_red_warp1)	nyd_2f_white_warp3	FAKE_NPC,6,6
 
-2@nyd,284,278,0	duplicate(nyd_2f_red)	nyd_2f_yellow	-1,5,5
-2@nyd,6,8,0	duplicate(nyd_2f_red_c)	nyd_2f_yellow_c	-1
-2@nyd,255,285,0	duplicate(nyd_2f_red_warp1)	nyd_2f_yellow_warp1	-1,6,6
-2@nyd,257,296,0	duplicate(nyd_2f_red_warp1)	nyd_2f_yellow_warp2	-1,6,6
-2@nyd,268,300,0	duplicate(nyd_2f_red_warp1)	nyd_2f_yellow_warp3	-1,6,6
+2@nyd,284,278,0	duplicate(nyd_2f_red)	nyd_2f_yellow	FAKE_NPC,5,5
+2@nyd,6,8,0	duplicate(nyd_2f_red_c)	nyd_2f_yellow_c	FAKE_NPC
+2@nyd,255,285,0	duplicate(nyd_2f_red_warp1)	nyd_2f_yellow_warp1	FAKE_NPC,6,6
+2@nyd,257,296,0	duplicate(nyd_2f_red_warp1)	nyd_2f_yellow_warp2	FAKE_NPC,6,6
+2@nyd,268,300,0	duplicate(nyd_2f_red_warp1)	nyd_2f_yellow_warp3	FAKE_NPC,6,6
 
-2@nyd,284,374,0	duplicate(nyd_2f_red)	nyd_2f_green	-1,5,5
-2@nyd,6,9,0	duplicate(nyd_2f_red_c)	nyd_2f_green_c	-1
-2@nyd,274,356,0	duplicate(nyd_2f_red_warp1)	nyd_2f_green_warp1	-1,6,6
-2@nyd,260,356,0	duplicate(nyd_2f_red_warp1)	nyd_2f_green_warp2	-1,6,6
-2@nyd,258,368,0	duplicate(nyd_2f_red_warp1)	nyd_2f_green_warp3	-1,6,6
+2@nyd,284,374,0	duplicate(nyd_2f_red)	nyd_2f_green	FAKE_NPC,5,5
+2@nyd,6,9,0	duplicate(nyd_2f_red_c)	nyd_2f_green_c	FAKE_NPC
+2@nyd,274,356,0	duplicate(nyd_2f_red_warp1)	nyd_2f_green_warp1	FAKE_NPC,6,6
+2@nyd,260,356,0	duplicate(nyd_2f_red_warp1)	nyd_2f_green_warp2	FAKE_NPC,6,6
+2@nyd,258,368,0	duplicate(nyd_2f_red_warp1)	nyd_2f_green_warp3	FAKE_NPC,6,6
 
-2@nyd,1,1,0	script	ins_nyd2_spawn_mobs	-1,{
+2@nyd,1,1,0	script	ins_nyd2_spawn_mobs	FAKE_NPC,{
 OnInstanceInit:
 	.@map$ = instance_mapname("2@nyd");
 	areamonster .@map$,200,92,180,80,"Rhyncho",2020,40,instance_npcname("ins_nyd2_spawn_mobs")+"::OnMyRhynDead";

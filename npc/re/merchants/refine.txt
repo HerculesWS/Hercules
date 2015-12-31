@@ -348,7 +348,7 @@ function	script	refinenew	{
 }
 
 //== Ori/Elu to Carnium/Bradium Refiners ===================
--	script	Austri#ref	-1,{
+-	script	Austri#ref	FAKE_NPC,{
 	if (checkweight(Knife,1) == 0) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";

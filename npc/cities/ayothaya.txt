@@ -39,7 +39,7 @@
 //=========================================================================
 
 //== Ayothaya Transportation ===============================
--	script	::Aibakthing_ayothaya	-1,{
+-	script	::Aibakthing_ayothaya	FAKE_NPC,{
 	mes "[Aibakthing]";
 	mes "Hoo! Hah! Hoo! Hah!";
 	mes "Let me take you away to";

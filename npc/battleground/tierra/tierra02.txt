@@ -86,7 +86,7 @@ OnTimer1000:
 	end;
 }
 
-bat_a02,352,342,0	script	#bat_a02_quest_a	-1,5,5,{
+bat_a02,352,342,0	script	#bat_a02_quest_a	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -95,7 +95,7 @@ OnTouch:
 	end;
 }
 
-bat_a02,353,52,0	script	#bat_a02_quest_b	-1,5,5,{
+bat_a02,353,52,0	script	#bat_a02_quest_b	FAKE_NPC,5,5,{
 	end;
 
 OnTouch:
@@ -519,7 +519,7 @@ OnTimer26500:
 	end;
 }
 
-bat_a02,51,375,0	script	bat_a02_rp1_a_warp	-1,10,10,{
+bat_a02,51,375,0	script	bat_a02_rp1_a_warp	FAKE_NPC,10,10,{
 OnInit:
 	disablenpc "bat_a02_rp1_a_warp";
 	end;
@@ -569,7 +569,7 @@ OnTimer26500:
 	end;
 }
 
-bat_a02,43,17,0	script	bat_a02_rp1_b_warp	-1,10,10,{
+bat_a02,43,17,0	script	bat_a02_rp1_b_warp	FAKE_NPC,10,10,{
 OnInit:
 	disablenpc "bat_a02_rp1_b_warp";
 	end;
@@ -609,7 +609,7 @@ OnTimer26500:
 	end;
 }
 
-bat_a02,55,213,0	script	bat_a02_rp1_n_warp	-1,10,10,{
+bat_a02,55,213,0	script	bat_a02_rp1_n_warp	FAKE_NPC,10,10,{
 OnInit:
 	disablenpc "bat_a02_rp1_n_warp";
 	end;
@@ -620,42 +620,42 @@ OnTouch:
 	end;
 }
 
-bat_a02,194,267,0	script	barri_warp_up#bat_a02_a	-1,7,0,{
+bat_a02,194,267,0	script	barri_warp_up#bat_a02_a	FAKE_NPC,7,0,{
 OnTouch:
 	if (getcharid(4) == $@TierraBG2_id1)
 		warp "bat_a02",194,261;
 	end;
 }
 
-bat_a02,194,265,0	script	barri_warp_down#bat_a02a	-1,7,0,{
+bat_a02,194,265,0	script	barri_warp_down#bat_a02a	FAKE_NPC,7,0,{
 OnTouch:
 	if (getcharid(4) == $@TierraBG2_id1)
 		warp "bat_a02",194,270;
 	end;
 }
 
-bat_a02,177,130,0	script	barri_warp_up#bat_a02_b	-1,7,0,{
+bat_a02,177,130,0	script	barri_warp_up#bat_a02_b	FAKE_NPC,7,0,{
 OnTouch:
 	if (getcharid(4) == $@TierraBG2_id2)
 		warp "bat_a02",178,125;
 	end;
 }
 
-bat_a02,177,128,0	script	barri_warp_down#bat_a02b	-1,7,0,{
+bat_a02,177,128,0	script	barri_warp_down#bat_a02b	FAKE_NPC,7,0,{
 OnTouch:
 	if (getcharid(4) == $@TierraBG2_id2)
 		warp "bat_a02",178,134;
 	end;
 }
 
-bat_a02,352,342,0	script	A_CODE#bat_a02	-1,5,5,{
+bat_a02,352,342,0	script	A_CODE#bat_a02	FAKE_NPC,5,5,{
 OnTouch:
 	if (questprogress(2069) == 1)
 		setquest 2069;
 	end;
 }
 
-bat_a02,353,52,0	script	B_CODE#bat_a02	-1,5,5,{
+bat_a02,353,52,0	script	B_CODE#bat_a02	FAKE_NPC,5,5,{
 OnTouch:
 	if (questprogress(2069) == 1)
 		setquest 2069;

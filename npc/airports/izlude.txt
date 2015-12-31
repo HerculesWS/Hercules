@@ -31,7 +31,7 @@
 //= Official Izlude Airport NPCs
 //=========================================================================
 
--	script	::Airship_Staff_izlude	-1,{
+-	script	::Airship_Staff_izlude	FAKE_NPC,{
 	mes "[Airship Staff]";
 	mes "Welcome! Would you like";
 	mes "to board the Airship that";

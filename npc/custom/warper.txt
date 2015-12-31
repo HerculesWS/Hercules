@@ -18,7 +18,7 @@
 //= 1.4b Added Wolfchev's Laboratory warp.
 //============================================================
 
--	script	Warper	-1,{
+-	script	Warper	FAKE_NPC,{
 function Go; function Disp; function Pick; function Restrict;
 
 // --------------------------------------------------

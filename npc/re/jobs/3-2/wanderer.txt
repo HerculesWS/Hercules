@@ -862,7 +862,7 @@ hu_fild05,342,130,5	script	Dancer Kim#fild	4_F_CAPEGIRL,{
 	close;
 }
 
--	script	#fildshout00::wandererjcq	-1,{
+-	script	#fildshout00::wandererjcq	FAKE_NPC,{
 OnTouch:
 	if (job_wan == 7) {
 		switch(rand(3)) {
@@ -1041,7 +1041,7 @@ OnInit:
 	end;
 }
 
--	script	#wander_xmas	-1,{
+-	script	#wander_xmas	FAKE_NPC,{
 	end;
 OnInit:
 	disablenpc strnpcinfo(0);
