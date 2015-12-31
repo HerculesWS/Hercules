@@ -1978,6 +1978,10 @@ void clif_selllist(struct map_session_data *sd)
 void clif_scriptmes(struct map_session_data *sd, int npcid, const char *mes)
 {
 	int fd, slen;
+#ifdef SCRIPT_MES_STRIP_LINEBREAK
+	char *stripmes = NULL;
+	int i;
+#endif
 
 	nullpo_retv(sd);
 	nullpo_retv(mes);
@@ -1992,7 +1996,17 @@ void clif_scriptmes(struct map_session_data *sd, int npcid, const char *mes)
 	WFIFOW(fd,0) = 0xb4;
 	WFIFOW(fd,2) = slen;
 	WFIFOL(fd,4) = npcid;
+#ifdef SCRIPT_MES_STRIP_LINEBREAK
+	stripmes = aStrdup(mes);
+	for (i = 0; stripmes[i] != '\0'; ++i) {
+		if (stripmes[i] == '\r')
+			stripmes[i] = ' ';
+	}
+	memcpy(WFIFOP(fd,8), stripmes, slen-8);
+	aFree(stripmes);
+#else // ! SCRIPT_MES_STRIP_LINEBREAK
 	memcpy(WFIFOP(fd,8), mes, slen-8);
+#endif // SCRIPT_MES_STRIP_LINEBREAK
 	WFIFOSET(fd,WFIFOW(fd,2));
 }
 
