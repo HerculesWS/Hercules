@@ -4869,7 +4869,7 @@ void script_load_translations(void) {
 	const char *config_filename = "db/translations.conf"; // FIXME hardcoded name
 	struct config_setting_t *translations = NULL;
 	int i, size;
-	uint32 total = 0;
+	int total = 0;
 	uint8 lang_id = 0, k;
 
 	if (map->minimal) // No translations in minimal mode
@@ -4906,24 +4906,22 @@ void script_load_translations(void) {
 
 	for(i = 0; i < size; i++) {
 		const char *translation_file = libconfig->setting_get_string_elem(translations, i);
-		script->load_translation(translation_file, ++lang_id, &total);
+		total += script->load_translation(translation_file, ++lang_id);
 	}
 	libconfig->destroy(&translations_conf);
 
-	if( total ) {
+	if (total != 0) {
 		struct DBIterator *main_iter;
 		struct DBMap *string_db;
 		struct string_translation *st = NULL;
-		uint32 j = 0;
 
-		CREATE(script->translation_buf, char *, total);
-		script->translation_buf_size = total;
+		VECTOR_ENSURE(script->translation_buf, total, 1);
 
 		main_iter = db_iterator(script->translation_db);
 		for (string_db = dbi_first(main_iter); dbi_exists(main_iter); string_db = dbi_next(main_iter)) {
 			struct DBIterator *sub_iter = db_iterator(string_db);
 			for (st = dbi_first(sub_iter); dbi_exists(sub_iter); st = dbi_next(sub_iter)) {
-				script->translation_buf[j++] = st->buf; // FIXME: change translation_buf to uint8
+				VECTOR_PUSH(script->translation_buf, st->buf);
 			}
 			dbi_destroy(sub_iter);
 		}
@@ -4970,23 +4968,29 @@ const char *script_get_translation_file_name(const char *file)
 }
 
 /**
- * Parses a individual translation file
- **/
-void script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
-	uint32 translations = 0;
+ * Parses an individual translation file.
+ *
+ * @param file The filename to parse.
+ * @param lang_id The language identifier.
+ * @return The amount of strings loaded.
+ */
+int script_load_translation(const char *file, uint8 lang_id)
+{
+	int translations = 0;
 	char line[1024];
 	char msgctxt[NAME_LENGTH*2+1] = { 0 };
 	struct DBMap *string_db;
 	size_t i;
 	FILE *fp;
 	struct script_string_buf msgid, msgstr;
-	VECTOR_INIT(msgid);
-	VECTOR_INIT(msgstr);
 
 	if( !(fp = fopen(file,"rb")) ) {
 		ShowError("load_translation: failed to open '%s' for reading\n",file);
-		return;
+		return 0;
 	}
+
+	VECTOR_INIT(msgid);
+	VECTOR_INIT(msgstr);
 
 	script->add_language(script->get_translation_file_name(file));
 	if( lang_id >= atcommand->max_message_table )
@@ -5085,14 +5089,13 @@ void script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
 		}
 	}
 
-	*total += translations;
-
 	fclose(fp);
 
 	VECTOR_CLEAR(msgid);
 	VECTOR_CLEAR(msgstr);
 
-	ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' translations in '"CL_WHITE"%s"CL_RESET"'.\n", translations, file);
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' translations in '"CL_WHITE"%s"CL_RESET"'.\n", translations, file);
+	return translations;
 }
 
 /**
@@ -5108,15 +5111,10 @@ void script_clear_translations(bool reload) {
 	script->string_list_pos = 0;
 	script->string_list_size = 0;
 
-	if( script->translation_buf ) {
-		for(i = 0; i < script->translation_buf_size; i++) {
-			aFree(script->translation_buf[i]);
-		}
-		aFree(script->translation_buf);
+	while (VECTOR_LENGTH(script->translation_buf) > 0) {
+		aFree(VECTOR_POP(script->translation_buf));
 	}
-
-	script->translation_buf = NULL;
-	script->translation_buf_size = 0;
+	VECTOR_CLEAR(script->translation_buf);
 
 	if( script->languages ) {
 		for(i = 0; i < script->max_lang_id; i++)
@@ -21054,6 +21052,7 @@ void script_defaults(void) {
 	script->labels_size = 0;
 
 	VECTOR_INIT(script->buf);
+	VECTOR_INIT(script->translation_buf);
 
 	script->parse_options = 0;
 	script->buildin_set_ref = 0;

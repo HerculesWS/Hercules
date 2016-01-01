@@ -630,8 +630,7 @@ struct script_interface {
 	int buildin_lang_macro_offset;
 	/* */
 	struct DBMap *translation_db;/* npc_name => DBMap (strings) */
-	char **translation_buf;/*  */
-	uint32 translation_buf_size;
+	VECTOR_DECL(uint8 *) translation_buf;
 	/* */
 	char **languages;
 	uint8 max_lang_id;
@@ -815,7 +814,7 @@ struct script_interface {
 	unsigned short (*mapindexname2id) (struct script_state *st, const char* name);
 	int (*string_dup) (char *str);
 	void (*load_translations) (void);
-	void (*load_translation) (const char *file, uint8 lang_id, uint32 *total);
+	int (*load_translation) (const char *file, uint8 lang_id);
 	int (*translation_db_destroyer) (union DBKey key, struct DBData *data, va_list ap);
 	void (*clear_translations) (bool reload);
 	int (*parse_cleanup_timer) (int tid, int64 tick, int id, intptr_t data);
