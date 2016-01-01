@@ -772,6 +772,7 @@ size_t sv_escape_c(char* out_dest, const char* src, size_t len, const char* esca
 						case '\v': out_dest[j++] = 'v'; break;
 						case '\f': out_dest[j++] = 'f'; break;
 						case '\?': out_dest[j++] = '?'; break;
+						case '\"': out_dest[j++] = '"'; break;
 						default:// to octal
 							out_dest[j++] = '0'+((char)(((unsigned char)src[i]&0700)>>6));
 							out_dest[j++] = '0'+((char)(((unsigned char)src[i]&0070)>>3));

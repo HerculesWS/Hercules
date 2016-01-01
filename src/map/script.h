@@ -637,7 +637,7 @@ struct script_interface {
 	/* */
 	struct script_string_buf parse_simpleexpr_str;
 	struct script_string_buf lang_export_line_buf;
-	struct script_string_buf lang_export_unescaped_buf;
+	struct script_string_buf lang_export_escaped_buf;
 	/* */
 	int parse_cleanup_timer_id;
 	/*  */

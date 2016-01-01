@@ -1296,7 +1296,7 @@ const char* parse_simpleexpr(const char *p)
 				) || script->syntax.lang_macro_active ) ) {
 			const char *line_start = start_point;
 			const char *line_end = start_point;
-			int line_length, cursor;
+			int line_length;
 
 			while( line_start > script->parser_current_src ) {
 				if( *line_start != '\n' )
@@ -1317,16 +1317,12 @@ const char* parse_simpleexpr(const char *p)
 				normalize_name(VECTOR_DATA(script->lang_export_line_buf), "\r\n\t "); // [!] Note: VECTOR_LENGTH() will lie.
 			}
 
-			for (cursor = 0; cursor < VECTOR_LENGTH(script->parse_simpleexpr_str); cursor++) {
-				if (VECTOR_INDEX(script->parse_simpleexpr_str, cursor) == '"') {
-					VECTOR_ENSURE(script->lang_export_unescaped_buf, 1, 512);
-					VECTOR_PUSH(script->lang_export_unescaped_buf, '\\');
-				}
-				VECTOR_ENSURE(script->lang_export_unescaped_buf, 1, 512);
-				VECTOR_PUSH(script->lang_export_unescaped_buf, VECTOR_INDEX(script->parse_simpleexpr_str, cursor));
-			}
-			VECTOR_ENSURE(script->lang_export_unescaped_buf, 1, 512);
-			VECTOR_PUSH(script->lang_export_unescaped_buf, '\0');
+			VECTOR_ENSURE(script->lang_export_escaped_buf, 4*VECTOR_LENGTH(script->parse_simpleexpr_str)+1, 1);
+			VECTOR_LENGTH(script->lang_export_escaped_buf) = (int)sv->escape_c(VECTOR_DATA(script->lang_export_escaped_buf),
+					VECTOR_DATA(script->parse_simpleexpr_str),
+					VECTOR_LENGTH(script->parse_simpleexpr_str)-1, /* exclude null terminator */
+					"\"");
+			VECTOR_PUSH(script->lang_export_escaped_buf, '\0');
 
 			fprintf(script->lang_export_fp, "#: %s\n"
 					"# %s\n"
@@ -1336,10 +1332,10 @@ const char* parse_simpleexpr(const char *p)
 					script->parser_current_file ? script->parser_current_file : "Unknown File",
 					VECTOR_DATA(script->lang_export_line_buf),
 					script->parser_current_npc_name ? script->parser_current_npc_name : "Unknown NPC",
-					VECTOR_DATA(script->lang_export_unescaped_buf)
+					VECTOR_DATA(script->lang_export_escaped_buf)
 			);
 			VECTOR_TRUNCATE(script->lang_export_line_buf);
-			VECTOR_TRUNCATE(script->lang_export_unescaped_buf);
+			VECTOR_TRUNCATE(script->lang_export_escaped_buf);
 		}
 		VECTOR_TRUNCATE(script->parse_simpleexpr_str);
 	} else {
@@ -5169,7 +5165,7 @@ void script_parser_clean_leftovers(void)
 
 	VECTOR_CLEAR(script->parse_simpleexpr_str);
 	VECTOR_CLEAR(script->lang_export_line_buf);
-	VECTOR_CLEAR(script->lang_export_unescaped_buf);
+	VECTOR_CLEAR(script->lang_export_escaped_buf);
 }
 
 /**
@@ -5189,7 +5185,7 @@ int script_parse_cleanup_timer(int tid, int64 tick, int id, intptr_t data) {
 void do_init_script(bool minimal) {
 	script->parse_cleanup_timer_id = INVALID_TIMER;
 	VECTOR_INIT(script->lang_export_line_buf);
-	VECTOR_INIT(script->lang_export_unescaped_buf);
+	VECTOR_INIT(script->lang_export_escaped_buf);
 	VECTOR_INIT(script->parse_simpleexpr_str);
 
 	script->st_db = idb_alloc(DB_OPT_BASE);
