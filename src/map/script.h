@@ -517,10 +517,10 @@ struct script_array {
 	unsigned int *members;/* member list */
 };
 
-struct script_string_buf {
-	char *ptr;
-	size_t pos,size;
-};
+/**
+ * A script string buffer, used to hold strings used by the script engine.
+ */
+VECTOR_STRUCT_DECL(script_string_buf, char);
 
 struct string_translation {
 	int string_id;

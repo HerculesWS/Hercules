@@ -92,29 +92,6 @@ static inline void SETVALUE(unsigned char* buf, int i, int n) {
 	buf[i+2] = GetByte(n, 2);
 }
 
-static inline void script_string_buf_ensure(struct script_string_buf *buf, size_t ensure) {
-	if( buf->pos+ensure >= buf->size ) {
-		do {
-			buf->size += 512;
-		} while ( buf->pos+ensure >= buf->size );
-		RECREATE(buf->ptr, char, buf->size);
-	}
-}
-
-static inline void script_string_buf_addb(struct script_string_buf *buf,uint8 b) {
-	if( buf->pos+1 >= buf->size ) {
-		buf->size += 512;
-		RECREATE(buf->ptr, char, buf->size);
-	}
-	buf->ptr[buf->pos++] = b;
-}
-
-static inline void script_string_buf_destroy(struct script_string_buf *buf) {
-	if( buf->ptr )
-		aFree(buf->ptr);
-	memset(buf,0,sizeof(struct script_string_buf));
-}
-
 const char* script_op2name(int op) {
 #define RETURN_OP_NAME(type) case type: return #type
 	switch( op ) {
@@ -1222,7 +1199,6 @@ const char* parse_simpleexpr(const char *p)
 		struct string_translation *st = NULL;
 		const char *start_point = p;
 		bool duplicate = true;
-		struct script_string_buf *sbuf = &script->parse_simpleexpr_str;
 
 		do {
 			p++;
@@ -1234,12 +1210,14 @@ const char* parse_simpleexpr(const char *p)
 					if( n != 1 )
 						ShowDebug("parse_simpleexpr: unexpected length %d after unescape (\"%.*s\" -> %.*s)\n", (int)n, (int)len, p, (int)n, buf);
 					p += len;
-					script_string_buf_addb(sbuf, *buf);
+					VECTOR_ENSURE(script->parse_simpleexpr_str, 1, 512);
+					VECTOR_PUSH(script->parse_simpleexpr_str, buf[0]);
 					continue;
 				} else if( *p == '\n' ) {
 					disp_error_message("parse_simpleexpr: unexpected newline @ string",p);
 				}
-				script_string_buf_addb(sbuf, *p++);
+				VECTOR_ENSURE(script->parse_simpleexpr_str, 1, 512);
+				VECTOR_PUSH(script->parse_simpleexpr_str, *p++);
 			}
 			if(!*p)
 				disp_error_message("parse_simpleexpr: unexpected end of file @ string",p);
@@ -1247,20 +1225,22 @@ const char* parse_simpleexpr(const char *p)
 			p = script->skip_space(p);
 		} while( *p && *p == '"' );
 
-		script_string_buf_addb(sbuf, 0);
+		VECTOR_ENSURE(script->parse_simpleexpr_str, 1, 512);
+		VECTOR_PUSH(script->parse_simpleexpr_str, '\0');
 
-		if (!(script->syntax.translation_db && (st = strdb_get(script->syntax.translation_db, sbuf->ptr)) != NULL)) {
+		if (script->syntax.translation_db == NULL
+		 || (st = strdb_get(script->syntax.translation_db, VECTOR_DATA(script->parse_simpleexpr_str))) == NULL) {
 			script->addc(C_STR);
 
-			if( script->pos+sbuf->pos >= script->size ) {
+			if (script->pos+VECTOR_LENGTH(script->parse_simpleexpr_str) >= script->size) {
 				do {
 					script->size += SCRIPT_BLOCK_SIZE;
-				} while( script->pos+sbuf->pos >= script->size );
+				} while (script->pos+VECTOR_LENGTH(script->parse_simpleexpr_str) >= script->size);
 				RECREATE(script->buf,unsigned char,script->size);
 			}
 
-			memcpy(script->buf+script->pos, sbuf->ptr, sbuf->pos);
-			script->pos += sbuf->pos;
+			memcpy(script->buf+script->pos, VECTOR_DATA(script->parse_simpleexpr_str), VECTOR_LENGTH(script->parse_simpleexpr_str));
+			script->pos += VECTOR_LENGTH(script->parse_simpleexpr_str);
 
 		} else {
 			int expand = sizeof(int) + sizeof(uint8);
@@ -1292,13 +1272,14 @@ const char* parse_simpleexpr(const char *p)
 		}
 
 		/* When exporting we don't know what is a translation and what isn't */
-		if( script->lang_export_fp && sbuf->pos > 1 ) {//sbuf->pos will always be at least 1 because of the '\0'
+		if (script->lang_export_fp && VECTOR_LENGTH(script->parse_simpleexpr_str) > 1) {
+			// The length of script->parse_simpleexpr_str will always be at least 1 because of the '\0'
 			if( !script->syntax.strings ) {
 				script->syntax.strings = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, 0);
 			}
 
-			if( !strdb_exists(script->syntax.strings,sbuf->ptr) ) {
-				strdb_put(script->syntax.strings, sbuf->ptr, NULL);
+			if (!strdb_exists(script->syntax.strings, VECTOR_DATA(script->parse_simpleexpr_str))) {
+				strdb_put(script->syntax.strings, VECTOR_DATA(script->parse_simpleexpr_str), NULL);
 				duplicate = false;
 			}
 		}
@@ -1309,9 +1290,7 @@ const char* parse_simpleexpr(const char *p)
 				) || script->syntax.lang_macro_active ) ) {
 			const char *line_start = start_point;
 			const char *line_end = start_point;
-			struct script_string_buf *lbuf = &script->lang_export_line_buf;
-			struct script_string_buf *ubuf = &script->lang_export_unescaped_buf;
-			size_t line_length, cursor;
+			int line_length, cursor;
 
 			while( line_start > script->parser_current_src ) {
 				if( *line_start != '\n' )
@@ -1323,23 +1302,25 @@ const char* parse_simpleexpr(const char *p)
 			while( *line_end != '\n' && *line_end != '\0' )
 				line_end++;
 
-			line_length = (size_t)(line_end - line_start);
+			line_length = (int)(line_end - line_start);
 			if( line_length > 0 ) {
-				script_string_buf_ensure(lbuf,line_length + 1);
+				VECTOR_ENSURE(script->lang_export_line_buf, line_length + 1, 512);
+				VECTOR_PUSHARRAY(script->lang_export_line_buf, line_start, line_length);
+				VECTOR_PUSH(script->lang_export_line_buf, '\0');
 
-				memcpy(lbuf->ptr, line_start, line_length);
-				lbuf->pos = line_length;
-				script_string_buf_addb(lbuf, 0);
-
-				normalize_name(lbuf->ptr, "\r\n\t ");
+				normalize_name(VECTOR_DATA(script->lang_export_line_buf), "\r\n\t "); // [!] Note: VECTOR_LENGTH() will lie.
 			}
 
-			for(cursor = 0; cursor < sbuf->pos; cursor++) {
-				if( sbuf->ptr[cursor] == '"' )
-					script_string_buf_addb(ubuf, '\\');
-				script_string_buf_addb(ubuf, sbuf->ptr[cursor]);
+			for (cursor = 0; cursor < VECTOR_LENGTH(script->parse_simpleexpr_str); cursor++) {
+				if (VECTOR_INDEX(script->parse_simpleexpr_str, cursor) == '"') {
+					VECTOR_ENSURE(script->lang_export_unescaped_buf, 1, 512);
+					VECTOR_PUSH(script->lang_export_unescaped_buf, '\\');
+				}
+				VECTOR_ENSURE(script->lang_export_unescaped_buf, 1, 512);
+				VECTOR_PUSH(script->lang_export_unescaped_buf, VECTOR_INDEX(script->parse_simpleexpr_str, cursor));
 			}
-			script_string_buf_addb(ubuf, 0);
+			VECTOR_ENSURE(script->lang_export_unescaped_buf, 1, 512);
+			VECTOR_PUSH(script->lang_export_unescaped_buf, '\0');
 
 			fprintf(script->lang_export_fp, "#: %s\n"
 					"# %s\n"
@@ -1347,14 +1328,14 @@ const char* parse_simpleexpr(const char *p)
 					"msgid \"%s\"\n"
 					"msgstr \"\"\n",
 					script->parser_current_file ? script->parser_current_file : "Unknown File",
-					lbuf->ptr,
+					VECTOR_DATA(script->lang_export_line_buf),
 					script->parser_current_npc_name ? script->parser_current_npc_name : "Unknown NPC",
-					ubuf->ptr
+					VECTOR_DATA(script->lang_export_unescaped_buf)
 			);
-			lbuf->pos = 0;
-			ubuf->pos = 0;
+			VECTOR_TRUNCATE(script->lang_export_line_buf);
+			VECTOR_TRUNCATE(script->lang_export_unescaped_buf);
 		}
-		sbuf->pos = 0;
+		VECTOR_TRUNCATE(script->parse_simpleexpr_str);
 	} else {
 		int l;
 		const char* pv;
@@ -4989,7 +4970,9 @@ void script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
 	struct DBMap *string_db;
 	size_t i;
 	FILE *fp;
-	struct script_string_buf msgid = { 0 }, msgstr = { 0 };
+	struct script_string_buf msgid, msgstr;
+	VECTOR_INIT(msgid);
+	VECTOR_INIT(msgstr);
 
 	if( !(fp = fopen(file,"rb")) ) {
 		ShowError("load_translation: failed to open '%s' for reading\n",file);
@@ -5023,39 +5006,45 @@ void script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
 			}
 			msgctxt[cursor] = '\0';
 		} else if ( strncasecmp(line, "msgid \"", 7) == 0 ) {
-			msgid.pos = 0;
+			VECTOR_TRUNCATE(msgid);
 			for(i = 7; i < len - 2; i++) {
+				VECTOR_ENSURE(msgid, 1, 512);
 				if( line[i] == '\\' && line[i+1] == '"' ) {
-					script_string_buf_addb(&msgid, '"');
+					VECTOR_PUSH(msgid, '"');
 					i++;
-				} else
-					script_string_buf_addb(&msgid, line[i]);
+				} else {
+					VECTOR_PUSH(msgid, line[i]);
+				}
 			}
-			script_string_buf_addb(&msgid,0);
+			VECTOR_ENSURE(msgid, 1, 512);
+			VECTOR_PUSH(msgid, '\0');
 		} else if ( len > 9 && line[9] != '"' && strncasecmp(line, "msgstr \"",8) == 0 ) {
-			msgstr.pos = 0;
+			VECTOR_TRUNCATE(msgstr);
 			for(i = 8; i < len - 2; i++) {
+				VECTOR_ENSURE(msgstr, 1, 512);
 				if( line[i] == '\\' && line[i+1] == '"' ) {
-					script_string_buf_addb(&msgstr, '"');
+					VECTOR_PUSH(msgstr, '"');
 					i++;
-				} else
-					script_string_buf_addb(&msgstr, line[i]);
+				} else {
+					VECTOR_PUSH(msgstr, line[i]);
+				}
 			}
-			script_string_buf_addb(&msgstr,0);
+			VECTOR_ENSURE(msgstr, 1, 512);
+			VECTOR_PUSH(msgstr, '\0');
 		}
 
-		if( msgctxt[0] && msgid.pos > 1 && msgstr.pos > 1 ) {
-			size_t msgstr_len = msgstr.pos;
+		if( msgctxt[0] && VECTOR_LENGTH(msgid) > 1 && VECTOR_LENGTH(msgstr) > 1 ) {
+			int msgstr_len = VECTOR_LENGTH(msgstr);
 			unsigned int inner_len = 1 + (uint32)msgstr_len + 1; //uint8 lang_id + msgstr_len + '\0'
 
 			if( strcasecmp(msgctxt, "messages.conf") == 0 ) {
 				int k;
 
 				for(k = 0; k < MAX_MSG; k++) {
-					if( atcommand->msg_table[0][k] && strcmpi(atcommand->msg_table[0][k],msgid.ptr) == 0 ) {
+					if( atcommand->msg_table[0][k] && strcmpi(atcommand->msg_table[0][k], VECTOR_DATA(msgid)) == 0 ) {
 						if( atcommand->msg_table[lang_id][k] )
 							aFree(atcommand->msg_table[lang_id][k]);
-						atcommand->msg_table[lang_id][k] = aStrdup(msgstr.ptr);
+						atcommand->msg_table[lang_id][k] = aStrdup(VECTOR_DATA(msgstr));
 						break;
 					}
 				}
@@ -5067,21 +5056,22 @@ void script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
 					strdb_put(script->translation_db, msgctxt, string_db);
 				}
 
-				if( !(st = strdb_get(string_db, msgid.ptr) ) ) {
+				if( !(st = strdb_get(string_db, VECTOR_DATA(msgid)) ) ) {
 					CREATE(st, struct string_translation, 1);
-					st->string_id = script->string_dup(msgid.ptr);
-					strdb_put(string_db, msgid.ptr, st);
+					st->string_id = script->string_dup(VECTOR_DATA(msgid));
+					strdb_put(string_db, VECTOR_DATA(msgid), st);
 				}
 				RECREATE(st->buf, char, st->len + inner_len);
 
 				WBUFB(st->buf, st->len) = lang_id;
-				safestrncpy(WBUFP(st->buf, st->len + 1), msgstr.ptr, msgstr_len + 1);
+				safestrncpy(WBUFP(st->buf, st->len + 1), VECTOR_DATA(msgstr), msgstr_len + 1);
 
 				st->translations++;
 				st->len += inner_len;
 			}
 			msgctxt[0] = '\0';
-			msgid.pos = msgstr.pos = 0;
+			VECTOR_TRUNCATE(msgid);
+			VECTOR_TRUNCATE(msgstr);
 			translations++;
 		}
 	}
@@ -5090,8 +5080,8 @@ void script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
 
 	fclose(fp);
 
-	script_string_buf_destroy(&msgid);
-	script_string_buf_destroy(&msgstr);
+	VECTOR_CLEAR(msgid);
+	VECTOR_CLEAR(msgstr);
 
 	ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' translations in '"CL_WHITE"%s"CL_RESET"'.\n", translations, file);
 }
@@ -5176,9 +5166,9 @@ void script_parser_clean_leftovers(void) {
 		script->syntax.strings = NULL;
 	}
 
-	script_string_buf_destroy(&script->parse_simpleexpr_str);
-	script_string_buf_destroy(&script->lang_export_line_buf);
-	script_string_buf_destroy(&script->lang_export_unescaped_buf);
+	VECTOR_CLEAR(script->parse_simpleexpr_str);
+	VECTOR_CLEAR(script->lang_export_line_buf);
+	VECTOR_CLEAR(script->lang_export_unescaped_buf);
 }
 
 /**
@@ -5197,6 +5187,9 @@ int script_parse_cleanup_timer(int tid, int64 tick, int id, intptr_t data) {
  *------------------------------------------*/
 void do_init_script(bool minimal) {
 	script->parse_cleanup_timer_id = INVALID_TIMER;
+	VECTOR_INIT(script->lang_export_line_buf);
+	VECTOR_INIT(script->lang_export_unescaped_buf);
+	VECTOR_INIT(script->parse_simpleexpr_str);
 
 	script->st_db = idb_alloc(DB_OPT_BASE);
 	script->userfunc_db = strdb_alloc(DB_OPT_DUP_KEY,0);
