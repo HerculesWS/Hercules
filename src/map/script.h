@@ -517,16 +517,22 @@ struct script_array {
 	unsigned int *members;/* member list */
 };
 
+
 /**
  * A script string buffer, used to hold strings used by the script engine.
  */
 VECTOR_STRUCT_DECL(script_string_buf, char);
 
+struct string_translation_entry {
+	uint8 lang_id;
+	char string[];
+};
+
 struct string_translation {
 	int string_id;
 	uint8 translations;
-	unsigned int len;
-	char *buf;
+	int len;
+	uint8 *buf; // Array of struct string_translation_entry
 };
 
 /**
@@ -576,8 +582,7 @@ struct script_interface {
 	/* */
 	/// temporary buffer for passing around compiled bytecode
 	/// @see add_scriptb, set_label, parse_script
-	unsigned char* buf;
-	int pos, size;
+	VECTOR_DECL(unsigned char) buf;
 	/* */
 	struct script_syntax_data syntax;
 	/* */

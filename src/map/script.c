@@ -583,21 +583,26 @@ int script_add_str(const char* p)
 	return script->str_num++;
 }
 
-/// Appends 1 byte to the script buffer.
+/**
+ * Appends 1 byte to the script buffer.
+ *
+ * @param a The byte to append.
+ */
 void add_scriptb(int a)
 {
-	if( script->pos+1 >= script->size )
-	{
-		script->size += SCRIPT_BLOCK_SIZE;
-		RECREATE(script->buf,unsigned char,script->size);
-	}
-	script->buf[script->pos++] = (uint8)(a);
+	VECTOR_ENSURE(script->buf, 1, SCRIPT_BLOCK_SIZE);
+	VECTOR_PUSH(script->buf, (uint8)a);
 }
 
-/// Appends a c_op value to the script buffer.
-/// The value is variable-length encoded into 8-bit blocks.
-/// The encoding scheme is ( 01?????? )* 00??????, LSB first.
-/// All blocks but the last hold 7 bits of data, topmost bit is always 1 (carries).
+/**
+ * Appends a c_op value to the script buffer.
+ *
+ * The value is variable-length encoded into 8-bit blocks.
+ * The encoding scheme is ( 01?????? )* 00??????, LSB first.
+ * All blocks but the last hold 7 bits of data, topmost bit is always 1 (carries).
+ *
+ * @param a The value to append.
+ */
 void add_scriptc(int a)
 {
 	while( a >= 0x40 )
@@ -609,10 +614,15 @@ void add_scriptc(int a)
 	script->addb(a);
 }
 
-/// Appends an integer value to the script buffer.
-/// The value is variable-length encoded into 8-bit blocks.
-/// The encoding scheme is ( 11?????? )* 10??????, LSB first.
-/// All blocks but the last hold 7 bits of data, topmost bit is always 1 (carries).
+/**
+ * Appends an integer value to the script buffer.
+ *
+ * The value is variable-length encoded into 8-bit blocks.
+ * The encoding scheme is ( 11?????? )* 10??????, LSB first.
+ * All blocks but the last hold 7 bits of data, topmost bit is always 1 (carries).
+ *
+ * @param a The value to append.
+ */
 void add_scripti(int a)
 {
 	while( a >= 0x40 )
@@ -623,11 +633,11 @@ void add_scripti(int a)
 	script->addb(a|0x80);
 }
 
-/// Appends a script->str_data object (label/function/variable/integer) to the script buffer.
-
-///
-/// @param l The id of the script->str_data entry
-// Maximum up to 16M
+/**
+ * Appends a script->str_data object (label/function/variable/integer) to the script buffer.
+ *
+ * @param l The id of the script->str_data entry (Maximum up to 16M)
+ */
 void add_scriptl(int l)
 {
 	int backpatch = script->str_data[l].backpatch;
@@ -644,7 +654,7 @@ void add_scriptl(int l)
 		case C_USERFUNC:
 			// Embedded data backpatch there is a possibility of label
 			script->addc(C_NAME);
-			script->str_data[l].backpatch = script->pos;
+			script->str_data[l].backpatch = VECTOR_LENGTH(script->buf);
 			script->addb(backpatch);
 			script->addb(backpatch>>8);
 			script->addb(backpatch>>16);
@@ -682,9 +692,9 @@ void set_label(int l,int pos, const char* script_pos)
 	script->str_data[l].type=(script->str_data[l].type == C_USERFUNC ? C_USERFUNC_POS : C_POS);
 	script->str_data[l].label=pos;
 	for (i = script->str_data[l].backpatch; i >= 0 && i != 0x00ffffff; ) {
-		int next = GETVALUE(script->buf,i);
-		script->buf[i-1]=(script->str_data[l].type == C_USERFUNC ? C_USERFUNC_POS : C_POS);
-		SETVALUE(script->buf,i,pos);
+		int next = GETVALUE(VECTOR_DATA(script->buf), i);
+		VECTOR_INDEX(script->buf, i-1) = (script->str_data[l].type == C_USERFUNC ? C_USERFUNC_POS : C_POS);
+		SETVALUE(VECTOR_DATA(script->buf), i, pos);
 		i = next;
 	}
 }
@@ -919,7 +929,7 @@ void parse_nextline(bool first, const char* p)
 	if( !first )
 	{
 		script->addc(C_EOL);  // mark end of line for stack cleanup
-		script->set_label(LABEL_NEXTLINE, script->pos, p);  // fix up '-' labels
+		script->set_label(LABEL_NEXTLINE, VECTOR_LENGTH(script->buf), p);  // fix up '-' labels
 	}
 
 	// initialize data for new '-' label fix up scheduling
@@ -1136,13 +1146,19 @@ bool is_number(const char *p) {
 }
 
 /**
+ * Duplicates a script string into the script string list.
  *
- **/
-int script_string_dup(char *str) {
-	size_t len = strlen(str);
+ * Grows the script string list as needed.
+ *
+ * @param str The string to insert.
+ * @return the string position in the script string list.
+ */
+int script_string_dup(char *str)
+{
+	int len = (int)strlen(str);
 	int pos = script->string_list_pos;
 
-	while( pos+len+1 >= script->string_list_size ) {
+	while (pos+len+1 >= script->string_list_size) {
 		script->string_list_size += (1024*1024)/2;
 		RECREATE(script->string_list,char,script->string_list_size);
 	}
@@ -1232,42 +1248,30 @@ const char* parse_simpleexpr(const char *p)
 		 || (st = strdb_get(script->syntax.translation_db, VECTOR_DATA(script->parse_simpleexpr_str))) == NULL) {
 			script->addc(C_STR);
 
-			if (script->pos+VECTOR_LENGTH(script->parse_simpleexpr_str) >= script->size) {
-				do {
-					script->size += SCRIPT_BLOCK_SIZE;
-				} while (script->pos+VECTOR_LENGTH(script->parse_simpleexpr_str) >= script->size);
-				RECREATE(script->buf,unsigned char,script->size);
-			}
+			VECTOR_ENSURE(script->buf, VECTOR_LENGTH(script->parse_simpleexpr_str), SCRIPT_BLOCK_SIZE);
 
-			memcpy(script->buf+script->pos, VECTOR_DATA(script->parse_simpleexpr_str), VECTOR_LENGTH(script->parse_simpleexpr_str));
-			script->pos += VECTOR_LENGTH(script->parse_simpleexpr_str);
-
+			VECTOR_PUSHARRAY(script->buf, VECTOR_DATA(script->parse_simpleexpr_str), VECTOR_LENGTH(script->parse_simpleexpr_str));
 		} else {
-			int expand = sizeof(int) + sizeof(uint8);
-			unsigned char j;
-			unsigned int st_cursor = 0;
+			unsigned char u;
+			int st_cursor = 0;
 
 			script->addc(C_LSTR);
 
-			expand += (sizeof(char*) + sizeof(uint8)) * st->translations;
+			VECTOR_ENSURE(script->buf, (int)(sizeof(st->string_id) + sizeof(st->translations)), SCRIPT_BLOCK_SIZE);
+			VECTOR_PUSHARRAY(script->buf, (void *)&st->string_id, sizeof(st->string_id));
+			VECTOR_PUSHARRAY(script->buf, (void *)&st->translations, sizeof(st->translations));
 
-			while( script->pos+expand >= script->size ) {
-				script->size += SCRIPT_BLOCK_SIZE;
-				RECREATE(script->buf,unsigned char,script->size);
-			}
-
-			*((int *)(&script->buf[script->pos])) = st->string_id;
-			*((uint8 *)(&script->buf[script->pos + sizeof(int)])) = st->translations;
-
-			script->pos += sizeof(int) + sizeof(uint8);
-
-			for(j = 0; j < st->translations; j++) {
-				*((uint8 *)(&script->buf[script->pos])) = RBUFB(st->buf, st_cursor);
-				*((char **)(&script->buf[script->pos+sizeof(uint8)])) = &st->buf[st_cursor + sizeof(uint8)];
-				script->pos += sizeof(char*) + sizeof(uint8);
-				st_cursor += sizeof(uint8);
-				while(st->buf[st_cursor++]);
-				st_cursor += sizeof(uint8);
+			for (u = 0; u != st->translations; u++) {
+				struct string_translation_entry *entry = (void *)(st->buf+st_cursor);
+				char *stringptr = &entry->string[0];
+				st_cursor += sizeof(*entry);
+				VECTOR_ENSURE(script->buf, (int)(sizeof(entry->lang_id) + sizeof(char *)), SCRIPT_BLOCK_SIZE);
+				VECTOR_PUSHARRAY(script->buf, (void *)&entry->lang_id, sizeof(entry->lang_id));
+				VECTOR_PUSHARRAY(script->buf, (void *)&stringptr, sizeof(stringptr));
+				st_cursor += sizeof(uint8); // FIXME: What are we skipping here?
+				while (st->buf[st_cursor++] != 0)
+					(void)0; // Skip string
+				st_cursor += sizeof(uint8); // FIXME: What are we skipping here?
 			}
 		}
 
@@ -1563,7 +1567,7 @@ const char* parse_curly_close(const char* p)
 		// You are here labeled
 		sprintf(label,"__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 		l=script->add_str(label);
-		script->set_label(l,script->pos, p);
+		script->set_label(l, VECTOR_LENGTH(script->buf), p);
 
 		if(script->syntax.curly[pos].flag) {
 			//Exists default
@@ -1576,7 +1580,7 @@ const char* parse_curly_close(const char* p)
 		// Label end
 		sprintf(label,"__SW%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 		l=script->add_str(label);
-		script->set_label(l,script->pos, p);
+		script->set_label(l, VECTOR_LENGTH(script->buf), p);
 		linkdb_final(&script->syntax.curly[pos].case_label); // free the list of case label
 		script->syntax.curly_count--;
 		//Closing decision if, for , while
@@ -1655,7 +1659,7 @@ const char* parse_syntax(const char* p)
 					// You are here labeled
 					sprintf(label,"__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 					l=script->add_str(label);
-					script->set_label(l,script->pos, p);
+					script->set_label(l, VECTOR_LENGTH(script->buf), p);
 				}
 				//Decision statement switch
 				p = script->skip_space(p2);
@@ -1695,7 +1699,7 @@ const char* parse_syntax(const char* p)
 					// Label after the completion of FALLTHRU
 					sprintf(label, "__SW%x_%xJ", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 					l=script->add_str(label);
-					script->set_label(l,script->pos,p);
+					script->set_label(l, VECTOR_LENGTH(script->buf), p);
 				}
 				// check duplication of case label [Rayce]
 				if(linkdb_search(&script->syntax.curly[pos].case_label, (void*)h64BPTRSIZE(v)) != NULL)
@@ -1762,7 +1766,7 @@ const char* parse_syntax(const char* p)
 				}
 				sprintf(label, "__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 				l=script->add_str(label);
-				script->set_label(l,script->pos,p);
+				script->set_label(l, VECTOR_LENGTH(script->buf), p);
 
 				// Skip to the next link w/o condition
 				sprintf(label, "goto __SW%x_%x;", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count + 1);
@@ -1773,7 +1777,7 @@ const char* parse_syntax(const char* p)
 				// The default label
 				sprintf(label, "__SW%x_DEF", (unsigned int)script->syntax.curly[pos].index);
 				l=script->add_str(label);
-				script->set_label(l,script->pos,p);
+				script->set_label(l, VECTOR_LENGTH(script->buf), p);
 
 				script->syntax.curly[script->syntax.curly_count - 1].flag = 1;
 				script->syntax.curly[pos].count++;
@@ -1791,7 +1795,7 @@ const char* parse_syntax(const char* p)
 			// Label of the (do) form here
 			sprintf(label, "__DO%x_BGN", (unsigned int)script->syntax.curly[script->syntax.curly_count].index);
 			l=script->add_str(label);
-			script->set_label(l,script->pos,p);
+			script->set_label(l, VECTOR_LENGTH(script->buf), p);
 			script->syntax.curly_count++;
 			return p;
 		}
@@ -1822,7 +1826,7 @@ const char* parse_syntax(const char* p)
 			// Form the start of label decision
 			sprintf(label, "__FR%x_J", (unsigned int)script->syntax.curly[pos].index);
 			l=script->add_str(label);
-			script->set_label(l,script->pos,p);
+			script->set_label(l, VECTOR_LENGTH(script->buf), p);
 
 			p=script->skip_space(p);
 			if(*p == ';') {
@@ -1851,7 +1855,7 @@ const char* parse_syntax(const char* p)
 			// Labels to form the next loop
 			sprintf(label, "__FR%x_NXT", (unsigned int)script->syntax.curly[pos].index);
 			l=script->add_str(label);
-			script->set_label(l,script->pos,p);
+			script->set_label(l, VECTOR_LENGTH(script->buf), p);
 
 			// Process the next time you enter the loop
 			// A ')' last for; flag to be treated as'
@@ -1870,7 +1874,7 @@ const char* parse_syntax(const char* p)
 			// Loop start labeling
 			sprintf(label, "__FR%x_BGN", (unsigned int)script->syntax.curly[pos].index);
 			l=script->add_str(label);
-			script->set_label(l,script->pos,p);
+			script->set_label(l, VECTOR_LENGTH(script->buf), p);
 			return p;
 		} else if( p2 - p == 8 && strncmp(p, "function", 8) == 0 ) {
 			// internal script function
@@ -1920,9 +1924,9 @@ const char* parse_syntax(const char* p)
 				if( script->str_data[l].type == C_NOP || script->str_data[l].type == C_USERFUNC )// register only, if the name was not used by something else
 				{
 					script->str_data[l].type = C_USERFUNC;
-					script->set_label(l, script->pos, p);
+					script->set_label(l, VECTOR_LENGTH(script->buf), p);
 					if( script->parse_options&SCRIPT_USE_LABEL_DB )
-						script->label_add(l,script->pos);
+						script->label_add(l, VECTOR_LENGTH(script->buf));
 				}
 				else
 					disp_error_message("parse_syntax:function: function name is invalid", func_name);
@@ -2002,7 +2006,7 @@ const char* parse_syntax(const char* p)
 			// Form the start of label decision
 			sprintf(label, "__WL%x_NXT", (unsigned int)script->syntax.curly[script->syntax.curly_count].index);
 			l=script->add_str(label);
-			script->set_label(l,script->pos,p);
+			script->set_label(l, VECTOR_LENGTH(script->buf), p);
 
 			// Skip to the end point if the condition is false
 			sprintf(label, "__WL%x_FIN", (unsigned int)script->syntax.curly[script->syntax.curly_count].index);
@@ -2059,7 +2063,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		// Put the label of the location
 		sprintf(label, "__IF%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 		l=script->add_str(label);
-		script->set_label(l,script->pos,p);
+		script->set_label(l, VECTOR_LENGTH(script->buf), p);
 
 		script->syntax.curly[pos].count++;
 		p = script->skip_space(p);
@@ -2097,7 +2101,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		// Put the label of the final location
 		sprintf(label, "__IF%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 		l=script->add_str(label);
-		script->set_label(l,script->pos,p);
+		script->set_label(l, VECTOR_LENGTH(script->buf), p);
 		if(script->syntax.curly[pos].flag == 1) {
 			// Because the position of the pointer is the same if not else for this
 			return bp;
@@ -2110,7 +2114,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 			// (Come here continue) to form the label here
 			sprintf(label, "__DO%x_NXT", (unsigned int)script->syntax.curly[pos].index);
 			l=script->add_str(label);
-			script->set_label(l,script->pos,p);
+			script->set_label(l, VECTOR_LENGTH(script->buf), p);
 		}
 
 		// Skip to the end point if the condition is false
@@ -2145,7 +2149,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		// Form label of the end point conditions
 		sprintf(label, "__DO%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 		l=script->add_str(label);
-		script->set_label(l,script->pos,p);
+		script->set_label(l, VECTOR_LENGTH(script->buf), p);
 		p = script->skip_space(p);
 		if(*p != ';') {
 			disp_error_message("parse_syntax: need ';'",p);
@@ -2167,7 +2171,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		// End for labeling
 		sprintf(label, "__FR%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 		l=script->add_str(label);
-		script->set_label(l,script->pos,p);
+		script->set_label(l, VECTOR_LENGTH(script->buf), p);
 		script->syntax.curly_count--;
 		return p;
 	} else if(script->syntax.curly[pos].type == TYPE_WHILE) {
@@ -2183,7 +2187,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		// End while labeling
 		sprintf(label, "__WL%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 		l=script->add_str(label);
-		script->set_label(l,script->pos,p);
+		script->set_label(l, VECTOR_LENGTH(script->buf), p);
 		script->syntax.curly_count--;
 		return p;
 	} else if(script->syntax.curly[pos].type == TYPE_USERFUNC) {
@@ -2196,7 +2200,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		// Put the label of the location
 		sprintf(label, "__FN%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 		l=script->add_str(label);
-		script->set_label(l,script->pos,p);
+		script->set_label(l, VECTOR_LENGTH(script->buf), p);
 		script->syntax.curly_count--;
 		return p;
 	} else {
@@ -2537,11 +2541,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			script->syntax.translation_db = strdb_get(script->translation_db, script->parser_current_npc_name);
 	}
 
-	if( !script->buf ) {
-		script->buf = (unsigned char *)aMalloc(SCRIPT_BLOCK_SIZE*sizeof(unsigned char));
-		script->size = SCRIPT_BLOCK_SIZE;
-	}
-	script->pos=0;
+	VECTOR_TRUNCATE(script->buf);
 	script->parse_nextline(true, NULL);
 
 	// who called parse_script is responsible for clearing the database after using it, but just in case... lets clear it here
@@ -2555,7 +2555,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 		if( script->error_report )
 			script->error(src,file,line,script->error_msg,script->error_pos);
 		aFree( script->error_msg );
-		script->pos  = 0;
+		VECTOR_TRUNCATE(script->buf);
 		for(i=LABEL_START;i<script->str_num;i++)
 			if(script->str_data[i].type == C_NOP) script->str_data[i].type = C_NAME;
 		for(i=0; i<size; i++)
@@ -2575,9 +2575,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	p=script->skip_space(p);
 	if( options&SCRIPT_IGNORE_EXTERNAL_BRACKETS )
 	{// does not require brackets around the script
-		if( *p == '\0' && !(options&SCRIPT_RETURN_EMPTY_SCRIPT) )
-		{// empty script and can return NULL
-			script->pos = 0;
+		if (*p == '\0' && !(options&SCRIPT_RETURN_EMPTY_SCRIPT)) {
+			// empty script and can return NULL
+			VECTOR_TRUNCATE(script->buf);
 #ifdef ENABLE_CASE_CHECK
 			script->local_casecheck.clear();
 			script->parser_current_src = NULL;
@@ -2595,9 +2595,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			if (retval) *retval = EXIT_FAILURE;
 		}
 		p = script->skip_space(p+1);
-		if( *p == '}' && !(options&SCRIPT_RETURN_EMPTY_SCRIPT) )
-		{// empty script and can return NULL
-			script->pos  = 0;
+		if (*p == '}' && !(options&SCRIPT_RETURN_EMPTY_SCRIPT)) {
+			// empty script and can return NULL
+			VECTOR_TRUNCATE(script->buf);
 #ifdef ENABLE_CASE_CHECK
 			script->local_casecheck.clear();
 			script->parser_current_src = NULL;
@@ -2629,9 +2629,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 		tmpp=script->skip_space(script->skip_word(p));
 		if(*tmpp==':' && !(strncmp(p,"default:",8) == 0 && p + 7 == tmpp)) {
 			i=script->add_word(p);
-			script->set_label(i,script->pos,p);
+			script->set_label(i, VECTOR_LENGTH(script->buf), p);
 			if( script->parse_options&SCRIPT_USE_LABEL_DB )
-				script->label_add(i,script->pos);
+				script->label_add(i, VECTOR_LENGTH(script->buf));
 			p=tmpp+1;
 			p=script->skip_space(p);
 			continue;
@@ -2653,8 +2653,8 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			script->str_data[i].type=C_NAME;
 			script->str_data[i].label=i;
 			for (j = script->str_data[i].backpatch; j >= 0 && j != 0x00ffffff; ) {
-				int next = GETVALUE(script->buf,j);
-				SETVALUE(script->buf,j,i);
+				int next = GETVALUE(VECTOR_DATA(script->buf), j);
+				SETVALUE(VECTOR_DATA(script->buf), j, i);
 				j = next;
 			}
 		} else if(script->str_data[i].type == C_USERFUNC) {
@@ -2671,37 +2671,39 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	}
 
 #ifdef SCRIPT_DEBUG_DISP
-	for(i=0;i<script->pos;i++) {
-		if((i&15)==0) ShowMessage("%04x : ",i);
-		ShowMessage("%02x ",script->buf[i]);
-		if((i&15)==15) ShowMessage("\n");
+	for (i = 0; i < VECTOR_LENGTH(script->buf); i++) {
+		if ((i&15) == 0)
+			ShowMessage("%04x : ",i);
+		ShowMessage("%02x ", VECTOR_INDEX(script->buf, i));
+		if ((i&15) == 15)
+			ShowMessage("\n");
 	}
 	ShowMessage("\n");
 #endif
 #ifdef SCRIPT_DEBUG_DISASM
 	i = 0;
-	while (i < script->pos) {
-		c_op op = script->get_com(script->buf, &i);
+	while (i < VECTOR_LENGTH(script->buf)) {
+		c_op op = script->get_com(VECTOR_DATA(script->buf), &i);
 		int j = i; // Note: i is modified in the line above.
 
 		ShowMessage("%06x %s", i, script->op2name(op));
 
 		switch (op) {
 		case C_INT:
-			ShowMessage(" %d", script->get_num(script->buf,&i));
+			ShowMessage(" %d", script->get_num(VECTOR_DATA(script->buf), &i));
 			break;
 		case C_POS:
-			ShowMessage(" 0x%06x", *(int*)(script->buf+i)&0xffffff);
+			ShowMessage(" 0x%06x", *(int*)(&VECTOR_INDEX(script->buf, i))&0xffffff);
 			i += 3;
 			break;
 		case C_NAME:
-			j = (*(int*)(script->buf+i)&0xffffff);
+			j = (*(int*)(&VECTOR_INDEX(script->buf, i))&0xffffff);
 			ShowMessage(" %s", ( j == 0xffffff ) ? "?? unknown ??" : script->get_str(j));
 			i += 3;
 			break;
 		case C_STR:
-			j = (int)strlen((char*)script->buf + i);
-			ShowMessage(" %s", script->buf + i);
+			j = (int)strlen((char*)&VECTOR_INDEX(script->buf, i));
+			ShowMessage(" %s", &VECTOR_INDEX(script->buf, i));
 			i += j+1;
 			break;
 		}
@@ -2710,9 +2712,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 #endif
 
 	CREATE(code,struct script_code,1);
-	code->script_buf = (unsigned char *)aMalloc(script->pos*sizeof(unsigned char));
-	memcpy(code->script_buf, script->buf, script->pos);
-	code->script_size = script->pos;
+	code->script_buf = (unsigned char *)aMalloc(VECTOR_LENGTH(script->buf)*sizeof(unsigned char));
+	memcpy(code->script_buf, VECTOR_DATA(script->buf), VECTOR_LENGTH(script->buf));
+	code->script_size = VECTOR_LENGTH(script->buf);
 	code->local.vars = NULL;
 	code->local.arrays = NULL;
 #ifdef ENABLE_CASE_CHECK
@@ -4914,7 +4916,7 @@ void script_load_translations(void) {
 		for (string_db = dbi_first(main_iter); dbi_exists(main_iter); string_db = dbi_next(main_iter)) {
 			struct DBIterator *sub_iter = db_iterator(string_db);
 			for (st = dbi_first(sub_iter); dbi_exists(sub_iter); st = dbi_next(sub_iter)) {
-				script->translation_buf[j++] = st->buf;
+				script->translation_buf[j++] = st->buf; // FIXME: change translation_buf to uint8
 			}
 			dbi_destroy(sub_iter);
 		}
@@ -5056,12 +5058,12 @@ void script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
 					strdb_put(script->translation_db, msgctxt, string_db);
 				}
 
-				if( !(st = strdb_get(string_db, VECTOR_DATA(msgid)) ) ) {
+				if ((st = strdb_get(string_db, VECTOR_DATA(msgid))) == NULL) {
 					CREATE(st, struct string_translation, 1);
 					st->string_id = script->string_dup(VECTOR_DATA(msgid));
 					strdb_put(string_db, VECTOR_DATA(msgid), st);
 				}
-				RECREATE(st->buf, char, st->len + inner_len);
+				RECREATE(st->buf, uint8, st->len + inner_len);
 
 				WBUFB(st->buf, st->len) = lang_id;
 				safestrncpy(WBUFP(st->buf, st->len + 1), VECTOR_DATA(msgstr), msgstr_len + 1);
@@ -5149,12 +5151,9 @@ int script_translation_db_destroyer(union DBKey key, struct DBData *data, va_lis
 /**
  *
  **/
-void script_parser_clean_leftovers(void) {
-	if( script->buf )
-		aFree(script->buf);
-
-	script->buf = NULL;
-	script->size = 0;
+void script_parser_clean_leftovers(void)
+{
+	VECTOR_CLEAR(script->buf);
 
 	if( script->translation_db ) {
 		script->translation_db->destroy(script->translation_db,script->translation_db_destroyer);
@@ -21047,8 +21046,7 @@ void script_defaults(void) {
 	script->label_count = 0;
 	script->labels_size = 0;
 
-	script->buf = NULL;
-	script->pos = 0, script->size = 0;
+	VECTOR_INIT(script->buf);
 
 	script->parse_options = 0;
 	script->buildin_set_ref = 0;
