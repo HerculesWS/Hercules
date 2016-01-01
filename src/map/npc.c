@@ -3759,7 +3759,7 @@ const char *npc_parse_function(const char *w1, const char *w2, const char *w3, c
 		struct script_code *oldscript = (struct script_code*)DB->data2ptr(&old_data);
 		ShowWarning("npc_parse_function: Overwriting user function [%s] in file '%s', line '%d'.\n", w3, filepath, strline(buffer,start-buffer));
 		script->free_vars(oldscript->local.vars);
-		aFree(oldscript->script_buf);
+		VECTOR_CLEAR(oldscript->script_buf);
 		aFree(oldscript);
 	}
 

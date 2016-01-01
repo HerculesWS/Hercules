@@ -394,11 +394,20 @@ struct script_data {
 	struct reg_db *ref; ///< Reference to the scope's variables
 };
 
+/**
+ * A script string buffer, used to hold strings used by the script engine.
+ */
+VECTOR_STRUCT_DECL(script_string_buf, char);
+
+/**
+ * Script buffer, used to hold parsed script data.
+ */
+VECTOR_STRUCT_DECL(script_buf, unsigned char);
+
 // Moved defsp from script_state to script_stack since
 // it must be saved when script state is RERUNLINE. [Eoe / jA 1094]
 struct script_code {
-	int script_size;
-	unsigned char *script_buf;
+	struct script_buf script_buf;
 	struct reg_db local; ///< Local (npc) vars
 	unsigned short instances;
 };
@@ -517,12 +526,6 @@ struct script_array {
 	unsigned int *members;/* member list */
 };
 
-
-/**
- * A script string buffer, used to hold strings used by the script engine.
- */
-VECTOR_STRUCT_DECL(script_string_buf, char);
-
 struct string_translation_entry {
 	uint8 lang_id;
 	char string[];
@@ -582,7 +585,7 @@ struct script_interface {
 	/* */
 	/// temporary buffer for passing around compiled bytecode
 	/// @see add_scriptb, set_label, parse_script
-	VECTOR_DECL(unsigned char) buf;
+	struct script_buf buf;
 	/* */
 	struct script_syntax_data syntax;
 	/* */
@@ -711,8 +714,8 @@ struct script_interface {
 	const char * (*parse_syntax_close) (const char *p);
 	const char * (*parse_syntax_close_sub) (const char *p, int *flag);
 	const char * (*parse_syntax) (const char *p);
-	c_op (*get_com) (unsigned char *scriptbuf, int *pos);
-	int (*get_num) (unsigned char *scriptbuf, int *pos);
+	c_op (*get_com) (const struct script_buf *scriptbuf, int *pos);
+	int (*get_num) (const struct script_buf *scriptbuf, int *pos);
 	const char* (*op2name) (int op);
 	void (*reportsrc) (struct script_state *st);
 	void (*reportdata) (struct script_data *data);

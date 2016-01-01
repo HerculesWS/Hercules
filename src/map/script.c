@@ -83,13 +83,18 @@
 struct script_interface script_s;
 struct script_interface *script;
 
-static inline int GETVALUE(const unsigned char* buf, int i) {
-	return (int)MakeDWord(MakeWord(buf[i], buf[i+1]), MakeWord(buf[i+2], 0));
+static inline int GETVALUE(const struct script_buf *buf, int i)
+{
+	Assert_ret(VECTOR_LENGTH(*buf) > i + 2);
+	return (int)MakeDWord(MakeWord(VECTOR_INDEX(*buf, i), VECTOR_INDEX(*buf, i+1)),
+	                      MakeWord(VECTOR_INDEX(*buf, i+2), 0));
 }
-static inline void SETVALUE(unsigned char* buf, int i, int n) {
-	buf[i]   = GetByte(n, 0);
-	buf[i+1] = GetByte(n, 1);
-	buf[i+2] = GetByte(n, 2);
+static inline void SETVALUE(struct script_buf *buf, int i, int n)
+{
+	Assert_retv(VECTOR_LENGTH(*buf) > i + 2);
+	VECTOR_INDEX(*buf, i)   = GetByte(n, 0);
+	VECTOR_INDEX(*buf, i+1) = GetByte(n, 1);
+	VECTOR_INDEX(*buf, i+2) = GetByte(n, 2);
 }
 
 const char* script_op2name(int op) {
@@ -692,9 +697,9 @@ void set_label(int l,int pos, const char* script_pos)
 	script->str_data[l].type=(script->str_data[l].type == C_USERFUNC ? C_USERFUNC_POS : C_POS);
 	script->str_data[l].label=pos;
 	for (i = script->str_data[l].backpatch; i >= 0 && i != 0x00ffffff; ) {
-		int next = GETVALUE(VECTOR_DATA(script->buf), i);
+		int next = GETVALUE(&script->buf, i);
 		VECTOR_INDEX(script->buf, i-1) = (script->str_data[l].type == C_USERFUNC ? C_USERFUNC_POS : C_POS);
-		SETVALUE(VECTOR_DATA(script->buf), i, pos);
+		SETVALUE(&script->buf, i, pos);
 		i = next;
 	}
 }
@@ -2653,8 +2658,8 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 			script->str_data[i].type=C_NAME;
 			script->str_data[i].label=i;
 			for (j = script->str_data[i].backpatch; j >= 0 && j != 0x00ffffff; ) {
-				int next = GETVALUE(VECTOR_DATA(script->buf), j);
-				SETVALUE(VECTOR_DATA(script->buf), j, i);
+				int next = GETVALUE(&script->buf, j);
+				SETVALUE(&script->buf, j, i);
 				j = next;
 			}
 		} else if(script->str_data[i].type == C_USERFUNC) {
@@ -2683,14 +2688,14 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 #ifdef SCRIPT_DEBUG_DISASM
 	i = 0;
 	while (i < VECTOR_LENGTH(script->buf)) {
-		c_op op = script->get_com(VECTOR_DATA(script->buf), &i);
+		c_op op = script->get_com(&script->buf, &i);
 		int j = i; // Note: i is modified in the line above.
 
 		ShowMessage("%06x %s", i, script->op2name(op));
 
 		switch (op) {
 		case C_INT:
-			ShowMessage(" %d", script->get_num(VECTOR_DATA(script->buf), &i));
+			ShowMessage(" %d", script->get_num(&script->buf, &i));
 			break;
 		case C_POS:
 			ShowMessage(" 0x%06x", *(int*)(&VECTOR_INDEX(script->buf, i))&0xffffff);
@@ -2712,9 +2717,9 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 #endif
 
 	CREATE(code,struct script_code,1);
-	code->script_buf = (unsigned char *)aMalloc(VECTOR_LENGTH(script->buf)*sizeof(unsigned char));
-	memcpy(code->script_buf, VECTOR_DATA(script->buf), VECTOR_LENGTH(script->buf));
-	code->script_size = VECTOR_LENGTH(script->buf);
+	VECTOR_INIT(code->script_buf);
+	VECTOR_ENSURE(code->script_buf, VECTOR_LENGTH(script->buf), 1);
+	VECTOR_PUSHARRAY(code->script_buf, VECTOR_DATA(script->buf), VECTOR_LENGTH(script->buf));
 	code->local.vars = NULL;
 	code->local.arrays = NULL;
 #ifdef ENABLE_CASE_CHECK
@@ -3607,7 +3612,7 @@ void script_free_code(struct script_code* code)
 	script->free_vars(code->local.vars);
 	if (code->local.arrays)
 		code->local.arrays->destroy(code->local.arrays,script->array_free_db);
-	aFree(code->script_buf);
+	VECTOR_CLEAR(code->script_buf);
 	aFree(code);
 }
 
@@ -3732,32 +3737,32 @@ void script_add_pending_ref(struct script_state *st, struct reg_db *ref) {
 /*==========================================
  * Read command
  *------------------------------------------*/
-c_op get_com(unsigned char *scriptbuf,int *pos)
+c_op get_com(const struct script_buf *scriptbuf, int *pos)
 {
 	int i = 0, j = 0;
 
-	if(scriptbuf[*pos]>=0x80) {
+	if (VECTOR_INDEX(*scriptbuf, *pos) >= 0x80) {
 		return C_INT;
 	}
-	while(scriptbuf[*pos]>=0x40) {
-		i=scriptbuf[(*pos)++]<<j;
+	while (VECTOR_INDEX(*scriptbuf, *pos) >= 0x40) {
+		i = VECTOR_INDEX(*scriptbuf, (*pos)++) << j;
 		j+=6;
 	}
-	return (c_op)(i+(scriptbuf[(*pos)++]<<j));
+	return (c_op)(i+(VECTOR_INDEX(*scriptbuf, (*pos)++)<<j));
 }
 
 /*==========================================
  *  Income figures
  *------------------------------------------*/
-int get_num(unsigned char *scriptbuf,int *pos)
+int get_num(const struct script_buf *scriptbuf, int *pos)
 {
 	int i,j;
 	i=0; j=0;
-	while(scriptbuf[*pos]>=0xc0) {
-		i+=(scriptbuf[(*pos)++]&0x7f)<<j;
+	while (VECTOR_INDEX(*scriptbuf, *pos) >= 0xc0) {
+		i+= (VECTOR_INDEX(*scriptbuf, (*pos)++)&0x7f)<<j;
 		j+=6;
 	}
-	return i+((scriptbuf[(*pos)++]&0x7f)<<j);
+	return i+((VECTOR_INDEX(*scriptbuf, (*pos)++)&0x7f)<<j);
 }
 
 /// Ternary operators
@@ -4377,7 +4382,7 @@ void run_script_main(struct script_state *st) {
 		st->state = RUN;
 
 	while( st->state == RUN ) {
-		enum c_op c = script->get_com(st->script->script_buf,&st->pos);
+		enum c_op c = script->get_com(&st->script->script_buf, &st->pos);
 		switch(c) {
 			case C_EOL:
 				if( stack->defsp > stack->sp )
@@ -4386,27 +4391,29 @@ void run_script_main(struct script_state *st) {
 					script->pop_stack(st, stack->defsp, stack->sp);// pop unused stack data. (unused return value)
 				break;
 			case C_INT:
-				script->push_val(stack,C_INT,script->get_num(st->script->script_buf,&st->pos),NULL);
+				script->push_val(stack,C_INT,script->get_num(&st->script->script_buf, &st->pos), NULL);
 				break;
 			case C_POS:
 			case C_NAME:
-				script->push_val(stack,c,GETVALUE(st->script->script_buf,st->pos),NULL);
+				script->push_val(stack,c,GETVALUE(&st->script->script_buf, st->pos), NULL);
 				st->pos+=3;
 				break;
 			case C_ARG:
 				script->push_val(stack,c,0,NULL);
 				break;
 			case C_STR:
-				script->push_conststr(stack, (const char *)(st->script->script_buf+st->pos));
-				while(st->script->script_buf[st->pos++]);
+				script->push_conststr(stack, (const char *)&VECTOR_INDEX(st->script->script_buf, st->pos));
+				while (VECTOR_INDEX(st->script->script_buf, st->pos++) != 0)
+					(void)0; // Skip string
 				break;
 			case C_LSTR:
 			{
-				int string_id = *((int *)(&st->script->script_buf[st->pos]));
-				uint8 translations = *((uint8 *)(&st->script->script_buf[st->pos+sizeof(int)]));
 				struct map_session_data *lsd = NULL;
-
-				st->pos += sizeof(int) + sizeof(uint8);
+				uint8 translations = 0;
+				int string_id = *((int *)(&VECTOR_INDEX(st->script->script_buf, st->pos)));
+				st->pos += sizeof(string_id);
+				translations = *((uint8 *)(&VECTOR_INDEX(st->script->script_buf, st->pos)));
+				st->pos += sizeof(translations);
 
 				if( (!st->rid || !(lsd = map->id2sd(st->rid)) || !lsd->lang_id) && !map->default_lang_id )
 					script->push_conststr(stack, script->string_list+string_id);
@@ -4415,7 +4422,7 @@ void run_script_main(struct script_state *st) {
 					int offset = st->pos;
 
 					for(k = 0; k < translations; k++) {
-						uint8 lang_id = *(uint8 *)(&st->script->script_buf[offset]);
+						uint8 lang_id = *(uint8 *)(&VECTOR_INDEX(st->script->script_buf, offset));
 						offset += sizeof(uint8);
 						if( lang_id == wlang_id )
 							break;
@@ -4424,7 +4431,7 @@ void run_script_main(struct script_state *st) {
 					if (k == translations)
 						script->push_conststr(stack, script->string_list+string_id);
 					else
-						script->push_conststr(stack, *(const char**)(&st->script->script_buf[offset]) );
+						script->push_conststr(stack, *(const char**)(&VECTOR_INDEX(st->script->script_buf, offset)));
 				}
 				st->pos += ( ( sizeof(char*) + sizeof(uint8) ) * translations );
 			}
