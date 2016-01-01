@@ -1395,6 +1395,16 @@ HPShared struct db_interface *DB;
 	} while(false)
 
 /**
+ * Removes all values from the vector.
+ *
+ * Does not free the allocated data.
+ */
+#define VECTOR_TRUNCATE(_vec) \
+	do { \
+		VECTOR_LENGTH(_vec) = 0; \
+	} while (false)
+
+/**
  * Clears the vector, freeing allocated data.
  *
  * @param _vec Vector.
