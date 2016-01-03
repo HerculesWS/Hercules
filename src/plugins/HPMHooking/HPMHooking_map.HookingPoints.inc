@@ -2181,6 +2181,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->autosave, HP_pc_autosave) },
 	{ HP_POP(pc->follow_timer, HP_pc_follow_timer) },
 	{ HP_POP(pc->read_skill_tree, HP_pc_read_skill_tree) },
+	{ HP_POP(pc->clear_skill_tree, HP_pc_clear_skill_tree) },
 	{ HP_POP(pc->isUseitem, HP_pc_isUseitem) },
 	{ HP_POP(pc->show_steal, HP_pc_show_steal) },
 	{ HP_POP(pc->checkcombo, HP_pc_checkcombo) },

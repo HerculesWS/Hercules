@@ -4262,6 +4262,8 @@ struct {
 	struct HPMHookPoint *HP_pc_follow_timer_post;
 	struct HPMHookPoint *HP_pc_read_skill_tree_pre;
 	struct HPMHookPoint *HP_pc_read_skill_tree_post;
+	struct HPMHookPoint *HP_pc_clear_skill_tree_pre;
+	struct HPMHookPoint *HP_pc_clear_skill_tree_post;
 	struct HPMHookPoint *HP_pc_isUseitem_pre;
 	struct HPMHookPoint *HP_pc_isUseitem_post;
 	struct HPMHookPoint *HP_pc_show_steal_pre;
@@ -10089,6 +10091,8 @@ struct {
 	int HP_pc_follow_timer_post;
 	int HP_pc_read_skill_tree_pre;
 	int HP_pc_read_skill_tree_post;
+	int HP_pc_clear_skill_tree_pre;
+	int HP_pc_clear_skill_tree_post;
 	int HP_pc_isUseitem_pre;
 	int HP_pc_isUseitem_post;
 	int HP_pc_show_steal_pre;
