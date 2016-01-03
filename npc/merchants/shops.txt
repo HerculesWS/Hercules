@@ -46,7 +46,7 @@
 //================= Description ===========================================
 //= Town shop NPCs.
 //================= Current Version =======================================
-//= 3.5.2
+//= 3.6
 //=========================================================================
 
 //== Alberta ===============================================
@@ -1292,39 +1292,6 @@ OnInit:
 	sellitem Venom_Knife;
 }
 
-moc_ruins,91,128,4	trader	Tool Dealer#moc1	4_F_04,{
-OnInit:
-	sellitem Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-}
-
-moc_ruins,114,63,6	trader	Tool Dealer#moc2	4W_M_03,{
-OnInit:
-	sellitem Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-	sellitem Luxury_Sunglasses;
-}
-
 moc_ruins,93,53,2	trader	Item Collector#moc1	4_M_03,{
 OnInit:
 	sellitem Scell;
@@ -1386,23 +1353,6 @@ OnInit:
 moc_ruins,90,149,6	trader	Trader#moc5	4W_M_03,{
 OnInit:
 	sellitem Banana;
-	sellitem Banana;
-	sellitem Banana;
-	sellitem Banana;
-	sellitem Banana;
-	sellitem Banana;
-}
-
-moc_ruins,118,170,4	trader	Pet Groomer#moc	4_M_TELEPORTER,{
-OnInit:
-	sellitem Pet_Food;
-	sellitem Pet_Incubator;
-	sellitem Backpack;
-	sellitem Rocker_Glasses;
-	sellitem Mojji;
-	sellitem Vital_Flower_;
-	sellitem Flame_Gemstone;
-	sellitem Bun_;
 }
 
 morocc_in,141,67,0	trader	Weapon Dealer#moc1	1_M_MERCHANT,{
@@ -1991,15 +1941,6 @@ OnInit:
 payon,206,119,5	trader	Chef Assistant#pay	4_M_ORIENT02,{
 OnInit:
 	sellitem Hot_Sauce;
-}
-
-moc_ruins,115,123,5	trader	Chef Assistant#moc	4_M_04,{
-OnInit:
-	sellitem Hot_Sauce;
-	sellitem Sweet_Sauce;
-	sellitem Plain_Sauce;
-	sellitem Red_Spice;
-	sellitem Yellow_Spice;
 }
 
 geffen,196,111,3	trader	Chef Assistant#gef	4_M_03,{
