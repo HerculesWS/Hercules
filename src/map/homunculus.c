@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -227,7 +227,7 @@ int homunculus_calc_skilltree(struct homun_data *hd, int flag_evolve) {
 			if( hd->homunculus.hskill[ id - HM_SKILLBASE ].id )
 				continue; //Skill already known.
 			if(!battle_config.skillfree) {
-				for( j = 0; j < MAX_PC_SKILL_REQUIRE; j++ ) {
+				for (j = 0; j < MAX_HOM_SKILL_REQUIRE; j++) {
 					if( homun->dbs->skill_tree[c][i].need[j].id &&
 					   homun->checkskill(hd,homun->dbs->skill_tree[c][i].need[j].id) < homun->dbs->skill_tree[c][i].need[j].lv ) {
 						f = 0;
@@ -252,7 +252,7 @@ int homunculus_calc_skilltree(struct homun_data *hd, int flag_evolve) {
 		if( j < homun->dbs->skill_tree[c][i].intimacylv )
 			continue;
 		if(!battle_config.skillfree) {
-			for( j = 0; j < MAX_PC_SKILL_REQUIRE; j++ ) {
+			for (j = 0; j < MAX_HOM_SKILL_REQUIRE; j++) {
 				if( homun->dbs->skill_tree[c][i].need[j].id &&
 					homun->checkskill(hd,homun->dbs->skill_tree[c][i].need[j].id) < homun->dbs->skill_tree[c][i].need[j].lv ) {
 					f = 0;
@@ -1234,7 +1234,7 @@ bool homunculus_read_skill_db_sub(char* split[], int columns, int current) {
 	if (minJobLevelPresent)
 		homun->dbs->skill_tree[classid][j].joblv = atoi(split[3]);
 
-	for( k = 0; k < MAX_PC_SKILL_REQUIRE; k++ ) {
+	for (k = 0; k < MAX_HOM_SKILL_REQUIRE; k++) {
 		homun->dbs->skill_tree[classid][j].need[k].id = atoi(split[3+k*2+minJobLevelPresent]);
 		homun->dbs->skill_tree[classid][j].need[k].lv = atoi(split[3+k*2+minJobLevelPresent+1]);
 	}
