@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -5364,12 +5364,13 @@ ACMD(displayskill) {
  * @skilltree by [MouseJstr]
  * prints the skill tree for a player required to get to a skill
  *------------------------------------------*/
-ACMD(skilltree) {
+ACMD(skilltree)
+{
 	struct map_session_data *pl_sd = NULL;
 	uint16 skill_id;
 	int meets, j, c=0;
 	char target[NAME_LENGTH];
-	struct skill_tree_entry *ent;
+	struct skill_tree_entry *entry;
 
 	if(!*message || sscanf(message, "%5hu %23[^\r\n]", &skill_id, target) != 2) {
 		clif->message(fd, msg_fd(fd,1167)); // Usage: @skilltree <skill ID> <target>
@@ -5387,21 +5388,19 @@ ACMD(skilltree) {
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1168), pc->job_name(c), pc->checkskill(pl_sd, NV_BASIC)); // Player is using %s skill tree (%d basic points).
 	clif->message(fd, atcmd_output);
 
-	ARR_FIND( 0, MAX_SKILL_TREE, j, pc->skill_tree[c][j].id == 0 || pc->skill_tree[c][j].id == skill_id );
-	if( j == MAX_SKILL_TREE || pc->skill_tree[c][j].id == 0 )
-	{
+	ARR_FIND(0, MAX_SKILL_TREE, j, pc->skill_tree[c][j].id == 0 || pc->skill_tree[c][j].id == skill_id);
+	if (j == MAX_SKILL_TREE || pc->skill_tree[c][j].id == 0) {
 		clif->message(fd, msg_fd(fd,1169)); // The player cannot use that skill.
 		return false;
 	}
 
-	ent = &pc->skill_tree[c][j];
+	entry = &pc->skill_tree[c][j];
 
 	meets = 1;
-	for(j=0;j<MAX_PC_SKILL_REQUIRE;j++)
-	{
-		if( ent->need[j].id && pc->checkskill(sd,ent->need[j].id) < ent->need[j].lv)
-		{
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1170), ent->need[j].lv, skill->dbs->db[ent->need[j].id].desc); // Player requires level %d of skill %s.
+	for (j = 0; j < VECTOR_LENGTH(entry->need); j++) {
+		struct skill_tree_requirement *req = &VECTOR_INDEX(entry->need, j);
+		if (pc->checkskill(sd, req->id) < req->lv) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1170), req->lv, skill->dbs->db[req->id].desc); // Player requires level %d of skill %s.
 			clif->message(fd, atcmd_output);
 			meets = 0;
 		}
