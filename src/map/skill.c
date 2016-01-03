@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -19082,22 +19082,24 @@ void skill_readdb(bool minimal) {
 	sv->readdb(map->db_path, "skill_changematerial_db.txt",  ',',   4,                    4+2*5,       MAX_SKILL_PRODUCE_DB, skill->parse_row_changematerialdb);
 }
 
-void skill_reload (void) {
+void skill_reload(void)
+{
 	struct s_mapiterator *iter;
 	struct map_session_data *sd;
-	int i,c,k;
+	int i, j, k;
 
 	skill->read_db(false);
 
 	//[Ind/Hercules] refresh index cache
-	for(c = 0; c < CLASS_COUNT; c++) {
-		for( i = 0; i < MAX_SKILL_TREE; i++ ) {
-			if( pc->skill_tree[c][i].id ) {
-				pc->skill_tree[c][i].idx = skill->get_index(pc->skill_tree[c][i].id);
-				for(k = 0; k < MAX_PC_SKILL_REQUIRE; k++) {
-					if( pc->skill_tree[c][i].need[k].id )
-						pc->skill_tree[c][i].need[k].idx = skill->get_index(pc->skill_tree[c][i].need[k].id);
-				}
+	for (j = 0; j < CLASS_COUNT; j++) {
+		for (i = 0; i < MAX_SKILL_TREE; i++) {
+			struct skill_tree_entry *entry = &pc->skill_tree[j][i];
+			if (entry->id == 0)
+				continue;
+			entry->idx = skill->get_index(entry->id);
+			for (k = 0; k < VECTOR_LENGTH(entry->need); k++) {
+				struct skill_tree_requirement *req = &VECTOR_INDEX(entry->need, k);
+				req->idx = skill->get_index(req->id);
 			}
 		}
 	}
