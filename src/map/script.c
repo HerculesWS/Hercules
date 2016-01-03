@@ -7439,16 +7439,16 @@ BUILDIN(grouprandomitem) {
 }
 
 /*==========================================
- *
- *------------------------------------------*/
-BUILDIN(makeitem)
+* makeitem <item id or name>,<amount>,"<map name>",<X>,<Y>;
+*------------------------------------------*/
+BUILDIN(makeitem) 
 {
-	int nameid,amount;
-	int x,y,m;
+	int nameid, amount;
+	int x, y, m;
 	const char *mapname;
 	struct item item_tmp;
 
-	if( script_isstringtype(st, 2) ) {
+	if (script_isstringtype(st, 2)) {
 		const char *name = script_getstr(st, 2);
 		struct item_data *item_data = itemdb->search_name(name);
 		if (item_data)
@@ -7457,15 +7457,16 @@ BUILDIN(makeitem)
 			nameid = UNKNOWN_ITEM_ID;
 	} else {
 		nameid = script_getnum(st, 2);
-		if( nameid <= 0 || !itemdb->exists(nameid)) {
+		if (nameid <= 0 || !itemdb->exists(nameid)) {
 			ShowError("makeitem: Nonexistant item %d requested.\n", nameid);
+			script_pushint(st, 0);
 			return false; //No item created.
 		}
 	}
-	amount  = script_getnum(st,3);
-	mapname = script_getstr(st,4);
-	x       = script_getnum(st,5);
-	y       = script_getnum(st,6);
+	amount = script_getnum(st, 3);
+	mapname = script_getstr(st, 4);
+	x = script_getnum(st, 5);
+	y = script_getnum(st, 6);
 
 	if(strcmp(mapname,"this")==0) {
 		struct map_session_data *sd = script->rid2sd(st);
@@ -7475,16 +7476,102 @@ BUILDIN(makeitem)
 	} else
 		m=map->mapname2mapid(mapname);
 
-	if( m == -1 ) {
+	if (m == -1) {
 		ShowError("makeitem: creating map on unexistent map '%s'!\n", mapname);
+		script_pushint(st, 0);
 		return false;
 	}
 
-	memset(&item_tmp,0,sizeof(item_tmp));
+	memset(&item_tmp, 0, sizeof(item_tmp));
 	item_tmp.nameid = nameid;
-	item_tmp.identify=1;
+	item_tmp.identify = 1;
 
-	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0);
+	if (!itemdb->isstackable(nameid))
+		amount = 1;
+
+	script_pushint(st, ( map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0) == 1 ) ? 1 : 0);
+
+	return true;
+}
+
+/*==========================================
+* makeitem2 <item id or name>,<amount>,"<map name>",<X>,<Y>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>;
+*------------------------------------------*/
+BUILDIN(makeitem2) 
+{
+	int nameid, amount;
+	int x, y, m, identify, refine, attribute, c1, c2, c3, c4;
+	const char *mapname;
+	struct item item_tmp;
+	struct item_data *item_data;
+
+	if (script_isstringtype(st, 2)) {
+		const char *name = script_getstr(st, 2);
+		struct item_data *item_data = itemdb->search_name(name);
+		if (item_data)
+			nameid = item_data->nameid;
+		else
+			nameid = UNKNOWN_ITEM_ID;
+	} else {
+		nameid = script_getnum(st, 2);
+		if (nameid <= 0 || !itemdb->exists(nameid)) {
+			ShowError("makeitem2: Nonexistant item %d requested.\n", nameid);
+			script_pushint(st, 0);
+			return false; //No item created.
+		}
+	}
+
+	amount = script_getnum(st, 3);
+	mapname = script_getstr(st, 4);
+	x = script_getnum(st, 5);
+	y = script_getnum(st, 6);
+	identify = script_getnum(st, 7);
+	refine = script_getnum(st, 8);
+	attribute = script_getnum(st, 9);
+	c1 = (short) script_getnum(st, 10);
+	c2 = (short) script_getnum(st, 11);
+	c3 = (short) script_getnum(st, 12);
+	c4 = (short) script_getnum(st, 13);
+
+	if (strcmp(mapname, "this") == 0) {
+		struct map_session_data *sd;
+		sd = script->rid2sd(st);
+		if (sd == NULL)
+			return true;
+		m = sd->bl.m;
+	} else
+		m = map->mapname2mapid(mapname);
+
+	if (m == -1) {
+		ShowError("makeitem2: non-existing map '%s'!\n", mapname);
+		script_pushint(st, 0);
+		return false;
+	}
+
+	item_data = itemdb->exists(nameid);
+	if (item_data == NULL) {
+		script_pushint(st, 0);
+		return false;
+	} else if (item_data->type == IT_WEAPON || item_data->type == IT_ARMOR) {
+		refine = cap_value(refine, 0, MAX_REFINE);
+	} else if (item_data->type == IT_PETEGG) {
+		identify = 1;
+		refine = 0;
+	}
+
+	memset(&item_tmp, 0, sizeof(item_tmp));
+	item_tmp.nameid = nameid;
+	item_tmp.identify = identify;
+	item_tmp.refine = refine;
+	item_tmp.card[0] = (short) c1;
+	item_tmp.card[1] = (short) c2;
+	item_tmp.card[2] = (short) c3;
+	item_tmp.card[3] = (short) c4;
+
+	if (!itemdb->isstackable(nameid))
+		amount = 1;
+
+	script_pushint(st, (map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0) == 1) ? 1:0);
 
 	return true;
 }
@@ -20273,6 +20360,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getnameditem,"vv"),
 		BUILDIN_DEF2(grouprandomitem,"groupranditem","i"),
 		BUILDIN_DEF(makeitem,"visii"),
+		BUILDIN_DEF(makeitem2,"visiiiiiiiii"),
 		BUILDIN_DEF(delitem,"vi?"),
 		BUILDIN_DEF(delitem2,"viiiiiiii?"),
 		BUILDIN_DEF2(enableitemuse,"enable_items",""),

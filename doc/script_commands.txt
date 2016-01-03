@@ -4925,6 +4925,34 @@ This item will still disappear just like any other dropped item. Like
 creates apples if the name isn't found.
 If the map name is given as "this", the map the invoking character is on 
 will be used.
+The command returns 1 when the item is created successfully, or 0 if it fails.
+
+---------------------------------------
+
+*makeitem2 <item id>,<amount>,"<map name>",<X>,<Y>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>;
+*makeitem2 "<item name>",<amount>,"<map name>",<X>,<Y>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>;
+
+This command will create an item lying around on a specified map in the 
+specified location.
+
+	itemid   	- Found in 'db/(pre-)re/item_db.txt'
+	amount   	- Amount you want produced
+	map name 	- The map name
+	X        	- The X coordinate
+	Y        	- The Y coordinate.
+	identify	- Whether you want the item to be identified (1) or not (0).
+	refine		- For how many pluses will it be refined. It will not let you 
+				  refine an item higher than the max refine.
+	attribute	- Whether the item is broken (1) or not (0).
+	card1,2,3,4	- If you want a card compound to it, place the card ID number 
+				  into the specific card slot.
+				  
+This item will still disappear just like any other dropped item. Like 
+'getitem', it also accepts an 'english name' field from the database and 
+creates apples if the name isn't found.
+If the map name is given as "this", the map the invoking character is on 
+will be used.
+The command returns 1 when the item is created successfully, or 0 if it fails.
 
 ---------------------------------------
 
