@@ -352,14 +352,14 @@ const char* itemdb_typename(int type)
  *
  * @author Dastgir
  */
-void itemdb_jobid2mapid(unsigned int *bclass, int job_id, bool enable)
+void itemdb_jobid2mapid(uint64 *bclass, int job_id, bool enable)
 {
 #define set_jobmask(bclass_idx, mapid) \
 	do { \
 		if (enable) \
-			bclass[(bclass_idx)] |= 1<<(mapid); \
+			bclass[(bclass_idx)] |= 1L<<(mapid); \
 		else \
-			bclass[(bclass_idx)] &= ~(1<<(mapid)); \
+			bclass[(bclass_idx)] &= ~(1L<<(mapid)); \
 	} while (false)
 
 	nullpo_retv(bclass);
@@ -463,11 +463,11 @@ void itemdb_jobid2mapid(unsigned int *bclass, int job_id, bool enable)
  * @param bclass  Pointer to the variable containing the new format.
  * @param jobmask Variable containing JobMask.
  */
-void itemdb_jobmask2mapid(unsigned int *bclass, unsigned int jobmask)
+void itemdb_jobmask2mapid(uint64 *bclass, int64 jobmask)
 {
 	int i;
 	nullpo_retv(bclass);
-	bclass[0]= bclass[1]= bclass[2]= 0;
+	bclass[0] = bclass[1] = bclass[2] = 0;
 	//Base classes
 	if (jobmask & 1<<JOB_NOVICE) {
 		//Both Novice/Super-Novice are counted with the same ID
@@ -1668,7 +1668,7 @@ void itemdb_readdb_job_sub(struct item_data *id, struct config_setting_t *t)
 		int job_id;
 
 		if (strcmp(job_name, "All") == 0) {
-			itemdb->jobmask2mapid(id->class_base, UINT_MAX);
+			itemdb->jobmask2mapid(id->class_base, UINT64_MAX);
 		} else if ((job_id = pc->check_job_name(job_name)) == -1) {
 			ShowWarning("itemdb_readdb_job_sub: unknown job name '%s'!\n", job_name);
 		} else {
@@ -1822,10 +1822,10 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 		if (config_setting_is_group(t)) {
 			itemdb->readdb_job_sub(&id, t);
 		} else if (itemdb->lookup_const(it, "Job", &i32) && i32 >= 0) {
-			itemdb->jobmask2mapid(id.class_base, (unsigned int)i32);
+			itemdb->jobmask2mapid(id.class_base, i32);
 		}
 	} else if (!inherit) {
-		itemdb->jobmask2mapid(id.class_base, UINT_MAX);
+		itemdb->jobmask2mapid(id.class_base, UINT64_MAX);
 	}
 
 	if( itemdb->lookup_const(it, "Upper", &i32) && i32 >= 0 )
