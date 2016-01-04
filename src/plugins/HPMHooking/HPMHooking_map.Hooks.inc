@@ -56817,6 +56817,32 @@ void HP_pc_read_skill_tree(void) {
 	}
 	return;
 }
+void HP_pc_clear_skill_tree(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_pc_clear_skill_tree_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_clear_skill_tree_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_clear_skill_tree_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pc.clear_skill_tree();
+	}
+	if( HPMHooks.count.HP_pc_clear_skill_tree_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_clear_skill_tree_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_clear_skill_tree_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 int HP_pc_isUseitem(struct map_session_data *sd, int n) {
 	int hIndex = 0;
 	int retVal___ = 0;
