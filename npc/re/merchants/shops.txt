@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C) 2012-2016  Hercules Dev Team
 //= Copyright (C)  Frost
 //= Copyright (C)  rAthena Dev Team
 //= Copyright (C)  Lemongrass
@@ -36,7 +36,7 @@
 //================= Description ===========================================
 //= Renewal-specific town shop NPCs.
 //================= Current Version =======================================
-//= 2.1
+//= 2.3
 //=========================================================================
 
 //== Comodo ================================================
@@ -744,6 +744,121 @@ OnInit:
 	sellitem Flower_Ring;
 }
 
+//== Geffen ================================================
+geffen_in,77,167,0	trader	Tool Dealer#gef	1_F_03,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+}
+
+geffen,193,152,4	trader	Pet Groomer#gef	4_F_TELEPORTER,{
+OnInit:
+	sellitem Pet_Food;
+	sellitem Pet_Incubator;
+	sellitem Backpack;
+	sellitem Rocker_Glasses;
+	sellitem Vital_Flower_;
+	sellitem Flame_Gemstone;
+	sellitem Bun_;
+	sellitem Vital_Flower;
+	sellitem Damp_Darkness;
+	sellitem Small_Snow_Flower;
+	sellitem Fresh_Plant;
+	sellitem Big_Cell;
+	sellitem Apple_Pudding;
+	sellitem Mystic_Stone;
+	sellitem Flavored_Alcohol;
+	sellitem Spirit_Liquor;
+	sellitem Pumpkin_Pie_;
+	sellitem Sunset_On_The_Rock;
+	sellitem Morning_Dew;
+	sellitem Grilled_Rice_Cake;
+}
+
+geffen_in,171,123,4	trader	Tool Dealer#gef2	1_M_WIZARD,{
+OnInit:
+	sellitem Empty_Cylinder;
+	sellitem Empty_Potion;
+	sellitem Empty_Bottle;
+}
+
+//== Payon =================================================
+payon,159,96,4	trader	Tool Dealer#pay3	4_M_ORIENT01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Red_Potion;
+	sellitem Center_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+}
+
+payon_in01,5,49,7	trader	Tool Dealer#pay	4_M_ORIENT01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+}
+
+payon,177,131,4	trader	Pet Groomer#pay	4_F_TELEPORTER,{
+OnInit:
+	sellitem Pet_Food;
+	sellitem Pet_Incubator;
+	sellitem Backpack;
+	sellitem Rocker_Glasses;
+	sellitem Vital_Flower_;
+	sellitem Flame_Gemstone;
+	sellitem Bun_;
+	sellitem Vital_Flower;
+	sellitem Damp_Darkness;
+	sellitem Small_Snow_Flower;
+	sellitem Fresh_Plant;
+	sellitem Big_Cell;
+	sellitem Apple_Pudding;
+	sellitem Mystic_Stone;
+	sellitem Flavored_Alcohol;
+	sellitem Spirit_Liquor;
+	sellitem Pumpkin_Pie_;
+	sellitem Sunset_On_The_Rock;
+	sellitem Morning_Dew;
+	sellitem Grilled_Rice_Cake;
+}
+
+payon_in02,87,34,0	trader	Tool Dealer#pay2	1_F_ORIENT_01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Silver_Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Booby_Trap;
+}
+
 //== Rachel ================================================
 ra_in01,263,281,4	trader	Trap Specialist#ra	1_F_01,{
 OnInit:
@@ -809,6 +924,44 @@ OnInit:
 }
 
 moc_ruins,115,123,5	trader	Chef Assistant#moc	4_M_04,{
+OnInit:
+	sellitem Combination_Kit;
+	sellitem Mushroom;
+	sellitem Pot;
+	sellitem Bread;
+	sellitem Grain;
+	sellitem Cooking_Oil;
+	sellitem Plain_Sauce;
+	sellitem Hot_Sauce;
+	sellitem Sweet_Sauce;
+	sellitem Red_Spice;
+	sellitem Yellow_Spice;
+	sellitem Delicious_Fish;
+	sellitem Outdoor_Cooking_Kits;
+	sellitem Indoor_Cooking_Kits;
+	sellitem High_end_Cooking_Kits;
+}
+
+geffen,196,111,3	trader	Chef Assistant#gef	4_M_03,{
+OnInit:
+	sellitem Combination_Kit;
+	sellitem Mushroom;
+	sellitem Pot;
+	sellitem Bread;
+	sellitem Grain;
+	sellitem Cooking_Oil;
+	sellitem Plain_Sauce;
+	sellitem Hot_Sauce;
+	sellitem Sweet_Sauce;
+	sellitem Red_Spice;
+	sellitem Yellow_Spice;
+	sellitem Delicious_Fish;
+	sellitem Outdoor_Cooking_Kits;
+	sellitem Indoor_Cooking_Kits;
+	sellitem High_end_Cooking_Kits;
+}
+
+payon,206,119,5	trader	Chef Assistant#pay	4_M_ORIENT02,{
 OnInit:
 	sellitem Combination_Kit;
 	sellitem Mushroom;

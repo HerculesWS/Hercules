@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C) 2012-2016  Hercules Dev Team
 //= Copyright (C)  Yommy
 //= Copyright (C)  Streusel
 //= Copyright (C)  Euphy
@@ -46,7 +46,7 @@
 //================= Description ===========================================
 //= Town shop NPCs.
 //================= Current Version =======================================
-//= 3.6
+//= 3.8
 //=========================================================================
 
 //== Alberta ===============================================
@@ -655,22 +655,6 @@ OnInit:
 	sellitem Zargon;
 }
 
-geffen_in,77,167,0	trader	Tool Dealer#gef	1_F_03,{
-OnInit:
-	sellitem Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Granpa_Beard;
-}
-
 geffen_in,77,173,0	trader	Magical Item Seller#gef	1_M_WIZARD,{
 OnInit:
 	sellitem Blue_Gemstone;
@@ -681,24 +665,6 @@ OnInit:
 	sellitem Circlet;
 	sellitem Silk_Robe;
 	sellitem Silver_Robe;
-}
-
-geffen_in,171,123,4	trader	Tool Dealer#gef2	1_M_WIZARD,{
-OnInit:
-	sellitem Empty_Cylinder;
-	sellitem Empty_Potion;
-}
-
-geffen,193,152,4	trader	Pet Groomer#gef	4_F_TELEPORTER,{
-OnInit:
-	sellitem Pet_Food;
-	sellitem Pet_Incubator;
-	sellitem Backpack;
-	sellitem Rocker_Glasses;
-	sellitem Mojji;
-	sellitem Vital_Flower_;
-	sellitem Flame_Gemstone;
-	sellitem Bun_;
 }
 
 //== Kunlun ================================================
@@ -1544,72 +1510,6 @@ OnInit:
 	sellitem Novice_Armlet;
 }
 
-payon_in01,5,49,7	trader	Tool Dealer#pay	4_M_ORIENT01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-}
-
-payon_in02,87,34,0	trader	Tool Dealer#pay2	1_F_ORIENT_01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Silver_Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-}
-
-payon,159,96,4	trader	Tool Dealer#pay3	4_M_ORIENT01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Red_Potion;
-	sellitem Center_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-}
-
-payon,177,131,4	trader	Pet Groomer#pay	4_F_TELEPORTER,{
-OnInit:
-	sellitem Pet_Food;
-	sellitem Pet_Incubator;
-	sellitem Backpack;
-	sellitem Rocker_Glasses;
-	sellitem Mojji;
-	sellitem Flame_Gemstone;
-	sellitem Vital_Flower_;
-	sellitem Vital_Flower;
-	sellitem Bun_;
-	sellitem Damp_Darkness;
-	sellitem Small_Snow_Flower;
-	sellitem Fresh_Plant;
-	sellitem Big_Cell;
-	sellitem Apple_Pudding;
-	sellitem Mystic_Stone;
-	sellitem Flavored_Alcohol;
-	sellitem Grilled_Rice_Cake;
-	sellitem Fish_With_Blue_Back;
-	sellitem Pumpkin_Pie_;
-	sellitem Traditional_Cookie;
-}
-
 //== Prontera ==============================================
 prontera,73,134,0	trader	Vendor from Milk Ranch#p	4_F_01,{
 OnInit:
@@ -1938,16 +1838,6 @@ OnInit:
 }
 
 //== Cooking Addition ======================================
-payon,206,119,5	trader	Chef Assistant#pay	4_M_ORIENT02,{
-OnInit:
-	sellitem Hot_Sauce;
-}
-
-geffen,196,111,3	trader	Chef Assistant#gef	4_M_03,{
-OnInit:
-	sellitem Pot;
-}
-
 alberta,167,135,5	trader	Chef Assistant#alb	4_M_05,{
 OnInit:
 	sellitem Delicious_Fish;

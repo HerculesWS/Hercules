@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C) 2012-2016  Hercules Dev Team
 //= Copyright (C)  Euphy
 //= Copyright (C)  Masao
 //= Copyright (C)  Xantara
@@ -50,7 +50,7 @@
 //================= Description ===========================================
 //= Refining NPCs and Metal Salesmen.
 //================= Current Version =======================================
-//= 3.3
+//= 3.5
 //=========================================================================
 
 //== Christopher: Geffen Blacksmith ========================
@@ -1101,7 +1101,7 @@ moc_ruins,107,94,4	script	Repairman#moc	4W_M_03,{
 	end;
 }
 
-payon,143,165,4	script	Repairman#pay	4_M_ORIENT01,{
+payon,143,165,0	script	Repairman#pay	4_M_ORIENT01,{
 	callfunc "repairmain","Repairman";
 	end;
 }
@@ -1116,7 +1116,7 @@ yuno_in01,175,28,3	script	Repairman#juno	4_M_04,{
 	end;
 }
 
-geffen_in,34,166,3	script	Repairman#gef	4W_M_03,{
+geffen_in,34,166,3	script	Repairman#gef	4_M_04,{
 	callfunc "repairmain","Repairman";
 	end;
 }
