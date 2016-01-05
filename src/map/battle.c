@@ -1931,7 +1931,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					skillratio += 10 * skill_lv;
 					break;
 				case KN_SPEARSTAB:
-					skillratio += 15 * skill_lv;
+					skillratio += 20 * skill_lv;
 					break;
 				case KN_SPEARBOOMERANG:
 					skillratio += 50*skill_lv;
