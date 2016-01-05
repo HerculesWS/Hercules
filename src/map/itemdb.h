@@ -64,6 +64,7 @@ enum item_itemid {
 	ITEMID_BRANCH_OF_DEAD_TREE   = 604,
 	ITEMID_ANODYNE               = 605,
 	ITEMID_ALOEBERA              = 606,
+	ITEMID_POISON_BOTTLE         = 678,
 	ITEMID_EMPTY_BOTTLE          = 713,
 	ITEMID_EMPERIUM              = 714,
 	ITEMID_YELLOW_GEMSTONE       = 715,
