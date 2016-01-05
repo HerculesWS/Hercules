@@ -7196,6 +7196,9 @@ static const struct battle_data {
 	{ "costume_refine_def",                 &battle_config.costume_refine_def,              1,      0,      1,              },
 	{ "shadow_refine_def",                  &battle_config.shadow_refine_def,               1,      0,      1,              },
 	{ "shadow_refine_atk",                  &battle_config.shadow_refine_atk,               1,      0,      1,              },
+	{ "min_body_style",                     &battle_config.min_body_style,                  0,      0,      SHRT_MAX,       },
+	{ "max_body_style",                     &battle_config.max_body_style,                  4,      0,      SHRT_MAX,       },
+	{ "save_body_style",                    &battle_config.save_body_style,                 0,      0,      1,              },
 };
 #ifndef STATS_OPT_OUT
 /**
