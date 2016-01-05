@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C) 2012-2016  Hercules Dev Team
 //= Copyright (C)  L0ne_W0lf
 //= Copyright (C)  Samuray22
 //= Copyright (C)  Silent
@@ -33,7 +33,7 @@
 //================= Description ===========================================
 //= Pretend Murder, Ear Muffs, Oxygen, Derivuchi Cap, Helm of Angel Quests.
 //================= Current Version =======================================
-//= 1.7
+//= 1.7.1
 //=========================================================================
 
 //== 'Pretend Murdered' Quest ==============================
@@ -229,7 +229,7 @@ payon_in02,25,71,4	script	Boy	4_M_04,{
 }
 
 //== 'Helm of Angel' and 'Deviruchi Cap' Quest =============
-payon_in01,56,12,7	script	Young man#12	4_M_ORIENT02,{
+payon_in01,46,21,5	script	Young man#12	4_M_ORIENT02,{
 	mes "[Young man]";
 	mes "...What is it?";
 	next;
