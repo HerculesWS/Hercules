@@ -18945,8 +18945,6 @@ BUILDIN(montransform) {
 			return true;
 		}
 
-		sprintf(msg, msg_sd(sd,1485), monster->name); // Traaaansformation-!! %s form!!
-		clif->ShowScript(&sd->bl, msg);
 		status_change_end(bl, SC_MONSTER_TRANSFORM, INVALID_TIMER); // Clear previous
 		sc_start2(NULL, bl, SC_MONSTER_TRANSFORM, 100, mob_id, type, tick);
 
