@@ -18930,8 +18930,6 @@ BUILDIN(montransform) {
 
 	if (tick != 0) {
 		struct map_session_data *sd = script->id2sd(st, bl->id);
-		struct mob_db *monster =  mob->db(mob_id);
-		char msg[CHAT_SIZE_MAX];
 
 		if (sd == NULL)
 			return true;
