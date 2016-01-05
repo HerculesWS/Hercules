@@ -4952,7 +4952,7 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 	if (sc->data[SC_MOONLIT_SERENADE])
 		matk += matk * sc->data[SC_MOONLIT_SERENADE]->val2 / 100;
 	if (sc->data[SC_MTF_MATK])
-		matk += matk * sc->data[SC_MTF_MATK]->val1 / 100;
+		matk += sc->data[SC_MTF_MATK]->val1;
 	if (sc->data[SC_MYSTICSCROLL])
 		matk += matk * sc->data[SC_MYSTICSCROLL]->val1 / 100;
 		
