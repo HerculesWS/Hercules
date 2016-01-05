@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C) 2012-2016  Hercules Dev Team
 //= Copyright (C)  Silent
 //= Copyright (C)  erKURITA
 //= Copyright (C)  MasterOfMuppets
@@ -35,10 +35,10 @@
 //================= Description ===========================================
 //= Guides for the City of Payon
 //================= Current Version =======================================
-//= 1.6
+//= 1.7
 //=========================================================================
 
-payon,162,67,4	script	Guide#pay	4_M_PAY_SOLDIER,{
+payon,160,67,4	script	Guide#pay	4_M_PAY_SOLDIER,{
 	cutin "pay_soldier",2;
 	mes "[Payon Guide]";
 	mes "Welcome to the";
