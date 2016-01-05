@@ -36,7 +36,7 @@
 //================= Description ===========================================
 //= Renewal-specific town shop NPCs.
 //================= Current Version =======================================
-//= 2.3
+//= 2.1.1
 //=========================================================================
 
 //== Comodo ================================================
@@ -192,10 +192,22 @@ OnInit:
 	sellitem Pet_Incubator;
 	sellitem Backpack;
 	sellitem Rocker_Glasses;
-	sellitem Mojji;
 	sellitem Vital_Flower_;
 	sellitem Flame_Gemstone;
 	sellitem Bun_;
+	sellitem Vital_Flower;
+	sellitem Damp_Darkness;
+	sellitem Small_Snow_Flower;
+	sellitem Fresh_Plant;
+	sellitem Big_Cell;
+	sellitem Apple_Pudding;
+	sellitem Mystic_Stone;
+	sellitem Flavored_Alcohol;
+	sellitem Spirit_Liquor;
+	sellitem Pumpkin_Pie_;
+	sellitem Sunset_On_The_Rock;
+	sellitem Morning_Dew;
+	sellitem Grilled_Rice_Cake;
 }
 
 izlude_in,57,110,0	trader	Tool Dealer#iz	1_M_01,{
@@ -205,16 +217,16 @@ OnInit:
 	sellitem Orange_Potion;
 	sellitem Yellow_Potion;
 	sellitem White_Potion;
-	sellitem Green_Potion;
 	sellitem Center_Potion;
 	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
 	sellitem Wing_Of_Fly;
 	sellitem Wing_Of_Butterfly;
 	sellitem Booby_Trap;
 	sellitem Arrow;
 }
 
-izlude_in,72,102,3	trader	Trading Merchant#iz	4_M_HUMERCHANT,{
+izlude_in,72,110,3	trader	Trading Merchant#iz	4_M_HUMERCHANT,{
 OnInit:
 	sellitem Bullet;
 	sellitem Silver_Bullet;
