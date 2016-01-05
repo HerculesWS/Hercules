@@ -46,7 +46,7 @@
 //================= Description ===========================================
 //= Town shop NPCs.
 //================= Current Version =======================================
-//= 3.7
+//= 3.8
 //=========================================================================
 
 //== Alberta ===============================================
@@ -1510,72 +1510,6 @@ OnInit:
 	sellitem Novice_Armlet;
 }
 
-payon_in01,5,49,7	trader	Tool Dealer#pay	4_M_ORIENT01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-}
-
-payon_in02,87,34,0	trader	Tool Dealer#pay2	1_F_ORIENT_01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Silver_Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-}
-
-payon,159,96,4	trader	Tool Dealer#pay3	4_M_ORIENT01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Red_Potion;
-	sellitem Center_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-}
-
-payon,177,131,4	trader	Pet Groomer#pay	4_F_TELEPORTER,{
-OnInit:
-	sellitem Pet_Food;
-	sellitem Pet_Incubator;
-	sellitem Backpack;
-	sellitem Rocker_Glasses;
-	sellitem Mojji;
-	sellitem Flame_Gemstone;
-	sellitem Vital_Flower_;
-	sellitem Vital_Flower;
-	sellitem Bun_;
-	sellitem Damp_Darkness;
-	sellitem Small_Snow_Flower;
-	sellitem Fresh_Plant;
-	sellitem Big_Cell;
-	sellitem Apple_Pudding;
-	sellitem Mystic_Stone;
-	sellitem Flavored_Alcohol;
-	sellitem Grilled_Rice_Cake;
-	sellitem Fish_With_Blue_Back;
-	sellitem Pumpkin_Pie_;
-	sellitem Traditional_Cookie;
-}
-
 //== Prontera ==============================================
 prontera,73,134,0	trader	Vendor from Milk Ranch#p	4_F_01,{
 OnInit:
@@ -1904,11 +1838,6 @@ OnInit:
 }
 
 //== Cooking Addition ======================================
-payon,206,119,5	trader	Chef Assistant#pay	4_M_ORIENT02,{
-OnInit:
-	sellitem Hot_Sauce;
-}
-
 alberta,167,135,5	trader	Chef Assistant#alb	4_M_05,{
 OnInit:
 	sellitem Delicious_Fish;
