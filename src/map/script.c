@@ -7253,7 +7253,7 @@ BUILDIN(getitem2)
 		if (item_data == NULL)
 			return -1;
 		if(item_data->type==IT_WEAPON || item_data->type==IT_ARMOR) {
-			if(ref > MAX_REFINE) ref = MAX_REFINE;
+			ref = cap_value(ref, 0, MAX_REFINE);
 		}
 		else if(item_data->type==IT_PETEGG) {
 			iden = 1;

@@ -1315,12 +1315,11 @@ ACMD(item2)
 			}
 			if (item_data->type == IT_PETARMOR)
 				refine = 0;
-			if (refine > MAX_REFINE)
-				refine = MAX_REFINE;
 		} else {
 			identify = 1;
 			refine = attr = 0;
 		}
+		refine = cap_value(refine, 0, MAX_REFINE);
 		for (i = 0; i < loop; i++) {
 			memset(&item_tmp, 0, sizeof(item_tmp));
 			item_tmp.nameid = item_id;
