@@ -15710,7 +15710,7 @@ BUILDIN(md5)
 
 BUILDIN(swap)
 {
-	TBL_PC *sd = NULL;
+	struct map_session_data *sd = NULL;
 	struct script_data *data1, *data2;
 	const char *varname1, *varname2;
 	int64 uid1, uid2;
@@ -15718,9 +15718,19 @@ BUILDIN(swap)
 	data1 = script_getdata(st,2);
 	data2 = script_getdata(st,3);
 
-	if (!data_isreference(data1) || !data_isreference(data2)) {
+	if (!data_isreference(data1) || !data_isreference(data2) || reference_toconstant(data1) || reference_toconstant(data2)) {
 		st->state = END;
 		return true; // avoid print error message twice
+	}
+
+	if (reference_toparam(data1) || reference_toparam(data2)) {
+		ShowError("script:swap: detected parameter type constant.\n");
+		if (reference_toparam(data1))
+			script->reportdata(data1);
+		if (reference_toparam(data2))
+			script->reportdata(data2);
+		st->state = END;
+		return false;
 	}
 
 	varname1 = reference_getname(data1);
