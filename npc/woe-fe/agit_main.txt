@@ -616,7 +616,7 @@ OnRecvCastle:
 	}
 	mes "["+strnpcinfo(1)+"]";
 	mes "Welcome. My honorable master, ^ff0000"+strcharinfo(0)+"^000000...";
-	mes "Your humble servent, "+strnpcinfo(1)+", is here to serve you.";
+	mes "Your humble servant, "+strnpcinfo(1)+", is here to serve you.";
 	next;
 	switch (select("Castle briefing:Invest in commercial growth:Invest in Castle Defenses:Summon Guardian:Hire / Fire a Kafra Employee:Go into Master's room")) {
 	case 1:
