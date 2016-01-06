@@ -96,6 +96,10 @@ enum item_itemid {
 	ITEMID_ANGRA_MANYU           = 1599,
 	ITEMID_STRANGE_EMBRYO        = 6415,
 	ITEMID_FACE_PAINT            = 6120,
+	ITEMID_SCARLET_POINT         = 6360,
+	ITEMID_INDIGO_POINT          = 6361,
+	ITEMID_YELLOW_WISH_POINT     = 6362,
+	ITEMID_LIME_GREEN_POINT      = 6363,
 	ITEMID_STONE                 = 7049,
 	ITEMID_FIRE_BOTTLE           = 7135,
 	ITEMID_ACID_BOTTLE           = 7136,
@@ -531,7 +535,7 @@ struct item_data {
 #define itemdb_canrefine(n)   (!itemdb->search(n)->flag.no_refine)
 
 #define itemdb_is_rune(n)        (((n) >= ITEMID_NAUTHIZ && (n) <= ITEMID_HAGALAZ) || (n) == ITEMID_LUX_ANIMA)
-#define itemdb_is_element(n)     ((n) >= ITEMID_BOODY_RED && (n) <= ITEMID_YELLOW_LIVE)
+#define itemdb_is_element(n)     ((n) >= ITEMID_SCARLET_POINT && (n) <= ITEMID_LIME_GREEN_POINT)
 #define itemdb_is_spellbook(n)   ((n) >= ITEMID_MAGIC_BOOK_FB && (n) <= ITEMID_MAGIC_BOOK_DL)
 #define itemdb_is_poison(n)      ((n) >= ITEMID_POISON_PARALYSIS && (n) <= ITEMID_POISON_FATIGUE)
 #define itemid_isgemstone(n)     ((n) >= ITEMID_YELLOW_GEMSTONE && (n) <= ITEMID_BLUE_GEMSTONE)

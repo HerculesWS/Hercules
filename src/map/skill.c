@@ -14072,19 +14072,18 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 		}
 		case NC_SILVERSNIPER:
 		case NC_MAGICDECOY: {
-				int c = 0;
+				int j, c = 0;
 				int maxcount = skill->get_maxcount(skill_id,skill_lv);
 
 				if( battle_config.land_skill_limit && maxcount > 0 && ( battle_config.land_skill_limit&BL_PC ) ) {
 					if (skill_id == NC_MAGICDECOY) {
-						int j;
 						for (j = MOBID_MAGICDECOY_FIRE; j <= MOBID_MAGICDECOY_WIND; j++)
 							map->foreachinmap(skill->check_condition_mob_master_sub, sd->bl.m, BL_MOB, sd->bl.id, j, skill_id, &c);
 					} else {
 						map->foreachinmap(skill->check_condition_mob_master_sub, sd->bl.m, BL_MOB, sd->bl.id, MOBID_SILVERSNIPER, skill_id, &c);
 					}
 					if( c >= maxcount ) {
-						clif->skill_fail(sd , skill_id, USESKILL_FAIL_LEVEL, 0);
+						clif->skill_fail(sd , skill_id, USESKILL_FAIL_SUMMON, 0);
 						return 0;
 					}
 				}
@@ -17638,21 +17637,21 @@ int skill_magicdecoy(struct map_session_data *sd, int nameid) {
 	sd->menuskill_val = 0;
 
 	switch (nameid) {
-	case ITEMID_BOODY_RED:
+	case ITEMID_SCARLET_POINT:
 		class_ = MOBID_MAGICDECOY_FIRE;
 		break;
-	case ITEMID_CRYSTAL_BLUE:
+	case ITEMID_INDIGO_POINT:
 		class_ = MOBID_MAGICDECOY_WATER;
 		break;
-	case ITEMID_WIND_OF_VERDURE:
+	case ITEMID_LIME_GREEN_POINT:
 		class_ = MOBID_MAGICDECOY_WIND;
 		break;
-	case ITEMID_YELLOW_LIVE:
+	case ITEMID_YELLOW_WISH_POINT:
 		class_ = MOBID_MAGICDECOY_EARTH;
 		break;
 	}
 
-	md =  mob->once_spawn_sub(&sd->bl, sd->bl.m, x, y, sd->status.name, class_, "", SZ_SMALL, AI_NONE);
+	md = mob->once_spawn_sub(&sd->bl, sd->bl.m, x, y, sd->status.name, class_, "", SZ_SMALL, AI_NONE);
 	if( md ) {
 		md->master_id = sd->bl.id;
 		md->special_state.ai = AI_FLORA;
