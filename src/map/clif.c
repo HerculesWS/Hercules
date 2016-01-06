@@ -17062,6 +17062,7 @@ void clif_millenniumshield(struct block_list *bl, short shields ) {
 	clif->send(buf,packet_len(0x440),bl,AREA);
 #endif
 }
+
 /**
  * Warlock
  **/
@@ -17070,38 +17071,42 @@ void clif_millenniumshield(struct block_list *bl, short shields ) {
  *------------------------------------------*/
 int clif_spellbook_list(struct map_session_data *sd)
 {
-	int i, c;
-	int fd;
+	int i, c = 0, fd, len;
+	int16 items[MAX_INVENTORY] = { 0 };
 
 	nullpo_ret(sd);
 
 	fd = sd->fd;
-	WFIFOHEAD(fd, 8 * 8 + 8);
-	WFIFOW(fd,0) = 0x1ad;
 
-	for( i = 0, c = 0; i < MAX_INVENTORY; i ++ )
-	{
-		if( itemdb_is_spellbook(sd->status.inventory[i].nameid) )
-		{
-			WFIFOW(fd, c * 2 + 4) = sd->status.inventory[i].nameid;
+	for (i = 0; i < MAX_INVENTORY; i++) {
+		if (itemdb_is_spellbook(sd->status.inventory[i].nameid)) {
+			items[c] = sd->status.inventory[i].nameid;
 			c++;
 		}
 	}
 
-	if( c > 0 )
-	{
-		WFIFOW(fd,2) = c * 2 + 4;
-		WFIFOSET(fd, WFIFOW(fd, 2));
-		sd->menuskill_id = WL_READING_SB;
-		sd->menuskill_val = c;
-	}
-	else{
-		status_change_end(&sd->bl,SC_STOP,INVALID_TIMER);
+	if (c == 0) {
+		status_change_end(&sd->bl, SC_STOP, INVALID_TIMER);
 		clif->skill_fail(sd, WL_READING_SB, USESKILL_FAIL_SPELLBOOK, 0);
+		return 1;
 	}
+
+	len = c * 2 + 4;
+
+	WFIFOHEAD(fd, 8 * 8 + 8);
+	WFIFOW(fd, 0) = 0x1ad;
+	WFIFOW(fd, 2) = len;
+	for (i = 0; i < c; i++) {
+		WFIFOW(fd, i * 2 + 4) = items[i];
+	}
+	WFIFOSET(fd, len);
+
+	sd->menuskill_id = WL_READING_SB;
+	sd->menuskill_val = c;
 
 	return 1;
 }
+
 /**
  * Mechanic
  **/
