@@ -1921,7 +1921,8 @@ struct map_session_data *map_id2sd(int id)
 
 	bl = idb_get(map->pc_db,id);
 
-	Assert_retr(NULL, bl->type == BL_PC);
+	if (bl)
+		Assert_retr(NULL, bl->type == BL_PC);
 	return BL_UCAST(BL_PC, bl);
 }
 
@@ -1957,7 +1958,8 @@ struct mob_data *map_id2md(int id)
 
 	bl = idb_get(map->mobid_db,id);
 
-	Assert_retr(NULL, bl->type == BL_MOB);
+	if (bl)
+		Assert_retr(NULL, bl->type == BL_MOB);
 	return BL_UCAST(BL_MOB, bl);
 }
 
@@ -2106,7 +2108,8 @@ const char *map_charid2nick(int charid) {
 struct map_session_data* map_charid2sd(int charid)
 {
 	struct block_list *bl = idb_get(map->charid_db, charid);
-	Assert_retr(NULL, bl->type == BL_PC);
+	if (bl)
+		Assert_retr(NULL, bl->type == BL_PC);
 	return BL_UCAST(BL_PC, bl);
 }
 
@@ -2187,7 +2190,8 @@ struct mob_data *map_id2boss(int id)
 	if (id <= 0)
 		return NULL;
 	bl = idb_get(map->bossid_db,id);
-	Assert_retr(NULL, bl->type == BL_MOB);
+	if (bl)
+		Assert_retr(NULL, bl->type == BL_MOB);
 	return BL_UCAST(BL_MOB, bl);
 }
 
