@@ -995,7 +995,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 			mes "you soooooooo beautiful!";
 			close;
 		}
-		else if (getlook(VAR_HEAD) == .@input) {
+		else if (getlook(LOOK_HAIR) == .@input) {
 			mes "[Prince Shammi]";
 			mes "Oh dear me, you're not";
 			mes "going to waste money for";
@@ -1017,7 +1017,7 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 			next;
 			switch(select("Yes.:No.")) {
 			case 1:
-				if (getlook(VAR_HEADPALETTE) == 0) {
+				if (getlook(LOOK_HAIR_COLOR) == 0) {
 					mes "[Prince Shammi]";
 					mes "Oh, Sweet Christmas,";
 					mes "I almost forgot! Would";
@@ -1072,8 +1072,8 @@ lhz_in02,100,143,3	script	Hair Dresser#li	2_M_DYEINGER,{
 				delitem Long_Hair,100;
 				delitem Golden_Hair,100;
 				delitem Glossy_Hair,100;
-				setlook VAR_HEAD,.@input;
-				setlook VAR_HEADPALETTE,.@headpalette;
+				setlook LOOK_HAIR,.@input;
+				setlook LOOK_HAIR_COLOR,.@headpalette;
 				mes "[Prince Shammi]";
 				mes "Well, we're all finished!";
 				mes "And my, oh my, you look even";
@@ -1272,8 +1272,8 @@ lhz_in02,91,155,5	script	Assistant Beautician#li	4_F_LGTGIRL,{
 				mes "^333333*Pant Pant Pant*^000000";
 				next;
 				Zeny -= 250000;
-				setlook VAR_HEAD,.@style_r;
-				setlook VAR_HEADPALETTE,.@color_r;
+				setlook LOOK_HAIR,.@style_r;
+				setlook LOOK_HAIR_COLOR,.@color_r;
 				mes "[Assistant Beautician]";
 				mes "Bwahahaha! Success!";
 				if (.@input == .@style_r) {
