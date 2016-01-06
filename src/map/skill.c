@@ -6203,7 +6203,6 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case AC_MAKINGARROW:
 			if(sd) {
 				clif->arrow_create_list(sd);
-				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			}
 			break;
 

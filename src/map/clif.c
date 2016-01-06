@@ -3356,34 +3356,38 @@ void clif_arrow_fail(struct map_session_data *sd,int type)
 /// 01ad <packet len>.W { <name id>.W }*
 void clif_arrow_create_list(struct map_session_data *sd)
 {
-	int i, c;
-	int fd;
+	int i, j, c = 0, fd, len;
+	int16 items[MAX_SKILL_ARROW_DB] = { 0 };
 
 	nullpo_retv(sd);
 
 	fd = sd->fd;
-	WFIFOHEAD(fd, MAX_SKILL_ARROW_DB*2+4);
-	WFIFOW(fd,0) = 0x1ad;
 
-	for (i = 0, c = 0; i < MAX_SKILL_ARROW_DB; i++) {
-		int j;
-		if (skill->dbs->arrow_db[i].nameid > 0
-		 && (j = pc->search_inventory(sd, skill->dbs->arrow_db[i].nameid)) != INDEX_NOT_FOUND
-		 && !sd->status.inventory[j].equip && sd->status.inventory[j].identify
-		) {
+	for (i = 0; i < MAX_SKILL_ARROW_DB; i++) {
+		if (skill->dbs->arrow_db[i].nameid > 0 && (j = pc->search_inventory(sd, skill->dbs->arrow_db[i].nameid)) != INDEX_NOT_FOUND && !sd->status.inventory[j].equip && sd->status.inventory[j].identify) {
 			if ((j = itemdb_viewid(skill->dbs->arrow_db[i].nameid)) > 0)
-				WFIFOW(fd,c*2+4) = j;
+				items[c] = j;
 			else
-				WFIFOW(fd,c*2+4) = skill->dbs->arrow_db[i].nameid;
+				items[c] = skill->dbs->arrow_db[i].nameid;
 			c++;
 		}
 	}
-	WFIFOW(fd,2) = c*2+4;
-	WFIFOSET(fd, WFIFOW(fd,2));
-	if (c > 0) {
-		sd->menuskill_id = AC_MAKINGARROW;
-		sd->menuskill_val = c;
+
+	if (c == 0) return;
+
+	len = c * 2 + 4;
+
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = 0x1ad;
+	WFIFOW(fd, 2) = len;
+	for (i = 0; i < c; i++) {
+		WFIFOW(fd, i * 2 + 4) = items[i];
 	}
+	WFIFOSET(fd, len);
+
+	sd->menuskill_id = AC_MAKINGARROW;
+	sd->menuskill_val = c;
+	clif->skill_nodamage(&sd->bl, &sd->bl, AC_MAKINGARROW, 1, 1);
 }
 
 /// Notifies the client, about the result of an status change request (ZC_STATUS_CHANGE_ACK).
