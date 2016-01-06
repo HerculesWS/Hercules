@@ -220,29 +220,46 @@ int bg_team_get_id(struct block_list *bl) {
 	nullpo_ret(bl);
 	switch( bl->type ) {
 		case BL_PC:
-			return ((TBL_PC*)bl)->bg_id;
+		{
+			const struct map_session_data *sd = BL_UCCAST(BL_PC, bl);
+			return sd->bg_id;
+		}
 		case BL_PET:
-			if( ((TBL_PET*)bl)->msd )
-				return ((TBL_PET*)bl)->msd->bg_id;
+		{
+			const struct pet_data *pd = BL_UCCAST(BL_PET, bl);
+			if (pd->msd != NULL)
+				return pd->msd->bg_id;
+		}
 			break;
 		case BL_MOB:
 		{
-			struct map_session_data *msd;
-			struct mob_data *md = (TBL_MOB*)bl;
+			const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+			const struct map_session_data *msd;
 			if (md->special_state.ai != AI_NONE && (msd = map->id2sd(md->master_id)) != NULL)
 				return msd->bg_id;
 			return md->bg_id;
 		}
 		case BL_HOM:
-			if( ((TBL_HOM*)bl)->master )
-				return ((TBL_HOM*)bl)->master->bg_id;
+		{
+			const struct homun_data *hd = BL_UCCAST(BL_HOM, bl);
+			if (hd->master != NULL)
+				return hd->master->bg_id;
+		}
 			break;
 		case BL_MER:
-			if( ((TBL_MER*)bl)->master )
-				return ((TBL_MER*)bl)->master->bg_id;
+		{
+			const struct mercenary_data *md = BL_UCCAST(BL_MER, bl);
+			if (md->master != NULL)
+				return md->master->bg_id;
+		}
 			break;
 		case BL_SKILL:
-			return ((TBL_SKILL*)bl)->group->bg_id;
+		{
+			const struct skill_unit *su = BL_UCCAST(BL_SKILL, bl);
+			if (su->group != NULL)
+				return su->group->bg_id;
+		}
+			break;
 	}
 
 	return 0;
@@ -655,7 +672,7 @@ int bg_afk_timer(int tid, int64 tick, int id, intptr_t data) {
 	int count = 0;
 
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if( !sd->bg_queue.arena || !sd->bg_id )
 			continue;
 		if( DIFF_TICK(sockt->last_tick, sd->idletime) > bg->mafksec )

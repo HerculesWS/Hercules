@@ -274,7 +274,8 @@ int mob_parse_dataset(struct spawn_data *data)
  * Generates the basic mob data using the spawn_data provided.
  *------------------------------------------*/
 struct mob_data* mob_spawn_dataset(struct spawn_data *data) {
-	struct mob_data *md = (struct mob_data*)aCalloc(1, sizeof(struct mob_data));
+	struct mob_data *md = NULL;
+	CREATE(md, struct mob_data, 1);
 	md->bl.id= npc->get_new_npc_id();
 	md->bl.type = BL_MOB;
 	md->bl.m = data->m;
@@ -591,12 +592,9 @@ int mob_spawn_guardian_sub(int tid, int64 tick, int id, intptr_t data) {
 	if( bl == NULL ) //It is possible mob was already removed from map when the castle has no owner. [Skotlex]
 		return 0;
 
-	if( bl->type != BL_MOB ) {
-		ShowError("mob_spawn_guardian_sub: Block error!\n");
-		return 0;
-	}
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
-	md = (struct mob_data*)bl;
 	nullpo_ret(md->guardian_data);
 	g = guild->search((int)data);
 
@@ -684,11 +682,9 @@ int mob_spawn_guardian(const char* mapname, short x, short y, const char* mobnam
 
 	if( has_index && gc->guardian[guardian].id ) {
 		//Check if guardian already exists, refuse to spawn if so.
-		struct mob_data *md2 = (TBL_MOB*)map->id2bl(gc->guardian[guardian].id);
-		if (md2 && md2->bl.type == BL_MOB
-		        && md2->guardian_data
-		        && md2->guardian_data->number == guardian
-		) {
+		struct block_list *bl2 = map->id2bl(gc->guardian[guardian].id); // TODO: Why does this not use map->id2md?
+		struct mob_data *md2 = BL_CAST(BL_MOB, bl2);
+		if (md2 != NULL && md2->guardian_data != NULL && md2->guardian_data->number == guardian) {
 			ShowError("mob_spawn_guardian: Attempted to spawn guardian in position %d which already has a guardian (castle map %s)\n", guardian, map->list[m].name);
 			return 0;
 		}
@@ -794,17 +790,16 @@ int mob_can_reach(struct mob_data *md,struct block_list *bl,int range, int state
 /*==========================================
  * Links nearby mobs (supportive mobs)
  *------------------------------------------*/
-int mob_linksearch(struct block_list *bl,va_list ap) {
-	struct mob_data *md;
-	int class_;
-	struct block_list *target;
-	int64 tick;
+int mob_linksearch(struct block_list *bl,va_list ap)
+{
+	struct mob_data *md = NULL;
+	int class_ = va_arg(ap, int);
+	struct block_list *target = va_arg(ap, struct block_list *);
+	int64 tick = va_arg(ap, int64);
 
 	nullpo_ret(bl);
-	md=(struct mob_data *)bl;
-	class_ = va_arg(ap, int);
-	target = va_arg(ap, struct block_list *);
-	tick = va_arg(ap, int64);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
 	if (md->class_ == class_ && DIFF_TICK(md->last_linktime, tick) < MIN_MOBLINKTIME
 		&& !md->target_id)
@@ -825,7 +820,7 @@ int mob_linksearch(struct block_list *bl,va_list ap) {
  * mob spawn with delay (timer function)
  *------------------------------------------*/
 int mob_delayspawn(int tid, int64 tick, int id, intptr_t data) {
-	struct block_list* bl = map->id2bl(id);
+	struct block_list* bl = map->id2bl(id); // TODO: Why does this not use map->bl2md?
 	struct mob_data* md = BL_CAST(BL_MOB, bl);
 
 	if( md )
@@ -889,7 +884,7 @@ int mob_count_sub(struct block_list *bl, va_list ap) {
 	int mobid[10] = { 0 }, i;
 	ARR_FIND(0, 10, i, (mobid[i] = va_arg(ap, int)) == 0); //fetch till 0
 	if (mobid[0]) { //if there one let's check it otherwise go backward
-		TBL_MOB *md = BL_CAST(BL_MOB, bl);
+		struct mob_data *md = BL_CAST(BL_MOB, bl);
 		nullpo_ret(md);
 		ARR_FIND(0, 10, i, md->class_ == mobid[i]);
 		return (i < 10) ? 1 : 0;
@@ -1073,8 +1068,7 @@ int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
 
 	switch (bl->type) {
 		case BL_PC:
-			if (((TBL_PC*)bl)->state.gangsterparadise &&
-				!(status_get_mode(&md->bl)&MD_BOSS))
+			if (BL_UCCAST(BL_PC, bl)->state.gangsterparadise && !(status_get_mode(&md->bl)&MD_BOSS))
 				return 0; //Gangster paradise protection.
 		default:
 			if (battle_config.hom_setting&0x4 &&
@@ -1174,17 +1168,15 @@ int mob_ai_sub_hard_lootsearch(struct block_list *bl,va_list ap)
 }
 
 int mob_warpchase_sub(struct block_list *bl,va_list ap) {
-	struct block_list *target;
-	struct npc_data **target_nd;
-	struct npc_data *nd;
-	int *min_distance;
 	int cur_distance;
+	struct block_list *target = va_arg(ap, struct block_list *);
+	struct npc_data **target_nd = va_arg(ap, struct npc_data **);
+	int *min_distance = va_arg(ap, int *);
+	struct npc_data *nd = NULL;
 
-	target= va_arg(ap, struct block_list*);
-	target_nd= va_arg(ap, struct npc_data**);
-	min_distance= va_arg(ap, int*);
-
-	nd = (TBL_NPC*) bl;
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_NPC);
+	nd = BL_UCAST(BL_NPC, bl);
 
 	if(nd->subtype != WARP)
 		return 0; //Not a warp
@@ -1440,14 +1432,13 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 
 	if (md->target_id) {
 		//Check validity of current target. [Skotlex]
+		struct map_session_data *tsd = NULL;
 		tbl = map->id2bl(md->target_id);
-		if (!tbl || tbl->m != md->bl.m
+		tsd = BL_CAST(BL_PC, tbl);
+		if (tbl == NULL || tbl->m != md->bl.m
 		 || (md->ud.attacktimer == INVALID_TIMER && !status->check_skilluse(&md->bl, tbl, 0, 0))
 		 || (md->ud.walktimer != INVALID_TIMER && !(battle_config.mob_ai&0x1) && !check_distance_bl(&md->bl, tbl, md->min_chase))
-		 || ( tbl->type == BL_PC
-		   && ((((TBL_PC*)tbl)->state.gangsterparadise && !(mode&MD_BOSS))
-		     || ((TBL_PC*)tbl)->invincible_timer != INVALID_TIMER)
-		    )
+		 || (tsd != NULL && ((tsd->state.gangsterparadise && !(mode&MD_BOSS)) || tsd->invincible_timer != INVALID_TIMER))
 		) {
 			//No valid target
 			if (mob->warpchase(md, tbl))
@@ -1580,7 +1571,7 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 	//Target exists, attack or loot as applicable.
 	if (tbl->type == BL_ITEM) {
 		//Loot time.
-		struct flooritem_data *fitem;
+		struct flooritem_data *fitem = BL_UCAST(BL_ITEM, tbl);
 		if (md->ud.target == tbl->id && md->ud.walktimer != INVALID_TIMER)
 			return true; //Already locked.
 		if (md->lootitem == NULL) {
@@ -1606,7 +1597,6 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 		if (md->ud.attacktimer != INVALID_TIMER)
 			return true; //Busy attacking?
 
-		fitem = (struct flooritem_data *)tbl;
 		//Logs items, taken by (L)ooter Mobs [Lupus]
 		logs->pick_mob(md, LOG_TYPE_LOOT, fitem->item_data.amount, &fitem->item_data, NULL);
 
@@ -1687,9 +1677,15 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 	return true;
 }
 
-int mob_ai_sub_hard_timer(struct block_list *bl, va_list ap) {
-	struct mob_data *md = (struct mob_data*)bl;
+int mob_ai_sub_hard_timer(struct block_list *bl, va_list ap)
+{
+	struct mob_data *md = NULL;
 	int64 tick = va_arg(ap, int64);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
+
 	if (mob->ai_sub_hard(md, tick)) {
 		//Hard AI triggered.
 		if(!md->state.spotted)
@@ -1847,7 +1843,7 @@ int mob_delay_item_drop(int tid, int64 tick, int id, intptr_t data) {
  *------------------------------------------*/
 void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, struct item_drop *ditem, int loot, int drop_rate, unsigned short flag)
 {
-	TBL_PC* sd;
+	struct map_session_data *sd = NULL;
 
 	//Logs items, dropped by mobs [Lupus]
 	logs->pick_mob(md, loot?LOG_TYPE_LOOT:LOG_TYPE_PICKDROP_MONSTER, -ditem->item_data.amount, &ditem->item_data, NULL);
@@ -1878,7 +1874,7 @@ void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, struct ite
 }
 
 int mob_timer_delete(int tid, int64 tick, int id, intptr_t data) {
-	struct block_list* bl = map->id2bl(id);
+	struct block_list* bl = map->id2bl(id); // TODO: Why does this not use map->id2md?
 	struct mob_data* md = BL_CAST(BL_MOB, bl);
 
 	if( md )
@@ -1900,13 +1896,13 @@ int mob_timer_delete(int tid, int64 tick, int id, intptr_t data) {
  *------------------------------------------*/
 int mob_deleteslave_sub(struct block_list *bl,va_list ap)
 {
-	struct mob_data *md;
-	int id;
+	struct mob_data *md = NULL;
+	int id = va_arg(ap, int);
 
 	nullpo_ret(bl);
-	nullpo_ret(md = (struct mob_data *)bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
-	id=va_arg(ap,int);
 	if(md->master_id > 0 && md->master_id == id )
 		status_kill(bl);
 	return 0;
@@ -1945,7 +1941,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 	{
 		case BL_PC:
 		{
-			struct map_session_data *sd = (TBL_PC*)src;
+			const struct map_session_data *sd = BL_UCCAST(BL_PC, src);
 			char_id = sd->status.char_id;
 			if( damage )
 				md->attacked_id = src->id;
@@ -1953,7 +1949,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 		}
 		case BL_HOM:
 		{
-			struct homun_data *hd = (TBL_HOM*)src;
+			const struct homun_data *hd = BL_UCCAST(BL_HOM, src);
 			flag = MDLF_HOMUN;
 			if( hd->master )
 				char_id = hd->master->status.char_id;
@@ -1963,7 +1959,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 		}
 		case BL_MER:
 		{
-			struct mercenary_data *mer = (TBL_MER*)src;
+			const struct mercenary_data *mer = BL_UCCAST(BL_MER, src);
 			if( mer->master )
 				char_id = mer->master->status.char_id;
 			if( damage )
@@ -1972,7 +1968,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 		}
 		case BL_PET:
 		{
-			struct pet_data *pd = (TBL_PET*)src;
+			const struct pet_data *pd = BL_UCCAST(BL_PET, src);
 			flag = MDLF_PET;
 			if( pd->msd )
 			{
@@ -1984,7 +1980,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 		}
 		case BL_MOB:
 		{
-			struct mob_data* md2 = (TBL_MOB*)src;
+			const struct mob_data *md2 = BL_UCCAST(BL_MOB, src);
 			if (md2->special_state.ai != AI_NONE && md2->master_id) {
 				struct map_session_data* msd = map->id2sd(md2->master_id);
 				if( msd )
@@ -2001,7 +1997,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 		}
 		case BL_ELEM:
 		{
-			struct elemental_data *ele = (TBL_ELEM*)src;
+			const struct elemental_data *ele = BL_UCCAST(BL_ELEM, src);
 			if( ele->master )
 				char_id = ele->master->status.char_id;
 			if( damage )
@@ -2098,14 +2094,15 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
  *------------------------------------------*/
 int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	struct status_data *mstatus;
-	struct map_session_data *sd = NULL, *tmpsd[DAMAGELOG_SIZE];
-	struct map_session_data *mvp_sd = NULL, *second_sd = NULL, *third_sd = NULL;
+	struct map_session_data *sd = BL_CAST(BL_PC, src);
+	struct map_session_data *tmpsd[DAMAGELOG_SIZE] = { NULL };
+	struct map_session_data *mvp_sd = sd, *second_sd = NULL, *third_sd = NULL;
 
 	struct {
 		struct party_data *p;
 		int id,zeny;
 		unsigned int base_exp,job_exp;
-	} pt[DAMAGELOG_SIZE];
+	} pt[DAMAGELOG_SIZE] = { { 0 } };
 	int i, temp, count, m = md->bl.m;
 	int dmgbltypes = 0;  // bitfield of all bl types, that caused damage to the mob and are eligible for exp distribution
 	unsigned int mvp_damage;
@@ -2113,12 +2110,6 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 	bool rebirth, homkillonly;
 
 	mstatus = &md->status;
-
-	if( src && src->type == BL_PC )
-	{
-		sd = (struct map_session_data *)src;
-		mvp_sd = sd;
-	}
 
 	if( md->guardian_data && md->guardian_data->number >= 0 && md->guardian_data->number < MAX_GUARDIANS )
 		guild->castledatasave(md->guardian_data->castle->castle_id, 10+md->guardian_data->number,0);
@@ -2131,13 +2122,10 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 
 	map->freeblock_lock();
 
-	memset(pt,0,sizeof(pt));
-
-	if(src && src->type == BL_MOB)
-		mob->unlocktarget((struct mob_data *)src,tick);
+	if (src != NULL && src->type == BL_MOB)
+		mob->unlocktarget(BL_UCAST(BL_MOB, src), tick);
 
 	// filter out entries not eligible for exp distribution
-	memset(tmpsd,0,sizeof(tmpsd));
 	for(i = 0, count = 0, mvp_damage = 0; i < DAMAGELOG_SIZE && md->dmglog[i].id; i++) {
 		struct map_session_data* tsd = map->charid2sd(md->dmglog[i].id);
 
@@ -2582,10 +2570,10 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		md->status.hp = 0; //So that npc_event invoked functions KNOW that mob is dead
 		if( src ) {
 			switch( src->type ) {
-				case BL_PET: sd = ((TBL_PET*)src)->msd; break;
-				case BL_HOM: sd = ((TBL_HOM*)src)->master; break;
-				case BL_MER: sd = ((TBL_MER*)src)->master; break;
-				case BL_ELEM: sd = ((TBL_ELEM*)src)->master; break;
+				case BL_PET: sd = BL_UCAST(BL_PET, src)->msd; break;
+				case BL_HOM: sd = BL_UCAST(BL_HOM, src)->master; break;
+				case BL_MER: sd = BL_UCAST(BL_MER, src)->master; break;
+				case BL_ELEM: sd = BL_UCAST(BL_ELEM, src)->master; break;
 			}
 		}
 
@@ -2843,12 +2831,17 @@ void mob_heal(struct mob_data *md, unsigned int heal)
 /*==========================================
  * Added by RoVeRT
  *------------------------------------------*/
-int mob_warpslave_sub(struct block_list *bl,va_list ap) {
-	struct mob_data *md=(struct mob_data *)bl;
+int mob_warpslave_sub(struct block_list *bl, va_list ap)
+{
+	struct mob_data *md = NULL;
 	struct block_list *master;
 	short x,y,range=0;
 	master = va_arg(ap, struct block_list*);
 	range = va_arg(ap, int);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
 	if(md->master_id!=master->id)
 		return 0;
@@ -2873,14 +2866,16 @@ int mob_warpslave(struct block_list *bl, int range) {
 /*==========================================
  *  Counts slave sub, currently checking if mob master is the given ID.
  *------------------------------------------*/
-int mob_countslave_sub(struct block_list *bl,va_list ap)
+int mob_countslave_sub(struct block_list *bl, va_list ap)
 {
-	int id;
-	struct mob_data *md;
-	id=va_arg(ap,int);
+	int id = va_arg(ap, int);
+	struct mob_data *md = NULL;
 
-	md = (struct mob_data *)bl;
-	if( md->master_id==id )
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
+
+	if (md->master_id == id)
 		return 1;
 	return 0;
 }
@@ -3064,11 +3059,12 @@ struct block_list *mob_getmasterhpltmaxrate(struct mob_data *md,int rate) {
 int mob_getfriendstatus_sub(struct block_list *bl,va_list ap)
 {
 	int cond1,cond2;
-	struct mob_data **fr, *md, *mmd;
+	struct mob_data **fr = NULL, *md = NULL, *mmd = NULL;
 	int flag=0;
 
 	nullpo_ret(bl);
-	nullpo_ret(md=(struct mob_data *)bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 	nullpo_ret(mmd=va_arg(ap,struct mob_data *));
 
 	if( mmd->bl.id == bl->id && !(battle_config.mob_ai&0x10) )

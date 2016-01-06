@@ -21,7 +21,6 @@
 #ifndef MAP_PARTY_H
 #define MAP_PARTY_H
 
-#include "map/map.h" // TBL_PC
 #include "common/hercules.h"
 #include "common/db.h"
 #include "common/mmo.h" // struct party
@@ -31,7 +30,9 @@
 #define PARTY_BOOKING_JOBS 6
 #define PARTY_BOOKING_RESULTS 10
 
+struct block_list;
 struct hplugin_data_store;
+struct map_session_data;
 
 struct party_member_data {
 	struct map_session_data *sd;
@@ -141,7 +142,7 @@ struct party_interface {
 	int (*foreachsamemap) (int (*func)(struct block_list *,va_list),struct map_session_data *sd,int range,...);
 	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*fill_member) (struct party_member* member, struct map_session_data* sd, unsigned int leader);
-	TBL_PC* (*sd_check) (int party_id, int account_id, int char_id);
+	struct map_session_data *(*sd_check) (int party_id, int account_id, int char_id);
 	void (*check_state) (struct party_data *p);
 	struct party_booking_ad_info* (*create_booking_data) (void);
 	int (*db_final) (DBKey key, DBData *data, va_list ap);
