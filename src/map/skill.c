@@ -14072,11 +14072,12 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 		}
 		case NC_SILVERSNIPER:
 		case NC_MAGICDECOY: {
-				int j, c = 0;
+				int c = 0;
 				int maxcount = skill->get_maxcount(skill_id,skill_lv);
 
 				if( battle_config.land_skill_limit && maxcount > 0 && ( battle_config.land_skill_limit&BL_PC ) ) {
 					if (skill_id == NC_MAGICDECOY) {
+						int j;
 						for (j = MOBID_MAGICDECOY_FIRE; j <= MOBID_MAGICDECOY_WIND; j++)
 							map->foreachinmap(skill->check_condition_mob_master_sub, sd->bl.m, BL_MOB, sd->bl.id, j, skill_id, &c);
 					} else {
