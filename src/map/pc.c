@@ -1519,6 +1519,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 				case WL_SUMMON_ATK_GROUND:
 				case LG_OVERBRAND_BRANDISH:
 				case LG_OVERBRAND_PLUSATK:
+				case NC_MAGMA_ERUPTION_DOTDAMAGE:
 					continue;
 				default:
 					break;
@@ -4752,6 +4753,7 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 			break;
 		case ITEMID_BUBBLE_GUM:
 		case ITEMID_COMP_BUBBLE_GUM:
+		case ITEMID_HE_BUBBLE_GUM:
 			if( sd->sc.data[SC_CASH_RECEIVEITEM] )
 				return 0;
 			break;
@@ -4910,6 +4912,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		sd->sc.data[SC_DEEP_SLEEP] ||
 		sd->sc.data[SC_SATURDAY_NIGHT_FEVER] ||
 		sd->sc.data[SC_COLD] ||
+		sd->sc.data[SC_KINGS_GRACE] ||
 		pc_ismuted(&sd->sc, MANNER_NOITEM)
 	    ))
 		return 0;
@@ -8896,7 +8899,9 @@ bool pc_can_attack( struct map_session_data *sd, int target_id ) {
 		(sd->sc.data[SC_SIREN] && sd->sc.data[SC_SIREN]->val2 == target_id) ||
 		sd->sc.data[SC_BLADESTOP] ||
 		sd->sc.data[SC_DEEP_SLEEP] ||
-		sd->sc.data[SC_FALLENEMPIRE] )
+		sd->sc.data[SC_FALLENEMPIRE] ||
+		sd->sc.data[SC_KINGS_GRACE]
+		)
 			return false;
 
 	return true;

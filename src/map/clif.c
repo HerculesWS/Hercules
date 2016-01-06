@@ -9975,6 +9975,8 @@ void clif_parse_HowManyConnections(int fd, struct map_session_data *sd) {
 
 void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, int target_id, int64 tick) {
 	struct block_list *target = NULL;
+	
+	struct status_change *tsc = status->get_sc(map->id2bl(target_id));
 
 	nullpo_retv(sd);
 	if (pc_isdead(sd)) {
@@ -10011,6 +10013,9 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 				return;
 
 			if( sd->sc.option&OPTION_COSTUME )
+				return;
+			
+			if( (sd->sc.count && sd->sc.data[SC__MANHOLE]) || (tsc && tsc->data[SC__MANHOLE]) )
 				return;
 
 			if (!battle_config.sdelay_attack_enable && pc->checkskill(sd, SA_FREECAST) <= 0) {
@@ -11069,6 +11074,9 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 
 	if( sd->sc.data[SC_BASILICA] && (skill_id != HP_BASILICA || sd->sc.data[SC_BASILICA]->val4 != sd->bl.id) )
 		return; // On basilica only caster can use Basilica again to stop it.
+	
+	if(sd->sc.data[SC__MANHOLE])
+		return;
 
 	if( sd->menuskill_id ) {
 		if( sd->menuskill_id == SA_TAMINGMONSTER ) {

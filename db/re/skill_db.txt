@@ -698,8 +698,8 @@
 2005,1,6,2,4,0x2,2,5,1,no,0,0,0,weapon,3,	RK_WINDCUTTER,Wind Cutter
 2006,0,6,4,-1,0x2,5,5,1,no,0,0,0,weapon,0,	RK_IGNITIONBREAK,Ignition Break
 2007,0,0,0,0,0,0,5,0,no,0,0,0,weapon,0,		RK_DRAGONTRAINING,Dragon Training
-2008,9,6,2,3,0x2,1:1:1:2:2:2:3:3:4:4,10,1,no,0,0,0,weapon,0,	RK_DRAGONBREATH,Dragon Breath
-2009,0,6,4,0,0x3,3:4:5:6:7,5,1,yes,0,0,0,none,0,	RK_DRAGONHOWLING,Dragon Howling
+2008,9,6,2,3,0x42,1:1:1:2:2:2:3:3:4:4,10,1,no,0,0,0,weapon,0,	RK_DRAGONBREATH,Dragon Breath
+2009,0,6,4,0,0x3,3:4:5:6:7,5,1,no,0,0,0,none,0,	RK_DRAGONHOWLING,Dragon Howling
 2010,0,0,0,0,0,0,10,0,no,0,0,0,none,0,		RK_RUNEMASTERY,Rune Mastery
 2011,0,6,4,0,0x1,0,1,1,yes,0,0,0,none,0,	RK_MILLENNIUMSHIELD,Millenium Shield
 2012,1,6,4,-1,0,0x8,1,1,yes,0,0,0,weapon,0,	RK_CRUSHSTRIKE,Crush Strike
@@ -996,18 +996,18 @@
 2474,0,0,0,0,0,0,5,0,no,0,0,0,none,0,		GN_TRAINING_SWORD,Sword Training
 2475,0,0,0,0,0,0,5,0,no,0,0,0,none,0,		GN_REMODELING_CART,Cart Remodeling
 2476,0,6,4,-1,0x2,2,5,1,no,0,0,0,weapon,2,	GN_CART_TORNADO,Cart Tornado
-2477,7:8:9:10:11,6,1,-1,0x2,1:1:2:2:3,5,1,yes,0,0,0,weapon,0,	GN_CARTCANNON,Cart Cannon
+2477,7:8:9:10:11,6,1,-1,0x42,1:1:2:2:3,5,1,yes,0,0,0,weapon,0,	GN_CARTCANNON,Cart Cannon
 2478,0,6,4,0,0x1,0,5,1,yes,0,0,0,none,0,	GN_CARTBOOST,Cart Boost
-2479,9,6,2,0,0,0,5,1,yes,0,0x80,5,misc,0,	GN_THORNS_TRAP,Thorn Trap
+2479,9,6,2,0,0x1,0,5,1,no,0,0x80,3,misc,0,	GN_THORNS_TRAP,Thorn Trap
 2480,11,6,1,0,0x1,0,5,1,yes,0,0,3,misc,0,		GN_BLOOD_SUCKER,Blood Sucker //CHECK Data says its a magic attack. Hmmmm....
 2481,11,6,1,-1,0x2,1:2:3:4:5,5,1,yes,0,0,0,weapon,0,	GN_SPORE_EXPLOSION,Spore Explosion //CHECK Data says its element is set to neutral. Need to confirm.
 2482,11,6,16,0,0x1,0,5,-1,yes,0,0,1,weapon,2,	GN_WALLOFTHORN,Wall of Thorns
 2483,11,6,2,0,0x3,4,10,1,yes,0,0,0,none,0,	GN_CRAZYWEED,Crazy Weed
 2484,0,6,2,2,0,0,10,1,no,0,0,0,weapon,0,	GN_CRAZYWEED_ATK,Crazy Weed Attack
-2485,9,6,2,3,0,0,5,1,yes,0,0,0,magic,0,		GN_DEMONIC_FIRE,Demonic Fire
-2486,9,6,2,0,0,0,5,1,yes,0,0,0,none,0,		GN_FIRE_EXPANSION,Fire Expansion //CHECK FIX ME!!!! Level 1 is reducing the damage. Should increase it by 50%
-2487,9,6,2,0,0,0,1,1,no,0,0,0,none,0,		GN_FIRE_EXPANSION_SMOKE_POWDER,Fire Expansion Smoke Powder
-2488,9,6,2,0,0,0,1,1,no,0,0,0,none,0,		GN_FIRE_EXPANSION_TEAR_GAS,Fire Expansion Tear Gas
+2485,9,6,2,3,0,0,5,1,yes,0,0,1,magic,0,		GN_DEMONIC_FIRE,Demonic Fire
+2486,9,6,2,0,0,0,5,1,yes,0,0,0,none,0,		GN_FIRE_EXPANSION,Fire Expansion
+2487,0,6,2,0,0,0,1,1,no,0,0,0,none,0,		GN_FIRE_EXPANSION_SMOKE_POWDER,Fire Expansion Smoke Powder
+2488,0,6,2,0,0,0,1,1,no,0,0,0,none,0,		GN_FIRE_EXPANSION_TEAR_GAS,Fire Expansion Tear Gas
 2489,11,6,1,0,0,0,10,1:2:3:4:5:6:7:8:9:10,no,0,0,0,weapon,0,		GN_FIRE_EXPANSION_ACID,Fire Expansion Acid
 2490,9,6,2,0,0x3,1,5,1,yes,0,0x80,2:3:4:5:6,none,0,	GN_HELLS_PLANT,Hell's Plant
 2491,0,6,1,0,0xC0,0,5,1,no,0,0,0,misc,0,	GN_HELLS_PLANT_ATK,Hell's Plant Attack
@@ -1069,33 +1069,33 @@
 2574,0,6,1,-1,0,0,10,1,no,0,0,0,weapon,0,	RL_GLITTERING_GREED_ATK,Flip The Coin Greed Attack//Guess on max level is from Flip The Coin Greed
 
 // Kagerou & Oboro
-3001,0,6,4,0,0,0,1,1,no,0,0,0,none,0,		KO_YAMIKUMO,Yamikumo
+3001,0,6,4,0,0,0,1,1,no,0,0,0,none,0,		KO_YAMIKUMO,Shadow Hiding
 3002,0,0,0,0,0,0,5,0,no,0,0,0,weapon,0,		KO_RIGHT,Right Hand Mastery
 3003,0,0,0,0,0,0,5,0,no,0,0,0,weapon,0,		KO_LEFT,Left Hand Mastery
-3004,3:4:5:6:7,8,1,-1,0,0,5,-2,no,0,0,0,weapon,0,	KO_JYUMONJIKIRI,Cross Strike
-3005,2,6,1,-1,0,0,5,1,no,0,0,0,weapon,0,		KO_SETSUDAN,Soul Sever
-3006,7:8:9:10:11,6,2,0,0x2,2,5,0,no,0,0,0,weapon,0,	KO_BAKURETSU,Bakuretsu Kunai
-3007,0,6,4,-1,0x42,4:4:4:4:5,5,0,no,0,0,0,misc,0,	KO_HAPPOKUNAI,Happo Kunai
-3008,9,8,2,0,0x12,2,10,-10,no,0,0,0,misc,0,	KO_MUCHANAGE,Mucha Nage
-3009,9:10:11:12:13,8,2,-1,0x2,3,5,-5,no,0,0,0,weapon,0,	KO_HUUMARANKA,Huuma Shuriken Ranka
+3004,3:4:5:6:7,8,1,-1,0,0,5,-2,no,0,0,0,weapon,0,	KO_JYUMONJIKIRI,Cross Slash
+3005,2,6,1,-1,0,0,5,1,no,0,0,0,weapon,0,		KO_SETSUDAN,Soul Cutter
+3006,7:8:9:10:11,6,2,0,0x2,2,5,0,no,0,0,0,weapon,0,	KO_BAKURETSU,Kunai Explosion
+3007,0,6,4,-1,0x42,4:4:4:4:5,5,0,no,0,0,0,misc,0,	KO_HAPPOKUNAI,Kunai Splash
+3008,11,8,2,0,0x56,1:1:1:1:1:1:1:1:1:2,10,-10,no,0,0,0,misc,0,	KO_MUCHANAGE,Rapid Throw
+3009,9:10:11:12:13,8,2,-1,0x2,3,5,-5,no,0,0,0,weapon,0,	KO_HUUMARANKA,Swirling Petal
 3010,3,6,4,0,0x42,0,5,1,no,0,0x80,0,weapon,0,	KO_MAKIBISHI,Makibishi
 3011,0,6,4,0,0x1,0,5,0,yes,0,0,0,none,0,	KO_MEIKYOUSISUI,Meikyo Shisui
 3012,0,6,4,0,0x1,0,5,0,no,0,0,1,none,3:4:5:6:7,		KO_ZANZOU,Zanzou
-3013,5,6,1,0,0x1,0,5,0,no,0,0,0,none,0,		KO_KYOUGAKU,Kyougaku
-3014,5,6,1,0,0x1,0,5,0,no,0,0,0,none,0,		KO_JYUSATSU,Jyusatsu
-3015,0,6,4,3,0x1,0,1,1,no,0,0,0,none,0,		KO_KAHU_ENTEN,Kahu Enten
-3016,0,6,4,1,0x1,0,1,1,no,0,0,0,none,0,		KO_HYOUHU_HUBUKI,Hyouhu Hubuki
-3017,0,6,4,4,0x1,0,1,1,no,0,0,0,none,0,		KO_KAZEHU_SEIRAN,Kazehu Seiran
-3018,0,6,4,2,0x1,0,1,1,no,0,0,0,none,0,		KO_DOHU_KOUKAI,Dohu Koukai
-3019,11,6,1,0,0,0,5,0,no,0,0,0,magic,0,	KO_KAIHOU,Technique Kaihou
-3020,7,6,2,0,0,0,1,3,yes,0,0,0,magic,0,		KO_ZENKAI,Zenkai
-3021,5:6:7:8:9,6,16,0,0x1,0,5,1,no,0,0,0,none,0,	KO_GENWAKU,Genwaku
-3022,0,6,4,0,0x1,0,5,0,no,0,0,0,none,0,		KO_IZAYOI,Izayoi
-3023,0,6,4,0,0x3,2:3:4:5:6,5,0,no,0,0,0,none,0,	KG_KAGEHUMI,Kagehumi
-3024,7,6,1,0,0x1,0,5,1,no,0,0,0,none,0,		KG_KYOMU,Kyomu
+3013,5,6,1,0,0x1,0,5,0,no,0,0,0,none,0,		KO_KYOUGAKU,Illusion - Shock
+3014,5,6,1,0,0x1,0,5,0,no,0,0,0,none,0,		KO_JYUSATSU,Illusion - Death
+3015,0,6,4,3,0x1,0,1,1,no,0,0,0,none,0,		KO_KAHU_ENTEN,Fire Charm
+3016,0,6,4,1,0x1,0,1,1,no,0,0,0,none,0,		KO_HYOUHU_HUBUKI,Ice Charm
+3017,0,6,4,4,0x1,0,1,1,no,0,0,0,none,0,		KO_KAZEHU_SEIRAN,Wind Charm
+3018,0,6,4,2,0x1,0,1,1,no,0,0,0,none,0,		KO_DOHU_KOUKAI,Earth Charm
+3019,11,6,1,0,0,0,5,0,no,0,0,0,magic,0,	KO_KAIHOU,Release Ninja Spell
+3020,7,6,2,0,0,0,1,3,yes,0,0,0,magic,0,		KO_ZENKAI,Cast Ninja Spell
+3021,5:6:7:8:9,6,16,0,0x1,0,5,1,no,0,0,0,none,0,	KO_GENWAKU,Illusion - Bewitch
+3022,0,6,4,0,0x1,0,5,0,no,0,0,0,none,0,		KO_IZAYOI,16th Night
+3023,0,6,4,0,0x3,2:3:4:5:6,5,0,no,0,0,0,none,0,	KG_KAGEHUMI,Shadow Trampling
+3024,7,6,1,0,0x1,0,5,1,no,0,0,0,none,0,		KG_KYOMU,Empty Shadow
 3025,7,6,16,0,0x1,0,5,1,no,0,0,0,none,0,	KG_KAGEMUSYA,Kagemusha
-3026,7,6,16,0,0x1,0,5,1,no,0,0,0,none,0,	OB_ZANGETSU,Zangetsu
-3027,7,6,16,0,0x1,0,5,1,no,0,0,0,none,0,	OB_OBOROGENSOU,Oboro Gensou
+3026,7,6,16,0,0x1,0,5,1,no,0,0,0,none,0,	OB_ZANGETSU,Distorted Crescent
+3027,7,6,16,0,0x1,0,5,1,no,0,0,0,none,0,	OB_OBOROGENSOU,Moonlight Fantasy
 3028,1,6,4,0,0x2,3,1,1,no,0,0,0,weapon,0,	OB_OBOROGENSOU_TRANSITION_ATK,Hazy Moonlight Illusion Transition Attack
 3029,7,6,1,0,0x1,0,5,0,no,0,0,0,none,0,		OB_AKAITSUKI,Akaitsuki
 
@@ -1109,22 +1109,19 @@
 // EP 14.3 Part 2 3rd Job Skills
 5001,1,8,1,-1,0,0,5,3,no,0,0,0,weapon,0,	GC_DARKCROW,Dark Claw
 5002,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		RA_UNLIMIT,Unlimited
-5003,7,6,1,-1,0x2,4:5:6:7:8,5,1,no,0,0,0,weapon,0,	GN_ILLUSIONDOPING,Illusion Doping
-5004,9,6,2,1,0x2,1:1:1:2:2:2:3:3:4:4,10,1,no,0,0,0,weapon,0,	RK_DRAGONBREATH_WATER,Dragon Breath - Water
+5003,7,6,1,-1,0x2,4:5:6:7:-1,5,1,no,0,0,0,weapon,0,	GN_ILLUSIONDOPING,Illusion Doping
+5004,9,6,2,1,0x42,1:1:1:2:2:2:3:3:4:4,10,1,no,0,0,0,weapon,0,	RK_DRAGONBREATH_WATER,Dragon Breath - Water
 5005,0,6,4,0,0x3,3,1,1,no,0,0,0,none,0,		RK_LUXANIMA,Lux Anima
 5006,1,6,2,3,0,0,5,1,no,0,0,3,misc,0,		NC_MAGMA_ERUPTION,Magma Eruption
 5007,0,6,4,0,0x3,5:6:7:8:9,5,1,no,0,0,0,none,0,	WM_FRIGG_SONG,Frigg's Song
-5008,0,6,4,0,0x3,15,5,1,no,0,0,0,none,0,	SO_ELEMENTAL_SHIELD,Elemental Shield
+5008,0,6,4,0,0x3,11,5,1,no,0,0,0,none,0,	SO_ELEMENTAL_SHIELD,Elemental Shield
 5009,1,6,1,0,0x1,0,5,1,no,0,0,0,none,0,		SR_FLASHCOMBO,Flash Combo
 5010,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		SC_ESCAPE,Emergency Escape
 5011,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		AB_OFFERTORIUM,Offertorium
 5012,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		WL_TELEKINESIS_INTENSE,Intense Telekinesis
-5013,0,6,4,0,0x3,5,5,1,no,0,0,0,none,0,		LG_KINGS_GRACE,King's Grace
+5013,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		LG_KINGS_GRACE,King's Grace
 5014,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		ALL_FULL_THROTTLE,Full Throttle
-5015,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		SR_FLASHCOMBO_ATK_STEP1,Flash Combo Attack Step 1
-5016,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		SR_FLASHCOMBO_ATK_STEP2,Flash Combo Attack Step 2
-5017,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		SR_FLASHCOMBO_ATK_STEP3,Flash Combo Attack Step 3
-5018,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		SR_FLASHCOMBO_ATK_STEP4,Flash Combo Attack Step 4
+5015,0,6,2,-1,0x2,3,5,1,no,0,0,0,weapon,0,	NC_MAGMA_ERUPTION_DOTDAMAGE,Magma Eruption Dot Damage
 
 8001,9,6,4,0,0x1,0,5,1,no,0,0,0,magic,0,	HLIF_HEAL,Healing Touch
 8002,0,6,4,0,0x3,-1,5,1,no,0,0,0,none,0,	HLIF_AVOID,Avoid

@@ -116,7 +116,8 @@ typedef enum sc_type {
 	SC_COLD,
 	SC_BURNING,
 	SC_DEEP_SLEEP,
-	SC_COMMON_MAX = 14, // end
+	SC__CHAOS,
+	SC_COMMON_MAX = 15, // end
 
 	//Next up, we continue on 20, to leave enough room for additional "common" ailments in the future.
 	SC_PROVOKE = 20,
@@ -709,7 +710,7 @@ typedef enum sc_type {
 	SC_NEEDLE_OF_PARALYZE,
 	SC_PAIN_KILLER, // 550
 #ifdef RENEWAL
-	SC_EXTREMITYFIST2,
+	SC_EXTREMITYFIST2 = 551,
 	SC_RAID,
 #endif
 	SC_DARKCROW = 553,
@@ -741,9 +742,9 @@ typedef enum sc_type {
 	SC_DECORATION_OF_MUSIC,
 
 	SC__MAELSTROM,
-	SC__CHAOS,
+	//SC__CHAOS,
 
-	SC__FEINTBOMB_MASTER,
+	SC__FEINTBOMB_MASTER = 578,
 	SC_FALLENEMPIRE,
 	SC_FLASHCOMBO, // 580
 
@@ -825,6 +826,7 @@ typedef enum sc_type {
 	SC_M_LIFEPOTION,
 	SC_G_LIFEPOTION, // 640
 	SC_MYSTICPOWDER,
+	SC_FIRE_EXPANSION_TEAR_GAS_SOB,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
