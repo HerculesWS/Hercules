@@ -5912,28 +5912,35 @@ void clif_insert_card(struct map_session_data *sd,int idx_equip,int idx_card,int
 /// 0177 <packet len>.W { <name id>.W }*
 void clif_item_identify_list(struct map_session_data *sd)
 {
-	int i,c;
-	int fd;
+	int i, c = 0, fd, len;
+	int16 items[MAX_INVENTORY] = { 0 };
 
 	nullpo_retv(sd);
 
-	fd=sd->fd;
+	fd = sd->fd;
 
-	WFIFOHEAD(fd,MAX_INVENTORY * 2 + 4);
-	WFIFOW(fd,0)=0x177;
-	for(i=c=0;i<MAX_INVENTORY;i++){
-		if(sd->status.inventory[i].nameid > 0 && !sd->status.inventory[i].identify){
-			WFIFOW(fd,c*2+4)=i+2;
+	for (i = 0; i < MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].nameid > 0 && !sd->status.inventory[i].identify) {
+			items[c] = i + 2;
 			c++;
 		}
 	}
-	if(c > 0) {
-		WFIFOW(fd,2)=c*2+4;
-		WFIFOSET(fd,WFIFOW(fd,2));
-		sd->menuskill_id = MC_IDENTIFY;
-		sd->menuskill_val = c;
-		sd->state.workinprogress = 3;
+
+	if (c == 0) return;
+
+	len = c * 2 + 4;
+
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = 0x177;
+	WFIFOW(fd, 2) = len;
+	for (i = 0; i < c; i++) {
+		WFIFOW(fd, i * 2 + 4) = items[i];
 	}
+	WFIFOSET(fd, len);
+
+	sd->menuskill_id = MC_IDENTIFY;
+	sd->menuskill_val = c;
+	sd->state.workinprogress = 3;
 }
 
 /// Notifies the client about the result of a item identify request (ZC_ACK_ITEMIDENTIFY).
