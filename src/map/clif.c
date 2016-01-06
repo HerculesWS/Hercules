@@ -5857,30 +5857,35 @@ void clif_solved_charname(int fd, int charid, const char* name)
 /// 017b <packet len>.W { <name id>.W }*
 void clif_use_card(struct map_session_data *sd,int idx)
 {
-	int i, c;
-	int fd;
+	int i, c = 0, fd, len;
+	int16 items[MAX_INVENTORY] = { 0 };
 
 	nullpo_retv(sd);
+
 	fd = sd->fd;
 	if (sd->state.trading != 0)
 		return;
 	if (!pc->can_insert_card(sd, idx))
 		return;
 
-	WFIFOHEAD(fd, MAX_INVENTORY * 2 + 4);
-	WFIFOW(fd, 0) = 0x17b;
-
-	for (i = c = 0; i < MAX_INVENTORY; i++) {
+	for (i = 0; i < MAX_INVENTORY; i++) {
 		if (!pc->can_insert_card_into(sd, idx, i))
 			continue;
-		WFIFOW(fd, 4 + c * 2) = i + 2;
+		items[c] = i + 2;
 		c++;
 	}
 
-	if (!c) return; // no item is available for card insertion
+	if (c == 0) return; // no item is available for card insertion
 
-	WFIFOW(fd, 2) = 4 + c * 2;
-	WFIFOSET(fd, WFIFOW(fd, 2));
+	len = c * 2 + 4;
+
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = 0x17b;
+	WFIFOW(fd, 2) = len;
+	for (i = 0; i < c; i++) {
+		WFIFOW(fd, i * 2 + 4) = items[i];
+	}
+	WFIFOSET(fd, len);
 }
 
 /// Notifies the client about the result of item carding/composition (ZC_ACK_ITEMCOMPOSITION).
