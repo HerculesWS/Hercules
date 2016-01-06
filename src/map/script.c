@@ -20898,6 +20898,22 @@ void script_hardcoded_constants(void)
 	script->set_constant("BG_AREA_WOS",BG_AREA_WOS,false, false);
 	script->set_constant("BG_QUEUE",BG_QUEUE,false, false);
 
+	/* LOOK_ constants, use in setlook/changelook script commands */
+	script->set_constant("LOOK_BASE", LOOK_BASE, false, false);
+	script->set_constant("LOOK_HAIR", LOOK_HAIR, false, false);
+	script->set_constant("LOOK_WEAPON", LOOK_WEAPON, false, false);
+	script->set_constant("LOOK_HEAD_BOTTOM", LOOK_HEAD_BOTTOM, false, false);
+	script->set_constant("LOOK_HEAD_TOP", LOOK_HEAD_TOP, false, false);
+	script->set_constant("LOOK_HEAD_MID", LOOK_HEAD_MID, false, false);
+	script->set_constant("LOOK_HAIR_COLOR", LOOK_HAIR_COLOR, false, false);
+	script->set_constant("LOOK_CLOTHES_COLOR", LOOK_CLOTHES_COLOR, false, false);
+	script->set_constant("LOOK_SHIELD", LOOK_SHIELD, false, false);
+	script->set_constant("LOOK_SHOES", LOOK_SHOES, false, false);
+	script->set_constant("LOOK_BODY", LOOK_BODY, false, false);
+	script->set_constant("LOOK_FLOOR", LOOK_FLOOR, false, false);
+	script->set_constant("LOOK_ROBE", LOOK_ROBE, false, false);
+	script->set_constant("LOOK_BODY2", LOOK_BODY2, false, false);
+
 	/* Equip Position in Bits,  use with *getiteminfo type 5,  or @inventorylist_equip */
 	script->set_constant("EQP_HEAD_LOW", EQP_HEAD_LOW, false, false);
 	script->set_constant("EQP_HEAD_MID", EQP_HEAD_MID, false, false);
