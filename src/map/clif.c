@@ -6794,8 +6794,10 @@ void clif_pet_roulette(struct map_session_data *sd,int data)
 
 /// Presents a list of pet eggs that can be hatched (ZC_PETEGG_LIST).
 /// 01a6 <packet len>.W { <index>.W }*
-void clif_sendegg(struct map_session_data *sd) {
-	int i, n, fd;
+void clif_sendegg(struct map_session_data *sd)
+{
+	int i, n = 0, fd, len;
+	int16 items[MAX_INVENTORY] = { 0 };
 
 	nullpo_retv(sd);
 
@@ -6805,19 +6807,24 @@ void clif_sendegg(struct map_session_data *sd) {
 		return;
 	}
 
-	WFIFOHEAD(fd, MAX_INVENTORY * 2 + 4);
-	WFIFOW(fd,0) = 0x1a6;
-	for (i = n = 0; i < MAX_INVENTORY; i++) {
-		if (sd->status.inventory[i].nameid <= 0 || sd->inventory_data[i] == NULL || sd->inventory_data[i]->type!=IT_PETEGG || sd->status.inventory[i].amount <= 0)
+	for (i = 0; i < MAX_INVENTORY; i++) {
+		if (sd->status.inventory[i].nameid <= 0 || sd->inventory_data[i] == NULL || sd->inventory_data[i]->type != IT_PETEGG || sd->status.inventory[i].amount <= 0)
 			continue;
-		WFIFOW(fd, n * 2 + 4) = i + 2;
+		items[n] = i + 2;
 		n++;
 	}
 
-	if (!n) return;
+	if (n == 0) return;
 
-	WFIFOW(fd, 2) = 4 + n * 2;
-	WFIFOSET(fd, WFIFOW(fd, 2));
+	len = n * 2 + 4;
+
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = 0x1a6;
+	WFIFOW(fd, 2) = len;
+	for (i = 0; i < n; i++) {
+		WFIFOW(fd, i * 2 + 4) = items[i];
+	}
+	WFIFOSET(fd, len);
 
 	sd->menuskill_id = SA_TAMINGMONSTER;
 	sd->menuskill_val = -1;
