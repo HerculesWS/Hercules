@@ -1051,7 +1051,7 @@ struct clif_interface {
 	void (*elemental_updatestatus) (struct map_session_data *sd, int type);
 	/* bgqueue */
 	void (*bgqueue_ack) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, unsigned char arena_id);
-	void (*bgqueue_notice_delete) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, char *name);
+	void (*bgqueue_notice_delete) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, const char *name);
 	void (*bgqueue_update_info) (struct map_session_data *sd, unsigned char arena_id, int position);
 	void (*bgqueue_joined) (struct map_session_data *sd, int pos);
 	void (*bgqueue_pcleft) (struct map_session_data *sd);
@@ -1080,7 +1080,7 @@ struct clif_interface {
 	int (*delay_damage_sub) (int tid, int64 tick, int id, intptr_t data);
 	/* NPC Market */
 	void (*npc_market_open) (struct map_session_data *sd, struct npc_data *nd);
-	void (*npc_market_purchase_ack) (struct map_session_data *sd, struct packet_npc_market_purchase *req, unsigned char response);
+	void (*npc_market_purchase_ack) (struct map_session_data *sd, const struct packet_npc_market_purchase *req, unsigned char response);
 	/* */
 	bool (*parse_roulette_db) (void);
 	void (*roulette_generate_ack) (struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, short bonusItemID);
