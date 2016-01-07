@@ -98,7 +98,7 @@ struct guild_interface {
 	struct guild_castle *(*mapindex2gc) (short map_index);
 	/* */
 	struct map_session_data *(*getavailablesd) (struct guild *g);
-	int (*getindex) (struct guild *g,int account_id,int char_id);
+	int (*getindex) (const struct guild *g, int account_id, int char_id);
 	int (*getposition) (struct guild *g, struct map_session_data *sd);
 	unsigned int (*payexp) (struct map_session_data *sd,unsigned int exp);
 	int (*getexp) (struct map_session_data *sd,int exp); // [Celest]
@@ -107,7 +107,7 @@ struct guild_interface {
 	int (*created) (int account_id,int guild_id);
 	int (*request_info) (int guild_id);
 	int (*recv_noinfo) (int guild_id);
-	int (*recv_info) (struct guild *sg);
+	int (*recv_info) (const struct guild *sg);
 	int (*npc_request_info) (int guild_id,const char *ev);
 	int (*invite) (struct map_session_data *sd,struct map_session_data *tsd);
 	int (*reply_invite) (struct map_session_data *sd,int guild_id,int flag);
@@ -130,7 +130,7 @@ struct guild_interface {
 	int (*change_memberposition) (int guild_id,int account_id,int char_id,short idx);
 	int (*memberposition_changed) (struct guild *g,int idx,int pos);
 	int (*change_position) (int guild_id,int idx,int mode,int exp_mode,const char *name);
-	int (*position_changed) (int guild_id,int idx,struct guild_position *p);
+	int (*position_changed) (int guild_id, int idx, const struct guild_position *p);
 	int (*change_notice) (struct map_session_data *sd,int guild_id,const char *mes1,const char *mes2);
 	int (*notice_changed) (int guild_id,const char *mes1,const char *mes2);
 	int (*change_emblem) (struct map_session_data *sd,int len,const char *data);
@@ -139,14 +139,14 @@ struct guild_interface {
 	int (*recv_message) (int guild_id,int account_id,const char *mes,int len);
 	int (*send_dot_remove) (struct map_session_data *sd);
 	int (*skillupack) (int guild_id,uint16 skill_id,int account_id);
-	int (*dobreak) (struct map_session_data *sd,char *name);
+	int (*dobreak) (struct map_session_data *sd, const char *name);
 	int (*broken) (int guild_id,int flag);
 	int (*gm_change) (int guild_id, struct map_session_data *sd);
 	int (*gm_changed) (int guild_id, int account_id, int char_id);
 	/* */
 	void (*castle_map_init) (void);
 	int (*castledatasave) (int castle_id,int index,int value);
-	int (*castledataloadack) (int len, struct guild_castle *gc);
+	int (*castledataloadack) (int len, const struct guild_castle *gc);
 	void (*castle_reconnect) (int castle_id, int index, int value);
 	/* */
 	void (*agit_start) (void);
@@ -176,7 +176,7 @@ struct guild_interface {
 	int (*broken_sub) (DBKey key, DBData *data, va_list ap);
 	int (*castle_broken_sub) (DBKey key, DBData *data, va_list ap);
 	void (*makemember) (struct guild_member *m,struct map_session_data *sd);
-	int (*check_member) (struct guild *g);
+	int (*check_member) (const struct guild *g);
 	int (*get_alliance_count) (struct guild *g,int flag);
 	void (*castle_reconnect_sub) (void *key, void *data, va_list ap);
 };
