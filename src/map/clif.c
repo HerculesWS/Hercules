@@ -18787,7 +18787,9 @@ int clif_parse(int fd) {
 			return 0; // not enough data received to form the packet
 
 		if( battle_config.packet_obfuscation == 2 || cmd != RFIFOW(fd, 0) || (sd && sd->parse_cmd_func == clif_parse_cmd_decrypt) ) {
-			RFIFOW(fd, 0) = cmd;
+			// Note: Overriding const qualifier to re-inject the decoded packet ID.
+			int16 *packet_id = (int16 *)RFIFOP(fd, 0);
+			*packet_id = cmd;
 			if( sd ) {
 				sd->cryptKey = (( sd->cryptKey * clif->cryptKey[1] ) + clif->cryptKey[2]) & 0xFFFFFFFF; // Update key for the next packet
 			}
