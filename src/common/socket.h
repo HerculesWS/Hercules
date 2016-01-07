@@ -50,13 +50,13 @@ struct config_setting_t;
 #define RFIFOP(fd,pos) (sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos))
 #define WFIFOP(fd,pos) (sockt->session[fd]->wdata + sockt->session[fd]->wdata_size + (pos))
 
-#define RFIFOB(fd,pos) (*(uint8*)RFIFOP((fd),(pos)))
+#define RFIFOB(fd,pos) (*(const uint8*)RFIFOP((fd),(pos)))
 #define WFIFOB(fd,pos) (*(uint8*)WFIFOP((fd),(pos)))
-#define RFIFOW(fd,pos) (*(uint16*)RFIFOP((fd),(pos)))
+#define RFIFOW(fd,pos) (*(const uint16*)RFIFOP((fd),(pos)))
 #define WFIFOW(fd,pos) (*(uint16*)WFIFOP((fd),(pos)))
-#define RFIFOL(fd,pos) (*(uint32*)RFIFOP((fd),(pos)))
+#define RFIFOL(fd,pos) (*(const uint32*)RFIFOP((fd),(pos)))
 #define WFIFOL(fd,pos) (*(uint32*)WFIFOP((fd),(pos)))
-#define RFIFOQ(fd,pos) (*(uint64*)RFIFOP((fd),(pos)))
+#define RFIFOQ(fd,pos) (*(const uint64*)RFIFOP((fd),(pos)))
 #define WFIFOQ(fd,pos) (*(uint64*)WFIFOP((fd),(pos)))
 #define RFIFOSPACE(fd) (sockt->session[fd]->max_rdata - sockt->session[fd]->rdata_size)
 #define WFIFOSPACE(fd) (sockt->session[fd]->max_wdata - sockt->session[fd]->wdata_size)
@@ -86,10 +86,10 @@ struct config_setting_t;
 
 // buffer I/O macros
 #define RBUFP(p,pos) (((uint8*)(p)) + (pos))
-#define RBUFB(p,pos) (*(uint8*)RBUFP((p),(pos)))
-#define RBUFW(p,pos) (*(uint16*)RBUFP((p),(pos)))
-#define RBUFL(p,pos) (*(uint32*)RBUFP((p),(pos)))
-#define RBUFQ(p,pos) (*(uint64*)RBUFP((p),(pos)))
+#define RBUFB(p,pos) (*(const uint8 *)RBUFP((p),(pos)))
+#define RBUFW(p,pos) (*(const uint16 *)RBUFP((p),(pos)))
+#define RBUFL(p,pos) (*(const uint32 *)RBUFP((p),(pos)))
+#define RBUFQ(p,pos) (*(const uint64 *)RBUFP((p),(pos)))
 
 #define WBUFP(p,pos) (((uint8*)(p)) + (pos))
 #define WBUFB(p,pos) (*(uint8*)WBUFP((p),(pos)))
