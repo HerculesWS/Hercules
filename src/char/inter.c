@@ -446,7 +446,7 @@ void mapif_parse_accinfo(int fd)
 	int account_id;
 	char *data;
 
-	safestrncpy(query, (char*) RFIFOP(fd,14), NAME_LENGTH);
+	safestrncpy(query, RFIFOP(fd,14), NAME_LENGTH);
 
 	SQL->EscapeString(inter->sql_handle, query_esq, query);
 
@@ -1101,7 +1101,7 @@ int mapif_parse_WisRequest(int fd)
 		return 0;
 	}
 
-	safestrncpy(name, (char*)RFIFOP(fd,28), NAME_LENGTH); //Received name may be too large and not contain \0! [Skotlex]
+	safestrncpy(name, RFIFOP(fd,28), NAME_LENGTH); //Received name may be too large and not contain \0! [Skotlex]
 
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `name` FROM `%s` WHERE `name`='%s'", char_db, esc_name) )
@@ -1119,8 +1119,7 @@ int mapif_parse_WisRequest(int fd)
 		memset(name, 0, NAME_LENGTH);
 		memcpy(name, data, min(len, NAME_LENGTH));
 		// if source is destination, don't ask other servers.
-		if( strncmp((const char*)RFIFOP(fd,4), name, NAME_LENGTH) == 0 )
-		{
+		if (strncmp(RFIFOP(fd,4), name, NAME_LENGTH) == 0) {
 			mapif->wis_response(fd, RFIFOP(fd, 4), 1);
 		}
 		else
@@ -1195,7 +1194,7 @@ int mapif_parse_Registry(int fd)
 		for(i = 0; i < count; i++) {
 			unsigned int index;
 			int len = RFIFOB(fd, cursor);
-			safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
+			safestrncpy(key, RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
 			cursor += len + 1;
 
 			index = RFIFOL(fd, cursor);
@@ -1213,7 +1212,7 @@ int mapif_parse_Registry(int fd)
 				/* str */
 				case 2:
 					len = RFIFOB(fd, cursor);
-					safestrncpy(sval, (char*)RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
+					safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
 					cursor += len + 1;
 					inter->savereg(account_id,char_id,key,index,(intptr_t)sval,true);
 					break;
@@ -1267,7 +1266,7 @@ int mapif_parse_NameChangeRequest(int fd)
 	account_id = RFIFOL(fd,2);
 	char_id = RFIFOL(fd,6);
 	type = RFIFOB(fd,10);
-	name = (char*)RFIFOP(fd,11);
+	name = RFIFOP(fd,11);
 
 	// Check Authorized letters/symbols in the name
 	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorized

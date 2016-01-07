@@ -311,7 +311,7 @@ int mapif_parse_CreatePet(int fd)
 {
 	RFIFOHEAD(fd);
 	mapif->create_pet(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOW(fd, 10), RFIFOW(fd, 12), RFIFOW(fd, 14), RFIFOW(fd, 16), RFIFOW(fd, 18),
-		RFIFOW(fd, 20), RFIFOB(fd, 22), RFIFOB(fd, 23), (char*)RFIFOP(fd, 24));
+		RFIFOW(fd, 20), RFIFOB(fd, 22), RFIFOB(fd, 23), RFIFOP(fd, 24));
 	return 0;
 }
 
@@ -325,7 +325,7 @@ int mapif_parse_LoadPet(int fd)
 int mapif_parse_SavePet(int fd)
 {
 	RFIFOHEAD(fd);
-	mapif->save_pet(fd, RFIFOL(fd, 4), (struct s_pet *) RFIFOP(fd, 8));
+	mapif->save_pet(fd, RFIFOL(fd, 4), RFIFOP(fd, 8));
 	return 0;
 }
 
