@@ -77,11 +77,11 @@ struct config_setting_t;
 #define RFIFOSKIP(fd, len) (sockt->rfifoskip(fd, len))
 
 /* [Ind/Hercules] */
-#define RFIFO2PTR(fd) (void*)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos)
+#define RFIFO2PTR(fd) ((const void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos))
 #define RP2PTR(fd) RFIFO2PTR(fd)
 
 /* [Hemagx/Hercules] */
-#define WFIFO2PTR(fd) (void*)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size)
+#define WFIFO2PTR(fd) ((void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size))
 #define WP2PTR(fd) WFIFO2PTR(fd)
 
 // buffer I/O macros
