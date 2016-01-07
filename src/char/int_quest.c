@@ -218,7 +218,8 @@ int mapif_parse_quest_save(int fd)
 {
 	int i, j, k, old_n, new_n = (RFIFOW(fd,2)-8)/sizeof(struct quest);
 	int char_id = RFIFOL(fd,4);
-	struct quest *old_qd = NULL, *new_qd = NULL;
+	struct quest *old_qd = NULL;
+	const struct quest *new_qd = NULL;
 	bool success = true;
 
 	if (new_n > 0)

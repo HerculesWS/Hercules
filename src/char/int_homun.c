@@ -49,7 +49,7 @@ void inter_homunculus_sql_final(void)
 	return;
 }
 
-void mapif_homunculus_created(int fd, int account_id, struct s_homunculus *sh, unsigned char flag)
+void mapif_homunculus_created(int fd, int account_id, const struct s_homunculus *sh, unsigned char flag)
 {
 	nullpo_retv(sh);
 	WFIFOHEAD(fd, sizeof(struct s_homunculus)+9);
@@ -97,7 +97,7 @@ void mapif_homunculus_saved(int fd, int account_id, bool flag)
 	WFIFOSET(fd, 7);
 }
 
-void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsigned char flag, char* name)
+void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsigned char flag, const char *name)
 {
 	nullpo_retv(name);
 	WFIFOHEAD(fd, NAME_LENGTH+12);
@@ -264,7 +264,7 @@ bool mapif_homunculus_delete(int homun_id)
 	return true;
 }
 
-bool mapif_homunculus_rename(char *name)
+bool mapif_homunculus_rename(const char *name)
 {
 	int i;
 
@@ -287,10 +287,15 @@ bool mapif_homunculus_rename(char *name)
 }
 
 
-void mapif_parse_homunculus_create(int fd, int len, int account_id, struct s_homunculus* phd)
+void mapif_parse_homunculus_create(int fd, int len, int account_id, const struct s_homunculus *phd)
 {
-	bool result = mapif->homunculus_save(phd);
-	mapif->homunculus_created(fd, account_id, phd, result);
+	struct s_homunculus shd;
+	bool result;
+
+	memcpy(&shd, phd, sizeof(shd));
+
+	result = mapif->homunculus_save(&shd);
+	mapif->homunculus_created(fd, account_id, &shd, result);
 }
 
 void mapif_parse_homunculus_delete(int fd, int homun_id)
@@ -306,13 +311,17 @@ void mapif_parse_homunculus_load(int fd, int account_id, int homun_id)
 	mapif->homunculus_loaded(fd, account_id, ( result ? &hd : NULL ));
 }
 
-void mapif_parse_homunculus_save(int fd, int len, int account_id, struct s_homunculus* phd)
+void mapif_parse_homunculus_save(int fd, int len, int account_id, const struct s_homunculus *phd)
 {
-	bool result = mapif->homunculus_save(phd);
+	struct s_homunculus shd;
+	bool result;
+
+	memcpy(&shd, phd, sizeof(shd));
+	result = mapif->homunculus_save(&shd);
 	mapif->homunculus_saved(fd, account_id, result);
 }
 
-void mapif_parse_homunculus_rename(int fd, int account_id, int char_id, char* name)
+void mapif_parse_homunculus_rename(int fd, int account_id, int char_id, const char *name)
 {
 	bool result = mapif->homunculus_rename(name);
 	mapif->homunculus_renamed(fd, account_id, char_id, result, name);

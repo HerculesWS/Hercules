@@ -461,7 +461,7 @@ int mapif_party_broken(int party_id, int flag)
 }
 
 //Remarks in the party
-int mapif_party_message(int party_id, int account_id, char *mes, int len, int sfd)
+int mapif_party_message(int party_id, int account_id, const char *mes, int len, int sfd)
 {
 	unsigned char buf[512];
 	nullpo_ret(mes);
@@ -479,7 +479,7 @@ int mapif_party_message(int party_id, int account_id, char *mes, int len, int sf
 
 
 // Create Party
-int mapif_parse_CreateParty(int fd, char *name, int item, int item2, struct party_member *leader)
+int mapif_parse_CreateParty(int fd, const char *name, int item, int item2, const struct party_member *leader)
 {
 	struct party_data *p;
 	int i;
@@ -493,9 +493,11 @@ int mapif_parse_CreateParty(int fd, char *name, int item, int item2, struct part
 	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorized
 		for (i = 0; i < NAME_LENGTH && name[i]; i++)
 			if (strchr(char_name_letters, name[i]) == NULL) {
-				if( name[i] == '"' ) { /* client-special-char */
-					normalize_name(name,"\"");
+				if (name[i] == '"') { /* client-special-char */
+					char *newname = aStrdup(name);
+					normalize_name(newname,"\"");
 					mapif->parse_CreateParty(fd,name,item,item2,leader);
+					aFree(newname);
 					return 0;
 				}
 				mapif->party_created(fd,leader->account_id,leader->char_id,NULL);
@@ -547,7 +549,7 @@ void mapif_parse_PartyInfo(int fd, int party_id, int char_id)
 }
 
 // Add a player to party request
-int mapif_parse_PartyAddMember(int fd, int party_id, struct party_member *member)
+int mapif_parse_PartyAddMember(int fd, int party_id, const struct party_member *member)
 {
 	struct party_data *p;
 	int i;
@@ -729,7 +731,7 @@ int mapif_parse_BreakParty(int fd, int party_id)
 }
 
 //Party sending the message
-int mapif_parse_PartyMessage(int fd, int party_id, int account_id, char *mes, int len)
+int mapif_parse_PartyMessage(int fd, int party_id, int account_id, const char *mes, int len)
 {
 	return mapif->party_message(party_id,account_id,mes,len, fd);
 }

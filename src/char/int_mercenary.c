@@ -179,10 +179,15 @@ void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char flag)
 	WFIFOSET(fd,size);
 }
 
-void mapif_parse_mercenary_create(int fd, struct s_mercenary* merc)
+void mapif_parse_mercenary_create(int fd, const struct s_mercenary *merc)
 {
-	bool result = mapif->mercenary_save(merc);
-	mapif->mercenary_send(fd, merc, result);
+	struct s_mercenary merc_;
+	bool result;
+
+	memcpy(&merc_, merc, sizeof(merc_));
+
+	result = mapif->mercenary_save(&merc_);
+	mapif->mercenary_send(fd, &merc_, result);
 }
 
 void mapif_parse_mercenary_load(int fd, int merc_id, int char_id)
@@ -216,7 +221,12 @@ void mapif_mercenary_saved(int fd, unsigned char flag)
 
 void mapif_parse_mercenary_save(int fd, struct s_mercenary* merc)
 {
-	bool result = mapif->mercenary_save(merc);
+	struct s_mercenary merc_;
+	bool result;
+
+	memcpy(&merc_, merc, sizeof(merc_));
+
+	result = mapif->mercenary_save(merc);
 	mapif->mercenary_saved(fd, result);
 }
 

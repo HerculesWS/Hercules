@@ -767,7 +767,7 @@ void inter_guild_sql_final(void)
 }
 
 // Get guild_id by its name. Returns 0 if not found, -1 on error.
-int inter_guild_search_guildname(char *str)
+int inter_guild_search_guildname(const char *str)
 {
 	int guild_id;
 	char esc_name[NAME_LENGTH*2+1];
@@ -1006,7 +1006,7 @@ int mapif_guild_broken(int guild_id, int flag)
 }
 
 // Send guild message
-int mapif_guild_message(int guild_id, int account_id, char *mes, int len, int sfd)
+int mapif_guild_message(int guild_id, int account_id, const char *mes, int len, int sfd)
 {
 	unsigned char buf[512];
 	nullpo_ret(mes);
@@ -1139,7 +1139,7 @@ int mapif_guild_master_changed(struct guild *g, int aid, int cid)
 	return 0;
 }
 
-int mapif_guild_castle_dataload(int fd, int sz, int *castle_ids)
+int mapif_guild_castle_dataload(int fd, int sz, const int *castle_ids)
 {
 	struct guild_castle *gc = NULL;
 	int num = (sz - 4) / sizeof(int);
@@ -1163,7 +1163,7 @@ int mapif_guild_castle_dataload(int fd, int sz, int *castle_ids)
 
 
 // Guild creation request
-int mapif_parse_CreateGuild(int fd,int account_id,char *name,struct guild_member *master)
+int mapif_parse_CreateGuild(int fd, int account_id, const char *name, const struct guild_member *master)
 {
 	struct guild *g;
 	int i=0;
@@ -1259,7 +1259,7 @@ int mapif_parse_GuildInfo(int fd, int guild_id)
 }
 
 // Add member to guild
-int mapif_parse_GuildAddMember(int fd, int guild_id, struct guild_member *m)
+int mapif_parse_GuildAddMember(int fd, int guild_id, const struct guild_member *m)
 {
 	struct guild * g;
 	int i;
@@ -1455,7 +1455,7 @@ int mapif_parse_BreakGuild(int fd, int guild_id)
 }
 
 // Forward Guild message to others map servers
-int mapif_parse_GuildMessage(int fd, int guild_id, int account_id, char *mes, int len)
+int mapif_parse_GuildMessage(int fd, int guild_id, int account_id, const char *mes, int len)
 {
 	return mapif->guild_message(guild_id,account_id,mes,len, fd);
 }
@@ -1670,7 +1670,7 @@ int inter_guild_charname_changed(int guild_id, int account_id, int char_id, char
 }
 
 // Change a position desc
-int mapif_parse_GuildPosition(int fd, int guild_id, int idx, struct guild_position *p)
+int mapif_parse_GuildPosition(int fd, int guild_id, int idx, const struct guild_position *p)
 {
 	// Could make some improvement in speed, because only change guild_position
 	struct guild * g;
@@ -1809,7 +1809,7 @@ int mapif_parse_GuildEmblem(int fd, int len, int guild_id, int dummy, const char
 	return mapif->guild_emblem(g);
 }
 
-int mapif_parse_GuildCastleDataLoad(int fd, int len, int *castle_ids)
+int mapif_parse_GuildCastleDataLoad(int fd, int len, const int *castle_ids)
 {
 	return mapif->guild_castle_dataload(fd, len, castle_ids);
 }

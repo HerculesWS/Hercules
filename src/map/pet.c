@@ -646,7 +646,7 @@ int pet_menu(struct map_session_data *sd,int menunum)
 	return 0;
 }
 
-int pet_change_name(struct map_session_data *sd,char *name)
+int pet_change_name(struct map_session_data *sd, const char *name)
 {
 	int i;
 	struct pet_data *pd;
@@ -664,19 +664,23 @@ int pet_change_name(struct map_session_data *sd,char *name)
 	return intif_rename_pet(sd, name);
 }
 
-int pet_change_name_ack(struct map_session_data *sd, char* name, int flag)
+int pet_change_name_ack(struct map_session_data *sd, const char *name, int flag)
 {
 	struct pet_data *pd = sd->pd;
+	char *newname = NULL;
 	if (!pd) return 0;
 
-	normalize_name(name," ");//bugreport:3032
+	newname = aStrdup(name);
+	normalize_name(newname, " ");//bugreport:3032 // FIXME[Haru]: This should be normalized by the inter-server (so that it's const here)
 
-	if ( !flag || !strlen(name) ) {
+	if ( !flag || !strlen(newname) ) {
 		clif->message(sd->fd, msg_sd(sd,280)); // You cannot use this name for your pet.
 		clif->send_petstatus(sd); //Send status so client knows oet name change got rejected.
+		aFree(newname);
 		return 0;
 	}
-	memcpy(pd->pet.name, name, NAME_LENGTH);
+	memcpy(pd->pet.name, newname, NAME_LENGTH);
+	aFree(newname);
 	clif->charnameack (0,&pd->bl);
 	pd->pet.rename_flag = 1;
 	clif->send_petdata(NULL, sd->pd, 3, sd->pd->vd.head_bottom);

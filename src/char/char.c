@@ -1657,7 +1657,8 @@ int char_check_char_name(char * name, char * esc_name)
  *  -5: 'Symbols in Character Names are forbidden'
  *  char_id: Success
  **/
-int char_make_new_char_sql(struct char_session_data* sd, char* name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style) {
+int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style)
+{
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
 	int char_id, flag, k, l;
@@ -3289,7 +3290,7 @@ void char_parse_frommap_char_select_req(int fd)
 	}
 }
 
-void char_change_map_server_ack(int fd, uint8 *data, bool ok)
+void char_change_map_server_ack(int fd, const uint8 *data, bool ok)
 {
 	WFIFOHEAD(fd,30);
 	WFIFOW(fd,0) = 0x2b06;
@@ -4971,11 +4972,10 @@ void char_login_map_server_ack(int fd, uint8 flag)
 
 void char_parse_char_login_map_server(int fd, uint32 ipl)
 {
-	char* l_user = (char*)RFIFOP(fd,2);
-	char* l_pass = (char*)RFIFOP(fd,26);
+	char l_user[24], l_pass[24];
 	int i;
-	l_user[23] = '\0';
-	l_pass[23] = '\0';
+	safestrncpy(l_user, (char *)RFIFOP(fd,2), 24);
+	safestrncpy(l_pass, (char *)RFIFOP(fd,26), 24);
 
 	ARR_FIND( 0, ARRAYLENGTH(chr->server), i, chr->server[i].fd <= 0 );
 	if (core->runflag != CHARSERVER_ST_RUNNING ||
@@ -5286,7 +5286,7 @@ int char_parse_char(int fd)
 	return 0;
 }
 
-int mapif_sendall(unsigned char *buf, unsigned int len)
+int mapif_sendall(const unsigned char *buf, unsigned int len)
 {
 	int i, c;
 

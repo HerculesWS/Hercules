@@ -133,9 +133,15 @@ void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char flag) {
 	WFIFOSET(fd,size);
 }
 
-void mapif_parse_elemental_create(int fd, struct s_elemental* ele) {
-	bool result = mapif->elemental_save(ele);
-	mapif->elemental_send(fd, ele, result);
+void mapif_parse_elemental_create(int fd, const struct s_elemental *ele)
+{
+	struct s_elemental ele_;
+	bool result;
+
+	memcpy(&ele_, ele, sizeof(ele_));
+
+	result = mapif->elemental_save(&ele_);
+	mapif->elemental_send(fd, &ele_, result);
 }
 
 void mapif_parse_elemental_load(int fd, int ele_id, int char_id) {
@@ -163,8 +169,14 @@ void mapif_elemental_saved(int fd, unsigned char flag) {
 	WFIFOSET(fd,3);
 }
 
-void mapif_parse_elemental_save(int fd, struct s_elemental* ele) {
-	bool result = mapif->elemental_save(ele);
+void mapif_parse_elemental_save(int fd, const struct s_elemental *ele)
+{
+	struct s_elemental ele_;
+	bool result;
+
+	memcpy(&ele_, ele, sizeof(ele_));
+
+	result = mapif->elemental_save(&ele_);
 	mapif->elemental_saved(fd, result);
 }
 

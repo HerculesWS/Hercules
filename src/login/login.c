@@ -1429,8 +1429,8 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 	// Shinryo: For the time being, just use token as password.
 	if(command == 0x0825)
 	{
-		char *accname = (char *)RFIFOP(fd, 9);
-		char *token = (char *)RFIFOP(fd, 0x5C);
+		const char *accname = (char *)RFIFOP(fd, 9);
+		const char *token = (char *)RFIFOP(fd, 0x5C);
 		size_t uAccLen = strlen(accname);
 		size_t uTokenLen = RFIFOREST(fd) - 0x5C;
 

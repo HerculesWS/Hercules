@@ -120,7 +120,7 @@ struct mercenary_interface {
 	struct view_data * (*get_viewdata) (int class_);
 
 	int (*create) (struct map_session_data *sd, int class_, unsigned int lifetime);
-	int (*data_received) (struct s_mercenary *merc, bool flag);
+	int (*data_received) (const struct s_mercenary *merc, bool flag);
 	int (*save) (struct mercenary_data *md);
 
 	void (*heal) (struct mercenary_data *md, int hp, int sp);

@@ -60,7 +60,7 @@ struct inter_guild_interface {
 	int (*sql_init) (void);
 	int (*db_final) (DBKey key, DBData *data, va_list ap);
 	void (*sql_final) (void);
-	int (*search_guildname) (char *str);
+	int (*search_guildname) (const char *str);
 	bool (*check_empty) (struct guild *g);
 	unsigned int (*nextexp) (int level);
 	int (*checkskill) (struct guild *g, int id);
