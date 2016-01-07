@@ -151,7 +151,7 @@ int irc_parse(int fd) {
 		return 0;
 
 	parse_string = aMalloc(RFIFOREST(fd));
-	safestrncpy(parse_string, (char*)RFIFOP(fd,0), RFIFOREST(fd));
+	safestrncpy(parse_string, RFIFOP(fd,0), RFIFOREST(fd));
 	RFIFOSKIP(fd, RFIFOREST(fd));
 	RFIFOFLUSH(fd);
 
