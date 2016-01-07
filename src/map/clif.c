@@ -10387,16 +10387,18 @@ void clif_parse_EquipItem(int fd,struct map_session_data *sd) __attribute__((non
 /// Request to equip an item (CZ_REQ_WEAR_EQUIP).
 /// 00a9 <index>.W <position>.W
 /// 0998 <index>.W <position>.L
-void clif_parse_EquipItem(int fd,struct map_session_data *sd) {
-	struct packet_equip_item *p = RP2PTR(fd);
+void clif_parse_EquipItem(int fd,struct map_session_data *sd)
+{
+	const struct packet_equip_item *p = RP2PTR(fd);
+	int index = 0;
 
 	if(pc_isdead(sd)) {
 		clif->clearunit_area(&sd->bl,CLR_DEAD);
 		return;
 	}
 
-	p->index = p->index - 2;
-	if (p->index >= MAX_INVENTORY)
+	index = p->index - 2;
+	if (index >= MAX_INVENTORY)
 		return; //Out of bounds check.
 
 	if( sd->npc_id ) {
@@ -10407,26 +10409,26 @@ void clif_parse_EquipItem(int fd,struct map_session_data *sd) {
 	else if ( pc_cant_act2(sd) || sd->state.prerefining )
 		return;
 
-	if(!sd->status.inventory[p->index].identify) {
-		clif->equipitemack(sd,p->index,0,EIA_FAIL);// fail
+	if(!sd->status.inventory[index].identify) {
+		clif->equipitemack(sd, index, 0, EIA_FAIL);// fail
 		return;
 	}
 
-	if(!sd->inventory_data[p->index])
+	if(!sd->inventory_data[index])
 		return;
 
-	if(sd->inventory_data[p->index]->type == IT_PETARMOR){
-		pet->equipitem(sd,p->index);
+	if(sd->inventory_data[index]->type == IT_PETARMOR){
+		pet->equipitem(sd, index);
 		return;
 	}
 
 	pc->update_idle_time(sd, BCIDLE_USEITEM);
 
 	//Client doesn't send the position for ammo.
-	if(sd->inventory_data[p->index]->type == IT_AMMO)
-		pc->equipitem(sd,p->index,EQP_AMMO);
+	if(sd->inventory_data[index]->type == IT_AMMO)
+		pc->equipitem(sd, index, EQP_AMMO);
 	else
-		pc->equipitem(sd,p->index,p->wearLocation);
+		pc->equipitem(sd, index, p->wearLocation);
 }
 
 void clif_parse_UnequipItem(int fd,struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -13389,16 +13391,16 @@ void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd) __attribute
 /// /item agitinvest - reset current global agit investments.(not yet implemented)
 /// 013f <item/mob name>.24B
 /// 09ce <item/mob name>.100B [Ind/Yommy<3]
-void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd) {
-	struct packet_gm_monster_item *p = RP2PTR(fd);
+void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd)
+{
+	const struct packet_gm_monster_item *p = RP2PTR(fd);
 	int i, count;
-	char *item_monster_name;
+	char item_monster_name[sizeof p->str];
 	struct item_data *item_array[10];
 	struct mob_db *mob_array[10];
 	char command[256];
 
-	item_monster_name = p->str;
-	item_monster_name[(sizeof(struct packet_gm_monster_item)-2)-1] = '\0';
+	safestrncpy(item_monster_name, p->str, sizeof(item_monster_name));
 
 	if ( (count=itemdb->search_name_array(item_array, 10, item_monster_name, 1)) > 0 ) {
 		for(i = 0; i < count; i++) {
@@ -17705,7 +17707,8 @@ void clif_bgqueue_ack(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK 
 	}
 }
 
-void clif_bgqueue_notice_delete(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, char *name) {
+void clif_bgqueue_notice_delete(struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, const char *name)
+{
 	struct packet_bgqueue_notice_delete p;
 
 	nullpo_retv(sd);
@@ -17717,8 +17720,9 @@ void clif_bgqueue_notice_delete(struct map_session_data *sd, enum BATTLEGROUNDS_
 }
 
 void clif_parse_bgqueue_register(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
-void clif_parse_bgqueue_register(int fd, struct map_session_data *sd) {
-	struct packet_bgqueue_register *p = RP2PTR(fd);
+void clif_parse_bgqueue_register(int fd, struct map_session_data *sd)
+{
+	const struct packet_bgqueue_register *p = RP2PTR(fd);
 	struct bg_arena *arena = NULL;
 	if( !bg->queue_on ) return; /* temp, until feature is complete */
 
@@ -17755,19 +17759,22 @@ void clif_bgqueue_update_info(struct map_session_data *sd, unsigned char arena_i
 }
 
 void clif_parse_bgqueue_checkstate(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
-void clif_parse_bgqueue_checkstate(int fd, struct map_session_data *sd) {
-	struct packet_bgqueue_checkstate *p = RP2PTR(fd);
+void clif_parse_bgqueue_checkstate(int fd, struct map_session_data *sd)
+{
+	const struct packet_bgqueue_checkstate *p = RP2PTR(fd);
 
 	nullpo_retv(sd);
-	if ( sd->bg_queue.arena && sd->bg_queue.type ) {
+	if (sd->bg_queue.arena && sd->bg_queue.type) {
 		clif->bgqueue_update_info(sd,sd->bg_queue.arena->id,bg->id2pos(sd->bg_queue.arena->queue_id,sd->status.account_id));
-	} else
+	} else {
 		clif->bgqueue_notice_delete(sd, BGQND_FAIL_NOT_QUEUING,p->bg_name);
+	}
 }
 
 void clif_parse_bgqueue_revoke_req(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
-void clif_parse_bgqueue_revoke_req(int fd, struct map_session_data *sd) {
-	struct packet_bgqueue_revoke_req *p = RP2PTR(fd);
+void clif_parse_bgqueue_revoke_req(int fd, struct map_session_data *sd)
+{
+	const struct packet_bgqueue_revoke_req *p = RP2PTR(fd);
 
 	if( sd->bg_queue.arena )
 		bg->queue_pc_cleanup(sd);
@@ -17776,8 +17783,9 @@ void clif_parse_bgqueue_revoke_req(int fd, struct map_session_data *sd) {
 }
 
 void clif_parse_bgqueue_battlebegin_ack(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
-void clif_parse_bgqueue_battlebegin_ack(int fd, struct map_session_data *sd) {
-	struct packet_bgqueue_battlebegin_ack *p = RP2PTR(fd);
+void clif_parse_bgqueue_battlebegin_ack(int fd, struct map_session_data *sd)
+{
+	const struct packet_bgqueue_battlebegin_ack *p = RP2PTR(fd);
 	struct bg_arena *arena;
 
 	if( !bg->queue_on ) return; /* temp, until feature is complete */
@@ -17913,10 +17921,11 @@ void clif_cart_additem_ack(struct map_session_data *sd, int flag) {
 	clif->send(&p,sizeof(p), &sd->bl, SELF);
 }
 
-void clif_parse_BankDeposit(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
 /* Bank System [Yommy/Hercules] */
-void clif_parse_BankDeposit(int fd, struct map_session_data* sd) {
-	struct packet_banking_deposit_req *p = RP2PTR(fd);
+void clif_parse_BankDeposit(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+void clif_parse_BankDeposit(int fd, struct map_session_data *sd)
+{
+	const struct packet_banking_deposit_req *p = RP2PTR(fd);
 	int money;
 
 	if (!battle_config.feature_banking) {
@@ -17929,9 +17938,10 @@ void clif_parse_BankDeposit(int fd, struct map_session_data* sd) {
 	pc->bank_deposit(sd,money);
 }
 
-void clif_parse_BankWithdraw(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
-void clif_parse_BankWithdraw(int fd, struct map_session_data* sd) {
-	struct packet_banking_withdraw_req *p = RP2PTR(fd);
+void clif_parse_BankWithdraw(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
+void clif_parse_BankWithdraw(int fd, struct map_session_data *sd)
+{
+	const struct packet_banking_withdraw_req *p = RP2PTR(fd);
 	int money;
 
 	if (!battle_config.feature_banking) {
@@ -18166,7 +18176,8 @@ void clif_parse_NPCMarketClosed(int fd, struct map_session_data *sd) {
 	sd->npc_shopid = 0;
 }
 
-void clif_npc_market_purchase_ack(struct map_session_data *sd, struct packet_npc_market_purchase *req, unsigned char response) {
+void clif_npc_market_purchase_ack(struct map_session_data *sd, const struct packet_npc_market_purchase *req, unsigned char response)
+{
 #if PACKETVER >= 20131223
 	unsigned short c = 0;
 
@@ -18206,11 +18217,20 @@ void clif_npc_market_purchase_ack(struct map_session_data *sd, struct packet_npc
 }
 
 void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
-void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd) {
+void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
+{
 #if PACKETVER >= 20131223
-	struct packet_npc_market_purchase *p = RP2PTR(fd);
+	const struct packet_npc_market_purchase *p = RP2PTR(fd);
+	struct packet_npc_market_purchase pcopy;
+	int response = 0;
+	int count = (p->PacketLength - 4) / sizeof p->list[0];
 
-	clif->npc_market_purchase_ack(sd,p,npc->market_buylist(sd,(p->PacketLength - 4) / sizeof(p->list[0]),p));
+	Assert_retv(count >= 0 && count <= MAX_INVENTORY);
+
+	memcpy(&pcopy, p, p->PacketLength); // FIXME: Temporary hack (until changed to a flexible array)
+
+	response = npc->market_buylist(sd, count, &pcopy);
+	clif->npc_market_purchase_ack(sd, &pcopy, response);
 #endif
 }
 
