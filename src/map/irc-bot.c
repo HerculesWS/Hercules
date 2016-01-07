@@ -134,7 +134,7 @@ struct irc_func* irc_func_search(char* function_name) {
  * @see do_sockets
  */
 int irc_parse(int fd) {
-	char *parse_string = NULL, *str_safe = NULL;
+	char *parse_string = NULL, *p = NULL, *str_safe = NULL;
 
 	if (sockt->session[fd]->flag.eof) {
 		sockt->close(fd);
@@ -150,18 +150,19 @@ int irc_parse(int fd) {
 	if( !RFIFOREST(fd) )
 		return 0;
 
-	parse_string = (char*)RFIFOP(fd,0);
-	parse_string[ RFIFOREST(fd) - 1 ] = '\0';
-
-	parse_string = strtok_r(parse_string,"\r\n",&str_safe);
-
-	while (parse_string != NULL) {
-		ircbot->parse_sub(fd,parse_string);
-		parse_string = strtok_r(NULL,"\r\n",&str_safe);
-	}
-
+	parse_string = aMalloc(RFIFOREST(fd));
+	safestrncpy(parse_string, (char*)RFIFOP(fd,0), RFIFOREST(fd));
 	RFIFOSKIP(fd, RFIFOREST(fd));
 	RFIFOFLUSH(fd);
+
+	p = strtok_r(parse_string,"\r\n",&str_safe);
+
+	while (p != NULL) {
+		ircbot->parse_sub(fd,parse_string);
+		p = strtok_r(NULL,"\r\n",&str_safe);
+	}
+	aFree(parse_string);
+
 	return 0;
 }
 

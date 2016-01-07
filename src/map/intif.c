@@ -132,7 +132,7 @@ int intif_delete_petdata(int pet_id)
 	return 1;
 }
 
-int intif_rename(struct map_session_data *sd, int type, char *name)
+int intif_rename(struct map_session_data *sd, int type, const char *name)
 {
 	if (intif->CheckForCharServer())
 		return 1;
@@ -231,7 +231,7 @@ int intif_main_message(struct map_session_data* sd, const char* message)
 }
 
 // The transmission of Wisp/Page to inter-server (player not found on this server)
-int intif_wis_message(struct map_session_data *sd, char *nick, char *mes, size_t mes_len)
+int intif_wis_message(struct map_session_data *sd, const char *nick, const char *mes, size_t mes_len)
 {
 	if (intif->CheckForCharServer())
 		return 0;
@@ -463,7 +463,7 @@ int intif_send_guild_storage(int account_id,struct guild_storage *gstor)
 }
 
 // Party creation request
-int intif_create_party(struct party_member *member,char *name,int item,int item2)
+int intif_create_party(struct party_member *member, const char *name, int item, int item2)
 {
 	if (intif->CheckForCharServer())
 		return 0;
@@ -956,7 +956,7 @@ int intif_homunculus_requestdelete(int homun_id)
 // Wisp/Page reception // rewritten by [Yor]
 void intif_parse_WisMessage(int fd) {
 	struct map_session_data* sd;
-	char *wisp_source;
+	const char *wisp_source;
 	char name[NAME_LENGTH];
 	int id, i;
 
@@ -1308,15 +1308,19 @@ void intif_parse_GuildBasicInfoChanged(int fd) {
 		case GBI_SKILLPOINT: g->skill_point = RFIFOL(fd,10); break;
 		case GBI_SKILLLV: {
 			int idx, max;
-			struct guild_skill *gs = (struct guild_skill *)RFIFOP(fd,10);
+			const struct guild_skill *p_gs = (struct guild_skill *)RFIFOP(fd,10);
+			struct guild_skill *gs = NULL;
 
-			idx = gs->id - GD_SKILLBASE;
+			idx = p_gs->id - GD_SKILLBASE;
 			Assert_retv(idx >= 0 && idx < MAX_GUILDSKILL);
+
+			gs = &g->skill[idx];
+			memcpy(gs, p_gs, sizeof(*gs));
+
 			max = guild->skill_get_max(gs->id);
-			if( gs->lv > max )
+			if (gs->lv > max)
 				gs->lv = max;
 
-			memcpy(&(g->skill[idx]), gs, sizeof(g->skill[idx]));
 			break;
 		}
 	}
@@ -1527,7 +1531,7 @@ void intif_parse_QuestLog(int fd) {
 			sd->quest_log = NULL;
 		}
 	} else {
-		struct quest *received = (struct quest *)RFIFOP(fd, 8);
+		const struct quest *received = (struct quest *)RFIFOP(fd, 8);
 		int i, k = num_received;
 		if (sd->quest_log) {
 			RECREATE(sd->quest_log, struct quest, num_received);
@@ -1876,7 +1880,7 @@ void intif_parse_AuctionResults(int fd) {
 	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,4));
 	short count = RFIFOW(fd,8);
 	short pages = RFIFOW(fd,10);
-	uint8* data = RFIFOP(fd,12);
+	const uint8 *data = RFIFOP(fd,12);
 
 	if( sd == NULL )
 		return;
