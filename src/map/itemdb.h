@@ -154,6 +154,9 @@ enum item_itemid {
 	ITEMID_WOB_LOCAL             = 14585,
 	ITEMID_SIEGE_TELEPORT_SCROLL = 14591,
 	ITEMID_JOB_MANUAL50          = 14592,
+	ITEMID_PILEBUNCKER_S         = 16030,
+	ITEMID_PILEBUNCKER_P         = 16031,
+	ITEMID_PILEBUNCKER_T         = 16032,
 };
 
 enum cards_item_list {
