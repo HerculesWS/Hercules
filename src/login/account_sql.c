@@ -719,7 +719,7 @@ void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
 		for (i = 0; i < count; i++) {
 			unsigned int index;
 			int len = RFIFOB(fd, cursor);
-			safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
+			safestrncpy(key, RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
 			cursor += len + 1;
 
 			index = RFIFOL(fd, cursor);
@@ -739,7 +739,7 @@ void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
 				/* str */
 				case 2:
 					len = RFIFOB(fd, cursor);
-					safestrncpy(sval, (char*)RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
+					safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
 					cursor += len + 1;
 					if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", db->global_acc_reg_str_db, account_id, key, index, sval) )
 						Sql_ShowDebug(sql_handle);

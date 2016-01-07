@@ -352,7 +352,7 @@ void login_fromchar_parse_request_change_email(int fd, int id, const char *const
 	char email[40];
 
 	int account_id = RFIFOL(fd,2);
-	safestrncpy(email, (char*)RFIFOP(fd,6), 40); remove_control_chars(email);
+	safestrncpy(email, RFIFOP(fd,6), 40); remove_control_chars(email);
 	RFIFOSKIP(fd,46);
 
 	if( e_mail_check(email) == 0 )
@@ -449,8 +449,8 @@ void login_fromchar_parse_change_email(int fd, int id, const char *const ip)
 	char new_email[40];
 
 	int account_id = RFIFOL(fd,2);
-	safestrncpy(actual_email, (char*)RFIFOP(fd,6), 40);
-	safestrncpy(new_email, (char*)RFIFOP(fd,46), 40);
+	safestrncpy(actual_email, RFIFOP(fd,6), 40);
+	safestrncpy(new_email, RFIFOP(fd,46), 40);
 	RFIFOSKIP(fd, 86);
 
 	if( e_mail_check(actual_email) == 0 )
@@ -699,7 +699,7 @@ void login_fromchar_parse_change_pincode(int fd)
 	struct mmo_account acc;
 
 	if (accounts->load_num(accounts, &acc, RFIFOL(fd,2))) {
-		safestrncpy(acc.pincode, (char*)RFIFOP(fd,6), sizeof(acc.pincode));
+		safestrncpy(acc.pincode, RFIFOP(fd,6), sizeof(acc.pincode));
 		acc.pincode_change = ((unsigned int)time(NULL));
 		accounts->save(accounts, &acc);
 	}
@@ -1429,8 +1429,8 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 	// Shinryo: For the time being, just use token as password.
 	if(command == 0x0825)
 	{
-		const char *accname = (char *)RFIFOP(fd, 9);
-		const char *token = (char *)RFIFOP(fd, 0x5C);
+		const char *accname = RFIFOP(fd, 9);
+		const char *token = RFIFOP(fd, 0x5C);
 		size_t uAccLen = strlen(accname);
 		size_t uTokenLen = RFIFOREST(fd) - 0x5C;
 
@@ -1448,10 +1448,10 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 	else
 	{
 		version = RFIFOL(fd,2);
-		safestrncpy(username, (const char*)RFIFOP(fd,6), NAME_LENGTH);
+		safestrncpy(username, RFIFOP(fd,6), NAME_LENGTH);
 		if( israwpass )
 		{
-			safestrncpy(password, (const char*)RFIFOP(fd,30), NAME_LENGTH);
+			safestrncpy(password, RFIFOP(fd,30), NAME_LENGTH);
 			clienttype = RFIFOB(fd,54);
 		}
 		else
@@ -1534,15 +1534,15 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	uint16 new_;
 	int result;
 
-	safestrncpy(sd->userid, (char*)RFIFOP(fd,2), NAME_LENGTH);
-	safestrncpy(sd->passwd, (char*)RFIFOP(fd,26), NAME_LENGTH);
+	safestrncpy(sd->userid, RFIFOP(fd,2), NAME_LENGTH);
+	safestrncpy(sd->passwd, RFIFOP(fd,26), NAME_LENGTH);
 	if (login->config->use_md5_passwds)
 		MD5_String(sd->passwd, sd->passwd);
 	sd->passwdenc = PWENC_NONE;
 	sd->version = login->config->client_version_to_connect; // hack to skip version check
 	server_ip = ntohl(RFIFOL(fd,54));
 	server_port = ntohs(RFIFOW(fd,58));
-	safestrncpy(server_name, (char*)RFIFOP(fd,60), 20);
+	safestrncpy(server_name, RFIFOP(fd,60), 20);
 	type = RFIFOW(fd,82);
 	new_ = RFIFOW(fd,84);
 	RFIFOSKIP(fd,86);

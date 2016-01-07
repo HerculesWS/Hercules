@@ -249,7 +249,7 @@ int mapif_parse_SaveGuildStorage(int fd)
 		} else if(SQL->NumRows(inter->sql_handle) > 0) {
 			// guild exists
 			SQL->FreeResult(inter->sql_handle);
-			inter_storage->guild_storage_tosql(guild_id, (struct guild_storage*)RFIFOP(fd,12));
+			inter_storage->guild_storage_tosql(guild_id, RFIFOP(fd,12));
 			mapif->save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 0);
 			return 0;
 		}

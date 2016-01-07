@@ -336,11 +336,11 @@ int inter_homunculus_parse_frommap(int fd)
 
 	switch( cmd )
 	{
-		case 0x3090: mapif->parse_homunculus_create(fd, (int)RFIFOW(fd,2), (int)RFIFOL(fd,4), (struct s_homunculus*)RFIFOP(fd,8)); break;
+		case 0x3090: mapif->parse_homunculus_create(fd, (int)RFIFOW(fd,2), (int)RFIFOL(fd,4), RFIFOP(fd,8)); break;
 		case 0x3091: mapif->parse_homunculus_load  (fd, (int)RFIFOL(fd,2), (int)RFIFOL(fd,6)); break;
-		case 0x3092: mapif->parse_homunculus_save  (fd, (int)RFIFOW(fd,2), (int)RFIFOL(fd,4), (struct s_homunculus*)RFIFOP(fd,8)); break;
+		case 0x3092: mapif->parse_homunculus_save  (fd, (int)RFIFOW(fd,2), (int)RFIFOL(fd,4), RFIFOP(fd,8)); break;
 		case 0x3093: mapif->parse_homunculus_delete(fd, (int)RFIFOL(fd,2)); break;
-		case 0x3094: mapif->parse_homunculus_rename(fd, (int)RFIFOL(fd,2), (int)RFIFOL(fd,6), (char*)RFIFOP(fd,10)); break;
+		case 0x3094: mapif->parse_homunculus_rename(fd, (int)RFIFOL(fd,2), (int)RFIFOL(fd,6), RFIFOP(fd,10)); break;
 		default:
 			return 0;
 	}

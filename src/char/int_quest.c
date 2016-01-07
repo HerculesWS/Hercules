@@ -223,7 +223,7 @@ int mapif_parse_quest_save(int fd)
 	bool success = true;
 
 	if (new_n > 0)
-		new_qd = (struct quest*)RFIFOP(fd,8);
+		new_qd = RFIFOP(fd,8);
 
 	old_qd = mapif->quests_fromsql(char_id, &old_n);
 
