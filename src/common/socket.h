@@ -47,8 +47,8 @@ struct config_setting_t;
 			sockt->realloc_writefifo((fd), (size)); \
 	} while(0)
 
-#define RFIFOP(fd,pos) (sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos))
-#define WFIFOP(fd,pos) (sockt->session[fd]->wdata + sockt->session[fd]->wdata_size + (pos))
+#define RFIFOP(fd,pos) ((const void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos)))
+#define WFIFOP(fd,pos) ((void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size + (pos)))
 
 #define RFIFOB(fd,pos) (*(const uint8*)RFIFOP((fd),(pos)))
 #define WFIFOB(fd,pos) (*(uint8*)WFIFOP((fd),(pos)))
