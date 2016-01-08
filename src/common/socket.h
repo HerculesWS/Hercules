@@ -85,7 +85,12 @@ struct config_setting_t;
 #define WP2PTR(fd) WFIFO2PTR(fd)
 
 // buffer I/O macros
-#define RBUFP(p,pos) (((uint8*)(p)) + (pos))
+static inline const void *RBUFP_(const void *p, int pos) __attribute__((const, unused));
+static inline const void *RBUFP_(const void *p, int pos)
+{
+	return ((const uint8 *)p) + pos;
+}
+#define RBUFP(p,pos) RBUFP_(p, (int)(pos))
 #define RBUFB(p,pos) (*(const uint8 *)RBUFP((p),(pos)))
 #define RBUFW(p,pos) (*(const uint16 *)RBUFP((p),(pos)))
 #define RBUFL(p,pos) (*(const uint32 *)RBUFP((p),(pos)))
