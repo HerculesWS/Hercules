@@ -16260,7 +16260,7 @@ struct skill_unit_group* skill_initunitgroup (struct block_list* src, int count,
 	group->guild_id    = status->get_guild_id(src);
 	group->bg_id       = bg->team_get_id(src);
 	group->group_id    = skill->get_new_group_id();
-	CREATE(group->unit.data, struct skill_unit, 1);
+	CREATE(group->unit.data, struct skill_unit, count);
 	group->unit.count  = count;
 	group->alive_count = 0;
 	group->val1        = 0;
