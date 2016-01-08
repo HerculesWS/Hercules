@@ -105,7 +105,7 @@ void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsigned char
 	WFIFOL(fd, 2) = account_id;
 	WFIFOL(fd, 6) = char_id;
 	WFIFOB(fd,10) = flag;
-	safestrncpy((char*)WFIFOP(fd,11), name, NAME_LENGTH);
+	safestrncpy(WFIFOP(fd,11), name, NAME_LENGTH);
 	WFIFOSET(fd, NAME_LENGTH+12);
 }
 

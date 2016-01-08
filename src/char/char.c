@@ -2085,7 +2085,7 @@ void char_mmo_char_send_ban_list(int fd, struct char_session_data *sd) {
 
 		for(i = 0, c = 0; i < MAX_CHARS; i++) {
 			if( sd->unban_time[i] ) {
-				timestamp2string((char*)WFIFOP(fd,8 + (28*c)), 20, sd->unban_time[i], "%Y-%m-%d %H:%M:%S");
+				timestamp2string(WFIFOP(fd,8 + (28*c)), 20, sd->unban_time[i], "%Y-%m-%d %H:%M:%S");
 
 				if( sd->unban_time[i] > now )
 					WFIFOL(fd, 4 + (24*c)) = sd->found_char[i];
@@ -2785,7 +2785,7 @@ void char_global_accreg_to_login_add (const char *key, unsigned int index, intpt
 	WFIFOB(chr->login_fd, nlen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 	nlen += 1;
 
-	safestrncpy((char*)WFIFOP(chr->login_fd,nlen), key, len);
+	safestrncpy(WFIFOP(chr->login_fd,nlen), key, len);
 	nlen += len;
 
 	WFIFOL(chr->login_fd, nlen) = index;
@@ -2802,7 +2802,7 @@ void char_global_accreg_to_login_add (const char *key, unsigned int index, intpt
 			WFIFOB(chr->login_fd, nlen) = (unsigned char)len;/* won't be higher; the column size is 254 */
 			nlen += 1;
 
-			safestrncpy((char*)WFIFOP(chr->login_fd,nlen), sval, len);
+			safestrncpy(WFIFOP(chr->login_fd,nlen), sval, len);
 			nlen += len;
 		}
 	} else {
@@ -3368,7 +3368,7 @@ void char_char_name_ack(int fd, int char_id)
 	WFIFOHEAD(fd,30);
 	WFIFOW(fd,0) = 0x2b09;
 	WFIFOL(fd,2) = char_id;
-	chr->loadName(char_id, (char*)WFIFOP(fd,6));
+	chr->loadName(char_id, WFIFOP(fd,6));
 	WFIFOSET(fd,30);
 }
 
@@ -3457,7 +3457,7 @@ void char_ask_name_ack(int fd, int acc, const char* name, int type, int result)
 	WFIFOHEAD(fd,34);
 	WFIFOW(fd, 0) = 0x2b0f;
 	WFIFOL(fd, 2) = acc;
-	safestrncpy((char*)WFIFOP(fd,6), name, NAME_LENGTH);
+	safestrncpy(WFIFOP(fd,6), name, NAME_LENGTH);
 	WFIFOW(fd,30) = type;
 	WFIFOW(fd,32) = result;
 	WFIFOSET(fd,34);
@@ -3855,7 +3855,7 @@ void char_parse_frommap_request_stats_report(int fd)
 
 	WFIFOHEAD(sfd, RFIFOW(fd,2) );
 
-	memcpy((char*)WFIFOP(sfd,0), RFIFOP(fd, 0), RFIFOW(fd,2));
+	memcpy(WFIFOP(sfd,0), RFIFOP(fd, 0), RFIFOW(fd,2));
 
 	WFIFOSET(sfd, RFIFOW(fd,2) );
 
@@ -4512,7 +4512,7 @@ void char_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charstat
 	WFIFOHEAD(fd,28);
 	WFIFOW(fd,0) = 0x71;
 	WFIFOL(fd,2) = cd->char_id;
-	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), (char*)WFIFOP(fd,6));
+	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(fd,6));
 	WFIFOL(fd,22) = htonl((subnet_map_ip) ? subnet_map_ip : chr->server[i].ip);
 	WFIFOW(fd,26) = sockt->ntows(htons(chr->server[i].port)); // [!] LE byte order here [!]
 	WFIFOSET(fd,28);
@@ -4523,7 +4523,7 @@ void char_send_wait_char_server(int fd)
 	WFIFOHEAD(fd, 24);
 	WFIFOW(fd, 0) = 0x840;
 	WFIFOW(fd, 2) = 24;
-	safestrncpy((char*)WFIFOP(fd,4), "0", 20);/* we can't send empty (otherwise the list will pop up) */
+	safestrncpy(WFIFOP(fd,4), "0", 20);/* we can't send empty (otherwise the list will pop up) */
 	WFIFOSET(fd, 24);
 }
 

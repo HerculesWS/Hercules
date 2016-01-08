@@ -245,7 +245,7 @@ void irc_send(char *str) {
 	if (len > IRC_MESSAGE_LENGTH-3)
 		len = IRC_MESSAGE_LENGTH-3;
 	WFIFOHEAD(ircbot->fd, len);
-	snprintf((char*)WFIFOP(ircbot->fd,0),IRC_MESSAGE_LENGTH, "%s\r\n", str);
+	snprintf(WFIFOP(ircbot->fd,0),IRC_MESSAGE_LENGTH, "%s\r\n", str);
 	WFIFOSET(ircbot->fd, len);
 }
 
