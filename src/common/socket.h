@@ -91,7 +91,12 @@ struct config_setting_t;
 #define RBUFL(p,pos) (*(const uint32 *)RBUFP((p),(pos)))
 #define RBUFQ(p,pos) (*(const uint64 *)RBUFP((p),(pos)))
 
-#define WBUFP(p,pos) (((uint8*)(p)) + (pos))
+static inline void *WBUFP_(void *p, int pos) __attribute__((const, unused));
+static inline void *WBUFP_(void *p, int pos)
+{
+	return ((uint8 *)p) + pos;
+}
+#define WBUFP(p,pos) WBUFP_(p, (int)(pos))
 #define WBUFB(p,pos) (*(uint8*)WBUFP((p),(pos)))
 #define WBUFW(p,pos) (*(uint16*)WBUFP((p),(pos)))
 #define WBUFL(p,pos) (*(uint32*)WBUFP((p),(pos)))
