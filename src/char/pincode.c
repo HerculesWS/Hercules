@@ -144,7 +144,7 @@ void pincode_notifyLoginPinUpdate(int account_id, char* pin) {
 	WFIFOHEAD(chr->login_fd,11);
 	WFIFOW(chr->login_fd,0) = 0x2738;
 	WFIFOL(chr->login_fd,2) = account_id;
-	safestrncpy( (char*)WFIFOP(chr->login_fd,6), pin, 5 );
+	safestrncpy(WFIFOP(chr->login_fd,6), pin, 5);
 	WFIFOSET(chr->login_fd,11);
 }
 

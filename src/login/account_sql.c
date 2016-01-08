@@ -791,7 +791,7 @@ void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy((char*)WFIFOP(fd,plen), data, len);
+		safestrncpy(WFIFOP(fd,plen), data, len);
 		plen += len;
 
 		SQL->GetData(sql_handle, 1, &data, NULL);
@@ -805,7 +805,7 @@ void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 254 */
 		plen += 1;
 
-		safestrncpy((char*)WFIFOP(fd,plen), data, len);
+		safestrncpy(WFIFOP(fd,plen), data, len);
 		plen += len;
 
 		WFIFOW(fd, 14) += 1;
@@ -859,7 +859,7 @@ void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy((char*)WFIFOP(fd,plen), data, len);
+		safestrncpy(WFIFOP(fd,plen), data, len);
 		plen += len;
 
 		SQL->GetData(sql_handle, 1, &data, NULL);

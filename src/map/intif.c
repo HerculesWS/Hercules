@@ -350,7 +350,7 @@ int intif_saveregistry(struct map_session_data *sd) {
 		WFIFOB(inter_fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy((char*)WFIFOP(inter_fd,plen), varname, len);
+		safestrncpy(WFIFOP(inter_fd,plen), varname, len);
 		plen += len;
 
 		WFIFOL(inter_fd, plen) = script_getvaridx(key.i64);
@@ -368,7 +368,7 @@ int intif_saveregistry(struct map_session_data *sd) {
 				WFIFOB(inter_fd, plen) = (unsigned char)len;/* won't be higher; the column size is 254 */
 				plen += 1;
 
-				safestrncpy((char*)WFIFOP(inter_fd,plen), p->value, len);
+				safestrncpy(WFIFOP(inter_fd,plen), p->value, len);
 				plen += len;
 			} else {
 				script->reg_destroy_single(sd,key.i64,&p->flag);
@@ -684,7 +684,7 @@ int intif_guild_leave(int guild_id,int account_id,int char_id,int flag,const cha
 	WFIFOL(inter_fd, 6) = account_id;
 	WFIFOL(inter_fd,10) = char_id;
 	WFIFOB(inter_fd,14) = flag;
-	safestrncpy((char*)WFIFOP(inter_fd,15),mes,40);
+	safestrncpy(WFIFOP(inter_fd,15),mes,40);
 	WFIFOSET(inter_fd,55);
 	return 0;
 }
@@ -2211,7 +2211,7 @@ void intif_request_accinfo( int u_fd, int aid, int group_lv, char* query ) {
 	WFIFOL(inter_fd,2) = u_fd;
 	WFIFOL(inter_fd,6) = aid;
 	WFIFOL(inter_fd,10) = group_lv;
-	safestrncpy((char *)WFIFOP(inter_fd,14), query, NAME_LENGTH);
+	safestrncpy(WFIFOP(inter_fd,14), query, NAME_LENGTH);
 
 	WFIFOSET(inter_fd,2 + 4 + 4 + 4 + NAME_LENGTH);
 
