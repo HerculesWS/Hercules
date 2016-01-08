@@ -12858,8 +12858,8 @@ bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len) {
 		switch( RBUFW(buf,28) ) {
 			case 8: // palette indexes
 			{
-				const uint8 *indexes = (const uint8 *)RBUFP(buf,offbits);
-				const uint32 *palette = (const uint32 *)RBUFP(buf,BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE);
+				const uint8 *indexes = RBUFP(buf,offbits);
+				const uint32 *palette = RBUFP(buf,BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE);
 
 				for (i = 0; i < BITMAP_WIDTH * BITMAP_HEIGHT; i++) {
 					if( indexes[i] >= palettesize ) // Invalid color
@@ -12877,7 +12877,7 @@ bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len) {
 			}
 			case 24: // full colors
 			{
-				const struct s_bitmaptripple *pixels = (const struct s_bitmaptripple*)RBUFP(buf,offbits);
+				const struct s_bitmaptripple *pixels = RBUFP(buf,offbits);
 
 				for (i = 0; i < BITMAP_WIDTH * BITMAP_HEIGHT; i++) {
 					// if( pixels[i].r < 0xF8 || pixels[i].g > 0x07 || pixels[i].b < 0xF8 )
