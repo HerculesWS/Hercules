@@ -1254,7 +1254,8 @@ int itemdb_combo_split_atoi (char *str, int *val) {
 /**
  * <combo{:combo{:combo:{..}}}>,<{ script }>
  **/
-void itemdb_read_combos() {
+void itemdb_read_combos(void)
+{
 	uint32 lines = 0, count = 0;
 	char line[1024];
 	char filepath[256];

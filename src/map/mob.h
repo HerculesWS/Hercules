@@ -528,7 +528,7 @@ struct mob_interface {
 	bool (*readdb_race2) (char *fields[], int columns, int current);
 	bool (*readdb_itemratio) (char *str[], int columns, int current);
 	void (*load) (bool minimal);
-	void (*clear_spawninfo) ();
+	void (*clear_spawninfo) (void);
 	void (*destroy_mob_db) (int index);
 };
 

@@ -76,11 +76,11 @@ struct socket_interface *sockt;
 struct socket_data **session;
 
 #ifdef SEND_SHORTLIST
-	// Add a fd to the shortlist so that it'll be recognized as a fd that needs
-	// sending done on it.
-	void send_shortlist_add_fd(int fd);
-	// Do pending network sends (and eof handling) from the shortlist.
-	void send_shortlist_do_sends();
+// Add a fd to the shortlist so that it'll be recognized as a fd that needs
+// sending done on it.
+void send_shortlist_add_fd(int fd);
+// Do pending network sends (and eof handling) from the shortlist.
+void send_shortlist_do_sends(void);
 #endif
 
 /////////////////////////////////////////////////////////////////////
@@ -1570,7 +1570,7 @@ void send_shortlist_add_fd(int fd)
 }
 
 // Do pending network sends and eof handling from the shortlist.
-void send_shortlist_do_sends()
+void send_shortlist_do_sends(void)
 {
 	int i;
 

@@ -317,8 +317,8 @@ extern char char_reg_num_db[32];
 extern int guild_exp_rate;
 extern int log_inter;
 
-void char_load_defaults();
-void char_defaults();
+void char_load_defaults(void);
+void char_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct char_interface *chr;

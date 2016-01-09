@@ -1178,7 +1178,7 @@ int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data) {
 /**
  * Loads (or reloads) the pet database.
  */
-int read_petdb()
+int read_petdb(void)
 {
 	const char *filename[] = {
 		DBPATH"pet_db.txt",

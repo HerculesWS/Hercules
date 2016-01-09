@@ -626,7 +626,7 @@ struct itemdb_interface {
 	int (*isidentified) (int nameid);
 	int (*isidentified2) (struct item_data *data);
 	int (*combo_split_atoi) (char *str, int *val);
-	void (*read_combos) ();
+	void (*read_combos) (void);
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
 	void (*readdb_additional_fields) (int itemid, config_setting_t *it, int n, const char *source);

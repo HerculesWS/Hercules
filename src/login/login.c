@@ -1701,7 +1701,7 @@ int login_parse_login(int fd)
 }
 
 
-void login_set_defaults()
+void login_set_defaults(void)
 {
 	login_config.login_ip = INADDR_ANY;
 	login_config.login_port = 6900;
