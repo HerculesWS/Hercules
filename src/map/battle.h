@@ -539,6 +539,8 @@ struct Battle_Config {
 	// BodyStyle
 	int min_body_style, max_body_style;
 	int save_body_style;
+	
+	int bow_unequip_arrow;
 };
 
 /* criteria for battle_config.idletime_critera */
