@@ -866,6 +866,7 @@ typedef struct elemental_data   TBL_ELEM;
  * object is passed to BL_UCAST. It's declared as static inline to let the
  * compiler optimize out the function call overhead.
  */
+static inline struct block_list *BL_UCAST_(struct block_list *bl) __attribute__((unused));
 static inline struct block_list *BL_UCAST_(struct block_list *bl)
 {
 	return bl;
@@ -894,6 +895,7 @@ static inline struct block_list *BL_UCAST_(struct block_list *bl)
  * object is passed to BL_UCAST. It's declared as static inline to let the
  * compiler optimize out the function call overhead.
  */
+static inline const struct block_list *BL_UCCAST_(const struct block_list *bl) __attribute__((unused));
 static inline const struct block_list *BL_UCCAST_(const struct block_list *bl)
 {
 	return bl;
