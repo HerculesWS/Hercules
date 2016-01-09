@@ -98,12 +98,15 @@
 #endif // 20090603
 #endif // 20070227
 
-/* Feb 1st 2012 */
-#if PACKETVER >= 20120201
-#	define NEW_CARTS
-#	define MAX_CARTS 9
+#if PACKETVER >= 20120201 /* New Genetic Carts */
+	#define NEW_CARTS
+#if PACKETVER >= 20150805 /* Cart Decoration */
+	#define MAX_CARTS 12
 #else
-#	define MAX_CARTS 5
+	#define MAX_CARTS 9
+#endif
+#else
+	#define MAX_CARTS 5
 #endif
 
 #define MAX_INVENTORY 100
@@ -122,6 +125,7 @@
 #define MAX_LEVEL 175
 #define MAX_FAME 1000000000
 #define MAX_CART 100
+#define MAX_CART_DECORATION 3	// Currently there are 3 Carts available in kRO. [Frost]
 #define MAX_SKILL 1478
 #define MAX_SKILL_ID 10015   // [Ind/Hercules] max used skill ID
 // Update this max as necessary. 86 is the value needed for Expanded Super Novice.
