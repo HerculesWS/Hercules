@@ -3518,11 +3518,20 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 		regen->flag &=~RGN_SP; //No natural SP regen
 	}
 
+
+	// Tension relax allows the user to recover HP while overweight
+	// at 1x speed. Other SC ignored? [csnv]
 	if (sc->data[SC_TENSIONRELAX]) {
-		regen->rate.hp += 2;
-		if (regen->sregen)
-			regen->sregen->rate.hp += 3;
+		if (sc->data[SC_WEIGHTOVER50] || sc->data[SC_WEIGHTOVER90]) {
+			regen->flag &= ~RGN_SP;
+			regen->rate.hp = 1;
+		} else {
+			regen->rate.hp += 2;
+			if (regen->sregen)
+				regen->sregen->rate.hp += 3;
+		}
 	}
+
 	if (sc->data[SC_MAGNIFICAT]) {
 		regen->rate.hp += 1;
 		regen->rate.sp += 1;
@@ -12409,8 +12418,10 @@ int status_natural_heal(struct block_list* bl, va_list args) {
 		}
 	}
 
-	if (flag && regen->state.overweight)
-		flag=0;
+	// SC_TENSIONRELAX allows HP to be recovered even when overweight. [csnv]
+	if (flag && regen->state.overweight && (sc == NULL || sc->data[SC_TENSIONRELAX] == NULL)) {
+		flag = 0;
+	}
 
 	ud = unit->bl2ud(bl);
 
