@@ -24067,6 +24067,58 @@ void HP_clif_dressroom_open(struct map_session_data *sd, int view) {
 	}
 	return;
 }
+void HP_clif_selectcart(struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_selectcart_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_selectcart_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_selectcart_pre[hIndex].func;
+			preHookFunc(sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.selectcart(sd);
+	}
+	if( HPMHooks.count.HP_clif_selectcart_post ) {
+		void (*postHookFunc) (struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_selectcart_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_selectcart_post[hIndex].func;
+			postHookFunc(sd);
+		}
+	}
+	return;
+}
+void HP_clif_pSelectCart(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pSelectCart_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pSelectCart_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pSelectCart_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pSelectCart(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pSelectCart_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pSelectCart_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pSelectCart_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
 /* cmdline */
 void HP_cmdline_init(void) {
 	int hIndex = 0;
