@@ -63,7 +63,7 @@ struct view_data;
 #define clif_disp_onlyself(sd,mes,len) clif->disp_message( &(sd)->bl, (mes), (len), SELF )
 #define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
 #define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
-#define RGB2BGR(c) ((c & 0x0000FF) << 16 | (c & 0x00FF00) | (c & 0xFF0000) >> 16)
+#define RGB2BGR(c) (((c) & 0x0000FF) << 16 | ((c) & 0x00FF00) | ((c) & 0xFF0000) >> 16)
 
 #define COLOR_RED     0xff0000U
 #define COLOR_GREEN   0x00ff00U

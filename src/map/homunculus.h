@@ -70,7 +70,7 @@ enum homun_id {
 	hom->dex_value = hom->luk_value = hom->level / 10 - HOMUN_LEVEL_STATWEIGHT_VALUE \
 	)
 #else
-#define APPLY_HOMUN_LEVEL_STATWEIGHT()
+#define APPLY_HOMUN_LEVEL_STATWEIGHT() 0
 #endif
 
 struct h_stats {

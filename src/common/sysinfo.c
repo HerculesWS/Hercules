@@ -65,7 +65,7 @@ struct sysinfo_interface *sysinfo;
 #define VCSTYPE_UNKNOWN 0
 #define VCSTYPE_GIT 1
 #define VCSTYPE_SVN 2
-#define VCSTYPE_NONE -1
+#define VCSTYPE_NONE (-1)
 
 #ifdef WIN32
 /**
