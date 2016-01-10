@@ -37,6 +37,10 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
+#ifdef SOCKET_EPOLL
+#include <sys/epoll.h>
+#endif
+
 #ifdef WIN32
 #	include "common/winapi.h"
 #else
@@ -250,7 +254,18 @@ char* sErr(int code)
 	#define MSG_NOSIGNAL 0
 #endif
 
+#ifndef SOCKET_EPOLL
+// Select based Event Dispatcher:
 fd_set readfds;
+
+#else
+// Epoll based Event Dispatcher:
+static int epoll_maxevents = (FD_SETSIZE / 2);
+static int epfd = SOCKET_ERROR;
+static struct epoll_event epevent;
+static struct epoll_event *epevents = NULL;
+
+#endif
 
 // Maximum packet size in bytes, which the client is able to handle.
 // Larger packets cause a buffer overflow and stack corruption.
@@ -535,8 +550,24 @@ int connect_client(int listen_fd) {
 	}
 #endif
 
-	if( sockt->fd_max <= fd ) sockt->fd_max = fd + 1;
+#ifndef SOCKET_EPOLL
+	// Select Based Event Dispatcher
 	sFD_SET(fd,&readfds);
+
+#else
+	// Epoll based Event Dispatcher
+	epevent.data.fd = fd;
+	epevent.events = EPOLLIN;
+
+	if(epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &epevent) == SOCKET_ERROR){
+		ShowError("connect_client: New Socket #%d failed to add to epoll event dispatcher: %s\n", fd, error_msg());
+		sClose(fd);
+		return -1;
+	}
+
+#endif
+
+	if( sockt->fd_max <= fd ) sockt->fd_max = fd + 1;
 
 	create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse);
 	sockt->session[fd]->client_addr = ntohl(client_address.sin_addr.s_addr);
@@ -585,8 +616,26 @@ int make_listen_bind(uint32 ip, uint16 port)
 		exit(EXIT_FAILURE);
 	}
 
+
+#ifndef SOCKET_EPOLL
+	// Select Based Event Dispatcher
+	sFD_SET(fd,&readfds);
+
+#else
+	// Epoll based Event Dispatcher
+	epevent.data.fd = fd;
+	epevent.events = EPOLLIN;
+
+	if(epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &epevent) == SOCKET_ERROR){
+		ShowError("make_listen_bind: failed to add listener socket #%d to epoll event dispatcher: %s\n", fd, error_msg());
+		sClose(fd);
+		exit(EXIT_FAILURE);
+	}
+
+#endif
+
 	if(sockt->fd_max <= fd) sockt->fd_max = fd + 1;
-	sFD_SET(fd, &readfds);
+
 
 	create_session(fd, connect_client, null_send, null_parse);
 	sockt->session[fd]->client_addr = 0; // just listens
@@ -636,8 +685,25 @@ int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt) {
 	//Now the socket can be made non-blocking. [Skotlex]
 	sockt->set_nonblocking(fd, 1);
 
-	if (sockt->fd_max <= fd) sockt->fd_max = fd + 1;
+
+#ifndef SOCKET_EPOLL
+	// Select Based Event Dispatcher
 	sFD_SET(fd,&readfds);
+
+#else
+	// Epoll based Event Dispatcher
+	epevent.data.fd = fd;
+	epevent.events = EPOLLIN;
+
+	if(epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &epevent) == SOCKET_ERROR){
+		ShowError("make_connection: failed to add socket #%d to epoll event dispatcher: %s\n", fd, error_msg());
+		sClose(fd);
+		return -1;
+	}
+
+#endif
+
+	if(sockt->fd_max <= fd) sockt->fd_max = fd + 1;
 
 	create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse);
 	sockt->session[fd]->client_addr = ntohl(remote_address.sin_addr.s_addr);
@@ -812,8 +878,10 @@ int wfifoset(int fd, size_t len)
 
 int do_sockets(int next)
 {
+#ifndef SOCKET_EPOLL
 	fd_set rfd;
 	struct timeval timeout;
+#endif
 	int ret,i;
 
 	// PRESEND Timers are executed before do_sendrecv and can send packets and/or set sessions to eof.
@@ -831,6 +899,9 @@ int do_sockets(int next)
 	}
 #endif
 
+#ifndef SOCKET_EPOLL
+	// Select based Event Dispatcher:
+
 	// can timeout until the next tick
 	timeout.tv_sec  = next/1000;
 	timeout.tv_usec = next%1000*1000;
@@ -847,6 +918,20 @@ int do_sockets(int next)
 		}
 		return 0; // interrupted by a signal, just loop and try again
 	}
+#else
+	// Epoll based Event Dispatcher
+
+	ret = epoll_wait(epfd, epevents, epoll_maxevents, next);
+	if(ret == SOCKET_ERROR)
+	{
+		if( sErrno != S_EINTR )
+		{
+			ShowFatalError("do_sockets: epoll_wait() failed, %s!\n", error_msg());
+			exit(EXIT_FAILURE);
+		}
+		return 0; // interrupted by a signal, just loop and try again
+	}
+#endif
 
 	sockt->last_tick = time(NULL);
 
@@ -858,6 +943,32 @@ int do_sockets(int next)
 		if( sockt->session[fd] )
 			sockt->session[fd]->func_recv(fd);
 	}
+#elif defined(SOCKET_EPOLL)
+	// epoll based selection
+
+	for( i = 0; i < ret; i++ )
+	{
+		struct epoll_event *it = &epevents[i];
+		struct socket_data *sock = sockt->session[ it->data.fd ];
+
+		if(!sock)
+			continue;
+
+		if ((it->events & EPOLLERR) ||
+			(it->events & EPOLLHUP) ||
+			(!(it->events & EPOLLIN)))
+		{
+			// Got Error on this connection
+			sockt->eof( it->data.fd );
+
+		} else if (it->events & EPOLLIN) {
+			// data wainting
+			sock->func_recv( it->data.fd );
+
+		}
+
+	}
+
 #else
 	// otherwise assume that the fd_set is a bit-array and enumerate it in a standard way
 	for( i = 1; ret && i < sockt->fd_max; ++i )
@@ -1183,7 +1294,15 @@ int socket_config_read(const char* cfgName)
 			sockt->stall_time = atoi(w2);
 			if( sockt->stall_time < 3 )
 				sockt->stall_time = 3;/* a minimum is required to refrain it from killing itself */
+		} 
+#ifdef SOCKET_EPOLL		
+		else if(!strcmpi(w1, "epoll_maxevents")) {
+			epoll_maxevents = atoi(w2);
+			if(epoll_maxevents < 16){
+				epoll_maxevents = 16; // minimum that seems to be useful
+			}
 		}
+#endif
 #ifndef MINICORE
 		else if (!strcmpi(w1, "enable_ip_rules")) {
 			ip_rules = config_switch(w2);
@@ -1254,6 +1373,18 @@ void socket_final(void)
 	VECTOR_CLEAR(sockt->lan_subnets);
 	VECTOR_CLEAR(sockt->allowed_ips);
 	VECTOR_CLEAR(sockt->trusted_ips);
+
+#ifdef SOCKET_EPOLL
+	if(epfd != SOCKET_ERROR){
+		close(epfd);
+		epfd = SOCKET_ERROR;
+	}
+	if(epevents != NULL){
+		aFree(epevents);
+		epevents = NULL;
+	}
+#endif
+
 }
 
 /// Closes a socket.
@@ -1263,7 +1394,17 @@ void socket_close(int fd)
 		return;// invalid
 
 	sockt->flush(fd); // Try to send what's left (although it might not succeed since it's a nonblocking socket)
+
+#ifndef SOCKET_EPOLL
+	// Select based Event Dispatcher
 	sFD_CLR(fd, &readfds);// this needs to be done before closing the socket
+#else
+	// Epoll based Event Dispatcher
+	epevent.data.fd = fd;
+	epevent.events = EPOLLIN;
+	epoll_ctl(epfd, EPOLL_CTL_DEL, fd, &epevent);	// removing the socket from epoll when it's being closed is not required but recommended
+#endif
+
 	sShutdown(fd, SHUT_RDWR); // Disallow further reads/writes
 	sClose(fd); // We don't really care if these closing functions return an error, we are just shutting down and not reusing this socket.
 	if (sockt->session[fd]) delete_session(fd);
@@ -1405,14 +1546,33 @@ void socket_init(void)
 	// Get initial local ips
 	sockt->naddr_ = sockt->getips(sockt->addr_,16);
 
+	socket_config_read(SOCKET_CONF_FILENAME);
+
+#ifndef SOCKET_EPOLL
+	// Select based Event Dispatcher:
 	sFD_ZERO(&readfds);
+	ShowInfo("Server uses '" CL_WHITE "select" CL_RESET "' as event dispatcher\n");
+
+#else
+	// Epoll based Event Dispatcher:
+	epfd = epoll_create(FD_SETSIZE);	// 2.6.8 or newer ignores the expected socket amount argument
+	if(epfd == SOCKET_ERROR){
+		ShowError("Failed to Create Epoll Event Dispatcher: %s\n", error_msg());
+		exit(EXIT_FAILURE);
+	}
+
+	memset(&epevent, 0x00, sizeof(struct epoll_event));
+	epevents = aCalloc(epoll_maxevents, sizeof(struct epoll_event));
+
+	ShowInfo("Server uses '" CL_WHITE "epoll" CL_RESET "' with up to " CL_WHITE "%d" CL_RESET " events per cycle as event dispatcher\n", epoll_maxevents);
+
+#endif
+
 #if defined(SEND_SHORTLIST)
 	memset(send_shortlist_set, 0, sizeof(send_shortlist_set));
 #endif
 
 	CREATE(sockt->session, struct socket_data *, FD_SETSIZE);
-
-	socket_config_read(SOCKET_CONF_FILENAME);
 
 	// initialize last send-receive tick
 	sockt->last_tick = time(NULL);
