@@ -242,7 +242,7 @@ and to make it look southeast it's facing 5.)
 
 Sprite is the sprite identifier used to display this particular NPC. For a 
 full list of sprite numbers see http://kalen.s79.xrea.com/npc/npce.shtml as
-well as db/const.txt.
+well as db/constants.conf.
 You may also use a monster's ID constant instead to display a monster sprite 
 for this NPC, in npcs that have view ids of mobs it's encouraged to use
 OnTouch events with a 2,2 range and with an 'end' after the header to avoid
@@ -528,12 +528,12 @@ forever, and no trace remains of it even if it was stored with character
 or account data. The maximum length of variable name including prefix and
 suffix is 32.
 
-Some variables are special, that is, they are already defined for you by 
-the scripting engine. You can see the full list somewhere in 
-'db/const.txt', which is a file you should read, since it also allows you 
-to replace lots of numbered arguments for many commands with easier to 
-read text. The special variables most commonly used are all permanent 
-character-based variables:
+Some variables are special, that is, they are already defined for you by
+the scripting engine. You can see the full list somewhere in
+'db/constants.conf', which is a file you should read, since it also
+allows you to replace lots of numbered arguments for many commands with
+easier to read text. The special variables most commonly used are all
+permanent character-based variables:
 
 Zeny        - Amount of Zeny.
 Hp          - Current amount of hit points.
@@ -692,9 +692,9 @@ Variable References
 Hard-coded constants
 --------------------
 Most of the constants defined by the scripting engine can be found in
-'db/const.txt' and have the same value independently of settings that
-are core related, but there are constants that can be used to retrieve
-core information that's set when the server is compiled.
+'db/constants.conf' and have the same value independently of settings
+that are core related, but there are constants that can be used to
+retrieve core information that's set when the server is compiled.
 
 PACKETVER			- Server packet version
 MAX_LEVEL			- Maximum level
@@ -1196,15 +1196,16 @@ the string is empty, it will show up as an empty line.
 
     mes "Text that will appear in the box";
 
-Inside the string you may put color codes, which will alter the color of 
-the text printed after them. The color codes are all '^<R><G><B>' and 
-contain three hexadecimal numbers representing colors as if they were HTML 
-colors - ^FF0000 is bright red, ^00FF00 is bright green, ^0000FF is bright 
-blue, ^000000 is black. ^FF00FF is a pure magenta, but it's also a color 
-that is considered transparent whenever the client is drawing windows on 
-screen, so printing text in that color will have kind of a weird effect.
-You may also use C_ constants accompany with "F_MesColor" function for the
-color effect, see the full list of the available ones in 'db/const.txt'
+Inside the string you may put color codes, which will alter the color of
+the text printed after them. The color codes are all '^<R><G><B>' and
+contain three hexadecimal numbers representing colors as if they were
+HTML colors - ^FF0000 is bright red, ^00FF00 is bright green, ^0000FF is
+bright blue, ^000000 is black. ^FF00FF is a pure magenta, but it's also
+a color that is considered transparent whenever the client is drawing
+windows on screen, so printing text in that color will have kind of a
+weird effect.  You may also use C_ constants accompany with "F_MesColor"
+function for the color effect, see the full list of the available ones
+in 'db/constants.conf'
 under 'C_'. Once you've set a text's color to something, you have to set
 it back to black unless you want all the rest of the text be in that color:
 
@@ -2387,7 +2388,7 @@ arrays:
 
 This function will return the basic stats of an invoking character, 
 referred to by the parameter number. Instead of a number, you can use a 
-parameter name if it is defined in 'db/const.txt'.
+parameter name if it is defined in 'db/constants.conf'.
 
 Example parameters:
 
@@ -3563,7 +3564,7 @@ mob database and return the info set by TYPE argument.
 It will return -1 if there is no such monster (or the type value is 
 invalid), or "null" if you requested the monster's name.
 
-Valid types are listed in const.txt:
+Valid types are listed in constants.conf:
 	MOB_NAME		0
 	MOB_LV			1
 	MOB_MAXHP		2
@@ -3712,7 +3713,7 @@ effect being inflicted, in percent.
 	}
 
 You can see the full list of available effect types you can possibly 
-inflict in 'db/const.txt' under 'Eff_'.
+inflict in 'db/constants.conf' under 'Eff_'.
 
 ---------------------------------------
 //=====================================
@@ -4341,7 +4342,7 @@ This command will change the job class of the invoking character.
 
 This command does work with numbers, but you can also use job names. The 
 full list of job names and the numbers they correspond to can be found in 
-'db/const.txt'.
+'db/constants.conf'.
 
 	// This would change your player into a Swordman
 	jobchange Job_Swordman;
@@ -4502,7 +4503,8 @@ Is subject to EXP bonuses and to the `quest_exp_rate` config option.
 
 	getexp 10000,5000;
 
-You can also assign directly to the parameters defined in 'db/const.txt':
+You can also assign directly to the parameters defined in
+'db/constants.conf':
 
 	BaseExp += 10000;
 	JobExp += 5000;
@@ -4580,7 +4582,7 @@ installation that you can look at: 'npc/custom/stylist.txt'
 This command will push the currently attached player to given direction by 
 given amount of square cells. Direction is the same as used when declaring 
 NPCs, and can be specified by using one of the DIR_* constants 
-(db/const.txt).
+(db/constants.conf).
 
 The knock-back is not restricted by items or map flags, only obstacles are 
 taken into account. If there is not enough space to perform the push (e.g. 
@@ -5542,9 +5544,9 @@ Used in reset NPC's (duh!).
 These commands will bestow a status effect on a character.
 
 The <effect type> determines which status is invoked. This can be either a number
-or constant, with the common statuses (mostly negative) found in 'db/const.txt'
-with the 'SC_' prefix. A full list is located in 'src/map/status.h', though
-they are not currently documented.
+or constant, with the common statuses (mostly negative) found in
+'db/constants.conf' with the 'SC_' prefix. A full list is located in
+'src/map/status.h', though they are not currently documented.
 
 The duration of the status is given in <ticks>, or milleseconds.
 
@@ -6281,9 +6283,10 @@ Examples:
 *unitemote <GID>,<Emote>;
 
 Okay, these commands should be fairly self explaining.
-For the emotions, you can look in db/const.txt for prefixes with e_
-PS: unitwarp supports a <GID> of zero, which causes the executor of the 
-script to be affected. This can be used with OnTouchNPC to warp monsters:
+For the emotions, you can look in db/constants.conf for prefixes with e_
+PS: unitwarp supports a <GID> of zero, which causes the executor of the
+script to be affected. This can be used with OnTouchNPC to warp
+monsters:
 
 OnTouchNPC:
 	unitwarp 0,"this",-1,-1;
@@ -6638,8 +6641,8 @@ This command will broadcast a message to all or most players, similar to
 The region the broadcast is heard in (target), source of the broadcast and 
 the color the message will come up as is determined by the flags.
 
-The flag values are coded as constants in db/const.txt to make them easier 
-to use.
+The flag values are coded as constants in db/constants.conf to make them
+easier to use.
 
 Target flags:
 - bc_all:	Broadcast message is sent server-wide (default).
@@ -6671,7 +6674,7 @@ depending on a game client used.
 
 The color parameter is a single number which can be in hexadecimal 
 notation. C_ constant can also be used for color effects, see the full list
-of the available ones in 'db/const.txt' under 'C_'.
+of the available ones in 'db/constants.conf' under 'C_'.
 
 For example:
 	announce "This announcement will be shown to everyone in green.",bc_all,0x00FF00;
@@ -6965,7 +6968,7 @@ to the coordinates specified.
 
 This command marks a specified map with a map flag given. Map flags alter 
 the behavior of the map, you can see the list of the available ones in 
-'db/const.txt' under 'mf_'.
+'db/constants.conf' under 'mf_'.
 
 The map flags alter the behavior of the map regarding teleporting 
 (mf_nomemo, mf_noteleport, mf_nowarp, mf_nogo), storing location when 
@@ -7354,7 +7357,7 @@ A full list of pet IDs can be found inside 'db/pet_db.txt'
 
 This command makes an object display an emotion sprite above their own as 
 if they were doing that emotion. For a full list of emotion numbers, see 
-'db/const.txt' under 'e_'. The not so obvious ones are 'e_what' (a 
+'db/constants.conf' under 'e_'. The not so obvious ones are 'e_what' (a 
 question mark) and 'e_gasp' (the exclamation mark).
 
 The optional target parameter specifies who will get the emotion on top of 
@@ -8215,14 +8218,14 @@ same time.
 
 This command will make the pet give a bonus to the owner's stat (bonus 
 type - bInt,bVit,bDex,bAgi,bLuk,bStr,bSpeedRate - for a full list, see the 
-values starting with 'b' in 'db/const.txt').
+values starting with 'b' in 'db/constants.conf').
 
 *petrecovery <status type>,<delay>;
 
 This command will make the pet cure a specified status condition. The 
 curing actions will occur once every <delay> seconds. For a full list of 
 status conditions that can be cured, see the list of 'SC_' status 
-condition constants in 'db/const.txt'
+condition constants in 'db/constants.conf'
 
 *petloot <max items>;
 
@@ -8317,7 +8320,7 @@ Each of these can be 'on' or 'off'. Together they define a cell's behavior.
 This command lets you alter these flags for all map cells in the specified 
 (x1,y1)-(x2,y2) rectangle. 
 'type' defines which flag to modify. Possible options include cell_walkable,
-cell_shootable, cell_basilica. For a full list, see const.txt.
+cell_shootable, cell_basilica. For a full list, see constants.conf.
 'flag' can be 0 or 1 (0:clear flag, 1:set flag). 
 
 Example:
@@ -8354,7 +8357,7 @@ remove a nonwalkable row of cells after the barricade mobs.
 This command will return 1 or 0, depending on whether the specified cell 
 has the 'type' flag set or not. There are various types to check, all 
 mimicking the server's cell_chk enumeration. The types can be found in 
-db/const.txt.
+db/constants.conf.
 
 The meaning of the individual types can be confusing, so here's an 
 overview:
