@@ -314,6 +314,10 @@ struct {
 	struct HPMHookPoint *HP_login_parse_request_connection_post;
 	struct HPMHookPoint *HP_login_parse_login_pre;
 	struct HPMHookPoint *HP_login_parse_login_post;
+	struct HPMHookPoint *HP_login_config_set_defaults_pre;
+	struct HPMHookPoint *HP_login_config_set_defaults_post;
+	struct HPMHookPoint *HP_login_config_read_pre;
+	struct HPMHookPoint *HP_login_config_read_post;
 	struct HPMHookPoint *HP_iMalloc_init_pre;
 	struct HPMHookPoint *HP_iMalloc_init_post;
 	struct HPMHookPoint *HP_iMalloc_final_pre;
@@ -887,6 +891,10 @@ struct {
 	int HP_login_parse_request_connection_post;
 	int HP_login_parse_login_pre;
 	int HP_login_parse_login_post;
+	int HP_login_config_set_defaults_pre;
+	int HP_login_config_set_defaults_post;
+	int HP_login_config_read_pre;
+	int HP_login_config_read_post;
 	int HP_iMalloc_init_pre;
 	int HP_iMalloc_init_post;
 	int HP_iMalloc_final_pre;

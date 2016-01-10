@@ -3914,6 +3914,59 @@ int HP_login_parse_login(int fd) {
 	}
 	return retVal___;
 }
+void HP_login_config_set_defaults(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_login_config_set_defaults_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_config_set_defaults_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_login_config_set_defaults_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.login.config_set_defaults();
+	}
+	if( HPMHooks.count.HP_login_config_set_defaults_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_config_set_defaults_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_login_config_set_defaults_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+int HP_login_config_read(const char *cfgName) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_login_config_read_pre ) {
+		int (*preHookFunc) (const char *cfgName);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_config_read_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_login_config_read_pre[hIndex].func;
+			retVal___ = preHookFunc(cfgName);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.login.config_read(cfgName);
+	}
+	if( HPMHooks.count.HP_login_config_read_post ) {
+		int (*postHookFunc) (int retVal___, const char *cfgName);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_config_read_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_login_config_read_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, cfgName);
+		}
+	}
+	return retVal___;
+}
 /* iMalloc */
 void HP_iMalloc_init(void) {
 	int hIndex = 0;
