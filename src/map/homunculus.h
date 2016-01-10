@@ -64,13 +64,14 @@ enum homun_id {
 
 #ifdef RENEWAL
 #define	HOMUN_LEVEL_STATWEIGHT_VALUE 0
-#define APPLY_HOMUN_LEVEL_STATWEIGHT()( \
-	hom->str_value = hom->agi_value = \
-	hom->vit_value = hom->int_value = \
-	hom->dex_value = hom->luk_value = hom->level / 10 - HOMUN_LEVEL_STATWEIGHT_VALUE \
-	)
+#define APPLY_HOMUN_LEVEL_STATWEIGHT() \
+	do { \
+		hom->str_value = hom->agi_value = \
+		hom->vit_value = hom->int_value = \
+		hom->dex_value = hom->luk_value = hom->level / 10 - HOMUN_LEVEL_STATWEIGHT_VALUE; \
+	} while (false)
 #else
-#define APPLY_HOMUN_LEVEL_STATWEIGHT() 0
+#define APPLY_HOMUN_LEVEL_STATWEIGHT() (void)0
 #endif
 
 struct h_stats {
