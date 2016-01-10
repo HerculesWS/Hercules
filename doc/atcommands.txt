@@ -209,7 +209,7 @@ New warp NPC 'my_warp_sample' created.
 @effect <effect ID>
 
 Creates a visual effect on or around the character.
-A list of IDs can be found in '/db/const.txt'.
+A list of IDs can be found in '/db/constants.conf'.
 Descriptions of the effects can be found in '/doc/effect_list.txt'.
 
 ---------------------------------------

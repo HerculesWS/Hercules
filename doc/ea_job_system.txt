@@ -12,7 +12,7 @@
 Preface:
 -------------------------------------------------------------------------------
 
-	Most scripters are aware of the class values used in RO and their constants specified on db/const.txt. Each class has a number associated to it for referencing, so when someone's class is 9 that means they are a wizard. However, this list of job numbers has no real order behind it, and no logic behind it's assignation.
+	Most scripters are aware of the class values used in RO and their constants specified on db/constants.conf. Each class has a number associated to it for referencing, so when someone's class is 9 that means they are a wizard. However, this list of job numbers has no real order behind it, and no logic behind it's assignation.
 
 	You can add 3999 to a job to get their rebirth ID, but if you try to do the same to get the Baby class ID, that fails on the super Baby class. Also, there's no way to calculate, from a given first class, which classes would be their "evolution". That is, given the Archer's ID, you cannot just add a value that will return you "Hunter", and will still work if applied to the other classes. It didn't help much when they added Taekwon Boy, a first class, with an ID of 4046, and much later they added Ninja/Gunslinger with the IDs 25/24. How do you identify a first class on all this mess without recurring to very ugly range checks?
 

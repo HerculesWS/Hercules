@@ -85,7 +85,7 @@ on build_hercules(hercules_repo)
 	display dialog "Build successfully completed. Please check the log file for details." with title "Build result" buttons {"Abort", "Continue"} default button 2 cancel button 1
 	set the files_to_copy to {"map-server", "script-checker"}
 	set the conf_files_to_copy to {"inter-server.conf", "import", "packet.conf", "script.conf"}
-	set the db_files_to_copy to {"map_index.txt", "item_db2.txt", "const.txt", "mob_db2.txt"}
+	set the db_files_to_copy to {"map_index.txt", "item_db2.txt", "constants.conf", "mob_db2.txt"}
 	set the db2_files_to_copy to {"map_cache.dat", "item_db.txt", "skill_db.txt", "mob_db.txt"}
 	try
 		set the hercules_path to path to resource "Hercules"

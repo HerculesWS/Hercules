@@ -2277,32 +2277,57 @@ void script_set_constant2(const char *name, int value, bool isparameter) {
 	script->str_data[n].val  = value;
 
 }
-/*==========================================
- * Reading constant databases
- * const.txt
- *------------------------------------------*/
-void read_constdb(void) {
-	FILE *fp;
-	char line[1024],name[1024],val[1024];
-	int type;
 
-	sprintf(line, "%s/const.txt", map->db_path);
-	fp=fopen(line, "r");
-	if(fp==NULL) {
-		ShowError("can't read %s\n", line);
-		return ;
+/**
+ * Loads the constants database from constants.conf
+ */
+void read_constdb(void)
+{
+	config_t constants_conf;
+	char filepath[256];
+	config_setting_t *cdb;
+	config_setting_t *t;
+	int i = 0;
+
+	sprintf(filepath, "%s/constants.conf", map->db_path);
+
+	if (libconfig->read_file(&constants_conf, filepath) || !(cdb = libconfig->setting_get_member(constants_conf.root, "constants_db"))) {
+		ShowError("can't read %s\n", filepath);
+		return;
 	}
-	while (fgets(line, sizeof(line), fp)) {
-		if (line[0] == '/' && line[1] == '/')
-			continue;
-		type = 0;
-		if (sscanf(line, "%1023[A-Za-z0-9_],%1023[-0-9xXA-Fa-f],%d", name, val, &type) >=2
-		 || sscanf(line, "%1023[A-Za-z0-9_] %1023[-0-9xXA-Fa-f] %d", name, val, &type) >=2
-		) {
-			script->set_constant(name, (int)strtol(val, NULL, 0), (bool)type);
+
+	while ((t = libconfig->setting_get_elem(cdb, i++))) {
+		bool is_parameter = false;
+		int value = 0;
+		const char *name = config_setting_name(t);
+		const char *p = name;
+
+		while (*p != '\0') {
+			if (!ISALNUM(*p) && *p != '_')
+				break;
+			p++;
 		}
+		if (*p != '\0') {
+			ShowWarning("read_constdb: Invalid constant name %s. Skipping.\n", name);
+			continue;
+		}
+		if (config_setting_is_aggregate(t)) {
+			int i32;
+			if (!libconfig->setting_lookup_int(t, "Value", &i32)) {
+				ShowWarning("read_constdb: Invalid entry for %s. Skipping.\n", name);
+				continue;
+			}
+			value = i32;
+			if (libconfig->setting_lookup_bool(t, "Parameter", &i32)) {
+				if (i32 != 0)
+					is_parameter = true;
+			}
+		} else {
+			value = libconfig->setting_get_int(t);
+		}
+		script->set_constant(name, value, is_parameter);
 	}
-	fclose(fp);
+	libconfig->destroy(&constants_conf);
 }
 
 // Standard UNIX tab size is 8
@@ -20778,7 +20803,10 @@ void script_label_add(int key, int pos) {
 /**
  * Sets source-end constants for scripts to play with
  **/
-void script_hardcoded_constants(void) {
+void script_hardcoded_constants(void)
+{
+	script->set_constant("true", 1, false);
+	script->set_constant("false", 0, false);
 	/* server defines */
 	script->set_constant("PACKETVER",PACKETVER,false);
 	script->set_constant("MAX_LEVEL",MAX_LEVEL,false);
