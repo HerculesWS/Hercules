@@ -18635,16 +18635,16 @@ void clif_selectcart(struct map_session_data *sd)
 
 	fd = sd->fd;
 
-	WFIFOHEAD(fd, 8 + MAX_CART_DECORATION);
+	WFIFOHEAD(fd, 8 + MAX_CARTDECORATION_CARTS);
 	WFIFOW(fd, 0) = 0x97f;
-	WFIFOW(fd, 2) = 8 + MAX_CART_DECORATION;
+	WFIFOW(fd, 2) = 8 + MAX_CARTDECORATION_CARTS;
 	WFIFOL(fd, 4) = sd->status.account_id;
 
-	for (i = 0; i < MAX_CART_DECORATION; i++) {
+	for (i = 0; i < MAX_CARTDECORATION_CARTS; i++) {
 		WFIFOB(fd, 8 + i) = MAX_BASE_CARTS + 1 + i;
 	}
 
-	WFIFOSET(fd, 8 + MAX_CART_DECORATION);
+	WFIFOSET(fd, 8 + MAX_CARTDECORATION_CARTS);
 #endif
 }
 
