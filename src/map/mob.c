@@ -4316,7 +4316,7 @@ void mob_name_constants(void) {
 #endif // ENABLE_CASE_CHECK
 	for (i = 0; i < MAX_MOB_DB; i++) {
 		if (mob->db_data[i] && !mob->is_clone(i))
-			script->set_constant2(mob->db_data[i]->sprite, i, 0);
+			script->set_constant2(mob->db_data[i]->sprite, i, false, false);
 	}
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = NULL;
