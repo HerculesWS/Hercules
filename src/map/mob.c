@@ -3736,6 +3736,8 @@ int mob_read_db_mode_sub(struct mob_db *entry, struct status_data *mstatus, int 
 		mode |= libconfig->setting_get_bool(t2) ? MD_CHANGETARGET_CHASE : 0;
 	if ((t2 = libconfig->setting_get_member(t, "TargetWeak")))
 		mode |= libconfig->setting_get_bool(t2) ? MD_TARGETWEAK : 0;
+	if ((t2 = libconfig->setting_get_member(t, "NoKnockback")))
+		mode |= libconfig->setting_get_bool(t2) ? MD_NOKNOCKBACK : 0;
 
 	return mode;
 }

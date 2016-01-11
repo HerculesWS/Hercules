@@ -2089,7 +2089,7 @@ int skill_blown(struct block_list* src, struct block_list* target, int count, in
 		case BL_MOB:
 		{
 			const struct mob_data *md = BL_UCCAST(BL_MOB, target);
-			if (md->class_ == MOBID_EMPELIUM)
+			if (md->status.mode&MD_NOKNOCKBACK)
 				return 0;
 			if (src != target && is_boss(target)) // Bosses can't be knocked-back
 				return 0;
