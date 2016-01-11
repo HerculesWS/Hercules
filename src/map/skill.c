@@ -13121,7 +13121,6 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			if( (i = sd->itemindex) == -1 ||
 				sd->status.inventory[i].nameid != sd->itemid ||
 				sd->inventory_data[i] == NULL ||
-				!sd->inventory_data[i]->flag.delay_consume ||
 				sd->status.inventory[i].amount < 1
 			) {
 				//Something went wrong, item exploit?
@@ -13132,7 +13131,7 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			sd->itemid = sd->itemindex = -1;
 			if( skill_id == WZ_EARTHSPIKE && sc && sc->data[SC_EARTHSCROLL] && rnd()%100 > sc->data[SC_EARTHSCROLL]->val2 ) // [marquis007]
 				; //Do not consume item.
-			else if( sd->status.inventory[i].expire_time == 0 ) // Rental usable items are not consumed until expiration
+			else if( sd->status.inventory[i].expire_time == 0 && sd->inventory_data[i]->flag.keepafteruse) // Rental usable items are not consumed until expiration
 				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 		}
 		return 1;
