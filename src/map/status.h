@@ -1823,6 +1823,7 @@ enum e_mode
 	MD_CHANGETARGET_MELEE = 0x1000,
 	MD_CHANGETARGET_CHASE = 0x2000,
 	MD_TARGETWEAK         = 0x4000,
+	MD_NOKNOCKBACK        = 0x8000,
 	MD_MASK               = 0xFFFF,
 };
 

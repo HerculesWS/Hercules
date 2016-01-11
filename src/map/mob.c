@@ -3760,6 +3760,8 @@ int mob_read_db_mode_sub(struct mob_db *entry, struct config_setting_t *t)
 		mode |= libconfig->setting_get_bool(t2) ? MD_CHANGETARGET_CHASE : 0;
 	if ((t2 = libconfig->setting_get_member(t, "TargetWeak")))
 		mode |= libconfig->setting_get_bool(t2) ? MD_TARGETWEAK : 0;
+	if ((t2 = libconfig->setting_get_member(t, "NoKnockback")))
+		mode |= libconfig->setting_get_bool(t2) ? MD_NOKNOCKBACK : 0;
 
 	return mode;
 }
@@ -4109,6 +4111,7 @@ int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *source)
 	 *     ChangeTargetMelee: true/false
 	 *     ChangeTargetChase: true/false
 	 *     TargetWeak: true/false
+	 *     NoKnockback: true/false
 	 * }
 	 * MoveSpeed: move speed
 	 * AttackDelay: attack delay
