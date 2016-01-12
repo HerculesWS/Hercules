@@ -36,7 +36,7 @@
 //================= Description ===========================================
 //= Renewal-specific town shop NPCs.
 //================= Current Version =======================================
-//= 2.3.1
+//= 2.4
 //=========================================================================
 
 //== Comodo ================================================
@@ -803,6 +803,51 @@ OnInit:
 	sellitem Empty_Bottle;
 }
 
+//== Alberta ===============================================
+alb2trea,87,65,5	trader	Tool Dealer#alb	4_M_01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Silver_Arrow;
+	sellitem Fire_Arrow;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+}
+
+alberta_in,182,97,0	trader	Tool Dealer#alb2	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Empty_Bottle;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+}
+
+alberta_in,176,81,3	trader	Trading Merchant#alb	4_M_HUMERCHANT,{
+OnInit:
+	sellitem Bullet;
+	sellitem Silver_Bullet_;
+	sellitem Shell_Of_Blood_;
+	sellitem Branch;
+	sellitem Crimson_Bolt;
+	sellitem The_Cyclone;
+	sellitem Rolling_Stone;
+	sellitem Black_Rose;
+	sellitem Long_Barrel;
+	sellitem Jungle_Carbine;
+	sellitem Thunder_P;
+}
+
 //== Payon =================================================
 payon,159,96,4	trader	Tool Dealer#pay3	4_M_ORIENT01,{
 OnInit:
@@ -955,6 +1000,25 @@ OnInit:
 }
 
 geffen,196,111,3	trader	Chef Assistant#gef	4_M_03,{
+OnInit:
+	sellitem Combination_Kit;
+	sellitem Mushroom;
+	sellitem Pot;
+	sellitem Bread;
+	sellitem Grain;
+	sellitem Cooking_Oil;
+	sellitem Plain_Sauce;
+	sellitem Hot_Sauce;
+	sellitem Sweet_Sauce;
+	sellitem Red_Spice;
+	sellitem Yellow_Spice;
+	sellitem Delicious_Fish;
+	sellitem Outdoor_Cooking_Kits;
+	sellitem Indoor_Cooking_Kits;
+	sellitem High_end_Cooking_Kits;
+}
+
+alberta,167,135,5	trader	Chef Assistant#alb	4_M_05,{
 OnInit:
 	sellitem Combination_Kit;
 	sellitem Mushroom;
