@@ -4374,7 +4374,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					clif->slide(src, x, y);
 					clif->fixpos(src); // the official server send these two packets.
 					skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
-					if ( rnd() % 100 < 4 * skill_lv &&	skill_id == GC_DARKILLUSION )
+					if (rnd() % 100 < 4 * skill_lv && skill_id == GC_DARKILLUSION)
 						skill->castend_damage_id(src, bl, GC_CROSSIMPACT, skill_lv, tick, flag);
 				}
 			}
@@ -14905,7 +14905,7 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 		}
 		if (sc->data[SC_MYSTICSCROLL])
 			VARCAST_REDUCTION(sc->data[SC_MYSTICSCROLL]->val1);
-			
+
 		// Fixed cast reduction bonuses
 		if( sc->data[SC__LAZINESS] )
 			fixcast_r = max(fixcast_r, sc->data[SC__LAZINESS]->val2);
@@ -18145,7 +18145,7 @@ int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, int tick)
 				return 0;
 			else {
 				int cursor;
-				/**	somehow, the timer vanished. (bugreport:8367) **/
+				/* somehow, the timer vanished. (bugreport:8367) */
 				ers_free(skill->cd_entry_ers, cd->entry[i]);
 
 				cd->entry[i] = NULL;
