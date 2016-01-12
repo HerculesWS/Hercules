@@ -31,7 +31,7 @@
 //================= Description ===========================================
 //= Pre-renewal-specific town shop NPCs.
 //================= Current Version =======================================
-//= 1.6
+//= 1.7
 //=========================================================================
 
 //== Prontera ==============================================
@@ -297,6 +297,52 @@ OnInit:
 	sellitem Traditional_Cookie;
 }
 
+//== Alberta ===============================================
+alb2trea,87,65,5	trader	Tool Dealer#alb	4_M_01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Silver_Arrow;
+	sellitem Fire_Arrow;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Green_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+}
+
+alberta_in,182,97,0	trader	Tool Dealer#alb2	1_F_MERCHANT_01,{
+OnInit:
+	sellitem Arrow;
+	sellitem Spectacles;
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Green_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Spinning_Eyes;
+}
+
+alberta_in,176,81,3	trader	Trading Merchant#alb	4_M_HUMERCHANT,{
+OnInit:
+	sellitem Bullet;
+	sellitem Silver_Bullet;
+	sellitem Shell_Of_Blood;
+	sellitem Branch;
+	sellitem Crimson_Bolt;
+	sellitem The_Cyclone;
+	sellitem Rolling_Stone;
+	sellitem Black_Rose;
+	sellitem Long_Barrel;
+	sellitem Jungle_Carbine;
+	sellitem Thunder_P;
+}
+
 //== Cooking Addition ======================================
 prontera,156,212,1	trader	Chef Assistant#prt	8_F_GIRL,{
 OnInit:
@@ -318,6 +364,11 @@ OnInit:
 geffen,196,111,3	trader	Chef Assistant#gef	4_M_03,{
 OnInit:
 	sellitem Pot;
+}
+
+alberta,167,135,5	trader	Chef Assistant#alb	4_M_05,{
+OnInit:
+	sellitem Delicious_Fish;
 }
 
 payon,206,119,5	trader	Chef Assistant#pay	4_M_ORIENT02,{
