@@ -862,38 +862,38 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_M_LIFEPOTION] = SI_M_LIFEPOTION;
 	status->dbs->IconChangeTable[SC_G_LIFEPOTION] = SI_G_LIFEPOTION;
 	status->dbs->IconChangeTable[SC_MYSTICPOWDER] = SI_MYSTICPOWDER;
-	
+
 	// Eden Crystal Synthesis
 	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
 	status->dbs->IconChangeTable[SC_QUEST_BUFF2] = SI_QUEST_BUFF2;
 	status->dbs->IconChangeTable[SC_QUEST_BUFF3] = SI_QUEST_BUFF3;
-	
+
 	// Geffen Magic Tournament
 	status->dbs->IconChangeTable[SC_GEFFEN_MAGIC1] = SI_GEFFEN_MAGIC1;
 	status->dbs->IconChangeTable[SC_GEFFEN_MAGIC2] = SI_GEFFEN_MAGIC2;
 	status->dbs->IconChangeTable[SC_GEFFEN_MAGIC3] = SI_GEFFEN_MAGIC3;
 	status->dbs->IconChangeTable[SC_FENRIR_CARD] = SI_FENRIR_CARD;
-	
+
 	// MVP Scrolls
 	status->dbs->IconChangeTable[SC_MVPCARD_TAOGUNKA] = SI_MVPCARD_TAOGUNKA;
 	status->dbs->IconChangeTable[SC_MVPCARD_MISTRESS] = SI_MVPCARD_MISTRESS;
 	status->dbs->IconChangeTable[SC_MVPCARD_ORCHERO] = SI_MVPCARD_ORCHERO;
 	status->dbs->IconChangeTable[SC_MVPCARD_ORCLORD] = SI_MVPCARD_ORCLORD;
-	
+
 	// Mercenary Bonus Effects
 	status->dbs->IconChangeTable[SC_MER_FLEE] = SI_MER_FLEE;
 	status->dbs->IconChangeTable[SC_MER_ATK] = SI_MER_ATK;
 	status->dbs->IconChangeTable[SC_MER_HP] = SI_MER_HP;
 	status->dbs->IconChangeTable[SC_MER_SP] = SI_MER_SP;
 	status->dbs->IconChangeTable[SC_MER_HIT] = SI_MER_HIT;
-	
+
 	// Warlock Spheres
 	status->dbs->IconChangeTable[SC_SUMMON1] = SI_SPHERE_1;
 	status->dbs->IconChangeTable[SC_SUMMON2] = SI_SPHERE_2;
 	status->dbs->IconChangeTable[SC_SUMMON3] = SI_SPHERE_3;
 	status->dbs->IconChangeTable[SC_SUMMON4] = SI_SPHERE_4;
 	status->dbs->IconChangeTable[SC_SUMMON5] = SI_SPHERE_5;
-	
+
 	// Warlock Preserved spells
 	status->dbs->IconChangeTable[SC_SPELLBOOK1] = SI_SPELLBOOK1;
 	status->dbs->IconChangeTable[SC_SPELLBOOK2] = SI_SPELLBOOK2;
@@ -977,7 +977,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_REBOUND] = SI_REBOUND;
 	status->dbs->IconChangeTable[SC_ALL_RIDING] = SI_ALL_RIDING;
 	status->dbs->IconChangeTable[SC_MONSTER_TRANSFORM] = SI_MONSTER_TRANSFORM;
-	
+
 	// Costumes
 	status->dbs->IconChangeTable[SC_MOONSTAR] = SI_MOONSTAR;
 	status->dbs->IconChangeTable[SC_SUPER_STAR] = SI_SUPER_STAR;
@@ -993,7 +993,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_TIME_ACCESSORY] = SI_TIME_ACCESSORY;
 	status->dbs->IconChangeTable[SC_MAGICAL_FEATHER] = SI_MAGICAL_FEATHER;
 	status->dbs->IconChangeTable[SC_BLOSSOM_FLUTTERING] = SI_BLOSSOM_FLUTTERING;
-	
+
 	// Other SC which are not necessarily associated to skills.
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION1] |= SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_ATTHASTE_POTION2] |= SCB_ASPD;
@@ -1061,7 +1061,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_PHI_DEMON] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MAGIC_CANDY] |= SCB_MATK | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MYSTICPOWDER] |= SCB_FLEE | SCB_LUK;
-	
+
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
 	status->dbs->ChangeFlagTable[SC_FOOD_AGI_CASH] |= SCB_AGI;
@@ -1069,14 +1069,14 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_FOOD_DEX_CASH] |= SCB_DEX;
 	status->dbs->ChangeFlagTable[SC_FOOD_INT_CASH] |= SCB_INT;
 	status->dbs->ChangeFlagTable[SC_FOOD_LUK_CASH] |= SCB_LUK;
-	
+
 	// Mercenary Bonus Effects
 	status->dbs->ChangeFlagTable[SC_MER_FLEE] |= SCB_FLEE;
 	status->dbs->ChangeFlagTable[SC_MER_ATK] |= SCB_WATK;
 	status->dbs->ChangeFlagTable[SC_MER_HP] |= SCB_MAXHP;
 	status->dbs->ChangeFlagTable[SC_MER_SP] |= SCB_MAXSP;
 	status->dbs->ChangeFlagTable[SC_MER_HIT] |= SCB_HIT;
-	
+
 	// Guillotine Cross Poison Effects
 	status->dbs->ChangeFlagTable[SC_PARALYSE] |= SCB_FLEE | SCB_SPEED | SCB_ASPD;
 	status->dbs->ChangeFlagTable[SC_VENOMBLEED] |= SCB_MAXHP;
@@ -1084,11 +1084,11 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_DEATHHURT] |= SCB_REGEN;
 	status->dbs->ChangeFlagTable[SC_PYREXIA] |= SCB_HIT | SCB_FLEE;
 	status->dbs->ChangeFlagTable[SC_OBLIVIONCURSE] |= SCB_REGEN;
-	
+
 	// Royal Guard status
 	status->dbs->ChangeFlagTable[SC_SHIELDSPELL_DEF] |= SCB_WATK;
 	status->dbs->ChangeFlagTable[SC_SHIELDSPELL_REF] |= SCB_DEF;
-	
+
 	// Mechanic status
 	status->dbs->ChangeFlagTable[SC_STEALTHFIELD_MASTER] |= SCB_SPEED;
 
@@ -1116,7 +1116,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_STOMACHACHE] |= SCB_STR | SCB_AGI | SCB_VIT | SCB_INT | SCB_DEX | SCB_LUK | SCB_SPEED;
 	status->dbs->ChangeFlagTable[SC_PROMOTE_HEALTH_RESERCH] |= SCB_MAXHP | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_ENERGY_DRINK_RESERCH] |= SCB_MAXSP | SCB_ALL;
-	
+
 	// Geffen Scrolls
 	status->dbs->ChangeFlagTable[SC_SKELSCROLL] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_DISTRUCTIONSCROLL] |= SCB_ALL;
@@ -1135,24 +1135,24 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_MTF_HITFLEE] |= SCB_HIT | SCB_FLEE;
 	status->dbs->ChangeFlagTable[SC_MTF_MHP] |= SCB_MAXHP;
 	status->dbs->ChangeFlagTable[SC_MTF_MSP] |= SCB_MAXSP;
-	
+
 	// Eden Crystal Synthesis
 	status->dbs->ChangeFlagTable[SC_QUEST_BUFF1] |= SCB_BATK | SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_QUEST_BUFF2] |= SCB_BATK | SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_QUEST_BUFF3] |= SCB_BATK | SCB_MATK;
-	
+
 	// Geffen Magic Tournament
 	status->dbs->ChangeFlagTable[SC_GEFFEN_MAGIC1] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_GEFFEN_MAGIC2] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_GEFFEN_MAGIC3] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_FENRIR_CARD] |= SCB_MATK | SCB_ALL;
-	
+
 	// MVP Scrolls
 	status->dbs->ChangeFlagTable[SC_MVPCARD_TAOGUNKA] |= SCB_MAXHP | SCB_DEF | SCB_MDEF;
 	status->dbs->ChangeFlagTable[SC_MVPCARD_MISTRESS] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCHERO] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MVPCARD_ORCLORD] |= SCB_ALL;
-	
+
 	// Costumes
 	status->dbs->ChangeFlagTable[SC_MOONSTAR] |= SCB_NONE;
 	status->dbs->ChangeFlagTable[SC_SUPER_STAR] |= SCB_NONE;
@@ -1192,7 +1192,7 @@ void initChangeTables(void) {
 	status->dbs->DisplayType[SC_BLOOD_SUCKER]        = true;
 	status->dbs->DisplayType[SC__SHADOWFORM]         = true;
 	status->dbs->DisplayType[SC_MONSTER_TRANSFORM]   = true;
-	
+
 	// Costumes
 	status->dbs->DisplayType[SC_MOONSTAR]            = true;
 	status->dbs->DisplayType[SC_SUPER_STAR]          = true;
@@ -2500,7 +2500,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		}
 		else if(sd->inventory_data[index]->type == IT_ARMOR) {
 			int r = sd->status.inventory[index].refine;
-			
+
 			if ( (!battle_config.costume_refine_def && itemdb_is_costumeequip(sd->inventory_data[index]->equip)) ||
 				 (!battle_config.shadow_refine_def && itemdb_is_shadowequip(sd->inventory_data[index]->equip))
 				)
@@ -3110,7 +3110,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 			sd->magic_addele[ELE_WIND] += 25;
 		if (sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 3)
 			sd->magic_addele[ELE_EARTH] += 25;
-			
+
 		// Geffen Scrolls
 		if (sc->data[SC_SKELSCROLL]) {
 #ifdef RENEWAL
@@ -3136,11 +3136,11 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 		}
 		if (sc->data[SC_IMMUNITYSCROLL])
 			sd->subele[ELE_NEUTRAL] += sc->data[SC_IMMUNITYSCROLL]->val1;
-		
+
 		// Geffen Magic Tournament
 		if (sc->data[SC_GEFFEN_MAGIC1]) {
 			sd->right_weapon.addrace[RC_DEMIHUMAN] += sc->data[SC_GEFFEN_MAGIC1]->val1;
-			sd->left_weapon.addrace[RC_DEMIHUMAN] += sc->data[SC_GEFFEN_MAGIC1]->val1;	
+			sd->left_weapon.addrace[RC_DEMIHUMAN] += sc->data[SC_GEFFEN_MAGIC1]->val1;
 		}
 		if (sc->data[SC_GEFFEN_MAGIC2])
 			sd->magic_addrace[RC_DEMIHUMAN] += sc->data[SC_GEFFEN_MAGIC2]->val1;
@@ -4190,10 +4190,14 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st) 
 	if ( sd->status.shield )
 		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class_)][MAX_WEAPON_TYPE];
 	switch ( sd->status.weapon ) {
-		case W_BOW:		case W_MUSICAL:
-		case W_WHIP:	case W_REVOLVER:
-		case W_RIFLE:	case W_GATLING:
-		case W_SHOTGUN:	case W_GRENADE:
+		case W_BOW:
+		case W_MUSICAL:
+		case W_WHIP:
+		case W_REVOLVER:
+		case W_RIFLE:
+		case W_GATLING:
+		case W_SHOTGUN:
+		case W_GRENADE:
 			temp = st->dex * st->dex / 7.0f + st->agi * st->agi * 0.5f;
 			break;
 		default:
@@ -4271,12 +4275,14 @@ unsigned short status_base_atk(const struct block_list *bl, const struct status_
 		str = (int)(dstr + (float)dex / 5 + (float)st->luk / 3 + (float)BL_UCCAST(BL_PC, bl)->status.base_level / 4);
 	else if (bl->type == BL_MOB)
 		str = dstr + BL_UCCAST(BL_MOB, bl)->level;
-	//else if (bl->type == BL_MER) // FIXME: What should go here?
-	//	str = dstr + BL_UCCAST(BL_MER, bl)->level;
-#else
+#if 0
+	else if (bl->type == BL_MER) // FIXME: What should go here?
+		str = dstr + BL_UCCAST(BL_MER, bl)->level;
+#endif // 0
+#else // ! RENEWAL
 	if (bl->type == BL_PC)
 		str += dex / 5 + st->luk / 5;
-#endif
+#endif // RENEWAL
 	return cap_value(str, 0, USHRT_MAX);
 }
 
@@ -4813,7 +4819,7 @@ unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc,
 		batk += 100 * sc->data[SC_SATURDAY_NIGHT_FEVER]->val1;
 	if (sc->data[SC_BATTLESCROLL])
 		batk += batk * sc->data[SC_BATTLESCROLL]->val1 / 100;
-		
+
 	// Eden Crystal Synthesis
 	if (sc->data[SC_QUEST_BUFF1])
 		batk += sc->data[SC_QUEST_BUFF1]->val1;
@@ -4998,7 +5004,7 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += sc->data[SC_MTF_MATK]->val1;
 	if (sc->data[SC_MYSTICSCROLL])
 		matk += matk * sc->data[SC_MYSTICSCROLL]->val1 / 100;
-		
+
 	// Eden Crystal Synthesis
 	if (sc->data[SC_QUEST_BUFF1])
 		matk += sc->data[SC_QUEST_BUFF1]->val1;
@@ -5006,7 +5012,7 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += sc->data[SC_QUEST_BUFF2]->val1;
 	if (sc->data[SC_QUEST_BUFF3])
 		matk += sc->data[SC_QUEST_BUFF3]->val1;
-		
+
 	// Geffen Magic Tournament
 	if (sc->data[SC_FENRIR_CARD])
 		matk += sc->data[SC_FENRIR_CARD]->val1;
@@ -5115,7 +5121,7 @@ signed short status_calc_hit(struct block_list *bl, struct status_change *sc, in
 		hit += sc->data[SC_ACARAJE]->val1;
 	if (sc->data[SC_BUCHEDENOEL])
 		hit += sc->data[SC_BUCHEDENOEL]->val3;
-		
+
 	return (short)cap_value(hit, 1, SHRT_MAX);
 }
 
@@ -5616,10 +5622,8 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 						val = max( val, sc->data[SC_MELON_BOMB]->val1 );
 					if (sc->data[SC_STOMACHACHE])
 						val = max(val, sc->data[SC_STOMACHACHE]->val2);
-						
-					if( sc->data[SC_MARSHOFABYSS] ) // It stacks to other statuses so always put this at the end.
-						val = max( 50, val + 10 * sc->data[SC_MARSHOFABYSS]->val1 );
-
+					if (sc->data[SC_MARSHOFABYSS]) // It stacks to other statuses so always put this at the end.
+						val = max(50, val + 10 * sc->data[SC_MARSHOFABYSS]->val1);
 					if (sc->data[SC_MOVHASTE_POTION]) { // Doesn't affect the movement speed by Quagmire, Decrease Agi, Slow Grace [Frost]
 						if (sc->data[SC_DEC_AGI] || sc->data[SC_QUAGMIRE] || sc->data[SC_DONTFORGETME])
 							return 0;
@@ -12814,13 +12818,13 @@ bool status_readdb_sizefix(char* fields[], int columns, int current)
 /**
  * Processes a refine_db.conf entry.
  *
- * @param *r	  Libconfig setting entry. It is expected to be valid and it
- *                won't be freed (it is care of the caller to do so if
- *                necessary)
- * @param n       Ordinal number of the entry, to be displayed in case of
- *                validation errors.
- * @param *source Source of the entry (file name), to be displayed in case of
- *                validation errors.
+ * @param r      Libconfig setting entry. It is expected to be valid and it
+ *               won't be freed (it is care of the caller to do so if
+ *               necessary)
+ * @param n      Ordinal number of the entry, to be displayed in case of
+ *               validation errors.
+ * @param source Source of the entry (file name), to be displayed in case of
+ *               validation errors.
  * @return # of the validated entry, or 0 in case of failure.
  */
 int status_readdb_refine_libconfig_sub(config_setting_t *r, const char *name, const char *source)
@@ -12831,7 +12835,7 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, const char *name, co
 	nullpo_ret(r);
 	nullpo_ret(name);
 	nullpo_ret(source);
-	
+
 	if (strncmp(name, "Armors", 6) == 0) {
 		type = REFINE_TYPE_ARMOR;
 	} else if (strncmp(name, "WeaponLevel", 11) != 0 || !strspn(&name[strlen(name)-1], "0123456789") || (type = atoi(strncpy(lv, name+11, 2))) == REFINE_TYPE_ARMOR) {
@@ -12920,14 +12924,14 @@ int status_readdb_refine_libconfig(const char *filename) {
 	config_setting_t *r;
 	char filepath[256];
 	int i = 0, count = 0,type = 0;
-	
+
 	sprintf(filepath, "%s/%s", map->db_path, filename);
 	memset(&duplicate,0,sizeof(duplicate));
 	if( libconfig->read_file(&refine_db_conf, filepath) ) {
 		ShowError("can't read %s\n", filepath);
 		return 0;
 	}
-	
+
 	while((r = libconfig->setting_get_elem(refine_db_conf.root,i++))) {
 		char *name = config_setting_name(r);
 		if((type=status->readdb_refine_libconfig_sub(r, name, filename))) {
@@ -12939,7 +12943,7 @@ int status_readdb_refine_libconfig(const char *filename) {
 	}
 	libconfig->destroy(&refine_db_conf);
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
-	
+
 	return count;
 }
 

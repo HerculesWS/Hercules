@@ -2064,7 +2064,7 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
 
 	if (battle_config.show_mob_info&3)
 		clif->charnameack (0, &md->bl);
-	
+
 #if PACKETVER >= 20131223
 	// Resend ZC_NOTIFY_MOVEENTRY to Update the HP
 	if (battle_config.show_monster_hp_bar)

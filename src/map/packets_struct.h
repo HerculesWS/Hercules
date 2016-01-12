@@ -1157,9 +1157,9 @@ struct packet_hotkey {
 	char Rotate;
 #endif
 	struct {
-		char isSkill;		// 0: Item, 1:Skill
-		unsigned int ID;	// Item/Skill ID
-		short count;		// Item Quantity/Skill Level
+		char isSkill;    // 0: Item, 1:Skill
+		unsigned int ID; // Item/Skill ID
+		short count;     // Item Quantity/Skill Level
 	} hotkey[MAX_HOTKEYS];
 #else // not HOTKEY_SAVING
 	UNAVAILABLE_STRUCT;

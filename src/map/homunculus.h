@@ -63,7 +63,7 @@ enum homun_id {
 #define homun_alive(x) ((x) && (x)->homunculus.vaporize == HOM_ST_ACTIVE && (x)->battle_status.hp > 0)
 
 #ifdef RENEWAL
-#define	HOMUN_LEVEL_STATWEIGHT_VALUE 0
+#define HOMUN_LEVEL_STATWEIGHT_VALUE 0
 #define APPLY_HOMUN_LEVEL_STATWEIGHT() \
 	do { \
 		hom->str_value = hom->agi_value = \
