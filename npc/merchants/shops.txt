@@ -46,44 +46,14 @@
 //================= Description ===========================================
 //= Town shop NPCs.
 //================= Current Version =======================================
-//= 3.8
+//= 3.6
 //=========================================================================
 
 //== Alberta ===============================================
-alb2trea,87,65,5	trader	Tool Dealer#alb	4_M_01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Silver_Arrow;
-	sellitem Fire_Arrow;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-}
-
 alberta_in,165,96,0	trader	Item Collector#alb	1_F_MERCHANT_02,{
 OnInit:
 	sellitem Scell;
 	sellitem Monster's_Feed;
-}
-
-alberta_in,182,97,0	trader	Tool Dealer#alb2	1_F_MERCHANT_01,{
-OnInit:
-	sellitem Arrow;
-	sellitem Spectacles;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Spinning_Eyes;
 }
 
 alberta_in,180,15,0	trader	Armor Dealer#alb	4W_F_01,{
@@ -136,21 +106,6 @@ alberta_in,175,97,4	trader	Weapon Dealer#alb2	4_KID01,{
 OnInit:
 	sellitem Town_Sword;
 	sellitem Cinquedea;
-}
-
-alberta_in,176,81,3	trader	Trading Merchant#alb	4_M_HUMERCHANT,{
-OnInit:
-	sellitem Bullet;
-	sellitem Silver_Bullet;
-	sellitem Shell_Of_Blood;
-	sellitem Branch;
-	sellitem Crimson_Bolt;
-	sellitem The_Cyclone;
-	sellitem Rolling_Stone;
-	sellitem Black_Rose;
-	sellitem Long_Barrel;
-	sellitem Jungle_Carbine;
-	sellitem Thunder_P;
 }
 
 //== Aldebaran =============================================
@@ -1838,11 +1793,6 @@ OnInit:
 }
 
 //== Cooking Addition ======================================
-alberta,167,135,5	trader	Chef Assistant#alb	4_M_05,{
-OnInit:
-	sellitem Delicious_Fish;
-}
-
 aldebaran,165,107,2	trader	Chef Assistant#alde	4W_M_01,{
 OnInit:
 	sellitem Red_Spice;
