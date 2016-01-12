@@ -716,7 +716,7 @@ struct map_data {
 		unsigned noknockback : 1;
 		unsigned notomb : 1;
 		unsigned nocashshop : 1;
-		unsigned noviewid : 22;
+		uint32 noviewid; ///< noviewid (bitmask - @see enum equip_pos)
 	} flag;
 	struct point save;
 	struct npc_data *npc[MAX_NPC_PER_MAP];

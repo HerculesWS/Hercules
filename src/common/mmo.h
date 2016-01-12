@@ -268,6 +268,7 @@ struct item {
 
 //Equip position constants
 enum equip_pos {
+	EQP_NONE               = 0x000000,
 	EQP_HEAD_LOW           = 0x000001,
 	EQP_HEAD_MID           = 0x000200, //512
 	EQP_HEAD_TOP           = 0x000100, //256
