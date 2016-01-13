@@ -1379,6 +1379,10 @@ const char* parse_simpleexpr(const char *p)
 			return pv;
 		}
 
+		if (script->str_data[l].type == C_INT && script->str_data[l].deprecated) {
+			disp_warning_message("This constant is deprecated and it will be removed in a future version. Please see the script documentation and constants.conf for an alternative.\n", p);
+		}
+
 		p=script->skip_word(p);
 		if( *p == '[' ) {
 			// array(name[i] => getelementofarray(name,i) )
@@ -2231,25 +2235,31 @@ bool script_get_constant(const char* name, int* value)
 		return false;
 	}
 	value[0] = script->str_data[n].val;
+	if (script->str_data[n].deprecated) {
+		ShowWarning("The constant '%s' is deprecated and it will be removed in a future version. Please see the script documentation and constants.conf for an alternative.\n", name);
+	}
 
 	return true;
 }
 
 /// Creates new constant or parameter with given value.
-void script_set_constant(const char* name, int value, bool isparameter) {
+void script_set_constant(const char *name, int value, bool is_parameter, bool is_deprecated)
+{
 	int n = script->add_str(name);
 
 	if( script->str_data[n].type == C_NOP ) {// new
-		script->str_data[n].type = isparameter ? C_PARAM : C_INT;
+		script->str_data[n].type = is_parameter ? C_PARAM : C_INT;
 		script->str_data[n].val  = value;
+		script->str_data[n].deprecated = is_deprecated ? 1 : 0;
 	} else if( script->str_data[n].type == C_PARAM || script->str_data[n].type == C_INT ) {// existing parameter or constant
 		ShowError("script_set_constant: Attempted to overwrite existing %s '%s' (old value=%d, new value=%d).\n", ( script->str_data[n].type == C_PARAM ) ? "parameter" : "constant", name, script->str_data[n].val, value);
 	} else {// existing name
-		ShowError("script_set_constant: Invalid name for %s '%s' (already defined as %s).\n", isparameter ? "parameter" : "constant", name, script->op2name(script->str_data[n].type));
+		ShowError("script_set_constant: Invalid name for %s '%s' (already defined as %s).\n", is_parameter ? "parameter" : "constant", name, script->op2name(script->str_data[n].type));
 	}
 }
 /* adds data to a existent constant in the database, inserted normally via parse */
-void script_set_constant2(const char *name, int value, bool isparameter) {
+void script_set_constant2(const char *name, int value, bool is_parameter, bool is_deprecated)
+{
 	int n = script->add_str(name);
 
 	if( script->str_data[n].type == C_PARAM ) {
@@ -2273,36 +2283,66 @@ void script_set_constant2(const char *name, int value, bool isparameter) {
 		script->str_data[n].label = -1;
 	}
 
-	script->str_data[n].type = isparameter ? C_PARAM : C_INT;
+	script->str_data[n].type = is_parameter ? C_PARAM : C_INT;
 	script->str_data[n].val  = value;
-
+	script->str_data[n].deprecated = is_deprecated ? 1 : 0;
 }
-/*==========================================
- * Reading constant databases
- * const.txt
- *------------------------------------------*/
-void read_constdb(void) {
-	FILE *fp;
-	char line[1024],name[1024],val[1024];
-	int type;
 
-	sprintf(line, "%s/const.txt", map->db_path);
-	fp=fopen(line, "r");
-	if(fp==NULL) {
-		ShowError("can't read %s\n", line);
-		return ;
+/**
+ * Loads the constants database from constants.conf
+ */
+void read_constdb(void)
+{
+	config_t constants_conf;
+	char filepath[256];
+	config_setting_t *cdb;
+	config_setting_t *t;
+	int i = 0;
+
+	sprintf(filepath, "%s/constants.conf", map->db_path);
+
+	if (libconfig->read_file(&constants_conf, filepath) || !(cdb = libconfig->setting_get_member(constants_conf.root, "constants_db"))) {
+		ShowError("can't read %s\n", filepath);
+		return;
 	}
-	while (fgets(line, sizeof(line), fp)) {
-		if (line[0] == '/' && line[1] == '/')
-			continue;
-		type = 0;
-		if (sscanf(line, "%1023[A-Za-z0-9_],%1023[-0-9xXA-Fa-f],%d", name, val, &type) >=2
-		 || sscanf(line, "%1023[A-Za-z0-9_] %1023[-0-9xXA-Fa-f] %d", name, val, &type) >=2
-		) {
-			script->set_constant(name, (int)strtol(val, NULL, 0), (bool)type);
+
+	while ((t = libconfig->setting_get_elem(cdb, i++))) {
+		bool is_parameter = false;
+		bool is_deprecated = false;
+		int value = 0;
+		const char *name = config_setting_name(t);
+		const char *p = name;
+
+		while (*p != '\0') {
+			if (!ISALNUM(*p) && *p != '_')
+				break;
+			p++;
 		}
+		if (*p != '\0') {
+			ShowWarning("read_constdb: Invalid constant name %s. Skipping.\n", name);
+			continue;
+		}
+		if (config_setting_is_aggregate(t)) {
+			int i32;
+			if (!libconfig->setting_lookup_int(t, "Value", &i32)) {
+				ShowWarning("read_constdb: Invalid entry for %s. Skipping.\n", name);
+				continue;
+			}
+			value = i32;
+			if (libconfig->setting_lookup_bool(t, "Parameter", &i32)) {
+				if (i32 != 0)
+					is_parameter = true;
+			}
+			if (libconfig->setting_lookup_bool(t, "Deprecated", &i32)) {
+				if (i32 != 0)
+					is_deprecated = true;
+			}
+		} else {
+			value = libconfig->setting_get_int(t);
+		}
+		script->set_constant(name, value, is_parameter, is_deprecated);
 	}
-	fclose(fp);
+	libconfig->destroy(&constants_conf);
 }
 
 // Standard UNIX tab size is 8
@@ -20778,118 +20818,121 @@ void script_label_add(int key, int pos) {
 /**
  * Sets source-end constants for scripts to play with
  **/
-void script_hardcoded_constants(void) {
+void script_hardcoded_constants(void)
+{
+	script->set_constant("true", 1, false, false);
+	script->set_constant("false", 0, false, false);
 	/* server defines */
-	script->set_constant("PACKETVER",PACKETVER,false);
-	script->set_constant("MAX_LEVEL",MAX_LEVEL,false);
-	script->set_constant("MAX_STORAGE",MAX_STORAGE,false);
-	script->set_constant("MAX_GUILD_STORAGE",MAX_GUILD_STORAGE,false);
-	script->set_constant("MAX_CART",MAX_INVENTORY,false);
-	script->set_constant("MAX_INVENTORY",MAX_INVENTORY,false);
-	script->set_constant("MAX_ZENY",MAX_ZENY,false);
-	script->set_constant("MAX_BG_MEMBERS",MAX_BG_MEMBERS,false);
-	script->set_constant("MAX_CHAT_USERS",MAX_CHAT_USERS,false);
-	script->set_constant("MAX_REFINE",MAX_REFINE,false);
+	script->set_constant("PACKETVER",PACKETVER,false, false);
+	script->set_constant("MAX_LEVEL",MAX_LEVEL,false, false);
+	script->set_constant("MAX_STORAGE",MAX_STORAGE,false, false);
+	script->set_constant("MAX_GUILD_STORAGE",MAX_GUILD_STORAGE,false, false);
+	script->set_constant("MAX_CART",MAX_INVENTORY,false, false);
+	script->set_constant("MAX_INVENTORY",MAX_INVENTORY,false, false);
+	script->set_constant("MAX_ZENY",MAX_ZENY,false, false);
+	script->set_constant("MAX_BG_MEMBERS",MAX_BG_MEMBERS,false, false);
+	script->set_constant("MAX_CHAT_USERS",MAX_CHAT_USERS,false, false);
+	script->set_constant("MAX_REFINE",MAX_REFINE,false, false);
 
 	/* status options */
-	script->set_constant("Option_Nothing",OPTION_NOTHING,false);
-	script->set_constant("Option_Sight",OPTION_SIGHT,false);
-	script->set_constant("Option_Hide",OPTION_HIDE,false);
-	script->set_constant("Option_Cloak",OPTION_CLOAK,false);
-	script->set_constant("Option_Falcon",OPTION_FALCON,false);
-	script->set_constant("Option_Riding",OPTION_RIDING,false);
-	script->set_constant("Option_Invisible",OPTION_INVISIBLE,false);
-	script->set_constant("Option_Orcish",OPTION_ORCISH,false);
-	script->set_constant("Option_Wedding",OPTION_WEDDING,false);
-	script->set_constant("Option_Chasewalk",OPTION_CHASEWALK,false);
-	script->set_constant("Option_Flying",OPTION_FLYING,false);
-	script->set_constant("Option_Xmas",OPTION_XMAS,false);
-	script->set_constant("Option_Transform",OPTION_TRANSFORM,false);
-	script->set_constant("Option_Summer",OPTION_SUMMER,false);
-	script->set_constant("Option_Dragon1",OPTION_DRAGON1,false);
-	script->set_constant("Option_Wug",OPTION_WUG,false);
-	script->set_constant("Option_Wugrider",OPTION_WUGRIDER,false);
-	script->set_constant("Option_Madogear",OPTION_MADOGEAR,false);
-	script->set_constant("Option_Dragon2",OPTION_DRAGON2,false);
-	script->set_constant("Option_Dragon3",OPTION_DRAGON3,false);
-	script->set_constant("Option_Dragon4",OPTION_DRAGON4,false);
-	script->set_constant("Option_Dragon5",OPTION_DRAGON5,false);
-	script->set_constant("Option_Hanbok",OPTION_HANBOK,false);
-	script->set_constant("Option_Oktoberfest",OPTION_OKTOBERFEST,false);
+	script->set_constant("Option_Nothing",OPTION_NOTHING,false, false);
+	script->set_constant("Option_Sight",OPTION_SIGHT,false, false);
+	script->set_constant("Option_Hide",OPTION_HIDE,false, false);
+	script->set_constant("Option_Cloak",OPTION_CLOAK,false, false);
+	script->set_constant("Option_Falcon",OPTION_FALCON,false, false);
+	script->set_constant("Option_Riding",OPTION_RIDING,false, false);
+	script->set_constant("Option_Invisible",OPTION_INVISIBLE,false, false);
+	script->set_constant("Option_Orcish",OPTION_ORCISH,false, false);
+	script->set_constant("Option_Wedding",OPTION_WEDDING,false, false);
+	script->set_constant("Option_Chasewalk",OPTION_CHASEWALK,false, false);
+	script->set_constant("Option_Flying",OPTION_FLYING,false, false);
+	script->set_constant("Option_Xmas",OPTION_XMAS,false, false);
+	script->set_constant("Option_Transform",OPTION_TRANSFORM,false, false);
+	script->set_constant("Option_Summer",OPTION_SUMMER,false, false);
+	script->set_constant("Option_Dragon1",OPTION_DRAGON1,false, false);
+	script->set_constant("Option_Wug",OPTION_WUG,false, false);
+	script->set_constant("Option_Wugrider",OPTION_WUGRIDER,false, false);
+	script->set_constant("Option_Madogear",OPTION_MADOGEAR,false, false);
+	script->set_constant("Option_Dragon2",OPTION_DRAGON2,false, false);
+	script->set_constant("Option_Dragon3",OPTION_DRAGON3,false, false);
+	script->set_constant("Option_Dragon4",OPTION_DRAGON4,false, false);
+	script->set_constant("Option_Dragon5",OPTION_DRAGON5,false, false);
+	script->set_constant("Option_Hanbok",OPTION_HANBOK,false, false);
+	script->set_constant("Option_Oktoberfest",OPTION_OKTOBERFEST,false, false);
 
 	/* status option compounds */
-	script->set_constant("Option_Dragon",OPTION_DRAGON,false);
-	script->set_constant("Option_Costume",OPTION_COSTUME,false);
+	script->set_constant("Option_Dragon",OPTION_DRAGON,false, false);
+	script->set_constant("Option_Costume",OPTION_COSTUME,false, false);
 
 	/* send_target */
-	script->set_constant("ALL_CLIENT",ALL_CLIENT,false);
-	script->set_constant("ALL_SAMEMAP",ALL_SAMEMAP,false);
-	script->set_constant("AREA",AREA,false);
-	script->set_constant("AREA_WOS",AREA_WOS,false);
-	script->set_constant("AREA_WOC",AREA_WOC,false);
-	script->set_constant("AREA_WOSC",AREA_WOSC,false);
-	script->set_constant("AREA_CHAT_WOC",AREA_CHAT_WOC,false);
-	script->set_constant("CHAT",CHAT,false);
-	script->set_constant("CHAT_WOS",CHAT_WOS,false);
-	script->set_constant("PARTY",PARTY,false);
-	script->set_constant("PARTY_WOS",PARTY_WOS,false);
-	script->set_constant("PARTY_SAMEMAP",PARTY_SAMEMAP,false);
-	script->set_constant("PARTY_SAMEMAP_WOS",PARTY_SAMEMAP_WOS,false);
-	script->set_constant("PARTY_AREA",PARTY_AREA,false);
-	script->set_constant("PARTY_AREA_WOS",PARTY_AREA_WOS,false);
-	script->set_constant("GUILD",GUILD,false);
-	script->set_constant("GUILD_WOS",GUILD_WOS,false);
-	script->set_constant("GUILD_SAMEMAP",GUILD_SAMEMAP,false);
-	script->set_constant("GUILD_SAMEMAP_WOS",GUILD_SAMEMAP_WOS,false);
-	script->set_constant("GUILD_AREA",GUILD_AREA,false);
-	script->set_constant("GUILD_AREA_WOS",GUILD_AREA_WOS,false);
-	script->set_constant("GUILD_NOBG",GUILD_NOBG,false);
-	script->set_constant("DUEL",DUEL,false);
-	script->set_constant("DUEL_WOS",DUEL_WOS,false);
-	script->set_constant("SELF",SELF,false);
-	script->set_constant("BG",BG,false);
-	script->set_constant("BG_WOS",BG_WOS,false);
-	script->set_constant("BG_SAMEMAP",BG_SAMEMAP,false);
-	script->set_constant("BG_SAMEMAP_WOS",BG_SAMEMAP_WOS,false);
-	script->set_constant("BG_AREA",BG_AREA,false);
-	script->set_constant("BG_AREA_WOS",BG_AREA_WOS,false);
-	script->set_constant("BG_QUEUE",BG_QUEUE,false);
+	script->set_constant("ALL_CLIENT",ALL_CLIENT,false, false);
+	script->set_constant("ALL_SAMEMAP",ALL_SAMEMAP,false, false);
+	script->set_constant("AREA",AREA,false, false);
+	script->set_constant("AREA_WOS",AREA_WOS,false, false);
+	script->set_constant("AREA_WOC",AREA_WOC,false, false);
+	script->set_constant("AREA_WOSC",AREA_WOSC,false, false);
+	script->set_constant("AREA_CHAT_WOC",AREA_CHAT_WOC,false, false);
+	script->set_constant("CHAT",CHAT,false, false);
+	script->set_constant("CHAT_WOS",CHAT_WOS,false, false);
+	script->set_constant("PARTY",PARTY,false, false);
+	script->set_constant("PARTY_WOS",PARTY_WOS,false, false);
+	script->set_constant("PARTY_SAMEMAP",PARTY_SAMEMAP,false, false);
+	script->set_constant("PARTY_SAMEMAP_WOS",PARTY_SAMEMAP_WOS,false, false);
+	script->set_constant("PARTY_AREA",PARTY_AREA,false, false);
+	script->set_constant("PARTY_AREA_WOS",PARTY_AREA_WOS,false, false);
+	script->set_constant("GUILD",GUILD,false, false);
+	script->set_constant("GUILD_WOS",GUILD_WOS,false, false);
+	script->set_constant("GUILD_SAMEMAP",GUILD_SAMEMAP,false, false);
+	script->set_constant("GUILD_SAMEMAP_WOS",GUILD_SAMEMAP_WOS,false, false);
+	script->set_constant("GUILD_AREA",GUILD_AREA,false, false);
+	script->set_constant("GUILD_AREA_WOS",GUILD_AREA_WOS,false, false);
+	script->set_constant("GUILD_NOBG",GUILD_NOBG,false, false);
+	script->set_constant("DUEL",DUEL,false, false);
+	script->set_constant("DUEL_WOS",DUEL_WOS,false, false);
+	script->set_constant("SELF",SELF,false, false);
+	script->set_constant("BG",BG,false, false);
+	script->set_constant("BG_WOS",BG_WOS,false, false);
+	script->set_constant("BG_SAMEMAP",BG_SAMEMAP,false, false);
+	script->set_constant("BG_SAMEMAP_WOS",BG_SAMEMAP_WOS,false, false);
+	script->set_constant("BG_AREA",BG_AREA,false, false);
+	script->set_constant("BG_AREA_WOS",BG_AREA_WOS,false, false);
+	script->set_constant("BG_QUEUE",BG_QUEUE,false, false);
 
 	/* Renewal */
 #ifdef RENEWAL
-	script->set_constant("RENEWAL", 1, false);
+	script->set_constant("RENEWAL", 1, false, false);
 #else
-	script->set_constant("RENEWAL", 0, false);
+	script->set_constant("RENEWAL", 0, false, false);
 #endif
 #ifdef RENEWAL_CAST
-	script->set_constant("RENEWAL_CAST", 1, false);
+	script->set_constant("RENEWAL_CAST", 1, false, false);
 #else
-	script->set_constant("RENEWAL_CAST", 0, false);
+	script->set_constant("RENEWAL_CAST", 0, false, false);
 #endif
 #ifdef RENEWAL_DROP
-	script->set_constant("RENEWAL_DROP", 1, false);
+	script->set_constant("RENEWAL_DROP", 1, false, false);
 #else
-	script->set_constant("RENEWAL_DROP", 0, false);
+	script->set_constant("RENEWAL_DROP", 0, false, false);
 #endif
 #ifdef RENEWAL_EXP
-	script->set_constant("RENEWAL_EXP", 1, false);
+	script->set_constant("RENEWAL_EXP", 1, false, false);
 #else
-	script->set_constant("RENEWAL_EXP", 0, false);
+	script->set_constant("RENEWAL_EXP", 0, false, false);
 #endif
 #ifdef RENEWAL_LVDMG
-	script->set_constant("RENEWAL_LVDMG", 1, false);
+	script->set_constant("RENEWAL_LVDMG", 1, false, false);
 #else
-	script->set_constant("RENEWAL_LVDMG", 0, false);
+	script->set_constant("RENEWAL_LVDMG", 0, false, false);
 #endif
 #ifdef RENEWAL_EDP
-	script->set_constant("RENEWAL_EDP", 1, false);
+	script->set_constant("RENEWAL_EDP", 1, false, false);
 #else
-	script->set_constant("RENEWAL_EDP", 0, false);
+	script->set_constant("RENEWAL_EDP", 0, false, false);
 #endif
 #ifdef RENEWAL_ASPD
-	script->set_constant("RENEWAL_ASPD", 1, false);
+	script->set_constant("RENEWAL_ASPD", 1, false, false);
 #else
-	script->set_constant("RENEWAL_ASPD", 0, false);
+	script->set_constant("RENEWAL_ASPD", 0, false, false);
 #endif
 }
 

@@ -1188,7 +1188,7 @@ void itemdb_read_chains(void) {
 		int c = 0;
 		config_setting_t *entry = NULL;
 
-		script->set_constant2(name,i-1,0);
+		script->set_constant2(name, i-1, false, false);
 		itemdb->chains[count].qty = (unsigned short)libconfig->setting_length(itc);
 
 		CREATE(itemdb->chains[count].items, struct item_chain_entry, libconfig->setting_length(itc));
@@ -2149,7 +2149,7 @@ void itemdb_name_constants(void) {
 	script->parser_current_file = "Item Database (Likely an invalid or conflicting AegisName)";
 #endif // ENABLE_CASE_CHECK
 	for( data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter) )
-		script->set_constant2(data->name,data->nameid,0);
+		script->set_constant2(data->name, data->nameid, false, false);
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = NULL;
 #endif // ENABLE_CASE_CHECK

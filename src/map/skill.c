@@ -18795,7 +18795,7 @@ bool skill_parse_row_skilldb(char* split[], int columns, int current) {
 	safestrncpy(skill->dbs->db[idx].name, trim(split[15]), sizeof(skill->dbs->db[idx].name));
 	safestrncpy(skill->dbs->db[idx].desc, trim(split[16]), sizeof(skill->dbs->db[idx].desc));
 	strdb_iput(skill->name2id_db, skill->dbs->db[idx].name, skill_id);
-	script->set_constant2(skill->dbs->db[idx].name,(int)skill_id,0);
+	script->set_constant2(skill->dbs->db[idx].name, (int)skill_id, false, false);
 
 	return true;
 }
