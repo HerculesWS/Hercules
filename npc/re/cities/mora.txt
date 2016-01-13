@@ -1077,7 +1077,7 @@ mora,132,184,5	script	Mora Villager#sleep6	4_M_RAFLE_OR,{
 mora,133,184,1	script	Mora Villager#sleep4	G_RAFFLESIA,{
 	mes "[Mora Villager]";
 	mes "Moan...";
-	end;
+	close;
 }
 
 mora,134,184,1	script	Mora Villager#sleep3	4_M_RAFLE_GR,{
@@ -1095,7 +1095,7 @@ mora,132,183,7	script	Mora Villager#sleep7	4_M_RAFLE_VI,{
 mora,133,183,7	script	Mora Villager#sleep8	4_F_RAFLE_PK,{
 	mes "[Mora Villager]";
 	mes "z Z";
-	end;
+	close;
 }
 
 mora,134,183,1	script	Mora Villager#sleep9	4_M_RAFLE_OR,{
