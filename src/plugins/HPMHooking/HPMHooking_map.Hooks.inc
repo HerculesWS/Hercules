@@ -60141,14 +60141,14 @@ void HP_script_pop_stack(struct script_state *st, int start, int end) {
 	}
 	return;
 }
-void HP_script_set_constant(const char *name, int value, bool isparameter) {
+void HP_script_set_constant(const char *name, int value, bool is_parameter, bool is_deprecated) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_script_set_constant_pre ) {
-		void (*preHookFunc) (const char *name, int *value, bool *isparameter);
+		void (*preHookFunc) (const char *name, int *value, bool *is_parameter, bool *is_deprecated);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_constant_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_script_set_constant_pre[hIndex].func;
-			preHookFunc(name, &value, &isparameter);
+			preHookFunc(name, &value, &is_parameter, &is_deprecated);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -60156,25 +60156,25 @@ void HP_script_set_constant(const char *name, int value, bool isparameter) {
 		}
 	}
 	{
-		HPMHooks.source.script.set_constant(name, value, isparameter);
+		HPMHooks.source.script.set_constant(name, value, is_parameter, is_deprecated);
 	}
 	if( HPMHooks.count.HP_script_set_constant_post ) {
-		void (*postHookFunc) (const char *name, int *value, bool *isparameter);
+		void (*postHookFunc) (const char *name, int *value, bool *is_parameter, bool *is_deprecated);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_constant_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_script_set_constant_post[hIndex].func;
-			postHookFunc(name, &value, &isparameter);
+			postHookFunc(name, &value, &is_parameter, &is_deprecated);
 		}
 	}
 	return;
 }
-void HP_script_set_constant2(const char *name, int value, bool isparameter) {
+void HP_script_set_constant2(const char *name, int value, bool is_parameter, bool is_deprecated) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_script_set_constant2_pre ) {
-		void (*preHookFunc) (const char *name, int *value, bool *isparameter);
+		void (*preHookFunc) (const char *name, int *value, bool *is_parameter, bool *is_deprecated);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_constant2_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_script_set_constant2_pre[hIndex].func;
-			preHookFunc(name, &value, &isparameter);
+			preHookFunc(name, &value, &is_parameter, &is_deprecated);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -60182,13 +60182,13 @@ void HP_script_set_constant2(const char *name, int value, bool isparameter) {
 		}
 	}
 	{
-		HPMHooks.source.script.set_constant2(name, value, isparameter);
+		HPMHooks.source.script.set_constant2(name, value, is_parameter, is_deprecated);
 	}
 	if( HPMHooks.count.HP_script_set_constant2_post ) {
-		void (*postHookFunc) (const char *name, int *value, bool *isparameter);
+		void (*postHookFunc) (const char *name, int *value, bool *is_parameter, bool *is_deprecated);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_set_constant2_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_script_set_constant2_post[hIndex].func;
-			postHookFunc(name, &value, &isparameter);
+			postHookFunc(name, &value, &is_parameter, &is_deprecated);
 		}
 	}
 	return;
