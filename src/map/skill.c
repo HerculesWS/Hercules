@@ -11770,6 +11770,10 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->limit);
 			break;
 		case UNT_APPLEIDUN:
+			// If Aegis, apple of idun doesn't update its effect
+			if (!battle_config.song_timer_reset && sc && sce)
+				return 0;
+			// Let it fall through
 		case UNT_WHISTLE:
 		case UNT_ASSASSINCROSS:
 		case UNT_POEMBRAGI:
@@ -12203,7 +12207,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 
 		case UNT_APPLEIDUN: //Apple of Idun [Skotlex]
 		{
-			int heal, remaining_time = 0;
+			int heal;
 #ifdef RENEWAL
 			struct mob_data *md = BL_CAST(BL_MOB, bl);
 			if (md && md->class_ == MOBID_EMPELIUM)
@@ -12214,41 +12218,20 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				break;
 
 			// Aegis style
-			// Escape as soon as possible if the song is still active and has enough remaining time
-			if (!battle_config.song_timer_reset && tsc && tsc->data[type] && tsc->data[type]->val4 == 1) {
-				const struct TimerData *td = timer->get(tsc->data[type]->timer);
-				remaining_time = DIFF_TICK32(td->tick, timer->gettick());
-				if (remaining_time > sg->interval)
-					break; // It has enough time, exit
-			}
-
-			heal = skill->calc_heal(ss,bl,sg->skill_id, sg->skill_lv, true);
-			if( tsc && tsc->data[SC_AKAITSUKI] && heal )
-				heal = ~heal + 1;
-			clif->skill_nodamage(&src->bl, bl, AL_HEAL, heal, 1);
-			status->heal(bl, heal, 0, 0);
-
-			// Aegis style
 			// Check if the remaining time is enough to survive the next update
-			if (!battle_config.song_timer_reset) {
-				if (tsc && tsc->data[type] && tsc->data[type]->val4 == 1) {
-					if (remaining_time < sg->interval) {
-						// Update with new values as the current one will vanish
-						timer->delete(tsc->data[type]->timer, status->change_timer);
-						tsc->data[type]->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
-						tsc->data[type]->val1 = sg->skill_lv;
-						tsc->data[type]->val2 = sg->val1;
-						tsc->data[type]->val3 = sg->val2;
-						tsc->data[type]->val4 = 0;
-					}
-					// Has enough time. Do nothing
-
-				} else {
-					// Apple of Idun is not active. Start it now
-					sc_start4(ss, bl, type, 100, sg->skill_lv, sg->val1, sg->val2, 0, sg->limit);
-				}
+			if (!battle_config.song_timer_reset
+					&& !(tsc && tsc->data[type] && tsc->data[type]->val4 == 1)) {
+				// Apple of Idun is not active. Start it now
+				sc_start4(ss, bl, type, 100, sg->skill_lv, sg->val1, sg->val2, 0, sg->limit);
 			}
 
+			if (tstatus->hp < tstatus->max_hp) {
+				heal = skill->calc_heal(ss,bl,sg->skill_id, sg->skill_lv, true);
+				if( tsc && tsc->data[SC_AKAITSUKI] && heal )
+					heal = ~heal + 1;
+				clif->skill_nodamage(&src->bl, bl, AL_HEAL, heal, 1);
+				status->heal(bl, heal, 0, 0);
+			}
 		}
 			break;
 		case UNT_POEMBRAGI:
