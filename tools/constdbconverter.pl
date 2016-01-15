@@ -24,7 +24,7 @@
 use strict;
 use warnings;
 
-sub parse_questdb (@) {
+sub parse_constdb (@) {
 	my @input = @_;
 	foreach (@input) {
 		chomp $_;
@@ -109,6 +109,6 @@ constants_db: {
 
 EOF
 
-parse_questdb(<>);
+parse_constdb(<>);
 
 print "}\n";
