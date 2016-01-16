@@ -74,7 +74,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		mes "and then needs to solve";
 		mes "several problems instead of me.";
 		next;
-		if (select("Let's help ^800080Rina^000000.:Just skip it.") == 2) {
+		if (select("Let's help ^800080Rina^000000.", "Just skip it.") == 2) {
 			emotion e_sigh;
 			mes "[Rina]";
 			mes "To help me,";
@@ -184,7 +184,7 @@ prontera,202,297,3	script	Rina#Easter	4_F_JOB_HUNTER,{
 		mes "^787878- whether you can listen -^000000";
 		mes "^787878- to the music sound. -^000000";
 		next;
-		if(select("[I'm ready to listen to the BGM.]:[I can't listen to the BGM.]") == 2) {
+		if(select("[I'm ready to listen to the BGM.]", "[I can't listen to the BGM.]") == 2) {
 			mes "[Rina]";
 			mes "I am so shocked that";
 			mes "you cannot feel the music.";
@@ -366,7 +366,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 		mes "I guess you're the trustworthy friend.";
 		mes "Are you here to make a deal with me?";
 		next;
-		switch(select("Yes.:No.:What do you mean?")) {
+		switch(select("Yes.", "No.", "What do you mean?")) {
 		case 1:
 			if (ADVJOB == 0) {
 				if (BaseLevel < 70)
@@ -389,7 +389,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 			mes "I will start it right now.";
 			mes "Are you ready for it?";
 			next;
-			if(select("Yes, let's start it.:No, stop it.") == 2) {
+			if(select("Yes, let's start it.", "No, stop it.") == 2) {
 				mes "[Rina's Little Friend]";
 				mes "Heh. It's boring.";
 				close;
@@ -491,7 +491,7 @@ prontera,204,297,3	script	Rina's Little Friend	4_DRAGON_EGG,{
 			mes "It may be end in failure";
 			mes "and it can be something like Pet Egg.";
 			next;
-			if(select("Ask the cost.:Stop listening because it feels like a trick.") == 2) {
+			if(select("Ask the cost.", "Stop listening because it feels like a trick.") == 2) {
 				mes "[Rina's Little Friend]";
 				mes "Well... I don't really care.";
 				mes "Good bye.";
@@ -552,7 +552,7 @@ prontera,116,82,5	script	Traveler#01Easter	4_M_03,{
 	mes "Hmm, I think I might";
 	mes "see you around here before.";
 	next;
-	if(select("Listen some more.:Just ignore it.") == 2) {
+	if(select("Listen some more.", "Just ignore it.") == 2) {
 		mes "[Traveler]";
 		mes "As I expected,";
 		mes "you are a silent person. Ha ha.";
@@ -578,7 +578,7 @@ prontera,116,82,5	script	Traveler#01Easter	4_M_03,{
 	mes "that new adventurer?";
 	mes "Or that is just your face look. Ha ha.";
 	next;
-	if(select("I'm interested in it.:I don't care at all.") == 2) {
+	if(select("I'm interested in it.", "I don't care at all.") == 2) {
 		mes "[Traveler]";
 		mes "Ah~ I see~!";
 		mes "Then, Good bye.";

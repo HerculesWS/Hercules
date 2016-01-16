@@ -49,7 +49,7 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 		next;
 		.@loop = 1;
 		while(.@loop) {
-			switch(select("What is RWC?:Are you a New Agent?:I don't care.")) {
+			switch(select("What is RWC?", "Are you a New Agent?", "I don't care.")) {
 			case 1:
 				mes "[New Agent]";
 				if (BaseLevel < 70)
@@ -85,7 +85,7 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 				mes "[New Agent]";
 				mes "Would you like to listen to my story?";
 				next;
-				if(select("Sure, let me hear it.:No, thank you.") == 2) {
+				if(select("Sure, let me hear it.", "No, thank you.") == 2) {
 					mes "[New Agent]";
 					mes "Arrgg!! Are you ignoring me because I'm new? Usually people listen...";
 					next;
@@ -156,7 +156,7 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 		emotion e_sob;
 		mes "- He looks at you with imploring eyes. -";
 		next;
-		if(select("Ok, I will help you!:How much money can you offer me?") == 2) {
+		if(select("Ok, I will help you!", "How much money can you offer me?") == 2) {
 			mes "[New Agent]";
 			mes "Have you decided to help me? Well, I will prepare some gifts. I'm sure you'll like them.";
 			next;
@@ -246,7 +246,7 @@ prontera,114,81,5	script	RWC2011 Agent#2	4_M_ATEIL,{
 		mes "You've come again~";
 		mes "Thanks for the last time! We still have lots of cards to find. Could you help me out?";
 		next;
-		switch(select("Ok!:I'm busy now.")) {
+		switch(select("Ok!", "I'm busy now.")) {
 		case 1:
 			mes "[RWC2011 Agent]";
 			mes "It's the same mission as before.";

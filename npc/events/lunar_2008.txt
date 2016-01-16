@@ -68,7 +68,7 @@ payon_in01,193,30,4	script	Rice Mill Grandma#rat	1_F_ORIENT_04,{
 		mes "even have the rice. Do you";
 		mes "think you can help me?";
 		next;
-		if (select("Of course.:I don't even know you.") == 1) {
+		if (select("Of course.", "I don't even know you.") == 1) {
 			lunar_rat = 1;
 			mes "[" + strcharinfo(0)+"]";
 			mes "Of course.";
@@ -274,7 +274,7 @@ payon,126,113,4	script	Miss Lunar#rat	4_F_NACORURI,{
 		mes "10 Mojji for 3,000 zeny";
 		mes "Would you like to try some?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			if (Zeny >= 3000) {
 				Zeny -= 3000;
 				getitem Mojji,10; // Mojji
