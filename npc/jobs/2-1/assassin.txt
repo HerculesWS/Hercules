@@ -72,7 +72,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 		mes "Is it that hard to stay alive?";
 		mes "Why don't you try harder next time? You can't force yourself too hard to become an Assassin...";
 		next;
-		if (select("I will become an Assassin no matter what!:Oh man, I gotta take a break.") == 1) {
+		if (select("I will become an Assassin no matter what!", "Oh man, I gotta take a break.") == 1) {
 			mes "[Ferocious-looking guy]";
 			mes "Oh...";
 			mes "Well then,";
@@ -243,7 +243,7 @@ in_moc_16,19,33,1	script	Guildsman#asn	1_M_JOBTESTER,{
 				mes "[Ferocious-looking guy]";
 				mes "So how about taking the next step and becoming an Assassin?";
 				next;
-				switch(select("Yes. I've picked my last pocket.:What's the requirements?:Maybe later, I need to steal some things first.")) {
+				switch(select("Yes. I've picked my last pocket.", "What's the requirements?", "Maybe later, I need to steal some things first.")) {
 				case 1:
 					mes "[Ferocious-looking guy]";
 					mes "It's been a while since I've received a guest. I'm sending";
@@ -323,7 +323,7 @@ OnTouch:
 		mes "[Assassin 'Khai']";
 		mes "Sorry for laughing, but this is hilarious! Hahaha~ So do you want me to give you some hints?";
 		next;
-		switch(select("I beg you, give me hints.:Don't laugh at me! Now, give me hints!:...Shut up, I don't need your help!")) {
+		switch(select("I beg you, give me hints.", "Don't laugh at me! Now, give me hints!", "...Shut up, I don't need your help!")) {
 		case 1:
 			mes "[Assassin 'Khai']";
 			mes "Haaahahahaha!!!";
@@ -420,7 +420,7 @@ OnTouch:
 			mes "Along with keeping your pride,";
 			mes "I want that you respect the blood that may stain your Katar or Dagger.";
 			next;
-			if (select("...Got you.:...I'm confused.") == 1) {
+			if (select("...Got you.", "...I'm confused.") == 1) {
 				mes "[Assassin 'Khai']";
 				mes "Yeah, I can trust you now. Let me give you some important tips.";
 				next;
@@ -524,7 +524,7 @@ OnTouch:
 		mes "Oh, you must be an Assassin trainee. You are here to become";
 		mes "an Assassin, aren't you?";
 		next;
-		if (select("Yes, I am. :...No, I'm not.") == 1) {
+		if (select("Yes, I am. ", "...No, I'm not.") == 1) {
 			mes "[Assassin 'Khai']";
 			mes "Okay, good. Let's fill out the application form. Please sign your name and include your job level.";
 			next;
@@ -589,7 +589,7 @@ OnTouch:
 			mes "Huh...?";
 			mes "What, are you trying to trick me or something? Don't you wanna be an Assassin?";
 			next;
-			if (select("No.:Yes, I want to be an Assassin.") == 1) {
+			if (select("No.", "Yes, I want to be an Assassin.") == 1) {
 				mes "[Assassin 'Khai']";
 				mes "Eh, get outta here.";
 				mes "Stop wastin' my time...";
@@ -671,7 +671,7 @@ OnTouch:
 			mes "[The Anonymous One]";
 			mes "Aren't you scared that you can't see me? I could kill you at any time and it would be so easy...";
 			next;
-			if (select("I think I crapped my pants!:You're all talk. I challenge you!") == 1) {
+			if (select("I think I crapped my pants!", "You're all talk. I challenge you!") == 1) {
 				mes "[The Anonymous One]";
 				mes "Now I see that";
 				mes "you're nothing";
@@ -705,7 +705,7 @@ OnTouch:
 			next;
 			ASSIN_Q2 = 0;
 			while(ASSIN_Q2 < 3) {
-				switch(select("...Skills?:...Stats?:Hmpf, I know it all.")) {
+				switch(select("...Skills?", "...Stats?", "Hmpf, I know it all.")) {
 				case 1:
 					mes "[The Anonymous One]";
 					mes "Skills...?";
@@ -810,7 +810,7 @@ OnTouch:
 			mes "You should have";
 			mes "known better.";
 			next;
-			if (select("Help me, how do I pass?:I challenge you again!") == 1) {
+			if (select("Help me, how do I pass?", "I challenge you again!") == 1) {
 				mes "[The Anonymous One]";
 				mes "Well, that's a damn good question. But you're banished from the Assassin Guild, so it's no concern of mine...";
 				close2;
@@ -838,53 +838,53 @@ OnTouch:
 			mes "[The Anonymous One]";
 			mes "1. Choose skill that is not required to learn Grimtooth.";
 			next;
-			if (select("Cloaking level 2:Sonic Blow level 5:Katar Mastery level 4:Right hand Mastery level 2") == 4)
+			if (select("Cloaking level 2", "Sonic Blow level 5", "Katar Mastery level 4", "Right hand Mastery level 2") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "2. What property does Enchant Poison possess?";
 			next;
-			if (select("Poison:Earth:Fire:Wind") == 1)
+			if (select("Poison", "Earth", "Fire", "Wind") == 1)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "3. How does Level 4 Right Hand Mastery work?";
 			next;
-			if (select("Recover 80% of damage decrease:Recover 90% of damage decrease:Increase 90% of damage:Increase 108% of damage") == 2)
+			if (select("Recover 80% of damage decrease", "Recover 90% of damage decrease", "Increase 90% of damage", "Increase 108% of damage") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "4. What is the item required for using Venom Dust?";
 			next;
-			if (select("Red Blood:Blue Gemstone:Yellow Gemstone:Red Gemstone") == 4)
+			if (select("Red Blood", "Blue Gemstone", "Yellow Gemstone", "Red Gemstone") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "5. Which skill can you learn when you reach Level 5 Enchant Poison?";
 			next;
-			if (select("Envenom:Sonic Blow:Venom Splasher:Venom Dust") == 4)
+			if (select("Envenom", "Sonic Blow", "Venom Splasher", "Venom Dust") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "6. Among the following skills, which allows you to walk while invisible?";
 			next;
-			if (select("Hiding:Back Slide:Cloaking:Sand Attack") == 3)
+			if (select("Hiding", "Back Slide", "Cloaking", "Sand Attack") == 3)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "7. Choose the condition that is unrelated to Venom Splasher.";
 			next;
-			if (select("Poisoned target.:Red Gemstone.:Remaing HP of Target.") == 2)
+			if (select("Poisoned target.", "Red Gemstone.", "Remaing HP of Target.") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "8. Which monster is weak to a weapon with Vadon card (adds 20% damage on Fire property monster)?";
 			next;
-			if (select("Steel Chonchon:Deviruchi:Elder Willow:Baphomet") == 3)
+			if (select("Steel Chonchon", "Deviruchi", "Elder Willow", "Baphomet") == 3)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "9. How much SP does";
 			mes "Double Attack need?";
 			next;
-			if (select("15:It's a passive skill, so SP use is 0.:It's passive skill, so SP use is 10.:54") == 2)
+			if (select("15", "It's a passive skill, so SP use is 0.", "It's passive skill, so SP use is 10.", "54") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "10. What is the best elemental Main Gauche weapon for hunting in Izlude dungeon?";
 			next;
-			if (select("Wind Main Gauche:Ice Main Gauche:Earth Main Gauche:Fire Main Gauche") == 1)
+			if (select("Wind Main Gauche", "Ice Main Gauche", "Earth Main Gauche", "Fire Main Gauche") == 1)
 				.@assassin_t += 10;
 			break;
 		case 2:
@@ -892,102 +892,102 @@ OnTouch:
 			mes "1. Which monster";
 			mes "drops a slotted Katar?";
 			next;
-			if (select("Thief Bug:Peco Peco:Desert Wolf:Hammer Cobolt") == 3)
+			if (select("Thief Bug", "Peco Peco", "Desert Wolf", "Hammer Cobolt") == 3)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "2. Which monster";
 			mes "drops a slotted Jur?";
 			next;
-			if (select("Martin:Desert Wolf:Marionette:Myst") == 1)
+			if (select("Martin", "Desert Wolf", "Marionette", "Myst") == 1)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "3. Which class is allowed to craft elemental weapons?";
 			next;
-			if (select("Merchant:Blacksmith:Thief:Priest") == 2)
+			if (select("Merchant", "Blacksmith", "Thief", "Priest") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "4. Choose the weapon which is not in the Katar class.";
 			next;
-			if (select("Jamadhar:Jur:Katar:Gladius") == 4)
+			if (select("Jamadhar", "Jur", "Katar", "Gladius") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "5. What property do Izlude dungeon monsters posses?";
 			next;
-			if (select("Water:Fire:Wind:Earth") == 1)
+			if (select("Water", "Fire", "Wind", "Earth") == 1)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "6. Which monster";
 			mes "cannot be a Cute Pet?";
 			next;
-			if (select("Poporing:Roda Frog:Smokie:Poison Spore") == 2)
+			if (select("Poporing", "Roda Frog", "Smokie", "Poison Spore") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "7. Choose a monster that Fire property Daggers work the best on.";
 			next;
-			if (select("Dagger Goblin:Mace Goblin:Morning Star Goblin:Hammer Goblin") == 4)
+			if (select("Dagger Goblin", "Mace Goblin", "Morning Star Goblin", "Hammer Goblin") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "8. Choose the non-elemental Katar from the following:";
 			next;
-			if (select("Katar of Raging Blaze:Katar of Dusty Thornbush:Sharpened Legbone of Ghoul:Infiltrator") == 4)
+			if (select("Katar of Raging Blaze", "Katar of Dusty Thornbush", "Sharpened Legbone of Ghoul", "Infiltrator") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "9. Which is the uncommon monster?";
 			next;
-			if (select("Poring:Mastering:Ghostring:Spore") == 3)
+			if (select("Poring", "Mastering", "Ghostring", "Spore") == 3)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "10. Choose the monster";
 			mes "that is not Undead.";
 			next;
-			if (select("Drake:Megalodon:Spore:Khalitzburg") == 3)
+			if (select("Drake", "Megalodon", "Spore", "Khalitzburg") == 3)
 				.@assassin_t += 10;
 			break;
 		case 3:
 			mes "[The Anonymous One]";
 			mes "1. Choose the correct amount of the maximum dodge rate increase from the 'Increase Dodge' skill when at level 10.";
 			next;
-			if (select("30:40:160:20") == 1)
+			if (select("30", "40", "160", "20") == 1)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "2. Choose a monster which detects hiding/cloaking Thieves and Assassins.";
 			next;
-			if (select("Worm Tail:Andre:Mummy:Soldier Skeleton") == 2)
+			if (select("Worm Tail", "Andre", "Mummy", "Soldier Skeleton") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "3. Choose a group of weapons that cannot be used by an Assassin at once.";
 			next;
-			if (select("Main Gaughe + Gladius:Stiletto + Main Gauche:Katar + Maingauche:Hammer + Stiletto") == 3)
+			if (select("Main Gaughe + Gladius", "Stiletto + Main Gauche", "Katar + Maingauche", "Hammer + Stiletto") == 3)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "4. Choose the town where Thieves can change their jobs.";
 			next;
-			if (select("Prontera:Lutie:Alberta:Morocc") == 4)
+			if (select("Prontera", "Lutie", "Alberta", "Morocc") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "5. Choose a card that does not affect the AGI stat.";
 			next;
-			if (select("Baphomet Jr. card:Whisper Card:Female Thiefbug card:Male Thiefbug card") == 2)
+			if (select("Baphomet Jr. card", "Whisper Card", "Female Thiefbug card", "Male Thiefbug card") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "6. Choose the correct specialty of the Assassin class.";
 			next;
-			if (select("Excellent singing talent:Excellent reading talent:Excellent dancing talent:Excellent dodge ability") == 4)
+			if (select("Excellent singing talent", "Excellent reading talent", "Excellent dancing talent", "Excellent dodge ability") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "7. Choose the maximum AGI bonus an Assassin can get at job level 50.";
 			next;
-			if (select("7:8:9:10") == 4)
+			if (select("7", "8", "9", "10") == 4)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "8. Choose the item that an Assassin cannot equip.";
 			next;
-			if (select("Dagger:Helm:Boots:Brooch") == 2)
+			if (select("Dagger", "Helm", "Boots", "Brooch") == 2)
 				.@assassin_t += 10;
 			mes "[The Anonymous One]";
 			mes "9. Choose the job change item for Thief.";
 			next;
-			switch(select("Orange Gooey Mushroom:Red Gooey Mushroom:Orange Net Mushroom:Orange Hair Mushroom")) {
+			switch(select("Orange Gooey Mushroom", "Red Gooey Mushroom", "Orange Net Mushroom", "Orange Hair Mushroom")) {
 			case 1:
 			case 3:
 				.@assassin_t += 10;
@@ -998,7 +998,7 @@ OnTouch:
 			mes "[The Anonymous One]";
 			mes "10. Choose a card that would typically benefit an Assassin the least.";
 			next;
-			if (select("Whisper card:Elder Willow card:Soldier Skeleton card:Cobold card") == 2)
+			if (select("Whisper card", "Elder Willow card", "Soldier Skeleton card", "Cobold card") == 2)
 				.@assassin_t += 10;
 			break;
 		}
@@ -1171,7 +1171,7 @@ OnTouch:
 		mes "[Barcardi]";
 		mes "Hmm, if you're exhausted, I'm willing to bring you back. Of course, if you leave, you'll have to take the job test over again. So what do you want to do?";
 		next;
-		if (select("Continue!:Quit the job change test for now.") == 1) {
+		if (select("Continue!", "Quit the job change test for now.") == 1) {
 			mes "[Barcardi]";
 			mes "Good choice!";
 			mes "Remember, you";
@@ -1501,7 +1501,7 @@ OnTouch:
 		mes "It looks like you're having a tough time. You're either trying too hard, or not trying hard";
 		mes "enough, kid.";
 		next;
-		switch(select("I'm gonna try it again!:I... I quit!")) {
+		switch(select("I'm gonna try it again!", "I... I quit!")) {
 		case 1:
 			mes "[Thomas]";
 			mes "Hmm. Well, okay.";
@@ -1649,7 +1649,7 @@ OnTouch:
 		mes "[Guildmaster]";
 		mes "First off, what do you think is the priority of an Assassin?";
 		next;
-		switch(select("More power.:An Assassin's pride.:Endless practice.")) {
+		switch(select("More power.", "An Assassin's pride.", "Endless practice.")) {
 		case 1:
 			mes "[Guildmaster]";
 			mes "More power...";
@@ -1665,7 +1665,7 @@ OnTouch:
 			mes "to be stronger";
 			mes "than you are now?";
 			next;
-			switch(select("Revenge...!:Money~:I want to travel.")) {
+			switch(select("Revenge...!", "Money~", "I want to travel.")) {
 			case 1:
 				ASSIN_Q = 8;
 				mes "[Guildmaster]";
@@ -1719,7 +1719,7 @@ OnTouch:
 			mes "[Guildmaster]";
 			mes "I can understand why their pride and dignity would be so important to them. Now, for what reason do you wish to become an Assassin?";
 			next;
-			switch(select("I like the solitude.:Making money being an Assassin.:They just look interesting.")) {
+			switch(select("I like the solitude.", "Making money being an Assassin.", "They just look interesting.")) {
 			case 1:
 				ASSIN_Q = 11;
 				mes "[Guildmaster]";
@@ -1765,7 +1765,7 @@ OnTouch:
 			mes "Unlike the Thief class, the Assassin job doesn't allow self-indulgence. Tell me the";
 			mes "reason you train endlessly.";
 			next;
-			switch(select("To broaden my skills.:It's a goal of mine.:For spiritual improvement.")) {
+			switch(select("To broaden my skills.", "It's a goal of mine.", "For spiritual improvement.")) {
 			case 1:
 				ASSIN_Q = 14;
 				mes "[Guildmaster]";
@@ -1814,13 +1814,13 @@ OnTouch:
 		mes "[Guildmaster]";
 		mes "So if you could become an Assassin right now, what is the first thing you would do?";
 		next;
-		switch(select("I would go hunt right away.:There are people waiting for me.:Check how I can help as an Assassin.")) {
+		switch(select("I would go hunt right away.", "There are people waiting for me.", "Check how I can help as an Assassin.")) {
 		case 1:
 			mes "[Guildmaster]";
 			mes "Hunt...";
 			mes "Is that all...?";
 			next;
-			switch(select("I would level up fast.:I want to explore my Assassin skills.:I will go where I couldn't go as a Thief.")) {
+			switch(select("I would level up fast.", "I want to explore my Assassin skills.", "I will go where I couldn't go as a Thief.")) {
 			case 1:
 				.@assassin_sangdam += 10;
 				mes "[Guildmaster]";
@@ -1854,7 +1854,7 @@ OnTouch:
 			mes "Who is waiting";
 			mes "for you, might I ask?";
 			next;
-			switch(select("My friends.:My Guildsmen.:My lover.")) {
+			switch(select("My friends.", "My Guildsmen.", "My lover.")) {
 			case 1:
 				.@assassin_sangdam += 5;
 				mes "[Guildmaster]";
@@ -1892,7 +1892,7 @@ OnTouch:
 			mes "[Guildmaster]";
 			mes "That's most admirable. Is there anything that you would like to ask me about?";
 			next;
-			switch(select("Places where Assassins can level up...:Main goals as an Assassin.:Financial consulting.")) {
+			switch(select("Places where Assassins can level up...", "Main goals as an Assassin.", "Financial consulting.")) {
 			case 1:
 				.@assassin_sangdam += 5;
 				mes "[Guildmaster]";
@@ -2058,7 +2058,7 @@ OnTouch:
 			mes "[Guildmaster]";
 			mes "You can choose a Jur, Katar, Main Gauche, or a Gladius. As a master, I love them all.";
 			next;
-			switch(select("Jur:Katar:Main Gauche:Gladius")) {
+			switch(select("Jur", "Katar", "Main Gauche", "Gladius")) {
 			case 1:
 				mes "[Guildmaster]";
 				mes "A Jur...";

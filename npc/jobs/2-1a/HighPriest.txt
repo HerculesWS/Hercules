@@ -64,7 +64,7 @@ valkyrie,44,42,5	script	High Priest#Valkyrie	1_M_PASTOR,{
 		mes "Would you like";
 		mes "to become a High Priest?";
 		next;
-		if (select("No.:Yes.") == 1) {
+		if (select("No.", "Yes.") == 1) {
 			mes "[High Priest]";
 			mes "When you're ready,";
 			mes "feel free to come back.";

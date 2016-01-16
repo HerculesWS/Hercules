@@ -64,7 +64,7 @@ valkyrie,53,54,3	script	Minstrel#Valkyrie	2_M_BARD_ORIENT,{
 		mes "for Rune-Midgard...";
 		mes "As a Minstrel?";
 		next;
-		if (select("No.:Yes.") == 1) {
+		if (select("No.", "Yes.") == 1) {
 			mes "[Minstrel]";
 			mes "When you're ready,";
 			mes "feel free to come back.";

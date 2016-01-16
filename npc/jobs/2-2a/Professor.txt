@@ -73,7 +73,7 @@ valkyrie,53,47,3	script	Scholar#Valkyrie	2_M_SAGE_OLD,{
 		mes "Will you serve Rune-Midgard";
 		mes "as a Scholar?";
 		next;
-		if (select("No.:Yes.") == 1) {
+		if (select("No.", "Yes.") == 1) {
 			mes "[Scholar]";
 			mes "When you're ready,";
 			mes "feel free to come back.";

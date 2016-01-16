@@ -70,7 +70,7 @@ valkyrie,53,50,3	script	Biochemist#Valkyrie	2_M_DYEINGER,{
 		mes "Would you like to";
 		mes "become a Biochemist?";
 		next;
-		if (select("No.:Yes.") == 1) {
+		if (select("No.", "Yes.") == 1) {
 			mes "[Biochemist]";
 			mes "When you're ready,";
 			mes "feel free to come back.";
@@ -101,7 +101,7 @@ valkyrie,53,50,3	script	Biochemist#Valkyrie	2_M_DYEINGER,{
 		mes "secrets of life that";
 		mes "were once yours...";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			mes "[Biochemist]";
 			mes "Close your eyes and";
 			mes "put your mind at rest.";

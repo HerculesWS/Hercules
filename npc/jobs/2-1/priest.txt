@@ -70,7 +70,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 			mes "[Bishop Paul]";
 			mes "I'm pleased to see that you are continuing to lead the children of God on the right path. Is there anything I can help you with today?";
 			next;
-			switch(select("How is your health?:I want to help this Acolyte.:Father, I need your help.")) {
+			switch(select("How is your health?", "I want to help this Acolyte.", "Father, I need your help.")) {
 			case 1:
 				mes "[Bishop Paul]";
 				mes "Thank you for your concern. I'm doing fine and am in good health. Please give my regards to your brothers and sisters.";
@@ -94,7 +94,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 				mes "[Bishop Paul]";
 				mes "Do you wish to help him out during the spiritual training?";
 				next;
-				if (select("Yes, I do.:Give me a second.") == 1) {
+				if (select("Yes, I do.", "Give me a second.") == 1) {
 					if (countitem(Rosary) > 0) {
 						mes "[Bishop Paul]";
 						mes "I will now send you to the training place for Acolytes. Please send my regards to Brother Peter...";
@@ -139,7 +139,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 			mes "the Sanctuary.";
 			mes "What brings you here?";
 			next;
-			switch(select("I want to be an Acolyte.:I want to be a Priest.:Nothing, really.")) {
+			switch(select("I want to be an Acolyte.", "I want to be a Priest.", "Nothing, really.")) {
 			case 1:
 				mes "[Bishop Paul]";
 				mes "Oh I see...";
@@ -171,7 +171,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 			mes "What brings you here";
 			mes "to Prontera Sanctuary?";
 			next;
-			switch(select("Information about Priests.:Nothing.")) {
+			switch(select("Information about Priests.", "Nothing.")) {
 			case 1:
 				mes "[Bishop Paul]";
 				mes "Priests have the authority to perform and administer religious rites.";
@@ -224,7 +224,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		mes "What brings";
 		mes "you to me?";
 		next;
-		switch(select("I want to be a Priest.:How are you, Father?")) {
+		switch(select("I want to be a Priest.", "How are you, Father?")) {
 		case 1:
 			mes "[Bishop Paul]";
 			mes "I see. So you wish to be a Priest. God will be delighted by your decision and will bless you.";
@@ -239,7 +239,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 			mes "[Bishop Paul]";
 			mes "If you satisfy the requirements, I suggest that you apply for the Priest job first. Do you wish to apply now?";
 			next;
-			if (select("Yes, I do.:I need some time to think about it...") == 1) {
+			if (select("Yes, I do.", "I need some time to think about it...") == 1) {
 				if (JobLevel < 40) {
 					mes "[Bishop Paul]";
 					mes "You are not yet qualified to be a Priest. Please go out into the world and broaden your experiences.";
@@ -289,7 +289,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 					mes "[Bishop Paul]";
 					mes "Well, are you ready for the Spiritual Training?";
 					next;
-					if (select("I am ready.:Give me a minute.") == 1) {
+					if (select("I am ready.", "Give me a minute.") == 1) {
 						mes "[Bishop Paul]";
 						mes "Good. I will send you to the training ground. When you get there, please speak to Brother Peter who is in charge of the training.";
 						next;
@@ -358,7 +358,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		mes "[Bishop Paul]";
 		mes "May I ask you the reason you're still here? You didn't forget your pilgrimage, did you?";
 		next;
-		if (select("Sorry father, I need to check the order.:No no no, not at all.") == 1) {
+		if (select("Sorry father, I need to check the order.", "No no no, not at all.") == 1) {
 			mes "[Bishop Paul]";
 			mes "Ah, I see. I will let you know the order of pilgrimage again, and hope that you will have a safe journey.";
 			next;
@@ -422,7 +422,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		mes "Well, are you ready for";
 		mes "the spiritual training?";
 		next;
-		if (select("I'm ready.:Give me a minute.") == 1) {
+		if (select("I'm ready.", "Give me a minute.") == 1) {
 			mes "[Bishop Paul]";
 			mes "Good. I will send you to the training ground. When you get there, please speak to Brother Peter who is in charge of the training.";
 			next;
@@ -441,7 +441,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		mes "[Bishop Paul]";
 		mes "You seem confident about the spiritual training. Shall we begin?";
 		next;
-		if (select("I'm ready.:Give me a minute.") == 1) {
+		if (select("I'm ready.", "Give me a minute.") == 1) {
 			mes "[Bishop Paul]";
 			mes "Good. I will send you to the training ground. When you get there, please speak to Brother Peter who is in charge of the training.";
 			next;
@@ -463,7 +463,7 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 		mes "[Bishop Paul]";
 		mes "Please endure these trials for the sake of your dream. Why don't you challenge the spiritual training again?";
 		next;
-		if (select("I'll try again.:Give me a minute.") == 1) {
+		if (select("I'll try again.", "Give me a minute.") == 1) {
 			mes "[Bishop Paul]";
 			mes "Good. I will send you to the training ground. Please ask for help from Brother Peter.";
 			next;
@@ -573,7 +573,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 			mes "May god bless you, "+ (Sex ? "brother":"sister") +".";
 			mes "Welcome to Prontera parish. How may I help you?";
 			next;
-			if (select("Tell me more about Priests.:Nothing.") == 1) {
+			if (select("Tell me more about Priests.", "Nothing.") == 1) {
 				mes "[Sister Cecilia]";
 				mes "Messengers of God are usually known as Priests. After becoming an Acolyte, you can train with the goal of becoming a Priest.";
 				next;
@@ -596,7 +596,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 			mes "May God bless you, sister.";
 		mes "May I ask what brings you here?";
 		next;
-		switch(select("I wish to become a Priest.:Nothing.")) {
+		switch(select("I wish to become a Priest.", "Nothing.")) {
 		case 1:
 			mes "[Sister Cecilia]";
 			mes "I see. You've devoted yourself to God. Many Acolytes wish to become Priests to continue on their personal journey towards holiness.";
@@ -731,7 +731,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "Are you willing";
 		mes "to give your life to God?";
 		next;
-		if (select("Yes.:No!") == 2) {
+		if (select("Yes.", "No!") == 2) {
 			mes "[Sister Cecilia]";
 			mes "Aw...? How could you give me that kind of answer? I assume you're not ready to be a Priest yet...";
 			next;
@@ -743,7 +743,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "[Sister Cecilia]";
 		mes "Will you take advantage of the holy abilities given by God for selfish, destructive or greedy ends?";
 		next;
-		if (select("Yes.:No.") == 1) {
+		if (select("Yes.", "No.") == 1) {
 			mes "[Sister Cecilia]";
 			mes "Aw...? God won't grant you the power of holiness if your goals aren't just and pure. Meditate on your motivations for a while, and then come back to me.";
 			next;
@@ -755,7 +755,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "[Sister Cecilia]";
 		mes "Will you help aid others, even complete strangers, in battles by easing their suffering?";
 		next;
-		if (select("Yes.:No.") == 2) {
+		if (select("Yes.", "No.") == 2) {
 			mes "[Sister Cecilia]";
 			mes "No, no. You've got the wrong idea. God authorizes us to use his power to support his children. You must help people in danger: it is your obligation.";
 			next;
@@ -767,7 +767,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "[Sister Cecilia]";
 		mes "Are you willing to sacrifice yourself for the sake of others?";
 		next;
-		if (select("Yes.:No.") == 2) {
+		if (select("Yes.", "No.") == 2) {
 			mes "[Sister Cecilia]";
 			mes "How can you say no...? That's one of the basic principles of Priesthood. You must value the welfare of others over your own safety.";
 			next;
@@ -779,7 +779,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "[Sister Cecilia]";
 		mes "Will you repeatly say the same phrase in public in order to send God's message to his children?";
 		next;
-		if (select("Yes.:No.") == 1) {
+		if (select("Yes.", "No.") == 1) {
 			mes "[Sister Cecilia]";
 			mes "No no no... You've got it wrong. Even though your purpose is to spread God's message, no one will eagerly accept what you say when you spam text.";
 			next;
@@ -793,7 +793,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "[Sister Cecilia]";
 		mes "Will you lure many monsters to help your party members level up?";
 		next;
-		if (select("Yes.:No.") == 1) {
+		if (select("Yes.", "No.") == 1) {
 			mes "[Sister Cecilia]";
 			mes "No, you won't. Luring many monsters does more harm than good. There is no exception. That behavior is totally unacceptable.";
 			next;
@@ -805,7 +805,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		mes "[Sister Cecilia]";
 		mes "Will you follow God, no matter what it takes, even if he demands you to kill yourself?";
 		next;
-		if (select("Yes.:No.") == 2) {
+		if (select("Yes.", "No.") == 2) {
 			mes "[Sister Cecilia]";
 			mes "With that spirit, you can't be a Priest. If it is God's will to sacrifice yourself for a good purpose, you must carry out God's will as his servant.";
 			next;
@@ -821,7 +821,7 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 			mes "Sister "+ strcharinfo(0) +"...";
 		mes "You have demonstrated your devotion to God. Will you swear to adhere to his teachings for the rest of your days?";
 		next;
-		if (select("I do.:No.") == 1) {
+		if (select("I do.", "No.") == 1) {
 			PRIEST_Q = 9;
 			changequest 8014,8015;
 			mes "[Sister Cecilia]";
@@ -879,7 +879,7 @@ job_prist,24,187,4	script	Peter S. Alberto	4_M_MINISTER,{
 		mes "So...";
 		mes "Are you gonna help him right now?";
 		next;
-		switch(select("Yes, I am.:Give me a minute.:I changed my mind.")) {
+		switch(select("Yes, I am.", "Give me a minute.", "I changed my mind.")) {
 		case 1:
 			mes "[Father Peter]";
 			mes "Go for it! As your Acolyte enters, the test will begin. Now, I will send you to the testing area.";
@@ -921,7 +921,7 @@ job_prist,24,187,4	script	Peter S. Alberto	4_M_MINISTER,{
 		mes "[Father Peter]";
 		mes "Anyway, let me give you a brief explanation of the spiritual training. Are you familiar with what the spiritual training is for Priests?";
 		next;
-		switch(select("Yes, I do.:Sorry...")) {
+		switch(select("Yes, I do.", "Sorry...")) {
 		case 1:
 			mes "[Father Peter]";
 			mes "Haha, I like you! But it never hurts to have too much information. The more well informed you are, the more easily you'll pass the test!";
@@ -949,7 +949,7 @@ job_prist,24,187,4	script	Peter S. Alberto	4_M_MINISTER,{
 		mes "[Father Peter]";
 		mes "If you are close to a Priest, you'd better ask him to assist you during this trial. Now, are you ready?";
 		next;
-		switch(select("I'm ready.:Please hold on.:I want to go back.")) {
+		switch(select("I'm ready.", "Please hold on.", "I want to go back.")) {
 		case 1:
 			mes "[Father Peter]";
 			mes "Now, let the spiritual training begin. It's simple. Just kill them all. Show no mercy to the creatures of darkness!";
@@ -992,7 +992,7 @@ job_prist,24,187,4	script	Peter S. Alberto	4_M_MINISTER,{
 		mes "[Father Peter]";
 		mes "Are you ready then?";
 		next;
-		switch(select("I'm ready.:Please hold on.:I want to go back.")) {
+		switch(select("I'm ready.", "Please hold on.", "I want to go back.")) {
 		case 1:
 			mes "[Father Peter]";
 			mes "Now, let the spiritual training begin. For the glory of God, for peace on earth, and goodwill towards all men...";
@@ -1357,7 +1357,7 @@ OnTouch:
 		mes "[Deviruchi]";
 		mes "Wouldn't life be so much easier if you weren't a Priest? And it'd be so easy. All you'd have to do is quit right now...";
 		next;
-		if (select("You're right, I quit!:Out of my sight, demon!") == 1) {
+		if (select("You're right, I quit!", "Out of my sight, demon!") == 1) {
 			mes "[Deviruchi]";
 			mes "^660000YES~!^000000 I mean...";
 			mes "Good for you!";
@@ -1387,7 +1387,7 @@ OnTouch:
 		mes "[Deviruchi]";
 		mes "Isn't it everyone's dream to have one of these? Think about it, being a Priest can only bring you suffering...";
 		next;
-		if (select("You're right, I'll take it!:Silence!") == 1) {
+		if (select("You're right, I'll take it!", "Silence!") == 1) {
 			mes "[Deviruchi]";
 			mes "Good choice!";
 			mes "This card can";
@@ -1443,7 +1443,7 @@ OnTouch:
 		mes "[Doppelganger]";
 		mes "Of course, I'll let you redistribute your stat points by your base level. Now, isn't that a sweet deal...?";
 		next;
-		if (select("Deal, Deal!:No deal... Doppelganger.") == 1) {
+		if (select("Deal, Deal!", "No deal... Doppelganger.") == 1) {
 			mes "[Doppelganger]";
 			mes "Good choice~";
 			mes "I shall return your";
@@ -1464,7 +1464,7 @@ OnTouch:
 		mes "[Doppelganger]";
 		mes "Just don't become a Priest. I won't ask you more than once. Then you can choose a better job... perhaps a Swordman like me.";
 		next;
-		if (select("I don't want to be a Priest!:I'll never listen to you!") == 1) {
+		if (select("I don't want to be a Priest!", "I'll never listen to you!") == 1) {
 			mes "[Doppelganger]";
 			mes "Excellent choice. Now, never return to this place. I shall return your job to Novice as you wish.";
 			next;
@@ -1513,7 +1513,7 @@ OnTouch:
 		mes "^330033It would be so easy for me to snap your fragile body in twain and grind your bones to dust.";
 		mes "Now, go back mortal!^000000";
 		next;
-		if (select("I'm so sorry. Spare me!:God will protect me.") == 1) {
+		if (select("I'm so sorry. Spare me!", "God will protect me.") == 1) {
 			mes "[Dark Lord]";
 			mes "^330033Don't ever come back!^000000";
 			close2;
@@ -1526,7 +1526,7 @@ OnTouch:
 		mes "[Dark Lord]";
 		mes "^330033With just a wave of my hand, you will cease to exist. And no one will remember you. Tremble before the might of my infinite magic!^000000";
 		next;
-		if (select("I beg you, don't...!:Begone, vile fiend!") == 1) {
+		if (select("I beg you, don't...!", "Begone, vile fiend!") == 1) {
 			mes "[Dark Lord]";
 			mes "^330033Don't ever come back!^000000";
 			close2;
@@ -1585,7 +1585,7 @@ OnTouch:
 		mes "[Baphomet]";
 		mes "Cease this foolishness of pursuing the Priesthood. Make a contract with me. The entire world is yours for the taking.";
 		next;
-		if (select("Deal.:No, Baphomet. You lose.") == 1) {
+		if (select("Deal.", "No, Baphomet. You lose.") == 1) {
 			mes "[Baphomet]";
 			mes "Then we shall form a contract. You won't ever regret this moment...";
 			next;
