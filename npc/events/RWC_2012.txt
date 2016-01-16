@@ -63,7 +63,7 @@ prontera,147,61,3	script	Driller#pron	4_M_BARBER,{
 	mes "[Driller]";
 	mes "You should also know that making a card slot it extremely dangerous. ^ff0000Chances to succeed are about 50%.^000000 Do you wish to proceed?";
 	next;
-	if(select("Cancel:Let's go!") == 1) {
+	if(select("Cancel", "Let's go!") == 1) {
 		mes "[Driller]";
 		mes "See ya then.";
 		close;
@@ -126,7 +126,7 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 		mes "However, I can see that the accessory you are wearing is not something I can work on. Please equip a RWC Memorial accessory.";
 		close;
 	}
-	.@select = select("Sorry, not interested.:Please, empower my accessory.:Remove the Enchant.")-1;
+	.@select = select("Sorry, not interested.", "Please, empower my accessory.", "Remove the Enchant.")-1;
 	if (.@select == 0) {
 		mes "[Goldberg]";
 		mes "Alright, then, see you next time...";
@@ -167,25 +167,25 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 			mes "Which enchantment would you like to infuse?";
 			next;
 			setarray .@enchant_select[0],1,2,3,4;
-			.@i = select("Cancel:Fighting Spirit:ATK (%):Max HP:HP")-2;
+			.@i = select("Cancel", "Fighting Spirit", "ATK (%)", "Max HP", "HP")-2;
 			break;
 		case 3:
 			setarray .@enchant_select[0],5,6,7;
-			.@i = select("Cancel:Spell:MATK (%):SP")-2;
+			.@i = select("Cancel", "Spell", "MATK (%)", "SP")-2;
 			break;
 		case 2:
 			mes "[Goldberg]";
 			mes "^ff0000Be careful! There is about a 25% chance that the enchantment will fail. If this happens, the item will be destroyed.^000000 Which enchantment would you like to infuse?";
 			next;
 			setarray .@enchant_select[0],8,9,10,11,12,13,14;
-			.@i = select("Cancel:STR:AGI:VIT:INT:DEX:LUK:SP")-2;
+			.@i = select("Cancel", "STR", "AGI", "VIT", "INT", "DEX", "LUK", "SP")-2;
 			break;
 		case 1:
 			mes "[Goldberg]";
 			mes "^ff0000There is about a 25% chance that the enchantment will fail. If this happens, the item will be destroyed.^000000 Which enchantment would you like to infuse?";
 			next;
 			setarray .@enchant_select[0],8,9,10,11,12,13,15,16;
-			.@i = select("Cancel:STR:AGI:VIT:INT:DEX:LUK:MHP:HP")-2;
+			.@i = select("Cancel", "STR", "AGI", "VIT", "INT", "DEX", "LUK", "MHP", "HP")-2;
 			break;
 		case 0:
 			mes "[Goldberg]";
@@ -200,7 +200,7 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 		mes "[Goldberg]";
 		mes "The power of the enchantment will be randomly chosen. ^ff0000Once infused, the enchantment cannot be removed.^000000 Shall we continue?";
 		next;
-		if(select("No, please stop.:Yes, please proceed.") == 1) {
+		if(select("No, please stop.", "Yes, please proceed.") == 1) {
 			mes "[Goldberg]";
 			mes "Alright, then, see you next time...";
 			close;
@@ -314,7 +314,7 @@ prontera,147,59,3	script	Goldberg#pron	4_M_OILMAN,{
 		mes "[Goldberg]";
 		mes "I will just initialize the enchant option without doing anything to the slotted card. You wanna continue?";
 		next;
-		if(select("I will stop.:Yep, sure, go on.") == 1) {
+		if(select("I will stop.", "Yep, sure, go on.") == 1) {
 			mes "[Goldberg]";
 			mes "Come back if you change your mind.";
 			close;

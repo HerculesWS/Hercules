@@ -65,7 +65,7 @@ xmas_in,89,92,5	script	Louise Kim#designer	4_F_06,{
 	emotion e_lv;
 	next;
 	if (countitem(Santa's_Hat) > 0) {
-		if (select("Here.:It's ok.") == 1) {
+		if (select("Here.", "It's ok.") == 1) {
 			mes "[Designer Louise Kim]";
 			mes "Nice choice!!";
 			mes "If I do it like this ...";
@@ -73,7 +73,7 @@ xmas_in,89,92,5	script	Louise Kim#designer	4_F_06,{
 			mes "finally it'll turn into fantastic hat.";
 			mes "But before that,I need some materials to make with.";
 			next;
-			if (select("What are the materials?:So what? I don't want to know.") == 1) {
+			if (select("What are the materials?", "So what? I don't want to know.") == 1) {
 				mes "[Designer Louise Kim]";
 				mes "Well, nothing special.";
 				mes "Basically, you need Santa's hat of course.";
@@ -228,7 +228,7 @@ prontera,155,285,3	script	Enjoy#enjoy	4_M_MONK,{
 		mes "!!!!!!!!!!!";
 		mes "!!!!!!!!!!!!!";
 		next;
-		switch(select("Wow!:Hm...I'm not interested.:I have ~")){
+		switch(select("Wow!", "Hm...I'm not interested.", "I have ~")){
 		case 1:
 			mes "[Enjoy]";
 			mes "Alright~~!!!";
@@ -967,7 +967,7 @@ prontera,156,242,0	script	Oholy#pron::OholyDup	1_F_PRIEST,{
 			mes "your mind when you think of Christmas?";
 			next;
 		}
-		switch(select("Santa Claus:Christmas Gifts:Christmas Carols:Santa Hat:I don't like couples")) {
+		switch(select("Santa Claus", "Christmas Gifts", "Christmas Carols", "Santa Hat", "I don't like couples")) {
 		case 1:
 			mes "[Oholy]";
 			mes "Santa Claus!";

@@ -57,7 +57,7 @@ function	script	F_Flags	{
 			mes "Brave ones...";
 			mes "Do you wish to return to your honorable place?";
 			next;
-			if (select("Return to the guild castle.:Quit.") == 1) {
+			if (select("Return to the guild castle.", "Quit.") == 1) {
 				if (getcharid(2) == getcastledata(getarg(1),1))
 					warp getarg(1),getarg(2),getarg(3);
 			}
