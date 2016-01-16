@@ -1848,6 +1848,8 @@ struct {
 	struct HPMHookPoint *HP_clif_pHotkeyRowShift_post;
 	struct HPMHookPoint *HP_clif_dressroom_open_pre;
 	struct HPMHookPoint *HP_clif_dressroom_open_post;
+	struct HPMHookPoint *HP_clif_pOneClick_ItemIdentify_pre;
+	struct HPMHookPoint *HP_clif_pOneClick_ItemIdentify_post;
 	struct HPMHookPoint *HP_clif_selectcart_pre;
 	struct HPMHookPoint *HP_clif_selectcart_post;
 	struct HPMHookPoint *HP_clif_pSelectCart_pre;
@@ -4322,6 +4324,8 @@ struct {
 	struct HPMHookPoint *HP_pc_check_job_name_post;
 	struct HPMHookPoint *HP_pc_update_idle_time_pre;
 	struct HPMHookPoint *HP_pc_update_idle_time_post;
+	struct HPMHookPoint *HP_pc_have_magnifier_pre;
+	struct HPMHookPoint *HP_pc_have_magnifier_post;
 	struct HPMHookPoint *HP_libpcre_compile_pre;
 	struct HPMHookPoint *HP_libpcre_compile_post;
 	struct HPMHookPoint *HP_libpcre_study_pre;
@@ -7689,6 +7693,8 @@ struct {
 	int HP_clif_pHotkeyRowShift_post;
 	int HP_clif_dressroom_open_pre;
 	int HP_clif_dressroom_open_post;
+	int HP_clif_pOneClick_ItemIdentify_pre;
+	int HP_clif_pOneClick_ItemIdentify_post;
 	int HP_clif_selectcart_pre;
 	int HP_clif_selectcart_post;
 	int HP_clif_pSelectCart_pre;
@@ -10163,6 +10169,8 @@ struct {
 	int HP_pc_check_job_name_post;
 	int HP_pc_update_idle_time_pre;
 	int HP_pc_update_idle_time_post;
+	int HP_pc_have_magnifier_pre;
+	int HP_pc_have_magnifier_post;
 	int HP_libpcre_compile_pre;
 	int HP_libpcre_compile_post;
 	int HP_libpcre_study_pre;
