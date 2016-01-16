@@ -49,7 +49,7 @@ aldeba_in,96,181,4	script	Kafra Service	4_F_KAFRA5,{
 	mes "Headquarters. Did you";
 	mes "need something?";
 	next;
-	switch(select("Save:Use Storage:Rent a Pushcart:Cancel")) {
+	switch(select("Save", "Use Storage", "Rent a Pushcart", "Cancel")) {
 	case 1:
 		mes "[Kafra Leilah]";
 		mes "Your Respawn Point has";

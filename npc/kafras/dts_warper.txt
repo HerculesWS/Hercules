@@ -314,7 +314,7 @@ function	script	F_VoteKafra	{
 	mes "provide the Dungeon Teleport";
 	mes "Service. How may I help you?";
 	next;
-	switch(select("Reason for Election:Cast a Vote:Use Teleport Service:Cancel")) {
+	switch(select("Reason for Election", "Cast a Vote", "Use Teleport Service", "Cancel")) {
 	case 1:
 		mes "[Kafra Voting Staff]";
 		mes "Cool Event Corp and the";
@@ -391,7 +391,7 @@ function	script	F_VoteKafra	{
 					mes "us. Would you like to vote";
 					mes "for the Kafra Corporation?";
 					next;
-					switch(select("No:Yes")) {
+					switch(select("No", "Yes")) {
 					case 1:
 						mes "[Kafra Voting Staff]";
 						mes "I understand. But if you";
@@ -460,7 +460,7 @@ function	script	F_VoteKafra	{
 					mes "us. Would you like to vote";
 					mes "for the Kafra Corporation?";
 					next;
-					switch(select("No:Yes")) {
+					switch(select("No", "Yes")) {
 					case 1:
 						mes "[Kafra Voting Staff]";
 						mes "I understand. But if you";
@@ -526,7 +526,7 @@ function	script	F_VoteKafra	{
 			mes "apply in this special service.";
 			next;
 			if ($DTS_KafraWins == 0) {
-				switch(select("Toy Factory, Level 2 -> 4,000 z:Cancel")) {
+				switch(select("Toy Factory, Level 2 -> 4,000 z", "Cancel")) {
 				case 1:
 					if (Zeny >= 4000) {
 						cutin "",255;
@@ -551,7 +551,7 @@ function	script	F_VoteKafra	{
 				}
 			}
 			else if ($DTS_KafraWins == 1) {
-				switch(select("Toy Factory, Level 2 -> 4,000 z:Clock Tower, Level 3 -> 4,000 z:Cancel")) {
+				switch(select("Toy Factory, Level 2 -> 4,000 z", "Clock Tower, Level 3 -> 4,000 z", "Cancel")) {
 				case 1:
 					if (Zeny >= 4000) {
 						Zeny -= 4000;
@@ -592,7 +592,7 @@ function	script	F_VoteKafra	{
 				}
 			}
 			else {
-				switch(select("Toy Factory, Level 2 -> 4,000 z:Clock Tower, Level 3 -> 4,000 z:Lava Dungeon, Level 2 -> 4,000 z:Cancel")) {
+				switch(select("Toy Factory, Level 2 -> 4,000 z", "Clock Tower, Level 3 -> 4,000 z", "Lava Dungeon, Level 2 -> 4,000 z", "Cancel")) {
 				case 1:
 					if (Zeny >= 4000) {
 						Zeny -= 4000;
@@ -713,7 +713,7 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 	mes "between Cool Event Corp. and";
 	mes "Kafra Corporation for control of the Dungeon Teleport Service!";
 	next;
-	switch(select("Reason for Election:Cast a Vote:Use Teleport Service:Cancel")) {
+	switch(select("Reason for Election", "Cast a Vote", "Use Teleport Service", "Cancel")) {
 	case 1:
 		mes "[Cool Event Corp. Voting Staff]";
 		mes "Cool Event Corp. has been";
@@ -796,7 +796,7 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 					mes "Would you like to vote";
 					mes "for Cool Event Corp.?";
 					next;
-					switch(select("No:Yes")) {
+					switch(select("No", "Yes")) {
 					case 1:
 						mes "[Cool Event Corp. Voting Staff]";
 						mes "Ah, I see... Well, if you";
@@ -868,7 +868,7 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 					mes "Would you like to vote";
 					mes "for Cool Event Corp.?";
 					next;
-					switch(select("No:Yes")) {
+					switch(select("No", "Yes")) {
 					case 1:
 						mes "[Cool Event Corp. Voting Staff]";
 						mes "Ah, I see... Well, if you";
@@ -926,7 +926,7 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 			mes "choose your destination.";
 			next;
 			if ($DTS_JondaWins == 0) {
-				switch(select("Byalan Dungeon, Level 3 -> 4,000 z:Cancel")) {
+				switch(select("Byalan Dungeon, Level 3 -> 4,000 z", "Cancel")) {
 				case 1:
 					if (Zeny >= 4000) {
 						Zeny -= 4000;
@@ -954,7 +954,7 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 				}
 			}
 			else if ($DTS_JondaWins == 1) {
-				switch(select("Byalan Dungeon, Level 3 -> 4,000 z:Clock Tower, 3rd Floor -> 4,000 z:Cancel")) {
+				switch(select("Byalan Dungeon, Level 3 -> 4,000 z", "Clock Tower, 3rd Floor -> 4,000 z", "Cancel")) {
 				case 1:
 					if (Zeny >= 4000) {
 						Zeny -= 4000;
@@ -1004,7 +1004,7 @@ lighthalzen,163,60,4	script	Kafra Voting Staff#lght	4_F_KAFRA9,{
 				mes "for this service. Now, please";
 				mes "choose your destination.";
 				next;
-				switch(select("Byalan Dungeon, Level 3 -> 4,000 z:Clock Tower, 3rd Floor -> 4,000 z:Glast Heim Entrance -> 4,000 z:Cancel")) {
+				switch(select("Byalan Dungeon, Level 3 -> 4,000 z", "Clock Tower, 3rd Floor -> 4,000 z", "Glast Heim Entrance -> 4,000 z", "Cancel")) {
 				case 1:
 					if (Zeny >= 4000) {
 						Zeny -= 4000;
@@ -1180,7 +1180,7 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 		mes "[Christy's Maid]";
 		mes "I am Lady Christy's Maid.";
 		next;
-		switch(select("Globalvar Check:Setitem Zero:Change Glbalvar")) {
+		switch(select("Globalvar Check", "Setitem Zero", "Change Glbalvar")) {
 		case 1:
 			mes "Current GlobalVar are";
 			next;
@@ -1204,7 +1204,7 @@ sec_in02,17,160,4	script	Vote Globalvar Girl#yuno	4_F_OPERATION,{
 			mes "[Christy's Maid]";
 			mes "Which Globalvar value would you like to change?";
 			next;
-			switch(select("1 - Voting Time:2 - Cool Event Corp. Vote Numbers:3 - Kafra Vote Numbers:4 - Winner:5 - Teleport Service Period:6 - Kafra Warp Number:7 - Cool Event Corp. Warp Number:8 - Setitem Value")) {
+			switch(select("1 - Voting Time", "2 - Cool Event Corp. Vote Numbers", "3 - Kafra Vote Numbers", "4 - Winner", "5 - Teleport Service Period", "6 - Kafra Warp Number", "7 - Cool Event Corp. Warp Number", "8 - Setitem Value")) {
 			case 1:
 				mes "[Christy's Maid]";
 				mes "Please enter a number among 0 and 1000.";
