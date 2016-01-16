@@ -49,7 +49,7 @@ prontera,218,218,3	script	Pet Enthusiast	4W_KID,{
 	mes "[Pet Enthusiast Jenny]";
 	mes "Do you have any food that you are looking for?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		if ((countitem(Broken_Wine_Vessel) > 19) && (countitem(Alchol) > 0)) {
 			mes "[Pet Enthusiast Jenny]";
@@ -57,7 +57,7 @@ prontera,218,218,3	script	Pet Enthusiast	4W_KID,{
 			mes "Do you want to exchange them for";
 			mes "^ff000020 Spirit Liquor^000000 for your Wanderer pet?";
 			next;
-			switch(select("Yes, please!:No thank you.")) {
+			switch(select("Yes, please!", "No thank you.")) {
 			case 1:
 				mes "[Pet Enthusiast Jenny]";
 				mes "Ok here you go then.";

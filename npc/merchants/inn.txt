@@ -115,7 +115,7 @@ lhz_in02,230,284,4	script	Hotel Employee#01	4_M_04,{
 	mes "finest accomodations";
 	mes "and the best service.";
 	next;
-	switch(select("Save Point:Rest - 5,000 zeny:Cancel")) {
+	switch(select("Save Point", "Rest - 5,000 zeny", "Cancel")) {
 	case 1:
 		savepoint "lhz_in02",209,275;
 		mes "[Hotel Employee]";
@@ -166,7 +166,7 @@ ve_in,157,219,5	script	Inn Master#Receptionist	4_M_SEAMAN,{
 	mes "most comfortable";
 	mes "inn here in Veins~";
 	next;
-	switch(select("Save:Take a Rest -> 5000 zeny:Quit")) {
+	switch(select("Save", "Take a Rest -> 5000 zeny", "Quit")) {
 	case 1:
 		mes "[Inn Master]";
 		mes "Your Respawn Point";
@@ -209,7 +209,7 @@ function	script	F_InnMaid	{
 	mes getarg(1) + ".";
 	mes "How may I help you?";
 	next;
-	switch(select("Save:Take a Rest -> 5000 zeny:Cancel")) {
+	switch(select("Save", "Take a Rest -> 5000 zeny", "Cancel")) {
 	case 1:
 		mes getarg(0);
 		mes "Your respawn point";

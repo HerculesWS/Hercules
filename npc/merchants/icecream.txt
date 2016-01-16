@@ -42,7 +42,7 @@
 	mes "^3355FF100 Zeny^000000 Ice Cream,";
 	mes "Ice Cream!";
 	next;
-	if(select("Gimme Ice Cream!:Cancel Trade") == 2) {
+	if(select("Gimme Ice Cream!", "Cancel Trade") == 2) {
 		mes "Are you sure you don't want any?";
 		mes "I won't be selling it for long,";
 		mes "and once I run out,";

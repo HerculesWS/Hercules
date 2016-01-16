@@ -50,12 +50,12 @@ morocc_in,146,99,3	script	Java Dullihan	1_M_MERCHANT,{
 	mes "Wow...";
 	mes "Such a nice day. Days like this are perfect to make dyes.";
 	next;
-	switch(select("Talk:Make Dyestuffs:Cancel")) {
+	switch(select("Talk", "Make Dyestuffs", "Cancel")) {
 	case 1:
 		mes "[Dye Maker Java Dullihan]";
 		mes "Erm, I don't really have much to say to you. But, if you would like me to tell you about my life, I can do that. It's a little long and boring, but would you like to listen?";
 		next;
-		if (select("Listen:Don't Listen") == 1) {
+		if (select("Listen", "Don't Listen") == 1) {
 			mes "[Dye Maker Java Dullihan]";
 			mes "As long as I can remember, my father has been making dyes. He used to spend countless hours making dyes of different colors. Even when my mother passed away, he never stopped.";
 			next;
@@ -97,7 +97,7 @@ morocc_in,146,99,3	script	Java Dullihan	1_M_MERCHANT,{
 		mes "[Dye Maker Java Dullihan]";
 		mes "The color of the dye is special, made with all my heart and soul.";
 		next;
-		switch(select("Scarlet Dyestuffs:Lemon Dyestuffs:Cobaltblue Dyestuffs:Darkgreen Dyestuffs:Orange Dyestuffs:Violet Dyestuffs:White Dyestuffs:Black Dyestuffs:Cancel")) {
+		switch(select("Scarlet Dyestuffs", "Lemon Dyestuffs", "Cobaltblue Dyestuffs", "Darkgreen Dyestuffs", "Orange Dyestuffs", "Violet Dyestuffs", "White Dyestuffs", "Black Dyestuffs", "Cancel")) {
 		case 1: callsub S_MakeDye,1,1; break;
 		case 2: callsub S_MakeDye,2,1; break;
 		case 3: callsub S_MakeDye,3,2; break;
@@ -187,7 +187,7 @@ S_MakeDye:
 	case 4: mes "Okay! I believe you would have everything prepared. Would you like to start the process?"; break;
 	}
 	next;
-	if (select("Make Dyestuffs:Cancel") == 1) {
+	if (select("Make Dyestuffs", "Cancel") == 1) {
 		.@size = getarraysize(.@item);
 		// check requirements
 		for (.@i = 0; .@i < .@size; ++.@i)

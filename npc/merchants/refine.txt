@@ -59,12 +59,12 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 	mes "Welcome to Christopher's Workshop. Ye can get all yer stuff for forging here. What business";
 	mes "brings ye to me?";
 	next;
-	switch(select("Purchase Anvil:Purchase Forging Item:Purchase Metal:Purify Rough Ores:Cancel")) {
+	switch(select("Purchase Anvil", "Purchase Forging Item", "Purchase Metal", "Purify Rough Ores", "Cancel")) {
 	case 1:
 		mes "[Christopher Guillenrow]";
 		mes "A better Anvil gives ye a greeeater chance to make better weapons, ye know? But they'll cost ye more zeny. Just get it off yer chest and buy what fits your purposes best, laddy.";
 		next;
-		switch(select("Anvil - 30,000 zeny:Oridecon Anvil - 120,000 zeny:Golden Anvil - 300,000 zeny:Better Anvil than the others.:Cancel.")) {
+		switch(select("Anvil - 30,000 zeny", "Oridecon Anvil - 120,000 zeny", "Golden Anvil - 300,000 zeny", "Better Anvil than the others.", "Cancel.")) {
 		case 1:
 			if (Zeny < 30000) {
 				mes "[Christopher Guillenrow]";
@@ -114,7 +114,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 		mes "[Christopher Guillenrow]";
 		mes "A respectable blacksmith uses fine tools. Ye can become one o'those with me Stuff. Choose anything ye want.";
 		next;
-		switch(select("Mini-Furnace - 150 zeny:Iron Hammer - 1000 zeny:Golden Hammer - 3000 zeny:Oridecon Hammer - 5000 zeny:Cancel.")) {
+		switch(select("Mini-Furnace - 150 zeny", "Iron Hammer - 1000 zeny", "Golden Hammer - 3000 zeny", "Oridecon Hammer - 5000 zeny", "Cancel.")) {
 		case 1:
 			mes "[Christopher Guillenrow]";
 			mes "It's a much needed tool fer refining metal! So, How many do ye wish to buy? If ye want to quit, just type the number '0.'";
@@ -193,7 +193,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 		mes "[Christopher Guillenrow]";
 		mes "I prepare every Metal, and only the high quality ones o'course. Now then, which one do ye need?";
 		next;
-		switch(select("Phracon - 200z.:Emveretarcon - 1000z.:Cancel.")) {
+		switch(select("Phracon - 200z.", "Emveretarcon - 1000z.", "Cancel.")) {
 		case 1:
 			mes "[Christopher Guillenrow]";
 			mes "So, How many do ye wish to buy? If ye dont want anything, just type the number as '0.'";
@@ -279,7 +279,7 @@ geffen_in,110,172,0	script	Christopher#1	1_M_SMITH,{
 		mes "[Christopher Guillenrow]";
 		mes "I can purify yer Oridecon and Elunium. I make a refined Ore out of 5 o'each rough ones. Well... Which one do ye want to make?";
 		next;
-		switch(select("Make Oridecon:Make Elunium:Cancel.")) {
+		switch(select("Make Oridecon", "Make Elunium", "Cancel.")) {
 		case 1:
 			if (countitem(Oridecon_Stone) < 5) {
 				mes "[Christopher Guillenrow]";
@@ -333,13 +333,13 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 	mes "In my shop, you will find everything that you need in forging.";
 	mes "Tell me what you need.";
 	next;
-	switch(select("Purchase Anvil.:Purchase Forging Items.:Purchase Metal.:Process Ores.:Quit.")) {
+	switch(select("Purchase Anvil.", "Purchase Forging Items.", "Purchase Metal.", "Process Ores.", "Quit.")) {
 	case 1:
 		mes "[Paul Spanner]";
 		mes "Anvil is the most necessary item for Blacksmiths.";
 		mes "Since you will use an Anvil more than once, you'd better buy a nice one.";
 		next;
-		switch(select("Anvil - 30,000z.:Oridecon Anvil - 120,000z.:Golden Anvil - 300,000z.:I need a better anvil.:Cancel.")) {
+		switch(select("Anvil - 30,000z.", "Oridecon Anvil - 120,000z.", "Golden Anvil - 300,000z.", "I need a better anvil.", "Cancel.")) {
 		case 1:
 			if (Zeny < 30000) {
 				mes "[Paul Spanner]";
@@ -391,7 +391,7 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 		mes "You need various materials to process ores and to forge weapons.";
 		mes "I have everything that you need. Take a look.";
 		next;
-		switch(select("Mini Furnace - 150z.:Iron Hammer - 1,000z.:Golden Hammer - 3,000z.:Oridecon Hammer - 5,000z.:Cancel.")) {
+		switch(select("Mini Furnace - 150z.", "Iron Hammer - 1,000z.", "Golden Hammer - 3,000z.", "Oridecon Hammer - 5,000z.", "Cancel.")) {
 		case 1:
 			.@item = 612;
 			.@item_cost = 150;
@@ -460,7 +460,7 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 		mes "I have high quality metal.";
 		mes "So, which metal would you like to buy?";
 		next;
-		switch(select("Phracon - 200z.:Emveretarcon - 1,000z.:Quit.")) {
+		switch(select("Phracon - 200z.", "Emveretarcon - 1,000z.", "Quit.")) {
 		case 1:
 			.@item = 1010;
 			.@item_price = 200;
@@ -514,7 +514,7 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 		mes "I can process Oridecon and Elunium for you.";
 		mes "You need 5 ores to process them into one Oridecon or Elunium.";
 		mes "So, which one do you want to process?";
-		switch(select("Oridecon:Elunium:Quit.")) {
+		switch(select("Oridecon", "Elunium", "Quit.")) {
 		case 1:
 			if (countitem(Oridecon_Stone) < 5) {
 				mes "[Paul Spanner]";
@@ -677,7 +677,7 @@ function	script	refinemain	{
 		mes "a service fee of " + .@price + " Zeny.";
 		mes "Do you really wish to continue?";
 		next;
-		if(select("Yes:No") == 2){
+		if(select("Yes", "No") == 2){
 			mes "[" + getarg(0) + "]";
 			mes "Yeah...";
 			mes "There's no need to";
@@ -706,7 +706,7 @@ function	script	refinemain	{
 			mes "^FF0000lose this weapon^000000 forever.";
 			mes "Do you still want to refine?";
 			next;
-			if(select("Yes:No") == 2){
+			if(select("Yes", "No") == 2){
 				mes "[" + getarg(0) + "]";
 				mes "I completely agree...";
 				mes "I might be a great refiner, but sometimes even I make mistakes.";
@@ -928,7 +928,7 @@ function	script	phramain	{
 	mes "Weapons, and ^007777Emveretarcon^000000";
 	mes "for Level 2 Weapons.";
 	next;
-	switch(select("Phracon - 200 Zeny:Emveretarcon - 1000 Zeny:Ask about other Metals")) {
+	switch(select("Phracon - 200 Zeny", "Emveretarcon - 1000 Zeny", "Ask about other Metals")) {
 	case 1:
 		.@material = 1010;
 		.@price = 200;
@@ -1039,7 +1039,7 @@ function	script	orimain	{
 	mes "5 Rough Stones to make";
 	mes "1 pure one for you.";
 	next;
-	switch(select("Make Oridecon:Make Elunium:Ask about Enchanted Stones")) {
+	switch(select("Make Oridecon", "Make Elunium", "Ask about Enchanted Stones")) {
 	case 1:
 		if (countitem(Oridecon_Stone) > 4) {
 			delitem Oridecon_Stone,5;
@@ -1171,7 +1171,7 @@ function	script	repairmain	{
 	mes "You can count on me";
 	mes "for item repairs!";
 	next;
-	switch(select("Actually, I do have some items...:None at the moment.")) {
+	switch(select("Actually, I do have some items...", "None at the moment.")) {
 	case 1:
 		.@checkitem = 1;
 		while (1) {
@@ -1201,7 +1201,7 @@ function	script	repairmain	{
 		mes "["+getarg(0)+"]";
 		mes "Each repair costs " + .@repairprice + " Zeny. So to repair all your damaged items would cost " + .@totalcost + " Zeny! Would you like to repair the items?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			if (Zeny < .@totalcost) {
 				mes "["+getarg(0)+"]";

@@ -53,12 +53,12 @@ alde_alche,24,188,3	script	Guild Dealer	2_M_ALCHE,{
 	mes "Alchemist Union.";
 	mes "How can I assist you today?";
 	next;
-	switch (select("Purchase materials.:Purchase a production manual.:Quit.")) {
+	switch (select("Purchase materials.", "Purchase a production manual.", "Quit.")) {
 	case 1:
 		mes "[Gever Al Sharp]";
 		mes "What would you like?";
 		next;
-		if (select("Medicine Bowl - " + (RENEWAL ? "250z" : "8 Zeny") +":Cancel.") == 1) {
+		if (select("Medicine Bowl - " + (RENEWAL ? "250z" : "8 Zeny"), "Cancel.") == 1) {
 			mes "[Gever Al Sharp]";
 			mes "How many do you want?";
 			mes "Enter '0' if you want to quit.";
@@ -122,7 +122,7 @@ alde_alche,24,188,3	script	Guild Dealer	2_M_ALCHE,{
 		mes "What do you need?";
 		mes "Manuals are generally 100,000 zeny. But there are a couple of special manuals that will cost more.";
 		next;
-		switch (select("Potion Creation Guide:Alcohol Creation Guide:Bottle Grenade Creation Guide:Acid Bottle Creation Guide:Plant Bottle Creation Guide:Marine Sphere Bottle Creation Guide:Glistening Coat Creation Guide:Condensed Potion Creation Guide:Cancel Deal.")) {
+		switch (select("Potion Creation Guide", "Alcohol Creation Guide", "Bottle Grenade Creation Guide", "Acid Bottle Creation Guide", "Plant Bottle Creation Guide", "Marine Sphere Bottle Creation Guide", "Glistening Coat Creation Guide", "Condensed Potion Creation Guide", "Cancel Deal.")) {
 		case 1:
 			callsub S_SellManual, Normal_Potion_Book, 100000;
 			break;
@@ -175,7 +175,7 @@ S_SellManual:
 	mes ""+ getitemname(getarg(0)) +"?";
 	mes "That'll be "+ getarg(1) +" zeny.";
 	next;
-	if (select("Purchase.:Quit.") == 1) {
+	if (select("Purchase.", "Quit.") == 1) {
 		Zeny -= getarg(1);
 		getitem getarg(0),1;
 		mes "[Gever Al Sharp]";

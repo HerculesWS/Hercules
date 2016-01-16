@@ -61,7 +61,7 @@ ama_in02,61,27,7	script	Alchemist#ama	4_M_ALCHE_B,{
 	mes "Keekeekee... Or else,";
 	mes "I will let you taste my acid bottle...!";
 	next;
-	if (select("Please, excuse me:Do you need help?") == 1) {
+	if (select("Please, excuse me", "Do you need help?") == 1) {
 		mes "[Laspuchin Gregory]";
 		mes "Keheheh... Did you hear";
 		mes "what I said? It would be";
@@ -81,7 +81,7 @@ ama_in02,61,27,7	script	Alchemist#ama	4_M_ALCHE_B,{
 	mes "I will use it efficiently...";
 	mes "Do you have them now?";
 	next;
-	if (select("Nope:I got some") == 1) {
+	if (select("Nope", "I got some") == 1) {
 		mes "[Laspuchin Gregory]";
 		mes "Then, find 8 stones of one kind.";
 		mes "If you bring 8 of one kind of";
@@ -104,7 +104,7 @@ ama_in02,61,27,7	script	Alchemist#ama	4_M_ALCHE_B,{
 	mes "Uh-huh, what did you bring?";
 	next;
 	setarray .@items[1],995,997,994,996;
-	.@i = .@items[select("Mystic Frozen:Great Nature:Flame Heart:Rough Wind")];
+	.@i = .@items[select("Mystic Frozen", "Great Nature", "Flame Heart", "Rough Wind")];
 	mes "[Laspuchin Gregory]";
 	if (countitem(.@i) > 7) {
 		mes "I will take 8 of them and";
