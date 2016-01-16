@@ -49,10 +49,10 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 	next;
 	if (countitem(Bapho_Doll) > 0) {
 		.@doll = 1;
-		.@selection = select("What is this place?:I want to enter.:About the Cursed Baphomet Doll.:Cancel.");
+		.@selection = select("What is this place?", "I want to enter.", "About the Cursed Baphomet Doll.", "Cancel.");
 	}
 	else {
-		.@selection = select("What is this place?:I want to enter.:Cancel.");
+		.@selection = select("What is this place?", "I want to enter.", "Cancel.");
 	}
 	switch(.@selection) {
 	case 1:
@@ -65,7 +65,7 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 		mes "[Friar Patrick]";
 		mes "The very place where the great Devil who once demolished this world is sleeping.";
 		next;
-		switch(select("Tell me more.:Stop talking.")) {
+		switch(select("Tell me more.", "Stop talking.")) {
 		case 1:
 			cutin "ins_cata_pri_n",2;
 			mes "[Friar Patrick]";
@@ -225,7 +225,7 @@ monk_test,306,151,3	script	Grave of Baphomet#edq	HIDDEN_NPC,{
 	if (countitem(Token_Of_Apostle)) delitem Token_Of_Apostle,countitem(Token_Of_Apostle);
 	mes "This gravestone has a carving of a wicked devil with large horns. It arouses an ominous feeling.";
 	next;
-	if(select("Touch the stone.:Step back.") == 2)
+	if(select("Touch the stone.", "Step back.") == 2)
 		close;
 
 	// 12 hour cooldown
@@ -317,7 +317,7 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 		}
 	}
 	else if (!.@new_maje && countitem(Bapho_Doll) > 0) {
-		switch(select("About the Cursed Baphomet Doll:Stop talking.")) {
+		switch(select("About the Cursed Baphomet Doll", "Stop talking.")) {
 		case 1:
 			mes "[Rust Blackhand]";
 			mes "What?... Hmmm... Did you get the doll? You're pretty good, unlike your appearance...";
@@ -337,7 +337,7 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 			mes "[Rust Blackhand]";
 			mes "The Cursed Baphomet Doll is the most important ingredient... I'll make you if you want. What would you like to do?";
 			next;
-			switch(select("I want to make one!:I don't need one.")) {
+			switch(select("I want to make one!", "I don't need one.")) {
 			case 1:
 				mes "[Rust Blackhand]";
 				mes "kkk... Yes, wise men take their chances when the opportunity comes. I'll tell you the ingredients. Don't forget, and bring them all.";
@@ -377,7 +377,7 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 		close;
 	}
 	else if (.@new_maje == 2 && countitem(Bapho_Doll)) {
-		switch(select("About the Cursed Baphomet Doll:Stop talking.")) {
+		switch(select("About the Cursed Baphomet Doll", "Stop talking.")) {
 		case 1:
 			mes "[Rust Blackhand]";
 			mes "What?... You again? What do you want this time?";
@@ -394,7 +394,7 @@ prt_monk,261,91,3	script	Rust Blackhand#edq	4_M_DWARF,{
 			mes "[Rust Blackhand]";
 			mes "I'll tell you the ingredients again. So, do you want to make?";
 			next;
-			switch(select("I want.:No, I don't want.")) {
+			switch(select("I want.", "No, I don't want.")) {
 			case 1:
 				mes "[Rust Blackhand]";
 				mes "kkk... Yes, wise men take their chances when the opportunity comes. I'll tell you the ingredients. Don't forget, and bring them all.";
@@ -502,7 +502,7 @@ OnMyMobDead:
 		mes "I have waited and waited for a brave adventurer like you who will come back here again...";
 		next;
 		while(1) {
-			switch(select("Who are you?:Waited for me?:Cancel.")) {
+			switch(select("Who are you?", "Waited for me?", "Cancel.")) {
 			case 1:
 				mes "[Voice of the Gravestone]";
 				mes "I was one of the warriors to stop Baphomet like you. Now, I'm dead and only my soul remains...";
@@ -615,7 +615,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 		next;
 		while(1) {
 			cutin "ins_cata_champ_n",2;
-			switch(select("What is Essence of Fire?:What is a Token of Apostle?:What should I do?:I am ready.")) {
+			switch(select("What is Essence of Fire?", "What is a Token of Apostle?", "What should I do?", "I am ready.")) {
 			case 1:
 				++.@ins_baphomet_1f_1;
 				mes "[Ancient Hero's Soul]";
@@ -1163,7 +1163,7 @@ OnInstanceInit:
 	mes "[Ancient Hero's Soul]";
 	mes "The struggle for peace on this world will never end. But... my role here is finally over because there are brave heroes like you.";
 	next;
-	switch(select("Let me leave the shrine.:Stop talking.")) {
+	switch(select("Let me leave the shrine.", "Stop talking.")) {
 	case 1:
 		mes "[Ancient Hero's Soul]";
 		mes "Okay. I'll let you and your group leave here safely.";
