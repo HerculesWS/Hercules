@@ -159,10 +159,8 @@ const char* script_op2name(int op) {
 	RETURN_OP_NAME(C_SUB_POST);
 	RETURN_OP_NAME(C_ADD_PRE);
 	RETURN_OP_NAME(C_SUB_PRE);
-#ifdef PCRE_SUPPORT
 	RETURN_OP_NAME(C_RE_EQ);
 	RETURN_OP_NAME(C_RE_NE);
-#endif // PCRE_SUPPORT
 
 	default:
 		ShowDebug("script_op2name: unexpected op=%d\n", op);
@@ -1446,10 +1444,8 @@ const char* script_parse_subexpr(const char* p,int limit)
 	|| (op=C_XOR,    opl=4, len=1,*p=='^')              // ^
 	|| (op=C_EQ,     opl=6, len=2,*p=='=' && p[1]=='=') // ==
 	|| (op=C_NE,     opl=6, len=2,*p=='!' && p[1]=='=') // !=
-#ifdef PCRE_SUPPORT
 	|| (op=C_RE_EQ,  opl=6, len=2,*p=='~' && p[1]=='=') // ~=
 	|| (op=C_RE_NE,  opl=6, len=2,*p=='~' && p[1]=='!') // ~!
-#endif // PCRE_SUPPORT
 	|| (op=C_R_SHIFT,opl=8, len=2,*p=='>' && p[1]=='>') // >>
 	|| (op=C_GE,     opl=7, len=2,*p=='>' && p[1]=='=') // >=
 	|| (op=C_GT,     opl=7, len=1,*p=='>')              // >
@@ -3739,7 +3735,6 @@ void op_2str(struct script_state* st, int op, const char* s1, const char* s2)
 	case C_GE: a = (strcmp(s1,s2) >= 0); break;
 	case C_LT: a = (strcmp(s1,s2) <  0); break;
 	case C_LE: a = (strcmp(s1,s2) <= 0); break;
-#ifdef PCRE_SUPPORT
 	case C_RE_EQ:
 	case C_RE_NE:
 		{
@@ -3804,7 +3799,6 @@ void op_2str(struct script_state* st, int op, const char* s1, const char* s2)
 				libpcre->free(extra_regex);
 		}
 		break;
-#endif // PCRE_SUPPORT
 	case C_ADD:
 		{
 			char* buf = (char *)aMalloc((strlen(s1)+strlen(s2)+1)*sizeof(char));
@@ -4401,10 +4395,8 @@ void run_script_main(struct script_state *st) {
 			case C_LOR:
 			case C_R_SHIFT:
 			case C_L_SHIFT:
-#ifdef PCRE_SUPPORT
 			case C_RE_EQ:
 			case C_RE_NE:
-#endif // PCRE_SUPPORT
 				script->op_2(st, c);
 				break;
 
@@ -20107,7 +20099,6 @@ BUILDIN(_) {
 }
 
 // declarations that were supposed to be exported from npc_chat.c
-#ifdef PCRE_SUPPORT
 BUILDIN(defpattern);
 BUILDIN(activatepset);
 BUILDIN(deactivatepset);
@@ -20120,7 +20111,6 @@ BUILDIN(pcre_match) {
 	script->op_2str(st, C_RE_EQ, input, regex);
 	return true;
 }
-#endif
 
 /**
  * Adds a built-in script function.
@@ -20537,13 +20527,11 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getrefine,""), // returns the refined number of the current item, or an item with index specified [celest]
 		BUILDIN_DEF(night,""), // sets the server to night time
 		BUILDIN_DEF(day,""), // sets the server to day time
-#ifdef PCRE_SUPPORT
 		BUILDIN_DEF(defpattern,"iss"), // Define pattern to listen for [MouseJstr]
 		BUILDIN_DEF(activatepset,"i"), // Activate a pattern set [MouseJstr]
 		BUILDIN_DEF(deactivatepset,"i"), // Deactive a pattern set [MouseJstr]
 		BUILDIN_DEF(deletepset,"i"), // Delete a pattern set [MouseJstr]
 		BUILDIN_DEF(pcre_match,"ss"),
-#endif
 		BUILDIN_DEF(dispbottom,"s?"), //added from jA [Lupus]
 		BUILDIN_DEF(getusersname,""),
 		BUILDIN_DEF(recovery,""),

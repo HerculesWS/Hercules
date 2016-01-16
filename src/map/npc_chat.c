@@ -20,8 +20,6 @@
  */
 #define HERCULES_CORE
 
-#ifdef PCRE_SUPPORT
-
 #include "npc.h" // struct npc_data
 
 #include "map/mob.h" // struct mob_data
@@ -470,5 +468,3 @@ void npc_chat_defaults(void) {
 	libpcre->copy_named_substring = pcre_copy_named_substring;
 	libpcre->get_substring = pcre_get_substring;
 }
-
-#endif //PCRE_SUPPORT
