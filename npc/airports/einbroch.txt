@@ -37,7 +37,7 @@ airport,143,43,5	script	Airport Staff#airport1a::airport1	4_F_01,{
 	mes "flights to the cities of";
 	mes "Juno, Lighthalzen and Hugel.";
 	next;
-	if (select("Board the Airship:Cancel") == 1) {
+	if (select("Board the Airship", "Cancel") == 1) {
 		mes "[Airport Staff]";
 		mes "The Airship boarding fee";
 		mes "is 1,200 zeny, but if you've";
@@ -45,7 +45,7 @@ airport,143,43,5	script	Airport Staff#airport1a::airport1	4_F_01,{
 		mes "the fee will be waived. Will";
 		mes "you board the Airship?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			if (countitem(Free_Flying_Ship_Ticket) > 0) {
 				delitem Free_Flying_Ship_Ticket,1;
 				warp "airport",148,51;
@@ -83,7 +83,7 @@ airport,143,49,3	script	Arrival Staff#airport2a::airport2	4_F_01,{
 	mes "main terminal. Otherwise, please board the Airship to depart to";
 	mes "Juno, Lighthalzen and Hugel.";
 	next;
-	if (select("Exit to main terminal.:Cancel.") == 1) {
+	if (select("Exit to main terminal.", "Cancel.") == 1) {
 		mes "[Arrival Staff]";
 		mes "Once you're in the main terminal, you will need to pay the fee again";
 		mes "to board an Airship. You should";
@@ -91,7 +91,7 @@ airport,143,49,3	script	Arrival Staff#airport2a::airport2	4_F_01,{
 		mes "is your intended destination.";
 		mes "Proceed to the main terminal?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			warp "airport",142,40;
 			end;
 		}
