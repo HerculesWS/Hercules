@@ -754,7 +754,7 @@ bat_b01,1,10,3	script	Release all#b01	4_DOG01,{
 	} else {
 		mes "May I help you?";
 		next;
-		switch(select("Release all.:Cancel.")) {
+		switch(select("Release all.", "Cancel.")) {
 		case 1:
 			mes "Bye.";
 			close2;
