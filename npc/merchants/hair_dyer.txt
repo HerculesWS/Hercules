@@ -53,7 +53,7 @@ prt_in,243,168,4	script	Jovovich	4_F_02,{
 	}
 	next;
 	while(1) {
-		switch(select("Dye Hair:Tips and Information:Cancel")) {
+		switch(select("Dye Hair", "Tips and Information", "Cancel")) {
 		case 1:
 			mes "[Hairdresser Jovovich]";
 			mes "Yes yes, good choice~";
@@ -64,7 +64,7 @@ prt_in,243,168,4	script	Jovovich	4_F_02,{
 					mes "[Hairdresser Jovovich]";
 					mes "What do you think? Did you want a different color?";
 					next;
-					if (select("Yes:No") == 1) {
+					if (select("Yes", "No") == 1) {
 						mes "[Hairdresser Jovovich]";
 						mes "Okay! Choose the color that you would like.";
 						next;
@@ -77,7 +77,7 @@ prt_in,243,168,4	script	Jovovich	4_F_02,{
 				}
 
 				while(1) {
-					switch(select("Red, please.:Yellow, please.:Violet, please.:Orange, please.:Green, please.:Blue, please.:White, please.:Black, please.:Actually, I like my hair as it is.")) {
+					switch(select("Red, please.", "Yellow, please.", "Violet, please.", "Orange, please.", "Green, please.", "Blue, please.", "White, please.", "Black, please.", "Actually, I like my hair as it is.")) {
 					case 1: .@headpalette = 8; break;
 					case 2: .@headpalette = 1; break;
 					case 3: .@headpalette = 2; break;
@@ -194,7 +194,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 	}
 	while (.@choose_success != 2) {
 		next;
-		switch(select("Dye Hair:Coloring Information:Cancel")) {
+		switch(select("Dye Hair", "Coloring Information", "Cancel")) {
 		case 1:
 			mes "[Rossa]";
 			mes "Ho ho ho ho~";
@@ -209,7 +209,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 					mes "But would you like to";
 					mes "try a different one?";
 					next;
-					switch(select("Yes:No")) {
+					switch(select("Yes", "No")) {
 					case 1:
 						mes "[Rossa]";
 						mes "Please select";
@@ -228,7 +228,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 					}
 				}
 				while (.@choose_success != 2) {
-					switch(select("Red, please.:Yellow, please.:Purple, please.:Orange, please.:Green, please.:Blue, please.:White, please.:Dark Brown, please.:I like my hair color.")) {
+					switch(select("Red, please.", "Yellow, please.", "Purple, please.", "Orange, please.", "Green, please.", "Blue, please.", "White, please.", "Dark Brown, please.", "I like my hair color.")) {
 					case 1:
 						.@headpalette = 8;
 						break;

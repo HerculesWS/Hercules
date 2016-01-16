@@ -52,13 +52,13 @@
 			setarray .@items[2],12342,12343,12348;
 			.@Book = 11019; //Manuk_Selling_Item
 			.@coin = 6080; //Manuk_Coin
-			.@i = select("View item description:Manuk's Opportunity:Manuk's Courage:Manuk's Faith:Cancel");
+			.@i = select("View item description", "Manuk's Opportunity", "Manuk's Courage", "Manuk's Faith", "Cancel");
 		}
 		else {
 			setarray .@items[2],12344,12345,12349;
 			.@Book = 11018; //Splendide_Selling_Item
 			.@coin = 6081; //Splendide_Coin
-			.@i = select("View item description:Buy Pinguicula's Fruit Jam:Buy Luciola's Honey Jam:Buy Cornus' Tears:Do nothing");
+			.@i = select("View item description", "Buy Pinguicula's Fruit Jam", "Buy Luciola's Honey Jam", "Buy Cornus' Tears", "Do nothing");
 		}
 		mes .@n$;
 		if (.@i == 1) {
@@ -70,7 +70,7 @@
 		else if (.@i < 5) {
 			mes "I can sell you 3 "+getitemname(.@items[.@i])+" for ^3131FF1 coin^000000.";
 			next;
-			switch(select("Purchase:Do not purchase")) {
+			switch(select("Purchase", "Do not purchase")) {
 			case 1:
 				if (countitem(.@coin)) {
 					mes .@n$;

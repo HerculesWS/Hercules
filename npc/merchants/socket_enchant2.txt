@@ -83,7 +83,7 @@
 	mes "and the success chance all depend on";
 	mes "the specific item I'm working on.";
 	next;
-	switch(select("Weapon:Armor:About that thing you skipped:More information:Quit"))
+	switch(select("Weapon", "Armor", "About that thing you skipped", "More information", "Quit"))
 	{
 		case 1:
 			mes "[Leablem]";
@@ -93,14 +93,14 @@
 			mes "C class is the easiest one, and S class is the hardest one.";
 			mes "Which class would you like to try?";
 			next;
-			switch(select("C:B:A:S"))
+			switch(select("C", "B", "A", "S"))
 			{
 				case 1:
 					mes "[Leablem]";
 					mes "C class, I see.";
 					mes "So, what kind of weapon do you have?";
 					next;
-					switch(select("Book of Mother Earth:Book of Billows:Book of Gust of Wind:Book of the Blazing Sun"))
+					switch(select("Book of Mother Earth", "Book of Billows", "Book of Gust of Wind", "Book of the Blazing Sun"))
 					{
 						case 1: callfunc "Func_Socket2",1554,1569,40,66,200,1010,10;
 						case 2: callfunc "Func_Socket2",1553,1568,40,66,200,1010,10;
@@ -112,7 +112,7 @@
 					mes "You have chosen average B class.";
 					mes "So, what kind of weapon do you have?";
 					next;
-					switch(select("Orcish Axe:Scimiter:Spike"))
+					switch(select("Orcish Axe", "Scimiter", "Spike"))
 					{
 						case 1: callfunc "Func_Socket2",1304,1309,40,66,200,984,1;
 						case 2: callfunc "Func_Socket2",1113,1114,40,66,200,984,1;
@@ -123,7 +123,7 @@
 					mes "A class? You seem to want little too much. But, no problem.";
 					mes "So, what kind of weapon do you have?";
 					next;
-					switch(select("Dragon Killer:Katar of Quaking:Katar of Raging Blaze:Katar of Frozen Icicle:Katar of Piercing Wind:Golden Mace:Oriental Lute:Queen's Whip:Spectral Spear:Gae Bolg:Schweizersabel"))
+					switch(select("Dragon Killer", "Katar of Quaking", "Katar of Raging Blaze", "Katar of Frozen Icicle", "Katar of Piercing Wind", "Golden Mace", "Oriental Lute", "Queen's Whip", "Spectral Spear", "Gae Bolg", "Schweizersabel"))
 					{
 						case 1:  callfunc "Func_Socket2",13001,13030,40,61,500,984,2;
 						case 2:  callfunc "Func_Socket2", 1257, 1276,40,66,500,984,2;
@@ -142,7 +142,7 @@
 					mes "Huh, S Class?! Oh my god, are you serious?*Tremble*";
 					mes "So...which S class weapon would you like to make a slot?!";
 					next;
-					switch(select("Zephyrus:Mailbreaker:Dragon Slayer:Swordbreaker:Assasin Dagger:Grand Cross:Executioner"))
+					switch(select("Zephyrus", "Mailbreaker", "Dragon Slayer", "Swordbreaker", "Assasin Dagger", "Grand Cross", "Executioner"))
 					{
 						case 1: callfunc "Func_Socket2",1468, 1481,40,51,1000,984,5,999,10;
 						case 2: callfunc "Func_Socket2",1225,13032,40,51,1000,984,5,999,10;
@@ -161,14 +161,14 @@
 			mes "C class is the easiest one, and S class is the hardest one.";
 			mes "Which class would you like to try?";
 			next;
-			switch(select("C:B:A:S"))
+			switch(select("C", "B", "A", "S"))
 			{
 				case 1:
 					mes "[Leablem]";
 					mes "C class, I see.";
 					mes "So, what kind of armor do you have?";
 					next;
-					switch(select("Sunflower:Ph.D Hat:Big Ribbon:Boys Cap"))
+					switch(select("Sunflower", "Ph.D Hat", "Big Ribbon", "Boys Cap"))
 					{
 						case 1: callfunc "Func_Socket2",2253,5351,40,66,100,999,3;
 						case 2: callfunc "Func_Socket2",5012,5347,40,66,100,999,3;
@@ -180,7 +180,7 @@
 					mes "You have chosen average B class.";
 					mes "So, what kind of armor do you have?";
 					next;
-					switch(select("Skull Ring:High Heels"))
+					switch(select("Skull Ring", "High Heels"))
 					{
 						case 1: callfunc "Func_Socket2",2609,2715,40,61,300,999,5;
 						case 2: callfunc "Func_Socket2",2409,2432,40,61,300,999,5;
@@ -190,7 +190,7 @@
 					mes "A class? You seem to want little too much. But, no problem.";
 					mes "So, what kind of armor do you have?";
 					next;
-					switch (select("Pirate Bandana:Black Leather Boots"+(RENEWAL?":Special Ninja Suit":""))) {
+					switch (select("Pirate Bandana", "Black Leather Boots", (RENEWAL?"Special Ninja Suit": ""))) {
 						case 1: callfunc "Func_Socket2",2287,5350,50,61,500,985,1; // 50,61 - it's not a typo
 						case 2: callfunc "Func_Socket2",2425,2434,40,51,500,985,1;
 						case 3: callfunc "Func_Socket2",15053,15056,50,61,500,985,1;
@@ -200,7 +200,7 @@
 					mes "Huh, S Class?! Oh my god, are you serious?*Tremble*";
 					mes "So...which S class armor would you like to make a slot?!";
 					next;
-					switch(select("Mage Coat:Holy Robe:Sacred Mission:Undershirt:Pantie"))
+					switch(select("Mage Coat", "Holy Robe", "Sacred Mission", "Undershirt", "Pantie"))
 					{
 						case 1: callfunc "Func_Socket2",2334,2372,40,51,1000,985,1; // Mage Coat has 10% success chance
 						case 2: callfunc "Func_Socket2",2327,2373,45,51,1000,985,1; // the rest has 5%
@@ -429,7 +429,7 @@ function	script	Func_Socket2	{
 	mes "Also remember, if the " + (getiteminfo(getarg(0),5)&2 ? "weapon" : "armor") + " has been upgraded, and has been inserted with a card,";
 	mes "you will lose them even if you succeed in creating a slot.";
 	next;
-	switch(select("Ask for slot creation.:Try next time."))
+	switch(select("Ask for slot creation.", "Try next time."))
 	{
 		case 1:
 			if ((Zeny >= getarg(4)*1000) && (countitem(getarg(5)) >= getarg(6)) && (countitem(getarg(7,512)) >= getarg(8,0)) && (countitem(getarg(0)) > 0)) // if there's no getarg(7) and getarg(8) provided, check itemcount against 0 (we still need a valid item ID though)
