@@ -126,7 +126,7 @@ OnBuyItem:
 		set .@preview,1;
 	addtimer 1000, strnpcinfo(0)+"::OnEnd";
 	while(1) {
-		switch(select(" ~ Purchase ^0055FF"+getitemname(.@q[0])+"^000000:"+((.@preview && !@qe[7])?" ~ Preview...":"")+": ~ ^777777Cancel^000000")) {
+		switch(select(" ~ Purchase ^0055FF"+ getitemname(.@q[0]) +"^000000", ((.@preview && !@qe[7])?" ~ Preview...": ""), " ~ ^777777Cancel^000000")) {
 		case 1:
 			if (@qe[0]) {
 				mes "[Quest Shop]";

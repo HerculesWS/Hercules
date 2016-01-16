@@ -30,7 +30,7 @@ prontera,129,215,5	script	Questboard	4_BOARD3,{
 		mes "Base EXP: ^0000FF"+getd("." +currentquest$+"_collectionexp["+0+"]")+"^000000";
 		mes "Job EXP: ^0000FF"+getd("." +currentquest$+"_collectionexp["+1+"]")+"^000000";
 		next;
-		if(select("Finish:Abort") == 2){
+		if(select("Finish", "Abort") == 2){
 			mes "[^FF7700Questboard^000000]";
 			mes "Quest aborted.";
 			set currentquest$, "";
@@ -55,7 +55,7 @@ prontera,129,215,5	script	Questboard	4_BOARD3,{
 		mes "Base EXP: ^0000FF"+getd("." +currentquest$+"_huntingexp["+0+"]")+"^000000";
 		mes "Job EXP: ^0000FF"+getd("." +currentquest$+"_huntingexp["+1+"]")+"^000000";
 		next;
-		if(select("Finish:Abort") == 2){
+		if(select("Finish", "Abort") == 2){
 			mes "[^FF7700Questboard^000000]";
 			mes "Quest aborted.";
 			for(set .@x, 1; .@x < getarraysize(getd("."+currentquest$+"_huntingmob")); set .@x,.@x+2){
@@ -105,7 +105,7 @@ L_questmenu:
 		mes "Base EXP: ^0000FF"+getd("." +.@selection+"_collectionexp["+0+"]")+"^000000";
 		mes "Job EXP: ^0000FF"+getd("." +.@selection+"_collectionexp["+1+"]")+"^000000";
 		next;
-		if(select("Accept:Decline") == 2){
+		if(select("Accept", "Decline") == 2){
 			close;
 		}
 		if(BaseLevel >= getd("." +.@selection+"_collectionmin") && BaseLevel <= getd("." +.@selection+"_collectionmax"))
@@ -152,7 +152,7 @@ L_questmenu:
 		mes "Base EXP: ^0000FF"+getd("." +.@selection+"_huntingexp["+0+"]")+"^000000";
 		mes "Job EXP: ^0000FF"+getd("." +.@selection+"_huntingexp["+1+"]")+"^000000";
 		next;
-		if(select("Accept:Decline") == 2){
+		if(select("Accept", "Decline") == 2){
 			close;
 		}
 		if(BaseLevel >= getd("." +.@selection+"_huntingmin") && BaseLevel <= getd("." +.@selection+"_huntingmax"))
