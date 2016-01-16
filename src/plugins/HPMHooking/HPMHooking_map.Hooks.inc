@@ -24067,6 +24067,32 @@ void HP_clif_dressroom_open(struct map_session_data *sd, int view) {
 	}
 	return;
 }
+void HP_clif_pOneClick_ItemIdentify(int fd, struct map_session_data *sd) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_pOneClick_ItemIdentify_pre ) {
+		void (*preHookFunc) (int *fd, struct map_session_data *sd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pOneClick_ItemIdentify_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_pOneClick_ItemIdentify_pre[hIndex].func;
+			preHookFunc(&fd, sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.pOneClick_ItemIdentify(fd, sd);
+	}
+	if( HPMHooks.count.HP_clif_pOneClick_ItemIdentify_post ) {
+		void (*postHookFunc) (int *fd, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_pOneClick_ItemIdentify_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_pOneClick_ItemIdentify_post[hIndex].func;
+			postHookFunc(&fd, sd);
+		}
+	}
+	return;
+}
 void HP_clif_selectcart(struct map_session_data *sd) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_selectcart_pre ) {
@@ -57622,6 +57648,33 @@ void HP_pc_update_idle_time(struct map_session_data *sd, enum e_battle_config_id
 		}
 	}
 	return;
+}
+int HP_pc_have_magnifier(struct map_session_data *sd) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_pc_have_magnifier_pre ) {
+		int (*preHookFunc) (struct map_session_data *sd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_have_magnifier_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_have_magnifier_pre[hIndex].func;
+			retVal___ = preHookFunc(sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.have_magnifier(sd);
+	}
+	if( HPMHooks.count.HP_pc_have_magnifier_post ) {
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_have_magnifier_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_have_magnifier_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd);
+		}
+	}
+	return retVal___;
 }
 /* libpcre */
 pcre* HP_libpcre_compile(const char *pattern, int options, const char **errptr, int *erroffset, const unsigned char *tableptr) {

@@ -944,6 +944,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->add_random_options, HP_clif_add_random_options) },
 	{ HP_POP(clif->pHotkeyRowShift, HP_clif_pHotkeyRowShift) },
 	{ HP_POP(clif->dressroom_open, HP_clif_dressroom_open) },
+	{ HP_POP(clif->pOneClick_ItemIdentify, HP_clif_pOneClick_ItemIdentify) },
 	{ HP_POP(clif->selectcart, HP_clif_selectcart) },
 	{ HP_POP(clif->pSelectCart, HP_clif_pSelectCart) },
 /* cmdline */
@@ -2211,6 +2212,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->autotrade_final, HP_pc_autotrade_final) },
 	{ HP_POP(pc->check_job_name, HP_pc_check_job_name) },
 	{ HP_POP(pc->update_idle_time, HP_pc_update_idle_time) },
+	{ HP_POP(pc->have_magnifier, HP_pc_have_magnifier) },
 /* libpcre */
 	{ HP_POP(libpcre->compile, HP_libpcre_compile) },
 	{ HP_POP(libpcre->study, HP_libpcre_study) },
