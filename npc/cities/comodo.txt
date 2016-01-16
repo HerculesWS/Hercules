@@ -317,7 +317,7 @@ cmd_fild07,192,58,4	script	Rahasu#cmd	4W_SAILOR,{
 	mes "Paros Lighthouse, I'll";
 	mes "be happy to tell you.";
 	next;
-	if (select("Paros Lighthouse?:Cancel") == 1) {
+	if (select("Paros Lighthouse?", "Cancel") == 1) {
 		mes "[Rahasu]";
 		mes "For many years, this";
 		mes "lighthouse guided many";
@@ -363,7 +363,7 @@ cmd_fild07,299,83,4	script	Zain#cmd	4W_SAILOR,{
 	mes "can travel on Reudelus";
 	mes "to Alberta or Izlude.";
 	next;
-	switch(select("Alberta - 600 Zeny:Izlude - 800 Zeny:Cancel")) {
+	switch(select("Alberta - 600 Zeny", "Izlude - 800 Zeny", "Cancel")) {
 	case 1:
 		if (Zeny < 600) break;
 		Zeny -= 600;
@@ -424,7 +424,7 @@ moc_fild12,35,303,4	script	Serutero#cmd	1_M_ORIENT01,{
 	mes "If you really want to go there,";
 	mes "I'll permit you to continue, but you must beware of its dangers...";
 	next;
-	switch(select("I'm going there!:Sandaruman Fortress?:Cancel")) {
+	switch(select("I'm going there!", "Sandaruman Fortress?", "Cancel")) {
 	case 1:
 		mes "[Serutero]";
 		mes "So you're really going";

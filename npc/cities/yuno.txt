@@ -86,7 +86,7 @@ yuno,337,227,4	script	Juno Granny#juno	8_F_GRANDMOTHER,{
 			mes "Here's ^3355FF1,000 zeny^000000.";
 			mes "Do you accept this?";
 			next;
-			if (select("Accept:Do not accept") == 1) {
+			if (select("Accept", "Do not accept") == 1) {
 				mes "[Granny]";
 				mes "*Giggle*";
 				mes "There you go~";
@@ -178,7 +178,7 @@ yuno,165,111,4	script	Juno Sage#juno	2_F_MAGICMASTER,,{
 			mes "[Le Morpheus]";
 			mes "Whichever one you choose, you must spend ^3355FF5,000 zeny^000000. Now, please select one.";
 			next;
-			if (select("Choose ^FF3355Red Herb^000000:Choose ^3355FFBlue Herb^000000.") == 1) {
+			if (select("Choose ^FF3355Red Herb^000000", "Choose ^3355FFBlue Herb^000000.") == 1) {
 				mes "[Le Morpheus]";
 				mes "As you have chosen, you will forget everything, and remain in this virtual reality.";
 				Zeny -= 5000;
@@ -217,7 +217,7 @@ yuno,157,205,4	script	Juno Artisan#juno	1_M_JOBGUIDER,{
 	mes "[Artisan]";
 	mes "Oh, hello there. Let me introduce myself. I am an artisan who tries to succeed the rights and duties of item makers in Juno.";
 	next;
-	switch(select("About Powerful Equipment:About Unique Items:About Authentic Food:End Conversation")) {
+	switch(select("About Powerful Equipment", "About Unique Items", "About Authentic Food", "End Conversation")) {
 	case 1:
 		mes "[Artisan]";
 		mes "Let me suggest the ^3355FFHoly Guard^000000 and ^3355FFHoly Avenger^000000 which are special items for Crusaders.";
@@ -379,7 +379,7 @@ yuno,142,183,5	script	Airship Representative	4W_SAILOR,{
 	mes "[Airship Representative]";
 	mes "The teleport fee is 1,800 zeny, regardless of where you want to go. Please let me know your desired destination.";
 	next;
-	switch(select("Prontera:Izlude:Geffen:Morroc:Payon:Alberta:Comodo:Cancel")) {
+	switch(select("Prontera", "Izlude", "Geffen", "Morroc", "Payon", "Alberta", "Comodo", "Cancel")) {
 		case 1: callsub S_Warp,"prontera",116,72;
 		case 2: if (RENEWAL) callsub S_Warp,"izlude",128,98; else callsub S_Warp,"izlude",94,103;
 		case 3: callsub S_Warp,"geffen",120,39;

@@ -49,7 +49,7 @@
 	mes "such distinguished quests from";
 	mes "the Rune-Midgard kingdom.";
 	next;
-	switch(select("About Kunlun:Visit Kunlun:Cancel")) {
+	switch(select("About Kunlun", "Visit Kunlun", "Cancel")) {
 	case 1:
 		mes "[Wa Bai Hu]";
 		mes "Kunlun is a beautiful place,";
@@ -120,7 +120,7 @@
 		mes "[Wa Bai Hu]";
 		mes "Would you like to board?";
 		next;
-		if (select("To Kunlun~!:No.") == 1) {
+		if (select("To Kunlun~!", "No.") == 1) {
 			if (Zeny > 9999) {
 				mes "[Wa Bai Hu]";
 				mes "Thank you, let me guide you there immediately.";
@@ -159,7 +159,7 @@ gon_fild01,255,79,7	script	Kunlun Envoy#gon2	4_M_TWMIDMAN,{
 	mes "I guess it's the time for you to";
 	mes "go home. The ship to Rune-Midgard is ready to depart at any time.";
 	next;
-	if (select("Go back to Alberta:Cancel") == 1) {
+	if (select("Go back to Alberta", "Cancel") == 1) {
 		mes "[Wa Bai Hu]";
 		mes "Please come again.";
 		mes "I hope you will let your friends";
@@ -195,7 +195,7 @@ gonryun,153,64,7	script	Kunlun Envoy#gon4	4_M_TWMIDMAN,{
 	mes "be more than happy to guide you";
 	mes "to the ship to Alberta.";
 	next;
-	if (select("Go back to the harbor:Cancel") == 1) {
+	if (select("Go back to the harbor", "Cancel") == 1) {
 		mes "[Zhang Quing Long]";
 		mes "I hope you enjoyed your trip.";
 		mes "Now, let me guide you back";

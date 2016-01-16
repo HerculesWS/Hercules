@@ -41,7 +41,7 @@
 	mes "Welcome to Moscovia";
 	mes "It's adventurous and mystic.";
 	next;
-	switch(select("About Moscovia...:Go to Moscovia.:Cancel")) {
+	switch(select("About Moscovia...", "Go to Moscovia.", "Cancel")) {
 		case 1:
 			mes "[Moscovia P.R. Officer]";
 			mes "Moscovia is a beautiful kingdom";
@@ -77,7 +77,7 @@
 			mes "[Moscovia P.R. Officer]";
 			mes "Can we leave now?";
 			next;
-			if (select("Let's go!:Cancel") == 2) {
+			if (select("Let's go!", "Cancel") == 2) {
 				mes "[Moscovia P.R. Officer]";
 				mes "If you're too busy now,";
 				mes "please tell me again whenever you want.";
@@ -116,7 +116,7 @@ moscovia,166,53,4	script	Moscovia P.R. Officer#2	4_F_RUSWOMAN2,{
 	mes "A ship is now leaving";
 	mes "for Rune Midgarts.";
 	next;
-	if (select("Return to Alberta:Cancel") == 2) {
+	if (select("Return to Alberta", "Cancel") == 2) {
 		mes "[Moscovia P.R. Officer]";
 		mes "If you want to see more";
 		mes "please take your time.";

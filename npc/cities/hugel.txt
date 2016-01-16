@@ -157,7 +157,7 @@ hu_in01,23,311,4	script	Party Supplies Shop	4_M_HUMAN_01,{
 	mes "We can provide you with 5 of them";
 	mes "at 500 zeny.";
 	next;
-	switch (select("Buy:Cancel")) {
+	switch (select("Buy", "Cancel")) {
 		case 1:
 			if (Zeny < 500) {
 				mes "[Shopkeeper]";
