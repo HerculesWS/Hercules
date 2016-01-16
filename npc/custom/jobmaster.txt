@@ -55,7 +55,7 @@ prontera,153,193,6	script	Job Master	2_F_MAGICMASTER,{
 		while (true) {
 			mes "Select an option.";
 			next;
-			.@choice = select(" ~ ^0055FFRebirth^000000:"+(.third_classes ? " ~ ^FF0000Third Class^000000" : "")+": ~ ^777777Cancel^000000");
+			.@choice = select(" ~ ^0055FFRebirth^000000", (.third_classes ? " ~ ^FF0000Third Class^000000":""), " ~ ^777777Cancel^000000");
 			if (.@choice == 3)
 				close;
 			mes "[Job Master]";
@@ -150,7 +150,7 @@ function Job_Menu {
 		} else {
 			.@newjob = getarg(0);
 		}
-		if (select(" ~ Change into ^0055FF"+jobname(.@newjob)+"^000000 class: ~ ^777777"+(getargcount() > 1 ? "Go back" : "Cancel")+"^000000") == 1) {
+		if (select(" ~ Change into ^0055FF"+ jobname(.@newjob) +"^000000 class", " ~ ^777777"+(getargcount() > 1 ? "Go back": "Cancel")+"^000000") == 1) {
 			mes "[Job Master]";
 			mes "You are now "+A_An(jobname(.@newjob))+"!";
 			if (.@newjob == Job_Novice_High && .linear_jobchange)

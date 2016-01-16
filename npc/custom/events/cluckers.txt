@@ -57,7 +57,7 @@ prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 		mes "Cluck cluck! Cluuuuuck? ^FF0000~Hi GM " + strcharinfo(0) + ", Wanna play today?~^000000";
 		mes "Cluck cluck... CLUCK! ^FF0000~Just tell me what to do!~^000000";
 		next;
-		while(1) switch(select("Start Event:Check Prize:Set Prize:Not today Cluckers")) {
+		while(1) switch(select("Start Event", "Check Prize", "Set Prize", "Not today Cluckers")) {
 			case 1:
 				mes "[Cluckers]";
 				mes "CLUCK! ^FF0000~Sure thing!~^000000";

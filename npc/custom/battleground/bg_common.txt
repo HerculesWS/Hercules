@@ -13,7 +13,7 @@
 	mes "[Maroll Battle Recruiter]";
 	mes "The two princes of the kingdom are now battling for the throne of Maroll, and are in need of experienced soldiers like you. How would you like to lend your power to one of the princes in the Maroll Kingdom?";
 	next;
-	if( select("Join:Don't Join") == 2 )
+	if( select("Join", "Don't Join") == 2 )
 	{
 		mes "[Maroll Battle Recruiter]";
 		mes "I'll always be stationed here for more soldiers. Feel free to come back whenever you're interested.";
@@ -40,7 +40,7 @@ bat_room,148,150,4	script	Teleporter#bat	4_F_TELEPORTER,{
 	mes "[Teleporter]";
 	mes "Do you wish to leave the battlefield? Use my service to return to town.";
 	next;
-	if( select("Leave:Don't Leave") == 2 )
+	if( select("Leave", "Don't Leave") == 2 )
 	{
 		mes "[Teleporter]";
 		mes "I'll be here whenever you're in need of my service.";
@@ -82,7 +82,7 @@ bat_room,160,159,3	script	General Guillaume	4_M_KY_KIYOM,{
 	mes "[General Guillaume]";
 	mes "This is however, not just a battle between us. This battle will determine the future of this country. I pledge on my honor to prove that I'm the one who can protect this Maroll from outside threats.";
 	next;
-	if( select("Yes, I want to join you.:End Conversation") == 2 )
+	if( select("Yes, I want to join you.", "End Conversation") == 2 )
 	{
 		mes "[General Guillaume]";
 		mes "I'll be the one who will capture the flag!";
@@ -117,7 +117,7 @@ bat_room,160,140,3	script	Prince Croix	4_M_CRU_CRUA,{
 	mes "[Prince Croix]";
 	mes "General Guillaume may have an advantage in this battle as he is the great general of Maroll, but that doesn't automatically mean he'll win. I want to win this battle so that I can grant a better future for my people.";
 	next;
-	if( select("Yes, I want to join you!:End Conversation") == 2 )
+	if( select("Yes, I want to join you!", "End Conversation") == 2 )
 	{
 		mes "[Prince Croix]";
 		mes "For Maroll!";
@@ -206,7 +206,7 @@ bat_room,156,178,5	script	Tierra Valley Officer#1	4_M_KY_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Tierra Officer]";
@@ -276,7 +276,7 @@ bat_room,156,121,1	script	Tierra Valley Officer#2	4_M_CRU_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Tierra Officer]";
@@ -346,7 +346,7 @@ bat_room,164,178,5	script	Tierra Valley Officer#3	4_M_KY_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Tierra Officer]";
@@ -416,7 +416,7 @@ bat_room,164,121,1	script	Tierra Valley Officer#4	4_M_CRU_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Tierra Officer]";
@@ -487,7 +487,7 @@ bat_room,172,178,5	script	Flavius Officer#1	4_M_KY_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Flavius Officer]";
@@ -558,7 +558,7 @@ bat_room,172,121,1	script	Flavius Officer#2	4_M_CRU_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Flavius Officer]";
@@ -629,7 +629,7 @@ bat_room,148,178,5	script	Flavius Officer#3	4_M_KY_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Flavius Officer]";
@@ -700,7 +700,7 @@ bat_room,148,121,1	script	Flavius Officer#4	4_M_CRU_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[Flavius Officer]";
@@ -768,7 +768,7 @@ bat_room,140,178,5	script	KVM [80-99] Officer#1	4_M_KY_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[KVM Officer]";
@@ -836,7 +836,7 @@ bat_room,140,121,1	script	KVM [80-99] Officer#2	4_M_CRU_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[KVM Officer]";
@@ -904,7 +904,7 @@ bat_room,132,178,5	script	KVM [60-79] Officer#1	4_M_KY_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[KVM Officer]";
@@ -972,7 +972,7 @@ bat_room,132,121,1	script	KVM [60-79] Officer#2	4_M_CRU_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[KVM Officer]";
@@ -1040,7 +1040,7 @@ bat_room,124,178,5	script	KVM [1-59] Officer#1	4_M_KY_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[KVM Officer]";
@@ -1108,7 +1108,7 @@ bat_room,124,121,1	script	KVM [1-59] Officer#2	4_M_CRU_KNT,{
 
 	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	if( select("I want to join your army!:End Conversation") == 2 )
+	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
 
 	mes "[KVM Officer]";
@@ -1252,7 +1252,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			deletearray .@Item_DB[0],127;
 			set .@Badge, 7828;
 
-			switch( select("Weapons:Garment:Footgear:Armor:Accessory") )
+			switch( select("Weapons", "Garment", "Footgear", "Armor", "Accessory") )
 			{
 				case 1: setarray .@Item_DB[0],13036,13411,1425,1632,1634,1543,1924,1978,1574,1824,1183,1380,13305,1279,1739,13108,13172; set .@Value, 100; break;
 				case 2: setarray .@Item_DB[0],2538,2539,2540; set .@Value, 50; break;
@@ -1270,7 +1270,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			deletearray .@Item_DB[0],127;
 			set .@Badge, 7829;
 
-			switch( select("Weapons:Garment:Footgear:Armor:Accessory") )
+			switch( select("Weapons", "Garment", "Footgear", "Armor", "Accessory") )
 			{
 				case 1: setarray .@Item_DB[0],13037,13410,1633,1635,1542,1923,1977,1575,1823,1184,1482,1379,13306,1280,1738,13171,13173,13174; set .@Value, 100; break;
 				case 2: setarray .@Item_DB[0],2538,2539,2540; set .@Value, 50; break;
@@ -1306,7 +1306,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 	mes "Are you sure you want this item?";
 	next;
 
-	if( select("Yes:No") == 2 )
+	if( select("Yes", "No") == 2 )
 	{
 		mes "[Erundek]";
 		mes "Do you need more time to check the items?";

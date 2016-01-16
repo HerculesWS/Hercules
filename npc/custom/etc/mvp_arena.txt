@@ -72,7 +72,7 @@ quiz_00,62,31,4	script	Epsilon MVP	4_M_TWMIDMAN,{ callfunc "Keeper",5; }
 // Protectors
 function	script	Protector	{
   mes "[ ^0065DFMVP-Protector^000000 ]";
-	switch(select(""+((getarg(0)=="")?"":"Harder Monsters")+":Heal:Exit")) {
+	switch(select( ((getarg(0)=="")?"":"Harder Monsters"), "Heal", "Exit")) {
 	case 1:
 		warp getarg(0),102,102;
 		end;
