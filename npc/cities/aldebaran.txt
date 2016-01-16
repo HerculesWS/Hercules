@@ -45,7 +45,7 @@ aldebaran,113,70,4	script	Forger Munster#alde	1_M_02,{
 	mes "My family used to live in Geffen. So I guess it was natural that we studied forging and eventually became Blacksmiths. Then, we finally moved to this town,";
 	mes "Al De Baran.";
 	next;
-	if (select("About ^3355FFItem Upgrade^000000:Quit") == 1) {
+	if (select("About ^3355FFItem Upgrade^000000", "Quit") == 1) {
 		mes "[Munster]";
 		mes "My father was a famous blacksmith in Geffen, and he taught me a lot about forging equipment.";
 		next;
@@ -69,7 +69,7 @@ aldebaran,64,104,4	script	Smithing Guy#alde	1_M_JOBTESTER,{
 	mes "[Quatro]";
 	mes "Have you heard that a famous Blacksmith moved here from Geffen?";
 	next;
-	if (select("Famous Blacksmith?:End Conversation") == 1) {
+	if (select("Famous Blacksmith?", "End Conversation") == 1) {
 		mes "[Quatro]";
 		mes "From what I've heard, he's one of those Blacksmiths that can upgrade your weapons and armor. When you upgrade a weapon, its attack strength is increased.";
 		next;
@@ -103,7 +103,7 @@ aldebaran,81,61,4	script	Shell Gathering Lady#ald	4W_F_01,{
 	mes "[Joanne]";
 	mes "I enjoy gathering shells from the sea. It's really fun and relaxing~";
 	next;
-	if (select("Shell Gathering?:End Conversation") == 1) {
+	if (select("Shell Gathering?", "End Conversation") == 1) {
 		mes "[Joanne]";
 		mes "When you see bubbles popping up from the sand or muddy puddles, try digging into the ground a bit. You might find some shells underneath the ground!";
 		next;
@@ -133,7 +133,7 @@ aldebaran,46,129,4	script	Canal Guy#alde	4W_M_01,{
 	mes "[Panama]";
 	mes "Al De Baran is known world wide as the City of Canals. The waterways really add a sophisticated, romantic touch to our fair city.";
 	next;
-	switch(select("About the Canals:End Conversation")) {
+	switch(select("About the Canals", "End Conversation")) {
 	case 1:
 		mes "[Panama]";
 		mes "Well, a canal is an artificial waterway used for travel,";
@@ -157,7 +157,7 @@ aldebaran,67,154,4	script	Forest Guy#alde	4W_M_02,{
 	mes "Both of those places are tough";
 	mes "to travel through.";
 	next;
-	switch(select("Mt.Mjolnir?:Payon Forest...?:End Conversation")) {
+	switch(select("Mt.Mjolnir?", "Payon Forest...?", "End Conversation")) {
 	case 1:
 		mes "[Isenberg]";
 		mes "To arrive here from Prontera or Geffen, you've got to cross the Mjolnir Mountains.";
@@ -194,7 +194,7 @@ aldebaran,90,170,4	script	Slot Guy#alde	1_M_01,{
 	mes "[Epthiel]";
 	mes "Some weapons or armor have Slots where you can insert Cards obtained from monsters.";
 	next;
-	switch(select("About the number of Slots:Relation between Cards and Slots:End Conversation")) {
+	switch(select("About the number of Slots", "Relation between Cards and Slots", "End Conversation")) {
 	case 1:
 		mes "[Epthiel]";
 		mes "Items dropped by monsters possess more Slots than ordinary weapons or armor sold in NPC shops.";
@@ -226,7 +226,7 @@ aldebaran,117,181,4	script	Phracon Guy#alde	1_M_02,{
 	mes "[Joy]";
 	mes "Level 1 weapons, which are the lowest grade, need a metal named ^3355FFPhracon^000000 in order to be upgraded.";
 	next;
-	switch(select("About Phracon:Advice about Phracon:End Conversation")) {
+	switch(select("About Phracon", "Advice about Phracon", "End Conversation")) {
 	case 1:
 		mes "[Joy]";
 		mes "Phracon is a pretty common metal and can be found all over the Rune-Midgard continent.";
@@ -255,7 +255,7 @@ aldebaran,121,231,4	script	Alchemy Guy#alde	1_M_03,{
 	mes "[Chemirre]";
 	mes "Alchemists, one of the 2nd Jobs, are able to create items out of several materials using knowledge from the ancient age of Al De Baran.";
 	next;
-	switch(select("About Alchemy in Payon:Definition of Alchemy:. . . . .:End Conversation")) {
+	switch(select("About Alchemy in Payon", "Definition of Alchemy", ". . . . .", "End Conversation")) {
 	case 1:
 		mes "[Chemirre]";
 		mes "Most people don't know that there was an oriental form of Alchemy that developed in Payon.";
@@ -327,7 +327,7 @@ aldebaran,86,228,4	script	Little Kid#alde	1_M_SIZ,{
 	mes "A while ago I went out for a walk toward Mt. Mjolnir with my pet Savage Bebe. His name is NukNuk!";
 	mes "We got attacked, but luckily we weren't hurt.";
 	next;
-	switch(select("Attacked?:About Mt.Mjolnir:End Conversation")) {
+	switch(select("Attacked?", "About Mt.Mjolnir", "End Conversation")) {
 	case 1:
 		mes "[Bebe]";
 		mes "I was walking up a narrow path, and out of the blue, a giant and ugly plant started to attack me and NukNuk!";
@@ -360,7 +360,7 @@ aldebaran,159,242,4	script	Insect Guy#alde	2_M_SWORDMASTER,{
 	mes "[Stromme]";
 	mes "Even to a strong Swordman, the Insects or Mt. Mjolnir pose a considerable threat. You've got to know your enemy before engaging it in battle!";
 	next;
-	if (select("About Insects:End Conversation") == 1) {
+	if (select("About Insects", "End Conversation") == 1) {
 		mes "[Stromme]";
 		mes "Honey Bees, Butterflies and Moths seem like simple creatures, but that doesn't mean you should underestimate them.";
 		next;
@@ -395,7 +395,7 @@ aldebaran,60,70,4	script	Sylvia#alde	1_F_04,{
 	mes "[Sylvia]";
 	mes "If that wasn't bad enough, I left my Magnifiers back in Prontera, so now I have to find someone to help me with these weapons I've got to appraise!";
 	next;
-	if (select("Appraise?:That's very nice.") == 1) {
+	if (select("Appraise?", "That's very nice.") == 1) {
 		mes "[Sylvia]";
 		mes "Equipment that is dropped by monsters can't be equipped right away.";
 		next;
@@ -419,7 +419,7 @@ aldebaran,93,80,4	script	Issei#alde	1_M_02,{
 	mes "[Issei]";
 	mes "Al De Baran is such a wonderful place with its romantic canals and classic architecture. I love nothing more than to stroll through this city with my beautiful girlfriend.";
 	next;
-	if (select("You have a girlfriend?:End Conversation.") == 1) {
+	if (select("You have a girlfriend?", "End Conversation.") == 1) {
 		mes "[Issei]";
 		mes "Hey...";
 		mes "Is that so hard to believe?! Yeah, ask anyone! She really exists! Although, sometimes, just sometimes mind you, she gets too excited about weapons and armor.";
@@ -453,7 +453,7 @@ aldebaran,180,46,4	script	Joo Jahk#alde	4_M_ORIENT01,{
 	mes "[Joo Jahk]";
 	mes "Well, it's too late for me, since I already drank some. Still, I'm a little worried...";
 	next;
-	if (select("Continue.:End conversation.") == 1) {
+	if (select("Continue.", "End conversation.") == 1) {
 		mes "[Joo Jahk]";
 		mes "On one of my travels around Rune-Midgard, I've heard from a really high level Mage that physical attacks, or magic with Neutral Property, won't damage Spiritual Property monsters.";
 		next;
@@ -477,7 +477,7 @@ aldebaran,212,122,4	script	Citizen#alde	4W_M_01,{
 	mes "Well, that might be an exaggeration. After all, it's just me that's welcoming you.";
 	mes "Hey there!";
 	next;
-	if (select("Now, tell me about monsters.:End conversation.") == 1) {
+	if (select("Now, tell me about monsters.", "End conversation.") == 1) {
 		mes "[Gavin]";
 		mes "Monsters...?";
 		mes "Aren't we straying off topic a little bit? Ah, you must be one of those adventurers!";
@@ -505,7 +505,7 @@ aldebaran,146,124,4	script	Town Girl#alde	4W_F_01,{
 	mes "[Nastasia]";
 	mes "But isn't killing illegal? And do they even collect educational tutition?";
 	next;
-	if (select("Continue conversation.:End Conversation.") == 1) {
+	if (select("Continue conversation.", "End Conversation.") == 1) {
 		mes "[Nastasia]";
 		mes "Although Assassins benefit from being very quick and having lots of AGI, they should still have some DEX.";
 		next;
@@ -525,7 +525,7 @@ aldebaran,143,136,4	script	Bell Keeper#A	4_M_ORIENT02,{
 	mes "[Bell Keeper]";
 	mes "I have been charged by the Committee of 'Heaven on Earth' to guard this entrance of the Clock Tower.";
 	next;
-	if (select("About Clock Tower.:Quit.") == 1) {
+	if (select("About Clock Tower.", "Quit.") == 1) {
 		mes "[Bell Keeper]";
 		mes "Every floor of this tower is connected to each other by a certain device we like to call 'Warp Gear.'";
 		next;
@@ -554,7 +554,7 @@ aldeba_in,232,241,4	script	RS125#alde	1_M_02,{
 	mes "I may have a machine heart and I may disturb you with loud noises from the heart,";
 	mes "that will never stop me from running for future of Al De Baran.";
 	next;
-	if (select("Listen to his story.:End Conversation") == 1) {
+	if (select("Listen to his story.", "End Conversation") == 1) {
 		mes "[RS125]";
 		mes "It's been 3 years already.";
 		mes "My brother 996 used to be a short track athlete in the Al De Baran city field team.";
@@ -597,7 +597,7 @@ aldeba_in,223,121,4	script	Threatening-Looking Man	1_M_SMITH,{
 	mes "[Threatening-Looking Man]";
 	mes "Hahahaha...chill out, I was just joking.";
 	next;
-	if (select("Continue:Quit") == 1) {
+	if (select("Continue", "Quit") == 1) {
 		mes "[Threatening-Looking Man]";
 		mes "You may know this already, but";
 		mes "we have a system called, the mercenary system in this world.";
@@ -652,13 +652,13 @@ aldeba_in,152,47,4	script	Fussy Man#alde	4W_M_01,{
 	mes "My little chicken has left me!";
 	mes "Oh, my god! Oh, my god!";
 	next;
-	if (select("What do you call the chicken?:. . . . .") == 1) {
+	if (select("What do you call the chicken?", ". . . . .") == 1) {
 		mes "[Fussy Man]";
 		mes "I used to call it 'Amazing Picky'...";
 		mes "*Sob* What should I do! How could this happen!";
 		mes "Please, please help me to find my sweet little chicken!";
 		next;
-		if (select("What? That is such a boring name!:. . . . .") == 1) {
+		if (select("What? That is such a boring name!", ". . . . .") == 1) {
 			mes "[Fussy Man]";
 			mes "Don't be so ridiculous!";
 			mes "'Amazing Picky' is the most wonderful and the most unique name";
@@ -698,7 +698,7 @@ aldeba_in,156,179,4	script	Master#alde	1_M_PUBMASTER,{
 		mes "Oh, and don't worry. I know that girls have some kind of opinion about how pretty other girls are.";
 		next;
 	}
-	if (select("Awesome!:No way, I ain't a perv.") == 1) {
+	if (select("Awesome!", "No way, I ain't a perv.") == 1) {
 		mes "[Master]";
 		mes "Alright, here we go!";
 		mes "Choose your favorite Kafra Lady!";
@@ -722,7 +722,7 @@ aldeba_in,156,179,4	script	Master#alde	1_M_PUBMASTER,{
 		mes "Pretty, cute and fresh faced. Although She looks young and immature,She's the best staff!";
 		mes "Candidate Number (6) ^AAAA00Curly Sue^000000 !!";
 		next;
-		switch(select("(1) Pavianne:(2) Blossom:(3) Jasmine:(4) Roxie:(5) Leilah:(6) Curly Sue")) {
+		switch(select("(1) Pavianne", "(2) Blossom", "(3) Jasmine", "(4) Roxie", "(5) Leilah", "(6) Curly Sue")) {
 		case 1:
 			mes "[Master]";
 			mes "Oh~";
@@ -776,7 +776,7 @@ aldeba_in,84,166,4	script	Kafra Service#alde	4_F_KAFRA1,{
 	mes "[Kafra Pavianne]";
 	mes "Due to a change in customer support policy, we no longer accept Kafra Passes. However, we are offering refunds for our customers who still possess these passes.";
 	next;
-	if (select("Sell Kafra Pass:Alright, bye~") == 1) {
+	if (select("Sell Kafra Pass", "Alright, bye~") == 1) {
 		if (countitem(Kapra's_Pass) == 0) {
 			mes "[Kafra Pavianne]";
 			mes "I'm sorry,";
@@ -799,7 +799,7 @@ aldeba_in,84,166,4	script	Kafra Service#alde	4_F_KAFRA1,{
 				mes "If you want to sell them to us, you will receive "+ .@kafrapassmoney +" zeny. Would you like to sell these back to the Kafra Corporation?";
 			}
 			next;
-			if (select("Yes:No") == 1) {
+			if (select("Yes", "No") == 1) {
 				if (countitem(Kapra's_Pass) == 0) {
 					mes "[Kafra Pavianne]";
 					mes "I'm sorry, but you don't have any Kafra Passes.";
@@ -836,7 +836,7 @@ aldeba_in,83,245,4	script	Kafra Service#2alde	4_F_KAFRA2,{
 	mes "[Kafra Blossom]";
 	mes "We appreciate your continued use of the Kafra Service. Please feel free to ask me if you have any questions.";
 	next;
-	switch(select("How does Kafra Storage work?:How do you teleport people?")) {
+	switch(select("How does Kafra Storage work?", "How do you teleport people?")) {
 	case 1:
 		mes "[Kafra Blossom]";
 		mes "Well, adventurers like yourself can place items into Kafra Storage, so that you don't have to carry all of your stuff around.";
@@ -904,7 +904,7 @@ aldeba_in,24,245,4	script	Kafra Jasmine#alde	4_F_KAFRA3,{
 	mes "[Kafra Jasmine]";
 	mes "The Kafra Service is always behind our customers with a dependable reputation that has been established over five thousand, eight hundred years...";
 	next;
-	switch(select("What?! I can't believe that!:Ahh~ Shut Up!:Your service is great!")) {
+	switch(select("What?! I can't believe that!", "Ahh~ Shut Up!", "Your service is great!")) {
 	case 1:
 		mes "["+ strcharinfo(0) +"]";
 		mes "What?!";
@@ -967,12 +967,12 @@ aldeba_in,142,238,4	script	Kafra Service#3alde	4_F_KAFRA4,{
 	mes "[Kafra Roxie]";
 	mes "I'm here to answer any of your questions regarding Kafra Corporations policies, as well as take note of any of your feedback.";
 	next;
-	switch(select("Kafra Policies:I love Kafra!")) {
+	switch(select("Kafra Policies", "I love Kafra!")) {
 	case 1:
 		mes "[Kafra Roxie]";
 		mes "So, you'd like more details on our policies and eligibility for our services? What would you like me to explain?";
 		next;
-		switch(select("Kafra Storage:Cart Rental:Actually, never mind.")) {
+		switch(select("Kafra Storage", "Cart Rental", "Actually, never mind.")) {
 		case 1:
 			mes "[Kafra Roxie]";
 			mes "As you probably already know, our customers must have at least Basic Skill level 6 in order to use the Kafra Storage.";
@@ -1038,7 +1038,7 @@ aldeba_in,91,244,4	script	Kafra Service#4alde	4_F_KAFRA6,{
 	mes "[Kafra Curly Sue]";
 	mes "I may still need to learn more about serving our customers, but I'm always doing my best!";
 	next;
-	if (select("Where's your mommy, kid?:End conversation.") == 1) {
+	if (select("Where's your mommy, kid?", "End conversation.") == 1) {
 		mes "[Kafra Curly Sue]";
 		mes "Waaaaaaah~!";
 		mes "I'm not a kid!";
@@ -1299,7 +1299,7 @@ function	script	F_ClockTowerGate	{
 	mes "You can't go through from "+getarg(0)+" Floor,";
 	mes "Please go back.";
 	next;
-	switch(select("About Clock Tower:About the "+getarg(0)+" Floor:Move to the "+getarg(0)+" Floor:End Dialogue")) {
+	switch(select("About Clock Tower", "About the "+getarg(0)+" Floor", "Move to the "+getarg(0)+" Floor", "End Dialogue")) {
 	case 1:
 		mes "[Gatekeeper Boy]";
 		mes "Homeland of Alchemy,Aldebaran!";
