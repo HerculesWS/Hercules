@@ -2276,9 +2276,7 @@ int npc_unload(struct npc_data* nd, bool single)
 	if (nd->chat_id) // remove npc chatroom object and kick users
 		chat->delete_npc_chat(nd);
 
-#ifdef PCRE_SUPPORT
 	npc_chat->finalize(nd); // deallocate npc PCRE data structures
-#endif
 
 	if (single && nd->path != NULL) {
 		npc->releasepathreference(nd->path);
