@@ -11484,6 +11484,22 @@ void clif_parse_ItemIdentify(int fd,struct map_session_data *sd)
 	clif_menuskill_clear(sd);
 }
 
+///	Identifying item with right-click (CZ_REQ_ONECLICK_ITEMIDENTIFY).
+///	0A35 <index>.W
+void clif_parse_OneClick_ItemIdentify(int fd, struct map_session_data *sd)
+{
+	int cmd = RFIFOW(fd,0);
+	short idx = RFIFOW(fd, packet_db[cmd].pos[0]) - 2;
+	int n;
+	
+	if (idx < 0 || idx >= MAX_INVENTORY || sd->inventory_data[idx] == NULL || sd->status.inventory[idx].nameid <= 0)
+		return;
+	
+	if ((n = pc->have_magnifier(sd) ) != INDEX_NOT_FOUND &&
+		pc->delitem(sd, n, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER) == 0)
+		skill->identify(sd, idx);
+}
+
 void clif_parse_SelectArrow(int fd,struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Answer to arrow crafting item selection dialog (CZ_REQ_MAKINGARROW).
 /// 01ae <name id>.W
@@ -19707,4 +19723,5 @@ void clif_defaults(void) {
 	clif->add_random_options = clif_add_random_options;
 	clif->pHotkeyRowShift = clif_parse_HotkeyRowShift;
 	clif->dressroom_open = clif_dressroom_open;
+	clif->pOneClick_ItemIdentify = clif_parse_OneClick_ItemIdentify;
 }
