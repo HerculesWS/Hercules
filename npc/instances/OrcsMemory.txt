@@ -58,14 +58,14 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 	if (.@orctime == 1) {
 		mes "You can enter the Dungeon if it has been generated.";
 		next;
-		if(select("Enter the Dungeon "+.@md_name$+":Cancel") == 2)
+		if(select("Enter the Dungeon "+.@md_name$, "Cancel") == 2)
 			close;
 		// Fall through to access the dungeon
 	} else { // !.@orctime
 		if (getcharid(0) == getpartyleader(.@party_id,2)) {
 			mes "Party status confirmed. Would you like to book entrance to the "+.@md_name$+"?";
 			next;
-			switch(select("Reserve the "+.@md_name$+":Enter the Dungeon:Cancel")) {
+			switch(select("Reserve the "+.@md_name$, "Enter the Dungeon", "Cancel")) {
 			case 1:
 				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
@@ -92,7 +92,7 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 			case 3:
 				close;
 			}
-		} else if (select(.@md_name$ + " Enter the Memorial Dungeon:Cancel") == 2)
+		} else if (select(.@md_name$ + " Enter the Memorial Dungeon", "Cancel") == 2)
 			end;
 		// Else access the dungeon
 	}
@@ -124,7 +124,7 @@ gef_fild10,238,202,6	script	Mad Scientist#orc	4_LGTSCIENCE,{
 		mes "Haha, no Orcs are coming near me!";
 		mes "The power of the Dimensional Gorge is undefeatable!!";
 		next;
-		switch(select("Orcs don't attack you?:You wish!")) {
+		switch(select("Orcs don't attack you?", "You wish!")) {
 		case 1:
 			mes "[Mad Scientist]";
 			mes "Yeah, yeah.. I know it's hard to belive. I don't blame ya.";
@@ -152,7 +152,7 @@ gef_fild10,238,202,6	script	Mad Scientist#orc	4_LGTSCIENCE,{
 		mes "[Mad Scientist]";
 		mes "Chances are they'll just give you lots of instructions once they see you, so just wing it! They're always saying the same thing, to the point where I memorized them!";
 		next;
-		switch(select("Alright... What do I do?:Umm, maybe not.")) {
+		switch(select("Alright... What do I do?", "Umm, maybe not.")) {
 		case 1:
 			mes "[Mad Scientist]";
 			mes "Very good! Just sit in the hands of this statue! And try to act natural when you're in there!";
