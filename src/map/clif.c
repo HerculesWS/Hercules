@@ -1049,6 +1049,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 #endif
 #if PACKETVER >= 20150513
 	p.body = vd->body_style;
+	safestrncpy(p.name, clif->get_bl_name(bl), NAME_LENGTH);
 #endif
 
 	clif->send(&p,sizeof(p),tsd?&tsd->bl:bl,target);
@@ -1189,6 +1190,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 #endif
 #if PACKETVER >= 20150513
 	p.body = vd->body_style;
+	safestrncpy(p.name, clif->get_bl_name(bl), NAME_LENGTH);
 #endif
 	if( disguised(bl) ) {
 		nullpo_retv(sd);
@@ -1280,6 +1282,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 #endif
 #if PACKETVER >= 20150513
 	p.body = vd->body_style;
+	safestrncpy(p.name, clif->get_bl_name(bl), NAME_LENGTH);
 #endif
 
 	clif->send(&p,sizeof(p),tsd?&tsd->bl:bl,target);

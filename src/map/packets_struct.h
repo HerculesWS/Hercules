@@ -584,6 +584,7 @@ struct packet_spawn_unit {
 #endif
 #if PACKETVER >= 20150513
 	short body;
+	char name[NAME_LENGTH];
 #endif
 } __attribute__((packed));
 
@@ -651,6 +652,7 @@ struct packet_unit_walking {
 #endif
 #if PACKETVER >= 20150513
 	short body;
+	char name[NAME_LENGTH];
 #endif
 } __attribute__((packed));
 
@@ -716,6 +718,7 @@ struct packet_idle_unit {
 #endif
 #if PACKETVER >= 20150513
 	short body;
+	char name[NAME_LENGTH];
 #endif
 } __attribute__((packed));
 
