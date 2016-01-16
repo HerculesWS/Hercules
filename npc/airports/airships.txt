@@ -303,7 +303,7 @@ airplane,250,58,2	script	Airship Staff#airplane	1_F_02,{
 	mes "to the Airship.";
 	mes "How may I help you?";
 	next;
-	switch (select("Using the Airship:Captain's Cabin:Facilities:Cancel")) {
+	switch (select("Using the Airship", "Captain's Cabin", "Facilities", "Cancel")) {
 	case 1:
 		mes "[Airship Staff]";
 		mes "When you see a broadcast";
@@ -483,7 +483,7 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 	mes "purchase Apples or grind";
 	mes "them to make Apple Juice.";
 	next;
-	switch (select("Buy Apples.:Make Apple Juice.:Why are you here?:Cancel.")) {
+	switch (select("Buy Apples.", "Make Apple Juice.", "Why are you here?", "Cancel.")) {
 	case 1:
 		mes "[Fruitz]";
 		mes "Please enter the amount";
@@ -520,7 +520,7 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 				mes "will cost you ^FF0000" + .@pay + " Zeny^000000 zeny.";
 				mes "Would you like to continue?";
 				next;
-				if (select("Yes:No") == 2) {
+				if (select("Yes", "No") == 2) {
 					mes "[Fruitz]";
 					mes "Thanks for stopping";
 					mes "by my shop. Farewell!";
@@ -565,7 +565,7 @@ airplane,50,66,5	script	Apple Merchant#airplane	4_M_04,{
 		mes "to make 1 Apple Juice for you.";
 		mes "Would you like to proceed?";
 		next;
-		switch (select("Yes:No")) {
+		switch (select("Yes", "No")) {
 		case 1:
 			if (countitem(Apple) < 3 || countitem(Empty_Bottle) < 1) {
 				mes "[Fruitz]";
@@ -784,7 +784,7 @@ airplane_01,250,58,2	script	Airship Staff#airplane01	1_F_02,{
 	mes "to the Airship.";
 	mes "How may I help you?";
 	next;
-	switch (select("Using the Airship:Captain's Cabin:Facilities:Cancel")) {
+	switch (select("Using the Airship", "Captain's Cabin", "Facilities", "Cancel")) {
 	case 1:
 		mes "[Airship Staff]";
 		mes "When you see a broadcast";
@@ -844,7 +844,7 @@ airplane_01,50,66,5	script	Apple Merchant#air01	4_M_04,{
 	mes "purchase Apples or grind";
 	mes "them to make Apple Juice.";
 	next;
-	switch (select("Buy Apples.:Make Apple Juice.:Cancel.")) {
+	switch (select("Buy Apples.", "Make Apple Juice.", "Cancel.")) {
 	case 1:
 		mes "[Meltz]";
 		mes "Please enter the amount";
@@ -881,7 +881,7 @@ airplane_01,50,66,5	script	Apple Merchant#air01	4_M_04,{
 				mes "will cost you ^FF0000" + .@pay + "^000000 zeny.";
 				mes "Would you like to continue?";
 				next;
-				if (select("Yes:No") == 2) {
+				if (select("Yes", "No") == 2) {
 					mes "[Meltz]";
 					mes "Thanks for stopping";
 					mes "by my shop. Farewell!";
@@ -926,7 +926,7 @@ airplane_01,50,66,5	script	Apple Merchant#air01	4_M_04,{
 		mes "to make 1 Apple Juice for you.";
 		mes "Would you like to proceed?";
 		next;
-		switch (select("Yes:No")) {
+		switch (select("Yes", "No")) {
 		case 1:
 			if (countitem(Apple) < 3 || countitem(Empty_Bottle) < 1) {
 				mes "[Meltz]";
@@ -1078,7 +1078,7 @@ airplane_01,32,61,4	script	Nils#ein	1_M_03,1,1,{
 	mes "Would you like to play";
 	mes "a quick typing game?";
 	next;
-	switch (select("Play ^ff0000RO Typing Challenge^000000:Information:View Top Records:Cancel")) {
+	switch (select("Play ^ff0000RO Typing Challenge^000000", "Information", "View Top Records", "Cancel")) {
 	case 1:
 		mes "[Nils]";
 		mes "Okay, we have";
@@ -1257,7 +1257,7 @@ airplane_01,33,68,4	script	Clarice	1_F_MERCHANT_02,{
 
 function	script	applegamble	{
 
-	switch (select("Play Dice Game:Learn Dice Game Rules:Cancel")) {
+	switch (select("Play Dice Game", "Learn Dice Game Rules", "Cancel")) {
 	case 3:
 		mes "["+getarg(0)+"]";
 		mes "I'm up for a game of";
@@ -1348,7 +1348,7 @@ function	script	applegamble	{
 		mes "betting ^FF0000"+.@amount+"^000000 Apples.";
 		mes "Is that right?";
 		next;
-		if (select("Yes:No") == 2) {
+		if (select("Yes", "No") == 2) {
 			mes "["+getarg(0)+"]";
 			mes "Mm, made a mistake?";
 			mes "Alright, please enter the";
@@ -1409,7 +1409,7 @@ function	script	applegamble	{
 		mes "Currently my total is ^0000FF" + .@tablesub + "^000000 and ^FF0000" + strcharinfo(0) + "^000000, your total is ^FF0000" + .@playersub + "^000000. I am winning this game. Would you like to cast dice again?";
 	}
 	next;
-	switch (select("Cast dice.:Cancel.")) {
+	switch (select("Cast dice.", "Cancel.")) {
 	case 1:
 		mes "^3355FF*Rolling and rumbling*^000000";
 		.@player3 = rand(1,6);

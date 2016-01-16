@@ -37,14 +37,14 @@ y_airport,143,43,5	script	Airport Staff#y_air1a::y_airport1	4_F_01,{
 	mes "and international flights to Izlude and Rachel.";
 	mes "How may I be of service?";
 	next;
-	if (select("Board the Airship.:Cancel.") == 1) {
+	if (select("Board the Airship.", "Cancel.") == 1) {
 		mes "[Airport Staff]";
 		mes "The boarding fee for all";
 		mes "flights is 1,200 zeny. If you";
 		mes "use a Free Ticket for Airship,";
 		mes "the boarding fee will be waived.So would you like to depart?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			if (countitem(Free_Flying_Ship_Ticket) > 0) {
 				delitem Free_Flying_Ship_Ticket,1;
 				warp "y_airport",148,51;
@@ -77,14 +77,14 @@ y_airport,143,49,3	script	Arrival Staff#y_air2a::y_airport2	4_F_01,{
 	mes "flight, let me guide you to the main terminal. Otherwise, please";
 	mes "board the departing Airship to reach your intended destination.";
 	next;
-	if (select("Exit to main terminal:Cancel") == 1) {
+	if (select("Exit to main terminal", "Cancel") == 1) {
 		mes "[Airport Staff]";
 		mes "Once you're in the main terminal, you must pay the fee once again";
 		mes "to board a departing Airship. You should only exit if your intended";
 		mes "destination is Juno. Proceed to";
 		mes "exit to the main terminal?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			warp "y_airport",142,40;
 			end;
 		}
@@ -108,7 +108,7 @@ y_airport,145,63,5	script	Domestic Boarding	4_F_02,{
 	mes "please let me guide you to that";
 	mes "Airship's boarding area.";
 	next;
-	if (select("Yes:No") == 1) {
+	if (select("Yes", "No") == 1) {
 		warp "yuno",59,244;
 		end;
 	}
@@ -128,7 +128,7 @@ y_airport,140,63,5	script	International Boarding	4_F_02,{
 	mes "If so, let me guide";
 	mes "you to the boarding area.";
 	next;
-	if (select("Yes:No") == 1) {
+	if (select("Yes", "No") == 1) {
 		warp "yuno",47,244;
 		end;
 	}
