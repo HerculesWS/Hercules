@@ -190,7 +190,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "[Hunter Guildsman]";
 				mes "Oh, you're an Archer! It seems as if you've trained enough as an Archer... You came here to become a Hunter, right?";
 				next;
-				switch(select("Yes. That's what I'm here for.:What are the requirements to change jobs?:....I don't want to change yet.")) {
+				switch(select("Yes. That's what I'm here for.", "What are the requirements to change jobs?", "....I don't want to change yet.")) {
 				case 1:
 					mes "[Hunter Guildsman]";
 					mes "Hehe~";
@@ -211,7 +211,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 					mes "Well then,";
 					mes "shall we begin?";
 					next;
-					if (select("Yes~ Let's start now.:No, I'll be back later.") == 1) {
+					if (select("Yes~ Let's start now.", "No, I'll be back later.") == 1) {
 						if (!questprogress(4000)) {
 							setquest 4000;
 						}
@@ -253,7 +253,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "[Hunter Sherin]";
 				mes "You are an Archer, and you don't know where you should go to hunt. What do you do?";
 				next;
-				switch(select("Scream out loud asking where you should go.:Quietly ask a person passing by.:Wander around alone and search for a place.")) {
+				switch(select("Scream out loud asking where you should go.", "Quietly ask a person passing by.", "Wander around alone and search for a place.")) {
 				case 2:
 				case 3:
 					.@hunter_t += 10;
@@ -267,7 +267,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "But you are in Payon!!";
 				mes "How do you go to the desert?";
 				next;
-				switch(select("Ask a Priest to open a free warp portal.:Use the Kafra service.:Walk with a friend.")) {
+				switch(select("Ask a Priest to open a free warp portal.", "Use the Kafra service.", "Walk with a friend.")) {
 				case 2:
 				case 3:
 					.@hunter_t += 10;
@@ -282,7 +282,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "about to make the";
 				mes "Zeny that you need?";
 				next;
-				switch(select("Beg here and there.:Sell items I do not need.:Hunt at a nearby field.")) {
+				switch(select("Beg here and there.", "Sell items I do not need.", "Hunt at a nearby field.")) {
 				case 2:
 				case 3:
 					.@hunter_t += 10;
@@ -297,12 +297,12 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "solution to this";
 				mes "situation?";
 				next;
-				if (select("Attack a Hode from the top of a hill.:Go back to town.:Attack someone else's Hode.") == 2)
+				if (select("Attack a Hode from the top of a hill.", "Go back to town.", "Attack someone else's Hode.") == 2)
 					.@hunter_t += 10;
 				mes "[Hunter Sherin]";
 				mes "Let's say you were having too much trouble hunting Hodes and returned to town. Now you are out of HP and a Priest happens to be around. How would you ask for a Heal?";
 				next;
-				if (select("Would it be possible to get a Heal, please?:Heal, please.:Heal me.") == 1)
+				if (select("Would it be possible to get a Heal, please?", "Heal, please.", "Heal me.") == 1)
 					.@hunter_t += 10;
 				mes "[Hunter Sherin]";
 				mes "This time, you found a rare item while you were going through your inventory. You go out to sell the item, and there are many people with stores and chatrooms open.";
@@ -312,7 +312,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "best way to";
 				mes "sell your item?";
 				next;
-				switch(select("Scream out loud to everyone in sight.:Open a chatroom and wait.:Look to see if anyone already wants it.")) {
+				switch(select("Scream out loud to everyone in sight.", "Open a chatroom and wait.", "Look to see if anyone already wants it.")) {
 				case 2:
 				case 3:
 					.@hunter_t += 10;
@@ -322,7 +322,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "[Hunter Sherin]";
 				mes "While you are waiting, someone is begging for items and Zeny. What should you do?";
 				next;
-				if (select("Give some of my items and Zeny.:Ignore and walk away.:Tell the person about a good place to hunt.") == 1)
+				if (select("Give some of my items and Zeny.", "Ignore and walk away.", "Tell the person about a good place to hunt.") == 1)
 					.@hunter_t += 10;
 				mes "[Hunter Sherin]";
 				mes "By now, you decide to go to the Maze by yourself.";
@@ -332,7 +332,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "into someone that is lost.";
 				mes "What should you do?";
 				next;
-				switch(select("Tell them which way to go.:Guide them to their destination.:Ignore.")) {
+				switch(select("Tell them which way to go.", "Guide them to their destination.", "Ignore.")) {
 				case 1:
 				case 2:
 					.@hunter_t += 10;
@@ -345,7 +345,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "[Hunter Sherin]";
 				mes "What should you do?";
 				next;
-				if (select("Watch, then attack when asked for help.:Attack and see what happens.:Just go back to town.") == 1)
+				if (select("Watch, then attack when asked for help.", "Attack and see what happens.", "Just go back to town.") == 1)
 					.@hunter_t += 10;
 				mes "[Hunter Sherin]";
 				mes "You are now very exhausted after your day of hunting. It's time to go back to town.";
@@ -353,7 +353,7 @@ hu_in01,386,373,4	script	Hunter Guildsman#hnt	4_F_JOB_HUNTER,{
 				mes "[Hunter Sherin]";
 				mes "But what's this!? You find an expensive item lying on the floor! What should you do with it?";
 				next;
-				switch(select("Pick it up and keep it.:Try to find the owner.:Just walk by.")) {
+				switch(select("Pick it up and keep it.", "Try to find the owner.", "Just walk by.")) {
 				case 2:
 				case 3:
 					.@hunter_t += 10;
@@ -462,13 +462,13 @@ hu_in01,382,382,4	script	Guild Receptionist#hnt	4_M_JOB_HUNTER,{
 		mes "[Guild Receptionist]";
 		mes "Greetings. They call me... ^660000The Demon Hunter^000000. I am the one in charge of processing applications. Your name is ... " + strcharinfo(0) + ", correct?";
 		next;
-		.@selection = select("Yes, that is correct.:Nope~~(heeheehee)");
+		.@selection = select("Yes, that is correct.", "Nope~~(heeheehee)");
 		if (.@selection == 2) {
 			mes "[Demon Hunter]";
 			mes "Hey, stop messing around.";
 			mes "Your name is " + strcharinfo(0) + ", right?";
 			next;
-			if (select("Yes...:Hehehe. I keep telling you, it's not~~") == 1) {
+			if (select("Yes...", "Hehehe. I keep telling you, it's not~~") == 1) {
 				mes "[Demon Hunter]";
 				mes "Okay, then. These are the items you need for the test. Since we provide all of the necessary arrows you'll use for the test, we need you to get the materials to make them.";
 				next;
@@ -604,7 +604,7 @@ payon_in03,131,7,3	script	Hunter#htnGM	1_M_ORIENT01,{
 		mes "[Hunter Guildmaster]";
 		mes "Hmpf. You must be here for the Hunter job test. Let me tell you about the testing process. What would you like to know?";
 		next;
-		switch(select("What is the test?:What are the passing requirements?:Any warnings?:Begin test.")) {
+		switch(select("What is the test?", "What are the passing requirements?", "Any warnings?", "Begin test.")) {
 		case 1:
 			mes "[Hunter Guildmaster]";
 			mes "You have to hunt down certain monsters with a particular name. But you must avoid all the traps while you're at it.";
@@ -675,7 +675,7 @@ payon_in03,131,7,3	script	Hunter#htnGM	1_M_ORIENT01,{
 		mes "If you have any";
 		mes "questions, ask now.";
 		next;
-		switch(select("What is the test?:What are the passing requirements?:Any warnings?:Begin test.")) {
+		switch(select("What is the test?", "What are the passing requirements?", "Any warnings?", "Begin test.")) {
 		case 1:
 			mes "[Hunter Guildmaster]";
 			mes "You have to hunt down certain monsters with a particular name, but you also avoid all the traps at the same time. This is to test your ability to move swiftly and locate targets in various situations.";
@@ -709,7 +709,7 @@ payon_in03,131,7,3	script	Hunter#htnGM	1_M_ORIENT01,{
 		mes "[Hunter Guildmaster]";
 		mes "Anyway, I believe you've prepared it yourself. Let's begin now.";
 		next;
-		if (select("Okay. Let's start...:Ah, wait a sec.") == 1) {
+		if (select("Okay. Let's start...", "Ah, wait a sec.") == 1) {
 			mes "[Hunter Guildmaster]";
 			mes "Okay!! I hope";
 			mes "you will pass this time!";
@@ -758,7 +758,7 @@ payon_in02,21,31,1	script	Hunter#htnGM2	1_M_ORIENT01,{
 		mes "[Hunter Guildmaster]";
 		mes "Mmm. I see you're here for the Hunter job test. Let me explain the testing process. What would you like to know?";
 		next;
-		switch(select("What is the test?:What are the passing requirements?:Any warnings?:Begin test.")) {
+		switch(select("What is the test?", "What are the passing requirements?", "Any warnings?", "Begin test.")) {
 		case 1:
 			mes "[Hunter Guildmaster]";
 			mes "You have to hunt down certain monsters with a particular name, but you must avoid all of the traps here at the same time.";
@@ -850,7 +850,7 @@ payon_in02,21,31,1	script	Hunter#htnGM2	1_M_ORIENT01,{
 		mes "have questions,";
 		mes "feel free to ask.";
 		next;
-		switch(select("What is the test?:What are the requirements to pass the test?:Any warnings?:Begin test.")) {
+		switch(select("What is the test?", "What are the requirements to pass the test?", "Any warnings?", "Begin test.")) {
 		case 1:
 			mes "[Hunter Guildmaster]";
 			mes "You have to hunt down certain monsters with a particular name, but you must avoid all of the traps here at the same time.";
@@ -896,7 +896,7 @@ payon_in02,21,31,1	script	Hunter#htnGM2	1_M_ORIENT01,{
 		mes "you're ready.";
 		mes "Let's begin.";
 		next;
-		if (select("Yes, let's start.:Ah, wait a moment.") == 1) {
+		if (select("Yes, let's start.", "Ah, wait a moment.") == 1) {
 			mes "[Hunter Guildmaster]";
 			mes "Okay!! Now...";
 			mes "Pass this time!";
@@ -984,7 +984,7 @@ OnTouch:
 		mes "[Guide]";
 		mes "If it's too hard, it wouldn't hurt to try again next time. Would you like to resign for now?";
 		next;
-		switch(select("Keep trying.:Resign.")) {
+		switch(select("Keep trying.", "Resign.")) {
 		case 1:
 			mes "[Guide]";
 			mes "Okay. Do your best and become a great Hunter. Please enter the waiting room. If someone is already taking the test, you must wait until that person is done.";
@@ -1196,7 +1196,7 @@ OnTouch:
 	mes "on the escape switch.^000000";
 	HNTR_Q = 15;
 	next;
-	switch(select("Escape:Cancel:Re-test")) {
+	switch(select("Escape", "Cancel", "Re-test")) {
 	case 1:
 		mes "^3355FFThe Escape Warp Portal";
 		mes "has now been activated.^000000";

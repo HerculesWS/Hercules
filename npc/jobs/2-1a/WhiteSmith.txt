@@ -70,7 +70,7 @@ valkyrie,44,50,5	script	MasterSmith#Valkyrie	4_M_JOB_BLACKSMITH,{
 		mes "Would you like to";
 		mes "become a MasterSmith?";
 		next;
-		if (select("No.:Yes.") == 1) {
+		if (select("No.", "Yes.") == 1) {
 			mes "[MasterSmith]";
 			mes "When you're ready,";
 			mes "feel free to come back.";

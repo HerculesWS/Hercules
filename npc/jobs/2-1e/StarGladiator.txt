@@ -83,7 +83,7 @@ payon,215,102,3	script	Moohyun#job_star	4_M_ROGUE,3,3,{
 				mes "Cool, huh? Anyway, interested";
 				mes "in being a Taekwon Master?";
 				next;
-				if (select("Yes, I am!:No, not so much.") == 1) {
+				if (select("Yes, I am!", "No, not so much.") == 1) {
 					if (JobLevel > 39) {
 						mes "[Moohyun]";
 						mes "Great, great~ I knew you'd";
@@ -187,7 +187,7 @@ payon,215,102,3	script	Moohyun#job_star	4_M_ROGUE,3,3,{
 			mes "look worried. Are you in";
 			mes "some kind of trouble?";
 			next;
-			if (select("No, I'm fine.:About Beeryu's riddle...") == 1) {
+			if (select("No, I'm fine.", "About Beeryu's riddle...") == 1) {
 				mes "[Moohyun]";
 				mes "It's alright to be independent";
 				mes "and solve problems on your";
@@ -221,7 +221,7 @@ payon,215,102,3	script	Moohyun#job_star	4_M_ROGUE,3,3,{
 			mes "do you say to yourself when";
 			mes "your life seems hopeless?";
 			next;
-			if (select("I will not give up!:I... I don't know?") == 1) {
+			if (select("I will not give up!", "I... I don't know?") == 1) {
 				mes "[" + strcharinfo(0) + "]";
 				mes "I will not give up!";
 				mes "I'll make my dreams";
@@ -390,7 +390,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 			mes "Are you ready for the first test, to use your fists and legs in the";
 			mes "service of the grand cosmos?";
 			next;
-			if (select("Yes, let me take the test!:Wait, I need to think about this!") == 1) {
+			if (select("Yes, let me take the test!", "Wait, I need to think about this!") == 1) {
 				if (SkillPoint) {
 					mes "[Moogang]";
 					mes "Hm? You still have Skill";
@@ -531,7 +531,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 			mes "a Taekwon Master? Then,";
 			mes "I shall guide you to the altar.";
 			next;
-			if (select("Wait, I need more time!:Yes, I am ready.") == 1) {
+			if (select("Wait, I need more time!", "Yes, I am ready.") == 1) {
 				mes "[Moogang]";
 				mes "I see. Well then, please";
 				mes "let me know when you";
@@ -605,7 +605,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 			mes "to complete your Taekwon";
 			mes "Master testing and training?";
 			next;
-			if (select("Yes, please.:Maybe later.") == 1) {
+			if (select("Yes, please.", "Maybe later.") == 1) {
 				mes "[Moogang]";
 				mes "Don't lose heart...";
 				mes "I expect that you will";
@@ -630,7 +630,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 			mes "Would you like me to send";
 			mes "you to the Star Room now?";
 			next;
-			if (select("Yes, please.:Maybe later.") == 1) {
+			if (select("Yes, please.", "Maybe later.") == 1) {
 				mes "[Moogang]";
 				mes "Don't lose heart...";
 				mes "I expect that you will";
@@ -776,7 +776,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 		mes "that you wish. Would you like";
 		mes "to visit any of them now?";
 		next;
-		switch(select("Maybe next time.:To the Room of the Sun!:To the Moon Room!:To the Star Room!")) {
+		switch(select("Maybe next time.", "To the Room of the Sun!", "To the Moon Room!", "To the Star Room!")) {
 		case 1:
 			mes "[Moogang]";
 			mes "Alright. I'll always be";
@@ -851,7 +851,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 			mes "What is it";
 			mes "that you see?";
 			next;
-			switch(select("The Sun.:The Moon.:The Stars.:I have no idea.")) {
+			switch(select("The Sun.", "The Moon.", "The Stars.", "I have no idea.")) {
 			case 1:
 				mes "[Daru]";
 				mes "Yes! It is the sun!";
@@ -890,7 +890,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 			mes "sun. Do you know what one";
 			mes "needs most from the sun?";
 			next;
-			switch(select("Warmth:Comfort:Light:Nothing")) {
+			switch(select("Warmth", "Comfort", "Light", "Nothing")) {
 			case 1:
 				mes "[Daru]";
 				mes "That is right.";
@@ -949,7 +949,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 			mes "shines brightest among ";
 			mes "them all? Think carefully...";
 			next;
-			if (select("2nd, Marsh, Knights:4th, Desert, Sand:10th, Desert, Knights:5th, Deep Cave, Wolves") == 2)
+			if (select("2nd, Marsh, Knights", "4th, Desert, Sand", "10th, Desert, Knights", "5th, Deep Cave, Wolves") == 2)
 				.@sun_point += 10;
 			mes "[Daru]";
 			mes "Well, that will be all.";
@@ -1103,7 +1103,7 @@ job_star,29,33,0	script	Daru#job_star	1_M_ORIENT01,{
 	mes "job change test. So, would";
 	mes "you like to return to town?";
 	next;
-	if (select("Return to Payon:Cancel") == 1) {
+	if (select("Return to Payon", "Cancel") == 1) {
 		mes "[Daru]";
 		mes "I see. Let me";
 		mes "guide you back";
@@ -1138,7 +1138,7 @@ job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 			mes "moon, and how it changes";
 			mes "on certain nights.";
 			next;
-			switch(select("Red Moon:Blue Moon:Gold Moon:...?")) {
+			switch(select("Red Moon", "Blue Moon", "Gold Moon", "...?")) {
 			case 1:
 				mes "[Beeryu]";
 				mes "The Red Moon...?";
@@ -1183,7 +1183,7 @@ job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 			mes "use the power of the";
 			mes "Lunar cosmos?";
 			next;
-			switch(select("Justice:Self Practice:Preservation of Nature:Revenge")) {
+			switch(select("Justice", "Self Practice", "Preservation of Nature", "Revenge")) {
 			case 1:
 				mes "[Beeryu]";
 				mes "Yes. Justice is always an";
@@ -1258,7 +1258,7 @@ job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 			mes "strongly evokes the";
 			mes "light of the moon?";
 			next;
-			if (select("2nd, Marsh, Dark Knights:4th, the Desert, the Sand:10th, Deep Cave, Dark Knight:5th, Marsh, Wolves") == 4)
+			if (select("2nd, Marsh, Dark Knights", "4th, the Desert, the Sand", "10th, Deep Cave, Dark Knight", "5th, Marsh, Wolves") == 4)
 				.@moon_point += 10;
 			mes "[Beeryu]";
 			mes "Well, I've asked the";
@@ -1419,7 +1419,7 @@ job_star,95,33,0	script	Beeryu#job_star	1_M_MOC_LORD,{
 	mes "Ah, and let me know when";
 	mes "you want to return to Payon.";
 	next;
-	if (select("Return to Payon:Cancel") == 1) {
+	if (select("Return to Payon", "Cancel") == 1) {
 		mes "[Beeryu]";
 		mes "Be safe!";
 		close2;
@@ -1524,7 +1524,7 @@ job_star,161,33,0	script	Cheehee#job_star	1_F_ORIENT_03,{
 			mes "groups shines brightest";
 			mes "with starlight?";
 			next;
-			if (select("5th day, Deep Cave, Sand:10th day, Desert, Sand:25th day, Deep Cave, Knights:10th day, Desert, Knights") == 3) {
+			if (select("5th day, Deep Cave, Sand", "10th day, Desert, Sand", "25th day, Deep Cave, Knights", "10th day, Desert, Knights") == 3) {
 				mes "[Cheehee]";
 				mes "You're right. The combination";
 				mes "of the 25th day, a multiple of";
@@ -1595,7 +1595,7 @@ job_star,161,33,0	script	Cheehee#job_star	1_F_ORIENT_03,{
 			mes "Do you wish to";
 			mes "leave the Star Room?";
 			next;
-			if (select("Yes:No") == 1) {
+			if (select("Yes", "No") == 1) {
 				mes "[Cheehee]";
 				mes "Then, I shall guide";
 				mes "you to Payon, the closest";
@@ -1616,7 +1616,7 @@ job_star,161,33,0	script	Cheehee#job_star	1_F_ORIENT_03,{
 		mes "they? Would you like";
 		mes "to return to Payon now?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			mes "[Cheehee]";
 			mes "I see.";
 			mes "Let me guide";
@@ -1637,7 +1637,7 @@ job_star,161,33,0	script	Cheehee#job_star	1_F_ORIENT_03,{
 	mes "they? Would you like";
 	mes "to return to Payon now?";
 	next;
-	if (select("Yes:No") == 1) {
+	if (select("Yes", "No") == 1) {
 		mes "[Cheehee]";
 		mes "I see.";
 		mes "Let me guide";
