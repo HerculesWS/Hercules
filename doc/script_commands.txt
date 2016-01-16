@@ -4530,13 +4530,13 @@ the look value).
 	// This will change your hair(6), so that it uses palette 8, what ever 
 	// your palette 8 is, your hair will use that color.
 
-	setlook VAR_HEADPALETTE, 8;
+	setlook LOOK_HAIR_COLOR, 8;
 
 	// This will change your clothes(7), so they are using palette 1, 
 	// whatever your palette 1 is, your clothes will then use that set of 
 	// colors.
 
-	setlook VAR_BODYPALETTE,1;
+	setlook LOOK_CLOTHES_COLOR, 1;
 
 Here are the possible look types:
 

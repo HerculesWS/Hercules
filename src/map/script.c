@@ -20898,6 +20898,45 @@ void script_hardcoded_constants(void)
 	script->set_constant("BG_AREA_WOS",BG_AREA_WOS,false, false);
 	script->set_constant("BG_QUEUE",BG_QUEUE,false, false);
 
+	/* LOOK_ constants, use in setlook/changelook script commands */
+	script->set_constant("LOOK_BASE", LOOK_BASE, false, false);
+	script->set_constant("LOOK_HAIR", LOOK_HAIR, false, false);
+	script->set_constant("LOOK_WEAPON", LOOK_WEAPON, false, false);
+	script->set_constant("LOOK_HEAD_BOTTOM", LOOK_HEAD_BOTTOM, false, false);
+	script->set_constant("LOOK_HEAD_TOP", LOOK_HEAD_TOP, false, false);
+	script->set_constant("LOOK_HEAD_MID", LOOK_HEAD_MID, false, false);
+	script->set_constant("LOOK_HAIR_COLOR", LOOK_HAIR_COLOR, false, false);
+	script->set_constant("LOOK_CLOTHES_COLOR", LOOK_CLOTHES_COLOR, false, false);
+	script->set_constant("LOOK_SHIELD", LOOK_SHIELD, false, false);
+	script->set_constant("LOOK_SHOES", LOOK_SHOES, false, false);
+	script->set_constant("LOOK_BODY", LOOK_BODY, false, false);
+	script->set_constant("LOOK_FLOOR", LOOK_FLOOR, false, false);
+	script->set_constant("LOOK_ROBE", LOOK_ROBE, false, false);
+	script->set_constant("LOOK_BODY2", LOOK_BODY2, false, false);
+
+	/* Equip Position in Bits,  use with *getiteminfo type 5,  or @inventorylist_equip */
+	script->set_constant("EQP_HEAD_LOW", EQP_HEAD_LOW, false, false);
+	script->set_constant("EQP_HEAD_MID", EQP_HEAD_MID, false, false);
+	script->set_constant("EQP_HEAD_TOP", EQP_HEAD_TOP, false, false);
+	script->set_constant("EQP_HAND_R", EQP_HAND_R, false, false);
+	script->set_constant("EQP_HAND_L", EQP_HAND_L, false, false);
+	script->set_constant("EQP_ARMOR", EQP_ARMOR, false, false);
+	script->set_constant("EQP_SHOES", EQP_SHOES, false, false);
+	script->set_constant("EQP_GARMENT", EQP_GARMENT, false, false);
+	script->set_constant("EQP_ACC_L", EQP_ACC_L, false, false);
+	script->set_constant("EQP_ACC_R", EQP_ACC_R, false, false);
+	script->set_constant("EQP_COSTUME_HEAD_TOP", EQP_COSTUME_HEAD_TOP, false, false);
+	script->set_constant("EQP_COSTUME_HEAD_MID", EQP_COSTUME_HEAD_MID, false, false);
+	script->set_constant("EQP_COSTUME_HEAD_LOW", EQP_COSTUME_HEAD_LOW, false, false);
+	script->set_constant("EQP_COSTUME_GARMENT", EQP_COSTUME_GARMENT, false, false);
+	script->set_constant("EQP_AMMO", EQP_AMMO, false, false);
+	script->set_constant("EQP_SHADOW_ARMOR", EQP_SHADOW_ARMOR, false, false);
+	script->set_constant("EQP_SHADOW_WEAPON", EQP_SHADOW_WEAPON, false, false);
+	script->set_constant("EQP_SHADOW_SHIELD", EQP_SHADOW_SHIELD, false, false);
+	script->set_constant("EQP_SHADOW_SHOES", EQP_SHADOW_SHOES, false, false);
+	script->set_constant("EQP_SHADOW_ACC_R", EQP_SHADOW_ACC_R, false, false);
+	script->set_constant("EQP_SHADOW_ACC_L", EQP_SHADOW_ACC_L, false, false);
+
 	/* Renewal */
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false, false);
