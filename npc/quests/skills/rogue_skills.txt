@@ -108,7 +108,7 @@ OnTouch:
 		for(.@lim_1 = 0; .@lim_1<10; ++.@lim_1) {
 			.@move_1 = rand(1,3);
 			specialeffect .@Effects[.@move_1];
-			if (select("Block him to the Left:Block him to the Right:Block his Retreat") == .@move_1) {
+			if (select("Block him to the Left", "Block him to the Right", "Block his Retreat") == .@move_1) {
 				mes "^3355FFThe killer remains";
 				mes "unable to move and looks";
 				mes "incredibly confused! Right";
@@ -192,7 +192,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 				mes "and how did you get";
 				mes "in here? Identify yourself!";
 				next;
-				if (select("I don't mean you any harm!:Give us what we want!") == 1) {
+				if (select("I don't mean you any harm!", "Give us what we want!") == 1) {
 					mes "[Haijara Greg]";
 					mes "No...?";
 					mes "Then... Then";
@@ -200,7 +200,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 					mes "It is no accident that";
 					mes "you have found me.";
 					next;
-					if (select("I came to help you.:Oh, actually, I wasn't looking for you.") == 1) {
+					if (select("I came to help you.", "Oh, actually, I wasn't looking for you.") == 1) {
 						mes "[Haijara Greg]";
 						mes "Hmm... Well, I suppose";
 						if (Upper == 1)
@@ -212,7 +212,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 						mes "Alright. Have you ever heard";
 						mes "the legend of Chae Takbae?";
 						next;
-						if (select("No:Yes") == 1) {
+						if (select("No", "Yes") == 1) {
 							mes "[Haijara Greg]";
 							mes "100 years ago, Chae Takbae";
 							mes "was the very first person to";
@@ -250,7 +250,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 							mes "Will you help me save";
 							mes "myself and my sons?";
 							next;
-							if (select("Sure!:Sorry, but I'm busy.") == 1) {
+							if (select("Sure!", "Sorry, but I'm busy.") == 1) {
 								mes "[Haijara Greg]";
 								mes "Oh, thank you so much!";
 								mes "Listen, I can't risk being";
@@ -276,7 +276,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 						mes "who will do anything to get it.";
 						mes "Would you please help me?";
 						next;
-						if (select("Sure!:Sorry, but I'm busy.") == 1) {
+						if (select("Sure!", "Sorry, but I'm busy.") == 1) {
 							mes "[Haijara Greg]";
 							mes "Oh, thank you so much!";
 							mes "Listen, I can't risk being";
@@ -457,7 +457,7 @@ in_rogue,355,179,0	script	Haijara Greg#rogueguild	1_ETC_01,{
 				mes "Confine, I can tell you more";
 				mes "about the skill if you like.";
 				next;
-				if (select("Yes, please.:No, thanks.") == 1) {
+				if (select("Yes, please.", "No, thanks.") == 1) {
 					mes "[Haijara Greg]";
 					mes "As you must know,";
 					mes "Close Confine immobilizes";
@@ -796,7 +796,7 @@ in_rogue,268,125,2	script	Thor Greg#rogueguild	4_M_04,{
 			mes "ground right away so that";
 			mes "you can learn ^FF0000Close Confine^000000.";
 			next;
-			if (select("Listen to Explanation:Go to Training Ground") == 1) {
+			if (select("Listen to Explanation", "Go to Training Ground") == 1) {
 				mes "[Thor Greg]";
 				mes "Alright, the very first step";
 				mes "to learning ^FF0000Close Confine^000000";
@@ -827,7 +827,7 @@ in_rogue,268,125,2	script	Thor Greg#rogueguild	4_M_04,{
 			mes "to the training ground in order";
 			mes "to learn ^FF0000Close Confine^000000?";
 			next;
-			if (select("Yes, please.:No, thanks.") == 1) {
+			if (select("Yes, please.", "No, thanks.") == 1) {
 				mes "[Thor Greg]";
 				mes "Alright, the very first step";
 				mes "to learning ^FF0000Close Confine^000000";
@@ -1199,7 +1199,7 @@ function	script	F_Kienna	{
 		next;
 		for(.@lim_1 = 0; .@lim_1<10; ++.@lim_1) {
 			.@move_1 = rand(1,3);
-			if (select("Block her to the Left:Block her to the Right:Block her retreat") == .@move_1) {
+			if (select("Block her to the Left", "Block her to the Right", "Block her retreat") == .@move_1) {
 				mes "[Kienna]";
 				mes "Huh...?";
 				mes "You blocked me!";
@@ -1289,7 +1289,7 @@ function	script	F_Kienna	{
 			mes "Would you like to try the";
 			mes "training exercise again?";
 			next;
-			if (select("Yes!:No, thanks.") == 1) {
+			if (select("Yes!", "No, thanks.") == 1) {
 				disablenpc "Kienna#"+getarg(0);
 				donpcevent "#1stmove::OnEnable";
 				ROG_SK = 6;

@@ -40,7 +40,7 @@ hu_fild01,140,163,5	script	Tower Keeper	4_M_EIN_SOLDIER,3,3,{
 	mes "of this Thanatos Tower.";
 	mes "How may I help you?";
 	next;
-	switch(select("Thanatos Tower?:Entrance Fee?:Enter the tower:Cancel")) {
+	switch(select("Thanatos Tower?", "Entrance Fee?", "Enter the tower", "Cancel")) {
 	case 1:
 		mes "[Gatei]";
 		mes "Yes, the tower in front";
@@ -94,7 +94,7 @@ hu_fild01,140,163,5	script	Tower Keeper	4_M_EIN_SOLDIER,3,3,{
 		mes "enter Thanatos Tower?";
 		mes "The entry fee is ^FF00005,000 zeny^000000.";
 		next;
-		switch(select("Enter:Maybe next time.")) {
+		switch(select("Enter", "Maybe next time.")) {
 		case 1:
 			if (thana_tower > 0) {
 				mes "[Gatei]";
@@ -104,7 +104,7 @@ hu_fild01,140,163,5	script	Tower Keeper	4_M_EIN_SOLDIER,3,3,{
 				mes "work contract, your entrance";
 				mes "fee is only 3,000 zeny.";
 				next;
-				switch(select("Enter:No, thanks.")) {
+				switch(select("Enter", "No, thanks.")) {
 				case 1:
 					if (Zeny > 2999) {
 						mes "[Gatei]";
@@ -189,7 +189,7 @@ tha_t01,149,78,4	script	Guide	4_F_01,{
 		mes "now open to the public. So";
 		mes "how may I help you today?";
 		next;
-		switch(select("Tower Information:Temporary Work Contract:Cancel")) {
+		switch(select("Tower Information", "Temporary Work Contract", "Cancel")) {
 		case 1:
 			mes "[Ditze]";
 			mes "When this tower was built,";
@@ -226,7 +226,7 @@ tha_t01,149,78,4	script	Guide	4_F_01,{
 			mes "the near future, bringing us";
 			mes "closer to our goal of opening all 12 floors of Thanatos Tower.";
 			next;
-			switch(select("Tower Monsters?:Temp Contract Work?:......")) {
+			switch(select("Tower Monsters?", "Temp Contract Work?", "......")) {
 			case 1:
 				mes "[Ditze]";
 				mes "Yes, when we began";
@@ -310,7 +310,7 @@ tha_t01,149,78,4	script	Guide	4_F_01,{
 	close;
 
 L_Contract:
-	switch(select("Maybe next time:Sure, I'd like to work for you.")) {
+	switch(select("Maybe next time", "Sure, I'd like to work for you.")) {
 	case 1:
 		mes "[Ditze]";
 		mes "Well, alright.";
@@ -386,7 +386,7 @@ L_Contract:
 		mes "Employer Signature____________";
 		mes "Employee Signature____________";
 		next;
-		switch(select("Sign:Don't Sign")) {
+		switch(select("Sign", "Don't Sign")) {
 		case 1:
 			mes "^3355FFYou sign two copies of the";
 			mes "Employment Agreement.^000000";
@@ -437,7 +437,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 		mes "Reward Department";
 		mes "here in Thanatos Tower.";
 		next;
-		switch(select("Employee's mission reward?:Keep up the good work.")) {
+		switch(select("Employee's mission reward?", "Keep up the good work.")) {
 		case 1:
 			mes "[Liei]";
 			mes "Currently, Rekenber Corporation";
@@ -458,7 +458,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 	mes "Ah, hello~";
 	mes "How may I help you?";
 	next;
-	if(select("Reward:Nothing") == 2) {
+	if(select("Reward", "Nothing") == 2) {
 		mes "[Liei]";
 		mes "Alright, then.";
 		mes "Please do your best";
@@ -477,7 +477,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 	mes "of mission proof you brought?";
 	next;
 	setarray .@items[1],7435,7440,7441,7442;
-	.@i = select("Golden Ornament:Red Feather:Blue Feather:Cursed Seal");
+	.@i = select("Golden Ornament", "Red Feather", "Blue Feather", "Cursed Seal");
 	mes "[Liei]";
 	if (!countitem(.@items[.@i])) {
 		mes "I'm sorry, but you are not";
@@ -508,7 +508,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 	mes "all of your "+getitemname(.@items[.@i])+"s";
 	mes "for your reward right now?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 		case 1:
 			mes "[Liei]";
 			mes "Great! Here is your";
@@ -544,7 +544,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 	mes "Only the contracted staff are allowed to enter.";
 	mes "How can I help you?";
 	next;
-	switch(select("Let me go to 3rd floor.:Tower Information.:Start a conversation.")) {
+	switch(select("Let me go to 3rd floor.", "Tower Information.", "Start a conversation.")) {
 	case 1:
 		mes "[Burled]";
 		mes "Oh, alright. Let me";
@@ -633,7 +633,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "...?";
 			mes "Do you have any questions?";
 			next;
-			if(select("About the development.:The relationship of Cool Event Corporation and Rekenber Corporation.:Nope.") == 3) {
+			if(select("About the development.", "The relationship of Cool Event Corporation and Rekenber Corporation.", "Nope.") == 3) {
 				mes "[Burled]";
 				mes "Take care.";
 				close;
@@ -643,7 +643,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "If you want to know more, would you do me a favor?";
 			mes "Since you asked for our confidential info...";
 			next;
-			if(select("Really? Don't make me afraid of it.:Just tell me about it.:I'll listen about it later.") == 3) {
+			if(select("Really? Don't make me afraid of it.", "Just tell me about it.", "I'll listen about it later.") == 3) {
 				mes "[Burled]";
 				mes "As you wish...";
 				mes "Take care!";
@@ -694,7 +694,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "No matter what happened there, they wouldn't be hurt.";
 			mes "Even if they don't get at the root of the accident....";
 			next;
-			switch(select("Oh...:What accident are you referring to?")) {
+			switch(select("Oh...", "What accident are you referring to?")) {
 			case 1:
 				mes "[Burled]";
 				mes "Yes, it's not that big of a deal. Haha....";
@@ -721,7 +721,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 				mes "If you promise me that";
 				mes "you will do me a favor...";
 				next;
-				switch(select("Ok! I will.:No, I won't.")) {
+				switch(select("Ok! I will.", "No, I won't.")) {
 				case 1:
 					callsub L_Request;
 					next;
@@ -916,7 +916,7 @@ tha_t03,67,70,0	script	Rune Device#tt1	HIDDEN_NPC,4,4,{
 		mes "its power prevents you from";
 		mes "approaching the machine.^000000";
 		next;
-		switch(select("Investigate it.:I don't care about it.")) {
+		switch(select("Investigate it.", "I don't care about it.")) {
 		case 1:
 			mes "["+strcharinfo(0)+"]";
 			mes "This seems mysterious...";
@@ -977,7 +977,7 @@ L_Key:
 	mes "^4d4dffOnce you hold the key, a shocking feeling passes through your head.";
 	mes "You see an illusion of light...^000000";
 	next;
-	switch(select("Ignore it.:Concentrate on it.")) {
+	switch(select("Ignore it.", "Concentrate on it.")) {
 	case 1:
 		mes "^3355FFYou decide to leave";
 		mes "the machine alone.^000000";
@@ -1107,7 +1107,7 @@ tha_t04,195,195,0	script	Rune Device#tt2	HIDDEN_NPC,3,3,{
 				mes "^4d4dffA fierce feeling passes through your head.";
 				mes "You seen an illusion of light, like when you acquired the first key.^000000";
 				next;
-				switch(select("Ignore it.:Concentrate on it.")) {
+				switch(select("Ignore it.", "Concentrate on it.")) {
 				case 1:
 					mes "You decide to ignore it.";
 					close;
@@ -1185,7 +1185,7 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 		mes "Red light is shining on a crack in the left wing, and gold light on a crack in the right one.";
 		mes "What will you do?";
 		next;
-		if(select("Stick the key into the crack...:Ignore it.") == 2) {
+		if(select("Stick the key into the crack...", "Ignore it.") == 2) {
 			mes "^3355FFYou decide to leave";
 			mes "the statue alone.^000000";
 			close;
@@ -1221,7 +1221,7 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 			mes "^4d4dffOnce you hold the key, a shocking feeling passes through your head.";
 			mes "You see an illusion of light...^000000";
 			next;
-			switch(select("Concentrate on it.:Ignore it.")) {
+			switch(select("Concentrate on it.", "Ignore it.")) {
 			case 1:
 				mes "This part isn't as clear as before.";
 				mes "You try to figure out what it's saying...";
@@ -1271,7 +1271,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 		mes "There're red, yellow, and blue light in a row.";
 		mes "What will you do?";
 		next;
-		if(select("Investigate.:Ignore it.") == 2) {
+		if(select("Investigate.", "Ignore it.") == 2) {
 			mes "^3355FFYou don't see the need to";
 			mes "investigate if nothing seems";
 			mes "peculiar or out of place...^000000";
@@ -1282,7 +1282,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 			mes "and match them by corresponding color, the Stone Statue will snap open.";
 			mes "You can see small wheels are moving inside.";
 			next;
-			switch(select("Investigate the Machine Chasis:Investigate the Wheels:Cancel")) {
+			switch(select("Investigate the Machine Chasis", "Investigate the Wheels", "Cancel")) {
 			case 1:
 				mes "^3355FFThe key in your inventory";
 				mes "does not seem to be affecting";
@@ -1318,9 +1318,9 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 					next;
 					mes "^3355FFWhich wheel do";
 					mes "you want to shift?^000000";
-					switch(select("1st Small Wheel:2nd Small Wheel:1st Big Wheel:2nd Big Wheel:3rd Big Wheel:Check Current Wheel Configuration:Reset Wheels to Default Configuration")) {
+					switch(select("1st Small Wheel", "2nd Small Wheel", "1st Big Wheel", "2nd Big Wheel", "3rd Big Wheel", "Check Current Wheel Configuration", "Reset Wheels to Default Configuration")) {
 					case 1:
-						switch(select("Raise Wheel:Lower Wheel:Press Wheel")) {
+						switch(select("Raise Wheel", "Lower Wheel", "Press Wheel")) {
 						case 1:
 							mes "^EE0000*Choom*^000000";
 							.@small_1 = 2;
@@ -1339,7 +1339,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						}
 						break;
 					case 2:
-						switch(select("Raise Wheel:Lower Wheel:Press Wheel")) {
+						switch(select("Raise Wheel", "Lower Wheel", "Press Wheel")) {
 						case 1:
 							mes "^5C246E*Mrreeem*^000000";
 							.@small_2 = 3;
@@ -1358,7 +1358,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						}
 						break;
 					case 3:
-						switch(select("Raise Wheel:Lower Wheel:Vertically Shift Wheel")) {
+						switch(select("Raise Wheel", "Lower Wheel", "Vertically Shift Wheel")) {
 						case 1:
 							mes "^00B2EE*Sneeeep*^000000";
 							.@big_1 = 1;
@@ -1377,7 +1377,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						}
 						break;
 					case 4:
-						switch(select("Raise Wheel:Lower Wheel:Vertically Shift Wheel")) {
+						switch(select("Raise Wheel", "Lower Wheel", "Vertically Shift Wheel")) {
 						case 1:
 							mes "^EE0000*Choom*^000000";
 							.@big_2 = 2;
@@ -1396,7 +1396,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 						}
 						break;
 					case 5:
-						switch(select("Raise Wheel:Lower Wheel:Vertically Shift Wheel")) {
+						switch(select("Raise Wheel", "Lower Wheel", "Vertically Shift Wheel")) {
 						case 1:
 							mes "^EE0000*Choom*^000000";
 							.@big_3 = 2;
@@ -1468,7 +1468,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 				mes "with an unknown power";
 				mes "and you see a hallucination with some text.^000000";
 				next;
-				switch(select("Concentrate on it.:Ignore it.")) {
+				switch(select("Concentrate on it.", "Ignore it.")) {
 				case 1:
 					mes "^b22222...You found 4 keys";
 					mes "and finally released 4 spells...";
@@ -1544,7 +1544,7 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 			mes "suddenly respond with a mysterious power.";
 			specialeffect2 EF_ABSORBSPIRITS;
 			next;
-			if(select("Observe it.:Ignore it.") == 2) {
+			if(select("Observe it.", "Ignore it.") == 2) {
 				mes "^3355FFYou decide to leave";
 				mes "the sword alone.^000000";
 				close;
@@ -1553,7 +1553,7 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 			mes "Your eyes keep getting drawn to the sword's hilt.";
 			mes "Then you lose control of your hands, and they stretch forth to grasp the handle...";
 			next;
-			switch(select("Towards the blade of the sword:Towards the hilt of the sword:Towards the table")) {
+			switch(select("Towards the blade of the sword", "Towards the hilt of the sword", "Towards the table")) {
 			case 1:
 				mes "By an unknown calling you decide to grab the blade of the sword.";
 				mes "Your hands get wounded and begin to bleed.";
@@ -1568,7 +1568,7 @@ tha_t06,204,181,0	script	Splendid Sword#tt5	HIDDEN_NPC,3,3,{
 				mes "Now, you hold the sword and...";
 				specialeffect EF_EXIT2;
 				next;
-				switch(select("Strike the table:Insert the sword into the hole:Bring the sword safely")) {
+				switch(select("Strike the table", "Insert the sword into the hole", "Bring the sword safely")) {
 				case 1:
 					mes "You strike the table with the sword.";
 					mes "Numerous conflicting spells act upon it, and you can tell that you chose incorrectly.";
@@ -1820,7 +1820,7 @@ tha_t12,161,57,0	script	Gold Religious Statue#tt	HIDDEN_NPC,{
 			specialeffect EF_BEGINSPELL5;
 			specialeffect2 EF_BEGINSPELL5;
 			next;
-			if(select("Insert the Yellow Charm Stone.:Run away.") == 2) close;
+			if(select("Insert the Yellow Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 0) {
 				mes "After inserting the Yellow Charm Stone into the sword, the statue begins to react.";
 				specialeffect EF_BEGINSPELL5;
@@ -1850,7 +1850,7 @@ tha_t12,154,17,0	script	Green Wiseman Statue#tt	HIDDEN_NPC,{
 			specialeffect EF_BEGINSPELL4;
 			specialeffect2 EF_BEGINSPELL4;
 			next;
-			if(select("Insert the Green Charm Stone.:Run away.") == 2) close;
+			if(select("Insert the Green Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 1) {
 				mes "After inserting the Green Charm Stone into the wand, the statue begins to react.";
 				specialeffect EF_BEGINSPELL4;
@@ -1880,7 +1880,7 @@ tha_t12,103,17,0	script	Blue Angel Statue#tt	HIDDEN_NPC,{
 			specialeffect EF_BEGINSPELL2;
 			specialeffect2 EF_BEGINSPELL2;
 			next;
-			if(select("Insert the Blue Charm Stone.:Run away.") == 2) close;
+			if(select("Insert the Blue Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 2) {
 				mes "After inserting the Blue Charm Stone into the belt, the statue begins to react.";
 				specialeffect EF_BEGINSPELL2;
@@ -1910,7 +1910,7 @@ tha_t12,96,57,0	script	Bloody Knight Statue#tt	HIDDEN_NPC,{
 			specialeffect EF_BEGINSPELL3;
 			specialeffect2 EF_BEGINSPELL3;
 			next;
-			if(select("Insert the Red Charm Stone.:Run away.") == 2) close;
+			if(select("Insert the Red Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 3) {
 				mes "After inserting the Red Charm Stone into the armor, the statue begins to react.";
 				specialeffect EF_BEGINSPELL3;
@@ -1940,7 +1940,7 @@ tha_t12,129,86,0	script	Dark Devil Statue#tt	HIDDEN_NPC,{
 			specialeffect EF_BEGINSPELL7;
 			specialeffect2 EF_BEGINSPELL7;
 			next;
-			if(select("Insert the Black Charm Stone.:Run away.") == 2) close;
+			if(select("Insert the Black Charm Stone.", "Run away.") == 2) close;
 			if ($@thana_summon == 4) {
 				mes "After inserting the Red Charm Stone into the eye socket, the statue begins to react.";
 				specialeffect EF_BEGINSPELL7;

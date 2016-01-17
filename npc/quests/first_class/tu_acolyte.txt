@@ -65,7 +65,7 @@ prt_church,179,15,1	script	Priest Praupin	4_M_MINISTER,{
 		mes "you may not know what to do";
 		mes "as an Acolyte from here on...";
 		next;
-		switch(select("I'm not worried.:What should I do?")){
+		switch(select("I'm not worried.", "What should I do?")){
 		case 1:
 			mes "[Priest Praupin]";
 			mes "Seeing your eyes filled with such determination assures me. But if you run into any trouble, feel free to ask me for help. Good bye for now, blessed child.";
@@ -81,7 +81,7 @@ prt_church,179,15,1	script	Priest Praupin	4_M_MINISTER,{
 			mes "become a better Acolyte after learning from Sister Asthe's instructions. If you like, I can send you to the convent.";
 			tu_acolyte01 = 1;
 			next;
-			if(select("Go to the convent.:Do not go.")==1){
+			if(select("Go to the convent.", "Do not go.")==1){
 				mes "[Priest Praupin]";
 				mes "Please say hello";
 				mes "to Sister Asthe for me.";
@@ -133,7 +133,7 @@ prt_church,179,15,1	script	Priest Praupin	4_M_MINISTER,{
 			mes "I know I'm not offering much,";
 			mes "but they were quite helpful to me when I was a young Acolyte like yourself.";
 			next;
-			switch(select("Wand:Flail")) {
+			switch(select("Wand", "Flail")) {
 			case 1:
 				delitem Receipt_01,1;
 				tu_acolyte01 = 23;
@@ -169,7 +169,7 @@ prt_church,179,15,1	script	Priest Praupin	4_M_MINISTER,{
 	mes "[Priest Praupin]";
 	mes "Would you like me to send you to the convent so that you can learn from this wonderful teacher?";
 	next;
-	if(select("Yes, please.:No thanks.")==1){
+	if(select("Yes, please.", "No thanks.")==1){
 		mes "[Priest Praupin]";
 		mes "Please say hello";
 		mes "to Sister Asthe for me.";
@@ -199,7 +199,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		mes "manage to reach";
 		mes "this remote place?";
 		next;
-		if(select("I came for fun.:Priest Praupin suggested I come here.")==1){
+		if(select("I came for fun.", "Priest Praupin suggested I come here.")==1){
 			mes "[Asthe]";
 			mes "This convent is always quiet and peaceful. Sitting on the benches and feeling the almighty presense all around you is such a relaxing, meditative experience.";
 			close;
@@ -233,7 +233,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		mes ""+strcharinfo(0)+",";
 		mes "have you thought about what kind of Acolyte you would like to become? It's very important that you plan for the future that you want.";
 		next;
-		if(select("One that supports others.:One that punishes evil.")==1){
+		if(select("One that supports others.", "One that punishes evil.")==1){
 			mes "[Asthe]";
 			mes "Ah, you have such";
 			mes "a generous heart!";
@@ -262,7 +262,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		mes "is the most necessary";
 		mes "skill for an Acolyte?";
 		next;
-		switch(select("Heal:Aqua Benedicta:Teleport")){
+		switch(select("Heal", "Aqua Benedicta", "Teleport")){
 		case 1:
 			mes "[Asthe]";
 			mes "Ah, yes.";
@@ -385,7 +385,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 				mes "[Asthe]";
 				mes "Would you like me to take the mace away from your inventory now?";
 				next;
-				if(select("Sure.:Let me check again.") == 2) {
+				if(select("Sure.", "Let me check again.") == 2) {
 					mes "[Asthe]";
 					mes "Okay, no problem.";
 					mes "Please make sure that you do not carry any ^FF0000Mace with an elemental Property^000000.";
@@ -664,7 +664,7 @@ prt_monk,230,106,3	script	Asthe#tu	1_F_PRIEST,{
 		mes "Now, we've covered some";
 		mes "pretty complicated material in this lesson. Would you like to hear this again?";
 		next;
-		if(select("Listen again.:Move to the next topic.")==1){
+		if(select("Listen again.", "Move to the next topic.")==1){
 			mes "[Asthe]";
 			mes "Alright,";
 			mes "give me a moment";
@@ -906,7 +906,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 				mes "[Priest Gardron]";
 				mes "Will you go to Prontera?";
 				next;
-				if(select("Let's go to Prontera!:I'll be back after doing some preparation.") == 1) {
+				if(select("Let's go to Prontera!", "I'll be back after doing some preparation.") == 1) {
 					mes "[Priest Gardron]";
 					mes "Okay, I will send you to Prontera.";
 					mes "Please dispose of Hornets and bring me 5 Bee Stings for confirmation.";
@@ -942,7 +942,7 @@ monk_in,18,38,6	script	Priest Gardron#tu	4_M_MINISTER,{
 				mes "Now then...";
 				mes "Will you go to Payon?";
 				next;
-				if(select("Let's go to Payon!:Um, let me get ready first.")==1) {
+				if(select("Let's go to Payon!", "Um, let me get ready first.")==1) {
 					mes "[Priest Gardron]";
 					mes "Good, good.";
 					mes "I shall send you";
@@ -972,7 +972,7 @@ prt_monk,235,245,5	script	Dog#tu	4_DOG01,{
 	next;
 	if(tu_acolyte01 == 10){
 		while(1) {
-			switch(select("Give a treat.:Pet the dog.:End actions.")){
+			switch(select("Give a treat.", "Pet the dog.", "End actions.")){
 			case 1:
 				++.@dog_food;
 				if(.@dog_food > 4){
@@ -1111,7 +1111,7 @@ prt_monk,226,257,6	script	Ill Girl#tu	4_F_04,{
 		mes "on her back and perform";
 		mes "a holy spell...^000000";
 		next;
-		switch(select("Heal!:Blessing!:Cure!:Recovery!:Signum Crucis!:B.S Sacramenti!")){
+		switch(select("Heal!", "Blessing!", "Cure!", "Recovery!", "Signum Crucis!", "B.S Sacramenti!")){
 		case 1:
 			mes "["+strcharinfo(0)+"]";
 			mes "H...";
@@ -1394,7 +1394,7 @@ prt_monk,219,164,3	script	Gloria#tu	4_F_SISTER,{
 		mes "send you to Prontera.";
 		mes "Just let me know, okay?";
 		next;
-		switch(select("I'm okay for now.:Send me to Prontera.")){
+		switch(select("I'm okay for now.", "Send me to Prontera.")){
 		case 1:
 			mes "[Gloria]";
 			mes "In order to use";
@@ -1786,7 +1786,7 @@ sec_in02,17,156,3	script	1st Job Quest Reset	4_F_JOB_BLACKSMITH,{
 	mes "[1st Job Quest]";
 	mes "Which would you like to reset?";
 	next;
-	switch(select("Swordsman:Merchant:Archer:Acolyte:Thief:Mage")) {
+	switch(select("Swordsman", "Merchant", "Archer", "Acolyte", "Thief", "Mage")) {
 	case 1:
 		tu_swordman = 0;
 		break;

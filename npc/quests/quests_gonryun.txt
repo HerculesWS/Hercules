@@ -96,7 +96,7 @@ gon_in,17,93,5	script	Chief#gon	4_M_TWMASKMAN,{
 				mes "As you've probably noticed,";
 				mes "the village isn't that peaceful, huh?";
 				next;
-				if (select("It's alright.:I heard that something was stolen...") == 1) {
+				if (select("It's alright.", "I heard that something was stolen...") == 1) {
 					mes "[Shi Yan Wen]";
 					mes "Well, I'm glad you don't mind.";
 					mes "Just watch out for robbers,";
@@ -110,7 +110,7 @@ gon_in,17,93,5	script	Chief#gon	4_M_TWMASKMAN,{
 				mes "robbery occurred. The rumors";
 				mes "are true. Sadly, there are lots of thieves out there in the village...";
 				next;
-				switch(select("......:What was stolen?:Was anyone hurt?")) {
+				switch(select("......", "What was stolen?", "Was anyone hurt?")) {
 				case 1:
 					mes "[Shi Yan Wen]";
 					mes "I can't believe it really";
@@ -136,7 +136,7 @@ gon_in,17,93,5	script	Chief#gon	4_M_TWMASKMAN,{
 					mes "You know how busy it is to be the";
 					mes "chief of a village. This is very troubling...*Sigh*";
 					next;
-					if (select("Hope you find it soon.:Can I find it for you?") == 1) {
+					if (select("Hope you find it soon.", "Can I find it for you?") == 1) {
 						mes "[Shi Yan Wen]";
 						mes "um..Thank you.";
 						mes "If you somehow come across it,";
@@ -173,7 +173,7 @@ gon_in,17,93,5	script	Chief#gon	4_M_TWMASKMAN,{
 					mes "You know how busy it is to be the";
 					mes "chief of a village. This is very troubling...*Sigh*";
 					next;
-					if (select("Hope you find it soon.:Can I find it for you?") == 1) {
+					if (select("Hope you find it soon.", "Can I find it for you?") == 1) {
 						mes "[Shi Yan Wen]";
 						mes "Um..Thank you.";
 						mes "If you somehow come across it,";
@@ -252,7 +252,7 @@ gon_in,17,93,5	script	Chief#gon	4_M_TWMASKMAN,{
 				mes "would you repair my sword for me?";
 				mes "I'll repay you for your help.";
 				next;
-				if (select("No way.:Alright.") == 1) {
+				if (select("No way.", "Alright.") == 1) {
 					mes "[Shi Yan Wen]";
 					mes "Well, I see...you've been such a";
 					mes "nice person. I truly appreciate";
@@ -445,7 +445,7 @@ gon_in,152,35,4	script	Hostess#gon	4_F_GON,{
 		mes "Oh, what am I saying...";
 		mes "Want some wine?";
 		next;
-		if (select("Yes, please:No, it's okay.") == 1) {
+		if (select("Yes, please", "No, it's okay.") == 1) {
 			mes "[Mei Yen Fang]";
 			mes "Oooops~! Oh no...";
 			mes "A lot of customers came by earlier,";
@@ -558,13 +558,13 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 			mes "of your ^00FF00Green_Potion^000000s?";
 			mes "I think I'm going to barf...";
 			next;
-			switch(select("No.:Here, drink this!")) {
+			switch(select("No.", "Here, drink this!")) {
 			case 1:
 				mes "[Xue Bong]";
 				mes "Uhh...";
 				mes "Are you sure?";
 				next;
-				switch(select("Sorry, I don't have any.:Here, you can have it!")) {
+				switch(select("Sorry, I don't have any.", "Here, you can have it!")) {
 				case 1:
 					mes "[Xue Bong]";
 					mes "C'mon, man...";
@@ -580,7 +580,7 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 					mes "I feel much better now.";
 					mes "So...uh, what brings you here?";
 					next;
-					if (select("Heard about the thief?:Nothing.") == 1) {
+					if (select("Heard about the thief?", "Nothing.") == 1) {
 						mes "[Xue Bong]";
 						mes "Ah, a thief~";
 						mes "Hmm...let me see..";
@@ -625,7 +625,7 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 				mes "Hmm...you seem new around here.";
 				mes "Anything you wanna know?";
 				next;
-				switch(select("About a thief...:How much have you been drinking?:Nothing~")) {
+				switch(select("About a thief...", "How much have you been drinking?", "Nothing~")) {
 				case 1:
 					mes "[Xue Bong]";
 					mes "Ah, a thief, eh? Let's see...";
@@ -642,7 +642,7 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 					mes "So I kept watching it and,";
 					mes "all of a sudden, I saw something moving on the rooftops...";
 					next;
-					if (select("Where to?:Probably a Wild Rose.") == 1) {
+					if (select("Where to?", "Probably a Wild Rose.") == 1) {
 						mes "[Xue Bong]";
 						mes "Umm?";
 						mes "Well..let me see..";
@@ -665,7 +665,7 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 						mes "Anything else I can help you with?";
 						mes "I appreciate the potion.";
 						next;
-						switch(select("Thanks for the information.:Stop drinking so much.:Okay, bye")) {
+						switch(select("Thanks for the information.", "Stop drinking so much.", "Okay, bye")) {
 						case 1:
 							mes "[Xue Bong]";
 							mes "I'll see you later then.";
@@ -719,7 +719,7 @@ gon_in,165,16,4	script	Man in hangover#gon	4_M_ALCHE_A,{
 			mes "What are you up to?";
 			mes "Got any questions for me?";
 			next;
-			switch(select("About a thief last night...:Nope, just passing by..")) {
+			switch(select("About a thief last night...", "Nope, just passing by..")) {
 			case 1:
 				mes "[Xue Bong]";
 				mes "Ah~ a thief...?";
@@ -2085,7 +2085,7 @@ gon_in,18,27,5	script	Madam#gnbs	4_F_TWGRANDMOM,{
 	mes "A visitor from out of town~";
 	mes "Welcome!";
 	next;
-	if (select("Hello, Madam~:Where's the chief?") == 1) {
+	if (select("Hello, Madam~", "Where's the chief?") == 1) {
 		mes "[Shang Hua Yen]";
 		mes "Hello, darling~";
 		close;
@@ -2118,7 +2118,7 @@ gon_dun03,62,222,0	script	Strange dead body#gnbs	HIDDEN_NPC,{
 		mes "of the corpse.";
 		mes "Take a look?";
 		next;
-		if (select("Yes.:Eew, no!") == 1) {
+		if (select("Yes.", "Eew, no!") == 1) {
 			mes "^3355FFThe paper is old and fading,";
 			mes "but there are words on it.";
 			mes "It's written in blood.";
@@ -2174,7 +2174,7 @@ gonryun,139,142,7	script	Girl##gnbs1	4_F_TWMASKGIRL,{
 	mes "village now. But most of all,";
 	mes "Someone found my father's heirloom~";
 	next;
-	if (select("I'm glad you're relieved.:That would be me!") == 1) {
+	if (select("I'm glad you're relieved.", "That would be me!") == 1) {
 		mes "[Shi Ying Xiao]";
 		mes "Yes, the mood of the entire";
 		mes "village seems to have calmed...";
@@ -2212,14 +2212,14 @@ gonryun,100,241,0	script	Stranger#gnbs	4_M_JOB_KNIGHT1,{
 				mes "What do you want?";
 				mes "I don't like to be bothered.";
 				next;
-				if (select("Ask about the blacksmith.:Why are you being so mean?") == 1) {
+				if (select("Ask about the blacksmith.", "Why are you being so mean?") == 1) {
 					mes "[Zuo Hei]";
 					mes "Ahh..";
 					mes "So you're the one who found";
 					mes "the sword, eh?";
 					mes "Did you also get asked to repair it?";
 					next;
-					if (select("Exactly.:No..I'm just...") == 1) {
+					if (select("Exactly.", "No..I'm just...") == 1) {
 						mes "[Zuo Hei]";
 						mes "Hmm...";
 						mes "If you want some information from";
@@ -2276,13 +2276,13 @@ gonryun,100,241,0	script	Stranger#gnbs	4_M_JOB_KNIGHT1,{
 				mes "Hmm...";
 				mes "What do you want??";
 				next;
-				if (select("Ask about the blacksmith.:Why are you being so mean?") == 1) {
+				if (select("Ask about the blacksmith.", "Why are you being so mean?") == 1) {
 					mes "[Zuo Hei]";
 					mes "Ahh...";
 					mes "So you are the one who found";
 					mes "the sword, eh? I assume you were also asked to repair it...";
 					next;
-					if (select("Exactly.:No...I'm just...") == 1) {
+					if (select("Exactly.", "No...I'm just...") == 1) {
 						mes "[Zuo Hei]";
 						mes "Hmm...";
 						mes "Since it's been shattered,";
@@ -2358,14 +2358,14 @@ gonryun,100,241,0	script	Stranger#gnbs	4_M_JOB_KNIGHT1,{
 				mes "Hmm......";
 				mes "What do you want?";
 				next;
-				if (select("Ask about the blacksmith.:Why are you being so mean?") == 1) {
+				if (select("Ask about the blacksmith.", "Why are you being so mean?") == 1) {
 					mes "[Zuo Hei]";
 					mes "Ahh...";
 					mes "So you are the one who found";
 					mes "the sword eh?";
 					mes "Did you also get asked to repair it?";
 					next;
-					if (select("Exactly.:No, i'm just...") == 1) {
+					if (select("Exactly.", "No, i'm just...") == 1) {
 						mes "[Zuo Hei]";
 						mes "Hmm...";
 						mes "Since it's been shattered,";
@@ -2445,13 +2445,13 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 			mes "My poor baby Lyroo..";
 			mes "*Sniff*...";
 			next;
-			if (select("Sir...?:...........") == 1) {
+			if (select("Sir...?", "...........") == 1) {
 				mes "[Aumgarl]";
 				mes "Hmm...Who are you?";
 				mes "Do you need something?";
 				mes "If not, please leave...";
 				next;
-				if (select("I came to repair this sword.:I heard you are a famous blacksmith...") == 1) {
+				if (select("I came to repair this sword.", "I heard you are a famous blacksmith...") == 1) {
 					mes "[Aumgarl]";
 					mes "Umm...";
 					mes "I'm sorry, but we're closed.";
@@ -2487,7 +2487,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 			mes "You're a persistent one!!";
 			mes "What is it that you want?";
 			next;
-			switch(select("I want to marry your granddaughter.:Your granddaughter is such a pretty girl.:I came to repair the sword.")) {
+			switch(select("I want to marry your granddaughter.", "Your granddaughter is such a pretty girl.", "I came to repair the sword.")) {
 			case 1:
 				mes "[Aumgarl]";
 				mes ".....";
@@ -2511,7 +2511,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 				mes "Hahaha...ah....hah...";
 				mes ".....*Sob, sob*....";
 				next;
-				switch(select("I want to marry her...:I came to repair the sword.:Anything wrong?")) {
+				switch(select("I want to marry her...", "I came to repair the sword.", "Anything wrong?")) {
 				case 1:
 					mes "[Aumgarl]";
 					mes ".....";
@@ -2580,7 +2580,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 					mes "But not one of them could";
 					mes "diagnose her sickness...";
 					next;
-					switch(select("I am sorry to hear that.:I'll make her happy.:I want to cure her.")) {
+					switch(select("I am sorry to hear that.", "I'll make her happy.", "I want to cure her.")) {
 					case 1:
 						mes "[Aumgarl]";
 						mes "*Sigh*...";
@@ -2598,7 +2598,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 						mes "You're not making any sense...";
 						mes "I'm confused...";
 						next;
-						switch(select("I'll make her happy all the time.:I want to take her with me.:I will cure her.")) {
+						switch(select("I'll make her happy all the time.", "I want to take her with me.", "I will cure her.")) {
 						case 1:
 							mes "[Aumgarl]";
 							mes "...";
@@ -2618,7 +2618,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 							mes "You want to take her to where?";
 							mes "What are you gonna do?";
 							next;
-							if (select("I will cure her.:I am sorry.") == 1) {
+							if (select("I will cure her.", "I am sorry.") == 1) {
 								mes "[Aumgarl]";
 								mes "It's useless talking about";
 								mes "it any longer. I don't think";
@@ -2632,14 +2632,14 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 							mes "It's not your fault anyway.";
 							mes "...*Sigh*...";
 							next;
-							if (select("Well...:I'll pray for her recovery.") == 1) {
+							if (select("Well...", "I'll pray for her recovery.") == 1) {
 								mes "[Aumgarl]";
 								mes "Err..";
 								mes "I am sorry to ask you this...";
 								mes "But would you do me a favor?";
 								mes "Umm...";
 								next;
-								if (select("No.:Sure.") == 1) {
+								if (select("No.", "Sure.") == 1) {
 									mes "[Aumgarl]";
 									mes "Err...";
 									mes "Alright, I won't bother you..";
@@ -2685,7 +2685,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 							mes "You don't look like";
 							mes "a doctor to me.";
 							next;
-							switch(select("I am a doctor.:I know a famous doctor.:I'll cure her no matter what.")) {
+							switch(select("I am a doctor.", "I know a famous doctor.", "I'll cure her no matter what.")) {
 							case 1:
 								mes "[Aumgarl]";
 								mes "Ehm...";
@@ -2782,7 +2782,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 			mes "do for you? I want to";
 			mes "return your favor somehow.";
 			next;
-			switch(select("No...I don't need anything.:Would you repair the sword for me?")) {
+			switch(select("No...I don't need anything.", "Would you repair the sword for me?")) {
 			case 1:
 				mes "[Aumgarl]";
 				mes "Hmm...";
@@ -2827,7 +2827,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 				mes "I am sorry I am asking";
 				mes "you to do this, as well.";
 				next;
-				if (select("Umm...let's do it next time.:Alright, I'll go get them.") == 1) {
+				if (select("Umm...let's do it next time.", "Alright, I'll go get them.") == 1) {
 					mes "[Aumgarl]";
 					mes "Umm.....";
 					mes "I am sorry I can't";
@@ -2867,7 +2867,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 			mes "I'll do my best";
 			mes "to help you.";
 			next;
-			switch(select("Maybe next time...:Please repair this sword for me.")) {
+			switch(select("Maybe next time...", "Please repair this sword for me.")) {
 			case 1:
 				mes "[Aumgarl]";
 				mes "Well...";
@@ -2911,7 +2911,7 @@ geffen_in,71,112,2	script	Blacksmith#SaYumMoon	4_M_JOB_BLACKSMITH,{
 				mes "I am sorry I am asking";
 				mes "you to do this, as well.";
 				next;
-				if (select("Umm..let's do it next time.:Alright, I'll go get them.") == 1) {
+				if (select("Umm..let's do it next time.", "Alright, I'll go get them.") == 1) {
 					mes "[Aumgarl]";
 					mes "Umm.....";
 					mes "I am sorry I can't";
@@ -3050,7 +3050,7 @@ geffen_in,106,106,7	script	Girl#gnbs2	4_M_KID2,{
 			mes "It's ..you.. handsome...brother..";
 		mes "Ahh...heh heh...";
 		next;
-		if (select("Ask about her health condition.:Talk to her for a while.") == 1) {
+		if (select("Ask about her health condition.", "Talk to her for a while.") == 1) {
 			if (rand(1,4) == 3) {
 				mes "[Lyroo]";
 				mes "Uh....umm...?";
@@ -3098,7 +3098,7 @@ geffen_in,106,106,7	script	Girl#gnbs2	4_M_KID2,{
 			mes "Ah....It's you, handsome brother...";
 		mes "Uhm? what is that you have?";
 		next;
-		if (select("It's nothing.:It's your medicine.") == 1) {
+		if (select("It's nothing.", "It's your medicine.") == 1) {
 			mes "[Lyroo]";
 			mes "Oh...";
 			mes "Alright...";
@@ -3236,7 +3236,7 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 				mes "Hmm...you look like you";
 				mes "want to ask me something?";
 				next;
-				if (select("You're so beautiful.:Do you like traveling?") == 1) {
+				if (select("You're so beautiful.", "Do you like traveling?") == 1) {
 					if (rand(1,4) == 4) {
 						mes "[Cylrnel]";
 						mes "...excuse me?";
@@ -3245,7 +3245,7 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 						mes "Trying to hit on me?";
 						mes "Ah ha ha ha.";
 						next;
-						if (select("Yes, I fell in love at first sight.:I have a favor to ask.") == 1) {
+						if (select("Yes, I fell in love at first sight.", "I have a favor to ask.") == 1) {
 							if (rand(1,3) == 3) {
 								mes "[Cylrnel]";
 								mes "HAHAHAHHAHAHAHAH!";
@@ -3369,7 +3369,7 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 			mes "I wanted to go with you, but";
 			mes "I've been really busy.";
 			next;
-			if (select("Not yet...:Yes, Here.") == 1) {
+			if (select("Not yet...", "Yes, Here.") == 1) {
 				mes "[Cylrnel]";
 				mes "What! Why not!?";
 				mes "Hurry to her house!";
@@ -3388,7 +3388,7 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 			mes "First, how was her body temperature?";
 			sick = 0;
 			next;
-			switch(select("Very hot.:Very cold.:Normal.:Turns hot and cold repeatedly.")) {
+			switch(select("Very hot.", "Very cold.", "Normal.", "Turns hot and cold repeatedly.")) {
 			case 1:
 				.@sick1$ = "Very hot.";
 				break;
@@ -3407,7 +3407,7 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 			mes "Okay...";
 			mes "Now, about physiological condition.";
 			next;
-			switch(select("No sweating at all.:Sweating all over the body.:Runny nose.:No tears, sweats at all.")) {
+			switch(select("No sweating at all.", "Sweating all over the body.", "Runny nose.", "No tears, sweats at all.")) {
 			case 1:
 				.@sick2$ = "No sweating at all.";
 				++.@sick;
@@ -3426,7 +3426,7 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 			mes "Next, tell me about";
 			mes "her physical condition.";
 			next;
-			switch(select("Nothing in particular.:Becomes paralyzed often.:Muscles became soft.:Muscles became hard.")) {
+			switch(select("Nothing in particular.", "Becomes paralyzed often.", "Muscles became soft.", "Muscles became hard.")) {
 			case 1:
 				.@sick3$ = "Nothing in particular.";
 				break;
@@ -3444,7 +3444,7 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 			mes "[Cylrnel]";
 			mes "How about internal organs?";
 			next;
-			switch(select("Stomach hurts like it's been stabbed by a knife.:Head hurts like it's been smashed by a hammer.:Heart beats irregularly.:Has difficulty in breathing.")) {
+			switch(select("Stomach hurts like it's been stabbed by a knife.", "Head hurts like it's been smashed by a hammer.", "Heart beats irregularly.", "Has difficulty in breathing.")) {
 			case 1:
 				.@sick4$ = "Stomach hurts like it's been stabbed by a knife.";
 				break;
@@ -3472,7 +3472,7 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 			mes ""+.@sick4$+"^000000";
 			mes "right?";
 			next;
-			if (select("No..not exactly..:Yes, I am sure.") == 1) {
+			if (select("No..not exactly..", "Yes, I am sure.") == 1) {
 				mes "[Cylrnel]";
 				mes "Then go back to her and";
 				mes "find the exact symptoms";
@@ -3484,7 +3484,7 @@ yuno_in01,99,101,4	script	Doctor#gnbs	4_F_ALCHE,{
 			mes "If they're the wrong symptoms,";
 			mes "I can't be responsible.";
 			next;
-			if (select("Err..let me go and double check.:I'm sure.") == 1) {
+			if (select("Err..let me go and double check.", "I'm sure.") == 1) {
 				mes "[Cylrnel]";
 				mes "Then, go back to her and";
 				mes "find the exact symptoms";
@@ -3771,7 +3771,7 @@ gonryun,237,226,3	script	Han Ran Jiao#gon	4_M_TWMIDMAN,{
 		mes "Would you please return that";
 		mes "knife to me?";
 		next;
-		if (select("Return the knife.:Refuse.") == 1) {
+		if (select("Return the knife.", "Refuse.") == 1) {
 			nakha = 3;
 			delitem Knife,1;
 			mes "[Han Ran Jiao]";

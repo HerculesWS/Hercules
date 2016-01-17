@@ -42,7 +42,7 @@
 	mes "This is Smile Assistance.";
 	mes "How may I help you ?";
 	next;
-	switch(select("^3355FFMr. Smile^000000 ?:Construct ^3355FFMr. Smile^000000 :Quit")) {
+	switch(select("^3355FFMr. Smile^000000 ?", "Construct ^3355FFMr. Smile^000000 ", "Quit")) {
 	case 1:
 		mes "[Smile Girl]";
 		mes "National Event held by the command of ^5577FFHis majesty Tristram the 3rd^000000,";

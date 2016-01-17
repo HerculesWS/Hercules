@@ -45,7 +45,7 @@ geffen_in,151,119,4	script	Great Wizard	1_M_WIZARD,{
 	mes "Look into yourself to discover";
 	mes "your hidden abilities !";
 	next;
-	switch (select("About mage's hidden ability :About skill ^3355FF' Energy Coat '^000000 :End conversation")) {
+	switch (select("About mage's hidden ability ", "About skill ^3355FF' Energy Coat '^000000 ", "End conversation")) {
 	case 1:
 		mes "[BLIZZARDRISS]";
 		mes "For many years";

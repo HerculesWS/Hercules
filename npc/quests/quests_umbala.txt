@@ -143,7 +143,7 @@ um_in,39,122,5	script	Utan Chief	4_M_UMCHIEF,{
 		mes "a problem looking around the";
 		mes "village, but it seems you have something to ask of me.";
 		next;
-		switch(select("I want to learn Utan language.:Umbabah Umbabah?:Nothing.")) {
+		switch(select("I want to learn Utan language.", "Umbabah Umbabah?", "Nothing.")) {
 		case 1:
 			if (isequipped(2278) || isequipped(2297) || isequipped(2288) || isequipped(2292) || isequipped(5005) || isequipped(2281) || isequipped(5043)) {
 				mes "[Karkatan]";
@@ -513,7 +513,7 @@ um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 	mes "enchanted stones and to divide a";
 	mes "pure enchanted stone into rough ones.";
 	next;
-	switch (select("Create rough enchanted stones:Divide a pure enchanted stone:Quit.")) {
+	switch (select("Create rough enchanted stones", "Divide a pure enchanted stone", "Quit.")) {
 	case 1:
 		mes "[Puchuchartan]";
 		mes "Do you wish to create rough";
@@ -522,7 +522,7 @@ um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 		mes "Earth, Water, Fire, Wind...";
 		mes "...choose one.";
 		next;
-		switch (select("Earth:Water:Fire:Wind")) {
+		switch (select("Earth", "Water", "Fire", "Wind")) {
 		case 1:
 			.@consume = 947; //Horn
 			.@amount = 15;
@@ -686,7 +686,7 @@ um_in,44,71,2	script	Utan Shaman	4_F_UMOLDWOMAN,{
 		mes "divide? Earth, Water, Fire, Wind... ";
 		mes "Choose one.";
 		next;
-		switch(select("Earth:Water:Fire:Wind")) {
+		switch(select("Earth", "Water", "Fire", "Wind")) {
 		case 1:
 			.@divide = 997; //Great_Nature
 			break;
@@ -845,7 +845,7 @@ umbala,221,193,1	script	#Skulldoor	HIDDEN_NPC,{
 		mes "As you peer through the keyhole,";
 		mes "you can see somebody moving inside the room.^000000";
 		next;
-		if (select("Examine the skull.:Quit.") == 1) {
+		if (select("Examine the skull.", "Quit.") == 1) {
 			mes "^3355FFYou see that the eye sockets";
 			mes "of the skull are empty.";
 			mes "How peculiar...";
@@ -856,7 +856,7 @@ umbala,221,193,1	script	#Skulldoor	HIDDEN_NPC,{
 			mes "^3355FFYou see the left eye socket of the";
 			mes "skull. What do you want to do?^000000";
 			next;
-			switch(select("Leave it as it is.:Insert a Blue Gemstone.:Insert a Yellow Gemstone.:Insert a Red Gemstone.")) {
+			switch(select("Leave it as it is.", "Insert a Blue Gemstone.", "Insert a Yellow Gemstone.", "Insert a Red Gemstone.")) {
 			case 1:
 				mes "^3355FFYou left the eye socket as it was.^000000";
 				next;
@@ -898,7 +898,7 @@ umbala,221,193,1	script	#Skulldoor	HIDDEN_NPC,{
 			mes "^3355FFYou see the right eye socket of";
 			mes "the skull. What do you want to do?^000000";
 			next;
-			switch(select("Leave it as it is.:Insert a Blue Gemstone.:Insert a Yellow Gemstone.:Insert a Red Gemstone.")) {
+			switch(select("Leave it as it is.", "Insert a Blue Gemstone.", "Insert a Yellow Gemstone.", "Insert a Red Gemstone.")) {
 			case 1:
 				mes "^3355FFYou left the eye socket as it was.^000000";
 				next;
@@ -1312,7 +1312,7 @@ OnTouch:
 		mes "house, you see a leaf on the";
 		mes "ground near where you're standing.^000000";
 		next;
-		if (select("Take it.:Leave it.") == 1) {
+		if (select("Take it.", "Leave it.") == 1) {
 			close2;
 			um_wind = 0;
 			MISC_QUEST |= 32768;

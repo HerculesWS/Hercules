@@ -282,7 +282,7 @@ pay_arche,109,169,3	script	Arpesto	4_M_05,{
 				mes "''^3131FFEmergency Arrow^000000.'' Would you";
 				mes "be interested in learning it?";
 				next;
-				switch(select("Yes, please!:Ummm...")) {
+				switch(select("Yes, please!", "Ummm...")) {
 				case 1:
 					mes "[Arpesto]";
 					mes "Great, great. Of course,";

@@ -62,7 +62,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 	mes "[Elin]";
 	mes "You know, I really really want a new doll! I hope my daddy will give me one on my birthday...!";
 	next;
-	switch(select("Um, I hope your daddy gives you one too.:How about I give you one now?")) {
+	switch(select("Um, I hope your daddy gives you one too.", "How about I give you one now?")) {
 	case 1:
 		mes "[Elin]";
 		mes "Yeah, I'm hoping";
@@ -93,7 +93,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 		mes "[Elin]";
 		mes "What kind of doll are you going to give me? Are you really gonna give me one?";
 		next;
-		switch(select("Poring Doll:Chonchon Doll:Puppet:Rocker Doll:Spore Doll:Osiris Doll:Baphomet Doll:Raccoon Doll:Yoyo Doll:I'm as adorable as a doll.")) {
+		switch(select("Poring Doll", "Chonchon Doll", "Puppet", "Rocker Doll", "Spore Doll", "Osiris Doll", "Baphomet Doll", "Raccoon Doll", "Yoyo Doll", "I'm as adorable as a doll.")) {
 		case 1:
 			if (countitem(Poring_Doll) >= 1) {
 				delitem Poring_Doll,1;
@@ -407,7 +407,7 @@ alberta_in,28,145,4	script	Grampa	2_M_PHARMACIST,{
 	mes "But my soul still burns with youthful vigor! It's just... This old body can't keep up anymore... *Hack! Wheeeeze~*";
 	next;
 	if (countitem(Tiger_Footskin) > 9) {
-		switch(select("Show him Tiger's Footskin.:Exchange it with Boys Cap.:Cancel")) {
+		switch(select("Show him Tiger's Footskin.", "Exchange it with Boys Cap.", "Cancel")) {
 		case 1:
 			mes "[Grampa]";
 			mes "Ohhh~ !!";
@@ -440,7 +440,7 @@ alberta_in,28,145,4	script	Grampa	2_M_PHARMACIST,{
 			close;
 		}
 	} else {
-		switch(select("Talk:Cancel")) {
+		switch(select("Talk", "Cancel")) {
 		case 1:
 			mes "[Grampa]";
 			mes "Listen well...";
@@ -490,7 +490,7 @@ alberta_in,122,53,4	script	Cherokee	1_M_01,{
 	mes "Do you have ^FF3355Evil Horn^000000?";
 	mes "If you offer me 20 Evil Horns, I will give you an ^3355FFAntler^000000 from my precious collection. So, deal?";
 	next;
-	switch(select("Okay, let's deal.:Shut up, Dumbo.")) {
+	switch(select("Okay, let's deal.", "Shut up, Dumbo.")) {
 	case 1:
 		if (countitem(Evil_Horn) > 19) {
 			delitem Evil_Horn,20;
@@ -603,7 +603,7 @@ alberta,120,53,1	script	Stylish Merchant#new30	1_M_BARD,{
 		mes "[Zic]";
 		mes "Let me know what item you're interested in, and maybe I'll make it for you...";
 		next;
-		switch(select("Bao Bao:Cresent Hairpin:Fashionable Glasses:Heart Hairpin")) {
+		switch(select("Bao Bao", "Cresent Hairpin", "Fashionable Glasses", "Heart Hairpin")) {
 		case 1:
 			mes "[Zic]";
 			mes "Sooo...";
@@ -659,7 +659,7 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 	mes "[Tempestra]";
 	mes "Oh, I'm sooo thirsty! A nice, chilled Yellow Potion would be perfect right about now~";
 	next;
-	switch(select("Let me treat you to a Yellow Potion.:What, you expect me to give you one?!")) {
+	switch(select("Let me treat you to a Yellow Potion.", "What, you expect me to give you one?!")) {
 	case 1:
 		if (countitem(Yellow_Potion) > 0){
 			mes "[Tempestra]";
@@ -672,7 +672,7 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 			mes "Hyaaaaaa~~!!!";
 			mes "It's so cold!! Thank you~~~";
 			next;
-			switch(select("It's really hot, isn't it~?:You should wear your hat...")) {
+			switch(select("It's really hot, isn't it~?", "You should wear your hat...")) {
 			case 1:
 				mes "[Tempestra]";
 				mes "Yeah~ it's really hot....";
@@ -686,7 +686,7 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 				mes "[Tempestra]";
 				mes "I brought these hats so I can sell them and use the money for my vacation here, but now it looks like I have to wear one~";
 				next;
-				switch(select("Sunday Hat!!?:Mage Hat?!?:Magician Hat??!??")) {
+				switch(select("Sunday Hat!!?", "Mage Hat?!?", "Magician Hat??!??")) {
 				case 1:
 					mes "[Tempestra]";
 					mes "Oh? Didn't you know? I'm a hat merchant. Didn't I tell you that before?";
@@ -708,7 +708,7 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 						next;
 						mes "[Tempestra]";
 						mes "I just want to make something for the Yellow Potion, so I won't charge you any zeny for my hat making service.";
-						switch(select("Oh, please do.:No thanks.")) {
+						switch(select("Oh, please do.", "No thanks.")) {
 						case 1:
 							next;
 							mes "[Tempestra]";
@@ -772,7 +772,7 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 						next;
 						mes "[Tempestra]";
 						mes "I just want to make something nice for you, so I won't charge you any zeny for my hat making service.";
-						switch(select("Oh, please do.:No thanks.")) {
+						switch(select("Oh, please do.", "No thanks.")) {
 						case 1:
 							next;
 							mes "[Tempestra]";
@@ -837,7 +837,7 @@ alberta,136,79,1	script	Hat store girl#new30	1_F_LIBRARYGIRL,{
 						next;
 						mes "[Tempestra]";
 						mes "I just want to make something nice for you, so I won't charge you any zeny for my hat making service.";
-						switch(select("Please do:No thanks")) {
+						switch(select("Please do", "No thanks")) {
 						case 1:
 							next;
 							mes "[Tempestra]";
@@ -959,7 +959,7 @@ alberta,91,70,4	script	Kinsey#tur	4_M_ORIENT02,{
 	mes "[Kinsey]";
 	mes "In fact, this old man is always there, telling stories about Turtle Island! But we're not sure if he's been there, or if he's just that drunk.";
 	next;
-	if (select("^3333FF*ting!*^000000:Sounds fun~") == 1) {
+	if (select("^3333FF*ting!*^000000", "Sounds fun~") == 1) {
 		mes "[Kinsey]";
 		mes "Whoa...";
 		mes "Hey, your eyes just lit up right when I said 'Turtle Island!' Hmm, let me try that again.";
@@ -1002,7 +1002,7 @@ alberta_in,23,104,4	script	Grandpa Turtle#tur	2_M_PHARMACIST,{
 	mes "[Grandpa Turtle]";
 	mes "There isn't one decent drinking establishment in all of Alberta! But then again, why did I drink so much? Hmm...";
 	next;
-	switch(select("Tell me about Turtle Island:How can I get there?:Stop talking")) {
+	switch(select("Tell me about Turtle Island", "How can I get there?", "Stop talking")) {
 	case 1:
 		mes "[Grandpa Turtle]";
 		mes "Eh...?";
@@ -1020,7 +1020,7 @@ alberta_in,23,104,4	script	Grandpa Turtle#tur	2_M_PHARMACIST,{
 		mes "[Grandpa Turtle]";
 		mes "But only someone with a good heart that's eager for adventure should be able to go to that kind of place.";
 		next;
-		switch(select("^3333FF*ting!*^000000:Tell me more, old man!")) {
+		switch(select("^3333FF*ting!*^000000", "Tell me more, old man!")) {
 		case 1:
 			mes "[Grandpa Turtle]";
 			mes "Ha ha ha~!";
@@ -1113,7 +1113,7 @@ alberta_in,23,104,4	script	Grandpa Turtle#tur	2_M_PHARMACIST,{
 		mes "Your eyes...";
 		mes "I can tell you're curious about Turtle Island. I guess you must have been talking to that drunken old man!";
 		next;
-		switch(select("Do you know about Turtle Island?:How can I get there?:Stop talking.")) {
+		switch(select("Do you know about Turtle Island?", "How can I get there?", "Stop talking.")) {
 		case 1:
 			mes "[Gotanblue]";
 			mes "Turtle Island...?";
@@ -1193,7 +1193,7 @@ alberta_in,23,104,4	script	Grandpa Turtle#tur	2_M_PHARMACIST,{
 			mes "[Gotanblue]";
 			mes "If you wish for me to guide you there, I will charge you 10,000 zeny. I'm the only navigator that can guide you there and back safely.";
 			next;
-			if (select("Turtle island -> 10000 zeny:Cancel") == 1) {
+			if (select("Turtle island -> 10000 zeny", "Cancel") == 1) {
 				if (Zeny > 9999) {
 					mes "[Gotanblue]";
 					mes "Alright!!";
@@ -1234,7 +1234,7 @@ tur_dun01,165,29,4	script	Sailor#tur2	4_M_SEAMAN,{
 	mes "to return";
 	mes "to Alberta?";
 	next;
-	if (select("Go to Alberta:Stop talking") == 1) {
+	if (select("Go to Alberta", "Stop talking") == 1) {
 		mes "[Gotanblue]";
 		mes "Heh heh...";
 		mes "I certainly hope you've found what you were looking for. Alright, I guess there's always a time for an adventurer to return home...";
@@ -1263,7 +1263,7 @@ tur_dun01,165,29,4	script	Sailor#tur2	4_M_SEAMAN,{
 	mes "time on Turtle Island.";
 	mes "Hah Hah Hah~";
 	next;
-	switch(select("About Turtle island:You're Jornadan Niliria?!:Stop talking")) {
+	switch(select("About Turtle island", "You're Jornadan Niliria?!", "Stop talking")) {
 	case 1:
 		mes "[Jornadan Niliria]";
 		mes "Turtle...";
@@ -2004,7 +2004,7 @@ tur_dun03,105,76,4	script	Knight Leader#tur	4_M_MINISTER,5,5,{
 	mes "Finally, another person.";
 	mes "Tell me who you are!";
 	next;
-	switch(select("Who are you to ask?:"+ strcharinfo(0) +"!:What are you doing here?:First, tell me who you are.")) {
+	switch(select("Who are you to ask?", ""+ strcharinfo(0) +"!", "What are you doing here?", "First, tell me who you are.")) {
 	case 1:
 		mes "[Takuyaka]";
 		mes "How dare you speak to me in that tone! Don't you know who I am?! I'm Takuyaka, leader of the Security Knights of Alberta! Kobolds and Porings quiver in fear when they hear my name...";
@@ -2107,7 +2107,7 @@ tur_dun01,190,115,4	script	Knight#tur	8W_SOLDIER,{
 	mes "Where are they?";
 	mes "Oh hey! You're an adventurer, aren't you? Do you know where my comrades are?";
 	next;
-	switch(select("Who are you?:Sorry, I don't.:Why did you come here?:How did you get here?")) {
+	switch(select("Who are you?", "Sorry, I don't.", "Why did you come here?", "How did you get here?")) {
 	case 1:
 		mes "[Passats]";
 		mes "My name is Passats, a proud Security Knight of Alberta. We've obtained some information that some people came here to seek treasure.";
@@ -2168,7 +2168,7 @@ tur_dun03,189,126,4	script	Knight#tur2	8W_SOLDIER,{
 	mes "[Jayprocat]";
 	mes "Oh? Are you a civilian? Nice to meet you. I'm a mighty Security Knight of Alberta, Jayprocat.";
 	next;
-	if (select("What is that, exactly?:I'm not impressed.") == 1) {
+	if (select("What is that, exactly?", "I'm not impressed.") == 1) {
 		mes "[Jayprocat]";
 		mes "Well...";
 		mes "We're supposed to protect the people of Alberta. That's our job as proud Security Knights.";
@@ -2192,7 +2192,7 @@ tur_dun03,189,126,4	script	Knight#tur2	8W_SOLDIER,{
 	mes "*Sniff*";
 	mes "Why did we have to be attacked by so many monsters on my first mission? I'm... I'm just a new recruit...";
 	next;
-	if (select("Why did you run away?:I don't care.") == 1) {
+	if (select("Why did you run away?", "I don't care.") == 1) {
 		mes "[Jayprocat]";
 		mes "No, I didn't just run away! The monsters were too stong and there were so many of them! Plus, it's our damn leader's fault.";
 		next;
@@ -2216,7 +2216,7 @@ tur_dun03,104,171,4	script	Knight#tur3	8W_SOLDIER,{
 	mes "[Squall]";
 	mes "Am I the only one left? Where are all my comrades?! I... I'm about to go crazy!";
 	next;
-	if(select("Maybe they ran away?:What happened?") == 1) {
+	if(select("Maybe they ran away?", "What happened?") == 1) {
 		mes "[Squall]";
 		mes "No, we would never run away from the face of danger.";
 		next;
@@ -2280,7 +2280,7 @@ tur_dun03,67,130,4	script	Knight#tur4	8W_SOLDIER,{
 			mes "[Nysurea]";
 			mes "Even though you're pretty strong, sooner or later you might need a reprieve. I can send you back to Alberta right now if you want.";
 			next;
-			if (select("Yes, Help me.:No, thanks.") == 1) {
+			if (select("Yes, Help me.", "No, thanks.") == 1) {
 				mes "[Nysurea]";
 				mes "Okay then, let me activate this teleport thingee donated to us by Kafra Corporation...";
 				close2;

@@ -308,14 +308,14 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 				mes "poison by using one";
 				mes "of your Green Potions.^000000";
 				next;
-				switch(select("Use Green Potion.:Don't use it.")){
+				switch(select("Use Green Potion.", "Don't use it.")){
 				case 1:
 					mes "^3355FFThe poison weakens";
 					mes "and some of it evaporates,";
 					mes "revealing a piece of cloth that";
 					mes "was hidden in that puddle.^000000";
 					next;
-					switch(select("Don't investigate.:Investigate.")){
+					switch(select("Don't investigate.", "Investigate.")){
 					case 1:
 						mes "["+strcharinfo(0)+"]";
 						mes "A piece of cloth";
@@ -377,14 +377,14 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 				mes "poison by using one";
 				mes "of your Green Potions.^000000";
 				next;
-				switch(select("Use Green Potion.:Don't use it.")){
+				switch(select("Use Green Potion.", "Don't use it.")){
 				case 1:
 					mes "^3355FFThe poison weakens";
 					mes "and some of it evaporates,";
 					mes "revealing a piece of cloth that";
 					mes "was hidden in that puddle.^000000";
 					next;
-					switch(select("Don't investigate.:Investigate.")){
+					switch(select("Don't investigate.", "Investigate.")){
 					case 1:
 						mes "["+strcharinfo(0)+"]";
 						mes "A piece of cloth";
@@ -949,7 +949,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 			mes "traces of poison strewn";
 			mes "all over the ground.^000000";
 			next;
-			switch(select("Continue following the traces.:Further investigate the area.")){
+			switch(select("Continue following the traces.", "Further investigate the area.")){
 			case 1:
 				mes "^3355FFYou examine the";
 				mes "trail, but can't really";
@@ -977,7 +977,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 				mes "Green Potion on it to";
 				mes "neutralize it first.^000000";
 				next;
-				switch(select("Pour Green Potion.:Don't use Green Potion.")){
+				switch(select("Pour Green Potion.", "Don't use Green Potion.")){
 				case 1:
 					if(countitem(Green_Potion) < 1){
 						mes "^3355FFUnfortunately, you";
@@ -1103,7 +1103,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 			mes "traces of poison strewn";
 			mes "all over the ground.^000000";
 			next;
-			switch(select("Continue following the traces.:Further investigate the area.")){
+			switch(select("Continue following the traces.", "Further investigate the area.")){
 			case 1:
 				mes "^3355FFYou examine the";
 				mes "trail, but can't really";
@@ -1131,7 +1131,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 				mes "Green Potion on it to";
 				mes "neutralize it first.^000000";
 				next;
-				switch(select("Pour Green Potion.:Don't use Green Potion.")){
+				switch(select("Pour Green Potion.", "Don't use Green Potion.")){
 				case 1:
 					if(countitem(Green_Potion) < 1){
 						mes "^3355FFUnfortunately, you";

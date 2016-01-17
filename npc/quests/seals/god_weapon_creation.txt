@@ -46,7 +46,7 @@ gld_dun01,28,85,0	script	Grunburti#1::GodDwarf	4_M_DWARF,{
 	mes "Living in Midgard and away from";
 	mes "my home town is painful enough, let alone facing a whiny human. Leave me alone!";
 	next;
-	switch(select("Ask him about Dwarves.:Ask him what he is doing.:Request weapon creation.:Cancel.")) {
+	switch(select("Ask him about Dwarves.", "Ask him what he is doing.", "Request weapon creation.", "Cancel.")) {
 	case 1:
 		mes "[Dwarf Grunburti]";
 		mes "What's to know about Dwarves?";
@@ -96,7 +96,7 @@ gld_dun01,28,85,0	script	Grunburti#1::GodDwarf	4_M_DWARF,{
 				mes "Hmm...";
 				mes "I'll need some things to make a weapon for you. What exactly were you interested in having?";
 				next;
-				switch(select("Brisingamen:Megingjard:Sleipnir:Mjolnir")) {
+				switch(select("Brisingamen", "Megingjard", "Sleipnir", "Mjolnir")) {
 				case 1:
 					mes "[Dwarf Grunburti]";
 					mes "I will need...";
@@ -240,7 +240,7 @@ gld_dun01,28,85,0	script	Grunburti#1::GodDwarf	4_M_DWARF,{
 			mes "[Dwarf Grunburti]";
 			mes "How dare you come here unprepared?! Did you forget what you needed to bring? Listen carefully this time!";
 			next;
-			switch(select("Brisingamen:Megingjard:Sleipnir:Mjolnir")) {
+			switch(select("Brisingamen", "Megingjard", "Sleipnir", "Mjolnir")) {
 			case 1:
 				mes "[Dwarf Grunburti]";
 				mes "I will need...";
@@ -447,7 +447,7 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 	mes "you wish for me";
 	mes "to create!";
 	next;
-	switch(select("Brisingamen:Megingjard:Sleipnir:Mjolnir")) {
+	switch(select("Brisingamen", "Megingjard", "Sleipnir", "Mjolnir")) {
 	case 1:
 		mes "[Dwarf Grunburti]";
 		mes "B-Brisingamen?!";
@@ -476,7 +476,7 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 		mes "20 Gold";
 		mes "1 Necklace^000000";
 		next;
-		switch(select("Make Brisingamen.:Cancel.")) {
+		switch(select("Make Brisingamen.", "Cancel.")) {
 		case 1:
 			if ((countitem(Jewel_Of_Prayer) > 3) && (countitem(Silver_Fancy) > 3) && (countitem(Crystal_Of_Snow) > 2) && (countitem(Slilince_Wave) > 2) && (countitem(Air_Stream) > 2) && (countitem(Blue_Jewel) > 1) && (countitem(Scarlet_Jewel) > 2) && (countitem(White_Jewel) > 9) && (countitem(Cardinal_Jewel_) > 4) && (countitem(Gold) > 19) && (countitem(Necklace) > 0)){ //Jewel_Of_Prayer Silver_Fancy Crystal_Of_Snow Slilince_Wave Air_Stream Blue_Jewel Scarlet_Jewel White_Jewel Cardinal_Jewel_ Gold Necklace
 				mes "[Dwarf Grunburti]";
@@ -555,7 +555,7 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 		mes "10 Oridecon";
 		mes "1 Belt^000000...";
 		next;
-		switch(select("Make Megingjard.:Cancel.")) {
+		switch(select("Make Megingjard.", "Cancel.")) {
 		case 1:
 			if ((countitem(Gullraifnir) > 0) && (countitem(Gold) > 19) && (countitem(Blue_Jewel) > 9) && (countitem(Oridecon) > 9) && (countitem(Belt) > 0)) {
 				mes "[Dwarf Grunburti]";
@@ -640,7 +640,7 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 		mes "10 Elunium";
 		mes "1 Slotted Boots^000000...";
 		next;
-		switch(select("Make Sleipnir.:Cancel.")) {
+		switch(select("Make Sleipnir.", "Cancel.")) {
 		case 1:
 			if ((countitem(Mystery_Wheel) > 2) && (countitem(Feather_Of_Angel) > 4) && (countitem(Soul_Of_Fish) > 2) && (countitem(Symbol_Of_Sun) > 3) && (countitem(Breath_Of_Soul) > 2) && (countitem(Gold) > 19) && (countitem(Elunium) > 9) && (countitem(Boots_) > 0)) {
 				mes "[Dwarf Grunburti]";
@@ -729,7 +729,7 @@ que_god01,154,112,4	script	Grunburti#god	4_M_DWARF,{
 		mes "40 Gold";
 		mes "1 Stunner^000000...";
 		next;
-		switch(select("Make Mjolnir.:Cancel.")) {
+		switch(select("Make Mjolnir.", "Cancel.")) {
 		case 1:
 			if ((countitem(Iron_Glove) > 1) && (countitem(Iron_Maiden) > 3) && (countitem(Anger_Of_Valkurye) > 4) && (countitem(Indication_Of_Tempest) > 4) && (countitem(Rough_Billows) > 4) && (countitem(Oridecon) > 19) && (countitem(Elunium) > 4) && (countitem(Gold) > 39) && (countitem(Stunner) > 0)) {
 				mes "[Dwarf Grunburti]";
@@ -864,7 +864,7 @@ que_god01,293,3,0	script	Godly Item Quests#god	4_F_01,{
 		mes "[Use in case of emergency]";
 		mes "What services would you like to use?";
 		next;
-		switch(select("Turn off Warps.:Reset Timer.:Reset chat room.")) {
+		switch(select("Turn off Warps.", "Reset Timer.", "Reset chat room.")) {
 		case 1:
 			mes "[Use in case of emergency]";
 			mes "Press the 'Next' button to turn off warps.";
