@@ -39,7 +39,7 @@ veins,210,345,5	script	Veins Guide#1::ve_guide	4_M_RASWORD,{
 	.@loop1 = 1;
 	while(.@loop1) {
 		next;
-		switch(select("Village Guide:Remove Marks from Mini-Map:Notice:Cancel")) {
+		switch(select("Village Guide", "Remove Marks from Mini-Map", "Notice", "Cancel")) {
 		case 1:
 			mes "[Veins Guide]";
 			mes "I can tell you any building location as long as it is in Veins.";
@@ -49,14 +49,14 @@ veins,210,345,5	script	Veins Guide#1::ve_guide	4_M_RASWORD,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes:No") == 1) .@compass_check = 1;
+				if (select("Yes", "No") == 1) .@compass_check = 1;
 			}
 			.@loop2 = 1;
 			while(.@loop2) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 
-				switch(select("Temple:Inn:Weapon Shop:Tool Shop:Airship:Tavern:Geological Research Institute:Cancel")) {
+				switch(select("Temple", "Inn", "Weapon Shop", "Tool Shop", "Airship", "Tavern", "Geological Research Institute", "Cancel")) {
 				case 1:
 					mes "[Veins Guide]";
 					mes "Our temple is located north,";

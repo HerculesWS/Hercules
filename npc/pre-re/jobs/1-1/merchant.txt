@@ -131,7 +131,7 @@ alberta_in,53,43,6	script	Merchant#mer	4_M_04,{
 			mes "The only thing to take care of is your Membership Fee.";
 			mes "Are you ready?";
 			next;
-			switch(select("Pay the rest of the 500 Zeny:Quit")) {
+			switch(select("Pay the rest of the 500 Zeny", "Quit")) {
 			case 1:
 				mes "[Chief Mahnsoo]";
 				if (Zeny < 500) {
@@ -295,7 +295,7 @@ alberta_in,53,43,6	script	Merchant#mer	4_M_04,{
 		mes "Is there anything";
 		mes "I can help you with?";
 		next;
-		switch(select("I want to be a Merchant.:Tell me about Merchants.:Tell me the requirements.:Nope.")) {
+		switch(select("I want to be a Merchant.", "Tell me about Merchants.", "Tell me the requirements.", "Nope.")) {
 		case 1:
 			mes "[Chief Mahnsoo]";
 			mes "Do you want to";
@@ -327,7 +327,7 @@ alberta_in,53,43,6	script	Merchant#mer	4_M_04,{
 			mes "So what do you think?";
 			mes "Are you ready to join now?";
 			next;
-			if (select("Yes, I will.:Ummm, maybe later...") ==1 ) {
+			if (select("Yes, I will.", "Ummm, maybe later...") ==1 ) {
 				mes "[Chief Mahnsoo]";
 				mes "Let me check if you";
 				mes "filled out everything";
@@ -345,7 +345,7 @@ alberta_in,53,43,6	script	Merchant#mer	4_M_04,{
 				mes "How do you wish to";
 				mes "handle the fee?";
 				next;
-				switch(select("Pay all 1,000 Zeny now!:Two payments of 500 Zeny.:Quit")) {
+				switch(select("Pay all 1,000 Zeny now!", "Two payments of 500 Zeny.", "Quit")) {
 				case 1:
 					mes "[Chief Mahnsoo]";
 					if (Zeny >= 1000) {
@@ -600,7 +600,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 		mes "So how did";
 		mes "the delivery go?";
 		next;
-		if (select("*Sob* I lost the package.:Fine.") == 1) {
+		if (select("*Sob* I lost the package.", "Fine.") == 1) {
 			job_merchant_q = 9;
 			mes "[Union Staff Kay]";
 			mes "Are you kidding me? You'll fail the test if you lose the package!";
@@ -618,7 +618,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 		mes "[Union Staff Kay]";
 		mes "Hey, what are you still doing here? Shouldn't you be on your way already?";
 		next;
-		if (select("I need a new package.:Oh, yeah. You're right!") == 1) {
+		if (select("I need a new package.", "Oh, yeah. You're right!") == 1) {
 			if (countitem(Merchant_Box_1) == 0 && countitem(Merchant_Box_2) == 0 && countitem(Merchant_Box_3) == 0 && countitem(Merchant_Box_Etc) == 0) {
 				mes "[Union Staff Kay]";
 				mes "Wha--?";
@@ -626,7 +626,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 				mes "the package go?";
 				mes "Where is it?!";
 				next;
-				if (select("*Sob* I lost it!:I have it right here.") == 1) {
+				if (select("*Sob* I lost it!", "I have it right here.") == 1) {
 					job_merchant_q = 9;
 					mes "[Union Staff Kay]";
 					mes "You...";
@@ -673,7 +673,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 		mes "what brings";
 		mes "you here?";
 		next;
-		switch(select("My Merchant License test.:I'm looking for part time work.:Nothing.")) {
+		switch(select("My Merchant License test.", "I'm looking for part time work.", "Nothing.")) {
 		case 1:
 			mes "[Union Staff Kay]";
 			mes "I see.";
@@ -694,7 +694,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 			mes "[Union Staff Kay]";
 			mes "Alright, there you go. Lemme give you the package. Now, choose the destination of the delivery.";
 			next;
-			switch(select("Prontera.:Geffen.:Morocc.:Byalan Island.")) {
+			switch(select("Prontera.", "Geffen.", "Morocc.", "Byalan Island.")) {
 			case 1: .@where_village = 1; break;
 			case 2: .@where_village = 2; break;
 			case 3: .@where_village = 3; break;
@@ -709,7 +709,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 					if (.@input == 0) {
 						mes "[Union Staff Kay]";
 						mes "Are you sure that you wanna cancel?";
-						if (select("Yes.:Let me try again.") == 1) {
+						if (select("Yes.", "Let me try again.") == 1) {
 							mes "Alright, we'll cancel for now.";
 							close;
 						}
@@ -733,7 +733,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 				else
 					mes "Lucky you! Your destination is Byalan Island. The Serial Number is " + .@input + ". Are you positive?";
 				next;
-				if (select("Positive.:Whoops! Wrong number!") == 1) {
+				if (select("Positive.", "Whoops! Wrong number!") == 1) {
 					break;
 				}
 			}
@@ -1057,7 +1057,7 @@ prontera,248,42,0	script	Kafra Employee#mer	4_F_KAFRA2,{
 		mes "Currently, we offer a Teleport";
 		mes "Service to Izlude for 600 zeny.";
 		next;
-		if (select("Use:Cancel") == 1) {
+		if (select("Use", "Cancel") == 1) {
 			if (Zeny < 600) {
 				mes "[Kafra Employee]";
 				mes "I'm sorry, but you";

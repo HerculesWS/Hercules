@@ -48,7 +48,7 @@ prontera,154,187,4	script	Guide#prt::PrtGuide	8W_SOLDIER,{
 	.@loop1 = 1;
 	while (.@loop1) {
 		next;
-		switch(select("City Guide.:Remove Marks from Mini-Map:Notice:Cancel")) {
+		switch(select("City Guide.", "Remove Marks from Mini-Map", "Notice", "Cancel")) {
 		case 1:
 			mes "[Prontera Guide]";
 			mes "Please select";
@@ -59,14 +59,14 @@ prontera,154,187,4	script	Guide#prt::PrtGuide	8W_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes:No") == 1) .@compass_check = 1;
+				if (select("Yes", "No") == 1) .@compass_check = 1;
 			}
 			.@loop2 = 1;
 			while (.@loop2) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 
-				switch(select("Swordman Association:^0000FFSanctuary^000000:Prontera Chivalry:Weapon Shop:Tool Shop:Inn:Trading Post:Pub:Library:Job Agency:Prontera Castle:City Hall:Cancel")) {
+				switch(select("Swordman Association", "^0000FFSanctuary^000000", "Prontera Chivalry", "Weapon Shop", "Tool Shop", "Inn", "Trading Post", "Pub", "Library", "Job Agency", "Prontera Castle", "City Hall", "Cancel")) {
 				case 1:
 					mes "[Prontera Guide]";
 					mes "The Swordman Association,";

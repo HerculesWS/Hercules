@@ -56,7 +56,7 @@ function	script	F_CmdGuide	{
 	mes "so let me know if you need";
 	mes "directions anywhere here.";
 	next;
-	switch(select("Casino:Hula Dance Stage ^3355FF(Dancer Job Change)^000000:Weapon and Armor Shop:Tool Shop:Tourist Shop:Kafra Co. Western Branch:Chief's House:Pub:Campground:End Conversation")) {
+	switch(select("Casino", "Hula Dance Stage ^3355FF(Dancer Job Change)^000000", "Weapon and Armor Shop", "Tool Shop", "Tourist Shop", "Kafra Co. Western Branch", "Chief's House", "Pub", "Campground", "End Conversation")) {
 	case 1:
 		viewpoint 1,140,98,0,0xFF6633;
 		mes "Please refer to the cross mark,";

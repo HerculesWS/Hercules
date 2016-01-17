@@ -57,7 +57,7 @@ prontera,146,232,4	script	Hypnotist#2	4_F_TELEPORTER,{
 	mes "Job character to qualify.";
 	mes "Now, do you have any questions?";
 	next;
-	switch(select("Skill Reset?:I want a Skill Reset:Nothing")) {
+	switch(select("Skill Reset?", "I want a Skill Reset", "Nothing")) {
 
 	case 1:
 		mes "[Hypnotist]";
@@ -88,7 +88,7 @@ prontera,146,232,4	script	Hypnotist#2	4_F_TELEPORTER,{
 		mes "want to proceed with";
 		mes "my ^FF0000Skill Reset^000000 service?";
 		next;
-		if (select("Yes:Cancel") == 1) {
+		if (select("Yes", "Cancel") == 1) {
 			if (BaseLevel > 40) {
 				mes "[Hypnotist]";
 				mes "I'm sorry, but characters";

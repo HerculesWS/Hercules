@@ -102,7 +102,7 @@ izlude_in,74,172,4	script	Swordman#swd_1	2_M_SWORDMASTER,{
 	mes "What business";
 	mes "brings you to us?";
 	next;
-	switch(select("Job Change:About Swordman.:About the Job requirements.:Cancel.")) {
+	switch(select("Job Change", "About Swordman.", "About the Job requirements.", "Cancel.")) {
 	case 1:
 		if (BaseJob == Job_Swordman) {
 			mes "[Swordman]";
@@ -118,7 +118,7 @@ izlude_in,74,172,4	script	Swordman#swd_1	2_M_SWORDMASTER,{
 			mes "[Swordman]";
 			mes "So you wish to become a proud Swordman? By all means, please sign up!";
 			next;
-			if (select("Sign up.:Cancel.") == 1) {
+			if (select("Sign up.", "Cancel.") == 1) {
 				savepoint "izlude_in",65,165;
 				job_sword_q = 1;
 				setquest 1014;
@@ -128,7 +128,7 @@ izlude_in,74,172,4	script	Swordman#swd_1	2_M_SWORDMASTER,{
 				mes "[Swordman]";
 				mes "If you have already met the requirements, you can take an interview right now. Would you like to?";
 				next;
-				if (select("Yes.:No.") == 1) {
+				if (select("Yes.", "No.") == 1) {
 					mes "[Swordman]";
 					mes "Good, good.";
 					mes "Now, let's see...";
@@ -341,7 +341,7 @@ function	script	F_JobSwdStaff	{
 	mes "[Test Hall Staff]";
 	mes "Do you surrender?";
 	next;
-	if (select("Yes.:No.") == 1) {
+	if (select("Yes.", "No.") == 1) {
 		mapannounce "job_sword1","Applicant " + strcharinfo(0) + " quit the test.",bc_map;
 		warp "izlude_in",65,165;
 		end;
@@ -356,7 +356,7 @@ OnTouch:
 	mes "[Test Hall Staff]";
 	mes "Applicant " + strcharinfo(0) + ". Do you surrender??";
 	next;
-	if (select("Yes.:No.") == 1) {
+	if (select("Yes.", "No.") == 1) {
 		mapannounce "job_sword1","Applicant " + strcharinfo(0) + " quit the test..",bc_map;
 		warp "izlude_in",65,165;
 		end;

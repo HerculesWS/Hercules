@@ -49,7 +49,7 @@ payon,162,67,4	script	Guide#pay	4_M_PAY_SOLDIER,{
 	.@loop1 = 1;
 	while (.@loop1) {
 		next;
-		switch(select("City Guide:Remove Marks from Mini-Map:Notice.:Cancel")) {
+		switch(select("City Guide", "Remove Marks from Mini-Map", "Notice.", "Cancel")) {
 		case 1:
 			mes "[Payon Guide]";
 			mes "Please select";
@@ -60,13 +60,13 @@ payon,162,67,4	script	Guide#pay	4_M_PAY_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) .@compass_check = 1;
+				if (select("Yes.", "No.") == 1) .@compass_check = 1;
 			}
 			.@loop2 = 1;
 			while(.@loop2) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
-				switch(select("^FF0000Archer Guild^000000:Weapon Shop:Tool Shop:Pub:Central Palace:The Empress:Palace Annex:Royal Kitchen:Forge:Cancel")) {
+				switch(select("^FF0000Archer Guild^000000", "Weapon Shop", "Tool Shop", "Pub", "Central Palace", "The Empress", "Palace Annex", "Royal Kitchen", "Forge", "Cancel")) {
 				case 1:
 					mes "[Payon Guide]";
 					mes "The Archer Guild handles";
@@ -218,20 +218,20 @@ pay_arche,85,30,2	script	Guide#2pay	4_M_PAY_SOLDIER,{
 	.@loop1 = 1;
 	while (.@loop1) {
 		next;
-		switch(select("City Guide:Remove Marks from Mini-Map:Notice:Cancel")) {
+		switch(select("City Guide", "Remove Marks from Mini-Map", "Notice", "Cancel")) {
 		case 1:
 			mes "[Payon Guide]";
 			mes "Please, select a menu.";
 			if (.@compass_check == 0) {
 				mes "Would you like to leave indicators on the mini-map?";
 				next;
-				if (select("Yes.:No.") == 1) .@compass_check = 1;
+				if (select("Yes.", "No.") == 1) .@compass_check = 1;
 			}
 			.@loop2 = 1;
 			while(.@loop2) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
-				switch(select("^FF0000Archer Guild^000000:Tool Shop:Payon Dungeon:Cancel")) {
+				switch(select("^FF0000Archer Guild^000000", "Tool Shop", "Payon Dungeon", "Cancel")) {
 				case 1:
 					mes "[Payon Guide]";
 					mes "The Archer Guild,";

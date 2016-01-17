@@ -51,12 +51,12 @@ niflheim,107,156,6	script	Roaming Man#nif	4_M_NFMAN,{
 	mes "layout might help you escape";
 	mes "if it weren't so futile.";
 	next;
-	switch(select("Ask building locations.:Remove marks on the mini-map.:Cancel.")) {
+	switch(select("Ask building locations.", "Remove marks on the mini-map.", "Cancel.")) {
 	case 1:
 		mes "[Ricael]";
 		mes "So, um, which place do you want to know about?";
 		next;
-		switch(select("Witch's castle:Tool shop:Weapon shop:Pub:Cancel")) {
+		switch(select("Witch's castle", "Tool shop", "Weapon shop", "Pub", "Cancel")) {
 		case 1:
 			mes "[Ricael]";
 			mes "There. I made a ^FF3355+^000000 mark";

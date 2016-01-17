@@ -88,7 +88,7 @@ prt_church,184,41,4	script	Cleric#aco	1_M_PASTOR,{
 	mes "[Father Mareusis]";
 	mes "What is it that you seek?";
 	next;
-	switch(select("Father, I want to be a Acolyte.:Acolyte Requirements.:Just looking around.")) {
+	switch(select("Father, I want to be a Acolyte.", "Acolyte Requirements.", "Just looking around.")) {
 	case 1:
 		mes "[Father Mareusis]";
 		if (BaseJob == Job_Acolyte) {
@@ -104,7 +104,7 @@ prt_church,184,41,4	script	Cleric#aco	1_M_PASTOR,{
 			mes "wish to become";
 			mes "a servant of God?";
 			next;
-			if (select("Yes Father, I do.:Nope, I lied.") == 1) {
+			if (select("Yes Father, I do.", "Nope, I lied.") == 1) {
 				mes "[Father Mareusis]";
 				mes "Good. I accept " + strcharinfo(0) + "'s will to become an Acolyte. You understand that you must do penance before you can become a servant of God, right?";
 				next;

@@ -38,7 +38,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 			mes "[Yullo]";
 			mes "Have you finished hunting the 50 Caramels?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Yullo]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -52,7 +52,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Yullo]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -78,7 +78,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 			mes "[Yullo]";
 			mes "Have you finished hunting the 50 Caramels?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Yullo]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -92,7 +92,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Yullo]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -119,7 +119,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 			mes "[Yullo]";
 			mes "Have you finished hunting the 150 Caramels?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Yullo]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -133,7 +133,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Yullo]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -164,13 +164,13 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 			mes "I can't, no more and I mean it.";
 			mes "Look at me I am serious I can't kill any more of these things.";
 			next;
-			switch(select("What things?:Ignore.")) {
+			switch(select("What things?", "Ignore.")) {
 			case 1:
 				mes "[Yullo]";
 				mes "You know what, here is an idea.";
 				mes "You can gather them and I can give you a reward for your efforts!";
 				next;
-				switch(select("Gather Items:Hunt Caramels:Cancel")) {
+				switch(select("Gather Items", "Hunt Caramels", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Yullo]";
@@ -179,7 +179,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 					mes "Please tell me you have some or can";
 					mes "help me";
 					next;
-					switch(select("I have Porcupine Quills:Well I don't think I can help.")) {
+					switch(select("I have Porcupine Quills", "Well I don't think I can help.")) {
 					case 1:
 						/*
 						if (checkweight(Red_Potion,10) == 0) {
@@ -216,7 +216,7 @@ mjolnir_01,296,29,6	script	Yullo#Caramel_Hunt	4_F_SISTER,{
 					mes "Ah, ok I think you can help me out by hunting some Caramels.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Caramels:100 Caramels:150 Caramels")) {
+					switch(select("50 Caramels", "100 Caramels", "150 Caramels")) {
 					case 1:
 						mes "[Yullo]";
 						mes "Come back when you've finished your task and I will give you a small reward.";
