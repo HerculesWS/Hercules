@@ -13284,7 +13284,7 @@ void clif_parse_GMKick(int fd, struct map_session_data *sd) {
 		case BL_PC:
 		{
 			char command[NAME_LENGTH+6];
-			sprintf(command, "%ckick %s", atcommand->at_symbol, status->get_name(target));
+			sprintf(command, "%ckick %s", atcommand->at_symbol, clif->get_bl_name(target));
 			atcommand->exec(fd, sd, command, true);
 		}
 		break;
@@ -13299,7 +13299,7 @@ void clif_parse_GMKick(int fd, struct map_session_data *sd) {
 				clif->GM_kickack(sd, 0);
 				return;
 			}
-			sprintf(command, "/kick %s (%d)", status->get_name(target), status->get_class(target));
+			sprintf(command, "/kick %s (%d)", clif->get_bl_name(target), status->get_class(target));
 			logs->atcommand(sd, command);
 			status_percent_damage(&sd->bl, target, 100, 0, true); // can invalidate 'target'
 		}

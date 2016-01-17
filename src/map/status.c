@@ -6243,6 +6243,12 @@ uint32 status_calc_mode(const struct block_list *bl, const struct status_change 
 	return mode & MD_MASK;
 }
 
+/**
+ * Returns the name of the given bl.
+ *
+ * @param bl The requested bl.
+ * @return The bl's name or NULL if not available.
+ */
 const char *status_get_name(const struct block_list *bl)
 {
 	nullpo_ret(bl);
@@ -6259,7 +6265,7 @@ const char *status_get_name(const struct block_list *bl)
 		case BL_HOM: return BL_UCCAST(BL_HOM, bl)->homunculus.name;
 		case BL_NPC: return BL_UCCAST(BL_NPC, bl)->name;
 	}
-	return "Unknown";
+	return NULL;
 }
 
 /*==========================================
