@@ -38,7 +38,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 			mes "[Halgus]";
 			mes "Have you gotten rid of the Pupa?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Halgus]";
 				mes "Hmm, I don't think you've gotten rid of 50 Pupa yet...";
@@ -52,7 +52,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Halgus]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -79,7 +79,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 			mes "[Halgus]";
 			mes "Have you gotten rid of the Pupa?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Halgus]";
 				mes "Hmm, I don't think you've gotten rid of 100 Pupa yet...";
@@ -93,7 +93,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Halgus]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -121,7 +121,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 			mes "[Halgus]";
 			mes "Have you gotten rid of the Pupa?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Halgus]";
 				mes "Hmm, I don't think you've gotten rid of 150 Pupa yet...";
@@ -135,7 +135,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Halgus]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -172,18 +172,18 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 			mes "None-the-less my daughter thought it would be fun to gather pupa around this field and it's becoming unsightly.";
 			mes "Do you mind helping me get rid of some Pupa to clear out this field?";
 			next;
-			switch(select("Sure, I don't mind:No")) {
+			switch(select("Sure, I don't mind", "No")) {
 			case 1:
 				mes "[Halgus]";
 				mes "Really? What would you like to do to help?";
 				next;
-				switch(select("Gather Items:Get rid of Pupa:Cancel")) {
+				switch(select("Gather Items", "Get rid of Pupa", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Halgus]";
 					mes "Can you collect ^00CE0025 Chrysalis^000000 and return them to me, I promise to reward you well.";
 					next;
-					switch(select("I have Chrysalis:What did you need?")) {
+					switch(select("I have Chrysalis", "What did you need?")) {
 					case 1:
 						if (countitem(Chrysalis) > 24) {
 							mes "[Halgus]";
@@ -209,7 +209,7 @@ gef_fild04,191,54,3	script	Halgus#Pupa_Hunt	2_F_MAGICMASTER,{
 					mes "Thank you so much!";
 					mes "How many would you like to get rid of?";
 					next;
-					switch(select("50 Pupa:100 Pupa:150 Pupa")) {
+					switch(select("50 Pupa", "100 Pupa", "150 Pupa")) {
 					case 1:
 						mes "[Halgus]";
 						mes "If you can get rid of 50 of those Pupa from the field I will be grateful.";

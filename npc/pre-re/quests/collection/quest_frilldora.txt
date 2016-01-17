@@ -38,7 +38,7 @@ moc_fild17,66,273,5	script	Lemly#Frilldora_Hunt	4_F_JOB_ASSASSIN,{
 			mes "[Lemly]";
 			mes "Have you finished hunting the 50 Frilldora?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Lemly]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -52,7 +52,7 @@ moc_fild17,66,273,5	script	Lemly#Frilldora_Hunt	4_F_JOB_ASSASSIN,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Lemly]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -78,7 +78,7 @@ moc_fild17,66,273,5	script	Lemly#Frilldora_Hunt	4_F_JOB_ASSASSIN,{
 			mes "[Lemly]";
 			mes "Have you finished hunting the 50 Frilldora?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Lemly]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -92,7 +92,7 @@ moc_fild17,66,273,5	script	Lemly#Frilldora_Hunt	4_F_JOB_ASSASSIN,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Lemly]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -119,7 +119,7 @@ moc_fild17,66,273,5	script	Lemly#Frilldora_Hunt	4_F_JOB_ASSASSIN,{
 			mes "[Lemly]";
 			mes "Have you finished hunting the 150 Frilldora?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Lemly]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -133,7 +133,7 @@ moc_fild17,66,273,5	script	Lemly#Frilldora_Hunt	4_F_JOB_ASSASSIN,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Lemly]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -166,7 +166,7 @@ moc_fild17,66,273,5	script	Lemly#Frilldora_Hunt	4_F_JOB_ASSASSIN,{
 			mes "[Lemly]";
 			mes "Think you could take some time to give me a hand?";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Lemly]";
 				mes "I am looking for lizard ^FF0000Frills^000000.";
@@ -174,10 +174,10 @@ moc_fild17,66,273,5	script	Lemly#Frilldora_Hunt	4_F_JOB_ASSASSIN,{
 				mes "[Lemly]";
 				mes "The lizards around here have a natural stealth, a property that the Assassin's Guild wants to study.";
 				next;
-				switch(select("Gather Items:Hunt Frilldora:Cancel")) {
+				switch(select("Gather Items", "Hunt Frilldora", "Cancel")) {
 				case 1:
 					// Item turn in
-					switch(select("I have some Frills:What did you need?")) {
+					switch(select("I have some Frills", "What did you need?")) {
 					case 1:
 						if (countitem(Lizard_Scruff) > 24) {
 							mes "[Lemly]";
@@ -207,7 +207,7 @@ moc_fild17,66,273,5	script	Lemly#Frilldora_Hunt	4_F_JOB_ASSASSIN,{
 					mes "Ah, ok I think you can help me out by hunting some Frilldora.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Frilldora:100 Frilldora:150 Frilldora")) {
+					switch(select("50 Frilldora", "100 Frilldora", "150 Frilldora")) {
 					case 1:
 						mes "[Lemly]";
 						mes "Come back when you've finished your task and I will give you a small reward.";

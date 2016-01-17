@@ -38,7 +38,7 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 			mes "[Li]";
 			mes "Have you finished hunting the 50 Dokebis?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Li]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -52,7 +52,7 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Li]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -78,7 +78,7 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 			mes "[Li]";
 			mes "Have you finished hunting the 50 Dokebis?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Li]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -92,7 +92,7 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Li]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -119,7 +119,7 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 			mes "[Li]";
 			mes "Have you finished hunting the 150 Dokebis?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Li]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -133,7 +133,7 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Li]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -163,18 +163,18 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 			mes "[Li]";
 			mes "Hello. DO you think you could help me?";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Li]";
 				mes "There are so many Dokebis here...I just don't feel safe.";
 				next;
-				switch(select("Gather Items:Hunt Dokebis:Cancel")) {
+				switch(select("Gather Items", "Hunt Dokebis", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Li]";
 					mes "My fortune teller business needs a good supply of ^FF0000Dokebi Horns^000000 to give my customers good luck.";
 					next;
-					switch(select("I have some Dokebi Horns:What did you need?")) {
+					switch(select("I have some Dokebi Horns", "What did you need?")) {
 					case 1:
 						if (countitem(Dokkaebi_Horn) > 49) {
 							mes "[Li]";
@@ -204,7 +204,7 @@ pay_fild10,108,357,5	script	Li#Dokebi_Hunt	4_F_01,{
 					mes "Ah, ok I think you can help me out by hunting some Dokebis.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Dokebis:100 Dokebis:150 Dokebis")) {
+					switch(select("50 Dokebis", "100 Dokebis", "150 Dokebis")) {
 					case 1:
 						mes "[Li]";
 						mes "Come back when you've finished your task and I will give you a small reward.";

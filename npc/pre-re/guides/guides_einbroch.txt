@@ -47,7 +47,7 @@ einbroch,72,202,4	script	Guide#ein::EinGuide	4_M_EIN_SOLDIER,{
 	.@loop1 = 1;
 	while (.@loop1) {
 		next;
-		switch(select("City Guide.:Remove Marks from Mini-Map.:Notice.:Cancel.")) {
+		switch(select("City Guide.", "Remove Marks from Mini-Map.", "Notice.", "Cancel.")) {
 		case 1:
 			mes "[Einbroch Guide]";
 			mes "Please select";
@@ -58,13 +58,13 @@ einbroch,72,202,4	script	Guide#ein::EinGuide	4_M_EIN_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) .@compass_check = 1;
+				if (select("Yes.", "No.") == 1) .@compass_check = 1;
 			}
 			.@loop2 = 1;
 			while(.@loop2) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
-				switch(select("^FF0000Airport^000000:Train Station:Factory:Plaza:Hotel:Weapon Shop:Laboratory:Blacksmith Guild:Einbroch Tower:Cancel")) {
+				switch(select("^FF0000Airport^000000", "Train Station", "Factory", "Plaza", "Hotel", "Weapon Shop", "Laboratory", "Blacksmith Guild", "Einbroch Tower", "Cancel")) {
 				case 1:
 					mes "[Einbroch Guide]";
 					mes "The ^FF0000Airport^000000 is located";
@@ -235,7 +235,7 @@ einbech,67,37,4	script	Guide#4ein::EinGuide2	4_M_EIN_SOLDIER,{
 	.@loop1 = 1;
 	while (.@loop1) {
 		next;
-		switch(select("City Guide.:Remove Marks from Mini-Map.:Notice.:Cancel.")) {
+		switch(select("City Guide.", "Remove Marks from Mini-Map.", "Notice.", "Cancel.")) {
 		case 1:
 			mes "[Einbech Guide]";
 			mes "Please select";
@@ -246,13 +246,13 @@ einbech,67,37,4	script	Guide#4ein::EinGuide2	4_M_EIN_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) .@compass_check = 1;
+				if (select("Yes.", "No.") == 1) .@compass_check = 1;
 			}
 			.@loop2 = 1;
 			while (.@loop2) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
-				switch(select("Train Station:Tavern:Tool Shop:Swordman Guild:Mine:Cancel")) {
+				switch(select("Train Station", "Tavern", "Tool Shop", "Swordman Guild", "Mine", "Cancel")) {
 				case 1:
 					mes "[Einbech Guide]";
 					mes "The Train Stations are";

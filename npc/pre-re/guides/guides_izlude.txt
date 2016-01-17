@@ -48,7 +48,7 @@ izlude,121,87,6	script	Guide#iz	8W_SOLDIER,{
 	.@loop1 = 1;
 	while(.@loop1) {
 		next;
-		switch(select("City Guide:Remove Marks from Mini-Map:Notice.:Cancel")) {
+		switch(select("City Guide", "Remove Marks from Mini-Map", "Notice.", "Cancel")) {
 		case 1:
 			mes "[Izlude Guide]";
 			mes "Please select";
@@ -59,14 +59,14 @@ izlude,121,87,6	script	Guide#iz	8W_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes:No") == 1) .@compass_check = 1;
+				if (select("Yes", "No") == 1) .@compass_check = 1;
 			}
 			.@loop2 = 1;
 			while(.@loop2) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 
-				switch(select("^FF0000Swordman Association^000000:Swordman Hall:Arena:Izlude Marina:Weapon Shop:Tool Shop:Cancel")) {
+				switch(select("^FF0000Swordman Association^000000", "Swordman Hall", "Arena", "Izlude Marina", "Weapon Shop", "Tool Shop", "Cancel")) {
 				case 1:
 					mes "[Izlude Guide]";
 					mes "The Swordman Association";

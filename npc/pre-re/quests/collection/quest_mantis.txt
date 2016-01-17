@@ -39,7 +39,7 @@ lou_fild01,240,354,4	script	Mantis Researcher	4_M_OILMAN,{
 			mes "[Mantis Researcher]";
 			mes "Have you finished hunting the 50 Mantis?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Mantis Researcher]";
 				mes "Hmm, I don't think you've hunted 50 yet.";
@@ -53,7 +53,7 @@ lou_fild01,240,354,4	script	Mantis Researcher	4_M_OILMAN,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Mantis Researcher]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -78,7 +78,7 @@ lou_fild01,240,354,4	script	Mantis Researcher	4_M_OILMAN,{
 		mes "You are here to help me right?";
 		mes "If not, i don't know what to do with the Monsters in this Place!";
 		next;
-		switch(select("Sure:No")) {
+		switch(select("Sure", "No")) {
 		case 1:
 			mes "[Mantis Researcher]";
 			mes "Great! I knew the moment i saw you that i can count on you!";
@@ -88,7 +88,7 @@ lou_fild01,240,354,4	script	Mantis Researcher	4_M_OILMAN,{
 			mes "[Mantis Researcher]";
 			mes "So, would you still like to help me?";
 			next;
-			switch(select("Sure:Cancel")) {
+			switch(select("Sure", "Cancel")) {
 			case 1:
 				if (BaseLevel > 70) {
 					mes "[Mantis Researcher]";

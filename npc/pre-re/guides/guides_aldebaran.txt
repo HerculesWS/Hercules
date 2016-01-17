@@ -49,7 +49,7 @@ aldebaran,139,63,4	script	Soldier#alde	8W_SOLDIER,{
 	mes "I am in charge of the Service Guides from the Al De Baran Garrison. Let me guide you";
 	mes "through our town!";
 	next;
-	if (select("Get Location Guide.:End conversation.") == 1) {
+	if (select("Get Location Guide.", "End conversation.") == 1) {
 		viewpoint 1,61,229,0,0xFF6633;
 		viewpoint 1,72,197,1,0x0000FF;
 		viewpoint 1,223,222,2,0x00FFFF;
@@ -88,7 +88,7 @@ aldebaran,133,108,4	script	Soldier#2alde	8W_SOLDIER,{
 	mes "populace, I'm here giving directions to adventurers";
 	mes "like yourself.";
 	next;
-	switch(select("Kafra Main Office :Weapon Shop :Sorcerer Guild :Pub :Item Shop :Alchemist Guild :End Conversation ")) {
+	switch(select("Kafra Main Office ", "Weapon Shop ", "Sorcerer Guild ", "Pub ", "Item Shop ", "Alchemist Guild ", "End Conversation ")) {
 	case 1:
 		viewpoint 1,61,229,0,0xFF6633;
 		mes "^FF6633+^000000 -> Kafra Main Office ";

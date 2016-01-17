@@ -38,7 +38,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 			mes "[Private Jeremy]";
 			mes "Have you finished hunting the 50 Golems?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Private Jeremy]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -52,7 +52,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Private Jeremy]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -78,7 +78,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 			mes "[Private Jeremy]";
 			mes "Have you finished hunting the 50 Golems?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Private Jeremy]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -92,7 +92,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Private Jeremy]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -119,7 +119,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 			mes "[Private Jeremy]";
 			mes "Have you finished hunting the 150 Golems?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Private Jeremy]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -133,7 +133,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Private Jeremy]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -164,18 +164,18 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 			mes "Greetings citizen!";
 			mes "Say, how would you like to help me?";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Private Jeremy]";
 				mes "Thanks! I really appreciate it.";
 				next;
-				switch(select("Gather Items:Hunt Golems:Cancel")) {
+				switch(select("Gather Items", "Hunt Golems", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Private Jeremy]";
 					mes "The Morroc Guard needs ^FF0000Stone Hearts^000000 for our training regimen.";
 					next;
-					switch(select("I have Stone Hearts:What did you need?")) {
+					switch(select("I have Stone Hearts", "What did you need?")) {
 					case 1:
 						if (countitem(Stone_Heart) > 24) {
 							mes "[Private Jeremy]";
@@ -203,7 +203,7 @@ moc_fild11,57,138,0	script	Private Jeremy#hunt	4_M_MOC_SOLDIER,{
 					mes "Ah, ok I think you can help me out by hunting some Golems.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Golems:100 Golems:150 Golems")) {
+					switch(select("50 Golems", "100 Golems", "150 Golems")) {
 					case 1:
 						mes "[Private Jeremy]";
 						mes "Come back when you've finished your task and I will give you a small reward.";
