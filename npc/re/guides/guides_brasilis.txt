@@ -39,12 +39,12 @@ brasilis,219,97,3	script	Brasilis Guide	4_F_BRZ_WOMAN,{
 	mes "If you have any questions, please ask me.";
 	F_Navi("[Brasilis Guide]");
 	next;
-	switch(select("Ask about locations:Remove Marks from Mini-Map:Cancel")) {
+	switch(select("Ask about locations", "Remove Marks from Mini-Map", "Cancel")) {
 	case 1:
 		mes "[Brasilis Guide]";
 		mes "Where can I guide you?";
 		next;
-		switch(select("[ Hotel ]:[ Jungle Cable ]:[ Art Museum ]:[ Market ]:[ Verass Monument ]")) {
+		switch(select("[ Hotel ]", "[ Jungle Cable ]", "[ Art Museum ]", "[ Market ]", "[ Verass Monument ]")) {
 		case 1:
 			mes "[Brasilis Guide]";
 			mes "The "+F_Navi("Brasilis Hotel","brasilis,274,151")+" is located just above, ^FF3355+^000000.";

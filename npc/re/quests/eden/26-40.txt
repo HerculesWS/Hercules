@@ -47,13 +47,13 @@ moc_para01,38,38,3	script	Mission [26 - 40]	4_BOARD3,{
 		mes "Your level is not qualified. You can not use the bulletin board.";
 		close;
 	}
-	switch(select("Hunting Mission:Delivery Mission:Gathering Mission:Escort Mission")) {
+	switch(select("Hunting Mission", "Delivery Mission", "Gathering Mission", "Escort Mission")) {
 	case 1:
 		mes "[Hunting Mission Board]";
 		mes "- Hunting Mission details -";
 		mes "- are on the board. -";
 		next;
-		switch(select("Hunting Poison Spore:Hunting Smokie:Hunting Elder Willow(Above Lv.30):Hunting Coco(Above Lv.35):Hunting Thara Frog(Above Lv.38)")) {
+		switch(select("Hunting Poison Spore", "Hunting Smokie", "Hunting Elder Willow(Above Lv.30)", "Hunting Coco(Above Lv.35)", "Hunting Thara Frog(Above Lv.38)")) {
 			case 1: callsub L_Quest,8266,0,"Hunting Poison Spore","Sponiac","Geffen","Hunt 10 Poison Spores";
 			case 2: callsub L_Quest,8267,0,"Hunting Smokie","Sponiac","Geffen","Hunt 10 Smokies";
 			case 3: callsub L_Quest,8268,30,"Hunting Elder Willow","Sponiac","Geffen","Hunt 10 Elder Willows";
@@ -65,7 +65,7 @@ moc_para01,38,38,3	script	Mission [26 - 40]	4_BOARD3,{
 		mes "- Delivery Mission details -";
 		mes "- are on the board. -";
 		next;
-		switch(select("Deliver an Insecticide:Deliver Honey:Deliver Blanket(Above Lv.35)")) {
+		switch(select("Deliver an Insecticide", "Deliver Honey", "Deliver Blanket(Above Lv.35)")) {
 			case 1: callsub L_Quest,8271,0,"Deliver an Insecticide","Dieshin Man","Morroc Ruins","Get an 'Insecticide' from Dieshin Man and deliver it south east of Payon";
 			case 2: callsub L_Quest,8272,0,"Deliver Honey","Dieshin Man","Morroc Ruins","Get 'Honey' from Dieshin Man and deliver it west of St. Capitolina Abbey";
 			case 3: callsub L_Quest,8273,35,"Deliver Blanket","Dieshin Man","Morroc Ruins","Get Blankets from Dieshin Man and deliver to the field south of Lutie";
@@ -75,7 +75,7 @@ moc_para01,38,38,3	script	Mission [26 - 40]	4_BOARD3,{
 		mes "- Gathering Mission details -";
 		mes "- are on the board. -";
 		next;
-		switch(select("Gather Bones:Gather Animal Skins:Gather Peelings(Above Lv.30):Gather Tails(Above Lv.32):Gather Cookies(Above Lv.35):Gather Mustaches(Above Lv.35)")) {
+		switch(select("Gather Bones", "Gather Animal Skins", "Gather Peelings(Above Lv.30)", "Gather Tails(Above Lv.32)", "Gather Cookies(Above Lv.35)", "Gather Mustaches(Above Lv.35)")) {
 			case 1: callsub L_Quest,8274,0,"Gather Bones","Dashia","Payon","Gather '10 Skel-Bones' and give them to Dashia";
 			case 2: callsub L_Quest,8275,0,"Gather Animal Skins","Dashia","Payon","Gather '10 Bear's Footskins' and '5 Animal Skins' and give them to Dashia";
 			case 3: callsub L_Quest,8276,30,"Gather Peelings","Dashia","Payon","Gather '20 Worm Peelings' and '20 Garlets' and give them to Dashia";
@@ -102,7 +102,7 @@ L_Quest:
 	mes " ";
 	mes "Will you accept this mission?";
 	next;
-	if(select("No, I won't accept it.:Yes, I will accept it.") == 1) {
+	if(select("No, I won't accept it.", "Yes, I will accept it.") == 1) {
 		mes "You have declined the "+getarg(2)+" mission.";
 		close;
 	}
@@ -136,7 +136,7 @@ geffen,103,42,5	script	Sponiac	4W_M_03,{
 	mes "[Sponiac]";
 	mes "Why don't you do some hunting outside instead of walking around and wasting your time?";
 	next;
-	if(select("I am about to leave now.:I've got a Hunting Mission.") == 1) {
+	if(select("I am about to leave now.", "I've got a Hunting Mission.") == 1) {
 		mes "[Sponiac]";
 		mes "Oh, well. Then, go figure.";
 		mes "Bye~ bye.";
@@ -146,7 +146,7 @@ geffen,103,42,5	script	Sponiac	4W_M_03,{
 	mes "Oh, you are from the Eden Group?";
 	mes "What mission do you have?";
 	next;
-	switch(select("Hunting Poison Spore:Hunting Smokie:Hunting Elder Willow:Hunting Coco:Hunting Thara Frog")) {
+	switch(select("Hunting Poison Spore", "Hunting Smokie", "Hunting Elder Willow", "Hunting Coco", "Hunting Thara Frog")) {
 		case 1: callsub L_Quest,8266,"Hunting Poison Spore",1000,0,100,"You can find Poison Spores on the Geffen Dungeon 1F or northeast of Prontera. There are other spots but I'll leave it up to you to find out.";
 		case 2: callsub L_Quest,8267,"Hunting Smokie",1000,0,100,"You can find Smokies northeast and northwest of Geffen. Oh, also the field east of Ayotaya is good spot to find them.";
 		case 3: callsub L_Quest,8268,"Hunting Elder Willow",1000,100,110,"You can find Elder Willows northeast of Geffen, east of payon and southwest of Prontera.";
@@ -215,7 +215,7 @@ moc_ruins,173,55,3	script	Dieshin Man	4_M_ORIENT02,{
 	mes "[Dieshin Man]";
 	mes "How can I help you?";
 	next;
-	if(select("I don't need help.:I've got a Delivery Mission.") == 1) {
+	if(select("I don't need help.", "I've got a Delivery Mission.") == 1) {
 		mes "[Dieshin Man]";
 		mes "Oh, well. Then, go figure. Bye~!";
 		close;
@@ -224,7 +224,7 @@ moc_ruins,173,55,3	script	Dieshin Man	4_M_ORIENT02,{
 	mes "Oh, you are from the Eden Group?";
 	mes "What mission do you have?";
 	next;
-	switch(select("Deliver an Insecticide.:Deliver Honey.:Deliver Blankets.")) {
+	switch(select("Deliver an Insecticide.", "Deliver Honey.", "Deliver Blankets.")) {
 		case 1: callsub L_Quest,8271;
 		case 2: callsub L_Quest,8272;
 		case 3: callsub L_Quest,8273;
@@ -298,7 +298,7 @@ pay_fild07,83,89,7	script	Zoologist	4_M_ORIENT02,{
 	mes "[Zoologist]";
 	mes "I am currently studying about it and try to prove the theory. So I plan to kill the flies around Bigfoot and observe his reaction.";
 	next;
-	if(select("...I am not interested.:Here is the Insecticide.") == 1) {
+	if(select("...I am not interested.", "Here is the Insecticide.") == 1) {
 		mes "[Zoologist]";
 		mes "Oh, I need an Insecticide to continue the study.";
 		close;
@@ -363,7 +363,7 @@ prt_fild03,30,254,3	script	Entomologist	4_M_01,{
 	mes "[Entomologist]";
 	mes "I am currently studying about it and trying to prove the theory. So I plan to set a Honey trap on the places he usually passes and observe his reaction.";
 	next;
-	if(select("...I am not interested.:Here is the Honey.") == 1) {
+	if(select("...I am not interested.", "Here is the Honey.") == 1) {
 		mes "[Entomologist]";
 		mes "Oh, I need Honey to continue the study.";
 		close;
@@ -428,7 +428,7 @@ xmas_fild01,92,57,3	script	Biologist	4W_M_01,{
 	mes "[Biologist]";
 	mes "But, this place is freaking cold.";
 	next;
-	if(select("...I am not interested.:Here are the blankets.") == 1) {
+	if(select("...I am not interested.", "Here are the blankets.") == 1) {
 		mes "[Biologist]";
 		mes "Huh, whatever. But be careful! It's very slippery here.";
 		close;
@@ -492,7 +492,7 @@ payon,179,66,3	script	Dashia	4_M_RACHMAN1,{
 	mes "[Dashia]";
 	mes "Hey~! Dude! You look like a very rich adventurer.";
 	next;
-	if(select("I am a poor adventurer.:I have a gathering mission.") == 1) {
+	if(select("I am a poor adventurer.", "I have a gathering mission.") == 1) {
 		mes "[Dashia]";
 		mes "Really? Hmm, oh right. You don't look sophisticated.";
 		next;
@@ -504,7 +504,7 @@ payon,179,66,3	script	Dashia	4_M_RACHMAN1,{
 	mes "Oh, you are from the Eden Group?";
 	mes "What mission do you have?";
 	next;
-	switch(select("Gather Bones:Gather Animal Skin:Gather Peelings:Gather Tails:Gather Cookies:Gather Mustaches")) {
+	switch(select("Gather Bones", "Gather Animal Skin", "Gather Peelings", "Gather Tails", "Gather Cookies", "Gather Mustaches")) {
 	case 1:
 		callsub L_Quest,8274;
 		if (countitem(Skel_Bone) > 9) {

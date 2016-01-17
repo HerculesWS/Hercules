@@ -51,14 +51,14 @@ mora,106,117,3	script	Quiver Maker#mora	4_M_RAFLE_GR,{
 	mes "Mora villagers ask what good quivers are. They just don't know how the world works.";
 	mes "No wonder they don't know a thing about quivers - spreading jam over leaves all day long.";
 	next;
-	switch(select("Please make me a quiver.:What's a quiver?")) {
+	switch(select("Please make me a quiver.", "What's a quiver?")) {
 	case 1:
 		mes "[Quiver Maker]";
 		mes "At last someone appreciates a quiver!";
 		mes "I can make Elven Quivers and Hunting Quivers.";
 		mes "Which do you need?";
 		next;
-		switch(select("An Elven Quiver:A Hunting Quiver:I don't need a quiver.")) {
+		switch(select("An Elven Quiver", "A Hunting Quiver", "I don't need a quiver.")) {
 		case 1: callsub S_BuyQuiver,1773,500,500,12575; //Arrow_Of_Elf_Cntr
 		case 2: callsub S_BuyQuiver,1774,500,500,12576; //Hunting_Arrow_Cntr
 		case 3:
@@ -93,7 +93,7 @@ S_BuyQuiver:
 	mes "Are you interested in using a quiver? It's really convenient!";
 	mes "If you're interested, I can trade "+getarg(1)+" of those arrows for one of these quivers for ^FF3131"+getarg(2)+" zeny^000000.";
 	next;
-	switch(select("Trade all the arrows you have:Get only one quiver:Don't trade")) {
+	switch(select("Trade all the arrows you have", "Get only one quiver", "Don't trade")) {
 	case 1:
 		.@arrows = countitem(getarg(0));
 		.@quiver = .@arrows / getarg(1);
@@ -105,7 +105,7 @@ S_BuyQuiver:
 		next;
 		mes "Trade?";
 		next;
-		if(select("Trade:Don't trade") == 2) {
+		if(select("Trade", "Don't trade") == 2) {
 			mes "[Quiver Maker]";
 			mes "Hey, you don't doubt my skills, do you?";
 			close;

@@ -48,7 +48,7 @@ ayothaya,203,169,4	script	Ayothaya Guide Noi#01ay	4_F_THAIGIRL,{
 	F_Navi(.@n$);
 	while (1) {
 		next;
-		switch(select("[ Weapon Shop ]:[ Tool Shop ]:[ Tavern ]:[ Shrine ]:[ Fishing Spot ]:[ Aibakthing ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Weapon Shop ]", "[ Tool Shop ]", "[ Tavern ]", "[ Shrine ]", "[ Fishing Spot ]", "[ Aibakthing ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			mes .@n$;
 			mes "The "+F_Navi("Weapon Shop","ayothaya,163,90","^0000FF");

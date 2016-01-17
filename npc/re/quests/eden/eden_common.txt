@@ -49,7 +49,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 	mes "Hello. Can I help you?";
 	next;
 	while (1) {
-		switch (select("What is Eden group?:Join the Eden Group.:Register new mission.:Search for missions.:Cancel.")) {
+		switch (select("What is Eden group?", "Join the Eden Group.", "Register new mission.", "Search for missions.", "Cancel.")) {
 		case 1:
 			mes "[Lime Evenor]";
 			mes "Eden Group is a group that helps people who are suffering from distresses in Rune-Midgard.";
@@ -72,7 +72,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 				mes "You can be a Eden's member by simply registering with me.";
 				mes "Would you like to join Eden Group?";
 				next;
-				switch (select("Yes, I want to join.:No, I don't want to join.")) {
+				switch (select("Yes, I want to join.", "No, I don't want to join.")) {
 				case 1:
 					mes "[Lime Evenor]";
 					mes "Aright. Excellent! Please write down your name here.";
@@ -125,7 +125,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 			mes "[Lime Evenor]";
 			mes "Do you want to register some missions that you want us to do?";
 			next;
-			if(select("Yes, I want to register.:No, I don't.") == 1) {
+			if(select("Yes, I want to register.", "No, I don't.") == 1) {
 				mes "[Lime Evenor]";
 				mes "Alrigh. Please write down your name on it.";
 				input .@input$;
@@ -214,7 +214,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 	mes "Would you like to be a problem solver?";
 	mes "Eden group is here to solve your problem.";
 	next;
-	switch (select("Move to Eden Group.:Don't want to talk anymore.")) {
+	switch (select("Move to Eden Group.", "Don't want to talk anymore.")) {
 	case 1:
 		mes "[Eden Teleport Officer]";
 		mes "Let's go to our secret base!";
@@ -311,7 +311,7 @@ moc_para01,47,39,3	script	#warp_2_pass	HIDDEN_NPC,{
 		mes "Oh, it is an exclusive place only for Eden's members.";
 		mes "If you are a member, you can come whenever you want!";
 		next;
-		switch (select("Enter.:Don't Enter.")) {
+		switch (select("Enter.", "Don't Enter.")) {
 		case 1:
 			mes "This door is beautifully decorated but seems a little bit too heavy.";
 			close2;

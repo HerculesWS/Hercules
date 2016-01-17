@@ -54,7 +54,7 @@ moc_para01,14,32,5	script	Aperture#acolytewarp	4_F_01,{
 	mes "I am willing to warp you to the many locations that I have memorized for a small fee.";
 	mes "Would you like to use this service?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		mes "[Aperture]";
 		mes "Where would you like to go to?";
@@ -133,7 +133,7 @@ moc_para01,166,51,3	script	Phelix#edco	4_M_03,{
 	mes "Not too bad...";
 	mes "How many do you want?";
 	next;
-	switch(select("As many as I can get, please.:I want to choose.:Never mind, I like my Jellopy.")) {
+	switch(select("As many as I can get, please.", "I want to choose.", "Never mind, I like my Jellopy.")) {
 	case 1:
 		.@amount = countitem(Jellopy) / 3;
 		break;
@@ -191,7 +191,7 @@ moc_para01,163,51,7	script	Izaac#edco	4_M_04,{
 	mes "^0000CC7 Feather of Birds^000000";
 	mes "^00CC006 Chrysalis^000000";
 	next;
-	switch(select("Sure!:I think it's a rip-off!:No, thanks.")) {
+	switch(select("Sure!", "I think it's a rip-off!", "No, thanks.")) {
 	case 1:
 		mes "[Izaac]";
 		mes "So which items do";
@@ -241,7 +241,7 @@ moc_para01,163,51,7	script	Izaac#edco	4_M_04,{
 		mes "What do you say?";
 		mes "Do we have a deal?";
 		next;
-		if(select("Deal.:No deal.") == 2) {
+		if(select("Deal.", "No deal.") == 2) {
 			mes "[Izaac]";
 			mes "Huh~";
 			mes "Alright.";
@@ -288,7 +288,7 @@ moc_para01,50,39,4	script	Eve Natalia	4_F_SITDOWN,{
 	mes "[Eve Natalia]";
 	mes "So do you have any of the gears I'm looking for to get some random Safe to 7 Certificates?";
 	next;
-	switch(select("What gear?:Yes I am!:Never mind.")) {
+	switch(select("What gear?", "Yes I am!", "Never mind.")) {
 	case 1:
 		mes "[Eve Natalia]";
 		mes "Nidhoggur's Shadow Garb 4 Random Safe to 7 Certificates";
@@ -306,7 +306,7 @@ moc_para01,50,39,4	script	Eve Natalia	4_F_SITDOWN,{
 		mes "I'm going to ask you which piece of gear you want to trade in, please verify that the 1st one in your inventory is one you want to give up.";
 		mes "^CC0000So if it is carded, upgraded, enchanted etc, you should put it in storage before we continue.^000000";
 		next;
-		.@i = select("Wait a minute:Nidhoggur's Shadow Garb 4:Valkyrja's Shield 4:Valkyrian Armor 5:Diabolus Robe 5:Diabolus Armor 2:Diabolus Boots 2:Diabolus Manteau 4:Twin Edge of Naght Sieger Blue 2:Twin Edge of Naght Sieger Red 2")-2;
+		.@i = select("Wait a minute", "Nidhoggur's Shadow Garb 4", "Valkyrja's Shield 4", "Valkyrian Armor 5", "Diabolus Robe 5", "Diabolus Armor 2", "Diabolus Boots 2", "Diabolus Manteau 4", "Twin Edge of Naght Sieger Blue 2", "Twin Edge of Naght Sieger Red 2")-2;
 		if (.@i == -1)
 			break;
 
@@ -372,7 +372,7 @@ moc_para01,48,184,2	script	Gum & Manual Exchanger	2_DROP_MACHINE,{
 	mes "3 Thick Battle Manual -> 2 Battle Manual X3";
 	mes "What would you like to exchange for?";
 	next;
-	switch(select("HE Bubble Gum:HE Battle Manual:1 Battle Manual X3:2 Battle Manual X3:1 Costume Corsair:Nothing")) {
+	switch(select("HE Bubble Gum", "HE Battle Manual", "1 Battle Manual X3", "2 Battle Manual X3", "1 Costume Corsair", "Nothing")) {
 	case 1:
 		callsub L_Exchange,12210,2,12412,1;
 		break;
@@ -395,7 +395,7 @@ moc_para01,48,184,2	script	Gum & Manual Exchanger	2_DROP_MACHINE,{
 			close;
 		}
 		next;
-		if(select("Yes, give it to me!:No, wait not yet.") == 2)
+		if(select("Yes, give it to me!", "No, wait not yet.") == 2)
 			close;
 		// Unofficial dialogue.
 		mes "[Trader Machine]";
@@ -431,7 +431,7 @@ L_Exchange:
 	mes "That's a total of " + .@amount + " " + getitemname(getarg(2)) + ".";
 	mes "Is this correct?";
 	next;
-	if(select("Yes, give them to me!:No, wait not yet.") == 2)
+	if(select("Yes, give them to me!", "No, wait not yet.") == 2)
 		close;
 	.@cost = getarg(1) * .@amount;
 	.@total_amount = getarg(3) * .@amount;
@@ -454,13 +454,13 @@ moc_para01,13,22,4	script	Merry Badger#xch	4_F_SITDOWN,{
 	mes "I can take your Merit Badges and give you some useful stuff, or I can take some of your stuff and give you some Eden Merit Badges.";
 	mes "As I get more authorization I can offer more things to trade with you, so definitely keep me in mind when visiting the Eden Group.";
 	next;
-	switch (select("Redeem Badges:Trade in FOR badges:Exchange Rates:15 Job Manuals - 1 JM Box")) {
+	switch (select("Redeem Badges", "Trade in FOR badges", "Exchange Rates", "15 Job Manuals - 1 JM Box")) {
 	case 1:
 		while (true) {
 			mes "[Merry Badger]";
 			mes "Sure thing, I have several options currently for your badges!";
 			next;
-			switch(select("This week's Special:2 EMB for 10 KVM Badge:2 EMB for 10 Bravery Medals:2 EMB for 10 Valor Medals:5 EMB for 5 Medium Life Potion:5 EMB for 5 Life Insurance:5 EMB for 5 Token of Siegfried:7 EMB for 1 Job Battle Manual:8 EMB for 1 Reset Stone:Nothing Now")){
+			switch(select("This week's Special", "2 EMB for 10 KVM Badge", "2 EMB for 10 Bravery Medals", "2 EMB for 10 Valor Medals", "5 EMB for 5 Medium Life Potion", "5 EMB for 5 Life Insurance", "5 EMB for 5 Token of Siegfried", "7 EMB for 1 Job Battle Manual", "8 EMB for 1 Reset Stone", "Nothing Now")){
 			case 1:
 				if (countitem(Para_Logro_Badge) < 3) {
 					mes "[Merry Badger]";
@@ -471,7 +471,7 @@ moc_para01,13,22,4	script	Merry Badger#xch	4_F_SITDOWN,{
 				mes "[Merry Badger]";
 				mes "Ok, I have a special for 3 Merit Badges. This week I'll give you ^00CC0040 Light Granule^000000, ^0066CC40 Gun Powder^000000, ^00CC003 Izidor^000000, ^0066CC10 Prickly Fruit^000000, ^00CC001 Mandragora Flowerpot^000000, and ^0066CC3 Elder Branch^000000.";
 				next;
-				if (select("Yes:No") != 1) {
+				if (select("Yes", "No") != 1) {
 					mes "[Merry Badger]";
 					mes "I understand, let's see if you'd like something different!";
 					next;
@@ -530,13 +530,13 @@ moc_para01,13,22,4	script	Merry Badger#xch	4_F_SITDOWN,{
 		mes "[Merry Badger]";
 		mes "I have a limited selection as of right now, but here is what I can offer to get 1 Eden Merit Badge!";
 		next;
-		if (select("Etc Items:Cancel") != 1) {
+		if (select("Etc Items", "Cancel") != 1) {
 			mes "[Merry Badger]";
 			mes "Well that is OK, if you want to see what I offer just ask!";
 			close;
 		}
 		while (true) {
-			if (select("5x Old Purple Box:Nothing") != 1) {
+			if (select("5x Old Purple Box", "Nothing") != 1) {
 				mes "[Merry Badger]";
 				mes "Wonderful!";
 				mes "I'll be here if you ever want to exchange for Eden Merit Badges!";
@@ -578,7 +578,7 @@ moc_para01,13,22,4	script	Merry Badger#xch	4_F_SITDOWN,{
 		next;
 
 		//custom dialogue below
-		if (select("Yes:No") != 1) {
+		if (select("Yes", "No") != 1) {
 			mes "[Merry Badger]";
 			mes "Wonderful!";
 			mes "I'll be here if you ever want to exchange for Eden Merit Badges!";
@@ -603,7 +603,7 @@ L_Exchange:
 	mes "Ok, I can give you ^ff0000"+getitemname(getarg(1))+"^000000 for ^0066CC"+getarg(0)+" of your Eden Merit Badge(s)^000000.";
 	mes "Do you want to?";
 	next;
-	if (select("Yes:No") != 1) {
+	if (select("Yes", "No") != 1) {
 		mes "[Merry Badger]";
 		mes "I understand, let's see if you'd like something different!";
 		return;
@@ -641,7 +641,7 @@ moc_para01,41,169,2	script	Kafra Stacker#eden	4_M_ALCHE_B,{
 	mes "you have 1 stack of each!";
 	next;
 	while(1) {
-		if(select("Do it!:Never mind.") == 2)
+		if(select("Do it!", "Never mind.") == 2)
 			break;
 		// Something strange goes on here, haven't quite figured it out...
 		mes "[Toma]";
@@ -871,7 +871,7 @@ moc_para01,29,35,4	script	Gramps#huntquests	4_M_LGTGRAND,{
 	mes "Will you help me, young adventurer?";
 	close;
 	//next;
-	//switch(select("Yes, I'll help.:Reward Me!:^ff0000I want to quit hunting^000000:^0000ffCan you warp me?^000000:Can you erase the timer?:What missions are you giving?:Give me Limited 3 day VIP:Tell me more about the VIP Access:No thanks, pops.")) {
+	//switch(select("Yes, I'll help.", "Reward Me!", "^ff0000I want to quit hunting^000000", "^0000ffCan you warp me?^000000", "Can you erase the timer?", "What missions are you giving?", "Give me Limited 3 day VIP", "Tell me more about the VIP Access", "No thanks, pops.")) {
 }
 
 moc_para01,174,33,3	script	Bathory#2012spirits	BATHORY,{
@@ -881,7 +881,7 @@ moc_para01,174,33,3	script	Bathory#2012spirits	BATHORY,{
 	mes "[Bathory]";
 	mes "How about it? Want to take a ride on a beautiful Bathory's broom?";
 	next;
-	switch(select("Prepare for Takeoff!:No thanks.")) {
+	switch(select("Prepare for Takeoff!", "No thanks.")) {
 	case 1:
 		if (Zeny < 1000) {
 			mes "[Bathory]";
@@ -911,7 +911,7 @@ moc_para01,30,187,4	script	Mail Annex Station	2_POSTBOX,{
 	mes "[Mail Annex Station]";
 	mes "Would you like to go to the Kafra Mail Annex Station?";
 	next;
-	if (select("Yes, send me now!:No thanks.") != 1) {
+	if (select("Yes, send me now!", "No thanks.") != 1) {
 		mes "[Mail Annex Station]";
 		mes "Ok then!";
 		close;
@@ -932,7 +932,7 @@ auction_03,152,42,4	script	Kafra Employee#annex	4_F_KAFRA1,{
 	mes "[Kafra Employee]";
 	mes "What would you like to do?";
 	next;
-	switch(select("Access Mail:Storage:Cancel")) {
+	switch(select("Access Mail", "Storage", "Cancel")) {
 	case 1:
 		if (Zeny < 130) {
 			mes "[Kafra Employee]";

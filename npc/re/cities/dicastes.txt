@@ -268,7 +268,7 @@ dic_in01,91,113,5	script	Suspicious Piom#a	4_MAN_PIOM6,{
 		mes "Have you heard of the";
 		mes "rumor about Ahat?";
 		next;
-		if(select("Nope!:You first.") == 1) {
+		if(select("Nope!", "You first.") == 1) {
 			mes "[Suspicious Piom]";
 			mes "Never mind.";
 			close;
@@ -279,7 +279,7 @@ dic_in01,91,113,5	script	Suspicious Piom#a	4_MAN_PIOM6,{
 		mes "You first.";
 		mes "You heard of the rumor, right?";
 		next;
-		if(select("Something is fishy?:If you're not going to spill it, me neither!") == 1) {
+		if(select("Something is fishy?", "If you're not going to spill it, me neither!") == 1) {
 			mes "[Suspicious Piom]";
 			mes "I'm only a very curious";
 			mes "ordinary Piom.";
@@ -292,7 +292,7 @@ dic_in01,91,113,5	script	Suspicious Piom#a	4_MAN_PIOM6,{
 	mes "¡ó¢³¡ó ¡ó ¡ó¡þ¡ö";
 	mes "¡õ ¢³¢²¡÷ ¡ó¡ó";
 	next;
-	if(select("Can't tell what it means:Is it a curse??") == 2) {
+	if(select("Can't tell what it means", "Is it a curse??") == 2) {
 		mes "[Suspicious Piom]";
 		mes "Too bad.";
 		close;
@@ -631,7 +631,7 @@ dicastes01,191,202,4	script	Complaining Galten#fihs	4_MAN_GALTUN,{
 		mes "Have you ever talked";
 		mes "to him?";
 		next;
-		if(select("No:Yes") == 1) {
+		if(select("No", "Yes") == 1) {
 			mes "[Complaining Galten]";
 			mes "Then you don't know about the legend behind the statue?";
 			mes "Then, I don't know what to talk about with you.";
@@ -667,7 +667,7 @@ dicastes01,202,197,4	script	Crazy Venknick#fihsing1	4_MAN_BENKUNI,{
 		mes "At only 5000 Zeny";
 		mes "I will tell you the sad legend behind that statue.";
 		next;
-		if(select("Give 5000 Zeny.:Don't give 5000 Zeny.") == 2) {
+		if(select("Give 5000 Zeny.", "Don't give 5000 Zeny.") == 2) {
 			mes "[Crazy Venknick]";
 			mes "Don't come back with regrets.";
 			close;

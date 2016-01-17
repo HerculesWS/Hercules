@@ -42,11 +42,11 @@ morocc,153,286,6	script	Guide#01morocc::GuideMorroc	4_M_MOC_SOLDIER,{
 	F_Navi("[Morroc Guide]");
 	next;
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Thief Guild ]:[ Sphinx Dungeon ]:[ Oasis Entrance ]:[ Forge ]:[ Weapon & Armor Shop ]:[ Inn ]:[ Tavern ]:Previous Menu")) {
+				switch(select("[ Thief Guild ]", "[ Sphinx Dungeon ]", "[ Oasis Entrance ]", "[ Forge ]", "[ Weapon & Armor Shop ]", "[ Inn ]", "[ Tavern ]", "Previous Menu")) {
 				case 1:
 					mes "[Morroc Guide]";
 					mes "The "+F_Navi("Thief Guild","morocc,26,294","^B9062F")+" is located";
@@ -106,7 +106,7 @@ morocc,153,286,6	script	Guide#01morocc::GuideMorroc	4_M_MOC_SOLDIER,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Kafra Employee ]:[ Poison Herb Salesman ]:[ Dye Maker ]:[ Seiyablem ]:Previous Menu")) {
+				switch(select("[ Kafra Employee ]", "[ Poison Herb Salesman ]", "[ Dye Maker ]", "[ Seiyablem ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark,"^0000FFKafra Employees^000000";
 					viewpoint 1,156,97,7,0x0A82FF;
@@ -194,11 +194,11 @@ moc_ruins,159,53,3	script	Guide#01ruins::GuideMocRuins	4_M_MOC_SOLDIER,{
 	F_Navi("[Morroc Guide]");
 	next;
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Thief Guild ]:[ Sphinx Dungeon ]:[ Morroc Entrance ]:Previous Menu")) {
+				switch(select("[ Thief Guild ]", "[ Sphinx Dungeon ]", "[ Morroc Entrance ]", "Previous Menu")) {
 				case 1:
 					mes "[Morroc Guide]";
 					mes "The "+F_Navi("Thief Guild","moc_ruins,56,161","^B9062F")+" is located";
@@ -236,7 +236,7 @@ moc_ruins,159,53,3	script	Guide#01ruins::GuideMocRuins	4_M_MOC_SOLDIER,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Eden Teleport Officer ]:[ Tool Dealer ]:[ Kafra Employee ]:[ Repairman ]:[ Pet Groomer ]:[ Chef Assistant ]:[ Leablem ]:Previous Menu")) {
+				switch(select("[ Eden Teleport Officer ]", "[ Tool Dealer ]", "[ Kafra Employee ]", "[ Repairman ]", "[ Pet Groomer ]", "[ Chef Assistant ]", "[ Leablem ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Eden Teleport Officer","moc_ruins,68,164","^006400");
 					viewpoint 1,68,164,3,0xAAFF00;

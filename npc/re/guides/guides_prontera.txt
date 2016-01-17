@@ -44,11 +44,11 @@ prontera,154,187,4	script	Guide#01prontera::GuideProntera	8W_SOLDIER,{
 	next;
 	.@str$ = "Would you like to check any other locations?";
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Tool Shop ]:[ Weapon & Armor Shop ]:[ Forge ]:[ Sanctuary ]:[ Chivalry Office ]:[ Inn ]:[ Tavern ]:[ Library ]:[ Prontera Castle ]:[ Job Agency ]:[ City Hall ]:Previous Menu")) {
+				switch(select("[ Tool Shop ]", "[ Weapon & Armor Shop ]", "[ Forge ]", "[ Sanctuary ]", "[ Chivalry Office ]", "[ Inn ]", "[ Tavern ]", "[ Library ]", "[ Prontera Castle ]", "[ Job Agency ]", "[ City Hall ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Tool Shop","prontera,134,221","^B9062F");
 					mes .@str$;
@@ -147,7 +147,7 @@ prontera,154,187,4	script	Guide#01prontera::GuideProntera	8W_SOLDIER,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Eden Teleport Officer ]:[ Peco Peco Breeder ]:[ Riding Creature Master ]:[ Magic Gear Master ]:[ Peco Peco Remover ]:[ Trading Merchants ]:[ Mercenary Guildsman ]:[ Hypnotist ]:[ Kafra Employee ]:[ Leablem ]:[ Apprentice Craftsman ]:[ Pet Groomer ]:Previous Menu")) {
+				switch(select("[ Eden Teleport Officer ]", "[ Peco Peco Breeder ]", "[ Riding Creature Master ]", "[ Magic Gear Master ]", "[ Peco Peco Remover ]", "[ Trading Merchants ]", "[ Mercenary Guildsman ]", "[ Hypnotist ]", "[ Kafra Employee ]", "[ Leablem ]", "[ Apprentice Craftsman ]", "[ Pet Groomer ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Eden Teleport Officer","prontera,124,76","^800080"),1;
 					mes .@str$;

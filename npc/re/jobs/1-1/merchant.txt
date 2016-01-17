@@ -78,7 +78,7 @@ alberta_in,53,43,6	script	Merchant#mer	4_M_04,{
 	mes "[Guildsman Mahnsoo]";
 	mes "Hey, why are you here?";
 	next;
-	switch(select("I want to be a merchant.:I want to know more about merchants.:Ask him the requirements to be a merchant.:Nothing.")) {
+	switch(select("I want to be a merchant.", "I want to know more about merchants.", "Ask him the requirements to be a merchant.", "Nothing.")) {
 	case 1:
 		if(BaseJob != Job_Novice) {
 			mes "[Guildsman Mahnsoo]";

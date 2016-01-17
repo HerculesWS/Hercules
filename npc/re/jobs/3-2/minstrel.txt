@@ -126,7 +126,7 @@ alberta,196,133,4	script	Bard#job_min	4_M_BARD,{
 			mes "[Karian]";
 			mes "If you are interested, why don't help me find out where ^f57d7d'Maestro Song'^000000 is?";
 			next;
-			if(select("Ok.:No.") == 2) {
+			if(select("Ok.", "No.") == 2) {
 				mes "["+strcharinfo(0)+"]";
 				mes "I'm not interested.";
 				next;
@@ -230,7 +230,7 @@ alberta,196,133,4	script	Bard#job_min	4_M_BARD,{
 		mes "Whenever you want to see me, visit me.";
 		mes "If you have time come by and have a chat with me.";
 		next;
-		switch(select("Accept.:Refuse.")) {
+		switch(select("Accept.", "Refuse.")) {
 		case 1:
 			mes "[Minstrel Song]";
 			mes "Did you visit somewhere fun?";
@@ -521,7 +521,7 @@ hu_in01,361,103,3	script	Tone-deaf person	4_M_CASMAN1,{
 		mes "- that such sounds could -";
 		mes "- be made from humans. -";
 		next;
-		if(select("You move to other side.:Keep listening.") == 1)
+		if(select("You move to other side.", "Keep listening.") == 1)
 			close;
 		mes "[Tone-deaf person]";
 		mes "Turuturu~";
@@ -1366,7 +1366,7 @@ function Choice;
 		next;
 		mes "-It's not easy to trust her-";
 		next;
-		if(select("I don't like this.:Take the kayak.") == 1) {
+		if(select("I don't like this.", "Take the kayak.") == 1) {
 			mes "[Karian]";
 			mes "I never ride airships ever...";
 			donpcevent "Karian#cmd5::OnDisable";
@@ -1645,7 +1645,7 @@ OnTouch:
 		mes "[Karian]";
 		mes "Will you join me?";
 		next;
-		switch(select("Refuse.:Accept.")) {
+		switch(select("Refuse.", "Accept.")) {
 		case 1:
 			mes "[Karian]";
 			mes "Come on~Come on~";
@@ -1902,7 +1902,7 @@ prt_in,94,172,4	script	Karian#job_min3	4_M_MINSTREL1,{
 		getitem Green_Apple_Ring,1;
 		close;
 	} else if (job_min > 99) {
-		switch(select("Talk.:Leave.")) {
+		switch(select("Talk.", "Leave.")) {
 		case 1:
 			mes "[Maestro Song]";
 			mes "The name 'Karian'?";

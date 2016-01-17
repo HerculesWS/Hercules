@@ -84,7 +84,7 @@ izlude_in,74,172,4	script	Swordman#swd	2_M_SWORDMASTER,{
 	mes "This is the Swordman Guild.";
 	mes "Why are you here?";
 	next;
-	switch(select("Tell me about being a Swordman.:I want to be a Swordman.:Nothing.")) {
+	switch(select("Tell me about being a Swordman.", "I want to be a Swordman.", "Nothing.")) {
 	case 1:
 		mes "[Swordman Guildsman]";
 		mes "So you wish to know more about the mighty Swordman? Okay!";
@@ -128,7 +128,7 @@ izlude_in,74,172,4	script	Swordman#swd	2_M_SWORDMASTER,{
 			mes "Hmm, both your Job Level and Basic Skill Level check out.";
 			mes "Good. Do you want to be a Swordman right away?";
 			next;
-			if(select("Yes, I do.:I'll consider it again.") == 2) {
+			if(select("Yes, I do.", "I'll consider it again.") == 2) {
 				mes "[Swordman Guildsman]";
 				mes "Yeah. Prudent decision is needed for choosing a job.";
 				mes "But I feel sorry... that you consider it again after overcoming all the hardships....";

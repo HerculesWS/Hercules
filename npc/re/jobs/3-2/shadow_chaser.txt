@@ -118,7 +118,7 @@ in_rogue,376,100,5	script	Guild Member#sc01	4_M_ROGUE,{
 				mes "[Scary man]";
 				mes "Hey there?";
 				next;
-				switch(select("Me?:Sorry, I am busy...")) {
+				switch(select("Me?", "Sorry, I am busy...")) {
 				case 1:
 					mes "[Scary man]";
 					mes "Yes! You there!";
@@ -247,7 +247,7 @@ in_rogue,379,101,3	script	Scary Man#sc03	1_M_SIGNROGUE,{
 		mes "You want one more explanation?";
 		mes "Or do you just want the code?";
 		next;
-		switch(select("More explanation.:Get the code.")) {
+		switch(select("More explanation.", "Get the code.")) {
 		case 1:
 			callsub L_Code,1;
 			mes "[Urupa]";
@@ -321,7 +321,7 @@ s_atelier,65,123,5	script	Manager#sc04_prt	4_M_KHKYEL,{
 		mes "Damn, there're so many strangers around.";
 		mes "Hey...";
 		next;
-		switch(select("Show the deciphered code!:...")) {
+		switch(select("Show the deciphered code!", "...")) {
 		case 1:
 			mes "[Manager]";
 			mes "Wow, you deciphered it?";
@@ -390,7 +390,7 @@ s_atelier,65,123,5	script	Manager#sc04_prt	4_M_KHKYEL,{
 		mes "So I will give you the code.";
 		mes "Please find the treasure!";
 		next;
-		switch(select("No way!:I'll give it a try!")) {
+		switch(select("No way!", "I'll give it a try!")) {
 		case 1:
 			mes "[Graham]";
 			mes "What the hell?";
@@ -409,7 +409,7 @@ s_atelier,65,123,5	script	Manager#sc04_prt	4_M_KHKYEL,{
 		mes "[Graham]";
 		mes "Are you interested in it now?";
 		next;
-		switch(select("Not at all.:Hmm, I'll take it.")) {
+		switch(select("Not at all.", "Hmm, I'll take it.")) {
 		case 1:
 			mes "[Graham]";
 			mes "Damn it.";
@@ -426,7 +426,7 @@ s_atelier,65,123,5	script	Manager#sc04_prt	4_M_KHKYEL,{
 		mes "[Graham]";
 		mes "Did you find something?";
 		next;
-		switch(select("I need an explanation.:What's the code again?")) {
+		switch(select("I need an explanation.", "What's the code again?")) {
 		case 1:
 			mes "[Graham]";
 			mes "You are so powerful!";
@@ -645,7 +645,7 @@ s_atelier,168,65,5	script	Manager#sc08_ra	4_M_DOCTOR,{
 			mes "Bleh...";
 			close;
 		}
-		switch(select("Give me your password!:I was sent by Graham.")) {
+		switch(select("Give me your password!", "I was sent by Graham.")) {
 		case 1:
 			mes "[Manager]";
 			mes "You need my password?";
@@ -719,7 +719,7 @@ s_atelier,168,65,5	script	Manager#sc08_ra	4_M_DOCTOR,{
 			mes "What do you think?";
 			mes "RENNND / LNNWWND means one thing.";
 			next;
-			switch(select("I think I got it.:I have no clue.")) {
+			switch(select("I think I got it.", "I have no clue.")) {
 			case 1:
 				callsub L_Code,7166;
 				close;
@@ -737,7 +737,7 @@ s_atelier,168,65,5	script	Manager#sc08_ra	4_M_DOCTOR,{
 		mes "[Paul]";
 		mes "So did you get what it means?";
 		next;
-		switch(select("Yes!:No, I don't think so.")) {
+		switch(select("Yes!", "No, I don't think so.")) {
 		case 1:
 			callsub L_Code,7167;
 			close;
@@ -794,7 +794,7 @@ s_atelier,168,65,5	script	Manager#sc08_ra	4_M_DOCTOR,{
 		mes "I am dying to wait for you.";
 		mes "So what did you find out?";
 		next;
-		select("I found the key.:Hmm...");
+		select("I found the key.", "Hmm...");
 		mes "- You hand over the 'Illusion Key' that you found in the ice cave. -";
 		next;
 		mes "[Paul]";
@@ -1205,7 +1205,7 @@ s_atelier,25,75,3	script	Manager#sc10_lgt	4_M_HUMAN_02,{
 		mes "Then let's make a point!";
 		mes "Do you know thanatos tower?";
 		next;
-		switch(select("Sure.:The tower of death?")) {
+		switch(select("Sure.", "The tower of death?")) {
 		case 1:
 			mes "[Vicente]";
 			mes "You know that.";
@@ -1268,7 +1268,7 @@ s_atelier,25,75,3	script	Manager#sc10_lgt	4_M_HUMAN_02,{
 		mes "You are back?";
 		mes "Find anything?";
 		next;
-		switch(select("Throw the brush.:Grab him by the collar.:Drop the brush.")) {
+		switch(select("Throw the brush.", "Grab him by the collar.", "Drop the brush.")) {
 		case 1:
 			mes "[Vicente]";
 			mes "Hey, what are you doing?";
@@ -1435,7 +1435,7 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 				mes "That's it.";
 				mes "Did you find it by yourself?";
 				next;
-				switch(select("Yes.:With my friends")) {
+				switch(select("Yes.", "With my friends")) {
 				case 1:
 					mes "[Dumk]";
 					mes "Hmm...";
@@ -1536,7 +1536,7 @@ s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
 			mes "[Dumk]";
 			mes "So, do you want me to keep talking about Shadow Chasers?";
 			next;
-			switch(select("What is a Shadow Chaser?:Change me to Shadow Chaser.:I'll come back later.")) {
+			switch(select("What is a Shadow Chaser?", "Change me to Shadow Chaser.", "I'll come back later.")) {
 			case 1:
 				mes "[Dumk]";
 				mes "Most spells are exclusively for Wizards and their kind.";
@@ -1949,7 +1949,7 @@ job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 		mes "It's a small box made of a hard turtle's shell.";
 		mes "The middle of it...";
 		next;
-		select("Touch the middle.:Push the middle.");
+		select("Touch the middle.", "Push the middle.");
 		mes "When you touch it, something comes out!";
 		next;
 		setarray .@Codes1$[1],"EFDFJWF","FGEGKXG","GHFHLYH","HIGIMZI","IJHJNAJ","JKIKOBK","KLJLPCL","LMKMQDM";
@@ -2005,7 +2005,7 @@ job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 	}
 	mes "You don't have to stay in here.";
 	next;
-	if(select("Go outside.:Stay here.") == 1)
+	if(select("Go outside.", "Stay here.") == 1)
 		warp "tur_dun03",40,201;
 	close;
 }
@@ -2040,7 +2040,7 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 		mes "I got "+.@Words$[.@i]+".";
 		mes "Now I have to convert it into a number...";
 		next;
-		switch(select("Input the answer.:I can't get it.")) {
+		switch(select("Input the answer.", "I can't get it.")) {
 		case 1:
 			input .@input;
 			if (.@input == .@numbers[.@i]) {
@@ -2130,11 +2130,11 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 			mes "For what?";
 			next;
 			while(1) {
-				switch(select("Turn the roof.:Turn the house.:Turn the handle.")) {
+				switch(select("Turn the roof.", "Turn the house.", "Turn the handle.")) {
 				case 1:
 					mes "You turn the roof.";
 					next;
-					switch(select("Shake the roof.:Shake the house.")) {
+					switch(select("Shake the roof.", "Shake the house.")) {
 					case 1:
 						mes "Even though you shake the roof but";
 						mes "nothing happens.";
@@ -2159,7 +2159,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 				case 2:
 					mes "You grab the whole house and turn it.";
 					next;
-					switch(select("Shake up and down.:Shake back and forth.:Turn 'round and 'round and shake.:Roll it upside down.")) {
+					switch(select("Shake up and down.", "Shake back and forth.", "Turn 'round and 'round and shake.", "Roll it upside down.")) {
 					case 1:
 					case 2:
 						mes "Nothing happens.";
@@ -2293,7 +2293,7 @@ s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 		mes "You are a member of the Rogue guild!";
 		mes "What can I help you with?";
 		next;
-		.@i = select("I need a make-up brush.:I need a paint brush.:Nothing.");
+		.@i = select("I need a make-up brush.", "I need a paint brush.", "Nothing.");
 		mes "[Max]";
 		if (.@i == 1) setarray .@i[1],Makeover_Brush,1,10,100000;
 		else if (.@i == 2) setarray .@i[1],Paint_Brush,2,30,200000;
@@ -2335,7 +2335,7 @@ s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 	}
 	mes "We sell all art related things here~";
 	next;
-	switch(select("Paint!?:Where's the manager?")) {
+	switch(select("Paint!?", "Where's the manager?")) {
 	case 1:
 		mes "[Max]";
 		mes "You are asking for paint?";
@@ -2358,7 +2358,7 @@ s_atelier,136,70,3	script	Titika#sc09_ra	4_F_CHILD,{
 		mes "You are in a guild.";
 		mes "What can I help you with?";
 		next;
-		.@i = select("Make a new make-up brush.:Make a new paint brush.:Nothing.");
+		.@i = select("Make a new make-up brush.", "Make a new paint brush.", "Nothing.");
 		mes "[Titika]";
 		if (.@i == 1) setarray .@i[1],6121,1,10,100000;
 		else if (.@i == 2) setarray .@i[1],6122,2,30,200000;
@@ -2388,7 +2388,7 @@ s_atelier,136,70,3	script	Titika#sc09_ra	4_F_CHILD,{
 	}
 	mes "This is the Shadow Chaser workplace~";
 	next;
-	switch(select("Where is the paint?:Where is the manager?")) {
+	switch(select("Where is the paint?", "Where is the manager?")) {
 	case 1:
 		mes "[Titika]";
 		mes "You mean paint?";
@@ -2408,7 +2408,7 @@ s_atelier,124,128,3	script	RimiGX#sc07_yuno	4_F_LGTGIRL,{
 	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
 		mes "What are you looking for?";
 		next;
-		.@i = select("Make a new blush for make-up.:Make a new blush for painting.:Nothing.");
+		.@i = select("Make a new blush for make-up.", "Make a new blush for painting.", "Nothing.");
 		mes "[RimiGX]";
 		if (.@i == 1) setarray .@i[1],6121,1,10,100000;
 		else if (.@i == 2) setarray .@i[1],6122,2,30,200000;
@@ -2437,7 +2437,7 @@ s_atelier,124,128,3	script	RimiGX#sc07_yuno	4_F_LGTGIRL,{
 	}
 	mes "It's the shadow workplace~";
 	next;
-	switch(select("Where is the paint?:Where is the manager?")) {
+	switch(select("Where is the paint?", "Where is the manager?")) {
 	case 1:
 		mes "[RimiGX]";
 		mes "Paint?";
@@ -2457,7 +2457,7 @@ s_atelier,26,68,3	script	Vito#sc11_lgt	4_M_KHMAN,{
 	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
 		mes "What are you looking for?";
 		next;
-		.@i = select("Make a new blush for make-up.:Make a new blush for painting.:Nothing.");
+		.@i = select("Make a new blush for make-up.", "Make a new blush for painting.", "Nothing.");
 		mes "[Vito]";
 		if (.@i == 1) setarray .@i[1],6121,1,10,100000;
 		else if (.@i == 2) setarray .@i[1],6122,2,30,200000;
@@ -2487,7 +2487,7 @@ s_atelier,26,68,3	script	Vito#sc11_lgt	4_M_KHMAN,{
 	}
 	mes "It's the shadow workplace.";
 	next;
-	switch(select("Where is the paint?:Where is the manager?")) {
+	switch(select("Where is the paint?", "Where is the manager?")) {
 	case 1:
 		mes "[Vito]";
 		mes "Paint?";

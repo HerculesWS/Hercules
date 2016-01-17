@@ -115,7 +115,7 @@ prt_church,103,88,3	script	Praying Minister#arch	1_M_PASTOR,{
 			mes "What do you think?";
 			mes "Would you like to do a Holy Pilgrimage?";
 			next;
-			switch(select("Yes I want to.:I'll think about it.")) {
+			switch(select("Yes I want to.", "I'll think about it.")) {
 			case 1:
 				mes "[Praying Minister]";
 				mes "That's the correct attitude.";
@@ -328,7 +328,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "This place is the holiest place in the world, Yggdrasil.";
 		mes "This holy ceremony will brighten your soul.";
 		next;
-		switch(select("How should I pray?:Cancel.")) {
+		switch(select("How should I pray?", "Cancel.")) {
 		case 1:
 			mes "[Priest Dayan]";
 			mes "Through prayer, we can follow four paths.";
@@ -442,7 +442,7 @@ OnTouch:
 		mes "[" + strcharinfo(0) + "]";
 		mes "Hmm... What is the first way?";
 		next;
-		switch(select("The way of silence.:The way of confession.:The way of meditation.")) {
+		switch(select("The way of silence.", "The way of confession.", "The way of meditation.")) {
 		case 1:
 			mes "[" + strcharinfo(0) + "]";
 			mes "The way of silence...?";
@@ -589,7 +589,7 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 	if (job_arch == 4) {
 		mes "- There is a nun closing her eyes as she murmurs something which sounds like a prayer. -";
 		next;
-		if(select("Talk to her.:Stay Quiet.") == 2) {
+		if(select("Talk to her.", "Stay Quiet.") == 2) {
 			mes "- You don't feel like disturbing her -";
 			close;
 		}
@@ -628,7 +628,7 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		mes "Evil is always watching for our souls.";
 		mes "If you are indifferent to praying, it never misses an opportunity.";
 		next;
-		if(select("A dream? What kind of dream?:Your soul should be fine.") == 2) {
+		if(select("A dream? What kind of dream?", "Your soul should be fine.") == 2) {
 			mes "[Vinue]";
 			mes "Oh but that's where you're wrong.";
 			mes "My soul may be the most at risk.";
@@ -686,7 +686,7 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		mes "I don't have any way to find out.";
 		mes "I don't have a method, so I just pray.";
 		next;
-		if(select("I'll investgate for you.:I'll pray with you.") == 2) {
+		if(select("I'll investgate for you.", "I'll pray with you.") == 2) {
 			mes "[Vinue]";
 			mes "Thank you.";
 			mes "I'll pray that the darkness stays away.";
@@ -745,7 +745,7 @@ odin_tem02,281,275,3	script	Valkyrie Illusion#arch	4_F_VALKYRIE2,{
 	if ((job_arch > 4) && (job_arch < 100)) {
 		mes "You can see Valkyrie who has a despairing face.";
 		next;
-		switch(select("Touch Valkyrie's Illusion.:Turn away.")) {
+		switch(select("Touch Valkyrie's Illusion.", "Turn away.")) {
 		case 1:
 			mes "You lose your consciousness while getting a closer view of Valkyrie's Illusion.";
 			close2;
@@ -840,7 +840,7 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 			mes "[Valkyrie Anguhilde]";
 			mes "Human, answer me. Are you here to sincerely help me?";
 			next;
-			if(select("Yes:No") == 2) {
+			if(select("Yes", "No") == 2) {
 				mes "[Valkyrie Anguhilde]";
 				mes "I knew that I couldn't trust a human!";
 				close2;
@@ -1666,7 +1666,7 @@ job3_arch01,1,1,1	script	control#arch	CLEAR_NPC,{
 		mes $@archbs + ".";
 		mes "Do you want to change it?";
 		next;
-		switch(select("0:1")) {
+		switch(select("0", "1")) {
 		case 1:
 			$@archbs = 0;
 			hideoffnpc "Valkyrie#arch";

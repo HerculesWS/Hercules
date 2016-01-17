@@ -45,7 +45,7 @@ umbala,128,94,3	script	Umbala Guide#01umbala::GuideUmbala	4_F_GON,{
 	F_Navi("[Umbala Guide]");
 	while (1) {
 		next;
-		switch(select("[ Kafra Employee ]:[ Chief's House ]:[ Shaman's House ]:[ Weapon Shop ]:[ Tool Shop ]:[ Bungee Jump Area ]:[ Tree of Yggdrasil ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Kafra Employee ]", "[ Chief's House ]", "[ Shaman's House ]", "[ Weapon Shop ]", "[ Tool Shop ]", "[ Bungee Jump Area ]", "[ Tree of Yggdrasil ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			mes "[Umbala Guide]";
 			mes "Let me mark the location of the";

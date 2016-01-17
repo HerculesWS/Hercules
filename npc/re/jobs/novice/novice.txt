@@ -149,7 +149,7 @@ new_5-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv5a	4_F_01
 		mes "Of course, this Training Process is optional, if you want to go straight to town, that's also fine.";
 		mes "But, you will miss all the advantages you can get in the Training Center.";
 		next;
-		switch(select("Begin Training.:Start the game right away.")) {
+		switch(select("Begin Training.", "Start the game right away.")) {
 		case 1:
 			mes "[Sprakki]";
 			mes "I will guide you to the Novice Training Center.";
@@ -179,7 +179,7 @@ new_5-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv5a	4_F_01
 			mes "Ok, You want to start right away.";
 			mes "Which Town do you want to start at?";
 			next;
-			.@select = select("Prontera:Morroc:Geffen:Payon:Alberta:Izlude");
+			.@select = select("Prontera", "Morroc", "Geffen", "Payon", "Alberta", "Izlude");
 			mes "[Sprakki]";
 			mes "I see.";
 			mes "Go ahead and grow stronger! Look toward a brighter future ahead of you.";
@@ -453,7 +453,7 @@ new_5-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv5b	4_F_01
 		mes "Next step of the Training is done in the room west of here.";
 		mes "If you are lost, I can send you there.";
 		next;
-		switch(select("I can get there by myself.:Please, send me to the next room.")) {
+		switch(select("I can get there by myself.", "Please, send me to the next room.")) {
 		case 1:
 			mes "[Instructor Brade]";
 			mes "Good. That's the attitude you must have.";
@@ -474,7 +474,7 @@ new_5-2,100,29,4	duplicate(NvSprakkiB)	Sprakki#nv5b	4_F_01
 		mes "Aren't you done with the courses here?";
 		mes "Or are you just lost?";
 		next;
-		switch(select("Send me to the Combat Training Ground.:I want to go to town.")) {
+		switch(select("Send me to the Combat Training Ground.", "I want to go to town.")) {
 		case 1:
 			mes "[Instructor Brade]";
 			mes "Sure.";
@@ -566,7 +566,7 @@ new_5-2,100,105,3	duplicate(NvBradeA)	Brade#nv5a	4_M_JOB_KNIGHT1
 		mes "Have it checked by Instructor Brade.";
 		mes "If you don't know how to get to him, I will send you to him.";
 		next;
-		switch(select("I'm good by myself.:Please, send me to him.")) {
+		switch(select("I'm good by myself.", "Please, send me to him.")) {
 		case 1:
 			mes "[Jinha]";
 			mes "Very Good!";
@@ -615,7 +615,7 @@ new_5-2,115,120,3	duplicate(NvJinha)	Jinha#nv5	1_M_ORIENT01
 			mes "Or you can go ahead and start with theory training.";
 			mes "What would you like to do?";
 			next;
-			switch(select("Send me to Basic Training.:Start Theory Training.")) {
+			switch(select("Send me to Basic Training.", "Start Theory Training.")) {
 			case 1:
 				mes "[Chocolat]";
 				mes "Sure.";
@@ -654,7 +654,7 @@ new_5-2,115,120,3	duplicate(NvJinha)	Jinha#nv5	1_M_ORIENT01
 			mes "[Chocolat]";
 			mes "If you don't know how to find them, I can send you to Instructor Brade, How about it?";
 			next;
-			switch(select("I will go myself.:Will you do that for me?")) {
+			switch(select("I will go myself.", "Will you do that for me?")) {
 			case 1:
 				mes "[Chocolat]";
 				mes "Sure. Go out to the door to the right.";
@@ -754,7 +754,7 @@ new_5-2,115,120,3	duplicate(NvJinha)	Jinha#nv5	1_M_ORIENT01
 		mes "[Chocolat]";
 		mes "Are you lost?";
 		next;
-		switch(select("No, just looking around:Yes, send me to the Combat Training Field")) {
+		switch(select("No, just looking around", "Yes, send me to the Combat Training Field")) {
 		case 1:
 			mes "[Chocolat]";
 			mes "Okay, come back to me if";
@@ -811,7 +811,7 @@ new_5-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv5	4W_KID
 		mes "Do you want to hear another explanation?";
 		next;
 		while(1) {
-			.@select = select("About Save:About Storage:About Teleport:About Cart:No More.");
+			.@select = select("About Save", "About Storage", "About Teleport", "About Cart", "No More.");
 			if (.@select == 5) {
 				mes "[Kafra Employee]";
 				mes "I hope you are satisfied with my explanation";
@@ -832,7 +832,7 @@ new_5-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv5	4W_KID
 		mes "^4d4dffyou can NEVER come back to the Novice Training Field.^000000";
 		mes "So keep that in mind.";
 		next;
-		switch(select("Teleport Service:About Kafra Service")) {
+		switch(select("Teleport Service", "About Kafra Service")) {
 		case 1:
 			mes "[Kafra Employee]";
 			mes "So, you are going straight to town.";
@@ -849,7 +849,7 @@ new_5-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv5	4W_KID
 			mes "Also, if you are trying to take a boat to go somewhere, you have to go through Alberta first.";
 			mes "Select the town you want to teleport to.";
 			next;
-			switch(select("Prontera:Morroc:Payon:Alberta:Geffen")) {
+			switch(select("Prontera", "Morroc", "Payon", "Alberta", "Geffen")) {
 			case 1:
 				mes "[Kafra Employee]";
 				mes "Rune-Midgarts' Capital, Prontera.";
@@ -909,7 +909,7 @@ new_5-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv5	4W_KID
 			mes "informed about?";
 			next;
 			while(1) {
-				.@select = select("About Save:About Storage:About Teleport:About Cart:No More.");
+				.@select = select("About Save", "About Storage", "About Teleport", "About Cart", "No More.");
 				if (.@select == 5) {
 					mes "[Kafra Employee]";
 					mes "I hope you are satisfied with my explanation";
@@ -1087,7 +1087,7 @@ new_5-2,33,176,4	duplicate(NvCool)	Cool Event Corp. Staff::NvCool5	4_M_ZONDAMAN
 		mes "What can I help you with?";
 		mes "Need me to explain what I do again?";
 		next;
-		switch(select("Yes, I need an explanation.:Nope.")) {
+		switch(select("Yes, I need an explanation.", "Nope.")) {
 		case 1:
 			mes "[Guide]";
 			mes "Guides are in each town to guide you to useful places in each town.";
@@ -1127,7 +1127,7 @@ new_5-2,36,176,4	duplicate(NvGuide)	Guide#nv5	8W_SOLDIER
 			mes "Do you want to do the basic course,";
 			mes "or do you just want to go through from here?";
 			next;
-			switch(select("Send me to Basic Training.:I'll start from here.")) {
+			switch(select("Send me to Basic Training.", "I'll start from here.")) {
 			case 1:
 				mes "[Brade]";
 				mes "Ok. I'll send you to the basic course.";
@@ -1146,7 +1146,7 @@ new_5-2,36,176,4	duplicate(NvGuide)	Guide#nv5	8W_SOLDIER
 			mes "I think you came back from theory training course,";
 			mes "can I send you back to there or do you just want to go through from here?";
 			next;
-			switch(select("Send me back to Chocolat.:I'll start from here.")) {
+			switch(select("Send me back to Chocolat.", "I'll start from here.")) {
 			case 1:
 				mes "[Brade]";
 				mes "Ok. I'll send you to Chocolat.";
@@ -1245,7 +1245,7 @@ new_5-2,36,176,4	duplicate(NvGuide)	Guide#nv5	8W_SOLDIER
 		mes "[Brade]";
 		mes "I think you've learned enough, do you want to quit and go to your first town?";
 		next;
-		switch(select("I will stay little longer.:I want to quit and go to the town.")) {
+		switch(select("I will stay little longer.", "I want to quit and go to the town.")) {
 		case 1:
 			mes "[Brade]";
 			mes "It's ok to stay here and practice until you think you are ready.";
@@ -1262,7 +1262,7 @@ new_5-2,36,176,4	duplicate(NvGuide)	Guide#nv5	8W_SOLDIER
 			mes "I guess you have made up your mind, huh?";
 			mes "Well, where do you want to go?";
 			next;
-			switch(select("Prontera:Morroc:Payon:Alberta:Geffen:Cancel")) {
+			switch(select("Prontera", "Morroc", "Payon", "Alberta", "Geffen", "Cancel")) {
 			case 1:
 				mes "[Brade]";
 				mes "Prontera, the Capital city of the Rune-Midgarts Kingdom.";
@@ -1337,7 +1337,7 @@ new_5-3,96,30,4	duplicate(NvBradeB)	Brade#nv5b	4_M_JOB_KNIGHT1
 	mes "[Swordman Guildsman]";
 	mes "Can I help you?";
 	next;
-	switch(select("About Swordman Class.:Job change to Swordman.:Got any quests?:Cancel.")) {
+	switch(select("About Swordman Class.", "Job change to Swordman.", "Got any quests?", "Cancel.")) {
 	case 1:
 		mes "[Swordman Guildsman]";
 		mes "Literally, Swordman means one, who";
@@ -1379,7 +1379,7 @@ new_5-3,96,30,4	duplicate(NvBradeB)	Brade#nv5b	4_M_JOB_KNIGHT1
 		mes "If you're interested in being a Swordman, I'll offer you this manual.";
 		mes "Do you want to try the skills of a Swordman?";
 		next;
-		switch(select("I'll try the Swordman skills.:No thanks.")) {
+		switch(select("I'll try the Swordman skills.", "No thanks.")) {
 		case 1:
 			mes "[Swordman Guildsman]";
 			mes "Here is the Swordman manual.";
@@ -1408,7 +1408,7 @@ new_5-3,96,30,4	duplicate(NvBradeB)	Brade#nv5b	4_M_JOB_KNIGHT1
 		mes "I think you have enough job levels, of course, right?";
 		mes "Do you want to stop your training now and go to the Swordman Association?";
 		next;
-		switch(select("I'll consider it again.:I'll go to the Swordman Association.")) {
+		switch(select("I'll consider it again.", "I'll go to the Swordman Association.")) {
 		case 1:
 			mes "[Swordman Guildsman]";
 			mes "Please try enough instruction manuals from each job class and consider it carefully.";
@@ -1497,7 +1497,7 @@ new_5-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv5	4_F_JOB_KNIGHT
 	mes "[Prontera Acolyte]";
 	mes "What can I do for you?";
 	next;
-	switch(select("What is an Acolyte?:Job change to Acolyte.:Cancel")) {
+	switch(select("What is an Acolyte?", "Job change to Acolyte.", "Cancel")) {
 	case 1:
 		mes "[Prontera Acolyte]";
 		mes "An Acolyte is someone who worships the goddess Freya sacrificing themselves to help others.";
@@ -1519,7 +1519,7 @@ new_5-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv5	4_F_JOB_KNIGHT
 		mes "If you want, I can give you a skill manual to experience what it is like to be an Acolyte.";
 		mes "Would you like to experience the skills of an Acolyte?";
 		next;
-		switch(select("Yes, please.:No, I'm not interested.")) {
+		switch(select("Yes, please.", "No, I'm not interested.")) {
 		case 1:
 			mes "[Prontera Acolyte]";
 			mes "Here you go, the instruction manual of an Acolyte.";
@@ -1548,7 +1548,7 @@ new_5-3,97,41,3	duplicate(NvSwordman)	Swordman Guide#nv5	4_F_JOB_KNIGHT
 		mes "Of course, I assume you have enough job levels to become an Acolyte right?";
 		mes "Would you like to quit the Training Process and go to the Prontera's Sanctuary?";
 		next;
-		switch(select("Let me reconsider.:I will go to the Sanctuary.")) {
+		switch(select("Let me reconsider.", "I will go to the Sanctuary.")) {
 		case 1:
 			mes "[Prontera Acolyte]";
 			mes "You should try out each job's manuals.";
@@ -1587,7 +1587,7 @@ new_5-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv5	4_F_SISTER
 	mes "[Thief Guild Member]";
 	mes "How can I help you?";
 	next;
-	switch(select("About the Thief Class.:I want to be a Thief.:Got any Quests?:Cancel.")) {
+	switch(select("About the Thief Class.", "I want to be a Thief.", "Got any Quests?", "Cancel.")) {
 	case 1:
 		mes "[Thief Guild Member]";
 		mes "Thieves are experts at using Dagger class weapons.";
@@ -1613,7 +1613,7 @@ new_5-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv5	4_F_SISTER
 		mes "If you want, I'll give you a Thief skill manual.";
 		mes "Would you like to experience the skills of a Thief?";
 		next;
-		switch(select("Yes, I would.:No, I don't.")) {
+		switch(select("Yes, I would.", "No, I don't.")) {
 		case 1:
 			mes "[Thief Guild Member]";
 			mes "Here, please take the Thief manual.";
@@ -1642,7 +1642,7 @@ new_5-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv5	4_F_SISTER
 		mes "You already reached the required job level, didn't you?";
 		mes "Do you want to finish the Novice training and go to the Thief Guild?";
 		next;
-		switch(select("Let me consider it again.:Yes, I do.")) {
+		switch(select("Let me consider it again.", "Yes, I do.")) {
 		case 1:
 			mes "[Thief Guild Member]";
 			mes "Have you tried all of the class manuals yet?";
@@ -1724,7 +1724,7 @@ new_5-3,105,41,3	duplicate(NvThief)	Thief Guide#nv5	2_M_THIEFMASTER
 	mes "[Merchant Guildsman]";
 	mes "What can I help you with?";
 	next;
-	switch(select("Tell me about Merchants:I want to be a Merchant.:Give me a Quest.:Cancel")) {
+	switch(select("Tell me about Merchants", "I want to be a Merchant.", "Give me a Quest.", "Cancel")) {
 	case 1:
 		mes "[Merchant Guildsman]";
 		mes "Merchant? Simply put, he sells goods and makes money.";
@@ -1751,7 +1751,7 @@ new_5-3,105,41,3	duplicate(NvThief)	Thief Guide#nv5	2_M_THIEFMASTER
 		mes "[Merchant Guildsman]";
 		mes "Do you want to see what it's like to be a Merchant?";
 		next;
-		switch(select("I want to test Merchant skills.:I don't want to test it.")) {
+		switch(select("I want to test Merchant skills.", "I don't want to test it.")) {
 		case 1:
 			mes "[Merchant Guildsman]";
 			mes "Here is the Merchant skill manual.";
@@ -1780,7 +1780,7 @@ new_5-3,105,41,3	duplicate(NvThief)	Thief Guide#nv5	2_M_THIEFMASTER
 		mes "Wait, have you checked your Job level?";
 		mes "Do you want to complete your Novice training and go straight to the Merchant Guild's union?";
 		next;
-		switch(select("I will think about it again.:Yes, I want to go to the Merchant Guild's union")) {
+		switch(select("I will think about it again.", "Yes, I want to go to the Merchant Guild's union")) {
 		case 1:
 			mes "[Merchant Guildsman]";
 			mes "Ok, I hope you consider being a Merchant.";
@@ -1880,7 +1880,7 @@ new_5-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv5	4W_M_01
 	mes "[Archer Guildsman]";
 	mes "What can I help you with?";
 	next;
-	switch(select("Tell me about Archers:I want to be an Archer:Cancel")) {
+	switch(select("Tell me about Archers", "I want to be an Archer", "Cancel")) {
 	case 1:
 		mes "[Archer Guildsman]";
 		mes "Archers have specialized skills by using a Bow and have a variety of powerful skills.";
@@ -1910,7 +1910,7 @@ new_5-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv5	4W_M_01
 		mes "Do you want to register to test skill experience?";
 		mes "Would like to test Archer skills?";
 		next;
-		switch(select("I want to test Archer skills.:I don't want to test it.")) {
+		switch(select("I want to test Archer skills.", "I don't want to test it.")) {
 		case 1:
 			mes "[Archer Guildsman]";
 			mes "Here is the Archer manual.";
@@ -1939,7 +1939,7 @@ new_5-3,109,41,3	duplicate(NvMerchant)	Merchant Guide#nv5	4W_M_01
 		mes "Wait, have you checked your Job level?";
 		mes "Do you want to complete the Novice training arena and go to the Archer Guild right now?";
 		next;
-		switch(select("I will think about it again.:Yes, I want to go to the Archer Guilds union")) {
+		switch(select("I will think about it again.", "Yes, I want to go to the Archer Guilds union")) {
 		case 1:
 			mes "[Archer Guildsman]";
 			mes "Test out all the jobs if you have to but choose Archer because we're the best.";
@@ -1977,7 +1977,7 @@ new_5-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv5	4_F_JOB_HUNTER
 	mes "[Mage Guild Member]";
 	mes "What can I help you with?";
 	next;
-	switch(select("Tell me about Mages:I want to be a Mage:Give me a Quest:Cancel")) {
+	switch(select("Tell me about Mages", "I want to be a Mage", "Give me a Quest", "Cancel")) {
 	case 1:
 		mes "[Mage Guild Member]";
 		mes "Mages are those who can use magic when they need to protect their friends.";
@@ -2013,7 +2013,7 @@ new_5-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv5	4_F_JOB_HUNTER
 		mes "Do you want to register to experience how it is to be a Mage?";
 		mes "Would you like to test Mage skills?";
 		next;
-		switch(select("I want to test Mage skills.:I don't want to test it.")) {
+		switch(select("I want to test Mage skills.", "I don't want to test it.")) {
 		case 1:
 			mes "[Mage Guild Member]";
 			mes "Here is the Mage Manual.";
@@ -2042,7 +2042,7 @@ new_5-3,113,41,3	duplicate(NvArcher)	Archer Guide#nv5	4_F_JOB_HUNTER
 		mes "Wait, have you checked your Job level?";
 		mes "Do you want to complete your Novice training and go straight to the Mage Guild's union?";
 		next;
-		switch(select("I will think about it again.:Yes, complete my training.")) {
+		switch(select("I will think about it again.", "Yes, complete my training.")) {
 		case 1:
 			mes "[Mage Guild Member]";
 			mes "Please test what Mage skills are all about before you decide.";
@@ -2128,7 +2128,7 @@ new_5-3,117,41,3	duplicate(NvMage)	Mage Guide#nv5	2_F_MAGICMASTER
 	mes "Which job description do you want to hear?";
 	next;
 	while(1) {
-		switch(select("Taekwon:Ninja:Super Novice:Gunslinger:End the conversation.")) {
+		switch(select("Taekwon", "Ninja", "Super Novice", "Gunslinger", "End the conversation.")) {
 		case 1:
 			mes "[Bruce]";
 			mes "It's a job that usually uses a lot of kicking skills.";
@@ -2204,7 +2204,7 @@ new_5-3,121,41,3	duplicate(NvBruce)	Bruce#nv5	1_M_LIBRARYMASTER
 	mes "Great! You are ready to take on the challenges of the world.";
 	mes "What would you like to do?";
 	next;
-	switch(select("I want to leave the training grounds:Tell me about the towns.:Cancel")) {
+	switch(select("I want to leave the training grounds", "Tell me about the towns.", "Cancel")) {
 	case 1:
 		mes "[Eden Group Officer]";
 		mes "Looks like you are ready.";
@@ -2214,7 +2214,7 @@ new_5-3,121,41,3	duplicate(NvBruce)	Bruce#nv5	1_M_LIBRARYMASTER
 		mes "If you know what job you want to change to, you should ask the ^4A4AFFJob Guides^000000 to send you out of the training grounds.";
 		mes "What town would you like to go to?";
 		next;
-		switch(select("Prontera:Morocc:Payon:Alberta:Geffen:Cancel")) {
+		switch(select("Prontera", "Morocc", "Payon", "Alberta", "Geffen", "Cancel")) {
 		case 1:
 			mes "[Eden Group Officer]";
 			mes "Prontera, the Capital city of the Rune-Midgarts Kingdom.";
@@ -2302,7 +2302,7 @@ new_5-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv5	4_F_NOVICE,5,5
 	mes "[Trainer Brutus]";
 	mes "So would you like to try?";
 	next;
-	switch(select("Send me to another Level:What monsters are there?:Cancel")) {
+	switch(select("Send me to another Level", "What monsters are there?", "Cancel")) {
 	case 1:
 		mes "[Trainer Brutus]";
 		mes "I see, then let me guide you to another level. Which level do you want to go to?";
@@ -2484,12 +2484,12 @@ function	script	F_NvErase	{
 		mes "I will send you to any town that you'd like to go to.";
 		mes "Or do you have a favourite profession?";
 		next;
-		switch(select("Choose Profession.:Go to Towns.")) {
+		switch(select("Choose Profession.", "Go to Towns.")) {
 		case 1:
 			mes "[Hanson]";
 			mes "What profession would you like to perform?";
 			next;
-			switch(select("Swordman:Acolyte:Thief:Merchant:Archer:Mage")) {
+			switch(select("Swordman", "Acolyte", "Thief", "Merchant", "Archer", "Mage")) {
 			case 1:
 				mes "[Hanson]";
 				mes "That's a great choice!";
@@ -2574,7 +2574,7 @@ function	script	F_NvErase	{
 			mes "[Hanson]";
 			mes "To what town do you want to go?";
 			next;
-			callsub L_Warp, select("Prontera:Geffen:Morroc:Payon:Alberta:Never mind");
+			callsub L_Warp, select("Prontera", "Geffen", "Morroc", "Payon", "Alberta", "Never mind");
 			end;
 		}
 	} else {
@@ -2582,7 +2582,7 @@ function	script	F_NvErase	{
 		mes "You have received all the supplies.";
 		mes "To what town do you want to go?";
 		next;
-		callsub L_Warp, select("Prontera:Geffen:Morroc:Payon:Alberta");
+		callsub L_Warp, select("Prontera", "Geffen", "Morroc", "Payon", "Alberta");
 		end;
 	}
 	end;
@@ -2680,7 +2680,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	next;
 	.@loop = 1;
 	while(.@loop) {
-		switch(select("Take the test.:What's the test for?:No, thank you.")) {
+		switch(select("Take the test.", "What's the test for?", "No, thank you.")) {
 		case 1:
 			mes "[Lark]";
 			mes "Great!";
@@ -2720,7 +2720,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "You run to the place and see someone surrounded by punks. Because of your sudden appearance, the punks are surprised.";
 	mes "What would be your reaction in this situation?";
 	next;
-	switch(select("Fight against the punks:Cast Magic.:Call for Guards.:Throw rocks at them.")) {
+	switch(select("Fight against the punks", "Cast Magic.", "Call for Guards.", "Throw rocks at them.")) {
 	case 1:
 		.@question_01$ = "You subdue them easily.";
 		++.@swordman_p;
@@ -2746,7 +2746,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "After clearing up the mess, you approach the person who was being attacked.";
 	mes "Do you think the person who was surrounded by punks is a man or a woman?";
 	next;
-	switch(select("Man:Woman")) {
+	switch(select("Man", "Woman")) {
 	case 1:
 		.@question_02_01$ = "he";
 		.@question_02_02$ = "son";
@@ -2760,7 +2760,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "You find out that "+.@question_02_01$+" is the "+.@question_02_02$+" of a very rich family in Alberta and Punks attacked while "+.@question_02_01$+" was on an errand for the family.";
 	mes "What kind of errand was "+.@question_02_01$+" doing?";
 	next;
-	switch(select("Delivering an important object:Delivering a small souvenir:Delivering a message")) {
+	switch(select("Delivering an important object", "Delivering a small souvenir", "Delivering a message")) {
 	case 1:
 		++.@swordman_p;
 		++.@archer_p;
@@ -2778,7 +2778,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "Thanks to your bravery, "+.@question_02_01$+" becomes your friend and decides to go on a trip.";
 	mes "Where are you going?";
 	next;
-	switch(select("Capital city, Prontera:Mountain city, Payon:Port city, Alberta:Magic city, Geffen:Satelite city, Izlude:Desert city, Morocc:Industrial city, Einbroch:World of natural life, Amatsu:Garden city, Hugel")) {
+	switch(select("Capital city, Prontera", "Mountain city, Payon", "Port city, Alberta", "Magic city, Geffen", "Satelite city, Izlude", "Desert city, Morocc", "Industrial city, Einbroch", "World of natural life, Amatsu", "Garden city, Hugel")) {
 	case 1:
 		++.@acolyte_p;
 		break;
@@ -2810,7 +2810,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "You're having a great time. Do you feel like something will be happening or not?";
 	next;
-	switch(select("Happening:Not happening.")) {
+	switch(select("Happening", "Not happening.")) {
 	case 1:
 		++.@thief_p;
 		++.@swordman_p;
@@ -2829,7 +2829,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "Let's go now for the second test. Choose the best answer in your own opinion.";
 	mes "^FF0000There are 5 questions.^000000";
 	next;
-	switch(select("Study:Exercise:Service:Violence")) {
+	switch(select("Study", "Exercise", "Service", "Violence")) {
 	case 1:
 		++.@magician_p;
 		break;
@@ -2846,7 +2846,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 		++.@ninja_p;
 		break;
 	}
-	switch(select("Change:Preservation")) {
+	switch(select("Change", "Preservation")) {
 	case 1:
 		++.@magician_p;
 		break;
@@ -2854,7 +2854,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 		++.@acolyte_p;
 		break;
 	}
-	switch(select("Consumer:Seller:Producer")) {
+	switch(select("Consumer", "Seller", "Producer")) {
 	case 1:
 		++.@swordman_p;
 		++.@thief_p;
@@ -2869,7 +2869,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 		++.@magician_p;
 		break;
 	}
-	switch(select("Speed:Caution")) {
+	switch(select("Speed", "Caution")) {
 	case 1:
 		++.@thief_p;
 		++.@ninja_p;
@@ -2879,7 +2879,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 		++.@gunslinger_p;
 		break;
 	}
-	switch(select("Theory:Experience")) {
+	switch(select("Theory", "Experience")) {
 	case 1:
 		++.@magician_p;
 		break;
@@ -2895,7 +2895,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you always pick up the money that you find on the ground?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@merchant_p;
 		++.@ninja_p;
@@ -2907,7 +2907,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "If you had the same name as someone of the opposite sex, would that make you less attracted to them?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@ninja_p;
 		++.@archer_p;
@@ -2920,7 +2920,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you like being able to carry a lot of items at once?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@swordman_p;
 		++.@merchant_p;
@@ -2933,7 +2933,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you like reading books?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@taekwon_p;
 		++.@gunslinger_p;
@@ -2946,7 +2946,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you read everything in a magazine?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@magician_p;
 		break;
@@ -2958,7 +2958,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you take the time to worry about what you are wearing?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@merchant_p;
 		++.@ninja_p;
@@ -2971,7 +2971,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you tell others what kind of fancy foods you've eaten recently?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@thief_p;
 		++.@swordman_p;
@@ -2984,7 +2984,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you write things down in a notebook often?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@magician_p;
 		++.@merchant_p;
@@ -2997,7 +2997,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you consider yourself attractive?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@ninja_p;
 		++.@gunslinger_p;
@@ -3010,7 +3010,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you like being in areas where a lot of people gather?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@acolyte_p;
 		++.@swordman_p;
@@ -3023,7 +3023,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you like the idea of living a single life?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@thief_p;
 		++.@ninja_p;
@@ -3035,7 +3035,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you like keeping your distance from others?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@gunslinger_p;
 		++.@archer_p;
@@ -3047,7 +3047,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you think that having a good hiding space is important in battle?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@magician_p;
 		++.@gunslinger_p;
@@ -3061,7 +3061,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Would you defend your friends even if you knew they were wrong?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@swordman_p;
 		break;
@@ -3073,7 +3073,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Would you try to convince an enemy not to fight you with logic?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@archer_p;
 		++.@merchant_p;
@@ -3086,7 +3086,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Can you sit still in the same place for a long time?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@taekwon_p;
 		++.@thief_p;
@@ -3099,7 +3099,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you think that you can take a punch straight to the gut from an Orc?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@swordman_p;
 		++.@merchant_p;
@@ -3112,7 +3112,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you make up nicknames for your friends?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@gunslinger_p;
 		++.@archer_p;
@@ -3125,7 +3125,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "Do you always have a plan B for various situations?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@thief_p;
 		++.@gunslinger_p;
@@ -3138,7 +3138,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "[Lark]";
 	mes "When talking with other people, do you take time so that the others have time to think?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		++.@magician_p;
 		break;
@@ -3278,12 +3278,12 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 	mes "Do you want to determine the job that suits you?";
 	mes "Do you want to select a job?";
 	next;
-	switch(select(.@job$+".:Any other profession.")) {
+	switch(select(.@job$+".", "Any other profession.")) {
 	case 1:
 		mes "[Lark]";
 		mes "The Novice Training Center course is now shut down, "+.@job$+". Would you like to make this occupation your profession?";
 		next;
-		if(select("I will think about it again.:I'll choose the former.") == 1) {
+		if(select("I will think about it again.", "I'll choose the former.") == 1) {
 			mes "[Lark]";
 			mes "You will receive a book corresponding to each job type.";
 			mes "Please have enough experience to determine carefully the job that suits you.";
@@ -3294,7 +3294,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 		mes "[Lark]";
 		mes "Quit now the Training Center Course. Would you like to make an occupation your career choice?";
 		next;
-		if(select("I will think about it again.:I still want to change my job.") == 1) {
+		if(select("I will think about it again.", "I still want to change my job.") == 1) {
 			mes "[Lark]";
 			mes "Primer of each class would have received.";
 			mes "Have enough experience to determine looked carefully, please.";
@@ -3303,7 +3303,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 		mes "[Lark]";
 		mes "Yes, sir. Please select your desired job.";
 		next;
-		.@who_job = select("Swordman:Wizard:Archer:Merchant:Thief:Acolyte:Taekwon Boy/Girl:Gunslinger:Ninja:I'll think again.");
+		.@who_job = select("Swordman", "Wizard", "Archer", "Merchant", "Thief", "Acolyte", "Taekwon Boy/Girl", "Gunslinger", "Ninja", "I'll think again.");
 		if (.@who_job == 10) {
 			mes "[Lark]";
 			mes "The Novice Training Center has a lot of sea experience, please pay attention along the way.";

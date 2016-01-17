@@ -61,7 +61,7 @@ mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 	mes "But someday this cave must be sealed forever, hehe!";
 	next;
 	while(1) {
-		switch(select("Ask what's going on.:Ask to open the gate.:Go to other location.")) {
+		switch(select("Ask what's going on.", "Ask to open the gate.", "Go to other location.")) {
 		case 1:
 			mes "[Starfish]";
 			mes "Lately, our Starfish lady is";
@@ -145,7 +145,7 @@ mal_dun01,153,237,5	script	Weird Entrance	CLEAR_NPC,{
 	mes "There is a strange entrance";
 	mes "blocked roughly with some boards.";
 	next;
-	switch(select("Go in.:Stop.")) {
+	switch(select("Go in.", "Stop.")) {
 	case 1:
 		if (countitem(Octopus_Hunt_Stick)) {
 			if (has_instance("1@cash") == "") {
@@ -710,7 +710,7 @@ OnInstanceInit:
 OnTouch:
 	mes "Do you want to go out from the octopus dungeon?";
 	next;
-	if(select("No!:Yes!") == 2)
+	if(select("No!", "Yes!") == 2)
 		warp "mal_dun01",153,233;
 	close;
 }
