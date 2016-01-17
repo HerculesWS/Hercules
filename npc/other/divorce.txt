@@ -157,7 +157,7 @@ nif_in,190,112,5	script	Deviruchi#divorce	4_DEVIRUCHI,{
 	mes "I can help you if you want...";
 	mes "I can make all of this happen!";
 	next;
-	if (select("No thanks, I am happy.:Yes, please do.") == 1) {
+	if (select("No thanks, I am happy.", "Yes, please do.") == 1) {
 		mes "[Deviruchi]";
 		mes "Hmpf~! You must still be";
 		mes "fascinated with the silly";
@@ -181,7 +181,7 @@ nif_in,190,112,5	script	Deviruchi#divorce	4_DEVIRUCHI,{
 	mes "single's life. All you have to";
 	mes "do is say the word...";
 	next;
-	if (select("...Give me some time to think.:Any price will do, give me a divorce right now!") == 1) {
+	if (select("...Give me some time to think.", "Any price will do, give me a divorce right now!") == 1) {
 		mes "[Deviruchi]";
 		mes "I understand. But if you think";
 		mes "about anything, think about";

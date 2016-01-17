@@ -42,7 +42,7 @@ yuno_in03,32,15,3	script	Museum Guide	1_F_02,{
 	mes "[Cenia]";
 	mes "Welcome to the Monster Museum.";
 	next;
-	switch(select("Monster Museum?:Tips")) {
+	switch(select("Monster Museum?", "Tips")) {
 	case 1:
 		mes "[Cenia]";
 		mes "The Monster Museum was founded by";

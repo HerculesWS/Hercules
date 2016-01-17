@@ -445,7 +445,7 @@ comodo,210,154,2	script	Suspicious Guy#cmd	2_M_THIEFMASTER,{
 		mes "[Cain]";
 		mes "The buzz that's been going around is that she's got a cache of rare equipment and weapons too! So whaddya say? Wanna be partners in crime and rob her house?";
 		next;
-		switch(select("No, thanks.:Sweet, I'm in!")){
+		switch(select("No, thanks.", "Sweet, I'm in!")){
 		case 1:
 			mes "[Cain]";
 			mes "Wha...?";
@@ -473,7 +473,7 @@ comodo,210,154,2	script	Suspicious Guy#cmd	2_M_THIEFMASTER,{
 	mes "and trust me, it's worth it.";
 	mes "So whaddya say...?";
 	next;
-	switch(select("Alright.:No, thanks.")){
+	switch(select("Alright.", "No, thanks.")){
 	case 1:
 		if (Zeny > 499){
 			mes "[Cain]";
@@ -524,7 +524,7 @@ mjolnir_02,85,362,3	script	Blacksmith Miner	4_F_JOB_BLACKSMITH,{
 	mes "I'm rich!";
 	emotion e_heh;
 	next;
-	switch(select("I want to buy some.:Congratulations.")){
+	switch(select("I want to buy some.", "Congratulations.")){
 	case 1:
 		mes "[Dwayne]";
 		mes "Ah, you have an";

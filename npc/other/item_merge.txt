@@ -45,7 +45,7 @@ prontera,146,95,3	script	Mergician#pron	1_M_WIZARD,{
 	mes "Do you believe in the miracle of Merge god?? If so, repeat my spell loudly as I pronunce it!!!";
 	mes "Merge Merge, Merrrrge!!!";
 	next;
-	switch(select("What is the miracle of Merge?:Merrrrge!!!!:Abandon...")) {
+	switch(select("What is the miracle of Merge?", "Merrrrge!!!!", "Abandon...")) {
 	case 1:
 		mes "[Mergician]";
 		mes "There is an order which rules the world and keeps the world to go well.";
@@ -71,7 +71,7 @@ prontera,146,95,3	script	Mergician#pron	1_M_WIZARD,{
 		mes "[Mergician]";
 		mes "And if you eagerly want to be blessed by Merge, be humble and shout out loud! Merge Merge, Merrrrge!!!";
 		next;
-		switch(select("Merrrrge!:Don't follow what he says.")) {
+		switch(select("Merrrrge!", "Don't follow what he says.")) {
 		case 1:
 			mes "[Mergician]";
 			mes "Merge just heard your wish and let it be realised!";
