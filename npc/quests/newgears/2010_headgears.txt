@@ -44,7 +44,7 @@ gonryun,149,189,0	script	Yotang#Flower_Of_Fairy	1_M_04,{
 	mes "Of course, I am the master of the fan club.";
 	mes "How about joining the fairy fan club?";
 	next;
-	if (select("I'm not that interested!!:I'll join it right away!!") == 1) {
+	if (select("I'm not that interested!!", "I'll join it right away!!") == 1) {
 		mes "[Yotang]";
 		mes "What! I'm going to tell on you!";
 		close;
@@ -63,7 +63,7 @@ gonryun,149,189,0	script	Yotang#Flower_Of_Fairy	1_M_04,{
 		mes "^FF0000the refinement on the matereials will all disapper^000000";
 		mes "^FF0000if you once combine those.^000000";
 		next;
-		if (select("No, next time.:Make it right now!!") == 1) {
+		if (select("No, next time.", "Make it right now!!") == 1) {
 			mes "[Yotang]";
 			mes "You'll regret it!";
 			close;
@@ -151,7 +151,7 @@ gonryun,149,189,0	script	Yotang#Flower_Of_Fairy	1_M_04,{
 	mes "^FF0000the refinement on the matereials will all disapper^000000";
 	mes "^FF0000if you once combine those.^000000";
 	next;
-	if (select("I won't do it.:Here, I have the materials!")==1) {
+	if (select("I won't do it.", "Here, I have the materials!")==1) {
 		mes "[Yotang]";
 		mes "You'll regret it!";
 		close;
@@ -174,7 +174,7 @@ lhz_in02,276,281,1	script	Drunken Man#Necktie	4_M_ALCHE_A,{
 	next;
 	mes "He seems to be drunken badly. What should I do?";
 	next;
-	if (select("Just ignore him.:Fight!") == 1) {
+	if (select("Just ignore him.", "Fight!") == 1) {
 		mes "[Drunken Man]";
 		mes "Why are you ignoring me?";
 		mes "Are you afraid of me?";
@@ -203,7 +203,7 @@ lhz_in02,276,281,1	script	Drunken Man#Necktie	4_M_ALCHE_A,{
 		mes "[Drunken Man]";
 		mes "Oh, you're having the materials for Necktie! give them to me!!";
 		next;
-		if (select("No way!:Here you are.")==1) {
+		if (select("No way!", "Here you are.")==1) {
 			mes "[Drunken Man]";
 			mes "Ohh, you are scared!";
 			mes "I won again!!";
@@ -257,7 +257,7 @@ lhz_in02,276,281,1	script	Drunken Man#Necktie	4_M_ALCHE_A,{
 	mes "[Drunken Man]";
 	mes "I will beat you off wearing the legendary Necktie!";
 	next;
-	if (select("I won't.:Let's go and get them.") == 1) {
+	if (select("I won't.", "Let's go and get them.") == 1) {
 		mes "[Drunken Man]";
 		mes "Are you dropping out?";
 		mes "Did I win again?";
@@ -280,7 +280,7 @@ comodo,236,164,0	script	Hat Girl#Hair_Brush	1_F_04,{
 	mes "Isn't the unique hat much better";
 	mes "than the common hairbands?";
 	next;
-	if (select("I still prefer hairbands!:Hat is the best!") == 1) {
+	if (select("I still prefer hairbands!", "Hat is the best!") == 1) {
 		mes "[Hat Girl]";
 		mes "Wear your boring hairband for the whole lifetime!";
 		emotion e_pif;
@@ -301,7 +301,7 @@ comodo,236,164,0	script	Hat Girl#Hair_Brush	1_F_04,{
 		mes "Oh! you're bringing ^0000FFthe materials for Hair Brush^000000.";
 		mes "Do you want me to make it now?";
 		next;
-		if (select("I think the hairband is better...:Yes, please make it!") == 1) {
+		if (select("I think the hairband is better...", "Yes, please make it!") == 1) {
 			mes "[Hat Girl]";
 			mes "Wear your boring hairband for the whole lifetime!";
 			emotion e_pif;
@@ -407,7 +407,7 @@ alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
 		mes "Did you lose it?";
 		mes "Do you want me to make it for you?";
 		next;
-		if (select("No, thanks.:Yes, I want it now.") == 1) {
+		if (select("No, thanks.", "Yes, I want it now.") == 1) {
 			mes "[Bebete]";
 			mes "Oh... it's not easy to make a living!";
 			close;
@@ -473,7 +473,7 @@ alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
 	mes "[Bebete]";
 	mes "Are you a real angel? Have you been to heaven?";
 	next;
-	if (select("What a bullshit!:Let's keep the childhood innocence!") == 1) {
+	if (select("What a bullshit!", "Let's keep the childhood innocence!") == 1) {
 		mes "[" + strcharinfo(0) + "]";
 		mes "Angel and heaven? It's all made up! ";
 		next;
@@ -549,7 +549,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		mes "I am the great king, Froggie Vll..";
 		mes "I need your help!";
 		next;
-		if (select("Just ignore it.:Let's help him.") == 1) {
+		if (select("Just ignore it.", "Let's help him.") == 1) {
 			mes "[" + strcharinfo(0) + "]";
 			mes "Talking frog...";
 			next;
@@ -828,7 +828,7 @@ OnTimer2000:
 OnTouch:
 	mes "There is a frog. What should I do?";
 	next;
-	if (select("Throw it a stone.:Have a conversation.") == 1) {
+	if (select("Throw it a stone.", "Have a conversation.") == 1) {
 		donpcevent "Roda Frog#Frog_Cap::OnDisable";
 		mes "Ouch~";
 		close;
@@ -859,7 +859,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 		mes "I can feel your admiration for me.";
 		mes "Wanna be my student?";
 		next;
-		if (select("You're out of your mind!:Please let me be your disciple!") == 1) {
+		if (select("You're out of your mind!", "Please let me be your disciple!") == 1) {
 			mes "[Alonie]";
 			mes "Yes, I'm out of my mind.";
 			mes "Huhu, Yapyap!";
@@ -877,7 +877,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 		mes "^FF000020 Zeroms, 20 Requiems^000000!";
 		mes "Hurry!";
 		next;
-		if (select("What a bullshit!:Let's go!") == 1) {
+		if (select("What a bullshit!", "Let's go!") == 1) {
 			mes "[Alonie]";
 			mes "Of course, I don't care.";
 			mes "Huhu, Yapyap!";
@@ -907,7 +907,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 			mes "Get around and kill";
 			mes "^FF000040 Arclouses and 30 High Orcs^000000";
 			next;
-			if (select("What a bullshit!:Let's go!") == 1) {
+			if (select("What a bullshit!", "Let's go!") == 1) {
 				mes "[Alonie]";
 				mes "Of course, I don't care.";
 				mes "Huhu, Yapyap!";
@@ -945,7 +945,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 			mes "Get around and kill";
 			mes "^FF000020 Chung E and 50	Civil Servant^000000!";
 			next;
-			if (select("What a bullshit!:Let's go!") == 1) {
+			if (select("What a bullshit!", "Let's go!") == 1) {
 					mes "[Alonie]";
 					mes "Of course, I don't care.";
 					mes "Huhu, Yapyap!";
@@ -983,7 +983,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 			mes "Get around and kill";
 			mes "^FF000020 The Papers and 40 Antique Firelocks^000000!";
 			next;
-			if (select("What a bullshit!:Let's go!") == 1) {
+			if (select("What a bullshit!", "Let's go!") == 1) {
 				mes "[Alonie]";
 				mes "Of course, I don't care.";
 				mes "huhu, Yapyap!";
@@ -1013,7 +1013,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 			mes "Get around and kill";
 			mes "^FF000020 The Papers and 40 Antique Firelocks^000000!";
 			next;
-			if (select("What a bullshit!:Let's go!") == 1) {
+			if (select("What a bullshit!", "Let's go!") == 1) {
 				mes "[Alonie]";
 				mes "Of course, I don't care.";
 				mes "huhu, Yapyap!";

@@ -49,7 +49,7 @@ moc_prydb1,154,128,4	script	Alcouskou	2_M_THIEFMASTER,{
 		mes "as useless knowledge, but it isn't";
 		mes "Let me explain.";
 		next;
-		switch (select("Sand Attack:Back Slide:Find Stone:Stone Fling:I will be back later.")) {
+		switch (select("Sand Attack", "Back Slide", "Find Stone", "Stone Fling", "I will be back later.")) {
 		case 1:
 			switch (skill_thief_1) {
 			case 0:

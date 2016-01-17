@@ -950,7 +950,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 			mes "If you think it's too difficult,";
 			mes "you can choose to give up.";
 			next;
-			if(select("I'm not giving up!:I give up...") == 1){
+			if(select("I'm not giving up!", "I give up...") == 1){
 				mes "[N. A]";
 				mes "Alright, I trust you.";
 				mes "Good luck.";
@@ -977,7 +977,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 		mes "you've paid me 100000 zeny.";
 		mes "Do you want to pay now?";
 		next;
-		if(select("Nope.:Yeah.") == 1){
+		if(select("Nope.", "Yeah.") == 1){
 			mes "[N. A]";
 			mes "Alright. I await you to return";
 			mes "with the money.";
@@ -1054,7 +1054,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 			mes "If you don't want it anymore,";
 			mes "you can cancel the request.";
 			next;
-			if(select("Don't cancel.:Cancel it.") == 1){
+			if(select("Don't cancel.", "Cancel it.") == 1){
 				mes "[N. A]";
 				mes "Well, please come back with the";
 				mes "materials. I'll be waiting.";
@@ -1164,7 +1164,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 		mes "Find me 30 of each Element.";
 		mes "Did you find them?";
 		next;
-		switch(select("Nope.:I found 30 Poison Spheres.:I found 30 Flare Spheres.:I found 30 Lightning Spheres.:I found 30 Blind Spheres.:I found 30 Freezing Spheres.")){
+		switch(select("Nope.", "I found 30 Poison Spheres.", "I found 30 Flare Spheres.", "I found 30 Lightning Spheres.", "I found 30 Blind Spheres.", "I found 30 Freezing Spheres.")){
 		case 1:
 			mes "[N. A]";
 			mes "Just bring me whatever type";
@@ -1262,7 +1262,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 		mes "disturb me.";
 		close;
 	}
-	switch(select(((BaseLevel > 67)?"Ask about 'Butcher'.":"")+":Ask about the 'Drifter'.:Cancel")) {
+	switch(select(((BaseLevel > 67)?"Ask about 'Butcher'.":""), "Ask about the 'Drifter'.", "Cancel")) {
 	case 1:
 		mes "[N. A]";
 		mes "Ah, you heard the news";
@@ -1291,7 +1291,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 		mes "[N. A]";
 		mes "Do you think you can handle it?";
 		next;
-		if(select("I'm not sure...:Of course I can!!") == 1){
+		if(select("I'm not sure...", "Of course I can!!") == 1){
 			mes "[N. A]";
 			mes "The ^ff0000Butcher^000000 is a weapon that you";
 			mes "can't handle without a strong";
@@ -1347,7 +1347,7 @@ que_ng,149,178,4	script	Lab Director	4_F_ALCHE,{
 		mes "[N. A]";
 		mes "Do you want to try using the ^ff0000Drifter^000000?";
 		next;
-		if(select("Um, no.:Yeah!") == 1){
+		if(select("Um, no.", "Yeah!") == 1){
 			mes "[N. A]";
 			mes "If you want to try it out";
 			mes "some time, come back here.";
@@ -1573,7 +1573,7 @@ lighthalzen,205,284,6	script	F. Harrison	4_M_03,{
 			mes "I'm bored out of my mind here!";
 			mes "Pleeeeeeeeeeeease~?";
 			next;
-			if(select("No way.:Here...") == 1){
+			if(select("No way.", "Here...") == 1){
 				mes "[F. Harrison]";
 				mes "Hah! You think you're the only";
 				mes "one with a cool weapon!? Well";

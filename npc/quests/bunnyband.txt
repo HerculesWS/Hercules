@@ -45,7 +45,7 @@ alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 		mes "Corporation's special";
 		mes "^529DFFBunny Band Event^000000?";
 		next;
-		switch(select("Sure, I brought the items.:Event Information:Cancel")) {
+		switch(select("Sure, I brought the items.", "Event Information", "Cancel")) {
 		case 1:
 			mes "[Kafra Employee]";
 			mes "Alrighty~";
@@ -113,7 +113,7 @@ alberta,26,229,0	script	Kafra Employee#bunny	4_M_01,{
 	mes "Corporation and sponsored by";
 	mes "the Alberta Merchant Guild?";
 	next;
-	switch(select("Join the Event:Event Information:Cancel")) {
+	switch(select("Join the Event", "Event Information", "Cancel")) {
 	case 1:
 		BUNYBND = 1;
 		mes "[Kafra Employee]";

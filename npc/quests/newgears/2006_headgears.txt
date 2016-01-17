@@ -184,7 +184,7 @@ rachel,152,131,3	script	Sakjul	4_M_MIDDLE1,{
 	mes "Young men in nowadays are too weak and tender.";
 	mes "Don't you agree with me, young adventurer?";
 	next;
-	if (select("Yes, sir!:No.") == 1) {
+	if (select("Yes, sir!", "No.") == 1) {
 		mes "[Sakjul]";
 		mes "Ah! I like your answer!";
 		mes "Lately, I found it very hard to see a diciplined young man like you.";
@@ -313,7 +313,7 @@ hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 		mes "I am pretty sure that they will start";
 		mes "being fused into the helm with their own mysterious powers.";
 		next;
-		if (select("Give him the items.:Don't give him the items.") == 1) {
+		if (select("Give him the items.", "Don't give him the items.") == 1) {
 			mes "[Ghenirhemin]";
 			mes "Excellent. Now, all we have to do";
 			mes "is just waiting until they finish being fused into one.";
@@ -407,7 +407,7 @@ hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 		mes "I feel that you will be able to fully recreate this Valkyre's Helm";
 		mes "as well as use it to its full potential.";
 		next;
-		if (select("Sure.:No, thanks.") == 1) {
+		if (select("Sure.", "No, thanks.") == 1) {
 			mes "[Ghenirhemin]";
 			mes "You are an ambitious young man as I expected.";
 			mes "It is surely a great advantage.";
@@ -488,7 +488,7 @@ hugel,147,103,3	script	Ghenirhemin	4_M_HUGRANFA,{
 		mes "It may or may not be interesting to you,";
 		mes "but I gurantee that it will never bore you in either way.";
 		next;
-		if (select("Listen.:Don't listen.") == 1) {
+		if (select("Listen.", "Don't listen.") == 1) {
 			mes "[Ghenirhemin]";
 			mes "Good, let me introduce myself.";
 			mes "My name is Ghenirhemin.";
@@ -594,7 +594,7 @@ payon,135,320,3	script	Chungwolmang	4W_M_01,{
 		mes "You'd better hurry because I can't wait so long!";
 		mes "Wait, what mask did you ask me to make anyways?";
 		next;
-		switch(select("Hahoe Mask:Bride Mask:Mythical Lion Mask")) {
+		switch(select("Hahoe Mask", "Bride Mask", "Mythical Lion Mask")) {
 		case 1:
 			mes "[Chungwolmang]";
 			mes "Oh, yes, you want Hahoe Mask.";
@@ -652,7 +652,7 @@ payon,135,320,3	script	Chungwolmang	4W_M_01,{
 		mes "Hahoe Mask, Bride Mask and Mythical Lion Mask.";
 		mes "Which one whould you like to have? Pick one.";
 		next;
-		switch(select("Hahoe Mask:Bride Mask:Mythical Lion Mask")) {
+		switch(select("Hahoe Mask", "Bride Mask", "Mythical Lion Mask")) {
 		case 1:
 			mes "[Chungwolmang]";
 			mes "Great, you want Hahoe Mask, eh? That's easy!";
@@ -720,7 +720,7 @@ payon,135,320,3	script	Chungwolmang	4W_M_01,{
 		mes "I will be able to pay back your favor sooner or later.";
 		mes "So, can I take it?";
 		next;
-		if (select("Sure.:No, you can't.") == 1) {
+		if (select("Sure.", "No, you can't.") == 1) {
 			mes "[Chungwolmang]";
 			mes "Oh! Thank you so much!";
 			mes "Muhahahahahaha! Now I will become a lucky guy!";
@@ -774,7 +774,7 @@ S_MakeMask:
 	mes "to make a "+getitemname(getarg(0))+". Excellent.";
 	mes "Please give me the materials. I will make the mask right away.";
 	next;
-	if (select("Give him the items.:Don't give him the items.") == 1) {
+	if (select("Give him the items.", "Don't give him the items.") == 1) {
 		mes "[Chungwolmang]";
 		mes "Great, I like your unhesitating attitude!";
 		mes "Alright then, I will make the mask as quickly as I can!";
@@ -829,7 +829,7 @@ payon_in03,139,124,3	script	Han Garam	4_M_ORIENT01,{
 		mes "Okay then, I will make the hat as quickly as I can.";
 		mes "Now, hand me all the materials.";
 		next;
-		if (select("Give him the items.:Don't give him the items.") == 1) {
+		if (select("Give him the items.", "Don't give him the items.") == 1) {
 			mes "[Han Garam]";
 			mes "Excellent! I don't have to be mediumized";
 			mes "by the Dragon God for this work";
@@ -891,7 +891,7 @@ payon_in03,139,124,3	script	Han Garam	4_M_ORIENT01,{
 		mes "Okay then, I will make the hat as quickly as I can.";
 		mes "Now, hand me all the materials.";
 		next;
-		if (select("Give him the items.:Don't give him the items.") == 1) {
+		if (select("Give him the items.", "Don't give him the items.") == 1) {
 			mes "[Han Garam]";
 			mes "Excellent! I don't have to be mediumized";
 			mes "by the Dragon God for this work";
@@ -1072,7 +1072,7 @@ payon_in03,139,124,3	script	Han Garam	4_M_ORIENT01,{
 		mes "[Han Garam]";
 		mes "Please? I assure you that I can make traditional hats.";
 		next;
-		if (select("Give him the items.:Don't give him the items.") == 1) {
+		if (select("Give him the items.", "Don't give him the items.") == 1) {
 			mes "[Han Garam]";
 			mes "Wow, wow, thank you so much!";
 			mes "As I promised, I will make you a hat in return.";

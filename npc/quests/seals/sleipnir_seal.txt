@@ -125,7 +125,7 @@ que_god01,98,98,4	script	Manager#G	1_F_04,{
 			mes "[Cukure]";
 			mes "We won't experiment on you or anything, we just need you to run some simple errands. And of course, you will be rewarded.";
 			next;
-			switch(select("I'm kind of busy...:Sure, why not?")) {
+			switch(select("I'm kind of busy...", "Sure, why not?")) {
 			case 1:
 				mes "[Cukure]";
 				mes "Oh, I see.";
@@ -849,7 +849,7 @@ que_god01,11,136,6	script	Researcher#G2	2_M_SAGE_B,{
 				mes "you've missed some";
 				mes "important detail.";
 				next;
-				switch(select("Well, um...:Impossible!")) {
+				switch(select("Well, um...", "Impossible!")) {
 				case 1:
 					mes "[Aadin]";
 					mes "Hmm.";
@@ -1438,7 +1438,7 @@ payon,79,171,4	script	Friar#G5	4_F_SISTER,{
 				mes "[Lania]";
 				mes "Despite the passing of time and mankind's progression, certain fundamentals of life are timeless and will never change.";
 				next;
-				switch(select("Umm...:I see.")) {
+				switch(select("Umm...", "I see.")) {
 				case 1:
 					mes "[Lania]";
 					mes "Hmm...?";
@@ -1450,7 +1450,7 @@ payon,79,171,4	script	Friar#G5	4_F_SISTER,{
 					mes "[Lania]";
 					mes "I believe that it's no use having ability or power unless you use that power for the right purposes.";
 					next;
-					switch(select("Oh no, that's okay.:Sleipnir's story.")) {
+					switch(select("Oh no, that's okay.", "Sleipnir's story.")) {
 					case 1:
 						mes "[Lania]";
 						mes "I must have";
@@ -1516,7 +1516,7 @@ payon,79,171,4	script	Friar#G5	4_F_SISTER,{
 						mes "finish this";
 						mes "story later.";
 						next;
-						switch(select("Yeah, let's finish this later.:No, please go ahead.")) {
+						switch(select("Yeah, let's finish this later.", "No, please go ahead.")) {
 						case 1:
 							mes "[Lania]";
 							mes "I understand that my story was not that interesting. But I will try my best to entertain you next time. Please travel in safety.";
@@ -1545,7 +1545,7 @@ payon,79,171,4	script	Friar#G5	4_F_SISTER,{
 						mes "Hmmm...";
 						mes "I know this story is quite long. Did you want to listen some more, or did you need a break?";
 						next;
-						switch(select("Let me take down some notes first.:I need a break!:No, please go ahead.")) {
+						switch(select("Let me take down some notes first.", "I need a break!", "No, please go ahead.")) {
 						case 1:
 							mes "[Lania]";
 							mes "Ah....";
@@ -1630,7 +1630,7 @@ payon,79,171,4	script	Friar#G5	4_F_SISTER,{
 						mes "Are you still listening? If you're tired, I understand and we can";
 						mes "stop for now.";
 						next;
-						switch(select("I'm so exhausted!:No, please go ahead.")) {
+						switch(select("I'm so exhausted!", "No, please go ahead.")) {
 						case 1:
 							mes "[Lania]";
 							mes "I know that this story might seem too long. But if you ever want to sit down and hear it again, I'll be glad to go over it again. Thank you for listening, adventurer.";
@@ -1672,7 +1672,7 @@ payon,79,171,4	script	Friar#G5	4_F_SISTER,{
 						mes "talk about this";
 						mes "later you know.";
 						next;
-						switch(select("I'm so bored~:No, please go ahead.")) {
+						switch(select("I'm so bored~", "No, please go ahead.")) {
 						case 1:
 							mes "[Lania]";
 							mes "I see. Well, stories are meant to be enjoyed and I suppose you're not in the mood to sit and listen.";
@@ -1708,7 +1708,7 @@ payon,79,171,4	script	Friar#G5	4_F_SISTER,{
 						mes "If you are, let's talk";
 						mes "about this later.";
 						next;
-						switch(select("Let me take down some notes.:See you later.:No, please go ahead.")) {
+						switch(select("Let me take down some notes.", "See you later.", "No, please go ahead.")) {
 						case 1:
 							mes "[Lania]";
 							mes "Ah....";

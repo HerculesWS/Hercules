@@ -189,7 +189,7 @@ payon_in02,54,13,3	script	Master Kavaruk	1_M_JOBTESTER,{
 	mes "of the Icarus Archer Guild.";
 	mes "I bid you welcome.";
 	next;
-	switch(select("Ask about 'Icarus.':Ask about recent news.:Talk about Archers.")) {
+	switch(select("Ask about 'Icarus.'", "Ask about recent news.", "Talk about Archers.")) {
 	case 1:
 		mes "[Master Kavaruk]";
 		mes "Have you ever";
@@ -366,7 +366,7 @@ payon_in02,54,13,3	script	Master Kavaruk	1_M_JOBTESTER,{
 				mes "some specialized instruction to learn more about the Archer job?";
 			}
 			next;
-			switch(select("Yes:No")){
+			switch(select("Yes", "No")){
 			case 1:
 				tu_archer01 = 1;
 				mes "[Master Kavaruk]";
@@ -442,7 +442,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 			mes "Can I help you";
 			mes "with something?";
 			next;
-			switch(select("Tell me about skills.:Er, not really...")) {
+			switch(select("Tell me about skills.", "Er, not really...")) {
 			case 1:
 				mes "[Reidin Corse]";
 				mes "Huh. So Master";
@@ -470,7 +470,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 			mes "call me ^3131FFChief^000000, got it? Stick with me and you'll become the second best archer in the world! How";
 			mes "about it, kid?";
 			next;
-			switch(select("You got it, Chief!:Ugh, no thanks~!")) {
+			switch(select("You got it, Chief!", "Ugh, no thanks~!")) {
 			case 1:
 				mes "[Reidin Corse]";
 				mes "Ho ho!";
@@ -529,7 +529,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 			mes "If you don't like it, you can just quit! No reason to stick around";
 			mes "if you can't keep up with the Chief, anyway.";
 			next;
-			switch(select("Please teach me... Chief!:I want to quit.")) {
+			switch(select("Please teach me... Chief!", "I want to quit.")) {
 			case 1:
 				mes "[Reidin Corse]";
 				mes "That's what I'm talkin' about! Yeah! Just trust me and you'll learn almost everything about Archer skills! Let's get started!";
@@ -566,7 +566,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 					mes "else if you want, but if you don't know any training areas, then";
 					mes "just follow my great advice.";
 					next;
-					switch(select("I'll follow your advice, Chief!:I'll hunt somewhere else...")) {
+					switch(select("I'll follow your advice, Chief!", "I'll hunt somewhere else...")) {
 					case 1:
 						mes "[Reidin Corse]";
 						if (RENEWAL) {
@@ -584,7 +584,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 							mes "and then ^3131FFwest^000000.";
 						}
 						next;
-						switch(select("Leave right away~:W-wait, let me get ready!")) {
+						switch(select("Leave right away~", "W-wait, let me get ready!")) {
 						case 1:
 							mes "[Reidin Corse]";
 							mes "When you struggle";
@@ -695,7 +695,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 			mes "about vultures, what";
 			mes "exactly comes to mind?";
 			next;
-			switch(select("Sharp, precise eyes.:You, Chief.")) {
+			switch(select("Sharp, precise eyes.", "You, Chief.")) {
 			case 1:
 				mes "[Reidin Corse]";
 				mes "Exactly!";
@@ -766,7 +766,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				mes "Alright~";
 				mes "Ready to go?";
 				next;
-				switch(select("Let's go!:W-wait a minute!")) {
+				switch(select("Let's go!", "W-wait a minute!")) {
 				case 1:
 					mes "[Reidin Corse]";
 					mes "Alright...!";
@@ -810,7 +810,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				mes "Are you";
 				mes "ready to go?";
 				next;
-				switch(select("Go.:Wait a moment.")) {
+				switch(select("Go.", "Wait a moment.")) {
 				case 1:
 					mes "[Reidin Corse]";
 					mes "Alright...!";
@@ -1061,7 +1061,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				mes "From Prontera, you'd get to Mt. Mjolnir by traveling ^3131FFnorth^000000, ^3131FFnorth^000000 and then ^3131FFeast^000000. But if you want,";
 				mes "I can just send you there.";
 				next;
-				switch(select("Go!:W-Wait!")) {
+				switch(select("Go!", "W-Wait!")) {
 				case 1:
 					mes "[Reidin Corse]";
 					mes "Alright!";
@@ -1224,7 +1224,7 @@ pay_arche,84,139,3	script	Seisner	4_F_JOB_HUNTER,{
 		mes "about Archers and Archery? Alright, what would you like to know more about?";
 		next;
 		while(1){
-			switch(select("About Archers.:Stats for Archers:End Conversation.")){
+			switch(select("About Archers.", "Stats for Archers", "End Conversation.")){
 			case 1:
 				mes "[Seisner]";
 				mes "Archers specialize";
@@ -1259,7 +1259,7 @@ pay_arche,84,139,3	script	Seisner	4_F_JOB_HUNTER,{
 				mes "and how they affect Archer abilities? I'll do my best to explain.";
 				next;
 				while(1) {
-					switch(select("STR:^3131FFAGI^000000:VIT:^FF9900INT^000000:^FF3131DEX^000000:LUK:End Conversation.")) {
+					switch(select("STR", "^3131FFAGI^000000", "VIT", "^FF9900INT^000000", "^FF3131DEX^000000", "LUK", "End Conversation.")) {
 					case 1:
 						mes "[Seisner]";
 						mes "STR typically increases the damage of attacks. However, Archer class characters use weapons that rely on ^FF3131DEX^000000 to increase their damage.";
@@ -1429,7 +1429,7 @@ pay_arche,76,135,3	script	#Target	HIDDEN_NPC,{ end; }
 			mes "Let's h-help each other train!";
 			mes "Um, is that okay?";
 			next;
-			switch(select("Sure.:No thanks.:Reidin Corse is mine!")) {
+			switch(select("Sure.", "No thanks.", "Reidin Corse is mine!")) {
 			case 1:
 				mes "[Acolyte]";
 				mes "Wow!";
@@ -1574,7 +1574,7 @@ pay_arche,130,113,3	script	Alchemist Guildmember#tu	2_M_ALCHE,{
 			mes "each Stem for ^3131FF30 Zeny^000000 and each";
 			mes "Maneater Blossom for ^3131FF130 Zeny^000000.";
 			next;
-			switch(select("Sell all Stems and Maneater Blossoms:Don't sell anything.")) {
+			switch(select("Sell all Stems and Maneater Blossoms", "Don't sell anything.")) {
 			case 1:
 				mes "[Alchemist Guildmember]";
 				mes "Thank you very much!";
@@ -1944,7 +1944,7 @@ monk_in,19,43,1	script	Bishop Maugins	1_M_PASTOR,{
 		mes "charge of that area. So";
 		mes "how may I help you?";
 		next;
-		switch(select("Has something happened to the Kingdom?:Nothing.")) {
+		switch(select("Has something happened to the Kingdom?", "Nothing.")) {
 		case 1:
 			mes "[Bishop Maugins]";
 			mes "...!!";

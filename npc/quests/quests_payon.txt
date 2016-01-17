@@ -49,7 +49,7 @@ payon_in01,99,72,4	script	Granny	8_F_GRANDMOTHER,{
 		mes "[Granny]";
 		mes "Oh! Would you give me your ^3355FFSkirt of Virgin^000000? I'd need four of them. Please, I'm begging you.";
 		next;
-		switch(select("Alright.:No way!")) {
+		switch(select("Alright.", "No way!")) {
 		case 1:
 			delitem Skirt_Of_Virgin,4;
 			mes "[Granny]";
@@ -100,7 +100,7 @@ payon_in01,18,10,4	script	Mystic Lady	1_F_ORIENT_02,{
 	mes "Ear Muffs are my family's specialty, and we provide it to customers who have ^FF33551 Cursed Ruby^000000, ^3311AA1 Headset,^000000 ^3355FF 200 Feathers^000000 and ^DDDD005000 Zeny^000000.";
 	emotion e_dots;
 	next;
-	switch(select("Oh Yeah? That sounds good.:No thank you, Ma'am.")) {
+	switch(select("Oh Yeah? That sounds good.", "No thank you, Ma'am.")) {
 	case 1:
 		if ((countitem(Cardinal_Jewel_) > 0) && (countitem(Feather) > 199) && (countitem(Headset) > 0) && (Zeny > 4999)) {
 			mes "[Mystic Lady]";
@@ -145,7 +145,7 @@ payon_in02,25,71,4	script	Boy	4_M_04,{
 		mes "*Huk*";
 		mes "Now even my eyes have gone mad!! Why do these bugs suddenly seem so cute?! Nooooooo~!!!";
 		next;
-		switch(select("Show Ora Ora:Give Ora Ora:Cancel")) {
+		switch(select("Show Ora Ora", "Give Ora Ora", "Cancel")) {
 		case 1:
 			mes "[Young Man]";
 			mes "Oooooohhhh!!!";
@@ -196,7 +196,7 @@ payon_in02,25,71,4	script	Boy	4_M_04,{
 		mes "I can't take it any more!";
 		mes "You little stinky filthy bastards!";
 		next;
-		switch(select("Continue:Cancel")) {
+		switch(select("Continue", "Cancel")) {
 		case 1:
 			mes "[Young Man]";
 			mes "Oh man...";
@@ -233,12 +233,12 @@ payon_in01,56,12,7	script	Young man#12	4_M_ORIENT02,{
 	mes "[Young man]";
 	mes "...What is it?";
 	next;
-	switch(select("Can you make me a special item?:Hey.")) {
+	switch(select("Can you make me a special item?", "Hey.")) {
 	case 1:
 		mes "[Young man]";
 		mes "Huh? So you already know what I specialize in, eh? I suppose there's no need for the usual secrecy. Tell me what you want.";
 		next;
-		switch(select("Helm of Angel.:Deviruchi Cap.:I will come next time.")) {
+		switch(select("Helm of Angel.", "Deviruchi Cap.", "I will come next time.")) {
 		case 1:
 			mes "[Young man]";
 			mes "1 Helm (with slot).";
@@ -255,7 +255,7 @@ payon_in01,56,12,7	script	Young man#12	4_M_ORIENT02,{
 			mes "[Young man]";
 			mes "Did you gather the items? Then hand them over.";
 			next;
-			switch(select("Give him the items.:Don't give him the items.")) {
+			switch(select("Give him the items.", "Don't give him the items.")) {
 			case 1:
 				if ((countitem(Helm_) > 0) && (countitem(Angelic_Chain) > 0) && (countitem(Fang_Of_Garm) > 4)) {
 					mes "[Young man]";
@@ -293,7 +293,7 @@ payon_in01,56,12,7	script	Young man#12	4_M_ORIENT02,{
 			mes "[Young man]";
 			mes "Did you gather the items? Then hand them over.";
 			next;
-			switch(select("Give him the items.:Don't give him the items.")) {
+			switch(select("Give him the items.", "Don't give him the items.")) {
 			case 1:
 				if ((countitem(Petite_DiablOfs_Horn) > 599) && (countitem(Talon_Of_Griffin) > 39)) {
 					mes "[Young man]";

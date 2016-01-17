@@ -144,7 +144,7 @@ yuno_in01,35,179,4	script	Pub Master#kh	1_ETC_01,5,5,{
 		mes "to my pub. So what";
 		mes "would you like to have?";
 		next;
-		switch(select("Beer, please:A cocktail, please:Soju, please.:You look worried, what's up?:Cancel")) {
+		switch(select("Beer, please", "A cocktail, please", "Soju, please.", "You look worried, what's up?", "Cancel")) {
 		case 1:
 			mes "[Vandt]";
 			mes "Alright, let me get";
@@ -192,7 +192,7 @@ yuno_in01,35,179,4	script	Pub Master#kh	1_ETC_01,5,5,{
 			mes "that's available for this";
 			mes "kind of temporary job.";
 			next;
-			switch(select("I'm sorry to hear that:Do you want me to help you?")) {
+			switch(select("I'm sorry to hear that", "Do you want me to help you?")) {
 			case 1:
 				mes "[Vandt]";
 				mes "Well, I'm sure that I'll";
@@ -210,7 +210,7 @@ yuno_in01,35,179,4	script	Pub Master#kh	1_ETC_01,5,5,{
 				mes "I expect you to complete the";
 				mes "delivery, no matter what.";
 				next;
-				switch(select("Sure I'll do it:Wait, let me think about it...")) {
+				switch(select("Sure I'll do it", "Wait, let me think about it...")) {
 				case 1:
 					mes "[Vandt]";
 					mes "I'm glad to hear that.";
@@ -332,7 +332,7 @@ yuno,217,114,6	script	Little Kid#kh	4W_KID,{
 			mes "Oh! Hi hi~ Did you want";
 			mes "to buy some yummy toast?";
 			next;
-			switch(select("I'm here for Elly:No, thanks")) {
+			switch(select("I'm here for Elly", "No, thanks")) {
 			case 1:
 				mes "[Cezu]";
 				mes "Oh, I see. Elly must have";
@@ -433,7 +433,7 @@ lighthalzen,366,299,4	script	Windmill Owner#kh	1_ETC_01,{
 		mes "you'd better spit it out quick";
 		mes "before things get hectic again.";
 		next;
-		switch(select("I'm here for Cezu:......")) {
+		switch(select("I'm here for Cezu", "......")) {
 		case 1:
 			mes "[Mills]";
 			mes "Oh, Cezu from the";
@@ -557,7 +557,7 @@ yuno_fild08,158,194,6	script	Security Guard#1::KHAGuard	4_M_EIN_SOLDIER,{
 		mes "Please leave if you don't have";
 		mes "an appointment with the staff.";
 		next;
-		switch(select("I'm here for a delivery.:......")) {
+		switch(select("I'm here for a delivery.", "......")) {
 		case 1:
 			mes "[Security Guard]";
 			mes "You're here to deliver";
@@ -713,7 +713,7 @@ kh_school,176,60,4	script	Lady#kh	4W_F_01,{
 		mes "security guard called and";
 		mes "mentioned you were coming.";
 		next;
-		switch(select("Yes, that's right!:Er, s-sorry!")) {
+		switch(select("Yes, that's right!", "Er, s-sorry!")) {
 		case 1:
 			mes "[Mrs. Lecollane]";
 			mes "Well, you've come a little";
@@ -804,7 +804,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 		mes "I do? ^333333*Sob*^000000 Wh-what";
 		mes "am I going to do? ^333333*Sniff*^000000";
 		next;
-		switch(select("What happened?:......")) {
+		switch(select("What happened?", "......")) {
 		case 1:
 			mes "[Elly]";
 			mes "I... I have to finish baking";
@@ -814,7 +814,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 			mes "floor. I don't know how I can";
 			mes "bake those cookies now...";
 			next;
-			switch(select("What can I do to help you?:Oh, I'm so sorry.")) {
+			switch(select("What can I do to help you?", "Oh, I'm so sorry.")) {
 			case 1:
 				cutin "kh_elly02",2;
 				mes "[Elly]";
@@ -838,7 +838,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 				mes "you can help me with this";
 				mes "huge problem that I have?";
 				next;
-				switch(select("Accept:Decline")) {
+				switch(select("Accept", "Decline")) {
 				case 1:
 					cutin "kh_elly02",2;
 					mes "How Wonderful!";
@@ -1006,7 +1006,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 		mes "you won't have to hurry as";
 		mes "quickly as you did last time.";
 		next;
-		switch(select("What do you need?:Sorry, but I'm pretty busy...")) {
+		switch(select("What do you need?", "Sorry, but I'm pretty busy...")) {
 		case 1:
 			mes "[Elly]";
 			mes "You know how you helped";
@@ -1024,7 +1024,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 			mes "campus. Would you deliver these";
 			mes "cookies to my grandfather for me?";
 			next;
-			switch(select("Sure:I'm busy.")) {
+			switch(select("Sure", "I'm busy.")) {
 			case 1:
 				cutin "kh_elly02",2;
 				mes "[Elly]";
@@ -1150,7 +1150,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 		mes ".........";
 		mes "............";
 		next;
-		switch(select("About your grandpa:Tell me about Kiehl:What's with this academy?")) {
+		switch(select("About your grandpa", "Tell me about Kiehl", "What's with this academy?")) {
 		case 1:
 			mes "[Elly]";
 			mes "Oh! My grandfather is";
@@ -1228,7 +1228,7 @@ kh_school,179,39,0	script	Cute Student#kh	4_F_KHELLY,{
 			mes "rescue me from danger,";
 			mes "right, "+strcharinfo(0)+"?";
 			next;
-			switch(select("Who is Ms. Allysia?:Strange incidents?")) {
+			switch(select("Who is Ms. Allysia?", "Strange incidents?")) {
 			case 1:
 				mes "[Elly]";
 				mes "Oh, Ms. Allysia is";
@@ -1350,7 +1350,7 @@ yuno_fild08,69,185,0	script	Window#kh	HIDDEN_NPC,{
 		mes "find one. You might be able";
 		mes "to climb up that water pipe...^000000";
 		next;
-		switch(select("Climb Water Pipe:Find Another Way")) {
+		switch(select("Climb Water Pipe", "Find Another Way")) {
 		case 1:
 			if (rand(1,3) == 2) {
 				mes "^3355FFYou climbed up the";
@@ -1425,7 +1425,7 @@ kh_school,178,180,4	script	Elly	4_F_KHELLY,{
 		mes "lifeless. You've got to";
 		mes "try something, but what?^000000";
 		next;
-		switch(select("Wake her up by shaking.:Wake her up by yelling.:Ignore")) {
+		switch(select("Wake her up by shaking.", "Wake her up by yelling.", "Ignore")) {
 		case 1:
 			mes "^3355FFYou grab Elly by the";
 			mes "shoulders, and try to get";
@@ -1576,7 +1576,7 @@ kh_school,175,176,0	script	Cookie Basket#kh	HIDDEN_NPC,{
 		mes "a folded note wedged";
 		mes "between the cookies.^000000";
 		next;
-		switch(select("Read Note:Ignore")) {
+		switch(select("Read Note", "Ignore")) {
 		case 1:
 			mes ""+strcharinfo(0)+", help!";
 			mes "There's this guy dressed in";
@@ -1746,7 +1746,7 @@ yuno_fild08,71,170,0	script	Grave#kh	HIDDEN_NPC,{
 		mes "^3355FFThe door to the";
 		mes "factory is wide open.^000000";
 		next;
-		switch(select("Enter:Cancel")) {
+		switch(select("Enter", "Cancel")) {
 		case 1:
 			warp "kh_dun01",3,230;
 			end;
@@ -1769,13 +1769,13 @@ yuno_fild08,71,170,0	script	Grave#kh	HIDDEN_NPC,{
 			mes "grave, it begins to";
 			mes "emit flashes of light.^000000";
 			next;
-			switch(select("Use the ^0000FFLuxurious Keycard^000000:Ignore")) {
+			switch(select("Use the ^0000FFLuxurious Keycard^000000", "Ignore")) {
 			case 1:
 				mes "Once you use the";
 				mes "Luxurious Keycard,";
 				mes "a secret path opens^000000";
 				next;
-				switch(select("Enter:cancel")) {
+				switch(select("Enter", "cancel")) {
 				case 1:
 					warp "kh_dun01",3,230;
 					end;
@@ -1812,7 +1812,7 @@ yuno_fild02,93,210,4	script	Cottage Keeper#kh	4_M_03,{
 		mes "so please do not enter this";
 		mes "area unless you're authorized.";
 		next;
-		switch(select("I have an appointment with Kiel Hyre.:Alright.")) {
+		switch(select("I have an appointment with Kiel Hyre.", "Alright.")) {
 		case 1:
 			mes "[Cottage Keeper]";
 			mes "You have an";
@@ -1820,7 +1820,7 @@ yuno_fild02,93,210,4	script	Cottage Keeper#kh	4_M_03,{
 			mes "Master Kiel Hyre?";
 			mes "Um, are you sure?";
 			next;
-			switch(select("Yes:No")) {
+			switch(select("Yes", "No")) {
 			case 1:
 				mes "[Cottage Keeper]";
 				mes "There must be some sort";
@@ -1861,7 +1861,7 @@ yuno_fild02,75,218,0	script	Door#kh2	HIDDEN_NPC,{
 		mes "open it for you, then you'll";
 		mes "need the right key to unlock it.";
 		next;
-		switch(select("Unlock:Cancel")) {
+		switch(select("Unlock", "Cancel")) {
 		case 1:
 			mes "^3355FFYou unlock the door with the";
 			mes "key that Elly gave you, and";
@@ -1888,7 +1888,7 @@ yuno_fild02,75,218,0	script	Door#kh2	HIDDEN_NPC,{
 	else {
 		mes "^3355FFThe door is open.^000000";
 		next;
-		switch(select("Enter:Cancel")) {
+		switch(select("Enter", "Cancel")) {
 		case 1:
 			warp "kh_vila",188,18;
 			end;
@@ -1913,7 +1913,7 @@ yuno_fild02,109,218,0	script	Door#kh1	HIDDEN_NPC,{
 		mes "open it for you, then you'll";
 		mes "need the right key to unlock it.";
 		next;
-		switch(select("Open:Cancel")) {
+		switch(select("Open", "Cancel")) {
 		case 1:
 			mes "^3355FFYou don't have";
 			mes "the key that can";
@@ -1941,7 +1941,7 @@ kh_vila,191,14,0	script	Wall#kh	HIDDEN_WARP_NPC,1,1,{
 		mes "open, revealing";
 		mes "a secret path.^000000";
 		next;
-		switch(select("Enter:Cancel")) {
+		switch(select("Enter", "Cancel")) {
 		case 1:
 			warp "kh_vila",17,177;
 			end;
@@ -2024,7 +2024,7 @@ kh_vila,16,175,0	script	Box#khp1	HIDDEN_NPC,{
 	mes "^FFFFFF_^000000";
 	mes "Price: 1,100 zeny (cheap!)";
 	next;
-	switch(select("Buy!:Cancel")) {
+	switch(select("Buy!", "Cancel")) {
 	case 1:
 		if (Zeny < 1100) {
 			mes "^3355FFUnfortunately, you";
@@ -2063,7 +2063,7 @@ kh_vila,30,184,0	script	Apple Box#khp1	HIDDEN_NPC,{
 	mes "^3355FFYou find a box filled with";
 	mes "ripe, delicious apples.^000000";
 	next;
-	switch(select("Take the box:Leave it")) {
+	switch(select("Take the box", "Leave it")) {
 	case 1:
 		mes "^3355FFNo...! Wait!";
 		mes "Something's wrong!";
@@ -2097,7 +2097,7 @@ kh_vila,44,126,0	script	Map#khp1	HIDDEN_NPC,{
 		mes "world map more closely,";
 		mes "you find that something has";
 		mes "been hidden underneath it.^000000";
-		switch(select("Ignore:Examine")) {
+		switch(select("Ignore", "Examine")) {
 		case 1:
 			mes "^3355FFWhatever might be";
 			mes "hidden beneath this";
@@ -2163,7 +2163,7 @@ kh_vila,44,126,0	script	Map#khp1	HIDDEN_NPC,{
 		mes "refresh your memory and";
 		mes "read that poem again.^000000";
 		next;
-		switch(select("Read:Cancel")) {
+		switch(select("Read", "Cancel")) {
 		case 1:
 			mes "^0000FFShe will be in a place";
 			mes "as cold as the poles.";
@@ -2211,7 +2211,7 @@ kh_vila,33,184,0	script	Pot#khp1	HIDDEN_NPC,{
 		mes "use to loosen the glue on";
 		mes "the map... You're a genius!^000000";
 		next;
-		switch(select("Try it.:That? That won't work!")) {
+		switch(select("Try it.", "That? That won't work!")) {
 		case 1:
 			mes "^3355FFYou picked up the";
 			mes "boiling pot, but";
@@ -2253,7 +2253,7 @@ kh_vila,14,55,0	script	Calabash#khp1	HIDDEN_NPC,{
 		mes "words, a ''gourd.''";
 		mes "Would do you do?^000000";
 		next;
-		switch(select("Break Open Calabash:Look Inside Calabash:Ignore")) {
+		switch(select("Break Open Calabash", "Look Inside Calabash", "Ignore")) {
 		case 1:
 			mes "^3355FFYou can't break";
 			mes "open that calabash...";
@@ -2300,12 +2300,12 @@ kh_vila,39,41,0	script	Pool#khp1	HIDDEN_NPC,{
 		mes "along with a conscpicuous";
 		mes "lion statue with two handles.^000000";
 		next;
-		switch(select("Pull Handles:Cancel")) {
+		switch(select("Pull Handles", "Cancel")) {
 		case 1:
 			mes "Which handle would";
 			mes "you like to pull first?";
 			next;
-			switch(select("Right Handle:Left Handle")) {
+			switch(select("Right Handle", "Left Handle")) {
 			case 1:
 				mes "^3355FFYou pull the right";
 				mes "handle, causing water";
@@ -2320,7 +2320,7 @@ kh_vila,39,41,0	script	Pool#khp1	HIDDEN_NPC,{
 				mes "see a layer of green moss";
 				mes "covering the pool's bottom.^000000";
 				next;
-				switch(select("Ignore:Investigate")) {
+				switch(select("Ignore", "Investigate")) {
 				case 1:
 					mes "^3355FFYou decide that";
 					mes "a pool is little more";
@@ -2334,7 +2334,7 @@ kh_vila,39,41,0	script	Pool#khp1	HIDDEN_NPC,{
 					mes "you stumble upon a";
 					mes "small, peculiar button.^000000";
 					next;
-					switch(select("Press button:Don't Press Button")) {
+					switch(select("Press button", "Don't Press Button")) {
 					case 1:
 						mes "^3355FFYou press the button,";
 						mes "which seems to trigger";
@@ -2379,7 +2379,7 @@ OnTouch:
 	mes "pass by this creature";
 	mes "without getting hurt?^000000";
 	next;
-	switch(select("March forward:Run away")) {
+	switch(select("March forward", "Run away")) {
 	case 1:
 		if (countitem(Pet_Food) >= 1) {
 			mes "^3355FFWait! Perhaps you can";
@@ -2388,7 +2388,7 @@ OnTouch:
 			mes "you feed it some of your Pet";
 			mes "Food and see what happens?^000000";
 			next;
-			switch(select("Give Pet Food:It won't work!")) {
+			switch(select("Give Pet Food", "It won't work!")) {
 			case 1:
 				mes "^3355FFYou gingerly throw the";
 				mes "Pet Food towards the dog.";
@@ -2449,7 +2449,7 @@ kh_vila,115,186,0	script	Drawer#khp1	HIDDEN_NPC,{
 		mes "^inside. Or could it be";
 		mes "^empty. Who knows?^000000";
 		next;
-		switch(select("Open Drawer:Ignore")) {
+		switch(select("Open Drawer", "Ignore")) {
 		case 1:
 			mes "^3355FFYou obtain a Yellow";
 			mes "Keycard from inside the";
@@ -2489,7 +2489,7 @@ kh_vila,107,126,0	script	Box#khp2	HIDDEN_NPC,{
 		mes "Perhaps you can use your";
 		mes "Old Bronze Key to unlock it.^000000";
 		next;
-		switch(select("Use Old Bronze Key:No, it'll never work.")) {
+		switch(select("Use Old Bronze Key", "No, it'll never work.")) {
 		case 1:
 			mes "^3355FFYour hunch paid off!";
 			mes "The Old Bronze Key really";
@@ -2526,7 +2526,7 @@ kh_vila,181,138,0	script	Bookshelf#khp1	HIDDEN_NPC,{
 		mes "''To Elly.'' It must have been";
 		mes "left behind by her grandfather.^000000";
 		next;
-		switch(select("Examine Book:Ignore")) {
+		switch(select("Examine Book", "Ignore")) {
 		case 1:
 			mes "^3355FFYou skim through the";
 			mes "book's pages, and don't";
@@ -2535,7 +2535,7 @@ kh_vila,181,138,0	script	Bookshelf#khp1	HIDDEN_NPC,{
 			mes "notice a steel surface behind the";
 			mes "shelf as you place the book back.^000000";
 			next;
-			switch(select("Examine the steel surface:Ignore")) {
+			switch(select("Examine the steel surface", "Ignore")) {
 			case 1:
 				mes "^3355FFYou remove more of the";
 				mes "shelf's books to reveal";
@@ -2544,22 +2544,22 @@ kh_vila,181,138,0	script	Bookshelf#khp1	HIDDEN_NPC,{
 				mes "the bookshelf. There are two";
 				mes "keyholes on the steel safe.^000000";
 				next;
-				switch(select("Try all your keys:Cancel")) {
+				switch(select("Try all your keys", "Cancel")) {
 				case 1:
 					mes "^3355FFWhich key will";
 					mes "you insert into";
 					mes "the first keyhole?^000000";
 					next;
 					if (countitem(Old_Copper_Key) >= 1) {
-						select("Old Bronze Key:Cottage Key");
+						select("Old Bronze Key", "Cottage Key");
 						mes "^3355FFWhich key will";
 						mes "you insert into";
 						mes "the second keyhole?^000000";
 						next;
-						select("Old Bronze Key:Cottage Key");
+						select("Old Bronze Key", "Cottage Key");
 					}
 					else if (countitem(Green_Key_Card) >= 1) {
-						switch(select("Green Keycard:Cottage Key")) {
+						switch(select("Green Keycard", "Cottage Key")) {
 						case 1:
 							.@KHFirstKeyhole = 1;
 							break;
@@ -2571,7 +2571,7 @@ kh_vila,181,138,0	script	Bookshelf#khp1	HIDDEN_NPC,{
 						mes "you insert into";
 						mes "the second keyhole?^000000";
 						next;
-						switch(select("Green Keycard:Cottage Key")) {
+						switch(select("Green Keycard", "Cottage Key")) {
 						case 1:
 							.@KHSecondKeyhole = 1;
 							break;
@@ -2687,14 +2687,14 @@ kh_vila,123,170,0	script	Medicine Chest#khp1	HIDDEN_NPC,{
 		mes "reveal any invisible ink";
 		mes "written on this document!^000000";
 		next;
-		switch(select("What? That's crazy!:Of course! Let's try it!")) {
+		switch(select("What? That's crazy!", "Of course! Let's try it!")) {
 		case 1:
 			mes "^3355FFSorry.";
 			mes "I thought it";
 			mes "was a good idea...^000000";
 			close;
 		case 2:
-			switch(select("Try Red Liquid:Try Blue Liquid:Try Yellow Liquid:Try Green Liquid:Cancel")) {
+			switch(select("Try Red Liquid", "Try Blue Liquid", "Try Yellow Liquid", "Try Green Liquid", "Cancel")) {
 			case 1:
 				.@KHPotionColor$ = "red";
 				break;
@@ -2766,7 +2766,7 @@ kh_vila,123,170,0	script	Medicine Chest#khp1	HIDDEN_NPC,{
 		mes "with the Kiel Hyre Foundation";
 		mes "seal. Would you like read it?^000000";
 		next;
-		switch(select("No time!:Read")) {
+		switch(select("No time!", "Read")) {
 		case 1:
 			mes "^3355FFYou're running out of";
 			mes "time! For now, it would";
@@ -2819,7 +2819,7 @@ kh_vila,136,68,0	script	Sword Hilt#kh	HIDDEN_NPC,{
 		mes "Perhaps they're related to";
 		mes "that poem you read earlier...";
 		next;
-		switch(select("No way!:Of course!")) {
+		switch(select("No way!", "Of course!")) {
 		case 1:
 			mes "^3355FFImpossible...";
 			mes "It must be some";
@@ -2833,7 +2833,7 @@ kh_vila,136,68,0	script	Sword Hilt#kh	HIDDEN_NPC,{
 			mes "big enough to insert each of";
 			mes "the ornamental swords nearby...^000000";
 			next;
-			switch(select("Ignore:Insert Ornamental Swords")) {
+			switch(select("Ignore", "Insert Ornamental Swords")) {
 			case 1:
 				mes "^3355FFImposible...^000000";
 				mes "^3355FFIt must be some^000000";
@@ -2856,7 +2856,7 @@ kh_vila,136,68,0	script	Sword Hilt#kh	HIDDEN_NPC,{
 					mes "snake in which you will";
 					mes "insert the first sword.^000000";
 					next;
-					switch(select("First Snake:Second Snake:Third Snake:Fourth Snake")) {
+					switch(select("First Snake", "Second Snake", "Third Snake", "Fourth Snake")) {
 					default:
 						break;
 					case 2:
@@ -2868,7 +2868,7 @@ kh_vila,136,68,0	script	Sword Hilt#kh	HIDDEN_NPC,{
 					mes "the snake in which you";
 					mes "will insert the second sword.^000000";
 					next;
-					switch(select("First Snake:Second Snake:Third Snake:Fourth Snake")) {
+					switch(select("First Snake", "Second Snake", "Third Snake", "Fourth Snake")) {
 					default:
 						break;
 					case 4:
@@ -2880,7 +2880,7 @@ kh_vila,136,68,0	script	Sword Hilt#kh	HIDDEN_NPC,{
 					mes "the snake in which you";
 					mes "will insert the third sword.^000000";
 					next;
-					switch(select("First Snake:Second Snake:Third Snake:Fourth Snake")) {
+					switch(select("First Snake", "Second Snake", "Third Snake", "Fourth Snake")) {
 					case 1:
 						++.@KHSwords;
 						break;
@@ -2892,7 +2892,7 @@ kh_vila,136,68,0	script	Sword Hilt#kh	HIDDEN_NPC,{
 					mes "the snake in which you";
 					mes "will insert the fourth sword.^000000";
 					next;
-					switch(select("First Snake:Second Snake:Third Snake:Fourth Snake")) {
+					switch(select("First Snake", "Second Snake", "Third Snake", "Fourth Snake")) {
 					default:
 						break;
 					case 3:
@@ -2931,7 +2931,7 @@ kh_vila,136,68,0	script	Sword Hilt#kh	HIDDEN_NPC,{
 		mes "path that leads to";
 		mes "the secret laboratory.^000000";
 		next;
-		switch(select("Enter:Cancel")) {
+		switch(select("Enter", "Cancel")) {
 		case 1:
 			warp "kh_vila",178,72;
 			end;
@@ -2967,7 +2967,7 @@ kh_vila,185,68,0	script	Test Tube::TestTubeKHQ2	HIDDEN_NPC,{
 		mes "There is a small red button";
 		mes "right underneath the test tube.^000000";
 		next;
-		switch(select("Press Button:Investigate Further")) {
+		switch(select("Press Button", "Investigate Further")) {
 		case 1:
 			mes "[???]";
 			mes "H-hello...? C-can you";
@@ -3042,7 +3042,7 @@ kh_dun01,235,48,0	script	Heavy Door#kh1::HeavyDoorKHQ1	HIDDEN_NPC,{
 		mes "^3355FFThere is a large, heavy";
 		mes "door infront of you.^000000";
 		next;
-		switch(select("Open Door:Cancel")) {
+		switch(select("Open Door", "Cancel")) {
 		case 1:
 			input .@KHInput$;
 			mes "^3355FFYou try to push the";
@@ -3062,7 +3062,7 @@ kh_dun01,235,48,0	script	Heavy Door#kh1::HeavyDoorKHQ1	HIDDEN_NPC,{
 		mes "^3355FFThere is a large, heavy";
 		mes "door in front of you.^000000";
 		next;
-		switch(select("Open Door:Cancel")) {
+		switch(select("Open Door", "Cancel")) {
 		case 1:
 			input .@KHInput$;
 			if (.@KHInput$ == "Blue Keycard") {
@@ -3102,7 +3102,7 @@ kh_dun01,76,233,0	script	Heavy Door::HeavyDoorKHQ2	HIDDEN_NPC,{
 		mes "^3355FFThere is a large, heavy";
 		mes "door infront of you.^000000";
 		next;
-		switch(select("Open Door:Cancel")) {
+		switch(select("Open Door", "Cancel")) {
 		case 1:
 			input .@KHInput$;
 			mes "^3355FFYou try to push the";
@@ -3160,7 +3160,7 @@ kh_school,119,149,4	script	Beautiful Lady#kh1::BeatifulLadyKHQ1	4_F_KHELLISIA,{
 		mes "Is there anything that you";
 		mes "can present to me as proof?";
 		next;
-		switch(select("Yellow Keycard:Blue Keycard:Golden Key:Carved Button:...?")) {
+		switch(select("Yellow Keycard", "Blue Keycard", "Golden Key", "Carved Button", "...?")) {
 		default:
 			break;
 		case 3:
@@ -3257,7 +3257,7 @@ kh_school,122,186,4	script	Beautiful Lady#kh6	4_F_KHELLISIA,{
 		mes "and rescue him as soon";
 		mes "as you possibly can!";
 		next;
-		switch(select("What is this factory?:What happened to ^FF0000Kiel Hyre^000000?")) {
+		switch(select("What is this factory?", "What happened to ^FF0000Kiel Hyre^000000?")) {
 		case 1:
 			mes "[Allysia]";
 			mes "This factory is part of";
@@ -3550,7 +3550,7 @@ kh_dun01,44,203,0	script	Entrance Device#khd2::KHAccess	HIDDEN_NPC,{
 			mes "to reveal a long flight";
 			mes "of descending stairs.^000000";
 			next;
-			switch(select("Descend Stairs:Cancel")) {
+			switch(select("Descend Stairs", "Cancel")) {
 			case 1:
 				warp "kh_dun02",41,198;
 				end;
@@ -3593,7 +3593,7 @@ kh_mansion,78,55,5	script	Steward#kh	4_M_MANAGER,{
 		mes "by the master of";
 		mes "this mansion?";
 		next;
-		switch(select("Present Golden Key:????")) {
+		switch(select("Present Golden Key", "????")) {
 		case 1:
 			mes "[Steward]";
 			mes "Ah, Master "+strcharinfo(0)+".";
@@ -3622,7 +3622,7 @@ kh_mansion,78,55,5	script	Steward#kh	4_M_MANAGER,{
 		mes "once again. Would you";
 		mes "like to see my master?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			mes "[Steward]";
 			mes "Very well.";
@@ -3646,7 +3646,7 @@ kh_mansion,78,55,5	script	Steward#kh	4_M_MANAGER,{
 		mes "once again. Would you";
 		mes "like to see my master, or...?";
 		next;
-		switch(select("^FF0000Kiel Hyre^000000:^3355FFMitchell^000000")) {
+		switch(select("^FF0000Kiel Hyre^000000", "^3355FFMitchell^000000")) {
 		case 1:
 			mes "[Steward]";
 			mes "Very well.";
@@ -3709,7 +3709,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "do my best to give you answers.";
 		next;
 		while(1) {
-			switch(select("Robots?:^3355FFKiehl^000000?:^FF0000Elly^000000's button?")) {
+			switch(select("Robots?", "^3355FFKiehl^000000?", "^FF0000Elly^000000's button?")) {
 			case 1:
 				mes "[Kiel Hyre]";
 				mes "I've been researching";
@@ -4291,7 +4291,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "my actions once everything";
 		mes "has been resolved.";
 		next;
-		select("Accept:Okay:Nod");
+		select("Accept", "Okay", "Nod");
 		mes "[Kiel Hyre]";
 		mes "Thank you so much!";
 		mes "You can find Kiehl";
@@ -4351,7 +4351,7 @@ kh_mansion,22,28,4	script	Kiel Hyre#kh	4_M_KHKYEL,{
 		mes "to confront";
 		mes "Kiehl now?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			mes "[Kiel Hyre]";
 			mes "There... the secret";
@@ -4463,7 +4463,7 @@ kh_mansion,18,30,4	script	Allysia	4_F_KHELLISIA,{
 		mes "would be easier to understand";
 		mes "if I explained about robots?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			mes "[Allysia]";
 			mes "The robots you've been";
@@ -4481,7 +4481,7 @@ kh_mansion,18,30,4	script	Allysia	4_F_KHELLISIA,{
 			mes "generations of robots, the first,";
 			mes "second, and third generations.";
 			next;
-			switch(select("First Generation:Second Generation:Third Generation")) {
+			switch(select("First Generation", "Second Generation", "Third Generation")) {
 			case 1:
 				mes "[Allysia]";
 				mes "I am a good example of one";
@@ -4662,7 +4662,7 @@ OnTouch:
 		mes "Now tell me the truth. How";
 		mes "do you know Kiel Hyre?";
 		next;
-		switch(select("I'll tell you everything!:I don't know nuthin'!")) {
+		switch(select("I'll tell you everything!", "I don't know nuthin'!")) {
 		case 2:
 			mes "[??????]";
 			mes "Don't...know...nuthin'?";
@@ -4787,7 +4787,7 @@ OnTouch:
 			mes "case, I want your help";
 			mes "in our investigation.";
 			next;
-			switch(select("Okay:......")) {
+			switch(select("Okay", "......")) {
 			case 2:
 				mes "[??????]";
 				mes "If you don't cooperate,";
@@ -4853,7 +4853,7 @@ OnTouch:
 		mes "you can get to Juno, and";
 		mes "finish your mission quickly.";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			mes "[Mitchell]";
 			mes "Good luck. Once you";
@@ -4951,7 +4951,7 @@ yuno,257,140,4	script	Odd Grandma	4_F_EINOLD,{
 		mes "Hush little baby...";
 		mes "Go to sleeeeep~";
 		next;
-		switch(select("What are you doing?:Um, I don't see a baby...")) {
+		switch(select("What are you doing?", "Um, I don't see a baby...")) {
 		case 1:
 			mes "[Grandma]";
 			mes "Oh? My baby won't stop";
@@ -5043,7 +5043,7 @@ yuno,250,132,0	script	Old Lady#kh	4_F_05,{
 		mes "of how old I've gotten!";
 		mes "It chills my bones, it does!";
 		next;
-		switch(select("......:Do you know that grandma?")) {
+		switch(select("......", "Do you know that grandma?")) {
 		case 1:
 			mes "[Old Lady]";
 			mes "Damn it! If only I didn't";
@@ -5266,12 +5266,12 @@ kh_rossi,92,40,0	script	Shelf#khr	HIDDEN_NPC,{
 			mes "mansions's Master Key, you";
 			mes "might be able to open them.^000000";
 			next;
-			switch(select("Use Key:Pass")) {
+			switch(select("Use Key", "Pass")) {
 			case 1:
 				mes "^3355FFWhich box do you";
 				mes "want to try to open?^000000";
 				next;
-				switch(select("First Box:Second Box")) {
+				switch(select("First Box", "Second Box")) {
 				case 1:
 					mes "^3355FFYou use the Master Key to";
 					mes "unlock the box, and obtain";
@@ -5332,7 +5332,7 @@ kh_rossi,144,286,0	script	Desk#khr3	HIDDEN_NPC,{
 		mes "^3355FFThe desk has";
 		mes "three drawers.^000000";
 		next;
-		switch(select("First Drawer:Second Drawer:Third Drawer:Cancel")) {
+		switch(select("First Drawer", "Second Drawer", "Third Drawer", "Cancel")) {
 		case 1:
 			mes "^3355FFThe first drawer is locked.^000000";
 			close;
@@ -5433,7 +5433,7 @@ kh_rossi,154,286,0	script	Bed#khr	HIDDEN_NPC,{
 		mes "a thick layer of dust";
 		mes "after years of disuse.^000000";
 		next;
-		switch(select("Check Bedsheets:Check Under Bed")) {
+		switch(select("Check Bedsheets", "Check Under Bed")) {
 		case 1:
 			mes "^3355FFYou brush the bed's";
 			mes "surface with your hand,";
@@ -5653,7 +5653,7 @@ kh_kiehl01,13,40,0	script	Flower Vase#kh1	HIDDEN_NPC,{
 		mes "^3355FFYou found";
 		mes "a flower vase.^000000";
 		next;
-		switch(select("Pick Up Vase:Break Vase:Turn Vase Upside-down")) {
+		switch(select("Pick Up Vase", "Break Vase", "Turn Vase Upside-down")) {
 		case 1:
 			mes "^3355FFThe vase is empty.^000000";
 			close;
@@ -6030,7 +6030,7 @@ kh_kiehl01,166,187,0	script	Big Door#BigDoorKHQ5	HIDDEN_NPC,{
 			mes "you can hear the door";
 			mes "hinges slightly squeak.^000000";
 			next;
-			select("Push Door:Kick Door:Shake Door:Pull Door:Lift Door");
+			select("Push Door", "Kick Door", "Shake Door", "Pull Door", "Lift Door");
 			mes "^3355FFA group of monsters";
 			mes "suddenly appeared as";
 			mes "soon as you applied";
@@ -6061,7 +6061,7 @@ kh_kiehl01,166,187,0	script	Big Door#BigDoorKHQ5	HIDDEN_NPC,{
 			mes "fully leveraged it, then you";
 			mes "should be able to open it.^000000";
 			next;
-			switch(select("Steel:Rusty Iron Piece:Solid Iron Piece:Iron Piece:Screw:Cancel")) {
+			switch(select("Steel", "Rusty Iron Piece", "Solid Iron Piece", "Iron Piece", "Screw", "Cancel")) {
 			case 1:
 				.@KHPryingItem$ = "Steel";
 				break;
@@ -6125,7 +6125,7 @@ kh_kiehl01,166,187,0	script	Big Door#BigDoorKHQ5	HIDDEN_NPC,{
 				mes "is wide open, and.";
 				mes "you may now enter.^000000";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					close2;
 					donpcevent "Big_Door_5_Warp::OnEnable";

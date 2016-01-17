@@ -167,7 +167,7 @@ geffen,129,148,3	script	Argen#1	4_M_YOYOROGUE,{
 	}
 	next;
 	emotion e_heh;
-	switch(select("^3131FFX Hairpin^000000:^3131FFBand Aid^000000:^3131FFFlower Hairpin^000000:No thanks.")) {
+	switch(select("^3131FFX Hairpin^000000", "^3131FFBand Aid^000000", "^3131FFFlower Hairpin^000000", "No thanks.")) {
 	case 1:
 		if (countitem(Star_Dust) > 0 && countitem(Ectoplasm) > 399) {
 			mes "[Argen]";
@@ -180,7 +180,7 @@ geffen,129,148,3	script	Argen#1	4_M_YOYOROGUE,{
 			mes "About the Stellar...";
 			mes "^CE3100If you use an upgraded Stellar to make this item, any upgrades will be lost. That okay with you?^000000";
 			next;
-			switch(select("I don't mind.:I will come back later.")) {
+			switch(select("I don't mind.", "I will come back later.")) {
 			case 1:
 				mes "[Argen]";
 				mes "Alright, let's get to work.";
@@ -351,7 +351,7 @@ yuno,300,188,5	script	Zhenbolt#1	4_M_MONK,{
 	mes "I...";
 	mes "am called ^FF0000Zhenbolt^000000!!";
 	next;
-	if (select("THE Zhenbolt!?:Oh my gosh, it's Zhenbolt!") == 1) {
+	if (select("THE Zhenbolt!?", "Oh my gosh, it's Zhenbolt!") == 1) {
 		mes "[Zhenbolt]";
 		mes "Yes, it is I, the man who has pummelled over a trillion foes and rising. Raging Hurricane Hero of Justice: Zhenbolt!";
 		next;
@@ -447,7 +447,7 @@ prontera,165,232,3	script	Nephia#1	4_F_ALCHE,{
 	mes "Ooh~! You know what would make your hair so much cuter? I think if you tied it back with a big, red ribbon, you would look sooo ^FF66CCadorable^000000!";
 	next;
 	if (Sex) {
-		if (select("Um, lady, I'm a dude.:^FF66CCOoh~! You're right!^000000") == 1) {
+		if (select("Um, lady, I'm a dude.", "^FF66CCOoh~! You're right!^000000") == 1) {
 			mes "["+ strcharinfo(0) +"]";
 			mes "Woman, can't you that I'm a man?";
 			next;
@@ -484,7 +484,7 @@ prontera,165,232,3	script	Nephia#1	4_F_ALCHE,{
 		close;
 	}
 	else {
-		if (select("No thanks.:^FF66CCOoh~! You're right!^000000") == 1) {
+		if (select("No thanks.", "^FF66CCOoh~! You're right!^000000") == 1) {
 			mes "["+ strcharinfo(0) +"]";
 			mes "Er...";
 			mes "No thanks.";
@@ -678,7 +678,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 		mes "How does that sound?";
 		mes "Oh, and don't you worry about my skill! I'm pretty well known among Blacksmiths for my talent, and my knack of making great things out of junk.";
 		next;
-		switch(select("Umm, let me think.:Okay, make it for me then.:Can you make it with an Evil Wing..?")) {
+		switch(select("Umm, let me think.", "Okay, make it for me then.", "Can you make it with an Evil Wing..?")) {
 		case 1:
 			mes "[Hatbyr Mhore]";
 			mes "Huh. What's to think about?! I was gonna use all of my skill to create something special for you. Ah well...";
@@ -698,7 +698,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 			mes "[Hatbyr Mhore]";
 			mes "I don't care how many times you've upgraded the items you brought, but please ^4d4dff carry only items that you need to create this item.^000000 I can't mess up my artwork because of some mistake you might make.";
 			next;
-			if (select("I am ready.:Okay, let me go store my other items first.") == 1) {
+			if (select("I am ready.", "Okay, let me go store my other items first.") == 1) {
 				if (MaxWeight - Weight < 2000) {
 					mes "[Hatbyr Mhore]";
 					mes "Ouch...!";
@@ -756,7 +756,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 			mes "[Hatbyr Mhore]";
 			mes "I don't care how many times you've upgraded the items you brought, but please ^4d4dff carry only items that you need to create this item.^000000 I can't mess up my artwork because of some mistake you might make.";
 			next;
-			if (select("I am ready.:Okay, let me go store my other items first.") == 1) {
+			if (select("I am ready.", "Okay, let me go store my other items first.") == 1) {
 				if (MaxWeight - Weight < 2000) {
 					mes "[Hatbyr Mhore]";
 					mes "Ouch...!";
@@ -803,7 +803,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 		mes "How does that sound?";
 		mes "Oh, and don't you worry about my skill! I'm pretty well known among Blacksmiths for my talent, and my knack of making great things out of junk.";
 		next;
-		switch(select("Umm, let me think.:Okay, make it for me then.:Can you make it with an Angel Wing..?")) {
+		switch(select("Umm, let me think.", "Okay, make it for me then.", "Can you make it with an Angel Wing..?")) {
 		case 1:
 			mes "[Hatbyr Mhore]";
 			mes "Huh. What's to think about?! I was gonna use all of my skill to create something special for you. Ah well...";
@@ -823,7 +823,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 			mes "[Hatbyr Mhore]";
 			mes "I don't care how many times you've upgraded the items you brought, but please ^4d4dff carry only items that you need to create this item. I can't mess up my artwork because of some mistake you might make. ^000000";
 			next;
-			if (select("I am ready.:Okay, let me go store my other items first.") == 1) {
+			if (select("I am ready.", "Okay, let me go store my other items first.") == 1) {
 				if (MaxWeight - Weight < 2000) {
 					mes "[Hatbyr Mhore]";
 					mes "Ouch, why are you carrying";
@@ -878,7 +878,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 			mes "[Hatbyr Mhore]";
 			mes "I don't care how many times you've upgraded the items you brought, but please ^4d4dff carry only items that you need to create this item.^000000 I can't mess up my artwork because of some mistake you might make.";
 			next;
-			if (select("I am ready.:Okay, let me go store my other items first.") == 1) {
+			if (select("I am ready.", "Okay, let me go store my other items first.") == 1) {
 				if (MaxWeight - Weight < 2000) {
 					mes "[Hatbyr Mhore]";
 					mes "Ouch, why are you carrying";
@@ -940,7 +940,7 @@ yuno,241,52,3	script	Old Blacksmith#hgear	2_M_OLDBLSMITH,{
 		mes "Elven Ears are great...";
 		mes "And everyone loves Angel Wing or Devil Wing. Wouldn't it be totally fab if I could combine the Elven Ears with one of the wings?!";
 		next;
-		if (select("Give me more information.:Yeah, I will think about it.") == 1) {
+		if (select("Give me more information.", "Yeah, I will think about it.") == 1) {
 			mes "[Hatbyr Mhore]";
 			mes "Oh, right.";
 			mes "Let me tell";
@@ -1032,7 +1032,7 @@ xmas,183,267,3	script	Pretty Lindsay#1	4_F_NFLOSTGIRL,{
 		mes "[Pretty Lindsay]";
 		mes "I have to put together ^0000FF1 Raccoon Hat^000000 and ^0000FF1 Smokie Leaf^000000 to make a ^4D4DFFSea-Otter Hat^000000 for you, though.";
 		next;
-		if (select("Okay, I will come back with the stuff.:Um... How come you need a Raccoon Hat?") == 1) {
+		if (select("Okay, I will come back with the stuff.", "Um... How come you need a Raccoon Hat?") == 1) {
 			emotion e_heh;
 			mes "[Pretty Lindsay]";
 			mes "Cool~! Come back soon as you can~!";
@@ -1065,7 +1065,7 @@ xmas,183,267,3	script	Pretty Lindsay#1	4_F_NFLOSTGIRL,{
 	mes "[Pretty Lindsay]";
 	mes "I need ^0000FF1 Raccoon Hat^000000 and ^0000FF1 Smokie Leaf^000000 so I can make a ^4D4DFFSea-Otter Hat^000000 for you.";
 	next;
-	if (select("Okay, I will come back with the stuff.:Um, why do you want to make hats so much?") == 1) {
+	if (select("Okay, I will come back with the stuff.", "Um, why do you want to make hats so much?") == 1) {
 		emotion e_heh;
 		mes "[Pretty Lindsay]";
 		mes "Cool~!";
@@ -1199,7 +1199,7 @@ payon_in03,8,193,4	script	Nanhyang#1	1_F_ORIENT_03,{
 		mes "[Nanhyang]";
 		mes "If you give me ^0000FF1 'Model Training Hat'^000000 and ^0000FF1 'Arrow'^000000, I give you ^8C17171 'Apple of Archer'^000000 and ^8C17171 'Book'^000000. So, would you like to disassemble the items?";
 		next;
-		if (select("Disassemble:Cancel") == 1) {
+		if (select("Disassemble", "Cancel") == 1) {
 			mes "[Nanhyang]";
 			mes "Thank you.";
 			mes "It will not take that much time to make this hat, so please wait a moment.";
@@ -1245,7 +1245,7 @@ payon_in03,8,193,4	script	Nanhyang#1	1_F_ORIENT_03,{
 		mes "[Hanhyang]";
 		mes "So would you like to create the Model Training Hat right now?";
 		next;
-		if (select("Create:Cancel") == 1) {
+		if (select("Create", "Cancel") == 1) {
 			mes "[Nanhyang]";
 			emotion e_ok;
 			mes "Thank you.";
@@ -1297,7 +1297,7 @@ payon_in03,8,193,4	script	Nanhyang#1	1_F_ORIENT_03,{
 	mes "Hello~";
 	mes "Welcome to the Handsome Charm Modeling School. May I help you?";
 	next;
-	if (select("I want to be a model~!:Cancel") == 1) {
+	if (select("I want to be a model~!", "Cancel") == 1) {
 		mes "[Nanhyang]";
 		mes "I see~";
 		mes "Although it's clear that you've got '^3355FFthe look^000000,' we can't accept any students at the moment.";
@@ -1360,7 +1360,7 @@ geffen,83,189,5	script	Seth#1	4_M_KID2,{
 		mes "pwease pwease?";
 		emotion e_swt2;
 		next;
-		switch(select("Alright!:No thanks kid.:Boys aren't supposed to make flowers.")) {
+		switch(select("Alright!", "No thanks kid.", "Boys aren't supposed to make flowers.")) {
 		case 1:
 			emotion e_heh;
 			mes "[Seth]";
@@ -1429,7 +1429,7 @@ geffen,83,189,5	script	Seth#1	4_M_KID2,{
 		mes "Uh oh...";
 		mes "But I don't have anything to make paper flowers out of.";
 		next;
-		if (select("I'll get what you need.:Too bad!") == 1) {
+		if (select("I'll get what you need.", "Too bad!") == 1) {
 			mes "[Seth]";
 			mes "Okay okay...";
 			mes "I neeeeed...";
@@ -1469,7 +1469,7 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 	mes "[Mad Hatter]";
 	mes "You wanna take a look at the trendy, stylish hats I can make for you?";
 	next;
-	switch(select("Party Hat:Straw Hat:Cowboy Hat:Sombrero:Beanie")) {
+	switch(select("Party Hat", "Straw Hat", "Cowboy Hat", "Sombrero", "Beanie")) {
 	case 1:
 		if (countitem(Santa's_Hat) > 0 && countitem(Oil_Paper) > 99 && countitem(Smooth_Paper) > 99) {
 			mes "[Mad Hatter]";
@@ -1484,7 +1484,7 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			mes "[Mad Hatter]";
 			mes "It seems to me that you have everything. Alright! Shall I make you a Party Hat?";
 			next;
-			if (select("No thanks.:Yes.") == 1) {
+			if (select("No thanks.", "Yes.") == 1) {
 				mes "[Mad Hatter]";
 				mes "Umm, okay...";
 				mes "I guess being the life of the party is a bit too much for you, eh? Hmpf. Well, I know a good library in Juno where you can hang out...";
@@ -1540,7 +1540,7 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			mes "[Mad Hatter]";
 			mes "Ah! I see you brought everything. Alright! Do you want me to make you a Straw Hat now?";
 			next;
-			if (select("No thanks.:Yes.") == 1) {
+			if (select("No thanks.", "Yes.") == 1) {
 				mes "[Mad Hatter]";
 				mes "Man...";
 				mes "I think you need this hat more than I thought. You have got to learn to just chill and relax~!";
@@ -1592,7 +1592,7 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			mes "[Mad Hatter]";
 			mes "Ah! You brought everything already. Excellent. Do you want me to make a Cowboy Hat now?";
 			next;
-			if (select("No thanks.:Yes.") == 1) {
+			if (select("No thanks.", "Yes.") == 1) {
 				mes "[Mad Hatter]";
 				mes "Well, I see.";
 				mes "I guess you just don't appreciate the value of cowboy heroes, do you?";
@@ -1644,7 +1644,7 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			mes "[Mad Hatter]";
 			mes "Ah! You brought everything already. Alright! Do you want me to make you a Sombrero right away?";
 			next;
-			if (select("No thanks.:Yes.") == 1) {
+			if (select("No thanks.", "Yes.") == 1) {
 				mes "[Mad Hatter]";
 				mes "Fine, fine.";
 				mes "But think of all the sex appeal you're missing out on. Come on, you know you need a Sombrero.";
@@ -1696,7 +1696,7 @@ xmas_in,35,30,3	script	Hat Merchant#zero	4_M_NFLOSTMAN,{
 			mes "[Mad Hatter]";
 			mes "Ah! You brought everything already. Alright! How about I make you that Beanie right now?";
 			next;
-			if (select("No thanks.:Yes.") == 1) {
+			if (select("No thanks.", "Yes.") == 1) {
 				mes "[Mad Hatter]";
 				mes "Okay...";
 				mes "Dork. Come back When you decide to join the cool guys, word?";
@@ -1766,7 +1766,7 @@ yuno_in03,20,18,6	script	Nehris#1	4_F_JOB_BLACKSMITH,{
 	mes "accessory you are";
 	mes "interested in.";
 	next;
-	switch(select("Decorative Golden Bell:Crown of Ancient Queen:Crown of Mistress")) {
+	switch(select("Decorative Golden Bell", "Crown of Ancient Queen", "Crown of Mistress")) {
 	case 1:
 		mes "[Nehris]";
 		mes "This Golden Bell is fashioned after the one worn by the 'Sohee' monster. It's a cute accessory I personally recommend for us ladies. A little oversized, but I believe you'll like it a lot.";
@@ -1861,7 +1861,7 @@ yuno_in03,20,18,6	script	Nehris#1	4_F_JOB_BLACKSMITH,{
 			mes "[Nehris]";
 			mes "Are you sure you want to create the Crown of Mistress?";
 			next;
-			if (select("Yes:Wait a minute...!") == 1) {
+			if (select("Yes", "Wait a minute...!") == 1) {
 				mes "[Nehris]";
 				mes "Please wait one moment.";
 				next;
@@ -1933,7 +1933,7 @@ alde_alche,88,180,0	script	Muscle Man#Alarm Mask	4_M_ALCHE_A,{
 	specialeffect EF_CLAYMORE,AREA," #Alarm Mask Man4";
 	initnpctimer;
 	if (countitem(Needle_Of_Alarm) > 2999 && countitem(Mr_Scream) > 0) {
-		if (select("Give him items:Cancel") == 1) {
+		if (select("Give him items", "Cancel") == 1) {
 			mes "[Muscle Man]";
 			mes "Ooh... Finally!";
 			mes "You brought them!";
@@ -1996,7 +1996,7 @@ alde_alche,88,180,0	script	Muscle Man#Alarm Mask	4_M_ALCHE_A,{
 	mes "Please adventurer...";
 	mes "Help me give muscles to the world.";
 	next;
-	if (select("Alright.:.........") == 1) {
+	if (select("Alright.", ".........") == 1) {
 		mes "[Muscle Man]";
 		mes "Oh~~! You know how I feel about Alarm's beautiful mechanic muscle! I am glad to have met someone who shares my good sense of taste.";
 		next;
@@ -2106,7 +2106,7 @@ morocc,273,79,4	script	Educated Traveller	4W_M_03,{
 		mes "Just remember...";
 		mes "If you give me any equipment compounded with cards or with upgrades, ^ff0000any upgraded abilities and cards in those items will be lost after I make something out of them.^000000 So, please keep that in mind.";
 		next;
-		switch(select("Drooping Cat:Smokie Leaf:Lazy Smokie:Blue Fish:That's... okay.")) {
+		switch(select("Drooping Cat", "Smokie Leaf", "Lazy Smokie", "Blue Fish", "That's... okay.")) {
 		case 1:
 			if (countitem(Circlet_) > 0 && countitem(Black_Dyestuffs) > 0 && countitem(Black_Kitty_Doll) > 299) {
 				mes "[Lee Hester]";
@@ -2467,7 +2467,7 @@ OnTouch:
 	mes "Yelp! Yelp yelp!";
 	mes "Yelp! Yelp yelp!";
 	next;
-	if (select("Shake head:Nod head") == 1) {
+	if (select("Shake head", "Nod head") == 1) {
 		mes "[Nine Tails]";
 		mes "Yelp! Yelp yelp!";
 		close2;
@@ -2525,7 +2525,7 @@ pay_dun03,48,84,4	script	Nine Tails#Kitsune Man	4_M_JPN2,{
 		mes "[Nine Tails]";
 		mes "Oh! You finally brought what I've asked, human. Okay, now I can bring her back to life!";
 		next;
-		if (select("Give items:Cancel") == 1) {
+		if (select("Give items", "Cancel") == 1) {
 			delitem Fox_Tail,999;
 			getitem Mask_Of_Fox,1;
 			mes "[Nine Tails]";
@@ -2661,7 +2661,7 @@ OnTouch:
 		mes "I'm too tired to kill you today, but keep silent! If you're wounded, you can bleed quietly on the floor and die with some honor I suppose.";
 		if (rand(1,5) == 5 && BaseLevel >= 55) {
 			next;
-			if (select(".....:Come on, let's talk.") == 1) {
+			if (select(".....", "Come on, let's talk.") == 1) {
 				close;
 			}
 			mes "[Orc Warrior]";
@@ -2675,7 +2675,7 @@ OnTouch:
 			mes "You can bleed in my house, but I will only talk with you if...";
 			mes "You bring ^FF00001000 Jellopy^000000!";
 			next;
-			if (select("I challenge you to a duel, Orc!:1000 Jellopies it is.") == 1) {
+			if (select("I challenge you to a duel, Orc!", "1000 Jellopies it is.") == 1) {
 				mes "[Orc Warrior]";
 				mes "Humans... such annoying bastards!";
 				mes "If you want to fight, go outside!";
@@ -3210,7 +3210,7 @@ OnTouch:
 				mes "[Orc Warrior]";
 				mes "You only achieve honor by winning battles. Even among Orcs, I'm sure you can prove your battle prowess by defeating 10,000 Orc Warriors.";
 				next;
-				if (select("I don't think that is necessary.:I will win 10,000 battles!") == 1) {
+				if (select("I don't think that is necessary.", "I will win 10,000 battles!") == 1) {
 					mes "[Orc Warrior]";
 					mes "I see. I will not force you to choose what I wish to see you do. I respect your decision.";
 					next;
@@ -3264,7 +3264,7 @@ OnTouch:
 			mes "record your current";
 			mes "victory with me?";
 			next;
-			if (select("Yes, I do.:I will do it later.") == 1) {
+			if (select("Yes, I do.", "I will do it later.") == 1) {
 				.@total_vouchers = orcs_hero_hat2+countitem(Orcish_Voucher);
 				if (.@total_vouchers < 10000) {
 					delitem Orcish_Voucher,countitem(Orcish_Voucher);
@@ -3373,7 +3373,7 @@ OnTouch:
 				mes "[Orc Warrior]";
 				mes "But, since you're an exceptional case, it might be possible for you to accomplish...";
 				next;
-				if (select("I am already satisfied.:...I will take this challenge.") == 1) {
+				if (select("I am already satisfied.", "...I will take this challenge.") == 1) {
 					mes "[Orc Warrior]";
 					mes "Yes, that's a good";
 					mes "attitude. Sometimes,";
@@ -3425,7 +3425,7 @@ OnTouch:
 			mes "you want to do";
 			mes "with the vouchers?";
 			next;
-			switch(select("I want to keep them.:I shall return them to the Orc Heroes.")) {
+			switch(select("I want to keep them.", "I shall return them to the Orc Heroes.")) {
 			case 1:
 				mes "[Orc Warrior]";
 				mes "Yes, that's";
@@ -3561,7 +3561,7 @@ OnTouch:
 					mes "[Orc Hero]";
 					mes "Would you mind giving the item back to its owner, my human Orc Hero?";
 					next;
-					if (select("Yes, I mind.:No, I don't mind.") == 1) {
+					if (select("Yes, I mind.", "No, I don't mind.") == 1) {
 						mes "[Orc Hero]";
 						mes "Wow, you're so stubborn! Just treat the helm with care, and wear it with respect. Recognize that it has a long history...";
 						close;
