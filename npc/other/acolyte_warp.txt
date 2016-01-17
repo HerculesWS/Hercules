@@ -50,7 +50,7 @@ prontera,98,121,4	script	Acolyte#Prtclear	4_F_01,{
 	mes "I am willing to warp you to the many locations that I have memorized for a small fee.";
 	mes "Would you like to use this service?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		mes "[Keiki]";
 		mes "Where would you like to go to?";
@@ -113,7 +113,7 @@ yuno,142,184,6	script	Acolyte#Junoclear	4_F_01,{
 	mes "I am willing to warp you to the many locations that I have memorized for a small fee.";
 	mes "Would you like to use this service?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		mes "[Isalei]";
 		mes "Where would you like to go to?";
