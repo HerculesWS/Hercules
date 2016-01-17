@@ -18760,6 +18760,22 @@ void clif_selectcart(struct map_session_data *sd)
 #endif
 }
 
+/**
+ * Returns the name of the given bl, in a client-friendly format.
+ *
+ * @param bl The requested bl.
+ * @return The bl's name (guaranteed to be non-NULL).
+ */
+const char *clif_get_bl_name(const struct block_list *bl)
+{
+	const char *name = status->get_name(bl);
+
+	if (name == NULL)
+		return "Unknown";
+
+	return name;
+}
+
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -19829,4 +19845,5 @@ void clif_defaults(void) {
 	clif->pHotkeyRowShift = clif_parse_HotkeyRowShift;
 	clif->dressroom_open = clif_dressroom_open;
 	clif->pOneClick_ItemIdentify = clif_parse_OneClick_ItemIdentify;
+	clif->get_bl_name = clif_get_bl_name;
 }

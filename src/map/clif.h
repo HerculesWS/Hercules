@@ -1334,8 +1334,10 @@ struct clif_interface {
 	void (*dressroom_open) (struct map_session_data *sd, int view);
 	void (*pOneClick_ItemIdentify) (int fd,struct map_session_data *sd);
 	/* Cart Deco */
-	void(*selectcart) (struct map_session_data *sd);
-	void(*pSelectCart) (int fd, struct map_session_data *sd);
+	void (*selectcart) (struct map_session_data *sd);
+	void (*pSelectCart) (int fd, struct map_session_data *sd);
+
+	const char *(*get_bl_name) (const struct block_list *bl);
 };
 
 #ifdef HERCULES_CORE
