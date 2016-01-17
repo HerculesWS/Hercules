@@ -247,7 +247,7 @@ OnTreasureDied:
 	mes "stronghold's maintenance";
 	mes "you wanted to discuss?";
 	next;
-	switch(select("Stronghold Briefing:Invest in Commercial Growth:Invest in Defense growth:Hire/Fire Storage Staff:Go to Master's room")) {
+	switch(select("Stronghold Briefing", "Invest in Commercial Growth", "Invest in Defense growth", "Hire/Fire Storage Staff", "Go to Master's room")) {
 	case 1:
 		mes "[ Steward ]";
 		mes "The Commercial Growth";
@@ -330,7 +330,7 @@ OnTreasureDied:
 			mes "invest one more time?";
 		}
 		next;
-		switch(select("Invest in Commercial Growth:Cancel")) {
+		switch(select("Invest in Commercial Growth", "Cancel")) {
 		case 1:
 			if (getcastledata(strnpcinfo(4),4) >= 2) {
 				mes "[ Steward ]";
@@ -418,7 +418,7 @@ OnTreasureDied:
 			mes "Will you invest now?";
 		}
 		next;
-		switch(select("Invest in Defense:Cancel")) {
+		switch(select("Invest in Defense", "Cancel")) {
 		case 1:
 			if (getcastledata(strnpcinfo(4),5) >= 2) {
 				mes "[ Steward ]";
@@ -458,7 +458,7 @@ OnTreasureDied:
 			mes "the Kafra Employee that";
 			mes "we've hired for the guild?";
 			next;
-			switch(select("Dismiss:Cancel")) {
+			switch(select("Dismiss", "Cancel")) {
 			case 1:
 				cutin "kafra_01",2;
 				mes "[ Hired Kafra Employee ]";
@@ -469,7 +469,7 @@ OnTreasureDied:
 				mes "guild members of this";
 				mes "stronghold, I promise!";
 				next;
-				switch(select("Dismiss:Cancel")) {
+				switch(select("Dismiss", "Cancel")) {
 				case 1:
 					mes "[ Hired Kafra Employee ]";
 					mes "Why?! What have I done";
@@ -510,7 +510,7 @@ OnTreasureDied:
 			mes "our stronghold? You must";
 			mes "pay ^FF000010,000 Zeny^000000 to hire one.";
 			next;
-			switch(select("Hire:Cancel")) {
+			switch(select("Hire", "Cancel")) {
 			case 1:
 				if (getgdskilllv(.@GID,10001) == 0) {
 					mes "[ Steward ]";
@@ -581,7 +581,7 @@ OnTreasureDied:
 		mes "treasure may disappear if";
 		mes "something unexpected happens.";
 		next;
-		switch(select("Go to Treasure Room:Cancel")) {
+		switch(select("Go to Treasure Room", "Cancel")) {
 		case 1:
 			mes "[ Steward ]";
 			mes "Allow me to guide you";
@@ -679,13 +679,13 @@ OnStartArena:
 				mes "this stronghold. For now,";
 				mes "all is quiet in this place.";
 				next;
-				switch(select("Converse:Cancel")) {
+				switch(select("Converse", "Cancel")) {
 				case 1:
 					mes .@n$;
 					mes "Do you have any questions";
 					mes "about this stronghold?";
 					next;
-					switch(select("Guardian Stones:Fortress Gates:Link Flags:Battle Strategy:Cancel")) {
+					switch(select("Guardian Stones", "Fortress Gates", "Link Flags", "Battle Strategy", "Cancel")) {
 					case 1:
 						mes .@n$;
 						mes "There is one Emperium";
@@ -784,7 +784,7 @@ OnStartArena:
 				mes "Greetings, "+strcharinfo(0)+".";
 				mes "What are your orders?";
 				next;
-				switch(select("Increase Stronghold Defense:Situational Briefing:Cancel")) {
+				switch(select("Increase Stronghold Defense", "Situational Briefing", "Cancel")) {
 				case 1:
 					if (!getd("$agit_"+strnpcinfo(2)+"[5]")) {
 						if (getgdskilllv(.@GID,10002) == 0) {
@@ -861,7 +861,7 @@ OnInit:
 		mes "The Kafra Corporation is ready";
 		mes "to assist you wherever you go!";
 		next;
-		switch(select("Use Storage:Use Warp Service:Rent Pushcart:Cancel")) {
+		switch(select("Use Storage", "Use Warp Service", "Rent Pushcart", "Cancel")) {
 		case 1:
 			if (basicskillcheck() && getskilllv("NV_BASIC") < 6) {
 				mes "[Kafra Employee]";
@@ -876,7 +876,7 @@ OnInit:
 			mes "Please tell me your";
 			mes "Warp destination.";
 			next;
-			switch(select("Rachel -> 200 z:Cancel")) {
+			switch(select("Rachel -> 200 z", "Cancel")) {
 			case 1:
 				if (Zeny < 200) {
 					mes "[Kafra Employee]";
@@ -915,7 +915,7 @@ OnInit:
 				mes "is 800 Zeny. Would you";
 				mes "like to rent a Pushcart?";
 				next;
-				switch(select("Rent Pushcart:Cancel")) {
+				switch(select("Rent Pushcart", "Cancel")) {
 				case 1:
 					if (Zeny < 800) {
 						mes "[Kafra Employee]";
@@ -982,7 +982,7 @@ OnInit:
 		next;
 		mes "^3355FFDo you want to continue?^000000";
 		next;
-		if(select("No:Continue") == 1) {
+		if(select("No", "Continue") == 1) {
 			mes "^3355FFWork canceled.^000000";
 			close;
 		}
@@ -994,18 +994,18 @@ OnInit:
 			mes "rebuild the Guardian Stone.^000000";
 			next;
 			setarray .@stone$[0],"Elunium","Oridecon","Stones";
-			.@i = select("Elunium:Oridecon:Stone")-1;
+			.@i = select("Elunium", "Oridecon", "Stone")-1;
 			if (.@i == 2) .@nice += 10;
 			mes "^3355FF"+.@stone$[.@i]+" has been";
 			mes "placed in the center.^000000";
 			next;
-			.@i = select("Elunium:Oridecon:Stone")-1;
+			.@i = select("Elunium", "Oridecon", "Stone")-1;
 			if (.@i == 0) .@nice += 10;
 			mes "^3355FFYou have lined the";
 			mes "outside of the center";
 			mes "with some "+.@stone$[.@i]+".^000000";
 			next;
-			.@i = select("Elunium:Oridecon:Stone")-1;
+			.@i = select("Elunium", "Oridecon", "Stone")-1;
 			if (.@i == 1) .@nice += 10;
 			mes "^3355FFYou covered the";
 			mes "rest of the materials";
@@ -1028,7 +1028,7 @@ OnInit:
 				mes "order according to their";
 				mes "magic properties and power.^000000";
 				next;
-				.@j = select("Red Gemstone:Yellow Gemstone:Blue Gemstone")-1;
+				.@j = select("Red Gemstone", "Yellow Gemstone", "Blue Gemstone")-1;
 				mes "^3355FFYou placed the "+.@color$[.@j]+" Gemstone.^000000";
 				if (.@i == .@j) {
 					mes "^3355FFHowever, the Guardian Stone";
@@ -1153,7 +1153,7 @@ OnEnable:
 								mes "fixing this part";
 								mes "is a top priority.^000000";
 								next;
-								switch(select("Trunk:Steel:Emveretarcon:Oridecon")) {
+								switch(select("Trunk", "Steel", "Emveretarcon", "Oridecon")) {
 								case 1:
 									mes "^3355FFThe frame has been";
 									mes "reinforced with wood.^000000";
@@ -1187,7 +1187,7 @@ OnEnable:
 								mes "overall endurance needs to";
 								mes "be reinforced with something.^000000";
 								next;
-								switch(select("Trunk:Steel:Emveretarcon:Oridecon")) {
+								switch(select("Trunk", "Steel", "Emveretarcon", "Oridecon")) {
 								case 1:
 									mes "^3355FFYou tried using wood";
 									mes "to reinforce the gate.^000000";
@@ -1223,7 +1223,7 @@ OnEnable:
 								mes "cracks. You'll have to";
 								mes "weld them solid somehow.^000000";
 								next;
-								switch(select("Trunk:Steel:Emveretarcon:Oridecon")) {
+								switch(select("Trunk", "Steel", "Emveretarcon", "Oridecon")) {
 								case 1:
 									mes "^3355FFYou tried using wood to fix";
 									mes "this problem, but it seems";
@@ -1258,7 +1258,7 @@ OnEnable:
 								mes "sure that the gate is held";
 								mes "together pretty solidly.^000000";
 								next;
-								switch(select("Trunk:Steel:Emveretarcon:Oridecon")) {
+								switch(select("Trunk", "Steel", "Emveretarcon", "Oridecon")) {
 								case 1:
 									mes "^3355FFYou tried using wood to fix";
 									mes "this problem, but it seems";
@@ -1714,7 +1714,7 @@ function	script	LinkFlag	{
 		mes "you like to teleport to the";
 		mes "Convenience Facility for";
 		mes "guild members?^000000";
-		if(select("Go to Convenience Facility:Cancel") == 1)
+		if(select("Go to Convenience Facility", "Cancel") == 1)
 			warp strnpcinfo(4),getarg(1),getarg(2);
 		close;
 	}
@@ -1723,7 +1723,7 @@ function	script	LinkFlag	{
 		mes "Teleport Service. Would";
 		mes "you like to teleport to";
 		mes "the Emperium Center?^000000";
-		if(select("Teleport:Cancel") == 1)
+		if(select("Teleport", "Cancel") == 1)
 			warp strnpcinfo(4),getarg(1),getarg(2);
 		close;
 	}
@@ -1760,7 +1760,7 @@ function	script	ReturnFlag	{
 		mes "do you wish to return";
 		mes "to your stronghold?";
 		next;
-		if(select("Return to the Stronghold:Cancel") == 1 && getcharid(2) == getcastledata(getarg(0),1)) {
+		if(select("Return to the Stronghold", "Cancel") == 1 && getcharid(2) == getcastledata(getarg(0),1)) {
 			if (compare(getarg(0),"arug")) {
 				if (getarg(0) == "arug_cas01") setarray .@i[0],67,193;
 				else if (getarg(0) == "arug_cas02") setarray .@i[0],43,256;
@@ -1797,7 +1797,7 @@ function	script	ReturnFlag	{
 	mes "^3355FFWill you pull";
 	mes "this small lever?^000000";
 	next;
-	if(select("Pull Lever:Cancel") == 2) close;
+	if(select("Pull Lever", "Cancel") == 2) close;
 	if (compare(strnpcinfo(4),"arug")) {
 		if (strnpcinfo(4) == "arug_cas01") setarray .@i[0],121,357;
 		else if (strnpcinfo(4) == "arug_cas02") setarray .@i[0],387,323;
@@ -1817,7 +1817,7 @@ function	script	ReturnFlag	{
 	if (getcharid(2) == getcastledata(strnpcinfo(4),1)) {
 		mes "- It's an amazingly huge sunflower; as big as a human! ... You feel something mysterious emanating from the flower. -";
 		next;
-		switch(select("Hold the stem.:Do nothing.")) {
+		switch(select("Hold the stem.", "Do nothing.")) {
 		case 1:
 			if (compare(strnpcinfo(4),"arug")) {
 				.@map$ = "arug_dun01";
