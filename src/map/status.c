@@ -2255,7 +2255,8 @@ int status_calc_pet_(struct pet_data *pd, enum e_status_calc_opt opt)
 	return 1;
 }
 
-unsigned int status_get_base_maxsp(struct map_session_data* sd, struct status_data *st) {
+unsigned int status_get_base_maxsp(const struct map_session_data *sd, const struct status_data *st)
+{
 	uint64 val = pc->class2idx(sd->status.class_);
 
 	val = status->dbs->SP_table[val][sd->status.base_level];
@@ -2272,7 +2273,8 @@ unsigned int status_get_base_maxsp(struct map_session_data* sd, struct status_da
 	return (unsigned int)cap_value(val, 0, UINT_MAX);
 }
 
-unsigned int status_get_base_maxhp(struct map_session_data *sd, struct status_data *st) {
+unsigned int status_get_base_maxhp(const struct map_session_data *sd, const struct status_data *st)
+{
 	uint64 val = pc->class2idx(sd->status.class_);
 
 	val = status->dbs->HP_table[val][sd->status.base_level];
@@ -6241,7 +6243,7 @@ uint32 status_calc_mode(const struct block_list *bl, const struct status_change 
 	return mode & MD_MASK;
 }
 
-const char *status_get_name(struct block_list *bl)
+const char *status_get_name(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6266,7 +6268,7 @@ const char *status_get_name(struct block_list *bl)
 *   0 = fail
 *   class_id = success
 *------------------------------------------*/
-int status_get_class(struct block_list *bl)
+int status_get_class(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6286,7 +6288,7 @@ int status_get_class(struct block_list *bl)
 *   1 = fail
 *   level = success
 *------------------------------------------*/
-int status_get_lv(struct block_list *bl)
+int status_get_lv(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6376,7 +6378,8 @@ unsigned short status_get_speed(struct block_list *bl)
 	return status->get_status_data(bl)->speed;
 }
 
-int status_get_party_id(struct block_list *bl) {
+int status_get_party_id(const struct block_list *bl)
+{
 	nullpo_ret(bl);
 	switch (bl->type) {
 	case BL_PC:
@@ -6431,7 +6434,7 @@ int status_get_party_id(struct block_list *bl) {
 	return 0;
 }
 
-int status_get_guild_id(struct block_list *bl)
+int status_get_guild_id(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6497,7 +6500,8 @@ int status_get_guild_id(struct block_list *bl)
 	return 0;
 }
 
-int status_get_emblem_id(struct block_list *bl) {
+int status_get_emblem_id(const struct block_list *bl)
+{
 	nullpo_ret(bl);
 	switch (bl->type) {
 	case BL_PC:
@@ -6558,7 +6562,7 @@ int status_get_emblem_id(struct block_list *bl) {
 	return 0;
 }
 
-int status_get_mexp(struct block_list *bl)
+int status_get_mexp(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	if (bl->type == BL_MOB)
@@ -6568,7 +6572,7 @@ int status_get_mexp(struct block_list *bl)
 	return 0;
 }
 
-int status_get_race2(struct block_list *bl)
+int status_get_race2(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	if (bl->type == BL_MOB)
