@@ -113,7 +113,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	mes "[Thief Guildsman]";
 	mes "Ehh... Seems like a beloved "+(Sex?"son":"daughter")+" of a rich family, but why are you here in this dirty place?";
 	next;
-	if(select("I want to be a Thief.:Nothing.") == 2) {
+	if(select("I want to be a Thief.", "Nothing.") == 2) {
 		mes "[Thief Guildsman]";
 		mes "You know you cannot be a thief without an application.....";
 		mes "What's on your mind..?";
@@ -127,7 +127,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	mes "[Thief Guildsman]";
 	mes "Do you want to be a thief so badly?";
 	next;
-	switch(select("Yes.:No.:How about you?")) {
+	switch(select("Yes.", "No.", "How about you?")) {
 	case 1:
 		mes "[Thief Guildsman]";
 		mes "Oh, do you...? Huh.. well... I do live and learn to see strange people like you.";
@@ -151,7 +151,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	mes "[Thief Guildsman]";
 	mes "So, do you want to apply for being a Thief?";
 	next;
-	if(select("Yes, I do.:No.") == 2) {
+	if(select("Yes, I do.", "No.") == 2) {
 		mes "[Thief Guildsman]";
 		mes "Well... do what you want to do~ Go your way~";
 		close;

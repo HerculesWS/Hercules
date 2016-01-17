@@ -137,7 +137,7 @@ function	script	refinenew	{
 	}
 	mes "Are you sure you want to continue?";
 	next;
-	if(select("Yes:No") == 2){
+	if(select("Yes", "No") == 2){
 		mes "["+ getarg(0) +"]";
 		mes "Hm... if you mind... never mind...";
 		close;
@@ -157,7 +157,7 @@ function	script	refinenew	{
 			mes "Do you still want me to refine it?";
 			mes "I think I have given you enough warning.";
 			next;
-			if(select("Yes.:No.") == 2) {
+			if(select("Yes.", "No.") == 2) {
 				mes "["+ getarg(0) +"]";
 				mes "Well, no challenge is one way to go...";
 				mes "No risk... that could be wise.";
@@ -275,7 +275,7 @@ function	script	refinenew	{
 	mes "[" + getarg(0) + "]";
 	mes "That will cost you " + .@refinecnt + " " + getitemname(.@material) + " and " + .@fullprice + " Zeny. Is that ok?";
 	next;
-	if(select("Yes:No...") == 2){
+	if(select("Yes", "No...") == 2){
 		mes "[" + getarg(0) + "]";
 		mes "You said so... So be it.";
 		close;
@@ -364,7 +364,7 @@ function	script	refinenew	{
 	mes "Bradium or Carnium.";
 	mes "Just give me 50,000z.";
 	next;
-	switch(select("Oridecon to Bradium.:Elunium to Carnium.:Purified Bradium to Carnium.:No thanks.")) {
+	switch(select("Oridecon to Bradium.", "Elunium to Carnium.", "Purified Bradium to Carnium.", "No thanks.")) {
 	case 1:
 		setarray .@i[0],984,3,6224;  //Oridecon -> Bradium
 		break;
@@ -497,7 +497,7 @@ malangdo,224,172,6	script	Clink#mal_normal	4_CAT_SAILOR1,{
 	}
 	mes "You need ^ff9999"+getitemname(.@material)+"^000000 and ^ff9999"+.@price+"^000000 Zeny. Do you have them?";
 	next;
-	if(select("Yes, I do!!:Forget about it!!") == 2) {
+	if(select("Yes, I do!!", "Forget about it!!") == 2) {
 		mes "[Clink]";
 		mes "I knew it!!";
 		mes "I knew you were not worth trying my magical refining hammer for.";
@@ -515,7 +515,7 @@ malangdo,224,172,6	script	Clink#mal_normal	4_CAT_SAILOR1,{
 		mes "the ^ff0000whole thing will disappear^000000.";
 		mes "You still up for this~?";
 		next;
-		if(select("Yes, I am!!:Forget about it!!") == 2) {
+		if(select("Yes, I am!!", "Forget about it!!") == 2) {
 			mes "[Clink]";
 			mes "I knew it!!";
 			mes "You can't even take this big step. Don't think about refining...";

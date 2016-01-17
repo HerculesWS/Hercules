@@ -138,7 +138,7 @@ malaya,266,76,3	script	Rodel the Guard#malaya	4_MAL_SOLDIER,4,4,{
 				mes "We are going to organize an extensive Jejeling hunt this time.";
 				mes "Peddlers going in and out of Baryo are always complaining about Jejelings.";
 				next;
-				if (select("Join the Jejeling hunt.:Refuse.") == 2) {
+				if (select("Join the Jejeling hunt.", "Refuse.") == 2) {
 					mes "[Rodel the Guard]";
 					mes "Is that so? I'm sorry to hear that.";
 					mes "Things would be so much simpler if we had a person like you around.";
@@ -241,7 +241,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 		mes "People are in panic, everyone trembling with fear.^000000";
 		cutin "malaya_ghost01", 4;
 		next;
-		select("Step toward the shadow.:Draw weapon.");
+		select("Step toward the shadow.", "Draw weapon.");
 		mes "[Phong in Mumbaki]";
 		mes "They have followed the trace of the outsider. ";
 		mes "Don't get to close too them.";
@@ -283,7 +283,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 		mes "You look disturbed.";
 		mes "Your clothes also look messed up. Was there some kind of trouble?";
 		next;
-		switch (select("Explain what happened.:There is nothing to talk about.")) {
+		switch (select("Explain what happened.", "There is nothing to talk about.")) {
 		case 1:
 			mes "[Phong in Mumbaki]";
 			mes "Is that so?";
@@ -310,7 +310,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 			mes "^4d4dffAs Mumbaki said, giving out some items to serve as a Spiritual Protection would be a good idea.";
 			mes "What would be adequate as a Spiritual Protection..^000000";
 			next;
-			switch (select("Holy Water!:Holy magical item Blue Gemstone?!:Writing utensils or school supplies")) {
+			switch (select("Holy Water!", "Holy magical item Blue Gemstone?!", "Writing utensils or school supplies")) {
 			case 1:
 				mes "[Phong in Mumbaki]";
 				mes "The name itself suggests holiness.";
@@ -419,7 +419,7 @@ malaya,185,358,3	script	Leader Phong in Mumbaki	4_BARYO_CHIEF,{
 			break;
 		}
 		next;
-		switch (select("Ask for advice.:Bless flowers...")) {
+		switch (select("Ask for advice.", "Bless flowers...")) {
 		case 1:
 			if (malaya_diwata == 2) {
 				mes "[Phong in Mumbaki]";
@@ -565,7 +565,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 		mes "This is my job and nobody else's.";
 		mes "Protecting traditions is my job.";
 		next;
-		switch (select("Is that so?:Good luck on your own!")) {
+		switch (select("Is that so?", "Good luck on your own!")) {
 		case 1:
 			if (BaseLevel < 100) {
 				mes "[Imelda]";
@@ -728,7 +728,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 		mes "Did you enjoy the scenery of Malaya?";
 		mes "It's nice to have a chat with friends on a Jeepney.";
 		next;
-		switch (select("I'll help you making Spiritual Protections.:Love and Spiritual Protection for all.")) {
+		switch (select("I'll help you making Spiritual Protections.", "Love and Spiritual Protection for all.")) {
 		case 1:
 			if (questprogress(7380)) {
 				if ((countitem(Salt_Bag) < 6) || (countitem(Silver_Cross) < 6) || (countitem(Sharp_Bamboo) < 6)) {
@@ -772,7 +772,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 					mes "Could you go for them now?";
 					erasequest 7381;
 					next;
-					switch (select("Sure.:I need some preparations.")) {
+					switch (select("Sure.", "I need some preparations.")) {
 					case 1:
 						mes "[Imelda]";
 						mes "As usual then.";
@@ -841,7 +841,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 					mes "Could you deliver Spiritual Protections to the folks today?";
 					erasequest 7375;
 					next;
-					if (select("Of course.:Not today.") == 2) {
+					if (select("Of course.", "Not today.") == 2) {
 						mes "[Imelda]";
 						mes "Yes.";
 						mes "Why not take a stroll in Malaya today?";
@@ -876,7 +876,7 @@ malaya,169,350,5	script	Imelda#malaya	4_M_BRZ_JACI,{
 					mes "[Imelda]";
 					mes "Could you give out these Spiritual Protections to the villagers for me?";
 					next;
-					switch (select("Yes.:Not today.") == 2) {
+					switch (select("Yes.", "Not today.") == 2) {
 						mes "[Imelda]";
 						mes "Yes.";
 						mes "Why not take a stroll in Malaya today?";
@@ -1031,7 +1031,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 		}
 		mes "What is it?";
 		next;
-		switch (select("Speak.:Give Spiritual Protection.:The Old Man and the Cast Iron Cauldron")) {
+		switch (select("Speak.", "Give Spiritual Protection.", "The Old Man and the Cast Iron Cauldron")) {
 		case 1:
 			mes "[Old Man Nardo]";
 			mes "Port Malaya is a beautiful city.";
@@ -1143,7 +1143,7 @@ malaya,181,353,5	script	Old Man Nardo#malaya	4_M_BARYO_OLD,{
 						mes "Go to Kiko in Mumbaki at Baryo Mahiwaga and deliver the Cast Iron Cauldron.";
 						mes "I'd like you to do it for me...";
 						next;
-						switch (select("Cast Iron Cauldron??:I'll do it.:I'm busy right now.")) {
+						switch (select("Cast Iron Cauldron??", "I'll do it.", "I'm busy right now.")) {
 						case 1:
 							mes "[Old Man Nardo]";
 							mes "It's because of the Bakonawa.";
@@ -1293,7 +1293,7 @@ malaya,224,267,3	script	Romel#malaya	4_M_MAYOR,{
 			break;
 		}
 		next;
-		if (select("Give Spiritual Protection:How are things?") == 2) {
+		if (select("Give Spiritual Protection", "How are things?") == 2) {
 			mes "[Romel]";
 			mes "I am at peace these days.";
 			close;
@@ -1422,7 +1422,7 @@ malaya,223,267,5	script	Talah#malaya	4_F_DST_CHILD,{
 		mes "[Talah]";
 		mes "Hello...";
 		next;
-		if (select("Give Spiritual Protection.:Hi there?") == 2) {
+		if (select("Give Spiritual Protection.", "Hi there?") == 2) {
 			mes "[Talah]";
 			mes "...Hey...Thank you.";
 			mes "You're keeping us safe aren't you?";
@@ -1649,7 +1649,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 		mes "[Woeon]";
 		mes "Oh, hi there!";
 		next;
-		if (select("Give Spiritual Protection.:The Dealer and his Collection") == 1) {
+		if (select("Give Spiritual Protection.", "The Dealer and his Collection") == 1) {
 			if (questprogress(7374) == 1 && questprogress(7371) == 1) {
 				if (!countitem(Soul_Protection)) {
 					mes "^4d4dffThere is no Spiritual Protection to give to Woeon.^000000";
@@ -1710,7 +1710,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 				mes "I know it's a difficult job... But you do it so well.";
 				erasequest 7392;
 				next;
-				if (select("I'm too busy today.:Leave it to me!") == 1) {
+				if (select("I'm too busy today.", "Leave it to me!") == 1) {
 					mes "[Woeon]";
 					mes "Is that so? So it is then.";
 					mes "Come stop by when you need some work.";
@@ -1762,7 +1762,7 @@ malaya,295,171,3	script	Collection Dealer Woeon	4_M_MALAYA,{
 					mes "Jejellopy can be acquired from the Jejeling.";
 					mes "Can you get me 30 Jejellopys?";
 					next;
-					if (select("Yeah, sure.:Nope.") == 2) {
+					if (select("Yeah, sure.", "Nope.") == 2) {
 						mes "[Woeon]";
 						mes "Is that so. Such a shame.";
 						mes "Come back when you need some work.";
@@ -1900,7 +1900,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			break;
 		}
 		next;
-		switch (select("Give Spiritual Protection.:Silver Blade.:Silver Cross")) {
+		switch (select("Give Spiritual Protection.", "Silver Blade.", "Silver Cross")) {
 		case 1:
 			if (!questprogress(7374) || !questprogress(7370)) {
 				mes "[Pandoi]";
@@ -2009,7 +2009,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 					mes "Maybe I'm not supposed to be a blacksmith!";
 					mes "I'm good with crafting silver, though!";
 					next;
-					if (select("I'll get you the materials. Cheer up.:Give up. It's a lot easier when you do.") == 2) {
+					if (select("I'll get you the materials. Cheer up.", "Give up. It's a lot easier when you do.") == 2) {
 						mes "[Pandoi]";
 						mes "... You're right...";
 						mes "I'll never be able to make a Silver Blade...";
@@ -2042,7 +2042,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 					mes "[Pandoi]";
 					mes "Could you slay the horrible creepers and get me the Silver Bracelets?";
 					next;
-					if (select("Indeed!:No. Way.") == 2) {
+					if (select("Indeed!", "No. Way.") == 2) {
 						mes "[Pandoi]";
 						mes "... You're right...";
 						mes "I'll never make a Silver Blade...";
@@ -2071,7 +2071,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			mes "I could make one Silver Cross for ^4d4dff2 Silver Bracelets^000000 the monsters hold there...";
 			mes "If you have Silver Bracelets, I could make Silver Crosses with them.";
 			next;
-			switch(select("Make 1 Silver Cross:Make 6 Silver Crosses:Input Number:Quit.")) {
+			switch(select("Make 1 Silver Cross", "Make 6 Silver Crosses", "Input Number", "Quit.")) {
 			case 1:
 				.@amount = 1;
 			case 2:
@@ -2148,7 +2148,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 		mes "Oh, you're th... The one who fends off ghosts at the wave of a hand?!";
 		mes "Could you stay for a bit and hear me out?!";
 		next;
-		if (select("Sorry.:Sure.") == 1) {
+		if (select("Sorry.", "Sure.") == 1) {
 			mes "[Pedro the Sailor]";
 			mes "Oh, a solid denial.";
 			mes "You just impaled my last glimpse of hope.";
@@ -2244,7 +2244,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 		mes "Those black souls just came up and disappeared.";
 		mes "Well, living the dream, eh?";
 		next;
-		if (select("Give Spiritual Protection.:About the Ferry Ride") == 1) {
+		if (select("Give Spiritual Protection.", "About the Ferry Ride") == 1) {
 			if (!questprogress(7374) || !questprogress(7368)) {
 				mes "[Pedro the Sailor]";
 				mes "The Spiritual Protection you gave me before works fine.";
@@ -2303,7 +2303,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 			mes "Hmmm..........";
 			mes "It's a long story...";
 			next;
-			if (select("I'm listening.:Maybe later.") == 2) {
+			if (select("I'm listening.", "Maybe later.") == 2) {
 				mes "[Pedro the Sailor]";
 				mes "I knew it.";
 				mes "Though, it's not such a boring story.";
@@ -2404,7 +2404,7 @@ malaya,326,68,2	script	Pedro the Sailor	4W_SAILOR,{
 				mes "This little one goes to Izlude.";
 				mes "That will be 1000z.";
 				next;
-				if (select("Use.:That's a rip off!") == 2) {
+				if (select("Use.", "That's a rip off!") == 2) {
 					mes "[Pedro the Sailor]";
 					mes "What?!";
 					mes "How much do you pay for the Alberta Liner to get here!?";
@@ -2475,7 +2475,7 @@ L_SetQuest:
 	mes "I mean... Miss Diwata... Isn't feeling very well and, even with the Spiritual Protection";
 	mes "a normal person can't stand it.";
 	next;
-	if (select("I see. Take care then.:How about a Floral Tribute?") == 1) {
+	if (select("I see. Take care then.", "How about a Floral Tribute?") == 1) {
 		mes "[Pedro the Sailor]";
 		mes "I'm glad you understand.";
 		mes "Sigh...";
@@ -2523,7 +2523,7 @@ OnTouch:
 		cutin "malaya_ghost01", 4;
 		mes "- Familiar souls are approaching Diwata. -";
 		next;
-		if (select("It's a misunderstanding!:You're from that..!") == 2) {
+		if (select("It's a misunderstanding!", "You're from that..!") == 2) {
 			cutin "malaya_ghost02", 4;
 			mes "[" + strcharinfo(0) + "]";
 			mes "Just as I thought! You're afraid of me?!";
@@ -2583,7 +2583,7 @@ OnTouch:
 		mes "- The Offering Bouquet... -";
 		cutin "malaya_diwata01", 2;
 		next;
-		if (select("Throw it to the Little Girl.:Slide it across on the floor.") == 1) {
+		if (select("Throw it to the Little Girl.", "Slide it across on the floor.") == 1) {
 			mes "- I threw the bouquet before she could toss me out, and she catches in surprise...";
 			mes "She won't toss me... far, now that she has the flower.-";
 		} else {
@@ -2693,7 +2693,7 @@ OnTouch:
 		next;
 		mes "- Diwata reached her hands out as if expecting something. -";
 		next;
-		if (select("Give the Bouquet.:Hold her hand.") == 2) {
+		if (select("Give the Bouquet.", "Hold her hand.") == 2) {
 			mes "[Diwata]";
 			mes "What do you think you're doing?!!??!?!!";
 			mes "Arghhhh - I have enough creeps around here, thank you!!";
@@ -2747,7 +2747,7 @@ ma_fild01,261,208,2	script	Kiko in Mumbaki	4_BARYO_CHIEF,{
 	mes "I am the soul guidance, protector of people and souls here at Baryo.";
 	mes "So, I'm a good leader Kiko in Mumbaki.";
 	next;
-	switch (select("Give Cast-Iron Caldron.:Request Purification Ritual.:Exchange Jellopy for gold.")) {
+	switch (select("Give Cast-Iron Caldron.", "Request Purification Ritual.", "Exchange Jellopy for gold.")) {
 		case 1:
 			if (!questprogress(7376)) {
 				if (!questprogress(7377)) {
@@ -2857,7 +2857,7 @@ ma_fild01,239,253,3	script	Dhong the Guard	4_MAL_SOLDIER,{
 	mes "Hi there!";
 	mes "Welcome to Baryo.";
 	next;
-	if (select("You're job seems so hard~:Guard Dog Vantai") == 1) {
+	if (select("You're job seems so hard~", "Guard Dog Vantai") == 1) {
 		mes "[Dhong the Guard]";
 		mes "Not at all. I just watch who comes and goes from here.";
 		mes "Travelers are the ones who go through more hardship.";
@@ -2959,7 +2959,7 @@ ma_fild01,239,253,3	script	Dhong the Guard	4_MAL_SOLDIER,{
 				mes "As you can see, I can't move from here,";
 				mes "so I was wondering if you can get the bones for Vantai...";
 				next;
-				if (select("Alright.:Sorry.") == 2) {
+				if (select("Alright.", "Sorry.") == 2) {
 					mes "[Dhong the Guard]";
 					mes "I see.";
 					mes "Vantai!";
@@ -3062,7 +3062,7 @@ ma_fild01,200,190,3	script	Maries#malaya	4_F_BARYO_WOMAN,{
 				mes "My daughter did not return.";
 				mes "Please help, I think she's lost in the forest.";
 				next;
-				switch (select("Of course.:I'm too busy right now.:You have so many children.")) {
+				switch (select("Of course.", "I'm too busy right now.", "You have so many children.")) {
 				case 1:
 					mes "[Maries]";
 					mes "I'm sure she's lost in the woods because of mischievous spirits.";
@@ -3200,7 +3200,7 @@ ma_fild02,241,39,5	script	Good Capre Budidai	4_MAL_BUDIDAI,{
 	mes "[Budidai]";
 	mes "Hey buddy, You here to hear Budidai singing?";
 	next;
-	switch (select("You like songs?:A profound study of one eyed monsters.:See ya!")) {
+	switch (select("You like songs?", "A profound study of one eyed monsters.", "See ya!")) {
 	case 1:
 		mes "[Budidai]";
 		mes "Yup, Budidai loves singing.";
@@ -3318,7 +3318,7 @@ ma_fild02,241,39,5	script	Good Capre Budidai	4_MAL_BUDIDAI,{
 					mes "Bongisungisu! I get the chills just by being in the same forest with it...";
 					mes "But Budidai is weak.";
 					next;
-					if (select("Shall I take care of it?:That does give the chills.") == 2) {
+					if (select("Shall I take care of it?", "That does give the chills.") == 2) {
 						mes "[Budidai]";
 						mes "Don't remind me.";
 						mes "My friends can't come and listen to my songs because of that behemoth.";
@@ -3362,7 +3362,7 @@ ma_fild01,166,214,6	script	Old Man in Dilemma#GA	4_F_BARYO_OLD,{
 	mes "[Old Man in Dilemma]";
 	mes "Oh! Demons are gaining more and more power in this world.";
 	next;
-	switch(select("We need to gather items to fight them off.:Ignore.")) {
+	switch(select("We need to gather items to fight them off.", "Ignore.")) {
 	case 1:
 		if (countitem(Lesser_Agimat) >= 3 && Zeny >= 1000) {
 			mes "[Old Man in Dilemma]";
@@ -3371,7 +3371,7 @@ ma_fild01,166,214,6	script	Old Man in Dilemma#GA	4_F_BARYO_OLD,{
 			mes "[Old Man in Dilemma]";
 			mes "Will you create a Greater Agimat of Ancient Spirit with 3 Lesser Agimats and 1,000 Zeny?";
 			next;
-			if(select("Create.:No, thank you.") == 1) {
+			if(select("Create.", "No, thank you.") == 1) {
 				if (countitem(Lesser_Agimat) >= 3 && Zeny >= 1000) {
 					specialeffect2 EF_CONE;
 					specialeffect EF_FORESTLIGHT2;
@@ -3436,7 +3436,7 @@ ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
 	mes "[Tikbalang Expert]";
 	mes "I spent 90% of my life studying Tikbalang.";
 	next;
-	switch(select("But you look young?:What is Tikbalang?:Teach me how to catch a Tikbalang.")) {
+	switch(select("But you look young?", "What is Tikbalang?", "Teach me how to catch a Tikbalang.")) {
 	case 1:
 		mes "[Tikbalang Expert]";
 		mes "What! I might be imagining things.";
@@ -3458,7 +3458,7 @@ ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
 		mes "Have you... ever been fooled by anyone around you? Why can't you believe someone's word for it? Really, ask me anything.";
 		next;
 		while(1) {
-			switch(select("I don't have any questions.:Characteristics?:Features?:Rumors?:Habitat?")) {
+			switch(select("I don't have any questions.", "Characteristics?", "Features?", "Rumors?", "Habitat?")) {
 			case 1:
 				mes "[Tikbalang Expert]";
 				mes "I think this is enough explanation for now. You wouldn't understand other highly sophisticated topics with specific terminology and all anyway.";
@@ -3544,7 +3544,7 @@ ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
 			mes "[Tikbalang Expert]";
 			mes "The '^F80835Tikbalang Belt^000000' is used to capture Tikbalangs without the hassle. But that doesn't mean it's 100% successful. Interested? Do you want me to make one for you?";
 			next;
-			switch(select("Yes, Im interested.:No, I can capture one myself.")) {
+			switch(select("Yes, Im interested.", "No, I can capture one myself.")) {
 			case 1:
 				delitem Tikbalang_Thick_Spine,3;
 				getitem Tikbalang_Belt,1;
@@ -3565,7 +3565,7 @@ ma_fild01,238,198,4	script	Tikbalang Expert#malaya	4_M_MALAYA,{
 		mes "[Tikbalang Expert]";
 		mes "There is the easy way and the hard way to capture Tikbalangs. Which one do you prefer?";
 		next;
-		switch(select("Easy way.:Hard way.")) {
+		switch(select("Easy way.", "Hard way.")) {
 		case 1:
 			mes "[Tikbalang Expert]";
 			mes "Ha ha. I've come up with the easy way myself.";
@@ -3618,7 +3618,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "[Bayani]";
 	mes "I will upgrade your armor if you bring one that holds enormous power.";
 	next;
-	switch (select("What kind of equipment do upgrade?:What are the required materials?:What will it become after an upgrade?:Please upgrade this.")) {
+	switch (select("What kind of equipment do upgrade?", "What are the required materials?", "What will it become after an upgrade?", "Please upgrade this.")) {
 	case 1:
 		mes "[Bayani]";
 		mes "Your questions are too simple, but!";
@@ -3675,7 +3675,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 		mes "Unless the one that holds it doesn't believe it is! Ask about what has changed and decide for yourself!";
 		next;
 		while (1) {
-			switch (select("There is no more.:Bakonawa Scale Armor:Kalasag:Buwaya Sack Cloth:Bangungot Boots of Nightmare")) {
+			switch (select("There is no more.", "Bakonawa Scale Armor", "Kalasag", "Buwaya Sack Cloth", "Bangungot Boots of Nightmare")) {
 			case 1:
 				mes "[Bayani]";
 				mes "Looks like you ran out of questions.";
@@ -3748,7 +3748,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "Ha ha ha ha ha ha ha! Good!";
 	mes "You've brought the materials, right?";
 	next;
-	if (select("Oh... sorry...:Preparations are complete!!") == 1) {
+	if (select("Oh... sorry...", "Preparations are complete!!") == 1) {
 		mes "[Bayani]";
 		mes "Oh no!!";
 		mes "I will need an light but sturdy armor with an refinement of +9 or greater and 20 Ancient Grudges!!";
@@ -3762,7 +3762,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "[Bayani]";
 	mes "So what armor will it be?";
 	next;
-	switch (select("Bakonawa Scale Armor:Kalasag:Buwaya Sack Cloth:Bangungot Boots of Nightmare")) {
+	switch (select("Bakonawa Scale Armor", "Kalasag", "Buwaya Sack Cloth", "Bangungot Boots of Nightmare")) {
 	case 1:
 		.@part    = EQI_ARMOR;
 		.@item    = 15051;
@@ -3805,7 +3805,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "[Bayani]";
 	mes "^0000FFOnce your item is refined, the refinement level will be ^FF00000^0000FF and the item will be upgraded.^000000 You get this part?";
 	next;
-	if (select("No.:Yes.") == 1) {
+	if (select("No.", "Yes.") == 1) {
 		mes "[Bayani]";
 		mes "What? You didn't know this? Then, read through my instructions and come back again.";
 		close;
@@ -3815,7 +3815,7 @@ ma_fild01,158,243,6	script	Tribe Blacksmith#malaya	4_M_MALAYA,{
 	mes "^0000FFEquipping the Kalasag, Buwaya Sack Cloth, Bakonawa Scale Armor, and Bangungot Boots of Nightmare all at once will lose the ^FF0000Set Effects^0000FF.^000000";
 	mes "Do you understand this point?";
 	next;
-	if (select("No.:Yes.") == 1) {
+	if (select("No.", "Yes.") == 1) {
 		mes "[Bayani]";
 		mes "What? You didn't know this? Then, read through my instructions and come back again.";
 		close;
@@ -3873,7 +3873,7 @@ malaya,305,281,3	script	Guard#buwaya	4_MAL_SOLDIER,7,7,{
 		mes "[Guard]";
 		mes "Is that why there are more outsiders here these days? Now don't be sneaky and a know-it-all. How would you know if I'd offered to take you around?";
 		next;
-		if (select("Treasure?:Ignore.") == 2) {
+		if (select("Treasure?", "Ignore.") == 2) {
 			mes "[Guard]";
 			mes "Are you ignoring me? Bah.";
 			close;
@@ -4014,7 +4014,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 	if (malaya_buwaya == 2) {
 		mes "- See someone shaky with dopey eyes. -";
 		next;
-		if (select("Tap him on the shoulder.:Ignore him.") == 2)
+		if (select("Tap him on the shoulder.", "Ignore him.") == 2)
 			close;
 		emotion e_omg;
 		mes "[Totoy]";
@@ -4056,7 +4056,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "[Totoy]";
 		mes "Hello? Hey, are you still there? What happened to the Green Potion? Jeez, this is driving me crazy.";
 		next;
-		if (select("Hand over the Green Potion.:Do not hand over the potion.") == 2) {
+		if (select("Hand over the Green Potion.", "Do not hand over the potion.") == 2) {
 			mes "[Totoy]";
 			mes "Did you really leave? Hey! Darn!";
 		} else {
@@ -4096,7 +4096,7 @@ ma_in01,47,101,3	script	Totoy#buwaya	4_M_BARYO_BOY,7,7,{
 		mes "[Totoy]";
 		mes "I did go deep in the woods because I wasn't getting anywhere with collecting bugs. But who would have thought I'd get into this mess?";
 		next;
-		if (select("What Totoy saw:About bugs") == 2) {
+		if (select("What Totoy saw", "About bugs") == 2) {
 			mes "[Totoy]";
 			mes "I only wanted to show people my collection of cute bugs. Ha ha.";
 			next;
@@ -4339,7 +4339,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		mes "[Master of Hunting]";
 		mes "So you came here to learn all about my excellent hunting skills? Or to ask me to publish an essay on Master of Hunting? Ho!";
 		next;
-		if (select("About Totoys monster:Interrupt.") == 2) {
+		if (select("About Totoys monster", "Interrupt.") == 2) {
 			mes "[Master of Hunting]";
 			mes "Oh? Hey! Where are you going?!";
 			close;
@@ -4361,7 +4361,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		mes "[Master of Hunting]";
 		mes "You shouldn't lie to an adult. I understand you want the Master of Huntings attention. Ha ha!";
 		next;
-		if (select("I will prove it.:Suspicious of Totoy.") == 2) {
+		if (select("I will prove it.", "Suspicious of Totoy.") == 2) {
 			mes "[Master of Hunting]";
 			mes "Kids tell stories for their own reasons. I'm sure Totoy is the same.";
 			malaya_buwaya = 6;
@@ -4386,7 +4386,7 @@ malaya,290,152,5	script	Master of Hunting#buwaya	4_M_BARYO_MAN,{
 		mes "[Master of Hunting]";
 		mes "Oh, you're back!";
 		next;
-		if (select("Let's see if we have a monster in it!:I don't think there is a monster.") == 2) {
+		if (select("Let's see if we have a monster in it!", "I don't think there is a monster.") == 2) {
 			mes "[Master of Hunting]";
 			mes "It was a kid's joke. Ha ha.";
 			close;
@@ -4595,7 +4595,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 	}
 	if (malaya_buwaya == 10) {
 		next;
-		if (select("Tell him about Buwaya.:Done with conversation.") == 2) {
+		if (select("Tell him about Buwaya.", "Done with conversation.") == 2) {
 			close;
 		}
 		mes "[Guard Leader]";
@@ -4610,7 +4610,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 		mes "[Guard Leader]";
 		mes "Hmm... will you be able to help Port Malaya?";
 		next;
-		if (select("Leave it to me!:I'm pretty busy myself.") == 2) {
+		if (select("Leave it to me!", "I'm pretty busy myself.") == 2) {
 			mes "[Guard Leader]";
 			mes "Really? That's no good. All the lives of the villagers will be at stake if we don't do something. How can a youth like you be so heartless. Are all outsiders like you? Hmph! Can't trust young people these days. Hmph.";
 			close;
@@ -4666,7 +4666,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 			mes "They say Buwaya is a very strong and ugly monster with two heads.";
 			mes "Will you help us defeat Buwaya?";
 			next;
-			if (select("Of course.:Nope.") == 2) {
+			if (select("Of course.", "Nope.") == 2) {
 				mes "[Guard Leader]";
 				mes "Buwaya is known to be a very dangerous monster.";
 				mes "There is no shame in rejecting this request.";
@@ -4690,7 +4690,7 @@ malaya,290,340,3	script	Guard Leader#buwaya	4_MAL_CAPTAIN,{
 			mes "[Guard Leader]";
 			mes "How is it going with the Buwaya situation?";
 			next;
-			if (select("I give up.:Still fighting.") == 2) {
+			if (select("I give up.", "Still fighting.") == 2) {
 				mes "[Guard Leader]";
 				mes "Keep this in mind and be cautious at all times.";
 				mes "I recommend asking trustful colleagues for help.";
@@ -4745,7 +4745,7 @@ ma_fild02,312,259,3	script	Dog#buwaya	4_DOG01,{
 		mes "[" + strcharinfo(0) + "]";
 		mes "Why is a dog here?";
 		next;
-		if (select("Look closely at the dog.:Ignore it.") == 2) {
+		if (select("Look closely at the dog.", "Ignore it.") == 2) {
 			mes "[" + strcharinfo(0) + "]";
 			mes "Looks like a lost dog.";
 			close;
@@ -4947,7 +4947,7 @@ malaya,264,338,4	script	Frightened Maiden#bako1	4_F_BARYO_GIRL,{
 		mes "It is said that Bakonawa hates loud noises.";
 		mes "Pound the pot if you want to live!";
 		next;
-		switch(select("Hates loud noises?:What is Bakonawa?")) {
+		switch(select("Hates loud noises?", "What is Bakonawa?")) {
 		case 1:
 			mes "[Frightened Maiden]";
 			mes "You already heard that the old lady";
@@ -5050,7 +5050,7 @@ malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 		mes "We must calm her";
 		mes "if to prevent further destruction...";
 		next;
-		switch(select("Calm Bakonawa?:Further destruction?")) {
+		switch(select("Calm Bakonawa?", "Further destruction?")) {
 		case 1:
 			mes "[Old Legend Teller]";
 			mes "The old lady faced an unjust death";
@@ -5080,7 +5080,7 @@ malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 			mes "it is worth a try?";
 			mes "Please help us and save us from our misery.";
 			next;
-			switch(select("It is no use.:I'll help.")) {
+			switch(select("It is no use.", "I'll help.")) {
 			case 1:
 				mes "[Old Legend Teller]";
 				mes "Yes, you are also right.";
@@ -5158,7 +5158,7 @@ malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 		mes "simply cannot travel there.";
 		mes "Could you visit the place for us?";
 		next;
-		switch(select("Go there yourself!:Your explanation is too vague.:On my way!")) {
+		switch(select("Go there yourself!", "Your explanation is too vague.", "On my way!")) {
 		case 1:
 			mes "[Old Legend Teller]";
 			mes "You twisted youth!";
@@ -5218,7 +5218,7 @@ malaya,285,332,4	script	Old Legend Teller#bako1	4_M_BARYO_OLD,{
 		mes "before it attacks first.";
 		mes "I believe we can trust you to do this, yes?";
 		next;
-		switch(select("Well...:Of course!")) {
+		switch(select("Well...", "Of course!")) {
 		case 1:
 			mes "[Old Legend Teller]";
 			mes "The atmosphere was really good";
@@ -5285,7 +5285,7 @@ ma_fild02,40,240,4	script	Malaya Immigrant#bako1	4_M_BARYO_MAN,{
 		mes "I don't know about the specifics, but";
 		mes "I think it's related to what I heard long time ago.";
 		next;
-		switch(select("What are you doing here?:Do you know about this Slate Piece?:Please tell me the story.:Who is the traveling merchant?")) {
+		switch(select("What are you doing here?", "Do you know about this Slate Piece?", "Please tell me the story.", "Who is the traveling merchant?")) {
 		case 1:
 			mes "[Malaya Immigrant]";
 			mes "I liked the environment here";
@@ -5386,7 +5386,7 @@ ma_fild01,165,237,4	script	Malaya Immigrant#bako2	4_M_MALAYA,{
 		mes "but you didn't come all the way";
 		mes "just to hear some folktale right?";
 		next;
-		switch(select("I just came here to take a break.:Tell me the tale.")) {
+		switch(select("I just came here to take a break.", "Tell me the tale.")) {
 		case 1:
 			mes "[Malaya Immigrant]";
 			mes "You must have a lot of free time on your hands!";
@@ -5439,7 +5439,7 @@ ma_fild01,165,237,4	script	Malaya Immigrant#bako2	4_M_MALAYA,{
 		mes "The stone ahead holds a record that";
 		mes "a swordsman from a long time ago left.";
 		next;
-		switch(select("Where did this swordsman go after?:Tell me the tale again.")) {
+		switch(select("Where did this swordsman go after?", "Tell me the tale again.")) {
 		case 1:
 			mes "[Malaya Immigrant]";
 			mes "Well, there is no story after that so";
@@ -5500,7 +5500,7 @@ OnTouch:
 		mes "Here is the record left by a swordsman";
 		mes "from a hundred years ago.";
 		next;
-		switch(select("I don't need to read it.:Read the record again.")) {
+		switch(select("I don't need to read it.", "Read the record again.")) {
 		case 1:
 			mes "I remember the story clearly.";
 			mes "Let's tell the ^0000FFOld Legend Teller^000000 in Malaya";
@@ -5693,7 +5693,7 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 		mes "are said to be carried by";
 		mes "^FF0000Tiyanak^000000 that roams Baryo Mahiwaga.";
 		next;
-		switch(select("Do it yourself.:I'm on my way.")) {
+		switch(select("Do it yourself.", "I'm on my way.")) {
 		case 1:
 			mes "[Village Chief]";
 			mes "You give me a lot to think about.";
@@ -5788,7 +5788,7 @@ malaya,283,265,4	script	Village Chief#bako2	4_BARYO_CHIEF,{
 		mes "near where traps will be set up,";
 		mes "so you just have to visit about 5 places.";
 		next;
-		switch(select("Sounds like too much work.:Sure thing.")) {
+		switch(select("Sounds like too much work.", "Sure thing.")) {
 		case 1:
 			mes "[Village Chief]";
 			mes "This operation means life and death to us";
@@ -6144,7 +6144,7 @@ malaya,289,364,4	script	Young Fortune Teller	4_F_MALAYA,{
 		mes "so I need you to hunt fifteen ^FF0000Tikbalang^000000";
 		mes "at Baryo Mahiwaga Field.";
 		next;
-		switch(select("It's none of my business.:You can count on me.")) {
+		switch(select("It's none of my business.", "You can count on me.")) {
 		case 1:
 			mes "[Young Fortune Teller]";
 			mes "You are so selfish!";
@@ -6555,7 +6555,7 @@ sec_in02,10,16,5	script	Bakonawa Intro Helper	4_MASK_SMOKEY,{
 	mes "Just boldly tell me";
 	mes "what is it that you want!";
 	next;
-	switch(select("Reset all quests:Just before the end of first quest:Reset secondary quest:Distribution of lost belongings:Just after hunting")) {
+	switch(select("Reset all quests", "Just before the end of first quest", "Reset secondary quest", "Distribution of lost belongings", "Just after hunting")) {
 	case 1:
 		mes "Here you go!";
 		malaya_bakona1 = 0;
@@ -6681,7 +6681,7 @@ function	script	F_Malaya_Nurse	{
 		mes "[Nurse Maenne]";
 		mes "We were just about to enter Bangungot's room, before we were thrown out...";
 		next;
-		switch(select("Bangungot?:Nurse Maenne?")) {
+		switch(select("Bangungot?", "Nurse Maenne?")) {
 		case 1:
 			callsub L_Bangungot;
 			select("Nurse Maenne");
@@ -6728,7 +6728,7 @@ function	script	F_Malaya_Nurse	{
 		switch(getarg(0)) {
 		case 1:
 			next;
-			switch(select("Enter the hospital.:Quit.")) {
+			switch(select("Enter the hospital.", "Quit.")) {
 			case 1:
 				callsub L_Warp, getarg(0);
 			case 2:
@@ -6773,7 +6773,7 @@ L_Warp:
 		end;
 	case 2:
 		next;
-		switch(select("Go outside.:Quit.")) {
+		switch(select("Go outside.", "Quit.")) {
 		case 1:
 			close2;
 			cutin "",255;
@@ -6893,7 +6893,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "Are you planning on going inside?";
 		cutin "malaya_nurseA01",2;
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			mes "[Nurse]";
 			mes "Oh~";
@@ -6901,7 +6901,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 			mes "I was literally waiting all day for someone to some by.";
 			cutin "malaya_nurseA02",2;
 			next;
-			switch(select("About the hospital:Reason for stalling me:Ignore.")) {
+			switch(select("About the hospital", "Reason for stalling me", "Ignore.")) {
 			case 1:
 				mes "[Nurse]";
 				mes "This hospital is the only one in town.";
@@ -6999,7 +6999,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "If I knew this was going to happen, I would've worn ER night-shift shoes instead of first-day shoes... *sniff*";
 		emotion e_sob;
 		next;
-		switch(select("Help.:Don't help.")) {
+		switch(select("Help.", "Don't help.")) {
 		case 1:
 			mes "[Nurse]";
 			mes "*Sob*";
@@ -7284,7 +7284,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "That's a secret~";
 		mes "My mom will kill me if she knew I was here!";
 		next;
-		switch(select("About entering the hospital.:About it's mom.:About ???:Quit.")) {
+		switch(select("About entering the hospital.", "About it's mom.", "About ???", "Quit.")) {
 		case 1:
 			mes "[???]";
 			mes "A few days ago, the old lady who lives near us went around the hospital sticking some kind of sticks into the ground.";
@@ -7358,7 +7358,7 @@ malaya,55,72,4	script	Nurse#ma_n1	4_F_NURSE,{
 		mes "Yes?";
 		mes "Yes?";
 		next;
-		switch(select("Go.:Don't go.")) {
+		switch(select("Go.", "Don't go.")) {
 		case 1:
 			mes "[Nurse Las]";
 			mes "Okay, off you go.";
@@ -7460,7 +7460,7 @@ ma_dun01,35,108,4	script	Nurse#ma_n2	4_F_NURSE,{
 		mes "Could you check the 2nd floor door again in case I missed something?";
 		cutin "malaya_nurseA01",2;
 		next;
-		switch(select("Go outside.:Quit.")) {
+		switch(select("Go outside.", "Quit.")) {
 		case 1:
 			close2;
 			cutin "",255;
@@ -7579,7 +7579,7 @@ malaya,48,76,4	script	Hospital Door#ma_n1	CLEAR_NPC,{
 		mes "Then why is the door not opening?";
 		close;
 	} else if (malaya_bang > 18) {
-		if(select("Enter the hospital.:Quit.") == 1)
+		if(select("Enter the hospital.", "Quit.") == 1)
 			warp "ma_dun01",33,110;
 		end;
 	} else {
@@ -7604,7 +7604,7 @@ malaya,64,78,4	script	Village Woman#mab	4_F_MALAYA,{
 		mes "[Village Woman]";
 		mes "I was born here and never went far away from here, so I always feel like going on my adventures when I hear the stories they bring.";
 		next;
-		switch(select("Ask about the hospital.:End conversation.")) {
+		switch(select("Ask about the hospital.", "End conversation.")) {
 		case 1:
 			mes "[Village Woman]";
 			mes "The hospital?";
@@ -7671,7 +7671,7 @@ malaya,62,37,4	script	Village Man#mab	4_M_MALAYA,{
 		mes "Just a little bit~";
 		mes "far from the village, but I'll give you all the pineapple you want in exchange for a good story of yours!";
 		next;
-		switch(select("Ask about the hospital.:End conversation.")) {
+		switch(select("Ask about the hospital.", "End conversation.")) {
 		case 1:
 			mes "[Village Man]";
 			mes "Ummm......";
@@ -7746,7 +7746,7 @@ malaya,210,200,5	script	Dr. Boon#ma	4_LGTSCIENCE,{
 		mes "[Dr. Boon]";
 		mes "So~ You're the new nurse?";
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			mes "[Dr. Boon]";
 			mes "Nothing's more important for a nurse than their white uniform.";
@@ -7824,7 +7824,7 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 		mes "I'm not old.";
 		emotion e_an,1;
 		next;
-		switch(select("About entering the hospital.:About its mom.:About ???.:Ask about the old lady.:Ask about the hospital grounds.:Quit.")) {
+		switch(select("About entering the hospital.", "About its mom.", "About ???.", "Ask about the old lady.", "Ask about the hospital grounds.", "Quit.")) {
 		case 1:
 			mes "[???]";
 			mes "A few days ago, the old lady who lives near us went around the hospital sticking some kind of sticks into the ground.";
@@ -7936,7 +7936,7 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 		mes "A strange stick is planted on the ground.";
 		mes "A mysterious force can be felt.";
 		next;
-		switch(select("Pull it out.:Leave it.")) {
+		switch(select("Pull it out.", "Leave it.")) {
 		case 1:
 			if (rand(1,5) == 4) {
 				mes "Pulled out the deeply planted stick.";
@@ -8078,7 +8078,7 @@ malaya,114,183,3	script	Bent Old Lady#ma	4_F_BARYO_OLD,{
 		mes "[Bent Old Lady]";
 		mes "The thing took away my poor little girl.";
 		next;
-		switch(select("Ask about the hospital.:Ask about her daughter.")) {
+		switch(select("Ask about the hospital.", "Ask about her daughter.")) {
 		case 1:
 			mes "[Bent Old Lady]";
 			mes "Everybody was happy to hear about the hospital being built.";
@@ -8270,12 +8270,12 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 	mes "Dyestuffs Value: ("+$malaya_pintados_03+"/300)";
 	mes "Recent Tattoo Creator: "+$malaya_pintados_04$;
 	next;
-	switch(select("Eastern Medicine Button ? Start & End:Detail Button ? Adjust Value:Start Timer:End Timer")) {
+	switch(select("Eastern Medicine Button ? Start & End", "Detail Button ? Adjust Value", "Start Timer", "End Timer")) {
 	case 1:
 		mes "This is the Eastern Medicine Control Button.";
 		mes "You can set the Start or End values for the festival.";
 		next;
-		switch(select("Start Pintados Festival:End Pintados Festival:NPC_ON:NPC_OFF")) {
+		switch(select("Start Pintados Festival", "End Pintados Festival", "NPC_ON", "NPC_OFF")) {
 		case 1:
 			$malaya_pintados_00 = 1;
 			donpcevent "Pintados Manager#pin::OnEnable";
@@ -8298,7 +8298,7 @@ ma_fild01,1,1,4	script	Pintados Manager#pin	4_F_KHELLISIA,{
 		mes "Adjust the global value. Please select the value to adjust.";
 		next;
 		while(1) {
-			switch(select("Complete Adjustment:Time ("+$malaya_pintados_00+"):Lesser Agimat ("+$malaya_pintados_01+"):Silver Cross ("+$malaya_pintados_02+"):Dyestuffs ("+$malaya_pintados_03+")")) {
+			switch(select("Complete Adjustment", "Time ("+$malaya_pintados_00+")", "Lesser Agimat ("+$malaya_pintados_01+")", "Silver Cross ("+$malaya_pintados_02+")", "Dyestuffs ("+$malaya_pintados_03+")")) {
 			case 1:
 				mes "Completed global adjustment.";
 				close;
@@ -8483,7 +8483,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 	mes "[Isco]";
 	mes "Oh no. What will we do with the festival coming to an end.";
 	next;
-	switch(select("What is it?:How many did you collect?:Brought back a lost belonging.")) {
+	switch(select("What is it?", "How many did you collect?", "Brought back a lost belonging.")) {
 	case 1:
 		mes "[Isco]";
 		mes "There is a traditional festival held since ancient times";
@@ -8563,7 +8563,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 	if (.@i < 3) {
 		mes "I am "+(.@total - getd("$malaya_pintados_0"+.@i))+" short of "+.@name$+". How many did you bring?";
 		next;
-		switch(select("One?!:Enter quantity.")) {
+		switch(select("One?!", "Enter quantity.")) {
 		case 1:
 			.@amount = 1;
 			mes "[Isco]";
@@ -8601,7 +8601,7 @@ ma_fild01,179,260,2	script	Festival Helper Boy#pin	4_M_BARYO_BOY,{
 		mes "[Isco]";
 		mes .@str$+"! How many Scarlet Dyestuffs can you give me from the "+countitem(.@item)+" you have?";
 		next;
-		switch(select("Enter Quantity:All")) {
+		switch(select("Enter Quantity", "All")) {
 		case 1:
 			mes "[Isco]";
 			mes "He he... I'm slow with numbers. I get lost when it's over 50. How many will you give me?";
@@ -8644,7 +8644,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	mes "[Tattooist]";
 	mes "Why do you want a Tattoo?";
 	next;
-	switch(select("What is a Tattoo?:I'm curious about the effect of Tattoos.:I need a Tattoo.")) {
+	switch(select("What is a Tattoo?", "I'm curious about the effect of Tattoos.", "I need a Tattoo.")) {
 	case 1:
 		mes "[Tattooist]";
 		mes "A Tattoo of a powerful monster is said to increase the ability of the holder.";
@@ -8687,7 +8687,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 		mes "Which Tattoo's effect are you curious about?";
 		next;
 		while(1) {
-			switch (select("Bangungot Agimat Tattoo:Buwaya Agimat Tattoo:Bakonawa Agimat Tattoo:I have no questions.")) {
+			switch (select("Bangungot Agimat Tattoo", "Buwaya Agimat Tattoo", "Bakonawa Agimat Tattoo", "I have no questions.")) {
 			case 1:
 				mes "[Tattooist]";
 				mes "Need 10 Ancient Grudges, 1 Piece of Bangungot's Spirit, and 1 Bangungot Doll to create";
@@ -8747,7 +8747,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	mes "[Tattooist]";
 	mes "The festival doesn't last long so I should start drawing. What Tattoo do you need?";
 	next;
-	switch(select("I will think it over.:Bangungot Agimat Tattoo:Buwaya Agimat Tattoo:Bakonawa Agimat Tattoo")) {
+	switch(select("I will think it over.", "Bangungot Agimat Tattoo", "Buwaya Agimat Tattoo", "Bakonawa Agimat Tattoo")) {
 	case 1:
 		mes "[Tattooist]";
 		mes "Hope you enjoy the '^7A96E0Pintados Festival^000000'.";
@@ -8795,7 +8795,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	next;
 	mes "And then "+.@name$+" stared intensely at the doll as if to remember every detail of it in his head.";
 	next;
-	if(select("Aren't you going to start?:... ... ..") == 1) {
+	if(select("Aren't you going to start?", "... ... ..") == 1) {
 		emotion e_an;
 		delitem Ancient_Grudge,5;
 		mes "[Tattooist]";
@@ -8816,7 +8816,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	emotion e_an;
 	mes "But he kept on looking at each corner of the drawing as if he didn't like some of its details.";
 	next;
-	if(select("Looks good to me.:... ... ..") == 1) {
+	if(select("Looks good to me.", "... ... ..") == 1) {
 		emotion e_an;
 		emotion e_ag;
 		delitem Ancient_Grudge,5;
@@ -8838,7 +8838,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	emotion e_dum;
 	mes "But now he is staring at the sky without doing anything else. What is he waiting for?";
 	next;
-	if(select("When will it be done?:... ... ..") == 1) {
+	if(select("When will it be done?", "... ... ..") == 1) {
 		emotion e_an;
 		emotion e_ag;
 		delitem Ancient_Grudge,5;
@@ -8882,7 +8882,7 @@ ma_fild01,172,223,6	script	Tattooist#pin	4_M_BARYO_OLD,{
 	specialeffect EF_DETOXICATION;
 	mes "The Piece of "+.@name$+"'s Spirit is shattered into powder. The Tattooist's hands are glowing.";
 	next;
-	if(select("Why did you break the pieces...:... ... ..") == 1) {
+	if(select("Why did you break the pieces...", "... ... ..") == 1) {
 		delitem Ancient_Grudge,5;
 		delitem .@spirit,1;
 		emotion e_an;

@@ -43,11 +43,11 @@ aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	8W_SOLDIER,{
 	next;
 	.@str$ = "Would you like to check any other locations?";
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Kafra Headquarters ]:[ Alchemist Guild ]:[ Clock Tower ]:[ Inn & Tool Shop ]:[ Repair & Buy Equipment ]:[ Tavern ]:Previous Menu")) {
+				switch(select("[ Kafra Headquarters ]", "[ Alchemist Guild ]", "[ Clock Tower ]", "[ Inn & Tool Shop ]", "[ Repair & Buy Equipment ]", "[ Tavern ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Kafra Headquarters","aldebaran,61,229","^B9062F");
 					mes .@str$;
@@ -98,7 +98,7 @@ aldebaran,139,63,4	script	Guide#01aldebaran::GuideAldearan	8W_SOLDIER,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Eden Teleport Officer ]:[ Kafra Employee ]:[ Mr. Claus ]:[ Chef Assistant ]:Previous Menu")) {
+				switch(select("[ Eden Teleport Officer ]", "[ Kafra Employee ]", "[ Mr. Claus ]", "[ Chef Assistant ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Eden Teleport Officer","aldebaran,133,119","^B9062F");
 					mes .@str$;

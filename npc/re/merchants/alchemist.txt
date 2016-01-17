@@ -56,7 +56,7 @@ alde_alche,31,186,3	script	Craft Book Merchant#alde	4_M_ALCHE_D,{
 	mes "[Craft Book Merchant]";
 	mes "Would you like to take a look at my craft books?";
 	next;
-	if(select("Sure.:No.") == 2) {
+	if(select("Sure.", "No.") == 2) {
 		mes "[Craft Book Merchant]";
 		mes "Thank you for visiting my shop.";
 		mes "Please be safe on your travels.";
@@ -76,7 +76,7 @@ alde_alche,31,186,3	script	Craft Book Merchant#alde	4_M_ALCHE_D,{
 	mes "[Craft Book Merchant]";
 	mes "Okay then, here's the list of available craft books.";
 	next;
-	switch(select("[Apple Bomb Craft Book] 100,000 zeny:[Pineapple Bomb Craft Book] 100,000 zeny:[Coconut Bomb Craft Book] 100,000 zeny:[Melon Bomb Craft Book] 100,000 zeny:[Banana Bomb Craft Book] 100,000 zeny:[Plant Gene Cultivation Method] 100,000 zeny:[Superior Potion Craft Manual] 100,000 zeny:[Mix Cooking Book] 100,000 zeny:[Health Improvement Research Book] 100,000 zeny:[Vigor Drink Recipe] 100,000 zeny:Close")){
+	switch(select("[Apple Bomb Craft Book] 100,000 zeny", "[Pineapple Bomb Craft Book] 100,000 zeny", "[Coconut Bomb Craft Book] 100,000 zeny", "[Melon Bomb Craft Book] 100,000 zeny", "[Banana Bomb Craft Book] 100,000 zeny", "[Plant Gene Cultivation Method] 100,000 zeny", "[Superior Potion Craft Manual] 100,000 zeny", "[Mix Cooking Book] 100,000 zeny", "[Health Improvement Research Book] 100,000 zeny", "[Vigor Drink Recipe] 100,000 zeny", "Close")){
 	case 1: .@item = 6279; break;
 	case 2: .@item = 6280; break;
 	case 3: .@item = 6281; break;
@@ -113,7 +113,7 @@ alde_alche,31,186,3	script	Craft Book Merchant#alde	4_M_ALCHE_D,{
 	mes "You've entered "+.@amount+"x ^0000FF["+getitemname(.@item)+"]^000000 to be purchased.";
 	mes "Would you like to continue?";
 	next;
-	if (select("Yes:No") == 1) {
+	if (select("Yes", "No") == 1) {
 		.@total = .@amount * 100000;
 		if (Zeny < .@total) {
 			mes "[Craft Book Merchant]";

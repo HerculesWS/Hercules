@@ -55,7 +55,7 @@
 		mes "Cost : 500 Zeny ";
 		mes "Would you like to use it?";
 		next;
-		switch(select("Use the Cabinet.:Cancel.")) {
+		switch(select("Use the Cabinet.", "Cancel.")) {
 			case 1:
 				if (Zeny > 499) {
 					if (getskilllv("NV_BASIC") < 6) {

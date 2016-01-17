@@ -39,7 +39,7 @@ mora,25,158,5	script	Raffle Guide#north	4_M_RAFLE_GR,{
 	mes "I can tell you whatever you want to know about the village~!";
 	F_Navi("[Raffoh]");
 	next;
-	switch(select("[ Inn ]:[ Residences ]:[ Stores ]:[ Warehouse ]:Remove markers from the mini-map:Quit")) {
+	switch(select("[ Inn ]", "[ Residences ]", "[ Stores ]", "[ Warehouse ]", "Remove markers from the mini-map", "Quit")) {
 	case 1:
 		mes "[Raffoh]";
 		mes "Laoh~!";
@@ -90,7 +90,7 @@ mora,167,76,3	script	Raffle Guide#east	4_M_RAFLE_OR,{
 	mes "Uh... which place do you want to know about?";
 	F_Navi("[Raffuh]");
 	next;
-	switch(select("[ Inn ]:[ Residences ]:[ Stores ]:[ Warehouse ]:Remove markers from the mini-map:Quit")) {
+	switch(select("[ Inn ]", "[ Residences ]", "[ Stores ]", "[ Warehouse ]", "Remove markers from the mini-map", "Quit")) {
 	case 1:
 		mes "[Raffuh]";
 		mes "Uh...";
@@ -141,7 +141,7 @@ mora,115,138,5	script	Raffle Guide#center	4_M_RAFLE_VI,{
 	mes "If you need to know anything about the village, just ask me la!";
 	F_Navi("[Raffla]");
 	next;
-	switch(select("[ Inn ]:[ Residences ]:[ Stores ]:[ Warehouse ]:Remove markers from the mini-map:Quit.")) {
+	switch(select("[ Inn ]", "[ Residences ]", "[ Stores ]", "[ Warehouse ]", "Remove markers from the mini-map", "Quit.")) {
 	case 1:
 		mes "[Raffla]";
 		mes "Lala!";
@@ -193,7 +193,7 @@ mora,72,51,3	script	Raffle Guide#south	4_F_RAFLE_PK,{
 	mes "If you need to know anything about the village, just ask me.";
 	F_Navi("[Raffli]");
 	next;
-	switch(select("[ Inn ]:[ Residences ]:[ Stores ]:[ Warehouse ]:Remove markers from the mini-map:Quit")) {
+	switch(select("[ Inn ]", "[ Residences ]", "[ Stores ]", "[ Warehouse ]", "Remove markers from the mini-map", "Quit")) {
 	case 1:
 		mes "[Raffli]";
 		mes "Lali?";

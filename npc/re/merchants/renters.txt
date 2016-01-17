@@ -41,7 +41,7 @@ job3_rune01,88,62,5	script	Dragon Breeder	8W_SOLDIER,{
 	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
 		mes "Welcome. Would you like to rent a Dragon?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			//if (!getskilllv(RK_DRAGONTRAINING)) {
 			if (!getskilllv(KN_RIDING)) {
@@ -76,7 +76,7 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
 		mes "Welcome. Would you like to rent a Dragon?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			//if (!getskilllv(RK_DRAGONTRAINING)) {
 			if (!getskilllv(KN_RIDING)) {
@@ -103,7 +103,7 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 	if (Class == Job_Royal_Guard || Class == Job_Royal_Guard_T || Class == Job_Baby_Guard) {
 		mes "Welcome. Would you like to rent a Gryphon?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			if(!getskilllv(KN_RIDING)) {
 				mes "[Riding Creature Master]";
@@ -148,7 +148,7 @@ prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 		mes "You're riding a Peco Peco.";
 		mes "Would you like to dismount?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			setmount(MOUNT_NONE);
 			mes "[Soldier]";
@@ -174,7 +174,7 @@ prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 		mes "Would you like to rent a Pushcart or";
 		mes "ride a Magic Gear?";
 		next;
-		switch(select("Rent a Pushcart:Ride a Magic Gear:Cancel")) {
+		switch(select("Rent a Pushcart", "Ride a Magic Gear", "Cancel")) {
 		case 1:
 			if (checkcart()) {
 				mes "[Magic Gear Master]";

@@ -43,7 +43,7 @@ mora,56,25,0	warp	bifrost_field0005	1,1,bif_fild02,176,162
 	mes "At the end of the small path through the bright flower garden";
 	mes "is an entrance to something that looks like a small hill.";
 	next;
-	if(select("Knock-knock:Is this a wormhole?") == 1) {
+	if(select("Knock-knock", "Is this a wormhole?") == 1) {
 		mes "When you knock on the door-like thing just for fun,";
 		mes "the door clicks open and you feel some mysterious force pulling you inside.";
 		close2;

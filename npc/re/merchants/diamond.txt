@@ -81,7 +81,7 @@
 		mes "Some claim that this is the very same diamond";
 		mes "that was seen by Kachua in Comodo!";
 		next;
-		if (select("End Conversation:How much is it?") == 1) {
+		if (select("End Conversation", "How much is it?") == 1) {
 			mes .@npc$;
 			mes "It's rather inexpensive!";
 			mes "If you're interested, talk to me any time!";
@@ -99,7 +99,7 @@
 		mes "Compared to the quality of the diamond";
 		mes "this is a small price to pay.";
 		next;
-		if (select("^828282It's too expensive.^000000:I'll buy it.") == 1) {
+		if (select("^828282It's too expensive.^000000", "I'll buy it.") == 1) {
 			mes .@npc$;
 			mes "To say that a diamond such as the";
 			mes "^FF82FF'17 Carat Diamond'^000000 is too expensive, ";
@@ -114,7 +114,7 @@
 		mes "All I need from you is to complete this contract.";
 		next;
 		while(1) {
-			if (select("^B9062FI will sign the contract.^000000:^828282Nevermind, I changed my mind.^000000") == 2) {
+			if (select("^B9062FI will sign the contract.^000000", "^828282Nevermind, I changed my mind.^000000") == 2) {
 				mes .@npc$;
 				mes "I see, that's too bad..";
 				close;
@@ -175,7 +175,7 @@
 		mes "AAH. You would like to exchange your ^FF82FF'17 Carat Diamond'^000000 for zeny?";
 		emotion e_gasp;
 		next;
-		if (select("Yes:No") == 2) {
+		if (select("Yes", "No") == 2) {
 			mes .@npc$;
 			mes "Then, what is it you desire?..";
 			mes ". . . . . ....";
@@ -197,7 +197,7 @@
 		mes "Alright then, please sign here.";
 		next;
 		while (1) {
-			if (select("Sign:Don't Sign") == 2) {
+			if (select("Sign", "Don't Sign") == 2) {
 				mes .@npc$;
 				mes "The trade cannot be completed without your signature.";
 				close;

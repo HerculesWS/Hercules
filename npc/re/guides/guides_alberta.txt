@@ -43,11 +43,11 @@ alberta,23,238,4	script	Guide#01alberta::AlbertaGuide	8W_SOLDIER,{
 	next;
 	.@str$ = "Would you like to check any other locations?";
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:[ Destination Ports ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "[ Destination Ports ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Tool Shop ]:[ Forge ]:[ Weapon & Armor Shop ]:[ Inn ]:[ Beauty Salon ]:[ Merchant Guild ]:Previous Menu")) {
+				switch(select("[ Tool Shop ]", "[ Forge ]", "[ Weapon & Armor Shop ]", "[ Inn ]", "[ Beauty Salon ]", "[ Merchant Guild ]", "Previous Menu")) {
 				case 1:
 					mes "[Alberta Guide]";
 					mes "Let me mark the location of the";
@@ -111,7 +111,7 @@ alberta,23,238,4	script	Guide#01alberta::AlbertaGuide	8W_SOLDIER,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Eden Teleport Officer ]:[ Kafra Employee ]:[ Cool Event Employee ]:[ Bullet Merchant ]:[ Cooking Ingredient Merchant ]:Previous Menu")) {
+				switch(select("[ Eden Teleport Officer ]", "[ Kafra Employee ]", "[ Cool Event Employee ]", "[ Bullet Merchant ]", "[ Cooking Ingredient Merchant ]", "Previous Menu")) {
 				case 1:
 					mes "[Alberta Guide]";
 					mes "^B9062FEden Teleport Officers^000000 are located in "+F_Navi("south Alberta","alberta,121,68");
@@ -167,7 +167,7 @@ alberta,23,238,4	script	Guide#01alberta::AlbertaGuide	8W_SOLDIER,{
 		case 3:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Port - Northern Dock ]:[ Port - Central Dock ]:[ Port - Southern Dock ]:Previous Menu")) {
+				switch(select("[ Port - Northern Dock ]", "[ Port - Central Dock ]", "[ Port - Southern Dock ]", "Previous Menu")) {
 				case 1:
 					mes "[Alberta Guide]";
 					mes "You can use the "+F_Navi("Northern Dock","alberta,192,196");

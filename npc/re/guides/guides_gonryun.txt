@@ -48,7 +48,7 @@ gonryun,163,60,4	script	Kunlun Guide#01gonryun	8_M_TWSOLDIER,{
 	F_Navi("[He Yuen Zhe]");
 	while (1) {
 		next;
-		switch(select("[ Kafra Employee ]:[ Chief's Residence ]:[ Tool Dealer ]:[ Weapon Dealer ]:[ Armor Dealer ]:[ Wine Maker ]:[ Kunlun Envoy ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Kafra Employee ]", "[ Chief's Residence ]", "[ Tool Dealer ]", "[ Weapon Dealer ]", "[ Armor Dealer ]", "[ Wine Maker ]", "[ Kunlun Envoy ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			callsub L_Mark, "^0000FFKafra Employee^000000";
 			viewpoint 1,159,122,0,0x0A82FF;

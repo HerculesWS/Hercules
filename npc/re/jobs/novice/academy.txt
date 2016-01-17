@@ -1272,7 +1272,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 			switch(select("[ Main facilities ]", "[ Guide & Helper ]", "Mini map marking removal", "End Conversation")) {
 			case 1:
 				while (1) {
-					switch(select("[ Criatura Academy ]:[ Wharf ]:[ Airship (International) ]:[ Arena ]:[ Shop ]:[ Swordman Guild ]:[ Enchant Association ]:[ Blacksmith's Workshop ]:Go back to the previous menu")) {
+					switch(select("[ Criatura Academy ]", "[ Wharf ]", "[ Airship (International) ]", "[ Arena ]", "[ Shop ]", "[ Swordman Guild ]", "[ Enchant Association ]", "[ Blacksmith's Workshop ]", "Go back to the previous menu")) {
 					case 1:
 						mes "[Information Staff]";
 						mes "If you are the first time adventurer,";
@@ -1357,7 +1357,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 				break;
 			case 2:
 				while (1) {
-					switch(select("[ Eden Group Teleporter ]:[ Kafra Employee ]:[ Mesmerizer ]:[ Wedding Secretary ]:[ Mercenary Guild Official ]:[ Taming Merchant ]:Go back to the previous menu")) {
+					switch(select("[ Eden Group Teleporter ]", "[ Kafra Employee ]", "[ Mesmerizer ]", "[ Wedding Secretary ]", "[ Mercenary Guild Official ]", "[ Taming Merchant ]", "Go back to the previous menu")) {
 					case 1:
 						mes "[Information Staff]";
 						mes "For now, I will mark the location of the";
@@ -4385,7 +4385,7 @@ iz_ac01,59,83,3	script	Battle Instructor#08	4_M_NOV_HUNT,{
 			next;
 			switch(select("Check requests", "Warp me to the Field", "End Conversation")) {
 				case 1:
-					switch(select("The most delicious in the world (1~3):Carrots are delicious (1~3):Fabre rolling clothes (4~6):Barrier!! (4~6):"+(BaseLevel<7?"":"Buzzing~ (7~10)")+":Stop.")) {
+					switch(select("The most delicious in the world (1~3)", "Carrots are delicious (1~3)", "Fabre rolling clothes (4~6)", "Barrier!! (4~6)", (BaseLevel<7?"":"Buzzing~ (7~10)"), "Stop.")) {
 						case 1:
 							if(!questprogress(11338)) {
 								setquest 11338;
@@ -5970,7 +5970,7 @@ iz_ac01,69,36,3	script	Otter Samssoon#ac	4W_SAILOR,{
 					mes "Honey! What about dying hair as well?";
 					mes "Dying hair also included in this service.";
 					next;
-					switch(select("Passionate Red:Sweet Yellow:Fatal Purple:Glamourous Orange:Comfortable Green:Clear Blue:Transparent White:Dark Black:Stop.")) {
+					switch(select("Passionate Red", "Sweet Yellow", "Fatal Purple", "Glamourous Orange", "Comfortable Green", "Clear Blue", "Transparent White", "Dark Black", "Stop.")) {
 						case 1:
 							.@pallete = 8;
 							break;
@@ -6696,7 +6696,7 @@ iz_ac02,143,55,3	script	Cream Puff#ac	4_M_KID1,{
 	}
 	mes "You're having a great time. Do you feel like something will be happening or not?";
 	next;
-	if(select("Happening:Not happening.") == 1) {
+	if(select("Happening", "Not happening.") == 1) {
 		.@thief_p = .@thief_p + 1;
 		.@swordman_p = .@swordman_p + 1;
 		.@ninja_p = .@ninja_p + 1;
@@ -9822,7 +9822,7 @@ iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 		mes "[Salim Hamid]";
 		mes "Yes. Let's see the prices you checked.";
 		next;
-		switch(select("I will come back after rechecking them.:Garlet 39z Zargon 450z:Garlet 37z Zargon 448z:Garlet 37z Zargon 446z:Garlet 37z Zargon 444z")) {
+		switch(select("I will come back after rechecking them.", "Garlet 39z Zargon 450z", "Garlet 37z Zargon 448z", "Garlet 37z Zargon 446z", "Garlet 37z Zargon 444z")) {
 			case 1:
 				mes "[Salim Hamid]";
 				mes "OK. You come back after rechecking them in detail.";
