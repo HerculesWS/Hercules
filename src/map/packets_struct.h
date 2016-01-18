@@ -290,13 +290,14 @@ enum packet_headers {
 	rouletteinfoackType = 0xa1c,
 	roulettgenerateackType = 0xa20,
 	roulettercvitemackType = 0xa22,
-#if PACKETVER >= 20150513	// Unconfirmed
+#if PACKETVER >= 20150513 // Not confirmed
 	questListType = 0x9f8, ///< ZC_ALL_QUEST_LIST3
 #elif PACKETVER >= 20141022
 	questListType = 0x97a, ///< ZC_ALL_QUEST_LIST2
 #else // PACKETVER < 20141022
 	questListType = 0x2b1, ///< ZC_ALL_QUEST_LIST
 #endif // PACKETVER >= 20141022
+	questAddType = 0x2b3,
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -1214,6 +1215,31 @@ struct packet_quest_list_header {
 	uint16 PacketLength;
 	int32 questCount;
 	//struct packet_quest_list_info list[]; // Variable-length
+} __attribute__((packed));
+
+/**
+ * PACKET_ZC_MISSION_HUNT (PACKETVER < 20150513)
+ */
+struct packet_quest_hunt_sub {
+	int32 mob_id;
+	int16 huntCount;
+	char mobName[NAME_LENGTH];
+} __attribute__((packed));
+
+/**
+ * Header for:
+ * PACKET_ZC_ADD_QUEST (PACKETVER < 20150513)
+ *
+ */
+
+struct packet_quest_add_header {
+	uint16 PacketType;
+	uint32 questID;
+	uint8 active;
+	int32 quest_svrTime;
+	int32 quest_endTime;
+	int16 count;
+	struct packet_quest_hunt_sub objectives[];
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute

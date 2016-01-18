@@ -15694,31 +15694,42 @@ void clif_quest_send_mission(struct map_session_data *sd)
 /// 02b3 <quest id>.L <active>.B <start time>.L <expire time>.L <mobs>.W { <mob id>.L <mob count>.W <mob name>.24B }*3
 void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 {
-	int fd;
-	int i;
+	int i, len, real_len;
+	uint8 *buf = NULL;
+	struct packet_quest_add_header *packet = NULL;
 	struct quest_db *qi;
 
 	nullpo_retv(sd);
 	nullpo_retv(qd);
-	fd = sd->fd;
+	
+	len = sizeof(struct packet_quest_add_header)
+	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_hunt_sub); // >= than the actual length
+
+	packet = (struct packet_quest_add_header *)WBUFP(buf, 0);
+	real_len = sizeof(*packet);
+	
 	qi = quest->db(qd->quest_id);
-	WFIFOHEAD(fd, packet_len(0x2b3));
-	WFIFOW(fd, 0) = 0x2b3;
-	WFIFOL(fd, 2) = qd->quest_id;
-	WFIFOB(fd, 6) = qd->state;
-	WFIFOB(fd, 7) = qd->time - qi->time;
-	WFIFOL(fd, 11) = qd->time;
-	WFIFOW(fd, 15) = qi->objectives_count;
+
+	packet->PacketType = questAddType;
+	packet->questID = qd->quest_id;
+	packet->active = qd->state;
+	packet->quest_svrTime = qd->time - qi->time;
+	packet->quest_endTime = qd->time;
+	packet->count = qi->objectives_count;
 
 	for (i = 0; i < qi->objectives_count; i++) {
 		struct mob_db *monster;
-		WFIFOL(fd, i*30+17) = qi->objectives[i].mob;
-		WFIFOW(fd, i*30+21) = qd->count[i];
+		
+		Assert_retb(i < MAX_QUEST_OBJECTIVES);
+		
+		real_len += sizeof(packet->objectives[i]);
 		monster = mob->db(qi->objectives[i].mob);
-		memcpy(WFIFOP(fd, i*30+23), monster->jname, NAME_LENGTH);
+		packet->objectives[i].mob_id = qi->objectives[i].mob;
+		packet->objectives[i].huntCount = qd->count[i];
+		memcpy(packet->objectives[i].mobName, monster->jname, NAME_LENGTH);
 	}
-
-	WFIFOSET(fd, packet_len(0x2b3));
+	clif->send(buf, real_len, &sd->bl, SELF);
+	aFree(buf);
 }
 
 /// Notification about a quest being removed (ZC_DEL_QUEST).
