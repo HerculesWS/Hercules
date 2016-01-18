@@ -16284,6 +16284,7 @@ void clif_quest_delete(struct map_session_data *sd, int quest_id) {
 
 /// Notification of an update to the hunting mission counter (ZC_UPDATE_MISSION_HUNT).
 /// 02b5 <packet len>.W <mobs>.W { <quest id>.L <mob id>.L <total count>.W <current count>.W }*3
+/// 09f8 <packet len>.W <mobs>.W { <quest id>.L <hunt identification>.L <total count>.W <current count>.W }*3
 void clif_quest_update_objective(struct map_session_data *sd, struct quest *qd)
 {
 	int i, len, real_len;
@@ -16309,7 +16310,11 @@ void clif_quest_update_objective(struct map_session_data *sd, struct quest *qd)
 		real_len += sizeof(packet->objectives[i]);
 		
 		packet->objectives[i].questID = qd->quest_id;
+#if PACKETVER >= 20150513
+		packet->objectives[i].huntIdent = (qd->quest_id * 1000) + i;
+#else
 		packet->objectives[i].mob_id = qi->objectives[i].mob;
+#endif
 		packet->objectives[i].maxCount = qi->objectives[i].count;
 		packet->objectives[i].count = qd->count[i];
 	}
