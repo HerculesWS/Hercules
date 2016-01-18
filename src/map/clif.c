@@ -16286,30 +16286,36 @@ void clif_quest_delete(struct map_session_data *sd, int quest_id) {
 /// 02b5 <packet len>.W <mobs>.W { <quest id>.L <mob id>.L <total count>.W <current count>.W }*3
 void clif_quest_update_objective(struct map_session_data *sd, struct quest *qd)
 {
-	int fd;
-	int i;
-	struct quest_db *qi;
-	int len;
+	int i, len, real_len;
+	uint8 *buf = NULL;
+	struct packet_quest_update_header *packet = NULL;
+	struct quest_db *qi = quest->db(qd->quest_id);
 
 	nullpo_retv(sd);
 	nullpo_retv(qd);
-	fd = sd->fd;
-	qi = quest->db(qd->quest_id);
-	len = qi->objectives_count * 12 + 6;
+	Assert_retv(qi->objectives_count < MAX_QUEST_OBJECTIVES);
+	
+	len = sizeof(struct packet_quest_update_header)
+	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_update_hunt); // >= than the actual length
 
-	WFIFOHEAD(fd, len);
-	WFIFOW(fd, 0) = 0x2b5;
-	WFIFOW(fd, 2) = len;
-	WFIFOW(fd, 4) = qi->objectives_count;
+	buf = aCalloc(1, len);
+	packet = (struct packet_quest_update_header *)WBUFP(buf, 0);
+	real_len = sizeof(*packet);
+
+	packet->PacketType = questUpdateType;
+	packet->count = qi->objectives_count;
 
 	for (i = 0; i < qi->objectives_count; i++) {
-		WFIFOL(fd, i*12+6) = qd->quest_id;
-		WFIFOL(fd, i*12+10) = qi->objectives[i].mob;
-		WFIFOW(fd, i*12+14) = qi->objectives[i].count;
-		WFIFOW(fd, i*12+16) = qd->count[i];
+		real_len += sizeof(packet->objectives[i]);
+		
+		packet->objectives[i].questID = qd->quest_id;
+		packet->objectives[i].mob_id = qi->objectives[i].mob;
+		packet->objectives[i].maxCount = qi->objectives[i].count;
+		packet->objectives[i].count = qd->count[i];
 	}
-
-	WFIFOSET(fd, len);
+	packet->PacketLength = real_len;
+	clif->send(buf, real_len, &sd->bl, SELF);
+	aFree(buf);
 }
 
 void clif_parse_questStateAck(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
