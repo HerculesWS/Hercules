@@ -206,11 +206,11 @@ L_Quest:
 		setquest .@quest2;
 
 		// Job Experience calculation.
-		if (JobLevel > 50 && JobLevel < 56) .@jexp = 67000;
+		if (JobLevel < 56) .@jexp = 67000;
 		else if (JobLevel > 55 && JobLevel < 61) .@jexp = 94000;
 		else if (JobLevel > 60 && JobLevel < 66) .@jexp = 141000;
 		else if (JobLevel > 65 && JobLevel < 69) .@jexp = 212000;
-		else if (JobLevel == 69) .@jexp = 311000;
+		else if (JobLevel >= 69) .@jexp = 311000;
 
 		getexp getarg(2),.@jexp;
 		close;
