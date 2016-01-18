@@ -215,7 +215,7 @@ struct login_interface {
 	int (*config_read) (const char *cfgName);
 	char *LOGIN_CONF_NAME;
 	char *NET_CONF_NAME; ///< Network configuration filename
-	void (*login_event_notify) (struct login_session_data* sd);
+	void (*event_notify) (struct login_session_data* sd);
 };
 
 #ifdef HERCULES_CORE
