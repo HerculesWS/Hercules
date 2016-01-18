@@ -290,7 +290,7 @@ enum packet_headers {
 	rouletteinfoackType = 0xa1c,
 	roulettgenerateackType = 0xa20,
 	roulettercvitemackType = 0xa22,
-#if 0 // Unknown
+#if PACKETVER >= 20150513	// Unconfirmed
 	questListType = 0x9f8, ///< ZC_ALL_QUEST_LIST3
 #elif PACKETVER >= 20141022
 	questListType = 0x97a, ///< ZC_ALL_QUEST_LIST2
@@ -1167,10 +1167,19 @@ struct packet_hotkey {
 } __attribute__((packed));
 
 /**
- * MISSION_HUNT_INFO
+ * MISSION_HUNT_INFO (PACKETVER >= 20141022)
+ * MISSION_HUNT_INFO_EX (PACKETVER >= 20150513)
  */
 struct packet_mission_info_sub {
-	int32 mob_id;
+#if PACKETVER >= 20150513
+	uint32 huntIdent;
+	uint32 mobType;
+#endif
+	uint32 mob_id;
+#if PACKETVER >= 20150513
+	int16 levelMin;
+	int16 levelMax;
+#endif
 	int16 huntCount;
 	int16 maxCount;
 	char mobName[NAME_LENGTH];
@@ -1178,7 +1187,7 @@ struct packet_mission_info_sub {
 
 /**
  * PACKET_ZC_ALL_QUEST_LIST2_INFO (PACKETVER >= 20141022)
- * PACKET_ZC_ALL_QUEST_LIST3_INFO (PACKETVER Unknown) / unused
+ * PACKET_ZC_ALL_QUEST_LIST3_INFO (PACKETVER >= 20150513)
  */
 struct packet_quest_list_info {
 	int32 questID;
@@ -1195,7 +1204,7 @@ struct packet_quest_list_info {
  * Header for:
  * PACKET_ZC_ALL_QUEST_LIST (PACKETVER < 20141022)
  * PACKET_ZC_ALL_QUEST_LIST2 (PACKETVER >= 20141022)
- * PACKET_ZC_ALL_QUEST_LIST3 (PACKETVER Unknown) / unused
+ * PACKET_ZC_ALL_QUEST_LIST3 (PACKETVER >= 20150513)
  *
  * @remark
  *     Contains (is followed by) a variable-length array of packet_quest_list_info
