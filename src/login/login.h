@@ -117,6 +117,8 @@ struct Login_Config {
 
 	int client_hash_check;                          ///< flags for checking client md5
 	struct client_hash_node *client_hash_nodes;     ///< linked list containg md5 hash for each gm group
+	
+	bool event_notify;                              ///< shows event notification after login.
 };
 
 struct login_auth_node {
@@ -213,6 +215,7 @@ struct login_interface {
 	int (*config_read) (const char *cfgName);
 	char *LOGIN_CONF_NAME;
 	char *NET_CONF_NAME; ///< Network configuration filename
+	void (*login_event_notify) (struct login_session_data* sd);
 };
 
 #ifdef HERCULES_CORE
