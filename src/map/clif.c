@@ -15798,6 +15798,42 @@ void clif_quest_update_objective(struct map_session_data *sd, struct quest *qd)
 	aFree(buf);
 }
 
+/// Notification of an hunting mission counter just after quest is added (ZC_HUNTING_QUEST_INFO).
+/// 08fe <packet len>.W  { <quest id>.L <mob id>.L <total count>.W <current count>.W }*3
+void clif_quest_notify_objective(struct map_session_data *sd, struct quest *qd)
+{
+	int i, len, real_len;
+	uint8 *buf = NULL;
+	struct packet_quest_hunt_info *packet = NULL;
+	struct quest_db *qi;
+
+	nullpo_retv(sd);
+	nullpo_retv(qd);
+	
+	len = sizeof(struct packet_quest_hunt_info)
+	            + MAX_QUEST_OBJECTIVES * sizeof(struct packet_quest_hunt_info_sub); // >= than the actual length
+	buf = aMalloc(len);
+	packet = (struct packet_quest_hunt_info *)WBUFP(buf, 0);
+	real_len = sizeof(*packet);
+	
+	qi = quest->db(qd->quest_id);
+
+	packet->PacketType = questUpdateType2;
+
+	for (i = 0; i < qi->objectives_count; i++) {
+		Assert_retb(i < MAX_QUEST_OBJECTIVES);
+		real_len += sizeof(packet->info[i]);
+		
+		packet->info[i].questID = qd->quest_id;
+		packet->info[i].mob_id = qi->objectives[i].mob;
+		packet->info[i].maxCount = qi->objectives[i].count;
+		packet->info[i].count = qd->count[i];
+	}
+	packet->PacketLength = real_len;
+	clif->send(buf, real_len, &sd->bl, SELF);
+	aFree(buf);
+}
+
 void clif_parse_questStateAck(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 /// Request to change the state of a quest (CZ_ACTIVE_QUEST).
 /// 02b6 <quest id>.L <active>.B
@@ -19413,6 +19449,7 @@ void clif_defaults(void) {
 	clif->quest_delete = clif_quest_delete;
 	clif->quest_update_status = clif_quest_update_status;
 	clif->quest_update_objective = clif_quest_update_objective;
+	clif->quest_notify_objective = clif_quest_notify_objective;
 	clif->quest_show_event = clif_quest_show_event;
 	/* mail-related */
 	clif->mail_window = clif_Mail_window;
