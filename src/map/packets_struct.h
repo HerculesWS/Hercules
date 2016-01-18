@@ -357,7 +357,11 @@ enum packet_headers {
 	clanLeave = 0x0989, ///< ZC_ACK_CLAN_LEAVE
 	clanMessage = 0x098E, ///< ZC_NOTIFY_CLAN_CHAT
 #endif
+#if PACKETVER >= 20150513 // Not confirmed
+	questAddType = 0x9f9,
+#else
 	questAddType = 0x2b3,
+#endif // PACKETVER < 20150513
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -1610,9 +1614,18 @@ struct PACKET_ZC_NOTIFY_CLAN_CHAT {
 
 /**
  * PACKET_ZC_MISSION_HUNT (PACKETVER < 20150513)
+ * PACKET_ZC_MISSION_HUNT_EX (PACKETVER >= 20150513)
  */
 struct packet_quest_hunt_sub {
+#if PACKETVER >= 20150513
+	uint32 huntIdent;
+	uint32 mobType;
+#endif
 	int32 mob_id;
+#if PACKETVER >= 20150513
+	int16 levelMin;
+	int16 levelMax;
+#endif
 	int16 huntCount;
 	char mobName[NAME_LENGTH];
 } __attribute__((packed));
@@ -1620,7 +1633,7 @@ struct packet_quest_hunt_sub {
 /**
  * Header for:
  * PACKET_ZC_ADD_QUEST (PACKETVER < 20150513)
- *
+ * PACKET_ZC_ADD_QUEST_EX (PACKETVER >= 20150513)
  */
 struct packet_quest_add_header {
 	uint16 PacketType;
