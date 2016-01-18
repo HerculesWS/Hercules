@@ -148,7 +148,11 @@ int quest_add(struct map_session_data *sd, int quest_id, unsigned int time_limit
 	sd->save_quest = true;
 
 	clif->quest_add(sd, &sd->quest_log[n]);
+#if PACKETVER >= 20150513
+	clif->quest_notify_objective(sd, &sd->quest_log[n]);
+#else
 	clif->quest_update_objective(sd, &sd->quest_log[n]);
+#endif
 
 	if ((map->save_settings & 64) != 0)
 		chrif->save(sd, 0);
@@ -201,7 +205,11 @@ int quest_change(struct map_session_data *sd, int qid1, int qid2)
 
 	clif->quest_delete(sd, qid1);
 	clif->quest_add(sd, &sd->quest_log[i]);
+#if PACKETVER >= 20150513
+	clif->quest_notify_objective(sd, &sd->quest_log[i]);
+#else
 	clif->quest_update_objective(sd, &sd->quest_log[i]);
+#endif
 
 	if( map->save_settings&64 )
 		chrif->save(sd,0);
