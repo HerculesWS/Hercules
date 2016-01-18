@@ -15692,6 +15692,7 @@ void clif_quest_send_mission(struct map_session_data *sd)
 
 /// Notification about a new quest (ZC_ADD_QUEST).
 /// 02b3 <quest id>.L <active>.B <start time>.L <expire time>.L <mobs>.W { <mob id>.L <mob count>.W <mob name>.24B }*3
+/// 09f9 <quest id>.L <active>.B <start time>.L <expire time>.L <mobs>.W { <hunt identification>.L <mob type>.L <mob id>.L <min level>.L <max level>.L <mob count>.W <mob name>.24B }*3
 void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 {
 	int i, len, real_len;
@@ -15724,7 +15725,17 @@ void clif_quest_add(struct map_session_data *sd, struct quest *qd)
 		
 		real_len += sizeof(packet->objectives[i]);
 		monster = mob->db(qi->objectives[i].mob);
+
+#if PACKETVER >= 20150513
+		packet->objectives[j].huntIdent = (qd->quest_id * 10000) + qi->objectives_count;
+		packet->objectives[j].mobType = 0; // Info Needed
+#endif
 		packet->objectives[i].mob_id = qi->objectives[i].mob;
+#if PACKETVER >= 20150513
+		// Info Needed
+		packet->objectives[j].levelMin = 0;
+		packet->objectives[j].levelMax = 0;
+#endif
 		packet->objectives[i].huntCount = qd->count[i];
 		memcpy(packet->objectives[i].mobName, monster->jname, NAME_LENGTH);
 	}
