@@ -16126,6 +16126,7 @@ void clif_parse_PartyTick(int fd, struct map_session_data* sd)
 /// Sends list of all quest states (ZC_ALL_QUEST_LIST).
 /// 02b1 <packet len>.W <num>.L { <quest id>.L <active>.B }*num
 /// 097a <packet len>.W <num>.L { <quest id>.L <active>.B <remaining time>.L <time>.L <count>.W { <mob_id>.L <killed>.W <total>.W <mob name>.24B }*count }*num
+/// 09f8 <packet len>.W <num>.L { <quest id>.L <active>.B <remaining time>.L <time>.L <count>.W { <hunt identification>.L <mob type>.L <mob_id>.L <min level>.L <max level>.L <killed>.W <total>.W <mob name>.24B }*count }*num
 void clif_quest_send_list(struct map_session_data *sd)
 {
 	int i, len, real_len;
@@ -16164,8 +16165,16 @@ void clif_quest_send_list(struct map_session_data *sd)
 			real_len += sizeof(info->objectives[j]);
 
 			mob_data = mob->db(qi->objectives[j].mob);
-
+#if PACKETVER >= 20150513
+			info->objectives[j].huntIdent = (sd->quest_log[i].quest_id * 1000) + j;
+			info->objectives[j].mobType = 0; // Info Needed
+#endif
 			info->objectives[j].mob_id = qi->objectives[j].mob;
+#if PACKETVER >= 20150513
+			// Info Needed
+			info->objectives[j].levelMin = 0;
+			info->objectives[j].levelMax = 0;
+#endif
 			info->objectives[j].huntCount = sd->quest_log[i].count[j];
 			info->objectives[j].maxCount = qi->objectives[j].count;
 			safestrncpy(info->objectives[j].mobName, mob_data->jname, sizeof(info->objectives[j].mobName));
