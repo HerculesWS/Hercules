@@ -367,6 +367,7 @@ enum packet_headers {
 #else
 	questUpdateType = 0x2b5,
 #endif // PACKETVER < 20150513
+	questUpdateType2 = 0x8fe,
 };
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -1675,7 +1676,28 @@ struct packet_quest_update_header {
 	uint16 PacketLength;
 	int16 count;
 	struct packet_quest_update_hunt objectives[];
-} __attribute__((packed));	
+} __attribute__((packed));
+
+/**
+ * Header for:
+ * PACKET_MOB_HUNTING (PACKETVER >= 20150513)
+ */
+struct packet_quest_hunt_info_sub {
+	uint32 questID;
+	uint32 mob_id;
+	int16 maxCount;
+	int16 count;
+} __attribute__((packed));
+
+/**
+ * Header for:
+ * ZC_HUNTING_QUEST_INFO (PACKETVER >= 20150513)
+ */
+struct packet_quest_hunt_info {
+	uint16 PacketType;
+	uint16 PacketLength;
+	struct packet_quest_hunt_info_sub info[];
+} __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
