@@ -2717,7 +2717,7 @@ void battle_calc_skillratio_weapon_unknown(int *attack_type, struct block_list *
  * After this we apply bg/gvg reduction
  *------------------------------------------*/
 int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damage *d,int64 damage,uint16 skill_id,uint16 skill_lv) {
-	struct map_session_data *s_sd, *sd = NULL;
+	struct map_session_data *s_sd, *t_sd;
 	struct status_change *sc, *tsc;
 	struct status_change_entry *sce;
 	int div_, flag;
@@ -2726,7 +2726,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 	nullpo_ret(d);
 
 	s_sd = BL_CAST(BL_PC, src);
-	sd = BL_CAST(BL_PC, bl);
+	t_sd = BL_CAST(BL_PC, bl);
 	div_ = d->div_;
 	flag = d->flag;
 
@@ -2736,16 +2736,16 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		return 0;
 	if( battle_config.ksprotection && mob->ksprotected(src, bl) )
 		return 0;
-	if (sd != NULL) {
+	if (t_sd != NULL) {
 		//Special no damage states
-		if(flag&BF_WEAPON && sd->special_state.no_weapon_damage)
-			damage -= damage * sd->special_state.no_weapon_damage / 100;
+		if(flag&BF_WEAPON && t_sd->special_state.no_weapon_damage)
+			damage -= damage * t_sd->special_state.no_weapon_damage / 100;
 
-		if(flag&BF_MAGIC && sd->special_state.no_magic_damage)
-			damage -= damage * sd->special_state.no_magic_damage / 100;
+		if(flag&BF_MAGIC && t_sd->special_state.no_magic_damage)
+			damage -= damage * t_sd->special_state.no_magic_damage / 100;
 
-		if(flag&BF_MISC && sd->special_state.no_misc_damage)
-			damage -= damage * sd->special_state.no_misc_damage / 100;
+		if(flag&BF_MISC && t_sd->special_state.no_misc_damage)
+			damage -= damage * t_sd->special_state.no_misc_damage / 100;
 
 		if(!damage) return 0;
 	}
@@ -2839,7 +2839,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		}
 		if( sc->data[SC__MAELSTROM] && (flag&BF_MAGIC) && skill_id && (skill->get_inf(skill_id)&INF_GROUND_SKILL) ) {
 			// {(Maelstrom Skill LevelxAbsorbed Skill Level)+(Caster's Job/5)}/2
-			int sp = (sc->data[SC__MAELSTROM]->val1 * skill_lv + (sd ? sd->status.job_level / 5 : 0)) / 2;
+			int sp = (sc->data[SC__MAELSTROM]->val1 * skill_lv + (t_sd ? t_sd->status.job_level / 5 : 0)) / 2;
 			status->heal(bl, 0, sp, 3);
 			d->dmg_lv = ATK_BLOCK;
 			return 0;
@@ -2917,7 +2917,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if(sc->data[SC_DODGE_READY] && ( !sc->opt1 || sc->opt1 == OPT1_BURNING ) &&
 			(flag&BF_LONG || sc->data[SC_STRUP])
 			&& rnd()%100 < 20) {
-			if (sd && pc_issit(sd)) pc->setstand(sd); //Stand it to dodge.
+			if (t_sd && pc_issit(t_sd)) pc->setstand(t_sd); //Stand it to dodge.
 			clif->skill_nodamage(bl,bl,TK_DODGE,1,1);
 			if (!sc->data[SC_COMBOATTACK])
 				sc_start4(src, bl, SC_COMBOATTACK, 100, TK_JUMPKICK, src->id, 1, 0, 2000);
@@ -2992,7 +2992,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				damage += damage / 2; // 1.5 times more damage while in Deep Sleep.
 				status_change_end(bl,SC_DEEP_SLEEP,INVALID_TIMER);
 			}
-			if( s_sd && sd && sc->data[SC_COLD] && flag&BF_WEAPON ){
+			if( s_sd && t_sd && sc->data[SC_COLD] && flag&BF_WEAPON ){
 				switch(s_sd->status.weapon){
 					case W_MACE:
 					case W_2HMACE:
@@ -3002,7 +3002,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 						break;
 					case W_MUSICAL:
 					case W_WHIP:
-						if(!sd->state.arrow_atk)
+						if(!t_sd->state.arrow_atk)
 							break;
 					case W_BOW:
 					case W_REVOLVER:
@@ -3208,9 +3208,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if( sc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * sc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
 			status->change_spread(bl, src); // Deadly infect attacked side
 
-		if (sd && damage > 0 && (sce = sc->data[SC_GENTLETOUCH_ENERGYGAIN]) != NULL) {
+		if (t_sd && damage > 0 && (sce = sc->data[SC_GENTLETOUCH_ENERGYGAIN]) != NULL) {
 			if ( rnd() % 100 < sce->val2 )
-				pc->addspiritball(sd, skill->get_time(MO_CALLSPIRITS, 1), pc->getmaxspiritball(sd, 0));
+				pc->addspiritball(t_sd, skill->get_time(MO_CALLSPIRITS, 1), pc->getmaxspiritball(t_sd, 0));
 		}
 	}
 
@@ -3263,7 +3263,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		}
 	}
 	/* no data claims these settings affect anything other than players */
-	if( damage && sd && bl->type == BL_PC ) {
+	if( damage && t_sd && bl->type == BL_PC ) {
 		switch( skill_id ) {
 			//case PA_PRESSURE: /* pressure also belongs to this list but it doesn't reach this area -- so don't worry about it */
 			case HW_GRAVITATION:
@@ -3305,7 +3305,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if (skill_id)
 			mob->skill_event(md, src, timer->gettick(), MSC_SKILLUSED|(skill_id<<16));
 	}
-	if (sd && pc_ismadogear(sd) && rnd()%100 < 50) {
+	if (t_sd && pc_ismadogear(t_sd) && rnd()%100 < 50) {
 		int element = -1;
 		if (!skill_id || (element = skill->get_ele(skill_id, skill_lv)) == -1) {
 			// Take weapon's element
@@ -3323,9 +3323,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			element = rnd()%ELE_MAX;
 		}
 		if (element == ELE_FIRE)
-			pc->overheat(sd, 1);
+			pc->overheat(t_sd, 1);
 		else if (element == ELE_WATER)
-			pc->overheat(sd, -1);
+			pc->overheat(t_sd, -1);
 	}
 
 	return damage;
