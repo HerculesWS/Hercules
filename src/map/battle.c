@@ -2718,7 +2718,7 @@ void battle_calc_skillratio_weapon_unknown(int *attack_type, struct block_list *
  *------------------------------------------*/
 int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damage *d,int64 damage,uint16 skill_id,uint16 skill_lv) {
 	struct map_session_data *s_sd, *t_sd;
-	struct status_change *sc, *tsc;
+	struct status_change *s_sc, *sc;
 	struct status_change_entry *sce;
 	int div_, flag;
 
@@ -2750,8 +2750,8 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if(!damage) return 0;
 	}
 
+	s_sc = status->get_sc(src);
 	sc = status->get_sc(bl);
-	tsc = status->get_sc(src);
 
 	if( sc && sc->data[SC_INVINCIBLE] && !sc->data[SC_INVINCIBLEOFF] )
 		return 1;
@@ -3215,24 +3215,24 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 	}
 
 	//SC effects from caster side.
-	if (tsc && tsc->count) {
-		if( tsc->data[SC_INVINCIBLE] && !tsc->data[SC_INVINCIBLEOFF] )
+	if (s_sc && s_sc->count) {
+		if( s_sc->data[SC_INVINCIBLE] && !s_sc->data[SC_INVINCIBLEOFF] )
 			damage += damage * 75 / 100;
 		// [Epoque]
 		if (bl->type == BL_MOB) {
 			const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 			int i;
 
-			if (((sce=tsc->data[SC_MANU_ATK]) != NULL && (flag&BF_WEAPON))
-			 || ((sce=tsc->data[SC_MANU_MATK]) != NULL && (flag&BF_MAGIC))) {
+			if (((sce=s_sc->data[SC_MANU_ATK]) != NULL && (flag&BF_WEAPON))
+			 || ((sce=s_sc->data[SC_MANU_MATK]) != NULL && (flag&BF_MAGIC))) {
 				for (i = 0; i < ARRAYLENGTH(mob->manuk); i++)
 					if (md->class_ == mob->manuk[i]) {
 						damage += damage * sce->val1 / 100;
 						break;
 					}
 			}
-			if (((sce=tsc->data[SC_SPL_ATK]) != NULL && (flag&BF_WEAPON))
-			 || ((sce=tsc->data[SC_SPL_MATK]) != NULL && (flag&BF_MAGIC))) {
+			if (((sce=s_sc->data[SC_SPL_ATK]) != NULL && (flag&BF_WEAPON))
+			 || ((sce=s_sc->data[SC_SPL_MATK]) != NULL && (flag&BF_MAGIC))) {
 				for (i = 0; i < ARRAYLENGTH(mob->splendide); i++)
 					if (md->class_ == mob->splendide[i]) {
 						damage += damage * sce->val1 / 100;
@@ -3240,24 +3240,24 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 					}
 			}
 		}
-		if( tsc->data[SC_POISONINGWEAPON] ) {
+		if( s_sc->data[SC_POISONINGWEAPON] ) {
 			struct status_data *tstatus = status->get_status_data(bl);
-			if ( !(flag&BF_SKILL) && (flag&BF_WEAPON) && damage > 0 && rnd()%100 < tsc->data[SC_POISONINGWEAPON]->val3 ) {
+			if ( !(flag&BF_SKILL) && (flag&BF_WEAPON) && damage > 0 && rnd()%100 < s_sc->data[SC_POISONINGWEAPON]->val3 ) {
 				short rate = 100;
-				if ( tsc->data[SC_POISONINGWEAPON]->val1 == 9 ) // Oblivion Curse gives a 2nd success chance after the 1st one passes which is reducible. [Rytech]
+				if ( s_sc->data[SC_POISONINGWEAPON]->val1 == 9 ) // Oblivion Curse gives a 2nd success chance after the 1st one passes which is reducible. [Rytech]
 					rate = 100 - tstatus->int_ * 4 / 5;
-				sc_start(src,bl,tsc->data[SC_POISONINGWEAPON]->val2,rate,tsc->data[SC_POISONINGWEAPON]->val1,skill->get_time2(GC_POISONINGWEAPON,1) - (tstatus->vit + tstatus->luk) / 2 * 1000);
+				sc_start(src,bl,s_sc->data[SC_POISONINGWEAPON]->val2,rate,s_sc->data[SC_POISONINGWEAPON]->val1,skill->get_time2(GC_POISONINGWEAPON,1) - (tstatus->vit + tstatus->luk) / 2 * 1000);
 			}
 		}
-		if( tsc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * tsc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
+		if( s_sc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * s_sc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
 			status->change_spread(src, bl);
-		if (tsc->data[SC_SHIELDSPELL_REF] && tsc->data[SC_SHIELDSPELL_REF]->val1 == 1 && damage > 0)
+		if (s_sc->data[SC_SHIELDSPELL_REF] && s_sc->data[SC_SHIELDSPELL_REF]->val1 == 1 && damage > 0)
 			skill->break_equip(bl,EQP_ARMOR,10000,BCT_ENEMY );
-		if (tsc->data[SC_STYLE_CHANGE] && rnd()%2) {
+		if (s_sc->data[SC_STYLE_CHANGE] && rnd()%2) {
 			struct homun_data *hd = BL_CAST(BL_HOM,bl);
 			if (hd) homun->addspiritball(hd, 10);
 		}
-		if (src->type == BL_PC && damage > 0 && (sce = tsc->data[SC_GENTLETOUCH_ENERGYGAIN]) != NULL) {
+		if (src->type == BL_PC && damage > 0 && (sce = s_sc->data[SC_GENTLETOUCH_ENERGYGAIN]) != NULL) {
 			if (s_sd != NULL && rnd() % 100 < sce->val2)
 				pc->addspiritball(s_sd, skill->get_time(MO_CALLSPIRITS, 1), pc->getmaxspiritball(s_sd, 0));
 		}
