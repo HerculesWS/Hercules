@@ -2717,7 +2717,7 @@ void battle_calc_skillratio_weapon_unknown(int *attack_type, struct block_list *
  * After this we apply bg/gvg reduction
  *------------------------------------------*/
 int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damage *d,int64 damage,uint16 skill_id,uint16 skill_lv) {
-	struct map_session_data *sd = NULL;
+	struct map_session_data *s_sd, *sd = NULL;
 	struct status_change *sc, *tsc;
 	struct status_change_entry *sce;
 	int div_, flag;
@@ -2725,6 +2725,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 	nullpo_ret(bl);
 	nullpo_ret(d);
 
+	s_sd = BL_CAST(BL_PC, src);
 	sd = BL_CAST(BL_PC, bl);
 	div_ = d->div_;
 	flag = d->flag;
@@ -2987,13 +2988,12 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 #endif
 
 		if( damage ) {
-			struct map_session_data *tsd = BL_CAST(BL_PC, src);
 			if( sc->data[SC_DEEP_SLEEP] ) {
 				damage += damage / 2; // 1.5 times more damage while in Deep Sleep.
 				status_change_end(bl,SC_DEEP_SLEEP,INVALID_TIMER);
 			}
-			if( tsd && sd && sc->data[SC_COLD] && flag&BF_WEAPON ){
-				switch(tsd->status.weapon){
+			if( s_sd && sd && sc->data[SC_COLD] && flag&BF_WEAPON ){
+				switch(s_sd->status.weapon){
 					case W_MACE:
 					case W_2HMACE:
 					case W_1HAXE:
@@ -3131,8 +3131,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if( (sce = sc->data[SC_STONEHARDSKIN]) && flag&(BF_SHORT|BF_WEAPON) && damage > 0 ) {
 			sce->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
 			if( src->type == BL_PC ) {
-				struct map_session_data *ssd = BL_CAST(BL_PC, src);
-				if (ssd && ssd->status.weapon != W_BOW)
+				if (s_sd && s_sd->status.weapon != W_BOW)
 					skill->break_equip(src, EQP_WEAPON, 3000, BCT_SELF);
 			} else
 				skill->break_equip(src, EQP_WEAPON, 3000, BCT_SELF);
@@ -3259,9 +3258,8 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			if (hd) homun->addspiritball(hd, 10);
 		}
 		if (src->type == BL_PC && damage > 0 && (sce = tsc->data[SC_GENTLETOUCH_ENERGYGAIN]) != NULL) {
-			struct map_session_data *tsd = BL_UCAST(BL_PC, src);
-			if (tsd != NULL && rnd() % 100 < sce->val2)
-				pc->addspiritball(tsd, skill->get_time(MO_CALLSPIRITS, 1), pc->getmaxspiritball(tsd, 0));
+			if (s_sd != NULL && rnd() % 100 < sce->val2)
+				pc->addspiritball(s_sd, skill->get_time(MO_CALLSPIRITS, 1), pc->getmaxspiritball(s_sd, 0));
 		}
 	}
 	/* no data claims these settings affect anything other than players */
@@ -3312,9 +3310,8 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if (!skill_id || (element = skill->get_ele(skill_id, skill_lv)) == -1) {
 			// Take weapon's element
 			struct status_data *sstatus = NULL;
-			struct map_session_data *ssd = BL_CAST(BL_PC, src);
-			if (src->type == BL_PC && ssd->bonus.arrow_ele != 0) {
-				element = ssd->bonus.arrow_ele;
+			if (s_sd != NULL && s_sd->bonus.arrow_ele != 0) {
+				element = s_sd->bonus.arrow_ele;
 			} else if ((sstatus = status->get_status_data(src)) != NULL) {
 				element = sstatus->rhw.ele;
 			}
