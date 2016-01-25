@@ -61731,6 +61731,32 @@ void HP_script_read_constdb(void) {
 	}
 	return;
 }
+void HP_script_constdb_comment(const char *comment) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_constdb_comment_pre ) {
+		void (*preHookFunc) (const char *comment);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_constdb_comment_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_constdb_comment_pre[hIndex].func;
+			preHookFunc(comment);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.constdb_comment(comment);
+	}
+	if( HPMHooks.count.HP_script_constdb_comment_post ) {
+		void (*postHookFunc) (const char *comment);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_constdb_comment_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_constdb_comment_post[hIndex].func;
+			postHookFunc(comment);
+		}
+	}
+	return;
+}
 const char* HP_script_print_line(StringBuf *buf, const char *p, const char *mark, int line) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
