@@ -718,13 +718,13 @@ CPCMD(plugins)
  * @retval 1 OK
  * @retval 2 incomplete packet
  */
-unsigned char hplugins_parse_packets(int fd, enum HPluginPacketHookingPoints point)
+unsigned char hplugins_parse_packets(int fd, int packet_id, enum HPluginPacketHookingPoints point)
 {
 	struct HPluginPacket *packet = NULL;
 	int i;
 	int16 length;
 
-	ARR_FIND(0, VECTOR_LENGTH(HPM->packets[point]), i, VECTOR_INDEX(HPM->packets[point], i).cmd == RFIFOW(fd,0));
+	ARR_FIND(0, VECTOR_LENGTH(HPM->packets[point]), i, VECTOR_INDEX(HPM->packets[point], i).cmd == packet_id);
 
 	if (i == VECTOR_LENGTH(HPM->packets[point]))
 		return 0;

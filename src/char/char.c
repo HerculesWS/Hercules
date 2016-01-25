@@ -2637,11 +2637,11 @@ int char_parse_fromlogin(int fd) {
 		}
 	}
 
-	while(RFIFOREST(fd) >= 2) {
+	while (RFIFOREST(fd) >= 2) {
 		uint16 command = RFIFOW(fd,0);
 
 		if (VECTOR_LENGTH(HPM->packets[hpParse_FromLogin]) > 0) {
-			int result = HPM->parse_packets(fd,hpParse_FromLogin);
+			int result = HPM->parse_packets(fd,command,hpParse_FromLogin);
 			if (result == 1)
 				continue;
 			if (result == 2)
@@ -3926,16 +3926,17 @@ int char_parse_frommap(int fd)
 		return 0;
 	}
 
-	while(RFIFOREST(fd) >= 2) {
+	while (RFIFOREST(fd) >= 2) {
+		int packet_id = RFIFOW(fd,0);
 		if (VECTOR_LENGTH(HPM->packets[hpParse_FromMap]) > 0) {
-			int result = HPM->parse_packets(fd,hpParse_FromMap);
+			int result = HPM->parse_packets(fd,packet_id,hpParse_FromMap);
 			if (result == 1)
 				continue;
 			if (result == 2)
 				return 0;
 		}
 
-		switch(RFIFOW(fd,0)) {
+		switch (packet_id) {
 			case 0x2b0a:
 				if( RFIFOREST(fd) < RFIFOW(fd, 2) )
 					return 0;
@@ -5106,21 +5107,21 @@ int char_parse_char(int fd)
 		return 0;
 	}
 
-	while( RFIFOREST(fd) >= 2 ) {
-		//For use in packets that depend on an sd being present [Skotlex]
-		#define FIFOSD_CHECK(rest) do { if(RFIFOREST(fd) < (rest)) return 0; if (sd==NULL || !sd->auth) { RFIFOSKIP(fd,(rest)); return 0; } } while (0)
+	while (RFIFOREST(fd) >= 2) {
+		cmd = RFIFOW(fd,0);
+
+//For use in packets that depend on an sd being present [Skotlex]
+#define FIFOSD_CHECK(rest) do { if(RFIFOREST(fd) < (rest)) return 0; if (sd==NULL || !sd->auth) { RFIFOSKIP(fd,(rest)); return 0; } } while (0)
 
 		if (VECTOR_LENGTH(HPM->packets[hpParse_Char]) > 0) {
-			int result = HPM->parse_packets(fd,hpParse_Char);
+			int result = HPM->parse_packets(fd,cmd,hpParse_Char);
 			if (result == 1)
 				continue;
 			if (result == 2)
 				return 0;
 		}
 
-		cmd = RFIFOW(fd,0);
-
-		switch( cmd ) {
+		switch (cmd) {
 			// request to connect
 			// 0065 <account id>.L <login id1>.L <login id2>.L <???>.W <sex>.B
 			case 0x65:
