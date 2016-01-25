@@ -586,7 +586,7 @@ umbala,215,181,3	script	Billik	4_M_JOB_KNIGHT1,{
 niflheim,153,215,3	script	Feylin	4_M_NFDEADMAN2,{
 	if (nif_revive == 2) {
 		mes "[Feylin]";
-		mes "Poor "+((Sex)?"guy":"girl")+"...";
+		mes "Poor "+ (Sex == SEX_MALE ? "guy" : "girl") +"...";
 		mes "Dying at such a young age...";
 		mes "I am always sorry to see the";
 		mes "young pass away.";

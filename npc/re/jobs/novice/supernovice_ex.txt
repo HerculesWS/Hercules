@@ -681,8 +681,10 @@ airplane,33,47,5	script	Nudor#sp2	4_F_NOVICE,{
 		}
 		next;
 		mes "[Nudor]";
-		if (Sex) mes "Did you know? You're really handsome~";
-		else mes "I need to tell you, you are really... really~ beautiful.";
+		if (Sex == SEX_MALE)
+			mes "Did you know? You're really handsome~";
+		else
+			mes "I need to tell you, you are really... really~ beautiful.";
 		next;
 		mes "[Nudor]";
 		mes "- You feel like you're being -";

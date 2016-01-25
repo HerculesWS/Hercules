@@ -312,7 +312,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 							mes "The doctor tells me to avoid";
 							mes "stress and hard work, but";
 							mes "researching is my life.";
-							if (Sex == 0) {
+							if (Sex == SEX_FEMALE) {
 								next;
 								mes "[Pisruik]";
 								mes "I wonder...";
@@ -373,7 +373,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 							mes "The doctor tells me to avoid";
 							mes "stress and hard work, but";
 							mes "researching is my life.";
-							if (Sex == 0) {
+							if (Sex == SEX_FEMALE) {
 								next;
 								mes "[Pisruik]";
 								mes "I wonder...";
@@ -552,7 +552,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "The doctor tells me to avoid";
 				mes "stress and hard work, but";
 				mes "researching is my life.";
-				if (Sex == 0) {
+				if (Sex == SEX_FEMALE) {
 					next;
 					mes "[Pisruik]";
 					mes "I wonder...";
@@ -613,7 +613,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "The doctor tells me to avoid";
 				mes "stress and hard work, but";
 				mes "researching is my life.";
-				if (Sex == 0) {
+				if (Sex == SEX_FEMALE) {
 					next;
 					mes "[Pisruik]";
 					mes "I wonder...";
@@ -666,7 +666,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			ALCHE_SK = 6;
 			next;
 			mes "[Pisruik]";
-			if (Sex == 0) {
+			if (Sex == SEX_FEMALE) {
 				mes "I... I really";
 				mes "appreciate your";
 				mes "willingness to help";
@@ -688,7 +688,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "Thanks so much for";
 				mes "bringing me these";
 				mes "Maneater Blossoms.";
-				if (Sex == 0) {
+				if (Sex == SEX_FEMALE) {
 					mes "You don't know how";
 					mes "much this means to me~";
 				}
@@ -715,7 +715,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "Your glasses...";
 				mes "They're broken...";
 				next;
-				if (Sex == 0) {
+				if (Sex == SEX_FEMALE) {
 					mes "^3355FFThe explosion destroyed";
 					mes "Pisruik's glasses, revealing";
 					mes "the beautiful face of a";
@@ -793,7 +793,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "Now I finally have the";
 				mes "exact amount of Maneater";
 				mes "Blossoms that I'll need.";
-				if (Sex == 0) {
+				if (Sex == SEX_FEMALE) {
 					mes "I'm really sorry for putting";
 					mes "your through all this trouble.";
 				}
@@ -819,7 +819,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "Your glasses...";
 				mes "They're broken...";
 				next;
-				if (Sex == 0) {
+				if (Sex == SEX_FEMALE) {
 					mes "^3355FFThe explosion destroyed";
 					mes "Pisruik's glasses, revealing";
 					mes "the beautiful face of a";
@@ -955,7 +955,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 						mes "thesis as a ready reference.";
 						next;
 						mes "[Pisruik]";
-						if (Sex == 1) {
+						if (Sex == SEX_MALE) {
 							mes "Hopefully, we'll";
 							mes "meet again sometime";
 							mes "in the future. Good luck on";
@@ -978,7 +978,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 					mes "Well, if you ever change";
 					mes "your mind, feel free to come";
 					mes "back for me to teach you.";
-					if (Sex == 0) {
+					if (Sex == SEX_FEMALE) {
 						mes "And it's no trouble at all!";
 						mes "I really enjoy your company...";
 					}
@@ -1042,7 +1042,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "thesis as a ready reference.";
 				next;
 				mes "[Pisruik]";
-				if (Sex == 1) {
+				if (Sex == SEX_MALE) {
 					mes "Hopefully, we'll";
 					mes "meet again sometime";
 					mes "in the future. Good luck on";
@@ -1065,7 +1065,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			mes "Well, if you ever change";
 			mes "your mind, feel free to come";
 			mes "back for me to teach you.";
-			if (Sex == 0) {
+			if (Sex == SEX_FEMALE) {
 				mes "And it's no trouble at all!";
 				mes "I really enjoy your company...";
 			}
@@ -1786,7 +1786,7 @@ lhz_in01,225,122,5	script	Skrajjad#qsk_al	4_M_SAGE_A,{
 		mes "to ask Kellasus to teach";
 		mes "you Alchemy. I must say";
 		mes "that I admire your attitude,";
-		if (Sex)
+		if (Sex == SEX_MALE)
 			mes "young lad. Now, don't worry...";
 		else
 			mes "young lass. Now, don't worry...";
