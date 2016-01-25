@@ -552,7 +552,7 @@ Weight      - Amount of weight the character currently carries.
               Display as in Weight/10.
 MaxWeight   - Maximum weight the character can carry.
               Display as in MaxWeight/10.
-Sex         - 0 if female, 1 if male.
+Sex         - Character's gender (SEX_MALE or SEX_FEMALE).
 Class       - Character's job.
 Upper       - 0 if the character is normal class, 1 if advanced, 2 if baby.
 BaseClass   - The character's 1-1 'normal' job, regardless of Upper value.
@@ -889,11 +889,14 @@ and are the following:
  ?: - Conditional operator
 	Very useful e.g. to replace
 
-		if(Sex) mes "..."; else mes "...";
+		if (Sex == SEX_MALE)
+			mes "You're Male.";
+		else
+			mes "You're Female.";
 
 	clauses with simple
 
-		mes "Welcome, " + (Sex?"Mr.":"Mrs.") + " " + strcharinfo(0);
+		mes "Welcome, " + (Sex == SEX_MALE ? "Mr." : "Mrs.") + " " + strcharinfo(0);
 
 	or to replace any other simple if-else clauses. It might be worth
 	mentioning that ?: has low priority and has to be enclosed with
