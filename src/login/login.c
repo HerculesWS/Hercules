@@ -808,18 +808,18 @@ int login_parse_fromchar(int fd)
 	ipl = server[id].ip;
 	sockt->ip2str(ipl, ip);
 
-	while( RFIFOREST(fd) >= 2 ) {
+	while (RFIFOREST(fd) >= 2) {
 		uint16 command = RFIFOW(fd,0);
 
 		if (VECTOR_LENGTH(HPM->packets[hpParse_FromChar]) > 0) {
-			int result = HPM->parse_packets(fd,hpParse_FromChar);
+			int result = HPM->parse_packets(fd,command,hpParse_FromChar);
 			if (result == 1)
 				continue;
 			if (result == 2)
 				return 0;
 		}
 
-		switch( command ) {
+		switch (command) {
 
 		case 0x2712: // request from char-server to authenticate an account
 			if( RFIFOREST(fd) < 23 )
@@ -1619,18 +1619,18 @@ int login_parse_login(int fd)
 		sd->fd = fd;
 	}
 
-	while( RFIFOREST(fd) >= 2 ) {
+	while (RFIFOREST(fd) >= 2) {
 		uint16 command = RFIFOW(fd,0);
 
 		if (VECTOR_LENGTH(HPM->packets[hpParse_Login]) > 0) {
-			int result = HPM->parse_packets(fd,hpParse_Login);
+			int result = HPM->parse_packets(fd,command,hpParse_Login);
 			if (result == 1)
 				continue;
 			if (result == 2)
 				return 0;
 		}
 
-		switch( command ) {
+		switch (command) {
 
 		case 0x0200: // New alive packet: structure: 0x200 <account.userid>.24B. used to verify if client is always alive.
 			if (RFIFOREST(fd) < 26)

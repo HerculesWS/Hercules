@@ -18743,20 +18743,20 @@ int clif_parse(int fd) {
 		if (RFIFOREST(fd) < 2)
 			return 0;
 
-		if (VECTOR_LENGTH(HPM->packets[hpClif_Parse]) > 0) {
-			int result = HPM->parse_packets(fd,hpClif_Parse);
-			if (result == 1)
-				continue;
-			if (result == 2)
-				return 0;
-		}
-
-		if( sd )
+		if (sd)
 			parse_cmd_func = sd->parse_cmd_func;
 		else
 			parse_cmd_func = clif->parse_cmd;
 
 		cmd = parse_cmd_func(fd,sd);
+
+		if (VECTOR_LENGTH(HPM->packets[hpClif_Parse]) > 0) {
+			int result = HPM->parse_packets(fd,cmd,hpClif_Parse);
+			if (result == 1)
+				continue;
+			if (result == 2)
+				return 0;
+		}
 
 		// filter out invalid / unsupported packets
 		if (cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0) {
