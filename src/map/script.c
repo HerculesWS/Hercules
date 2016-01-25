@@ -2318,6 +2318,15 @@ void read_constdb(void)
 			ShowWarning("read_constdb: Invalid constant name %s. Skipping.\n", name);
 			continue;
 		}
+		if (strcmp(name, "comment__") == 0) {
+			const char *comment = libconfig->setting_get_string(t);
+			if (comment == NULL)
+				continue;
+			if (*comment == '\0')
+				comment = NULL;
+			script->constdb_comment(comment);
+			continue;
+		}
 		if (config_setting_is_aggregate(t)) {
 			int i32;
 			if (!libconfig->setting_lookup_int(t, "Value", &i32)) {
@@ -2338,7 +2347,20 @@ void read_constdb(void)
 		}
 		script->set_constant(name, value, is_parameter, is_deprecated);
 	}
+	script->constdb_comment(NULL);
 	libconfig->destroy(&constants_conf);
+}
+
+/**
+ * Sets the current constdb comment.
+ *
+ * This function does nothing (used by plugins only)
+ *
+ * @param comment The comment to set (NULL to unset)
+ */
+void script_constdb_comment(const char *comment)
+{
+	(void)comment;
 }
 
 // Standard UNIX tab size is 8
@@ -20896,9 +20918,11 @@ void script_label_add(int key, int pos) {
  **/
 void script_hardcoded_constants(void)
 {
+	script->constdb_comment("Boolean");
 	script->set_constant("true", 1, false, false);
 	script->set_constant("false", 0, false, false);
-	/* server defines */
+
+	script->constdb_comment("Server defines");
 	script->set_constant("PACKETVER",PACKETVER,false, false);
 	script->set_constant("MAX_LEVEL",MAX_LEVEL,false, false);
 	script->set_constant("MAX_STORAGE",MAX_STORAGE,false, false);
@@ -20910,7 +20934,7 @@ void script_hardcoded_constants(void)
 	script->set_constant("MAX_CHAT_USERS",MAX_CHAT_USERS,false, false);
 	script->set_constant("MAX_REFINE",MAX_REFINE,false, false);
 
-	/* status options */
+	script->constdb_comment("status options");
 	script->set_constant("Option_Nothing",OPTION_NOTHING,false, false);
 	script->set_constant("Option_Sight",OPTION_SIGHT,false, false);
 	script->set_constant("Option_Hide",OPTION_HIDE,false, false);
@@ -20936,11 +20960,11 @@ void script_hardcoded_constants(void)
 	script->set_constant("Option_Hanbok",OPTION_HANBOK,false, false);
 	script->set_constant("Option_Oktoberfest",OPTION_OKTOBERFEST,false, false);
 
-	/* status option compounds */
+	script->constdb_comment("status option compounds");
 	script->set_constant("Option_Dragon",OPTION_DRAGON,false, false);
 	script->set_constant("Option_Costume",OPTION_COSTUME,false, false);
 
-	/* send_target */
+	script->constdb_comment("send_target");
 	script->set_constant("ALL_CLIENT",ALL_CLIENT,false, false);
 	script->set_constant("ALL_SAMEMAP",ALL_SAMEMAP,false, false);
 	script->set_constant("AREA",AREA,false, false);
@@ -20974,7 +20998,7 @@ void script_hardcoded_constants(void)
 	script->set_constant("BG_AREA_WOS",BG_AREA_WOS,false, false);
 	script->set_constant("BG_QUEUE",BG_QUEUE,false, false);
 
-	/* LOOK_ constants, use in setlook/changelook script commands */
+	script->constdb_comment("LOOK_ constants, use in setlook/changelook script commands");
 	script->set_constant("LOOK_BASE", LOOK_BASE, false, false);
 	script->set_constant("LOOK_HAIR", LOOK_HAIR, false, false);
 	script->set_constant("LOOK_WEAPON", LOOK_WEAPON, false, false);
@@ -20990,7 +21014,7 @@ void script_hardcoded_constants(void)
 	script->set_constant("LOOK_ROBE", LOOK_ROBE, false, false);
 	script->set_constant("LOOK_BODY2", LOOK_BODY2, false, false);
 
-	/* Equip Position in Bits,  use with *getiteminfo type 5,  or @inventorylist_equip */
+	script->constdb_comment("Equip Position in Bits,  use with *getiteminfo type 5, or @inventorylist_equip");
 	script->set_constant("EQP_HEAD_LOW", EQP_HEAD_LOW, false, false);
 	script->set_constant("EQP_HEAD_MID", EQP_HEAD_MID, false, false);
 	script->set_constant("EQP_HEAD_TOP", EQP_HEAD_TOP, false, false);
@@ -21013,7 +21037,7 @@ void script_hardcoded_constants(void)
 	script->set_constant("EQP_SHADOW_ACC_R", EQP_SHADOW_ACC_R, false, false);
 	script->set_constant("EQP_SHADOW_ACC_L", EQP_SHADOW_ACC_L, false, false);
 
-	/* Renewal */
+	script->constdb_comment("Renewal");
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false, false);
 #else
@@ -21049,6 +21073,7 @@ void script_hardcoded_constants(void)
 #else
 	script->set_constant("RENEWAL_ASPD", 0, false, false);
 #endif
+	script->constdb_comment(NULL);
 }
 
 /**
@@ -21226,6 +21251,7 @@ void script_defaults(void) {
 	script->parse_expr = parse_expr;
 	script->parse_line = parse_line;
 	script->read_constdb = read_constdb;
+	script->constdb_comment = script_constdb_comment;
 	script->print_line = script_print_line;
 	script->errorwarning_sub = script_errorwarning_sub;
 	script->set_reg = set_reg;
