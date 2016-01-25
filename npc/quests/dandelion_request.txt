@@ -3642,8 +3642,10 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		mes "[Lin]";
 		mes "Ah, this is "+ strcharinfo(0) +",";
 		mes "my partner for this assignment.";
-		if(Sex == 1) mes "Don't worry, you can trust him.";
-		else mes "Don't worry, you can trust her.";
+		if (Sex == SEX_MALE)
+			mes "Don't worry, you can trust him.";
+		else
+			mes "Don't worry, you can trust her.";
 		next;
 		mes "[R.]";
 		mes "Ah, I see. Please,";
@@ -3938,8 +3940,10 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		mes "[Lin]";
 		mes "I'm sending "+ strcharinfo(0) +"";
 		mes "on a snack errand and it won't";
-		if(Sex == 1) mes "take too long. Did you want him";
-		else mes "take too long. Did you want her";
+		if (Sex == SEX_MALE)
+			mes "take too long. Did you want him";
+		else
+			mes "take too long. Did you want her";
 		mes "to bring you back anything?";
 		next;
 		cutin "mocseal_dan01.bmp",0;
@@ -4186,8 +4190,10 @@ que_job01,79,15,1	script	R	4_M_MASKMAN,{
 		mes "[Lin]";
 		mes "Ah, this is "+ strcharinfo(0) +",";
 		mes "my partner for this assignment.";
-		if(Sex == 1) mes "Don't worry, you can trust him.";
-		else mes "Don't worry, you can trust her.";
+		if (Sex == SEX_MALE)
+			mes "Don't worry, you can trust him.";
+		else
+			mes "Don't worry, you can trust her.";
 		next;
 		mes "[R.]";
 		mes "Ah, I see. Please, for";

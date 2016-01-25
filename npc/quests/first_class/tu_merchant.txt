@@ -602,11 +602,10 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 		if(getskilllv(MC_INCCARRY) < 4){
 			setquest 8229;
 			mes "[Guarnien]";
-			if(Sex == 1){
+			if (Sex == SEX_MALE)
 				mes "Atta boy~!";
-			} else {
+			else
 				mes "Atta girl~!";
-			}
 			mes "But first things first!";
 			mes "You better learn the";
 			mes "^871F78Increase Weight Limit^000000 skill!";

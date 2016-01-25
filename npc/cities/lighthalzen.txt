@@ -891,7 +891,7 @@ lhz_in02,283,276,4	script	Customer#amano12	4_F_CHNDRESS1,{
 	mes "to ask me out or something?";
 	next;
 	mes "[Sei]";
-	if (Sex == 1) {
+	if (Sex == SEX_MALE) {
 		mes "Well, if he does,";
 		mes "shouldn't he have";
 		mes "more guts? Or are ";
@@ -1567,7 +1567,7 @@ lhz_in03,192,19,3	script	Haggar#zen1	4_M_EINMAN,{
 
 lhz_in03,193,25,2	script	Bartender#12	1_M_PUBMASTER,{
 	mes "[Tony]";
-	if (Sex) {
+	if (Sex == SEX_MALE) {
 		mes "Hey man, I know this";
 	}
 	else {
@@ -2978,7 +2978,7 @@ lhz_in01,139,48,7	script	Leimi#mimir	1_F_MERCHANT_01,{
 	mes "Um, may I help you?";
 	emotion e_omg;
 	if (BaseJob == Job_Assassin) {
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			next;
 			mes "[Leimi]";
 			mes "Oh, you're an Assassin!";
@@ -3001,7 +3001,7 @@ lhz_in01,139,48,7	script	Leimi#mimir	1_F_MERCHANT_01,{
 lhz_in01,138,47,0	script	#mimir_camera	FAKE_NPC,2,2,{
 OnTouch:
 	if (BaseJob == Job_Assassin) {
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "^3355FF*Click*^000000";
 			next;
 			mes "["+strcharinfo(0)+"]";
