@@ -396,7 +396,7 @@ prontera,154,185,5	script	Event Ring Maker#Val09	4_F_KAFRA7,{
 	delitem 7948,1;
 	Zeny -= 1000;
 	iROval09ring = 1;
-	if (Sex) {
+	if (Sex == SEX_MALE) {
 		getnameditem 12742,strcharinfo(0);
 	} else {
 		getnameditem 12743,strcharinfo(0);
@@ -453,7 +453,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 					break;
 				}
 
-				if (Sex) {
+				if (Sex == SEX_MALE) {
 					if (countitem(Valentine_Silver_Ring) > .@input) {
 						mes "[Valentine Vote Manager]";
 						mes "Seems like the value you entered is too small.";
@@ -536,7 +536,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 
 //== Charles Orleans (Makes Home-Made Chocolates) ==========
 prt_castle,42,35,3	script	Dessert Manager#Val09	1_M_01,{
-	if (Sex) {
+	if (Sex == SEX_MALE) {
 		mes "[Charles Orleans]";
 		mes "Monsieur~! What brings you to my beautiful atelier?";
 		mes "What is it that you want?";

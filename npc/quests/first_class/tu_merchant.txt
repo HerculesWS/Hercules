@@ -602,7 +602,7 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 		if(getskilllv(MC_INCCARRY) < 4){
 			setquest 8229;
 			mes "[Guarnien]";
-			if(Sex == 1){
+			if(Sex == SEX_MALE){
 				mes "Atta boy~!";
 			} else {
 				mes "Atta girl~!";

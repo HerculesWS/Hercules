@@ -84,7 +84,7 @@ ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 		close;
 	}
 	if (BaseClass == Job_Novice) {
-		if (Sex == 0) {
+		if (Sex == SEX_FEMALE) {
 			mes "[Altiregen]";
 			mes "Oh~";
 			mes "what a very";

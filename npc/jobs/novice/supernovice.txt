@@ -406,7 +406,7 @@ aldeba_in,216,169,5	script	Esseray#sn	4_M_04,{
 aldebaran,54,238,5	script	Kafra Employee#sn	4_F_KAFRA1,{
 	if (BaseJob == Job_SuperNovice) {
 		mes "[Kafra Employee]";
-		if (Sex )
+		if (Sex == SEX_MALE)
 			mes "Hello, Mister Super Novice~";
 		else
 			mes "Hello, Super Novice, Ma'am.";

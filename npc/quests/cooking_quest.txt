@@ -51,7 +51,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		end;
 	}
 	if (BaseJob == Job_Novice) {
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			cutin "orleans_5",0;
 			mes "[Charles Orleans]";
 			mes "Excuse me, monsieur?";
@@ -88,7 +88,7 @@ prt_castle,43,30,3	script	Charles Orleans#cook	4_M_OILMAN,{
 		goto L_End;
 	}
 	else if (getequipid(1) != 5026) {
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			cutin "orleans_5",0;
 			emotion e_an;
 			mes "[Charles Orleans]";
