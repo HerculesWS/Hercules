@@ -4301,6 +4301,8 @@ const char *npc_parse_mapflag(const char *w1, const char *w2, const char *w3, co
 		map->list[m].long_damage_rate = (state) ? atoi(w4) : 100;
 	} else if ( !strcmpi(w3,"src4instance") ) {
 		map->list[m].flag.src4instance = (state) ? 1 : 0;
+	} else if (!strcmpi(w3,"noemergencycall")) {
+		map->list[m].flag.noemergencycall=state;
 	} else if ( !strcmpi(w3,"nocashshop") ) {
 		map->list[m].flag.nocashshop = (state) ? 1 : 0;
 	} else if (!strcmpi(w3,"noviewid")) {

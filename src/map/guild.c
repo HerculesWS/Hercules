@@ -1870,7 +1870,7 @@ int guild_gm_changed(int guild_id, int account_id, int char_id)
 	// announce the change to all guild members
 	for( i = 0; i < g->max_member; i++ )
 	{
-		if( g->member[i].sd && g->member[i].sd->fd )
+		if( g->member[i].sd && g->member[i].sd->fd && !(battle_config.bg_eamod_mode && g->member[i].sd->bg_id))
 		{
 			clif->guild_basicinfo(g->member[i].sd);
 			clif->guild_memberlist(g->member[i].sd);
@@ -2164,11 +2164,18 @@ int guild_checkcastles(struct guild *g)
 bool guild_isallied(int guild_id, int guild_id2)
 {
 	int i;
+	if (guild_id >=32000 || guild_id2 >=32000){
+		if (guild_id == guild_id2)
+			return true;
+		else
+			return false;
+	}else {
 	struct guild* g = guild->search(guild_id);
 	nullpo_ret(g);
 
 	ARR_FIND( 0, MAX_GUILDALLIANCE, i, g->alliance[i].guild_id == guild_id2 );
 	return( i < MAX_GUILDALLIANCE && g->alliance[i].opposition == 0 );
+	}
 }
 
 void guild_flag_add(struct npc_data *nd) {

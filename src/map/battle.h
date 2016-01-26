@@ -528,6 +528,16 @@ struct Battle_Config {
 
 	int feature_roulette;
 
+	int bg_idle_announce;
+	int bg_idle_autokick;
+	int bg_items_on_pvp;
+	int bg_reward_rates;
+	int bg_reportafk_leaderonly;
+	int bg_queue2team_balanced;
+	int bg_logincount_check;
+	int bg_queue_onlytowns;
+	int bg_eamod_mode;
+
 	int show_monster_hp_bar; // [Frost]
 
 	int fix_warp_hit_delay_abuse;

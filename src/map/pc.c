@@ -72,6 +72,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 
 struct pc_interface pc_s;
 struct pc_interface *pc;
@@ -83,6 +84,23 @@ int pc_class2idx(int class_) {
 	if (class_ >= JOB_NOVICE_HIGH)
 		return class_- JOB_NOVICE_HIGH+JOB_MAX_BASIC;
 	return class_;
+}
+
+int pc_update_last_action(struct map_session_data *sd)
+{
+	struct battleground_data *bgd;
+
+	sd->idletime = sockt->last_tick;
+
+	if( sd->bg_id && sd->state.bg_afk && (bgd = bg->team_search(sd->bg_id)) != NULL && bgd->g )
+	{ // Battleground AFK announce
+		char output[128];
+		sprintf(output, "%s : %s is no longer away...", bgd->g->name, sd->status.name);
+		clif->bg_message(bgd, bgd->bg_id, bgd->g->name, output, strlen(output) + 1);
+		sd->state.bg_afk = 0;
+	}
+
+	return 1;
 }
 
 /**
@@ -1156,8 +1174,8 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->bg_queue.arena = NULL;
 	sd->bg_queue.ready = 0;
 	sd->bg_queue.client_has_bg_data = 0;
-	sd->bg_queue.type = 0;
-
+	sd->bg_queue.type = BGQT_INVALID;
+	
 	VECTOR_INIT(sd->script_queues);
 
 	sd->state.dialog = 0;
@@ -5492,6 +5510,8 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 		party->send_dot_remove(sd); //minimap dot fix [Kevin]
 		guild->send_dot_remove(sd);
 		bg->send_dot_remove(sd);
+		if( battle_config.bg_queue_onlytowns && sd->qd && map->list[sd->bl.m].flag.town && !map->list[m].flag.town )
+			bg->queue_leaveall(sd);
 		if (sd->regen.state.gc)
 			sd->regen.state.gc = 0;
 		// make sure vending is allowed here
@@ -7555,10 +7575,15 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 
 	if( sd->bg_id ) {/* TODO: purge when bgqueue is deemed ok */
 		struct battleground_data *bgd;
-		if( (bgd = bg->team_search(sd->bg_id)) != NULL && bgd->die_event[0] )
+		if( map->list[sd->bl.m].flag.battleground && (bgd = bg->team_search(sd->bg_id)) != NULL && bgd->die_event[0] )
+		{
+			struct map_session_data *ssd = BL_CAST(BL_PC,src);
+			pc->setreg(sd,script->add_str("@killer_bg_id"),bg->team_get_id(src)); // Killer's Team
+			pc->setreg(sd,script->add_str("@killer_bg_src"),ssd && ssd->bg_id ? ssd->bl.id : 0);
 			npc->event(sd, bgd->die_event, 0);
+		}
 	}
-
+	
 	for (i = 0; i < VECTOR_LENGTH(sd->script_queues); i++ ) {
 		struct script_queue *queue = script->queue(VECTOR_INDEX(sd->script_queues, i));
 		if (queue && queue->event_death[0] != '\0')
@@ -11847,7 +11872,8 @@ void pc_defaults(void) {
 	pc->expire_check = pc_expire_check;
 	pc->db_checkid = pc_db_checkid;
 	pc->validate_levels = pc_validate_levels;
-
+	
+	pc->update_last_action = pc_update_last_action;
 	/**
 	 * Autotrade persistency [Ind/Hercules <3]
 	 **/

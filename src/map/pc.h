@@ -220,6 +220,9 @@ struct map_session_data {
 		unsigned int standalone : 1;/* [Ind/Hercules <3] */
 		unsigned int loggingout : 1;
 		unsigned int warp_clean : 1;
+		unsigned int storeitem : 1;
+		unsigned int bg_listen : 1;
+		unsigned bg_afk : 1;
 	} state;
 	struct {
 		unsigned char no_weapon_damage, no_magic_damage, no_misc_damage;
@@ -487,12 +490,15 @@ END_ZEROED_BLOCK;
 	struct quest *quest_log; ///< Quest log entries (note: Q_COMPLETE quests follow the first <avail_quests>th enties
 	bool save_quest;         ///< Whether the quest_log entries were modified and are waitin to be saved
 
+	unsigned int bg_id;
+	struct battleground_data *bmaster_flag;
+	unsigned short bg_kills; // Battleground Kill Count
+	struct queue_data *qd;
+
 	// temporary debug [flaviojs]
 	const char* debug_file;
 	int debug_line;
 	const char* debug_func;
-
-	unsigned int bg_id;
 
 	/**
 	 * For the Secure NPC Timeout option (check config/Secure.h) [RR]
@@ -1008,6 +1014,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*readdb) (void);
 	int (*map_day_timer) (int tid, int64 tick, int id, intptr_t data); // by [yor]
 	int (*map_night_timer) (int tid, int64 tick, int id, intptr_t data); // by [yor]
+	int (*update_last_action)(struct map_session_data *sd);
 	// Rental System
 	void (*inventory_rentals) (struct map_session_data *sd);
 	int (*inventory_rental_clear) (struct map_session_data *sd);
