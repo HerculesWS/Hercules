@@ -4628,6 +4628,8 @@ struct {
 	struct HPMHookPoint *HP_script_parse_line_post;
 	struct HPMHookPoint *HP_script_read_constdb_pre;
 	struct HPMHookPoint *HP_script_read_constdb_post;
+	struct HPMHookPoint *HP_script_constdb_comment_pre;
+	struct HPMHookPoint *HP_script_constdb_comment_post;
 	struct HPMHookPoint *HP_script_print_line_pre;
 	struct HPMHookPoint *HP_script_print_line_post;
 	struct HPMHookPoint *HP_script_errorwarning_sub_pre;
@@ -10473,6 +10475,8 @@ struct {
 	int HP_script_parse_line_post;
 	int HP_script_read_constdb_pre;
 	int HP_script_read_constdb_post;
+	int HP_script_constdb_comment_pre;
+	int HP_script_constdb_comment_post;
 	int HP_script_print_line_pre;
 	int HP_script_print_line_post;
 	int HP_script_errorwarning_sub_pre;

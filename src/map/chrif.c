@@ -1394,15 +1394,15 @@ int chrif_parse(int fd) {
 	}
 
 	while (RFIFOREST(fd) >= 2) {
+		cmd = RFIFOW(fd,0);
+
 		if (VECTOR_LENGTH(HPM->packets[hpChrif_Parse]) > 0) {
-			int result = HPM->parse_packets(fd,hpChrif_Parse);
+			int result = HPM->parse_packets(fd,cmd,hpChrif_Parse);
 			if (result == 1)
 				continue;
 			if (result == 2)
 				return 0;
 		}
-
-		cmd = RFIFOW(fd,0);
 
 		if (cmd < 0x2af8 || cmd >= 0x2af8 + ARRAYLENGTH(chrif->packet_len_table) || chrif->packet_len_table[cmd-0x2af8] == 0) {
 			int result = intif->parse(fd); // Passed on to the intif
