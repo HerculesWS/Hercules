@@ -36,6 +36,7 @@
 #include "common/db.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
+#include "common/utils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -193,6 +194,7 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 	stor->storage_amount++;
 	stor->items[i].amount = amount;
 	clif->storageitemadded(sd,&stor->items[i],i,amount);
+	if(sd && !sd->state.storeitem)
 	clif->updatestorageamount(sd, stor->storage_amount, MAX_STORAGE);
 
 	return 0;
@@ -361,6 +363,23 @@ void storage_storage_quit(struct map_session_data* sd, int flag) {
 		chrif->save(sd, flag); //Invokes the storage saving as well.
 
 	sd->state.storage_flag = STORAGE_FLAG_CLOSED;
+}
+
+int storage_additem2(struct map_session_data *sd, struct item* item_data, int amount)
+{
+	nullpo_ret(sd);
+	nullpo_ret(item_data);
+
+	if( sd->status.storage.storage_amount > MAX_STORAGE )
+		return 0;
+	if( item_data->nameid <= 0 || amount <= 0 )
+		return 0;
+	if( amount > MAX_AMOUNT )
+		return 0;
+	if( storage_additem(sd,item_data,amount) == 0 )
+		return 1;
+
+	return 0;
 }
 
 /**
@@ -775,6 +794,7 @@ void storage_defaults(void) {
 	storage->comp_item = storage_comp_item;
 	storage->sortitem = storage_sortitem;
 	storage->reconnect_sub = storage_reconnect_sub;
+	storage->additem2 = storage_additem2;
 }
 void gstorage_defaults(void) {
 	gstorage = &gstorage_s;

@@ -2753,6 +2753,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 	if (skill_id == PA_PRESSURE)
 		return damage; //This skill bypass everything else.
 
+	if(((TBL_MOB*)bl)->state.inmunity)
+		return 1;
+
 	if( sc && sc->count )
 	{
 		//First, sc_*'s that reduce damage to 0.
@@ -3561,7 +3564,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 
 	//Skill Range Criteria
 	ad.flag |= battle->range_type(src, target, skill_id, skill_lv);
-	flag.infdef = (tstatus->mode&MD_PLANT) ? 1 : 0;
+	flag.infdef = ((tstatus->mode&MD_PLANT || (target->type == BL_MOB && ((TBL_MOB*)target)->state.inmunity)) ? 1 : 0);
 	if( !flag.infdef && target->type == BL_SKILL && ((TBL_SKILL*)target)->group->unit_id == UNT_REVERBERATION )
 		flag.infdef = 1; // Reverberation takes 1 damage
 
@@ -4199,6 +4202,8 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 
 	if(md.damage < 0)
 		md.damage = 0;
+	else if(md.damage && target->type == BL_MOB && ((TBL_MOB*)target)->state.inmunity)
+		md.damage = 1;
 	else if(md.damage && tstatus->mode&MD_PLANT){
 		switch(skill_id){
 			case HT_LANDMINE:
@@ -5162,7 +5167,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			case AS_SONICBLOW:
 				if (sc && sc->data[SC_SOULLINK] &&
 					sc->data[SC_SOULLINK]->val2 == SL_ASSASIN)
-					ATK_ADDRATE(map_flag_gvg(src->m)?25:100); //+25% dmg on woe/+100% dmg on nonwoe
+					ATK_ADDRATE(map_flag_gvg(src->m)?25:100 || map->list[src->m].flag.battleground); //+25% dmg on woe/+100% dmg on nonwoe
 
 				if(sd && pc->checkskill(sd,AS_SONICACCEL)>0)
 					ATK_ADDRATE(10);
@@ -6697,7 +6702,9 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 		if( flag&(BCT_GUILD|BCT_ENEMY) ) {
 			int s_guild = status->get_guild_id(s_bl);
 			int t_guild = status->get_guild_id(t_bl);
-			if( !(map->list[m].flag.pvp && map->list[m].flag.pvp_noguild)
+			if( map->list[m].flag.battleground && sbg_id && sbg_id == tbg_id )
+				state |= BCT_GUILD; // On Battleground, same team works like Guild
+			else if( !(map->list[m].flag.pvp && map->list[m].flag.pvp_noguild)
 			 && s_guild && t_guild
 			 && (s_guild == t_guild || (!(flag&BCT_SAMEGUILD) && guild->isallied(s_guild, t_guild)))
 			 && (!map->list[m].flag.battleground || sbg_id == tbg_id) )
@@ -7134,6 +7141,15 @@ static const struct battle_data {
 	// BattleGround Settings
 	{ "bg_update_interval",                 &battle_config.bg_update_interval,              1000,   100,    INT_MAX,        },
 	{ "bg_flee_penalty",                    &battle_config.bg_flee_penalty,                 20,     0,      INT_MAX,        },
+	{ "bg_idle_announce",                   &battle_config.bg_idle_announce,                0,      0,      INT_MAX,        },
+	{ "bg_idle_autokick",                   &battle_config.bg_idle_autokick,                0,      0,      INT_MAX,        },
+	{ "bg_items_on_pvp",                    &battle_config.bg_items_on_pvp,                 1,      0,      1,              },
+	{ "bg_reward_rates",                    &battle_config.bg_reward_rates,                 100,    0,      INT_MAX,        },
+	{ "bg_reportafk_leaderonly",            &battle_config.bg_reportafk_leaderonly,         1,      0,      1,              },
+	{ "bg_queue2team_balanced",             &battle_config.bg_queue2team_balanced,          1,      0,      1,              },
+	{ "bg_logincount_check",                &battle_config.bg_logincount_check,             1,      0,      1,              },
+	{ "bg_queue_onlytowns",                 &battle_config.bg_queue_onlytowns,              1,      0,      1,              },
+	{ "bg_eamod_mode",						&battle_config.bg_eamod_mode,		            1,      0,      1,              },
 	/**
 	 * rAthena
 	 **/

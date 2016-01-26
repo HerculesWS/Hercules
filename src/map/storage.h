@@ -53,6 +53,7 @@ struct storage_interface {
 	int (*comp_item) (const void *i1_, const void *i2_);
 	void (*sortitem) (struct item* items, unsigned int size);
 	int (*reconnect_sub) (DBKey key, DBData *data, va_list ap);
+	int (*additem2)(struct map_session_data *sd, struct item* item_data, int amount);
 };
 
 struct guild_storage_interface {

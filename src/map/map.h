@@ -676,7 +676,7 @@ struct map_data {
 	int16 m;
 	int16 xs,ys; // map dimensions (in cells)
 	int16 bxs,bys; // map dimensions (in blocks)
-	int16 bgscore_lion, bgscore_eagle; // Battleground ScoreBoard
+	int16 bgscore_lion, bgscore_eagle, bgscore_top; // Battleground ScoreBoard
 	int npc_num;
 	int users;
 	int users_pvp;
@@ -701,7 +701,7 @@ struct map_data {
 		unsigned gvg : 1; // Now it identifies gvg versus maps that are active 24/7
 		unsigned gvg_dungeon : 1; // Celest
 		unsigned gvg_noparty : 1;
-		unsigned battleground : 2; // [BattleGround System]
+		unsigned battleground : 3; // [BattleGround System]
 		unsigned nozenypenalty : 1;
 		unsigned notrade : 1;
 		unsigned noskill : 1;
@@ -731,6 +731,7 @@ struct map_data {
 		unsigned chsysnolocalaj : 1;
 		unsigned noknockback : 1;
 		unsigned notomb : 1;
+		unsigned noemergencycall : 1;
 		unsigned nocashshop : 1;
 	} flag;
 	struct point save;
@@ -1005,6 +1006,7 @@ END_ZEROED_BLOCK;
 	int (*removemobs_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*clearflooritem) (struct block_list* bl);
 	int (*addflooritem) (const struct block_list *bl, struct item *item_data, int amount, int16 m, int16 x, int16 y, int first_charid, int second_charid, int third_charid, int flags);
+	int (*addflooritem_area)(struct block_list* bl, int m, int x, int y, int nameid, int amount);
 	// player to map session
 	void (*addnickdb) (int charid, const char* nick);
 	void (*delnickdb) (int charid, const char* nick);

@@ -112,8 +112,9 @@ typedef enum send_target {
 	BG_SAMEMAP_WOS,
 	BG_AREA,
 	BG_AREA_WOS,
-
+	
 	BG_QUEUE,
+	BG_LISTEN,
 } send_target;
 
 typedef enum broadcast_flags {
@@ -951,8 +952,17 @@ struct clif_interface {
 	void (*bg_message) (struct battleground_data *bgd, int src_id, const char *name, const char *mes, size_t len);
 	void (*bg_updatescore) (int16 m);
 	void (*bg_updatescore_single) (struct map_session_data *sd);
+	void (*bg_updatescore_team)(struct battleground_data *bg);
 	void (*sendbgemblem_area) (struct map_session_data *sd);
 	void (*sendbgemblem_single) (int fd, struct map_session_data *sd);
+	void (*bg_emblem)(struct map_session_data *sd, struct guild *g);
+	void (*bg_memberlist)(struct map_session_data *sd);
+	void (*bg_hp_single)(int fd, struct map_session_data* ssd);
+	void (*bg_leave_single)(struct map_session_data *sd, const char *name, const char *mes);
+	void (*bg_belonginfo)(struct map_session_data *sd);
+	int (*visual_guild_id)(struct block_list *bl);
+	int (*visual_emblem_id)(struct block_list *bl);
+	void (*bg_expulsion_single)(struct map_session_data *sd, const char *name, const char *mes);
 	/* instance-related */
 	int (*instance) (int instance_id, int type, int flag);
 	void (*instance_join) (int fd, int instance_id);

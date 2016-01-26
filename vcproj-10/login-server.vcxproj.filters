@@ -237,6 +237,7 @@
     <ClInclude Include="..\src\config\classes\general.h">
       <Filter>config</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\common\conf.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">

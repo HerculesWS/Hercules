@@ -6280,7 +6280,15 @@ int status_get_guild_id(struct block_list *bl) {
 	nullpo_ret(bl);
 	switch (bl->type) {
 	case BL_PC:
-		return ((TBL_PC*)bl)->status.guild_id;
+		if(map->list[bl->m].flag.battleground){
+			struct battleground_data *bgd;
+			int bg_id;
+			if ((bg_id = bg->team_get_id(bl)) > 0 && (bgd = bg->team_search(bg_id)) != NULL && bgd->g )	
+				return bgd->g->guild_id;
+			else
+				return ((TBL_PC*)bl)->status.guild_id;
+		}else
+			return ((TBL_PC*)bl)->status.guild_id;
 	case BL_PET:
 		if (((TBL_PET*)bl)->msd)
 			return ((TBL_PET*)bl)->msd->status.guild_id;

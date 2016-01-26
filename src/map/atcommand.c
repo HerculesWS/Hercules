@@ -9377,6 +9377,116 @@ ACMD(lang) {
 
 	return true;
 }
+
+ACMD(order){
+	nullpo_retr(-1,sd);
+	if( !message || !*message )
+	{
+		clif->message(fd, "Please, enter a message (usage: @order <message>).");
+		return false;
+	}
+
+	if( map->list[sd->bl.m].flag.battleground )
+	{
+		if( !sd->bmaster_flag )
+		{
+			clif->message(fd, "This command is reserved for Team Leaders Only.");
+			return false;
+		}
+		clif->broadcast2(&sd->bl, message, (int)strlen(message)+1, sd->bmaster_flag->color, 0x190, 20, 0, 0, BG);
+	}
+	else
+	{
+		if( !sd->state.gmaster_flag )
+		{
+			clif->message(fd, "This command is reserved for Guild Leaders Only.");
+			return false;
+		}
+		clif->broadcast2(&sd->bl, message, (int)strlen(message)+1, 0xFF0000, 0x190, 20, 0, 0, GUILD);
+	}
+
+	return true;
+}
+
+ACMD(leader){
+	struct map_session_data *pl_sd;
+	nullpo_retr(-1,sd);
+	if( !sd->bmaster_flag )
+		clif->message(fd, "This command is reserved for Team Leaders Only.");
+	else if( sd->ud.skilltimer != INVALID_TIMER )
+		clif->message(fd, "Command not allow while casting a skill.");
+	else if( !message || !*message )
+		clif->message(fd, "Please, enter the new Leader name (usage: @leader <name>).");
+	else if( (pl_sd = map->nick2sd((char *)message)) == NULL )
+		clif->message(fd, msg_txt(3)); // Character not found.
+	else if( sd->bg_id != pl_sd->bg_id )
+		clif->message(fd, "Destination Player is not in your Team.");
+	else if( sd == pl_sd )
+		clif->message(fd, "You are already the Team Leader.");
+	else
+	{
+		sprintf(atcmd_output, "Team Leader transfered to [%s]", pl_sd->status.name);
+		clif->broadcast2(&sd->bl, atcmd_output, (int)strlen(atcmd_output)+1, sd->bmaster_flag->color, 0x190, 20, 0, 0, BG);
+
+		sd->bmaster_flag->leader_char_id = pl_sd->status.char_id;
+		pl_sd->bmaster_flag = sd->bmaster_flag;
+		sd->bmaster_flag = NULL;
+
+		clif->charnameupdate(sd);
+		clif->charnameupdate(pl_sd);
+		return true;
+	}
+	return false;
+}
+
+ACMD(reportafk){
+	struct map_session_data *pl_sd;
+	nullpo_retr(-1,sd);
+	if( !sd->bg_id )
+		clif->message(fd, "This command is reserved for Battleground Only.");
+	else if( !sd->bmaster_flag && battle_config.bg_reportafk_leaderonly )
+		clif->message(fd, "This command is reserved for Team Leaders Only.");
+	else if( !message || !*message )
+		clif->message(fd, "Please, enter the character name (usage: @reportafk <name>).");
+	else if( (pl_sd = map->nick2sd((char *)message)) == NULL )
+		clif->message(fd, msg_txt(3)); // Character not found.
+	else if( sd->bg_id != pl_sd->bg_id )
+		clif->message(fd, "Destination Player is not in your Team.");
+	else if( sd == pl_sd )
+		clif->message(fd, "You cannot kick yourself.");
+	else if( pl_sd->state.bg_afk == 0 )
+		clif->message(fd, "The player is not AFK on this Battleground.");
+	else
+	{
+		struct battleground_data *bgd;
+		if( (bgd = bg->team_search(sd->bg_id)) == NULL )
+			return false;
+
+		bg->team_leave(pl_sd,BGTL_AFK );
+		clif->message(pl_sd->fd, "You have been kicked from Battleground because of your AFK status.");
+		pc->setpos(pl_sd,pl_sd->status.save_point.map,pl_sd->status.save_point.x,pl_sd->status.save_point.y,3);
+
+		sprintf(atcmd_output, "- AFK [%s] Kicked -", pl_sd->status.name);
+		clif->broadcast2(&sd->bl, atcmd_output, (int)strlen(atcmd_output)+1, bgd->color, 0x190, 20, 0, 0, BG);
+		return true;
+	}
+	return false;
+}
+ACMD(listenbg){
+	if( sd->state.bg_listen )
+	{
+		sd->state.bg_listen = 0;
+		clif->message(fd, "You will not receive Battleground announcements.");
+	}
+	else
+	{
+		sd->state.bg_listen = 1;
+		clif->message(fd, "You will receive Battleground announcements.");
+	}
+
+	return true;
+}
+
 /**
  * Fills the reference of available commands in atcommand DBMap
  **/
@@ -9648,6 +9758,10 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(skdebug),
 		ACMD_DEF(cddebug),
 		ACMD_DEF(lang),
+		ACMD_DEF(order),
+		ACMD_DEF(leader),
+		ACMD_DEF(reportafk),
+		ACMD_DEF(listenbg),
 	};
 	int i;
 

@@ -1645,6 +1645,36 @@ int map_addflooritem(const struct block_list *bl, struct item *item_data, int am
 	return fitem->bl.id;
 }
 
+int map_addflooritem_area(struct block_list* bl, int m, int x, int y, int nameid, int amount)
+{
+	struct item item_tmp;
+	int count, range, i;
+	short mx, my;
+
+	memset(&item_tmp, 0, sizeof(item_tmp));
+	item_tmp.nameid = nameid;
+	item_tmp.identify = 1;
+
+	if( bl != NULL ) m = bl->m;
+
+	count = 0;
+	range = (int)sqrt(amount) +2;
+	for( i = 0; i < amount; i++ )
+	{
+		if( bl != NULL )
+			map_search_freecell(bl, 0, &mx, &my, range, range, 0);
+		else
+		{
+			mx = x; my = y;
+			map_search_freecell(NULL, m, &mx, &my, range, range, 1);
+		}
+
+		count += (map->addflooritem(bl, &item_tmp, 1, m, mx, my, 0, 0, 0, 4) != 0) ? 1 : 0;
+	}
+
+	return count;
+}
+
 /**
  * @see DBCreateData
  */
@@ -6254,6 +6284,7 @@ void map_defaults(void) {
 	map->remove_questinfo = map_remove_questinfo;
 
 	map->merge_zone = map_merge_zone;
+	map->addflooritem_area = map_addflooritem_area;
 	map->zone_clear_single = map_zone_clear_single;
 
 	/**

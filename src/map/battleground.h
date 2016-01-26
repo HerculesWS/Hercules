@@ -33,7 +33,7 @@ struct map_session_data;
 /**
  * Defines
  **/
-#define MAX_BG_MEMBERS 30
+#define MAX_BG_MEMBERS 50
 #define BG_DELAY_VAR_LENGTH 30
 
 /**
@@ -62,15 +62,41 @@ struct battleground_member_data {
 
 struct battleground_data {
 	unsigned int bg_id;
-	unsigned char count;
+	time_t creation_tick; // Creation of this Team
+	int count;
 	struct battleground_member_data members[MAX_BG_MEMBERS];
+	// Team Leader and BG Skills features
+	int leader_char_id;
+	int skill_block_timer[MAX_GUILDSKILL];
+	unsigned int color;
+	// Fake Guild Link
+	struct guild *g;
 	// BG Cementery
 	unsigned short mapindex, x, y;
+	bool reveal_pos, reveal_flag;
+	// Script Events
 	// Logout Event
 	char logout_event[EVENT_NAME_LENGTH];
 	char die_event[EVENT_NAME_LENGTH];
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
+	// Score Board
+	int team_score;
 };
+
+struct queue_member {
+	int position;
+	struct map_session_data *sd;
+	struct queue_member *next;
+};
+
+struct queue_data {
+	unsigned int q_id;
+	int min_level, users;
+	struct queue_member *first, *last;
+	char queue_name[50], join_event[EVENT_NAME_LENGTH];
+};
+
+extern struct guild bg_guild[];
 
 struct bg_arena {
 	char name[NAME_LENGTH];
@@ -121,23 +147,45 @@ struct battleground_interface {
 	void (*match_over) (struct bg_arena *arena, bool canceled);
 	void (*queue_check) (struct bg_arena *arena);
 	struct battleground_data* (*team_search) (int bg_id);
+	struct guild* (*guild_get) (int bg_id);
 	struct map_session_data* (*getavailablesd) (struct battleground_data *bgd);
 	bool (*team_delete) (int bg_id);
+	int (*team_clean)(int bg_id, bool remove);
 	bool (*team_warp) (int bg_id, unsigned short map_index, short x, short y);
 	void (*send_dot_remove) (struct map_session_data *sd);
 	bool (*team_join) (int bg_id, struct map_session_data *sd);
 	int (*team_leave) (struct map_session_data *sd, enum bg_team_leave_type flag);
 	bool (*member_respawn) (struct map_session_data *sd);
 	int (*create) (unsigned short map_index, short rx, short ry, const char *ev, const char *dev);
+	int (*create2) (unsigned short mapindex, short rx, short ry, int guild_index, const char *ev, const char *dev);
 	int (*team_get_id) (struct block_list *bl);
 	bool (*send_message) (struct map_session_data *sd, const char *mes, int len);
 	int (*send_xy_timer_sub) (DBKey key, DBData *data, va_list ap);
 	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*checkskill)(struct battleground_data *bg, int id);
+	int (*block_skill_end)(int tid, int64 tick, int id, intptr_t data);
+	void (*block_skill_status)(struct battleground_data *bg, int skillnum);
+	void (*block_skill_start)(struct battleground_data *bg, int skillnum, int time);
 	int (*afk_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*team_db_final) (DBKey key, DBData *data, va_list ap);
 	/* */
 	enum bg_queue_types (*str2teamtype) (const char *str);
 	/* */
+	int (*countlogin)(struct map_session_data *sd, bool check_bat_room);
+	void (*team_getitem) (int bg_id, int nameid, int amount);
+	void (*team_get_kafrapoints) (int bg_id, int amount);
+	void (*team_rewards) (int bg_id, int nameid, int amount, int kafrapoints, int quest_id, const char *var, int add_value, int bg_arena, int bg_result);
+ 	struct queue_data* (*queue_search)(int q_id);
+	int (*queue_create)(const char* queue_name, const char* join_event, int min_level);
+	int (*queue_destroy)(int q_id);
+	int (*queue_leave)(struct map_session_data *sd, int q_id);
+	void (*queue_leaveall)(struct map_session_data *sd);
+	int (*queue_join)(struct map_session_data *sd, int q_id);
+	
+	struct queue_member* (*queue_member_get)(struct queue_data *qd, int position);
+	int (*queue_member_remove)(struct queue_data *qd, int id);
+	
+	void (*reload)(void);
 	void (*config_read) (void);
 };
 

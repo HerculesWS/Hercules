@@ -34,6 +34,7 @@
 #include "map/party.h"
 #include "map/pc.h"
 #include "map/pet.h"
+#include "map/quest.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/HPM.h"
@@ -43,13 +44,122 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
+#include "common/utils.h"
+#include "common/sql.h"
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 struct battleground_interface bg_s;
 struct battleground_interface *bg;
+struct guild bg_guild[13]; // Temporal fake guild information
+static const unsigned int bg_colors[13] = { 0x0000FF, 0xFF0000, 0x00FF00, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF };
 
+static unsigned int queue_counter = 0; // Next q_id
+static DBMap* queue_db;
+
+#define BLUE_SKULL 8965
+#define RED_SKULL 8966
+#define GREEN_SKULL 8967
+
+int bg_member_removeskulls(struct map_session_data *sd)
+{
+	int n;
+	nullpo_ret(sd);
+	if( (n = pc->search_inventory(sd,BLUE_SKULL)) >= 0 )
+		pc->delitem(sd,n,sd->status.inventory[n].amount,0,2,LOG_TYPE_NPC);
+	if( (n = pc->search_inventory(sd,RED_SKULL)) >= 0 )
+		pc->delitem(sd,n,sd->status.inventory[n].amount,0,2,LOG_TYPE_NPC);
+	if( (n = pc->search_inventory(sd,GREEN_SKULL)) >= 0 )
+		pc->delitem(sd,n,sd->status.inventory[n].amount,0,2,LOG_TYPE_NPC);
+	return 1;
+}
+
+int battleground_countlogin(struct map_session_data *sd, bool check_bat_room)
+{
+	int c = 0, m = map->mapname2mapid("bat_room");
+	struct map_session_data* pl_sd;
+	struct s_mapiterator* iter;
+	nullpo_ret(sd);
+
+	iter = mapit_getallusers();
+	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
+	{
+		if( !(pl_sd->qd || map->list[pl_sd->bl.m].flag.battleground || (check_bat_room && pl_sd->bl.m == m)) )
+			continue;
+
+		if( sockt->session[sd->fd]->client_addr == sockt->session[pl_sd->fd]->client_addr )
+			c++; // Same Mac and IP = Same Computer
+	}
+	mapit->free(iter);
+	return c;
+}
+int bg_checkskill(struct battleground_data *bg, int id)
+{
+	int idx = id - GD_SKILLBASE;
+	if( idx < 0 || idx >= MAX_GUILDSKILL || !bg->g )
+		return 0;
+	return bg->g->skill[idx].lv;
+}
+
+int bg_block_skill_end(int tid, int64 tick, int id, intptr_t data)
+{
+	struct battleground_data *bgd;
+	char output[128];
+	int idx = (int)data - GD_SKILLBASE;
+
+	if( (bgd = bg->team_search(id)) == NULL )
+		return 1;
+
+	if( idx < 0 || idx >= MAX_GUILDSKILL )
+	{
+		ShowError("bg_block_skill_end invalid skillnum %d.\n", (int)data);
+		return 0;
+	}
+
+	if( tid != bgd->skill_block_timer[idx] )
+	{
+		ShowError("bg_block_skill_end %d != %d.\n", bgd->skill_block_timer[idx], tid);
+		return 0;
+	}
+
+	sprintf(output, "%s : Guild Skill %s Ready!!", bgd->g->name, skill->get_desc((int)data));
+	clif->bg_message(bgd, bgd->bg_id, bgd->g->name, output, strlen(output) + 1);
+	bgd->skill_block_timer[idx] = INVALID_TIMER;
+	return 1;
+}
+
+void bg_block_skill_status(struct battleground_data *bgd, int skillnum)
+{
+	const struct TimerData * td;
+	char output[128];
+	int64 seconds;
+	int idx;
+
+	idx = skillnum - GD_SKILLBASE;// : 0;
+	if( bgd == NULL || bgd->g == NULL || idx < 0 || idx >= MAX_GUILDSKILL || bgd->skill_block_timer[idx] <= 0 )
+		return;
+
+	if( (td = timer->get(bgd->skill_block_timer[idx])) == NULL )
+		return;
+
+	seconds = DIFF_TICK(td->tick,timer->gettick())/1000;
+	sprintf(output, "%s : Cannot use team skill %s. %"PRIu64" seconds remaining...", bgd->g->name, skill->get_desc(skillnum), seconds);
+	clif->bg_message(bgd, bgd->bg_id, bgd->g->name, output, strlen(output) + 1);
+}
+
+void bg_block_skill_start(struct battleground_data *bgd, int skillnum, int time)
+{
+	int idx = skillnum - GD_SKILLBASE;// : 0;
+	if( bgd == NULL || idx < 0 || idx >= MAX_GUILDSKILL )
+		return;
+
+	if( bgd->skill_block_timer[idx] >= 0  )
+		bgd->skill_block_timer[idx] = 0;
+
+	bgd->skill_block_timer[idx] = timer->add(timer->gettick() + time, bg->block_skill_end, bgd->bg_id, skillnum);
+}
 /// Search a BG Team using bg_id
 struct battleground_data* bg_team_search(int bg_id) {
 	if( !bg_id ) return NULL;
@@ -81,19 +191,104 @@ bool bg_team_delete(int bg_id) {
 	return true;
 }
 
+int bg_team_clean(int bg_id, bool remove) {
+	int i;
+	struct map_session_data *sd;
+	struct battleground_data *bgd = bg->team_search(bg_id);
+	struct guild *g;
+
+	if( bgd == NULL ) return false;
+	for( i = 0; i < MAX_BG_MEMBERS; i++ ) {
+		if( (sd = bgd->members[i].sd) == NULL )
+			continue;
+
+		bg->send_dot_remove(sd);
+		sd->bg_id = 0;
+		sd->state.bg_afk = 0;
+		sd->bmaster_flag = NULL;
+		bg_member_removeskulls(sd);
+		
+		if( !battle_config.bg_eamod_mode )
+			continue; // No need to touch Guild stuff
+
+		if( sd->status.guild_id && (g = guild->search(sd->status.guild_id)) != NULL )
+		{
+			clif->guild_belonginfo(sd,g);
+			clif->guild_basicinfo(sd);
+			clif->guild_allianceinfo(sd);
+			clif->guild_memberlist(sd);
+			clif->guild_skillinfo(sd);
+		}
+		else
+			clif->bg_leave_single(sd, sd->status.name, "Leaving Battleground...");
+
+		clif->charnameupdate(sd);
+		clif->guild_emblem_area(&sd->bl);
+	}
+	
+	for( i = 0; i < MAX_GUILDSKILL; i++ )
+	{
+		if( bgd->skill_block_timer[i] <= 0 )
+			continue;
+		bgd->skill_block_timer[i] = 0;
+	}
+
+	if( remove )
+		idb_remove(bg->team_db, bg_id);
+	else
+	{
+		bgd->count = 0;
+		bgd->leader_char_id = 0;
+		bgd->team_score = 0;
+		bgd->creation_tick = 0;
+		memset(&bgd->members, 0, sizeof(bgd->members));
+	}
+	return true;
+}
+
 /// Warps a Team
 bool bg_team_warp(int bg_id, unsigned short map_index, short x, short y) {
 	int i;
 	struct battleground_data *bgd = bg->team_search(bg_id);
 	if( bgd == NULL ) return false;
+	if( map_index == 0 )
+	{
+		map_index = bgd->mapindex;
+		x = bgd->x;
+		y = bgd->y;
+	}
 	for( i = 0; i < MAX_BG_MEMBERS; i++ )
 		if( bgd->members[i].sd != NULL ) pc->setpos(bgd->members[i].sd, map_index, x, y, CLR_TELEPORT);
 	return true;
 }
 
+int bg_reveal_pos(struct block_list *bl, va_list ap)
+{
+	struct map_session_data *pl_sd, *sd = NULL;
+	int flag, color;
+
+	pl_sd = (struct map_session_data *)bl;
+	sd = va_arg(ap,struct map_session_data *); // Source
+	flag = va_arg(ap,int);
+	color = va_arg(ap,int);
+
+	if( pl_sd->bg_id == sd->bg_id )
+		return 0; // Same Team
+
+	clif->viewpoint(pl_sd,sd->bl.id,flag,sd->bl.x,sd->bl.y,sd->bl.id,color);
+	return 0;
+}
+
 void bg_send_dot_remove(struct map_session_data *sd) {
-	if( sd && sd->bg_id )
-		clif->bg_xy_remove(sd);
+	struct battleground_data *bgd;
+	int m;
+
+	if( sd && sd->bg_id && (bgd = bg->team_search(sd->bg_id)) != NULL )
+	{
+ 		clif->bg_xy_remove(sd);
+		if( bgd->reveal_pos && (m = map->mapindex2mapid(bgd->mapindex)) == sd->bl.m )
+			map->foreachinmap(bg_reveal_pos,m,BL_PC,sd,2,0xFFFFFF);
+	}
 }
 
 /// Player joins team
@@ -106,7 +301,10 @@ bool bg_team_join(int bg_id, struct map_session_data *sd) {
 	ARR_FIND(0, MAX_BG_MEMBERS, i, bgd->members[i].sd == NULL);
 	if( i == MAX_BG_MEMBERS ) return false; // No free slots
 
+	pc->update_last_action(sd); // Start count from here...
 	sd->bg_id = bg_id;
+	sd->bg_kills = 0;
+	sd->state.bg_afk = 0;
 	bgd->members[i].sd = sd;
 	bgd->members[i].x = sd->bl.x;
 	bgd->members[i].y = sd->bl.y;
@@ -121,14 +319,35 @@ bool bg_team_join(int bg_id, struct map_session_data *sd) {
 		memcpy(&bgd->members[i].source,&sd->status.last_point,sizeof(struct point));
 	bgd->count++;
 
+	if( bgd->creation_tick == 0 ) bgd->creation_tick = sockt->last_tick; // Creation Tick = First member joined.
+
+	if( bgd->leader_char_id == 0 )
+	{ // First Join = Team Leader
+		bgd->leader_char_id = sd->status.char_id;
+		sd->bmaster_flag = bgd;
+	}
 	guild->send_dot_remove(sd);
 
+	if( battle_config.bg_eamod_mode )
+	{
+		clif->bg_belonginfo(sd);
+		clif->charnameupdate(sd);
+	}
 	for( i = 0; i < MAX_BG_MEMBERS; i++ ) {
 		struct map_session_data *pl_sd = bgd->members[i].sd;
-		if (pl_sd != NULL && pl_sd != sd)
+		if( pl_sd == NULL )
+			continue;
+		if( battle_config.bg_eamod_mode )
+		{ // Simulate Guild Information
+			clif->guild_basicinfo(pl_sd);
+			clif->bg_emblem(pl_sd, bgd->g);
+			clif->bg_memberlist(pl_sd);
+		}
+		if( pl_sd != sd )
 			clif->hpmeter_single(sd->fd, pl_sd->bl.id, pl_sd->battle_status.hp, pl_sd->battle_status.max_hp);
 	}
-
+	if( battle_config.bg_eamod_mode ) 
+		clif->guild_emblem_area(&sd->bl);
 	clif->bg_hp(sd);
 	clif->bg_xy(sd);
 	return true;
@@ -136,29 +355,86 @@ bool bg_team_join(int bg_id, struct map_session_data *sd) {
 
 /// Single Player leaves team
 int bg_team_leave(struct map_session_data *sd, enum bg_team_leave_type flag) {
-	int i, bg_id;
+	int i, h = 0;
 	struct battleground_data *bgd;
+	struct map_session_data *pl_sd;
+	struct guild *g;
 
 	if( sd == NULL || !sd->bg_id )
 		return 0;
-	bg->send_dot_remove(sd);
-	bg_id = sd->bg_id;
-	sd->bg_id = 0;
 
-	if( (bgd = bg->team_search(bg_id)) == NULL )
-		return 0;
+	bgd = bg->team_search(sd->bg_id);
+
+	if( bg && bgd->logout_event[0] && flag )
+		npc->event(sd, bgd->logout_event, 0);
+
+	if( battle_config.bg_eamod_mode ) clif->bg_leave_single(sd, sd->status.name, "Leaving Battle...");
+
+	bg->send_dot_remove(sd);
+	sd->bg_id = 0;
+	sd->bg_kills = 0;
+	sd->state.bg_afk = 0;
+	sd->bmaster_flag = NULL;
+	bg_member_removeskulls(sd);
+
+	if( battle_config.bg_eamod_mode )
+	{ // Refresh Guild Information
+		if( sd->status.guild_id && (g = guild->search(sd->status.guild_id)) != NULL )
+		{
+			clif->guild_belonginfo(sd, g);
+			clif->guild_basicinfo(sd);
+			clif->guild_allianceinfo(sd);
+			clif->guild_memberlist(sd);
+			clif->guild_skillinfo(sd);
+			clif->guild_emblem(sd, g);
+		}
+
+		clif->charnameupdate(sd);
+		clif->guild_emblem_area(&sd->bl);
+	}
+	
+	if( !bgd )
+		return true;
 
 	ARR_FIND(0, MAX_BG_MEMBERS, i, bgd->members[i].sd == sd);
 	if( i < MAX_BG_MEMBERS ) { // Removes member from BG
-		if( sd->bg_queue.arena ) {
-			bg->queue_pc_cleanup(sd);
-			pc->setpos(sd,bgd->members[i].source.map, bgd->members[i].source.x, bgd->members[i].source.y, CLR_OUTSIGHT);
-		}
 		memset(&bgd->members[i], 0, sizeof(bgd->members[0]));
 	}
 
+	if( bgd->leader_char_id == sd->status.char_id )
+		bgd->leader_char_id = 0;
+
 	if (--bgd->count != 0) {
 		char output[128];
+		for( i = 0; i < MAX_BG_MEMBERS; i++ )
+		{ // Update other BG members
+			if( (pl_sd = bgd->members[i].sd) == NULL )
+				continue;
+			if( !bgd->leader_char_id )
+			{ // Set new Leader first on the list
+				bgd->leader_char_id = pl_sd->status.char_id;
+				pl_sd->bmaster_flag = bgd;
+			}
+	
+		if( battle_config.bg_eamod_mode )
+		{
+			switch( flag )
+			{
+			case 3: sprintf(output, "Server : '%s' has been Kicked by AFK Status...", sd->status.name); break;
+			case 2: sprintf(output, "Server : '%s' has been Kicked by AFK Report...", sd->status.name);  break;
+			case 1: sprintf(output, "Server : '%s' has quit the game...", sd->status.name); break;
+			case 0: sprintf(output, "Server : '%s' is Leaving Battle...",	sd->status.name); break;
+			}
+			if (!h)
+			clif->bg_message(bgd, bgd->bg_id, bgd->g->name, output, strlen(output) + 1);
+			h = 1;
+			clif->guild_basicinfo(pl_sd);
+			clif->bg_emblem(pl_sd, bgd->g);
+			clif->bg_memberlist(pl_sd);
+		}
+		}
+		if( !battle_config.bg_eamod_mode )
+		{
 		switch (flag) {
 			default:
 			case BGTL_QUIT:
@@ -172,11 +448,9 @@ int bg_team_leave(struct map_session_data *sd, enum bg_team_leave_type flag) {
 				break;
 		}
 		clif->bg_message(bgd, 0, "Server", output, strlen(output) + 1);
+		}
 	}
-
-	if( bgd->logout_event[0] && flag )
-		npc->event(sd, bgd->logout_event, 0);
-
+	
 	if( sd->bg_queue.arena ) {
 		bg->queue_pc_cleanup(sd);
 	}
@@ -216,8 +490,37 @@ int bg_create(unsigned short map_index, short rx, short ry, const char *ev, cons
 	return bgd->bg_id;
 }
 
+struct guild* bg_guild_get(int bg_id)
+{ // Return Fake Guild for BG Members
+	struct battleground_data *bgd = bg->team_search(bg_id);
+	if( bgd == NULL ) return NULL;
+	return bgd->g;
+}
+int bg_create2(unsigned short mapindex, short rx, short ry, int guild_index, const char *ev, const char *dev){
+	struct battleground_data *bgd;
+	if( ++bg->team_counter <= 0 ) bg->team_counter = 1;
+
+	CREATE(bgd, struct battleground_data, 1);
+	bgd->bg_id = bg->team_counter;
+	bgd->creation_tick = 0;
+	bgd->count = 0;
+	bgd->g = &bg_guild[guild_index];
+	bgd->mapindex = mapindex;
+	bgd->x = rx;
+	bgd->y = ry;
+	safestrncpy(bgd->logout_event, ev, sizeof(bgd->logout_event));
+	safestrncpy(bgd->die_event, dev, sizeof(bgd->die_event));
+
+	memset(&bgd->members, 0, sizeof(bgd->members));
+	bgd->color = bg_colors[guild_index];
+
+	idb_put(bg->team_db, bg->team_counter, bgd);
+	
+	return bgd->bg_id;
+}
+
 int bg_team_get_id(struct block_list *bl) {
-	nullpo_ret(bl);
+	if( bl )
 	switch( bl->type ) {
 		case BL_PC:
 			return ((TBL_PC*)bl)->bg_id;
@@ -243,6 +546,8 @@ int bg_team_get_id(struct block_list *bl) {
 			break;
 		case BL_SKILL:
 			return ((TBL_SKILL*)bl)->group->bg_id;
+		case BL_NPC:
+			return ((TBL_NPC*)bl)->u.scr.bg_id;
 	}
 
 	return 0;
@@ -265,15 +570,36 @@ bool bg_send_message(struct map_session_data *sd, const char *mes, int len) {
 int bg_send_xy_timer_sub(DBKey key, DBData *data, va_list ap) {
 	struct battleground_data *bgd = DB->data2ptr(data);
 	struct map_session_data *sd;
-	int i;
+	char output[128];
+	int i, m;
 	nullpo_ret(bgd);
+	m = map->mapindex2mapid(bgd->mapindex);
+	bgd->reveal_flag = !bgd->reveal_flag; // Switch
 	for( i = 0; i < MAX_BG_MEMBERS; i++ ) {
 		if( (sd = bgd->members[i].sd) == NULL )
 			continue;
+		if( battle_config.bg_idle_autokick && DIFF_TICK(sockt->last_tick, sd->idletime) >= battle_config.bg_idle_autokick && bgd->g )
+		{
+			sprintf(output, "- AFK [%s] Kicked -", sd->status.name);
+			clif->broadcast2(&sd->bl, output, (int)strlen(output)+1, bgd->color, 0x190, 20, 0, 0, BG);
+
+			bg_team_leave(sd,BGTL_AFK);
+			clif->message(sd->fd, "You have been kicked from Battleground because of your AFK status.");
+			pc->setpos(sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
+			continue;
+		}
 		if( sd->bl.x != bgd->members[i].x || sd->bl.y != bgd->members[i].y ) { // xy update
 			bgd->members[i].x = sd->bl.x;
 			bgd->members[i].y = sd->bl.y;
 			clif->bg_xy(sd);
+		}
+		if( bgd->reveal_pos && bgd->reveal_flag && sd->bl.m == m ) // Reveal each 4 seconds
+			map->foreachinmap(bg_reveal_pos,m,BL_PC,sd,1,bgd->color);
+		if( battle_config.bg_idle_announce && !sd->state.bg_afk && DIFF_TICK(sockt->last_tick, sd->idletime) >= battle_config.bg_idle_announce && bgd->g )
+		{ // Idle announces
+			sd->state.bg_afk = 1;
+			sprintf(output, "%s : %s seens to be away. AFK Warning - Can be kicked out with @reportafk", bgd->g->name, sd->status.name);
+			clif->bg_message(bgd, bgd->bg_id, bgd->g->name, output, strlen(output) + 1);
 		}
 	}
 	return 0;
@@ -282,6 +608,445 @@ int bg_send_xy_timer_sub(DBKey key, DBData *data, va_list ap) {
 int bg_send_xy_timer(int tid, int64 tick, int id, intptr_t data) {
 	bg->team_db->foreach(bg->team_db, bg->send_xy_timer_sub, tick);
 	return 0;
+}
+
+void bg_guild_build_data(void)
+{
+	int i, j, k, skill;
+	memset(&bg_guild, 0, sizeof(bg_guild));
+	for( i = 1; i <= 13; i++ )
+	{ // Emblem Data - Guild ID's
+		FILE* fp = NULL;
+		char path[256];
+
+		j = i - 1;
+		bg_guild[j].emblem_id = 1; // Emblem Index
+		bg_guild[j].guild_id = SHRT_MAX - j;
+		bg_guild[j].guild_lv = 1;
+		bg_guild[j].max_member = MAX_BG_MEMBERS;
+
+		// Skills
+		if( j < 3 )
+		{ // Clan Skills
+			for( k = 0; k < MAX_GUILDSKILL; k++ )
+			{
+				skill = k + GD_SKILLBASE;
+				bg_guild[j].skill[k].id = skill;
+				switch( skill )
+				{
+				case GD_GLORYGUILD:
+					bg_guild[j].skill[k].lv = 0;
+					break;
+				case GD_APPROVAL:
+				case GD_KAFRACONTRACT:
+				case GD_GUARDRESEARCH:
+				case GD_BATTLEORDER:
+				case GD_RESTORE:
+				case GD_EMERGENCYCALL:
+				case GD_DEVELOPMENT:
+					bg_guild[j].skill[k].lv = 1;
+					break;
+				case GD_GUARDUP:
+				case GD_REGENERATION:
+					bg_guild[j].skill[k].lv = 3;
+					break;
+				case GD_LEADERSHIP:
+				case GD_GLORYWOUNDS:
+				case GD_SOULCOLD:
+				case GD_HAWKEYES:
+					bg_guild[j].skill[k].lv = 5;
+					break;
+				case GD_EXTENSION:
+					bg_guild[j].skill[k].lv = 10;
+					break;
+				}
+			}
+		}
+		else
+		{ // Other Data
+			snprintf(bg_guild[j].name, NAME_LENGTH, "Team %d", i - 3); // Team 1, Team 2 ... Team 10
+			strncpy(bg_guild[j].master, bg_guild[j].name, NAME_LENGTH);
+			snprintf(bg_guild[j].position[0].name, NAME_LENGTH, "%s Leader", bg_guild[j].name);
+			strncpy(bg_guild[j].position[1].name, bg_guild[j].name, NAME_LENGTH);
+		}
+
+
+		sprintf(path, "%s/emblems/bg_%d.ebm", map->db_path, i);
+
+		if( (fp = fopen(path, "rb")) != NULL )
+		{
+			fseek(fp, 0, SEEK_END);
+			bg_guild[j].emblem_len = ftell(fp);
+			fseek(fp, 0, SEEK_SET);
+			fread(&bg_guild[j].emblem_data, 1, bg_guild[j].emblem_len, fp);
+			fclose(fp);
+			ShowInfo("Done reading '"CL_WHITE"%s"CL_RESET"' emblem data file.\n", path);
+		}
+	}
+
+	// Guild Data - Guillaume
+	strncpy(bg_guild[0].name, "Blue Team", NAME_LENGTH);
+	strncpy(bg_guild[0].master, "General Guillaume Marollo", NAME_LENGTH);
+	strncpy(bg_guild[0].position[0].name, "Blue Team Leader", NAME_LENGTH);
+	strncpy(bg_guild[0].position[1].name, "Blue Team", NAME_LENGTH);
+
+	// Guild Data - Croix
+	strncpy(bg_guild[1].name, "Red Team", NAME_LENGTH);
+	strncpy(bg_guild[1].master, "Prince Croix Marollo", NAME_LENGTH);
+	strncpy(bg_guild[1].position[0].name, "Red Team Leader", NAME_LENGTH);
+	strncpy(bg_guild[1].position[1].name, "Red Team", NAME_LENGTH);
+
+	// Guild Data - Traitors
+	strncpy(bg_guild[2].name, "Green Team", NAME_LENGTH);
+	strncpy(bg_guild[2].master, "Traitors of the Kingdom", NAME_LENGTH);
+	strncpy(bg_guild[2].position[0].name, "Green Team Leader", NAME_LENGTH);
+	strncpy(bg_guild[2].position[1].name, "Green Team", NAME_LENGTH);
+}
+
+void bg_team_getitem(int bg_id, int nameid, int amount)
+{
+	struct battleground_data *bg;
+	struct map_session_data *sd;
+	struct item_data *id;
+	struct item it;
+	int j, flag;
+
+	if( amount < 1 || (bg = bg_team_search(bg_id)) == NULL || (id = itemdb->exists(nameid)) == NULL )
+		return;
+	if( nameid != 7828 && nameid != 7829 && nameid != 7773 )
+		return;
+	if( battle_config.bg_reward_rates != 100 )
+		amount = amount * battle_config.bg_reward_rates / 100;
+
+	memset(&it, 0, sizeof(it));
+	it.nameid = nameid;
+	it.identify = 1;
+
+	for( j = 0; j < MAX_BG_MEMBERS; j++ )
+	{
+		if( (sd = bg->members[j].sd) == NULL )
+			continue;
+
+		if( (flag = pc->additem(sd,&it,amount,LOG_TYPE_NPC)) )
+			clif->additem(sd,0,0,flag);
+	}
+}
+
+void bg_team_get_kafrapoints(int bg_id, int amount)
+{
+	struct battleground_data *bgd;
+	struct map_session_data *sd;
+	int i;
+
+	if( (bgd = bg->team_search(bg_id)) == NULL )
+		return;
+
+	if( battle_config.bg_reward_rates != 100 )
+		amount = amount * battle_config.bg_reward_rates / 100;
+
+for( i = 0; i < MAX_BG_MEMBERS; i++ )
+	{
+		if( (sd = bgd->members[i].sd) == NULL )
+			continue;
+
+		pc->getcash(sd,0,amount);
+	}
+}
+
+/* ==============================================================
+   bg_arena (0 EoS | 1 Boss | 2 TI | 3 CTF | 4 TD | 5 SC | 6 CON)
+   bg_result (0 Won | 1 Tie | 2 Lost)
+   ============================================================== */
+void bg_team_rewards(int bg_id, int nameid, int amount, int kafrapoints, int quest_id, const char *var, int add_value, int bg_arena, int bg_result)
+{
+	struct battleground_data *bgd;
+	struct map_session_data *sd;
+	struct item_data *id;
+	struct item it;
+	int j, flag;
+	time_t clock;
+
+	if( amount < 1 || (bgd = bg->team_search(bg_id)) == NULL || (id = itemdb->exists(nameid)) == NULL )
+		return;
+		
+	time(&clock);
+
+	if( battle_config.bg_reward_rates != 100 )
+	{ // BG Reward Rates
+		amount = amount * battle_config.bg_reward_rates / 100;
+		kafrapoints = kafrapoints * battle_config.bg_reward_rates / 100;
+	}
+
+	bg_result = cap_value(bg_result,0,2);
+	memset(&it,0,sizeof(it));
+	if( nameid == 7828 || nameid == 7829 || nameid == 7773 )
+	{
+		it.nameid = nameid;
+		it.identify = 1;
+	}
+	else nameid = 0;
+
+	for( j = 0; j < MAX_BG_MEMBERS; j++ )
+	{
+		if( (sd = bgd->members[j].sd) == NULL )
+			continue;
+
+		if( quest_id ) quest->add(sd,quest_id);
+		pc_setglobalreg(sd,script->add_str(var),pc_readglobalreg(sd,script->add_str(var)) + add_value);
+
+		if( kafrapoints > 0 )
+			pc->getcash(sd,0,kafrapoints);
+
+		if( nameid && amount > 0 )
+		{
+			if( (flag = pc->additem(sd,&it,amount,LOG_TYPE_NPC)) )
+				clif->additem(sd,0,0,flag);
+		}
+	}
+}
+
+/* Queue System */
+
+struct queue_data* queue_search(int q_id)
+{ // Search a Queue using q_id
+	if( !q_id ) return NULL;
+	return (struct queue_data *)idb_get(queue_db, q_id);
+}
+
+int queue_create(const char* queue_name, const char* join_event, int min_level)
+{
+	struct queue_data *qd;
+	if( ++queue_counter <= 0 ) queue_counter = 1;
+
+	CREATE(qd, struct queue_data, 1);
+	qd->q_id = queue_counter;
+	safestrncpy(qd->queue_name, queue_name, sizeof(qd->queue_name));
+	safestrncpy(qd->join_event, join_event, sizeof(qd->join_event));
+	qd->first = qd->last = NULL; // First and Last Queue Members
+	qd->users = 0;
+	qd->min_level = min_level;
+
+	idb_put(queue_db, queue_counter, qd);
+
+	return qd->q_id;
+}
+
+void queue_members_clean(struct queue_data *qd)
+{
+	struct queue_member *head, *next;
+	nullpo_retv(qd);
+
+	head = qd->first;
+	while( head != NULL )
+	{
+		if( head->sd ) head->sd->qd = NULL;
+		next = head->next;
+		aFree(head);
+		head = next;
+	}
+
+	qd->first = qd->last = NULL;
+	qd->users = 0;
+}
+
+int queue_member_add(struct queue_data *qd, struct map_session_data *sd)
+{
+	struct queue_member *qm;
+	nullpo_retr(0,qd);
+	nullpo_retr(0,sd);
+
+	CREATE(qm, struct queue_member, 1);
+	qd->users++;
+	qm->sd = sd;
+	qm->position = qd->users;
+	qm->next = NULL;
+	sd->qd = qd; // Attach user to the Queue too
+
+	if( qd->last == NULL )
+		qd->first = qd->last = qm; // Attach to first position
+	else
+	{ // Attach at the end of the queue
+		qd->last->next = qm;
+		qd->last = qm;
+	}
+
+	return qm->position;
+}
+
+struct queue_member* queue_member_get(struct queue_data *qd, int position)
+{
+	struct queue_member *head;
+	if( !qd ) return NULL;
+
+	head = qd->first;
+	while( head != NULL )
+	{
+		if( head->sd && head->position == position )
+			return head;
+
+		head = head->next;
+	}
+
+	return NULL;
+}
+
+int queue_member_remove(struct queue_data *qd, int id)
+{
+	struct queue_member *head, *previous;
+	int i;
+	nullpo_retr(0,qd);
+
+	head = qd->first;
+	previous = NULL;
+
+	while( head != NULL )
+	{
+		if( head->sd && head->sd->bl.id == id )
+		{
+			struct queue_member *next;
+
+			next = head->next;
+			i = head->position;
+			head->sd->qd = NULL;
+			qd->users--;
+
+			// De-attach target from the main queue
+			if( previous )
+				previous->next = head->next;
+			else
+				qd->first = head->next; // Deleted is on first position
+
+			if( head->next == NULL ) qd->last = previous; // Deleted is on last position
+
+			while( next != NULL )
+			{ // Reduces positions of the next of the queue in -1
+				next->position--;
+				next = next->next;
+			}
+
+			aFree(head);
+			return i;
+		}
+
+		previous = head;
+		head = head->next;
+	}
+	return 0;
+}
+
+int queue_member_search(struct queue_data *qd, int id)
+{
+	struct queue_member *head;
+	nullpo_retr(0,qd);
+
+	head = qd->first;
+	while( head != NULL )
+	{
+		if( head->sd && head->sd->bl.id == id )
+			return head->position;
+
+		head = head->next;
+	}
+	return 0; // Not Found
+}
+
+int queue_destroy(int q_id)
+{
+	struct queue_data *qd;
+
+	if( (qd = queue_search(q_id)) == NULL )
+		return 0;
+
+	queue_members_clean(qd);
+	idb_remove(queue_db, q_id);
+	return 1;
+}
+
+int queue_join(struct map_session_data *sd, int q_id)
+{
+	char output[128];
+	struct queue_data *qd;
+	int i;
+
+	if( battle_config.bg_queue_onlytowns && !map->list[sd->bl.m].flag.town )
+	{
+		clif->message(sd->fd,"You only can join BG queues from Towns or BG Waiting Room.");
+		return 0;
+	}
+
+	if( sd->bg_id )
+	{
+		clif->message(sd->fd,"You cannot join queues when already playing Battlegrounds.");
+		return 0;
+	}
+
+	if( sd->sc.data[SC_JAILED] )
+	{
+		clif->message(sd->fd,"You cannot join queues when jailed.");
+		return 0;
+	}
+
+	if( (qd = sd->qd) != NULL )
+	{ // You cannot join a Queue if you are already on one.
+		i = queue_member_search(qd,sd->bl.id);
+		sprintf(output,"You are already on %s queue at position %d.", qd->queue_name, i);
+		clif->message(sd->fd,output);
+		return 0;
+	}
+
+	if( (qd = queue_search(q_id)) == NULL )
+		return 0; // Current Queue don't exists
+
+	if( qd->min_level && sd->status.base_level < qd->min_level )
+	{
+		sprintf(output,"You cannot join %s queue. Required min level is %d.", qd->queue_name, qd->min_level);
+		clif->message(sd->fd,output);
+		return 0;
+	}
+
+	if( battle_config.bg_logincount_check && battleground_countlogin(sd,false) > 0 )
+	{
+		sprintf(output,"You cannot join %s queue. Double Login detected.", qd->queue_name);
+		clif->message(sd->fd,output);
+		return 0;
+	}
+
+	i = queue_member_add(qd,sd);
+	sprintf(output,"You have joined %s queue at position %d.", qd->queue_name, i);
+	clif->message(sd->fd,output);
+
+	if( qd->join_event[0] ) npc->event_do(qd->join_event);
+	return 1;
+}
+
+int queue_leave(struct map_session_data *sd, int q_id)
+{
+	char output[128];
+	struct queue_data *qd;
+
+	if( (qd = queue_search(q_id)) == NULL )
+		return 0;
+
+	if( !queue_member_remove(qd,sd->bl.id) )
+	{
+		sprintf(output,"You are not at %s queue.", qd->queue_name);
+		clif->message(sd->fd,output);
+		return 0;
+	}
+
+	return 1;
+}
+
+void queue_leaveall(struct map_session_data *sd)
+{
+	struct queue_data *qd;
+	if( sd && (qd = sd->qd) != NULL )
+	{
+		char output[128];
+		queue_member_remove(qd,sd->bl.id);
+		sprintf(output,"You have been removed from %s BG Queue.",qd->queue_name);
+		clif->message(sd->fd,output);
+	}
 }
 
 enum bg_queue_types bg_str2teamtype (const char *str) {
@@ -485,6 +1250,7 @@ struct bg_arena *bg_name2arena (char *name) {
 		if( strcmpi(bg->arena[i]->name,name) == 0 )
 			return bg->arena[i];
 	}
+
 	return NULL;
 }
 
@@ -507,6 +1273,7 @@ int bg_id2pos(int queue_id, int account_id)
 			return i+1;
 		}
 	}
+
 	return 0;
 }
 
@@ -554,7 +1321,7 @@ void bg_queue_player_cleanup(struct map_session_data *sd) {
 	sd->bg_queue.arena = NULL;
 	sd->bg_queue.ready = 0;
 	sd->bg_queue.client_has_bg_data = 0;
-	sd->bg_queue.type = 0;
+	sd->bg_queue.type = BGQT_INVALID;
 }
 void bg_match_over(struct bg_arena *arena, bool canceled) {
 	struct script_queue *queue = script->queue(arena->queue_id);
@@ -572,7 +1339,7 @@ void bg_match_over(struct bg_arena *arena, bool canceled) {
 			continue;
 
 		if (sd->bg_queue.arena) {
-			bg->team_leave(sd, 0);
+			bg->team_leave(sd, BGTL_LEFT);
 			bg->queue_pc_cleanup(sd);
 		}
 		if (canceled)
@@ -899,9 +1666,37 @@ void do_init_battleground(bool minimal) {
 		return;
 
 	bg->team_db = idb_alloc(DB_OPT_RELEASE_DATA);
+	queue_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	timer->add_func_list(bg->send_xy_timer, "bg_send_xy_timer");
 	timer->add_interval(timer->gettick() + battle_config.bg_update_interval, bg->send_xy_timer, 0, 0, battle_config.bg_update_interval);
 	bg->config_read();
+	bg_guild_build_data();
+}
+
+static int bg_team_db_reset(DBKey key, DBData *data, va_list ap)
+{
+	struct battleground_data *bgd = (struct battleground_data *)DB->data2ptr(data);
+	bg->team_clean(bgd->bg_id,false);
+	return 0;
+}
+
+static int queue_db_final(DBKey key, DBData *data, va_list ap)
+{
+	struct queue_data *qd = (struct queue_data *)DB->data2ptr(data);
+	queue_members_clean(qd); // Unlink all queue members
+	return 0;
+}
+
+void bg_reload(void)
+{ // @reloadscript
+	bg->team_db->destroy(bg->team_db,bg_team_db_reset);
+	queue_db->destroy(queue_db, queue_db_final);
+
+	bg->team_db = idb_alloc(DB_OPT_RELEASE_DATA);
+	queue_db = idb_alloc(DB_OPT_RELEASE_DATA);
+
+	bg->team_counter = 0;
+	queue_counter = 0;
 }
 
 /**
@@ -918,6 +1713,8 @@ int bg_team_db_final(DBKey key, DBData *data, va_list ap) {
 void do_final_battleground(void)
 {
 	bg->team_db->destroy(bg->team_db,bg->team_db_final);
+
+	queue_db->destroy(queue_db, queue_db_final);
 
 	if (bg->arena) {
 		int i;
@@ -973,6 +1770,27 @@ void battleground_defaults(void) {
 	bg->team_db_final = bg_team_db_final;
 	/* */
 	bg->str2teamtype = bg_str2teamtype;
+	/* */
+	bg->create2 = bg_create2;
+	bg->guild_get = bg_guild_get;
+	bg->checkskill = bg_checkskill;
+	bg->block_skill_end = bg_block_skill_end;
+	bg->block_skill_status = bg_block_skill_status;
+	bg->block_skill_start = bg_block_skill_start;
+	bg->countlogin = battleground_countlogin;
+	bg->team_getitem = bg_team_getitem;
+	bg->team_get_kafrapoints = bg_team_get_kafrapoints;
+	bg->team_rewards = bg_team_rewards;
+	bg->team_clean = bg_team_clean;
+	bg->queue_search = queue_search;
+	bg->queue_create = queue_create;
+	bg->queue_destroy = queue_destroy;
+	bg->queue_leave = queue_leave;
+	bg->queue_leaveall = queue_leaveall;
+	bg->queue_join = queue_join;
+	bg->queue_member_get = queue_member_get;
+	bg->queue_member_remove = queue_member_remove;
+	bg->reload = bg_reload;
 	/* */
 	bg->config_read = bg_config_read;
 }
