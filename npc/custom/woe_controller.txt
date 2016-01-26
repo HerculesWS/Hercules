@@ -30,7 +30,7 @@ OnAgitStart:
 
 // Script Core
 //============================================================
--	script	WOE_CONTROL	-1,{
+-	script	WOE_CONTROL	FAKE_NPC,{
 function Disp_Owner; function Add_Zero;
 
 OnInit:

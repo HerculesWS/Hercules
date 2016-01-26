@@ -1,7 +1,7 @@
 /**
  * This file is part of Hercules.
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2016  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -175,6 +175,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(login->char_server_connection_status, HP_login_char_server_connection_status) },
 	{ HP_POP(login->parse_request_connection, HP_login_parse_request_connection) },
 	{ HP_POP(login->parse_login, HP_login_parse_login) },
+	{ HP_POP(login->config_set_defaults, HP_login_config_set_defaults) },
+	{ HP_POP(login->config_read, HP_login_config_read) },
 /* iMalloc */
 	{ HP_POP(iMalloc->init, HP_iMalloc_init) },
 	{ HP_POP(iMalloc->final, HP_iMalloc_final) },

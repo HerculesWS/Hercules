@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -609,7 +609,7 @@ ACMD(jump)
  * various info.
  *------------------------------------------*/
 ACMD(who) {
-	struct map_session_data *pl_sd = NULL;
+	const struct map_session_data *pl_sd = NULL;
 	struct s_mapiterator *iter = NULL;
 	char player_name[NAME_LENGTH] = "";
 	int count = 0;
@@ -640,7 +640,7 @@ ACMD(who) {
 	StrBuf->Init(&buf);
 
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter)) {
+	for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
 		if (!((pc_has_permission(pl_sd, PC_PERM_HIDE_SESSION) || pc_isinvisible(pl_sd)) && pc_get_group_level(pl_sd) > level)) { // you can look only lower or same level
 			if (stristr(pl_sd->status.name, player_name) == NULL // search with no case sensitive
 				|| (map_id >= 0 && pl_sd->bl.m != map_id))
@@ -709,7 +709,7 @@ ACMD(who) {
  *------------------------------------------*/
 ACMD(whogm)
 {
-	struct map_session_data* pl_sd;
+	const struct map_session_data *pl_sd;
 	struct s_mapiterator* iter;
 	int j, count;
 	int level;
@@ -731,7 +731,7 @@ ACMD(whogm)
 	level = pc_get_group_level(sd);
 
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter)) {
+	for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
 		int pl_level = pc_get_group_level(pl_sd);
 		if (!pl_level)
 			continue;
@@ -1315,12 +1315,11 @@ ACMD(item2)
 			}
 			if (item_data->type == IT_PETARMOR)
 				refine = 0;
-			if (refine > MAX_REFINE)
-				refine = MAX_REFINE;
 		} else {
 			identify = 1;
 			refine = attr = 0;
 		}
+		refine = cap_value(refine, 0, MAX_REFINE);
 		for (i = 0; i < loop; i++) {
 			memset(&item_tmp, 0, sizeof(item_tmp));
 			item_tmp.nameid = item_id;
@@ -1564,8 +1563,11 @@ int atcommand_stopattack(struct block_list *bl,va_list ap)
  *------------------------------------------*/
 int atcommand_pvpoff_sub(struct block_list *bl,va_list ap)
 {
-	TBL_PC* sd = (TBL_PC*)bl;
+	struct map_session_data *sd = NULL;
 	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
+
 	clif->pvpset(sd, 0, 0, 2);
 	if (sd->pvp_timer != INVALID_TIMER) {
 		timer->delete(sd->pvp_timer, pc->calc_pvprank_timer);
@@ -1599,8 +1601,11 @@ ACMD(pvpoff)
  *------------------------------------------*/
 int atcommand_pvpon_sub(struct block_list *bl,va_list ap)
 {
-	TBL_PC* sd = (TBL_PC*)bl;
+	struct map_session_data *sd = NULL;
 	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
+
 	if (sd->pvp_timer == INVALID_TIMER) {
 		sd->pvp_timer = timer->add(timer->gettick() + 200, pc->calc_pvprank_timer, sd->bl.id, 0);
 		sd->pvp_rank = 0;
@@ -1697,6 +1702,32 @@ ACMD(model)
 		clif->message(fd, msg_fd(fd,36)); // Appearance changed.
 	} else {
 		clif->message(fd, msg_fd(fd,37)); // An invalid number was specified.
+		return false;
+	}
+
+	return true;
+}
+
+/*==========================================
+ * @bodystyle [Rytech]
+ *------------------------------------------*/
+ACMD(bodystyle)
+{
+	int body_style = 0;
+
+	memset(atcmd_output, '\0', sizeof(atcmd_output));
+
+	if (!*message || sscanf(message, "%d", &body_style) < 1) {
+		sprintf(atcmd_output, "Please, enter a body style (usage: @bodystyle <body ID: %d-%d>).", MIN_BODY_STYLE, MAX_BODY_STYLE);
+		clif->message(fd, atcmd_output);
+		return false;
+	}
+
+	if (body_style >= MIN_BODY_STYLE && body_style <= MAX_BODY_STYLE) {
+		pc->changelook(sd, LOOK_BODY2, body_style);
+		clif->message(fd, msg_txt(36)); // Appearence changed.
+	} else {
+		clif->message(fd, msg_txt(37)); // An invalid number was specified.
 		return false;
 	}
 
@@ -1992,7 +2023,7 @@ ACMD(monster)
 	for (i = 0; i < number; i++) {
 		int k;
 		map->search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
-		k = mob->once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, eventname, size, AI_NONE|(mob_id == MOBID_EMPERIUM?0x200:0x0));
+		k = mob->once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, eventname, size, AI_NONE|(mob_id == MOBID_EMPELIUM?0x200:0x0));
 		count += (k != 0) ? 1 : 0;
 	}
 
@@ -2016,10 +2047,12 @@ ACMD(monster)
  *------------------------------------------*/
 int atkillmonster_sub(struct block_list *bl, va_list ap)
 {
-	struct mob_data *md = (struct mob_data *)bl;
+	struct mob_data *md = NULL;
 	int flag = va_arg(ap, int);
-
 	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
+
 	if (md->guardian_data)
 		return 0; //Do not touch WoE mobs!
 
@@ -2934,10 +2967,8 @@ ACMD(doom)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
-	{
-		if (pl_sd->fd != fd && pc_get_group_level(sd) >= pc_get_group_level(pl_sd))
-		{
+	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
+		if (pl_sd->fd != fd && pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) {
 			status_kill(&pl_sd->bl);
 			clif->specialeffect(&pl_sd->bl,450,AREA);
 			clif->message(pl_sd->fd, msg_fd(fd,61)); // The holy messenger has given judgment.
@@ -2959,10 +2990,8 @@ ACMD(doommap)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
-	{
-		if (pl_sd->fd != fd && sd->bl.m == pl_sd->bl.m && pc_get_group_level(sd) >= pc_get_group_level(pl_sd))
-		{
+	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
+		if (pl_sd->fd != fd && sd->bl.m == pl_sd->bl.m && pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) {
 			status_kill(&pl_sd->bl);
 			clif->specialeffect(&pl_sd->bl,450,AREA);
 			clif->message(pl_sd->fd, msg_fd(fd,61)); // The holy messenger has given judgment.
@@ -2996,7 +3025,7 @@ ACMD(raise)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
+	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter)))
 		if( pc_isdead(pl_sd) )
 			atcommand->raise_sub(pl_sd);
 	mapit->free(iter);
@@ -3015,7 +3044,7 @@ ACMD(raisemap)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
+	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter)))
 		if (sd->bl.m == pl_sd->bl.m && pc_isdead(pl_sd) )
 			atcommand->raise_sub(pl_sd);
 	mapit->free(iter);
@@ -3064,8 +3093,7 @@ ACMD(kickall)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter))
-	{
+	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if (pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) { // you can kick only lower or same gm level
 			if (sd->status.account_id != pl_sd->status.account_id)
 				clif->GM_kick(NULL, pl_sd);
@@ -3399,7 +3427,7 @@ ACMD(recallall)
 
 	count = 0;
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter)) {
+	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if (sd->status.account_id != pl_sd->status.account_id && pc_get_group_level(sd) >= pc_get_group_level(pl_sd)) {
 			if (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y)
 				continue; // Don't waste time warping the character to the same place.
@@ -3459,8 +3487,7 @@ ACMD(guildrecall)
 	count = 0;
 
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter))
-	{
+	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if (sd->status.account_id != pl_sd->status.account_id && pl_sd->status.guild_id == g->guild_id) {
 			if (pc_get_group_level(pl_sd) > pc_get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
 				continue; // Skip GMs greater than you...             or chars already on the cell
@@ -3516,7 +3543,7 @@ ACMD(partyrecall)
 	count = 0;
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) ) {
+	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if (sd->status.account_id != pl_sd->status.account_id && pl_sd->status.party_id == p->party.party_id) {
 			if (pc_get_group_level(pl_sd) > pc_get_group_level(sd) || (pl_sd->bl.m == sd->bl.m && pl_sd->bl.x == sd->bl.x && pl_sd->bl.y == sd->bl.y))
 				continue; // Skip GMs greater than you...             or chars already on the cell
@@ -3679,7 +3706,7 @@ ACMD(reloadscript) {
 	//atcommand_broadcast( fd, sd, "@broadcast", "You will feel a bit of lag at this point !" );
 
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter)) {
+	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if (pl_sd->npc_id || pl_sd->npc_shopid) {
 			if (pl_sd->state.using_fake_npc) {
 				clif->clearunit_single(pl_sd->npc_id, CLR_OUTSIGHT, pl_sd->fd);
@@ -3717,10 +3744,11 @@ ACMD(reloadscript) {
  * 3 = Shows the chats in that map
  TODO# add the missing mapflags e.g. adjust_skill_damage to display
  *------------------------------------------*/
-ACMD(mapinfo) {
-	struct map_session_data* pl_sd;
+ACMD(mapinfo)
+{
+	const struct map_session_data *pl_sd;
 	struct s_mapiterator* iter;
-	struct chat_data *cd = NULL;
+	const struct chat_data *cd = NULL;
 	char direction[12];
 	int i, m_id, chat_num = 0, list = 0, vend_num = 0;
 	unsigned short m_index;
@@ -3755,11 +3783,11 @@ ACMD(mapinfo) {
 	// count chats (for initial message)
 	chat_num = 0;
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) ) {
+	for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
 		if( pl_sd->mapindex == m_index ) {
 			if( pl_sd->state.vending )
 				vend_num++;
-			else if( (cd = (struct chat_data*)map->id2bl(pl_sd->chatID)) != NULL && cd->usersd[0] == pl_sd )
+			else if ((cd = map->id2cd(pl_sd->chatID)) != NULL && cd->usersd[0] == pl_sd)
 				chat_num++;
 		}
 	}
@@ -3889,6 +3917,8 @@ ACMD(mapinfo) {
 		strcat(atcmd_output, msg_fd(fd,1096)); // PartyLock |
 	if (map->list[m_id].flag.guildlock)
 		strcat(atcmd_output, msg_fd(fd,1097)); // GuildLock |
+	if (map->list[m_id].flag.noviewid != EQP_NONE)
+		strcat(atcmd_output, msg_fd(fd,1079)); // NoViewID |
 	clif->message(fd, atcmd_output);
 
 	switch (list) {
@@ -3898,8 +3928,7 @@ ACMD(mapinfo) {
 		case 1:
 			clif->message(fd, msg_fd(fd,1098)); // ----- Players in Map -----
 			iter = mapit_getallusers();
-			for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter))
-			{
+			for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
 				if (pl_sd->mapindex == m_index) {
 					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1099), // Player '%s' (session #%d) | Location: %d,%d
 							pl_sd->status.name, pl_sd->fd, pl_sd->bl.x, pl_sd->bl.y);
@@ -3936,12 +3965,8 @@ ACMD(mapinfo) {
 		case 3:
 			clif->message(fd, msg_fd(fd,1113)); // ----- Chats in Map -----
 			iter = mapit_getallusers();
-			for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter))
-			{
-				if ((cd = (struct chat_data*)map->id2bl(pl_sd->chatID)) != NULL &&
-						pl_sd->mapindex == m_index &&
-						cd->usersd[0] == pl_sd)
-				{
+			for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
+				if ((cd = map->id2cd(pl_sd->chatID)) != NULL && pl_sd->mapindex == m_index && cd->usersd[0] == pl_sd) {
 					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1114), // Chat: %s | Player: %s | Location: %d %d
 							cd->title, pl_sd->status.name, cd->bl.x, cd->bl.y);
 					clif->message(fd, atcmd_output);
@@ -4722,7 +4747,7 @@ ACMD(disguiseall)
 	}
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
+	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter)))
 		pc->disguise(pl_sd, mob_id);
 	mapit->free(iter);
 
@@ -4802,7 +4827,7 @@ ACMD(undisguiseall) {
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for( pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter) )
+	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter)))
 		if( pl_sd->disguise != -1 )
 			pc->disguise(pl_sd, -1);
 	mapit->free(iter);
@@ -5362,12 +5387,13 @@ ACMD(displayskill) {
  * @skilltree by [MouseJstr]
  * prints the skill tree for a player required to get to a skill
  *------------------------------------------*/
-ACMD(skilltree) {
+ACMD(skilltree)
+{
 	struct map_session_data *pl_sd = NULL;
 	uint16 skill_id;
 	int meets, j, c=0;
 	char target[NAME_LENGTH];
-	struct skill_tree_entry *ent;
+	struct skill_tree_entry *entry;
 
 	if(!*message || sscanf(message, "%5hu %23[^\r\n]", &skill_id, target) != 2) {
 		clif->message(fd, msg_fd(fd,1167)); // Usage: @skilltree <skill ID> <target>
@@ -5385,21 +5411,19 @@ ACMD(skilltree) {
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1168), pc->job_name(c), pc->checkskill(pl_sd, NV_BASIC)); // Player is using %s skill tree (%d basic points).
 	clif->message(fd, atcmd_output);
 
-	ARR_FIND( 0, MAX_SKILL_TREE, j, pc->skill_tree[c][j].id == 0 || pc->skill_tree[c][j].id == skill_id );
-	if( j == MAX_SKILL_TREE || pc->skill_tree[c][j].id == 0 )
-	{
+	ARR_FIND(0, MAX_SKILL_TREE, j, pc->skill_tree[c][j].id == 0 || pc->skill_tree[c][j].id == skill_id);
+	if (j == MAX_SKILL_TREE || pc->skill_tree[c][j].id == 0) {
 		clif->message(fd, msg_fd(fd,1169)); // The player cannot use that skill.
 		return false;
 	}
 
-	ent = &pc->skill_tree[c][j];
+	entry = &pc->skill_tree[c][j];
 
 	meets = 1;
-	for(j=0;j<MAX_PC_SKILL_REQUIRE;j++)
-	{
-		if( ent->need[j].id && pc->checkskill(sd,ent->need[j].id) < ent->need[j].lv)
-		{
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1170), ent->need[j].lv, skill->dbs->db[ent->need[j].id].desc); // Player requires level %d of skill %s.
+	for (j = 0; j < VECTOR_LENGTH(entry->need); j++) {
+		struct skill_tree_requirement *req = &VECTOR_INDEX(entry->need, j);
+		if (pc->checkskill(sd, req->id) < req->lv) {
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1170), req->lv, skill->dbs->db[req->id].desc); // Player requires level %d of skill %s.
 			clif->message(fd, atcmd_output);
 			meets = 0;
 		}
@@ -5484,7 +5508,7 @@ ACMD(divorce)
 ACMD(changelook)
 {
 	int i, j = 0, k = 0;
-	int pos[7] = { LOOK_HEAD_TOP,LOOK_HEAD_MID,LOOK_HEAD_BOTTOM,LOOK_WEAPON,LOOK_SHIELD,LOOK_SHOES,LOOK_ROBE };
+	int pos[8] = { LOOK_HEAD_TOP,LOOK_HEAD_MID,LOOK_HEAD_BOTTOM,LOOK_WEAPON,LOOK_SHIELD,LOOK_SHOES,LOOK_ROBE,LOOK_BODY2 };
 
 	if((i = sscanf(message, "%12d %12d", &j, &k)) < 1) {
 		clif->message(fd, msg_fd(fd,1177)); // Usage: @changelook {<position>} <view id>
@@ -6039,7 +6063,8 @@ ACMD(mobsearch)
 	char mob_name[100];
 	int mob_id;
 	int number = 0;
-	struct s_mapiterator* it;
+	struct s_mapiterator *it;
+	const struct mob_data *md = NULL;
 
 	if (!*message || sscanf(message, "%99[^\n]", mob_name) < 1) {
 		clif->message(fd, msg_fd(fd,1218)); // Please enter a monster name (usage: @mobsearch <monster name>).
@@ -6061,12 +6086,7 @@ ACMD(mobsearch)
 	clif->message(fd, atcmd_output);
 
 	it = mapit_geteachmob();
-	for(;;)
-	{
-		TBL_MOB* md = (TBL_MOB*)mapit->next(it);
-		if( md == NULL )
-			break;// no more mobs
-
+	for (md = BL_UCCAST(BL_MOB, mapit->first(it)); mapit->exists(it); md = BL_UCCAST(BL_MOB, mapit->next(it))) {
 		if( md->bl.m != sd->bl.m )
 			continue;
 		if( mob_id != -1 && md->class_ != mob_id )
@@ -6224,24 +6244,22 @@ ACMD(users)
 	char buf[CHAT_SIZE_MAX];
 	int users[MAX_MAPINDEX];
 	int users_all;
-	struct s_mapiterator* iter;
+	struct s_mapiterator *iter;
+	const struct map_session_data *pl_sd = NULL;
 
 	memset(users, 0, sizeof(users));
 	users_all = 0;
 
 	// count users on each map
 	iter = mapit_getallusers();
-	for(;;)
-	{
-		struct map_session_data* sd2 = (struct map_session_data*)mapit->next(iter);
-		if( sd2 == NULL )
-			break;// no more users
-
-		if( sd2->mapindex >= MAX_MAPINDEX )
+	for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
+		if (pl_sd->mapindex >= MAX_MAPINDEX)
 			continue;// invalid mapindex
 
-		if( users[sd2->mapindex] < INT_MAX ) ++users[sd2->mapindex];
-		if( users_all < INT_MAX ) ++users_all;
+		if (users[pl_sd->mapindex] < INT_MAX)
+			++users[pl_sd->mapindex];
+		if (users_all < INT_MAX)
+			++users_all;
 	}
 	mapit->free(iter);
 
@@ -6510,7 +6528,7 @@ ACMD(refreshall)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for (iter_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); iter_sd = (TBL_PC*)mapit->next(iter))
+	for (iter_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); iter_sd = BL_UCAST(BL_PC, mapit->next(iter)))
 		clif->refresh(iter_sd);
 	mapit->free(iter);
 	return true;
@@ -6718,7 +6736,8 @@ ACMD(showmobs)
 	char mob_name[100];
 	int mob_id;
 	int number = 0;
-	struct s_mapiterator* it;
+	struct s_mapiterator *it;
+	const struct mob_data *md = NULL;
 
 	if (sscanf(message, "%99[^\n]", mob_name) < 0) {
 		clif->message(fd, msg_fd(fd,546)); // Please enter a mob name/id (usage: @showmobs <mob name/id>)
@@ -6755,12 +6774,7 @@ ACMD(showmobs)
 	clif->message(fd, atcmd_output);
 
 	it = mapit_geteachmob();
-	for(;;)
-	{
-		TBL_MOB* md = (TBL_MOB*)mapit->next(it);
-		if( md == NULL )
-			break;// no more mobs
-
+	for (md = BL_UCCAST(BL_MOB, mapit->first(it)); mapit->next(it); md = BL_UCCAST(BL_MOB, mapit->next(it))) {
 		if( md->bl.m != sd->bl.m )
 			continue;
 		if( mob_id != -1 && md->class_ != mob_id )
@@ -6782,7 +6796,7 @@ ACMD(showmobs)
  * homunculus level up [orn]
  *------------------------------------------*/
 ACMD(homlevel) {
-	TBL_HOM * hd;
+	struct homun_data *hd;
 	int level = 0;
 	enum homun_type htype;
 
@@ -6861,8 +6875,8 @@ ACMD(hommutate) {
 		return false;
 	}
 
-	if (!*message) {
-		homun_id = 6048 + (rnd() % 4);
+	if (*message == '\0') {
+		homun_id = HOMID_EIRA + (rnd() % 4);
 	} else {
 		homun_id = atoi(message);
 	}
@@ -7277,7 +7291,7 @@ int atcommand_mutearea_sub(struct block_list *bl, va_list ap)
 { // As it is being used [ACMD(mutearea)] there's no need to be a bool, but if there's need to reuse it, it's better to be this way
 
 	int time, id;
-	struct map_session_data *pl_sd = (struct map_session_data *)bl;
+	struct map_session_data *pl_sd = BL_CAST(BL_PC, bl);
 	if (pl_sd == NULL)
 		return 0;
 
@@ -7393,7 +7407,7 @@ ACMD(sizeall)
 	size = cap_value(size,0,2);
 
 	iter = mapit_getallusers();
-	for (pl_sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); pl_sd = (TBL_PC*)mapit->next(iter)) {
+	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if (pl_sd->state.size != size) {
 			if (pl_sd->state.size) {
 				pl_sd->state.size = SZ_SMALL;
@@ -7540,7 +7554,7 @@ ACMD(mapflag) {
 		CHECKFLAG(nojobexp);          CHECKFLAG(nomobloot);          CHECKFLAG(nomvploot);    CHECKFLAG(nightenabled);
 		CHECKFLAG(nodrop);            CHECKFLAG(novending);          CHECKFLAG(loadevent);
 		CHECKFLAG(nochat);            CHECKFLAG(partylock);          CHECKFLAG(guildlock);    CHECKFLAG(src4instance);
-		CHECKFLAG(notomb);            CHECKFLAG(nocashshop);
+		CHECKFLAG(notomb);            CHECKFLAG(nocashshop);         CHECKFLAG(noviewid);
 		clif->message(sd->fd," ");
 		clif->message(sd->fd,msg_fd(fd,1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
 		clif->message(sd->fd,msg_fd(fd,1313)); // Type "@mapflag available" to list the available mapflags.
@@ -7577,7 +7591,7 @@ ACMD(mapflag) {
 	SETFLAG(nojobexp);          SETFLAG(nomobloot);          SETFLAG(nomvploot);    SETFLAG(nightenabled);
 	SETFLAG(nodrop);            SETFLAG(novending);          SETFLAG(loadevent);
 	SETFLAG(nochat);            SETFLAG(partylock);          SETFLAG(guildlock);    SETFLAG(src4instance);
-	SETFLAG(notomb);            SETFLAG(nocashshop);
+	SETFLAG(notomb);            SETFLAG(nocashshop);         SETFLAG(noviewid);
 
 	clif->message(sd->fd,msg_fd(fd,1314)); // Invalid flag name or flag.
 	clif->message(sd->fd,msg_fd(fd,1312)); // Usage: "@mapflag monster_noteleport 1" (0=Off | 1=On)
@@ -7589,7 +7603,7 @@ ACMD(mapflag) {
 	clif->message(sd->fd,"nozenypenalty, notrade, noskill, nowarp, nowarpto, noicewall, snow, clouds, clouds2,");
 	clif->message(sd->fd,"fog, fireworks, sakura, leaves, nobaseexp, nojobexp, nomobloot,");
 	clif->message(sd->fd,"nomvploot, nightenabled, nodrop, novending, loadevent, nochat, partylock,");
-	clif->message(sd->fd,"guildlock, src4instance, notomb, nocashshop");
+	clif->message(sd->fd,"guildlock, src4instance, notomb, nocashshop, noviewid");
 #undef CHECKFLAG
 #undef SETFLAG
 
@@ -8400,6 +8414,7 @@ ACMD(charcommands)
 	atcommand->commands_sub(sd, fd, COMMAND_CHARCOMMAND);
 	return true;
 }
+
 /* for new mounts */
 ACMD(cashmount)
 {
@@ -8411,7 +8426,7 @@ ACMD(cashmount)
 	clif->message(sd->fd,msg_fd(fd,1362)); // NOTICE: If you crash with mount your LUA is outdated.
 	if (!sd->sc.data[SC_ALL_RIDING]) {
 		clif->message(sd->fd,msg_fd(fd,1363)); // You have mounted.
-		sc_start(NULL,&sd->bl,SC_ALL_RIDING,100,0,-1);
+		sc_start(NULL,&sd->bl,SC_ALL_RIDING,100,25,-1);
 	} else {
 		clif->message(sd->fd,msg_fd(fd,1364)); // You have released your mount.
 		status_change_end(&sd->bl, SC_ALL_RIDING, INVALID_TIMER);
@@ -9758,6 +9773,7 @@ void atcommand_basecommands(void) {
 		ACMD_DEF(skdebug),
 		ACMD_DEF(cddebug),
 		ACMD_DEF(lang),
+		ACMD_DEF(bodystyle),
 		ACMD_DEF(order),
 		ACMD_DEF(leader),
 		ACMD_DEF(reportafk),
@@ -9909,7 +9925,7 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
 	//Reconstructed message
 	char atcmd_msg[CHAT_SIZE_MAX];
 
-	TBL_PC * ssd = NULL; //sd for target
+	struct map_session_data *ssd = NULL; //sd for target
 	AtCommandInfo * info;
 
 	nullpo_retr(false, sd);

@@ -1582,7 +1582,7 @@ OnTimer133000:
 	end;
 }
 
--	script	Egg Bomb#0	-1,{
+-	script	Egg Bomb#0	FAKE_NPC,{
 OnInit:
 	disablenpc strnpcinfo(0);
 	end;

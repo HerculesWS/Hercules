@@ -459,7 +459,7 @@ OnTouch:
 	close;
 }
 
-1@ma_c,1,1,0	script	#buwaya_spawn_mobs	-1,{
+1@ma_c,1,1,0	script	#buwaya_spawn_mobs	FAKE_NPC,{
 OnInstanceInit:
 	.@map$ = instance_mapname("1@ma_c");
 	areamonster .@map$,73,81,93,101,"Seaweed",2331,18;

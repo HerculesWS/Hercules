@@ -40,7 +40,7 @@
 //=========================================================================
 
 //== Kunlun Transportation =================================
--	script	::Kunlun_Envoy_gonryun	-1,{
+-	script	::Kunlun_Envoy_gonryun	FAKE_NPC,{
 	mes "[Wa Bai Hu]";
 	mes "Good day~";
 	mes "Let me invite you all";

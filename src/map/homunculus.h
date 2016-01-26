@@ -28,19 +28,50 @@
 
 struct map_session_data;
 
+/// Homunuculus IDs
+enum homun_id {
+	HOMID_LIF           = 6001, ///< Lif
+	HOMID_AMISTR        = 6002, ///< Amistr
+	HOMID_FILIR         = 6003, ///< Filir
+	HOMID_VANILMIRTH    = 6004, ///< Vanilmirth
+	HOMID_LIF2          = 6005, ///< Lif (Alternate)
+	HOMID_AMISTR2       = 6006, ///< Amistr (Alternate)
+	HOMID_FILIR2        = 6007, ///< Filir (Alternate)
+	HOMID_VANILMIRTH2   = 6008, ///< Vanilmirth (Alternate)
+	HOMID_LIF_E         = 6009, ///< Lif (Evolved)
+	HOMID_AMISTR_E      = 6010, ///< Amistr (Evolved)
+	HOMID_FILIR_E       = 6011, ///< Filir (Evolved)
+	HOMID_VANILMIRTH_E  = 6012, ///< Vanilmirth (Evolved)
+	HOMID_LIF2_E        = 6013, ///< Lif (Alternate, Evolved)
+	HOMID_AMISTR2_E     = 6014, ///< Amistr (Alternate, Evolved)
+	HOMID_FILIR2_E      = 6015, ///< Filir (Alternate, Evolved)
+	HOMID_VANILMIRTH2_E = 6016, ///< Vanilmirth (Alternate, Evolved)
+
+	HOMID_EIRA          = 6048, ///< Eira
+	HOMID_BAYERI        = 6049, ///< Bayeri
+	HOMID_SERA          = 6050, ///< Sera
+	HOMID_DIETR         = 6051, ///< Dietr
+	HOMID_ELEANOR       = 6052, ///< Eleanor
+};
+
+#define MAX_HOMUNCULUS_CLASS 52 // [orn] Increased to 60 from 16 to allow new Homun-S.
+#define HM_CLASS_BASE 6001
+#define HM_CLASS_MAX (HM_CLASS_BASE+MAX_HOMUNCULUS_CLASS-1)
+
 #define MAX_HOM_SKILL_REQUIRE 5
 #define homdb_checkid(id) ((id) >=  HM_CLASS_BASE && (id) <= HM_CLASS_MAX)
 #define homun_alive(x) ((x) && (x)->homunculus.vaporize == HOM_ST_ACTIVE && (x)->battle_status.hp > 0)
 
 #ifdef RENEWAL
-#define	HOMUN_LEVEL_STATWEIGHT_VALUE 0
-#define APPLY_HOMUN_LEVEL_STATWEIGHT()( \
-	hom->str_value = hom->agi_value = \
-	hom->vit_value = hom->int_value = \
-	hom->dex_value = hom->luk_value = hom->level / 10 - HOMUN_LEVEL_STATWEIGHT_VALUE \
-	)
+#define HOMUN_LEVEL_STATWEIGHT_VALUE 0
+#define APPLY_HOMUN_LEVEL_STATWEIGHT() \
+	do { \
+		hom->str_value = hom->agi_value = \
+		hom->vit_value = hom->int_value = \
+		hom->dex_value = hom->luk_value = hom->level / 10 - HOMUN_LEVEL_STATWEIGHT_VALUE; \
+	} while (false)
 #else
-#define APPLY_HOMUN_LEVEL_STATWEIGHT()
+#define APPLY_HOMUN_LEVEL_STATWEIGHT() (void)0
 #endif
 
 struct h_stats {

@@ -98,13 +98,19 @@
 #endif // 20090603
 #endif // 20070227
 
-/* Feb 1st 2012 */
-#if PACKETVER >= 20120201
-#	define NEW_CARTS
-#	define MAX_CARTS 9
+#if PACKETVER >= 20150805 /* Cart Decoration */
+	#define CART_DECORATION
+	#define MAX_CARTDECORATION_CARTS 3 // Currently there are 3 Carts available in kRO. [Frost]
 #else
-#	define MAX_CARTS 5
+	#define MAX_CARTDECORATION_CARTS 0
 #endif
+#if PACKETVER >= 20120201 /* New Geneticist Carts */
+	#define NEW_CARTS
+	#define MAX_BASE_CARTS 9
+#else
+	#define MAX_BASE_CARTS 5
+#endif
+#define MAX_CARTS (MAX_BASE_CARTS + MAX_CARTDECORATION_CARTS)
 
 #define MAX_INVENTORY 100
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
@@ -182,9 +188,6 @@
 // Base Homun skill.
 #define HM_SKILLBASE 8001
 #define MAX_HOMUNSKILL 43
-#define MAX_HOMUNCULUS_CLASS 52 // [orn] Increased to 60 from 16 to allow new Homun-S.
-#define HM_CLASS_BASE 6001
-#define HM_CLASS_MAX (HM_CLASS_BASE+MAX_HOMUNCULUS_CLASS-1)
 
 // Mail System
 #define MAIL_MAX_INBOX 30
@@ -194,15 +197,11 @@
 // Mercenary System
 #define MC_SKILLBASE 8201
 #define MAX_MERCSKILL 40
-#define MAX_MERCENARY_CLASS 61
 
 // Elemental System
 #define MAX_ELEMENTALSKILL 42
 #define EL_SKILLBASE 8401
 #define MAX_ELESKILLTREE 3
-#define MAX_ELEMENTAL_CLASS 12
-#define EL_CLASS_BASE 2114
-#define EL_CLASS_MAX (EL_CLASS_BASE+MAX_ELEMENTAL_CLASS-1)
 
 // The following system marks a different job ID system used by the map server,
 // which makes a lot more sense than the normal one. [Skotlex]
@@ -269,6 +268,7 @@ struct item {
 
 //Equip position constants
 enum equip_pos {
+	EQP_NONE               = 0x000000,
 	EQP_HEAD_LOW           = 0x000001,
 	EQP_HEAD_MID           = 0x000200, //512
 	EQP_HEAD_TOP           = 0x000100, //256
@@ -508,7 +508,7 @@ struct mmo_charstatus {
 	unsigned int option;
 	short manner; // Defines how many minutes a char will be muted, each negative point is equivalent to a minute.
 	unsigned char karma;
-	short hair,hair_color,clothes_color;
+	short hair,hair_color,clothes_color,body;
 	int party_id,guild_id,pet_id,hom_id,mer_id,ele_id;
 	int fame;
 

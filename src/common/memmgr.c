@@ -45,7 +45,7 @@ struct malloc_interface *iMalloc;
 #	define REALLOC(p,n,file,line,func) mwRealloc((p),(n),(file),(line))
 #	define STRDUP(p,file,line,func)    mwStrdup((p),(file),(line))
 #	define FREE(p,file,line,func)      mwFree((p),(file),(line))
-#	define MEMORY_USAGE()              (size_t)0
+#	define MEMORY_USAGE()              ((size_t)0)
 #	define MEMORY_VERIFY(ptr)          mwIsSafeAddr((ptr), 1)
 #	define MEMORY_CHECK()              CHECK()
 
@@ -67,20 +67,20 @@ struct malloc_interface *iMalloc;
 
 #	include <gc.h>
 #	ifdef GC_ADD_CALLER
-#		define RETURN_ADDR 0,
+#		define MALLOC(n,file,line,func)    GC_debug_malloc((n), 0, (file), (line))
+#		define CALLOC(m,n,file,line,func)  GC_debug_malloc((m)*(n), 0, (file), (line))
+#		define REALLOC(p,n,file,line,func) GC_debug_realloc((p),(n), 0, (file), (line))
+#		define STRDUP(p,file,line,func)    GC_debug_strdup((p), 0, (file), (line))
 #	else
-#		define RETURN_ADDR
+#		define MALLOC(n,file,line,func)    GC_debug_malloc((n), (file), (line))
+#		define CALLOC(m,n,file,line,func)  GC_debug_malloc((m)*(n), (file), (line))
+#		define REALLOC(p,n,file,line,func) GC_debug_realloc((p),(n), (file), (line))
+#		define STRDUP(p,file,line,func)    GC_debug_strdup((p), (file), (line))
 #	endif
-#	define MALLOC(n,file,line,func)    GC_debug_malloc((n), RETURN_ADDR (file),(line))
-#	define CALLOC(m,n,file,line,func)  GC_debug_malloc((m)*(n), RETURN_ADDR (file),(line))
-#	define REALLOC(p,n,file,line,func) GC_debug_realloc((p),(n), RETURN_ADDR (file),(line))
-#	define STRDUP(p,file,line,func)    GC_debug_strdup((p), RETURN_ADDR (file),(line))
 #	define FREE(p,file,line,func)      GC_debug_free(p)
 #	define MEMORY_USAGE()              GC_get_heap_size()
 #	define MEMORY_VERIFY(ptr)          (GC_base(ptr) != NULL)
 #	define MEMORY_CHECK()              GC_gcollect()
-
-#	undef RETURN_ADDR
 
 #else
 
@@ -89,9 +89,9 @@ struct malloc_interface *iMalloc;
 #	define REALLOC(p,n,file,line,func) realloc((p),(n))
 #	define STRDUP(p,file,line,func)    strdup(p)
 #	define FREE(p,file,line,func)      free(p)
-#	define MEMORY_USAGE()              (size_t)0
+#	define MEMORY_USAGE()              ((size_t)0)
 #	define MEMORY_VERIFY(ptr)          true
-#	define MEMORY_CHECK()
+#	define MEMORY_CHECK()              (void)0
 
 #endif
 

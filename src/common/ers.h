@@ -148,15 +148,15 @@ typedef struct eri {
 
 #ifdef DISABLE_ERS
 // Use memory manager to allocate/free and disable other interface functions
-#	define ers_alloc(obj,type) (type *)aMalloc(sizeof(type))
-#	define ers_free(obj,entry) aFree(entry)
-#	define ers_entry_size(obj) (size_t)0
-#	define ers_destroy(obj)
-#	define ers_chunk_size(obj,size)
+#	define ers_alloc(obj,type) ((void)(obj), (type *)aMalloc(sizeof(type)))
+#	define ers_free(obj,entry) ((void)(obj), aFree(entry))
+#	define ers_entry_size(obj) ((void)(obj), (size_t)0)
+#	define ers_destroy(obj) ((void)(obj), (void)0)
+#	define ers_chunk_size(obj,size) ((void)(obj), (void)(size), (size_t)0)
 // Disable the public functions
 #	define ers_new(size,name,options) NULL
-#	define ers_report()
-#	define ers_final()
+#	define ers_report() (void)0
+#	define ers_final() (void)0
 #else /* not DISABLE_ERS */
 // These defines should be used to allow the code to keep working whenever
 // the system is disabled

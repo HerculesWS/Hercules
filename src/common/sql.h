@@ -272,13 +272,13 @@ void Sql_HerculesUpdateSkip(Sql* self,const char *filename);
 HPShared struct sql_interface *SQL;
 
 #if defined(SQL_REMOVE_SHOWDEBUG)
-#define Sql_ShowDebug(self) (void)0
+#define Sql_ShowDebug(self) (void)(self)
 #else
 #define Sql_ShowDebug(self) (SQL->ShowDebug_((self), __FILE__, __LINE__))
 #endif
 
 #if defined(SQL_REMOVE_SHOWDEBUG)
-#define SqlStmt_ShowDebug(self) (void)0
+#define SqlStmt_ShowDebug(self) (void)(self)
 #else
 /// Shows debug information (with statement).
 #define SqlStmt_ShowDebug(self) (SQL->StmtShowDebug_((self), __FILE__, __LINE__))

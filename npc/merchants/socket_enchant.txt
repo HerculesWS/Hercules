@@ -43,7 +43,7 @@
 //= 2.0a
 //=========================================================================
 
--	script	Seiyablem#dummy::SocketEnchant	-1,{
+-	script	Seiyablem#dummy::SocketEnchant	FAKE_NPC,{
 	if (checkweight(Knife,1) == 0)
 	{
 		mes "- Wait a minute !! -";
@@ -354,7 +354,7 @@ lhz_in02,281,35,5	duplicate(SocketEnchant)	Seiyablem#lhz	4_M_02
 prt_in,33,70,5	duplicate(SocketEnchant)	Seiyablem#prt	4_M_02
 morocc,51,41,4	duplicate(SocketEnchant)	Seiyablem#moc	4_M_02
 
--	script	Young Man#dummy::SocketMan	-1,{
+-	script	Young Man#dummy::SocketMan	FAKE_NPC,{
 	mes "[Young Man]";
 	mes "I'm considering becoming a Slotting Engineer.";
 	mes "It's a new field where you can add Slots to equipment, and it'd be cool if I can work in such a lucrative career.";

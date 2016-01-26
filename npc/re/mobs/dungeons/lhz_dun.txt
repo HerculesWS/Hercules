@@ -79,7 +79,7 @@ lhz_dun03,139,117,20,11	monster	Sniper Cecil	1644,1,2700000,2500000,1
 lhz_dun03,163,138,12,16	monster	Whitesmith Howard	1642,1,3000000,2700000,1
 lhz_dun03,138,138,36,34	monster	High Priest Margaretha	1643,1,3300000,3000000,1
 
-lhz_dun03,0,0,0	script	mvp_lhz_dun03	-1,{
+lhz_dun03,0,0,0	script	mvp_lhz_dun03	FAKE_NPC,{
 OnTimer6000000: // delay1 = 6000000 ms (100 min)
 	stopnpctimer;
 	sleep rand(0,30)*60000; // 0 to 30 minutes
@@ -132,7 +132,7 @@ lhz_dun04,0,0,0,0	monster	Stalker Gertie	2232,1,3300000,3000000,1
 lhz_dun04,0,0,0,0	monster	Clown Alphoccio	2233,1,3300000,3000000,1
 lhz_dun04,0,0,0,0	monster	Gypsy Trentini	2234,1,3300000,3000000,1
 
-lhz_dun04,0,0,0	script	mvp_lhz_dun04	-1,{
+lhz_dun04,0,0,0	script	mvp_lhz_dun04	FAKE_NPC,{
 OnTimer6000000: // delay1 = 6000000 ms (100 min)
 	stopnpctimer;
 	sleep rand(0,30)*60000; // 0 to 30 minutes

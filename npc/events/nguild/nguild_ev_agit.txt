@@ -113,7 +113,7 @@ function	script	F_AgitEnd	{
 }
 
 //== Castle 1 ==============================================
-nguild_alde,0,0,0	script	Agit_N01	-1,{
+nguild_alde,0,0,0	script	Agit_N01	FAKE_NPC,{
 OnInterIfInitOnce:
 	donpcevent "::OnRecvCastleN01";
 	end;
@@ -140,7 +140,7 @@ OnAgitEnd:
 }
 
 //== Castle 2 ==============================================
-nguild_gef,0,0,0	script	Agit_N02	-1,{
+nguild_gef,0,0,0	script	Agit_N02	FAKE_NPC,{
 OnInterIfInitOnce:
 	donpcevent "::OnRecvCastleN02";
 	end;
@@ -167,7 +167,7 @@ OnAgitEnd:
 }
 
 //== Castle 3 ==============================================
-nguild_pay,0,0,0	script	Agit_N03	-1,{
+nguild_pay,0,0,0	script	Agit_N03	FAKE_NPC,{
 OnInterIfInitOnce:
 	donpcevent "::OnRecvCastleN03";
 	end;
@@ -194,7 +194,7 @@ OnAgitEnd:
 }
 
 //== Castle 4 ==============================================
-nguild_prt,0,0,0	script	Agit_N04	-1,{
+nguild_prt,0,0,0	script	Agit_N04	FAKE_NPC,{
 OnInterIfInitOnce:
 	donpcevent "::OnRecvCastleN04";
 	end;
@@ -221,7 +221,7 @@ OnAgitEnd:
 }
 
 //== Treasure Spawn Time ===================================
--	script	TreasSpawn	-1,{
+-	script	TreasSpawn	FAKE_NPC,{
 	end;
 
 OnClock0005:

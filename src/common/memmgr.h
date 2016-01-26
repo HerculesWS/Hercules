@@ -60,7 +60,7 @@
 #ifdef __GNUC__ // GCC has variable length arrays
 
 #define CREATE_BUFFER(name, type, size) type name[size]
-#define DELETE_BUFFER(name)
+#define DELETE_BUFFER(name) (void)0
 
 #else // others don't, so we emulate them
 

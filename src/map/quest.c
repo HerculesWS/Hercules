@@ -75,7 +75,7 @@ struct quest_db *quest_db(int quest_id) {
  * @param sd Player's data
  * @return 0 in case of success, nonzero otherwise (i.e. the player has no quests)
  */
-int quest_pc_login(TBL_PC *sd)
+int quest_pc_login(struct map_session_data *sd)
 {
 #if PACKETVER < 20141022
 	int i;
@@ -90,7 +90,7 @@ int quest_pc_login(TBL_PC *sd)
 	clif->quest_send_mission(sd);
 	for( i = 0; i < sd->avail_quests; i++ ) {
 		// TODO[Haru]: is this necessary? Does quest_send_mission not take care of this?
-		clif->quest_update_objective(sd, &sd->quest_log[i]);
+		clif->quest_update_objective(sd, &sd->quest_log[i],0);
 	}
 #endif
 
@@ -106,7 +106,8 @@ int quest_pc_login(TBL_PC *sd)
  * @param quest_id ID of the quest to add.
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_add(TBL_PC *sd, int quest_id) {
+int quest_add(struct map_session_data *sd, int quest_id)
+{
 	int n;
 	struct quest_db *qi = quest->db(quest_id);
 
@@ -141,7 +142,7 @@ int quest_add(TBL_PC *sd, int quest_id) {
 	sd->save_quest = true;
 
 	clif->quest_add(sd, &sd->quest_log[n]);
-	clif->quest_update_objective(sd, &sd->quest_log[n]);
+	clif->quest_update_objective(sd, &sd->quest_log[n],0);
 
 	if( map->save_settings&64 )
 		chrif->save(sd,0);
@@ -157,7 +158,8 @@ int quest_add(TBL_PC *sd, int quest_id) {
  * @param qid2 New quest to add
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_change(TBL_PC *sd, int qid1, int qid2) {
+int quest_change(struct map_session_data *sd, int qid1, int qid2)
+{
 	int i;
 	struct quest_db *qi = quest->db(qid2);
 
@@ -192,7 +194,7 @@ int quest_change(TBL_PC *sd, int qid1, int qid2) {
 
 	clif->quest_delete(sd, qid1);
 	clif->quest_add(sd, &sd->quest_log[i]);
-	clif->quest_update_objective(sd, &sd->quest_log[i]);
+	clif->quest_update_objective(sd, &sd->quest_log[i],0);
 
 	if( map->save_settings&64 )
 		chrif->save(sd,0);
@@ -207,7 +209,8 @@ int quest_change(TBL_PC *sd, int qid1, int qid2) {
  * @param quest_id ID of the quest to remove
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_delete(TBL_PC *sd, int quest_id) {
+int quest_delete(struct map_session_data *sd, int quest_id)
+{
 	int i;
 
 	//Search for quest
@@ -249,15 +252,15 @@ int quest_delete(TBL_PC *sd, int quest_id) {
  *           int Party ID
  *           int Mob ID
  */
-int quest_update_objective_sub(struct block_list *bl, va_list ap) {
-	struct map_session_data *sd;
-	int mob_id, party_id;
+int quest_update_objective_sub(struct block_list *bl, va_list ap)
+{
+	struct map_session_data *sd = NULL;
+	int party_id = va_arg(ap, int);
+	int mob_id = va_arg(ap, int);
 
 	nullpo_ret(bl);
-	nullpo_ret(sd = (struct map_session_data *)bl);
-
-	party_id = va_arg(ap,int);
-	mob_id = va_arg(ap,int);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
 
 	if( !sd->avail_quests )
 		return 0;
@@ -276,7 +279,7 @@ int quest_update_objective_sub(struct block_list *bl, va_list ap) {
  * @param sd     Character's data
  * @param mob_id Monster ID
  */
-void quest_update_objective(TBL_PC *sd, int mob_id)
+void quest_update_objective(struct map_session_data *sd, int mob_id)
 {
 	int i,j;
 
@@ -292,7 +295,7 @@ void quest_update_objective(TBL_PC *sd, int mob_id)
 			if (qi->objectives[j].mob == mob_id && sd->quest_log[i].count[j] < qi->objectives[j].count) {
 				sd->quest_log[i].count[j]++;
 				sd->save_quest = true;
-				clif->quest_update_objective(sd, &sd->quest_log[i]);
+				clif->quest_update_objective(sd, &sd->quest_log[i],mob_id);
 			}
 		}
 
@@ -331,7 +334,8 @@ void quest_update_objective(TBL_PC *sd, int mob_id)
  * @param qs       New quest state
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_update_status(TBL_PC *sd, int quest_id, enum quest_state qs) {
+int quest_update_status(struct map_session_data *sd, int quest_id, enum quest_state qs)
+{
 	int i;
 
 	ARR_FIND(0, sd->avail_quests, i, sd->quest_log[i].quest_id == quest_id);
@@ -380,7 +384,7 @@ int quest_update_status(TBL_PC *sd, int quest_id, enum quest_state qs) {
  *                    1 if the quest's timeout has expired
  *                    0 otherwise
  */
-int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type)
+int quest_check(struct map_session_data *sd, int quest_id, enum quest_check_type type)
 {
 	int i;
 

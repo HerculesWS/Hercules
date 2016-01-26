@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2016  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1846,6 +1846,14 @@ struct {
 	struct HPMHookPoint *HP_clif_add_random_options_post;
 	struct HPMHookPoint *HP_clif_pHotkeyRowShift_pre;
 	struct HPMHookPoint *HP_clif_pHotkeyRowShift_post;
+	struct HPMHookPoint *HP_clif_dressroom_open_pre;
+	struct HPMHookPoint *HP_clif_dressroom_open_post;
+	struct HPMHookPoint *HP_clif_pOneClick_ItemIdentify_pre;
+	struct HPMHookPoint *HP_clif_pOneClick_ItemIdentify_post;
+	struct HPMHookPoint *HP_clif_selectcart_pre;
+	struct HPMHookPoint *HP_clif_selectcart_post;
+	struct HPMHookPoint *HP_clif_pSelectCart_pre;
+	struct HPMHookPoint *HP_clif_pSelectCart_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -3032,16 +3040,24 @@ struct {
 	struct HPMHookPoint *HP_map_vforeachininstance_post;
 	struct HPMHookPoint *HP_map_id2sd_pre;
 	struct HPMHookPoint *HP_map_id2sd_post;
-	struct HPMHookPoint *HP_map_id2md_pre;
-	struct HPMHookPoint *HP_map_id2md_post;
 	struct HPMHookPoint *HP_map_id2nd_pre;
 	struct HPMHookPoint *HP_map_id2nd_post;
+	struct HPMHookPoint *HP_map_id2md_pre;
+	struct HPMHookPoint *HP_map_id2md_post;
+	struct HPMHookPoint *HP_map_id2fi_pre;
+	struct HPMHookPoint *HP_map_id2fi_post;
+	struct HPMHookPoint *HP_map_id2cd_pre;
+	struct HPMHookPoint *HP_map_id2cd_post;
+	struct HPMHookPoint *HP_map_id2su_pre;
+	struct HPMHookPoint *HP_map_id2su_post;
+	struct HPMHookPoint *HP_map_id2pd_pre;
+	struct HPMHookPoint *HP_map_id2pd_post;
 	struct HPMHookPoint *HP_map_id2hd_pre;
 	struct HPMHookPoint *HP_map_id2hd_post;
 	struct HPMHookPoint *HP_map_id2mc_pre;
 	struct HPMHookPoint *HP_map_id2mc_post;
-	struct HPMHookPoint *HP_map_id2cd_pre;
-	struct HPMHookPoint *HP_map_id2cd_post;
+	struct HPMHookPoint *HP_map_id2ed_pre;
+	struct HPMHookPoint *HP_map_id2ed_post;
 	struct HPMHookPoint *HP_map_id2bl_pre;
 	struct HPMHookPoint *HP_map_id2bl_post;
 	struct HPMHookPoint *HP_map_blid_exists_pre;
@@ -4260,6 +4276,8 @@ struct {
 	struct HPMHookPoint *HP_pc_follow_timer_post;
 	struct HPMHookPoint *HP_pc_read_skill_tree_pre;
 	struct HPMHookPoint *HP_pc_read_skill_tree_post;
+	struct HPMHookPoint *HP_pc_clear_skill_tree_pre;
+	struct HPMHookPoint *HP_pc_clear_skill_tree_post;
 	struct HPMHookPoint *HP_pc_isUseitem_pre;
 	struct HPMHookPoint *HP_pc_isUseitem_post;
 	struct HPMHookPoint *HP_pc_show_steal_pre;
@@ -4306,6 +4324,8 @@ struct {
 	struct HPMHookPoint *HP_pc_check_job_name_post;
 	struct HPMHookPoint *HP_pc_update_idle_time_pre;
 	struct HPMHookPoint *HP_pc_update_idle_time_post;
+	struct HPMHookPoint *HP_pc_have_magnifier_pre;
+	struct HPMHookPoint *HP_pc_have_magnifier_post;
 	struct HPMHookPoint *HP_libpcre_compile_pre;
 	struct HPMHookPoint *HP_libpcre_compile_post;
 	struct HPMHookPoint *HP_libpcre_study_pre;
@@ -7671,6 +7691,14 @@ struct {
 	int HP_clif_add_random_options_post;
 	int HP_clif_pHotkeyRowShift_pre;
 	int HP_clif_pHotkeyRowShift_post;
+	int HP_clif_dressroom_open_pre;
+	int HP_clif_dressroom_open_post;
+	int HP_clif_pOneClick_ItemIdentify_pre;
+	int HP_clif_pOneClick_ItemIdentify_post;
+	int HP_clif_selectcart_pre;
+	int HP_clif_selectcart_post;
+	int HP_clif_pSelectCart_pre;
+	int HP_clif_pSelectCart_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;
@@ -8857,16 +8885,24 @@ struct {
 	int HP_map_vforeachininstance_post;
 	int HP_map_id2sd_pre;
 	int HP_map_id2sd_post;
-	int HP_map_id2md_pre;
-	int HP_map_id2md_post;
 	int HP_map_id2nd_pre;
 	int HP_map_id2nd_post;
+	int HP_map_id2md_pre;
+	int HP_map_id2md_post;
+	int HP_map_id2fi_pre;
+	int HP_map_id2fi_post;
+	int HP_map_id2cd_pre;
+	int HP_map_id2cd_post;
+	int HP_map_id2su_pre;
+	int HP_map_id2su_post;
+	int HP_map_id2pd_pre;
+	int HP_map_id2pd_post;
 	int HP_map_id2hd_pre;
 	int HP_map_id2hd_post;
 	int HP_map_id2mc_pre;
 	int HP_map_id2mc_post;
-	int HP_map_id2cd_pre;
-	int HP_map_id2cd_post;
+	int HP_map_id2ed_pre;
+	int HP_map_id2ed_post;
 	int HP_map_id2bl_pre;
 	int HP_map_id2bl_post;
 	int HP_map_blid_exists_pre;
@@ -10085,6 +10121,8 @@ struct {
 	int HP_pc_follow_timer_post;
 	int HP_pc_read_skill_tree_pre;
 	int HP_pc_read_skill_tree_post;
+	int HP_pc_clear_skill_tree_pre;
+	int HP_pc_clear_skill_tree_post;
 	int HP_pc_isUseitem_pre;
 	int HP_pc_isUseitem_post;
 	int HP_pc_show_steal_pre;
@@ -10131,6 +10169,8 @@ struct {
 	int HP_pc_check_job_name_post;
 	int HP_pc_update_idle_time_pre;
 	int HP_pc_update_idle_time_post;
+	int HP_pc_have_magnifier_pre;
+	int HP_pc_have_magnifier_post;
 	int HP_libpcre_compile_pre;
 	int HP_libpcre_compile_post;
 	int HP_libpcre_study_pre;

@@ -478,7 +478,7 @@ int FPRINTF(HANDLE handle, const char *fmt, ...) {
 	return ret;
 }
 
-#define FFLUSH(handle)
+#define FFLUSH(handle) (void)(handle)
 
 #define STDOUT GetStdHandle(STD_OUTPUT_HANDLE)
 #define STDERR GetStdHandle(STD_ERROR_HANDLE)

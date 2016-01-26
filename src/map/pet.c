@@ -359,9 +359,10 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 		sd->status.pet_id = 0;
 		return 1;
 	}
-	sd->pd = pd = (struct pet_data *)aCalloc(1,sizeof(struct pet_data));
+	CREATE(pd, struct pet_data, 1);
 	pd->bl.type = BL_PET;
 	pd->bl.id = npc->get_new_npc_id();
+	sd->pd = pd;
 
 	pd->msd = sd;
 	pd->petDB = &pet->db[i];
@@ -505,13 +506,15 @@ int pet_catch_process1(struct map_session_data *sd,int target_class)
 }
 
 int pet_catch_process2(struct map_session_data* sd, int target_id) {
-	struct mob_data* md;
+	struct mob_data *md = NULL;
+	struct block_list *bl = NULL;
 	int i = 0, pet_catch_rate = 0;
 
 	nullpo_retr(1, sd);
 
-	md = (struct mob_data*)map->id2bl(target_id);
-	if(!md || md->bl.type != BL_MOB || md->bl.prev == NULL) {
+	bl = map->id2bl(target_id); // TODO: Why does this not use map->id2md?
+	md = BL_CAST(BL_MOB, bl);
+	if (md == NULL || md->bl.prev == NULL) {
 		// Invalid inputs/state, abort capture.
 		clif->pet_roulette(sd,0);
 		sd->catch_target_class = -1;
@@ -937,7 +940,7 @@ int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int64 tick
 				pet->unlocktarget(pd);
 			return 0;
 		} else{
-			struct flooritem_data *fitem = (struct flooritem_data *)target;
+			struct flooritem_data *fitem = BL_UCAST(BL_ITEM, target);
 			if(pd->loot->count < pd->loot->max){
 				memcpy(&pd->loot->item[pd->loot->count++],&fitem->item_data,sizeof(pd->loot->item[0]));
 				pd->loot->weight += itemdb_weight(fitem->item_data.nameid)*fitem->item_data.amount;
@@ -964,15 +967,16 @@ int pet_ai_hard(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-int pet_ai_sub_hard_lootsearch(struct block_list *bl,va_list ap)
+int pet_ai_sub_hard_lootsearch(struct block_list *bl, va_list ap)
 {
-	struct pet_data* pd;
-	struct flooritem_data *fitem = (struct flooritem_data *)bl;
-	struct block_list **target;
-	int sd_charid =0;
+	struct pet_data *pd = va_arg(ap,struct pet_data *);
+	struct block_list **target = va_arg(ap,struct block_list**);
+	struct flooritem_data *fitem = NULL;
+	int sd_charid = 0;
 
-	pd=va_arg(ap,struct pet_data *);
-	target=va_arg(ap,struct block_list**);
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_ITEM);
+	fitem = BL_UCAST(BL_ITEM, bl);
 
 	sd_charid = fitem->first_get_charid;
 
@@ -1174,7 +1178,7 @@ int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data) {
 /**
  * Loads (or reloads) the pet database.
  */
-int read_petdb()
+int read_petdb(void)
 {
 	const char *filename[] = {
 		DBPATH"pet_db.txt",

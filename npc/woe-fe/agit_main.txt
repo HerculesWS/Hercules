@@ -58,7 +58,7 @@
 //=========================================================================
 
 //== WoE : Main Functions ==================================
--	script	Gld_Agit_Manager::Gld_Agit_Manager	-1,{
+-	script	Gld_Agit_Manager::Gld_Agit_Manager	FAKE_NPC,{
 	end;
 
 // War of Emperium has started.
@@ -316,7 +316,7 @@ OnRecvCastle:
 }
 
 //== WoE : Guild Kafras ====================================
--	script	Kafra Staff#woe::guildkafra	-1,{
+-	script	Kafra Staff#woe::guildkafra	FAKE_NPC,{
 
 	.@GID = getcastledata(strnpcinfo(2),1);
 
@@ -464,7 +464,7 @@ OnRecvCastle:
 }
 
 //== WoE : Castle Managers =================================
--	script	Castle Manager#cm::cm	-1,{
+-	script	Castle Manager#cm::cm	FAKE_NPC,{
 
 	.@GID = getcastledata(strnpcinfo(2),1);
 
@@ -616,7 +616,7 @@ OnRecvCastle:
 	}
 	mes "["+strnpcinfo(1)+"]";
 	mes "Welcome. My honorable master, ^ff0000"+strcharinfo(0)+"^000000...";
-	mes "Your humble servent, "+strnpcinfo(1)+", is here to serve you.";
+	mes "Your humble servant, "+strnpcinfo(1)+", is here to serve you.";
 	next;
 	switch (select("Castle briefing:Invest in commercial growth:Invest in Castle Defenses:Summon Guardian:Hire / Fire a Kafra Employee:Go into Master's room")) {
 	case 1:
@@ -915,7 +915,7 @@ OnRecvCastle:
 }
 
 //== WoE : Guild Dungeon Entrances =========================
--	script	Lever#gd::gdlever	-1,{
+-	script	Lever#gd::gdlever	FAKE_NPC,{
 
 	.@GID = getcastledata(strnpcinfo(2),1);
 
@@ -982,7 +982,7 @@ OnRecvCastle:
 }
 
 //== Guardian Spawner Template =============================
--	script	Gld_Guard_Template::Gld_Guard_Template	-1,{
+-	script	Gld_Guard_Template::Gld_Guard_Template	FAKE_NPC,{
 // Spawn Guardians in castles
 // When adding new castles, ensure that the coordinates coincide with the
 // coordinates defined in the Guild Steward template.
@@ -1122,7 +1122,7 @@ OnGuardianDied:
 }
 
 //== Treasure Room Spawn Template ==========================
--	script	Gld_Trea_Spawn::Gld_Trea_Spawn	-1,{
+-	script	Gld_Trea_Spawn::Gld_Trea_Spawn	FAKE_NPC,{
 	end;
 
 OnClock0001:

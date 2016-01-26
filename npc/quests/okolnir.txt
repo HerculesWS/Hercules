@@ -41,7 +41,7 @@ function	script	F_Okolnir	{
 	return .@sub$;
 }
 
--	script	Guide#gq_main	-1,{
+-	script	Guide#gq_main	FAKE_NPC,{
 	.@sub$ = callfunc("F_Okolnir");
 	.@GID = getcastledata(strnpcinfo(4),1);
 	if (getcharid(2) == .@GID) {
@@ -188,7 +188,7 @@ que_qsch03,345,23,0	warp	Gate02#gq_sch03	1,1,schg_cas03,81,95
 que_qsch04,345,23,0	warp	Gate02#gq_sch04	1,1,schg_cas04,369,306
 que_qsch05,345,23,0	warp	Gate02#gq_sch05	1,1,schg_cas05,369,306
 
--	script	Wish Maiden#gq_main	-1,{
+-	script	Wish Maiden#gq_main	FAKE_NPC,{
 	.@sub$ = callfunc("F_Okolnir");
 	.@t$ = ((compare(strnpcinfo(4),"aru"))?"arug_cas0":"schg_cas0")+(charat(strnpcinfo(4),getstrlen(strnpcinfo(4))-1));
 	.@GID = getcastledata(.@t$,1);
@@ -386,7 +386,7 @@ que_qsch03,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch03	4_F_VALK
 que_qsch04,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch04	4_F_VALKYRIE2
 que_qsch05,345,82,3	duplicate(Wish Maiden#gq_main)	Wish Maiden#gq_sch05	4_F_VALKYRIE2
 
--	script	Gate01#gq_main	-1,{
+-	script	Gate01#gq_main	FAKE_NPC,{
 	function	SMonster;
 	.@sub$ = callfunc("F_Okolnir");
 
@@ -481,7 +481,7 @@ que_qsch03,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_sch03	WARPNPC,1,1
 que_qsch04,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_sch04	WARPNPC,1,1
 que_qsch05,346,81,0	duplicate(Gate01#gq_main)	Gate01#gq_sch05	WARPNPC,1,1
 
--	script	#Gate_manager_main	-1,{
+-	script	#Gate_manager_main	FAKE_NPC,{
 	end;
 
 OnMyMobDead:
@@ -504,7 +504,7 @@ que_qsch03,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_sch03	CLEAR_NPC
 que_qsch04,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_sch04	CLEAR_NPC
 que_qsch05,1,4,0	duplicate(#Gate_manager_main)	#Gate_manager_sch05	CLEAR_NPC
 
--	script	#gq_miromob2_main	-1,{
+-	script	#gq_miromob2_main	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -558,7 +558,7 @@ que_qsch03,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_sch03	CLEAR_NPC
 que_qsch04,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_sch04	CLEAR_NPC
 que_qsch05,1,4,0	duplicate(#gq_miromob2_main)	#gq_miromob2_sch05	CLEAR_NPC
 
--	script	#okolnir_main	-1,{
+-	script	#okolnir_main	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -755,7 +755,7 @@ que_qsch03,1,1,0	duplicate(#okolnir_main)	#okolnir_sch03	CLEAR_NPC
 que_qsch04,1,1,0	duplicate(#okolnir_main)	#okolnir_sch04	CLEAR_NPC
 que_qsch05,1,1,0	duplicate(#okolnir_main)	#okolnir_sch05	CLEAR_NPC
 
--	script	#Maze_Manager_main	-1,{
+-	script	#Maze_Manager_main	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -839,7 +839,7 @@ que_qsch03,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_sch03	CLEAR_NPC
 que_qsch04,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_sch04	CLEAR_NPC
 que_qsch05,1,2,0	duplicate(#Maze_Manager_main)	#Maze_Manager_sch05	CLEAR_NPC
 
--	script	#miro_bf_main	-1,{
+-	script	#miro_bf_main	FAKE_NPC,{
 	function	Cell;
 OnEnable:
 	.@sub$ = callfunc("F_Okolnir");
@@ -876,7 +876,7 @@ que_qsch03,2,1,0	duplicate(#miro_bf_main)	#miro_bf_sch03	CLEAR_NPC
 que_qsch04,2,1,0	duplicate(#miro_bf_main)	#miro_bf_sch04	CLEAR_NPC
 que_qsch05,2,1,0	duplicate(#miro_bf_main)	#miro_bf_sch05	CLEAR_NPC
 
--	script	#miro_rf_main	-1,{
+-	script	#miro_rf_main	FAKE_NPC,{
 	function	Cell;
 OnEnable:
 	.@sub$ = callfunc("F_Okolnir");
@@ -914,7 +914,7 @@ que_qsch03,2,2,0	duplicate(#miro_rf_main)	#miro_rf_sch03	CLEAR_NPC
 que_qsch04,2,2,0	duplicate(#miro_rf_main)	#miro_rf_sch04	CLEAR_NPC
 que_qsch05,2,2,0	duplicate(#miro_rf_main)	#miro_rf_sch05	CLEAR_NPC
 
--	script	#miro_yf_main	-1,{
+-	script	#miro_yf_main	FAKE_NPC,{
 	function	Cell;
 OnEnable:
 	.@sub$ = callfunc("F_Okolnir");
@@ -952,7 +952,7 @@ que_qsch03,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch03	CLEAR_NPC
 que_qsch04,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch04	CLEAR_NPC
 que_qsch05,2,3,0	duplicate(#miro_yf_main)	#miro_yf_sch05	CLEAR_NPC
 
--	script	windpath01_main	-1,{
+-	script	windpath01_main	FAKE_NPC,{
 	end;
 
 OnTouch:
@@ -989,7 +989,7 @@ que_qsch03,113,165,0	warp	windpath02_sch03	1,1,que_qsch03,139,172
 que_qsch04,113,165,0	warp	windpath02_sch04	1,1,que_qsch04,139,172
 que_qsch05,113,165,0	warp	windpath02_sch05	1,1,que_qsch05,139,172
 
--	script	Piamette#main	-1,{
+-	script	Piamette#main	FAKE_NPC,{
 	end;
 
 OnInit:
@@ -1009,7 +1009,7 @@ que_qsch03,131,136,3	duplicate(Piamette#main)	Piamette#sch03	PIAMETTE
 que_qsch04,131,136,3	duplicate(Piamette#main)	Piamette#sch04	PIAMETTE
 que_qsch05,131,136,3	duplicate(Piamette#main)	Piamette#sch05	PIAMETTE
 
--	script	#event_start01_main	-1,{
+-	script	#event_start01_main	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -1056,18 +1056,18 @@ OnInit:
 	disablenpc "#event_start01_"+.@sub$;
 	end;
 }
-que_qaru01,114,158,0	duplicate(#event_start01_main)	#event_start01_aru01	-1,1,1
-que_qaru02,114,158,0	duplicate(#event_start01_main)	#event_start01_aru02	-1,1,1
-que_qaru03,114,158,0	duplicate(#event_start01_main)	#event_start01_aru03	-1,1,1
-que_qaru04,114,158,0	duplicate(#event_start01_main)	#event_start01_aru04	-1,1,1
-que_qaru05,114,158,0	duplicate(#event_start01_main)	#event_start01_aru05	-1,1,1
-que_qsch01,114,158,0	duplicate(#event_start01_main)	#event_start01_sch01	-1,1,1
-que_qsch02,114,158,0	duplicate(#event_start01_main)	#event_start01_sch02	-1,1,1
-que_qsch03,114,158,0	duplicate(#event_start01_main)	#event_start01_sch03	-1,1,1
-que_qsch04,114,158,0	duplicate(#event_start01_main)	#event_start01_sch04	-1,1,1
-que_qsch05,114,158,0	duplicate(#event_start01_main)	#event_start01_sch05	-1,1,1
+que_qaru01,114,158,0	duplicate(#event_start01_main)	#event_start01_aru01	FAKE_NPC,1,1
+que_qaru02,114,158,0	duplicate(#event_start01_main)	#event_start01_aru02	FAKE_NPC,1,1
+que_qaru03,114,158,0	duplicate(#event_start01_main)	#event_start01_aru03	FAKE_NPC,1,1
+que_qaru04,114,158,0	duplicate(#event_start01_main)	#event_start01_aru04	FAKE_NPC,1,1
+que_qaru05,114,158,0	duplicate(#event_start01_main)	#event_start01_aru05	FAKE_NPC,1,1
+que_qsch01,114,158,0	duplicate(#event_start01_main)	#event_start01_sch01	FAKE_NPC,1,1
+que_qsch02,114,158,0	duplicate(#event_start01_main)	#event_start01_sch02	FAKE_NPC,1,1
+que_qsch03,114,158,0	duplicate(#event_start01_main)	#event_start01_sch03	FAKE_NPC,1,1
+que_qsch04,114,158,0	duplicate(#event_start01_main)	#event_start01_sch04	FAKE_NPC,1,1
+que_qsch05,114,158,0	duplicate(#event_start01_main)	#event_start01_sch05	FAKE_NPC,1,1
 
--	script	#gdtimer01_main	-1,{
+-	script	#gdtimer01_main	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -1161,7 +1161,7 @@ que_qsch03,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_sch03	CLEAR_NPC
 que_qsch04,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_sch04	CLEAR_NPC
 que_qsch05,2,2,0	duplicate(#gdtimer01_main)	#gdtimer01_sch05	CLEAR_NPC
 
--	script	#gdtimer02_main	-1,{
+-	script	#gdtimer02_main	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -1235,7 +1235,7 @@ que_qsch03,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_sch03	CLEAR_NPC
 que_qsch04,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_sch04	CLEAR_NPC
 que_qsch05,2,3,0	duplicate(#gdtimer02_main)	#gdtimer02_sch05	CLEAR_NPC
 
--	script	#piamette_main	-1,{
+-	script	#piamette_main	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -1278,7 +1278,7 @@ que_qsch03,1,4,0	duplicate(#piamette_main)	#piamette_sch03	CLEAR_NPC
 que_qsch04,1,4,0	duplicate(#piamette_main)	#piamette_sch04	CLEAR_NPC
 que_qsch05,1,4,0	duplicate(#piamette_main)	#piamette_sch05	CLEAR_NPC
 
--	script	#getspells_main	-1,{
+-	script	#getspells_main	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -1321,88 +1321,88 @@ OnInit:
 		disablenpc "#getspell0"+.@i+"_"+.@sub$;
 	end;
 }
-que_qaru01,113,135,0	duplicate(#getspells_main)	#getspell01_aru01	-1,1,1
-que_qaru02,113,135,0	duplicate(#getspells_main)	#getspell01_aru02	-1,1,1
-que_qaru03,113,135,0	duplicate(#getspells_main)	#getspell01_aru03	-1,1,1
-que_qaru04,113,135,0	duplicate(#getspells_main)	#getspell01_aru04	-1,1,1
-que_qaru05,113,135,0	duplicate(#getspells_main)	#getspell01_aru05	-1,1,1
-que_qsch01,113,135,0	duplicate(#getspells_main)	#getspell01_sch01	-1,1,1
-que_qsch02,113,135,0	duplicate(#getspells_main)	#getspell01_sch02	-1,1,1
-que_qsch03,113,135,0	duplicate(#getspells_main)	#getspell01_sch03	-1,1,1
-que_qsch04,113,135,0	duplicate(#getspells_main)	#getspell01_sch04	-1,1,1
-que_qsch05,113,135,0	duplicate(#getspells_main)	#getspell01_sch05	-1,1,1
-que_qaru01,146,150,0	duplicate(#getspells_main)	#getspell02_aru01	-1,1,1
-que_qaru02,146,150,0	duplicate(#getspells_main)	#getspell02_aru02	-1,1,1
-que_qaru03,146,150,0	duplicate(#getspells_main)	#getspell02_aru03	-1,1,1
-que_qaru04,146,150,0	duplicate(#getspells_main)	#getspell02_aru04	-1,1,1
-que_qaru05,146,150,0	duplicate(#getspells_main)	#getspell02_aru05	-1,1,1
-que_qsch01,146,150,0	duplicate(#getspells_main)	#getspell02_sch01	-1,1,1
-que_qsch02,146,150,0	duplicate(#getspells_main)	#getspell02_sch02	-1,1,1
-que_qsch03,146,150,0	duplicate(#getspells_main)	#getspell02_sch03	-1,1,1
-que_qsch04,146,150,0	duplicate(#getspells_main)	#getspell02_sch04	-1,1,1
-que_qsch05,146,150,0	duplicate(#getspells_main)	#getspell02_sch05	-1,1,1
-que_qaru01,131,117,0	duplicate(#getspells_main)	#getspell03_aru01	-1,1,1
-que_qaru02,131,117,0	duplicate(#getspells_main)	#getspell03_aru02	-1,1,1
-que_qaru03,131,117,0	duplicate(#getspells_main)	#getspell03_aru03	-1,1,1
-que_qaru04,131,117,0	duplicate(#getspells_main)	#getspell03_aru04	-1,1,1
-que_qaru05,131,117,0	duplicate(#getspells_main)	#getspell03_aru05	-1,1,1
-que_qsch01,131,117,0	duplicate(#getspells_main)	#getspell03_sch01	-1,1,1
-que_qsch02,131,117,0	duplicate(#getspells_main)	#getspell03_sch02	-1,1,1
-que_qsch03,131,117,0	duplicate(#getspells_main)	#getspell03_sch03	-1,1,1
-que_qsch04,131,117,0	duplicate(#getspells_main)	#getspell03_sch04	-1,1,1
-que_qsch05,131,117,0	duplicate(#getspells_main)	#getspell03_sch05	-1,1,1
-que_qaru01,117,150,0	duplicate(#getspells_main)	#getspell04_aru01	-1,1,1
-que_qaru02,117,150,0	duplicate(#getspells_main)	#getspell04_aru02	-1,1,1
-que_qaru03,117,150,0	duplicate(#getspells_main)	#getspell04_aru03	-1,1,1
-que_qaru04,117,150,0	duplicate(#getspells_main)	#getspell04_aru04	-1,1,1
-que_qaru05,117,150,0	duplicate(#getspells_main)	#getspell04_aru05	-1,1,1
-que_qsch01,117,150,0	duplicate(#getspells_main)	#getspell04_sch01	-1,1,1
-que_qsch02,117,150,0	duplicate(#getspells_main)	#getspell04_sch02	-1,1,1
-que_qsch03,117,150,0	duplicate(#getspells_main)	#getspell04_sch03	-1,1,1
-que_qsch04,117,150,0	duplicate(#getspells_main)	#getspell04_sch04	-1,1,1
-que_qsch05,117,150,0	duplicate(#getspells_main)	#getspell04_sch05	-1,1,1
-que_qaru01,150,135,0	duplicate(#getspells_main)	#getspell05_aru01	-1,1,1
-que_qaru02,150,135,0	duplicate(#getspells_main)	#getspell05_aru02	-1,1,1
-que_qaru03,150,135,0	duplicate(#getspells_main)	#getspell05_aru03	-1,1,1
-que_qaru04,150,135,0	duplicate(#getspells_main)	#getspell05_aru04	-1,1,1
-que_qaru05,150,135,0	duplicate(#getspells_main)	#getspell05_aru05	-1,1,1
-que_qsch01,150,135,0	duplicate(#getspells_main)	#getspell05_sch01	-1,1,1
-que_qsch02,150,135,0	duplicate(#getspells_main)	#getspell05_sch02	-1,1,1
-que_qsch03,150,135,0	duplicate(#getspells_main)	#getspell05_sch03	-1,1,1
-que_qsch04,150,135,0	duplicate(#getspells_main)	#getspell05_sch04	-1,1,1
-que_qsch05,150,135,0	duplicate(#getspells_main)	#getspell05_sch05	-1,1,1
-que_qaru01,117,121,0	duplicate(#getspells_main)	#getspell06_aru01	-1,1,1
-que_qaru02,117,121,0	duplicate(#getspells_main)	#getspell06_aru02	-1,1,1
-que_qaru03,117,121,0	duplicate(#getspells_main)	#getspell06_aru03	-1,1,1
-que_qaru04,117,121,0	duplicate(#getspells_main)	#getspell06_aru04	-1,1,1
-que_qaru05,117,121,0	duplicate(#getspells_main)	#getspell06_aru05	-1,1,1
-que_qsch01,117,121,0	duplicate(#getspells_main)	#getspell06_sch01	-1,1,1
-que_qsch02,117,121,0	duplicate(#getspells_main)	#getspell06_sch02	-1,1,1
-que_qsch03,117,121,0	duplicate(#getspells_main)	#getspell06_sch03	-1,1,1
-que_qsch04,117,121,0	duplicate(#getspells_main)	#getspell06_sch04	-1,1,1
-que_qsch05,117,121,0	duplicate(#getspells_main)	#getspell06_sch05	-1,1,1
-que_qaru01,131,154,0	duplicate(#getspells_main)	#getspell07_aru01	-1,1,1
-que_qaru02,131,154,0	duplicate(#getspells_main)	#getspell07_aru02	-1,1,1
-que_qaru03,131,154,0	duplicate(#getspells_main)	#getspell07_aru03	-1,1,1
-que_qaru04,131,154,0	duplicate(#getspells_main)	#getspell07_aru04	-1,1,1
-que_qaru05,131,154,0	duplicate(#getspells_main)	#getspell07_aru05	-1,1,1
-que_qsch01,131,154,0	duplicate(#getspells_main)	#getspell07_sch01	-1,1,1
-que_qsch02,131,154,0	duplicate(#getspells_main)	#getspell07_sch02	-1,1,1
-que_qsch03,131,154,0	duplicate(#getspells_main)	#getspell07_sch03	-1,1,1
-que_qsch04,131,154,0	duplicate(#getspells_main)	#getspell07_sch04	-1,1,1
-que_qsch05,131,154,0	duplicate(#getspells_main)	#getspell07_sch05	-1,1,1
-que_qaru01,146,121,0	duplicate(#getspells_main)	#getspell08_aru01	-1,1,1
-que_qaru02,146,121,0	duplicate(#getspells_main)	#getspell08_aru02	-1,1,1
-que_qaru03,146,121,0	duplicate(#getspells_main)	#getspell08_aru03	-1,1,1
-que_qaru04,146,121,0	duplicate(#getspells_main)	#getspell08_aru04	-1,1,1
-que_qaru05,146,121,0	duplicate(#getspells_main)	#getspell08_aru05	-1,1,1
-que_qsch01,146,121,0	duplicate(#getspells_main)	#getspell08_sch01	-1,1,1
-que_qsch02,146,121,0	duplicate(#getspells_main)	#getspell08_sch02	-1,1,1
-que_qsch03,146,121,0	duplicate(#getspells_main)	#getspell08_sch03	-1,1,1
-que_qsch04,146,121,0	duplicate(#getspells_main)	#getspell08_sch04	-1,1,1
-que_qsch05,146,121,0	duplicate(#getspells_main)	#getspell08_sch05	-1,1,1
+que_qaru01,113,135,0	duplicate(#getspells_main)	#getspell01_aru01	FAKE_NPC,1,1
+que_qaru02,113,135,0	duplicate(#getspells_main)	#getspell01_aru02	FAKE_NPC,1,1
+que_qaru03,113,135,0	duplicate(#getspells_main)	#getspell01_aru03	FAKE_NPC,1,1
+que_qaru04,113,135,0	duplicate(#getspells_main)	#getspell01_aru04	FAKE_NPC,1,1
+que_qaru05,113,135,0	duplicate(#getspells_main)	#getspell01_aru05	FAKE_NPC,1,1
+que_qsch01,113,135,0	duplicate(#getspells_main)	#getspell01_sch01	FAKE_NPC,1,1
+que_qsch02,113,135,0	duplicate(#getspells_main)	#getspell01_sch02	FAKE_NPC,1,1
+que_qsch03,113,135,0	duplicate(#getspells_main)	#getspell01_sch03	FAKE_NPC,1,1
+que_qsch04,113,135,0	duplicate(#getspells_main)	#getspell01_sch04	FAKE_NPC,1,1
+que_qsch05,113,135,0	duplicate(#getspells_main)	#getspell01_sch05	FAKE_NPC,1,1
+que_qaru01,146,150,0	duplicate(#getspells_main)	#getspell02_aru01	FAKE_NPC,1,1
+que_qaru02,146,150,0	duplicate(#getspells_main)	#getspell02_aru02	FAKE_NPC,1,1
+que_qaru03,146,150,0	duplicate(#getspells_main)	#getspell02_aru03	FAKE_NPC,1,1
+que_qaru04,146,150,0	duplicate(#getspells_main)	#getspell02_aru04	FAKE_NPC,1,1
+que_qaru05,146,150,0	duplicate(#getspells_main)	#getspell02_aru05	FAKE_NPC,1,1
+que_qsch01,146,150,0	duplicate(#getspells_main)	#getspell02_sch01	FAKE_NPC,1,1
+que_qsch02,146,150,0	duplicate(#getspells_main)	#getspell02_sch02	FAKE_NPC,1,1
+que_qsch03,146,150,0	duplicate(#getspells_main)	#getspell02_sch03	FAKE_NPC,1,1
+que_qsch04,146,150,0	duplicate(#getspells_main)	#getspell02_sch04	FAKE_NPC,1,1
+que_qsch05,146,150,0	duplicate(#getspells_main)	#getspell02_sch05	FAKE_NPC,1,1
+que_qaru01,131,117,0	duplicate(#getspells_main)	#getspell03_aru01	FAKE_NPC,1,1
+que_qaru02,131,117,0	duplicate(#getspells_main)	#getspell03_aru02	FAKE_NPC,1,1
+que_qaru03,131,117,0	duplicate(#getspells_main)	#getspell03_aru03	FAKE_NPC,1,1
+que_qaru04,131,117,0	duplicate(#getspells_main)	#getspell03_aru04	FAKE_NPC,1,1
+que_qaru05,131,117,0	duplicate(#getspells_main)	#getspell03_aru05	FAKE_NPC,1,1
+que_qsch01,131,117,0	duplicate(#getspells_main)	#getspell03_sch01	FAKE_NPC,1,1
+que_qsch02,131,117,0	duplicate(#getspells_main)	#getspell03_sch02	FAKE_NPC,1,1
+que_qsch03,131,117,0	duplicate(#getspells_main)	#getspell03_sch03	FAKE_NPC,1,1
+que_qsch04,131,117,0	duplicate(#getspells_main)	#getspell03_sch04	FAKE_NPC,1,1
+que_qsch05,131,117,0	duplicate(#getspells_main)	#getspell03_sch05	FAKE_NPC,1,1
+que_qaru01,117,150,0	duplicate(#getspells_main)	#getspell04_aru01	FAKE_NPC,1,1
+que_qaru02,117,150,0	duplicate(#getspells_main)	#getspell04_aru02	FAKE_NPC,1,1
+que_qaru03,117,150,0	duplicate(#getspells_main)	#getspell04_aru03	FAKE_NPC,1,1
+que_qaru04,117,150,0	duplicate(#getspells_main)	#getspell04_aru04	FAKE_NPC,1,1
+que_qaru05,117,150,0	duplicate(#getspells_main)	#getspell04_aru05	FAKE_NPC,1,1
+que_qsch01,117,150,0	duplicate(#getspells_main)	#getspell04_sch01	FAKE_NPC,1,1
+que_qsch02,117,150,0	duplicate(#getspells_main)	#getspell04_sch02	FAKE_NPC,1,1
+que_qsch03,117,150,0	duplicate(#getspells_main)	#getspell04_sch03	FAKE_NPC,1,1
+que_qsch04,117,150,0	duplicate(#getspells_main)	#getspell04_sch04	FAKE_NPC,1,1
+que_qsch05,117,150,0	duplicate(#getspells_main)	#getspell04_sch05	FAKE_NPC,1,1
+que_qaru01,150,135,0	duplicate(#getspells_main)	#getspell05_aru01	FAKE_NPC,1,1
+que_qaru02,150,135,0	duplicate(#getspells_main)	#getspell05_aru02	FAKE_NPC,1,1
+que_qaru03,150,135,0	duplicate(#getspells_main)	#getspell05_aru03	FAKE_NPC,1,1
+que_qaru04,150,135,0	duplicate(#getspells_main)	#getspell05_aru04	FAKE_NPC,1,1
+que_qaru05,150,135,0	duplicate(#getspells_main)	#getspell05_aru05	FAKE_NPC,1,1
+que_qsch01,150,135,0	duplicate(#getspells_main)	#getspell05_sch01	FAKE_NPC,1,1
+que_qsch02,150,135,0	duplicate(#getspells_main)	#getspell05_sch02	FAKE_NPC,1,1
+que_qsch03,150,135,0	duplicate(#getspells_main)	#getspell05_sch03	FAKE_NPC,1,1
+que_qsch04,150,135,0	duplicate(#getspells_main)	#getspell05_sch04	FAKE_NPC,1,1
+que_qsch05,150,135,0	duplicate(#getspells_main)	#getspell05_sch05	FAKE_NPC,1,1
+que_qaru01,117,121,0	duplicate(#getspells_main)	#getspell06_aru01	FAKE_NPC,1,1
+que_qaru02,117,121,0	duplicate(#getspells_main)	#getspell06_aru02	FAKE_NPC,1,1
+que_qaru03,117,121,0	duplicate(#getspells_main)	#getspell06_aru03	FAKE_NPC,1,1
+que_qaru04,117,121,0	duplicate(#getspells_main)	#getspell06_aru04	FAKE_NPC,1,1
+que_qaru05,117,121,0	duplicate(#getspells_main)	#getspell06_aru05	FAKE_NPC,1,1
+que_qsch01,117,121,0	duplicate(#getspells_main)	#getspell06_sch01	FAKE_NPC,1,1
+que_qsch02,117,121,0	duplicate(#getspells_main)	#getspell06_sch02	FAKE_NPC,1,1
+que_qsch03,117,121,0	duplicate(#getspells_main)	#getspell06_sch03	FAKE_NPC,1,1
+que_qsch04,117,121,0	duplicate(#getspells_main)	#getspell06_sch04	FAKE_NPC,1,1
+que_qsch05,117,121,0	duplicate(#getspells_main)	#getspell06_sch05	FAKE_NPC,1,1
+que_qaru01,131,154,0	duplicate(#getspells_main)	#getspell07_aru01	FAKE_NPC,1,1
+que_qaru02,131,154,0	duplicate(#getspells_main)	#getspell07_aru02	FAKE_NPC,1,1
+que_qaru03,131,154,0	duplicate(#getspells_main)	#getspell07_aru03	FAKE_NPC,1,1
+que_qaru04,131,154,0	duplicate(#getspells_main)	#getspell07_aru04	FAKE_NPC,1,1
+que_qaru05,131,154,0	duplicate(#getspells_main)	#getspell07_aru05	FAKE_NPC,1,1
+que_qsch01,131,154,0	duplicate(#getspells_main)	#getspell07_sch01	FAKE_NPC,1,1
+que_qsch02,131,154,0	duplicate(#getspells_main)	#getspell07_sch02	FAKE_NPC,1,1
+que_qsch03,131,154,0	duplicate(#getspells_main)	#getspell07_sch03	FAKE_NPC,1,1
+que_qsch04,131,154,0	duplicate(#getspells_main)	#getspell07_sch04	FAKE_NPC,1,1
+que_qsch05,131,154,0	duplicate(#getspells_main)	#getspell07_sch05	FAKE_NPC,1,1
+que_qaru01,146,121,0	duplicate(#getspells_main)	#getspell08_aru01	FAKE_NPC,1,1
+que_qaru02,146,121,0	duplicate(#getspells_main)	#getspell08_aru02	FAKE_NPC,1,1
+que_qaru03,146,121,0	duplicate(#getspells_main)	#getspell08_aru03	FAKE_NPC,1,1
+que_qaru04,146,121,0	duplicate(#getspells_main)	#getspell08_aru04	FAKE_NPC,1,1
+que_qaru05,146,121,0	duplicate(#getspells_main)	#getspell08_aru05	FAKE_NPC,1,1
+que_qsch01,146,121,0	duplicate(#getspells_main)	#getspell08_sch01	FAKE_NPC,1,1
+que_qsch02,146,121,0	duplicate(#getspells_main)	#getspell08_sch02	FAKE_NPC,1,1
+que_qsch03,146,121,0	duplicate(#getspells_main)	#getspell08_sch03	FAKE_NPC,1,1
+que_qsch04,146,121,0	duplicate(#getspells_main)	#getspell08_sch04	FAKE_NPC,1,1
+que_qsch05,146,121,0	duplicate(#getspells_main)	#getspell08_sch05	FAKE_NPC,1,1
 
--	script	#main_cages	-1,{
+-	script	#main_cages	FAKE_NPC,{
 	end;
 
 OnTouch:
@@ -1421,66 +1421,66 @@ OnInit:
 		disablenpc "#"+.@sub$+"_cage0"+.@i;
 	end;
 }
-que_qaru01,103,153,0	duplicate(#main_cages)	#aru01_cage01	-1,1,1
-que_qaru02,103,153,0	duplicate(#main_cages)	#aru02_cage01	-1,1,1
-que_qaru03,103,153,0	duplicate(#main_cages)	#aru03_cage01	-1,1,1
-que_qaru04,103,153,0	duplicate(#main_cages)	#aru04_cage01	-1,1,1
-que_qaru05,103,153,0	duplicate(#main_cages)	#aru05_cage01	-1,1,1
-que_qsch01,103,153,0	duplicate(#main_cages)	#sch01_cage01	-1,1,1
-que_qsch02,103,153,0	duplicate(#main_cages)	#sch02_cage01	-1,1,1
-que_qsch03,103,153,0	duplicate(#main_cages)	#sch03_cage01	-1,1,1
-que_qsch04,103,153,0	duplicate(#main_cages)	#sch04_cage01	-1,1,1
-que_qsch05,103,153,0	duplicate(#main_cages)	#sch05_cage01	-1,1,1
-que_qaru01,102,135,0	duplicate(#main_cages)	#aru01_cage02	-1,1,1
-que_qaru02,102,135,0	duplicate(#main_cages)	#aru02_cage02	-1,1,1
-que_qaru03,102,135,0	duplicate(#main_cages)	#aru03_cage02	-1,1,1
-que_qaru04,102,135,0	duplicate(#main_cages)	#aru04_cage02	-1,1,1
-que_qaru05,102,135,0	duplicate(#main_cages)	#aru05_cage02	-1,1,1
-que_qsch01,102,135,0	duplicate(#main_cages)	#sch01_cage02	-1,1,1
-que_qsch02,102,135,0	duplicate(#main_cages)	#sch02_cage02	-1,1,1
-que_qsch03,102,135,0	duplicate(#main_cages)	#sch03_cage02	-1,1,1
-que_qsch04,102,135,0	duplicate(#main_cages)	#sch04_cage02	-1,1,1
-que_qsch05,102,135,0	duplicate(#main_cages)	#sch05_cage02	-1,1,1
-que_qaru01,113,111,0	duplicate(#main_cages)	#aru01_cage03	-1,1,1
-que_qaru02,113,111,0	duplicate(#main_cages)	#aru02_cage03	-1,1,1
-que_qaru03,113,111,0	duplicate(#main_cages)	#aru03_cage03	-1,1,1
-que_qaru04,113,111,0	duplicate(#main_cages)	#aru04_cage03	-1,1,1
-que_qaru05,113,111,0	duplicate(#main_cages)	#aru05_cage03	-1,1,1
-que_qsch01,113,111,0	duplicate(#main_cages)	#sch01_cage03	-1,1,1
-que_qsch02,113,111,0	duplicate(#main_cages)	#sch02_cage03	-1,1,1
-que_qsch03,113,111,0	duplicate(#main_cages)	#sch03_cage03	-1,1,1
-que_qsch04,113,111,0	duplicate(#main_cages)	#sch04_cage03	-1,1,1
-que_qsch05,113,111,0	duplicate(#main_cages)	#sch05_cage03	-1,1,1
-que_qaru01,161,105,0	duplicate(#main_cages)	#aru01_cage04	-1,1,1
-que_qaru02,161,105,0	duplicate(#main_cages)	#aru02_cage04	-1,1,1
-que_qaru03,161,105,0	duplicate(#main_cages)	#aru03_cage04	-1,1,1
-que_qaru04,161,105,0	duplicate(#main_cages)	#aru04_cage04	-1,1,1
-que_qaru05,161,105,0	duplicate(#main_cages)	#aru05_cage04	-1,1,1
-que_qsch01,161,105,0	duplicate(#main_cages)	#sch01_cage04	-1,1,1
-que_qsch02,161,105,0	duplicate(#main_cages)	#sch02_cage04	-1,1,1
-que_qsch03,161,105,0	duplicate(#main_cages)	#sch03_cage04	-1,1,1
-que_qsch04,161,105,0	duplicate(#main_cages)	#sch04_cage04	-1,1,1
-que_qsch05,161,105,0	duplicate(#main_cages)	#sch05_cage04	-1,1,1
-que_qaru01,168,135,0	duplicate(#main_cages)	#aru01_cage05	-1,1,1
-que_qaru02,168,135,0	duplicate(#main_cages)	#aru02_cage05	-1,1,1
-que_qaru03,168,135,0	duplicate(#main_cages)	#aru03_cage05	-1,1,1
-que_qaru04,168,135,0	duplicate(#main_cages)	#aru04_cage05	-1,1,1
-que_qaru05,168,135,0	duplicate(#main_cages)	#aru05_cage05	-1,1,1
-que_qsch01,168,135,0	duplicate(#main_cages)	#sch01_cage05	-1,1,1
-que_qsch02,168,135,0	duplicate(#main_cages)	#sch02_cage05	-1,1,1
-que_qsch03,168,135,0	duplicate(#main_cages)	#sch03_cage05	-1,1,1
-que_qsch04,168,135,0	duplicate(#main_cages)	#sch04_cage05	-1,1,1
-que_qsch05,168,135,0	duplicate(#main_cages)	#sch05_cage05	-1,1,1
-que_qaru01,150,159,0	duplicate(#main_cages)	#aru01_cage06	-1,1,1
-que_qaru02,150,159,0	duplicate(#main_cages)	#aru02_cage06	-1,1,1
-que_qaru03,150,159,0	duplicate(#main_cages)	#aru03_cage06	-1,1,1
-que_qaru04,150,159,0	duplicate(#main_cages)	#aru04_cage06	-1,1,1
-que_qaru05,150,159,0	duplicate(#main_cages)	#aru05_cage06	-1,1,1
-que_qsch01,150,159,0	duplicate(#main_cages)	#sch01_cage06	-1,1,1
-que_qsch02,150,159,0	duplicate(#main_cages)	#sch02_cage06	-1,1,1
-que_qsch03,150,159,0	duplicate(#main_cages)	#sch03_cage06	-1,1,1
-que_qsch04,150,159,0	duplicate(#main_cages)	#sch04_cage06	-1,1,1
-que_qsch05,150,159,0	duplicate(#main_cages)	#sch05_cage06	-1,1,1
+que_qaru01,103,153,0	duplicate(#main_cages)	#aru01_cage01	FAKE_NPC,1,1
+que_qaru02,103,153,0	duplicate(#main_cages)	#aru02_cage01	FAKE_NPC,1,1
+que_qaru03,103,153,0	duplicate(#main_cages)	#aru03_cage01	FAKE_NPC,1,1
+que_qaru04,103,153,0	duplicate(#main_cages)	#aru04_cage01	FAKE_NPC,1,1
+que_qaru05,103,153,0	duplicate(#main_cages)	#aru05_cage01	FAKE_NPC,1,1
+que_qsch01,103,153,0	duplicate(#main_cages)	#sch01_cage01	FAKE_NPC,1,1
+que_qsch02,103,153,0	duplicate(#main_cages)	#sch02_cage01	FAKE_NPC,1,1
+que_qsch03,103,153,0	duplicate(#main_cages)	#sch03_cage01	FAKE_NPC,1,1
+que_qsch04,103,153,0	duplicate(#main_cages)	#sch04_cage01	FAKE_NPC,1,1
+que_qsch05,103,153,0	duplicate(#main_cages)	#sch05_cage01	FAKE_NPC,1,1
+que_qaru01,102,135,0	duplicate(#main_cages)	#aru01_cage02	FAKE_NPC,1,1
+que_qaru02,102,135,0	duplicate(#main_cages)	#aru02_cage02	FAKE_NPC,1,1
+que_qaru03,102,135,0	duplicate(#main_cages)	#aru03_cage02	FAKE_NPC,1,1
+que_qaru04,102,135,0	duplicate(#main_cages)	#aru04_cage02	FAKE_NPC,1,1
+que_qaru05,102,135,0	duplicate(#main_cages)	#aru05_cage02	FAKE_NPC,1,1
+que_qsch01,102,135,0	duplicate(#main_cages)	#sch01_cage02	FAKE_NPC,1,1
+que_qsch02,102,135,0	duplicate(#main_cages)	#sch02_cage02	FAKE_NPC,1,1
+que_qsch03,102,135,0	duplicate(#main_cages)	#sch03_cage02	FAKE_NPC,1,1
+que_qsch04,102,135,0	duplicate(#main_cages)	#sch04_cage02	FAKE_NPC,1,1
+que_qsch05,102,135,0	duplicate(#main_cages)	#sch05_cage02	FAKE_NPC,1,1
+que_qaru01,113,111,0	duplicate(#main_cages)	#aru01_cage03	FAKE_NPC,1,1
+que_qaru02,113,111,0	duplicate(#main_cages)	#aru02_cage03	FAKE_NPC,1,1
+que_qaru03,113,111,0	duplicate(#main_cages)	#aru03_cage03	FAKE_NPC,1,1
+que_qaru04,113,111,0	duplicate(#main_cages)	#aru04_cage03	FAKE_NPC,1,1
+que_qaru05,113,111,0	duplicate(#main_cages)	#aru05_cage03	FAKE_NPC,1,1
+que_qsch01,113,111,0	duplicate(#main_cages)	#sch01_cage03	FAKE_NPC,1,1
+que_qsch02,113,111,0	duplicate(#main_cages)	#sch02_cage03	FAKE_NPC,1,1
+que_qsch03,113,111,0	duplicate(#main_cages)	#sch03_cage03	FAKE_NPC,1,1
+que_qsch04,113,111,0	duplicate(#main_cages)	#sch04_cage03	FAKE_NPC,1,1
+que_qsch05,113,111,0	duplicate(#main_cages)	#sch05_cage03	FAKE_NPC,1,1
+que_qaru01,161,105,0	duplicate(#main_cages)	#aru01_cage04	FAKE_NPC,1,1
+que_qaru02,161,105,0	duplicate(#main_cages)	#aru02_cage04	FAKE_NPC,1,1
+que_qaru03,161,105,0	duplicate(#main_cages)	#aru03_cage04	FAKE_NPC,1,1
+que_qaru04,161,105,0	duplicate(#main_cages)	#aru04_cage04	FAKE_NPC,1,1
+que_qaru05,161,105,0	duplicate(#main_cages)	#aru05_cage04	FAKE_NPC,1,1
+que_qsch01,161,105,0	duplicate(#main_cages)	#sch01_cage04	FAKE_NPC,1,1
+que_qsch02,161,105,0	duplicate(#main_cages)	#sch02_cage04	FAKE_NPC,1,1
+que_qsch03,161,105,0	duplicate(#main_cages)	#sch03_cage04	FAKE_NPC,1,1
+que_qsch04,161,105,0	duplicate(#main_cages)	#sch04_cage04	FAKE_NPC,1,1
+que_qsch05,161,105,0	duplicate(#main_cages)	#sch05_cage04	FAKE_NPC,1,1
+que_qaru01,168,135,0	duplicate(#main_cages)	#aru01_cage05	FAKE_NPC,1,1
+que_qaru02,168,135,0	duplicate(#main_cages)	#aru02_cage05	FAKE_NPC,1,1
+que_qaru03,168,135,0	duplicate(#main_cages)	#aru03_cage05	FAKE_NPC,1,1
+que_qaru04,168,135,0	duplicate(#main_cages)	#aru04_cage05	FAKE_NPC,1,1
+que_qaru05,168,135,0	duplicate(#main_cages)	#aru05_cage05	FAKE_NPC,1,1
+que_qsch01,168,135,0	duplicate(#main_cages)	#sch01_cage05	FAKE_NPC,1,1
+que_qsch02,168,135,0	duplicate(#main_cages)	#sch02_cage05	FAKE_NPC,1,1
+que_qsch03,168,135,0	duplicate(#main_cages)	#sch03_cage05	FAKE_NPC,1,1
+que_qsch04,168,135,0	duplicate(#main_cages)	#sch04_cage05	FAKE_NPC,1,1
+que_qsch05,168,135,0	duplicate(#main_cages)	#sch05_cage05	FAKE_NPC,1,1
+que_qaru01,150,159,0	duplicate(#main_cages)	#aru01_cage06	FAKE_NPC,1,1
+que_qaru02,150,159,0	duplicate(#main_cages)	#aru02_cage06	FAKE_NPC,1,1
+que_qaru03,150,159,0	duplicate(#main_cages)	#aru03_cage06	FAKE_NPC,1,1
+que_qaru04,150,159,0	duplicate(#main_cages)	#aru04_cage06	FAKE_NPC,1,1
+que_qaru05,150,159,0	duplicate(#main_cages)	#aru05_cage06	FAKE_NPC,1,1
+que_qsch01,150,159,0	duplicate(#main_cages)	#sch01_cage06	FAKE_NPC,1,1
+que_qsch02,150,159,0	duplicate(#main_cages)	#sch02_cage06	FAKE_NPC,1,1
+que_qsch03,150,159,0	duplicate(#main_cages)	#sch03_cage06	FAKE_NPC,1,1
+que_qsch04,150,159,0	duplicate(#main_cages)	#sch04_cage06	FAKE_NPC,1,1
+que_qsch05,150,159,0	duplicate(#main_cages)	#sch05_cage06	FAKE_NPC,1,1
 
 que_qaru01,1,8,0	script	#gd_main_mobctrl	CLEAR_NPC,{
 	end;
@@ -1528,7 +1528,7 @@ que_qsch03,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch03_mobctrl	CLEAR_NPC
 que_qsch04,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch04_mobctrl	CLEAR_NPC
 que_qsch05,1,8,0	duplicate(#gd_main_mobctrl)	#gd_sch05_mobctrl	CLEAR_NPC
 
--	script	windpaths_main	-1,{
+-	script	windpaths_main	FAKE_NPC,{
 	end;
 
 OnTouch:
@@ -1568,7 +1568,7 @@ que_qsch03,128,104,0	duplicate(windpaths_main)	windpath04_sch03	WARPNPC,1,1
 que_qsch04,128,104,0	duplicate(windpaths_main)	windpath04_sch04	WARPNPC,1,1
 que_qsch05,128,104,0	duplicate(windpaths_main)	windpath04_sch05	WARPNPC,1,1
 
--	script	#nm_switch_main	-1,{
+-	script	#nm_switch_main	FAKE_NPC,{
 	end;
 
 OnTouch:
@@ -1627,18 +1627,18 @@ OnInit:
 	disablenpc "#nm_switch_"+.@sub$;
 	end;
 }
-que_qaru01,253,273,0	duplicate(#nm_switch_main)	#nm_switch_aru01	-1,5,5
-que_qaru02,253,273,0	duplicate(#nm_switch_main)	#nm_switch_aru02	-1,5,5
-que_qaru03,253,273,0	duplicate(#nm_switch_main)	#nm_switch_aru03	-1,5,5
-que_qaru04,253,273,0	duplicate(#nm_switch_main)	#nm_switch_aru04	-1,5,5
-que_qaru05,253,273,0	duplicate(#nm_switch_main)	#nm_switch_aru05	-1,5,5
-que_qsch01,253,273,0	duplicate(#nm_switch_main)	#nm_switch_sch01	-1,5,5
-que_qsch02,253,273,0	duplicate(#nm_switch_main)	#nm_switch_sch02	-1,5,5
-que_qsch03,253,273,0	duplicate(#nm_switch_main)	#nm_switch_sch03	-1,5,5
-que_qsch04,253,273,0	duplicate(#nm_switch_main)	#nm_switch_sch04	-1,5,5
-que_qsch05,253,273,0	duplicate(#nm_switch_main)	#nm_switch_sch05	-1,5,5
+que_qaru01,253,273,0	duplicate(#nm_switch_main)	#nm_switch_aru01	FAKE_NPC,5,5
+que_qaru02,253,273,0	duplicate(#nm_switch_main)	#nm_switch_aru02	FAKE_NPC,5,5
+que_qaru03,253,273,0	duplicate(#nm_switch_main)	#nm_switch_aru03	FAKE_NPC,5,5
+que_qaru04,253,273,0	duplicate(#nm_switch_main)	#nm_switch_aru04	FAKE_NPC,5,5
+que_qaru05,253,273,0	duplicate(#nm_switch_main)	#nm_switch_aru05	FAKE_NPC,5,5
+que_qsch01,253,273,0	duplicate(#nm_switch_main)	#nm_switch_sch01	FAKE_NPC,5,5
+que_qsch02,253,273,0	duplicate(#nm_switch_main)	#nm_switch_sch02	FAKE_NPC,5,5
+que_qsch03,253,273,0	duplicate(#nm_switch_main)	#nm_switch_sch03	FAKE_NPC,5,5
+que_qsch04,253,273,0	duplicate(#nm_switch_main)	#nm_switch_sch04	FAKE_NPC,5,5
+que_qsch05,253,273,0	duplicate(#nm_switch_main)	#nm_switch_sch05	FAKE_NPC,5,5
 
--	script	#nmsommain_jin01	-1,{
+-	script	#nmsommain_jin01	FAKE_NPC,{
 OnEnable:
 	.@sub$ = callfunc("F_Okolnir");
 	donpcevent "#"+.@sub$+"_stone01::OnEnable";
@@ -1676,18 +1676,18 @@ OnTimer180000:
 OnMyMobDead:
 	end;
 }
-que_qaru01,229,297,0	duplicate(#nmsommain_jin01)	#nmsomaru01_jin01	-1
-que_qaru02,229,297,0	duplicate(#nmsommain_jin01)	#nmsomaru02_jin01	-1
-que_qaru03,229,297,0	duplicate(#nmsommain_jin01)	#nmsomaru03_jin01	-1
-que_qaru04,229,297,0	duplicate(#nmsommain_jin01)	#nmsomaru04_jin01	-1
-que_qaru05,229,297,0	duplicate(#nmsommain_jin01)	#nmsomaru05_jin01	-1
-que_qsch01,229,297,0	duplicate(#nmsommain_jin01)	#nmsomsch01_jin01	-1
-que_qsch02,229,297,0	duplicate(#nmsommain_jin01)	#nmsomsch02_jin01	-1
-que_qsch03,229,297,0	duplicate(#nmsommain_jin01)	#nmsomsch03_jin01	-1
-que_qsch04,229,297,0	duplicate(#nmsommain_jin01)	#nmsomsch04_jin01	-1
-que_qsch05,229,297,0	duplicate(#nmsommain_jin01)	#nmsomsch05_jin01	-1
+que_qaru01,229,297,0	duplicate(#nmsommain_jin01)	#nmsomaru01_jin01	FAKE_NPC
+que_qaru02,229,297,0	duplicate(#nmsommain_jin01)	#nmsomaru02_jin01	FAKE_NPC
+que_qaru03,229,297,0	duplicate(#nmsommain_jin01)	#nmsomaru03_jin01	FAKE_NPC
+que_qaru04,229,297,0	duplicate(#nmsommain_jin01)	#nmsomaru04_jin01	FAKE_NPC
+que_qaru05,229,297,0	duplicate(#nmsommain_jin01)	#nmsomaru05_jin01	FAKE_NPC
+que_qsch01,229,297,0	duplicate(#nmsommain_jin01)	#nmsomsch01_jin01	FAKE_NPC
+que_qsch02,229,297,0	duplicate(#nmsommain_jin01)	#nmsomsch02_jin01	FAKE_NPC
+que_qsch03,229,297,0	duplicate(#nmsommain_jin01)	#nmsomsch03_jin01	FAKE_NPC
+que_qsch04,229,297,0	duplicate(#nmsommain_jin01)	#nmsomsch04_jin01	FAKE_NPC
+que_qsch05,229,297,0	duplicate(#nmsommain_jin01)	#nmsomsch05_jin01	FAKE_NPC
 
--	script	#main_stone01	-1,{
+-	script	#main_stone01	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -1724,7 +1724,7 @@ que_qsch03,2,8,0	duplicate(#main_stone01)	#sch03_stone01	CLEAR_NPC
 que_qsch04,2,8,0	duplicate(#main_stone01)	#sch04_stone01	CLEAR_NPC
 que_qsch05,2,8,0	duplicate(#main_stone01)	#sch05_stone01	CLEAR_NPC
 
--	script	#nmsommain_jin02	-1,{
+-	script	#nmsommain_jin02	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -1760,18 +1760,18 @@ OnTimer180000:
 OnMyMobDead:
 	end;
 }
-que_qaru01,275,299,0	duplicate(#nmsommain_jin02)	#nmsomaru01_jin02	-1
-que_qaru02,275,299,0	duplicate(#nmsommain_jin02)	#nmsomaru02_jin02	-1
-que_qaru03,275,299,0	duplicate(#nmsommain_jin02)	#nmsomaru03_jin02	-1
-que_qaru04,275,299,0	duplicate(#nmsommain_jin02)	#nmsomaru04_jin02	-1
-que_qaru05,275,299,0	duplicate(#nmsommain_jin02)	#nmsomaru05_jin02	-1
-que_qsch01,275,299,0	duplicate(#nmsommain_jin02)	#nmsomsch01_jin02	-1
-que_qsch02,275,299,0	duplicate(#nmsommain_jin02)	#nmsomsch02_jin02	-1
-que_qsch03,275,299,0	duplicate(#nmsommain_jin02)	#nmsomsch03_jin02	-1
-que_qsch04,275,299,0	duplicate(#nmsommain_jin02)	#nmsomsch04_jin02	-1
-que_qsch05,275,299,0	duplicate(#nmsommain_jin02)	#nmsomsch05_jin02	-1
+que_qaru01,275,299,0	duplicate(#nmsommain_jin02)	#nmsomaru01_jin02	FAKE_NPC
+que_qaru02,275,299,0	duplicate(#nmsommain_jin02)	#nmsomaru02_jin02	FAKE_NPC
+que_qaru03,275,299,0	duplicate(#nmsommain_jin02)	#nmsomaru03_jin02	FAKE_NPC
+que_qaru04,275,299,0	duplicate(#nmsommain_jin02)	#nmsomaru04_jin02	FAKE_NPC
+que_qaru05,275,299,0	duplicate(#nmsommain_jin02)	#nmsomaru05_jin02	FAKE_NPC
+que_qsch01,275,299,0	duplicate(#nmsommain_jin02)	#nmsomsch01_jin02	FAKE_NPC
+que_qsch02,275,299,0	duplicate(#nmsommain_jin02)	#nmsomsch02_jin02	FAKE_NPC
+que_qsch03,275,299,0	duplicate(#nmsommain_jin02)	#nmsomsch03_jin02	FAKE_NPC
+que_qsch04,275,299,0	duplicate(#nmsommain_jin02)	#nmsomsch04_jin02	FAKE_NPC
+que_qsch05,275,299,0	duplicate(#nmsommain_jin02)	#nmsomsch05_jin02	FAKE_NPC
 
--	script	#main_stone02	-1,{
+-	script	#main_stone02	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -1808,7 +1808,7 @@ que_qsch03,2,9,0	duplicate(#main_stone02)	#sch03_stone02	CLEAR_NPC
 que_qsch04,2,9,0	duplicate(#main_stone02)	#sch04_stone02	CLEAR_NPC
 que_qsch05,2,9,0	duplicate(#main_stone02)	#sch05_stone02	CLEAR_NPC
 
--	script	#nmsommain_jin03	-1,{
+-	script	#nmsommain_jin03	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -1852,18 +1852,18 @@ OnTimer360000:
 OnMyMobDead:
 	end;
 }
-que_qaru01,251,340,0	duplicate(#nmsommain_jin03)	#nmsomaru01_jin03	-1
-que_qaru02,251,340,0	duplicate(#nmsommain_jin03)	#nmsomaru02_jin03	-1
-que_qaru03,251,340,0	duplicate(#nmsommain_jin03)	#nmsomaru03_jin03	-1
-que_qaru04,251,340,0	duplicate(#nmsommain_jin03)	#nmsomaru04_jin03	-1
-que_qaru05,251,340,0	duplicate(#nmsommain_jin03)	#nmsomaru05_jin03	-1
-que_qsch01,251,340,0	duplicate(#nmsommain_jin03)	#nmsomsch01_jin03	-1
-que_qsch02,251,340,0	duplicate(#nmsommain_jin03)	#nmsomsch02_jin03	-1
-que_qsch03,251,340,0	duplicate(#nmsommain_jin03)	#nmsomsch03_jin03	-1
-que_qsch04,251,340,0	duplicate(#nmsommain_jin03)	#nmsomsch04_jin03	-1
-que_qsch05,251,340,0	duplicate(#nmsommain_jin03)	#nmsomsch05_jin03	-1
+que_qaru01,251,340,0	duplicate(#nmsommain_jin03)	#nmsomaru01_jin03	FAKE_NPC
+que_qaru02,251,340,0	duplicate(#nmsommain_jin03)	#nmsomaru02_jin03	FAKE_NPC
+que_qaru03,251,340,0	duplicate(#nmsommain_jin03)	#nmsomaru03_jin03	FAKE_NPC
+que_qaru04,251,340,0	duplicate(#nmsommain_jin03)	#nmsomaru04_jin03	FAKE_NPC
+que_qaru05,251,340,0	duplicate(#nmsommain_jin03)	#nmsomaru05_jin03	FAKE_NPC
+que_qsch01,251,340,0	duplicate(#nmsommain_jin03)	#nmsomsch01_jin03	FAKE_NPC
+que_qsch02,251,340,0	duplicate(#nmsommain_jin03)	#nmsomsch02_jin03	FAKE_NPC
+que_qsch03,251,340,0	duplicate(#nmsommain_jin03)	#nmsomsch03_jin03	FAKE_NPC
+que_qsch04,251,340,0	duplicate(#nmsommain_jin03)	#nmsomsch04_jin03	FAKE_NPC
+que_qsch05,251,340,0	duplicate(#nmsommain_jin03)	#nmsomsch05_jin03	FAKE_NPC
 
--	script	#main_stone03	-1,{
+-	script	#main_stone03	FAKE_NPC,{
 	end;
 
 OnEnable:
@@ -1900,7 +1900,7 @@ que_qsch03,2,10,0	duplicate(#main_stone03)	#sch03_stone03	CLEAR_NPC
 que_qsch04,2,10,0	duplicate(#main_stone03)	#sch04_stone03	CLEAR_NPC
 que_qsch05,2,10,0	duplicate(#main_stone03)	#sch05_stone03	CLEAR_NPC
 
--	script	Guard of Shadow#main_all	-1,{
+-	script	Guard of Shadow#main_all	FAKE_NPC,{
 	end;
 OnTouch:
 	.@sub$ = callfunc("F_Okolnir");
@@ -1973,7 +1973,7 @@ que_qsch05,224,290,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch05_0
 que_qsch05,236,296,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch05_03	SKOGUL,4,4
 que_qsch05,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch05_04	SKOGUL,4,4
 
--	script	Bloody Hunter#main_all	-1,{
+-	script	Bloody Hunter#main_all	FAKE_NPC,{
 	end;
 
 OnTouch:
@@ -2047,7 +2047,7 @@ que_qsch05,271,283,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch05_ac02	
 que_qsch05,270,307,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch05_ac03	FRUS,4,4
 que_qsch05,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch05_ac04	FRUS,4,4
 
--	script	Temple Keeper#main_all	-1,{
+-	script	Temple Keeper#main_all	FAKE_NPC,{
 	end;
 
 OnTouch:
@@ -2099,7 +2099,7 @@ que_qsch04,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#sch04_ac02	
 que_qsch05,247,330,5	duplicate(Temple Keeper#main_all)	Temple Keeper#sch05_ac01	GARDEN_WATCHER,4,4
 que_qsch05,255,330,3	duplicate(Temple Keeper#main_all)	Temple Keeper#sch05_ac02	GARDEN_WATCHER,4,4
 
--	script	Wish Maiden#main_boss	-1,{
+-	script	Wish Maiden#main_boss	FAKE_NPC,{
 	end;
 
 OnDisable:
@@ -2157,7 +2157,7 @@ que_qsch03,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch03_boss	WIS
 que_qsch04,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch04_boss	WISH_MAIDEN
 que_qsch05,251,255,3	duplicate(Wish Maiden#main_boss)	Wish Maiden#sch05_boss	WISH_MAIDEN
 
--	script	Wish Maiden#main_gift	-1,{
+-	script	Wish Maiden#main_gift	FAKE_NPC,{
 	.@sub$ = callfunc("F_Okolnir");
 	.@t$ = ((compare(strnpcinfo(4),"aru"))?"arug_cas0":"schg_cas0")+(charat(strnpcinfo(4),getstrlen(strnpcinfo(4))-1));
 	.@GID = getcastledata(.@t$,1);
@@ -2286,7 +2286,7 @@ que_qsch03,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch03_gift	4_F
 que_qsch04,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch04_gift	4_F_VALKYRIE2
 que_qsch05,252,340,3	duplicate(Wish Maiden#main_gift)	Wish Maiden#sch05_gift	4_F_VALKYRIE2
 
--	script	#to_agit_main_gate	-1,{
+-	script	#to_agit_main_gate	FAKE_NPC,{
 	end;
 
 OnTouch:
@@ -2310,7 +2310,7 @@ que_qsch03,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_sch03_gate	WARPNPC,1
 que_qsch04,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_sch04_gate	WARPNPC,1,1
 que_qsch05,252,339,0	duplicate(#to_agit_main_gate)	#to_agit_sch05_gate	WARPNPC,1,1
 
--	script	#okolnir_main_time01	-1,{
+-	script	#okolnir_main_time01	FAKE_NPC,{
 	end;
 
 OnEnable:

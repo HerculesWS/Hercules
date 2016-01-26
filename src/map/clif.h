@@ -63,7 +63,7 @@ struct view_data;
 #define clif_disp_onlyself(sd,mes,len) clif->disp_message( &(sd)->bl, (mes), (len), SELF )
 #define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
 #define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
-#define RGB2BGR(c) ((c & 0x0000FF) << 16 | (c & 0x00FF00) | (c & 0xFF0000) >> 16)
+#define RGB2BGR(c) (((c) & 0x0000FF) << 16 | ((c) & 0x00FF00) | ((c) & 0xFF0000) >> 16)
 
 #define COLOR_RED     0xff0000U
 #define COLOR_GREEN   0x00ff00U
@@ -1000,7 +1000,7 @@ struct clif_interface {
 	void (*quest_add) (struct map_session_data *sd, struct quest *qd);
 	void (*quest_delete) (struct map_session_data *sd, int quest_id);
 	void (*quest_update_status) (struct map_session_data *sd, int quest_id, bool active);
-	void (*quest_update_objective) (struct map_session_data *sd, struct quest *qd);
+	void (*quest_update_objective) (struct map_session_data *sd, struct quest *qd, int mob_id);
 	void (*quest_show_event) (struct map_session_data *sd, struct block_list *bl, short state, short color);
 	/* mail-related */
 	void (*mail_window) (int fd, int flag);
@@ -1347,6 +1347,11 @@ struct clif_interface {
 	/* */
 	void (*add_random_options) (unsigned char* buf, struct item* item);
 	void (*pHotkeyRowShift) (int fd, struct map_session_data *sd);
+	void (*dressroom_open) (struct map_session_data *sd, int view);
+	void (*pOneClick_ItemIdentify) (int fd,struct map_session_data *sd);
+	/* Cart Deco */
+	void(*selectcart) (struct map_session_data *sd);
+	void(*pSelectCart) (int fd, struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

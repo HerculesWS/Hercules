@@ -1403,7 +1403,7 @@ pay_arche,84,139,3	script	Seisner	4_F_JOB_HUNTER,{
 pay_arche,76,135,3	script	#Target	HIDDEN_NPC,{ end; }
 
 //== Acolyte ===============================================
--	script	::Acolyte_Tu	-1,{
+-	script	::Acolyte_Tu	FAKE_NPC,{
 	mes "[Acolyte]";
 	if(tu_archer01 == 14){
 		if (gettime(GETTIME_HOUR) >= 18 && gettime(GETTIME_HOUR) < 22) {

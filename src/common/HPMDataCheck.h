@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2014-2015  Hercules Dev Team
+ * Copyright (C) 2014-2016  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -587,6 +587,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "s_autospell", sizeof(struct s_autospell), SERVER_TYPE_MAP },
 		{ "sg_data", sizeof(struct sg_data), SERVER_TYPE_MAP },
 		{ "skill_tree_entry", sizeof(struct skill_tree_entry), SERVER_TYPE_MAP },
+		{ "skill_tree_requirement", sizeof(struct skill_tree_requirement), SERVER_TYPE_MAP },
 		{ "weapon_data", sizeof(struct weapon_data), SERVER_TYPE_MAP },
 	#else
 		#define MAP_PC_H

@@ -2794,7 +2794,7 @@ OnTouch:
 	end;
 }
 
-que_job01,1,1,1	script	#maobartimer1	-1,{
+que_job01,1,1,1	script	#maobartimer1	FAKE_NPC,{
 
 OnEnter:
 	initnpctimer;
@@ -2924,7 +2924,7 @@ OnTouch:
 	end;
 }
 
-que_job01,1,2,1	script	#maobartimer2	-1,{
+que_job01,1,2,1	script	#maobartimer2	FAKE_NPC,{
 
 OnEnter:
 	initnpctimer;
@@ -6446,7 +6446,7 @@ OnEnter:
 	end;
 }
 
-yuno_in04,1,1,1	script	#maobooktimer	-1,{
+yuno_in04,1,1,1	script	#maobooktimer	FAKE_NPC,{
 
 OnEnter:
 	initnpctimer;
@@ -9970,7 +9970,7 @@ OnEnter:
 	end;
 }
 
-morocc,1,1,1	script	#mao_timer	-1,{
+morocc,1,1,1	script	#mao_timer	FAKE_NPC,{
 
 OnStart:
 	initnpctimer;
@@ -9986,7 +9986,7 @@ OnStop:
 	end;
 }
 
-morocc,1,2,1	script	#mao_manager	-1,{
+morocc,1,2,1	script	#mao_manager	FAKE_NPC,{
 
 OnStart:
 	initnpctimer;

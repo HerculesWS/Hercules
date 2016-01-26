@@ -57,8 +57,9 @@ struct guild_interface *guild;
 /*==========================================
  * Retrieves and validates the sd pointer for this guild member [Skotlex]
  *------------------------------------------*/
-TBL_PC* guild_sd_check(int guild_id, int account_id, int char_id) {
-	TBL_PC* sd = map->id2sd(account_id);
+struct map_session_data *guild_sd_check(int guild_id, int account_id, int char_id)
+{
+	struct map_session_data *sd = map->id2sd(account_id);
 
 	if (!(sd && sd->status.char_id == char_id))
 		return NULL;
@@ -441,8 +442,7 @@ int guild_check_member(struct guild *g)
 	nullpo_ret(g);
 
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
-	{
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if( sd->status.guild_id != g->guild_id )
 			continue;
 
@@ -465,7 +465,7 @@ int guild_recv_noinfo(int guild_id)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if( sd->status.guild_id == guild_id )
 			sd->status.guild_id = 0; // erase guild
 	}
@@ -505,7 +505,7 @@ int guild_recv_info(struct guild *sg) {
 						tg[i] = guild->search(sg->alliance[i].guild_id);
 				}
 
-				for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
+				for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 					if (!sd->status.guild_id)
 						continue; // Not interested in guildless users
 
@@ -939,14 +939,14 @@ int guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, c
 
 void guild_retrieveitembound(int char_id,int aid,int guild_id) {
 #ifdef GP_BOUND_ITEMS
-	TBL_PC *sd = map->charid2sd(char_id);
-	if(sd){ //Character is online
+	struct map_session_data *sd = map->charid2sd(char_id);
+	if (sd != NULL) { //Character is online
 		pc->bound_clear(sd,IBT_GUILD);
 	} else { //Character is offline, ask char server to do the job
 		struct guild_storage *gstor = idb_get(gstorage->db,guild_id);
 		if(gstor && gstor->storage_status == 1) { //Someone is in guild storage, close them
 			struct s_mapiterator* iter = mapit_getallusers();
-			for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
+			for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 				if(sd->status.guild_id == guild_id && sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 					gstorage->close(sd);
 					break;
@@ -1229,7 +1229,7 @@ int guild_emblem_changed(int len,int guild_id,int emblem_id,const char *data)
 				continue;
 			// update permanent guardians
 			for( i = 0; i < ARRAYLENGTH(gc->guardian); ++i ) {
-				TBL_MOB* md = (gc->guardian[i].id ? map->id2md(gc->guardian[i].id) : NULL);
+				struct mob_data *md = gc->guardian[i].id ? map->id2md(gc->guardian[i].id) : NULL;
 				if( md == NULL || md->guardian_data == NULL )
 					continue;
 
@@ -1237,7 +1237,7 @@ int guild_emblem_changed(int len,int guild_id,int emblem_id,const char *data)
 			}
 			// update temporary guardians
 			for( i = 0; i < gc->temp_guardians_max; ++i ) {
-				TBL_MOB* md = (gc->temp_guardians[i] ? map->id2md(gc->temp_guardians[i]) : NULL);
+				struct mob_data *md = gc->temp_guardians[i] ? map->id2md(gc->temp_guardians[i]) : NULL;
 				if( md == NULL || md->guardian_data == NULL )
 					continue;
 
@@ -1328,7 +1328,7 @@ int guild_getexp(struct map_session_data *sd,int exp)
 /*====================================================
  * Ask to increase guildskill skill_id
  *---------------------------------------------------*/
-int guild_skillup(TBL_PC* sd, uint16 skill_id)
+int guild_skillup(struct map_session_data *sd, uint16 skill_id)
 {
 	struct guild* g;
 	int idx = skill_id - GD_SKILLBASE;
@@ -2215,7 +2215,7 @@ void guild_flag_remove(struct npc_data *nd) {
 			continue;
 
 		if( cursor != i ) {
-			memmove(&guild->flags[cursor], &guild->flags[i], sizeof(struct npc_data*));
+			memmove(&guild->flags[cursor], &guild->flags[i], sizeof(guild->flags[0]));
 		}
 		cursor++;
 	}

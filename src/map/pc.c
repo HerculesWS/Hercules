@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -141,10 +141,11 @@ bool pc_should_log_commands(struct map_session_data *sd)
 	return pcg->should_log_commands(sd->group);
 }
 
-int pc_invincible_timer(int tid, int64 tick, int id, intptr_t data) {
-	struct map_session_data *sd;
+int pc_invincible_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	struct map_session_data *sd = map->id2sd(id);
 
-	if( (sd=(struct map_session_data *)map->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
+	if (sd == NULL)
 		return 1;
 
 	if(sd->invincible_timer != tid){
@@ -180,10 +181,10 @@ void pc_delinvincibletimer(struct map_session_data* sd)
 }
 
 int pc_spiritball_timer(int tid, int64 tick, int id, intptr_t data) {
-	struct map_session_data *sd;
+	struct map_session_data *sd = map->id2sd(id);
 	int i;
 
-	if( (sd=(struct map_session_data *)map->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
+	if (sd == NULL)
 		return 1;
 
 	if( sd->spiritball <= 0 )
@@ -304,14 +305,17 @@ int pc_delspiritball(struct map_session_data *sd,int count,int type)
 	}
 	return 0;
 }
-int pc_check_banding( struct block_list *bl, va_list ap ) {
+int pc_check_banding(struct block_list *bl, va_list ap)
+{
 	int *c, *b_sd;
 	struct block_list *src;
-	struct map_session_data *tsd;
+	const struct map_session_data *tsd;
 	struct status_change *sc;
 
 	nullpo_ret(bl);
-	nullpo_ret(tsd = (struct map_session_data*)bl);
+	Assert_ret(bl->type == BL_PC);
+	tsd = BL_UCCAST(BL_PC, bl);
+
 	nullpo_ret(src = va_arg(ap,struct block_list *));
 	c = va_arg(ap,int *);
 	b_sd = va_arg(ap, int *);
@@ -613,6 +617,10 @@ int pc_makesavestatus(struct map_session_data *sd)
 
 	if(!battle_config.save_clothcolor)
 		sd->status.clothes_color=0;
+
+	if (!battle_config.save_body_style)
+		sd->status.body = 0;
+
 
 	//Only copy the Cart/Peco/Falcon options, the rest are handled via
 	//status change load/saving. [Skotlex]
@@ -1085,6 +1093,9 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	if( sd->status.clothes_color < MIN_CLOTH_COLOR || sd->status.clothes_color > MAX_CLOTH_COLOR ) {
 		sd->status.clothes_color = MIN_CLOTH_COLOR;
 	}
+	if (sd->status.body < MIN_BODY_STYLE || sd->status.body > MAX_BODY_STYLE) {
+		sd->status.body = MIN_BODY_STYLE;
+	}
 
 	//Initializations to null/0 unneeded since map_session_data was filled with 0 upon allocation.
 	if(!sd->status.hp) pc_setdead(sd);
@@ -1544,43 +1555,42 @@ int pc_calc_skilltree(struct map_session_data *sd)
 
 	do {
 		flag = 0;
-		for( i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[c][i].id) > 0; i++ ) {
-			int f, idx = pc->skill_tree[c][i].idx;
-			if( sd->status.skill[idx].id )
+		for (i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[c][i].id) > 0; i++) {
+			int idx = pc->skill_tree[c][i].idx;
+			bool satisfied = true;
+			if (sd->status.skill[idx].id > 0)
 				continue; //Skill already known.
 
-			f = 1;
-			if(!battle_config.skillfree) {
+			if (!battle_config.skillfree) {
 				int j;
-				for(j = 0; j < MAX_PC_SKILL_REQUIRE; j++) {
-					int k;
-					if((k=pc->skill_tree[c][i].need[j].id)) {
-						int idx2 = pc->skill_tree[c][i].need[j].idx;
-						if (sd->status.skill[idx2].id == 0 || sd->status.skill[idx2].flag == SKILL_FLAG_TEMPORARY || sd->status.skill[idx2].flag == SKILL_FLAG_PLAGIARIZED)
-							k = 0; //Not learned.
-						else if (sd->status.skill[idx2].flag >= SKILL_FLAG_REPLACED_LV_0) //Real lerned level
-							k = sd->status.skill[idx2].flag - SKILL_FLAG_REPLACED_LV_0;
-						else
-							k = pc->checkskill2(sd,idx2);
-						if (k < pc->skill_tree[c][i].need[j].lv) {
-							f = 0;
-							break;
-						}
+				for (j = 0; j < VECTOR_LENGTH(pc->skill_tree[c][i].need); j++) {
+					struct skill_tree_requirement *req = &VECTOR_INDEX(pc->skill_tree[c][i].need, j);
+					int level;
+					if (sd->status.skill[req->idx].id == 0
+					 || sd->status.skill[req->idx].flag == SKILL_FLAG_TEMPORARY
+					 || sd->status.skill[req->idx].flag == SKILL_FLAG_PLAGIARIZED)
+						level = 0; //Not learned.
+					else if (sd->status.skill[req->idx].flag >= SKILL_FLAG_REPLACED_LV_0) //Real learned level
+						level = sd->status.skill[req->idx].flag - SKILL_FLAG_REPLACED_LV_0;
+					else
+						level = pc->checkskill2(sd, req->idx);
+					if (level < req->lv) {
+						satisfied = false;
+						break;
 					}
 				}
-				if ( sd->status.job_level < pc->skill_tree[c][i].joblv ) {
-					int x = pc->mapid2jobid(sd->class_, sd->status.sex); // need to get its own skilltree
-					if ( x > -1 ) {
-						x = pc->class2idx(x);
-						if ( !pc->skill_tree[x][i].inherited )
-							f = 0; // job level requirement wasn't satisfied
-					} else
-						f = 0;
+				if (sd->status.job_level < pc->skill_tree[c][i].joblv) {
+					int jobid = pc->mapid2jobid(sd->class_, sd->status.sex); // need to get its own skilltree
+					if (jobid > -1) {
+						if (!pc->skill_tree[pc->class2idx(jobid)][i].inherited)
+							satisfied = false; // job level requirement wasn't satisfied
+					} else {
+						satisfied = false;
+					}
 				}
 			}
-			if( f ) {
-				int inf2;
-				inf2 = skill->dbs->db[idx].inf2;
+			if (satisfied) {
+				int inf2 = skill->dbs->db[idx].inf2;
 
 				if(!sd->status.skill[idx].lv && (
 					(inf2&INF2_QUEST_SKILL && !battle_config.quest_skill_learn) ||
@@ -1646,39 +1656,40 @@ void pc_check_skilltree(struct map_session_data *sd, int skill_id)
 	c = pc->class2idx(c);
 	do {
 		flag = 0;
-		for (i = 0; i < MAX_SKILL_TREE && (id=pc->skill_tree[c][i].id)>0; i++) {
-			int j, f = 1, idx = pc->skill_tree[c][i].idx;
+		for (i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[c][i].id) > 0; i++) {
+			int j, idx = pc->skill_tree[c][i].idx;
+			bool satisfied = true;
 
-			if( sd->status.skill[idx].id ) //Already learned
+			if (sd->status.skill[idx].id) //Already learned
 				continue;
 
-			for (j = 0; j < MAX_PC_SKILL_REQUIRE; j++) {
-				int k = pc->skill_tree[c][i].need[j].id;
-				if (k) {
-					int idx2 = pc->skill_tree[c][i].need[j].idx;
-					if (sd->status.skill[idx2].id == 0 || sd->status.skill[idx2].flag == SKILL_FLAG_TEMPORARY || sd->status.skill[idx2].flag == SKILL_FLAG_PLAGIARIZED)
-						k = 0; //Not learned.
-					else if (sd->status.skill[idx2].flag >= SKILL_FLAG_REPLACED_LV_0) //Real lerned level
-						k = sd->status.skill[idx2].flag - SKILL_FLAG_REPLACED_LV_0;
-					else
-						k = pc->checkskill2(sd,idx2);
-					if (k < pc->skill_tree[c][i].need[j].lv) {
-						f = 0;
-						break;
-					}
+			for (j = 0; j < VECTOR_LENGTH(pc->skill_tree[c][i].need); j++) {
+				struct skill_tree_requirement *req = &VECTOR_INDEX(pc->skill_tree[c][i].need, j);
+				int level;
+				if (sd->status.skill[req->idx].id == 0
+				 || sd->status.skill[req->idx].flag == SKILL_FLAG_TEMPORARY
+				 || sd->status.skill[req->idx].flag == SKILL_FLAG_PLAGIARIZED)
+					level = 0; //Not learned.
+				else if (sd->status.skill[req->idx].flag >= SKILL_FLAG_REPLACED_LV_0) //Real lerned level
+					level = sd->status.skill[req->idx].flag - SKILL_FLAG_REPLACED_LV_0;
+				else
+					level = pc->checkskill2(sd,req->idx);
+				if (level < req->lv) {
+					satisfied = false;
+					break;
 				}
 			}
-			if( !f )
+			if (!satisfied)
 				continue;
 
-			if ( sd->status.job_level < pc->skill_tree[c][i].joblv ) {
-				int x = pc->mapid2jobid(sd->class_, sd->status.sex); // need to get its own skilltree
-				if ( x > -1 ) {
-					x = pc->class2idx(x);
-					if ( !pc->skill_tree[x][i].inherited )
+			if (sd->status.job_level < pc->skill_tree[c][i].joblv) {
+				int jobid = pc->mapid2jobid(sd->class_, sd->status.sex); // need to get its own skilltree
+				if (jobid > -1) {
+					if (!pc->skill_tree[pc->class2idx(jobid)][i].inherited)
 						continue;
-				} else
+				} else {
 					continue;
+				}
 			}
 
 			j = skill->dbs->db[idx].inf2;
@@ -1869,9 +1880,9 @@ int pc_disguise(struct map_session_data *sd, int class_) {
 			clif->updatestatus(sd,SP_CARTINFO);
 		}
 		if (sd->chatID) {
-			struct chat_data* cd;
+			struct chat_data *cd = map->id2cd(sd->chatID);
 
-			if( (cd = (struct chat_data*)map->id2bl(sd->chatID)) )
+			if (cd != NULL)
 				clif->dispchat(cd,0);
 		}
 	}
@@ -3186,11 +3197,18 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 				sd->left_weapon.sp_drain[RC_BOSS].type = val;
 			}
 			break;
+		case SP_HP_VANISH_RATE:
+			if (sd->state.lr_flag != 2) {
+				sd->bonus.hp_vanish_rate += type2;
+				sd->bonus.hp_vanish_per = max(sd->bonus.hp_vanish_per, val);
+				sd->bonus.hp_vanish_trigger = 0;
+			}
+			break;
 		case SP_SP_VANISH_RATE:
-			if(sd->state.lr_flag != 2) {
+			if (sd->state.lr_flag != 2) {
 				sd->bonus.sp_vanish_rate += type2;
-				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per,val);
-				sd->bonus.sp_vanish_trigger=0;
+				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per, val);
+				sd->bonus.sp_vanish_trigger = 0;
 			}
 			break;
 		case SP_GET_ZENY_NUM:
@@ -3830,11 +3848,18 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 				}
 			}
 			break;
+		case SP_HP_VANISH_RATE:
+			if (sd->state.lr_flag != 2) {
+				sd->bonus.hp_vanish_rate += type2;
+				sd->bonus.hp_vanish_per = max(sd->bonus.hp_vanish_per, type3);
+				sd->bonus.hp_vanish_trigger = val;
+			}
+			break;
 		case SP_SP_VANISH_RATE:
-			if(sd->state.lr_flag != 2) {
+			if (sd->state.lr_flag != 2) {
 				sd->bonus.sp_vanish_rate += type2;
-				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per,type3);
-				sd->bonus.sp_vanish_trigger=val;
+				sd->bonus.sp_vanish_per = max(sd->bonus.sp_vanish_per, type3);
+				sd->bonus.sp_vanish_trigger = val;
 			}
 			break;
 
@@ -3973,7 +3998,7 @@ int pc_bonus5(struct map_session_data *sd,int type,int type2,int type3,int type4
  * Grants a player a given skill.
  * Flag values: @see enum pc_skill_flag
  *------------------------------------------*/
-int pc_skill(TBL_PC* sd, int id, int level, int flag)
+int pc_skill(struct map_session_data *sd, int id, int level, int flag)
 {
 	uint16 index = 0;
 	nullpo_ret(sd);
@@ -5221,7 +5246,7 @@ void pc_bound_clear(struct map_session_data *sd, enum e_item_bound_type type) {
  *------------------------------------------*/
 int pc_show_steal(struct block_list *bl,va_list ap)
 {
-	struct map_session_data *sd;
+	struct map_session_data *sd = NULL, *tsd = NULL;
 	int itemid;
 
 	struct item_data *item=NULL;
@@ -5230,11 +5255,16 @@ int pc_show_steal(struct block_list *bl,va_list ap)
 	sd=va_arg(ap,struct map_session_data *);
 	itemid=va_arg(ap,int);
 
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	tsd = BL_UCAST(BL_PC, bl);
+	nullpo_ret(sd);
+
 	if((item=itemdb->exists(itemid))==NULL)
 		sprintf(output,"%s stole an Unknown Item (id: %i).",sd->status.name, itemid);
 	else
 		sprintf(output,"%s stole %s.",sd->status.name,item->jname);
-	clif->message( ((struct map_session_data *)bl)->fd, output);
+	clif->message(tsd->fd, output);
 
 	return 0;
 }
@@ -5249,14 +5279,12 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	int i,itemid,flag;
 	double rate;
 	struct status_data *sd_status, *md_status;
-	struct mob_data *md;
+	struct mob_data *md = BL_CAST(BL_MOB, bl);
 	struct item tmp_item;
 	struct item_data *data = NULL;
 
-	if(!sd || !bl || bl->type!=BL_MOB)
+	if (sd == NULL || md == NULL)
 		return 0;
-
-	md = (TBL_MOB *)bl;
 
 	if(md->state.steal_flag == UCHAR_MAX || ( md->sc.opt1 && md->sc.opt1 != OPT1_BURNING && md->sc.opt1 != OPT1_CRYSTALIZE ) ) //already stolen from / status change check
 		return 0;
@@ -5264,7 +5292,7 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	sd_status= status->get_status_data(&sd->bl);
 	md_status= status->get_status_data(bl);
 
-	if( md->master_id || md_status->mode&MD_BOSS || mob_is_treasure(md) ||
+	if (md->master_id || md_status->mode&MD_BOSS || mob_is_treasure(md) ||
 		map->list[bl->m].flag.nomobloot || // check noloot map flag [Lorky]
 		(battle_config.skill_steal_max_tries && //Reached limit of steal attempts. [Lupus]
 			md->state.steal_flag++ >= battle_config.skill_steal_max_tries)
@@ -5329,21 +5357,21 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
  **/
 int pc_steal_coin(struct map_session_data *sd, struct block_list *target) {
 	int rate, skill_lv;
-	struct mob_data *md;
-	if(!sd || !target || target->type != BL_MOB)
+	struct mob_data *md = BL_CAST(BL_MOB, target);
+
+	if (sd == NULL || md == NULL)
 		return 0;
 
-	md = (TBL_MOB*)target;
-	if( md->state.steal_coin_flag || md->sc.data[SC_STONE] || md->sc.data[SC_FREEZE] || md->status.mode&MD_BOSS )
+	if (md->state.steal_coin_flag || md->sc.data[SC_STONE] || md->sc.data[SC_FREEZE] || md->status.mode&MD_BOSS)
 		return 0;
 
-	if( mob_is_treasure(md) )
+	if (mob_is_treasure(md))
 		return 0;
 
 	skill_lv = pc->checkskill(sd, RG_STEALCOIN);
-	rate = skill_lv*10 + (sd->status.base_level - md->level)*2 + sd->battle_status.dex/2 + sd->battle_status.luk/2;
+	rate = skill_lv * 10 + (sd->status.base_level - md->level) * 2 + sd->battle_status.dex / 2 + sd->battle_status.luk / 2;
 	if(rnd()%1000 < rate) {
-		int amount = md->level * skill_lv / 10 + md->level*8 + rnd()%(md->level*2 + 1); // mob_lv * skill_lv / 10 + random [mob_lv*8; mob_lv*10]
+		int amount = md->level * skill_lv / 10 + md->level * 8 + rnd()%(md->level * 2 + 1); // mob_lv * skill_lv / 10 + random [mob_lv*8; mob_lv*10]
 
 		pc->getzeny(sd, amount, LOG_TYPE_STEAL, NULL);
 		md->state.steal_coin_flag = 1;
@@ -7600,11 +7628,11 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 		pc->del_charm(sd, sd->charm_count, sd->charm_type);
 
-	if (src) {
+	if (src != NULL) {
 		switch (src->type) {
 			case BL_MOB:
 			{
-				struct mob_data *md=(struct mob_data *)src;
+				struct mob_data *md = BL_UCAST(BL_MOB, src);
 				if (md->target_id==sd->bl.id)
 					mob->unlocktarget(md,tick);
 				if (battle_config.mobs_level_up && md->status.hp
@@ -7626,19 +7654,19 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 			}
 			break;
 			case BL_PET: //Pass on to master...
-				src = &((TBL_PET*)src)->msd->bl;
+				src = &BL_UCAST(BL_PET, src)->msd->bl;
 			break;
 			case BL_HOM:
-				src = &((TBL_HOM*)src)->master->bl;
+				src = &BL_UCAST(BL_HOM, src)->master->bl;
 			break;
 			case BL_MER:
-				src = &((TBL_MER*)src)->master->bl;
+				src = &BL_UCAST(BL_MER, src)->master->bl;
 			break;
 		}
 	}
 
-	if (src && src->type == BL_PC) {
-		struct map_session_data *ssd = (struct map_session_data *)src;
+	if (src != NULL && src->type == BL_PC) {
+		struct map_session_data *ssd = BL_UCAST(BL_PC, src);
 		pc->setparam(ssd, SP_KILLEDRID, sd->bl.id);
 		npc->script_event(ssd, NPCE_KILLPC);
 
@@ -7824,9 +7852,8 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	if( map->list[sd->bl.m].flag.pvp && !battle_config.pk_mode && !map->list[sd->bl.m].flag.pvp_nocalcrank ) {
 		sd->pvp_point -= 5;
 		sd->pvp_lost++;
-		if( src && src->type == BL_PC )
-		{
-			struct map_session_data *ssd = (struct map_session_data *)src;
+		if (src != NULL && src->type == BL_PC) {
+			struct map_session_data *ssd = BL_UCAST(BL_PC, src);
 			ssd->pvp_point++;
 			ssd->pvp_won++;
 		}
@@ -8326,11 +8353,12 @@ int pc_percentheal(struct map_session_data *sd,int hp,int sp)
 
 int jobchange_killclone(struct block_list *bl, va_list ap)
 {
-	struct mob_data *md;
-		int flag;
-	md = (struct mob_data *)bl;
-	nullpo_ret(md);
-	flag = va_arg(ap, int);
+	struct mob_data *md = NULL;
+	int flag = va_arg(ap, int);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
 	if (md->master_id && md->special_state.clone && md->master_id == flag)
 		status_kill(&md->bl);
@@ -8460,6 +8488,8 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_); // move sprite update to prevent client crashes with incompatible equipment [Valaris]
 	if(sd->vd.cloth_color)
 		clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
+	if (sd->vd.body_style)
+		clif->changelook(&sd->bl,LOOK_BODY2,sd->vd.body_style);
 
 	//Update skill tree.
 	pc->calc_skilltree(sd);
@@ -8556,6 +8586,8 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 			clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
 			if (sd->vd.cloth_color)
 				clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
+			if (sd->vd.body_style)
+				clif->changelook(&sd->bl,LOOK_BODY2,sd->vd.body_style);
 			clif->skillinfoblock(sd);
 			return 0;
 			break;
@@ -8603,6 +8635,10 @@ int pc_changelook(struct map_session_data *sd,int type,int val)
 			break;
 		case LOOK_ROBE:
 			sd->status.robe = val;
+			break;
+		case LOOK_BODY2:
+			val = cap_value(val, MIN_BODY_STYLE, MAX_BODY_STYLE);
+			sd->status.body=val;
 			break;
 	}
 	clif->changelook(&sd->bl,type,val);
@@ -8700,6 +8736,8 @@ int pc_setoption(struct map_session_data *sd,int type)
 	clif->changelook(&sd->bl,LOOK_BASE,new_look);
 	if (sd->vd.cloth_color)
 		clif->changelook(&sd->bl,LOOK_CLOTHES_COLOR,sd->vd.cloth_color);
+	if( sd->vd.body_style )
+		clif->changelook(&sd->bl,LOOK_BODY2,sd->vd.body_style);
 	clif->skillinfoblock(sd); // Skill list needs to be updated after base change.
 
 	return 0;
@@ -8771,7 +8809,7 @@ int pc_setcart(struct map_session_data *sd,int type) {
  * @param sd Target player.
  * @param flag New state.
  **/
-void pc_setfalcon(TBL_PC* sd, bool flag)
+void pc_setfalcon(struct map_session_data *sd, bool flag)
 {
 	if (flag) {
 		if (pc->checkskill(sd,HT_FALCON) > 0) // add falcon if he have the skill
@@ -8789,7 +8827,7 @@ void pc_setfalcon(TBL_PC* sd, bool flag)
  * @param sd Target player.
  * @param flag New state.
  **/
-void pc_setridingpeco(TBL_PC* sd, bool flag)
+void pc_setridingpeco(struct map_session_data *sd, bool flag)
 {
 	if (flag) {
 		if (pc->checkskill(sd, KN_RIDING))
@@ -8825,7 +8863,7 @@ void pc_setmadogear(struct map_session_data *sd, bool flag)
  * @param sd Target player.
  * @param type New state. This must be a valid OPTION_DRAGON* or 0.
  **/
-void pc_setridingdragon(TBL_PC* sd, unsigned int type)
+void pc_setridingdragon(struct map_session_data *sd, unsigned int type)
 {
 	if (type&OPTION_DRAGON) {
 		// Ensure only one dragon is set at a time.
@@ -8857,7 +8895,7 @@ void pc_setridingdragon(TBL_PC* sd, unsigned int type)
  * @param sd Target player.
  * @param flag New state.
  **/
-void pc_setridingwug(TBL_PC* sd, bool flag)
+void pc_setridingwug(struct map_session_data *sd, bool flag)
 {
 	if (flag) {
 		if (pc->checkskill(sd, RA_WUGRIDER) > 0)
@@ -9425,7 +9463,7 @@ int pc_load_combo(struct map_session_data *sd) {
 }
 
 /**
-* Equip item ad given position.
+* Equip item at given position.
 * @param sd the affected player structure. Must be checked before.
 * @param id item structure for equip. Must be checked before.
 * @param n inventory item position. Must be checked before.
@@ -9433,7 +9471,8 @@ int pc_load_combo(struct map_session_data *sd) {
 **/
 void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, int pos)
 {
-	if (pos & (EQP_HAND_R|EQP_SHADOW_WEAPON)) {
+	if ((!map_no_view(sd->bl.m,EQP_SHADOW_WEAPON) && pos & EQP_SHADOW_WEAPON) ||
+		 (pos & EQP_HAND_R)) {
 		if(id)
 			sd->weapontype1 = id->look;
 		else
@@ -9441,7 +9480,8 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, 
 		pc->calcweapontype(sd);
 		clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
 	}
-	if (pos & (EQP_HAND_L|EQP_SHADOW_SHIELD)) {
+	if ((!map_no_view(sd->bl.m,EQP_SHADOW_SHIELD) && pos & EQP_SHADOW_SHIELD) ||
+		 (pos & EQP_HAND_L)) {
 		if (id) {
 			if(id->type == IT_WEAPON) {
 				sd->status.shield = 0;
@@ -9457,42 +9497,42 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, 
 	}
 	//Added check to prevent sending the same look on multiple slots ->
 	//causes client to redraw item on top of itself. (suggested by Lupus)
-	if (pos & EQP_HEAD_LOW && pc->checkequip(sd,EQP_COSTUME_HEAD_LOW) == -1) {
+	if (!map_no_view(sd->bl.m,EQP_HEAD_LOW) && pos & EQP_HEAD_LOW && pc->checkequip(sd,EQP_COSTUME_HEAD_LOW) == -1) {
 		if (id && !(pos&(EQP_HEAD_TOP|EQP_HEAD_MID)))
 			sd->status.head_bottom = id->look;
 		else
 			sd->status.head_bottom = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_BOTTOM,sd->status.head_bottom);
 	}
-	if (pos & EQP_HEAD_TOP && pc->checkequip(sd,EQP_COSTUME_HEAD_TOP) == -1) {
+	if (!map_no_view(sd->bl.m,EQP_HEAD_TOP) && pos & EQP_HEAD_TOP && pc->checkequip(sd,EQP_COSTUME_HEAD_TOP) == -1) {
 		if (id)
 			sd->status.head_top = id->look;
 		else
 			sd->status.head_top = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_TOP,sd->status.head_top);
 	}
-	if (pos & EQP_HEAD_MID && pc->checkequip(sd,EQP_COSTUME_HEAD_MID) == -1) {
+	if (!map_no_view(sd->bl.m,EQP_HEAD_MID) && pos & EQP_HEAD_MID && pc->checkequip(sd,EQP_COSTUME_HEAD_MID) == -1) {
 		if (id && !(pos&EQP_HEAD_TOP))
 			sd->status.head_mid = id->look;
 		else
 			sd->status.head_mid = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_MID,sd->status.head_mid);
 	}
-	if (pos & EQP_COSTUME_HEAD_TOP) {
+	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_TOP) && pos & EQP_COSTUME_HEAD_TOP) {
 		if (id){
 			sd->status.head_top = id->look;
 		} else
 			sd->status.head_top = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_TOP,sd->status.head_top);
 	}
-	if (pos & EQP_COSTUME_HEAD_MID) {
+	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_MID) && pos & EQP_COSTUME_HEAD_MID) {
 		if(id && !(pos&EQP_HEAD_TOP)){
 			sd->status.head_mid = id->look;
 		} else
 			sd->status.head_mid = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_MID,sd->status.head_mid);
 	}
-	if (pos & EQP_COSTUME_HEAD_LOW) {
+	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_LOW) && pos & EQP_COSTUME_HEAD_LOW) {
 		if (id && !(pos&(EQP_HEAD_TOP|EQP_HEAD_MID))){
 			sd->status.head_bottom = id->look;
 		} else
@@ -9500,14 +9540,14 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, 
 		clif->changelook(&sd->bl,LOOK_HEAD_BOTTOM,sd->status.head_bottom);
 	}
 
-	if (pos & EQP_SHOES)
+	if (!map_no_view(sd->bl.m,EQP_SHOES) && pos & EQP_SHOES)
 		clif->changelook(&sd->bl,LOOK_SHOES,0);
-	if (pos&EQP_GARMENT && pc->checkequip(sd,EQP_COSTUME_GARMENT) == -1) {
+	if (!map_no_view(sd->bl.m,EQP_GARMENT) && pos&EQP_GARMENT && pc->checkequip(sd,EQP_COSTUME_GARMENT) == -1) {
 		sd->status.robe = id ? id->look : 0;
 		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.robe);
 	}
 
-	if (pos & EQP_COSTUME_GARMENT) {
+	if (!map_no_view(sd->bl.m,EQP_COSTUME_GARMENT) && pos & EQP_COSTUME_GARMENT) {
 		sd->status.robe = id ? id->look : 0;
 		clif->changelook(&sd->bl,LOOK_ROBE,sd->status.robe);
 	}
@@ -9990,12 +10030,15 @@ int pc_checkitem(struct map_session_data *sd)
 /*==========================================
  * Update PVP rank for sd1 in cmp to sd2
  *------------------------------------------*/
-int pc_calc_pvprank_sub(struct block_list *bl,va_list ap)
+int pc_calc_pvprank_sub(struct block_list *bl, va_list ap)
 {
-	struct map_session_data *sd1,*sd2;
+	struct map_session_data *sd1 = NULL;
+	struct map_session_data *sd2 = va_arg(ap,struct map_session_data *);
 
-	sd1=(struct map_session_data *)bl;
-	sd2=va_arg(ap,struct map_session_data *);
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_PC);
+	sd1 = BL_UCAST(BL_PC, bl);
+	nullpo_ret(sd2);
 
 	if (pc_isinvisible(sd1) ||pc_isinvisible(sd2)) {
 		// cannot register pvp rank for hidden GMs
@@ -10250,8 +10293,7 @@ int pc_autosave(int tid, int64 tick, int id, intptr_t data) {
 		save_flag = 1; //Noone was saved, so save first found char.
 
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
-	{
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if(sd->bl.id == last_save_id && save_flag != 1) {
 			save_flag = 1;
 			continue;
@@ -10394,10 +10436,10 @@ bool pc_can_use_command(struct map_session_data *sd, const char *command) {
  */
 int pc_charm_timer(int tid, int64 tick, int id, intptr_t data)
 {
-	struct map_session_data *sd;
+	struct map_session_data *sd = map->id2sd(id);
 	int i;
 
-	if( (sd=(struct map_session_data *)map->id2sd(id)) == NULL || sd->bl.type!=BL_PC )
+	if (sd == NULL)
 		return 1;
 
 	if (sd->charm_count <= 0) {
@@ -10600,128 +10642,203 @@ int pc_split_atoui(char* str, unsigned int* val, char sep, int max)
 		val[j] = 0;
 	return i;
 }
-/* [Ind/Hercules] */
-void pc_read_skill_tree(void) {
+
+/**
+ * Parses the skill tree config file.
+ *
+ * In order to reclaim the memory allocated by this function
+ * `pc->clear_skill_tree()` should be used.
+ *
+ * @remark
+ *   This function assumes that the skill tree is clear and zeroed.
+ *   If it has been already loaded (ie reloading), it needs to be cleared
+ *   before calling this function again.
+ *
+ * @author [Ind/Hercules]
+ */
+void pc_read_skill_tree(void)
+{
 	config_t skill_tree_conf;
-	config_setting_t *skt = NULL, *inherit = NULL, *skills = NULL, *sk = NULL;
-#ifdef RENEWAL
-	const char *config_filename = "db/re/skill_tree.conf"; // FIXME hardcoded name
-#else
-	const char *config_filename = "db/pre-re/skill_tree.conf"; // FIXME hardcoded name
-#endif
+	config_setting_t *skt = NULL;
+	char config_filename[128];
 	int i = 0;
 	struct s_mapiterator *iter;
 	struct map_session_data *sd;
+	bool loaded[CLASS_COUNT] = { false };
 
+	safesnprintf(config_filename, sizeof(config_filename), "%s/"DBPATH"skill_tree.conf", map->db_path);
 	if (libconfig->read_file(&skill_tree_conf, config_filename)) {
 		ShowError("can't read %s\n", config_filename);
 		return;
 	}
 
-	while ((skt = libconfig->setting_get_elem(skill_tree_conf.root,i++))) {
-		int k;
-		const char *name = config_setting_name(skt);
+	// Foreach job
+	while ((skt = libconfig->setting_get_elem(skill_tree_conf.root, i++))) {
+		config_setting_t *t = NULL;
+		int job_idx;
+		const char *job_name = config_setting_name(skt);
+		int job_id = pc->check_job_name(job_name);
 
-		if ( (k = pc->check_job_name(name)) == -1 ) {
-			ShowWarning("pc_read_skill_tree: '%s' unknown job name!\n", name);
+		if (job_id == -1) {
+			ShowWarning("pc_read_skill_tree: '%s' unknown job name!\n", job_name);
 			continue;
 		}
+		job_idx = pc->class2idx(job_id);
+		if (loaded[job_idx]) {
+			ShowWarning("pc_read_skill_tree: Duplicate entry for job '%s'. Skipping.\n", job_name);
+			continue;
+		}
+		loaded[job_idx] = true;
 
-		if( ( skills = libconfig->setting_get_member(skt,"skills") ) ) {
-			int c = 0;
-			int idx = pc->class2idx(k);
+		if ((t = libconfig->setting_get_member(skt, "inherit")) != NULL) {
+			int j = 0;
+			const char *ijob_name = NULL;
+			// Foreach inherited job
+			while ((ijob_name = libconfig->setting_get_string_elem(t, j++)) != NULL) {
+				int k, ijob_idx;
+				int ijob_id = pc->check_job_name(ijob_name);
 
-			while ((sk = libconfig->setting_get_elem(skills,c++))) {
-				const char *sk_name = config_setting_name(sk);
-				int skill_id;
-
-				if( ( skill_id = skill->name2id(sk_name) ) ) {
-					int skidx, offset = 0, h = 0, rlen = 0;
-
-					ARR_FIND( 0, MAX_SKILL_TREE, skidx, pc->skill_tree[idx][skidx].id == 0 || pc->skill_tree[idx][skidx].id == skill_id );
-					if (skidx == MAX_SKILL_TREE) {
-						ShowWarning("pc_read_skill_tree: Unable to load skill %d (%s) into '%s's tree. Maximum number of skills per class has been reached.\n", skill_id, sk_name, name);
-						continue;
-					} else if (pc->skill_tree[idx][skidx].id) {
-						ShowNotice("pc_read_skill_tree: Overwriting %d for '%s' (%d)\n", skill_id, name, k);
-					}
-
-					pc->skill_tree[idx][skidx].id    = skill_id;
-					pc->skill_tree[idx][skidx].idx   = skill->get_index(skill_id);
-
-					if( config_setting_is_group(sk) ) {
-						int max = 0, jlevel = 0;
-						libconfig->setting_lookup_int(sk, "MaxLevel", &max);
-						libconfig->setting_lookup_int(sk, "MinJobLevel", &jlevel);
-						pc->skill_tree[idx][skidx].max = (unsigned char)max;
-						pc->skill_tree[idx][skidx].joblv = (unsigned char)jlevel;
-						rlen = libconfig->setting_length(sk);
-						offset += jlevel ? 2 : 1;
-					} else {
-						pc->skill_tree[idx][skidx].max = (unsigned char)libconfig->setting_get_int(sk);
-						pc->skill_tree[idx][skidx].joblv = 0;
-					}
-
-					for (h = offset; h < rlen && h < MAX_PC_SKILL_REQUIRE; h++) {
-						config_setting_t *rsk = libconfig->setting_get_elem(sk,h);
-						int rskid;
-						if (rsk && (rskid = skill->name2id(config_setting_name(rsk))) != 0) {
-							pc->skill_tree[idx][skidx].need[h].id  = rskid;
-							pc->skill_tree[idx][skidx].need[h].idx = skill->get_index(rskid);
-							pc->skill_tree[idx][skidx].need[h].lv  = (unsigned char)libconfig->setting_get_int(rsk);
-						} else if( rsk ) {
-							ShowWarning("pc_read_skill_tree: unknown requirement '%s' for '%s' in '%s'\n",config_setting_name(rsk),sk_name,name);
-						} else {
-							ShowWarning("pc_read_skill_tree: error for '%s' in '%s'\n",sk_name,name);
-						}
-					}
-				} else {
-					ShowWarning("pc_read_skill_tree: unknown skill '%s' in '%s'\n",sk_name,name);
+				if (ijob_id == -1) {
+					ShowWarning("pc_read_skill_tree: '%s' trying to inherit unknown '%s'!\n", job_name, ijob_name);
+					continue;
 				}
-			}
-		}
-	}
-
-	i = 0;
-	while( (skt = libconfig->setting_get_elem(skill_tree_conf.root,i++)) ) {
-		int k, idx;
-		const char *name = config_setting_name(skt);
-
-		if ( (k = pc->check_job_name(name)) == -1 ) {
-			ShowWarning("pc_read_skill_tree: '%s' unknown job name!\n", name);
-			continue;
-		}
-
-		idx = pc->class2idx(k);
-
-		if( ( inherit = libconfig->setting_get_member(skt,"inherit") ) ) {
-			const char *iname;
-			int v = 0;
-			while ( (iname = libconfig->setting_get_string_elem(inherit, v++)) ) {
-				int b = 0, a, d, f, fidx;
-
-				if ( (b = pc->check_job_name(iname)) == -1 ) {
-					ShowWarning("pc_read_skill_tree: '%s' trying to inherit unknown '%s'!\n", name, iname);
+				ijob_idx = pc->class2idx(ijob_id);
+				if (ijob_idx == job_idx) {
+					ShowWarning("pc_read_skill_tree: '%s' trying to inherit itself. Skipping.\n", job_name);
+					continue;
+				}
+				if (!loaded[ijob_idx]) {
+					ShowWarning("pc_read_skill_tree: '%s' trying to inherit not yet loaded '%s' (wrong order in the tree). Skipping.\n", job_name, ijob_name);
 					continue;
 				}
 
-				fidx = pc->class2idx(b);
+				for (k = 0; k < MAX_SKILL_TREE; k++) {
+					int cur;
+					struct skill_tree_entry *dst = NULL;
+					const struct skill_tree_entry *src = &pc->skill_tree[ijob_idx][k];
 
-				ARR_FIND(0, MAX_SKILL_TREE, d, pc->skill_tree[fidx][d].id == 0);
+					if (src->id == 0)
+						break; // No more skills to copy
 
-				for ( f = 0; f < d; f++ ) {
-
-					ARR_FIND(0, MAX_SKILL_TREE, a, pc->skill_tree[idx][a].id == 0 || pc->skill_tree[idx][a].id == pc->skill_tree[fidx][f].id);
-
-					if ( a == MAX_SKILL_TREE ) {
-						ShowWarning("pc_read_skill_tree: '%s' can't inherit '%s', skill tree is full!\n", name, iname);
+					ARR_FIND(0, MAX_SKILL_TREE, cur, pc->skill_tree[job_idx][cur].id == 0 || pc->skill_tree[job_idx][cur].id == src->id);
+					if (cur == MAX_SKILL_TREE) {
+						ShowWarning("pc_read_skill_tree: '%s' can't inherit '%s', skill tree is full!\n", job_name, ijob_name);
 						break;
-					} else if ( pc->skill_tree[idx][a].id || (pc->skill_tree[idx][a].id == NV_TRICKDEAD && ((pc->jobid2mapid(k)&(MAPID_BASEMASK | JOBL_2)) != MAPID_NOVICE)) ) /* we skip trickdead for non-novices */
-						continue;/* skip */
-					memcpy(&pc->skill_tree[idx][a], &pc->skill_tree[fidx][f], sizeof(pc->skill_tree[fidx][f]));
-					pc->skill_tree[idx][a].inherited = 1;
+					}
+					if (src->id == NV_TRICKDEAD && ((pc->jobid2mapid(job_id)&(MAPID_BASEMASK | JOBL_2)) != MAPID_NOVICE))
+						continue; // skip trickdead for non-novices
+					dst = &pc->skill_tree[job_idx][cur];
+					dst->inherited = 1;
+					if (dst->id == 0) {
+						// Not existing yet, copy
+						dst->id = src->id;
+						dst->idx = src->idx;
+						dst->max = src->max;
+						dst->joblv = src->joblv;
+						VECTOR_INIT(dst->need);
+						if (VECTOR_LENGTH(src->need) > 0) {
+							VECTOR_ENSURE(dst->need, VECTOR_LENGTH(src->need), 1);
+							VECTOR_PUSHARRAY(dst->need, VECTOR_DATA(src->need), VECTOR_LENGTH(src->need));
+						}
+					} else {
+						int l;
+						// Already existing, merge
+						if (src->max > dst->max)
+							dst->max = src->max;
+						dst->joblv = src->joblv;
+						for (l = 0; l < VECTOR_LENGTH(src->need); l++) {
+							int m;
+							struct skill_tree_requirement *sreq = &VECTOR_INDEX(src->need, l);
+							ARR_FIND(0, VECTOR_LENGTH(dst->need), m, VECTOR_INDEX(dst->need, m).id == sreq->id);
+							if (m == VECTOR_LENGTH(dst->need)) {
+								VECTOR_ENSURE(dst->need, 1, 1);
+								VECTOR_PUSHCOPY(dst->need, sreq);
+							} else {
+								struct skill_tree_requirement *dreq = &VECTOR_INDEX(dst->need, m);
+								dreq->lv = sreq->lv;
+							}
+						}
+					}
+				}
+			}
+		}
+		if ((t = libconfig->setting_get_member(skt, "skills")) != NULL) {
+			int j = 0;
+			config_setting_t *sk = NULL;
+			// Foreach skill
+			while ((sk = libconfig->setting_get_elem(t, j++)) != NULL) {
+				int skill_id, sk_idx;
+				config_setting_t *rsk = NULL;
+				const char *sk_name = config_setting_name(sk);
+				struct skill_tree_entry *tree_entry = NULL;
+
+				if ((skill_id = skill->name2id(sk_name)) == 0) {
+					ShowWarning("pc_read_skill_tree: unknown skill '%s' in '%s'\n", sk_name, job_name);
+					continue;
 				}
 
+				ARR_FIND(0, MAX_SKILL_TREE, sk_idx, pc->skill_tree[job_idx][sk_idx].id == 0 || pc->skill_tree[job_idx][sk_idx].id == skill_id);
+				if (sk_idx == MAX_SKILL_TREE) {
+					ShowWarning("pc_read_skill_tree: Unable to load skill %d (%s) into '%s's tree. Maximum number of skills per class has been reached.\n", skill_id, sk_name, job_name);
+					continue;
+				}
+				tree_entry = &pc->skill_tree[job_idx][sk_idx];
+
+				if (tree_entry->id != 0 && !tree_entry->inherited) {
+					ShowNotice("pc_read_skill_tree: Duplicate %d for '%s' (%d). Skipping.\n", skill_id, job_name, job_id);
+					continue;
+				}
+				if (config_setting_is_group(sk)) {
+					int i32 = 0;
+					if (libconfig->setting_lookup_int(sk, "MaxLevel", &i32) && i32 > 0) {
+						tree_entry->max = (unsigned char)i32;
+					} else {
+						ShowWarning("pc_read_skill_tree: missing MaxLevel for skill %d (%s) class '%s'. Skipping.\n", skill_id, sk_name, job_name);
+						continue;
+					}
+					if (libconfig->setting_lookup_int(sk, "MinJobLevel", &i32) && i32 > 0) {
+						tree_entry->joblv = (unsigned char)i32;
+					} else if (!tree_entry->inherited) {
+						tree_entry->joblv = 0;
+					}
+				} else {
+					tree_entry->max = (unsigned char)libconfig->setting_get_int(sk);
+					if (!tree_entry->inherited)
+						tree_entry->joblv = 0;
+				}
+				if (!tree_entry->inherited) {
+					tree_entry->id  = skill_id;
+					tree_entry->idx = skill->get_index(skill_id);
+					VECTOR_INIT(tree_entry->need);
+				}
+
+				if (config_setting_is_group(sk)) {
+					int k = 0;
+					// Foreach requirement
+					while ((rsk = libconfig->setting_get_elem(sk, k++)) != NULL) {
+						const char *rsk_name = config_setting_name(rsk);
+						int rsk_id = skill->name2id(rsk_name);
+						struct skill_tree_requirement *req = NULL;
+						int l;
+
+						if (rsk_id == 0) {
+							if (strcmp(rsk_name, "MaxLevel") != 0 && strcmp(rsk_name, "MinJobLevel") != 0)
+								ShowWarning("pc_read_skill_tree: unknown requirement '%s' for '%s' in '%s'\n", rsk_name, sk_name, job_name);
+							continue;
+						}
+						ARR_FIND(0, VECTOR_LENGTH(tree_entry->need), l, VECTOR_INDEX(tree_entry->need, l).id == rsk_id);
+						if (l == VECTOR_LENGTH(tree_entry->need)) {
+							VECTOR_ENSURE(tree_entry->need, 1, 1);
+							VECTOR_PUSHZEROED(tree_entry->need);
+							req = &VECTOR_LAST(tree_entry->need);
+							req->id  = rsk_id;
+							req->idx = skill->get_index(rsk_id);
+						} else {
+							req = &VECTOR_INDEX(tree_entry->need, l);
+						}
+						req->lv  = (unsigned char)libconfig->setting_get_int(rsk);
+					}
+				}
 			}
 		}
 	}
@@ -10730,10 +10847,28 @@ void pc_read_skill_tree(void) {
 
 	/* lets update all players skill tree */
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter)))
 		clif->skillinfoblock(sd);
 	mapit->free(iter);
 }
+
+/**
+ * Clears the skill tree and frees any allocated memory.
+ */
+void pc_clear_skill_tree(void)
+{
+	int i;
+	for (i = 0; i < CLASS_COUNT; i++) {
+		int j;
+		for (j = 0; j < MAX_SKILL_TREE; j++) {
+			if (pc->skill_tree[i][j].id == 0)
+				continue;
+			VECTOR_CLEAR(pc->skill_tree[i][j].need);
+		}
+	}
+	memset(pc->skill_tree, 0, sizeof(pc->skill_tree));
+}
+
 bool pc_readdb_levelpenalty(char* fields[], int columns, int current) {
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	int type, race, diff;
@@ -10850,7 +10985,7 @@ int pc_readdb(void) {
 	ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' entries in '"CL_WHITE"%s/"DBPATH"%s"CL_RESET"'.\n",count,map->db_path,"exp.txt");
 	count = 0;
 	// Reset and read skilltree
-	memset(pc->skill_tree,0,sizeof(pc->skill_tree));
+	pc->clear_skill_tree();
 	pc->read_skill_tree();
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	sv->readdb(map->db_path, "re/level_penalty.txt", ',', 4, 4, -1, pc->readdb_levelpenalty);
@@ -11095,7 +11230,7 @@ int pc_global_expiration_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct map_session_data* sd;
 
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if( sd->expiration_time )
 			pc->expire_check(sd);
 	}
@@ -11141,7 +11276,7 @@ void pc_autotrade_load(void)
 		SQL->GetData(map->mysql_handle, 2, &data, NULL); sex = atoi(data);
 		SQL->GetData(map->mysql_handle, 3, &data, NULL); safestrncpy(title, data, sizeof(title));
 
-		CREATE(sd, TBL_PC, 1);
+		CREATE(sd, struct map_session_data, 1);
 
 		pc->setnewpc(sd, account_id, char_id, 0, 0, sex, 0);
 
@@ -11287,7 +11422,7 @@ void pc_autotrade_prepare(struct map_session_data *sd) {
 	map->quit(sd);
 	chrif->auth_delete(account_id, char_id, ST_LOGOUT);
 
-	CREATE(sd, TBL_PC, 1);
+	CREATE(sd, struct map_session_data, 1);
 
 	pc->setnewpc(sd, account_id, char_id, 0, 0, sex, 0);
 
@@ -11369,11 +11504,27 @@ bool pc_db_checkid(unsigned int class_)
 		|| (class_ >= JOB_REBELLION      && class_ <  JOB_MAX            );
 }
 
+/**
+ * checks if player have any kind of magnifier in inventory
+ * @param sd map_session_data of Player
+ * @return index of magnifer, INDEX_NOT_FOUND if it is not found
+ */
+int pc_have_magnifier(struct map_session_data *sd)
+{
+	int n;
+	n = pc->search_inventory(sd, ITEMID_MAGNIFIER);
+	if (n == INDEX_NOT_FOUND)
+		n = pc->search_inventory(sd, ITEMID_NOVICE_MAGNIFIER);
+	return n;
+}
+
 void do_final_pc(void) {
 	db_destroy(pc->itemcd_db);
 	pc->at_db->destroy(pc->at_db,pc->autotrade_final);
 
 	pcg->final();
+
+	pc->clear_skill_tree();
 
 	ers_destroy(pc->sc_display_ers);
 	ers_destroy(pc->num_reg_ers);
@@ -11701,6 +11852,7 @@ void pc_defaults(void) {
 	pc->autosave = pc_autosave;
 	pc->follow_timer = pc_follow_timer;
 	pc->read_skill_tree = pc_read_skill_tree;
+	pc->clear_skill_tree = pc_clear_skill_tree;
 	pc->isUseitem = pc_isUseitem;
 	pc->show_steal = pc_show_steal;
 	pc->checkcombo = pc_checkcombo;
@@ -11734,4 +11886,6 @@ void pc_defaults(void) {
 
 	pc->check_job_name = pc_check_job_name;
 	pc->update_idle_time = pc_update_idle_time;
+	
+	pc->have_magnifier = pc_have_magnifier;
 }

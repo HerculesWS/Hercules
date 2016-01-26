@@ -1188,7 +1188,7 @@ void itemdb_read_chains(void) {
 		int c = 0;
 		config_setting_t *entry = NULL;
 
-		script->set_constant2(name,i-1,0);
+		script->set_constant2(name, i-1, false, false);
 		itemdb->chains[count].qty = (unsigned short)libconfig->setting_length(itc);
 
 		CREATE(itemdb->chains[count].items, struct item_chain_entry, libconfig->setting_length(itc));
@@ -1254,7 +1254,8 @@ int itemdb_combo_split_atoi (char *str, int *val) {
 /**
  * <combo{:combo{:combo:{..}}}>,<{ script }>
  **/
-void itemdb_read_combos() {
+void itemdb_read_combos(void)
+{
 	uint32 lines = 0, count = 0;
 	char line[1024];
 	char filepath[256];
@@ -2095,9 +2096,9 @@ void itemdb_reload(void) {
 
 	//Epoque's awesome @reloaditemdb fix - thanks! [Ind]
 	//- Fixes the need of a @reloadmobdb after a @reloaditemdb to re-link monster drop data
-	for( i = 0; i < MAX_MOB_DB; i++ ) {
+	for (i = 0; i < MAX_MOB_DB; i++) {
 		struct mob_db *entry;
-		if( !((i < 1324 || i > 1363) && (i < 1938 || i > 1946)) )
+		if ((i >= MOBID_TREASURE_BOX1 && i <= MOBID_TREASURE_BOX40) || (i >= MOBID_TREASURE_BOX41 && i <= MOBID_TREASURE_BOX49))
 			continue;
 		entry = mob->db(i);
 		for(d = 0; d < MAX_MOB_DROP; d++) {
@@ -2123,7 +2124,7 @@ void itemdb_reload(void) {
 
 	// readjust itemdb pointer cache for each player
 	iter = mapit_geteachpc();
-	for( sd = (struct map_session_data*)mapit->first(iter); mapit->exists(iter); sd = (struct map_session_data*)mapit->next(iter) ) {
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		memset(sd->item_delay, 0, sizeof(sd->item_delay));  // reset item delays
 		pc->setinventorydata(sd);
 		if( battle_config.item_check )
@@ -2148,7 +2149,7 @@ void itemdb_name_constants(void) {
 	script->parser_current_file = "Item Database (Likely an invalid or conflicting AegisName)";
 #endif // ENABLE_CASE_CHECK
 	for( data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter) )
-		script->set_constant2(data->name,data->nameid,0);
+		script->set_constant2(data->name, data->nameid, false, false);
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = NULL;
 #endif // ENABLE_CASE_CHECK

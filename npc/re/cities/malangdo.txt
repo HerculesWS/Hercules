@@ -34,7 +34,7 @@
 //=========================================================================
 
 //== Malangdo Transportation :: malangdo_go ================
--	script	Dolangmal	-1,{
+-	script	Dolangmal	FAKE_NPC,{
 	if (!questprogress(5091)) {
 		mes "[Dolangmal]";
 		mes "Hey~! Hi human~ This is Mr. Dolangmal. kakaka~";
@@ -173,7 +173,7 @@ rachel,121,126,4	duplicate(Dolangmal)	Dolangmal#7	4_CAT_DOWN
 lighthalzen,254,83,5	duplicate(Dolangmal)	Dolangmal#8	4_CAT_DOWN
 mora,57,150,4	duplicate(Dolangmal)	Dolangmal#9	4_CAT_DOWN
 
--	script	::Odgnalam	-1,{
+-	script	::Odgnalam	FAKE_NPC,{
 	mes "This cat is sleeping in the warm "+((strnpcinfo(2) == "albe")?"Alberta":"Izlude")+" sun.";
 	next;
 	if(select("Let him sleep:Talk to him") == 1) close;

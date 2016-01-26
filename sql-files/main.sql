@@ -1,7 +1,7 @@
 -- This file is part of Hercules.
 -- http://herc.ws - http://github.com/HerculesWS/Hercules
 --
--- Copyright (C) 2012-2015  Hercules Dev Team
+-- Copyright (C) 2012-2016  Hercules Dev Team
 -- Copyright (C)  Athena Dev Teams
 --
 -- Hercules is free software: you can redistribute it and/or modify
@@ -149,13 +149,13 @@ CREATE TABLE IF NOT EXISTS `char` (
   `str` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
   `agi` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
   `vit` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
-  `INT` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
+  `int` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
   `dex` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
   `luk` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0',
-  `max_hp` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-  `hp` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-  `max_sp` MEDIUMINT(6) UNSIGNED NOT NULL DEFAULT '0',
-  `sp` MEDIUMINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `max_hp` INT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `hp` INT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `max_sp` INT(9) UNSIGNED NOT NULL DEFAULT '0',
+  `sp` INT(9) UNSIGNED NOT NULL DEFAULT '0',
   `status_point` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `skill_point` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `option` INT(11) NOT NULL DEFAULT '0',
@@ -169,6 +169,7 @@ CREATE TABLE IF NOT EXISTS `char` (
   `hair` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
   `hair_color` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
   `clothes_color` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+  `body` SMALLINT(5) unsigned NOT NULL default '0',
   `weapon` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `shield` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `head_top` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
@@ -821,6 +822,8 @@ INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1414975503); -- 2014-11-0
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1435860840); -- 2015-07-02--18-14.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1436360978); -- 2015-07-08--13-08.sql
 INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1440688342); -- 2015-08-27--20-42.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1450241859); -- 2015-12-16--12-57.sql
+INSERT IGNORE INTO `sql_updates` (`timestamp`) VALUES (1450367880); -- 2015-12-17--15-58.sql
 
 --
 -- Table structure for table `storage`

@@ -1,7 +1,7 @@
 /**
  * This file is part of Hercules.
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2016  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -943,6 +943,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->pNPCMarketPurchase, HP_clif_pNPCMarketPurchase) },
 	{ HP_POP(clif->add_random_options, HP_clif_add_random_options) },
 	{ HP_POP(clif->pHotkeyRowShift, HP_clif_pHotkeyRowShift) },
+	{ HP_POP(clif->dressroom_open, HP_clif_dressroom_open) },
+	{ HP_POP(clif->pOneClick_ItemIdentify, HP_clif_pOneClick_ItemIdentify) },
+	{ HP_POP(clif->selectcart, HP_clif_selectcart) },
+	{ HP_POP(clif->pSelectCart, HP_clif_pSelectCart) },
 /* cmdline */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },
@@ -1554,11 +1558,15 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(map->vforeachinmap, HP_map_vforeachinmap) },
 	{ HP_POP(map->vforeachininstance, HP_map_vforeachininstance) },
 	{ HP_POP(map->id2sd, HP_map_id2sd) },
-	{ HP_POP(map->id2md, HP_map_id2md) },
 	{ HP_POP(map->id2nd, HP_map_id2nd) },
+	{ HP_POP(map->id2md, HP_map_id2md) },
+	{ HP_POP(map->id2fi, HP_map_id2fi) },
+	{ HP_POP(map->id2cd, HP_map_id2cd) },
+	{ HP_POP(map->id2su, HP_map_id2su) },
+	{ HP_POP(map->id2pd, HP_map_id2pd) },
 	{ HP_POP(map->id2hd, HP_map_id2hd) },
 	{ HP_POP(map->id2mc, HP_map_id2mc) },
-	{ HP_POP(map->id2cd, HP_map_id2cd) },
+	{ HP_POP(map->id2ed, HP_map_id2ed) },
 	{ HP_POP(map->id2bl, HP_map_id2bl) },
 	{ HP_POP(map->blid_exists, HP_map_blid_exists) },
 	{ HP_POP(map->mapindex2mapid, HP_map_mapindex2mapid) },
@@ -2180,6 +2188,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->autosave, HP_pc_autosave) },
 	{ HP_POP(pc->follow_timer, HP_pc_follow_timer) },
 	{ HP_POP(pc->read_skill_tree, HP_pc_read_skill_tree) },
+	{ HP_POP(pc->clear_skill_tree, HP_pc_clear_skill_tree) },
 	{ HP_POP(pc->isUseitem, HP_pc_isUseitem) },
 	{ HP_POP(pc->show_steal, HP_pc_show_steal) },
 	{ HP_POP(pc->checkcombo, HP_pc_checkcombo) },
@@ -2203,6 +2212,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->autotrade_final, HP_pc_autotrade_final) },
 	{ HP_POP(pc->check_job_name, HP_pc_check_job_name) },
 	{ HP_POP(pc->update_idle_time, HP_pc_update_idle_time) },
+	{ HP_POP(pc->have_magnifier, HP_pc_have_magnifier) },
 /* libpcre */
 	{ HP_POP(libpcre->compile, HP_libpcre_compile) },
 	{ HP_POP(libpcre->study, HP_libpcre_study) },

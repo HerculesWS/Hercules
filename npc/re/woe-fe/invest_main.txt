@@ -74,7 +74,7 @@
 
 //== Investment Functions & Controller =====================
 // Note: The times in this section are almost entirely custom.
--	script	#invest_timer	-1,{
+-	script	#invest_timer	FAKE_NPC,{
 OnClock0000:	// Open investments on Wed (1 hour after WoE)
 	if (gettime(GETTIME_WEEKDAY) == WEDNESDAY && !agitcheck()) {
 		$2011_agit_invest = 1;
@@ -705,7 +705,7 @@ OnAgitInvest:
 */
 
 //== Realms - Merchant Guilds, Gate Managers, Status Boards =
--	script	Cat Paw Merchant Guild	-1,{
+-	script	Cat Paw Merchant Guild	FAKE_NPC,{
 
 	if (compare(strnpcinfo(4),"alde")) {
 		.@npc$ = "alde";
@@ -947,7 +947,7 @@ OnAgitInvest:
 	}
 }
 
--	script	Gate Manager#realm	-1,{
+-	script	Gate Manager#realm	FAKE_NPC,{
 
 	if (compare(strnpcinfo(4),"alde")) {
 		.@npc$ = "alde";
@@ -1028,7 +1028,7 @@ OnAgitInvest:
 	end;
 }
 
--	script	Investment Status Board	-1,{
+-	script	Investment Status Board	FAKE_NPC,{
 	.@invest_status = callfunc("F_Invest_Status");
 	if (.@invest_status == 1) {
 		if (compare(strnpcinfo(4),"alde")) {
@@ -1096,7 +1096,7 @@ OnAgitInvest:
 }
 
 //== Inside Castles - Gate Managers ========================
--	script	Gate Manager#castle	-1,{
+-	script	Gate Manager#castle	FAKE_NPC,{
 
 	.@id = atoi(charat(strnpcinfo(2),getstrlen(strnpcinfo(2))-1));
 	if (compare(strnpcinfo(2),"alde")) {

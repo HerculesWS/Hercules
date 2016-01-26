@@ -332,8 +332,9 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 		if (sc && sc->data[SC_PROPERTYWALK] &&
 			sc->data[SC_PROPERTYWALK]->val3 >= skill->get_maxcount(sc->data[SC_PROPERTYWALK]->val1,sc->data[SC_PROPERTYWALK]->val2) )
 			status_change_end(bl,SC_PROPERTYWALK,INVALID_TIMER);
-	} else if (bl->type == BL_NPC)
-		npc->unsetcells((TBL_NPC*)bl);
+	} else if (bl->type == BL_NPC) {
+		npc->unsetcells(BL_UCAST(BL_NPC, bl));
+	}
 
 	if (moveblock) map->delblock(bl);
 #ifdef CELL_NOSTACK
@@ -347,15 +348,17 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 #endif
 
 	if (bl->type&BL_CHAR) {
+		struct map_session_data *sd = BL_CAST(BL_PC, bl);
 
 		skill->unit_move(bl,tick,3);
 
-		if( bl->type == BL_PC && ((TBL_PC*)bl)->shadowform_id ) {//Shadow Form Target Moving
+		if (sd != NULL && sd->shadowform_id != 0) {
+			//Shadow Form Target Moving
 			struct block_list *d_bl;
-			if( (d_bl = map->id2bl(((TBL_PC*)bl)->shadowform_id)) == NULL || !check_distance_bl(bl,d_bl,10) ) {
+			if ((d_bl = map->id2bl(sd->shadowform_id)) == NULL || !check_distance_bl(bl,d_bl,10)) {
 				if( d_bl )
 					status_change_end(d_bl,SC__SHADOWFORM,INVALID_TIMER);
-				((TBL_PC*)bl)->shadowform_id = 0;
+				sd->shadowform_id = 0;
 			}
 		}
 
@@ -391,7 +394,7 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 				}
 			}
 			/* Guild Aura Moving */
-			if( bl->type == BL_PC && ((TBL_PC*)bl)->state.gmaster_flag ) {
+			if (sd != NULL && sd->state.gmaster_flag) {
 				if (sc->data[SC_LEADERSHIP])
 					skill->unit_move_unit_group(skill->id2group(sc->data[SC_LEADERSHIP]->val4), bl->m, x1-x0, y1-y0);
 				if (sc->data[SC_GLORYWOUNDS])
@@ -402,8 +405,9 @@ int map_moveblock(struct block_list *bl, int x1, int y1, int64 tick) {
 					skill->unit_move_unit_group(skill->id2group(sc->data[SC_HAWKEYES]->val4), bl->m, x1-x0, y1-y0);
 			}
 		}
-	} else if (bl->type == BL_NPC)
-		npc->setcells((TBL_NPC*)bl);
+	} else if (bl->type == BL_NPC) {
+		npc->setcells(BL_UCAST(BL_NPC, bl));
+	}
 
 	return 0;
 }
@@ -484,7 +488,7 @@ struct skill_unit* map_find_skill_unit_oncell(struct block_list* target,int16 x,
 		if (bl->x != x || bl->y != y || bl->type != BL_SKILL)
 			continue;
 
-		su = (struct skill_unit *) bl;
+		su = BL_UCAST(BL_SKILL, bl);
 		if( su == out_unit || !su->alive || !su->group || su->group->skill_id != skill_id )
 			continue;
 		if( !(flag&1) || battle->check_target(&su->bl,target,su->group->target_flag) > 0 )
@@ -1370,10 +1374,12 @@ int map_get_new_object_id(void)
  * Timered function to clear the floor (remove remaining item)
  * Called each flooritem_lifetime ms
  *------------------------------------------*/
-int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data) {
-	struct flooritem_data* fitem = (struct flooritem_data*)idb_get(map->id_db, id);
+int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	struct block_list *bl = idb_get(map->id_db, id);
+	struct flooritem_data *fitem = BL_CAST(BL_ITEM, bl);
 
-	if (fitem == NULL || fitem->bl.type != BL_ITEM || (fitem->cleartimer != tid)) {
+	if (fitem == NULL || fitem->cleartimer != tid) {
 		ShowError("map_clearflooritem_timer : error\n");
 		return 1;
 	}
@@ -1391,8 +1397,11 @@ int map_clearflooritem_timer(int tid, int64 tick, int id, intptr_t data) {
 /*
  * clears a single bl item out of the bazooonga.
  */
-void map_clearflooritem(struct block_list *bl) {
-	struct flooritem_data* fitem = (struct flooritem_data*)bl;
+void map_clearflooritem(struct block_list *bl)
+{
+	struct flooritem_data *fitem = BL_CAST(BL_ITEM, bl);
+
+	nullpo_retv(fitem);
 
 	if( fitem->cleartimer != INVALID_TIMER )
 		timer->delete(fitem->cleartimer,map->clearflooritem_timer);
@@ -1768,15 +1777,12 @@ void map_addiddb(struct block_list *bl)
 {
 	nullpo_retv(bl);
 
-	if( bl->type == BL_PC )
-	{
-		TBL_PC* sd = (TBL_PC*)bl;
+	if (bl->type == BL_PC) {
+		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 		idb_put(map->pc_db,sd->bl.id,sd);
 		idb_put(map->charid_db,sd->status.char_id,sd);
-	}
-	else if( bl->type == BL_MOB )
-	{
-		TBL_MOB* md = (TBL_MOB*)bl;
+	} else if (bl->type == BL_MOB) {
+		struct mob_data *md = BL_UCAST(BL_MOB, bl);
 		idb_put(map->mobid_db,bl->id,bl);
 
 		if( md->state.boss )
@@ -1796,14 +1802,11 @@ void map_deliddb(struct block_list *bl)
 {
 	nullpo_retv(bl);
 
-	if( bl->type == BL_PC )
-	{
-		TBL_PC* sd = (TBL_PC*)bl;
+	if (bl->type == BL_PC) {
+		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 		idb_remove(map->pc_db,sd->bl.id);
 		idb_remove(map->charid_db,sd->status.char_id);
-	}
-	else if( bl->type == BL_MOB )
-	{
+	} else if (bl->type == BL_MOB) {
 		idb_remove(map->mobid_db,bl->id);
 		idb_remove(map->bossid_db,bl->id);
 	}
@@ -1931,42 +1934,187 @@ int map_quit(struct map_session_data *sd) {
 	return 0;
 }
 
-/*==========================================
- * Lookup, id to session (player,mob,npc,homon,merc..)
- *------------------------------------------*/
-struct map_session_data *map_id2sd(int id) {
-	if (id <= 0) return NULL;
-	return (struct map_session_data*)idb_get(map->pc_db,id);
+/**
+ * Looks up a session data by ID.
+ *
+ * The search is performed using the pc_db.
+ *
+ * @param id The bl ID to search.
+ * @return The searched map_session_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a player unit.
+ */
+struct map_session_data *map_id2sd(int id)
+{
+	struct block_list *bl = NULL;
+	if (id <= 0)
+		return NULL;
+
+	bl = idb_get(map->pc_db,id);
+
+	if (bl)
+		Assert_retr(NULL, bl->type == BL_PC);
+	return BL_UCAST(BL_PC, bl);
 }
 
-struct mob_data *map_id2md(int id) {
-	if (id <= 0) return NULL;
-	return (struct mob_data*)idb_get(map->mobid_db,id);
-}
-
-struct npc_data *map_id2nd(int id) {
+/**
+ * Looks up a NPC data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched npc_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a NPC.
+ */
+struct npc_data *map_id2nd(int id)
+{
 	// just a id2bl lookup because there's no npc_db
 	struct block_list* bl = map->id2bl(id);
 
 	return BL_CAST(BL_NPC, bl);
 }
 
-struct homun_data *map_id2hd(int id) {
+/**
+ * Looks up a mob data by ID.
+ *
+ * The search is performed using the mobid_db.
+ *
+ * @param id The bl ID to search.
+ * @return The searched mob_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a mob unit.
+ */
+struct mob_data *map_id2md(int id)
+{
+	struct block_list *bl = NULL;
+	if (id <= 0)
+		return NULL;
+
+	bl = idb_get(map->mobid_db,id);
+
+	if (bl)
+		Assert_retr(NULL, bl->type == BL_MOB);
+	return BL_UCAST(BL_MOB, bl);
+}
+
+/**
+ * Looks up a floor item data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched flooritem_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a floor item.
+ */
+struct flooritem_data *map_id2fi(int id)
+{
+	struct block_list* bl = map->id2bl(id);
+
+	return BL_CAST(BL_ITEM, bl);
+}
+
+/**
+ * Looks up a chat data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched chat_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a chat.
+ */
+struct chat_data *map_id2cd(int id)
+{
+	struct block_list* bl = map->id2bl(id);
+
+	return BL_CAST(BL_CHAT, bl);
+}
+
+/**
+ * Looks up a skill unit data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched skill_unit data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a skill unit.
+ */
+struct skill_unit *map_id2su(int id)
+{
+	struct block_list* bl = map->id2bl(id);
+
+	return BL_CAST(BL_SKILL, bl);
+}
+
+/**
+ * Looks up a pet data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched pet_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a pet.
+ */
+struct pet_data *map_id2pd(int id)
+{
+	struct block_list* bl = map->id2bl(id);
+
+	return BL_CAST(BL_PET, bl);
+}
+
+/**
+ * Looks up a homunculus data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched homun_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a homunculus.
+ */
+struct homun_data *map_id2hd(int id)
+{
 	struct block_list* bl = map->id2bl(id);
 
 	return BL_CAST(BL_HOM, bl);
 }
 
-struct mercenary_data *map_id2mc(int id) {
+/**
+ * Looks up a mercenary data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched mercenary_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to a mercenary.
+ */
+struct mercenary_data *map_id2mc(int id)
+{
 	struct block_list* bl = map->id2bl(id);
 
 	return BL_CAST(BL_MER, bl);
 }
 
-struct chat_data *map_id2cd(int id) {
+/**
+ * Looks up an elemental data by ID.
+ *
+ * @param id The bl ID to search.
+ * @return The searched elemental_data, if it exists.
+ * @retval NULL if the ID is invalid or doesn't belong to an elemental.
+ */
+struct elemental_data *map_id2ed(int id)
+{
 	struct block_list* bl = map->id2bl(id);
 
-	return BL_CAST(BL_CHAT, bl);
+	return BL_CAST(BL_ELEM, bl);
+}
+
+/**
+ * Looks up a block_list by ID.
+ *
+ * The search is performed using the id_db.
+ *
+ * @param id The bl ID to search.
+ * @return The searched block_list, if it exists.
+ * @retval NULL if the ID is invalid.
+ */
+struct block_list *map_id2bl(int id)
+{
+	return idb_get(map->id_db, id);
+}
+
+/**
+ * Verifies whether a block list ID is valid.
+ *
+ * @param id The bl ID to search.
+ * @retval true if the ID exists and is valid.
+ * @retval false otherwise.
+ */
+bool map_blid_exists(int id)
+{
+	return (idb_exists(map->id_db,id));
 }
 
 /// Returns the nick of the target charid or NULL if unknown (requests the nick to the char server).
@@ -1989,7 +2137,10 @@ const char *map_charid2nick(int charid) {
 /// Returns the struct map_session_data of the charid or NULL if the char is not online.
 struct map_session_data* map_charid2sd(int charid)
 {
-	return (struct map_session_data*)idb_get(map->charid_db, charid);
+	struct block_list *bl = idb_get(map->charid_db, charid);
+	if (bl)
+		Assert_retr(NULL, bl->type == BL_PC);
+	return BL_UCAST(BL_PC, bl);
 }
 
 /*==========================================
@@ -2012,8 +2163,7 @@ struct map_session_data * map_nick2sd(const char *nick)
 	iter = mapit_getallusers();
 
 	found_sd = NULL;
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
-	{
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if( battle_config.partial_name_scan )
 		{// partial name search
 			if( strnicmp(sd->status.name, nick, nicklen) == 0 )
@@ -2044,20 +2194,6 @@ struct map_session_data * map_nick2sd(const char *nick)
 }
 
 /*==========================================
- * Looksup id_db DBMap and returns BL pointer of 'id' or NULL if not found
- *------------------------------------------*/
-struct block_list * map_id2bl(int id) {
-	return (struct block_list*)idb_get(map->id_db,id);
-}
-
-/**
- * Same as map->id2bl except it only checks for its existence
- **/
-bool map_blid_exists( int id ) {
-	return (idb_exists(map->id_db,id));
-}
-
-/*==========================================
  * Convext Mirror
  *------------------------------------------*/
 struct mob_data * map_getmob_boss(int16 m)
@@ -2067,10 +2203,8 @@ struct mob_data * map_getmob_boss(int16 m)
 	bool found = false;
 
 	iter = db_iterator(map->bossid_db);
-	for( md = (struct mob_data*)dbi_first(iter); dbi_exists(iter); md = (struct mob_data*)dbi_next(iter) )
-	{
-		if( md->bl.m == m )
-		{
+	for (md = dbi_first(iter); dbi_exists(iter); md = dbi_next(iter)) {
+		if (md->bl.m == m) {
 			found = true;
 			break;
 		}
@@ -2080,10 +2214,15 @@ struct mob_data * map_getmob_boss(int16 m)
 	return (found)? md : NULL;
 }
 
-struct mob_data * map_id2boss(int id)
+struct mob_data *map_id2boss(int id)
 {
-	if (id <= 0) return NULL;
-	return (struct mob_data*)idb_get(map->bossid_db,id);
+	struct block_list *bl = NULL;
+	if (id <= 0)
+		return NULL;
+	bl = idb_get(map->bossid_db,id);
+	if (bl)
+		Assert_retr(NULL, bl->type == BL_MOB);
+	return BL_UCAST(BL_MOB, bl);
 }
 
 /**
@@ -2158,7 +2297,7 @@ void map_vforeachmob(int (*func)(struct mob_data* md, va_list args), va_list arg
 	struct mob_data* md;
 
 	iter = db_iterator(map->mobid_db);
-	for( md = (struct mob_data*)dbi_first(iter); dbi_exists(iter); md = (struct mob_data*)dbi_next(iter) ) {
+	for (md = dbi_first(iter); dbi_exists(iter); md = dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
 
@@ -2189,9 +2328,9 @@ void map_vforeachnpc(int (*func)(struct npc_data* nd, va_list args), va_list arg
 	struct block_list* bl;
 
 	iter = db_iterator(map->id_db);
-	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) ) {
-		if( bl->type == BL_NPC ) {
-			struct npc_data* nd = (struct npc_data*)bl;
+	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
+		if (bl->type == BL_NPC) {
+			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
 			va_list argscopy;
 			int ret;
 
@@ -2223,7 +2362,7 @@ void map_vforeachregen(int (*func)(struct block_list* bl, va_list args), va_list
 	struct block_list* bl;
 
 	iter = db_iterator(map->regen_db);
-	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) ) {
+	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
 
@@ -2254,7 +2393,7 @@ void map_vforeachiddb(int (*func)(struct block_list* bl, va_list args), va_list 
 	struct block_list* bl;
 
 	iter = db_iterator(map->id_db);
-	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) ) {
+	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
 
@@ -2335,7 +2474,7 @@ struct block_list* mapit_first(struct s_mapiterator* iter) {
 
 	nullpo_retr(NULL,iter);
 
-	for( bl = (struct block_list*)dbi_first(iter->dbi); bl != NULL; bl = (struct block_list*)dbi_next(iter->dbi) ) {
+	for (bl = dbi_first(iter->dbi); bl != NULL; bl = dbi_next(iter->dbi) ) {
 		if( MAPIT_MATCHES(iter,bl) )
 			break;// found match
 	}
@@ -2352,7 +2491,7 @@ struct block_list* mapit_last(struct s_mapiterator* iter) {
 
 	nullpo_retr(NULL,iter);
 
-	for( bl = (struct block_list*)dbi_last(iter->dbi); bl != NULL; bl = (struct block_list*)dbi_prev(iter->dbi) ) {
+	for (bl = dbi_last(iter->dbi); bl != NULL; bl = dbi_prev(iter->dbi)) {
 		if( MAPIT_MATCHES(iter,bl) )
 			break;// found match
 	}
@@ -2370,7 +2509,7 @@ struct block_list* mapit_next(struct s_mapiterator* iter) {
 	nullpo_retr(NULL,iter);
 
 	for( ; ; ) {
-		bl = (struct block_list*)dbi_next(iter->dbi);
+		bl = dbi_next(iter->dbi);
 		if( bl == NULL )
 			break;// end
 		if( MAPIT_MATCHES(iter,bl) )
@@ -2391,7 +2530,7 @@ struct block_list* mapit_prev(struct s_mapiterator* iter) {
 	nullpo_retr(NULL,iter);
 
 	for( ; ; ) {
-		bl = (struct block_list*)dbi_prev(iter->dbi);
+		bl = dbi_prev(iter->dbi);
 		if( bl == NULL )
 			break;// end
 		if( MAPIT_MATCHES(iter,bl) )
@@ -2467,8 +2606,10 @@ void map_spawnmobs(int16 m) {
 
 int map_removemobs_sub(struct block_list *bl, va_list ap)
 {
-	struct mob_data *md = (struct mob_data *)bl;
-	nullpo_ret(md);
+	struct mob_data *md = NULL;
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_MOB);
+	md = BL_UCAST(BL_MOB, bl);
 
 	//When not to remove mob:
 	// doesn't respawn and is not a slave
@@ -5368,10 +5509,10 @@ int cleanup_sub(struct block_list *bl, va_list ap) {
 
 	switch(bl->type) {
 		case BL_PC:
-			map->quit((struct map_session_data *) bl);
+			map->quit(BL_UCAST(BL_PC, bl));
 			break;
 		case BL_NPC:
-			npc->unload((struct npc_data *)bl,false);
+			npc->unload(BL_UCAST(BL_NPC, bl), false);
 			break;
 		case BL_MOB:
 			unit->free(bl,CLR_OUTSIGHT);
@@ -5383,7 +5524,7 @@ int cleanup_sub(struct block_list *bl, va_list ap) {
 			map->clearflooritem(bl);
 			break;
 		case BL_SKILL:
-			skill->delunit((struct skill_unit *) bl);
+			skill->delunit(BL_UCAST(BL_SKILL, bl));
 			break;
 	}
 
@@ -5414,7 +5555,7 @@ int do_final(void) {
 
 	//Ladies and babies first.
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter)))
 		map->quit(sd);
 	mapit->free(iter);
 
@@ -5558,7 +5699,7 @@ void do_shutdown(void)
 		{
 			struct map_session_data* sd;
 			struct s_mapiterator* iter = mapit_getallusers();
-			for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
+			for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter)))
 				clif->GM_kick(NULL, sd);
 			mapit->free(iter);
 			sockt->flush_fifos();
@@ -6193,11 +6334,15 @@ void map_defaults(void) {
 	map->foreachininstance = map_foreachininstance;
 
 	map->id2sd = map_id2sd;
-	map->id2md = map_id2md;
 	map->id2nd = map_id2nd;
+	map->id2md = map_id2md;
+	map->id2fi = map_id2fi;
+	map->id2cd = map_id2cd;
+	map->id2su = map_id2su;
+	map->id2pd = map_id2pd;
 	map->id2hd = map_id2hd;
 	map->id2mc = map_id2mc;
-	map->id2cd = map_id2cd;
+	map->id2ed = map_id2ed;
 	map->id2bl = map_id2bl;
 	map->blid_exists = map_blid_exists;
 	map->mapindex2mapid = map_mapindex2mapid;

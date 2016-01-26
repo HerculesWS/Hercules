@@ -758,13 +758,13 @@ typedef enum sc_type {
 	SC_MTF_MSP,
 	SC_MTF_PUMPKIN,
 	SC_MTF_HITFLEE,
-	
+
 	SC_LJOSALFAR,
 	SC_MERMAID_LONGING,
-	
+
 	SC_ACARAJE, // 590
 	SC_TARGET_ASPD,
-	
+
 	// Geffen Scrolls
 	SC_SKELSCROLL,
 	SC_DISTRUCTIONSCROLL,
@@ -775,25 +775,25 @@ typedef enum sc_type {
 	SC_ARMORSCROLL,
 	SC_FREYJASCROLL,
 	SC_SOULSCROLL, // 600
-	
+
 	// Eden Crystal Synthesis
 	SC_QUEST_BUFF1,
 	SC_QUEST_BUFF2,
 	SC_QUEST_BUFF3,
-	
+
 	// Geffen Magic Tournament
 	SC_GEFFEN_MAGIC1,
 	SC_GEFFEN_MAGIC2,
 	SC_GEFFEN_MAGIC3,
 	SC_FENRIR_CARD,
-	
+
 	SC_ATKER_ASPD,
 	SC_ATKER_MOVESPEED,
 	SC_FOOD_CRITICALSUCCESSVALUE, // 610
 	SC_CUP_OF_BOZA,
 	SC_OVERLAPEXPUP,
 	SC_MORA_BUFF,
-	
+
 	// MVP Scrolls
 	SC_MVPCARD_TAOGUNKA,
 	SC_MVPCARD_MISTRESS,
@@ -817,6 +817,14 @@ typedef enum sc_type {
 	SC_STEAMPACK,
 	SC_MOVHASTE_POTION,
 	SC_MOVESLOW_POTION,
+	SC_BUCHEDENOEL,
+	SC_PHI_DEMON,
+	SC_PROMOTE_HEALTH_RESERCH,
+	SC_ENERGY_DRINK_RESERCH,
+	SC_MAGIC_CANDY,
+	SC_M_LIFEPOTION,
+	SC_G_LIFEPOTION, // 640
+	SC_MYSTICPOWDER,
 
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 } sc_type;
@@ -1633,10 +1641,10 @@ enum si_type {
 	//SI_CHUSEOK_WEEKEND                     = 790,
 	//SI_ALL_LIGHTGUARD                      = 791,
 	//SI_ALL_LIGHTGUARD_COOL_TIME            = 792,
-	//SI_MTF_MHP                             = 793,
-	//SI_MTF_MSP                             = 794,
-	//SI_MTF_PUMPKIN                         = 795,
-	//SI_MTF_HITFLEE                         = 796,
+	SI_MTF_MHP                               = 793,
+	SI_MTF_MSP                               = 794,
+	SI_MTF_PUMPKIN                           = 795,
+	SI_MTF_HITFLEE                           = 796,
 	//SI_MTF_CRIDAMAGE2                      = 797,
 	//SI_MTF_SPDRAIN                         = 798,
 	//SI_ACUO_MINT_GUM                       = 799,
@@ -1915,6 +1923,9 @@ enum scb_flag
 	SCB_RANGE   = 0x10000000,
 	SCB_REGEN   = 0x20000000,
 	SCB_DYE     = 0x40000000, // force cloth-dye change to 0 to avoid client crashes.
+#if 0 // Currently No SC use it. Also, when this will be implemented, there will be need to change to 64bit variable
+	SCB_BODY    = 0x80000000, // Force bodysStyle change to 0
+#endif
 
 	SCB_BATTLE  = 0x3FFFFFFE,
 	SCB_ALL     = 0x3FFFFFFF
@@ -2111,13 +2122,6 @@ struct status_change {
 #define status_get_race(bl)                  (status->get_status_data(bl)->race)
 #define status_get_size(bl)                  (status->get_status_data(bl)->size)
 #define status_get_mode(bl)                  (status->get_status_data(bl)->mode)
-
-#define status_get_homstr(bl)                   (st->str + ((TBL_HOM*)bl)->homunculus.str_value)
-#define status_get_homagi(bl)                   (st->agi + ((TBL_HOM*)bl)->homunculus.agi_value)
-#define status_get_homvit(bl)                   (st->vit + ((TBL_HOM*)bl)->homunculus.vit_value)
-#define status_get_homint(bl)                   (st->int_ + ((TBL_HOM*)bl)->homunculus.int_value)
-#define status_get_homdex(bl)                   (st->dex + ((TBL_HOM*)bl)->homunculus.dex_value)
-#define status_get_homluk(bl)                   (st->luk + ((TBL_HOM*)bl)->homunculus.luk_value)
 
 //Short version, receives rate in 1->100 range, and does not uses a flag setting.
 #define sc_start(src, bl, type, rate, val1, tick)                    (status->change_start((src),(bl),(type),100*(rate),(val1),0,0,0,(tick),SCFLAG_NONE))

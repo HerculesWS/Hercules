@@ -29,6 +29,25 @@
 #include <stdarg.h>
 
 /**
+ * Enums
+ */
+/// Elemental IDs
+enum elemental_id {
+	ELEID_EL_AGNI_S   = 2114, ///<   EL_AGNI_S / Agni
+	ELEID_EL_AGNI_M   = 2115, ///<   EL_AGNI_M / Agni
+	ELEID_EL_AGNI_L   = 2116, ///<   EL_AGNI_L / Agni
+	ELEID_EL_AQUA_S   = 2117, ///<   EL_AQUA_S / Aqua
+	ELEID_EL_AQUA_M   = 2118, ///<   EL_AQUA_M / Aqua
+	ELEID_EL_AQUA_L   = 2119, ///<   EL_AQUA_L / Aqua
+	ELEID_EL_VENTUS_S = 2120, ///< EL_VENTUS_S / Ventus
+	ELEID_EL_VENTUS_M = 2121, ///< EL_VENTUS_M / Ventus
+	ELEID_EL_VENTUS_L = 2122, ///< EL_VENTUS_L / Ventus
+	ELEID_EL_TERA_S   = 2123, ///<   EL_TERA_S / Tera
+	ELEID_EL_TERA_M   = 2124, ///<   EL_TERA_M / Tera
+	ELEID_EL_TERA_L   = 2125, ///<   EL_TERA_L / Tera
+};
+
+/**
  * Defines
  **/
 #define MIN_ELETHINKTIME 100
@@ -40,6 +59,9 @@
 #define EL_SKILLMODE_PASIVE 0x1
 #define EL_SKILLMODE_ASSIST 0x2
 #define EL_SKILLMODE_AGGRESSIVE 0x4
+#define MAX_ELEMENTAL_CLASS 12
+#define EL_CLASS_BASE ELEID_EL_AGNI_S
+#define EL_CLASS_MAX (EL_CLASS_BASE+MAX_ELEMENTAL_CLASS-1)
 
 #define elemental_stop_walking(ed, type) (unit->stop_walking(&(ed)->bl, (type)))
 #define elemental_stop_attack(ed)        (unit->stop_attack(&(ed)->bl))

@@ -1581,7 +1581,7 @@ typedef BOOL (WINAPI *ISDEBUGGERPRESENT)(void);
 ///
 /// @return TRUE is a debugger is present
 static BOOL
-Dhp__IsDebuggerPresent()
+Dhp__IsDebuggerPresent(void)
 {
 	HANDLE kernel32_dll;
 	ISDEBUGGERPRESENT IsDebuggerPresent_;
@@ -1606,7 +1606,7 @@ Dhp__IsDebuggerPresent()
 ///
 /// @return TRUE is sucessfull
 static BOOL
-Dhp__LoadDbghelpDll()
+Dhp__LoadDbghelpDll(void)
 {
 	dbghelp_dll = LoadLibraryA(DBGHELP_DLL);
 	if( dbghelp_dll != INVALID_HANDLE_VALUE )
@@ -1663,7 +1663,7 @@ Dhp__LoadDbghelpDll()
 
 /// Unloads the dbghelp.dll library.
 static VOID
-Dhp__UnloadDbghlpDll()
+Dhp__UnloadDbghlpDll(void)
 {
 	if( !SymCleanup_(GetCurrentProcess()) )
 		printf("Failed to cleanup symbols! Error: %u\n", GetLastError());

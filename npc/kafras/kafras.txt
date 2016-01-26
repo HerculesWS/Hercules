@@ -410,7 +410,7 @@ cmd_fild07,136,134,4	script	Kafra Employee::kaf_cmd_fild07	4_F_KAFRA7,{
 }
 
 //== Izlude ================================================
--	script	::kaf_izlude	-1,{
+-	script	::kaf_izlude	FAKE_NPC,{
 	cutin "kafra_01",2;
 	callfunc "F_KafSet";
 	mes "[Kafra Employee]";

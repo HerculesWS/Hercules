@@ -62,25 +62,6 @@ enum E_MAPSERVER_ST {
 #define block_free_max 1048576
 #define BL_LIST_MAX 1048576
 
-
-// Added definitions for WoESE objects. [L0ne_W0lf]
-enum MOBID {
-	MOBID_EMPERIUM = 1288,
-	MOBID_TREAS01 = 1324,
-	MOBID_TREAS40 = 1363,
-	MOBID_BARRICADE1 = 1905,
-	MOBID_BARRICADE2,
-	MOBID_GUARIDAN_STONE1,
-	MOBID_GUARIDAN_STONE2,
-	MOBID_FOOD_STOR,
-	MOBID_BLUE_CRYST = 1914,
-	MOBID_PINK_CRYST,
-	MOBID_TREAS41 = 1938,
-	MOBID_TREAS49 = 1946,
-	MOBID_SILVERSNIPER = 2042,
-	MOBID_MAGICDECOY_WIND = 2046,
-};
-
 // For filtering and quick checking.
 #define MAPID_BASEMASK 0x00ff
 #define MAPID_UPPERMASK 0x0fff
@@ -243,6 +224,8 @@ enum {
 #define map_flag_gvg2(m) (map->list[m].flag.gvg || map->list[m].flag.gvg_castle)
 // No Kill Steal Protection
 #define map_flag_ks(m) (map->list[m].flag.town || map->list[m].flag.pvp || map->list[m].flag.gvg || map->list[m].flag.battleground)
+// No ViewID
+#define map_no_view(m, view) (map->list[m].flag.noviewid & (view))
 
 //This stackable implementation does not means a BL can be more than one type at a time, but it's
 // meant to make it easier to check for multiple types at a time on invocations such as map_foreach* calls [Skotlex]
@@ -465,7 +448,7 @@ enum status_point_types {
 	SP_WEAPON_ATK,SP_WEAPON_ATK_RATE, // 1081-1082
 	SP_DELAYRATE,SP_HP_DRAIN_RATE_RACE,SP_SP_DRAIN_RATE_RACE, // 1083-1085
 	SP_IGNORE_MDEF_RATE,SP_IGNORE_DEF_RATE,SP_SKILL_HEAL2,SP_ADDEFF_ONSKILL, //1086-1089
-	SP_ADD_HEAL_RATE,SP_ADD_HEAL2_RATE, //1090-1091
+	SP_ADD_HEAL_RATE, SP_ADD_HEAL2_RATE, SP_HP_VANISH_RATE, //1090-1092
 
 	SP_RESTART_FULL_RECOVER=2000,SP_NO_CASTCANCEL,SP_NO_SIZEFIX,SP_NO_MAGIC_DAMAGE,SP_NO_WEAPON_DAMAGE,SP_NO_GEMSTONE, // 2000-2005
 	SP_NO_CASTCANCEL2,SP_NO_MISC_DAMAGE,SP_UNBREAKABLE_WEAPON,SP_UNBREAKABLE_ARMOR, SP_UNBREAKABLE_HELM, // 2006-2010
@@ -503,6 +486,7 @@ enum look {
 	LOOK_BODY,
 	LOOK_FLOOR,
 	LOOK_ROBE,
+	LOOK_BODY2,
 };
 
 // used by map_setcell()
@@ -733,6 +717,7 @@ struct map_data {
 		unsigned notomb : 1;
 		unsigned noemergencycall : 1;
 		unsigned nocashshop : 1;
+		uint32 noviewid; ///< noviewid (bitmask - @see enum equip_pos)
 	} flag;
 	struct point save;
 	struct npc_data *npc[MAX_NPC_PER_MAP];
@@ -844,8 +829,91 @@ typedef struct homun_data       TBL_HOM;
 typedef struct mercenary_data   TBL_MER;
 typedef struct elemental_data   TBL_ELEM;
 
+/**
+ * Casts a block list to a specific type.
+ *
+ * @remark
+ *   The `bl` argument may be evaluated more than once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ * @retval NULL if bl is the wrong type or NULL.
+ */
 #define BL_CAST(type_, bl) \
-	( ((bl) == (struct block_list*)NULL || (bl)->type != (type_)) ? (T ## type_ *)NULL : (T ## type_ *)(bl) )
+	( ((bl) == (struct block_list *)NULL || (bl)->type != (type_)) ? (T ## type_ *)NULL : (T ## type_ *)(bl) )
+
+/**
+ * Casts a const block list to a specific type.
+ *
+ * @remark
+ *   The `bl` argument may be evaluated more than once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ * @retval NULL if bl is the wrong type or NULL.
+ */
+#define BL_CCAST(type_, bl) \
+	( ((bl) == (const struct block_list *)NULL || (bl)->type != (type_)) ? (const T ## type_ *)NULL : (const T ## type_ *)(bl) )
+
+/**
+ * Helper function for `BL_UCAST`.
+ *
+ * @warning
+ *   This function shouldn't be called on it own.
+ *
+ * The purpose of this function is to produce a compile-timer error if a non-bl
+ * object is passed to BL_UCAST. It's declared as static inline to let the
+ * compiler optimize out the function call overhead.
+ */
+static inline struct block_list *BL_UCAST_(struct block_list *bl) __attribute__((unused));
+static inline struct block_list *BL_UCAST_(struct block_list *bl)
+{
+	return bl;
+}
+
+/**
+ * Casts a block list to a specific type, without performing any type checks.
+ *
+ * @remark
+ *   The `bl` argument is guaranteed to be evaluated once and only once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ */
+#define BL_UCAST(type_, bl) \
+	((T ## type_ *)BL_UCAST_(bl))
+
+/**
+ * Helper function for `BL_UCCAST`.
+ *
+ * @warning
+ *   This function shouldn't be called on it own.
+ *
+ * The purpose of this function is to produce a compile-timer error if a non-bl
+ * object is passed to BL_UCAST. It's declared as static inline to let the
+ * compiler optimize out the function call overhead.
+ */
+static inline const struct block_list *BL_UCCAST_(const struct block_list *bl) __attribute__((unused));
+static inline const struct block_list *BL_UCCAST_(const struct block_list *bl)
+{
+	return bl;
+}
+
+/**
+ * Casts a const block list to a specific type, without performing any type checks.
+ *
+ * @remark
+ *   The `bl` argument is guaranteed to be evaluated once and only once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ */
+#define BL_UCCAST(type_, bl) \
+	((const T ## type_ *)BL_UCCAST_(bl))
 
 struct charid_request {
 	struct charid_request* next;
@@ -1046,13 +1114,17 @@ END_ZEROED_BLOCK;
 	int (*vforeachininstance)(int (*func)(struct block_list*,va_list), int16 instance_id, int type, va_list ap);
 	int (*foreachininstance)(int (*func)(struct block_list*,va_list), int16 instance_id, int type,...);
 
-	struct map_session_data * (*id2sd) (int id);
-	struct mob_data * (*id2md) (int id);
-	struct npc_data * (*id2nd) (int id);
-	struct homun_data* (*id2hd) (int id);
-	struct mercenary_data* (*id2mc) (int id);
-	struct chat_data* (*id2cd) (int id);
-	struct block_list * (*id2bl) (int id);
+	struct map_session_data *(*id2sd) (int id);
+	struct npc_data *(*id2nd) (int id);
+	struct mob_data *(*id2md) (int id);
+	struct flooritem_data *(*id2fi) (int id);
+	struct chat_data *(*id2cd) (int id);
+	struct skill_unit *(*id2su) (int id);
+	struct pet_data *(*id2pd) (int id);
+	struct homun_data *(*id2hd) (int id);
+	struct mercenary_data *(*id2mc) (int id);
+	struct elemental_data *(*id2ed) (int id);
+	struct block_list *(*id2bl) (int id);
 	bool (*blid_exists) (int id);
 	int16 (*mapindex2mapid) (unsigned short map_index);
 	int16 (*mapname2mapid) (const char* name);

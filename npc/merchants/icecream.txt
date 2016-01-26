@@ -35,7 +35,7 @@
 //= 1.5
 //=========================================================================
 
--	script	Ice Cream Maker::IceCreamer	-1,{
+-	script	Ice Cream Maker::IceCreamer	FAKE_NPC,{
 	mes "[Ice Cream Maker]";
 	mes "Fresh Ice Cream made with snow from Lutie!";
 	mes "Enjoy it now, it won't be on sale for long!";

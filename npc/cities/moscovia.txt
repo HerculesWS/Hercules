@@ -34,7 +34,7 @@
 //=========================================================================
 
 //== Moscovia Transportation :: mosk_trans =================
--	script	::PR_Officer_moscovia	-1,{
+-	script	::PR_Officer_moscovia	FAKE_NPC,{
 	mes "[Moscovia P.R. Officer]";
 	mes "Moscovia! Do you know Moscovia?";
 	mes "the paradise spreading on the endless seas...";

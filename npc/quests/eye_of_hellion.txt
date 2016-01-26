@@ -1619,7 +1619,7 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 	}
 }
 
-payon,101,190,0	script	 #paypuzz1	-1,1,1,{
+payon,101,190,0	script	 #paypuzz1	FAKE_NPC,1,1,{
 OnTouch:
 	if (HELLIONQ == 48) {
 		mes "[" + strcharinfo(0) + "]";

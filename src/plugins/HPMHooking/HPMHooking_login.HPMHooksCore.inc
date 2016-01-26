@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2016  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -314,6 +314,10 @@ struct {
 	struct HPMHookPoint *HP_login_parse_request_connection_post;
 	struct HPMHookPoint *HP_login_parse_login_pre;
 	struct HPMHookPoint *HP_login_parse_login_post;
+	struct HPMHookPoint *HP_login_config_set_defaults_pre;
+	struct HPMHookPoint *HP_login_config_set_defaults_post;
+	struct HPMHookPoint *HP_login_config_read_pre;
+	struct HPMHookPoint *HP_login_config_read_post;
 	struct HPMHookPoint *HP_iMalloc_init_pre;
 	struct HPMHookPoint *HP_iMalloc_init_post;
 	struct HPMHookPoint *HP_iMalloc_final_pre;
@@ -887,6 +891,10 @@ struct {
 	int HP_login_parse_request_connection_post;
 	int HP_login_parse_login_pre;
 	int HP_login_parse_login_post;
+	int HP_login_config_set_defaults_pre;
+	int HP_login_config_set_defaults_post;
+	int HP_login_config_read_pre;
+	int HP_login_config_read_post;
 	int HP_iMalloc_init_pre;
 	int HP_iMalloc_init_post;
 	int HP_iMalloc_final_pre;

@@ -88,7 +88,7 @@ function	script	F_AuctionWarper	{
 }
 
 //== Sign posts ============================================
--	script	Information Post#dum::AuctionSign	-1,{
+-	script	Information Post#dum::AuctionSign	FAKE_NPC,{
 	mes "[Information]";
 	mes "Auction Warp Guide";
 	close;
@@ -106,7 +106,7 @@ auction_02,151,17,0	warp	auction_enterance_juno	1,1,yuno,132,119
 auction_02,43,17,0	warp	auction_enterance_lhz	1,1,lighthalzen,209,169
 
 //== Auction House NPCs ====================================
--	script	Auction Broker#dum::AuctionBroker	-1,{
+-	script	Auction Broker#dum::AuctionBroker	FAKE_NPC,{
 	mes "[Auction Broker]";
 	mes "Welcome to the Auction Hall.";
 	mes "Would you like to view the goods?";

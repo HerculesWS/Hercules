@@ -499,7 +499,7 @@ OnTouch:
 	end;
 }
 
-1@orcs,1,1,0	script	B1 Area Mobs	-1,{
+1@orcs,1,1,0	script	B1 Area Mobs	FAKE_NPC,{
 	end;
 
 OnMyMobDead:

@@ -2686,7 +2686,7 @@ OnTimer186000:
 	end;
 }
 
--	script	Arena#2	-1,{
+-	script	Arena#2	FAKE_NPC,{
 OnInit:
 	disablenpc "Arena#2";
 	end;
@@ -2789,7 +2789,7 @@ OnTimer186000:
 	end;
 }
 
--	script	Arena#Doorkeeper	-1,{
+-	script	Arena#Doorkeeper	FAKE_NPC,{
 OnInit:
 	disablenpc "Arena#Doorkeeper";
 	end;
@@ -2855,7 +2855,7 @@ OnTimer63000:
 	end;
 }
 
--	script	Arena#3	-1,{
+-	script	Arena#3	FAKE_NPC,{
 OnInit:
 	disablenpc "Arena#3";
 	end;
@@ -2872,7 +2872,7 @@ OnDisable:
 	end;
 }
 
--	script	Test Helper#sg	-1,{
+-	script	Test Helper#sg	FAKE_NPC,{
 OnInit:
 	disablenpc "Test Helper#sg";
 	end;

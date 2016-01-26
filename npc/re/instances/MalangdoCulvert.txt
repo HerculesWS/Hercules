@@ -707,7 +707,7 @@ OnTimer520000:
 	end;
 }
 
-1@pump,1,1,4	script	Monster Hole#n	-1,{
+1@pump,1,1,4	script	Monster Hole#n	FAKE_NPC,{
 	end;
 OnSpawn:
 	.@i$ = charat(strnpcinfo(2),0);
@@ -789,7 +789,7 @@ OnTouch:
 1@pump,75,80,4	duplicate(#Culvert_n1)	#Culvert_n5	CLEAR_NPC,14,14
 1@pump,58,101,4	duplicate(#Culvert_n1)	#Culvert_n6	CLEAR_NPC,14,14
 
-1@pump,1,1,4	script	Boss Creation#n	-1,{
+1@pump,1,1,4	script	Boss Creation#n	FAKE_NPC,{
 	end;
 OnInstanceInit:
 	disablenpc instance_npcname(strnpcinfo(0));
@@ -909,7 +909,7 @@ OnTouch:
 }
 
 //MD_Putmob "1@pump" 0 0 0 0 20 HYDRA 0 0 2
-1@pump,1,1,4	script	Hydra#n	-1,{
+1@pump,1,1,4	script	Hydra#n	FAKE_NPC,{
 OnInstanceInit:
 	monster strnpcinfo(4),0,0,"Hydra",1068,20;
 	end;
@@ -1054,10 +1054,10 @@ OnTouch:
 2@pump,100,74,4	duplicate(#Culvert_h1)	#Culvert_h9	CLEAR_NPC,14,14
 2@pump,115,50,4	duplicate(#Culvert_h1)	#Culvert_h10	CLEAR_NPC,14,14
 
-2@pump,1,1,4	duplicate(Monster Hole#n)	Monster Hole#h	-1
-2@pump,1,1,4	duplicate(Boss Creation#n)	Boss Creation#h	-1
+2@pump,1,1,4	duplicate(Monster Hole#n)	Monster Hole#h	FAKE_NPC
+2@pump,1,1,4	duplicate(Boss Creation#n)	Boss Creation#h	FAKE_NPC
 2@pump,39,88,4	duplicate(Missing, the Cleaner#no)	Missing, the Cleaner#ho	4_CAT_SAILOR2
 2@pump,38,100,0	duplicate(Culvert Entrance#n)	Culvert Entrance#h	WARPNPC,3,3
 
 //MD_Putmob "2@pump" 0 0 0 0 20 HYDRA 0 0 2
-2@pump,1,1,4	duplicate(Hydra#n)	Hydra#h	-1
+2@pump,1,1,4	duplicate(Hydra#n)	Hydra#h	FAKE_NPC

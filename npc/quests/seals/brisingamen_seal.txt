@@ -3019,7 +3019,7 @@ que_god02,55,64,4	script	Soldier#2_brising	8W_SOLDIER,1,1,{
 	close;
 }
 
-que_god02,1,1,1	script	#brisinsold2	-1,{
+que_god02,1,1,1	script	#brisinsold2	FAKE_NPC,{
 OnInit:
 	hideonnpc "Soldier#2_brising";
 	areawarp "que_god02",15,125,185,131,"geffen",120,100;
@@ -3056,7 +3056,7 @@ OnTimer550500:
 
 }
 
-que_god02,1,1,1	script	#brisinsummon	-1,{
+que_god02,1,1,1	script	#brisinsummon	FAKE_NPC,{
 
 OnInit:
 	hideonnpc "#doppelganger1";

@@ -1321,7 +1321,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 	close;
 }
 
--	script	Crack#mal0	-1,{
+-	script	Crack#mal0	FAKE_NPC,{
 	if (.off) end;	// Official script uses a 1-second timer to disable cracks. Added to prevent abuse.
 	if (ma_tomas == 15 || questprogress(11241)) {
 		if (countitem(Fix_Kit) < 1) {
@@ -1416,7 +1416,7 @@ malangdo,221,155,0	duplicate(Crack#mal0)	Crack#mal8	4_CRACK
 malangdo,217,109,0	duplicate(Crack#mal0)	Crack#mal9	4_CRACK
 malangdo,162,183,0	duplicate(Crack#mal0)	Crack#mal10	4_CRACK
 
--	script	Crackt0#mal	-1,{
+-	script	Crackt0#mal	FAKE_NPC,{
 	end;
 OnInit:
 	disablenpc strnpcinfo(0);
@@ -1437,16 +1437,16 @@ OnTimer30000:
 	donpcevent strnpcinfo(0)+"::OnDisable";
 	end;
 }
--	duplicate(Crackt0#mal)	Crackt1#mal	-1
--	duplicate(Crackt0#mal)	Crackt2#mal	-1
--	duplicate(Crackt0#mal)	Crackt3#mal	-1
--	duplicate(Crackt0#mal)	Crackt4#mal	-1
--	duplicate(Crackt0#mal)	Crackt5#mal	-1
--	duplicate(Crackt0#mal)	Crackt6#mal	-1
--	duplicate(Crackt0#mal)	Crackt7#mal	-1
--	duplicate(Crackt0#mal)	Crackt8#mal	-1
--	duplicate(Crackt0#mal)	Crackt9#mal	-1
--	duplicate(Crackt0#mal)	Crackt10#mal	-1
+-	duplicate(Crackt0#mal)	Crackt1#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt2#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt3#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt4#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt5#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt6#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt7#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt8#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt9#mal	FAKE_NPC
+-	duplicate(Crackt0#mal)	Crackt10#mal	FAKE_NPC
 
 mal_in02,181,55,3	script	Brie#mal	4_CAT_SAILOR2,{
 	if (ma_tomas < 6) {
@@ -1906,7 +1906,7 @@ mal_in01,116,168,0	script	Dry Machine#mal	2_SLOT_MACHINE,{
 	close;
 }
 
--	script	Suspicious Sand Pile#0	-1,{
+-	script	Suspicious Sand Pile#0	FAKE_NPC,{
 	if (.off) end;	// Official script uses a 1-second timer to disable sand piles. Added to prevent abuse.
 	if (MaxWeight - Weight < 1000) {
 		mes "Your inventory is too heavy to proceed. Come back after lightening your load.";
@@ -1954,7 +1954,7 @@ malangdo,136,122,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#8	4_SO
 malangdo,152,143,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#9	4_SOIL
 malangdo,242,175,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#10	4_SOIL
 
--	script	Water Sand0#mal	-1,{
+-	script	Water Sand0#mal	FAKE_NPC,{
 OnInit:
 	disablenpc strnpcinfo(0);
 	end;
@@ -1974,16 +1974,16 @@ OnTimer30000:
 	donpcevent strnpcinfo(0)+"::OnDisable";
 	end;
 }
--	duplicate(Water Sand0#mal)	Water Sand1#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand2#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand3#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand4#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand5#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand6#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand7#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand8#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand9#mal	-1
--	duplicate(Water Sand0#mal)	Water Sand10#mal	-1
+-	duplicate(Water Sand0#mal)	Water Sand1#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand2#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand3#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand4#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand5#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand6#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand7#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand8#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand9#mal	FAKE_NPC
+-	duplicate(Water Sand0#mal)	Water Sand10#mal	FAKE_NPC
 
 mal_dun01,136,120,6	script	Linguist Devore#mald	4_CAT_MERMASTER,{
 	end;
@@ -2602,7 +2602,7 @@ mal_dun01,133,125,5	script	Star Candy#mal	4_F_STARFISHGIRL,{
 	close;
 }
 
--	script	#skin_mal	-1,{
+-	script	#skin_mal	FAKE_NPC,{
 	.@index = atoi(strnpcinfo(2));
 	switch(.@index) {
 		case 29: .@str$ = "dry"; break;
@@ -3172,7 +3172,7 @@ malangdo,197,120,5	script	A Foolish Cat#ml	4_CAT_SAILOR3,{
 	close;
 }
 
-malangdo,196,120,0	script	#ml1	-1,2,2,{
+malangdo,196,120,0	script	#ml1	FAKE_NPC,2,2,{
 OnTouch:
 	if (malang_bad_guys == 1 || malang_bad_guys == 2) {
 		mes "You hear a conversation between the Suspious Dealers.";
@@ -3231,7 +3231,7 @@ OnTouch:
 	end;
 }
 
-malangdo,155,179,0	script	#ml2	-1,2,2,{
+malangdo,155,179,0	script	#ml2	FAKE_NPC,2,2,{
 OnTouch:
 	if (malang_bad_guys == 2 || malang_bad_guys == 3) {
 		mes "There's a memo.";
@@ -3388,7 +3388,7 @@ mal_in02,184,72,3	script	Gozangee#ml	4_CAT_SAILOR4,{
 	close;
 }
 
-mal_in02,184,77,0	script	#ml3	-1,2,2,{
+mal_in02,184,77,0	script	#ml3	FAKE_NPC,2,2,{
 OnTouch:
 	if (checkweight(Knife,1) == 0) {
 		mes "- You have too many items. -";
@@ -5481,7 +5481,7 @@ L_Viewpoint:
 	return;
 }
 
--	script	#malangdo_compass	-1,{
+-	script	#malangdo_compass	FAKE_NPC,{
 	if (countitem(Bravery_Card_A) == 0) {
 		mes "There is a strange machine.";
 		mes "This is the Duruduru compass from the Meow Bravery Team.";

@@ -778,7 +778,7 @@ S_Erasequest2:
 	return;
 }
 
--	script	Trace of an adventurer	-1,{
+-	script	Trace of an adventurer	FAKE_NPC,{
 	.@quest = 13106 + atoi(strnpcinfo(2));
 	.@delay = 13110 + atoi(strnpcinfo(2));
 	if (questprogress(.@quest) == 1) {

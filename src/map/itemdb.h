@@ -64,6 +64,8 @@ enum item_itemid {
 	ITEMID_BRANCH_OF_DEAD_TREE   = 604,
 	ITEMID_ANODYNE               = 605,
 	ITEMID_ALOEBERA              = 606,
+	ITEMID_MAGNIFIER             = 611,
+	ITEMID_POISON_BOTTLE         = 678,
 	ITEMID_EMPTY_BOTTLE          = 713,
 	ITEMID_EMPERIUM              = 714,
 	ITEMID_YELLOW_GEMSTONE       = 715,
@@ -95,6 +97,10 @@ enum item_itemid {
 	ITEMID_ANGRA_MANYU           = 1599,
 	ITEMID_STRANGE_EMBRYO        = 6415,
 	ITEMID_FACE_PAINT            = 6120,
+	ITEMID_SCARLET_POINT         = 6360,
+	ITEMID_INDIGO_POINT          = 6361,
+	ITEMID_YELLOW_WISH_POINT     = 6362,
+	ITEMID_LIME_GREEN_POINT      = 6363,
 	ITEMID_STONE                 = 7049,
 	ITEMID_FIRE_BOTTLE           = 7135,
 	ITEMID_ACID_BOTTLE           = 7136,
@@ -104,6 +110,8 @@ enum item_itemid {
 	ITEMID_FRAGMENT_OF_CRYSTAL   = 7321,
 	ITEMID_SKULL_                = 7420,
 	ITEMID_TOKEN_OF_SIEGFRIED    = 7621,
+	ITEMID_GOLD_KEY77            = 7782,
+	ITEMID_SILVER_KEY77          = 7783,
 	ITEMID_TRAP_ALLOY            = 7940,
 	ITEMID_RED_POUCH_OF_SURPRISE = 12024,
 	ITEMID_BLOODY_DEAD_BRANCH    = 12103,
@@ -129,6 +137,7 @@ enum item_itemid {
 	ITEMID_MAGIC_CASTLE          = 12308,
 	ITEMID_BULGING_HEAD          = 12309,
 	ITEMID_THICK_MANUAL50        = 12312,
+	ITEMID_NOVICE_MAGNIFIER      = 12325,
 	ITEMID_ANCILLA               = 12333,
 	ITEMID_REPAIR_A              = 12392,
 	ITEMID_REPAIR_B              = 12393,
@@ -147,6 +156,9 @@ enum item_itemid {
 	ITEMID_WOB_LOCAL             = 14585,
 	ITEMID_SIEGE_TELEPORT_SCROLL = 14591,
 	ITEMID_JOB_MANUAL50          = 14592,
+	ITEMID_PILEBUNCKER_S         = 16030,
+	ITEMID_PILEBUNCKER_P         = 16031,
+	ITEMID_PILEBUNCKER_T         = 16032,
 };
 
 enum cards_item_list {
@@ -528,13 +540,14 @@ struct item_data {
 #define itemdb_canrefine(n)   (!itemdb->search(n)->flag.no_refine)
 
 #define itemdb_is_rune(n)        (((n) >= ITEMID_NAUTHIZ && (n) <= ITEMID_HAGALAZ) || (n) == ITEMID_LUX_ANIMA)
-#define itemdb_is_element(n)     ((n) >= ITEMID_BOODY_RED && (n) <= ITEMID_YELLOW_LIVE)
+#define itemdb_is_element(n)     ((n) >= ITEMID_SCARLET_POINT && (n) <= ITEMID_LIME_GREEN_POINT)
 #define itemdb_is_spellbook(n)   ((n) >= ITEMID_MAGIC_BOOK_FB && (n) <= ITEMID_MAGIC_BOOK_DL)
 #define itemdb_is_poison(n)      ((n) >= ITEMID_POISON_PARALYSIS && (n) <= ITEMID_POISON_FATIGUE)
 #define itemid_isgemstone(n)     ((n) >= ITEMID_YELLOW_GEMSTONE && (n) <= ITEMID_BLUE_GEMSTONE)
 #define itemdb_iscashfood(n)     ((n) >= ITEMID_STR_DISH10_ && (n) <= ITEMID_VIT_DISH10_)
 #define itemdb_is_GNbomb(n)      ((n) >= ITEMID_APPLE_BOMB && (n) <= ITEMID_VERY_HARD_LUMP)
 #define itemdb_is_GNthrowable(n) ((n) >= ITEMID_MYSTERIOUS_POWDER && (n) <= ITEMID_BLACK_THING_TO_THROW)
+#define itemid_is_pilebunker(n)  ((n) == ITEMID_PILEBUNCKER || (n) == ITEMID_PILEBUNCKER_P || (n) == ITEMID_PILEBUNCKER_S || (n) == ITEMID_PILEBUNCKER_T)
 #define itemdb_is_shadowequip(n) ((n) & (EQP_SHADOW_ARMOR|EQP_SHADOW_WEAPON|EQP_SHADOW_SHIELD|EQP_SHADOW_SHOES|EQP_SHADOW_ACC_R|EQP_SHADOW_ACC_L))
 #define itemdb_is_costumeequip(n) ((n) & (EQP_COSTUME_HEAD_TOP|EQP_COSTUME_HEAD_MID|EQP_COSTUME_HEAD_LOW|EQP_COSTUME_GARMENT))
 
@@ -615,7 +628,7 @@ struct itemdb_interface {
 	int (*isidentified) (int nameid);
 	int (*isidentified2) (struct item_data *data);
 	int (*combo_split_atoi) (char *str, int *val);
-	void (*read_combos) ();
+	void (*read_combos) (void);
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
 	void (*readdb_additional_fields) (int itemid, config_setting_t *it, int n, const char *source);

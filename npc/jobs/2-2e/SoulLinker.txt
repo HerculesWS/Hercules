@@ -349,7 +349,7 @@ OnInit:
 	end;
 }
 
-job_soul,30,31,0	script	Maia#link2::SLTester	-1,3,3,{
+job_soul,30,31,0	script	Maia#link2::SLTester	FAKE_NPC,3,3,{
 OnTouch:
 	if (Class == Job_Taekwon) {
 		if (JobLevel < 40) {

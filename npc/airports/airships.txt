@@ -58,7 +58,7 @@ OnTouch:
 
 airplane,243,29,0	duplicate(#AirshipWarp-1)	#AirshipWarp-2	WARPNPC,1,1
 
-airplane,1,1,0	script	Domestic_Airship	-1,{
+airplane,1,1,0	script	Domestic_Airship	FAKE_NPC,{
 	end;
 OnInit:
 	initnpctimer;
@@ -693,7 +693,7 @@ OnUnhide:
 
 airplane_01,243,29,0	duplicate(#AirshipWarp-3)	#AirshipWarp-4	WARPNPC,1,1
 
-airplane_01,1,1,0	script	International_Airship	-1,{
+airplane_01,1,1,0	script	International_Airship	FAKE_NPC,{
 	end;
 OnInit:
 OnEnable:

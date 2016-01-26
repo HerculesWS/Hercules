@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -41,7 +41,6 @@
  * Defines
  **/
 #define MAX_PC_BONUS 10
-#define MAX_PC_SKILL_REQUIRE 5
 #define MAX_PC_FEELHATE 3
 #define MAX_PC_DEVOTION 5          ///< Max amount of devotion targets
 #define PVP_CALCRANK_INTERVAL 1000 ///< PVP calculation interval
@@ -380,6 +379,8 @@ BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of st
 		short add_steal_rate;
 		short add_heal_rate, add_heal2_rate;
 		short sp_gain_value, hp_gain_value, magic_sp_gain_value, magic_hp_gain_value;
+		short hp_vanish_rate;
+		short hp_vanish_per, hp_vanish_trigger;
 		short sp_vanish_rate;
 		short sp_vanish_per, sp_vanish_trigger;
 		unsigned short unbreakable; // chance to prevent ANY equipment breaking [celest]
@@ -718,17 +719,19 @@ END_ZEROED_BLOCK;
 #define pc_can_give_items(sd) ( pc_has_permission((sd),PC_PERM_TRADE) )
 #define pc_can_give_bound_items(sd) ( pc_has_permission((sd),PC_PERM_TRADE_BOUND) )
 
+struct skill_tree_requirement {
+	short id;
+	unsigned short idx;
+	unsigned char lv;
+};
+
 struct skill_tree_entry {
 	short id;
 	unsigned short idx;
 	unsigned char max;
 	unsigned char joblv;
 	short inherited;
-	struct {
-		short id;
-		unsigned short idx;
-		unsigned char lv;
-	} need[MAX_PC_SKILL_REQUIRE];
+	VECTOR_DECL(struct skill_tree_requirement) need;
 }; // Celest
 
 struct sg_data {
@@ -1057,6 +1060,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*autosave) (int tid, int64 tick, int id, intptr_t data);
 	int (*follow_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*read_skill_tree) (void);
+	void (*clear_skill_tree) (void);
 	int (*isUseitem) (struct map_session_data *sd,int n);
 	int (*show_steal) (struct block_list *bl,va_list ap);
 	int (*checkcombo) (struct map_session_data *sd, struct item_data *data );
@@ -1091,6 +1095,8 @@ END_ZEROED_BLOCK; /* End */
 
 	int (*check_job_name) (const char *name);
 	void (*update_idle_time) (struct map_session_data* sd, enum e_battle_config_idletime type);
+	
+	int (*have_magnifier) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

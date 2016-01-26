@@ -97,7 +97,7 @@ prt_in,243,168,4	script	Jovovich	4_F_02,{
 						close;
 					}
 
-					if (.@headpalette == getlook(VAR_HEADPALETTE)) {
+					if (.@headpalette == getlook(LOOK_HAIR_COLOR)) {
 						mes "[Hairdresser Jovovich]";
 						mes "Eh? But that's the hair color you already have. Please choose a different color.";
 						next;
@@ -130,7 +130,7 @@ prt_in,243,168,4	script	Jovovich	4_F_02,{
 						case 8: delitem Scarlet_Dyestuffs,1; break;
 						}
 						Zeny -= 1000;
-						setlook VAR_HEADPALETTE,.@headpalette;
+						setlook LOOK_HAIR_COLOR,.@headpalette;
 						.@choose_success = 1;
 						break;
 					}
@@ -275,7 +275,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 						}
 						break;
 					}
-					if (getlook(VAR_HEADPALETTE) == .@headpalette) {
+					if (getlook(LOOK_HAIR_COLOR) == .@headpalette) {
 						mes "[Rossa]";
 						mes "Hmm, your hair color";
 						mes "is still fine, so there's";
@@ -388,7 +388,7 @@ lhz_in02,100,134,3	script	Hair Dyer#lich	4_F_EINWOMAN,{
 						else if (.@headpalette == 6) delitem White_Dyestuffs,1;
 						else if (.@headpalette == 7) delitem Black_Dyestuffs,1;
 						Zeny -= 1000;
-						setlook VAR_HEADPALETTE,.@headpalette;
+						setlook LOOK_HAIR_COLOR,.@headpalette;
 						.@choose_success = 1;
 						break;
 					}

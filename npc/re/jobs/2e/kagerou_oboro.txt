@@ -1139,7 +1139,7 @@ function	script	F_KO_Survival_rps	{
 }
 
 //- Templates -
--	script	Sight#ko_trap	-1,{
+-	script	Sight#ko_trap	FAKE_NPC,{
 	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(2),3,4));
 	end;
 OnTouch:
@@ -1160,7 +1160,7 @@ OnTouch:
 	end;
 }
 
--	script	Sight#ko_trap2	-1,{
+-	script	Sight#ko_trap2	FAKE_NPC,{
 	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(2),3,4));
 	end;
 OnTouch:
@@ -1205,7 +1205,7 @@ OnTouch:
 	end;
 }
 
--	script	Sight#ko_heal	-1,{
+-	script	Sight#ko_heal	FAKE_NPC,{
 	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(2),3,4));
 	end;
 OnTouch:
@@ -1223,7 +1223,7 @@ OnTouch:
 	end;
 }
 
--	script	Sight#ko_curse	-1,{
+-	script	Sight#ko_curse	FAKE_NPC,{
 	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(2),3,4));
 	end;
 OnTouch:
@@ -1268,7 +1268,7 @@ OnTouch:
 	}
 }
 
--	script	Sight#ko_gravity	-1,{
+-	script	Sight#ko_gravity	FAKE_NPC,{
 	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(2),3,4));
 	end;
 OnTouch:

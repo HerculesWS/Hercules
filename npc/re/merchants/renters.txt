@@ -167,7 +167,7 @@ prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 }
 
 //== Magic Gear Renter =====================================
--	script	::mgm	-1,{
+-	script	::mgm	FAKE_NPC,{
 	mes "[Magic Gear Master]";
 	if (Class == Job_Mechanic || Class == Job_Mechanic_T || Class == Job_Baby_Mechanic) {
 		mes "Welcome, Mechanic.";

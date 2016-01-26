@@ -203,7 +203,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 	close;
 }
 
--	script	Eden Teleport Officer#0::eto	-1,{
+-	script	Eden Teleport Officer#0::eto	FAKE_NPC,{
 	mes "[Eden Teleport Officer]";
 	mes "Those who are wandering around this strange world with aimless eyes listen up and come to me!";
 	mes "Eden group is here to help you and will show you the great future.";

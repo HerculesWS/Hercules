@@ -53,7 +53,7 @@
 //= "Vote Globalvar Girl#yuno" NPC at the end of the file.
 //=========================================================================
 
-einbroch,246,70,0	script	Vote Timer#ein	-1,{
+einbroch,246,70,0	script	Vote Timer#ein	FAKE_NPC,{
 OnInit:
 	if ($dts) {
 		$dts = 0;
@@ -225,7 +225,7 @@ OnTimer60000:
 	end;
 }
 
-einbroch,245,71,0	script	Vote Timer2#ein	-1,{
+einbroch,245,71,0	script	Vote Timer2#ein	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -246,7 +246,7 @@ OnTimer60000:
 	end;
 }
 
-einbroch,246,71,0	script	Vote Timer3#ein	-1,{
+einbroch,246,71,0	script	Vote Timer3#ein	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -268,7 +268,7 @@ OnTimer60000:
 	end;
 }
 
-einbroch,247,71,0	script	Vote Timer4#ein	-1,{
+einbroch,247,71,0	script	Vote Timer4#ein	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -1104,7 +1104,7 @@ alberta,114,70,6	duplicate(VotingStaffCCE)	Cool Event Staff#alb	4_M_ZONDAMAN
 aldebaran,138,102,6	duplicate(VotingStaffCCE)	Cool Event Staff#alde	4_M_ZONDAMAN
 lighthalzen,154,60,6	duplicate(VotingStaffCCE)	Cool Event Staff#lhz	4_M_ZONDAMAN
 
-yuno,103,225,0	script	Scrutiny Association#5	-1,{
+yuno,103,225,0	script	Scrutiny Association#5	FAKE_NPC,{
 OnInit:
 	initnpctimer;
 	end;
@@ -1122,7 +1122,7 @@ OnTimer7200000:
 	end;
 }
 
-einbroch,248,71,0	script	Scrutiny Association#6	-1,{
+einbroch,248,71,0	script	Scrutiny Association#6	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;
@@ -1145,7 +1145,7 @@ OnTimer15000:
 	end;
 }
 
-einbroch,249,71,0	script	Scrutiny Association#7	-1,{
+einbroch,249,71,0	script	Scrutiny Association#7	FAKE_NPC,{
 OnEnable:
 	initnpctimer;
 	end;

@@ -484,7 +484,7 @@ aldeba_in,168,175,4	script	Monster Tamer#alde	4_M_TELEPORTER,{
 	}
 }
 
--	script	::MonsterTamer_izlude	-1,{
+-	script	::MonsterTamer_izlude	FAKE_NPC,{
 	mes "[Shogo]";
 	mes "Are you pre-occupied with";
 	mes "gathering items for monsters";

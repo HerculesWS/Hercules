@@ -1325,7 +1325,7 @@ OnTouch:
 	}
 }
 
-in_rogue,200,389,0	script	gen_ro#1	-1,3,3,{
+in_rogue,200,389,0	script	gen_ro#1	FAKE_NPC,3,3,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",200,389,"Zombie",1015,1,"gen_ro#1::OnMyMobDead";
@@ -1346,7 +1346,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,100,389,0	script	gen_ro#2	-1,3,3,{
+in_rogue,100,389,0	script	gen_ro#2	FAKE_NPC,3,3,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",100,389,"Mummy",1041,1,"gen_ro#2::OnMyMobDead";
@@ -1364,7 +1364,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,150,389,0	script	gen_ro#3	-1,3,3,{
+in_rogue,150,389,0	script	gen_ro#3	FAKE_NPC,3,3,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",145,389,"Zombie",1015,1,"gen_ro#3::OnMyMobDead";
@@ -1383,7 +1383,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,250,389,0	script	gen_ro#4	-1,3,3,{
+in_rogue,250,389,0	script	gen_ro#4	FAKE_NPC,3,3,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",200,389,"Abysmal Knight",1219,1,"gen_ro#4::OnMyMobDead";
@@ -1673,7 +1673,7 @@ OnTouch:
 	end;
 }
 
-in_rogue,15,184,0	script	mob_rogue#1	-1,8,1,{
+in_rogue,15,184,0	script	mob_rogue#1	FAKE_NPC,8,1,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",14,187,"Zombie",1015,1,"mob_rogue#1::OnMyMobDead";
@@ -1695,7 +1695,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,15,273,0	script	mob_rogue#2	-1,8,1,{
+in_rogue,15,273,0	script	mob_rogue#2	FAKE_NPC,8,1,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",15,276,"Mummy",1041,1,"mob_rogue#2::OnMyMobDead";
@@ -1714,7 +1714,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,15,333,0	script	mob_rogue#3	-1,8,1,{
+in_rogue,15,333,0	script	mob_rogue#3	FAKE_NPC,8,1,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",15,336,"Zombie",1015,1,"mob_rogue#3::OnMyMobDead";
@@ -1737,7 +1737,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,39,341,0	script	mob_rogue#4	-1,1,8,{
+in_rogue,39,341,0	script	mob_rogue#4	FAKE_NPC,1,8,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",39,341,"Mummy",1041,1,"mob_rogue#4::OnMyMobDead";
@@ -1757,7 +1757,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,102,334,0	script	mob_rogue#5	-1,1,4,{
+in_rogue,102,334,0	script	mob_rogue#5	FAKE_NPC,1,4,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",92,334,"Khalitzburg",1132,1,"mob_rogue#5::OnMyMobDead";
@@ -1777,7 +1777,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,58,309,0	script	mob_rogue#6	-1,4,1,{
+in_rogue,58,309,0	script	mob_rogue#6	FAKE_NPC,4,1,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",57,301,"Khalitzburg",1132,1,"mob_rogue#6::OnMyMobDead";
@@ -1797,7 +1797,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,101,264,0	script	mob_rogue#7	-1,5,5,{
+in_rogue,101,264,0	script	mob_rogue#7	FAKE_NPC,5,5,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",101,264,"Abysmal Knight",1219,1,"mob_rogue#7::OnMyMobDead";
@@ -1815,7 +1815,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,140,312,0	script	mob_rogue#8	-1,5,5,{
+in_rogue,140,312,0	script	mob_rogue#8	FAKE_NPC,5,5,{
 OnTouch:
 	if (BaseJob == Job_Thief)
 		monster "in_rogue",140,312,"Abysmal Knight",1219,1,"mob_rogue#8::OnMyMobDead";
@@ -1831,7 +1831,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,139,246,0	script	mob_rogue#9	-1,4,4,{
+in_rogue,139,246,0	script	mob_rogue#9	FAKE_NPC,4,4,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",139,246,"Zombie",1015,1,"mob_rogue#9::OnMyMobDead";
@@ -1853,7 +1853,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,197,249,0	script	mob_rogue#10	-1,1,8,{
+in_rogue,197,249,0	script	mob_rogue#10	FAKE_NPC,1,8,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",176,211,"Ghoul",1036,1,"mob_rogue#10::OnMyMobDead";
@@ -1888,7 +1888,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,96,205,0	script	mob_rogue#11	-1,1,8,{
+in_rogue,96,205,0	script	mob_rogue#11	FAKE_NPC,1,8,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		donpcevent "mob_rogue#7::OnDisable";
@@ -1901,7 +1901,7 @@ OnTouch:
 	end;
 }
 
-in_rogue,86,187,0	script	mob_rogue#12	-1,1,8,{
+in_rogue,86,187,0	script	mob_rogue#12	FAKE_NPC,1,8,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",90,187,"Mummy",1041,1,"mob_rogue#12::OnMyMobDead";
@@ -1920,7 +1920,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,223,187,0	script	mob_rogue#13	-1,1,8,{
+in_rogue,223,187,0	script	mob_rogue#13	FAKE_NPC,1,8,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",236,186,"Abysmal Knight",1219,1,"mob_rogue#13::OnMyMobDead";
@@ -1940,7 +1940,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,233,207,0	script	mob_rogue#14	-1,8,3,{
+in_rogue,233,207,0	script	mob_rogue#14	FAKE_NPC,8,3,{
 OnTouch:
 	if (BaseJob == Job_Thief)
 		donpcevent "mob_rogue#13::OnDisable";
@@ -1949,7 +1949,7 @@ OnTouch:
 	end;
 }
 
-in_rogue,244,319,0	script	mob_rogue#15	-1,1,8,{
+in_rogue,244,319,0	script	mob_rogue#15	FAKE_NPC,1,8,{
 OnTouch:
 	if (BaseJob == Job_Thief) {
 		monster "in_rogue",240,319,"Mummy",1041,1,"mob_rogue#15::OnMyMobDead";
@@ -1971,7 +1971,7 @@ OnMyMobDead:
 	end;
 }
 
-in_rogue,334,319,0	script	mob_rogue#16	-1,8,8,{
+in_rogue,334,319,0	script	mob_rogue#16	FAKE_NPC,8,8,{
 OnTouch:
 	if (BaseJob == Job_Thief)
 		donpcevent "mob_rogue#15::OnDisable";
@@ -1980,7 +1980,7 @@ OnTouch:
 	end;
 }
 
-in_rogue,3,3,0	script	resetter#rogue	-1,{
+in_rogue,3,3,0	script	resetter#rogue	FAKE_NPC,{
 OnTimer500000:
 	donpcevent "mob_rogue#1::OnDisable";
 	donpcevent "mob_rogue#2::OnDisable";

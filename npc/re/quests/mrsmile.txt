@@ -31,11 +31,15 @@
 //================= Description ===========================================
 //= Trade Clover, Fluff and Jellopy for a Mr. Smile mask.
 //================= Current Version =======================================
-//= 1.1
+//= 1.2
 //=========================================================================
 
+//== Izlude ================================================
 izlude,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz	4_F_03
 izlude_a,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_a	4_F_03
 izlude_b,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_b	4_F_03
 izlude_c,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_c	4_F_03
 izlude_d,125,175,4	duplicate(SmileHelper)	Smile Assistance#iz_d	4_F_03
+
+//== Morroc ================================================
+morocc,159,107,4	duplicate(SmileHelper)	Smile Assistance#moc1	4_F_03

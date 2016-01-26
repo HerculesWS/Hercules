@@ -32,11 +32,11 @@
 //= Sells some 3rd Job related items:
 //= - Poison Herbs, Rune Stones, Rare Herbs, Points
 //================= Current Version =======================================
-//= 1.5
+//= 1.6
 //=========================================================================
 
 //== Poison Herb Merchants (Guillotine Cross) ==============
--	script	::phs	-1,{
+-	script	::phs	FAKE_NPC,{
 	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -97,11 +97,11 @@
 	close;
 }
 job3_guil01,79,96,3	duplicate(phs)	Poison Herb Merchant	4_F_YUNYANG
-morocc,191,94,4	duplicate(phs)	Poison Herb Merchant#moc	4_F_YUNYANG	//Official: (190,96) -> in a wall
+morocc,193,100,4	duplicate(phs)	Poison Herb Merchant#moc	4_F_YUNYANG
 lhz_in02,16,205,4	duplicate(phs)	Poison Herb Merchant#lhz	4_F_YUNYANG
 
 //== Rune Stone Merchants (Rune Knight) ====================
--	script	::runesale	-1,{
+-	script	::runesale	FAKE_NPC,{
 	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
@@ -230,7 +230,7 @@ job3_guil01,91,93,3	script	Rare Herb Collector	1_M_03,{
 }
 
 //== Point Merchants (Sorcerer) ============================
--	script	::pss	-1,{
+-	script	::pss	FAKE_NPC,{
 	if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 2000) {
 		mes "- Wait a minute !! -";
 		mes "- Currently you're carrying -";
