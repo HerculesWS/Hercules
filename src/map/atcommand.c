@@ -260,24 +260,28 @@ ACMD(send)
 
 	if (type >= MIN_PACKET_DB && type <= MAX_PACKET_DB) {
 		int off = 2;
+		if (clif->packet(type) == NULL) {
+			// unknown packet - ERROR
+			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,905), type); // Unknown packet: 0x%x
+			clif->message(fd, atcmd_output);
+			return false;
+		}
+		
 		if (len) {
 			// show packet length
 			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,904), type, clif->packet(type)->len); // Packet 0x%x length: %d
 			clif->message(fd, atcmd_output);
 			return true;
 		}
-
+		
 		len = clif->packet(type)->len;
-		if (len == 0) {
-			// unknown packet - ERROR
-			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,905), type); // Unknown packet: 0x%x
-			clif->message(fd, atcmd_output);
-			return false;
-		} else if (len == -1) {
+		
+		if (len == -1) {
 			// dynamic packet
 			len = SHRT_MAX-4; // maximum length
 			off = 4;
 		}
+		
 		WFIFOHEAD(sd->fd, len);
 		WFIFOW(sd->fd,0)=TOW(type);
 
