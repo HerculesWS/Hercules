@@ -9859,10 +9859,8 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 	// Chat logging type 'O' / Global Chat
 	logs->chat(LOG_CHAT_GLOBAL, 0, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, message);
 
-#ifdef PCRE_SUPPORT
 	// trigger listening npcs
 	map->foreachinrange(npc_chat->sub, &sd->bl, AREA_SIZE, BL_NPC, text, textlen, &sd->bl);
-#endif
 }
 
 void clif_parse_MapMove(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
