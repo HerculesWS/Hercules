@@ -33,11 +33,16 @@ prontera,144,174,4	script	Bound Items	4_M_JP_MID,{
 		for(.@i = 0; .@i < @inventorylist_count; .@i++) {
 			//We only show the items that you allow to be bound
 			//Allows equipment (default) or non-rental item
-			if( @inventorylist_bound[.@i] || @inventorylist_expire[.@i] )
+			if (@inventorylist_bound[.@i] || @inventorylist_expire[.@i])
 				continue;
-			if(((.allowbind & 1) && (getiteminfo(@inventorylist_id[.@i],2) == (4|5))) ||
-				((.allowbind & 2) && (getiteminfo(@inventorylist_id[.@i],2) == (0|2|11|18))) ||
-				((.allowbind & 4) && (getiteminfo(@inventorylist_id[.@i],2) == (3|6|7|8|10)))
+			if (((.allowbind & 1) && (getiteminfo(@inventorylist_id[.@i], 2) == IT_WEAPON || getiteminfo(@inventorylist_id[.@i], 2) == IT_ARMOR)) ||
+				((.allowbind & 2) && 
+				(getiteminfo(@inventorylist_id[.@i], 2) == IT_HEALING || getiteminfo(@inventorylist_id[.@i], 2) == IT_USABLE ||
+				 getiteminfo(@inventorylist_id[.@i], 2) == IT_DELAYCONSUME || getiteminfo(@inventorylist_id[.@i], 2) == IT_CASH)) ||
+				((.allowbind & 4) &&
+				(getiteminfo(@inventorylist_id[.@i], 2) == IT_ETC || getiteminfo(@inventorylist_id[.@i], 2) == IT_CARD ||
+				getiteminfo(@inventorylist_id[.@i], 2) == IT_PETEGG || getiteminfo(@inventorylist_id[.@i], 2) == IT_PETARMOR ||
+				getiteminfo(@inventorylist_id[.@i], 2) == IT_AMMO))
 			) {
 				set .@bindlist$, .@bindlist$ + ":" + getitemname(@inventorylist_id[.@i]) + " - " + @inventorylist_id[.@i];
 				set .@bindlist[.@j],.@i;
