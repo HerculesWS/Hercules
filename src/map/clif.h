@@ -58,7 +58,6 @@ struct view_data;
  * Defines
  **/
 #define packet_len(cmd) packet_db[cmd].len
-#define P2PTR(fd) RFIFO2PTR(fd)
 #define clif_menuskill_clear(sd) ((sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0)
 #define clif_disp_onlyself(sd,mes,len) clif->disp_message( &(sd)->bl, (mes), (len), SELF )
 #define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
@@ -73,12 +72,6 @@ struct view_data;
 /**
  * Enumerations
  **/
-enum {// packet DB
-	MIN_PACKET_DB  = 0x0064,
-	MAX_PACKET_DB  = 0x0F00,
-	MAX_PACKET_POS = 20,
-};
-
 typedef enum send_target {
 	ALL_CLIENT,
 	ALL_SAMEMAP,

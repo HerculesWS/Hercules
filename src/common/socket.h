@@ -77,6 +77,11 @@ struct hplugin_data_store;
 
 /* [Ind/Hercules] */
 #define RFIFO2PTR(fd) (void*)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos)
+#define RP2PTR(fd) RFIFO2PTR(fd)
+
+/* [Hemagx/Hercules] */
+#define WFIFO2PTR(fd) (void*)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_pos)
+#define WP2PTR(fd) WFIFO2PTR(fd)
 
 // buffer I/O macros
 #define RBUFP(p,pos) (((uint8*)(p)) + (pos))
