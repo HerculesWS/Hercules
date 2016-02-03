@@ -13631,25 +13631,27 @@ BUILDIN(npcskilleffect) {
  * Special effects [Valaris]
  *------------------------------------------*/
 BUILDIN(specialeffect) {
-	struct block_list *bl=map->id2bl(st->oid);
+	struct block_list *bl = NULL;
 	int type = script_getnum(st,2);
 	enum send_target target = script_hasdata(st,3) ? (send_target)script_getnum(st,3) : AREA;
-
-	if(bl==NULL)
-		return true;
 
 	if (script_hasdata(st,4)) {
 		struct npc_data *nd = npc->name2id(script_getstr(st,4));
 		if (nd != NULL)
-			clif->specialeffect(&nd->bl, type, target);
+			bl = &nd->bl;
 	} else {
-		if (target == SELF) {
-			struct map_session_data *sd = script->rid2sd(st);
-			if (sd != NULL)
-				clif->specialeffect_single(bl,type,sd->fd);
-		} else {
-			clif->specialeffect(bl, type, target);
-		}
+		bl = map->id2bl(st->oid);
+	}
+
+	if (bl == NULL)
+		return true;
+
+	if (target == SELF) {
+		struct map_session_data *sd = script->rid2sd(st);
+		if (sd != NULL)
+			clif->specialeffect_single(bl, type, sd->fd);
+	} else {
+		clif->specialeffect(bl, type, target);
 	}
 
 	return true;
