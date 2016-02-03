@@ -394,6 +394,14 @@ enum mob_id {
 	MOBID_MIMING           = 2137, ///<           MIMING / Miming
 
 	MOBID_KO_KAGE          = 2308, ///<          KO_KAGE / Zanzou
+
+	// Dummy Monsters
+	MOBID_DUMMY_10         = 2408, ///<         DUMMY_10 / Lv 10
+	MOBID_DUMMY_50         = 2409, ///<         DUMMY_50 / Lv 50
+	MOBID_DUMMY_100        = 2410, ///<        DUMMY_100 / Lv 100
+	MOBID_DUMMY_150        = 2411, ///<        DUMMY_150 / Lv 150
+	//...
+	MOBID_DUMMY_10_FIRE    = 2413, ///<    DUMMY_10_FIRE / Lv 10 (Fire)
 };
 
 // The data structures for storing delayed item drops
