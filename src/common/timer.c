@@ -491,6 +491,7 @@ int do_timer(int64 tick)
 				default:
 				case TIMER_ONCE_AUTODEL:
 					timer_data[tid].type = 0;
+					timer_data[tid].func = NULL;
 					if (free_timer_list_pos >= free_timer_list_max) {
 						free_timer_list_max += 256;
 						RECREATE(free_timer_list,int,free_timer_list_max);
