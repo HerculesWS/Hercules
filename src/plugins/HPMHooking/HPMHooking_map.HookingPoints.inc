@@ -1783,6 +1783,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mob->readdb, HP_mob_readdb) },
 	{ HP_POP(mob->lookup_const, HP_mob_lookup_const) },
 	{ HP_POP(mob->get_const, HP_mob_get_const) },
+	{ HP_POP(mob->db_validate_entry, HP_mob_db_validate_entry) },
 	{ HP_POP(mob->read_libconfig, HP_mob_read_libconfig) },
 	{ HP_POP(mob->read_db_additional_fields, HP_mob_read_db_additional_fields) },
 	{ HP_POP(mob->read_db_sub, HP_mob_read_db_sub) },
