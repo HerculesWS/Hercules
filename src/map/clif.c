@@ -10396,7 +10396,7 @@ void clif_parse_EquipItem(int fd,struct map_session_data *sd) __attribute__((non
 /// 00a9 <index>.W <position>.W
 /// 0998 <index>.W <position>.L
 void clif_parse_EquipItem(int fd,struct map_session_data *sd) {
-	struct packet_equip_item *p = P2PTR(fd);
+	struct packet_equip_item *p = RP2PTR(fd);
 
 	if(pc_isdead(sd)) {
 		clif->clearunit_area(&sd->bl,CLR_DEAD);
@@ -13377,7 +13377,7 @@ void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd) __attribute
 /// 013f <item/mob name>.24B
 /// 09ce <item/mob name>.100B [Ind/Yommy<3]
 void clif_parse_GM_Monster_Item(int fd, struct map_session_data *sd) {
-	struct packet_gm_monster_item *p = P2PTR(fd);
+	struct packet_gm_monster_item *p = RP2PTR(fd);
 	int i, count;
 	char *item_monster_name;
 	struct item_data *item_array[10];
@@ -17692,7 +17692,7 @@ void clif_bgqueue_notice_delete(struct map_session_data *sd, enum BATTLEGROUNDS_
 
 void clif_parse_bgqueue_register(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 void clif_parse_bgqueue_register(int fd, struct map_session_data *sd) {
-	struct packet_bgqueue_register *p = P2PTR(fd);
+	struct packet_bgqueue_register *p = RP2PTR(fd);
 	struct bg_arena *arena = NULL;
 	if( !bg->queue_on ) return; /* temp, until feature is complete */
 
@@ -17730,7 +17730,7 @@ void clif_bgqueue_update_info(struct map_session_data *sd, unsigned char arena_i
 
 void clif_parse_bgqueue_checkstate(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 void clif_parse_bgqueue_checkstate(int fd, struct map_session_data *sd) {
-	struct packet_bgqueue_checkstate *p = P2PTR(fd);
+	struct packet_bgqueue_checkstate *p = RP2PTR(fd);
 
 	nullpo_retv(sd);
 	if ( sd->bg_queue.arena && sd->bg_queue.type ) {
@@ -17741,7 +17741,7 @@ void clif_parse_bgqueue_checkstate(int fd, struct map_session_data *sd) {
 
 void clif_parse_bgqueue_revoke_req(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 void clif_parse_bgqueue_revoke_req(int fd, struct map_session_data *sd) {
-	struct packet_bgqueue_revoke_req *p = P2PTR(fd);
+	struct packet_bgqueue_revoke_req *p = RP2PTR(fd);
 
 	if( sd->bg_queue.arena )
 		bg->queue_pc_cleanup(sd);
@@ -17751,7 +17751,7 @@ void clif_parse_bgqueue_revoke_req(int fd, struct map_session_data *sd) {
 
 void clif_parse_bgqueue_battlebegin_ack(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 void clif_parse_bgqueue_battlebegin_ack(int fd, struct map_session_data *sd) {
-	struct packet_bgqueue_battlebegin_ack *p = P2PTR(fd);
+	struct packet_bgqueue_battlebegin_ack *p = RP2PTR(fd);
 	struct bg_arena *arena;
 
 	if( !bg->queue_on ) return; /* temp, until feature is complete */
@@ -17890,7 +17890,7 @@ void clif_cart_additem_ack(struct map_session_data *sd, int flag) {
 void clif_parse_BankDeposit(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
 /* Bank System [Yommy/Hercules] */
 void clif_parse_BankDeposit(int fd, struct map_session_data* sd) {
-	struct packet_banking_deposit_req *p = P2PTR(fd);
+	struct packet_banking_deposit_req *p = RP2PTR(fd);
 	int money;
 
 	if (!battle_config.feature_banking) {
@@ -17905,7 +17905,7 @@ void clif_parse_BankDeposit(int fd, struct map_session_data* sd) {
 
 void clif_parse_BankWithdraw(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
 void clif_parse_BankWithdraw(int fd, struct map_session_data* sd) {
-	struct packet_banking_withdraw_req *p = P2PTR(fd);
+	struct packet_banking_withdraw_req *p = RP2PTR(fd);
 	int money;
 
 	if (!battle_config.feature_banking) {
@@ -18182,7 +18182,7 @@ void clif_npc_market_purchase_ack(struct map_session_data *sd, struct packet_npc
 void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd) {
 #if PACKETVER >= 20131223
-	struct packet_npc_market_purchase *p = P2PTR(fd);
+	struct packet_npc_market_purchase *p = RP2PTR(fd);
 
 	clif->npc_market_purchase_ack(sd,p,npc->market_buylist(sd,(p->PacketLength - 4) / sizeof(p->list[0]),p));
 #endif
@@ -18866,6 +18866,11 @@ static void __attribute__ ((unused)) packetdb_addpacket(short cmd, int len, ...)
 
 	if (cmd > MAX_PACKET_DB) {
 		ShowError("Packet Error: packet 0x%x is greater than the maximum allowed (0x%x), skipping...\n", cmd, MAX_PACKET_DB);
+		return;
+	}
+
+	if (cmd < MIN_PACKET_DB) {
+		ShowError("Packet Error: packet 0x%x is lower than the minimum allowed (0x%x), skipping...\n", cmd, MIN_PACKET_DB);
 		return;
 	}
 
