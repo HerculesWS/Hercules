@@ -89,7 +89,7 @@ void vending_vendinglistreq(struct map_session_data* sd, unsigned int id) {
  *------------------------------------------*/
 void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid, const uint8* data, int count) {
 	int i, j, cursor, w, new_ = 0, blank, vend_list[MAX_VENDING];
-	double z;
+	int64 z;
 	struct s_vending vend[MAX_VENDING]; // against duplicate packets
 	struct map_session_data* vsd = map->id2sd(aid);
 
@@ -116,7 +116,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 	memcpy(&vend, &vsd->vending, sizeof(vsd->vending)); // copy vending list
 
 	// some checks
-	z = 0.; // zeny counter
+	z = 0; // zeny counter
 	w = 0;  // weight counter
 	for( i = 0; i < count; i++ ) {
 		short amount = *(uint16*)(data + 4*i + 0);
@@ -136,12 +136,12 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 		else
 			vend_list[i] = j;
 
-		z += ((double)vsd->vending[j].value * (double)amount);
-		if( z > (double)sd->status.zeny || z < 0. || z > (double)MAX_ZENY ) {
+		z += (int64)vsd->vending[j].value * amount;
+		if (z > sd->status.zeny || z < 0 || z > MAX_ZENY) {
 			clif->buyvending(sd, idx, amount, 1); // you don't have enough zeny
 			return;
 		}
-		if( z + (double)vsd->status.zeny > (double)MAX_ZENY && !battle_config.vending_over_max ) {
+		if (z > MAX_ZENY - vsd->status.zeny && !battle_config.vending_over_max) {
 			clif->buyvending(sd, idx, vsd->vending[j].amount, 4); // too much zeny = overflow
 			return;
 
@@ -181,7 +181,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 
 	pc->payzeny(sd, (int)z, LOG_TYPE_VENDING, vsd);
 	if( battle_config.vending_tax )
-		z -= z * (battle_config.vending_tax/10000.);
+		z -= apply_percentrate64(z, battle_config.vending_tax, 10000);
 	pc->getzeny(vsd, (int)z, LOG_TYPE_VENDING, sd);
 
 	for( i = 0; i < count; i++ ) {

@@ -4156,34 +4156,39 @@ int pc_insert_card(struct map_session_data* sd, int idx_card, int idx_equip)
 /*==========================================
  * Update buying value by skills
  *------------------------------------------*/
-int pc_modifybuyvalue(struct map_session_data *sd,int orig_value) {
-	int skill_lv,val = orig_value,rate1 = 0,rate2 = 0;
-	if((skill_lv=pc->checkskill(sd,MC_DISCOUNT))>0)   // merchant discount
+int pc_modifybuyvalue(struct map_session_data *sd, int orig_value)
+{
+	int skill_lv, rate1 = 0, rate2 = 0;
+	if (orig_value <= 0)
+		return 0;
+	if ((skill_lv=pc->checkskill(sd,MC_DISCOUNT)) > 0)   // merchant discount
 		rate1 = 5+skill_lv*2-((skill_lv==10)? 1:0);
-	if((skill_lv=pc->checkskill(sd,RG_COMPULSION))>0) // rogue discount
+	if ((skill_lv=pc->checkskill(sd,RG_COMPULSION)) > 0) // rogue discount
 		rate2 = 5+skill_lv*4;
-	if(rate1 < rate2) rate1 = rate2;
-	if(rate1)
-		val = (int)((double)orig_value*(double)(100-rate1)/100.);
-	if(val < 0) val = 0;
-	if(orig_value > 0 && val < 1) val = 1;
-
-	return val;
+	if (rate1 < rate2)
+		rate1 = rate2;
+	if (rate1 != 0)
+		orig_value = apply_percentrate(orig_value, 100-rate1, 100);
+	if (orig_value < 1)
+		orig_value = 1;
+	return orig_value;
 }
 
 /*==========================================
  * Update selling value by skills
  *------------------------------------------*/
-int pc_modifysellvalue(struct map_session_data *sd,int orig_value) {
-	int skill_lv,val = orig_value,rate = 0;
-	if((skill_lv=pc->checkskill(sd,MC_OVERCHARGE))>0) //OverCharge
+int pc_modifysellvalue(struct map_session_data *sd, int orig_value)
+{
+	int skill_lv, rate = 0;
+	if (orig_value <= 0)
+		return 0;
+	if ((skill_lv=pc->checkskill(sd,MC_OVERCHARGE)) > 0) //OverCharge
 		rate = 5+skill_lv*2-((skill_lv==10)? 1:0);
-	if(rate)
-		val = (int)((double)orig_value*(double)(100+rate)/100.);
-	if(val < 0) val = 0;
-	if(orig_value > 0 && val < 1) val = 1;
-
-	return val;
+	if (rate != 0)
+		orig_value = apply_percentrate(orig_value, 100+rate, 100);
+	if (orig_value < 1)
+		orig_value = 1;
+	return orig_value;
 }
 
 /*==========================================
@@ -5259,7 +5264,7 @@ int pc_show_steal(struct block_list *bl,va_list ap)
 int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skill_lv)
 {
 	int i,itemid,flag;
-	double rate;
+	int rate;
 	struct status_data *sd_status, *md_status;
 	struct mob_data *md = BL_CAST(BL_MOB, bl);
 	struct item tmp_item;
@@ -5284,18 +5289,22 @@ int pc_steal_item(struct map_session_data *sd,struct block_list *bl, uint16 skil
 	}
 
 	// base skill success chance (percentual)
-	rate = (sd_status->dex - md_status->dex)/2 + skill_lv*6 + 4;
-	rate += sd->bonus.add_steal_rate;
+	rate = (sd_status->dex - md_status->dex)/2 + skill_lv*6 + 4 + sd->bonus.add_steal_rate;
 
 	if( rate < 1 )
 		return 0;
 
 	// Try dropping one item, in the order from first to last possible slot.
 	// Droprate is affected by the skill success rate.
-	for( i = 0; i < MAX_STEAL_DROP; i++ )
-		if (md->db->dropitem[i].nameid > 0 && (data = itemdb->exists(md->db->dropitem[i].nameid)) != NULL && rnd() % 10000 < md->db->dropitem[i].p * rate/100.)
+	for (i = 0; i < MAX_STEAL_DROP; i++) {
+		if (md->db->dropitem[i].nameid == 0)
+			continue;
+		if ((data = itemdb->exists(md->db->dropitem[i].nameid)) == NULL)
+			continue;
+		if (rnd() % 10000 < apply_percentrate(md->db->dropitem[i].p, rate, 100))
 			break;
-	if( i == MAX_STEAL_DROP )
+	}
+	if (i == MAX_STEAL_DROP)
 		return 0;
 
 	itemid = md->db->dropitem[i].nameid;
@@ -6612,16 +6621,16 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
 	if (sd->sc.data[SC_OVERLAPEXPUP])
 		bonus += sd->sc.data[SC_OVERLAPEXPUP]->val1;
 
-	*base_exp = (unsigned int) cap_value(*base_exp + (double)*base_exp * bonus/100., 1, UINT_MAX);
+	*base_exp = (unsigned int) cap_value(*base_exp + apply_percentrate64(*base_exp, bonus, 100), 1, UINT_MAX);
 
 	if (sd->sc.data[SC_CASH_PLUSONLYJOBEXP])
 		bonus += sd->sc.data[SC_CASH_PLUSONLYJOBEXP]->val1;
 
-	*job_exp = (unsigned int) cap_value(*job_exp + (double)*job_exp * bonus/100., 1, UINT_MAX);
+	*job_exp = (unsigned int) cap_value(*job_exp + apply_percentrate64(*job_exp, bonus, 100), 1, UINT_MAX);
 
-	if( sd->status.mod_exp != 100 ) {
-		*base_exp = (unsigned int) cap_value((double)*base_exp * sd->status.mod_exp/100., 1, UINT_MAX);
-		*job_exp  = (unsigned int) cap_value((double)*job_exp  * sd->status.mod_exp/100., 1, UINT_MAX);
+	if (sd->status.mod_exp != 100) {
+		*base_exp = (unsigned int) cap_value(apply_percentrate64(*base_exp, sd->status.mod_exp, 100), 1, UINT_MAX);
+		*job_exp  = (unsigned int) cap_value(apply_percentrate64(*job_exp, sd->status.mod_exp, 100), 1, UINT_MAX);
 
 	}
 }
@@ -7713,18 +7722,18 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 	   && !map->list[sd->bl.m].flag.noexppenalty && !map_flag_gvg2(sd->bl.m)
 	   && !sd->sc.data[SC_BABY] && !sd->sc.data[SC_CASH_DEATHPENALTY]
 	   ) {
-		unsigned int base_penalty = 0;
 		if (battle_config.death_penalty_base > 0) {
+			unsigned int base_penalty = 0;
 			switch (battle_config.death_penalty_type) {
 				case 1:
-					base_penalty = (unsigned int) ((double)pc->nextbaseexp(sd) * (double)battle_config.death_penalty_base/10000);
+					base_penalty = (unsigned int) apply_percentrate64(pc->nextbaseexp(sd), battle_config.death_penalty_base, 10000);
 					break;
 				case 2:
-					base_penalty = (unsigned int) ((double)sd->status.base_exp * (double)battle_config.death_penalty_base/10000);
+					base_penalty = (unsigned int) apply_percentrate64(sd->status.base_exp, battle_config.death_penalty_base, 10000);
 					break;
 			}
 
-			if(base_penalty) {
+			if (base_penalty != 0) {
 				if (battle_config.pk_mode && src && src->type==BL_PC)
 					base_penalty*=2;
 				if( sd->status.mod_death != 100 )
@@ -7735,31 +7744,31 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 		}
 
 		if(battle_config.death_penalty_job > 0) {
-			base_penalty = 0;
+			unsigned int job_penalty = 0;
 
 			switch (battle_config.death_penalty_type) {
 				case 1:
-					base_penalty = (unsigned int) ((double)pc->nextjobexp(sd) * (double)battle_config.death_penalty_job/10000);
+					job_penalty = (unsigned int) apply_percentrate64(pc->nextjobexp(sd), battle_config.death_penalty_job, 10000);
 					break;
 				case 2:
-					base_penalty = (unsigned int) ((double)sd->status.job_exp * (double)battle_config.death_penalty_job/10000);
+					job_penalty = (unsigned int) apply_percentrate64(sd->status.job_exp, battle_config.death_penalty_job, 10000);
 					break;
 			}
 
-			if(base_penalty) {
+			if (job_penalty != 0) {
 				if (battle_config.pk_mode && src && src->type==BL_PC)
-					base_penalty*=2;
+					job_penalty*=2;
 				if( sd->status.mod_death != 100 )
-					base_penalty = base_penalty * sd->status.mod_death / 100;
-				sd->status.job_exp -= min(sd->status.job_exp, base_penalty);
+					job_penalty = job_penalty * sd->status.mod_death / 100;
+				sd->status.job_exp -= min(sd->status.job_exp, job_penalty);
 				clif->updatestatus(sd,SP_JOBEXP);
 			}
 		}
 
-		if(battle_config.zeny_penalty > 0 && !map->list[sd->bl.m].flag.nozenypenalty) {
-			base_penalty = (unsigned int)((double)sd->status.zeny * (double)battle_config.zeny_penalty / 10000.);
-			if(base_penalty)
-				pc->payzeny(sd, base_penalty, LOG_TYPE_PICKDROP_PLAYER, NULL);
+		if (battle_config.zeny_penalty > 0 && !map->list[sd->bl.m].flag.nozenypenalty) {
+			int zeny_penalty = apply_percentrate(sd->status.zeny, battle_config.zeny_penalty, 10000);
+			if (zeny_penalty != 0)
+				pc->payzeny(sd, zeny_penalty, LOG_TYPE_PICKDROP_PLAYER, NULL);
 		}
 	}
 
