@@ -3480,6 +3480,8 @@ struct {
 	struct HPMHookPoint *HP_mob_lookup_const_post;
 	struct HPMHookPoint *HP_mob_get_const_pre;
 	struct HPMHookPoint *HP_mob_get_const_post;
+	struct HPMHookPoint *HP_mob_db_validate_entry_pre;
+	struct HPMHookPoint *HP_mob_db_validate_entry_post;
 	struct HPMHookPoint *HP_mob_read_libconfig_pre;
 	struct HPMHookPoint *HP_mob_read_libconfig_post;
 	struct HPMHookPoint *HP_mob_read_db_additional_fields_pre;
@@ -9327,6 +9329,8 @@ struct {
 	int HP_mob_lookup_const_post;
 	int HP_mob_get_const_pre;
 	int HP_mob_get_const_post;
+	int HP_mob_db_validate_entry_pre;
+	int HP_mob_db_validate_entry_post;
 	int HP_mob_read_libconfig_pre;
 	int HP_mob_read_libconfig_post;
 	int HP_mob_read_db_additional_fields_pre;
