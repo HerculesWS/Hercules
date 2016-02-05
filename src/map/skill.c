@@ -11777,6 +11777,10 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->limit);
 			break;
 		case UNT_APPLEIDUN:
+			// If Aegis, apple of idun doesn't update its effect
+			if (!battle_config.song_timer_reset && sc && sce)
+				return 0;
+			// Let it fall through
 		case UNT_WHISTLE:
 		case UNT_ASSASSINCROSS:
 		case UNT_POEMBRAGI:
@@ -11784,19 +11788,34 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 		case UNT_DONTFORGETME:
 		case UNT_FORTUNEKISS:
 		case UNT_SERVICEFORYOU:
+			// Don't buff themselves without link!
 			if (sg->src_id==bl->id && !(sc && sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
 				return 0;
 
 			if (!sc) return 0;
 			if (!sce)
 				sc_start4(ss,bl,type,100,sg->skill_lv,sg->val1,sg->val2,0,sg->limit);
+			// From here songs are already active
 			else if (battle_config.song_timer_reset && sce->val4 == 1) {
-				//Readjust timers since the effect will not last long.
+				// eA style:
+				// Readjust timers since the effect will not last long.
 				sce->val4 = 0;
 				timer->delete(sce->timer, status->change_timer);
 				sce->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
+			} else if (!battle_config.song_timer_reset) {
+				// Aegis style:
+				// Songs won't renew unless finished
+				const struct TimerData *td = timer->get(sce->timer);
+				if (DIFF_TICK32(td->tick, timer->gettick()) < sg->interval) {
+					// Update with new values as the current one will vanish soon
+					timer->delete(sce->timer, status->change_timer);
+					sce->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
+					sce->val1 = sg->skill_lv; // Why are we storing skill_lv as val1?
+					sce->val2 = sg->val1;
+					sce->val3 = sg->val2;
+					sce->val4 = 0;
+				}
 			}
-
 			break;
 
 		case UNT_FOGWALL:
@@ -12201,18 +12220,25 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			if (md && md->class_ == MOBID_EMPELIUM)
 				break;
 #endif
-			if ((sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
-			  || (!(battle_config.song_timer_reset) && tsc && tsc->data[type] && tsc->data[type]->val4 == 1))
+			// Don't buff themselves!
+			if ((sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER)))
 				break;
 
-			heal = skill->calc_heal(ss,bl,sg->skill_id, sg->skill_lv, true);
-			if( tsc && tsc->data[SC_AKAITSUKI] && heal )
-				heal = ~heal + 1;
-			clif->skill_nodamage(&src->bl, bl, AL_HEAL, heal, 1);
-			status->heal(bl, heal, 0, 0);
-
-			if (!battle_config.song_timer_reset)
+			// Aegis style
+			// Check if the remaining time is enough to survive the next update
+			if (!battle_config.song_timer_reset
+					&& !(tsc && tsc->data[type] && tsc->data[type]->val4 == 1)) {
+				// Apple of Idun is not active. Start it now
 				sc_start4(ss, bl, type, 100, sg->skill_lv, sg->val1, sg->val2, 0, sg->limit);
+			}
+
+			if (tstatus->hp < tstatus->max_hp) {
+				heal = skill->calc_heal(ss,bl,sg->skill_id, sg->skill_lv, true);
+				if( tsc && tsc->data[SC_AKAITSUKI] && heal )
+					heal = ~heal + 1;
+				clif->skill_nodamage(&src->bl, bl, AL_HEAL, heal, 1);
+				status->heal(bl, heal, 0, 0);
+			}
 		}
 			break;
 		case UNT_POEMBRAGI:
@@ -12222,12 +12248,30 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 		case UNT_DONTFORGETME:
 		case UNT_FORTUNEKISS:
 		case UNT_SERVICEFORYOU:
-			if (battle_config.song_timer_reset
-			  || (!(battle_config.song_timer_reset) && tsc && tsc->data[type] && tsc->data[type]->val4 == 1)
-			  || (sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
-			)
+			// eA style: doesn't need this
+			if (battle_config.song_timer_reset)
+				break;
+			// Don't let buff themselves!
+			if (sg->src_id == bl->id && !(tsc && tsc->data[SC_SOULLINK] && tsc->data[SC_SOULLINK]->val2 == SL_BARDDANCER))
 				break;
 
+			// Aegis style
+			// Check if song has enough time to survive the next check
+			if (!(battle_config.song_timer_reset) && tsc && tsc->data[type] && tsc->data[type]->val4 == 1) {
+				const struct TimerData *td = timer->get(tsc->data[type]->timer);
+				if (DIFF_TICK32(td->tick, timer->gettick()) < sg->interval) {
+					// Update with new values as the current one will vanish
+					timer->delete(tsc->data[type]->timer, status->change_timer);
+					tsc->data[type]->timer = timer->add(tick+sg->limit, status->change_timer, bl->id, type);
+					tsc->data[type]->val1 = sg->skill_lv;
+					tsc->data[type]->val2 = sg->val1;
+					tsc->data[type]->val3 = sg->val2;
+					tsc->data[type]->val4 = 0;
+				}
+				break; // Had enough time or not, it now has. Exit
+			}
+
+			// Song was not active. Start it now
 			sc_start4(ss, bl, type, 100, sg->skill_lv, sg->val1, sg->val2, 0, sg->limit);
 			break;
 		case UNT_TATAMIGAESHI:
@@ -12749,8 +12793,9 @@ int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick) {
 		case DC_DONTFORGETME:
 		case DC_FORTUNEKISS:
 		case DC_SERVICEFORYOU:
-			if ((battle_config.song_timer_reset && sce) // athena style
-			  || (!battle_config.song_timer_reset && sce && sce->val4 != 1)
+
+			if ((battle_config.song_timer_reset && sce) // eAthena style: update everytime
+			  || (!battle_config.song_timer_reset && sce && sce->val4 != 1) // Aegis style: update only when it was not a reduced effect
 			) {
 				timer->delete(sce->timer, status->change_timer);
 				//NOTE: It'd be nice if we could get the skill_lv for a more accurate extra time, but alas...
