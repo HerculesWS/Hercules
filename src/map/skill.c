@@ -2499,7 +2499,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,dmg.div_,skill_id,skill_lv,BDT_MULTIHIT);
 			break;
 		case WL_CHAINLIGHTNING_ATK:
-			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,1,WL_CHAINLIGHTNING_ATK,-2,BDT_SKILL);
+			dmg.dmotion = clif->skill_damage(src,bl,tick,dmg.amotion,dmg.dmotion,damage,1,WL_CHAINLIGHTNING,-2,BDT_SKILL);
 			break;
 		case LG_OVERBRAND_BRANDISH:
 		case LG_OVERBRAND:
