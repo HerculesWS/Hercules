@@ -481,6 +481,18 @@ CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wextra -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
 LDFLAGS="$LDFLAGS"
 
+# Add /usr/local to the library and header search path, where appropriate
+case `uname` in
+	Darwin*|*BSD*)
+		if test -d /usr/local/include ; then
+			CPPFLAGS="$CPPFLAGS -I/usr/local/include"
+		fi
+		if test -d /usr/local/lib ; then
+			LDFLAGS="$LDFLAGS -L/usr/local/lib"
+		fi
+	;;
+esac
+
 AC_C_BIGENDIAN(
 	[AC_MSG_ERROR([[bigendian is not supported... stopping]])],
 	,
