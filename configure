@@ -4592,7 +4592,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-CFLAGS="$CFLAGS -pipe -ffast-math -fvisibility=hidden -Wall -Wextra -Wno-sign-compare"
+CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wextra -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
 LDFLAGS="$LDFLAGS"
 
