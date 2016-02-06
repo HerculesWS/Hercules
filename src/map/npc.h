@@ -27,6 +27,8 @@
 #include "common/hercules.h"
 #include "common/db.h"
 
+#include <pcre.h>
+
 struct hplugin_data_store;
 struct view_data;
 
@@ -307,9 +309,6 @@ void npc_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct npc_interface *npc;
-
-/* comes from npc_chat.c */
-#include <pcre/include/pcre.h>
 
 /**
  * Structure containing all info associated with a single pattern block
