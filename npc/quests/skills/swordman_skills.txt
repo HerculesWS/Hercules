@@ -48,7 +48,7 @@ izlude_in,118,175,4	script	Knight De Thomas	4W_M_02,{
 		mes "Being a swordsman must come with a lot of responsibility and sacrifice.";
 		next;
 		mes "[De Thomas]";
-		if (Sex == 0) {
+		if (Sex == SEX_FEMALE) {
 			mes "For these swordsmen and knights, there is a wonderful skill.";
 		}
 		else {
@@ -235,7 +235,7 @@ prt_in,75,88,5	script	Leon Von Frich	4_M_03,3,3,{
 		next;
 		select("Eh, I... just...");
 		mes "[Leon]";
-		if (Sex == 0) {
+		if (Sex == SEX_FEMALE) {
 			mes "No need to be surprised.";
 			mes "If you use a sword, of course you ought to have a good arm!";
 		}

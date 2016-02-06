@@ -906,7 +906,7 @@ ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 		mes "first thing you'll";
 		mes "see is yourself.";
 		next;
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			switch(rand(1,5)) {
 			case 1:
 				mes "["+strcharinfo(0)+"]";

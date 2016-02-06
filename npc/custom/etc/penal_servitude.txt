@@ -17,7 +17,7 @@
 sec_pri,36,58,1	script	Chief Warder	8W_SOLDIER,{
 	mes "[Saddeus]";
 	emotion 1;
-	if(Sex) {
+	if(Sex == SEX_MALE) {
 		mes "Mr. Prisoner #"+BaseLevel+JobLevel+",";
 	} else {
 		mes "Ms. Prisoner #"+BaseLevel+JobLevel+",";

@@ -63,7 +63,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 				close;
 			}else{
 				mes "[Thief Guide]";
-				if (Sex)
+				if (Sex == SEX_MALE)
 					mes "Hey, dude.";
 				else
 					mes "Hey, baby~";
@@ -71,7 +71,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 			}
 		}else{
 			mes "[Thief Guide]";
-			if (Sex)
+			if (Sex == SEX_MALE)
 				mes "Hey, dude.";
 			else
 				mes "Hey, baby.";
@@ -81,7 +81,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	}
 	if(q_job_thief == 1) {
 		mes "[Thief Guildsman]";
-		mes "Ehh... Seems like a beloved "+(Sex?"son":"daughter")+" of a rich family, but why are you here in this dirty place?";
+		mes "Ehh... Seems like a beloved "+(Sex == SEX_MALE?"son":"daughter")+" of a rich family, but why are you here in this dirty place?";
 		next;
 		mes "[Thief Guildsman]";
 		mes "Well, I'm not in charge of making you a Thief. I just accept applications, get it?";
@@ -96,7 +96,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 		}else{
 			mes "[Thief Guildsman]";
 			mes "What the heck...?";
-			if(Sex) {
+			if(Sex == SEX_MALE) {
 				mes "Huh.. you are a "+jobname(Class)+" you blockhead...!";
 				next;
 				mes "[Thief Guildsman]";
@@ -111,7 +111,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 		}
 	}
 	mes "[Thief Guildsman]";
-	mes "Ehh... Seems like a beloved "+(Sex?"son":"daughter")+" of a rich family, but why are you here in this dirty place?";
+	mes "Ehh... Seems like a beloved "+(Sex == SEX_MALE?"son":"daughter")+" of a rich family, but why are you here in this dirty place?";
 	next;
 	if(select("I want to be a Thief.:Nothing.") == 2) {
 		mes "[Thief Guildsman]";

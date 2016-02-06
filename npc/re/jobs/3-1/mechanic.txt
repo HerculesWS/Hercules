@@ -95,7 +95,7 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 			next;
 			job__mechanic = 12;
 			completequest 10101;
-			if (Sex)
+			if (Sex == SEX_MALE)
 				getitem Driver_Band,1;
 			else
 				getitem Driver_Band_,1;

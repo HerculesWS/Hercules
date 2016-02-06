@@ -93,7 +93,7 @@ geffen_in,164,124,4	script	Mage Guildsman#mage	2_F_MAGICMASTER,{
 			mes "Wanna be a Mage? Eh...";
 			next;
 			mes "[Mage Guildsman]";
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				mes "Hey, look at you! You're kinda cute~! Not my type though...";
 			}else{
 				mes "Oooh, you're such a hot babe~!";

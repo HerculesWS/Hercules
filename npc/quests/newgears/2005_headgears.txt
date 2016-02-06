@@ -768,7 +768,7 @@ lighthalzen,143,68,0	script	Strange Guy#LhzHat	1_M_01,{
 
 lighthalzen,360,313,3	script	Kid#LhzHat	4_M_KID1,{
 	mes "[Kid]";
-	if(Sex)
+	if(Sex == SEX_MALE)
 		mes "Hello, mister!";
 	else
 		mes "Hello, ma'am!";
