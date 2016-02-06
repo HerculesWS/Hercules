@@ -31,8 +31,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 
-#include <pcre/include/pcre.h>
-
+#include <pcre.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
