@@ -443,27 +443,6 @@ AC_ARG_WITH(
 )
 
 
-#
-# Specify the path of the zlib library (required library)
-#
-AC_ARG_WITH(
-	[zlib],
-	AC_HELP_STRING(
-		[--with-zlib=DIR],
-		[root directory path of zlib installation (defaults to /usr/local or /usr if not found in /usr/local).
-		 Assumes that the header files are in DIR/include and the library files are in DIR/lib]
-	),
-	[
-		test -n "$withval" && ZLIB_HOME="$withval"
-	],
-	[
-		ZLIB_HOME=/usr/local
-		test ! -f "${ZLIB_HOME}/include/zlib.h" && ZLIB_HOME=/usr
-	]
-)
-
-
-
 ###############################################################################
 # Check for programs and types.
 #
@@ -1173,12 +1152,8 @@ fi
 #
 # zlib library (required)
 #
-if test -n "${ZLIB_HOME}" ; then
-	LDFLAGS="$LDFLAGS -L${ZLIB_HOME}/lib"
-	CPPFLAGS="$CPPFLAGS -I${ZLIB_HOME}/include"
-fi
-AC_SEARCH_LIBS([inflateEnd], [z], [],[AC_MSG_ERROR([zlib library not found or incompatible, please specify the correct path with --with-zlib=DIR... stopping])])
-AC_CHECK_HEADER([zlib.h], [], [AC_MSG_ERROR([zlib header not found, please specify the correct path with --with-zlib=DIR... stopping])])
+AC_SEARCH_LIBS([inflateEnd], [z], [],[AC_MSG_ERROR([zlib library not found or incompatible... stopping])])
+AC_CHECK_HEADER([zlib.h], [], [AC_MSG_ERROR([zlib header not found, please specify the correct path with... stopping])])
 
 
 #
