@@ -556,6 +556,8 @@ struct {
 	struct HPMHookPoint *HP_sysinfo_compiler_post;
 	struct HPMHookPoint *HP_sysinfo_cflags_pre;
 	struct HPMHookPoint *HP_sysinfo_cflags_post;
+	struct HPMHookPoint *HP_sysinfo_time_pre;
+	struct HPMHookPoint *HP_sysinfo_time_post;
 	struct HPMHookPoint *HP_sysinfo_vcstype_pre;
 	struct HPMHookPoint *HP_sysinfo_vcstype_post;
 	struct HPMHookPoint *HP_sysinfo_vcstypeid_pre;
@@ -1133,6 +1135,8 @@ struct {
 	int HP_sysinfo_compiler_post;
 	int HP_sysinfo_cflags_pre;
 	int HP_sysinfo_cflags_post;
+	int HP_sysinfo_time_pre;
+	int HP_sysinfo_time_post;
 	int HP_sysinfo_vcstype_pre;
 	int HP_sysinfo_vcstype_post;
 	int HP_sysinfo_vcstypeid_pre;

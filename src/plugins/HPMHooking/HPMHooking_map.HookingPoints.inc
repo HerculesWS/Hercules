@@ -2914,6 +2914,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sysinfo->is64bit, HP_sysinfo_is64bit) },
 	{ HP_POP(sysinfo->compiler, HP_sysinfo_compiler) },
 	{ HP_POP(sysinfo->cflags, HP_sysinfo_cflags) },
+	{ HP_POP(sysinfo->time, HP_sysinfo_time) },
 	{ HP_POP(sysinfo->vcstype, HP_sysinfo_vcstype) },
 	{ HP_POP(sysinfo->vcstypeid, HP_sysinfo_vcstypeid) },
 	{ HP_POP(sysinfo->vcsrevision_src, HP_sysinfo_vcsrevision_src) },
