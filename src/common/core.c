@@ -230,7 +230,10 @@ bool cmdline_arg_add(unsigned int pluginID, const char *name, char shortname, Cm
 	data->name = aStrdup(name);
 	data->shortname = shortname;
 	data->func = func;
-	data->help = aStrdup(help);
+	if (help)
+		data->help = aStrdup(help);
+	else
+		data->help = NULL;
 	data->options = options;
 
 	return true;
