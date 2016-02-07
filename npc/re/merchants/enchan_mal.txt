@@ -47,7 +47,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 	mes "[Mayomayo]";
 	mes "Wow welcome. It is new Mayomayo refinement store~ I enchant some luxury weapons including level 4 weapons.";
 	next;
-	switch(select("Any store policy changes?:Enchant High Ranked Weapon:Initialize Enchant (Need Silvervine Fruit)")) {
+	switch(select("Any store policy changes?", "Enchant High Ranked Weapon", "Initialize Enchant (Need Silvervine Fruit)")) {
 	case 1:
 		mes "[Mayomayo]";
 		mes "When I enchant weapons, the slotted cards or refined level are dissipated sometimes. I hated it. However, one day I found how to do it without any extinction.";
@@ -55,7 +55,7 @@ malangdo,213,167,4	script	Mayomayo#mal	4_CAT_3COLOR,{
 		mes "[Mayomayo]";
 		mes "Have you ever seen a building of person of reinforcement capacity association?";
 		next;
-		if(select("I've seen it before.:I haven't seen it before.") == 2) {
+		if(select("I've seen it before.", "I haven't seen it before.") == 2) {
 			mes "[Mayomayo]";
 			mes "That builiding is located to the southeast of where I am. Why don't you go on a field trip there?";
 			close;
@@ -385,7 +385,7 @@ L_Socket:
 			mes "[Mayomayo]";
 			mes "When you use the "+getitemname(.@coin[.@coin_select])+", you can choose the enchant type.";
 			next;
-			switch(select("Stop:Short Range Type:Long Range Type:Caster Type")) {
+			switch(select("Stop", "Short Range Type", "Long Range Type", "Caster Type")) {
 			case 1:
 				mes "[Mayomayo]";
 				mes "Ok. If you change your mind, let me know.";
@@ -416,7 +416,7 @@ L_Socket:
 		mes "[Mayomayo]";
 		mes "I'm trying for the "+.@str$+" enchant. ^ff0000It will not touch previous refinement and cards. Also, the equipment will not be destroyed.^000000 Can I continue?";
 		next;
-		if(select("I'll come back later.:Please, continue.") == 1) {
+		if(select("I'll come back later.", "Please, continue.") == 1) {
 			mes "[Mayomayo]";
 			mes "Ok. If you change your mind, come back again.";
 			close;
@@ -622,7 +622,7 @@ L_Socket:
 		mes "[Mayomayo]";
 		mes "I will only initialize the enchant effect without touching previous refined level and cards.";
 		next;
-		if(select("Stop:Continue") == 1) {
+		if(select("Stop", "Continue") == 1) {
 			mes "[Mayomayo]";
 			mes "If you change your mind, come back anytime.";
 			close;

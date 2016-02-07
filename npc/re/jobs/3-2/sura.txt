@@ -371,7 +371,7 @@ ve_in,98,159,0	script	Fighter#job_shu	4_F_SURA,{
 		mes "You won't even have time to take a rest if you choose this way.";
 		mes "You'll become a puppet for war...";
 		next;
-		switch(select("But I still want to know more.:Well, I quit then.")) {
+		switch(select("But I still want to know more.", "Well, I quit then.")) {
 		case 1:
 			mes "[???]";
 			mes "Aren't you an idiot?";
@@ -500,7 +500,7 @@ yuno_fild07,254,176,7	script	Buddy#job_shu	4_M_MONK,{
 		mes "Ah, long time no see, "+strcharinfo(0)+".";
 		mes "Are you here to meet my master?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			mes "[Buddy]";
 			mes "I'll take you right away.";
@@ -550,7 +550,7 @@ sword_1-1,223,243,4	script	Buddy#job_shu_Salong	4_M_MONK,{
 	mes "[Buddy]";
 	mes "My master doesn't like noise, so please ^f57d7dwait in the living room silently.^000000";
 	next;
-	switch(select("Go to the living room.:Go outside.")) {
+	switch(select("Go to the living room.", "Go outside.")) {
 	case 1:
 		mes "[Buddy]";
 		mes "Please wait in the living room at the upper side.";
@@ -704,7 +704,7 @@ sword_1-1,222,169,5	script	Bruno#job_shu	4_F_SURA,{
 		mes "[Bruno]";
 		mes "Hey~ "+strcharinfo(0)+", what's up?";
 		next;
-		switch(select("Let's have conversation.:Go outside.")) {
+		switch(select("Let's have conversation.", "Go outside.")) {
 		case 1:
 			if (job_shu == 100) {
 				mes "[Bruno]";
@@ -852,7 +852,7 @@ sword_1-1,223,167,2	script	Master#job_shu	4_M_SURA,{
 
 sword_2-1,1,2,0	script	Button Girl#sura	1_F_01,{
 	callfunc "F_GM_NPC";
-	switch(select("Turn on arena.:Turn off arena.:Turn on the living room.:Turn on Buddy.:Turn on Gara.:Turn off all.:Close")) {
+	switch(select("Turn on arena.", "Turn off arena.", "Turn on the living room.", "Turn on Buddy.", "Turn on Gara.", "Turn off all.", "Close")) {
 	case 1:
 		mes "Turn on arena.";
 		donpcevent "Drawing Room::OnEnable";

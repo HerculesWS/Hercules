@@ -52,6 +52,7 @@ struct sysinfo_interface {
 	bool (*is64bit) (void);
 	const char *(*compiler) (void);
 	const char *(*cflags) (void);
+	const char *(*time) (void);
 	const char *(*vcstype) (void);
 	int (*vcstypeid) (void);
 	const char *(*vcsrevision_src) (void);

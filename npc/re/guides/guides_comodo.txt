@@ -41,11 +41,11 @@ comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 	F_Navi("[Comodo Guide]");
 	next;
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel:About ^8B4513Comodo^000000")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel", "About ^8B4513Comodo^000000")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Tavern ]:[ Casino ]:[ Weapon & Armor Shop ]:[ Tool Shop ]:[ Campsite ]:[ Souvenir Vendor ]:[ East Cave Mao ]:[ West Cave Karu ]:[ North Cave Ruanda ]:[ Hula Dance Stage ]:[ Kafra Co. Western Branch ]:Previous Menu")) {
+				switch(select("[ Tavern ]", "[ Casino ]", "[ Weapon & Armor Shop ]", "[ Tool Shop ]", "[ Campsite ]", "[ Souvenir Vendor ]", "[ East Cave Mao ]", "[ West Cave Karu ]", "[ North Cave Ruanda ]", "[ Hula Dance Stage ]", "[ Kafra Co. Western Branch ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Tavern","comodo,161,315","^FF0000");
 					viewpoint 1,166,298,0,0xFF0000;
@@ -114,7 +114,7 @@ comodo,322,178,4	script	Comodo Guide#01comodo::GuideComodo	8_F_GIRL,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Chief's House ]:[ Bor Robin ]:[ Kafra Employee ]:[ Roaming Bard ]:Previous Menu")) {
+				switch(select("[ Chief's House ]", "[ Bor Robin ]", "[ Kafra Employee ]", "[ Roaming Bard ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Chief's House","comodo,115,290","^6495ED");
 					viewpoint 1,114,294,11,0x6495ED;

@@ -47,7 +47,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 			mes "The monsters here are a";
 			mes "little tough so be careful.";
 			next;
-			if(select("I came here to become to a Ranger.:I just came to look around.") == 2) {
+			if(select("I came here to become to a Ranger.", "I just came to look around.") == 2) {
 				mes "[Survival Instructor, Rescue]";
 				mes "Oh ya?";
 				mes "The weather is really great. Shall we take a picture to commemorate it?";
@@ -94,7 +94,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 				mes "When you change a job into a Ranger from a Hunter,";
 				mes "you won't get any chance to learn the skills of a Sniper, would that be okay?";
 				next;
-				switch(select("I'll think about it more.:I want to be a Ranger already.")) {
+				switch(select("I'll think about it more.", "I want to be a Ranger already.")) {
 				case 1:
 					mes "[Survival Instructor, Rescue]";
 					mes "Okay.";
@@ -172,7 +172,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 			if (Weight < 1) {
 				mes "Um. That you talked to me again means that you are determined to change into a Ranger and take the survival power test.";
 				next;
-				if(select("I'll think about it more:I'll take the test") == 1) {
+				if(select("I'll think about it more", "I'll take the test") == 1) {
 					mes "[Survival Instructor, Rescue]";
 					mes "Prepare yourself very well before taking this test.";
 					next;
@@ -195,7 +195,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 				mes "Remember that you don't have any other equipment on, so be careful of the monsters.";
 				mes "Ready to start?";
 				next;
-				if(select("Wait a second:Yes, I'm ready") == 1) {
+				if(select("Wait a second", "Yes, I'm ready") == 1) {
 					mes "[Survival Instructor, Rescue]";
 					mes "What kind of preparation can be so long.";
 					next;
@@ -227,7 +227,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 			mes "Umm?";
 			mes "What are you waiting for?";
 			next;
-			if(select("Tell me the mission again.:I just wanted to talk.") == 1) {
+			if(select("Tell me the mission again.", "I just wanted to talk.") == 1) {
 				mes "[Survival Instructor, Rescue]";
 				mes "Oh, ya.";
 				mes "Is this the mind of a person who's going to take the test?";
@@ -243,7 +243,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 				mes "As you don't have any equipment on, be careful of the monsters in the field.";
 				mes "Well, shall we start?";
 				next;
-				if(select("Wait a minute:I will start") == 1) {
+				if(select("Wait a minute", "I will start") == 1) {
 					mes "[Survival Instructor, Rescue]";
 					mes "What kind of preparation can be so long.";
 					next;
@@ -275,7 +275,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 			mes "Because you've disappeared suddenly, the Ranger Master was looking for you.";
 			mes "Do you want to go to him now?";
 			next;
-			switch(select("Don't go:Go")) {
+			switch(select("Don't go", "Go")) {
 			case 1:
 				mes "[Survival Instructor, Rescue]";
 				mes "Are you busy with something else?";
@@ -343,7 +343,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 			mes "[Test Instructor, Teardrop]";
 			mes "That you are coming and going bugs me so, would you please stop?!";
 			next;
-			if(select("Ranger practical test building?:I came for the test.") == 1) {
+			if(select("Ranger practical test building?", "I came for the test.") == 1) {
 				mes "[Test Instructor, Teardrop]";
 				mes "What, what are you...?";
 				next;
@@ -440,7 +440,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 			mes "Eh? What are you looking at?";
 			mes "You want to eat some?";
 			next;
-			switch(select("Oh, just eat up:...")) {
+			switch(select("Oh, just eat up", "...")) {
 			case 1:
 				mes "[Test Instructor, Teardrop]";
 				mes "Why aren't you eating?";
@@ -499,7 +499,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 			mes "[Test Instructor, Teardrop]";
 			mes "Now, I will enter you into the practical test field, is your preparation all done?";
 			next;
-			if(select("Please wait a little:Let's go to the practical test field!") == 1) {
+			if(select("Please wait a little", "Let's go to the practical test field!") == 1) {
 				mes "[Test Instructor, Teardrop]";
 				mes "Um? Aren't you ready?";
 				next;
@@ -525,7 +525,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 			mes "[Test Instructor, Teardrop]";
 			mes "So what are you going to do? Try again?";
 			next;
-			switch(select("Wait a minute:Go to the practical test field!:I give up the job change.")) {
+			switch(select("Wait a minute", "Go to the practical test field!", "I give up the job change.")) {
 			case 1:
 				mes "[Test Instructor, Teardrop]";
 				mes "Um? Aren't you ready yet?";
@@ -545,7 +545,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 				mes "Think again.";
 				mes "Do you really want to give up the job change to become a Ranger?";
 				next;
-				switch(select("No, I'll try again:I give up!")) {
+				switch(select("No, I'll try again", "I give up!")) {
 				case 1:
 					mes "[Test Instructor, Teardrop]";
 					mes "Hey. You were kidding after all?";
@@ -584,7 +584,7 @@ tur_dun01,91,169,3	script	Test Instructor#jr02	4_M_JOB_HUNTER,{
 			mes "Because you've disappeared suddenly, the Ranger Master was looking for you.";
 			mes "Do you want to go to him now?";
 			next;
-			switch(select("Don't go:Go")) {
+			switch(select("Don't go", "Go")) {
 			case 1:
 				mes "[Test Instructor, Teardrop]";
 				mes "Are you busy with something else?";
@@ -695,7 +695,7 @@ job3_rang01,30,44,3	script	Test Waiting Room#jr_03	4_M_ORIENT01,{
 	mes "In the order you enter, you can take the practical test one by one.";
 	mes "There's 3 kinds of a Ranger job change practical tests, it takes a total of about 10 minutes.";
 	next;
-	switch(select("Test explanation:Cancel:I give up the Ranger test")) {
+	switch(select("Test explanation", "Cancel", "I give up the Ranger test")) {
 	case 1:
 		break;
 	case 2:
@@ -710,7 +710,7 @@ job3_rang01,30,44,3	script	Test Waiting Room#jr_03	4_M_ORIENT01,{
 		mes "Please think about it again.";
 		mes "If you give up here, your job change request will be cancelled. Do you really want to give up the job change to a Ranger?";
 		next;
-		switch(select("No, I'll continue with the test:I give up the Ranger job change")) {
+		switch(select("No, I'll continue with the test", "I give up the Ranger job change")) {
 		case 1:
 			mes "[Staff DTS]";
 			mes "If you want to continue with the practical test, please enter into the chat room.";
@@ -747,7 +747,7 @@ job3_rang01,30,44,3	script	Test Waiting Room#jr_03	4_M_ORIENT01,{
 		mes "I'll explain the Ranger job change practical test.";
 		mes "Among the 1st, 2nd, and 3rd practical tests, which one's test method are you curious of?";
 		next;
-		switch(select("1st Test:2nd Test:3rd Test:Cancel")) {
+		switch(select("1st Test", "2nd Test", "3rd Test", "Cancel")) {
 		case 1:
 			mes "[Staff DTS]";
 			mes "For the 1st test, we test your eyesight and accuracy.";
@@ -1673,7 +1673,7 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 		mes "[Ranger Master, Neveragain]";
 		mes "Before you do a job change ^0000ffdismiss your Falcon^000000, and check if you've used all of your ^0000ffSkill Points^000000.";
 		next;
-		if(select("Wait a minute:I am ready") == 1) {
+		if(select("Wait a minute", "I am ready") == 1) {
 			mes "[Ranger Master, Neveragain]";
 			mes "I am not running away so take your time.";
 			close;
@@ -1699,7 +1699,7 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 		mes "Okay, before you really change the job into a ranger, I'll ask you on more time.";
 		mes "Do you really want to become a ranger?";
 		next;
-		if(select("No:Yes!") == 1) {
+		if(select("No", "Yes!") == 1) {
 			mes "[Ranger Master, Neveragain]";
 			mes "...Um? That's not the answer that I was waiting for...";
 			next;
@@ -1754,7 +1754,7 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 	mes "Hey, you look great.";
 	mes "What are you doing here?";
 	next;
-	switch(select("I just came by:Please let me be out")) {
+	switch(select("I just came by", "Please let me be out")) {
 	case 1:
 		mes "[Ranger Master, Neveragain]";
 		mes "Well, there's nothing to see and you came.";
@@ -1775,7 +1775,7 @@ job3_rang01,90,43,3	script	Ranger Master#jr_29	4_M_REIDIN_KURS,{
 
 job3_rang01,58,1,0	script	Worker#job_ranger	4_M_ORIENT01,{
 	callfunc "F_GM_NPC";
-	switch(select("Enable Waiting Room:Disable Waiting Room:Enable 1st Test:Disable 1st Test:Enable 2nd Test:Disable 2nd Test:Enable 3rd Test:Disable 3rd Test:Cancel")) {
+	switch(select("Enable Waiting Room", "Disable Waiting Room", "Enable 1st Test", "Disable 1st Test", "Enable 2nd Test", "Disable 2nd Test", "Enable 3rd Test", "Disable 3rd Test", "Cancel")) {
 	case 1:
 		mes "Enabled Waiting Room";
 		donpcevent "Test Waiting Room#jr_03::OnEnable";

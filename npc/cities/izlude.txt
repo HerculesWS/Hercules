@@ -50,7 +50,7 @@
 	mes "on a fascinating Ship!";
 	mes "Hurry, hurry!";
 	next;
-	switch(select("Byalan Island -> 150 Zeny.:Alberta Marina  -> 500 Zeny.:Cancel.")) {
+	switch(select("Byalan Island -> 150 Zeny.", "Alberta Marina  -> 500 Zeny.", "Cancel.")) {
 	case 1:
 		if (Zeny < 150) {
 			mes "[Sailor]";
@@ -197,7 +197,7 @@
 		mes "If you are lucky enough, you might even bump into Angelring, the Poring with Angel wings.";
 		next;
 		while(1) {
-			switch(select("Ghostring?:Angelring?:End Conversation.")) {
+			switch(select("Ghostring?", "Angelring?", "End Conversation.")) {
 			case 1:
 				mes "[Dega]";
 				mes "Ghostring is a grayish Poring that floats around in the air like a ghost. Just like other ghosts, physical attacks can't do any damage to it.";
@@ -300,7 +300,7 @@
 	mes "[Red]";
 	mes "Which one do you think is better? The critical damage skill, ^FF2400Bash^000000, or the Splash damage skill, ^EE0000Magnum Break^000000?";
 	next;
-	if (select("Bash:Magnum Break") == 1)  {
+	if (select("Bash", "Magnum Break") == 1)  {
 		if (BaseClass == Job_Swordman) {
 			mes "[Red]";
 			mes "Hahahaha!!! I knew you'd see things my way!! You ARE a great guy!! Undoubtedly, only ^FF2400Bash^000000 suits a Swordman. Please tell that to this BONEHEAD over here~ Hahaha!";
@@ -373,7 +373,7 @@
 	mes "[Red]";
 	mes "Which one do you think is better? The critical damage skill, ^FF2400Bash^000000, or the Splash damage skill, ^EE0000Magnum Break^000000?";
 	next;
-	if (select("Bash:Magnum Break") == 1) {
+	if (select("Bash", "Magnum Break") == 1) {
 		if (BaseClass == Job_Swordman) {
 			mes "[Red]";
 			mes "Hahahaha!!! I knew you'd see things my way!! You ARE a great guy!! Without a doubt, only ^FF2400Bash^000000 suits a Swordman. Please tell that to FUNBOY over here!! Hahaha.";
@@ -415,11 +415,11 @@
 	mes "Huh? Why am I so happy?";
 	mes "You wanna know?";
 	next;
-	if (select("Sure, why?:Not really, I don't care.") == 1) {
+	if (select("Sure, why?", "Not really, I don't care.") == 1) {
 		mes "[Soldier]";
 		mes "Ah~~ There's not much for us to do these days. You see, Merchants buy items dropped by monsters. But you knew that, right? ";
 		next;
-		if (select("Of course:Eh? Really?") == 1) {
+		if (select("Of course", "Eh? Really?") == 1) {
 			mes "[Soldier]";
 			mes "HaHa~ In fact, that was actually part of our job. But there were more and more hunters who came to us in order to get paid and it became too much to handle.";
 			next;
@@ -492,7 +492,7 @@ izlude_in,125,164,2	script	Aaron#izlude	1_M_YOUNGKNIGHT,{
 	mes "Hm...";
 	mes "Are you bored by all this talk? Or do you want me to go on?";
 	next;
-	if (select("Tell me more please.:End conversation.") == 1) {
+	if (select("Tell me more please.", "End conversation.") == 1) {
 		mes "[Aaron]";
 		mes "Hmm...";
 		mes "In that case, I'll explain about the other attributes to you briefly. In order to attack and evade quickly, you've gotta pay attention to AGI. ";
@@ -513,7 +513,7 @@ izlu2dun,108,27,0	script	Sailor#2izlude	4W_SAILOR,{
 	mes "Wanna";
 	mes "head back?";
 	next;
-	if (select("Yeah, I'm tired to death.:Nope, I love this place!") == 1) {
+	if (select("Yeah, I'm tired to death.", "Nope, I love this place!") == 1) {
 		if (RENEWAL)
 			warp "izlude",197,210;
 		else

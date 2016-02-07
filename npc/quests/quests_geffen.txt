@@ -46,7 +46,7 @@ geffen_in,144,166,4	script	Blacksmith	1_M_SMITH,{
 	mes "But...";
 	mes "I am growing older and my prowess begins to fade with age. So I've invented something for young, hot, upcoming Blacksmiths, in hopes that they too will master my craft...";
 	next;
-	switch(select("What is it?:...")) {
+	switch(select("What is it?", "...")) {
 	case 1:
 		mes "[Blacksmith]";
 		mes "We Blacksmiths must always manipulate steel under extreme heat, and the hot air and melted metals are more than most people can stand.";
@@ -63,7 +63,7 @@ geffen_in,144,166,4	script	Blacksmith	1_M_SMITH,{
 		mes "[Blacksmith]";
 		mes "So how about it ? If you give me ^2244FF50 Steel^000000 and ^4422FFonly 2000 Zeny^000000, I will make it for you right away~!!";
 		next;
-		switch(select("Hm... Not bad. Alright.:How does it work again?")) {
+		switch(select("Hm... Not bad. Alright.", "How does it work again?")) {
 		case 1:
 			if ((countitem(Steel) > 49) && (Zeny > 1999)){
 				mes "[Blacksmith]";
@@ -110,7 +110,7 @@ geffen_in,30,71,4	script	Eric	4_M_01,{
 	mes "of my blessed";
 	mes "grandfather.";
 	next;
-	switch(select("Talk:Ask about Items needed:Manufacture:Quit")) {
+	switch(select("Talk", "Ask about Items needed", "Manufacture", "Quit")) {
 	case 1:
 		mes "[Eric]";
 		mes "My Grandfather, who passed away a few years ago, was special to me. He always stayed with me, and took care of me. He was much better than my old man, who was always busy working.";
@@ -191,7 +191,7 @@ geffen,122,77,4	script	Nia#yagu	8_F_GIRL,{
 	mes "how would you like to play a";
 	mes "Number Match game with me?";
 	next;
-	switch(select("Number Match Game?:Practice Number Match:Play Number Match:Record Holder:Cancel")) {
+	switch(select("Number Match Game?", "Practice Number Match", "Play Number Match", "Record Holder", "Cancel")) {
 	case 1:
 		mes "[Nia]";
 		mes "Ah, well, the objective of";

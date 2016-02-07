@@ -41,7 +41,7 @@ que_ng,75,20,3	script	Artisan Tene#ko	4_M_JPN2,{
 	mes "[Artisan Tene]";
 	mes "How may I help you?";
 	next;
-	switch (select("Which blacksmith?:I want to add option.:I want to remove option.")) {
+	switch (select("Which blacksmith?", "I want to add option.", "I want to remove option.")) {
 	case 1: // Which blacksmith?
 		mes "[Artisan Tene]";
 		mes "Oh! Sorry, I didn't introduce myself.";
@@ -52,7 +52,7 @@ que_ng,75,20,3	script	Artisan Tene#ko	4_M_JPN2,{
 		mes "[Artisan Tene]";
 		mes "Oh! Do you want to know the list of weapons and armor I work on?";
 		next;
-		switch (select("Take a look at the weapon list.:Take a look at the armor list.")) {
+		switch (select("Take a look at the weapon list.", "Take a look at the armor list.")) {
 		case 1: // Take a look at the weapon list
 			mes "[Artisan Tene]";
 			mes "Are you interested in the weapon list?";
@@ -99,7 +99,7 @@ que_ng,75,20,3	script	Artisan Tene#ko	4_M_JPN2,{
 		mes "[Artisan Tene]";
 		mes "Ha ha. I must have talked too much. Which class of equipment do you want to add an option to?";
 		next;
-		switch (select("Weapon...:Armor...")) {
+		switch (select("Weapon...", "Armor...")) {
 		case 1:
 			mes "[Artisan Tene]";
 			mes "So you want to add an option to your weapon. That will be ^ff0000100,000 Zeny for a 1 time service.^000000";
@@ -110,7 +110,7 @@ que_ng,75,20,3	script	Artisan Tene#ko	4_M_JPN2,{
 			mes "[Artisan Tene]";
 			mes "Which weapon do you want to add an option to?";
 			next;
-			switch (select("Later...:Raksasa Dagger [1]:Mikatsuki [1]:Huuma Swirling Petal [2]:Huuma Fluttering Snow:Huuma Thunderstorm")) {
+			switch (select("Later...", "Raksasa Dagger [1]", "Mikatsuki [1]", "Huuma Swirling Petal [2]", "Huuma Fluttering Snow", "Huuma Thunderstorm")) {
 			case 1:
 				mes "[Artisan Tene]";
 				mes "Changed your mind? Very well. Hope to see you later.";
@@ -140,7 +140,7 @@ que_ng,75,20,3	script	Artisan Tene#ko	4_M_JPN2,{
 			mes "[Artisan Tene]";
 			mes "Which armor do you want to add an option to?";
 			next;
-			switch (select("Later...:Wolf Armguard [1]:Crescent Armguard [1]:Ninja Scale Armor [1]:Tenebris Latitantes [1]:Special Ninja Suit [1]")) {
+			switch (select("Later...", "Wolf Armguard [1]", "Crescent Armguard [1]", "Ninja Scale Armor [1]", "Tenebris Latitantes [1]", "Special Ninja Suit [1]")) {
 			case 1:
 				mes "[Artisan Tene]";
 				mes "Changed your mind? Very well. Hope to see you later.";
@@ -179,7 +179,7 @@ que_ng,75,20,3	script	Artisan Tene#ko	4_M_JPN2,{
 		mes "[Artisan Tene]";
 		mes "^ff0000Removing an option will be 100,000 Zeny.^000000 Which option from the list of items do you want to remove?";
 		next;
-		switch(select("Later...:Raksasa Dagger [1]:Mikatsuki [1]:Huuma Swirling Petal [2]:Huuma Fluttering Snow:Huuma Thunderstorm:Wolf Armguard [1]:Crescent Armguard [1]:Ninja Scale Armor [1]:Tenebris Latitantes [1]:Special Ninja Suit [1]")) {
+		switch(select("Later...", "Raksasa Dagger [1]", "Mikatsuki [1]", "Huuma Swirling Petal [2]", "Huuma Fluttering Snow", "Huuma Thunderstorm", "Wolf Armguard [1]", "Crescent Armguard [1]", "Ninja Scale Armor [1]", "Tenebris Latitantes [1]", "Special Ninja Suit [1]")) {
 		case 1:
 			mes "[Artisan Tene]";
 			mes "Removing options is expensive, isn't it? Sorry. I will work harder in developing my skills and bring down costs as well.";
@@ -231,7 +231,7 @@ que_ng,75,20,3	script	Artisan Tene#ko	4_M_JPN2,{
 		mes "[Artisan Tene]";
 		mes "The cost is the same but I do provide a service to remove only the option on the 3rd slot and leave the 4th slot as is. Are you interested?";
 		next;
-		switch (select("Reset only the 3rd Slot.:Reset all.")) {
+		switch (select("Reset only the 3rd Slot.", "Reset all.")) {
 		case 1:
 			mes "[Artisan Tene]";
 			mes "Very well. I will reset only your 3rd slot.";
@@ -321,7 +321,7 @@ que_ng,75,20,3	script	Artisan Tene#ko	4_M_JPN2,{
 	else
 		mes "This equipment is not currently enchanted. Shall I enchant the fourth slot?";
 	next;
-	if (select("Do it later:Do it now") == 1) {
+	if (select("Do it later", "Do it now") == 1) {
 		mes "[Artisan Tene]";
 		mes "Very well. Hope to see you later.";
 		close;

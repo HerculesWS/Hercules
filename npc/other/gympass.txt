@@ -67,7 +67,7 @@ payon,173,141,4	script	Ripped Cabus#GymPass	4_M_HUMAN_02,{
 	mes "item carrying capacity ^FF000010 times^000000.";
 	mes "So... Are you ready to sweat?";
 	next;
-	switch(select("Yes:No:Um, my workouts wore off.")) {
+	switch(select("Yes", "No", "Um, my workouts wore off.")) {
 	case 1:
 		if (gympassmemory < 10) {
 			.@add_carry = gympassmemory + 1;

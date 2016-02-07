@@ -54,7 +54,7 @@ prontera,146,91,5	script	Pandit chacha#child07	1_M_PUBMASTER,{
 		mes "I would like to give the small gift to little adventurer...";
 		mes "What about you? Do you want to take it?";
 		next;
-		if(select("No. I will take it later.:Sure, I want.") == 1) {
+		if(select("No. I will take it later.", "Sure, I want.") == 1) {
 			mes "[Pandit chacha]";
 			mes "That's too bad.... hum...";
 			mes "I gathered some stuffs from far a way world to make it....";
@@ -76,7 +76,7 @@ prontera,146,91,5	script	Pandit chacha#child07	1_M_PUBMASTER,{
 			mes "You did good work.";
 			mes "Could you give me 1 Wedding Bouquet and 1 Witherless Rose? ";
 			next;
-			if(select("Not yet.:Sure, take it.") == 1) {
+			if(select("Not yet.", "Sure, take it.") == 1) {
 				mes "[Pandit chacha]";
 				mes "If you are not prepared yet, call me when you ready.";
 				close;

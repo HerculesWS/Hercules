@@ -57,7 +57,7 @@ function	script	Promotional_Staff	{
 	mes "[Promotional Staff]";
 	mes "Hey, you're a knowledgeable person, right? Are you interested in my story?";
 	next;
-	switch(select("Yes.:No, thanks.")) {
+	switch(select("Yes.", "No, thanks.")) {
 	case 1:
 		mes "[Promotional Staff]";
 		mes "You're a real adventurer.";
@@ -319,7 +319,7 @@ prt_castle,83,67,5	script	Recruiter for the Brave	4_M_MANAGER,{
 	mes "I know, you're super curious.";
 	mes "Just try whatever you want.";
 	next;
-	switch(select("Yes, I am interested.:No, thanks.")) {
+	switch(select("Yes, I am interested.", "No, thanks.")) {
 	case 1:
 		mes "[Recruiter]";
 		mes "Oh! Yes! You're quite curious!";
@@ -1193,7 +1193,7 @@ lhz_in01,130,232,5	script	Guard#ep13_1-9	4_M_HUMAN_02,{
 		mes "If you want,";
 		mes "I can send you to the Time-Gap of Dimension.";
 		next;
-		switch(select("Send me there.:I will go there myself.")) {
+		switch(select("Send me there.", "I will go there myself.")) {
 		case 1:
 			mes "[Guard]";
 			mes "Ok, I will send you to the dimensional rift. Once you get there, just find the head of the alliance.";
@@ -1620,7 +1620,7 @@ moc_fild20,349,179,3	script	Rift Guard#1	4_M_MOC_SOLDIER,{
 		mes "Then you will pass.";
 		mes "Are you ready?";
 		next;
-		switch(select("Yes, sure.:Please wait.")) {
+		switch(select("Yes, sure.", "Please wait.")) {
 		case 1:
 			mes "[Guard]";
 			mes "Good luck.";
@@ -1650,7 +1650,7 @@ moc_fild22b,37,196,5	script	Rift Guard#2	4_M_MOC_SOLDIER,{
 	mes "[Guard]";
 	mes "If you want to run away from here, just let me know, I will guide you.";
 	next;
-	switch(select("Escape.:Nah.")) {
+	switch(select("Escape.", "Nah.")) {
 	case 1:
 		mes "[Guard]";
 		mes "Ok.";
@@ -1682,7 +1682,7 @@ moc_fild22b,230,197,5	script	Munkenro#2	4_M_RUSMAN1,{
 		mes "[Munkenro]";
 		mes "Are you ready to discover Ash-Vacuum?";
 		next;
-		switch(select("Yes, of course!:Please, wait...")) {
+		switch(select("Yes, of course!", "Please, wait...")) {
 		case 1:
 			mes "[Munkenro]";
 			mes "I wish you good luck!";
@@ -1742,7 +1742,7 @@ moc_fild22b,230,197,5	script	Munkenro#2	4_M_RUSMAN1,{
 		mes "Are you ready??";
 		mes "Let's start!";
 		next;
-		switch(select("Ready!!:Please, wait...")) {
+		switch(select("Ready!!", "Please, wait...")) {
 		case 1:
 			mes "[Munkenro]";
 			mes "Ok, just have a good adventure.";
@@ -1864,7 +1864,7 @@ mid_camp,213,286,3	script	Rift Guard#4	4_M_MOC_SOLDIER,{
 	mes "[Guard]";
 	mes "If you want to run away from here, just let me know, I will guide you.";
 	next;
-	switch(select("Escape.:Nah.")) {
+	switch(select("Escape.", "Nah.")) {
 	case 1:
 		mes "[Guard]";
 		mes "Ok.";
@@ -1909,7 +1909,7 @@ moc_ruins,137,89,5	script	Time-Space Gap Guard	4_M_MOC_SOLDIER,{
 		mes "[Guard]";
 		mes "Then, do you want to go through the Time-Space Gap now??";
 		next;
-		switch(select("Yes.:No, thanks.")) {
+		switch(select("Yes.", "No, thanks.")) {
 		case 1:
 			mes "[Guard]";
 			mes "Ok, then I will send you there. As I already said, don't tell anybody about me. Anyway... good luck!!";
@@ -1962,7 +1962,7 @@ moc_fild22b,370,370,3	script	Allied Manager#gm	4W_SAILOR,{
 		mes "[Manager]";
 		mes "What would you like to do?";
 		next;
-		switch(select("Reset the Allied Attacks.:Nothing.")) {
+		switch(select("Reset the Allied Attacks.", "Nothing.")) {
 		case 1:
 			mes "[Manager]";
 			mes "Resetting the allied attacks.";
@@ -1991,7 +1991,7 @@ mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
 			mes "You must be a stranger here.";
 			mes "Is this your first visit here?";
 			next;
-			switch(select("Yes.:No.")) {
+			switch(select("Yes.", "No.")) {
 			case 1:
 				mes "[Marian]";
 				mes "As expected~";
@@ -2179,7 +2179,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "[Instructor Lugen]";
 		mes "Will you join the survey team?";
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			mes "[Instructor Lugen]";
 			mes "Registration is simple.";
@@ -2211,7 +2211,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "[Instructor Lugen]";
 		mes "Will ou join the survey team?";
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			mes "["+ strcharinfo(0) +"]";
 			mes "I will register...";
@@ -2525,7 +2525,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			mes "and it makes me...";
 			mes "*sigh*";
 			next;
-			switch(select("Help.:Just listen.")) {
+			switch(select("Help.", "Just listen.")) {
 			case 1:
 				mes "["+ strcharinfo(0) +"]";
 				mes "I will help with your problem!";
@@ -2589,7 +2589,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "Huu...~";
 		emotion e_pif;
 		next;
-		switch(select("Help him.:Just pass.")) {
+		switch(select("Help him.", "Just pass.")) {
 		case 1:
 			mes "["+ strcharinfo(0) +"]";
 			mes "May I help you?";
@@ -2863,7 +2863,7 @@ mid_campin,106,122,4	script	Receptionist Brink#ep13b	4_M_ORIENT02,{
 		mes "...register...";
 		mes "I mean...";
 		next;
-		switch(select("I am here to register.:Just stand.")) {
+		switch(select("I am here to register.", "Just stand.")) {
 		case 1:
 			mes "[Brink]";
 			mes "Ah... I mean...";
@@ -2949,7 +2949,7 @@ mid_camp,264,263,4	script	Diego#ep13bs	4_M_RACHMAN1,{
 		mes "Hey, you there, adventurer. Please help me.";
 		emotion e_sob;
 		next;
-		switch(select("Help him.:Don't help.")) {
+		switch(select("Help him.", "Don't help.")) {
 		case 1:
 			mes "[Diego]";
 			mes "Thanks.";
@@ -3160,7 +3160,7 @@ mid_campin,295,128,4	script	Lucas#ep13bs	4_M_ACROSS,{
 		mes "send us people using the";
 		mes "dangerous way.";
 		next;
-		switch(select("Dangerous way?:Disregard it.")) {
+		switch(select("Dangerous way?", "Disregard it.")) {
 		case 1:
 			mes "[Lucas]";
 			mes "......";
@@ -3521,7 +3521,7 @@ mid_camp,267,263,0	script	Post#ep13bs1	HIDDEN_NPC,{
 		mes "- the barracks will collapse. -";
 		next;
 		while(1) {
-			switch(select("Attach the tree bar.:Tie it with the vines.")) {
+			switch(select("Attach the tree bar.", "Tie it with the vines.")) {
 			case 1:
 				mes "- You attach the tree bar -";
 				mes "- to the broken post -";
@@ -3537,7 +3537,7 @@ mid_camp,267,263,0	script	Post#ep13bs1	HIDDEN_NPC,{
 					mes "Oh! Now you need to";
 					mes "knot it and finish it.";
 					next;
-					switch(select("Knot it.:Leave it.")) {
+					switch(select("Knot it.", "Leave it.")) {
 					case 1:
 						mes "- You tie a perfect knot -";
 						next;
@@ -3605,7 +3605,7 @@ mid_camp,267,258,0	script	Post#ep13bs2	HIDDEN_NPC,{
 		mes "- the barracks will collapse. -";
 		next;
 		while(1) {
-			switch(select("Attach the tree bar.:Tie it with the vines.")) {
+			switch(select("Attach the tree bar.", "Tie it with the vines.")) {
 			case 1:
 				mes "- You attach the tree bar -";
 				mes "- to the broken post -";
@@ -3621,7 +3621,7 @@ mid_camp,267,258,0	script	Post#ep13bs2	HIDDEN_NPC,{
 					mes "Oh! Now you need to knot it and";
 					mes "finish it.";
 					next;
-					switch(select("Knot it.:Leave it.")) {
+					switch(select("Knot it.", "Leave it.")) {
 					case 1:
 						mes "- You tie a perfect knot -";
 						next;
@@ -3866,7 +3866,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				mes "...This is why I didn't want";
 				mes "to leave my lab...";
 				next;
-				switch(select("Show loot from Nepentheses.:Scold him.:Comfort him.")) {
+				switch(select("Show loot from Nepentheses.", "Scold him.", "Comfort him.")) {
 				case 1:
 					mes "["+strcharinfo(0)+"]";
 					mes "Hey, take a look here...";
@@ -4104,7 +4104,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 			mes "Can you escort me while I'm studying that species?";
 			mes "Please, I'm begging you!";
 			next;
-			switch(select("Okay.:No.")) {
+			switch(select("Okay.", "No.")) {
 			case 1:
 				mes "[Rumis Block]";
 				mes "Wow, thanks!";
@@ -4382,7 +4382,7 @@ mid_camp,240,270,3	script	Botanist#ep13	4_M_ALCHE_C,{
 			mes "Oh, okay... Ah-hah!";
 			mes "This is how it goes...";
 			next;
-			switch(select("Express your displeasure.:Agree with him.")) {
+			switch(select("Express your displeasure.", "Agree with him.")) {
 			case 1:
 				mes "["+strcharinfo(0)+"]";
 				mes "Your excitement agitates me.";
@@ -4447,7 +4447,7 @@ mid_camp,240,270,3	script	Botanist#ep13	4_M_ALCHE_C,{
 			mes "Let me see what Rumis is doing right now... Oh, he's picking his nose with his left hand and eating a slice of bread with his right.";
 			mes "God, how disgusting!";
 			next;
-			switch(select("Go check Rumis if it's true.:Do not trust his word.")) {
+			switch(select("Go check Rumis if it's true.", "Do not trust his word.")) {
 			case 1:
 				emotion e_heh;
 				mes "[Botanist]";
@@ -4634,7 +4634,7 @@ mid_camp,336,171,1	script	Camp Guard#man1	4_M_EIN_SOLDIER,{
 	if (ep13_ryu < 100 && ep13_start < 100)
 		close;
 	next;
-	switch(select("I want to enter the next area.:I want to stay.")) {
+	switch(select("I want to enter the next area.", "I want to stay.")) {
 	case 1:
 		mes "[Camp Guard]";
 		mes "Please be careful out there.";
@@ -5598,7 +5598,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			mes "[Ryosen]";
 			mes "Whatever... Could you deliver this document to the Schwartzvalt and Arunafeltz researchers?";
 			next;
-			if(select("Why me?:Alright.") == 1) {
+			if(select("Why me?", "Alright.") == 1) {
 				mes "[Ryosen]";
 				mes "... Eh? Didn't you come to help us?";
 				close;
@@ -5964,7 +5964,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			mes "[Ryosen]";
 			mes "Or... do you have any ^0000ffMystic Horns^000000 with you? Of course, I'm not saying that I want it for free. If you'd give me 5 ^0000ff5 Mystic Horns^000000, I'd give you my Rune-Midgart's Strawberry Cake.";
 			next;
-			switch(select("I haven't seen such a thing.:Oh, ok, I'll give you!")) {
+			switch(select("I haven't seen such a thing.", "Oh, ok, I'll give you!")) {
 			case 1:
 				mes "[Ryosen]";
 				mes "Mmmmmmm~";
@@ -5997,7 +5997,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 				mes "[Ryosen]";
 				mes "Are you really, honestly, positively sure you want to exchange them for my cake?";
 				next;
-				if(select("No way.:Yeah... I'll exchange.") == 1) {
+				if(select("No way.", "Yeah... I'll exchange.") == 1) {
 					mes "[Ryosen]";
 					mes "Ahhh...";
 					next;
@@ -6068,7 +6068,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				mes "[Hue]";
 				mes "You can't just come and go around as you please here. This is a restricted area.";
 				next;
-				if(select("Sorry...:I came to show you this.") == 1) {
+				if(select("Sorry...", "I came to show you this.") == 1) {
 					mes "[Hue]";
 					mes "You're just helpless, aren't you?";
 					close;
@@ -6128,7 +6128,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				mes "[Hue]";
 				mes "Well, thank you for entertaining me. You should tell Ryosen that.";
 				next;
-				if(select("Ok, I will.:Please sign the invitation.") == 1) {
+				if(select("Ok, I will.", "Please sign the invitation.") == 1) {
 					mes "[Hue]";
 					mes "Well, you should also tell him that I think he's very talented in settin up comedy. Hahaha.";
 					close;
@@ -6361,7 +6361,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 			mes "Could you bring ^0000ffFur^000000 if you get some? I'm not asking it for free.";
 			mes "I'll give you my Pineapple Jubilee from Schwartzvalt, if you bring me ^0000ff5 Furs^000000.";
 			next;
-			switch(select("I don't have any, right now.:Oh, I'll give you Fur.")) {
+			switch(select("I don't have any, right now.", "Oh, I'll give you Fur.")) {
 			case 1:
 				mes "[Hue]";
 				mes "Alright, you don't have any.";
@@ -6393,7 +6393,7 @@ mid_camp,247,255,1	script	Hue#ep131_rhea02	4_M_LGTGUARD,{
 				mes "[Hue]";
 				mes "Are you sure you want to exchange this for my Pineapple Jubilee?";
 				next;
-				if(select("No way.:Sure.") == 1) {
+				if(select("No way.", "Sure.") == 1) {
 					mes "[Hue]";
 					mes "Ahhhhh...";
 					next;
@@ -6466,7 +6466,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 				mes "[Hansenne]";
 				mes "Haha, hahaha, hahahahahahahahaha.";
 				next;
-				switch(select("......:Come and look at this.")) {
+				switch(select("......", "Come and look at this.")) {
 				case 1:
 					mes "[Hansenne]";
 					mes "What are you looking at?";
@@ -6558,7 +6558,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 				mes "Ehhhhh? And what's this? Having some time to get to know each other??? ...Pffthahahahaha...";
 				mes "Aaahahahahaha.";
 				next;
-				switch(select("What's so funny?!:Hey, just sign this thing.")) {
+				switch(select("What's so funny?!", "Hey, just sign this thing.")) {
 				case 1:
 					mes "[Hansenne]";
 					mes "Haha...get to know each other...";
@@ -6621,7 +6621,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 			mes "[Hansenne]";
 			mes "What are you doing here?";
 			next;
-			switch(select("I missed you.:I came to pick up the requested document.")) {
+			switch(select("I missed you.", "I came to pick up the requested document.")) {
 			case 1:
 				mes "[Hansenne]";
 				mes "You what?";
@@ -6824,7 +6824,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 			mes "Can you give me a ^0000ffPeaked Hat^000000 if you have any? I'm not asking for free.";
 			mes "For ^0000ff5 Peaked Hats^000000, I'll give you my special dessert!";
 			next;
-			switch(select("No way.:Sure.")) {
+			switch(select("No way.", "Sure.")) {
 			case 1:
 				mes "[Hansenne]";
 				mes "No way?";
@@ -6858,7 +6858,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 				mes "[Hansenne]";
 				mes "Are you sure you want to give these to me?";
 				next;
-				switch(select("No way.:Sure.")) {
+				switch(select("No way.", "Sure.")) {
 				case 1:
 					mes "[Hansenne]";
 					mes "No way. Yes way. This way. That way.";
@@ -6978,7 +6978,7 @@ mid_camp,1,1,0	script	#timer_alba01	CLEAR_NPC,{
 		mes "Recruited " + $@PartTimeSlots + " part-timers.";
 		mes "What do you want to do?";
 		next;
-		switch(select("Reset the recruiting.:Cancel.")) {
+		switch(select("Reset the recruiting.", "Cancel.")) {
 		case 1:
 			mes "Recruiting has been reset.";
 			mes "Timer has stopped!";
@@ -7038,7 +7038,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 			mes "[Taab]";
 			mes "How may I help you?";
 			next;
-			switch(select("What is this place?:I'm here for a job.:No, thanks.")) {
+			switch(select("What is this place?", "I'm here for a job.", "No, thanks.")) {
 			case 1:
 				mes "[Taab]";
 				mes "This is where we keep creatures";
@@ -7583,7 +7583,7 @@ function Catwarp;
 		mes "conveniences during your";
 		mes "stay at this expedition camp?";
 		next;
-		switch(select("Tell me more about your services.:No. thanks")) {
+		switch(select("Tell me more about your services.", "No. thanks")) {
 		case 1:
 			mes "[Cat Hand Agent]";
 			mes "Before making a contract with us, youll have to go through a few steps to satisfy our terms and conditions.";
@@ -7619,7 +7619,7 @@ function Catwarp;
 		mes "Would you like to save your location?";
 		ep13_yong1 = 3;
 		next;
-		switch(select("Save your location:Cancel")) {
+		switch(select("Save your location", "Cancel")) {
 		case 1:
 			savepoint "mid_camp",56,139;
 			mes "[Cat Hand Agent]";
@@ -7638,7 +7638,7 @@ function Catwarp;
 		mes "Cat Trading's available services are as followed.";
 		mes "For additional services, please consult Agent Gyaruk.";
 		next;
-		switch(select("Save your location:Cancel")) {
+		switch(select("Save your location", "Cancel")) {
 		case 1:
 			savepoint "mid_camp",56,139;
 			mes "[Cat Hand Agent]";
@@ -7657,7 +7657,7 @@ function Catwarp;
 		mes "Cat Trading's available services are as followed.";
 		mes "For additional services, please consult Agent Gyaruk.";
 		next;
-		switch(select("Save your location:Use Storage:Cancel")) {
+		switch(select("Save your location", "Use Storage", "Cancel")) {
 		case 1:
 			savepoint "mid_camp",56,139;
 			mes "[Cat Hand Agent]";
@@ -7704,7 +7704,7 @@ function Catwarp;
 		mes "Cat Trading's available services are as followed.";
 		mes "For additional services, please consult Agent Gyaruk.";
 		next;
-		switch(select("Save your location:Use Storage:Use Cat Warp (Midgard):Cancel")) {
+		switch(select("Save your location", "Use Storage", "Use Cat Warp (Midgard)", "Cancel")) {
 		case 1:
 			savepoint "mid_camp",56,139;
 			mes "[Cat Hand Agent]";
@@ -7748,20 +7748,20 @@ function Catwarp;
 			mes "Please remember, you can't come back easily once you move to Midgard.";
 			next;
 			if ((ep13_yong1 > 39) && (ep13_yong1 <= 49)) {
-				switch(select("Prontera -> 5500z:Cancel")) {
+				switch(select("Prontera -> 5500z", "Cancel")) {
 					case 1: Catwarp(5500,2);
 					case 2: break;
 				}
 			}
 			else if ((ep13_yong1 > 49) && (ep13_yong1 < 60)) {
-				switch(select("Alberta -> 5500z:Prontera -> 5500z:Cancel")) {
+				switch(select("Alberta -> 5500z", "Prontera -> 5500z", "Cancel")) {
 					case 1: Catwarp(5500,1);
 					case 2: Catwarp(5500,2);
 					case 3: break;
 				}
 			}
 			else if ((ep13_yong1 > 59) && (ep13_yong1 < 70)) {
-				switch(select("Alberta -> 5025z:Prontera -> 5025z:Izlude -> 5025z:Cancel")) {
+				switch(select("Alberta -> 5025z", "Prontera -> 5025z", "Izlude -> 5025z", "Cancel")) {
 					case 1: Catwarp(5025,1);
 					case 2: Catwarp(5025,2);
 					case 3: Catwarp(5025,3);
@@ -7769,7 +7769,7 @@ function Catwarp;
 				}
 			}
 			else if ((ep13_yong1 > 69) && (ep13_yong1 < 80)) {
-				switch(select("Alberta -> 5025z:Prontera -> 5025z:Izlude -> 5025z:Geffen -> 5025z:Cancel")) {
+				switch(select("Alberta -> 5025z", "Prontera -> 5025z", "Izlude -> 5025z", "Geffen -> 5025z", "Cancel")) {
 					case 1: Catwarp(5025,1);
 					case 2: Catwarp(5025,2);
 					case 3: Catwarp(5025,3);
@@ -7778,7 +7778,7 @@ function Catwarp;
 				}
 			}
 			else if ((ep13_yong1 > 79) && (ep13_yong1 < 90)) {
-				switch(select("Alberta -> 4765z:Prontera -> 4765z:Izlude -> 4765z:Geffen -> 4765z:Payon -> 4765z:Cancel")) {
+				switch(select("Alberta -> 4765z", "Prontera -> 4765z", "Izlude -> 4765z", "Geffen -> 4765z", "Payon -> 4765z", "Cancel")) {
 					case 1: Catwarp(4765,1);
 					case 2: Catwarp(4765,2);
 					case 3: Catwarp(4765,3);
@@ -7788,7 +7788,7 @@ function Catwarp;
 				}
 			}
 			else if ((ep13_yong1 > 89) && (ep13_yong1 < 100)) {
-				switch(select("Alberta -> 4765z:Prontera -> 4765z:Izlude -> 4765z:Geffen -> 4765z:Payon -> 4765z:Morroc -> 4765z:Cancel")) {
+				switch(select("Alberta -> 4765z", "Prontera -> 4765z", "Izlude -> 4765z", "Geffen -> 4765z", "Payon -> 4765z", "Morroc -> 4765z", "Cancel")) {
 					case 1: Catwarp(4765,1);
 					case 2: Catwarp(4765,2);
 					case 3: Catwarp(4765,3);
@@ -7799,7 +7799,7 @@ function Catwarp;
 				}
 			}
 			else if (ep13_yong1 > 99) {
-				switch(select("Alberta -> 4590z:Prontera -> 4590z:Izlude -> 4590z:Geffen -> 4590z:Payon -> 4590z:Morroc -> 4590z:Al De Baran -> 4590z:Cancel")) {
+				switch(select("Alberta -> 4590z", "Prontera -> 4590z", "Izlude -> 4590z", "Geffen -> 4590z", "Payon -> 4590z", "Morroc -> 4590z", "Al De Baran -> 4590z", "Cancel")) {
 					case 1: Catwarp(4590,1);
 					case 2: Catwarp(4590,2);
 					case 3: Catwarp(4590,3);
@@ -7826,7 +7826,7 @@ function Catwarp;
 		mes "Cat Trading's available services are as followed.";
 		mes "For additional services, please consult Agent Gyaruk.";
 		next;
-		switch(select("Save your location:Use Storage:Use Cat Warp (Midgard):Use Cat Warp (Jottunheim):Cancel")) {
+		switch(select("Save your location", "Use Storage", "Use Cat Warp (Midgard)", "Use Cat Warp (Jottunheim)", "Cancel")) {
 		case 1:
 			savepoint "mid_camp",56,139;
 			mes "[Cat Hand Agent]";
@@ -7870,7 +7870,7 @@ function Catwarp;
 			mes "Please remember, you can't come back easily once you move to Midgard.";
 			next;
 			if ((ep13_yong1 > 99) && (ep13_yong1 < 200)) {
-				switch(select("Alberta -> 4590z:Prontera -> 4590z:Izlude -> 4590z:Geffen -> 4590z:Payon -> 4590z:Morroc -> 4590z:Al De Baran -> 4590z:Cancel")) {
+				switch(select("Alberta -> 4590z", "Prontera -> 4590z", "Izlude -> 4590z", "Geffen -> 4590z", "Payon -> 4590z", "Morroc -> 4590z", "Al De Baran -> 4590z", "Cancel")) {
 					case 1: Catwarp(4590,1);
 					case 2: Catwarp(4590,2);
 					case 3: Catwarp(4590,3);
@@ -7882,7 +7882,7 @@ function Catwarp;
 				}
 			}
 			else if ((ep13_yong1 > 199) && (ep13_yong1 < 250)) {
-				switch(select("Alberta -> 4170z:Prontera -> 4170z:Izlude -> 4170z:Geffen -> 4170z:Payon -> 4170z:Morroc -> 4170z:Al De Baran -> 4170z:Juno -> 4170z:Cancel")) {
+				switch(select("Alberta -> 4170z", "Prontera -> 4170z", "Izlude -> 4170z", "Geffen -> 4170z", "Payon -> 4170z", "Morroc -> 4170z", "Al De Baran -> 4170z", "Juno -> 4170z", "Cancel")) {
 					case 1: Catwarp(4170,1);
 					case 2: Catwarp(4170,2);
 					case 3: Catwarp(4170,3);
@@ -7895,7 +7895,7 @@ function Catwarp;
 				}
 			}
 			else if ((ep13_yong1 > 249) && (ep13_yong1 < 300)) {
-				switch(select("Alberta -> 4025z:Prontera -> 4025z:Izlude -> 4025z:Geffen -> 4025z:Payon -> 4025z:Morroc -> 4025z:Al De Baran -> 4025z:Juno -> 4025z:Einbroch -> 4025z:Cancel")) {
+				switch(select("Alberta -> 4025z", "Prontera -> 4025z", "Izlude -> 4025z", "Geffen -> 4025z", "Payon -> 4025z", "Morroc -> 4025z", "Al De Baran -> 4025z", "Juno -> 4025z", "Einbroch -> 4025z", "Cancel")) {
 					case 1: Catwarp(4025,1);
 					case 2: Catwarp(4025,2);
 					case 3: Catwarp(4025,3);
@@ -7909,7 +7909,7 @@ function Catwarp;
 				}
 			}
 			else if (ep13_yong1 > 299) {
-				switch(select("Alberta -> 3970z:Prontera -> 3970z:Izlude -> 3970z:Geffen -> 3970z:Payon -> 3970z:Morroc -> 3970z:Al De Baran -> 3970z:Juno -> 3970z:Einbroch -> 3970z:Lighthalzen -> 3970z:Cancel")) {
+				switch(select("Alberta -> 3970z", "Prontera -> 3970z", "Izlude -> 3970z", "Geffen -> 3970z", "Payon -> 3970z", "Morroc -> 3970z", "Al De Baran -> 3970z", "Juno -> 3970z", "Einbroch -> 3970z", "Lighthalzen -> 3970z", "Cancel")) {
 					case 1: Catwarp(3970,1);
 					case 2: Catwarp(3970,2);
 					case 3: Catwarp(3970,3);
@@ -7929,7 +7929,7 @@ function Catwarp;
 			}
 			close;
 		case 4:
-			switch(select("Splendide Camp -> 5500z:Manuk Camp -> 5500z:Cancel")) {
+			switch(select("Splendide Camp -> 5500z", "Manuk Camp -> 5500z", "Cancel")) {
 				case 1: Catwarp(5500,11);
 				case 2: Catwarp(5500,12);
 				case 3:
@@ -8026,7 +8026,7 @@ mid_camp,72,94,4	script	Fluffy Gyaruk	4_M_BOSSCAT,{
 		mes "The more credits you earn, the more services you can use. You can also apply for special events.";
 		mes "Say, how'd you like to make a membership contract with us?";
 		next;
-		switch(select("Sure.:I need to think it over.")) {
+		switch(select("Sure.", "I need to think it over.")) {
 		case 1:
 			mes "[Fluffy Gyaruk]";
 			mes "Excellent! Thank you for joining the Cat Trading membership service.";
@@ -8063,7 +8063,7 @@ mid_camp,72,94,4	script	Fluffy Gyaruk	4_M_BOSSCAT,{
 		mes "Doesn't that sound like a win-win situation?";
 		mes "Would you like to start now?";
 		next;
-		switch(select("Sure.:I need to go prepare first.")) {
+		switch(select("Sure.", "I need to go prepare first.")) {
 		case 1:
 			mes "[Fluffy Gyaruk]";
 			mes "Excellent.";
@@ -8086,7 +8086,7 @@ mid_camp,72,94,4	script	Fluffy Gyaruk	4_M_BOSSCAT,{
 		mes "[Fluffy Gyaruk]";
 		mes "Your current credit points with us are ^0000FF" + ep13_yong1 + "^000000.";
 		next;
-		switch(select("How can I increase my points?:I'm not interested.")) {
+		switch(select("How can I increase my points?", "I'm not interested.")) {
 		case 1:
 			mes "[Cat Hand Agent]";
 			mes "You can increase them daily by fishing and mining, you need to submit caught Pieces of Fish to Gorurung and minerals to the Mining Agent.";
@@ -8342,7 +8342,7 @@ mid_camp,66,122,7	script	Henry Clifford	4_M_05,{
 		mes "but I guarantee the authenticity of these points.";
 		mes "Are you interested?";
 		next;
-		switch(select("Yes.:No, thanks.")) {
+		switch(select("Yes.", "No, thanks.")) {
 		case 1:
 			delitem Marlin,1;
 			ep13_yong1 += 2;
@@ -8934,7 +8934,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		mes "[Hibba Agip]";
 		mes "What brings you here again? You seem to have something to say to me.";
 		next;
-		switch(select("I just want to say hello.:I found a weird portal below the mine cave.")) {
+		switch(select("I just want to say hello.", "I found a weird portal below the mine cave.")) {
 		case 1:
 			mes "[Hibba Agip]";
 			mes "Well hello then...";
@@ -9073,7 +9073,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 			mes "[Hibba Agip]";
 			mes "I'm going to give you a choice. Which tribe do you want to go to?";
 			next;
-			switch(select("Laphine:Sapha")) {
+			switch(select("Laphine", "Sapha")) {
 			case 1:
 				mes "[Hibba Agip]";
 				mes "Okay, then I place responsibility on you. from now on you focus on acquiring a good reputation with the Laphine.";
@@ -9087,7 +9087,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 				mes "[Hibba Agip]";
 				mes "Will you choose the Laphine?";
 				next;
-				switch(select("Choose Laphine.:Think again.")) {
+				switch(select("Choose Laphine.", "Think again.")) {
 				case 1:
 					mes "[Hibba Agip]";
 					mes "Good. You are now responsible with building our relationship with the Laphine tribe.";
@@ -9120,7 +9120,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 				mes "[Hibba Agip]";
 				mes "Will you choose the Sapha?";
 				next;
-				switch(select("Choose Sapha.:Think again.")) {
+				switch(select("Choose Sapha.", "Think again.")) {
 				case 1:
 					mes "[Hibba Agip]";
 					mes "Good. You are now responsible with building our relationship with the Sapha tribe.";
@@ -9256,7 +9256,7 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 		mes "[Staff Officer Abidal]";
 		mes "I'm Staff Officer Abidal of the Midgard Expedition. How may I help you?";
 		next;
-		switch(select("Midgard Expedition Introduction:Midgard Expedition's Achievement:Situation in the Ash-Vacuum:Quit")) {
+		switch(select("Midgard Expedition Introduction", "Midgard Expedition's Achievement", "Situation in the Ash-Vacuum", "Quit")) {
 		case 1:
 			mes "[Staff Officer Abidal]";
 			mes "The Midgard Expedition is conducted by a group of explorers from the three countries of Rune Midgard and the Mercenary Association. We're here to explore the Ash-Vacuum.";
@@ -9319,7 +9319,7 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 		mes "[Staff Officer Abidal]";
 		mes "On behalf of the expedition, I'd like to give you a mission. Would you like to accept it?";
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			mes "[Staff Officer Abidal]";
 			mes "Thank you so much. I had a good feeling about you, and I was so sure that you'd be willing to help.";
@@ -9416,7 +9416,7 @@ mid_campin,94,118,3	script	Staff Officer Abidal	4_M_SAGE_C,{
 		mes "How have you been doing with finding the report's lost pages?";
 		mes "Feel free to tell me whenever you're ready.";
 		next;
-		switch(select("Submit found pages.:Check the report's resoration status.:Quit.")) {
+		switch(select("Submit found pages.", "Check the report's resoration status.", "Quit.")) {
 		case 1:
 			if ((countitem(Expedition_Report_Vol1) > 0) && (countitem(Expedition_Report_Vol2) > 0) && (countitem(Expedition_Report_Vol3) > 0) && (countitem(Expedition_Report_Vol4) > 0)) {
 				mes "[Staff Officer Abidal]";
@@ -9859,7 +9859,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 		mes "[???]";
 		mes "Give me the report.";
 		next;
-		switch(select("Give the report.:Protect the report.")) {
+		switch(select("Give the report.", "Protect the report.")) {
 		case 1:
 			mes "[Expedition Messenger]";
 			mes "Wha... What are you doing? You can't give up the report...";
@@ -10077,7 +10077,7 @@ man_fild01,315,95,3	script	Expedition Scout#1	4_M_MOC_SOLDIER,{
 	mes "I've been ordered by Instructor Igrid to conduct a search for something.";
 	.@playtime = questprogress(3091,PLAYTIME);
 	next;
-	switch(select("Ask about search results.:Chitchat.:Quit.")) {
+	switch(select("Ask about search results.", "Chitchat.", "Quit.")) {
 	case 1:
 		if (ep13_1_edq == 71 || ep13_1_edq == 72) {
 			mes "[Expedition Scout]";
@@ -10705,7 +10705,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 		mes "What?! What do you want?";
 		mes "Why do you keep giving me that dirty look?!";
 		next;
-		switch(select("Nothing.:Something is bothering me...")) {
+		switch(select("Nothing.", "Something is bothering me...")) {
 		case 1:
 			mes "[Echinacea]";
 			mes "Argh...!";
@@ -10902,14 +10902,14 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 		mes "[Mr. Kidd]";
 		mes "......Do you have any business here?";
 		next;
-		switch(select("Echinacea...:No.")) {
+		switch(select("Echinacea...", "No.")) {
 		case 1:
 			mes "[Mr. Kidd]";
 			mes "An assistant? I don't think I need one, but...";
 			mes "I guess I should give you something to do.";
 			mes "Do you mind if I entrust you with a chore?";
 			next;
-			switch(select("Yes.:No, I don't mind at all.")) {
+			switch(select("Yes.", "No, I don't mind at all.")) {
 			case 1:
 				mes "[Mr. Kidd]";
 				mes "Then why did you come all this way?";
@@ -11261,7 +11261,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			mes "[Mr. Kidd]";
 			mes "Where's the scroll? Did you use it?";
 			next;
-			switch(select("Yes.:No.")) {
+			switch(select("Yes.", "No.")) {
 			case 1:
 				mes "[Mr. Kidd]";
 				mes "That scroll contains a teleportation spell.";
@@ -11364,7 +11364,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 		mes "[Mr. Kidd]";
 		mes "..Do you have any questions?";
 		next;
-		switch(select("Is this an exchange journal?:Why should I carry the crystal?:What is this last assignment?")) {
+		switch(select("Is this an exchange journal?", "Why should I carry the crystal?", "What is this last assignment?")) {
 		case 1:
 			cutin "moc2_kid04",2;
 			mes "[Mr. Kidd]";
@@ -11454,7 +11454,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			mes "What's up?";
 			mes "I told you that I won't have any more work available for you. Well, for a good while, anyway..";
 			next;
-			select("Want a snack?:Mr. Defaria has sent me.");
+			select("Want a snack?", "Mr. Defaria has sent me.");
 			cutin "moc2_kid05",2;
 			mes "[Mr. Kidd]";
 			mes "..I guess he's finally made a fire, huh?";
@@ -11462,7 +11462,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			delitem Nice_Sweet_Potato,2;
 			mao_morocc2 = 105;
 			next;
-			switch(select("Ask about Dandelion.:Ask about Arunafeltz.")) {
+			switch(select("Ask about Dandelion.", "Ask about Arunafeltz.")) {
 			case 1:
 				cutin "moc2_kid03",2;
 				mes "[Mr. Kidd]";
@@ -11608,7 +11608,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		mes "[Defaria]";
 		mes "But remember; I'm not doing this officially. Please don't make me disgrace my country by helping you. Do you understand what I'm saying?";
 		next;
-		switch(select("Got it.:No.")) {
+		switch(select("Got it.", "No.")) {
 		case 1:
 			mes "[Defaria]";
 			mes "Good. Then I expect you to help me by gathering the items I need to unseal the scroll:";
@@ -11716,7 +11716,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 			mes "..I know they're involved in this case, but";
 			mes "we shouldn't talk about them.";
 			next;
-			switch(select("Just tell me what you know.:Alright..:")) {
+			switch(select("Just tell me what you know.", "Alright..", "")) {
 			case 1:
 				mes "[Defaria]";
 				mes "Why should I go through all that trouble?";
@@ -11728,7 +11728,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 				mes "Anything?";
 				mes "Are you serious?";
 				next;
-				switch(select("Haha, got you!:Yes!")) {
+				switch(select("Haha, got you!", "Yes!")) {
 				case 1:
 					mes "[Defaria]";
 					mes "What th--! How dare you fool an old man!";
@@ -12030,14 +12030,14 @@ que_job01,82,95,3	script	Bar Master#moc2_01	1_ETC_01,{
 		mes "What would you like to drink?";
 	}
 	next;
-	switch(select("Order a Drink:About the mission:Quit")) {
+	switch(select("Order a Drink", "About the mission", "Quit")) {
 	case 1:
 		mes "[Karred]";
 		mes "We have Tropical Sograt";
 		mes "and Vermillion on the Beach.";
 		mes "Which one would you like to drink?";
 		next;
-		switch(select("Tropical Sograt:Vermilion on the Beach:How about a free drink?")) {
+		switch(select("Tropical Sograt", "Vermilion on the Beach", "How about a free drink?")) {
 		case 1:
 			if (checkweight(Knife,1) == 0) {
 				mes "[Karred]";
@@ -12260,7 +12260,7 @@ OnTouch:
 			mes "a drink. Besides, you can't risk making trouble here: this place";
 			mes "is full of deadly Assassins.";
 			next;
-			switch(select("Sure:Why should I?!")) {
+			switch(select("Sure", "Why should I?!")) {
 			case 1:
 				mes "[Litheron]";
 				if (Zeny > 999) {
@@ -12340,7 +12340,7 @@ que_job01,49,49,5	script	Tao#dan_09	4_F_YUNYANG,{
 		mes "Say, how's it like outside? Meow?";
 		next;
 		if (prt_curse == 24) {
-			switch(select("Is Marjana in?:I'm here to see you, Tao.")) {
+			switch(select("Is Marjana in?", "I'm here to see you, Tao.")) {
 			case 1:
 				mes "[Tao]";
 				mes "She's in the room on your left, meow~";
@@ -12374,7 +12374,7 @@ que_job01,49,49,5	script	Tao#dan_09	4_F_YUNYANG,{
 	else {
 		mes "Why are you here, meow?";
 		next;
-		switch(select("Hey kid, are you alone?:What are you, meow?!:Why do you keep meowing?!")) {
+		switch(select("Hey kid, are you alone?", "What are you, meow?!", "Why do you keep meowing?!")) {
 		case 1:
 			mes "[Tao]";
 			mes "Who are you calling a kid?";
@@ -12756,7 +12756,7 @@ que_job01,84,17,3	script	Rin#moc_room2_1	4_F_ACROSS,{
 			cutin "moc2_rin01",2;
 		}
 		next;
-		switch(select("Mr. Kidd sent me.:Just passing by.")) {
+		switch(select("Mr. Kidd sent me.", "Just passing by.")) {
 		case 1:
 			cutin "moc2_rin02",2;
 			mes "[Rin]";
@@ -12828,7 +12828,7 @@ que_job01,84,17,3	script	Rin#moc_room2_1	4_F_ACROSS,{
 			mes "I really want to know how the space gap is linked to Satan Morocc...";
 			mes "*Pant Pant*... ...";
 			next;
-			switch(select("And then what?:Don't strain yourself.")) {
+			switch(select("And then what?", "Don't strain yourself.")) {
 			case 1:
 				cutin "moc2_rin01",2;
 				mes "[Rin]";
@@ -13098,7 +13098,7 @@ que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 			mes "It seems as if he is trying to resist the evil personality within him. -";
 			next;
 			cutin "moc2_dan02",255;
-			switch(select("Smack his head.:Punch his stomach.:Slap his face.")) {
+			switch(select("Smack his head.", "Punch his stomach.", "Slap his face.")) {
 			case 1:
 				specialeffect EF_HIT2,AREA,"Rayan#moc_room2_2";
 				mes "- Wanting to stop Rayan from going berserk, you smacked the back of his head with the journal. Rayan staggered and then fell to the ground. Nice job! -";
@@ -13362,7 +13362,7 @@ hu_fild04,235,103,0	script	Heap of Earth#mao2_01	CLEAR_NPC,4,4,{
 		mes "It feels like faint mana.. ?!... Yes, I can barely see an aura.";
 		mes "...What is this?";
 		next;
-		switch(select("Ignore it.:Take a careful look.")) {
+		switch(select("Ignore it.", "Take a careful look.")) {
 		case 1:
 			mes "[" + strcharinfo(0) + "]";
 			mes "Hmm.. This place must be where Rin fought with Rayan's gang.";
@@ -13611,7 +13611,7 @@ que_dan01,49,36,5	script	Corpse#moc2_dead01	4_M_DSTMANDEAD,{
 			mes "You have found a laceration on the dead body;";
 			mes "he must have been killed by Rin.";
 			next;
-			switch(select("Check his pockets.:Shake the corpse.")) {
+			switch(select("Check his pockets.", "Shake the corpse.")) {
 			case 1:
 				mes "It's creepy to touch a corpse, but you have decided to check his pockets for any clues.";
 				next;
@@ -13818,7 +13818,7 @@ OnTouch:
 		mes "- The side to the basement is open.";
 		mes "You can enter if you want. -";
 		next;
-		switch(select("Enter.:Do not enter.")) {
+		switch(select("Enter.", "Do not enter.")) {
 		case 1:
 			warp "que_dan02",91,11;
 			end;
@@ -13973,7 +13973,7 @@ prontera,161,192,5	script	Ash-Vacuum Warper	4_M_MOC_SOLDIER,{
 	mes "[Warp Soldier]";
 	mes "Do you want to go to Ash-Vacuum right now?";
 	next;
-	switch(select("Yes, please:Not yet")) {
+	switch(select("Yes, please", "Not yet")) {
 	case 1:
 		mes "[Warp Soldier]";
 		mes "Ok. I hope you";

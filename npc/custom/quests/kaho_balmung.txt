@@ -19,12 +19,12 @@ prontera,158,356,4	script	Royal Messenger	8W_SOLDIER,{
 	mes "Welcome to Prontera.";
 	mes "I am the messenger in charge of the Royal Quests.";
 	next;
-	if(select("Listen...:Walk away")==2) close;
+	if(select("Listen...", "Walk away")==2) close;
 	mes "[Royal Messenger]";
 	mes "There are two quests.";
 	mes "Choose the one you like.";
 	next;
-	set .@i, select("Balmung:Lord Kaho's Horns:^777777Never mind.^000000");
+	set .@i, select("Balmung", "Lord Kaho's Horns", "^777777Never mind.^000000");
 	mes "[Royal Messenger]";
 	if (.@i==3) {
 		mes "Have a nice day.";

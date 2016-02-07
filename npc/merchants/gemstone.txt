@@ -45,7 +45,7 @@ payon,173,238,5	script	Jade#pay	4_M_SAGE_A,{
 	mes "change them to Gemstones";
 	mes "of a different color.";
 	next;
-	switch(select("Blue Gemstones into Red ones!:Red Gemstones into Yellow ones!:Yellow Gemstones into Blue ones!")) {
+	switch(select("Blue Gemstones into Red ones!", "Red Gemstones into Yellow ones!", "Yellow Gemstones into Blue ones!")) {
 	case 1: callsub S_TradeGems,717,716;
 	case 2: callsub S_TradeGems,716,715;
 	case 3: callsub S_TradeGems,715,717;
@@ -71,7 +71,7 @@ S_TradeGems:
 		mes "that you currently have.";
 		mes "What do you want to do?";
 		next;
-		switch(select("Give me as many as you can.:I want to set the amount.:I quit.")) {
+		switch(select("Give me as many as you can.", "I want to set the amount.", "I quit.")) {
 		case 1:
 			delitem getarg(0),.@gems * 2;
 			getitem getarg(1),.@gems;

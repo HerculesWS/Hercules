@@ -49,7 +49,7 @@ amatsu,202,91,3	script	Amatsu Guide#amatsu	4_F_JPN,{
 	F_Navi("[Amachang]");
 	while (1) {
 		next;
-		switch(select("[ Kafra Employee ]:[ Bar ]:[ Weapon Dealer ]:[ Tool Dealer ]:[ Amatsu Palace ]:[ Chef Assistant ]:[ Ninja Guild Building ]:[ Sea Captain ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Kafra Employee ]", "[ Bar ]", "[ Weapon Dealer ]", "[ Tool Dealer ]", "[ Amatsu Palace ]", "[ Chef Assistant ]", "[ Ninja Guild Building ]", "[ Sea Captain ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			callsub L_Mark, "^0000FFKafra Employee^000000";
 			viewpoint 1,102,149,0,0x0A82FF;

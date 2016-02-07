@@ -56,7 +56,7 @@ function	script	F_AuctionWarper	{
 	mes "like to enter the";
 	mes "Auction Hall?";
 	next;
-	if (select("Yes:No") == 1) {
+	if (select("Yes", "No") == 1) {
 		if (getarg(0) == 1 || getarg(0) == 4) {
 			mes "[Auction Hall Guide]";
 			mes "Great! Well then,";
@@ -111,7 +111,7 @@ auction_02,43,17,0	warp	auction_enterance_lhz	1,1,lighthalzen,209,169
 	mes "Welcome to the Auction Hall.";
 	mes "Would you like to view the goods?";
 	next;
-	if (select("Yes:No") == 1) {
+	if (select("Yes", "No") == 1) {
 		mes "[Auction Broker]";
 		if ( getbattleflag( "feature.auction" ) ) {
 			mes "Very well.";

@@ -48,7 +48,7 @@ mora,160,123,3	script	Nemnem#p	4_M_RAFLE_OLD,{
 	mes "since the crevice appeared in Bifrost.";
 	mes "Are you responsible for it, young one?";
 	next;
-	switch(select("Of course I am!:That's an unfair accusation!")) {
+	switch(select("Of course I am!", "That's an unfair accusation!")) {
 	case 1:
 		mes "[Nemnem]";
 		mes "Bra~vo!";
@@ -257,7 +257,7 @@ mora,113,185,4	script	Reading Raffle#ep14_1	4_M_RAFLE_GR,{
 	mes "You see a Rafflesia";
 	mes "lost in reading.";
 	next;
-	switch(select("See what he's reading.:Leave him alone.")) {
+	switch(select("See what he's reading.", "Leave him alone.")) {
 	case 1:
 		mes "Curious about what he's reading,";
 		mes "you quietly approach him from behind.";
@@ -347,7 +347,7 @@ mora,99,65,6	script	Banana Rafflesia#ep14_1	4_M_RAFLE_GR,{
 	mes "[Banana Rafflesia]";
 	mes "You want a banana?";
 	next;
-	switch(select("Yes, I do.:No, thanks.")) {
+	switch(select("Yes, I do.", "No, thanks.")) {
 	case 1:
 		mes "[Banana Rafflesia]";
 		mes "Take it if you can.";
@@ -442,7 +442,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	mes "[Raffle Philosopher]";
 	mes "With a little token of appreciation, I will tell you a quote that will help you in your life.";
 	next;
-	if(select("Give him a token of appreciation.:Can't you just tell me?") == 2) {
+	if(select("Give him a token of appreciation.", "Can't you just tell me?") == 2) {
 		mes "[Raffle Philosopher]";
 		mes "You don't get something for nothing.";
 		close;
@@ -949,7 +949,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	next;
 	mes "They seem to be calling out to you.";
 	next;
-	if(select("See what the matter is.:I have nothing to do with it.") == 2) {
+	if(select("See what the matter is.", "I have nothing to do with it.") == 2) {
 		mes "You went on your way";
 		mes "leaving the travelers behind you.";
 		close;
@@ -981,7 +981,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	mes "the answer to the question is?";
 	emotion e_ag,0,"Traveler#ep14_1_1";
 	next;
-	switch(select("Roseten.:Rose.:How would I know that?")) {
+	switch(select("Roseten.", "Rose.", "How would I know that?")) {
 	case 1:
 		mes "["+strcharinfo(0)+"]";
 		mes "The answer to the question is Roseten.";
@@ -1109,7 +1109,7 @@ mora,43,127,3	script	Innkeeper#mora_inn	4_M_RAFLE_OR,{
 	mes "Oh~ looks like we have another adventurer.";
 	mes "Where are you from?";
 	next;
-	switch(select("Just save the game.:I'd like to get some rest.:The place I used to live is called...:How can I use the warehouse?")) {
+	switch(select("Just save the game.", "I'd like to get some rest.", "The place I used to live is called...", "How can I use the warehouse?")) {
 	case 1:
 		mes "[Innkeeper]";
 		mes "Wow, what's the rush?";
@@ -1125,7 +1125,7 @@ mora,43,127,3	script	Innkeeper#mora_inn	4_M_RAFLE_OR,{
 		mes "My my, I need some rest also.";
 		mes "The rate is 5000 zeny. Do you want a room?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			if (Zeny < 5000) {
 				mes "[Innkeeper]";
@@ -1185,7 +1185,7 @@ mora,48,128,0	script	Drawer#mora_warehouse	HIDDEN_NPC,{
 	}
 	mes "- The figure 1 0 0 is written in small letters on the vegetable-shaped drawer. -";
 	next;
-	switch(select("Insert 100 zeny.:Don't do anything.")) {
+	switch(select("Insert 100 zeny.", "Don't do anything.")) {
 	case 1:
 		if (Zeny < 100) {
 			mes "- You don't seem to have 100 zeny with you. -";

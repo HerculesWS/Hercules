@@ -56,7 +56,7 @@ aldeba_in,152,166,4	script	Trader#01	4_M_04,{
 	mes " (4) ^3355FFSakkat^000000:";
 	mes "120 Trunks + 10000 Zeny ";
 	next;
-	switch(select(" Doctor Band : Feather Bonnet : Phantom of Opera : Sakkat ")) {
+	switch(select(" Doctor Band ", " Feather Bonnet ", " Phantom of Opera ", " Sakkat ")) {
 	case 1:
 		if ((countitem(Red_Bandana) > 0) && (countitem(Iron) > 49) && (countitem(Crystal_Jewel___) > 0) && (Zeny > 3499)) {
 			delitem Red_Bandana,1;

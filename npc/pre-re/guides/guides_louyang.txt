@@ -54,12 +54,12 @@ louyang,213,213,3	script	Soldier#BA::LouGuide	4_M_CHNSOLDIER,{
 	mes "and we invite you to enjoy";
 	mes "your trip here in Louyang.";
 	next;
-	switch(select("Ask Building Locations.:Remove all marks from mini-map.:Cancel.")) {
+	switch(select("Ask Building Locations.", "Remove all marks from mini-map.", "Cancel.")) {
 	case 1:
 		mes "[Soldier]";
 		mes "Where would you like to go?";
 		next;
-		switch(select("Dragon Castle:Doctor's Office:City Hall:Weapon Shop:Tool Shop:Tavern:Cancel")) {
+		switch(select("Dragon Castle", "Doctor's Office", "City Hall", "Weapon Shop", "Tool Shop", "Tavern", "Cancel")) {
 		case 1:
 			mes "[Soldier]";
 			mes "The Dragon Castle is located at ^FF3355+^000000. It is where all the nobles reside, including our lord.";
@@ -160,13 +160,13 @@ louyang,224,104,3	script	Representative#lou	4_F_CHNWOMAN,{
 	mes "Louyang is famous for";
 	mes "its elaborate history, as well as specialties that are unique to this nation. Please take your time and enjoy your stay.";
 	next;
-	switch(select("Ask Building Locations.:Remove all marks from mini-map.:Cancel.")) {
+	switch(select("Ask Building Locations.", "Remove all marks from mini-map.", "Cancel.")) {
 	case 1:
 		.@compass_check = 1;
 		mes "[Representative]";
 		mes "Where would you like to go?";
 		next;
-		switch(select("Dragon Castle:Doctor's Office:City Hall:Weapon Shop:Tool Shop:Tavern:Cancel")) {
+		switch(select("Dragon Castle", "Doctor's Office", "City Hall", "Weapon Shop", "Tool Shop", "Tavern", "Cancel")) {
 		case 1:
 			mes "[Representative]";
 			mes "The Dragon Castle is located at ^FF3355+^000000. It is where all the nobles reside, including our lord.";

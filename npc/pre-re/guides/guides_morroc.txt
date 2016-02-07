@@ -48,7 +48,7 @@ morocc,153,286,6	script	Guide#moc::MocGuide	4_M_MOC_SOLDIER,{
 	.@loop1 = 1;
 	while (.@loop1) {
 		next;
-		switch(select("City Guide:Remove Marks from Mini-Map:Notice:Cancel")) {
+		switch(select("City Guide", "Remove Marks from Mini-Map", "Notice", "Cancel")) {
 		case 1:
 			mes "[Morroc Guide]";
 			mes "Please select";
@@ -59,14 +59,14 @@ morocc,153,286,6	script	Guide#moc::MocGuide	4_M_MOC_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) .@compass_check = 1;
+				if (select("Yes.", "No.") == 1) .@compass_check = 1;
 			}
 			.@loop2 = 1;
 			while(.@loop2) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 
-				switch(select("^FF0000Thief Guild^000000:Weapon Shop:Inn:Pub:Mercenary Guild:Forge:Cancel")) {
+				switch(select("^FF0000Thief Guild^000000", "Weapon Shop", "Inn", "Pub", "Mercenary Guild", "Forge", "Cancel")) {
 				case 1:
 					mes "[Morroc Guide]";
 					mes "The Thief Guild is";

@@ -44,7 +44,7 @@ prt_church,173,23,4	script	Cleric	1_F_PRIEST,{
 	mes "and tire you ?";
 	mes "I am here to assist you.";
 	next;
-	switch (select("^3355FF' About acolyte's hidden ability '^000000 ..:^3355FF' Holy light '^000000 training:End conversation")) {
+	switch (select("^3355FF' About acolyte's hidden ability '^000000 ..", "^3355FF' Holy light '^000000 training", "End conversation")) {
 	case 1:
 		mes "[Acolyte Klift]";
 		mes "Our members of the clergy";

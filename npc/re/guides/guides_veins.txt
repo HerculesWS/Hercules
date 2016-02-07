@@ -40,7 +40,7 @@ veins,210,345,5	script	Veins Guide#veins01::GuideVeins	4_M_RASWORD,{
 	F_Navi("[Veins Guide]");
 	next;
 	while (1) {
-		switch(select("[ Temple ]:[ Inn ]:[ Pub ]:[ Weapon Shop ]:[ Tool Shop ]:[ Airport ]:[ Geological Research Institute ]:[ Cool Event Corp. Staff ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Temple ]", "[ Inn ]", "[ Pub ]", "[ Weapon Shop ]", "[ Tool Shop ]", "[ Airport ]", "[ Geological Research Institute ]", "[ Cool Event Corp. Staff ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			mes "[Veins Guide]";
 			mes "The "+F_Navi("Temple","veins,197,256")+" is always filled with praying the faithful of the incarnation of goddess Freya.";

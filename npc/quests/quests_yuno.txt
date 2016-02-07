@@ -181,7 +181,7 @@ yuno_in01,17,30,5	script	Wagan#juno	4_M_03,{
 		mes "[Wagan]";
 		mes "I wish there was a way that we could stop him from wrecking it for the rest of us. Some brave, daring soul should be able to do something...";
 		next;
-		if (select("Leave it to me.:I wish your village luck in doing so.") == 1) {
+		if (select("Leave it to me.", "I wish your village luck in doing so.") == 1) {
 			if (Class == Job_Novice) {
 				mes "[Wagan]";
 				mes "Hmm...";
@@ -202,7 +202,7 @@ yuno_in01,17,30,5	script	Wagan#juno	4_M_03,{
 			mes "[Wagan]";
 			mes "But how do you plan to go about doing this? I'm guessing it's harder than it sounds...";
 			next;
-			if (select("Of course I have a plan.:I guess I need a plan.") == 1) {
+			if (select("Of course I have a plan.", "I guess I need a plan.") == 1) {
 				mes "[Wagan]";
 				mes "I have faith in you. You should know that he believes in fate. Use that to your advantage.";
 				next;
@@ -275,7 +275,7 @@ yuno_in01,17,95,5	script	Stangckle#juno	4W_M_03,{
 	if (metto_q == 2) {
 		mes "What can I do for you? My colleague Metto is coming here soon, so I don't have much time. So what did you say you needed?";
 		next;
-		if (select("I'm here to stop your research.:I don't need anything.") == 1) {
+		if (select("I'm here to stop your research.", "I don't need anything.") == 1) {
 			metto_q = 3;
 			mes "[Stangckle]";
 			mes "...";
@@ -340,7 +340,7 @@ yuno_in01,19,183,5	script	Kato#juno	1_M_JOBTESTER,{
 		mes "[Kato]";
 		mes "Of course, my research is private and confidential. But is there anything I can do for you?";
 		next;
-		if (select("I want to stop you from making a mistake.:Just saying hello.") == 1) {
+		if (select("I want to stop you from making a mistake.", "Just saying hello.") == 1) {
 			metto_q = 5;
 			mes "[Kato]";
 			mes "What? Metto said, my Great Z is inferior to Stangckles research?!";
@@ -391,7 +391,7 @@ yuno_in03,178,43,0	script	CiCi#juno	2_M_MOLGENSTEIN,{
 		mes "[CiCi]";
 		mes "Well, I think I've bragged a little too much now, what can I do for you?";
 		next;
-		switch(select("I want to warn you.:Nothing, just saying Hi.")) {
+		switch(select("I want to warn you.", "Nothing, just saying Hi.")) {
 		case 1:
 			metto_q = 7;
 			mes "[CiCi]";
@@ -506,7 +506,7 @@ yuno_in01,103,157,3	script	Bain#juno	4W_M_02,{
 		mes "monsters that are much too";
 		mes "powerful. How will I continue my research?";
 		next;
-		if (select("I'll get them for you.:Good luck.") == 1) {
+		if (select("I'll get them for you.", "Good luck.") == 1) {
 			bros_q = 1;
 			mes "[Bain]";
 			mes "Really? Such benevolence is rare";
@@ -639,7 +639,7 @@ yuno_in01,100,153,7	script	Bajin	1_M_01,0,0,{
 		mes "monsters that are much too";
 		mes "powerful. How will I continue my research?";
 		next;
-		if (select("I'll get them for you.:Good luck.") == 1) {
+		if (select("I'll get them for you.", "Good luck.") == 1) {
 			bros_q = 1;
 			mes "[Bajin]";
 			mes "Oh, you are too kind.";
@@ -749,7 +749,7 @@ yuno,261,99,4	script	Sage Yklah#juno	4_M_JOB_WIZARD,{
 			mes "[Yklah]";
 			mes "Who are you...? Who are you carrying this legendary item for?";
 			next;
-			switch(select("(Show him the slate):I'm a genius!:I'm a GM!")) {
+			switch(select("(Show him the slate)", "I'm a genius!", "I'm a GM!")) {
 			case 1:
 				mes "[Yklah]";
 				mes "...I can't believe my eyes! Only a chosen few can possess the Stamp of Muriniel...";

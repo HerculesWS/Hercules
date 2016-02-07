@@ -176,7 +176,7 @@ L_AddItem:
 		.@ven_menu$ = "^999999Silvervine Fruit (missing "+(.@cost - countitem(Silvervine))+")^000000";
 	else
 		.@ven_menu$ = "Purchase - Silvervine Fruit (have "+countitem(Silvervine)+")";
-	switch(select("Stop:"+.@ven_menu$)) {
+	switch(select("Stop", ""+.@ven_menu$)) {
 	case 1:
 		mes "[Special Vending Machine]";
 		mes "Thank you for coming.";
@@ -375,7 +375,7 @@ malangdo,175,145,4	script	Can Agency Guard	4_CAT_MERMASTER,{
 	mes "[Can Agency Guard]";
 	mes "Hey, you there... Have you seen any ^0000ffMalangdo Cat Can^000000s around here?";
 	next;
-	switch(select("Why are you asking?:Oh, you mean these?")) {
+	switch(select("Why are you asking?", "Oh, you mean these?")) {
 	case 1:
 		mes "[Can Agency Guard]";
 		mes "Umm.";
@@ -404,7 +404,7 @@ malangdo,175,145,4	script	Can Agency Guard	4_CAT_MERMASTER,{
 	mes "[Can Agency Guard]";
 	mes "The Malangdo Cat Can is a faulty product. Let me exchange it to 3 E Grade Coins. How about that?";
 	next;
-	switch(select("I won't exchange:^0000ff1^000000 Can -> ^0000ff3^000000 E Grade Coin:^0000ff10^000000 Can -> ^0000ff30^000000 E Grade Coin:^0000ff100^000000 Can -> ^0000ff300^000000 E Grade Coin:Exchange all I've got")) {
+	switch(select("I won't exchange", "^0000ff1^000000 Can -> ^0000ff3^000000 E Grade Coin", "^0000ff10^000000 Can -> ^0000ff30^000000 E Grade Coin", "^0000ff100^000000 Can -> ^0000ff300^000000 E Grade Coin", "Exchange all I've got")) {
 	case 1:
 		mes "[Can Agency Guard]";
 		mes "Umm, I'm not here forever, so come to me if you'd like to exchange while I still am.";
@@ -489,7 +489,7 @@ function	script	F_mal_coin	{
 		mes getarg(1);
 		mes "Well then, do you want to take a look at what I have now?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			if (checkweight(Knife,1) == 0) {
 				mes getarg(1);
@@ -860,7 +860,7 @@ ecl_in01,66,95,3	script	Armor Merchant Naphara#e	4_F_FAIRYKID,{
 	mes "Hello, this is Naphara's store, a place of high class goods.";
 	mes "What would you need?";
 	next;
-	.@choice = select("Str Glove:Int Glove:Agi Glove:Vit Glove:Dex Glove:Luk Glove");
+	.@choice = select("Str Glove", "Int Glove", "Agi Glove", "Vit Glove", "Dex Glove", "Luk Glove");
 	.@choice -= 1;
 	mes "[Armor Merchant]";
 	mes "^3131FF" + .name$[.@choice] + " For ^000000,";
@@ -876,7 +876,7 @@ ecl_in01,66,95,3	script	Armor Merchant Naphara#e	4_F_FAIRYKID,{
 	mes "It costs 10 Splendide Coins.";
 	mes "Would you like to buy it?";
 	next;
-	if (select("Buy it.:Don't buy it.")==1) {
+	if (select("Buy it.", "Don't buy it.")==1) {
 		if (countitem(Splendide_Coin) < 10) {
 			mes "[Armor Merchant]";
 			mes "It seems like you don't have enough coins.";
@@ -912,7 +912,7 @@ ecl_in01,64,97,5	script	Slot Expert Nattuer#ecl	4_F_FAIRYKID,{
 	mes "I am Slot Expert Nattuer.";
 	mes "If you bring me an item from my little brother Naphara along with 5 Splendide Coins, I will open up one Slot for you.";
 	next;
-	if (select("Activate a Slot.:Forget it.")==2){
+	if (select("Activate a Slot.", "Forget it.")==2){
 		close;
 	}
 	mes "[Slot Expert]";
@@ -921,18 +921,18 @@ ecl_in01,64,97,5	script	Slot Expert Nattuer#ecl	4_F_FAIRYKID,{
 	mes "[Slot Expert]";
 	mes "Of course, if your heart were as big as that flower-filled land, you wouldn't mind. Right? Should I go for it?";
 	next;
-	if (select("Continue.:Forget it.")==2) {
+	if (select("Continue.", "Forget it.")==2) {
 		close;
 	}
 	mes "[Slot Expert]";
 	mes "Which item would you like to activate with a Slot?";
 	next;
-	.@choice = select("Str Glove:Int Glove:Ag Glove:Vit Glove:Dex Glove:Luk Glove");
+	.@choice = select("Str Glove", "Int Glove", "Ag Glove", "Vit Glove", "Dex Glove", "Luk Glove");
 	.@choice += 2916;
 	mes "[Slot Expert]";
 	mes "Let's confirm for the last time. Is the one you want " + getitemname(.@choice) + "?";
 	next;
-	if (select("Yes:No")==2) {
+	if (select("Yes", "No")==2) {
 		mes "[Slot Expert]";
 		mes "Why don't you talk to me when you know for sure.";
 		close;
@@ -978,7 +978,7 @@ ecl_in01,33,98,5	script	Herb Merchant Plafina#e	4_M_FAIRYKID2,{
 	mes "[Herb Merchant]";
 	mes "Welcome, this is Plafina's Herb Store where only the freshest herbs are provided~!";
 	next;
-	.@item = select("Snow Flip:Peony Mommy:Slapping Herb:Yggdrasil Dust:End conversation")-1;
+	.@item = select("Snow Flip", "Peony Mommy", "Slapping Herb", "Yggdrasil Dust", "End conversation")-1;
 	if (.@item==4){
 		mes "[Herb Merchant]";
 		mes "Come back anytime.";
@@ -1002,7 +1002,7 @@ ecl_in01,33,98,5	script	Herb Merchant Plafina#e	4_M_FAIRYKID2,{
 	mes "Requires 5 seconds between uses.";
 	mes "It costs "+ .cost[.@item] +" Splendide Coins for each.";
 	next;
-	.@buy = select("Buy 1.:Buy 10.:Don't buy.");
+	.@buy = select("Buy 1.", "Buy 10.", "Don't buy.");
 	if (.@buy==3){
 		close;
 	}
@@ -1012,7 +1012,7 @@ ecl_in01,33,98,5	script	Herb Merchant Plafina#e	4_M_FAIRYKID2,{
 	mes "[Herb Merchant]";
 	mes "Would you like to buy "+ .@buy +" "+ getitemname(.items[.@item]) +"?";
 	next;
-	if (select("Buy.:Don't buy.")==2){
+	if (select("Buy.", "Don't buy.")==2){
 		close;
 	}
 	if (countitem(Splendide_Coin) < (.cost[.@item]*.@buy) ) {
@@ -1041,7 +1041,7 @@ ecl_in01,67,39,4	script	Replication Expert Paltu	4_M_FAIRYKID4,{
 	mes "[Paltu]";
 	mes "Woohoo- Greetings. What are you looking for? Lots of goods here.";
 	next;
-	switch (select("No thanks.:Replication?:I know you got lots up your sleeve!")) {
+	switch (select("No thanks.", "Replication?", "I know you got lots up your sleeve!")) {
 		case 1:
 			emotion e_an;
 			mes "[Paltu]";
@@ -1100,7 +1100,7 @@ ecl_in01,67,39,4	script	Replication Expert Paltu	4_M_FAIRYKID4,{
 			mes "[Paltu]";
 			mes "What do you think? I'll make it happen as long as I have the ingredients and the compensation.";
 			next;
-			if (select("I'll do it later.:Show me what you got!") == 1) {
+			if (select("I'll do it later.", "Show me what you got!") == 1) {
 				emotion e_dots;
 				mes "[Paltu]";
 				mes "What? Are you kidding me? Please tell me you are!";
@@ -1170,7 +1170,7 @@ ecl_in01,67,39,4	script	Replication Expert Paltu	4_M_FAIRYKID4,{
 	mes "[Paltu]";
 	mes "Yes, this is more than enough. Should I make it now?";
 	next;
-	if (select("Please make it now.:Oops, I have to take care of something...") == 2) {
+	if (select("Please make it now.", "Oops, I have to take care of something...") == 2) {
 		emotion e_omg;
 		mes "[Paltu]";
 		mes "Hey.. Hey! Hey! Where you going?";
@@ -1189,7 +1189,7 @@ ecl_in01,67,39,4	script	Replication Expert Paltu	4_M_FAIRYKID4,{
 	mes "[Paltu]";
 	mes "So any problems with that?";
 	next;
-	if (select("Let me go check.:Start the replication process.")==1) {
+	if (select("Let me go check.", "Start the replication process.")==1) {
 		mes "[Paltu]";
 		mes "Yeah, please make sure!";
 		close;

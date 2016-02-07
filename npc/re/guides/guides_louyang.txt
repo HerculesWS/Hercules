@@ -50,7 +50,7 @@ louyang,224,104,4	script	Louyang Guide#01louyang	4_F_CHNWOMAN,{
 	.@str$ = "Is there anything else I can do for you?";
 	while (1) {
 		next;
-		switch(select("[ Dragon Castle ]:[ Doctor's Office ]:[ City Hall ]:[ Weapon Shop ]:[ Tool Shop ]:[ Tavern ]:[ Observatory ]:[ Return to Alberta ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Dragon Castle ]", "[ Doctor's Office ]", "[ City Hall ]", "[ Weapon Shop ]", "[ Tool Shop ]", "[ Tavern ]", "[ Observatory ]", "[ Return to Alberta ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			mes "[Representative]";
 			mes "The "+F_Navi("Dragon Castle","louyang,218,253")+" is located at ^0A82FF+^000000. It is where all the nobles reside, including our lord.";

@@ -42,7 +42,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 		next;
 		mes "Near the bottom of the gate, Laphine tribeswomen have been turned to stone and now look like they are part of the great door.";
 		next;
-		switch(select("Move closer to look more carefully.:Step back.")) {
+		switch(select("Move closer to look more carefully.", "Step back.")) {
 		case 1:
 			specialeffect2 EF_HOLYHIT;
 			pushpc 3,3;
@@ -84,7 +84,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 		mes "[??????]";
 		mes "Wingless one... Our promised words...";
 		next;
-		switch(select("'Guardian's spell'!:Take a step back.")) {
+		switch(select("'Guardian's spell'!", "Take a step back.")) {
 		case 1:
 			mes "[??????]";
 			mes "Promised words... Guardian's spell... proof of their existence.";
@@ -128,7 +128,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 				mes "[Yggdrasil Gatekeeper]";
 				mes "The loyal servants of the Guardian... what can I do for you?";
 				next;
-				switch(select("Please allow me to enter.:I want to go in.:I want to leave.")) {
+				switch(select("Please allow me to enter.", "I want to go in.", "I want to leave.")) {
 				case 1:
 					.@instance = instance_create(.@md_name$, .@party_id);
 					if (.@instance < 0) {
@@ -161,7 +161,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 			mes "[Yggdrasil Gatekeeper]";
 			mes "If you have the dungeon generated already, you can enter it.";
 			next;
-			if(select("I want to go in.:I want to leave.") == 2)
+			if(select("I want to go in.", "I want to leave.") == 2)
 				close;
 			goto L_Enter;
 		} else {
@@ -177,7 +177,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 				mes "[Yggdrasil Gatekeeper]";
 				mes "If you have the dungeon generated already, you can enter it.";
 				next;
-				if(select("I want to go in.:I want to leave.") == 2)
+				if(select("I want to go in.", "I want to leave.") == 2)
 					close;
 				goto L_Enter;
 			} else if (.@ins_nyd_check == 2) {
@@ -204,7 +204,7 @@ nyd_dun02,100,201,3	script	Yggdrasil Gatekeeper	HIDDEN_NPC,8,8,{
 		next;
 		mes "Near the bottom of the gate, Laphine tribeswomen have been turned to stone and now look like they are part of the great door.";
 		next;
-		switch(select("Move closer to look more carefully.:Step back.")) {
+		switch(select("Move closer to look more carefully.", "Step back.")) {
 		case 1:
 			specialeffect2 EF_HOLYHIT;
 			pushpc 3,3;
@@ -307,7 +307,7 @@ mid_camp,271,299,3	script	Historian Magnifier#edq	4_M_SAGE_C,3,3,{
 		mes "[Historian Magnifier]";
 		mes "So, did you read the whole story that I have prepared?";
 		next;
-		switch(select("Not yet.:I read all the stories.")) {
+		switch(select("Not yet.", "I read all the stories.")) {
 		case 1:
 			mes "[Historian Magnifier]";
 			mes "Sheesh~ I prepared these stories for you carefully, but you didn't bother to check anything out did you?";
@@ -440,7 +440,7 @@ prt_in,171,94,3	script	Assistant Naomi#edq	4_F_HUWOMAN,3,3,{
 		mes "[Assistant Naomi]";
 		mes "Don't you see I am too busy? Don't hesitate. Just do it.";
 		next;
-		switch(select("Look busy, and take a step back.:Help her just this once.")) {
+		switch(select("Look busy, and take a step back.", "Help her just this once.")) {
 		case 1:
 			mes "[Assistant Naomi]";
 			mes "Gosh! Where is-? Where did-? Ugh! It's so difficult!";
@@ -540,7 +540,7 @@ prt_in,171,94,3	script	Assistant Naomi#edq	4_F_HUWOMAN,3,3,{
 	} else if (ins_nyd == 4) {
 		mes "Browse around, to take a look at the books.";
 		next;
-		switch(select("Discovery of Heterogeneity:Report of Indigenous Tribes")) {
+		switch(select("Discovery of Heterogeneity", "Report of Indigenous Tribes")) {
 		case 1:
 			mes "Satan Morocc has known that he didn't resurrect normally or by himself.";
 			next;
@@ -617,7 +617,7 @@ splendide,198,178,3	script	Grumbling Soldier#edq	4_M_FAIRYSOLDIER,3,3,{
 		mes "Nowadays, the world has turned unstable. I can't even fly comfortably anymore.";
 		next;
 		if (ins_nyd == 5) {
-			switch(select("What's with the cave up north?:Who are the Sapha tribesmen?:Hmm. We can talk later.")) {
+			switch(select("What's with the cave up north?", "Who are the Sapha tribesmen?", "Hmm. We can talk later.")) {
 			case 1:
 				mes "[Grumbling Soldier]";
 				mes "What? If you wander around there... you might return with injuries.";
@@ -677,7 +677,7 @@ splendide,240,164,3	script	Sighing Soldier#edq	4_M_FAIRYSOLDIER2,3,3,{
 		mes "When will we be finished with this combat with the Sapha? Ugghhhh...";
 		next;
 		if (ins_nyd == 5) {
-			switch(select("What's with the cave up north?:Who are the Sapha tribesmen?:Hmm. We can talk later.")) {
+			switch(select("What's with the cave up north?", "Who are the Sapha tribesmen?", "Hmm. We can talk later.")) {
 			case 1:
 				mes "[Sighing Soldier]";
 				mes "Well... I'm not sure, but we have avoided going to that area.";
@@ -749,7 +749,7 @@ spl_in01,109,60,3	script	Commander Lebiordirr#edq	4_F_FAIRY,3,3,{
 			mes "[Commander Lebiordirr]";
 			mes "Unless you have any messages for me...? Your face says you do...";
 			next;
-			if(select("No. Nothing. We can talk later.:I intend to stay. For good reasons.")==1) close;
+			if(select("No. Nothing. We can talk later.", "I intend to stay. For good reasons.")==1) close;
 			mes "[Splendide Guard]";
 			mes "Sir, I can drag this pest out right now.";
 			next;
@@ -1122,7 +1122,7 @@ man_in01,311,57,3	script	Neat Etorr#edq	4_MAN_NITT,3,3,{
 			mes "[Neat Etorr]";
 			mes "I hope that your people will becareful of your actions on this land, and terminate any unnecessary interventions.";
 			next;
-			if(select("Leave quietly.:Don't know what he's talking about, and ask for details.")==1) close;
+			if(select("Leave quietly.", "Don't know what he's talking about, and ask for details.")==1) close;
 			mes "[Manuk Field Elite Soldier]";
 			mes "Are we really just letting these people go after they have stirred up problems on our land?";
 			next;
@@ -1334,7 +1334,7 @@ man_in01,291,62,3	script	Laphine Prisoner#edq	4_F_FAIRYKID2,3,3,{
 			mes "[Laphine Prisoner]";
 			mes "Please, talk to my people in Splendide. They will come to help me.";
 			next;
-			switch(select("What happened to you?:What's in the cave to the north?:Tell me about your tribe.:I will leave you alone.")) {
+			switch(select("What happened to you?", "What's in the cave to the north?", "Tell me about your tribe.", "I will leave you alone.")) {
 			case 1:
 				mes "[Laphine Prisoner]";
 				mes "During out last battle with the Sapha tribe... they caught me and took me prisoner.";
@@ -1538,7 +1538,7 @@ OnTouch_:
 		mes "It's all over... servants of the Guardian... Hurry up and leave this place.";
 		next;
 		while(1) {
-			switch(select("Who are you?:What do you mean?")) {
+			switch(select("Who are you?", "What do you mean?")) {
 			case 1:
 				mes "[World Tree World Tree Yggdrasil]";
 				mes "I... I am the World Tree Yggdrasil, servant of the Guardian of Nidhoggur, as well as the High Priest leading the Laphine Tribe.";
@@ -1602,7 +1602,7 @@ OnTouch_:
 		mes "[World Tree Yggdrasil]";
 		mes "Are you willing to accept this mission? Even if it means to pay with your life?";
 		next;
-		if(select("Leave it to us.:We can't do it.") == 2)
+		if(select("Leave it to us.", "We can't do it.") == 2)
 			close;
 		mes "[World Tree Yggdrasil]";
 		mes "I thank you deeply for your decision. I will use what is left of my powers to open up the path towards the Guardian's Nest.";
@@ -1987,7 +1987,7 @@ OnTimer180000:
 	mes "[World Tree Yggdrasil]";
 	mes "Now... Allow me to escort you out of the cursed nest.";
 	next;
-	switch(select("Please let me out.:I want to look around for a while.")) {
+	switch(select("Please let me out.", "I want to look around for a while.")) {
 	case 1:
 		'ins_nyd2 = 0;
 		ins_nyd = 203;
@@ -2203,7 +2203,7 @@ sec_in02,36,167,3	script	Nidhoggur Manager	4_M_FAIRYSOLDIER,1,1,{
 	}
 	mes "What do you need to do?";
 	next;
-	switch(select("Reset variables to allow entrance to Nidhoggur:change variable 'ins_nyd':Remove 3 day timer 3135:Confirm variable number")) {
+	switch(select("Reset variables to allow entrance to Nidhoggur", "change variable 'ins_nyd'", "Remove 3 day timer 3135", "Confirm variable number")) {
 	case 1:
 		ins_nyd = 200;
 		ins_nyd2 = 0;
@@ -2214,7 +2214,7 @@ sec_in02,36,167,3	script	Nidhoggur Manager	4_M_FAIRYSOLDIER,1,1,{
 	case 2:
 		mes "Which variable do you want to change?";
 		next;
-		switch(select("ins_nyd:ins_nyd2")) {
+		switch(select("ins_nyd", "ins_nyd2")) {
 			case 1: .@var$ = "ins_nyd"; break;
 			case 2: .@var$ = "ins_nyd2"; break;
 		}
@@ -2246,7 +2246,7 @@ nyd_dun02,7,7,2	script	Purification Admin#nyd2	CLEAR_NPC,2,0,{
 		mes "Enter the password exactly.";
 		close;
 	}
-	switch(select("Generate Purification Stone:Remove Purification Stone:Turn Entrance NPC OFF:Turn Entrance NPC On:Cancel")) {
+	switch(select("Generate Purification Stone", "Remove Purification Stone", "Turn Entrance NPC OFF", "Turn Entrance NPC On", "Cancel")) {
 	case 1:
 		mes "Purification stone has been created and will stay on for 30 minutes.";
 		donpcevent "Purification Stone#nyd2::OnEnable";

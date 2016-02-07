@@ -57758,15 +57758,15 @@ pcre_extra* HP_libpcre_study(const pcre *code, int options, const char **errptr)
 	}
 	return retVal___;
 }
-int HP_libpcre_exec(const pcre *code, const pcre_extra *extra, const char *subject, int length, int startoffset, int options, int *ovector, int ovecsize) {
+int HP_libpcre_exec(const pcre *code, const pcre_extra *extra, PCRE_SPTR subject, int length, int startoffset, int options, int *ovector, int ovecsize) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libpcre_exec_pre ) {
-		int (*preHookFunc) (const pcre *code, const pcre_extra *extra, const char *subject, int *length, int *startoffset, int *options, int *ovector, int *ovecsize);
+		int (*preHookFunc) (const pcre *code, const pcre_extra *extra, PCRE_SPTR *subject, int *length, int *startoffset, int *options, int *ovector, int *ovecsize);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libpcre_exec_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libpcre_exec_pre[hIndex].func;
-			retVal___ = preHookFunc(code, extra, subject, &length, &startoffset, &options, ovector, &ovecsize);
+			retVal___ = preHookFunc(code, extra, &subject, &length, &startoffset, &options, ovector, &ovecsize);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -57777,10 +57777,10 @@ int HP_libpcre_exec(const pcre *code, const pcre_extra *extra, const char *subje
 		retVal___ = HPMHooks.source.libpcre.exec(code, extra, subject, length, startoffset, options, ovector, ovecsize);
 	}
 	if( HPMHooks.count.HP_libpcre_exec_post ) {
-		int (*postHookFunc) (int retVal___, const pcre *code, const pcre_extra *extra, const char *subject, int *length, int *startoffset, int *options, int *ovector, int *ovecsize);
+		int (*postHookFunc) (int retVal___, const pcre *code, const pcre_extra *extra, PCRE_SPTR *subject, int *length, int *startoffset, int *options, int *ovector, int *ovecsize);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libpcre_exec_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libpcre_exec_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, code, extra, subject, &length, &startoffset, &options, ovector, &ovecsize);
+			retVal___ = postHookFunc(retVal___, code, extra, &subject, &length, &startoffset, &options, ovector, &ovecsize);
 		}
 	}
 	return retVal___;
@@ -76398,6 +76398,33 @@ const char* HP_sysinfo_cflags(void) {
 		const char* (*postHookFunc) (const char* retVal___);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_cflags_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sysinfo_cflags_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+const char* HP_sysinfo_time(void) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if( HPMHooks.count.HP_sysinfo_time_pre ) {
+		const char* (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_time_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_sysinfo_time_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.sysinfo.time();
+	}
+	if( HPMHooks.count.HP_sysinfo_time_post ) {
+		const char* (*postHookFunc) (const char* retVal___);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_sysinfo_time_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_sysinfo_time_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___);
 		}
 	}

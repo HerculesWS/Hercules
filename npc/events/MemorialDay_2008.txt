@@ -61,7 +61,7 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 		mes "If you think this is just another holiday, I'm not going to waste my breath.";
 		mes "But if you like to pay a tribute to great soldiers, I will help you ready yourself.";
 		next;
-		if (select("I guess so...:Are you crazy or something?") == 2) {
+		if (select("I guess so...", "Are you crazy or something?") == 2) {
 			mes "[Mad Sago Lauds]";
 			mes "Fine, be unprepared!";
 			next;
@@ -118,7 +118,7 @@ prontera,182,214,4	script	Lauds#Memorial	1_M_MERCHANT,{
 		mes "[Mad Sago Lauds]";
 		mes "Say, how do you like to go on a journey to pay a tribute to Memorial Day?";
 		next;
-		if (select("Sure.:No, I'm Busy.") == 2) {
+		if (select("Sure.", "No, I'm Busy.") == 2) {
 			mes "[Mad Sago Lauds]";
 			mes "Don't come crying to me if someone decides to build a highway through your home!";
 			close;
@@ -284,7 +284,7 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			mes "If you feel too burdened to gather them all,";
 			mes "I can provide you all the materials.";
 			next;
-			if (select("I'll gather the rest.:Give me the materials.") == 2) {
+			if (select("I'll gather the rest.", "Give me the materials.") == 2) {
 				goto L_GiveUp;
 			}
 			goto L_Continue;
@@ -312,7 +312,7 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			mes "You'll have to bring me more materials afterwards.";
 			mes "If you feel too burdened to gather them all, I can provide you all the materials.";
 			next;
-			if (select("I'll gather the rest.:Give me the materials.") == 2) {
+			if (select("I'll gather the rest.", "Give me the materials.") == 2) {
 				goto L_GiveUp;
 			}
 			goto L_Continue;
@@ -341,7 +341,7 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			mes "If I provide you all materials, however, I won't have to thank you for your service.";
 			mes "It's your call, " + strcharinfo(0) + ".";
 			next;
-			if (select("I'll gather the rest.:Give me the materials.") == 2) {
+			if (select("I'll gather the rest.", "Give me the materials.") == 2) {
 				goto L_GiveUp;
 			}
 			goto L_Continue;
@@ -362,7 +362,7 @@ prontera,150,270,4	script	Grast#Memorial	4_M_HUMERCHANT,{
 			mes "[Grast]";
 			mes "Okay, which hand would you like to pick?";
 			next;
-			if (select("Left hand.:Right hand.") == 2) {
+			if (select("Left hand.", "Right hand.") == 2) {
 				mes "[Grast]";
 				mes "You've selected my right hand.";
 				mes "Here's the gift for you.";

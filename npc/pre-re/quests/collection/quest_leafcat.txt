@@ -38,7 +38,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 			mes "[Lella]";
 			mes "Have you finished hunting the 50 Leaf Cats?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Lella]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -52,7 +52,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Lella]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -78,7 +78,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 			mes "[Lella]";
 			mes "Have you finished hunting the 50 Leaf Cats?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Lella]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -92,7 +92,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Lella]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -119,7 +119,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 			mes "[Lella]";
 			mes "Have you finished hunting the 150 Leaf Cats?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Lella]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -133,7 +133,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Lella]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -165,18 +165,18 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 			mes "You look like someone who is willing to help someone who is slowly going mad.";
 			next;
 			mes "[Lella]";
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Lella]";
 				mes "Thanks! You're a life saver!";
 				next;
-				switch(select("Gather Items:Hunt Leaf Cats:Cancel")) {
+				switch(select("Gather Items", "Hunt Leaf Cats", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "I really need to gather ^00CE0050 Huge Leafs^000000 for my sanity.";
 					mes "Do you have any?";
 					next;
-					switch(select("I have 50 Huge Leafs:What, sorry I was day dreaming")) {
+					switch(select("I have 50 Huge Leafs", "What, sorry I was day dreaming")) {
 					case 1:
 						/*
 						if (checkweight(Yellow_Potion,10) == 0) {
@@ -215,7 +215,7 @@ ayo_fild01,44,241,5	script	Lella#LeafCat_Hunt	4_F_YUNYANG,{
 					mes "Ah, ok I think you can help me out by hunting some Leaf Cats.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Leaf Cats:100 Leaf Cats:150 Leaf Cats")) {
+					switch(select("50 Leaf Cats", "100 Leaf Cats", "150 Leaf Cats")) {
 					case 1:
 						mes "[Lella]";
 						mes "Come back when you've finished your task and I will give you a small reward.";

@@ -45,7 +45,7 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 		mes "that nutcase scientist";
 		mes "who lives over in Geffen?";
 		next;
-		if (select("Talk About Molgenstein:Cancel") == 1) {
+		if (select("Talk About Molgenstein", "Cancel") == 1) {
 			mes "[Merchant Louitz]";
 			mes "You know where he lives";
 			mes "but didn't check it out? Hey,";
@@ -75,7 +75,7 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 	mes "What's up?";
 	next;
 	if (countitem(Detrimindexta) > 0 && countitem(Karvodailnirol) > 0) {
-		switch(select("Talk:Talk about the solutions.:Cancel")) {
+		switch(select("Talk", "Talk about the solutions.", "Cancel")) {
 		case 1:
 			mes "[Merchant Louitz]";
 			mes "When I was in Geffen";
@@ -145,7 +145,7 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 		}
 	}
 	if (countitem(Karvodailnirol) > 0) {
-		switch(select("Talk:Talk about Karvodailnirol:Cancel")) {
+		switch(select("Talk", "Talk about Karvodailnirol", "Cancel")) {
 		case 1:
 			mes "[Merchant Louitz]";
 			mes "When I was in Geffen";
@@ -215,7 +215,7 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 		}
 	}
 	if (countitem(Detrimindexta) > 0) {
-		switch(select("Talk:Talk about Detrimindexta:Cancel")) {
+		switch(select("Talk", "Talk about Detrimindexta", "Cancel")) {
 		case 1:
 			mes "[Merchant Louitz]";
 			mes "When I was in Geffen";
@@ -284,7 +284,7 @@ alberta_in,133,55,3	script	Louitz#cm	4_M_02,{
 			close;
 		}
 	}
-	if (select("Talk:Cancel") == 1) {
+	if (select("Talk", "Cancel") == 1) {
 		mes "[Merchant Louitz]";
 		mes "When I was in Geffen";
 		mes "looking for magic items,";
@@ -334,7 +334,7 @@ geffen,181,114,3	script	Aure Dupon#cm	4_KID01,{
 		mes "Coincidence? It's more";
 		mes "than that. This is ^0000FFfate^000000.";
 		next;
-		if (select("Talk About Molgenstein:Cancel") == 1) {
+		if (select("Talk About Molgenstein", "Cancel") == 1) {
 			mes "[Aure Dupon]";
 			mes "Have you not met";
 			mes "Molgenstein yet? He";
@@ -360,7 +360,7 @@ geffen,181,114,3	script	Aure Dupon#cm	4_KID01,{
 	mes "mote in the grand scheme.";
 	next;
 	if (molgenstain > 0) {
-		switch(select("Talk:Ask About Molgenstein:Cancel")) {
+		switch(select("Talk", "Ask About Molgenstein", "Cancel")) {
 		case 1:
 			mes "[Aure Dupon]";
 			mes "To have goals and focus";
@@ -397,7 +397,7 @@ geffen,181,114,3	script	Aure Dupon#cm	4_KID01,{
 			close;
 		}
 	}
-	if (select("Talk:Cancel") == 1) {
+	if (select("Talk", "Cancel") == 1) {
 		mes "[Aure Dupon]";
 		mes "To have goals and focus";
 		mes "is good, but to be obsessive";
@@ -431,7 +431,7 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 		mes "Hehehehe....";
 		mes "Heeheeheeheehee....";
 		next;
-		switch(select("Ask about his research:Ask him to make a new solution.:Cancel")) {
+		switch(select("Ask about his research", "Ask him to make a new solution.", "Cancel")) {
 		case 1:
 			mes "[Chemist Molgenstein]";
 			mes "Heeheeheeheee...";
@@ -460,7 +460,7 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 			mes "So...";
 			mes "You want me to make something totally new, huh? Hehhehheh! I love your sense of scientific adventure!";
 			next;
-			switch(select("Counteragent:Mixture")) {
+			switch(select("Counteragent", "Mixture")) {
 			case 1:
 				mes "[Chemist Molgenstein]";
 				mes "Ooh...!";
@@ -473,7 +473,7 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 				mes "Bwahahahah!";
 				mes "Oh, I just can't wait to make this! Are you ready to begin?";
 				next;
-				if (select("Make:Cancel") == 1) {
+				if (select("Make", "Cancel") == 1) {
 					if (countitem(Alchol) == 0 || countitem(Detrimindexta) == 0 || countitem(Empty_Bottle) == 0 || Zeny < 3000) {
 						mes "[Chemist Molgenstein]";
 						mes "Heuheuheuheuh.... not enough... not enough.. Haah...Haah... Go..... get the rest of the materials!";
@@ -517,7 +517,7 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 				mes "Bwahahahah!";
 				mes "Oh, I just can't wait to make this! Are you ready to begin?";
 				next;
-				if (select("Make:Cancel") == 1) {
+				if (select("Make", "Cancel") == 1) {
 					if (countitem(Alchol) == 0 || countitem(Karvodailnirol) == 0 || countitem(Empty_Bottle) == 0 || Zeny < 4000) {
 						mes "[Chemist Molgenstein]";
 						mes "Hohohoho.... not enough... not enough... haah...haah... go..... go get the rest of the materials!!";
@@ -568,7 +568,7 @@ geffen_in,141,140,3	script	Molgenstein#cm	2_M_MOLGENSTEIN,{
 		mes "Ah...?!";
 		mes "So sorry if I weirded you out. It's just... I haven't seen a living person in soooo long. So, er, what can I do for you??";
 		next;
-		if (select("Ask about his research.:Cancel.") == 1) {
+		if (select("Ask about his research.", "Cancel.") == 1) {
 			mes "[Chemist Molgenstein]";
 			mes "Heeheeheeheee...";
 			mes "You must have heard the rumors about my research. Yes! But since you probably know already, I'll tell you without hiding, I mean, there's nothing to hide.";

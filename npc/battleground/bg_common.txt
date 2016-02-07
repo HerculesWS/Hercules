@@ -47,7 +47,7 @@ bat_room,160,141,3	script	Prince Croix	4_M_CRU_CRUA,{
 	mes "[Prince Croix]";
 	mes "Wise adventurer, why don't you lend us your power for victory?";
 	next;
-	switch(select("What's the reason for the Battle?:Tell me about General Guillaume")) {
+	switch(select("What's the reason for the Battle?", "Tell me about General Guillaume")) {
 	case 1:
 		cutin "bat_crua2",2;
 		mes "[Prince Croix]";
@@ -58,7 +58,7 @@ bat_room,160,141,3	script	Prince Croix	4_M_CRU_CRUA,{
 		mes "General Guillaume may have an advantage in this battle as he is the great general of Maroll, but that doesn't automatically mean he'll win.";
 		mes "I want to win this battle so that I can bring prosperity to the people of Maroll. They've suffered enough from war...";
 		next;
-		switch(select("Yes, I want to join you.:End Conversation")) {
+		switch(select("Yes, I want to join you.", "End Conversation")) {
 		case 1:
 			cutin "bat_crua1",2;
 			mes "[Prince Croix]";
@@ -86,7 +86,7 @@ bat_room,160,141,3	script	Prince Croix	4_M_CRU_CRUA,{
 		mes "[Prince Croix]";
 		mes "I do not wish to shed blood, but I have no choice but to fight for the possibility of peace and for the sake of my people.";
 		next;
-		switch(select("Yes, I want to join you.:End Conversation")) {
+		switch(select("Yes, I want to join you.", "End Conversation")) {
 		case 1:
 			cutin "bat_crua1",2;
 			mes "[Prince Croix]";
@@ -114,7 +114,7 @@ bat_room,160,159,3	script	General Guillaume	4_M_KY_KIYOM,{
 	mes "[General Guillaume]";
 	mes "Hot-blooded adventurer, we need your ability to win this battle.";
 	next;
-	switch(select("What's the reason for the Battle?:Tell me about Prince Croix")) {
+	switch(select("What's the reason for the Battle?", "Tell me about Prince Croix")) {
 	case 1:
 		cutin "bat_kiyom1",2;
 		mes "[General Guillaume]";
@@ -128,7 +128,7 @@ bat_room,160,159,3	script	General Guillaume	4_M_KY_KIYOM,{
 		mes "This is, however, not just a battle between us. This battle will determine the future of this country.";
 		mes "I pledge on my honor to prove that I'm the one who can protect this Maroll from outside threats.";
 		next;
-		switch(select("Yes, I want to join you.:End Conversation")) {
+		switch(select("Yes, I want to join you.", "End Conversation")) {
 		case 1:
 			cutin "bat_kiyom2",2;
 			mes "[General Guillaume]";
@@ -163,7 +163,7 @@ bat_room,160,159,3	script	General Guillaume	4_M_KY_KIYOM,{
 		mes "His unrealistic beliefs will drown this country in poverty and make the people weak. If he becomes the king, Maroll will never rest from the onslaughts of other countries.";
 		mes "I want to teach him what makes this small country so powerful and prosperous. It's military power!";
 		next;
-		switch(select("I want to join your army!:End Conversation")) {
+		switch(select("I want to join your army!", "End Conversation")) {
 		case 1:
 			cutin "bat_kiyom2",2;
 			mes "[General Guillaume]";
@@ -198,7 +198,7 @@ bat_room,148,150,5	script	Teleporter#Battlefield	4_F_TELEPORTER,{
 	mes "[Teleporter]";
 	mes "Do you wish to leave the battlefield? Use my services to return to town.";
 	next;
-	switch(select("Leave:Don't Leave")) {
+	switch(select("Leave", "Don't Leave")) {
 	case 1:
 		mes "[Teleporter]";
 		switch(bat_return) {
@@ -253,7 +253,7 @@ bat_room,148,150,5	script	Teleporter#Battlefield	4_F_TELEPORTER,{
 	mes "The two princes of the kingdom are now battling for the throne of Maroll, and are in need of experienced soldiers like you.";
 	mes "How would you like to lend your power to one of the princes in the Maroll Kingdom?";
 	next;
-	switch(select("Join:Don't Join")) {
+	switch(select("Join", "Don't Join")) {
 	case 1:
 		mes "[Maroll Battle Recruiter]";
 		mes "May the war god bless you.";
@@ -345,7 +345,7 @@ bat_room,1,151,3	script	Switch#batgnd	4_DOG01,{
 	} else {
 		mes "May I help you?";
 		next;
-		switch(select("Close Battlefield:Open Battlefield:Reset a01:Reset b01:Reset a02:Reset b02")) {
+		switch(select("Close Battlefield", "Open Battlefield", "Reset a01", "Reset b01", "Reset a02", "Reset b02")) {
 		case 1:
 			disablenpc "Tierra Gorge Officer#01a";
 			disablenpc "Tierra Gorge Officer#02a";
@@ -398,20 +398,20 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 	mes "Do you have the battlefield badges?";
 	mes "I can exchange Bravery Badges and Valor Badges for reward items.";
 	next;
-	switch(select("Exchange Badges:Check the Catalog")) {
+	switch(select("Exchange Badges", "Check the Catalog")) {
 	case 1:
 		mes "[Erundek]";
 		mes "Which type of items would you like to exchange?";
 		mes "To check more information about the reward items, please use our ^3131FFCatalog^000000.";
 		next;
-		switch(select("Weapon:Armor:Accessory:Consumable")) {
+		switch(select("Weapon", "Armor", "Accessory", "Consumable")) {
 		case 1:
 			mes "[Erundek]";
 			mes "You chose ^3131FFWeapon^000000.";
 			mes "The following weapons are available for exchange with the battlefield badges.";
 			mes "Please note that items for ^3131FFBravery Badges are indicated as (BB)^000000, and ^3131FFValor Badges as (VB)^000000.";
 			next;
-			switch(select("Dagger/OneSword/TwoSword/TwoSpear:Staff/Mace/TwoAxe/Shuriken:Bow/Katar/Music/Whip:Book/Knuckle:Revolver/Rifle/Gatling/Shotgun/Launcher")) {
+			switch(select("Dagger/OneSword/TwoSword/TwoSpear", "Staff/Mace/TwoAxe/Shuriken", "Bow/Katar/Music/Whip", "Book/Knuckle", "Revolver/Rifle/Gatling/Shotgun/Launcher")) {
 			case 1:
 				mes "[Erundek]";
 				mes "The following items are available in the ^3131FFDagger, One-Handed Sword, Two-Handed Sword, and Two-Handed Spear^000000 category.";
@@ -453,7 +453,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			mes "You can exchange for this item with ^FF0000100 "+getitemname(.@Weapons[.@i+1])+"^000000.";
 			mes "Would you like to exchange?";
 			next;
-			switch(select("Do not exchange:Exchange")) {
+			switch(select("Do not exchange", "Exchange")) {
 			case 1:
 				break;
 			case 2:
@@ -463,7 +463,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 				mes "[Erundek]";
 				mes "Remember, Battleground Reward Items are ^FF0000Character Bound^000000. Are you sure you want this item?";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Erundek]";
 					if (countitem(.@Weapons[.@i+1]) >= 100) {
@@ -486,7 +486,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			mes "You chose ^3131FFArmor^000000.";
 			mes "The following armors are available for exchange with the battlefield badges.";
 			next;
-			switch(select("Garments / Shoes:Armor")) {
+			switch(select("Garments / Shoes", "Armor")) {
 			case 1:
 				setarray .@items[0],2538,50,2539,50,2540,50,2435,50,2436,50,2437,50;
 				break;
@@ -539,7 +539,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 	mes "You can exchange for this item with ^FF0000"+.@items[.@i+1]+" "+getitemname(7828)+" or "+.@items[.@i+1]+" "+getitemname(7829)+"^000000.";
 	mes "Would you like to exchange?";
 	next;
-	switch(select("Do not exchange:Exchange")) {
+	switch(select("Do not exchange", "Exchange")) {
 	case 1:
 		mes "[Erundek]";
 		mes "Do you need more time to check the items?";
@@ -554,7 +554,7 @@ bat_room,160,150,3	script	Erundek	4_M_MANAGER,{
 			mes "Remember, Battleground Reward Items are ^FF0000Character Bound^000000. Are you sure you want this item?";
 			next;
 		}
-		.@j = select("Bravery Badge:Valor Badge:Cancel");
+		.@j = select("Bravery Badge", "Valor Badge", "Cancel");
 		mes "[Erundek]";
 		if (.@j == 3) {
 			mes "You cancelled the exchange.";

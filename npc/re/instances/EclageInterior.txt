@@ -53,7 +53,7 @@ ecl_hub01,132,12,3	script	Chief of Staff#tl01::EclInstance	4_F_FAIRY,{
 		mes "This place is set up with lighting for Orb.";
 		mes "If you favor Mayor, you should be cautious here.";
 		next;
-		switch (select("Enter it.:Forget it.")) {
+		switch (select("Enter it.", "Forget it.")) {
 			case 1:
 				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
@@ -91,7 +91,7 @@ ecl_hub01,130,15,0	script	It is closed shut.	CLEAR_NPC,{
 		mes "This door connects to the plaza's ceiling.";
 		mes "It's also a place where the lighting is set up to make Orb seem more beautiful.";
 		next;
-		switch (select("Enter it.:Forget it.")) {
+		switch (select("Enter it.", "Forget it.")) {
 			case 1:
 				.@party_id = getcharid(1);
 
@@ -137,7 +137,7 @@ ecl_hub01,130,15,0	script	It is closed shut.	CLEAR_NPC,{
 	mes "Oh, what's going on here?";
 	mes "They destroyed additional troops that Mayor sent?";
 	next;
-	select("What...?:I fought monsters off!");
+	select("What...?", "I fought monsters off!");
 	mes "[Shenime]";
 	mes "It doesn't matter.";
 	mes "Your job ends here.";
@@ -310,7 +310,7 @@ OnInstanceInit:
 	mes "There was a subtle and magical echo to it.";
 	mes "Immidiately after that, you were thrown here.";
 	next;
-	if (select("It's all because of you!:Shenime said...") == 1) {
+	if (select("It's all because of you!", "Shenime said...") == 1) {
 		mes "[Avant]";
 		mes "I don't understand a word you're saying.";
 		mes "Can't you organize your story? Don't you know 'five W's and one H' rule?";

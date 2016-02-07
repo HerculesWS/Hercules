@@ -37,7 +37,7 @@ geffen_in,99,174,5	script	Ore Tester#sorty	8_F_GIRL,{
 	mes "Do you have ^3131FFany same type of ores in your inventories^000000 which take many spaces?";
 	mes "I can distinguish your ores and organize them right away~!";
 	next;
-	switch(select("Refine my Ore.:Cancel.")) {
+	switch(select("Refine my Ore.", "Cancel.")) {
 	case 1:
 		mes "[Ore Tester Sorty]";
 		mes "At the moment I can only distinguish ^FF0000Steel^000000, ^FF0000Iron^000000, ^FF0000Iron Ore^000000, and ^FF0000Rough Oridecon^000000 and organize them.";
@@ -46,7 +46,7 @@ geffen_in,99,174,5	script	Ore Tester#sorty	8_F_GIRL,{
 		mes "[Ore Tester Sorty]";
 		mes "So, would you like me to organize your ores?";
 		next;
-		.@i = select("Steel, please.:Iron, please.:Iron Ore, please.:Rough Oridecon, please.:No, thanks.");
+		.@i = select("Steel, please.", "Iron, please.", "Iron Ore, please.", "Rough Oridecon, please.", "No, thanks.");
 		if (.@i == 5) {
 			mes "[Ore Tester Sorty]";
 			mes "Huh, I really hate messy people!";

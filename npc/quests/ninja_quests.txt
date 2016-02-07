@@ -102,7 +102,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 		mes "I'm not sure what I'll do, but I get the feeling I'll feel inspired once I see that armor.";
 		mes "How 'bout it~ Will you find me a ^ff0000Guard[1]^000000?";
 		next;
-		if(select("Hmm.. I don't feel like it.:Very well.") == 1){
+		if(select("Hmm.. I don't feel like it.", "Very well.") == 1){
 			mes "[Boshuu]";
 			mes "Ah~ What a shame..";
 			mes "You're missing out on an opportunity to get your hands on something made by a genius craftsman like myself...";
@@ -134,7 +134,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 		mes "[Boshuu]";
 		mes "How 'bout it? Want to try?";
 		next;
-		if(select("No thanks.:Ok, sounds good.") == 1){
+		if(select("No thanks.", "Ok, sounds good.") == 1){
 			mes "[Boshuu]";
 			mes "Hmm, Ok.";
 			mes "I'm so grateful that I was able to see such a rare thing from overseas.";
@@ -180,7 +180,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 		mes "But before I start, I must ask you one more time.";
 		mes "Do you want to give me the materials you've brought and receive a Slotted Arm Guard instead?";
 		next;
-		if(select("No:Yes") == 1){
+		if(select("No", "Yes") == 1){
 			mes "[Boshuu]";
 			mes "Ok";
 			mes "Well, if you make up your mind again, come and see me.";
@@ -214,7 +214,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 		mes "Oh~ I see you've come back.";
 		mes "Is it because you need another slotted Arm Guard?";
 		next;
-		if(select("Nope, not really.:Yes, make me another one.") == 1){
+		if(select("Nope, not really.", "Yes, make me another one.") == 1){
 			mes "[Boshuu]";
 			mes "Hmmph~ You sure a weird one.";
 			mes "Well, I'll see you later~";
@@ -245,7 +245,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 			mes "Before I begin, let me ask one final time...";
 			mes "Will you give me the materials you've gathered, and in turn, receive a slotted Arm Guard?";
 			next;
-			if(select("No:Yes") == 1){
+			if(select("No", "Yes") == 1){
 				mes "[Boshuu]";
 				mes "Ok";
 				mes "If you ever make up your mind";
@@ -312,7 +312,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 		mes "I you want to, bring me an Arm Guard, a Slotted Guard, and 10,000 Zeny, and I'll make you a Slotted Arm Guard.";
 		mes "How 'bout it? Would you like to obtain a Slotted Arm Guard?";
 		next;
-		if(select("No, I'd rather not.:Yes~!! Please make it for me!") == 1){
+		if(select("No, I'd rather not.", "Yes~!! Please make it for me!") == 1){
 			mes "[Boshuu]";
 			mes "Hmm, is that so?";
 			mes "What a shame...";
@@ -349,7 +349,7 @@ que_ng,28,50,3	script	Boshuu	4_M_SEAMAN,{
 			mes "Will you give me the materials you've gathered,";
 			mes "and in turn, receive a Slotted Arm Guard?";
 			next;
-			if(select("No:Yes") == 1){
+			if(select("No", "Yes") == 1){
 				mes "[Boshuu]";
 				mes "Ok";
 				mes "If you ever make up your mind";
@@ -425,7 +425,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 		mes "It'd help me greatly if I could see that shield up close.";
 		mes "Can you help me?";
 		next;
-		if(select("Hmm...I don't feel like it.:Very well.") == 1){
+		if(select("Hmm...I don't feel like it.", "Very well.") == 1){
 			mes "[Basshu]";
 			mes "Ah~ I guess it was an impossible request.";
 			mes "I'm sorry.";
@@ -460,7 +460,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 		mes "[Basshu]";
 		mes "How about it? Would you like that?";
 		next;
-		if(select("No, I wouldn't.:Yes, I would.") == 1){
+		if(select("No, I wouldn't.", "Yes, I would.") == 1){
 			mes "[Basshu]";
 			mes "Hmm, Very Well.";
 			mes "I'm so grateful you showed me that rare shield from overseas.";
@@ -518,7 +518,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 		mes "Will you give me the materials you've gathered";
 		mes "and in trade, receive an Improved Arm Guard?";
 		next;
-		if(select("No:Yes") == 1){
+		if(select("No", "Yes") == 1){
 			mes "[Basshu]";
 			mes "Very Well.";
 			mes "If you ever make up your mind";
@@ -554,7 +554,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 		mes "Oh~ I see you've come back.";
 		mes "Are you here because you need an Improved Arm Guard?";
 		next;
-		if(select("Nope, not really.:Yes, make me another one.") == 1){
+		if(select("Nope, not really.", "Yes, make me another one.") == 1){
 			mes "[Basshu]";
 			mes "Aha~ I see~.";
 			mes "Come back and talk to me anytime.";
@@ -589,7 +589,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 			mes "[Basshu]";
 			mes "Will you give me the materials you've gathered to receive an Improved Arm Guard?";
 			next;
-			if(select("No:Yes") == 1){
+			if(select("No", "Yes") == 1){
 				mes "[Basshu]";
 				mes "Very Well.";
 				mes "If you make up your mind";
@@ -661,7 +661,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 		mes "If you want, I will make you an Improved Arm Guard if you bring me 1 Arm Guard, 1 Mirror Shield, And 20,000 Zeny.";
 		mes "Would you like to try using one?";
 		next;
-		if(select("No, I don't wanna!:Yeah~!! Hurry and make it for me!") == 1){
+		if(select("No, I don't wanna!", "Yeah~!! Hurry and make it for me!") == 1){
 			mes "[Basshu]";
 			mes "Hmm, is that so.";
 			mes "What a shame.";
@@ -699,7 +699,7 @@ que_ng,28,45,3	script	Basshu	4_M_04,{
 			mes "Will you give me the materials you've gathered";
 			mes "to receive an Improved Arm Guard?";
 			next;
-			if(select("No:Yes") == 1){
+			if(select("No", "Yes") == 1){
 				mes "[Basshu]";
 				mes "Very Well.";
 				mes "If you ever make up your mind";
@@ -763,7 +763,7 @@ que_ng,27,18,3	script	Toshu	4_M_SEAMAN,{
 	mes "By the way, I'm sorry to say this, but there's a chance I might break your materials and fail slotting the Improved Arm Guard, so you might want to think about it.";
 	mes "How 'bout it? Do we have a deal?";
 	next;
-	if(select("No. I don't want to do this.:Yes! Let's do this!") == 1){
+	if(select("No. I don't want to do this.", "Yes! Let's do this!") == 1){
 		mes "[Toshu]";
 		mes "Ok.";
 		mes "Of course, the shields are important to you.";
@@ -801,7 +801,7 @@ que_ng,27,18,3	script	Toshu	4_M_SEAMAN,{
 		mes "[Toshu]";
 		mes "Do you want me to produce your gear, even if there's a chance I may fail?";
 		next;
-		if(select("I think I better back off. Sob..:Yes! Let's try anyway!") == 1){
+		if(select("I think I better back off. Sob..", "Yes! Let's try anyway!") == 1){
 			mes "[Toshu]";
 			mes "Ok.";
 			mes "Well, come back later when you've got the guts to try.";
@@ -879,7 +879,7 @@ que_ng,72,34,3	script	Craftsman Kaibara	4_M_EINOLD,{
 	mes "You look like a Ninja.";
 	mes "If you're interested, take a look at my goods while you decide what you want.";
 	next;
-	switch(select("Gokurin:Jitte:Ashura[3]:Murasame:Hakujin:Cancel")){
+	switch(select("Gokurin", "Jitte", "Ashura[3]", "Murasame", "Hakujin", "Cancel")){
 		case 1:
 			mes "[Kaibara]";
 			mes "Hmm~ I see you've picked the Gokurin.";
@@ -891,7 +891,7 @@ que_ng,72,34,3	script	Craftsman Kaibara	4_M_EINOLD,{
 			mes "and 200,000 Zeny.";
 			mes "Do you want me to create this item for you?";
 			next;
-			if(select("No thanks. It's too expensive.:Yes! I want one!") == 1){
+			if(select("No thanks. It's too expensive.", "Yes! I want one!") == 1){
 				mes "[Kaibara]";
 				mes "Hrm. I understand. These are materials that are difficult to attain...";
 				mes "If you ever happen to gather all these materials one day, feel free to come back.";
@@ -943,7 +943,7 @@ que_ng,72,34,3	script	Craftsman Kaibara	4_M_EINOLD,{
 			mes "and 20,000 Zeny.";
 			mes "Do you want me to create this item for you?";
 			next;
-			if(select("No thanks. It's too expensive.:Yes! I want one!") == 1){
+			if(select("No thanks. It's too expensive.", "Yes! I want one!") == 1){
 				mes "[Kaibara]";
 				mes "Hrm. I understand. These are materials that are difficult to attain...";
 				mes "If you ever happen to gather all these materials one day, feel free to come back.";
@@ -992,7 +992,7 @@ que_ng,72,34,3	script	Craftsman Kaibara	4_M_EINOLD,{
 			mes "And 32,000 Zeny.";
 			mes "Do you want me to create this item for you?";
 			next;
-			if(select("No thanks. It's too expensive.:Yes! I want one!") == 1){
+			if(select("No thanks. It's too expensive.", "Yes! I want one!") == 1){
 				mes "[Kaibara]";
 				mes "Hrm. I understand. These are materials that are difficult to attain...";
 				mes "If you ever happen to gather all these materials one day, feel free to come back.";
@@ -1040,7 +1040,7 @@ que_ng,72,34,3	script	Craftsman Kaibara	4_M_EINOLD,{
 			mes "And 48,000 Zeny.";
 			mes "Do you want me to create this item for you?";
 			next;
-			if(select("No thanks. It's too expensive.:Yes! I want one!") == 1){
+			if(select("No thanks. It's too expensive.", "Yes! I want one!") == 1){
 				mes "[Kaibara]";
 				mes "Hrm. I understand. These are materials that are difficult to attain...";
 				mes "If you ever happen to gather all these materials one day, feel free to come back.";
@@ -1090,7 +1090,7 @@ que_ng,72,34,3	script	Craftsman Kaibara	4_M_EINOLD,{
 			mes "and 120,000 Zeny.";
 			mes "Do you want me to create this item for you?";
 			next;
-			if(select("No thanks. It's too expensive.:Yes! I want one!") == 1){
+			if(select("No thanks. It's too expensive.", "Yes! I want one!") == 1){
 				mes "[Kaibara]";
 				mes "Hrm. I understand. These are materials that are difficult to attain...";
 				mes "If you ever happen to gather all these materials one day, feel free to come back.";

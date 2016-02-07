@@ -65,7 +65,7 @@ valkyrie,53,56,3	script	Gypsy#Valkyrie	4W_F_01,{
 		mes "to take up this role,";
 		mes "and become a Gypsy?";
 		next;
-		if (select("No.:Yes.") == 1) {
+		if (select("No.", "Yes.") == 1) {
 			mes "[Gypsy]";
 			mes "When you're ready,";
 			mes "feel free to come back.";

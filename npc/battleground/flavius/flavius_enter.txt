@@ -45,7 +45,7 @@ bat_room,133,178,5	script	Flavius Officer#01a	4_M_KY_KNT,{
 	mes "[Guillaume Army Officer]";
 	mes "Let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	switch(select("I want to join your army!:End Conversation")) {
+	switch(select("I want to join your army!", "End Conversation")) {
 	case 1:
 		if ((Class == Job_Novice) || (BaseClass == Job_SuperNovice)) {
 			mes "[Guillaume Army Officer]";
@@ -105,7 +105,7 @@ bat_room,133,121,1	script	Flavius Officer#01b	4_M_CRU_KNT,{
 	mes "[Croix Army Officer]";
 	mes "Let's show the Guillaumes the power of the Croix Army!";
 	next;
-	switch(select("I want to join your army!:End Conversation")) {
+	switch(select("I want to join your army!", "End Conversation")) {
 	case 1:
 		if ((Class == Job_Novice) || (BaseClass == Job_SuperNovice)) {
 			mes "[Croix Army Officer]";
@@ -254,7 +254,7 @@ bat_room,148,178,5	script	Flavius Officer#02a	4_M_KY_KNT,{
 	mes "[Guillaume Army Officer]";
 	mes "Let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
-	switch(select("I want to join your army!:End Conversation")) {
+	switch(select("I want to join your army!", "End Conversation")) {
 	case 1:
 		if ((Class == Job_Novice) || (BaseClass == Job_SuperNovice)) {
 			mes "[Guillaume Army Officer]";
@@ -314,7 +314,7 @@ bat_room,148,121,1	script	Flavius Officer#02b	4_M_CRU_KNT,{
 	mes "[Croix Army Officer]";
 	mes "Let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
-	switch(select("I want to join your army!:End Conversation")) {
+	switch(select("I want to join your army!", "End Conversation")) {
 	case 1:
 		if ((Class == Job_Novice) || (BaseClass == Job_SuperNovice)) {
 			mes "[Croix Army Officer]";

@@ -37,7 +37,7 @@ prontera,154,136,5	script	Suspicious Coffin#2013HE	4_NFCOFFIN,{
 	if (!eve_bs) {
 		mes "- The coffin seems very suspicious -";
 		next;
-		if (select("Leave it:Knock-knock.") == 1) {
+		if (select("Leave it", "Knock-knock.") == 1) {
 			mes "- You left though with doubt. -";
 			close;
 		}
@@ -161,7 +161,7 @@ prontera,154,136,5	script	Suspicious Coffin#2013HE	4_NFCOFFIN,{
 		mes "Don't feel pressured.";
 		mes "The strawberry thing will be recovered after few days of illness.";
 		next;
-		if (select("Help them.:Leave it.") == 2) {
+		if (select("Help them.", "Leave it.") == 2) {
 			mes "[Trick]";
 			mes "Ooops!";
 			mes "Well, then we have to go out Treat!";
@@ -219,7 +219,7 @@ prontera,154,136,5	script	Suspicious Coffin#2013HE	4_NFCOFFIN,{
 		mes "[Trick]";
 		mes "Last time when I visited there, I saw piled up pumpkin cake which was taller than castle... how much should we make more?";
 		next;
-		if (select("help them:leave it.") == 1) {
+		if (select("help them", "leave it.") == 1) {
 			mes "[Trick]";
 			mes "^ff9000Pumpkins are any of field. Please collect organic or non-organic pumpkins for 30 people and bring them to Chef Candycon at Niflheim.^000000";
 			next;
@@ -395,7 +395,7 @@ L_GivePumpkin:
 	mes "^ff9000*****WARNING*****^000000";
 	mes "^ff9000You will give all of pumpkin, [ALL]!^000000";
 	mes "^ff9000Will you proceed?^000000";
-	if (select("Give all pumpkins.:Cancel") == 2) {
+	if (select("Give all pumpkins.", "Cancel") == 2) {
 		mes "[Chef Candycon]";
 		mes "Eeh~~ You have no use for those pumpkins~~";
 		close;

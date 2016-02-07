@@ -241,7 +241,7 @@ prt_church,111,112,1	script	Sister Linus	1_F_PRIEST,{
 			mes "How are you";
 			mes "doing today?";
 			next;
-			if (select("Please teach me ^3131FFRedemptio^000000.:Cancel") == 1) {
+			if (select("Please teach me ^3131FFRedemptio^000000.", "Cancel") == 1) {
 				mes "[Sister Linus]";
 				mes "Ooh, Redemptio would be";
 				mes "a good skill for you to learn~";

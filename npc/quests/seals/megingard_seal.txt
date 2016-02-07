@@ -51,7 +51,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 		mes "everything I need to";
 		mes "create Gleipnir!";
 		next;
-		switch(select("Make Gleipnir.:Cancel.")) {
+		switch(select("Make Gleipnir.", "Cancel.")) {
 		case 1:
 			mes "[Rebarev Doug]";
 			mes "I'm the only human on earth";
@@ -87,7 +87,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 		mes "If you have any questions about Crusaders, feel free to ask me.";
 		mes "I may be too old and weak for fighting, but I will spread our message as much as I can.";
 		next;
-		switch(select("What is Holy Cross?:What is Grand Cross?:What is Sacrifice?:What is Gleipnir?")) {
+		switch(select("What is Holy Cross?", "What is Grand Cross?", "What is Sacrifice?", "What is Gleipnir?")) {
 		case 1:
 			mes "[Rebarev Doug]";
 			mes "Holy Cross is the first manifestation of a Crusader's faith. By making the sign of the cross, Crusader's can inflict a holy attack on their enemies.";
@@ -202,7 +202,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 				mes "It may be an enriching";
 				mes "experience for you. It's possible that you'll even have a greater appreciation for Crusaders.";
 				next;
-				switch(select("What is it?:I'm sick and tired of doin' favors.")) {
+				switch(select("What is it?", "I'm sick and tired of doin' favors.")) {
 				case 1:
 					mes "[Rebarev Doug]";
 					mes "I want you to find the members of the 1st Squad in the 3rd Platoon of the 3rd Company. If you happen to encounter them in your travels, please ask them how they are doing.";
@@ -211,7 +211,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 					mes "It shouldn't be that difficult to do and won't be a waste of your time if you are already planning";
 					mes "to explore the world.";
 					next;
-					switch(select("Sure, why not.:I'm sorry, but no.")) {
+					switch(select("Sure, why not.", "I'm sorry, but no.")) {
 					case 1:
 						mes "[Rebarev Doug]";
 						mes "Excellent!";
@@ -296,7 +296,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 					mes "Haven't you left";
 					mes "to search for them yet?";
 					next;
-					switch(select("Where should I go?:I am about to leave.:What do you mean by final mission?")) {
+					switch(select("Where should I go?", "I am about to leave.", "What do you mean by final mission?")) {
 					case 1:
 						mes "[Rebarev Doug]";
 						mes "Well...";
@@ -359,7 +359,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 					mes "Haven't you left";
 					mes "to search for them yet?";
 					next;
-					switch(select("Where should I go?:I am about to leave.")) {
+					switch(select("Where should I go?", "I am about to leave.")) {
 					case 1:
 						mes "[Rebarev Doug]";
 						mes "Well...";
@@ -451,7 +451,7 @@ prt_castle,44,151,0	script	Rebarev Doug	1_M_KNIGHTMASTER,{
 				mes "What's that";
 				mes "strange look for?";
 				next;
-				switch(select("Confront Rebarev Doug.:Act unsuspicious.")) {
+				switch(select("Confront Rebarev Doug.", "Act unsuspicious.")) {
 				case 1:
 					mes "^3355FFYou confront Rebarev Doug about the memory problems and migraines of the 1st Squad...^000000";
 					next;
@@ -820,7 +820,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			mes "I can't read anything when the light is this dim! It's bad enough my eyes have gone bad...";
 			while(1) {
 				next;
-				switch(select("You have bad eyes?:I want to read some documents.:Let me help you find those files...:What kind of files are you looking for?")) {
+				switch(select("You have bad eyes?", "I want to read some documents.", "Let me help you find those files...", "What kind of files are you looking for?")) {
 				case 1:
 					mes "[Librarian Jekan]";
 					mes "I've worked";
@@ -832,7 +832,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 						mes "[Librarian Jekan]";
 						mes "Hey, that's some pretty useful stuff that you've got with you. Do you mind letting me borrow it for a while? It'll help me in finding those files...";
 						next;
-						switch(select("Yes, I mind!:No, I don't mind.")) {
+						switch(select("Yes, I mind!", "No, I don't mind.")) {
 						case 1:
 							mes "[Librarian Jekan]";
 							mes "^333333*Sniff*^000000";
@@ -985,7 +985,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			mes "[Librarian Jekan]";
 			mes "So what brings you here? If you're looking for something in particular, you should try another section.";
 			next;
-			switch(select("I want to read some documents.:Do you have bad eyes?:Let me help you to find the files.:What kind of files are you looking for?")) {
+			switch(select("I want to read some documents.", "Do you have bad eyes?", "Let me help you to find the files.", "What kind of files are you looking for?")) {
 			case 1:
 				mes "[Librarian Jekan]";
 				mes "I told you already! The files in this section aren't open to the public right now! Don't make me repeat myself!";
@@ -1145,7 +1145,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			mes "So, what do you need today?";
 			next;
 			while(1) {
-				switch(select("Record Search.:Quit searching.:Search Help:Converse.")) {
+				switch(select("Record Search.", "Quit searching.", "Search Help", "Converse.")) {
 				case 1:
 					mes "^663300- Search Magic Initiated -";
 					mes "- Please enter a keyword. -";
@@ -1499,7 +1499,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 			mes "[Librarian Jekan]";
 			mes "Ah, please do not touch any books in that section. ...I'm sure there's nothing there that could be useful to you.";
 			next;
-			switch(select("Ignore him and check books.:Step back.")) {
+			switch(select("Ignore him and check books.", "Step back.")) {
 			case 1:
 				mes "[Librarian Jekan]";
 				mes "Hey...!";
@@ -1528,7 +1528,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 		mes "nothing useful over in";
 		mes "that section anyway.";
 		next;
-		switch(select("Ignore him and check books.:Step back.")) {
+		switch(select("Ignore him and check books.", "Step back.")) {
 		case 1:
 			mes "[Librarian Jekan]";
 			mes "I told you...!";
@@ -1566,7 +1566,7 @@ geffen_in,109,161,3	script	Crusader#God1	4_M_CRU,{
 			mes "Can I help you";
 			mes "with anything?";
 			next;
-			switch(select("Ask him about the 1st Squad.:Ask him how he's been doing.:Ask him about the 1st Squad's last mission.")) {
+			switch(select("Ask him about the 1st Squad.", "Ask him how he's been doing.", "Ask him about the 1st Squad's last mission.")) {
 			case 1:
 				if (god_eremes == 18) {
 					mes "[Zan.Huadoku]";
@@ -1750,7 +1750,7 @@ geffen_in,109,161,3	script	Crusader#God1	4_M_CRU,{
 		mes "Do you know the";
 		mes "importance of supply?";
 		next;
-		switch(select("No.:Yes!")) {
+		switch(select("No.", "Yes!")) {
 		case 1:
 			mes "[Zan.Huadoku]";
 			mes "Any military force or party needs their supplies to be replenished if they are to continue battling for a prolonged period of time.";
@@ -1842,7 +1842,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 					mes "Why are you so curious?!";
 					mes "Are you one of them?!";
 					next;
-					switch(select("Rebarev Doug sent me!:Wait, is he in hiding?:Just... curious.")) {
+					switch(select("Rebarev Doug sent me!", "Wait, is he in hiding?", "Just... curious.")) {
 					case 1:
 						if (rand(1,10) > 3) {
 							mes "[Ms. Scary Inn Employee]";
@@ -2081,7 +2081,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 				mes "^3355FFChaque Donon nodded his head";
 				mes "and happily sucked his thumb. It saddens you to see a former Crusader reduced to this state.^000000";
 				next;
-				switch(select("Ask him about the Inn Maid.:Ask him how he's been doing.:Ask about 1st Squad's Final Mission.")) {
+				switch(select("Ask him about the Inn Maid.", "Ask him how he's been doing.", "Ask about 1st Squad's Final Mission.")) {
 				case 1:
 					mes "[Cuaque Donon]";
 					mes "S-she's my sister.";
@@ -2183,7 +2183,7 @@ in_rogue,243,61,0	script	Suspicious Man#megin	4_M_ALCHE_A,{
 						mes "just by looking at it!";
 						next;
 						if (rand(1,10) > 4) {
-							switch(select("^FF0000Megingjard^000000!:^FFFFFFListen to him quietly^000000.")) {
+							switch(select("^FF0000Megingjard^000000!", "^FFFFFFListen to him quietly^000000.")) {
 							case 1:
 								mes "[Cuaque Donon]";
 								mes "Waaaaaaaah~!";
@@ -2289,7 +2289,7 @@ alberta,196,146,0	script	Crusader#megin2	4_M_CRU,{
 			mes "[Jack O]";
 			mes "Eh...?";
 			next;
-			switch(select("Ask him about Rebarev Doug.:Ask him how he's been doing.:Ask him about the last mission of the 1st Squad.")) {
+			switch(select("Ask him about Rebarev Doug.", "Ask him how he's been doing.", "Ask him about the last mission of the 1st Squad.")) {
 			case 1:
 				mes "[Jack O]";
 				mes "Ah! Yeah, our old leader back in the 1st Squad. Heh. I haven't seen him since we were disbanded.";
@@ -2319,7 +2319,7 @@ alberta,196,146,0	script	Crusader#megin2	4_M_CRU,{
 				mes "[Jack O]";
 				mes "Eh...?";
 				next;
-				switch(select("Ask him about Rebarev Doug.:Ask him how he's been doing.:Ask about 1st Squad's final mission.")) {
+				switch(select("Ask him about Rebarev Doug.", "Ask him how he's been doing.", "Ask about 1st Squad's final mission.")) {
 				case 1:
 					if (god_megin_3 == 1) {
 						mes "[Jack O]";
@@ -2520,7 +2520,7 @@ aldebaran,66,213,0	script	Lady#megin	1_F_04,{
 				mes "[Emma Searth]";
 				mes "^333333*Sigh...*^000000";
 				next;
-				switch(select("About her past.:Why be a Kafra Lady?:About memories she can remember.")) {
+				switch(select("About her past.", "Why be a Kafra Lady?", "About memories she can remember.")) {
 				case 1:
 					if (countitem(Bookclip_In_Memory) > 0) {
 						mes "^3355FFThe scent of your";
@@ -2731,7 +2731,7 @@ cmd_in02,190,94,3	script	Man#megin	4_M_ROGUE,{
 			mes "I'm busy here! Awright, now";
 			mes "which one do I bet on...?";
 			next;
-			switch(select("Speak of Rebarev Doug.:Speak of the 1st Squad.:Talk about gambling.:Discuss hobbies.")) {
+			switch(select("Speak of Rebarev Doug.", "Speak of the 1st Squad.", "Talk about gambling.", "Discuss hobbies.")) {
 			case 1:
 				mes "[Royal Myst]";
 				mes "Wha--? Him again?! Tell him I'm fine! Dandy, even! Why's he gotta send all these people just to ask";
@@ -3011,7 +3011,7 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 				mes "been forgotten...";
 				while(1) {
 					next;
-					switch(select("The Mission:Fate of the 1st Squad:Why are you in Niflheim?:Thanks, I've heard enough.")) {
+					switch(select("The Mission", "Fate of the 1st Squad", "Why are you in Niflheim?", "Thanks, I've heard enough.")) {
 					case 1:
 						mes "[Egnigem]";
 						mes "First of all, the official record of our mission is misleading.";
@@ -3297,12 +3297,12 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 			mes "to be in this realm of cold and suffering. But I can only help you escape by telling you what little";
 			mes "I know.";
 			next;
-			switch(select("Ask him about buildings.:Remove marks on mini-map.:Cancel.")) {
+			switch(select("Ask him about buildings.", "Remove marks on mini-map.", "Cancel.")) {
 			case 1:
 				mes "[Egnigem]";
 				mes "I see. If you better understand Niflheim's layout, you have a greater chance of surviving and escaping.";
 				next;
-				switch(select("Witch's Castle:Tool Shop:Weapon Shop:Tavern:Cancel")) {
+				switch(select("Witch's Castle", "Tool Shop", "Weapon Shop", "Tavern", "Cancel")) {
 				case 1:
 					mes "[Egnigem]";
 					mes "The witch of Niflheim...";
@@ -3377,12 +3377,12 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 		mes "to be in this realm of cold and suffering. But I can only help you escape by telling you what little";
 		mes "I know.";
 		next;
-		switch(select("Ask him about buildings.:Remove marks on mini-map.:Cancel.")) {
+		switch(select("Ask him about buildings.", "Remove marks on mini-map.", "Cancel.")) {
 		case 1:
 			mes "[Egnigem]";
 			mes "...I see. Now, let me introduce you all buildings in Niflheim!";
 			next;
-			switch(select("Witch's Castle:Tool Shop:Weapon Shop:Tavern:Cancel")) {
+			switch(select("Witch's Castle", "Tool Shop", "Weapon Shop", "Tavern", "Cancel")) {
 			case 1:
 				mes "[Egnigem]";
 				mes "The witch of Niflheim...";

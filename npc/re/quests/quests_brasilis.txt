@@ -191,7 +191,7 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 			mes "Hello.";
 			mes "Have you come here to hunt ^FF0000Strange Hydra^000000s?";
 			next;
-			switch(select("Yes.:No.:^006400What is happening here?^000000")) {
+			switch(select("Yes.", "No.", "^006400What is happening here?^000000")) {
 			case 1:
 				setquest 9028;
 				getitem Leaf_Cat_Ball,1; //Hydra_Ball
@@ -270,7 +270,7 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 				else {
 					mes "Any problems?";
 					next;
-					switch(select("No.:^006400Tell me again what happened^000000")) {
+					switch(select("No.", "^006400Tell me again what happened^000000")) {
 					case 1:
 						mes "[Lucia]";
 						mes "Ok, please do me a favor.";
@@ -317,7 +317,7 @@ brasilis,192,133,6	script	Lucia#brasilis	4_F_BRZ_WOMAN,{
 				completequest 9029;
 				mes "Did you come here to hunt ^FF0000Strange Hydra^000000s?";
 				next;
-				switch(select("Yes.:No.:^006400What is happening here?^000000")) {
+				switch(select("Yes.", "No.", "^006400What is happening here?^000000")) {
 				case 1:
 					setquest 9028;
 					getitem Leaf_Cat_Ball,1;
@@ -391,7 +391,7 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 		mes "[Candy Maker]";
 		mes "Since then, the output of that fruit has reduced and the price has gone up so now candy ingredients were changed to coconuts or other tropical fruits instead. I miss the guarana candy.";
 		next;
-		switch(select("How can I taste this guarana candy?:End conversation.")) {
+		switch(select("How can I taste this guarana candy?", "End conversation.")) {
 		case 1:
 			mes "[Candy Maker]";
 			mes "Hmm? I already sold out of all my old supply.";
@@ -399,7 +399,7 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 			mes "[Candy Maker]";
 			mes "But if you can find some guarana, I can make it for you.";
 			next;
-			switch(select("How do I find guarana?:End conversation.")) {
+			switch(select("How do I find guarana?", "End conversation.")) {
 			case 1:
 				mes "[Candy Maker]";
 				mes "Will you find the guarana?? Hoooooh~";
@@ -481,7 +481,7 @@ brasilis,187,162,5	script	Candy Maker	4_M_BRZ_MAN1,{
 		mes "What about it? Wanna buy some?";
 		mes "It's 4000 zeny each.";
 		next;
-		switch(select("Buy a Guarana Candy.:Cancel.")) {
+		switch(select("Buy a Guarana Candy.", "Cancel.")) {
 		case 1:
 			if (Zeny > 3999) {
 				mes "[Candy Maker]";
@@ -680,7 +680,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "[Strange Kid]";
 		mes "................";
 		next;
-		if(select("Try to talk.:Pretend to pass by.") == 2) {
+		if(select("Try to talk.", "Pretend to pass by.") == 2) {
 			mes "[Strange Kid]";
 			mes "................";
 			close;
@@ -688,7 +688,7 @@ brasilis,203,64,3	script	Strange Kid#bra	4_M_KID1,{
 		mes "What can I say to him?";
 		next;
 		while(1) {
-			switch(select("What's your name?:How old are you?:What are you doing?:End conversation.")) {
+			switch(select("What's your name?", "How old are you?", "What are you doing?", "End conversation.")) {
 			case 1:
 				mes "[Strange Kid]";
 				mes "Kaaaaaaao~";
@@ -1067,7 +1067,7 @@ brasilis,203,286,3	script	Botanist Karmen#bra	4_F_HUWOMAN,{
 		mes "One of them, a Water Lily, is a really gorgeous and unique plant.";
 		mes "This flower is quite sensitive so it doesn't bloom everywhere.";
 		next;
-		if(select("Interesting.:End conversation.") == 2) {
+		if(select("Interesting.", "End conversation.") == 2) {
 			mes "[Karmen]";
 			mes "I guess you aren't interested in botany.";
 			close;
@@ -1455,7 +1455,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "What's up? Why are you looking at me?";
 		mes "I don't want to be a showgirl!! Get out!!";
 		next;
-		if(select("Nothing, sorry.:What's wrong?") == 1) {
+		if(select("Nothing, sorry.", "What's wrong?") == 1) {
 			mes "[Brasilis Girl]";
 			mes "I am so sad!!!";
 			close;
@@ -1464,7 +1464,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes "It's not your business.";
 		mes "You are just an outsider!";
 		next;
-		if(select("How rude!:Just trying to help.") == 1) {
+		if(select("How rude!", "Just trying to help.") == 1) {
 			mes "[Brasilis Girl]";
 			mes "What's it matter to you that I'm rude??!!";
 			close;
@@ -1559,7 +1559,7 @@ brasilis,270,145,5	script	Brasilis Girl#bra	4_F_BRZ_INDIAN,5,5,{
 		mes ".................";
 		mes "I wanna see him right now...";
 		next;
-		if(select("Help Jasira.:Ignore her.") == 2) {
+		if(select("Help Jasira.", "Ignore her.") == 2) {
 			mes "["+strcharinfo(0)+"]";
 			mes "Sorry I can't help you. Cheer up!";
 			next;
@@ -1720,7 +1720,7 @@ bra_dun02,67,205,5	script	Recluse#bra	4_M_BRZ_JACI,3,3,{
 		mes "[Recluse]";
 		mes "Oh, I haven't seen another person in such a long time.";
 		next;
-		if(select("Keep going.:Are you the moon?") == 1) {
+		if(select("Keep going.", "Are you the moon?") == 1) {
 			mes "[Recluse]";
 			mes "You don't have specific business with me.";
 			close;
@@ -1843,7 +1843,7 @@ bra_dun02,71,200,3	script	Water lily#bra	HIDDEN_NPC,{
 	if (brazil_regia == 4) {
 		mes "An unusual Water lily is blooming here. You can't stop staring at it, knowing that few people have seen this flower bloom.";
 		next;
-		if(select("Pick up the flower.:Keep gazing.") == 2) {
+		if(select("Pick up the flower.", "Keep gazing.") == 2) {
 			mes "- You can't avoid staring at it's beauty. -";
 			close;
 		}
@@ -2022,7 +2022,7 @@ brasilis,185,246,5	script	Pedro#bra	1_M_SIZ,{
 		mes "[Daniel]";
 		mes "kkkickkkkkkkk";
 		next;
-		if(select("Walk by.:Ask about the gossip.") == 1) {
+		if(select("Walk by.", "Ask about the gossip.") == 1) {
 			mes "[Fabio]";
 			mes "Mariana~ smells~ Nya nya~";
 			next;
@@ -2234,7 +2234,7 @@ bra_in01,149,184,3	script	Door#bra	CLEAR_NPC,{
 	if (brazil_ghost > 0) {
 		mes "- A key is inserted in the locked door.-";
 		next;
-		switch(select("Turn the key.:Ignore it.")) {
+		switch(select("Turn the key.", "Ignore it.")) {
 		case 1:
 			mes "You start saying the first line of the magic words.";
 			input .@input$;
@@ -2253,7 +2253,7 @@ bra_in01,149,184,3	script	Door#bra	CLEAR_NPC,{
 					mes "[Sobbing Voice]";
 					mes "'^FF0000Turn the key as many times as there are colors in the rainbow.^000000'";
 					next;
-					switch(select("Open the door:Knock on the door.:Turn the key.:Take the key out.")) {
+					switch(select("Open the door", "Knock on the door.", "Turn the key.", "Take the key out.")) {
 					case 1:
 						mes "The door is locked.";
 						mes "So nothing happens.";
@@ -2324,7 +2324,7 @@ bra_in01,144,187,3	script	Toilet#bra	CLEAR_NPC,{
 		mes "- Looks like an ordinary toilet -";
 		next;
 		if (brazil_ghost > 6) {
-			switch(select("Flush the toilet.:Doing nothing.")) {
+			switch(select("Flush the toilet.", "Doing nothing.")) {
 			case 1:
 				mes "After flushing the toilet, you suddenly feel dizzy and are suddenly swept away somewhere.";
 				specialeffect2 EF_WATERFALL_SMALL_T2_90;
@@ -2336,7 +2336,7 @@ bra_in01,144,187,3	script	Toilet#bra	CLEAR_NPC,{
 				close;
 			}
 		}
-		switch(select("Use the toilet:Ignore.")) {
+		switch(select("Use the toilet", "Ignore.")) {
 		case 1:
 			mes "- What was the second line to that spell now? -";
 			input .@input$;
@@ -2355,7 +2355,7 @@ bra_in01,144,187,3	script	Toilet#bra	CLEAR_NPC,{
 					mes "[Sobbing Voice]";
 					mes "^FF0000If the moon disappears 3 times... don't worry.....^000000";
 					next;
-					switch(select("Flush the toilet.:Close the lid.")) {
+					switch(select("Flush the toilet.", "Close the lid.")) {
 					case 1:
 						mes "How many times should I flush?";
 						input .@input,0,999;
@@ -2409,7 +2409,7 @@ bra_in01,134,189,3	script	Faucet#bra	CLEAR_NPC,{
 	if (brazil_ghost > 0) {
 		mes "- It seems like an ordinary faucet -";
 		next;
-		switch(select("Examine it.:Ignore.")) {
+		switch(select("Examine it.", "Ignore.")) {
 		case 1:
 			mes "- What was the next line to that spell now? -";
 			input .@input$;
@@ -2428,7 +2428,7 @@ bra_in01,134,189,3	script	Faucet#bra	CLEAR_NPC,{
 					mes "[Sobbing Voice]";
 					mes "^FF0000Don't worry... the waterfall will help it....^000000";
 					next;
-					switch(select("Tap on the faucet.:Turn on the water.")) {
+					switch(select("Tap on the faucet.", "Turn on the water.")) {
 					case 1:
 						mes "How many times will you tap the faucet?";
 						input .@input,0,999;
@@ -2484,7 +2484,7 @@ bra_in01,138,184,3	script	Carpet#bra	CLEAR_NPC,{
 	if (brazil_ghost > 0) {
 		mes "- A carpet with an intricate pattern on it -";
 		next;
-		switch(select("Examine it.:Ignore.")) {
+		switch(select("Examine it.", "Ignore.")) {
 		case 1:
 			mes "- What was the next line to that spell now? -";
 			input .@input$;
@@ -2503,7 +2503,7 @@ bra_in01,138,184,3	script	Carpet#bra	CLEAR_NPC,{
 					mes "[Sobbing Voice]";
 					mes "^FF0000your 7 friends....are...sleeping... now it...'s time ....to wake them........^000000";
 					next;
-					switch(select("Jump on the carpet.:Lie on the carpet.:Shake the carpet.")) {
+					switch(select("Jump on the carpet.", "Lie on the carpet.", "Shake the carpet.")) {
 					case 1:
 						mes "How many times should I jump?";
 						input .@input,0,999;
@@ -2566,7 +2566,7 @@ bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
 	if (brazil_ghost > 0) {
 		mes "- You can see a clean mirror without any marks or dust -";
 		next;
-		switch(select("Examine it.:Ignore.")) {
+		switch(select("Examine it.", "Ignore.")) {
 		case 1:
 			mes "- What was the next line to that spell now? -";
 			input .@input$;
@@ -2616,7 +2616,7 @@ bra_in01,151,180,3	script	Mirror#bra	CLEAR_NPC,{
 					mes "[Ghost]";
 					mes "^FF0000Come on help mom.....^000000";
 					next;
-					switch(select("Take the eye bandage off.:Run away~.")) {
+					switch(select("Take the eye bandage off.", "Run away~.")) {
 					case 1:
 						while(1) {
 							.@cpudice = rand(1,6);
@@ -2702,7 +2702,7 @@ bra_in01,7,181,5	script	Curator#bra	4_M_BRZ_MAN2,{
 			mes "Sorry we are remodeling inside right now so, it's closed.";
 			mes "Please use the other one.";
 			next;
-			switch(select("But I forgot something inside.:Give up.")) {
+			switch(select("But I forgot something inside.", "Give up.")) {
 			case 1:
 				mes "[Curator]";
 				mes "That's tooooo bad.";
@@ -2743,7 +2743,7 @@ bra_in01,7,181,5	script	Curator#bra	4_M_BRZ_MAN2,{
 			mes "Sorry we are remodeling inside right now so, it's closed.";
 			mes "Please use the other one.";
 			next;
-			switch(select("But I forgot something inside.:Give up.")) {
+			switch(select("But I forgot something inside.", "Give up.")) {
 			case 1:
 				mes "[Curator]";
 				mes "That's tooooo bad.";
@@ -2832,7 +2832,7 @@ bra_fild01,323,136,1	script	Pipe#brafild	CLEAR_NPC,{
 	if (brazil_ghost > 6) {
 		mes "You see a rusty pipe. It seems to be linked to somewhere beneath the jungle.";
 		next;
-		switch(select("Examine it:Ignore.")) {
+		switch(select("Examine it", "Ignore.")) {
 		case 1:
 			mes "You swim through a gap in the pipe and are swept by a sudden rush of water.";
 			close2;
@@ -2937,7 +2937,7 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 				mes "materials as before...";
 				mes "I need your power.";
 				next;
-				switch(select("No.:Okay, I'll do it.")) {
+				switch(select("No.", "Okay, I'll do it.")) {
 				case 1:
 					mes "[Anori]";
 					mes "This, ah...";
@@ -2976,7 +2976,7 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 				mes "Could you listen to my stories for a moment.";
 				mes "There's an emergency in our tribe.";
 				next;
-				if(select("No.:Okay.") == 1) {
+				if(select("No.", "Okay.") == 1) {
 					mes "[Anori]";
 					mes "You are a heartless person...";
 					mes "You don't seem the helpful type.";
@@ -3011,7 +3011,7 @@ brasilis,315,334,5	script	Shaman#nk	4_F_BRZ_INDOLD,{
 				mes "the purification potion.";
 				mes "Could you do that for me?";
 				next;
-				switch(select("No.:Yes, I can.")) {
+				switch(select("No.", "Yes, I can.")) {
 				case 1:
 					mes "[Anori]";
 					mes "Hm...";
@@ -3060,7 +3060,7 @@ bra_dun02,157,74,5	script	Iara#nk	4_F_BRZ_WOMAN,2,2,{
 		mes "[" + strcharinfo(0) + "]";
 		mes "Should I use a Purification Potion?";
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			specialeffect EF_MAPPILLAR;
 			mes "[Iara]";

@@ -14,7 +14,7 @@ prontera,170,180,1	script	Stylist#custom_stylist	2_M_DYEINGER,{
 
 	setarray .@styles[1],getbattleflag("max_cloth_color"),getbattleflag("max_hair_style"),getbattleflag("max_hair_color");
 	setarray .@Look[1],7,1,6;
-	set .@s, select(" ~ Cloth color: ~ Hairstyle: ~ Hair color");
+	set .@s, select(" ~ Cloth color", " ~ Hairstyle", " ~ Hair color");
 	set .@Revert, getlook(.@Look[.@s]);
 	set .@style,1;
 	while(1) {

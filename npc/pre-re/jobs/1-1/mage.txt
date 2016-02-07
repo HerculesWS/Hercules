@@ -84,7 +84,7 @@ geffen_in,164,124,4	script	Mage Guildsman	2_F_MAGICMASTER,{
 	mes "[Mage Guildsman]";
 	mes "Yo. What's up?";
 	next;
-	switch(select("I want to be a Mage.:Tell me the Requirements.:Pretty much nothing.")) {
+	switch(select("I want to be a Mage.", "Tell me the Requirements.", "Pretty much nothing.")) {
 	case 1:
 		mes "[Mage Guildsman]";
 		if (BaseJob == Job_Mage) {
@@ -110,7 +110,7 @@ geffen_in,164,124,4	script	Mage Guildsman	2_F_MAGICMASTER,{
 			mes "[Mage Guildsman]";
 			mes "Right, you said that you wanna be a Mage? Alright then, please sign the Mage Application.";
 			next;
-			if (select("Sign Up.:Quit.") == 1) {
+			if (select("Sign Up.", "Quit.") == 1) {
 				mes "[Mage Guildsman]";
 				mes "Okay. Sign right there. Oh, you're very good at spelling. Alright. So your name is... " + strcharinfo(0) + ".";
 				next;
@@ -304,13 +304,13 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 	mes "[Mixing Machine]";
 	mes "This machine is the property of the Geffen Mage Guild and is used only for mixing solutions for magic purposes.";
 	next;
-	if (select("Use Machine.:Cancel.") == 1) {
+	if (select("Use Machine.", "Cancel.") == 1) {
 		mes "[Mixing Machine]";
 		mes "Choose the";
 		mes "Solvent for";
 		mes "the Solution.";
 		next;
-		switch(select("Payon Solution.:Morroc Solution.:No Solvent.")) {
+		switch(select("Payon Solution.", "Morroc Solution.", "No Solvent.")) {
 		case 1:
 			if (countitem(Payon_Potion) == 0) {
 				mes "[Mixing Machine]";
@@ -350,7 +350,7 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 				mes "[Mixing Machine]";
 				mes "Please choose if you wish to begin mixing, or to re-enter the number of items to be mixed.";
 				next;
-				switch(select("Begin Mixing.:Re-Enter Number of Items.:Reset.")) {
+				switch(select("Begin Mixing.", "Re-Enter Number of Items.", "Reset.")) {
 				case 1:
 					mes "[Mixing Machine]";
 					mes "Please place the items into the Mixing Receptacle. Make sure the item amounts are correct.";
@@ -361,7 +361,7 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 					mes "[Mixing Machine]";
 					mes "If everything is correct, press the 'Mix' button when you are ready. Otherwise, press the 'Cancel' button.";
 					next;
-					if (select("Press 'Mix' Button.:Press 'Cancel' Button.") == 1) {
+					if (select("Press 'Mix' Button.", "Press 'Cancel' Button.") == 1) {
 						mes "[Mixing Machine]";
 						mes "Place items into the Mixing Receptacle now. Please wait.";
 						next;
@@ -417,7 +417,7 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 					mes "Reset Complete.";
 					mes "Initiate again?";
 					next;
-					if (select("Yes.:No.") == 1)
+					if (select("Yes.", "No.") == 1)
 						break;
 					mes "[Mixing Machine]";
 					mes "Process Halted.";
@@ -434,7 +434,7 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 			mes "[Mixing Machine]";
 			mes "Select items to mix.";
 			while(1) {
-				switch(select("Jellopy.:Fluff.:Milk.:Ready to Mix.")) {
+				switch(select("Jellopy.", "Fluff.", "Milk.", "Ready to Mix.")) {
 				case 1:
 					while(1) {
 						input .@input;
@@ -505,7 +505,7 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 				if (.@input == 0) {
 					mes "Do you want to skip this Menu?";
 					next;
-					if (select("Yes.:No.") == 1) {
+					if (select("Yes.", "No.") == 1) {
 						break;
 					}
 				}
@@ -519,7 +519,7 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 				mes "[Mixing Machine]";
 				mes "The Serial Number is #" + .@input + ", correct?";
 				next;
-				if (select("Confirm.:Cancel.") == 1) {
+				if (select("Confirm.", "Cancel.") == 1) {
 					if (.@input == 8472)
 						.@magic_powder = 1;
 					else if (.@input == 3735)
@@ -538,7 +538,7 @@ geffen_in,164,112,4	script	Mixing Machine	HIDDEN_NPC,{
 		mes "Choose a";
 		mes "Catalyst Stone.";
 		next;
-		switch(select("Yellow Gemstone.:Red Gemstone.:Blue Gemstone.:1carat Diamond.:Skip.")) {
+		switch(select("Yellow Gemstone.", "Red Gemstone.", "Blue Gemstone.", "1carat Diamond.", "Skip.")) {
 		case 1: .@mixitem3 = 1; break;
 		case 2: .@mixitem3 = 2; break;
 		case 3: .@mixitem3 = 3; break;
@@ -621,7 +621,7 @@ geffen_in,177,112,4	script	Bookshelf	HIDDEN_NPC,{
 	mes "[Guide Book]";
 	mes "This Guide Book is the property of the Geffen Mage Association. Please handle with care.";
 	next;
-	switch(select("Solution No. 1.:Solution No. 2.:Solution No. 3.:Solution No. 4.:Close.")) {
+	switch(select("Solution No. 1.", "Solution No. 2.", "Solution No. 3.", "Solution No. 4.", "Close.")) {
 	case 1:
 		mes "[Mage Test Solution No. 1]";
 		mes "* Ingredients List *";

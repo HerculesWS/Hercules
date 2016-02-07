@@ -253,7 +253,7 @@ moc_para01,41,169,3	script	Reno#2012hat	1_M_WIZARD,{
 					" all your history will be lost. Do you really"
 					" want to give up?";
 				next;
-				if (select("Yes:No") != 1) {
+				if (select("Yes", "No") != 1) {
 					.@erase_quest = 2;
 					continue;
 				}
@@ -331,7 +331,7 @@ moc_para01,41,169,3	script	Reno#2012hat	1_M_WIZARD,{
 		mes "It takes 3 hours for your body to accumulate 2 to 4 "+.@crystal$[.@choice]
 			+" Energy Crystals. Do you want to start?";
 		next;
-		if (select("Cancel:Start") == 1) {
+		if (select("Cancel", "Start") == 1) {
 			mes "[Reno]";
 			mes "I recommend that you try to accumulate Energy Crystal when you have time.";
 			close;
@@ -393,7 +393,7 @@ moc_para01,41,169,3	script	Reno#2012hat	1_M_WIZARD,{
 		mes sprintf("%d %ss will be compressed to %d %ss.",.@crystal_count,getitemname(.@crystal),.@crystal_get,getitemname(.@crystal_));
 		mes "Do you want to compress?";
 		next;
-		if (select("Compress:Stop") == 2) {
+		if (select("Compress", "Stop") == 2) {
 			mes "[Reno]";
 			mes "Okay, please contact if you need me in the future.";
 			close;
@@ -416,7 +416,7 @@ moc_para01,41,169,3	script	Reno#2012hat	1_M_WIZARD,{
 				" compress into "+.@crystal_get+" Energy Crystals. Do you"
 				" want to continue?";
 			next;
-			if (select("Compress:Stop") == 2)
+			if (select("Compress", "Stop") == 2)
 				break;
 		}
 		mes "[Reno]";
@@ -548,7 +548,7 @@ moc_para01,41,169,3	script	Reno#2012hat	1_M_WIZARD,{
 		mes "[Reno]";
 		mes "Are you familiar with the ^FF0000precautions^000000?";
 		next;
-		if (select("I am.:No.") == 2) {
+		if (select("I am.", "No.") == 2) {
 			mes "[Reno]";
 			mes "Okay. Next time, then.";
 			close;

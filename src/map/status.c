@@ -3523,10 +3523,14 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 		if (regen->sregen)
 			regen->sregen->rate.hp += 3;
 	}
+
 	if (sc->data[SC_MAGNIFICAT]) {
+#ifndef RENEWAL // HP Regen applies only in Pre-renewal
 		regen->rate.hp += 1;
+#endif
 		regen->rate.sp += 1;
 	}
+	
 	if (sc->data[SC_GDSKILL_REGENERATION]) {
 		const struct status_change_entry *sce = sc->data[SC_GDSKILL_REGENERATION];
 		if (!sce->val4) {

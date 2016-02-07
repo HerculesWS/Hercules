@@ -60,7 +60,7 @@ ma_fild02,312,317,5	script	Guard#buwaya_cave	4_MAL_SOLDIER,{
 		mes "If you dont have any business here, please go back.";
 		next;
 		while(1) {
-			switch(select("Why is it so dangerous?:I'm here to hunt down Buwaya.:End conversation.")) {
+			switch(select("Why is it so dangerous?", "I'm here to hunt down Buwaya.", "End conversation.")) {
 			case 1:
 				mes "[Guard]";
 				mes "Recently, there has been a case";
@@ -152,7 +152,7 @@ OnTouch:
 		erasequest 4229;
 		// fall through
 	}
-	switch(select("Enter.:Turn back.")) {
+	switch(select("Enter.", "Turn back.")) {
 	case 1:
 		if( has_instance("1@ma_c") == "" ) {
 			mes "The memorial dungeon Buwaya Cave does not exist.";
@@ -200,7 +200,7 @@ OnTouch:
 	mes "and new people got caught.";
 	mes "We will be stuck in here for the rest of our lives.";
 	next;
-	switch(select("Get me outta here!!:Ca...can't escape?")) {
+	switch(select("Get me outta here!!", "Ca...can't escape?")) {
 	case 1:
 		mes "[Kidnapped Residents]";
 		mes "We don't have enough power to destroy it but Buwaya has a weakness.";
@@ -231,7 +231,7 @@ OnEnable:
 	mes "Ahaa! I wish I had a little more power...";
 	mes "I know its weakness...";
 	next;
-	switch(select("Tell me.:Do you really know?")) {
+	switch(select("Tell me.", "Do you really know?")) {
 	case 1:
 		mes "[Kidnapped Residents]";
 		mes "Are you sure you can do it...?";
@@ -454,7 +454,7 @@ OnEnable:
 OnTouch:
 	mes "Would like to go out?";
 	next;
-	if(select("Yes!:No, I will stay.") == 1)
+	if(select("Yes!", "No, I will stay.") == 1)
 		warp "ma_fild02",315,315;
 	close;
 }

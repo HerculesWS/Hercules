@@ -38,7 +38,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 			mes "[Nutters]";
 			mes "Have you finished hunting the 50 Cocos?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Nutters]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -52,7 +52,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Nutters]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -78,7 +78,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 			mes "[Nutters]";
 			mes "Have you finished hunting the 50 Cocos?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Nutters]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -92,7 +92,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Nutters]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -119,7 +119,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 			mes "[Nutters]";
 			mes "Have you finished hunting the 150 Cocos?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Nutters]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -133,7 +133,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Nutters]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -165,19 +165,19 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 			mes "Pesky Coco's have hidden all the Acorns.";
 			mes "Do you think you could help me?";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Nutters]";
 				mes "Oh, that's great! I knew I could count on you, just from looking at you!";
 				next;
-				switch(select("Gather Items:Hunt Cocos:Cancel")) {
+				switch(select("Gather Items", "Hunt Cocos", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Nutters]";
 					mes "Can you help me find ^00CE0025 Acorns^000000.";
 					mes "I will reward you with much if you can.";
 					next;
-					switch(select("I have 25 Acorns:Please come again?")) {
+					switch(select("I have 25 Acorns", "Please come again?")) {
 					case 1:
 						/*
 						if (checkweight(Orange_Potion,5) == 0) {
@@ -218,7 +218,7 @@ mjolnir_01,293,20,3	script	Nutters#Coco_Hunt	4_M_YOYOROGUE,{
 					mes "Ah, ok I think you can help me out by hunting some Cocos.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Cocos:100 Cocos:150 Cocos")) {
+					switch(select("50 Cocos", "100 Cocos", "150 Cocos")) {
 					case 1:
 						mes "[Nutters]";
 						mes "Come back when you've finished your task and I will give you a small reward.";

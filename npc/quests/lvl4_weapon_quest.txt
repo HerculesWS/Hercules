@@ -66,7 +66,7 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 		mes "[Bazo]";
 		mes "If you like, I'd be willing to show you my skills. Now how does that sound?";
 		next;
-		switch(select("Sounds good~:No, thanks.")) {
+		switch(select("Sounds good~", "No, thanks.")) {
 		case 1:
 			if (BaseLevel < 70) {
 				mes "[Bazo]";
@@ -214,7 +214,7 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 				mes "thinking about right now.";
 			}
 			next;
-			.@answer = select("Poring:Hode:Obeaune:Minorous");
+			.@answer = select("Poring", "Hode", "Obeaune", "Minorous");
 			if (.@answer == .@mons[.@i]) {
 				++.@dap;
 			}
@@ -286,7 +286,7 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 				mes "bring one kind of ore, not all of them. So which one would you";
 				mes "like to use?";
 				next;
-				switch(select("Citrin:Turquoise:Agate")) {
+				switch(select("Citrin", "Turquoise", "Agate")) {
 				case 1:
 					.@itemreq = 7295; // Citrine
 					break;
@@ -303,7 +303,7 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 				mes "bring one kind of ore, not";
 				mes "two. So which one would";
 				mes "you like to use?";
-				switch(select("Citrin:Turquoise")) {
+				switch(select("Citrin", "Turquoise")) {
 				case 1:
 					.@itemreq = 7295; // Citrine
 					break;
@@ -317,7 +317,7 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 				mes "bring one kind of ore, not";
 				mes "two. So which one would";
 				mes "you like to use?";
-				switch(select("Citrin:Agate")) {
+				switch(select("Citrin", "Agate")) {
 				case 1:
 					.@itemreq = 7295; // Citrine
 					break;
@@ -331,7 +331,7 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 				mes "bring one kind of ore, not";
 				mes "two. So which one would";
 				mes "you like to use?";
-				switch(select("Turquoise:Agate")) {
+				switch(select("Turquoise", "Agate")) {
 				case 1:
 					.@itemreq = 7294; //Turqoise
 					break;
@@ -435,7 +435,7 @@ umbala,117,285,3	script	Bazo#lv4	4_M_03,{
 	mes "[Bazo]";
 	mes "If you like, I'd be willing to show you my skills. Now how does that sound?";
 	next;
-	switch(select("Sounds good~:No, thanks.")) {
+	switch(select("Sounds good~", "No, thanks.")) {
 	case 1:
 		if (BaseLevel < 70) {
 			mes "[Bazo]";
@@ -517,7 +517,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 		mes "inspired and oft imitated";
 		mes "handiwork or not?";
 		next;
-		switch(select("Yes. Yes, I do.:Sorry, I don't need it!")) {
+		switch(select("Yes. Yes, I do.", "Sorry, I don't need it!")) {
 		case 1:
 			if (BaseLevel < 70) {
 				mes "[Hibilaithan]";
@@ -659,7 +659,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 				mes "am I thinking of?";
 			}
 			next;
-			.@answer = select("Zealotus:Alice:Munak:Isis");
+			.@answer = select("Zealotus", "Alice", "Munak", "Isis");
 			if (.@answer == .@mons[.@i]) {
 				++.@dap;
 			}
@@ -737,7 +737,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 				mes "[Hibilaithan]";
 				mes "Whoa, you brought all three kinds of those ores I asked for? Haha, we can only use one of them, so go ahead and choose.";
 				next;
-				switch(select("Muscovite:Biotite:Pyroxene")) {
+				switch(select("Muscovite", "Biotite", "Pyroxene")) {
 				case 1:
 					.@itemreq = 7292; //Muscovite
 					break;
@@ -753,7 +753,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 				mes "[Hibilaithan]";
 				mes "Hahaha, you only needed to bring one kind of ore, not two. Now, which ore would you like to use?";
 				next;
-				switch(select("Muscovite:Biotite")) {
+				switch(select("Muscovite", "Biotite")) {
 				case 1:
 					.@itemreq = 7292; //Muscovite
 					break;
@@ -766,7 +766,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 				mes "[Hibilaithan]";
 				mes "Hahaha, you only needed to bring one kind of ore, not two. Now, which ore would you like to use?";
 				next;
-				switch(select("Muscovite:Pyroxene")) {
+				switch(select("Muscovite", "Pyroxene")) {
 				case 1:
 					.@itemreq = 7292; //Muscovite
 					break;
@@ -779,7 +779,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 				mes "[Hibilaithan]";
 				mes "Hahaha, you only needed to bring one kind of ore, not two. Now, which ore would you like to use?";
 				next;
-				switch(select("Biotite:Pyroxene")) {
+				switch(select("Biotite", "Pyroxene")) {
 				case 1:
 					.@itemreq = 7297; // Biotite
 					break;
@@ -891,7 +891,7 @@ umbala,163,257,3	script	Hibilaithan#lv4	4_M_UMDANCEKID2,{
 	mes "inspired and oft imitated";
 	mes "handiwork or not?";
 	next;
-	switch(select("Yes. Yes, I do.:Sorry, I don't need it!")) {
+	switch(select("Yes. Yes, I do.", "Sorry, I don't need it!")) {
 	case 1:
 		if (BaseLevel < 70) {
 			mes "[Hibilaithan]";
@@ -972,7 +972,7 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 		mes "In any case, do have any use";
 		mes "for my skills? If so, please bring me the materials that I need so that I may be of service to you.";
 		next;
-		switch(select("Yes, please.:No, thank you.")) {
+		switch(select("Yes, please.", "No, thank you.")) {
 		case 1:
 			if (BaseLevel < 70) {
 				mes "[Tabezthan]";
@@ -1113,7 +1113,7 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 				mes "monster I'm thinking of.";
 			}
 			next;
-			.@answer = select("Baphomet:Dark Lord:Bloody Knight:Stormy Knight");
+			.@answer = select("Baphomet", "Dark Lord", "Bloody Knight", "Stormy Knight");
 			if (.@answer == .@mons[.@i]) {
 				++.@dap;
 			}
@@ -1179,7 +1179,7 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 				mes "[Tabezthan]";
 				mes "Ah, you've brought all three. However, we can only use one kind of ore at a time, so please choose just one.";
 				next;
-				switch(select("Phlogopite:Peridot:Rose Quartz")) {
+				switch(select("Phlogopite", "Peridot", "Rose Quartz")) {
 				case 1:
 					.@itemreq = 7290; //Phlogopite
 					break;
@@ -1198,7 +1198,7 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 				mes "of ore. Now, which one would";
 				mes "you like to use?";
 				next;
-				switch(select("Phlogopite:Peridot")) {
+				switch(select("Phlogopite", "Peridot")) {
 				case 1:
 					.@itemreq = 7290; //Phlogopite
 					break;
@@ -1214,7 +1214,7 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 				mes "of ore. Now, which one would";
 				mes "you like to use?";
 				next;
-				switch(select("Phlogopite:Rose Quartz")) {
+				switch(select("Phlogopite", "Rose Quartz")) {
 				case 1:
 					.@itemreq = 7290; //Phlogopite
 					break;
@@ -1230,7 +1230,7 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 				mes "of ore. Now, which one would";
 				mes "you like to use?";
 				next;
-				switch(select("Peridot:Rose Quartz")) {
+				switch(select("Peridot", "Rose Quartz")) {
 				case 1:
 					.@itemreq = 7289; //Olivine
 					break;
@@ -1323,7 +1323,7 @@ um_in,156,77,5	script	Tabezthan#lv4	4_M_UMOLDMAN,{
 	mes "In any case, do have any use";
 	mes "for my skills? If so, please bring me the materials that I need so that I may be of service to you.";
 	next;
-	switch(select("Yes, please.:No, thank you.")) {
+	switch(select("Yes, please.", "No, thank you.")) {
 	case 1:
 		if (BaseLevel < 70) {
 			mes "[Tabezthan]";
@@ -1730,7 +1730,7 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 		mes "the dead. Without a body, I feel";
 		mes "so useless.";
 		next;
-		switch(select("Show interest.:Ignore him.")) {
+		switch(select("Show interest.", "Ignore him.")) {
 		case 1:
 			mes "[Kayron]";
 			mes "Huh...?";
@@ -1847,7 +1847,7 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 		mes "You'll write 'Rock,' 'Paper,' or 'Scissors,' and I'll do the same. Then we'll compare our results and see what happens. Alright, let's do the first match!";
 		next;
 		.@npchand1 = rand(1,3);
-		.@myhand1 = select("Scissors:Rock:Paper");
+		.@myhand1 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand1 == 1) && (.@npchand1 == 3)) || ((.@myhand1 == 2) && (.@npchand1 == 1)) || ((.@myhand1 == 3) && (.@npchand1 == 2))) {
 			++.@shobu;
 		}
@@ -1857,7 +1857,7 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 		mes "the second match~";
 		next;
 		.@npchand2 = rand(1,3);
-		.@myhand2 = select("Scissors:Rock:Paper");
+		.@myhand2 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand2 == 1) && (.@npchand2 == 3)) || ((.@myhand2 == 2) && (.@npchand2 == 1)) || ((.@myhand2 == 3) && (.@npchand2 == 2))) {
 			++.@shobu;
 		}
@@ -1868,7 +1868,7 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 		mes "'Paper' or 'Scissors.'";
 		next;
 		.@npchand3 = rand(1,3);
-		.@myhand3 = select("Scissors:Rock:Paper");
+		.@myhand3 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand3 == 1) && (.@npchand3 == 3)) || ((.@myhand3 == 2) && (.@npchand3 == 1)) || ((.@myhand3 == 3) && (.@npchand3 == 2))) {
 			++.@shobu;
 		}
@@ -2139,7 +2139,7 @@ niflheim,240,193,3	script	Kayron#lv4	4_M_NFDEADMAN2,{
 	mes "the dead. Without a body, I feel";
 	mes "so useless.";
 	next;
-	switch(select("Show interest.:Ignore him.")) {
+	switch(select("Show interest.", "Ignore him.")) {
 	case 1:
 		mes "[Kayron]";
 		mes "Huh...?";
@@ -2183,7 +2183,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 		mes "something like that,";
 		mes "but there was more to it...";
 		next;
-		switch(select("Show interest.:Ignore him.")) {
+		switch(select("Show interest.", "Ignore him.")) {
 		case 1:
 			mes "[Reyghema]";
 			mes "Enjoy your youth...";
@@ -2297,7 +2297,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 		mes "Alright, here's a piece of paper. When I say so, you write down 'Rock,' 'Paper' or 'Scissors.' Alright? Let's start.";
 		next;
 		.@npchand1 = rand(1,3);
-		.@myhand1 = select("Scissors:Rock:Paper");
+		.@myhand1 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand1 == 1) && (.@npchand1 == 3)) || ((.@myhand1 == 2) && (.@npchand1 == 1)) || ((.@myhand1 == 3) && (.@npchand1 == 2))) {
 			++.@shobu;
 		}
@@ -2306,7 +2306,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 		mes "try this again.";
 		next;
 		.@npchand2 = rand(1,3);
-		.@myhand2 = select("Scissors:Rock:Paper");
+		.@myhand2 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand2 == 1) && (.@npchand2 == 3)) || ((.@myhand2 == 2) && (.@npchand2 == 1)) || ((.@myhand2 == 3) && (.@npchand2 == 2))) {
 			++.@shobu;
 		}
@@ -2316,7 +2316,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 		mes "'Paper' or 'Scissors.'";
 		next;
 		.@npchand3 = rand(1,3);
-		.@myhand3 = select("Scissors:Rock:Paper");
+		.@myhand3 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand3 == 1) && (.@npchand3 == 3)) || ((.@myhand3 == 2) && (.@npchand3 == 1)) || ((.@myhand3 == 3) && (.@npchand3 == 2))) {
 			++.@shobu;
 		}
@@ -2612,7 +2612,7 @@ niflheim,99,268,5	script	Reyghema#lv4	4_M_NFDEADMAN2,{
 	mes "something like that,";
 	mes "but there was more to it...";
 	next;
-	switch(select("Show interest.:Ignore him.")) {
+	switch(select("Show interest.", "Ignore him.")) {
 	case 1:
 		mes "[Reyghema]";
 		mes "Enjoy your youth...";
@@ -2648,7 +2648,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		mes "Back during those days,";
 		mes "I never accepted money for my work. Father always used to say, 'Never accept payment to forge a good weapon. It... It...'";
 		next;
-		switch(select("Show interest.:Ignore him.")) {
+		switch(select("Show interest.", "Ignore him.")) {
 		case 1:
 			mes "[Hein]";
 			mes "What was the rest of it?";
@@ -2758,7 +2758,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		mes "When I tell you to, write down 'Rock,' 'Paper' or 'Scissors.' I'll do the same thing, and we'll compare our results at the end, okay? Let's begin!";
 		next;
 		.@npchand1 = rand(1,3);
-		.@myhand1 = select("Scissors:Rock:Paper");
+		.@myhand1 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand1 == 1) && (.@npchand1 == 3)) || ((.@myhand1 == 2) && (.@npchand1 == 1)) || ((.@myhand1 == 3) && (.@npchand1 == 2))) {
 			++.@shobu;
 		}
@@ -2767,7 +2767,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		mes "the second round!";
 		next;
 		.@npchand2 = rand(1,3);
-		.@myhand2 = select("Scissors:Rock:Paper");
+		.@myhand2 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand2 == 1) && (.@npchand2 == 3)) || ((.@myhand2 == 2) && (.@npchand2 == 1)) || ((.@myhand2 == 3) && (.@npchand2 == 2))) {
 			++.@shobu;
 		}
@@ -2778,7 +2778,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 		mes "compare our results.";
 		next;
 		.@npchand3 = rand(1,3);
-		.@myhand3 = select("Scissors:Rock:Paper");
+		.@myhand3 = select("Scissors", "Rock", "Paper");
 		.@aekddam = rand(1,3);
 		if (((.@myhand3 == 1) && (.@npchand3 == 3)) || ((.@myhand3 == 2) && (.@npchand3 == 1)) || ((.@myhand3 == 3) && (.@npchand3 == 2))) {
 			++.@shobu;
@@ -3054,7 +3054,7 @@ niflheim,187,280,3	script	Hein#lv4	4_M_NFDEADMAN,{
 	mes "Back during those days,";
 	mes "I never accepted money for my work. Father always used to say, 'Never accept payment to forge a good weapon. It... It...'";
 	next;
-	switch(select("Show interest.:Ignore him.")) {
+	switch(select("Show interest.", "Ignore him.")) {
 	case 1:
 		mes "[Hein]";
 		mes "What was the rest of it?";
@@ -3101,7 +3101,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		mes "[Waltboughst]";
 		mes "It's funny, you know. My father always used to say, 'Trying your best won't always result in success...' Um, that's ... Huh? There was more, I think.";
 		next;
-		switch(select("Show interest.:Ignore him.")) {
+		switch(select("Show interest.", "Ignore him.")) {
 		case 1:
 			mes "[Waltboughst]";
 			mes "Let me try it again.";
@@ -3223,7 +3223,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		mes "Now, when I tell you to, write down 'Rock,' 'Paper' or 'Scissors.' Let's begin...!";
 		next;
 		.@npchand1 = rand(1,3);
-		.@myhand1 = select("Scissors:Rock:Paper");
+		.@myhand1 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand1 == 1) && (.@npchand1 == 3)) || ((.@myhand1 == 2) && (.@npchand1 == 1)) || ((.@myhand1 == 3) && (.@npchand1 == 2))) {
 			++.@shobu;
 		}
@@ -3233,7 +3233,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		mes "a second time.";
 		next;
 		.@npchand2 = rand(1,3);
-		.@myhand2 = select("Scissors:Rock:Paper");
+		.@myhand2 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand2 == 1) && (.@npchand2 == 3)) || ((.@myhand2 == 2) && (.@npchand2 == 1)) || ((.@myhand2 == 3) && (.@npchand2 == 2))) {
 			++.@shobu;
 		}
@@ -3244,7 +3244,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 		mes "and check your luck.";
 		next;
 		.@npchand3 = rand(1,3);
-		.@myhand3 = select("Scissors:Rock:Paper");
+		.@myhand3 = select("Scissors", "Rock", "Paper");
 		if (((.@myhand3 == 1) && (.@npchand3 == 3)) || ((.@myhand3 == 2) && (.@npchand3 == 1)) || ((.@myhand3 == 3) && (.@npchand3 == 2))) {
 			++.@shobu;
 		}
@@ -3498,7 +3498,7 @@ niflheim,331,72,3	script	Waltboughst#lv4	4_M_NFDEADMAN,{
 	mes "[Waltboughst]";
 	mes "It's funny, you know. My father always used to say, 'Trying your best won't always result in success...' Um, that's ... Huh? There was more, I think.";
 	next;
-	switch(select("Show interest.:Ignore him.")) {
+	switch(select("Show interest.", "Ignore him.")) {
 	case 1:
 		mes "[Waltboughst]";
 		mes "Let me try it again.";

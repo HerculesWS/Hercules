@@ -102,7 +102,7 @@ new_1-2,100,29,4	script	Receptionist#nv1	4_M_04,{
 	mes "menu for more information.";
 	next;
 	while (1) {
-		switch(select("Apply for training.:Direct access to Ragnarok Online.:^3355FFTraining Grounds Introduction.^000000:I need a moment to think.")) {
+		switch(select("Apply for training.", "Direct access to Ragnarok Online.", "^3355FFTraining Grounds Introduction.^000000", "I need a moment to think.")) {
 		case 1:
 			mes "[Training Grounds Receptionist]";
 			mes "Thank you for applying for Novice training. For detailed information of each training course, please inquire the Guides for assistance.";
@@ -297,7 +297,7 @@ new_1-1,53,114,4	script	Shion#nv1	4_F_JOB_HUNTER,{
 		mes "Now that we've met, is there anything I can help you with?";
 		mes "I'm here for your questions~";
 		next;
-		switch(select("Where should I go?:About Basic Interfaces.:Who the crap are you?")) {
+		switch(select("Where should I go?", "About Basic Interfaces.", "Who the crap are you?")) {
 		case 1:
 			mes "[Shion]";
 			mes "Do you see the bridge to your";
@@ -371,7 +371,7 @@ new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 		mes "[Kris]";
 		mes "You've completed all the essential courses. Have you spoken to the assistant tutors already? The field combat training will be your next course. Would you like to proceed?";
 		next;
-		switch(select("Sure!:No, I'll come back later.:Send me to a town!")) {
+		switch(select("Sure!", "No, I'll come back later.", "Send me to a town!")) {
 		case 1:
 			mes "[Kris]";
 			mes "Your next course is Field Combat training. Please listen carefully to your next trainer, and I hope you pass the course. Godspeed.";
@@ -429,7 +429,7 @@ new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 		mes "more about interface";
 		mes "fundamentals?";
 		next;
-		switch(select("Yes.:Nah, I'm a pro~:Cancel.")) {
+		switch(select("Yes.", "Nah, I'm a pro~", "Cancel.")) {
 		case 1:
 			mes "[Kris]";
 			mes "First, it's possible to move every interface window on your screen by dragging the window. Just click on the window, hold down the mouse button and move your mouse.";
@@ -566,7 +566,7 @@ new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 		mes "[Kris]";
 		mes "It seems that you haven't attended the Skill Information class yet. Please talk to a tutor to the very left of this room to attend his class.";
 		next;
-		switch(select("Thank you!:I'm tired of classes~:Cancel")) {
+		switch(select("Thank you!", "I'm tired of classes~", "Cancel")) {
 		case 1:
 			mes "[Kris]";
 			mes "When you attend the Skill Information class, you'll gain a better understanding of the use of skills.";
@@ -580,7 +580,7 @@ new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 			mes "[Kris]";
 			mes "I see. In that case, you must be ready for the Field Combat Training Course. Shall I send you there right away?";
 			next;
-			if (select("No! W-wait!:Please do~!") == 1) {
+			if (select("No! W-wait!", "Please do~!") == 1) {
 				mes "[Kris]";
 				mes "...?!";
 				mes "O...kay then.";
@@ -609,7 +609,7 @@ new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 		mes "[Kris]";
 		mes "It looks like you still haven't attended the Item Information class yet. Please speak to the tutor to the very right of this room to attend her class.";
 		next;
-		switch(select("Thank you.:I'm tired of classes~:Cancel")) {
+		switch(select("Thank you.", "I'm tired of classes~", "Cancel")) {
 		case 1:
 			mes "[Kris]";
 			mes "The Item Information class is very useful for you to learn how to use your Hot keys and Hot key bars. Come, let me guide you there.";
@@ -620,7 +620,7 @@ new_1-2,99,105,3	script	Interfaces Tutor#nv1	4_M_CRU,{
 			mes "[Kris]";
 			mes "I see. In that case, you must be ready for the Field Combat Training Course. Shall I send you there right away?";
 			next;
-			if (select("No! W-wait!:Please do~!") == 1) {
+			if (select("No! W-wait!", "Please do~!") == 1) {
 				mes "[Kris]";
 				mes "...?!";
 				mes "O...kay then.";
@@ -650,7 +650,7 @@ new_1-2,83,111,3	script	Skill Tutor#nv	4_M_MONK,{
 		mes "Did you need more help?";
 		mes "I see that you've completed all the essential courses. Did you speak to the assistant tutors too?";
 		next;
-		switch(select("Send me to the next course!:Assistant tutors?:Take me to a town!")) {
+		switch(select("Send me to the next course!", "Assistant tutors?", "Take me to a town!")) {
 		case 1:
 			mes "[Cecil]";
 			mes "Ah! Right, right.";
@@ -713,7 +713,7 @@ new_1-2,83,111,3	script	Skill Tutor#nv	4_M_MONK,{
 		}
 		mes "Then, shall we begin the class?";
 		next;
-		switch(select("What do you teach?:I want Field Combat Training now!:Cancel")) {
+		switch(select("What do you teach?", "I want Field Combat Training now!", "Cancel")) {
 		case 1:
 			mes "[Cecil]";
 			mes "I live for power";
@@ -821,7 +821,7 @@ new_1-2,83,111,3	script	Skill Tutor#nv	4_M_MONK,{
 			mes "[Cecil]";
 			mes "Well, that's it for the essential fundamentals. If you want a more comprehensive lesson, you gotta speak to the assistant tutors.";
 			next;
-			switch(select("Okay.:Send me to Field Combat Training, now!:Cancel")) {
+			switch(select("Okay.", "Send me to Field Combat Training, now!", "Cancel")) {
 			case 1:
 				mes "[Cecil]";
 				mes "Everyone in the";
@@ -858,7 +858,7 @@ new_1-2,83,111,3	script	Skill Tutor#nv	4_M_MONK,{
 		mes "I help you?";
 		mes "Whoa, you haven't attended the Basic Interface class yet? Oh well, I know that class is kinda boring~";
 		next;
-		switch(select("Oh, I better take that class.:Send me to Field Combat Training.:Cancel")) {
+		switch(select("Oh, I better take that class.", "Send me to Field Combat Training.", "Cancel")) {
 		case 1:
 			mes "[Cecil]";
 			mes "Yeah, that's a good idea. After all, you'll gain experience and items while you take that class. Alright then, the Interfaces Tutor is in the center of this room. Go for it~";
@@ -881,7 +881,7 @@ new_1-2,83,111,3	script	Skill Tutor#nv	4_M_MONK,{
 		mes "I help you?";
 		mes "Whoa, you haven't attended the Item Information class yet? Oh well, I know that class is kinda boring~";
 		next;
-		switch(select("Oh, I better take that class.:Send me to Field Combat Training.:Cancel")) {
+		switch(select("Oh, I better take that class.", "Send me to Field Combat Training.", "Cancel")) {
 		case 1:
 			mes "[Cecil]";
 			mes "Yeah, that's a good idea. After all, you'll gain experience and items while you take that class. Alright then, the Item Tutor is on the far right side of this room. Go for it~";
@@ -906,14 +906,14 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 		mes "Huh...?";
 		mes "Do you need help looking for someone? You seem to have completed all of the essential courses. Where do you need to go?";
 		next;
-		switch(select("I'm not sure~!:Send me to a town.:Cancel")) {
+		switch(select("I'm not sure~!", "Send me to a town.", "Cancel")) {
 		case 1:
 			mes "[Alice]";
 			mes "Hmm...";
 			mes "You've learned everything else,";
 			mes "so I guess the only thing left is Field Combat Training. Did you want to attend that class now?";
 			next;
-			switch(select("Yes.:Oh, w-wait.")) {
+			switch(select("Yes.", "Oh, w-wait.")) {
 			case 1:
 				mes "[Alice]";
 				mes "Make sure you keep the items I've given you handy, and that you equip all of your armor, alright? Now, take care.";
@@ -958,7 +958,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 		mes "So, have you come to attend";
 		mes "my Item Information class?";
 		next;
-		switch(select("Yes!:No, thanks.:How do I get to a town?")) {
+		switch(select("Yes!", "No, thanks.", "How do I get to a town?")) {
 		case 1:
 			mes "[Alice]";
 			mes "Don't worry, it'll be short.";
@@ -1114,7 +1114,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 				mes "I was gonna give you some job experience points, but I think you have enough job experience for now.";
 			}
 			next;
-			switch(select("Now what?:Send me to the actual fighting class!:Cancel")) {
+			switch(select("Now what?", "Send me to the actual fighting class!", "Cancel")) {
 			case 1:
 				mes "[Alice]";
 				mes "Why don't you walk around";
@@ -1147,7 +1147,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 			mes "[Alice]";
 			mes "Are you sure you really want to go into Field Combat Training? Have you spoken to every tutor? You better do that beforehand.";
 			next;
-			switch(select("No, no! Send me to the actual fight class!:Oh, wait!")) {
+			switch(select("No, no! Send me to the actual fight class!", "Oh, wait!")) {
 			case 1:
 				mes "[Alice]";
 				mes "What an enthusiastic Novice you are! Okay, I'll send you to the folks in charge of Field Combat Training. Make sure that you listen carefully to the trainers.";
@@ -1175,7 +1175,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 		mes "I help you?";
 		mes "Hmm, it seems that you haven't attended the Basic Interfaces class yet. Would you like to attend that class first?";
 		next;
-		switch(select("I am going to attend that class.:Send me to Field Combat Training.:Cancel")) {
+		switch(select("I am going to attend that class.", "Send me to Field Combat Training.", "Cancel")) {
 		case 1:
 			mes "[Cecil]";
 			mes "Excellent~";
@@ -1185,7 +1185,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 			mes "[Alice]";
 			mes "Are you sure you really want to go into Field Combat Training? Have you spoken to every tutor? You better do that beforehand.";
 			next;
-			switch(select("I want Field Combat Training~!:Oh, wait!")) {
+			switch(select("I want Field Combat Training~!", "Oh, wait!")) {
 			case 1:
 				mes "[Alice]";
 				mes "What an enthusiastic Novice you are! Okay, I'll send you to the folks in charge of Field Combat Training. Make sure that you listen carefully to the trainers.";
@@ -1213,7 +1213,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 		mes "I help you?";
 		mes "It looks like you still haven't attended the ^4d4dffthe Skill information class^000000 yet. Would you like to attend that class first?";
 		next;
-		switch(select("I'll attend that class.:Send me to Field Combat Training.:Cancel")) {
+		switch(select("I'll attend that class.", "Send me to Field Combat Training.", "Cancel")) {
 		case 1:
 			mes "[Alice]";
 			mes "Now, that's a good idea. Please talk to Cecil, the tutor at the far left side of this room, okay?";
@@ -1224,7 +1224,7 @@ new_1-2,115,111,3	script	Item Tutor#nv	4_F_JOB_BLACKSMITH,{
 			mes "[Alice]";
 			mes "Are you sure you really want to go into Field Combat Training? Have you spoken to every tutor? You better do that beforehand.";
 			next;
-			switch(select("I want Field Combat Training~!:Oh, wait!")) {
+			switch(select("I want Field Combat Training~!", "Oh, wait!")) {
 			case 1:
 				mes "[Alice]";
 				mes "What an enthusiastic Novice you are! Okay, I'll send you to the folks in charge of Field Combat Training. Make sure that you listen carefully to the trainers.";
@@ -1298,7 +1298,7 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 			mes "Please choose";
 			mes "your destination.";
 			next;
-			switch(select("Prontera:Morroc:Payon:Alberta:Geffen")) {
+			switch(select("Prontera", "Morroc", "Payon", "Alberta", "Geffen")) {
 			case 1:
 				.@dest$ = "Prontera";
 				.@mapn$ = "prontera";
@@ -1361,7 +1361,7 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 			end;
 		}
 		else {
-			switch(select("Field Combat Course:Prontera:Morroc:Payon:Alberta:Geffen")) {
+			switch(select("Field Combat Course", "Prontera", "Morroc", "Payon", "Alberta", "Geffen")) {
 			case 1:
 				mes "[Kafra Employee]";
 				mes "Thank you, let";
@@ -1433,7 +1433,7 @@ new_1-2,118,108,3	script	Kafra Employee#nv1	4_F_KAFRA1,{
 		mes "learn more about.";
 		next;
 		while(1) {
-			switch(select("Save service:Storage service:Teleport service:Cart rental service:Cancel")) {
+			switch(select("Save service", "Storage service", "Teleport service", "Cart rental service", "Cancel")) {
 			case 1:
 				mes "[Kafra Employee]";
 				mes "When you talk to a Kafra Employee and ask for the Save Service, the location of where you will revive, after being defeated in battle, will be changed.";
@@ -1555,7 +1555,7 @@ new_1-2,161,182,5	script	Instructor#nv	4_F_03,{
 	mes "";
 	next;
 	while(1) {
-		switch(select("Basic Info Window:Party Window:Item Window:Option Window:Equipment Window:Cancel")) {
+		switch(select("Basic Info Window", "Party Window", "Item Window", "Option Window", "Equipment Window", "Cancel")) {
 		case 1:
 			mes "[Edwin]";
 			mes "Let's take a look at";
@@ -1739,7 +1739,7 @@ new_1-2,182,182,3	script	Somatology Instructor	4_M_SAGE_A,{
 	mes "according to your personal needs, so ask about the Status you wish to better understand. First, open your Status Window by using the '^3355FFAlt^000000 + ^3355FFA^000000' keys.";
 	next;
 	while(1) {
-		switch(select("Strength and Agility:Vitality and Intelligence:Dexterity and Luck:I do not wish to continue.")) {
+		switch(select("Strength and Agility", "Vitality and Intelligence", "Dexterity and Luck", "I do not wish to continue.")) {
 		case 1:
 			mes "[Jare Riotte]";
 			mes "Let me explain Strength first.";
@@ -1919,7 +1919,7 @@ new_1-2,184,172,1	script	Understandings of Skills	1_M_01,{
 	emotion e_kis;
 	next;
 	while(1) {
-		switch(select("Passive and Active skills:Basic Skills:Use of Emoticons:Cancel.")) {
+		switch(select("Passive and Active skills", "Basic Skills", "Use of Emoticons", "Cancel.")) {
 		case 1:
 			mes "[Leo Handerson]";
 			mes "First, let me explain";
@@ -1982,7 +1982,7 @@ new_1-2,184,172,1	script	Understandings of Skills	1_M_01,{
 			mes "your better understanding.";
 			next;
 			while(1) {
-				switch(select("Trade and Exchange:Organizing & Joining party:Opening Chat Room:Storage Use:No thanks, I know this already.")) {
+				switch(select("Trade and Exchange", "Organizing & Joining party", "Opening Chat Room", "Storage Use", "No thanks, I know this already.")) {
 				case 1:
 					mes "[Leo Handerson]";
 					mes "When you go visit our official website at ^0000FFiro.ragnarokonline.com^000000, you can find a full explanation about trading, illustrated with pictures.";
@@ -2193,7 +2193,7 @@ new_1-2,17,182,5	script	Helper#nv	4_M_02,{
 		mes "Please check your";
 		mes "equipment before you engaging in battle. Are you sure you've equipped all of your equipment, your weapons and armor?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			mes "[Elmeen]";
 			mes "First, you place the cursor on a monster. When you left click, you will hit the monster once.";
@@ -2266,7 +2266,7 @@ new_1-2,17,182,5	script	Helper#nv	4_M_02,{
 			mes "first for you?";
 			next;
 			while(1) {
-				switch(select("Monsters:Experience:Items:Quit.")) {
+				switch(select("Monsters", "Experience", "Items", "Quit.")) {
 				case 1:
 					mes "[Elmeen]";
 					mes "There are many aggressive monsters that will attack you first before you even approach them. ";
@@ -2371,7 +2371,7 @@ new_1-2,17,182,5	script	Helper#nv	4_M_02,{
 		mes "shall I expain?";
 		next;
 		while(1) {
-			switch(select("Monsters:Experience:Items:Quit.")) {
+			switch(select("Monsters", "Experience", "Items", "Quit.")) {
 			case 1:
 				mes "[Elmeen]";
 				mes "There are many aggressive monsters that will attack you first before you even approach them. ";
@@ -2490,7 +2490,7 @@ new_1-2,38,182,3	script	Entrance Guard#nv	4_F_03,{
 		mes "to take the test";
 		mes "right away?";
 		next;
-		switch(select("Yes:I need more time.")) {
+		switch(select("Yes", "I need more time.")) {
 		case 1:
 			mes "[Muriel]";
 			mes "Please make sure you";
@@ -2553,7 +2553,7 @@ new_1-2,38,182,3	script	Entrance Guard#nv	4_F_03,{
 		mes "Do you wish";
 		mes "to try again?";
 		next;
-		switch(select("Yes.:Can I have more time?")) {
+		switch(select("Yes.", "Can I have more time?")) {
 		case 1:
 			mes "[Muriel]";
 			mes "I will give you";
@@ -2614,7 +2614,7 @@ new_1-2,38,182,3	script	Entrance Guard#nv	4_F_03,{
 		mes "[Muriel]";
 		mes "Do you wish to try again?";
 		next;
-		switch(select("Yes:Can I have more time?")) {
+		switch(select("Yes", "Can I have more time?")) {
 		case 1:
 			mes "[Muriel]";
 			mes "I will restore";
@@ -2655,7 +2655,7 @@ new_1-3,95,30,4	script	Trainer#nv1::NovHoffman	4_M_02,{
 	mes "Novices. So would you";
 	mes "like to try?";
 	next;
-	switch(select("I do want more of a challenge~:I wanna fight tough monsters!:Cancel")) {
+	switch(select("I do want more of a challenge~", "I wanna fight tough monsters!", "Cancel")) {
 	case 1:
 		mes "[Hoffman]";
 		mes "I see, then let me guide";
@@ -2720,7 +2720,7 @@ new_1-3,96,174,3	script	Test Examiner#nv1::NovKeyman	4_M_03,{
 	mes "Would you like to move";
 	mes "to the next course?";
 	next;
-	switch(select("Yes:No")) {
+	switch(select("Yes", "No")) {
 	case 1:
 		mes "[Keyman]";
 		mes "I hope you will be";
@@ -2778,7 +2778,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 		mes "[Hanson]";
 		mes "Do you wish to start Ragnarok Online immediately, or take this personality test course first?";
 		next;
-		switch(select("I'll take the course.:Let me start Ragnarok Online please.")) {
+		switch(select("I'll take the course.", "Let me start Ragnarok Online please.")) {
 		case 1:
 			mes "[Hanson]";
 			mes "Excellent choice!";
@@ -2796,7 +2796,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "that best matches you from";
 			mes "among the following.";
 			next;
-			switch(select("Study:Exercise:Public service:Violence")) {
+			switch(select("Study", "Exercise", "Public service", "Violence")) {
 			case 1:
 				++.@magician_p;
 				break;
@@ -2811,7 +2811,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 				++.@thief_p;
 				break;
 			}
-			switch(select("Change:Conserve")) {
+			switch(select("Change", "Conserve")) {
 			case 1:
 				++.@magician_p;
 				break;
@@ -2819,7 +2819,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 				++.@acolyte_p;
 				break;
 			}
-			switch(select("Consumer:Seller:Producer")) {
+			switch(select("Consumer", "Seller", "Producer")) {
 			case 1:
 				++.@swordman_p;
 				++.@thief_p;
@@ -2832,7 +2832,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 				++.@magician_p;
 				break;
 			}
-			switch(select("Celebrity:Prudence")) {
+			switch(select("Celebrity", "Prudence")) {
 			case 1:
 				++.@thief_p;
 				break;
@@ -2840,7 +2840,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 				++.@archer_p;
 				break;
 			}
-			switch(select("Theory:Experience")) {
+			switch(select("Theory", "Experience")) {
 			case 1:
 				++.@magician_p;
 				break;
@@ -2848,7 +2848,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 				++.@swordman_p;
 				break;
 			}
-			switch(select("The Past:Reality:The Future")) {
+			switch(select("The Past", "Reality", "The Future")) {
 			case 1:
 				++.@archer_p;
 				break;
@@ -2869,7 +2869,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "I'd rather die";
 			mes "than live submissively.";
 			next;
-			switch(select("Yes.:No.")) {
+			switch(select("Yes.", "No.")) {
 			case 1:
 				++.@swordman_p;
 				break;
@@ -2883,7 +2883,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "to see someone better";
 			mes "than you.";
 			next;
-			switch(select("Yes.:No.")) {
+			switch(select("Yes.", "No.")) {
 			case 1:
 				++.@merchant_p;
 				break;
@@ -2896,7 +2896,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "exploring dangerous";
 			mes "places.";
 			next;
-			switch(select("Yes.:No.")) {
+			switch(select("Yes.", "No.")) {
 			case 1:
 				++.@swordman_p;
 				break;
@@ -2909,7 +2909,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "a leader-type";
 			mes "person.";
 			next;
-			switch(select("Yes.:No.")) {
+			switch(select("Yes.", "No.")) {
 			case 1:
 				++.@swordman_p;
 				break;
@@ -2930,7 +2930,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "to the urge to push";
 			mes "this button?";
 			next;
-			switch(select("Yes.:No.")) {
+			switch(select("Yes.", "No.")) {
 			case 1:
 				++.@thief_p;
 				break;
@@ -2942,7 +2942,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "You often see";
 			mes "things that don't exist.";
 			next;
-			switch(select("Yes.:No.")) {
+			switch(select("Yes.", "No.")) {
 			case 1:
 				++.@acolyte_p;
 				break;
@@ -2955,7 +2955,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "a cliff, you'd feel";
 			mes "like you were flying.";
 			next;
-			switch(select("Yes.:No.")) {
+			switch(select("Yes.", "No.")) {
 			case 1:
 				++.@acolyte_p;
 				break;
@@ -2966,7 +2966,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "[Hanson]";
 			mes "Money talks.";
 			next;
-			switch(select("Yes.:No.")) {
+			switch(select("Yes.", "No.")) {
 			case 1:
 				++.@merchant_p;
 				break;
@@ -2981,7 +2981,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "As you check";
 			mes "your tight schedule....";
 			next;
-			switch(select("You feel like a robot.:You are proud and satisfied.:Schedule? What schedule?")) {
+			switch(select("You feel like a robot.", "You are proud and satisfied.", "Schedule? What schedule?")) {
 			case 1:
 				++.@swordman_p;
 				++.@thief_p;
@@ -3001,7 +3001,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "a purchase, the first thing";
 			mes "you do is...";
 			next;
-			switch(select("Consider if you need it.:Check the price.:Don't think twice, just buy it!")) {
+			switch(select("Consider if you need it.", "Check the price.", "Don't think twice, just buy it!")) {
 			case 1:
 				++.@archer_p;
 				break;
@@ -3018,7 +3018,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "competing with other people...";
 			mes "";
 			next;
-			switch(select("don't mind...:don't like...:don't care about...")) {
+			switch(select("don't mind...", "don't like...", "don't care about...")) {
 			case 1:
 				++.@merchant_p;
 				break;
@@ -3036,7 +3036,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "[Hanson]";
 			mes "But if you cooperate with others, it will be simple and an enjoyable task. You would... ";
 			next;
-			switch(select("Handle it myself, even if it's hard.:Ask friends to help.")) {
+			switch(select("Handle it myself, even if it's hard.", "Ask friends to help.")) {
 			case 1:
 				++.@magician_p;
 				break;
@@ -3050,7 +3050,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "fainted on the street.";
 			mes "What would you do?";
 			next;
-			switch(select("Carry her to a hospital.:Assess the situation before taking action.:Just ignore it.")) {
+			switch(select("Carry her to a hospital.", "Assess the situation before taking action.", "Just ignore it.")) {
 			case 1:
 				++.@acolyte_p;
 				break;
@@ -3069,7 +3069,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "pick up 'Clothing.'";
 			mes "What would you do?";
 			next;
-			switch(select("Check the brand.:Wonder who lost it.:Finder's keepers!:Leave it where it was.")) {
+			switch(select("Check the brand.", "Wonder who lost it.", "Finder's keepers!", "Leave it where it was.")) {
 			case 1:
 				++.@merchant_p;
 				break;
@@ -3087,7 +3087,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "[Hanson]";
 			mes "You happened to accidentally slip your tongue in the middle of a conversation. How do you cope with this situation?";
 			next;
-			switch(select("Pretend it's a joke.:Change the subject.:Analyze it.:Apologize honestly.")) {
+			switch(select("Pretend it's a joke.", "Change the subject.", "Analyze it.", "Apologize honestly.")) {
 			case 1:
 				++.@thief_p;
 				break;
@@ -3104,7 +3104,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 			mes "[Hanson]";
 			mes "You're on a trip with your beloved. Your significant other then asks you to buy a souvenir that's not particularly good. What do you do?";
 			next;
-			switch(select("Buy the item for her/him.:Say 'no.':Promise it for next time.")) {
+			switch(select("Buy the item for her/him.", "Say 'no.'", "Promise it for next time.")) {
 			case 1:
 				++.@swordman_p;
 				break;
@@ -3253,7 +3253,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 				mes "[Hanson]";
 				mes "So would you like to accept our recommendation, or would you like to choose a job on your own?";
 				next;
-				switch(select("Swordman!:My own choice!")) {
+				switch(select("Swordman!", "My own choice!")) {
 				case 1:
 					mes "[Hanson]";
 					mes "That's a great choice!";
@@ -3320,7 +3320,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 				mes "[Hanson]";
 				mes "So, would you like to accept our recommendation or would you like to choose a job on your own?";
 				next;
-				switch(select("Mage!:My own choice!")) {
+				switch(select("Mage!", "My own choice!")) {
 				case 1:
 					mes "[Hanson]";
 					mes "That's a great choice!";
@@ -3393,7 +3393,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 				mes "[Hanson]";
 				mes "So, would you like to accept our recommendation or would you like to choose a job on your own?";
 				next;
-				switch(select("Merchant!:My own choice!")) {
+				switch(select("Merchant!", "My own choice!")) {
 				case 1:
 					mes "[Hanson]";
 					mes "That's a great choice!";
@@ -3471,7 +3471,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 				mes "[Hanson]";
 				mes "So, would you like to accept our recommendation or would you like to choose a job on your own?";
 				next;
-				switch(select("Thief!:My own choice!")) {
+				switch(select("Thief!", "My own choice!")) {
 				case 1:
 					mes "[Hanson]";
 					mes "That's a great choice!";
@@ -3532,7 +3532,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 				mes "[Hanson]";
 				mes "So, would you like to accept our recommendation or would you like to choose a job on your own?";
 				next;
-				switch(select("Archer!:My own choice!")) {
+				switch(select("Archer!", "My own choice!")) {
 				case 1:
 					mes "[Hanson]";
 					mes "That's a great choice!";
@@ -3604,7 +3604,7 @@ new_1-4,100,29,1	script	Hanson#nv	1_ETC_01,{
 				mes "[Hanson]";
 				mes "So, would you like to accept our recommendation or would you like to choose a job on your own?";
 				next;
-				switch(select("Acolyte!:My own choice!")) {
+				switch(select("Acolyte!", "My own choice!")) {
 				case 1:
 					mes "[Hanson]";
 					mes "That's a great choice!";
@@ -3793,7 +3793,7 @@ S_UserJobchoice:
 	mes "I see. It's your choice.";
 	mes "There is no obligation to change to the job we recommend. Please choose the job you wish to become.";
 	next;
-	select( "Swordsman:Mage:Merchant:Thief:Archer:Acolyte" );
+	select( "Swordsman", "Mage", "Merchant", "Thief", "Archer", "Acolyte" );
 	// @menu is already set by Core.
 	setarray .@Jobs$[1],"Swordsman","Mage","Merchant","Thief","Archer","Acolyte";
 
@@ -3928,7 +3928,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 			mes "have in mind?";
 			next;
 			while(1) {
-				switch(select("Swordman:Mage:Archer:Merchant:Thief:Acolyte:End conversation.")) {
+				switch(select("Swordman", "Mage", "Archer", "Merchant", "Thief", "Acolyte", "End conversation.")) {
 				case 1:
 					mes "[Bruce]";
 					mes "As the name implies, the";
@@ -4085,7 +4085,7 @@ new_1-4,91,22,4	script	Bruce#nv	1_M_LIBRARYMASTER,{
 			mes "you have in mind?";
 			next;
 			while(1) {
-				switch(select("Swordman:Mage:Archer:Merchant:Thief:Acolyte:End conversation.")) {
+				switch(select("Swordman", "Mage", "Archer", "Merchant", "Thief", "Acolyte", "End conversation.")) {
 				case 1:
 					mes "[Bruce]";
 					mes "As the name implies, the";

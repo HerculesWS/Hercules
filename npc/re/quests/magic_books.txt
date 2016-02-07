@@ -79,7 +79,7 @@ geffen_in,176,105,4	script	Master Velofos	1_M_WIZARD,{
 		mes "[Master Velofos]";
 		mes "By the way, what brings you to me today?";
 		next;
-		switch (select("Nothing.:Do you know the Reading Spell Book?:What's the Freezing Spell?:Can I have a Magic Book?:Can I use the Reading Spell Book without the Freezing Spell?:About the Ultimate Magic Book")) {
+		switch (select("Nothing.", "Do you know the Reading Spell Book?", "What's the Freezing Spell?", "Can I have a Magic Book?", "Can I use the Reading Spell Book without the Freezing Spell?", "About the Ultimate Magic Book")) {
 		case 1:
 			mes "[Master Velofos]";
 			mes "Hah! You're silly.";
@@ -88,7 +88,7 @@ geffen_in,176,105,4	script	Master Velofos	1_M_WIZARD,{
 			mes "[Master Velofos]";
 			mes "Reading Spell Book literally means 'read a spell book.' Do you know how to use Magic Books?";
 			next;
-			switch (select("Yes, I do.:No, I don't.")) {
+			switch (select("Yes, I do.", "No, I don't.")) {
 			case 1:
 				mes "[Master Velofos]";
 				mes "Well then, you don't need an additional lecture.";
@@ -185,7 +185,7 @@ geffen_in,176,105,4	script	Master Velofos	1_M_WIZARD,{
 			mes "[Master Velofos]";
 			mes "I'm sorry, but I only have Magic Books for beginners, but they're obviously not suitable for you. Do you still want one?";
 			next;
-			switch (select("Sure thing.:Where can I find advanced books?")) {
+			switch (select("Sure thing.", "Where can I find advanced books?")) {
 			case 1:
 				mes "[Master Velofos]";
 				mes "Please go talk to [Lea] in the Archive. Tell her that you need one of the Magic Books that I've stored in there.";
@@ -308,7 +308,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 		mes "[Lea]";
 		mes "Are you borrowing a book?";
 		next;
-		switch (select("Let me think.:I want the Beginner's Magic Books.:I want the Intermediate Magic Books.:I want the Superior Magic Books.:I want the Ultimate Magic Book.")) {
+		switch (select("Let me think.", "I want the Beginner's Magic Books.", "I want the Intermediate Magic Books.", "I want the Superior Magic Books.", "I want the Ultimate Magic Book.")) {
 		case 1:
 			mes "[Lea]";
 			mes "No problem.";
@@ -324,7 +324,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 			mes "[Lea]";
 			mes "Yes. You may pay a minimum of 10,000 Rune-Midgarts zeny. Alternatively, you can bring 2 Old Magic Books or 50 Old Pages. Once you pay the deposit, I'll let you borrow some Magic Books.";
 			next;
-			.@Payment = select("Where can I find Old Magic Books and Old Pages?:I'll pay with zeny.:I'll pay with Old Magic Books.:I'll pay with Old Pages.")-1;
+			.@Payment = select("Where can I find Old Magic Books and Old Pages?", "I'll pay with zeny.", "I'll pay with Old Magic Books.", "I'll pay with Old Pages.")-1;
 			mes "[Lea]";
 			if (!.@Payment) {
 				mes "I heard that you can find them from Ride Words, Death Words, Bathorys, and other monsters. I ask that you please don't strain yourself to find those items.";
@@ -336,7 +336,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 			if ((.@Payment == 1 && Zeny > 10000) || (.@Payment == 2 && countitem(Old_Magic_Book) > 1) || (.@Payment == 3 && countitem(Worn_Out_Page) > 49)) {
 				mes "What kind of Magic Book do you want?";
 				next;
-				.@i = select("Let me think.:Magic Book (Fire Bolt):Magic Book (Cold Bolt):Magic Book (Lightning Bolt)")-1;
+				.@i = select("Let me think.", "Magic Book (Fire Bolt)", "Magic Book (Cold Bolt)", "Magic Book (Lightning Bolt)")-1;
 				mes "[Lea]";
 				if (!.@i) {
 					mes "No problem.";
@@ -367,7 +367,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 			mes "[Lea]";
 			mes "Ah, so you want the Intermediate Magic Books. Please pay 50,000 Rune-Midgartian zeny, or you can bring me 2 Old Blue Boxes or 9 Eluniums to borrow the Intermediate Magic Books.";
 			next;
-			.@Payment = select("Where can I find Old Blue Boxes and Eluniums?:I'll pay 50,000 zeny.:I'll pay with Old Blue Boxes.:I'll pay with Eluniums.")-1;
+			.@Payment = select("Where can I find Old Blue Boxes and Eluniums?", "I'll pay 50,000 zeny.", "I'll pay with Old Blue Boxes.", "I'll pay with Eluniums.")-1;
 			mes "[Lea]";
 			if (!.@Payment) {
 				mes "Old Blue Boxes are quite rare to find, but they can be obtained from monsters everywhere in the world, including Myst Cases, Megalogons, Mimics, Nightmares, Krabens, Requiems, Nine Tails, Noxiouses, and Byorgues.";
@@ -380,7 +380,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 			if ((.@Payment == 1 && Zeny > 50000) || (.@Payment == 2 && countitem(Old_Blue_Box) > 1) || (.@Payment == 3 && countitem(Elunium) > 8)) {
 				mes "What kind of Magic Book do you want?";
 				next;
-				.@i = select("Let me think.:Magic Book (Storm Gust):Magic Book (Lord of Vermillion):Magic Book (Meteor Storm):Magic Book (Thunderstorm):Magic Book (Jupitel Thunder):Magic Book (Water Ball):Magic Book (Heaven's Drive):Magic Book (Earth Spike)")-1;
+				.@i = select("Let me think.", "Magic Book (Storm Gust)", "Magic Book (Lord of Vermillion)", "Magic Book (Meteor Storm)", "Magic Book (Thunderstorm)", "Magic Book (Jupitel Thunder)", "Magic Book (Water Ball)", "Magic Book (Heaven's Drive)", "Magic Book (Earth Spike)")-1;
 				setarray .@Books[0],6192,6193,6194,6197,6198,6199,6200,6201;
 				mes "[Lea]";
 				if (!.@i) {
@@ -419,7 +419,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 			mes "[Lea]";
 			mes "[12 Mystery Pieces and 100,000 zeny], [7 Oridecons and 100,000 zeny], or [1 Old Violet Box and 100,000 zeny]. Now how would you like to pay your deposit?";
 			next;
-			.@Payment = select("Where can I find those items?:Let me think.:I'll pay with 12 Mystery Pieces and 100,000 zeny.:I'll pay with 7 Oridecons and 100,000 zeny.:I'll pay with 1 Old Violet Box and 100,000 zeny.")-1;
+			.@Payment = select("Where can I find those items?", "Let me think.", "I'll pay with 12 Mystery Pieces and 100,000 zeny.", "I'll pay with 7 Oridecons and 100,000 zeny.", "I'll pay with 1 Old Violet Box and 100,000 zeny.")-1;
 			mes "[Lea]";
 			if (!.@Payment) {
 				mes "Mystery Pieces can be obtained from machine creatures in the Juperos Dungeon, and they're the fountain of knowledge from the ancient civilization. Ah, I get excited thinking about those artifacts.";
@@ -443,7 +443,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 				mes "[Lea]";
 				mes "How does 200,000 Rune-Midgartian zeny sound?";
 				next;
-				if(select("I'm sorry, but I can't pay that much.:Sounds good.") == 1) {
+				if(select("I'm sorry, but I can't pay that much.", "Sounds good.") == 1) {
 					mes "[Lea]";
 					mes "I see.";
 					close;
@@ -453,7 +453,7 @@ geffen_in,175,112,4	script	Lea	2_F_MAGICMASTER,{
 			if ((.@Payment == 1 && Zeny > 199999) || (Zeny > 99999 && ((.@Payment == 2 && countitem(Mystery_Piece) > 11) || (.@Payment == 3 && countitem(Oridecon) > 6) || (.@Payment == 4 && countitem(Old_Violet_Box))))) {
 				mes "What kind of Magic Book do you want?";
 				next;
-				.@i = select("Let me think.:Magic Book (Earth Strain):Magic Book (Chain Lightning):Magic Book (Crimson Rock):Magic Book (Drain Life)")-1;
+				.@i = select("Let me think.", "Magic Book (Earth Strain)", "Magic Book (Chain Lightning)", "Magic Book (Crimson Rock)", "Magic Book (Drain Life)")-1;
 				mes "[Lea]";
 				if (!.@i) {
 					mes "No problem.";
@@ -640,7 +640,7 @@ mid_camp,255,244,4	script	Galfos	4_M_JOB_WIZARD,{
 		mes "Oh, did you find";
 		mes "anything useful?";
 		next;
-		.@i = select("I've discovered everything about Comet.:I've mastered the zenith of Tetra Vortex.");
+		.@i = select("I've discovered everything about Comet.", "I've mastered the zenith of Tetra Vortex.");
 		mes "[Galfos]";
 		if ((.@i == 1 && countitem(Magic_Book_CM)) || (.@i == 2 && countitem(Magic_Book_TV))) {
 			mes "Are you kidding me? You already have the book!";
@@ -655,7 +655,7 @@ mid_camp,255,244,4	script	Galfos	4_M_JOB_WIZARD,{
 			mes "[Galfos]";
 			mes "I need at least ^0000aa1,000,000 zeny^000000 to buy all the necessary tools. Do you have the money?";
 			next;
-			if(select("Wh-what? No!:Sure.") == 1) {
+			if(select("Wh-what? No!", "Sure.") == 1) {
 				mes "[Galfos]";
 				mes "Aw, you don't? It's disappointing, but there's nothing I can do. Come back when you have enough money, okay?";
 				close;

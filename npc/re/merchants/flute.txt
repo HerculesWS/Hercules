@@ -68,7 +68,7 @@
 			next;
 		} else
 			.@price = 12500;
-		if(select("Don't buy one:Buy a Falcon Flute") == 1) {
+		if(select("Don't buy one", "Buy a Falcon Flute") == 1) {
 			mes "[Falcon Flute Trader]";
 			mes "That's too bad. If you need one, come back!";
 			close;
@@ -124,7 +124,7 @@ tur_dun01,89,170,5	script	Expert Flute Crafter	1_M_ORIENT01,{
 		mes "Do you need anything?";
 		mes "A new Wolf Flute?";
 		next;
-		switch(select("Please give me a new Wolf Flute.:No.")) {
+		switch(select("Please give me a new Wolf Flute.", "No.")) {
 		case 1:
 			if (countitem(Bamboo_Cut) && Zeny >= 100000) {
 				mes "[Expert Flute Crafter]";

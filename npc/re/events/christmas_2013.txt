@@ -166,7 +166,7 @@ xmas,150,134,3	script	Union Commander Cliff	4_XMAS_CAT1,{
 	mes "Let me ask you bluntly.";
 	mes "You must be single. I've got a feeling. Right?!??";
 	next;
-	if (select("- ...maybe...?:WHAT! I'm in a relationship!!") == 2) {
+	if (select("- ...maybe...?", "WHAT! I'm in a relationship!!") == 2) {
 		mes "[Union Commander Cliff]";
 		mes "What? ...in a relationship?!!";
 		mes "...Not single, but a couple...";
@@ -208,7 +208,7 @@ xmas,150,134,3	script	Union Commander Cliff	4_XMAS_CAT1,{
 	mes "[Union Commander Cliff]";
 	mes "What do you think? Would you join my Singles Union Army and make Christmas day for singles?";
 	next;
-	select("Count me in!:I'll help.:I can't say no, can I?");
+	select("Count me in!", "I'll help.", "I can't say no, can I?");
 	mes "[Union Commander Cliff]";
 	mes "Yeah! That's it! but we need more members to stand against couples.";
 	next;

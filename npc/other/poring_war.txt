@@ -54,7 +54,7 @@ prt_fild08,159,371,3	script	Poring War Recruiter#wop	4_PORING,{
 	mes "I.. I've got some interesting work for ya.. Would you be interested?";
 	mes "We.. we porings need lots and lots of brave human worriers, ring~.";
 	next;
-	switch(select("Alright, I'm with you!:What's that?:Ignore")) {
+	switch(select("Alright, I'm with you!", "What's that?", "Ignore")) {
 	case 1:
 		if (Zeny > 499) {
 			mes "[Poring]";
@@ -93,12 +93,12 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 	}
 	mes "It's a vending machine. You can use Poring Coints to purchase.";
 	next;
-	if(select("Purchase.:Read the descriptions of goods.") == 1) {
+	if(select("Purchase.", "Read the descriptions of goods.") == 1) {
 		mes "You need Poring Coins to purchase items.";
 		mes "You cannot use any zeny.";
 		mes "Item name - Price Poring Coin(P.Co)";
 		next;
-		switch(select("Marvelous Medal - 4 P.Co:Union of Tribe - 20 P.Co:Poring Box - 30 P.Co:Next")) {
+		switch(select("Marvelous Medal - 4 P.Co", "Union of Tribe - 20 P.Co", "Poring Box - 30 P.Co", "Next")) {
 		case 1:
 			callsub S_PoringVending,Marvelous_Medal,4;
 		case 2:
@@ -109,7 +109,7 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 			mes "This is a special item.";
 			mes "Item name - Poring Coin(P.Co)";
 			next;
-			switch(select("Wild Rose - 15 P.Co:Doppelganger - 20 P.Co:Egnigem Cenia - 20 P.Co:Collection Item")) {
+			switch(select("Wild Rose - 15 P.Co", "Doppelganger - 20 P.Co", "Egnigem Cenia - 20 P.Co", "Collection Item")) {
 			case 1:
 				callsub S_PoringVending,Wild_Rose_Scroll,15;
 			case 2:
@@ -122,7 +122,7 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 				mes "Please be aware before you make a purchase~";
 				mes "Item name - Poring Coin(P.Co)";
 				next;
-				switch(select("Novice Figure - 50 P.Co:Swordman Figure - 100 P.Co:Thief Figure - 100 P.Co:Merchant Figure - 100 P.Co:Acolyte Figure - 100 P.Co:Mage Figure - 100 P.Co:Archer Figure - 100 P.Co:Random Draw - 50 P.Co:Cancel")) {
+				switch(select("Novice Figure - 50 P.Co", "Swordman Figure - 100 P.Co", "Thief Figure - 100 P.Co", "Merchant Figure - 100 P.Co", "Acolyte Figure - 100 P.Co", "Mage Figure - 100 P.Co", "Archer Figure - 100 P.Co", "Random Draw - 50 P.Co", "Cancel")) {
 				case 1:
 					callsub S_PoringVending,Novice_Figure,50;
 				case 2:
@@ -141,7 +141,7 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 					mes "You have chosen Random Draw.";
 					mes "1 of 7 diffeent kinds of figures will be selected.";
 					next;
-					if(select("Draw:Cancel") == 1) {
+					if(select("Draw", "Cancel") == 1) {
 						if (countitem(Poring_Coin) >= 50) {
 							mes "Insert the Poring coin and pull the lever.";
 							mes "Click~ The item came out of the mouth of the Poring with a rumbling sound.";
@@ -262,7 +262,7 @@ poring_w01,96,97,3	script	Sweet Devi#wop	4_DEVIRUCHI,{
 	mes "Hehehee, I feel kinda shy now.";
 	mes "Anyway, human. Do you want to join our Poring War?";
 	next;
-	switch(select("Am I qualified to join?:How do I join the war?:Cancel:Let me out of here, please!")) {
+	switch(select("Am I qualified to join?", "How do I join the war?", "Cancel", "Let me out of here, please!")) {
 	case 1:
 		mes "[Deviruchi]";
 		mes "No racial discrimination! Anyone can join if they're willing to fight.";
@@ -651,7 +651,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 		mes "The name of the party is... " + .@pname$ + ", right?";
 		mes "I'll transfer you to the battle staging area.";
 		next;
-		switch(select("No! Wait!:Go to the staging area.")) {
+		switch(select("No! Wait!", "Go to the staging area.")) {
 		case 1:
 			mes "[Mr. Doppel]";
 			mes "What is it now?";
@@ -666,7 +666,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 				mes "[Mr. Doppel]";
 				mes "So, you are the leader. Before going to the battlefield, you should check all your members.";
 				next;
-				switch(select("Very well. I'll be the last.:I am the last. Send me to the battlefield.")) {
+				switch(select("Very well. I'll be the last.", "I am the last. Send me to the battlefield.")) {
 				case 1:
 					mes "[Mr. Doppel]";
 					mes "First, make sure all the members are in your party.";
@@ -708,7 +708,7 @@ poring_w02,26,181,3	script	Mr. Doppel#wop_team_a	8_DOPPEL,{
 				mes " ";
 				mes "Right? That is the name you wish?";
 				next;
-				switch(select("No! You're wrong.:Yes. I would like to register that name.:Cancel")) {
+				switch(select("No! You're wrong.", "Yes. I would like to register that name.", "Cancel")) {
 				case 1:
 					mes "[Mr. Doppel]";
 					mes "Hey, I don't have all day! Make your mind and register as fast as you can.";
@@ -782,7 +782,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 		mes "The name of the party is... " + .@pname$ + ", right?";
 		mes "I'll transfer you to the battle staging area.";
 		next;
-		switch(select("No! Wait!:Go to the staging area.")) {
+		switch(select("No! Wait!", "Go to the staging area.")) {
 		case 1:
 			mes "[Mr. Doppel]";
 			mes "What is it now?";
@@ -797,7 +797,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 				mes "[Mr. Doppel]";
 				mes "So, you are the leader. Before going to the battlefield, you should check all your members.";
 				next;
-				switch(select("Very well. I'll be the last.:I am the last. Send me to the battlefield.")) {
+				switch(select("Very well. I'll be the last.", "I am the last. Send me to the battlefield.")) {
 				case 1:
 					mes "[Mr. Doppel]";
 					mes "First, make sure all the members are in your party.";
@@ -837,7 +837,7 @@ poring_w02,170,181,3	script	Mr. Doppel#wop_team_d	8_DOPPEL,{
 				mes " ";
 				mes "Right? That is the name you wish?";
 				next;
-				switch(select("No! You're wrong.:Yes. I would like to register that name.:Cancel")) {
+				switch(select("No! You're wrong.", "Yes. I would like to register that name.", "Cancel")) {
 				case 1:
 					mes "[Mr. Doppel]";
 					mes "Hey, I don't have all day! Make your mind and register as fast as you can.";
@@ -1468,7 +1468,7 @@ poring_w02,99,52,0	script	Angeling Guardian#wop_da	HIDDEN_NPC,{
 			mes "There is a device to equip the War Badges.";
 			mes "I can see the empty slots to equip the Badges.";
 			next;
-			switch(select("Equip War Badge.:Cancel.")) {
+			switch(select("Equip War Badge.", "Cancel.")) {
 			case 1:
 				if (countitem(War_Badge)) {
 					if ($@wop_doorcount_a < 4) {
@@ -1565,7 +1565,7 @@ poring_w02,98,113,0	script	Deviling Guardian#wop_dd	HIDDEN_NPC,{
 			mes "There is a device to equip the War Badges.";
 			mes "I can see the empty slots to equip the Badges.";
 			next;
-			switch(select("Equip War Badge.:Cancel.")) {
+			switch(select("Equip War Badge.", "Cancel.")) {
 			case 1:
 				if (countitem(War_Badge)) {
 					if ($@wop_doorcount_d < 4) {

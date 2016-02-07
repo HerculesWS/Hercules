@@ -290,7 +290,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 			mes "What the hell";
 			mes "are you looking at?";
 			next;
-			if (select("Have you heard of the Doomed Swords?:I... I...") == 1) {
+			if (select("Have you heard of the Doomed Swords?", "I... I...") == 1) {
 				mes "[Mysterious Man]";
 				mes "...!";
 				mes "How the hell would";
@@ -315,7 +315,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 			mes "What the hell";
 			mes "are you looking at?";
 			next;
-			if (select("Um, er...:Nothing, sir.") == 1) {
+			if (select("Um, er...", "Nothing, sir.") == 1) {
 				mes "[Mysterious Man]";
 				mes "What...?!";
 				next;
@@ -338,7 +338,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 		mes "What the hell";
 		mes "are you looking at?";
 		next;
-		if (select("Do you happen to be a blacksmith?:No-Nothing!") == 1) {
+		if (select("Do you happen to be a blacksmith?", "No-Nothing!") == 1) {
 			mes "[Mysterious Blacksmith]";
 			mes "Hmpf. So you're not";
 			mes "a total fool after all. Yes,";
@@ -362,7 +362,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 		mes "What the hell";
 		mes "are you looking at?";
 		next;
-		if (select("I want you to make me a Doomed Sword.:Er, nothing!") == 1) {
+		if (select("I want you to make me a Doomed Sword.", "Er, nothing!") == 1) {
 			mes "[Mysterious Blacksmith]";
 			mes "Hm. I don't know where";
 			mes "the hell you may have heard";
@@ -371,7 +371,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 			mes "enough. Now, which doomed";
 			mes "sword did you wish to possess?";
 			next;
-			switch(select("Mysteltainn.:Grimtooth.:Executioner.:I ch-changed my mind!")) {
+			switch(select("Mysteltainn.", "Grimtooth.", "Executioner.", "I ch-changed my mind!")) {
 			case 1:
 				if (dmdswrd_Q2 & 1) {
 					mes "[Mysterious Blacksmith]";
@@ -628,14 +628,14 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 		mes "Or did you forget what";
 		mes "you needed to bring to me?";
 		next;
-		switch(select("Er, what were the items again?:Yes, I brought all the required items.:Oh! Um, never mind!")) {
+		switch(select("Er, what were the items again?", "Yes, I brought all the required items.", "Oh! Um, never mind!")) {
 		case 1:
 			mes "[Mysterious Blacksmith]";
 			mes "Hmpf. I thought so.";
 			mes "Now, which sword did";
 			mes "you want me to forge?";
 			next;
-			switch(select("Mysteltainn.:Grimtooth.:Executioner.:Wait! I just remembered!")) {
+			switch(select("Mysteltainn.", "Grimtooth.", "Executioner.", "Wait! I just remembered!")) {
 			case 1:
 				if (dmdswrd_Q2 & 1 || dmdswrd_Q2 & 8) {
 					mes "[Mysterious Blacksmith]";
@@ -704,7 +704,7 @@ pay_fild08,218,283,2	script	Mysterious Man#magum	4_M_ORIENT02,{
 			mes "ready. Now, which sword";
 			mes "did you want me to craft?";
 			next;
-			switch(select("Mysteltainn:Grimtooth:Executioner:I ch-changed my mind!")) {
+			switch(select("Mysteltainn", "Grimtooth", "Executioner", "I ch-changed my mind!")) {
 			case 1:
 				if (dmdswrd_Q2 & 8) {
 					mes "[Mysterious Blacksmith]";
