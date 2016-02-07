@@ -3688,7 +3688,7 @@ turbo_room,99,120,4	script	Turbo Track Guide	4_F_TELEPORTER,{
 	mes "any questions.";
 	next;
 	while(1) {
-		switch(select("Race Rules:Game Courses:Game Modes:Prohibited Items and Skills:Cancel")) {
+		switch(select("Race Rules", "Game Courses", "Game Modes", "Prohibited Items and Skills", "Cancel")) {
 		case 1:
 			mes "[Turbo Track Guide]";
 			mes "The rules for all the races";
@@ -3757,7 +3757,7 @@ turbo_room,99,120,4	script	Turbo Track Guide	4_F_TELEPORTER,{
 			next;
 			.@exitloop = 1;
 			while (.@exitloop) {
-				switch(select("Log Bridge and Cube Hills:Cursed Desert and Flasher Maze:Single Snail and Invisible Maze:Snake Dice and Small Cave:No, thanks.")) {
+				switch(select("Log Bridge and Cube Hills", "Cursed Desert and Flasher Maze", "Single Snail and Invisible Maze", "Snake Dice and Small Cave", "No, thanks.")) {
 				case 1:
 					mes "[Turbo Track Guide]";
 					mes "In the Log Bridge";
@@ -4075,7 +4075,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 		mes "you like to see the Turbo";
 		mes "Track Point exchange list?";
 		next;
-		if (select("Yes.:Cancel.") == 1) {
+		if (select("Yes.", "Cancel.") == 1) {
 			mes "[Item Exchange Helper]";
 			mes "^3355FF10 TTP^000000: 1 Free Ticket";
 			mes "for Kafra Transportation";
@@ -4109,14 +4109,14 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 		mes "Would you like to exchange";
 		mes "these points for items?";
 		next;
-		switch(select("Exchange.:Cancel.")) {
+		switch(select("Exchange.", "Cancel.")) {
 		case 1:
 			mes "[Item Exchange Helper]";
 			mes "Please choose the item for";
 			mes "which you'd like to exchange";
 			mes "your Turbo Track Points.";
 			next;
-			switch(select("Free Ticket for Kafra Transportation:Level 5 Magic Scroll:Experience Points:3 Carat Diamond:Gift Box:Speed Potion:Cancel.")) {
+			switch(select("Free Ticket for Kafra Transportation", "Level 5 Magic Scroll", "Experience Points", "3 Carat Diamond", "Gift Box", "Speed Potion", "Cancel.")) {
 			case 1:
 				mes "[Item Exchange Helper]";
 				mes "Each Free Ticket for";
@@ -4170,7 +4170,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 				mes "12 Turbo Track Points. Please";
 				mes "select the Magic Scroll you would like to receive. Each scroll enables a one time use of a Level 5 spell or skill.";
 				next;
-				switch(select("Earth Spike:Cold Bolt:Fire Bolt:Lightning Bolt:Soul Strike:Fire Ball:Fire Wall:Frost Diver:Heal")) {
+				switch(select("Earth Spike", "Cold Bolt", "Fire Bolt", "Lightning Bolt", "Soul Strike", "Fire Ball", "Fire Wall", "Frost Diver", "Heal")) {
 				case 1:
 					.@scroll = 687; //Earth_Scroll_1_5
 					.@name$ = "Earth Spike";
@@ -4261,7 +4261,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 				mes "like to exchange your Turbo";
 				mes "Track Points for Experience?";
 				next;
-				if (select("No:Yes") == 2) {
+				if (select("No", "Yes") == 2) {
 					if (tt_point < 40) {
 						mes "[Item Exchange Helper]";
 						mes "I'm sorry, but you do";
@@ -4471,7 +4471,7 @@ turbo_room,106,117,3	script	Point Manager#tt	4_M_ZONDAOYAJI,{
 	mes "How may I be of";
 	mes "assistance?";
 	next;
-	switch(select("Check Points:Convert Points:^660000Conversion Info^000000")) {
+	switch(select("Check Points", "Convert Points", "^660000Conversion Info^000000")) {
 	case 1:
 		mes "[Turbo Track Point Manager]";
 		mes "" + strcharinfo(0) + ",";
@@ -4492,7 +4492,7 @@ turbo_room,106,117,3	script	Point Manager#tt	4_M_ZONDAOYAJI,{
 		mes "can only convert Arena Points";
 		mes "in ^4D4DFFmultiples of 10^000000.";
 		next;
-		switch(select("2 AP -> 1 TTP:4 AP -> 2 TTP:6 AP -> 3 TTP:8 AP -> 4 TTP:10 AP or more:Cancel")) {
+		switch(select("2 AP -> 1 TTP", "4 AP -> 2 TTP", "6 AP -> 3 TTP", "8 AP -> 4 TTP", "10 AP or more", "Cancel")) {
 		case 1:
 			callsub S_ExchangePoints,28999,2,1;
 		case 2:
@@ -4749,7 +4749,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 		mes "of "+.@zeny$+" zeny.";
 	}
 	next;
-	switch(select("Yes:Cancel")) {
+	switch(select("Yes", "Cancel")) {
 	case 1:
 		if (getskilllv(.@skill) == 0) {
 			mes .@n$;

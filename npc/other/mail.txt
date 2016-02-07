@@ -43,7 +43,7 @@
 	mes "you are required to pay 130 zeny.";
 	mes "Would you like to use the service?";
 	next;
-	switch(select("Yes.:No.")) {
+	switch(select("Yes.", "No.")) {
 	case 1:
 		mes "[Mailbox]";
 		if (Zeny < 130) {

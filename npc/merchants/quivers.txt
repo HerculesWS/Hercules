@@ -61,7 +61,7 @@ payon_in01,5,134,5	script	Inventor Jaax	4_M_ORIENT02,{
 	mes "[Inventor Jaax]";
 	mes "Would you like to try using one of my arrow quivers? I have no doubt that someone like you can appreciate my genius!";
 	next;
-	switch(select("Quiver:Iron Arrow Quiver:Steel Arrow Quiver:Oridecon Arrow Quiver:Fire Arrow Quiver:Silver Arrow Quiver:Wind Arrow Quiver:Stone Arrow Quiver:Crystal Arrow Quiver:Shadow Arrow Quiver:Immaterial Arrow Quiver:Rusty Arrow Quiver")) {
+	switch(select("Quiver", "Iron Arrow Quiver", "Steel Arrow Quiver", "Oridecon Arrow Quiver", "Fire Arrow Quiver", "Silver Arrow Quiver", "Wind Arrow Quiver", "Stone Arrow Quiver", "Crystal Arrow Quiver", "Shadow Arrow Quiver", "Immaterial Arrow Quiver", "Rusty Arrow Quiver")) {
 	case 1: callsub S_BuyQuiver,1750,500,500,12004;
 	case 2: callsub S_BuyQuiver,1770,500,500,12005;
 	case 3: callsub S_BuyQuiver,1753,500,500,12006;
@@ -92,7 +92,7 @@ S_BuyQuiver:
 		mes "Excellent!";
 		mes "Are you carrying any Arrows with you? I'll provide you with a quiver that can carry "+getarg(1)+" of your "+getitemname(getarg(0))+"s for only ^FF3131"+getarg(2)+" Zeny^000000.";
 		next;
-		switch(select("Store as many Arrows in quivers as possible:Purchase 1 quiver:Cancel")) {
+		switch(select("Store as many Arrows in quivers as possible", "Purchase 1 quiver", "Cancel")) {
 		case 1:
 			.@arrows = countitem(getarg(0));
 			.@quiver = .@arrows / getarg(1);
@@ -111,7 +111,7 @@ S_BuyQuiver:
 			mes "as you can for the Arrows";
 			mes "you are currently carrying?";
 			next;
-			if (select("Yes:Cancel") == 1) {
+			if (select("Yes", "Cancel") == 1) {
 				if (.@arrow_zeny01 < Zeny) {
 					mes "[Inventor Jaax]";
 					mes "There you go!";

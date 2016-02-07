@@ -250,7 +250,7 @@ OnTouch:
 	mes "[Suspicious Guy]";
 	mes "So just tell me what you want, and I'll cut you a deal from amongst my valuable, yet affordable, wares.";
 	next;
-	switch(select("Gimme some potion so I can recover HP.:Um, you got a Knife?:Don't you have a good Manteau?:Don't you have something besides this?")) {
+	switch(select("Gimme some potion so I can recover HP.", "Um, you got a Knife?", "Don't you have a good Manteau?", "Don't you have something besides this?")) {
 	case 1:
 		mes "[Suspicious Guy]";
 		mes "Ah, you into Potions, eh?";
@@ -460,7 +460,7 @@ geffen_in,22,125,1	script	Crumpler	1_M_HOF,{
 		mes "[Crumpler]";
 		mes "Everyone knows Wizards are all intelligence and no strength! Come on, smart man! Show me how tough you are!";
 		next;
-		switch(select("Meteor Storm!:Lord of Vermilion!:Show Mercy.")) {
+		switch(select("Meteor Storm!", "Lord of Vermilion!", "Show Mercy.")) {
 		case 1:
 			mes "[Crumpler]";
 			mes "Huh?";
@@ -545,7 +545,7 @@ geffen_in,59,61,1	script	Skyler	1_M_PUBMASTER,{
 	mes "You're not looking";
 	mes "for Eric, are you?";
 	next;
-	if (select("Eric? Who's that?:Yes. Yes, I am.") == 1) {
+	if (select("Eric? Who's that?", "Yes. Yes, I am.") == 1) {
 		mes "[Skyler]";
 		mes "Oh, I see. He's just some guy in the room to the left of me. He's always working on some sort of project.";
 		next;
@@ -578,7 +578,7 @@ geffen_in,27,134,5	script	Waitress#elen	4_F_02,{
 	mes "What can";
 	mes "I do for you?";
 	next;
-	if (select("May I have a drink?:Is there any interesting gossip?") == 1) {
+	if (select("May I have a drink?", "Is there any interesting gossip?") == 1) {
 		mes "[Elenore]";
 		mes "Well...";
 		mes "If you're looking for alcohol, King Tristram III outlawed it a while ago. Now I hear they only serve it in certain places.";
@@ -709,7 +709,7 @@ geffen_in,70,67,3	script	Waitress#elise	4_F_01,{
 	mes "Can I help you";
 	mes "with anything?";
 	next;
-	if (select("May I ask for a drink?:Is there any interesting gossip lately?") == 1) {
+	if (select("May I ask for a drink?", "Is there any interesting gossip lately?") == 1) {
 		mes "[Elisa]";
 		mes "A...";
 		mes "Drink?";
@@ -833,7 +833,7 @@ geffen_in,79,76,2	script	Merchant Daven	2_M_PHARMACIST,{
 	mes "But now there are Mages and Wizards, and a flourishing";
 	mes "economy in this town!";
 	next;
-	switch(select("Mages...?:Economy?:Who are you?")) {
+	switch(select("Mages...?", "Economy?", "Who are you?")) {
 	case 1:
 		if (BaseJob == Job_Mage) {
 			mes "[Merchant Daven]";
@@ -898,7 +898,7 @@ geffen_in,114,73,5	script	Hadenheim	4_M_SEAMAN,{
 	mes "[Hans Hadenheim]";
 	mes "This Geffen sure is strange. But it was worth it to travel here all the way from the Schubaltzwald Republic.";
 	next;
-	if (select("Schubaltzwald Republic?:So, why are you traveling?") == 1) {
+	if (select("Schubaltzwald Republic?", "So, why are you traveling?") == 1) {
 		mes "[Hans Hadenheim]";
 		mes "You...";
 		mes "Don't know the";
@@ -943,7 +943,7 @@ geffen_in,39,127,2	script	Psychic Advisor	4_M_BIBI,{
 	mes "Don't tell me! You've come to have your fortune told, yes? I know,";
 	mes "I know... I can see the future! So what kind of fortune do you want?";
 	next;
-	switch(select("Life!:Love!:Money!:Grades!:Future!:Fashion!")) {
+	switch(select("Life!", "Love!", "Money!", "Grades!", "Future!", "Fashion!")) {
 	case 1:
 		mes "[Psychic Advisor]";
 		switch(rand(1,5)) {
@@ -1062,7 +1062,7 @@ geffen_in,39,127,2	script	Psychic Advisor	4_M_BIBI,{
 			mes "are currently seeing";
 			mes "is perfect for you!";
 			next;
-			switch(select("How did you know?:You're so wrong!:I'm single!")) {
+			switch(select("How did you know?", "You're so wrong!", "I'm single!")) {
 			case 1:
 				mes "[Psychic Advisor]";
 				mes "Well...";
@@ -1358,7 +1358,7 @@ geffen_in,109,72,2	script	Monster Scholar	4_F_01,{
 	mes "[Estheres]";
 	mes "Hello, I'm the resident expert of Monsterology here in Geffen. Is there anything in particular that you're curious about?";
 	next;
-	switch(select("Monsters in the Area.:Recent Monster News.:Era of Monsters:Jellopy Theory.")) {
+	switch(select("Monsters in the Area.", "Recent Monster News.", "Era of Monsters", "Jellopy Theory.")) {
 	case 1:
 		mes "[Estheres]";
 		mes "Well, as you may already know, since Wizards and Mages train in Geffen, monsters tend to stay away from the city. So tired adventurers are welcome to rest here.";

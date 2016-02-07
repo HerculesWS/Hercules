@@ -43,7 +43,7 @@ yuno,153,47,4	script	Juno Guide#yuno	8_F_GIRL,{
 	mes "A place that takes the vision of the future, and gives it form in the present. Welcome to";
 	mes "the city of Juno!";
 	next;
-	switch(select("Armory:Tool Shop:Sage Castle (Sage Job Change Place):Street of Book Stores:Juphero Plaza:Library of the Republic:Schweicherbil Magic Academy:Monster Museum:Forge:Airport:End Conversation")) {
+	switch(select("Armory", "Tool Shop", "Sage Castle (Sage Job Change Place)", "Street of Book Stores", "Juphero Plaza", "Library of the Republic", "Schweicherbil Magic Academy", "Monster Museum", "Forge", "Airport", "End Conversation")) {
 	case 1:
 		viewpoint 1,120,138,0,0xFF3355;
 		mes "[Ms. Yoon]";

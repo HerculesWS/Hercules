@@ -50,7 +50,7 @@ function Dyes;
 		mes .n$;
 		mes "How may I assist you?";
 		next;
-		switch(select("- Talk:- Dye Clothing:- Price List:- ^777777Cancel^000000")) {
+		switch(select("- Talk", "- Dye Clothing", "- Price List", "- ^777777Cancel^000000")) {
 		case 1:
 			mes .n$;
 			mes "Life may have gotten a bit better, but when I look at all of the orders I've received... Whew!";
@@ -165,7 +165,7 @@ function Dyes {
 		mes "the default for free.";
 		mes "Are you sure?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			mes .n$;
 			setlook 7,0;

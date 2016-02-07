@@ -52,7 +52,7 @@ prontera,73,140,0	script	Milk Vendor	4_M_04,{
 	mes "them for 1 Milk. How";
 	mes "does that sound?";
 	next;
-	if (select("Exchange all empty bottles.:Cancel") == 1) {
+	if (select("Exchange all empty bottles.", "Cancel") == 1) {
 		if (countitem(Empty_Bottle) <= 0) {
 			mes "[Milk Vendor]";
 			mes "Hey...";

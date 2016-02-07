@@ -164,7 +164,7 @@ payon,249,156,1	script	Woman#payon	1_F_01,{
 	mes "[Woman]";
 	mes "If you're interested, just head North, pass the forest, and go towards the Northwest. You'll know you've arrived when you're in the place filled with the smell of stinky monsters.";
 	next;
-	switch(select("It sounds dangerous!:I better prepare myself...!:That's a nice dress you're wearing~")) {
+	switch(select("It sounds dangerous!", "I better prepare myself...!", "That's a nice dress you're wearing~")) {
 	case 1:
 		mes "[Woman]";
 		mes "Oh come on, don't be a coward.";
@@ -217,7 +217,7 @@ payon,246,158,5	script	Woman#2payon	1_F_01,0,0,{
 		mes "Or a well timed insult joke.";
 	}
 	next;
-	if (select("Fortune Teller...? :Well, see you later~") == 1) {
+	if (select("Fortune Teller...? ", "Well, see you later~") == 1) {
 		mes "[Jim's Mother]";
 		mes "Oh yes...";
 		mes "There's an extraordinary fortune teller in the Central Palace of Payon. The more Zeny you pay her, the better fortune you'll get!";
@@ -264,7 +264,7 @@ payon,210,110,1	script	Drunkard#payon	2_M_PHARMACIST,{
 		mes "Buy me a drink?!";
 	}
 	next;
-	switch(select("Alright, but only one drink.:No thanks, pal.:Oh my God! Hell no!")) {
+	switch(select("Alright, but only one drink.", "No thanks, pal.", "Oh my God! Hell no!")) {
 	case 1:
 		Zeny = (Zeny < 100) ? 0 : (Zeny - 100);
 		mes "[Drunkard]";
@@ -315,7 +315,7 @@ payon,132,235,3	script	Monster Scholar#02	4W_M_02,{
 	mes "I am called Vuicokk.";
 	mes "I am a scholar in the Monster Research organization of the Rune Midgarts Kingdom. Do you have any questions about monsters?";
 	next;
-	switch(select("Any news?:Undead Monsters?:Monster Research Organization?")) {
+	switch(select("Any news?", "Undead Monsters?", "Monster Research Organization?")) {
 	case 1:
 		mes "[Monster Scholar Vuicokk]";
 		mes "Payon is located deep inside the forest where it can easily be attacked by hordes of monsters. Monsters also come from the dangerous cave located near town.";
@@ -419,7 +419,7 @@ payon_in01,180,7,2	script	Waitress#payon	4_F_01,{
 	mes "So...";
 	mes "How may I help you? ";
 	next;
-	switch(select("Have you ever heard of Zombies?:Fortune Teller...?:I needs some booze.")) {
+	switch(select("Have you ever heard of Zombies?", "Fortune Teller...?", "I needs some booze.")) {
 	case 1:
 		mes "[Pub Lady]";
 		mes "Of course I've";
@@ -501,7 +501,7 @@ payon_in01,66,64,5	script	Archer Zakk#payon	4_M_ORIENT01,{
 	mes "[Archer Zakk]";
 	mes "Even though he's an expert at archery, no one likes his motor mouth. Even our chief is getting fed up with him!";
 	next;
-	switch(select("Your friend?:Payon has a chief?: Motor... Mouth?")) {
+	switch(select("Your friend?", "Payon has a chief?", " Motor... Mouth?")) {
 	case 1:
 		mes "[Archer Zakk]";
 		mes "Ah, right. This buddy of mine is the number one archer in Payon.";
@@ -566,7 +566,7 @@ payon_in01,47,59,2	script	Archer Wolt#payon	4_M_ORIENT01,{
 	mes "you tend to spend a lot of your";
 	mes "time in idleness?";
 	next;
-	switch(select("Oh, hell no.:Yeah. I guess...")) {
+	switch(select("Oh, hell no.", "Yeah. I guess...")) {
 	case 1:
 		mes "[Archer Wolt]";
 		mes "Ooh. That's good. In fact, that's great! If only all of us Archers had that kind of attitude. If you have time to just sit around, then you have the time to go out and practice!";
@@ -591,7 +591,7 @@ payon_in01,47,59,2	script	Archer Wolt#payon	4_M_ORIENT01,{
 		mes "So we just carry out Bows wherever we go, and spend all day looking for monsters to kill. Oh, and after we find some monsters, we";
 		mes "kill them of course. That almost goes without saying.";
 		next;
-		if (select("I guess you'd need a good Bow. :You call that 'practice?!'") == 1) {
+		if (select("I guess you'd need a good Bow. ", "You call that 'practice?!'") == 1) {
 			mes "[Archer Wolt]";
 			mes "That's right!";
 			mes "An Archer depends";
@@ -636,7 +636,7 @@ payon_in01,47,59,2	script	Archer Wolt#payon	4_M_ORIENT01,{
 			mes "[Archer Wolt]";
 			mes "We Archers are here to protect our territory against them, as ordered by our honorable chief!";
 			next;
-			switch(select("Cave, you say?:Chief...? :Oh man, I hate this town!")) {
+			switch(select("Cave, you say?", "Chief...? ", "Oh man, I hate this town!")) {
 			case 1:
 				mes "[Archer Wolt]";
 				mes "If you head North";
@@ -742,7 +742,7 @@ payon_in01,47,59,2	script	Archer Wolt#payon	4_M_ORIENT01,{
 		mes "[Archer Wolt]";
 		mes "But, it turned out that no one could hear me. Luckily, our roof caved in and totally demolished our walls so that my screams could finally reach passerby. And it was in that way that I survived.";
 		next;
-		switch(select("Um, what's the point of that story?:I guess I better not get lazy then. :Blah blah blah. See ya. ")) {
+		switch(select("Um, what's the point of that story?", "I guess I better not get lazy then. ", "Blah blah blah. See ya. ")) {
 		case 1:
 			mes "[Archer Wolt]";
 			mes "Oh...";
@@ -756,7 +756,7 @@ payon_in01,47,59,2	script	Archer Wolt#payon	4_M_ORIENT01,{
 			mes "[Archer Wolt]";
 			mes "Our chief is especially annoyed by that kind of irresponsible attitude. I guess, around here, only the town drunkard subscribes to that kind of policy.";
 			next;
-			switch(select("Chief?:Town Drunkard? :Man, you talk too much!")) {
+			switch(select("Chief?", "Town Drunkard? ", "Man, you talk too much!")) {
 			case 1:
 				mes "[Archer Wolt]";
 				mes "Our chief? Ah, he's such a swell guy. Then again, he's always scolds me for talking too much.";
@@ -871,7 +871,7 @@ OnTouch:
 			mes "such young people.";
 			next;
 		}
-		switch(select("Please tell me about Payon.:Where are the guards from?:Please tell me about the cave. :What does an Archer do?:What does a Hunter do?")) {
+		switch(select("Please tell me about Payon.", "Where are the guards from?", "Please tell me about the cave. ", "What does an Archer do?", "What does a Hunter do?")) {
 		case 1:
 			mes "[Chief]";
 			mes "Payon is the city of highlanders. As long as our history can relate, our city has been self-sufficient.";
@@ -1013,20 +1013,20 @@ pay_arche,77,131,2	script	Archer Joe#payon	4_M_ORIENT01,{
 	mes "Have you heard";
 	mes "of famous Payon?";
 	next;
-	switch(select("Yeah, of course~! :Pay...on?:...")) {
+	switch(select("Yeah, of course~! ", "Pay...on?", "...")) {
 	case 1:
 		mes "[Archer Joe]";
 		mes "Oh! You the man!";
 		mes "You know the Archers of Payon!";
 		mes "We never miss our target! Even from a distance, the hearts of our foes are unsafe!";
 		next;
-		if (select("So, you like this place, huh? :Hahahaha~") == 1) {
+		if (select("So, you like this place, huh? ", "Hahahaha~") == 1) {
 			mes "[Archer Joe]";
 			mes "Yes! I love this place!";
 			mes "I love this city so much,";
 			mes "I've even been doing research on it! If there's anything you wanna know about Payon, please ask me!";
 			next;
-			switch(select("The people wear unique clothing here.:What's the building in the middle of town?:Who's that guy drinking over there? :Talk to you later.")) {
+			switch(select("The people wear unique clothing here.", "What's the building in the middle of town?", "Who's that guy drinking over there? ", "Talk to you later.")) {
 			case 1:
 				mes "[Archer Joe]";
 				mes "Yes, I agree.";

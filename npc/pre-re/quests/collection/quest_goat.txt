@@ -38,7 +38,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 			mes "[Vegetable Farmer]";
 			mes "Have you finished hunting the 50 Goats?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Vegetable Farmer]";
 				mes "Hmm, I don't think you've hunted 50 yet.";
@@ -52,7 +52,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Vegetable Farmer]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -78,7 +78,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 			mes "[Vegetable Farmer]";
 			mes "Have you finished hunting the 100 Goats?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Vegetable Farmer]";
 				mes "Hmm, I don't think you've hunted 100 yet.";
@@ -92,7 +92,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Vegetable Farmer]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -119,7 +119,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 			mes "[Vegetable Farmer]";
 			mes "Have you finished hunting the 150 Goats?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Vegetable Farmer]";
 				mes "Hmm, I don't think you've hunted 150 yet.";
@@ -133,7 +133,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Vegetable Farmer]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -165,19 +165,19 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 			mes "You are here to help me right?";
 			mes "If not, then I am in a world of hurt.";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Vegetable Farmer]";
 				mes "These Goats keep eating my vegetables.";
 				mes "Can you do what you can to help me?";
 				next;
-				switch(select("Gather Items:Hunt Goats:Cancel")) {
+				switch(select("Gather Items", "Hunt Goats", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Vegetable Farmer]";
 					mes "I need ^FF0000Antelope Horns^000000 to show for your hard work, and I will reward you.";
 					next;
-					switch(select("I have Antelope Horns:What did you need?")) {
+					switch(select("I have Antelope Horns", "What did you need?")) {
 					case 1:
 						/*
 						if (checkweight(White_Potion,10) == 0) {
@@ -216,7 +216,7 @@ ein_fild06,82,171,0	script	Vegetable Farmer#Goat	4_F_SHABBY,{
 					mes "Thank you.";
 					mes "How many Goats would you like to hunt?";
 					next;
-					switch(select("50 Goats:100 Goats:150 Goats")) {
+					switch(select("50 Goats", "100 Goats", "150 Goats")) {
 					case 1:
 						mes "[Vegetable Farmer]";
 						mes "Kill 50 of those Goats and let me know when you're done. I will reward you for your efforts.";

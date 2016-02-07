@@ -49,7 +49,7 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 		mes "for refining items,";
 		mes "but I don't work anymore.";
 		next;
-		switch(select("I'll go on my way.:Hmm... this makes me curious.")) {
+		switch(select("I'll go on my way.", "Hmm... this makes me curious.")) {
 		case 1:
 			mes "[Refine Master]";
 			mes "Take care, adventurer.";
@@ -67,7 +67,7 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	mes "I can refine an item up to the ^006400same level as your ticket^000000.";
 	mes "You don't have to worry! There's no chance of breaking your item.";
 	next;
-	if(select("I'll come back later.:Refine item with ticket.") == 1) {
+	if(select("I'll come back later.", "Refine item with ticket.") == 1) {
 		mes "[Refine Master]";
 		mes "Okay.";
 		mes "You can come again later.";
@@ -146,7 +146,7 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	mes "I'm going to refine ^006400"+getequipname(.@part)+"^8B4513 up to the +"+.@ticket_lv+" level^000000 with ^006400"+getitemname(.@ticket_id)+"^000000.";
 	mes "May I proceed?";
 	next;
-	if(select("No.:Yes.") == 1) {
+	if(select("No.", "Yes.") == 1) {
 		emotion e_dots;
 		mes "[Refine Master]";
 		mes "Oh, you changed your mind.";

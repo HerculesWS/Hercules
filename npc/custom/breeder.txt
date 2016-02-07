@@ -18,7 +18,7 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 		end;
 	} else if ((eaclass()&EAJ_THIRDMASK) == EAJ_RANGER && !countitem(Wolf's_Flute)) {
 		if (!checkfalcon() && getskilllv(HT_FALCON) && !checkwug()) {
-			if (select(" ~ Falcon: ~ Warg") == 1)
+			if (select(" ~ Falcon", " ~ Warg") == 1)
 				setfalcon;
 			else
 				getitem Wolf's_Flute, 1;
@@ -29,7 +29,7 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 		}
 	} else if ((eaclass()&EAJ_THIRDMASK) == EAJ_MECHANIC && !checkcart() && getskilllv(MC_PUSHCART)) {
 		if (!checkmount() != MOUNT_MADO && getskilllv(NC_MADOLICENCE)) {
-			if (select(" ~ Cart: ~ Mado") == 1) {
+			if (select(" ~ Cart", " ~ Mado") == 1) {
 				setcart;
 			} else {
 				setmount(MOUNT_MADO);

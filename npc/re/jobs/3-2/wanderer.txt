@@ -62,7 +62,7 @@ xmas,162,209,5	script	Aspiring Wanderer, Soy	4_F_06,{
 		mes "Many people are looking forward to meeting the best Wanderer in the world.";
 		if (BaseJob != Job_Dancer || BaseLevel < 99) close;
 		next;
-		select("Dancer Kim?:Wanderer?");
+		select("Dancer Kim?", "Wanderer?");
 		emotion e_omg,0,"Aspiring Wanderer, Soy";
 		mes "[Soy]";
 		mes "What? You don't know the famous Wanderer, Dancer Kim?";
@@ -88,7 +88,7 @@ xmas,162,209,5	script	Aspiring Wanderer, Soy	4_F_06,{
 		mes "[Mimi]";
 		mes "Just hang in there, Soy. Ha ha.";
 		next;
-		switch(select("Where is the performance?:End the conversation.")) {
+		switch(select("Where is the performance?", "End the conversation.")) {
 		case 1:
 			mes "[Soy]";
 			mes "Right in front of the Christmas tree!";
@@ -150,7 +150,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 		next;
 		while (1) {
 			.@loop = 0;
-			switch(select("Sorry, I don't care.:What's the matter?:Why are you telling me this?")) {
+			switch(select("Sorry, I don't care.", "What's the matter?", "Why are you telling me this?")) {
 			case 1:
 				mes "[Performance Manager]";
 				mes "That's a bit harsh don't you think?";
@@ -177,7 +177,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 		}
 		while (1) {
 			.@loop = 0;
-			switch(select("Is there a problem?:Who do you mean?:It has nothing to do with me.")) {
+			switch(select("Is there a problem?", "Who do you mean?", "It has nothing to do with me.")) {
 			case 1:
 				mes "[Performance Manager]";
 				mes "How could they do that?";
@@ -209,7 +209,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 		}
 		while (1) {
 			.@loop = 0;
-			switch(select("Are you afraid of people?:The performers caused trouble?:Ignore him.")) {
+			switch(select("Are you afraid of people?", "The performers caused trouble?", "Ignore him.")) {
 			case 1:
 				mes "[Performance Manager]";
 				mes "Wouldn't you be afraid of all the eyes of people if you were me?";
@@ -267,7 +267,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 		mes "[Performance Manager]";
 		mes "Hey! Can you please go out and find the Maestro Guitar Song?";
 		next;
-		switch(select("Ah, okay.:Why should I do that?:I won't!")) {
+		switch(select("Ah, okay.", "Why should I do that?", "I won't!")) {
 		case 1:
 			break;
 		case 2:
@@ -331,7 +331,7 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 		mes "- You found a Maestro -";
 		mes "- singing a weird song. -";
 		next;
-		if(select("That's a weird song.:Ignore it.") == 2) {
+		if(select("That's a weird song.", "Ignore it.") == 2) {
 			mes "- What a weird person, I better stay away. -";
 			close;
 		}
@@ -367,7 +367,7 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 		mes "So how about it? Isn't that a tempting offer to you?";
 		mes "I'm a really famous Maestro at the peak of my popularity. People are dying to work with me, but you are indifferent to me lady.";
 		next;
-		select("Where is Dancer Kim?:Why'd you cancel the performance?");
+		select("Where is Dancer Kim?", "Why'd you cancel the performance?");
 		mes "[Guitar Song]";
 		mes "Why are you asking me that question so suddenly?";
 		mes "Come on, let's just talk about a pleasant matter.";
@@ -385,7 +385,7 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 		mes "[" + strcharinfo(0) + "]";
 		mes "(Would it be possible for me to make him tell me what happened with Nollio?)";
 		next;
-		switch(select("Use Dazzler:Use Lullaby:Use Lucky Luck")) {
+		switch(select("Use Dazzler", "Use Lullaby", "Use Lucky Luck")) {
 		case 1:
 			if (getskilllv("DC_UGLYDANCE") == 5 || rand(100) >= 80) {
 				mes "- You get closer to Song's ear. -";
@@ -700,7 +700,7 @@ hu_in01,305,251,5	script	Vacant Looking Lady#wnd	4_F_CAPEGIRL,{
 		mes "I think the life of Wanderer Dancer Kim is over now.";
 		mes "Boo hoo hoo hoo!";
 		next;
-		if(select("Hey, don't give up.:I feel sorry for you.") == 2) {
+		if(select("Hey, don't give up.", "I feel sorry for you.") == 2) {
 			mes "[Dancer Kim]";
 			mes "My life cannot get out of abyss now......";
 			close;
@@ -722,7 +722,7 @@ hu_in01,305,251,5	script	Vacant Looking Lady#wnd	4_F_CAPEGIRL,{
 		mes "But I get tired and give up easily.";
 		mes "I think I am going to give up.";
 		next;
-		if(select("Well, there's no other way.:Let's work together.") == 1) {
+		if(select("Well, there's no other way.", "Let's work together.") == 1) {
 			mes "[Dancer Kim]";
 			mes "No dreams and no hope...";
 			close;
@@ -779,7 +779,7 @@ hu_fild05,342,130,5	script	Dancer Kim#fild	4_F_CAPEGIRL,{
 		mes "You need to defeat 50 Yellow Novus!";
 		mes "Are you ready?";
 		next;
-		if(select("No.:Yes.") == 1) {
+		if(select("No.", "Yes.") == 1) {
 			mes "[Dancer Kim]";
 			mes "Hurry up before I lose interest!";
 			close;

@@ -334,7 +334,7 @@ p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 				mes "would you like to exchange your";
 				mes "Racing Ticket for Prize Medals?";
 				next;
-				if (select("Yes, please.:No, thanks.") == 2) {
+				if (select("Yes, please.", "No, thanks.") == 2) {
 					mes "[Medal Distributor]";
 					mes "Um, are you sure? You ";
 					mes "can only exchange a winning";
@@ -508,7 +508,7 @@ p_track01,76,36,1	script	Exit Guide#single	4_M_NFMAN,{
 	mes "you outside. Would you like";
 	mes "to leave the arena right now?";
 	next;
-	if (select("Yes:No") == 2) {
+	if (select("Yes", "No") == 2) {
 		mes "[Exit Guide]";
 		mes "Alright, then.";
 		mes "Just let me know";
@@ -545,7 +545,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 	mes "Monster Race Arena.";
 	mes "How may I help you today?";
 	next;
-	if (select("Monster Race Info:Enter Monster Race") == 1) {
+	if (select("Monster Race Info", "Enter Monster Race") == 1) {
 		mes "[Eckar Ellebird]";
 		mes "Monster Races originated from";
 		mes "simple children's games in which";
@@ -599,7 +599,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 	mes "Would you like wager on";
 	mes "a Single Monster Race?";
 	next;
-	if (select("Yes, please.:No, thanks.") == 2) {
+	if (select("Yes, please.", "No, thanks.") == 2) {
 		mes "[Eckar Ellebird]";
 		mes "Very well. I hope that";
 		mes "you enjoy your time here";
@@ -687,7 +687,7 @@ hugel,58,72,6	script	Eckar Ellebird#single	4_M_NFMAN,{
 		mes "to watch, the fee is 500 zeny";
 		mes "for spectators. Would you like to enter the Monster Race Arena?";
 		next;
-		if (select("Enter:Cancel") == 2) {
+		if (select("Enter", "Cancel") == 2) {
 			mes "[Eckar Ellebird]";
 			mes "Alright, then. If you'd like";
 			mes "to wager on a monster";
@@ -736,7 +736,7 @@ p_track01,39,49,3	script	Game Guide#single	4_F_RACING,{
 	mes "Monster Race Arena.";
 	mes "How can I help you?";
 	next;
-	switch(select("Monster Race Info:Wager Info:Ticket Redemption Info")) {
+	switch(select("Monster Race Info", "Wager Info", "Ticket Redemption Info")) {
 	case 1:
 		mes "[Game Guide]";
 		mes "Monster Races originated from";
@@ -1139,7 +1139,7 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 	mes "the village of Hugel!";
 	mes "How may I help you?";
 	next;
-	if (select("Monster Race Info:Enter Monster Race") == 1) {
+	if (select("Monster Race Info", "Enter Monster Race") == 1) {
 		mes "[Eckar Erenes]";
 		mes "Monster Races originated from";
 		mes "simple children's games in which";
@@ -1193,7 +1193,7 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 	mes "Would you like to wager";
 	mes "on a Dual Monster Race?";
 	next;
-	if (select("Yes, please.:No, thanks.") == 2) {
+	if (select("Yes, please.", "No, thanks.") == 2) {
 		mes "[Eckar Erenes]";
 		mes "Very well. I hope that";
 		mes "you enjoy your time here";
@@ -1279,7 +1279,7 @@ hugel,62,69,1	script	Eckar Erenes#double	4_M_NFMAN,{
 		mes "to watch, the fee is 500 zeny";
 		mes "for spectators. Would you like to enter the Monster Race Arena?";
 		next;
-		if (select("Enter:Cancel") == 2) {
+		if (select("Enter", "Cancel") == 2) {
 			mes "[Eckar Erenes]";
 			mes "Alright, then. If you'd like";
 			mes "to wager on a monster";
@@ -1350,7 +1350,7 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 		mes "got any questions, or if you";
 		mes "want to place your wager.";
 		next;
-		switch(select("Check Monster Status:Wager on Race:Monster Race?:Cancel")) {
+		switch(select("Check Monster Status", "Wager on Race", "Monster Race?", "Cancel")) {
 		case 1:
 			for (.@i = 1; .@i <= 6; ++.@i)
 				mes "Monster "+.@i+" [^CC6600Luck^000000: " + $@mon_r02_luk[.@i] + "] [^EE0000HP^000000: " + $@mon_r02_tire[.@i] + "]";
@@ -1390,7 +1390,7 @@ p_track02,73,22,1	script	Ticket Helper#2	4_M_HUMAN_02,{
 				mes "Are you sure you want";
 				mes "to choose this monster?";
 				next;
-				if (select("Yes:No") == 2) {
+				if (select("Yes", "No") == 2) {
 					mes "[Ticket Helper]";
 					mes "You have canceled";
 					mes "your wager. Okay,";
@@ -1515,7 +1515,7 @@ p_track02,39,49,3	script	Game Guide#double	4_F_RACING,{
 	mes "Monster Race Arena.";
 	mes "How can I help you?";
 	next;
-	switch(select("Monster Race Info:Wager Info:Ticket Redemption Info")) {
+	switch(select("Monster Race Info", "Wager Info", "Ticket Redemption Info")) {
 	case 1:
 		mes "[Game Guide]";
 		mes "Monster Races originated from";
@@ -1651,7 +1651,7 @@ p_track02,67,45,5	script	Medal Distributor#medal	4_F_RACING,{
 		mes "like to exchange your winning";
 		mes "Racing Ticket for Prize Medals?";
 		next;
-		if (select("Yes, please.:No, thanks.") == 1) {
+		if (select("Yes, please.", "No, thanks.") == 1) {
 			mes "[Medal Distributor]";
 			mes "Okay, everything looks good,";
 			mes "so here's your Prize Medals~";
@@ -1714,7 +1714,7 @@ p_track02,76,38,1	script	Exit Guide#double	4_M_NFMAN,{
 	mes "you outside. Would you like";
 	mes "to leave the arena right now?";
 	next;
-	if (select("Yes:No") == 2) {
+	if (select("Yes", "No") == 2) {
 		mes "[Exit Guide]";
 		mes "Alright, then.";
 		mes "Just let me know";
@@ -2106,7 +2106,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 			mes "receive this Glittering Jacket";
 			mes "as my way of repaying you?";
 			next;
-			if (select("Accept:Wait for Further Development") == 1) {
+			if (select("Accept", "Wait for Further Development") == 1) {
 				callsub S_BonusReward,500,Glittering_Clothes;
 				end;
 			}
@@ -2134,7 +2134,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 			mes "medals until I can develop";
 			mes "something else for you.";
 			next;
-			switch(select("Accept Armor:Can I have something else?:Wait for Further Development")) {
+			switch(select("Accept Armor", "Can I have something else?", "Wait for Further Development")) {
 				case 1:
 					mes "[Ei'felle]";
 					mes "I can manufacture one set of";
@@ -2143,7 +2143,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 					mes "property. Which property would";
 					mes "you like your armor to have?";
 					next;
-					switch(select("Fire Property:Earth Property:Wind Property:Water Property")) {
+					switch(select("Fire Property", "Earth Property", "Wind Property", "Water Property")) {
 						case 1: callsub S_BonusReward,1000,Flame_Sprits_Armor_; end;
 						case 2: callsub S_BonusReward,1000,Earth_Sprits_Armor_; end;
 						case 3: callsub S_BonusReward,1000,Wind_Sprits_Armor_; end;
@@ -2207,7 +2207,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 		mes "as my way of repaying you for";
 		mes "your help. What do you think?";
 		next;
-		if (select("Yes, I want a Level 4 Weapon.:Can I have something else?") == 2) {
+		if (select("Yes, I want a Level 4 Weapon.", "Can I have something else?") == 2) {
 			mes "[Ei'felle]";
 			mes "Something else?";
 			mes "Oh, alright then, would";
@@ -2216,7 +2216,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 			mes "elemental Armor? Please go";
 			mes "ahead and make your choice~";
 			next;
-			switch (select("Glittering Jacket:Fire Property Armor:Earth Property Armor:Wind Property Armor:Water Property Armor:Cancel")) {
+			switch (select("Glittering Jacket", "Fire Property Armor", "Earth Property Armor", "Wind Property Armor", "Water Property Armor", "Cancel")) {
 				case 1: callsub S_BonusReward,500,2319; end;
 				case 2: callsub S_BonusReward,1000,2345; end;
 				case 3: callsub S_BonusReward,1000,2351; end;
@@ -2294,7 +2294,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 	}
 
 S_Reward:
-	if (select("Sure:No") == 2) {
+	if (select("Sure", "No") == 2) {
 		mes "[Ei'felle]";
 		mes "Oh, alright...";
 		mes "Still, I really need";
@@ -2312,7 +2312,7 @@ S_Reward:
 	mes "shall I repay you for giving me";
 	mes "some of your Prize Medals?";
 	next;
-	switch(select("Base Experience:Job Experience:No, I'm just glad to help.:How's your research progressing?")) {
+	switch(select("Base Experience", "Job Experience", "No, I'm just glad to help.", "How's your research progressing?")) {
 		case 1:
 			mes "[Ei'felle]";
 			mes "You just want to improve";
@@ -2512,7 +2512,7 @@ S_Reward:
 			mes "medals do you think you";
 			mes "can give me right now?";
 			next;
-			switch(select("Take them all.:How about this much?:No, I changed my mind.")) {
+			switch(select("Take them all.", "How about this much?", "No, I changed my mind.")) {
 			case 1:
 				mes "[Ei'felle]";
 				mes "Th-thank you!";
@@ -2627,7 +2627,7 @@ S_BonusReward:
 		mes "to me. Shall we proceed?";
 	}
 	next;
-	if (select("Decline:Accept") == 1) {
+	if (select("Decline", "Accept") == 1) {
 		mes "["+ strcharinfo(0) +"]";
 		mes "W-wait, I changed my";
 		mes "mind. Would it be fine";
@@ -2703,7 +2703,7 @@ hugel,71,83,4	script	Wayne	4_M_HUMERCHANT,{
 	mes "now, with me. As always, the";
 	mes "choice is really up to you.";
 	next;
-	if (select("Prize Medal Exchange:Cancel") == 2) {
+	if (select("Prize Medal Exchange", "Cancel") == 2) {
 		mes "[Wayne]";
 		mes "Well, just keep in mind";
 		mes "that you can always come";
@@ -3012,7 +3012,7 @@ hugel,5,5,3	script	Monster Race Manager	4_M_LGTGUARD,{
 	mes "Entry NPCs for the Single";
 	mes "and Dual Monster Races.";
 	next;
-	.@select = select("Single Race Entry - ON:Dual Race Entry - ON:Single Race Entry - OFF:Dual Race Entry - OFF");
+	.@select = select("Single Race Entry - ON", "Dual Race Entry - ON", "Single Race Entry - OFF", "Dual Race Entry - OFF");
 	mes "[Monster Race Manager]";
 	mes "Please enter";
 	mes "the password.";

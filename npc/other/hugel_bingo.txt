@@ -905,7 +905,7 @@ que_bingo,54,17,5	script	Arcade Owner	4_M_05,{
 	mes "bingo? If you have any";
 	mes "questions, feel free to ask.";
 	next;
-	switch(select("Rules for Bingo:Bingo Room:Marvelous Medals")) {
+	switch(select("Rules for Bingo", "Bingo Room", "Marvelous Medals")) {
 	case 1:
 		mes "[Arcade Owner]";
 		mes "The rules for playing bingo";

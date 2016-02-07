@@ -49,7 +49,7 @@ yuno,1,1,0	script	Festival Manager#gq_fes0	4_F_HUGIRL,{
 	mes "[Festival Manager]";
 	mes "What would you like to do?";
 	next;
-	switch(select("Disable festival NPCs:Enable festival NPCs")) {
+	switch(select("Disable festival NPCs", "Enable festival NPCs")) {
 	case 1:
 		mes "[Festival Manager]";
 		mes "Ending festivals and disabling NPCs.";
@@ -96,7 +96,7 @@ yuno,118,192,5	script	Rmimi Ravies#gq_fes01	4_F_HUGIRL,{
 			mes "Anyway,";
 			mes "Do you want to summon monsters?";
 			next;
-			switch(select("Do not summon:Summon, please")) {
+			switch(select("Do not summon", "Summon, please")) {
 			case 1:
 				mes "[Rmimi Ravies]";
 				mes "I don't like to be interrupted by others..";
@@ -118,7 +118,7 @@ yuno,118,192,5	script	Rmimi Ravies#gq_fes01	4_F_HUGIRL,{
 			mes "[Rmimi Ravies]";
 			mes "Now, are you ready to summon monsters?";
 			next;
-			switch(select("No, I'm not ready now.:Yes! I'm ready for that.")) {
+			switch(select("No, I'm not ready now.", "Yes! I'm ready for that.")) {
 			case 1:
 				mes "[Rmimi Ravies]";
 				mes "If you are not ready, why did you come to me?";
@@ -425,7 +425,7 @@ rachel,1,1,0	script	Festival Manager#gq_fes2	4_F_HUGIRL,{
 	mes "[Festival Manager]";
 	mes "What would you like to do?";
 	next;
-	switch(select("Disable festival NPCs:Enable festival NPCs")) {
+	switch(select("Disable festival NPCs", "Enable festival NPCs")) {
 	case 1:
 		mes "[Festival Manager]";
 		mes "Ending festivals and disabling NPCs.";
@@ -474,7 +474,7 @@ rachel,132,117,3	script	Rhehe Ravies#gq_fes03	4_F_HUGIRL,{
 			mes "... Hehehe, anyways let's move on.";
 			mes "So do you wish to summon or not!?";
 			next;
-			switch(select("Do not summon:Summon")) {
+			switch(select("Do not summon", "Summon")) {
 			case 1:
 				mes "[Rhehe Ravies]";
 				mes "...*Cries*.";
@@ -498,7 +498,7 @@ rachel,132,117,3	script	Rhehe Ravies#gq_fes03	4_F_HUGIRL,{
 			mes "[Rhehe Ravies]";
 			mes "Are you ready to begin the summoning ritual~?";
 			next;
-			switch(select("No, not yet.:Yes! I'm ready!")) {
+			switch(select("No, not yet.", "Yes! I'm ready!")) {
 			case 1:
 				mes "[Rhehe Ravies]";
 				mes "You're not even ready, why bother talking to me?";

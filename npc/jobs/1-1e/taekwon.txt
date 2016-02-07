@@ -196,7 +196,7 @@ payon,157,141,5	script	Phoenix#TKJobChange	4_M_MONK,{
 		mes "great difficulty, how do";
 		mes "you generally respond?";
 		next;
-		switch(select( "I face it head on.:Avoid it somehow.:Regroup and analyze the problem.")) {
+		switch(select( "I face it head on.", "Avoid it somehow.", "Regroup and analyze the problem.")) {
 		case 1:
 			mes "[Phoenix]";
 			mes "Yes, that is the answer";
@@ -271,7 +271,7 @@ payon,157,141,5	script	Phoenix#TKJobChange	4_M_MONK,{
 		mes "clash, causing heated conflict,";
 		mes "how would you respond?";
 		next;
-		switch( select("Insist that I'm right, regardless:Disregard conflicting viewpoint:Accept differences and learn from them")) {
+		switch( select("Insist that I'm right, regardless", "Disregard conflicting viewpoint", "Accept differences and learn from them")) {
 		case 1:
 			mes "[Phoenix]";
 			mes "It's important to have your";

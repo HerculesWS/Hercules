@@ -71,7 +71,7 @@ que_ng,152,167,3	script	Master Miller	4_M_HUOLDARMY,{
 			mes "Selena. Now, what do you";
 			mes "need? If it's not important, then I can't make the time for you.";
 			next;
-			if(select("Nothing.:I want to become a Gunslinger.") == 1) {
+			if(select("Nothing.", "I want to become a Gunslinger.") == 1) {
 				mes "[Master Miller]";
 				mes "Don't waste my time.";
 				mes "If you do want to become";
@@ -85,7 +85,7 @@ que_ng,152,167,3	script	Master Miller	4_M_HUOLDARMY,{
 			mes "pretty ambitious. You'll need to pass our interview and educational";
 			mes "course to become a Gunslinger. Do you want to apply for the job?";
 			next;
-			if(select("Give me some time to think.:Sure!") == 1) {
+			if(select("Give me some time to think.", "Sure!") == 1) {
 				mes "[Master Miller]";
 				mes "Understandable.";
 				mes "If you do decide that";

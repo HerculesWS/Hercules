@@ -39,7 +39,7 @@ nif_fild01,332,327,4	script	Deadman	4_M_NFDEADMAN,{
 			mes "[Deadman]";
 			mes "Have you finished hunting the 50 Disguise?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Deadman]";
 				mes "Hmm, I don't think you've hunted 50 yet.";
@@ -53,7 +53,7 @@ nif_fild01,332,327,4	script	Deadman	4_M_NFDEADMAN,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Deadman]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -77,7 +77,7 @@ nif_fild01,332,327,4	script	Deadman	4_M_NFDEADMAN,{
 			mes "[Deadman]";
 			mes "Have you finished hunting the 50 Loli Ruri?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Deadman]";
 				mes "Hmm, I don't think you've hunted 50 yet.";
@@ -91,7 +91,7 @@ nif_fild01,332,327,4	script	Deadman	4_M_NFDEADMAN,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Deadman]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -116,7 +116,7 @@ nif_fild01,332,327,4	script	Deadman	4_M_NFDEADMAN,{
 		mes "You are here to help me right?";
 		mes "If not, i don't know what to do with the Monsters in this Place!";
 		next;
-		switch(select("Sure:No")) {
+		switch(select("Sure", "No")) {
 		case 1:
 			mes "[Deadman]";
 			mes "Great! I knew the moment i saw you that i can count on you!";
@@ -126,7 +126,7 @@ nif_fild01,332,327,4	script	Deadman	4_M_NFDEADMAN,{
 			mes "[Deadman]";
 			mes "So, which of those Monsters would you like to hunt for me?";
 			next;
-			switch(select("Disguise:Loli Ruri:Cancel")) {
+			switch(select("Disguise", "Loli Ruri", "Cancel")) {
 			case 1:
 				if (BaseLevel > 90) {
 					mes "[Deadman]";

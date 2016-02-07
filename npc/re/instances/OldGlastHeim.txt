@@ -1975,7 +1975,7 @@ OnTimer80000:
 		mes "Soon after me? Anyways...";
 		mes "Doesn't matter, soon the gap of time will be closed, I have to get out of here.";
 		next;
-		switch(select("Since I'm here, let's explore more.:Please, send me out.")) {
+		switch(select("Since I'm here, let's explore more.", "Please, send me out.")) {
 		case 1:
 			mes "[Hugin]";
 			mes "..................";

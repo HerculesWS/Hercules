@@ -388,7 +388,7 @@ function	script	F_KafCart	{
 		mes "fee is "+getarg(1)+" zeny. Would";
 		mes "you like to rent a Pushcart?";
 		next;
-		if (select("Rent a Pushcart.:Cancel") == 2)
+		if (select("Rent a Pushcart.", "Cancel") == 2)
 			return 0;
 		if (Zeny < getarg(1)) {
 			mes getarg(2);
@@ -501,7 +501,7 @@ function	script	F_SetKafCode	{
 	if (#kafra_code) {
 		mes "Your storage is protected with a password. What would you do now?";
 		next;
-		switch (select("Change old password -> 5000z:Remove storage password -> 1000z:Cancel")) {
+		switch (select("Change old password -> 5000z", "Remove storage password -> 1000z", "Cancel")) {
 			case 1:
 				mes getarg(0);
 				mes "At first, please enter your ^0000FFold password^000000.";
@@ -549,7 +549,7 @@ function	script	F_SetKafCode	{
 		mes getarg(1)+" proudly presents you a new service:";
 		mes "Additional storage protection with a password.";
 		next;
-		switch (select("Set new password -> 5000z:Cancel")) {
+		switch (select("Set new password -> 5000z", "Cancel")) {
 			case 1: callsub S_SET,getarg(0),getarg(1); break;
 			case 2: break;
 		}

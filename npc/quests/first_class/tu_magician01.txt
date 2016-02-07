@@ -89,7 +89,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "you want to learn more on";
 		mes "the basics of the Mage job.";
 		next;
-		switch(select("Will you teach me?:Perhaps later...")) {
+		switch(select("Will you teach me?", "Perhaps later...")) {
 		case 1:
 			mes "[Mana]";
 			mes "Of course!";
@@ -383,7 +383,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				mes "ready, we'll cover some new";
 				mes "material for you to learn.";
 				next;
-				if(select("W-wait, not yet!:I'm ready to go on.") == 2) {
+				if(select("W-wait, not yet!", "I'm ready to go on.") == 2) {
 					mes "[Mana]";
 					mes "Alrighty, we'll";
 					mes "move on to the next";
@@ -544,7 +544,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "you like me to explain?";
 		next;
 		while(1){
-			switch(select("Soul Strike:Safety Wall:Fire Ball:Frost Diver:Thunderstorm:Fire Wall:Energy Coat:Quit.")) {
+			switch(select("Soul Strike", "Safety Wall", "Fire Ball", "Frost Diver", "Thunderstorm", "Fire Wall", "Energy Coat", "Quit.")) {
 			case 1:
 				mes "[Mana]";
 				mes "Soul Strike is a ^CFB53BGhost^000000";
@@ -741,7 +741,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "give you some support.";
 		mes "So what do you think?";
 		next;
-		switch(select("I'll do it.:Sorry, but...")) {
+		switch(select("I'll do it.", "Sorry, but...")) {
 		case 1:
 			mes "[Mana]";
 			mes "Great! Alright,";

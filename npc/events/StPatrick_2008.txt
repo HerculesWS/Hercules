@@ -89,7 +89,7 @@ prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 		mes "I have not even begun brewing me famous green ale on account of this mess.";
 		mes "I will ask ye, will ya help get me treasure back?";
 		next;
-		if (select("Sure, I can help you.:I'm too busy.") == 2) {
+		if (select("Sure, I can help you.", "I'm too busy.") == 2) {
 			mes "[O'Riley the Leprechaun]";
 			mes "Aye, I understand.";
 			mes "Thank you for listening to me tale.";
@@ -182,7 +182,7 @@ prt_fild05,170,286,4	script	Anxious Leprechaun#8pday	4_M_PATRICK,{
 		mes "It be a fair bounty for the ill-gotten coins.";
 		mes "So, what kind of coin have ye brought?";
 		next;
-		switch(select("Bronze Coins:Silver Coins:Gold Coins:Quit.")) {
+		switch(select("Bronze Coins", "Silver Coins", "Gold Coins", "Quit.")) {
 		case 1:
 			mes "[O'Riley the Leprechaun]";
 			mes "Thank you. Here's your ale~";
@@ -232,7 +232,7 @@ OnTouch:
 			close;
 		}
 		else {
-			if (select("Use Firecrackers.:Ignore") == 2) {
+			if (select("Use Firecrackers.", "Ignore") == 2) {
 				close;
 			}
 			mes "You buried 200 Firecrackers under the pile of rocks.";

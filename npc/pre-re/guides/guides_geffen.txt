@@ -48,7 +48,7 @@ geffen,203,116,0	script	Guide#gef::GefGuide	4_M_GEF_SOLDIER,{
 	.@loop1 = 1;
 	while (.@loop1) {
 		next;
-		switch(select("City Guide:Remove Marks from Mini-Map:Notice.:Cancel")) {
+		switch(select("City Guide", "Remove Marks from Mini-Map", "Notice.", "Cancel")) {
 		case 1:
 			mes "[Geffen Guide]";
 			mes "Please select";
@@ -59,14 +59,14 @@ geffen,203,116,0	script	Guide#gef::GefGuide	4_M_GEF_SOLDIER,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes:No") == 1) .@compass_check = 1;
+				if (select("Yes", "No") == 1) .@compass_check = 1;
 			}
 			.@loop2 = 1;
 			while (.@loop2) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 //				next;
-				switch(select("^FF0000Magic Acedemy^000000:Forge Shop:Weapon Shop:Tool Shop:Pub:Inn:Geffen Tower:Cancel")) {
+				switch(select("^FF0000Magic Acedemy^000000", "Forge Shop", "Weapon Shop", "Tool Shop", "Pub", "Inn", "Geffen Tower", "Cancel")) {
 				case 1:
 					mes "[Geffen Guide]";
 					mes "The Magic Academy in";

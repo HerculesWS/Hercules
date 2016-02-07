@@ -73,7 +73,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 			mes "you think about Christmas?";
 			next;
 		}
-		switch(select("Santa Claus:Gift Boxes:Carols:Santa Costumes:Fake Santa Antonio")) {
+		switch(select("Santa Claus", "Gift Boxes", "Carols", "Santa Costumes", "Fake Santa Antonio")) {
 
 			case 1:
 				mes "[Caroller]";
@@ -146,7 +146,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 						mes "[Caroller]";
 						mes "I can bake you a cake, and I can carve your name on the cake, if you want!";
 						next;
-						if (select("No, thanks.:Please name it for me.") == 2) {
+						if (select("No, thanks.", "Please name it for me.") == 2) {
 							mes "[Caroller]";
 							mes "Thank for your help!";
 							next;
@@ -209,7 +209,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 				mes "[Caroller]";
 				mes "I am so devastated, since the Singing Crystal has been the hope of many children around the villages.";
 				next;
-				if (select("There's no other way to carol?:You can hear carols in Lutie.") == 2) {
+				if (select("There's no other way to carol?", "You can hear carols in Lutie.") == 2) {
 					mes "[Caroller]";
 					mes "And just stay there, every Christmas, for your whole life?";
 					next;
@@ -463,7 +463,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 	mes "Wow! Were you naughty or nice this year?";
 	mes "All right, what comes to your mind when you think about Christmas?";
 	next;
-	switch(select("Carolling:Santa Claus:Gift Boxes:Santa Costume:Not much really...")) {
+	switch(select("Carolling", "Santa Claus", "Gift Boxes", "Santa Costume", "Not much really...")) {
 
 	case 1:
 		mes "[Santa Claus]";
@@ -514,7 +514,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 		mes "[Santa Claus]";
 		mes "Do you want to play a game with me?";
 		next;
-		if (select("No, thanks.:Yes, I would.") == 1) {
+		if (select("No, thanks.", "Yes, I would.") == 1) {
 			mes "[Santa Claus]";
 			mes "Aww, don't be afraid.";
 			mes "If you've been a little naughty this year I won't stuff your stockings with coal.";
@@ -575,7 +575,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 			mes "I'm picking up only one!";
 			mes "Please guess what is is.";
 			next;
-			switch(select("Poring:Angeling:Ghostring")) {
+			switch(select("Poring", "Angeling", "Ghostring")) {
 				case 1:
 					mes "["+strcharinfo(0)+"]";
 					mes "Um...I choose Poring!";
@@ -763,7 +763,7 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	4_F_06,{
 	mes "[Louise Kim]";
 	mes "Are you interested?";
 	next;
-	if (select("Nope.:Yes, please.") == 1) {
+	if (select("Nope.", "Yes, please.") == 1) {
 		mes "[Louise Kim]";
 		mes "Ah!";
 		mes "You're silly! You lost your big chance!";
@@ -785,7 +785,7 @@ xmas_in,89,92,4	script	Louise Kim#iROxmas08	4_F_06,{
 	mes "[Louise Kim]";
 	mes "Anyway, can you bring me some stuff?";
 	next;
-	if (select("Why not? What do you need?:Sorry, no time.") == 2) {
+	if (select("Why not? What do you need?", "Sorry, no time.") == 2) {
 		emotion e_heh;
 		mes "[Louise Kim]";
 		mes "What?";

@@ -45,7 +45,7 @@ niflheim,201,187,3	script	Niflheim Guide#01nif	4_M_DIEMAN,{
 	}
 	while (1) {
 		next;
-		switch(select("[ Tool Shop ]:[ Pub ]:[ Weapon Shop ]:[ Witch's Castle ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Tool Shop ]", "[ Pub ]", "[ Weapon Shop ]", "[ Witch's Castle ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			callsub L_Mark, F_Navi("Tool Shop","niflheim,218,196","^0000FF");
 			viewpoint 1,218,196,0,0x0A82FF;

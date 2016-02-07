@@ -84,7 +84,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 	mes "[Archer Guildsman]";
 	mes "Nice to meet you. How may I help you?";
 	next;
-	switch(select("I want to be an Archer.:I need the requirements, please.:Nothing, thanks.")) {
+	switch(select("I want to be an Archer.", "I need the requirements, please.", "Nothing, thanks.")) {
 	case 1:
 		if(BaseJob != Job_Novice) {
 			mes "[Archer Guildsman]";

@@ -167,7 +167,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		mes "Mushroom Farm?";
 		mes "Have any fun?";
 		next;
-		if (select("Yeah, kinda Cool.:It was horrible.") == 1) {
+		if (select("Yeah, kinda Cool.", "It was horrible.") == 1) {
 			mes "[Thief Guide]";
 			mes "Heh heh! That's a good attitude. In our line of work, you gotta enjoy getting your hands dirty, one way or another.";
 			close;
@@ -180,7 +180,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		mes "[Thief Guide]";
 		mes "Hey, whaddya doin' here? Aren't you supposed to be gathering Mushrooms? Or did you need it explained to you again?";
 		next;
-		if  (select("Yes.:No, that's okay.") == 1) {
+		if  (select("Yes.", "No, that's okay.") == 1) {
 			mes "[Thief Guide]";
 			mes "*Sigh* Well, there's always one in the bunch. Alright, listen carefully.";
 			next;
@@ -225,7 +225,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		mes "ready to try again?";
 	}
 	next;
-	if (select("Hey, I came here to be a Thief!:Nah, I'm just looking around.") == 1) {
+	if (select("Hey, I came here to be a Thief!", "Nah, I'm just looking around.") == 1) {
 		if (job_thief_q == 0) {
 			mes "[Thief Guide]";
 			mes "Heh, I like your confidence. Still, you know being a Thief isn't all what it's cracked up to be.";
@@ -236,7 +236,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 			mes "want to be";
 			mes "a Thief?";
 			next;
-			switch(select("Yeah.:No, just wasting your time.:Why did you become a Thief?")) {
+			switch(select("Yeah.", "No, just wasting your time.", "Why did you become a Thief?")) {
 			case 1:
 				mes "[Thief Guide]";
 				mes "Really...";
@@ -258,7 +258,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 			mes "apply to become";
 			mes "a Thief or not?";
 			next;
-			switch(select("Yes, I will.:I'm too scared to be a Thief!")) {
+			switch(select("Yes, I will.", "I'm too scared to be a Thief!")) {
 			case 1:
 				mes "[Thief Guide]";
 				mes "Alright, tell";
@@ -272,7 +272,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 				mes "[Thief Guide]";
 				mes "Alright, your registration has been processed. Okay, you can begin your test if you're ready.";
 				next;
-				switch(select("Yeah, I'm ready.:No, I'm not ready yet.")) {
+				switch(select("Yeah, I'm ready.", "No, I'm not ready yet.")) {
 				case 1:
 					break;
 				case 2:
@@ -318,7 +318,7 @@ moc_prydb1,39,129,2	script	Thief Guide	1_F_04,{
 		mes "[Thief Guide]";
 		mes "Now, your actual abilities will need to be tested. Do you know anything about the test?";
 		next;
-		switch(select("Yes, I do.:Sorry, I don't.")) {
+		switch(select("Yes, I do.", "Sorry, I don't.")) {
 		case 1:
 			mes "[Thief Guide]";
 			mes "Oh yeah? Well, this makes things a lot easier.";

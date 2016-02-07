@@ -51,7 +51,7 @@ que_job01,68,84,1	script	Black Marketeer#Buying	4_M_SITDOWN,{
 	mes "You must need something badly to come to find me.";
 	mes "What do you want?";
 	next;
-	switch(select("Bulk Buyer Shop License:Who are you?:Nothing, nothing!")) {
+	switch(select("Bulk Buyer Shop License", "Who are you?", "Nothing, nothing!")) {
 	case 1:
 		mes "[Mr. Jass]";
 		mes "I knew it!";
@@ -128,7 +128,7 @@ alberta_in,58,52,4	script	Purchasing Team#Buying	1_M_ORIENT01,{
 			mes "I'm Hugh from the Purchasing Team.";
 			mes "How may I help you today?";
 			next;
-			if(select("Purchase Bulk Buyer Shop License:Quit") == 2) {
+			if(select("Purchase Bulk Buyer Shop License", "Quit") == 2) {
 				mes "[Mr. Hugh]";
 				mes "Please feel free to ask me if you need any Bulk Buyer Shop Licenses.";
 				mes "Come again~";
@@ -218,7 +218,7 @@ alberta_in,58,52,4	script	Purchasing Team#Buying	1_M_ORIENT01,{
 			mes "Say, would you like to register now?";
 			mes "If you do, I'll teach you how to open the Bulk Buyer Shop.";
 			next;
-			if(select("Learn how to open Bulk Buyer Shop:Cancel") == 2) {
+			if(select("Learn how to open Bulk Buyer Shop", "Cancel") == 2) {
 				mes "[Mr. Hugh]";
 				mes "Man, that's disappointing!";
 				mes "Using this bulk buyer option can benefit your business in many ways, but it's your call.";

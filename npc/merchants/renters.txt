@@ -54,7 +54,7 @@ prontera,55,350,5	script	Peco Peco Breeder#knt	8W_SOLDIER,{
 		mes "a Peco Peco? The rental";
 		mes "fee is "+.@price+" zeny.";
 		next;
-		switch(select("Rent Peco Peco:Cancel")) {
+		switch(select("Rent Peco Peco", "Cancel")) {
 		case 1:
 			if (Zeny < .@price) {
 				mes "[Peco Peco Breeder]";
@@ -117,7 +117,7 @@ prontera,232,318,3	script	Peco Peco Breeder#cru	8W_SOLDIER,{
 		mes "for you. To rent one";
 		mes "will cost "+.@price+" zeny.";
 		next;
-		switch(select("Rent a PecoPeco:Quit")) {
+		switch(select("Rent a PecoPeco", "Quit")) {
 		case 1:
 			if (Zeny < .@price) {
 				mes "[Peco Peco Breeder]";
@@ -182,7 +182,7 @@ hu_in01,381,304,5	script	Falcon Breeder#hnt	8W_SOLDIER,{
 		mes "trusty bird of prey for a";
 		mes "fee of just "+.@price+" zeny~";
 		next;
-		switch(select("Rent Falcon:Cancel")) {
+		switch(select("Rent Falcon", "Cancel")) {
 		case 1:
 			if (checkoption(Option_Wug) || checkoption(Option_Wugrider)) {
 				mes "[Falcon Breeder]";

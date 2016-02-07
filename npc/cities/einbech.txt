@@ -46,7 +46,7 @@ einbech,172,113,4	script	Nemuk#ein	4_M_EINMAN,{
 	mes "What do you think ";
 	mes "of Einbech?";
 	next;
-	switch(select("It's fine.:It looks tough to live here.")) {
+	switch(select("It's fine.", "It looks tough to live here.")) {
 	case 1:
 		mes "[Nemuk]";
 		mes "Huh...?";
@@ -218,7 +218,7 @@ einbech,39,215,5	script	Train Station Staff#ein3	4_M_EIN_SOLDIER,{
 	mes "200 zeny. Would";
 	mes "you like to ride?";
 	next;
-	switch(select("Yes.:No.")) {
+	switch(select("Yes.", "No.")) {
 	case 1:
 		if (Zeny > 199) {
 			mes "[Staff]";
@@ -520,7 +520,7 @@ einbech,46,107,6	script	Shena#ein::EinMonsters	4_F_EINOLD,{
 	mes "but I'm surprised that elder";
 	mes "people would know so much~";
 	next;
-	switch(select("What are you guys talking about?:Pass on by")) {
+	switch(select("What are you guys talking about?", "Pass on by")) {
 	case 1:
 		mes "[Shena]";
 		mes "Oh? Well, well!";
@@ -572,7 +572,7 @@ einbech,46,107,6	script	Shena#ein::EinMonsters	4_F_EINOLD,{
 			next;
 		}
 		while(1) {
-			switch(select("Metalling:Mineral:Pit Man:Old Stove:Quit")) {
+			switch(select("Metalling", "Mineral", "Pit Man", "Old Stove", "Quit")) {
 			case 1:
 				mes "[Shena]";
 				mes "Well, the Metallings";
@@ -676,7 +676,7 @@ einbech,46,107,6	script	Shena#ein::EinMonsters	4_F_EINOLD,{
 				mes "It's just an evil,";
 				mes "man-eating stove.";
 				next;
-				switch(select("...That's it?:H-horrifying!")) {
+				switch(select("...That's it?", "H-horrifying!")) {
 				case 1:
 					mes "[Shena]";
 					mes "Now, you know the importance";
@@ -773,14 +773,14 @@ einbech,148,242,5	script	Jung#ein	4_M_EINMAN,{
 	mes "the monsters in that place so";
 	mes "that you'll be better prepared.";
 	next;
-	switch(select("Sure, why not?:No, thanks.")) {
+	switch(select("Sure, why not?", "No, thanks.")) {
 	case 1:
 		mes "[Jung]";
 		mes "Let's see. Ah, the monsters that are unique to the Mine Dungeon";
 		mes "are Noxious, Venomous, Pollcellio and Obsidian. Which one do you";
 		mes "want to know more about?";
 		next;
-		switch(select("Noxious and Venomous:Pollcellio:Obsidian")) {
+		switch(select("Noxious and Venomous", "Pollcellio", "Obsidian")) {
 		case 1:
 			mes "[Jung]";
 			mes "You know, no one seems";
@@ -905,7 +905,7 @@ einbech,148,246,5	script	Franz#ein	4_M_REPAIR,{
 	mes "the Mine Dungeon or the fields";
 	mes "around here? Let's chat for a bit and maybe you'll learn something.";
 	next;
-	switch(select("Okay, fine.:No, thanks.")) {
+	switch(select("Okay, fine.", "No, thanks.")) {
 	case 1:
 		mes "[Franz]";
 		mes "Ooh, have you heard";
@@ -915,7 +915,7 @@ einbech,148,246,5	script	Franz#ein	4_M_REPAIR,{
 		mes "Which would you like to";
 		mes "know more about?";
 		next;
-		switch(select("Creature of Mine Dungeon:Town Incident")) {
+		switch(select("Creature of Mine Dungeon", "Town Incident")) {
 		case 1:
 			mes "[Franz]";
 			mes "The creature I'm talking about is Ungoliant, which also called the Master of the Caves around here.";

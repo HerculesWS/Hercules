@@ -131,7 +131,7 @@ yuno,129,156,3	script	Chainheart	4_M_DOCTOR,{
 	} else if (job__mechanic == 2) {
 		mes "I think I've done all the explanations, is there anything else you want to know?";
 		next;
-		switch(select("I want to know more.:Nothing.")) {
+		switch(select("I want to know more.", "Nothing.")) {
 		case 1:
 			mes "[Chainheart]";
 			mes "Um..? You want to know more about magic machinery. Is that it?";
@@ -342,7 +342,7 @@ jupe_cave,37,55,5	script	Scholar#Mechanic	4_M_ALCHE_D,{
 		mes "to go to the midway point";
 		mes "at Juperos?";
 		next;
-		switch(select("I am ready!:Not yet")) {
+		switch(select("I am ready!", "Not yet")) {
 		case 1:
 			mes "[Scholar]";
 			mes "Uh... you are acting so firmly that I regret a little that I haven't gone there.";
@@ -454,7 +454,7 @@ jupe_core2,149,273,3	script	Ghostfire#1	4_NFWISP,{
 		mes "If you focus on me,";
 		mes "you might get attacked.";
 		next;
-		if(select("Well then, later.:Focus.") == 1) close;
+		if(select("Well then, later.", "Focus.") == 1) close;
 		mes "[?]";
 		mes "I was once a human scholar.";
 		mes "I wanted to know the limitation of science that humankind didn't know of, so I learned a lot of things, studied,";
@@ -507,7 +507,7 @@ jupe_core2,53,75,3	script	Ghostfire#2	4_NFWISP,{
 		mes "If you focus on me,";
 		mes "you might get attacked.";
 		next;
-		if(select("Well then, later:Focus") == 1) close;
+		if(select("Well then, later", "Focus") == 1) close;
 		mes "[?]";
 		mes "When I had a body";
 		mes "I wanted to prove the";
@@ -569,7 +569,7 @@ jupe_core2,242,62,3	script	Ghostfire#3	4_NFWISP,{
 		mes "If you focus on me,";
 		mes "you might get attacked.";
 		next;
-		if(select("Well then, later:Focus") == 1) close;
+		if(select("Well then, later", "Focus") == 1) close;
 		mes "[?]";
 		mes "I wasn't satisfied with my success so I came back here time and time again.";
 		next;

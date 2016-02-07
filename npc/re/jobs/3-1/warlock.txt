@@ -47,7 +47,7 @@ OnTouch:
 			end;
 		}
 		next;
-		switch(select("Extend your hand.:Ignore it.")) {
+		switch(select("Extend your hand.", "Ignore it.")) {
 		case 1:
 			mes " - I extend my arm as a fierce sound resonates in my ear and a cool wave surrounds me - ";
 			close2;
@@ -61,11 +61,11 @@ OnTouch:
 	if (BaseLevel > 94 && (strnpcinfo(0) == "#distorted_space_2" || BaseJob == Job_Wizard)) {
 		mes " - There is a strange distortion here - ";
 		next;
-		switch(select("Search the area.:Ignore it.")) {
+		switch(select("Search the area.", "Ignore it.")) {
 		case 1:
 			mes " - There appears to be nothing here. But I can definitely feel something around here... - ";
 			next;
-			switch(select("Extend arm.:Leave it alone.")) {
+			switch(select("Extend arm.", "Leave it alone.")) {
 			case 1:
 				mes " - I extend my arm as a fierce sound resonates in my ear and a cool wave surrounds me - ";
 				close2;
@@ -174,7 +174,7 @@ function	script	F_Warlock	{
 			mes "[Master Egnoloria]";
 			mes "If you dare to face death, you can try to become one.";
 			next;
-			switch(select("What do I need to do?:Cancel.")) {
+			switch(select("What do I need to do?", "Cancel.")) {
 			case 1:
 				mes "[Master Egnoloria]";
 				mes "Are you serious?";
@@ -229,7 +229,7 @@ spl_in02,77,107,5	script	Assistant#Warlock1	4_M_FAIRYKID5,{
 		mes "Can you imagine how severely I was scolded by my master?!";
 		mes "If you have any business with me, just go away!";
 		next;
-		switch(select("Leave.:Stay.")) {
+		switch(select("Leave.", "Stay.")) {
 		case 1:
 			mes "[Yoop]";
 			mes "Leave me alone...!";
@@ -346,7 +346,7 @@ spl_in02,60,231,5	script	Yoop#Warlock	4_M_FAIRYKID5,{
 	} else if (job_wl == 4) {
 		mes "You're back?";
 		next;
-		switch(select("I brought the materials.:I've lost the Magical Stones.:Nothing.")) {
+		switch(select("I brought the materials.", "I've lost the Magical Stones.", "Nothing.")) {
 		case 1:
 			mes "[Yoop]";
 			if (countitem(Glittering_Crystal) == 0 || countitem(Peice_Of_Great_Bradium) == 0) {
@@ -401,7 +401,7 @@ spl_in02,60,231,5	script	Yoop#Warlock	4_M_FAIRYKID5,{
 			mes "[Yoop]";
 			mes "Please check whether you misplaced it or if you already have it equipped.";
 			next;
-			switch(select("I found it.:Nah.")) {
+			switch(select("I found it.", "Nah.")) {
 			case 1:
 				mes "[Yoop]";
 				mes "Don't tease me!";
@@ -410,7 +410,7 @@ spl_in02,60,231,5	script	Yoop#Warlock	4_M_FAIRYKID5,{
 			case 2:
 				if ((isequipped(2796) == 0 && countitem(Magical_Stone) == 0) || (isequipped(2797) == 0 && countitem(Magical_Stone_) == 0)) {
 					if (countitem(Crystal_Jewel__) > 0) {
-						switch(select("Give 3 carat diamond.:Just quit it.")) {
+						switch(select("Give 3 carat diamond.", "Just quit it.")) {
 						case 1:
 							mes "[Yoop]";
 							mes "I will overlook your fault.";
@@ -570,7 +570,7 @@ spl_in02,78,110,5	script	Assistant#Warlock3	4_F_FAIRYKID2,{
 		default: mes "Please be quiet while my master is meditating."; break;
 	}
 	next;
-	switch(select("Leave:Stay")) {
+	switch(select("Leave", "Stay")) {
 	case 1:
 		mes "[Assistant]";
 		mes "Then be careful.";
@@ -592,7 +592,7 @@ spl_in02,80,108,5	script	Guild Master#Warlock	4_F_FAIRY1,{
 		mes "[Master Egnoloria]";
 		mes "Do you have something to ask me?";
 		next;
-		switch(select("How can I be a Warlock?:Cancel.")) {
+		switch(select("How can I be a Warlock?", "Cancel.")) {
 		case 1:
 			mes "[Master Egnoloria]";
 			mes "Are you serious?";
@@ -741,7 +741,7 @@ job3_war01,29,25,0	script	Ebein#WRR	4_F_FAIRYKID2,{
 	mes "[Ebein]";
 	mes "If there're others inside the room, you just need to wait for a while.";
 	next;
-	switch(select("Go to the waiting room.:Go outside.")) {
+	switch(select("Go to the waiting room.", "Go outside.")) {
 	case 1:
 		mes "[Ebein]";
 		mes "Then please enter the room yourself.";
@@ -1072,7 +1072,7 @@ OnTimer6000:
 
 job3_war01,1,2,0	script	Button Girl#wl	1_F_01,{
 	callfunc "F_GM_NPC";
-	switch(select("Open Arena:Close Arena:Open the Chamber of Magic:Close the Chamber of Magic:Hollow Stone On:Hollow Stone Off:Cancel")) {
+	switch(select("Open Arena", "Close Arena", "Open the Chamber of Magic", "Close the Chamber of Magic", "Hollow Stone On", "Hollow Stone Off", "Cancel")) {
 	case 1:
 		mes "Opening the Arena.";
 		donpcevent "The chamber of magic#1::OnEnable";

@@ -53,7 +53,7 @@ prontera,164,174,4	script	Trader#Val09	1_M_MERCHANT,{
 	mes "It's the perfect dessert and the perfect gift for loved ones.";
 	mes "High-quality, traditional homemade chocolate only 5000z each!";
 	next;
-	switch(select("I'll take it, please!:I want to wrap the chocolate!:End trading.")) {
+	switch(select("I'll take it, please!", "I want to wrap the chocolate!", "End trading.")) {
 		case 1:
 			mes "[Marco Bassinio]";
 			mes "Ahaha, my dear.";
@@ -188,7 +188,7 @@ prontera,147,171,5	script	Packs Trader#Val09	1_M_MERCHANT,{
 		mes "[Packs Trader]";
 		mes "Do you have something to buy?";
 		next;
-		switch(select("Packing Paper:Packing Ribbon:Box:Cancel.")) {
+		switch(select("Packing Paper", "Packing Ribbon", "Box", "Cancel.")) {
 			case 1:
 				mes "[Packs Trader]";
 				mes "It's 200 zeny for 1 Packing Paper.";
@@ -373,7 +373,7 @@ prontera,154,185,5	script	Event Ring Maker#Val09	4_F_KAFRA7,{
 	mes "By the way, It costs 1,000 zeny.";
 	mes "Would you like to make one?";
 	next;
-	if(select("Hmm.. I gotta give it a second thought...:Sure.") == 1) {
+	if(select("Hmm.. I gotta give it a second thought...", "Sure.") == 1) {
 		mes "[Event Ring Maker]";
 		mes "Alrighty!";
 		mes "You can't put a rush on such a thing like this.";
@@ -434,7 +434,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 		mes "[Valentine Vote Manager]";
 		mes "So, what do you want?";
 		next;
-		switch(select("Please register my rings.:Please count my votes.:Nothing, for now.")) {
+		switch(select("Please register my rings.", "Please count my votes.", "Nothing, for now.")) {
 			case 1:
 				mes "[Valentine Vote Manager]";
 				mes "Please tell me how many rings you want to register.";
@@ -555,7 +555,7 @@ prt_castle,42,35,3	script	Dessert Manager#Val09	1_M_01,{
 	mes "This little trifling space felt like heaven the minute you walked in!";
 	mes "Can I help you with anything, if it's alright?";
 	next;
-	if(select("Please, make me some chocolate.:Don't bother. I'm just passing by.") == 2) {
+	if(select("Please, make me some chocolate.", "Don't bother. I'm just passing by.") == 2) {
 		mes "[Charles Orleans]";
 		mes "Ahhh, this is so heartbreaking.";
 		mes "How could you say that?";

@@ -83,7 +83,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			mes "Though, I'm afraid I can't be";
 			mes "of very much help to you.";
 			next;
-			if (select("What are you working on?:I don't need anything, thanks.") == 1) {
+			if (select("What are you working on?", "I don't need anything, thanks.") == 1) {
 				mes "[Pisruik]";
 				mes "Well, I'm not sure if I can";
 				mes "give you all of the details.";
@@ -154,7 +154,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			mes "And... And... What else";
 			mes "did I ask you to get?";
 			next;
-			switch(select("5 Yellow Gemstones:5 Blue Gemstones:5 Red Gemstones")) {
+			switch(select("5 Yellow Gemstones", "5 Blue Gemstones", "5 Red Gemstones")) {
 			case 1:
 				mes "[Pisruik]";
 				mes "Right, right!";
@@ -163,7 +163,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "I'm sure there was more,";
 				mes "but what I can't recall exactly... ";
 				next;
-				if (select("10 Hearts of Mermaid:10 Large Jellopies") == 1) {
+				if (select("10 Hearts of Mermaid", "10 Large Jellopies") == 1) {
 					mes "[Pisruik]";
 					mes "Of course!";
 					mes "10 Hearts of Mermaid!";
@@ -171,7 +171,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 					mes "And then, the last thing";
 					mes "I asked you for was, um...";
 					next;
-					if (select("10 Frill:10 Moth Dust") == 1) {
+					if (select("10 Frill", "10 Moth Dust") == 1) {
 						mes "[Pisruik]";
 						mes "No, that can't have";
 						mes "been it. I already have";
@@ -185,7 +185,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 					mes "So did you remember";
 					mes "to bring me everything?";
 					next;
-					if (select("No.:Yes!") == 1) {
+					if (select("No.", "Yes!") == 1) {
 						if (rand(1,5) == 1) {
 							mes "[Pisruik]";
 							mes "You didn't...?";
@@ -226,7 +226,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 						mes "I'll be making with the";
 						mes "materials you've brought.";
 						next;
-						switch(select("Medicine?:Bomb?")) {
+						switch(select("Medicine?", "Bomb?")) {
 						case 1:
 							ALCHE_SK = 4;
 							mes "[Pisruik]";
@@ -277,7 +277,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 						mes "could bring them to me, it'd";
 						mes "really help me out a lot.";
 						next;
-						switch(select("Nope, I'm too busy!:Sure, I'll help you.:What's in it for me?")) {
+						switch(select("Nope, I'm too busy!", "Sure, I'll help you.", "What's in it for me?")) {
 						case 1:
 							ALCHE_SK = 5;
 							mes "[Pisruik]";
@@ -339,7 +339,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 							mes "you help me, I'll give you";
 							mes "the results of my research.";
 							next;
-							if (select("Nah, I'm too busy.:Alright, I'll help you.") == 1) {
+							if (select("Nah, I'm too busy.", "Alright, I'll help you.") == 1) {
 								ALCHE_SK = 5;
 								mes "[Pisruik]";
 								mes "I guess I'll have to gather";
@@ -469,7 +469,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			mes "I'm developing? I mean,";
 			mes "that's why you came, right?";
 			next;
-			if (select("No, thanks.:Yes, please.") == 1) {
+			if (select("No, thanks.", "Yes, please.") == 1) {
 				mes "[Pisruik]";
 				mes "Alright then.";
 				mes "Really? Well, I'm";
@@ -517,7 +517,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			mes "could bring them to me, it'd";
 			mes "really help me out a lot.";
 			next;
-			switch(select("Nope, I'm too busy!:Sure, I'll help you.:What's in it for me?")) {
+			switch(select("Nope, I'm too busy!", "Sure, I'll help you.", "What's in it for me?")) {
 			case 1:
 				ALCHE_SK = 5;
 				mes "[Pisruik]";
@@ -579,7 +579,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 				mes "you help me, I'll give you";
 				mes "the results of my research.";
 				next;
-				if (select("Nah, I'm too busy.:Alright, I'll help you.") == 1) {
+				if (select("Nah, I'm too busy.", "Alright, I'll help you.") == 1) {
 					ALCHE_SK = 5;
 					mes "[Pisruik]";
 					mes "I guess I'll have to gather";
@@ -643,7 +643,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			mes "get going and let";
 			mes "me do my work.";
 			next;
-			if (select("Alright, sorry to bother you.:Can I still help you?") == 1) {
+			if (select("Alright, sorry to bother you.", "Can I still help you?") == 1) {
 				mes "[Pisruik]";
 				mes "Yeah, whatever.";
 				mes "Just hurry up and leave";
@@ -885,7 +885,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			mes "even if he looks much less";
 			mes "dorky without them.^000000";
 			next;
-			if (select("Let him try a pair of your glasses:Don't give him anything") == 1) {
+			if (select("Let him try a pair of your glasses", "Don't give him anything") == 1) {
 				if (countitem(Spinning_Eyes) > 0) {
 					delitem Spinning_Eyes,1;
 					ALCHE_SK = 10;
@@ -928,7 +928,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 					mes "type of potion by making use of";
 					mes "the knowledge I can teach you.";
 					next;
-					if (select("Sure!:No, thanks.") == 1) {
+					if (select("Sure!", "No, thanks.") == 1) {
 						mes "[Pisruik]";
 						mes "Great, "+ strcharinfo(0) +"!";
 						mes "I know I can trust you";
@@ -1015,7 +1015,7 @@ yuno_in04,33,108,4	script	Pisruik#qsk_al	4_M_ALCHE_D,{
 			mes "of the research I've''";
 			mes "been conducting?";
 			next;
-			if (select("Yes!:No, thanks.") == 1) {
+			if (select("Yes!", "No, thanks.") == 1) {
 				mes "[Pisruik]";
 				mes "Great, "+ strcharinfo(0) +"!";
 				mes "I know I can trust you";
@@ -1549,7 +1549,7 @@ lhz_in01,224,140,3	script	Kellasus#qsk_al	1_M_LIBRARYMASTER,{
 		mes "field of Alchemy, I can";
 		mes "give you some advice if you're stumped by a particular problem...";
 		next;
-		if (select("Teach me the Homunculus Skills.:No, nothing.") == 1) {
+		if (select("Teach me the Homunculus Skills.", "No, nothing.") == 1) {
 			mes "[" + strcharinfo(0) + "]";
 			mes "I want you to";
 			mes "teach me how to";

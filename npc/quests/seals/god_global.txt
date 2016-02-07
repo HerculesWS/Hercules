@@ -43,7 +43,7 @@ sec_in02,15,170,0	script	Golbal var	4_F_CHNDRESS3,{
 		mes "[Check]";
 		mes "Please choose a menu.";
 		next;
-		switch(select("Now:No.1:No.2:No.3:No.4:Reset:god_sl_1:god_eremes:god_brising:god_mjo_0:god_mjo_1:god_mjo_2:god_mjo_3:god_mjo_4")) {
+		switch(select("Now", "No.1", "No.2", "No.3", "No.4", "Reset", "god_sl_1", "god_eremes", "god_brising", "god_mjo_0", "god_mjo_1", "god_mjo_2", "god_mjo_3", "god_mjo_4")) {
 		case 1:
 			mes "^0000FF$God1^000000 = ^FF0000" + $God1 + "^000000.";
 			mes "^0000FF$God2^000000 = ^FF0000" + $God2 + "^000000.";

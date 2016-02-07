@@ -318,7 +318,7 @@ lighthalzen,230,182,4	script	Klaubis#zen3	4_M_LGTGRAND,{
 	mes "but it can be a little too";
 	mes "quiet and uneventful here.";
 	next;
-	switch(select("Have you lived in here long?:I agree.:Have you heard about the serial killer?")) {
+	switch(select("Have you lived in here long?", "I agree.", "Have you heard about the serial killer?")) {
 	case 1:
 		mes "[Klaubis]";
 		mes "Yes, our family has";
@@ -553,7 +553,7 @@ lighthalzen,182,102,3	script	Lucius#zen5	4_M_LGTGRAND,{
 		mes "make a donation";
 		mes "to help the hungry?";
 		next;
-		if (select("Sure.:No, thanks.") == 1) {
+		if (select("Sure.", "No, thanks.") == 1) {
 			mes "[Lucius]";
 			mes "Now, you can donate 1 to";
 			mes "30,000 zeny that will be used";
@@ -923,7 +923,7 @@ lighthalzen,123,212,4	script	Merpi#zen2	8_F_GIRL,{
 	mes "If you have any questions,";
 	mes "feel free to ask me anything.";
 	next;
-	switch(select("Well, I have nothing to ask...:Any news or rumors?:I like laundry too.")) {
+	switch(select("Well, I have nothing to ask...", "Any news or rumors?", "I like laundry too.")) {
 	case 1:
 		mes "[Merpi]";
 		mes "Oh, really?";
@@ -1038,7 +1038,7 @@ OnTouch:
 	mes "Would you give me";
 	mes "some money?";
 	next;
-	if (select("Give him some money.:Ignore him.") == 1) {
+	if (select("Give him some money.", "Ignore him.") == 1) {
 		if (Zeny < 50) {
 			mes "[Beggar]";
 			mes "I appreciate your";
@@ -1441,7 +1441,7 @@ lhz_in01,125,40,3	script	Dowbow Ryuei#ryusei	4_M_THAIONGBAK,{
 	mes "you like better? ''Uber-Cool''";
 	mes "or ''Reality?'' Pick one~";
 	next;
-	if (select("Uber-Cool:Reality") == 1) {
+	if (select("Uber-Cool", "Reality") == 1) {
 		mes "[Dowbow Ryuei]";
 		mes "Oh yeah? Me too!";
 		mes "Yeah, we got the same";
@@ -1822,7 +1822,7 @@ lhz_in01,35,226,5	script	Rekenber Guard#li01	4_M_LGTGUARD2,{
 	mes "area! Please show";
 	mes "some ID immediately!";
 	next;
-	if (select("ID?:Cancel") == 1) {
+	if (select("ID?", "Cancel") == 1) {
 		mes "[Rekenber Guard]";
 		mes "I don't know how you";
 		mes "adventurers do things in";
@@ -1950,7 +1950,7 @@ OnTouch:
 		mes "[Rekenber Guard]";
 		mes "......................";
 		next;
-		if (select("Nice day, huh?:Cancel") == 1) {
+		if (select("Nice day, huh?", "Cancel") == 1) {
 			mes "[Rekenber Guard]";
 			mes "...";
 			emotion e_an;
@@ -1975,7 +1975,7 @@ lhz_in01,25,141,4	script	Regenschirm Guard	4_M_LGTGUARD,{
 		mes "Do you wish to";
 		mes "go underground?";
 		next;
-		if(select("Yes:No")==1){
+		if(select("Yes", "No")==1){
 			if(isequipped(2657)){
 				warp "lhz_dun01",150,288;
 				end;
@@ -2776,7 +2776,7 @@ lighthalzen,192,63,4	script	Sergei#zen1	4_F_03,{
 	mes "over there. Would you";
 	mes "like me to tell you?";
 	next;
-	if (select("Sure.:No, thanks.") == 1) {
+	if (select("Sure.", "No, thanks.") == 1) {
 		mes "[Sergei]";
 		mes "This previous owner of";
 		mes "this Weapon Shop was";
@@ -2853,7 +2853,7 @@ lighthalzen,40,107,4	script	Vergil#zen4	4_M_LGTMAN,{
 	mes "I just want to ditch work,";
 	mes "run outside and work out.";
 	next;
-	switch(select("Where do you want to go?:But shouldn't you go to work?:Have you heard about the serial killer?")) {
+	switch(select("Where do you want to go?", "But shouldn't you go to work?", "Have you heard about the serial killer?")) {
 	case 1:
 		mes "[Vergil]";
 		mes "Well, those guys in";
@@ -3022,7 +3022,7 @@ lhz_in02,36,274,4	script	Cool Event Staff#Saera	4_F_ZONDAGIRL,{
 	mes "of Cool Event Corporation.";
 	mes "How may I help you today?";
 	next;
-	switch(select("Temporary headquarters?:Voting:No, thanks.")) {
+	switch(select("Temporary headquarters?", "Voting", "No, thanks.")) {
 	case 1:
 		mes "[Saera]";
 		mes "Our headquarters building";

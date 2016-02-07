@@ -69,7 +69,7 @@ valkyrie,53,42,3	script	Champion#Valkyrie	1_M_HOF,{
 		mes "Would you like";
 		mes "to become a Champion?";
 		next;
-		if (select("No.:Yes.") == 1) {
+		if (select("No.", "Yes.") == 1) {
 			mes "[Champion]";
 			mes "When you're ready,";
 			mes "feel free to come back.";

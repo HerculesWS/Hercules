@@ -75,7 +75,7 @@ valkyrie,44,58,5	script	Assassin Cross#Valkyrie	4_F_JOB_ASSASSIN,{
 		mes "Will you become";
 		mes "an Assassin Cross?";
 		next;
-		if (select("No.:Yes.") == 1) {
+		if (select("No.", "Yes.") == 1) {
 			mes "[Assassin Cross]";
 			mes "When you are";
 			mes "ready, come back.";

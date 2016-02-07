@@ -47,13 +47,13 @@ ayothaya,203,169,3	script	Noi#ayo	4_F_THAIGIRL,{
 	mes "Please feel free";
 	mes "to take a look around.";
 	next;
-	switch(select("Building Locations.:Remove marks from mini-map.:Cancel.")) {
+	switch(select("Building Locations.", "Remove marks from mini-map.", "Cancel.")) {
 	case 1:
 		mes "[Noi]";
 		mes "Where would";
 		mes "you like to visit?";
 		next;
-		switch(select("Weapon Shop:Tool Shop:Tavern:Shrine:Fishing Spot:Cancel")) {
+		switch(select("Weapon Shop", "Tool Shop", "Tavern", "Shrine", "Fishing Spot", "Cancel")) {
 		case 1:
 			mes "[Noi]";
 			mes "At our Weapon Shop,";

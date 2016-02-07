@@ -108,7 +108,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 			setarray .@skill[0],1018,1017,1019,1008;
 			setarray .@skill$[0],"Fire","Earth","Wind","Water";
 			while(1) {
-				.@i = select("Fire Elemental Change:Earth Elemental Change:Wind Elemental Change:Water Elemental Change")-1;
+				.@i = select("Fire Elemental Change", "Earth Elemental Change", "Wind Elemental Change", "Water Elemental Change")-1;
 				if(getskilllv(.@ReqSkill[.@i]) == 0) {
 					mes "[Mishuna]";
 					mes "I'm sorry, but you haven't";
@@ -225,7 +225,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		mes "of it. So, do you think you're";
 		mes "ready to learn these skills?";
 		next;
-		if(select("Maybe later.:Yes, I am.") == 1) {
+		if(select("Maybe later.", "Yes, I am.") == 1) {
 			mes "[Mishuna]";
 			mes "Ah, you must be busy right";
 			mes "now. No problem, just come";
@@ -383,7 +383,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		setarray .@ReqItem$[0],"Red Bloods","Green Lives","Wind of Verdure","Crystal Blues";
 		setarray .@skill$[0],"Fire","Earth","Wind","Water";
 		while(1) {
-			.@i = select("Fire Elemental Change:Earth Elemental Change:Wind Elemental Change:Water Elemental Change")-1;
+			.@i = select("Fire Elemental Change", "Earth Elemental Change", "Wind Elemental Change", "Water Elemental Change")-1;
 			if(getskilllv(.@ReqSkill[.@i]) == 0) {
 				mes "[Mishuna]";
 				mes "I'm sorry, but you have not";

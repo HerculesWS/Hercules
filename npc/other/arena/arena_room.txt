@@ -43,7 +43,7 @@ arena_room,94,93,5	script	Vendigos	4W_M_01,{
 	mes "If you have any questions, feel free to ask me.";
 	next;
 	while(1) {
-		switch(select("How to challenge:About Arena Points:My Current Arena Points:Cancel")) {
+		switch(select("How to challenge", "About Arena Points", "My Current Arena Points", "Cancel")) {
 		case 1:
 			mes "[Vendigos]";
 			mes "There are two different kinds of arena mode such as ^3131FFPlayer Mode^000000 and ^3131FFParty Mode^000000.";
@@ -129,7 +129,7 @@ arena_room,105,82,5	script	Arena Record Staff	1_M_LIBRARYMASTER,{
 	mes "Would you like to check the top record players in each stage?";
 	mes "If so, please choose a menu below.";
 	next;
-	switch(select("Lv 50 Stage:Lv 60 Stage:Lv 70 Stage:Lv 80 Stage:Party Stage")) {
+	switch(select("Lv 50 Stage", "Lv 60 Stage", "Lv 70 Stage", "Lv 80 Stage", "Party Stage")) {
 	case 1:
 		mes "[Owen Kheuv]";
 		mes "Currently the top player of the arena Lv 50 stage is ^3131FF "+$arena_50topn$+"^000000, the top record is ^3131FF"+$top_50min+"^000000 minutes ^3131FF"+$top_50sec+"^000000 seconds.";
@@ -423,9 +423,9 @@ sec_in02,72,180,3	script	Arena Manager#arena	4_NFWISP,{
 		mes "[Arena Manager]";
 		mes "Select an option.";
 		next;
-		switch(select("Restart arena:Rearrange the Ranking Time")) {
+		switch(select("Restart arena", "Rearrange the Ranking Time")) {
 		case 1:
-			switch(select("Lv 50:Lv 60:Lv 70:Lv 80:Party Mode")) {
+			switch(select("Lv 50", "Lv 60", "Lv 70", "Lv 80", "Party Mode")) {
 			case 1:
 				.@arena = 50;
 				break;
@@ -444,7 +444,7 @@ sec_in02,72,180,3	script	Arena Manager#arena	4_NFWISP,{
 				mes "You have chosen to restart party arena stage.";
 				mes "Do you wish to proceed?";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					donpcevent "Ponox::OnStart";
 					mes "[Arena Manager]";
@@ -462,7 +462,7 @@ sec_in02,72,180,3	script	Arena Manager#arena	4_NFWISP,{
 			mes "You have chosen to restart Lv "+.@arena+" arena stage.";
 			mes "Do you wish to proceed?";
 			next;
-			switch(select("Yes:No")) {
+			switch(select("Yes", "No")) {
 			case 1:
 				donpcevent "Lv"+.@arena+" Waiting Room::OnStart";
 				mes "[Arena Manager]";
@@ -481,13 +481,13 @@ sec_in02,72,180,3	script	Arena Manager#arena	4_NFWISP,{
 			mes "[Arena Manager]";
 			mes "Are you sure you want to rearrange the ranking time?";
 			next;
-			switch(select("No:Yes")) {
+			switch(select("No", "Yes")) {
 			case 1:
 				mes "[Arena Manager]";
 				mes "Phew~ :)";
 				close;
 			case 2:
-				switch(select("Lv 50:Lv 60:Lv 70:Lv 80:Party Mode")) {
+				switch(select("Lv 50", "Lv 60", "Lv 70", "Lv 80", "Party Mode")) {
 				case 1:
 					.@min$ = "$top50min";
 					.@sec$ = "$top50sec";
@@ -546,7 +546,7 @@ sec_in02,79,171,3	script	Reward Manager#arena	4_NFWISP,{
 		mes "[Reward Manager]";
 		mes "You have chosen to hide the teleporter NPC.";
 		next;
-		switch(select("Cancel:Yes:Turn on")) {
+		switch(select("Cancel", "Yes", "Turn on")) {
 		case 1:
 			mes "[Reward Manager]";
 			mes "You have canceled the command.";
@@ -570,7 +570,7 @@ arena_room,105,93,5	script	Teleporter#arena	1_M_JOBTESTER,{
 	mes "I can move you to the reward arena!";
 	mes "Would you like to go there?";
 	next;
-	switch(select("Yes:No.")) {
+	switch(select("Yes", "No.")) {
 	case 1:
 		mes "[Teleporter]";
 		mes "Let me guide you.";
@@ -601,12 +601,12 @@ prt_are_in,98,14,3	script	Givu#arena	4_F_JOB_KNIGHT,{
 	mes "You can exchange your arena points with various stuffs.";
 	mes "Please choose a menu below.";
 	next;
-	switch(select("Exchange with Consumable items:Exchange with EXP points:Take a Souvenir Picture:Check Current Arena Points")) {
+	switch(select("Exchange with Consumable items", "Exchange with EXP points", "Take a Souvenir Picture", "Check Current Arena Points")) {
 	case 1:
 		mes "[Givu]";
 		mes "What consumable item do you wish to exchange?";
 		next;
-		switch(select("Honey:Royal Jelly:Mastela Fruit:Condensed White Potion:Anodyne:Yggdrasil Seed:Yggdrasilberry:Old Blue Box:Old Purple Box:Old Card Album")) {
+		switch(select("Honey", "Royal Jelly", "Mastela Fruit", "Condensed White Potion", "Anodyne", "Yggdrasil Seed", "Yggdrasilberry", "Old Blue Box", "Old Purple Box", "Old Card Album")) {
 			case 1: callfunc "Func_Are_Rew",518,5,20;
 			case 2: callfunc "Func_Are_Rew",526,5,30;
 			case 3: callfunc "Func_Are_Rew",522,5,30;
@@ -623,7 +623,7 @@ prt_are_in,98,14,3	script	Givu#arena	4_F_JOB_KNIGHT,{
 		mes "Would you like to exchange your arena points with experience points?";
 		mes "It requires 40 arena points.";
 		next;
-		switch(select("Cancel:Yes")) {
+		switch(select("Cancel", "Yes")) {
 		case 1:
 			mes "[Givu]";
 			mes "You have canceled your request.";
@@ -655,7 +655,7 @@ prt_are_in,98,14,3	script	Givu#arena	4_F_JOB_KNIGHT,{
 		mes "[Givu]";
 		mes "You have chosen a souvenir picture services.";
 		next;
-		switch(select("About souvenir Picture Services:Take a picture")) {
+		switch(select("About souvenir Picture Services", "Take a picture")) {
 		case 1:
 			mes "[Givu]";
 			mes "Do you see stairs at the right side of me?";
@@ -679,7 +679,7 @@ prt_are_in,98,14,3	script	Givu#arena	4_F_JOB_KNIGHT,{
 			mes "Please choose an NPC at below.";
 			mes "The NPC will appear for 1 minute and this service requires 10 arena points.";
 			next;
-			switch(select("Baphomet:Dark Lord:Doppelganger:Eddga:Dracula:Samurai:Stormy Knight:Phreeoni:Girl:Valkyrie")) {
+			switch(select("Baphomet", "Dark Lord", "Doppelganger", "Eddga", "Dracula", "Samurai", "Stormy Knight", "Phreeoni", "Girl", "Valkyrie")) {
 				case 1: $@arena_picture_id = 1039; break;
 				case 2: $@arena_picture_id = 1272; break;
 				case 3: $@arena_picture_id = 1046; break;
@@ -705,7 +705,7 @@ prt_are_in,98,14,3	script	Givu#arena	4_F_JOB_KNIGHT,{
 			else
 				mes "Would you like to take a picture with a "+getmonsterinfo($@arena_picture_id,0)+"?";
 			next;
-			switch(select("Yes:No")) {
+			switch(select("Yes", "No")) {
 			case 1:
 				arena_point -= 10;
 				$@arena_picture = 1;
@@ -979,7 +979,7 @@ sec_in02,72,171,3	script	Picture Manager#arena	4_NFWISP,{
 		mes "[Picture Manager]";
 		mes "Would you like to reset Picture Reward variable to 0?";
 		next;
-		switch(select("Cancel:Yes")) {
+		switch(select("Cancel", "Yes")) {
 		case 1:
 			mes "[Picture Manager]";
 			mes "You have canceled your request.";

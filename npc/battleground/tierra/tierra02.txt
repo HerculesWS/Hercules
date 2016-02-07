@@ -319,7 +319,7 @@ bat_a02,185,270,1	script	Guillaume Blacksmith#a02	4_M_REPAIR,{
 		mes "We can repair the Barricade with ^3131FF50 Stones, 3 Sinew of Bear, 500 Metal Fragments, 30 Rough Elunium and 100 Gold.^000000";
 		mes "We have it all except for the 50 Stones!";
 		next;
-		switch(select("Repair.:Leave it.")) {
+		switch(select("Repair.", "Leave it.")) {
 		case 1:
 			if (countitem(Stone) > 49) {
 				mes "[Guillaume Blacksmith]";
@@ -403,7 +403,7 @@ bat_a02,170,121,5	script	Croix Blacksmith#bat_a02	4_M_REPAIR,{
 		mes "We can repair the Barricade with ^3131FF50 Stones, 3 Sinew of Bear, 500 Metal Fragments, 30 Rough Elunium and 100 Gold.^000000";
 		mes "We have it all except for the 50 Stones!";
 		next;
-		switch(select("Repair.:Leave it.")) {
+		switch(select("Repair.", "Leave it.")) {
 		case 1:
 			if (countitem(Stone) > 49) {
 				mes "[Croix Blacksmith]";
@@ -947,7 +947,7 @@ bat_a02,1,1,3	script	Release all#a02	4_DOG01,{
 	} else {
 		mes "May I help you?";
 		next;
-		switch(select("Release all.:Cancel.")) {
+		switch(select("Release all.", "Cancel.")) {
 		case 1:
 			mes "Bye.";
 			close2;

@@ -73,12 +73,12 @@ ma_scene01,174,179,4	script	Taho	4_M_DEWZATIMAN,{
 			mes "[Taho]";
 			mes "Are you the leader of the Bakonawa slayers? The road is not well so we have to go down the cliff with a rope, is that OK?";
 			next;
-			.@i = select("Please weave a rope.:Now I will go down.:Cancel.");
+			.@i = select("Please weave a rope.", "Now I will go down.", "Cancel.");
 		} else {
 			mes "[Taho]";
 			mes "You came for slaying Bakonawa. The leader of your party has to help me weaving the rope for going down.";
 			next;
-			.@i = select(":Now I will go down.:Cancel.");
+			.@i = select("", "Now I will go down.", "Cancel.");
 		}
 		switch(.@i) {
 		case 1:
@@ -148,7 +148,7 @@ sec_in02,26,26,4	script	Bakonawa's Rage	4_M_DEWZATIMAN,{
 		mes "[Taho]";
 		mes "Now I will make Bakonawa spring out from the lake.";
 		next;
-		switch(select("Hold on! I'm not ready yet!:Let's do it!")) {
+		switch(select("Hold on! I'm not ready yet!", "Let's do it!")) {
 		case 1:
 			mes "[Taho]";
 			mes "Oh... alright... tell me when you are ready.";
@@ -532,7 +532,7 @@ OnTimer10000:
 		mes "[Taho]";
 		mes "Are we going to try again?";
 		next;
-		switch(select("Hold on a sec!:Of course! We cannot stand back now!")) {
+		switch(select("Hold on a sec!", "Of course! We cannot stand back now!")) {
 		case 1:
 			mes "[Taho]";
 			mes "AWW... I almost brought him out.";

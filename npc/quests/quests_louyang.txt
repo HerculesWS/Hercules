@@ -466,7 +466,7 @@ lou_fild01,195,177,5	script	Jiu Lian Bu#1-1	4_M_CHN8GUEK,{
 		mes "Speaking of which, there's even";
 		mes "a place in Louyang that's just like that. Man, I hate that restaurant!";
 		next;
-		if (select("What restaurant?:Ignore him.") == 1) {
+		if (select("What restaurant?", "Ignore him.") == 1) {
 			mes "[Jiu Lian Bu]";
 			mes "West of Louyang, there's";
 			mes "a restaurant built on a pond. It's been around for a long time, selling food for ridiculous prices!";
@@ -503,7 +503,7 @@ lou_fild01,195,177,5	script	Jiu Lian Bu#1-1	4_M_CHN8GUEK,{
 			mes "[Jiu Lian Bu]";
 			mes "If you can steal some of the broth, I'll pay you back. So whaddya say?";
 			next;
-			if (select("I'll do it!:No, stealing is wrong.") == 1) {
+			if (select("I'll do it!", "No, stealing is wrong.") == 1) {
 				mes "[Jiu Lian Bu]";
 				mes "Grrrrreat!";
 				mes "I knew you'd";
@@ -586,7 +586,7 @@ lou_fild01,195,177,5	script	Jiu Lian Bu#1-1	4_M_CHN8GUEK,{
 		mes "Hey~";
 		mes "So how ya been, ya smooth criminal? You wanna visit that place again?";
 		next;
-		if (select("Sure, let's go~:Nah, maybe next time.") == 1) {
+		if (select("Sure, let's go~", "Nah, maybe next time.") == 1) {
 			mes "[Jiu Lian Bu]";
 			mes "Alright~";
 			mes "Let's get";
@@ -678,7 +678,7 @@ lou_fild01,175,173,3	script	Jiu Lian Bu#1-2	4_M_CHN8GUEK,{
 		mes "So...";
 		mes "Whaddya wanna do?";
 		next;
-		if (select("Shout.:Leave.") == 1) {
+		if (select("Shout.", "Leave.") == 1) {
 			mes "[Jiu Lian Bu]";
 			mes "Alright~!";
 			mes "Say it out loud!";
@@ -718,7 +718,7 @@ lou_in02,50,185,5	script	Pot#1	HIDDEN_NPC,{
 		mes "you find a large pot filled with dark, red liquid. What do you";
 		mes "want to do?^000000 ";
 		next;
-		if (select("Take the pot.:Look for another pot.") == 1) {
+		if (select("Take the pot.", "Look for another pot.") == 1) {
 			mes "^3131FFYou take a careful look around.";
 			mes "It wouldn't be wise to steal this now if anyone is watching.^000000";
 			next;
@@ -788,7 +788,7 @@ lou_in02,49,185,5	script	Pot#2	HIDDEN_NPC,{
 		mes "you find a large pot filled with dark, red liquid. What do you";
 		mes "want to do?^000000";
 		next;
-		if (select("Take the pot.:Look for another pot.") == 1) {
+		if (select("Take the pot.", "Look for another pot.") == 1) {
 			mes "^3131FFYou take a careful look around.";
 			mes "It wouldn't be wise to steal this now if anyone is watching.^000000";
 			next;
@@ -1140,7 +1140,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		mes "I can't leave the office...";
 		emotion e_swt2;
 		next;
-		if (select("I can help you.:What a shame!") == 1) {
+		if (select("I can help you.", "What a shame!") == 1) {
 			mes "[Hua Tuo]";
 			mes "Huh...?";
 			mes "Are...";
@@ -1149,7 +1149,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 			mes "[Hua Tuo]";
 			mes "This won't take much effort, but it may be too much to ask this of you, especially since we have just met.";
 			next;
-			if (select("If you feel burdened...:I don't mind, I'd be glad to help.") == 1) {
+			if (select("If you feel burdened...", "I don't mind, I'd be glad to help.") == 1) {
 				mes "[Hua Tuo]";
 				mes "Thank you so";
 				mes "much for saying that.";
@@ -1266,7 +1266,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		mes "I am asking you once more";
 		mes "as now I see that you are trustworthy. Of course, I will compensate you for your trouble.";
 		next;
-		if (select("I'm sorry, I can't help you.:No problem.") == 1) {
+		if (select("I'm sorry, I can't help you.", "No problem.") == 1) {
 			mes "[Hua Tuo]";
 			mes "Alright....";
 			mes "I understand.";
@@ -1385,7 +1385,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		mes "but may I ask you another favor?";
 		mes "I am asking for your help once more, since I know I can depend on you. Of course, I will compensate you for your trouble.";
 		next;
-		if (select("I'm sorry...:No problem.") == 1) {
+		if (select("I'm sorry...", "No problem.") == 1) {
 			mes "[Hua Tuo]";
 			mes "Alright....";
 			mes "I understand.";
@@ -1539,7 +1539,7 @@ lou_in02,248,166,2	script	Tool Shop Master#lou	4_M_CHNOLD,{
 		mes "you with anything?";
 		emotion e_what;
 		next;
-		if (select("I'm here to get something for the doctor...:I agree, the weather really is bad.") == 1) {
+		if (select("I'm here to get something for the doctor...", "I agree, the weather really is bad.") == 1) {
 			mes "[Wang Chuiyi]";
 			mes "Huh?";
 			mes "An errand for the doctor?";
@@ -1603,7 +1603,7 @@ lou_in02,201,166,4	script	Storage Keeper#lou	4_M_CHN8GUEK,{
 		mes "What, what are you doing here?";
 		mes "If you don't need anything, you better get a move on.";
 		next;
-		switch(select("Sorry about that.:It's hot, isn't it?:I'm on an errand for the doctor.")) {
+		switch(select("Sorry about that.", "It's hot, isn't it?", "I'm on an errand for the doctor.")) {
 		case 1:
 			mes "[Jiang Xiayou]";
 			mes "That's right!";
@@ -1632,7 +1632,7 @@ lou_in02,201,166,4	script	Storage Keeper#lou	4_M_CHN8GUEK,{
 			mes "out first? Don't worry, it's not so hard but it's pretty important for me. Once you help me out, I'll";
 			mes "get you what you need.";
 			next;
-			if (select("Um, what is it?:Sorry, I'm busy.") == 1) {
+			if (select("Um, what is it?", "Sorry, I'm busy.") == 1) {
 				mes "[Jiang Xiayou]";
 				mes "Cool, thanks. I have to go get";
 				mes "some official documents from";
@@ -1839,7 +1839,7 @@ lou_in02,210,47,0	script	City Hall Officer#lou	4_M_CHNSOLDIER,{
 		mes "Hm? A Rune-Midgardian?";
 		mes "Now, how may I help you?";
 		next;
-		if (select("I need a document.:I just dropped by.") == 1) {
+		if (select("I need a document.", "I just dropped by.") == 1) {
 			mes "[Jin Chiyuan]";
 			mes "Ah, you do?";
 			mes "Unfortunately, there are many people waiting in line to procure government forms, so it will take";
@@ -1849,7 +1849,7 @@ lou_in02,210,47,0	script	City Hall Officer#lou	4_M_CHNSOLDIER,{
 			mes "^333333*Whispers*";
 			mes "Well, there is a way that you can, shall we say, expediate our processing of your request...^000000";
 			next;
-			if (select("Huh? Come again?:A little zeny to cut the red tape, eh?") == 1) {
+			if (select("Huh? Come again?", "A little zeny to cut the red tape, eh?") == 1) {
 				mes "[Jin Chiyuan]";
 				mes "^666666*Ahem!*^000000 Nothing.";
 				mes "Nothing of importance. Now, I'm very busy, so if you would go fill the application over there...";
@@ -1988,7 +1988,7 @@ lou_in02,156,38,0	script	Studying Officer#lou	4_M_CHNMAN,{
 		mes "some documents and takes";
 		mes "no notice of you.^000000";
 		next;
-		if (select("Excuse me.:Pass him.") == 1) {
+		if (select("Excuse me.", "Pass him.") == 1) {
 			mes "[Huang Zhishu]";
 			mes "Hmmm...?";
 			mes "Well...";
@@ -2051,7 +2051,7 @@ lou_in02,156,38,0	script	Studying Officer#lou	4_M_CHNMAN,{
 		next;
 		mes "^3355FF*Rummage rummage...*^000000";
 		next;
-		if (select("Sorry about that.:I came to pick up my documents.") == 1) {
+		if (select("Sorry about that.", "I came to pick up my documents.") == 1) {
 			mes "[Huang Zhishu]";
 			mes "Apology accepted.";
 			mes "Hmmm....";
@@ -2452,7 +2452,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 		mes "feeling homesick.";
 		next;
 		if ((countitem(Green_Potion) > 0 || countitem(Green_Herb) > 0 || countitem(Red_Gemstone) > 0) && (ch_poison > 0 && rand(1,300) > 99)) {
-			switch(select("Ask about the poem.:Ask about his hometown.:Ask about use of Poison.:Ask about his situation.")) {
+			switch(select("Ask about the poem.", "Ask about his hometown.", "Ask about use of Poison.", "Ask about his situation.")) {
 			case 1:
 				mes "[Nagash Arses]";
 				mes "Ah, have you";
@@ -2472,12 +2472,12 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "[Nagash Arses]";
 					mes "'^3355FFAs I lay^000000 ^3355FFlooking up at the moonlight^000000.' In this first line, what word should be in [ ]?";
 					next;
-					if (select("on the ground:with you:in bed:in the stars") == 3)
+					if (select("on the ground", "with you", "in bed", "in the stars") == 3)
 						.@answer_poet += 10;
 					mes "[Nagash Arses]";
 					mes "'^3355FFIt looks like the^000000 ^3355FFon the ground^000000.' In the second line, which word should be in [ ]?";
 					next;
-					if (select("frost:dew:pebbles:snow") == 1)
+					if (select("frost", "dew", "pebbles", "snow") == 1)
 						.@answer_poet += 10;
 					mes "[Nagash Arses]";
 					mes "Now to see if you see really understand the poem. It's no use to just know the words. They must be a part of you as well.";
@@ -2485,25 +2485,25 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "[Nagash Arses]";
 					mes "How would you describe the overall mood and tone of the speaker of this poem?";
 					next;
-					if (select("Romantic:Wistful:Regretful:Passionate") == 2)
+					if (select("Romantic", "Wistful", "Regretful", "Passionate") == 2)
 						.@answer_poet += 10;
 					mes "[Nagash Arses]";
 					mes "What do you think is the";
 					mes "major theme of this poem?";
 					next;
-					if (select("Tragedy:Separation:Love:Revenge:Buddy Cop Film") == 2)
+					if (select("Tragedy", "Separation", "Love", "Revenge", "Buddy Cop Film") == 2)
 						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "Ha ha ha! You understand this poem well! Now, would you repeat the first line for me again?";
 					next;
 					if (.@answer_poet > 30) {
-						if (select("When I lay in bed looking up at the moon light:When I lay in bed thinking of the moon light:As I lay in bed looking up at the moonlight:As I lay in bed thinking of the moonlight") == 3) {
+						if (select("When I lay in bed looking up at the moon light", "When I lay in bed thinking of the moon light", "As I lay in bed looking up at the moonlight", "As I lay in bed thinking of the moonlight") == 3) {
 							ch_poison = 2;
 						}
 					}
 					else {
-						select("When I lay in bed looking up at the moon light:When I lay in bed thinking of the moon light:As I lay in bed looking up at the moonlight:As I lay in bed thinking of the moon light");
+						select("When I lay in bed looking up at the moon light", "When I lay in bed thinking of the moon light", "As I lay in bed looking up at the moonlight", "As I lay in bed thinking of the moon light");
 					}
 					mes "[Nagash Arses]";
 					mes "Thank you for your time,";
@@ -2517,12 +2517,12 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "[Nagash Arses]";
 					mes "'^3355FFIt looks like the^000000 ^3355FFon the ground^000000.' In the second line, which word should be in [ ]?";
 					next;
-					if (select("frost:dew:pebbles:snow") == 1)
+					if (select("frost", "dew", "pebbles", "snow") == 1)
 						.@answer_poet += 10;
 					mes "[Nagash Arses]";
 					mes "'^3355FFI lower my head feeling^000000 [ ].' Which word should be in [ ]?";
 					next;
-					if (select("homesick.:drowsy:loneliness.:heartbroken.") == 1)
+					if (select("homesick.", "drowsy", "loneliness.", "heartbroken.") == 1)
 						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
@@ -2534,24 +2534,24 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "of the speaker as he is";
 					mes "gazing at the moon?";
 					next;
-					if (select("In his hometown.:In jail.:In the depths of the cosmos.:In bed.") == 4)
+					if (select("In his hometown.", "In jail.", "In the depths of the cosmos.", "In bed.") == 4)
 						.@answer_poet += 10;
 					mes "[Nagash Arses]";
 					mes "Although this poem is only four lines long, its structure can be easily classified. How would you describe this poem's structure?";
 					next;
-					if (select("Why, it's a sonnet.:It's prose with erratic caesuras.:It's a quatrain, of course.:Iambic pentameter?") == 3)
+					if (select("Why, it's a sonnet.", "It's prose with erratic caesuras.", "It's a quatrain, of course.", "Iambic pentameter?") == 3)
 						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "Ha ha ha! You understand this poem well! Now, would you repeat the first line for me again?";
 					next;
 					if (.@answer_poet > 30) {
-						if (select("It looks like the frost on the ground:It looks like an icicle on the ground:It looks as though shining:It looks like the frost in the sky") == 1) {
+						if (select("It looks like the frost on the ground", "It looks like an icicle on the ground", "It looks as though shining", "It looks like the frost in the sky") == 1) {
 							ch_poison = 2;
 						}
 					}
 					else {
-						select("It looks like the frost on the ground:It looks like an icicle on the ground:It looks as though shining:It looks like the frost in the sky");
+						select("It looks like the frost on the ground", "It looks like an icicle on the ground", "It looks as though shining", "It looks like the frost in the sky");
 					}
 					mes "[Nagash Arses]";
 					mes "Thank you for your time,";
@@ -2565,13 +2565,13 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "[Nagash Arses]";
 					mes "'^3355FFIt looks like the^000000 ^3355FFon the ground^000000.' In the second line, which word should be in [ ]?";
 					next;
-					if (select("frost:dew:pebbles:snow") == 1)
+					if (select("frost", "dew", "pebbles", "snow") == 1)
 						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "'^3355FFI lower my head feeling^000000 [ ].' Which word should be in [ ]?";
 					next;
-					if (select("homesick.:drowsy:loneliness.:heartbroken.") == 1)
+					if (select("homesick.", "drowsy", "loneliness.", "heartbroken.") == 1)
 						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
@@ -2580,24 +2580,24 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "[Nagash Arses]";
 					mes "In the first two lines, what two images are being linked by the poet?";
 					next;
-					if (select("Bed and ground:Frost and hometown:Gloomy:Smokey:Moonlight and frost") == 5)
+					if (select("Bed and ground", "Frost and hometown", "Gloomy", "Smokey", "Moonlight and frost") == 5)
 						.@answer_poet += 10;
 					mes "[Nagash Arses]";
 					mes "In this land, the image of the moon often appears in poems expressing separation, longing and homesickness. Why would gazing at the moon offer comfort?";
 					next;
-					if (select("The rabbit on the moon grants wishes.:Its sheer beauty eases any anxiety.:Because it wanes and waxes.:All places and peoples share the same moon.") == 4)
+					if (select("The rabbit on the moon grants wishes.", "Its sheer beauty eases any anxiety.", "Because it wanes and waxes.", "All places and peoples share the same moon.") == 4)
 						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "Ha ha ha! You understand this poem well! Now, would you repeat the third line for me again?";
 					next;
 					if (.@answer_poet > 30) {
-						if (select("I look up at the bright moon:I lift my head to look at the bright moon:I turn my head to look at the bright moon:I face the bright moon") == 2) {
+						if (select("I look up at the bright moon", "I lift my head to look at the bright moon", "I turn my head to look at the bright moon", "I face the bright moon") == 2) {
 							ch_poison = 2;
 						}
 					}
 					else {
-						select("I look up at the bright moon:I lift my head to look at the bright moon:I turn my head to look at the bright moon:I face the bright moon");
+						select("I look up at the bright moon", "I lift my head to look at the bright moon", "I turn my head to look at the bright moon", "I face the bright moon");
 					}
 					mes "[Nagash Arses]";
 					mes "Thank you for your time,";
@@ -2612,13 +2612,13 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "'^3355FFIt looks like the^000000 ^3355FFon the ground^000000.' In the second line,";
 					mes "which word should be in [ ]?";
 					next;
-					if (select("frost:dew:pebbles:snow") == 1)
+					if (select("frost", "dew", "pebbles", "snow") == 1)
 						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "'^3355FFI lift my^000000 ^3355FFto look at the bright moon^000000.' In the third line, which word should be in [ ]?";
 					next;
-					if (select("eyes:head:gaze:sights") == 2)
+					if (select("eyes", "head", "gaze", "sights") == 2)
 						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
@@ -2628,25 +2628,25 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "[Nagash Arses]";
 					mes "What do you think is the major theme of this poem?";
 					next;
-					if (select("Tragedy:Separation:Love:Revenge:Buddy Cop Film") == 2)
+					if (select("Tragedy", "Separation", "Love", "Revenge", "Buddy Cop Film") == 2)
 						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "Why might be one reason why the bright moonlight looks like frost on the ground to the poet?";
 					next;
-					if (select("He's looking through a frosty window.:A bright moon glimmers like icicles.:He's homesick, so the moonlight looks cold:It's called 'poetic license.'") == 3)
+					if (select("He's looking through a frosty window.", "A bright moon glimmers like icicles.", "He's homesick, so the moonlight looks cold", "It's called 'poetic license.'") == 3)
 						.@answer_poet += 10;
 					next;
 					mes "[Nagash Arses]";
 					mes "Ha ha ha! You understand this poem well! Now, would you repeat the last line for me again?";
 					next;
 					if (.@answer_poet > 30) {
-						if (select("I cry for my home town.:I lower my head feeling homesick.:I miss my home town.:I sob feeling homesick.") == 2) {
+						if (select("I cry for my home town.", "I lower my head feeling homesick.", "I miss my home town.", "I sob feeling homesick.") == 2) {
 							ch_poison = 2;
 						}
 					}
 					else {
-						select("I cry for my home town.:I lower my head feeling homesick.:I miss my home town.:I sob feeling homesick.");
+						select("I cry for my home town.", "I lower my head feeling homesick.", "I miss my home town.", "I sob feeling homesick.");
 					}
 					mes "[Nagash Arses]";
 					mes "Thank you for your time,";
@@ -2678,7 +2678,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "Ah~ I miss Morroc, my hometown.";
 					mes "I used to be a member of the Assassin organization known as the 'Canine of Desert.' Long ago, I was their poison expert.";
 					next;
-					switch(select("Tell him news of Morroc.:Info about 'Canine of Desert'.:Just listen.")) {
+					switch(select("Tell him news of Morroc.", "Info about 'Canine of Desert'.", "Just listen.")) {
 					case 1:
 						mes "[Nagash Arses]";
 						mes "Hm? Do you have recent news of Morroc?";
@@ -2833,7 +2833,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "I wish I could see";
 					mes "Morroc just once before I die.";
 					next;
-					if (select("Tell him news of Morroc.:Ask about 'Canine of Desert.'") == 1) {
+					if (select("Tell him news of Morroc.", "Ask about 'Canine of Desert.'") == 1) {
 						mes "[Nagash Arses]";
 						mes "Hm...?";
 						mes "Is there anything";
@@ -2947,7 +2947,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "[Nagash Arses]";
 					mes "As I studied with them, together we started to clear the town of the remaining monsters. Can you guess the results of our efforts to clean up the city?";
 					next;
-					switch(select("...??:It must have been good.:I guess it was okay?:I don't know, but how did it go?")) {
+					switch(select("...??", "It must have been good.", "I guess it was okay?", "I don't know, but how did it go?")) {
 					case 1:
 						mes "[Nagash Arses]";
 						mes "Did you even listen to me? It's no use talking to you if you don't even care about what I have to say.";
@@ -3013,7 +3013,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 			}
 		}
 		else {
-			switch(select("Grin at him.:Lament for his grief.:Reprove him.:Listen to the poem again.:Show him a sad look.")) {
+			switch(select("Grin at him.", "Lament for his grief.", "Reprove him.", "Listen to the poem again.", "Show him a sad look.")) {
 			case 1:
 				mes "[Nagash Arses]";
 				mes "Yeah, I don't blame you.";
@@ -3139,7 +3139,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 		mes "You look pale...";
 		mes "Did something happen?";
 		next;
-		switch(select("Nothing.:I want to talk about your diciple.:I don't feel good.")) {
+		switch(select("Nothing.", "I want to talk about your diciple.", "I don't feel good.")) {
 		case 1:
 			mes "[Nagash Arses]";
 			mes "Oh...";
@@ -3156,7 +3156,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 			mes "I've been worried since he hasn't come to visit me since you last came to speak with me.";
 			next;
 			if (countitem(Poison_Bottle) > 1) {
-				if (select("Give him Poison Bottle.:Cancel and go to 'Song Zhi Du.") == 1) {
+				if (select("Give him Poison Bottle.", "Cancel and go to 'Song Zhi Du.") == 1) {
 					delitem Poison_Bottle,1;
 					mes "[Nagash Arses]";
 					mes "Huh!?";
@@ -3167,7 +3167,7 @@ lou_in02,123,39,4	script	Poison King#lou	4_M_CHNOLD,{
 					mes "a poison of such potency!";
 					mes "W-where did you find this?";
 					next;
-					if (select("It's common nowadays.:Explain to him what happened.") == 1) {
+					if (select("It's common nowadays.", "Explain to him what happened.") == 1) {
 						mes "[Nagash Arses]";
 						mes "Really...?";
 						mes "Then someone";
@@ -3429,7 +3429,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		mes "[Song Zhi Du]";
 		mes "I feel like you're looking at me. Is there something that you want?";
 		next;
-		switch(select("......:Ask him about his master.:Ask about Poison Organization.:Ask why he's working here.")) {
+		switch(select("......", "Ask him about his master.", "Ask about Poison Organization.", "Ask why he's working here.")) {
 		case 1:
 			mes "[Song Zhi Du]";
 			mes "I guess there's nothing you really need from me. Well then, if you'll excuse me...";
@@ -3482,7 +3482,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		mes "[Song Zhi Du]";
 		mes "I suppose I underestimated you. By the way, do you know anything about poison?";
 		next;
-		if (select("Yes, I am kind of interested in it.:No, not at all.") == 1) {
+		if (select("Yes, I am kind of interested in it.", "No, not at all.") == 1) {
 			mes "[Song Zhi Du]";
 			mes "Oh, I see. Well, if you have some time, why don't you go visit my old master in the slums?";
 			next;
@@ -3566,7 +3566,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		mes "Do you understand";
 		mes "why I'm furious!?";
 		next;
-		if (select("But revenge isn't good.:Yes, I fully understand.") == 1) {
+		if (select("But revenge isn't good.", "Yes, I fully understand.") == 1) {
 			mes "[Song Zhi Du]";
 			mes "Hmm...";
 			mes "I see.";
@@ -3617,7 +3617,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		mes "How could you not";
 		mes "understand me?!";
 		next;
-		if (select("I'm sorry for last time.:No matter what, revenge isn't good.") == 1) {
+		if (select("I'm sorry for last time.", "No matter what, revenge isn't good.") == 1) {
 			mes "[Song Zhi Du]";
 			mes "If you really";
 			mes "feel sorry for me,";
@@ -3656,7 +3656,7 @@ lou_in02,253,45,0	script	Employee#poison	4_M_CHNMAN,{
 		mes "gather everything";
 		mes "I asked of you?";
 		next;
-		if (select("Yes.:What do you need again?") == 1) {
+		if (select("Yes.", "What do you need again?") == 1) {
 			if (countitem(Bee_Sting) > 3 && countitem(Posionous_Canine) > 9 && countitem(Empty_Potion) > 9 && countitem(Green_Potion) > 29) {
 				delitem Bee_Sting,4;
 				delitem Posionous_Canine,10;
@@ -4114,7 +4114,7 @@ lou_fild01,224,348,0	script	Lady#delivery	4_F_CHNDRESS3,{
 		mes "for its various firecrackers.";
 		mes "Would you like to see one?";
 		next;
-		if (select("Sure!:No thanks~") == 1) {
+		if (select("Sure!", "No thanks~") == 1) {
 			mes "[Lady]";
 			mes "Alright, there you go!";
 			if (Zeny > 99) {
@@ -4135,7 +4135,7 @@ lou_fild01,224,348,0	script	Lady#delivery	4_F_CHNDRESS3,{
 		mes "like to see some";
 		mes "firecrackers?";
 		next;
-		if (select("Sure!:No thanks~") == 1) {
+		if (select("Sure!", "No thanks~") == 1) {
 			mes "[Lady]";
 			mes "Alright,";
 			mes "there you go!";
@@ -4151,7 +4151,7 @@ lou_fild01,224,348,0	script	Lady#delivery	4_F_CHNDRESS3,{
 		mes "then you must want something";
 		mes "else. Did someone send you?";
 		next;
-		if (select("Yes.:No.") == 1) {
+		if (select("Yes.", "No.") == 1) {
 			mes "[Lady]";
 			mes "Who was it?";
 			mes "Please tell me";
@@ -4223,7 +4223,7 @@ lou_fild01,224,348,0	script	Lady#delivery	4_F_CHNDRESS3,{
 		mes "for its various firecrackers.";
 		mes "Would you like to see one?";
 		next;
-		if (select("Sure!:No thanks~") == 1) {
+		if (select("Sure!", "No thanks~") == 1) {
 			mes "[Lady]";
 			mes "Alright~";
 			mes "There you go!";
@@ -4600,7 +4600,7 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 		mes "is Sun Mao.";
 		mes "This invitation may be sudden, but I am a man of action. I see in your face that you too despise injustice.";
 		next;
-		switch(select("What am I supposed to do?:I will join you!:Well, I'm just another tourist...")) {
+		switch(select("What am I supposed to do?", "I will join you!", "Well, I'm just another tourist...")) {
 		case 1:
 			mes "[Sun Mao]";
 			mes "For now, we must recruit as many members as we can. When we're ready, we'll start a movement that will change Louyang, and even the world!";
@@ -4622,7 +4622,7 @@ lou_in02,77,37,7	script	Hermit	4_M_CHNOLD,{
 			mes "I shall then engrave your name";
 			mes "on this bloody pledge board. But before I do so, I shall ask once more. Do you truly wish to join us, through pain and bloodshed?";
 			next;
-			switch(select("No, wait!:I am 100% sure.")) {
+			switch(select("No, wait!", "I am 100% sure.")) {
 			case 1:
 				mes "[Sun Mao]";
 				mes "I understand if you need time to decide. If you do decide to join us, please return. Time is on our side, after all.";
@@ -4894,7 +4894,7 @@ lou_in01,43,147,3	script	Gunpowder Expert	4_M_ALCHE_C,{
 			mes "I may quickly make";
 			mes "the gunpowder.";
 			next;
-			switch(select("Make Gunpowder.:Cancel.")) {
+			switch(select("Make Gunpowder.", "Cancel.")) {
 			case 1:
 				delitem Burn_Tree,1;
 				delitem Cold_Magma,1;

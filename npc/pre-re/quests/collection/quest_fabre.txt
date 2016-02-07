@@ -38,7 +38,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 			mes "[Langry]";
 			mes "Have you finished hunting the 50 Fabres?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Langry]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -52,7 +52,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Langry]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -78,7 +78,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 			mes "[Langry]";
 			mes "Have you finished hunting the 50 Fabres?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Langry]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -92,7 +92,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Langry]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -119,7 +119,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 			mes "[Langry]";
 			mes "Have you finished hunting the 150 Fabres?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Langry]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -133,7 +133,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Langry]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -164,13 +164,13 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 			mes "Do you think you can help me?";
 			mes "Please?";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Langry]";
 				mes "Really?!";
 				mes "That's great!";
 				next;
-				switch(select("Gather Items:Hunt Fabres:Cancel")) {
+				switch(select("Gather Items", "Hunt Fabres", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Langry]";
@@ -178,7 +178,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 					mes "complete this community service project.";
 					mes "You know what? I can even reward you a little for helping me.";
 					next;
-					switch(select("I have some Fluff:What was that again?")) {
+					switch(select("I have some Fluff", "What was that again?")) {
 					case 1:
 						if (countitem(Fluff) > 24) {
 							mes "[Langry]";
@@ -204,7 +204,7 @@ gef_fild07,321,193,4	script	Langry#Fabre_Hunt	4_M_SAGE_A,{
 					mes "Ah, ok I think you can help me out by hunting some Fabres.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Fabres:100 Fabres:150 Fabres")) {
+					switch(select("50 Fabres", "100 Fabres", "150 Fabres")) {
 					case 1:
 						mes "[Langry]";
 						mes "Come back when you've finished your task and I will give you a small reward.";
