@@ -45,7 +45,7 @@ dewata,202,106,4	script	Dewata Guide#dewata01	4_M_DEWOLDWOMAN,{
 	F_Navi("[Dewata Guide]");
 	while (1) {
 		next;
-		switch(select("[ Kafra Employee ]:[ Weapon Dealer ]:[ Armor Dealer ]:[ Tool Dealer ]:[ Restauranteur ]:[ Krakatau Gatekeeper ]:[ Alberta Sailor ]:Remove marks from Mini-Map:Cancel")) {
+		switch(select("[ Kafra Employee ]", "[ Weapon Dealer ]", "[ Armor Dealer ]", "[ Tool Dealer ]", "[ Restauranteur ]", "[ Krakatau Gatekeeper ]", "[ Alberta Sailor ]", "Remove marks from Mini-Map", "Cancel")) {
 		case 1:
 			callsub L_Mark, "^0000FFKafra Employee^000000";
 			viewpoint 1,202,184,0,0x000FFF;

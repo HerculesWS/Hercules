@@ -150,7 +150,7 @@ ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 			mes "If you're interested, fill out this application with your name";
 			mes "and Job Level.";
 			next;
-			switch(select("Fill out Application.:What are the requirements?:Um, I need to think about it.")) {
+			switch(select("Fill out Application.", "What are the requirements?", "Um, I need to think about it.")) {
 			case 1:
 				if (SkillPoint) {
 					mes "[Altiregen]";
@@ -227,7 +227,7 @@ ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 			mes "Haha, but don't worry, you are not going to travel that far.";
 			mes "Please go talk to the guildsman inside the building for more details about your next test.";
 			next;
-			if (select("I want to change my job quickly! But...oh well.:Grrr! Enough is enough!") == 1) {
+			if (select("I want to change my job quickly! But...oh well.", "Grrr! Enough is enough!") == 1) {
 				BSMITH_Q = 16;
 				changequest 2013,2014;
 				mes "[Altiregen]";
@@ -340,7 +340,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 				mes "[Geschupenschte]";
 				mes "However, I want to make sure that you have some basic knowledge as a Merchant. I'd like to ask you some questions, if that's okay.";
 				next;
-				.@selection = select("Yes.:Um, can I have some time to prepare?");
+				.@selection = select("Yes.", "Um, can I have some time to prepare?");
 			}
 			else if (BSMITH_Q == 2) {
 				mes "[Geschupenschte]";
@@ -365,131 +365,131 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 					mes "1. Which one of the following regions is matched incorrectly";
 					mes "with its specialty item?";
 					next;
-					if (select("Morroc - Thief Clothes:Alberta - Two Hand Axe:Comodo - Berserk Potion:Alberta - Swordmace") == 4)
+					if (select("Morroc - Thief Clothes", "Alberta - Two Hand Axe", "Comodo - Berserk Potion", "Alberta - Swordmace") == 4)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "2. What status can";
 					mes "be inflicted with the";
 					mes "^8E6B23Hammer Fall^000000 skill?";
 					next;
-					if (select("Stun:Blind:Silence:Sleep") == 1)
+					if (select("Stun", "Blind", "Silence", "Sleep") == 1)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "3. Which one of the following skills cannot be performed";
 					mes "by a Merchant?";
 					next;
-					if (select("Vending:Discount:Overcharge:Increase AGI") == 4)
+					if (select("Vending", "Discount", "Overcharge", "Increase AGI") == 4)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "4. Where can you find a store";
 					mes "that sells Blue Gemstones?";
 					next;
-					if (select("Alberta:Morroc:Geffen:Prontera") == 3)
+					if (select("Alberta", "Morroc", "Geffen", "Prontera") == 3)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "5. Where is the";
 					mes "Tool Dealer";
 					mes "located in Geffen?";
 					next;
-					if (select("8 o'clock direction from the town square:11 o'clock direction from the town square:6 o'clock direction from the town square:5 o'clock direction from the town square") == 1)
+					if (select("8 o'clock direction from the town square", "11 o'clock direction from the town square", "6 o'clock direction from the town square", "5 o'clock direction from the town square") == 1)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "6. Which weapon";
 					mes "cannot be used";
 					mes "by a Merchant?";
 					next;
-					if (select("Stiletto:Ring Pommel Saber:Chain:Bible") == 4)
+					if (select("Stiletto", "Ring Pommel Saber", "Chain", "Bible") == 4)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "7. Which one of the following";
 					mes "has the highest defense rate?";
 					next;
-					if (select("Panties:Mink Coat:Wooden Mail:Silk Robe") == 2)
+					if (select("Panties", "Mink Coat", "Wooden Mail", "Silk Robe") == 2)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "8. For Level 3 weapons,";
 					mes "what is the ^8E6B23Safe^000000 limit";
 					mes "for upgrading?";
 					next;
-					if (select("up to + 3:up to + 4:up to + 5:up to + 6") == 3)
+					if (select("up to + 3", "up to + 4", "up to + 5", "up to + 6") == 3)
 						.@black_q += 10;
 					mes "9. What item";
 					mes "can be made using";
 					mes "the ^8E6B23Trunks^000000 item?";
 					next;
-					if (select("Sakkat:Ghost Bandana:Majestic Goat:Antler") == 1)
+					if (select("Sakkat", "Ghost Bandana", "Majestic Goat", "Antler") == 1)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "10. The most important";
 					mes "part of being a Merchant is...?";
 					next;
-					select("Credit:Integrity:Money:Rhetoric");
+					select("Credit", "Integrity", "Money", "Rhetoric");
 					.@black_q += 10;
 				}
 				else {
 					mes "[Geschupenschte]";
 					mes "1. Among the following cities, which one is not correctly matched with its specialty?";
 					next;
-					if (select("Al De Baran - Yggdrasil Leaf:Alberta - Hammer:Comodo - Berserk Potion:Al De Baran - Hammer") == 4)
+					if (select("Al De Baran - Yggdrasil Leaf", "Alberta - Hammer", "Comodo - Berserk Potion", "Al De Baran - Hammer") == 4)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "2. How much Zeny";
 					mes "is one Jellopy worth?";
 					next;
-					if (select("1 Zeny:2 Zeny:3 Zeny:4 Zeny") == 3)
+					if (select("1 Zeny", "2 Zeny", "3 Zeny", "4 Zeny") == 3)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "3. What is required";
 					mes "for a Merchant to use";
 					mes "the ^8E6B23Vending^000000 Skill?";
 					next;
-					if (select("Must have a Cart.:Must have items to sell.:Must be wielding a weapon.:Must be wearing armor.") == 1)
+					if (select("Must have a Cart.", "Must have items to sell.", "Must be wielding a weapon.", "Must be wearing armor.") == 1)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "4. Where can you";
 					mes "change your Job to";
 					mes "become a Merchant?";
 					next;
-					if (select("Alberta:Morroc:Geffen:Prontera") == 1)
+					if (select("Alberta", "Morroc", "Geffen", "Prontera") == 1)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "5. Where is the";
 					mes "Weapons Dealer";
 					mes "located in Morroc?";
 					next;
-					if (select("7 o'clock from the town's center:11 o'clock from the town's center:6 o'clock from the town's center:5 o'clock from the town's center") == 4)
+					if (select("7 o'clock from the town's center", "11 o'clock from the town's center", "6 o'clock from the town's center", "5 o'clock from the town's center") == 4)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "6. What weapon";
 					mes "can a Merchant";
 					mes "not use?";
 					next;
-					if (select("Main Gauche:Claymore:Chain:Two handed Axe") == 2)
+					if (select("Main Gauche", "Claymore", "Chain", "Two handed Axe") == 2)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "7. Which one of the following";
 					mes "has the highest defense rate?";
 					next;
-					if (select("Panties:Mink Coat:Wooden Mail:Silk Robe") == 2)
+					if (select("Panties", "Mink Coat", "Wooden Mail", "Silk Robe") == 2)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "8. For Level 3 weapons,";
 					mes "what is the ^8E6B23Safe^000000 limit";
 					mes "for upgrading?";
 					next;
-					if (select("up to + 3:up to + 4:up to + 5:up to + 6") == 3)
+					if (select("up to + 3", "up to + 4", "up to + 5", "up to + 6") == 3)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "9. What monster does";
 					mes "NOT drop Iron Ore?";
 					next;
-					if (select("Chon Chon:Steel Chon Chon:Zerom:Anolian") == 4)
+					if (select("Chon Chon", "Steel Chon Chon", "Zerom", "Anolian") == 4)
 						.@black_q += 10;
 					mes "[Geschupenschte]";
 					mes "10. What is most";
 					mes "important to a Merchant?";
 					next;
-					select("Rhetoric:Credit:Money:Experience");
+					select("Rhetoric", "Credit", "Money", "Experience");
 					.@black_q += 10;
 				}
 				mes "[Geschupenschte]";
@@ -639,7 +639,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 				mes "[Geschupenschte]";
 				mes "Oh, you should make sure that you are not carrying ^FF0000more than one "+getitemname(.@items[6])+"^000000, you should really only have an "+getitemname(.@items[6])+" that you bought from an NPC shop in your inventory.";
 				next;
-				if (select("Oh, could you give me a second?:Oh, I brought what you asked for.") == 1) {
+				if (select("Oh, could you give me a second?", "Oh, I brought what you asked for.") == 1) {
 					mes "[Geschupenschte]";
 					mes "Hmmm, it would be";
 					mes "a good idea to put the";
@@ -862,7 +862,7 @@ ein_in01,201,27,3	script	Guildsman#alberta	1_M_SMITH,{
 			mes "the delivery?";
 			mes "Let's see that receipt~";
 			next;
-			if (select("Yes sir, here it is.:Receipt? I, uh, have it somewhere.") == 1) {
+			if (select("Yes sir, here it is.", "Receipt? I, uh, have it somewhere.") == 1) {
 				if (countitem(Merchant_Voucher_1) > 0) {
 					BSMITH_Q = 15;
 					delitem Merchant_Voucher_1,1;
@@ -959,7 +959,7 @@ geffen,46,164,1	script	Baisulist#BLS	1_F_04,{
 		mes "You sure this is what I ordered, right? I mean, if it's been used,";
 		mes "I don't want it.";
 		next;
-		if (select("Whoops, this is one of the items I use...:I'm sure! It's brand new!") == 1) {
+		if (select("Whoops, this is one of the items I use...", "I'm sure! It's brand new!") == 1) {
 			mes "[Baisulist]";
 			mes "Well...";
 			mes "I guess I can";
@@ -1033,7 +1033,7 @@ morocc,27,112,4	script	Wickebine#BLS	4_F_JOB_ASSASSIN,{
 		mes "This is what I ordered, right?";
 		mes "I don't want any used or old Gladius that you might have!";
 		next;
-		if (select("Whoops, not that one.:I guarantee you it is new.") == 1) {
+		if (select("Whoops, not that one.", "I guarantee you it is new.") == 1) {
 			cutin "Job_Black_hucke03",2;
 			mes "[Wickebine]";
 			mes "Oooh...!";
@@ -1135,7 +1135,7 @@ lighthalzen,209,80,4	script	Krongast#BLS	4_M_JOB_KNIGHT2,{
 		mes "So you're sure this is the item";
 		mes "I ordered, right? I wouldn't want it if it's been used.";
 		next;
-		if (select("Whoops, this one is used!:It was just made, so it's new.") == 1) {
+		if (select("Whoops, this one is used!", "It was just made, so it's new.") == 1) {
 			mes "[Krongast]";
 			mes "Hmmmmm!";
 			mes "Please deliver";
@@ -1211,7 +1211,7 @@ payon,214,79,4	script	Talpiz#BLS	1_M_ORIENT01,{
 		mes "[Talpiz]";
 		mes "Um, this is what I ordered, right? I don't want an Arbalest that's been used before.";
 		next;
-		if (select("Whoops, this is a used one.:I'm sure it's new.") == 1) {
+		if (select("Whoops, this is a used one.", "I'm sure it's new.") == 1) {
 			mes "[Talpiz]";
 			mes "Hmmmm.";
 			mes "Please hurry";
@@ -1288,7 +1288,7 @@ hugel,168,183,1	script	Bismarc#BLS	2_M_THIEFMASTER,{
 		mes "^666666*Huuuk*^000000 This is what I ordered, right? I needed one especially";
 		mes "made to stop this poison...";
 		next;
-		if (select("Whoops, this is my own Ring Pommel Saber.:I'm sure this is the one.") == 1) {
+		if (select("Whoops, this is my own Ring Pommel Saber.", "I'm sure this is the one.") == 1) {
 			mes "[Bismarc]";
 			mes "N-Nooo...";
 			mes "Hurry...!";
@@ -1383,7 +1383,7 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 		mes "[Mitehmaeeuh]";
 		mes "How much do you truly understand about smithing? Are you ready for me to ask you some questions?";
 		next;
-		if (select("Yes:No, not yet~") == 1) {
+		if (select("Yes", "No, not yet~") == 1) {
 			mes "[Mitehmaeeuh]";
 			mes "Alright...";
 			mes "My test is simple.";
@@ -1404,7 +1404,7 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 				mes "is required to learn";
 				mes "the ^8E6B23Discount^000000 skill?";
 				next;
-				if (select("Level 3 Push Cart:Item Appraisal:Level 10 Mammonite:Level 3 Enlarge Weight") == 4)
+				if (select("Level 3 Push Cart", "Item Appraisal", "Level 10 Mammonite", "Level 3 Enlarge Weight") == 4)
 					.@blackss_te += 20;
 				mes "[Mitehmaeeuh]";
 				mes "2. When you attack";
@@ -1412,7 +1412,7 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 				mes "what status effect can";
 				mes "you inflict on enemies?";
 				next;
-				if (select("Stun:Blindness:Chaos:Silence") == 1)
+				if (select("Stun", "Blindness", "Chaos", "Silence") == 1)
 					.@blackss_te += 20;
 				mes "[Mitehmaeeuh]";
 				mes "3. How much Zeny is spent";
@@ -1420,7 +1420,7 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 				mes "mastered Mammonite skill?";
 				mes "(Level 10 Mammonite)";
 				next;
-				if (select("900 Zeny:1000 Zeny:2000 Zeny:100,000 Zeny") == 2)
+				if (select("900 Zeny", "1000 Zeny", "2000 Zeny", "100,000 Zeny") == 2)
 					.@blackss_te += 20;
 				mes "[Mitehmaeeuh]";
 				mes "4. What is the";
@@ -1428,7 +1428,7 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 				mes "the ^8E6B23Discount^000000";
 				mes "skill is mastered?";
 				next;
-				if (select("21 % :22 % :23 % :24 % ") == 4)
+				if (select("21 % ", "22 % ", "23 % ", "24 % ") == 4)
 					.@blackss_te += 20;
 				mes "[Mitehmaeeuh]";
 				mes "5. What is the maximum";
@@ -1437,7 +1437,7 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 				mes "NPCs after mastering the";
 				mes "^8E6B23Overcharge^000000 skill?";
 				next;
-				if (select("21 % :22 % :23 % :24 % ") == 3)
+				if (select("21 % ", "22 % ", "23 % ", "24 % ") == 3)
 					.@blackss_te += 20;
 				break;
 			case 2:
@@ -1446,21 +1446,21 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 				mes "following monsters";
 				mes "drops Steel?";
 				next;
-				if (select("Zerom:Chon Chon:Skel Worker:Requiem") == 3)
+				if (select("Zerom", "Chon Chon", "Skel Worker", "Requiem") == 3)
 					.@blackss_te += 20;
 				mes "[Mitehmaeeuh]";
 				mes "2. Which of the following";
 				mes "stones can be made from";
 				mes "Red Bloods?";
 				next;
-				if (select("Flame Heart:Rough Wind:Great Nature:Mystic Frozen") == 1)
+				if (select("Flame Heart", "Rough Wind", "Great Nature", "Mystic Frozen") == 1)
 					.@blackss_te += 20;
 				mes "[Mitehmaeeuh]";
 				mes "3. Which of the following";
 				mes "stones do you have the most";
 				mes "of in your Kafra Storage?";
 				next;
-				select("Wind of Verdure:Red Blood:Green Live:Crystal Blue");
+				select("Wind of Verdure", "Red Blood", "Green Live", "Crystal Blue");
 					.@blackss_te += 20;
 				mes "[Mitehmaeeuh]";
 				mes "4. In general,";
@@ -1469,14 +1469,14 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 				mes "most damage from a Wind";
 				mes "attribute weapon?";
 				next;
-				if (select("Fire Property:Water Property:Earth Property:Wind Property") == 2)
+				if (select("Fire Property", "Water Property", "Earth Property", "Wind Property") == 2)
 					.@blackss_te += 20;
 				mes "[Mitehmaeeuh]";
 				mes "5. How many Iron Ore";
 				mes "is required to make";
 				mes "1 Steel?";
 				next;
-				if (select("5 Iron Ore :4 Iron Ore:3 Iron Ore:6 Iron Ore") == 1)
+				if (select("5 Iron Ore ", "4 Iron Ore", "3 Iron Ore", "6 Iron Ore") == 1)
 					.@blackss_te += 20;
 				break;
 			case 3:
@@ -1485,7 +1485,7 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 				mes "do when you meet someone";
 				mes "randomly on the street?";
 				next;
-				switch(select("Ask them what they need.:Have a brief conversation.:Ignore them.:Give items and run away.")) {
+				switch(select("Ask them what they need.", "Have a brief conversation.", "Ignore them.", "Give items and run away.")) {
 				case 1:
 				case 2:
 					.@blackss_te += 20;
@@ -1499,20 +1499,20 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 				mes "^8E6B23Crazy Uproar^000000 and";
 				mes "^8E6B23Change Cart^000000 skills?";
 				next;
-				if (select("Al De Baran:Alberta:Morroc:Izlude") == 2)
+				if (select("Al De Baran", "Alberta", "Morroc", "Izlude") == 2)
 					.@blackss_te += 20;
 				mes "[Mitehmaeeuh]";
 				mes "3. From the center of Einbroch,";
 				mes "in which direction is the Blacksmith Guild?";
 				next;
-				if (select("11 o'clock:5 o'clock:7 o'clock:12 o'clock") == 2)
+				if (select("11 o'clock", "5 o'clock", "7 o'clock", "12 o'clock") == 2)
 					.@blackss_te += 20;
 				mes "[Mitehmaeeuh]";
 				mes "4. In which town";
 				mes "can you find the";
 				mes "most Blacksmiths?";
 				next;
-				if (select("Prontera:Morroc:Alberta:Einbroch") == 4)
+				if (select("Prontera", "Morroc", "Alberta", "Einbroch") == 4)
 					.@blackss_te += 20;
 				mes "[Mitehmaeeuh]";
 				mes "5. Which of the";
@@ -1520,7 +1520,7 @@ ein_in01,24,41,5	script	Blacksmith Guildsman#moc	4_F_JOB_BLACKSMITH,{
 				mes "affect your skill";
 				mes "as a Blacksmith?";
 				next;
-				if (select("STR :DEX:AGI :VIT ") == 2)
+				if (select("STR ", "DEX", "AGI ", "VIT ") == 2)
 					.@blackss_te += 20;
 				break;
 			}
@@ -1607,7 +1607,7 @@ geffen_in,109,170,3	script	Blacksmith Guildsman#gef	4_F_JOB_BLACKSMITH,{
 	mes "I can provide you a teleport service to Izlude, where you can use the airship.";
 	mes "Would you like to move to Izlude immediately?";
 	next;
-	switch(select("How to go to Einbroch:Yes!:No, thanks.")) {
+	switch(select("How to go to Einbroch", "Yes!", "No, thanks.")) {
 	case 1:
 		mes "[Blacksmith Guildsman]";
 		mes "Oops, haven't you used the airship yet?";

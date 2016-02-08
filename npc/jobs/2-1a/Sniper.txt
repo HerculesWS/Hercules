@@ -64,7 +64,7 @@ valkyrie,44,55,5	script	Sniper#Valkyrie	4_F_JOB_HUNTER,{
 		mes "take the next step and";
 		mes "become a Sniper?";
 		next;
-		if (select("No.:Yes.") == 1) {
+		if (select("No.", "Yes.") == 1) {
 			mes "[Sniper]";
 			mes "When you're ready,";
 			mes "feel free to come back.";

@@ -230,7 +230,7 @@ yuno_in02,88,164,5	script	Metheus Sylphe#Library	2_M_SAGE_B,{
 			mes "donation amount is";
 			mes "1,285,000 zeny.";
 			next;
-			if (select("Donate.:Cancel.") == 1) {
+			if (select("Donate.", "Cancel.") == 1) {
 				if (Zeny >= 1285000) {
 					Zeny -= 1285000;
 					valkyrie_Q = 1;
@@ -266,7 +266,7 @@ yuno_in02,93,207,1	script	Book of Ymir	HIDDEN_NPC,{
 		mes "[The Book of Ymir]";
 		mes "In the Hall of Honor, everything is prepared for heroes. It is rumored that any wish that cannot be fulfilled in our reality can be realized in the Hall of Honor.";
 		next;
-		if (select("Stop reading.:Continue reading.") == 1) {
+		if (select("Stop reading.", "Continue reading.") == 1) {
 			mes "[The Book of Ymir]";
 			mes ".....";
 			close;
@@ -372,7 +372,7 @@ valkyrie,44,33,5	script	Teleporter	4_F_TELEPORTER,{
 		mes "Honorable one,";
 		mes "which place do you wish to go?";
 		next;
-		switch(select("Prontera:Morroc:Payon:Geffen:Alberta:Izlude:Al De Baran:Comodo:Juno")) {
+		switch(select("Prontera", "Morroc", "Payon", "Geffen", "Alberta", "Izlude", "Al De Baran", "Comodo", "Juno")) {
 		case 1: callsub S_Warpchar,"prontera",116,72;
 		case 2: callsub S_Warpchar,"morocc",156,46;
 		case 3: callsub S_Warpchar,"payon",69,100;

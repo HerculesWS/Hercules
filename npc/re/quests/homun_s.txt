@@ -92,7 +92,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 			mes "[Viorel]";
 			mes "Ready to go to my house?";
 			next;
-			switch(select("Go to ^005DFFViorel^000000's house.:Don't go.")) {
+			switch(select("Go to ^005DFFViorel^000000's house.", "Don't go.")) {
 			case 1:
 				mes "[Viorel]";
 				mes "Good choice.";
@@ -115,7 +115,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 			mes "[Viorel]";
 			mes "Now, ready to go to ^005DFFJeyna^000000?";
 			next;
-			switch(select("Go to ^005DFFJeyna^000000's room.:Don't go.")) {
+			switch(select("Go to ^005DFFJeyna^000000's room.", "Don't go.")) {
 			case 1:
 				mes "[Viorel]";
 				mes "Good choice.";
@@ -157,7 +157,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 			mes "[Viorel]";
 			mes "I must speak to you in private. Would you mind going to my house with me?";
 			next;
-			switch(select("Go to ^005DFFViorel^000000's home.:Stay here.")) {
+			switch(select("Go to ^005DFFViorel^000000's home.", "Stay here.")) {
 			case 1:
 				mes "[Viorel]";
 				mes "Good choice.";
@@ -179,7 +179,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 			mes "in the newly created ^FF4800Homunculus^000000,";
 			mes "born from the new ^006400Homunculus Mutation System^000000?";
 			next;
-			switch(select("Nope. Good bye.:Please, I'm busy.:That's exactly what I wanted to hear.:Why are you always standing there?")) {
+			switch(select("Nope. Good bye.", "Please, I'm busy.", "That's exactly what I wanted to hear.", "Why are you always standing there?")) {
 			case 1:
 				emotion e_heh;
 				mes "[Viorel]";
@@ -244,7 +244,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 	mes "^FF4800Homunculus^000000 research requires a lot of time and funding.";
 	mes "However, I believe passion is the most important factor.";
 	next;
-	switch(select("End conversation.:What are you talking about?:Why are you always standing there?")) {
+	switch(select("End conversation.", "What are you talking about?", "Why are you always standing there?")) {
 	case 1:
 		mes "[Viorel]";
 		mes "So long~!";
@@ -307,7 +307,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 		mes "[Viorel]";
 		mes "In order to break the current limitations of the ^FF4800Homunculus^000000, mutations need to happen.";
 		next;
-		switch(select("Like, biological experiments...?!:Well, yeah, naturally.:I don't want to hurt my Homunculus!")) {
+		switch(select("Like, biological experiments...?!", "Well, yeah, naturally.", "I don't want to hurt my Homunculus!")) {
 		case 1:
 			emotion e_swt2;
 			mes "[Viorel]";
@@ -378,7 +378,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 		mes "I know it's a little abrupt, but...";
 		mes "How about changing your ^FF4800Homunculus^000000 into something incredible with my marvelous achievement, the ^006400Homunculus Mutation System^000000?";
 		next;
-		switch(select("Explore the ^006400Homunculus Mutation System^000000.:Cancel.")) {
+		switch(select("Explore the ^006400Homunculus Mutation System^000000.", "Cancel.")) {
 		case 1:
 			emotion e_no1;
 			mes "[Viorel]";
@@ -401,7 +401,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 			mes "I am not trying to deceive you.";
 			mes "Maybe you need some time to think about it?";
 			next;
-			switch(select("Think about it.:I'm just going to walk away.")) {
+			switch(select("Think about it.", "I'm just going to walk away.")) {
 			case 1:
 				mes "[Viorel]";
 				mes "We'll talk in a bit then.";
@@ -450,7 +450,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 		mes "mutation, I can't guarentee what kind of Homunculus you're going to get.";
 		mes "Anyways, it's up to you.";
 		next;
-		switch(select("Mutation stabilization (50,000 zeny):Unstable mutation")) {
+		switch(select("Mutation stabilization (50,000 zeny)", "Unstable mutation")) {
 		case 1:
 			if (Zeny < 50000) {
 				mes "[Viorel]";
@@ -459,7 +459,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 				mes "I'll be waiting.";
 				mes "Want me to send you back to the ^8B4513Laboratory^000000?";
 				next;
-				switch(select("No thanks.:Yes. Send me back to the Lab.")) {
+				switch(select("No thanks.", "Yes. Send me back to the Lab.")) {
 				case 1:
 					mes "[Viorel]";
 					mes "Alright.";
@@ -480,7 +480,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 			mes "Good choice.";
 			mes "Choose from the different types of ^0000FFHomunculus^000000.";
 			next;
-			switch(select("Eira:Sera:Dieter:Bayeri:Eleanor")) {
+			switch(select("Eira", "Sera", "Dieter", "Bayeri", "Eleanor")) {
 			case 1:
 				cutin "Mer_Eira_Card",3;
 				.@Homunculus = 6048; //MER_EIRA
@@ -505,7 +505,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 			mes "[Viorel]";
 			mes "Are you sure?";
 			next;
-			if(select("Yes.:No.") == 2) {
+			if(select("Yes.", "No.") == 2) {
 				cutin "",255;
 				playbgm "33.mp3"; // Yuna Song
 				mes "[Viorel]";
@@ -541,7 +541,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 			mes "Do you really wish to proceed";
 			mes "with the process of random outcome?";
 			next;
-			if(select("Go ahead. (Random Mutation):Cancel.") == 2) {
+			if(select("Go ahead. (Random Mutation)", "Cancel.") == 2) {
 				playbgm "33.mp3"; // Yuna Song
 				mes "[Viorel]";
 				mes "I see.";
@@ -726,7 +726,7 @@ que_house_s,80,42,3	script	Jeyna#homun_s	4_F_ALCHE_A,{
 		mes "So, please decide.";
 		mes "Do you want to proceed with the new ^0000FFHomunculus Mutation System^000000?";
 		next;
-		switch(select("Yes, I do.:I need to think more.")) {
+		switch(select("Yes, I do.", "I need to think more.")) {
 		case 1:
 			if (checkhomcall() == 1) {
 				mes "[Jeyna]";

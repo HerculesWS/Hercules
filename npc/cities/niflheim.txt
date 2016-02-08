@@ -130,7 +130,7 @@ nif_in,156,93,5	script	Child#niflheim	4_F_NFLOSTGIRL,{
 	mes "Mommy, have you seen my mommy?";
 	mes "I wanna go home...*Sob*";
 	next;
-	switch(select("About the witch:About the curse:Cancel.")) {
+	switch(select("About the witch", "About the curse", "Cancel.")) {
 	case 1:
 		mes "[Alakina Ann]";
 		mes "Witch...? I've never seen a witch, but I've read about them in books. I'm not sure if they exist or not, but it would be so horrifying if they did...";
@@ -206,7 +206,7 @@ niflheim,350,258,1	script	Cursed Spirit#nif	4_NFWISP,{
 	mes "....Whatever you do...";
 	mes "....Do NOT touch my books...";
 	next;
-	switch(select("Touch the first book.:Touch the second book.:Touch the third book.:Okay, I am leaving.")) {
+	switch(select("Touch the first book.", "Touch the second book.", "Touch the third book.", "Okay, I am leaving.")) {
 	case 1:
 		monster "niflheim",349,259,"Rideword",1478,1,"Cursed Spirit#nif::OnMyMobDead";
 		mes "[Ashe Bruce]";
@@ -248,13 +248,13 @@ niflheim,350,258,1	script	Cursed Spirit#nif	4_NFWISP,{
 		mes "lost to the ages~!";
 		emotion e_gg;
 		next;
-		if (select("Clover:Klaatu:Klaytos") == 2) {
+		if (select("Clover", "Klaatu", "Klaytos") == 2) {
 			++.@spell;
 		}
-		if (select("Verit:Veritas:Verata") == 3) {
+		if (select("Verit", "Veritas", "Verata") == 3) {
 			++.@spell;
 		}
-		if (select("Necktie:Necklace:Nero:^FFFFFFNictu!!!^000000") == 4) {
+		if (select("Necktie", "Necklace", "Nero", "^FFFFFFNictu!!!^000000") == 4) {
 			++.@spell;
 		}
 		if (.@spell == 3) {

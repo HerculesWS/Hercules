@@ -347,7 +347,7 @@ OnRecvCastle:
 		mes "Welcome. ^ff0000" + getguildname(.@GID) + "^000000 Member.";
 		mes "The Kafra Corporation will stay with you wherever you go.";
 		next;
-		switch (select("Use Storage:Use Teleport Service:Rent a Pushcart:Cancel")) {
+		switch (select("Use Storage", "Use Teleport Service", "Rent a Pushcart", "Cancel")) {
 		case 1:
 			if (getskilllv("NV_BASIC") < 6) {
 				mes "[Kafra Employee]";
@@ -373,7 +373,7 @@ OnRecvCastle:
 			mes "Please choose";
 			mes "your destination.";
 			next;
-			switch (select(.@destination$+" -> 200z:Cancel")) {
+			switch (select(.@destination$+" -> 200z", "Cancel")) {
 			case 1:
 				if (Zeny < 200) {
 					mes "[Kafra Employee]";
@@ -424,7 +424,7 @@ OnRecvCastle:
 			mes "fee is 800 zeny. Would";
 			mes "you like to rent a Pushcart?";
 			next;
-			switch (select("Rent a Pushcart.:Cancel")) {
+			switch (select("Rent a Pushcart.", "Cancel")) {
 			case 1:
 				if (Zeny < 800) {
 					mes "[Kafra Employee]";
@@ -618,7 +618,7 @@ OnRecvCastle:
 	mes "Welcome. My honorable master, ^ff0000"+strcharinfo(0)+"^000000...";
 	mes "Your humble servant, "+strnpcinfo(1)+", is here to serve you.";
 	next;
-	switch (select("Castle briefing:Invest in commercial growth:Invest in Castle Defenses:Summon Guardian:Hire / Fire a Kafra Employee:Go into Master's room")) {
+	switch (select("Castle briefing", "Invest in commercial growth", "Invest in Castle Defenses", "Summon Guardian", "Hire / Fire a Kafra Employee", "Go into Master's room")) {
 	case 1:
 		mes "["+strnpcinfo(1)+"]";
 		mes "I will report the Castle briefing, Master.";
@@ -683,7 +683,7 @@ OnRecvCastle:
 			mes "You've invested once today... if you wish to invest once more, ^ff0000"+.@eco_invest+"^000000 more zeny will be needed.";
 		}
 		next;
-		switch (select("Invest in commercial growth:Cancel")) {
+		switch (select("Invest in commercial growth", "Cancel")) {
 		case 1:
 			if (Zeny < .@eco_invest) {
 				mes "["+strnpcinfo(1)+"]";
@@ -749,7 +749,7 @@ OnRecvCastle:
 			mes "You've invested once today... if you wish to invest once more, ^ff0000"+.@def_invest+"^000000 more zeny will be needed.";
 		}
 		next;
-		switch (select("Invest in Castle Defenses.:Cancel")) {
+		switch (select("Invest in Castle Defenses.", "Cancel")) {
 		case 1:
 			if (Zeny < .@def_invest) {
 				mes "["+strnpcinfo(1)+"]";
@@ -787,7 +787,7 @@ OnRecvCastle:
 		mes "["+strnpcinfo(1)+"]";
 		mes "Will you summon the chosen guardian? 10,000 zeny are required to summon a Guardian.";
 		next;
-		switch (select("Summon:Cancel")) {
+		switch (select("Summon", "Cancel")) {
 		case 1:
 			if (getgdskilllv(.@GID,10002) == 0) {
 				mes "["+strnpcinfo(1)+"]";
@@ -824,13 +824,13 @@ OnRecvCastle:
 			mes "["+strnpcinfo(1)+"]";
 			mes "We are currently hiring a Kafra Employee... Do you want to fire the Kafra Employee?";
 			next;
-			switch (select("Fire:Cancel")) {
+			switch (select("Fire", "Cancel")) {
 			case 1:
 				cutin "kafra_01",2;
 				mes "[ Hired Kafra Employee ]";
 				mes "I worked so hard... How can you do that, Master?... Please... Please reconsider... Check it again, Master... Please...";
 				next;
-				switch (select("Fire:Cancel")) {
+				switch (select("Fire", "Cancel")) {
 				case 1:
 					mes "[ Hired Kafra Employee ]";
 					mes "Oh, my goodness! This is nonsense!";
@@ -859,7 +859,7 @@ OnRecvCastle:
 		mes "Will you contact the kafra Main Office and Hire a Employee for our Castle?";
 		mes "^ff0000 10,000 zeny is required for their services. ";
 		next;
-		switch (select("Hire.:Cancel")) {
+		switch (select("Hire.", "Cancel")) {
 		case 1:
 			if (getgdskilllv(.@GID,10001) == 0) {
 				mes "["+strnpcinfo(1)+"]";
@@ -897,7 +897,7 @@ OnRecvCastle:
 		mes "Do you want to visit the room where our valuables are stored?";
 		mes "That room is restricted to you... you are the only one with access to it.";
 		next;
-		switch (select("Go into Master's room.:Cancel")) {
+		switch (select("Go into Master's room.", "Cancel")) {
 		case 1:
 			mes "["+strnpcinfo(1)+"]";
 			mes "I'll show you the secret path. Follow me...please.";
@@ -968,7 +968,7 @@ OnRecvCastle:
 	mes " ";
 	mes "There's a small lever. Will you pull it?";
 	next;
-	if(select("Pull.:Don't pull.") == 1) {
+	if(select("Pull.", "Don't pull.") == 1) {
 		if (getcharid(2) == .@GID) {
 			close2;
 			warp .@destination$,.@coordinates[0],.@coordinates[1];

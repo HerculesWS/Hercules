@@ -99,7 +99,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 			mes "[Tourist]";
 			mes "..........";
 			next;
-			switch(select("So do you have business in Lutie?:You don't want to go to Lutie for a tour.:What made you come over here?")) {
+			switch(select("So do you have business in Lutie?", "You don't want to go to Lutie for a tour.", "What made you come over here?")) {
 			case 1:
 				mes "[Tourist]";
 				mes "Yes.";
@@ -122,7 +122,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				mes "Now I'm running out of money and";
 				mes "food...I can't stay here much longer...";
 				next;
-				if (select("Do you want me to help you?:Well, good luck with everything.") == 1) {
+				if (select("Do you want me to help you?", "Well, good luck with everything.") == 1) {
 					thai_head = 3;
 					mes "[Tourist]";
 					mes "Thank god! Thank you so much.";
@@ -173,7 +173,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 				mes "Now I'm running out of money and";
 				mes "food...I can't stay here much longer...";
 				next;
-				if (select("Do you want me to help you?:Well, good luck with everything.") == 1) {
+				if (select("Do you want me to help you?", "Well, good luck with everything.") == 1) {
 					thai_head = 3;
 					mes "[Tourist]";
 					mes "Thank god! Thank you so much.";
@@ -580,7 +580,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 		mes "*Sob*...I guess I got lost...";
 		mes "Hey, where is this!?";
 		next;
-		switch(select("Ignore him.:This is Alberta.:This is Al De Baran.")) {
+		switch(select("Ignore him.", "This is Alberta.", "This is Al De Baran.")) {
 		case 1:
 			mes "[Tourist]";
 			mes "..........";
@@ -614,7 +614,7 @@ alberta,43,244,0	script	Tourist#thai	4W_M_03,{
 			mes "I was told that I can see a ^FF0000Clock Tower^000000 in Al De Baran.";
 			mes "Can you tell me where I can find the ^FF0000Clock Tower^000000?";
 			next;
-			if (select("It's in the center of the town.:Eh, I think I gave you the wrong town name.") == 1) {
+			if (select("It's in the center of the town.", "Eh, I think I gave you the wrong town name.") == 1) {
 				mes "[Tourist]";
 				mes "..............";
 				mes "You know, I'm beginning";
@@ -762,7 +762,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 				else
 					mes "So, lady, do you think my Daddy can catch a Munak with this?";
 				next;
-				switch(select("Yes.:...not sure.:No, ^FF0000never^000000.")) {
+				switch(select("Yes.", "...not sure.", "No, ^FF0000never^000000.")) {
 				case 1:
 					mes "[Tommy]";
 					mes "Heh!! I knew my Daddy";
@@ -787,7 +787,7 @@ moc_ruins,105,62,4	script	Jacob#thai	1_M_04,{
 					mes "Can we catch a Munak with this or";
 					mes "not, huh? Tell meeeeehhhh~~~!";
 					next;
-					switch(select("Yes, we can.:No, we can't.")) {
+					switch(select("Yes, we can.", "No, we can't.")) {
 					case 1:
 						mes "[Tommy]";
 						mes "Heh heh! I knew it!";
@@ -1107,7 +1107,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 			mes "[Elder Creek]";
 			mes "Answer me, adventurer!";
 			next;
-			switch(select("I seek fortune!:I seek...wisdom.:I want to finish what I've started.")) {
+			switch(select("I seek fortune!", "I seek...wisdom.", "I want to finish what I've started.")) {
 			case 1:
 				mes "[Elder Creek]";
 				mes "You're honest...!";
@@ -1120,7 +1120,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 				mes "I will give you what you want if";
 				mes "you answer the way I expect you to.";
 				next;
-				switch(select("It's necessary to have a lot!:Too dumb to see the future.:Too much of a good thing can be bad.:Cringe to the powerful.")) {
+				switch(select("It's necessary to have a lot!", "Too dumb to see the future.", "Too much of a good thing can be bad.", "Cringe to the powerful.")) {
 				case 1:
 					mes "[Elder Creek]";
 					mes "...";
@@ -1177,7 +1177,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 				mes "[Elder Creek]";
 				mes "Now, tell me what is bothering right now.";
 				next;
-				switch(select("Boy/girlfriend issue.:Financial problem.:Bored to death.:Career issue.:I want money.:Give me items, old man.")) {
+				switch(select("Boy/girlfriend issue.", "Financial problem.", "Bored to death.", "Career issue.", "I want money.", "Give me items, old man.")) {
 				case 1:
 					mes "[Elder Creek]";
 					mes "I'm envious of you! Still, young";
@@ -1492,11 +1492,11 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 		mes "[Elder Creek]";
 		mes "Do you wish for me to give you advice, adventurer?";
 		next;
-		if (select("Yes.:No.") == 1) {
+		if (select("Yes.", "No.") == 1) {
 			mes "[Elder Creek]";
 			mes "Now, tell me what bothers you at the moment.";
 			next;
-			switch(select("Boy/girlfriend issue.:Financial problem.:Bored to death.:Career issue.:Give me items, old man.")) {
+			switch(select("Boy/girlfriend issue.", "Financial problem.", "Bored to death.", "Career issue.", "Give me items, old man.")) {
 			case 1:
 				mes "[Elder Creek]";
 				mes "I'm envious of you! Still, young";
@@ -1685,7 +1685,7 @@ comodo,68,195,0	script	Old Man#thai	2_M_PHARMACIST,{
 		mes "[Elder Creek]";
 		mes "Now tell me, what bothers you right now?";
 		next;
-		switch(select("Boy/girlfriend issue.:Financial problem.:Bored to death.:Career issue.:Give me items, old man.")) {
+		switch(select("Boy/girlfriend issue.", "Financial problem.", "Bored to death.", "Career issue.", "Give me items, old man.")) {
 		case 1:
 			mes "[Elder Creek]";
 			mes "I'm envious of you! Still, young";

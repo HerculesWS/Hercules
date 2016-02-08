@@ -47,7 +47,7 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 		mes "-^4d4dff'Eden Group Mark'^000000-";
 		mes "-to receive these missions.-";
 		next;
-		switch(select("Just walk away.:^0000FFEden Group^000000 missions?:How can I be a member of the ^0000FFEden Group^000000?")) {
+		switch(select("Just walk away.", "^0000FFEden Group^000000 missions?", "How can I be a member of the ^0000FFEden Group^000000?")) {
 		case 1:
 			close;
 		case 2:
@@ -132,12 +132,12 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 	mes "[91-99 Mission Board]";
 	mes "There are several requests on this board.";
 	next;
-	switch(select("^8B4513Turtle Island^000000:^8B4513Glast Heim^000000:^8B4513Rachel / Veins^000000:^8B4513Expansion Cities^000000:^8B4513Other regions^000000")) {
+	switch(select("^8B4513Turtle Island^000000", "^8B4513Glast Heim^000000", "^8B4513Rachel / Veins^000000", "^8B4513Expansion Cities^000000", "^8B4513Other regions^000000")) {
 	case 1:
 		mes "^8B4513Turtle Island^000000.";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFSolider^000000:^0000FFFreezer^000000:^0000FFHeater^000000")) {
+		switch(select("^0000FFSolider^000000", "^0000FFFreezer^000000", "^0000FFHeater^000000")) {
 			case 1: callsub L_Quest,4181,"Solider",90000,"솔리더카드","There is a monster that only can be found on ^8B4513Turtle Island^000000.";
 			case 2: callsub L_Quest,4182,"Freezer",94000,"프리저카드","There is a monster that only can be found on ^8B4513Turtle Island^000000.";
 			case 3: callsub L_Quest,4183,"Heater",114000,"히터카드","There is a monster that only can be found on ^8B4513Turtle Island^000000.";
@@ -146,7 +146,7 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 		mes "^8B4513Glast Heim^000000.";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFInjustice^000000:^0000FFRybio^000000:^0000FFDark Priest^000000")) {
+		switch(select("^0000FFInjustice^000000", "^0000FFRybio^000000", "^0000FFDark Priest^000000")) {
 			case 1: callsub L_Quest,4184,"Injustice",96000,"인저스티스카드","There is a monster only found in ^8B4513Glast Heim prison^000000.";
 			case 2: callsub L_Quest,4185,"Rybio",96000,"리비오카드","There is a monster only found in ^8B4513Glast Heim prison^000000.";
 			case 3: callsub L_Quest,4186,"Dark Priest",146000,"다크프리스트카드","There is a monster only found in ^8B4513Glast Heim prison^000000.";
@@ -155,7 +155,7 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 		mes "^8B4513Rachel / Veins^000000.";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFStapo^000000:^0000FFRoween^000000:^0000FFSiroma^000000")) {
+		switch(select("^0000FFStapo^000000", "^0000FFRoween^000000", "^0000FFSiroma^000000")) {
 			case 1: callsub L_Quest,4187,"Stapo",96000,"스태포카드","There is a monster only found in ^8B4513Veins^000000.";
 			case 2: callsub L_Quest,4188,"Roween",102000,"로우윈카드","There is a monster only found in ^8B4513Rachel^000000.";
 			case 3: callsub L_Quest,4189,"Siroma",110000,"시로마카드","There is a monster only found in ^8B4513Ice Dungeon^000000.";
@@ -164,7 +164,7 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 		mes "^8B4513Expansion Cities^000000.";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFShinobi^000000:^0000FFEvil Nymph^000000")) {
+		switch(select("^0000FFShinobi^000000", "^0000FFEvil Nymph^000000")) {
 			case 1: callsub L_Quest,4190,"Shinobi",102000,"시노비카드","There is a monster only found in ^8B4513Amatsu Dungeon^000000.";
 			case 2: callsub L_Quest,4191,"Evil Nymph",108000,"요선녀카드","There is a monster only found in ^8B4513Kunlun Dungeon^000000.";
 		}
@@ -172,7 +172,7 @@ moc_para01,48,177,3	script	91-99 Mission Board	4_BOARD3,{
 		mes "Other Regions.";
 		mes "Which monster will you hunt or have you finished hunting?";
 		next;
-		switch(select("^0000FFDeviruchi^000000:^0000FFMineral^000000:^0000FFKaho^000000:^0000FFNeraid^000000:^0000FFDisguise^000000")) {
+		switch(select("^0000FFDeviruchi^000000", "^0000FFMineral^000000", "^0000FFKaho^000000", "^0000FFNeraid^000000", "^0000FFDisguise^000000")) {
 			case 1: callsub L_Quest,4192,"Deviruchi",110000,"데비루치카드","There is a monster only found in ^8B4513Geffen Dungeon^000000.";
 			case 2: callsub L_Quest,4193,"Mineral",138000,"미네랄","There is a monster only found in ^8B4513Einbech Dungeon^000000.";
 			case 3: callsub L_Quest,4194,"Kaho",118000,"카호카드","There is a monster found in ^8B4513Nogg Road Magma 1^000000.";
@@ -229,7 +229,7 @@ L_Quest:
 		mes "Hunt 30 "+getarg(1)+" monsters there and post your success on this board.";
 		next;
 		if (getarg(3) != "") cutin getarg(3),255;
-		if(select("I'll hunt them.:No thanks.") == 1) {
+		if(select("I'll hunt them.", "No thanks.") == 1) {
 			mes "[91-99 Mission Board]";
 			mes "When you have completed the mission, post it on this board and collect your reward.";
 			if (.@playtime) erasequest .@quest2;

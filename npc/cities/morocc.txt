@@ -318,7 +318,7 @@ moc_ruins,121,116,4	script	Picky Lady#moc	1_F_01,{
 	mes "[Syvia]";
 	mes "I'm so scared... I just wanna ease my mind watching over those cute little Porings...";
 	next;
-	switch(select("What about Angeling?:How about Ghostring?:Quit Conversation")) {
+	switch(select("What about Angeling?", "How about Ghostring?", "Quit Conversation")) {
 	case 1:
 		mes "[Syvia]";
 		mes "Ooh! Angeling is just like Poring, except it has angel wings! Of course, I don't know if they can actually fly..";
@@ -367,7 +367,7 @@ moc_ruins,155,107,4	script	Ant Man#moc	1_M_01,{
 	mes "[Akira]";
 	mes "I'm really wondered how those entrances are after the horrible destruction, but I can't go out.. If you ever hear anything about it, please get me informed.";
 	next;
-	switch(select("About 'Ant Hell':About Ants:End Conversation")) {
+	switch(select("About 'Ant Hell'", "About Ants", "End Conversation")) {
 	case 1:
 		mes "[Akira]";
 		mes "That cave is sure a dangerous hell, sticky and all... There are 2 underground levels.";
@@ -413,7 +413,7 @@ moc_ruins,143,43,4	script	Assassin Boy#moc	2_M_THIEFMASTER,{
 	mes "[Slayer Kid]";
 	mes "But what did they do when this destruction happened in Morroc!!!";
 	next;
-	switch(select("?????:Where I can find the Assassin clan?:End Conversation")) {
+	switch(select("?????", "Where I can find the Assassin clan?", "End Conversation")) {
 	case 1:
 		mes "[Slayer Kid]";
 		mes "I hear Assassins practice killing people, quietly and stealthfully..";
@@ -463,7 +463,7 @@ moc_ruins,173,141,4	script	Dimitri#moc	1_M_03,{
 	mes "[Dimitri]";
 	mes "The desert of Morroc has the highest average temperature in Midgard. You might as well think twice before you sit on the sand in the middle of the desert, cause your ass will be toasted.";
 	next;
-	switch(select("About the desert sands:About the remedy for Fatigue:End Conversation")) {
+	switch(select("About the desert sands", "About the remedy for Fatigue", "End Conversation")) {
 	case 1:
 		mes "[Dimitri]";
 		mes "......What I mean is that...";
@@ -541,7 +541,7 @@ moc_ruins,173,70,4	script	Uncle Morroc#moc	1_M_02,{
 	mes "[Phlanette]";
 	mes "I have a hunch that this hot and dry climate in Morroc is because of that Satan sealed deeper underground for so long.";
 	next;
-	switch(select("Tell me about the desert.:Quit Conversation")) {
+	switch(select("Tell me about the desert.", "Quit Conversation")) {
 	case 1:
 		mes "[Phlanette]";
 		mes "Um.. I'll briefly tell ya about the desert if you want to know.";
@@ -583,7 +583,7 @@ moc_fild16,199,212,4	script	 Uncle Assassin#moc	1_M_JOBTESTER,{
 	mes "we never";
 	mes "look our targets in the eye.";
 	next;
-	switch(select("Notion of Assassin:Quit Conversation")) {
+	switch(select("Notion of Assassin", "Quit Conversation")) {
 	case 1:
 		mes "[Hashisid]";
 		mes "Well, then..";
@@ -643,7 +643,7 @@ moc_fild16,211,254,4	script	Assassin#07rhea_30	2_M_THIEFMASTER,{
 	mes "They may either wield dual daggers,";
 	mes "or fight with a set of Katars!";
 	next;
-	switch(select("Specialty of Katar:Specialty of Dual Daggers:Quit Conversation")) {
+	switch(select("Specialty of Katar", "Specialty of Dual Daggers", "Quit Conversation")) {
 	case 1:
 		mes "[La Conte]";
 		mes "A set of Katars is";
@@ -730,7 +730,7 @@ morocc_in,166,76,3	script	Bartender#02	1_ETC_01,{
 	mes "[Bartender]";
 	mes "What are you going to order?";
 	next;
-	switch(select("Tropical Sograt:Vemillion the Beach:Nothing.")) {
+	switch(select("Tropical Sograt", "Vemillion the Beach", "Nothing.")) {
 	case 1:
 		if (Zeny >= 1000 ) {
 			Zeny -= 1000;

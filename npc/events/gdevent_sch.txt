@@ -94,7 +94,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 			mes "Help me!";
 			mes "Please, help me!";
 			next;
-			switch(select("What happened?:Nevermind.")) {
+			switch(select("What happened?", "Nevermind.")) {
 			case 1:
 				mes "[Dwarf]";
 				mes "I am Morestone and I collect rare gems.";
@@ -160,7 +160,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 					mes "If you want, I can take ^3131FFyou and your guild members^000000 to explore that area.";
 					mes "Do you want to go there now?";
 					next;
-					switch(select("Wait! I'm not ready yet.:Let's go!")) {
+					switch(select("Wait! I'm not ready yet.", "Let's go!")) {
 					case 1:
 						$@gdeventv_s1 = 0;
 						$@gdevents_s$ = "";
@@ -205,7 +205,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 				mes "Oh, you are a member.";
 				mes "Would you like to go to the mysterious area?";
 				next;
-				switch(select("Let's go.:No, thanks.")) {
+				switch(select("Let's go.", "No, thanks.")) {
 				case 1:
 					mes "[Morestone]";
 					mes "I hope you enjoy yourself, my friend.";
@@ -226,7 +226,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 				mes "Help me!";
 				mes "Please, help me!";
 				next;
-				switch(select("What happened?:Nevermind.")) {
+				switch(select("What happened?", "Nevermind.")) {
 				case 1:
 					mes "[Dwarf]";
 					mes "I am Morestone and I collect rare gems.";
@@ -292,7 +292,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 						mes "If you want, I can take ^3131FFyou and your guild members^000000 to explore that area.";
 						mes "Do you want to go there now?";
 						next;
-						switch(select("Wait! I'm not ready yet.:Let's go!")) {
+						switch(select("Wait! I'm not ready yet.", "Let's go!")) {
 						case 1:
 							$@gdeventv_s1 = 0;
 							$@gdevents_s$ = "";
@@ -347,7 +347,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 				mes "Oh, you are a member.";
 				mes "Would you like to go to the mysterious area?";
 				next;
-				switch(select("Let's go.:No, thanks.")) {
+				switch(select("Let's go.", "No, thanks.")) {
 				case 1:
 					mes "[Morestone]";
 					mes "I hope you enjoy yourself, my friend.";
@@ -368,7 +368,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 				mes "Help me!";
 				mes "Please, help me!";
 				next;
-				switch(select("What happened?:Nevermind.")) {
+				switch(select("What happened?", "Nevermind.")) {
 				case 1:
 					mes "[Dwarf]";
 					mes "I am Morestone and I collect rare gems.";
@@ -434,7 +434,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 						mes "If you want, I can take ^3131FFyou and your guild members^000000 to explore that area.";
 						mes "Do you want to go there now?";
 						next;
-						switch(select("Wait! I'm not ready yet.:Let's go!")) {
+						switch(select("Wait! I'm not ready yet.", "Let's go!")) {
 						case 1:
 							$@gdeventv_s1 = 0;
 							$@gdevents_s$ = "";
@@ -545,7 +545,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 				mes "Did you get permission from Gergath?";
 				mapannounce "schg_que01", "Pierrot Pier: Did you get permission from Gergath?",bc_map,"0x99CC00";
 				next;
-				switch(select("I need to check that.:No.")) {
+				switch(select("I need to check that.", "No.")) {
 				case 1:
 					mes "[Pierrot Pier]";
 					mes "Please give me the palm of your hand.";
@@ -619,7 +619,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 				mes "[Pierrot Pier]";
 				mes "Alright, would you like to play the game Gergath has prepared for you?";
 				next;
-				switch(select("Game instructions.:Skip instructions.:Refuse game.")) {
+				switch(select("Game instructions.", "Skip instructions.", "Refuse game.")) {
 				case 1:
 					mes "[Pierrot Pier]";
 					mes "The game prepared by my master is very unique, yet simple and fun!";
@@ -653,7 +653,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 				mes "Okay, I'm ready to begin.";
 				mes "Shall we start? Beep, beep?";
 				next;
-				switch(select("No.:Start.")) {
+				switch(select("No.", "Start.")) {
 				case 1:
 					mes "[Pierrot Pier]";
 					mes "Let me know when you are ready.";
@@ -727,7 +727,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 			mes "[Pierrot Pier]";
 			mes "What did you think?";
 			next;
-			switch(select("It was pretty hard.:I should've been successful...")) {
+			switch(select("It was pretty hard.", "I should've been successful...")) {
 			case 1:
 				mes "[Pierrot Pier]";
 				mes "It's like trying to find a needle in a haystack!";
@@ -755,7 +755,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 			mes "Shall we start? Beep, beep?";
 			mapannounce "schg_que01", "Pierrot Pier: Okay, I'm ready to begin. Shall we start? Beep, beep?",bc_map,"0x99CC00";
 			next;
-			switch(select("No.:Start.")) {
+			switch(select("No.", "Start.")) {
 			case 1:
 				mes "[Pierrot Pier]";
 				mes "Let me know when you are ready.";
@@ -883,7 +883,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 			mes "Did you get permission from the Gergath?";
 			mapannounce "schg_que01", "Pierrot Pier: Did you get permission from Gergath?",bc_map,"0x99CC00";
 			next;
-			switch(select("I need to check that.:No.")) {
+			switch(select("I need to check that.", "No.")) {
 			case 1:
 				mes "[Pierrot Pier]";
 				mes "Please give me the palm of your hand.";
@@ -1528,7 +1528,7 @@ schg_dun01,5,5,1	script	Event controller#sch_gd	4_DOG01,{
 	} else {
 		mes "How can I help you?";
 		next;
-		switch(select("Reset.:No, thanks.")) {
+		switch(select("Reset.", "No, thanks.")) {
 		case 1:
 			mes "Completed.";
 			donpcevent "Monster Controler1#sch::OnControler1#sch_gd";

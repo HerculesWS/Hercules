@@ -82,11 +82,11 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "[Middle-aged Gentleman]";
 		mes "You're a curious one. Who are you? What do you want?";
 		next;
-		select("Just looking around!:This is my office!:Who am I? Who are you?");
+		select("Just looking around!", "This is my office!", "Who am I? Who are you?");
 		mes "[Middle-aged Gentleman]";
 		mes "Do you want to argue with me? Do you know who I am?";
 		next;
-		if(select("Not really, who are you?:Sorry, I won't hurt your feelings.") == 2) {
+		if(select("Not really, who are you?", "Sorry, I won't hurt your feelings.") == 2) {
 			mes "["+strcharinfo(0)+"]";
 			mes "Sorry. I had to be sure. I didn't know that you are from the royal palace.";
 			next;
@@ -126,7 +126,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "[Heinrich]";
 		mes "BUT!! I want to believe you...";
 		next;
-		switch(select("I want to know more.:Stop talking.")) {
+		switch(select("I want to know more.", "Stop talking.")) {
 		case 1:
 			mes "[Heinrich]";
 			mes "You are impetuous.";
@@ -164,7 +164,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "Really?";
 		mes "Good. You might have the wrong idea about what a Royal Guard is. So, in your opinion, what do you think is the key to being a Royal Guard?";
 		next;
-		select("Decision and Bravery:Calm Judgment:Sharp wisdom:Benevolent spirit");
+		select("Decision and Bravery", "Calm Judgment", "Sharp wisdom", "Benevolent spirit");
 		mes "[Heinrich]";
 		mes "Good choice.";
 		mes "Actually, the other 3 are also needed to have the Royal Guard spirit, friend.";
@@ -195,7 +195,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "[Heinrich]";
 		mes "If you want to hear more story, you have to show me your similar attitude.";
 		next;
-		if(select("That's an unfair demand.:I will try.") == 1) {
+		if(select("That's an unfair demand.", "I will try.") == 1) {
 			mes "[Heinrich]";
 			mes "Good idea, it would better to find something more worthy.";
 			close;
@@ -279,7 +279,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "[Heinrich]";
 		mes "Now I can't tell you why the trace is there.";
 		next;
-		if(select("Interesting. Can I go there?:Seems really dangerous.") == 2) {
+		if(select("Interesting. Can I go there?", "Seems really dangerous.") == 2) {
 			mes "[Heinrich]";
 			mes "Good idea, that's useless work to explore there.";
 			close;
@@ -417,7 +417,7 @@ glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
 		mes "[Memory of King Schmidtz]";
 		mes "I'm planning to accept you as a member of the Royal Guard to continue their lost traditions. Are you ready to do it?";
 		next;
-		if(select("Sure, of course:Not yet") == 2) {
+		if(select("Sure, of course", "Not yet") == 2) {
 			mes "[Memory of King Schmidtz]";
 			mes "Umm, maybe Heinrich had wrong judgement.";
 			close;
@@ -425,7 +425,7 @@ glast_01,240,366,5	script	Memory of King Schmidtz	CLEAR_NPC,{
 		mes "[Memory of King Schmidtz]";
 		mes "If so, I will proceed to making you a Royal Guard.";
 		next;
-		if(select("Great.:Not yet.") == 2) {
+		if(select("Great.", "Not yet.") == 2) {
 			mes "[Memory of King Schmidtz]";
 			mes "Perhaps Heinrich had the wrong image of you.";
 			close;
@@ -519,7 +519,7 @@ OnTouch:
 
 sec_in02,12,43,3	script	sorcereryal	1_M_LIBRARYMASTER,1,1,{
 	callfunc "F_GM_NPC";
-	switch(select("Royal Guard:Rune Knight:Sorcerer")) {
+	switch(select("Royal Guard", "Rune Knight", "Sorcerer")) {
 	case 1:
 		mes "1~5";
 		input .@input;

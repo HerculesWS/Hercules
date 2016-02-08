@@ -58,7 +58,7 @@ einbroch,175,196,5	script	Morei#ein	4_M_EINMAN2,{
 	mes "Would you like to go";
 	mes "back to ground level?";
 	next;
-	switch(select("Yes.:No.")) {
+	switch(select("Yes.", "No.")) {
 	case 1:
 		mes "[Morei]";
 		mes "I see.";
@@ -120,7 +120,7 @@ function	script	EinTower	{
 	mes "Einbroch Tower admission";
 	mes "and an Apple to snack on.";
 	next;
-	switch(select("Tower Admission Only:Apple Combo Set:Cancel")) {
+	switch(select("Tower Admission Only", "Apple Combo Set", "Cancel")) {
 	case 1:
 		if (Zeny < 10) {
 			mes "[" + getarg(0) + "]";
@@ -203,7 +203,7 @@ einbroch,232,272,3	script	Train Station Staff#ein1::EinbrochTrain	4_M_EIN_SOLDIE
 	mes "to Einbech line is 200 zeny.";
 	mes "Would you like to buy a ticket?";
 	next;
-	switch(select("Yes.:No.:About the Environment...")) {
+	switch(select("Yes.", "No.", "About the Environment...")) {
 	case 1:
 		if (Zeny > 199) {
 			mes "[Staff]";
@@ -326,7 +326,7 @@ einbroch,40,116,1	script	Airship Engineer#ein-1	4_M_EINMAN,{
 	mes "her tune-up and now she's";
 	mes "sleeping! J-just step away!";
 	next;
-	switch(select("Who's Burielle?:Sorry about That.")) {
+	switch(select("Who's Burielle?", "Sorry about That.")) {
 	case 1:
 		mes "[Airship Engineer]";
 		mes "Burielle is the prettiest";
@@ -336,7 +336,7 @@ einbroch,40,116,1	script	Airship Engineer#ein-1	4_M_EINMAN,{
 		mes "with my healing hands, she'll";
 		mes "conquer the skies again!";
 		next;
-		switch(select("Ah~:Uh huh...")) {
+		switch(select("Ah~", "Uh huh...")) {
 		case 1:
 			mes "["+strcharinfo(0)+"]";
 			mes "Ah~";
@@ -825,7 +825,7 @@ ein_in01,206,224,3	script	Hotel Employee#ein	4_M_EINMAN,{
 		next;
 	}
 	else {
-		switch(select("Save:Take Rest - 5,000 zeny:Cancel")) {
+		switch(select("Save", "Take Rest - 5,000 zeny", "Cancel")) {
 		case 1:
 			mes "[Hotel Employee]";
 			mes "Your Respawn Point";

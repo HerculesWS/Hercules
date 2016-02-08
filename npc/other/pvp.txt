@@ -45,7 +45,7 @@
 	mes "explaining the PVP Modes.";
 	mes "I am the PVP Narrator!";
 	next;
-	switch(select("What is PVP?:What are the PVP Modes?:What are the rules for PVP?:Save Position.:End Dialog.")) {
+	switch(select("What is PVP?", "What are the PVP Modes?", "What are the rules for PVP?", "Save Position.", "End Dialog.")) {
 	case 1:
 		mes "[PVP Narrator]";
 		mes "In short, PVP means";
@@ -201,7 +201,7 @@ geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 	mes "modes or rules, Please ask";
 	mes "the Narrator...";
 	next;
-	switch(select("^FF5533' PvP Nightmare Mode'^000000:^3355FF' PvP Yoyo Mode'^000000:^3355FF' PvP Event Mode'^000000:Quit")) {
+	switch(select("^FF5533' PvP Nightmare Mode'^000000", "^3355FF' PvP Yoyo Mode'^000000", "^3355FF' PvP Event Mode'^000000", "Quit")) {
 		case 1:
 			mes "[Gate Keeper]";
 			mes "I am sorry, but currently the Nightmare mode service is not available.";
@@ -214,7 +214,7 @@ geffen_in,67,63,4	duplicate(pvpe)	PVP Narrator#pe6	4_M_02
 			mes "to the Yoyo Mode";
 			mes "fight square?";
 			next;
-			switch(select("Move:Cancel")) {
+			switch(select("Move", "Cancel")) {
 			case 1:
 				if ((Zeny > 499) && (BaseLevel > 30)) {
 					Zeny -= 500;
@@ -345,12 +345,12 @@ pvp_room,54,85,4	script	Registration Staff#1	8W_SOLDIER,{
 		setarray .warp_x,40,59,20,40;
 		setarray .warp_y,59,40,40,20;
 	}
-	if (select("Combat Square one:Cancel") == 1) {
+	if (select("Combat Square one", "Cancel") == 1) {
 		mes "[PVP Combat Square Register Staff]";
 		mes "'"+ strcharinfo(0) +"'";
 		mes "Are you ready?!";
 		next;
-		if (select("Yes!:No!") == 1) {
+		if (select("Yes!", "No!") == 1) {
 			mes "[PVP Combat Square Register Staff]";
 			mes "OK! I will send you inside";
 			mes "Good luck!";
@@ -381,7 +381,7 @@ OnInit:
 		mes "For details about players entrance please proceed to the Register Staff on your left.";
 		close;
 	}
-	if (select("Compete Square one:Cancel") == 1) {
+	if (select("Compete Square one", "Cancel") == 1) {
 		mes "[PVP Combat Square Register Staff]";
 		mes "You got it, thanks for participating. Have fun!";
 		close2;
@@ -409,7 +409,7 @@ pvp_room,86,85,4	duplicate(PVPSpectator)	Spectator's Entrance#4	8W_SOLDIER
 OnTouch:
 	mes "[Combat Square Staff]";
 	mes "May I help you?";
-	if (select("To the center viewer seat.:Leave Combat Square.") == 1) {
+	if (select("To the center viewer seat.", "Leave Combat Square.") == 1) {
 		warp "pvp_2vs2",38,38;
 		end;
 	}
@@ -424,7 +424,7 @@ pvp_2vs2,74,5,0	duplicate(PVPSpecWarp)	Combat Square Staff#4	WARPNPC,1,1
 pvp_2vs2,40,40,0	script	Combat Square Staff#5	WARPNPC,1,1,{
 	mes "[Combat Square Staff]";
 	mes "May I help you?";
-	switch(select("To the side viewer seat.:Leave Combat Square.")) {
+	switch(select("To the side viewer seat.", "Leave Combat Square.")) {
 	case 1:
 		switch(rand(1,4)) {
 			case 1: warp "pvp_2vs2",39,7; end;
@@ -445,7 +445,7 @@ OnTouch:
 	mes "Did you have fun in Combat Square?";
 	mes "May I ask where you want to go?";
 	next;
-	switch(select("Prontera.:Morocc.:Geffen.:Payon.:Alberta.:Cancel.")) {
+	switch(select("Prontera.", "Morocc.", "Geffen.", "Payon.", "Alberta.", "Cancel.")) {
 		case 1: warp "prontera",107,60; end;
 		case 2: warp "morocc",157,96; end;
 		case 3: warp "geffen",120,36; end;

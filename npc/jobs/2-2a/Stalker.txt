@@ -74,7 +74,7 @@ valkyrie,53,58,3	script	Stalker#Valkyrie	4_F_ROGUE,{
 		mes "warriors? Are you ready";
 		mes "to become a Stalker?";
 		next;
-		if (select("No.:Yes.") == 1) {
+		if (select("No.", "Yes.") == 1) {
 			mes "[Stalker]";
 			mes "When you're ready,";
 			mes "feel free to come back.";

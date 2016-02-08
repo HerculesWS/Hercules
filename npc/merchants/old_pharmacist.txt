@@ -47,7 +47,7 @@ alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 	mes "[Old Pharmacist]";
 	mes "Ummmm...";
 	mes "What brings you here...?";
-	switch(select("Make Potion:Talk.:Mixing Information:Cancel")) {
+	switch(select("Make Potion", "Talk.", "Mixing Information", "Cancel")) {
 	case 1:
 		next;
 		if (MaxWeight - Weight < 5000) {
@@ -62,7 +62,7 @@ alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 		} else {
 			mes "[Old Pharmacist]";
 			mes "You have all the stuff ready, right? Which one would you like?";
-			switch(select("Red Potion.:Orange Potion.:Yellow Potion.:White Potion.:Blue Potion.:Green Potion.:Actually, I don't want anything.")) {
+			switch(select("Red Potion.", "Orange Potion.", "Yellow Potion.", "White Potion.", "Blue Potion.", "Green Potion.", "Actually, I don't want anything.")) {
 			case 1:
 				callsub L_Making,507,3,501;
 			case 2:
@@ -88,7 +88,7 @@ alberta_in,16,28,4	script	Pharmacist	1_M_PUBMASTER,{
 					close;
 				}
 				mes "How many?";
-				switch(select("Make as many as I can.:I want to choose an amount.:Actually, I don't want anything.")) {
+				switch(select("Make as many as I can.", "I want to choose an amount.", "Actually, I don't want anything.")) {
 				case 1:
 					next;
 					if ((countitem(Red_Herb) < .@max) || (countitem(Yellow_Herb) < .@max) || (countitem(Empty_Bottle) < .@max) || (Zeny < .@max*3)) {
@@ -218,7 +218,7 @@ L_Making:
 		close;
 	}
 	mes "How many?";
-	switch(select("Make as many as I can.:I want to choose an amount.:Actually, I don't want anything.")) {
+	switch(select("Make as many as I can.", "I want to choose an amount.", "Actually, I don't want anything.")) {
 	case 1:
 		next;
 		if ((countitem(getarg(0)) < .@max*2) || (countitem(Empty_Bottle) < .@max) || (Zeny < .@max*getarg(1))) {

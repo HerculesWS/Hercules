@@ -176,7 +176,7 @@
 			else
 				.@menu$ += "^777777Socket "+(.@i+1)+" - No card^000000:";
 		}
-		.@i = select("Stop the work:"+.@menu$);
+		.@i = select("Stop the work:"+ .@menu$);
 		switch(.@i) {
 		case 1:
 			mes .@n$;
@@ -221,7 +221,7 @@
 			mes .@n$;
 			mes "This is pretty old equipment. There is a high rate of destroying the cards or equipment during the work. Are you sure you want to continue?";
 			next;
-			if(select("Next time...:Continue") == 1) {
+			if(select("Next time...", "Continue") == 1) {
 				mes .@n$;
 				mes "Whenever you need the work, visit me here.";
 				close;
@@ -240,7 +240,7 @@
 			mes .@n$;
 			mes "If you use the Premium Lubricant, the rate of destruction will be decreased highly, but I can't give you a 100% guarantee. Are you sure you want to continue?";
 			next;
-			if(select("Next time...:Continue") == 1) {
+			if(select("Next time...", "Continue") == 1) {
 				mes .@n$;
 				mes "Whenever you need the work, visit me here.";
 				close;
@@ -259,7 +259,7 @@
 			mes .@n$;
 			mes "If you use the Ordinary Lubricant, the rate of destruction will be decreased highly, but I can't give you a 100% guarantee. Are you sure you want to continue?";
 			next;
-			if(select("Next time...:Continue") == 1) {
+			if(select("Next time...", "Continue") == 1) {
 				mes .@n$;
 				mes "Whenever you need the work, visit me here.";
 				close;
@@ -274,7 +274,7 @@
 		mes .@n$;
 		mes "This equipment contains a precious MVP card. This card can't be separated with lubricant. If you bring the super surfactant ^0000ffSillit Pong^000000, I will be able to work.";
 		next;
-		switch(select("Next time...:I have a Sillit Pong.")) {
+		switch(select("Next time...", "I have a Sillit Pong.")) {
 		case 1:
 			mes .@n$;
 			mes "Whenever you need the work, visit me here.";
@@ -296,7 +296,7 @@
 			.@menu$ = "I got it. Just do it quickly!";
 		}
 		next;
-		switch(select("Next time...:"+.@menu$)) {
+		switch(select("Next time...:"+ .@menu$)) {
 		case 1:
 			mes .@n$;
 			mes "Whenever you need the work, visit me here.";

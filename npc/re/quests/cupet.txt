@@ -194,7 +194,7 @@ function	script	cute_pet_manager	{
 		mes "exchange for an " + getitemname(.@tame_id) + ".";
 		mes "Do you want to exchange with me?";
 		next;
-		if (select("Exchange:Don't Exchange") == 2) {
+		if (select("Exchange", "Don't Exchange") == 2) {
 			mes "[Cute Pet Manager]";
 			mes "You don't? You will come back again.";
 			close;

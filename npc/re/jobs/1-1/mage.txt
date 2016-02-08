@@ -87,7 +87,7 @@ geffen_in,164,124,4	script	Mage Guildsman#mage	2_F_MAGICMASTER,{
 	}else{
 		mes "Hey?";
 		next;
-		switch(select("I want to be a Mage:What are the requirements to be a Mage?:Nothing, thanks.")) {
+		switch(select("I want to be a Mage", "What are the requirements to be a Mage?", "Nothing, thanks.")) {
 		case 1:
 			mes "[Mage Guildsman]";
 			mes "Wanna be a Mage? Eh...";
@@ -101,7 +101,7 @@ geffen_in,164,124,4	script	Mage Guildsman#mage	2_F_MAGICMASTER,{
 			}
 			mes "Right, you said that you wanna be a Mage?";
 			next;
-			if(select("I want to be a Mage.:Nothing, thanks.") == 2) {
+			if(select("I want to be a Mage.", "Nothing, thanks.") == 2) {
 				mes "[Mage Guildsman]";
 				mes "Whaaaaat~?! Right after you tell me that you wanna become a Mage, you change your mind?! Be a bit more decisive!";
 				close;

@@ -66,7 +66,7 @@ valkyrie,44,39,5	script	Lord Knight#Valkyrie	1_M_KNIGHTMASTER,{
 		mes "Would you like";
 		mes "to become a Lord Knight?";
 		next;
-		if (select("No.:Yes.") == 1) {
+		if (select("No.", "Yes.") == 1) {
 			mes "[Lord Knight]";
 			mes "When you're ready,";
 			mes "feel free to come back.";

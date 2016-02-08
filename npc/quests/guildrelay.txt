@@ -371,7 +371,7 @@
 				mes "You look as though";
 				mes "something is on your mind.";
 				next;
-				switch(select("N-no, nothing.:I want to take a lesson.")) {
+				switch(select("N-no, nothing.", "I want to take a lesson.")) {
 				case 1:
 					mes "[" + .@name$ + "]";
 					mes "Hm? That's strange.";
@@ -675,7 +675,7 @@
 				mes "so that you will be better";
 				mes "able to protect the weak.";
 				next;
-				switch(select("I want to take the test.:Let me think about it.")) {
+				switch(select("I want to take the test.", "Let me think about it.")) {
 				case 1:
 					mes "[" + .@name$ + "]";
 					mes "Is that so? In this test,";
@@ -1214,7 +1214,7 @@
 			mes "Have you come here";
 			mes "as an invited guest?";
 			next;
-			switch(select("No, not really...:I was invited by the guild master.")) {
+			switch(select("No, not really...", "I was invited by the guild master.")) {
 			case 1:
 				mes "[" + .@name$ + "]";
 				mes "Oh, really?";
@@ -1604,7 +1604,7 @@
 				mes "your Falcon for the";
 				mes "sake of your guild.";
 				next;
-				switch(select("Donate Falcon:No way!")) {
+				switch(select("Donate Falcon", "No way!")) {
 				case 1:
 					if (checkfalcon()) {
 						mes "[" + .@name$ + "]";

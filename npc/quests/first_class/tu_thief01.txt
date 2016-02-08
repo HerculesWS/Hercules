@@ -76,7 +76,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "the guy in charge";
 			mes "of training new Thieves.";
 			next;
-			switch(select("Training?:Training? Right now?")){
+			switch(select("Training?", "Training? Right now?")){
 			case 1:
 				mes "[Yierhan]";
 				mes "Yeah, training. I mean, this kind of stuff is second nature to some people, but other guys need a little more help. So this is one of those 'just in case' things.";
@@ -96,7 +96,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "So for melee attacks, which stat increases your damage? Come on";
 			mes "now, you should know this if you didn't skip the Novice Training Grounds.";
 			next;
-			switch(select("^6B8E23INT^000000:^2F4F2FSTR^000000:^23238EDEX^000000")){
+			switch(select("^6B8E23INT^000000", "^2F4F2FSTR^000000", "^23238EDEX^000000")){
 			case 1:
 				mes "[Yierhan]";
 				mes "Say whaaat? ^6B8E23INT^000000 affects magic damage, magic defense and some skills. Thieves don't even work with magic!";
@@ -260,7 +260,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "already know?";
 			next;
 			while(1){
-				switch(select("Double Attack:Increase Dodge:Steal:Hiding:Envenom:Detoxify:I know enough.")) {
+				switch(select("Double Attack", "Increase Dodge", "Steal", "Hiding", "Envenom", "Detoxify", "I know enough.")) {
 				case 1:
 					mes "[Yierhan]";
 					mes "Just like its name,";
@@ -394,7 +394,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 				mes "and do you have any questions?";
 				next;
 				if(tu_thief01 == 6){
-					switch(select("About those traces...:Nope.")) {
+					switch(select("About those traces...", "Nope.")) {
 					case 1:
 						mes "[Yierhan]";
 						mes "You found out, eh?";
@@ -442,7 +442,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 						close;
 					}
 				} else {
-					switch(select("It was nice to meet you.:Nope.")) {
+					switch(select("It was nice to meet you.", "Nope.")) {
 					case 1:
 						mes "[Yierhan]";
 						mes "Yeah, it was pretty cool just hanging out. Keep fighting";
@@ -543,7 +543,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "complete your mission?";
 			mes "I know, I know, the thing you've gotta do is pretty rough.";
 			next;
-			switch(select("I'm still investigating.:Not yet.:Yes, I did.")) {
+			switch(select("I'm still investigating.", "Not yet.", "Yes, I did.")) {
 			case 1:
 				mes "[Yierhan]";
 				mes "Ah, gotcha. Well, that's understandable. I mean, these things take time, you know?";
@@ -667,7 +667,7 @@ moc_ruins,66,164,4	script	Thief Trainer#T	4_M_02,{
 			mes "I couldn't focus";
 			mes "on it at all...";
 			next;
-			switch(select("I'm still investigating.:I'm not done yet...:Oh, I finished~")) {
+			switch(select("I'm still investigating.", "I'm not done yet...", "Oh, I finished~")) {
 			case 1:
 				mes "[Yierhan]";
 				mes "Ah, gotcha. Well, that's understandable. I mean, these things take time, you know?";

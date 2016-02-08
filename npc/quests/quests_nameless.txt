@@ -222,7 +222,7 @@ ra_in01,308,59,1	script	Waiter#pc	4_M_RACHMAN2,{
 			mes "not mistaken, you're";
 			mes "here for something else?";
 			next;
-			if (select("I'd like to order.:Yes, I've come for another reason.") == 1) {
+			if (select("I'd like to order.", "Yes, I've come for another reason.") == 1) {
 				mes "[Waiter]";
 				mes "Sure, no problem.";
 				mes "Did you come alone?";
@@ -489,7 +489,7 @@ ve_in,78,314,5	script	Magistrate#Aru	4_M_DST_GRAND,{
 		mes "to come in here. Why do";
 		mes "you keep coming back?";
 		next;
-		if (select("I'm sorry.:I want to know about the smugglers.") == 1) {
+		if (select("I'm sorry.", "I want to know about the smugglers.") == 1) {
 			mes "[Al Hamad]";
 			mes "It's fine. Just leave,";
 			mes "and don't come back";
@@ -824,7 +824,7 @@ ve_fild07,125,128,0	script	Boat#Aru	HIDDEN_NPC,{
 		mes "a chance you might have to";
 		mes "sail this boat on your own if I'm not here. So, you ready to go?";
 		next;
-		switch(select("Yes, I'm ready.:Give me more time.")) {
+		switch(select("Yes, I'm ready.", "Give me more time.")) {
 		case 1:
 			mes "[Larjes]";
 			mes "Alright, let's go.";
@@ -849,7 +849,7 @@ ve_fild07,125,128,0	script	Boat#Aru	HIDDEN_NPC,{
 		mes "can take you to the";
 		mes "monastery.^000000";
 		next;
-		switch(select("Go to Monastery:Cancel")) {
+		switch(select("Go to Monastery", "Cancel")) {
 		case 1:
 			mes "^3355FFYou set sail for";
 			mes "the monastery...^000000";
@@ -867,7 +867,7 @@ ve_fild07,125,128,0	script	Boat#Aru	HIDDEN_NPC,{
 		mes "can take you to the";
 		mes "monastery.^000000";
 		next;
-		switch(select("Go to Monastery:Cancel")) {
+		switch(select("Go to Monastery", "Cancel")) {
 		case 1:
 			mes "^3355FFYou set sail for";
 			mes "the monastery...^000000";
@@ -892,7 +892,7 @@ ve_fild07,128,130,1	script	Secret Agent#Aru	4W_M_01,{
 		mes "there, I might not be here";
 		mes "when you come back.";
 		next;
-		switch(select("Yes, I'm ready.:Give me more time.")) {
+		switch(select("Yes, I'm ready.", "Give me more time.")) {
 		case 1:
 			mes "[Larjes]";
 			mes "Alright, let's go.";
@@ -979,7 +979,7 @@ nameless_i,127,207,0	script	Dead Crow#Aru	HIDDEN_NPC,{
 		mes "crow^3355FF makes you feel";
 		mes "uneasy for some reason.^000000";
 		next;
-		if (select("Ignore:Investigate") == 1) {
+		if (select("Ignore", "Investigate") == 1) {
 			mes "^3355FFYou decide not to touch";
 			mes "the animal's carcass.^000000";
 			close;
@@ -1210,7 +1210,7 @@ nameless_i,259,218,3	script	Larjes#Aru	4W_M_01,{
 		mes "but did you want to leave";
 		mes "this place for a while?";
 		next;
-		if(select("Yes:No")==1) {
+		if(select("Yes", "No")==1) {
 			mes "[Larjes]";
 			mes "Alight, let's go.";
 			close2;
@@ -1228,7 +1228,7 @@ nameless_i,259,218,3	script	Larjes#Aru	4W_M_01,{
 		mes "Did you still want to";
 		mes "investigate the island?";
 		next;
-		if (select("No:Yes") == 1) {
+		if (select("No", "Yes") == 1) {
 			mes "[Larjes]";
 			mes "Alright, let's go.";
 			close2;
@@ -1254,7 +1254,7 @@ nameless_n,259,218,3	script	Larjes#Boat1	4W_M_01,{
 			mes "but did you want to leave";
 			mes "this place for a while?";
 			next;
-			switch(select("Yes:No")) {
+			switch(select("Yes", "No")) {
 			case 1:
 				mes "[Larjes]";
 				mes "Alright, let's go.";
@@ -1299,7 +1299,7 @@ nameless_n,259,218,3	script	Larjes#Boat1	4W_M_01,{
 	mes "Did you still want to";
 	mes "investigate the island?";
 	next;
-	switch(select("No:Yes")) {
+	switch(select("No", "Yes")) {
 	case 1:
 		mes "[Larjes]";
 		mes "Alright, let's go.";
@@ -1335,7 +1335,7 @@ abbey02,224,70,0	script	Books#Mona1	HIDDEN_NPC,{
 		mes "with blood amongst all";
 		mes "these old, moldy books.^000000";
 		next;
-		if(select("Examine Book:Ignore")==1) {
+		if(select("Examine Book", "Ignore")==1) {
 			aru_monas = 22;
 			changequest 17014,17015;
 			getitem Research_Note,1; // Reasearch_Note
@@ -1376,7 +1376,7 @@ abbey03,232,233,4	script	Man#King	4_M_TRISTAN,{
 		mes "seems that he really is";
 		mes "still barely alive.^000000";
 		next;
-		if (select("Touch Him:Ignore Him") == 1) {
+		if (select("Touch Him", "Ignore Him") == 1) {
 			mes "["+strcharinfo(0)+"]";
 			mes "This man...";
 			mes "He's so familiar";
@@ -1467,7 +1467,7 @@ OnTouch:
 		mes "[" + strcharinfo(0) + "]";
 		mes "There is a low wall here against the other wall, if I climb it I could reach the resting place of Tristan III...";
 		next;
-		switch(select("Stay here:Climb the wall")) {
+		switch(select("Stay here", "Climb the wall")) {
 		case 1:
 			warp "nameless_n",158,169;
 			end;
@@ -1487,7 +1487,7 @@ sec_in02,15,15,4	script	boss::boss_aru_monas	1_M_SIGNMONK,{
 	mes "[Patch]";
 	mes "Input.";
 	next;
-	switch(select("Now:How much?:P- How much?:Others")) {
+	switch(select("Now", "How much?", "P- How much?", "Others")) {
 	case 1:
 		mes " ";
 		mes ""+aru_monas;
@@ -1531,7 +1531,7 @@ ra_temple,165,57,5	script	Niren#ss	4_F_MADAME,{
 	mes "I can spare a moment or two.";
 	mes "What would you like to ask?";
 	next;
-	switch(select("Ask About Veins Smugglers:Ask About Zhed")) {
+	switch(select("Ask About Veins Smugglers", "Ask About Zhed")) {
 	case 1:
 		if (aru_monas == 12) {
 			mes "[Niren]";
@@ -1563,7 +1563,7 @@ ra_temple,165,57,5	script	Niren#ss	4_F_MADAME,{
 			mes "But first, I'd like to";
 			mes "ask you for a favor.";
 			next;
-			select("Accept:Do Not Refuse");
+			select("Accept", "Do Not Refuse");
 			mes "[Niren]";
 			mes "When we realized the";
 			mes "kind of hostage the";
@@ -2321,7 +2321,7 @@ moc_ruins,77,167,4	script	Foreign Merchant#aru1	4_M_MASKMAN,5,5,{
 			mes "*Pant Pant*";
 			mes "*Sweat*";
 			next;
-			switch(select("Give Fruit Wine:Quietly Watch Him")) {
+			switch(select("Give Fruit Wine", "Quietly Watch Him")) {
 			case 1:
 				mes "[Foreign Merchant]";
 				mes "Oh, thank you! This";
@@ -2688,7 +2688,7 @@ ra_fild03,139,355,5	script	Ishmael#em	4_F_CHILD,{
 		mes "need from me, do you?";
 		emotion e_swt2;
 		next;
-		switch(select("Give Her Niren's File:Leave Her Alone")) {
+		switch(select("Give Her Niren's File", "Leave Her Alone")) {
 		case 1:
 			if (countitem(File02) > 0) {
 				mes "["+ strcharinfo(0) +"]";
@@ -2782,7 +2782,7 @@ ra_fild03,139,355,5	script	Ishmael#em	4_F_CHILD,{
 			mes "I'll be able to forge";
 			mes "your copy right away.";
 			next;
-			switch(select("Don't Give It to Her:Give It to Her")) {
+			switch(select("Don't Give It to Her", "Give It to Her")) {
 			case 1:
 				mes "[Ishmael]";
 				mes "Huh? I thought you";
@@ -3221,7 +3221,7 @@ comodo,224,187,3	script	Muff	4_M_04,{
 		mes "scare me like that!";
 		mes "What is it that you want?";
 		next;
-		switch(select("You look troubled.:Nothing. Take care!")) {
+		switch(select("You look troubled.", "Nothing. Take care!")) {
 		case 1:
 			if (BaseLevel < 61) {
 				mes "[Muff]";
@@ -3265,7 +3265,7 @@ comodo,224,187,3	script	Muff	4_M_04,{
 				mes "the collateral I gave him";
 				mes "is really valuable to me.";
 				next;
-				switch(select("Do you know where you lost it?:I'm sorry to hear that. Bye!")) {
+				switch(select("Do you know where you lost it?", "I'm sorry to hear that. Bye!")) {
 				case 1:
 					mes "[Muff]";
 					mes "If I knew where I lost";
@@ -3308,7 +3308,7 @@ comodo,224,187,3	script	Muff	4_M_04,{
 			mes "my treasure from that";
 			mes "bastard, no matter what!";
 			next;
-			switch(select("I don't understand.:I'm sorry, I was just kidding...")) {
+			switch(select("I don't understand.", "I'm sorry, I was just kidding...")) {
 			case 1:
 				mes "[Muff]";
 				mes "You think you can";
@@ -3366,7 +3366,7 @@ comodo,224,187,3	script	Muff	4_M_04,{
 		mes "the collateral I gave him";
 		mes "is really valuable to me.";
 		next;
-		switch(select("Do you know where you lost it?:What was the collateral?:Bye!")) {
+		switch(select("Do you know where you lost it?", "What was the collateral?", "Bye!")) {
 		case 1:
 			mes "[Muff]";
 			mes "If I knew where I lost";
@@ -3463,7 +3463,7 @@ comodo,224,187,3	script	Muff	4_M_04,{
 		mes "It's magic, right? Will you";
 		mes "ask Dorian to help me out?";
 		next;
-		switch(select("Accept His Request:Decline His Request")) {
+		switch(select("Accept His Request", "Decline His Request")) {
 		case 1:
 			mes "[Muff]";
 			mes "Thank you so much!";
@@ -3495,7 +3495,7 @@ comodo,224,187,3	script	Muff	4_M_04,{
 		mes "too nice to just leave";
 		mes "me hanging like that.";
 		next;
-		switch(select("Accept His Request:Decline His Request")) {
+		switch(select("Accept His Request", "Decline His Request")) {
 		case 1:
 			mes "[Muff]";
 			mes "Thank you so much!";
@@ -3596,7 +3596,7 @@ alberta,127,143,3	script	Belder	4_M_03,{
 		mes "the customers by th--Oh!";
 		mes "Welcome to Belder Loans!";
 		next;
-		switch(select("I'll promote your loans!:Uh...")) {
+		switch(select("I'll promote your loans!", "Uh...")) {
 		case 1:
 			if (Sex == 1) {
 				mes "[Belder]";
@@ -3702,7 +3702,7 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 		mes "dug a hole in the ground,";
 		mes "and then covered it again.^000000";
 		next;
-		switch(select("Dig Up the Spot:Cancel")) {
+		switch(select("Dig Up the Spot", "Cancel")) {
 		case 1:
 			mes "[" + strcharinfo(0) + "]";
 			mes "There must be something";
@@ -3796,7 +3796,7 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 		mes "infused with art's essence~";
 		mes "So... How may I assist you?";
 		next;
-		switch(select("I want to use your Magic Dryer.:I want to be your student.:No, thanks.")) {
+		switch(select("I want to use your Magic Dryer.", "I want to be your student.", "No, thanks.")) {
 		case 1:
 			mes "[Dorian]";
 			mes "Magic Dryer? No, no, no.";
@@ -3806,7 +3806,7 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 			mes "like that. What, pray tell,";
 			mes "do you need to dry?";
 			next;
-			switch(select("This Bond of Debt:My Hair:I'm just curious.")) {
+			switch(select("This Bond of Debt", "My Hair", "I'm just curious.")) {
 			case 1:
 				mes "[Dorian]";
 				mes "Mm? My masterpiece is far";
@@ -3856,7 +3856,7 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 				mes "Blah-blah--that's just";
 				mes "about it in a nutshell.";
 				next;
-				switch(select("Zzz...:Oh, please!")) {
+				switch(select("Zzz...", "Oh, please!")) {
 				case 1:
 					mes "[Dorian]";
 					mes "You... You fell asleep?";
@@ -4150,7 +4150,7 @@ cmd_fild01,55,160,0	script	Heap of Earth	CLEAR_NPC,{
 		mes "I can't blame you since";
 		mes "they're a bit complicated.";
 		next;
-		switch(select("Instructions:Cancel")) {
+		switch(select("Instructions", "Cancel")) {
 		case 1:
 			mes "[Dorian]";
 			mes "First, insert a new rough";
@@ -4292,7 +4292,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 		next;
 		while(1) {
 			.@switch_sound = rand(1,4);
-			switch(select("Check the Machine:Replace the Engine:Tighten the Screw:Press a Switch")) {
+			switch(select("Check the Machine", "Replace the Engine", "Tighten the Screw", "Press a Switch")) {
 			case 1:
 				if (.@hit_status == 0) {
 					mes "^3355FFThere's no power";
@@ -4398,7 +4398,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 						mes "Which switch do";
 						mes "you want to press?^000000";
 						next;
-						switch(select("Red Switch:Blue Switch:Yellow Switch:Green Switch")) {
+						switch(select("Red Switch", "Blue Switch", "Yellow Switch", "Green Switch")) {
 						default:
 							mes "^3355FF*Whiz Whiz*^000000";
 							mes "^3355FF*Whiz Whiz*^000000";
@@ -4450,7 +4450,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 						mes "Which switch will";
 						mes "you try now?^000000";
 						next;
-						switch(select("Red Switch:Blue Switch:Yellow Switch:Green Switch")) {
+						switch(select("Red Switch", "Blue Switch", "Yellow Switch", "Green Switch")) {
 						default:
 							mes "^3355FF*Whiz Whiz*^000000";
 							mes "^3355FF*Whiz Whiz*^000000";
@@ -4501,7 +4501,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 						mes "are a bit more stable now.";
 						mes "Which switch will you try?^000000";
 						next;
-						switch(select("Red Switch:Blue Switch:Yellow Switch:Green Switch")) {
+						switch(select("Red Switch", "Blue Switch", "Yellow Switch", "Green Switch")) {
 						default:
 							mes "^3355FF*Whiz Whiz*^000000";
 							mes "^3355FF*Whiz Whiz*^000000";
@@ -4553,7 +4553,7 @@ izlude_in,113,66,0	script	Strange Machine	HIDDEN_NPC,{
 						mes "fairly strongly now. Which";
 						mes "switch will you try?^000000";
 						next;
-						switch(select("Red Switch:Blue Switch:Yellow Switch:Green Switch")) {
+						switch(select("Red Switch", "Blue Switch", "Yellow Switch", "Green Switch")) {
 						default:
 							mes "^3355FF*Whiz Whiz*^000000";
 							mes "^3355FF*Whiz Whiz*^000000";
@@ -4678,7 +4678,7 @@ moc_ruins,152,147,5	script	Ibrahim	4_M_JOB_HUNTER,3,3,{
 		mes "and there. Heh heh~!";
 		next;
 		while(1) {
-			switch(select("How can I help you?:What'd you hear?:Bye!")) {
+			switch(select("How can I help you?", "What'd you hear?", "Bye!")) {
 			case 1:
 				mes "[Ibrahim]";
 				mes "I wanted to ask you about";
@@ -4709,7 +4709,7 @@ moc_ruins,152,147,5	script	Ibrahim	4_M_JOB_HUNTER,3,3,{
 				mes "it back, but I can understand";
 				mes "if you can't. You up for it?";
 				next;
-				switch(select("Sure, I'll help you.:No, sorry.")) {
+				switch(select("Sure, I'll help you.", "No, sorry.")) {
 				case 1:
 					mes "[Ibrahim]";
 					mes "Great! I knew it was";
@@ -4978,7 +4978,7 @@ moc_ruins,152,147,5	script	Ibrahim	4_M_JOB_HUNTER,3,3,{
 				mes "Cursed Jewels. You wouldn't";
 				mes "mind if I look at it, do you?";
 				next;
-				switch(select("No!:Sure, why not?")) {
+				switch(select("No!", "Sure, why not?")) {
 				case 1:
 					mes "[Ibrahim]";
 					mes "No? Well, I'm sure you";
@@ -5014,7 +5014,7 @@ moc_ruins,152,147,5	script	Ibrahim	4_M_JOB_HUNTER,3,3,{
 				mes "you planning to do with";
 				mes "the Unlucky Emerald?";
 				next;
-				switch(select("I'm going to sell it.:I'm going to study it.")) {
+				switch(select("I'm going to sell it.", "I'm going to study it.")) {
 				case 1:
 					mes "[Ibrahim]";
 					mes "Oh, you weren't going";
@@ -5186,7 +5186,7 @@ alberta,102,80,3	script	Jhonnita	4_M_04,{
 		mes "a jewel? We only carry";
 		mes "the best. Hahahaha!";
 		next;
-		switch(select("What's the most popular jewel?:Do you know Diamond of Destruction?")) {
+		switch(select("What's the most popular jewel?", "Do you know Diamond of Destruction?")) {
 		case 1:
 			mes "[Jhonnita]";
 			mes "Ah, take a look at this";
@@ -5240,7 +5240,7 @@ alberta,102,80,3	script	Jhonnita	4_M_04,{
 			mes "come to spend your life";
 			mes "savings on my jewels?";
 			next;
-			switch(select("Show me some jewels...:I have a rare emerald to sell...")) {
+			switch(select("Show me some jewels...", "I have a rare emerald to sell...")) {
 			case 1:
 				mes "[Jhonnita]";
 				mes "It couldn't hurt to";
@@ -5346,7 +5346,7 @@ payon,69,65,5	script	Kimeunbang	4_M_ORIENT02,{
 		mes "Go to another jewelry shop,";
 		mes "I don't feel like opening up.";
 		next;
-		switch(select("What's wrong?:Diamond of Destruction?")) {
+		switch(select("What's wrong?", "Diamond of Destruction?")) {
 		case 1:
 			mes "[Kimeunbang]";
 			mes "I'm just disappointed.";
@@ -5403,7 +5403,7 @@ payon,69,65,5	script	Kimeunbang	4_M_ORIENT02,{
 			mes "Oh, hello. Looks like";
 			mes "I'm back in business~";
 			next;
-			switch(select("I have a jewel to sell.:How are you?")) {
+			switch(select("I have a jewel to sell.", "How are you?")) {
 			case 1:
 				mes "[Kimeunbang]";
 				mes "Really? Alright, just";
@@ -5487,7 +5487,7 @@ geffen,128,153,3	script	Leblo	4_M_ALCHE_D,{
 		mes "have to do something for";
 		mes "me first. We have a deal?";
 		next;
-		switch(select("Deal.:No, thanks.")) {
+		switch(select("Deal.", "No, thanks.")) {
 		case 1:
 			mes "[Leblo]";
 			mes "I've been suffering back";
@@ -5619,7 +5619,7 @@ geffen,128,153,3	script	Leblo	4_M_ALCHE_D,{
 			mes "have any business";
 			mes "with me today?";
 			next;
-			switch(select("I have a jewel to sell.:No, not really.")) {
+			switch(select("I have a jewel to sell.", "No, not really.")) {
 			case 1:
 				mes "[Leblo]";
 				mes "Oh, yeah? Well then,";
@@ -5842,7 +5842,7 @@ payon_in03,167,149,3	script	Wola	1_F_ORIENT_01,2,2,{
 			changequest 3112,3113;
 			diamond_edq = 20;
 			next;
-			switch(select("Will you go out with me?:Leblo's back medicine?")) {
+			switch(select("Will you go out with me?", "Leblo's back medicine?")) {
 			case 1:
 				if (Sex) {
 					mes "[Wola]";
@@ -5931,7 +5931,7 @@ payon_in03,167,149,3	script	Wola	1_F_ORIENT_01,2,2,{
 		mes "earlier. Something about";
 		mes "needing medicine from me?";
 		next;
-		switch(select("Will you go out with me?:Leblo's back medicine?")) {
+		switch(select("Will you go out with me?", "Leblo's back medicine?")) {
 		case 1:
 			if (Sex == 1) {
 				mes "^666666*Blush*^000000 But it's too";
@@ -6101,7 +6101,7 @@ in_rogue,366,46,3	script	Rogue Investigator	4_M_ROGUE,{
 		mes "much, is it? We Rogues are";
 		mes "pretty bad... But not that bad.";
 		next;
-		switch(select("Sounds good!:Never mind, I'll find it myself...")) {
+		switch(select("Sounds good!", "Never mind, I'll find it myself...")) {
 		case 1:
 			if (Zeny > 9999) {
 				Zeny -= 10000;
@@ -6179,7 +6179,7 @@ in_rogue,366,46,3	script	Rogue Investigator	4_M_ROGUE,{
 		mes "we're together on this,";
 		mes "I'll just ask for 10,000 zeny.";
 		next;
-		switch(select("Sounds good!:Forget it...")) {
+		switch(select("Sounds good!", "Forget it...")) {
 		case 1:
 			if (Zeny > 9999) {
 				Zeny -= 10000;
@@ -6520,7 +6520,7 @@ prontera,148,326,3	script	Chief Officer#edq	4_M_JOB_KNIGHT2,{
 		mes "Hello, Rune-Midgartian.";
 		mes "What brings you here?";
 		next;
-		switch(select("National Wanted Notice:Z Gang:What crimes did Z Gang commit?")) {
+		switch(select("National Wanted Notice", "Z Gang", "What crimes did Z Gang commit?")) {
 		case 1:
 			mes "[Chief Officer]";
 			mes "Ah, were you interested";
@@ -6554,7 +6554,7 @@ prontera,148,326,3	script	Chief Officer#edq	4_M_JOB_KNIGHT2,{
 			mes "but I can divulge what";
 			mes "little I've heard.";
 			next;
-			switch(select("Louis:Martha:Catfoii:Book of Forbidden Mystery?")) {
+			switch(select("Louis", "Martha", "Catfoii", "Book of Forbidden Mystery?")) {
 			case 1:
 				mes "[Chief Officer]";
 				mes "Louis Von Silokens was";
@@ -6715,7 +6715,7 @@ prt_in,168,18,1	script	Valdes	1_M_YOUNGKNIGHT,2,2,{
 		mes "I'm-I'm no good";
 		mes "to anybody anymore!";
 		next;
-		switch(select("Ask About Z Gang:The chief officer is worried about you.:Bye!")) {
+		switch(select("Ask About Z Gang", "The chief officer is worried about you.", "Bye!")) {
 		case 1:
 			mes "[Valdes]";
 			mes "That Z Gang...";
@@ -6897,7 +6897,7 @@ in_rogue,359,116,3	script	Marybell	4_F_ROGUE,{
 				mes "then I'll do what I can to";
 				mes "help. What do you need?";
 				next;
-				switch(select("Ask About Z Gang:Valdes says, ''Hi.''")) {
+				switch(select("Ask About Z Gang", "Valdes says, ''Hi.''")) {
 				case 1:
 					mes "[Marybell]";
 					mes "The Z Gang again?";
@@ -7018,7 +7018,7 @@ in_rogue,359,116,3	script	Marybell	4_F_ROGUE,{
 		mes "What did you want to ask me?";
 		next;
 		while(1) {
-			switch(select("Z Gang's Goal:Z Gang's Recent Movements:Z Gang's Stronghold:Thanks for the tip!")) {
+			switch(select("Z Gang's Goal", "Z Gang's Recent Movements", "Z Gang's Stronghold", "Thanks for the tip!")) {
 			case 1:
 				mes "[Marybell]";
 				mes "Actually, I don't know";
@@ -7284,7 +7284,7 @@ payon,244,62,3	script	Moonho Ahn	4_M_HUGRANFA,{
 		mes "me? You're not here for what";
 		mes "I think you are... Are you?";
 		next;
-		switch(select("Are you the White Meteor?:I'm here to challenge you.")) {
+		switch(select("Are you the White Meteor?", "I'm here to challenge you.")) {
 		case 1:
 			mes "[Moonho Ahn]";
 			mes "It's been so long since";
@@ -7376,7 +7376,7 @@ payon,244,62,3	script	Moonho Ahn	4_M_HUGRANFA,{
 		mes "Are you ready to";
 		mes "play Coin Shake?";
 		next;
-		switch(select("Yes, let's play!:How does this game work again?")) {
+		switch(select("Yes, let's play!", "How does this game work again?")) {
 		case 1:
 			if (Zeny > 500) {
 				Zeny -= 500;
@@ -7457,7 +7457,7 @@ payon,244,62,3	script	Moonho Ahn	4_M_HUGRANFA,{
 					mes "(^666666What should I guess?^000000)";
 					next;
 					.@amuro = rand(1,2);
-					if (select("Odd:Even") == 1) {
+					if (select("Odd", "Even") == 1) {
 						if (.@amuro == 1) {
 							++.@number_false_2;
 							mes "[Moonho Ahn]";
@@ -9292,7 +9292,7 @@ morocc,143,63,3	script	Ragged Man#nd	4_M_MIDDLE,{
 		mes "life if you would just do me";
 		mes "this favor. Please...";
 		next;
-		switch(select("How may I help you?:Ignore Him")) {
+		switch(select("How may I help you?", "Ignore Him")) {
 		case 1:
 			mes "[" + strcharinfo(0) + "]";
 			mes "Okay, what can I do to help?";
@@ -9328,7 +9328,7 @@ morocc,143,63,3	script	Ragged Man#nd	4_M_MIDDLE,{
 				mes "money, so that I can finally";
 				mes "go back home to Prontera?";
 				next;
-				switch(select("Why don't you just walk?:I can give you some money.")) {
+				switch(select("Why don't you just walk?", "I can give you some money.")) {
 				case 1:
 					mes "[Ragged Man]";
 					mes "What? You don't think that";
@@ -9430,7 +9430,7 @@ morocc,143,63,3	script	Ragged Man#nd	4_M_MIDDLE,{
 		mes "to go back home, and I'll";
 		mes "tell you everything I know.";
 		next;
-		switch(select("Give Money:Don't Give Money")) {
+		switch(select("Give Money", "Don't Give Money")) {
 		case 1:
 			mes "[Ragged Man]";
 			mes "Ah, good choice!";
@@ -9583,7 +9583,7 @@ morocc,102,298,3	script	Man#zgang	4W_M_02,{
 			mes "money, and you want to know";
 			mes "more, right? Let's cut a deal.";
 			next;
-			switch(select("No, thanks.:What'd you have in mind?")) {
+			switch(select("No, thanks.", "What'd you have in mind?")) {
 			case 1:
 				mes "[Man]";
 				mes "No? Well...";
@@ -9641,7 +9641,7 @@ morocc,102,298,3	script	Man#zgang	4W_M_02,{
 		mes "You're reconsidering that";
 		mes "deal I had in mind, aren't you?";
 		next;
-		switch(select("No, not really.:I guess so.")) {
+		switch(select("No, not really.", "I guess so.")) {
 		case 1:
 			mes "[Man]";
 			mes "You sure? No one would";
@@ -9793,7 +9793,7 @@ morocc,102,298,3	script	Man#zgang	4W_M_02,{
 		mes "my clients gave to me.";
 		next;
 		while (1) {
-			switch(select("Who was going to help you?:Your clients gave you something?")) {
+			switch(select("Who was going to help you?", "Your clients gave you something?")) {
 			case 1:
 				mes "[Man]";
 				mes "Oh, yeah. The guys that";
@@ -10842,7 +10842,7 @@ yuno_in04,38,48,3	script	Archeologist	1_M_JOBTESTER,{
 			mes "I'm guessing you needed";
 			mes "my help with something?";
 			next;
-			switch(select("Ask About the Jewel's Curse:Show Off Jewel")) {
+			switch(select("Ask About the Jewel's Curse", "Show Off Jewel")) {
 			case 1:
 				emotion e_heh;
 				mes "[Archeologist]";
@@ -11030,7 +11030,7 @@ prontera,140,304,5	script	Old Soldier	4_M_HUOLDARMY,{
 		mes "some reason, but I'll";
 		mes "admit that it's kind of nice.";
 		next;
-		switch(select("Ask About Past Battles:Ask About Fallen Warrior")) {
+		switch(select("Ask About Past Battles", "Ask About Fallen Warrior")) {
 		case 1:
 			mes "[Retired Soldier]";
 			mes "Don't get me started.";
@@ -11105,7 +11105,7 @@ prontera,140,304,5	script	Old Soldier	4_M_HUOLDARMY,{
 		mes "I'm afraid I already told";
 		mes "you everything I know.";
 		next;
-		switch(select("Sorry...:I met the warrior's spirit.")) {
+		switch(select("Sorry...", "I met the warrior's spirit.")) {
 		case 1:
 			mes "[Retired Soldier]";
 			mes "It's fine.";
@@ -11133,7 +11133,7 @@ prontera,140,304,5	script	Old Soldier	4_M_HUOLDARMY,{
 			mes "this all up to a really good";
 			mes "learning experience.";
 			next;
-			switch(select("I feel so sorry for him.:Do you believe the jewel is really cursed?")) {
+			switch(select("I feel so sorry for him.", "Do you believe the jewel is really cursed?")) {
 			case 1:
 				mes "[Retired Soldier]";
 				mes "Well...";
@@ -11419,7 +11419,7 @@ gef_fild08,182,185,0	script	The Wanderer	8_DOPPEL,{
 		jewel_nd = 27;
 		next;
 		while(1) {
-			if (select("You killed your comrades!:Do you remember your last moment?") == 1) {
+			if (select("You killed your comrades!", "Do you remember your last moment?") == 1) {
 				mes "[The Wanderer]";
 				mes "Did I...? Ha. Haha!";
 				mes "adventurer, but that sounds";
@@ -11501,7 +11501,7 @@ gef_fild08,182,185,0	script	The Wanderer	8_DOPPEL,{
 		mes "say to me this time?";
 		next;
 		while(1) {
-			if (select("You killed your comrades!:Do you remember your last moment?") == 1) {
+			if (select("You killed your comrades!", "Do you remember your last moment?") == 1) {
 				mes "[The Wanderer]";
 				mes "Did I...? Ha. Haha!";
 				mes "adventurer, but that sounds";
@@ -11682,7 +11682,7 @@ prontera,163,204,3	script	Man from Morroc	4W_M_03,{
 		mes "fountain. It's much cooler";
 		mes "here than back in Morroc.";
 		next;
-		switch(select("Nice day today, huh?:How's Morroc lately?")) {
+		switch(select("Nice day today, huh?", "How's Morroc lately?")) {
 		case 1:
 			mes "[Morroc Traveler]";
 			mes "Oh, yes. It's a wonderful";
@@ -11798,7 +11798,7 @@ in_rogue,355,28,5	script	Rogue Agent	2_M_THIEFMASTER,{
 		mes "going on around the kingdom.";
 		mes "How'd you know about that?";
 		next;
-		switch(select("I was just...:Can I help?")) {
+		switch(select("I was just...", "Can I help?")) {
 		case 1:
 			mes "[Guildsman]";
 			mes "Just what...?";
@@ -12153,7 +12153,7 @@ geffen,91,36,5	script	Rogue Guild Agent#nd1	4_M_ROGUE,{
 		mes "I hope you brought";
 		mes "the stuff...";
 		next;
-		switch(select("Give Items:I forgot what you need.")) {
+		switch(select("Give Items", "I forgot what you need.")) {
 		case 1:
 			if ((countitem(Pumpkin_Head) > 0) && (countitem(Horseshoe) > 0) && (countitem(Petite_DiablOfs_Horn) > 0) && (countitem(Golden_Hair) > 0) && (countitem(Transparent_Cloth) > 0)) {
 				delitem Pumpkin_Head,1;
@@ -12312,7 +12312,7 @@ geffen,91,36,5	script	Rogue Guild Agent#nd1	4_M_ROGUE,{
 			mes "locked up inside. You";
 			mes "bring the stuff?";
 			next;
-			switch(select("Give Items:I forgot what you need.")) {
+			switch(select("Give Items", "I forgot what you need.")) {
 			case 1:
 				if ((countitem(Pumpkin_Head) > 1) && (countitem(Horseshoe) > 2) && (countitem(Petite_DiablOfs_Horn) > 1) && (countitem(Golden_Hair) > 2) && (countitem(Transparent_Cloth) > 0)) {
 					delitem Pumpkin_Head,2;
@@ -12373,7 +12373,7 @@ geffen,91,36,5	script	Rogue Guild Agent#nd1	4_M_ROGUE,{
 			mes "Tower are safely locked";
 			mes "up in there. You do that yet?";
 			next;
-			switch(select("Give Items:I forgot what you need.")) {
+			switch(select("Give Items", "I forgot what you need.")) {
 			case 1:
 				if ((countitem(Pumpkin_Head) > 1) && (countitem(Horseshoe) > 2) && (countitem(Petite_DiablOfs_Horn) > 1) && (countitem(Golden_Hair) > 2) && (countitem(Transparent_Cloth) > 0)) {
 					delitem Pumpkin_Head,2;
@@ -12531,7 +12531,7 @@ payon,209,44,5	script	Rogue Guild Agent#nd2	4_M_ROGUE,{
 		mes "Let's see,";
 		mes "the note says...";
 		next;
-		switch(select("Cooperate with this adventurer.:......")) {
+		switch(select("Cooperate with this adventurer.", "......")) {
 		case 1:
 			mes "[Agent]";
 			mes "So... We're partners?";
@@ -12568,7 +12568,7 @@ payon,209,44,5	script	Rogue Guild Agent#nd2	4_M_ROGUE,{
 		mes "Let's see,";
 		mes "the note says...";
 		next;
-		switch(select("Cooperate with this adventurer.:......")) {
+		switch(select("Cooperate with this adventurer.", "......")) {
 		case 1:
 			mes "[Agent]";
 			mes "So... We're partners?";
@@ -12981,7 +12981,7 @@ comodo,233,199,5	script	Rogue Guild Agent#nd3	1_M_SIGNROGUE,{
 		mes "acknowledge my instructions.";
 		mes "You got that! Loud and clear!";
 		next;
-		switch(select("Yes, Sir!:...")) {
+		switch(select("Yes, Sir!", "...")) {
 		case 1:
 			emotion e_dots;
 			mes "[Agent]";
@@ -13042,7 +13042,7 @@ comodo,233,199,5	script	Rogue Guild Agent#nd3	1_M_SIGNROGUE,{
 		mes "the masks like";
 		mes "a good little soldier?";
 		next;
-		switch(select("Uh huh.:Yes, Sir!")) {
+		switch(select("Uh huh.", "Yes, Sir!")) {
 		case 1:
 			mes "[Agent]";
 			mes "Hey, remember our";
@@ -13105,7 +13105,7 @@ comodo,233,199,5	script	Rogue Guild Agent#nd3	1_M_SIGNROGUE,{
 				mes "Rogue world if you would.";
 				emotion e_sob;
 				next;
-				switch(select("Yes, sir!:I won't tell anyone.")) {
+				switch(select("Yes, sir!", "I won't tell anyone.")) {
 				case 1:
 					mes "[Agent]";
 					mes "Whoa! Whoa!";

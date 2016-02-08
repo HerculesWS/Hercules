@@ -62,7 +62,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 		mes "[Merito]";
 		mes "What made you want to be a sorcerer?";
 		next;
-		if(select("The spirit of fire led me here.:The spirit of water led me here.:The spirit of earth led me here:The spirit of meat led me here.") == 4) {
+		if(select("The spirit of fire led me here.", "The spirit of water led me here.", "The spirit of earth led me here", "The spirit of meat led me here.") == 4) {
 			mes "[Merito]";
 			mes "That kind of spirit doesn't exist!";
 			close;
@@ -74,7 +74,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 		mes "[Merito]";
 		mes "Hmm... Then first, can you write down your name on this list?";
 		next;
-		if(select("Write name.:I won't.") == 2) {
+		if(select("Write name.", "I won't.") == 2) {
 			mes "[Merito]";
 			mes "Well, okay. See you again when you get a chance.";
 			close;
@@ -93,7 +93,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 		mes "[Merito]";
 		mes "[" + strcharinfo(0) + "], can you handle magic skillfully?";
 		next;
-		if(select("Yes, I can.:No, I'm not really good at it.") == 2) {
+		if(select("Yes, I can.", "No, I'm not really good at it.") == 2) {
 			mes "[Merito]";
 			mes "What!? You don't know how to use magic?";
 			mes "What are you doing here then? Get out of here. Right now!";
@@ -103,7 +103,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 		mes "Okay, that should be obvious.";
 		mes "Of course, Sorcerers use magic, too. But, do you know the main difference Sorcerers have from other magical jobs?";
 		next;
-		switch(select("They know how to sing.:They're all old fogies.:They can deal with the spirits.")) {
+		switch(select("They know how to sing.", "They're all old fogies.", "They can deal with the spirits.")) {
 		case 1:
 			mes "[Merito]";
 			mes "Well maybe some but that's not the main difference.";
@@ -127,7 +127,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 		mes "[Merito]";
 		mes "Well, it's all up to you. What are you going to do?";
 		next;
-		switch(select("I will take the test.:I'll do it later.")) {
+		switch(select("I will take the test.", "I'll do it later.")) {
 		case 1:
 			mes "[Merito]";
 			mes "Okay. ";
@@ -190,7 +190,7 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		mes "[Karacas]";
 		mes "So, you are [" + strcharinfo(0) + "]... right?";
 		next;
-		if(select("Yes, I am.:No, I'm not!") == 2) {
+		if(select("Yes, I am.", "No, I'm not!") == 2) {
 			mes "[Karacas]";
 			mes "Oh, there must be some mistake in the list, I think. Will you come again later?";
 			close;
@@ -307,7 +307,7 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 			mes "[Karacas]";
 			mes "Have any questions?";
 			next;
-			if(select("No.:Please explain it again.") == 2) {
+			if(select("No.", "Please explain it again.") == 2) {
 				mes "[Karacas]";
 				mes "Haha, then can I have a cup of water for a minute? Please come and find me again later.";
 				next;

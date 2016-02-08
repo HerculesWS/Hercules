@@ -122,7 +122,7 @@ S_RefineValidate:
 	mes "To refine that, you'll need to have one ^ff9999" + getitemname(getarg(1)) + "^000000 and " + getarg(2) + " zeny.";
 	mes "Would you like to continue?";
 	next;
-	if(select("Yes:No") == 1) {
+	if(select("Yes", "No") == 1) {
 		if (getequippercentrefinery(getarg(3)) < 100) {
 			if (getarg(0)) {
 				mes "[Suhnbi]";
@@ -139,7 +139,7 @@ S_RefineValidate:
 				mes "^ff0000Besides, the equipment will break!^000000";
 				mes "Are you sure you still want to continue?";
 				next;
-				if(select("Yes:No") == 2) {
+				if(select("Yes", "No") == 2) {
 					mes "[Suhnbi]";
 					mes "Good.";
 					mes "Because if the weapon breaks from unreasonable refining, then I get a bad mood, too.";
@@ -155,7 +155,7 @@ S_RefineValidate:
 				//mes "Everything will disappear. As in... GONE!";
 				mes "Do you really wish to continue?";
 				next;
-				if(select("Yes:No") == 2) {
+				if(select("Yes", "No") == 2) {
 					mes "[Suhnbi]";
 					mes "What nonsense. You waste my precious time.";
 					mes "Get lost, punk.";

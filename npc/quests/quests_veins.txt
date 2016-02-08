@@ -68,7 +68,7 @@
 		mes "pick up stones all day long...";
 		mes "The pain... It's unbearable!";
 		next;
-		switch(select("Bend with your knees, yo.:Gosh, how bad is it?")) {
+		switch(select("Bend with your knees, yo.", "Gosh, how bad is it?")) {
 		case 1:
 			mes "[Zabaroo]";
 			mes "Whippersnapper!";
@@ -149,7 +149,7 @@
 				mes "with throbbing pain. Let's...";
 				mes "Let's at least give it a try.";
 				next;
-				switch(select("What's with these stones?:Where's the old man?:Nothing.")) {
+				switch(select("What's with these stones?", "Where's the old man?", "Nothing.")) {
 					case 1:
 						mes "[Zabaroo]";
 						mes "Well, we use these dark";
@@ -321,7 +321,7 @@ ve_in,169,310,6	script	Strange Old Man#ve	2_M_MOLGENSTEIN,{
 		mes "completion. Now, if";
 		mes "I just turn this here...";
 		next;
-		if (select("Excuse me...:........") == 1) {
+		if (select("Excuse me...", "........") == 1) {
 			mes "[Absar]";
 			mes "What?! Who dares";
 			mes "disturb me?! N-no!";
@@ -359,7 +359,7 @@ ve_in,169,310,6	script	Strange Old Man#ve	2_M_MOLGENSTEIN,{
 		mes "name. Hurry, can't you";
 		mes "see that I'm busy?";
 		next;
-		if (select("I... I'm sorry.:I'm here for Mr. Zabaroo...") == 1) {
+		if (select("I... I'm sorry.", "I'm here for Mr. Zabaroo...") == 1) {
 			mes "[Absar]";
 			mes "If only you didn't";
 			mes "interrupt me! Then";
@@ -374,7 +374,7 @@ ve_in,169,310,6	script	Strange Old Man#ve	2_M_MOLGENSTEIN,{
 		mes "me to make him. So did";
 		mes "you bring all the materials?";
 		next;
-		if (select("Yes:What materials...?") == 1) {
+		if (select("Yes", "What materials...?") == 1) {
 			mes "[Absar]";
 			mes "Great, we can get";
 			mes "started and m--";
@@ -490,7 +490,7 @@ ve_in02,37,28,4	script	Factory Manager	4_M_HUMAN_01,{
 		mes "We should get one...";
 		mes "Anyway, get out of here.";
 		next;
-		if (select("I'm sorry.:I've brought these...") == 1) {
+		if (select("I'm sorry.", "I've brought these...") == 1) {
 			mes "[Mirhen]";
 			mes "You're sorry,";
 			mes "I get it. Ummm...";
@@ -651,7 +651,7 @@ prontera,202,122,0	script	Kid#sch	4_F_KID2,{
 		mes "He's got to be around here";
 		mes "somewhere, I think...";
 		next;
-		select("What's wrong?:...");
+		select("What's wrong?", "...");
 		mes "[Rooney]";
 		mes "Oh, it's just...";
 		mes "Some guy sent me on a";
@@ -667,7 +667,7 @@ prontera,202,122,0	script	Kid#sch	4_F_KID2,{
 		mes "never get paid for doing";
 		mes "this delivery. ^333333*Sigh*^000000";
 		next;
-		if (select("Sounds tough. Good luck!:Do you need any help?") == 1) {
+		if (select("Sounds tough. Good luck!", "Do you need any help?") == 1) {
 			mes "[Rooney]";
 			mes "Thanks. I think";
 			mes "I just might need it.";
@@ -760,7 +760,7 @@ prt_church,89,108,6	script	Bard#sch	2_M_BARD_ORIENT,{
 		mes "Ooooh... La la la-la~";
 		mes "Girls, girls, giiiirls...";
 		next;
-		if(select("Excuse me...:......") == 1) {
+		if(select("Excuse me...", "......") == 1) {
 			mes "[Lasda]";
 			mes "Why, what a glorious";
 			mes "day! I should sing a song";
@@ -783,7 +783,7 @@ prt_church,89,108,6	script	Bard#sch	2_M_BARD_ORIENT,{
 		mes "me blush. Did you need to";
 		mes "talk to me or something?.";
 		next;
-		if(select("I'm sorry.:Are you ^ff0000Lasda Midar^000000?") == 1) {
+		if(select("I'm sorry.", "Are you ^ff0000Lasda Midar^000000?") == 1) {
 			mes "[Lasda]";
 			mes "Oh, that's alright.";
 			mes "...............................";
@@ -841,7 +841,7 @@ prt_church,89,108,6	script	Bard#sch	2_M_BARD_ORIENT,{
 		mes "a bit? I want to ask you";
 		mes "for your help with something.";
 		next;
-		if (select("Sure.:No.") == 1) {
+		if (select("Sure.", "No.") == 1) {
 			mes "[Lasda]";
 			mes "You see, the letter you";
 			mes "brought me was from my old";
@@ -857,7 +857,7 @@ prt_church,89,108,6	script	Bard#sch	2_M_BARD_ORIENT,{
 			mes "there isn't much I can do.";
 			mes "Do you think you can help him?";
 			next;
-			if (select("Sure.:No.") == 1) {
+			if (select("Sure.", "No.") == 1) {
 				mes "[Lasda]";
 				mes "Thank you so much!";
 				mes "I guess the best thing";
@@ -1073,7 +1073,7 @@ morocc,53,87,7	script	Prison Ward#sch	4_M_MOC_SOLDIER,{
 		mes "[Jesse]";
 		mes "Do you want to enter?";
 		next;
-		if (select("Yes.:No") == 1) {
+		if (select("Yes.", "No") == 1) {
 			mes "[Jesse]";
 			mes "Be careful when you talk";
 			mes "to that guy: he's a smooth";
@@ -1215,7 +1215,7 @@ ra_in01,50,387,4	script	Upset Looking Bard#sch	1_M_BARD,{
 		mes "you. Still, did you want";
 		mes "to ask me something?";
 		next;
-		switch(select("Nothing.:I'm here on behalf of Mr. Lasda.")) {
+		switch(select("Nothing.", "I'm here on behalf of Mr. Lasda.")) {
 		case 1:
 			mes "[Vitre]";
 			mes "Well...";
@@ -1472,7 +1472,7 @@ job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 		mes "I'd prefer it if you didn't";
 		mes "come to watch us practice.";
 		next;
-		if (select("I want a Megaphone.:Eeek...") == 2) {
+		if (select("I want a Megaphone.", "Eeek...") == 2) {
 			mes "[Hianna]";
 			mes "If you really want to";
 			mes "watch us dance, come to";
@@ -1489,7 +1489,7 @@ job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 		mes "it's not like you can find one";
 		mes "anywhere else, either.";
 		next;
-		if (select("Please! I'll do anything!:Later.") == 2) {
+		if (select("Please! I'll do anything!", "Later.") == 2) {
 			mes "[Hianna]";
 			mes "Alright, then.";
 			mes "I'm sorry that";
@@ -1503,7 +1503,7 @@ job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 		mes "carefully to what I want";
 		mes "you to do for me.";
 		next;
-		if (select("Listen:Reconsider") == 1) {
+		if (select("Listen", "Reconsider") == 1) {
 			mes "[Hianna]";
 			mes "First, I want a little";
 			mes "cash. Consider it a rental";
@@ -1527,7 +1527,7 @@ job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 			mes "once you come back. So...";
 			mes "How does that sound?";
 			next;
-			if (select("Sounds good.:Like a ripoff.") == 1) {
+			if (select("Sounds good.", "Like a ripoff.") == 1) {
 				mes "[Hianna]";
 				mes "I'm glad you agree~";
 				mes "Okay, the Dancers are";
@@ -1567,7 +1567,7 @@ job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 		mes "job escorting them. Now...";
 		mes "Do you have the money?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			if (Zeny < 500000) {
 				mes "[Hianna]";
 				mes "What's this? Hmm...";
@@ -1603,7 +1603,7 @@ job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 		mes "Anything I can help";
 		mes "you with today?";
 		next;
-		if (select("I'd like another Megaphone.:No thanks.") == 1) {
+		if (select("I'd like another Megaphone.", "No thanks.") == 1) {
 			mes "[Hianna]";
 			mes "Well, I guess I can let";
 			mes "you have another one if";
@@ -1611,7 +1611,7 @@ job_duncer,93,106,6	script	Dance Instructor#sch	4_F_HUGRANMA,{
 			mes "You sure you want to pay";
 			mes "the money for a Megaphone?";
 			next;
-			if (select("Yes:No") == 1) {
+			if (select("Yes", "No") == 1) {
 				if (Zeny < 500000) {
 					mes "[Hianna]";
 					mes "I'm sorry, but this";
@@ -1666,7 +1666,7 @@ job_duncer,85,49,0	script	Young Dancer#sch1	4_F_07,{
 		mes "bodyguard. So are you";
 		mes "ready to go now?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			mes "[Dancer]";
 			mes "Alright, then.";
 			mes "Here we go~";
@@ -1704,7 +1704,7 @@ job_duncer,83,52,6	script	Cheerful Dancer#sch1	4_F_07,{
 		mes "bodyguard. So are you";
 		mes "ready to go now?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			mes "[Dancer]";
 			mes "Alright, then.";
 			mes "Here we go~";
@@ -1741,7 +1741,7 @@ job_duncer,87,50,2	script	Mature Looking Dancer#s1	4_F_07,{
 		mes "bodyguard. So are you";
 		mes "ready to go now?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			mes "[Dancer]";
 			mes "Alright, then.";
 			mes "Here we go~";
@@ -2158,7 +2158,7 @@ morocc,297,154,0	script	Thin-Faced Bard#sch	1_M_BARD,{
 		mes "Listen, I'm a fugitive now.";
 		mes "Do you think you can help me?";
 		next;
-		select("Sure.:I may as well...");
+		select("Sure.", "I may as well...");
 		mes "[Vitre]";
 		mes "I just need you to talk";
 		mes "to a few people, and let";
@@ -2227,7 +2227,7 @@ morocc,297,154,0	script	Thin-Faced Bard#sch	1_M_BARD,{
 		mes "So did you listen";
 		mes "to all of their songs?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			mes "[Vitre]";
 			mes "Perfect~ Here's a little";
 			mes "something to show my";
@@ -2653,7 +2653,7 @@ sec_in02,10,43,4	script	Extra Story Patch	1_M_SIGNMONK,{
 	mes "[Patch]";
 	mes "Yeah, you can try.";
 	next;
-	if(select("Now:How many?") == 2) {
+	if(select("Now", "How many?") == 2) {
 		input .@input,0,1000;
 		que_sch = .@input;
 	}
@@ -2768,7 +2768,7 @@ veins,327,185,3	script	Kid#camelcamel	4_M_DST_CHILD,{
 			mes "Maybe your sister was";
 			mes "kidnapped by bandits...";
 			next;
-			switch(select("Decline Request:Accept Request")) {
+			switch(select("Decline Request", "Accept Request")) {
 			case 1:
 				mes "["+strcharinfo(0)+"]";
 				mes "Sorry kid, but I've got";
@@ -5236,7 +5236,7 @@ ra_temin,115,140,1	script	Flower Vase#vol	HIDDEN_NPC,{
 		mes "flowers that look freshly";
 		mes "picked from a garden.^000000";
 		next;
-		if (select("Destroy Vase:Don't Destroy Vase") == 1) {
+		if (select("Destroy Vase", "Don't Destroy Vase") == 1) {
 			mes "^3355FFYou grasp the flower";
 			mes "vase with both hands, and";
 			mes "then hurl it to the ground.^000000";
@@ -5449,7 +5449,7 @@ ra_temin,85,118,3	script	Drawer#vol3	HIDDEN_NPC,{
 		mes "to the high priest";
 		mes "inside this drawer.^000000";
 		next;
-		if (select("Check the Reports:Cancel") == 1) {
+		if (select("Check the Reports", "Cancel") == 1) {
 			mes "["+strcharinfo(0)+"]";
 			mes "Well, it might not to";
 			mes "the most moral thing,";
@@ -5521,7 +5521,7 @@ ra_temin,73,126,1	script	Ladder#vol1	HIDDEN_NPC,{
 		mes "I'd get caught if I just";
 		mes "passed the guards...";
 		next;
-		if (select("Climb Ladder:Cancel") == 1) {
+		if (select("Climb Ladder", "Cancel") == 1) {
 			mes "^3355FFYou climbed the";
 			mes "ladder over the";
 			mes "wall and snuck out.^000000";
@@ -6395,7 +6395,7 @@ thor_camp,250,104,3	script	Sahedi#vol	4_M_RASWORD,{
 		mes "erupt anytime soon?";
 		next;
 		while(1) {
-			if (select("Yes:No") == 1) {
+			if (select("Yes", "No") == 1) {
 				mes "["+strcharinfo(0)+"]";
 				mes "I guess I can't hide it";
 				mes "from you... The recent";
@@ -6657,7 +6657,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 			mes "Who do we fight for?";
 			mes "Who do we live for?";
 			next;
-			if (select("Odin:Freya:Thor") == 2) {
+			if (select("Odin", "Freya", "Thor") == 2) {
 				break;
 			}
 			mes "[Colonel Vito]";
@@ -6874,7 +6874,7 @@ thor_camp,159,74,3	script	Colonel Vito#3	4_M_DST_MASTER,{
 		changequest 2125,2126;
 		aru_vol = 19;
 		next;
-		if (select("Yes, sir!:What do you mean by chop?") == 1) {
+		if (select("Yes, sir!", "What do you mean by chop?") == 1) {
 			mes "[Colonel Vito]";
 			mes "Focus your energy in";
 			mes "your yell when you strike!";
@@ -7292,7 +7292,7 @@ thor_camp,246,191,3	script	Guard#goto	4_DST_SOLDIER,{
 	mes "What now?";
 	mes "Can't you see I'm busy?";
 	next;
-	if (select("Let me go out.:I'm sorry.") == 1) {
+	if (select("Let me go out.", "I'm sorry.") == 1) {
 		mes "[Guard]";
 		mes "Hurry up, and get out!";
 		close2;

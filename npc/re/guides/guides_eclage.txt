@@ -36,7 +36,7 @@ ecl_in01,48,60,5	script	Eclage Guard#obb	4_M_FAIRYSOLDIER,{
 	mes "[Eclage Guard]";
 	mes "Welcome, Adventurer. This is the plaza of Eclage, a great and sacred tree. How can I help you?";
 	next;
-	switch (select("Palace:Orb:Store:Prison:Clinic:Residential Area:Finish the conversation")) {
+	switch (select("Palace", "Orb", "Store", "Prison", "Clinic", "Residential Area", "Finish the conversation")) {
 		case 1:
 			mes "[Eclage Guard]";
 			mes "Our great king, courageous generals, and scholars are all staying at the palace.";

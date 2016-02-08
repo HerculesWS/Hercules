@@ -113,7 +113,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 			mes "^3355FFShuda gazes directly";
 			mes "at you with a puppy eyed look.^000000";
 			next;
-			switch(select("D-Don't look at me that way!:Alright, alright.")) {
+			switch(select("D-Don't look at me that way!", "Alright, alright.")) {
 			case 1:
 				mes "[Shuda]";
 				mes "Oh come on, you know everything that happened, and I know you're gonna continue adventuring";
@@ -208,7 +208,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 			mes "my fiancee hadn't";
 			mes "thrown it...";
 			next;
-			switch(select("What...?:Lies~!")) {
+			switch(select("What...?", "Lies~!")) {
 			case 1:
 				mes "[Powerful-Looking Woman]";
 				mes "What 'what?'";
@@ -265,7 +265,7 @@ ayothaya,233,105,3	script	Powerful-Looking Woman	4_F_THAIAYO,2,2,{
 				mes "Why are you staring at me?";
 				mes "Don't you have anything to do?";
 				next;
-				switch(select("No.:No~ and you are an interesting girl.")) {
+				switch(select("No.", "No~ and you are an interesting girl.")) {
 				case 1:
 					mes "[Powerful-Looking Woman]";
 					mes "I see. Hmmm...";
@@ -460,7 +460,7 @@ if (!$@annonactive) {
 		mes "[" +strcharinfo(0)+ "]";
 		mes "Hmmm....";
 		next;
-		switch(select("Scatter the bushes.:Dig up the bushes.")) {
+		switch(select("Scatter the bushes.", "Dig up the bushes.")) {
 		case 1:
 			if (!rand(0,2)) {
 				mes "[" +strcharinfo(0)+ "]";
@@ -492,7 +492,7 @@ if (!$@annonactive) {
 				mes "stay back, or I'll kill myself!";
 				emotion e_omg,1;
 				next;
-				switch(select("What are you doing here?:I'm not Shuda!")) {
+				switch(select("What are you doing here?", "I'm not Shuda!")) {
 				case 1:
 					mes "["+strcharinfo(0)+"]";
 					mes "Hey...";
@@ -593,7 +593,7 @@ ayo_dun02,91,264,3	script	Haggard Man	4_M_THAIAYO,{
 		mes "Oh, how did this happen?";
 		mes "My spiritual training wasn't supposed to go like this...!";
 		next;
-		switch(select("Treat his wound first.:Is that you, Annon?")) {
+		switch(select("Treat his wound first.", "Is that you, Annon?")) {
 		case 1:
 			mes "[" +strcharinfo(0)+ "]";
 			mes "Anyway, I think you need to be treated. Let me check if I have some potions.";
@@ -651,7 +651,7 @@ ayo_dun02,91,264,3	script	Haggard Man	4_M_THAIAYO,{
 				mes "It looks like you wish to know more. If you promise me that you will not mention my whereabouts";
 				mes "to Shuda, then I'll explain.";
 				next;
-				switch(select("You think the world revolves around you?:What do you want me to do?")) {
+				switch(select("You think the world revolves around you?", "What do you want me to do?")) {
 				case 1:
 					mes "[" +strcharinfo(0)+ "]";
 					mes "You think the world";
@@ -857,7 +857,7 @@ ayothaya,253,99,3	script	Fisherman	4_M_THAIONGBAK,{
 		mes "Would you";
 		mes "like to try?";
 		next;
-		switch(select("Yes.:No, thanks.")) {
+		switch(select("Yes.", "No, thanks.")) {
 		case 1:
 			if (countitem(Monster's_Feed) && Zeny > 49) {
 				mes "^3355FFYou cast your";
@@ -1058,7 +1058,7 @@ OnTouch:
 			mes "^3355FFHmm...?";
 			mes "There's something here...^000000";
 			next;
-			switch(select("Ignore.:^5C3317Investigate.^000000")) {
+			switch(select("Ignore.", "^5C3317Investigate.^000000")) {
 			case 1:
 				mes "["+strcharinfo(0)+"]";
 				mes "Well, it's probably nothing. But which way should I go now?";
@@ -1243,7 +1243,7 @@ ayothaya,83,132,0	script	Dusit#thai	4_M_THAIONGBAK,{
 		mes "You must be a traveller.";
 		mes "I have a tale you may wish to hear if you're interested in listening.";
 		next;
-		if (select("What is it?:I know what the story is.") == 1) {
+		if (select("What is it?", "I know what the story is.") == 1) {
 			mes "[Dusit]";
 			mes "Ayothaya has a long history. Perhaps it looks calm and peaceful now, but in the past our village was terrorized by a terrible creature.";
 			next;
@@ -1281,7 +1281,7 @@ ayothaya,83,132,0	script	Dusit#thai	4_M_THAIONGBAK,{
 			mes "in the existance";
 			mes "of man-eating tigers?";
 			next;
-			if (select("Well, not really.:Yes, I do and I think they're scary!") == 1) {
+			if (select("Well, not really.", "Yes, I do and I think they're scary!") == 1) {
 				mes "[Dusit]";
 				mes "Umm...";
 				mes "Oh well. My late grandfather told me about the Sa-mhing Tiger when";
@@ -1409,7 +1409,7 @@ ayo_in01,181,193,4	script	Shaman#thai	4_F_THAISHAMAN,{
 		mes "[Boonthom]";
 		mes "I don't think we need to worry about it though. It is locked up and there it shall remain.";
 		next;
-		switch(select("I want to explore the ancient ruins.:Locked up! Good! I'm not afraid!")) {
+		switch(select("I want to explore the ancient ruins.", "Locked up! Good! I'm not afraid!")) {
 		case 1:
 			mes "[Boonthom]";
 			mes "You...";
@@ -1424,7 +1424,7 @@ ayo_in01,181,193,4	script	Shaman#thai	4_F_THAISHAMAN,{
 			mes "I can give you some useful tips.";
 			mes "Would you like to listen?";
 			next;
-			if (select("If it's that dangerous, I'd rather not try.:Sure!") == 1) {
+			if (select("If it's that dangerous, I'd rather not try.", "Sure!") == 1) {
 				mes "[Boonthom]";
 				mes "You made a good decision.";
 				mes "You'd better be careful if";
@@ -1839,7 +1839,7 @@ ayo_fild01,129,197,0	script	Puraim#thai1	4_M_THAIOLD,{
 		mes "explore the area,";
 		mes "adventurer?";
 		next;
-		if (select("Yes.:No! I'm too afraid of the ruins now.") == 1) {
+		if (select("Yes.", "No! I'm too afraid of the ruins now.") == 1) {
 			mes "[Puraim]";
 			mes "Hmmm...";
 			mes "It seems you adventurers are tempted by the thrill of danger,";
@@ -1901,7 +1901,7 @@ ayo_fild02,25,154,0	script	Aik#thai	4_M_THAIONGBAK,{
 	mes "So, would you";
 	mes "like to go back?";
 	next;
-	if (select("Yes.:No, I need to look around more...") == 1) {
+	if (select("Yes.", "No, I need to look around more...") == 1) {
 		mes "[Aik]";
 		mes "Alright then...";
 		mes "Here we go...";
@@ -2125,7 +2125,7 @@ ayothaya,196,265,3	script	Einon#ayo	4_M_THAIOLD,{
 		mes "want to try this at least once in his lifetime. So, would you like";
 		mes "to try some?";
 		next;
-		if (select("Sure thing.:No, thanks. I hate spicy food.") == 1) {
+		if (select("Sure thing.", "No, thanks. I hate spicy food.") == 1) {
 			mes "[Einon]";
 			mes "Okay...!";
 			mes "Now who would be";
@@ -2205,7 +2205,7 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 			mes "busy ever since I opened this restaurant. If you really wish to taste my Tom Yum Goong, would";
 			mes "you do something for me?";
 			next;
-			if (select("Sure!:Eh... I dunno.") == 1) {
+			if (select("Sure!", "Eh... I dunno.") == 1) {
 				mes "[Mali the Spicy]";
 				mes "First, would you get";
 				mes "the ingredients to make";
@@ -2288,7 +2288,7 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 				mes "Now, I want you to bring";
 				mes "me some ^CE0000Lemons^000000.";
 				next;
-				if (select("Where can I find Lemons?:I hate sour food. I'd better quit!") == 1) {
+				if (select("Where can I find Lemons?", "I hate sour food. I'd better quit!") == 1) {
 					tomyumgoong = 4;
 					changequest 8124,8125;
 					mes "[Mali the Spicy]";
@@ -2368,7 +2368,7 @@ ayo_in01,145,163,3	script	Cook#ayo	4_F_THAIGIRL,{
 				mes "in the Market, they";
 				mes "will know what you want.";
 				next;
-				if (select("Okay, I'll be right back.:Ah, I'm tired now. Let me take a rest first...") == 1) {
+				if (select("Okay, I'll be right back.", "Ah, I'm tired now. Let me take a rest first...") == 1) {
 					delitem Lemon,10;
 					tomyumgoong = 6;
 					changequest 8125,8126;
@@ -2539,7 +2539,7 @@ ayothaya,153,86,5	script	Thongpool#ayo	4_M_THAIONGBAK,{
 		mes "aren't you? How many Shrimp";
 		mes "do you need? Twenty? Forty?";
 		next;
-		if (select("I need Shrimp for Tom Yum Goong.:Err, they look expensive.") == 1) {
+		if (select("I need Shrimp for Tom Yum Goong.", "Err, they look expensive.") == 1) {
 			mes "[Thongpool]";
 			mes "Ah! I guess Ms. Mali the Spicy recommended me to you. I guess";
 			mes "that also means you want to buy them in bulk?";
@@ -2556,7 +2556,7 @@ ayothaya,153,86,5	script	Thongpool#ayo	4_M_THAIONGBAK,{
 			mes "11,000 zeny for 20 shrimps.";
 			mes "What do you say?";
 			next;
-			if (select("I will take them.:I could get 100 Jellopies for that much!") == 1) {
+			if (select("I will take them.", "I could get 100 Jellopies for that much!") == 1) {
 				if (Zeny > 10999) {
 					if (MaxWeight - Weight > 3999) {
 						Zeny -= 11000;
@@ -2600,7 +2600,7 @@ ayothaya,153,86,5	script	Thongpool#ayo	4_M_THAIONGBAK,{
 		mes "Would you like";
 		mes "to buy more?";
 		next;
-		if (select("Yes!:No, thanks.") == 1) {
+		if (select("Yes!", "No, thanks.") == 1) {
 			if (Zeny > 10999) {
 				if (MaxWeight - Weight > 3999) {
 					Zeny -= 11000;
@@ -2649,7 +2649,7 @@ ayothaya,121,240,7	script	Mr. Jun#ayo	4_M_THAIOLD,1,1,{
 		mes "more Lemons";
 		mes "again, do you?";
 		next;
-		switch(select("No.:Give me Lemons, old man!:Can I have some more Lemons, please?")) {
+		switch(select("No.", "Give me Lemons, old man!", "Can I have some more Lemons, please?")) {
 		case 1:
 			emotion e_ho;
 			mes "[Mr. Jun]";
@@ -2696,7 +2696,7 @@ OnTouch:
 		mes "some help...?";
 		emotion e_hmm;
 		next;
-		if (select("I need some Lemons.:No, thanks.") == 1) {
+		if (select("I need some Lemons.", "No, thanks.") == 1) {
 			mes "[Mr. Jun]";
 			mes "Umm...";
 			mes "Lemons?";
@@ -2704,7 +2704,7 @@ OnTouch:
 			mes "of Lemons on my tree.";
 			mes "Do you really need some?";
 			next;
-			if (select("Yes, I will pay you.:No, thanks.") == 1) {
+			if (select("Yes, I will pay you.", "No, thanks.") == 1) {
 				mes "[Mr. Jun]";
 				mes "I started growing this Lemon tree as a hobby, but I didn't expect to have such a good harvest of sweet,";
 				mes "succulent Lemons.";
@@ -2729,7 +2729,7 @@ OnTouch:
 				mes "What do you say?";
 				mes "Would you like to try?";
 				next;
-				if (select("Sure, why not!:No, thanks.") == 1) {
+				if (select("Sure, why not!", "No, thanks.") == 1) {
 					mes "[Mr. Jun]";
 					mes "Good!";
 					mes "The game I want us";
@@ -2771,7 +2771,7 @@ OnTouch:
 						}
 						else {
 							.@jun_mark = rand(1,3);
-							switch(select("Scissors:Rock:Paper")) {
+							switch(select("Scissors", "Rock", "Paper")) {
 							case 1:
 								if (.@jun_mark == 1) {
 									emotion e_scissors;
@@ -2950,7 +2950,7 @@ ayothaya,213,94,7	script	Merchant#ayo	4_M_THAIAYO,{
 		mes "you'll need. I'll sell";
 		mes "it all to you for 2,000 zeny.";
 		next;
-		if (select("Thanks, I'll take it.:It's a rip-off, man!") == 1) {
+		if (select("Thanks, I'll take it.", "It's a rip-off, man!") == 1) {
 			emotion e_thx;
 			if (Zeny > 1999) {
 				if (MaxWeight - Weight > 1199) {
@@ -3003,7 +3003,7 @@ ayothaya,213,94,7	script	Merchant#ayo	4_M_THAIAYO,{
 		mes "Would you like to";
 		mes "buy some more Chilis?";
 		next;
-		if (select("No, thanks.:Yes, please.") == 1) {
+		if (select("No, thanks.", "Yes, please.") == 1) {
 			mes "[Merchant Thongdum]";
 			mes "Fare well~";
 			close;

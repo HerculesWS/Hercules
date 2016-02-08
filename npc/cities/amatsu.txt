@@ -54,7 +54,7 @@
 	mes "are totally different countries";
 	mes "than the Rune-Midgard Kingdom?";
 	next;
-	switch(select("About Amatsu...:Go to Amatsu:Cancel")) {
+	switch(select("About Amatsu...", "Go to Amatsu", "Cancel")) {
 	case 1:
 		mes "[Walter Moers]";
 		mes "I heard that a drifting ship";
@@ -123,7 +123,7 @@
 		mes "Shall we go now? You didn't forget";
 		mes "the fare, right? Let's go.";
 		next;
-		if (select("All Aboard!:Cancel") == 1) {
+		if (select("All Aboard!", "Cancel") == 1) {
 			if (Zeny > 9999) {
 				mes "[Walter Moers]";
 				mes "Alright, I will start the engine!";
@@ -161,7 +161,7 @@ amatsu,194,79,5	script	Sea Captain#ama2	4_M_SEAMAN,{
 	mes "Alright, I will take you";
 	mes "back to Alberta.";
 	next;
-	if (select("Back to Alberta:Cancel") == 1) {
+	if (select("Back to Alberta", "Cancel") == 1) {
 		mes "[Walter Moers]";
 		mes "Let's go then. You must have";
 		mes "so many things to talk about,";
@@ -278,7 +278,7 @@ amatsu,185,115,3	script	Drunken Man#ama	4_M_JPNOJI2,{
 	mes "...like a man...*Hiccup*...";
 	mes "I'm going to really...*Hiccup*...not go home this time...Hiccup";
 	next;
-	if (select("Stop drinking and go home:Let's drink together") == 1) {
+	if (select("Stop drinking and go home", "Let's drink together") == 1) {
 		mes "[Kosake]";
 		mes "What?! Do you want me to get";
 		mes "hit by my wife's big fist?";
@@ -503,7 +503,7 @@ amatsu,274,178,7	script	Veterinarian#ama	4_M_JOB_WIZARD,{
 	mes "There are corpses buried under...";
 	mes "that tree...";
 	next;
-	if (select("How horrible!:You have got to be kidding.") == 1) {
+	if (select("How horrible!", "You have got to be kidding.") == 1) {
 		mes "[Sakura Seiichi]";
 		mes "Kuhuhu... They could be...";
 		mes "By the way, do you want";

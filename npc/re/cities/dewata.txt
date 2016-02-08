@@ -43,7 +43,7 @@ alberta,212,202,4	script	Dewata Sailor#alberta	4_M_DEWMAN,{
 	mes "With it's dazzling waves and charming views it's a great place to relax.";
 	mes "The transit fee is 10,000 Zeny.";
 	next;
-	switch(select("Yes!:No.")) {
+	switch(select("Yes!", "No.")) {
 	case 1:
 		if (Zeny >= 10000) {
 			mes "[Dewata Sailor]";
@@ -71,7 +71,7 @@ dewata,229,49,6	script	Alberta Sailor#dewata	4_M_DEWMAN,{
 	mes "[Alberta Sailor]";
 	mes "Do you want to go back to Alberta?";
 	next;
-	switch(select("Yes.:No.")) {
+	switch(select("Yes.", "No.")) {
 	case 1:
 		mes "[Alberta Sailor]";
 		mes "I hope you had a lot of fun on";
@@ -99,7 +99,7 @@ dewata,221,237,5	script	Young Man#dew-1	4_M_DEWMAN,{
 	mes "[Fruit Fancier]";
 	mes "I may be a youngling, but no one knows more than I do about ^777700Palm fruit^000000. All right! What do you want to know?";
 	next;
-	switch(select("About the shell...:About the pulp...:About the palm kernel...:No thanks.")) {
+	switch(select("About the shell...", "About the pulp...", "About the palm kernel...", "No thanks.")) {
 	case 1:
 		mes "[Fruit Fancier]";
 		mes "So you want to know about Palm fruit's pulp? Let me explain.";
@@ -197,7 +197,7 @@ dewata,114,243,6	script	Lazy Young Man#dew	4_M_DEWMAN,1,1,{
 		mes "Can you give me that? I just woke";
 		mes "up, and my throat is parched!";
 		next;
-		switch(select("Give:Do not give")) {
+		switch(select("Give", "Do not give")) {
 		case 1:
 			mes "[Lazy Young Man]";
 			mes "Really? For me?? I'll give you this in return... Thanks... Hehe~";
@@ -258,7 +258,7 @@ dewata,146,109,5	script	Restauranteur#dew	4_COOK,{
 	mes "traveler, unlike some of these";
 	mes "teenage punks...";
 	next;
-	switch(select("About Dewata dishes:Today's menu?:I'm okay.")) {
+	switch(select("About Dewata dishes", "Today's menu?", "I'm okay.")) {
 	case 1:
 		mes "[Restauranteur]";
 		mes "Need info about our foods? Well... I don't have much to talk about, but feel free to listen if you want.";
@@ -294,7 +294,7 @@ dewata,146,109,5	script	Restauranteur#dew	4_COOK,{
 		mes "[Restauranteur]";
 		mes "We have 2 items 'Nasi Goreng' and 'Satay'. Which one do you want?";
 		next;
-		switch(select("Nasi Goreng:Satay")) {
+		switch(select("Nasi Goreng", "Satay")) {
 		case 1:
 			mes "[Restauranteur]";
 			mes "This is Nasi Goreng fried with my special sauce plus egg fry on the top. It only costs ^0000FF5000^000000 Zeny.";
@@ -307,7 +307,7 @@ dewata,146,109,5	script	Restauranteur#dew	4_COOK,{
 			break;
 		}
 		next;
-		switch(select("Taste:Walk away")) {
+		switch(select("Taste", "Walk away")) {
 		case 1:
 			if (Zeny < 5000) {
 				mes "[Restauranteur]";
@@ -483,7 +483,7 @@ dewata,62,192,0	script	Monk#dew4	4_M_BUDDHIST,{
 dewata,89,191,6	script	Small Shrine#dew1	CLEAR_NPC,{
 	mes "There is a small shrine here. There are many people making wishes.";
 	next;
-	switch(select("Make a donation.:Make a wish.:Walk away.")) {
+	switch(select("Make a donation.", "Make a wish.", "Walk away.")) {
 	case 1:
 		mes "Donation case says:";
 		mes "^FF00001,000 ~ 100,000 Zeny^000000";
@@ -587,7 +587,7 @@ dewata,75,122,6	script	Monk#dewt1	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "You are a stranger here. What brings here to this quiet place?";
 	next;
-	switch(select("I'm sightseeing.:No reason.")) {
+	switch(select("I'm sightseeing.", "No reason.")) {
 	case 1:
 		mes "[Monk]";
 		mes "Oh, you are a tourist. This is the '^0000FFPagoda^000000' worshiping the great Buddha. Please be respectful of the monks praying here.";
@@ -603,7 +603,7 @@ dewata,69,101,6	script	Monk#dewt2	4_M_BUDDHIST,{
 	mes "[Monk]";
 	mes "We have a pagoda for the worship of Buddhas. Each temple has one of these towers, though not many people come here besides other monks.";
 	next;
-	switch(select("I see...:Explain about Buddhas:Ah, okay.")) {
+	switch(select("I see...", "Explain about Buddhas", "Ah, okay.")) {
 	case 1:
 		mes "[Monk]";
 		mes "You must feel the compassion of our Buddha!";
@@ -968,7 +968,7 @@ dewata,139,114,6	script	Semangat's Wife#dew	4_M_DEWOLDWOMAN,{
 	mes "gone off to again?";
 	mes "Have you seen my husband around?";
 	next;
-	switch(select("I think I saw him there..:No I haven't..")) {
+	switch(select("I think I saw him there..", "No I haven't..")) {
 	case 1:
 		mes "[Semangat's Wife]";
 		mes "He ran away when";
@@ -1073,7 +1073,7 @@ dewata,204,230,6	script	Dieting Lady#dew	4_M_DEWWOMAN,{
 	mes "Is that mouth-watering";
 	mes "^006400Satay^000000 for me?";
 	next;
-	switch(select("Yes, want a taste?:No, it's for me!")) {
+	switch(select("Yes, want a taste?", "No, it's for me!")) {
 	case 1:
 		delitem Satay,1;
 		mes "[Dieting Lady]";

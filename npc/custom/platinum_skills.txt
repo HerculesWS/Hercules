@@ -23,7 +23,7 @@ prontera,128,200,6	script	Platinum Skill NPC	4_F_MAID,{
 	mes "I can give you the special skills available to your job.";
 	mes "Would you like these skills now?";
 	next;
-	if (select("Yes Please:No") == 2) {
+	if (select("Yes Please", "No") == 2) {
 		mes "[Platinum Skill NPC]";
 		mes "Have a nice day... >.>";
 		close;

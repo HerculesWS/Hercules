@@ -118,7 +118,7 @@ prontera,124,297,3	script	Tialfi	4_M_KID1,{
 					mes "So which treasure";
 					mes "would you like to have?";
 					next;
-					switch(select("An item that I can use.:An item that my friend can use.")) {
+					switch(select("An item that I can use.", "An item that my friend can use.")) {
 					case 1:
 						mes "[Tialfi]";
 						mes "I see...";
@@ -344,7 +344,7 @@ prontera,124,297,3	script	Tialfi	4_M_KID1,{
 				mes "[Tialfi]";
 				mes "If you don't mind, I'd like to ask you to explore this mountain and search for these Dwarven Blacksmiths.";
 				next;
-				switch(select("No.:Okay.")) {
+				switch(select("No.", "Okay.")) {
 				case 1:
 					cutin "god_tialpi02",2;
 					mes "[Tialfi]";
@@ -482,7 +482,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 				mes "Why have you";
 				mes "come to me, human?";
 				next;
-				switch(select("Nothing.:Hey, 'sup!")) {
+				switch(select("Nothing.", "Hey, 'sup!")) {
 				case 1:
 					mes "[Austri]";
 					mes "...";
@@ -502,7 +502,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 				mes "What has made";
 				mes "you come to me?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Austri]";
 					mes "...";
@@ -519,7 +519,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "want to ask";
 								mes "me about?";
 								next;
-								switch(select("...:About Mjolnir.")) {
+								switch(select("...", "About Mjolnir.")) {
 								case 1:
 									.@talk_not = 1;
 									break;
@@ -539,7 +539,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "[Austri]";
 								mes "The hilt of Mjolnir was forged shorter than intended. Are you still listening to me?";
 								next;
-								switch(select("...:Yes, sir!:Huh?")) {
+								switch(select("...", "Yes, sir!", "Huh?")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -555,7 +555,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "Frankly his treasures were";
 								mes "made by another Dwarf tribe, but we couldn't tolerate his insult. So my ancestors created three treasures of their own.";
 								next;
-								switch(select("...:Boooring!:Oh, wow.")) {
+								switch(select("...", "Boooring!", "Oh, wow.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -573,7 +573,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "[Austri]";
 								mes "It's very sad. Although Mjolnir is the greatest weapon ever, it was very close to being the epitome of craftsmanship.";
 								next;
-								switch(select("...:Epito--what?:Yes sir, I agree.")) {
+								switch(select("...", "Epito--what?", "Yes sir, I agree.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -591,7 +591,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "[Austri]";
 								mes "I must say, a Blacksmith's greatest pride comes when he creates the weapon and armor that can be considered his life's work.";
 								next;
-								switch(select("...:I agree, sir!:Um, yeah.")) {
+								switch(select("...", "I agree, sir!", "Um, yeah.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -611,7 +611,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "how powerful Mjolnir is.";
 								mes "However, humans can never hope to see or even wield Mjolnir. Only a god can handle that kind of force.";
 								next;
-								switch(select("...:Wah wah wah~!:Ah, I understand sir!")) {
+								switch(select("...", "Wah wah wah~!", "Ah, I understand sir!")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -627,7 +627,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "Yes, it's possible to create";
 								mes "a Mjolnir suited to humans. Still, it wouldn't be very easy.";
 								next;
-								switch(select("...:Yes, sir!:Yeah, whatever.")) {
+								switch(select("...", "Yes, sir!", "Yeah, whatever.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -648,7 +648,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "Perhaps only the gods can be";
 								mes "sure as to what the future will bring. In any case, we must prepare ourselves for what will happen.";
 								next;
-								switch(select("...:Yes?:Yes, sir!")) {
+								switch(select("...", "Yes?", "Yes, sir!")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -693,7 +693,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 				mes "What has made";
 				mes "you come to me?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Austri]";
 					mes "...";
@@ -740,7 +740,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 				mes "[Austri]";
 				mes "What made you come to me?";
 				next;
-				switch(select("Nothing.:Hey, sup!")) {
+				switch(select("Nothing.", "Hey, sup!")) {
 				case 1:
 					mes "[Austri]";
 					mes "...";
@@ -758,7 +758,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 				mes "What has made";
 				mes "you come to me?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Austri]";
 					mes "...";
@@ -775,7 +775,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "want to ask";
 								mes "me about?";
 								next;
-								switch(select("...:About Mjolnir.")) {
+								switch(select("...", "About Mjolnir.")) {
 								case 1:
 									.@talk_not = 1;
 									break;
@@ -795,7 +795,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "[Austri]";
 								mes "The hilt of Mjolnir was forged shorter than intended. Are you still listening to me?";
 								next;
-								switch(select("...:Yes, sir!:Huh?")) {
+								switch(select("...", "Yes, sir!", "Huh?")) {
 								default:
 									.@talk_not = 1;
 								break;
@@ -811,7 +811,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "Frankly his treasures were";
 								mes "made by another Dwarf tribe, but we couldn't tolerate his insult. So my ancestors created three treasures of their own.";
 								next;
-								switch(select("...:Boooring!:Oh, wow.")) {
+								switch(select("...", "Boooring!", "Oh, wow.")) {
 								case 1:
 									.@talk_not = 1;
 								break;
@@ -832,7 +832,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "[Austri]";
 								mes "It's very sad. Although Mjolnir is the greatest weapon ever, it was very close to being the epitome of craftsmanship.";
 								next;
-								switch(select("...:Epito--what?:Yes sir, I agree.")) {
+								switch(select("...", "Epito--what?", "Yes sir, I agree.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -850,7 +850,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "[Austri]";
 								mes "I must say, a Blacksmith's greatest pride comes when he creates the weapon and armor that can be considered his life's work.";
 								next;
-								switch(select("...:I agree, sir!:Um, yeah.")) {
+								switch(select("...", "I agree, sir!", "Um, yeah.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -870,7 +870,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "how powerful Mjolnir is.";
 								mes "However, humans can never hope to see or even wield Mjolnir. Only a god can handle that kind of force.";
 								next;
-								switch(select("...:Wah wah wah~!:Ah, I understand sir!")) {
+								switch(select("...", "Wah wah wah~!", "Ah, I understand sir!")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -886,7 +886,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "Yes, it's possible to create";
 								mes "a Mjolnir suited to humans. Still, it wouldn't be very easy.";
 								next;
-								switch(select("...:Yes, sir!:Yeah, whatever.")) {
+								switch(select("...", "Yes, sir!", "Yeah, whatever.")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -907,7 +907,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 								mes "Perhaps only the gods can be";
 								mes "sure as to what the future will bring. In any case, we must prepare ourselves for what will happen.";
 								next;
-								switch(select("...:Yes?:Yes, sir!")) {
+								switch(select("...", "Yes?", "Yes, sir!")) {
 								default:
 									.@talk_not = 1;
 									break;
@@ -950,7 +950,7 @@ mjolnir_11,149,247,5	script	Dwarf Blacksmith#east	4_M_DWARF,{
 				mes "[Austri]";
 				mes "What made you come to me?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Austri]";
 					mes "...";
@@ -1052,7 +1052,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 				mes "What brings";
 				mes "you here?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Sudri]";
 					mes "You have too much time on your hands. Why don't you log out and hang out with your friends instead?";
@@ -1083,7 +1083,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 					mes "initiated";
 					mes "an attack!";
 					next;
-					switch(select("...?!:Strike Head!:Strike Chest!:Strike Legs!:Take a break.")) {
+					switch(select("...?!", "Strike Head!", "Strike Chest!", "Strike Legs!", "Take a break.")) {
 					case 1:
 						.@p_atk = 0;
 						break;
@@ -1216,7 +1216,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 					mes "--------------------";
 					mes "Sudri attacks...!";
 					next;
-					switch(select("...?!:Dodge!:Block!:Jump!:Counter back!")) {
+					switch(select("...?!", "Dodge!", "Block!", "Jump!", "Counter back!")) {
 					case 1:
 						.@p_def = 0;
 						break;
@@ -1385,7 +1385,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 				mes "What brings";
 				mes "you here, human?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Sudri]";
 					mes "You have too much time on your hands. Why don't you log out and hang out with your buddies for a while?";
@@ -1406,7 +1406,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 					mes "just talk to you.";
 					mes "How about it?";
 					next;
-					switch(select("...:Yes, I accept your challenge.:No, I'm scared!")) {
+					switch(select("...", "Yes, I accept your challenge.", "No, I'm scared!")) {
 					case 1:
 						god_mjo_2 = 3;
 						mes "[Sudri]";
@@ -1460,7 +1460,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 				mes "[Sudri]";
 				mes "What made you come to me?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Sudri]";
 					mes "You have too much";
@@ -1491,7 +1491,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 					mes "initiated";
 					mes "an attack!";
 					next;
-					switch(select("...?!:Strike Head!:Strike Chest!:Strike Legs!:Take a break.")) {
+					switch(select("...?!", "Strike Head!", "Strike Chest!", "Strike Legs!", "Take a break.")) {
 					case 1:
 						.@p_atk = 0;
 						break;
@@ -1624,7 +1624,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 					mes "--------------------";
 					mes "Sudri attacks...!";
 					next;
-					switch(select("...?!:Dodge!:Block!:Jump!:Counter back!")) {
+					switch(select("...?!", "Dodge!", "Block!", "Jump!", "Counter back!")) {
 					case 1:
 						.@p_def = 0;
 						break;
@@ -1790,7 +1790,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 				mes "[Sudri]";
 				mes "What made you come to me?";
 				next;
-				switch(select("Nothing.:Excuse me, sir.")) {
+				switch(select("Nothing.", "Excuse me, sir.")) {
 				case 1:
 					mes "[Sudri]";
 					mes "You have too much";
@@ -1813,7 +1813,7 @@ mjolnir_09,209,341,3	script	Dwarf Blacksmith#south	4_M_DWARF,{
 					mes "just talk to you.";
 					mes "How about it?";
 					next;
-					switch(select("...:Yes, I accept your challenge.:No, I'm scared!")) {
+					switch(select("...", "Yes, I accept your challenge.", "No, I'm scared!")) {
 					case 1:
 						god_mjo_3 = 3;
 						mes "[Sudri]";
@@ -1934,7 +1934,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 				mes "[Vestri]";
 				mes "What do you want?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Vestri]";
 					mes "If you want something, you should earn it through your own efforts.";
@@ -2027,7 +2027,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 				mes "If you understand,";
 				mes "then let's get on with it!";
 				next;
-				if(select("Sure, let's do it!:N-no, I changed my mind!") == 2) {
+				if(select("Sure, let's do it!", "N-no, I changed my mind!") == 2) {
 					mes "[Vestri]";
 					mes "Bah...!";
 					mes "How do you survive";
@@ -2095,7 +2095,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 				mes "[Vestri]";
 				mes "What do you want?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Vestri]";
 					mes "If you want something, you should earn it through your own efforts.";
@@ -2151,7 +2151,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 				mes "[Vestri]";
 				mes "What do you want?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Vestri]";
 					mes "If you want something, you should earn it through your own efforts.";
@@ -2238,7 +2238,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 				mes "If you understand,";
 				mes "then let's get on with it!";
 				next;
-				if(select("Sure, let's do it!:...no, I am out.") == 2) {
+				if(select("Sure, let's do it!", "...no, I am out.") == 2) {
 					mes "[Vestri]";
 					mes "Bah...!";
 					mes "How do you survive";
@@ -2305,7 +2305,7 @@ mjolnir_01,35,136,7	script	Dwarf Blacksmith#west	4_M_DWARF,{
 				mes "[Vestri]";
 				mes "What do you want?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Vestri]";
 					mes "If you want something, you should earn it through your own efforts.";
@@ -2415,7 +2415,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 				mes "do you have with";
 				mes "me, human?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Nordri]";
 					mes "Huh.";
@@ -2460,7 +2460,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 							mes "In truth, Thor was tricked, and the opponent that defeated him was not";
 							mes "actually a giant. Illusion was used to disguise Thor's opponent, but I forget was it was. Do you know?";
 							next;
-							switch(select("Greed:Sea:Blaze:Hog")) {
+							switch(select("Greed", "Sea", "Blaze", "Hog")) {
 							default:
 								.@talk_not = 1;
 								break;
@@ -2480,7 +2480,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 							mes "Once again, illusion magic was";
 							mes "used to disguise the competitor. Do you know what Tialfi was really racing against?";
 							next;
-							switch(select("Language:Thoughts:Turtle:Wolf")) {
+							switch(select("Language", "Thoughts", "Turtle", "Wolf")) {
 							default:
 								.@talk_not = 1;
 								break;
@@ -2499,7 +2499,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 							mes "Once again, Thor was the victim";
 							mes "of illusion magic. He didn't realize he wasn't actually wrestling with an old woman. Do you know what his opponent really was?";
 							next;
-							switch(select("Curse:Earth:Heart:Old Age")) {
+							switch(select("Curse", "Earth", "Heart", "Old Age")) {
 							default:
 								.@talk_not = 1;
 								break;
@@ -2560,7 +2560,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 				mes "do you have with";
 				mes "me, human?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Nordri]";
 					mes "Huh.";
@@ -2604,7 +2604,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 				mes "do you have with";
 				mes "me, human?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Nordri]";
 					mes "Huh.";
@@ -2648,7 +2648,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 							mes "[Nordri]";
 							mes "So Thor decided to test his knowledge by asking him some questions. The first question was, 'What is the name of the ground in human terms?' Do you know the answer?";
 							next;
-							switch(select("Ymir's body:Earth:Lane:Universe")) {
+							switch(select("Ymir's body", "Earth", "Lane", "Universe")) {
 							default:
 								.@talk_not = 1;
 								break;
@@ -2663,7 +2663,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 							mes "[Nordri]";
 							mes "Thor then gave Alvis another question. What is the giant's term for the round shell that covers the earth?";
 							next;
-							switch(select("Ymir's Head:Sky:Cloud Factory:High House")) {
+							switch(select("Ymir's Head", "Sky", "Cloud Factory", "High House")) {
 							default:
 								.@talk_not = 1;
 								break;
@@ -2678,7 +2678,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 							mes "[Nordri]";
 							mes "So Thor gave him another question. What is the term for the ball that rises in the sky at night, as used by the gods?";
 							next;
-							switch(select("Circling Wheel:Moon:False Sun:Fast Stranger")) {
+							switch(select("Circling Wheel", "Moon", "False Sun", "Fast Stranger")) {
 							default:
 								.@talk_not = 1;
 								break;
@@ -2746,7 +2746,7 @@ mjolnir_12,18,18,7	script	Dwarf Blacksmith#north	4_M_DWARF,{
 				mes "do you have with";
 				mes "me, human?";
 				next;
-				switch(select("Nothing.:Excuse me.")) {
+				switch(select("Nothing.", "Excuse me.")) {
 				case 1:
 					mes "[Nordri]";
 					mes "You're funny, leave me alone.";

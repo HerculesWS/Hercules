@@ -42,11 +42,11 @@ hugel,98,56,3	script	Hugel Guide Granny#hugel	4_F_LGTGRAND,{
 	next;
 	.@str$ = "Would you like to know more locations?";
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Church ]:[ Inn ]:[ Pub ]:[ Airport ]:[ Weapon Shop ]:[ Tool Shop ]:[ Bingo Game Room ]:[ ^3131FFHunter Guild^000000 ]:[ Party Supplies Shop ]:[ ^3131FFShrine Expedition^000000 ]:Previous Menu")) {
+				switch(select("[ Church ]", "[ Inn ]", "[ Pub ]", "[ Airport ]", "[ Weapon Shop ]", "[ Tool Shop ]", "[ Bingo Game Room ]", "[ ^3131FFHunter Guild^000000 ]", "[ Party Supplies Shop ]", "[ ^3131FFShrine Expedition^000000 ]", "Previous Menu")) {
 				case 1:
 					mes "[Hugel Guide Granny]";
 					mes "Well, to me, this "+F_Navi("Church","hugel,159,113")+" is rather like a place for old folks like me, you know...";
@@ -139,7 +139,7 @@ hugel,98,56,3	script	Hugel Guide Granny#hugel	4_F_LGTGRAND,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Monster Race Arena ]:[ Cool Event Corp. Staff ]:Previous Menu")) {
+				switch(select("[ Monster Race Arena ]", "[ Cool Event Corp. Staff ]", "Previous Menu")) {
 				case 1:
 					mes "[Hugel Guide Granny]";
 					mes "I also like playing Monster Race games. It is pretty fun, you know?";
@@ -202,11 +202,11 @@ hugel,187,172,6	script	Guide Rich King#hugel	4_M_CRU_KNT,{
 	F_Navi("[Rich King]");
 	next;
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Church ]:[ Inn ]:[ Pub ]:[ Airport ]:[ Weapon Shop ]:[ Tool Shop ]:[ Bingo Game Room ]:[ Hunter Guild ]:[ Party Supplies Shop ]:[ Shrine Expedition ]:Previous Menu")) {
+				switch(select("[ Church ]", "[ Inn ]", "[ Pub ]", "[ Airport ]", "[ Weapon Shop ]", "[ Tool Shop ]", "[ Bingo Game Room ]", "[ Hunter Guild ]", "[ Party Supplies Shop ]", "[ Shrine Expedition ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Church","hugel,159,113","^FF0000");
 					viewpoint 1,159,113,0,0xFF0000;
@@ -266,7 +266,7 @@ hugel,187,172,6	script	Guide Rich King#hugel	4_M_CRU_KNT,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Monster Race Arena ]:[ Cool Event Corp. Staff ]:Previous Menu")) {
+				switch(select("[ Monster Race Arena ]", "[ Cool Event Corp. Staff ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, "^FF1493Monster Race Arena^000000";
 					viewpoint 1,60,71,10,0xFF1493;

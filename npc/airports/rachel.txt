@@ -37,7 +37,7 @@ OnTouch:
 	mes "To use the airship, you are required to pay 1,200 zeny or a Free Airship Ticket.";
 	mes "Would you like to use the service?";
 	next;
-	if (select("Yes:No") == 1) {
+	if (select("Yes", "No") == 1) {
 		if (countitem(Free_Flying_Ship_Ticket) > 0) {
 			delitem Free_Flying_Ship_Ticket,1;
 			warp "airplane_01",245,60;

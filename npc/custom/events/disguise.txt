@@ -22,7 +22,7 @@ prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
 		mes .@n$;
 		mes "Select an option.";
 		next;
-		switch(select("Turn ON/OFF Event:Event Settings")) {
+		switch(select("Turn ON/OFF Event", "Event Settings")) {
 		case 1:
 			mes .@n$;
 			if (.EventON) {
@@ -32,7 +32,7 @@ prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
 				mes "The Event is currently: [^FF0000OFF^000000]";
 				mes "Would you like to turn it ON?";
 			}
-			if(select("Yes:No")==2) close;
+			if(select("Yes", "No")==2) close;
 			if (.EventON) {
 				set .EventON,0; set .Timer,0;
 				setnpctimer 0; stopnpctimer;
@@ -50,7 +50,7 @@ prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
 			mes .@n$;
 			mes "Pick a setting to modify.";
 			next;
-			switch(select("Monster Display:Number of Rounds:Prize Settings")) {
+			switch(select("Monster Display", "Number of Rounds", "Prize Settings")) {
 			case 1:
 				setarray .@r$[0],"Disguise as all monsters.","Disguise as MVPs only.";
 				mes .@n$;
@@ -104,7 +104,7 @@ prontera,160,155,4	script	Disguise Event	4_M_NFDEADMAN,{
 	mes .@n$;
 	mes "Welcome.";
 	mes "How may I be of assistance?";
-	if(select("Information:Nothing, just passing through.")==2) close;
+	if(select("Information", "Nothing, just passing through.")==2) close;
 	next;
 	mes .@n$;
 	mes "This event is quite simple.";

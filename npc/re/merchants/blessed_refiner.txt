@@ -132,7 +132,7 @@
 	mes "This "+.@type$+" has been refined to "+.@equip_refine+". To refine it, I need "+.@ore$+" and a "+(.@price/1000)+",000 zeny refining fee.";
 	mes "Do you want to proceed?";
 	next;
-	if(select("Yes:No") == 2) {
+	if(select("Yes", "No") == 2) {
 		mes "[Blacksmith Dister]";
 		mes "I am busy, don't joke with me!";
 		close;
@@ -144,7 +144,7 @@
 		mes "[Blacksmith Dister]";
 		mes "Of course, the refining fee will not be returned! Do you want to continue?";
 		next;
-		if(select("Yes:No") == 2) {
+		if(select("Yes", "No") == 2) {
 			mes "[Blacksmith Dister]";
 			mes "Good. I'd be sad if it failed, too.";
 			close;

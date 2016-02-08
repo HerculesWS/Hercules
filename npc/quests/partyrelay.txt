@@ -361,7 +361,7 @@ payon,103,113,3	script	Ledrion#payon::RelayLedrion	4_M_MANAGER,{
 	mes "incentive for your group.";
 	mes "Would you like to participate?";
 	next;
-	switch(select("Sure!:No.")) {
+	switch(select("Sure!", "No.")) {
 	case 1:
 		if ((BaseLevel > 39) && (.@partyleader == getcharid(0)) && (getcharid(2) > 0) && (.@partymembercount > 5)) {
 			mes "[Ledrion]";

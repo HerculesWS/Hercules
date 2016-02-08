@@ -57,7 +57,7 @@ prontera,152,192,5	script	Pumpkin Hat Researcher	4_M_05,{
 	mes "I'm a Pumpkin Hat researcher, Why don't you listen to my story?";
 	next;
 	while(1) {
-		switch(select("Listen to the story.:Ask about Pumpkin Hat.:Get a Pumpkin Hat.:Stop the conversation.")) {
+		switch(select("Listen to the story.", "Ask about Pumpkin Hat.", "Get a Pumpkin Hat.", "Stop the conversation.")) {
 			case 1:
 				mes "[Pumpkin Hat Researcher]";
 				mes "I've been studying about an upgraded Pumpkin Hat.";
@@ -122,7 +122,7 @@ OnTouch:
 	mes "Hooray! hooray! Hooray!";
 	mes "Trick or Treat?";
 	next;
-	if(select("Trick.:Treat.") == 1) {
+	if(select("Trick.", "Treat.") == 1) {
 		mes "[Trick or Treater]";
 		mes "!!!!";
 		mes "Fine. I have no choice but to trick you back!";
@@ -132,7 +132,7 @@ OnTouch:
 	mes "[Trick or Treater]";
 	mes "Oh yay! What kind of treat do you have?";
 	next;
-	switch(select("Candy:Candy Cane:Well-baked Cookie:Nothing")) {
+	switch(select("Candy", "Candy Cane", "Well-baked Cookie", "Nothing")) {
 		case 1:
 			if(countitem(Candy) > 0) {
 				mes "[Trick or Treater]";
@@ -245,7 +245,7 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 	mes "Do you want to play a trick on someone?";
 	next;
 	while(1) {
-		switch(select("What trick?:Sure:No.")) {
+		switch(select("What trick?", "Sure", "No.")) {
 			case 1:
 				mes "[Halloween Wizard]";
 				mes "I can summon monsters in other parts of the world with just a few materials.";
@@ -263,7 +263,7 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 				next;
 				getmapxy(.@mapname$, .@mapx, .@mapy, UNITTYPE_PC, strcharinfo(0));
 				if (.@mapname$ == "prontera") {
-					switch(select("Geffen:Payon:Alberta:Aldebaran")) {
+					switch(select("Geffen", "Payon", "Alberta", "Aldebaran")) {
 						case 1:
 							.@HallowTown = 3;
 							break;
@@ -279,7 +279,7 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 					}
 				}
 				else if (.@mapname$ == "payon") {
-					switch(select("Prontera:Geffen:Alberta:Aldebaran")) {
+					switch(select("Prontera", "Geffen", "Alberta", "Aldebaran")) {
 						case 1:
 							.@HallowTown = 1;
 							break;
@@ -295,7 +295,7 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 					}
 				}
 				else if (.@mapname$ == "geffen") {
-					switch(select("Prontera:Payon:Alberta:Aldebaran")) {
+					switch(select("Prontera", "Payon", "Alberta", "Aldebaran")) {
 						case 1:
 							.@HallowTown = 1;
 							break;
@@ -311,7 +311,7 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 					}
 				}
 				else if (.@mapname$ == "alberta") {
-					switch(select("Prontera:Geffen:Payon:Aldebaran")) {
+					switch(select("Prontera", "Geffen", "Payon", "Aldebaran")) {
 						case 1:
 							.@HallowTown = 1;
 							break;
@@ -327,7 +327,7 @@ prontera,220,72,5	duplicate(09Treats)	Trick or Treater#iRO8	4_M_KID1,2,2
 					}
 				}
 				else if (.@mapname$ == "aldebaran") {
-					switch(select("Prontera:Geffen:Payon:Alberta")) {
+					switch(select("Prontera", "Geffen", "Payon", "Alberta")) {
 						case 1:
 							.@HallowTown = 1;
 							break;

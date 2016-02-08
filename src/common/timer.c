@@ -25,6 +25,7 @@
 #include "common/cbasetypes.h"
 #include "common/db.h"
 #include "common/memmgr.h"
+#include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/utils.h"
 
@@ -87,6 +88,8 @@ struct timer_func_list {
 int timer_add_func_list(TimerFunc func, char* name) {
 	struct timer_func_list* tfl;
 
+	nullpo_ret(func);
+	nullpo_ret(name);
 	if (name) {
 		for( tfl=tfl_root; tfl != NULL; tfl=tfl->next )
 		{// check suspicious cases
@@ -303,7 +306,19 @@ static int acquire_timer(void) {
 int timer_add(int64 tick, TimerFunc func, int id, intptr_t data) {
 	int tid;
 
+	nullpo_retr(INVALID_TIMER, func);
+
 	tid = acquire_timer();
+	if (timer_data[tid].type != 0 && timer_data[tid].type != TIMER_REMOVE_HEAP)
+	{
+		ShowError("timer_add error: wrong tid type: %d, [%d]%p(%s) -> %p(%s)\n", timer_data[tid].type, tid, func, search_timer_func_list(func), timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
+		Assert_retr(INVALID_TIMER, 0);
+	}
+	if (timer_data[tid].func != NULL)
+	{
+		ShowError("timer_add error: func non NULL: [%d]%p(%s) -> %p(%s)\n", tid, func, search_timer_func_list(func), timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
+		Assert_retr(INVALID_TIMER, 0);
+	}
 	timer_data[tid].tick     = tick;
 	timer_data[tid].func     = func;
 	timer_data[tid].id       = id;
@@ -317,9 +332,11 @@ int timer_add(int64 tick, TimerFunc func, int id, intptr_t data) {
 
 /// Starts a new timer that automatically restarts itself (infinite loop until manually removed).
 /// Returns the timer's id, or INVALID_TIMER if it fails.
-int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data, int interval) {
+int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data, int interval)
+{
 	int tid;
 
+	nullpo_retr(INVALID_TIMER, func);
 	if (interval < 1) {
 		ShowError("timer_add_interval: invalid interval (tick=%"PRId64" %p[%s] id=%d data=%"PRIdPTR" diff_tick=%"PRId64")\n",
 		          tick, func, search_timer_func_list(func), id, data, DIFF_TICK(tick, timer->gettick()));
@@ -327,6 +344,18 @@ int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data, int in
 	}
 
 	tid = acquire_timer();
+	if (timer_data[tid].type != 0 && timer_data[tid].type != TIMER_REMOVE_HEAP)
+	{
+		ShowError("timer_add_interval: wrong tid type: %d, [%d]%p(%s) -> %p(%s)\n", timer_data[tid].type, tid, func, search_timer_func_list(func), timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
+		Assert_retr(INVALID_TIMER, 0);
+		return INVALID_TIMER;
+	}
+	if (timer_data[tid].func != NULL)
+	{
+		ShowError("timer_add_interval: func non NULL: [%d]%p(%s) -> %p(%s)\n", tid, func, search_timer_func_list(func), timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
+		Assert_retr(INVALID_TIMER, 0);
+		return INVALID_TIMER;
+	}
 	timer_data[tid].tick     = tick;
 	timer_data[tid].func     = func;
 	timer_data[tid].id       = id;
@@ -346,14 +375,26 @@ const struct TimerData* timer_get(int tid) {
 /// Marks a timer specified by 'id' for immediate deletion once it expires.
 /// Param 'func' is used for debug/verification purposes.
 /// Returns 0 on success, < 0 on failure.
-int timer_do_delete(int tid, TimerFunc func) {
+int timer_do_delete(int tid, TimerFunc func)
+{
+	nullpo_ret(func);
+
 	if( tid < 0 || tid >= timer_data_num ) {
-		ShowError("timer_do_delete error : no such timer %d (%p(%s))\n", tid, func, search_timer_func_list(func));
+		ShowError("timer_do_delete error : no such timer [%d](%p(%s))\n", tid, func, search_timer_func_list(func));
+		Assert_retr(-1, 0);
 		return -1;
 	}
 	if( timer_data[tid].func != func ) {
-		ShowError("timer_do_delete error : function mismatch %p(%s) != %p(%s)\n", timer_data[tid].func, search_timer_func_list(timer_data[tid].func), func, search_timer_func_list(func));
+		ShowError("timer_do_delete error : function mismatch [%d]%p(%s) != %p(%s)\n", tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func), func, search_timer_func_list(func));
+		Assert_retr(-2, 0);
 		return -2;
+	}
+
+	if (timer_data[tid].type == 0 || timer_data[tid].type == TIMER_REMOVE_HEAP)
+	{
+		ShowError("timer_do_delete: timer already deleted: %d, [%d]%p(%s) -> %p(%s)\n", timer_data[tid].type, tid, func, search_timer_func_list(func), func, search_timer_func_list(func));
+		Assert_retr(-3, 0);
+		return -3;
 	}
 
 	timer_data[tid].func = NULL;
@@ -383,7 +424,19 @@ int64 timer_settick(int tid, int64 tick)
 	// search timer position
 	ARR_FIND(0, BHEAP_LENGTH(timer_heap), i, BHEAP_DATA(timer_heap)[i] == tid);
 	if (i == BHEAP_LENGTH(timer_heap)) {
-		ShowError("timer_settick: no such timer %d (%p(%s))\n", tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
+		ShowError("timer_settick: no such timer [%d](%p(%s))\n", tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
+		Assert_retr(-1, 0);
+		return -1;
+	}
+
+	if (timer_data[tid].type == 0 || timer_data[tid].type == TIMER_REMOVE_HEAP) {
+		ShowError("timer_settick error: set tick for deleted timer %d, [%d](%p(%s))\n", timer_data[tid].type, tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
+		Assert_retr(-1, 0);
+		return -1;
+	}
+	if (timer_data[tid].func == NULL) {
+		ShowError("timer_settick error: set tick for timer with wrong func [%d](%p(%s))\n", tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
+		Assert_retr(-1, 0);
 		return -1;
 	}
 
@@ -438,6 +491,7 @@ int do_timer(int64 tick)
 				default:
 				case TIMER_ONCE_AUTODEL:
 					timer_data[tid].type = 0;
+					timer_data[tid].func = NULL;
 					if (free_timer_list_pos >= free_timer_list_max) {
 						free_timer_list_max += 256;
 						RECREATE(free_timer_list,int,free_timer_list_max);

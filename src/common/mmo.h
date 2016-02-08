@@ -213,6 +213,11 @@
 #define JOBL_BABY 0x2000  //8192
 #define JOBL_THIRD 0x4000 //16384
 
+//Packet DB
+#define MIN_PACKET_DB 0x0064 //what's the point of minimum packet id ? [hemagx]
+#define MAX_PACKET_DB 0x0F00
+#define MAX_PACKET_POS 20
+
 #define SCRIPT_VARNAME_LENGTH 32 ///< Maximum length of a script variable
 
 struct hplugin_data_store;

@@ -3480,6 +3480,8 @@ struct {
 	struct HPMHookPoint *HP_mob_lookup_const_post;
 	struct HPMHookPoint *HP_mob_get_const_pre;
 	struct HPMHookPoint *HP_mob_get_const_post;
+	struct HPMHookPoint *HP_mob_db_validate_entry_pre;
+	struct HPMHookPoint *HP_mob_db_validate_entry_post;
 	struct HPMHookPoint *HP_mob_read_libconfig_pre;
 	struct HPMHookPoint *HP_mob_read_libconfig_post;
 	struct HPMHookPoint *HP_mob_read_db_additional_fields_pre;
@@ -5696,6 +5698,8 @@ struct {
 	struct HPMHookPoint *HP_sysinfo_compiler_post;
 	struct HPMHookPoint *HP_sysinfo_cflags_pre;
 	struct HPMHookPoint *HP_sysinfo_cflags_post;
+	struct HPMHookPoint *HP_sysinfo_time_pre;
+	struct HPMHookPoint *HP_sysinfo_time_post;
 	struct HPMHookPoint *HP_sysinfo_vcstype_pre;
 	struct HPMHookPoint *HP_sysinfo_vcstype_post;
 	struct HPMHookPoint *HP_sysinfo_vcstypeid_pre;
@@ -9327,6 +9331,8 @@ struct {
 	int HP_mob_lookup_const_post;
 	int HP_mob_get_const_pre;
 	int HP_mob_get_const_post;
+	int HP_mob_db_validate_entry_pre;
+	int HP_mob_db_validate_entry_post;
 	int HP_mob_read_libconfig_pre;
 	int HP_mob_read_libconfig_post;
 	int HP_mob_read_db_additional_fields_pre;
@@ -11543,6 +11549,8 @@ struct {
 	int HP_sysinfo_compiler_post;
 	int HP_sysinfo_cflags_pre;
 	int HP_sysinfo_cflags_post;
+	int HP_sysinfo_time_pre;
+	int HP_sysinfo_time_post;
 	int HP_sysinfo_vcstype_pre;
 	int HP_sysinfo_vcstype_post;
 	int HP_sysinfo_vcstypeid_pre;
