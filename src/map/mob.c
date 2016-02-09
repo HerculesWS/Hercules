@@ -3634,13 +3634,19 @@ unsigned int mob_drop_adjust(int baserate, int rate_adjust, unsigned short rate_
 {
 	int64 rate = baserate;
 
-	if (battle_config.logarithmic_drops && rate_adjust > 0 && rate_adjust != 100 && baserate > 0) //Logarithmic drops equation by Ishizu-Chan
-		//Equation: Droprate(x,y) = x * (5 - log(x)) ^ (ln(y) / ln(5))
-		//x is the normal Droprate, y is the Modificator.
-		rate = rate * pow((5.0 - log10(rate)), (log(rate_adjust/100.) / log(5.0))) + 0.5;
-	else
-		//Classical linear rate adjustment.
-		rate = apply_percentrate64(rate, rate_adjust, 100);
+	Assert_ret(baserate >= 0);
+
+	if (rate_adjust != 100 && baserate > 0) {
+		if (battle_config.logarithmic_drops && rate_adjust > 0) {
+			// Logarithmic drops equation by Ishizu-Chan
+			//Equation: Droprate(x,y) = x * (5 - log(x)) ^ (ln(y) / ln(5))
+			//x is the normal Droprate, y is the Modificator.
+			rate = (int64)(baserate * pow((5.0 - log10(baserate)), (log(rate_adjust/100.) / log(5.0))) + 0.5);
+		} else {
+			//Classical linear rate adjustment.
+			rate = apply_percentrate64(baserate, rate_adjust, 100);
+		}
+	}
 
 	return (unsigned int)cap_value(rate,rate_min,rate_max);
 }
