@@ -24,6 +24,9 @@
 #include "common/hercules.h"
 
 #include <stdio.h> // FILE*
+#ifndef WIN32
+#	include <unistd.h> // sleep()
+#endif
 
 /* [HCache] 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
 #define HCACHE_KEY 'k'
