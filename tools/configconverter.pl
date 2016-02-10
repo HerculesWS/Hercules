@@ -57,16 +57,35 @@ sub cfg_add($$$$) {
 	$output->{$variable} = {value => $value, print => $default->{print}, path => $default->{path}} unless $value eq $default->{default};
 }
 
-sub parsecfg_string($$$$) {
+sub cfg_append($$$$) {
 	my ($variable, $value, $default, $output) = @_;
+	for my $default_value (@{$default->{default}}) {
+		return if $value eq $default_value;
+	}
+	$output->{$variable} = {value => [], print => $default->{print}, path => $default->{path}} unless $output->{$variable};
+	push(@{$output->{$variable}->{value}}, $value);
+}
+
+sub parsecfg_string_sub($$$$$) {
+	my ($variable, $value, $default, $output, $func) = @_;
 	if ($value =~ m{\s*"((?:\\"|.)*)"\s*(?://.*)?$}i) {
-		cfg_add($variable, $1, $default, $output);
+		$func->($variable, $1, $default, $output);
 		return 1;
 	} elsif ($value =~ m{\s*((?:\\"|.)*)\s*(?://.*)?$}i) {
-		cfg_add($variable, $1, $default, $output);
+		$func->($variable, $1, $default, $output);
 		return 1;
 	}
 	return 0;
+}
+
+sub parsecfg_string($$$$) {
+	my ($variable, $value, $default, $output) = @_;
+	return parsecfg_string_sub($variable, $value, $default, $output, \&cfg_add);
+}
+
+sub parsecfg_stringarr($$$$) {
+	my ($variable, $value, $default, $output) = @_;
+	return parsecfg_string_sub($variable, $value, $default, $output, \&cfg_append);
 }
 
 sub parsecfg_int($$$$) {
@@ -189,6 +208,39 @@ sub printcfg_items($$$) {
 	indent(")\n", $nestlevel);
 }
 
+sub printcfg_md5hash($$$) {
+	my ($variable, $value, $nestlevel) = @_;
+
+	indent("$variable: (\n", $nestlevel);
+
+	for (@$value) {
+		my ($group_id, $hash) = split(/,/, $_, 2);
+		$group_id =~ s/\s*$//; $group_id =~ s/^\s*//;
+		$hash =~ s/\s*$//; $hash =~ s/^\s*//;
+
+		indent("{\n", $nestlevel);
+		indent("group_id: $group_id\n", $nestlevel + 1);
+		indent("hash: \"$hash\"\n", $nestlevel + 1);
+		indent("},\n", $nestlevel);
+	}
+
+	indent(")\n", $nestlevel);
+}
+
+sub printcfg_strlist($$$) {
+	my ($variable, $value, $nestlevel) = @_;
+
+	indent("$variable: (\n", $nestlevel);
+
+	for my $string (split(/,/, $value)) {
+		$string =~ s/\s*$//; $string =~ s/^\s*//;
+
+		indent("\"$string\",\n", $nestlevel + 1);
+	}
+
+	indent(")\n", $nestlevel);
+}
+
 sub process_conf($$) {
 	my ($files, $defaults) = @_;
 	my $found = 0;
@@ -271,7 +323,7 @@ my @defaults = (
 			inter_log_filename     => {parse => \&parsecfg_string, print => \&printcfg_string, path => "inter-server:inter_configuration/log/", default => "log/inter.log"},
 			mysql_reconnect_type   => {parse => \&parsecfg_int,    print => \&printcfg_int,    path => "inter-server:inter_configuration/mysql_reconnect/type", default => 2},
 			mysql_reconnect_count  => {parse => \&parsecfg_int,    print => \&printcfg_int,    path => "inter-server:inter_configuration/mysql_reconnect/count", default => 1},
-			log_login_db           => {parse => \&parsecfg_string, print => \&printcfg_nil,    path => "inter-server:inter_configuration/database_names/login_db", default => "loginlog"},
+			log_login_db           => {parse => \&parsecfg_string, print => \&printcfg_string, path => "inter-server:inter_configuration/database_names/login_db", default => "loginlog"},
 			char_db                => {parse => \&parsecfg_string, print => \&printcfg_string, path => "inter-server:inter_configuration/database_names/", default => "char"},
 			interlog_db            => {parse => \&parsecfg_string, print => \&printcfg_string, path => "inter-server:inter_configuration/database_names/", default => "interlog"},
 			ragsrvinfo_db          => {parse => \&parsecfg_string, print => \&printcfg_string, path => "inter-server:inter_configuration/database_names/", default => "ragsrvinfo"},
@@ -340,6 +392,56 @@ my @defaults = (
 			import                 => {parse => \&parsecfg_string, print => \&printcfg_nil,    path => "", default => "conf/import/inter_conf.txt"},
 		}
 	},
+	{
+		files => ['login-server.conf', 'import/login_conf.txt'],
+		settings => {
+			bind_ip                                   => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "login-server:login_configuration/inter/", default => "127.0.0.1"},
+			login_port                                => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "login-server:login_configuration/inter/", default => 6900},
+			timestamp_format                          => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "console:console/", default => "[%d/%b %H:%M]"},
+			stdout_with_ansisequence                  => {parse => \&parsecfg_bool,      print => \&printcfg_bool,    path => "console:console/", default => "false"},
+			console_silent                            => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "console:console/", default => 0},
+			new_account                               => {parse => \&parsecfg_bool,      print => \&printcfg_bool,    path => "login-server:login_configuration/account/", default => "true"},
+			new_acc_length_limit                      => {parse => \&parsecfg_bool,      print => \&printcfg_bool,    path => "login-server:login_configuration/account/", default => "true"},
+			allowed_regs                              => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "login-server:login_configuration/account/", default => 1},
+			time_allowed                              => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "login-server:login_configuration/account/", default => 10},
+			log_login                                 => {parse => \&parsecfg_bool,      print => \&printcfg_bool,    path => "login-server:login_configuration/log/", default => "true"},
+			date_format                               => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "login-server:login_configuration/log/", default => "%Y-%m-%d %H:%M:%S"},
+			group_id_to_connect                       => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "login-server:login_configuration/permission/", default => -1},
+			min_group_id_to_connect                   => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "login-server:login_configuration/permission/", default => -1},
+			start_limited_time                        => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "login-server:login_configuration/account/", default => -1},
+			check_client_version                      => {parse => \&parsecfg_bool,      print => \&printcfg_bool,    path => "login-server:login_configuration/permission/", default => "false"},
+			client_version_to_connect                 => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "login-server:login_configuration/permission/", default => 20},
+			use_MD5_passwords                         => {parse => \&parsecfg_bool,      print => \&printcfg_bool,    path => "login-server:login_configuration/account/", default => "false"},
+			'ipban.enable'                            => {parse => \&parsecfg_bool,      print => \&printcfg_bool,    path => "login-server:login_configuration/account/ipban/enabled", default => "true"},
+			'ipban.sql.db_hostname'                   => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "sql_connection:sql_connection/db_hostname", default => "127.0.0.1"},
+			'ipban.sql.db_port'                       => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "sql_connection:sql_connection/db_port", default => 3306},
+			'ipban.sql.db_username'                   => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "sql_connection:sql_connection/db_username", default => "ragnarok"},
+			'ipban.sql.db_password'                   => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "sql_connection:sql_connection/db_password", default => "ragnarok"},
+			'ipban.sql.db_database'                   => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "sql_connection:sql_connection/db_database", default => "ragnarok"},
+			'ipban.sql.codepage'                      => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "sql_connection:sql_connection/codepage", default => ""},
+			'ipban.sql.ipban_table'                   => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "inter-server:inter_configuration/database_names/ipban_table", default => "ipbanlist"},
+			'ipban.dynamic_pass_failure_ban'          => {parse => \&parsecfg_bool,      print => \&printcfg_bool,    path => "login-server:login_configuration/account/ipban/dynamic_pass_failure/enabled", default => "true"},
+			'ipban.dynamic_pass_failure_ban_interval' => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "login-server:login_configuration/account/ipban/dynamic_pass_failure/ban_interval", default => 5},
+			'ipban.dynamic_pass_failure_ban_limit'    => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "login-server:login_configuration/account/ipban/dynamic_pass_failure/ban_limit", default => 7},
+			'ipban.dynamic_pass_failure_ban_duration' => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "login-server:login_configuration/account/ipban/dynamic_pass_failure/ban_duration", default => 5},
+			ipban_cleanup_interval                    => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "login-server:login_configuration/account/ipban/cleanup_interval", default => 60},
+			ip_sync_interval                          => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "login-server:login_configuration/inter/ip_sync_interval", default => 10},
+			use_dnsbl                                 => {parse => \&parsecfg_bool,      print => \&printcfg_bool,    path => "login-server:login_configuration/permission/DNS_blacklist/enabled", default => "false"},
+			dnsbl_servers                             => {parse => \&parsecfg_string,    print => \&printcfg_strlist, path => "login-server:login_configuration/permission/DNS_blacklist/dnsbl_servers", default => "bl.blocklist.de, socks.dnsbl.sorbs.net"},
+			'account.sql.db_hostname'                 => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "sql_connection:sql_connection/db_hostname", default => "127.0.0.1"},
+			'account.sql.db_port'                     => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "sql_connection:sql_connection/db_port", default => 3306},
+			'account.sql.db_username'                 => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "sql_connection:sql_connection/db_username", default => "ragnarok"},
+			'account.sql.db_password'                 => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "sql_connection:sql_connection/db_password", default => "ragnarok"},
+			'account.sql.db_database'                 => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "sql_connection:sql_connection/db_database", default => "ragnarok"},
+			'account.sql.codepage'                    => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "sql_connection:sql_connection/codepage", default => ""},
+			'account.sql.case_sensitive'              => {parse => \&parsecfg_bool,      print => \&printcfg_bool,    path => "sql_connection:sql_connection/case_sensitive", default => "false"},
+			'account.sql.account_db'                  => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "inter-server:inter_configuration/database_names/account_db", default => "login"},
+			client_hash_check                         => {parse => \&parsecfg_bool,      print => \&printcfg_bool,    path => "login-server:login_configuration/permission/hash/enabled", default => "false"},
+			client_hash                               => {parse => \&parsecfg_stringarr, print => \&printcfg_md5hash, path => "login-server:login_configuration/permission/hash/MD5_hashes", default => []},
+			'account.sql.accreg_db'                   => {parse => \&parsecfg_string,    print => \&printcfg_nil,     path => "", default => "global_reg_value"},
+			import                                    => {parse => \&parsecfg_stringarr, print => \&printcfg_nil,     path => "", default => ["conf/inter-server.conf", "conf/import/login_conf.txt"]},
+		}
+	}
 );
 
 for (@ARGV) {
