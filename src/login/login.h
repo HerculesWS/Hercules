@@ -97,8 +97,8 @@ struct Login_Config {
 
 	uint32 login_ip;                                ///< the address to bind to
 	uint16 login_port;                              ///< the port to bind to
-	unsigned int ipban_cleanup_interval;            ///< interval (in seconds) to clean up expired IP bans
-	unsigned int ip_sync_interval;                  ///< interval (in minutes) to execute a DNS/IP update (for dynamic IPs)
+	uint32 ipban_cleanup_interval;                  ///< interval (in seconds) to clean up expired IP bans
+	uint32 ip_sync_interval;                        ///< interval (in minutes) to execute a DNS/IP update (for dynamic IPs)
 	bool log_login;                                 ///< whether to log login server actions or not
 	char date_format[32];                           ///< date format used in messages
 	bool new_account_flag,new_acc_length_limit;     ///< auto-registration via _M/_F ? / if yes minimum length is 4?
@@ -113,13 +113,14 @@ struct Login_Config {
 
 	bool ipban;                                     ///< perform IP blocking (via contents of `ipbanlist`) ?
 	bool dynamic_pass_failure_ban;                  ///< automatic IP blocking due to failed login attemps ?
-	unsigned int dynamic_pass_failure_ban_interval; ///< how far to scan the loginlog for password failures
-	unsigned int dynamic_pass_failure_ban_limit;    ///< number of failures needed to trigger the ipban
-	unsigned int dynamic_pass_failure_ban_duration; ///< duration of the ipban
+	uint32 dynamic_pass_failure_ban_interval;       ///< how far to scan the loginlog for password failures
+	uint32 dynamic_pass_failure_ban_limit;          ///< number of failures needed to trigger the ipban
+	uint32 dynamic_pass_failure_ban_duration;       ///< duration of the ipban
 	bool use_dnsbl;                                 ///< dns blacklist blocking ?
-	char dnsbl_servs[1024];                         ///< comma-separated list of dnsbl servers
+	VECTOR_DECL(char *) dnsbl_servers;              ///< dnsbl servers
 
-	int client_hash_check;                          ///< flags for checking client md5
+	bool client_hash_check;                         ///< flags for checking client md5
+	// TODO: VECTOR candidate
 	struct client_hash_node *client_hash_nodes;     ///< linked list containg md5 hash for each gm group
 };
 
@@ -207,7 +208,7 @@ struct login_interface {
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
 	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
 	void (*config_set_defaults) (void);
-	int (*config_read) (const char *cfgName);
+	bool (*config_read) (const char *filename, bool included);
 	char *LOGIN_CONF_NAME;
 	char *NET_CONF_NAME; ///< Network configuration filename
 };
