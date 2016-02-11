@@ -38818,15 +38818,15 @@ void HP_logs_mvpdrop_sub(struct map_session_data *sd, int monster_id, int *log_m
 	}
 	return;
 }
-int HP_logs_config_read(const char *cfgName) {
+bool HP_logs_config_read(const char *filename, bool imported) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_logs_config_read_pre ) {
-		int (*preHookFunc) (const char **cfgName);
+		bool (*preHookFunc) (const char **filename, bool *imported);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_logs_config_read_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_logs_config_read_pre[hIndex].func;
-			retVal___ = preHookFunc(&cfgName);
+			retVal___ = preHookFunc(&filename, &imported);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -38834,13 +38834,13 @@ int HP_logs_config_read(const char *cfgName) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.logs.config_read(cfgName);
+		retVal___ = HPMHooks.source.logs.config_read(filename, imported);
 	}
 	if( HPMHooks.count.HP_logs_config_read_post ) {
-		int (*postHookFunc) (int retVal___, const char *cfgName);
+		bool (*postHookFunc) (bool retVal___, const char *filename, bool imported);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_logs_config_read_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_logs_config_read_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, cfgName);
+			retVal___ = postHookFunc(retVal___, filename, imported);
 		}
 	}
 	return retVal___;
