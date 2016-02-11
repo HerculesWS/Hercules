@@ -1147,7 +1147,7 @@ END_ZEROED_BLOCK;
 
 	int (*cleanup_sub) (struct block_list *bl, va_list ap);
 
-	int (*delmap) (char* mapname);
+	int (*delmap) (const char *mapname);
 	void (*flags_init) (void);
 
 	bool (*iwall_set) (int16 m, int16 x, int16 y, int size, int8 dir, bool shootable, const char* wall_name);
@@ -1188,7 +1188,6 @@ END_ZEROED_BLOCK;
 	int (*readgat) (struct map_data *m);
 	int (*readallmaps) (void);
 	bool (*config_read) (const char *filename, bool imported);
-	bool (*config_read_sub) (char *filename);
 	void (*reloadnpc_sub) (char *cfgName);
 	bool (*inter_config_read) (const char *filename, bool imported);
 	bool (*inter_config_read_database_names) (const char *filename, const struct config_t *config, bool imported);
