@@ -169,6 +169,12 @@ sub printcfg_int($$$) {
 	indent("$variable: $value\n", $nestlevel);
 }
 
+sub printcfg_hexint($$$) {
+	my ($variable, $value, $nestlevel) = @_;
+
+	indent(sprintf("%s: 0x%x\n", $variable, $value), $nestlevel);
+}
+
 sub printcfg_bool($$$) {
 	my ($variable, $value, $nestlevel) = @_;
 
@@ -441,7 +447,34 @@ my @defaults = (
 			'account.sql.accreg_db'                   => {parse => \&parsecfg_string,    print => \&printcfg_nil,     path => "", default => "global_reg_value"},
 			import                                    => {parse => \&parsecfg_stringarr, print => \&printcfg_nil,     path => "", default => ["conf/inter-server.conf", "conf/import/login_conf.txt"]},
 		}
-	}
+	},
+	{
+		files => ['map-server.conf', 'import/map_conf.txt'],
+		settings => {
+			userid                   => {parse => \&parsecfg_string,    print => \&printcfg_string, path => "map-server:map_configuration/inter/", default => "s1"},
+			passwd                   => {parse => \&parsecfg_string,    print => \&printcfg_string, path => "map-server:map_configuration/inter/", default => "p1"},
+			char_ip                  => {parse => \&parsecfg_string,    print => \&printcfg_string, path => "map-server:map_configuration/inter/", default => "127.0.0.1"},
+			bind_ip                  => {parse => \&parsecfg_string,    print => \&printcfg_string, path => "map-server:map_configuration/inter/", default => "127.0.0.1"},
+			char_port                => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "map-server:map_configuration/inter/", default => 6121},
+			map_ip                   => {parse => \&parsecfg_string,    print => \&printcfg_string, path => "map-server:map_configuration/inter/", default => "127.0.0.1"},
+			map_port                 => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "map-server:map_configuration/inter/", default => 5121},
+			timestamp_format         => {parse => \&parsecfg_string,    print => \&printcfg_string, path => "console:console/", default => "[%d/%b %H:%M]"},
+			stdout_with_ansisequence => {parse => \&parsecfg_bool,      print => \&printcfg_bool,   path => "console:console/", default => "false"},
+			console_msg_log          => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "console:console/", default => 0},
+			console_silent           => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "console:console/", default => 0},
+			db_path                  => {parse => \&parsecfg_string,    print => \&printcfg_string, path => "map-server:map_configuration/database/", default => "db"},
+			enable_spy               => {parse => \&parsecfg_bool,      print => \&printcfg_bool,   path => "map-server:map_configuration/", default => "false"},
+			use_grf                  => {parse => \&parsecfg_bool,      print => \&printcfg_bool,   path => "map-server:map_configuration/", default => "false"},
+			autosave_time            => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "map-server:map_configuration/database/", default => 300},
+			minsave_time             => {parse => \&parsecfg_int,       print => \&printcfg_int,    path => "map-server:map_configuration/database/", default => 100},
+			save_settings            => {parse => \&parsecfg_int,       print => \&printcfg_hexint, path => "map-server:map_configuration/database/", default => 511},
+			default_language         => {parse => \&parsecfg_string,    print => \&printcfg_string, path => "map-server:map_configuration/", default => "English"},
+			help_txt                 => {parse => \&parsecfg_string,    print => \&printcfg_string, path => "map-server:map_configuration/", default => "conf/help.txt"},
+			charhelp_txt             => {parse => \&parsecfg_string,    print => \&printcfg_string, path => "map-server:map_configuration/", default => "conf/charhelp.txt"},
+			help2_txt                => {parse => \&parsecfg_string,    print => \&printcfg_nil,    path => "", default => "conf/help2.txt"},
+			import                   => {parse => \&parsecfg_stringarr, print => \&printcfg_nil,    path => "", default => ["conf/maps.conf", "conf/import/map_conf.txt"]},
+		}
+	},
 );
 
 for (@ARGV) {

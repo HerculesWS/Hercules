@@ -79,6 +79,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #ifndef _WIN32
 #include <unistd.h>
 #endif
@@ -3798,143 +3799,333 @@ int map_readallmaps (void) {
 	return 0;
 }
 
-/*==========================================
- * Read map server configuration files (conf/map_server.conf...)
- *------------------------------------------*/
-int map_config_read(char *cfgName) {
-	char line[1024], w1[1024], w2[1024];
-	FILE *fp;
+/**
+ * Reads 'map_configuration/console' and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool map_config_read_console(const char *filename, struct config_t *config, bool imported)
+{
+	struct config_setting_t *setting = NULL;
 
-	nullpo_retr(1, cfgName);
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
 
-	fp = fopen(cfgName,"r");
-	if( fp == NULL ) {
-		ShowError("Map configuration file not found at: %s\n", cfgName);
-		return 1;
+	if ((setting = libconfig->lookup(config, "map_configuration/console")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("map_config_read: map_configuration/console was not found in %s!\n", filename);
+		return false;
 	}
 
-	while (fgets(line, sizeof(line), fp)) {
-		char* ptr;
+	libconfig->setting_lookup_bool_real(setting, "stdout_with_ansisequence", &showmsg->stdout_with_ansisequence);
+	if (libconfig->setting_lookup_int(setting, "console_silent", &showmsg->silent) == CONFIG_TRUE) {
+		if (showmsg->silent) // only bother if its actually enabled
+			ShowInfo("Console Silent Setting: %d\n", showmsg->silent);
+	}
+	libconfig->setting_lookup_mutable_string(setting, "timestamp_format", showmsg->timestamp_format, sizeof(showmsg->timestamp_format));
+	libconfig->setting_lookup_int(setting, "console_msg_log", &showmsg->console_log);
 
-		if (line[0] == '/' && line[1] == '/')
-			continue;
-		if ((ptr = strstr(line, "//")) != NULL)
-			*ptr = '\n'; //Strip comments
-		if (sscanf(line, "%1023[^:]: %1023[^\t\r\n]", w1, w2) < 2)
-			continue;
+	return true;
+}
 
-		//Strip trailing spaces
-		ptr = w2 + strlen(w2);
-		while (--ptr >= w2 && *ptr == ' ');
-		ptr++;
-		*ptr = '\0';
+/**
+ * Reads 'map_configuration/sql_connection' and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool map_config_read_connection(const char *filename, struct config_t *config, bool imported)
+{
+	struct config_setting_t *setting = NULL;
 
-		if(strcmpi(w1,"timestamp_format")==0)
-			safestrncpy(showmsg->timestamp_format, w2, 20);
-		else if(strcmpi(w1,"stdout_with_ansisequence")==0)
-			showmsg->stdout_with_ansisequence = config_switch(w2) ? true : false;
-		else if(strcmpi(w1,"console_silent")==0) {
-			showmsg->silent = atoi(w2);
-			if (showmsg->silent) // only bother if its actually enabled
-				ShowInfo("Console Silent Setting: %d\n", atoi(w2));
-		} else if (strcmpi(w1, "userid")==0)
-			chrif->setuserid(w2);
-		else if (strcmpi(w1, "passwd") == 0)
-			chrif->setpasswd(w2);
-		else if (strcmpi(w1, "char_ip") == 0)
-			map->char_ip_set = chrif->setip(w2);
-		else if (strcmpi(w1, "char_port") == 0)
-			chrif->setport(atoi(w2));
-		else if (strcmpi(w1, "map_ip") == 0)
-			map->ip_set = clif->setip(w2);
-		else if (strcmpi(w1, "bind_ip") == 0)
-			clif->setbindip(w2);
-		else if (strcmpi(w1, "map_port") == 0) {
-			clif->setport(atoi(w2));
-			map->port = (atoi(w2));
-		} else if (strcmpi(w1, "map") == 0)
-			map->count++;
-		else if (strcmpi(w1, "delmap") == 0)
-			map->count--;
-		else if (strcmpi(w1, "npc") == 0)
-			npc->addsrcfile(w2);
-		else if (strcmpi(w1, "delnpc") == 0)
-			npc->delsrcfile(w2);
-		else if (strcmpi(w1, "autosave_time") == 0) {
-			map->autosave_interval = atoi(w2);
-			if (map->autosave_interval < 1) //Revert to default saving.
-				map->autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
-			else
-				map->autosave_interval *= 1000; //Pass from sec to ms
-		} else if (strcmpi(w1, "minsave_time") == 0) {
-			map->minsave_interval= atoi(w2);
-			if (map->minsave_interval < 1)
-				map->minsave_interval = 1;
-		} else if (strcmpi(w1, "save_settings") == 0)
-			map->save_settings = atoi(w2);
-		else if (strcmpi(w1, "help_txt") == 0)
-			strcpy(map->help_txt, w2);
-		else if (strcmpi(w1, "help2_txt") == 0)
-			strcpy(map->help2_txt, w2);
-		else if (strcmpi(w1, "charhelp_txt") == 0)
-			strcpy(map->charhelp_txt, w2);
-		else if(strcmpi(w1,"db_path") == 0)
-			safestrncpy(map->db_path,w2,255);
-		else if (strcmpi(w1, "enable_spy") == 0)
-			map->enable_spy = config_switch(w2);
-		else if (strcmpi(w1, "use_grf") == 0)
-			map->enable_grf = config_switch(w2);
-		else if (strcmpi(w1, "console_msg_log") == 0)
-			showmsg->console_log = atoi(w2);//[Ind]
-		else if (strcmpi(w1, "default_language") == 0)
-			safestrncpy(map->default_lang_str, w2, sizeof(map->default_lang_str));
-		else if (strcmpi(w1, "import") == 0)
-			map->config_read(w2);
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "map_configuration/sql_connection")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("map_config_read: map_configuration/sql_connection was not found in %s!\n", filename);
+		ShowWarning("map_config_read_connection: Defaulting sql_connection...\n");
+		return false;
+	}
+
+	libconfig->setting_lookup_int(setting, "db_port", &map->server_port);
+	libconfig->setting_lookup_mutable_string(setting, "db_hostname", map->server_ip, sizeof(map->server_ip));
+	libconfig->setting_lookup_mutable_string(setting, "db_username", map->server_id, sizeof(map->server_id));
+	libconfig->setting_lookup_mutable_string(setting, "db_password", map->server_pw, sizeof(map->server_pw));
+	libconfig->setting_lookup_mutable_string(setting, "db_database", map->server_db, sizeof(map->server_db));
+	libconfig->setting_lookup_mutable_string(setting, "default_codepage", map->default_codepage, sizeof(map->default_codepage));
+	return true;
+}
+
+/**
+ * Reads 'map_configuration/inter' and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool map_config_read_inter(const char *filename, struct config_t *config, bool imported)
+{
+	struct config_setting_t *setting = NULL;
+	const char *str = NULL;
+	char temp[24];
+	uint16 port;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "map_configuration/inter")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("map_config_read: map_configuration/inter was not found in %s!\n", filename);
+		return false;
+	}
+
+	// Login information
+	if (libconfig->setting_lookup_mutable_string(setting, "userid", temp, sizeof(temp)) == CONFIG_TRUE)
+		chrif->setuserid(temp);
+	if (libconfig->setting_lookup_mutable_string(setting, "passwd", temp, sizeof(temp)) == CONFIG_TRUE)
+		chrif->setpasswd(temp);
+
+	// Char and map-server information
+	if (libconfig->setting_lookup_string(setting, "char_ip", &str) == CONFIG_TRUE)
+		map->char_ip_set = chrif->setip(str);
+	if (libconfig->setting_lookup_uint16(setting, "char_port", &port) == CONFIG_TRUE)
+		chrif->setport(port);
+
+	if (libconfig->setting_lookup_string(setting, "map_ip", &str) == CONFIG_TRUE)
+		map->ip_set = clif->setip(str);
+	if (libconfig->setting_lookup_uint16(setting, "map_port", &port) == CONFIG_TRUE) {
+		clif->setport(port);
+		map->port = port;
+	}
+	if (libconfig->setting_lookup_string(setting, "bind_ip", &str) == CONFIG_TRUE)
+		clif->setbindip(str);
+
+	return true;
+}
+
+/**
+ * Reads 'map_configuration/database' and initializes required variables
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool map_config_read_database(const char *filename, struct config_t *config, bool imported)
+{
+	struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "map_configuration/database")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("map_config_read: map_configuration/database was not found in %s!\n", filename);
+		return false;
+	}
+	libconfig->setting_lookup_mutable_string(setting, "db_path", map->db_path, sizeof(map->db_path));
+	libconfig->setting_lookup_int(setting, "save_settings", &map->save_settings);
+
+	if (libconfig->setting_lookup_int(setting, "autosave_time", &map->autosave_interval) == CONFIG_TRUE) {
+		if (map->autosave_interval < 1) // Revert to default saving
+			map->autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
 		else
-			ShowWarning("Unknown setting '%s' in file %s\n", w1, cfgName);
+			map->autosave_interval *= 1000; // Pass from s to ms
+	}
+	if (libconfig->setting_lookup_int(setting, "minsave_time", &map->minsave_interval) == CONFIG_TRUE) {
+		if (map->minsave_interval < 1)
+			map->minsave_interval = 1;
 	}
 
-	fclose(fp);
-	return 0;
+	return true;
 }
-int map_config_read_sub(char *cfgName) {
-	char line[1024], w1[1024], w2[1024];
-	FILE *fp;
 
-	nullpo_retr(1, cfgName);
-	fp = fopen(cfgName,"r");
-	if (fp == NULL) {
-		ShowError("Map configuration file not found at: %s\n", cfgName);
-		return 1;
+/**
+ * Reads 'map_configuration/map_list' and initializes required variables
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool map_config_read_map_list(const char *filename, struct config_t *config, bool imported)
+{
+	// FIXME: There's no need to run this separately anymore (it can be done in one step when loading the maps)
+	struct config_setting_t *setting = NULL;
+	int count;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "map_configuration/map_list")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("map_config_read: map_configuration/map_list was not found in %s!\n", filename);
+		return false;
 	}
 
-	while (fgets(line, sizeof(line), fp)) {
-		char* ptr;
+	count = libconfig->setting_length(setting);
+	if (count == 0) {
+		ShowWarning("map_config_read: no maps found in %s!\n", filename);
+		return false;
+	}
+	map->count += count;
 
-		if (line[0] == '/' && line[1] == '/')
-			continue;
-		if ((ptr = strstr(line, "//")) != NULL)
-			*ptr = '\n'; //Strip comments
-		if (sscanf(line, "%1023[^:]: %1023[^\t\r\n]", w1, w2) < 2)
-			continue;
-
-		//Strip trailing spaces
-		ptr = w2 + strlen(w2);
-		while (--ptr >= w2 && *ptr == ' ');
-		ptr++;
-		*ptr = '\0';
-
-		if (strcmpi(w1, "map") == 0)
-			map->addmap(w2);
-		else if (strcmpi(w1, "delmap") == 0)
-			map->delmap(w2);
-		else if (strcmpi(w1, "import") == 0)
-			map->config_read_sub(w2);
+	// Find how many maps should be removed
+	if ((setting = libconfig->lookup(config, "map_configuration/map_removed")) != NULL) {
+		if ((count = libconfig->setting_length(setting)) > 0)
+			map->count -= count;
 	}
 
-	fclose(fp);
-	return 0;
+	return true;
 }
+
+/**
+ * Reads 'map_configuration/map_list'/'map_configuration/map_removed' and adds
+ * or removes maps from map-server.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ *
+ * @retval false in case of error.
+ */
+bool map_config_read_sub(char *filename)
+{
+	// FIXME: This should be called by map->config_read, rather than re-opening the file!
+	struct config_t config;
+	struct config_setting_t *setting = NULL;
+	int i, count = 0;
+	struct DBMap *deleted_maps;
+
+	nullpo_retr(false, filename);
+
+	if (!libconfig->load_file(&config, filename))
+		return false;
+
+	deleted_maps = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY, MAP_NAME_LENGTH);
+
+	// Remove maps
+	if ((setting = libconfig->lookup(&config, "map_configuration/map_removed")) != NULL) {
+		count = libconfig->setting_length(setting);
+		for (i = 0; i < count; i++) {
+			const char *mapname;
+
+			if ((mapname = libconfig->setting_get_string_elem(setting, i)) == NULL || mapname[0] == '\0')
+				continue;
+
+			strdb_put(deleted_maps, mapname, NULL);
+			// map->delmap is not used because the map is removed from the list before it's added [Panikon]
+			// map->delmap(mapname);
+		}
+	}
+
+	if ((setting = libconfig->lookup(&config, "map_configuration/map_list")) == NULL) {
+		ShowError("map_config_read_sub: map_configuration/map_list was not found in %s!\n", filename);
+		db_destroy(deleted_maps);
+		libconfig->destroy(&config);
+		return false;
+	}
+
+	// Add maps to map->list
+	count = libconfig->setting_length(setting);
+	if (count <= 0) {
+		ShowWarning("map_config_read_sub: no maps found in %s!\n", filename);
+		db_destroy(deleted_maps);
+		libconfig->destroy(&config);
+		return false;
+	}
+	for (i = 0; i < count; i++) {
+		const char *mapname;
+
+		if ((mapname = libconfig->setting_get_string_elem(setting, i)) == NULL || mapname[0] == '\0')
+			continue;
+
+		if (strdb_exists(deleted_maps, mapname))
+			continue;
+
+		map->addmap(mapname);
+	}
+
+	db_destroy(deleted_maps);
+	libconfig->destroy(&config);
+	return true;
+}
+
+/**
+ * Reads map-server configuration files (map-server.conf) and initialises
+ * required variables.
+ *
+ * @param filename Path to configuration file.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool map_config_read(const char *filename, bool imported)
+{
+	struct config_t config;
+	struct config_setting_t *setting = NULL;
+	const char *import = NULL;
+	bool retval = true;
+
+	nullpo_retr(false, filename);
+
+	if (!libconfig->load_file(&config, filename))
+		return false;
+
+	if ((setting = libconfig->lookup(&config, "map_configuration")) == NULL) {
+		libconfig->destroy(&config);
+		if (imported)
+			return true;
+		ShowError("map_config_read: map_configuration was not found in %s!\n", filename);
+		return false;
+	}
+
+	libconfig->setting_lookup_mutable_string(setting, "help_txt", map->help_txt, sizeof(map->help_txt));
+	libconfig->setting_lookup_mutable_string(setting, "charhelp_txt", map->charhelp_txt, sizeof(map->charhelp_txt));
+	libconfig->setting_lookup_bool(setting, "enable_spy", &map->enable_spy);
+	libconfig->setting_lookup_bool(setting, "use_grf", &map->enable_grf);
+	libconfig->setting_lookup_mutable_string(setting, "default_language", map->default_lang_str, sizeof(map->default_lang_str));
+
+	if (!map_config_read_console(filename, &config, imported))
+		retval = false;
+	if (!map_config_read_connection(filename, &config, imported))
+		retval = false;
+	if (!map_config_read_inter(filename, &config, imported))
+		retval = false;
+	if (!map_config_read_database(filename, &config, imported))
+		retval = false;
+	if (!map_config_read_map_list(filename, &config, imported))
+		retval = false;
+
+	// import should overwrite any previous configuration, so it should be called last
+	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
+		if (strcmp(import, filename) == 0 || strcmp(import, map->MAP_CONF_NAME) == 0) {
+			ShowWarning("map_config_read: Loop detected! Skipping 'import'...\n");
+		} else {
+			if (!map->config_read(import, true))
+				retval = false;
+		}
+	}
+
+	libconfig->destroy(&config);
+	return retval;
+}
+
 void map_reloadnpc_sub(char *cfgName) {
 	char line[1024], w1[1024], w2[1024];
 	FILE *fp;
@@ -6141,7 +6332,7 @@ int do_init(int argc, char *argv[])
 
 	map->INTER_CONF_NAME         = aStrdup("conf/common/inter-server.conf");
 	map->LOG_CONF_NAME           = aStrdup("conf/logs.conf");
-	map->MAP_CONF_NAME           = aStrdup("conf/map-server.conf");
+	map->MAP_CONF_NAME           = aStrdup("conf/map/map-server.conf");
 	map->BATTLE_CONF_FILENAME    = aStrdup("conf/battle.conf");
 	map->ATCOMMAND_CONF_FILENAME = aStrdup("conf/atcommand.conf");
 	map->SCRIPT_CONF_NAME        = aStrdup("conf/script.conf");
@@ -6157,10 +6348,29 @@ int do_init(int argc, char *argv[])
 	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
 	minimal = map->minimal;/* temp (perhaps make minimal a mask with options of what to load? e.g. plugin 1 does minimal |= mob_db; */
 	if (!minimal) {
-		map->config_read(map->MAP_CONF_NAME);
+		map->config_read(map->MAP_CONF_NAME, false);
 		CREATE(map->list,struct map_data,map->count);
 		map->count = 0;
 		map->config_read_sub(map->MAP_CONF_NAME);
+
+		{
+			// TODO: Remove this when no longer needed.
+#define CHECK_OLD_LOCAL_CONF(oldname, newname) do { \
+	if (stat((oldname), &fileinfo) == 0 && fileinfo.st_size > 0) { \
+		ShowWarning("An old configuration file \"%s\" was found.\n", (oldname)); \
+		ShowWarning("If it contains settings you wish to keep, please merge them into \"%s\".\n", (newname)); \
+		ShowWarning("Otherwise, just delete it.\n"); \
+		ShowInfo("Resuming in 10 seconds...\n"); \
+		HSleep(10); \
+	} \
+} while (0)
+		struct stat fileinfo;
+
+		CHECK_OLD_LOCAL_CONF("conf/import/map_conf.txt", "conf/import/map-server.conf");
+		CHECK_OLD_LOCAL_CONF("conf/import/inter_conf.txt", "conf/import/inter-server.conf");
+
+#undef CHECK_OLD_LOCAL_CONF
+		}
 
 		// loads npcs
 		map->reloadnpc(false);
@@ -6172,7 +6382,7 @@ int do_init(int argc, char *argv[])
 			sockt->ip2str(sockt->addr_[0], ip_str);
 
 #ifndef BUILDBOT
-			ShowWarning("Not all IP addresses in /conf/map-server.conf configured, auto-detecting...\n");
+			ShowWarning("Not all IP addresses in /conf/map/map-server.conf configured, auto-detecting...\n");
 #endif
 
 			if (sockt->naddr_ == 0)
@@ -6337,7 +6547,6 @@ void map_defaults(void) {
 
 	sprintf(map->db_path ,"db");
 	sprintf(map->help_txt ,"conf/help.txt");
-	sprintf(map->help2_txt ,"conf/help2.txt");
 	sprintf(map->charhelp_txt ,"conf/charhelp.txt");
 
 	sprintf(map->wisp_server_name ,"Server"); // can be modified in char-server configuration file
@@ -6352,7 +6561,7 @@ void map_defaults(void) {
 
 	map->INTER_CONF_NAME="conf/common/inter-server.conf";
 	map->LOG_CONF_NAME="conf/logs.conf";
-	map->MAP_CONF_NAME = "conf/map-server.conf";
+	map->MAP_CONF_NAME = "conf/map/map-server.conf";
 	map->BATTLE_CONF_FILENAME = "conf/battle.conf";
 	map->ATCOMMAND_CONF_FILENAME = "conf/atcommand.conf";
 	map->SCRIPT_CONF_NAME = "conf/script.conf";
