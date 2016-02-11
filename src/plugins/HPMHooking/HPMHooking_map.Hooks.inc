@@ -42761,31 +42761,32 @@ bool HP_map_config_read(const char *filename, bool imported) {
 	}
 	return retVal___;
 }
-void HP_map_reloadnpc_sub(char *cfgName) {
+bool HP_map_read_npclist(const char *filename, bool imported) {
 	int hIndex = 0;
-	if( HPMHooks.count.HP_map_reloadnpc_sub_pre ) {
-		void (*preHookFunc) (char **cfgName);
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_map_read_npclist_pre ) {
+		bool (*preHookFunc) (const char **filename, bool *imported);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_reloadnpc_sub_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_map_reloadnpc_sub_pre[hIndex].func;
-			preHookFunc(&cfgName);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_read_npclist_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_map_read_npclist_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &imported);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
-			return;
+			return retVal___;
 		}
 	}
 	{
-		HPMHooks.source.map.reloadnpc_sub(cfgName);
+		retVal___ = HPMHooks.source.map.read_npclist(filename, imported);
 	}
-	if( HPMHooks.count.HP_map_reloadnpc_sub_post ) {
-		void (*postHookFunc) (char *cfgName);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_reloadnpc_sub_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_map_reloadnpc_sub_post[hIndex].func;
-			postHookFunc(cfgName);
+	if( HPMHooks.count.HP_map_read_npclist_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, bool imported);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_read_npclist_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_map_read_npclist_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, imported);
 		}
 	}
-	return;
+	return retVal___;
 }
 bool HP_map_inter_config_read(const char *filename, bool imported) {
 	int hIndex = 0;

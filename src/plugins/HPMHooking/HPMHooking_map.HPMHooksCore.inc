@@ -3234,8 +3234,8 @@ struct {
 	struct HPMHookPoint *HP_map_readallmaps_post;
 	struct HPMHookPoint *HP_map_config_read_pre;
 	struct HPMHookPoint *HP_map_config_read_post;
-	struct HPMHookPoint *HP_map_reloadnpc_sub_pre;
-	struct HPMHookPoint *HP_map_reloadnpc_sub_post;
+	struct HPMHookPoint *HP_map_read_npclist_pre;
+	struct HPMHookPoint *HP_map_read_npclist_post;
 	struct HPMHookPoint *HP_map_inter_config_read_pre;
 	struct HPMHookPoint *HP_map_inter_config_read_post;
 	struct HPMHookPoint *HP_map_inter_config_read_database_names_pre;
@@ -9287,8 +9287,8 @@ struct {
 	int HP_map_readallmaps_post;
 	int HP_map_config_read_pre;
 	int HP_map_config_read_post;
-	int HP_map_reloadnpc_sub_pre;
-	int HP_map_reloadnpc_sub_post;
+	int HP_map_read_npclist_pre;
+	int HP_map_read_npclist_post;
 	int HP_map_inter_config_read_pre;
 	int HP_map_inter_config_read_post;
 	int HP_map_inter_config_read_database_names_pre;
