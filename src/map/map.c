@@ -3331,20 +3331,42 @@ int map_readfromcache(struct map_data *m, char *buffer) {
 	return 0; // Not found
 }
 
-int map_addmap(const char* mapname) {
+/**
+ * Adds a new empty map to the map list.
+ *
+ * Assumes that there's enough space in the map list.
+ *
+ * @param mapname The new map's name.
+ * @return success state.
+ */
+int map_addmap(const char *mapname)
+{
 	map->list[map->count].instance_id = -1;
 	mapindex->getmapname(mapname, map->list[map->count++].name);
 	return 0;
 }
 
-void map_delmapid(int id) {
+/**
+ * Removes a map from the map list.
+ *
+ * @param id The map ID.
+ */
+void map_delmapid(int id)
+{
 	Assert_retv(id >= 0 && id < map->count);
 	ShowNotice("Removing map [ %s ] from maplist"CL_CLL"\n",map->list[id].name);
 	memmove(map->list+id, map->list+id+1, sizeof(map->list[0])*(map->count-id-1));
 	map->count--;
 }
 
-int map_delmap(char* mapname) {
+/**
+ * Removes a map fromt he map list.
+ *
+ * @param mapname The name of the map to remove.
+ * @return the number of removed maps.
+ */
+int map_delmap(const char *mapname)
+{
 	int i;
 	char map_name[MAP_NAME_LENGTH];
 
@@ -3956,7 +3978,8 @@ bool map_config_read_database(const char *filename, struct config_t *config, boo
 }
 
 /**
- * Reads 'map_configuration/map_list' and initializes required variables
+ * Reads 'map_configuration/map_list'/'map_configuration/map_removed' and adds
+ * or removes maps from map-server.
  *
  * @param filename Path to configuration file (used in error and warning messages).
  * @param config   The current config being parsed.
@@ -3966,61 +3989,17 @@ bool map_config_read_database(const char *filename, struct config_t *config, boo
  */
 bool map_config_read_map_list(const char *filename, struct config_t *config, bool imported)
 {
-	// FIXME: There's no need to run this separately anymore (it can be done in one step when loading the maps)
-	struct config_setting_t *setting = NULL;
-	int count;
-
-	nullpo_retr(false, filename);
-	nullpo_retr(false, config);
-
-	if ((setting = libconfig->lookup(config, "map_configuration/map_list")) == NULL) {
-		if (imported)
-			return true;
-		ShowError("map_config_read: map_configuration/map_list was not found in %s!\n", filename);
-		return false;
-	}
-
-	count = libconfig->setting_length(setting);
-	if (count == 0) {
-		ShowWarning("map_config_read: no maps found in %s!\n", filename);
-		return false;
-	}
-	map->count += count;
-
-	// Find how many maps should be removed
-	if ((setting = libconfig->lookup(config, "map_configuration/map_removed")) != NULL) {
-		if ((count = libconfig->setting_length(setting)) > 0)
-			map->count -= count;
-	}
-
-	return true;
-}
-
-/**
- * Reads 'map_configuration/map_list'/'map_configuration/map_removed' and adds
- * or removes maps from map-server.
- *
- * @param filename Path to configuration file (used in error and warning messages).
- *
- * @retval false in case of error.
- */
-bool map_config_read_sub(char *filename)
-{
-	// FIXME: This should be called by map->config_read, rather than re-opening the file!
-	struct config_t config;
 	struct config_setting_t *setting = NULL;
 	int i, count = 0;
 	struct DBMap *deleted_maps;
 
 	nullpo_retr(false, filename);
-
-	if (!libconfig->load_file(&config, filename))
-		return false;
+	nullpo_retr(false, config);
 
 	deleted_maps = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY, MAP_NAME_LENGTH);
 
 	// Remove maps
-	if ((setting = libconfig->lookup(&config, "map_configuration/map_removed")) != NULL) {
+	if ((setting = libconfig->lookup(config, "map_configuration/map_removed")) != NULL) {
 		count = libconfig->setting_length(setting);
 		for (i = 0; i < count; i++) {
 			const char *mapname;
@@ -4029,26 +4008,33 @@ bool map_config_read_sub(char *filename)
 				continue;
 
 			strdb_put(deleted_maps, mapname, NULL);
-			// map->delmap is not used because the map is removed from the list before it's added [Panikon]
-			// map->delmap(mapname);
+
+			if (imported) // Map list is empty on the first run, only do this for imported files.
+				map->delmap(mapname);
 		}
 	}
 
-	if ((setting = libconfig->lookup(&config, "map_configuration/map_list")) == NULL) {
-		ShowError("map_config_read_sub: map_configuration/map_list was not found in %s!\n", filename);
+	if ((setting = libconfig->lookup(config, "map_configuration/map_list")) == NULL) {
 		db_destroy(deleted_maps);
-		libconfig->destroy(&config);
+		if (imported)
+			return true;
+		ShowError("map_config_read_map_list: map_configuration/map_list was not found in %s!\n", filename);
 		return false;
 	}
 
 	// Add maps to map->list
 	count = libconfig->setting_length(setting);
+
 	if (count <= 0) {
-		ShowWarning("map_config_read_sub: no maps found in %s!\n", filename);
 		db_destroy(deleted_maps);
-		libconfig->destroy(&config);
+		if (imported)
+			return true;
+		ShowWarning("map_config_read_map_list: no maps found in %s!\n", filename);
 		return false;
 	}
+
+	RECREATE(map->list, struct map_data, map->count + count); // TODO: VECTOR candidate
+
 	for (i = 0; i < count; i++) {
 		const char *mapname;
 
@@ -4061,8 +4047,9 @@ bool map_config_read_sub(char *filename)
 		map->addmap(mapname);
 	}
 
+	RECREATE(map->list, struct map_data, map->count);
+
 	db_destroy(deleted_maps);
-	libconfig->destroy(&config);
 	return true;
 }
 
@@ -6349,9 +6336,6 @@ int do_init(int argc, char *argv[])
 	minimal = map->minimal;/* temp (perhaps make minimal a mask with options of what to load? e.g. plugin 1 does minimal |= mob_db; */
 	if (!minimal) {
 		map->config_read(map->MAP_CONF_NAME, false);
-		CREATE(map->list,struct map_data,map->count);
-		map->count = 0;
-		map->config_read_sub(map->MAP_CONF_NAME);
 
 		{
 			// TODO: Remove this when no longer needed.
@@ -6770,7 +6754,6 @@ void map_defaults(void) {
 	map->readgat = map_readgat;
 	map->readallmaps = map_readallmaps;
 	map->config_read = map_config_read;
-	map->config_read_sub = map_config_read_sub;
 	map->reloadnpc_sub = map_reloadnpc_sub;
 	map->inter_config_read = inter_config_read;
 	map->inter_config_read_database_names = inter_config_read_database_names;
