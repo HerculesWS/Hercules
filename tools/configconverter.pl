@@ -475,6 +475,33 @@ my @defaults = (
 			import                   => {parse => \&parsecfg_stringarr, print => \&printcfg_nil,    path => "", default => ["conf/maps.conf", "conf/import/map_conf.txt"]},
 		}
 	},
+	{
+		files => ['logs.conf', 'import/log_conf.txt'],
+		settings => {
+			enable_logs          => {parse => \&parsecfg_int,    print => \&printcfg_hexint, path => "logs:map_log/enable", default => 0xFFFFF},
+			sql_logs             => {parse => \&parsecfg_bool,   print => \&printcfg_bool,   path => "logs:map_log/database/use_sql", default => "true"},
+			log_filter           => {parse => \&parsecfg_int,    print => \&printcfg_int,    path => "logs:map_log/filter/item/", default => 1},
+			refine_items_log     => {parse => \&parsecfg_int,    print => \&printcfg_int,    path => "logs:map_log/filter/item/", default => 5},
+			rare_items_log       => {parse => \&parsecfg_int,    print => \&printcfg_int,    path => "logs:map_log/filter/item/", default => 100},
+			price_items_log      => {parse => \&parsecfg_int,    print => \&printcfg_int,    path => "logs:map_log/filter/item/", default => 1000},
+			amount_items_log     => {parse => \&parsecfg_int,    print => \&printcfg_int,    path => "logs:map_log/filter/item/", default => 100},
+			log_branch           => {parse => \&parsecfg_bool,   print => \&printcfg_bool,   path => "logs:map_log/", default => "false"},
+			log_zeny             => {parse => \&parsecfg_int,    print => \&printcfg_int,    path => "logs:map_log/", default => 0},
+			log_mvpdrop          => {parse => \&parsecfg_bool,   print => \&printcfg_bool,   path => "logs:map_log/", default => "false"},
+			log_commands         => {parse => \&parsecfg_bool,   print => \&printcfg_bool,   path => "logs:map_log/", default => "true"},
+			log_npc              => {parse => \&parsecfg_bool,   print => \&printcfg_bool,   path => "logs:map_log/", default => "false"},
+			log_chat             => {parse => \&parsecfg_int,    print => \&printcfg_int,    path => "logs:map_log/filter/chat/", default => 0},
+			log_chat_woe_disable => {parse => \&parsecfg_bool,   print => \&printcfg_bool,   path => "logs:map_log/filter/chat/", default => "false"},
+			log_gm_db            => {parse => \&parsecfg_string, print => \&printcfg_string, path => "logs:map_log/database/", default => "atcommandlog"},
+			log_branch_db        => {parse => \&parsecfg_string, print => \&printcfg_string, path => "logs:map_log/database/", default => "branchlog"},
+			log_chat_db          => {parse => \&parsecfg_string, print => \&printcfg_string, path => "logs:map_log/database/", default => "chatlog"},
+			log_mvpdrop_db       => {parse => \&parsecfg_string, print => \&printcfg_string, path => "logs:map_log/database/", default => "mvplog"},
+			log_npc_db           => {parse => \&parsecfg_string, print => \&printcfg_string, path => "logs:map_log/database/", default => "npclog"},
+			log_pick_db          => {parse => \&parsecfg_string, print => \&printcfg_string, path => "logs:map_log/database/", default => "picklog"},
+			log_zeny_db          => {parse => \&parsecfg_string, print => \&printcfg_string, path => "logs:map_log/database/", default => "zenylog"},
+			import               => {parse => \&parsecfg_string, print => \&printcfg_nil,    path => "", default => "conf/import/log_conf.txt"},
+		}
+	},
 );
 
 for (@ARGV) {

@@ -6365,7 +6365,7 @@ int do_init(int argc, char *argv[])
 	map_load_defaults();
 
 	map->INTER_CONF_NAME         = aStrdup("conf/common/inter-server.conf");
-	map->LOG_CONF_NAME           = aStrdup("conf/logs.conf");
+	map->LOG_CONF_NAME           = aStrdup("conf/map/logs.conf");
 	map->MAP_CONF_NAME           = aStrdup("conf/map/map-server.conf");
 	map->BATTLE_CONF_FILENAME    = aStrdup("conf/battle.conf");
 	map->ATCOMMAND_CONF_FILENAME = aStrdup("conf/atcommand.conf");
@@ -6399,6 +6399,7 @@ int do_init(int argc, char *argv[])
 
 		CHECK_OLD_LOCAL_CONF("conf/import/map_conf.txt", "conf/import/map-server.conf");
 		CHECK_OLD_LOCAL_CONF("conf/import/inter_conf.txt", "conf/import/inter-server.conf");
+		CHECK_OLD_LOCAL_CONF("conf/import/log_conf.txt", "conf/import/logs.conf");
 
 #undef CHECK_OLD_LOCAL_CONF
 		}
@@ -6432,7 +6433,7 @@ int do_init(int argc, char *argv[])
 		battle->config_read(map->BATTLE_CONF_FILENAME);
 		atcommand->msg_read(map->MSG_CONF_NAME, false);
 		map->inter_config_read(map->INTER_CONF_NAME, false);
-		logs->config_read(map->LOG_CONF_NAME);
+		logs->config_read(map->LOG_CONF_NAME, false);
 	}
 	script->config_read(map->SCRIPT_CONF_NAME);
 
@@ -6591,7 +6592,7 @@ void map_defaults(void) {
 	map->enable_spy = 0; //To enable/disable @spy commands, which consume too much cpu time when sending packets. [Skotlex]
 
 	map->INTER_CONF_NAME="conf/common/inter-server.conf";
-	map->LOG_CONF_NAME="conf/logs.conf";
+	map->LOG_CONF_NAME="conf/map/logs.conf";
 	map->MAP_CONF_NAME = "conf/map/map-server.conf";
 	map->BATTLE_CONF_FILENAME = "conf/battle.conf";
 	map->ATCOMMAND_CONF_FILENAME = "conf/atcommand.conf";

@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@
 #include "map/mob.h"
 #include "map/pc.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/sql.h" // SQL_INNODB
@@ -479,119 +480,250 @@ void log_sql_final(void) {
 	logs->mysql_handle = NULL;
 }
 
-void log_set_defaults(void) {
+/**
+ * Initializes logs->config variables
+ */
+void log_set_defaults(void)
+{
 	memset(&logs->config, 0, sizeof(logs->config));
 
-	//LOG FILTER Default values
+	//map_log default values
+	logs->config.enable_logs = 0xFFFFF;
+	logs->config.commands = true;
+
+	//map_log/database default values
+	logs->config.sql_logs = true;
+	// file/table names defaults are defined inside log_config_read_database
+
+	//map_log/filter/item default values
+	logs->config.filter = 1;              // logs any item
 	logs->config.refine_items_log = 5;    // log refined items, with refine >= +5
 	logs->config.rare_items_log   = 100;  // log rare items. drop chance <= 1%
 	logs->config.price_items_log  = 1000; // 1000z
 	logs->config.amount_items_log = 100;
 }
 
-int log_config_read(const char* cfgName) {
-	static int count = 0;
-	char line[1024], w1[1024], w2[1024];
-	FILE *fp;
+/**
+ * Reads 'map_log/database' and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool log_config_read_database(const char *filename, struct config_t *config, bool imported)
+{
+	struct config_setting_t *setting = NULL;
 
-	nullpo_retr(1, cfgName);
-	if( count++ == 0 )
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "map_log/database")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("log_config_read: map_log/database was not found in %s!\n", filename);
+		return false;
+	}
+	libconfig->setting_lookup_bool_real(setting, "use_sql", &logs->config.sql_logs);
+
+	// map_log.database defaults are defined in order to not make unecessary calls to safestrncpy [Panikon]
+	if (libconfig->setting_lookup_mutable_string(setting, "log_branch_db",
+				logs->config.log_branch, sizeof(logs->config.log_branch)) == CONFIG_FALSE)
+		safestrncpy(logs->config.log_branch, "branchlog", sizeof(logs->config.log_branch));
+
+	if (libconfig->setting_lookup_mutable_string(setting, "log_pick_db",
+				logs->config.log_pick, sizeof(logs->config.log_pick)) == CONFIG_FALSE)
+		safestrncpy(logs->config.log_pick, "picklog", sizeof(logs->config.log_pick));
+
+	if (libconfig->setting_lookup_mutable_string(setting, "log_zeny_db",
+				logs->config.log_zeny, sizeof(logs->config.log_zeny)) == CONFIG_FALSE)
+		safestrncpy(logs->config.log_zeny, "zenylog", sizeof(logs->config.log_zeny));
+
+	if (libconfig->setting_lookup_mutable_string(setting, "log_mvpdrop_db",
+				logs->config.log_mvpdrop, sizeof(logs->config.log_mvpdrop)) == CONFIG_FALSE)
+		safestrncpy(logs->config.log_mvpdrop, "mvplog", sizeof(logs->config.log_mvpdrop));
+
+	if (libconfig->setting_lookup_mutable_string(setting, "log_gm_db",
+				logs->config.log_gm, sizeof(logs->config.log_gm)) == CONFIG_FALSE)
+		safestrncpy(logs->config.log_gm, "atcommandlog", sizeof(logs->config.log_gm));
+
+	if (libconfig->setting_lookup_mutable_string(setting, "log_npc_db",
+				logs->config.log_npc, sizeof(logs->config.log_npc)) == CONFIG_FALSE)
+		safestrncpy(logs->config.log_npc, "npclog", sizeof(logs->config.log_npc));
+
+	if (libconfig->setting_lookup_mutable_string(setting, "log_chat_db",
+				logs->config.log_chat, sizeof(logs->config.log_chat)) == CONFIG_FALSE)
+		safestrncpy(logs->config.log_chat, "chatlog", sizeof(logs->config.log_chat));
+
+	return true;
+}
+
+/**
+ * Reads 'map_log/filter/item' and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool log_config_read_filter_item(const char *filename, struct config_t *config, bool imported)
+{
+	struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "map_log/filter/item")) == NULL) {
+		if (!imported)
+			ShowError("log_config_read: map_log/filter/item was not found in %s!\n", filename);
+		return false;
+	}
+	libconfig->setting_lookup_int(setting, "log_filter", &logs->config.filter);
+	libconfig->setting_lookup_int(setting, "refine_items_log", &logs->config.refine_items_log);
+	libconfig->setting_lookup_int(setting, "rare_items_log", &logs->config.rare_items_log);
+	libconfig->setting_lookup_int(setting, "price_items_log", &logs->config.price_items_log);
+	libconfig->setting_lookup_int(setting, "amount_items_log", &logs->config.amount_items_log);
+	return true;
+}
+
+/**
+ * Reads 'map_log.filter.chat' and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool log_config_read_filter_chat(const char *filename, struct config_t *config, bool imported)
+{
+	struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "map_log/filter/chat")) == NULL) {
+		if (!imported)
+			ShowError("log_config_read: map_log/filter/chat was not found in %s!\n", filename);
+		return false;
+	}
+	libconfig->setting_lookup_int(setting, "log_chat", &logs->config.chat);
+	libconfig->setting_lookup_bool_real(setting, "log_chat_woe_disable", &logs->config.log_chat_woe_disable);
+	return true;
+}
+
+/**
+ * Reads 'map_log.filter' and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool log_config_read_filter(const char *filename, struct config_t *config, bool imported)
+{
+	bool retval = true;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if (!log_config_read_filter_item(filename, config, imported))
+		retval = false;
+	if (!log_config_read_filter_chat(filename, config, imported))
+		retval = false;
+
+	return retval;
+}
+
+/**
+ * Reads 'map_log' and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool log_config_read(const char *filename, bool imported)
+{
+	struct config_t config;
+	struct config_setting_t *setting = NULL;
+	const char *import;
+	const char *target; // Type of storage 'file'/'table'
+	int temp;
+	bool retval = true;
+
+	nullpo_retr(false, filename);
+
+	if (!imported)
 		log_set_defaults();
 
-	if( ( fp = fopen(cfgName, "r") ) == NULL ) {
-		ShowError("Log configuration file not found at: %s\n", cfgName);
-		return 1;
+	if (!libconfig->load_file(&config, filename))
+		return false;
+
+	if ((setting = libconfig->lookup(&config, "map_log")) == NULL) {
+		libconfig->destroy(&config);
+		if (imported)
+			return true;
+		ShowError("log_config_read: map_log was not found in %s!\n", filename);
+		return false;
 	}
 
-	while (fgets(line, sizeof(line), fp)) {
-		if (line[0] == '/' && line[1] == '/')
-			continue;
+	if (libconfig->setting_lookup_int(setting, "enable", &temp) == CONFIG_TRUE) {
+		logs->config.enable_logs = temp&LOG_TYPE_ALL; // e_log_pick_type
+	}
+	libconfig->setting_lookup_int(setting, "log_zeny", &logs->config.zeny);
+	libconfig->setting_lookup_bool_real(setting, "log_branch", &logs->config.branch);
+	libconfig->setting_lookup_bool_real(setting, "log_mvpdrop", &logs->config.mvpdrop);
+	libconfig->setting_lookup_bool_real(setting, "log_commands", &logs->config.commands);
+	libconfig->setting_lookup_bool_real(setting, "log_npc", &logs->config.npc);
 
-		if (sscanf(line, "%1023[^:]: %1023[^\r\n]", w1, w2) == 2) {
-			if( strcmpi(w1, "enable_logs") == 0 )
-				logs->config.enable_logs = (e_log_pick_type)config_switch(w2);
-			else if( strcmpi(w1, "sql_logs") == 0 )
-				logs->config.sql_logs = (bool)config_switch(w2);
-//start of common filter settings
-			else if( strcmpi(w1, "rare_items_log") == 0 )
-				logs->config.rare_items_log = atoi(w2);
-			else if( strcmpi(w1, "refine_items_log") == 0 )
-				logs->config.refine_items_log = atoi(w2);
-			else if( strcmpi(w1, "price_items_log") == 0 )
-				logs->config.price_items_log = atoi(w2);
-			else if( strcmpi(w1, "amount_items_log") == 0 )
-				logs->config.amount_items_log = atoi(w2);
-//end of common filter settings
-			else if( strcmpi(w1, "log_branch") == 0 )
-				logs->config.branch = config_switch(w2);
-			else if( strcmpi(w1, "log_filter") == 0 )
-				logs->config.filter = config_switch(w2);
-			else if( strcmpi(w1, "log_zeny") == 0 )
-				logs->config.zeny = config_switch(w2);
-			else if( strcmpi(w1, "log_commands") == 0 )
-				logs->config.commands = config_switch(w2);
-			else if( strcmpi(w1, "log_npc") == 0 )
-				logs->config.npc = config_switch(w2);
-			else if( strcmpi(w1, "log_chat") == 0 )
-				logs->config.chat = config_switch(w2);
-			else if( strcmpi(w1, "log_mvpdrop") == 0 )
-				logs->config.mvpdrop = config_switch(w2);
-			else if( strcmpi(w1, "log_chat_woe_disable") == 0 )
-				logs->config.log_chat_woe_disable = (bool)config_switch(w2);
-			else if( strcmpi(w1, "log_branch_db") == 0 )
-				safestrncpy(logs->config.log_branch, w2, sizeof(logs->config.log_branch));
-			else if( strcmpi(w1, "log_pick_db") == 0 )
-				safestrncpy(logs->config.log_pick, w2, sizeof(logs->config.log_pick));
-			else if( strcmpi(w1, "log_zeny_db") == 0 )
-				safestrncpy(logs->config.log_zeny, w2, sizeof(logs->config.log_zeny));
-			else if( strcmpi(w1, "log_mvpdrop_db") == 0 )
-				safestrncpy(logs->config.log_mvpdrop, w2, sizeof(logs->config.log_mvpdrop));
-			else if( strcmpi(w1, "log_gm_db") == 0 )
-				safestrncpy(logs->config.log_gm, w2, sizeof(logs->config.log_gm));
-			else if( strcmpi(w1, "log_npc_db") == 0 )
-				safestrncpy(logs->config.log_npc, w2, sizeof(logs->config.log_npc));
-			else if( strcmpi(w1, "log_chat_db") == 0 )
-				safestrncpy(logs->config.log_chat, w2, sizeof(logs->config.log_chat));
-			//support the import command, just like any other config
-			else if( strcmpi(w1,"import") == 0 )
-				logs->config_read(w2);
-			else if (HPM->parseConf(w1, w2, HPCT_LOG))
-				; // handled by plugins
-			else
-				ShowWarning("Unknown setting '%s' in file %s\n", w1, cfgName);
+	if (!log_config_read_database(filename, &config, imported))
+		retval = false;
+	if (!log_config_read_filter(filename, &config, imported))
+		retval = false;
+
+	// TODO HPM->parseConf(w1, w2, HPCT_LOG);
+
+	target = logs->config.sql_logs ? "table" : "file";
+
+	if (logs->config.enable_logs && logs->config.filter)
+		ShowInfo("Logging item transactions to %s '%s'.\n", target, logs->config.log_pick);
+
+	if (logs->config.branch)
+		ShowInfo("Logging monster summon item usage to %s '%s'.\n", target, logs->config.log_branch);
+
+	if (logs->config.chat)
+		ShowInfo("Logging chat to %s '%s'.\n", target, logs->config.log_chat);
+
+	if (logs->config.commands)
+		ShowInfo("Logging commands to %s '%s'.\n", target, logs->config.log_gm);
+
+	if (logs->config.mvpdrop)
+		ShowInfo("Logging MVP monster rewards to %s '%s'.\n", target, logs->config.log_mvpdrop);
+
+	if (logs->config.npc)
+		ShowInfo("Logging 'logmes' messages to %s '%s'.\n", target, logs->config.log_npc);
+
+	if (logs->config.zeny)
+		ShowInfo("Logging Zeny transactions to %s '%s'.\n", target, logs->config.log_zeny);
+
+	logs->config_done();
+
+	// import should overwrite any previous configuration, so it should be called last
+	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
+		if (strcmp(import, filename) == 0 || strcmp(import, map->LOG_CONF_NAME) == 0) {
+			ShowWarning("log_config_read: Loop detected! Skipping 'import'...\n");
+		} else {
+			if (!logs->config_read(import, true))
+				retval = false;
 		}
 	}
 
-	fclose(fp);
-
-	if( --count == 0 ) {// report final logging state
-		const char* target = logs->config.sql_logs ? "table" : "file";
-
-		if( logs->config.enable_logs && logs->config.filter ) {
-			ShowInfo("Logging item transactions to %s '%s'.\n", target, logs->config.log_pick);
-		}
-		if( logs->config.branch ) {
-			ShowInfo("Logging monster summon item usage to %s '%s'.\n", target, logs->config.log_pick);
-		}
-		if( logs->config.chat ) {
-			ShowInfo("Logging chat to %s '%s'.\n", target, logs->config.log_chat);
-		}
-		if( logs->config.commands ) {
-			ShowInfo("Logging commands to %s '%s'.\n", target, logs->config.log_gm);
-		}
-		if( logs->config.mvpdrop ) {
-			ShowInfo("Logging MVP monster rewards to %s '%s'.\n", target, logs->config.log_mvpdrop);
-		}
-		if( logs->config.npc ) {
-			ShowInfo("Logging 'logmes' messages to %s '%s'.\n", target, logs->config.log_npc);
-		}
-		if( logs->config.zeny ) {
-			ShowInfo("Logging Zeny transactions to %s '%s'.\n", target, logs->config.log_zeny);
-		}
-		logs->config_done();
-	}
-
-	return 0;
+	libconfig->destroy(&config);
+	return retval;
 }
 
 void log_config_complete(void) {
@@ -606,6 +738,9 @@ void log_config_complete(void) {
 	}
 }
 
+/**
+ * Initializes the log interface to the default values.
+ */
 void log_defaults(void) {
 	logs = &log_s;
 
