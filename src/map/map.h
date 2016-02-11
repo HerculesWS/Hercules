@@ -1188,7 +1188,7 @@ END_ZEROED_BLOCK;
 	int (*readgat) (struct map_data *m);
 	int (*readallmaps) (void);
 	bool (*config_read) (const char *filename, bool imported);
-	void (*reloadnpc_sub) (char *cfgName);
+	bool (*read_npclist) (const char *filename, bool imported);
 	bool (*inter_config_read) (const char *filename, bool imported);
 	bool (*inter_config_read_database_names) (const char *filename, const struct config_t *config, bool imported);
 	bool (*inter_config_read_connection) (const char *filename, const struct config_t *config, bool imported);

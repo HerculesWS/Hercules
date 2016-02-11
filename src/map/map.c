@@ -4113,44 +4113,91 @@ bool map_config_read(const char *filename, bool imported)
 	return retval;
 }
 
-void map_reloadnpc_sub(char *cfgName) {
-	char line[1024], w1[1024], w2[1024];
-	FILE *fp;
+/**
+ * Reads 'npc_global_list'/'npc_removed_list' and adds or removes NPC sources
+ * from map-server.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool map_read_npclist(const char *filename, bool imported)
+{
+	struct config_t config;
+	struct config_setting_t *setting = NULL;
+	const char *import = NULL;
+	bool retval = true;
 
-	nullpo_retv(cfgName);
-	fp = fopen(cfgName,"r");
-	if (fp == NULL) {
-		ShowError("Map configuration file not found at: %s\n", cfgName);
-		return;
+	struct DBMap *deleted_npcs;
+
+	nullpo_retr(false, filename);
+
+	if (!libconfig->load_file(&config, filename))
+		return false;
+
+	deleted_npcs = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY, MAP_NAME_LENGTH);
+
+	// Remove maps
+	if ((setting = libconfig->lookup(&config, "npc_removed_list")) != NULL) {
+		int i, del_count = libconfig->setting_length(setting);
+		for (i = 0; i < del_count; i++) {
+			const char *scriptname;
+
+			if ((scriptname = libconfig->setting_get_string_elem(setting, i)) == NULL || scriptname[0] == '\0')
+				continue;
+
+			strdb_put(deleted_npcs, scriptname, NULL);
+
+			if (imported) // Map list is empty on the first run, only do this for imported files.
+				npc->delsrcfile(scriptname);
+		}
 	}
 
-	while (fgets(line, sizeof(line), fp)) {
-		char* ptr;
+	if ((setting = libconfig->lookup(&config, "npc_global_list")) != NULL) {
+		int i, count = libconfig->setting_length(setting);
+		if (count <= 0) {
+			if (!imported) {
+				ShowWarning("map_read_npclist: no NPCs found in %s!\n", filename);
+				retval = false;
+			}
+		}
+		for (i = 0; i < count; i++) {
+			const char *scriptname;
 
-		if (line[0] == '/' && line[1] == '/')
-			continue;
-		if ((ptr = strstr(line, "//")) != NULL)
-			*ptr = '\n'; //Strip comments
-		if (sscanf(line, "%1023[^:]: %1023[^\t\r\n]", w1, w2) < 2)
-			continue;
+			if ((scriptname = libconfig->setting_get_string_elem(setting, i)) == NULL || scriptname[0] == '\0')
+				continue;
 
-		//Strip trailing spaces
-		ptr = w2 + strlen(w2);
-		while (--ptr >= w2 && *ptr == ' ');
-		ptr++;
-		*ptr = '\0';
+			if (strdb_exists(deleted_npcs, scriptname))
+				continue;
 
-		if (strcmpi(w1, "npc") == 0)
-			npc->addsrcfile(w2);
-		else if (strcmpi(w1, "import") == 0)
-			map->reloadnpc_sub(w2);
-		else if (strcmpi(w1, "delnpc") == 0)
-			npc->delsrcfile(w2);
-		else
-			ShowWarning("Unknown setting '%s' in file %s\n", w1, cfgName);
+			npc->addsrcfile(scriptname);
+		}
+	} else {
+		ShowError("map_read_npclist: npc_global_list was not found in %s!\n", filename);
+		retval = false;
 	}
 
-	fclose(fp);
+	db_destroy(deleted_npcs);
+
+	// import should overwrite any previous configuration, so it should be called last
+	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
+		const char *base_npclist = NULL;
+#ifdef RENEWAL
+		base_npclist = "npc/re/scripts_main.conf";
+#else
+		base_npclist = "npc/pre-re/scripts_main.conf";
+#endif
+		if (strcmp(import, filename) == 0 || strcmp(import, base_npclist) == 0) {
+			ShowWarning("map_read_npclist: Loop detected! Skipping 'import'...\n");
+		} else {
+			if (!map->read_npclist(import, true))
+				retval = false;
+		}
+	}
+
+	libconfig->destroy(&config);
+	return retval;
 }
 
 /**
@@ -4164,9 +4211,9 @@ void map_reloadnpc(bool clear) {
 		npc->addsrcfile("clear"); // this will clear the current script list
 
 #ifdef RENEWAL
-	map->reloadnpc_sub("npc/re/scripts_main.conf");
+	map->read_npclist("npc/re/scripts_main.conf", false);
 #else
-	map->reloadnpc_sub("npc/pre-re/scripts_main.conf");
+	map->read_npclist("npc/pre-re/scripts_main.conf", false);
 #endif
 
 	// Append extra scripts
@@ -6754,7 +6801,7 @@ void map_defaults(void) {
 	map->readgat = map_readgat;
 	map->readallmaps = map_readallmaps;
 	map->config_read = map_config_read;
-	map->reloadnpc_sub = map_reloadnpc_sub;
+	map->read_npclist = map_read_npclist;
 	map->inter_config_read = inter_config_read;
 	map->inter_config_read_database_names = inter_config_read_database_names;
 	map->inter_config_read_connection = inter_config_read_connection;
