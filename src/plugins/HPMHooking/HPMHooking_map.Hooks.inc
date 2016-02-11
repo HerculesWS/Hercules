@@ -41774,11 +41774,11 @@ int HP_map_cleanup_sub(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
-int HP_map_delmap(char *mapname) {
+int HP_map_delmap(const char *mapname) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_map_delmap_pre ) {
-		int (*preHookFunc) (char **mapname);
+		int (*preHookFunc) (const char **mapname);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_delmap_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_map_delmap_pre[hIndex].func;
@@ -41793,7 +41793,7 @@ int HP_map_delmap(char *mapname) {
 		retVal___ = HPMHooks.source.map.delmap(mapname);
 	}
 	if( HPMHooks.count.HP_map_delmap_post ) {
-		int (*postHookFunc) (int retVal___, char *mapname);
+		int (*postHookFunc) (int retVal___, const char *mapname);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_delmap_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_map_delmap_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, mapname);
@@ -42757,33 +42757,6 @@ bool HP_map_config_read(const char *filename, bool imported) {
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_map_config_read_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, filename, imported);
-		}
-	}
-	return retVal___;
-}
-bool HP_map_config_read_sub(char *filename) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if( HPMHooks.count.HP_map_config_read_sub_pre ) {
-		bool (*preHookFunc) (char **filename);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_sub_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_map_config_read_sub_pre[hIndex].func;
-			retVal___ = preHookFunc(&filename);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.map.config_read_sub(filename);
-	}
-	if( HPMHooks.count.HP_map_config_read_sub_post ) {
-		bool (*postHookFunc) (bool retVal___, char *filename);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_map_config_read_sub_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_map_config_read_sub_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, filename);
 		}
 	}
 	return retVal___;
