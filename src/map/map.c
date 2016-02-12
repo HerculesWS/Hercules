@@ -6401,6 +6401,7 @@ int do_init(int argc, char *argv[])
 		CHECK_OLD_LOCAL_CONF("conf/import/inter_conf.txt", "conf/import/inter-server.conf");
 		CHECK_OLD_LOCAL_CONF("conf/import/log_conf.txt", "conf/import/logs.conf");
 		CHECK_OLD_LOCAL_CONF("conf/import/script_conf.txt", "conf/import/script.conf");
+		CHECK_OLD_LOCAL_CONF("conf/import/packet_conf.txt", "conf/import/socket.conf");
 
 #undef CHECK_OLD_LOCAL_CONF
 		}

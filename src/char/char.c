@@ -6211,6 +6211,7 @@ int do_init(int argc, char **argv) {
 
 		CHECK_OLD_LOCAL_CONF("conf/import/char_conf.txt", "conf/import/char-server.conf");
 		CHECK_OLD_LOCAL_CONF("conf/import/inter_conf.txt", "conf/import/inter-server.conf");
+		CHECK_OLD_LOCAL_CONF("conf/import/packet_conf.txt", "conf/import/socket.conf");
 
 #undef CHECK_OLD_LOCAL_CONF
 	}
