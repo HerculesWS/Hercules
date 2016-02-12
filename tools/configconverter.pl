@@ -502,6 +502,18 @@ my @defaults = (
 			import               => {parse => \&parsecfg_string, print => \&printcfg_nil,    path => "", default => "conf/import/log_conf.txt"},
 		}
 	},
+	{
+		files => ['script.conf', 'import/script_conf.txt'],
+		settings => {
+			warn_func_mismatch_paramnum => {parse => \&parsecfg_bool,   print => \&printcfg_bool, path => "script:script_configuration/", default => "true"},
+			check_cmdcount              => {parse => \&parsecfg_int,    print => \&printcfg_int,  path => "script:script_configuration/", default => 655360},
+			check_gotocount             => {parse => \&parsecfg_int,    print => \&printcfg_int,  path => "script:script_configuration/", default => 2048},
+			input_min_value             => {parse => \&parsecfg_int,    print => \&printcfg_int,  path => "script:script_configuration/", default => 0},
+			input_max_value             => {parse => \&parsecfg_int,    print => \&printcfg_int,  path => "script:script_configuration/", default => 10000000},
+			warn_func_mismatch_argtypes => {parse => \&parsecfg_bool,   print => \&printcfg_bool, path => "script:script_configuration/", default => "true"},
+			import                      => {parse => \&parsecfg_string, print => \&printcfg_nil,  path => "", default => "conf/import/script_conf.txt"},
+		}
+	},
 );
 
 for (@ARGV) {

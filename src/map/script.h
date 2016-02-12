@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -343,8 +343,8 @@ enum {
  **/
 
 struct Script_Config {
-	unsigned warn_func_mismatch_argtypes : 1;
-	unsigned warn_func_mismatch_paramnum : 1;
+	bool warn_func_mismatch_argtypes;
+	bool warn_func_mismatch_paramnum;
 	int check_cmdcount;
 	int check_gotocount;
 	int input_min_value;
@@ -692,7 +692,7 @@ struct script_interface {
 	void (*run_autobonus) (const char *autobonus,int id, int pos);
 	void (*cleararray_pc) (struct map_session_data* sd, const char* varname, void* value);
 	void (*setarray_pc) (struct map_session_data* sd, const char* varname, uint32 idx, void* value, int* refcache);
-	int (*config_read) (char *cfgName);
+	bool (*config_read) (const char *filename, bool imported);
 	int (*add_str) (const char* p);
 	const char* (*get_str) (int id);
 	int (*search_str) (const char* p);

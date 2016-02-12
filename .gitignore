@@ -63,7 +63,6 @@ Thumbs.db
 /conf/import/battle_conf.txt
 /conf/import/msg_conf.txt
 /conf/import/packet_conf.txt
-/conf/import/script_conf.txt
 
 # /log/
 /log/*.log
