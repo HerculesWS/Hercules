@@ -514,6 +514,23 @@ my @defaults = (
 			import                      => {parse => \&parsecfg_string, print => \&printcfg_nil,  path => "", default => "conf/import/script_conf.txt"},
 		}
 	},
+	{
+		files => ['packet.conf', 'import/packet_conf.txt'],
+		settings => {
+			debug                    => {parse => \&parsecfg_bool,      print => \&printcfg_bool,    path => "socket:socket_configuration/", default => "false"},
+			stall_time               => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "socket:socket_configuration/", default => 60},
+			epoll_maxevents          => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "socket:socket_configuration/", default => 1024},
+			socket_max_client_packet => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "socket:socket_configuration/", default => 65535},
+			enable_ip_rules          => {parse => \&parsecfg_bool,      print => \&printcfg_bool,    path => "socket:socket_configuration/ip_rules/enable", default => "true"},
+			order                    => {parse => \&parsecfg_string,    print => \&printcfg_string,  path => "socket:socket_configuration/ip_rules/", default => "deny,allow"},
+			allow                    => {parse => \&parsecfg_stringarr, print => \&printcfg_strlist, path => "socket:socket_configuration/ip_rules/allow_list", default => []},
+			deny                     => {parse => \&parsecfg_stringarr, print => \&printcfg_strlist, path => "socket:socket_configuration/ip_rules/deny_list", default => []},
+			ddos_interval            => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "socket:socket_configuration/ddos/interval", default => 3000},
+			ddos_count               => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "socket:socket_configuration/ddos/count", default => 5},
+			ddos_autoreset           => {parse => \&parsecfg_int,       print => \&printcfg_int,     path => "socket:socket_configuration/ddos/autoreset", default => 600000},
+			import                   => {parse => \&parsecfg_string,    print => \&printcfg_nil,     path => "", default => "conf/import/packet_conf.txt"},
+		}
+	},
 );
 
 for (@ARGV) {
