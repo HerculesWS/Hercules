@@ -5872,8 +5872,8 @@ typedef void (*HPMHOOK_pre_script_cleararray_pc) (struct map_session_data **sd, 
 typedef void (*HPMHOOK_post_script_cleararray_pc) (struct map_session_data *sd, const char *varname, void *value);
 typedef void (*HPMHOOK_pre_script_setarray_pc) (struct map_session_data **sd, const char **varname, uint32 *idx, void **value, int **refcache);
 typedef void (*HPMHOOK_post_script_setarray_pc) (struct map_session_data *sd, const char *varname, uint32 idx, void *value, int *refcache);
-typedef int (*HPMHOOK_pre_script_config_read) (char **cfgName);
-typedef int (*HPMHOOK_post_script_config_read) (int retVal___, char *cfgName);
+typedef bool (*HPMHOOK_pre_script_config_read) (const char **filename, bool *imported);
+typedef bool (*HPMHOOK_post_script_config_read) (bool retVal___, const char *filename, bool imported);
 typedef int (*HPMHOOK_pre_script_add_str) (const char **p);
 typedef int (*HPMHOOK_post_script_add_str) (int retVal___, const char *p);
 typedef const char* (*HPMHOOK_pre_script_get_str) (int *id);
