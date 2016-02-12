@@ -4521,52 +4521,55 @@ void run_script_main(struct script_state *st) {
 	}
 }
 
-int script_config_read(char *cfgName) {
-	int i;
-	char line[1024],w1[1024],w2[1024];
-	FILE *fp;
+/**
+ * Reads 'script_configuration' and initializes required variables.
+ *
+ * @param filename Path to configuration file.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool script_config_read(const char *filename, bool imported)
+{
+	struct config_t config;
+	struct config_setting_t * setting = NULL;
+	const char *import = NULL;
+	bool retval = true;
 
-	if( !( fp = fopen(cfgName,"r") ) ) {
-		ShowError("File not found: %s\n", cfgName);
-		return 1;
+	nullpo_retr(false, filename);
+
+	if (!libconfig->load_file(&config, filename))
+		return false;
+
+	if ((setting = libconfig->lookup(&config, "script_configuration")) == NULL) {
+		libconfig->destroy(&config);
+		if (imported)
+			return true;
+		ShowError("script_config_read: script_configuration was not found in %s!\n", filename);
+		return false;
 	}
-	while (fgets(line, sizeof(line), fp)) {
-		if (line[0] == '/' && line[1] == '/')
-			continue;
-		i = sscanf(line,"%1023[^:]: %1023[^\r\n]", w1, w2);
-		if(i!=2)
-			continue;
 
-		if(strcmpi(w1,"warn_func_mismatch_paramnum")==0) {
-			script->config.warn_func_mismatch_paramnum = config_switch(w2);
-		}
-		else if(strcmpi(w1,"check_cmdcount")==0) {
-			script->config.check_cmdcount = config_switch(w2);
-		}
-		else if(strcmpi(w1,"check_gotocount")==0) {
-			script->config.check_gotocount = config_switch(w2);
-		}
-		else if(strcmpi(w1,"input_min_value")==0) {
-			script->config.input_min_value = config_switch(w2);
-		}
-		else if(strcmpi(w1,"input_max_value")==0) {
-			script->config.input_max_value = config_switch(w2);
-		}
-		else if(strcmpi(w1,"warn_func_mismatch_argtypes")==0) {
-			script->config.warn_func_mismatch_argtypes = config_switch(w2);
-		}
-		else if(strcmpi(w1,"import")==0) {
-			script->config_read(w2);
-		}
-		else if(HPM->parseConf(w1, w2, HPCT_SCRIPT)) {
-			; // handled by plugin
+	libconfig->setting_lookup_bool_real(setting, "warn_func_mismatch_paramnum", &script->config.warn_func_mismatch_paramnum);
+	libconfig->setting_lookup_bool_real(setting, "warn_func_mismatch_argtypes", &script->config.warn_func_mismatch_argtypes);
+	libconfig->setting_lookup_int(setting, "check_cmdcount", &script->config.check_cmdcount);
+	libconfig->setting_lookup_int(setting, "check_gotocount", &script->config.check_gotocount);
+	libconfig->setting_lookup_int(setting, "input_min_value", &script->config.input_min_value);
+	libconfig->setting_lookup_int(setting, "input_max_value", &script->config.input_max_value);
+
+	// TODO HPM->parseConf(w1, w2, HPCT_SCRIPT));
+
+	// import should overwrite any previous configuration, so it should be called last
+	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
+		if (strcmp(import, filename) == 0 || strcmp(import, map->SCRIPT_CONF_NAME) == 0) {
+			ShowWarning("script_config_read: Loop detected! Skipping 'import'...\n");
 		} else {
-			ShowWarning("Unknown setting '%s' in file %s\n", w1, cfgName);
+			if (!script->config_read(import, true))
+				retval = false;
 		}
 	}
-	fclose(fp);
 
-	return 0;
+	libconfig->destroy(&config);
+	return retval;
 }
 
 /**
@@ -21449,8 +21452,8 @@ void script_defaults(void) {
 	script->getfuncname = script_getfuncname;
 
 	/* script_config base */
-	script->config.warn_func_mismatch_argtypes = 1;
-	script->config.warn_func_mismatch_paramnum = 1;
+	script->config.warn_func_mismatch_argtypes = true;
+	script->config.warn_func_mismatch_paramnum = true;
 	script->config.check_cmdcount = 65535;
 	script->config.check_gotocount = 2048;
 	script->config.input_min_value = 0;
