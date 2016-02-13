@@ -6367,7 +6367,7 @@ int do_init(int argc, char *argv[])
 	map->INTER_CONF_NAME         = aStrdup("conf/common/inter-server.conf");
 	map->LOG_CONF_NAME           = aStrdup("conf/map/logs.conf");
 	map->MAP_CONF_NAME           = aStrdup("conf/map/map-server.conf");
-	map->BATTLE_CONF_FILENAME    = aStrdup("conf/battle.conf");
+	map->BATTLE_CONF_FILENAME    = aStrdup("conf/map/battle.conf");
 	map->ATCOMMAND_CONF_FILENAME = aStrdup("conf/atcommand.conf");
 	map->SCRIPT_CONF_NAME        = aStrdup("conf/map/script.conf");
 	map->MSG_CONF_NAME           = aStrdup("conf/messages.conf");
@@ -6402,6 +6402,7 @@ int do_init(int argc, char *argv[])
 		CHECK_OLD_LOCAL_CONF("conf/import/log_conf.txt", "conf/import/logs.conf");
 		CHECK_OLD_LOCAL_CONF("conf/import/script_conf.txt", "conf/import/script.conf");
 		CHECK_OLD_LOCAL_CONF("conf/import/packet_conf.txt", "conf/import/socket.conf");
+		CHECK_OLD_LOCAL_CONF("conf/import/battle_conf.txt", "conf/import/battle.conf");
 
 #undef CHECK_OLD_LOCAL_CONF
 		}
@@ -6432,7 +6433,7 @@ int do_init(int argc, char *argv[])
 				chrif->setip(ip_str);
 		}
 
-		battle->config_read(map->BATTLE_CONF_FILENAME);
+		battle->config_read(map->BATTLE_CONF_FILENAME, false);
 		atcommand->msg_read(map->MSG_CONF_NAME, false);
 		map->inter_config_read(map->INTER_CONF_NAME, false);
 		logs->config_read(map->LOG_CONF_NAME, false);
@@ -6596,7 +6597,7 @@ void map_defaults(void) {
 	map->INTER_CONF_NAME="conf/common/inter-server.conf";
 	map->LOG_CONF_NAME="conf/map/logs.conf";
 	map->MAP_CONF_NAME = "conf/map/map-server.conf";
-	map->BATTLE_CONF_FILENAME = "conf/battle.conf";
+	map->BATTLE_CONF_FILENAME = "conf/map/battle.conf";
 	map->ATCOMMAND_CONF_FILENAME = "conf/atcommand.conf";
 	map->SCRIPT_CONF_NAME = "conf/map/script.conf";
 	map->MSG_CONF_NAME = "conf/messages.conf";

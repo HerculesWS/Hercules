@@ -3611,7 +3611,7 @@ ACMD(reloadbattleconf)
 	struct Battle_Config prev_config;
 	memcpy(&prev_config, &battle_config, sizeof(prev_config));
 
-	battle->config_read(map->BATTLE_CONF_FILENAME);
+	battle->config_read(map->BATTLE_CONF_FILENAME, false);
 	if (prev_config.feature_roulette == 0 && battle_config.feature_roulette == 1 && !clif->parse_roulette_db())
 		battle_config.feature_roulette = 0;
 
