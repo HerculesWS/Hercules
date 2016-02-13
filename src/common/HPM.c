@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2016  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -859,6 +859,52 @@ bool hplugins_get_battle_conf(const char *w1, int *value)
 }
 
 /**
+ * Parses battle config entries registered by plugins.
+ *
+ * @param config   The configuration file to parse.
+ * @param filename Path to configuration file.
+ * @param imported Whether the current config is imported from another file.
+ * @retval false in case of error.
+ */
+bool hplugins_parse_battle_conf(const struct config_t *config, const char *filename, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+	int i, val, type;
+	char str[1024];
+	bool retval = true;
+
+	nullpo_retr(false, config);
+
+	for (i = 0; i < VECTOR_LENGTH(HPM->config_listeners[HPCT_BATTLE]); i++) {
+		const struct HPConfListenStorage *entry = &VECTOR_INDEX(HPM->config_listeners[HPCT_BATTLE], i);
+		const char *config_name = entry->key;
+		if ((setting = libconfig->lookup(config, config_name)) == NULL) {
+			if (!imported) {
+				ShowWarning("Missing configuration '%s' in file %s!\n", config_name, filename);
+				retval = false;
+			}
+			continue;
+		}
+
+		switch ((type = config_setting_type(setting))) {
+		case CONFIG_TYPE_INT:
+			val = libconfig->setting_get_int(setting);
+			break;
+		case CONFIG_TYPE_BOOL:
+			val = libconfig->setting_get_bool(setting);
+			break;
+		default: // Unsupported type
+			ShowWarning("Setting %s has unsupported type %d, ignoring...\n", config_name, type);
+			retval = false;
+			continue;
+		}
+		sprintf(str, "%d", val); // FIXME: Remove this when support to int's as value is added
+		entry->parse_func(config_name, str);
+	}
+	return retval;
+}
+
+/**
  * Helper to destroy an interface's hplugin_data store and release any owned memory.
  *
  * The pointer will be cleared.
@@ -1074,6 +1120,7 @@ void hpm_defaults(void)
 	HPM->parse_packets = hplugins_parse_packets;
 	HPM->load_sub = NULL;
 	HPM->parseConf = hplugins_parse_conf;
+	HPM->parse_battle_conf = hplugins_parse_battle_conf;
 	HPM->getBattleConf = hplugins_get_battle_conf;
 	HPM->DataCheck = HPM_DataCheck;
 	HPM->datacheck_init = HPM_datacheck_init;

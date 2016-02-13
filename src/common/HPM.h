@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2013-2015  Hercules Dev Team
+ * Copyright (C) 2013-2016  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,7 +65,9 @@
 
 #endif // WIN32
 
+/* Forward Declarations */
 struct HPMHooking_core_interface;
+struct config_t;
 
 struct hplugin {
 	DLL dll;
@@ -155,6 +157,7 @@ struct HPM_interface {
 	void *(*import_symbol) (char *name, unsigned int pID);
 	void (*share) (void *value, const char *name);
 	void (*config_read) (void);
+	bool (*parse_battle_conf) (const struct config_t *config, const char *filename, bool imported);
 	char *(*pid2name) (unsigned int pid);
 	unsigned char (*parse_packets) (int fd, int packet_id, enum HPluginPacketHookingPoints point);
 	void (*load_sub) (struct hplugin *plugin);
