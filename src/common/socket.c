@@ -1077,11 +1077,9 @@ enum aco {
 	ACO_MUTUAL_FAILURE
 };
 
-static struct access_control *access_allow = NULL;
-static struct access_control *access_deny = NULL;
+static VECTOR_DECL(struct access_control) access_allow;
+static VECTOR_DECL(struct access_control) access_deny;
 static int access_order    = ACO_DENY_ALLOW;
-static int access_allownum = 0;
-static int access_denynum  = 0;
 static int access_debug    = 0;
 static int ddos_count      = 10;
 static int ddos_interval   = 3*1000;
@@ -1113,26 +1111,28 @@ static int connect_check_(uint32 ip)
 	int connect_ok = 0;
 
 	// Search the allow list
-	for( i=0; i < access_allownum; ++i ){
-		if (SUBNET_MATCH(ip, access_allow[i].ip, access_allow[i].mask)) {
-			if( access_debug ){
+	for (i = 0; i < VECTOR_LENGTH(access_allow); ++i) {
+		struct access_control *entry = &VECTOR_INDEX(access_allow, i);
+		if (SUBNET_MATCH(ip, entry->ip, entry->mask)) {
+			if (access_debug) {
 				ShowInfo("connect_check: Found match from allow list:%u.%u.%u.%u IP:%u.%u.%u.%u Mask:%u.%u.%u.%u\n",
 					CONVIP(ip),
-					CONVIP(access_allow[i].ip),
-					CONVIP(access_allow[i].mask));
+					CONVIP(entry->ip),
+					CONVIP(entry->mask));
 			}
 			is_allowip = 1;
 			break;
 		}
 	}
 	// Search the deny list
-	for( i=0; i < access_denynum; ++i ){
-		if (SUBNET_MATCH(ip, access_deny[i].ip, access_deny[i].mask)) {
-			if( access_debug ){
+	for (i = 0; i < VECTOR_LENGTH(access_deny); ++i) {
+		struct access_control *entry = &VECTOR_INDEX(access_deny, i);
+		if (SUBNET_MATCH(ip, entry->ip, entry->mask)) {
+			if (access_debug) {
 				ShowInfo("connect_check: Found match from deny list:%u.%u.%u.%u IP:%u.%u.%u.%u Mask:%u.%u.%u.%u\n",
 					CONVIP(ip),
-					CONVIP(access_deny[i].ip),
-					CONVIP(access_deny[i].mask));
+					CONVIP(entry->ip),
+					CONVIP(entry->mask));
 			}
 			is_denyip = 1;
 			break;
@@ -1315,15 +1315,17 @@ int socket_config_read(const char* cfgName)
 			else if (!strcmpi(w2, "mutual-failure"))
 				access_order = ACO_MUTUAL_FAILURE;
 		} else if (!strcmpi(w1, "allow")) {
-			RECREATE(access_allow, struct access_control, access_allownum+1);
-			if (access_ipmask(w2, &access_allow[access_allownum]))
-				++access_allownum;
+			struct access_control acc;
+			VECTOR_ENSURE(access_allow, 1, 1);
+			if (access_ipmask(w2, &acc))
+				VECTOR_PUSH(access_allow, acc);
 			else
 				ShowError("socket_config_read: Invalid ip or ip range '%s'!\n", line);
 		} else if (!strcmpi(w1, "deny")) {
-			RECREATE(access_deny, struct access_control, access_denynum+1);
-			if (access_ipmask(w2, &access_deny[access_denynum]))
-				++access_denynum;
+			struct access_control acc;
+			VECTOR_ENSURE(access_deny, 1, 1);
+			if (access_ipmask(w2, &acc))
+				VECTOR_PUSH(access_deny, acc);
 			else
 				ShowError("socket_config_read: Invalid ip or ip range '%s'!\n", line);
 		}
@@ -1354,10 +1356,8 @@ void socket_final(void)
 #ifndef MINICORE
 	if( connect_history )
 		db_destroy(connect_history);
-	if( access_allow )
-		aFree(access_allow);
-	if( access_deny )
-		aFree(access_deny);
+	VECTOR_CLEAR(access_allow);
+	VECTOR_CLEAR(access_deny);
 #endif  // MINICORE
 
 	for( i = 1; i < sockt->fd_max; i++ )
@@ -1543,6 +1543,11 @@ void socket_init(void)
 		}
 	}
 #endif  // defined(HAVE_SETRLIMIT) && !defined(CYGWIN)
+
+#ifndef MINICORE
+	VECTOR_INIT(access_allow);
+	VECTOR_INIT(access_deny);
+#endif // ! MINICORE
 
 	// Get initial local ips
 	sockt->naddr_ = sockt->getips(sockt->addr_,16);
