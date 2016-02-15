@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -823,7 +823,7 @@ static int inter_config_read(const char* cfgName)
 		} else if(!strcmpi(w1,"party_share_level"))
 			party_share_level = atoi(w2);
 		else if(!strcmpi(w1,"log_inter"))
-			log_inter = atoi(w2);
+			inter->enable_logs = atoi(w2) ? true : false;
 		else if(!strcmpi(w1,"import"))
 			inter->config_read(w2);
 	}
@@ -1361,6 +1361,7 @@ void inter_defaults(void)
 {
 	inter = &inter_s;
 
+	inter->enable_logs = true;
 	inter->sql_handle = NULL;
 
 	inter->msg_txt = inter_msg_txt;
