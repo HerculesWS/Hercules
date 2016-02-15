@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -110,9 +110,6 @@ char char_reg_num_db[32] = "char_reg_num_db";
 struct char_interface char_s;
 struct char_interface *chr;
 
-// show loading/saving messages
-int save_log = 1;
-
 char db_path[1024] = "db";
 
 char wisp_server_name[NAME_LENGTH] = "Server";
@@ -123,7 +120,7 @@ char char_ip_str[128];
 char bind_ip_str[128];
 uint32 bind_ip = INADDR_ANY;
 int char_maintenance_min_group_id = 0;
-bool char_new = true;
+bool enable_char_creation = true; ///< Whether to allow character creation.
 
 bool name_ignoring_case = false; // Allow or not identical name for characters but with a different case by [Yor]
 int char_name_option = 0; // Option to know which letters/symbols are authorized in the name of a character (0: all, 1: only those in char_name_letters, 2: all EXCEPT those in char_name_letters) by [Yor]
@@ -131,13 +128,9 @@ char unknown_char_name[NAME_LENGTH] = "Unknown"; // Name to use when the request
 #define TRIM_CHARS "\255\xA0\032\t\x0A\x0D " //The following characters are trimmed regardless because they cause confusion and problems on the servers. [Skotlex]
 char char_name_letters[1024] = ""; // list of letters/symbols allowed (or not) in a character name. by [Yor]
 
-int char_del_level = 0; //From which level u can delete character [Lupus]
+int char_del_level = 0; ///< From which level you can delete character [Lupus]
 int char_del_delay = 86400;
-
-int log_char = 1;  // logging char or not [devil]
-int log_inter = 1; // logging inter or not [devil]
-
-int char_aegis_delete = 0; // Verify if char is in guild/party or char and reacts as Aegis does (doesn't allow deletion), see chr->delete2_req for more information
+bool char_aegis_delete = false; ///< Verify if char is in guild/party or char and reacts as Aegis does (disallow deletion), @see chr->delete2_req.
 
 int max_connect_user = -1;
 int gm_allow_group = -1;
@@ -690,7 +683,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 #endif
 
 	StrBuf->Destroy(&buf);
-	if (save_status[0]!='\0' && save_log)
+	if (chr->show_save_log && save_status[0] != '\0')
 		ShowInfo("Saved char %d - %s:%s.\n", char_id, p->name, save_status);
 	if (!errors)
 		memcpy(cp, p, sizeof(struct mmo_charstatus));
@@ -1043,7 +1036,8 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 
 	memset(p, 0, sizeof(struct mmo_charstatus));
 
-	if (save_log) ShowInfo("Char load request (%d)\n", char_id);
+	if (chr->show_save_log)
+		ShowInfo("Char load request (%d)\n", char_id);
 
 	stmt = SQL->StmtMalloc(inter->sql_handle);
 	if( stmt == NULL )
@@ -1336,7 +1330,8 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	if( SQL_SUCCESS == SQL->StmtNextRow(stmt) )
 		strcat(t_msg, " accdata");
 
-	if (save_log) ShowInfo("Loaded char (%d - %s): %s\n", char_id, p->name, t_msg); //ok. all data load successfully!
+	if (chr->show_save_log)
+		ShowInfo("Loaded char (%d - %s): %s\n", char_id, p->name, t_msg); //ok. all data load successfully!
 	SQL->StmtFree(stmt);
 	StrBuf->Destroy(&buf);
 
@@ -1463,12 +1458,11 @@ int char_rename_char_sql(struct char_session_data *sd, int char_id)
 	memset(sd->new_name,0,sizeof(sd->new_name));
 
 	// log change
-	if( log_char )
-	{
-		if( SQL_ERROR == SQL->Query(inter->sql_handle,
-			"INSERT INTO `%s` (`time`, `char_msg`,`account_id`,`char_id`,`char_num`,`name`,`str`,`agi`,`vit`,`int`,`dex`,`luk`,`hair`,`hair_color`)"
-			"VALUES (NOW(), '%s', '%d', '%d', '%d', '%s', '0', '0', '0', '0', '0', '0', '0', '0')",
-			charlog_db, "change char name", sd->account_id, char_dat.char_id, char_dat.slot, esc_name) )
+	if (chr->enable_logs) {
+		if (SQL_ERROR == SQL->Query(inter->sql_handle,
+					"INSERT INTO `%s` (`time`, `char_msg`,`account_id`,`char_id`,`char_num`,`name`,`str`,`agi`,`vit`,`int`,`dex`,`luk`,`hair`,`hair_color`)"
+					"VALUES (NOW(), '%s', '%d', '%d', '%d', '%s', '0', '0', '0', '0', '0', '0', '0', '0')",
+					charlog_db, "change char name", sd->account_id, char_dat.char_id, char_dat.slot, esc_name))
 			Sql_ShowDebug(inter->sql_handle);
 	}
 
@@ -1606,10 +1600,11 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 		return -2;
 
 	// Validation success, log result
-	if (log_char) {
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`time`, `char_msg`,`account_id`,`char_id`,`char_num`,`name`,`str`,`agi`,`vit`,`int`,`dex`,`luk`,`hair`,`hair_color`)"
-			"VALUES (NOW(), '%s', '%d', '%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
-			charlog_db, "make new char", sd->account_id, char_id, slot, esc_name, str, agi, vit, int_, dex, luk, hair_style, hair_color) )
+	if (chr->enable_logs) {
+		if (SQL_ERROR == SQL->Query(inter->sql_handle,
+					"INSERT INTO `%s` (`time`, `char_msg`,`account_id`,`char_id`,`char_num`,`name`,`str`,`agi`,`vit`,`int`,`dex`,`luk`,`hair`,`hair_color`)"
+					"VALUES (NOW(), '%s', '%d', '%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
+					charlog_db, "make new char", sd->account_id, char_id, slot, esc_name, str, agi, vit, int_, dex, luk, hair_style, hair_color))
 			Sql_ShowDebug(inter->sql_handle);
 	}
 
@@ -1804,13 +1799,13 @@ int char_delete_char_sql(int char_id)
 #endif
 
 	/* delete character */
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", char_db, char_id) )
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id`='%d'", char_db, char_id)) {
 		Sql_ShowDebug(inter->sql_handle);
-	else if( log_char ) {
-		if( SQL_ERROR == SQL->Query(inter->sql_handle,
-			"INSERT INTO `%s`(`time`, `account_id`, `char_id`, `char_num`, `char_msg`, `name`)"
-			" VALUES (NOW(), '%d', '%d', '%d', 'Deleted character', '%s')",
-			charlog_db, account_id, char_id, 0, esc_name) )
+	} else if (chr->enable_logs) {
+		if (SQL_ERROR == SQL->Query(inter->sql_handle,
+					"INSERT INTO `%s`(`time`, `account_id`, `char_id`, `char_num`, `char_msg`, `name`)"
+					" VALUES (NOW(), '%d', '%d', '%d', 'Deleted character', '%s')",
+					charlog_db, account_id, char_id, 0, esc_name))
 			Sql_ShowDebug(inter->sql_handle);
 	}
 
@@ -2015,7 +2010,7 @@ int char_mmo_char_send_characters(int fd, struct char_session_data* sd)
 #if PACKETVER >= 20100413
 	offset += 3;
 #endif
-	if (save_log)
+	if (chr->show_save_log)
 		ShowInfo("Loading Char Data ("CL_BOLD"%d"CL_RESET")\n",sd->account_id);
 
 	j = 24 + offset; // offset
@@ -4516,13 +4511,13 @@ void char_parse_char_select(int fd, struct char_session_data* sd, uint32 ipl)
 	if( cd->sex == 99 )
 		cd->sex = sd->sex;
 
-	if (log_char) {
+	if (chr->enable_logs) {
 		char esc_name[NAME_LENGTH*2+1];
 		// FIXME: Why are we re-escaping the name if it was already escaped in rename/make_new_char? [Panikon]
 		SQL->EscapeStringLen(inter->sql_handle, esc_name, char_dat.name, strnlen(char_dat.name, NAME_LENGTH));
-		if( SQL_ERROR == SQL->Query(inter->sql_handle,
-			"INSERT INTO `%s`(`time`, `account_id`, `char_id`, `char_num`, `name`) VALUES (NOW(), '%d', '%d', '%d', '%s')",
-			charlog_db, sd->account_id, cd->char_id, slot, esc_name) )
+		if (SQL_ERROR == SQL->Query(inter->sql_handle,
+					"INSERT INTO `%s`(`time`, `account_id`, `char_id`, `char_num`, `name`) VALUES (NOW(), '%d', '%d', '%d', '%s')",
+					charlog_db, sd->account_id, cd->char_id, slot, esc_name))
 			Sql_ShowDebug(inter->sql_handle);
 	}
 	ShowInfo("Selected char: (Account %d: %d - %s)\n", sd->account_id, slot, char_dat.name);
@@ -4615,7 +4610,7 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd) __att
 void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 {
 	int result;
-	if( !char_new ) {
+	if (!enable_char_creation) {
 		//turn character creation on/off [Kevin]
 		result = -2;
 	} else {
@@ -5525,7 +5520,7 @@ int char_config_read(const char* cfgName)
 		} else if (strcmpi(w1, "char_server_type") == 0) {
 			chr->server_type = atoi(w2);
 		} else if (strcmpi(w1, "char_new") == 0) {
-			char_new = (bool)atoi(w2);
+			enable_char_creation = atoi(w2) ? true : false;
 		} else if (strcmpi(w1, "char_new_display") == 0) {
 			chr->new_display = atoi(w2);
 		} else if (strcmpi(w1, "max_connect_user") == 0) {
@@ -5539,7 +5534,7 @@ int char_config_read(const char* cfgName)
 			if (autosave_interval <= 0)
 				autosave_interval = DEFAULT_AUTOSAVE_INTERVAL;
 		} else if (strcmpi(w1, "save_log") == 0) {
-			save_log = config_switch(w2);
+			chr->show_save_log = config_switch(w2) ? true : false;
 		}
 		#ifdef RENEWAL
 			else if (strcmpi(w1, "start_point_re") == 0) {
@@ -5596,8 +5591,8 @@ int char_config_read(const char* cfgName)
 			start_zeny = atoi(w2);
 			if (start_zeny < 0)
 				start_zeny = 0;
-		} else if(strcmpi(w1,"log_char")==0) {
-			log_char = atoi(w2); //log char or not [devil]
+		} else if(strcmpi(w1,"log_char") == 0) {
+			chr->enable_logs = atoi(w2) ? true : false;
 		} else if (strcmpi(w1, "unknown_char_name") == 0) {
 			safestrncpy(unknown_char_name, w2, sizeof(unknown_char_name));
 			unknown_char_name[NAME_LENGTH-1] = '\0';
@@ -5612,7 +5607,7 @@ int char_config_read(const char* cfgName)
 		} else if (strcmpi(w1, "char_del_delay") == 0) {
 			char_del_delay = atoi(w2);
 		} else if (strcmpi(w1, "char_aegis_delete") == 0) {
-			char_aegis_delete = atoi(w2);
+			char_aegis_delete = atoi(w2) ? true : false;
 		} else if(strcmpi(w1,"db_path")==0) {
 			safestrncpy(db_path, w2, sizeof(db_path));
 		} else if (strcmpi(w1, "fame_list_alchemist") == 0) {
@@ -5946,6 +5941,9 @@ void char_defaults(void)
 	chr->port = 6121;
 	chr->server_type = 0;
 	chr->new_display = 0;
+
+	chr->show_save_log = true;
+	chr->enable_logs = true;
 
 	chr->waiting_disconnect = char_waiting_disconnect;
 	chr->delete_char_sql = char_delete_char_sql;

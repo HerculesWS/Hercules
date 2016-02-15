@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -83,9 +83,9 @@ int inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data) {
 			state++;
 		}
 
-		if( g->save_flag == GS_REMOVE )
-		{// Nothing to save, guild is ready for removal.
-			if (save_log)
+		if (g->save_flag == GS_REMOVE) {
+			// Nothing to save, guild is ready for removal.
+			if (chr->show_save_log)
 				ShowInfo("Guild Unloaded (%d - %s)\n", g->guild_id, g->name);
 			db_remove(inter_guild->guild_db, key);
 		}
@@ -337,8 +337,8 @@ int inter_guild_tosql(struct guild *g,int flag)
 		}
 	}
 
-	if (save_log)
-		ShowInfo("Saved guild (%d - %s):%s\n",g->guild_id,g->name,t_info);
+	if (chr->show_save_log)
+		ShowInfo("Saved guild (%d - %s):%s\n", g->guild_id, g->name, t_info);
 	return 1;
 }
 
@@ -525,7 +525,7 @@ struct guild * inter_guild_fromsql(int guild_id)
 	idb_put(inter_guild->guild_db, guild_id, g); //Add to cache
 	g->save_flag |= GS_REMOVE; //But set it to be removed, in case it is not needed for long.
 
-	if (save_log)
+	if (chr->show_save_log)
 		ShowInfo("Guild loaded (%d - %s)\n", guild_id, g->name);
 
 	return g;
@@ -548,7 +548,7 @@ int inter_guild_castle_tosql(struct guild_castle *gc)
 
 	if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)))
 		Sql_ShowDebug(inter->sql_handle);
-	else if(save_log)
+	else if (chr->show_save_log)
 		ShowInfo("Saved guild castle (%d)\n", gc->castle_id);
 
 	StrBuf->Destroy(&buf);
@@ -600,7 +600,7 @@ struct guild_castle* inter_guild_castle_fromsql(int castle_id)
 
 	idb_put(inter_guild->castle_db, castle_id, gc);
 
-	if (save_log)
+	if (chr->show_save_log)
 		ShowInfo("Loaded guild castle (%d - guild %d)\n", castle_id, gc->guild_id);
 
 	return gc;
@@ -1233,9 +1233,9 @@ int mapif_parse_CreateGuild(int fd, int account_id, const char *name, const stru
 	mapif->guild_created(fd,account_id,g);
 	mapif->guild_info(fd,g);
 
-	if(log_inter)
+	if (inter->enable_logs)
 		inter->log("guild %s (id=%d) created by master %s (id=%d)\n",
-			name, g->guild_id, master->name, master->account_id );
+			name, g->guild_id, master->name, master->account_id);
 
 	return 0;
 }
@@ -1442,8 +1442,8 @@ int mapif_parse_BreakGuild(int fd, int guild_id)
 
 	mapif->guild_broken(guild_id,0);
 
-	if(log_inter)
-		inter->log("guild %s (id=%d) broken\n",g->name,guild_id);
+	if (inter->enable_logs)
+		inter->log("guild %s (id=%d) broken\n", g->name, guild_id);
 
 	//Remove the guild from memory. [Skotlex]
 	idb_remove(inter_guild->guild_db, guild_id);
@@ -1821,7 +1821,7 @@ int mapif_parse_GuildCastleDataSave(int fd, int castle_id, int index, int value)
 
 	switch (index) {
 		case 1:
-			if (log_inter && gc->guild_id != value) {
+			if (inter->enable_logs && gc->guild_id != value) {
 				int gid = (value) ? value : gc->guild_id;
 				struct guild *g = idb_get(inter_guild->guild_db, gid);
 				inter->log("guild %s (id=%d) %s castle id=%d\n",

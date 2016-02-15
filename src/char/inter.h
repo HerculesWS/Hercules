@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@ struct Sql; // common/sql.h
  * inter interface
  **/
 struct inter_interface {
+	bool enable_logs; ///< Whether to log inter-server operations.
 	struct Sql *sql_handle;
 	const char* (*msg_txt) (int msg_number);
 	bool (*msg_config_read) (const char *cfg_name, bool allow_override);
