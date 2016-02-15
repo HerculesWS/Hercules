@@ -61,9 +61,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#ifndef WIN32
-#	include <unistd.h>
-#endif
 
 // private declarations
 char char_db[256] = "char";
@@ -3864,11 +3861,7 @@ void char_parse_frommap_request_stats_report(int fd)
 
 	do {
 		sockt->flush(sfd);
-#ifdef WIN32
-		Sleep(1);
-#else
-		sleep(1);
-#endif
+		HSleep(1);
 	} while( !sockt->session[sfd]->flag.eof && sockt->session[sfd]->wdata_size );
 
 	sockt->close(sfd);
