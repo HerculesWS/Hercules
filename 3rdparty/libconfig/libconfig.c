@@ -728,6 +728,7 @@ int config_write_file(config_t *config, const char *filename)
   {
     config->error_text = __io_error;
     config->error_type = CONFIG_ERR_FILE_IO;
+    config->error_file = filename;
     return(CONFIG_FALSE);
   }
 
