@@ -265,10 +265,10 @@ bool HP_atcommand_can_use2(struct map_session_data *sd, const char *command, AtC
 	}
 	return retVal___;
 }
-void HP_atcommand_load_groups(GroupSettings **groups, config_setting_t **commands_, size_t sz) {
+void HP_atcommand_load_groups(GroupSettings **groups, struct config_setting_t **commands_, size_t sz) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_atcommand_load_groups_pre ) {
-		void (*preHookFunc) (GroupSettings **groups, config_setting_t **commands_, size_t *sz);
+		void (*preHookFunc) (GroupSettings **groups, struct config_setting_t **commands_, size_t *sz);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_load_groups_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_atcommand_load_groups_pre[hIndex].func;
@@ -283,7 +283,7 @@ void HP_atcommand_load_groups(GroupSettings **groups, config_setting_t **command
 		HPMHooks.source.atcommand.load_groups(groups, commands_, sz);
 	}
 	if( HPMHooks.count.HP_atcommand_load_groups_post ) {
-		void (*postHookFunc) (GroupSettings **groups, config_setting_t **commands_, size_t *sz);
+		void (*postHookFunc) (GroupSettings **groups, struct config_setting_t **commands_, size_t *sz);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_atcommand_load_groups_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_atcommand_load_groups_post[hIndex].func;
 			postHookFunc(groups, commands_, &sz);
@@ -35754,10 +35754,10 @@ int HP_itemdb_validate_entry(struct item_data *entry, int n, const char *source)
 	}
 	return retVal___;
 }
-void HP_itemdb_readdb_additional_fields(int itemid, config_setting_t *it, int n, const char *source) {
+void HP_itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it, int n, const char *source) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_itemdb_readdb_additional_fields_pre ) {
-		void (*preHookFunc) (int *itemid, config_setting_t *it, int *n, const char *source);
+		void (*preHookFunc) (int *itemid, struct config_setting_t *it, int *n, const char *source);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_additional_fields_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_itemdb_readdb_additional_fields_pre[hIndex].func;
@@ -35772,7 +35772,7 @@ void HP_itemdb_readdb_additional_fields(int itemid, config_setting_t *it, int n,
 		HPMHooks.source.itemdb.readdb_additional_fields(itemid, it, n, source);
 	}
 	if( HPMHooks.count.HP_itemdb_readdb_additional_fields_post ) {
-		void (*postHookFunc) (int *itemid, config_setting_t *it, int *n, const char *source);
+		void (*postHookFunc) (int *itemid, struct config_setting_t *it, int *n, const char *source);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_additional_fields_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_itemdb_readdb_additional_fields_post[hIndex].func;
 			postHookFunc(&itemid, it, &n, source);
@@ -35780,11 +35780,11 @@ void HP_itemdb_readdb_additional_fields(int itemid, config_setting_t *it, int n,
 	}
 	return;
 }
-int HP_itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source) {
+int HP_itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *source) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_itemdb_readdb_libconfig_sub_pre ) {
-		int (*preHookFunc) (config_setting_t *it, int *n, const char *source);
+		int (*preHookFunc) (struct config_setting_t *it, int *n, const char *source);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_libconfig_sub_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_itemdb_readdb_libconfig_sub_pre[hIndex].func;
@@ -35799,7 +35799,7 @@ int HP_itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *sour
 		retVal___ = HPMHooks.source.itemdb.readdb_libconfig_sub(it, n, source);
 	}
 	if( HPMHooks.count.HP_itemdb_readdb_libconfig_sub_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *it, int *n, const char *source);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *it, int *n, const char *source);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_libconfig_sub_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_itemdb_readdb_libconfig_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, it, &n, source);
@@ -36026,11 +36026,11 @@ bool HP_itemdb_is_item_usable(struct item_data *item) {
 	}
 	return retVal___;
 }
-bool HP_itemdb_lookup_const(const config_setting_t *it, const char *name, int *value) {
+bool HP_itemdb_lookup_const(const struct config_setting_t *it, const char *name, int *value) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_itemdb_lookup_const_pre ) {
-		bool (*preHookFunc) (const config_setting_t *it, const char *name, int *value);
+		bool (*preHookFunc) (const struct config_setting_t *it, const char *name, int *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_lookup_const_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_itemdb_lookup_const_pre[hIndex].func;
@@ -36045,7 +36045,7 @@ bool HP_itemdb_lookup_const(const config_setting_t *it, const char *name, int *v
 		retVal___ = HPMHooks.source.itemdb.lookup_const(it, name, value);
 	}
 	if( HPMHooks.count.HP_itemdb_lookup_const_post ) {
-		bool (*postHookFunc) (bool retVal___, const config_setting_t *it, const char *name, int *value);
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *it, const char *name, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_lookup_const_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_itemdb_lookup_const_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, it, name, value);
@@ -36054,11 +36054,11 @@ bool HP_itemdb_lookup_const(const config_setting_t *it, const char *name, int *v
 	return retVal___;
 }
 /* libconfig */
-int HP_libconfig_read(config_t *config, FILE *stream) {
+int HP_libconfig_read(struct config_t *config, FILE *stream) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_read_pre ) {
-		int (*preHookFunc) (config_t *config, FILE *stream);
+		int (*preHookFunc) (struct config_t *config, FILE *stream);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_read_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_read_pre[hIndex].func;
@@ -36073,7 +36073,7 @@ int HP_libconfig_read(config_t *config, FILE *stream) {
 		retVal___ = HPMHooks.source.libconfig.read(config, stream);
 	}
 	if( HPMHooks.count.HP_libconfig_read_post ) {
-		int (*postHookFunc) (int retVal___, config_t *config, FILE *stream);
+		int (*postHookFunc) (int retVal___, struct config_t *config, FILE *stream);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_read_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_read_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config, stream);
@@ -36081,10 +36081,10 @@ int HP_libconfig_read(config_t *config, FILE *stream) {
 	}
 	return retVal___;
 }
-void HP_libconfig_write(const config_t *config, FILE *stream) {
+void HP_libconfig_write(const struct config_t *config, FILE *stream) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_libconfig_write_pre ) {
-		void (*preHookFunc) (const config_t *config, FILE *stream);
+		void (*preHookFunc) (const struct config_t *config, FILE *stream);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_write_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_write_pre[hIndex].func;
@@ -36099,7 +36099,7 @@ void HP_libconfig_write(const config_t *config, FILE *stream) {
 		HPMHooks.source.libconfig.write(config, stream);
 	}
 	if( HPMHooks.count.HP_libconfig_write_post ) {
-		void (*postHookFunc) (const config_t *config, FILE *stream);
+		void (*postHookFunc) (const struct config_t *config, FILE *stream);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_write_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_write_post[hIndex].func;
 			postHookFunc(config, stream);
@@ -36107,10 +36107,10 @@ void HP_libconfig_write(const config_t *config, FILE *stream) {
 	}
 	return;
 }
-void HP_libconfig_set_options(config_t *config, int options) {
+void HP_libconfig_set_options(struct config_t *config, int options) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_libconfig_set_options_pre ) {
-		void (*preHookFunc) (config_t *config, int *options);
+		void (*preHookFunc) (struct config_t *config, int *options);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_set_options_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_set_options_pre[hIndex].func;
@@ -36125,7 +36125,7 @@ void HP_libconfig_set_options(config_t *config, int options) {
 		HPMHooks.source.libconfig.set_options(config, options);
 	}
 	if( HPMHooks.count.HP_libconfig_set_options_post ) {
-		void (*postHookFunc) (config_t *config, int *options);
+		void (*postHookFunc) (struct config_t *config, int *options);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_set_options_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_set_options_post[hIndex].func;
 			postHookFunc(config, &options);
@@ -36133,11 +36133,11 @@ void HP_libconfig_set_options(config_t *config, int options) {
 	}
 	return;
 }
-int HP_libconfig_get_options(const config_t *config) {
+int HP_libconfig_get_options(const struct config_t *config) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_get_options_pre ) {
-		int (*preHookFunc) (const config_t *config);
+		int (*preHookFunc) (const struct config_t *config);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_get_options_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_get_options_pre[hIndex].func;
@@ -36152,7 +36152,7 @@ int HP_libconfig_get_options(const config_t *config) {
 		retVal___ = HPMHooks.source.libconfig.get_options(config);
 	}
 	if( HPMHooks.count.HP_libconfig_get_options_post ) {
-		int (*postHookFunc) (int retVal___, const config_t *config);
+		int (*postHookFunc) (int retVal___, const struct config_t *config);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_get_options_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_get_options_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config);
@@ -36160,11 +36160,11 @@ int HP_libconfig_get_options(const config_t *config) {
 	}
 	return retVal___;
 }
-int HP_libconfig_read_string(config_t *config, const char *str) {
+int HP_libconfig_read_string(struct config_t *config, const char *str) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_read_string_pre ) {
-		int (*preHookFunc) (config_t *config, const char *str);
+		int (*preHookFunc) (struct config_t *config, const char *str);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_read_string_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_read_string_pre[hIndex].func;
@@ -36179,7 +36179,7 @@ int HP_libconfig_read_string(config_t *config, const char *str) {
 		retVal___ = HPMHooks.source.libconfig.read_string(config, str);
 	}
 	if( HPMHooks.count.HP_libconfig_read_string_post ) {
-		int (*postHookFunc) (int retVal___, config_t *config, const char *str);
+		int (*postHookFunc) (int retVal___, struct config_t *config, const char *str);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_read_string_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_read_string_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config, str);
@@ -36187,11 +36187,11 @@ int HP_libconfig_read_string(config_t *config, const char *str) {
 	}
 	return retVal___;
 }
-int HP_libconfig_read_file_src(config_t *config, const char *filename) {
+int HP_libconfig_read_file_src(struct config_t *config, const char *filename) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_read_file_src_pre ) {
-		int (*preHookFunc) (config_t *config, const char *filename);
+		int (*preHookFunc) (struct config_t *config, const char *filename);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_read_file_src_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_read_file_src_pre[hIndex].func;
@@ -36206,7 +36206,7 @@ int HP_libconfig_read_file_src(config_t *config, const char *filename) {
 		retVal___ = HPMHooks.source.libconfig.read_file_src(config, filename);
 	}
 	if( HPMHooks.count.HP_libconfig_read_file_src_post ) {
-		int (*postHookFunc) (int retVal___, config_t *config, const char *filename);
+		int (*postHookFunc) (int retVal___, struct config_t *config, const char *filename);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_read_file_src_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_read_file_src_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config, filename);
@@ -36214,11 +36214,11 @@ int HP_libconfig_read_file_src(config_t *config, const char *filename) {
 	}
 	return retVal___;
 }
-int HP_libconfig_write_file(config_t *config, const char *filename) {
+int HP_libconfig_write_file(struct config_t *config, const char *filename) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_write_file_pre ) {
-		int (*preHookFunc) (config_t *config, const char *filename);
+		int (*preHookFunc) (struct config_t *config, const char *filename);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_write_file_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_write_file_pre[hIndex].func;
@@ -36233,7 +36233,7 @@ int HP_libconfig_write_file(config_t *config, const char *filename) {
 		retVal___ = HPMHooks.source.libconfig.write_file(config, filename);
 	}
 	if( HPMHooks.count.HP_libconfig_write_file_post ) {
-		int (*postHookFunc) (int retVal___, config_t *config, const char *filename);
+		int (*postHookFunc) (int retVal___, struct config_t *config, const char *filename);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_write_file_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_write_file_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config, filename);
@@ -36241,10 +36241,10 @@ int HP_libconfig_write_file(config_t *config, const char *filename) {
 	}
 	return retVal___;
 }
-void HP_libconfig_set_destructor(config_t *config, void ( *destructor ) (void *)) {
+void HP_libconfig_set_destructor(struct config_t *config, void ( *destructor ) (void *)) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_libconfig_set_destructor_pre ) {
-		void (*preHookFunc) (config_t *config, void ( *destructor ) (void *));
+		void (*preHookFunc) (struct config_t *config, void ( *destructor ) (void *));
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_set_destructor_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_set_destructor_pre[hIndex].func;
@@ -36259,7 +36259,7 @@ void HP_libconfig_set_destructor(config_t *config, void ( *destructor ) (void *)
 		HPMHooks.source.libconfig.set_destructor(config, destructor);
 	}
 	if( HPMHooks.count.HP_libconfig_set_destructor_post ) {
-		void (*postHookFunc) (config_t *config, void ( *destructor ) (void *));
+		void (*postHookFunc) (struct config_t *config, void ( *destructor ) (void *));
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_set_destructor_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_set_destructor_post[hIndex].func;
 			postHookFunc(config, destructor);
@@ -36267,10 +36267,10 @@ void HP_libconfig_set_destructor(config_t *config, void ( *destructor ) (void *)
 	}
 	return;
 }
-void HP_libconfig_set_include_dir(config_t *config, const char *include_dir) {
+void HP_libconfig_set_include_dir(struct config_t *config, const char *include_dir) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_libconfig_set_include_dir_pre ) {
-		void (*preHookFunc) (config_t *config, const char *include_dir);
+		void (*preHookFunc) (struct config_t *config, const char *include_dir);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_set_include_dir_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_set_include_dir_pre[hIndex].func;
@@ -36285,7 +36285,7 @@ void HP_libconfig_set_include_dir(config_t *config, const char *include_dir) {
 		HPMHooks.source.libconfig.set_include_dir(config, include_dir);
 	}
 	if( HPMHooks.count.HP_libconfig_set_include_dir_post ) {
-		void (*postHookFunc) (config_t *config, const char *include_dir);
+		void (*postHookFunc) (struct config_t *config, const char *include_dir);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_set_include_dir_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_set_include_dir_post[hIndex].func;
 			postHookFunc(config, include_dir);
@@ -36293,10 +36293,10 @@ void HP_libconfig_set_include_dir(config_t *config, const char *include_dir) {
 	}
 	return;
 }
-void HP_libconfig_init(config_t *config) {
+void HP_libconfig_init(struct config_t *config) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_libconfig_init_pre ) {
-		void (*preHookFunc) (config_t *config);
+		void (*preHookFunc) (struct config_t *config);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_init_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_init_pre[hIndex].func;
@@ -36311,7 +36311,7 @@ void HP_libconfig_init(config_t *config) {
 		HPMHooks.source.libconfig.init(config);
 	}
 	if( HPMHooks.count.HP_libconfig_init_post ) {
-		void (*postHookFunc) (config_t *config);
+		void (*postHookFunc) (struct config_t *config);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_init_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_init_post[hIndex].func;
 			postHookFunc(config);
@@ -36319,10 +36319,10 @@ void HP_libconfig_init(config_t *config) {
 	}
 	return;
 }
-void HP_libconfig_destroy(config_t *config) {
+void HP_libconfig_destroy(struct config_t *config) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_libconfig_destroy_pre ) {
-		void (*preHookFunc) (config_t *config);
+		void (*preHookFunc) (struct config_t *config);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_destroy_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_destroy_pre[hIndex].func;
@@ -36337,7 +36337,7 @@ void HP_libconfig_destroy(config_t *config) {
 		HPMHooks.source.libconfig.destroy(config);
 	}
 	if( HPMHooks.count.HP_libconfig_destroy_post ) {
-		void (*postHookFunc) (config_t *config);
+		void (*postHookFunc) (struct config_t *config);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_destroy_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_destroy_post[hIndex].func;
 			postHookFunc(config);
@@ -36345,11 +36345,11 @@ void HP_libconfig_destroy(config_t *config) {
 	}
 	return;
 }
-int HP_libconfig_setting_get_int(const config_setting_t *setting) {
+int HP_libconfig_setting_get_int(const struct config_setting_t *setting) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_get_int_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting);
+		int (*preHookFunc) (const struct config_setting_t *setting);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_int_pre[hIndex].func;
@@ -36364,7 +36364,7 @@ int HP_libconfig_setting_get_int(const config_setting_t *setting) {
 		retVal___ = HPMHooks.source.libconfig.setting_get_int(setting);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_int_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_int_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting);
@@ -36372,11 +36372,11 @@ int HP_libconfig_setting_get_int(const config_setting_t *setting) {
 	}
 	return retVal___;
 }
-long long HP_libconfig_setting_get_int64(const config_setting_t *setting) {
+long long HP_libconfig_setting_get_int64(const struct config_setting_t *setting) {
 	int hIndex = 0;
 	long long retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_get_int64_pre ) {
-		long long (*preHookFunc) (const config_setting_t *setting);
+		long long (*preHookFunc) (const struct config_setting_t *setting);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int64_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_int64_pre[hIndex].func;
@@ -36391,7 +36391,7 @@ long long HP_libconfig_setting_get_int64(const config_setting_t *setting) {
 		retVal___ = HPMHooks.source.libconfig.setting_get_int64(setting);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_int64_post ) {
-		long long (*postHookFunc) (long long retVal___, const config_setting_t *setting);
+		long long (*postHookFunc) (long long retVal___, const struct config_setting_t *setting);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int64_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_int64_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting);
@@ -36399,11 +36399,11 @@ long long HP_libconfig_setting_get_int64(const config_setting_t *setting) {
 	}
 	return retVal___;
 }
-double HP_libconfig_setting_get_float(const config_setting_t *setting) {
+double HP_libconfig_setting_get_float(const struct config_setting_t *setting) {
 	int hIndex = 0;
 	double retVal___ = 0.;
 	if( HPMHooks.count.HP_libconfig_setting_get_float_pre ) {
-		double (*preHookFunc) (const config_setting_t *setting);
+		double (*preHookFunc) (const struct config_setting_t *setting);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_float_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_float_pre[hIndex].func;
@@ -36418,7 +36418,7 @@ double HP_libconfig_setting_get_float(const config_setting_t *setting) {
 		retVal___ = HPMHooks.source.libconfig.setting_get_float(setting);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_float_post ) {
-		double (*postHookFunc) (double retVal___, const config_setting_t *setting);
+		double (*postHookFunc) (double retVal___, const struct config_setting_t *setting);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_float_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_float_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting);
@@ -36426,11 +36426,11 @@ double HP_libconfig_setting_get_float(const config_setting_t *setting) {
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_get_bool(const config_setting_t *setting) {
+int HP_libconfig_setting_get_bool(const struct config_setting_t *setting) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_get_bool_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting);
+		int (*preHookFunc) (const struct config_setting_t *setting);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_bool_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_bool_pre[hIndex].func;
@@ -36445,7 +36445,7 @@ int HP_libconfig_setting_get_bool(const config_setting_t *setting) {
 		retVal___ = HPMHooks.source.libconfig.setting_get_bool(setting);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_bool_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_bool_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_bool_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting);
@@ -36453,11 +36453,11 @@ int HP_libconfig_setting_get_bool(const config_setting_t *setting) {
 	}
 	return retVal___;
 }
-const char* HP_libconfig_setting_get_string(const config_setting_t *setting) {
+const char* HP_libconfig_setting_get_string(const struct config_setting_t *setting) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_libconfig_setting_get_string_pre ) {
-		const char* (*preHookFunc) (const config_setting_t *setting);
+		const char* (*preHookFunc) (const struct config_setting_t *setting);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_string_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_string_pre[hIndex].func;
@@ -36472,7 +36472,7 @@ const char* HP_libconfig_setting_get_string(const config_setting_t *setting) {
 		retVal___ = HPMHooks.source.libconfig.setting_get_string(setting);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_string_post ) {
-		const char* (*postHookFunc) (const char* retVal___, const config_setting_t *setting);
+		const char* (*postHookFunc) (const char* retVal___, const struct config_setting_t *setting);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_string_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_string_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting);
@@ -36480,11 +36480,11 @@ const char* HP_libconfig_setting_get_string(const config_setting_t *setting) {
 	}
 	return retVal___;
 }
-config_setting_t* HP_libconfig_setting_lookup(config_setting_t *setting, const char *name) {
+struct config_setting_t* HP_libconfig_setting_lookup(struct config_setting_t *setting, const char *name) {
 	int hIndex = 0;
-	config_setting_t* retVal___ = NULL;
+	struct config_setting_t* retVal___ = NULL;
 	if( HPMHooks.count.HP_libconfig_setting_lookup_pre ) {
-		config_setting_t* (*preHookFunc) (config_setting_t *setting, const char *name);
+		struct config_setting_t* (*preHookFunc) (struct config_setting_t *setting, const char *name);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_pre[hIndex].func;
@@ -36499,7 +36499,7 @@ config_setting_t* HP_libconfig_setting_lookup(config_setting_t *setting, const c
 		retVal___ = HPMHooks.source.libconfig.setting_lookup(setting, name);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_lookup_post ) {
-		config_setting_t* (*postHookFunc) (config_setting_t* retVal___, config_setting_t *setting, const char *name);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, name);
@@ -36507,11 +36507,11 @@ config_setting_t* HP_libconfig_setting_lookup(config_setting_t *setting, const c
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_lookup_int(const config_setting_t *setting, const char *name, int *value) {
+int HP_libconfig_setting_lookup_int(const struct config_setting_t *setting, const char *name, int *value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_lookup_int_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting, const char *name, int *value);
+		int (*preHookFunc) (const struct config_setting_t *setting, const char *name, int *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_int_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_int_pre[hIndex].func;
@@ -36526,7 +36526,7 @@ int HP_libconfig_setting_lookup_int(const config_setting_t *setting, const char 
 		retVal___ = HPMHooks.source.libconfig.setting_lookup_int(setting, name, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_lookup_int_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, int *value);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, const char *name, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_int_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_int_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, name, value);
@@ -36534,11 +36534,11 @@ int HP_libconfig_setting_lookup_int(const config_setting_t *setting, const char 
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_lookup_int64(const config_setting_t *setting, const char *name, long long *value) {
+int HP_libconfig_setting_lookup_int64(const struct config_setting_t *setting, const char *name, long long *value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_lookup_int64_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting, const char *name, long long *value);
+		int (*preHookFunc) (const struct config_setting_t *setting, const char *name, long long *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_int64_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_int64_pre[hIndex].func;
@@ -36553,7 +36553,7 @@ int HP_libconfig_setting_lookup_int64(const config_setting_t *setting, const cha
 		retVal___ = HPMHooks.source.libconfig.setting_lookup_int64(setting, name, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_lookup_int64_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, long long *value);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, const char *name, long long *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_int64_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_int64_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, name, value);
@@ -36561,11 +36561,11 @@ int HP_libconfig_setting_lookup_int64(const config_setting_t *setting, const cha
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_lookup_float(const config_setting_t *setting, const char *name, double *value) {
+int HP_libconfig_setting_lookup_float(const struct config_setting_t *setting, const char *name, double *value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_lookup_float_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting, const char *name, double *value);
+		int (*preHookFunc) (const struct config_setting_t *setting, const char *name, double *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_float_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_float_pre[hIndex].func;
@@ -36580,7 +36580,7 @@ int HP_libconfig_setting_lookup_float(const config_setting_t *setting, const cha
 		retVal___ = HPMHooks.source.libconfig.setting_lookup_float(setting, name, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_lookup_float_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, double *value);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, const char *name, double *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_float_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_float_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, name, value);
@@ -36588,11 +36588,11 @@ int HP_libconfig_setting_lookup_float(const config_setting_t *setting, const cha
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_lookup_bool(const config_setting_t *setting, const char *name, int *value) {
+int HP_libconfig_setting_lookup_bool(const struct config_setting_t *setting, const char *name, int *value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_lookup_bool_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting, const char *name, int *value);
+		int (*preHookFunc) (const struct config_setting_t *setting, const char *name, int *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_bool_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_bool_pre[hIndex].func;
@@ -36607,7 +36607,7 @@ int HP_libconfig_setting_lookup_bool(const config_setting_t *setting, const char
 		retVal___ = HPMHooks.source.libconfig.setting_lookup_bool(setting, name, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_lookup_bool_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, int *value);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, const char *name, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_bool_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_bool_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, name, value);
@@ -36615,11 +36615,11 @@ int HP_libconfig_setting_lookup_bool(const config_setting_t *setting, const char
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_lookup_string(const config_setting_t *setting, const char *name, const char **value) {
+int HP_libconfig_setting_lookup_string(const struct config_setting_t *setting, const char *name, const char **value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_lookup_string_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting, const char *name, const char **value);
+		int (*preHookFunc) (const struct config_setting_t *setting, const char *name, const char **value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_string_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_string_pre[hIndex].func;
@@ -36634,7 +36634,7 @@ int HP_libconfig_setting_lookup_string(const config_setting_t *setting, const ch
 		retVal___ = HPMHooks.source.libconfig.setting_lookup_string(setting, name, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_lookup_string_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, const char **value);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, const char *name, const char **value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_string_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_string_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, name, value);
@@ -36642,11 +36642,11 @@ int HP_libconfig_setting_lookup_string(const config_setting_t *setting, const ch
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_set_int(config_setting_t *setting, int value) {
+int HP_libconfig_setting_set_int(struct config_setting_t *setting, int value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_set_int_pre ) {
-		int (*preHookFunc) (config_setting_t *setting, int *value);
+		int (*preHookFunc) (struct config_setting_t *setting, int *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_int_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_set_int_pre[hIndex].func;
@@ -36661,7 +36661,7 @@ int HP_libconfig_setting_set_int(config_setting_t *setting, int value) {
 		retVal___ = HPMHooks.source.libconfig.setting_set_int(setting, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_int_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *setting, int *value);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_int_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_int_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &value);
@@ -36669,11 +36669,11 @@ int HP_libconfig_setting_set_int(config_setting_t *setting, int value) {
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_set_int64(config_setting_t *setting, long long value) {
+int HP_libconfig_setting_set_int64(struct config_setting_t *setting, long long value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_set_int64_pre ) {
-		int (*preHookFunc) (config_setting_t *setting, long long *value);
+		int (*preHookFunc) (struct config_setting_t *setting, long long *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_int64_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_set_int64_pre[hIndex].func;
@@ -36688,7 +36688,7 @@ int HP_libconfig_setting_set_int64(config_setting_t *setting, long long value) {
 		retVal___ = HPMHooks.source.libconfig.setting_set_int64(setting, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_int64_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *setting, long long *value);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, long long *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_int64_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_int64_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &value);
@@ -36696,11 +36696,11 @@ int HP_libconfig_setting_set_int64(config_setting_t *setting, long long value) {
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_set_float(config_setting_t *setting, double value) {
+int HP_libconfig_setting_set_float(struct config_setting_t *setting, double value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_set_float_pre ) {
-		int (*preHookFunc) (config_setting_t *setting, double *value);
+		int (*preHookFunc) (struct config_setting_t *setting, double *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_float_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_set_float_pre[hIndex].func;
@@ -36715,7 +36715,7 @@ int HP_libconfig_setting_set_float(config_setting_t *setting, double value) {
 		retVal___ = HPMHooks.source.libconfig.setting_set_float(setting, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_float_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *setting, double *value);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, double *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_float_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_float_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &value);
@@ -36723,11 +36723,11 @@ int HP_libconfig_setting_set_float(config_setting_t *setting, double value) {
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_set_bool(config_setting_t *setting, int value) {
+int HP_libconfig_setting_set_bool(struct config_setting_t *setting, int value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_set_bool_pre ) {
-		int (*preHookFunc) (config_setting_t *setting, int *value);
+		int (*preHookFunc) (struct config_setting_t *setting, int *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_bool_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_set_bool_pre[hIndex].func;
@@ -36742,7 +36742,7 @@ int HP_libconfig_setting_set_bool(config_setting_t *setting, int value) {
 		retVal___ = HPMHooks.source.libconfig.setting_set_bool(setting, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_bool_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *setting, int *value);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_bool_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_bool_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &value);
@@ -36750,11 +36750,11 @@ int HP_libconfig_setting_set_bool(config_setting_t *setting, int value) {
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_set_string(config_setting_t *setting, const char *value) {
+int HP_libconfig_setting_set_string(struct config_setting_t *setting, const char *value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_set_string_pre ) {
-		int (*preHookFunc) (config_setting_t *setting, const char *value);
+		int (*preHookFunc) (struct config_setting_t *setting, const char *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_string_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_set_string_pre[hIndex].func;
@@ -36769,7 +36769,7 @@ int HP_libconfig_setting_set_string(config_setting_t *setting, const char *value
 		retVal___ = HPMHooks.source.libconfig.setting_set_string(setting, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_string_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *setting, const char *value);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, const char *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_string_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_string_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, value);
@@ -36777,11 +36777,11 @@ int HP_libconfig_setting_set_string(config_setting_t *setting, const char *value
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_set_format(config_setting_t *setting, short format) {
+int HP_libconfig_setting_set_format(struct config_setting_t *setting, short format) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_set_format_pre ) {
-		int (*preHookFunc) (config_setting_t *setting, short *format);
+		int (*preHookFunc) (struct config_setting_t *setting, short *format);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_format_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_set_format_pre[hIndex].func;
@@ -36796,7 +36796,7 @@ int HP_libconfig_setting_set_format(config_setting_t *setting, short format) {
 		retVal___ = HPMHooks.source.libconfig.setting_set_format(setting, format);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_format_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *setting, short *format);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, short *format);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_format_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_format_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &format);
@@ -36804,11 +36804,11 @@ int HP_libconfig_setting_set_format(config_setting_t *setting, short format) {
 	}
 	return retVal___;
 }
-short HP_libconfig_setting_get_format(const config_setting_t *setting) {
+short HP_libconfig_setting_get_format(const struct config_setting_t *setting) {
 	int hIndex = 0;
 	short retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_get_format_pre ) {
-		short (*preHookFunc) (const config_setting_t *setting);
+		short (*preHookFunc) (const struct config_setting_t *setting);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_format_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_format_pre[hIndex].func;
@@ -36823,7 +36823,7 @@ short HP_libconfig_setting_get_format(const config_setting_t *setting) {
 		retVal___ = HPMHooks.source.libconfig.setting_get_format(setting);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_format_post ) {
-		short (*postHookFunc) (short retVal___, const config_setting_t *setting);
+		short (*postHookFunc) (short retVal___, const struct config_setting_t *setting);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_format_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_format_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting);
@@ -36831,11 +36831,11 @@ short HP_libconfig_setting_get_format(const config_setting_t *setting) {
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_get_int_elem(const config_setting_t *setting, int idx) {
+int HP_libconfig_setting_get_int_elem(const struct config_setting_t *setting, int idx) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_get_int_elem_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting, int *idx);
+		int (*preHookFunc) (const struct config_setting_t *setting, int *idx);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int_elem_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_int_elem_pre[hIndex].func;
@@ -36850,7 +36850,7 @@ int HP_libconfig_setting_get_int_elem(const config_setting_t *setting, int idx) 
 		retVal___ = HPMHooks.source.libconfig.setting_get_int_elem(setting, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_int_elem_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting, int *idx);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, int *idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_int_elem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &idx);
@@ -36858,11 +36858,11 @@ int HP_libconfig_setting_get_int_elem(const config_setting_t *setting, int idx) 
 	}
 	return retVal___;
 }
-long long HP_libconfig_setting_get_int64_elem(const config_setting_t *setting, int idx) {
+long long HP_libconfig_setting_get_int64_elem(const struct config_setting_t *setting, int idx) {
 	int hIndex = 0;
 	long long retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_get_int64_elem_pre ) {
-		long long (*preHookFunc) (const config_setting_t *setting, int *idx);
+		long long (*preHookFunc) (const struct config_setting_t *setting, int *idx);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int64_elem_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_int64_elem_pre[hIndex].func;
@@ -36877,7 +36877,7 @@ long long HP_libconfig_setting_get_int64_elem(const config_setting_t *setting, i
 		retVal___ = HPMHooks.source.libconfig.setting_get_int64_elem(setting, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_int64_elem_post ) {
-		long long (*postHookFunc) (long long retVal___, const config_setting_t *setting, int *idx);
+		long long (*postHookFunc) (long long retVal___, const struct config_setting_t *setting, int *idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int64_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_int64_elem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &idx);
@@ -36885,11 +36885,11 @@ long long HP_libconfig_setting_get_int64_elem(const config_setting_t *setting, i
 	}
 	return retVal___;
 }
-double HP_libconfig_setting_get_float_elem(const config_setting_t *setting, int idx) {
+double HP_libconfig_setting_get_float_elem(const struct config_setting_t *setting, int idx) {
 	int hIndex = 0;
 	double retVal___ = 0.;
 	if( HPMHooks.count.HP_libconfig_setting_get_float_elem_pre ) {
-		double (*preHookFunc) (const config_setting_t *setting, int *idx);
+		double (*preHookFunc) (const struct config_setting_t *setting, int *idx);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_float_elem_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_float_elem_pre[hIndex].func;
@@ -36904,7 +36904,7 @@ double HP_libconfig_setting_get_float_elem(const config_setting_t *setting, int 
 		retVal___ = HPMHooks.source.libconfig.setting_get_float_elem(setting, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_float_elem_post ) {
-		double (*postHookFunc) (double retVal___, const config_setting_t *setting, int *idx);
+		double (*postHookFunc) (double retVal___, const struct config_setting_t *setting, int *idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_float_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_float_elem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &idx);
@@ -36912,11 +36912,11 @@ double HP_libconfig_setting_get_float_elem(const config_setting_t *setting, int 
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_get_bool_elem(const config_setting_t *setting, int idx) {
+int HP_libconfig_setting_get_bool_elem(const struct config_setting_t *setting, int idx) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_get_bool_elem_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting, int *idx);
+		int (*preHookFunc) (const struct config_setting_t *setting, int *idx);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_bool_elem_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_bool_elem_pre[hIndex].func;
@@ -36931,7 +36931,7 @@ int HP_libconfig_setting_get_bool_elem(const config_setting_t *setting, int idx)
 		retVal___ = HPMHooks.source.libconfig.setting_get_bool_elem(setting, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_bool_elem_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting, int *idx);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, int *idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_bool_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_bool_elem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &idx);
@@ -36939,11 +36939,11 @@ int HP_libconfig_setting_get_bool_elem(const config_setting_t *setting, int idx)
 	}
 	return retVal___;
 }
-const char* HP_libconfig_setting_get_string_elem(const config_setting_t *setting, int idx) {
+const char* HP_libconfig_setting_get_string_elem(const struct config_setting_t *setting, int idx) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_libconfig_setting_get_string_elem_pre ) {
-		const char* (*preHookFunc) (const config_setting_t *setting, int *idx);
+		const char* (*preHookFunc) (const struct config_setting_t *setting, int *idx);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_string_elem_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_string_elem_pre[hIndex].func;
@@ -36958,7 +36958,7 @@ const char* HP_libconfig_setting_get_string_elem(const config_setting_t *setting
 		retVal___ = HPMHooks.source.libconfig.setting_get_string_elem(setting, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_string_elem_post ) {
-		const char* (*postHookFunc) (const char* retVal___, const config_setting_t *setting, int *idx);
+		const char* (*postHookFunc) (const char* retVal___, const struct config_setting_t *setting, int *idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_string_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_string_elem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &idx);
@@ -36966,11 +36966,11 @@ const char* HP_libconfig_setting_get_string_elem(const config_setting_t *setting
 	}
 	return retVal___;
 }
-config_setting_t* HP_libconfig_setting_set_int_elem(config_setting_t *setting, int idx, int value) {
+struct config_setting_t* HP_libconfig_setting_set_int_elem(struct config_setting_t *setting, int idx, int value) {
 	int hIndex = 0;
-	config_setting_t* retVal___ = NULL;
+	struct config_setting_t* retVal___ = NULL;
 	if( HPMHooks.count.HP_libconfig_setting_set_int_elem_pre ) {
-		config_setting_t* (*preHookFunc) (config_setting_t *setting, int *idx, int *value);
+		struct config_setting_t* (*preHookFunc) (struct config_setting_t *setting, int *idx, int *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_int_elem_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_set_int_elem_pre[hIndex].func;
@@ -36985,7 +36985,7 @@ config_setting_t* HP_libconfig_setting_set_int_elem(config_setting_t *setting, i
 		retVal___ = HPMHooks.source.libconfig.setting_set_int_elem(setting, idx, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_int_elem_post ) {
-		config_setting_t* (*postHookFunc) (config_setting_t* retVal___, config_setting_t *setting, int *idx, int *value);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int *idx, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_int_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_int_elem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &idx, &value);
@@ -36993,11 +36993,11 @@ config_setting_t* HP_libconfig_setting_set_int_elem(config_setting_t *setting, i
 	}
 	return retVal___;
 }
-config_setting_t* HP_libconfig_setting_set_int64_elem(config_setting_t *setting, int idx, long long value) {
+struct config_setting_t* HP_libconfig_setting_set_int64_elem(struct config_setting_t *setting, int idx, long long value) {
 	int hIndex = 0;
-	config_setting_t* retVal___ = NULL;
+	struct config_setting_t* retVal___ = NULL;
 	if( HPMHooks.count.HP_libconfig_setting_set_int64_elem_pre ) {
-		config_setting_t* (*preHookFunc) (config_setting_t *setting, int *idx, long long *value);
+		struct config_setting_t* (*preHookFunc) (struct config_setting_t *setting, int *idx, long long *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_int64_elem_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_set_int64_elem_pre[hIndex].func;
@@ -37012,7 +37012,7 @@ config_setting_t* HP_libconfig_setting_set_int64_elem(config_setting_t *setting,
 		retVal___ = HPMHooks.source.libconfig.setting_set_int64_elem(setting, idx, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_int64_elem_post ) {
-		config_setting_t* (*postHookFunc) (config_setting_t* retVal___, config_setting_t *setting, int *idx, long long *value);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int *idx, long long *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_int64_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_int64_elem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &idx, &value);
@@ -37020,11 +37020,11 @@ config_setting_t* HP_libconfig_setting_set_int64_elem(config_setting_t *setting,
 	}
 	return retVal___;
 }
-config_setting_t* HP_libconfig_setting_set_float_elem(config_setting_t *setting, int idx, double value) {
+struct config_setting_t* HP_libconfig_setting_set_float_elem(struct config_setting_t *setting, int idx, double value) {
 	int hIndex = 0;
-	config_setting_t* retVal___ = NULL;
+	struct config_setting_t* retVal___ = NULL;
 	if( HPMHooks.count.HP_libconfig_setting_set_float_elem_pre ) {
-		config_setting_t* (*preHookFunc) (config_setting_t *setting, int *idx, double *value);
+		struct config_setting_t* (*preHookFunc) (struct config_setting_t *setting, int *idx, double *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_float_elem_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_set_float_elem_pre[hIndex].func;
@@ -37039,7 +37039,7 @@ config_setting_t* HP_libconfig_setting_set_float_elem(config_setting_t *setting,
 		retVal___ = HPMHooks.source.libconfig.setting_set_float_elem(setting, idx, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_float_elem_post ) {
-		config_setting_t* (*postHookFunc) (config_setting_t* retVal___, config_setting_t *setting, int *idx, double *value);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int *idx, double *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_float_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_float_elem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &idx, &value);
@@ -37047,11 +37047,11 @@ config_setting_t* HP_libconfig_setting_set_float_elem(config_setting_t *setting,
 	}
 	return retVal___;
 }
-config_setting_t* HP_libconfig_setting_set_bool_elem(config_setting_t *setting, int idx, int value) {
+struct config_setting_t* HP_libconfig_setting_set_bool_elem(struct config_setting_t *setting, int idx, int value) {
 	int hIndex = 0;
-	config_setting_t* retVal___ = NULL;
+	struct config_setting_t* retVal___ = NULL;
 	if( HPMHooks.count.HP_libconfig_setting_set_bool_elem_pre ) {
-		config_setting_t* (*preHookFunc) (config_setting_t *setting, int *idx, int *value);
+		struct config_setting_t* (*preHookFunc) (struct config_setting_t *setting, int *idx, int *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_bool_elem_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_set_bool_elem_pre[hIndex].func;
@@ -37066,7 +37066,7 @@ config_setting_t* HP_libconfig_setting_set_bool_elem(config_setting_t *setting, 
 		retVal___ = HPMHooks.source.libconfig.setting_set_bool_elem(setting, idx, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_bool_elem_post ) {
-		config_setting_t* (*postHookFunc) (config_setting_t* retVal___, config_setting_t *setting, int *idx, int *value);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int *idx, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_bool_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_bool_elem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &idx, &value);
@@ -37074,11 +37074,11 @@ config_setting_t* HP_libconfig_setting_set_bool_elem(config_setting_t *setting, 
 	}
 	return retVal___;
 }
-config_setting_t* HP_libconfig_setting_set_string_elem(config_setting_t *setting, int idx, const char *value) {
+struct config_setting_t* HP_libconfig_setting_set_string_elem(struct config_setting_t *setting, int idx, const char *value) {
 	int hIndex = 0;
-	config_setting_t* retVal___ = NULL;
+	struct config_setting_t* retVal___ = NULL;
 	if( HPMHooks.count.HP_libconfig_setting_set_string_elem_pre ) {
-		config_setting_t* (*preHookFunc) (config_setting_t *setting, int *idx, const char *value);
+		struct config_setting_t* (*preHookFunc) (struct config_setting_t *setting, int *idx, const char *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_string_elem_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_set_string_elem_pre[hIndex].func;
@@ -37093,7 +37093,7 @@ config_setting_t* HP_libconfig_setting_set_string_elem(config_setting_t *setting
 		retVal___ = HPMHooks.source.libconfig.setting_set_string_elem(setting, idx, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_string_elem_post ) {
-		config_setting_t* (*postHookFunc) (config_setting_t* retVal___, config_setting_t *setting, int *idx, const char *value);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int *idx, const char *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_string_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_string_elem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &idx, value);
@@ -37101,11 +37101,11 @@ config_setting_t* HP_libconfig_setting_set_string_elem(config_setting_t *setting
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_index(const config_setting_t *setting) {
+int HP_libconfig_setting_index(const struct config_setting_t *setting) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_index_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting);
+		int (*preHookFunc) (const struct config_setting_t *setting);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_index_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_index_pre[hIndex].func;
@@ -37120,7 +37120,7 @@ int HP_libconfig_setting_index(const config_setting_t *setting) {
 		retVal___ = HPMHooks.source.libconfig.setting_index(setting);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_index_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_index_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_index_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting);
@@ -37128,11 +37128,11 @@ int HP_libconfig_setting_index(const config_setting_t *setting) {
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_length(const config_setting_t *setting) {
+int HP_libconfig_setting_length(const struct config_setting_t *setting) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_length_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting);
+		int (*preHookFunc) (const struct config_setting_t *setting);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_length_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_length_pre[hIndex].func;
@@ -37147,7 +37147,7 @@ int HP_libconfig_setting_length(const config_setting_t *setting) {
 		retVal___ = HPMHooks.source.libconfig.setting_length(setting);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_length_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_length_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_length_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting);
@@ -37155,11 +37155,11 @@ int HP_libconfig_setting_length(const config_setting_t *setting) {
 	}
 	return retVal___;
 }
-config_setting_t* HP_libconfig_setting_get_elem(const config_setting_t *setting, unsigned int idx) {
+struct config_setting_t* HP_libconfig_setting_get_elem(const struct config_setting_t *setting, unsigned int idx) {
 	int hIndex = 0;
-	config_setting_t* retVal___ = NULL;
+	struct config_setting_t* retVal___ = NULL;
 	if( HPMHooks.count.HP_libconfig_setting_get_elem_pre ) {
-		config_setting_t* (*preHookFunc) (const config_setting_t *setting, unsigned int *idx);
+		struct config_setting_t* (*preHookFunc) (const struct config_setting_t *setting, unsigned int *idx);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_elem_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_elem_pre[hIndex].func;
@@ -37174,7 +37174,7 @@ config_setting_t* HP_libconfig_setting_get_elem(const config_setting_t *setting,
 		retVal___ = HPMHooks.source.libconfig.setting_get_elem(setting, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_elem_post ) {
-		config_setting_t* (*postHookFunc) (config_setting_t* retVal___, const config_setting_t *setting, unsigned int *idx);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, const struct config_setting_t *setting, unsigned int *idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_elem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, &idx);
@@ -37182,11 +37182,11 @@ config_setting_t* HP_libconfig_setting_get_elem(const config_setting_t *setting,
 	}
 	return retVal___;
 }
-config_setting_t* HP_libconfig_setting_get_member(const config_setting_t *setting, const char *name) {
+struct config_setting_t* HP_libconfig_setting_get_member(const struct config_setting_t *setting, const char *name) {
 	int hIndex = 0;
-	config_setting_t* retVal___ = NULL;
+	struct config_setting_t* retVal___ = NULL;
 	if( HPMHooks.count.HP_libconfig_setting_get_member_pre ) {
-		config_setting_t* (*preHookFunc) (const config_setting_t *setting, const char *name);
+		struct config_setting_t* (*preHookFunc) (const struct config_setting_t *setting, const char *name);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_member_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_member_pre[hIndex].func;
@@ -37201,7 +37201,7 @@ config_setting_t* HP_libconfig_setting_get_member(const config_setting_t *settin
 		retVal___ = HPMHooks.source.libconfig.setting_get_member(setting, name);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_member_post ) {
-		config_setting_t* (*postHookFunc) (config_setting_t* retVal___, const config_setting_t *setting, const char *name);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, const struct config_setting_t *setting, const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_member_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_member_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, name);
@@ -37209,11 +37209,11 @@ config_setting_t* HP_libconfig_setting_get_member(const config_setting_t *settin
 	}
 	return retVal___;
 }
-config_setting_t* HP_libconfig_setting_add(config_setting_t *parent, const char *name, int type) {
+struct config_setting_t* HP_libconfig_setting_add(struct config_setting_t *parent, const char *name, int type) {
 	int hIndex = 0;
-	config_setting_t* retVal___ = NULL;
+	struct config_setting_t* retVal___ = NULL;
 	if( HPMHooks.count.HP_libconfig_setting_add_pre ) {
-		config_setting_t* (*preHookFunc) (config_setting_t *parent, const char *name, int *type);
+		struct config_setting_t* (*preHookFunc) (struct config_setting_t *parent, const char *name, int *type);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_add_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_add_pre[hIndex].func;
@@ -37228,7 +37228,7 @@ config_setting_t* HP_libconfig_setting_add(config_setting_t *parent, const char 
 		retVal___ = HPMHooks.source.libconfig.setting_add(parent, name, type);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_add_post ) {
-		config_setting_t* (*postHookFunc) (config_setting_t* retVal___, config_setting_t *parent, const char *name, int *type);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *parent, const char *name, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_add_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_add_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parent, name, &type);
@@ -37236,11 +37236,11 @@ config_setting_t* HP_libconfig_setting_add(config_setting_t *parent, const char 
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_remove(config_setting_t *parent, const char *name) {
+int HP_libconfig_setting_remove(struct config_setting_t *parent, const char *name) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_remove_pre ) {
-		int (*preHookFunc) (config_setting_t *parent, const char *name);
+		int (*preHookFunc) (struct config_setting_t *parent, const char *name);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_remove_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_remove_pre[hIndex].func;
@@ -37255,7 +37255,7 @@ int HP_libconfig_setting_remove(config_setting_t *parent, const char *name) {
 		retVal___ = HPMHooks.source.libconfig.setting_remove(parent, name);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_remove_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *parent, const char *name);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *parent, const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_remove_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_remove_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parent, name);
@@ -37263,11 +37263,11 @@ int HP_libconfig_setting_remove(config_setting_t *parent, const char *name) {
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_remove_elem(config_setting_t *parent, unsigned int idx) {
+int HP_libconfig_setting_remove_elem(struct config_setting_t *parent, unsigned int idx) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_remove_elem_pre ) {
-		int (*preHookFunc) (config_setting_t *parent, unsigned int *idx);
+		int (*preHookFunc) (struct config_setting_t *parent, unsigned int *idx);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_remove_elem_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_remove_elem_pre[hIndex].func;
@@ -37282,7 +37282,7 @@ int HP_libconfig_setting_remove_elem(config_setting_t *parent, unsigned int idx)
 		retVal___ = HPMHooks.source.libconfig.setting_remove_elem(parent, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_remove_elem_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *parent, unsigned int *idx);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *parent, unsigned int *idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_remove_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_remove_elem_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parent, &idx);
@@ -37290,10 +37290,10 @@ int HP_libconfig_setting_remove_elem(config_setting_t *parent, unsigned int idx)
 	}
 	return retVal___;
 }
-void HP_libconfig_setting_set_hook(config_setting_t *setting, void *hook) {
+void HP_libconfig_setting_set_hook(struct config_setting_t *setting, void *hook) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_libconfig_setting_set_hook_pre ) {
-		void (*preHookFunc) (config_setting_t *setting, void *hook);
+		void (*preHookFunc) (struct config_setting_t *setting, void *hook);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_hook_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_set_hook_pre[hIndex].func;
@@ -37308,7 +37308,7 @@ void HP_libconfig_setting_set_hook(config_setting_t *setting, void *hook) {
 		HPMHooks.source.libconfig.setting_set_hook(setting, hook);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_hook_post ) {
-		void (*postHookFunc) (config_setting_t *setting, void *hook);
+		void (*postHookFunc) (struct config_setting_t *setting, void *hook);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_hook_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_hook_post[hIndex].func;
 			postHookFunc(setting, hook);
@@ -37316,11 +37316,11 @@ void HP_libconfig_setting_set_hook(config_setting_t *setting, void *hook) {
 	}
 	return;
 }
-config_setting_t* HP_libconfig_lookup(const config_t *config, const char *filepath) {
+struct config_setting_t* HP_libconfig_lookup(const struct config_t *config, const char *filepath) {
 	int hIndex = 0;
-	config_setting_t* retVal___ = NULL;
+	struct config_setting_t* retVal___ = NULL;
 	if( HPMHooks.count.HP_libconfig_lookup_pre ) {
-		config_setting_t* (*preHookFunc) (const config_t *config, const char *filepath);
+		struct config_setting_t* (*preHookFunc) (const struct config_t *config, const char *filepath);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_lookup_pre[hIndex].func;
@@ -37335,7 +37335,7 @@ config_setting_t* HP_libconfig_lookup(const config_t *config, const char *filepa
 		retVal___ = HPMHooks.source.libconfig.lookup(config, filepath);
 	}
 	if( HPMHooks.count.HP_libconfig_lookup_post ) {
-		config_setting_t* (*postHookFunc) (config_setting_t* retVal___, const config_t *config, const char *filepath);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, const struct config_t *config, const char *filepath);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_lookup_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config, filepath);
@@ -37343,11 +37343,11 @@ config_setting_t* HP_libconfig_lookup(const config_t *config, const char *filepa
 	}
 	return retVal___;
 }
-int HP_libconfig_lookup_int(const config_t *config, const char *filepath, int *value) {
+int HP_libconfig_lookup_int(const struct config_t *config, const char *filepath, int *value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_lookup_int_pre ) {
-		int (*preHookFunc) (const config_t *config, const char *filepath, int *value);
+		int (*preHookFunc) (const struct config_t *config, const char *filepath, int *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_int_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_lookup_int_pre[hIndex].func;
@@ -37362,7 +37362,7 @@ int HP_libconfig_lookup_int(const config_t *config, const char *filepath, int *v
 		retVal___ = HPMHooks.source.libconfig.lookup_int(config, filepath, value);
 	}
 	if( HPMHooks.count.HP_libconfig_lookup_int_post ) {
-		int (*postHookFunc) (int retVal___, const config_t *config, const char *filepath, int *value);
+		int (*postHookFunc) (int retVal___, const struct config_t *config, const char *filepath, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_int_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_lookup_int_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config, filepath, value);
@@ -37370,11 +37370,11 @@ int HP_libconfig_lookup_int(const config_t *config, const char *filepath, int *v
 	}
 	return retVal___;
 }
-int HP_libconfig_lookup_int64(const config_t *config, const char *filepath, long long *value) {
+int HP_libconfig_lookup_int64(const struct config_t *config, const char *filepath, long long *value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_lookup_int64_pre ) {
-		int (*preHookFunc) (const config_t *config, const char *filepath, long long *value);
+		int (*preHookFunc) (const struct config_t *config, const char *filepath, long long *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_int64_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_lookup_int64_pre[hIndex].func;
@@ -37389,7 +37389,7 @@ int HP_libconfig_lookup_int64(const config_t *config, const char *filepath, long
 		retVal___ = HPMHooks.source.libconfig.lookup_int64(config, filepath, value);
 	}
 	if( HPMHooks.count.HP_libconfig_lookup_int64_post ) {
-		int (*postHookFunc) (int retVal___, const config_t *config, const char *filepath, long long *value);
+		int (*postHookFunc) (int retVal___, const struct config_t *config, const char *filepath, long long *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_int64_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_lookup_int64_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config, filepath, value);
@@ -37397,11 +37397,11 @@ int HP_libconfig_lookup_int64(const config_t *config, const char *filepath, long
 	}
 	return retVal___;
 }
-int HP_libconfig_lookup_float(const config_t *config, const char *filepath, double *value) {
+int HP_libconfig_lookup_float(const struct config_t *config, const char *filepath, double *value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_lookup_float_pre ) {
-		int (*preHookFunc) (const config_t *config, const char *filepath, double *value);
+		int (*preHookFunc) (const struct config_t *config, const char *filepath, double *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_float_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_lookup_float_pre[hIndex].func;
@@ -37416,7 +37416,7 @@ int HP_libconfig_lookup_float(const config_t *config, const char *filepath, doub
 		retVal___ = HPMHooks.source.libconfig.lookup_float(config, filepath, value);
 	}
 	if( HPMHooks.count.HP_libconfig_lookup_float_post ) {
-		int (*postHookFunc) (int retVal___, const config_t *config, const char *filepath, double *value);
+		int (*postHookFunc) (int retVal___, const struct config_t *config, const char *filepath, double *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_float_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_lookup_float_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config, filepath, value);
@@ -37424,11 +37424,11 @@ int HP_libconfig_lookup_float(const config_t *config, const char *filepath, doub
 	}
 	return retVal___;
 }
-int HP_libconfig_lookup_bool(const config_t *config, const char *filepath, int *value) {
+int HP_libconfig_lookup_bool(const struct config_t *config, const char *filepath, int *value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_lookup_bool_pre ) {
-		int (*preHookFunc) (const config_t *config, const char *filepath, int *value);
+		int (*preHookFunc) (const struct config_t *config, const char *filepath, int *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_bool_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_lookup_bool_pre[hIndex].func;
@@ -37443,7 +37443,7 @@ int HP_libconfig_lookup_bool(const config_t *config, const char *filepath, int *
 		retVal___ = HPMHooks.source.libconfig.lookup_bool(config, filepath, value);
 	}
 	if( HPMHooks.count.HP_libconfig_lookup_bool_post ) {
-		int (*postHookFunc) (int retVal___, const config_t *config, const char *filepath, int *value);
+		int (*postHookFunc) (int retVal___, const struct config_t *config, const char *filepath, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_bool_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_lookup_bool_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config, filepath, value);
@@ -37451,11 +37451,11 @@ int HP_libconfig_lookup_bool(const config_t *config, const char *filepath, int *
 	}
 	return retVal___;
 }
-int HP_libconfig_lookup_string(const config_t *config, const char *filepath, const char **value) {
+int HP_libconfig_lookup_string(const struct config_t *config, const char *filepath, const char **value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_lookup_string_pre ) {
-		int (*preHookFunc) (const config_t *config, const char *filepath, const char **value);
+		int (*preHookFunc) (const struct config_t *config, const char *filepath, const char **value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_string_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_lookup_string_pre[hIndex].func;
@@ -37470,7 +37470,7 @@ int HP_libconfig_lookup_string(const config_t *config, const char *filepath, con
 		retVal___ = HPMHooks.source.libconfig.lookup_string(config, filepath, value);
 	}
 	if( HPMHooks.count.HP_libconfig_lookup_string_post ) {
-		int (*postHookFunc) (int retVal___, const config_t *config, const char *filepath, const char **value);
+		int (*postHookFunc) (int retVal___, const struct config_t *config, const char *filepath, const char **value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_string_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_lookup_string_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config, filepath, value);
@@ -37478,11 +37478,11 @@ int HP_libconfig_lookup_string(const config_t *config, const char *filepath, con
 	}
 	return retVal___;
 }
-int HP_libconfig_load_file(config_t *config, const char *config_filename) {
+int HP_libconfig_load_file(struct config_t *config, const char *config_filename) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_load_file_pre ) {
-		int (*preHookFunc) (config_t *config, const char *config_filename);
+		int (*preHookFunc) (struct config_t *config, const char *config_filename);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_load_file_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_load_file_pre[hIndex].func;
@@ -37497,7 +37497,7 @@ int HP_libconfig_load_file(config_t *config, const char *config_filename) {
 		retVal___ = HPMHooks.source.libconfig.load_file(config, config_filename);
 	}
 	if( HPMHooks.count.HP_libconfig_load_file_post ) {
-		int (*postHookFunc) (int retVal___, config_t *config, const char *config_filename);
+		int (*postHookFunc) (int retVal___, struct config_t *config, const char *config_filename);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_load_file_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_load_file_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config, config_filename);
@@ -37505,10 +37505,10 @@ int HP_libconfig_load_file(config_t *config, const char *config_filename) {
 	}
 	return retVal___;
 }
-void HP_libconfig_setting_copy_simple(config_setting_t *parent, const config_setting_t *src) {
+void HP_libconfig_setting_copy_simple(struct config_setting_t *parent, const struct config_setting_t *src) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_libconfig_setting_copy_simple_pre ) {
-		void (*preHookFunc) (config_setting_t *parent, const config_setting_t *src);
+		void (*preHookFunc) (struct config_setting_t *parent, const struct config_setting_t *src);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_copy_simple_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_copy_simple_pre[hIndex].func;
@@ -37523,7 +37523,7 @@ void HP_libconfig_setting_copy_simple(config_setting_t *parent, const config_set
 		HPMHooks.source.libconfig.setting_copy_simple(parent, src);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_copy_simple_post ) {
-		void (*postHookFunc) (config_setting_t *parent, const config_setting_t *src);
+		void (*postHookFunc) (struct config_setting_t *parent, const struct config_setting_t *src);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_copy_simple_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_copy_simple_post[hIndex].func;
 			postHookFunc(parent, src);
@@ -37531,10 +37531,10 @@ void HP_libconfig_setting_copy_simple(config_setting_t *parent, const config_set
 	}
 	return;
 }
-void HP_libconfig_setting_copy_elem(config_setting_t *parent, const config_setting_t *src) {
+void HP_libconfig_setting_copy_elem(struct config_setting_t *parent, const struct config_setting_t *src) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_libconfig_setting_copy_elem_pre ) {
-		void (*preHookFunc) (config_setting_t *parent, const config_setting_t *src);
+		void (*preHookFunc) (struct config_setting_t *parent, const struct config_setting_t *src);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_copy_elem_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_copy_elem_pre[hIndex].func;
@@ -37549,7 +37549,7 @@ void HP_libconfig_setting_copy_elem(config_setting_t *parent, const config_setti
 		HPMHooks.source.libconfig.setting_copy_elem(parent, src);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_copy_elem_post ) {
-		void (*postHookFunc) (config_setting_t *parent, const config_setting_t *src);
+		void (*postHookFunc) (struct config_setting_t *parent, const struct config_setting_t *src);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_copy_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_copy_elem_post[hIndex].func;
 			postHookFunc(parent, src);
@@ -37557,10 +37557,10 @@ void HP_libconfig_setting_copy_elem(config_setting_t *parent, const config_setti
 	}
 	return;
 }
-void HP_libconfig_setting_copy_aggregate(config_setting_t *parent, const config_setting_t *src) {
+void HP_libconfig_setting_copy_aggregate(struct config_setting_t *parent, const struct config_setting_t *src) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_libconfig_setting_copy_aggregate_pre ) {
-		void (*preHookFunc) (config_setting_t *parent, const config_setting_t *src);
+		void (*preHookFunc) (struct config_setting_t *parent, const struct config_setting_t *src);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_copy_aggregate_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_copy_aggregate_pre[hIndex].func;
@@ -37575,7 +37575,7 @@ void HP_libconfig_setting_copy_aggregate(config_setting_t *parent, const config_
 		HPMHooks.source.libconfig.setting_copy_aggregate(parent, src);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_copy_aggregate_post ) {
-		void (*postHookFunc) (config_setting_t *parent, const config_setting_t *src);
+		void (*postHookFunc) (struct config_setting_t *parent, const struct config_setting_t *src);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_copy_aggregate_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_copy_aggregate_post[hIndex].func;
 			postHookFunc(parent, src);
@@ -37583,11 +37583,11 @@ void HP_libconfig_setting_copy_aggregate(config_setting_t *parent, const config_
 	}
 	return;
 }
-int HP_libconfig_setting_copy(config_setting_t *parent, const config_setting_t *src) {
+int HP_libconfig_setting_copy(struct config_setting_t *parent, const struct config_setting_t *src) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_copy_pre ) {
-		int (*preHookFunc) (config_setting_t *parent, const config_setting_t *src);
+		int (*preHookFunc) (struct config_setting_t *parent, const struct config_setting_t *src);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_copy_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_copy_pre[hIndex].func;
@@ -37602,7 +37602,7 @@ int HP_libconfig_setting_copy(config_setting_t *parent, const config_setting_t *
 		retVal___ = HPMHooks.source.libconfig.setting_copy(parent, src);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_copy_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *parent, const config_setting_t *src);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *parent, const struct config_setting_t *src);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_copy_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_copy_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, parent, src);
@@ -37610,11 +37610,11 @@ int HP_libconfig_setting_copy(config_setting_t *parent, const config_setting_t *
 	}
 	return retVal___;
 }
-bool HP_libconfig_setting_get_bool_real(const config_setting_t *setting) {
+bool HP_libconfig_setting_get_bool_real(const struct config_setting_t *setting) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_libconfig_setting_get_bool_real_pre ) {
-		bool (*preHookFunc) (const config_setting_t *setting);
+		bool (*preHookFunc) (const struct config_setting_t *setting);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_bool_real_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_bool_real_pre[hIndex].func;
@@ -37629,7 +37629,7 @@ bool HP_libconfig_setting_get_bool_real(const config_setting_t *setting) {
 		retVal___ = HPMHooks.source.libconfig.setting_get_bool_real(setting);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_bool_real_post ) {
-		bool (*postHookFunc) (bool retVal___, const config_setting_t *setting);
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *setting);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_bool_real_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_bool_real_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting);
@@ -37637,11 +37637,11 @@ bool HP_libconfig_setting_get_bool_real(const config_setting_t *setting) {
 	}
 	return retVal___;
 }
-uint32 HP_libconfig_setting_get_uint32(const config_setting_t *setting) {
+uint32 HP_libconfig_setting_get_uint32(const struct config_setting_t *setting) {
 	int hIndex = 0;
 	uint32 retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_get_uint32_pre ) {
-		uint32 (*preHookFunc) (const config_setting_t *setting);
+		uint32 (*preHookFunc) (const struct config_setting_t *setting);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_uint32_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_uint32_pre[hIndex].func;
@@ -37656,7 +37656,7 @@ uint32 HP_libconfig_setting_get_uint32(const config_setting_t *setting) {
 		retVal___ = HPMHooks.source.libconfig.setting_get_uint32(setting);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_uint32_post ) {
-		uint32 (*postHookFunc) (uint32 retVal___, const config_setting_t *setting);
+		uint32 (*postHookFunc) (uint32 retVal___, const struct config_setting_t *setting);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_uint32_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_uint32_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting);
@@ -37664,11 +37664,11 @@ uint32 HP_libconfig_setting_get_uint32(const config_setting_t *setting) {
 	}
 	return retVal___;
 }
-uint16 HP_libconfig_setting_get_uint16(const config_setting_t *setting) {
+uint16 HP_libconfig_setting_get_uint16(const struct config_setting_t *setting) {
 	int hIndex = 0;
 	uint16 retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_get_uint16_pre ) {
-		uint16 (*preHookFunc) (const config_setting_t *setting);
+		uint16 (*preHookFunc) (const struct config_setting_t *setting);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_uint16_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_uint16_pre[hIndex].func;
@@ -37683,7 +37683,7 @@ uint16 HP_libconfig_setting_get_uint16(const config_setting_t *setting) {
 		retVal___ = HPMHooks.source.libconfig.setting_get_uint16(setting);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_uint16_post ) {
-		uint16 (*postHookFunc) (uint16 retVal___, const config_setting_t *setting);
+		uint16 (*postHookFunc) (uint16 retVal___, const struct config_setting_t *setting);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_uint16_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_uint16_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting);
@@ -37691,11 +37691,11 @@ uint16 HP_libconfig_setting_get_uint16(const config_setting_t *setting) {
 	}
 	return retVal___;
 }
-int16 HP_libconfig_setting_get_int16(const config_setting_t *setting) {
+int16 HP_libconfig_setting_get_int16(const struct config_setting_t *setting) {
 	int hIndex = 0;
 	int16 retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_get_int16_pre ) {
-		int16 (*preHookFunc) (const config_setting_t *setting);
+		int16 (*preHookFunc) (const struct config_setting_t *setting);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int16_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_get_int16_pre[hIndex].func;
@@ -37710,7 +37710,7 @@ int16 HP_libconfig_setting_get_int16(const config_setting_t *setting) {
 		retVal___ = HPMHooks.source.libconfig.setting_get_int16(setting);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_int16_post ) {
-		int16 (*postHookFunc) (int16 retVal___, const config_setting_t *setting);
+		int16 (*postHookFunc) (int16 retVal___, const struct config_setting_t *setting);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int16_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_int16_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting);
@@ -37718,11 +37718,11 @@ int16 HP_libconfig_setting_get_int16(const config_setting_t *setting) {
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_lookup_bool_real(const config_setting_t *setting, const char *name, bool *value) {
+int HP_libconfig_setting_lookup_bool_real(const struct config_setting_t *setting, const char *name, bool *value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_lookup_bool_real_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting, const char *name, bool *value);
+		int (*preHookFunc) (const struct config_setting_t *setting, const char *name, bool *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_bool_real_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_bool_real_pre[hIndex].func;
@@ -37737,7 +37737,7 @@ int HP_libconfig_setting_lookup_bool_real(const config_setting_t *setting, const
 		retVal___ = HPMHooks.source.libconfig.setting_lookup_bool_real(setting, name, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_lookup_bool_real_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, bool *value);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, const char *name, bool *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_bool_real_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_bool_real_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, name, value);
@@ -37745,11 +37745,11 @@ int HP_libconfig_setting_lookup_bool_real(const config_setting_t *setting, const
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_lookup_uint32(const config_setting_t *setting, const char *name, uint32 *value) {
+int HP_libconfig_setting_lookup_uint32(const struct config_setting_t *setting, const char *name, uint32 *value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_lookup_uint32_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting, const char *name, uint32 *value);
+		int (*preHookFunc) (const struct config_setting_t *setting, const char *name, uint32 *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_uint32_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_uint32_pre[hIndex].func;
@@ -37764,7 +37764,7 @@ int HP_libconfig_setting_lookup_uint32(const config_setting_t *setting, const ch
 		retVal___ = HPMHooks.source.libconfig.setting_lookup_uint32(setting, name, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_lookup_uint32_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, uint32 *value);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, const char *name, uint32 *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_uint32_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_uint32_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, name, value);
@@ -37772,11 +37772,11 @@ int HP_libconfig_setting_lookup_uint32(const config_setting_t *setting, const ch
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_lookup_uint16(const config_setting_t *setting, const char *name, uint16 *value) {
+int HP_libconfig_setting_lookup_uint16(const struct config_setting_t *setting, const char *name, uint16 *value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_lookup_uint16_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting, const char *name, uint16 *value);
+		int (*preHookFunc) (const struct config_setting_t *setting, const char *name, uint16 *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_uint16_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_uint16_pre[hIndex].func;
@@ -37791,7 +37791,7 @@ int HP_libconfig_setting_lookup_uint16(const config_setting_t *setting, const ch
 		retVal___ = HPMHooks.source.libconfig.setting_lookup_uint16(setting, name, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_lookup_uint16_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, uint16 *value);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, const char *name, uint16 *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_uint16_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_uint16_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, name, value);
@@ -37799,11 +37799,11 @@ int HP_libconfig_setting_lookup_uint16(const config_setting_t *setting, const ch
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_lookup_int16(const config_setting_t *setting, const char *name, int16 *value) {
+int HP_libconfig_setting_lookup_int16(const struct config_setting_t *setting, const char *name, int16 *value) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_lookup_int16_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting, const char *name, int16 *value);
+		int (*preHookFunc) (const struct config_setting_t *setting, const char *name, int16 *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_int16_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_int16_pre[hIndex].func;
@@ -37818,7 +37818,7 @@ int HP_libconfig_setting_lookup_int16(const config_setting_t *setting, const cha
 		retVal___ = HPMHooks.source.libconfig.setting_lookup_int16(setting, name, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_lookup_int16_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, int16 *value);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, const char *name, int16 *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_int16_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_int16_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, name, value);
@@ -37826,11 +37826,11 @@ int HP_libconfig_setting_lookup_int16(const config_setting_t *setting, const cha
 	}
 	return retVal___;
 }
-int HP_libconfig_setting_lookup_mutable_string(const config_setting_t *setting, const char *name, char *out, size_t out_size) {
+int HP_libconfig_setting_lookup_mutable_string(const struct config_setting_t *setting, const char *name, char *out, size_t out_size) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_setting_lookup_mutable_string_pre ) {
-		int (*preHookFunc) (const config_setting_t *setting, const char *name, char *out, size_t *out_size);
+		int (*preHookFunc) (const struct config_setting_t *setting, const char *name, char *out, size_t *out_size);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_mutable_string_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_mutable_string_pre[hIndex].func;
@@ -37845,7 +37845,7 @@ int HP_libconfig_setting_lookup_mutable_string(const config_setting_t *setting, 
 		retVal___ = HPMHooks.source.libconfig.setting_lookup_mutable_string(setting, name, out, out_size);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_lookup_mutable_string_post ) {
-		int (*postHookFunc) (int retVal___, const config_setting_t *setting, const char *name, char *out, size_t *out_size);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, const char *name, char *out, size_t *out_size);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_mutable_string_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_mutable_string_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting, name, out, &out_size);
@@ -37853,11 +37853,11 @@ int HP_libconfig_setting_lookup_mutable_string(const config_setting_t *setting, 
 	}
 	return retVal___;
 }
-int HP_libconfig_lookup_mutable_string(const config_t *config, const char *name, char *out, size_t out_size) {
+int HP_libconfig_lookup_mutable_string(const struct config_t *config, const char *name, char *out, size_t out_size) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_libconfig_lookup_mutable_string_pre ) {
-		int (*preHookFunc) (const config_t *config, const char *name, char *out, size_t *out_size);
+		int (*preHookFunc) (const struct config_t *config, const char *name, char *out, size_t *out_size);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_mutable_string_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_libconfig_lookup_mutable_string_pre[hIndex].func;
@@ -37872,7 +37872,7 @@ int HP_libconfig_lookup_mutable_string(const config_t *config, const char *name,
 		retVal___ = HPMHooks.source.libconfig.lookup_mutable_string(config, name, out, out_size);
 	}
 	if( HPMHooks.count.HP_libconfig_lookup_mutable_string_post ) {
-		int (*postHookFunc) (int retVal___, const config_t *config, const char *name, char *out, size_t *out_size);
+		int (*postHookFunc) (int retVal___, const struct config_t *config, const char *name, char *out, size_t *out_size);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_mutable_string_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_lookup_mutable_string_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config, name, out, &out_size);
@@ -46447,11 +46447,11 @@ void HP_mob_readdb(void) {
 	}
 	return;
 }
-bool HP_mob_lookup_const(const config_setting_t *it, const char *name, int *value) {
+bool HP_mob_lookup_const(const struct config_setting_t *it, const char *name, int *value) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_mob_lookup_const_pre ) {
-		bool (*preHookFunc) (const config_setting_t *it, const char *name, int *value);
+		bool (*preHookFunc) (const struct config_setting_t *it, const char *name, int *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_lookup_const_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mob_lookup_const_pre[hIndex].func;
@@ -46466,7 +46466,7 @@ bool HP_mob_lookup_const(const config_setting_t *it, const char *name, int *valu
 		retVal___ = HPMHooks.source.mob.lookup_const(it, name, value);
 	}
 	if( HPMHooks.count.HP_mob_lookup_const_post ) {
-		bool (*postHookFunc) (bool retVal___, const config_setting_t *it, const char *name, int *value);
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *it, const char *name, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_lookup_const_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mob_lookup_const_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, it, name, value);
@@ -46474,11 +46474,11 @@ bool HP_mob_lookup_const(const config_setting_t *it, const char *name, int *valu
 	}
 	return retVal___;
 }
-bool HP_mob_get_const(const config_setting_t *it, int *value) {
+bool HP_mob_get_const(const struct config_setting_t *it, int *value) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_mob_get_const_pre ) {
-		bool (*preHookFunc) (const config_setting_t *it, int *value);
+		bool (*preHookFunc) (const struct config_setting_t *it, int *value);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_get_const_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mob_get_const_pre[hIndex].func;
@@ -46493,7 +46493,7 @@ bool HP_mob_get_const(const config_setting_t *it, int *value) {
 		retVal___ = HPMHooks.source.mob.get_const(it, value);
 	}
 	if( HPMHooks.count.HP_mob_get_const_post ) {
-		bool (*postHookFunc) (bool retVal___, const config_setting_t *it, int *value);
+		bool (*postHookFunc) (bool retVal___, const struct config_setting_t *it, int *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_get_const_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mob_get_const_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, it, value);
@@ -46555,10 +46555,10 @@ int HP_mob_read_libconfig(const char *filename, bool ignore_missing) {
 	}
 	return retVal___;
 }
-void HP_mob_read_db_additional_fields(struct mob_db *entry, config_setting_t *it, int n, const char *source) {
+void HP_mob_read_db_additional_fields(struct mob_db *entry, struct config_setting_t *it, int n, const char *source) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_mob_read_db_additional_fields_pre ) {
-		void (*preHookFunc) (struct mob_db *entry, config_setting_t *it, int *n, const char *source);
+		void (*preHookFunc) (struct mob_db *entry, struct config_setting_t *it, int *n, const char *source);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_additional_fields_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mob_read_db_additional_fields_pre[hIndex].func;
@@ -46573,7 +46573,7 @@ void HP_mob_read_db_additional_fields(struct mob_db *entry, config_setting_t *it
 		HPMHooks.source.mob.read_db_additional_fields(entry, it, n, source);
 	}
 	if( HPMHooks.count.HP_mob_read_db_additional_fields_post ) {
-		void (*postHookFunc) (struct mob_db *entry, config_setting_t *it, int *n, const char *source);
+		void (*postHookFunc) (struct mob_db *entry, struct config_setting_t *it, int *n, const char *source);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_additional_fields_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mob_read_db_additional_fields_post[hIndex].func;
 			postHookFunc(entry, it, &n, source);
@@ -46581,11 +46581,11 @@ void HP_mob_read_db_additional_fields(struct mob_db *entry, config_setting_t *it
 	}
 	return;
 }
-int HP_mob_read_db_sub(config_setting_t *mobt, int id, const char *source) {
+int HP_mob_read_db_sub(struct config_setting_t *mobt, int id, const char *source) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_read_db_sub_pre ) {
-		int (*preHookFunc) (config_setting_t *mobt, int *id, const char *source);
+		int (*preHookFunc) (struct config_setting_t *mobt, int *id, const char *source);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_sub_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mob_read_db_sub_pre[hIndex].func;
@@ -46600,7 +46600,7 @@ int HP_mob_read_db_sub(config_setting_t *mobt, int id, const char *source) {
 		retVal___ = HPMHooks.source.mob.read_db_sub(mobt, id, source);
 	}
 	if( HPMHooks.count.HP_mob_read_db_sub_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *mobt, int *id, const char *source);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *mobt, int *id, const char *source);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_sub_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mob_read_db_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, mobt, &id, source);
@@ -46608,10 +46608,10 @@ int HP_mob_read_db_sub(config_setting_t *mobt, int id, const char *source) {
 	}
 	return retVal___;
 }
-void HP_mob_read_db_drops_sub(struct mob_db *entry, config_setting_t *t) {
+void HP_mob_read_db_drops_sub(struct mob_db *entry, struct config_setting_t *t) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_mob_read_db_drops_sub_pre ) {
-		void (*preHookFunc) (struct mob_db *entry, config_setting_t *t);
+		void (*preHookFunc) (struct mob_db *entry, struct config_setting_t *t);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_drops_sub_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mob_read_db_drops_sub_pre[hIndex].func;
@@ -46626,7 +46626,7 @@ void HP_mob_read_db_drops_sub(struct mob_db *entry, config_setting_t *t) {
 		HPMHooks.source.mob.read_db_drops_sub(entry, t);
 	}
 	if( HPMHooks.count.HP_mob_read_db_drops_sub_post ) {
-		void (*postHookFunc) (struct mob_db *entry, config_setting_t *t);
+		void (*postHookFunc) (struct mob_db *entry, struct config_setting_t *t);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_drops_sub_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mob_read_db_drops_sub_post[hIndex].func;
 			postHookFunc(entry, t);
@@ -46634,10 +46634,10 @@ void HP_mob_read_db_drops_sub(struct mob_db *entry, config_setting_t *t) {
 	}
 	return;
 }
-void HP_mob_read_db_mvpdrops_sub(struct mob_db *entry, config_setting_t *t) {
+void HP_mob_read_db_mvpdrops_sub(struct mob_db *entry, struct config_setting_t *t) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_mob_read_db_mvpdrops_sub_pre ) {
-		void (*preHookFunc) (struct mob_db *entry, config_setting_t *t);
+		void (*preHookFunc) (struct mob_db *entry, struct config_setting_t *t);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_mvpdrops_sub_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mob_read_db_mvpdrops_sub_pre[hIndex].func;
@@ -46652,7 +46652,7 @@ void HP_mob_read_db_mvpdrops_sub(struct mob_db *entry, config_setting_t *t) {
 		HPMHooks.source.mob.read_db_mvpdrops_sub(entry, t);
 	}
 	if( HPMHooks.count.HP_mob_read_db_mvpdrops_sub_post ) {
-		void (*postHookFunc) (struct mob_db *entry, config_setting_t *t);
+		void (*postHookFunc) (struct mob_db *entry, struct config_setting_t *t);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_mvpdrops_sub_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mob_read_db_mvpdrops_sub_post[hIndex].func;
 			postHookFunc(entry, t);
@@ -46660,11 +46660,11 @@ void HP_mob_read_db_mvpdrops_sub(struct mob_db *entry, config_setting_t *t) {
 	}
 	return;
 }
-int HP_mob_read_db_mode_sub(struct mob_db *entry, config_setting_t *t) {
+int HP_mob_read_db_mode_sub(struct mob_db *entry, struct config_setting_t *t) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_read_db_mode_sub_pre ) {
-		int (*preHookFunc) (struct mob_db *entry, config_setting_t *t);
+		int (*preHookFunc) (struct mob_db *entry, struct config_setting_t *t);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_mode_sub_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mob_read_db_mode_sub_pre[hIndex].func;
@@ -46679,7 +46679,7 @@ int HP_mob_read_db_mode_sub(struct mob_db *entry, config_setting_t *t) {
 		retVal___ = HPMHooks.source.mob.read_db_mode_sub(entry, t);
 	}
 	if( HPMHooks.count.HP_mob_read_db_mode_sub_post ) {
-		int (*postHookFunc) (int retVal___, struct mob_db *entry, config_setting_t *t);
+		int (*postHookFunc) (int retVal___, struct mob_db *entry, struct config_setting_t *t);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_mode_sub_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mob_read_db_mode_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, entry, t);
@@ -46687,10 +46687,10 @@ int HP_mob_read_db_mode_sub(struct mob_db *entry, config_setting_t *t) {
 	}
 	return retVal___;
 }
-void HP_mob_read_db_stats_sub(struct mob_db *entry, config_setting_t *t) {
+void HP_mob_read_db_stats_sub(struct mob_db *entry, struct config_setting_t *t) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_mob_read_db_stats_sub_pre ) {
-		void (*preHookFunc) (struct mob_db *entry, config_setting_t *t);
+		void (*preHookFunc) (struct mob_db *entry, struct config_setting_t *t);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_stats_sub_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mob_read_db_stats_sub_pre[hIndex].func;
@@ -46705,7 +46705,7 @@ void HP_mob_read_db_stats_sub(struct mob_db *entry, config_setting_t *t) {
 		HPMHooks.source.mob.read_db_stats_sub(entry, t);
 	}
 	if( HPMHooks.count.HP_mob_read_db_stats_sub_post ) {
-		void (*postHookFunc) (struct mob_db *entry, config_setting_t *t);
+		void (*postHookFunc) (struct mob_db *entry, struct config_setting_t *t);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_stats_sub_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mob_read_db_stats_sub_post[hIndex].func;
 			postHookFunc(entry, t);
@@ -59606,11 +59606,11 @@ int HP_quest_read_db(void) {
 	}
 	return retVal___;
 }
-struct quest_db* HP_quest_read_db_sub(config_setting_t *cs, int n, const char *source) {
+struct quest_db* HP_quest_read_db_sub(struct config_setting_t *cs, int n, const char *source) {
 	int hIndex = 0;
 	struct quest_db* retVal___ = NULL;
 	if( HPMHooks.count.HP_quest_read_db_sub_pre ) {
-		struct quest_db* (*preHookFunc) (config_setting_t *cs, int *n, const char *source);
+		struct quest_db* (*preHookFunc) (struct config_setting_t *cs, int *n, const char *source);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_read_db_sub_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_quest_read_db_sub_pre[hIndex].func;
@@ -59625,7 +59625,7 @@ struct quest_db* HP_quest_read_db_sub(config_setting_t *cs, int n, const char *s
 		retVal___ = HPMHooks.source.quest.read_db_sub(cs, n, source);
 	}
 	if( HPMHooks.count.HP_quest_read_db_sub_post ) {
-		struct quest_db* (*postHookFunc) (struct quest_db* retVal___, config_setting_t *cs, int *n, const char *source);
+		struct quest_db* (*postHookFunc) (struct quest_db* retVal___, struct config_setting_t *cs, int *n, const char *source);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_quest_read_db_sub_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_quest_read_db_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, cs, &n, source);
@@ -71261,11 +71261,11 @@ bool HP_sockt_trusted_ip_check(uint32 ip) {
 	}
 	return retVal___;
 }
-int HP_sockt_net_config_read_sub(config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname) {
+int HP_sockt_net_config_read_sub(struct config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_sockt_net_config_read_sub_pre ) {
-		int (*preHookFunc) (config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
+		int (*preHookFunc) (struct config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_net_config_read_sub_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_sockt_net_config_read_sub_pre[hIndex].func;
@@ -71280,7 +71280,7 @@ int HP_sockt_net_config_read_sub(config_setting_t *t, struct s_subnet_vector *li
 		retVal___ = HPMHooks.source.sockt.net_config_read_sub(t, list, filename, groupname);
 	}
 	if( HPMHooks.count.HP_sockt_net_config_read_sub_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_net_config_read_sub_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_net_config_read_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, t, list, filename, groupname);
@@ -75100,11 +75100,11 @@ int HP_status_readdb_refine_libconfig(const char *filename) {
 	}
 	return retVal___;
 }
-int HP_status_readdb_refine_libconfig_sub(config_setting_t *r, const char *name, const char *source) {
+int HP_status_readdb_refine_libconfig_sub(struct config_setting_t *r, const char *name, const char *source) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_readdb_refine_libconfig_sub_pre ) {
-		int (*preHookFunc) (config_setting_t *r, const char *name, const char *source);
+		int (*preHookFunc) (struct config_setting_t *r, const char *name, const char *source);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_libconfig_sub_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_readdb_refine_libconfig_sub_pre[hIndex].func;
@@ -75119,7 +75119,7 @@ int HP_status_readdb_refine_libconfig_sub(config_setting_t *r, const char *name,
 		retVal___ = HPMHooks.source.status.readdb_refine_libconfig_sub(r, name, source);
 	}
 	if( HPMHooks.count.HP_status_readdb_refine_libconfig_sub_post ) {
-		int (*postHookFunc) (int retVal___, config_setting_t *r, const char *name, const char *source);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *r, const char *name, const char *source);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_readdb_refine_libconfig_sub_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_readdb_refine_libconfig_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, r, name, source);
@@ -75180,10 +75180,10 @@ void HP_status_read_job_db(void) {
 	}
 	return;
 }
-void HP_status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb) {
+void HP_status_read_job_db_sub(int idx, const char *name, struct config_setting_t *jdb) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_status_read_job_db_sub_pre ) {
-		void (*preHookFunc) (int *idx, const char *name, config_setting_t *jdb);
+		void (*preHookFunc) (int *idx, const char *name, struct config_setting_t *jdb);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_read_job_db_sub_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_read_job_db_sub_pre[hIndex].func;
@@ -75198,7 +75198,7 @@ void HP_status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 		HPMHooks.source.status.read_job_db_sub(idx, name, jdb);
 	}
 	if( HPMHooks.count.HP_status_read_job_db_sub_post ) {
-		void (*postHookFunc) (int *idx, const char *name, config_setting_t *jdb);
+		void (*postHookFunc) (int *idx, const char *name, struct config_setting_t *jdb);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_read_job_db_sub_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_read_job_db_sub_post[hIndex].func;
 			postHookFunc(&idx, name, jdb);
