@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2013-2015  Hercules Dev Team
-   Copyright (C) 2005-2010  Mark A Lindner
+   Copyright (C) 2013-2016  Hercules Dev Team
+   Copyright (C) 2005-2014  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -40,7 +40,6 @@ static const char *err_include_too_deep = "include file nesting too deep";
 static const char *__scanctx_add_filename(struct scan_context *ctx,
                                           const char *filename)
 {
-#ifndef __clang_analyzer__ // FIXME: Clang's static analyzer doesn't like this
   unsigned int count = ctx->num_filenames;
   const char **f;
 
@@ -62,7 +61,6 @@ static const char *__scanctx_add_filename(struct scan_context *ctx,
 
   ctx->filenames[ctx->num_filenames] = filename;
   ++ctx->num_filenames;
-#endif // __clang_analyzer__
   return(filename);
 }
 
@@ -71,8 +69,10 @@ static const char *__scanctx_add_filename(struct scan_context *ctx,
 void scanctx_init(struct scan_context *ctx, const char *top_filename)
 {
   memset(ctx, 0, sizeof(struct scan_context));
+#ifndef __clang_analyzer__ // FIXME: Clang's static analyzer doesn't like this
   if(top_filename)
     ctx->top_filename = __scanctx_add_filename(ctx, strdup(top_filename));
+#endif // __clang_analyzer__
 }
 
 /* ------------------------------------------------------------------------- */
@@ -124,7 +124,9 @@ FILE *scanctx_push_include(struct scan_context *ctx, void *buffer,
   if(fp)
   {
     ctx->streams[ctx->depth] = fp;
+#ifndef __clang_analyzer__ // FIXME: Clang's static analyzer doesn't like this
     ctx->files[ctx->depth] = __scanctx_add_filename(ctx, file);
+#endif // __clang_analyzer__
     ctx->buffers[ctx->depth] = buffer;
     ++(ctx->depth);
   }
@@ -170,4 +172,3 @@ const char *scanctx_current_filename(struct scan_context *ctx)
 }
 
 /* ------------------------------------------------------------------------- */
-/* eof */

@@ -32,8 +32,8 @@ struct libconfig_interface {
 	int (*read) (config_t *config, FILE *stream);
 	void (*write) (const config_t *config, FILE *stream);
 	/* */
-	void (*set_auto_convert) (config_t *config, int flag); // TODO: Replace with config_set_options
-	int (*get_auto_convert) (const config_t *config); // TODO: Replace with config_get_options
+	void (*set_options) (config_t *config, int options);
+	int (*get_options) (const config_t *config);
 	/* */
 	int (*read_string) (config_t *config, const char *str);
 	int (*read_file_src) (config_t *config, const char *filename);
@@ -53,6 +53,7 @@ struct libconfig_interface {
 
 	const char * (*setting_get_string) (const config_setting_t *setting);
 
+	config_setting_t * (*setting_lookup) (config_setting_t *setting, const char *name);
 	int (*setting_lookup_int) (const config_setting_t *setting, const char *name, int *value);
 	int (*setting_lookup_int64) (const config_setting_t *setting, const char *name, long long *value);
 	int (*setting_lookup_float) (const config_setting_t *setting, const char *name, double *value);
@@ -91,7 +92,6 @@ struct libconfig_interface {
 	void (*setting_set_hook) (config_setting_t *setting, void *hook);
 
 	config_setting_t * (*lookup) (const config_t *config, const char *filepath);
-	config_setting_t * (*lookup_from) (config_setting_t *setting, const char *filepath);
 	int (*lookup_int) (const config_t *config, const char *filepath, int *value);
 	int (*lookup_int64) (const config_t *config, const char *filepath, long long *value);
 	int (*lookup_float) (const config_t *config, const char *filepath, double *value);

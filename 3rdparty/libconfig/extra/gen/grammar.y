@@ -1,8 +1,8 @@
 /* -*- mode: C -*- */
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2013-2015  Hercules Dev Team
-   Copyright (C) 2005-2010  Mark A Lindner
+   Copyright (C) 2013-2016  Hercules Dev Team
+   Copyright (C) 2005-2014  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -23,7 +23,7 @@
 */
 
 %defines
-%output="y.tab.c"
+%output "y.tab.c"
 %pure-parser
 %lex-param{void *scanner}
 %parse-param{void *scanner}

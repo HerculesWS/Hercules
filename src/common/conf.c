@@ -134,8 +134,8 @@ void libconfig_defaults(void) {
 	libconfig->read = config_read;
 	libconfig->write = config_write;
 	/* */
-	libconfig->set_auto_convert = config_set_auto_convert;
-	libconfig->get_auto_convert = config_get_auto_convert;
+	libconfig->set_options = config_set_options;
+	libconfig->get_options = config_get_options;
 	/* */
 	libconfig->read_string = config_read_string;
 	libconfig->read_file_src = config_read_file;
@@ -153,6 +153,7 @@ void libconfig_defaults(void) {
 	libconfig->setting_get_bool = config_setting_get_bool;
 	libconfig->setting_get_string = config_setting_get_string;
 	/* */
+	libconfig->setting_lookup = config_setting_lookup;
 	libconfig->setting_lookup_int = config_setting_lookup_int;
 	libconfig->setting_lookup_int64 = config_setting_lookup_int64;
 	libconfig->setting_lookup_float = config_setting_lookup_float;
@@ -193,7 +194,6 @@ void libconfig_defaults(void) {
 	libconfig->setting_set_hook = config_setting_set_hook;
 	/* */
 	libconfig->lookup = config_lookup;
-	libconfig->lookup_from = config_lookup_from;
 	/* */
 	libconfig->lookup_int = config_lookup_int;
 	libconfig->lookup_int64 = config_lookup_int64;
