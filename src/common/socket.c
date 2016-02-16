@@ -1686,7 +1686,7 @@ bool socket_trusted_ip_check(uint32 ip)
  * @param[in]     groupname Current group name, for output/logging reasons.
  * @return The amount of entries read, zero in case of errors.
  */
-int socket_net_config_read_sub(config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname)
+int socket_net_config_read_sub(struct config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname)
 {
 	int i, len;
 	char ipbuf[64], maskbuf[64];
@@ -1722,7 +1722,7 @@ int socket_net_config_read_sub(config_setting_t *t, struct s_subnet_vector *list
  */
 void socket_net_config_read(const char *filename)
 {
-	config_t network_config;
+	struct config_t network_config;
 	int i;
 	nullpo_retv(filename);
 

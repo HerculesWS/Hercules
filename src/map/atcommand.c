@@ -3613,7 +3613,7 @@ ACMD(reloadskilldb)
  * @reloadatcommand - reloads conf/atcommand.conf conf/groups.conf
  *------------------------------------------*/
 ACMD(reloadatcommand) {
-	config_t run_test;
+	struct config_t run_test;
 
 	if (!libconfig->load_file(&run_test, "conf/groups.conf")) {
 		clif->message(fd, msg_fd(fd,1036)); // Error reading groups.conf, reload failed.
@@ -10006,8 +10006,8 @@ bool atcommand_exec(const int fd, struct map_session_data *sd, const char *messa
  *
  *------------------------------------------*/
 void atcommand_config_read(const char* config_filename) {
-	config_t atcommand_config;
-	config_setting_t *aliases = NULL, *help = NULL, *nolog = NULL;
+	struct config_t atcommand_config;
+	struct config_setting_t *aliases = NULL, *help = NULL, *nolog = NULL;
 	const char *symbol = NULL;
 	int num_aliases = 0;
 
@@ -10041,7 +10041,7 @@ void atcommand_config_read(const char* config_filename) {
 		int count = libconfig->setting_length(aliases);
 
 		for (i = 0; i < count; ++i) {
-			config_setting_t *command;
+			struct config_setting_t *command;
 			const char *commandname = NULL;
 			int j = 0, alias_count = 0;
 			AtCommandInfo *commandinfo = NULL;
@@ -10079,7 +10079,7 @@ void atcommand_config_read(const char* config_filename) {
 		int count = libconfig->setting_length(nolog);
 
 		for (i = 0; i < count; ++i) {
-			config_setting_t *command;
+			struct config_setting_t *command;
 			const char *commandname = NULL;
 			AtCommandInfo *commandinfo = NULL;
 
@@ -10101,7 +10101,7 @@ void atcommand_config_read(const char* config_filename) {
 		int i;
 
 		for (i = 0; i < count; ++i) {
-			config_setting_t *command;
+			struct config_setting_t *command;
 			const char *commandname;
 			AtCommandInfo *commandinfo = NULL;
 
@@ -10144,7 +10144,7 @@ static inline int atcommand_command_type2idx(AtCommandType type)
  * Loads permissions for groups to use commands.
  *
  */
-void atcommand_db_load_groups(GroupSettings **groups, config_setting_t **commands_, size_t sz)
+void atcommand_db_load_groups(GroupSettings **groups, struct config_setting_t **commands_, size_t sz)
 {
 	DBIterator *iter = db_iterator(atcommand->db);
 	AtCommandInfo *atcmd;
@@ -10157,7 +10157,7 @@ void atcommand_db_load_groups(GroupSettings **groups, config_setting_t **command
 		CREATE(atcmd->char_groups, char, sz);
 		for (i = 0; i < sz; i++) {
 			GroupSettings *group = groups[i];
-			config_setting_t *commands = commands_[i];
+			struct config_setting_t *commands = commands_[i];
 			int result = 0;
 			int idx = -1;
 
@@ -10178,7 +10178,7 @@ void atcommand_db_load_groups(GroupSettings **groups, config_setting_t **command
 			}
 
 			if (commands != NULL) {
-				config_setting_t *cmd = NULL;
+				struct config_setting_t *cmd = NULL;
 
 				// <commandname> : <bool> (only atcommand)
 				if (config_setting_lookup_bool(commands, atcmd->command, &result) && result) {

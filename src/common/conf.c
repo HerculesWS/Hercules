@@ -43,7 +43,7 @@ struct libconfig_interface *libconfig;
  * @retval CONFIG_TRUE  in case of success.
  * @retval CONFIG_FALSE in case of failure.
  */
-int config_load_file(config_t *config, const char *config_filename)
+int config_load_file(struct config_t *config, const char *config_filename)
 {
 	libconfig->init(config);
 	if (libconfig->read_file_src(config, config_filename) != CONFIG_TRUE) {
@@ -58,12 +58,12 @@ int config_load_file(config_t *config, const char *config_filename)
 //
 // Functions to copy settings from libconfig/contrib
 //
-void config_setting_copy_simple(config_setting_t *parent, const config_setting_t *src) {
+void config_setting_copy_simple(struct config_setting_t *parent, const struct config_setting_t *src)
+{
 	if (config_setting_is_aggregate(src)) {
 		libconfig->setting_copy_aggregate(parent, src);
-	}
-	else {
-		config_setting_t *set;
+	} else {
+		struct config_setting_t *set;
 
 		if( libconfig->setting_get_member(parent, config_setting_name(src)) != NULL )
 			return;
@@ -87,8 +87,9 @@ void config_setting_copy_simple(config_setting_t *parent, const config_setting_t
 	}
 }
 
-void config_setting_copy_elem(config_setting_t *parent, const config_setting_t *src) {
-	config_setting_t *set = NULL;
+void config_setting_copy_elem(struct config_setting_t *parent, const struct config_setting_t *src)
+{
+	struct config_setting_t *set = NULL;
 
 	if (config_setting_is_aggregate(src))
 		libconfig->setting_copy_aggregate(parent, src);
@@ -107,8 +108,9 @@ void config_setting_copy_elem(config_setting_t *parent, const config_setting_t *
 	}
 }
 
-void config_setting_copy_aggregate(config_setting_t *parent, const config_setting_t *src) {
-	config_setting_t *newAgg;
+void config_setting_copy_aggregate(struct config_setting_t *parent, const struct config_setting_t *src)
+{
+	struct config_setting_t *newAgg;
 	int i, n;
 
 	if( libconfig->setting_get_member(parent, config_setting_name(src)) != NULL )
@@ -130,7 +132,8 @@ void config_setting_copy_aggregate(config_setting_t *parent, const config_settin
 	}
 }
 
-int config_setting_copy(config_setting_t *parent, const config_setting_t *src) {
+int config_setting_copy(struct config_setting_t *parent, const struct config_setting_t *src)
+{
 	if (!config_setting_is_group(parent) && !config_setting_is_list(parent))
 		return CONFIG_FALSE;
 
@@ -150,7 +153,7 @@ int config_setting_copy(config_setting_t *parent, const config_setting_t *src) {
  * @return The converted value.
  * @retval false in case of failure.
  */
-bool config_setting_get_bool_real(const config_setting_t *setting)
+bool config_setting_get_bool_real(const struct config_setting_t *setting)
 {
 	if (setting == NULL || setting->type != CONFIG_TYPE_BOOL)
 		return false;
@@ -168,9 +171,9 @@ bool config_setting_get_bool_real(const config_setting_t *setting)
  * @retval CONFIG_TRUE  in case of success.
  * @retval CONFIG_FALSE in case of failure.
  */
-int config_setting_lookup_bool_real(const config_setting_t *setting, const char *name, bool *value)
+int config_setting_lookup_bool_real(const struct config_setting_t *setting, const char *name, bool *value)
 {
-	config_setting_t *member = config_setting_get_member(setting, name);
+	struct config_setting_t *member = config_setting_get_member(setting, name);
 
 	if (!member)
 		return CONFIG_FALSE;
@@ -191,7 +194,7 @@ int config_setting_lookup_bool_real(const config_setting_t *setting, const char 
  * @return The converted value.
  * @retval 0 in case of failure.
  */
-uint32 config_setting_get_uint32(const config_setting_t *setting)
+uint32 config_setting_get_uint32(const struct config_setting_t *setting)
 {
 	if (setting == NULL || setting->type != CONFIG_TYPE_INT)
 		return 0;
@@ -212,9 +215,9 @@ uint32 config_setting_get_uint32(const config_setting_t *setting)
  * @retval CONFIG_TRUE  in case of success.
  * @retval CONFIG_FALSE in case of failure.
  */
-int config_setting_lookup_uint32(const config_setting_t *setting, const char *name, uint32 *value)
+int config_setting_lookup_uint32(const struct config_setting_t *setting, const char *name, uint32 *value)
 {
-	config_setting_t *member = config_setting_get_member(setting, name);
+	struct config_setting_t *member = config_setting_get_member(setting, name);
 
 	if (!member)
 		return CONFIG_FALSE;
@@ -235,7 +238,7 @@ int config_setting_lookup_uint32(const config_setting_t *setting, const char *na
  * @return The converted value.
  * @retval 0 in case of failure.
  */
-uint16 config_setting_get_uint16(const config_setting_t *setting)
+uint16 config_setting_get_uint16(const struct config_setting_t *setting)
 {
 	if (setting == NULL || setting->type != CONFIG_TYPE_INT)
 		return 0;
@@ -258,9 +261,9 @@ uint16 config_setting_get_uint16(const config_setting_t *setting)
  * @retval CONFIG_TRUE  in case of success.
  * @retval CONFIG_FALSE in case of failure.
  */
-int config_setting_lookup_uint16(const config_setting_t *setting, const char *name, uint16 *value)
+int config_setting_lookup_uint16(const struct config_setting_t *setting, const char *name, uint16 *value)
 {
-	config_setting_t *member = config_setting_get_member(setting, name);
+	struct config_setting_t *member = config_setting_get_member(setting, name);
 
 	if (!member)
 		return CONFIG_FALSE;
@@ -281,7 +284,7 @@ int config_setting_lookup_uint16(const config_setting_t *setting, const char *na
  * @return The converted value.
  * @retval 0 in case of failure.
  */
-int16 config_setting_get_int16(const config_setting_t *setting)
+int16 config_setting_get_int16(const struct config_setting_t *setting)
 {
 	if (setting == NULL || setting->type != CONFIG_TYPE_INT)
 		return 0;
@@ -304,9 +307,9 @@ int16 config_setting_get_int16(const config_setting_t *setting)
  * @retval CONFIG_TRUE  in case of success.
  * @retval CONFIG_FALSE in case of failure.
  */
-int config_setting_lookup_int16(const config_setting_t *setting, const char *name, int16 *value)
+int config_setting_lookup_int16(const struct config_setting_t *setting, const char *name, int16 *value)
 {
-	config_setting_t *member = config_setting_get_member(setting, name);
+	struct config_setting_t *member = config_setting_get_member(setting, name);
 
 	if (!member)
 		return CONFIG_FALSE;
@@ -320,7 +323,7 @@ int config_setting_lookup_int16(const config_setting_t *setting, const char *nam
 }
 
 /**
- * Looks up a configuration entry of type CONFIG_TYPE_STRING inside a config_setting_t and copies it into a (non-const) char buffer.
+ * Looks up a configuration entry of type CONFIG_TYPE_STRING inside a struct config_setting_t and copies it into a (non-const) char buffer.
  *
  * @param[in]  setting  The setting to read.
  * @param[in]  name     The setting name to lookup.
@@ -330,7 +333,7 @@ int config_setting_lookup_int16(const config_setting_t *setting, const char *nam
  * @retval CONFIG_TRUE  in case of success.
  * @retval CONFIG_FALSE in case of failure.
  */
-int config_setting_lookup_mutable_string(const config_setting_t *setting, const char *name, char *out, size_t out_size)
+int config_setting_lookup_mutable_string(const struct config_setting_t *setting, const char *name, char *out, size_t out_size)
 {
 	const char *str = NULL;
 
@@ -343,7 +346,7 @@ int config_setting_lookup_mutable_string(const config_setting_t *setting, const 
 }
 
 /**
- * Looks up a configuration entry of type CONFIG_TYPE_STRING inside a config_t and copies it into a (non-const) char buffer.
+ * Looks up a configuration entry of type CONFIG_TYPE_STRING inside a struct config_t and copies it into a (non-const) char buffer.
  *
  * @param[in]  config   The configuration to read.
  * @param[in]  name     The setting name to lookup.
@@ -353,7 +356,7 @@ int config_setting_lookup_mutable_string(const config_setting_t *setting, const 
  * @retval CONFIG_TRUE  in case of success.
  * @retval CONFIG_FALSE in case of failure.
  */
-int config_lookup_mutable_string(const config_t *config, const char *name, char *out, size_t out_size)
+int config_lookup_mutable_string(const struct config_t *config, const char *name, char *out, size_t out_size)
 {
 	const char *str = NULL;
 

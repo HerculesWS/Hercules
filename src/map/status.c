@@ -12556,9 +12556,9 @@ int status_get_sc_type(sc_type type) {
 	return status->dbs->sc_conf[type];
 }
 
-void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
+void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *jdb)
 {
-	config_setting_t *temp = NULL;
+	struct config_setting_t *temp = NULL;
 	int i32 = 0;
 
 	struct {
@@ -12698,7 +12698,7 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 
 	if ((temp = libconfig->setting_get_member(jdb, "BaseASPD"))) {
 		int widx = 0;
-		config_setting_t *wpn = NULL;
+		struct config_setting_t *wpn = NULL;
 		while ((wpn = libconfig->setting_get_elem(temp, widx++))) {
 			int w, wlen = ARRAYLENGTH(wnames);
 			const char *wname = config_setting_name(wpn);
@@ -12714,7 +12714,7 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 
 	if ((temp = libconfig->setting_get_member(jdb, "HPTable"))) {
 		int level = 0, avg_increment, base;
-		config_setting_t *hp = NULL;
+		struct config_setting_t *hp = NULL;
 		while (level <= MAX_LEVEL && (hp = libconfig->setting_get_elem(temp, level)) != NULL) {
 			i32 = libconfig->setting_get_int(hp);
 			status->dbs->HP_table[idx][++level] = min(i32, battle_config.max_hp);
@@ -12734,7 +12734,7 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 
 	if ((temp = libconfig->setting_get_member(jdb, "SPTable"))) {
 		int level = 0, avg_increment, base;
-		config_setting_t *sp = NULL;
+		struct config_setting_t *sp = NULL;
 		while (level <= MAX_LEVEL && (sp = libconfig->setting_get_elem(temp, level)) != NULL) {
 			i32 = libconfig->setting_get_int(sp);
 			status->dbs->SP_table[idx][++level] = min(i32, battle_config.max_sp);
@@ -12762,8 +12762,8 @@ void status_read_job_db_sub(int idx, const char *name, config_setting_t *jdb)
 *------------------------------------------*/
 void status_read_job_db(void) { /* [malufett/Hercules] */
 	int i = 0;
-	config_t job_db_conf;
-	config_setting_t *jdb = NULL;
+	struct config_t job_db_conf;
+	struct config_setting_t *jdb = NULL;
 #ifdef RENEWAL_ASPD
 	const char *config_filename = "db/re/job_db.conf";
 #else
@@ -12832,9 +12832,9 @@ bool status_readdb_sizefix(char* fields[], int columns, int current)
  *               validation errors.
  * @return # of the validated entry, or 0 in case of failure.
  */
-int status_readdb_refine_libconfig_sub(config_setting_t *r, const char *name, const char *source)
+int status_readdb_refine_libconfig_sub(struct config_setting_t *r, const char *name, const char *source)
 {
-	config_setting_t *rate = NULL;
+	struct config_setting_t *rate = NULL;
 	int type = REFINE_TYPE_ARMOR, bonus_per_level = 0, rnd_bonus_v = 0, rnd_bonus_lv = 0;
 	char lv[4];
 	nullpo_ret(r);
@@ -12865,7 +12865,7 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, const char *name, co
 	}
 
 	if ((rate=libconfig->setting_get_member(r, "Rates")) != NULL && config_setting_is_group(rate)) {
-		config_setting_t *t = NULL;
+		struct config_setting_t *t = NULL;
 		bool duplicate[MAX_REFINE];
 		int bonus[MAX_REFINE], rnd_bonus[MAX_REFINE], chance[MAX_REFINE];
 		int i;
@@ -12925,8 +12925,8 @@ int status_readdb_refine_libconfig_sub(config_setting_t *r, const char *name, co
  */
 int status_readdb_refine_libconfig(const char *filename) {
 	bool duplicate[REFINE_TYPE_MAX];
-	config_t refine_db_conf;
-	config_setting_t *r;
+	struct config_t refine_db_conf;
+	struct config_setting_t *r;
 	char filepath[256];
 	int i = 0, count = 0,type = 0;
 

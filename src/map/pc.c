@@ -10642,8 +10642,8 @@ int pc_split_atoui(char* str, unsigned int* val, char sep, int max)
  */
 void pc_read_skill_tree(void)
 {
-	config_t skill_tree_conf;
-	config_setting_t *skt = NULL;
+	struct config_t skill_tree_conf;
+	struct config_setting_t *skt = NULL;
 	char config_filename[128];
 	int i = 0;
 	struct s_mapiterator *iter;
@@ -10656,7 +10656,7 @@ void pc_read_skill_tree(void)
 
 	// Foreach job
 	while ((skt = libconfig->setting_get_elem(skill_tree_conf.root, i++))) {
-		config_setting_t *t = NULL;
+		struct config_setting_t *t = NULL;
 		int job_idx;
 		const char *job_name = config_setting_name(skt);
 		int job_id = pc->check_job_name(job_name);
@@ -10746,11 +10746,11 @@ void pc_read_skill_tree(void)
 		}
 		if ((t = libconfig->setting_get_member(skt, "skills")) != NULL) {
 			int j = 0;
-			config_setting_t *sk = NULL;
+			struct config_setting_t *sk = NULL;
 			// Foreach skill
 			while ((sk = libconfig->setting_get_elem(t, j++)) != NULL) {
 				int skill_id, sk_idx;
-				config_setting_t *rsk = NULL;
+				struct config_setting_t *rsk = NULL;
 				const char *sk_name = config_setting_name(sk);
 				struct skill_tree_entry *tree_entry = NULL;
 

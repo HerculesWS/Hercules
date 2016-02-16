@@ -2289,10 +2289,10 @@ void script_set_constant2(const char *name, int value, bool is_parameter, bool i
  */
 void read_constdb(void)
 {
-	config_t constants_conf;
+	struct config_t constants_conf;
 	char filepath[256];
-	config_setting_t *cdb;
-	config_setting_t *t;
+	struct config_setting_t *cdb;
+	struct config_setting_t *t;
 	int i = 0;
 
 	sprintf(filepath, "%s/constants.conf", map->db_path);
@@ -4803,9 +4803,9 @@ uint8 script_add_language(const char *name) {
  * Goes thru db/translations.conf file
  **/
 void script_load_translations(void) {
-	config_t translations_conf;
+	struct config_t translations_conf;
 	const char *config_filename = "db/translations.conf"; // FIXME hardcoded name
-	config_setting_t *translations = NULL;
+	struct config_setting_t *translations = NULL;
 	int i, size;
 	uint32 total = 0;
 	uint8 lang_id = 0, k;

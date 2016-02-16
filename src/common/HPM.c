@@ -616,8 +616,8 @@ CMDLINEARG(loadplugin)
  * Reads the plugin configuration and loads the plugins as necessary.
  */
 void hplugins_config_read(void) {
-	config_t plugins_conf;
-	config_setting_t *plist = NULL;
+	struct config_t plugins_conf;
+	struct config_setting_t *plist = NULL;
 	const char *config_filename = "conf/plugins.conf"; // FIXME hardcoded name
 	FILE *fp;
 	int i;
@@ -633,7 +633,7 @@ void hplugins_config_read(void) {
 
 	plist = libconfig->lookup(&plugins_conf, "plugins_list");
 	for (i = 0; i < VECTOR_LENGTH(HPM->cmdline_load_plugins); i++) {
-		config_setting_t *entry = libconfig->setting_add(plist, NULL, CONFIG_TYPE_STRING);
+		struct config_setting_t *entry = libconfig->setting_add(plist, NULL, CONFIG_TYPE_STRING);
 		config_setting_set_string(entry, VECTOR_INDEX(HPM->cmdline_load_plugins, i));
 	}
 

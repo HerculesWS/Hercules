@@ -214,7 +214,7 @@ struct socket_interface {
 	uint32 (*lan_subnet_check) (uint32 ip, struct s_subnet *info);
 	bool (*allowed_ip_check) (uint32 ip);
 	bool (*trusted_ip_check) (uint32 ip);
-	int (*net_config_read_sub) (config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
+	int (*net_config_read_sub) (struct config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
 	void (*net_config_read) (const char *filename);
 };
 

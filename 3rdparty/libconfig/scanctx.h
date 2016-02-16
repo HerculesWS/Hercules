@@ -33,7 +33,7 @@
 
 struct scan_context
 {
-  config_t *config;
+  struct config_t *config;
   const char *top_filename;
   const char *files[MAX_INCLUDE_DEPTH];
   void *buffers[MAX_INCLUDE_DEPTH];

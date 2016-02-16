@@ -63,8 +63,8 @@ static inline GroupSettings* name2group(const char* group_name)
  * @private
  */
 static void read_config(void) {
-	config_t pc_group_config;
-	config_setting_t *groups = NULL;
+	struct config_t pc_group_config;
+	struct config_setting_t *groups = NULL;
 	const char *config_filename = "conf/groups.conf"; // FIXME hardcoded name
 	int group_count = 0;
 
@@ -83,7 +83,7 @@ static void read_config(void) {
 			int id = 0, level = 0;
 			const char *groupname = NULL;
 			int log_commands = 0;
-			config_setting_t *group = libconfig->setting_get_elem(groups, i);
+			struct config_setting_t *group = libconfig->setting_get_elem(groups, i);
 
 			if (!libconfig->setting_lookup_int(group, "id", &id)) {
 				ShowConfigWarning(group, "pc_groups:read_config: \"groups\" list member #%d has undefined id, removing...", i);
@@ -106,7 +106,7 @@ static void read_config(void) {
 
 			if (!libconfig->setting_lookup_string(group, "name", &groupname)) {
 				char temp[20];
-				config_setting_t *name = NULL;
+				struct config_setting_t *name = NULL;
 				snprintf(temp, sizeof(temp), "Group %d", id);
 				if ((name = config_setting_add(group, "name", CONFIG_TYPE_STRING)) == NULL ||
 				    !config_setting_set_string(name, temp)) {
@@ -148,7 +148,7 @@ static void read_config(void) {
 		// Check if all commands and permissions exist
 		iter = db_iterator(pcg->db);
 		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
-			config_setting_t *commands = group_settings->commands, *permissions = group_settings->permissions;
+			struct config_setting_t *commands = group_settings->commands, *permissions = group_settings->permissions;
 			int count = 0;
 
 			// Make sure there is "commands" group
@@ -157,7 +157,7 @@ static void read_config(void) {
 			count = libconfig->setting_length(commands);
 
 			for (i = 0; i < count; ++i) {
-				config_setting_t *command = libconfig->setting_get_elem(commands, i);
+				struct config_setting_t *command = libconfig->setting_get_elem(commands, i);
 				const char *name = config_setting_name(command);
 				if (!atcommand->exists(name)) {
 					ShowConfigWarning(command, "pc_groups:read_config: non-existent command name '%s', removing...", name);
@@ -173,7 +173,7 @@ static void read_config(void) {
 			count = libconfig->setting_length(permissions);
 
 			for(i = 0; i < count; ++i) {
-				config_setting_t *permission = libconfig->setting_get_elem(permissions, i);
+				struct config_setting_t *permission = libconfig->setting_get_elem(permissions, i);
 				const char *name = config_setting_name(permission);
 				int j;
 
@@ -193,7 +193,7 @@ static void read_config(void) {
 		while (i < group_count) {
 			iter = db_iterator(pcg->db);
 			for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
-				config_setting_t *inherit = NULL,
+				struct config_setting_t *inherit = NULL,
 				                 *commands = group_settings->commands,
 					             *permissions = group_settings->permissions;
 				int j, inherit_count = 0, done = 0;
@@ -258,11 +258,11 @@ static void read_config(void) {
 		// Pack permissions into GroupSettings.e_permissions for faster checking
 		iter = db_iterator(pcg->db);
 		for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
-			config_setting_t *permissions = group_settings->permissions;
+			struct config_setting_t *permissions = group_settings->permissions;
 			int count = libconfig->setting_length(permissions);
 
 			for (i = 0; i < count; ++i) {
-				config_setting_t *perm = libconfig->setting_get_elem(permissions, i);
+				struct config_setting_t *perm = libconfig->setting_get_elem(permissions, i);
 				const char *name = config_setting_name(perm);
 				int val = libconfig->setting_get_bool(perm);
 				int j;
@@ -280,9 +280,9 @@ static void read_config(void) {
 		// to atcommand->load_group() for processing.
 		if (group_count > 0) {
 			GroupSettings **pc_groups = NULL;
-			config_setting_t **commands = NULL;
+			struct config_setting_t **commands = NULL;
 			CREATE(pc_groups, GroupSettings*, group_count);
-			CREATE(commands, config_setting_t*, group_count);
+			CREATE(commands, struct config_setting_t*, group_count);
 			i = 0;
 			iter = db_iterator(pcg->db);
 			for (group_settings = dbi_first(iter); dbi_exists(iter); group_settings = dbi_next(iter)) {
