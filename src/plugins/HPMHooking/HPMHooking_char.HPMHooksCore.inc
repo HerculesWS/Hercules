@@ -610,10 +610,10 @@ struct {
 	struct HPMHookPoint *HP_libconfig_read_post;
 	struct HPMHookPoint *HP_libconfig_write_pre;
 	struct HPMHookPoint *HP_libconfig_write_post;
-	struct HPMHookPoint *HP_libconfig_set_auto_convert_pre;
-	struct HPMHookPoint *HP_libconfig_set_auto_convert_post;
-	struct HPMHookPoint *HP_libconfig_get_auto_convert_pre;
-	struct HPMHookPoint *HP_libconfig_get_auto_convert_post;
+	struct HPMHookPoint *HP_libconfig_set_options_pre;
+	struct HPMHookPoint *HP_libconfig_set_options_post;
+	struct HPMHookPoint *HP_libconfig_get_options_pre;
+	struct HPMHookPoint *HP_libconfig_get_options_post;
 	struct HPMHookPoint *HP_libconfig_read_string_pre;
 	struct HPMHookPoint *HP_libconfig_read_string_post;
 	struct HPMHookPoint *HP_libconfig_read_file_src_pre;
@@ -638,6 +638,8 @@ struct {
 	struct HPMHookPoint *HP_libconfig_setting_get_bool_post;
 	struct HPMHookPoint *HP_libconfig_setting_get_string_pre;
 	struct HPMHookPoint *HP_libconfig_setting_get_string_post;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_pre;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_post;
 	struct HPMHookPoint *HP_libconfig_setting_lookup_int_pre;
 	struct HPMHookPoint *HP_libconfig_setting_lookup_int_post;
 	struct HPMHookPoint *HP_libconfig_setting_lookup_int64_pre;
@@ -700,8 +702,6 @@ struct {
 	struct HPMHookPoint *HP_libconfig_setting_set_hook_post;
 	struct HPMHookPoint *HP_libconfig_lookup_pre;
 	struct HPMHookPoint *HP_libconfig_lookup_post;
-	struct HPMHookPoint *HP_libconfig_lookup_from_pre;
-	struct HPMHookPoint *HP_libconfig_lookup_from_post;
 	struct HPMHookPoint *HP_libconfig_lookup_int_pre;
 	struct HPMHookPoint *HP_libconfig_lookup_int_post;
 	struct HPMHookPoint *HP_libconfig_lookup_int64_pre;
@@ -1989,10 +1989,10 @@ struct {
 	int HP_libconfig_read_post;
 	int HP_libconfig_write_pre;
 	int HP_libconfig_write_post;
-	int HP_libconfig_set_auto_convert_pre;
-	int HP_libconfig_set_auto_convert_post;
-	int HP_libconfig_get_auto_convert_pre;
-	int HP_libconfig_get_auto_convert_post;
+	int HP_libconfig_set_options_pre;
+	int HP_libconfig_set_options_post;
+	int HP_libconfig_get_options_pre;
+	int HP_libconfig_get_options_post;
 	int HP_libconfig_read_string_pre;
 	int HP_libconfig_read_string_post;
 	int HP_libconfig_read_file_src_pre;
@@ -2017,6 +2017,8 @@ struct {
 	int HP_libconfig_setting_get_bool_post;
 	int HP_libconfig_setting_get_string_pre;
 	int HP_libconfig_setting_get_string_post;
+	int HP_libconfig_setting_lookup_pre;
+	int HP_libconfig_setting_lookup_post;
 	int HP_libconfig_setting_lookup_int_pre;
 	int HP_libconfig_setting_lookup_int_post;
 	int HP_libconfig_setting_lookup_int64_pre;
@@ -2079,8 +2081,6 @@ struct {
 	int HP_libconfig_setting_set_hook_post;
 	int HP_libconfig_lookup_pre;
 	int HP_libconfig_lookup_post;
-	int HP_libconfig_lookup_from_pre;
-	int HP_libconfig_lookup_from_post;
 	int HP_libconfig_lookup_int_pre;
 	int HP_libconfig_lookup_int_post;
 	int HP_libconfig_lookup_int64_pre;
