@@ -799,8 +799,8 @@ void showmsg_showWarning(const char *string, ...)
 	vShowMessage_(MSG_WARNING, string, ap);
 	va_end(ap);
 }
-void showmsg_showConfigWarning(config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
-void showmsg_showConfigWarning(config_setting_t *config, const char *string, ...)
+void showmsg_showConfigWarning(struct config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
+void showmsg_showConfigWarning(struct config_setting_t *config, const char *string, ...)
 {
 	StringBuf buf;
 	va_list ap;

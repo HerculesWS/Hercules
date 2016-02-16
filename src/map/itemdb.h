@@ -631,8 +631,8 @@ struct itemdb_interface {
 	void (*read_combos) (void);
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
-	void (*readdb_additional_fields) (int itemid, config_setting_t *it, int n, const char *source);
-	int (*readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
+	void (*readdb_additional_fields) (int itemid, struct config_setting_t *it, int n, const char *source);
+	int (*readdb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);
 	int (*readdb_libconfig) (const char *filename);
 	uint64 (*unique_id) (struct map_session_data *sd);
 	void (*read) (bool minimal);
@@ -641,7 +641,7 @@ struct itemdb_interface {
 	void (*clear) (bool total);
 	struct item_combo * (*id2combo) (unsigned short id);
 	bool (*is_item_usable) (struct item_data *item);
-	bool (*lookup_const) (const config_setting_t *it, const char *name, int *value);
+	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
 };
 
 #ifdef HERCULES_CORE

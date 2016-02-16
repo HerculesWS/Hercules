@@ -65,9 +65,9 @@ bool itemdb2sql_torun = false;
 bool mobdb2sql_torun = false;
 
 /// Backup of the original item_db parser function pointer.
-int (*itemdb_readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
+int (*itemdb_readdb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);
 /// Backup of the original mob_db parser function pointer.
-int (*mob_read_db_sub) (config_setting_t *it, int n, const char *source);
+int (*mob_read_db_sub) (struct config_setting_t *it, int n, const char *source);
 
 /**
  * Normalizes and appends a string to the output buffer.
@@ -124,7 +124,7 @@ void db2sql_fileheader(void)
  *
  * @see itemdb_readdb_libconfig_sub.
  */
-int itemdb2sql_sub(config_setting_t *entry, int n, const char *source)
+int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 {
 	struct item_data *it = NULL;
 
@@ -134,7 +134,7 @@ int itemdb2sql_sub(config_setting_t *entry, int n, const char *source)
 		char *str;
 		int i32;
 		uint32 ui32;
-		config_setting_t *t = NULL;
+		struct config_setting_t *t = NULL;
 		StringBuf buf;
 
 		nullpo_ret(entry);
@@ -424,7 +424,7 @@ void do_itemdb2sql(void)
  *
  * @see mobdb_readdb_libconfig_sub.
  */
-int mobdb2sql_sub(config_setting_t *mobt, int n, const char *source)
+int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 {
 	struct mob_db *md = NULL;
 	nullpo_ret(mobt);

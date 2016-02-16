@@ -3691,7 +3691,7 @@ static inline int mob_parse_dbrow_cap_value(int class_, int min, int max, int va
  *                      (mob_id is expected to be already set).
  * @param[in]     t     The libconfig entry.
  */
-void mob_read_db_stats_sub(struct mob_db *entry, config_setting_t *t)
+void mob_read_db_stats_sub(struct mob_db *entry, struct config_setting_t *t)
 {
 	int i32;
 	if (mob->lookup_const(t, "Str", &i32) && i32 >= 0) {
@@ -3722,10 +3722,10 @@ void mob_read_db_stats_sub(struct mob_db *entry, config_setting_t *t)
  *
  * @return The parsed mode.
  */
-int mob_read_db_mode_sub(struct mob_db *entry, config_setting_t *t)
+int mob_read_db_mode_sub(struct mob_db *entry, struct config_setting_t *t)
 {
 	int mode = 0;
-	config_setting_t *t2;
+	struct config_setting_t *t2;
 
 	if ((t2 = libconfig->setting_get_member(t, "CanMove")))
 		mode |= libconfig->setting_get_bool(t2) ? MD_CANMOVE : 0;
@@ -3768,9 +3768,9 @@ int mob_read_db_mode_sub(struct mob_db *entry, config_setting_t *t)
  *                      (mob_id is expected to be already set).
  * @param[in]     t     The libconfig entry.
  */
-void mob_read_db_mvpdrops_sub(struct mob_db *entry, config_setting_t *t)
+void mob_read_db_mvpdrops_sub(struct mob_db *entry, struct config_setting_t *t)
 {
-	config_setting_t *drop;
+	struct config_setting_t *drop;
 	int i = 0;
 	int idx = 0;
 	int i32;
@@ -3824,9 +3824,9 @@ void mob_read_db_mvpdrops_sub(struct mob_db *entry, config_setting_t *t)
  *                      (mob_id, status.mode are expected to be already set).
  * @param[in]     t     The libconfig entry.
  */
-void mob_read_db_drops_sub(struct mob_db *entry, config_setting_t *t)
+void mob_read_db_drops_sub(struct mob_db *entry, struct config_setting_t *t)
 {
-	config_setting_t *drop;
+	struct config_setting_t *drop;
 	int i = 0;
 	int idx = 0;
 	int i32;
@@ -4051,10 +4051,10 @@ int mob_db_validate_entry(struct mob_db *entry, int n, const char *source)
  *               validation errors.
  * @return Mob ID of the validated entry, or 0 in case of failure.
  */
-int mob_read_db_sub(config_setting_t *mobt, int n, const char *source)
+int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *source)
 {
 	struct mob_db md = { 0 };
-	config_setting_t *t = NULL;
+	struct config_setting_t *t = NULL;
 	const char *str = NULL;
 	int i32 = 0;
 	bool inherit = false;
@@ -4359,12 +4359,12 @@ int mob_read_db_sub(config_setting_t *mobt, int n, const char *source)
  * @param[in]     source Source of the entry (file name), to be displayed in
  *                       case of validation errors.
  */
-void mob_read_db_additional_fields(struct mob_db *entry, config_setting_t *t, int n, const char *source)
+void mob_read_db_additional_fields(struct mob_db *entry, struct config_setting_t *t, int n, const char *source)
 {
 	// do nothing. plugins can do own work
 }
 
-bool mob_lookup_const(const config_setting_t *it, const char *name, int *value)
+bool mob_lookup_const(const struct config_setting_t *it, const char *name, int *value)
 {
 	if (libconfig->setting_lookup_int(it, name, value))
 	{
@@ -4382,7 +4382,7 @@ bool mob_lookup_const(const config_setting_t *it, const char *name, int *value)
 	return false;
 }
 
-bool mob_get_const(const config_setting_t *it, int *value)
+bool mob_get_const(const struct config_setting_t *it, int *value)
 {
 	const char *str = config_setting_get_string(it);
 	if (str && *str && script->get_constant(str, value))
@@ -4419,10 +4419,10 @@ void mob_readdb(void) {
 int mob_read_libconfig(const char *filename, bool ignore_missing)
 {
 	bool duplicate[MAX_MOB_DB] = { 0 };
-	config_t mob_db_conf;
+	struct config_t mob_db_conf;
 	char filepath[256];
-	config_setting_t *mdb;
-	config_setting_t *t;
+	struct config_setting_t *mdb;
+	struct config_setting_t *t;
 	int i = 0, count = 0;
 
 	nullpo_ret(filename);

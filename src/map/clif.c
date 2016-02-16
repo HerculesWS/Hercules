@@ -17308,8 +17308,8 @@ void clif_parse_MoveItem(int fd, struct map_session_data *sd) {
 
 /* [Ind/Hercules] */
 void clif_cashshop_db(void) {
-	config_t cashshop_conf;
-	config_setting_t *cashshop = NULL, *cats = NULL;
+	struct config_t cashshop_conf;
+	struct config_setting_t *cashshop = NULL, *cats = NULL;
 	const char *config_filename = "db/cashshop_db.conf"; // FIXME hardcoded name
 	int i, item_count_t = 0;
 	for( i = 0; i < CASHSHOP_TAB_MAX; i++ ) {
@@ -17324,7 +17324,7 @@ void clif_cashshop_db(void) {
 
 	if( cashshop != NULL && (cats = libconfig->setting_get_elem(cashshop, 0)) != NULL ) {
 		for(i = 0; i < CASHSHOP_TAB_MAX; i++) {
-			config_setting_t *cat;
+			struct config_setting_t *cat;
 			char entry_name[10];
 
 			sprintf(entry_name,"cat_%d",i);
@@ -17333,7 +17333,7 @@ void clif_cashshop_db(void) {
 				int k, item_count = libconfig->setting_length(cat);
 
 				for(k = 0; k < item_count; k++) {
-					config_setting_t *entry = libconfig->setting_get_elem(cat,k);
+					struct config_setting_t *entry = libconfig->setting_get_elem(cat,k);
 					const char *name = config_setting_name(entry);
 					int price = libconfig->setting_get_int(entry);
 					struct item_data * data = NULL;
@@ -18366,8 +18366,8 @@ void clif_parse_RouletteRecvItem(int fd, struct map_session_data* sd) {
 }
 
 bool clif_parse_roulette_db(void) {
-	config_t roulette_conf;
-	config_setting_t *roulette = NULL, *levels = NULL;
+	struct config_t roulette_conf;
+	struct config_setting_t *roulette = NULL, *levels = NULL;
 	const char *config_filename = "db/roulette_db.conf"; // FIXME hardcoded name
 	int i, j, item_count_t = 0;
 
@@ -18381,7 +18381,7 @@ bool clif_parse_roulette_db(void) {
 
 	if( roulette != NULL && (levels = libconfig->setting_get_elem(roulette, 0)) != NULL ) {
 		for(i = 0; i < MAX_ROULETTE_LEVEL; i++) {
-			config_setting_t *level;
+			struct config_setting_t *level;
 			char entry_name[10];
 
 			sprintf(entry_name,"level_%d",i+1);
@@ -18390,7 +18390,7 @@ bool clif_parse_roulette_db(void) {
 				int k, item_count = libconfig->setting_length(level);
 
 				for(k = 0; k < item_count; k++) {
-					config_setting_t *entry = libconfig->setting_get_elem(level,k);
+					struct config_setting_t *entry = libconfig->setting_get_elem(level,k);
 					const char *name = config_setting_name(entry);
 					int qty = libconfig->setting_get_int(entry);
 					struct item_data * data = NULL;

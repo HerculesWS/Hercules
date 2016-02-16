@@ -330,8 +330,8 @@ enum bg_queue_types bg_str2teamtype (const char *str) {
 }
 
 void bg_config_read(void) {
-	config_t bg_conf;
-	config_setting_t *data = NULL;
+	struct config_t bg_conf;
+	struct config_setting_t *data = NULL;
 	const char *config_filename = "conf/battlegrounds.conf"; // FIXME hardcoded name
 
 	if (!libconfig->load_file(&bg_conf, config_filename))
@@ -340,8 +340,8 @@ void bg_config_read(void) {
 	data = libconfig->lookup(&bg_conf, "battlegrounds");
 
 	if (data != NULL) {
-		config_setting_t *settings = libconfig->setting_get_elem(data, 0);
-		config_setting_t *arenas;
+		struct config_setting_t *settings = libconfig->setting_get_elem(data, 0);
+		struct config_setting_t *arenas;
 		const char *delay_var;
 		int offline = 0;
 
@@ -361,8 +361,8 @@ void bg_config_read(void) {
 			int arena_count = libconfig->setting_length(arenas);
 			CREATE( bg->arena, struct bg_arena *, arena_count );
 			for(i = 0; i < arena_count; i++) {
-				config_setting_t *arena = libconfig->setting_get_elem(arenas, i);
-				config_setting_t *reward;
+				struct config_setting_t *arena = libconfig->setting_get_elem(arenas, i);
+				struct config_setting_t *reward;
 				const char *aName, *aEvent, *aDelayVar, *aTeamTypes;
 				int minLevel = 0, maxLevel = 0;
 				int prizeWin, prizeLoss, prizeDraw;

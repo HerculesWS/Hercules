@@ -77,7 +77,7 @@ struct quest_interface {
 	int (*check) (struct map_session_data *sd, int quest_id, enum quest_check_type type);
 	void (*clear) (void);
 	int (*read_db) (void);
-	struct quest_db *(*read_db_sub) (config_setting_t *cs, int n, const char *source);
+	struct quest_db *(*read_db_sub) (struct config_setting_t *cs, int n, const char *source);
 };
 
 #ifdef HERCULES_CORE

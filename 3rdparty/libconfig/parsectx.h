@@ -28,9 +28,9 @@
 
 struct parse_context
 {
-  config_t *config;
-  config_setting_t *parent;
-  config_setting_t *setting;
+  struct config_t *config;
+  struct config_setting_t *parent;
+  struct config_setting_t *setting;
   char *name;
   strbuf_t string;
 };
