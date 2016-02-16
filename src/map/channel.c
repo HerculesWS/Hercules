@@ -593,7 +593,7 @@ void read_channels_config(void)
 	config_setting_t *chsys = NULL;
 	const char *config_filename = "conf/channels.conf"; // FIXME hardcoded name
 
-	if (libconfig->read_file(&channels_conf, config_filename))
+	if (!libconfig->load_file(&channels_conf, config_filename))
 		return;
 
 	chsys = libconfig->lookup(&channels_conf, "chsys");

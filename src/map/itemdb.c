@@ -648,10 +648,8 @@ void itemdb_read_groups(void) {
 	int i = 0, count = 0, c;
 	unsigned int *gsize = NULL;
 
-	if (libconfig->read_file(&item_group_conf, config_filename)) {
-		ShowError("can't read %s\n", config_filename);
+	if (!libconfig->load_file(&item_group_conf, config_filename))
 		return;
-	}
 
 	gsize = aMalloc( libconfig->setting_length(item_group_conf.root) * sizeof(unsigned int) );
 
@@ -946,10 +944,8 @@ void itemdb_read_packages(void) {
 			return;
 	}
 
-	if (libconfig->read_file(&item_packages_conf, config_filename)) {
-		ShowError("can't read %s\n", config_filename);
+	if (!libconfig->load_file(&item_packages_conf, config_filename))
 		return;
-	}
 
 	must = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
 	random = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
@@ -1170,10 +1166,8 @@ void itemdb_read_chains(void) {
 #endif
 	int i = 0, count = 0;
 
-	if (libconfig->read_file(&item_chain_conf, config_filename)) {
-		ShowError("can't read %s\n", config_filename);
+	if (!libconfig->load_file(&item_chain_conf, config_filename))
 		return;
-	}
 
 	CREATE(itemdb->chains, struct item_chain, libconfig->setting_length(item_chain_conf.root));
 	itemdb->chain_count = (unsigned short)libconfig->setting_length(item_chain_conf.root);
@@ -1885,12 +1879,17 @@ int itemdb_readdb_libconfig(const char *filename) {
 	int i = 0, count = 0;
 
 	nullpo_ret(filename);
+
 	sprintf(filepath, "%s/%s", map->db_path, filename);
-	memset(&duplicate,0,sizeof(duplicate));
-	if( libconfig->read_file(&item_db_conf, filepath) || !(itdb = libconfig->setting_get_member(item_db_conf.root, "item_db")) ) {
+	if (!libconfig->load_file(&item_db_conf, filepath))
+		return 0;
+
+	if ((itdb = libconfig->setting_get_member(item_db_conf.root, "item_db")) == NULL) {
 		ShowError("can't read %s\n", filepath);
 		return 0;
 	}
+
+	memset(&duplicate,0,sizeof(duplicate));
 
 	while( (it = libconfig->setting_get_elem(itdb,i++)) ) {
 		int nameid = itemdb->readdb_libconfig_sub(it, i-1, filename);

@@ -10651,10 +10651,8 @@ void pc_read_skill_tree(void)
 	bool loaded[CLASS_COUNT] = { false };
 
 	safesnprintf(config_filename, sizeof(config_filename), "%s/"DBPATH"skill_tree.conf", map->db_path);
-	if (libconfig->read_file(&skill_tree_conf, config_filename)) {
-		ShowError("can't read %s\n", config_filename);
+	if (!libconfig->load_file(&skill_tree_conf, config_filename))
 		return;
-	}
 
 	// Foreach job
 	while ((skt = libconfig->setting_get_elem(skill_tree_conf.root, i++))) {

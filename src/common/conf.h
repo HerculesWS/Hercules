@@ -100,7 +100,7 @@ struct libconfig_interface {
 
 	/* those are custom and are from src/common/conf.c */
 	/* Functions to copy settings from libconfig/contrib */
-	int (*read_file) (config_t *config, const char *config_filename);
+	int (*load_file) (config_t *config, const char *config_filename);
 	void (*setting_copy_simple) (config_setting_t *parent, const config_setting_t *src);
 	void (*setting_copy_elem) (config_setting_t *parent, const config_setting_t *src);
 	void (*setting_copy_aggregate) (config_setting_t *parent, const config_setting_t *src);

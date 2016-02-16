@@ -68,7 +68,7 @@ static void read_config(void) {
 	const char *config_filename = "conf/groups.conf"; // FIXME hardcoded name
 	int group_count = 0;
 
-	if (libconfig->read_file(&pc_group_config, config_filename))
+	if (!libconfig->load_file(&pc_group_config, config_filename))
 		return;
 
 	groups = libconfig->lookup(&pc_group_config, "groups");

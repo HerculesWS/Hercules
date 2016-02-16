@@ -4431,7 +4431,10 @@ int mob_read_libconfig(const char *filename, bool ignore_missing)
 	if (ignore_missing && !exists(filepath))
 		return 0;
 
-	if (libconfig->read_file(&mob_db_conf, filepath) || !(mdb = libconfig->setting_get_member(mob_db_conf.root, "mob_db"))) {
+	if (!libconfig->load_file(&mob_db_conf, filepath))
+		return 0;
+
+	if ((mdb = libconfig->setting_get_member(mob_db_conf.root, "mob_db")) == NULL) {
 		ShowError("can't read %s\n", filepath);
 		return 0;
 	}

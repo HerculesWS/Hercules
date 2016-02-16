@@ -1726,7 +1726,7 @@ void socket_net_config_read(const char *filename)
 	int i;
 	nullpo_retv(filename);
 
-	if (libconfig->read_file(&network_config, filename)) {
+	if (!libconfig->load_file(&network_config, filename)) {
 		ShowError("LAN Support configuration file is not found: '%s'. This server won't be able to accept connections from any servers.\n", filename);
 		return;
 	}

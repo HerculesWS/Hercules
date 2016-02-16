@@ -3615,14 +3615,14 @@ ACMD(reloadskilldb)
 ACMD(reloadatcommand) {
 	config_t run_test;
 
-	if (libconfig->read_file(&run_test, "conf/groups.conf")) {
+	if (!libconfig->load_file(&run_test, "conf/groups.conf")) {
 		clif->message(fd, msg_fd(fd,1036)); // Error reading groups.conf, reload failed.
 		return false;
 	}
 
 	libconfig->destroy(&run_test);
 
-	if (libconfig->read_file(&run_test, map->ATCOMMAND_CONF_FILENAME)) {
+	if (!libconfig->load_file(&run_test, map->ATCOMMAND_CONF_FILENAME)) {
 		clif->message(fd, msg_fd(fd,1037)); // Error reading atcommand.conf, reload failed.
 		return false;
 	}
@@ -10012,7 +10012,7 @@ void atcommand_config_read(const char* config_filename) {
 	int num_aliases = 0;
 
 	nullpo_retv(config_filename);
-	if (libconfig->read_file(&atcommand_config, config_filename))
+	if (!libconfig->load_file(&atcommand_config, config_filename))
 		return;
 
 	// Command symbols

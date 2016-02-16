@@ -4990,7 +4990,7 @@ void read_map_zone_db(void) {
 #else
 	const char *config_filename = "db/pre-re/map_zone_db.conf"; // FIXME hardcoded name
 #endif
-	if (libconfig->read_file(&map_zone_db, config_filename))
+	if (!libconfig->load_file(&map_zone_db, config_filename))
 		return;
 
 	zones = libconfig->lookup(&map_zone_db, "zones");
