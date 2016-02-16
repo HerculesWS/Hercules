@@ -2844,8 +2844,8 @@ struct {
 	struct HPMHookPoint *HP_libconfig_lookup_bool_post;
 	struct HPMHookPoint *HP_libconfig_lookup_string_pre;
 	struct HPMHookPoint *HP_libconfig_lookup_string_post;
-	struct HPMHookPoint *HP_libconfig_read_file_pre;
-	struct HPMHookPoint *HP_libconfig_read_file_post;
+	struct HPMHookPoint *HP_libconfig_load_file_pre;
+	struct HPMHookPoint *HP_libconfig_load_file_post;
 	struct HPMHookPoint *HP_libconfig_setting_copy_simple_pre;
 	struct HPMHookPoint *HP_libconfig_setting_copy_simple_post;
 	struct HPMHookPoint *HP_libconfig_setting_copy_elem_pre;
@@ -8715,8 +8715,8 @@ struct {
 	int HP_libconfig_lookup_bool_post;
 	int HP_libconfig_lookup_string_pre;
 	int HP_libconfig_lookup_string_post;
-	int HP_libconfig_read_file_pre;
-	int HP_libconfig_read_file_post;
+	int HP_libconfig_load_file_pre;
+	int HP_libconfig_load_file_post;
 	int HP_libconfig_setting_copy_simple_pre;
 	int HP_libconfig_setting_copy_simple_post;
 	int HP_libconfig_setting_copy_elem_pre;
