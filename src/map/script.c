@@ -55,6 +55,7 @@
 #include "map/storage.h"
 #include "map/unit.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/memmgr.h"
 #include "common/md5calc.h"
 #include "common/mmo.h" // NEW_CARTS

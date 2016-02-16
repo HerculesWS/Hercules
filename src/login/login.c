@@ -28,7 +28,6 @@
 #include "login/loginlog.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
-#include "common/conf.h"
 #include "common/core.h"
 #include "common/db.h"
 #include "common/memmgr.h"

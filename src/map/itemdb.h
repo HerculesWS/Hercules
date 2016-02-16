@@ -23,10 +23,10 @@
 
 /* #include "map/map.h" */
 #include "common/hercules.h"
-#include "common/conf.h"
 #include "common/db.h"
 #include "common/mmo.h" // ITEM_NAME_LENGTH
 
+struct config_setting_t;
 struct script_code;
 struct hplugin_data_store;
 

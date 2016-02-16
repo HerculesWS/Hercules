@@ -23,9 +23,10 @@
 
 #include "common/hercules.h"
 
-#include <libconfig/libconfig.h>
-
 #include <stdarg.h>
+
+/* Forward Declarations */
+struct config_setting_t;
 
 // for help with the console colors look here:
 // http://www.edoceo.com/liberum/?doc=printf-with-color

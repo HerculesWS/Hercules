@@ -22,7 +22,6 @@
 #define COMMON_SOCKET_H
 
 #include "common/hercules.h"
-#include "common/conf.h"
 #include "common/db.h"
 
 #ifdef WIN32
@@ -34,7 +33,9 @@
 #	include <sys/types.h>
 #endif
 
+/* Forward Declarations */
 struct hplugin_data_store;
+struct config_setting_t;
 
 #define FIFOSIZE_SERVERLINK 256*1024
 

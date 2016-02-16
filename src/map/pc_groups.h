@@ -22,8 +22,10 @@
 #define MAP_PC_GROUPS_H
 
 #include "common/hercules.h"
-#include "common/conf.h"
 #include "common/db.h"
+
+/* Forward Declarations */
+struct config_setting_t;
 
 /// PC permissions
 enum e_pc_permission {

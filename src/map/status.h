@@ -21,11 +21,11 @@
 #ifndef MAP_STATUS_H
 #define MAP_STATUS_H
 
-#include "common/conf.h"
 #include "common/hercules.h"
 #include "common/mmo.h" // NEW_CARTS
 
 struct block_list;
+struct config_setting_t;
 struct elemental_data;
 struct homun_data;
 struct mercenary_data;
