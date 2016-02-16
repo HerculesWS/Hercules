@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2013-2015  Hercules Dev Team
-   Copyright (C) 2005-2010  Mark A Lindner
+   Copyright (C) 2013-2016  Hercules Dev Team
+   Copyright (C) 2005-2014  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -40,8 +40,8 @@ extern "C" {
 #endif /* WIN32 */
 
 #define LIBCONFIG_VER_MAJOR    1
-#define LIBCONFIG_VER_MINOR    4
-#define LIBCONFIG_VER_REVISION 9
+#define LIBCONFIG_VER_MINOR    5
+#define LIBCONFIG_VER_REVISION 0
 
 #include <stdio.h>
 
@@ -58,7 +58,11 @@ extern "C" {
 #define CONFIG_FORMAT_DEFAULT  0
 #define CONFIG_FORMAT_HEX      1
 
-#define CONFIG_OPTION_AUTOCONVERT 0x01
+#define CONFIG_OPTION_AUTOCONVERT                     0x01
+#define CONFIG_OPTION_SEMICOLON_SEPARATORS            0x02
+#define CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS     0x04
+#define CONFIG_OPTION_COLON_ASSIGNMENT_FOR_NON_GROUPS 0x08
+#define CONFIG_OPTION_OPEN_BRACE_ON_SEPARATE_LINE     0x10
 
 #define CONFIG_TRUE  (1)
 #define CONFIG_FALSE (0)
@@ -102,7 +106,7 @@ typedef struct config_t
 {
   config_setting_t *root;
   void (*destructor)(void *);
-  unsigned short flags;
+  int options;
   unsigned short tab_width;
   short default_format;
   const char *include_dir;
@@ -119,6 +123,9 @@ extern LIBCONFIG_API void config_write(const config_t *config, FILE *stream);
 
 extern LIBCONFIG_API void config_set_default_format(config_t *config,
                                                     short format);
+
+extern LIBCONFIG_API void config_set_options(config_t *config, int options);
+extern LIBCONFIG_API int config_get_options(const config_t *config);
 
 extern LIBCONFIG_API void config_set_auto_convert(config_t *config, int flag);
 extern LIBCONFIG_API int config_get_auto_convert(const config_t *config);
@@ -260,7 +267,7 @@ extern LIBCONFIG_API void config_setting_set_hook(config_setting_t *setting,
 
 extern LIBCONFIG_API config_setting_t *config_lookup(const config_t *config,
                                                      const char *path);
-extern LIBCONFIG_API config_setting_t *config_lookup_from(
+extern LIBCONFIG_API config_setting_t *config_setting_lookup(
   config_setting_t *setting, const char *path);
 
 extern LIBCONFIG_API int config_lookup_int(const config_t *config,

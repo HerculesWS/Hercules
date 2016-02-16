@@ -226,9 +226,9 @@ static const char *test_libconfig_lookup(void)
 		return "libconfig->lookup failed.";
 	}
 
-	if ((t = libconfig->lookup_from(config.root, "Setting_Int")) == NULL) {
+	if ((t = libconfig->setting_lookup(config.root, "Setting_Int")) == NULL) {
 		libconfig->destroy(&config);
-		return "libconfig->lookup_from failed.";
+		return "libconfig->setting_lookup failed.";
 	}
 
 	if (libconfig->lookup_int(&config, "Setting_Int", &i32) == CONFIG_FALSE || i32 != 1) {
