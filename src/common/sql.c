@@ -32,6 +32,7 @@
 #	include "common/winapi.h" // Needed before mysql.h
 #endif
 #include <mysql.h>
+#include <stdio.h>
 #include <stdlib.h> // strtoul
 
 void hercules_mysql_error_handler(unsigned int ecode);

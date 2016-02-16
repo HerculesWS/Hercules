@@ -32,6 +32,7 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 struct pincode_interface pincode_s;

@@ -23,7 +23,6 @@
 
 #include "map/pc_groups.h"
 #include "common/hercules.h"
-#include "common/conf.h"
 #include "common/db.h"
 
 #include <stdarg.h>
@@ -34,6 +33,7 @@
 struct map_session_data;
 struct AtCommandInfo;
 struct block_list;
+struct config_setting_t;
 
 /**
  * Defines
