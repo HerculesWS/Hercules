@@ -122,11 +122,11 @@ static const char *test_libconfig_read(void)
 	return NULL;
 }
 
-static const char *test_libconfig_read_file(void)
+static const char *test_libconfig_load_file(void)
 {
 	config_t config;
 #define FILENAME "src/test/libconfig/test.conf"
-	if (libconfig->read_file(&config, FILENAME) != 0) {
+	if (libconfig->load_file(&config, FILENAME) == CONFIG_FALSE) {
 		return "Unable to read file '" FILENAME "'.";
 	}
 #undef FILENAME
@@ -809,7 +809,7 @@ int do_init(int argc, char **argv)
 	TEST("libconfig->init and libconfig->destroy", test_libconfig_init_destroy);
 	TEST("libconfig->read_file_src", test_libconfig_read_file_src);
 	TEST("libconfig->read", test_libconfig_read);
-	TEST("libconfig->read_file", test_libconfig_read_file);
+	TEST("libconfig->load_file", test_libconfig_load_file);
 	(void)test_libconfig_write; //TEST("libconfig->write", test_libconfig_write);
 	(void)test_libconfig_write_file; //TEST("libconfig->write_file", test_libconfig_write_file);
 	TEST("libconfig->read_string", test_libconfig_read_string);

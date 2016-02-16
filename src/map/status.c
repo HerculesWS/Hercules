@@ -12770,10 +12770,9 @@ void status_read_job_db(void) { /* [malufett/Hercules] */
 	const char *config_filename = "db/pre-re/job_db.conf";
 #endif
 
-	if ( libconfig->read_file(&job_db_conf, config_filename) ) {
-		ShowError("can't read %s\n", config_filename);
+	if (!libconfig->load_file(&job_db_conf, config_filename))
 		return;
-	}
+
 	while ( (jdb = libconfig->setting_get_elem(job_db_conf.root, i++)) ) {
 		int class_, idx;
 		const char *name = config_setting_name(jdb);
@@ -12932,11 +12931,10 @@ int status_readdb_refine_libconfig(const char *filename) {
 	int i = 0, count = 0,type = 0;
 
 	sprintf(filepath, "%s/%s", map->db_path, filename);
-	memset(&duplicate,0,sizeof(duplicate));
-	if( libconfig->read_file(&refine_db_conf, filepath) ) {
-		ShowError("can't read %s\n", filepath);
+	if (!libconfig->load_file(&refine_db_conf, filepath))
 		return 0;
-	}
+
+	memset(&duplicate,0,sizeof(duplicate));
 
 	while((r = libconfig->setting_get_elem(refine_db_conf.root,i++))) {
 		char *name = config_setting_name(r);

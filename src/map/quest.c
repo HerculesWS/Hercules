@@ -533,7 +533,10 @@ int quest_read_db(void)
 	const char *filename = "quest_db.conf";
 
 	sprintf(filepath, "%s/%s", map->db_path, filename);
-	if (libconfig->read_file(&quest_db_conf, filepath) || !(qdb = libconfig->setting_get_member(quest_db_conf.root, "quest_db"))) {
+	if (!libconfig->load_file(&quest_db_conf, filepath))
+		return -1;
+
+	if ((qdb = libconfig->setting_get_member(quest_db_conf.root, "quest_db")) == NULL) {
 		ShowError("can't read %s\n", filepath);
 		return -1;
 	}

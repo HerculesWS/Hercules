@@ -32,7 +32,7 @@ struct libconfig_interface libconfig_s;
 struct libconfig_interface *libconfig;
 
 /**
- * Initializes 'config' and reads a configuration file.
+ * Initializes 'config' and loads a configuration file.
  *
  * Shows error and destroys 'config' in case of failure.
  * It is the caller's care to destroy 'config' in case of success.
@@ -40,17 +40,19 @@ struct libconfig_interface *libconfig;
  * @param config          The config file to initialize.
  * @param config_filename The file to read.
  *
- * @retval 1 in case of failure.
+ * @retval CONFIG_TRUE  in case of success.
+ * @retval CONFIG_FALSE in case of failure.
  */
-int conf_read_file(config_t *config, const char *config_filename) {
+int config_load_file(config_t *config, const char *config_filename)
+{
 	libconfig->init(config);
-	if (!libconfig->read_file_src(config, config_filename)) {
+	if (libconfig->read_file_src(config, config_filename) != CONFIG_TRUE) {
 		ShowError("%s:%d - %s\n", config_error_file(config),
 		          config_error_line(config), config_error_text(config));
 		libconfig->destroy(config);
-		return 1;
+		return CONFIG_FALSE;
 	}
-	return 0;
+	return CONFIG_TRUE;
 }
 
 //
@@ -436,7 +438,7 @@ void libconfig_defaults(void) {
 	libconfig->lookup_bool = config_lookup_bool;
 	libconfig->lookup_string = config_lookup_string;
 	/* those are custom and are from src/common/conf.c */
-	libconfig->read_file = conf_read_file;
+	libconfig->load_file = config_load_file;
 	libconfig->setting_copy_simple = config_setting_copy_simple;
 	libconfig->setting_copy_elem = config_setting_copy_elem;
 	libconfig->setting_copy_aggregate = config_setting_copy_aggregate;

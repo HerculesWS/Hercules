@@ -2297,7 +2297,10 @@ void read_constdb(void)
 
 	sprintf(filepath, "%s/constants.conf", map->db_path);
 
-	if (libconfig->read_file(&constants_conf, filepath) || !(cdb = libconfig->setting_get_member(constants_conf.root, "constants_db"))) {
+	if (!libconfig->load_file(&constants_conf, filepath))
+		return;
+
+	if ((cdb = libconfig->setting_get_member(constants_conf.root, "constants_db")) == NULL) {
 		ShowError("can't read %s\n", filepath);
 		return;
 	}
@@ -4822,12 +4825,10 @@ void script_load_translations(void) {
 
 	script->add_language("English");/* 0 is default, which is whatever is in the npc files hardcoded (in our case, English) */
 
-	if (libconfig->read_file(&translations_conf, config_filename)) {
-		ShowError("load_translations: can't read '%s'\n", config_filename);
+	if (!libconfig->load_file(&translations_conf, config_filename))
 		return;
-	}
 
-	if( !(translations = libconfig->lookup(&translations_conf, "translations")) ) {
+	if ((translations = libconfig->lookup(&translations_conf, "translations")) == NULL) {
 		ShowError("load_translations: invalid format on '%s'\n",config_filename);
 		return;
 	}

@@ -628,7 +628,7 @@ void hplugins_config_read(void) {
 		fclose(fp);
 	}
 
-	if (libconfig->read_file(&plugins_conf, config_filename))
+	if (!libconfig->load_file(&plugins_conf, config_filename))
 		return;
 
 	plist = libconfig->lookup(&plugins_conf, "plugins_list");

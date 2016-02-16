@@ -17317,10 +17317,8 @@ void clif_cashshop_db(void) {
 		clif->cs.item_count[i] = 0;
 	}
 
-	if (libconfig->read_file(&cashshop_conf, config_filename)) {
-		ShowError("can't read %s\n", config_filename);
+	if (!libconfig->load_file(&cashshop_conf, config_filename))
 		return;
-	}
 
 	cashshop = libconfig->lookup(&cashshop_conf, "cash_shop");
 
@@ -18377,10 +18375,8 @@ bool clif_parse_roulette_db(void) {
 		clif->rd.items[i] = 0;
 	}
 
-	if (libconfig->read_file(&roulette_conf, config_filename)) {
-		ShowError("can't read %s\n", config_filename);
+	if (!libconfig->load_file(&roulette_conf, config_filename))
 		return false;
-	}
 	roulette = libconfig->lookup(&roulette_conf, "roulette");
 
 	if( roulette != NULL && (levels = libconfig->setting_get_elem(roulette, 0)) != NULL ) {
