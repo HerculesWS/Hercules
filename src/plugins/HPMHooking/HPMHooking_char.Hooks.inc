@@ -7877,14 +7877,14 @@ void HP_libconfig_write(const config_t *config, FILE *stream) {
 	}
 	return;
 }
-void HP_libconfig_set_auto_convert(config_t *config, int flag) {
+void HP_libconfig_set_options(config_t *config, int options) {
 	int hIndex = 0;
-	if( HPMHooks.count.HP_libconfig_set_auto_convert_pre ) {
-		void (*preHookFunc) (config_t *config, int *flag);
+	if( HPMHooks.count.HP_libconfig_set_options_pre ) {
+		void (*preHookFunc) (config_t *config, int *options);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_set_auto_convert_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_libconfig_set_auto_convert_pre[hIndex].func;
-			preHookFunc(config, &flag);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_set_options_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_libconfig_set_options_pre[hIndex].func;
+			preHookFunc(config, &options);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -7892,25 +7892,25 @@ void HP_libconfig_set_auto_convert(config_t *config, int flag) {
 		}
 	}
 	{
-		HPMHooks.source.libconfig.set_auto_convert(config, flag);
+		HPMHooks.source.libconfig.set_options(config, options);
 	}
-	if( HPMHooks.count.HP_libconfig_set_auto_convert_post ) {
-		void (*postHookFunc) (config_t *config, int *flag);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_set_auto_convert_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_libconfig_set_auto_convert_post[hIndex].func;
-			postHookFunc(config, &flag);
+	if( HPMHooks.count.HP_libconfig_set_options_post ) {
+		void (*postHookFunc) (config_t *config, int *options);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_set_options_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_libconfig_set_options_post[hIndex].func;
+			postHookFunc(config, &options);
 		}
 	}
 	return;
 }
-int HP_libconfig_get_auto_convert(const config_t *config) {
+int HP_libconfig_get_options(const config_t *config) {
 	int hIndex = 0;
 	int retVal___ = 0;
-	if( HPMHooks.count.HP_libconfig_get_auto_convert_pre ) {
+	if( HPMHooks.count.HP_libconfig_get_options_pre ) {
 		int (*preHookFunc) (const config_t *config);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_get_auto_convert_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_libconfig_get_auto_convert_pre[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_get_options_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_libconfig_get_options_pre[hIndex].func;
 			retVal___ = preHookFunc(config);
 		}
 		if( *HPMforce_return ) {
@@ -7919,12 +7919,12 @@ int HP_libconfig_get_auto_convert(const config_t *config) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.libconfig.get_auto_convert(config);
+		retVal___ = HPMHooks.source.libconfig.get_options(config);
 	}
-	if( HPMHooks.count.HP_libconfig_get_auto_convert_post ) {
+	if( HPMHooks.count.HP_libconfig_get_options_post ) {
 		int (*postHookFunc) (int retVal___, const config_t *config);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_get_auto_convert_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_libconfig_get_auto_convert_post[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_get_options_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_libconfig_get_options_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config);
 		}
 	}
@@ -8246,6 +8246,33 @@ const char* HP_libconfig_setting_get_string(const config_setting_t *setting) {
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_string_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_string_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, setting);
+		}
+	}
+	return retVal___;
+}
+config_setting_t* HP_libconfig_setting_lookup(config_setting_t *setting, const char *name) {
+	int hIndex = 0;
+	config_setting_t* retVal___ = NULL;
+	if( HPMHooks.count.HP_libconfig_setting_lookup_pre ) {
+		config_setting_t* (*preHookFunc) (config_setting_t *setting, const char *name);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_pre[hIndex].func;
+			retVal___ = preHookFunc(setting, name);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.libconfig.setting_lookup(setting, name);
+	}
+	if( HPMHooks.count.HP_libconfig_setting_lookup_post ) {
+		config_setting_t* (*postHookFunc) (config_setting_t* retVal___, config_setting_t *setting, const char *name);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, setting, name);
 		}
 	}
 	return retVal___;
@@ -9082,33 +9109,6 @@ config_setting_t* HP_libconfig_lookup(const config_t *config, const char *filepa
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_lookup_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, config, filepath);
-		}
-	}
-	return retVal___;
-}
-config_setting_t* HP_libconfig_lookup_from(config_setting_t *setting, const char *filepath) {
-	int hIndex = 0;
-	config_setting_t* retVal___ = NULL;
-	if( HPMHooks.count.HP_libconfig_lookup_from_pre ) {
-		config_setting_t* (*preHookFunc) (config_setting_t *setting, const char *filepath);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_from_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_libconfig_lookup_from_pre[hIndex].func;
-			retVal___ = preHookFunc(setting, filepath);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.libconfig.lookup_from(setting, filepath);
-	}
-	if( HPMHooks.count.HP_libconfig_lookup_from_post ) {
-		config_setting_t* (*postHookFunc) (config_setting_t* retVal___, config_setting_t *setting, const char *filepath);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_from_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_libconfig_lookup_from_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, filepath);
 		}
 	}
 	return retVal___;
