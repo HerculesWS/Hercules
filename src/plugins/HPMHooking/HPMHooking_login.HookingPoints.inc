@@ -115,7 +115,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(libconfig->lookup_float, HP_libconfig_lookup_float) },
 	{ HP_POP(libconfig->lookup_bool, HP_libconfig_lookup_bool) },
 	{ HP_POP(libconfig->lookup_string, HP_libconfig_lookup_string) },
-	{ HP_POP(libconfig->read_file, HP_libconfig_read_file) },
+	{ HP_POP(libconfig->load_file, HP_libconfig_load_file) },
 	{ HP_POP(libconfig->setting_copy_simple, HP_libconfig_setting_copy_simple) },
 	{ HP_POP(libconfig->setting_copy_elem, HP_libconfig_setting_copy_elem) },
 	{ HP_POP(libconfig->setting_copy_aggregate, HP_libconfig_setting_copy_aggregate) },
