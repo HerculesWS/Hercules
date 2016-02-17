@@ -356,14 +356,14 @@ bool homunculus_levelup(struct homun_data *hd) {
 	max  = &hd->homunculusDB->gmax;
 	min  = &hd->homunculusDB->gmin;
 
-	growth_max_hp = rnd_value(min->HP, max->HP);
-	growth_max_sp = rnd_value(min->SP, max->SP);
-	growth_str = rnd_value(min->str, max->str);
-	growth_agi = rnd_value(min->agi, max->agi);
-	growth_vit = rnd_value(min->vit, max->vit);
-	growth_dex = rnd_value(min->dex, max->dex);
-	growth_int = rnd_value(min->int_,max->int_);
-	growth_luk = rnd_value(min->luk, max->luk);
+	growth_max_hp = rnd->value(min->HP, max->HP);
+	growth_max_sp = rnd->value(min->SP, max->SP);
+	growth_str = rnd->value(min->str, max->str);
+	growth_agi = rnd->value(min->agi, max->agi);
+	growth_vit = rnd->value(min->vit, max->vit);
+	growth_dex = rnd->value(min->dex, max->dex);
+	growth_int = rnd->value(min->int_,max->int_);
+	growth_luk = rnd->value(min->luk, max->luk);
 
 	//Aegis discards the decimals in the stat growth values!
 	growth_str-=growth_str%10;
@@ -432,14 +432,14 @@ bool homunculus_evolve(struct homun_data *hd) {
 	hom = &hd->homunculus;
 	max = &hd->homunculusDB->emax;
 	min = &hd->homunculusDB->emin;
-	hom->max_hp += rnd_value(min->HP, max->HP);
-	hom->max_sp += rnd_value(min->SP, max->SP);
-	hom->str += 10*rnd_value(min->str, max->str);
-	hom->agi += 10*rnd_value(min->agi, max->agi);
-	hom->vit += 10*rnd_value(min->vit, max->vit);
-	hom->int_+= 10*rnd_value(min->int_,max->int_);
-	hom->dex += 10*rnd_value(min->dex, max->dex);
-	hom->luk += 10*rnd_value(min->luk, max->luk);
+	hom->max_hp += rnd->value(min->HP, max->HP);
+	hom->max_sp += rnd->value(min->SP, max->SP);
+	hom->str += 10*rnd->value(min->str, max->str);
+	hom->agi += 10*rnd->value(min->agi, max->agi);
+	hom->vit += 10*rnd->value(min->vit, max->vit);
+	hom->int_+= 10*rnd->value(min->int_,max->int_);
+	hom->dex += 10*rnd->value(min->dex, max->dex);
+	hom->luk += 10*rnd->value(min->luk, max->luk);
 	hom->intimacy = 500;
 
 	unit->remove_map(&hd->bl, CLR_OUTSIGHT, ALC_MARK);
@@ -848,7 +848,7 @@ bool homunculus_call(struct map_session_data *sd) {
 
 	nullpo_retr(false, sd);
 	if (!sd->status.hom_id) //Create a new homun.
-		return homun->creation_request(sd, HM_CLASS_BASE + rnd_value(0, 7));
+		return homun->creation_request(sd, HM_CLASS_BASE + rnd->value(0, 7));
 
 	// If homunc not yet loaded, load it
 	if (!sd->hd)
@@ -1075,14 +1075,14 @@ bool homunculus_shuffle(struct homun_data *hd) {
 		//Evolved bonuses
 		struct s_homunculus *hom = &hd->homunculus;
 		struct h_stats *max = &hd->homunculusDB->emax, *min = &hd->homunculusDB->emin;
-		hom->max_hp += rnd_value(min->HP, max->HP);
-		hom->max_sp += rnd_value(min->SP, max->SP);
-		hom->str += 10*rnd_value(min->str, max->str);
-		hom->agi += 10*rnd_value(min->agi, max->agi);
-		hom->vit += 10*rnd_value(min->vit, max->vit);
-		hom->int_+= 10*rnd_value(min->int_,max->int_);
-		hom->dex += 10*rnd_value(min->dex, max->dex);
-		hom->luk += 10*rnd_value(min->luk, max->luk);
+		hom->max_hp += rnd->value(min->HP, max->HP);
+		hom->max_sp += rnd->value(min->SP, max->SP);
+		hom->str += 10*rnd->value(min->str, max->str);
+		hom->agi += 10*rnd->value(min->agi, max->agi);
+		hom->vit += 10*rnd->value(min->vit, max->vit);
+		hom->int_+= 10*rnd->value(min->int_,max->int_);
+		hom->dex += 10*rnd->value(min->dex, max->dex);
+		hom->luk += 10*rnd->value(min->luk, max->luk);
 	}
 
 	hd->homunculus.exp = exp;

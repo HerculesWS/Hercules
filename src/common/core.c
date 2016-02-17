@@ -25,15 +25,15 @@
 
 #include "common/cbasetypes.h"
 #include "common/console.h"
-#include "common/des.h"
 #include "common/db.h"
+#include "common/des.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
-#include "common/random.h"
+#include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
 #include "common/sysinfo.h"
-#include "common/nullpo.h"
+#include "common/timer.h"
 #include "common/utils.h"
 
 #ifndef MINICORE
@@ -42,10 +42,10 @@
 #	include "common/ers.h"
 #	include "common/md5calc.h"
 #	include "common/mutex.h"
+#	include "common/random.h"
 #	include "common/socket.h"
 #	include "common/sql.h"
 #	include "common/thread.h"
-#	include "common/timer.h"
 #endif
 
 #ifndef _WIN32
@@ -264,6 +264,7 @@ void core_defaults(void) {
 	timer_defaults();
 	db_defaults();
 	socket_defaults();
+	rnd_defaults();
 	md5_defaults();
 #endif
 }
@@ -515,8 +516,7 @@ int main (int argc, char **argv) {
 	timer->init();
 
 	/* timer first */
-	rnd_init();
-	srand((unsigned int)timer->gettick());
+	rnd->init();
 
 	console->init();
 
@@ -543,6 +543,7 @@ int main (int argc, char **argv) {
 	DB->final();
 	rathread_final();
 	ers_final();
+	rnd->final();
 #endif
 	cmdline->final();
 	//sysinfo->final(); Called by iMalloc->final()

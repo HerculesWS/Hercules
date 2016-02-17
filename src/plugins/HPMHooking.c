@@ -114,6 +114,7 @@
 #include "common/memmgr.h"
 #include "common/mutex.h"
 #include "common/nullpo.h"
+#include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/sql.h"

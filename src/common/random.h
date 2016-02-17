@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -21,17 +21,27 @@
 #ifndef COMMON_RANDOM_H
 #define COMMON_RANDOM_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
+
+struct rnd_interface {
+	void (*init) (void);
+	void (*final) (void);
+
+	void (*seed) (uint32);
+
+	int32 (*random) (void);// [0, SINT32_MAX]
+	uint32 (*roll) (uint32 dice_faces);// [0, dice_faces)
+	int32 (*value) (int32 min, int32 max);// [min, max]
+	double (*uniform) (void);// [0.0, 1.0)
+	double (*uniform53) (void);// [0.0, 1.0)
+};
+
+#define rnd() rnd->random()
 
 #ifdef HERCULES_CORE
-void rnd_init(void);
-void rnd_seed(uint32);
-
-int32 rnd(void);// [0, SINT32_MAX]
-uint32 rnd_roll(uint32 dice_faces);// [0, dice_faces)
-int32 rnd_value(int32 min, int32 max);// [min, max]
-double rnd_uniform(void);// [0.0, 1.0)
-double rnd_uniform53(void);// [0.0, 1.0)
+void rnd_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct rnd_interface *rnd;
 
 #endif /* COMMON_RANDOM_H */

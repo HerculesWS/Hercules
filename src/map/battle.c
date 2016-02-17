@@ -2431,7 +2431,7 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					RE_LVL_DMOD(100);
 					break;
 				case LG_OVERBRAND_PLUSATK:
-					skillratio = 200 * skill_lv + rnd_value( 10, 100);
+					skillratio = 200 * skill_lv + rnd->value(10, 100);
 					RE_LVL_DMOD(100);
 					break;
 				case LG_RAYOFGENESIS:
