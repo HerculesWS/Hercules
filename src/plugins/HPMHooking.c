@@ -112,6 +112,7 @@
 #include "common/des.h"
 #include "common/md5calc.h"
 #include "common/memmgr.h"
+#include "common/mutex.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"

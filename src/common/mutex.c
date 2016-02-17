@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  rAthena Project (www.rathena.org)
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -33,6 +33,9 @@
 #include <pthread.h>
 #include <sys/time.h>
 #endif
+
+struct mutex_interface mutex_s;
+struct mutex_interface *mutex;
 
 struct ramutex{
 #ifdef WIN32
@@ -181,7 +184,7 @@ void racond_wait(racond *c, ramutex *m, sysint timeout_ticks) {
 	// we can release the mutex (m) here, cause win's
 	// manual reset events maintain state when used with
 	// SetEvent()
-	ramutex_unlock(m);
+	mutex->unlock(m);
 
 	result = WaitForMultipleObjects(2, c->events, FALSE, ms);
 
@@ -196,7 +199,7 @@ void racond_wait(racond *c, ramutex *m, sysint timeout_ticks) {
 	if(is_last == true)
 		ResetEvent( c->events[EVENT_COND_BROADCAST] );
 
-	ramutex_lock(m);
+	mutex->lock(m);
 
 #else
 	if(timeout_ticks < 0){
@@ -247,3 +250,19 @@ void racond_broadcast(racond *c) {
 	pthread_cond_broadcast(&c->hCond);
 #endif
 }//end: racond_broadcast()
+
+void mutex_defaults(void)
+{
+	mutex = &mutex_s;
+	mutex->create = ramutex_create;
+	mutex->destroy = ramutex_destroy;
+	mutex->lock = ramutex_lock;
+	mutex->trylock = ramutex_trylock;
+	mutex->unlock = ramutex_unlock;
+
+	mutex->cond_create = racond_create;
+	mutex->cond_destroy = racond_destroy;
+	mutex->cond_wait = racond_wait;
+	mutex->cond_signal = racond_signal;
+	mutex->cond_broadcast = racond_broadcast;
+}

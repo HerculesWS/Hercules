@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -475,9 +475,9 @@ void *cThread_main(void *x) {
 				LeaveSpinLock(&console->input->ptlock);
 			}
 		}
-		ramutex_lock( console->input->ptmutex );
-		racond_wait( console->input->ptcond, console->input->ptmutex, -1 );
-		ramutex_unlock( console->input->ptmutex );
+		mutex->lock(console->input->ptmutex);
+		mutex->cond_wait(console->input->ptcond, console->input->ptmutex, -1);
+		mutex->unlock(console->input->ptmutex);
 	}
 
 	return NULL;
@@ -490,19 +490,19 @@ int console_parse_timer(int tid, int64 tick, int id, intptr_t data) {
 	}
 	cinput.count = 0;
 	LeaveSpinLock(&console->input->ptlock);
-	racond_signal(console->input->ptcond);
+	mutex->cond_signal(console->input->ptcond);
 	return 0;
 }
 void console_parse_final(void) {
 	if( console->input->ptstate ) {
 		InterlockedDecrement(&console->input->ptstate);
-		racond_signal(console->input->ptcond);
+		mutex->cond_signal(console->input->ptcond);
 
 		/* wait for thread to close */
 		rathread_wait(console->input->pthread, NULL);
 
-		racond_destroy(console->input->ptcond);
-		ramutex_destroy(console->input->ptmutex);
+		mutex->cond_destroy(console->input->ptcond);
+		mutex->destroy(console->input->ptmutex);
 	}
 }
 void console_parse_init(void) {
@@ -512,8 +512,8 @@ void console_parse_init(void) {
 
 	InitializeSpinLock(&console->input->ptlock);
 
-	console->input->ptmutex = ramutex_create();
-	console->input->ptcond = racond_create();
+	console->input->ptmutex = mutex->create();
+	console->input->ptcond = mutex->cond_create();
 
 	if( (console->input->pthread = rathread_create(console->input->pthread_main, NULL)) == NULL ){
 		ShowFatalError("console_parse_init: failed to spawn console_parse thread.\n");
