@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -36,6 +36,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+struct md5_interface md5_s;
+struct md5_interface *md5;
 
 // Global variable
 static unsigned int *pX;
@@ -232,18 +235,12 @@ static void MD5_String2binary(const char * string, unsigned char * output)
 //-------------------------------------------------------------------
 // The function for the exteriors
 
-/** output is the coded binary in the character sequence which wants to code string. */
-void MD5_Binary(const char * string, unsigned char * output)
-{
-	MD5_String2binary(string,output);
-}
-
 /** output is the coded character sequence in the character sequence which wants to code string. */
 void MD5_String(const char *string, char *output)
 {
 	unsigned char digest[16];
 
-	MD5_String2binary(string,digest);
+	md5->binary(string,digest);
 	snprintf(output, 33, "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
 		digest[ 0], digest[ 1], digest[ 2], digest[ 3],
 		digest[ 4], digest[ 5], digest[ 6], digest[ 7],
@@ -258,4 +255,12 @@ void MD5_Salt(unsigned int len, char * output)
 	for( i = 0; i < len; ++i )
 		output[i] = (char)(1 + rnd() % 255);
 
+}
+
+void md5_defaults(void)
+{
+	md5 = &md5_s;
+	md5->binary = MD5_String2binary;
+	md5->string = MD5_String;
+	md5->salt = MD5_Salt;
 }

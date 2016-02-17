@@ -239,7 +239,7 @@ bool login_check_encrypted(const char* str1, const char* str2, const char* passw
 	nullpo_ret(str2);
 	nullpo_ret(passwd);
 	safesnprintf(tmpstr, sizeof(tmpstr), "%s%s", str1, str2);
-	MD5_String(tmpstr, md5str);
+	md5->string(tmpstr, md5str);
 
 	return (0==strcmp(passwd, md5str));
 }
@@ -1378,7 +1378,7 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	safestrncpy(sd->userid, RFIFOP(fd,2), NAME_LENGTH);
 	safestrncpy(sd->passwd, RFIFOP(fd,26), NAME_LENGTH);
 	if (login->config->use_md5_passwds)
-		MD5_String(sd->passwd, sd->passwd);
+		md5->string(sd->passwd, sd->passwd);
 	sd->passwdenc = PWENC_NONE;
 	sd->version = login->config->client_version_to_connect; // hack to skip version check
 	server_ip = ntohl(RFIFOL(fd,54));
@@ -1529,14 +1529,14 @@ int login_config_read(const char *cfgName)
 			login->config->client_hash_check = config_switch(w2);
 		else if(!strcmpi(w1, "client_hash")) {
 			int group = 0;
-			char md5[33];
-			memset(md5, '\0', 33);
+			char md5hash[33];
+			memset(md5hash, '\0', 33);
 
-			if (sscanf(w2, "%d, %32s", &group, md5) == 2) {
+			if (sscanf(w2, "%d, %32s", &group, md5hash) == 2) {
 				struct client_hash_node *nnode;
 				CREATE(nnode, struct client_hash_node, 1);
 
-				if (strcmpi(md5, "disabled") == 0) {
+				if (strcmpi(md5hash, "disabled") == 0) {
 					nnode->hash[0] = '\0';
 				} else {
 					int i;
@@ -1544,7 +1544,7 @@ int login_config_read(const char *cfgName)
 						char buf[3];
 						unsigned int byte;
 
-						memcpy(buf, &md5[i], 2);
+						memcpy(buf, &md5hash[i], 2);
 						buf[2] = 0;
 
 						sscanf(buf, "%x", &byte);

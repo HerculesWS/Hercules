@@ -40,6 +40,7 @@
 #	include "common/HPM.h"
 #	include "common/conf.h"
 #	include "common/ers.h"
+#	include "common/md5calc.h"
 #	include "common/socket.h"
 #	include "common/sql.h"
 #	include "common/thread.h"
@@ -261,6 +262,7 @@ void core_defaults(void) {
 	timer_defaults();
 	db_defaults();
 	socket_defaults();
+	md5_defaults();
 #endif
 }
 /**

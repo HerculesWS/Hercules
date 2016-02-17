@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -21,10 +21,18 @@
 #ifndef COMMON_MD5CALC_H
 #define COMMON_MD5CALC_H
 
+#include "common/hercules.h"
+
+struct md5_interface {
+	void (*string) (const char *string, char *output);
+	void (*binary) (const char *string, unsigned char *output);
+	void (*salt) (unsigned int len, char *output);
+};
+
 #ifdef HERCULES_CORE
-void MD5_String(const char * string, char * output);
-void MD5_Binary(const char * string, unsigned char * output);
-void MD5_Salt(unsigned int len, char * output);
+void md5_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct md5_interface *md5;
 
 #endif /* COMMON_MD5CALC_H */
