@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -23,6 +23,9 @@
 #include "des.h"
 
 #include "common/cbasetypes.h"
+
+struct des_interface des_s;
+struct des_interface *des;
 
 /// DES (Data Encryption Standard) algorithm, modified version.
 /// @see http://www.eathena.ws/board/index.php?autocom=bugtracker&showbug=5099.
@@ -232,5 +235,12 @@ void des_decrypt(unsigned char* data, size_t size)
 	size_t i;
 
 	for( i = 0; i*8 < size; i += 8 )
-		des_decrypt_block(p);
+		des->decrypt_block(p);
+}
+
+void des_defaults(void)
+{
+	des = &des_s;
+	des->decrypt = des_decrypt;
+	des->decrypt_block = des_decrypt_block;
 }

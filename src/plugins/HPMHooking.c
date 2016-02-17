@@ -109,6 +109,7 @@
 #include "common/conf.h"
 #include "common/console.h"
 #include "common/db.h"
+#include "common/des.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"

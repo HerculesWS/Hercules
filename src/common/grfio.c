@@ -162,7 +162,7 @@ static void grf_decode_header(unsigned char* buf, size_t len)
 
 	// first 20 blocks are all des-encrypted
 	for( i = 0; i < 20 && i < nblocks; ++i )
-		des_decrypt_block(&p[i]);
+		des->decrypt_block(&p[i]);
 
 	// the rest is plaintext, done.
 }
@@ -176,7 +176,7 @@ static void grf_decode_full(unsigned char* buf, size_t len, int cycle)
 
 	// first 20 blocks are all des-encrypted
 	for( i = 0; i < 20 && i < nblocks; ++i )
-		des_decrypt_block(&p[i]);
+		des->decrypt_block(&p[i]);
 
 	// after that only one of every 'dcycle' blocks is des-encrypted
 	dcycle = cycle;
@@ -190,7 +190,7 @@ static void grf_decode_full(unsigned char* buf, size_t len, int cycle)
 	{
 		if( i % dcycle == 0 )
 		{// decrypt block
-			des_decrypt_block(&p[i]);
+			des->decrypt_block(&p[i]);
 			continue;
 		}
 
@@ -504,7 +504,7 @@ static char* decode_filename(unsigned char* buf, int len)
 	int lop;
 	for(lop=0;lop<len;lop+=8) {
 		NibbleSwap(&buf[lop],8);
-		des_decrypt(&buf[lop],8);
+		des->decrypt(&buf[lop],8);
 	}
 	return (char*)buf;
 }
