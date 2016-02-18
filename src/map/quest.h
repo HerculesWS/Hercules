@@ -22,10 +22,11 @@
 #define MAP_QUEST_H
 
 #include "common/hercules.h"
-#include "common/conf.h"
 #include "common/mmo.h" // enum quest_state
 
+/* Forward Declarations */
 struct block_list;
+struct config_setting_t;
 struct map_session_data;
 
 #define MAX_QUEST_DB (60355+1) // Highest quest ID + 1
@@ -77,7 +78,7 @@ struct quest_interface {
 	int (*check) (struct map_session_data *sd, int quest_id, enum quest_check_type type);
 	void (*clear) (void);
 	int (*read_db) (void);
-	struct quest_db *(*read_db_sub) (config_setting_t *cs, int n, const char *source);
+	struct quest_db *(*read_db_sub) (struct config_setting_t *cs, int n, const char *source);
 };
 
 #ifdef HERCULES_CORE

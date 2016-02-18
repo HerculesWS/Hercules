@@ -637,8 +637,8 @@ int itemdb_isidentified2(struct item_data *data) {
 }
 
 void itemdb_read_groups(void) {
-	config_t item_group_conf;
-	config_setting_t *itg = NULL, *it = NULL;
+	struct config_t item_group_conf;
+	struct config_setting_t *itg = NULL, *it = NULL;
 #ifdef RENEWAL
 	const char *config_filename = "db/re/item_group.conf"; // FIXME hardcoded name
 #else
@@ -648,10 +648,8 @@ void itemdb_read_groups(void) {
 	int i = 0, count = 0, c;
 	unsigned int *gsize = NULL;
 
-	if (libconfig->read_file(&item_group_conf, config_filename)) {
-		ShowError("can't read %s\n", config_filename);
+	if (!libconfig->load_file(&item_group_conf, config_filename))
 		return;
-	}
 
 	gsize = aMalloc( libconfig->setting_length(item_group_conf.root) * sizeof(unsigned int) );
 
@@ -929,8 +927,8 @@ bool itemdb_read_cached_packages(const char *config_filename) {
 	return true;
 }
 void itemdb_read_packages(void) {
-	config_t item_packages_conf;
-	config_setting_t *itg = NULL, *it = NULL, *t = NULL;
+	struct config_t item_packages_conf;
+	struct config_setting_t *itg = NULL, *it = NULL, *t = NULL;
 #ifdef RENEWAL
 	const char *config_filename = "db/re/item_packages.conf"; // FIXME hardcoded name
 #else
@@ -946,10 +944,8 @@ void itemdb_read_packages(void) {
 			return;
 	}
 
-	if (libconfig->read_file(&item_packages_conf, config_filename)) {
-		ShowError("can't read %s\n", config_filename);
+	if (!libconfig->load_file(&item_packages_conf, config_filename))
 		return;
-	}
 
 	must = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
 	random = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
@@ -1161,8 +1157,8 @@ void itemdb_read_packages(void) {
 }
 
 void itemdb_read_chains(void) {
-	config_t item_chain_conf;
-	config_setting_t *itc = NULL;
+	struct config_t item_chain_conf;
+	struct config_setting_t *itc = NULL;
 #ifdef RENEWAL
 	const char *config_filename = "db/re/item_chain.conf"; // FIXME hardcoded name
 #else
@@ -1170,10 +1166,8 @@ void itemdb_read_chains(void) {
 #endif
 	int i = 0, count = 0;
 
-	if (libconfig->read_file(&item_chain_conf, config_filename)) {
-		ShowError("can't read %s\n", config_filename);
+	if (!libconfig->load_file(&item_chain_conf, config_filename))
 		return;
-	}
 
 	CREATE(itemdb->chains, struct item_chain, libconfig->setting_length(item_chain_conf.root));
 	itemdb->chain_count = (unsigned short)libconfig->setting_length(item_chain_conf.root);
@@ -1186,7 +1180,7 @@ void itemdb_read_chains(void) {
 		struct item_chain_entry *prev = NULL;
 		const char *name = config_setting_name(itc);
 		int c = 0;
-		config_setting_t *entry = NULL;
+		struct config_setting_t *entry = NULL;
 
 		script->set_constant2(name, i-1, false, false);
 		itemdb->chains[count].qty = (unsigned short)libconfig->setting_length(itc);
@@ -1535,7 +1529,7 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 	return item->nameid;
 }
 
-void itemdb_readdb_additional_fields(int itemid, config_setting_t *it, int n, const char *source)
+void itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it, int n, const char *source)
 {
     // do nothing. plugins can do own work
 }
@@ -1553,9 +1547,9 @@ void itemdb_readdb_additional_fields(int itemid, config_setting_t *it, int n, co
  *               validation errors.
  * @return Nameid of the validated entry, or 0 in case of failure.
  */
-int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source) {
+int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *source) {
 	struct item_data id = { 0 };
-	config_setting_t *t = NULL;
+	struct config_setting_t *t = NULL;
 	const char *str = NULL;
 	int i32 = 0;
 	bool inherit = false;
@@ -1736,7 +1730,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 
 	if ( (t = libconfig->setting_get_member(it, "Trade")) ) {
 		if (config_setting_is_group(t)) {
-			config_setting_t *tt = NULL;
+			struct config_setting_t *tt = NULL;
 
 			if ((tt = libconfig->setting_get_member(t, "override"))) {
 				id.gm_lv_trade_override = libconfig->setting_get_int(tt);
@@ -1802,7 +1796,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 
 	if ((t = libconfig->setting_get_member(it, "Nouse"))) {
 		if (config_setting_is_group(t)) {
-			config_setting_t *nt = NULL;
+			struct config_setting_t *nt = NULL;
 
 			if ((nt = libconfig->setting_get_member(t, "override"))) {
 				id.item_usage.override = libconfig->setting_get_int(nt);
@@ -1850,7 +1844,7 @@ int itemdb_readdb_libconfig_sub(config_setting_t *it, int n, const char *source)
 	return itemdb->validate_entry(&id, n, source);
 }
 
-bool itemdb_lookup_const(const config_setting_t *it, const char *name, int *value)
+bool itemdb_lookup_const(const struct config_setting_t *it, const char *name, int *value)
 {
 	nullpo_retr(false, name);
 	nullpo_retr(false, value);
@@ -1879,18 +1873,23 @@ bool itemdb_lookup_const(const config_setting_t *it, const char *name, int *valu
  */
 int itemdb_readdb_libconfig(const char *filename) {
 	bool duplicate[MAX_ITEMDB];
-	config_t item_db_conf;
-	config_setting_t *itdb, *it;
+	struct config_t item_db_conf;
+	struct config_setting_t *itdb, *it;
 	char filepath[256];
 	int i = 0, count = 0;
 
 	nullpo_ret(filename);
+
 	sprintf(filepath, "%s/%s", map->db_path, filename);
-	memset(&duplicate,0,sizeof(duplicate));
-	if( libconfig->read_file(&item_db_conf, filepath) || !(itdb = libconfig->setting_get_member(item_db_conf.root, "item_db")) ) {
+	if (!libconfig->load_file(&item_db_conf, filepath))
+		return 0;
+
+	if ((itdb = libconfig->setting_get_member(item_db_conf.root, "item_db")) == NULL) {
 		ShowError("can't read %s\n", filepath);
 		return 0;
 	}
+
+	memset(&duplicate,0,sizeof(duplicate));
 
 	while( (it = libconfig->setting_get_elem(itdb,i++)) ) {
 		int nameid = itemdb->readdb_libconfig_sub(it, i-1, filename);

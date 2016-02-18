@@ -21,11 +21,11 @@
 #ifndef MAP_STATUS_H
 #define MAP_STATUS_H
 
-#include "common/conf.h"
 #include "common/hercules.h"
 #include "common/mmo.h" // NEW_CARTS
 
 struct block_list;
+struct config_setting_t;
 struct elemental_data;
 struct homun_data;
 struct mercenary_data;
@@ -2298,10 +2298,10 @@ struct status_interface {
 	bool (*readdb_job2) (char *fields[], int columns, int current);
 	bool (*readdb_sizefix) (char *fields[], int columns, int current);
 	int (*readdb_refine_libconfig) (const char *filename);
-	int (*readdb_refine_libconfig_sub) (config_setting_t *r, const char *name, const char *source);
+	int (*readdb_refine_libconfig_sub) (struct config_setting_t *r, const char *name, const char *source);
 	bool (*readdb_scconfig) (char *fields[], int columns, int current);
 	void (*read_job_db) (void);
-	void (*read_job_db_sub) (int idx, const char *name, config_setting_t *jdb);
+	void (*read_job_db_sub) (int idx, const char *name, struct config_setting_t *jdb);
 };
 
 #ifdef HERCULES_CORE

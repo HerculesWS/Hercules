@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2013-2015  Hercules Dev Team
-   Copyright (C) 2005-2010  Mark A Lindner
+   Copyright (C) 2013-2016  Hercules Dev Team
+   Copyright (C) 2005-2014  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -32,12 +32,19 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#define fileno _fileno
+#define fstat _fstat
+#define stat _stat // struct stat for fstat()
 #define snprintf  _snprintf
 
-#ifndef __MINGW32__
+#if !defined(__MINGW32__) && _MSC_VER < 1800
 #define atoll     _atoi64
 #define strtoull  _strtoui64
-#endif /* __MINGW32__ */
+#endif
+
+#if !defined(S_ISDIR) && defined(S_IFMT) && defined(S_IFDIR)
+#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#endif
 
 #endif
 

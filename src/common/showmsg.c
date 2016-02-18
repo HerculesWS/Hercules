@@ -23,10 +23,9 @@
 #include "showmsg.h"
 
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/core.h" //[Ind] - For SERVER_TYPE
 #include "common/strlib.h" // StringBuf
-
-#include <libconfig/libconfig.h>
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -799,8 +798,8 @@ void showmsg_showWarning(const char *string, ...)
 	vShowMessage_(MSG_WARNING, string, ap);
 	va_end(ap);
 }
-void showmsg_showConfigWarning(config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
-void showmsg_showConfigWarning(config_setting_t *config, const char *string, ...)
+void showmsg_showConfigWarning(struct config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
+void showmsg_showConfigWarning(struct config_setting_t *config, const char *string, ...)
 {
 	StringBuf buf;
 	va_list ap;

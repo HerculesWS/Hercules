@@ -55,6 +55,7 @@
 #include "map/storage.h"
 #include "map/unit.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/memmgr.h"
 #include "common/md5calc.h"
 #include "common/mmo.h" // NEW_CARTS
@@ -2289,15 +2290,18 @@ void script_set_constant2(const char *name, int value, bool is_parameter, bool i
  */
 void read_constdb(void)
 {
-	config_t constants_conf;
+	struct config_t constants_conf;
 	char filepath[256];
-	config_setting_t *cdb;
-	config_setting_t *t;
+	struct config_setting_t *cdb;
+	struct config_setting_t *t;
 	int i = 0;
 
 	sprintf(filepath, "%s/constants.conf", map->db_path);
 
-	if (libconfig->read_file(&constants_conf, filepath) || !(cdb = libconfig->setting_get_member(constants_conf.root, "constants_db"))) {
+	if (!libconfig->load_file(&constants_conf, filepath))
+		return;
+
+	if ((cdb = libconfig->setting_get_member(constants_conf.root, "constants_db")) == NULL) {
 		ShowError("can't read %s\n", filepath);
 		return;
 	}
@@ -4800,9 +4804,9 @@ uint8 script_add_language(const char *name) {
  * Goes thru db/translations.conf file
  **/
 void script_load_translations(void) {
-	config_t translations_conf;
+	struct config_t translations_conf;
 	const char *config_filename = "db/translations.conf"; // FIXME hardcoded name
-	config_setting_t *translations = NULL;
+	struct config_setting_t *translations = NULL;
 	int i, size;
 	uint32 total = 0;
 	uint8 lang_id = 0, k;
@@ -4822,12 +4826,10 @@ void script_load_translations(void) {
 
 	script->add_language("English");/* 0 is default, which is whatever is in the npc files hardcoded (in our case, English) */
 
-	if (libconfig->read_file(&translations_conf, config_filename)) {
-		ShowError("load_translations: can't read '%s'\n", config_filename);
+	if (!libconfig->load_file(&translations_conf, config_filename))
 		return;
-	}
 
-	if( !(translations = libconfig->lookup(&translations_conf, "translations")) ) {
+	if ((translations = libconfig->lookup(&translations_conf, "translations")) == NULL) {
 		ShowError("load_translations: invalid format on '%s'\n",config_filename);
 		return;
 	}

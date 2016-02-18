@@ -425,10 +425,10 @@ int quest_check(struct map_session_data *sd, int quest_id, enum quest_check_type
  * @return The parsed quest entry.
  * @retval NULL in case of errors.
  */
-struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *source)
+struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, const char *source)
 {
 	struct quest_db *entry = NULL;
-	config_setting_t *t = NULL;
+	struct config_setting_t *t = NULL;
 	int i32 = 0, quest_id;
 	const char *str = NULL;
 	/*
@@ -477,7 +477,7 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
 		for (i = 0; i < len && entry->objectives_count < MAX_QUEST_OBJECTIVES; i++) {
 			// Note: We ensure that objectives_count < MAX_QUEST_OBJECTIVES because
 			//       quest_log (as well as the client) expect this maximum size.
-			config_setting_t *tt = libconfig->setting_get_elem(t, i);
+			struct config_setting_t *tt = libconfig->setting_get_elem(t, i);
 			int mob_id = 0, count = 0;
 			if (!tt)
 				break;
@@ -496,7 +496,7 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
 	if ((t=libconfig->setting_get_member(cs, "Drops")) && config_setting_is_list(t)) {
 		int i, len = libconfig->setting_length(t);
 		for (i = 0; i < len; i++) {
-			config_setting_t *tt = libconfig->setting_get_elem(t, i);
+			struct config_setting_t *tt = libconfig->setting_get_elem(t, i);
 			int mob_id = 0, nameid = 0, rate = 0;
 			if (!tt)
 				break;
@@ -527,13 +527,16 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
 int quest_read_db(void)
 {
 	char filepath[256];
-	config_t quest_db_conf;
-	config_setting_t *qdb = NULL, *q = NULL;
+	struct config_t quest_db_conf;
+	struct config_setting_t *qdb = NULL, *q = NULL;
 	int i = 0, count = 0;
 	const char *filename = "quest_db.conf";
 
 	sprintf(filepath, "%s/%s", map->db_path, filename);
-	if (libconfig->read_file(&quest_db_conf, filepath) || !(qdb = libconfig->setting_get_member(quest_db_conf.root, "quest_db"))) {
+	if (!libconfig->load_file(&quest_db_conf, filepath))
+		return -1;
+
+	if ((qdb = libconfig->setting_get_member(quest_db_conf.root, "quest_db")) == NULL) {
 		ShowError("can't read %s\n", filepath);
 		return -1;
 	}

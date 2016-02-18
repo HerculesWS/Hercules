@@ -589,19 +589,19 @@ void channel_quit_guild(struct map_session_data *sd)
 
 void read_channels_config(void)
 {
-	config_t channels_conf;
-	config_setting_t *chsys = NULL;
+	struct config_t channels_conf;
+	struct config_setting_t *chsys = NULL;
 	const char *config_filename = "conf/channels.conf"; // FIXME hardcoded name
 
-	if (libconfig->read_file(&channels_conf, config_filename))
+	if (!libconfig->load_file(&channels_conf, config_filename))
 		return;
 
 	chsys = libconfig->lookup(&channels_conf, "chsys");
 
 	if (chsys != NULL) {
-		config_setting_t *settings = libconfig->setting_get_elem(chsys, 0);
-		config_setting_t *channels;
-		config_setting_t *colors;
+		struct config_setting_t *settings = libconfig->setting_get_elem(chsys, 0);
+		struct config_setting_t *channels;
+		struct config_setting_t *colors;
 		int i,k;
 		const char *local_name, *ally_name,
 					*local_color, *ally_color,
@@ -710,7 +710,7 @@ void read_channels_config(void)
 			CREATE(channel->config->colors, unsigned int, color_count);
 			CREATE(channel->config->colors_name, char *, color_count);
 			for(i = 0; i < color_count; i++) {
-				config_setting_t *color = libconfig->setting_get_elem(colors, i);
+				struct config_setting_t *color = libconfig->setting_get_elem(colors, i);
 
 				CREATE(channel->config->colors_name[i], char, HCS_NAME_LENGTH);
 
@@ -771,7 +771,7 @@ void read_channels_config(void)
 			int channel_count = libconfig->setting_length(channels);
 
 			for(i = 0; i < channel_count; i++) {
-				config_setting_t *chan = libconfig->setting_get_elem(channels, i);
+				struct config_setting_t *chan = libconfig->setting_get_elem(channels, i);
 				const char *name = config_setting_name(chan);
 				const char *color = libconfig->setting_get_string_elem(channels,i);
 

@@ -4982,27 +4982,27 @@ enum bl_type map_zone_bl_type(const char *entry, enum map_zone_skill_subtype *su
 }
 /* [Ind/Hercules] */
 void read_map_zone_db(void) {
-	config_t map_zone_db;
-	config_setting_t *zones = NULL;
+	struct config_t map_zone_db;
+	struct config_setting_t *zones = NULL;
 	/* TODO: #ifndef required for re/pre-re */
 #ifdef RENEWAL
 	const char *config_filename = "db/re/map_zone_db.conf"; // FIXME hardcoded name
 #else
 	const char *config_filename = "db/pre-re/map_zone_db.conf"; // FIXME hardcoded name
 #endif
-	if (libconfig->read_file(&map_zone_db, config_filename))
+	if (!libconfig->load_file(&map_zone_db, config_filename))
 		return;
 
 	zones = libconfig->lookup(&map_zone_db, "zones");
 
 	if (zones != NULL) {
 		struct map_zone_data *zone;
-		config_setting_t *zone_e;
-		config_setting_t *skills;
-		config_setting_t *items;
-		config_setting_t *mapflags;
-		config_setting_t *commands;
-		config_setting_t *caps;
+		struct config_setting_t *zone_e;
+		struct config_setting_t *skills;
+		struct config_setting_t *items;
+		struct config_setting_t *mapflags;
+		struct config_setting_t *commands;
+		struct config_setting_t *caps;
 		const char *name;
 		const char *zonename;
 		int i,h,v,j;
@@ -5054,7 +5054,7 @@ void read_map_zone_db(void) {
 				disabled_skills_count = libconfig->setting_length(skills);
 				/* validate */
 				for(h = 0; h < libconfig->setting_length(skills); h++) {
-					config_setting_t *skillinfo = libconfig->setting_get_elem(skills, h);
+					struct config_setting_t *skillinfo = libconfig->setting_get_elem(skills, h);
 					name = config_setting_name(skillinfo);
 					if( !map->zone_str2skillid(name) ) {
 						ShowError("map_zone_db: unknown skill (%s) in disabled_skills for zone '%s', skipping skill...\n",name,zone->name);
@@ -5069,7 +5069,7 @@ void read_map_zone_db(void) {
 				/* all ok, process */
 				CREATE( zone->disabled_skills, struct map_zone_disabled_skill_entry *, disabled_skills_count );
 				for(h = 0, v = 0; h < libconfig->setting_length(skills); h++) {
-					config_setting_t *skillinfo = libconfig->setting_get_elem(skills, h);
+					struct config_setting_t *skillinfo = libconfig->setting_get_elem(skills, h);
 					struct map_zone_disabled_skill_entry * entry;
 					enum bl_type type;
 					name = config_setting_name(skillinfo);
@@ -5092,7 +5092,7 @@ void read_map_zone_db(void) {
 				disabled_items_count = libconfig->setting_length(items);
 				/* validate */
 				for(h = 0; h < libconfig->setting_length(items); h++) {
-					config_setting_t *item = libconfig->setting_get_elem(items, h);
+					struct config_setting_t *item = libconfig->setting_get_elem(items, h);
 					name = config_setting_name(item);
 					if( !map->zone_str2itemid(name) ) {
 						ShowError("map_zone_db: unknown item (%s) in disabled_items for zone '%s', skipping item...\n",name,zone->name);
@@ -5111,7 +5111,7 @@ void read_map_zone_db(void) {
 					CREATE(zone->cant_disable_items, int, zone->cant_disable_items_count);
 				}
 				for(h = 0, v = 0, j = 0; h < libconfig->setting_length(items); h++) {
-					config_setting_t *item = libconfig->setting_get_elem(items, h);
+					struct config_setting_t *item = libconfig->setting_get_elem(items, h);
 
 					name = config_setting_name(item);
 					if( libconfig->setting_get_bool(item) ) { /* only add if enabled */
@@ -5143,7 +5143,7 @@ void read_map_zone_db(void) {
 				disabled_commands_count = libconfig->setting_length(commands);
 				/* validate */
 				for(h = 0; h < libconfig->setting_length(commands); h++) {
-					config_setting_t *command = libconfig->setting_get_elem(commands, h);
+					struct config_setting_t *command = libconfig->setting_get_elem(commands, h);
 					name = config_setting_name(command);
 					if( !atcommand->exists(name) ) {
 						ShowError("map_zone_db: unknown command '%s' in disabled_commands for zone '%s', skipping entry...\n",name,zone->name);
@@ -5158,7 +5158,7 @@ void read_map_zone_db(void) {
 				/* all ok, process */
 				CREATE( zone->disabled_commands, struct map_zone_disabled_command_entry *, disabled_commands_count );
 				for(h = 0, v = 0; h < libconfig->setting_length(commands); h++) {
-					config_setting_t *command = libconfig->setting_get_elem(commands, h);
+					struct config_setting_t *command = libconfig->setting_get_elem(commands, h);
 					struct map_zone_disabled_command_entry * entry;
 					int group_lv;
 					name = config_setting_name(command);
@@ -5179,7 +5179,7 @@ void read_map_zone_db(void) {
 				capped_skills_count = libconfig->setting_length(caps);
 				/* validate */
 				for(h = 0; h < libconfig->setting_length(caps); h++) {
-					config_setting_t *cap = libconfig->setting_get_elem(caps, h);
+					struct config_setting_t *cap = libconfig->setting_get_elem(caps, h);
 					name = config_setting_name(cap);
 					if( !map->zone_str2skillid(name) ) {
 						ShowError("map_zone_db: unknown skill (%s) in skill_damage_cap for zone '%s', skipping skill...\n",name,zone->name);
@@ -5194,7 +5194,7 @@ void read_map_zone_db(void) {
 				/* all ok, process */
 				CREATE( zone->capped_skills, struct map_zone_skill_damage_cap_entry *, capped_skills_count );
 				for(h = 0, v = 0; h < libconfig->setting_length(caps); h++) {
-					config_setting_t *cap = libconfig->setting_get_elem(caps, h);
+					struct config_setting_t *cap = libconfig->setting_get_elem(caps, h);
 					struct map_zone_skill_damage_cap_entry * entry;
 					enum bl_type type;
 					name = config_setting_name(cap);
@@ -5219,8 +5219,8 @@ void read_map_zone_db(void) {
 
 		/* process inheritance, aka loop through the whole thing again :P */
 		for (i = 0; i < zone_count; ++i) {
-			config_setting_t *inherit_tree = NULL;
-			config_setting_t *new_entry = NULL;
+			struct config_setting_t *inherit_tree = NULL;
+			struct config_setting_t *new_entry = NULL;
 			int inherit_count;
 
 			zone_e = libconfig->setting_get_elem(zones, i);
@@ -5278,7 +5278,7 @@ void read_map_zone_db(void) {
 					for(j = 0; j < disabled_skills_count_i; j++) {
 						int k;
 						for(k = 0; k < disabled_skills_count; k++) {
-							config_setting_t *skillinfo = libconfig->setting_get_elem(skills, k);
+							struct config_setting_t *skillinfo = libconfig->setting_get_elem(skills, k);
 							if( map->zone_str2skillid(config_setting_name(skillinfo)) == izone->disabled_skills[j]->nameid ) {
 								break;
 							}
@@ -5302,7 +5302,7 @@ void read_map_zone_db(void) {
 					for(j = 0; j < disabled_items_count_i; j++) {
 						int k;
 						for(k = 0; k < disabled_items_count; k++) {
-							config_setting_t *item = libconfig->setting_get_elem(items, k);
+							struct config_setting_t *item = libconfig->setting_get_elem(items, k);
 
 							name = config_setting_name(item);
 
@@ -5348,7 +5348,7 @@ void read_map_zone_db(void) {
 					for(j = 0; j < disabled_commands_count_i; j++) {
 						int k;
 						for(k = 0; k < disabled_commands_count; k++) {
-							config_setting_t *command = libconfig->setting_get_elem(commands, k);
+							struct config_setting_t *command = libconfig->setting_get_elem(commands, k);
 							if( atcommand->exists(config_setting_name(command))->func == izone->disabled_commands[j]->cmd ) {
 								break;
 							}
@@ -5372,7 +5372,7 @@ void read_map_zone_db(void) {
 					for(j = 0; j < capped_skills_count_i; j++) {
 						int k;
 						for(k = 0; k < capped_skills_count; k++) {
-							config_setting_t *cap = libconfig->setting_get_elem(caps, k);
+							struct config_setting_t *cap = libconfig->setting_get_elem(caps, k);
 							if( map->zone_str2skillid(config_setting_name(cap)) == izone->capped_skills[j]->nameid ) {
 								break;
 							}
