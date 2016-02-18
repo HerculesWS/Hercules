@@ -6651,7 +6651,7 @@ BUILDIN(getarraysize)
 	return true;
 }
 int script_array_index_cmp(const void *a, const void *b) {
-	return ( *(unsigned int*)a - *(unsigned int*)b );
+	return ( *(const unsigned int*)a - *(const unsigned int*)b );
 }
 
 /// Deletes count or all the elements in an array, from the starting index.
@@ -11094,7 +11094,7 @@ BUILDIN(getstatus)
 		case 4: script_pushint(st, sd->sc.data[id]->val4); break;
 		case 5:
 		{
-			struct TimerData* td = (struct TimerData*)timer->get(sd->sc.data[id]->timer);
+			const struct TimerData* td = (const struct TimerData*)timer->get(sd->sc.data[id]->timer);
 
 			if( td ) {
 				// return the amount of time remaining
@@ -19783,7 +19783,7 @@ BUILDIN(checkbound)
 /* returns 0 when successful, 1 otherwise */
 BUILDIN(bg_match_over) {
 	bool canceled = script_hasdata(st,3) ? true : false;
-	struct bg_arena *arena = bg->name2arena((char*)script_getstr(st, 2));
+	struct bg_arena *arena = bg->name2arena((const char*)script_getstr(st, 2));
 
 	if( arena ) {
 		bg->match_over(arena,canceled);
