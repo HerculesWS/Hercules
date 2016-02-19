@@ -3567,7 +3567,7 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 	}
 
 	st = script->alloc_state(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
-	script->setd_sub(st, NULL, ".@atcmd_command$", 0, (void *)command, NULL);
+	script->setd_sub(st, NULL, ".@atcmd_command$", 0, command, NULL);
 
 	len = strlen(message);
 	if (len) {

@@ -3358,7 +3358,7 @@ int set_var(struct map_session_data *sd, char *name, void *val)
 	return script->set_reg(NULL, sd, reference_uid(script->add_str(name),0), name, val, NULL);
 }
 
-void setd_sub(struct script_state *st, struct map_session_data *sd, const char *varname, int elem, void *value, struct reg_db *ref)
+void setd_sub(struct script_state *st, struct map_session_data *sd, const char *varname, int elem, const void *value, struct reg_db *ref)
 {
 	script->set_reg(st, sd, reference_uid(script->add_str(varname),elem), varname, value, ref);
 }
@@ -15923,10 +15923,10 @@ BUILDIN(setd)
 		}
 	}
 
-	if( is_string_variable(varname) ) {
-		script->setd_sub(st, sd, varname, elem, (void *)script_getstr(st, 3), NULL);
+	if (is_string_variable(varname)) {
+		script->setd_sub(st, sd, varname, elem, script_getstr(st, 3), NULL);
 	} else {
-		script->setd_sub(st, sd, varname, elem, (void *)h64BPTRSIZE(script_getnum(st, 3)), NULL);
+		script->setd_sub(st, sd, varname, elem, (const void *)h64BPTRSIZE(script_getnum(st, 3)), NULL);
 	}
 
 	return true;

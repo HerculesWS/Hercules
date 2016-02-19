@@ -692,7 +692,7 @@ struct script_interface {
 	int (*add_str) (const char* p);
 	const char* (*get_str) (int id);
 	int (*search_str) (const char* p);
-	void (*setd_sub) (struct script_state *st, struct map_session_data *sd, const char *varname, int elem, void *value, struct reg_db *ref);
+	void (*setd_sub) (struct script_state *st, struct map_session_data *sd, const char *varname, int elem, const void *value, struct reg_db *ref);
 	void (*attach_state) (struct script_state* st);
 	/* */
 	struct script_queue *(*queue) (int idx);
