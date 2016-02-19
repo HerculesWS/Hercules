@@ -461,7 +461,8 @@ AC_LANG([C])
 # -Wfloat-equal comparing floating point with == or != is unsafe
 # flags what can be used but now return no warnings: -Warray-bounds -Wbool-compare -Wcast-align
 #   -Wchar-subscripts -Wchkp -Wclobbered -Wcomment -Wdisabled-optimization -Wempty-body 
-#   -Werror-implicit-function-declaration
+#   -Werror-implicit-function-declaration -Wignored-qualifiers
+#   -Winit-self
 
 CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wextra -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
@@ -809,6 +810,7 @@ AC_CHECK_COMPILER_WFLAG(format-security)
 AC_CHECK_COMPILER_WFLAG(format)
 AC_CHECK_COMPILER_WFLAG(format-signedness)
 AC_CHECK_COMPILER_WFLAG(format-y2k)
+AC_CHECK_COMPILER_WFLAG(missing-include-dirs)
 AC_CHECK_COMPILER_WNOFLAG(format-nonliteral)
 AC_CHECK_COMPILER_WNOFLAG(switch)
 AC_CHECK_COMPILER_WNOFLAG(missing-field-initializers)
