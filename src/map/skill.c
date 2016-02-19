@@ -5123,7 +5123,7 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 			unit->set_walkdelay(src, tick, battle_config.default_walk_delay+skill->get_walkdelay(ud->skill_id, ud->skill_lv), 1);
 
 		if(battle_config.skill_log && battle_config.skill_log&src->type)
-			ShowInfo("Type %d, ID %d skill castend id [id =%d, lv=%d, target ID %d]\n",
+			ShowInfo("Type %u, ID %d skill castend id [id =%d, lv=%d, target ID %d]\n",
 				src->type, src->id, ud->skill_id, ud->skill_lv, target->id);
 
 		map->freeblock_lock();
@@ -10023,7 +10023,7 @@ int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		}
 
 		if(battle_config.skill_log && battle_config.skill_log&src->type)
-			ShowInfo("Type %d, ID %d skill castend pos [id =%d, lv=%d, (%d,%d)]\n",
+			ShowInfo("Type %u, ID %d skill castend pos [id =%d, lv=%d, (%d,%d)]\n",
 				src->type, src->id, ud->skill_id, ud->skill_lv, ud->skillx, ud->skilly);
 
 		if (ud->walktimer != INVALID_TIMER)
@@ -11950,7 +11950,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			case UNT_MANHOLE:
 				return 0;
 			default:
-				ShowError("skill_unit_onplace_timer: interval error (unit id %x)\n", sg->unit_id);
+				ShowError("skill_unit_onplace_timer: interval error (unit id %x)\n", (unsigned int)sg->unit_id);
 				return 0;
 		}
 	}
@@ -16519,7 +16519,7 @@ struct skill_unit_group_tickset *skill_unitgrouptickset_search(struct block_list
 	}
 
 	if (j == -1) {
-		ShowWarning ("skill_unitgrouptickset_search: tickset is full. ( failed for skill '%s' on unit %d )\n",skill->get_name(group->skill_id),bl->type);
+		ShowWarning ("skill_unitgrouptickset_search: tickset is full. ( failed for skill '%s' on unit %u )\n", skill->get_name(group->skill_id), bl->type);
 		j = id % MAX_SKILLUNITGROUPTICKSET;
 	}
 

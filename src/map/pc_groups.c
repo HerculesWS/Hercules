@@ -110,7 +110,7 @@ static void read_config(void) {
 				snprintf(temp, sizeof(temp), "Group %d", id);
 				if ((name = config_setting_add(group, "name", CONFIG_TYPE_STRING)) == NULL ||
 				    !config_setting_set_string(name, temp)) {
-					ShowError("pc_groups:read_config: failed to set missing group name, id=%d, skipping... (%s:%d)\n",
+					ShowError("pc_groups:read_config: failed to set missing group name, id=%d, skipping... (%s:%u)\n",
 					          id, config_setting_source_file(group), config_setting_source_line(group));
 					--i;
 					--group_count;
@@ -446,7 +446,7 @@ void do_init_pc_groups(void) {
 	for(i = 0; i < len; i++) {
 		unsigned int p;
 		if( ( p = pc_groups_add_permission(pc_g_defaults[i].name) ) != pc_g_defaults[i].permission )
-			ShowError("do_init_pc_groups: %s error : %d != %d\n",pc_g_defaults[i].name,p,pc_g_defaults[i].permission);
+			ShowError("do_init_pc_groups: %s error : %u != %u\n", pc_g_defaults[i].name, p, pc_g_defaults[i].permission);
 	}
 
 	/**

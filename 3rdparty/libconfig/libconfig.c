@@ -192,7 +192,7 @@ static void __config_write_value(const struct config_t *config,
       switch(format)
       {
         case CONFIG_FORMAT_HEX:
-          fprintf(stream, "0x%X", value->ival);
+          fprintf(stream, "0x%X", (unsigned int)(value->ival));
           break;
 
         case CONFIG_FORMAT_DEFAULT:
@@ -207,7 +207,7 @@ static void __config_write_value(const struct config_t *config,
       switch(format)
       {
         case CONFIG_FORMAT_HEX:
-          fprintf(stream, "0x" INT64_HEX_FMT "L", value->llval);
+          fprintf(stream, "0x" INT64_HEX_FMT "L", (unsigned long long)(value->llval));
           break;
 
         case CONFIG_FORMAT_DEFAULT:
@@ -291,7 +291,7 @@ static void __config_write_value(const struct config_t *config,
               if(c >= ' ')
                 fputc(c, stream);
               else
-                fprintf(stream, "\\x%02X", c);
+                fprintf(stream, "\\x%02X", (unsigned int)(c));
           }
         }
       }

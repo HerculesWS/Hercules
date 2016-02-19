@@ -805,7 +805,7 @@ void showmsg_showConfigWarning(struct config_setting_t *config, const char *stri
 	va_list ap;
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, string);
-	StrBuf->Printf(&buf, " (%s:%d)\n", config_setting_source_file(config), config_setting_source_line(config));
+	StrBuf->Printf(&buf, " (%s:%u)\n", config_setting_source_file(config), config_setting_source_line(config));
 	va_start(ap, string);
 	vShowMessage_(MSG_WARNING, StrBuf->Value(&buf), ap);
 	va_end(ap);

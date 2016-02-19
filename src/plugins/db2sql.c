@@ -153,7 +153,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		StrBuf->Printf(&buf, "'%s',", e_name);
 
 		// type
-		StrBuf->Printf(&buf, "'%u',", it->flag.delay_consume?IT_DELAYCONSUME:it->type);
+		StrBuf->Printf(&buf, "'%d',", it->flag.delay_consume ? IT_DELAYCONSUME : it->type);
 
 		// price_buy
 		StrBuf->Printf(&buf, "'%d',", it->value_buy);
@@ -162,22 +162,22 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		StrBuf->Printf(&buf, "'%d',", it->value_sell);
 
 		// weight
-		StrBuf->Printf(&buf, "'%u',", it->weight);
+		StrBuf->Printf(&buf, "'%d',", it->weight);
 
 		// atk
-		StrBuf->Printf(&buf, "'%u',", it->atk);
+		StrBuf->Printf(&buf, "'%d',", it->atk);
 
 		// matk
-		StrBuf->Printf(&buf, "'%u',", it->matk);
+		StrBuf->Printf(&buf, "'%d',", it->matk);
 
 		// defence
-		StrBuf->Printf(&buf, "'%u',", it->def);
+		StrBuf->Printf(&buf, "'%d',", it->def);
 
 		// range
-		StrBuf->Printf(&buf, "'%u',", it->range);
+		StrBuf->Printf(&buf, "'%d',", it->range);
 
 		// slots
-		StrBuf->Printf(&buf, "'%u',", it->slot);
+		StrBuf->Printf(&buf, "'%d',", it->slot);
 
 		// equip_jobs
 		if (libconfig->setting_lookup_int(entry, "Job", &i32)) // This is an unsigned value, do not check for >= 0
@@ -194,47 +194,47 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		StrBuf->Printf(&buf, "'%u',", ui32);
 
 		// equip_genders
-		StrBuf->Printf(&buf, "'%u',", it->sex);
+		StrBuf->Printf(&buf, "'%d',", it->sex);
 
 		// equip_locations
-		StrBuf->Printf(&buf, "'%u',", it->equip);
+		StrBuf->Printf(&buf, "'%d',", it->equip);
 
 		// weapon_level
-		StrBuf->Printf(&buf, "'%u',", it->wlv);
+		StrBuf->Printf(&buf, "'%d',", it->wlv);
 
 		// equip_level_min
-		StrBuf->Printf(&buf, "'%u',", it->elv);
+		StrBuf->Printf(&buf, "'%d',", it->elv);
 
 		// equip_level_max
 		if ((t = libconfig->setting_get_member(entry, "EquipLv")) && config_setting_is_aggregate(t) && libconfig->setting_length(t) >= 2)
-			StrBuf->Printf(&buf, "'%u',", it->elvmax);
+			StrBuf->Printf(&buf, "'%d',", it->elvmax);
 		else
 			StrBuf->AppendStr(&buf, "NULL,");
 
 		// refineable
-		StrBuf->Printf(&buf, "'%u',", it->flag.no_refine?0:1);
+		StrBuf->Printf(&buf, "'%d',", it->flag.no_refine?0:1);
 
 		// view
-		StrBuf->Printf(&buf, "'%u',", it->look);
+		StrBuf->Printf(&buf, "'%d',", it->look);
 
 		// bindonequip
-		StrBuf->Printf(&buf, "'%u',", it->flag.bindonequip?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.bindonequip?1:0);
 
 		// forceserial
-		StrBuf->Printf(&buf, "'%u',", it->flag.force_serial?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.force_serial?1:0);
 
 		// buyingstore
-		StrBuf->Printf(&buf, "'%u',", it->flag.buyingstore?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.buyingstore?1:0);
 
 		// delay
-		StrBuf->Printf(&buf, "'%u',", it->delay);
+		StrBuf->Printf(&buf, "'%d',", it->delay);
 
 		// trade_flag
-		StrBuf->Printf(&buf, "'%u',", it->flag.trade_restriction);
+		StrBuf->Printf(&buf, "'%d',", it->flag.trade_restriction);
 
 		// trade_group
 		if (it->flag.trade_restriction != ITR_NONE && it->gm_lv_trade_override > 0 && it->gm_lv_trade_override < 100) {
-			StrBuf->Printf(&buf, "'%u',", it->gm_lv_trade_override);
+			StrBuf->Printf(&buf, "'%d',", it->gm_lv_trade_override);
 		} else {
 			StrBuf->AppendStr(&buf, "NULL,");
 		}
@@ -266,7 +266,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 
 		// sprite
 		if (it->flag.available) {
-			StrBuf->Printf(&buf, "'%u',", it->view_id);
+			StrBuf->Printf(&buf, "'%d',", it->view_id);
 		} else {
 			StrBuf->AppendStr(&buf, "NULL,");
 		}
@@ -437,7 +437,7 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 		StrBuf->Init(&buf);
 
 		// id
-		StrBuf->Printf(&buf, "%u,", md->mob_id);
+		StrBuf->Printf(&buf, "%d,", md->mob_id);
 
 		// Sprite
 		SQL->EscapeString(NULL, e_name, md->sprite);
@@ -476,10 +476,10 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 		StrBuf->Printf(&buf, "%u,", md->status.rhw.atk2);
 
 		// DEF
-		StrBuf->Printf(&buf, "%u,", md->status.def);
+		StrBuf->Printf(&buf, "%d,", md->status.def);
 
 		// MDEF
-		StrBuf->Printf(&buf, "%u,", md->status.mdef);
+		StrBuf->Printf(&buf, "%d,", md->status.mdef);
 
 		// STR
 		StrBuf->Printf(&buf, "%u,", md->status.str);
@@ -500,10 +500,10 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 		StrBuf->Printf(&buf, "%u,", md->status.luk);
 
 		// Range2
-		StrBuf->Printf(&buf, "%u,", md->range2);
+		StrBuf->Printf(&buf, "%d,", md->range2);
 
 		// Range3
-		StrBuf->Printf(&buf, "%u,", md->range3);
+		StrBuf->Printf(&buf, "%d,", md->range3);
 
 		// Scale
 		StrBuf->Printf(&buf, "%u,", md->status.size);
@@ -512,7 +512,7 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 		StrBuf->Printf(&buf, "%u,", md->status.race);
 
 		// Element
-		StrBuf->Printf(&buf, "%u,", md->status.def_ele + 20 * md->status.ele_lv);
+		StrBuf->Printf(&buf, "%d,", md->status.def_ele + 20 * md->status.ele_lv);
 
 		// Mode
 		StrBuf->Printf(&buf, "0x%X,", md->status.mode);
@@ -534,9 +534,9 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 
 		for (i = 0; i < 3; i++) {
 			// MVP{i}id
-			StrBuf->Printf(&buf, "%u,", md->mvpitem[i].nameid);
+			StrBuf->Printf(&buf, "%d,", md->mvpitem[i].nameid);
 			// MVP{i}per
-			StrBuf->Printf(&buf, "%u,", md->mvpitem[i].p);
+			StrBuf->Printf(&buf, "%d,", md->mvpitem[i].p);
 		}
 
 		// Scan for cards
@@ -550,15 +550,15 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 			if (card_idx == i)
 				continue;
 			// Drop{i}id
-			StrBuf->Printf(&buf, "%u,", md->dropitem[i].nameid);
+			StrBuf->Printf(&buf, "%d,", md->dropitem[i].nameid);
 			// Drop{i}per
-			StrBuf->Printf(&buf, "%u,", md->dropitem[i].p);
+			StrBuf->Printf(&buf, "%d,", md->dropitem[i].p);
 		}
 
 		// DropCardid
-		StrBuf->Printf(&buf, "%u,", md->dropitem[card_idx].nameid);
+		StrBuf->Printf(&buf, "%d,", md->dropitem[card_idx].nameid);
 		// DropCardper
-		StrBuf->Printf(&buf, "%u", md->dropitem[card_idx].p);
+		StrBuf->Printf(&buf, "%d", md->dropitem[card_idx].p);
 
 		fprintf(tosql.fp, "REPLACE INTO `%s` VALUES (%s);\n", tosql.db_name, StrBuf->Value(&buf));
 

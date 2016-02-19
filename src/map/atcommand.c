@@ -223,8 +223,8 @@ ACMD(send)
 
 	// read message type as hex number (without the 0x)
 	if (!*message
-	 || !((sscanf(message, "len %x", &type)==1 && (len=1, true))
-	 || sscanf(message, "%x", &type)==1)
+	 || !((sscanf(message, "len %x", (unsigned int*)&type)==1 && (len=1, true))
+	 || sscanf(message, "%x", (unsigned int*)&type)==1)
 	) {
 		clif->message(fd, msg_fd(fd,900)); // Usage:
 		clif->message(fd, msg_fd(fd,901)); // @send len <packet hex number>
@@ -252,7 +252,7 @@ ACMD(send)
 } while(0) //define SKIP_VALUE
 
 #define GET_VALUE(p,num) do { \
-	if(sscanf((p), "x%lx", &(num)) < 1 && sscanf((p), "%ld ", &(num)) < 1){\
+	if(sscanf((p), "x%lx", (long unsigned int*)&(num)) < 1 && sscanf((p), "%ld ", &(num)) < 1){\
 		PARSE_ERROR("Invalid number in:",(p));\
 		return false;\
 	}\
@@ -2272,11 +2272,11 @@ ACMD(gat) {
 	for (y = 2; y >= -2; y--) {
 		safesnprintf(atcmd_output, sizeof(atcmd_output), "%s (x= %d, y= %d) %02X %02X %02X %02X %02X",
 				map->list[sd->bl.m].name, sd->bl.x - 2, sd->bl.y + y,
-				map->getcell(sd->bl.m, &sd->bl, sd->bl.x - 2, sd->bl.y + y, CELL_GETTYPE),
-				map->getcell(sd->bl.m, &sd->bl, sd->bl.x - 1, sd->bl.y + y, CELL_GETTYPE),
-				map->getcell(sd->bl.m, &sd->bl, sd->bl.x,     sd->bl.y + y, CELL_GETTYPE),
-				map->getcell(sd->bl.m, &sd->bl, sd->bl.x + 1, sd->bl.y + y, CELL_GETTYPE),
-				map->getcell(sd->bl.m, &sd->bl, sd->bl.x + 2, sd->bl.y + y, CELL_GETTYPE));
+				(unsigned int)map->getcell(sd->bl.m, &sd->bl, sd->bl.x - 2, sd->bl.y + y, CELL_GETTYPE),
+				(unsigned int)map->getcell(sd->bl.m, &sd->bl, sd->bl.x - 1, sd->bl.y + y, CELL_GETTYPE),
+				(unsigned int)map->getcell(sd->bl.m, &sd->bl, sd->bl.x,     sd->bl.y + y, CELL_GETTYPE),
+				(unsigned int)map->getcell(sd->bl.m, &sd->bl, sd->bl.x + 1, sd->bl.y + y, CELL_GETTYPE),
+				(unsigned int)map->getcell(sd->bl.m, &sd->bl, sd->bl.x + 2, sd->bl.y + y, CELL_GETTYPE));
 
 		clif->message(fd, atcmd_output);
 	}

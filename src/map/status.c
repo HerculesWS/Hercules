@@ -11016,7 +11016,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 	st = status->get_status_data(bl);
 
 	if (!sc || (sce = sc->data[type]) == NULL) {
-		ShowDebug("status_change_timer: Null pointer id: %d data: %"PRIdPTR" bl-type: %d\n", id, data, bl->type);
+		ShowDebug("status_change_timer: Null pointer id: %d data: %"PRIdPTR" bl-type: %u\n", id, data, bl->type);
 		return 0;
 	}
 

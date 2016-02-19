@@ -305,7 +305,7 @@ void *mmalloc_(size_t size, const char *file, int line, const char *func) {
 	struct unit_head *head;
 
 	if (((long) size) < 0) {
-		ShowError("mmalloc_: %"PRIdS"\n", size);
+		ShowError("mmalloc_: %"PRIuS"\n", size);
 		return NULL;
 	}
 
@@ -820,7 +820,7 @@ void memmgr_report (int extra) {
 	}
 	for( j = 0; j < 100; j++ ) {
 		if( data[j].size != 0 ) {
-			ShowMessage("[malloc] : "CL_WHITE"%s"CL_RESET":"CL_WHITE"%d"CL_RESET" %d instances => %.2f MB\n",data[j].file,data[j].line,data[j].count,(double)((data[j].size)/1024)/1024);
+			ShowMessage("[malloc] : "CL_WHITE"%s"CL_RESET":"CL_WHITE"%d"CL_RESET" %u instances => %.2f MB\n",data[j].file,data[j].line,data[j].count,(double)((data[j].size)/1024)/1024);
 		}
 	}
 	ShowMessage("[malloc] : reporting %u instances | %.2f MB\n",count,(double)((size)/1024)/1024);
