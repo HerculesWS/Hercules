@@ -4783,12 +4783,10 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 //Assuming that 99% of the cases we will not need to check for the flag.rh... we don't.
 //ATK_RATE scales the damage. 100 = no change. 50 is halved, 200 is doubled, etc
 #define ATK_RATE( a ) do { int64 temp__ = (a); wd.damage= wd.damage*temp__/100 ; if(flag.lh) wd.damage2= wd.damage2*temp__/100; } while(0)
-#define ATK_RATE2( a , b ) do { wd.damage= wd.damage*(a)/100 ; if(flag.lh) wd.damage2= wd.damage2*(b)/100; } while(0)
 #define ATK_RATER(a) ( wd.damage = wd.damage*(a)/100 )
 #define ATK_RATEL(a) ( wd.damage2 = wd.damage2*(a)/100 )
 //Adds dmg%. 100 = +100% (double) damage. 10 = +10% damage
 #define ATK_ADDRATE( a ) do { int64 temp__ = (a); wd.damage+= wd.damage*temp__/100; if(flag.lh) wd.damage2+= wd.damage2*temp__/100; } while(0)
-#define ATK_ADDRATE2( a , b ) do { wd.damage+= wd.damage*(a)/100 ; if(flag.lh) wd.damage2+= wd.damage2*(b)/100; } while(0)
 //Adds an absolute value to damage. 100 = +100 damage
 #define ATK_ADD( a ) do { int64 temp__ = (a); wd.damage += temp__; if (flag.lh) wd.damage2 += temp__; } while(0)
 #define ATK_ADD2( a , b ) do { wd.damage += (a); if (flag.lh) wd.damage2 += (b); } while(0)
@@ -6373,11 +6371,9 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 	return wd.dmg_lv;
 }
 #undef ATK_RATE
-#undef ATK_RATE2
 #undef ATK_RATER
 #undef ATK_RATEL
 #undef ATK_ADDRATE
-#undef ATK_ADDRATE2
 #undef ATK_ADD
 #undef ATK_ADD2
 #undef GET_NORMAL_ATTACK
