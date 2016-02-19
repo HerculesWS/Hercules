@@ -62,13 +62,13 @@ struct intif_interface {
 	int (*broadcast) (const char* mes, size_t len, int type);
 	int (*broadcast2) (const char* mes, size_t len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY);
 	int (*main_message) (struct map_session_data* sd, const char* message);
-	int (*wis_message) (struct map_session_data *sd,char *nick,char *mes,size_t mes_len);
+	int (*wis_message) (struct map_session_data *sd, const char *nick, const char *mes, size_t mes_len);
 	int (*wis_message_to_gm) (char *Wisp_name, int permission, char *mes);
 	int (*saveregistry) (struct map_session_data *sd);
 	int (*request_registry) (struct map_session_data *sd, int flag);
 	int (*request_guild_storage) (int account_id, int guild_id);
 	int (*send_guild_storage) (int account_id, struct guild_storage *gstor);
-	int (*create_party) (struct party_member *member,char *name,int item,int item2);
+	int (*create_party) (struct party_member *member, const char *name, int item, int item2);
 	int (*request_partyinfo) (int party_id, int char_id);
 	int (*party_addmember) (int party_id,struct party_member *member);
 	int (*party_changeoption) (int party_id, int account_id, int exp, int item);
@@ -98,7 +98,7 @@ struct intif_interface {
 	int (*request_petdata) (int account_id, int char_id, int pet_id);
 	int (*save_petdata) (int account_id, struct s_pet *p);
 	int (*delete_petdata) (int pet_id);
-	int (*rename) (struct map_session_data *sd, int type, char *name);
+	int (*rename) (struct map_session_data *sd, int type, const char *name);
 	int (*homunculus_create) (int account_id, struct s_homunculus *sh);
 	bool (*homunculus_requestload) (int account_id, int homun_id);
 	int (*homunculus_requestsave) (int account_id, struct s_homunculus* sh);

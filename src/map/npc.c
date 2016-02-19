@@ -1934,7 +1934,9 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 /**
  * parses incoming npc market purchase list
  **/
-int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, struct packet_npc_market_purchase *p) {
+// FIXME[Haru]: This needs to be decoupled from the client. A packet struct should never make it into npc functions.
+int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, struct packet_npc_market_purchase *p)
+{
 	struct npc_data* nd;
 	struct npc_item_list *shop = NULL;
 	int64 z;

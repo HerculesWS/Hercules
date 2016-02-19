@@ -108,7 +108,7 @@ struct battleground_interface {
 	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
-	struct bg_arena *(*name2arena) (char *name);
+	struct bg_arena *(*name2arena) (const char *name);
 	void (*queue_add) (struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type);
 	enum BATTLEGROUNDS_QUEUE_ACK (*can_queue) (struct map_session_data *sd, struct bg_arena *arena, enum bg_queue_types type);
 	int (*id2pos) (int queue_id, int account_id);

@@ -495,7 +495,8 @@ void bg_config_read(void) {
 	}
 	libconfig->destroy(&bg_conf);
 }
-struct bg_arena *bg_name2arena (char *name) {
+struct bg_arena *bg_name2arena(const char *name)
+{
 	int i;
 	nullpo_retr(NULL, name);
 	for(i = 0; i < bg->arenas; i++) {

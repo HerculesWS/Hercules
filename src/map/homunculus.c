@@ -705,7 +705,8 @@ void homunculus_hunger_timer_delete(struct homun_data *hd) {
 	}
 }
 
-int homunculus_change_name(struct map_session_data *sd,char *name) {
+int homunculus_change_name(struct map_session_data *sd, const char *name)
+{
 	int i;
 	struct homun_data *hd;
 	nullpo_retr(1, sd);
@@ -725,21 +726,26 @@ int homunculus_change_name(struct map_session_data *sd,char *name) {
 	return intif_rename_hom(sd, name);
 }
 
-bool homunculus_change_name_ack(struct map_session_data *sd, char* name, int flag) {
+bool homunculus_change_name_ack(struct map_session_data *sd, const char *name, int flag)
+{
 	struct homun_data *hd;
+	char *newname = NULL;
 	nullpo_retr(false, sd);
 	nullpo_retr(false, name);
 	hd = sd->hd;
 	nullpo_retr(false, hd);
 	if (!homun_alive(hd)) return false;
 
-	normalize_name(name," ");//bugreport:3032
+	newname = aStrdup(name);
+	normalize_name(newname, " ");//bugreport:3032 // FIXME[Haru]: This should be normalized by the inter-server (so that it's const here)
 
 	if ( !flag || !strlen(name) ) {
 		clif->message(sd->fd, msg_sd(sd,280)); // You cannot use this name
+		aFree(newname);
 		return false;
 	}
-	safestrncpy(hd->homunculus.name,name,NAME_LENGTH);
+	safestrncpy(hd->homunculus.name, newname, NAME_LENGTH);
+	aFree(newname);
 	clif->charnameack (0,&hd->bl);
 	hd->homunculus.rename_flag = 1;
 	clif->hominfo(sd,hd,0);
@@ -770,7 +776,8 @@ int homunculus_db_search(int key,int type) {
 }
 
 // Create homunc structure
-bool homunculus_create(struct map_session_data *sd, struct s_homunculus *hom) {
+bool homunculus_create(struct map_session_data *sd, const struct s_homunculus *hom)
+{
 	struct homun_data *hd;
 	int i = 0;
 
@@ -863,17 +870,20 @@ bool homunculus_call(struct map_session_data *sd) {
 }
 
 // Receive homunculus data from char server
-bool homunculus_recv_data(int account_id, struct s_homunculus *sh, int flag) {
+bool homunculus_recv_data(int account_id, const struct s_homunculus *sh, int flag)
+{
 	struct map_session_data *sd;
 	struct homun_data *hd;
+	struct s_homunculus new_sh;
 
 	nullpo_retr(false, sh);
 	sd = map->id2sd(account_id);
 	if(!sd)
 		return false;
-	if (sd->status.char_id != sh->char_id) {
-		if (sd->status.hom_id == sh->hom_id)
-			sh->char_id = sd->status.char_id; //Correct char id.
+	memcpy(&new_sh, sh, sizeof(new_sh));
+	if (sd->status.char_id != new_sh.char_id) {
+		if (sd->status.hom_id == new_sh.hom_id)
+			new_sh.char_id = sd->status.char_id; //Correct char id.
 		else
 			return false;
 	}
@@ -883,12 +893,12 @@ bool homunculus_recv_data(int account_id, struct s_homunculus *sh, int flag) {
 	}
 
 	if (!sd->status.hom_id) //Hom just created.
-		sd->status.hom_id = sh->hom_id;
+		sd->status.hom_id = new_sh.hom_id;
 
 	if (sd->hd) //uh? Overwrite the data.
-		memcpy(&sd->hd->homunculus, sh, sizeof(struct s_homunculus));
+		memcpy(&sd->hd->homunculus, &new_sh, sizeof(struct s_homunculus));
 	else
-		homun->create(sd, sh);
+		homun->create(sd, &new_sh);
 
 	hd = sd->hd;
 	if(hd && hd->homunculus.hp && hd->homunculus.vaporize == HOM_ST_ACTIVE && hd->bl.prev == NULL && sd->bl.prev != NULL) {

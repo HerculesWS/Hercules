@@ -211,7 +211,7 @@ int mapif_delete_pet_ack(int fd, int flag)
 }
 
 int mapif_create_pet(int fd, int account_id, int char_id, short pet_class, short pet_lv, short pet_egg_id,
-	short pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name)
+	short pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name)
 {
 	nullpo_ret(pet_name);
 	memset(inter_pet->pt, 0, sizeof(struct s_pet));
@@ -308,7 +308,7 @@ int mapif_parse_CreatePet(int fd)
 {
 	RFIFOHEAD(fd);
 	mapif->create_pet(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOW(fd, 10), RFIFOW(fd, 12), RFIFOW(fd, 14), RFIFOW(fd, 16), RFIFOW(fd, 18),
-		RFIFOW(fd, 20), RFIFOB(fd, 22), RFIFOB(fd, 23), (char*)RFIFOP(fd, 24));
+		RFIFOW(fd, 20), RFIFOB(fd, 22), RFIFOB(fd, 23), RFIFOP(fd, 24));
 	return 0;
 }
 
@@ -321,8 +321,12 @@ int mapif_parse_LoadPet(int fd)
 
 int mapif_parse_SavePet(int fd)
 {
+	struct s_pet pet_data;
 	RFIFOHEAD(fd);
-	mapif->save_pet(fd, RFIFOL(fd, 4), (struct s_pet *) RFIFOP(fd, 8));
+
+	memcpy(&pet_data, RFIFOP(fd, 8), sizeof(pet_data));
+
+	mapif->save_pet(fd, RFIFOL(fd, 4), &pet_data);
 	return 0;
 }
 

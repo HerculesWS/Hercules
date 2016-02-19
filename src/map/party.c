@@ -148,7 +148,7 @@ struct party_data* party_searchname(const char* str)
 	return p;
 }
 
-int party_create(struct map_session_data *sd,char *name,int item,int item2)
+int party_create(struct map_session_data *sd, const char *name,int item,int item2)
 {
 	struct party_member leader;
 	char tname[NAME_LENGTH];
@@ -175,7 +175,8 @@ int party_create(struct map_session_data *sd,char *name,int item,int item2)
 	return 0;
 }
 
-void party_created(int account_id,int char_id,int fail,int party_id,char *name) {
+void party_created(int account_id, int char_id, int fail, int party_id, const char *name)
+{
 	struct map_session_data *sd;
 	sd=map->id2sd(account_id);
 
@@ -241,10 +242,10 @@ void party_check_state(struct party_data *p) {
 	}
 }
 
-int party_recv_info(struct party* sp, int char_id)
+int party_recv_info(const struct party *sp, int char_id)
 {
 	struct party_data* p;
-	struct party_member* member;
+	const struct party_member *member;
 	struct map_session_data* sd;
 	int removed[MAX_PARTY];// member_id in old data
 	int removed_count = 0;
@@ -510,7 +511,7 @@ int party_member_added(int party_id,int account_id,int char_id, int flag) {
 }
 
 /// Party member 'sd' requesting kick of member with <account_id, name>.
-int party_removemember(struct map_session_data* sd, int account_id, char* name)
+int party_removemember(struct map_session_data* sd, int account_id, const char *name)
 {
 	struct party_data *p;
 	int i;

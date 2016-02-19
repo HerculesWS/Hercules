@@ -122,7 +122,7 @@ struct elemental_interface {
 	struct view_data * (*get_viewdata) (int class_);
 
 	int (*create) (struct map_session_data *sd, int class_, unsigned int lifetime);
-	int (*data_received) (struct s_elemental *ele, bool flag);
+	int (*data_received) (const struct s_elemental *ele, bool flag);
 	int (*save) (struct elemental_data *ed);
 
 	int (*change_mode_ack) (struct elemental_data *ed, int mode);

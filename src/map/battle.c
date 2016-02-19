@@ -7383,19 +7383,19 @@ void Hercules_report(char* date, char *time_c) {
 	WBUFW(buf,2) = 262 + ( bd_size * ( BFLAG_LENGTH + 4 ) );
 	WBUFW(buf,4) = 0x9f;
 
-	safestrncpy((char*)WBUFP(buf,6), date, 12);
-	safestrncpy((char*)WBUFP(buf,18), time_c, 9);
-	safestrncpy((char*)WBUFP(buf,27), timestring, 24);
+	safestrncpy(WBUFP(buf,6), date, 12);
+	safestrncpy(WBUFP(buf,18), time_c, 9);
+	safestrncpy(WBUFP(buf,27), timestring, 24);
 
-	safestrncpy((char*)WBUFP(buf,51), sysinfo->platform(), 16);
-	safestrncpy((char*)WBUFP(buf,67), sysinfo->osversion(), 50);
-	safestrncpy((char*)WBUFP(buf,117), sysinfo->cpu(), 32);
+	safestrncpy(WBUFP(buf,51), sysinfo->platform(), 16);
+	safestrncpy(WBUFP(buf,67), sysinfo->osversion(), 50);
+	safestrncpy(WBUFP(buf,117), sysinfo->cpu(), 32);
 	WBUFL(buf,149) = sysinfo->cpucores();
-	safestrncpy((char*)WBUFP(buf,153), sysinfo->arch(), 8);
+	safestrncpy(WBUFP(buf,153), sysinfo->arch(), 8);
 	WBUFB(buf,161) = sysinfo->vcstypeid();
 	WBUFB(buf,162) = sysinfo->is64bit();
-	safestrncpy((char*)WBUFP(buf,163), sysinfo->vcsrevision_src(), 41);
-	safestrncpy((char*)WBUFP(buf,204), sysinfo->vcsrevision_scripts(), 41);
+	safestrncpy(WBUFP(buf,163), sysinfo->vcsrevision_src(), 41);
+	safestrncpy(WBUFP(buf,204), sysinfo->vcsrevision_scripts(), 41);
 	WBUFB(buf,245) = (sysinfo->is_superuser()? 1 : 0);
 	WBUFL(buf,246) = map->getusers();
 
@@ -7404,7 +7404,7 @@ void Hercules_report(char* date, char *time_c) {
 
 	WBUFL(buf,258) = bd_size;
 	for( i = 0; i < bd_size; i++ ) {
-		safestrncpy((char*)WBUFP(buf,262 + ( i * ( BFLAG_LENGTH + 4 ) ) ), battle_data[i].str, BFLAG_LENGTH);
+		safestrncpy(WBUFP(buf,262 + ( i * ( BFLAG_LENGTH + 4 ) ) ), battle_data[i].str, BFLAG_LENGTH);
 		WBUFL(buf,262 + BFLAG_LENGTH + ( i * ( BFLAG_LENGTH + 4 )  )  ) = *battle_data[i].val;
 	}
 

@@ -230,7 +230,7 @@ struct map_session_data* guild_getavailablesd(struct guild* g)
 }
 
 /// lookup: player AID/CID -> member index
-int guild_getindex(struct guild *g,int account_id,int char_id)
+int guild_getindex(const struct guild *g, int account_id, int char_id)
 {
 	int i;
 
@@ -433,7 +433,7 @@ int guild_npc_request_info(int guild_id,const char *event)
 }
 
 //Confirmation of the character belongs to guild
-int guild_check_member(struct guild *g)
+int guild_check_member(const struct guild *g)
 {
 	int i;
 	struct map_session_data *sd;
@@ -475,7 +475,8 @@ int guild_recv_noinfo(int guild_id)
 }
 
 //Get and display information for all member
-int guild_recv_info(struct guild *sg) {
+int guild_recv_info(const struct guild *sg)
+{
 	struct guild *g,before;
 	int i,bm,m;
 	DBData data;
@@ -1126,7 +1127,7 @@ int guild_change_position(int guild_id,int idx,int mode,int exp_mode,const char 
 /*====================================================
  * Notification of member has changed his guild title
  *---------------------------------------------------*/
-int guild_position_changed(int guild_id,int idx,struct guild_position *p)
+int guild_position_changed(int guild_id, int idx, const struct guild_position *p)
 {
 	struct guild *g=guild->search(guild_id);
 	int i;
@@ -1883,7 +1884,8 @@ int guild_gm_changed(int guild_id, int account_id, int char_id)
 /*====================================================
  * Guild disbanded
  *---------------------------------------------------*/
-int guild_break(struct map_session_data *sd,char *name) {
+int guild_break(struct map_session_data *sd, const char *name)
+{
 	struct guild *g;
 	struct unit_data *ud;
 	int i;
@@ -2064,7 +2066,7 @@ void guild_castle_reconnect(int castle_id, int index, int value)
 }
 
 // Load castle data then invoke OnAgitInit* on last
-int guild_castledataloadack(int len, struct guild_castle *gc)
+int guild_castledataloadack(int len, const struct guild_castle *gc)
 {
 	int i;
 	int n = (len-4) / sizeof(struct guild_castle);

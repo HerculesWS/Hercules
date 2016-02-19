@@ -5003,7 +5003,7 @@ void script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
 				RECREATE(st->buf, char, st->len + inner_len);
 
 				WBUFB(st->buf, st->len) = lang_id;
-				safestrncpy((char*)WBUFP(st->buf, st->len + 1), msgstr.ptr, msgstr_len + 1);
+				safestrncpy(WBUFP(st->buf, st->len + 1), msgstr.ptr, msgstr_len + 1);
 
 				st->translations++;
 				st->len += inner_len;

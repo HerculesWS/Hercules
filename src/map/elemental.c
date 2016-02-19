@@ -254,7 +254,8 @@ void elemental_summon_init(struct elemental_data *ed) {
 	ed->regen.state.block = 0;
 }
 
-int elemental_data_received(struct s_elemental *ele, bool flag) {
+int elemental_data_received(const struct s_elemental *ele, bool flag)
+{
 	struct map_session_data *sd;
 	struct elemental_data *ed;
 	struct s_elemental_db *db;
