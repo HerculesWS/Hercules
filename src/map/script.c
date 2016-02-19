@@ -6386,16 +6386,13 @@ BUILDIN(input)
 	} else {
 		// take received text/value and store it in the designated variable
 		sd->state.menu_or_input = 0;
-		if( is_string_variable(name) )
-		{
+		if (is_string_variable(name)) {
 			int len = (int)strlen(sd->npc_str);
-			script->set_reg(st, sd, uid, name, (void*)sd->npc_str, script_getref(st,2));
+			script->set_reg(st, sd, uid, name, sd->npc_str, script_getref(st,2));
 			script_pushint(st, (len > max ? 1 : len < min ? -1 : 0));
-		}
-		else
-		{
+		} else {
 			int amount = sd->npc_amount;
-			script->set_reg(st, sd, uid, name, (void*)h64BPTRSIZE(cap_value(amount,min,max)), script_getref(st,2));
+			script->set_reg(st, sd, uid, name, (const void *)h64BPTRSIZE(cap_value(amount,min,max)), script_getref(st,2));
 			script_pushint(st, (amount > max ? 1 : amount < min ? -1 : 0));
 		}
 		st->state = RUN;
@@ -6482,9 +6479,9 @@ BUILDIN(__setr)
 	}
 
 	if (is_string_variable(name))
-		script->set_reg(st,sd,num,name,(void*)script_getstr(st,3),script_getref(st,2));
+		script->set_reg(st, sd, num, name, script_getstr(st, 3), script_getref(st, 2));
 	else
-		script->set_reg(st,sd,num,name,(void*)h64BPTRSIZE(script_getnum(st,3)),script_getref(st,2));
+		script->set_reg(st, sd, num, name, (const void *)h64BPTRSIZE(script_getnum(st, 3)), script_getref(st, 2));
 
 	return true;
 }
@@ -6531,15 +6528,14 @@ BUILDIN(setarray)
 	if( end > SCRIPT_MAX_ARRAYSIZE )
 		end = SCRIPT_MAX_ARRAYSIZE;
 
-	if( is_string_variable(name) )
-	{// string array
-		for( i = 3; start < end; ++start, ++i )
-			script->set_reg(st, sd, reference_uid(id, start), name, (void*)script_getstr(st,i), reference_getref(data));
-	}
-	else
-	{// int array
-		for( i = 3; start < end; ++start, ++i )
-			script->set_reg(st, sd, reference_uid(id, start), name, (void*)h64BPTRSIZE(script_getnum(st,i)), reference_getref(data));
+	if (is_string_variable(name)) {
+		// string array
+		for (i = 3; start < end; ++start, ++i)
+			script->set_reg(st, sd, reference_uid(id, start), name, script_getstr(st, i), reference_getref(data));
+	} else {
+		// int array
+		for (i = 3; start < end; ++start, ++i)
+			script->set_reg(st, sd, reference_uid(id, start), name, (const void *)h64BPTRSIZE(script_getnum(st, i)), reference_getref(data));
 	}
 	return true;
 }
@@ -6555,7 +6551,7 @@ BUILDIN(cleararray)
 	uint32 start;
 	uint32 end;
 	int32 id;
-	void* v;
+	const void *v = NULL;
 	struct map_session_data *sd = NULL;
 
 	data = script_getdata(st, 2);
@@ -6578,10 +6574,10 @@ BUILDIN(cleararray)
 			return true;// no player attached
 	}
 
-	if( is_string_variable(name) )
-		v = (void*)script_getstr(st, 3);
+	if (is_string_variable(name))
+		v = script_getstr(st, 3);
 	else
-		v = (void*)h64BPTRSIZE(script_getnum(st, 3));
+		v = (const void *)h64BPTRSIZE(script_getnum(st, 3));
 
 	end = start + script_getnum(st, 4);
 	if( end > SCRIPT_MAX_ARRAYSIZE )
@@ -6667,7 +6663,12 @@ BUILDIN(copyarray)
 				script_removetop(st, -1, 0);
 			} else {
 				// out of range - assume ""/0
-				script->set_reg(st, sd, reference_uid(id1, idx1 + i), name1, (is_string_variable(name1)?(void*)"":(void*)0), reference_getref(data1));
+				const void *value;
+				if (is_string_variable(name1))
+					value = "";
+				else
+					value = (const void *)0;
+				script->set_reg(st, sd, reference_uid(id1, idx1 + i), name1, value, reference_getref(data1));
 			}
 		}
 	}
@@ -6696,8 +6697,9 @@ BUILDIN(getarraysize)
 	script_pushint(st, script->array_highest_key(st,st->rid ? script->rid2sd(st) : NULL,reference_getname(data),reference_getref(data)));
 	return true;
 }
-int script_array_index_cmp(const void *a, const void *b) {
-	return ( *(const unsigned int*)a - *(const unsigned int*)b );
+int script_array_index_cmp(const void *a, const void *b)
+{
+	return (*(const unsigned int *)a - *(const unsigned int *)b); // FIXME: Is the unsigned difference really intended here?
 }
 
 /// Deletes count or all the elements in an array, from the starting index.
@@ -11054,9 +11056,9 @@ BUILDIN(getstatus)
 		case 4: script_pushint(st, sd->sc.data[id]->val4); break;
 		case 5:
 		{
-			const struct TimerData* td = (const struct TimerData*)timer->get(sd->sc.data[id]->timer);
+			const struct TimerData *td = timer->get(sd->sc.data[id]->timer);
 
-			if( td ) {
+			if (td != NULL) {
 				// return the amount of time remaining
 				script_pushint(st, (int)(td->tick - timer->gettick())); // TODO: change this to int64 when we'll support 64 bit script values
 			}
@@ -14407,7 +14409,7 @@ BUILDIN(getmapxy)
 		sd=script->rid2sd(st);
 	else
 		sd=NULL;
-	script->set_reg(st,sd,num,name,(void*)mapname,script_getref(st,2));
+	script->set_reg(st, sd, num, name, mapname, script_getref(st, 2));
 
 	//Set MapX
 	num=st->stack->stack_data[st->start+3].u.num;
@@ -14418,7 +14420,7 @@ BUILDIN(getmapxy)
 		sd=script->rid2sd(st);
 	else
 		sd=NULL;
-	script->set_reg(st,sd,num,name,(void*)h64BPTRSIZE(x),script_getref(st,3));
+	script->set_reg(st, sd, num, name, (const void *)h64BPTRSIZE(x), script_getref(st, 3));
 
 	//Set MapY
 	num=st->stack->stack_data[st->start+4].u.num;
@@ -14429,7 +14431,7 @@ BUILDIN(getmapxy)
 		sd=script->rid2sd(st);
 	else
 		sd=NULL;
-	script->set_reg(st,sd,num,name,(void*)h64BPTRSIZE(y),script_getref(st,4));
+	script->set_reg(st, sd, num, name, (const void *)h64BPTRSIZE(y), script_getref(st, 4));
 
 	//Return Success value
 	script_pushint(st,0);
@@ -15089,7 +15091,7 @@ BUILDIN(explode)
 		if (str[i] == delimiter && (int64)start + k < (int64)(SCRIPT_MAX_ARRAYSIZE-1)) { // FIXME[Haru]: SCRIPT_MAX_ARRAYSIZE should really be unsigned (and INT32_MAX)
 			//break at delimiter but ignore after reaching last array index
 			temp[j] = '\0';
-			script->set_reg(st, sd, reference_uid(id, start + k), name, (void*)temp, reference_getref(data));
+			script->set_reg(st, sd, reference_uid(id, start + k), name, temp, reference_getref(data));
 			k++;
 			j = 0;
 		} else {
@@ -15098,7 +15100,7 @@ BUILDIN(explode)
 	}
 	//set last string
 	temp[j] = '\0';
-	script->set_reg(st, sd, reference_uid(id, start + k), name, (void*)temp, reference_getref(data));
+	script->set_reg(st, sd, reference_uid(id, start + k), name, temp, reference_getref(data));
 
 	aFree(temp);
 
@@ -15418,12 +15420,12 @@ BUILDIN(sscanf) {
 			if(sscanf(str, buf, ref_str)==0) {
 				break;
 			}
-			script->set_reg(st, sd, reference_uid( reference_getid(data), reference_getindex(data) ), buf_p, (void *)(ref_str), reference_getref(data));
+			script->set_reg(st, sd, reference_uid( reference_getid(data), reference_getindex(data) ), buf_p, ref_str, reference_getref(data));
 		} else {  // Number
 			if(sscanf(str, buf, &ref_int)==0) {
 				break;
 			}
-			script->set_reg(st, sd, reference_uid( reference_getid(data), reference_getindex(data) ), buf_p, (void *)h64BPTRSIZE(ref_int), reference_getref(data));
+			script->set_reg(st, sd, reference_uid( reference_getid(data), reference_getindex(data) ), buf_p, (const void *)h64BPTRSIZE(ref_int), reference_getref(data));
 		}
 		arg++;
 
@@ -15863,8 +15865,8 @@ BUILDIN(swap)
 		value2 = script_getstr(st,3);
 
 		if (strcmpi(value1, value2)) {
-			script->set_reg(st, sd, uid1, varname1, (void*)(value2), script_getref(st,3));
-			script->set_reg(st, sd, uid2, varname2, (void*)(value1), script_getref(st,2));
+			script->set_reg(st, sd, uid1, varname1, value2, script_getref(st,3));
+			script->set_reg(st, sd, uid2, varname2, value1, script_getref(st,2));
 		}
 	}
 	else {
@@ -15874,8 +15876,8 @@ BUILDIN(swap)
 		value2 = script_getnum(st,3);
 
 		if (value1 != value2) {
-			script->set_reg(st, sd, uid1, varname1, (void*)h64BPTRSIZE(value2), script_getref(st,3));
-			script->set_reg(st, sd, uid2, varname2, (void*)h64BPTRSIZE(value1), script_getref(st,2));
+			script->set_reg(st, sd, uid1, varname1, (const void *)h64BPTRSIZE(value2), script_getref(st,3));
+			script->set_reg(st, sd, uid2, varname2, (const void *)h64BPTRSIZE(value1), script_getref(st,2));
 		}
 	}
 	return true;
@@ -16529,7 +16531,7 @@ BUILDIN(searchitem)
 
 	for( i = 0; i < count; ++start, ++i )
 	{// Set array
-		void* v = (void*)h64BPTRSIZE((int)items[i]->nameid);
+		const void *v = (const void *)h64BPTRSIZE((int)items[i]->nameid);
 		script->set_reg(st, sd, reference_uid(id, start), name, v, reference_getref(data));
 	}
 
@@ -19743,9 +19745,10 @@ BUILDIN(checkbound)
 
 /* bg_match_over( arena_name {, optional canceled } ) */
 /* returns 0 when successful, 1 otherwise */
-BUILDIN(bg_match_over) {
+BUILDIN(bg_match_over)
+{
 	bool canceled = script_hasdata(st,3) ? true : false;
-	struct bg_arena *arena = bg->name2arena((const char*)script_getstr(st, 2));
+	struct bg_arena *arena = bg->name2arena(script_getstr(st, 2));
 
 	if( arena ) {
 		bg->match_over(arena,canceled);

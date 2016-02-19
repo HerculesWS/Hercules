@@ -1547,17 +1547,17 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 	switch(type)
 	{
 		case GMI_POSITION:
-		  {
-			g->member[i].position=*((const short *)data);
+		{
+			g->member[i].position = *(const short *)data;
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER;
 			break;
-		  }
+		}
 		case GMI_EXP:
 		{
 			uint64 old_exp = g->member[i].exp;
-			g->member[i].exp=*((const uint64 *)data);
+			g->member[i].exp = *(const uint64 *)data;
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			if (g->member[i].exp > old_exp) {
 				uint64 exp = g->member[i].exp - old_exp;
@@ -1582,7 +1582,7 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 		}
 		case GMI_HAIR:
 		{
-			g->member[i].hair=*((const short *)data);
+			g->member[i].hair = *(const short *)data;
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER; //Save new data.
@@ -1590,7 +1590,7 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 		}
 		case GMI_HAIR_COLOR:
 		{
-			g->member[i].hair_color=*((const short *)data);
+			g->member[i].hair_color = *(const short *)data;
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER; //Save new data.
@@ -1598,7 +1598,7 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 		}
 		case GMI_GENDER:
 		{
-			g->member[i].gender=*((const short *)data);
+			g->member[i].gender = *(const short *)data;
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER; //Save new data.
@@ -1606,7 +1606,7 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 		}
 		case GMI_CLASS:
 		{
-			g->member[i].class_=*((const short *)data);
+			g->member[i].class_ = *(const short *)data;
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER; //Save new data.
@@ -1614,7 +1614,7 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 		}
 		case GMI_LEVEL:
 		{
-			g->member[i].lv=*((const short *)data);
+			g->member[i].lv = *(const short *)data;
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER; //Save new data.

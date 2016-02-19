@@ -52,8 +52,8 @@ struct guild_storage_interface *gstorage;
  *------------------------------------------*/
 int storage_comp_item(const void *i1_, const void *i2_)
 {
-	const struct item *i1 = (const struct item *)i1_;
-	const struct item *i2 = (const struct item *)i2_;
+	const struct item *i1 = i1_;
+	const struct item *i2 = i2_;
 
 	if (i1->nameid == i2->nameid)
 		return 0;

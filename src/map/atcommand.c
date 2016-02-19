@@ -547,7 +547,7 @@ ACMD(jumpto) {
 		return false;
 	}
 
-	if((pl_sd=map->nick2sd((const char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
+	if ((pl_sd=map->nick2sd(message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -2747,7 +2747,7 @@ ACMD(recall) {
 		return false;
 	}
 
-	if((pl_sd=map->nick2sd((const char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
+	if ((pl_sd=map->nick2sd(message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -3072,7 +3072,7 @@ ACMD(kick)
 		return false;
 	}
 
-	if((pl_sd=map->nick2sd((const char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
+	if ((pl_sd=map->nick2sd(message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -5125,8 +5125,7 @@ ACMD(follow) {
 		return true;
 	}
 
-	if ((pl_sd = map->nick2sd((const char *)message)) == NULL)
-	{
+	if ((pl_sd = map->nick2sd(message)) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -5603,7 +5602,7 @@ ACMD(changegm) {
 		return false;
 	}
 
-	if ((pl_sd=map->nick2sd((const char *) message)) == NULL || pl_sd->status.guild_id != sd->status.guild_id) {
+	if ((pl_sd=map->nick2sd(message)) == NULL || pl_sd->status.guild_id != sd->status.guild_id) {
 		clif->message(fd, msg_fd(fd,1184)); // Target character must be online and be a guild member.
 		return false;
 	}
@@ -5623,7 +5622,7 @@ ACMD(changeleader) {
 		return false;
 	}
 
-	if (party->changeleader(sd, map->nick2sd((const char *) message)))
+	if (party->changeleader(sd, map->nick2sd(message)))
 		return true;
 	return false;
 }
@@ -6382,7 +6381,7 @@ ACMD(trade) {
 		return false;
 	}
 
-	if ( (pl_sd = map->nick2sd((const char *)message)) == NULL ) {
+	if ((pl_sd = map->nick2sd(message)) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -6425,8 +6424,7 @@ ACMD(unmute) {
 		return false;
 	}
 
-	if ((pl_sd = map->nick2sd((const char *)message)) == NULL)
-	{
+	if ((pl_sd = map->nick2sd(message)) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -7667,9 +7665,10 @@ ACMD(showdelay)
  * @reject - reject invitation
  * @leave - leave duel
  *------------------------------------------*/
-ACMD(invite) {
+ACMD(invite)
+{
 	unsigned int did = sd->duel_group;
-	struct map_session_data *target_sd = map->nick2sd((const char *)message);
+	struct map_session_data *target_sd = map->nick2sd(message);
 
 	if (did == 0)
 	{
@@ -7741,8 +7740,7 @@ ACMD(duel) {
 			}
 			duel->create(sd, maxpl);
 		} else {
-			struct map_session_data *target_sd;
-			target_sd = map->nick2sd((const char *)message);
+			struct map_session_data *target_sd = map->nick2sd(message);
 			if (target_sd != NULL) {
 				unsigned int newduel;
 				if ((newduel = duel->create(sd, 2)) != -1) {
@@ -7884,7 +7882,7 @@ ACMD(clone) {
 		return false;
 	}
 
-	if ((pl_sd=map->nick2sd((const char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
+	if ((pl_sd=map->nick2sd(message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}

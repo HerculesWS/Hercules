@@ -1110,7 +1110,7 @@ void intif_parse_Registers(int fd)
 				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
 				cursor += len + 1;
 
-				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)sval, NULL);
+				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, sval, NULL);
 			}
 		/**
 		 * Vessel!
@@ -1132,7 +1132,7 @@ void intif_parse_Registers(int fd)
 				ival = RFIFOL(fd, cursor);
 				cursor += 4;
 
-				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)h64BPTRSIZE(ival), NULL);
+				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (const void *)h64BPTRSIZE(ival), NULL);
 			}
 		}
 		script->parser_current_file = NULL;/* reset */
