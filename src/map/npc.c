@@ -47,6 +47,7 @@
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
+#include "common/sql.h"
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/utils.h"
@@ -1514,8 +1515,9 @@ int npc_buylist_sub(struct map_session_data *sd, struct itemlist *item_list, str
 /**
  * Loads persistent NPC Market Data from SQL
  **/
-void npc_market_fromsql(void) {
-	SqlStmt* stmt = SQL->StmtMalloc(map->mysql_handle);
+void npc_market_fromsql(void)
+{
+	struct SqlStmt *stmt = SQL->StmtMalloc(map->mysql_handle);
 	char name[NAME_LENGTH+1];
 	int itemid;
 	int amount;

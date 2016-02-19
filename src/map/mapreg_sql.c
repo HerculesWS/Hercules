@@ -190,7 +190,7 @@ void script_load_mapreg(void) {
 	   | varname | index | value |
 	   +-------------------------+
 	                                */
-	SqlStmt* stmt = SQL->StmtMalloc(map->mysql_handle);
+	struct SqlStmt *stmt = SQL->StmtMalloc(map->mysql_handle);
 	char varname[SCRIPT_VARNAME_LENGTH+1];
 	int index;
 	char value[255+1];

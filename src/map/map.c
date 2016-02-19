@@ -69,6 +69,7 @@
 #include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h" // WFIFO*()
+#include "common/sql.h"
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/utils.h"

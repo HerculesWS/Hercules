@@ -27,11 +27,12 @@
 #include "common/db.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
-#include "common/sql.h"
 
 #include <stdio.h>
 #include <stdarg.h>
 
+/* Forward Declarations */
+struct Sql; // common/sql.h
 struct mob_data;
 struct npc_data;
 struct channel_data;
@@ -993,7 +994,7 @@ struct map_interface {
 	char server_id[32];
 	char server_pw[100];
 	char server_db[32];
-	Sql* mysql_handle;
+	struct Sql *mysql_handle;
 
 	int port;
 	int users;

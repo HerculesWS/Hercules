@@ -163,7 +163,7 @@ bool mapif_homunculus_save(const struct s_homunculus *hd)
 		flag = false;
 	} else {
 		int i;
-		SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
+		struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
 
 		if (SQL_ERROR == SQL->StmtPrepare(stmt, "REPLACE INTO `%s` (`homun_id`, `id`, `lv`) VALUES (%d, ?, ?)", skill_homunculus_db, hd->hom_id)) {
 			SqlStmt_ShowDebug(stmt);

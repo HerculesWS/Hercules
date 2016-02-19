@@ -119,8 +119,9 @@ bool should_log_item(int nameid, int amount, int refine, struct item_data *id) {
 
 	return false;
 }
-void log_branch_sub_sql(struct map_session_data* sd) {
-	SqlStmt* stmt;
+void log_branch_sub_sql(struct map_session_data* sd)
+{
+	struct SqlStmt *stmt;
 
 	nullpo_retv(sd);
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
@@ -279,8 +280,9 @@ void log_mvpdrop(struct map_session_data* sd, int monster_id, int* log_mvp)
 	logs->mvpdrop_sub(sd,monster_id,log_mvp);
 }
 
-void log_atcommand_sub_sql(struct map_session_data* sd, const char* message) {
-	SqlStmt* stmt;
+void log_atcommand_sub_sql(struct map_session_data* sd, const char* message)
+{
+	struct SqlStmt *stmt;
 
 	nullpo_retv(sd);
 	nullpo_retv(message);
@@ -322,8 +324,9 @@ void log_atcommand(struct map_session_data* sd, const char* message)
 	logs->atcommand_sub(sd,message);
 }
 
-void log_npc_sub_sql(struct map_session_data *sd, const char *message) {
-	SqlStmt* stmt;
+void log_npc_sub_sql(struct map_session_data *sd, const char *message)
+{
+	struct SqlStmt *stmt;
 
 	nullpo_retv(sd);
 	nullpo_retv(message);
@@ -379,7 +382,7 @@ void log_npc(struct map_session_data* sd, const char* message)
  */
 void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char *dst_charname, const char *message)
 {
-	SqlStmt* stmt;
+	struct SqlStmt* stmt;
 
 	nullpo_retv(dst_charname);
 	nullpo_retv(message);

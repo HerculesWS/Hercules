@@ -22,11 +22,11 @@
 #define MAP_LOG_H
 
 #include "common/hercules.h"
-#include "common/sql.h"
 
 /**
  * Declarations
  **/
+struct Sql; // common/sql.h
 struct item;
 struct item_data;
 struct map_session_data;
@@ -127,7 +127,7 @@ struct log_interface {
 	char db_id[32];
 	char db_pw[100];
 	char db_name[32];
-	Sql* mysql_handle;
+	struct Sql *mysql_handle;
 	/* */
 	void (*pick_pc) (struct map_session_data* sd, e_log_pick_type type, int amount, struct item* itm, struct item_data *data);
 	void (*pick_mob) (struct mob_data* md, e_log_pick_type type, int amount, struct item* itm, struct item_data *data);

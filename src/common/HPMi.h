@@ -24,8 +24,8 @@
 #include "common/console.h"
 #include "common/core.h"
 #include "common/showmsg.h"
-#include "common/sql.h"
 
+struct Sql; // common/sql.h
 struct script_state;
 struct AtCommandInfo;
 struct socket_data;
@@ -242,7 +242,7 @@ struct HPMi_interface {
 	/* pc group permission */
 	void (*addPCGPermission) (unsigned int pluginID, char *name, unsigned int *mask);
 
-	Sql *sql_handle;
+	struct Sql *sql_handle;
 };
 #ifdef HERCULES_CORE
 #define HPM_SYMBOL(n, s) (HPM->share((s), (n)), true)

@@ -63,6 +63,7 @@
 #include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h" // usage: getcharip
+#include "common/sql.h"
 #include "common/strlib.h"
 #include "common/sysinfo.h"
 #include "common/timer.h"
@@ -15932,7 +15933,7 @@ BUILDIN(setd)
 	return true;
 }
 
-int buildin_query_sql_sub(struct script_state* st, Sql* handle)
+int buildin_query_sql_sub(struct script_state *st, struct Sql *handle)
 {
 	int i, j;
 	struct map_session_data *sd = NULL;

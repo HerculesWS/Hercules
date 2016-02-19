@@ -25,7 +25,6 @@
 #include "common/hercules.h"
 #include "common/db.h"
 #include "common/mmo.h" // struct item
-#include "common/sql.h" // Sql
 #include "common/strlib.h" //StringBuf
 
 #include <errno.h>
@@ -34,6 +33,7 @@
 /**
  * Declarations
  **/
+struct Sql; // common/sql.h
 struct eri;
 struct item_data;
 
@@ -773,7 +773,7 @@ struct script_interface {
 	int (*playbgm_sub) (struct block_list *bl, va_list ap);
 	int (*playbgm_foreachpc_sub) (struct map_session_data *sd, va_list args);
 	int (*soundeffect_sub) (struct block_list *bl, va_list ap);
-	int (*buildin_query_sql_sub) (struct script_state *st, Sql *handle);
+	int (*buildin_query_sql_sub) (struct script_state *st, struct Sql *handle);
 	int (*buildin_instance_warpall_sub) (struct block_list *bl, va_list ap);
 	int (*buildin_mobuseskill_sub) (struct block_list *bl, va_list ap);
 	int (*cleanfloor_sub) (struct block_list *bl, va_list ap);

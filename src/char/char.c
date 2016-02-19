@@ -702,7 +702,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 int char_memitemdata_to_sql(const struct item items[], int max, int id, int tableswitch)
 {
 	StringBuf buf;
-	SqlStmt *stmt = NULL;
+	struct SqlStmt *stmt = NULL;
 	int i, j;
 	const char *tablename = NULL;
 	const char *selectoption = NULL;
@@ -915,7 +915,7 @@ int char_mmo_gender(const struct char_session_data *sd, const struct mmo_charsta
 // Loads the basic character rooster for the given account. Returns total buffer used.
 int char_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 {
-	SqlStmt* stmt;
+	struct SqlStmt *stmt;
 	struct mmo_charstatus p;
 	int j = 0, i;
 	char last_map[MAP_NAME_LENGTH_EXT];
@@ -1015,7 +1015,7 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	char t_msg[128] = "";
 	struct mmo_charstatus* cp;
 	StringBuf buf;
-	SqlStmt* stmt;
+	struct SqlStmt *stmt;
 	char last_map[MAP_NAME_LENGTH_EXT];
 	char save_map[MAP_NAME_LENGTH_EXT];
 	char point_map[MAP_NAME_LENGTH_EXT];
@@ -2341,7 +2341,7 @@ int char_parse_fromlogin_changesex_reply(int fd)
 	int char_id = 0, class_ = 0, guild_id = 0;
 	int i;
 	struct char_auth_node *node;
-	SqlStmt *stmt;
+	struct SqlStmt *stmt;
 
 	int acc = RFIFOL(fd,2);
 	int sex = RFIFOB(fd,6);
@@ -3277,7 +3277,7 @@ void char_ban(int account_id, int char_id, time_t *unban_time, short year, short
 {
 	time_t timestamp;
 	struct tm *tmtime;
-	SqlStmt* stmt = SQL->StmtMalloc(inter->sql_handle);
+	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
 
 	nullpo_retv(unban_time);
 
