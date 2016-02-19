@@ -10850,7 +10850,7 @@ void clif_parse_ChangeCart(int fd,struct map_session_data *sd)
 	}
 #endif
 
-	type = (int)RFIFOW(fd,2);
+	type = RFIFOW(fd,2);
 #ifdef NEW_CARTS
 	if( (type == 9 && sd->status.base_level > 131) ||
 		(type == 8 && sd->status.base_level > 121) ||
@@ -10881,7 +10881,7 @@ void clif_parse_SelectCart(int fd, struct map_session_data *sd)
 	if (!sd || !pc->checkskill(sd, MC_CARTDECORATE) || RFIFOL(fd, 2) != sd->status.account_id)
 		return;
 
-	type = (int)RFIFOB(fd, 6);
+	type = RFIFOB(fd, 6);
 
 	if (type <= MAX_BASE_CARTS || type > MAX_CARTS)
 		return;
@@ -11424,7 +11424,7 @@ void clif_parse_NpcAmountInput(int fd,struct map_session_data *sd) __attribute__
 void clif_parse_NpcAmountInput(int fd,struct map_session_data *sd)
 {
 	int npcid = RFIFOL(fd,2);
-	int amount = (int)RFIFOL(fd,6);
+	int amount = RFIFOL(fd,6);
 
 	if (amount >= 0)
 		sd->npc_amount = amount;
@@ -12608,7 +12608,7 @@ void clif_parse_PurchaseReq(int fd, struct map_session_data* sd) __attribute__((
 void clif_parse_PurchaseReq(int fd, struct map_session_data* sd)
 {
 	int len = (int)RFIFOW(fd,2) - 8;
-	int id = (int)RFIFOL(fd,4);
+	int id = RFIFOL(fd,4);
 	const uint8 *data = RFIFOP(fd,8);
 
 	vending->purchase(sd, id, sd->vended_id, data, len/4);
@@ -12623,8 +12623,8 @@ void clif_parse_PurchaseReq2(int fd, struct map_session_data* sd) __attribute__(
 void clif_parse_PurchaseReq2(int fd, struct map_session_data* sd)
 {
 	int len = (int)RFIFOW(fd,2) - 12;
-	int aid = (int)RFIFOL(fd,4);
-	int uid = (int)RFIFOL(fd,8);
+	int aid = RFIFOL(fd,4);
+	int uid = RFIFOL(fd,8);
 	const uint8 *data = RFIFOP(fd,12);
 
 	vending->purchase(sd, aid, uid, data, len/4);
@@ -12643,7 +12643,7 @@ void clif_parse_OpenVending(int fd, struct map_session_data* sd) __attribute__((
 void clif_parse_OpenVending(int fd, struct map_session_data* sd) {
 	short len = (short)RFIFOW(fd,2) - 85;
 	const char *message = RFIFOP(fd,4);
-	bool flag = (bool)RFIFOB(fd,84);
+	bool flag = (RFIFOB(fd,84) != 0) ? true : false;
 	const uint8 *data = RFIFOP(fd,85);
 
 	if( !flag )
@@ -15594,7 +15594,7 @@ void clif_parse_EquipTick(int fd, struct map_session_data* sd) __attribute__((no
 ///         1 = enabled
 void clif_parse_EquipTick(int fd, struct map_session_data* sd)
 {
-	bool flag = (bool)RFIFOL(fd,6);
+	bool flag = (RFIFOL(fd,6) != 0) ? true : false;
 	sd->status.show_equip = flag;
 	clif->equiptickack(sd, flag);
 }

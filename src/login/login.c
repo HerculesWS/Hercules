@@ -527,12 +527,12 @@ void login_fromchar_parse_ban(int fd, int id, const char *const ip)
 	struct mmo_account acc;
 
 	int account_id = RFIFOL(fd,2);
-	int year = (short)RFIFOW(fd,6);
-	int month = (short)RFIFOW(fd,8);
-	int mday = (short)RFIFOW(fd,10);
-	int hour = (short)RFIFOW(fd,12);
-	int min = (short)RFIFOW(fd,14);
-	int sec = (short)RFIFOW(fd,16);
+	int year = RFIFOW(fd,6);
+	int month = RFIFOW(fd,8);
+	int mday = RFIFOW(fd,10);
+	int hour = RFIFOW(fd,12);
+	int min = RFIFOW(fd,14);
+	int sec = RFIFOW(fd,16);
 	RFIFOSKIP(fd,18);
 
 	if (!accounts->load_num(accounts, &acc, account_id)) {
