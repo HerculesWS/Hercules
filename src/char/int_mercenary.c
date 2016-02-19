@@ -246,11 +246,10 @@ int inter_mercenary_parse_frommap(int fd)
 {
 	unsigned short cmd = RFIFOW(fd,0);
 
-	switch( cmd )
-	{
+	switch (cmd) {
 		case 0x3070: mapif->parse_mercenary_create(fd, RFIFOP(fd,4)); break;
-		case 0x3071: mapif->parse_mercenary_load(fd, (int)RFIFOL(fd,2), (int)RFIFOL(fd,6)); break;
-		case 0x3072: mapif->parse_mercenary_delete(fd, (int)RFIFOL(fd,2)); break;
+		case 0x3071: mapif->parse_mercenary_load(fd, RFIFOL(fd,2), RFIFOL(fd,6)); break;
+		case 0x3072: mapif->parse_mercenary_delete(fd, RFIFOL(fd,2)); break;
 		case 0x3073: mapif->parse_mercenary_save(fd, RFIFOP(fd,4)); break;
 		default:
 			return 0;
