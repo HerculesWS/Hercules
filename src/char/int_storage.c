@@ -37,8 +37,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define STORAGE_MEMINC 16
-
 struct inter_storage_interface inter_storage_s;
 struct inter_storage_interface *inter_storage;
 

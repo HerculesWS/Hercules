@@ -459,17 +459,22 @@ AC_LANG([C])
 # -Wcast-qual  use for check wrong casts. It cant be added by default, because some casts must be wrong.
 # -Wconversion warning: conversion to 'long unsigned int' from 'int' may change the sign of the result
 # -Wfloat-equal comparing floating point with == or != is unsafe
+# -Wunsuffixed-float-constants float issues
 # -Wpedantic different pedantic checks. Not all can be fixed in nice way.
+# -Wtraditional-conversion some conversion issues
+# -Wunsafe-loop-optimizations possible optimisation issues
+# -Wunused-parameter -Wunused-but-set-parameter unused parameters
+# -Wunused-macros unused macro warnings, but it also enable unused parameters
 # attributes suggestion
 #  -Wsuggest-attribute=const -Wsuggest-attribute=format -Wsuggest-attribute=pure
 
 # flags what can be used but now return no warnings: -Warray-bounds -Wbool-compare -Wcast-align
 #   -Wchar-subscripts -Wchkp -Wclobbered -Wcomment -Wdisabled-optimization -Wempty-body 
-#   -Werror-implicit-function-declaration -Wignored-qualifiers
+#   -Werror-implicit-function-declaration -Wignored-qualifiers -Wtrampolines -Wtype-limits
 #   -Wjump-misses-init -Wlogical-op  -Wmissing-field-initializers -Wmissing-parameter-type
 #   -Wnested-externs -Wold-style-declaration -Wold-style-definition -Woverlength-strings -Woverride-init
-#   -Wredundant-decls -Wstack-protector -Wstrict-prototypes
-#   -Winit-self -Wpointer-arith
+#   -Wredundant-decls -Wstack-protector -Wstrict-prototypes -Wundef
+#   -Winit-self -Wpointer-arith -Wswitch-bool
 
 CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wextra -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
