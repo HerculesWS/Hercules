@@ -39,6 +39,7 @@ struct loginif_interface loginif_s;
 struct loginif_interface *loginif;
 
 /// Resets all the data.
+void loginif_reset(void) __attribute__ ((noreturn));
 void loginif_reset(void)
 {
 	int id;

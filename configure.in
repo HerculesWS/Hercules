@@ -459,10 +459,17 @@ AC_LANG([C])
 # -Wcast-qual  use for check wrong casts. It cant be added by default, because some casts must be wrong.
 # -Wconversion warning: conversion to 'long unsigned int' from 'int' may change the sign of the result
 # -Wfloat-equal comparing floating point with == or != is unsafe
+# -Wpedantic different pedantic checks. Not all can be fixed in nice way.
+# attributes suggestion
+#  -Wsuggest-attribute=const -Wsuggest-attribute=format -Wsuggest-attribute=pure
+
 # flags what can be used but now return no warnings: -Warray-bounds -Wbool-compare -Wcast-align
 #   -Wchar-subscripts -Wchkp -Wclobbered -Wcomment -Wdisabled-optimization -Wempty-body 
 #   -Werror-implicit-function-declaration -Wignored-qualifiers
-#   -Winit-self
+#   -Wjump-misses-init -Wlogical-op  -Wmissing-field-initializers -Wmissing-parameter-type
+#   -Wnested-externs -Wold-style-declaration -Wold-style-definition -Woverlength-strings -Woverride-init
+#   -Wredundant-decls -Wstack-protector -Wstrict-prototypes
+#   -Winit-self -Wpointer-arith
 
 CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wextra -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
@@ -811,6 +818,7 @@ AC_CHECK_COMPILER_WFLAG(format)
 AC_CHECK_COMPILER_WFLAG(format-signedness)
 AC_CHECK_COMPILER_WFLAG(format-y2k)
 AC_CHECK_COMPILER_WFLAG(missing-include-dirs)
+AC_CHECK_COMPILER_WFLAG(suggest-attribute=noreturn)
 AC_CHECK_COMPILER_WNOFLAG(format-nonliteral)
 AC_CHECK_COMPILER_WNOFLAG(switch)
 AC_CHECK_COMPILER_WNOFLAG(missing-field-initializers)
