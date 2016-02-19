@@ -3298,8 +3298,8 @@ void char_ban(int account_id, int char_id, time_t *unban_time, short year, short
 	if( SQL_SUCCESS != SQL->StmtPrepare(stmt,
 		"UPDATE `%s` SET `unban_time` = ? WHERE `char_id` = ? LIMIT 1",
 		char_db)
-	   || SQL_SUCCESS != SQL->StmtBindParam(stmt,  0, SQLDT_LONG,   (void*)&timestamp,   sizeof(timestamp))
-	   || SQL_SUCCESS != SQL->StmtBindParam(stmt,  1, SQLDT_INT,    (void*)&char_id,     sizeof(char_id))
+	   || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_LONG, &timestamp, sizeof(timestamp))
+	   || SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_INT,  &char_id,   sizeof(char_id))
 	   || SQL_SUCCESS != SQL->StmtExecute(stmt)
 	) {
 		SqlStmt_ShowDebug(stmt);

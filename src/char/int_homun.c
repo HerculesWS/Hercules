@@ -171,8 +171,8 @@ bool mapif_homunculus_save(const struct s_homunculus *hd)
 		} else {
 			for (i = 0; i < MAX_HOMUNSKILL; ++i) {
 				if (hd->hskill[i].id > 0 && hd->hskill[i].lv != 0) {
-					SQL->StmtBindParam(stmt, 0, SQLDT_USHORT, (void*)&hd->hskill[i].id, 0); // FIXME: StmtBindParam should take const void
-					SQL->StmtBindParam(stmt, 1, SQLDT_USHORT, (void*)&hd->hskill[i].lv, 0); // FIXME: StmtBindParam should take const void
+					SQL->StmtBindParam(stmt, 0, SQLDT_USHORT, &hd->hskill[i].id, 0);
+					SQL->StmtBindParam(stmt, 1, SQLDT_USHORT, &hd->hskill[i].lv, 0);
 					if (SQL_ERROR == SQL->StmtExecute(stmt)) {
 						SqlStmt_ShowDebug(stmt);
 						flag = false;

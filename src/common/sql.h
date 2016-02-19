@@ -209,7 +209,7 @@ struct sql_interface {
 	/// All parameters should have bindings.
 	///
 	/// @return SQL_SUCCESS or SQL_ERROR
-	int (*StmtBindParam)(struct SqlStmt *self, size_t idx, enum SqlDataType buffer_type, void *buffer, size_t buffer_len);
+	int (*StmtBindParam)(struct SqlStmt *self, size_t idx, enum SqlDataType buffer_type, const void *buffer, size_t buffer_len);
 
 	/// Executes the prepared statement.
 	/// Any previous result is freed and all column bindings are removed.

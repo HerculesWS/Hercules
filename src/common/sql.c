@@ -629,7 +629,7 @@ size_t SqlStmt_NumParams(struct SqlStmt *self)
 }
 
 /// Binds a parameter to a buffer.
-int SqlStmt_BindParam(struct SqlStmt *self, size_t idx, enum SqlDataType buffer_type, void *buffer, size_t buffer_len)
+int SqlStmt_BindParam(struct SqlStmt *self, size_t idx, enum SqlDataType buffer_type, const void *buffer, size_t buffer_len)
 {
 	if( self == NULL )
 	return SQL_ERROR;
@@ -650,10 +650,19 @@ int SqlStmt_BindParam(struct SqlStmt *self, size_t idx, enum SqlDataType buffer_
 			self->params[i].buffer_type = MYSQL_TYPE_NULL;
 		self->bind_params = true;
 	}
-	if( idx < self->max_params )
-		return Sql_P_BindSqlDataType(self->params+idx, buffer_type, buffer, buffer_len, NULL, NULL);
-	else
-		return SQL_SUCCESS;// out of range - ignore
+	if (idx >= self->max_params)
+		return SQL_SUCCESS; // out of range - ignore
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+	/*
+	 * MySQL uses the same struct with a non-const buffer for both
+	 * parameters (input) and columns (output).
+	 * As such, we get to close our eyes and pretend we didn't see we're
+	 * dropping a const qualifier here.
+	 */
+	return Sql_P_BindSqlDataType(self->params+idx, buffer_type, (void *)buffer, buffer_len, NULL, NULL);
+#pragma GCC diagnostic pop
 }
 
 /// Executes the prepared statement.

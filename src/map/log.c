@@ -289,7 +289,7 @@ void log_atcommand_sub_sql(struct map_session_data* sd, const char* message)
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
 	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`atcommand_date`, `account_id`, `char_id`, `char_name`, `map`, `command`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_gm, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
 	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
-	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, (char*)message, safestrnlen(message, 255))
+	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, message, safestrnlen(message, 255))
 	   ||  SQL_SUCCESS != SQL->StmtExecute(stmt) )
 	{
 		SqlStmt_ShowDebug(stmt);
@@ -331,11 +331,11 @@ void log_npc_sub_sql(struct map_session_data *sd, const char *message)
 	nullpo_retv(sd);
 	nullpo_retv(message);
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
-	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`npc_date`, `account_id`, `char_id`, `char_name`, `map`, `mes`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_npc, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
-	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
-	   ||  SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, (char*)message, safestrnlen(message, 255))
-	   ||  SQL_SUCCESS != SQL->StmtExecute(stmt) )
-	{
+	if (SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`npc_date`, `account_id`, `char_id`, `char_name`, `map`, `mes`) VALUES (NOW(), '%d', '%d', ?, '%s', ?)", logs->config.log_npc, sd->status.account_id, sd->status.char_id, mapindex_id2name(sd->mapindex) )
+	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, sd->status.name, strnlen(sd->status.name, NAME_LENGTH))
+	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, message, safestrnlen(message, 255))
+	 || SQL_SUCCESS != SQL->StmtExecute(stmt)
+	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		return;
@@ -388,8 +388,8 @@ void log_chat_sub_sql(e_log_chat_type type, int type_id, int src_charid, int src
 	nullpo_retv(message);
 	stmt = SQL->StmtMalloc(logs->mysql_handle);
 	if( SQL_SUCCESS != SQL->StmtPrepare(stmt, LOG_QUERY " INTO `%s` (`time`, `type`, `type_id`, `src_charid`, `src_accountid`, `src_map`, `src_map_x`, `src_map_y`, `dst_charname`, `message`) VALUES (NOW(), '%c', '%d', '%d', '%d', '%s', '%d', '%d', ?, ?)", logs->config.log_chat, logs->chattype2char(type), type_id, src_charid, src_accid, mapname, x, y)
-	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, (char*)dst_charname, safestrnlen(dst_charname, NAME_LENGTH))
-	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, (char*)message, safestrnlen(message, CHAT_SIZE_MAX))
+	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_STRING, dst_charname, safestrnlen(dst_charname, NAME_LENGTH))
+	 || SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_STRING, message, safestrnlen(message, CHAT_SIZE_MAX))
 	 || SQL_SUCCESS != SQL->StmtExecute(stmt)
 	) {
 		SqlStmt_ShowDebug(stmt);
