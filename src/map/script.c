@@ -2864,43 +2864,46 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
 		}
 	}
 
-	if( postfix == '$' ) {// string variable
+	if (postfix == '$') {
+		// string variable
+		const char *str = NULL;
 
-		switch( prefix ) {
+		switch (prefix) {
 			case '@':
-				data->u.str = pc->readregstr(sd, data->u.num);
+				str = pc->readregstr(sd, data->u.num);
 				break;
 			case '$':
-				data->u.str = mapreg->readregstr(data->u.num);
+				str = mapreg->readregstr(data->u.num);
 				break;
 			case '#':
-				if( name[1] == '#' )
-					data->u.str = pc_readaccountreg2str(sd, data->u.num);// global
+				if (name[1] == '#')
+					str = pc_readaccountreg2str(sd, data->u.num);// global
 				else
-					data->u.str = pc_readaccountregstr(sd, data->u.num);// local
+					str = pc_readaccountregstr(sd, data->u.num);// local
 				break;
 			case '.':
 				if (data->ref)
-					data->u.str = script->get_val_ref_str(st, data->ref, data);
+					str = script->get_val_ref_str(st, data->ref, data);
 				else if (name[1] == '@')
-					data->u.str = script->get_val_scope_str(st, &st->stack->scope, data);
+					str = script->get_val_scope_str(st, &st->stack->scope, data);
 				else
-					data->u.str = script->get_val_npc_str(st, &st->script->local, data);
+					str = script->get_val_npc_str(st, &st->script->local, data);
 				break;
 			case '\'':
-				data->u.str = script->get_val_instance_str(st, name, data);
+				str = script->get_val_instance_str(st, name, data);
 				break;
 			default:
-				data->u.str = pc_readglobalreg_str(sd, data->u.num);
+				str = pc_readglobalreg_str(sd, data->u.num);
 				break;
 		}
 
-		if( data->u.str == NULL || data->u.str[0] == '\0' ) {// empty string
+		if (str == NULL || str[0] == '\0') {
+			// empty string
 			data->type = C_CONSTSTR;
 			data->u.str = "";
 		} else {// duplicate string
 			data->type = C_STR;
-			data->u.str = aStrdup(data->u.str);
+			data->u.mutstr = aStrdup(str);
 		}
 
 	} else {// integer variable
@@ -3361,53 +3364,53 @@ void setd_sub(struct script_state *st, struct map_session_data *sd, const char *
 }
 
 /// Converts the data to a string
-const char* conv_str(struct script_state* st, struct script_data* data)
+const char *conv_str(struct script_state *st, struct script_data* data)
 {
-	char* p;
-
 	script->get_val(st, data);
-	if( data_isstring(data) )
-	{// nothing to convert
+	if (data_isstring(data)) {
+		// nothing to convert
+		return data->u.str;
 	}
-	else if( data_isint(data) )
-	{// int -> string
+	if (data_isint(data)) {
+		// int -> string
+		char *p;
 		CREATE(p, char, ITEM_NAME_LENGTH);
 		snprintf(p, ITEM_NAME_LENGTH, "%"PRId64"", data->u.num);
 		p[ITEM_NAME_LENGTH-1] = '\0';
 		data->type = C_STR;
-		data->u.str = p;
+		data->u.mutstr = p;
+		return data->u.mutstr;
 	}
-	else if( data_isreference(data) )
-	{// reference -> string
+	if (data_isreference(data)) {
+		// reference -> string
 		//##TODO when does this happen (check script->get_val) [FlavioJS]
 		data->type = C_CONSTSTR;
 		data->u.str = reference_getname(data);
+		return data->u.str;
 	}
-	else
-	{// unsupported data type
-		ShowError("script:conv_str: cannot convert to string, defaulting to \"\"\n");
-		script->reportdata(data);
-		script->reportsrc(st);
-		data->type = C_CONSTSTR;
-		data->u.str = "";
-	}
+	// unsupported data type
+	ShowError("script:conv_str: cannot convert to string, defaulting to \"\"\n");
+	script->reportdata(data);
+	script->reportsrc(st);
+	data->type = C_CONSTSTR;
+	data->u.str = "";
 	return data->u.str;
 }
 
 /// Converts the data to an int
-int conv_num(struct script_state* st, struct script_data* data) {
-	char* p;
+int conv_num(struct script_state *st, struct script_data *data)
+{
 	long num;
 
 	script->get_val(st, data);
-	if( data_isint(data) )
-	{// nothing to convert
+	if (data_isint(data)) {
+		// nothing to convert
+		return (int)data->u.num;
 	}
-	else if( data_isstring(data) )
-	{// string -> int
+	if (data_isstring(data)) {
+		// string -> int
 		// the result does not overflow or underflow, it is capped instead
 		// ex: 999999999999 is capped to INT_MAX (2147483647)
-		p = data->u.str;
 		errno = 0;
 		num = strtol(data->u.str, NULL, 10);// change radix to 0 to support octal numbers "o377" and hex numbers "0xFF"
 		if( errno == ERANGE
@@ -3429,22 +3432,21 @@ int conv_num(struct script_state* st, struct script_data* data) {
 			script->reportdata(data);
 			script->reportsrc(st);
 		}
-		if( data->type == C_STR )
-			aFree(p);
+		if (data->type == C_STR)
+			aFree(data->u.mutstr);
 		data->type = C_INT;
 		data->u.num = (int)num;
+		return (int)data->u.num;
 	}
 #if 0
+	// unsupported data type
 	// FIXME this function is being used to retrieve the position of labels and
 	// probably other stuff [FlavioJS]
-	else
-	{// unsupported data type
-		ShowError("script:conv_num: cannot convert to number, defaulting to 0\n");
-		script->reportdata(data);
-		script->reportsrc(st);
-		data->type = C_INT;
-		data->u.num = 0;
-	}
+	ShowError("script:conv_num: cannot convert to number, defaulting to 0\n");
+	script->reportdata(data);
+	script->reportsrc(st);
+	data->type = C_INT;
+	data->u.num = 0;
 #endif
 	return (int)data->u.num;
 }
@@ -3474,11 +3476,23 @@ struct script_data* push_val(struct script_stack* stack, enum c_op type, int64 v
 }
 
 /// Pushes a string into the stack
-struct script_data* push_str(struct script_stack* stack, enum c_op type, char* str)
+struct script_data *push_str(struct script_stack *stack, char *str)
 {
 	if( stack->sp >= stack->sp_max )
 		script->stack_expand(stack);
-	stack->stack_data[stack->sp].type  = type;
+	stack->stack_data[stack->sp].type  = C_STR;
+	stack->stack_data[stack->sp].u.mutstr = str;
+	stack->stack_data[stack->sp].ref   = NULL;
+	stack->sp++;
+	return &stack->stack_data[stack->sp-1];
+}
+
+/// Pushes a constant string into the stack
+struct script_data *push_conststr(struct script_stack *stack, const char *str)
+{
+	if( stack->sp >= stack->sp_max )
+		script->stack_expand(stack);
+	stack->stack_data[stack->sp].type  = C_CONSTSTR;
 	stack->stack_data[stack->sp].u.str = str;
 	stack->stack_data[stack->sp].ref   = NULL;
 	stack->sp++;
@@ -3500,10 +3514,10 @@ struct script_data* push_retinfo(struct script_stack* stack, struct script_retin
 struct script_data* push_copy(struct script_stack* stack, int pos) {
 	switch( stack->stack_data[pos].type ) {
 		case C_CONSTSTR:
-			return script->push_str(stack, C_CONSTSTR, stack->stack_data[pos].u.str);
+			return script->push_conststr(stack, stack->stack_data[pos].u.str);
 			break;
 		case C_STR:
-			return script->push_str(stack, C_STR, aStrdup(stack->stack_data[pos].u.str));
+			return script->push_str(stack, aStrdup(stack->stack_data[pos].u.mutstr));
 			break;
 		case C_RETINFO:
 			ShowFatalError("script:push_copy: can't create copies of C_RETINFO. Exiting...\n");
@@ -3537,8 +3551,8 @@ void pop_stack(struct script_state* st, int start, int end) {
 	for( i = start; i < end; i++ )
 	{
 		data = &stack->stack_data[i];
-		if( data->type == C_STR )
-			aFree(data->u.str);
+		if (data->type == C_STR)
+			aFree(data->u.mutstr);
 		if( data->type == C_RETINFO )
 		{
 			struct script_retinfo* ri = data->u.ri;
@@ -3769,12 +3783,11 @@ void op_3(struct script_state* st, int op)
 	data = script_getdatatop(st, -3);
 	script->get_val(st, data);
 
-	if( data_isstring(data) )
-		flag = data->u.str[0];// "" -> false
-	else if( data_isint(data) )
+	if (data_isstring(data)) {
+		flag = data->u.str[0]; // "" -> false
+	} else if (data_isint(data)) {
 		flag = data->u.num == 0 ? 0 : 1;// 0 -> false
-	else
-	{
+	} else {
 		ShowError("script:op_3: invalid data for the ternary operator test\n");
 		script->reportdata(data);
 		script->reportsrc(st);
@@ -3995,10 +4008,9 @@ void op_2(struct script_state *st, int op)
 		script->op_2str(st, op, left->u.str, right->u.str);
 		script_removetop(st, leftref.type == C_NOP ? -3 : -2, -1);// pop the two values before the top one
 
-		if (leftref.type != C_NOP)
-		{
+		if (leftref.type != C_NOP) {
 			if (left->type == C_STR) // don't free C_CONSTSTR
-				aFree(left->u.str);
+				aFree(left->u.mutstr);
 			*left = leftref;
 		}
 	}
@@ -4396,7 +4408,7 @@ void run_script_main(struct script_state *st) {
 				script->push_val(stack,c,0,NULL);
 				break;
 			case C_STR:
-				script->push_str(stack,C_CONSTSTR,(char*)(st->script->script_buf+st->pos));
+				script->push_conststr(stack, (const char *)(st->script->script_buf+st->pos));
 				while(st->script->script_buf[st->pos++]);
 				break;
 			case C_LSTR:
@@ -4408,7 +4420,7 @@ void run_script_main(struct script_state *st) {
 				st->pos += sizeof(int) + sizeof(uint8);
 
 				if( (!st->rid || !(lsd = map->id2sd(st->rid)) || !lsd->lang_id) && !map->default_lang_id )
-					script->push_str(stack,C_CONSTSTR,script->string_list+string_id);
+					script->push_conststr(stack, script->string_list+string_id);
 				else {
 					uint8 k, wlang_id = lsd ? lsd->lang_id : map->default_lang_id;
 					int offset = st->pos;
@@ -4420,8 +4432,10 @@ void run_script_main(struct script_state *st) {
 							break;
 						offset += sizeof(char*);
 					}
-					script->push_str(stack,C_CONSTSTR,
-							( k == translations ) ? script->string_list+string_id : *(char**)(&st->script->script_buf[offset]) );
+					if (k == translations)
+						script->push_conststr(stack, script->string_list+string_id);
+					else
+						script->push_conststr(stack, *(const char**)(&st->script->script_buf[offset]) );
 				}
 				st->pos += ( ( sizeof(char*) + sizeof(uint8) ) * translations );
 			}
@@ -6341,7 +6355,7 @@ BUILDIN(jobchange)
 BUILDIN(jobname)
 {
 	int class_=script_getnum(st,2);
-	script_pushconststr(st, (char*)pc->job_name(class_));
+	script_pushconststr(st, pc->job_name(class_));
 	return true;
 }
 
@@ -21152,6 +21166,7 @@ void script_defaults(void) {
 	script->get_val_npc_num = get_val_npcscope_num;
 	script->get_val_instance_num = get_val_instance_num;
 	script->push_str = push_str;
+	script->push_conststr = push_conststr;
 	script->push_copy = push_copy;
 	script->pop_stack = pop_stack;
 	script->set_constant = script_set_constant;

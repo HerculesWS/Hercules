@@ -8498,30 +8498,34 @@ ACMD(set)
 
 	CREATE(data, struct script_data,1);
 
-	if( is_str ) {// string variable
-		switch( reg[0] ) {
+	if (is_str) {
+		// string variable
+		const char *str = NULL;
+		switch (reg[0]) {
 			case '@':
-				data->u.str = pc->readregstr(sd, script->add_str(reg));
+				str = pc->readregstr(sd, script->add_str(reg));
 				break;
 			case '$':
-				data->u.str = mapreg->readregstr(script->add_str(reg));
+				str = mapreg->readregstr(script->add_str(reg));
 				break;
 			case '#':
-				if( reg[1] == '#' )
-					data->u.str = pc_readaccountreg2str(sd, script->add_str(reg));// global
+				if (reg[1] == '#')
+					str = pc_readaccountreg2str(sd, script->add_str(reg));// global
 				else
-					data->u.str = pc_readaccountregstr(sd, script->add_str(reg));// local
+					str = pc_readaccountregstr(sd, script->add_str(reg));// local
 				break;
 			default:
-				data->u.str = pc_readglobalreg_str(sd, script->add_str(reg));
+				str = pc_readglobalreg_str(sd, script->add_str(reg));
 				break;
 		}
-		if( data->u.str == NULL || data->u.str[0] == '\0' ) {// empty string
+		if (str == NULL || str[0] == '\0') {
+			// empty string
 			data->type = C_CONSTSTR;
 			data->u.str = "";
-		} else {// duplicate string
+		} else {
+			// duplicate string
 			data->type = C_STR;
-			data->u.str = aStrdup(data->u.str);
+			data->u.mutstr = aStrdup(str);
 		}
 	} else {// integer variable
 		data->type = C_INT;
@@ -8549,7 +8553,7 @@ ACMD(set)
 			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1373),reg,data->u.num); // %s value is now :%d
 			break;
 		case C_STR:
-			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1374),reg,data->u.str); // %s value is now :%s
+			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1374),reg,data->u.mutstr); // %s value is now :%s
 			break;
 		case C_CONSTSTR:
 			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1375),reg); // %s is empty

@@ -94,11 +94,11 @@ struct item_data;
 /// Pushes an int into the stack
 #define script_pushint(st,val) (script->push_val((st)->stack, C_INT, (val),NULL))
 /// Pushes a string into the stack (script engine frees it automatically)
-#define script_pushstr(st,val) (script->push_str((st)->stack, C_STR, (val)))
+#define script_pushstr(st,val) (script->push_str((st)->stack, (val)))
 /// Pushes a copy of a string into the stack
-#define script_pushstrcopy(st,val) (script->push_str((st)->stack, C_STR, aStrdup(val)))
+#define script_pushstrcopy(st,val) (script->push_str((st)->stack, aStrdup(val)))
 /// Pushes a constant string into the stack (must never change or be freed)
-#define script_pushconststr(st,val) (script->push_str((st)->stack, C_CONSTSTR, (val)))
+#define script_pushconststr(st,val) (script->push_conststr((st)->stack, (val)))
 /// Pushes a nil into the stack
 #define script_pushnil(st) (script->push_val((st)->stack, C_NOP, 0,NULL))
 /// Pushes a copy of the data in the target index
@@ -380,14 +380,18 @@ struct script_retinfo {
 	int defsp;                  ///< default stack pointer
 };
 
+/**
+ * Represents a variable in the script stack.
+ */
 struct script_data {
-	enum c_op type;
+	enum c_op type;     ///< Data type
 	union script_data_val {
-		int64 num;
-		char *str;
-		struct script_retinfo* ri;
-	} u;
-	struct reg_db *ref;
+		int64 num;                 ///< Numeric data
+		char *mutstr;              ///< Mutable string
+		const char *str;           ///< Constant string
+		struct script_retinfo *ri; ///< Function return information
+	} u;                ///< Data (field depends on `type`)
+	struct reg_db *ref; ///< Reference to the scope's variables
 };
 
 // Moved defsp from script_state to script_stack since
@@ -661,8 +665,9 @@ struct script_interface {
 	int (*get_val_npc_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	int (*get_val_instance_num) (struct script_state* st, const char* name, struct script_data* data);
 	const void *(*get_val2) (struct script_state *st, int64 uid, struct reg_db *ref);
-	struct script_data* (*push_str) (struct script_stack* stack, enum c_op type, char* str);
-	struct script_data* (*push_copy) (struct script_stack* stack, int pos);
+	struct script_data *(*push_str) (struct script_stack *stack, char *str);
+	struct script_data *(*push_conststr) (struct script_stack *stack, const char *str);
+	struct script_data *(*push_copy) (struct script_stack *stack, int pos);
 	void (*pop_stack) (struct script_state* st, int start, int end);
 	void (*set_constant) (const char *name, int value, bool is_parameter, bool is_deprecated);
 	void (*set_constant2) (const char *name, int value, bool is_parameter, bool is_deprecated);
