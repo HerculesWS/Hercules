@@ -154,7 +154,7 @@ bool mapif_quest_add(int char_id, struct quest qd)
 	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
 		StrBuf->Printf(&buf, ", `count%d`", i+1);
 	}
-	StrBuf->Printf(&buf, ") VALUES ('%d', '%d', '%d', '%d'", qd.quest_id, char_id, qd.state, qd.time);
+	StrBuf->Printf(&buf, ") VALUES ('%d', '%d', '%u', '%u'", qd.quest_id, char_id, qd.state, qd.time);
 	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
 		StrBuf->Printf(&buf, ", '%d'", qd.count[i]);
 	}
@@ -182,7 +182,7 @@ bool mapif_quest_update(int char_id, struct quest qd)
 	int i;
 
 	StrBuf->Init(&buf);
-	StrBuf->Printf(&buf, "UPDATE `%s` SET `state`='%d'", quest_db, qd.state);
+	StrBuf->Printf(&buf, "UPDATE `%s` SET `state`='%u'", quest_db, qd.state);
 	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
 		StrBuf->Printf(&buf, ", `count%d`='%d'", i+1, qd.count[i]);
 	}

@@ -466,11 +466,11 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		if( p->show_equip )
 			opt |= OPT_SHOW_EQUIP;
 
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `base_level`='%d', `job_level`='%d',"
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `base_level`='%u', `job_level`='%u',"
 			"`base_exp`='%u', `job_exp`='%u', `zeny`='%d',"
-			"`max_hp`='%d',`hp`='%d',`max_sp`='%d',`sp`='%d',`status_point`='%d',`skill_point`='%d',"
+			"`max_hp`='%d',`hp`='%d',`max_sp`='%d',`sp`='%d',`status_point`='%u',`skill_point`='%u',"
 			"`str`='%d',`agi`='%d',`vit`='%d',`int`='%d',`dex`='%d',`luk`='%d',"
-			"`option`='%d',`party_id`='%d',`guild_id`='%d',`pet_id`='%d',`homun_id`='%d',`elemental_id`='%d',"
+			"`option`='%u',`party_id`='%d',`guild_id`='%d',`pet_id`='%d',`homun_id`='%d',`elemental_id`='%d',"
 			"`weapon`='%d',`shield`='%d',`head_top`='%d',`head_mid`='%d',`head_bottom`='%d',"
 			"`last_map`='%s',`last_x`='%d',`last_y`='%d',`save_map`='%s',`save_x`='%d',`save_y`='%d', `rename`='%d',"
 			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u', `font`='%u', `uniqueitem_counter` ='%u',"
@@ -781,7 +781,7 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 				} else {
 					// update all fields.
 					StrBuf->Clear(&buf);
-					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%d', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `bound`='%d'",
+					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%u', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `bound`='%d'",
 						tablename, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound);
 					for( j = 0; j < MAX_SLOTS; ++j )
 						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);
@@ -828,7 +828,7 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 		else
 			found = true;
 
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
+		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
 			id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound, items[i].unique_id);
 		for( j = 0; j < MAX_SLOTS; ++j )
 			StrBuf->Printf(&buf, ", '%d'", items[i].card[j]);
@@ -927,7 +927,7 @@ int char_inventory_to_sql(const struct item items[], int max, int id) {
 				} else {
 					// update all fields.
 					StrBuf->Clear(&buf);
-					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%d', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `favorite`='%d', `bound`='%d'",
+					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%u', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `favorite`='%d', `bound`='%d'",
 							inventory_db, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].favorite, items[i].bound);
 					for( j = 0; j < MAX_SLOTS; ++j )
 						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);
@@ -970,7 +970,7 @@ int char_inventory_to_sql(const struct item items[], int max, int id) {
 		else
 			found = true;
 
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%u', '%d', '%d', '%"PRIu64"'",
+		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%d', '%"PRIu64"'",
 						 id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].favorite, items[i].bound, items[i].unique_id);
 		for( j = 0; j < MAX_SLOTS; ++j )
 			StrBuf->Printf(&buf, ", '%d'", items[i].card[j]);
@@ -3093,7 +3093,7 @@ void char_parse_frommap_map_names(int fd, int id)
 		VECTOR_PUSH(chr->server[id].maps, RFIFOW(fd,i));
 	}
 
-	ShowStatus("Map-Server %d connected: %d maps, from IP %d.%d.%d.%d port %d.\n",
+	ShowStatus("Map-Server %d connected: %d maps, from IP %u.%u.%u.%u port %d.\n",
 			id, (int)VECTOR_LENGTH(chr->server[id].maps), CONVIP(chr->server[id].ip), chr->server[id].port);
 	ShowStatus("Map-server %d loading complete.\n", id);
 
@@ -3655,7 +3655,7 @@ void char_parse_frommap_ragsrvinfo(int fd)
 
 	SQL->EscapeString(inter->sql_handle, esc_server_name, chr->server_name);
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` SET `index`='%d',`name`='%s',`exp`='%d',`jexp`='%d',`drop`='%d'",
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` SET `index`='%d',`name`='%s',`exp`='%u',`jexp`='%u',`drop`='%u'",
 		ragsrvinfo_db, fd, esc_server_name, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10)) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
@@ -3712,7 +3712,7 @@ void char_parse_frommap_save_status_change_data(int fd)
 			memcpy (&data, RFIFOP(fd, 14+i*sizeof(struct status_change_data)), sizeof(struct status_change_data));
 			if( i > 0 )
 				StrBuf->AppendStr(&buf, ", ");
-			StrBuf->Printf(&buf, "('%d','%d','%hu','%d','%d','%d','%d','%d')", aid, cid,
+			StrBuf->Printf(&buf, "('%d','%d','%hu','%u','%d','%d','%d','%d')", aid, cid,
 				data.type, data.tick, data.val1, data.val2, data.val3, data.val4);
 		}
 		if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
@@ -3831,7 +3831,7 @@ void char_parse_frommap_auth_request(int fd, int id)
 void char_parse_frommap_update_ip(int fd, int id)
 {
 	chr->server[id].ip = ntohl(RFIFOL(fd, 2));
-	ShowInfo("Updated IP address of map-server #%d to %d.%d.%d.%d.\n", id, CONVIP(chr->server[id].ip));
+	ShowInfo("Updated IP address of map-server #%d to %u.%u.%u.%u.\n", id, CONVIP(chr->server[id].ip));
 	RFIFOSKIP(fd,6);
 }
 
@@ -4450,7 +4450,7 @@ void char_parse_char_connect(int fd, struct char_session_data* sd, uint32 ipl)
 
 	RFIFOSKIP(fd,17);
 
-	ShowInfo("request connect - account_id:%d/login_id1:%d/login_id2:%d\n", account_id, login_id1, login_id2);
+	ShowInfo("request connect - account_id:%d/login_id1:%u/login_id2:%u\n", account_id, login_id1, login_id2);
 
 	if (sd) {
 		//Received again auth packet for already authenticated account?? Discard it.

@@ -214,11 +214,11 @@ bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplugin_data
 			break;
 		default:
 			if (HPM->data_store_validate_sub == NULL) {
-				ShowError("HPM:validateHPData failed, type %d needs sub-handler!\n",type);
+				ShowError("HPM:validateHPData failed, type %u needs sub-handler!\n", type);
 				return false;
 			}
 			if (!HPM->data_store_validate_sub(type, storeptr, initialize)) {
-				ShowError("HPM:HPM:validateHPData failed, unknown type %d!\n",type);
+				ShowError("HPM:HPM:validateHPData failed, unknown type %u!\n", type);
 				return false;
 			}
 			break;
@@ -228,7 +228,7 @@ bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplugin_data
 		store = *storeptr;
 	}
 	if (store->type != type) {
-		ShowError("HPM:HPM:validateHPData failed, store type mismatch %d != %d.\n",store->type, type);
+		ShowError("HPM:HPM:validateHPData failed, store type mismatch %u != %u.\n", store->type, type);
 		return false;
 	}
 	return true;
@@ -253,7 +253,7 @@ void hplugins_addToHPData(enum HPluginDataTypes type, uint32 pluginID, struct hp
 
 	if (!HPM->data_store_validate(type, storeptr, true)) {
 		/* woo it failed! */
-		ShowError("HPM:addToHPData:%s: failed, type %d (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
+		ShowError("HPM:addToHPData:%s: failed, type %u (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
 		return;
 	}
 	store = *storeptr;
@@ -294,7 +294,7 @@ void *hplugins_getFromHPData(enum HPluginDataTypes type, uint32 pluginID, struct
 
 	if (!HPM->data_store_validate(type, &store, false)) {
 		/* woo it failed! */
-		ShowError("HPM:getFromHPData:%s: failed, type %d (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
+		ShowError("HPM:getFromHPData:%s: failed, type %u (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
 		return NULL;
 	}
 	if (!store)
@@ -322,7 +322,7 @@ void hplugins_removeFromHPData(enum HPluginDataTypes type, uint32 pluginID, stru
 
 	if (!HPM->data_store_validate(type, &store, false)) {
 		/* woo it failed! */
-		ShowError("HPM:removeFromHPData:%s: failed, type %d (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
+		ShowError("HPM:removeFromHPData:%s: failed, type %u (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
 		return;
 	}
 	if (!store)

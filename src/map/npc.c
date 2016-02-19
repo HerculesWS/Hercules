@@ -1564,8 +1564,8 @@ void npc_market_fromsql(void) {
  * Saves persistent NPC Market Data into SQL
  **/
 void npc_market_tosql(struct npc_data *nd, unsigned short index) {
-	if( SQL_ERROR == SQL->Query(map->mysql_handle, "REPLACE INTO `%s` VALUES ('%s','%d','%d')",
-		map->npc_market_data_db, nd->exname, nd->u.scr.shop->item[index].nameid, nd->u.scr.shop->item[index].qty) )
+	if (SQL_ERROR == SQL->Query(map->mysql_handle, "REPLACE INTO `%s` VALUES ('%s','%d','%u')",
+		map->npc_market_data_db, nd->exname, nd->u.scr.shop->item[index].nameid, nd->u.scr.shop->item[index].qty))
 		Sql_ShowDebug(map->mysql_handle);
 }
 /**
@@ -1771,7 +1771,7 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 
 	if ((int64)shop[i].value * amount > INT_MAX) {
 		ShowWarning("npc_cashshop_buy: Item '%s' (%d) price overflow attempt!\n", item->name, nameid);
-		ShowDebug("(NPC:'%s' (%s,%d,%d), player:'%s' (%d/%d), value:%d, amount:%d)\n",
+		ShowDebug("(NPC:'%s' (%s,%d,%d), player:'%s' (%d/%d), value:%u, amount:%d)\n",
 				nd->exname, map->list[nd->bl.m].name, nd->bl.x, nd->bl.y,
 				sd->status.name, sd->status.account_id, sd->status.char_id,
 				shop[i].value, amount);
@@ -2501,7 +2501,7 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 	if( p ) { // <Display name>::<Unique name>
 		size_t len = p-name;
 		if( len > NAME_LENGTH ) {
-			ShowWarning("npc_parsename: Display name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
+			ShowWarning("npc_parsename: Display name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %d characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
 			safestrncpy(nd->name, name, sizeof(nd->name));
 		} else {
 			memcpy(nd->name, name, len);
@@ -2509,12 +2509,12 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 		}
 		len = strlen(p+2);
 		if( len > NAME_LENGTH )
-			ShowWarning("npc_parsename: Unique name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
+			ShowWarning("npc_parsename: Unique name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %d characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
 		safestrncpy(nd->exname, p+2, sizeof(nd->exname));
 	} else {// <Display name>
 		size_t len = strlen(name);
 		if( len > NAME_LENGTH )
-			ShowWarning("npc_parsename: Name '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
+			ShowWarning("npc_parsename: Name '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %d characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
 		safestrncpy(nd->name, name, sizeof(nd->name));
 		safestrncpy(nd->exname, name, sizeof(nd->exname));
 	}
@@ -4536,7 +4536,7 @@ int npc_script_event(struct map_session_data* sd, enum npce_event type)
 	if (type == NPCE_MAX)
 		return 0;
 	if (!sd) {
-		ShowError("npc_script_event: NULL sd. Event Type %d\n", type);
+		ShowError("npc_script_event: NULL sd. Event Type %u\n", type);
 		return 0;
 	}
 	for (i = 0; i<script_event[type].event_count; i++)

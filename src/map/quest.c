@@ -409,7 +409,7 @@ int quest_check(struct map_session_data *sd, int quest_id, enum quest_check_type
 			}
 			return 0;
 		default:
-			ShowError("quest_check_quest: Unknown parameter %d",type);
+			ShowError("quest_check_quest: Unknown parameter %u", type);
 			break;
 	}
 

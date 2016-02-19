@@ -97,7 +97,7 @@ bool mapreg_setreg(int64 uid, int val) {
 			if (name[1] != '@' && !mapreg->skip_insert) {// write new variable to database
 				char tmp_str[(SCRIPT_VARNAME_LENGTH+1)*2+1];
 				SQL->EscapeStringLen(map->mysql_handle, tmp_str, name, strnlen(name, SCRIPT_VARNAME_LENGTH+1));
-				if( SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s`(`varname`,`index`,`value`) VALUES ('%s','%d','%d')", mapreg->table, tmp_str, i, val) )
+				if( SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s`(`varname`,`index`,`value`) VALUES ('%s','%u','%d')", mapreg->table, tmp_str, i, val) )
 					Sql_ShowDebug(map->mysql_handle);
 			}
 			i64db_put(mapreg->regs.vars, uid, m);
@@ -111,7 +111,7 @@ bool mapreg_setreg(int64 uid, int val) {
 		i64db_remove(mapreg->regs.vars, uid);
 
 		if( name[1] != '@' ) {// Remove from database because it is unused.
-			if( SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `varname`='%s' AND `index`='%d'", mapreg->table, name, i) )
+			if( SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `varname`='%s' AND `index`='%u'", mapreg->table, name, i) )
 				Sql_ShowDebug(map->mysql_handle);
 		}
 	}
@@ -136,7 +136,7 @@ bool mapreg_setregstr(int64 uid, const char* str) {
 		if( i )
 			script->array_update(&mapreg->regs, uid, true);
 		if(name[1] != '@') {
-			if( SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `varname`='%s' AND `index`='%d'", mapreg->table, name, i) )
+			if (SQL_ERROR == SQL->Query(map->mysql_handle, "DELETE FROM `%s` WHERE `varname`='%s' AND `index`='%u'", mapreg->table, name, i))
 				Sql_ShowDebug(map->mysql_handle);
 		}
 		if( (m = i64db_get(mapreg->regs.vars, uid)) ) {
@@ -170,7 +170,7 @@ bool mapreg_setregstr(int64 uid, const char* str) {
 				char tmp_str2[255*2+1];
 				SQL->EscapeStringLen(map->mysql_handle, tmp_str, name, strnlen(name, SCRIPT_VARNAME_LENGTH+1));
 				SQL->EscapeStringLen(map->mysql_handle, tmp_str2, str, strnlen(str, 255));
-				if( SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s`(`varname`,`index`,`value`) VALUES ('%s','%d','%s')", mapreg->table, tmp_str, i, tmp_str2) )
+				if( SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s`(`varname`,`index`,`value`) VALUES ('%s','%u','%s')", mapreg->table, tmp_str, i, tmp_str2) )
 					Sql_ShowDebug(map->mysql_handle);
 			}
 			i64db_put(mapreg->regs.vars, uid, m);

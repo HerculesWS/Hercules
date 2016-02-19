@@ -625,7 +625,7 @@ int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt) {
 	remote_address.sin_port        = htons(port);
 
 	if( !( opt && opt->silent ) )
-		ShowStatus("Connecting to %d.%d.%d.%d:%i\n", CONVIP(ip), port);
+		ShowStatus("Connecting to %u.%u.%u.%u:%i\n", CONVIP(ip), port);
 
 	result = sConnect(fd, (struct sockaddr *)(&remote_address), sizeof(struct sockaddr_in));
 	if( result == SOCKET_ERROR ) {
@@ -758,7 +758,7 @@ int wfifoset(int fd, size_t len)
 	if (s->wdata_size+len > s->max_wdata) {
 		// actually there was a buffer overflow already
 		uint32 ip = s->client_addr;
-		ShowFatalError("WFIFOSET: Write Buffer Overflow. Connection %d (%d.%d.%d.%d) has written %u bytes on a %u/%u bytes buffer.\n", fd, CONVIP(ip), (unsigned int)len, (unsigned int)s->wdata_size, (unsigned int)s->max_wdata);
+		ShowFatalError("WFIFOSET: Write Buffer Overflow. Connection %d (%u.%u.%u.%u) has written %u bytes on a %u/%u bytes buffer.\n", fd, CONVIP(ip), (unsigned int)len, (unsigned int)s->wdata_size, (unsigned int)s->max_wdata);
 		ShowDebug("Likely command that caused it: 0x%x\n", (*(uint16*)(s->wdata + s->wdata_size)));
 		// no other chance, make a better fifo model
 		exit(EXIT_FAILURE);
@@ -768,7 +768,7 @@ int wfifoset(int fd, size_t len)
 	{
 		// dynamic packets allow up to UINT16_MAX bytes (<packet_id>.W <packet_len>.W ...)
 		// all known fixed-size packets are within this limit, so use the same limit
-		ShowFatalError("WFIFOSET: Packet 0x%x is too big. (len=%u, max=%u)\n", (*(uint16*)(s->wdata + s->wdata_size)), (unsigned int)len, 0xFFFF);
+		ShowFatalError("WFIFOSET: Packet 0x%x is too big. (len=%u, max=%u)\n", (*(uint16*)(s->wdata + s->wdata_size)), (unsigned int)len, 0xFFFFU);
 		exit(EXIT_FAILURE);
 	}
 	else if( len == 0 )
@@ -985,7 +985,7 @@ static int connect_check(uint32 ip)
 {
 	int result = connect_check_(ip);
 	if( access_debug ) {
-		ShowInfo("connect_check: Connection from %d.%d.%d.%d %s\n", CONVIP(ip),result ? "allowed." : "denied!");
+		ShowInfo("connect_check: Connection from %u.%u.%u.%u %s\n", CONVIP(ip),result ? "allowed." : "denied!");
 	}
 	return result;
 }
@@ -1005,7 +1005,7 @@ static int connect_check_(uint32 ip)
 	for( i=0; i < access_allownum; ++i ){
 		if (SUBNET_MATCH(ip, access_allow[i].ip, access_allow[i].mask)) {
 			if( access_debug ){
-				ShowInfo("connect_check: Found match from allow list:%d.%d.%d.%d IP:%d.%d.%d.%d Mask:%d.%d.%d.%d\n",
+				ShowInfo("connect_check: Found match from allow list:%u.%u.%u.%u IP:%u.%u.%u.%u Mask:%u.%u.%u.%u\n",
 					CONVIP(ip),
 					CONVIP(access_allow[i].ip),
 					CONVIP(access_allow[i].mask));
@@ -1018,7 +1018,7 @@ static int connect_check_(uint32 ip)
 	for( i=0; i < access_denynum; ++i ){
 		if (SUBNET_MATCH(ip, access_deny[i].ip, access_deny[i].mask)) {
 			if( access_debug ){
-				ShowInfo("connect_check: Found match from deny list:%d.%d.%d.%d IP:%d.%d.%d.%d Mask:%d.%d.%d.%d\n",
+				ShowInfo("connect_check: Found match from deny list:%u.%u.%u.%u IP:%u.%u.%u.%u Mask:%u.%u.%u.%u\n",
 					CONVIP(ip),
 					CONVIP(access_deny[i].ip),
 					CONVIP(access_deny[i].mask));
@@ -1065,7 +1065,7 @@ static int connect_check_(uint32 ip)
 				hist->tick = timer->gettick();
 				if( ++hist->count >= ddos_count ) {// DDoS attack detected
 					hist->ddos = 1;
-					ShowWarning("connect_check: DDoS Attack detected from %d.%d.%d.%d!\n", CONVIP(ip));
+					ShowWarning("connect_check: DDoS Attack detected from %u.%u.%u.%u!\n", CONVIP(ip));
 					return (connect_ok == 2 ? 1 : 0);
 				}
 				return connect_ok;
@@ -1153,7 +1153,7 @@ int access_ipmask(const char* str, AccessControl* acc)
 		}
 	}
 	if( access_debug ){
-		ShowInfo("access_ipmask: Loaded IP:%d.%d.%d.%d mask:%d.%d.%d.%d\n", CONVIP(ip), CONVIP(mask));
+		ShowInfo("access_ipmask: Loaded IP:%u.%u.%u.%u mask:%u.%u.%u.%u\n", CONVIP(ip), CONVIP(mask));
 	}
 	acc->ip   = ip;
 	acc->mask = mask;
@@ -1429,7 +1429,7 @@ void socket_init(void)
 	timer->add_interval(timer->gettick()+1000, connect_check_clear, 0, 0, 5*60*1000);
 #endif
 
-	ShowInfo("Server supports up to '"CL_WHITE"%"PRId64""CL_RESET"' concurrent connections.\n", rlim_cur);
+	ShowInfo("Server supports up to '"CL_WHITE"%"PRIu64""CL_RESET"' concurrent connections.\n", rlim_cur);
 }
 
 bool session_is_valid(int fd)

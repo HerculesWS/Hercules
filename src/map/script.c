@@ -235,9 +235,9 @@ void script_reportsrc(struct script_state *st) {
 			break;
 		default:
 			if( bl->m >= 0 )
-				ShowDebug("Source (Non-NPC type %d): name %s at %s (%d,%d)\n", bl->type, status->get_name(bl), map->list[bl->m].name, bl->x, bl->y);
+				ShowDebug("Source (Non-NPC type %u): name %s at %s (%d,%d)\n", bl->type, status->get_name(bl), map->list[bl->m].name, bl->x, bl->y);
 			else
-				ShowDebug("Source (Non-NPC type %d): name %s (invisible/not on a map)\n", bl->type, status->get_name(bl));
+				ShowDebug("Source (Non-NPC type %u): name %s (invisible/not on a map)\n", bl->type, status->get_name(bl));
 			break;
 	}
 }
@@ -265,7 +265,7 @@ void script_reportdata(struct script_data* data)
 		case C_NAME:// reference
 			if( reference_tovariable(data) ) {// variable
 				const char* name = reference_getname(data);
-				ShowDebug("Data: variable name='%s' index=%d\n", name, reference_getindex(data));
+				ShowDebug("Data: variable name='%s' index=%u\n", name, reference_getindex(data));
 			} else if( reference_toconstant(data) ) {// constant
 				ShowDebug("Data: constant name='%s' value=%d\n", reference_getname(data), reference_getconstant(data));
 			} else if( reference_toparam(data) ) {// param
@@ -1566,32 +1566,32 @@ const char* parse_curly_close(const char* p)
 		char label[256];
 		int l;
 		// Remove temporary variables
-		sprintf(label,"__setr $@__SW%x_VAL,0;",script->syntax.curly[pos].index);
+		sprintf(label, "__setr $@__SW%x_VAL,0;", (unsigned int)script->syntax.curly[pos].index);
 		script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 		script->parse_line(label);
 		script->syntax.curly_count--;
 
 		// Go to the end pointer unconditionally
-		sprintf(label,"goto __SW%x_FIN;",script->syntax.curly[pos].index);
+		sprintf(label,"goto __SW%x_FIN;", (unsigned int)script->syntax.curly[pos].index);
 		script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 		script->parse_line(label);
 		script->syntax.curly_count--;
 
 		// You are here labeled
-		sprintf(label,"__SW%x_%x",script->syntax.curly[pos].index,script->syntax.curly[pos].count);
+		sprintf(label,"__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 		l=script->add_str(label);
 		script->set_label(l,script->pos, p);
 
 		if(script->syntax.curly[pos].flag) {
 			//Exists default
-			sprintf(label,"goto __SW%x_DEF;",script->syntax.curly[pos].index);
+			sprintf(label,"goto __SW%x_DEF;", (unsigned int)script->syntax.curly[pos].index);
 			script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 			script->parse_line(label);
 			script->syntax.curly_count--;
 		}
 
 		// Label end
-		sprintf(label,"__SW%x_FIN",script->syntax.curly[pos].index);
+		sprintf(label,"__SW%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 		l=script->add_str(label);
 		script->set_label(l,script->pos, p);
 		linkdb_final(&script->syntax.curly[pos].case_label); // free the list of case label
@@ -1621,16 +1621,16 @@ const char* parse_syntax(const char* p)
 			int pos = script->syntax.curly_count - 1;
 			while(pos >= 0) {
 				if(script->syntax.curly[pos].type == TYPE_DO) {
-					sprintf(label,"goto __DO%x_FIN;",script->syntax.curly[pos].index);
+					sprintf(label, "goto __DO%x_FIN;", (unsigned int)script->syntax.curly[pos].index);
 					break;
 				} else if(script->syntax.curly[pos].type == TYPE_FOR) {
-					sprintf(label,"goto __FR%x_FIN;",script->syntax.curly[pos].index);
+					sprintf(label, "goto __FR%x_FIN;", (unsigned int)script->syntax.curly[pos].index);
 					break;
 				} else if(script->syntax.curly[pos].type == TYPE_WHILE) {
-					sprintf(label,"goto __WL%x_FIN;",script->syntax.curly[pos].index);
+					sprintf(label, "goto __WL%x_FIN;", (unsigned int)script->syntax.curly[pos].index);
 					break;
 				} else if(script->syntax.curly[pos].type == TYPE_SWITCH) {
-					sprintf(label,"goto __SW%x_FIN;",script->syntax.curly[pos].index);
+					sprintf(label, "goto __SW%x_FIN;", (unsigned int)script->syntax.curly[pos].index);
 					break;
 				}
 				pos--;
@@ -1664,13 +1664,13 @@ const char* parse_syntax(const char* p)
 				char *np;
 				if(script->syntax.curly[pos].count != 1) {
 					//Jump for FALLTHRU
-					sprintf(label,"goto __SW%x_%xJ;",script->syntax.curly[pos].index,script->syntax.curly[pos].count);
+					sprintf(label,"goto __SW%x_%xJ;", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 					script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 					script->parse_line(label);
 					script->syntax.curly_count--;
 
 					// You are here labeled
-					sprintf(label,"__SW%x_%x",script->syntax.curly[pos].index,script->syntax.curly[pos].count);
+					sprintf(label,"__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 					l=script->add_str(label);
 					script->set_label(l,script->pos, p);
 				}
@@ -1702,7 +1702,7 @@ const char* parse_syntax(const char* p)
 				if(*p != ':')
 					disp_error_message("parse_syntax: expect ':'",p);
 				sprintf(label,"if(%d != $@__SW%x_VAL) goto __SW%x_%x;",
-					v,script->syntax.curly[pos].index,script->syntax.curly[pos].index,script->syntax.curly[pos].count+1);
+					v, (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count+1);
 				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 				// Bad I do not parse twice
 				p2 = script->parse_line(label);
@@ -1710,7 +1710,7 @@ const char* parse_syntax(const char* p)
 				script->syntax.curly_count--;
 				if(script->syntax.curly[pos].count != 1) {
 					// Label after the completion of FALLTHRU
-					sprintf(label,"__SW%x_%xJ",script->syntax.curly[pos].index,script->syntax.curly[pos].count);
+					sprintf(label, "__SW%x_%xJ", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 					l=script->add_str(label);
 					script->set_label(l,script->pos,p);
 				}
@@ -1719,7 +1719,7 @@ const char* parse_syntax(const char* p)
 					disp_error_message("parse_syntax: dup 'case'",p);
 				linkdb_insert(&script->syntax.curly[pos].case_label, (void*)h64BPTRSIZE(v), (void*)1);
 
-				sprintf(label,"__setr $@__SW%x_VAL,0;",script->syntax.curly[pos].index);
+				sprintf(label, "__setr $@__SW%x_VAL,0;", (unsigned int)script->syntax.curly[pos].index);
 				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 
 				script->parse_line(label);
@@ -1733,14 +1733,14 @@ const char* parse_syntax(const char* p)
 			int pos = script->syntax.curly_count - 1;
 			while(pos >= 0) {
 				if(script->syntax.curly[pos].type == TYPE_DO) {
-					sprintf(label,"goto __DO%x_NXT;",script->syntax.curly[pos].index);
+					sprintf(label, "goto __DO%x_NXT;", (unsigned int)script->syntax.curly[pos].index);
 					script->syntax.curly[pos].flag = 1; //Flag put the link for continue
 					break;
 				} else if(script->syntax.curly[pos].type == TYPE_FOR) {
-					sprintf(label,"goto __FR%x_NXT;",script->syntax.curly[pos].index);
+					sprintf(label, "goto __FR%x_NXT;", (unsigned int)script->syntax.curly[pos].index);
 					break;
 				} else if(script->syntax.curly[pos].type == TYPE_WHILE) {
-					sprintf(label,"goto __WL%x_NXT;",script->syntax.curly[pos].index);
+					sprintf(label, "goto __WL%x_NXT;", (unsigned int)script->syntax.curly[pos].index);
 					break;
 				}
 				pos--;
@@ -1777,18 +1777,18 @@ const char* parse_syntax(const char* p)
 				if(*p != ':') {
 					disp_error_message("parse_syntax: need ':'",p);
 				}
-				sprintf(label,"__SW%x_%x",script->syntax.curly[pos].index,script->syntax.curly[pos].count);
+				sprintf(label, "__SW%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 				l=script->add_str(label);
 				script->set_label(l,script->pos,p);
 
 				// Skip to the next link w/o condition
-				sprintf(label,"goto __SW%x_%x;",script->syntax.curly[pos].index,script->syntax.curly[pos].count+1);
+				sprintf(label, "goto __SW%x_%x;", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count + 1);
 				script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 				script->parse_line(label);
 				script->syntax.curly_count--;
 
 				// The default label
-				sprintf(label,"__SW%x_DEF",script->syntax.curly[pos].index);
+				sprintf(label, "__SW%x_DEF", (unsigned int)script->syntax.curly[pos].index);
 				l=script->add_str(label);
 				script->set_label(l,script->pos,p);
 
@@ -1806,7 +1806,7 @@ const char* parse_syntax(const char* p)
 			script->syntax.curly[script->syntax.curly_count].index = script->syntax.index++;
 			script->syntax.curly[script->syntax.curly_count].flag  = 0;
 			// Label of the (do) form here
-			sprintf(label,"__DO%x_BGN",script->syntax.curly[script->syntax.curly_count].index);
+			sprintf(label, "__DO%x_BGN", (unsigned int)script->syntax.curly[script->syntax.curly_count].index);
 			l=script->add_str(label);
 			script->set_label(l,script->pos,p);
 			script->syntax.curly_count++;
@@ -1837,7 +1837,7 @@ const char* parse_syntax(const char* p)
 			script->syntax.curly_count--;
 
 			// Form the start of label decision
-			sprintf(label,"__FR%x_J",script->syntax.curly[pos].index);
+			sprintf(label, "__FR%x_J", (unsigned int)script->syntax.curly[pos].index);
 			l=script->add_str(label);
 			script->set_label(l,script->pos,p);
 
@@ -1847,7 +1847,7 @@ const char* parse_syntax(const char* p)
 				;
 			} else {
 				// Skip to the end point if the condition is false
-				sprintf(label,"__FR%x_FIN",script->syntax.curly[pos].index);
+				sprintf(label, "__FR%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 				script->addl(script->add_str("__jump_zero"));
 				script->addc(C_ARG);
 				p=script->parse_expr(p);
@@ -1860,13 +1860,13 @@ const char* parse_syntax(const char* p)
 			p++;
 
 			// Skip to the beginning of the loop
-			sprintf(label,"goto __FR%x_BGN;",script->syntax.curly[pos].index);
+			sprintf(label, "goto __FR%x_BGN;", (unsigned int)script->syntax.curly[pos].index);
 			script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 			script->parse_line(label);
 			script->syntax.curly_count--;
 
 			// Labels to form the next loop
-			sprintf(label,"__FR%x_NXT",script->syntax.curly[pos].index);
+			sprintf(label, "__FR%x_NXT", (unsigned int)script->syntax.curly[pos].index);
 			l=script->add_str(label);
 			script->set_label(l,script->pos,p);
 
@@ -1879,13 +1879,13 @@ const char* parse_syntax(const char* p)
 			script->parse_syntax_for_flag = 0;
 
 			// Skip to the determination process conditions
-			sprintf(label,"goto __FR%x_J;",script->syntax.curly[pos].index);
+			sprintf(label, "goto __FR%x_J;", (unsigned int)script->syntax.curly[pos].index);
 			script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 			script->parse_line(label);
 			script->syntax.curly_count--;
 
 			// Loop start labeling
-			sprintf(label,"__FR%x_BGN",script->syntax.curly[pos].index);
+			sprintf(label, "__FR%x_BGN", (unsigned int)script->syntax.curly[pos].index);
 			l=script->add_str(label);
 			script->set_label(l,script->pos,p);
 			return p;
@@ -1926,7 +1926,7 @@ const char* parse_syntax(const char* p)
 				++script->syntax.curly_count;
 
 				// Jump over the function code
-				sprintf(label, "goto __FN%x_FIN;", script->syntax.curly[script->syntax.curly_count-1].index);
+				sprintf(label, "goto __FN%x_FIN;", (unsigned int)script->syntax.curly[script->syntax.curly_count-1].index);
 				script->syntax.curly[script->syntax.curly_count].type = TYPE_NULL;
 				++script->syntax.curly_count;
 				script->parse_line(label);
@@ -1965,7 +1965,7 @@ const char* parse_syntax(const char* p)
 			script->syntax.curly[script->syntax.curly_count].count = 1;
 			script->syntax.curly[script->syntax.curly_count].index = script->syntax.index++;
 			script->syntax.curly[script->syntax.curly_count].flag  = 0;
-			sprintf(label,"__IF%x_%x",script->syntax.curly[script->syntax.curly_count].index,script->syntax.curly[script->syntax.curly_count].count);
+			sprintf(label, "__IF%x_%x", (unsigned int)script->syntax.curly[script->syntax.curly_count].index, (unsigned int)script->syntax.curly[script->syntax.curly_count].count);
 			script->syntax.curly_count++;
 			script->addl(script->add_str("__jump_zero"));
 			script->addc(C_ARG);
@@ -1989,7 +1989,7 @@ const char* parse_syntax(const char* p)
 			script->syntax.curly[script->syntax.curly_count].count = 1;
 			script->syntax.curly[script->syntax.curly_count].index = script->syntax.index++;
 			script->syntax.curly[script->syntax.curly_count].flag  = 0;
-			sprintf(label,"$@__SW%x_VAL",script->syntax.curly[script->syntax.curly_count].index);
+			sprintf(label, "$@__SW%x_VAL", (unsigned int)script->syntax.curly[script->syntax.curly_count].index);
 			script->syntax.curly_count++;
 			script->addl(script->add_str("__setr"));
 			script->addc(C_ARG);
@@ -2017,12 +2017,12 @@ const char* parse_syntax(const char* p)
 			script->syntax.curly[script->syntax.curly_count].index = script->syntax.index++;
 			script->syntax.curly[script->syntax.curly_count].flag  = 0;
 			// Form the start of label decision
-			sprintf(label,"__WL%x_NXT",script->syntax.curly[script->syntax.curly_count].index);
+			sprintf(label, "__WL%x_NXT", (unsigned int)script->syntax.curly[script->syntax.curly_count].index);
 			l=script->add_str(label);
 			script->set_label(l,script->pos,p);
 
 			// Skip to the end point if the condition is false
-			sprintf(label,"__WL%x_FIN",script->syntax.curly[script->syntax.curly_count].index);
+			sprintf(label, "__WL%x_FIN", (unsigned int)script->syntax.curly[script->syntax.curly_count].index);
 			script->syntax.curly_count++;
 			script->addl(script->add_str("__jump_zero"));
 			script->addc(C_ARG);
@@ -2068,13 +2068,13 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		script->parse_nextline(false, p);
 
 		// Skip to the last location if
-		sprintf(label,"goto __IF%x_FIN;",script->syntax.curly[pos].index);
+		sprintf(label, "goto __IF%x_FIN;", (unsigned int)script->syntax.curly[pos].index);
 		script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 		script->parse_line(label);
 		script->syntax.curly_count--;
 
 		// Put the label of the location
-		sprintf(label,"__IF%x_%x",script->syntax.curly[pos].index,script->syntax.curly[pos].count);
+		sprintf(label, "__IF%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 		l=script->add_str(label);
 		script->set_label(l,script->pos,p);
 
@@ -2091,7 +2091,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 				if(*p != '(') {
 					disp_error_message("need '('",p);
 				}
-				sprintf(label,"__IF%x_%x",script->syntax.curly[pos].index,script->syntax.curly[pos].count);
+				sprintf(label, "__IF%x_%x", (unsigned int)script->syntax.curly[pos].index, (unsigned int)script->syntax.curly[pos].count);
 				script->addl(script->add_str("__jump_zero"));
 				script->addc(C_ARG);
 				p=script->parse_expr(p);
@@ -2112,7 +2112,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		// Close if
 		script->syntax.curly_count--;
 		// Put the label of the final location
-		sprintf(label,"__IF%x_FIN",script->syntax.curly[pos].index);
+		sprintf(label, "__IF%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 		l=script->add_str(label);
 		script->set_label(l,script->pos,p);
 		if(script->syntax.curly[pos].flag == 1) {
@@ -2125,7 +2125,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 
 		if(script->syntax.curly[pos].flag) {
 			// (Come here continue) to form the label here
-			sprintf(label,"__DO%x_NXT",script->syntax.curly[pos].index);
+			sprintf(label, "__DO%x_NXT", (unsigned int)script->syntax.curly[pos].index);
 			l=script->add_str(label);
 			script->set_label(l,script->pos,p);
 		}
@@ -2145,7 +2145,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		// do-block end is a new line
 		script->parse_nextline(false, p);
 
-		sprintf(label,"__DO%x_FIN",script->syntax.curly[pos].index);
+		sprintf(label, "__DO%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 		script->addl(script->add_str("__jump_zero"));
 		script->addc(C_ARG);
 		p=script->parse_expr(p);
@@ -2154,13 +2154,13 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		script->addc(C_FUNC);
 
 		// Skip to the starting point
-		sprintf(label,"goto __DO%x_BGN;",script->syntax.curly[pos].index);
+		sprintf(label, "goto __DO%x_BGN;", (unsigned int)script->syntax.curly[pos].index);
 		script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 		script->parse_line(label);
 		script->syntax.curly_count--;
 
 		// Form label of the end point conditions
-		sprintf(label,"__DO%x_FIN",script->syntax.curly[pos].index);
+		sprintf(label, "__DO%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 		l=script->add_str(label);
 		script->set_label(l,script->pos,p);
 		p = script->skip_space(p);
@@ -2176,13 +2176,13 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		script->parse_nextline(false, p);
 
 		// Skip to the next loop
-		sprintf(label,"goto __FR%x_NXT;",script->syntax.curly[pos].index);
+		sprintf(label, "goto __FR%x_NXT;", (unsigned int)script->syntax.curly[pos].index);
 		script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 		script->parse_line(label);
 		script->syntax.curly_count--;
 
 		// End for labeling
-		sprintf(label,"__FR%x_FIN",script->syntax.curly[pos].index);
+		sprintf(label, "__FR%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 		l=script->add_str(label);
 		script->set_label(l,script->pos,p);
 		script->syntax.curly_count--;
@@ -2192,13 +2192,13 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		script->parse_nextline(false, p);
 
 		// Skip to the decision while
-		sprintf(label,"goto __WL%x_NXT;",script->syntax.curly[pos].index);
+		sprintf(label, "goto __WL%x_NXT;", (unsigned int)script->syntax.curly[pos].index);
 		script->syntax.curly[script->syntax.curly_count++].type = TYPE_NULL;
 		script->parse_line(label);
 		script->syntax.curly_count--;
 
 		// End while labeling
-		sprintf(label,"__WL%x_FIN",script->syntax.curly[pos].index);
+		sprintf(label, "__WL%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 		l=script->add_str(label);
 		script->set_label(l,script->pos,p);
 		script->syntax.curly_count--;
@@ -2211,7 +2211,7 @@ const char* parse_syntax_close_sub(const char* p,int* flag)
 		script->syntax.curly_count--;
 
 		// Put the label of the location
-		sprintf(label,"__FN%x_FIN",script->syntax.curly[pos].index);
+		sprintf(label, "__FN%x_FIN", (unsigned int)script->syntax.curly[pos].index);
 		l=script->add_str(label);
 		script->set_label(l,script->pos,p);
 		script->syntax.curly_count--;
@@ -3615,7 +3615,7 @@ void script_free_state(struct script_state* st) {
 		struct map_session_data *sd = st->rid ? map->id2sd(st->rid) : NULL;
 
 		if(st->bk_st) {// backup was not restored
-			ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%d, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
+			ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%u, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
 		}
 
 		if(sd && sd->st == st) { //Current script is aborted.
@@ -4262,7 +4262,7 @@ void script_detach_state(struct script_state* st, bool dequeue_event) {
 			npc->event_dequeue(sd);
 		}
 	} else if(st->bk_st) { // rid was set to 0, before detaching the script state
-		ShowError("script_detach_state: Found previous script state without attached player (rid=%d, oid=%d, state=%d, bk_npcid=%d)\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
+		ShowError("script_detach_state: Found previous script state without attached player (rid=%d, oid=%d, state=%u, bk_npcid=%d)\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
 		script->reportsrc(st->bk_st);
 
 		script->free_state(st->bk_st);
@@ -4282,7 +4282,7 @@ void script_attach_state(struct script_state* st) {
 		{
 			if(st->bk_st)
 			{// there is already a backup
-				ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%d, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
+				ShowDebug("script_free_state: Previous script state lost (rid=%d, oid=%d, state=%u, bk_npcid=%d).\n", st->bk_st->rid, st->bk_st->oid, st->bk_st->state, st->bk_npcid);
 			}
 			st->bk_st = sd->st;
 			st->bk_npcid = sd->npc_id;
@@ -4431,7 +4431,7 @@ void run_script_main(struct script_state *st) {
 				break;
 
 			default:
-				ShowError("unknown command : %d @ %d\n",c,st->pos);
+				ShowError("unknown command : %u @ %d\n", c, st->pos);
 				st->state=END;
 				break;
 		}
@@ -7002,7 +7002,7 @@ BUILDIN(checkweight)
 			// item id
 			id = itemdb->exists(script_getnum(st, i));
 		} else {
-			ShowError("buildin_checkweight: invalid type for argument '%d'.\n", i);
+			ShowError("buildin_checkweight: invalid type for argument '%u'.\n", i);
 			script_pushint(st,0);
 			return false;
 		}
@@ -9793,7 +9793,7 @@ BUILDIN(monster)
 		size = script_getnum(st, 9);
 		if (size > 3)
 		{
-			ShowWarning("buildin_monster: Attempted to spawn non-existing size %d for monster class %d\n", size, class_);
+			ShowWarning("buildin_monster: Attempted to spawn non-existing size %u for monster class %d\n", size, class_);
 			return false;
 		}
 	}
@@ -9802,7 +9802,7 @@ BUILDIN(monster)
 	{
 		ai = script_getnum(st, 10);
 		if (ai > AI_FLORA) {
-			ShowWarning("buildin_monster: Attempted to spawn non-existing ai %d for monster class %d\n", ai, class_);
+			ShowWarning("buildin_monster: Attempted to spawn non-existing ai %u for monster class %d\n", ai, class_);
 			return false;
 		}
 	}
@@ -9898,7 +9898,7 @@ BUILDIN(areamonster) {
 	if (script_hasdata(st, 11)) {
 		size = script_getnum(st, 11);
 		if (size > 3) {
-			ShowWarning("buildin_monster: Attempted to spawn non-existing size %d for monster class %d\n", size, class_);
+			ShowWarning("buildin_monster: Attempted to spawn non-existing size %u for monster class %d\n", size, class_);
 			return false;
 		}
 	}
@@ -9906,7 +9906,7 @@ BUILDIN(areamonster) {
 	if (script_hasdata(st, 12)) {
 		ai = script_getnum(st, 12);
 		if (ai > AI_FLORA) {
-			ShowWarning("buildin_monster: Attempted to spawn non-existing ai %d for monster class %d\n", ai, class_);
+			ShowWarning("buildin_monster: Attempted to spawn non-existing ai %u for monster class %d\n", ai, class_);
 			return false;
 		}
 	}
@@ -12219,7 +12219,7 @@ BUILDIN(flagemblem)
 	if( nd == NULL ) {
 		ShowError("script:flagemblem: npc %d not found\n", st->oid);
 	} else if( nd->subtype != SCRIPT ) {
-		ShowError("script:flagemblem: unexpected subtype %d for npc %d '%s'\n", nd->subtype, st->oid, nd->exname);
+		ShowError("script:flagemblem: unexpected subtype %u for npc %d '%s'\n", nd->subtype, st->oid, nd->exname);
 	} else {
 		bool changed = ( nd->u.scr.guild_id != g_id )?true:false;
 		nd->u.scr.guild_id = g_id;
@@ -15936,7 +15936,7 @@ int buildin_query_sql_sub(struct script_state* st, Sql* handle)
 		}
 	}
 	if( i == max_rows && max_rows < SQL->NumRows(handle) ) {
-		ShowWarning("script:query_sql: Only %d/%u rows have been stored.\n", max_rows, (unsigned int)SQL->NumRows(handle));
+		ShowWarning("script:query_sql: Only %u/%u rows have been stored.\n", max_rows, (unsigned int)SQL->NumRows(handle));
 		script->reportsrc(st);
 	}
 
@@ -16726,7 +16726,7 @@ BUILDIN(unitattack) {
 			BL_UCAST(BL_PET, unit_bl)->target_id = target_bl->id;
 			break;
 		default:
-			ShowError("script:unitattack: unsupported source unit type %d\n", unit_bl->type);
+			ShowError("script:unitattack: unsupported source unit type %u\n", unit_bl->type);
 			script_pushint(st, 0);
 			return false;
 	}
@@ -17084,7 +17084,7 @@ BUILDIN(checkcell) {
 	cell_chk type = (cell_chk)script_getnum(st,5);
 
 	if ( m == -1 ) {
-		ShowWarning("checkcell: Attempted to run on unexsitent map '%s', type %d, x/y %d,%d\n",script_getstr(st,2),type,x,y);
+		ShowWarning("checkcell: Attempted to run on unexsitent map '%s', type %u, x/y %d,%d\n", script_getstr(st,2), type, x, y);
 		return true;
 	}
 
@@ -17110,7 +17110,7 @@ BUILDIN(setcell) {
 	int x,y;
 
 	if ( m == -1 ) {
-		ShowWarning("setcell: Attempted to run on unexistent map '%s', type %d, x1/y1 - %d,%d | x2/y2 - %d,%d\n",script_getstr(st, 2),type,x1,y1,x2,y2);
+		ShowWarning("setcell: Attempted to run on unexistent map '%s', type %u, x1/y1 - %d,%d | x2/y2 - %d,%d\n", script_getstr(st, 2), type, x1, y1, x2, y2);
 		return true;
 	}
 

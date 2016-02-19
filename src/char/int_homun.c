@@ -181,7 +181,7 @@ bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd)
 	nullpo_ret(hd);
 	memset(hd, 0, sizeof(*hd));
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `homun_id`,`char_id`,`class`,`prev_class`,`name`,`level`,`exp`,`intimacy`,`hunger`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `hp`,`max_hp`,`sp`,`max_sp`,`skill_point`,`rename_flag`, `vaporize` FROM `%s` WHERE `homun_id`='%u'", homunculus_db, homun_id) )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `homun_id`,`char_id`,`class`,`prev_class`,`name`,`level`,`exp`,`intimacy`,`hunger`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `hp`,`max_hp`,`sp`,`max_sp`,`skill_point`,`rename_flag`, `vaporize` FROM `%s` WHERE `homun_id`='%d'", homunculus_db, homun_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
@@ -255,8 +255,8 @@ bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd)
 
 bool mapif_homunculus_delete(int homun_id)
 {
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `homun_id` = '%u'", homunculus_db, homun_id)
-	 || SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `homun_id` = '%u'", skill_homunculus_db, homun_id)
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `homun_id` = '%d'", homunculus_db, homun_id)
+	 || SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `homun_id` = '%d'", skill_homunculus_db, homun_id)
 	) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
