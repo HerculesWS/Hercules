@@ -2957,12 +2957,16 @@ struct script_data *get_val(struct script_state* st, struct script_data* data) {
  * @param ref[in] the container to look up the reference into.
  * @return the retrieved value of the reference.
  */
-void* get_val2(struct script_state* st, int64 uid, struct reg_db *ref) {
+const void *get_val2(struct script_state *st, int64 uid, struct reg_db *ref)
+{
 	struct script_data* data;
 	script->push_val(st->stack, C_NAME, uid, ref);
 	data = script_getdatatop(st, -1);
 	script->get_val(st, data);
-	return (data->type == C_INT ? (void*)h64BPTRSIZE((int32)data->u.num) : (void*)h64BPTRSIZE(data->u.str)); // u.num is int32 because it comes from script->get_val
+	if (data->type == C_INT) // u.num is int32 because it comes from script->get_val
+		return (const void *)h64BPTRSIZE((int32)data->u.num);
+	else
+		return (const void *)h64BPTRSIZE(data->u.str);
 }
 /**
  * Because, currently, array members with key 0 are indifferenciable from normal variables, we should ensure its actually in
@@ -2979,8 +2983,8 @@ void script_array_ensure_zero(struct script_state *st, struct map_session_data *
 		insert = true;
 	} else {
 		if( is_string_variable(name) ) {
-			char* str = (char*)script->get_val2(st, uid, ref);
-			if( str && *str )
+			const char *str = script->get_val2(st, uid, ref);
+			if (str != NULL && *str != '\0')
 				insert = true;
 			script_removetop(st, -1, 0);
 		} else {
@@ -6602,7 +6606,6 @@ BUILDIN(copyarray)
 	int32 idx2;
 	int32 id1;
 	int32 id2;
-	void* v;
 	int32 i;
 	uint32 count;
 	struct map_session_data *sd = NULL;
@@ -6650,16 +6653,16 @@ BUILDIN(copyarray)
 	if( is_same_reference(data1, data2) && idx1 > idx2 ) {
 		// destination might be overlapping the source - copy in reverse order
 		for( i = count - 1; i >= 0; --i ) {
-			v = script->get_val2(st, reference_uid(id2, idx2 + i), reference_getref(data2));
-			script->set_reg(st, sd, reference_uid(id1, idx1 + i), name1, v, reference_getref(data1));
+			const void *value = script->get_val2(st, reference_uid(id2, idx2 + i), reference_getref(data2));
+			script->set_reg(st, sd, reference_uid(id1, idx1 + i), name1, value, reference_getref(data1));
 			script_removetop(st, -1, 0);
 		}
 	} else {
 		// normal copy
 		for( i = 0; i < count; ++i ) {
 			if( idx2 + i < SCRIPT_MAX_ARRAYSIZE ) {
-				v = script->get_val2(st, reference_uid(id2, idx2 + i), reference_getref(data2));
-				script->set_reg(st, sd, reference_uid(id1, idx1 + i), name1, v, reference_getref(data1));
+				const void *value = script->get_val2(st, reference_uid(id2, idx2 + i), reference_getref(data2));
+				script->set_reg(st, sd, reference_uid(id1, idx1 + i), name1, value, reference_getref(data1));
 				script_removetop(st, -1, 0);
 			} else {
 				// out of range - assume ""/0
@@ -6772,7 +6775,7 @@ BUILDIN(deletearray)
 			// Better to iterate directly on the array, no speed-up from using sa
 			for( ; start + count < end; ++start ) {
 				// Compact and overwrite
-				void* v = script->get_val2(st, reference_uid(id, start + count), reference_getref(data));
+				const void *v = script->get_val2(st, reference_uid(id, start + count), reference_getref(data));
 				script->set_reg(st, sd, reference_uid(id, start), name, v, reference_getref(data));
 				script_removetop(st, -1, 0);
 			}
@@ -6796,7 +6799,7 @@ BUILDIN(deletearray)
 
 			for( ; i < size && list[i] < end; i++ ) {
 				// Move back count positions any entries between start+count to fill the gaps
-				void* v = script->get_val2(st, reference_uid(id, list[i]), reference_getref(data));
+				const void *v = script->get_val2(st, reference_uid(id, list[i]), reference_getref(data));
 				script->set_reg(st, sd, reference_uid(id, list[i]-count), name, v, reference_getref(data));
 				script_removetop(st, -1, 0);
 				// Clear their originals
@@ -15161,7 +15164,7 @@ BUILDIN(implode)
 		size_t len = 0, glue_len = 0, k = 0;
 		const char *glue = NULL, *temp;
 		for(i = 0; i <= array_size; ++i) {
-			temp = (char*) script->get_val2(st, reference_uid(id, i), reference_getref(data));
+			temp = script->get_val2(st, reference_uid(id, i), reference_getref(data));
 			len += strlen(temp);
 			script_removetop(st, -1, 0);
 		}
@@ -15176,7 +15179,7 @@ BUILDIN(implode)
 
 		//build output
 		for(i = 0; i < array_size; ++i) {
-			temp = (char*) script->get_val2(st, reference_uid(id, i), reference_getref(data));
+			temp = script->get_val2(st, reference_uid(id, i), reference_getref(data));
 			len = strlen(temp);
 			memcpy(&output[k], temp, len);
 			k += len;
@@ -15186,7 +15189,7 @@ BUILDIN(implode)
 			}
 			script_removetop(st, -1, 0);
 		}
-		temp = (char*) script->get_val2(st, reference_uid(id, array_size), reference_getref(data));
+		temp = script->get_val2(st, reference_uid(id, array_size), reference_getref(data));
 		len = strlen(temp);
 		memcpy(&output[k], temp, len);
 		k += len;

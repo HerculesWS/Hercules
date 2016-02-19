@@ -660,7 +660,7 @@ struct script_interface {
 	int (*get_val_scope_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	int (*get_val_npc_num) (struct script_state* st, struct reg_db *n, struct script_data* data);
 	int (*get_val_instance_num) (struct script_state* st, const char* name, struct script_data* data);
-	void* (*get_val2) (struct script_state* st, int64 uid, struct reg_db *ref);
+	const void *(*get_val2) (struct script_state *st, int64 uid, struct reg_db *ref);
 	struct script_data* (*push_str) (struct script_stack* stack, enum c_op type, char* str);
 	struct script_data* (*push_copy) (struct script_stack* stack, int pos);
 	void (*pop_stack) (struct script_state* st, int start, int end);
