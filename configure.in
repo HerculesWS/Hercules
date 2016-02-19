@@ -465,16 +465,14 @@ AC_LANG([C])
 # -Wunsafe-loop-optimizations possible optimisation issues
 # -Wunused-parameter -Wunused-but-set-parameter unused parameters
 # -Wunused-macros unused macro warnings, but it also enable unused parameters
+# -Wstrict-prototypes show warning in grammar.y
 # attributes suggestion
 #  -Wsuggest-attribute=const -Wsuggest-attribute=format -Wsuggest-attribute=pure
 
-# flags what can be used but now return no warnings: -Warray-bounds -Wbool-compare -Wcast-align
-#   -Wchar-subscripts -Wchkp -Wclobbered -Wcomment -Wdisabled-optimization -Wempty-body 
-#   -Werror-implicit-function-declaration -Wignored-qualifiers -Wtrampolines -Wtype-limits
-#   -Wjump-misses-init -Wlogical-op  -Wmissing-field-initializers -Wmissing-parameter-type
-#   -Wnested-externs -Wold-style-declaration -Wold-style-definition -Woverlength-strings -Woverride-init
-#   -Wredundant-decls -Wstack-protector -Wstrict-prototypes -Wundef
-#   -Winit-self -Wpointer-arith -Wswitch-bool
+# flags what can be used but now return no warnings:
+#   -Wchkp -Wdisabled-optimization
+#   -Werror-implicit-function-declaration -Wtrampolines
+#   -Wjump-misses-init
 
 CFLAGS="$CFLAGS -pipe -ffast-math -Wall -Wextra -Wno-sign-compare"
 CPPFLAGS="$CPPFLAGS -I../common"
@@ -814,6 +812,9 @@ AC_CHECK_COMPILER_WNOFLAG(clobbered)
 AC_CHECK_COMPILER_WFLAG(empty-body)
 AC_CHECK_COMPILER_WFLAG(newline-eof)
 AC_CHECK_COMPILER_WFLAG(int-conversion)
+AC_CHECK_COMPILER_WFLAG(init-self)
+AC_CHECK_COMPILER_WFLAG(pointer-arith)
+AC_CHECK_COMPILER_WFLAG(switch-bool)
 AC_CHECK_COMPILER_WFLAG(enum-conversion)
 AC_CHECK_COMPILER_WFLAG(shorten-64-to-32)
 AC_CHECK_COMPILER_WFLAG(constant-conversion)
@@ -824,6 +825,13 @@ AC_CHECK_COMPILER_WFLAG(format-signedness)
 AC_CHECK_COMPILER_WFLAG(format-y2k)
 AC_CHECK_COMPILER_WFLAG(missing-include-dirs)
 AC_CHECK_COMPILER_WFLAG(suggest-attribute=noreturn)
+AC_CHECK_COMPILER_WFLAG(undef)
+AC_CHECK_COMPILER_WFLAG(cast-align)
+AC_CHECK_COMPILER_WFLAG(logical-op)
+AC_CHECK_COMPILER_WFLAG(nested-externs)
+AC_CHECK_COMPILER_WFLAG(old-style-definition)
+AC_CHECK_COMPILER_WFLAG(overlength-strings)
+AC_CHECK_COMPILER_WFLAG(redundant-decls)
 AC_CHECK_COMPILER_WNOFLAG(format-nonliteral)
 AC_CHECK_COMPILER_WNOFLAG(switch)
 AC_CHECK_COMPILER_WNOFLAG(missing-field-initializers)
