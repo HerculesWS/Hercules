@@ -2633,11 +2633,11 @@ void HP_bg_final(void) {
 	}
 	return;
 }
-struct bg_arena* HP_bg_name2arena(char *name) {
+struct bg_arena* HP_bg_name2arena(const char *name) {
 	int hIndex = 0;
 	struct bg_arena* retVal___ = NULL;
 	if( HPMHooks.count.HP_bg_name2arena_pre ) {
-		struct bg_arena* (*preHookFunc) (char *name);
+		struct bg_arena* (*preHookFunc) (const char *name);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_name2arena_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_bg_name2arena_pre[hIndex].func;
@@ -2652,7 +2652,7 @@ struct bg_arena* HP_bg_name2arena(char *name) {
 		retVal___ = HPMHooks.source.bg.name2arena(name);
 	}
 	if( HPMHooks.count.HP_bg_name2arena_post ) {
-		struct bg_arena* (*postHookFunc) (struct bg_arena* retVal___, char *name);
+		struct bg_arena* (*postHookFunc) (struct bg_arena* retVal___, const char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_bg_name2arena_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_bg_name2arena_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, name);
