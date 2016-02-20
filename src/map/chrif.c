@@ -110,7 +110,9 @@ struct chrif_interface *chrif;
 #define chrif_check(a) do { if(!chrif->isconnected()) return a; } while(0)
 
 /// Resets all the data.
-void chrif_reset(void) {
+void chrif_reset(void) __attribute__ ((noreturn));
+void chrif_reset(void)
+{
 	// TODO kick everyone out and reset everything [FlavioJS]
 	exit(EXIT_FAILURE);
 }
@@ -362,7 +364,7 @@ void chrif_recvmap(int fd) {
 	}
 
 	if (battle_config.etc_log)
-		ShowStatus("Received maps from %d.%d.%d.%d:%d (%d maps)\n", CONVIP(ip), port, j);
+		ShowStatus("Received maps from %u.%u.%u.%u:%u (%d maps)\n", CONVIP(ip), port, j);
 
 	chrif->other_mapserver_count++;
 }
@@ -379,7 +381,7 @@ void chrif_removemap(int fd) {
 	chrif->other_mapserver_count--;
 
 	if(battle_config.etc_log)
-		ShowStatus("remove map of server %d.%d.%d.%d:%d (%d maps)\n", CONVIP(ip), port, j);
+		ShowStatus("remove map of server %u.%u.%u.%u:%u (%d maps)\n", CONVIP(ip), port, j);
 }
 
 // received after a character has been "final saved" on the char-server
@@ -1410,7 +1412,7 @@ int chrif_parse(int fd) {
 			if (result == 1) continue; // Treated in intif
 			if (result == 2) return 0; // Didn't have enough data (len==-1)
 
-			ShowWarning("chrif_parse: session #%d, intif->parse failed (unrecognized command 0x%.4x).\n", fd, cmd);
+			ShowWarning("chrif_parse: session #%d, intif->parse failed (unrecognized command 0x%.4x).\n", fd, (unsigned int)cmd);
 			sockt->eof(fd);
 			return 0;
 		}
@@ -1451,7 +1453,7 @@ int chrif_parse(int fd) {
 			case 0x2b25: chrif->deadopt(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10)); break;
 			case 0x2b27: chrif->authfail(fd); break;
 			default:
-				ShowError("chrif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, cmd);
+				ShowError("chrif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, (unsigned int)cmd);
 				sockt->eof(fd);
 				return 0;
 		}

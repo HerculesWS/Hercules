@@ -1156,7 +1156,7 @@ void intif_parse_LoadGuildStorage(int fd)
 	sd=map->id2sd( RFIFOL(fd,4) );
 	if( flag ){ //If flag != 0, we attach a player and open the storage
 		if(sd==NULL){
-			ShowError("intif_parse_LoadGuildStorage: user not found %d\n",RFIFOL(fd,4));
+			ShowError("intif_parse_LoadGuildStorage: user not found %u\n", RFIFOL(fd,4));
 			return;
 		}
 	}
@@ -1194,20 +1194,20 @@ void intif_parse_SaveGuildStorage(int fd)
 void intif_parse_PartyCreated(int fd)
 {
 	if(battle_config.etc_log)
-		ShowInfo("intif: party created by account %d\n\n", RFIFOL(fd,2));
+		ShowInfo("intif: party created by account %u\n\n", RFIFOL(fd,2));
 	party->created(RFIFOL(fd,2), RFIFOL(fd,6),RFIFOB(fd,10),RFIFOL(fd,11), (char *)RFIFOP(fd,15));
 }
 
 // Receive party info
 void intif_parse_PartyInfo(int fd) {
 	if (RFIFOW(fd,2) == 12) {
-		ShowWarning("intif: party noinfo (char_id=%d party_id=%d)\n", RFIFOL(fd,4), RFIFOL(fd,8));
+		ShowWarning("intif: party noinfo (char_id=%u party_id=%u)\n", RFIFOL(fd,4), RFIFOL(fd,8));
 		party->recv_noinfo(RFIFOL(fd,8), RFIFOL(fd,4));
 		return;
 	}
 
 	if (RFIFOW(fd,2) != 8+sizeof(struct party))
-		ShowError("intif: party info: data size mismatch (char_id=%d party_id=%d packet_len=%d expected_len=%"PRIuS")\n",
+		ShowError("intif: party info: data size mismatch (char_id=%u party_id=%u packet_len=%d expected_len=%"PRIuS")\n",
 		          RFIFOL(fd,4), RFIFOL(fd,8), RFIFOW(fd,2), 8+sizeof(struct party));
 	party->recv_info((struct party *)RFIFOP(fd,8), RFIFOL(fd,4));
 }
@@ -1216,7 +1216,7 @@ void intif_parse_PartyInfo(int fd) {
 void intif_parse_PartyMemberAdded(int fd)
 {
 	if(battle_config.etc_log)
-		ShowInfo("intif: party member added Party (%d), Account(%d), Char(%d)\n",RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
+		ShowInfo("intif: party member added Party (%u), Account(%u), Char(%u)\n", RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10));
 	party->member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10), RFIFOB(fd, 14));
 }
 
@@ -1230,7 +1230,7 @@ void intif_parse_PartyOptionChanged(int fd)
 void intif_parse_PartyMemberWithdraw(int fd)
 {
 	if(battle_config.etc_log)
-		ShowInfo("intif: party member withdraw: Party(%d), Account(%d), Char(%d)\n",RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
+		ShowInfo("intif: party member withdraw: Party(%u), Account(%u), Char(%u)\n", RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10));
 	party->member_withdraw(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
 }
 
@@ -1258,20 +1258,20 @@ void intif_parse_GuildCreated(int fd) {
 // ACK guild infos
 void intif_parse_GuildInfo(int fd) {
 	if (RFIFOW(fd,2) == 8) {
-		ShowWarning("intif: guild noinfo %d\n",RFIFOL(fd,4));
+		ShowWarning("intif: guild noinfo %u\n", RFIFOL(fd,4));
 		guild->recv_noinfo(RFIFOL(fd,4));
 		return;
 	}
 	if (RFIFOW(fd,2)!=sizeof(struct guild)+4)
-		ShowError("intif: guild info: data size mismatch - Gid: %d recv size: %d Expected size: %"PRIuS"\n",
-		          RFIFOL(fd,4),RFIFOW(fd,2),sizeof(struct guild)+4);
+		ShowError("intif: guild info: data size mismatch - Gid: %u recv size: %d Expected size: %"PRIuS"\n",
+		          RFIFOL(fd,4), RFIFOW(fd,2), sizeof(struct guild)+4);
 	guild->recv_info((struct guild *)RFIFOP(fd,4));
 }
 
 // ACK adding guild member
 void intif_parse_GuildMemberAdded(int fd) {
 	if(battle_config.etc_log)
-		ShowInfo("intif: guild member added %d %d %d %d\n",RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14));
+		ShowInfo("intif: guild member added %u %u %u %d\n", RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOB(fd,14));
 	guild->member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14));
 }
 
@@ -1357,8 +1357,8 @@ void intif_parse_GuildMemberInfoChanged(int fd) {
 // ACK change of guild title
 void intif_parse_GuildPosition(int fd) {
 	if (RFIFOW(fd,2)!=sizeof(struct guild_position)+12)
-		ShowError("intif: guild info: data size mismatch (%d) %d != %"PRIuS"\n",
-		          RFIFOL(fd,4),RFIFOW(fd,2),sizeof(struct guild_position)+12);
+		ShowError("intif: guild info: data size mismatch (%u) %d != %"PRIuS"\n",
+		          RFIFOL(fd,4), RFIFOW(fd,2), sizeof(struct guild_position) + 12);
 	guild->position_changed(RFIFOL(fd,4),RFIFOL(fd,8),(struct guild_position *)RFIFOP(fd,12));
 }
 
@@ -1476,7 +1476,7 @@ void intif_parse_RecvHomunculusData(int fd) {
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
 void intif_parse_SaveHomunculusOk(int fd) {
 	if(RFIFOB(fd,6) != 1)
-		ShowError("homunculus data save failure for account %d\n", RFIFOL(fd,2));
+		ShowError("homunculus data save failure for account %u\n", RFIFOL(fd,2));
 }
 
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
@@ -1691,7 +1691,7 @@ void intif_parse_MailGetAttach(int fd) {
 	sd = map->charid2sd( RFIFOL(fd,4) );
 
 	if (sd == NULL) {
-		ShowError("intif_parse_MailGetAttach: char not found %d\n",RFIFOL(fd,4));
+		ShowError("intif_parse_MailGetAttach: char not found %u\n", RFIFOL(fd,4));
 		return;
 	}
 
@@ -1769,7 +1769,7 @@ void intif_parse_MailReturn(int fd) {
 	short fail = RFIFOB(fd,10);
 
 	if( sd == NULL ) {
-		ShowError("intif_parse_MailReturn: char not found %d\n",RFIFOL(fd,2));
+		ShowError("intif_parse_MailReturn: char not found %u\n", RFIFOL(fd, 2));
 		return;
 	}
 

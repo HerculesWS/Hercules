@@ -1280,7 +1280,7 @@ void itemdb_read_combos(void)
 
 		if (!strchr(p,',')) {
 			/* is there even a single column? */
-			ShowError("itemdb_read_combos: Insufficient columns in line %d of \"%s\", skipping.\n", lines, filepath);
+			ShowError("itemdb_read_combos: Insufficient columns in line %u of \"%s\", skipping.\n", lines, filepath);
 			continue;
 		}
 
@@ -1294,13 +1294,13 @@ void itemdb_read_combos(void)
 		p++;
 
 		if (str[1][0] != '{') {
-			ShowError("itemdb_read_combos(#1): Invalid format (Script column) in line %d of \"%s\", skipping.\n", lines, filepath);
+			ShowError("itemdb_read_combos(#1): Invalid format (Script column) in line %u of \"%s\", skipping.\n", lines, filepath);
 			continue;
 		}
 
 		/* no ending key anywhere (missing \}\) */
 		if ( str[1][strlen(str[1])-1] != '}' ) {
-			ShowError("itemdb_read_combos(#2): Invalid format (Script column) in line %d of \"%s\", skipping.\n", lines, filepath);
+			ShowError("itemdb_read_combos(#2): Invalid format (Script column) in line %u of \"%s\", skipping.\n", lines, filepath);
 			continue;
 		} else {
 			int items[MAX_ITEMS_PER_COMBO];
@@ -1308,14 +1308,14 @@ void itemdb_read_combos(void)
 			struct item_combo *combo = NULL;
 
 			if((retcount = itemdb->combo_split_atoi(str[0], items)) < 2) {
-				ShowError("itemdb_read_combos: line %d of \"%s\" doesn't have enough items to make for a combo (min:2), skipping.\n", lines, filepath);
+				ShowError("itemdb_read_combos: line %u of \"%s\" doesn't have enough items to make for a combo (min:2), skipping.\n", lines, filepath);
 				continue;
 			}
 
 			/* validate */
 			for(v = 0; v < retcount; v++) {
 				if( !itemdb->exists(items[v]) ) {
-					ShowError("itemdb_read_combos: line %d of \"%s\" contains unknown item ID %d, skipping.\n", lines, filepath,items[v]);
+					ShowError("itemdb_read_combos: line %u of \"%s\" contains unknown item ID %d, skipping.\n", lines, filepath, items[v]);
 					break;
 				}
 			}
@@ -1456,7 +1456,7 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 
 	if (entry->flag.trade_restriction > ITR_ALL) {
 		ShowWarning("itemdb_validate_entry: Invalid trade restriction flag 0x%x for item %d (%s) in '%s', defaulting to none.\n",
-		            entry->flag.trade_restriction, entry->nameid, entry->jname, source);
+		            (unsigned int)entry->flag.trade_restriction, entry->nameid, entry->jname, source);
 		entry->flag.trade_restriction = ITR_NONE;
 	}
 

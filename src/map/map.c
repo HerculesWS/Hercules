@@ -5017,7 +5017,7 @@ void read_map_zone_db(void) {
 			zone_e = libconfig->setting_get_elem(zones, i);
 
 			if (!libconfig->setting_lookup_string(zone_e, "name", &zonename)) {
-				ShowError("map_zone_db: missing zone name, skipping... (%s:%d)\n",
+				ShowError("map_zone_db: missing zone name, skipping... (%s:%u)\n",
 					config_setting_source_file(zone_e), config_setting_source_line(zone_e));
 				libconfig->setting_remove_elem(zones,i);/* remove from the tree */
 				--zone_count;

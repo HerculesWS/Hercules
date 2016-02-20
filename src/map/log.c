@@ -66,7 +66,7 @@ char log_picktype2char(e_log_pick_type type) {
 	}
 
 	// should not get here, fallback
-	ShowDebug("log_picktype2char: Unknown pick type %d.\n", type);
+	ShowDebug("log_picktype2char: Unknown pick type %u.\n", type);
 	return 'X';
 }
 
@@ -81,7 +81,7 @@ char log_chattype2char(e_log_chat_type type) {
 	}
 
 	// should not get here, fallback
-	ShowDebug("log_chattype2char: Unknown chat type %d.\n", type);
+	ShowDebug("log_chattype2char: Unknown chat type %u.\n", type);
 	return 'O';
 }
 

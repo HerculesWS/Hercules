@@ -744,7 +744,7 @@ int mob_spawn_bg(const char* mapname, short x, short y, const char* mobname, int
 
 	data.class_ = class_;
 	if( (x <= 0 || y <= 0) && !map->search_freecell(NULL, m, &x, &y, -1,-1, 1) ) {
-		ShowWarning("mob_spawn_bg: Couldn't locate a spawn cell for guardian class %d (bg_id %d) at map %s\n",class_, bg_id, map->list[m].name);
+		ShowWarning("mob_spawn_bg: Couldn't locate a spawn cell for guardian class %d (bg_id %u) at map %s\n", class_, bg_id, map->list[m].name);
 		return 0;
 	}
 
@@ -4681,7 +4681,7 @@ void mob_readchatdb(void) {
 
 		if( j < 2 || str[2]==NULL)
 		{
-			ShowError("mob_readchatdb: Insufficient number of fields for skill at %s, line %d\n", arc, lines);
+			ShowError("mob_readchatdb: Insufficient number of fields for skill at %s, line %u\n", arc, lines);
 			continue;
 		}
 

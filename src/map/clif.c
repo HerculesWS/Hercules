@@ -645,7 +645,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 			break;
 
 		default:
-			ShowError("clif_send: Unrecognized type %d\n",type);
+			ShowError("clif_send: Unrecognized type %u\n", type);
 			return false;
 	}
 
@@ -8475,7 +8475,7 @@ void clif_charnameack (int fd, struct block_list *bl)
 			memcpy(WBUFP(buf,6), BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
 			break;
 		default:
-			ShowError("clif_charnameack: bad type %d(%d)\n", bl->type, bl->id);
+			ShowError("clif_charnameack: bad type %u(%d)\n", bl->type, bl->id);
 			return;
 	}
 
@@ -12717,7 +12717,7 @@ void clif_parse_GuildRequestInfo(int fd, struct map_session_data *sd)
 			clif->guild_expulsionlist(sd);
 			break;
 		default:
-			ShowError("clif: guild request info: unknown type %d\n", RFIFOL(fd,2));
+			ShowError("clif: guild request info: unknown type %u\n", RFIFOL(fd,2));
 			break;
 	}
 }
@@ -15417,7 +15417,7 @@ void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 		unsigned short* item_list = (unsigned short*)RFIFOP(fd,10);
 
 		if( len < 10 || len != 10 + count * 4) {
-			ShowWarning("Player %u sent incorrect cash shop buy packet (len %u:%u)!\n", sd->status.char_id, len, 10 + count * 4);
+			ShowWarning("Player %d sent incorrect cash shop buy packet (len %d:%d)!\n", sd->status.char_id, len, 10 + count * 4);
 			return;
 		}
 		fail = npc->cashshop_buylist(sd,points,count,item_list);
@@ -16528,7 +16528,7 @@ void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data* sd) {
 	// TODO: Make this check global for all variable length packets.
 	if( packet_len < 89 )
 	{// minimum packet length
-		ShowError("clif_parse_ReqOpenBuyingStore: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", 89, packet_len, sd->bl.id);
+		ShowError("clif_parse_ReqOpenBuyingStore: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", 89U, packet_len, sd->bl.id);
 		return;
 	}
 
@@ -16707,7 +16707,7 @@ void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data* sd) {
 
 	if( packet_len < 12 )
 	{// minimum packet length
-		ShowError("clif_parse_ReqTradeBuyingStore: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", 12, packet_len, sd->bl.id);
+		ShowError("clif_parse_ReqTradeBuyingStore: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", 12U, packet_len, sd->bl.id);
 		return;
 	}
 
@@ -16720,7 +16720,7 @@ void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data* sd) {
 
 	if( packet_len%blocksize )
 	{
-		ShowError("clif_parse_ReqTradeBuyingStore: Unexpected item list size %u (account_id=%d, buyer_id=%u, block size=%u)\n", packet_len, sd->bl.id, account_id, blocksize);
+		ShowError("clif_parse_ReqTradeBuyingStore: Unexpected item list size %u (account_id=%d, buyer_id=%d, block size=%u)\n", packet_len, sd->bl.id, account_id, blocksize);
 		return;
 	}
 	count = packet_len/blocksize;
@@ -16827,7 +16827,7 @@ void clif_parse_SearchStoreInfo(int fd, struct map_session_data* sd) {
 
 	if( packet_len < 15 )
 	{// minimum packet length
-		ShowError("clif_parse_SearchStoreInfo: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", 15, packet_len, sd->bl.id);
+		ShowError("clif_parse_SearchStoreInfo: Malformed packet (expected length=%u, length=%u, account_id=%d).\n", 15U, packet_len, sd->bl.id);
 		return;
 	}
 
@@ -17009,10 +17009,10 @@ void clif_parse_debug(int fd,struct map_session_data *sd) {
 		if( packet_len == -1 ) {// variable length
 			packet_len = RFIFOW(fd,2);  // clif_parse ensures, that this amount of data is already received
 		}
-		ShowDebug("Packet debug of 0x%04X (length %d), %s session #%d, %d/%d (AID/CID)\n", cmd, packet_len, sd->state.active ? "authed" : "unauthed", fd, sd->status.account_id, sd->status.char_id);
+		ShowDebug("Packet debug of 0x%04X (length %d), %s session #%d, %d/%d (AID/CID)\n", (unsigned int)cmd, packet_len, sd->state.active ? "authed" : "unauthed", fd, sd->status.account_id, sd->status.char_id);
 	} else {
 		packet_len = (int)RFIFOREST(fd);
-		ShowDebug("Packet debug of 0x%04X (length %d), session #%d\n", cmd, packet_len, fd);
+		ShowDebug("Packet debug of 0x%04X (length %d), session #%d\n", (unsigned int)cmd, packet_len, fd);
 	}
 
 	ShowDump(RFIFOP(fd,0), packet_len);
@@ -18757,7 +18757,7 @@ int clif_parse(int fd) {
 		// filter out invalid / unsupported packets
 		if (cmd > MAX_PACKET_DB || cmd < MIN_PACKET_DB || packet_db[cmd].len == 0) {
 			ShowWarning("clif_parse: Received unsupported packet (packet 0x%04x (0x%04x), %"PRIuS" bytes received), disconnecting session #%d.\n",
-			            cmd, RFIFOW(fd,0), RFIFOREST(fd), fd);
+			            (unsigned int)cmd, RFIFOW(fd,0), RFIFOREST(fd), fd);
 #ifdef DUMP_INVALID_PACKET
 			ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
 #endif
@@ -18773,7 +18773,7 @@ int clif_parse(int fd) {
 
 			packet_len = RFIFOW(fd,2);
 			if (packet_len < 4 || packet_len > 32768) {
-				ShowWarning("clif_parse: Received packet 0x%04x specifies invalid packet_len (%d), disconnecting session #%d.\n", cmd, packet_len, fd);
+				ShowWarning("clif_parse: Received packet 0x%04x specifies invalid packet_len (%d), disconnecting session #%d.\n", (unsigned int)cmd, packet_len, fd);
 #ifdef DUMP_INVALID_PACKET
 				ShowDump(RFIFOP(fd,0), RFIFOREST(fd));
 #endif
@@ -18861,12 +18861,12 @@ static void __attribute__ ((unused)) packetdb_addpacket(short cmd, int len, ...)
 	pFunc func;
 
 	if (cmd > MAX_PACKET_DB) {
-		ShowError("Packet Error: packet 0x%x is greater than the maximum allowed (0x%x), skipping...\n", cmd, MAX_PACKET_DB);
+		ShowError("Packet Error: packet 0x%x is greater than the maximum allowed (0x%x), skipping...\n", (unsigned int)cmd, (unsigned int)MAX_PACKET_DB);
 		return;
 	}
 
 	if (cmd < MIN_PACKET_DB) {
-		ShowError("Packet Error: packet 0x%x is lower than the minimum allowed (0x%x), skipping...\n", cmd, MIN_PACKET_DB);
+		ShowError("Packet Error: packet 0x%x is lower than the minimum allowed (0x%x), skipping...\n", (unsigned int)cmd, (unsigned int)MIN_PACKET_DB);
 		return;
 	}
 

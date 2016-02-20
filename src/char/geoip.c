@@ -101,7 +101,7 @@ const char* geoip_getcountry(uint32 ipnum)
 		}
 		offset = x;
 	}
-	ShowError("geoip_getcountry(): Error traversing database for ipnum %d\n", ipnum);
+	ShowError("geoip_getcountry(): Error traversing database for ipnum %u\n", ipnum);
 	ShowWarning("geoip_getcountry(): Possible database corruption!\n");
 
 	return geoip_countryname[0];

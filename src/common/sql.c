@@ -467,7 +467,7 @@ static int Sql_P_BindSqlDataType(MYSQL_BIND* bind, enum SqlDataType buffer_type,
 	case SQLDT_BLOB: bind->buffer_type = MYSQL_TYPE_BLOB;
 		break;
 	default:
-		ShowDebug("Sql_P_BindSqlDataType: unsupported buffer type (%d)\n", buffer_type);
+		ShowDebug("Sql_P_BindSqlDataType: unsupported buffer type (%u)\n", buffer_type);
 		return SQL_ERROR;
 	}
 	bind->buffer = buffer;
@@ -870,7 +870,7 @@ void hercules_mysql_error_handler(unsigned int ecode) {
 	case 2003:/* Can't connect to MySQL (this error only happens here when failing to reconnect) */
 		if( mysql_reconnect_type == 1 ) {
 			if( ++retry > mysql_reconnect_count ) {
-				ShowFatalError("MySQL has been unreachable for too long, %d reconnects were attempted. Shutting Down\n", retry);
+				ShowFatalError("MySQL has been unreachable for too long, %u reconnects were attempted. Shutting Down\n", retry);
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -972,7 +972,7 @@ void Sql_HerculesUpdateCheck(Sql* self) {
 	fclose(ifp);
 
 	if( performed ) {
-		ShowSQL("- detected %d new "CL_WHITE"SQL updates"CL_RESET"\n",performed);
+		ShowSQL("- detected %u new "CL_WHITE"SQL updates"CL_RESET"\n",performed);
 		ShowMessage("%s",StrBuf->Value(&buf));
 		ShowSQL("To manually skip, type: 'sql update skip <file name>'\n");
 	}

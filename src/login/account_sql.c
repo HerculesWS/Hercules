@@ -728,7 +728,7 @@ void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id) {
 			switch (RFIFOB(fd, cursor++)) {
 				/* int */
 				case 0:
-					if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%d')", db->global_acc_reg_num_db, account_id, key, index, RFIFOL(fd, cursor)) )
+					if( SQL_ERROR == SQL->Query(sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%u')", db->global_acc_reg_num_db, account_id, key, index, RFIFOL(fd, cursor)) )
 						Sql_ShowDebug(sql_handle);
 					cursor += 4;
 					break;

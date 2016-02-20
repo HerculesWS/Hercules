@@ -80,10 +80,10 @@ void sample_packet0f3(int fd) {
 		data->lastMSGPosition.y = sd->status.last_point.y;
 		data->someNumber = rand()%777;
 
-		ShowInfo("Created Appended sockt->session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
+		ShowInfo("Created Appended sockt->session[] data, %d %d %d %u\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		addToSession(sockt->session[fd],data,0,true);
 	} else {
-		ShowInfo("Existent Appended sockt->session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
+		ShowInfo("Existent Appended sockt->session[] data, %d %d %d %u\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		if( rand()%4 == 2 ) {
 			ShowInfo("Removing Appended sockt->session[] data\n");
 			removeFromSession(sockt->session[fd],0);
@@ -99,10 +99,10 @@ void sample_packet0f3(int fd) {
 		data->lastMSGPosition.y = sd->status.last_point.y;
 		data->someNumber = rand()%777;
 
-		ShowInfo("Created Appended map_session_data data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
+		ShowInfo("Created Appended map_session_data data, %d %d %d %u\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		addToMSD(sd,data,0,true);
 	} else {
-		ShowInfo("Existent Appended map_session_data data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
+		ShowInfo("Existent Appended map_session_data data, %d %d %d %u\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		if( rand()%4 == 2 ) {
 			ShowInfo("Removing Appended map_session_data data\n");
 			removeFromMSD(sd,0);

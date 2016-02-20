@@ -495,7 +495,8 @@ void bg_config_read(void) {
 	}
 	libconfig->destroy(&bg_conf);
 }
-struct bg_arena *bg_name2arena (char *name) {
+struct bg_arena *bg_name2arena(const char *name)
+{
 	int i;
 	nullpo_retr(NULL, name);
 	for(i = 0; i < bg->arenas; i++) {
@@ -827,9 +828,9 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 	if ( ( tick = pc_readglobalreg(sd, script->add_str(bg->gdelay_var)) ) && tsec < tick ) {
 		char response[100];
 		if( (tick-tsec) > 60 )
-			sprintf(response, "You are a deserter! Wait %d minute(s) before you can apply again",(tick-tsec)/60);
+			sprintf(response, "You are a deserter! Wait %u minute(s) before you can apply again", (tick - tsec) / 60);
 		else
-			sprintf(response, "You are a deserter! Wait %d seconds before you can apply again",(tick-tsec));
+			sprintf(response, "You are a deserter! Wait %u seconds before you can apply again", (tick - tsec));
 		clif->messagecolor_self(sd->fd, COLOR_RED, response);
 		return BGQA_FAIL_DESERTER;
 	}
@@ -837,9 +838,9 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 	if ( ( tick = pc_readglobalreg(sd, script->add_str(arena->delay_var)) ) && tsec < tick ) {
 		char response[100];
 		if( (tick-tsec) > 60 )
-			sprintf(response, "You can't reapply to this arena so fast. Apply to the different arena or wait %d minute(s)",(tick-tsec)/60);
+			sprintf(response, "You can't reapply to this arena so fast. Apply to the different arena or wait %u minute(s)", (tick - tsec) / 60);
 		else
-			sprintf(response, "You can't reapply to this arena so fast. Apply to the different arena or wait %d seconds",(tick-tsec));
+			sprintf(response, "You can't reapply to this arena so fast. Apply to the different arena or wait %u seconds", (tick - tsec));
 		clif->messagecolor_self(sd->fd, COLOR_RED, response);
 		return BGQA_FAIL_COOLDOWN;
 	}
@@ -906,7 +907,7 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 		case BGQT_INDIVIDUAL:/* already did */
 			break;
 		default:
-			ShowDebug("bg_canqueue: unknown/unsupported type %d\n",type);
+			ShowDebug("bg_canqueue: unknown/unsupported type %u\n", type);
 			return BGQA_DUPLICATE_REQUEST;
 	}
 	return BGQA_SUCCESS;

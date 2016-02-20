@@ -37,8 +37,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define STORAGE_MEMINC 16
-
 struct inter_storage_interface inter_storage_s;
 struct inter_storage_interface *inter_storage;
 
@@ -418,7 +416,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		if( j )
 			StrBuf->AppendStr(&buf, ",");
 
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%"PRIu64"'",
+		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
 			guild_id, items[j].nameid, items[j].amount, items[j].equip, items[j].identify, items[j].refine,
 			items[j].attribute, items[j].expire_time, items[j].bound, items[j].unique_id);
 		for( s = 0; s < MAX_SLOTS; ++s )

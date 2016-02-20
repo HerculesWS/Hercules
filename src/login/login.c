@@ -494,12 +494,12 @@ void login_fromchar_parse_account_update(int fd, int id, const char *const ip)
 	RFIFOSKIP(fd,10);
 
 	if( !accounts->load_num(accounts, &acc, account_id) )
-		ShowNotice("Char-server '%s': Error of Status change (account: %d not found, suggested status %d, ip: %s).\n", server[id].name, account_id, state, ip);
+		ShowNotice("Char-server '%s': Error of Status change (account: %d not found, suggested status %u, ip: %s).\n", server[id].name, account_id, state, ip);
 	else
 	if( acc.state == state )
-		ShowNotice("Char-server '%s':  Error of Status change - actual status is already the good status (account: %d, status %d, ip: %s).\n", server[id].name, account_id, state, ip);
+		ShowNotice("Char-server '%s':  Error of Status change - actual status is already the good status (account: %d, status %u, ip: %s).\n", server[id].name, account_id, state, ip);
 	else {
-		ShowNotice("Char-server '%s': Status change (account: %d, new status %d, ip: %s).\n", server[id].name, account_id, state, ip);
+		ShowNotice("Char-server '%s': Status change (account: %d, new status %u, ip: %s).\n", server[id].name, account_id, state, ip);
 
 		acc.state = state;
 		// Save
@@ -683,7 +683,7 @@ void login_fromchar_parse_request_account_reg2(int fd)
 void login_fromchar_parse_update_wan_ip(int fd, int id)
 {
 	server[id].ip = ntohl(RFIFOL(fd,2));
-	ShowInfo("Updated IP of Server #%d to %d.%d.%d.%d.\n",id, CONVIP(server[id].ip));
+	ShowInfo("Updated IP of Server #%d to %u.%u.%u.%u.\n",id, CONVIP(server[id].ip));
 	RFIFOSKIP(fd,6);
 }
 
@@ -1118,7 +1118,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	}
 
 	if( acc.state != 0 ) {
-		ShowNotice("Connection refused (account: %s, pass: %s, state: %d, ip: %s)\n", sd->userid, sd->passwd, acc.state, ip);
+		ShowNotice("Connection refused (account: %s, pass: %s, state: %u, ip: %s)\n", sd->userid, sd->passwd, acc.state, ip);
 		return acc.state - 1;
 	}
 
