@@ -1632,7 +1632,7 @@ bool npc_trader_open(struct map_session_data *sd, struct npc_data *nd) {
  * @param master id of the original npc
  **/
 void npc_trader_update(int master) {
-	DBIterator* iter;
+	struct DBIterator *iter;
 	struct block_list* bl;
 	struct npc_data *master_nd = map->id2nd(master);
 
@@ -4569,9 +4569,8 @@ void npc_read_event_script(void)
 		{"Kill NPC Event",script->config.kill_mob_event_name},
 	};
 
-	for (i = 0; i < NPCE_MAX; i++)
-	{
-		DBIterator* iter;
+	for (i = 0; i < NPCE_MAX; i++) {
+		struct DBIterator *iter;
 		union DBKey key;
 		struct DBData *data;
 
@@ -4756,8 +4755,9 @@ int npc_reload(void) {
 }
 
 //Unload all npc in the given file
-bool npc_unloadfile( const char* filepath ) {
-	DBIterator * iter = db_iterator(npc->name_db);
+bool npc_unloadfile(const char *filepath)
+{
+	struct DBIterator *iter = db_iterator(npc->name_db);
 	struct npc_data* nd = NULL;
 	bool found = false;
 

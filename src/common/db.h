@@ -76,9 +76,9 @@
  *  DBComparator         - Format of the comparators used by the databases.  *
  *  DBHasher             - Format of the hashers used by the databases.      *
  *  DBReleaser           - Format of the releasers used by the databases.    *
- *  DBIterator           - Database iterator.                                *
+ *  struct DBIterator    - Database iterator.                                *
  *  DBMap                - Database interface.                               *
-\*****************************************************************************/
+ *****************************************************************************/
 
 /**
  * Bitfield with what should be released by the releaser function (if the
@@ -288,21 +288,21 @@ typedef uint64 (*DBHasher)(union DBKey key, unsigned short maxlen);
  */
 typedef void (*DBReleaser)(union DBKey key, struct DBData data, enum DBReleaseOption which);
 
-typedef struct DBIterator DBIterator;
 typedef struct DBMap DBMap;
 
 /**
  * Database iterator.
+ *
  * Supports forward iteration, backward iteration and removing entries from the database.
  * The iterator is initially positioned before the first entry of the database.
+ *
  * While the iterator exists the database is locked internally, so invoke
- * {@link DBIterator#destroy} as soon as possible.
+ * struct DBIterator#destroy() as soon as possible.
+ *
  * @public
  * @see #DBMap
  */
-struct DBIterator
-{
-
+struct DBIterator {
 	/**
 	 * Fetches the first entry in the database.
 	 * Returns the data of the entry.
@@ -312,7 +312,7 @@ struct DBIterator
 	 * @return Data of the entry
 	 * @protected
 	 */
-	struct DBData *(*first)(DBIterator* self, union DBKey *out_key);
+	struct DBData *(*first)(struct DBIterator *self, union DBKey *out_key);
 
 	/**
 	 * Fetches the last entry in the database.
@@ -323,7 +323,7 @@ struct DBIterator
 	 * @return Data of the entry
 	 * @protected
 	 */
-	struct DBData *(*last)(DBIterator* self, union DBKey *out_key);
+	struct DBData *(*last)(struct DBIterator *self, union DBKey *out_key);
 
 	/**
 	 * Fetches the next entry in the database.
@@ -334,7 +334,7 @@ struct DBIterator
 	 * @return Data of the entry
 	 * @protected
 	 */
-	struct DBData *(*next)(DBIterator* self, union DBKey *out_key);
+	struct DBData *(*next)(struct DBIterator *self, union DBKey *out_key);
 
 	/**
 	 * Fetches the previous entry in the database.
@@ -345,7 +345,7 @@ struct DBIterator
 	 * @return Data of the entry
 	 * @protected
 	 */
-	struct DBData *(*prev)(DBIterator* self, union DBKey *out_key);
+	struct DBData *(*prev)(struct DBIterator *self, union DBKey *out_key);
 
 	/**
 	 * Returns true if the fetched entry exists.
@@ -355,12 +355,14 @@ struct DBIterator
 	 * @return true is the entry exists
 	 * @protected
 	 */
-	bool (*exists)(DBIterator* self);
+	bool (*exists)(struct DBIterator *self);
 
 	/**
 	 * Removes the current entry from the database.
-	 * NOTE: {@link DBIterator#exists} will return false until another entry
-	 *       is fetched
+	 *
+	 * NOTE: struct DBIterator#exists() will return false until another
+	 * entry is fetched.
+	 *
 	 * Puts data of the removed entry in out_data, if out_data is not NULL.
 	 * @param self Iterator
 	 * @param out_data Data of the removed entry.
@@ -368,14 +370,14 @@ struct DBIterator
 	 * @protected
 	 * @see DBMap#remove
 	 */
-	int (*remove)(DBIterator* self, struct DBData *out_data);
+	int (*remove)(struct DBIterator *self, struct DBData *out_data);
 
 	/**
 	 * Destroys this iterator and unlocks the database.
 	 * @param self Iterator
 	 * @protected
 	 */
-	void (*destroy)(DBIterator* self);
+	void (*destroy)(struct DBIterator *self);
 
 };
 
@@ -396,7 +398,7 @@ struct DBMap {
 	 * @return New iterator
 	 * @protected
 	 */
-	DBIterator* (*iterator)(DBMap* self);
+	struct DBIterator *(*iterator)(DBMap* self);
 
 	/**
 	 * Returns true if the entry exists.

@@ -1089,7 +1089,7 @@ static int connect_check_clear(int tid, int64 tick, int id, intptr_t data) {
 	int clear = 0;
 	int list  = 0;
 	ConnectHistory *hist = NULL;
-	DBIterator *iter;
+	struct DBIterator *iter;
 
 	if( !db_size(connect_history) )
 		return 0;

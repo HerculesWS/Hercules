@@ -236,10 +236,11 @@ void script_load_mapreg(void) {
 /**
  * Saves permanent variables to database.
  */
-void script_save_mapreg(void) {
+void script_save_mapreg(void)
+{
 	if (mapreg->dirty) {
-		DBIterator *iter = db_iterator(mapreg->regs.vars);
-		struct mapreg_save *m;
+		struct DBIterator *iter = db_iterator(mapreg->regs.vars);
+		struct mapreg_save *m = NULL;
 		for (m = dbi_first(iter); dbi_exists(iter); m = dbi_next(iter)) {
 			if (m->save) {
 				int num = script_getvarid(m->uid);

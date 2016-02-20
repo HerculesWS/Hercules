@@ -75,7 +75,7 @@ static void read_config(void) {
 
 	if (groups != NULL) {
 		GroupSettings *group_settings = NULL;
-		DBIterator *iter = NULL;
+		struct DBIterator *iter = NULL;
 		int i, loop = 0;
 
 		group_count = libconfig->setting_length(groups);

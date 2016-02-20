@@ -178,7 +178,7 @@ struct guild* guild_search(int guild_id)
 struct guild* guild_searchname(char* str)
 {
 	struct guild* g;
-	DBIterator *iter = db_iterator(guild->db);
+	struct DBIterator *iter = db_iterator(guild->db);
 
 	nullpo_retr(NULL, str);
 	for( g = dbi_first(iter); dbi_exists(iter); g = dbi_next(iter) )
@@ -201,7 +201,7 @@ struct guild_castle* guild_castle_search(int gcid)
 struct guild_castle* guild_mapindex2gc(short map_index)
 {
 	struct guild_castle* gc;
-	DBIterator *iter = db_iterator(guild->castle_db);
+	struct DBIterator *iter = db_iterator(guild->castle_db);
 
 	for( gc = dbi_first(iter); dbi_exists(iter); gc = dbi_next(iter) )
 	{
@@ -1225,7 +1225,7 @@ int guild_emblem_changed(int len,int guild_id,int emblem_id,const char *data)
 		}
 	}
 	{// update guardians (mobs)
-		DBIterator* iter = db_iterator(guild->castle_db);
+		struct DBIterator *iter = db_iterator(guild->castle_db);
 		struct guild_castle* gc;
 		for( gc = (struct guild_castle*)dbi_first(iter) ; dbi_exists(iter); gc = (struct guild_castle*)dbi_next(iter) )
 		{
@@ -1956,7 +1956,7 @@ void guild_castle_map_init(void)
 	if (num > 0) {
 		struct guild_castle* gc = NULL;
 		int *castle_ids, *cursor;
-		DBIterator* iter = NULL;
+		struct DBIterator *iter = NULL;
 
 		CREATE(castle_ids, int, num);
 		cursor = castle_ids;
@@ -2154,7 +2154,7 @@ int guild_checkcastles(struct guild *g)
 {
 	int nb_cas = 0;
 	struct guild_castle* gc = NULL;
-	DBIterator *iter = db_iterator(guild->castle_db);
+	struct DBIterator *iter = db_iterator(guild->castle_db);
 
 	for (gc = dbi_first(iter); dbi_exists(iter); gc = dbi_next(iter)) {
 		if (gc->guild_id == g->guild_id) {
@@ -2287,8 +2287,9 @@ void do_init_guild(bool minimal) {
 	timer->add_interval(timer->gettick()+GUILD_SEND_XY_INVERVAL,guild->send_xy_timer,0,0,GUILD_SEND_XY_INVERVAL);
 }
 
-void do_final_guild(void) {
-	DBIterator *iter = db_iterator(guild->db);
+void do_final_guild(void)
+{
+	struct DBIterator *iter = db_iterator(guild->db);
 	struct guild *g;
 
 	for( g = dbi_first(iter); dbi_exists(iter); g = dbi_next(iter) ) {

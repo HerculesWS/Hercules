@@ -2307,8 +2307,9 @@ void itemdb_reload(void) {
 	}
 	mapit->free(iter);
 }
-void itemdb_name_constants(void) {
-	DBIterator *iter = db_iterator(itemdb->names);
+void itemdb_name_constants(void)
+{
+	struct DBIterator *iter = db_iterator(itemdb->names);
 	struct item_data *data;
 
 #ifdef ENABLE_CASE_CHECK

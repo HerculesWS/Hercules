@@ -59,7 +59,7 @@ static const char dataToHex[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9
 int inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data) {
 	static int last_id = 0; //To know in which guild we were.
 	int state = 0; //0: Have not reached last guild. 1: Reached last guild, ready for save. 2: Some guild saved, don't do further saving.
-	DBIterator *iter = db_iterator(inter_guild->guild_db);
+	struct DBIterator *iter = db_iterator(inter_guild->guild_db);
 	union DBKey key;
 	struct guild* g;
 

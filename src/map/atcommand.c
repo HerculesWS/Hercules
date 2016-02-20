@@ -1511,7 +1511,7 @@ ACMD(help) {
 	clif->message(fd, atcmd_output);
 
 	{   // Display aliases
-		DBIterator* iter;
+		struct DBIterator *iter;
 		AtCommandInfo *command_info;
 		AliasInfo *alias_info = NULL;
 		StringBuf buf;
@@ -5278,10 +5278,11 @@ ACMD(clearcart)
  *------------------------------------------*/
 #define MAX_SKILLID_PARTIAL_RESULTS 5
 #define MAX_SKILLID_PARTIAL_RESULTS_LEN 74 /* "skill " (6) + "%d:" (up to 5) + "%s" (up to 30) + " (%s)" (up to 33) */
-ACMD(skillid) {
+ACMD(skillid)
+{
 	int i, found = 0;
 	size_t skillen;
-	DBIterator* iter;
+	struct DBIterator *iter;
 	union DBKey key;
 	struct DBData *data;
 	char partials[MAX_SKILLID_PARTIAL_RESULTS][MAX_SKILLID_PARTIAL_RESULTS_LEN];
@@ -8352,7 +8353,7 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 	char line_buff[CHATBOX_SIZE];
 	char* cur = line_buff;
 	AtCommandInfo* cmd;
-	DBIterator *iter = db_iterator(atcommand->db);
+	struct DBIterator *iter = db_iterator(atcommand->db);
 	int count = 0;
 
 	memset(line_buff,' ',CHATBOX_SIZE);
@@ -8826,7 +8827,7 @@ ACMD(channel) {
 				clif->messagecolor_self(fd, channel->config->colors[k], atcmd_output);
 			}
 		} else {
-			DBIterator *iter = db_iterator(channel->db);
+			struct DBIterator *iter = db_iterator(channel->db);
 			bool show_all = pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ? true : false;
 			clif->message(fd, msg_fd(fd,1410)); // -- Public Channels
 			if (channel->config->local) {
@@ -9056,7 +9057,7 @@ ACMD(channel) {
 		clif->message(fd, atcmd_output);
 	} else if (strcmpi(subcmd,"banlist") == 0) {
 		// sub1 = channel name; sub2 = unused; sub3 = unused
-		DBIterator *iter = NULL;
+		struct DBIterator *iter = NULL;
 		union DBKey key;
 		struct DBData *data;
 		bool isA = pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)?true:false;
@@ -9733,8 +9734,7 @@ const char* atcommand_checkalias(const char *aliasname) {
 
 /// AtCommand suggestion
 void atcommand_get_suggestions(struct map_session_data* sd, const char *name, bool is_atcmd_cmd) {
-	DBIterator* atcommand_iter;
-	DBIterator* alias_iter;
+	struct DBIterator *atcommand_iter, *alias_iter;
 	AtCommandInfo* command_info = NULL;
 	AliasInfo* alias_info = NULL;
 	AtCommandType type = is_atcmd_cmd ? COMMAND_ATCOMMAND : COMMAND_CHARCOMMAND;
@@ -10120,7 +10120,7 @@ static inline int atcommand_command_type2idx(AtCommandType type)
  */
 void atcommand_db_load_groups(GroupSettings **groups, struct config_setting_t **commands_, size_t sz)
 {
-	DBIterator *iter = db_iterator(atcommand->db);
+	struct DBIterator *iter = db_iterator(atcommand->db);
 	AtCommandInfo *atcmd;
 
 	nullpo_retv(groups);

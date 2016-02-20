@@ -234,17 +234,17 @@ typedef struct DBMap_impl {
  * @param ht_index Current index of the hashtable
  * @param node Current node
  * @private
- * @see #DBIterator
+ * @see struct DBIterator
  * @see #DBMap_impl
  * @see #DBNode
  */
-typedef struct DBIterator_impl {
+struct DBIterator_impl {
 	// Iterator interface
 	struct DBIterator vtable;
 	DBMap_impl* db;
 	int ht_index;
 	DBNode *node;
-} DBIterator_impl;
+};
 
 #if defined(DB_ENABLE_STATS)
 /**
@@ -1245,11 +1245,11 @@ static void db_release_both(union DBKey key, struct DBData data, enum DBReleaseO
  * @param out_key Key of the entry
  * @return Data of the entry
  * @protected
- * @see DBIterator#first
+ * @see struct DBIterator#first()
  */
-struct DBData *dbit_obj_first(DBIterator* self, union DBKey *out_key)
+struct DBData *dbit_obj_first(struct DBIterator *self, union DBKey *out_key)
 {
-	DBIterator_impl* it = (DBIterator_impl*)self;
+	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 
 	DB_COUNTSTAT(dbit_first);
 	// position before the first entry
@@ -1267,11 +1267,11 @@ struct DBData *dbit_obj_first(DBIterator* self, union DBKey *out_key)
  * @param out_key Key of the entry
  * @return Data of the entry
  * @protected
- * @see DBIterator#last
+ * @see struct DBIterator#last()
  */
-struct DBData *dbit_obj_last(DBIterator* self, union DBKey *out_key)
+struct DBData *dbit_obj_last(struct DBIterator *self, union DBKey *out_key)
 {
-	DBIterator_impl* it = (DBIterator_impl*)self;
+	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 
 	DB_COUNTSTAT(dbit_last);
 	// position after the last entry
@@ -1289,11 +1289,11 @@ struct DBData *dbit_obj_last(DBIterator* self, union DBKey *out_key)
  * @param out_key Key of the entry
  * @return Data of the entry
  * @protected
- * @see DBIterator#next
+ * @see struct DBIterator#next()
  */
-struct DBData *dbit_obj_next(DBIterator* self, union DBKey *out_key)
+struct DBData *dbit_obj_next(struct DBIterator *self, union DBKey *out_key)
 {
-	DBIterator_impl* it = (DBIterator_impl*)self;
+	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 	DBNode *node;
 	DBNode *parent;
 	struct dbn fake;
@@ -1365,11 +1365,11 @@ struct DBData *dbit_obj_next(DBIterator* self, union DBKey *out_key)
  * @param out_key Key of the entry
  * @return Data of the entry
  * @protected
- * @see DBIterator#prev
+ * @see struct DBIterator#prev()
  */
-struct DBData *dbit_obj_prev(DBIterator* self, union DBKey *out_key)
+struct DBData *dbit_obj_prev(struct DBIterator *self, union DBKey *out_key)
 {
-	DBIterator_impl* it = (DBIterator_impl*)self;
+	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 	DBNode *node;
 	DBNode *parent;
 	struct dbn fake;
@@ -1440,11 +1440,11 @@ struct DBData *dbit_obj_prev(DBIterator* self, union DBKey *out_key)
  * @param self Iterator
  * @return true if the entry exists
  * @protected
- * @see DBIterator#exists
+ * @see struct DBIterator#exists()
  */
-bool dbit_obj_exists(DBIterator* self)
+bool dbit_obj_exists(struct DBIterator *self)
 {
-	DBIterator_impl* it = (DBIterator_impl*)self;
+	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 
 	DB_COUNTSTAT(dbit_exists);
 	return (it->node && !it->node->deleted);
@@ -1452,19 +1452,21 @@ bool dbit_obj_exists(DBIterator* self)
 
 /**
  * Removes the current entry from the database.
- * NOTE: {@link DBIterator#exists} will return false until another entry
- *       is fetched
+ *
+ * NOTE: struct DBIterator#exists() will return false until another entry is
+ * fetched.
+ *
  * Puts data of the removed entry in out_data, if out_data is not NULL (unless data has been released)
  * @param self Iterator
  * @param out_data Data of the removed entry.
  * @return 1 if entry was removed, 0 otherwise
  * @protected
  * @see DBMap#remove
- * @see DBIterator#remove
+ * @see struct DBIterator#remove()
  */
-int dbit_obj_remove(DBIterator* self, struct DBData *out_data)
+int dbit_obj_remove(struct DBIterator *self, struct DBData *out_data)
 {
-	DBIterator_impl* it = (DBIterator_impl*)self;
+	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 	DBNode *node;
 	int retval = 0;
 
@@ -1489,9 +1491,9 @@ int dbit_obj_remove(DBIterator* self, struct DBData *out_data)
  * @param self Iterator
  * @protected
  */
-void dbit_obj_destroy(DBIterator* self)
+void dbit_obj_destroy(struct DBIterator *self)
 {
-	DBIterator_impl* it = (DBIterator_impl*)self;
+	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
 
 	DB_COUNTSTAT(dbit_destroy);
 	// unlock the database
@@ -1509,10 +1511,10 @@ void dbit_obj_destroy(DBIterator* self)
  * @return New iterator
  * @protected
  */
-static DBIterator* db_obj_iterator(DBMap* self)
+static struct DBIterator *db_obj_iterator(DBMap* self)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
-	DBIterator_impl* it;
+	struct DBIterator_impl *it;
 
 	DB_COUNTSTAT(db_iterator);
 	it = ers_alloc(db_iterator_ers, struct DBIterator_impl);

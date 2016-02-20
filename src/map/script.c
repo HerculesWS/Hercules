@@ -4261,8 +4261,9 @@ void run_script(struct script_code *rootscript, int pos, int rid, int oid) {
 	script->run_main(st);
 }
 
-void script_stop_instances(struct script_code *code) {
-	DBIterator *iter;
+void script_stop_instances(struct script_code *code)
+{
+	struct DBIterator *iter;
 	struct script_state* st;
 
 	if( !script->active_scripts )
@@ -4723,9 +4724,10 @@ void script_generic_ui_array_expand (unsigned int plus) {
 /*==========================================
  * Destructor
  *------------------------------------------*/
-void do_final_script(void) {
+void do_final_script(void)
+{
 	int i;
-	DBIterator *iter;
+	struct DBIterator *iter;
 	struct script_state *st;
 
 #ifdef SCRIPT_DEBUG_HASH
@@ -4916,8 +4918,7 @@ void script_load_translations(void) {
 	libconfig->destroy(&translations_conf);
 
 	if( total ) {
-		DBIterator *main_iter;
-		DBIterator *sub_iter;
+		struct DBIterator *main_iter, *sub_iter;
 		DBMap *string_db;
 		struct string_translation *st = NULL;
 		uint32 j = 0;
@@ -5138,7 +5139,7 @@ int script_translation_db_destroyer(union DBKey key, struct DBData *data, va_lis
 
 	if( db_size(string_db) ) {
 		struct string_translation *st = NULL;
-		DBIterator *iter = db_iterator(string_db);
+		struct DBIterator *iter = db_iterator(string_db);
 
 		for( st = dbi_first(iter); dbi_exists(iter); st = dbi_next(iter) ) {
 			aFree(st);
@@ -5218,9 +5219,10 @@ void do_init_script(bool minimal) {
 	script->load_translations();
 }
 
-int script_reload(void) {
+int script_reload(void)
+{
 	int i;
-	DBIterator *iter;
+	struct DBIterator *iter;
 	struct script_state *st;
 
 #ifdef ENABLE_CASE_CHECK
@@ -16995,8 +16997,9 @@ BUILDIN(sleep2) {
 /// Awakes all the sleep timers of the target npc
 ///
 /// awake "<npc name>";
-BUILDIN(awake) {
-	DBIterator *iter;
+BUILDIN(awake)
+{
+	struct DBIterator *iter;
 	struct script_state *tst;
 	struct npc_data* nd;
 
