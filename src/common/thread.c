@@ -263,7 +263,7 @@ int rathread_get_tid(void) {
 	#ifdef WIN32
 		return (int)GetCurrentThreadId();
 	#else
-		return (intptr_t)pthread_self();
+		return (int)pthread_self();
 	#endif
 #endif
 
