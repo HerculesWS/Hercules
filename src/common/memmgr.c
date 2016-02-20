@@ -97,10 +97,10 @@ struct malloc_interface *iMalloc;
 
 #ifndef USE_MEMMGR
 
-#ifdef __APPLE__
+#if defined __APPLE__
 #include <malloc/malloc.h>
 #define BUFFER_SIZE(ptr) malloc_size(ptr)
-#elif __FreeBSD__
+#elif defined __FreeBSD__
 #include <malloc_np.h>
 #define BUFFER_SIZE(ptr) malloc_usable_size(ptr)
 #elif defined __linux__ || defined __linux || defined CYGWIN
@@ -149,7 +149,7 @@ void* aRealloc_(void *p, size_t size, const char *file, int line, const char *fu
 
 void* aReallocz_(void *p, size_t size, const char *file, int line, const char *func)
 {
-	void *ret;
+	unsigned char *ret = NULL;
 	// ShowMessage("%s:%d: in func %s: aReallocz %p %ld\n",file,line,func,p,size);
 #ifdef USE_MEMMGR
 	ret = REALLOC(p, size, file, line, func);
@@ -159,11 +159,11 @@ void* aReallocz_(void *p, size_t size, const char *file, int line, const char *f
 		size_t oldSize = BUFFER_SIZE(p);
 		ret = REALLOC(p, size, file, line, func);
 		newSize = BUFFER_SIZE(ret);
-		if (ret && newSize > oldSize)
+		if (ret != NULL && newSize > oldSize)
 			memset(ret + oldSize, 0, newSize - oldSize);
 	} else {
 		ret = REALLOC(p, size, file, line, func);
-		if (ret)
+		if (ret != NULL)
 			memset(ret, 0, BUFFER_SIZE(ret));
 	}
 #endif
