@@ -751,7 +751,7 @@ struct script_interface {
 	void (*op_1) (struct script_state *st, int op);
 	void (*check_buildin_argtype) (struct script_state *st, int func);
 	void (*detach_state) (struct script_state *st, bool dequeue_event);
-	int (*db_free_code_sub) (DBKey key, DBData *data, va_list ap);
+	int (*db_free_code_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*add_autobonus) (const char *autobonus);
 	int (*menu_countoptions) (const char *str, int max_count, int *total);
 	int (*buildin_areawarp_sub) (struct block_list *bl, va_list ap);
@@ -794,11 +794,11 @@ struct script_interface {
 	void (*array_add_member) (struct script_array *sa, unsigned int idx);
 	unsigned int (*array_size) (struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref);
 	unsigned int (*array_highest_key) (struct script_state *st, struct map_session_data *sd, const char *name, struct reg_db *ref);
-	int (*array_free_db) (DBKey key, DBData *data, va_list ap);
+	int (*array_free_db) (union DBKey key, struct DBData *data, va_list ap);
 	void (*array_ensure_zero) (struct script_state *st, struct map_session_data *sd, int64 uid, struct reg_db *ref);
 	/* */
 	void (*reg_destroy_single) (struct map_session_data *sd, int64 reg, struct script_reg_state *data);
-	int (*reg_destroy) (DBKey key, DBData *data, va_list ap);
+	int (*reg_destroy) (union DBKey key, struct DBData *data, va_list ap);
 	/* */
 	void (*generic_ui_array_expand) (unsigned int plus);
 	unsigned int *(*array_cpy_list) (struct script_array *sa);
@@ -808,7 +808,7 @@ struct script_interface {
 	int (*string_dup) (char *str);
 	void (*load_translations) (void);
 	void (*load_translation) (const char *file, uint8 lang_id, uint32 *total);
-	int (*translation_db_destroyer) (DBKey key, DBData *data, va_list ap);
+	int (*translation_db_destroyer) (union DBKey key, struct DBData *data, va_list ap);
 	void (*clear_translations) (bool reload);
 	int (*parse_cleanup_timer) (int tid, int64 tick, int id, intptr_t data);
 	uint8 (*add_language) (const char *name);

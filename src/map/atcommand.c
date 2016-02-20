@@ -5282,8 +5282,8 @@ ACMD(skillid) {
 	int i, found = 0;
 	size_t skillen;
 	DBIterator* iter;
-	DBKey key;
-	DBData *data;
+	union DBKey key;
+	struct DBData *data;
 	char partials[MAX_SKILLID_PARTIAL_RESULTS][MAX_SKILLID_PARTIAL_RESULTS_LEN];
 
 	if (!*message) {
@@ -9057,8 +9057,8 @@ ACMD(channel) {
 	} else if (strcmpi(subcmd,"banlist") == 0) {
 		// sub1 = channel name; sub2 = unused; sub3 = unused
 		DBIterator *iter = NULL;
-		DBKey key;
-		DBData *data;
+		union DBKey key;
+		struct DBData *data;
 		bool isA = pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)?true:false;
 		if (sub1[0] != '#') {
 			clif->message(fd, msg_fd(fd,1405));// Channel name must start with a '#'
@@ -10222,7 +10222,8 @@ bool atcommand_hp_add(char *name, AtCommandFunc func) {
 /**
  * @see DBApply
  */
-int atcommand_db_clear_sub(DBKey key, DBData *data, va_list args) {
+int atcommand_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
+{
 	AtCommandInfo *cmd = DB->data2ptr(data);
 	aFree(cmd->at_groups);
 	aFree(cmd->char_groups);

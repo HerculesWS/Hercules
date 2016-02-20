@@ -612,8 +612,8 @@ struct itemdb_interface {
 	int (*group_item) (struct item_group *group);
 	int (*chain_item) (unsigned short chain_id, int *rate);
 	void (*package_item) (struct map_session_data *sd, struct item_package *package);
-	int (*searchname_sub) (DBKey key, DBData *data, va_list ap);
-	int (*searchname_array_sub) (DBKey key, DBData data, va_list ap);
+	int (*searchname_sub) (union DBKey key, struct DBData *data, va_list ap);
+	int (*searchname_array_sub) (union DBKey key, struct DBData data, va_list ap);
 	int (*searchrandomid) (struct item_group *group);
 	const char* (*typename) (int type);
 	void (*jobmask2mapid) (uint64 *bclass, uint64 jobmask);
@@ -647,7 +647,7 @@ struct itemdb_interface {
 	uint64 (*unique_id) (struct map_session_data *sd);
 	void (*read) (bool minimal);
 	void (*destroy_item_data) (struct item_data *self, int free_self);
-	int (*final_sub) (DBKey key, DBData *data, va_list ap);
+	int (*final_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*clear) (bool total);
 	struct item_combo * (*id2combo) (unsigned short id);
 	bool (*is_item_usable) (struct item_data *item);

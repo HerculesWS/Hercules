@@ -203,7 +203,7 @@ struct npc_interface {
 	int (*enable) (const char *name, int flag);
 	struct npc_data* (*name2id) (const char *name);
 	int (*event_dequeue) (struct map_session_data *sd);
-	DBData (*event_export_create) (DBKey key, va_list args);
+	struct DBData (*event_export_create) (union DBKey key, va_list args);
 	int (*event_export) (struct npc_data *nd, int i);
 	int (*event_sub) (struct map_session_data *sd, struct event_data *ev, const char *eventname);
 	void (*event_doall_sub) (void *key, void *data, va_list ap);
@@ -239,8 +239,8 @@ struct npc_interface {
 	int (*selllist_sub) (struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd);
 	int (*selllist) (struct map_session_data *sd, struct itemlist *item_list);
 	int (*remove_map) (struct npc_data *nd);
-	int (*unload_ev) (DBKey key, DBData *data, va_list ap);
-	int (*unload_ev_label) (DBKey key, DBData *data, va_list ap);
+	int (*unload_ev) (union DBKey key, struct DBData *data, va_list ap);
+	int (*unload_ev_label) (union DBKey key, struct DBData *data, va_list ap);
 	int (*unload_dup_sub) (struct npc_data *nd, va_list args);
 	void (*unload_duplicates) (struct npc_data *nd);
 	int (*unload) (struct npc_data *nd, bool single);
@@ -282,8 +282,8 @@ struct npc_interface {
 	int (*parsesrcfile) (const char *filepath, bool runOnInit);
 	int (*script_event) (struct map_session_data *sd, enum npce_event type);
 	void (*read_event_script) (void);
-	int (*path_db_clear_sub) (DBKey key, DBData *data, va_list args);
-	int (*ev_label_db_clear_sub) (DBKey key, DBData *data, va_list args);
+	int (*path_db_clear_sub) (union DBKey key, struct DBData *data, va_list args);
+	int (*ev_label_db_clear_sub) (union DBKey key, struct DBData *data, va_list args);
 	int (*reload) (void);
 	bool (*unloadfile) (const char *filepath);
 	void (*do_clear_npc) (void);

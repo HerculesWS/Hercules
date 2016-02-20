@@ -58,7 +58,7 @@ struct inter_guild_interface {
 	int (*CharOnline) (int char_id, int guild_id);
 	int (*CharOffline) (int char_id, int guild_id);
 	int (*sql_init) (void);
-	int (*db_final) (DBKey key, DBData *data, va_list ap);
+	int (*db_final) (union DBKey key, struct DBData *data, va_list ap);
 	void (*sql_final) (void);
 	int (*search_guildname) (const char *str);
 	bool (*check_empty) (struct guild *g);

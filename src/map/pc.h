@@ -33,8 +33,9 @@
 #include "map/status.h" // enum sc_type, OPTION_*
 #include "map/unit.h" // struct unit_data, struct view_data
 #include "map/vending.h" // struct s_vending
-#include "common/hercules.h"
+#include "common/db.h"
 #include "common/ers.h" // struct eri
+#include "common/hercules.h"
 #include "common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS
 
 /**
@@ -1084,7 +1085,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*autotrade_start) (struct map_session_data *sd);
 	void (*autotrade_prepare) (struct map_session_data *sd);
 	void (*autotrade_populate) (struct map_session_data *sd);
-	int (*autotrade_final) (DBKey key, DBData *data, va_list ap);
+	int (*autotrade_final) (union DBKey key, struct DBData *data, va_list ap);
 
 	int (*check_job_name) (const char *name);
 	void (*update_idle_time) (struct map_session_data* sd, enum e_battle_config_idletime type);

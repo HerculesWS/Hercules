@@ -3052,7 +3052,8 @@ unsigned int script_array_highest_key(struct script_state *st, struct map_sessio
 	}
 	return 0;
 }
-int script_free_array_db(DBKey key, DBData *data, va_list ap) {
+int script_free_array_db(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct script_array *sa = DB->data2ptr(data);
 	aFree(sa->members);
 	ers_free(script->array_ers, sa);
@@ -4595,7 +4596,7 @@ int script_config_read(char *cfgName) {
 /**
  * @see DBApply
  */
-int db_script_free_code_sub(DBKey key, DBData *data, va_list ap)
+int db_script_free_code_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct script_code *code = DB->data2ptr(data);
 	if (code)
@@ -4671,7 +4672,8 @@ void script_setarray_pc(struct map_session_data* sd, const char* varname, uint32
 /**
  * Clears persistent variables from memory
  **/
-int script_reg_destroy(DBKey key, DBData *data, va_list ap) {
+int script_reg_destroy(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct script_reg_state *src;
 
 	if( data->type != DB_DATA_PTR )/* got no need for those! */
@@ -5130,7 +5132,8 @@ void script_clear_translations(bool reload) {
 /**
  *
  **/
-int script_translation_db_destroyer(DBKey key, DBData *data, va_list ap) {
+int script_translation_db_destroyer(union DBKey key, struct DBData *data, va_list ap)
+{
 	DBMap *string_db = DB->data2ptr(data);
 
 	if( db_size(string_db) ) {

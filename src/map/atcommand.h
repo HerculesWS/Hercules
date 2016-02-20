@@ -135,7 +135,7 @@ struct atcommand_interface {
 	/* */
 	void (*commands_sub) (struct map_session_data* sd, const int fd, AtCommandType type);
 	void (*cmd_db_clear) (void);
-	int (*cmd_db_clear_sub) (DBKey key, DBData *data, va_list args);
+	int (*cmd_db_clear_sub) (union DBKey key, struct DBData *data, va_list args);
 	void (*doload) (void);
 	void (*base_commands) (void);
 	bool (*add) (char *name, AtCommandFunc func, bool replace);

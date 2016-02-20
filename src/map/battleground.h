@@ -131,10 +131,10 @@ struct battleground_interface {
 	int (*create) (unsigned short map_index, short rx, short ry, const char *ev, const char *dev);
 	int (*team_get_id) (struct block_list *bl);
 	bool (*send_message) (struct map_session_data *sd, const char *mes, int len);
-	int (*send_xy_timer_sub) (DBKey key, DBData *data, va_list ap);
+	int (*send_xy_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*afk_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*team_db_final) (DBKey key, DBData *data, va_list ap);
+	int (*team_db_final) (union DBKey key, struct DBData *data, va_list ap);
 	/* */
 	enum bg_queue_types (*str2teamtype) (const char *str);
 	/* */

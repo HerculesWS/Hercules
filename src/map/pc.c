@@ -8991,7 +8991,7 @@ char* pc_readregstr(struct map_session_data* sd, int64 reg) {
 void pc_setregstr(struct map_session_data* sd, int64 reg, const char* str) {
 	struct script_reg_str *p = NULL;
 	unsigned int index = script_getvaridx(reg);
-	DBData prev;
+	struct DBData prev;
 
 	if( str[0] ) {
 		p = ers_alloc(pc->str_reg_ers, struct script_reg_str);
@@ -9114,7 +9114,7 @@ int pc_setregistry(struct map_session_data *sd, int64 reg, int val) {
 		if( !pc->reg_load )
 			p->flag.update = 1;/* either way, it will require either delete or replace */
 	} else if( val ) {
-		DBData prev;
+		struct DBData prev;
 
 		if( index )
 			script->array_update(&sd->regs, reg, false);
@@ -9167,7 +9167,7 @@ int pc_setregistry_str(struct map_session_data *sd, int64 reg, const char *val) 
 		if( !pc->reg_load )
 			p->flag.update = 1;/* either way, it will require either delete or replace */
 	} else if( val[0] ) {
-		DBData prev;
+		struct DBData prev;
 
 		if( index )
 			script->array_update(&sd->regs, reg, false);
@@ -11475,7 +11475,8 @@ void pc_autotrade_populate(struct map_session_data *sd) {
 /**
  * @see DBApply
  */
-int pc_autotrade_final(DBKey key, DBData *data, va_list ap) {
+int pc_autotrade_final(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct autotrade_vending* at_v = DB->data2ptr(data);
 	HPM->data_store_destroy(&at_v->hdata);
 	return 0;

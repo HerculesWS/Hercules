@@ -122,7 +122,8 @@ struct map_session_data *party_sd_check(int party_id, int account_id, int char_i
 
 	return sd;
 }
-int party_db_final(DBKey key, DBData *data, va_list ap) {
+int party_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct party_data *p;
 
 	if ((p = DB->data2ptr(data))) {

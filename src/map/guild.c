@@ -282,7 +282,8 @@ void guild_makemember(struct guild_member *m,struct map_session_data *sd)
  * Server cache to be flushed to inter the Guild EXP
  * @see DBApply
  */
-int guild_payexp_timer_sub(DBKey key, DBData *data, va_list ap) {
+int guild_payexp_timer_sub(union DBKey key, struct DBData *data, va_list ap)
+{
 	int i;
 	struct guild_expcache *c;
 	struct guild *g;
@@ -318,7 +319,7 @@ int guild_payexp_timer(int tid, int64 tick, int id, intptr_t data) {
  * Taken from party_send_xy_timer_sub. [Skotlex]
  * @see DBApply
  */
-int guild_send_xy_timer_sub(DBKey key, DBData *data, va_list ap)
+int guild_send_xy_timer_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct guild *g = DB->data2ptr(data);
 	int i;
@@ -423,7 +424,7 @@ int guild_npc_request_info(int guild_id,const char *event)
 	if( event && *event )
 	{
 		struct eventlist *ev;
-		DBData prev;
+		struct DBData prev;
 		ev=(struct eventlist *)aCalloc(sizeof(struct eventlist),1);
 		memcpy(ev->name,event,strlen(event));
 		//The one in the db (if present) becomes the next event from this.
@@ -481,7 +482,7 @@ int guild_recv_info(const struct guild *sg)
 {
 	struct guild *g,before;
 	int i,bm,m;
-	DBData data;
+	struct DBData data;
 	struct map_session_data *sd;
 	bool guild_new = false;
 	struct channel_data *aChSysSave = NULL;
@@ -1262,7 +1263,7 @@ int guild_emblem_changed(int len,int guild_id,int emblem_id,const char *data)
 /**
  * @see DBCreateData
  */
-DBData create_expcache(DBKey key, va_list args)
+struct DBData create_expcache(union DBKey key, va_list args)
 {
 	struct guild_expcache *c;
 	struct map_session_data *sd = va_arg(args, struct map_session_data*);
@@ -1720,7 +1721,7 @@ int guild_allianceack(int guild_id1,int guild_id2,int account_id1,int account_id
  * Notification for the guild disbanded
  * @see DBApply
  */
-int guild_broken_sub(DBKey key, DBData *data, va_list ap)
+int guild_broken_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct guild *g = DB->data2ptr(data);
 	int guild_id=va_arg(ap,int);
@@ -1746,7 +1747,7 @@ int guild_broken_sub(DBKey key, DBData *data, va_list ap)
  * Invoked on Castles when a guild is broken. [Skotlex]
  * @see DBApply
  */
-int castle_guild_broken_sub(DBKey key, DBData *data, va_list ap)
+int castle_guild_broken_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct guild_castle *gc = DB->data2ptr(data);
 	int guild_id = va_arg(ap, int);
@@ -2222,7 +2223,8 @@ void guild_flag_remove(struct npc_data *nd) {
 /**
  * @see DBApply
  */
-int eventlist_db_final(DBKey key, DBData *data, va_list ap) {
+int eventlist_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct eventlist *next = NULL;
 	struct eventlist *current = DB->data2ptr(data);
 	while (current != NULL) {
@@ -2236,7 +2238,8 @@ int eventlist_db_final(DBKey key, DBData *data, va_list ap) {
 /**
  * @see DBApply
  */
-int guild_expcache_db_final(DBKey key, DBData *data, va_list ap) {
+int guild_expcache_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
 	ers_free(guild->expcache_ers, DB->data2ptr(data));
 	return 0;
 }
@@ -2244,7 +2247,8 @@ int guild_expcache_db_final(DBKey key, DBData *data, va_list ap) {
 /**
  * @see DBApply
  */
-int guild_castle_db_final(DBKey key, DBData *data, va_list ap) {
+int guild_castle_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct guild_castle* gc = DB->data2ptr(data);
 	if( gc->temp_guardians )
 		aFree(gc->temp_guardians);

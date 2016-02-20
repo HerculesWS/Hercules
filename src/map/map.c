@@ -1658,7 +1658,7 @@ int map_addflooritem(const struct block_list *bl, struct item *item_data, int am
 /**
  * @see DBCreateData
  */
-DBData create_charid2nick(DBKey key, va_list args)
+struct DBData create_charid2nick(union DBKey key, va_list args)
 {
 	struct charid2nick *p;
 	CREATE(p, struct charid2nick, 1);
@@ -1695,7 +1695,7 @@ void map_delnickdb(int charid, const char* name)
 {
 	struct charid2nick* p;
 	struct charid_request* req;
-	DBData data;
+	struct DBData data;
 
 	if (!map->nick_db->remove(map->nick_db, DB->i2key(charid), &data) || (p = DB->data2ptr(&data)) == NULL)
 		return;
@@ -3069,7 +3069,7 @@ void map_iwall_remove(const char *wall_name)
 /**
  * @see DBCreateData
  */
-DBData create_map_data_other_server(DBKey key, va_list args)
+struct DBData create_map_data_other_server(union DBKey key, va_list args)
 {
 	struct map_data_other_server *mdos;
 	unsigned short map_index = (unsigned short)key.ui;
@@ -3104,7 +3104,7 @@ int map_setipport(unsigned short map_index, uint32 ip, uint16 port)
  * Delete all the other maps server management
  * @see DBApply
  */
-int map_eraseallipport_sub(DBKey key, DBData *data, va_list va)
+int map_eraseallipport_sub(union DBKey key, struct DBData *data, va_list va)
 {
 	struct map_data_other_server *mdos = DB->data2ptr(data);
 	if(mdos->cell == NULL) {
@@ -5446,7 +5446,8 @@ bool map_remove_questinfo(int m, struct npc_data *nd) {
 /**
  * @see DBApply
  */
-int map_db_final(DBKey key, DBData *data, va_list ap) {
+int map_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct map_data_other_server *mdos = DB->data2ptr(data);
 
 	if(mdos && iMalloc->verify_ptr(mdos) && mdos->cell == NULL)
@@ -5458,7 +5459,7 @@ int map_db_final(DBKey key, DBData *data, va_list ap) {
 /**
  * @see DBApply
  */
-int nick_db_final(DBKey key, DBData *data, va_list args)
+int nick_db_final(union DBKey key, struct DBData *data, va_list args)
 {
 	struct charid2nick* p = DB->data2ptr(data);
 	struct charid_request* req;
@@ -5505,7 +5506,8 @@ int cleanup_sub(struct block_list *bl, va_list ap) {
 /**
  * @see DBApply
  */
-int cleanup_db_sub(DBKey key, DBData *data, va_list va) {
+int cleanup_db_sub(union DBKey key, struct DBData *data, va_list va)
+{
 	return map->cleanup_sub(DB->data2ptr(data), va);
 }
 

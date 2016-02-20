@@ -171,7 +171,7 @@ static DBMap* auth_db; // int account_id -> struct char_auth_node*
 /**
  * @see DBCreateData
  */
-static DBData char_create_online_char_data(DBKey key, va_list args)
+static struct DBData char_create_online_char_data(union DBKey key, va_list args)
 {
 	struct online_char_data* character;
 	CREATE(character, struct online_char_data, 1);
@@ -313,7 +313,7 @@ void char_set_char_offline(int char_id, int account_id)
 /**
  * @see DBApply
  */
-static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
+static int char_db_setoffline(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
@@ -333,7 +333,7 @@ static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
 /**
  * @see DBApply
  */
-static int char_db_kickoffline(DBKey key, DBData *data, va_list ap)
+static int char_db_kickoffline(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
@@ -388,7 +388,7 @@ void char_set_all_offline_sql(void)
 /**
  * @see DBCreateData
  */
-static DBData char_create_charstatus(DBKey key, va_list args)
+static struct DBData char_create_charstatus(union DBKey key, va_list args)
 {
 	struct mmo_charstatus *cp;
 	cp = (struct mmo_charstatus *) aCalloc(1,sizeof(struct mmo_charstatus));
@@ -5249,7 +5249,7 @@ int char_broadcast_user_count(int tid, int64 tick, int id, intptr_t data) {
  * Load this character's account id into the 'online accounts' packet
  * @see DBApply
  */
-static int char_send_accounts_tologin_sub(DBKey key, DBData *data, va_list ap)
+static int char_send_accounts_tologin_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_char_data* character = DB->data2ptr(data);
 	int* i = va_arg(ap, int*);
@@ -5318,7 +5318,7 @@ static int char_waiting_disconnect(int tid, int64 tick, int id, intptr_t data) {
 /**
  * @see DBApply
  */
-static int char_online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
+static int char_online_data_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_char_data *character= DB->data2ptr(data);
 	nullpo_ret(character);

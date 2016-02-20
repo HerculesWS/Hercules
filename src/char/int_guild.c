@@ -60,7 +60,7 @@ int inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data) {
 	static int last_id = 0; //To know in which guild we were.
 	int state = 0; //0: Have not reached last guild. 1: Reached last guild, ready for save. 2: Some guild saved, don't do further saving.
 	DBIterator *iter = db_iterator(inter_guild->guild_db);
-	DBKey key;
+	union DBKey key;
 	struct guild* g;
 
 	if( last_id == 0 ) //Save the first guild in the list.
@@ -749,7 +749,7 @@ int inter_guild_sql_init(void)
 /**
  * @see DBApply
  */
-int inter_guild_db_final(DBKey key, DBData *data, va_list ap)
+int inter_guild_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct guild *g = DB->data2ptr(data);
 	nullpo_ret(g);

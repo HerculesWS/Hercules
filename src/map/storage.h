@@ -52,7 +52,7 @@ struct storage_interface {
 	void (*pc_quit) (struct map_session_data *sd, int flag);
 	int (*comp_item) (const void *i1_, const void *i2_);
 	void (*sortitem) (struct item* items, unsigned int size);
-	int (*reconnect_sub) (DBKey key, DBData *data, va_list ap);
+	int (*reconnect_sub) (union DBKey key, struct DBData *data, va_list ap);
 };
 
 struct guild_storage_interface {
@@ -75,7 +75,7 @@ struct guild_storage_interface {
 	int (*pc_quit) (struct map_session_data *sd,int flag);
 	int (*save) (int account_id, int guild_id, int flag);
 	int (*saved) (int guild_id); //Ack from char server that guild store was saved.
-	DBData (*create) (DBKey key, va_list args);
+	struct DBData (*create) (union DBKey key, va_list args);
 };
 
 #ifdef HERCULES_CORE

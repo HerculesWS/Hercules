@@ -367,7 +367,7 @@ int npc_event_dequeue(struct map_session_data* sd)
 /**
  * @see DBCreateData
  */
-DBData npc_event_export_create(DBKey key, va_list args)
+struct DBData npc_event_export_create(union DBKey key, va_list args)
 {
 	struct linkdb_node** head_ptr;
 	CREATE(head_ptr, struct linkdb_node*, 1);
@@ -2224,7 +2224,7 @@ int npc_remove_map(struct npc_data* nd) {
 /**
  * @see DBApply
  */
-int npc_unload_ev(DBKey key, DBData *data, va_list ap)
+int npc_unload_ev(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct event_data* ev = DB->data2ptr(data);
 	char* npcname = va_arg(ap, char *);
@@ -2239,7 +2239,7 @@ int npc_unload_ev(DBKey key, DBData *data, va_list ap)
 /**
  * @see DBApply
  */
-int npc_unload_ev_label(DBKey key, DBData *data, va_list ap)
+int npc_unload_ev_label(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct linkdb_node **label_linkdb = DB->data2ptr(data);
 	struct npc_data* nd = va_arg(ap, struct npc_data *);
@@ -3626,7 +3626,7 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
 const char *npc_parse_function(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
 {
 	DBMap* func_db;
-	DBData old_data;
+	struct DBData old_data;
 	struct script_code *scriptroot;
 	const char* end;
 	const char* script_start;
@@ -4572,8 +4572,8 @@ void npc_read_event_script(void)
 	for (i = 0; i < NPCE_MAX; i++)
 	{
 		DBIterator* iter;
-		DBKey key;
-		DBData *data;
+		union DBKey key;
+		struct DBData *data;
 
 		char name[64]="::";
 		safestrncpy(name+2,config[i].event_name,62);
@@ -4616,7 +4616,7 @@ void npc_read_event_script(void)
 /**
  * @see DBApply
  */
-int npc_path_db_clear_sub(DBKey key, DBData *data, va_list args)
+int npc_path_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
 {
 	struct npc_path_data *npd = DB->data2ptr(data);
 	if (npd->path)
@@ -4627,7 +4627,7 @@ int npc_path_db_clear_sub(DBKey key, DBData *data, va_list args)
 /**
  * @see DBApply
  */
-int npc_ev_label_db_clear_sub(DBKey key, DBData *data, va_list args)
+int npc_ev_label_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
 {
 	struct linkdb_node **label_linkdb = DB->data2ptr(data);
 	linkdb_final(label_linkdb); // linked data (struct event_data*) is freed when clearing ev_db

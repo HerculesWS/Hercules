@@ -63,7 +63,7 @@ AccountDB* accounts = NULL;
 /**
  * @see DBCreateData
  */
-static DBData login_create_online_user(DBKey key, va_list args)
+static struct DBData login_create_online_user(union DBKey key, va_list args)
 {
 	struct online_login_data* p;
 	CREATE(p, struct online_login_data, 1);
@@ -112,7 +112,7 @@ static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t 
 /**
  * @see DBApply
  */
-static int login_online_db_setoffline(DBKey key, DBData *data, va_list ap)
+static int login_online_db_setoffline(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_login_data* p = DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
@@ -134,7 +134,7 @@ static int login_online_db_setoffline(DBKey key, DBData *data, va_list ap)
 /**
  * @see DBApply
  */
-static int login_online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
+static int login_online_data_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_login_data *character= DB->data2ptr(data);
 	nullpo_ret(character);

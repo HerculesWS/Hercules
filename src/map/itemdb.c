@@ -49,7 +49,7 @@ struct itemdb_interface *itemdb;
  * name = item alias, so we should find items aliases first. if not found then look for "jname" (full name)
  * @see DBApply
  */
-int itemdb_searchname_sub(DBKey key, DBData *data, va_list ap)
+int itemdb_searchname_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct item_data *item = DB->data2ptr(data), **dst, **dst2;
 	char *str;
@@ -112,7 +112,7 @@ struct item_data* itemdb_name2id(const char *str) {
 /**
  * @see DBMatcher
  */
-int itemdb_searchname_array_sub(DBKey key, DBData data, va_list ap)
+int itemdb_searchname_array_sub(union DBKey key, struct DBData data, va_list ap)
 {
 	struct item_data *item = DB->data2ptr(&data);
 	char *str;
@@ -170,10 +170,10 @@ int itemdb_searchname_array(struct item_data** data, int size, const char *str, 
 	// search in the db
 	if( count < size )
 	{
-		DBData *db_data[MAX_SEARCH];
+		struct DBData *db_data[MAX_SEARCH];
 		int db_count = 0;
 		size -= count;
-		db_count = itemdb->other->getall(itemdb->other, (DBData**)&db_data, size, itemdb->searchname_array_sub, str);
+		db_count = itemdb->other->getall(itemdb->other, (struct DBData**)&db_data, size, itemdb->searchname_array_sub, str);
 		for (i = 0; i < db_count; i++)
 			data[count++] = DB->data2ptr(db_data[i]);
 		count += db_count;
@@ -2094,7 +2094,7 @@ uint64 itemdb_unique_id(struct map_session_data *sd) {
  */
 void itemdb_read(bool minimal) {
 	int i;
-	DBData prev;
+	struct DBData prev;
 
 	const char *filename[] = {
 		DBPATH"item_db.conf",
@@ -2171,7 +2171,7 @@ void destroy_item_data(struct item_data* self, int free_self)
 /**
  * @see DBApply
  */
-int itemdb_final_sub(DBKey key, DBData *data, va_list ap)
+int itemdb_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct item_data *id = DB->data2ptr(data);
 

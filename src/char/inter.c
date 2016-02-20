@@ -1038,7 +1038,7 @@ int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason)
  * Existence check of WISP data
  * @see DBApply
  */
-int inter_check_ttl_wisdata_sub(DBKey key, DBData *data, va_list ap)
+int inter_check_ttl_wisdata_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	int64 tick;
 	struct WisData *wd = DB->data2ptr(data);

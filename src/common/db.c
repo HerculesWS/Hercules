@@ -161,8 +161,8 @@ typedef struct dbn {
 	struct dbn *left;
 	struct dbn *right;
 	// Node data
-	DBKey key;
-	DBData data;
+	union DBKey key;
+	struct DBData data;
 	// Other
 	enum DBNodeColor color;
 	unsigned deleted : 1;
@@ -447,7 +447,7 @@ static void db_rotate_right(DBNode *node, DBNode **root)
  * @private
  * @see #db_rotate_left(DBNode *,DBNode **)
  * @see #db_rotate_right(DBNode *,DBNode **)
- * @see #db_obj_put(DBMap*,DBKey,DBData)
+ * @see #db_obj_put()
  */
 static void db_rebalance(DBNode *node, DBNode **root)
 {
@@ -648,11 +648,11 @@ static void db_rebalance_erase(DBNode *node, DBNode **root)
  * @param key Key being tested
  * @return not 0 if considered NULL, 0 otherwise
  * @private
- * @see #db_obj_get(DBMap*,DBKey)
- * @see #db_obj_put(DBMap*,DBKey,DBData)
- * @see #db_obj_remove(DBMap*,DBKey)
+ * @see #db_obj_get()
+ * @see #db_obj_put()
+ * @see #db_obj_remove()
  */
-static int db_is_key_null(enum DBType type, DBKey key)
+static int db_is_key_null(enum DBType type, union DBKey key)
 {
 	DB_COUNTSTAT(db_is_key_null);
 	switch (type) {
@@ -673,10 +673,10 @@ static int db_is_key_null(enum DBType type, DBKey key)
  * @private
  * @see #db_free_add(DBMap_impl*,DBNode *,DBNode **)
  * @see #db_free_remove(DBMap_impl*,DBNode *)
- * @see #db_obj_put(DBMap*,DBKey,void *)
- * @see #db_dup_key_free(DBMap_impl*,DBKey)
+ * @see #db_obj_put()
+ * @see #db_dup_key_free()
  */
-static DBKey db_dup_key(DBMap_impl* db, DBKey key)
+static union DBKey db_dup_key(DBMap_impl* db, union DBKey key)
 {
 	char *str;
 	size_t len;
@@ -702,9 +702,9 @@ static DBKey db_dup_key(DBMap_impl* db, DBKey key)
  * @param db Database the key is being used in
  * @param key Key to be freed
  * @private
- * @see #db_dup_key(DBMap_impl*,DBKey)
+ * @see #db_dup_key()
  */
-static void db_dup_key_free(DBMap_impl* db, DBKey key)
+static void db_dup_key_free(DBMap_impl* db, union DBKey key)
 {
 	DB_COUNTSTAT(db_dup_key_free);
 	switch (db->type) {
@@ -730,12 +730,12 @@ static void db_dup_key_free(DBMap_impl* db, DBKey key)
  * @see DBMap_impl#free_list
  * @see DBMap_impl#free_count
  * @see DBMap_impl#free_max
- * @see #db_obj_remove(DBMap*,DBKey)
+ * @see #db_obj_remove()
  * @see #db_free_remove(DBMap_impl*,DBNode *)
  */
 static void db_free_add(DBMap_impl* db, DBNode *node, DBNode **root)
 {
-	DBKey old_key;
+	union DBKey old_key;
 
 	DB_COUNTSTAT(db_free_add);
 	if (db->free_lock == (unsigned int)~0) {
@@ -779,7 +779,7 @@ static void db_free_add(DBMap_impl* db, DBNode *node, DBNode **root)
  * @see #struct db_free
  * @see DBMap_impl#free_list
  * @see DBMap_impl#free_count
- * @see #db_obj_put(DBMap*,DBKey,DBData)
+ * @see #db_obj_put()
  * @see #db_free_add(DBMap_impl*,DBNode**,DBNode*)
  */
 static void db_free_remove(DBMap_impl* db, DBNode *node)
@@ -893,7 +893,7 @@ static void db_free_unlock(DBMap_impl* db)
  * @see #DBComparator
  * @see #db_default_cmp()
  */
-static int db_int_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
+static int db_int_cmp(union DBKey key1, union DBKey key2, unsigned short maxlen)
 {
 	(void)maxlen;//not used
 	DB_COUNTSTAT(db_int_cmp);
@@ -915,7 +915,7 @@ static int db_int_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
  * @see #DBComparator
  * @see #db_default_cmp()
  */
-static int db_uint_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
+static int db_uint_cmp(union DBKey key1, union DBKey key2, unsigned short maxlen)
 {
 	(void)maxlen;//not used
 	DB_COUNTSTAT(db_uint_cmp);
@@ -936,7 +936,7 @@ static int db_uint_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
  * @see #DBComparator
  * @see #db_default_cmp()
  */
-static int db_string_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
+static int db_string_cmp(union DBKey key1, union DBKey key2, unsigned short maxlen)
 {
 	DB_COUNTSTAT(db_string_cmp);
 	return strncmp((const char *)key1.str, (const char *)key2.str, maxlen);
@@ -954,7 +954,7 @@ static int db_string_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
  * @see #DBComparator
  * @see #db_default_cmp()
  */
-static int db_istring_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
+static int db_istring_cmp(union DBKey key1, union DBKey key2, unsigned short maxlen)
 {
 	DB_COUNTSTAT(db_istring_cmp);
 	return strncasecmp((const char *)key1.str, (const char *)key2.str, maxlen);
@@ -973,7 +973,7 @@ static int db_istring_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
  * @see #DBComparator
  * @see #db_default_cmp()
  */
-static int db_int64_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
+static int db_int64_cmp(union DBKey key1, union DBKey key2, unsigned short maxlen)
 {
 	(void)maxlen;//not used
 	DB_COUNTSTAT(db_int64_cmp);
@@ -995,7 +995,7 @@ static int db_int64_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
  * @see #DBComparator
  * @see #db_default_cmp()
  */
-static int db_uint64_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
+static int db_uint64_cmp(union DBKey key1, union DBKey key2, unsigned short maxlen)
 {
 	(void)maxlen;//not used
 	DB_COUNTSTAT(db_uint64_cmp);
@@ -1016,7 +1016,7 @@ static int db_uint64_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
  * @see #DBHasher
  * @see #db_default_hash()
  */
-static uint64 db_int_hash(DBKey key, unsigned short maxlen)
+static uint64 db_int_hash(union DBKey key, unsigned short maxlen)
 {
 	(void)maxlen;//not used
 	DB_COUNTSTAT(db_int_hash);
@@ -1034,7 +1034,7 @@ static uint64 db_int_hash(DBKey key, unsigned short maxlen)
  * @see #DBHasher
  * @see #db_default_hash()
  */
-static uint64 db_uint_hash(DBKey key, unsigned short maxlen)
+static uint64 db_uint_hash(union DBKey key, unsigned short maxlen)
 {
 	(void)maxlen;//not used
 	DB_COUNTSTAT(db_uint_hash);
@@ -1050,7 +1050,7 @@ static uint64 db_uint_hash(DBKey key, unsigned short maxlen)
  * @see #DBHasher
  * @see #db_default_hash()
  */
-static uint64 db_string_hash(DBKey key, unsigned short maxlen)
+static uint64 db_string_hash(union DBKey key, unsigned short maxlen)
 {
 	const char *k = key.str;
 	unsigned int hash = 0;
@@ -1076,7 +1076,7 @@ static uint64 db_string_hash(DBKey key, unsigned short maxlen)
  * @see enum DBType#DB_ISTRING
  * @see #db_default_hash()
  */
-static uint64 db_istring_hash(DBKey key, unsigned short maxlen)
+static uint64 db_istring_hash(union DBKey key, unsigned short maxlen)
 {
 	const char *k = key.str;
 	unsigned int hash = 0;
@@ -1105,7 +1105,7 @@ static uint64 db_istring_hash(DBKey key, unsigned short maxlen)
  * @see #DBHasher
  * @see #db_default_hash()
  */
-static uint64 db_int64_hash(DBKey key, unsigned short maxlen)
+static uint64 db_int64_hash(union DBKey key, unsigned short maxlen)
 {
 	(void)maxlen;//not used
 	DB_COUNTSTAT(db_int64_hash);
@@ -1123,7 +1123,7 @@ static uint64 db_int64_hash(DBKey key, unsigned short maxlen)
  * @see #DBHasher
  * @see #db_default_hash()
  */
-static uint64 db_uint64_hash(DBKey key, unsigned short maxlen)
+static uint64 db_uint64_hash(union DBKey key, unsigned short maxlen)
 {
 	(void)maxlen;//not used
 	DB_COUNTSTAT(db_uint64_hash);
@@ -1139,7 +1139,7 @@ static uint64 db_uint64_hash(DBKey key, unsigned short maxlen)
  * @see #DBReleaser
  * @see #db_default_releaser()
  */
-static void db_release_nothing(DBKey key, DBData data, enum DBReleaseOption which)
+static void db_release_nothing(union DBKey key, struct DBData data, enum DBReleaseOption which)
 {
 	(void)key;(void)data;(void)which;//not used
 	DB_COUNTSTAT(db_release_nothing);
@@ -1154,7 +1154,7 @@ static void db_release_nothing(DBKey key, DBData data, enum DBReleaseOption whic
  * @see #DBReleaser
  * @see #db_default_release()
  */
-static void db_release_key(DBKey key, DBData data, enum DBReleaseOption which)
+static void db_release_key(union DBKey key, struct DBData data, enum DBReleaseOption which)
 {
 	(void)data;//not used
 	DB_COUNTSTAT(db_release_key);
@@ -1167,12 +1167,12 @@ static void db_release_key(DBKey key, DBData data, enum DBReleaseOption which)
  * @param data Data of the database entry
  * @param which What is being requested to be released
  * @protected
- * @see #DBData
+ * @see struct DBData
  * @see enum DBReleaseOption
  * @see #DBReleaser
  * @see #db_default_release()
  */
-static void db_release_data(DBKey key, DBData data, enum DBReleaseOption which)
+static void db_release_data(union DBKey key, struct DBData data, enum DBReleaseOption which)
 {
 	(void)key;//not used
 	DB_COUNTSTAT(db_release_data);
@@ -1188,13 +1188,13 @@ static void db_release_data(DBKey key, DBData data, enum DBReleaseOption which)
  * @param data Data of the database entry
  * @param which What is being requested to be released
  * @protected
- * @see #DBKey
- * @see #DBData
+ * @see union DBKey
+ * @see struct DBData
  * @see enum DBReleaseOption
  * @see #DBReleaser
  * @see #db_default_release()
  */
-static void db_release_both(DBKey key, DBData data, enum DBReleaseOption which)
+static void db_release_both(union DBKey key, struct DBData data, enum DBReleaseOption which)
 {
 	DB_COUNTSTAT(db_release_both);
 	if (which&DB_RELEASE_KEY) aFree((char*)key.str); // needs to be a pointer
@@ -1247,7 +1247,7 @@ static void db_release_both(DBKey key, DBData data, enum DBReleaseOption which)
  * @protected
  * @see DBIterator#first
  */
-DBData* dbit_obj_first(DBIterator* self, DBKey* out_key)
+struct DBData *dbit_obj_first(DBIterator* self, union DBKey *out_key)
 {
 	DBIterator_impl* it = (DBIterator_impl*)self;
 
@@ -1269,7 +1269,7 @@ DBData* dbit_obj_first(DBIterator* self, DBKey* out_key)
  * @protected
  * @see DBIterator#last
  */
-DBData* dbit_obj_last(DBIterator* self, DBKey* out_key)
+struct DBData *dbit_obj_last(DBIterator* self, union DBKey *out_key)
 {
 	DBIterator_impl* it = (DBIterator_impl*)self;
 
@@ -1291,7 +1291,7 @@ DBData* dbit_obj_last(DBIterator* self, DBKey* out_key)
  * @protected
  * @see DBIterator#next
  */
-DBData* dbit_obj_next(DBIterator* self, DBKey* out_key)
+struct DBData *dbit_obj_next(DBIterator* self, union DBKey *out_key)
 {
 	DBIterator_impl* it = (DBIterator_impl*)self;
 	DBNode *node;
@@ -1348,7 +1348,7 @@ DBData* dbit_obj_next(DBIterator* self, DBKey* out_key)
 			{// found next entry
 				it->node = node;
 				if( out_key )
-					memcpy(out_key, &node->key, sizeof(DBKey));
+					memcpy(out_key, &node->key, sizeof(union DBKey));
 				return &node->data;
 			}
 		}
@@ -1367,7 +1367,7 @@ DBData* dbit_obj_next(DBIterator* self, DBKey* out_key)
  * @protected
  * @see DBIterator#prev
  */
-DBData* dbit_obj_prev(DBIterator* self, DBKey* out_key)
+struct DBData *dbit_obj_prev(DBIterator* self, union DBKey *out_key)
 {
 	DBIterator_impl* it = (DBIterator_impl*)self;
 	DBNode *node;
@@ -1424,7 +1424,7 @@ DBData* dbit_obj_prev(DBIterator* self, DBKey* out_key)
 			{// found previous entry
 				it->node = node;
 				if( out_key )
-					memcpy(out_key, &node->key, sizeof(DBKey));
+					memcpy(out_key, &node->key, sizeof(union DBKey));
 				return &node->data;
 			}
 		}
@@ -1462,7 +1462,7 @@ bool dbit_obj_exists(DBIterator* self)
  * @see DBMap#remove
  * @see DBIterator#remove
  */
-int dbit_obj_remove(DBIterator* self, DBData *out_data)
+int dbit_obj_remove(DBIterator* self, struct DBData *out_data)
 {
 	DBIterator_impl* it = (DBIterator_impl*)self;
 	DBNode *node;
@@ -1477,7 +1477,7 @@ int dbit_obj_remove(DBIterator* self, DBData *out_data)
 			db->cache = NULL;
 		db->release(node->key, node->data, DB_RELEASE_DATA);
 		if( out_data )
-			memcpy(out_data, &node->data, sizeof(DBData));
+			memcpy(out_data, &node->data, sizeof(struct DBData));
 		retval = 1;
 		db_free_add(db, node, &db->ht[it->ht_index]);
 	}
@@ -1541,7 +1541,7 @@ static DBIterator* db_obj_iterator(DBMap* self)
  * @protected
  * @see DBMap#exists
  */
-static bool db_obj_exists(DBMap* self, DBKey key)
+static bool db_obj_exists(DBMap* self, union DBKey key)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
 	DBNode *node;
@@ -1591,11 +1591,11 @@ static bool db_obj_exists(DBMap* self, DBKey key)
  * @protected
  * @see DBMap#get
  */
-static DBData* db_obj_get(DBMap* self, DBKey key)
+static struct DBData *db_obj_get(DBMap* self, union DBKey key)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
 	DBNode *node;
-	DBData *data = NULL;
+	struct DBData *data = NULL;
 
 	DB_COUNTSTAT(db_get);
 	if (db == NULL) return NULL; // nullpo candidate
@@ -1650,7 +1650,7 @@ static DBData* db_obj_get(DBMap* self, DBKey key)
  * @protected
  * @see DBMap#vgetall
  */
-static unsigned int db_obj_vgetall(DBMap* self, DBData **buf, unsigned int max, DBMatcher match, va_list args)
+static unsigned int db_obj_vgetall(DBMap* self, struct DBData **buf, unsigned int max, DBMatcher match, va_list args)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
 	unsigned int i;
@@ -1722,7 +1722,7 @@ static unsigned int db_obj_vgetall(DBMap* self, DBData **buf, unsigned int max, 
  * @see DBMap#vgetall
  * @see DBMap#getall
  */
-static unsigned int db_obj_getall(DBMap* self, DBData **buf, unsigned int max, DBMatcher match, ...)
+static unsigned int db_obj_getall(DBMap* self, struct DBData **buf, unsigned int max, DBMatcher match, ...)
 {
 	va_list args;
 	unsigned int ret;
@@ -1748,14 +1748,14 @@ static unsigned int db_obj_getall(DBMap* self, DBData **buf, unsigned int max, D
  * @protected
  * @see DBMap#vensure
  */
-static DBData* db_obj_vensure(DBMap* self, DBKey key, DBCreateData create, va_list args)
+static struct DBData *db_obj_vensure(DBMap* self, union DBKey key, DBCreateData create, va_list args)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
 	DBNode *node;
 	DBNode *parent = NULL;
 	unsigned int hash;
 	int c = 0;
-	DBData *data = NULL;
+	struct DBData *data = NULL;
 
 	DB_COUNTSTAT(db_vensure);
 	if (db == NULL) return NULL; // nullpo candidate
@@ -1848,10 +1848,10 @@ static DBData* db_obj_vensure(DBMap* self, DBKey key, DBCreateData create, va_li
  * @see DBMap#vensure
  * @see DBMap#ensure
  */
-static DBData* db_obj_ensure(DBMap* self, DBKey key, DBCreateData create, ...)
+static struct DBData *db_obj_ensure(DBMap* self, union DBKey key, DBCreateData create, ...)
 {
 	va_list args;
-	DBData *ret = NULL;
+	struct DBData *ret = NULL;
 
 	DB_COUNTSTAT(db_ensure);
 	if (self == NULL) return NULL; // nullpo candidate
@@ -1877,7 +1877,7 @@ static DBData* db_obj_ensure(DBMap* self, DBKey key, DBCreateData create, ...)
  * FIXME: If this method fails shouldn't it return another value?
  *        Other functions rely on this to know if they were able to put something [Panikon]
  */
-static int db_obj_put(DBMap* self, DBKey key, DBData data, DBData *out_data)
+static int db_obj_put(DBMap* self, union DBKey key, struct DBData data, struct DBData *out_data)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
 	DBNode *node;
@@ -1982,7 +1982,7 @@ static int db_obj_put(DBMap* self, DBKey key, DBData data, DBData *out_data)
  * @see #db_free_add(DBMap_impl*,DBNode*,DBNode **)
  * @see DBMap#remove
  */
-static int db_obj_remove(DBMap* self, DBKey key, DBData *out_data)
+static int db_obj_remove(DBMap* self, union DBKey key, struct DBData *out_data)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
 	DBNode *node;
@@ -2372,17 +2372,17 @@ static enum DBOptions db_obj_options(DBMap* self)
  *  db_default_release - Get the default releaser for a type of database with the specified options.
  *  db_custom_release  - Get a releaser that behaves a certain way.
  *  db_alloc           - Allocate a new database.
- *  db_i2key           - Manual cast from 'int' to 'DBKey'.
- *  db_ui2key          - Manual cast from 'unsigned int' to 'DBKey'.
- *  db_str2key         - Manual cast from 'unsigned char *' to 'DBKey'.
- *  db_i642key         - Manual cast from 'int64' to 'DBKey'.
- *  db_ui642key        - Manual cast from 'uin64' to 'DBKey'.
- *  db_i2data          - Manual cast from 'int' to 'DBData'.
- *  db_ui2data         - Manual cast from 'unsigned int' to 'DBData'.
- *  db_ptr2data        - Manual cast from 'void*' to 'DBData'.
- *  db_data2i          - Gets 'int' value from 'DBData'.
- *  db_data2ui         - Gets 'unsigned int' value from 'DBData'.
- *  db_data2ptr        - Gets 'void*' value from 'DBData'.
+ *  db_i2key           - Manual cast from `int` to `union DBKey`.
+ *  db_ui2key          - Manual cast from `unsigned int` to `union DBKey`.
+ *  db_str2key         - Manual cast from `unsigned char *` to `union DBKey`.
+ *  db_i642key         - Manual cast from `int64` to `union DBKey`.
+ *  db_ui642key        - Manual cast from `uin64` to `union DBKey`.
+ *  db_i2data          - Manual cast from `int` to `struct DBData`.
+ *  db_ui2data         - Manual cast from `unsigned int` to `struct DBData`.
+ *  db_ptr2data        - Manual cast from `void*` to `struct DBData`.
+ *  db_data2i          - Gets `int` value from `struct DBData`.
+ *  db_data2ui         - Gets `unsigned int` value from `struct DBData`.
+ *  db_data2ptr        - Gets `void*` value from `struct DBData`.
  *  db_init            - Initializes the database system.
  *  db_final           - Finalizes the database system.
 \*****************************************************************************/
@@ -2421,12 +2421,12 @@ enum DBOptions db_fix_options(enum DBType type, enum DBOptions options)
  * @param type Type of database
  * @return Comparator for the type of database or NULL if unknown database
  * @public
- * @see #db_int_cmp(DBKey,DBKey,unsigned short)
- * @see #db_uint_cmp(DBKey,DBKey,unsigned short)
- * @see #db_string_cmp(DBKey,DBKey,unsigned short)
- * @see #db_istring_cmp(DBKey,DBKey,unsigned short)
- * @see #db_int64_cmp(DBKey,DBKey,unsigned short)
- * @see #db_uint64_cmp(DBKey,DBKey,unsigned short)
+ * @see #db_int_cmp()
+ * @see #db_uint_cmp()
+ * @see #db_string_cmp()
+ * @see #db_istring_cmp()
+ * @see #db_int64_cmp()
+ * @see #db_uint64_cmp()
  */
 DBComparator db_default_cmp(enum DBType type)
 {
@@ -2449,12 +2449,12 @@ DBComparator db_default_cmp(enum DBType type)
  * @param type Type of database
  * @return Hasher of the type of database or NULL if unknown database
  * @public
- * @see #db_int_hash(DBKey,unsigned short)
- * @see #db_uint_hash(DBKey,unsigned short)
- * @see #db_string_hash(DBKey,unsigned short)
- * @see #db_istring_hash(DBKey,unsigned short)
- * @see #db_int64_hash(DBKey,unsigned short)
- * @see #db_uint64_hash(DBKey,unsigned short)
+ * @see #db_int_hash()
+ * @see #db_uint_hash()
+ * @see #db_string_hash()
+ * @see #db_istring_hash()
+ * @see #db_int64_hash()
+ * @see #db_uint64_hash()
  */
 DBHasher db_default_hash(enum DBType type)
 {
@@ -2619,9 +2619,9 @@ DBMap* db_alloc(const char *file, const char *func, int line, enum DBType type, 
  * @return The key as a DBKey union
  * @public
  */
-DBKey db_i2key(int key)
+union DBKey db_i2key(int key)
 {
-	DBKey ret;
+	union DBKey ret;
 
 	DB_COUNTSTAT(db_i2key);
 	ret.i = key;
@@ -2634,9 +2634,9 @@ DBKey db_i2key(int key)
  * @return The key as a DBKey union
  * @public
  */
-DBKey db_ui2key(unsigned int key)
+union DBKey db_ui2key(unsigned int key)
 {
-	DBKey ret;
+	union DBKey ret;
 
 	DB_COUNTSTAT(db_ui2key);
 	ret.ui = key;
@@ -2649,9 +2649,9 @@ DBKey db_ui2key(unsigned int key)
  * @return The key as a DBKey union
  * @public
  */
-DBKey db_str2key(const char *key)
+union DBKey db_str2key(const char *key)
 {
-	DBKey ret;
+	union DBKey ret;
 
 	DB_COUNTSTAT(db_str2key);
 	ret.str = key;
@@ -2664,9 +2664,9 @@ DBKey db_str2key(const char *key)
  * @return The key as a DBKey union
  * @public
  */
-DBKey db_i642key(int64 key)
+union DBKey db_i642key(int64 key)
 {
-	DBKey ret;
+	union DBKey ret;
 
 	DB_COUNTSTAT(db_i642key);
 	ret.i64 = key;
@@ -2679,9 +2679,9 @@ DBKey db_i642key(int64 key)
  * @return The key as a DBKey union
  * @public
  */
-DBKey db_ui642key(uint64 key)
+union DBKey db_ui642key(uint64 key)
 {
-	DBKey ret;
+	union DBKey ret;
 
 	DB_COUNTSTAT(db_ui642key);
 	ret.ui64 = key;
@@ -2694,9 +2694,9 @@ DBKey db_ui642key(uint64 key)
  * @return The data as a DBData struct
  * @public
  */
-DBData db_i2data(int data)
+struct DBData db_i2data(int data)
 {
-	DBData ret;
+	struct DBData ret;
 
 	DB_COUNTSTAT(db_i2data);
 	ret.type = DB_DATA_INT;
@@ -2710,9 +2710,9 @@ DBData db_i2data(int data)
  * @return The data as a DBData struct
  * @public
  */
-DBData db_ui2data(unsigned int data)
+struct DBData db_ui2data(unsigned int data)
 {
-	DBData ret;
+	struct DBData ret;
 
 	DB_COUNTSTAT(db_ui2data);
 	ret.type = DB_DATA_UINT;
@@ -2726,9 +2726,9 @@ DBData db_ui2data(unsigned int data)
  * @return The data as a DBData struct
  * @public
  */
-DBData db_ptr2data(void *data)
+struct DBData db_ptr2data(void *data)
 {
-	DBData ret;
+	struct DBData ret;
 
 	DB_COUNTSTAT(db_ptr2data);
 	ret.type = DB_DATA_PTR;
@@ -2743,7 +2743,7 @@ DBData db_ptr2data(void *data)
  * @return Integer value of the data.
  * @public
  */
-int db_data2i(DBData *data)
+int db_data2i(struct DBData *data)
 {
 	DB_COUNTSTAT(db_data2i);
 	if (data && DB_DATA_INT == data->type)
@@ -2758,7 +2758,7 @@ int db_data2i(DBData *data)
  * @return Unsigned int value of the data.
  * @public
  */
-unsigned int db_data2ui(DBData *data)
+unsigned int db_data2ui(struct DBData *data)
 {
 	DB_COUNTSTAT(db_data2ui);
 	if (data && DB_DATA_UINT == data->type)
@@ -2773,7 +2773,7 @@ unsigned int db_data2ui(DBData *data)
  * @return Void* value of the data.
  * @public
  */
-void* db_data2ptr(DBData *data)
+void *db_data2ptr(struct DBData *data)
 {
 	DB_COUNTSTAT(db_data2ptr);
 	if (data && DB_DATA_PTR == data->type)

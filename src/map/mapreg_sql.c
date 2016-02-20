@@ -277,7 +277,8 @@ int script_autosave_mapreg(int tid, int64 tick, int id, intptr_t data) {
  *
  * @see DBApply
  */
-int mapreg_destroyreg(DBKey key, DBData *data, va_list ap) {
+int mapreg_destroyreg(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct mapreg_save *m = NULL;
 
 	if (data->type != DB_DATA_PTR) // Sanity check

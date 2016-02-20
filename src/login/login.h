@@ -158,11 +158,11 @@ struct login_interface {
 	int (*mmo_auth) (struct login_session_data* sd, bool isServer);
 	int (*mmo_auth_new) (const char* userid, const char* pass, const char sex, const char* last_ip);
 	int (*waiting_disconnect_timer) (int tid, int64 tick, int id, intptr_t data);
-	DBData (*create_online_user) (DBKey key, va_list args);
+	struct DBData (*create_online_user) (union DBKey key, va_list args);
 	struct online_login_data* (*add_online_user) (int char_server, int account_id);
 	void (*remove_online_user) (int account_id);
-	int (*online_db_setoffline) (DBKey key, DBData *data, va_list ap);
-	int (*online_data_cleanup_sub) (DBKey key, DBData *data, va_list ap);
+	int (*online_db_setoffline) (union DBKey key, struct DBData *data, va_list ap);
+	int (*online_data_cleanup_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
 	int (*sync_ip_addresses) (int tid, int64 tick, int id, intptr_t data);
 	bool (*check_encrypted) (const char* str1, const char* str2, const char* passwd);

@@ -302,8 +302,8 @@ int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 //Request for saving registry values.
 int intif_saveregistry(struct map_session_data *sd) {
 	DBIterator *iter;
-	DBKey key;
-	DBData *data;
+	union DBKey key;
+	struct DBData *data;
 	int plen = 0;
 	size_t len;
 

@@ -145,7 +145,7 @@ struct party_interface {
 	struct map_session_data *(*sd_check) (int party_id, int account_id, int char_id);
 	void (*check_state) (struct party_data *p);
 	struct party_booking_ad_info* (*create_booking_data) (void);
-	int (*db_final) (DBKey key, DBData *data, va_list ap);
+	int (*db_final) (union DBKey key, struct DBData *data, va_list ap);
 };
 
 #ifdef HERCULES_CORE
