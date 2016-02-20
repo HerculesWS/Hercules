@@ -21,7 +21,7 @@
 
 /*****************************************************************************\
  *  This file is separated in five sections:
- *  (1) Private typedefs, enums, structures, defines and global variables
+ *  (1) Private enums, structures, defines and global variables
  *  (2) Private functions
  *  (3) Protected functions used internally
  *  (4) Protected functions used in the interface of the database
@@ -103,13 +103,13 @@ struct db_interface DB_s;
 struct db_interface *DB;
 
 /*****************************************************************************
- *  (1) Private typedefs, enums, structures, defines and global variables of *
- *  the database system.                                                     *
+ *  (1) Private enums, structures, defines and global variables of the       *
+ *      database system.                                                     *
  *  DB_ENABLE_STATS  - Define to enable database statistics.                 *
  *  HASH_SIZE        - Define with the size of the hashtable.                *
  *  enum DBNodeColor - Enumeration of colors of the nodes.                   *
- *  DBNode           - Structure of a node in RED-BLACK trees.               *
- *  struct db_free   - Structure that holds a deleted node to be freed.      *
+ *  struct DBNode     - Structure of a node in RED-BLACK trees.              *
+ *  struct db_free    - Structure that holds a deleted node to be freed.     *
  *  struct DBMap_impl - Structure of the database.                           *
  *  stats             - Statistics about the database system.                *
  *****************************************************************************/
@@ -136,7 +136,7 @@ struct db_interface *DB;
 /**
  * The color of individual nodes.
  * @private
- * @see struct dbn
+ * @see struct DBNode
  */
 enum DBNodeColor {
 	RED,
@@ -155,18 +155,18 @@ enum DBNodeColor {
  * @private
  * @see struct DBMap_impl#ht
  */
-typedef struct dbn {
+struct DBNode {
 	// Tree structure
-	struct dbn *parent;
-	struct dbn *left;
-	struct dbn *right;
+	struct DBNode *parent;
+	struct DBNode *left;
+	struct DBNode *right;
 	// Node data
 	union DBKey key;
 	struct DBData data;
 	// Other
 	enum DBNodeColor color;
 	unsigned deleted : 1;
-} DBNode;
+};
 
 /**
  * Structure that holds a deleted node.
@@ -176,8 +176,8 @@ typedef struct dbn {
  * @see struct DBMap_impl#free_list
  */
 struct db_free {
-	DBNode *node;
-	DBNode **root;
+	struct DBNode *node;
+	struct DBNode **root;
 };
 
 /**
@@ -218,8 +218,8 @@ struct DBMap_impl {
 	DBComparator cmp;
 	DBHasher hash;
 	DBReleaser release;
-	DBNode *ht[HASH_SIZE];
-	DBNode *cache;
+	struct DBNode *ht[HASH_SIZE];
+	struct DBNode *cache;
 	enum DBType type;
 	enum DBOptions options;
 	uint32 item_count;
@@ -236,14 +236,14 @@ struct DBMap_impl {
  * @private
  * @see struct DBIterator
  * @see struct DBMap_impl
- * @see #DBNode
+ * @see struct DBNode
  */
 struct DBIterator_impl {
 	// Iterator interface
 	struct DBIterator vtable;
 	struct DBMap_impl *db;
 	int ht_index;
-	DBNode *node;
+	struct DBNode *node;
 };
 
 #if defined(DB_ENABLE_STATS)
@@ -382,12 +382,12 @@ struct eri *db_alloc_ers;
  * @param node Node to be rotated
  * @param root Pointer to the root of the tree
  * @private
- * @see #db_rebalance(DBNode *,DBNode **)
- * @see #db_rebalance_erase(DBNode *,DBNode **)
+ * @see #db_rebalance()
+ * @see #db_rebalance_erase()
  */
-static void db_rotate_left(DBNode *node, DBNode **root)
+static void db_rotate_left(struct DBNode *node, struct DBNode **root)
 {
-	DBNode *y = node->right;
+	struct DBNode *y = node->right;
 
 	DB_COUNTSTAT(db_rotate_left);
 	// put the left of y at the right of node
@@ -413,12 +413,12 @@ static void db_rotate_left(DBNode *node, DBNode **root)
  * @param node Node to be rotated
  * @param root Pointer to the root of the tree
  * @private
- * @see #db_rebalance(DBNode *,DBNode **)
- * @see #db_rebalance_erase(DBNode *,DBNode **)
+ * @see #db_rebalance()
+ * @see #db_rebalance_erase()
  */
-static void db_rotate_right(DBNode *node, DBNode **root)
+static void db_rotate_right(struct DBNode *node, struct DBNode **root)
 {
-	DBNode *y = node->left;
+	struct DBNode *y = node->left;
 
 	DB_COUNTSTAT(db_rotate_right);
 	// put the right of y at the left of node
@@ -445,13 +445,13 @@ static void db_rotate_right(DBNode *node, DBNode **root)
  * @param node Node to be rebalanced
  * @param root Pointer to the root of the tree
  * @private
- * @see #db_rotate_left(DBNode *,DBNode **)
- * @see #db_rotate_right(DBNode *,DBNode **)
+ * @see #db_rotate_left()
+ * @see #db_rotate_right()
  * @see #db_obj_put()
  */
-static void db_rebalance(DBNode *node, DBNode **root)
+static void db_rebalance(struct DBNode *node, struct DBNode **root)
 {
-	DBNode *y;
+	struct DBNode *y;
 
 	DB_COUNTSTAT(db_rebalance);
 	// Restore the RED-BLACK properties
@@ -507,15 +507,15 @@ static void db_rebalance(DBNode *node, DBNode **root)
  * @param node Node to be erased from the tree
  * @param root Root of the tree
  * @private
- * @see #db_rotate_left(DBNode *,DBNode **)
- * @see #db_rotate_right(DBNode *,DBNode **)
+ * @see #db_rotate_left()
+ * @see #db_rotate_right()
  * @see #db_free_unlock()
  */
-static void db_rebalance_erase(DBNode *node, DBNode **root)
+static void db_rebalance_erase(struct DBNode *node, struct DBNode **root)
 {
-	DBNode *y = node;
-	DBNode *x = NULL;
-	DBNode *x_parent = NULL;
+	struct DBNode *y = node;
+	struct DBNode *x = NULL;
+	struct DBNode *x_parent = NULL;
 
 	DB_COUNTSTAT(db_rebalance_erase);
 	// Select where to change the tree
@@ -583,7 +583,7 @@ static void db_rebalance_erase(DBNode *node, DBNode **root)
 	// Restore the RED-BLACK properties
 	if (y->color != RED) {
 		while (x != *root && (x == NULL || x->color == BLACK)) {
-			DBNode *w;
+			struct DBNode *w;
 			if (x == x_parent->left) {
 				w = x_parent->right;
 				if (w->color == RED) {
@@ -733,7 +733,7 @@ static void db_dup_key_free(struct DBMap_impl *db, union DBKey key)
  * @see #db_obj_remove()
  * @see #db_free_remove()
  */
-static void db_free_add(struct DBMap_impl *db, DBNode *node, DBNode **root)
+static void db_free_add(struct DBMap_impl *db, struct DBNode *node, struct DBNode **root)
 {
 	union DBKey old_key;
 
@@ -782,7 +782,7 @@ static void db_free_add(struct DBMap_impl *db, DBNode *node, DBNode **root)
  * @see #db_obj_put()
  * @see #db_free_add()
  */
-static void db_free_remove(struct DBMap_impl *db, DBNode *node)
+static void db_free_remove(struct DBMap_impl *db, struct DBNode *node)
 {
 	unsigned int i;
 
@@ -831,7 +831,7 @@ static void db_free_lock(struct DBMap_impl *db)
  * @param db Target database
  * @private
  * @see struct DBMap_impl#free_lock
- * @see #db_free_dbn(DBNode*)
+ * @see #db_free_dbn()
  * @see #db_lock()
  */
 static void db_free_unlock(struct DBMap_impl *db)
@@ -1294,9 +1294,9 @@ struct DBData *dbit_obj_last(struct DBIterator *self, union DBKey *out_key)
 struct DBData *dbit_obj_next(struct DBIterator *self, union DBKey *out_key)
 {
 	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
-	DBNode *node;
-	DBNode *parent;
-	struct dbn fake;
+	struct DBNode *node;
+	struct DBNode *parent;
+	struct DBNode fake;
 
 	DB_COUNTSTAT(dbit_next);
 	if( it->ht_index < 0 )
@@ -1370,9 +1370,9 @@ struct DBData *dbit_obj_next(struct DBIterator *self, union DBKey *out_key)
 struct DBData *dbit_obj_prev(struct DBIterator *self, union DBKey *out_key)
 {
 	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
-	DBNode *node;
-	DBNode *parent;
-	struct dbn fake;
+	struct DBNode *node;
+	struct DBNode *parent;
+	struct DBNode fake;
 
 	DB_COUNTSTAT(dbit_prev);
 	if( it->ht_index >= HASH_SIZE )
@@ -1467,7 +1467,7 @@ bool dbit_obj_exists(struct DBIterator *self)
 int dbit_obj_remove(struct DBIterator *self, struct DBData *out_data)
 {
 	struct DBIterator_impl *it = (struct DBIterator_impl *)self;
-	DBNode *node;
+	struct DBNode *node;
 	int retval = 0;
 
 	DB_COUNTSTAT(dbit_remove);
@@ -1546,7 +1546,7 @@ static struct DBIterator *db_obj_iterator(struct DBMap *self)
 static bool db_obj_exists(struct DBMap *self, union DBKey key)
 {
 	struct DBMap_impl *db = (struct DBMap_impl *)self;
-	DBNode *node;
+	struct DBNode *node;
 	bool found = false;
 
 	DB_COUNTSTAT(db_exists);
@@ -1596,7 +1596,7 @@ static bool db_obj_exists(struct DBMap *self, union DBKey key)
 static struct DBData *db_obj_get(struct DBMap *self, union DBKey key)
 {
 	struct DBMap_impl *db = (struct DBMap_impl *)self;
-	DBNode *node;
+	struct DBNode *node;
 	struct DBData *data = NULL;
 
 	DB_COUNTSTAT(db_get);
@@ -1656,8 +1656,8 @@ static unsigned int db_obj_vgetall(struct DBMap *self, struct DBData **buf, unsi
 {
 	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	unsigned int i;
-	DBNode *node;
-	DBNode *parent;
+	struct DBNode *node;
+	struct DBNode *parent;
 	unsigned int ret = 0;
 
 	DB_COUNTSTAT(db_vgetall);
@@ -1754,8 +1754,8 @@ static unsigned int db_obj_getall(struct DBMap *self, struct DBData **buf, unsig
 static struct DBData *db_obj_vensure(struct DBMap *self, union DBKey key, DBCreateData create, va_list args)
 {
 	struct DBMap_impl *db = (struct DBMap_impl *)self;
-	DBNode *node;
-	DBNode *parent = NULL;
+	struct DBNode *node;
+	struct DBNode *parent = NULL;
 	unsigned int hash;
 	int c = 0;
 	struct DBData *data = NULL;
@@ -1798,7 +1798,7 @@ static struct DBData *db_obj_vensure(struct DBMap *self, union DBKey key, DBCrea
 				return NULL;
 		}
 		DB_COUNTSTAT(db_node_alloc);
-		node = ers_alloc(db->nodes, struct dbn);
+		node = ers_alloc(db->nodes, struct DBNode);
 		node->left = NULL;
 		node->right = NULL;
 		node->deleted = 0;
@@ -1884,8 +1884,8 @@ static struct DBData *db_obj_ensure(struct DBMap *self, union DBKey key, DBCreat
 static int db_obj_put(struct DBMap *self, union DBKey key, struct DBData data, struct DBData *out_data)
 {
 	struct DBMap_impl *db = (struct DBMap_impl *)self;
-	DBNode *node;
-	DBNode *parent = NULL;
+	struct DBNode *node;
+	struct DBNode *parent = NULL;
 	int c = 0, retval = 0;
 	unsigned int hash;
 
@@ -1938,7 +1938,7 @@ static int db_obj_put(struct DBMap *self, union DBKey key, struct DBData data, s
 	// allocate a new node if necessary
 	if (node == NULL) {
 		DB_COUNTSTAT(db_node_alloc);
-		node = ers_alloc(db->nodes, struct dbn);
+		node = ers_alloc(db->nodes, struct DBNode);
 		node->left = NULL;
 		node->right = NULL;
 		node->deleted = 0;
@@ -1989,7 +1989,7 @@ static int db_obj_put(struct DBMap *self, union DBKey key, struct DBData data, s
 static int db_obj_remove(struct DBMap *self, union DBKey key, struct DBData *out_data)
 {
 	struct DBMap_impl *db = (struct DBMap_impl *)self;
-	DBNode *node;
+	struct DBNode *node;
 	unsigned int hash;
 	int retval = 0;
 
@@ -2046,8 +2046,8 @@ static int db_obj_vforeach(struct DBMap *self, DBApply func, va_list args)
 	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	unsigned int i;
 	int sum = 0;
-	DBNode *node;
-	DBNode *parent;
+	struct DBNode *node;
+	struct DBNode *parent;
 
 	DB_COUNTSTAT(db_vforeach);
 	if (db == NULL) return 0; // nullpo candidate
@@ -2133,8 +2133,8 @@ static int db_obj_vclear(struct DBMap *self, DBApply func, va_list args)
 	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	int sum = 0;
 	unsigned int i;
-	DBNode *node;
-	DBNode *parent;
+	struct DBNode *node;
+	struct DBNode *parent;
 
 	DB_COUNTSTAT(db_vclear);
 	if (db == NULL) return 0; // nullpo candidate
@@ -2600,7 +2600,7 @@ struct DBMap *db_alloc(const char *file, const char *func, int line, enum DBType
 	db->free_lock = 0;
 	/* Other */
 	snprintf(ers_name, 50, "db_alloc:nodes:%s:%s:%d",func,file,line);
-	db->nodes = ers_new(sizeof(struct dbn),ers_name,ERS_OPT_WAIT|ERS_OPT_FREE_NAME|ERS_OPT_CLEAN);
+	db->nodes = ers_new(sizeof(struct DBNode),ers_name,ERS_OPT_WAIT|ERS_OPT_FREE_NAME|ERS_OPT_CLEAN);
 	db->cmp = DB->default_cmp(type);
 	db->hash = DB->default_hash(type);
 	db->release = DB->default_release(type, options);
