@@ -98,8 +98,8 @@ struct char_interface {
 	struct mmo_map_server server[MAX_MAP_SERVERS];
 	int login_fd;
 	int char_fd;
-	DBMap* online_char_db; // int account_id -> struct online_char_data*
-	DBMap* char_db_;
+	struct DBMap *online_char_db; // int account_id -> struct online_char_data*
+	struct DBMap *char_db_;
 	char userid[NAME_LENGTH];
 	char passwd[NAME_LENGTH];
 	char server_name[20];

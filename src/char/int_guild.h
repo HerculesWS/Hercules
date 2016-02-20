@@ -44,8 +44,8 @@ enum {
  * inter_guild interface
  **/
 struct inter_guild_interface {
-	DBMap* guild_db; // int guild_id -> struct guild*
-	DBMap* castle_db;
+	struct DBMap *guild_db; // int guild_id -> struct guild*
+	struct DBMap *castle_db;
 	unsigned int exp[MAX_GUILDLEVEL];
 
 	int (*save_timer) (int tid, int64 tick, int id, intptr_t data);

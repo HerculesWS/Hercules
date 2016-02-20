@@ -94,8 +94,8 @@ struct atcommand_interface {
 	struct atcmd_binding_data** binding;
 	int binding_count;
 	/* other vars */
-	DBMap* db; //name -> AtCommandInfo
-	DBMap* alias_db; //alias -> AtCommandInfo
+	struct DBMap *db; //name -> AtCommandInfo
+	struct DBMap *alias_db; //alias -> AtCommandInfo
 	/**
 	 * msg_table[lang_id][msg_id]
 	 * Server messages (0-499 reserved for GM commands, 500-999 reserved for others)

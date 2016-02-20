@@ -72,7 +72,7 @@ struct chrif_interface {
 
 	/* */
 	struct eri *auth_db_ers; //For re-utilizing player login structures.
-	DBMap* auth_db; // int id -> struct auth_node*
+	struct DBMap *auth_db; // int id -> struct auth_node*
 	/* */
 	int packet_len_table[CHRIF_PACKET_LEN_TABLE_SIZE];
 	int fd;

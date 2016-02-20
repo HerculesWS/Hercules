@@ -1004,16 +1004,16 @@ struct map_interface {
 
 	int16 index2mapid[MAX_MAPINDEX];
 	/* */
-	DBMap* id_db;     // int id -> struct block_list*
-	DBMap* pc_db;     // int id -> struct map_session_data*
-	DBMap* mobid_db;  // int id -> struct mob_data*
-	DBMap* bossid_db; // int id -> struct mob_data* (MVP db)
-	DBMap* map_db;    // unsigned int mapindex -> struct map_data_other_server*
-	DBMap* nick_db;   // int char_id -> struct charid2nick* (requested names of offline characters)
-	DBMap* charid_db; // int char_id -> struct map_session_data*
-	DBMap* regen_db;  // int id -> struct block_list* (status_natural_heal processing)
-	DBMap* zone_db;   // string => struct map_zone_data
-	DBMap* iwall_db;
+	struct DBMap *id_db;     // int id -> struct block_list*
+	struct DBMap *pc_db;     // int id -> struct map_session_data*
+	struct DBMap *mobid_db;  // int id -> struct mob_data*
+	struct DBMap *bossid_db; // int id -> struct mob_data* (MVP db)
+	struct DBMap *map_db;    // unsigned int mapindex -> struct map_data_other_server*
+	struct DBMap *nick_db;   // int char_id -> struct charid2nick* (requested names of offline characters)
+	struct DBMap *charid_db; // int char_id -> struct map_session_data*
+	struct DBMap *regen_db;  // int id -> struct block_list* (status_natural_heal processing)
+	struct DBMap *zone_db;   // string => struct map_zone_data
+	struct DBMap *iwall_db;
 	struct block_list **block_free;
 	int block_free_count, block_free_lock, block_free_list_size;
 	struct block_list **bl_list;

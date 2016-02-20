@@ -71,10 +71,10 @@ struct guild_interface {
 	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
-	DBMap* db; // int guild_id -> struct guild*
-	DBMap* castle_db; // int castle_id -> struct guild_castle*
-	DBMap* expcache_db; // int char_id -> struct guild_expcache*
-	DBMap* infoevent_db; // int guild_id -> struct eventlist*
+	struct DBMap *db; // int guild_id -> struct guild*
+	struct DBMap *castle_db; // int castle_id -> struct guild_castle*
+	struct DBMap *expcache_db; // int char_id -> struct guild_expcache*
+	struct DBMap *infoevent_db; // int guild_id -> struct eventlist*
 	/* */
 	struct eri *expcache_ers; //For handling of guild exp payment.
 	/* */

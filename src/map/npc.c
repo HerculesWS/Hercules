@@ -3625,7 +3625,7 @@ int npc_do_atcmd_event(struct map_session_data* sd, const char* command, const c
  */
 const char *npc_parse_function(const char *w1, const char *w2, const char *w3, const char *w4, const char *start, const char *buffer, const char *filepath, int *retval)
 {
-	DBMap* func_db;
+	struct DBMap *func_db;
 	struct DBData old_data;
 	struct script_code *scriptroot;
 	const char* end;

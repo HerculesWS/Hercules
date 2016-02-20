@@ -85,8 +85,8 @@ struct party_booking_ad_info {
 * created by Susu
 *-------------------------------------*/
 struct party_interface {
-	DBMap* db; // int party_id -> struct party_data* (releases data)
-	DBMap* booking_db; // int char_id -> struct party_booking_ad_info* (releases data) // Party Booking [Spiria]
+	struct DBMap *db; // int party_id -> struct party_data* (releases data)
+	struct DBMap *booking_db; // int char_id -> struct party_booking_ad_info* (releases data) // Party Booking [Spiria]
 	unsigned int booking_nextid;
 	/* funcs */
 	void (*init) (bool minimal);

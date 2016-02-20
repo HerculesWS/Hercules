@@ -785,9 +785,9 @@ struct autotrade_vending {
 struct pc_interface {
 
 	/* */
-	DBMap *at_db;/* char id -> struct autotrade_vending */
+	struct DBMap *at_db;/* char id -> struct autotrade_vending */
 	/* */
-	DBMap* itemcd_db;
+	struct DBMap *itemcd_db;
 	/* */
 	int day_timer_tid;
 	int night_timer_tid;

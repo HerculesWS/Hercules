@@ -162,7 +162,7 @@ unsigned short skillid2idx[MAX_SKILL_ID];
 //-----------------------------------------------------
 #define AUTH_TIMEOUT 30000
 
-static DBMap* auth_db; // int account_id -> struct char_auth_node*
+static struct DBMap *auth_db; // int account_id -> struct char_auth_node*
 
 //-----------------------------------------------------
 // Online User Database

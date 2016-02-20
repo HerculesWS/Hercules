@@ -975,7 +975,7 @@ static int access_debug    = 0;
 static int ddos_count      = 10;
 static int ddos_interval   = 3*1000;
 static int ddos_autoreset  = 10*60*1000;
-DBMap *connect_history = NULL;
+struct DBMap *connect_history = NULL;
 
 static int connect_check_(uint32 ip);
 

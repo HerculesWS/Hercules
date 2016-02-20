@@ -56,6 +56,7 @@
 #include "map/unit.h"
 #include "common/cbasetypes.h"
 #include "common/conf.h"
+#include "common/db.h"
 #include "common/memmgr.h"
 #include "common/md5calc.h"
 #include "common/mmo.h" // NEW_CARTS
@@ -3606,7 +3607,8 @@ void pop_stack(struct script_state* st, int start, int end) {
 /*==========================================
  * Release script dependent variable, dependent variable of function
  *------------------------------------------*/
-void script_free_vars(struct DBMap* var_storage) {
+void script_free_vars(struct DBMap *var_storage)
+{
 	if( var_storage ) {
 		// destroy the storage construct containing the variables
 		db_destroy(var_storage);
@@ -4919,7 +4921,7 @@ void script_load_translations(void) {
 
 	if( total ) {
 		struct DBIterator *main_iter, *sub_iter;
-		DBMap *string_db;
+		struct DBMap *string_db;
 		struct string_translation *st = NULL;
 		uint32 j = 0;
 
@@ -4982,7 +4984,7 @@ void script_load_translation(const char *file, uint8 lang_id, uint32 *total) {
 	uint32 translations = 0;
 	char line[1024];
 	char msgctxt[NAME_LENGTH*2+1] = { 0 };
-	DBMap *string_db;
+	struct DBMap *string_db;
 	size_t i;
 	FILE *fp;
 	struct script_string_buf msgid = { 0 }, msgstr = { 0 };
@@ -5135,7 +5137,7 @@ void script_clear_translations(bool reload) {
  **/
 int script_translation_db_destroyer(union DBKey key, struct DBData *data, va_list ap)
 {
-	DBMap *string_db = DB->data2ptr(data);
+	struct DBMap *string_db = DB->data2ptr(data);
 
 	if( db_size(string_db) ) {
 		struct string_translation *st = NULL;

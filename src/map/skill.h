@@ -1856,12 +1856,12 @@ struct skill_interface {
 	void (*reload) (void);
 	void (*read_db) (bool minimal);
 	/* */
-	DBMap* cd_db; // char_id -> struct skill_cd
-	DBMap* name2id_db;
-	DBMap* unit_db; // int id -> struct skill_unit*
-	DBMap* usave_db; // char_id -> struct skill_unit_save
-	DBMap* group_db;// int group_id -> struct skill_unit_group*
-	DBMap* bowling_db;// int mob_id -> struct mob_data*s
+	struct DBMap *cd_db; // char_id -> struct skill_cd
+	struct DBMap *name2id_db;
+	struct DBMap *unit_db; // int id -> struct skill_unit*
+	struct DBMap *usave_db; // char_id -> struct skill_unit_save
+	struct DBMap *group_db;// int group_id -> struct skill_unit_group*
+	struct DBMap *bowling_db;// int mob_id -> struct mob_data*s
 	/* */
 	struct eri *unit_ers; //For handling skill_unit's [Skotlex]
 	struct eri *timer_ers; //For handling skill_timerskills [Skotlex]

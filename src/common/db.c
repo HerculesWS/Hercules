@@ -110,8 +110,8 @@ struct db_interface *DB;
  *  enum DBNodeColor - Enumeration of colors of the nodes.                   *
  *  DBNode           - Structure of a node in RED-BLACK trees.               *
  *  struct db_free   - Structure that holds a deleted node to be freed.      *
- *  DBMap_impl       - Structure of the database.                            *
- *  stats            - Statistics about the database system.                 *
+ *  struct DBMap_impl - Structure of the database.                           *
+ *  stats             - Statistics about the database system.                *
  *****************************************************************************/
 
 /**
@@ -129,7 +129,7 @@ struct db_interface *DB;
 /**
  * Size of the hashtable in the database.
  * @private
- * @see DBMap_impl#ht
+ * @see struct DBMap_impl#ht
  */
 #define HASH_SIZE (256+27)
 
@@ -153,7 +153,7 @@ enum DBNodeColor {
  * @param deleted If the node is deleted
  * @param color Color of the node
  * @private
- * @see DBMap_impl#ht
+ * @see struct DBMap_impl#ht
  */
 typedef struct dbn {
 	// Tree structure
@@ -173,7 +173,7 @@ typedef struct dbn {
  * @param node Deleted node
  * @param root Address to the root of the tree
  * @private
- * @see DBMap_impl#free_list
+ * @see struct DBMap_impl#free_list
  */
 struct db_free {
 	DBNode *node;
@@ -202,7 +202,7 @@ struct db_free {
  * @private
  * @see #db_alloc()
  */
-typedef struct DBMap_impl {
+struct DBMap_impl {
 	// Database interface
 	struct DBMap vtable;
 	// File and line of allocation
@@ -225,7 +225,7 @@ typedef struct DBMap_impl {
 	uint32 item_count;
 	unsigned short maxlen;
 	unsigned global_lock : 1;
-} DBMap_impl;
+};
 
 /**
  * Complete iterator structure.
@@ -235,13 +235,13 @@ typedef struct DBMap_impl {
  * @param node Current node
  * @private
  * @see struct DBIterator
- * @see #DBMap_impl
+ * @see struct DBMap_impl
  * @see #DBNode
  */
 struct DBIterator_impl {
 	// Iterator interface
 	struct DBIterator vtable;
-	DBMap_impl* db;
+	struct DBMap_impl *db;
 	int ht_index;
 	DBNode *node;
 };
@@ -509,7 +509,7 @@ static void db_rebalance(DBNode *node, DBNode **root)
  * @private
  * @see #db_rotate_left(DBNode *,DBNode **)
  * @see #db_rotate_right(DBNode *,DBNode **)
- * @see #db_free_unlock(DBMap_impl*)
+ * @see #db_free_unlock()
  */
 static void db_rebalance_erase(DBNode *node, DBNode **root)
 {
@@ -671,12 +671,12 @@ static int db_is_key_null(enum DBType type, union DBKey key)
  * @param key Key to be duplicated
  * @param Duplicated key
  * @private
- * @see #db_free_add(DBMap_impl*,DBNode *,DBNode **)
- * @see #db_free_remove(DBMap_impl*,DBNode *)
+ * @see #db_free_add()
+ * @see #db_free_remove()
  * @see #db_obj_put()
  * @see #db_dup_key_free()
  */
-static union DBKey db_dup_key(DBMap_impl* db, union DBKey key)
+static union DBKey db_dup_key(struct DBMap_impl *db, union DBKey key)
 {
 	char *str;
 	size_t len;
@@ -704,7 +704,7 @@ static union DBKey db_dup_key(DBMap_impl* db, union DBKey key)
  * @private
  * @see #db_dup_key()
  */
-static void db_dup_key_free(DBMap_impl* db, union DBKey key)
+static void db_dup_key_free(struct DBMap_impl *db, union DBKey key)
 {
 	DB_COUNTSTAT(db_dup_key_free);
 	switch (db->type) {
@@ -727,13 +727,13 @@ static void db_dup_key_free(DBMap_impl* db, union DBKey key)
  * @param node Target node
  * @private
  * @see #struct db_free
- * @see DBMap_impl#free_list
- * @see DBMap_impl#free_count
- * @see DBMap_impl#free_max
+ * @see struct DBMap_impl#free_list
+ * @see struct DBMap_impl#free_count
+ * @see struct DBMap_impl#free_max
  * @see #db_obj_remove()
- * @see #db_free_remove(DBMap_impl*,DBNode *)
+ * @see #db_free_remove()
  */
-static void db_free_add(DBMap_impl* db, DBNode *node, DBNode **root)
+static void db_free_add(struct DBMap_impl *db, DBNode *node, DBNode **root)
 {
 	union DBKey old_key;
 
@@ -777,12 +777,12 @@ static void db_free_add(DBMap_impl* db, DBNode *node, DBNode **root)
  * @param node Node being removed from free_list
  * @private
  * @see #struct db_free
- * @see DBMap_impl#free_list
- * @see DBMap_impl#free_count
+ * @see struct DBMap_impl#free_list
+ * @see struct DBMap_impl#free_count
  * @see #db_obj_put()
- * @see #db_free_add(DBMap_impl*,DBNode**,DBNode*)
+ * @see #db_free_add()
  */
-static void db_free_remove(DBMap_impl* db, DBNode *node)
+static void db_free_remove(struct DBMap_impl *db, DBNode *node)
 {
 	unsigned int i;
 
@@ -808,10 +808,10 @@ static void db_free_remove(DBMap_impl* db, DBNode *node)
  * Increment the free_lock of the database.
  * @param db Target database
  * @private
- * @see DBMap_impl#free_lock
- * @see #db_unlock(DBMap_impl*)
+ * @see struct DBMap_impl#free_lock
+ * @see #db_unlock()
  */
-static void db_free_lock(DBMap_impl* db)
+static void db_free_lock(struct DBMap_impl *db)
 {
 	DB_COUNTSTAT(db_free_lock);
 	if (db->free_lock == (unsigned int)~0) {
@@ -830,11 +830,11 @@ static void db_free_lock(DBMap_impl* db)
  * NOTE: Frees the duplicated keys of the nodes
  * @param db Target database
  * @private
- * @see DBMap_impl#free_lock
+ * @see struct DBMap_impl#free_lock
  * @see #db_free_dbn(DBNode*)
- * @see #db_lock(DBMap_impl*)
+ * @see #db_lock()
  */
-static void db_free_unlock(DBMap_impl* db)
+static void db_free_unlock(struct DBMap_impl *db)
 {
 	unsigned int i;
 
@@ -1461,7 +1461,7 @@ bool dbit_obj_exists(struct DBIterator *self)
  * @param out_data Data of the removed entry.
  * @return 1 if entry was removed, 0 otherwise
  * @protected
- * @see DBMap#remove
+ * @see struct DBMap#remove()
  * @see struct DBIterator#remove()
  */
 int dbit_obj_remove(struct DBIterator *self, struct DBData *out_data)
@@ -1474,7 +1474,7 @@ int dbit_obj_remove(struct DBIterator *self, struct DBData *out_data)
 	node = it->node;
 	if( node && !node->deleted )
 	{
-		DBMap_impl* db = it->db;
+		struct DBMap_impl *db = it->db;
 		if( db->cache == node )
 			db->cache = NULL;
 		db->release(node->key, node->data, DB_RELEASE_DATA);
@@ -1511,9 +1511,9 @@ void dbit_obj_destroy(struct DBIterator *self)
  * @return New iterator
  * @protected
  */
-static struct DBIterator *db_obj_iterator(DBMap* self)
+static struct DBIterator *db_obj_iterator(struct DBMap *self)
 {
-	DBMap_impl* db = (DBMap_impl*)self;
+	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	struct DBIterator_impl *it;
 
 	DB_COUNTSTAT(db_iterator);
@@ -1541,11 +1541,11 @@ static struct DBIterator *db_obj_iterator(DBMap* self)
  * @param key Key that identifies the entry
  * @return true is the entry exists
  * @protected
- * @see DBMap#exists
+ * @see struct DBMap#exists()
  */
-static bool db_obj_exists(DBMap* self, union DBKey key)
+static bool db_obj_exists(struct DBMap *self, union DBKey key)
 {
-	DBMap_impl* db = (DBMap_impl*)self;
+	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	DBNode *node;
 	bool found = false;
 
@@ -1591,11 +1591,11 @@ static bool db_obj_exists(DBMap* self, union DBKey key)
  * @param key Key that identifies the entry
  * @return Data of the entry or NULL if not found
  * @protected
- * @see DBMap#get
+ * @see struct DBMap#get()
  */
-static struct DBData *db_obj_get(DBMap* self, union DBKey key)
+static struct DBData *db_obj_get(struct DBMap *self, union DBKey key)
 {
-	DBMap_impl* db = (DBMap_impl*)self;
+	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	DBNode *node;
 	struct DBData *data = NULL;
 
@@ -1650,11 +1650,11 @@ static struct DBData *db_obj_get(DBMap* self, union DBKey key)
  * @param ... Extra arguments for match
  * @return The number of entries that matched
  * @protected
- * @see DBMap#vgetall
+ * @see struct DBMap#vgetall()
  */
-static unsigned int db_obj_vgetall(DBMap* self, struct DBData **buf, unsigned int max, DBMatcher match, va_list args)
+static unsigned int db_obj_vgetall(struct DBMap *self, struct DBData **buf, unsigned int max, DBMatcher match, va_list args)
 {
-	DBMap_impl* db = (DBMap_impl*)self;
+	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	unsigned int i;
 	DBNode *node;
 	DBNode *parent;
@@ -1707,7 +1707,8 @@ static unsigned int db_obj_vgetall(DBMap* self, struct DBData **buf, unsigned in
 }
 
 /**
- * Just calls {@link DBMap#vgetall}.
+ * Just calls struct DBMap#vgetall().
+ *
  * Get the data of the entries matched by <code>match</code>.
  * It puts a maximum of <code>max</code> entries into <code>buf</code>.
  * If <code>buf</code> is NULL, it only counts the matches.
@@ -1721,10 +1722,10 @@ static unsigned int db_obj_vgetall(DBMap* self, struct DBData **buf, unsigned in
  * @param ... Extra arguments for match
  * @return The number of entries that matched
  * @protected
- * @see DBMap#vgetall
- * @see DBMap#getall
+ * @see struct DBMap#vgetall()
+ * @see struct DBMap#getall()
  */
-static unsigned int db_obj_getall(DBMap* self, struct DBData **buf, unsigned int max, DBMatcher match, ...)
+static unsigned int db_obj_getall(struct DBMap *self, struct DBData **buf, unsigned int max, DBMatcher match, ...)
 {
 	va_list args;
 	unsigned int ret;
@@ -1748,11 +1749,11 @@ static unsigned int db_obj_getall(DBMap* self, struct DBData **buf, unsigned int
  * @param args Extra arguments for create
  * @return Data of the entry
  * @protected
- * @see DBMap#vensure
+ * @see struct DBMap#vensure()
  */
-static struct DBData *db_obj_vensure(DBMap* self, union DBKey key, DBCreateData create, va_list args)
+static struct DBData *db_obj_vensure(struct DBMap *self, union DBKey key, DBCreateData create, va_list args)
 {
-	DBMap_impl* db = (DBMap_impl*)self;
+	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	DBNode *node;
 	DBNode *parent = NULL;
 	unsigned int hash;
@@ -1837,7 +1838,8 @@ static struct DBData *db_obj_vensure(DBMap* self, union DBKey key, DBCreateData 
 }
 
 /**
- * Just calls {@link DBMap#vensure}.
+ * Just calls struct DBMap#vensure().
+ *
  * Get the data of the entry identified by the key.
  * If the entry does not exist, an entry is added with the data returned by
  * <code>create</code>.
@@ -1847,10 +1849,10 @@ static struct DBData *db_obj_vensure(DBMap* self, union DBKey key, DBCreateData 
  * @param ... Extra arguments for create
  * @return Data of the entry
  * @protected
- * @see DBMap#vensure
- * @see DBMap#ensure
+ * @see struct DBMap#vensure()
+ * @see struct DBMap#ensure()
  */
-static struct DBData *db_obj_ensure(DBMap* self, union DBKey key, DBCreateData create, ...)
+static struct DBData *db_obj_ensure(struct DBMap *self, union DBKey key, DBCreateData create, ...)
 {
 	va_list args;
 	struct DBData *ret = NULL;
@@ -1875,13 +1877,13 @@ static struct DBData *db_obj_ensure(DBMap* self, union DBKey key, DBCreateData c
  * @return 1 if if the entry already exists, 0 otherwise
  * @protected
  * @see #db_malloc_dbn(void)
- * @see DBMap#put
+ * @see struct DBMap#put()
  * FIXME: If this method fails shouldn't it return another value?
  *        Other functions rely on this to know if they were able to put something [Panikon]
  */
-static int db_obj_put(DBMap* self, union DBKey key, struct DBData data, struct DBData *out_data)
+static int db_obj_put(struct DBMap *self, union DBKey key, struct DBData data, struct DBData *out_data)
 {
-	DBMap_impl* db = (DBMap_impl*)self;
+	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	DBNode *node;
 	DBNode *parent = NULL;
 	int c = 0, retval = 0;
@@ -1975,18 +1977,18 @@ static int db_obj_put(DBMap* self, union DBKey key, struct DBData data, struct D
 /**
  * Remove an entry from the database.
  * Puts the previous data in out_data, if out_data is not NULL. (unless data has been released)
- * NOTE: The key (of the database) is released in {@link #db_free_add(DBMap_impl*,DBNode*,DBNode **)}.
+ * NOTE: The key (of the database) is released in #db_free_add().
  * @param self Interface of the database
  * @param key Key that identifies the entry
  * @param out_data Previous data if the entry exists
  * @return 1 if if the entry already exists, 0 otherwise
  * @protected
- * @see #db_free_add(DBMap_impl*,DBNode*,DBNode **)
- * @see DBMap#remove
+ * @see #db_free_add()
+ * @see struct DBMap#remove()
  */
-static int db_obj_remove(DBMap* self, union DBKey key, struct DBData *out_data)
+static int db_obj_remove(struct DBMap *self, union DBKey key, struct DBData *out_data)
 {
-	DBMap_impl* db = (DBMap_impl*)self;
+	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	DBNode *node;
 	unsigned int hash;
 	int retval = 0;
@@ -2037,11 +2039,11 @@ static int db_obj_remove(DBMap* self, union DBKey key, struct DBData *out_data)
  * @param args Extra arguments for func
  * @return Sum of the values returned by func
  * @protected
- * @see DBMap#vforeach
+ * @see struct DBMap#vforeach()
  */
-static int db_obj_vforeach(DBMap* self, DBApply func, va_list args)
+static int db_obj_vforeach(struct DBMap *self, DBApply func, va_list args)
 {
-	DBMap_impl* db = (DBMap_impl*)self;
+	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	unsigned int i;
 	int sum = 0;
 	DBNode *node;
@@ -2088,7 +2090,8 @@ static int db_obj_vforeach(DBMap* self, DBApply func, va_list args)
 }
 
 /**
- * Just calls {@link DBMap#vforeach}.
+ * Just calls struct DBMap#vforeach().
+ *
  * Apply <code>func</code> to every entry in the database.
  * Returns the sum of values returned by func.
  * @param self Interface of the database
@@ -2096,10 +2099,10 @@ static int db_obj_vforeach(DBMap* self, DBApply func, va_list args)
  * @param ... Extra arguments for func
  * @return Sum of the values returned by func
  * @protected
- * @see DBMap#vforeach
- * @see DBMap#foreach
+ * @see struct DBMap#vforeach()
+ * @see struct DBMap#foreach()
  */
-static int db_obj_foreach(DBMap* self, DBApply func, ...)
+static int db_obj_foreach(struct DBMap *self, DBApply func, ...)
 {
 	va_list args;
 	int ret;
@@ -2123,11 +2126,11 @@ static int db_obj_foreach(DBMap* self, DBApply func, ...)
  * @param args Extra arguments for func
  * @return Sum of values returned by func
  * @protected
- * @see DBMap#vclear
+ * @see struct DBMap#vclear()
  */
-static int db_obj_vclear(DBMap* self, DBApply func, va_list args)
+static int db_obj_vclear(struct DBMap *self, DBApply func, va_list args)
 {
-	DBMap_impl* db = (DBMap_impl*)self;
+	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	int sum = 0;
 	unsigned int i;
 	DBNode *node;
@@ -2184,7 +2187,8 @@ static int db_obj_vclear(DBMap* self, DBApply func, va_list args)
 }
 
 /**
- * Just calls {@link DBMap#vclear}.
+ * Just calls struct DBMap#vclear().
+ *
  * Removes all entries from the database.
  * Before deleting an entry, func is applied to it.
  * Releases the key and the data.
@@ -2196,10 +2200,10 @@ static int db_obj_vclear(DBMap* self, DBApply func, va_list args)
  * @param ... Extra arguments for func
  * @return Sum of values returned by func
  * @protected
- * @see DBMap#vclear
- * @see DBMap#clear
+ * @see struct DBMap#vclear()
+ * @see struct DBMap#clear()
  */
-static int db_obj_clear(DBMap* self, DBApply func, ...)
+static int db_obj_clear(struct DBMap *self, DBApply func, ...)
 {
 	va_list args;
 	int ret;
@@ -2224,11 +2228,11 @@ static int db_obj_clear(DBMap* self, DBApply func, ...)
  * @param args Extra arguments for func
  * @return Sum of values returned by func
  * @protected
- * @see DBMap#vdestroy
+ * @see struct DBMap#vdestroy()
  */
-static int db_obj_vdestroy(DBMap* self, DBApply func, va_list args)
+static int db_obj_vdestroy(struct DBMap *self, DBApply func, va_list args)
 {
-	DBMap_impl* db = (DBMap_impl*)self;
+	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	int sum;
 
 	DB_COUNTSTAT(db_vdestroy);
@@ -2267,7 +2271,7 @@ static int db_obj_vdestroy(DBMap* self, DBApply func, va_list args)
 }
 
 /**
- * Just calls {@link DBMap#db_vdestroy}.
+ * Just calls struct DBMap#db_vdestroy().
  * Finalize the database, feeing all the memory it uses.
  * Before deleting an entry, func is applied to it.
  * Releases the key and the data.
@@ -2279,10 +2283,10 @@ static int db_obj_vdestroy(DBMap* self, DBApply func, va_list args)
  * @param ... Extra arguments for func
  * @return Sum of values returned by func
  * @protected
- * @see DBMap#vdestroy
- * @see DBMap#destroy
+ * @see struct DBMap#vdestroy()
+ * @see struct DBMap#destroy()
  */
-static int db_obj_destroy(DBMap* self, DBApply func, ...)
+static int db_obj_destroy(struct DBMap *self, DBApply func, ...)
 {
 	va_list args;
 	int ret;
@@ -2301,12 +2305,12 @@ static int db_obj_destroy(DBMap* self, DBApply func, ...)
  * @param self Interface of the database
  * @return Size of the database
  * @protected
- * @see DBMap_impl#item_count
- * @see DBMap#size
+ * @see struct DBMap_impl#item_count
+ * @see struct DBMap#size()
  */
-static unsigned int db_obj_size(DBMap* self)
+static unsigned int db_obj_size(struct DBMap *self)
 {
-	DBMap_impl* db = (DBMap_impl*)self;
+	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	unsigned int item_count;
 
 	DB_COUNTSTAT(db_size);
@@ -2324,12 +2328,12 @@ static unsigned int db_obj_size(DBMap* self)
  * @param self Interface of the database
  * @return Type of the database
  * @protected
- * @see DBMap_impl#type
- * @see DBMap#type
+ * @see struct DBMap_impl#type
+ * @see struct DBMap#type()
  */
-static enum DBType db_obj_type(DBMap* self)
+static enum DBType db_obj_type(struct DBMap *self)
 {
-	DBMap_impl* db = (DBMap_impl*)self;
+	struct DBMap_impl *db = (struct DBMap_impl *)self;
 	enum DBType type;
 
 	DB_COUNTSTAT(db_type);
@@ -2348,12 +2352,12 @@ static enum DBType db_obj_type(DBMap* self)
  * @param self Interface of the database
  * @return Options of the database
  * @protected
- * @see DBMap_impl#options
- * @see DBMap#options
+ * @see struct DBMap_impl#options
+ * @see struct DBMap#options()
  */
-static enum DBOptions db_obj_options(DBMap* self)
+static enum DBOptions db_obj_options(struct DBMap *self)
 {
-	DBMap_impl* db = (DBMap_impl*)self;
+	struct DBMap_impl* db = (struct DBMap_impl *)self;
 	enum DBOptions options;
 
 	DB_COUNTSTAT(db_options);
@@ -2544,12 +2548,12 @@ DBReleaser db_custom_release(enum DBReleaseOption which)
  *          databases. If 0, the maximum number of maxlen is used (64K).
  * @return The interface of the database
  * @public
- * @see #DBMap_impl
+ * @see struct DBMap_impl
  * @see #db_fix_options()
  */
-DBMap* db_alloc(const char *file, const char *func, int line, enum DBType type, enum DBOptions options, unsigned short maxlen)
+struct DBMap *db_alloc(const char *file, const char *func, int line, enum DBType type, enum DBOptions options, unsigned short maxlen)
 {
-	DBMap_impl* db;
+	struct DBMap_impl *db;
 	unsigned int i;
 	char ers_name[50];
 

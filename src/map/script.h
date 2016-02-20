@@ -494,8 +494,8 @@ struct script_syntax_data {
 	int last_func; // buildin index of the last parsed function
 	unsigned int nested_call; //Dont really know what to call this
 	bool lang_macro_active;
-	DBMap *strings; // string map parsed (used when exporting strings only)
-	DBMap *translation_db; //non-null if this npc has any translated strings to be linked
+	struct DBMap *strings; // string map parsed (used when exporting strings only)
+	struct DBMap *translation_db; //non-null if this npc has any translated strings to be linked
 };
 
 struct casecheck_data {
@@ -534,7 +534,7 @@ struct string_translation {
  **/
 struct script_interface {
 	/* */
-	DBMap *st_db;
+	struct DBMap *st_db;
 	unsigned int active_scripts;
 	unsigned int next_id;
 	struct eri *st_ers;
@@ -602,8 +602,8 @@ struct script_interface {
 	/* */
 	/* Caches compiled autoscript item code. */
 	/* Note: This is not cleared when reloading itemdb. */
-	DBMap* autobonus_db; // char* script -> char* bytecode
-	DBMap* userfunc_db; // const char* func_name -> struct script_code*
+	struct DBMap *autobonus_db; // char* script -> char* bytecode
+	struct DBMap *userfunc_db; // const char* func_name -> struct script_code*
 	/* */
 	int potion_flag; //For use on Alchemist improved potions/Potion Pitcher. [Skotlex]
 	int potion_hp, potion_per_hp, potion_sp, potion_per_sp;
@@ -621,7 +621,7 @@ struct script_interface {
 	int buildin_select_offset;
 	int buildin_lang_macro_offset;
 	/* */
-	DBMap *translation_db;/* npc_name => DBMap (strings) */
+	struct DBMap *translation_db;/* npc_name => DBMap (strings) */
 	char **translation_buf;/*  */
 	uint32 translation_buf_size;
 	/* */

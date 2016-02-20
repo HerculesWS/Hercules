@@ -589,10 +589,10 @@ struct itemdb_interface {
 	struct item_combo **combos;
 	unsigned short combo_count;
 	/* */
-	DBMap *names;
+	struct DBMap *names;
 	/* */
 	struct item_data *array[MAX_ITEMDB];
-	DBMap *other;// int nameid -> struct item_data*
+	struct DBMap *other;// int nameid -> struct item_data*
 	struct item_data dummy; //This is the default dummy item used for non-existant items. [Skotlex]
 	/* */
 	void (*read_groups) (void);

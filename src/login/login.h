@@ -149,8 +149,8 @@ struct online_login_data {
  * Login.c Interface
  **/
 struct login_interface {
-	DBMap* auth_db;
-	DBMap* online_db;
+	struct DBMap *auth_db;
+	struct DBMap *online_db;
 	int fd;
 	struct Login_Config *config;
 	struct AccountDB* accounts;

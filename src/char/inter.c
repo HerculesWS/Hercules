@@ -83,7 +83,7 @@ struct WisData {
 	int64 tick;
 	unsigned char src[24], dst[24], msg[512];
 };
-static DBMap* wis_db = NULL; // int wis_id -> struct WisData*
+static struct DBMap *wis_db = NULL; // int wis_id -> struct WisData*
 static int wis_dellist[WISDELLIST_MAX], wis_delnum;
 
 #define MAX_JOB_NAMES 150
