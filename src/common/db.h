@@ -64,21 +64,21 @@
 
 #include <stdarg.h>
 
-/*****************************************************************************\
+/*****************************************************************************
  *  (1) Section with public typedefs, enums, unions, structures and defines. *
- *  DBRelease    - Enumeration of release options.                           *
- *  DBType       - Enumeration of database types.                            *
- *  DBOptions    - Bitfield enumeration of database options.                 *
- *  DBKey        - Union of used key types.                                  *
- *  DBDataType   - Enumeration of data types.                                *
- *  DBData       - Struct for used data types.                               *
- *  DBApply      - Format of functions applied to the databases.             *
- *  DBMatcher    - Format of matchers used in DBMap::getall.                 *
- *  DBComparator - Format of the comparators used by the databases.          *
- *  DBHasher     - Format of the hashers used by the databases.              *
- *  DBReleaser   - Format of the releasers used by the databases.            *
- *  DBIterator   - Database iterator.                                        *
- *  DBMap        - Database interface.                                       *
+ *  enum DBReleaseOption - Enumeration of release options.                   *
+ *  enum DBType          - Enumeration of database types.                    *
+ *  enum DBOptions       - Bitfield enumeration of database options.         *
+ *  DBKey                - Union of used key types.                          *
+ *  enum DBDataType      - Enumeration of data types.                        *
+ *  DBData               - Struct for used data types.                       *
+ *  DBApply              - Format of functions applied to the databases.     *
+ *  DBMatcher            - Format of matchers used in DBMap::getall.         *
+ *  DBComparator         - Format of the comparators used by the databases.  *
+ *  DBHasher             - Format of the hashers used by the databases.      *
+ *  DBReleaser           - Format of the releasers used by the databases.    *
+ *  DBIterator           - Database iterator.                                *
+ *  DBMap                - Database interface.                               *
 \*****************************************************************************/
 
 /**
@@ -86,19 +86,20 @@
  * function supports it).
  * @public
  * @see #DBReleaser
- * @see #db_custom_release(DBRelease)
+ * @see #db_custom_release()
  */
-typedef enum DBRelease {
+enum DBReleaseOption {
 	DB_RELEASE_NOTHING = 0x0,
 	DB_RELEASE_KEY     = 0x1,
 	DB_RELEASE_DATA    = 0x2,
 	DB_RELEASE_BOTH    = DB_RELEASE_KEY|DB_RELEASE_DATA,
-} DBRelease;
+};
 
 /**
  * Supported types of database.
- * See {@link #db_fix_options(DBType,DBOptions)} for restrictions of the
- * types of databases.
+ *
+ * See #db_fix_options() for restrictions of the types of databases.
+ *
  * @param DB_INT Uses int's for keys
  * @param DB_UINT Uses unsigned int's for keys
  * @param DB_STRING Uses strings for keys.
@@ -106,27 +107,28 @@ typedef enum DBRelease {
  * @param DB_INT64 Uses int64's for keys
  * @param DB_UINT64 Uses uint64's for keys
  * @public
- * @see #DBOptions
+ * @see enum DBOptions
  * @see #DBKey
- * @see #db_fix_options(DBType,DBOptions)
- * @see #db_default_cmp(DBType)
- * @see #db_default_hash(DBType)
- * @see #db_default_release(DBType,DBOptions)
- * @see #db_alloc(const char *,int,DBType,DBOptions,unsigned short)
+ * @see #db_fix_options()
+ * @see #db_default_cmp()
+ * @see #db_default_hash()
+ * @see #db_default_release()
+ * @see #db_alloc()
  */
-typedef enum DBType {
+enum DBType {
 	DB_INT,
 	DB_UINT,
 	DB_STRING,
 	DB_ISTRING,
 	DB_INT64,
 	DB_UINT64,
-} DBType;
+};
 
 /**
  * Bitfield of options that define the behavior of the database.
- * See {@link #db_fix_options(DBType,DBOptions)} for restrictions of the
- * types of databases.
+ *
+ * See #db_fix_options() for restrictions of the types of databases.
+ *
  * @param DB_OPT_BASE Base options: does not duplicate keys, releases nothing
  *          and does not allow NULL keys or NULL data.
  * @param DB_OPT_DUP_KEY Duplicates the keys internally. If DB_OPT_RELEASE_KEY
@@ -140,11 +142,11 @@ typedef enum DBType {
  * @param DB_OPT_ALLOW_NULL_KEY Allow NULL keys in the database.
  * @param DB_OPT_ALLOW_NULL_DATA Allow NULL data in the database.
  * @public
- * @see #db_fix_options(DBType,DBOptions)
- * @see #db_default_release(DBType,DBOptions)
- * @see #db_alloc(const char *,int,DBType,DBOptions,unsigned short)
+ * @see #db_fix_options()
+ * @see #db_default_release()
+ * @see #db_alloc()
  */
-typedef enum DBOptions {
+enum DBOptions {
 	DB_OPT_BASE            = 0x00,
 	DB_OPT_DUP_KEY         = 0x01,
 	DB_OPT_RELEASE_KEY     = 0x02,
@@ -152,7 +154,7 @@ typedef enum DBOptions {
 	DB_OPT_RELEASE_BOTH    = DB_OPT_RELEASE_KEY|DB_OPT_RELEASE_DATA,
 	DB_OPT_ALLOW_NULL_KEY  = 0x08,
 	DB_OPT_ALLOW_NULL_DATA = 0x10,
-} DBOptions;
+};
 
 /**
  * Union of key types used by the database.
@@ -160,7 +162,7 @@ typedef enum DBOptions {
  * @param ui Type of key for DB_UINT databases
  * @param str Type of key for DB_STRING and DB_ISTRING databases
  * @public
- * @see #DBType
+ * @see enum DBType
  * @see DBMap#get
  * @see DBMap#put
  * @see DBMap#remove
@@ -181,11 +183,11 @@ typedef union DBKey {
  * @public
  * @see #DBData
  */
-typedef enum DBDataType {
+enum DBDataType {
 	DB_DATA_INT,
 	DB_DATA_UINT,
 	DB_DATA_PTR,
-} DBDataType;
+};
 
 /**
  * Struct for data types used by the database.
@@ -197,7 +199,7 @@ typedef enum DBDataType {
  * @public
  */
 typedef struct DBData {
-	DBDataType type;
+	enum DBDataType type;
 	union {
 		int i;
 		unsigned int ui;
@@ -257,7 +259,7 @@ typedef int (*DBMatcher)(DBKey key, DBData data, va_list args);
  *          databases.
  * @return 0 if equal, negative if lower and positive if higher
  * @public
- * @see #db_default_cmp(DBType)
+ * @see #db_default_cmp()
  */
 typedef int (*DBComparator)(DBKey key1, DBKey key2, unsigned short maxlen);
 
@@ -269,7 +271,7 @@ typedef int (*DBComparator)(DBKey key1, DBKey key2, unsigned short maxlen);
  *          databases.
  * @return Hash of the key
  * @public
- * @see #db_default_hash(DBType)
+ * @see #db_default_hash()
  */
 typedef uint64 (*DBHasher)(DBKey key, unsigned short maxlen);
 
@@ -281,11 +283,11 @@ typedef uint64 (*DBHasher)(DBKey key, unsigned short maxlen);
  * @param data Data of the database entry
  * @param which What is being requested to be released
  * @public
- * @see #DBRelease
- * @see #db_default_releaser(DBType,DBOptions)
- * @see #db_custom_release(DBRelease)
+ * @see enum DBReleaseOption
+ * @see #db_default_releaser()
+ * @see #db_custom_release()
  */
-typedef void (*DBReleaser)(DBKey key, DBData data, DBRelease which);
+typedef void (*DBReleaser)(DBKey key, DBData data, enum DBReleaseOption which);
 
 typedef struct DBIterator DBIterator;
 typedef struct DBMap DBMap;
@@ -382,7 +384,7 @@ struct DBIterator
  * Public interface of a database. Only contains functions.
  * All the functions take the interface as the first argument.
  * @public
- * @see #db_alloc(const char*,int,DBType,DBOptions,unsigned short)
+ * @see #db_alloc()
  */
 struct DBMap {
 
@@ -606,7 +608,7 @@ struct DBMap {
 	 * @return Type of the database
 	 * @protected
 	 */
-	DBType (*type)(DBMap* self);
+	enum DBType (*type)(DBMap* self);
 
 	/**
 	 * Return the options of the database.
@@ -614,7 +616,7 @@ struct DBMap {
 	 * @return Options of the database
 	 * @protected
 	 */
-	DBOptions (*options)(DBMap* self);
+	enum DBOptions (*options)(DBMap* self);
 
 };
 
@@ -745,66 +747,71 @@ struct db_interface {
  * @param options Original options of the database
  * @return Fixed options of the database
  * @private
- * @see #DBType
- * @see #DBOptions
- * @see #db_default_release(DBType,DBOptions)
+ * @see enum DBType
+ * @see enum DBOptions
+ * @see #db_default_release()
  */
-DBOptions (*fix_options) (DBType type, DBOptions options);
+enum DBOptions (*fix_options) (enum DBType type, enum DBOptions options);
 
 /**
  * Returns the default comparator for the type of database.
  * @param type Type of database
  * @return Comparator for the type of database or NULL if unknown database
  * @public
- * @see #DBType
+ * @see enum DBType
  * @see #DBComparator
  */
-DBComparator (*default_cmp) (DBType type);
+DBComparator (*default_cmp) (enum DBType type);
 
 /**
  * Returns the default hasher for the specified type of database.
  * @param type Type of database
  * @return Hasher of the type of database or NULL if unknown database
  * @public
- * @see #DBType
+ * @see enum DBType
  * @see #DBHasher
  */
-DBHasher (*default_hash) (DBType type);
+DBHasher (*default_hash) (enum DBType type);
 
 /**
  * Returns the default releaser for the specified type of database with the
  * specified options.
- * NOTE: the options are fixed by {@link #db_fix_options(DBType,DBOptions)}
- * before choosing the releaser
+ *
+ * NOTE: the options are fixed by #db_fix_options() before choosing the
+ * releaser.
+ *
  * @param type Type of database
  * @param options Options of the database
  * @return Default releaser for the type of database with the fixed options
  * @public
- * @see #DBType
- * @see #DBOptions
+ * @see enum DBType
+ * @see enum DBOptions
  * @see #DBReleaser
- * @see #db_fix_options(DBType,DBOptions)
- * @see #db_custom_release(DBRelease)
+ * @see #db_fix_options()
+ * @see #db_custom_release()
  */
-DBReleaser (*default_release) (DBType type, DBOptions options);
+DBReleaser (*default_release) (enum DBType type, enum DBOptions options);
 
 /**
  * Returns the releaser that behaves as <code>which</code> specifies.
  * @param which Defines what the releaser releases
  * @return Releaser for the specified release options
  * @public
- * @see #DBRelease
+ * @see enum DBReleaseOption
  * @see #DBReleaser
- * @see #db_default_release(DBType,DBOptions)
+ * @see #db_default_release()
  */
-DBReleaser (*custom_release)  (DBRelease which);
+DBReleaser (*custom_release)  (enum DBReleaseOption which);
 
 /**
  * Allocate a new database of the specified type.
+ *
  * It uses the default comparator, hasher and releaser of the specified
  * database type and fixed options.
- * NOTE: the options are fixed by {@link #db_fix_options(DBType,DBOptions)}
- * before creating the database.
+ *
+ * NOTE: the options are fixed by #db_fix_options() before creating the
+ * database.
+ *
  * @param file File where the database is being allocated
  * @param line Line of the file where the database is being allocated
  * @param type Type of database
@@ -813,14 +820,14 @@ DBReleaser (*custom_release)  (DBRelease which);
  *          databases. If 0, the maximum number of maxlen is used (64K).
  * @return The interface of the database
  * @public
- * @see #DBType
+ * @see enum DBType
  * @see #DBMap
- * @see #db_default_cmp(DBType)
- * @see #db_default_hash(DBType)
- * @see #db_default_release(DBType,DBOptions)
- * @see #db_fix_options(DBType,DBOptions)
+ * @see #db_default_cmp()
+ * @see #db_default_hash()
+ * @see #db_default_release()
+ * @see #db_fix_options()
  */
-DBMap* (*alloc) (const char *file, const char *func, int line, DBType type, DBOptions options, unsigned short maxlen);
+DBMap* (*alloc) (const char *file, const char *func, int line, enum DBType type, enum DBOptions options, unsigned short maxlen);
 
 /**
  * Manual cast from 'int' to the union DBKey.

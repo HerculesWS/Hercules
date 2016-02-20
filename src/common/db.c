@@ -102,17 +102,17 @@
 struct db_interface DB_s;
 struct db_interface *DB;
 
-/*****************************************************************************\
+/*****************************************************************************
  *  (1) Private typedefs, enums, structures, defines and global variables of *
  *  the database system.                                                     *
- *  DB_ENABLE_STATS - Define to enable database statistics.                  *
- *  HASH_SIZE       - Define with the size of the hashtable.                 *
- *  DBNColor        - Enumeration of colors of the nodes.                    *
- *  DBNode          - Structure of a node in RED-BLACK trees.                *
- *  struct db_free  - Structure that holds a deleted node to be freed.       *
- *  DBMap_impl      - Structure of the database.                              *
- *  stats           - Statistics about the database system.                  *
-\*****************************************************************************/
+ *  DB_ENABLE_STATS  - Define to enable database statistics.                 *
+ *  HASH_SIZE        - Define with the size of the hashtable.                *
+ *  enum DBNodeColor - Enumeration of colors of the nodes.                   *
+ *  DBNode           - Structure of a node in RED-BLACK trees.               *
+ *  struct db_free   - Structure that holds a deleted node to be freed.      *
+ *  DBMap_impl       - Structure of the database.                            *
+ *  stats            - Statistics about the database system.                 *
+ *****************************************************************************/
 
 /**
  * If defined statistics about database nodes, database creating/destruction
@@ -138,10 +138,10 @@ struct db_interface *DB;
  * @private
  * @see struct dbn
  */
-typedef enum node_color {
+enum DBNodeColor {
 	RED,
-	BLACK
-} node_color;
+	BLACK,
+};
 
 /**
  * A node in a RED-BLACK tree of the database.
@@ -164,7 +164,7 @@ typedef struct dbn {
 	DBKey key;
 	DBData data;
 	// Other
-	node_color color;
+	enum DBNodeColor color;
 	unsigned deleted : 1;
 } DBNode;
 
@@ -200,7 +200,7 @@ struct db_free {
  * @param maxlen Maximum length of strings in DB_STRING and DB_ISTRING databases
  * @param global_lock Global lock of the database
  * @private
- * @see #db_alloc(const char*,int,DBType,DBOptions,unsigned short)
+ * @see #db_alloc()
  */
 typedef struct DBMap_impl {
 	// Database interface
@@ -220,8 +220,8 @@ typedef struct DBMap_impl {
 	DBReleaser release;
 	DBNode *ht[HASH_SIZE];
 	DBNode *cache;
-	DBType type;
-	DBOptions options;
+	enum DBType type;
+	enum DBOptions options;
 	uint32 item_count;
 	unsigned short maxlen;
 	unsigned global_lock : 1;
@@ -561,7 +561,7 @@ static void db_rebalance_erase(DBNode *node, DBNode **root)
 		y->parent = node->parent;
 		// switch colors
 		{
-			node_color tmp = y->color;
+			enum DBNodeColor tmp = y->color;
 			y->color = node->color;
 			node->color = tmp;
 		}
@@ -652,7 +652,7 @@ static void db_rebalance_erase(DBNode *node, DBNode **root)
  * @see #db_obj_put(DBMap*,DBKey,DBData)
  * @see #db_obj_remove(DBMap*,DBKey)
  */
-static int db_is_key_null(DBType type, DBKey key)
+static int db_is_key_null(enum DBType type, DBKey key)
 {
 	DB_COUNTSTAT(db_is_key_null);
 	switch (type) {
@@ -889,9 +889,9 @@ static void db_free_unlock(DBMap_impl* db)
  * @param key2 Key being compared to
  * @param maxlen Maximum length of the key to hash
  * @return 0 if equal, negative if lower and positive if higher
- * @see DBType#DB_INT
+ * @see enum DBType#DB_INT
  * @see #DBComparator
- * @see #db_default_cmp(DBType)
+ * @see #db_default_cmp()
  */
 static int db_int_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
 {
@@ -911,9 +911,9 @@ static int db_int_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
  * @param key2 Key being compared to
  * @param maxlen Maximum length of the key to hash
  * @return 0 if equal, negative if lower and positive if higher
- * @see DBType#DB_UINT
+ * @see enum DBType#DB_UINT
  * @see #DBComparator
- * @see #db_default_cmp(DBType)
+ * @see #db_default_cmp()
  */
 static int db_uint_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
 {
@@ -932,9 +932,9 @@ static int db_uint_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
  * @param key2 Key being compared to
  * @param maxlen Maximum length of the key to hash
  * @return 0 if equal, negative if lower and positive if higher
- * @see DBType#DB_STRING
+ * @see enum DBType#DB_STRING
  * @see #DBComparator
- * @see #db_default_cmp(DBType)
+ * @see #db_default_cmp()
  */
 static int db_string_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
 {
@@ -950,9 +950,9 @@ static int db_string_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
  * @param key2 Key being compared to
  * @param maxlen Maximum length of the key to hash
  * @return 0 if equal, negative if lower and positive if higher
- * @see DBType#DB_ISTRING
+ * @see enum DBType#DB_ISTRING
  * @see #DBComparator
- * @see #db_default_cmp(DBType)
+ * @see #db_default_cmp()
  */
 static int db_istring_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
 {
@@ -969,9 +969,9 @@ static int db_istring_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
  * @param key2 Key being compared to
  * @param maxlen Maximum length of the key to hash
  * @return 0 if equal, negative if lower and positive if higher
- * @see DBType#DB_INT64
+ * @see enum DBType#DB_INT64
  * @see #DBComparator
- * @see #db_default_cmp(DBType)
+ * @see #db_default_cmp()
  */
 static int db_int64_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
 {
@@ -991,9 +991,9 @@ static int db_int64_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
  * @param key2 Key being compared to
  * @param maxlen Maximum length of the key to hash
  * @return 0 if equal, negative if lower and positive if higher
- * @see DBType#DB_UINT64
+ * @see enum DBType#DB_UINT64
  * @see #DBComparator
- * @see #db_default_cmp(DBType)
+ * @see #db_default_cmp()
  */
 static int db_uint64_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
 {
@@ -1012,9 +1012,9 @@ static int db_uint64_cmp(DBKey key1, DBKey key2, unsigned short maxlen)
  * @param key Key to be hashed
  * @param maxlen Maximum length of the key to hash
  * @return hash of the key
- * @see DBType#DB_INT
+ * @see enum DBType#DB_INT
  * @see #DBHasher
- * @see #db_default_hash(DBType)
+ * @see #db_default_hash()
  */
 static uint64 db_int_hash(DBKey key, unsigned short maxlen)
 {
@@ -1030,9 +1030,9 @@ static uint64 db_int_hash(DBKey key, unsigned short maxlen)
  * @param key Key to be hashed
  * @param maxlen Maximum length of the key to hash
  * @return hash of the key
- * @see DBType#DB_UINT
+ * @see enum DBType#DB_UINT
  * @see #DBHasher
- * @see #db_default_hash(DBType)
+ * @see #db_default_hash()
  */
 static uint64 db_uint_hash(DBKey key, unsigned short maxlen)
 {
@@ -1046,9 +1046,9 @@ static uint64 db_uint_hash(DBKey key, unsigned short maxlen)
  * @param key Key to be hashed
  * @param maxlen Maximum length of the key to hash
  * @return hash of the key
- * @see DBType#DB_STRING
+ * @see enum DBType#DB_STRING
  * @see #DBHasher
- * @see #db_default_hash(DBType)
+ * @see #db_default_hash()
  */
 static uint64 db_string_hash(DBKey key, unsigned short maxlen)
 {
@@ -1073,8 +1073,8 @@ static uint64 db_string_hash(DBKey key, unsigned short maxlen)
  * @param key Key to be hashed
  * @param maxlen Maximum length of the key to hash
  * @return hash of the key
- * @see DBType#DB_ISTRING
- * @see #db_default_hash(DBType)
+ * @see enum DBType#DB_ISTRING
+ * @see #db_default_hash()
  */
 static uint64 db_istring_hash(DBKey key, unsigned short maxlen)
 {
@@ -1101,9 +1101,9 @@ static uint64 db_istring_hash(DBKey key, unsigned short maxlen)
  * @param key Key to be hashed
  * @param maxlen Maximum length of the key to hash
  * @return hash of the key
- * @see DBType#DB_INT64
+ * @see enum DBType#DB_INT64
  * @see #DBHasher
- * @see #db_default_hash(DBType)
+ * @see #db_default_hash()
  */
 static uint64 db_int64_hash(DBKey key, unsigned short maxlen)
 {
@@ -1119,9 +1119,9 @@ static uint64 db_int64_hash(DBKey key, unsigned short maxlen)
  * @param key Key to be hashed
  * @param maxlen Maximum length of the key to hash
  * @return hash of the key
- * @see DBType#DB_UINT64
+ * @see enum DBType#DB_UINT64
  * @see #DBHasher
- * @see #db_default_hash(DBType)
+ * @see #db_default_hash()
  */
 static uint64 db_uint64_hash(DBKey key, unsigned short maxlen)
 {
@@ -1137,9 +1137,9 @@ static uint64 db_uint64_hash(DBKey key, unsigned short maxlen)
  * @param which What is being requested to be released
  * @protected
  * @see #DBReleaser
- * @see #db_default_releaser(DBType,DBOptions)
+ * @see #db_default_releaser()
  */
-static void db_release_nothing(DBKey key, DBData data, DBRelease which)
+static void db_release_nothing(DBKey key, DBData data, enum DBReleaseOption which)
 {
 	(void)key;(void)data;(void)which;//not used
 	DB_COUNTSTAT(db_release_nothing);
@@ -1152,9 +1152,9 @@ static void db_release_nothing(DBKey key, DBData data, DBRelease which)
  * @param which What is being requested to be released
  * @protected
  * @see #DBReleaser
- * @see #db_default_release(DBType,DBOptions)
+ * @see #db_default_release()
  */
-static void db_release_key(DBKey key, DBData data, DBRelease which)
+static void db_release_key(DBKey key, DBData data, enum DBReleaseOption which)
 {
 	(void)data;//not used
 	DB_COUNTSTAT(db_release_key);
@@ -1168,11 +1168,11 @@ static void db_release_key(DBKey key, DBData data, DBRelease which)
  * @param which What is being requested to be released
  * @protected
  * @see #DBData
- * @see #DBRelease
+ * @see enum DBReleaseOption
  * @see #DBReleaser
- * @see #db_default_release(DBType,DBOptions)
+ * @see #db_default_release()
  */
-static void db_release_data(DBKey key, DBData data, DBRelease which)
+static void db_release_data(DBKey key, DBData data, enum DBReleaseOption which)
 {
 	(void)key;//not used
 	DB_COUNTSTAT(db_release_data);
@@ -1190,11 +1190,11 @@ static void db_release_data(DBKey key, DBData data, DBRelease which)
  * @protected
  * @see #DBKey
  * @see #DBData
- * @see #DBRelease
+ * @see enum DBReleaseOption
  * @see #DBReleaser
- * @see #db_default_release(DBType,DBOptions)
+ * @see #db_default_release()
  */
-static void db_release_both(DBKey key, DBData data, DBRelease which)
+static void db_release_both(DBKey key, DBData data, enum DBReleaseOption which)
 {
 	DB_COUNTSTAT(db_release_both);
 	if (which&DB_RELEASE_KEY) aFree((char*)key.str); // needs to be a pointer
@@ -2325,13 +2325,14 @@ static unsigned int db_obj_size(DBMap* self)
  * @see DBMap_impl#type
  * @see DBMap#type
  */
-static DBType db_obj_type(DBMap* self)
+static enum DBType db_obj_type(DBMap* self)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
-	DBType type;
+	enum DBType type;
 
 	DB_COUNTSTAT(db_type);
-	if (db == NULL) return (DBType)-1; // nullpo candidate - TODO what should this return?
+	if (db == NULL)
+		return (enum DBType)-1; // nullpo candidate - TODO what should this return?
 
 	db_free_lock(db);
 	type = db->type;
@@ -2348,10 +2349,10 @@ static DBType db_obj_type(DBMap* self)
  * @see DBMap_impl#options
  * @see DBMap#options
  */
-static DBOptions db_obj_options(DBMap* self)
+static enum DBOptions db_obj_options(DBMap* self)
 {
 	DBMap_impl* db = (DBMap_impl*)self;
-	DBOptions options;
+	enum DBOptions options;
 
 	DB_COUNTSTAT(db_options);
 	if (db == NULL) return DB_OPT_BASE; // nullpo candidate - TODO what should this return?
@@ -2394,10 +2395,10 @@ static DBOptions db_obj_options(DBMap* self)
  * @param options Original options of the database
  * @return Fixed options of the database
  * @private
- * @see #db_default_release(DBType,DBOptions)
- * @see #db_alloc(const char *,int,DBType,DBOptions,unsigned short)
+ * @see #db_default_release()
+ * @see #db_alloc()
  */
-DBOptions db_fix_options(DBType type, DBOptions options)
+enum DBOptions db_fix_options(enum DBType type, enum DBOptions options)
 {
 	DB_COUNTSTAT(db_fix_options);
 	switch (type) {
@@ -2405,7 +2406,7 @@ DBOptions db_fix_options(DBType type, DBOptions options)
 		case DB_UINT:
 		case DB_INT64:
 		case DB_UINT64: // Numeric database, do nothing with the keys
-			return (DBOptions)(options&~(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY));
+			return (enum DBOptions)(options&~(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY));
 
 		default:
 			ShowError("db_fix_options: Unknown database type %u with options %x\n", type, options);
@@ -2427,7 +2428,7 @@ DBOptions db_fix_options(DBType type, DBOptions options)
  * @see #db_int64_cmp(DBKey,DBKey,unsigned short)
  * @see #db_uint64_cmp(DBKey,DBKey,unsigned short)
  */
-DBComparator db_default_cmp(DBType type)
+DBComparator db_default_cmp(enum DBType type)
 {
 	DB_COUNTSTAT(db_default_cmp);
 	switch (type) {
@@ -2455,7 +2456,7 @@ DBComparator db_default_cmp(DBType type)
  * @see #db_int64_hash(DBKey,unsigned short)
  * @see #db_uint64_hash(DBKey,unsigned short)
  */
-DBHasher db_default_hash(DBType type)
+DBHasher db_default_hash(enum DBType type)
 {
 	DB_COUNTSTAT(db_default_hash);
 	switch (type) {
@@ -2474,19 +2475,21 @@ DBHasher db_default_hash(DBType type)
 /**
  * Returns the default releaser for the specified type of database with the
  * specified options.
- * NOTE: the options are fixed with {@link #db_fix_options(DBType,DBOptions)}
- * before choosing the releaser.
+ *
+ * NOTE: the options are fixed with #db_fix_options() before choosing the
+ * releaser.
+ *
  * @param type Type of database
  * @param options Options of the database
  * @return Default releaser for the type of database with the specified options
  * @public
- * @see #db_release_nothing(DBKey,DBData,DBRelease)
- * @see #db_release_key(DBKey,DBData,DBRelease)
- * @see #db_release_data(DBKey,DBData,DBRelease)
- * @see #db_release_both(DBKey,DBData,DBRelease)
- * @see #db_custom_release(DBRelease)
+ * @see #db_release_nothing()
+ * @see #db_release_key()
+ * @see #db_release_data()
+ * @see #db_release_both()
+ * @see #db_custom_release()
  */
-DBReleaser db_default_release(DBType type, DBOptions options)
+DBReleaser db_default_release(enum DBType type, enum DBOptions options)
 {
 	DB_COUNTSTAT(db_default_release);
 	options = DB->fix_options(type, options);
@@ -2505,13 +2508,13 @@ DBReleaser db_default_release(DBType type, DBOptions options)
  * @param which Options that specified what the releaser releases
  * @return Releaser for the specified release options
  * @public
- * @see #db_release_nothing(DBKey,DBData,DBRelease)
- * @see #db_release_key(DBKey,DBData,DBRelease)
- * @see #db_release_data(DBKey,DBData,DBRelease)
- * @see #db_release_both(DBKey,DBData,DBRelease)
- * @see #db_default_release(DBType,DBOptions)
+ * @see #db_release_nothing()
+ * @see #db_release_key()
+ * @see #db_release_data()
+ * @see #db_release_both()
+ * @see #db_default_release()
  */
-DBReleaser db_custom_release(DBRelease which)
+DBReleaser db_custom_release(enum DBReleaseOption which)
 {
 	DB_COUNTSTAT(db_custom_release);
 	switch (which) {
@@ -2527,8 +2530,10 @@ DBReleaser db_custom_release(DBRelease which)
 
 /**
  * Allocate a new database of the specified type.
- * NOTE: the options are fixed by {@link #db_fix_options(DBType,DBOptions)}
- * before creating the database.
+ *
+ * NOTE: the options are fixed by #db_fix_options() before creating the
+ * database.
+ *
  * @param file File where the database is being allocated
  * @param line Line of the file where the database is being allocated
  * @param type Type of database
@@ -2538,9 +2543,10 @@ DBReleaser db_custom_release(DBRelease which)
  * @return The interface of the database
  * @public
  * @see #DBMap_impl
- * @see #db_fix_options(DBType,DBOptions)
+ * @see #db_fix_options()
  */
-DBMap* db_alloc(const char *file, const char *func, int line, DBType type, DBOptions options, unsigned short maxlen) {
+DBMap* db_alloc(const char *file, const char *func, int line, enum DBType type, enum DBOptions options, unsigned short maxlen)
+{
 	DBMap_impl* db;
 	unsigned int i;
 	char ers_name[50];
