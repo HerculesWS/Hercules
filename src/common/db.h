@@ -170,6 +170,7 @@ union DBKey {
 	int i;
 	unsigned int ui;
 	const char *str;
+	char *mutstr;
 	int64 i64;
 	uint64 ui64;
 };

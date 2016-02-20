@@ -678,19 +678,19 @@ static int db_is_key_null(enum DBType type, union DBKey key)
  */
 static union DBKey db_dup_key(struct DBMap_impl *db, union DBKey key)
 {
-	char *str;
-	size_t len;
-
 	DB_COUNTSTAT(db_dup_key);
 	switch (db->type) {
 		case DB_STRING:
 		case DB_ISTRING:
-			len = strnlen(key.str, db->maxlen);
-			str = (char*)aMalloc(len + 1);
+		{
+			size_t len = strnlen(key.str, db->maxlen);
+			char *str = aMalloc(len + 1);
+
 			memcpy(str, key.str, len);
 			str[len] = '\0';
-			key.str = str;
+			key.mutstr = str;
 			return key;
+		}
 
 		default:
 			return key;
@@ -710,7 +710,7 @@ static void db_dup_key_free(struct DBMap_impl *db, union DBKey key)
 	switch (db->type) {
 		case DB_STRING:
 		case DB_ISTRING:
-			aFree((char*)key.str);
+			aFree(key.mutstr);
 			return;
 
 		default:
@@ -1158,7 +1158,8 @@ static void db_release_key(union DBKey key, struct DBData data, enum DBReleaseOp
 {
 	(void)data;//not used
 	DB_COUNTSTAT(db_release_key);
-	if (which&DB_RELEASE_KEY) aFree((char*)key.str); // needs to be a pointer
+	if (which&DB_RELEASE_KEY)
+		aFree(key.mutstr); // FIXME: Ensure this is the right db type.
 }
 
 /**
@@ -1197,7 +1198,8 @@ static void db_release_data(union DBKey key, struct DBData data, enum DBReleaseO
 static void db_release_both(union DBKey key, struct DBData data, enum DBReleaseOption which)
 {
 	DB_COUNTSTAT(db_release_both);
-	if (which&DB_RELEASE_KEY) aFree((char*)key.str); // needs to be a pointer
+	if (which&DB_RELEASE_KEY)
+		aFree(key.mutstr); // FIXME: Ensure this is the right db type.
 	if (which&DB_RELEASE_DATA && data.type == DB_DATA_PTR) {
 		aFree(data.u.ptr);
 		data.u.ptr = NULL;
