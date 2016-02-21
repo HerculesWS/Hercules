@@ -3730,8 +3730,8 @@ typedef void (*HPMHOOK_pre_login_parse_request_connection) (int *fd, struct logi
 typedef void (*HPMHOOK_post_login_parse_request_connection) (int fd, struct login_session_data *sd, const char *ip, uint32 ipl);
 typedef void (*HPMHOOK_pre_login_config_set_defaults) (void);
 typedef void (*HPMHOOK_post_login_config_set_defaults) (void);
-typedef int (*HPMHOOK_pre_login_config_read) (const char **cfgName);
-typedef int (*HPMHOOK_post_login_config_read) (int retVal___, const char *cfgName);
+typedef bool (*HPMHOOK_pre_login_config_read) (const char **filename, bool *included);
+typedef bool (*HPMHOOK_post_login_config_read) (bool retVal___, const char *filename, bool included);
 #endif // LOGIN_LOGIN_H
 #ifdef CHAR_LOGINIF_H /* loginif */
 typedef void (*HPMHOOK_pre_loginif_init) (void);
