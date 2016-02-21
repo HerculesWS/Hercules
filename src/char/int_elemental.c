@@ -40,32 +40,54 @@
 struct inter_elemental_interface inter_elemental_s;
 struct inter_elemental_interface *inter_elemental;
 
-bool mapif_elemental_save(struct s_elemental* ele) {
-	bool flag = true;
-
+/**
+ * Creates a new elemental with the given data.
+ *
+ * @remark
+ *   The elemental ID is expected to be 0, and will be filled with the newly
+ *   assigned ID.
+ *
+ * @param[in,out] ele The new elemental's data.
+ * @retval false in case of errors.
+ */
+bool mapif_elemental_create(struct s_elemental *ele)
+{
 	nullpo_retr(false, ele);
-	if( ele->elemental_id == 0 ) { // Create new DB entry
-		if( SQL_ERROR == SQL->Query(inter->sql_handle,
+	Assert_retr(false, ele->elemental_id == 0);
+
+	if (SQL_ERROR == SQL->Query(inter->sql_handle,
 			"INSERT INTO `%s` (`char_id`,`class`,`mode`,`hp`,`sp`,`max_hp`,`max_sp`,`atk1`,`atk2`,`matk`,`aspd`,`def`,`mdef`,`flee`,`hit`,`life_time`)"
 			"VALUES ('%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",
-			elemental_db, ele->char_id, ele->class_, ele->mode, ele->hp, ele->sp, ele->max_hp, ele->max_sp, ele->atk, ele->atk2, ele->matk, ele->amotion, ele->def, ele->mdef, ele->flee, ele->hit, ele->life_time) )
-		{
-			Sql_ShowDebug(inter->sql_handle);
-			flag = false;
-		}
-		else
-			ele->elemental_id = (int)SQL->LastInsertId(inter->sql_handle);
-	} else if( SQL_ERROR == SQL->Query(inter->sql_handle,
-		"UPDATE `%s` SET `char_id` = '%d', `class` = '%d', `mode` = '%d', `hp` = '%d', `sp` = '%d',"
-		"`max_hp` = '%d', `max_sp` = '%d', `atk1` = '%d', `atk2` = '%d', `matk` = '%d', `aspd` = '%d', `def` = '%d',"
-		"`mdef` = '%d', `flee` = '%d', `hit` = '%d', `life_time` = '%d' WHERE `ele_id` = '%d'",
-		elemental_db, ele->char_id, ele->class_, ele->mode, ele->hp, ele->sp, ele->max_hp, ele->max_sp, ele->atk, ele->atk2,
-		ele->matk, ele->amotion, ele->def, ele->mdef, ele->flee, ele->hit, ele->life_time, ele->elemental_id) )
-	{ // Update DB entry
+			elemental_db, ele->char_id, ele->class_, ele->mode, ele->hp, ele->sp, ele->max_hp, ele->max_sp, ele->atk,
+			ele->atk2, ele->matk, ele->amotion, ele->def, ele->mdef, ele->flee, ele->hit, ele->life_time)) {
 		Sql_ShowDebug(inter->sql_handle);
-		flag = false;
+		return false;
 	}
-	return flag;
+	ele->elemental_id = (int)SQL->LastInsertId(inter->sql_handle);
+	return true;
+}
+
+/**
+ * Saves an existing elemental.
+ *
+ * @param ele The elemental's data.
+ * @retval false in case of errors.
+ */
+bool mapif_elemental_save(const struct s_elemental *ele)
+{
+	nullpo_retr(false, ele);
+	Assert_retr(false, ele->elemental_id > 0);
+
+	if (SQL_ERROR == SQL->Query(inter->sql_handle,
+			"UPDATE `%s` SET `char_id` = '%d', `class` = '%d', `mode` = '%d', `hp` = '%d', `sp` = '%d',"
+			"`max_hp` = '%d', `max_sp` = '%d', `atk1` = '%d', `atk2` = '%d', `matk` = '%d', `aspd` = '%d', `def` = '%d',"
+			"`mdef` = '%d', `flee` = '%d', `hit` = '%d', `life_time` = '%d' WHERE `ele_id` = '%d'",
+			elemental_db, ele->char_id, ele->class_, ele->mode, ele->hp, ele->sp, ele->max_hp, ele->max_sp, ele->atk, ele->atk2,
+			ele->matk, ele->amotion, ele->def, ele->mdef, ele->flee, ele->hit, ele->life_time, ele->elemental_id)) {
+		Sql_ShowDebug(inter->sql_handle);
+		return false;
+	}
+	return true;
 }
 
 bool mapif_elemental_load(int ele_id, int char_id, struct s_elemental *ele) {
@@ -133,8 +155,9 @@ void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char flag) {
 	WFIFOSET(fd,size);
 }
 
-void mapif_parse_elemental_create(int fd, struct s_elemental* ele) {
-	bool result = mapif->elemental_save(ele);
+void mapif_parse_elemental_create(int fd, struct s_elemental *ele)
+{
+	bool result = mapif->elemental_create(ele);
 	mapif->elemental_send(fd, ele, result);
 }
 
