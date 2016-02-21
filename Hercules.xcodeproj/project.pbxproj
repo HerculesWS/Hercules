@@ -1566,6 +1566,7 @@
 					"-lpthread",
 					"-lz",
 					"-lmysqlclient",
+					"-lpcre",
 				);
 				SDKROOT = macosx;
 			};
@@ -1644,6 +1645,7 @@
 					"-lpthread",
 					"-lz",
 					"-lmysqlclient",
+					"-lpcre",
 				);
 				SDKROOT = macosx;
 			};
