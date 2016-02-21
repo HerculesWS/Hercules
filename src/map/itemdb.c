@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -342,15 +342,132 @@ const char* itemdb_typename(int type)
 	return "Unknown Type";
 }
 
-/*==========================================
- * Converts the jobid from the format in itemdb
- * to the format used by the map server. [Skotlex]
- *------------------------------------------*/
-void itemdb_jobid2mapid(unsigned int *bclass, unsigned int jobmask)
+ /**
+ * Converts the JobID to the format used by map-server to check item
+ * restriction as per job.
+ *
+ * @param bclass Pointer to the variable containing the new format
+ * @param job_id Variable containing JobID
+ * @param enable Boolean value which (un)set the restriction.
+ *
+ * @author Dastgir
+ */
+void itemdb_jobid2mapid(uint64 *bclass, int job_id, bool enable)
+{
+#define set_jobmask(bclass_idx, mapid) \
+	do { \
+		if (enable) \
+			bclass[(bclass_idx)] |= 1L<<(mapid); \
+		else \
+			bclass[(bclass_idx)] &= ~(1L<<(mapid)); \
+	} while (false)
+
+	nullpo_retv(bclass);
+
+	switch(job_id) {
+		// Base Classes
+		case JOB_NOVICE:
+		case JOB_SUPER_NOVICE:
+			set_jobmask(0, MAPID_NOVICE);
+			set_jobmask(1, MAPID_NOVICE);
+			break;
+		case JOB_SWORDMAN:
+		case JOB_MAGE:
+		case JOB_ARCHER:
+		case JOB_ACOLYTE:
+		case JOB_MERCHANT:
+		case JOB_THIEF:
+			set_jobmask(0, MAPID_NOVICE+job_id);
+			break;
+		// 2-1 Classes
+		case JOB_KNIGHT:
+			set_jobmask(1, MAPID_SWORDMAN);
+			break;
+		case JOB_PRIEST:
+			set_jobmask(1, MAPID_ACOLYTE);
+			break;
+		case JOB_WIZARD:
+			set_jobmask(1, MAPID_MAGE);
+			break;
+		case JOB_BLACKSMITH:
+			set_jobmask(1, MAPID_MERCHANT);
+			break;
+		case JOB_HUNTER:
+			set_jobmask(1, MAPID_ARCHER);
+			break;
+		case JOB_ASSASSIN:
+			set_jobmask(1, MAPID_THIEF);
+			break;
+		// 2-2 Classes
+		case JOB_CRUSADER:
+			set_jobmask(2, MAPID_SWORDMAN);
+			break;
+		case JOB_MONK:
+			set_jobmask(2, MAPID_ACOLYTE);
+			break;
+		case JOB_SAGE:
+			set_jobmask(2, MAPID_MAGE);
+			break;
+		case JOB_ALCHEMIST:
+			set_jobmask(2, MAPID_MERCHANT);
+			break;
+		case JOB_BARD:
+			set_jobmask(2, MAPID_ARCHER);
+			break;
+		case JOB_ROGUE:
+			set_jobmask(2, MAPID_THIEF);
+			break;
+		// Extended Classes
+		case JOB_TAEKWON:
+			set_jobmask(0, MAPID_TAEKWON);
+			break;
+		case JOB_STAR_GLADIATOR:
+			set_jobmask(1, MAPID_TAEKWON);
+			break;
+		case JOB_SOUL_LINKER:
+			set_jobmask(2, MAPID_TAEKWON);
+			break;
+		case JOB_GUNSLINGER:
+			set_jobmask(0, MAPID_GUNSLINGER);
+			set_jobmask(1, MAPID_GUNSLINGER);
+			break;
+		case JOB_NINJA:
+			set_jobmask(0, MAPID_NINJA);
+			set_jobmask(1, MAPID_NINJA);
+			break;
+		case JOB_KAGEROU:
+		case JOB_OBORO:
+			set_jobmask(1, MAPID_NINJA);
+			break;
+		case JOB_REBELLION:
+			set_jobmask(1, MAPID_GUNSLINGER);
+			break;
+		// Other Classes
+		case JOB_GANGSI:	//Bongun/Munak
+			set_jobmask(0, MAPID_GANGSI);
+			break;
+		case JOB_DEATH_KNIGHT:
+			set_jobmask(1, MAPID_GANGSI);
+			break;
+		case JOB_DARK_COLLECTOR:
+			set_jobmask(2, MAPID_GANGSI);
+			break;
+	}
+#undef set_jobmask
+}
+
+/**
+ * Converts the JobMask to the format used by map-server to check item
+ * restriction as per job.
+ *
+ * @param bclass  Pointer to the variable containing the new format.
+ * @param jobmask Variable containing JobMask.
+ */
+void itemdb_jobmask2mapid(uint64 *bclass, int64 jobmask)
 {
 	int i;
 	nullpo_retv(bclass);
-	bclass[0]= bclass[1]= bclass[2]= 0;
+	bclass[0] = bclass[1] = bclass[2] = 0;
 	//Base classes
 	if (jobmask & 1<<JOB_NOVICE) {
 		//Both Novice/Super-Novice are counted with the same ID
@@ -1535,6 +1652,32 @@ void itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it, in
 }
 
 /**
+ * Processes job names and changes it into mapid format.
+ *
+ * @param id item_data entry.
+ * @param t  Libconfig setting entry. It is expected to be valid and it won't
+ *           be freed (it is care of the caller to do so if necessary).
+ */
+void itemdb_readdb_job_sub(struct item_data *id, struct config_setting_t *t)
+{
+	int idx = 0;
+	struct config_setting_t *it = NULL;
+	id->class_base[0] = id->class_base[1] = id->class_base[2] = 0;
+	while ((it = libconfig->setting_get_elem(t, idx++)) != NULL) {
+		const char *job_name = config_setting_name(it);
+		int job_id;
+
+		if (strcmp(job_name, "All") == 0) {
+			itemdb->jobmask2mapid(id->class_base, UINT64_MAX);
+		} else if ((job_id = pc->check_job_name(job_name)) == -1) {
+			ShowWarning("itemdb_readdb_job_sub: unknown job name '%s'!\n", job_name);
+		} else {
+			itemdb->jobid2mapid(id->class_base, job_id, libconfig->setting_get_bool(it));
+		}
+	}
+}
+
+/**
  * Processes one itemdb entry from the libconfig backend, loading and inserting
  * it into the item database.
  *
@@ -1675,10 +1818,15 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 	if( itemdb->lookup_const(it, "Slots", &i32) && i32 >= 0 )
 		id.slot = i32;
 
-	if( itemdb->lookup_const(it, "Job", &i32) ) // This is an unsigned value, do not check for >= 0
-		itemdb->jobid2mapid(id.class_base, (unsigned int)i32);
-	else if( !inherit )
-		itemdb->jobid2mapid(id.class_base, UINT_MAX);
+	if ((t = libconfig->setting_get_member(it, "Job")) != NULL) {
+		if (config_setting_is_group(t)) {
+			itemdb->readdb_job_sub(&id, t);
+		} else if (itemdb->lookup_const(it, "Job", &i32) && i32 >= 0) {
+			itemdb->jobmask2mapid(id.class_base, i32);
+		}
+	} else if (!inherit) {
+		itemdb->jobmask2mapid(id.class_base, UINT64_MAX);
+	}
 
 	if( itemdb->lookup_const(it, "Upper", &i32) && i32 >= 0 )
 		id.class_upper = (unsigned int)i32;
@@ -2226,6 +2374,7 @@ void itemdb_defaults(void) {
 	itemdb->searchname_array_sub = itemdb_searchname_array_sub;
 	itemdb->searchrandomid = itemdb_searchrandomid;
 	itemdb->typename = itemdb_typename;
+	itemdb->jobmask2mapid = itemdb_jobmask2mapid;
 	itemdb->jobid2mapid = itemdb_jobid2mapid;
 	itemdb->create_dummy_data = create_dummy_data;
 	itemdb->create_item_data = create_item_data;
@@ -2250,6 +2399,7 @@ void itemdb_defaults(void) {
 	itemdb->gendercheck = itemdb_gendercheck;
 	itemdb->validate_entry = itemdb_validate_entry;
 	itemdb->readdb_additional_fields = itemdb_readdb_additional_fields;
+	itemdb->readdb_job_sub = itemdb_readdb_job_sub;
 	itemdb->readdb_libconfig_sub = itemdb_readdb_libconfig_sub;
 	itemdb->readdb_libconfig = itemdb_readdb_libconfig;
 	itemdb->unique_id = itemdb_unique_id;

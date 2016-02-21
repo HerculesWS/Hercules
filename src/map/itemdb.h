@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -478,7 +478,7 @@ struct item_data {
 	int delay;
 //Lupus: I rearranged order of these fields due to compatibility with ITEMINFO script command
 //       some script commands should be revised as well...
-	unsigned int class_base[3]; ///< Specifies if the base can wear this item (split in 3 indexes per type: 1-1, 2-1, 2-2)
+	uint64 class_base[3]; ///< Specifies if the base can wear this item (split in 3 indexes per type: 1-1, 2-1, 2-2)
 	unsigned class_upper : 6;   ///< Specifies if the upper-type can equip it (bitfield, 0x01: normal, 0x02: upper, 0x04: baby normal, 0x08: third normal, 0x10: third upper, 0x20: third baby)
 	struct {
 		unsigned short chance;
@@ -608,7 +608,8 @@ struct itemdb_interface {
 	int (*searchname_array_sub) (DBKey key, DBData data, va_list ap);
 	int (*searchrandomid) (struct item_group *group);
 	const char* (*typename) (int type);
-	void (*jobid2mapid) (unsigned int *bclass, unsigned int jobmask);
+	void (*jobmask2mapid) (uint64 *bclass, int64 jobmask);
+	void (*jobid2mapid) (uint64 *bclass, int job_id, bool enable);
 	void (*create_dummy_data) (void);
 	struct item_data* (*create_item_data) (int nameid);
 	int (*isequip) (int nameid);
@@ -632,6 +633,7 @@ struct itemdb_interface {
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
 	void (*readdb_additional_fields) (int itemid, struct config_setting_t *it, int n, const char *source);
+	void (*readdb_job_sub) (struct item_data *id, struct config_setting_t *t);
 	int (*readdb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);
 	int (*readdb_libconfig) (const char *filename);
 	uint64 (*unique_id) (struct map_session_data *sd);
