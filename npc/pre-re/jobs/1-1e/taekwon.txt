@@ -10,7 +10,6 @@
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
 //= Copyright (C) 2012-2016  Hercules Dev Team
-//= Copyright (C)  Euphy
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -25,12 +24,11 @@
 //= You should have received a copy of the GNU General Public License
 //= along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=========================================================================
-//= Bullet Dealers (Renewal)
+//= Taekwon Job Quest (Pre-Renewal)
 //================= Description ===========================================
-//= Bullet trader.
+//= Official TaeKwon Job Change Quest
 //================= Current Version =======================================
-//= 1.2
+//= 1.0
 //=========================================================================
 
-que_ng,187,156,3	duplicate(bdt)	Bullet Dealer Tony#ng	4_M_04
-izlude_in,74,106,3	duplicate(bdt)	Bullet Dealer Tony#iz	4_M_04
+payon,157,141,5	duplicate(Pheonix)	Phoenix#TKJobChangePRE	4_M_MONK

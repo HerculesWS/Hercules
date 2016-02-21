@@ -37,7 +37,7 @@
 //================= Description ===========================================
 //= Payon City Npcs
 //================= Current Version =======================================
-//= 2.1c
+//= 2.1.1
 //=========================================================================
 
 //== Payon =================================================
@@ -90,7 +90,7 @@ payon,134,211,4	script	Young Man#payon	1_M_ORIENT01,{
 	close;
 }
 
-payon,173,82,0	script	Young Man#2payon	4_M_ORIENT01,{
+payon,176,85,0	script	Young Man#2payon	4_M_ORIENT01,{
 	mes "[Young Man]";
 	mes "I remember the story my dearly departed grandfather has told me.";
 	next;
