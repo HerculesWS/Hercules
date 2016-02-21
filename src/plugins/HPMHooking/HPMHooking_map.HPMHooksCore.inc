@@ -2670,6 +2670,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_searchrandomid_post;
 	struct HPMHookPoint *HP_itemdb_typename_pre;
 	struct HPMHookPoint *HP_itemdb_typename_post;
+	struct HPMHookPoint *HP_itemdb_jobmask2mapid_pre;
+	struct HPMHookPoint *HP_itemdb_jobmask2mapid_post;
 	struct HPMHookPoint *HP_itemdb_jobid2mapid_pre;
 	struct HPMHookPoint *HP_itemdb_jobid2mapid_post;
 	struct HPMHookPoint *HP_itemdb_create_dummy_data_pre;
@@ -2718,6 +2720,8 @@ struct {
 	struct HPMHookPoint *HP_itemdb_validate_entry_post;
 	struct HPMHookPoint *HP_itemdb_readdb_additional_fields_pre;
 	struct HPMHookPoint *HP_itemdb_readdb_additional_fields_post;
+	struct HPMHookPoint *HP_itemdb_readdb_job_sub_pre;
+	struct HPMHookPoint *HP_itemdb_readdb_job_sub_post;
 	struct HPMHookPoint *HP_itemdb_readdb_libconfig_sub_pre;
 	struct HPMHookPoint *HP_itemdb_readdb_libconfig_sub_post;
 	struct HPMHookPoint *HP_itemdb_readdb_libconfig_pre;
@@ -8541,6 +8545,8 @@ struct {
 	int HP_itemdb_searchrandomid_post;
 	int HP_itemdb_typename_pre;
 	int HP_itemdb_typename_post;
+	int HP_itemdb_jobmask2mapid_pre;
+	int HP_itemdb_jobmask2mapid_post;
 	int HP_itemdb_jobid2mapid_pre;
 	int HP_itemdb_jobid2mapid_post;
 	int HP_itemdb_create_dummy_data_pre;
@@ -8589,6 +8595,8 @@ struct {
 	int HP_itemdb_validate_entry_post;
 	int HP_itemdb_readdb_additional_fields_pre;
 	int HP_itemdb_readdb_additional_fields_post;
+	int HP_itemdb_readdb_job_sub_pre;
+	int HP_itemdb_readdb_job_sub_post;
 	int HP_itemdb_readdb_libconfig_sub_pre;
 	int HP_itemdb_readdb_libconfig_sub_post;
 	int HP_itemdb_readdb_libconfig_pre;

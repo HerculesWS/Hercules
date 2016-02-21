@@ -35136,13 +35136,13 @@ const char* HP_itemdb_typename(int type) {
 	}
 	return retVal___;
 }
-void HP_itemdb_jobid2mapid(unsigned int *bclass, unsigned int jobmask) {
+void HP_itemdb_jobmask2mapid(uint64 *bclass, int64 jobmask) {
 	int hIndex = 0;
-	if( HPMHooks.count.HP_itemdb_jobid2mapid_pre ) {
-		void (*preHookFunc) (unsigned int *bclass, unsigned int *jobmask);
+	if( HPMHooks.count.HP_itemdb_jobmask2mapid_pre ) {
+		void (*preHookFunc) (uint64 *bclass, int64 *jobmask);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_jobid2mapid_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_itemdb_jobid2mapid_pre[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_jobmask2mapid_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_itemdb_jobmask2mapid_pre[hIndex].func;
 			preHookFunc(bclass, &jobmask);
 		}
 		if( *HPMforce_return ) {
@@ -35151,13 +35151,39 @@ void HP_itemdb_jobid2mapid(unsigned int *bclass, unsigned int jobmask) {
 		}
 	}
 	{
-		HPMHooks.source.itemdb.jobid2mapid(bclass, jobmask);
+		HPMHooks.source.itemdb.jobmask2mapid(bclass, jobmask);
+	}
+	if( HPMHooks.count.HP_itemdb_jobmask2mapid_post ) {
+		void (*postHookFunc) (uint64 *bclass, int64 *jobmask);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_jobmask2mapid_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_itemdb_jobmask2mapid_post[hIndex].func;
+			postHookFunc(bclass, &jobmask);
+		}
+	}
+	return;
+}
+void HP_itemdb_jobid2mapid(uint64 *bclass, int job_id, bool enable) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_itemdb_jobid2mapid_pre ) {
+		void (*preHookFunc) (uint64 *bclass, int *job_id, bool *enable);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_jobid2mapid_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_itemdb_jobid2mapid_pre[hIndex].func;
+			preHookFunc(bclass, &job_id, &enable);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.itemdb.jobid2mapid(bclass, job_id, enable);
 	}
 	if( HPMHooks.count.HP_itemdb_jobid2mapid_post ) {
-		void (*postHookFunc) (unsigned int *bclass, unsigned int *jobmask);
+		void (*postHookFunc) (uint64 *bclass, int *job_id, bool *enable);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_jobid2mapid_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_itemdb_jobid2mapid_post[hIndex].func;
-			postHookFunc(bclass, &jobmask);
+			postHookFunc(bclass, &job_id, &enable);
 		}
 	}
 	return;
@@ -35776,6 +35802,32 @@ void HP_itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it,
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_additional_fields_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_itemdb_readdb_additional_fields_post[hIndex].func;
 			postHookFunc(&itemid, it, &n, source);
+		}
+	}
+	return;
+}
+void HP_itemdb_readdb_job_sub(struct item_data *id, struct config_setting_t *t) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_itemdb_readdb_job_sub_pre ) {
+		void (*preHookFunc) (struct item_data *id, struct config_setting_t *t);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_job_sub_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_itemdb_readdb_job_sub_pre[hIndex].func;
+			preHookFunc(id, t);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.itemdb.readdb_job_sub(id, t);
+	}
+	if( HPMHooks.count.HP_itemdb_readdb_job_sub_post ) {
+		void (*postHookFunc) (struct item_data *id, struct config_setting_t *t);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_readdb_job_sub_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_itemdb_readdb_job_sub_post[hIndex].func;
+			postHookFunc(id, t);
 		}
 	}
 	return;
