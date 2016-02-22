@@ -1930,10 +1930,9 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 }
 
 /**
- * parses incoming npc market purchase list
+ * Processes incoming npc market purchase list
  **/
-// FIXME[Haru]: This needs to be decoupled from the client. A packet struct should never make it into npc functions.
-int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, struct packet_npc_market_purchase *p)
+int npc_market_buylist(struct map_session_data *sd, struct itemlist *item_list)
 {
 	struct npc_data* nd;
 	struct npc_item_list *shop = NULL;
@@ -1942,11 +1941,11 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 	unsigned short shop_size = 0;
 
 	nullpo_retr(1, sd);
-	nullpo_retr(1, p);
+	nullpo_retr(1, item_list);
 
 	nd = npc->checknear(sd,map->id2bl(sd->npc_shopid));
 
-	if( nd == NULL || nd->subtype != SCRIPT || !list_size || !nd->u.scr.shop || nd->u.scr.shop->type != NST_MARKET )
+	if (nd == NULL || nd->subtype != SCRIPT || VECTOR_LENGTH(*item_list) == 0 || !nd->u.scr.shop || nd->u.scr.shop->type != NST_MARKET)
 		return 1;
 
 	shop = nd->u.scr.shop->item;
@@ -1957,37 +1956,37 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 	new_ = 0;
 
 	// process entries in buy list, one by one
-	for( i = 0; i < list_size; ++i ) {
-		int nameid, amount, value;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		int value;
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 
 		// find this entry in the shop's sell list
 		ARR_FIND( 0, shop_size, j,
-				 p->list[i].ITID == shop[j].nameid || //Normal items
-				 p->list[i].ITID == itemdb_viewid(shop[j].nameid) //item_avail replacement
+				 entry->id == shop[j].nameid || //Normal items
+				 entry->id == itemdb_viewid(shop[j].nameid) //item_avail replacement
 				 );
-
-		if( j == shop_size ) /* TODO find official response for this */
+		if (j == shop_size) /* TODO find official response for this */
 			return 1; // no such item in shop
 
-		if( p->list[i].qty > shop[j].qty )
+		entry->id = shop[j].nameid; //item_avail replacement
+
+		if (entry->amount > (int)shop[j].qty)
 			return 1;
 
-		amount = p->list[i].qty;
-		nameid = p->list[i].ITID = shop[j].nameid; //item_avail replacement
 		value = shop[j].value;
 		npc_market_qty[i] = j;
 
-		if( !itemdb->exists(nameid) ) /* TODO find official response for this */
+		if (!itemdb->exists(entry->id)) /* TODO find official response for this */
 			return 1; // item no longer in itemdb
 
-		if( !itemdb->isstackable(nameid) && amount > 1 ) {
+		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
 			//Exploit? You can't buy more than 1 of equipment types o.O
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
-						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
-			amount = p->list[i].qty = 1;
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->amount, entry->id);
+			entry->amount = 1;
 		}
 
-		switch( pc->checkadditem(sd,nameid,amount) ) {
+		switch (pc->checkadditem(sd, entry->id, entry->amount)) {
 			case ADDITEM_EXIST:
 				break;
 			case ADDITEM_NEW:
@@ -1997,8 +1996,8 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 				return 1;
 		}
 
-		z += (int64)value * amount;
-		w += itemdb_weight(nameid) * amount;
+		z += (int64)value * entry->amount;
+		w += itemdb_weight(entry->id) * entry->amount;
 	}
 
 	if (z > sd->status.zeny) /* TODO find official response for this */
@@ -2012,28 +2011,27 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 
 	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
 
-	for( i = 0; i < list_size; ++i ) {
-		int nameid = p->list[i].ITID;
-		int amount = p->list[i].qty;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 
 		j = npc_market_qty[i];
 
-		if( p->list[i].qty > shop[j].qty ) /* wohoo someone tampered with the packet. */
+		if (entry->amount > (int)shop[j].qty) /* wohoo someone tampered with the packet. */
 			return 1;
 
-		shop[j].qty -= amount;
+		shop[j].qty -= entry->amount;
 
 		npc->market_tosql(nd,j);
 
-		if (itemdb_type(nameid) == IT_PETEGG) {
-			pet->create_egg(sd, nameid);
+		if (itemdb_type(entry->id) == IT_PETEGG) {
+			pet->create_egg(sd, entry->id);
 		} else {
 			struct item item_tmp;
 			memset(&item_tmp,0,sizeof(item_tmp));
-			item_tmp.nameid = nameid;
+			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
 
-			pc->additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
+			pc->additem(sd, &item_tmp, entry->amount, LOG_TYPE_NPC);
 		}
 	}
 

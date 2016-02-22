@@ -18193,33 +18193,30 @@ void clif_parse_NPCMarketClosed(int fd, struct map_session_data *sd) {
 	sd->npc_shopid = 0;
 }
 
-void clif_npc_market_purchase_ack(struct map_session_data *sd, const struct packet_npc_market_purchase *req, unsigned char response)
+void clif_npc_market_purchase_ack(struct map_session_data *sd, const struct itemlist *item_list, unsigned char response)
 {
 #if PACKETVER >= 20131223
 	unsigned short c = 0;
 
 	nullpo_retv(sd);
-	nullpo_retv(req);
+	nullpo_retv(item_list);
 	npcmarket_result.PacketType = npcmarketresultackType;
 	npcmarket_result.result = response == 0 ? 1 : 0;/* find other values */
 
-	if( npcmarket_result.result ) {
-		unsigned short i, list_size = (req->PacketLength - 4) / sizeof(req->list[0]), j;
-		struct npc_data* nd;
-		struct npc_item_list *shop = NULL;
-		unsigned short shop_size = 0;
+	if (npcmarket_result.result) {
+		struct npc_data *nd = map->id2nd(sd->npc_shopid);
+		struct npc_item_list *shop = nd->u.scr.shop->item;
+		unsigned short shop_size = nd->u.scr.shop->items;
+		int i;
 
-		nd = map->id2nd(sd->npc_shopid);
+		for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+			const struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+			int j;
 
-		shop = nd->u.scr.shop->item;
-		shop_size = nd->u.scr.shop->items;
+			npcmarket_result.list[i].ITID = entry->id;
+			npcmarket_result.list[i].qty  = entry->amount;
 
-		for(i = 0; i < list_size; i++) {
-
-			npcmarket_result.list[i].ITID  = req->list[i].ITID;
-			npcmarket_result.list[i].qty   = req->list[i].qty;
-
-			ARR_FIND( 0, shop_size, j, req->list[i].ITID == shop[j].nameid );
+			ARR_FIND( 0, shop_size, j, entry->id == shop[j].nameid);
 
 			npcmarket_result.list[i].price = (j != shop_size) ? shop[j].value : 0;
 
@@ -18238,16 +18235,28 @@ void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
 {
 #if PACKETVER >= 20131223
 	const struct packet_npc_market_purchase *p = RP2PTR(fd);
-	struct packet_npc_market_purchase pcopy;
-	int response = 0;
+	int response = 0, i;
 	int count = (p->PacketLength - 4) / sizeof p->list[0];
+	struct itemlist item_list;
 
 	Assert_retv(count >= 0 && count <= MAX_INVENTORY);
 
-	memcpy(&pcopy, p, p->PacketLength); // FIXME: Temporary hack (until changed to a flexible array)
+	VECTOR_INIT(item_list);
+	VECTOR_ENSURE(item_list, count, 1);
 
-	response = npc->market_buylist(sd, count, &pcopy);
-	clif->npc_market_purchase_ack(sd, &pcopy, response);
+	for (i = 0; i < count; i++) {
+		struct itemlist_entry entry = { 0 };
+
+		entry.id = p->list[i].ITID;
+		entry.amount = p->list[i].qty;
+
+		VECTOR_PUSH(item_list, entry);
+	}
+
+	response = npc->market_buylist(sd, &item_list);
+	clif->npc_market_purchase_ack(sd, &item_list, response);
+
+	VECTOR_CLEAR(item_list);
 #endif
 }
 
