@@ -108,7 +108,8 @@ void mapif_homunculus_deleted(int fd, int flag);
 void mapif_homunculus_loaded(int fd, int account_id, struct s_homunculus *hd);
 void mapif_homunculus_saved(int fd, int account_id, bool flag);
 void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsigned char flag, char* name);
-bool mapif_homunculus_save(struct s_homunculus* hd);
+bool mapif_homunculus_create(struct s_homunculus *hd);
+bool mapif_homunculus_save(const struct s_homunculus *hd);
 bool mapif_homunculus_load(int homun_id, struct s_homunculus* hd);
 bool mapif_homunculus_delete(int homun_id);
 bool mapif_homunculus_rename(char *name);
@@ -284,6 +285,7 @@ void mapif_defaults(void) {
 	mapif->homunculus_loaded = mapif_homunculus_loaded;
 	mapif->homunculus_saved = mapif_homunculus_saved;
 	mapif->homunculus_renamed = mapif_homunculus_renamed;
+	mapif->homunculus_create = mapif_homunculus_create;
 	mapif->homunculus_save = mapif_homunculus_save;
 	mapif->homunculus_load = mapif_homunculus_load;
 	mapif->homunculus_delete = mapif_homunculus_delete;
