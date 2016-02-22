@@ -10587,15 +10587,30 @@ void clif_parse_NpcSellListSend(int fd,struct map_session_data *sd)
 {
 	int fail=0,n;
 
-	n = (RFIFOW(fd,2)-4) /4;
+	n = ((int)RFIFOW(fd,2)-4) /4;
+
+	Assert_retv(n >= 0);
 
 	if (sd->state.trading || !sd->npc_shopid) {
 		fail = 1;
 	} else {
-		unsigned short *item_list = aMalloc(sizeof(*item_list) * 2 * n);
-		memcpy(item_list, RFIFOP(fd,4), sizeof(*item_list) * 2 * n);
-		fail = npc->selllist(sd,n,item_list);
-		aFree(item_list);
+		struct itemlist item_list = { 0 };
+		int i;
+
+		VECTOR_INIT(item_list);
+		VECTOR_ENSURE(item_list, n, 1);
+
+		for (i = 0; i < n; i++) {
+			struct itemlist_entry entry = { 0 };
+
+			entry.id = (int)RFIFOW(fd, 4 + 4 * i) - 2;
+			entry.amount =  RFIFOW(fd, 4 + 4 * i + 2);
+
+			VECTOR_PUSH(item_list, entry);
+		}
+		fail = npc->selllist(sd, &item_list);
+
+		VECTOR_CLEAR(item_list);
 	}
 
 	sd->npc_shopid = 0; //Clear shop data.

@@ -236,8 +236,8 @@ struct npc_interface {
 	int (*buylist_sub) (struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd);
 	int (*cashshop_buy) (struct map_session_data *sd, int nameid, int amount, int points);
 	int (*buylist) (struct map_session_data *sd, struct itemlist *item_list);
-	int (*selllist_sub) (struct map_session_data *sd, int n, unsigned short *item_list, struct npc_data *nd);
-	int (*selllist) (struct map_session_data *sd, int n, unsigned short *item_list);
+	int (*selllist_sub) (struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd);
+	int (*selllist) (struct map_session_data *sd, struct itemlist *item_list);
 	int (*remove_map) (struct npc_data *nd);
 	int (*unload_ev) (DBKey key, DBData *data, va_list ap);
 	int (*unload_ev_label) (DBKey key, DBData *data, va_list ap);
