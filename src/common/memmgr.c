@@ -184,6 +184,36 @@ char* aStrdup_(const char *p, const char *file, int line, const char *func)
 	}
 	return ret;
 }
+
+/**
+ * Copies a string to a newly allocated buffer, setting a maximum length.
+ *
+ * The string is always NULL-terminated. If the string is longer than `size`,
+ * then `size` bytes are copied, not including the appended NULL terminator.
+ *
+ * @warning
+ *   If malloc is out of memory, throws a fatal error and aborts the program.
+ *
+ * @param p the source string to copy.
+ * @param size The maximum string length to copy.
+ * @param file @see ALC_MARK.
+ * @param line @see ALC_MARK.
+ * @param func @see ALC_MARK.
+ * @return the copied string.
+ */
+char *aStrndup_(const char *p, size_t size, const char *file, int line, const char *func)
+{
+	size_t len = strnlen(p, size);
+	char *ret = MALLOC(len + 1, file, line, func);
+	if (ret == NULL) {
+		ShowFatalError("%s:%d: in func %s: aStrndup error out of memory!\n", file, line, func);
+		exit(EXIT_FAILURE);
+	}
+	memcpy(ret, p, len);
+	ret[len] = '\0';
+	return ret;
+}
+
 void aFree_(void *p, const char *file, int line, const char *func)
 {
 	// ShowMessage("%s:%d: in func %s: aFree %p\n",file,line,func,p);
@@ -477,6 +507,37 @@ char *mstrdup_(const char *p, const char *file, int line, const char *func) {
 		return string;
 	}
 }
+
+/**
+ * Copies a string to a newly allocated buffer, setting a maximum length.
+ *
+ * The string is always NULL-terminated. If the string is longer than `size`,
+ * then `size` bytes are copied, not including the appended NULL terminator.
+ *
+ * @warning
+ *   If malloc is out of memory, throws a fatal error and aborts the program.
+ *
+ * @param p the source string to copy.
+ * @param size The maximum string length to copy.
+ * @param file @see ALC_MARK.
+ * @param line @see ALC_MARK.
+ * @param func @see ALC_MARK.
+ * @return the copied string.
+ * @retval NULL if the source string is NULL or in case of error.
+ */
+char *mstrndup_(const char *p, size_t size, const char *file, int line, const char *func)
+{
+	if (p == NULL) {
+		return NULL;
+	} else {
+		size_t len = strnlen(p, size);
+		char *string = iMalloc->malloc(len + 1, file, line, func);
+		memcpy(string, p, len);
+		string[len] = '\0';
+		return string;
+	}
+}
+
 
 void mfree_(void *ptr, const char *file, int line, const char *func) {
 	struct unit_head *head;
@@ -947,6 +1008,7 @@ void malloc_defaults(void) {
 	iMalloc->realloc  = mrealloc_;
 	iMalloc->reallocz = mreallocz_;
 	iMalloc->astrdup  = mstrdup_;
+	iMalloc->astrndup = mstrndup_;
 	iMalloc->free     = mfree_;
 #else
 	iMalloc->malloc   = aMalloc_;
@@ -954,6 +1016,7 @@ void malloc_defaults(void) {
 	iMalloc->realloc  = aRealloc_;
 	iMalloc->reallocz = aReallocz_;/* not using memory manager huhum o.o perhaps we could still do something about */
 	iMalloc->astrdup  = aStrdup_;
+	iMalloc->astrndup = aStrndup_;
 	iMalloc->free     = aFree_;
 #endif
 	iMalloc->post_shutdown = NULL;
