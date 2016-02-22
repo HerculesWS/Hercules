@@ -16441,7 +16441,8 @@ void clif_parse_ItemListWindowSelected(int fd, struct map_session_data *sd)
 	int n = ((int)RFIFOW(fd,2) - 12) / 4;
 	int type = RFIFOL(fd,4);
 	int flag = RFIFOL(fd,8); // Button clicked: 0 = Cancel, 1 = OK
-	unsigned short *item_list = NULL;
+	struct itemlist item_list = { 0 };
+	int i;
 
 	if( sd->state.trading || sd->npc_shopid )
 		return;
@@ -16459,18 +16460,25 @@ void clif_parse_ItemListWindowSelected(int fd, struct map_session_data *sd)
 		return; // Prevent hacking.
 	}
 
-	item_list = aMalloc(sizeof *item_list * 2 * n);
-	memcpy(item_list, RFIFOP(fd,12), sizeof *item_list * 2 * n);
+	VECTOR_INIT(item_list);
+	VECTOR_ENSURE(item_list, n, 1);
+	for (i = 0; i < n; i++) {
+		struct itemlist_entry entry = { 0 };
+		entry.id = (int)RFIFOW(fd, 12 + 4 * i) - 2; // Inventory index
+		entry.amount =  RFIFOW(fd, 12 + 4 * i + 2);
+		VECTOR_PUSH(item_list, entry);
+	}
+
 	switch( type ) {
 		case 0: // Change Material
-			skill->changematerial(sd,n,item_list);
+			skill->changematerial(sd, &item_list);
 			break;
 		case 1: // Level 1: Pure to Rough
 		case 2: // Level 2: Rough to Pure
-			skill->elementalanalysis(sd,n,type,item_list);
+			skill->elementalanalysis(sd, type, &item_list);
 			break;
 	}
-	aFree(item_list);
+	VECTOR_CLEAR(item_list);
 	clif_menuskill_clear(sd);
 
 	return;
