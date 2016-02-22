@@ -94,32 +94,51 @@ bool inter_mercenary_owner_delete(int char_id)
 	return true;
 }
 
-bool mapif_mercenary_save(struct s_mercenary* merc)
+/**
+ * Creates a new mercenary with the given data.
+ *
+ * @remark
+ *   The mercenary ID is expected to be 0, and will be filled with the newly
+ *   assigned ID.
+ *
+ * @param[in,out] merc The new mercenary's data.
+ * @retval false in case of errors.
+ */
+bool mapif_mercenary_create(struct s_mercenary *merc)
 {
-	bool flag = true;
+	nullpo_retr(false, merc);
+	Assert_retr(false, merc->mercenary_id == 0);
 
-	nullpo_ret(merc);
-	if( merc->mercenary_id == 0 )
-	{ // Create new DB entry
-		if( SQL_ERROR == SQL->Query(inter->sql_handle,
+	if (SQL_ERROR == SQL->Query(inter->sql_handle,
 			"INSERT INTO `%s` (`char_id`,`class`,`hp`,`sp`,`kill_counter`,`life_time`) VALUES ('%d','%d','%d','%d','%u','%u')",
-			mercenary_db, merc->char_id, merc->class_, merc->hp, merc->sp, merc->kill_count, merc->life_time) )
-		{
-			Sql_ShowDebug(inter->sql_handle);
-			flag = false;
-		}
-		else
-			merc->mercenary_id = (int)SQL->LastInsertId(inter->sql_handle);
-	}
-	else if( SQL_ERROR == SQL->Query(inter->sql_handle,
-		"UPDATE `%s` SET `char_id` = '%d', `class` = '%d', `hp` = '%d', `sp` = '%d', `kill_counter` = '%u', `life_time` = '%u' WHERE `mer_id` = '%d'",
-		mercenary_db, merc->char_id, merc->class_, merc->hp, merc->sp, merc->kill_count, merc->life_time, merc->mercenary_id) )
-	{ // Update DB entry
+			mercenary_db, merc->char_id, merc->class_, merc->hp, merc->sp, merc->kill_count, merc->life_time)) {
 		Sql_ShowDebug(inter->sql_handle);
-		flag = false;
+		return false;
+	}
+	merc->mercenary_id = (int)SQL->LastInsertId(inter->sql_handle);
+
+	return true;
+}
+
+/**
+ * Saves an existing mercenary.
+ *
+ * @param merc The mercenary's data.
+ * @retval false in case of errors.
+ */
+bool mapif_mercenary_save(const struct s_mercenary *merc)
+{
+	nullpo_retr(false, merc);
+	Assert_retr(false, merc->mercenary_id > 0);
+
+	if (SQL_ERROR == SQL->Query(inter->sql_handle,
+			"UPDATE `%s` SET `char_id` = '%d', `class` = '%d', `hp` = '%d', `sp` = '%d', `kill_counter` = '%u', `life_time` = '%u' WHERE `mer_id` = '%d'",
+			mercenary_db, merc->char_id, merc->class_, merc->hp, merc->sp, merc->kill_count, merc->life_time, merc->mercenary_id)) {
+		Sql_ShowDebug(inter->sql_handle);
+		return false;
 	}
 
-	return flag;
+	return true;
 }
 
 bool mapif_mercenary_load(int merc_id, int char_id, struct s_mercenary *merc)
@@ -181,7 +200,7 @@ void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char flag)
 
 void mapif_parse_mercenary_create(int fd, struct s_mercenary* merc)
 {
-	bool result = mapif->mercenary_save(merc);
+	bool result = mapif->mercenary_create(merc);
 	mapif->mercenary_send(fd, merc, result);
 }
 

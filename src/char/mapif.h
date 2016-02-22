@@ -125,7 +125,8 @@ struct mapif_interface {
 	void (*parse_mail_return) (int fd);
 	void (*mail_send) (int fd, struct mail_message* msg);
 	void (*parse_mail_send) (int fd);
-	bool (*mercenary_save) (struct s_mercenary* merc);
+	bool (*mercenary_create) (struct s_mercenary *merc);
+	bool (*mercenary_save) (const struct s_mercenary *merc);
 	bool (*mercenary_load) (int merc_id, int char_id, struct s_mercenary *merc);
 	bool (*mercenary_delete) (int merc_id);
 	void (*mercenary_send) (int fd, struct s_mercenary *merc, unsigned char flag);
