@@ -15434,16 +15434,25 @@ void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 		int len = RFIFOW(fd,2);
 		int points = RFIFOL(fd,4);
 		int count = RFIFOW(fd,8);
-		unsigned short *item_list = NULL;
+		struct itemlist item_list = { 0 };
+		int i;
 
 		if( len < 10 || len != 10 + count * 4) {
 			ShowWarning("Player %d sent incorrect cash shop buy packet (len %d:%d)!\n", sd->status.char_id, len, 10 + count * 4);
 			return;
 		}
-		item_list = aMalloc(sizeof(*item_list) * 2 * count);
-		memcpy(item_list, RFIFOP(fd,10), sizeof(*item_list) * 2 * count);
-		fail = npc->cashshop_buylist(sd,points,count,item_list);
-		aFree(item_list);
+		VECTOR_INIT(item_list);
+		VECTOR_ENSURE(item_list, count, 1);
+		for (i = 0; i < count; i++) {
+			struct itemlist_entry entry = { 0 };
+
+			entry.amount = RFIFOW(fd, 10 + 4 * i);
+			entry.id =     RFIFOW(fd, 10 + 4 * i + 2); // Nameid
+
+			VECTOR_PUSH(item_list, entry);
+		}
+		fail = npc->cashshop_buylist(sd, points, &item_list);
+		VECTOR_CLEAR(item_list);
 #endif
 	}
 

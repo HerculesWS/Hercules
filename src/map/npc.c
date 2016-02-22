@@ -1386,8 +1386,9 @@ int npc_buysellsel(struct map_session_data* sd, int id, int type) {
 /*==========================================
 * Cash Shop Buy List
 *------------------------------------------*/
-int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, unsigned short* item_list) {
-	int i, j, nameid, amount, new_, w, vt;
+int npc_cashshop_buylist(struct map_session_data *sd, int points, struct itemlist *item_list)
+{
+	int i, j, new_, w, vt;
 	struct npc_data *nd = NULL;
 	struct npc_item_list *shop = NULL;
 	unsigned short shop_size = 0;
@@ -1395,7 +1396,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 	if( sd->state.trading )
 		return ERROR_TYPE_EXCHANGE;
 
-	if( count <= 0 )
+	if (VECTOR_LENGTH(*item_list) <= 0)
 		return ERROR_TYPE_ITEM_ID;
 
 	if( points < 0 )
@@ -1421,24 +1422,23 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 	vt = 0; // Global Value
 
 	// Validating Process ----------------------------------------------------
-	for( i = 0; i < count; i++ ) {
-		nameid = item_list[i*2+1];
-		amount = item_list[i*2+0];
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 
-		if( !itemdb->exists(nameid) || amount <= 0 )
+		if (!itemdb->exists(entry->id) || entry->amount <= 0)
 			return ERROR_TYPE_ITEM_ID;
 
-		ARR_FIND(0,shop_size,j,shop[j].nameid == nameid);
-		if( j == shop_size || shop[j].value <= 0 )
+		ARR_FIND(0,shop_size,j,shop[j].nameid == entry->id);
+		if (j == shop_size || shop[j].value <= 0)
 			return ERROR_TYPE_ITEM_ID;
 
-		if( !itemdb->isstackable(nameid) && amount > 1 ) {
+		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
-						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
-			amount = item_list[i*2+0] = 1;
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->amount, entry->id);
+			entry->amount = 1;
 		}
 
-		switch( pc->checkadditem(sd,nameid,amount) ) {
+		switch (pc->checkadditem(sd, entry->id, entry->amount)) {
 			case ADDITEM_NEW:
 				new_++;
 				break;
@@ -1446,8 +1446,8 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 				return ERROR_TYPE_INVENTORY_WEIGHT;
 		}
 
-		vt += shop[j].value * amount;
-		w += itemdb_weight(nameid) * amount;
+		vt += shop[j].value * entry->amount;
+		w += itemdb_weight(entry->id) * entry->amount;
 	}
 
 	if( w + sd->weight > sd->max_weight )
@@ -1468,18 +1468,16 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 		pc->paycash(sd,vt,points);
 	}
 	// Delivery Process ----------------------------------------------------
-	for( i = 0; i < count; i++ ) {
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 		struct item item_tmp;
-
-		nameid = item_list[i*2+1];
-		amount = item_list[i*2+0];
 
 		memset(&item_tmp,0,sizeof(item_tmp));
 
-		if( !pet->create_egg(sd,nameid) ) {
-			item_tmp.nameid = nameid;
+		if (!pet->create_egg(sd, entry->id)) {
+			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
-			pc->additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
+			pc->additem(sd, &item_tmp, entry->amount, LOG_TYPE_NPC);
 		}
 	}
 

@@ -29,7 +29,9 @@
 
 #include <pcre.h>
 
+/* Forward declarations */
 struct hplugin_data_store;
+struct itemlist; // map/itemdb.h
 struct view_data;
 
 enum npc_parse_options {
@@ -230,7 +232,7 @@ struct npc_interface {
 	int (*click) (struct map_session_data *sd, struct npc_data *nd);
 	int (*scriptcont) (struct map_session_data *sd, int id, bool closing);
 	int (*buysellsel) (struct map_session_data *sd, int id, int type);
-	int (*cashshop_buylist) (struct map_session_data *sd, int points, int count, unsigned short *item_list);
+	int (*cashshop_buylist) (struct map_session_data *sd, int points, struct itemlist *item_list);
 	int (*buylist_sub) (struct map_session_data *sd, int n, unsigned short *item_list, struct npc_data *nd);
 	int (*cashshop_buy) (struct map_session_data *sd, int nameid, int amount, int points);
 	int (*buylist) (struct map_session_data *sd, int n, unsigned short *item_list);
