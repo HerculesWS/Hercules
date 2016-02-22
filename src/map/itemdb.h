@@ -395,6 +395,14 @@ enum ItemNouseRestrictions {
 	INR_ALL     = 0x1 ///< Sum of all the above values
 };
 
+/** Convenience item list (entry) used in various functions */
+struct itemlist_entry {
+	int id;       ///< Item ID or (inventory) index
+	int16 amount; ///< Amount
+};
+/** Convenience item list used in various functions */
+VECTOR_STRUCT_DECL(itemlist, struct itemlist_entry);
+
 struct item_combo {
 	struct script_code *script;
 	unsigned short nameid[MAX_ITEMS_PER_COMBO];/* nameid array */
