@@ -12192,7 +12192,7 @@ BUILDIN(emotion) {
 			clif->emotion(&sd->bl,type);
 	} else if( script_hasdata(st,4) ) {
 		struct npc_data *nd = npc->name2id(script_getstr(st,4));
-		if (nd == NULL)
+		if (nd != NULL)
 			clif->emotion(&nd->bl,type);
 	} else {
 		clif->emotion(map->id2bl(st->oid),type);
