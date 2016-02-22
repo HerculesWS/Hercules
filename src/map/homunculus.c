@@ -775,7 +775,17 @@ int homunculus_db_search(int key,int type) {
 	return -1;
 }
 
-// Create homunc structure
+/**
+ * Creates and initializes an homunculus.
+ *
+ * @remark
+ *   The char_id field in the source homunculus data is ignored (the sd's
+ *   character ID is used instead).
+ *
+ * @param sd  The owner character.
+ * @param hom The homunculus source data.
+ * @retval false in case of errors.
+ */
 bool homunculus_create(struct map_session_data *sd, const struct s_homunculus *hom)
 {
 	struct homun_data *hd;
@@ -801,6 +811,7 @@ bool homunculus_create(struct map_session_data *sd, const struct s_homunculus *h
 	hd->master = sd;
 	hd->homunculusDB = &homun->dbs->db[i];
 	memcpy(&hd->homunculus, hom, sizeof(struct s_homunculus));
+	hd->homunculus.char_id = sd->status.char_id; // Fix character ID if necessary.
 	hd->exp_next = homun->dbs->exptable[hd->homunculus.level - 1];
 
 	status->set_viewdata(&hd->bl, hd->homunculus.class_);
@@ -874,34 +885,34 @@ bool homunculus_recv_data(int account_id, const struct s_homunculus *sh, int fla
 {
 	struct map_session_data *sd;
 	struct homun_data *hd;
-	struct s_homunculus new_sh;
 
 	nullpo_retr(false, sh);
+
 	sd = map->id2sd(account_id);
-	if(!sd)
+	if (sd == NULL)
 		return false;
-	memcpy(&new_sh, sh, sizeof(new_sh));
-	if (sd->status.char_id != new_sh.char_id) {
-		if (sd->status.hom_id == new_sh.hom_id)
-			new_sh.char_id = sd->status.char_id; //Correct char id.
-		else
-			return false;
-	}
-	if(!flag) { // Failed to load
+
+	if (flag == 0) { // Failed to load
 		sd->status.hom_id = 0;
 		return false;
 	}
 
-	if (!sd->status.hom_id) //Hom just created.
-		sd->status.hom_id = new_sh.hom_id;
+	if (sd->status.char_id != sh->char_id && sd->status.hom_id != sh->hom_id)
+		return false;
 
-	if (sd->hd) //uh? Overwrite the data.
-		memcpy(&sd->hd->homunculus, &new_sh, sizeof(struct s_homunculus));
-	else
-		homun->create(sd, &new_sh);
+	if (sd->status.hom_id == 0) //Hom just created.
+		sd->status.hom_id = sh->hom_id;
+
+	if (sd->hd != NULL) {
+		//uh? Overwrite the data.
+		memcpy(&sd->hd->homunculus, sh, sizeof sd->hd->homunculus);
+		sd->hd->homunculus.char_id = sd->status.char_id; // Correct char id if necessary.
+	} else {
+		homun->create(sd, sh);
+	}
 
 	hd = sd->hd;
-	if(hd && hd->homunculus.hp && hd->homunculus.vaporize == HOM_ST_ACTIVE && hd->bl.prev == NULL && sd->bl.prev != NULL) {
+	if(hd != NULL && hd->homunculus.hp && hd->homunculus.vaporize == HOM_ST_ACTIVE && hd->bl.prev == NULL && sd->bl.prev != NULL) {
 		enum homun_type htype = homun->class2type(hd->homunculus.class_);
 
 		map->addblock(&hd->bl);
