@@ -131,7 +131,8 @@ void mapif_mail_return(int fd, int char_id, int mail_id, int new_mail);
 void mapif_parse_mail_return(int fd);
 void mapif_mail_send(int fd, struct mail_message* msg);
 void mapif_parse_mail_send(int fd);
-bool mapif_mercenary_save(struct s_mercenary* merc);
+bool mapif_mercenary_create(struct s_mercenary *merc);
+bool mapif_mercenary_save(const struct s_mercenary *merc);
 bool mapif_mercenary_load(int merc_id, int char_id, struct s_mercenary *merc);
 bool mapif_mercenary_delete(int merc_id);
 void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char flag);
@@ -308,6 +309,7 @@ void mapif_defaults(void) {
 	mapif->parse_mail_return = mapif_parse_mail_return;
 	mapif->mail_send = mapif_mail_send;
 	mapif->parse_mail_send = mapif_parse_mail_send;
+	mapif->mercenary_create = mapif_mercenary_create;
 	mapif->mercenary_save = mapif_mercenary_save;
 	mapif->mercenary_load = mapif_mercenary_load;
 	mapif->mercenary_delete = mapif_mercenary_delete;
