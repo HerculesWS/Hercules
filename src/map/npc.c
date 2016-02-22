@@ -2043,7 +2043,7 @@ int npc_market_buylist(struct map_session_data *sd, struct itemlist *item_list)
 }
 
 /// npc_selllist for script-controlled shops
-int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_list, struct npc_data* nd)
+int npc_selllist_sub(struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd)
 {
 	char npc_ev[EVENT_NAME_LENGTH];
 	char card_slot[NAME_LENGTH];
@@ -2070,21 +2070,28 @@ int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_li
 	}
 
 	// save list of to be sold items
-	for (i = 0; i < n; i++) {
-		int idx = item_list[i*2]-2;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		struct item *item = &sd->status.inventory[entry->id];
+		intptr_t nameid = item->nameid;
+		intptr_t amount = entry->amount;
+		intptr_t refine = item->refine;
+		intptr_t attribute = item->attribute;
+		intptr_t identify = item->identify;
 
-		script->setarray_pc(sd, "@sold_nameid", i, (void*)(intptr_t)sd->status.inventory[idx].nameid, &key_nameid);
-		script->setarray_pc(sd, "@sold_quantity", i, (void*)(intptr_t)item_list[i*2+1], &key_amount);
+		script->setarray_pc(sd, "@sold_nameid", i, (void*)nameid, &key_nameid);
+		script->setarray_pc(sd, "@sold_quantity", i, (void*)amount, &key_amount);
 
 		// process item based information into the arrays
-		script->setarray_pc(sd, "@sold_refine", i, (void*)(intptr_t)sd->status.inventory[idx].refine, &key_refine);
-		script->setarray_pc(sd, "@sold_attribute", i, (void*)(intptr_t)sd->status.inventory[idx].attribute, &key_attribute);
-		script->setarray_pc(sd, "@sold_identify", i, (void*)(intptr_t)sd->status.inventory[idx].identify, &key_identify);
+		script->setarray_pc(sd, "@sold_refine", i, (void*)refine, &key_refine);
+		script->setarray_pc(sd, "@sold_attribute", i, (void*)attribute, &key_attribute);
+		script->setarray_pc(sd, "@sold_identify", i, (void*)identify, &key_identify);
 
 		for (j = 0; j < MAX_SLOTS; j++) {
+			intptr_t card = item->card[j];
 			// store each of the cards/special info from the item in the array
 			snprintf(card_slot, sizeof(card_slot), "@sold_card%d", j + 1);
-			script->setarray_pc(sd, card_slot, i, (void*)(intptr_t)sd->status.inventory[idx].card[j], &key_card[j]);
+			script->setarray_pc(sd, card_slot, i, (void*)card, &key_card[j]);
 		}
 
 	}
@@ -2099,7 +2106,8 @@ int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_li
 ///
 /// @param item_list 'n' pairs <index,amount>
 /// @return result code for clif->parse_NpcSellListSend
-int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) {
+int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
+{
 	int64 z;
 	int i,skill_t, skill_idx = skill->get_index(MC_OVERCHARGE);
 	struct npc_data *nd;
@@ -2120,13 +2128,11 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 	z = 0;
 
 	// verify the sell list
-	for (i = 0; i < n; i++) {
-		int nameid, amount, idx, value;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		int nameid, value, idx = entry->id;
 
-		idx    = item_list[i*2]-2;
-		amount = item_list[i*2+1];
-
-		if (idx >= MAX_INVENTORY || idx < 0 || amount < 0) {
+		if (idx >= MAX_INVENTORY || idx < 0 || entry->amount < 0) {
 			return 1;
 		}
 
@@ -2138,7 +2144,7 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 
 		nameid = sd->status.inventory[idx].nameid;
 
-		if (!nameid || !sd->inventory_data[idx] || sd->status.inventory[idx].amount < amount) {
+		if (!nameid || !sd->inventory_data[idx] || sd->status.inventory[idx].amount < entry->amount) {
 			return 1;
 		}
 
@@ -2149,27 +2155,25 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 
 		value = pc->modifysellvalue(sd, sd->inventory_data[idx]->value_sell);
 
-		z += (int64)value * amount;
+		z += (int64)value * entry->amount;
 	}
 
 	if( nd->master_nd ) { // Script-controlled shops
-		return npc->selllist_sub(sd, n, item_list, nd->master_nd);
+		return npc->selllist_sub(sd, item_list, nd->master_nd);
 	}
 
 	// delete items
-	for( i = 0; i < n; i++ ) {
-		int amount, idx;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		int idx = entry->id;
 
-		idx    = item_list[i*2]-2;
-		amount = item_list[i*2+1];
-
-		if( sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET ) {
-			if( pet->search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0 ) {
+		if (sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET) {
+			if (pet->search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0) {
 				intif->delete_petdata(MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
 			}
 		}
 
-		pc->delitem(sd, idx, amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
+		pc->delitem(sd, idx, entry->amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
 	}
 
 	if( z > MAX_ZENY )
