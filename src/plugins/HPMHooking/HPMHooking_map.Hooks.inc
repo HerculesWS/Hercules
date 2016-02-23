@@ -35136,10 +35136,10 @@ const char* HP_itemdb_typename(int type) {
 	}
 	return retVal___;
 }
-void HP_itemdb_jobmask2mapid(uint64 *bclass, int64 jobmask) {
+void HP_itemdb_jobmask2mapid(uint64 *bclass, uint64 jobmask) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_itemdb_jobmask2mapid_pre ) {
-		void (*preHookFunc) (uint64 *bclass, int64 *jobmask);
+		void (*preHookFunc) (uint64 *bclass, uint64 *jobmask);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_jobmask2mapid_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_itemdb_jobmask2mapid_pre[hIndex].func;
@@ -35154,7 +35154,7 @@ void HP_itemdb_jobmask2mapid(uint64 *bclass, int64 jobmask) {
 		HPMHooks.source.itemdb.jobmask2mapid(bclass, jobmask);
 	}
 	if( HPMHooks.count.HP_itemdb_jobmask2mapid_post ) {
-		void (*postHookFunc) (uint64 *bclass, int64 *jobmask);
+		void (*postHookFunc) (uint64 *bclass, uint64 *jobmask);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_jobmask2mapid_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_itemdb_jobmask2mapid_post[hIndex].func;
 			postHookFunc(bclass, &jobmask);
