@@ -354,13 +354,8 @@ const char* itemdb_typename(int type)
  */
 void itemdb_jobid2mapid(uint64 *bclass, int job_id, bool enable)
 {
-#define set_jobmask(bclass_idx, mapid) \
-	do { \
-		if (enable) \
-			bclass[(bclass_idx)] |= 1L<<(mapid); \
-		else \
-			bclass[(bclass_idx)] &= ~(1L<<(mapid)); \
-	} while (false)
+	uint64 mask[3] = { 0 };
+	int i;
 
 	nullpo_retv(bclass);
 
@@ -368,8 +363,8 @@ void itemdb_jobid2mapid(uint64 *bclass, int job_id, bool enable)
 		// Base Classes
 		case JOB_NOVICE:
 		case JOB_SUPER_NOVICE:
-			set_jobmask(0, MAPID_NOVICE);
-			set_jobmask(1, MAPID_NOVICE);
+			mask[0] = 1ULL << MAPID_NOVICE;
+			mask[1] = 1ULL << MAPID_NOVICE;
 			break;
 		case JOB_SWORDMAN:
 		case JOB_MAGE:
@@ -377,83 +372,91 @@ void itemdb_jobid2mapid(uint64 *bclass, int job_id, bool enable)
 		case JOB_ACOLYTE:
 		case JOB_MERCHANT:
 		case JOB_THIEF:
-			set_jobmask(0, MAPID_NOVICE+job_id);
+			mask[0] = 1ULL << (MAPID_NOVICE+job_id);
 			break;
 		// 2-1 Classes
 		case JOB_KNIGHT:
-			set_jobmask(1, MAPID_SWORDMAN);
+			mask[1] = 1ULL << MAPID_SWORDMAN;
 			break;
 		case JOB_PRIEST:
-			set_jobmask(1, MAPID_ACOLYTE);
+			mask[1] = 1ULL << MAPID_ACOLYTE;
 			break;
 		case JOB_WIZARD:
-			set_jobmask(1, MAPID_MAGE);
+			mask[1] = 1ULL << MAPID_MAGE;
 			break;
 		case JOB_BLACKSMITH:
-			set_jobmask(1, MAPID_MERCHANT);
+			mask[1] = 1ULL << MAPID_MERCHANT;
 			break;
 		case JOB_HUNTER:
-			set_jobmask(1, MAPID_ARCHER);
+			mask[1] = 1ULL << MAPID_ARCHER;
 			break;
 		case JOB_ASSASSIN:
-			set_jobmask(1, MAPID_THIEF);
+			mask[1] = 1ULL << MAPID_THIEF;
 			break;
 		// 2-2 Classes
 		case JOB_CRUSADER:
-			set_jobmask(2, MAPID_SWORDMAN);
+			mask[2] = 1ULL << MAPID_SWORDMAN;
 			break;
 		case JOB_MONK:
-			set_jobmask(2, MAPID_ACOLYTE);
+			mask[2] = 1ULL << MAPID_ACOLYTE;
 			break;
 		case JOB_SAGE:
-			set_jobmask(2, MAPID_MAGE);
+			mask[2] = 1ULL << MAPID_MAGE;
 			break;
 		case JOB_ALCHEMIST:
-			set_jobmask(2, MAPID_MERCHANT);
+			mask[2] = 1ULL << MAPID_MERCHANT;
 			break;
 		case JOB_BARD:
-			set_jobmask(2, MAPID_ARCHER);
+			mask[2] = 1ULL << MAPID_ARCHER;
 			break;
 		case JOB_ROGUE:
-			set_jobmask(2, MAPID_THIEF);
+			mask[2] = 1ULL << MAPID_THIEF;
 			break;
 		// Extended Classes
 		case JOB_TAEKWON:
-			set_jobmask(0, MAPID_TAEKWON);
+			mask[0] = 1ULL << MAPID_TAEKWON;
 			break;
 		case JOB_STAR_GLADIATOR:
-			set_jobmask(1, MAPID_TAEKWON);
+			mask[1] = 1ULL << MAPID_TAEKWON;
 			break;
 		case JOB_SOUL_LINKER:
-			set_jobmask(2, MAPID_TAEKWON);
+			mask[2] = 1ULL << MAPID_TAEKWON;
 			break;
 		case JOB_GUNSLINGER:
-			set_jobmask(0, MAPID_GUNSLINGER);
-			set_jobmask(1, MAPID_GUNSLINGER);
+			mask[0] = 1ULL << MAPID_GUNSLINGER;
+			mask[1] = 1ULL << MAPID_GUNSLINGER;
 			break;
 		case JOB_NINJA:
-			set_jobmask(0, MAPID_NINJA);
-			set_jobmask(1, MAPID_NINJA);
+			mask[0] = 1ULL << MAPID_NINJA;
+			mask[1] = 1ULL << MAPID_NINJA;
 			break;
 		case JOB_KAGEROU:
 		case JOB_OBORO:
-			set_jobmask(1, MAPID_NINJA);
+			mask[1] = 1ULL << MAPID_NINJA;
 			break;
 		case JOB_REBELLION:
-			set_jobmask(1, MAPID_GUNSLINGER);
+			mask[1] = 1ULL << MAPID_GUNSLINGER;
 			break;
 		// Other Classes
-		case JOB_GANGSI:	//Bongun/Munak
-			set_jobmask(0, MAPID_GANGSI);
+		case JOB_GANGSI: //Bongun/Munak
+			mask[0] = 1ULL << MAPID_GANGSI;
 			break;
 		case JOB_DEATH_KNIGHT:
-			set_jobmask(1, MAPID_GANGSI);
+			mask[1] = 1ULL << MAPID_GANGSI;
 			break;
 		case JOB_DARK_COLLECTOR:
-			set_jobmask(2, MAPID_GANGSI);
+			mask[2] = 1ULL << MAPID_GANGSI;
 			break;
 	}
-#undef set_jobmask
+
+	for (i = 0; i < ARRAYLENGTH(mask); i++) {
+		if (mask[i] == 0)
+			continue;
+		if (enable)
+			bclass[i] |= mask[i];
+		else
+			bclass[i] &= ~mask[i];
+	}
 }
 
 /**
@@ -463,77 +466,78 @@ void itemdb_jobid2mapid(uint64 *bclass, int job_id, bool enable)
  * @param bclass  Pointer to the variable containing the new format.
  * @param jobmask Variable containing JobMask.
  */
-void itemdb_jobmask2mapid(uint64 *bclass, int64 jobmask)
+void itemdb_jobmask2mapid(uint64 *bclass, uint64 jobmask)
 {
 	int i;
 	nullpo_retv(bclass);
 	bclass[0] = bclass[1] = bclass[2] = 0;
 	//Base classes
-	if (jobmask & 1<<JOB_NOVICE) {
+	if (jobmask & 1ULL<<JOB_NOVICE) {
 		//Both Novice/Super-Novice are counted with the same ID
-		bclass[0] |= 1<<MAPID_NOVICE;
-		bclass[1] |= 1<<MAPID_NOVICE;
+		bclass[0] |= 1ULL<<MAPID_NOVICE;
+		bclass[1] |= 1ULL<<MAPID_NOVICE;
 	}
-	for (i = JOB_NOVICE+1; i <= JOB_THIEF; i++)
-	{
-		if (jobmask & 1<<i)
-			bclass[0] |= 1<<(MAPID_NOVICE+i);
+	for (i = JOB_NOVICE+1; i <= JOB_THIEF; i++) {
+		if (jobmask & 1ULL<<i)
+			bclass[0] |= 1ULL<<(MAPID_NOVICE+i);
 	}
 	//2-1 classes
-	if (jobmask & 1<<JOB_KNIGHT)
-		bclass[1] |= 1<<MAPID_SWORDMAN;
-	if (jobmask & 1<<JOB_PRIEST)
-		bclass[1] |= 1<<MAPID_ACOLYTE;
-	if (jobmask & 1<<JOB_WIZARD)
-		bclass[1] |= 1<<MAPID_MAGE;
-	if (jobmask & 1<<JOB_BLACKSMITH)
-		bclass[1] |= 1<<MAPID_MERCHANT;
-	if (jobmask & 1<<JOB_HUNTER)
-		bclass[1] |= 1<<MAPID_ARCHER;
-	if (jobmask & 1<<JOB_ASSASSIN)
-		bclass[1] |= 1<<MAPID_THIEF;
+	if (jobmask & 1ULL<<JOB_KNIGHT)
+		bclass[1] |= 1ULL<<MAPID_SWORDMAN;
+	if (jobmask & 1ULL<<JOB_PRIEST)
+		bclass[1] |= 1ULL<<MAPID_ACOLYTE;
+	if (jobmask & 1ULL<<JOB_WIZARD)
+		bclass[1] |= 1ULL<<MAPID_MAGE;
+	if (jobmask & 1ULL<<JOB_BLACKSMITH)
+		bclass[1] |= 1ULL<<MAPID_MERCHANT;
+	if (jobmask & 1ULL<<JOB_HUNTER)
+		bclass[1] |= 1ULL<<MAPID_ARCHER;
+	if (jobmask & 1ULL<<JOB_ASSASSIN)
+		bclass[1] |= 1ULL<<MAPID_THIEF;
 	//2-2 classes
-	if (jobmask & 1<<JOB_CRUSADER)
-		bclass[2] |= 1<<MAPID_SWORDMAN;
-	if (jobmask & 1<<JOB_MONK)
-		bclass[2] |= 1<<MAPID_ACOLYTE;
-	if (jobmask & 1<<JOB_SAGE)
-		bclass[2] |= 1<<MAPID_MAGE;
-	if (jobmask & 1<<JOB_ALCHEMIST)
-		bclass[2] |= 1<<MAPID_MERCHANT;
-	if (jobmask & 1<<JOB_BARD)
-		bclass[2] |= 1<<MAPID_ARCHER;
+	if (jobmask & 1ULL<<JOB_CRUSADER)
+		bclass[2] |= 1ULL<<MAPID_SWORDMAN;
+	if (jobmask & 1ULL<<JOB_MONK)
+		bclass[2] |= 1ULL<<MAPID_ACOLYTE;
+	if (jobmask & 1ULL<<JOB_SAGE)
+		bclass[2] |= 1ULL<<MAPID_MAGE;
+	if (jobmask & 1ULL<<JOB_ALCHEMIST)
+		bclass[2] |= 1ULL<<MAPID_MERCHANT;
+	if (jobmask & 1ULL<<JOB_BARD)
+		bclass[2] |= 1ULL<<MAPID_ARCHER;
 #if 0 // Bard/Dancer share the same slot now.
-	if (jobmask & 1<<JOB_DANCER)
-		bclass[2] |= 1<<MAPID_ARCHER;
+	if (jobmask & 1ULL<<JOB_DANCER)
+		bclass[2] |= 1ULL<<MAPID_ARCHER;
 #endif // 0
-	if (jobmask & 1<<JOB_ROGUE)
-		bclass[2] |= 1<<MAPID_THIEF;
+	if (jobmask & 1ULL<<JOB_ROGUE)
+		bclass[2] |= 1ULL<<MAPID_THIEF;
 	//Special classes that don't fit above.
-	if (jobmask & 1<<21) //Taekwon boy
-		bclass[0] |= 1<<MAPID_TAEKWON;
-	if (jobmask & 1<<22) //Star Gladiator
-		bclass[1] |= 1<<MAPID_TAEKWON;
-	if (jobmask & 1<<23) //Soul Linker
-		bclass[2] |= 1<<MAPID_TAEKWON;
-	if (jobmask & 1<<JOB_GUNSLINGER)
-	{//Rebellion job can equip Gunslinger equips. [Rytech]
-		bclass[0] |= 1<<MAPID_GUNSLINGER;
-		bclass[1] |= 1<<MAPID_GUNSLINGER;
+	if (jobmask & 1ULL<<21) //Taekwon boy
+		bclass[0] |= 1ULL<<MAPID_TAEKWON;
+	if (jobmask & 1ULL<<22) //Star Gladiator
+		bclass[1] |= 1ULL<<MAPID_TAEKWON;
+	if (jobmask & 1ULL<<23) //Soul Linker
+		bclass[2] |= 1ULL<<MAPID_TAEKWON;
+	if (jobmask & 1ULL<<JOB_GUNSLINGER) {
+		//Rebellion job can equip Gunslinger equips. [Rytech]
+		bclass[0] |= 1ULL<<MAPID_GUNSLINGER;
+		bclass[1] |= 1ULL<<MAPID_GUNSLINGER;
 	}
-	if (jobmask & 1<<JOB_NINJA)
-		{bclass[0] |= 1<<MAPID_NINJA;
-		bclass[1] |= 1<<MAPID_NINJA;}//Kagerou/Oboro jobs can equip Ninja equips. [Rytech]
-	if (jobmask & 1<<26) //Bongun/Munak
-		bclass[0] |= 1<<MAPID_GANGSI;
-	if (jobmask & 1<<27) //Death Knight
-		bclass[1] |= 1<<MAPID_GANGSI;
-	if (jobmask & 1<<28) //Dark Collector
-		bclass[2] |= 1<<MAPID_GANGSI;
-	if (jobmask & 1<<29) //Kagerou / Oboro
-		bclass[1] |= 1<<MAPID_NINJA;
-	if (jobmask & 1<<30) //Rebellion
-		bclass[1] |= 1<<MAPID_GUNSLINGER;
+	if (jobmask & 1ULL<<JOB_NINJA) {
+		//Kagerou/Oboro jobs can equip Ninja equips. [Rytech]
+		bclass[0] |= 1ULL<<MAPID_NINJA;
+		bclass[1] |= 1ULL<<MAPID_NINJA;
+	}
+	if (jobmask & 1ULL<<26) //Bongun/Munak
+		bclass[0] |= 1ULL<<MAPID_GANGSI;
+	if (jobmask & 1ULL<<27) //Death Knight
+		bclass[1] |= 1ULL<<MAPID_GANGSI;
+	if (jobmask & 1ULL<<28) //Dark Collector
+		bclass[2] |= 1ULL<<MAPID_GANGSI;
+	if (jobmask & 1ULL<<29) //Kagerou / Oboro
+		bclass[1] |= 1ULL<<MAPID_NINJA;
+	if (jobmask & 1ULL<<30) //Rebellion
+		bclass[1] |= 1ULL<<MAPID_GUNSLINGER;
 }
 
 void create_dummy_data(void)
