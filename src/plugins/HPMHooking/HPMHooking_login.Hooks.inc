@@ -4425,6 +4425,33 @@ char* HP_iMalloc_astrdup(const char *p, const char *file, int line, const char *
 	}
 	return retVal___;
 }
+char* HP_iMalloc_astrndup(const char *p, size_t size, const char *file, int line, const char *func) {
+	int hIndex = 0;
+	char* retVal___ = NULL;
+	if( HPMHooks.count.HP_iMalloc_astrndup_pre ) {
+		char* (*preHookFunc) (const char *p, size_t *size, const char *file, int *line, const char *func);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_iMalloc_astrndup_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_iMalloc_astrndup_pre[hIndex].func;
+			retVal___ = preHookFunc(p, &size, file, &line, func);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.iMalloc.astrndup(p, size, file, line, func);
+	}
+	if( HPMHooks.count.HP_iMalloc_astrndup_post ) {
+		char* (*postHookFunc) (char* retVal___, const char *p, size_t *size, const char *file, int *line, const char *func);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_iMalloc_astrndup_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_iMalloc_astrndup_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, p, &size, file, &line, func);
+		}
+	}
+	return retVal___;
+}
 void HP_iMalloc_free(void *p, const char *file, int line, const char *func) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_iMalloc_free_pre ) {

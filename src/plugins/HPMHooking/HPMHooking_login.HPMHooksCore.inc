@@ -352,6 +352,8 @@ struct {
 	struct HPMHookPoint *HP_iMalloc_reallocz_post;
 	struct HPMHookPoint *HP_iMalloc_astrdup_pre;
 	struct HPMHookPoint *HP_iMalloc_astrdup_post;
+	struct HPMHookPoint *HP_iMalloc_astrndup_pre;
+	struct HPMHookPoint *HP_iMalloc_astrndup_post;
 	struct HPMHookPoint *HP_iMalloc_free_pre;
 	struct HPMHookPoint *HP_iMalloc_free_post;
 	struct HPMHookPoint *HP_iMalloc_memory_check_pre;
@@ -951,6 +953,8 @@ struct {
 	int HP_iMalloc_reallocz_post;
 	int HP_iMalloc_astrdup_pre;
 	int HP_iMalloc_astrdup_post;
+	int HP_iMalloc_astrndup_pre;
+	int HP_iMalloc_astrndup_post;
 	int HP_iMalloc_free_pre;
 	int HP_iMalloc_free_post;
 	int HP_iMalloc_memory_check_pre;
