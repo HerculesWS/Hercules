@@ -1105,7 +1105,7 @@ struct packet_npc_market_purchase {
 	struct {
 		unsigned short ITID;
 		int qty;
-	} list[MAX_INVENTORY];/* assuming MAX_INVENTORY is max since you can't hold more than MAX_INVENTORY items thus cant buy that many at once. */
+	} list[]; // Note: We assume this should be <= MAX_INVENTORY (since you can't hold more than MAX_INVENTORY items thus cant buy that many at once).
 } __attribute__((packed));
 
 struct packet_npc_market_result_ack {

@@ -1386,8 +1386,9 @@ int npc_buysellsel(struct map_session_data* sd, int id, int type) {
 /*==========================================
 * Cash Shop Buy List
 *------------------------------------------*/
-int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, unsigned short* item_list) {
-	int i, j, nameid, amount, new_, w, vt;
+int npc_cashshop_buylist(struct map_session_data *sd, int points, struct itemlist *item_list)
+{
+	int i, j, new_, w, vt;
 	struct npc_data *nd = NULL;
 	struct npc_item_list *shop = NULL;
 	unsigned short shop_size = 0;
@@ -1395,7 +1396,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 	if( sd->state.trading )
 		return ERROR_TYPE_EXCHANGE;
 
-	if( count <= 0 )
+	if (VECTOR_LENGTH(*item_list) <= 0)
 		return ERROR_TYPE_ITEM_ID;
 
 	if( points < 0 )
@@ -1421,24 +1422,23 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 	vt = 0; // Global Value
 
 	// Validating Process ----------------------------------------------------
-	for( i = 0; i < count; i++ ) {
-		nameid = item_list[i*2+1];
-		amount = item_list[i*2+0];
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 
-		if( !itemdb->exists(nameid) || amount <= 0 )
+		if (!itemdb->exists(entry->id) || entry->amount <= 0)
 			return ERROR_TYPE_ITEM_ID;
 
-		ARR_FIND(0,shop_size,j,shop[j].nameid == nameid);
-		if( j == shop_size || shop[j].value <= 0 )
+		ARR_FIND(0,shop_size,j,shop[j].nameid == entry->id);
+		if (j == shop_size || shop[j].value <= 0)
 			return ERROR_TYPE_ITEM_ID;
 
-		if( !itemdb->isstackable(nameid) && amount > 1 ) {
+		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
-						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
-			amount = item_list[i*2+0] = 1;
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->amount, entry->id);
+			entry->amount = 1;
 		}
 
-		switch( pc->checkadditem(sd,nameid,amount) ) {
+		switch (pc->checkadditem(sd, entry->id, entry->amount)) {
 			case ADDITEM_NEW:
 				new_++;
 				break;
@@ -1446,8 +1446,8 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 				return ERROR_TYPE_INVENTORY_WEIGHT;
 		}
 
-		vt += shop[j].value * amount;
-		w += itemdb_weight(nameid) * amount;
+		vt += shop[j].value * entry->amount;
+		w += itemdb_weight(entry->id) * entry->amount;
 	}
 
 	if( w + sd->weight > sd->max_weight )
@@ -1468,18 +1468,16 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 		pc->paycash(sd,vt,points);
 	}
 	// Delivery Process ----------------------------------------------------
-	for( i = 0; i < count; i++ ) {
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 		struct item item_tmp;
-
-		nameid = item_list[i*2+1];
-		amount = item_list[i*2+0];
 
 		memset(&item_tmp,0,sizeof(item_tmp));
 
-		if( !pet->create_egg(sd,nameid) ) {
-			item_tmp.nameid = nameid;
+		if (!pet->create_egg(sd, entry->id)) {
+			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
-			pc->additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
+			pc->additem(sd, &item_tmp, entry->amount, LOG_TYPE_NPC);
 		}
 	}
 
@@ -1487,7 +1485,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 }
 
 //npc_buylist for script-controlled shops.
-int npc_buylist_sub(struct map_session_data* sd, int n, unsigned short* item_list, struct npc_data* nd)
+int npc_buylist_sub(struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd)
 {
 	char npc_ev[EVENT_NAME_LENGTH];
 	int i;
@@ -1499,9 +1497,12 @@ int npc_buylist_sub(struct map_session_data* sd, int n, unsigned short* item_lis
 	script->cleararray_pc(sd, "@bought_quantity", (void*)0);
 
 	// save list of bought items
-	for( i = 0; i < n; i++ ) {
-		script->setarray_pc(sd, "@bought_nameid", i, (void*)(intptr_t)item_list[i*2+1], &key_nameid);
-		script->setarray_pc(sd, "@bought_quantity", i, (void*)(intptr_t)item_list[i*2], &key_amount);
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		intptr_t nameid = entry->id;
+		intptr_t amount = entry->amount;
+		script->setarray_pc(sd, "@bought_nameid", i, (void *)nameid, &key_nameid);
+		script->setarray_pc(sd, "@bought_quantity", i, (void *)amount, &key_amount);
 	}
 
 	// invoke event
@@ -1805,11 +1806,15 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	return ERROR_TYPE_NONE;
 }
 
-/// Player item purchase from npc shop.
-///
-/// @param item_list 'n' pairs <amount,itemid>
-/// @return result code for clif->parse_NpcBuyListSend
-int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
+/**
+ * Processes a player item purchase from npc shop.
+ *
+ * @param sd        Buyer character.
+ * @param item_list List of items.
+ * @return result code for clif->parse_NpcBuyListSend.
+ */
+int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
+{
 	struct npc_data* nd;
 	struct npc_item_list *shop = NULL;
 	int64 z;
@@ -1838,30 +1843,29 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 	w = 0;
 	new_ = 0;
 	// process entries in buy list, one by one
-	for( i = 0; i < n; ++i ) {
-		int nameid, amount, value;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		int value;
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 
 		// find this entry in the shop's sell list
 		ARR_FIND( 0, shop_size, j,
-				 item_list[i*2+1] == shop[j].nameid || //Normal items
-				 item_list[i*2+1] == itemdb_viewid(shop[j].nameid) //item_avail replacement
+				 entry->id == shop[j].nameid || //Normal items
+				 entry->id == itemdb_viewid(shop[j].nameid) //item_avail replacement
 				 );
-
-		if( j == shop_size )
+		if (j == shop_size)
 			return 3; // no such item in shop
 
-		amount = item_list[i*2+0];
-		nameid = item_list[i*2+1] = shop[j].nameid; //item_avail replacement
+		entry->id = shop[j].nameid; //item_avail replacement
 		value = shop[j].value;
 
-		if( !itemdb->exists(nameid) )
+		if (!itemdb->exists(entry->id))
 			return 3; // item no longer in itemdb
 
-		if( !itemdb->isstackable(nameid) && amount > 1 ) {
+		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
 			//Exploit? You can't buy more than 1 of equipment types o.O
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
-						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
-			amount = item_list[i*2+0] = 1;
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->amount, entry->id);
+			entry->amount = 1;
 		}
 
 		if( nd->master_nd ) {
@@ -1869,7 +1873,7 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 			continue;
 		}
 
-		switch( pc->checkadditem(sd,nameid,amount) ) {
+		switch (pc->checkadditem(sd, entry->id, entry->amount)) {
 			case ADDITEM_EXIST:
 				break;
 
@@ -1883,12 +1887,12 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 
 		value = pc->modifybuyvalue(sd,value);
 
-		z += (int64)value * amount;
-		w += itemdb_weight(nameid) * amount;
+		z += (int64)value * entry->amount;
+		w += itemdb_weight(entry->id) * entry->amount;
 	}
 
-	if( nd->master_nd != NULL ) //Script-based shops.
-		return npc->buylist_sub(sd,n,item_list,nd->master_nd);
+	if (nd->master_nd != NULL) //Script-based shops.
+		return npc->buylist_sub(sd, item_list, nd->master_nd);
 
 	if (z > sd->status.zeny)
 		return 1; // Not enough Zeny
@@ -1899,19 +1903,17 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 
 	pc->payzeny(sd, (int)z, LOG_TYPE_NPC, NULL);
 
-	for( i = 0; i < n; ++i ) {
-		int nameid = item_list[i*2+1];
-		int amount = item_list[i*2+0];
-
-		if (itemdb_type(nameid) == IT_PETEGG) {
-			pet->create_egg(sd, nameid);
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		if (itemdb_type(entry->id) == IT_PETEGG) {
+			pet->create_egg(sd, entry->id);
 		} else {
 			struct item item_tmp;
 			memset(&item_tmp,0,sizeof(item_tmp));
-			item_tmp.nameid = nameid;
+			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
 
-			pc->additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
+			pc->additem(sd, &item_tmp, entry->amount, LOG_TYPE_NPC);
 		}
 	}
 
@@ -1932,9 +1934,10 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 }
 
 /**
- * parses incoming npc market purchase list
+ * Processes incoming npc market purchase list
  **/
-int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, struct packet_npc_market_purchase *p) {
+int npc_market_buylist(struct map_session_data *sd, struct itemlist *item_list)
+{
 	struct npc_data* nd;
 	struct npc_item_list *shop = NULL;
 	int64 z;
@@ -1942,11 +1945,11 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 	unsigned short shop_size = 0;
 
 	nullpo_retr(1, sd);
-	nullpo_retr(1, p);
+	nullpo_retr(1, item_list);
 
 	nd = npc->checknear(sd,map->id2bl(sd->npc_shopid));
 
-	if( nd == NULL || nd->subtype != SCRIPT || !list_size || !nd->u.scr.shop || nd->u.scr.shop->type != NST_MARKET )
+	if (nd == NULL || nd->subtype != SCRIPT || VECTOR_LENGTH(*item_list) == 0 || !nd->u.scr.shop || nd->u.scr.shop->type != NST_MARKET)
 		return 1;
 
 	shop = nd->u.scr.shop->item;
@@ -1957,37 +1960,37 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 	new_ = 0;
 
 	// process entries in buy list, one by one
-	for( i = 0; i < list_size; ++i ) {
-		int nameid, amount, value;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		int value;
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 
 		// find this entry in the shop's sell list
 		ARR_FIND( 0, shop_size, j,
-				 p->list[i].ITID == shop[j].nameid || //Normal items
-				 p->list[i].ITID == itemdb_viewid(shop[j].nameid) //item_avail replacement
+				 entry->id == shop[j].nameid || //Normal items
+				 entry->id == itemdb_viewid(shop[j].nameid) //item_avail replacement
 				 );
-
-		if( j == shop_size ) /* TODO find official response for this */
+		if (j == shop_size) /* TODO find official response for this */
 			return 1; // no such item in shop
 
-		if( p->list[i].qty > shop[j].qty )
+		entry->id = shop[j].nameid; //item_avail replacement
+
+		if (entry->amount > (int)shop[j].qty)
 			return 1;
 
-		amount = p->list[i].qty;
-		nameid = p->list[i].ITID = shop[j].nameid; //item_avail replacement
 		value = shop[j].value;
 		npc_market_qty[i] = j;
 
-		if( !itemdb->exists(nameid) ) /* TODO find official response for this */
+		if (!itemdb->exists(entry->id)) /* TODO find official response for this */
 			return 1; // item no longer in itemdb
 
-		if( !itemdb->isstackable(nameid) && amount > 1 ) {
+		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
 			//Exploit? You can't buy more than 1 of equipment types o.O
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
-						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
-			amount = p->list[i].qty = 1;
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->amount, entry->id);
+			entry->amount = 1;
 		}
 
-		switch( pc->checkadditem(sd,nameid,amount) ) {
+		switch (pc->checkadditem(sd, entry->id, entry->amount)) {
 			case ADDITEM_EXIST:
 				break;
 			case ADDITEM_NEW:
@@ -1997,8 +2000,8 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 				return 1;
 		}
 
-		z += (int64)value * amount;
-		w += itemdb_weight(nameid) * amount;
+		z += (int64)value * entry->amount;
+		w += itemdb_weight(entry->id) * entry->amount;
 	}
 
 	if (z > sd->status.zeny) /* TODO find official response for this */
@@ -2012,28 +2015,27 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 
 	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
 
-	for( i = 0; i < list_size; ++i ) {
-		int nameid = p->list[i].ITID;
-		int amount = p->list[i].qty;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 
 		j = npc_market_qty[i];
 
-		if( p->list[i].qty > shop[j].qty ) /* wohoo someone tampered with the packet. */
+		if (entry->amount > (int)shop[j].qty) /* wohoo someone tampered with the packet. */
 			return 1;
 
-		shop[j].qty -= amount;
+		shop[j].qty -= entry->amount;
 
 		npc->market_tosql(nd,j);
 
-		if (itemdb_type(nameid) == IT_PETEGG) {
-			pet->create_egg(sd, nameid);
+		if (itemdb_type(entry->id) == IT_PETEGG) {
+			pet->create_egg(sd, entry->id);
 		} else {
 			struct item item_tmp;
 			memset(&item_tmp,0,sizeof(item_tmp));
-			item_tmp.nameid = nameid;
+			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
 
-			pc->additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
+			pc->additem(sd, &item_tmp, entry->amount, LOG_TYPE_NPC);
 		}
 	}
 
@@ -2041,7 +2043,7 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 }
 
 /// npc_selllist for script-controlled shops
-int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_list, struct npc_data* nd)
+int npc_selllist_sub(struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd)
 {
 	char npc_ev[EVENT_NAME_LENGTH];
 	char card_slot[NAME_LENGTH];
@@ -2068,21 +2070,28 @@ int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_li
 	}
 
 	// save list of to be sold items
-	for (i = 0; i < n; i++) {
-		int idx = item_list[i*2]-2;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		struct item *item = &sd->status.inventory[entry->id];
+		intptr_t nameid = item->nameid;
+		intptr_t amount = entry->amount;
+		intptr_t refine = item->refine;
+		intptr_t attribute = item->attribute;
+		intptr_t identify = item->identify;
 
-		script->setarray_pc(sd, "@sold_nameid", i, (void*)(intptr_t)sd->status.inventory[idx].nameid, &key_nameid);
-		script->setarray_pc(sd, "@sold_quantity", i, (void*)(intptr_t)item_list[i*2+1], &key_amount);
+		script->setarray_pc(sd, "@sold_nameid", i, (void*)nameid, &key_nameid);
+		script->setarray_pc(sd, "@sold_quantity", i, (void*)amount, &key_amount);
 
 		// process item based information into the arrays
-		script->setarray_pc(sd, "@sold_refine", i, (void*)(intptr_t)sd->status.inventory[idx].refine, &key_refine);
-		script->setarray_pc(sd, "@sold_attribute", i, (void*)(intptr_t)sd->status.inventory[idx].attribute, &key_attribute);
-		script->setarray_pc(sd, "@sold_identify", i, (void*)(intptr_t)sd->status.inventory[idx].identify, &key_identify);
+		script->setarray_pc(sd, "@sold_refine", i, (void*)refine, &key_refine);
+		script->setarray_pc(sd, "@sold_attribute", i, (void*)attribute, &key_attribute);
+		script->setarray_pc(sd, "@sold_identify", i, (void*)identify, &key_identify);
 
 		for (j = 0; j < MAX_SLOTS; j++) {
+			intptr_t card = item->card[j];
 			// store each of the cards/special info from the item in the array
 			snprintf(card_slot, sizeof(card_slot), "@sold_card%d", j + 1);
-			script->setarray_pc(sd, card_slot, i, (void*)(intptr_t)sd->status.inventory[idx].card[j], &key_card[j]);
+			script->setarray_pc(sd, card_slot, i, (void*)card, &key_card[j]);
 		}
 
 	}
@@ -2097,7 +2106,8 @@ int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_li
 ///
 /// @param item_list 'n' pairs <index,amount>
 /// @return result code for clif->parse_NpcSellListSend
-int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) {
+int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
+{
 	int64 z;
 	int i,skill_t, skill_idx = skill->get_index(MC_OVERCHARGE);
 	struct npc_data *nd;
@@ -2118,13 +2128,11 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 	z = 0;
 
 	// verify the sell list
-	for (i = 0; i < n; i++) {
-		int nameid, amount, idx, value;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		int nameid, value, idx = entry->id;
 
-		idx    = item_list[i*2]-2;
-		amount = item_list[i*2+1];
-
-		if (idx >= MAX_INVENTORY || idx < 0 || amount < 0) {
+		if (idx >= MAX_INVENTORY || idx < 0 || entry->amount < 0) {
 			return 1;
 		}
 
@@ -2136,7 +2144,7 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 
 		nameid = sd->status.inventory[idx].nameid;
 
-		if (!nameid || !sd->inventory_data[idx] || sd->status.inventory[idx].amount < amount) {
+		if (!nameid || !sd->inventory_data[idx] || sd->status.inventory[idx].amount < entry->amount) {
 			return 1;
 		}
 
@@ -2147,27 +2155,25 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 
 		value = pc->modifysellvalue(sd, sd->inventory_data[idx]->value_sell);
 
-		z += (int64)value * amount;
+		z += (int64)value * entry->amount;
 	}
 
 	if( nd->master_nd ) { // Script-controlled shops
-		return npc->selllist_sub(sd, n, item_list, nd->master_nd);
+		return npc->selllist_sub(sd, item_list, nd->master_nd);
 	}
 
 	// delete items
-	for( i = 0; i < n; i++ ) {
-		int amount, idx;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		int idx = entry->id;
 
-		idx    = item_list[i*2]-2;
-		amount = item_list[i*2+1];
-
-		if( sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET ) {
-			if( pet->search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0 ) {
+		if (sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET) {
+			if (pet->search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0) {
 				intif->delete_petdata(MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
 			}
 		}
 
-		pc->delitem(sd, idx, amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
+		pc->delitem(sd, idx, entry->amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
 	}
 
 	if( z > MAX_ZENY )

@@ -1657,7 +1657,8 @@ int char_check_char_name(char * name, char * esc_name)
  *  -5: 'Symbols in Character Names are forbidden'
  *  char_id: Success
  **/
-int char_make_new_char_sql(struct char_session_data* sd, char* name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style) {
+int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style)
+{
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
 	int char_id, flag, k, l;
@@ -2030,7 +2031,7 @@ int char_mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 	offset += 2;
 #endif
 #if (PACKETVER >= 20100720 && PACKETVER <= 20100727) || PACKETVER >= 20100803
-	mapindex->getmapname_ext(mapindex_id2name(p->last_point.map), (char*)WBUFP(buf,108));
+	mapindex->getmapname_ext(mapindex_id2name(p->last_point.map), WBUFP(buf,108));
 	offset += MAP_NAME_LENGTH_EXT;
 #endif
 #if PACKETVER >= 20100803
@@ -2084,7 +2085,7 @@ void char_mmo_char_send_ban_list(int fd, struct char_session_data *sd) {
 
 		for(i = 0, c = 0; i < MAX_CHARS; i++) {
 			if( sd->unban_time[i] ) {
-				timestamp2string((char*)WFIFOP(fd,8 + (28*c)), 20, sd->unban_time[i], "%Y-%m-%d %H:%M:%S");
+				timestamp2string(WFIFOP(fd,8 + (28*c)), 20, sd->unban_time[i], "%Y-%m-%d %H:%M:%S");
 
 				if( sd->unban_time[i] > now )
 					WFIFOL(fd, 4 + (24*c)) = sd->found_char[i];
@@ -2377,8 +2378,8 @@ void char_parse_fromlogin_account_data(int fd)
 			sd->char_slots = MAX_CHARS;/* cap to maximum */
 		} else if ( sd->char_slots <= 0 )/* no value aka 0 in sql */
 			sd->char_slots = MAX_CHARS;/* cap to maximum */
-		safestrncpy(sd->birthdate, (const char*)RFIFOP(fd,52), sizeof(sd->birthdate));
-		safestrncpy(sd->pincode, (const char*)RFIFOP(fd,63), sizeof(sd->pincode));
+		safestrncpy(sd->birthdate, RFIFOP(fd,52), sizeof(sd->birthdate));
+		safestrncpy(sd->pincode, RFIFOP(fd,63), sizeof(sd->pincode));
 		sd->pincode_change = RFIFOL(fd,68);
 		// continued from chr->auth_ok...
 		if( (max_connect_user == 0 && sd->group_id != gm_allow_group) ||
@@ -2605,9 +2606,8 @@ void char_parse_fromlogin_accinfo2_failed(int fd)
 void char_parse_fromlogin_accinfo2_ok(int fd)
 {
 	mapif->parse_accinfo2(true, RFIFOL(fd,167), RFIFOL(fd,171), RFIFOL(fd,175), RFIFOL(fd,179),
-	                     (char*)RFIFOP(fd,2), (char*)RFIFOP(fd,26), (char*)RFIFOP(fd,59),
-	                     (char*)RFIFOP(fd,99), (char*)RFIFOP(fd,119), (char*)RFIFOP(fd,151),
-	                     (char*)RFIFOP(fd,156), RFIFOL(fd,115), RFIFOL(fd,143), RFIFOL(fd,147));
+	                      RFIFOP(fd,2), RFIFOP(fd,26), RFIFOP(fd,59), RFIFOP(fd,99), RFIFOP(fd,119),
+	                      RFIFOP(fd,151), RFIFOP(fd,156), RFIFOL(fd,115), RFIFOL(fd,143), RFIFOL(fd,147));
 	RFIFOSKIP(fd,183);
 }
 
@@ -2785,7 +2785,7 @@ void char_global_accreg_to_login_add (const char *key, unsigned int index, intpt
 	WFIFOB(chr->login_fd, nlen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 	nlen += 1;
 
-	safestrncpy((char*)WFIFOP(chr->login_fd,nlen), key, len);
+	safestrncpy(WFIFOP(chr->login_fd,nlen), key, len);
 	nlen += len;
 
 	WFIFOL(chr->login_fd, nlen) = index;
@@ -2802,7 +2802,7 @@ void char_global_accreg_to_login_add (const char *key, unsigned int index, intpt
 			WFIFOB(chr->login_fd, nlen) = (unsigned char)len;/* won't be higher; the column size is 254 */
 			nlen += 1;
 
-			safestrncpy((char*)WFIFOP(chr->login_fd,nlen), sval, len);
+			safestrncpy(WFIFOP(chr->login_fd,nlen), sval, len);
 			nlen += len;
 		}
 	} else {
@@ -3289,7 +3289,7 @@ void char_parse_frommap_char_select_req(int fd)
 	}
 }
 
-void char_change_map_server_ack(int fd, uint8 *data, bool ok)
+void char_change_map_server_ack(int fd, const uint8 *data, bool ok)
 {
 	WFIFOHEAD(fd,30);
 	WFIFOW(fd,0) = 0x2b06;
@@ -3368,7 +3368,7 @@ void char_char_name_ack(int fd, int char_id)
 	WFIFOHEAD(fd,30);
 	WFIFOW(fd,0) = 0x2b09;
 	WFIFOL(fd,2) = char_id;
-	chr->loadName(char_id, (char*)WFIFOP(fd,6));
+	chr->loadName(char_id, WFIFOP(fd,6));
 	WFIFOSET(fd,30);
 }
 
@@ -3457,7 +3457,7 @@ void char_ask_name_ack(int fd, int acc, const char* name, int type, int result)
 	WFIFOHEAD(fd,34);
 	WFIFOW(fd, 0) = 0x2b0f;
 	WFIFOL(fd, 2) = acc;
-	safestrncpy((char*)WFIFOP(fd,6), name, NAME_LENGTH);
+	safestrncpy(WFIFOP(fd,6), name, NAME_LENGTH);
 	WFIFOW(fd,30) = type;
 	WFIFOW(fd,32) = result;
 	WFIFOSET(fd,34);
@@ -3512,7 +3512,7 @@ void char_parse_frommap_change_account(int fd)
 	char esc_name[NAME_LENGTH*2+1];
 
 	int acc = RFIFOL(fd,2); // account_id of who ask (-1 if server itself made this request)
-	const char* name = (char*)RFIFOP(fd,6); // name of the target character
+	const char *name = RFIFOP(fd,6); // name of the target character
 	int type = RFIFOW(fd,30); // type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
 	short year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
 	int sex = SEX_MALE;
@@ -3855,7 +3855,7 @@ void char_parse_frommap_request_stats_report(int fd)
 
 	WFIFOHEAD(sfd, RFIFOW(fd,2) );
 
-	memcpy((char*)WFIFOP(sfd,0), (char*)RFIFOP(fd, 0), RFIFOW(fd,2));
+	memcpy(WFIFOP(sfd,0), RFIFOP(fd, 0), RFIFOW(fd,2));
 
 	WFIFOSET(sfd, RFIFOW(fd,2) );
 
@@ -4512,7 +4512,7 @@ void char_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charstat
 	WFIFOHEAD(fd,28);
 	WFIFOW(fd,0) = 0x71;
 	WFIFOL(fd,2) = cd->char_id;
-	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), (char*)WFIFOP(fd,6));
+	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(fd,6));
 	WFIFOL(fd,22) = htonl((subnet_map_ip) ? subnet_map_ip : chr->server[i].ip);
 	WFIFOW(fd,26) = sockt->ntows(htons(chr->server[i].port)); // [!] LE byte order here [!]
 	WFIFOSET(fd,28);
@@ -4523,7 +4523,7 @@ void char_send_wait_char_server(int fd)
 	WFIFOHEAD(fd, 24);
 	WFIFOW(fd, 0) = 0x840;
 	WFIFOW(fd, 2) = 24;
-	safestrncpy((char*)WFIFOP(fd,4), "0", 20);/* we can't send empty (otherwise the list will pop up) */
+	safestrncpy(WFIFOP(fd,4), "0", 20);/* we can't send empty (otherwise the list will pop up) */
 	WFIFOSET(fd, 24);
 }
 
@@ -4733,9 +4733,9 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 		result = -2;
 	} else {
 	#if PACKETVER >= 20120307
-		result = chr->make_new_char_sql(sd, (char*)RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26),RFIFOW(fd,27),RFIFOW(fd,29));
+		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26),RFIFOW(fd,27),RFIFOW(fd,29));
 	#else
-		result = chr->make_new_char_sql(sd, (char*)RFIFOP(fd,2),RFIFOB(fd,26),RFIFOB(fd,27),RFIFOB(fd,28),RFIFOB(fd,29),RFIFOB(fd,30),RFIFOB(fd,31),RFIFOB(fd,32),RFIFOW(fd,33),RFIFOW(fd,35));
+		result = chr->make_new_char_sql(sd, RFIFOP(fd,2),RFIFOB(fd,26),RFIFOB(fd,27),RFIFOB(fd,28),RFIFOB(fd,29),RFIFOB(fd,30),RFIFOB(fd,31),RFIFOB(fd,32),RFIFOW(fd,33),RFIFOW(fd,35));
 	#endif
 	}
 
@@ -4849,7 +4849,7 @@ void char_parse_char_rename_char(int fd, struct char_session_data* sd)
 	int i, cid =RFIFOL(fd,2);
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
-	safestrncpy(name, (char *)RFIFOP(fd,6), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(fd,6), NAME_LENGTH);
 	RFIFOSKIP(fd,30);
 
 	ARR_FIND( 0, MAX_CHARS, i, sd->found_char[i] == cid );
@@ -4874,7 +4874,7 @@ void char_parse_char_rename_char2(int fd, struct char_session_data* sd)
 	int i, aid = RFIFOL(fd,2), cid =RFIFOL(fd,6);
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
-	safestrncpy(name, (char *)RFIFOP(fd,10), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(fd,10), NAME_LENGTH);
 	RFIFOSKIP(fd,34);
 
 	if( aid != sd->account_id )
@@ -4971,11 +4971,10 @@ void char_login_map_server_ack(int fd, uint8 flag)
 
 void char_parse_char_login_map_server(int fd, uint32 ipl)
 {
-	char* l_user = (char*)RFIFOP(fd,2);
-	char* l_pass = (char*)RFIFOP(fd,26);
+	char l_user[24], l_pass[24];
 	int i;
-	l_user[23] = '\0';
-	l_pass[23] = '\0';
+	safestrncpy(l_user, RFIFOP(fd,2), 24);
+	safestrncpy(l_pass, RFIFOP(fd,26), 24);
 
 	ARR_FIND( 0, ARRAYLENGTH(chr->server), i, chr->server[i].fd <= 0 );
 	if (core->runflag != CHARSERVER_ST_RUNNING ||
@@ -5286,7 +5285,7 @@ int char_parse_char(int fd)
 	return 0;
 }
 
-int mapif_sendall(unsigned char *buf, unsigned int len)
+int mapif_sendall(const unsigned char *buf, unsigned int len)
 {
 	int i, c;
 

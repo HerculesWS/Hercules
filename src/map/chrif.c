@@ -594,7 +594,7 @@ void chrif_authok(int fd) {
 	int account_id, group_id, char_id;
 	uint32 login_id1,login_id2;
 	time_t expiration_time;
-	struct mmo_charstatus* charstatus;
+	const struct mmo_charstatus *charstatus;
 	struct auth_node *node;
 	bool changing_mapservers;
 	struct map_session_data *sd = NULL;
@@ -611,7 +611,7 @@ void chrif_authok(int fd) {
 	expiration_time = (time_t)(int32)RFIFOL(fd,16);
 	group_id = RFIFOL(fd,20);
 	changing_mapservers = (RFIFOB(fd,24));
-	charstatus = (struct mmo_charstatus*)RFIFOP(fd,25);
+	charstatus = RFIFOP(fd,25);
 	char_id = charstatus->char_id;
 
 	//Check if we don't already have player data in our server
@@ -796,7 +796,7 @@ bool chrif_char_ask_name(int acc, const char* character_name, unsigned short ope
 	WFIFOHEAD(chrif->fd,44);
 	WFIFOW(chrif->fd,0) = 0x2b0e;
 	WFIFOL(chrif->fd,2) = acc;
-	safestrncpy((char*)WFIFOP(chrif->fd,6), character_name, NAME_LENGTH);
+	safestrncpy(WFIFOP(chrif->fd,6), character_name, NAME_LENGTH);
 	WFIFOW(chrif->fd,30) = operation_type;
 
 	if (operation_type == CHAR_ASK_NAME_BAN || operation_type == CHAR_ASK_NAME_CHARBAN) {
@@ -827,7 +827,7 @@ bool chrif_changesex(struct map_session_data *sd, bool change_account)
 	WFIFOHEAD(chrif->fd,44);
 	WFIFOW(chrif->fd,0) = 0x2b0e;
 	WFIFOL(chrif->fd,2) = sd->status.account_id;
-	safestrncpy((char*)WFIFOP(chrif->fd,6), sd->status.name, NAME_LENGTH);
+	safestrncpy(WFIFOP(chrif->fd,6), sd->status.name, NAME_LENGTH);
 	WFIFOW(chrif->fd,30) = change_account ? CHAR_ASK_NAME_CHANGESEX : CHAR_ASK_NAME_CHANGECHARSEX;
 	if (!change_account)
 		WFIFOB(chrif->fd,32) = sd->status.sex == SEX_MALE ? SEX_FEMALE : SEX_MALE;
@@ -1221,7 +1221,7 @@ bool chrif_load_scdata(int fd) {
 	count = RFIFOW(fd,12); //sc_count
 
 	for (i = 0; i < count; i++) {
-		struct status_change_data *data = (struct status_change_data*)RFIFOP(fd,14 + i*sizeof(struct status_change_data));
+		const struct status_change_data *data = RFIFOP(fd,14 + i*sizeof(struct status_change_data));
 		status->change_start(NULL, &sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4,
 		                     data->tick, SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_LOADED|SCFLAG_FIXEDRATE);
 	}
@@ -1436,10 +1436,10 @@ int chrif_parse(int fd) {
 			case 0x2b03: clif->charselectok(RFIFOL(fd,2), RFIFOB(fd,6)); break;
 			case 0x2b04: chrif->recvmap(fd); break;
 			case 0x2b06: chrif->changemapserverack(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14), RFIFOW(fd,18), RFIFOW(fd,20), RFIFOW(fd,22), RFIFOL(fd,24), RFIFOW(fd,28)); break;
-			case 0x2b09: map->addnickdb(RFIFOL(fd,2), (char*)RFIFOP(fd,6)); break;
+			case 0x2b09: map->addnickdb(RFIFOL(fd,2), RFIFOP(fd,6)); break;
 			case 0x2b0a: sockt->datasync(fd, false); break;
 			case 0x2b0d: chrif->changedsex(fd); break;
-			case 0x2b0f: chrif->char_ask_name_answer(RFIFOL(fd,2), (char*)RFIFOP(fd,6), RFIFOW(fd,30), RFIFOW(fd,32)); break;
+			case 0x2b0f: chrif->char_ask_name_answer(RFIFOL(fd,2), RFIFOP(fd,6), RFIFOW(fd,30), RFIFOW(fd,32)); break;
 			case 0x2b12: chrif->divorceack(RFIFOL(fd,2), RFIFOL(fd,6)); break;
 			case 0x2b14: chrif->idbanned(fd); break;
 			case 0x2b1b: chrif->recvfamelist(fd); break;

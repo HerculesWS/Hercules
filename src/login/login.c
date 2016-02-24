@@ -352,7 +352,7 @@ void login_fromchar_parse_request_change_email(int fd, int id, const char *const
 	char email[40];
 
 	int account_id = RFIFOL(fd,2);
-	safestrncpy(email, (char*)RFIFOP(fd,6), 40); remove_control_chars(email);
+	safestrncpy(email, RFIFOP(fd,6), 40); remove_control_chars(email);
 	RFIFOSKIP(fd,46);
 
 	if( e_mail_check(email) == 0 )
@@ -391,22 +391,22 @@ void login_fromchar_account(int fd, int account_id, struct mmo_account *acc)
 		if (pincode[0] == '\0')
 			memset(pincode,'\0',sizeof(pincode));
 
-		safestrncpy((char*)WFIFOP(fd,6), email, 40);
+		safestrncpy(WFIFOP(fd,6), email, 40);
 		WFIFOL(fd,46) = (uint32)expiration_time;
 		WFIFOB(fd,50) = (unsigned char)group_id;
 		WFIFOB(fd,51) = char_slots;
-		safestrncpy((char*)WFIFOP(fd,52), birthdate, 10+1);
-		safestrncpy((char*)WFIFOP(fd,63), pincode, 4+1 );
+		safestrncpy(WFIFOP(fd,52), birthdate, 10+1);
+		safestrncpy(WFIFOP(fd,63), pincode, 4+1 );
 		WFIFOL(fd,68) = acc->pincode_change;
 	}
 	else
 	{
-		safestrncpy((char*)WFIFOP(fd,6), "", 40);
+		safestrncpy(WFIFOP(fd,6), "", 40);
 		WFIFOL(fd,46) = 0;
 		WFIFOB(fd,50) = 0;
 		WFIFOB(fd,51) = 0;
-		safestrncpy((char*)WFIFOP(fd,52), "", 10+1);
-		safestrncpy((char*)WFIFOP(fd,63), "\0\0\0\0", 4+1 );
+		safestrncpy(WFIFOP(fd,52), "", 10+1);
+		safestrncpy(WFIFOP(fd,63), "\0\0\0\0", 4+1 );
 		WFIFOL(fd,68) = 0;
 	}
 	WFIFOSET(fd,72);
@@ -449,8 +449,8 @@ void login_fromchar_parse_change_email(int fd, int id, const char *const ip)
 	char new_email[40];
 
 	int account_id = RFIFOL(fd,2);
-	safestrncpy(actual_email, (char*)RFIFOP(fd,6), 40);
-	safestrncpy(new_email, (char*)RFIFOP(fd,46), 40);
+	safestrncpy(actual_email, RFIFOP(fd,6), 40);
+	safestrncpy(new_email, RFIFOP(fd,46), 40);
 	RFIFOSKIP(fd, 86);
 
 	if( e_mail_check(actual_email) == 0 )
@@ -527,12 +527,12 @@ void login_fromchar_parse_ban(int fd, int id, const char *const ip)
 	struct mmo_account acc;
 
 	int account_id = RFIFOL(fd,2);
-	int year = (short)RFIFOW(fd,6);
-	int month = (short)RFIFOW(fd,8);
-	int mday = (short)RFIFOW(fd,10);
-	int hour = (short)RFIFOW(fd,12);
-	int min = (short)RFIFOW(fd,14);
-	int sec = (short)RFIFOW(fd,16);
+	int year = RFIFOW(fd,6);
+	int month = RFIFOW(fd,8);
+	int mday = RFIFOW(fd,10);
+	int hour = RFIFOW(fd,12);
+	int min = RFIFOW(fd,14);
+	int sec = RFIFOW(fd,16);
 	RFIFOSKIP(fd,18);
 
 	if (!accounts->load_num(accounts, &acc, account_id)) {
@@ -699,7 +699,7 @@ void login_fromchar_parse_change_pincode(int fd)
 	struct mmo_account acc;
 
 	if (accounts->load_num(accounts, &acc, RFIFOL(fd,2))) {
-		safestrncpy(acc.pincode, (char*)RFIFOP(fd,6), sizeof(acc.pincode));
+		safestrncpy(acc.pincode, RFIFOP(fd,6), sizeof(acc.pincode));
 		acc.pincode_change = ((unsigned int)time(NULL));
 		accounts->save(accounts, &acc);
 	}
@@ -732,22 +732,22 @@ void login_fromchar_accinfo(int fd, int account_id, int u_fd, int u_aid, int u_g
 	{
 		WFIFOHEAD(fd,183);
 		WFIFOW(fd,0) = 0x2737;
-		safestrncpy((char*)WFIFOP(fd,2), acc->userid, NAME_LENGTH);
+		safestrncpy(WFIFOP(fd,2), acc->userid, NAME_LENGTH);
 		if (u_group >= acc->group_id)
-			safestrncpy((char*)WFIFOP(fd,26), acc->pass, 33);
+			safestrncpy(WFIFOP(fd,26), acc->pass, 33);
 		else
 			memset(WFIFOP(fd,26), '\0', 33);
-		safestrncpy((char*)WFIFOP(fd,59), acc->email, 40);
-		safestrncpy((char*)WFIFOP(fd,99), acc->last_ip, 16);
+		safestrncpy(WFIFOP(fd,59), acc->email, 40);
+		safestrncpy(WFIFOP(fd,99), acc->last_ip, 16);
 		WFIFOL(fd,115) = acc->group_id;
-		safestrncpy((char*)WFIFOP(fd,119), acc->lastlogin, 24);
+		safestrncpy(WFIFOP(fd,119), acc->lastlogin, 24);
 		WFIFOL(fd,143) = acc->logincount;
 		WFIFOL(fd,147) = acc->state;
 		if (u_group >= acc->group_id)
-			safestrncpy((char*)WFIFOP(fd,151), acc->pincode, 5);
+			safestrncpy(WFIFOP(fd,151), acc->pincode, 5);
 		else
 			memset(WFIFOP(fd,151), '\0', 5);
-		safestrncpy((char*)WFIFOP(fd,156), acc->birthdate, 11);
+		safestrncpy(WFIFOP(fd,156), acc->birthdate, 11);
 		WFIFOL(fd,167) = map_fd;
 		WFIFOL(fd,171) = u_fd;
 		WFIFOL(fd,175) = u_aid;
@@ -1373,7 +1373,7 @@ void login_auth_failed(struct login_session_data* sd, int result)
 	else { // 6 = Your are Prohibited to log in until %s
 		struct mmo_account acc;
 		time_t unban_time = ( accounts->load_str(accounts, &acc, sd->userid) ) ? acc.unban_time : 0;
-		timestamp2string((char*)WFIFOP(fd,6), 20, unban_time, login->config->date_format);
+		timestamp2string(WFIFOP(fd,6), 20, unban_time, login->config->date_format);
 	}
 	WFIFOSET(fd,26);
 #else
@@ -1385,7 +1385,7 @@ void login_auth_failed(struct login_session_data* sd, int result)
 	else { // 6 = Your are Prohibited to log in until %s
 		struct mmo_account acc;
 		time_t unban_time = ( accounts->load_str(accounts, &acc, sd->userid) ) ? acc.unban_time : 0;
-		timestamp2string((char*)WFIFOP(fd,3), 20, unban_time, login->config->date_format);
+		timestamp2string(WFIFOP(fd,3), 20, unban_time, login->config->date_format);
 	}
 	WFIFOSET(fd,23);
 #endif
@@ -1429,8 +1429,8 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 	// Shinryo: For the time being, just use token as password.
 	if(command == 0x0825)
 	{
-		char *accname = (char *)RFIFOP(fd, 9);
-		char *token = (char *)RFIFOP(fd, 0x5C);
+		const char *accname = RFIFOP(fd, 9);
+		const char *token = RFIFOP(fd, 0x5C);
 		size_t uAccLen = strlen(accname);
 		size_t uTokenLen = RFIFOREST(fd) - 0x5C;
 
@@ -1448,10 +1448,10 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 	else
 	{
 		version = RFIFOL(fd,2);
-		safestrncpy(username, (const char*)RFIFOP(fd,6), NAME_LENGTH);
+		safestrncpy(username, RFIFOP(fd,6), NAME_LENGTH);
 		if( israwpass )
 		{
-			safestrncpy(password, (const char*)RFIFOP(fd,30), NAME_LENGTH);
+			safestrncpy(password, RFIFOP(fd,30), NAME_LENGTH);
 			clienttype = RFIFOB(fd,54);
 		}
 		else
@@ -1534,15 +1534,15 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	uint16 new_;
 	int result;
 
-	safestrncpy(sd->userid, (char*)RFIFOP(fd,2), NAME_LENGTH);
-	safestrncpy(sd->passwd, (char*)RFIFOP(fd,26), NAME_LENGTH);
+	safestrncpy(sd->userid, RFIFOP(fd,2), NAME_LENGTH);
+	safestrncpy(sd->passwd, RFIFOP(fd,26), NAME_LENGTH);
 	if (login->config->use_md5_passwds)
 		MD5_String(sd->passwd, sd->passwd);
 	sd->passwdenc = PWENC_NONE;
 	sd->version = login->config->client_version_to_connect; // hack to skip version check
 	server_ip = ntohl(RFIFOL(fd,54));
 	server_port = ntohs(RFIFOW(fd,58));
-	safestrncpy(server_name, (char*)RFIFOP(fd,60), 20);
+	safestrncpy(server_name, RFIFOP(fd,60), 20);
 	type = RFIFOW(fd,82);
 	new_ = RFIFOW(fd,84);
 	RFIFOSKIP(fd,86);

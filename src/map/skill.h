@@ -32,6 +32,7 @@
  **/
 struct Damage;
 struct homun_data;
+struct itemlist; // map/itemdb.h
 struct map_session_data;
 struct mercenary_data;
 struct unit_data;
@@ -2060,8 +2061,8 @@ struct skill_interface {
 	int (*magicdecoy) (struct map_session_data *sd, int nameid);
 	int (*poisoningweapon) ( struct map_session_data *sd, int nameid);
 	int (*select_menu) (struct map_session_data *sd,uint16 skill_id);
-	int (*elementalanalysis) (struct map_session_data *sd, int n, uint16 skill_lv, unsigned short *item_list);
-	int (*changematerial) (struct map_session_data *sd, int n, unsigned short *item_list);
+	int (*elementalanalysis) (struct map_session_data *sd, uint16 skill_lv, const struct itemlist *item_list);
+	int (*changematerial) (struct map_session_data *sd, const struct itemlist *item_list);
 	int (*get_elemental_type) (uint16 skill_id, uint16 skill_lv);
 	void (*cooldown_save) (struct map_session_data * sd);
 	int (*get_new_group_id) (void);
