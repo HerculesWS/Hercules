@@ -2566,7 +2566,7 @@ int npc_parseview(const char* w4, const char* start, const char* buffer, const c
 	{
 		// Check if constant exists and get its value.
 		if(!script->get_constant(viewid, &val)) {
-			ShowWarning("npc_parseview: Invalid NPC constant '%s' specified in file '%s', line'%d'. Defaulting to INVISIBLE_CLASS. \n", viewid, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parseview: Invalid NPC constant '%s' specified in file '%s', line '%d'. Defaulting to INVISIBLE_CLASS.\n", viewid, filepath, strline(buffer,start-buffer));
 			val = INVISIBLE_CLASS;
 		}
 	} else {
@@ -2762,7 +2762,7 @@ const char *npc_parse_shop(const char *w1, const char *w2, const char *w3, const
 		}
 
 		if (dir < 0 || dir > 7) {
-			ShowError("npc_parse_ship: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
+			ShowError("npc_parse_shop: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 			return strchr(start,'\n');//continue
 		}
