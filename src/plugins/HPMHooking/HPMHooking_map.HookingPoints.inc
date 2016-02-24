@@ -1514,6 +1514,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(iMalloc->realloc, HP_iMalloc_realloc) },
 	{ HP_POP(iMalloc->reallocz, HP_iMalloc_reallocz) },
 	{ HP_POP(iMalloc->astrdup, HP_iMalloc_astrdup) },
+	{ HP_POP(iMalloc->astrndup, HP_iMalloc_astrndup) },
 	{ HP_POP(iMalloc->free, HP_iMalloc_free) },
 	{ HP_POP(iMalloc->memory_check, HP_iMalloc_memory_check) },
 	{ HP_POP(iMalloc->verify_ptr, HP_iMalloc_verify_ptr) },

@@ -782,6 +782,8 @@ struct {
 	struct HPMHookPoint *HP_iMalloc_reallocz_post;
 	struct HPMHookPoint *HP_iMalloc_astrdup_pre;
 	struct HPMHookPoint *HP_iMalloc_astrdup_post;
+	struct HPMHookPoint *HP_iMalloc_astrndup_pre;
+	struct HPMHookPoint *HP_iMalloc_astrndup_post;
 	struct HPMHookPoint *HP_iMalloc_free_pre;
 	struct HPMHookPoint *HP_iMalloc_free_post;
 	struct HPMHookPoint *HP_iMalloc_memory_check_pre;
@@ -838,6 +840,8 @@ struct {
 	struct HPMHookPoint *HP_mapif_auction_bid_post;
 	struct HPMHookPoint *HP_mapif_parse_auction_bid_pre;
 	struct HPMHookPoint *HP_mapif_parse_auction_bid_post;
+	struct HPMHookPoint *HP_mapif_elemental_create_pre;
+	struct HPMHookPoint *HP_mapif_elemental_create_post;
 	struct HPMHookPoint *HP_mapif_elemental_save_pre;
 	struct HPMHookPoint *HP_mapif_elemental_save_post;
 	struct HPMHookPoint *HP_mapif_elemental_load_pre;
@@ -938,6 +942,8 @@ struct {
 	struct HPMHookPoint *HP_mapif_homunculus_saved_post;
 	struct HPMHookPoint *HP_mapif_homunculus_renamed_pre;
 	struct HPMHookPoint *HP_mapif_homunculus_renamed_post;
+	struct HPMHookPoint *HP_mapif_homunculus_create_pre;
+	struct HPMHookPoint *HP_mapif_homunculus_create_post;
 	struct HPMHookPoint *HP_mapif_homunculus_save_pre;
 	struct HPMHookPoint *HP_mapif_homunculus_save_post;
 	struct HPMHookPoint *HP_mapif_homunculus_load_pre;
@@ -982,6 +988,8 @@ struct {
 	struct HPMHookPoint *HP_mapif_mail_send_post;
 	struct HPMHookPoint *HP_mapif_parse_mail_send_pre;
 	struct HPMHookPoint *HP_mapif_parse_mail_send_post;
+	struct HPMHookPoint *HP_mapif_mercenary_create_pre;
+	struct HPMHookPoint *HP_mapif_mercenary_create_post;
 	struct HPMHookPoint *HP_mapif_mercenary_save_pre;
 	struct HPMHookPoint *HP_mapif_mercenary_save_post;
 	struct HPMHookPoint *HP_mapif_mercenary_load_pre;
@@ -2181,6 +2189,8 @@ struct {
 	int HP_iMalloc_reallocz_post;
 	int HP_iMalloc_astrdup_pre;
 	int HP_iMalloc_astrdup_post;
+	int HP_iMalloc_astrndup_pre;
+	int HP_iMalloc_astrndup_post;
 	int HP_iMalloc_free_pre;
 	int HP_iMalloc_free_post;
 	int HP_iMalloc_memory_check_pre;
@@ -2237,6 +2247,8 @@ struct {
 	int HP_mapif_auction_bid_post;
 	int HP_mapif_parse_auction_bid_pre;
 	int HP_mapif_parse_auction_bid_post;
+	int HP_mapif_elemental_create_pre;
+	int HP_mapif_elemental_create_post;
 	int HP_mapif_elemental_save_pre;
 	int HP_mapif_elemental_save_post;
 	int HP_mapif_elemental_load_pre;
@@ -2337,6 +2349,8 @@ struct {
 	int HP_mapif_homunculus_saved_post;
 	int HP_mapif_homunculus_renamed_pre;
 	int HP_mapif_homunculus_renamed_post;
+	int HP_mapif_homunculus_create_pre;
+	int HP_mapif_homunculus_create_post;
 	int HP_mapif_homunculus_save_pre;
 	int HP_mapif_homunculus_save_post;
 	int HP_mapif_homunculus_load_pre;
@@ -2381,6 +2395,8 @@ struct {
 	int HP_mapif_mail_send_post;
 	int HP_mapif_parse_mail_send_pre;
 	int HP_mapif_parse_mail_send_post;
+	int HP_mapif_mercenary_create_pre;
+	int HP_mapif_mercenary_create_post;
 	int HP_mapif_mercenary_save_pre;
 	int HP_mapif_mercenary_save_post;
 	int HP_mapif_mercenary_load_pre;
