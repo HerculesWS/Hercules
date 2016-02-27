@@ -12299,8 +12299,9 @@ int status_change_spread( struct block_list *src, struct block_list *bl ) {
 				if (td == NULL || td->func != status->change_timer || DIFF_TICK(td->tick,tick) < 0)
 					continue;
 				data.tick = DIFF_TICK32(td->tick,tick);
-			} else
-				data.tick = INVALID_TIMER;
+			} else {
+				data.tick = INFINITE_DURATION;
+			}
 			break;
 			// Special cases
 		case SC_POISON:

@@ -3712,7 +3712,7 @@ void char_parse_frommap_save_status_change_data(int fd)
 			memcpy (&data, RFIFOP(fd, 14+i*sizeof(struct status_change_data)), sizeof(struct status_change_data));
 			if( i > 0 )
 				StrBuf->AppendStr(&buf, ", ");
-			StrBuf->Printf(&buf, "('%d','%d','%hu','%u','%d','%d','%d','%d')", aid, cid,
+			StrBuf->Printf(&buf, "('%d','%d','%hu','%d','%d','%d','%d','%d')", aid, cid,
 				data.type, data.tick, data.val1, data.val2, data.val3, data.val4);
 		}
 		if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
@@ -3880,9 +3880,11 @@ void char_parse_frommap_scdata_update(int fd)
 	int val4 = RFIFOL(fd, 24);
 	short type = RFIFOW(fd, 10);
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`char_id`,`type`,`tick`,`val1`,`val2`,`val3`,`val4`) VALUES ('%d','%d','%d',-1,'%d','%d','%d','%d')",
-								scdata_db, account_id, char_id, type, val1, val2, val3, val4) )
-	{
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s`"
+			" (`account_id`,`char_id`,`type`,`tick`,`val1`,`val2`,`val3`,`val4`)"
+			" VALUES ('%d','%d','%d','%d','%d','%d','%d','%d')",
+			scdata_db, account_id, char_id, type, INFINITE_DURATION, val1, val2, val3, val4)
+	) {
 		Sql_ShowDebug(inter->sql_handle);
 	}
 	RFIFOSKIP(fd, 28);
