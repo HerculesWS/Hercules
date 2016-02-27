@@ -8043,23 +8043,23 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					}
 				}
 				//val4 signals infinite endure (if val4 == 2 it is infinite endure from Berserk)
-				if( val4 )
-					tick = -1;
+				if (val4)
+					tick = INFINITE_DURATION;
 				break;
 			case SC_AUTOBERSERK:
 				if (st->hp < st->max_hp>>2 &&
 					(!sc->data[SC_PROVOKE] || sc->data[SC_PROVOKE]->val2==0))
 					sc_start4(src,bl,SC_PROVOKE,100,10,1,0,0,60000);
-				tick = -1;
+				tick = INFINITE_DURATION;
 				break;
 			case SC_CRUCIS:
 				val2 = 10 + 4*val1; //Def reduction
-				tick = -1;
+				tick = INFINITE_DURATION;
 				clif->emotion(bl,E_SWT);
 				break;
 			case SC_MAXIMIZEPOWER:
 				tick_time = val2 = tick>0?tick:60000;
-				tick = -1; // duration sent to the client should be infinite
+				tick = INFINITE_DURATION; // duration sent to the client should be infinite
 				break;
 			case SC_EDP: // [Celest]
 				//Chance to Poison enemies.
@@ -8100,7 +8100,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC_SACRIFICE:
 				val2 = 5; //Lasts 5 hits
-				tick = -1;
+				tick = INFINITE_DURATION;
 				break;
 			case SC_ENCHANTPOISON:
 				val2= 250+50*val1; //Poisoning Chance (2.5+0.5%) in 1/10000 rate
@@ -8353,7 +8353,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				if (!sd) //Monsters should be able to walk with no penalties. [Skotlex]
 					val1 = 10;
 				tick_time = val2 = tick>0?tick:60000; //SP consumption rate.
-				tick = -1; // duration sent to the client should be infinite
+				tick = INFINITE_DURATION; // duration sent to the client should be infinite
 				val3 = 0; // unused, previously walk speed adjustment
 				//val4&1 signals the presence of a wall.
 				//val4&2 makes cloak not end on normal attacks [Skotlex]
@@ -8384,7 +8384,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_TURNKICK_READY:
 			case SC_DODGE_READY:
 			case SC_PUSH_CART:
-				tick = -1;
+				tick = INFINITE_DURATION;
 				break;
 
 			case SC_AUTOGUARD:
@@ -8438,7 +8438,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val2 = 12; //SP cost
 				val4 = 10000; //Decrease at 10secs intervals.
 				val3 = tick/val4;
-				tick = -1; // duration sent to the client should be infinite
+				tick = INFINITE_DURATION; // duration sent to the client should be infinite
 				tick_time = val4; // [GodLesZ] tick time
 				break;
 			case SC_PARRYING:
@@ -8534,12 +8534,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_SWORDREJECT:
 				val2 = 15*val1; //Reflect chance
 				val3 = 3; //Reflections
-				tick = -1;
+				tick = INFINITE_DURATION;
 				break;
 
 			case SC_MEMORIZE:
 				val2 = 5; //Memorized casts.
-				tick = -1;
+				tick = INFINITE_DURATION;
 				break;
 
 			case SC_GRAVITATION:
@@ -8652,7 +8652,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val3 = (int)(currenttick&0x00000000ffffffffLL);
 				val4 = (int)((currenttick&0xffffffff00000000LL)>>32);
 			}
-				tick = -1;
+				tick = INFINITE_DURATION;
 				break;
 			case SC_KAAHI:
 				val2 = 200*val1; //HP heal
@@ -8667,7 +8667,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC_TRICKDEAD:
 				if (vd) vd->dead_sit = 1;
-				tick = -1;
+				tick = INFINITE_DURATION;
 				break;
 			case SC_CONCENTRATION:
 				val2 = 2 + val1;
@@ -9060,7 +9060,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val3 = (int)(currenttick&0x00000000ffffffffLL);
 				val4 = (int)((currenttick&0xffffffff00000000LL)>>32);
 			}
-				tick = -1;
+				tick = INFINITE_DURATION;
 				break;
 			case SC__REPRODUCE:
 				val4 = tick / 1000;
@@ -9257,7 +9257,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_FORCEOFVANGUARD:
 				val2 = 8 + 12 * val1; // Chance
 				val3 = 5 + 2 * val1; // Max rage counters
-				tick = -1; //endless duration in the client
+				tick = INFINITE_DURATION; //endless duration in the client
 				break;
 			case SC_EXEEDBREAK:
 				if( sd ){
@@ -9523,7 +9523,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC_NEUTRALBARRIER:
 				tick_time = tick;
-				tick = -1;
+				tick = INFINITE_DURATION;
 				break;
 			case SC_GOLDENE_FERSE:
 				val2 = 10 + 10*val1; //max hp bonus
@@ -9555,7 +9555,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					sc_start(src, bl, SC_ENDURE, 100, val1, tick); //start endure for same duration
 				break;
 			case SC_STYLE_CHANGE: //[Lighta] need real info
-				tick = -1;
+				tick = INFINITE_DURATION;
 				if(val2 == MH_MD_FIGHTING) val2 = MH_MD_GRAPPLING;
 				else val2 = MH_MD_FIGHTING;
 				break;
@@ -9591,7 +9591,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					val1 = MOBID_PORING;
 				break;
 			case SC_ALL_RIDING:
-				tick = -1;
+				tick = INFINITE_DURATION;
 				break;
 			case SC_FLASHCOMBO:
 				/**
@@ -10594,7 +10594,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			// need to do it here.
 			if( sd ) {
 				map->quit(sd);
-				// Because map->quit calls status_change_end with tid -1
+				// Because map->quit calls status_change_end with tid INVALID_TIMER
 				// from here it's not neccesary to continue
 				return 1;
 			}
@@ -10624,7 +10624,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		case SC_WHITEIMPRISON:
 			{
 				struct block_list* src = map->id2bl(sce->val2);
-				if( tid == -1 || !src)
+				if (tid == INVALID_TIMER || src == NULL)
 					break; // Terminated by Damage
 				status_fix_damage(src,bl,400*sce->val1,clif->damage(bl,bl,0,0,400*sce->val1,0,BDT_NORMAL,0));
 			}
@@ -10634,7 +10634,7 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 				struct unit_data *ud = unit->bl2ud(bl);
 				if (ud) {
 					ud->state.running = 0;
-					if (ud->walktimer != -1)
+					if (ud->walktimer != INVALID_TIMER)
 						unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 				}
 			}

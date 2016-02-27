@@ -67,18 +67,27 @@ void party_fill_member(struct party_member* member, struct map_session_data* sd,
 	member->online     = 1;
 	member->leader     = leader;
 }
-/// Get the member_id of a party member.
-/// Return -1 if not in party.
-int party_getmemberid(struct party_data* p, struct map_session_data* sd) {
+
+/**
+ * Gets the member_id of a party member.
+ *
+ * @param p  Party data.
+ * @param sd Member data.
+ * @return the member_id.
+ * @retval INDEX_NOT_FOUND if not in party.
+ */
+int party_getmemberid(struct party_data *p, struct map_session_data *sd)
+{
 	int member_id;
-	nullpo_retr(-1, p);
-	if( sd == NULL )
-		return -1;// no player
+	nullpo_retr(INDEX_NOT_FOUND, p);
+
+	if (sd == NULL)
+		return INDEX_NOT_FOUND; // no player
 	ARR_FIND(0, MAX_PARTY, member_id,
 		p->party.member[member_id].account_id == sd->status.account_id &&
 		p->party.member[member_id].char_id == sd->status.char_id);
-	if( member_id == MAX_PARTY )
-		return -1;// not found
+	if (member_id == MAX_PARTY)
+		return INDEX_NOT_FOUND; // not found
 	return member_id;
 }
 
@@ -326,7 +335,7 @@ int party_recv_info(const struct party *sp, int char_id)
 	if( char_id != 0 ) {
 		// requester
 		sd = map->charid2sd(char_id);
-		if( sd && sd->status.party_id == sp->party_id && party->getmemberid(p,sd) == -1 )
+		if (sd != NULL && sd->status.party_id == sp->party_id && party->getmemberid(p,sd) == INDEX_NOT_FOUND)
 			sd->status.party_id = 0;// was not in the party
 	}
 	return 0;
