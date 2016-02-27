@@ -7305,7 +7305,7 @@ BUILDIN(getitem2)
 		int get_count, i;
 		memset(&item_tmp,0,sizeof(item_tmp));
 		if (item_data == NULL)
-			return -1;
+			return false;
 		if(item_data->type==IT_WEAPON || item_data->type==IT_ARMOR) {
 			ref = cap_value(ref, 0, MAX_REFINE);
 		}
@@ -13999,7 +13999,7 @@ BUILDIN(movenpc)
 	y = script_getnum(st,4);
 
 	if ((nd = npc->name2id(npc_name)) == NULL)
-		return -1;
+		return false;
 
 	if (script_hasdata(st,5))
 		nd->dir = script_getnum(st,5) % 8;
@@ -16431,7 +16431,7 @@ BUILDIN(getmonsterinfo)
 			script_pushconststr(st,"null");
 		else
 			script_pushint(st,-1);
-		return -1;
+		return false;
 	}
 	monster = mob->db(mob_id);
 	switch ( script_getnum(st,3) ) {
@@ -19727,7 +19727,7 @@ BUILDIN(countbound)
 	}
 
 	script_pushint(st,j);
-	return 0;
+	return true;
 }
 
 /*==========================================
