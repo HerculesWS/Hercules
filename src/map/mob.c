@@ -2987,18 +2987,20 @@ int mob_summonslave(struct mob_data *md2,int *value,int amount,uint16 skill_id)
 
 /*==========================================
  * MOBskill lookup (get skillindex through skill_id)
- * Returns -1 if not found.
+ * Returns INDEX_NOT_FOUND if not found.
  *------------------------------------------*/
 int mob_skill_id2skill_idx(int class_,uint16 skill_id)
 {
 	int i, max = mob->db(class_)->maxskill;
 	struct mob_skill *ms=mob->db(class_)->skill;
 
-	if(ms==NULL)
-		return -1;
+	if (ms == NULL)
+		return INDEX_NOT_FOUND;
 
-	ARR_FIND( 0, max, i, ms[i].skill_id == skill_id );
-	return ( i < max ) ? i : -1;
+	ARR_FIND(0, max, i, ms[i].skill_id == skill_id);
+	if (i == max)
+		return INDEX_NOT_FOUND;
+	return i;
 }
 
 /*==========================================

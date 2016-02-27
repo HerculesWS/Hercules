@@ -235,10 +235,13 @@ int guild_getindex(const struct guild *g, int account_id, int char_id)
 	int i;
 
 	if( g == NULL )
-		return -1;
+		return INDEX_NOT_FOUND;
 
 	ARR_FIND( 0, g->max_member, i, g->member[i].account_id == account_id && g->member[i].char_id == char_id );
-	return( i < g->max_member ) ? i : -1;
+	if (i == g->max_member)
+		return INDEX_NOT_FOUND;
+
+	return i;
 }
 
 /// lookup: player sd -> member position
@@ -286,9 +289,8 @@ int guild_payexp_timer_sub(DBKey key, DBData *data, va_list ap) {
 
 	c = DB->data2ptr(data);
 
-	if (
-		(g = guild->search(c->guild_id)) == NULL ||
-		(i = guild->getindex(g, c->account_id, c->char_id)) < 0
+	if ((g = guild->search(c->guild_id)) == NULL
+	 || (i = guild->getindex(g, c->account_id, c->char_id)) == INDEX_NOT_FOUND
 	) {
 		ers_free(guild->expcache_ers, c);
 		return 0;
@@ -447,7 +449,7 @@ int guild_check_member(const struct guild *g)
 			continue;
 
 		i = guild->getindex(g,sd->status.account_id,sd->status.char_id);
-		if (i < 0) {
+		if (i == INDEX_NOT_FOUND) {
 			sd->status.guild_id=0;
 			sd->guild_emblem_id=0;
 			ShowWarning("guild: check_member %d[%s] is not member\n",sd->status.account_id,sd->status.name);
@@ -754,9 +756,9 @@ void guild_member_joined(struct map_session_data *sd)
 			guild->block_skill(sd, 300000);
 	}
 	i = guild->getindex(g, sd->status.account_id, sd->status.char_id);
-	if (i == -1)
+	if (i == INDEX_NOT_FOUND) {
 		sd->status.guild_id = 0;
-	else {
+	} else {
 		g->member[i].sd = sd;
 		sd->guild = g;
 
@@ -876,7 +878,7 @@ int guild_expulsion(struct map_session_data* sd, int guild_id, int account_id, i
 
 	// find the member and perform expulsion
 	i = guild->getindex(g, account_id, char_id);
-	if( i != -1 && strcmp(g->member[i].name,g->master) != 0 ) //Can't expel the GL!
+	if (i != INDEX_NOT_FOUND && strcmp(g->member[i].name,g->master) != 0) //Can't expel the GL!
 		intif->guild_leave(g->guild_id,account_id,char_id,1,mes);
 
 	return 0;
@@ -893,7 +895,7 @@ int guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, c
 		return 0; // no such guild (error!)
 
 	i = guild->getindex(g, account_id, char_id);
-	if( i == -1 )
+	if (i == INDEX_NOT_FOUND)
 		return 0; // not a member (inconsistency!)
 
 	online_member_sd = guild->getavailablesd(g);
@@ -976,8 +978,8 @@ int guild_send_memberinfoshort(struct map_session_data *sd,int online)
 		sd->status.account_id,sd->status.char_id,online,sd->status.base_level,sd->status.class_);
 
 	if(!online){
-		int i=guild->getindex(g,sd->status.account_id,sd->status.char_id);
-		if(i>=0)
+		int i = guild->getindex(g,sd->status.account_id,sd->status.char_id);
+		if (i != INDEX_NOT_FOUND)
 			g->member[i].sd=NULL;
 		else
 			ShowError("guild_send_memberinfoshort: Failed to locate member %d:%d in guild %d!\n", sd->status.account_id, sd->status.char_id, g->guild_id);
@@ -994,7 +996,7 @@ int guild_send_memberinfoshort(struct map_session_data *sd,int online)
 
 int guild_recv_memberinfoshort(int guild_id,int account_id,int char_id,int online,int lv,int class_)
 { // cleaned up [LuzZza]
-	int i,alv,c,idx=-1,om=0,oldonline=-1;
+	int i, alv, c, idx = INDEX_NOT_FOUND, om = 0, oldonline = -1;
 	struct guild *g = guild->search(guild_id);
 
 	if(g == NULL)
@@ -1016,7 +1018,7 @@ int guild_recv_memberinfoshort(int guild_id,int account_id,int char_id,int onlin
 			om++;
 	}
 
-	if(idx == -1 || c == 0) {
+	if (idx == INDEX_NOT_FOUND || c == 0) {
 		//Treat char_id who doesn't match guild_id (not found as member)
 		struct map_session_data *sd = map->id2sd(account_id);
 		if(sd && sd->status.char_id == char_id) {

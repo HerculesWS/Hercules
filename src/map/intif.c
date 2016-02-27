@@ -1346,7 +1346,7 @@ void intif_parse_GuildMemberInfoChanged(int fd) {
 		return;
 
 	idx = guild->getindex(g,account_id,char_id);
-	if( idx == -1 )
+	if (idx == INDEX_NOT_FOUND)
 		return;
 
 	switch( type ) {

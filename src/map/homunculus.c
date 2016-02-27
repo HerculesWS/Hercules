@@ -399,7 +399,7 @@ bool homunculus_levelup(struct homun_data *hd) {
 int homunculus_change_class(struct homun_data *hd, short class_) {
 	int i = homun->db_search(class_,HOMUNCULUS_CLASS);
 	nullpo_retr(0, hd);
-	if(i < 0)
+	if (i == INDEX_NOT_FOUND)
 		return 0;
 	hd->homunculusDB = &homun->dbs->db[i];
 	hd->homunculus.class_ = class_;
@@ -769,10 +769,10 @@ int homunculus_db_search(int key,int type) {
 					return i;
 				break;
 			default:
-				return -1;
+				return INDEX_NOT_FOUND;
 		}
 	}
-	return -1;
+	return INDEX_NOT_FOUND;
 }
 
 /**
@@ -797,7 +797,7 @@ bool homunculus_create(struct map_session_data *sd, const struct s_homunculus *h
 	Assert_retr(false, sd->status.hom_id == 0 || sd->hd == 0 || sd->hd->master == sd);
 
 	i = homun->db_search(hom->class_,HOMUNCULUS_CLASS);
-	if(i < 0) {
+	if (i == INDEX_NOT_FOUND) {
 		ShowError("homunculus_create: unknown class [%d] for homunculus '%s', requesting deletion.\n", hom->class_, hom->name);
 		sd->status.hom_id = 0;
 		intif->homunculus_requestdelete(hom->hom_id);
@@ -948,7 +948,8 @@ bool homunculus_creation_request(struct map_session_data *sd, int class_) {
 	nullpo_retr(false, sd);
 
 	i = homun->db_search(class_,HOMUNCULUS_CLASS);
-	if(i < 0) return false;
+	if (i == INDEX_NOT_FOUND)
+		return false;
 
 	memset(&hom, 0, sizeof(struct s_homunculus));
 	//Initial data
