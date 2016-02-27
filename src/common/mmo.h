@@ -220,6 +220,8 @@
 
 #define SCRIPT_VARNAME_LENGTH 32 ///< Maximum length of a script variable
 
+#define INFINITE_DURATION (-1) // Infinite duration for status changes
+
 struct hplugin_data_store;
 
 enum item_types {
@@ -392,11 +394,11 @@ struct script_reg_str {
 	char *value;
 };
 
-// For saving status changes across sessions. [Skotlex]
+/// For saving status changes across sessions. [Skotlex]
 struct status_change_data {
-	unsigned short type; //SC_type
-	int val1, val2, val3, val4;
-	unsigned int tick; //Remaining duration.
+	unsigned short type;        ///< Status change type (@see enum sc_type)
+	int val1, val2, val3, val4; ///< Parameters (meaning depends on type).
+	int tick;                   ///< Remaining duration.
 };
 
 struct storage_data {
