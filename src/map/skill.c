@@ -9431,7 +9431,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case SO_EL_CONTROL:
 			if( sd ) {
-				int mode = EL_MODE_PASSIVE; // Standard mode.
+				uint32 mode = EL_MODE_PASSIVE; // Standard mode.
 
 				if( !sd->ed ) break;
 
@@ -9443,7 +9443,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					case 2: mode = EL_MODE_ASSIST; break;
 					case 3: mode = EL_MODE_AGGRESSIVE; break;
 				}
-				if( !elemental->change_mode(sd->ed,mode) ) {
+				if (!elemental->change_mode(sd->ed, mode)) {
 					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 					break;
 				}

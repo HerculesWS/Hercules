@@ -126,7 +126,7 @@ struct elemental_interface {
 	int (*save) (struct elemental_data *ed);
 
 	int (*change_mode_ack) (struct elemental_data *ed, int mode);
-	int (*change_mode) (struct elemental_data *ed, int mode);
+	int (*change_mode) (struct elemental_data *ed, uint32 mode);
 
 	void (*heal) (struct elemental_data *ed, int hp, int sp);
 	int (*dead) (struct elemental_data *ed);
