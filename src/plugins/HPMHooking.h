@@ -43,8 +43,18 @@ struct HPMHooking_core_interface {
 #else // ! HERCULES_CORE
 HPExport struct HPMHooking_interface HPMHooking_s;
 
-#define addHookPre(tname,hook) (HPMi->hooking->AddHook(HOOK_TYPE_PRE,(tname),(hook),HPMi->pid))
-#define addHookPost(tname,hook) (HPMi->hooking->AddHook(HOOK_TYPE_POST,(tname),(hook),HPMi->pid))
+#include "HPMHooking/HPMHooking.Defs.inc"
+
+#define addHookPre(ifname, funcname, hook) ( \
+		(void)((HPMHOOK_pre_ ## ifname ## _ ## funcname)0 == (hook)), \
+		HPMi->hooking->AddHook(HOOK_TYPE_PRE, #ifname "->" #funcname, (hook), HPMi->pid) \
+		)
+
+#define addHookPost(ifname, funcname, hook) ( \
+		(void)((HPMHOOK_post_ ## ifname ## _ ## funcname)0 == (hook)), \
+		HPMi->hooking->AddHook(HOOK_TYPE_POST, #ifname "->" #funcname, (hook), HPMi->pid) \
+		)
+
 /* need better names ;/ */
 /* will not run the original function after pre-hook processing is complete (other hooks will run) */
 #define hookStop() (HPMi->hooking->HookStop(__func__,HPMi->pid))

@@ -200,13 +200,13 @@ HPExport void plugin_init (void) {
 		/* in this sample we add a PreHook to pc->dropitem */
 		/* to identify whether the item being dropped is on amount higher than 1 */
 		/* if so, it stores the amount on a variable (my_pc_dropitem_storage) and changes the amount to 1 */
-		addHookPre("pc->dropitem",my_pc_dropitem_pre);
+		addHookPre(pc, dropitem, my_pc_dropitem_pre);
 
 		/* in this sample we add a PostHook to pc->dropitem */
 		/* if the original pc->dropitem was successful and the amount stored on my_pc_dropitem_storage is higher than 1, */
 		/* our posthook will display a message to the user about the cap */
 		/* - by checking whether it was successful (retVal value) it allows for the originals conditions to take place */
-		addHookPost("pc->dropitem",my_pc_dropitem_post);
+		addHookPost(pc, dropitem, my_pc_dropitem_post);
 	}
 }
 /* triggered when server starts loading, before any server-specific data is set */
