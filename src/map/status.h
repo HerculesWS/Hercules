@@ -1805,25 +1805,33 @@ enum e_joint_break
 };
 
 
-//Mode definitions to clear up code reading. [Skotlex]
+/**
+ * Mob mode definitions. [Skotlex]
+ *
+ * @see doc/mob_db_mode_list.txt for a description of each mode.
+ */
 enum e_mode
 {
-	MD_CANMOVE            = 0x0001,
-	MD_LOOTER             = 0x0002,
-	MD_AGGRESSIVE         = 0x0004,
-	MD_ASSIST             = 0x0008,
-	MD_CASTSENSOR_IDLE    = 0x0010,
-	MD_BOSS               = 0x0020,
-	MD_PLANT              = 0x0040,
-	MD_CANATTACK          = 0x0080,
-	MD_DETECTOR           = 0x0100,
-	MD_CASTSENSOR_CHASE   = 0x0200,
-	MD_CHANGECHASE        = 0x0400,
-	MD_ANGRY              = 0x0800,
-	MD_CHANGETARGET_MELEE = 0x1000,
-	MD_CHANGETARGET_CHASE = 0x2000,
-	MD_TARGETWEAK         = 0x4000,
-	MD_MASK               = 0xFFFF,
+	MD_NONE               = 0x00000000,
+	MD_CANMOVE            = 0x00000001,
+	MD_LOOTER             = 0x00000002,
+	MD_AGGRESSIVE         = 0x00000004,
+	MD_ASSIST             = 0x00000008,
+	MD_CASTSENSOR_IDLE    = 0x00000010,
+	MD_BOSS               = 0x00000020,
+	MD_PLANT              = 0x00000040,
+	MD_CANATTACK          = 0x00000080,
+	MD_DETECTOR           = 0x00000100,
+	MD_CASTSENSOR_CHASE   = 0x00000200,
+	MD_CHANGECHASE        = 0x00000400,
+	MD_ANGRY              = 0x00000800,
+	MD_CHANGETARGET_MELEE = 0x00001000,
+	MD_CHANGETARGET_CHASE = 0x00002000,
+	MD_TARGETWEAK         = 0x00004000,
+	MD_NOKNOCKBACK        = 0x00008000,
+	//MD_RANDOMTARGET     = 0x00010000, // Not implemented
+	// Note: This should be kept within INT_MAX, since it's often cast to int.
+	MD_MASK               = 0x7FFFFFFF,
 };
 
 //Status change option definitions (options are what makes status changes visible to chars
@@ -1975,8 +1983,8 @@ struct status_data {
 		batk,
 		matk_min, matk_max,
 		speed,
-		amotion, adelay, dmotion,
-		mode;
+		amotion, adelay, dmotion;
+	uint32 mode;
 	short
 		hit, flee, cri, flee2,
 		def2, mdef2,
@@ -2288,7 +2296,7 @@ struct status_interface {
 	unsigned int (*calc_maxsp) (struct block_list *bl, struct status_change *sc, unsigned int maxsp);
 	unsigned char (*calc_element) (struct block_list *bl, struct status_change *sc, int element);
 	unsigned char (*calc_element_lv) (struct block_list *bl, struct status_change *sc, int lv);
-	unsigned short (*calc_mode) (struct block_list *bl, struct status_change *sc, int mode);
+	uint32 (*calc_mode) (const struct block_list *bl, const struct status_change *sc, uint32 mode);
 	unsigned short (*calc_ematk) (struct block_list *bl, struct status_change *sc, int matk);
 	void (*calc_bl_main) (struct block_list *bl, int flag);
 	void (*display_add) (struct map_session_data *sd, enum sc_type type, int dval1, int dval2, int dval3);

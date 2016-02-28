@@ -607,7 +607,7 @@ void mobdb2sql_tableheader(void)
 			"  `Scale` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  `Race` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  `Element` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',\n"
-			"  `Mode` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
+			"  `Mode` INT(11) UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  `Speed` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  `aDelay` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"
 			"  `aMotion` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',\n"

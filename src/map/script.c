@@ -10051,7 +10051,8 @@ BUILDIN(killmonsterall) {
  *------------------------------------------*/
 BUILDIN(clone) {
 	struct map_session_data *sd, *msd = NULL;
-	int char_id,master_id=0,x,y, mode = 0, flag = 0, m;
+	int char_id, master_id = 0, x, y, flag = 0, m;
+	uint32 mode = 0;
 	unsigned int duration = 0;
 	const char *mapname, *event;
 
@@ -10064,8 +10065,8 @@ BUILDIN(clone) {
 	if( script_hasdata(st,7) )
 		master_id=script_getnum(st,7);
 
-	if( script_hasdata(st,8) )
-		mode=script_getnum(st,8);
+	if (script_hasdata(st,8))
+		mode = script_getnum(st,8);
 
 	if( script_hasdata(st,9) )
 		flag=script_getnum(st,9);

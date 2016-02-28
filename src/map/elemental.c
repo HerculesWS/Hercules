@@ -545,28 +545,38 @@ int elemental_change_mode_ack(struct elemental_data *ed, int mode) {
 	return 1;
 }
 
-/*===============================================================
- * Change elemental mode.
- *-------------------------------------------------------------*/
-int elemental_change_mode(struct elemental_data *ed, int mode) {
+/**
+ * Changes elemental mode.
+ *
+ * @param ed  The elemental data.
+ * @param mode The new mode.
+ * @retval 1 in case of success.
+ */
+int elemental_change_mode(struct elemental_data *ed, uint32 mode)
+{
+	int skillmode = EL_SKILLMODE_PASIVE;
 	nullpo_ret(ed);
 
 	// Remove target
 	elemental->unlocktarget(ed);
 
 	// Removes the effects of the previous mode.
-	if(ed->elemental.mode != mode ) elemental->clean_effect(ed);
+	if (ed->elemental.mode != mode)
+		elemental->clean_effect(ed);
 
 	ed->battle_status.mode = ed->elemental.mode = mode;
 
 	// Normalize elemental mode to elemental skill mode.
-	if( mode == EL_MODE_AGGRESSIVE ) mode = EL_SKILLMODE_AGGRESSIVE; // Aggressive spirit mode -> Aggressive spirit skill.
-	else if( mode == EL_MODE_ASSIST ) mode = EL_SKILLMODE_ASSIST;    // Assist spirit mode -> Assist spirit skill.
-	else mode = EL_SKILLMODE_PASIVE;                                 // Passive spirit mode -> Passive spirit skill.
+	if (mode == EL_MODE_AGGRESSIVE)
+		skillmode = EL_SKILLMODE_AGGRESSIVE; // Aggressive spirit mode -> Aggressive spirit skill.
+	else if (mode == EL_MODE_ASSIST)
+		skillmode = EL_SKILLMODE_ASSIST; // Assist spirit mode -> Assist spirit skill.
+	else
+		skillmode = EL_SKILLMODE_PASIVE; // Passive spirit mode -> Passive spirit skill.
 
 	// Use a skill immediately after every change mode.
-	if( mode != EL_SKILLMODE_AGGRESSIVE )
-		elemental->change_mode_ack(ed,mode);
+	if (skillmode != EL_SKILLMODE_AGGRESSIVE)
+		elemental->change_mode_ack(ed, skillmode);
 	return 1;
 }
 
@@ -681,7 +691,8 @@ int elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap) {
 
 int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_data *sd, int64 tick) {
 	struct block_list *target = NULL;
-	int master_dist, view_range, mode;
+	int master_dist, view_range;
+	uint32 mode;
 
 	nullpo_ret(ed);
 	nullpo_ret(sd);
@@ -760,7 +771,7 @@ int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_data *s
 			return 0;
 	}
 
-	if( mode == EL_MODE_AGGRESSIVE ) {
+	if (mode == EL_MODE_AGGRESSIVE) {
 		target = map->id2bl(ed->ud.target);
 
 		if( !target )

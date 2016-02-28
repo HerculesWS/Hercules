@@ -1028,7 +1028,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*del_charm) (struct map_session_data *sd, int count, int type);
 
 	void (*baselevelchanged) (struct map_session_data *sd);
-	int (*level_penalty_mod) (int diff, unsigned char race, unsigned short mode, int type);
+	int (*level_penalty_mod) (int diff, unsigned char race, uint32 mode, int type);
 	int (*calc_skillpoint) (struct map_session_data* sd);
 
 	int (*invincible_timer) (int tid, int64 tick, int id, intptr_t data);

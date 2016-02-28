@@ -2095,7 +2095,7 @@ int status_calc_mob_(struct mob_data* md, enum e_status_calc_opt opt) {
 				mstatus->max_hp = 3000 + 3000 * ud->skill_lv + status_get_max_sp(battle->get_master(mbl));
 			} else { //AM_CANNIBALIZE
 				mstatus->max_hp = 1500 + 200*ud->skill_lv + 10*status->get_lv(mbl);
-				mstatus->mode|= MD_CANATTACK|MD_AGGRESSIVE;
+				mstatus->mode |= MD_CANATTACK|MD_AGGRESSIVE;
 			}
 			mstatus->hp = mstatus->max_hp;
 			if( ud->skill_id == NC_SILVERSNIPER )
@@ -2200,9 +2200,9 @@ int status_calc_pet_(struct pet_data *pd, enum e_status_calc_opt opt)
 		pd->status.mode = MD_CANMOVE; // pets discard all modes, except walking
 		pd->status.speed = pd->petDB->speed;
 
-		if(battle_config.pet_attack_support || battle_config.pet_damage_support)
-		{// attack support requires the pet to be able to attack
-			pd->status.mode|= MD_CANATTACK;
+		if(battle_config.pet_attack_support || battle_config.pet_damage_support) {
+			// attack support requires the pet to be able to attack
+			pd->status.mode |= MD_CANATTACK;
 		}
 	}
 
@@ -3212,7 +3212,7 @@ int status_calc_elemental_(struct elemental_data *ed, enum e_status_calc_opt opt
 
 	if ( opt&SCO_FIRST ) {
 		memcpy(estatus, &ed->db->status, sizeof(struct status_data));
-		if ( !ele->mode )
+		if (ele->mode == MD_NONE)
 			estatus->mode = EL_MODE_PASSIVE;
 		else
 			estatus->mode = ele->mode;
@@ -6218,19 +6218,27 @@ unsigned char status_calc_attack_element(struct block_list *bl, struct status_ch
 	return (unsigned char)cap_value(element,0,UCHAR_MAX);
 }
 
-unsigned short status_calc_mode(struct block_list *bl, struct status_change *sc, int mode)
+/**
+ * Calculates the new mode, based on status changes.
+ *
+ * @param bl   The current unit.
+ * @param sc   The current status change list.
+ * @param mode The starting mode.
+ * @return The calculated mode.
+ */
+uint32 status_calc_mode(const struct block_list *bl, const struct status_change *sc, uint32 mode)
 {
-	if(!sc || !sc->count)
-		return mode;
-	if(sc->data[SC_MODECHANGE]) {
-		if (sc->data[SC_MODECHANGE]->val2)
+	if (sc == NULL || sc->count == 0)
+		return mode & MD_MASK;
+	if (sc->data[SC_MODECHANGE] != NULL) {
+		if (sc->data[SC_MODECHANGE]->val2 != 0)
 			mode = sc->data[SC_MODECHANGE]->val2; //Set mode
 		if (sc->data[SC_MODECHANGE]->val3)
-			mode|= sc->data[SC_MODECHANGE]->val3; //Add mode
+			mode |= sc->data[SC_MODECHANGE]->val3; //Add mode
 		if (sc->data[SC_MODECHANGE]->val4)
-			mode&=~sc->data[SC_MODECHANGE]->val4; //Del mode
+			mode &= ~sc->data[SC_MODECHANGE]->val4; //Del mode
 	}
-	return cap_value(mode,0,USHRT_MAX);
+	return mode & MD_MASK;
 }
 
 const char *status_get_name(struct block_list *bl)
@@ -7428,20 +7436,24 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			break;
 		case SC_MODECHANGE:
 		{
-			int mode;
-			struct status_data *bst = status->get_base_status(bl);
-			if (!bst) return 0;
-			if (sc->data[type]) {
-				//Pile up with previous values.
-				if(!val2) val2 = sc->data[type]->val2;
+			uint32 mode = MD_NONE;
+			const struct status_data *bst = status->get_base_status(bl);
+			if (bst == NULL)
+				return 0;
+			if (sc->data[type] != NULL) {
+				// Pile up with previous values.
+				if (val2 == 0)
+					val2 = sc->data[type]->val2;
 				val3 |= sc->data[type]->val3;
 				val4 |= sc->data[type]->val4;
 			}
-			mode = val2 ? val2 : bst->mode; //Base mode
-			if (val4) mode&=~val4; //Del mode
-			if (val3) mode|= val3; //Add mode
+			mode = val2 != 0 ? val2 : bst->mode; // Base mode
+			if (val4 != 0)
+				mode &= ~val4; //Del mode
+			if (val3 != 0)
+				mode |= val3; //Add mode
 			if (mode == bst->mode) { //No change.
-				if (sc->data[type]) //Abort previous status
+				if (sc->data[type] != NULL) //Abort previous status
 					return status_change_end(bl, type, INVALID_TIMER);
 				return 0;
 			}
