@@ -459,7 +459,7 @@ struct mob_interface {
 	int (*setdelayspawn) (struct mob_data *md);
 	int (*count_sub) (struct block_list *bl, va_list ap);
 	int (*spawn) (struct mob_data *md);
-	int (*can_changetarget) (struct mob_data *md, struct block_list *target, int mode);
+	int (*can_changetarget) (const struct mob_data *md, const struct block_list *target, uint32 mode);
 	int (*target) (struct mob_data *md, struct block_list *bl, int dist);
 	int (*ai_sub_hard_activesearch) (struct block_list *bl, va_list ap);
 	int (*ai_sub_hard_changechase) (struct block_list *bl, va_list ap);
@@ -505,7 +505,7 @@ struct mob_interface {
 	int (*skill_use) (struct mob_data *md, int64 tick, int event);
 	int (*skill_event) (struct mob_data *md, struct block_list *src, int64 tick, int flag);
 	int (*is_clone) (int class_);
-	int (*clone_spawn) (struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, int mode, int flag, unsigned int duration);
+	int (*clone_spawn) (struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, uint32 mode, int flag, unsigned int duration);
 	int (*clone_delete) (struct mob_data *md);
 	unsigned int (*drop_adjust) (int baserate, int rate_adjust, unsigned short rate_min, unsigned short rate_max);
 	void (*item_dropratio_adjust) (int nameid, int mob_id, int *rate_adjust);
@@ -518,7 +518,7 @@ struct mob_interface {
 	int (*read_db_sub) (struct config_setting_t *mobt, int id, const char *source);
 	void (*read_db_drops_sub) (struct mob_db *entry, struct config_setting_t *t);
 	void (*read_db_mvpdrops_sub) (struct mob_db *entry, struct config_setting_t *t);
-	int (*read_db_mode_sub) (struct mob_db *entry, struct config_setting_t *t);
+	uint32 (*read_db_mode_sub) (struct mob_db *entry, struct config_setting_t *t);
 	void (*read_db_stats_sub) (struct mob_db *entry, struct config_setting_t *t);
 	void (*name_constants) (void);
 	bool (*readdb_mobavail) (char *str[], int columns, int current);

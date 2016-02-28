@@ -842,7 +842,8 @@ int mob_delayspawn(int tid, int64 tick, int id, intptr_t data) {
  *------------------------------------------*/
 int mob_setdelayspawn(struct mob_data *md)
 {
-	unsigned int spawntime, mode;
+	unsigned int spawntime;
+	uint32 mode;
 	struct mob_db *db;
 
 	if (!md->spawn) //Doesn't has respawn data!
@@ -989,7 +990,7 @@ int mob_spawn (struct mob_data *md)
 /*==========================================
  * Determines if the mob can change target. [Skotlex]
  *------------------------------------------*/
-int mob_can_changetarget(struct mob_data* md, struct block_list* target, int mode)
+int mob_can_changetarget(const struct mob_data *md, const struct block_list *target, uint32 mode)
 {
 	// if the monster was provoked ignore the above rule [celest]
 	if(md->state.provoke_flag)
@@ -1006,7 +1007,7 @@ int mob_can_changetarget(struct mob_data* md, struct block_list* target, int mod
 				return 0;
 			return (battle_config.mob_ai&0x4 || check_distance_bl(&md->bl, target, 3));
 		case MSS_RUSH:
-			return (mode&MD_CHANGETARGET_CHASE);
+			return (mode&MD_CHANGETARGET_CHASE) ? 1 : 0;
 		case MSS_FOLLOW:
 		case MSS_ANGRY:
 		case MSS_IDLE:
@@ -1045,17 +1046,17 @@ int mob_target(struct mob_data *md,struct block_list *bl,int dist)
 /*==========================================
  * The ?? routine of an active monster
  *------------------------------------------*/
-int mob_ai_sub_hard_activesearch(struct block_list *bl,va_list ap)
+int mob_ai_sub_hard_activesearch(struct block_list *bl, va_list ap)
 {
 	struct mob_data *md;
 	struct block_list **target;
-	int mode;
+	uint32 mode;
 	int dist;
 
 	nullpo_ret(bl);
 	md=va_arg(ap,struct mob_data *);
 	target= va_arg(ap,struct block_list**);
-	mode= va_arg(ap,int);
+	mode = va_arg(ap, uint32);
 
 	//If can't seek yet, not an enemy, or you can't attack it, skip.
 	if (md->bl.id == bl->id || (*target) == bl || !status->check_skilluse(&md->bl, bl, 0, 0))
@@ -1401,7 +1402,7 @@ int mob_warpchase(struct mob_data *md, struct block_list *target)
  *------------------------------------------*/
 bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 	struct block_list *tbl = NULL, *abl = NULL;
-	int mode;
+	uint32 mode;
 	int view_range, can_move;
 
 	if(md->bl.prev == NULL || md->status.hp <= 0)
@@ -1542,7 +1543,7 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 	}
 
 	if ((!tbl && mode&MD_AGGRESSIVE) || md->state.skillstate == MSS_FOLLOW) {
-		map->foreachinrange (mob->ai_sub_hard_activesearch, &md->bl, view_range, DEFAULT_ENEMY_TYPE(md), md, &tbl, mode);
+		map->foreachinrange(mob->ai_sub_hard_activesearch, &md->bl, view_range, DEFAULT_ENEMY_TYPE(md), md, &tbl, mode);
 	} else if ((mode&MD_CHANGECHASE && (md->state.skillstate == MSS_RUSH || md->state.skillstate == MSS_FOLLOW)) || (md->sc.count && md->sc.data[SC__CHAOS])) {
 		int search_size;
 		search_size = view_range<md->status.rhw.range ? view_range:md->status.rhw.range;
@@ -3369,7 +3370,8 @@ int mob_is_clone(int class_)
 //If mode is not passed, a default aggressive mode is used.
 //If master_id is passed, clone is attached to him.
 //Returns: ID of newly crafted copy.
-int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, int mode, int flag, unsigned int duration) {
+int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, uint32 mode, int flag, unsigned int duration)
+{
 	int class_;
 	int i,j,h,inf, fd;
 	struct mob_data *md;
@@ -3399,7 +3401,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 		mstatus->lhw.atk2= mstatus->dex + mstatus->lhw.atk + mstatus->lhw.atk2; //Max ATK
 		mstatus->lhw.atk = mstatus->dex; //Min ATK
 	}
-	if (mode) //User provided mode.
+	if (mode != MD_NONE) //User provided mode.
 		mstatus->mode = mode;
 	else if (flag&1) //Friendly Character, remove looting.
 		mstatus->mode &= ~MD_LOOTER;
@@ -3725,45 +3727,45 @@ void mob_read_db_stats_sub(struct mob_db *entry, struct config_setting_t *t)
  *
  * @return The parsed mode.
  */
-int mob_read_db_mode_sub(struct mob_db *entry, struct config_setting_t *t)
+uint32 mob_read_db_mode_sub(struct mob_db *entry, struct config_setting_t *t)
 {
-	int mode = 0;
+	uint32 mode = 0;
 	struct config_setting_t *t2;
 
 	if ((t2 = libconfig->setting_get_member(t, "CanMove")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_CANMOVE : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_CANMOVE : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "Looter")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_LOOTER : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_LOOTER : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "Aggressive")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_AGGRESSIVE : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_AGGRESSIVE : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "Assist")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_ASSIST : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_ASSIST : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "CastSensorIdle")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_CASTSENSOR_IDLE : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_CASTSENSOR_IDLE : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "Boss")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_BOSS : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_BOSS : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "Plant")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_PLANT : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_PLANT : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "CanAttack")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_CANATTACK : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_CANATTACK : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "Detector")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_DETECTOR : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_DETECTOR : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "CastSensorChase")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_CASTSENSOR_CHASE : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_CASTSENSOR_CHASE : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "ChangeChase")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_CHANGECHASE : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_CHANGECHASE : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "Angry")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_ANGRY : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_ANGRY : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "ChangeTargetMelee")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_CHANGETARGET_MELEE : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_CHANGETARGET_MELEE : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "ChangeTargetChase")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_CHANGETARGET_CHASE : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_CHANGETARGET_CHASE : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "TargetWeak")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_TARGETWEAK : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_TARGETWEAK : MD_NONE;
 	if ((t2 = libconfig->setting_get_member(t, "NoKnockback")))
-		mode |= libconfig->setting_get_bool(t2) ? MD_NOKNOCKBACK : 0;
+		mode |= libconfig->setting_get_bool(t2) ? MD_NOKNOCKBACK : MD_NONE;
 
-	return mode;
+	return mode & MD_MASK;
 }
 
 /**
@@ -4288,7 +4290,7 @@ int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *source)
 		if (config_setting_is_group(t)) {
 			md.status.mode = mob->read_db_mode_sub(&md, t);
 		} else if (mob->lookup_const(mobt, "Mode", &i32) && i32 >= 0) {
-			md.status.mode = i32;
+			md.status.mode = (uint32)i32 & MD_MASK;
 		}
 	}
 	if (!battle_config.monster_active_enable)
@@ -4906,19 +4908,23 @@ bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	ms->val[3]=(int)strtol(str[15],NULL,0);
 	ms->val[4]=(int)strtol(str[16],NULL,0);
 
-	if(ms->skill_id == NPC_EMOTION && mob_id>0 &&
-		ms->val[1] == mob->db(mob_id)->status.mode)
-	{
-		ms->val[1] = 0;
+	if (ms->skill_id == NPC_EMOTION) {
+		ms->val[1] &= MD_MASK;
+		ms->val[2] &= MD_MASK;
+		ms->val[3] &= MD_MASK;
+	}
+	if (ms->skill_id == NPC_EMOTION && mob_id > 0
+	 && (uint32)ms->val[1] == mob->db(mob_id)->status.mode) {
+		ms->val[1] = MD_NONE;
 		ms->val[4] = 1; //request to return mode to normal.
 	}
-	if (ms->skill_id == NPC_EMOTION_ON && mob_id>0 && ms->val[1]) {
+	if (ms->skill_id == NPC_EMOTION_ON && mob_id>0 && ms->val[1] != MD_NONE) {
 		//Adds a mode to the mob.
 		//Remove aggressive mode when the new mob type is passive.
 		if (!(ms->val[1]&MD_AGGRESSIVE))
-			ms->val[3]|=MD_AGGRESSIVE;
-		ms->val[2]|= ms->val[1]; //Add the new mode.
-		ms->val[1] = 0; //Do not "set" it.
+			ms->val[3] |= MD_AGGRESSIVE;
+		ms->val[2] |= (uint32)ms->val[1]; //Add the new mode.
+		ms->val[1] = MD_NONE; //Do not "set" it.
 	}
 
 	if(*str[17])

@@ -10539,11 +10539,18 @@ void pc_del_charm(struct map_session_data *sd, int count, int type)
 
 	clif->spiritcharm(sd);
 }
-/*==========================================
- * Renewal EXP/Itemdrop rate modifier base on level penalty
- * 1=exp 2=itemdrop
- *------------------------------------------*/
-int pc_level_penalty_mod(int diff, unsigned char race, unsigned short mode, int type) {
+
+/**
+ * Renewal EXP/Itemdrop rate modifier base on level penalty.
+ *
+ * @param diff Level difference.
+ * @param race Monster race.
+ * @param mode Monster mode.
+ * @param type Modifier type (1=exp 2=itemdrop)
+ * @return The percent rate modifier (100 = 100%)
+ */
+int pc_level_penalty_mod(int diff, unsigned char race, uint32 mode, int type)
+{
 #if defined(RENEWAL_DROP) || defined(RENEWAL_EXP)
 	int rate = 100, i;
 
