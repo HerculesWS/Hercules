@@ -187,7 +187,7 @@ sub parse($$) {
 			$post_code = "va_end(${callvar});";
 			$var = '';
 			$variadic = 1;
-		} elsif (!$indirectionlvl) { # Increase indirection level when necessary
+		} else { # Increase indirection level when necessary
 			$dereference = '*';
 			$addressof = '&';
 		}

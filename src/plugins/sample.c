@@ -114,9 +114,10 @@ void sample_packet0f3(int fd) {
 }
 int my_pc_dropitem_storage;/* storage var */
 /* my custom prehook for pc_dropitem, checks if amount of item being dropped is higher than 1 and if so cap it to 1 and store the value of how much it was */
-int my_pc_dropitem_pre(struct map_session_data *sd,int *n,int *amount) {
+int my_pc_dropitem_pre(struct map_session_data **sd, int *n, int *amount)
+{
 	my_pc_dropitem_storage = 0;
-	if( *amount > 1 ) {
+	if (*amount > 1) {
 		my_pc_dropitem_storage = *amount;
 		*amount = 1;
 	}
