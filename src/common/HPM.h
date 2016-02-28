@@ -65,6 +65,8 @@
 
 #endif // WIN32
 
+struct HPMHooking_core_interface;
+
 struct hplugin {
 	DLL dll;
 	unsigned int idx;
@@ -126,9 +128,6 @@ struct HPM_interface {
 	/* vars */
 	unsigned int version[2];
 	bool off;
-	bool hooking;
-	/* hooking */
-	bool force_return;
 	/* data */
 	VECTOR_DECL(struct hplugin *) plugins;
 	VECTOR_DECL(struct hpm_symbol *) symbols;
@@ -159,7 +158,6 @@ struct HPM_interface {
 	char *(*pid2name) (unsigned int pid);
 	unsigned char (*parse_packets) (int fd, int packet_id, enum HPluginPacketHookingPoints point);
 	void (*load_sub) (struct hplugin *plugin);
-	bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
 	/* for custom config parsing */
 	bool (*parseConf) (const char *w1, const char *w2, enum HPluginConfType point);
 	bool (*getBattleConf) (const char* w1, int *value);
@@ -173,6 +171,9 @@ struct HPM_interface {
 	bool (*data_store_validate) (enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize);
 	/* for server-specific HPData e.g. map_session_data */
 	bool (*data_store_validate_sub) (enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize);
+
+	/* hooking */
+	struct HPMHooking_core_interface *hooking;
 };
 
 CMDLINEARG(loadplugin);

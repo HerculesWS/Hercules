@@ -29,6 +29,7 @@
 #include "map/pc.h"
 #include "map/script.h"
 
+#include "plugins/HPMHooking.h"
 #include "common/HPMDataCheck.h" /* should always be the last Hercules file included! (if you don't make it last, it'll intentionally break compile time) */
 
 #include <stdio.h>

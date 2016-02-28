@@ -47,7 +47,7 @@ PLUGINS = sample db2sql HPMHooking_char HPMHooking_login HPMHooking_map $(MYPLUG
 
 COMMON_D = ../common
 # Includes private headers (plugins might need them)
-COMMON_H = $(wildcard $(COMMON_D)/*.h)
+COMMON_H = $(wildcard $(COMMON_D)/*.h) ../plugins/HPMHooking.h
 COMMON_INCLUDE = -I..
 
 THIRDPARTY_INCLUDE = -I../../3rdparty
