@@ -1132,8 +1132,7 @@ void HP_battle_final(void) {
 }
 struct Damage HP_battle_calc_attack(int attack_type, struct block_list *bl, struct block_list *target, uint16 skill_id, uint16 skill_lv, int count) {
 	int hIndex = 0;
-	struct Damage retVal___;
-	memset(&retVal___, '\0', sizeof(struct Damage));
+	struct Damage retVal___ = { 0 };
 	if( HPMHooks.count.HP_battle_calc_attack_pre ) {
 		struct Damage (*preHookFunc) (int *attack_type, struct block_list *bl, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *count);
 		*HPMforce_return = false;
@@ -1268,8 +1267,7 @@ enum damage_lv HP_battle_weapon_attack(struct block_list *bl, struct block_list 
 }
 struct Damage HP_battle_calc_weapon_attack(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int wflag) {
 	int hIndex = 0;
-	struct Damage retVal___;
-	memset(&retVal___, '\0', sizeof(struct Damage));
+	struct Damage retVal___ = { 0 };
 	if( HPMHooks.count.HP_battle_calc_weapon_attack_pre ) {
 		struct Damage (*preHookFunc) (struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *wflag);
 		*HPMforce_return = false;
@@ -2148,8 +2146,7 @@ int64 HP_battle_calc_base_damage2(struct status_data *st, struct weapon_atk *wa,
 }
 struct Damage HP_battle_calc_misc_attack(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int mflag) {
 	int hIndex = 0;
-	struct Damage retVal___;
-	memset(&retVal___, '\0', sizeof(struct Damage));
+	struct Damage retVal___ = { 0 };
 	if( HPMHooks.count.HP_battle_calc_misc_attack_pre ) {
 		struct Damage (*preHookFunc) (struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *mflag);
 		*HPMforce_return = false;
@@ -2176,8 +2173,7 @@ struct Damage HP_battle_calc_misc_attack(struct block_list *src, struct block_li
 }
 struct Damage HP_battle_calc_magic_attack(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int mflag) {
 	int hIndex = 0;
-	struct Damage retVal___;
-	memset(&retVal___, '\0', sizeof(struct Damage));
+	struct Damage retVal___ = { 0 };
 	if( HPMHooks.count.HP_battle_calc_magic_attack_pre ) {
 		struct Damage (*preHookFunc) (struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *mflag);
 		*HPMforce_return = false;
@@ -24657,8 +24653,7 @@ struct DBMap* HP_DB_alloc(const char *file, const char *func, int line, enum DBT
 }
 union DBKey HP_DB_i2key(int key) {
 	int hIndex = 0;
-	union DBKey retVal___;
-	memset(&retVal___, '\0', sizeof(union DBKey));
+	union DBKey retVal___ = { 0 };
 	if( HPMHooks.count.HP_DB_i2key_pre ) {
 		union DBKey (*preHookFunc) (int *key);
 		*HPMforce_return = false;
@@ -24685,8 +24680,7 @@ union DBKey HP_DB_i2key(int key) {
 }
 union DBKey HP_DB_ui2key(unsigned int key) {
 	int hIndex = 0;
-	union DBKey retVal___;
-	memset(&retVal___, '\0', sizeof(union DBKey));
+	union DBKey retVal___ = { 0 };
 	if( HPMHooks.count.HP_DB_ui2key_pre ) {
 		union DBKey (*preHookFunc) (unsigned int *key);
 		*HPMforce_return = false;
@@ -24713,8 +24707,7 @@ union DBKey HP_DB_ui2key(unsigned int key) {
 }
 union DBKey HP_DB_str2key(const char *key) {
 	int hIndex = 0;
-	union DBKey retVal___;
-	memset(&retVal___, '\0', sizeof(union DBKey));
+	union DBKey retVal___ = { 0 };
 	if( HPMHooks.count.HP_DB_str2key_pre ) {
 		union DBKey (*preHookFunc) (const char *key);
 		*HPMforce_return = false;
@@ -24741,8 +24734,7 @@ union DBKey HP_DB_str2key(const char *key) {
 }
 union DBKey HP_DB_i642key(int64 key) {
 	int hIndex = 0;
-	union DBKey retVal___;
-	memset(&retVal___, '\0', sizeof(union DBKey));
+	union DBKey retVal___ = { 0 };
 	if( HPMHooks.count.HP_DB_i642key_pre ) {
 		union DBKey (*preHookFunc) (int64 *key);
 		*HPMforce_return = false;
@@ -24769,8 +24761,7 @@ union DBKey HP_DB_i642key(int64 key) {
 }
 union DBKey HP_DB_ui642key(uint64 key) {
 	int hIndex = 0;
-	union DBKey retVal___;
-	memset(&retVal___, '\0', sizeof(union DBKey));
+	union DBKey retVal___ = { 0 };
 	if( HPMHooks.count.HP_DB_ui642key_pre ) {
 		union DBKey (*preHookFunc) (uint64 *key);
 		*HPMforce_return = false;
@@ -24797,8 +24788,7 @@ union DBKey HP_DB_ui642key(uint64 key) {
 }
 struct DBData HP_DB_i2data(int data) {
 	int hIndex = 0;
-	struct DBData retVal___;
-	memset(&retVal___, '\0', sizeof(struct DBData));
+	struct DBData retVal___ = { 0 };
 	if( HPMHooks.count.HP_DB_i2data_pre ) {
 		struct DBData (*preHookFunc) (int *data);
 		*HPMforce_return = false;
@@ -24825,8 +24815,7 @@ struct DBData HP_DB_i2data(int data) {
 }
 struct DBData HP_DB_ui2data(unsigned int data) {
 	int hIndex = 0;
-	struct DBData retVal___;
-	memset(&retVal___, '\0', sizeof(struct DBData));
+	struct DBData retVal___ = { 0 };
 	if( HPMHooks.count.HP_DB_ui2data_pre ) {
 		struct DBData (*preHookFunc) (unsigned int *data);
 		*HPMforce_return = false;
@@ -24853,8 +24842,7 @@ struct DBData HP_DB_ui2data(unsigned int data) {
 }
 struct DBData HP_DB_ptr2data(void *data) {
 	int hIndex = 0;
-	struct DBData retVal___;
-	memset(&retVal___, '\0', sizeof(struct DBData));
+	struct DBData retVal___ = { 0 };
 	if( HPMHooks.count.HP_DB_ptr2data_pre ) {
 		struct DBData (*preHookFunc) (void *data);
 		*HPMforce_return = false;
@@ -25789,8 +25777,7 @@ int HP_elemental_action(struct elemental_data *ed, struct block_list *bl, int64 
 }
 struct skill_condition HP_elemental_skill_get_requirements(uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	struct skill_condition retVal___;
-	memset(&retVal___, '\0', sizeof(struct skill_condition));
+	struct skill_condition retVal___ = { 0 };
 	if( HPMHooks.count.HP_elemental_skill_get_requirements_pre ) {
 		struct skill_condition (*preHookFunc) (uint16 *skill_id, uint16 *skill_lv);
 		*HPMforce_return = false;
@@ -28173,8 +28160,7 @@ int HP_guild_send_xy_timer(int tid, int64 tick, int id, intptr_t data) {
 }
 struct DBData HP_guild_create_expcache(union DBKey key, va_list args) {
 	int hIndex = 0;
-	struct DBData retVal___;
-	memset(&retVal___, '\0', sizeof(struct DBData));
+	struct DBData retVal___ = { 0 };
 	if( HPMHooks.count.HP_guild_create_expcache_pre ) {
 		struct DBData (*preHookFunc) (union DBKey *key, va_list args);
 		*HPMforce_return = false;
@@ -28888,8 +28874,7 @@ int HP_gstorage_saved(int guild_id) {
 }
 struct DBData HP_gstorage_create(union DBKey key, va_list args) {
 	int hIndex = 0;
-	struct DBData retVal___;
-	memset(&retVal___, '\0', sizeof(struct DBData));
+	struct DBData retVal___ = { 0 };
 	if( HPMHooks.count.HP_gstorage_create_pre ) {
 		struct DBData (*preHookFunc) (union DBKey *key, va_list args);
 		*HPMforce_return = false;
@@ -41816,8 +41801,7 @@ int HP_map_count_sub(struct block_list *bl, va_list ap) {
 }
 struct DBData HP_map_create_charid2nick(union DBKey key, va_list args) {
 	int hIndex = 0;
-	struct DBData retVal___;
-	memset(&retVal___, '\0', sizeof(struct DBData));
+	struct DBData retVal___ = { 0 };
 	if( HPMHooks.count.HP_map_create_charid2nick_pre ) {
 		struct DBData (*preHookFunc) (union DBKey *key, va_list args);
 		*HPMforce_return = false;
@@ -41883,8 +41867,7 @@ int HP_map_removemobs_sub(struct block_list *bl, va_list ap) {
 }
 struct mapcell HP_map_gat2cell(int gat) {
 	int hIndex = 0;
-	struct mapcell retVal___;
-	memset(&retVal___, '\0', sizeof(struct mapcell));
+	struct mapcell retVal___ = { 0 };
 	if( HPMHooks.count.HP_map_gat2cell_pre ) {
 		struct mapcell (*preHookFunc) (int *gat);
 		*HPMforce_return = false;
@@ -42070,8 +42053,7 @@ void HP_map_iwall_nextxy(int16 x, int16 y, int8 dir, int pos, int16 *x1, int16 *
 }
 struct DBData HP_map_create_map_data_other_server(union DBKey key, va_list args) {
 	int hIndex = 0;
-	struct DBData retVal___;
-	memset(&retVal___, '\0', sizeof(struct DBData));
+	struct DBData retVal___ = { 0 };
 	if( HPMHooks.count.HP_map_create_map_data_other_server_pre ) {
 		struct DBData (*preHookFunc) (union DBKey *key, va_list args);
 		*HPMforce_return = false;
@@ -47853,8 +47835,7 @@ int HP_npc_event_dequeue(struct map_session_data *sd) {
 }
 struct DBData HP_npc_event_export_create(union DBKey key, va_list args) {
 	int hIndex = 0;
-	struct DBData retVal___;
-	memset(&retVal___, '\0', sizeof(struct DBData));
+	struct DBData retVal___ = { 0 };
 	if( HPMHooks.count.HP_npc_event_export_create_pre ) {
 		struct DBData (*preHookFunc) (union DBKey *key, va_list args);
 		*HPMforce_return = false;
@@ -67071,8 +67052,7 @@ int HP_skill_consume_requirement(struct map_session_data *sd, uint16 skill_id, u
 }
 struct skill_condition HP_skill_get_requirement(struct map_session_data *sd, uint16 skill_id, uint16 skill_lv) {
 	int hIndex = 0;
-	struct skill_condition retVal___;
-	memset(&retVal___, '\0', sizeof(struct skill_condition));
+	struct skill_condition retVal___ = { 0 };
 	if( HPMHooks.count.HP_skill_get_requirement_pre ) {
 		struct skill_condition (*preHookFunc) (struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv);
 		*HPMforce_return = false;
