@@ -25411,11 +25411,11 @@ int HP_elemental_change_mode_ack(struct elemental_data *ed, int mode) {
 	}
 	return retVal___;
 }
-int HP_elemental_change_mode(struct elemental_data *ed, int mode) {
+int HP_elemental_change_mode(struct elemental_data *ed, uint32 mode) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_elemental_change_mode_pre ) {
-		int (*preHookFunc) (struct elemental_data *ed, int *mode);
+		int (*preHookFunc) (struct elemental_data *ed, uint32 *mode);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_change_mode_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_elemental_change_mode_pre[hIndex].func;
@@ -25430,7 +25430,7 @@ int HP_elemental_change_mode(struct elemental_data *ed, int mode) {
 		retVal___ = HPMHooks.source.elemental.change_mode(ed, mode);
 	}
 	if( HPMHooks.count.HP_elemental_change_mode_post ) {
-		int (*postHookFunc) (int retVal___, struct elemental_data *ed, int *mode);
+		int (*postHookFunc) (int retVal___, struct elemental_data *ed, uint32 *mode);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_elemental_change_mode_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_elemental_change_mode_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, ed, &mode);
@@ -45078,11 +45078,11 @@ int HP_mob_spawn(struct mob_data *md) {
 	}
 	return retVal___;
 }
-int HP_mob_can_changetarget(struct mob_data *md, struct block_list *target, int mode) {
+int HP_mob_can_changetarget(const struct mob_data *md, const struct block_list *target, uint32 mode) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_can_changetarget_pre ) {
-		int (*preHookFunc) (struct mob_data *md, struct block_list *target, int *mode);
+		int (*preHookFunc) (const struct mob_data *md, const struct block_list *target, uint32 *mode);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_can_changetarget_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mob_can_changetarget_pre[hIndex].func;
@@ -45097,7 +45097,7 @@ int HP_mob_can_changetarget(struct mob_data *md, struct block_list *target, int 
 		retVal___ = HPMHooks.source.mob.can_changetarget(md, target, mode);
 	}
 	if( HPMHooks.count.HP_mob_can_changetarget_post ) {
-		int (*postHookFunc) (int retVal___, struct mob_data *md, struct block_list *target, int *mode);
+		int (*postHookFunc) (int retVal___, const struct mob_data *md, const struct block_list *target, uint32 *mode);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_can_changetarget_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mob_can_changetarget_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, md, target, &mode);
@@ -46393,11 +46393,11 @@ int HP_mob_is_clone(int class_) {
 	}
 	return retVal___;
 }
-int HP_mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, int mode, int flag, unsigned int duration) {
+int HP_mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, uint32 mode, int flag, unsigned int duration) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_mob_clone_spawn_pre ) {
-		int (*preHookFunc) (struct map_session_data *sd, int16 *m, int16 *x, int16 *y, const char *event, int *master_id, int *mode, int *flag, unsigned int *duration);
+		int (*preHookFunc) (struct map_session_data *sd, int16 *m, int16 *x, int16 *y, const char *event, int *master_id, uint32 *mode, int *flag, unsigned int *duration);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_clone_spawn_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mob_clone_spawn_pre[hIndex].func;
@@ -46412,7 +46412,7 @@ int HP_mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, c
 		retVal___ = HPMHooks.source.mob.clone_spawn(sd, m, x, y, event, master_id, mode, flag, duration);
 	}
 	if( HPMHooks.count.HP_mob_clone_spawn_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int16 *m, int16 *x, int16 *y, const char *event, int *master_id, int *mode, int *flag, unsigned int *duration);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int16 *m, int16 *x, int16 *y, const char *event, int *master_id, uint32 *mode, int *flag, unsigned int *duration);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_clone_spawn_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mob_clone_spawn_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, &m, &x, &y, event, &master_id, &mode, &flag, &duration);
@@ -46739,11 +46739,11 @@ void HP_mob_read_db_mvpdrops_sub(struct mob_db *entry, struct config_setting_t *
 	}
 	return;
 }
-int HP_mob_read_db_mode_sub(struct mob_db *entry, struct config_setting_t *t) {
+uint32 HP_mob_read_db_mode_sub(struct mob_db *entry, struct config_setting_t *t) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	uint32 retVal___ = 0;
 	if( HPMHooks.count.HP_mob_read_db_mode_sub_pre ) {
-		int (*preHookFunc) (struct mob_db *entry, struct config_setting_t *t);
+		uint32 (*preHookFunc) (struct mob_db *entry, struct config_setting_t *t);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_mode_sub_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_mob_read_db_mode_sub_pre[hIndex].func;
@@ -46758,7 +46758,7 @@ int HP_mob_read_db_mode_sub(struct mob_db *entry, struct config_setting_t *t) {
 		retVal___ = HPMHooks.source.mob.read_db_mode_sub(entry, t);
 	}
 	if( HPMHooks.count.HP_mob_read_db_mode_sub_post ) {
-		int (*postHookFunc) (int retVal___, struct mob_db *entry, struct config_setting_t *t);
+		uint32 (*postHookFunc) (uint32 retVal___, struct mob_db *entry, struct config_setting_t *t);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_mob_read_db_mode_sub_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_mob_read_db_mode_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, entry, t);
@@ -56716,11 +56716,11 @@ void HP_pc_baselevelchanged(struct map_session_data *sd) {
 	}
 	return;
 }
-int HP_pc_level_penalty_mod(int diff, unsigned char race, unsigned short mode, int type) {
+int HP_pc_level_penalty_mod(int diff, unsigned char race, uint32 mode, int type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_level_penalty_mod_pre ) {
-		int (*preHookFunc) (int *diff, unsigned char *race, unsigned short *mode, int *type);
+		int (*preHookFunc) (int *diff, unsigned char *race, uint32 *mode, int *type);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_level_penalty_mod_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_level_penalty_mod_pre[hIndex].func;
@@ -56735,7 +56735,7 @@ int HP_pc_level_penalty_mod(int diff, unsigned char race, unsigned short mode, i
 		retVal___ = HPMHooks.source.pc.level_penalty_mod(diff, race, mode, type);
 	}
 	if( HPMHooks.count.HP_pc_level_penalty_mod_post ) {
-		int (*postHookFunc) (int retVal___, int *diff, unsigned char *race, unsigned short *mode, int *type);
+		int (*postHookFunc) (int retVal___, int *diff, unsigned char *race, uint32 *mode, int *type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_level_penalty_mod_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_level_penalty_mod_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, &diff, &race, &mode, &type);
@@ -74906,11 +74906,11 @@ unsigned char HP_status_calc_element_lv(struct block_list *bl, struct status_cha
 	}
 	return retVal___;
 }
-unsigned short HP_status_calc_mode(struct block_list *bl, struct status_change *sc, int mode) {
+uint32 HP_status_calc_mode(const struct block_list *bl, const struct status_change *sc, uint32 mode) {
 	int hIndex = 0;
-	unsigned short retVal___ = 0;
+	uint32 retVal___ = 0;
 	if( HPMHooks.count.HP_status_calc_mode_pre ) {
-		unsigned short (*preHookFunc) (struct block_list *bl, struct status_change *sc, int *mode);
+		uint32 (*preHookFunc) (const struct block_list *bl, const struct status_change *sc, uint32 *mode);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_mode_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_calc_mode_pre[hIndex].func;
@@ -74925,7 +74925,7 @@ unsigned short HP_status_calc_mode(struct block_list *bl, struct status_change *
 		retVal___ = HPMHooks.source.status.calc_mode(bl, sc, mode);
 	}
 	if( HPMHooks.count.HP_status_calc_mode_post ) {
-		unsigned short (*postHookFunc) (unsigned short retVal___, struct block_list *bl, struct status_change *sc, int *mode);
+		uint32 (*postHookFunc) (uint32 retVal___, const struct block_list *bl, const struct status_change *sc, uint32 *mode);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_calc_mode_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_calc_mode_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl, sc, &mode);
