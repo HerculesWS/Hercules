@@ -208,7 +208,6 @@ sub parse($$) {
 		$lastvar = $var;
 	}
 
-	my $rtmemset = 0;
 	my $rtinit = '';
 	foreach ($rt) { # Decide initialization for the return value
 		my $x = $_;
@@ -244,8 +243,7 @@ sub parse($$) {
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
 			$rtinit = ' = NULL';
 		} elsif ($x =~ /^(?:struct|union)\s+.*$/) { # Structs and unions
-			$rtinit = '';
-			$rtmemset = 1;
+			$rtinit = ' = { 0 }';
 		} elsif ($x =~ /^float|double$/) { # Floating point variables
 			$rtinit = ' = 0.';
 		} elsif ($x =~ /^(?:(?:un)?signed\s+)?(?:char|int|long|short)$/
@@ -267,7 +265,6 @@ sub parse($$) {
 		vname    => $variadic ? "v$name" : $name,
 		type     => $rt,
 		typeinit => $rtinit,
-		memset   => $rtmemset,
 		variadic => $variadic,
 		args     => \@args,
 		notes    => $notes,
@@ -687,7 +684,6 @@ EOF
 
 			unless ($if->{type} eq 'void') {
 				$initialization  = "\n\t$if->{type} retVal___$if->{typeinit};";
-				$initialization .= "\n\tmemset(&retVal___, '\\0', sizeof($if->{type}));" if $if->{memset};
 			}
 
 			$beforeblock3 .= "\n\t\t\t$_" foreach (@{ $if->{before} });
