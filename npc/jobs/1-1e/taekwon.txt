@@ -400,11 +400,10 @@
 			mes "You are still young, so";
 			mes "I assume you'll want a job";
 			mes "title. Mm. In that case, you";
-			if(Sex == 0) {
+			if (Sex == SEX_FEMALE)
 				mes "are now a ^FF0000Taekwon Girl^000000.";
-			} else {
+			else
 				mes "are now a ^FF0000Taekwon Boy^000000.";
-			}
 			mes "Yes, that sounds good. ";
 			next;
 			mes "[Phoenix]";

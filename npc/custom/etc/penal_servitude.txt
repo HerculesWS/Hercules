@@ -17,11 +17,10 @@
 sec_pri,36,58,1	script	Chief Warder	8W_SOLDIER,{
 	mes "[Saddeus]";
 	emotion 1;
-	if(Sex) {
+	if (Sex == SEX_MALE)
 		mes "Mr. Prisoner #"+BaseLevel+JobLevel+",";
-	} else {
+	else
 		mes "Ms. Prisoner #"+BaseLevel+JobLevel+",";
-	}
 	mes "what's the noise over there?";
 	next;
 	menu "Let me free, I'll pay!",-, "Let me to work off my freedom!",M_Q1, "Nothing",M_NO_THANKS;
