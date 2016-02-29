@@ -3661,6 +3661,11 @@
 - `C_GOLD`: 16766720
 - `C_VIOLET`: 15631086
 
+### Genders
+
+- `SEX_FEMALE`: 0
+- `SEX_MALE`: 1
+
 
 ## Hardcoded Constants (source)
 
