@@ -306,6 +306,9 @@ foreach my $file (@files) { # Loop through the xml files
 	} elsif ($key eq "mapindex_interface") {
 		push @servertypes, ("map", "char"); # Currently not used by the login server
 		$servermask = 'SERVER_TYPE_MAP|SERVER_TYPE_CHAR';
+	} elsif ($key eq "grfio_interface") {
+		push @servertypes, ("map"); # Currently not used by the login and char servers
+		$servermask = 'SERVER_TYPE_MAP';
 	} else {
 		push @servertypes, ("map", "char", "login");
 		$servermask = 'SERVER_TYPE_ALL';

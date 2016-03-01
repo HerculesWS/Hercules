@@ -27,6 +27,7 @@
 #include "common/console.h"
 #include "common/db.h"
 #include "common/des.h"
+#include "common/grfio.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
@@ -257,6 +258,7 @@ void core_defaults(void) {
 	showmsg_defaults();
 	cmdline_defaults();
 	des_defaults();
+	grfio_defaults(); // Note: grfio is lazily loaded. grfio->init() and grfio->final() are not automatically called.
 #ifndef MINICORE
 	mutex_defaults();
 	libconfig_defaults();

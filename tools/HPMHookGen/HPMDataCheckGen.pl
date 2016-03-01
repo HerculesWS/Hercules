@@ -47,6 +47,8 @@ foreach my $file (@files) {
 	if ($foldername eq 'COMMON') {
 		if ($filename eq 'MAPINDEX_H') {
 			$plugintypes = 'SERVER_TYPE_CHAR|SERVER_TYPE_MAP';
+		} elsif ($filename eq 'GRFIO_H') {
+			$plugintypes = 'SERVER_TYPE_MAP';
 		} else {
 			$plugintypes = 'SERVER_TYPE_ALL';
 		}

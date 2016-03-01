@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -21,16 +21,24 @@
 #ifndef COMMON_GRFIO_H
 #define COMMON_GRFIO_H
 
-#ifdef HERCULES_CORE
-void grfio_init(const char* fname);
-void grfio_final(void);
-void* grfio_reads(const char* fname, int* size);
-char* grfio_find_file(const char* fname);
-#define grfio_read(fn) grfio_reads((fn), NULL)
+#include "common/hercules.h"
 
-unsigned long grfio_crc32(const unsigned char *buf, unsigned int len);
-int decode_zip(void* dest, unsigned long* destLen, const void* source, unsigned long sourceLen);
-int encode_zip(void* dest, unsigned long* destLen, const void* source, unsigned long sourceLen);
+struct grfio_interface {
+	void (*init) (const char *fname);
+	void (*final) (void);
+	void *(*reads) (const char *fname, int *size);
+	char *(*find_file) (const char *fname);
+
+	unsigned long (*crc32) (const unsigned char *buf, unsigned int len);
+	int (*decode_zip) (void *dest, unsigned long *destLen, const void *source, unsigned long sourceLen);
+	int (*encode_zip) (void *dest, unsigned long *destLen, const void *source, unsigned long sourceLen);
+};
+
+#define grfio_read(fn) grfio->reads((fn), NULL)
+
+#ifdef HERCULES_CORE
+void grfio_defaults(void);
 #endif // HERCULES_CORE
 
+HPShared struct grfio_interface *grfio;
 #endif /* COMMON_GRFIO_H */
