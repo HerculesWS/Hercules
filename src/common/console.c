@@ -499,7 +499,7 @@ void console_parse_final(void) {
 		mutex->cond_signal(console->input->ptcond);
 
 		/* wait for thread to close */
-		rathread_wait(console->input->pthread, NULL);
+		thread->wait(console->input->pthread, NULL);
 
 		mutex->cond_destroy(console->input->ptcond);
 		mutex->destroy(console->input->ptmutex);
@@ -515,7 +515,7 @@ void console_parse_init(void) {
 	console->input->ptmutex = mutex->create();
 	console->input->ptcond = mutex->cond_create();
 
-	if( (console->input->pthread = rathread_create(console->input->pthread_main, NULL)) == NULL ){
+	if( (console->input->pthread = thread->create(console->input->pthread_main, NULL)) == NULL ){
 		ShowFatalError("console_parse_init: failed to spawn console_parse thread.\n");
 		exit(EXIT_FAILURE);
 	}

@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  rAthena Project (www.rathena.org)
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
 #ifndef COMMON_THREAD_H
 #define COMMON_THREAD_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 typedef struct rAthread rAthread;
 typedef void* (*rAthreadProc)(void*);
@@ -32,103 +32,113 @@ typedef enum RATHREAD_PRIO {
 	RAT_PRIO_HIGH
 } RATHREAD_PRIO;
 
+struct thread_interface {
+	/**
+	 * Creates a new Thread.
+	 *
+	 * @param entyPoint Thread's entry point.
+	 * @param param     General purpose parameter, would be given as
+	 *                  parameter to the thread's entry point.
+	 *
+	 * @return The created thread object.
+	 * @retval NULL in vase of failure.
+	 */
+	rAthread *(*create) (rAthreadProc entryPoint, void *param);
+
+	/**
+	 * Creates a new Thread (with more creation options).
+	 *
+	 * @param entyPoint Thread's entry point.
+	 * @param param     General purpose parameter, would be given as
+	 *                  parameter to the thread's entry point.
+	 * @param szStack   Stack Size in bytes.
+	 * @param prio      Priority of the Thread in the OS scheduler.
+	 *
+	 * @return The created thread object.
+	 * @retval NULL in case of failure.
+	 */
+	rAthread *(*createEx) (rAthreadProc entryPoint, void *param, size_t szStack, RATHREAD_PRIO prio);
+
+	/**
+	 * Destroys the given Thread immediately.
+	 *
+	 * @remark
+	 *   The Handle gets invalid after call! don't use it afterwards.
+	 *
+	 * @param handle The thread to destroy.
+	 */
+	void (*destroy) (rAthread *handle);
+
+	/**
+	 * Returns the thread handle of the thread calling this function.
+	 *
+	 * @remark
+	 *   This won't work in the program's main thread.
+	 *
+	 * @warning
+	 *   The underlying implementation might not perform very well, cache
+	 *   the value received!
+	 *
+	 * @return the thread handle.
+	 * @retval NULL in case of failure.
+	 */
+	rAthread *(*self) (void);
+
+	/**
+	 * Returns own thread id (TID).
+	 *
+	 * @remark
+	 *   This is an unique identifier for the calling thread, and depends
+	 *   on platform/ compiler, and may not be the systems Thread ID!
+	 *
+	 * @return the thread ID.
+	 * @retval -1 in case of failure.
+	 */
+	int (*get_tid) (void);
+
+	/**
+	 * Waits for the given thread to terminate.
+	 *
+	 * @param[in]  handle       The thread to wait (join) for.
+	 * @param[out] out_Exitcode Pointer to return the exit code of the
+	 *                          given thread after termination (optional).
+	 *
+	 * @retval true if the given thread has been terminated.
+	 */
+	bool (*wait) (rAthread *handle, void **out_exitCode);
+
+	/**
+	 * Sets the given priority in the OS scheduler.
+	 *
+	 * @param handle The thread to set the priority for.
+	 * @param prio   The priority to set (@see enum RATHREAD_PRIO).
+	 */
+	void (*prio_set) (rAthread *handle, RATHREAD_PRIO prio);
+
+	/**
+	 * Gets the current priority of the given thread.
+	 *
+	 * @param handle The thread to get the priority for.
+	 */
+	RATHREAD_PRIO (*prio_get) (rAthread *handle);
+
+	/**
+	 * Tells the OS scheduler to yield the execution of the calling thread.
+	 *
+	 * @remark
+	 *   This will not "pause" the thread, it just allows the OS to spend
+	 *   the remaining time of the slice to another thread.
+	 */
+	void (*yield) (void);
+
+	void (*init) (void);
+	void (*final) (void);
+};
 
 #ifdef HERCULES_CORE
-/**
- * Creates a new Thread
- *
- * @param entyPoint  - entryProc,
- * @param param - general purpose parameter, would be given as parameter to the thread's entry point.
- *
- * @return not NULL if success
- */
-rAthread *rathread_create(rAthreadProc entryPoint, void *param);
-
-
-/**
- * Creates a new Thread (with more creation options)
- *
- * @param entyPoint  - entryProc,
- * @param param - general purpose parameter, would be given as parameter to the thread's entry point
- * @param szStack - stack Size in bytes
- * @param prio - Priority of the Thread @ OS Scheduler..
- *
- * @return not NULL if success
- */
-rAthread *rathread_createEx(rAthreadProc entryPoint, void *param, size_t szStack, RATHREAD_PRIO prio);
-
-
-/**
- * Destroys the given Thread immediately
- *
- * @note The Handle gets invalid after call! don't use it afterwards.
- *
- * @param handle - thread to destroy.
- */
-void rathread_destroy(rAthread *handle);
-
-
-/**
- * Returns the thread handle of the thread calling this function
- *
- * @note this wont work @ programs main thread
- * @note the underlying implementation might not perform very well, cache the value received!
- *
- * @return not NULL if success
- */
-rAthread *rathread_self(void);
-
-
-/**
- * Returns own thread id (TID)
- *
- * @note this is an unique identifier for the calling thread, and
- *        depends on platform/ compiler, and may not be the systems Thread ID!
- *
- * @return -1 when fails, otherwise >= 0
- */
-int rathread_get_tid(void);
-
-
-/**
- * Waits for the given thread to terminate
- *
- * @param handle - thread to wait (join) for
- * @param out_Exitcode - [OPTIONAL] - if given => Exitcode (value) of the given thread - if it's terminated
- *
- * @return true - if the given thread has been terminated.
- */
-bool rathread_wait(rAthread *handle, void **out_exitCode);
-
-
-/**
- * Sets the given PRIORITY @ OS Task Scheduler
- *
- * @param handle - thread to set prio for
- * @param rio - the priority (RAT_PRIO_LOW ... )
- */
-void rathread_prio_set(rAthread *handle, RATHREAD_PRIO prio);
-
-
-/**
- * Gets the current Prio of the given thread
- *
- * @param handle - the thread to get the prio for.
- */
-RATHREAD_PRIO rathread_prio_get(rAthread *handle);
-
-
-/**
- * Tells the OS scheduler to yield the execution of the calling thread
- *
- * @note: this will not "pause" the thread,
- *        it just allows the OS to spend the remaining time
- *        of the slice to another thread.
- */
-void rathread_yield(void);
-
-void rathread_init(void);
-void rathread_final(void);
+void thread_defaults(void);
 #endif // HERCULES_CORE
+
+HPShared struct thread_interface *thread;
 
 #endif /* COMMON_THREAD_H */

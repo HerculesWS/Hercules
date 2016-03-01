@@ -78,13 +78,13 @@ int do_init(int argc, char **argv){
 		InitializeSpinLock(&lock);
 
 		for(i =0; i < THRC; i++){
-			t[i] = rathread_createEx( worker,  NULL,  1024*512,  RAT_PRIO_NORMAL);
+			t[i] = thread->createEx(worker, NULL, 1024*512, RAT_PRIO_NORMAL);
 		}
 
 		while(1){
 			if(InterlockedCompareExchange(&done_threads, THRC, THRC) == THRC)
 				break;
-			rathread_yield();
+			thread->yield();
 		}
 
 		FinalizeSpinLock(&lock);

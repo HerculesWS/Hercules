@@ -120,6 +120,7 @@
 #include "common/sql.h"
 #include "common/strlib.h"
 #include "common/sysinfo.h"
+#include "common/thread.h"
 #include "common/timer.h"
 #include "common/utils.h"
 

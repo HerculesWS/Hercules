@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  rAthena Project (www.rathena.org)
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -54,57 +54,61 @@ typedef struct SPIN_LOCK{
 
 
 #ifdef HERCULES_CORE
-static forceinline void InitializeSpinLock(SPIN_LOCK *lck){
-		lck->lock = 0;
-		lck->nest = 0;
-		lck->sync_lock = 0;
+static forceinline void InitializeSpinLock(SPIN_LOCK *lck)
+{
+	lck->lock = 0;
+	lck->nest = 0;
+	lck->sync_lock = 0;
 }
 
-static forceinline void FinalizeSpinLock(SPIN_LOCK *lck){
+static forceinline void FinalizeSpinLock(SPIN_LOCK *lck)
+{
 		return;
 }
 
 
-#define getsynclock(l) do { if(InterlockedCompareExchange((l), 1, 0) == 0) break; rathread_yield(); } while(/*always*/1)
+#define getsynclock(l) do { if(InterlockedCompareExchange((l), 1, 0) == 0) break; thread->yield(); } while(/*always*/1)
 #define dropsynclock(l) do { InterlockedExchange((l), 0); } while(0)
 
-static forceinline void EnterSpinLock(SPIN_LOCK *lck){
-		int tid = rathread_get_tid();
+static forceinline void EnterSpinLock(SPIN_LOCK *lck)
+{
+	int tid = thread->get_tid();
 
-		// Get Sync Lock && Check if the requester thread already owns the lock.
-		// if it owns, increase nesting level
-		getsynclock(&lck->sync_lock);
-		if(InterlockedCompareExchange(&lck->lock, tid, tid) == tid){
-				InterlockedIncrement(&lck->nest);
-				dropsynclock(&lck->sync_lock);
-				return; // Got Lock
-		}
-		// drop sync lock
+	// Get Sync Lock && Check if the requester thread already owns the lock.
+	// if it owns, increase nesting level
+	getsynclock(&lck->sync_lock);
+	if (InterlockedCompareExchange(&lck->lock, tid, tid) == tid) {
+		InterlockedIncrement(&lck->nest);
 		dropsynclock(&lck->sync_lock);
+		return; // Got Lock
+	}
+	// drop sync lock
+	dropsynclock(&lck->sync_lock);
 
-		// Spin until we've got it !
-		while(1){
-			if(InterlockedCompareExchange(&lck->lock, tid, 0) == 0){
-				InterlockedIncrement(&lck->nest);
-				return; // Got Lock
-			}
-			rathread_yield(); // Force ctxswitch to another thread.
+	// Spin until we've got it !
+	while (true) {
+		if (InterlockedCompareExchange(&lck->lock, tid, 0) == 0) {
+			InterlockedIncrement(&lck->nest);
+			return; // Got Lock
 		}
+		thread->yield(); // Force ctxswitch to another thread.
+	}
 
 }
 
 
-static forceinline void LeaveSpinLock(SPIN_LOCK *lck){
-		int tid = rathread_get_tid();
+static forceinline void LeaveSpinLock(SPIN_LOCK *lck)
+{
+	int tid = thread->get_tid();
 
-		getsynclock(&lck->sync_lock);
+	getsynclock(&lck->sync_lock);
 
-		if(InterlockedCompareExchange(&lck->lock, tid, tid) == tid){ // this thread owns the lock.
-			if(InterlockedDecrement(&lck->nest) == 0)
-					InterlockedExchange(&lck->lock, 0); // Unlock!
-		}
+	if (InterlockedCompareExchange(&lck->lock, tid, tid) == tid) { // this thread owns the lock.
+		if (InterlockedDecrement(&lck->nest) == 0)
+			InterlockedExchange(&lck->lock, 0); // Unlock!
+	}
 
-		dropsynclock(&lck->sync_lock);
+	dropsynclock(&lck->sync_lock);
 }
 
 #endif // HERCULES_CORE
