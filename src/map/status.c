@@ -862,6 +862,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_M_LIFEPOTION] = SI_M_LIFEPOTION;
 	status->dbs->IconChangeTable[SC_G_LIFEPOTION] = SI_G_LIFEPOTION;
 	status->dbs->IconChangeTable[SC_MYSTICPOWDER] = SI_MYSTICPOWDER;
+	status->dbs->IconChangeTable[SC_ALMIGHTY] = SI_ALMIGHTY;
 
 	// Eden Crystal Synthesis
 	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
@@ -1061,6 +1062,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_PHI_DEMON] |= SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MAGIC_CANDY] |= SCB_MATK | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MYSTICPOWDER] |= SCB_FLEE | SCB_LUK;
+	status->dbs->ChangeFlagTable[SC_ALMIGHTY] |= SCB_WATK | SCB_MATK;
 
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
@@ -4749,6 +4751,7 @@ unsigned short status_calc_luk(struct block_list *bl, struct status_change *sc, 
 
 	return (unsigned short)cap_value(luk, 0, USHRT_MAX);
 }
+
 unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc, int batk, bool viewable)
 {
 	if(!sc || !sc->count)
@@ -4932,14 +4935,18 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 		watk += watk * sc->data[SC_ANGRIFFS_MODUS]->val2/100;
 	if( sc->data[SC_FLASHCOMBO] )
 		watk += sc->data[SC_FLASHCOMBO]->val2;
+	if (sc->data[SC_ALMIGHTY])
+		watk += sc->data[SC_ALMIGHTY]->val1;
 
 	return (unsigned short)cap_value(watk,0,USHRT_MAX);
 }
-unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc, int matk) {
-#ifdef RENEWAL
 
+unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc, int matk)
+{
+#ifdef RENEWAL
 	if (!sc || !sc->count)
 		return cap_value(matk,0,USHRT_MAX);
+	
 	if (sc->data[SC_PLUSMAGICPOWER])
 		matk += sc->data[SC_PLUSMAGICPOWER]->val1;
 	if (sc->data[SC_MATKFOOD])
@@ -4958,13 +4965,17 @@ unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc
 		matk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1; //70 lvl1, 100lvl2
 	if(sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
+	if (sc->data[SC_ALMIGHTY])
+		matk += sc->data[SC_ALMIGHTY]->val1;
+	
 	return (unsigned short)cap_value(matk,0,USHRT_MAX);
 #else
 	return 0;
 #endif
 }
-unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc, int matk, bool viewable) {
 
+unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc, int matk, bool viewable)
+{
 	if (!sc || !sc->count)
 		return cap_value(matk,0,USHRT_MAX);
 
