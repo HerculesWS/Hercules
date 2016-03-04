@@ -143,37 +143,6 @@ OnInit:
 	sellitem Cinquedea;
 }
 
-aldeba_in,94,56,5	trader	Tool Dealer#alde	4_M_01,{
-OnInit:
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Spectacles;
-	sellitem Leaf_Of_Yggdrasil;
-}
-
-alde_alche,38,184,3	trader	Material Seller#alche	4_M_SAGE_C,{
-OnInit:
-	sellitem Life_Force_Pot;
-	sellitem Yggdrasilberry_Dew;
-	sellitem Seed_Of_Life;
-	if (RENEWAL) {
-		sellitem Melange_Pot;
-		sellitem Cooking_Skewer;
-		sellitem Black_Charcoal;
-		sellitem Large_Cookpot;
-		sellitem Fine_Noodle;
-		sellitem Cool_Gravy;
-		sellitem Bottle_To_Throw;
-	}
-}
-
 //== Amatsu ================================================
 ama_in01,89,28,5	trader	Armor Dealer#ama	4_F_JPN2,{
 OnInit:
@@ -1793,13 +1762,6 @@ OnInit:
 }
 
 //== Cooking Addition ======================================
-aldebaran,165,107,2	trader	Chef Assistant#alde	4W_M_01,{
-OnInit:
-	sellitem Red_Spice;
-	sellitem Yellow_Spice;
-	sellitem Bread;
-}
-
 comodo,225,164,3	trader	Chef Assistant#cmd	4_M_01,{
 OnInit:
 	sellitem Hot_Sauce;

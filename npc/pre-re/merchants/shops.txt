@@ -343,6 +343,29 @@ OnInit:
 	sellitem Thunder_P;
 }
 
+//== Al De Baran ===========================================
+aldeba_in,94,56,5	trader	Tool Dealer#alde	4_M_01,{
+OnInit:
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	sellitem White_Potion;
+	sellitem Green_Potion;
+	sellitem Center_Potion;
+	sellitem Awakening_Potion;
+	sellitem Wing_Of_Fly;
+	sellitem Wing_Of_Butterfly;
+	sellitem Spectacles;
+	sellitem Leaf_Of_Yggdrasil;
+}
+
+alde_alche,38,184,3	trader	Material Seller#alche	4_M_SAGE_C,{
+OnInit:
+	sellitem Life_Force_Pot;
+	sellitem Yggdrasilberry_Dew;
+	sellitem Seed_Of_Life;
+}
+
 //== Cooking Addition ======================================
 prontera,156,212,1	trader	Chef Assistant#prt	8_F_GIRL,{
 OnInit:
@@ -374,4 +397,11 @@ OnInit:
 payon,206,119,5	trader	Chef Assistant#pay	4_M_ORIENT02,{
 OnInit:
 	sellitem Hot_Sauce;
+}
+
+aldebaran,165,107,2	trader	Chef Assistant#alde	4W_M_01,{
+OnInit:
+	sellitem Red_Spice;
+	sellitem Yellow_Spice;
+	sellitem Bread;
 }
