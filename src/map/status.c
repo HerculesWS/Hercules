@@ -863,6 +863,7 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_G_LIFEPOTION] = SI_G_LIFEPOTION;
 	status->dbs->IconChangeTable[SC_MYSTICPOWDER] = SI_MYSTICPOWDER;
 	status->dbs->IconChangeTable[SC_ALMIGHTY] = SI_ALMIGHTY;
+	status->dbs->IconChangeTable[SC_VITALIZE_POTION] = SI_VITALIZE_POTION;
 
 	// Eden Crystal Synthesis
 	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
@@ -1063,6 +1064,7 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_MAGIC_CANDY] |= SCB_MATK | SCB_ALL;
 	status->dbs->ChangeFlagTable[SC_MYSTICPOWDER] |= SCB_FLEE | SCB_LUK;
 	status->dbs->ChangeFlagTable[SC_ALMIGHTY] |= SCB_WATK | SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_VITALIZE_POTION] |= SCB_BATK | SCB_MATK;
 
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
@@ -4843,6 +4845,8 @@ unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc,
 		batk += batk * sc->data[SC_2011RWC]->val2 / 100;
 	if (sc->data[SC_STEAMPACK])
 		batk += sc->data[SC_STEAMPACK]->val1;
+	if (sc->data[SC_VITALIZE_POTION])
+		batk += batk * sc->data[SC_VITALIZE_POTION]->val1 / 100;
 
 	return (unsigned short)cap_value(batk,0,USHRT_MAX);
 }
@@ -5040,6 +5044,8 @@ unsigned short status_calc_matk(struct block_list *bl, struct status_change *sc,
 		matk += matk * sc->data[SC_2011RWC]->val2 / 100;
 	if (sc->data[SC_MAGIC_CANDY])
 		matk += sc->data[SC_MAGIC_CANDY]->val1;
+	if (sc->data[SC_VITALIZE_POTION])
+		matk += matk * sc->data[SC_VITALIZE_POTION]->val1 / 100;
 
 	return (unsigned short)cap_value(matk, 0, USHRT_MAX);
 }

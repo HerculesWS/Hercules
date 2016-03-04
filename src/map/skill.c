@@ -415,6 +415,8 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 sk
 			hp += hp / 10;
 		if (sc->data[SC_VITALITYACTIVATION])
 			hp = hp * 150 / 100;
+		if (sc->data[SC_VITALIZE_POTION])
+			hp += hp * sc->data[SC_VITALIZE_POTION]->val2 / 100;
 	}
 
 #ifdef RENEWAL

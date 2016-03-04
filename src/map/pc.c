@@ -8250,8 +8250,10 @@ int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp)
 			hp = tmp;
 
 		// Recovery Potion
-		if( sd->sc.data[SC_HEALPLUS] )
-			hp += (int)(hp * sd->sc.data[SC_HEALPLUS]->val1/100.);
+		if (sd->sc.data[SC_HEALPLUS])
+			hp += (int)(hp * sd->sc.data[SC_HEALPLUS]->val1 / 100.);
+		if (sd->sc.data[SC_VITALIZE_POTION])
+			hp += (int)(hp * sd->sc.data[SC_VITALIZE_POTION]->val2 / 100.);
 
 		// 2014 Halloween Event : Pumpkin Bonus
 		if ( sd->sc.data[SC_MTF_PUMPKIN] && itemid == ITEMID_PUMPKIN )
