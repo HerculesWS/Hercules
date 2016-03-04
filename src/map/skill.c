@@ -8518,9 +8518,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				for(i = 0; i < SC_MAX; i++) {
 					if ( !tsc->data[i] )
 						continue;
-					if( SC_COMMON_MAX > i )
-						if ( status->get_sc_type(i)&SC_NO_CLEARANCE )
-							continue;
+					if (status->get_sc_type(i)&SC_NO_CLEARANCE)
+						continue;
 					switch (i) {
 						case SC_ASSUMPTIO:
 							if( bl->type == BL_MOB )
