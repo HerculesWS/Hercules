@@ -864,6 +864,10 @@ void initChangeTables(void) {
 	status->dbs->IconChangeTable[SC_MYSTICPOWDER] = SI_MYSTICPOWDER;
 	status->dbs->IconChangeTable[SC_ALMIGHTY] = SI_ALMIGHTY;
 	status->dbs->IconChangeTable[SC_VITALIZE_POTION] = SI_VITALIZE_POTION;
+	status->dbs->IconChangeTable[SC_SKF_MATK] = SI_SKF_MATK;
+	status->dbs->IconChangeTable[SC_SKF_ATK] = SI_SKF_ATK;
+	status->dbs->IconChangeTable[SC_SKF_ASPD] = SI_SKF_ASPD;
+	status->dbs->IconChangeTable[SC_SKF_CAST] = SI_SKF_CAST;
 
 	// Eden Crystal Synthesis
 	status->dbs->IconChangeTable[SC_QUEST_BUFF1] = SI_QUEST_BUFF1;
@@ -1065,7 +1069,11 @@ void initChangeTables(void) {
 	status->dbs->ChangeFlagTable[SC_MYSTICPOWDER] |= SCB_FLEE | SCB_LUK;
 	status->dbs->ChangeFlagTable[SC_ALMIGHTY] |= SCB_WATK | SCB_MATK;
 	status->dbs->ChangeFlagTable[SC_VITALIZE_POTION] |= SCB_BATK | SCB_MATK;
-
+	status->dbs->ChangeFlagTable[SC_SKF_MATK] |= SCB_MATK;
+	status->dbs->ChangeFlagTable[SC_SKF_ATK] |= SCB_BATK;
+	status->dbs->ChangeFlagTable[SC_SKF_ASPD] |= SCB_ASPD;
+	status->dbs->ChangeFlagTable[SC_SKF_CAST] |= SCB_ALL;
+	
 	// Cash Items
 	status->dbs->ChangeFlagTable[SC_FOOD_STR_CASH] |= SCB_STR;
 	status->dbs->ChangeFlagTable[SC_FOOD_AGI_CASH] |= SCB_AGI;
@@ -4847,6 +4855,8 @@ unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc,
 		batk += sc->data[SC_STEAMPACK]->val1;
 	if (sc->data[SC_VITALIZE_POTION])
 		batk += batk * sc->data[SC_VITALIZE_POTION]->val1 / 100;
+	if (sc->data[SC_SKF_ATK])
+		batk += sc->data[SC_SKF_ATK]->val1;
 
 	return (unsigned short)cap_value(batk,0,USHRT_MAX);
 }
@@ -4971,6 +4981,8 @@ unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
 	if (sc->data[SC_ALMIGHTY])
 		matk += sc->data[SC_ALMIGHTY]->val1;
+	if (sc->data[SC_SKF_MATK])
+		matk += sc->data[SC_SKF_MATK]->val1;
 	
 	return (unsigned short)cap_value(matk,0,USHRT_MAX);
 #else
@@ -5855,6 +5867,8 @@ short status_calc_aspd(struct block_list *bl, struct status_change *sc, short fl
 			bonus += sc->data[SC_BATTLESCROLL]->val1;
 		if (sc->data[SC_STEAMPACK])
 			bonus += sc->data[SC_STEAMPACK]->val2;
+		if (sc->data[SC_SKF_ASPD])
+			bonus -= sc->data[SC_SKF_ASPD]->val1;
 	}
 
 	return (bonus + pots);
@@ -6019,6 +6033,8 @@ short status_calc_aspd_rate(struct block_list *bl, struct status_change *sc, int
 		aspd_rate += sc->data[SC_BATTLESCROLL]->val1 * 10;
 	if (sc->data[SC_STEAMPACK])
 		aspd_rate += sc->data[SC_STEAMPACK]->val2 * 10;
+	if (sc->data[SC_SKF_ASPD])
+		aspd_rate += sc->data[SC_SKF_ASPD]->val1 * 10;
 
 	return (short)cap_value(aspd_rate,0,SHRT_MAX);
 }
