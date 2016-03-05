@@ -2885,6 +2885,7 @@ int pc_bonus(struct map_session_data *sd,int type,int val) {
 			break;
 		default:
 			ShowWarning("pc_bonus: unknown type %d %d !\n",type,val);
+			Assert_report(0);
 			break;
 	}
 	return 0;
@@ -3677,6 +3678,7 @@ int pc_bonus2(struct map_session_data *sd,int type,int type2,int val)
 #endif
 		default:
 			ShowWarning("pc_bonus2: unknown type %d %d %d!\n",type,type2,val);
+			Assert_report(0);
 			break;
 	}
 	return 0;
@@ -3849,6 +3851,7 @@ int pc_bonus3(struct map_session_data *sd,int type,int type2,int type3,int val)
 
 		default:
 			ShowWarning("pc_bonus3: unknown type %d %d %d %d!\n",type,type2,type3,val);
+			Assert_report(0);
 			break;
 	}
 
@@ -3943,6 +3946,7 @@ int pc_bonus4(struct map_session_data *sd,int type,int type2,int type3,int type4
 
 	default:
 		ShowWarning("pc_bonus4: unknown type %d %d %d %d %d!\n",type,type2,type3,type4,val);
+		Assert_report(0);
 		break;
 	}
 
@@ -3970,6 +3974,7 @@ int pc_bonus5(struct map_session_data *sd,int type,int type2,int type3,int type4
 
 		default:
 			ShowWarning("pc_bonus5: unknown type %d %d %d %d %d %d!\n",type,type2,type3,type4,type5,val);
+			Assert_report(0);
 			break;
 	}
 
