@@ -1613,6 +1613,12 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 		memset(&entry->stack, '\0', sizeof(entry->stack));
 	}
 
+	if (entry->type == IT_WEAPON && (entry->look < 0 || entry->look >= MAX_SINGLE_WEAPON_TYPE)) {
+		ShowWarning("itemdb_validate_entry: Invalid View for weapon items. View value %d for item %d (%s) in '%s', defaulting to 1.\n",
+		            entry->look, entry->nameid, entry->jname, source);
+		entry->look = 1;
+	}
+
 	entry->wlv = cap_value(entry->wlv, REFINE_TYPE_ARMOR, REFINE_TYPE_MAX);
 
 	if( !entry->elvmax )

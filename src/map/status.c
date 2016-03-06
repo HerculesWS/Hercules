@@ -12826,7 +12826,7 @@ bool status_readdb_sizefix(char* fields[], int columns, int current)
 {
 	unsigned int i;
 
-	for(i = 0; i < MAX_WEAPON_TYPE; i++)
+	for(i = 0; i < MAX_SINGLE_WEAPON_TYPE; i++)
 	{
 		status->dbs->atkmods[current][i] = atoi(fields[i]);
 	}
@@ -13008,7 +13008,7 @@ int status_readdb(void)
 
 	// size_fix.txt
 	for(i = 0; i < ARRAYLENGTH(status->dbs->atkmods); i++)
-		for(j = 0; j < MAX_WEAPON_TYPE; j++)
+		for(j = 0; j < MAX_SINGLE_WEAPON_TYPE; j++)
 			status->dbs->atkmods[i][j] = 100;
 
 	// refine_db.txt
@@ -13023,7 +13023,7 @@ int status_readdb(void)
 	// read databases
 	//
 	sv->readdb(map->db_path, "job_db2.txt",         ',', 1,                 1+MAX_LEVEL,       -1,                       status->readdb_job2);
-	sv->readdb(map->db_path, DBPATH"size_fix.txt", ',', MAX_WEAPON_TYPE, MAX_WEAPON_TYPE, ARRAYLENGTH(status->dbs->atkmods), status->readdb_sizefix);
+	sv->readdb(map->db_path, DBPATH"size_fix.txt", ',', MAX_SINGLE_WEAPON_TYPE, MAX_SINGLE_WEAPON_TYPE, ARRAYLENGTH(status->dbs->atkmods), status->readdb_sizefix);
 	status->readdb_refine_libconfig(DBPATH"refine_db.conf");
 	sv->readdb(map->db_path, "sc_config.txt",       ',', 2,                 2,                 SC_MAX,                   status->readdb_scconfig);
 	status->read_job_db();
