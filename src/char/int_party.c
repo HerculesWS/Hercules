@@ -485,7 +485,7 @@ int mapif_parse_CreateParty(int fd, const char *name, int item, int item2, const
 	int i;
 	nullpo_ret(name);
 	nullpo_ret(leader);
-	if( (p=inter_party->search_partyname(name))!=NULL){
+	if (!*name || (p = inter_party->search_partyname(name)) != NULL) {
 		mapif->party_created(fd,leader->account_id,leader->char_id,NULL);
 		return 0;
 	}
@@ -496,7 +496,8 @@ int mapif_parse_CreateParty(int fd, const char *name, int item, int item2, const
 				if (name[i] == '"') { /* client-special-char */
 					char *newname = aStrndup(name, NAME_LENGTH-1);
 					normalize_name(newname,"\"");
-					mapif->parse_CreateParty(fd,name,item,item2,leader);
+					trim(newname);
+					mapif->parse_CreateParty(fd, newname, item, item2, leader);
 					aFree(newname);
 					return 0;
 				}
@@ -513,7 +514,7 @@ int mapif_parse_CreateParty(int fd, const char *name, int item, int item2, const
 
 	p = (struct party_data*)aCalloc(1, sizeof(struct party_data));
 
-	memcpy(p->party.name,name,NAME_LENGTH);
+	safestrncpy(p->party.name, name, NAME_LENGTH);
 	p->party.exp=0;
 	p->party.item=(item?1:0)|(item2?2:0);
 
