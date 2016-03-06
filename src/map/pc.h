@@ -302,8 +302,8 @@ BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of st
 	int reseff[SC_COMMON_MAX-SC_COMMON_MIN+1];
 	int weapon_coma_ele[ELE_MAX];
 	int weapon_coma_race[RC_MAX];
-	int weapon_atk[16];
-	int weapon_atk_rate[16];
+	int weapon_atk[MAX_WEAPON_TYPE];
+	int weapon_atk_rate[MAX_WEAPON_TYPE];
 	int arrow_addele[ELE_MAX];
 	int arrow_addrace[RC_MAX];
 	int arrow_addsize[3];

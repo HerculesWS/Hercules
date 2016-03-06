@@ -2169,7 +2169,7 @@ BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when sta
 	/* */
 	struct s_refine_info refine_info[REFINE_TYPE_MAX];
 	/* */
-	int atkmods[3][MAX_WEAPON_TYPE];//ATK weapon modification for size (size_fix.txt)
+	int atkmods[3][MAX_SINGLE_WEAPON_TYPE];//ATK weapon modification for size (size_fix.txt)
 	char job_bonus[CLASS_COUNT][MAX_LEVEL];
 	sc_conf_type sc_conf[SC_MAX];
 END_ZEROED_BLOCK; /* End */
