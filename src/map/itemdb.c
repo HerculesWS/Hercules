@@ -1666,14 +1666,21 @@ void itemdb_readdb_job_sub(struct item_data *id, struct config_setting_t *t)
 {
 	int idx = 0;
 	struct config_setting_t *it = NULL;
+	bool enable_all = false;
+
 	id->class_base[0] = id->class_base[1] = id->class_base[2] = 0;
+
+	if (libconfig->setting_lookup_bool_real(t, "All", &enable_all) && enable_all) {
+		itemdb->jobmask2mapid(id->class_base, UINT64_MAX);
+	}
 	while ((it = libconfig->setting_get_elem(t, idx++)) != NULL) {
 		const char *job_name = config_setting_name(it);
 		int job_id;
 
-		if (strcmp(job_name, "All") == 0) {
-			itemdb->jobmask2mapid(id->class_base, UINT64_MAX);
-		} else if ((job_id = pc->check_job_name(job_name)) == -1) {
+		if (strcmp(job_name, "All") == 0)
+			continue;
+
+		if ((job_id = pc->check_job_name(job_name)) == -1) {
 			ShowWarning("itemdb_readdb_job_sub: unknown job name '%s'!\n", job_name);
 		} else {
 			itemdb->jobid2mapid(id->class_base, job_id, libconfig->setting_get_bool(it));
@@ -1825,8 +1832,10 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 	if ((t = libconfig->setting_get_member(it, "Job")) != NULL) {
 		if (config_setting_is_group(t)) {
 			itemdb->readdb_job_sub(&id, t);
-		} else if (itemdb->lookup_const(it, "Job", &i32) && i32 >= 0) {
-			itemdb->jobmask2mapid(id.class_base, i32);
+		} else if (itemdb->lookup_const(it, "Job", &i32)) { // This is an unsigned value, do not check for >= 0
+			itemdb->jobmask2mapid(id.class_base, (uint64)i32);
+		} else if (!inherit) {
+			itemdb->jobmask2mapid(id.class_base, UINT64_MAX);
 		}
 	} else if (!inherit) {
 		itemdb->jobmask2mapid(id.class_base, UINT64_MAX);

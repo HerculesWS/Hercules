@@ -30,6 +30,7 @@
 #include "map/itemdb.h"
 #include "map/mob.h"
 #include "map/map.h"
+#include "map/pc.h"
 
 #include "common/HPMDataCheck.h"
 
@@ -120,6 +121,100 @@ void db2sql_fileheader(void)
 }
 
 /**
+ * Converts the Job field of an Item DB entry to the numeric format used in the SQL table.
+ */
+uint64 itemdb2sql_readdb_job_sub(struct config_setting_t *t)
+{
+	uint64 jobmask = 0;
+	int idx = 0;
+	struct config_setting_t *it = NULL;
+	bool enable_all = false;
+
+	if (libconfig->setting_lookup_bool_real(t, "All", &enable_all) && enable_all) {
+		jobmask |= UINT64_MAX;
+	}
+	while ((it = libconfig->setting_get_elem(t, idx++)) != NULL) {
+		const char *job_name = config_setting_name(it);
+		int job_id;
+
+		if (strcmp(job_name, "All") == 0)
+			continue;
+
+		if ((job_id = pc->check_job_name(job_name)) != -1) {
+			uint64 newmask = 0;
+			switch (job_id) {
+				// Base Classes
+				case JOB_NOVICE:
+				case JOB_SUPER_NOVICE:
+					newmask = 1ULL << JOB_NOVICE;
+					break;
+				case JOB_SWORDMAN:
+				case JOB_MAGE:
+				case JOB_ARCHER:
+				case JOB_ACOLYTE:
+				case JOB_MERCHANT:
+				case JOB_THIEF:
+				// 2-1 Classes
+				case JOB_KNIGHT:
+				case JOB_PRIEST:
+				case JOB_WIZARD:
+				case JOB_BLACKSMITH:
+				case JOB_HUNTER:
+				case JOB_ASSASSIN:
+				// 2-2 Classes
+				case JOB_CRUSADER:
+				case JOB_MONK:
+				case JOB_SAGE:
+				case JOB_ALCHEMIST:
+				case JOB_BARD:
+				case JOB_DANCER:
+				case JOB_ROGUE:
+				// Extended Classes
+				case JOB_GUNSLINGER:
+				case JOB_NINJA:
+					newmask = 1ULL << job_id;
+					break;
+				// Extended Classes (special handling)
+				case JOB_TAEKWON:
+					newmask = 1ULL << 21;
+					break;
+				case JOB_STAR_GLADIATOR:
+					newmask = 1ULL << 22;
+					break;
+				case JOB_SOUL_LINKER:
+					newmask = 1ULL << 23;
+					break;
+				// Other Classes
+				case JOB_GANGSI: //Bongun/Munak
+					newmask = 1ULL << 26;
+					break;
+				case JOB_DEATH_KNIGHT:
+					newmask = 1ULL << 27;
+					break;
+				case JOB_DARK_COLLECTOR:
+					newmask = 1ULL << 28;
+					break;
+				case JOB_KAGEROU:
+				case JOB_OBORO:
+					newmask = 1ULL << 29;
+					break;
+				case JOB_REBELLION:
+					newmask = 1ULL << 30;
+					break;
+			}
+
+			if (libconfig->setting_get_bool(it)) {
+				jobmask |= newmask;
+			} else {
+				jobmask &= ~newmask;
+			}
+		}
+	}
+
+	return jobmask;
+}
+
+/**
  * Converts an Item DB entry to SQL.
  *
  * @see itemdb_readdb_libconfig_sub.
@@ -134,6 +229,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		char *str;
 		int i32;
 		uint32 ui32;
+		uint64 ui64;
 		struct config_setting_t *t = NULL;
 		StringBuf buf;
 
@@ -180,11 +276,18 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		StrBuf->Printf(&buf, "'%d',", it->slot);
 
 		// equip_jobs
-		if (libconfig->setting_lookup_int(entry, "Job", &i32)) // This is an unsigned value, do not check for >= 0
-			ui32 = (uint32)i32;
-		else
-			ui32 = UINT_MAX;
-		StrBuf->Printf(&buf, "'%u',", ui32);
+		if ((t = libconfig->setting_get_member(entry, "Job")) != NULL) {
+			if (config_setting_is_group(t)) {
+				ui64 = itemdb2sql_readdb_job_sub(t);
+			} else if (itemdb->lookup_const(entry, "Job", &i32)) { // This is an unsigned value, do not check for >= 0
+				ui64 = (uint64)i32;
+			} else {
+				ui64 = UINT64_MAX;
+			}
+		} else {
+			ui64 = UINT64_MAX;
+		}
+		StrBuf->Printf(&buf, "'0x%"PRIX64"',", ui64);
 
 		// equip_upper
 		if (libconfig->setting_lookup_int(entry, "Upper", &i32) && i32 >= 0)
@@ -344,7 +447,7 @@ void itemdb2sql_tableheader(void)
 			"  `defence` smallint(5) UNSIGNED DEFAULT NULL,\n"
 			"  `range` tinyint(2) UNSIGNED DEFAULT NULL,\n"
 			"  `slots` tinyint(2) UNSIGNED DEFAULT NULL,\n"
-			"  `equip_jobs` int(12) UNSIGNED DEFAULT NULL,\n"
+			"  `equip_jobs` bigint(20) UNSIGNED DEFAULT NULL,\n"
 			"  `equip_upper` tinyint(8) UNSIGNED DEFAULT NULL,\n"
 			"  `equip_genders` tinyint(2) UNSIGNED DEFAULT NULL,\n"
 			"  `equip_locations` smallint(4) UNSIGNED DEFAULT NULL,\n"
