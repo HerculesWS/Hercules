@@ -39,7 +39,7 @@ CREATE TABLE `item_db` (
   `defence` smallint(5) UNSIGNED DEFAULT NULL,
   `range` tinyint(2) UNSIGNED DEFAULT NULL,
   `slots` tinyint(2) UNSIGNED DEFAULT NULL,
-  `equip_jobs` int(12) UNSIGNED DEFAULT NULL,
+  `equip_jobs` bigint(20) UNSIGNED DEFAULT NULL,
   `equip_upper` tinyint(8) UNSIGNED DEFAULT NULL,
   `equip_genders` tinyint(2) UNSIGNED DEFAULT NULL,
   `equip_locations` smallint(4) UNSIGNED DEFAULT NULL,
