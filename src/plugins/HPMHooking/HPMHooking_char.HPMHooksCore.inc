@@ -62,8 +62,6 @@ struct {
 	struct HPMHookPoint *HP_chr_mmo_char_tosql_post;
 	struct HPMHookPoint *HP_chr_memitemdata_to_sql_pre;
 	struct HPMHookPoint *HP_chr_memitemdata_to_sql_post;
-	struct HPMHookPoint *HP_chr_inventory_to_sql_pre;
-	struct HPMHookPoint *HP_chr_inventory_to_sql_post;
 	struct HPMHookPoint *HP_chr_mmo_gender_pre;
 	struct HPMHookPoint *HP_chr_mmo_gender_post;
 	struct HPMHookPoint *HP_chr_mmo_chars_fromsql_pre;
@@ -1469,8 +1467,6 @@ struct {
 	int HP_chr_mmo_char_tosql_post;
 	int HP_chr_memitemdata_to_sql_pre;
 	int HP_chr_memitemdata_to_sql_post;
-	int HP_chr_inventory_to_sql_pre;
-	int HP_chr_inventory_to_sql_post;
 	int HP_chr_mmo_gender_pre;
 	int HP_chr_mmo_gender_post;
 	int HP_chr_mmo_chars_fromsql_pre;

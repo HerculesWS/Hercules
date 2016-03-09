@@ -555,33 +555,6 @@ int HP_chr_memitemdata_to_sql(const struct item items[], int max, int id, int ta
 	}
 	return retVal___;
 }
-int HP_chr_inventory_to_sql(const struct item items[], int max, int id) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_chr_inventory_to_sql_pre ) {
-		int (*preHookFunc) (const struct item *items[], int *max, int *id);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_inventory_to_sql_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_chr_inventory_to_sql_pre[hIndex].func;
-			retVal___ = preHookFunc(&items, &max, &id);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.chr.inventory_to_sql(items, max, id);
-	}
-	if( HPMHooks.count.HP_chr_inventory_to_sql_post ) {
-		int (*postHookFunc) (int retVal___, const struct item *items[], int *max, int *id);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_chr_inventory_to_sql_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_chr_inventory_to_sql_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &items, &max, &id);
-		}
-	}
-	return retVal___;
-}
 int HP_chr_mmo_gender(const struct char_session_data *sd, const struct mmo_charstatus *p, char sex) {
 	int hIndex = 0;
 	int retVal___ = 0;
