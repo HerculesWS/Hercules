@@ -62,6 +62,16 @@ char log_picktype2char(e_log_pick_type type) {
 		case LOG_TYPE_BUYING_STORE:     return 'B';  // (B)uying Store
 		case LOG_TYPE_LOOT:             return 'L';  // (L)oot (consumed monster pick/drop)
 		case LOG_TYPE_BANK:             return 'K';  // Ban(K) Transactions
+		case LOG_TYPE_DIVORCE:          return 'Y';  // Divorce
+		case LOG_TYPE_ROULETTE:         return 'Z';  // Roulette
+		case LOG_TYPE_RENTAL:           return 'W';  // Rental
+		case LOG_TYPE_CARD:             return 'Q';  // Card
+		case LOG_TYPE_INV_INVALID:      return 'J';  // Invalid in inventory
+		case LOG_TYPE_CART_INVALID:     return 'H';  // Invalid in cart
+		case LOG_TYPE_EGG:              return '@';  // Egg
+		case LOG_TYPE_QUEST:            return '0';  // Quest
+		case LOG_TYPE_SKILL:            return '1';  // Skill
+		case LOG_TYPE_REFINE:           return '2';  // Refine
 		case LOG_TYPE_OTHER:            return 'X';  // Other
 	}
 

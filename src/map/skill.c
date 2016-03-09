@@ -7505,7 +7505,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 									memset(&item_tmp,0,sizeof(item_tmp));
 									item_tmp.nameid = skill->dbs->db[su->group->skill_id].itemid[i];
 									item_tmp.identify = 1;
-									if (item_tmp.nameid && (success=pc->additem(sd,&item_tmp,skill->dbs->db[su->group->skill_id].amount[i],LOG_TYPE_OTHER)) != 0) {
+									if (item_tmp.nameid && (success=pc->additem(sd,&item_tmp,skill->dbs->db[su->group->skill_id].amount[i],LOG_TYPE_SKILL)) != 0) {
 										clif->additem(sd,0,0,success);
 										map->addflooritem(&sd->bl, &item_tmp, skill->dbs->db[su->group->skill_id].amount[i], sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 									}
@@ -7517,7 +7517,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 							memset(&item_tmp,0,sizeof(item_tmp));
 							item_tmp.nameid = su->group->item_id?su->group->item_id:ITEMID_TRAP;
 							item_tmp.identify = 1;
-							if (item_tmp.nameid && (flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_OTHER)) != 0) {
+							if (item_tmp.nameid && (flag=pc->additem(sd,&item_tmp,1,LOG_TYPE_SKILL)) != 0) {
 								clif->additem(sd,0,0,flag);
 								map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
 							}
@@ -15314,12 +15314,12 @@ void skill_weaponrefine (struct map_session_data *sd, int idx)
 			else
 				per += 5 * ((signed int)sd->status.job_level - 50);
 
-			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER); // FIXME: is this the correct reason flag?
+			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_REFINE); // FIXME: is this the correct reason flag?
 			if (per > rnd() % 1000) {
 				int ep = 0;
-				logs->pick_pc(sd, LOG_TYPE_OTHER, -1, item, ditem);
+				logs->pick_pc(sd, LOG_TYPE_REFINE, -1, item, ditem);
 				item->refine++;
-				logs->pick_pc(sd, LOG_TYPE_OTHER,  1, item, ditem);
+				logs->pick_pc(sd, LOG_TYPE_REFINE,  1, item, ditem);
 				if(item->equip) {
 					ep = item->equip;
 					pc->unequipitem(sd, idx, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
@@ -15352,7 +15352,7 @@ void skill_weaponrefine (struct map_session_data *sd, int idx)
 				if(item->equip)
 					pc->unequipitem(sd, idx, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
 				clif->refine(sd->fd,1,idx,item->refine);
-				pc->delitem(sd, idx, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER);
+				pc->delitem(sd, idx, 1, 0, DELITEM_NORMAL, LOG_TYPE_REFINE);
 				clif->misceffect(&sd->bl,2);
 				clif->emotion(&sd->bl, E_OMG);
 			}
