@@ -2349,6 +2349,8 @@ void read_constdb(void)
 		} else {
 			value = libconfig->setting_get_int(t);
 		}
+		if (is_parameter)
+			ShowWarning("read_constdb: Defining parameters in the constants configuration is deprecated and will no longer be possible in a future version. Parameters should be defined in source. (parameter = '%s')\n", name);
 		script->set_constant(name, value, is_parameter, is_deprecated);
 	}
 	script->constdb_comment(NULL);
@@ -2367,6 +2369,49 @@ void script_constdb_comment(const char *comment)
 	(void)comment;
 }
 
+void script_load_parameters(void)
+{
+	int i = 0;
+	struct {
+		char *name;
+		enum status_point_types type;
+	} parameters[] = {
+		{"BaseExp", SP_BASEEXP},
+		{"JobExp", SP_JOBEXP},
+		{"Karma", SP_KARMA},
+		{"Manner", SP_MANNER},
+		{"Hp", SP_HP},
+		{"MaxHp", SP_MAXHP},
+		{"Sp", SP_SP},
+		{"MaxSp", SP_MAXSP},
+		{"StatusPoint", SP_STATUSPOINT},
+		{"BaseLevel", SP_BASELEVEL},
+		{"SkillPoint", SP_SKILLPOINT},
+		{"Class", SP_CLASS},
+		{"Zeny", SP_ZENY},
+		{"Sex", SP_SEX},
+		{"NextBaseExp", SP_NEXTBASEEXP},
+		{"NextJobExp", SP_NEXTJOBEXP},
+		{"Weight", SP_WEIGHT},
+		{"MaxWeight", SP_MAXWEIGHT},
+		{"JobLevel", SP_JOBLEVEL},
+		{"Upper", SP_UPPER},
+		{"BaseJob", SP_BASEJOB},
+		{"BaseClass", SP_BASECLASS},
+		{"killerrid", SP_KILLERRID},
+		{"killedrid", SP_KILLEDRID},
+		{"SlotChange", SP_SLOTCHANGE},
+		{"CharRename", SP_CHARRENAME},
+		{"ModExp", SP_MOD_EXP},
+		{"ModDrop", SP_MOD_DROP},
+		{"ModDeath", SP_MOD_DEATH},
+	};
+
+	script->constdb_comment("Parameters");
+	for (i=0; i < ARRAYLENGTH(parameters); ++i)
+		script->set_constant(parameters[i].name, parameters[i].type, true, false);
+	script->constdb_comment(NULL);
+}
 // Standard UNIX tab size is 8
 #define TAB_SIZE 8
 #define update_tabstop(tabstop,chars) \
@@ -5141,6 +5186,7 @@ void do_init_script(bool minimal) {
 
 	script->parse_builtin();
 	script->read_constdb();
+	script->load_parameters();
 	script->hardcoded_constants();
 
 	if (minimal)
@@ -21161,6 +21207,7 @@ void script_defaults(void) {
 	script->parse_line = parse_line;
 	script->read_constdb = read_constdb;
 	script->constdb_comment = script_constdb_comment;
+	script->load_parameters = script_load_parameters;
 	script->print_line = script_print_line;
 	script->errorwarning_sub = script_errorwarning_sub;
 	script->set_reg = set_reg;

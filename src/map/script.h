@@ -725,6 +725,7 @@ struct script_interface {
 	const char* (*parse_line) (const char *p);
 	void (*read_constdb) (void);
 	void (*constdb_comment) (const char *comment);
+	void (*load_parameters) (void);
 	const char* (*print_line) (StringBuf *buf, const char *p, const char *mark, int line);
 	void (*errorwarning_sub) (StringBuf *buf, const char *src, const char *file, int start_line, const char *error_msg, const char *error_pos);
 	int (*set_reg) (struct script_state *st, struct map_session_data *sd, int64 num, const char *name, const void *value, struct reg_db *ref);
