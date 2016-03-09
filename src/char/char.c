@@ -416,7 +416,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 
 	//map inventory data
 	if( memcmp(p->inventory, cp->inventory, sizeof(p->inventory)) ) {
-		if (!chr->inventory_to_sql(p->inventory, MAX_INVENTORY, p->char_id))
+		if (!chr->memitemdata_to_sql(p->inventory, MAX_INVENTORY, p->char_id, TABLE_INVENTORY))
 			strcat(save_status, " inventory");
 		else
 			errors++;
@@ -689,30 +689,40 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 	return 0;
 }
 
-/// Saves an array of 'item' entries into the specified table.
+/**
+ * Saves an array of 'item' entries into the specified table.
+ *
+ * @param items       The items array.
+ * @param max         The array size.
+ * @param id          The character/account/guild ID (depending on tableswitch).
+ * @param tableswitch The type of table (@see enum inventory_table_type).
+ * @return Error code.
+ * @retval 0 in case of success.
+ */
 int char_memitemdata_to_sql(const struct item items[], int max, int id, int tableswitch)
 {
 	StringBuf buf;
-	SqlStmt* stmt;
-	int i;
-	int j;
-	const char* tablename;
-	const char* selectoption;
-	struct item item; // temp storage variable
-	bool* flag; // bit array for inventory matching
+	SqlStmt *stmt = NULL;
+	int i, j;
+	const char *tablename = NULL;
+	const char *selectoption = NULL;
+	bool has_favorite = false;
+	struct item item = { 0 }; // temp storage variable
+	bool *flag = NULL; // bit array for inventory matching
 	bool found;
 	int errors = 0;
 
+	nullpo_ret(items);
+
 	switch (tableswitch) {
-	case TABLE_INVENTORY:     tablename = inventory_db;     selectoption = "char_id";    break;
+	case TABLE_INVENTORY:     tablename = inventory_db;     selectoption = "char_id";    has_favorite = true; break;
 	case TABLE_CART:          tablename = cart_db;          selectoption = "char_id";    break;
 	case TABLE_STORAGE:       tablename = storage_db;       selectoption = "account_id"; break;
 	case TABLE_GUILD_STORAGE: tablename = guild_storage_db; selectoption = "guild_id";   break;
 	default:
 		ShowError("Invalid table name!\n");
-		return 1;
+		Assert_retr(1, tableswitch);
 	}
-
 
 	// The following code compares inventory with current database values
 	// and performs modification/deletion/insertion only on relevant rows.
@@ -720,22 +730,22 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 	// it significantly reduces cpu load on the database server.
 
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`");
-	for( j = 0; j < MAX_SLOTS; ++j )
+	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
+	for (j = 0; j < MAX_SLOTS; ++j)
 		StrBuf->Printf(&buf, ", `card%d`", j);
+	if (has_favorite)
+		StrBuf->AppendStr(&buf, ", `favorite`");
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `%s`='%d'", tablename, selectoption, id);
 
 	stmt = SQL->StmtMalloc(inter->sql_handle);
-	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
-	||  SQL_ERROR == SQL->StmtExecute(stmt) )
-	{
+	if (SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
+	 || SQL_ERROR == SQL->StmtExecute(stmt)) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		StrBuf->Destroy(&buf);
 		return 1;
 	}
 
-	memset(&item, 0, sizeof(item));
 	SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &item.id,          0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &item.nameid,      0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &item.amount,      0, NULL, NULL);
@@ -745,30 +755,32 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.attribute,   0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, 0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,     &item.bound,       0, NULL, NULL);
-	for( j = 0; j < MAX_SLOTS; ++j )
-		SQL->StmtBindColumn(stmt, 9+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 9, SQLDT_UINT64,    &item.unique_id,   0, NULL, NULL);
+	for (j = 0; j < MAX_SLOTS; ++j)
+		SQL->StmtBindColumn(stmt, 10+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
+	if (has_favorite)
+		SQL->StmtBindColumn(stmt, 10+MAX_SLOTS, SQLDT_UCHAR, &item.favorite, 0, NULL, NULL);
 
 	// bit array indicating which inventory items have already been matched
-	flag = (bool*) aCalloc(max, sizeof(bool));
+	flag = aCalloc(max, sizeof(bool));
 
-	while( SQL_SUCCESS == SQL->StmtNextRow(stmt) )
-	{
+	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
 		found = false;
 		// search for the presence of the item in the char's inventory
-		for( i = 0; i < max; ++i )
-		{
+		for (i = 0; i < max; ++i) {
 			// skip empty and already matched entries
-			if( items[i].nameid == 0 || flag[i] )
+			if (items[i].nameid == 0 || flag[i])
 				continue;
 
-			if( items[i].nameid == item.nameid
+			if (items[i].nameid == item.nameid
+			 && items[i].unique_id == item.unique_id
 			 && items[i].card[0] == item.card[0]
 			 && items[i].card[2] == item.card[2]
 			 && items[i].card[3] == item.card[3]
 			) {
-				//They are the same item.
-				ARR_FIND( 0, MAX_SLOTS, j, items[i].card[j] != item.card[j] );
-				if( j == MAX_SLOTS
+				// They are the same item.
+				ARR_FIND(0, MAX_SLOTS, j, items[i].card[j] != item.card[j]);
+				if (j == MAX_SLOTS
 				 && items[i].amount == item.amount
 				 && items[i].equip == item.equip
 				 && items[i].identify == item.identify
@@ -776,6 +788,7 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 				 && items[i].attribute == item.attribute
 				 && items[i].expire_time == item.expire_time
 				 && items[i].bound == item.bound
+				 && (!has_favorite || items[i].favorite == item.favorite)
 				) {
 					; //Do nothing.
 				} else {
@@ -783,12 +796,13 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 					StrBuf->Clear(&buf);
 					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%u', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `bound`='%d'",
 						tablename, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound);
-					for( j = 0; j < MAX_SLOTS; ++j )
+					for (j = 0; j < MAX_SLOTS; ++j)
 						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);
+					if (has_favorite)
+						StrBuf->Printf(&buf, ", `favorite`='%d'", items[i].favorite);
 					StrBuf->Printf(&buf, " WHERE `id`='%d' LIMIT 1", item.id);
 
-					if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
-					{
+					if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf))) {
 						Sql_ShowDebug(inter->sql_handle);
 						errors++;
 					}
@@ -798,10 +812,9 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 				break; //skip to next item in the db.
 			}
 		}
-		if( !found )
-		{// Item not present in inventory, remove it.
-			if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE from `%s` where `id`='%d' LIMIT 1", tablename, item.id) )
-			{
+		if (!found) {
+			// Item not present in inventory, remove it.
+			if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE from `%s` where `id`='%d' LIMIT 1", tablename, item.id)) {
 				Sql_ShowDebug(inter->sql_handle);
 				errors++;
 			}
@@ -811,173 +824,34 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 
 	StrBuf->Clear(&buf);
 	StrBuf->Printf(&buf, "INSERT INTO `%s`(`%s`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`", tablename, selectoption);
-	for( j = 0; j < MAX_SLOTS; ++j )
+	for (j = 0; j < MAX_SLOTS; ++j)
 		StrBuf->Printf(&buf, ", `card%d`", j);
+	if (has_favorite)
+		StrBuf->AppendStr(&buf, ", `favorite`");
 	StrBuf->AppendStr(&buf, ") VALUES ");
 
 	found = false;
 	// insert non-matched items into the db as new items
-	for( i = 0; i < max; ++i )
-	{
+	for (i = 0; i < max; ++i) {
 		// skip empty and already matched entries
-		if( items[i].nameid == 0 || flag[i] )
+		if (items[i].nameid == 0 || flag[i])
 			continue;
 
-		if( found )
+		if (found)
 			StrBuf->AppendStr(&buf, ",");
 		else
 			found = true;
 
 		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
 			id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound, items[i].unique_id);
-		for( j = 0; j < MAX_SLOTS; ++j )
+		for (j = 0; j < MAX_SLOTS; ++j)
 			StrBuf->Printf(&buf, ", '%d'", items[i].card[j]);
+		if (has_favorite)
+			StrBuf->Printf(&buf, ", '%d'", items[i].favorite);
 		StrBuf->AppendStr(&buf, ")");
 	}
 
-	if( found && SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
-	{
-		Sql_ShowDebug(inter->sql_handle);
-		errors++;
-	}
-
-	StrBuf->Destroy(&buf);
-	aFree(flag);
-
-	return errors;
-}
-/* pretty much a copy of chr->memitemdata_to_sql except it handles inventory_db exclusively,
- * - this is required because inventory db is the only one with the 'favorite' column. */
-int char_inventory_to_sql(const struct item items[], int max, int id) {
-	StringBuf buf;
-	SqlStmt* stmt;
-	int i;
-	int j;
-	struct item item; // temp storage variable
-	bool* flag; // bit array for inventory matching
-	bool found;
-	int errors = 0;
-
-	nullpo_ret(items);
-
-	// The following code compares inventory with current database values
-	// and performs modification/deletion/insertion only on relevant rows.
-	// This approach is more complicated than a trivial delete&insert, but
-	// it significantly reduces cpu load on the database server.
-
-	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `favorite`, `bound`");
-	for( j = 0; j < MAX_SLOTS; ++j )
-		StrBuf->Printf(&buf, ", `card%d`", j);
-	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`='%d'", inventory_db, id);
-
-	stmt = SQL->StmtMalloc(inter->sql_handle);
-	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
-	   ||  SQL_ERROR == SQL->StmtExecute(stmt) )
-	{
-		SqlStmt_ShowDebug(stmt);
-		SQL->StmtFree(stmt);
-		StrBuf->Destroy(&buf);
-		return 1;
-	}
-
-	memset(&item, 0, sizeof(item));
-	SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &item.id,          0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &item.nameid,      0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &item.amount,      0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 3, SQLDT_UINT,      &item.equip,       0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 4, SQLDT_CHAR,      &item.identify,    0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,      &item.refine,      0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.attribute,   0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, 0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 8, SQLDT_CHAR,      &item.favorite,    0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 9, SQLDT_UCHAR,     &item.bound,       0, NULL, NULL);
-	for( j = 0; j < MAX_SLOTS; ++j )
-		SQL->StmtBindColumn(stmt, 10+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
-
-	// bit array indicating which inventory items have already been matched
-	flag = (bool*) aCalloc(max, sizeof(bool));
-
-	while( SQL_SUCCESS == SQL->StmtNextRow(stmt) ) {
-		found = false;
-		// search for the presence of the item in the char's inventory
-		for( i = 0; i < max; ++i ) {
-			// skip empty and already matched entries
-			if( items[i].nameid == 0 || flag[i] )
-				continue;
-
-			if( items[i].nameid == item.nameid
-			 && items[i].card[0] == item.card[0]
-			 && items[i].card[2] == item.card[2]
-			 && items[i].card[3] == item.card[3]
-			) {
-				//They are the same item.
-				ARR_FIND( 0, MAX_SLOTS, j, items[i].card[j] != item.card[j] );
-				if( j == MAX_SLOTS
-				 && items[i].amount == item.amount
-				 && items[i].equip == item.equip
-				 && items[i].identify == item.identify
-				 && items[i].refine == item.refine
-				 && items[i].attribute == item.attribute
-				 && items[i].expire_time == item.expire_time
-				 && items[i].favorite == item.favorite
-				 && items[i].bound == item.bound
-				) {
-					; //Do nothing.
-				} else {
-					// update all fields.
-					StrBuf->Clear(&buf);
-					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%u', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `favorite`='%d', `bound`='%d'",
-							inventory_db, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].favorite, items[i].bound);
-					for( j = 0; j < MAX_SLOTS; ++j )
-						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);
-					StrBuf->Printf(&buf, " WHERE `id`='%d' LIMIT 1", item.id);
-
-					if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) ) {
-						Sql_ShowDebug(inter->sql_handle);
-						errors++;
-					}
-				}
-
-				found = flag[i] = true; //Item dealt with,
-				break; //skip to next item in the db.
-			}
-		}
-		if( !found ) {// Item not present in inventory, remove it.
-			if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE from `%s` where `id`='%d' LIMIT 1", inventory_db, item.id) ) {
-				Sql_ShowDebug(inter->sql_handle);
-				errors++;
-			}
-		}
-	}
-	SQL->StmtFree(stmt);
-
-	StrBuf->Clear(&buf);
-	StrBuf->Printf(&buf, "INSERT INTO `%s` (`char_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `favorite`, `bound`, `unique_id`", inventory_db);
-	for( j = 0; j < MAX_SLOTS; ++j )
-		StrBuf->Printf(&buf, ", `card%d`", j);
-	StrBuf->AppendStr(&buf, ") VALUES ");
-
-	found = false;
-	// insert non-matched items into the db as new items
-	for( i = 0; i < max; ++i ) {
-		// skip empty and already matched entries
-		if( items[i].nameid == 0 || flag[i] )
-			continue;
-
-		if( found )
-			StrBuf->AppendStr(&buf, ",");
-		else
-			found = true;
-
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%d', '%"PRIu64"'",
-						 id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].favorite, items[i].bound, items[i].unique_id);
-		for( j = 0; j < MAX_SLOTS; ++j )
-			StrBuf->Printf(&buf, ", '%d'", items[i].card[j]);
-		StrBuf->AppendStr(&buf, ")");
-	}
-
-	if( found && SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) ) {
+	if (found && SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf))) {
 		Sql_ShowDebug(inter->sql_handle);
 		errors++;
 	}
@@ -6062,7 +5936,6 @@ void char_defaults(void)
 	chr->create_charstatus = char_create_charstatus;
 	chr->mmo_char_tosql = char_mmo_char_tosql;
 	chr->memitemdata_to_sql = char_memitemdata_to_sql;
-	chr->inventory_to_sql = char_inventory_to_sql;
 	chr->mmo_gender = char_mmo_gender;
 	chr->mmo_chars_fromsql = char_mmo_chars_fromsql;
 	chr->mmo_char_fromsql = char_mmo_char_fromsql;

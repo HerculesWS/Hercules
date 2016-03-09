@@ -72,7 +72,7 @@ struct mmo_map_server {
 
 #define DEFAULT_AUTOSAVE_INTERVAL (300*1000)
 
-enum {
+enum inventory_table_type {
 	TABLE_INVENTORY,
 	TABLE_CART,
 	TABLE_STORAGE,
@@ -129,7 +129,6 @@ struct char_interface {
 	DBData (*create_charstatus) (DBKey key, va_list args);
 	int (*mmo_char_tosql) (int char_id, struct mmo_charstatus* p);
 	int (*memitemdata_to_sql) (const struct item items[], int max, int id, int tableswitch);
-	int (*inventory_to_sql) (const struct item items[], int max, int id);
 	int (*mmo_gender) (const struct char_session_data *sd, const struct mmo_charstatus *p, char sex);
 	int (*mmo_chars_fromsql) (struct char_session_data* sd, uint8* buf);
 	int (*mmo_char_fromsql) (int char_id, struct mmo_charstatus* p, bool load_everything);

@@ -1048,4 +1048,8 @@ enum hz_char_ask_name_answer {
 #error MAX_ZENY is too big
 #endif
 
+#if MAX_SLOTS < 4
+#error MAX_SLOTS it too small
+#endif
+
 #endif /* COMMON_MMO_H */
