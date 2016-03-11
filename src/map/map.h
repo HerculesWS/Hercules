@@ -418,6 +418,7 @@ enum status_point_types { //we better clean up this enum and change it name [Hem
 	SP_MOD_EXP=125,
 	SP_MOD_DROP=126,
 	SP_MOD_DEATH=127,
+	SP_BASETHIRD=128,
 
 	// Mercenaries
 	SP_MERCFLEE=165, SP_MERCKILLS=189, SP_MERCFAITH=190,

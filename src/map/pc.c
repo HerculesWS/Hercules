@@ -7909,6 +7909,7 @@ int pc_readparam(struct map_session_data* sd,int type)
 		case SP_BASEJOB:         val = pc->mapid2jobid(sd->class_&MAPID_UPPERMASK, sd->status.sex); break; //Base job, extracting upper type.
 		case SP_UPPER:           val = (sd->class_&JOBL_UPPER) ? 1 : ((sd->class_&JOBL_BABY) ? 2 : 0); break;
 		case SP_BASECLASS:       val = pc->mapid2jobid(sd->class_&MAPID_BASEMASK, sd->status.sex); break; //Extract base class tree. [Skotlex]
+		case SP_BASETHIRD:       val = pc->mapid2jobid(sd->class_&MAPID_THIRDMASK, sd->status.sex); break;
 		case SP_SEX:             val = sd->status.sex; break;
 		case SP_WEIGHT:          val = sd->weight; break;
 		case SP_MAXWEIGHT:       val = sd->max_weight; break;

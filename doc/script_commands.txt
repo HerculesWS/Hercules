@@ -560,6 +560,9 @@ BaseClass   - The character's 1-1 'normal' job, regardless of Upper value.
               Priest/Monk, High Priest/Champion, and Arch Bishop/Sura. 
               If the character has not reached a 1-1 class, it will return 
               Job_Novice.
+BaseThird   - The character's 3rd 'normal' job, regardless of Upper value.
+              For example, this will return Job_Rune_Knight for Rune Knight, 
+              or Trans Rune Knight or Baby Rune Knight.	  
 BaseJob     - The character's 'normal' job, regardless of Upper value.
               For example, this will return Job_Acolyte for Acolyte,
               Baby Acolyte, and High Acolyte.

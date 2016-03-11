@@ -2405,6 +2405,7 @@ void script_load_parameters(void)
 		{"ModExp", SP_MOD_EXP},
 		{"ModDrop", SP_MOD_DROP},
 		{"ModDeath", SP_MOD_DEATH},
+		{"BaseThird", SP_BASETHIRD},
 	};
 
 	script->constdb_comment("Parameters");
