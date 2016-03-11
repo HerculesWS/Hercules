@@ -287,7 +287,7 @@
 5470:5653,{ bonus bDex,1; bonus bLongAtkRate,3; }
 5690:13428,{ bonus2 bAddRace,RC_DemiPlayer,10; bonus bHit,10; }
 5890:28306,{ bonus2 bAddRace, RC_All, 3; }
-5932:1737,{ if (Class == Job_Ranger || Class == Job_Ranger_T) skill HT_BLITZBEAT,5*getequiprefinerycnt(EQI_HAND_R); }
+5932:1737,{ if (BaseThird == Job_Ranger) skill HT_BLITZBEAT,5*getequiprefinerycnt(EQI_HAND_R); }
 //5967:28321,{ skill HT_BLITZBEAT,-200; }
 13027:15044,{ bonus3 bAddMonsterDropItem,929,RC_Brute,100+(getequiprefinerycnt(EQI_HAND_R)*10); bonus3 bAddMonsterDropItem,929,RC_DemiPlayer,100+(getequiprefinerycnt(EQI_HAND_R)*10); bonus3 bAddMonsterDropItem,970,RC_Brute,20+(getequiprefinerycnt(EQI_HAND_R)*2); bonus3 bAddMonsterDropItem,970,RC_DemiPlayer,20+(getequiprefinerycnt(EQI_HAND_R)*2); }
 13034:13035,{ bonus bMaxSP,20; bonus bMaxHPrate,5; bonus bHit,10; bonus2 bAddSize,Size_Large,30; autobonus "{ bonus bAspdRate,100; }",1,7000,BF_WEAPON,"{ specialeffect2 EF_POTION_BERSERK; }"; }
