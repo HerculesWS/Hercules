@@ -11521,7 +11521,7 @@ void clif_parse_OneClick_ItemIdentify(int fd, struct map_session_data *sd)
 		return;
 	
 	if ((n = pc->have_magnifier(sd) ) != INDEX_NOT_FOUND &&
-		pc->delitem(sd, n, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER) == 0)
+		pc->delitem(sd, n, 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME) == 0)
 		skill->identify(sd, idx);
 }
 
@@ -18404,7 +18404,7 @@ void clif_parse_RouletteGenerate(int fd, struct map_session_data* sd) {
 			it.nameid = clif->rd.nameid[stage][0];
 			it.identify = 1;
 
-			pc->additem(sd, &it, clif->rd.qty[stage][0], LOG_TYPE_OTHER);/** TODO maybe a new log type for roulette items? **/
+			pc->additem(sd, &it, clif->rd.qty[stage][0], LOG_TYPE_ROULETTE);/** TODO maybe a new log type for roulette items? **/
 
 			sd->roulette.stage = 0;
 			result = GENERATE_ROULETTE_LOSING;
@@ -18439,7 +18439,7 @@ void clif_parse_RouletteRecvItem(int fd, struct map_session_data* sd) {
 		it.nameid = clif->rd.nameid[sd->roulette.prizeStage][sd->roulette.prizeIdx];
 		it.identify = 1;
 
-		switch (pc->additem(sd, &it, clif->rd.qty[sd->roulette.prizeStage][sd->roulette.prizeIdx], LOG_TYPE_OTHER)) {
+		switch (pc->additem(sd, &it, clif->rd.qty[sd->roulette.prizeStage][sd->roulette.prizeIdx], LOG_TYPE_ROULETTE)) {
 			case 0:
 				p.Result = RECV_ITEM_SUCCESS;
 				sd->roulette.claimPrize = false;

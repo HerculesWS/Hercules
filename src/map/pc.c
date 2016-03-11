@@ -539,7 +539,7 @@ void pc_rental_expire(struct map_session_data *sd, int i) {
 	}
 
 	clif->rental_expired(sd->fd, i, sd->status.inventory[i].nameid);
-	pc->delitem(sd, i, sd->status.inventory[i].amount, 0, DELITEM_NORMAL, LOG_TYPE_OTHER);
+	pc->delitem(sd, i, sd->status.inventory[i].amount, 0, DELITEM_NORMAL, LOG_TYPE_RENTAL);
 }
 void pc_inventory_rentals(struct map_session_data *sd)
 {
@@ -4136,7 +4136,7 @@ int pc_insert_card(struct map_session_data* sd, int idx_card, int idx_equip)
 	// remember the card id to insert
 	nameid = sd->status.inventory[idx_card].nameid;
 
-	if( pc->delitem(sd, idx_card, 1, 1, DELITEM_NORMAL, LOG_TYPE_OTHER) == 1 )
+	if( pc->delitem(sd, idx_card, 1, 1, DELITEM_NORMAL, LOG_TYPE_CARD) == 1 )
 	{// failed
 		clif->insert_card(sd,idx_equip,idx_card,1);
 	}
@@ -4146,9 +4146,9 @@ int pc_insert_card(struct map_session_data* sd, int idx_card, int idx_equip)
 		ARR_FIND( 0, sd->inventory_data[idx_equip]->slot, i, sd->status.inventory[idx_equip].card[i] == 0);
 		if (i == sd->inventory_data[idx_equip]->slot)
 			return 0; // no free slots
-		logs->pick_pc(sd, LOG_TYPE_OTHER, -1, &sd->status.inventory[idx_equip],sd->inventory_data[idx_equip]);
+		logs->pick_pc(sd, LOG_TYPE_CARD, -1, &sd->status.inventory[idx_equip],sd->inventory_data[idx_equip]);
 		sd->status.inventory[idx_equip].card[i] = nameid;
-		logs->pick_pc(sd, LOG_TYPE_OTHER,  1, &sd->status.inventory[idx_equip],sd->inventory_data[idx_equip]);
+		logs->pick_pc(sd, LOG_TYPE_CARD,  1, &sd->status.inventory[idx_equip],sd->inventory_data[idx_equip]);
 		clif->insert_card(sd,idx_equip,idx_card,0);
 		return 1;
 	}
@@ -9905,7 +9905,7 @@ int pc_checkitem(struct map_session_data *sd)
 
 			if (!itemdb_available(id)) {
 				ShowWarning("Removed invalid/disabled item id %d from inventory (amount=%d, char_id=%d).\n", id, sd->status.inventory[i].amount, sd->status.char_id);
-				pc->delitem(sd, i, sd->status.inventory[i].amount, 0, DELITEM_NORMAL, LOG_TYPE_OTHER);
+				pc->delitem(sd, i, sd->status.inventory[i].amount, 0, DELITEM_NORMAL, LOG_TYPE_INV_INVALID);
 				continue;
 			}
 
@@ -9921,7 +9921,7 @@ int pc_checkitem(struct map_session_data *sd)
 
 			if( !itemdb_available(id) ) {
 				ShowWarning("Removed invalid/disabled item id %d from cart (amount=%d, char_id=%d).\n", id, sd->status.cart[i].amount, sd->status.char_id);
-				pc->cart_delitem(sd, i, sd->status.cart[i].amount, 0, LOG_TYPE_OTHER);
+				pc->cart_delitem(sd, i, sd->status.cart[i].amount, 0, LOG_TYPE_CART_INVALID);
 				continue;
 			}
 
@@ -10139,9 +10139,9 @@ int pc_divorce(struct map_session_data *sd)
 	for( i = 0; i < MAX_INVENTORY; i++ )
 	{
 		if( sd->status.inventory[i].nameid == WEDDING_RING_M || sd->status.inventory[i].nameid == WEDDING_RING_F )
-			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER);
+			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_DIVORCE);
 		if( p_sd->status.inventory[i].nameid == WEDDING_RING_M || p_sd->status.inventory[i].nameid == WEDDING_RING_F )
-			pc->delitem(p_sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER);
+			pc->delitem(p_sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_DIVORCE);
 	}
 
 	clif->divorced(sd, p_sd->status.name);

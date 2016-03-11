@@ -5262,7 +5262,7 @@ ACMD(clearcart)
 
 	for( i = 0; i < MAX_CART; i++ )
 		if(sd->status.cart[i].nameid > 0)
-			pc->cart_delitem(sd, i, sd->status.cart[i].amount, 1, LOG_TYPE_OTHER);
+			pc->cart_delitem(sd, i, sd->status.cart[i].amount, 1, LOG_TYPE_COMMAND);
 
 	clif->clearcart(fd);
 	clif->updatestatus(sd,SP_CARTINFO);
