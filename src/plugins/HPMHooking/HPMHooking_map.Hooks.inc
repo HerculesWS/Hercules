@@ -62133,6 +62133,32 @@ void HP_script_constdb_comment(const char *comment) {
 	}
 	return;
 }
+void HP_script_load_parameters(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_load_parameters_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_load_parameters_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_load_parameters_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.load_parameters();
+	}
+	if( HPMHooks.count.HP_script_load_parameters_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_load_parameters_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_load_parameters_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 const char* HP_script_print_line(StringBuf *buf, const char *p, const char *mark, int line) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
