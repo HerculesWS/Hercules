@@ -77,7 +77,7 @@ ein_in01,18,28,4	script	Guildsman#BLS	4_M_JOB_BLACKSMITH,{
 	if (BaseClass >= Job_Thief) close; // Custom expanded class check.
 	next;
 	// Third class check - precedes other BaseClass dialogue.
-	if (Class >= Job_Rune_Knight && Class <= Job_Baby_Mechanic2) {
+	if (BaseThird != -1) {
 		mes "[Altiregen]";
 		mes "You... look like a stranger. But somehow it seems that you're related to our guild. Haha~";
 		mes "Am I right?";

@@ -45,7 +45,7 @@ yuno,179,174,4	script	Gomer	4_M_REPAIR,{
 		mes "So how's that Pilebuncker working out for you?";
 		close;
 	}
-	if (Class != Job_Mechanic && Class != Job_Mechanic_T && Class != Job_Baby_Mechanic) {
+	if (BaseThird != Job_Mechanic) {
 		mes "[Gomer]";
 		mes "I'm a retired Mechanic and I don't think I have any business with you.";
 		close;

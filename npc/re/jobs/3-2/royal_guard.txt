@@ -41,7 +41,7 @@ prt_castle,48,161,3	script	Middle-aged Gentleman#rg	1_M_LIBRARYMASTER,{
 		mes "- and please try again. -";
 		close;
 	}
-	if (Class == Job_Royal_Guard || Class == Job_Royal_Guard_T || Class == Job_Baby_Guard) {
+	if (BaseThird == Job_Royal_Guard) {
 		mes "[Middle-aged Gentleman]";
 		mes "Uh? What am I doing? I came here for an errand...";
 		next;

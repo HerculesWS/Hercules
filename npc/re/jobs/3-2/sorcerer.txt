@@ -40,7 +40,7 @@ gef_tower,102,34,5	script	Merito	2_M_SAGE_B,{
 		mes "You packed so much in your bag. Try again after emptying your bag.";
 		close;
 	}
-	if (Class == Job_Sorcerer || Class == Job_Sorcerer_T || Class == Job_Baby_Sorcerer) {
+	if (BaseThird == Job_Sorcerer) {
 		mes "Please get on with the sprits well~ You should~!";
 		close;
 	}
@@ -152,7 +152,7 @@ gef_tower,113,161,5	script	Karacas	4_M_SAGE_A,{
 		mes "Oh, it seems that you're too heavy. Empty your bag and then come again.";
 		close;
 	}
-	if (Class == Job_Sorcerer || Class == Job_Sorcerer_T || Class == Job_Baby_Sorcerer) {
+	if (BaseThird == Job_Sorcerer) {
 		mes "You look happy. Have a great journey.";
 		close;
 	}

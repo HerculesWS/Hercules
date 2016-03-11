@@ -1382,7 +1382,7 @@ eclage,191,200,4	script	Yube#ep14_2	4_M_FAIRYKID5,{
 		emotion e_omg;
 		cutin "war_y1",2;
 		next;
-		if ((Class == Job_Warlock) || (Class == Job_Warlock_T)) {
+		if (BaseThird == Job_Warlock) {
 			mes "[Yube]";
 			mes "Whoa! Who's this? It's";
 			mes strcharinfo(PC_NAME) +"?";

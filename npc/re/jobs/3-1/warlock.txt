@@ -40,7 +40,7 @@
 OnTouch:
 	if (job_wl > 1) {
 		mes " - There is a strange distortion here - ";
-		if (strnpcinfo(0) == "#distorted_space_1" && (Class == Job_Warlock || Class == Job_Warlock_T || Class == Job_Baby_Warlock)) {
+		if (strnpcinfo(0) == "#distorted_space_1" && BaseThird == Job_Warlock) {
 			close2;
 			if (countitem(Special_Exchange_Coupon) > 0)
 				warp "spl_in02",79,102;

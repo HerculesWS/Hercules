@@ -298,7 +298,7 @@ tur_dun01,156,36,5	script	Survival Instructor#jr01	1_M_ORIENT01,{
 		mes "Next time, try not to intimidate other people.";
 		close;
 	}
-	if (Class == Job_Ranger || Class == Job_Ranger_T || Class == Job_Baby_Ranger) {
+	if (BaseThird == Job_Ranger) {
 		if (job_ranger01 == 8) {
 			mes "Ho. Who's this~";
 			mes "You really look talented...";

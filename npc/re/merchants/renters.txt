@@ -38,7 +38,7 @@
 //== Dragon Breeder ========================================
 job3_rune01,88,62,5	script	Dragon Breeder	8W_SOLDIER,{
 	mes "[Dragon Breeder]";
-	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
+	if (BaseThird == Job_Rune_Knight) {
 		mes "Welcome. Would you like to rent a Dragon?";
 		next;
 		switch(select("Yes", "No")) {
@@ -73,7 +73,7 @@ job3_rune01,88,62,5	script	Dragon Breeder	8W_SOLDIER,{
 //== Dragon/Gryphon Master =================================
 prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 	mes "[Riding Creature Master]";
-	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
+	if (BaseThird == Job_Rune_Knight) {
 		mes "Welcome. Would you like to rent a Dragon?";
 		next;
 		switch(select("Yes", "No")) {
@@ -100,7 +100,7 @@ prontera,130,213,5	script	Riding Creature Master	8W_SOLDIER,{
 			close;
 		}
 	}
-	if (Class == Job_Royal_Guard || Class == Job_Royal_Guard_T || Class == Job_Baby_Guard) {
+	if (BaseThird == Job_Royal_Guard) {
 		mes "Welcome. Would you like to rent a Gryphon?";
 		next;
 		switch(select("Yes", "No")) {
@@ -169,7 +169,7 @@ prontera,125,208,5	script	Peco Peco Remover	8W_SOLDIER,{
 //== Magic Gear Renter =====================================
 -	script	::mgm	FAKE_NPC,{
 	mes "[Magic Gear Master]";
-	if (Class == Job_Mechanic || Class == Job_Mechanic_T || Class == Job_Baby_Mechanic) {
+	if (BaseThird == Job_Mechanic) {
 		mes "Welcome, Mechanic.";
 		mes "Would you like to rent a Pushcart or";
 		mes "ride a Magic Gear?";

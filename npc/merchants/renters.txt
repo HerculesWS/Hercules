@@ -47,7 +47,7 @@ prontera,55,350,5	script	Peco Peco Breeder#knt	8W_SOLDIER,{
 	if(Upper==2) .@price = 2500; //Baby Peco
 
 	mes "[Peco Peco Breeder]";
-	if (BaseJob == Job_Knight && Class < Job_Rune_Knight) {
+	if (BaseJob == Job_Knight && BaseThird != Job_Rune_Knight) {
 		mes "Welcome.";
 		mes "Honorable Knight,";
 		mes "would you like to rent";
@@ -109,7 +109,7 @@ prontera,232,318,3	script	Peco Peco Breeder#cru	8W_SOLDIER,{
 	if(Upper==2) .@price = 3500; //Baby Peco
 
 	mes "[PecoPeco Breeder]";
-	if (BaseJob == Job_Crusader && Class < Job_Rune_Knight) {
+	if (BaseJob == Job_Crusader && BaseThird != Job_Rune_Knight) {
 		if(Upper != 1 ) mes "Welcome, Crusader.";
 		else mes "Welcome, Paladin.";
 		mes "We have a special";

@@ -147,7 +147,7 @@ in_rogue,376,100,5	script	Guild Member#sc01	4_M_ROGUE,{
 			mes "Sooner or later I'll solve it myself if I dare to get the map...!";
 			close;
 		}
-	} else if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
+	} else if (BaseThird == Job_Shadow_Chaser) {
 		mes "[Vin]";
 		mes "Huh! This is a Shadow Chaser!";
 		mes "How unbelievable!";
@@ -179,7 +179,7 @@ in_rogue,379,99,1	script	Guild Member#sc02	4_F_ROGUE,{
 		mes "[Lotte]";
 		mes "I just hate numbers!";
 		close;
-	} else if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
+	} else if (BaseThird == Job_Shadow_Chaser) {
 		mes "[Lotte]";
 		mes "Wow!";
 		mes "You are the one!";
@@ -1361,7 +1361,7 @@ s_atelier,73,65,3	script	Vicente#sc12_lgt	4_M_HUMAN_02,{
 }
 
 s_atelier,70,66,4	script	Dumk#sc13_lgh	4_M_SHADOWCHASER,{
-	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
+	if (BaseThird == Job_Shadow_Chaser) {
 		mes "[Dumk]";
 		mes "What is it?";
 		mes "Have you been enjoying your new skills?";
@@ -2289,7 +2289,7 @@ job3_sha01,71,27,0	script	????#keybox04	CLEAR_NPC,{
 s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 	mes "[Max]";
 	mes "Welcome~";
-	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
+	if (BaseThird == Job_Shadow_Chaser) {
 		mes "You are a member of the Rogue guild!";
 		mes "What can I help you with?";
 		next;
@@ -2354,7 +2354,7 @@ s_atelier,29,119,3	script	Max#sc05_prt	4W_M_01,{
 s_atelier,136,70,3	script	Titika#sc09_ra	4_F_CHILD,{
 	mes "[Titika]";
 	mes "Welcome.";
-	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
+	if (BaseThird == Job_Shadow_Chaser) {
 		mes "You are in a guild.";
 		mes "What can I help you with?";
 		next;
@@ -2405,7 +2405,7 @@ s_atelier,136,70,3	script	Titika#sc09_ra	4_F_CHILD,{
 s_atelier,124,128,3	script	RimiGX#sc07_yuno	4_F_LGTGIRL,{
 	mes "[RimiGX]";
 	mes "Welcome.";
-	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
+	if (BaseThird == Job_Shadow_Chaser) {
 		mes "What are you looking for?";
 		next;
 		.@i = select("Make a new blush for make-up.", "Make a new blush for painting.", "Nothing.");
@@ -2454,7 +2454,7 @@ s_atelier,124,128,3	script	RimiGX#sc07_yuno	4_F_LGTGIRL,{
 s_atelier,26,68,3	script	Vito#sc11_lgt	4_M_KHMAN,{
 	mes "[Vito]";
 	mes "Welcome.";
-	if (Class == Job_Shadow_Chaser || Class == Job_Shadow_Chaser_T || Class == Job_Baby_Chaser) {
+	if (BaseThird == Job_Shadow_Chaser) {
 		mes "What are you looking for?";
 		next;
 		.@i = select("Make a new blush for make-up.", "Make a new blush for painting.", "Nothing.");

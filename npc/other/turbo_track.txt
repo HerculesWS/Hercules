@@ -4649,7 +4649,7 @@ OnTouch:
 			setmount(MOUNT_NONE);
 			warp "turbo_room",100,65;
 		}
-	} else if ((Class == Job_Ranger || Class == Job_Ranger_T || Class == Job_Baby_Ranger) && checkoption(Option_Wugrider)) {
+	} else if (BaseThird == Job_Ranger && checkoption(Option_Wugrider)) {
 		if (MaxWeight-Weight < 20000) {
 			mes "[Helper]";
 			mes "Wargs are prohibited";
@@ -4662,7 +4662,7 @@ OnTouch:
 			setoption Option_Wugrider,0;
 			warp "turbo_room",100,65;
 		}
-	} else if ((Class == Job_Mechanic || Class == Job_Mechanic_T || Class == Job_Baby_Mechanic) && checkmount()) {
+	} else if ((BaseThird == Job_Mechanic) && checkmount()) {
 		if (MaxWeight-Weight < 20000) {
 			mes "[Helper]";
 			mes "Magic Gears are prohibited";
@@ -4730,7 +4730,7 @@ alde_gld,186,199,3	script	Turbo Track Guide#Entran	4_F_RACING,{
 		}
 		.@skill = KN_RIDING;
 		.@skill$ = "Peco Peco Ride";
-	} else if (Class == Job_Mechanic || Class == Job_Mechanic_T || Class == Job_Baby_Mechanic) {
+	} else if (BaseThird == Job_Mechanic) {
 		.@mount$ = "Magic Gear";
 		.@skill = NC_MADOLICENCE;
 		.@skill$ = "Magic Gear License";

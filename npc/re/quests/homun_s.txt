@@ -37,7 +37,7 @@
 //== Main NPCs =============================================
 job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 	if (countitem(Strange_Embryo)) {
-		if (Class == Job_Genetic || Class == Job_Genetic_T || Class == Job_Baby_Genetic) {
+		if (BaseThird == Job_Genetic) {
 			disable_items;
 			if (!questprogress(4159) && !questprogress(4160)) {
 				mes "[Viorel]";
@@ -83,7 +83,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 			close;
 		}
 	}
-	if ((Class == Job_Genetic || Class == Job_Genetic_T || Class == Job_Baby_Genetic) && questprogress(4154)) {
+	if (BaseThird == Job_Genetic && questprogress(4154)) {
 		if (questprogress(4155) || questprogress(4160)) {
 			mes "[Viorel]";
 			mes "Weather's great.";
@@ -139,7 +139,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 		mes "[Viorel]";
 		mes "If you're interested in ^FF4800Homunculus^000000, become an ^005DFFAlchemist^000000 or a ^005DFFCreator^000000.";
 		close;
- 	} else if (BaseJob == Job_Alchemist && Class < Job_Genetic) {
+ 	} else if (BaseJob == Job_Alchemist && BaseThird != Job_Genetic) {
 		mes "[Viorel]";
 		mes "I've spent lots of time and energy on Homunculus.";
 		mes "If you feel like you're at a dead end, come back next time with a ^FF4800Homunculus^000000.";
@@ -147,7 +147,7 @@ job3_gen01,12,44,3	script	Viorel#job3_gen01	4_M_ALCHE_E,{
 		mes "[Viorel]";
 		mes "Oh. Of course you need to have the suitable potentials. You could probably prove yourself once you become a ^FF4800Genetic^000000.";
 		close;
-	} else if (Class == Job_Genetic || Class == Job_Genetic_T || Class == Job_Baby_Genetic) {
+	} else if (BaseThird == Job_Genetic) {
 		if (gethominfo(6) >= 99 && (gethominfo(1) >= 6009 && gethominfo(1) <= 6016)) { // Level 99+ evolved Homunculus
 			mes "[Viorel]";
 			mes "Oh, great~!";
