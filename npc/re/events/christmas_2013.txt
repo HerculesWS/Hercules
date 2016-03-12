@@ -1745,5 +1745,5 @@ prt_fild08d,0,0,0,0	monster	Gift Stealing Raccoon	2380,5,5000,0,0
 prt_fild08d,0,0,0,0	monster	Sock Stealing Raccoon	2379,5,5000,0,0
 gl_chyard_,0,0,0,0	monster	Gift Stealing Raccoon	2380,5,5000,0,0
 gl_chyard_,0,0,0,0	monster	Sock Stealing Raccoon	2379,5,5000,0,0
-gl_cas02_,0,0,0,0	monster	Gift Stealing Raccoon	2380,5,5000,0,0m
+gl_cas02_,0,0,0,0	monster	Gift Stealing Raccoon	2380,5,5000,0,0
 gl_cas02_,0,0,0,0	monster	Sock Stealing Raccoon	2379,5,5000,0,0
