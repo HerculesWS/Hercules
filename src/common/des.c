@@ -40,9 +40,9 @@ static const uint8_t mask[8] = {
 
 
 /// Initial permutation (IP).
-static void IP(BIT64* src)
+static void IP(struct BIT64 *src)
 {
-	BIT64 tmp = {{0}};
+	struct BIT64 tmp = {{0}};
 
 	static const uint8_t ip_table[64] = {
 		58, 50, 42, 34, 26, 18, 10,  2,
@@ -68,9 +68,9 @@ static void IP(BIT64* src)
 
 
 /// Final permutation (IP^-1).
-static void FP(BIT64* src)
+static void FP(struct BIT64 *src)
 {
-	BIT64 tmp = {{0}};
+	struct BIT64 tmp = {{0}};
 
 	static const uint8_t fp_table[64] = {
 		40,  8, 48, 16, 56, 24, 64, 32,
@@ -97,9 +97,9 @@ static void FP(BIT64* src)
 
 /// Expansion (E).
 /// Expands upper four 8-bits (32b) into eight 6-bits (48b).
-static void E(BIT64* src)
+static void E(struct BIT64 *src)
 {
-	BIT64 tmp = {{0}};
+	struct BIT64 tmp = {{0}};
 
 #if 0
 	// original
@@ -137,9 +137,9 @@ static void E(BIT64* src)
 
 
 /// Transposition (P-BOX).
-static void TP(BIT64* src)
+static void TP(struct BIT64 *src)
 {
-	BIT64 tmp = {{0}};
+	struct BIT64 tmp = {{0}};
 
 	static const uint8_t tp_table[32] = {
 		16,  7, 20, 21,
@@ -166,9 +166,9 @@ static void TP(BIT64* src)
 
 /// Substitution boxes (S-boxes).
 /// NOTE: This implementation was optimized to process two nibbles in one step (twice as fast).
-static void SBOX(BIT64* src)
+static void SBOX(struct BIT64 *src)
 {
-	BIT64 tmp = {{0}};
+	struct BIT64 tmp = {{0}};
 
 	static const uint8_t s_table[4][64] = {
 		  {
@@ -207,9 +207,9 @@ static void SBOX(BIT64* src)
 
 /// DES round function.
 /// XORs src[0..3] with TP(SBOX(E(src[4..7]))).
-static void RoundFunction(BIT64* src)
+static void RoundFunction(struct BIT64 *src)
 {
-	BIT64 tmp = *src;
+	struct BIT64 tmp = *src;
 	E(&tmp);
 	SBOX(&tmp);
 	TP(&tmp);
@@ -221,7 +221,7 @@ static void RoundFunction(BIT64* src)
 }
 
 
-void des_decrypt_block(BIT64* block)
+void des_decrypt_block(struct BIT64 *block)
 {
 	IP(block);
 	RoundFunction(block);
@@ -231,7 +231,7 @@ void des_decrypt_block(BIT64* block)
 
 void des_decrypt(unsigned char* data, size_t size)
 {
-	BIT64* p = (BIT64*)data;
+	struct BIT64 *p = (struct BIT64 *)data;
 	size_t i;
 
 	for( i = 0; i*8 < size; i += 8 )

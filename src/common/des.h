@@ -23,12 +23,18 @@
 
 #include "common/hercules.h"
 
+/* Struct definitions */
+
 /// One 64-bit block.
-typedef struct BIT64 { uint8_t b[8]; } BIT64;
+struct BIT64 {
+	uint8_t b[8];
+};
+
+/* Interface */
 
 struct des_interface {
-	void (*decrypt_block) (BIT64* block);
-	void (*decrypt) (unsigned char* data, size_t size);
+	void (*decrypt_block) (struct BIT64 *block);
+	void (*decrypt) (unsigned char *data, size_t size);
 };
 
 #ifdef HERCULES_CORE
