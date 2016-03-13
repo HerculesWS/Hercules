@@ -15199,6 +15199,270 @@ void HP_md5_salt(int len, char *output) {
 	}
 	return;
 }
+/* mutex_interface */
+struct mutex_data* HP_mutex_create(void) {
+	int hIndex = 0;
+	struct mutex_data* retVal___ = NULL;
+	if( HPMHooks.count.HP_mutex_create_pre ) {
+		struct mutex_data* (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_create_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_mutex_create_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mutex.create();
+	}
+	if( HPMHooks.count.HP_mutex_create_post ) {
+		struct mutex_data* (*postHookFunc) (struct mutex_data* retVal___);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_create_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_mutex_create_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+void HP_mutex_destroy(struct mutex_data *m) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_mutex_destroy_pre ) {
+		void (*preHookFunc) (struct mutex_data **m);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_destroy_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_mutex_destroy_pre[hIndex].func;
+			preHookFunc(&m);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mutex.destroy(m);
+	}
+	if( HPMHooks.count.HP_mutex_destroy_post ) {
+		void (*postHookFunc) (struct mutex_data *m);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_destroy_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_mutex_destroy_post[hIndex].func;
+			postHookFunc(m);
+		}
+	}
+	return;
+}
+void HP_mutex_lock(struct mutex_data *m) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_mutex_lock_pre ) {
+		void (*preHookFunc) (struct mutex_data **m);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_lock_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_mutex_lock_pre[hIndex].func;
+			preHookFunc(&m);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mutex.lock(m);
+	}
+	if( HPMHooks.count.HP_mutex_lock_post ) {
+		void (*postHookFunc) (struct mutex_data *m);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_lock_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_mutex_lock_post[hIndex].func;
+			postHookFunc(m);
+		}
+	}
+	return;
+}
+bool HP_mutex_trylock(struct mutex_data *m) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_mutex_trylock_pre ) {
+		bool (*preHookFunc) (struct mutex_data **m);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_trylock_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_mutex_trylock_pre[hIndex].func;
+			retVal___ = preHookFunc(&m);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mutex.trylock(m);
+	}
+	if( HPMHooks.count.HP_mutex_trylock_post ) {
+		bool (*postHookFunc) (bool retVal___, struct mutex_data *m);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_trylock_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_mutex_trylock_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, m);
+		}
+	}
+	return retVal___;
+}
+void HP_mutex_unlock(struct mutex_data *m) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_mutex_unlock_pre ) {
+		void (*preHookFunc) (struct mutex_data **m);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_unlock_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_mutex_unlock_pre[hIndex].func;
+			preHookFunc(&m);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mutex.unlock(m);
+	}
+	if( HPMHooks.count.HP_mutex_unlock_post ) {
+		void (*postHookFunc) (struct mutex_data *m);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_unlock_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_mutex_unlock_post[hIndex].func;
+			postHookFunc(m);
+		}
+	}
+	return;
+}
+struct cond_data* HP_mutex_cond_create(void) {
+	int hIndex = 0;
+	struct cond_data* retVal___ = NULL;
+	if( HPMHooks.count.HP_mutex_cond_create_pre ) {
+		struct cond_data* (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_cond_create_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_mutex_cond_create_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.mutex.cond_create();
+	}
+	if( HPMHooks.count.HP_mutex_cond_create_post ) {
+		struct cond_data* (*postHookFunc) (struct cond_data* retVal___);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_cond_create_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_mutex_cond_create_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+void HP_mutex_cond_destroy(struct cond_data *c) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_mutex_cond_destroy_pre ) {
+		void (*preHookFunc) (struct cond_data **c);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_cond_destroy_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_mutex_cond_destroy_pre[hIndex].func;
+			preHookFunc(&c);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mutex.cond_destroy(c);
+	}
+	if( HPMHooks.count.HP_mutex_cond_destroy_post ) {
+		void (*postHookFunc) (struct cond_data *c);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_cond_destroy_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_mutex_cond_destroy_post[hIndex].func;
+			postHookFunc(c);
+		}
+	}
+	return;
+}
+void HP_mutex_cond_wait(struct cond_data *c, struct mutex_data *m, sysint timeout_ticks) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_mutex_cond_wait_pre ) {
+		void (*preHookFunc) (struct cond_data **c, struct mutex_data **m, sysint *timeout_ticks);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_cond_wait_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_mutex_cond_wait_pre[hIndex].func;
+			preHookFunc(&c, &m, &timeout_ticks);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mutex.cond_wait(c, m, timeout_ticks);
+	}
+	if( HPMHooks.count.HP_mutex_cond_wait_post ) {
+		void (*postHookFunc) (struct cond_data *c, struct mutex_data *m, sysint timeout_ticks);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_cond_wait_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_mutex_cond_wait_post[hIndex].func;
+			postHookFunc(c, m, timeout_ticks);
+		}
+	}
+	return;
+}
+void HP_mutex_cond_signal(struct cond_data *c) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_mutex_cond_signal_pre ) {
+		void (*preHookFunc) (struct cond_data **c);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_cond_signal_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_mutex_cond_signal_pre[hIndex].func;
+			preHookFunc(&c);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mutex.cond_signal(c);
+	}
+	if( HPMHooks.count.HP_mutex_cond_signal_post ) {
+		void (*postHookFunc) (struct cond_data *c);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_cond_signal_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_mutex_cond_signal_post[hIndex].func;
+			postHookFunc(c);
+		}
+	}
+	return;
+}
+void HP_mutex_cond_broadcast(struct cond_data *c) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_mutex_cond_broadcast_pre ) {
+		void (*preHookFunc) (struct cond_data **c);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_cond_broadcast_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_mutex_cond_broadcast_pre[hIndex].func;
+			preHookFunc(&c);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.mutex.cond_broadcast(c);
+	}
+	if( HPMHooks.count.HP_mutex_cond_broadcast_post ) {
+		void (*postHookFunc) (struct cond_data *c);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_mutex_cond_broadcast_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_mutex_cond_broadcast_post[hIndex].func;
+			postHookFunc(c);
+		}
+	}
+	return;
+}
 /* nullpo_interface */
 void HP_nullpo_assert_report(const char *file, int line, const char *func, const char *targetname, const char *title) {
 	int hIndex = 0;

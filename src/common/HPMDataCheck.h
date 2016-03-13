@@ -216,6 +216,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_MMO_H
 	#endif // COMMON_MMO_H
+	#ifdef COMMON_MUTEX_H
+		{ "mutex_interface", sizeof(struct mutex_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_MUTEX_H
+	#endif // COMMON_MUTEX_H
 	#ifdef COMMON_NULLPO_H
 		{ "nullpo_interface", sizeof(struct nullpo_interface), SERVER_TYPE_ALL },
 	#else

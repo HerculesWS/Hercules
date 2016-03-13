@@ -50,6 +50,7 @@ memcpy(&HPMHooks.source.iMalloc, iMalloc, sizeof(struct malloc_interface));
 memcpy(&HPMHooks.source.mapif, mapif, sizeof(struct mapif_interface));
 memcpy(&HPMHooks.source.mapindex, mapindex, sizeof(struct mapindex_interface));
 memcpy(&HPMHooks.source.md5, md5, sizeof(struct md5_interface));
+memcpy(&HPMHooks.source.mutex, mutex, sizeof(struct mutex_interface));
 memcpy(&HPMHooks.source.nullpo, nullpo, sizeof(struct nullpo_interface));
 memcpy(&HPMHooks.source.pincode, pincode, sizeof(struct pincode_interface));
 memcpy(&HPMHooks.source.showmsg, showmsg, sizeof(struct showmsg_interface));

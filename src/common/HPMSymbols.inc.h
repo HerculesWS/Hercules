@@ -179,6 +179,9 @@ struct mercenary_interface *mercenary;
 #ifdef MAP_MOB_H /* mob */
 struct mob_interface *mob;
 #endif // MAP_MOB_H
+#ifdef COMMON_MUTEX_H /* mutex */
+struct mutex_interface *mutex;
+#endif // COMMON_MUTEX_H
 #ifdef MAP_NPC_H /* npc_chat */
 struct npc_chat_interface *npc_chat;
 #endif // MAP_NPC_H
@@ -417,6 +420,9 @@ if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("mercenary", mercenary)) retu
 #ifdef MAP_MOB_H /* mob */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("mob", mob)) return "mob";
 #endif // MAP_MOB_H
+#ifdef COMMON_MUTEX_H /* mutex */
+if ((server_type&(SERVER_TYPE_ALL)) && !HPM_SYMBOL("mutex", mutex)) return "mutex";
+#endif // COMMON_MUTEX_H
 #ifdef MAP_NPC_H /* npc_chat */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("npc_chat", npc_chat)) return "npc_chat";
 #endif // MAP_NPC_H

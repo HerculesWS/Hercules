@@ -230,6 +230,17 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(md5->string, HP_md5_string) },
 	{ HP_POP(md5->binary, HP_md5_binary) },
 	{ HP_POP(md5->salt, HP_md5_salt) },
+/* mutex_interface */
+	{ HP_POP(mutex->create, HP_mutex_create) },
+	{ HP_POP(mutex->destroy, HP_mutex_destroy) },
+	{ HP_POP(mutex->lock, HP_mutex_lock) },
+	{ HP_POP(mutex->trylock, HP_mutex_trylock) },
+	{ HP_POP(mutex->unlock, HP_mutex_unlock) },
+	{ HP_POP(mutex->cond_create, HP_mutex_cond_create) },
+	{ HP_POP(mutex->cond_destroy, HP_mutex_cond_destroy) },
+	{ HP_POP(mutex->cond_wait, HP_mutex_cond_wait) },
+	{ HP_POP(mutex->cond_signal, HP_mutex_cond_signal) },
+	{ HP_POP(mutex->cond_broadcast, HP_mutex_cond_broadcast) },
 /* nullpo_interface */
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },
 /* showmsg_interface */

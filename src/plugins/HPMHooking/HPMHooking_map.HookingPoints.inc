@@ -1835,6 +1835,17 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mob->load, HP_mob_load) },
 	{ HP_POP(mob->clear_spawninfo, HP_mob_clear_spawninfo) },
 	{ HP_POP(mob->destroy_mob_db, HP_mob_destroy_mob_db) },
+/* mutex_interface */
+	{ HP_POP(mutex->create, HP_mutex_create) },
+	{ HP_POP(mutex->destroy, HP_mutex_destroy) },
+	{ HP_POP(mutex->lock, HP_mutex_lock) },
+	{ HP_POP(mutex->trylock, HP_mutex_trylock) },
+	{ HP_POP(mutex->unlock, HP_mutex_unlock) },
+	{ HP_POP(mutex->cond_create, HP_mutex_cond_create) },
+	{ HP_POP(mutex->cond_destroy, HP_mutex_cond_destroy) },
+	{ HP_POP(mutex->cond_wait, HP_mutex_cond_wait) },
+	{ HP_POP(mutex->cond_signal, HP_mutex_cond_signal) },
+	{ HP_POP(mutex->cond_broadcast, HP_mutex_cond_broadcast) },
 /* npc_chat_interface */
 	{ HP_POP(npc_chat->sub, HP_npc_chat_sub) },
 	{ HP_POP(npc_chat->finalize, HP_npc_chat_finalize) },

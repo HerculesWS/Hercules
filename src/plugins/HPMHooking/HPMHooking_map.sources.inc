@@ -59,6 +59,7 @@ memcpy(&HPMHooks.source.mapreg, mapreg, sizeof(struct mapreg_interface));
 memcpy(&HPMHooks.source.md5, md5, sizeof(struct md5_interface));
 memcpy(&HPMHooks.source.mercenary, mercenary, sizeof(struct mercenary_interface));
 memcpy(&HPMHooks.source.mob, mob, sizeof(struct mob_interface));
+memcpy(&HPMHooks.source.mutex, mutex, sizeof(struct mutex_interface));
 memcpy(&HPMHooks.source.npc_chat, npc_chat, sizeof(struct npc_chat_interface));
 memcpy(&HPMHooks.source.npc, npc, sizeof(struct npc_interface));
 memcpy(&HPMHooks.source.nullpo, nullpo, sizeof(struct nullpo_interface));

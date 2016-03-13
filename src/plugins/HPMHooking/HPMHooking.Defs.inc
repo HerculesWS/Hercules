@@ -4701,6 +4701,28 @@ typedef void (*HPMHOOK_post_mob_clear_spawninfo) (void);
 typedef void (*HPMHOOK_pre_mob_destroy_mob_db) (int *index);
 typedef void (*HPMHOOK_post_mob_destroy_mob_db) (int index);
 #endif // MAP_MOB_H
+#ifdef COMMON_MUTEX_H /* mutex */
+typedef struct mutex_data* (*HPMHOOK_pre_mutex_create) (void);
+typedef struct mutex_data* (*HPMHOOK_post_mutex_create) (struct mutex_data* retVal___);
+typedef void (*HPMHOOK_pre_mutex_destroy) (struct mutex_data **m);
+typedef void (*HPMHOOK_post_mutex_destroy) (struct mutex_data *m);
+typedef void (*HPMHOOK_pre_mutex_lock) (struct mutex_data **m);
+typedef void (*HPMHOOK_post_mutex_lock) (struct mutex_data *m);
+typedef bool (*HPMHOOK_pre_mutex_trylock) (struct mutex_data **m);
+typedef bool (*HPMHOOK_post_mutex_trylock) (bool retVal___, struct mutex_data *m);
+typedef void (*HPMHOOK_pre_mutex_unlock) (struct mutex_data **m);
+typedef void (*HPMHOOK_post_mutex_unlock) (struct mutex_data *m);
+typedef struct cond_data* (*HPMHOOK_pre_mutex_cond_create) (void);
+typedef struct cond_data* (*HPMHOOK_post_mutex_cond_create) (struct cond_data* retVal___);
+typedef void (*HPMHOOK_pre_mutex_cond_destroy) (struct cond_data **c);
+typedef void (*HPMHOOK_post_mutex_cond_destroy) (struct cond_data *c);
+typedef void (*HPMHOOK_pre_mutex_cond_wait) (struct cond_data **c, struct mutex_data **m, sysint *timeout_ticks);
+typedef void (*HPMHOOK_post_mutex_cond_wait) (struct cond_data *c, struct mutex_data *m, sysint timeout_ticks);
+typedef void (*HPMHOOK_pre_mutex_cond_signal) (struct cond_data **c);
+typedef void (*HPMHOOK_post_mutex_cond_signal) (struct cond_data *c);
+typedef void (*HPMHOOK_pre_mutex_cond_broadcast) (struct cond_data **c);
+typedef void (*HPMHOOK_post_mutex_cond_broadcast) (struct cond_data *c);
+#endif // COMMON_MUTEX_H
 #ifdef MAP_NPC_H /* npc_chat */
 typedef int (*HPMHOOK_pre_npc_chat_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_npc_chat_sub) (int retVal___, struct block_list *bl, va_list ap);
