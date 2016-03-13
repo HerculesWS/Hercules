@@ -34,6 +34,10 @@
 #include <sys/time.h>
 #endif
 
+/** @file
+ * Implementation of the mutex interface.
+ */
+
 struct mutex_interface mutex_s;
 struct mutex_interface *mutex;
 
@@ -57,13 +61,10 @@ struct cond_data {
 #endif
 };
 
-////////////////////
-// Mutex
-//
-// Implementation:
-//
+/* Mutex */
 
-struct mutex_data *ramutex_create(void)
+/// @copydoc mutex_interface::create()
+struct mutex_data *mutex_create(void)
 {
 	struct mutex_data *m = aMalloc(sizeof(struct mutex_data));
 	if (m == NULL) {
@@ -78,9 +79,10 @@ struct mutex_data *ramutex_create(void)
 #endif
 
 	return m;
-}//end: ramutex_create()
+}
 
-void ramutex_destroy(struct mutex_data *m)
+/// @copydoc mutex_interface::destroy()
+void mutex_destroy(struct mutex_data *m)
 {
 #ifdef WIN32
 	DeleteCriticalSection(&m->hMutex);
@@ -89,18 +91,20 @@ void ramutex_destroy(struct mutex_data *m)
 #endif
 
 	aFree(m);
-}//end: ramutex_destroy()
+}
 
-void ramutex_lock(struct mutex_data *m)
+/// @copydoc mutex_interface::lock()
+void mutex_lock(struct mutex_data *m)
 {
 #ifdef WIN32
 	EnterCriticalSection(&m->hMutex);
 #else
 	pthread_mutex_lock(&m->hMutex);
 #endif
-}//end: ramutex_lock
+}
 
-bool ramutex_trylock(struct mutex_data *m)
+/// @copydoc mutex_interface::trylock()
+bool mutex_trylock(struct mutex_data *m)
 {
 #ifdef WIN32
 	if (TryEnterCriticalSection(&m->hMutex) != FALSE)
@@ -110,24 +114,22 @@ bool ramutex_trylock(struct mutex_data *m)
 		return true;
 #endif
 	return false;
-}//end: ramutex_trylock()
+}
 
-void ramutex_unlock(struct mutex_data *m)
+/// @copydoc mutex_interface::unlock()
+void mutex_unlock(struct mutex_data *m)
 {
 #ifdef WIN32
 	LeaveCriticalSection(&m->hMutex);
 #else
 	pthread_mutex_unlock(&m->hMutex);
 #endif
-}//end: ramutex_unlock()
+}
 
-///////////////
-// Condition Variables
-//
-// Implementation:
-//
+/* Conditional variable */
 
-struct cond_data *racond_create(void)
+/// @copydoc mutex_interface::cond_create()
+struct cond_data *cond_create(void)
 {
 	struct cond_data *c = aMalloc(sizeof(struct cond_data));
 	if (c == NULL) {
@@ -145,9 +147,10 @@ struct cond_data *racond_create(void)
 #endif
 
 	return c;
-}//end: racond_create()
+}
 
-void racond_destroy(struct cond_data *c)
+/// @copydoc mutex_interface::cond_destroy()
+void cond_destroy(struct cond_data *c)
 {
 #ifdef WIN32
 	CloseHandle(c->events[EVENT_COND_SIGNAL]);
@@ -158,9 +161,10 @@ void racond_destroy(struct cond_data *c)
 #endif
 
 	aFree(c);
-}//end: racond_destroy()
+}
 
-void racond_wait(struct cond_data *c, struct mutex_data *m, sysint timeout_ticks)
+/// @copydoc mutex_interface::cond_wait()
+void cond_wait(struct cond_data *c, struct mutex_data *m, sysint timeout_ticks)
 {
 #ifdef WIN32
 	register DWORD ms;
@@ -209,9 +213,10 @@ void racond_wait(struct cond_data *c, struct mutex_data *m, sysint timeout_ticks
 		pthread_cond_timedwait( &c->hCond,  &m->hMutex,  &wtime);
 	}
 #endif
-}//end: racond_wait()
+}
 
-void racond_signal(struct cond_data *c)
+/// @copydoc mutex_interface::cond_signal()
+void cond_signal(struct cond_data *c)
 {
 #ifdef WIN32
 #	if 0
@@ -223,13 +228,14 @@ void racond_signal(struct cond_data *c)
 
 	if(has_waiters == true)
 #	endif // 0
-		SetEvent( c->events[ EVENT_COND_SIGNAL ] );
+		SetEvent(c->events[EVENT_COND_SIGNAL]);
 #else
 	pthread_cond_signal(&c->hCond);
 #endif
-}//end: racond_signal()
+}
 
-void racond_broadcast(struct cond_data *c)
+/// @copydoc mutex_interface::cond_broadcast()
+void cond_broadcast(struct cond_data *c)
 {
 #ifdef WIN32
 #	if 0
@@ -241,24 +247,27 @@ void racond_broadcast(struct cond_data *c)
 
 	if(has_waiters == true)
 #	endif // 0
-		SetEvent( c->events[ EVENT_COND_BROADCAST ] );
+		SetEvent(c->events[EVENT_COND_BROADCAST]);
 #else
 	pthread_cond_broadcast(&c->hCond);
 #endif
-}//end: racond_broadcast()
+}
 
+/**
+ * Interface base initialization.
+ */
 void mutex_defaults(void)
 {
 	mutex = &mutex_s;
-	mutex->create = ramutex_create;
-	mutex->destroy = ramutex_destroy;
-	mutex->lock = ramutex_lock;
-	mutex->trylock = ramutex_trylock;
-	mutex->unlock = ramutex_unlock;
+	mutex->create = mutex_create;
+	mutex->destroy = mutex_destroy;
+	mutex->lock = mutex_lock;
+	mutex->trylock = mutex_trylock;
+	mutex->unlock = mutex_unlock;
 
-	mutex->cond_create = racond_create;
-	mutex->cond_destroy = racond_destroy;
-	mutex->cond_wait = racond_wait;
-	mutex->cond_signal = racond_signal;
-	mutex->cond_broadcast = racond_broadcast;
+	mutex->cond_create = cond_create;
+	mutex->cond_destroy = cond_destroy;
+	mutex->cond_wait = cond_wait;
+	mutex->cond_signal = cond_signal;
+	mutex->cond_broadcast = cond_broadcast;
 }

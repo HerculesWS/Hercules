@@ -23,21 +23,28 @@
 
 #include "common/hercules.h"
 
+/** @file
+ * Mutex and conditional variables implementation for Hercules.
+ */
+
 /* Opaque types */
+
 struct mutex_data; ///< Mutex
 struct cond_data;  ///< Conditional variable
 
 /* Interface */
+
+/// The mutex interface.
 struct mutex_interface {
 	/**
-	 * Creates a Mutex
+	 * Creates a mutex.
 	 *
 	 * @return The created mutex.
 	 */
 	struct mutex_data *(*create) (void);
 
 	/**
-	 * Destroys a Mutex.
+	 * Destroys a mutex.
 	 *
 	 * @param m the mutex to destroy.
 	 */
@@ -46,12 +53,16 @@ struct mutex_interface {
 	/**
 	 * Gets a lock.
 	 *
+	 * This function blocks until the lock can be acquired.
+	 *
 	 * @param m The mutex to lock.
 	 */
 	void (*lock) (struct mutex_data *m);
 
 	/**
 	 * Tries to get a lock.
+	 *
+	 * This function returns immediately.
 	 *
 	 * @param m The mutex to try to lock.
 	 * @return success status.
@@ -67,18 +78,17 @@ struct mutex_interface {
 	 */
 	void (*unlock) (struct mutex_data *m);
 
-
 	/**
-	 * Creates a Condition variable.
+	 * Creates a conditional variable.
 	 *
-	 * @return the created condition variable.
+	 * @return the created conditional variable.
 	 */
 	struct cond_data *(*cond_create) (void);
 
 	/**
-	 * Destroys a Condition variable.
+	 * Destroys a conditional variable.
 	 *
-	 * @param c the condition variable to destroy.
+	 * @param c the conditional variable to destroy.
 	 */
 	void (*cond_destroy) (struct cond_data *c);
 
@@ -116,6 +126,6 @@ struct mutex_interface {
 void mutex_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct mutex_interface *mutex;
+HPShared struct mutex_interface *mutex; ///< Pointer to the mutex interface.
 
 #endif /* COMMON_MUTEX_H */
