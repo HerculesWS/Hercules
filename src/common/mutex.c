@@ -37,7 +37,7 @@
 struct mutex_interface mutex_s;
 struct mutex_interface *mutex;
 
-struct ramutex{
+struct mutex_data {
 #ifdef WIN32
 	CRITICAL_SECTION hMutex;
 #else
@@ -45,15 +45,13 @@ struct ramutex{
 #endif
 };
 
-struct racond{
+struct cond_data {
 #ifdef WIN32
 	HANDLE events[2];
 	ra_align(8) volatile LONG nWaiters;
 	CRITICAL_SECTION waiters_lock;
-
 #define EVENT_COND_SIGNAL 0
 #define EVENT_COND_BROADCAST 1
-
 #else
 	pthread_cond_t hCond;
 #endif
@@ -65,12 +63,11 @@ struct racond{
 // Implementation:
 //
 
-ramutex *ramutex_create(void) {
-	struct ramutex *m;
-
-	m = (struct ramutex*)aMalloc( sizeof(struct ramutex) );
+struct mutex_data *ramutex_create(void)
+{
+	struct mutex_data *m = aMalloc(sizeof(struct mutex_data));
 	if (m == NULL) {
-		ShowFatalError("ramutex_create: OOM while allocating %"PRIuS" bytes.\n", sizeof(struct ramutex));
+		ShowFatalError("ramutex_create: OOM while allocating %"PRIuS" bytes.\n", sizeof(struct mutex_data));
 		return NULL;
 	}
 
@@ -83,8 +80,8 @@ ramutex *ramutex_create(void) {
 	return m;
 }//end: ramutex_create()
 
-void ramutex_destroy(ramutex *m) {
-
+void ramutex_destroy(struct mutex_data *m)
+{
 #ifdef WIN32
 	DeleteCriticalSection(&m->hMutex);
 #else
@@ -92,11 +89,10 @@ void ramutex_destroy(ramutex *m) {
 #endif
 
 	aFree(m);
-
 }//end: ramutex_destroy()
 
-void ramutex_lock(ramutex *m) {
-
+void ramutex_lock(struct mutex_data *m)
+{
 #ifdef WIN32
 	EnterCriticalSection(&m->hMutex);
 #else
@@ -104,27 +100,25 @@ void ramutex_lock(ramutex *m) {
 #endif
 }//end: ramutex_lock
 
-bool ramutex_trylock(ramutex *m) {
+bool ramutex_trylock(struct mutex_data *m)
+{
 #ifdef WIN32
-	if(TryEnterCriticalSection(&m->hMutex) != FALSE)
+	if (TryEnterCriticalSection(&m->hMutex) != FALSE)
 		return true;
-
-	return false;
 #else
-	if(pthread_mutex_trylock(&m->hMutex) == 0)
+	if (pthread_mutex_trylock(&m->hMutex) == 0)
 		return true;
-
-	return false;
 #endif
+	return false;
 }//end: ramutex_trylock()
 
-void ramutex_unlock(ramutex *m) {
+void ramutex_unlock(struct mutex_data *m)
+{
 #ifdef WIN32
 	LeaveCriticalSection(&m->hMutex);
 #else
 	pthread_mutex_unlock(&m->hMutex);
 #endif
-
 }//end: ramutex_unlock()
 
 ///////////////
@@ -133,12 +127,11 @@ void ramutex_unlock(ramutex *m) {
 // Implementation:
 //
 
-racond *racond_create(void) {
-	struct racond *c;
-
-	c = (struct racond*)aMalloc( sizeof(struct racond) );
+struct cond_data *racond_create(void)
+{
+	struct cond_data *c = aMalloc(sizeof(struct cond_data));
 	if (c == NULL) {
-		ShowFatalError("racond_create: OOM while allocating %"PRIuS" bytes\n", sizeof(struct racond));
+		ShowFatalError("racond_create: OOM while allocating %"PRIuS" bytes\n", sizeof(struct cond_data));
 		return NULL;
 	}
 
@@ -154,11 +147,12 @@ racond *racond_create(void) {
 	return c;
 }//end: racond_create()
 
-void racond_destroy(racond *c) {
+void racond_destroy(struct cond_data *c)
+{
 #ifdef WIN32
-	CloseHandle( c->events[ EVENT_COND_SIGNAL ] );
-	CloseHandle( c->events[ EVENT_COND_BROADCAST ] );
-	DeleteCriticalSection( &c->waiters_lock );
+	CloseHandle(c->events[EVENT_COND_SIGNAL]);
+	CloseHandle(c->events[EVENT_COND_BROADCAST]);
+	DeleteCriticalSection(&c->waiters_lock);
 #else
 	pthread_cond_destroy(&c->hCond);
 #endif
@@ -166,7 +160,8 @@ void racond_destroy(racond *c) {
 	aFree(c);
 }//end: racond_destroy()
 
-void racond_wait(racond *c, ramutex *m, sysint timeout_ticks) {
+void racond_wait(struct cond_data *c, struct mutex_data *m, sysint timeout_ticks)
+{
 #ifdef WIN32
 	register DWORD ms;
 	int result;
@@ -176,7 +171,7 @@ void racond_wait(racond *c, ramutex *m, sysint timeout_ticks) {
 	c->nWaiters++;
 	LeaveCriticalSection(&c->waiters_lock);
 
-	if(timeout_ticks < 0)
+	if (timeout_ticks < 0)
 		ms = INFINITE;
 	else
 		ms = (timeout_ticks > MAXDWORD) ? (MAXDWORD - 1) : (DWORD)timeout_ticks;
@@ -190,21 +185,21 @@ void racond_wait(racond *c, ramutex *m, sysint timeout_ticks) {
 
 	EnterCriticalSection(&c->waiters_lock);
 	c->nWaiters--;
-	if( (result == WAIT_OBJECT_0 + EVENT_COND_BROADCAST) && (c->nWaiters == 0) )
+	if ((result == WAIT_OBJECT_0 + EVENT_COND_BROADCAST) && (c->nWaiters == 0))
 		is_last = true; // Broadcast called!
 	LeaveCriticalSection(&c->waiters_lock);
 
 	// we are the last waiter that has to be notified, or to stop waiting
 	// so we have to do a manual reset
-	if(is_last == true)
+	if (is_last == true)
 		ResetEvent( c->events[EVENT_COND_BROADCAST] );
 
 	mutex->lock(m);
 
 #else
-	if(timeout_ticks < 0){
-		pthread_cond_wait( &c->hCond,  &m->hMutex );
-	}else{
+	if (timeout_ticks < 0) {
+		pthread_cond_wait(&c->hCond,  &m->hMutex);
+	} else {
 		struct timespec wtime;
 		int64 exact_timeout = timer->gettick() + timeout_ticks;
 
@@ -213,11 +208,11 @@ void racond_wait(racond *c, ramutex *m, sysint timeout_ticks) {
 
 		pthread_cond_timedwait( &c->hCond,  &m->hMutex,  &wtime);
 	}
-
 #endif
 }//end: racond_wait()
 
-void racond_signal(racond *c) {
+void racond_signal(struct cond_data *c)
+{
 #ifdef WIN32
 #	if 0
 	bool has_waiters = false;
@@ -234,7 +229,8 @@ void racond_signal(racond *c) {
 #endif
 }//end: racond_signal()
 
-void racond_broadcast(racond *c) {
+void racond_broadcast(struct cond_data *c)
+{
 #ifdef WIN32
 #	if 0
 	bool has_waiters = false;

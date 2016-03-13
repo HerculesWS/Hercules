@@ -23,30 +23,32 @@
 
 #include "common/hercules.h"
 
-typedef struct ramutex ramutex; // Mutex
-typedef struct racond racond; // Condition Var
+/* Opaque types */
+struct mutex_data; ///< Mutex
+struct cond_data;  ///< Conditional variable
 
+/* Interface */
 struct mutex_interface {
 	/**
 	 * Creates a Mutex
 	 *
 	 * @return The created mutex.
 	 */
-	ramutex *(*create) (void);
+	struct mutex_data *(*create) (void);
 
 	/**
 	 * Destroys a Mutex.
 	 *
 	 * @param m the mutex to destroy.
 	 */
-	void (*destroy) (ramutex *m);
+	void (*destroy) (struct mutex_data *m);
 
 	/**
 	 * Gets a lock.
 	 *
 	 * @param m The mutex to lock.
 	 */
-	void (*lock) (ramutex *m);
+	void (*lock) (struct mutex_data *m);
 
 	/**
 	 * Tries to get a lock.
@@ -56,14 +58,14 @@ struct mutex_interface {
 	 * @retval true if the lock was acquired.
 	 * @retval false if the mutex couldn't be locked.
 	 */
-	bool (*trylock) (ramutex *m);
+	bool (*trylock) (struct mutex_data *m);
 
 	/**
 	 * Unlocks a mutex.
 	 *
 	 * @param m The mutex to unlock.
 	 */
-	void (*unlock) (ramutex *m);
+	void (*unlock) (struct mutex_data *m);
 
 
 	/**
@@ -71,14 +73,14 @@ struct mutex_interface {
 	 *
 	 * @return the created condition variable.
 	 */
-	racond *(*cond_create) (void);
+	struct cond_data *(*cond_create) (void);
 
 	/**
 	 * Destroys a Condition variable.
 	 *
 	 * @param c the condition variable to destroy.
 	 */
-	void (*cond_destroy) (racond *c);
+	void (*cond_destroy) (struct cond_data *c);
 
 	/**
 	 * Waits Until state is signaled.
@@ -87,7 +89,7 @@ struct mutex_interface {
 	 * @param m             The mutex used for synchronization.
 	 * @param timeout_ticks Timeout in ticks (-1 = INFINITE)
 	 */
-	void (*cond_wait) (racond *c, ramutex *m, sysint timeout_ticks);
+	void (*cond_wait) (struct cond_data *c, struct mutex_data *m, sysint timeout_ticks);
 
 	/**
 	 * Sets the given condition var to signaled state.
@@ -97,7 +99,7 @@ struct mutex_interface {
 	 *
 	 * @param c Condition var to set in signaled state.
 	 */
-	void (*cond_signal) (racond *c);
+	void (*cond_signal) (struct cond_data *c);
 
 	/**
 	 * Sets notifies all waiting threads thats signaled.
@@ -107,7 +109,7 @@ struct mutex_interface {
 	 *
 	 * @param c Condition var to set in signaled state.
 	 */
-	void (*cond_broadcast) (racond *c);
+	void (*cond_broadcast) (struct cond_data *c);
 };
 
 #ifdef HERCULES_CORE
