@@ -36,10 +36,14 @@
 #	include <unistd.h>
 #endif
 
+/** @file
+ * Implementation of the random number generator interface.
+ */
+
 struct rnd_interface rnd_s;
 struct rnd_interface *rnd;
 
-/// Initializes the random number generator with an appropriate seed.
+/// @copydoc rnd_interface::init()
 void rnd_init(void)
 {
 	unsigned long seed = (unsigned long)timer->gettick();
@@ -58,61 +62,53 @@ void rnd_init(void)
 	init_genrand(seed);
 
 	// Also initialize the stdlib rng, just in case it's used somewhere.
-	srand((unsigned int)timer->gettick());
+	srand((unsigned int)seed);
 }
 
+/// @copydoc rnd_interface::final()
 void rnd_final(void)
 {
 }
 
-/// Initializes the random number generator.
+/// @copydoc rnd_interface::seed()
 void rnd_seed(uint32 seed)
 {
 	init_genrand(seed);
 }
 
-
-/// Generates a random number in the interval [0, SINT32_MAX]
+/// @copydoc rnd_interface::random()
 int32 rnd_random(void)
 {
 	return (int32)genrand_int31();
 }
 
-
-/// Generates a random number in the interval [0, dice_faces)
-/// NOTE: interval is open ended, so dice_faces is excluded (unless it's 0)
+/// @copydoc rnd_interface::roll()
 uint32 rnd_roll(uint32 dice_faces)
 {
 	return (uint32)(rnd->uniform()*dice_faces);
 }
 
-
-/// Generates a random number in the interval [min, max]
-/// Returns min if range is invalid.
+/// @copydoc rnd_interface::value()
 int32 rnd_value(int32 min, int32 max)
 {
-	if( min >= max )
+	if (min >= max)
 		return min;
 	return min + (int32)(rnd->uniform()*(max-min+1));
 }
 
-
-/// Generates a random number in the interval [0.0, 1.0)
-/// NOTE: interval is open ended, so 1.0 is excluded
+/// @copydoc rnd_interface::uniform()
 double rnd_uniform(void)
 {
 	return ((uint32)genrand_int32())*(1.0/4294967296.0);// divided by 2^32
 }
 
-
-/// Generates a random number in the interval [0.0, 1.0) with 53-bit resolution
-/// NOTE: interval is open ended, so 1.0 is excluded
-/// NOTE: 53 bits is the maximum precision of a double
+/// @copydoc rnd_interface::uniform53()
 double rnd_uniform53(void)
 {
 	return genrand_res53();
 }
 
+/// Interface base initialization.
 void rnd_defaults(void)
 {
 	rnd = &rnd_s;
