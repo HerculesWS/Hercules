@@ -66,7 +66,7 @@ int do_init(int argc, char **argv){
 	int ok;
 
 	ShowStatus("==========\n");
-	ShowStatus("TEST: %u Runs,  (%u Threads)\n", LOOPS, THRC);
+	ShowStatus("TEST: %d Runs,  (%d Threads)\n", LOOPS, THRC);
 	ShowStatus("This can take a while\n");
 	ShowStatus("\n\n");
 
