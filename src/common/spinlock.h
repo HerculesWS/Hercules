@@ -37,31 +37,28 @@
 #endif
 
 #ifdef WIN32
-
-typedef struct __declspec( align(64) ) SPIN_LOCK{
+struct __declspec(align(64)) spin_lock {
 	volatile LONG lock;
 	volatile LONG nest;
 	volatile LONG sync_lock;
-}  SPIN_LOCK;
+};
 #else
-typedef struct SPIN_LOCK{
-		volatile int32 lock;
-		volatile int32 nest; // nesting level.
-
-		volatile int32 sync_lock;
-} __attribute__((aligned(64))) SPIN_LOCK;
+struct spin_lock {
+	volatile int32 lock;
+	volatile int32 nest; // nesting level.
+	volatile int32 sync_lock;
+} __attribute__((aligned(64)));
 #endif
 
-
 #ifdef HERCULES_CORE
-static forceinline void InitializeSpinLock(SPIN_LOCK *lck)
+static forceinline void InitializeSpinLock(struct spin_lock *lck)
 {
 	lck->lock = 0;
 	lck->nest = 0;
 	lck->sync_lock = 0;
 }
 
-static forceinline void FinalizeSpinLock(SPIN_LOCK *lck)
+static forceinline void FinalizeSpinLock(struct spin_lock *lck)
 {
 		return;
 }
@@ -70,7 +67,7 @@ static forceinline void FinalizeSpinLock(SPIN_LOCK *lck)
 #define getsynclock(l) do { if(InterlockedCompareExchange((l), 1, 0) == 0) break; thread->yield(); } while(/*always*/1)
 #define dropsynclock(l) do { InterlockedExchange((l), 0); } while(0)
 
-static forceinline void EnterSpinLock(SPIN_LOCK *lck)
+static forceinline void EnterSpinLock(struct spin_lock *lck)
 {
 	int tid = thread->get_tid();
 
@@ -97,7 +94,7 @@ static forceinline void EnterSpinLock(SPIN_LOCK *lck)
 }
 
 
-static forceinline void LeaveSpinLock(SPIN_LOCK *lck)
+static forceinline void LeaveSpinLock(struct spin_lock *lck)
 {
 	int tid = thread->get_tid();
 

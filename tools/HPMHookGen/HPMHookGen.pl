@@ -242,6 +242,8 @@ sub parse($$) {
 			$rtinit = ' = PACKET_UNKNOWN';
 		} elsif ($x =~ /^(?:enum\s+)?DBOptions$/) { # Known enum DBOptions
 			$rtinit = ' = DB_OPT_BASE';
+		} elsif ($x =~ /^enum\s+thread_priority$/) { # Known enum DBOptions
+			$rtinit = ' = THREADPRIO_NORMAL';
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
 			$rtinit = ' = NULL';
 		} elsif ($x =~ /^(?:struct|union)\s+.*$/) { # Structs and unions

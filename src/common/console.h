@@ -23,12 +23,13 @@
 #include "common/hercules.h"
 #include "common/db.h"
 #include "common/spinlock.h"
-#include "common/thread.h"
 
 /* Forward Declarations */
 struct Sql; // common/sql.h
-struct mutex_data;
 struct cond_data;
+struct mutex_data;
+struct spin_lock;
+struct thread_handle;
 
 /**
  * Queue Max
@@ -72,11 +73,11 @@ struct CParseEntry {
 struct console_input_interface {
 #ifdef CONSOLE_INPUT
 	/* vars */
-	SPIN_LOCK ptlock;/* parse thread lock */
-	rAthread *pthread;/* parse thread */
-	volatile int32 ptstate;/* parse thread state */
-	struct mutex_data *ptmutex; ///< parse thread mutex.
-	struct cond_data *ptcond;   ///< parse thread conditional variable.
+	struct spin_lock *ptlock;      ///< parse thread lock.
+	struct thread_handle *pthread; ///< parse thread.
+	volatile int32 ptstate;        ///< parse thread state.
+	struct mutex_data *ptmutex;    ///< parse thread mutex.
+	struct cond_data *ptcond;      ///< parse thread conditional variable.
 	/* */
 	VECTOR_DECL(struct CParseEntry *) command_list;
 	VECTOR_DECL(struct CParseEntry *) commands;
