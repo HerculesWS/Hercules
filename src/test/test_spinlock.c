@@ -79,7 +79,7 @@ int do_init(int argc, char **argv)
 		InitializeSpinLock(&lock);
 
 		for(i =0; i < THRC; i++){
-			t[i] = thread->createEx(worker, NULL, 1024*512, THREADPRIO_NORMAL);
+			t[i] = thread->create_opt(worker, NULL, 1024*512, THREADPRIO_NORMAL);
 		}
 
 		while(1){

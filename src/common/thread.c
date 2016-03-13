@@ -20,10 +20,6 @@
  */
 #define HERCULES_CORE
 
-// Basic Threading abstraction (for pthread / win32 based systems)
-//
-// Author: Florian Wilkemeyer <fw@f-ws.de>
-
 #include "thread.h"
 
 #include "common/cbasetypes.h"
@@ -48,6 +44,15 @@
 #define HAS_TLS
 #endif
 
+/** @file
+ * Thread interface implementation.
+ * @author Florian Wilkemeyer <fw@f-ws.de>
+ */
+
+struct thread_interface thread_s;
+struct thread_interface *thread;
+
+/// The maximum amount of threads.
 #define THREADS_MAX 64
 
 struct thread_handle {
@@ -68,16 +73,14 @@ struct thread_handle {
 __thread int g_rathread_ID = -1;
 #endif
 
-struct thread_interface thread_s;
-struct thread_interface *thread;
+// Subystem Code
 
-///
-/// Subystem Code
-///
 static struct thread_handle l_threads[THREADS_MAX];
 
-void rathread_init(void) {
-	register unsigned int i;
+/// @copydoc thread_interface::init()
+void thread_init(void)
+{
+	register int i;
 	memset(&l_threads, 0x00, THREADS_MAX * sizeof(struct thread_handle));
 
 	for (i = 0; i < THREADS_MAX; i++) {
@@ -91,38 +94,41 @@ void rathread_init(void) {
 	l_threads[0].prio = THREADPRIO_NORMAL;
 	l_threads[0].proc = (threadFunc)0xDEADCAFE;
 
-}//end: rathread_init()
+}
 
-void rathread_final(void) {
-	register unsigned int i;
+/// @copydoc thread_interface::final()
+void thread_final(void)
+{
+	register int i;
 
 	// Unterminated Threads Left?
-	// Shouldn't happen ..
-	// Kill 'em all!
-	//
+	// Shouldn't happen ... Kill 'em all!
 	for (i = 1; i < THREADS_MAX; i++) {
-		if(l_threads[i].proc != NULL){
-			ShowWarning("rAthread_final: unterminated Thread (tid %u entryPoint %p) - forcing to terminate (kill)\n", i, l_threads[i].proc);
+		if (l_threads[i].proc != NULL){
+			ShowWarning("thread_final: unterminated Thread (tid %d entry_point %p) - forcing to terminate (kill)\n", i, l_threads[i].proc);
 			thread->destroy(&l_threads[i]);
 		}
 	}
+}
 
-}//end: rathread_final()
-
-// gets called whenever a thread terminated ..
-static void rat_thread_terminated(struct thread_handle *handle)
+/**
+ * Gets called whenever a thread terminated.
+ *
+ * @param handle The terminated thread's handle.
+ */
+static void thread_terminated(struct thread_handle *handle)
 {
 	// Preserve handle->myID and handle->hThread, set everything else to its default value
 	handle->param = NULL;
 	handle->proc = NULL;
 	handle->prio = THREADPRIO_NORMAL;
-}//end: rat_thread_terminated()
+}
 
 #ifdef WIN32
-DWORD WINAPI raThreadMainRedirector(LPVOID p)
+DWORD WINAPI thread_main_redirector(LPVOID p)
 {
 #else
-static void *raThreadMainRedirector(void *p)
+static void *thread_main_redirector(void *p)
 {
 	sigset_t set; // on Posix Thread platforms
 #endif
@@ -145,7 +151,6 @@ static void *raThreadMainRedirector(void *p)
 	(void)sigaddset(&set, SIGPIPE);
 
 	pthread_sigmask(SIG_BLOCK, &set, NULL);
-
 #endif
 
 	ret = self->proc(self->param);
@@ -154,35 +159,36 @@ static void *raThreadMainRedirector(void *p)
 	CloseHandle(self->hThread);
 #endif
 
-	rat_thread_terminated(self);
+	thread_terminated(self);
 #ifdef WIN32
 	return (DWORD)ret;
 #else
 	return ret;
 #endif
-}//end: raThreadMainRedirector()
+}
 
-///
-/// API Level
-///
-struct thread_handle *rathread_create(threadFunc entryPoint, void *param)
+// API Level
+
+/// @copydoc thread_interface::create()
+struct thread_handle *thread_create(threadFunc entry_point, void *param)
 {
-	return thread->createEx(entryPoint, param,  (1<<23) /*8MB*/, THREADPRIO_NORMAL);
-}//end: rathread_create()
+	return thread->create_opt(entry_point, param,  (1<<23) /*8MB*/, THREADPRIO_NORMAL);
+}
 
-struct thread_handle *rathread_createEx(threadFunc entryPoint, void *param, size_t szStack, enum thread_priority prio)
+/// @copydoc thread_interface::create_opt()
+struct thread_handle *thread_create_opt(threadFunc entry_point, void *param, size_t stack_size, enum thread_priority prio)
 {
 #ifndef WIN32
 	pthread_attr_t attr;
 #endif
 	size_t tmp;
-	unsigned int i;
+	int i;
 	struct thread_handle *handle = NULL;
 
 	// given stacksize aligned to systems pagesize?
-	tmp = szStack % sysinfo->getpagesize();
-	if(tmp != 0)
-		szStack += tmp;
+	tmp = stack_size % sysinfo->getpagesize();
+	if (tmp != 0)
+		stack_size += tmp;
 
 	// Get a free Thread Slot.
 	for (i = 0; i < THREADS_MAX; i++) {
@@ -192,21 +198,21 @@ struct thread_handle *rathread_createEx(threadFunc entryPoint, void *param, size
 		}
 	}
 
-	if(handle == NULL){
-		ShowError("rAthread: cannot create new thread (entryPoint: %p) - no free thread slot found!", entryPoint);
+	if (handle == NULL) {
+		ShowError("thread_create_opt: cannot create new thread (entry_point: %p) - no free thread slot found!", entry_point);
 		return NULL;
 	}
 
-	handle->proc = entryPoint;
+	handle->proc = entry_point;
 	handle->param = param;
 
 #ifdef WIN32
-	handle->hThread = CreateThread(NULL, szStack, raThreadMainRedirector, (void*)handle, 0, NULL);
+	handle->hThread = CreateThread(NULL, stack_size, thread_main_redirector, handle, 0, NULL);
 #else
 	pthread_attr_init(&attr);
-	pthread_attr_setstacksize(&attr, szStack);
+	pthread_attr_setstacksize(&attr, stack_size);
 
-	if(pthread_create(&handle->hThread, &attr, raThreadMainRedirector, (void*)handle) != 0){
+	if (pthread_create(&handle->hThread, &attr, thread_main_redirector, handle) != 0) {
 		handle->proc = NULL;
 		handle->param = NULL;
 		return NULL;
@@ -214,120 +220,122 @@ struct thread_handle *rathread_createEx(threadFunc entryPoint, void *param, size
 	pthread_attr_destroy(&attr);
 #endif
 
-	thread->prio_set( handle,  prio );
+	thread->prio_set(handle,  prio);
 
 	return handle;
-}//end: rathread_createEx
+}
 
-void rathread_destroy(struct thread_handle *handle)
+/// @copydoc thread_interface::destroy()
+void thread_destroy(struct thread_handle *handle)
 {
 #ifdef WIN32
-	if( TerminateThread(handle->hThread, 0) != FALSE){
+	if (TerminateThread(handle->hThread, 0) != FALSE) {
 		CloseHandle(handle->hThread);
-		rat_thread_terminated(handle);
+		thread_terminated(handle);
 	}
 #else
-	if( pthread_cancel( handle->hThread ) == 0){
+	if (pthread_cancel(handle->hThread) == 0) {
 		// We have to join it, otherwise pthread wont re-cycle its internal resources assoc. with this thread.
-		pthread_join( handle->hThread, NULL );
+		pthread_join(handle->hThread, NULL);
 
 		// Tell our manager to release resources ;)
-		rat_thread_terminated(handle);
+		thread_terminated(handle);
 	}
 #endif
-}//end: rathread_destroy()
+}
 
-struct thread_handle *rathread_self(void)
+struct thread_handle *thread_self(void)
 {
 #ifdef HAS_TLS
 	struct thread_handle *handle = &l_threads[g_rathread_ID];
 
-	if(handle->proc != NULL) // entry point set, so its used!
+	if (handle->proc != NULL) // entry point set, so its used!
 		return handle;
 #else
 	// .. so no tls means we have to search the thread by its api-handle ..
 	int i;
 
-	#ifdef WIN32
-		HANDLE hSelf;
-		hSelf = GetCurrent = GetCurrentThread();
-	#else
-		pthread_t hSelf;
-		hSelf = pthread_self();
-	#endif
+#ifdef WIN32
+	HANDLE hSelf;
+	hSelf = GetCurrent = GetCurrentThread();
+#else
+	pthread_t hSelf;
+	hSelf = pthread_self();
+#endif
 
 	for (i = 0; i < THREADS_MAX; i++) {
-		if(l_threads[i].hThread == hSelf  &&  l_threads[i].proc != NULL)
+		if (l_threads[i].hThread == hSelf  &&  l_threads[i].proc != NULL)
 			return &l_threads[i];
 	}
 #endif
 
 	return NULL;
-}//end: rathread_self()
+}
 
-int rathread_get_tid(void) {
-
-#ifdef HAS_TLS
+/// @copydoc thread_interface::get_tid()
+int thread_get_tid(void)
+{
+#if defined(HAS_TLS)
 	return g_rathread_ID;
+#elif defined(WIN32)
+	return (int)GetCurrentThreadId();
 #else
-	// TODO
-	#ifdef WIN32
-		return (int)GetCurrentThreadId();
-	#else
-		return (int)pthread_self();
-	#endif
+	return (int)pthread_self();
 #endif
+}
 
-}//end: rathread_get_tid()
-
-bool rathread_wait(struct thread_handle *handle, void **out_exitCode)
+/// @copydoc thread_interface::wait()
+bool thread_wait(struct thread_handle *handle, void **out_exit_code)
 {
 	// Hint:
 	// no thread data cleanup routine call here!
 	// its managed by the callProxy itself..
-	//
 #ifdef WIN32
 	WaitForSingleObject(handle->hThread, INFINITE);
 	return true;
 #else
-	if(pthread_join(handle->hThread, out_exitCode) == 0)
+	if (pthread_join(handle->hThread, out_exit_code) == 0)
 		return true;
 	return false;
 #endif
 
-}//end: rathread_wait()
+}
 
-void rathread_prio_set(struct thread_handle *handle, enum thread_priority prio)
+/// @copydoc thread_interface::prio_set()
+void thread_prio_set(struct thread_handle *handle, enum thread_priority prio)
 {
 	handle->prio = THREADPRIO_NORMAL;
 	//@TODO
-}//end: rathread_prio_set()
+}
 
-enum thread_priority rathread_prio_get(struct thread_handle *handle)
+/// @copydoc thread_interface::prio_get()
+enum thread_priority thread_prio_get(struct thread_handle *handle)
 {
 	return handle->prio;
-}//end: rathread_prio_get()
+}
 
-void rathread_yield(void) {
+/// @copydoc thread_interface::yield()
+void thread_yield(void) {
 #ifdef WIN32
 	SwitchToThread();
 #else
 	sched_yield();
 #endif
-}//end: rathread_yield()
+}
 
+/// Interface base initialization.
 void thread_defaults(void)
 {
 	thread = &thread_s;
-	thread->create = rathread_create;
-	thread->createEx = rathread_createEx;
-	thread->destroy = rathread_destroy;
-	thread->self = rathread_self;
-	thread->get_tid = rathread_get_tid;
-	thread->wait = rathread_wait;
-	thread->prio_set = rathread_prio_set;
-	thread->prio_get = rathread_prio_get;
-	thread->yield = rathread_yield;
-	thread->init = rathread_init;
-	thread->final = rathread_final;
+	thread->init = thread_init;
+	thread->final = thread_final;
+	thread->create = thread_create;
+	thread->create_opt = thread_create_opt;
+	thread->destroy = thread_destroy;
+	thread->self = thread_self;
+	thread->get_tid = thread_get_tid;
+	thread->wait = thread_wait;
+	thread->prio_set = thread_prio_set;
+	thread->prio_get = thread_prio_get;
+	thread->yield = thread_yield;
 }

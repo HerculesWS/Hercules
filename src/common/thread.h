@@ -23,42 +23,56 @@
 
 #include "common/hercules.h"
 
+/** @file
+ * Basic Threading abstraction (for pthread / win32 based systems).
+ */
+
 /* Opaque Types */
 struct thread_handle;                ///< Thread handle.
 typedef void *(*threadFunc)(void *); ///< Thread entry point function.
 
+/* Enums */
+
+/// Thread priority
 enum thread_priority {
 	THREADPRIO_LOW = 0,
 	THREADPRIO_NORMAL,
 	THREADPRIO_HIGH
 };
 
+/// The thread interface
 struct thread_interface {
+	/// Interface initialization.
+	void (*init) (void);
+
+	/// Interface finalization.
+	void (*final) (void);
+
 	/**
 	 * Creates a new Thread.
 	 *
-	 * @param entyPoint Thread's entry point.
-	 * @param param     General purpose parameter, would be given as
-	 *                  parameter to the thread's entry point.
+	 * @param enty_point Thread's entry point.
+	 * @param param      General purpose parameter, would be given as
+	 *                   parameter to the thread's entry point.
 	 *
 	 * @return The created thread object.
 	 * @retval NULL in vase of failure.
 	 */
-	struct thread_handle *(*create) (threadFunc entryPoint, void *param);
+	struct thread_handle *(*create) (threadFunc entry_point, void *param);
 
 	/**
 	 * Creates a new Thread (with more creation options).
 	 *
-	 * @param entyPoint Thread's entry point.
-	 * @param param     General purpose parameter, would be given as
-	 *                  parameter to the thread's entry point.
-	 * @param szStack   Stack Size in bytes.
-	 * @param prio      Priority of the Thread in the OS scheduler.
+	 * @param enty_point Thread's entry point.
+	 * @param param      General purpose parameter, would be given as
+	 *                   parameter to the thread's entry point.
+	 * @param stack_size Stack Size in bytes.
+	 * @param prio       Priority of the Thread in the OS scheduler.
 	 *
 	 * @return The created thread object.
 	 * @retval NULL in case of failure.
 	 */
-	struct thread_handle *(*createEx) (threadFunc entryPoint, void *param, size_t szStack, enum thread_priority prio);
+	struct thread_handle *(*create_opt) (threadFunc entry_point, void *param, size_t stack_size, enum thread_priority prio);
 
 	/**
 	 * Destroys the given Thread immediately.
@@ -100,13 +114,13 @@ struct thread_interface {
 	/**
 	 * Waits for the given thread to terminate.
 	 *
-	 * @param[in]  handle       The thread to wait (join) for.
-	 * @param[out] out_Exitcode Pointer to return the exit code of the
-	 *                          given thread after termination (optional).
+	 * @param[in]  handle        The thread to wait (join) for.
+	 * @param[out] out_exit_code Pointer to return the exit code of the
+	 *                           given thread after termination (optional).
 	 *
 	 * @retval true if the given thread has been terminated.
 	 */
-	bool (*wait) (struct thread_handle *handle, void **out_exitCode);
+	bool (*wait) (struct thread_handle *handle, void **out_exit_code);
 
 	/**
 	 * Sets the given priority in the OS scheduler.
@@ -131,15 +145,12 @@ struct thread_interface {
 	 *   the remaining time of the slice to another thread.
 	 */
 	void (*yield) (void);
-
-	void (*init) (void);
-	void (*final) (void);
 };
 
 #ifdef HERCULES_CORE
 void thread_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct thread_interface *thread;
+HPShared struct thread_interface *thread; ///< Pointer to the thread interface.
 
 #endif /* COMMON_THREAD_H */
