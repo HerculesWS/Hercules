@@ -1156,6 +1156,12 @@ struct {
 	struct HPMHookPoint *HP_mapindex_id2name_post;
 	struct HPMHookPoint *HP_mapindex_check_default_pre;
 	struct HPMHookPoint *HP_mapindex_check_default_post;
+	struct HPMHookPoint *HP_md5_string_pre;
+	struct HPMHookPoint *HP_md5_string_post;
+	struct HPMHookPoint *HP_md5_binary_pre;
+	struct HPMHookPoint *HP_md5_binary_post;
+	struct HPMHookPoint *HP_md5_salt_pre;
+	struct HPMHookPoint *HP_md5_salt_post;
 	struct HPMHookPoint *HP_nullpo_assert_report_pre;
 	struct HPMHookPoint *HP_nullpo_assert_report_post;
 	struct HPMHookPoint *HP_pincode_handle_pre;
@@ -2565,6 +2571,12 @@ struct {
 	int HP_mapindex_id2name_post;
 	int HP_mapindex_check_default_pre;
 	int HP_mapindex_check_default_post;
+	int HP_md5_string_pre;
+	int HP_md5_string_post;
+	int HP_md5_binary_pre;
+	int HP_md5_binary_post;
+	int HP_md5_salt_pre;
+	int HP_md5_salt_post;
 	int HP_nullpo_assert_report_pre;
 	int HP_nullpo_assert_report_post;
 	int HP_pincode_handle_pre;
@@ -2868,6 +2880,7 @@ struct {
 	struct malloc_interface iMalloc;
 	struct mapif_interface mapif;
 	struct mapindex_interface mapindex;
+	struct md5_interface md5;
 	struct nullpo_interface nullpo;
 	struct pincode_interface pincode;
 	struct showmsg_interface showmsg;

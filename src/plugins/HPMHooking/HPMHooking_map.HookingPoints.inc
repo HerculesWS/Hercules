@@ -1701,6 +1701,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapreg->destroyreg, HP_mapreg_destroyreg) },
 	{ HP_POP(mapreg->reload, HP_mapreg_reload) },
 	{ HP_POP(mapreg->config_read, HP_mapreg_config_read) },
+/* md5_interface */
+	{ HP_POP(md5->string, HP_md5_string) },
+	{ HP_POP(md5->binary, HP_md5_binary) },
+	{ HP_POP(md5->salt, HP_md5_salt) },
 /* mercenary_interface */
 	{ HP_POP(mercenary->init, HP_mercenary_init) },
 	{ HP_POP(mercenary->class, HP_mercenary_class) },

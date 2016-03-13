@@ -170,6 +170,9 @@ struct mapit_interface *mapit;
 #ifdef MAP_MAPREG_H /* mapreg */
 struct mapreg_interface *mapreg;
 #endif // MAP_MAPREG_H
+#ifdef COMMON_MD5CALC_H /* md5 */
+struct md5_interface *md5;
+#endif // COMMON_MD5CALC_H
 #ifdef MAP_MERCENARY_H /* mercenary */
 struct mercenary_interface *mercenary;
 #endif // MAP_MERCENARY_H
@@ -405,6 +408,9 @@ if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("mapit", mapit)) return "mapi
 #ifdef MAP_MAPREG_H /* mapreg */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("mapreg", mapreg)) return "mapreg";
 #endif // MAP_MAPREG_H
+#ifdef COMMON_MD5CALC_H /* md5 */
+if ((server_type&(SERVER_TYPE_ALL)) && !HPM_SYMBOL("md5", md5)) return "md5";
+#endif // COMMON_MD5CALC_H
 #ifdef MAP_MERCENARY_H /* mercenary */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("mercenary", mercenary)) return "mercenary";
 #endif // MAP_MERCENARY_H

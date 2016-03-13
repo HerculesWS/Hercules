@@ -615,6 +615,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapindex->name2id, HP_mapindex_name2id) },
 	{ HP_POP(mapindex->id2name, HP_mapindex_id2name) },
 	{ HP_POP(mapindex->check_default, HP_mapindex_check_default) },
+/* md5_interface */
+	{ HP_POP(md5->string, HP_md5_string) },
+	{ HP_POP(md5->binary, HP_md5_binary) },
+	{ HP_POP(md5->salt, HP_md5_salt) },
 /* nullpo_interface */
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },
 /* pincode_interface */

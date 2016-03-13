@@ -172,6 +172,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_MAPINDEX_H
 	#endif // COMMON_MAPINDEX_H
+	#ifdef COMMON_MD5CALC_H
+		{ "md5_interface", sizeof(struct md5_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_MD5CALC_H
+	#endif // COMMON_MD5CALC_H
 	#ifdef COMMON_MEMMGR_H
 		{ "malloc_interface", sizeof(struct malloc_interface), SERVER_TYPE_ALL },
 	#else

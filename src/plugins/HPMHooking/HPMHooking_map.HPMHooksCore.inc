@@ -3314,6 +3314,12 @@ struct {
 	struct HPMHookPoint *HP_mapreg_reload_post;
 	struct HPMHookPoint *HP_mapreg_config_read_pre;
 	struct HPMHookPoint *HP_mapreg_config_read_post;
+	struct HPMHookPoint *HP_md5_string_pre;
+	struct HPMHookPoint *HP_md5_string_post;
+	struct HPMHookPoint *HP_md5_binary_pre;
+	struct HPMHookPoint *HP_md5_binary_post;
+	struct HPMHookPoint *HP_md5_salt_pre;
+	struct HPMHookPoint *HP_md5_salt_post;
 	struct HPMHookPoint *HP_mercenary_init_pre;
 	struct HPMHookPoint *HP_mercenary_init_post;
 	struct HPMHookPoint *HP_mercenary_class_pre;
@@ -9275,6 +9281,12 @@ struct {
 	int HP_mapreg_reload_post;
 	int HP_mapreg_config_read_pre;
 	int HP_mapreg_config_read_post;
+	int HP_md5_string_pre;
+	int HP_md5_string_post;
+	int HP_md5_binary_pre;
+	int HP_md5_binary_post;
+	int HP_md5_salt_pre;
+	int HP_md5_salt_post;
 	int HP_mercenary_init_pre;
 	int HP_mercenary_init_post;
 	int HP_mercenary_class_pre;
@@ -11979,6 +11991,7 @@ struct {
 	struct mapindex_interface mapindex;
 	struct mapit_interface mapit;
 	struct mapreg_interface mapreg;
+	struct md5_interface md5;
 	struct mercenary_interface mercenary;
 	struct mob_interface mob;
 	struct npc_chat_interface npc_chat;

@@ -404,6 +404,12 @@ struct {
 	struct HPMHookPoint *HP_iMalloc_post_shutdown_post;
 	struct HPMHookPoint *HP_iMalloc_init_messages_pre;
 	struct HPMHookPoint *HP_iMalloc_init_messages_post;
+	struct HPMHookPoint *HP_md5_string_pre;
+	struct HPMHookPoint *HP_md5_string_post;
+	struct HPMHookPoint *HP_md5_binary_pre;
+	struct HPMHookPoint *HP_md5_binary_post;
+	struct HPMHookPoint *HP_md5_salt_pre;
+	struct HPMHookPoint *HP_md5_salt_post;
 	struct HPMHookPoint *HP_nullpo_assert_report_pre;
 	struct HPMHookPoint *HP_nullpo_assert_report_post;
 	struct HPMHookPoint *HP_showmsg_init_pre;
@@ -1041,6 +1047,12 @@ struct {
 	int HP_iMalloc_post_shutdown_post;
 	int HP_iMalloc_init_messages_pre;
 	int HP_iMalloc_init_messages_post;
+	int HP_md5_string_pre;
+	int HP_md5_string_post;
+	int HP_md5_binary_pre;
+	int HP_md5_binary_post;
+	int HP_md5_salt_pre;
+	int HP_md5_salt_post;
 	int HP_nullpo_assert_report_pre;
 	int HP_nullpo_assert_report_post;
 	int HP_showmsg_init_pre;
@@ -1311,6 +1323,7 @@ struct {
 	struct libconfig_interface libconfig;
 	struct login_interface login;
 	struct malloc_interface iMalloc;
+	struct md5_interface md5;
 	struct nullpo_interface nullpo;
 	struct showmsg_interface showmsg;
 	struct socket_interface sockt;

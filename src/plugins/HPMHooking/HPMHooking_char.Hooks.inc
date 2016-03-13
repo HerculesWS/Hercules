@@ -15120,6 +15120,85 @@ bool HP_mapindex_check_default(void) {
 	}
 	return retVal___;
 }
+/* md5_interface */
+void HP_md5_string(const char *string, char *output) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_md5_string_pre ) {
+		void (*preHookFunc) (const char **string, char **output);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_md5_string_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_md5_string_pre[hIndex].func;
+			preHookFunc(&string, &output);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.md5.string(string, output);
+	}
+	if( HPMHooks.count.HP_md5_string_post ) {
+		void (*postHookFunc) (const char *string, char *output);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_md5_string_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_md5_string_post[hIndex].func;
+			postHookFunc(string, output);
+		}
+	}
+	return;
+}
+void HP_md5_binary(const char *string, unsigned char *output) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_md5_binary_pre ) {
+		void (*preHookFunc) (const char **string, unsigned char **output);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_md5_binary_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_md5_binary_pre[hIndex].func;
+			preHookFunc(&string, &output);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.md5.binary(string, output);
+	}
+	if( HPMHooks.count.HP_md5_binary_post ) {
+		void (*postHookFunc) (const char *string, unsigned char *output);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_md5_binary_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_md5_binary_post[hIndex].func;
+			postHookFunc(string, output);
+		}
+	}
+	return;
+}
+void HP_md5_salt(int len, char *output) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_md5_salt_pre ) {
+		void (*preHookFunc) (int *len, char **output);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_md5_salt_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_md5_salt_pre[hIndex].func;
+			preHookFunc(&len, &output);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.md5.salt(len, output);
+	}
+	if( HPMHooks.count.HP_md5_salt_post ) {
+		void (*postHookFunc) (int len, char *output);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_md5_salt_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_md5_salt_post[hIndex].func;
+			postHookFunc(len, output);
+		}
+	}
+	return;
+}
 /* nullpo_interface */
 void HP_nullpo_assert_report(const char *file, int line, const char *func, const char *targetname, const char *title) {
 	int hIndex = 0;

@@ -4433,6 +4433,14 @@ typedef void (*HPMHOOK_post_mapreg_reload) (void);
 typedef bool (*HPMHOOK_pre_mapreg_config_read) (const char **w1, const char **w2);
 typedef bool (*HPMHOOK_post_mapreg_config_read) (bool retVal___, const char *w1, const char *w2);
 #endif // MAP_MAPREG_H
+#ifdef COMMON_MD5CALC_H /* md5 */
+typedef void (*HPMHOOK_pre_md5_string) (const char **string, char **output);
+typedef void (*HPMHOOK_post_md5_string) (const char *string, char *output);
+typedef void (*HPMHOOK_pre_md5_binary) (const char **string, unsigned char **output);
+typedef void (*HPMHOOK_post_md5_binary) (const char *string, unsigned char *output);
+typedef void (*HPMHOOK_pre_md5_salt) (int *len, char **output);
+typedef void (*HPMHOOK_post_md5_salt) (int len, char *output);
+#endif // COMMON_MD5CALC_H
 #ifdef MAP_MERCENARY_H /* mercenary */
 typedef void (*HPMHOOK_pre_mercenary_init) (bool *minimal);
 typedef void (*HPMHOOK_post_mercenary_init) (bool minimal);

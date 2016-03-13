@@ -226,6 +226,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(iMalloc->usage, HP_iMalloc_usage) },
 	{ HP_POP(iMalloc->post_shutdown, HP_iMalloc_post_shutdown) },
 	{ HP_POP(iMalloc->init_messages, HP_iMalloc_init_messages) },
+/* md5_interface */
+	{ HP_POP(md5->string, HP_md5_string) },
+	{ HP_POP(md5->binary, HP_md5_binary) },
+	{ HP_POP(md5->salt, HP_md5_salt) },
 /* nullpo_interface */
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },
 /* showmsg_interface */
