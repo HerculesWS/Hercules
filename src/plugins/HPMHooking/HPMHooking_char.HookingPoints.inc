@@ -223,6 +223,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(DB->data2ptr, HP_DB_data2ptr) },
 	{ HP_POP(DB->init, HP_DB_init) },
 	{ HP_POP(DB->final, HP_DB_final) },
+/* des_interface */
+	{ HP_POP(des->decrypt_block, HP_des_decrypt_block) },
+	{ HP_POP(des->decrypt, HP_des_decrypt) },
 /* geoip_interface */
 	{ HP_POP(geoip->getcountry, HP_geoip_getcountry) },
 	{ HP_POP(geoip->final, HP_geoip_final) },

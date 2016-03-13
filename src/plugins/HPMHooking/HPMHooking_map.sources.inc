@@ -38,6 +38,7 @@ memcpy(&HPMHooks.source.cmdline, cmdline, sizeof(struct cmdline_interface));
 memcpy(&HPMHooks.source.console, console, sizeof(struct console_interface));
 memcpy(&HPMHooks.source.core, core, sizeof(struct core_interface));
 memcpy(&HPMHooks.source.DB, DB, sizeof(struct db_interface));
+memcpy(&HPMHooks.source.des, des, sizeof(struct des_interface));
 memcpy(&HPMHooks.source.duel, duel, sizeof(struct duel_interface));
 memcpy(&HPMHooks.source.elemental, elemental, sizeof(struct elemental_interface));
 memcpy(&HPMHooks.source.guild, guild, sizeof(struct guild_interface));

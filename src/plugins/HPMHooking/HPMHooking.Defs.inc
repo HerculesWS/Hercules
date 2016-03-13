@@ -2271,6 +2271,12 @@ typedef void (*HPMHOOK_post_DB_init) (void);
 typedef void (*HPMHOOK_pre_DB_final) (void);
 typedef void (*HPMHOOK_post_DB_final) (void);
 #endif // COMMON_DB_H
+#ifdef COMMON_DES_H /* des */
+typedef void (*HPMHOOK_pre_des_decrypt_block) (struct des_bit64 **block);
+typedef void (*HPMHOOK_post_des_decrypt_block) (struct des_bit64 *block);
+typedef void (*HPMHOOK_pre_des_decrypt) (unsigned char **data, size_t *size);
+typedef void (*HPMHOOK_post_des_decrypt) (unsigned char *data, size_t size);
+#endif // COMMON_DES_H
 #ifdef MAP_DUEL_H /* duel */
 typedef int (*HPMHOOK_pre_duel_create) (struct map_session_data **sd, const unsigned int *maxpl);
 typedef int (*HPMHOOK_post_duel_create) (int retVal___, struct map_session_data *sd, const unsigned int maxpl);

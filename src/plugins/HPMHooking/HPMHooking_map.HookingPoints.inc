@@ -990,6 +990,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(DB->data2ptr, HP_DB_data2ptr) },
 	{ HP_POP(DB->init, HP_DB_init) },
 	{ HP_POP(DB->final, HP_DB_final) },
+/* des_interface */
+	{ HP_POP(des->decrypt_block, HP_des_decrypt_block) },
+	{ HP_POP(des->decrypt, HP_des_decrypt) },
 /* duel_interface */
 	{ HP_POP(duel->create, HP_duel_create) },
 	{ HP_POP(duel->invite, HP_duel_invite) },

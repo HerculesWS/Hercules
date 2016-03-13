@@ -92,6 +92,10 @@ struct {
 	struct HPMHookPoint *HP_DB_init_post;
 	struct HPMHookPoint *HP_DB_final_pre;
 	struct HPMHookPoint *HP_DB_final_post;
+	struct HPMHookPoint *HP_des_decrypt_block_pre;
+	struct HPMHookPoint *HP_des_decrypt_block_post;
+	struct HPMHookPoint *HP_des_decrypt_pre;
+	struct HPMHookPoint *HP_des_decrypt_post;
 	struct HPMHookPoint *HP_lclif_init_pre;
 	struct HPMHookPoint *HP_lclif_init_post;
 	struct HPMHookPoint *HP_lclif_final_pre;
@@ -725,6 +729,10 @@ struct {
 	int HP_DB_init_post;
 	int HP_DB_final_pre;
 	int HP_DB_final_post;
+	int HP_des_decrypt_block_pre;
+	int HP_des_decrypt_block_post;
+	int HP_des_decrypt_pre;
+	int HP_des_decrypt_post;
 	int HP_lclif_init_pre;
 	int HP_lclif_init_post;
 	int HP_lclif_final_pre;
@@ -1297,6 +1305,7 @@ struct {
 	struct console_interface console;
 	struct core_interface core;
 	struct db_interface DB;
+	struct des_interface des;
 	struct lclif_interface lclif;
 	struct lclif_interface_private PRIV__lclif;
 	struct libconfig_interface libconfig;

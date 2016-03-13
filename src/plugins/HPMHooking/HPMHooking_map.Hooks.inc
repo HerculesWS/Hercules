@@ -25109,6 +25109,59 @@ void HP_DB_final(void) {
 	}
 	return;
 }
+/* des_interface */
+void HP_des_decrypt_block(struct des_bit64 *block) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_des_decrypt_block_pre ) {
+		void (*preHookFunc) (struct des_bit64 **block);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_des_decrypt_block_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_des_decrypt_block_pre[hIndex].func;
+			preHookFunc(&block);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.des.decrypt_block(block);
+	}
+	if( HPMHooks.count.HP_des_decrypt_block_post ) {
+		void (*postHookFunc) (struct des_bit64 *block);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_des_decrypt_block_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_des_decrypt_block_post[hIndex].func;
+			postHookFunc(block);
+		}
+	}
+	return;
+}
+void HP_des_decrypt(unsigned char *data, size_t size) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_des_decrypt_pre ) {
+		void (*preHookFunc) (unsigned char **data, size_t *size);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_des_decrypt_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_des_decrypt_pre[hIndex].func;
+			preHookFunc(&data, &size);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.des.decrypt(data, size);
+	}
+	if( HPMHooks.count.HP_des_decrypt_post ) {
+		void (*postHookFunc) (unsigned char *data, size_t size);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_des_decrypt_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_des_decrypt_post[hIndex].func;
+			postHookFunc(data, size);
+		}
+	}
+	return;
+}
 /* duel_interface */
 int HP_duel_create(struct map_session_data *sd, const unsigned int maxpl) {
 	int hIndex = 0;

@@ -64,6 +64,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(DB->data2ptr, HP_DB_data2ptr) },
 	{ HP_POP(DB->init, HP_DB_init) },
 	{ HP_POP(DB->final, HP_DB_final) },
+/* des_interface */
+	{ HP_POP(des->decrypt_block, HP_des_decrypt_block) },
+	{ HP_POP(des->decrypt, HP_des_decrypt) },
 /* lclif_interface */
 	{ HP_POP(lclif->init, HP_lclif_init) },
 	{ HP_POP(lclif->final, HP_lclif_final) },

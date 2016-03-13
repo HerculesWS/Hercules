@@ -150,7 +150,8 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define COMMON_DB_H
 	#endif // COMMON_DB_H
 	#ifdef COMMON_DES_H
-		{ "BIT64", sizeof(struct BIT64), SERVER_TYPE_ALL },
+		{ "des_bit64", sizeof(struct des_bit64), SERVER_TYPE_ALL },
+		{ "des_interface", sizeof(struct des_interface), SERVER_TYPE_ALL },
 	#else
 		#define COMMON_DES_H
 	#endif // COMMON_DES_H

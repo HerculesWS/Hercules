@@ -1928,6 +1928,10 @@ struct {
 	struct HPMHookPoint *HP_DB_init_post;
 	struct HPMHookPoint *HP_DB_final_pre;
 	struct HPMHookPoint *HP_DB_final_post;
+	struct HPMHookPoint *HP_des_decrypt_block_pre;
+	struct HPMHookPoint *HP_des_decrypt_block_post;
+	struct HPMHookPoint *HP_des_decrypt_pre;
+	struct HPMHookPoint *HP_des_decrypt_post;
 	struct HPMHookPoint *HP_duel_create_pre;
 	struct HPMHookPoint *HP_duel_create_post;
 	struct HPMHookPoint *HP_duel_invite_pre;
@@ -7885,6 +7889,10 @@ struct {
 	int HP_DB_init_post;
 	int HP_DB_final_pre;
 	int HP_DB_final_post;
+	int HP_des_decrypt_block_pre;
+	int HP_des_decrypt_block_post;
+	int HP_des_decrypt_pre;
+	int HP_des_decrypt_post;
 	int HP_duel_create_pre;
 	int HP_duel_create_post;
 	int HP_duel_invite_pre;
@@ -11953,6 +11961,7 @@ struct {
 	struct console_interface console;
 	struct core_interface core;
 	struct db_interface DB;
+	struct des_interface des;
 	struct duel_interface duel;
 	struct elemental_interface elemental;
 	struct guild_interface guild;

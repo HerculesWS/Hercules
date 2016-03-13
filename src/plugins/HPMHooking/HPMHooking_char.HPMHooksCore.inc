@@ -408,6 +408,10 @@ struct {
 	struct HPMHookPoint *HP_DB_init_post;
 	struct HPMHookPoint *HP_DB_final_pre;
 	struct HPMHookPoint *HP_DB_final_post;
+	struct HPMHookPoint *HP_des_decrypt_block_pre;
+	struct HPMHookPoint *HP_des_decrypt_block_post;
+	struct HPMHookPoint *HP_des_decrypt_pre;
+	struct HPMHookPoint *HP_des_decrypt_post;
 	struct HPMHookPoint *HP_geoip_getcountry_pre;
 	struct HPMHookPoint *HP_geoip_getcountry_post;
 	struct HPMHookPoint *HP_geoip_final_pre;
@@ -1813,6 +1817,10 @@ struct {
 	int HP_DB_init_post;
 	int HP_DB_final_pre;
 	int HP_DB_final_post;
+	int HP_des_decrypt_block_pre;
+	int HP_des_decrypt_block_post;
+	int HP_des_decrypt_pre;
+	int HP_des_decrypt_post;
 	int HP_geoip_getcountry_pre;
 	int HP_geoip_getcountry_post;
 	int HP_geoip_final_pre;
@@ -2842,6 +2850,7 @@ struct {
 	struct console_interface console;
 	struct core_interface core;
 	struct db_interface DB;
+	struct des_interface des;
 	struct geoip_interface geoip;
 	struct inter_auction_interface inter_auction;
 	struct inter_elemental_interface inter_elemental;

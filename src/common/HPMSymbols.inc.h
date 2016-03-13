@@ -68,6 +68,9 @@ struct core_interface *core;
 #ifdef COMMON_DB_H /* DB */
 struct db_interface *DB;
 #endif // COMMON_DB_H
+#ifdef COMMON_DES_H /* des */
+struct des_interface *des;
+#endif // COMMON_DES_H
 #ifdef MAP_DUEL_H /* duel */
 struct duel_interface *duel;
 #endif // MAP_DUEL_H
@@ -300,6 +303,9 @@ if ((server_type&(SERVER_TYPE_ALL)) && !HPM_SYMBOL("core", core)) return "core";
 #ifdef COMMON_DB_H /* DB */
 if ((server_type&(SERVER_TYPE_ALL)) && !HPM_SYMBOL("DB", DB)) return "DB";
 #endif // COMMON_DB_H
+#ifdef COMMON_DES_H /* des */
+if ((server_type&(SERVER_TYPE_ALL)) && !HPM_SYMBOL("des", des)) return "des";
+#endif // COMMON_DES_H
 #ifdef MAP_DUEL_H /* duel */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("duel", duel)) return "duel";
 #endif // MAP_DUEL_H
