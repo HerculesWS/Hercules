@@ -5699,6 +5699,24 @@ typedef int (*HPMHOOK_post_quest_read_db) (int retVal___);
 typedef struct quest_db* (*HPMHOOK_pre_quest_read_db_sub) (struct config_setting_t **cs, int *n, const char **source);
 typedef struct quest_db* (*HPMHOOK_post_quest_read_db_sub) (struct quest_db* retVal___, struct config_setting_t *cs, int n, const char *source);
 #endif // MAP_QUEST_H
+#ifdef COMMON_RANDOM_H /* rnd */
+typedef void (*HPMHOOK_pre_rnd_init) (void);
+typedef void (*HPMHOOK_post_rnd_init) (void);
+typedef void (*HPMHOOK_pre_rnd_final) (void);
+typedef void (*HPMHOOK_post_rnd_final) (void);
+typedef void (*HPMHOOK_pre_rnd_seed) (uint32 *seed);
+typedef void (*HPMHOOK_post_rnd_seed) (uint32 seed);
+typedef int32 (*HPMHOOK_pre_rnd_random) (void);
+typedef int32 (*HPMHOOK_post_rnd_random) (int32 retVal___);
+typedef uint32 (*HPMHOOK_pre_rnd_roll) (uint32 *dice_faces);
+typedef uint32 (*HPMHOOK_post_rnd_roll) (uint32 retVal___, uint32 dice_faces);
+typedef int32 (*HPMHOOK_pre_rnd_value) (int32 *min, int32 *max);
+typedef int32 (*HPMHOOK_post_rnd_value) (int32 retVal___, int32 min, int32 max);
+typedef double (*HPMHOOK_pre_rnd_uniform) (void);
+typedef double (*HPMHOOK_post_rnd_uniform) (double retVal___);
+typedef double (*HPMHOOK_pre_rnd_uniform53) (void);
+typedef double (*HPMHOOK_post_rnd_uniform53) (double retVal___);
+#endif // COMMON_RANDOM_H
 #ifdef MAP_SCRIPT_H /* script */
 typedef void (*HPMHOOK_pre_script_init) (bool *minimal);
 typedef void (*HPMHOOK_post_script_init) (bool minimal);

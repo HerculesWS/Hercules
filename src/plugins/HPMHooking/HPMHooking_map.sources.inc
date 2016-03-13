@@ -70,6 +70,7 @@ memcpy(&HPMHooks.source.pc, pc, sizeof(struct pc_interface));
 memcpy(&HPMHooks.source.libpcre, libpcre, sizeof(struct pcre_interface));
 memcpy(&HPMHooks.source.pet, pet, sizeof(struct pet_interface));
 memcpy(&HPMHooks.source.quest, quest, sizeof(struct quest_interface));
+memcpy(&HPMHooks.source.rnd, rnd, sizeof(struct rnd_interface));
 memcpy(&HPMHooks.source.script, script, sizeof(struct script_interface));
 memcpy(&HPMHooks.source.searchstore, searchstore, sizeof(struct searchstore_interface));
 memcpy(&HPMHooks.source.showmsg, showmsg, sizeof(struct showmsg_interface));

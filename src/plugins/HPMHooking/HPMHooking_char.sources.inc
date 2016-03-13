@@ -53,6 +53,7 @@ memcpy(&HPMHooks.source.md5, md5, sizeof(struct md5_interface));
 memcpy(&HPMHooks.source.mutex, mutex, sizeof(struct mutex_interface));
 memcpy(&HPMHooks.source.nullpo, nullpo, sizeof(struct nullpo_interface));
 memcpy(&HPMHooks.source.pincode, pincode, sizeof(struct pincode_interface));
+memcpy(&HPMHooks.source.rnd, rnd, sizeof(struct rnd_interface));
 memcpy(&HPMHooks.source.showmsg, showmsg, sizeof(struct showmsg_interface));
 memcpy(&HPMHooks.source.sockt, sockt, sizeof(struct socket_interface));
 memcpy(&HPMHooks.source.SQL, SQL, sizeof(struct sql_interface));

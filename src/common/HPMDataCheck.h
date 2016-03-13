@@ -226,6 +226,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_NULLPO_H
 	#endif // COMMON_NULLPO_H
+	#ifdef COMMON_RANDOM_H
+		{ "rnd_interface", sizeof(struct rnd_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_RANDOM_H
+	#endif // COMMON_RANDOM_H
 	#ifdef COMMON_SHOWMSG_H
 		{ "showmsg_interface", sizeof(struct showmsg_interface), SERVER_TYPE_ALL },
 	#else

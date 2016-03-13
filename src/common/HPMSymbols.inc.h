@@ -215,6 +215,9 @@ struct pincode_interface *pincode;
 #ifdef MAP_QUEST_H /* quest */
 struct quest_interface *quest;
 #endif // MAP_QUEST_H
+#ifdef COMMON_RANDOM_H /* rnd */
+struct rnd_interface *rnd;
+#endif // COMMON_RANDOM_H
 #ifdef MAP_SCRIPT_H /* script */
 struct script_interface *script;
 #endif // MAP_SCRIPT_H
@@ -456,6 +459,9 @@ if ((server_type&(SERVER_TYPE_CHAR)) && !HPM_SYMBOL("pincode", pincode)) return 
 #ifdef MAP_QUEST_H /* quest */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("quest", quest)) return "quest";
 #endif // MAP_QUEST_H
+#ifdef COMMON_RANDOM_H /* rnd */
+if ((server_type&(SERVER_TYPE_ALL)) && !HPM_SYMBOL("rnd", rnd)) return "rnd";
+#endif // COMMON_RANDOM_H
 #ifdef MAP_SCRIPT_H /* script */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("script", script)) return "script";
 #endif // MAP_SCRIPT_H

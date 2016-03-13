@@ -643,6 +643,15 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pincode->compare, HP_pincode_compare) },
 	{ HP_POP(pincode->check, HP_pincode_check) },
 	{ HP_POP(pincode->config_read, HP_pincode_config_read) },
+/* rnd_interface */
+	{ HP_POP(rnd->init, HP_rnd_init) },
+	{ HP_POP(rnd->final, HP_rnd_final) },
+	{ HP_POP(rnd->seed, HP_rnd_seed) },
+	{ HP_POP(rnd->random, HP_rnd_random) },
+	{ HP_POP(rnd->roll, HP_rnd_roll) },
+	{ HP_POP(rnd->value, HP_rnd_value) },
+	{ HP_POP(rnd->uniform, HP_rnd_uniform) },
+	{ HP_POP(rnd->uniform53, HP_rnd_uniform53) },
 /* showmsg_interface */
 	{ HP_POP(showmsg->init, HP_showmsg_init) },
 	{ HP_POP(showmsg->final, HP_showmsg_final) },

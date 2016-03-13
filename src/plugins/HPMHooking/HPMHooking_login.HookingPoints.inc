@@ -243,6 +243,15 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mutex->cond_broadcast, HP_mutex_cond_broadcast) },
 /* nullpo_interface */
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },
+/* rnd_interface */
+	{ HP_POP(rnd->init, HP_rnd_init) },
+	{ HP_POP(rnd->final, HP_rnd_final) },
+	{ HP_POP(rnd->seed, HP_rnd_seed) },
+	{ HP_POP(rnd->random, HP_rnd_random) },
+	{ HP_POP(rnd->roll, HP_rnd_roll) },
+	{ HP_POP(rnd->value, HP_rnd_value) },
+	{ HP_POP(rnd->uniform, HP_rnd_uniform) },
+	{ HP_POP(rnd->uniform53, HP_rnd_uniform53) },
 /* showmsg_interface */
 	{ HP_POP(showmsg->init, HP_showmsg_init) },
 	{ HP_POP(showmsg->final, HP_showmsg_final) },

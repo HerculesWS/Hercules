@@ -2323,6 +2323,15 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(quest->clear, HP_quest_clear) },
 	{ HP_POP(quest->read_db, HP_quest_read_db) },
 	{ HP_POP(quest->read_db_sub, HP_quest_read_db_sub) },
+/* rnd_interface */
+	{ HP_POP(rnd->init, HP_rnd_init) },
+	{ HP_POP(rnd->final, HP_rnd_final) },
+	{ HP_POP(rnd->seed, HP_rnd_seed) },
+	{ HP_POP(rnd->random, HP_rnd_random) },
+	{ HP_POP(rnd->roll, HP_rnd_roll) },
+	{ HP_POP(rnd->value, HP_rnd_value) },
+	{ HP_POP(rnd->uniform, HP_rnd_uniform) },
+	{ HP_POP(rnd->uniform53, HP_rnd_uniform53) },
 /* script_interface */
 	{ HP_POP(script->init, HP_script_init) },
 	{ HP_POP(script->final, HP_script_final) },

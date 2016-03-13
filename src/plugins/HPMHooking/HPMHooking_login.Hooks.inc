@@ -5459,6 +5459,220 @@ void HP_nullpo_assert_report(const char *file, int line, const char *func, const
 	}
 	return;
 }
+/* rnd_interface */
+void HP_rnd_init(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_rnd_init_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_init_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_rnd_init_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.rnd.init();
+	}
+	if( HPMHooks.count.HP_rnd_init_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_init_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_rnd_init_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_rnd_final(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_rnd_final_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_final_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_rnd_final_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.rnd.final();
+	}
+	if( HPMHooks.count.HP_rnd_final_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_final_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_rnd_final_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_rnd_seed(uint32 seed) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_rnd_seed_pre ) {
+		void (*preHookFunc) (uint32 *seed);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_seed_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_rnd_seed_pre[hIndex].func;
+			preHookFunc(&seed);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.rnd.seed(seed);
+	}
+	if( HPMHooks.count.HP_rnd_seed_post ) {
+		void (*postHookFunc) (uint32 seed);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_seed_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_rnd_seed_post[hIndex].func;
+			postHookFunc(seed);
+		}
+	}
+	return;
+}
+int32 HP_rnd_random(void) {
+	int hIndex = 0;
+	int32 retVal___ = 0;
+	if( HPMHooks.count.HP_rnd_random_pre ) {
+		int32 (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_random_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_rnd_random_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.rnd.random();
+	}
+	if( HPMHooks.count.HP_rnd_random_post ) {
+		int32 (*postHookFunc) (int32 retVal___);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_random_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_rnd_random_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+uint32 HP_rnd_roll(uint32 dice_faces) {
+	int hIndex = 0;
+	uint32 retVal___ = 0;
+	if( HPMHooks.count.HP_rnd_roll_pre ) {
+		uint32 (*preHookFunc) (uint32 *dice_faces);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_roll_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_rnd_roll_pre[hIndex].func;
+			retVal___ = preHookFunc(&dice_faces);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.rnd.roll(dice_faces);
+	}
+	if( HPMHooks.count.HP_rnd_roll_post ) {
+		uint32 (*postHookFunc) (uint32 retVal___, uint32 dice_faces);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_roll_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_rnd_roll_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, dice_faces);
+		}
+	}
+	return retVal___;
+}
+int32 HP_rnd_value(int32 min, int32 max) {
+	int hIndex = 0;
+	int32 retVal___ = 0;
+	if( HPMHooks.count.HP_rnd_value_pre ) {
+		int32 (*preHookFunc) (int32 *min, int32 *max);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_value_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_rnd_value_pre[hIndex].func;
+			retVal___ = preHookFunc(&min, &max);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.rnd.value(min, max);
+	}
+	if( HPMHooks.count.HP_rnd_value_post ) {
+		int32 (*postHookFunc) (int32 retVal___, int32 min, int32 max);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_value_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_rnd_value_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, min, max);
+		}
+	}
+	return retVal___;
+}
+double HP_rnd_uniform(void) {
+	int hIndex = 0;
+	double retVal___ = 0.;
+	if( HPMHooks.count.HP_rnd_uniform_pre ) {
+		double (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_uniform_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_rnd_uniform_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.rnd.uniform();
+	}
+	if( HPMHooks.count.HP_rnd_uniform_post ) {
+		double (*postHookFunc) (double retVal___);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_uniform_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_rnd_uniform_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+double HP_rnd_uniform53(void) {
+	int hIndex = 0;
+	double retVal___ = 0.;
+	if( HPMHooks.count.HP_rnd_uniform53_pre ) {
+		double (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_uniform53_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_rnd_uniform53_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.rnd.uniform53();
+	}
+	if( HPMHooks.count.HP_rnd_uniform53_post ) {
+		double (*postHookFunc) (double retVal___);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_rnd_uniform53_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_rnd_uniform53_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
 /* showmsg_interface */
 void HP_showmsg_init(void) {
 	int hIndex = 0;
