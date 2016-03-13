@@ -23,17 +23,40 @@
 
 #include "common/hercules.h"
 
+/**
+ * @file
+ *
+ * DES (Data Encryption Standard) algorithm, modified version.
+ *
+ * @see http://www.eathena.ws/board/index.php?autocom=bugtracker&showbug=5099
+ * @see http://en.wikipedia.org/wiki/Data_Encryption_Standard
+ * @see http://en.wikipedia.org/wiki/DES_supplementary_material
+ */
+
 /* Struct definitions */
 
 /// One 64-bit block.
-struct BIT64 {
+struct des_bit64 {
 	uint8_t b[8];
 };
 
 /* Interface */
 
+/// The des interface.
 struct des_interface {
-	void (*decrypt_block) (struct BIT64 *block);
+	/**
+	 * Decrypts a block.
+	 *
+	 * @param[in,out] block The block to decrypt (in-place).
+	 */
+	void (*decrypt_block) (struct des_bit64 *block);
+
+	/**
+	 * Decrypts a buffer.
+	 *
+	 * @param [in,out] data The buffer to decrypt (in-place).
+	 * @param [in]     size The size of the data.
+	 */
 	void (*decrypt) (unsigned char *data, size_t size);
 };
 
@@ -41,6 +64,6 @@ struct des_interface {
 void des_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct des_interface *des;
+HPShared struct des_interface *des; ///< Pointer to the des interface implementation.
 
 #endif // COMMON_DES_H

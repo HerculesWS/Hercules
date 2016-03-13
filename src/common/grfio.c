@@ -121,9 +121,9 @@ static uint8_t grf_substitution(uint8_t in)
 }
 
 #if 0 /* this is not used anywhere, is it ok to delete?  */
-static void grf_shuffle_enc(struct BIT64 *src)
+static void grf_shuffle_enc(struct des_bit64 *src)
 {
-	struct BIT64 out;
+	struct des_bit64 out;
 
 	out.b[0] = src->b[3];
 	out.b[1] = src->b[4];
@@ -138,9 +138,9 @@ static void grf_shuffle_enc(struct BIT64 *src)
 }
 #endif // 0
 
-static void grf_shuffle_dec(struct BIT64 *src)
+static void grf_shuffle_dec(struct des_bit64 *src)
 {
-	struct BIT64 out;
+	struct des_bit64 out;
 
 	out.b[0] = src->b[3];
 	out.b[1] = src->b[4];
@@ -156,8 +156,8 @@ static void grf_shuffle_dec(struct BIT64 *src)
 
 static void grf_decode_header(unsigned char* buf, size_t len)
 {
-	struct BIT64 *p = (struct BIT64 *)buf;
-	size_t nblocks = len / sizeof(struct BIT64);
+	struct des_bit64 *p = (struct des_bit64 *)buf;
+	size_t nblocks = len / sizeof(struct des_bit64);
 	size_t i;
 
 	// first 20 blocks are all des-encrypted
@@ -169,8 +169,8 @@ static void grf_decode_header(unsigned char* buf, size_t len)
 
 static void grf_decode_full(unsigned char* buf, size_t len, int cycle)
 {
-	struct BIT64 *p = (struct BIT64 *)buf;
-	size_t nblocks = len / sizeof(struct BIT64);
+	struct des_bit64 *p = (struct des_bit64 *)buf;
+	size_t nblocks = len / sizeof(struct des_bit64);
 	int dcycle, scycle;
 	size_t i, j;
 
