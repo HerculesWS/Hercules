@@ -3643,6 +3643,8 @@ ACMD(reloadbattleconf)
 	memcpy(&prev_config, &battle_config, sizeof(prev_config));
 
 	battle->config_read(map->BATTLE_CONF_FILENAME);
+	if (prev_config.feature_roulette == 0 && battle_config.feature_roulette == 1 && !clif->parse_roulette_db())
+		battle_config.feature_roulette = 0;
 
 	if( prev_config.item_rate_mvp          != battle_config.item_rate_mvp
 	   ||  prev_config.item_rate_common       != battle_config.item_rate_common
