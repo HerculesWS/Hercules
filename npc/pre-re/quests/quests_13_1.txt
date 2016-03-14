@@ -32,4 +32,4 @@
 //= 1.0
 //=========================================================================
 
-izlude,99,136,6	duplicate(PromotionalStaff_izlude)	Promotional Staff#iz	4W_SAILOR
+izlude,99,136,5	duplicate(PromotionalStaff_izlude)	Promotional Staff#iz	4W_SAILOR
