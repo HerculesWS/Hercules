@@ -160,6 +160,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_ERS_H
 	#endif // COMMON_ERS_H
+	#ifdef COMMON_GRFIO_H
+		{ "grfio_interface", sizeof(struct grfio_interface), SERVER_TYPE_MAP },
+	#else
+		#define COMMON_GRFIO_H
+	#endif // COMMON_GRFIO_H
 	#ifdef COMMON_HPMI_H
 		{ "HPMi_interface", sizeof(struct HPMi_interface), SERVER_TYPE_ALL },
 		{ "hplugin_info", sizeof(struct hplugin_info), SERVER_TYPE_ALL },

@@ -80,6 +80,9 @@ struct elemental_interface *elemental;
 #ifdef CHAR_GEOIP_H /* geoip */
 struct geoip_interface *geoip;
 #endif // CHAR_GEOIP_H
+#ifdef COMMON_GRFIO_H /* grfio */
+struct grfio_interface *grfio;
+#endif // COMMON_GRFIO_H
 #ifdef MAP_GUILD_H /* guild */
 struct guild_interface *guild;
 #endif // MAP_GUILD_H
@@ -327,6 +330,9 @@ if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("elemental", elemental)) retu
 #ifdef CHAR_GEOIP_H /* geoip */
 if ((server_type&(SERVER_TYPE_CHAR)) && !HPM_SYMBOL("geoip", geoip)) return "geoip";
 #endif // CHAR_GEOIP_H
+#ifdef COMMON_GRFIO_H /* grfio */
+if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("grfio", grfio)) return "grfio";
+#endif // COMMON_GRFIO_H
 #ifdef MAP_GUILD_H /* guild */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("guild", guild)) return "guild";
 #endif // MAP_GUILD_H

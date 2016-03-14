@@ -1036,6 +1036,14 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(elemental->ai_sub_foreachclient, HP_elemental_ai_sub_foreachclient) },
 	{ HP_POP(elemental->ai_timer, HP_elemental_ai_timer) },
 	{ HP_POP(elemental->read_db, HP_elemental_read_db) },
+/* grfio_interface */
+	{ HP_POP(grfio->init, HP_grfio_init) },
+	{ HP_POP(grfio->final, HP_grfio_final) },
+	{ HP_POP(grfio->reads, HP_grfio_reads) },
+	{ HP_POP(grfio->find_file, HP_grfio_find_file) },
+	{ HP_POP(grfio->crc32, HP_grfio_crc32) },
+	{ HP_POP(grfio->decode_zip, HP_grfio_decode_zip) },
+	{ HP_POP(grfio->encode_zip, HP_grfio_encode_zip) },
 /* guild_interface */
 	{ HP_POP(guild->init, HP_guild_init) },
 	{ HP_POP(guild->final, HP_guild_final) },

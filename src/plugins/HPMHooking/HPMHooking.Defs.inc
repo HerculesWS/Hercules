@@ -2371,6 +2371,22 @@ typedef void (*HPMHOOK_post_geoip_final) (bool shutdown);
 typedef void (*HPMHOOK_pre_geoip_init) (void);
 typedef void (*HPMHOOK_post_geoip_init) (void);
 #endif // CHAR_GEOIP_H
+#ifdef COMMON_GRFIO_H /* grfio */
+typedef void (*HPMHOOK_pre_grfio_init) (const char **fname);
+typedef void (*HPMHOOK_post_grfio_init) (const char *fname);
+typedef void (*HPMHOOK_pre_grfio_final) (void);
+typedef void (*HPMHOOK_post_grfio_final) (void);
+typedef void* (*HPMHOOK_pre_grfio_reads) (const char **fname, int **size);
+typedef void* (*HPMHOOK_post_grfio_reads) (void* retVal___, const char *fname, int *size);
+typedef const char* (*HPMHOOK_pre_grfio_find_file) (const char **fname);
+typedef const char* (*HPMHOOK_post_grfio_find_file) (const char* retVal___, const char *fname);
+typedef unsigned long (*HPMHOOK_pre_grfio_crc32) (const unsigned char **buf, unsigned int *len);
+typedef unsigned long (*HPMHOOK_post_grfio_crc32) (unsigned long retVal___, const unsigned char *buf, unsigned int len);
+typedef int (*HPMHOOK_pre_grfio_decode_zip) (void **dest, unsigned long **dest_len, const void **source, unsigned long *source_len);
+typedef int (*HPMHOOK_post_grfio_decode_zip) (int retVal___, void *dest, unsigned long *dest_len, const void *source, unsigned long source_len);
+typedef int (*HPMHOOK_pre_grfio_encode_zip) (void **dest, unsigned long **dest_len, const void **source, unsigned long *source_len);
+typedef int (*HPMHOOK_post_grfio_encode_zip) (int retVal___, void *dest, unsigned long *dest_len, const void *source, unsigned long source_len);
+#endif // COMMON_GRFIO_H
 #ifdef MAP_GUILD_H /* guild */
 typedef void (*HPMHOOK_pre_guild_init) (bool *minimal);
 typedef void (*HPMHOOK_post_guild_init) (bool minimal);
