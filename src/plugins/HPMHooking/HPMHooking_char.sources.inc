@@ -61,4 +61,5 @@ memcpy(&HPMHooks.source.StrBuf, StrBuf, sizeof(struct stringbuf_interface));
 memcpy(&HPMHooks.source.strlib, strlib, sizeof(struct strlib_interface));
 memcpy(&HPMHooks.source.sv, sv, sizeof(struct sv_interface));
 memcpy(&HPMHooks.source.sysinfo, sysinfo, sizeof(struct sysinfo_interface));
+memcpy(&HPMHooks.source.thread, thread, sizeof(struct thread_interface));
 memcpy(&HPMHooks.source.timer, timer, sizeof(struct timer_interface));

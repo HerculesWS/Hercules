@@ -7063,6 +7063,30 @@ typedef void (*HPMHOOK_post_sysinfo_init) (void);
 typedef void (*HPMHOOK_pre_sysinfo_final) (void);
 typedef void (*HPMHOOK_post_sysinfo_final) (void);
 #endif // COMMON_SYSINFO_H
+#ifdef COMMON_THREAD_H /* thread */
+typedef void (*HPMHOOK_pre_thread_init) (void);
+typedef void (*HPMHOOK_post_thread_init) (void);
+typedef void (*HPMHOOK_pre_thread_final) (void);
+typedef void (*HPMHOOK_post_thread_final) (void);
+typedef struct thread_handle* (*HPMHOOK_pre_thread_create) (threadFunc *entry_point, void **param);
+typedef struct thread_handle* (*HPMHOOK_post_thread_create) (struct thread_handle* retVal___, threadFunc entry_point, void *param);
+typedef struct thread_handle* (*HPMHOOK_pre_thread_create_opt) (threadFunc *entry_point, void **param, size_t *stack_size, enum thread_priority *prio);
+typedef struct thread_handle* (*HPMHOOK_post_thread_create_opt) (struct thread_handle* retVal___, threadFunc entry_point, void *param, size_t stack_size, enum thread_priority prio);
+typedef void (*HPMHOOK_pre_thread_destroy) (struct thread_handle **handle);
+typedef void (*HPMHOOK_post_thread_destroy) (struct thread_handle *handle);
+typedef struct thread_handle* (*HPMHOOK_pre_thread_self) (void);
+typedef struct thread_handle* (*HPMHOOK_post_thread_self) (struct thread_handle* retVal___);
+typedef int (*HPMHOOK_pre_thread_get_tid) (void);
+typedef int (*HPMHOOK_post_thread_get_tid) (int retVal___);
+typedef bool (*HPMHOOK_pre_thread_wait) (struct thread_handle **handle, void ***out_exit_code);
+typedef bool (*HPMHOOK_post_thread_wait) (bool retVal___, struct thread_handle *handle, void **out_exit_code);
+typedef void (*HPMHOOK_pre_thread_prio_set) (struct thread_handle **handle, enum thread_priority *prio);
+typedef void (*HPMHOOK_post_thread_prio_set) (struct thread_handle *handle, enum thread_priority prio);
+typedef enum thread_priority (*HPMHOOK_pre_thread_prio_get) (struct thread_handle **handle);
+typedef enum thread_priority (*HPMHOOK_post_thread_prio_get) (enum thread_priority retVal___, struct thread_handle *handle);
+typedef void (*HPMHOOK_pre_thread_yield) (void);
+typedef void (*HPMHOOK_post_thread_yield) (void);
+#endif // COMMON_THREAD_H
 #ifdef COMMON_TIMER_H /* timer */
 typedef int64 (*HPMHOOK_pre_timer_gettick) (void);
 typedef int64 (*HPMHOOK_post_timer_gettick) (int64 retVal___);

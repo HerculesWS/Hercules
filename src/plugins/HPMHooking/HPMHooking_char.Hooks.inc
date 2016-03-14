@@ -19050,6 +19050,299 @@ void HP_sysinfo_final(void) {
 	}
 	return;
 }
+/* thread_interface */
+void HP_thread_init(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_thread_init_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_init_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_thread_init_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.thread.init();
+	}
+	if( HPMHooks.count.HP_thread_init_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_init_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_thread_init_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+void HP_thread_final(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_thread_final_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_final_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_thread_final_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.thread.final();
+	}
+	if( HPMHooks.count.HP_thread_final_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_final_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_thread_final_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+struct thread_handle* HP_thread_create(threadFunc entry_point, void *param) {
+	int hIndex = 0;
+	struct thread_handle* retVal___ = NULL;
+	if( HPMHooks.count.HP_thread_create_pre ) {
+		struct thread_handle* (*preHookFunc) (threadFunc *entry_point, void **param);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_create_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_thread_create_pre[hIndex].func;
+			retVal___ = preHookFunc(&entry_point, &param);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.thread.create(entry_point, param);
+	}
+	if( HPMHooks.count.HP_thread_create_post ) {
+		struct thread_handle* (*postHookFunc) (struct thread_handle* retVal___, threadFunc entry_point, void *param);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_create_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_thread_create_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, entry_point, param);
+		}
+	}
+	return retVal___;
+}
+struct thread_handle* HP_thread_create_opt(threadFunc entry_point, void *param, size_t stack_size, enum thread_priority prio) {
+	int hIndex = 0;
+	struct thread_handle* retVal___ = NULL;
+	if( HPMHooks.count.HP_thread_create_opt_pre ) {
+		struct thread_handle* (*preHookFunc) (threadFunc *entry_point, void **param, size_t *stack_size, enum thread_priority *prio);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_create_opt_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_thread_create_opt_pre[hIndex].func;
+			retVal___ = preHookFunc(&entry_point, &param, &stack_size, &prio);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.thread.create_opt(entry_point, param, stack_size, prio);
+	}
+	if( HPMHooks.count.HP_thread_create_opt_post ) {
+		struct thread_handle* (*postHookFunc) (struct thread_handle* retVal___, threadFunc entry_point, void *param, size_t stack_size, enum thread_priority prio);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_create_opt_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_thread_create_opt_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, entry_point, param, stack_size, prio);
+		}
+	}
+	return retVal___;
+}
+void HP_thread_destroy(struct thread_handle *handle) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_thread_destroy_pre ) {
+		void (*preHookFunc) (struct thread_handle **handle);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_destroy_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_thread_destroy_pre[hIndex].func;
+			preHookFunc(&handle);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.thread.destroy(handle);
+	}
+	if( HPMHooks.count.HP_thread_destroy_post ) {
+		void (*postHookFunc) (struct thread_handle *handle);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_destroy_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_thread_destroy_post[hIndex].func;
+			postHookFunc(handle);
+		}
+	}
+	return;
+}
+struct thread_handle* HP_thread_self(void) {
+	int hIndex = 0;
+	struct thread_handle* retVal___ = NULL;
+	if( HPMHooks.count.HP_thread_self_pre ) {
+		struct thread_handle* (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_self_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_thread_self_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.thread.self();
+	}
+	if( HPMHooks.count.HP_thread_self_post ) {
+		struct thread_handle* (*postHookFunc) (struct thread_handle* retVal___);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_self_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_thread_self_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+int HP_thread_get_tid(void) {
+	int hIndex = 0;
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_thread_get_tid_pre ) {
+		int (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_get_tid_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_thread_get_tid_pre[hIndex].func;
+			retVal___ = preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.thread.get_tid();
+	}
+	if( HPMHooks.count.HP_thread_get_tid_post ) {
+		int (*postHookFunc) (int retVal___);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_get_tid_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_thread_get_tid_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___);
+		}
+	}
+	return retVal___;
+}
+bool HP_thread_wait(struct thread_handle *handle, void **out_exit_code) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_thread_wait_pre ) {
+		bool (*preHookFunc) (struct thread_handle **handle, void ***out_exit_code);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_wait_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_thread_wait_pre[hIndex].func;
+			retVal___ = preHookFunc(&handle, &out_exit_code);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.thread.wait(handle, out_exit_code);
+	}
+	if( HPMHooks.count.HP_thread_wait_post ) {
+		bool (*postHookFunc) (bool retVal___, struct thread_handle *handle, void **out_exit_code);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_wait_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_thread_wait_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, handle, out_exit_code);
+		}
+	}
+	return retVal___;
+}
+void HP_thread_prio_set(struct thread_handle *handle, enum thread_priority prio) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_thread_prio_set_pre ) {
+		void (*preHookFunc) (struct thread_handle **handle, enum thread_priority *prio);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_prio_set_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_thread_prio_set_pre[hIndex].func;
+			preHookFunc(&handle, &prio);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.thread.prio_set(handle, prio);
+	}
+	if( HPMHooks.count.HP_thread_prio_set_post ) {
+		void (*postHookFunc) (struct thread_handle *handle, enum thread_priority prio);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_prio_set_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_thread_prio_set_post[hIndex].func;
+			postHookFunc(handle, prio);
+		}
+	}
+	return;
+}
+enum thread_priority HP_thread_prio_get(struct thread_handle *handle) {
+	int hIndex = 0;
+	enum thread_priority retVal___ = THREADPRIO_NORMAL;
+	if( HPMHooks.count.HP_thread_prio_get_pre ) {
+		enum thread_priority (*preHookFunc) (struct thread_handle **handle);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_prio_get_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_thread_prio_get_pre[hIndex].func;
+			retVal___ = preHookFunc(&handle);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.thread.prio_get(handle);
+	}
+	if( HPMHooks.count.HP_thread_prio_get_post ) {
+		enum thread_priority (*postHookFunc) (enum thread_priority retVal___, struct thread_handle *handle);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_prio_get_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_thread_prio_get_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, handle);
+		}
+	}
+	return retVal___;
+}
+void HP_thread_yield(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_thread_yield_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_yield_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_thread_yield_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.thread.yield();
+	}
+	if( HPMHooks.count.HP_thread_yield_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_thread_yield_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_thread_yield_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
 /* timer_interface */
 int64 HP_timer_gettick(void) {
 	int hIndex = 0;

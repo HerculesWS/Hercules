@@ -246,7 +246,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define COMMON_SOCKET_H
 	#endif // COMMON_SOCKET_H
 	#ifdef COMMON_SPINLOCK_H
-		{ "SPIN_LOCK", sizeof(struct SPIN_LOCK), SERVER_TYPE_ALL },
+		{ "spin_lock", sizeof(struct spin_lock), SERVER_TYPE_ALL },
 	#else
 		#define COMMON_SPINLOCK_H
 	#endif // COMMON_SPINLOCK_H
@@ -269,6 +269,11 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define COMMON_SYSINFO_H
 	#endif // COMMON_SYSINFO_H
+	#ifdef COMMON_THREAD_H
+		{ "thread_interface", sizeof(struct thread_interface), SERVER_TYPE_ALL },
+	#else
+		#define COMMON_THREAD_H
+	#endif // COMMON_THREAD_H
 	#ifdef COMMON_TIMER_H
 		{ "TimerData", sizeof(struct TimerData), SERVER_TYPE_ALL },
 		{ "timer_interface", sizeof(struct timer_interface), SERVER_TYPE_ALL },

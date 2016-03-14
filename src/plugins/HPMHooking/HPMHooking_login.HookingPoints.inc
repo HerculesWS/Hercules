@@ -373,6 +373,18 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sysinfo->is_superuser, HP_sysinfo_is_superuser) },
 	{ HP_POP(sysinfo->init, HP_sysinfo_init) },
 	{ HP_POP(sysinfo->final, HP_sysinfo_final) },
+/* thread_interface */
+	{ HP_POP(thread->init, HP_thread_init) },
+	{ HP_POP(thread->final, HP_thread_final) },
+	{ HP_POP(thread->create, HP_thread_create) },
+	{ HP_POP(thread->create_opt, HP_thread_create_opt) },
+	{ HP_POP(thread->destroy, HP_thread_destroy) },
+	{ HP_POP(thread->self, HP_thread_self) },
+	{ HP_POP(thread->get_tid, HP_thread_get_tid) },
+	{ HP_POP(thread->wait, HP_thread_wait) },
+	{ HP_POP(thread->prio_set, HP_thread_prio_set) },
+	{ HP_POP(thread->prio_get, HP_thread_prio_get) },
+	{ HP_POP(thread->yield, HP_thread_yield) },
 /* timer_interface */
 	{ HP_POP(timer->gettick, HP_timer_gettick) },
 	{ HP_POP(timer->gettick_nocache, HP_timer_gettick_nocache) },

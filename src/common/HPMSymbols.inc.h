@@ -254,6 +254,9 @@ struct sv_interface *sv;
 #ifdef COMMON_SYSINFO_H /* sysinfo */
 struct sysinfo_interface *sysinfo;
 #endif // COMMON_SYSINFO_H
+#ifdef COMMON_THREAD_H /* thread */
+struct thread_interface *thread;
+#endif // COMMON_THREAD_H
 #ifdef COMMON_TIMER_H /* timer */
 struct timer_interface *timer;
 #endif // COMMON_TIMER_H
@@ -498,6 +501,9 @@ if ((server_type&(SERVER_TYPE_ALL)) && !HPM_SYMBOL("sv", sv)) return "sv";
 #ifdef COMMON_SYSINFO_H /* sysinfo */
 if ((server_type&(SERVER_TYPE_ALL)) && !HPM_SYMBOL("sysinfo", sysinfo)) return "sysinfo";
 #endif // COMMON_SYSINFO_H
+#ifdef COMMON_THREAD_H /* thread */
+if ((server_type&(SERVER_TYPE_ALL)) && !HPM_SYMBOL("thread", thread)) return "thread";
+#endif // COMMON_THREAD_H
 #ifdef COMMON_TIMER_H /* timer */
 if ((server_type&(SERVER_TYPE_ALL)) && !HPM_SYMBOL("timer", timer)) return "timer";
 #endif // COMMON_TIMER_H
