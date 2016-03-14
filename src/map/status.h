@@ -1789,9 +1789,13 @@ enum si_type {
 	//SI_DORAM_BUF_01                        = 935,
 	//SI_DORAM_BUF_02                        = 936,
 	//SI_SPRITEMABLE                         = 937,
+	//SI_EP16_2_BUFF_SS                      = 963,
+	//SI_EP16_2_BUFF_SC                      = 964,
+	//SI_EP16_2_BUFF_AC                      = 965,
 
 	SI_MAX,
 };
+
 // JOINTBEAT stackable ailments
 enum e_joint_break
 {
@@ -1803,7 +1807,6 @@ enum e_joint_break
 	BREAK_NECK     = 0x20, // current attack does 2x damage, inflicts 'bleeding' for 30 seconds
 	BREAK_FLAGS    = BREAK_ANKLE | BREAK_WRIST | BREAK_KNEE | BREAK_SHOULDER | BREAK_WAIST | BREAK_NECK,
 };
-
 
 /**
  * Mob mode definitions. [Skotlex]
