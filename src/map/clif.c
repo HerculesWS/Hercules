@@ -419,8 +419,14 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 
 	sd = BL_CAST(BL_PC, bl);
 
-	switch(type) {
+	if (sd != NULL && pc_isinvisible(sd)) {
+		if (type == AREA || type == BG || type == BG_AREA)
+			type = SELF;
+		else if (type == AREA_WOS || type == BG_WOS || type == BG_AREA_WOS)
+			return true;
+	}
 
+	switch(type) {
 		case ALL_CLIENT: //All player clients.
 			iter = mapit_getallusers();
 			while ((tsd = BL_UCAST(BL_PC, mapit->next(iter))) != NULL) {
