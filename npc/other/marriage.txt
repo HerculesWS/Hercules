@@ -130,7 +130,7 @@ prt_church,97,100,4	script	Wedding Staff#w	1_F_LIBRARYGIRL,{
 		mes "speak to the Bishop and tell";
 		mes "him the name of her groom.";
 		mes "If these names are correctly";
-		mes "told to the Biship, they will";
+		mes "told to the Bishop, they will";
 		mes "be able to exchange rings.";
 		next;
 		mes "[Marry Happy]";

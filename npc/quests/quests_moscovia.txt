@@ -1869,7 +1869,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 				mes "Yes, Here you are.";
 				next;
 				mes "-Offered the Yaga's Pestles.-";
-				delitem 7762,40;
+				delitem Yaga_Pestle,40;
 				next;
 				mes "[Csar Alexsay III]";
 				mes "Hm.. You do have them.";
@@ -1907,7 +1907,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 		next;
 		if(select("Yes, I did.", "I am confused.") == 1) {
 			if (countitem(Yaga_Pestle) > 39) {
-				delitem 7762,40;
+				delitem Yaga_Pestle,40;
 				mes "[Csar Alexsay III]";
 				mes "Good,";
 				mes "I won't doubt you anymore.";
@@ -2004,7 +2004,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 		mes "I give it as an atonement";
 		mes "to make my people happy.";
 		mos_nowinter = 21;
-		getitem 603,1;
+		getitem Old_Blue_Box,1;
 		next;
 		mes "[Csar Alexsay III]";
 		mes "Stay here as long as you want, and";
@@ -3139,7 +3139,7 @@ mosk_in,205,268,3	script	Fire pot#mos	HIDDEN_NPC,{
 		mes "Now I'm gonna give this back to Mom.";
 		donpcevent "Mikhail#mos::OnInit";
 		mos_swan = 25;
-		delitem 7764,1;
+		delitem High_Strength_Adhesive,1;
 		close;
 	}
 	mes "- It's a fire pot to heat the room or bake something -";
@@ -3395,7 +3395,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 		if (Zeny > 999) {
 			Zeny -= 1000;
 			mos_swan = 9;
-			if (!.@j) getitem 519,1; else getitem 531,1;
+			if (!.@j) getitem Milk,1; else getitem Apple_Juice,1;
 			mes "[Pub Owner]";
 			mes "Here you are. This is what you ordered.";
 			mes "How do you like Moscovia?";
@@ -3458,7 +3458,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 				if (Zeny > 999) {
 					Zeny -= 1000;
 					mos_swan = 9;
-					getitem 519,1;
+					getitem Milk,1;
 					mes "[Pub Owner]";
 					mes "Here you are. This is what you ordered.";
 					mes "Enjoy yourself.";
@@ -3472,7 +3472,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 				if (Zeny > 999) {
 					Zeny -= 1000;
 					mos_swan = 9;
-					getitem 531,1;
+					getitem Apple_Juice,1;
 					mes "[Pub Owner]";
 					mes "Here you are. This is what you ordered.";
 					mes "Enjoy yourself.";
@@ -3661,10 +3661,10 @@ mosk_in,147,202,3	script	Victor#mos	4_M_RUSMAN2,{
 			mes "Ok, done!";
 			mes "I don't want you to bother me any longer!";
 			mes "Please leave!";
-			delitem 7763,10;
-			delitem 7134,1;
+			delitem Sticky_Herb,10;
+			delitem Medicine_Bowl,1;
 			mos_swan = 24;
-			getitem 7764,1;
+			getitem High_Strength_Adhesive,1;
 			close;
 		}
 		mes "[Victor]";
@@ -3746,16 +3746,16 @@ mosk_dun03,153,90,3	script	Bubbling Swamp#mos1	CLEAR_NPC,{
 		if (rand(1,10) < 6) {
 			mes "- You have pricked your finger on a Sticky Herb. -";
 			if (mos_swan == 22) {
-				getitem 7763,1;
+				getitem Sticky_Herb,1;
 				mos_swan = 23;
 				close;
 			}
-			getitem 7763,1;
+			getitem Sticky_Herb,1;
 			++mos_swan;
 			close;
 		}
 		mes "- You have pricked your finger on a Green Herb. -";
-		getitem 511,1;
+		getitem Green_Herb,1;
 		close;
 	}
 	mes "- You can see a small swamp which seems very muddy. -";
@@ -3783,8 +3783,8 @@ mosk_in,211,259,5	script	Larissa#mos_01	4_F_RUSWOMAN2,{
 		mes "Here you are. This special pancake is for you.";
 		mes "It will be very delicious.";
 		mos_swan = 101;
-		getitem 592,5;
-		getitem 593,5;
+		getitem Jam_Pancake,5;
+		getitem Honey_Pancake,5;
 		next;
 		mes "[Larissa]";
 		mes "Whenever you'd like to eat these pancake, you come on by.";
@@ -3902,7 +3902,7 @@ mosk_in,211,259,5	script	Larissa#mos_01	4_F_RUSWOMAN2,{
 						setarray .@n, 594,1;
 						break;
 				}
-				setarray .@di,7031,1,519,2,504,2,548,1,1019,1,518,1;
+				setarray .@di,Old_Frying_Pan,1,Milk,2,White_Potion,2,Cheese,1,Wooden_Block,1,Honey,1;
 				for (.@i = 0; .@i < getarraysize(.@di); .@i += 2)
 					delitem .@di[.@i],.@di[.@i+1];
 				getitem .@n,.@n[1];
@@ -3986,7 +3986,7 @@ moscovia,208,182,7	script	Acorn Dealer#mos	4_M_RUSMAN1,{
 	mes "Oh, thank you...";
 	mes "What do you think of them? They're fresh, aren't they?";
 	Zeny -= .@price;
-	getitem 1026,.@input;
+	getitem Acorn,.@input;
 	close;
 }
 
@@ -4017,55 +4017,55 @@ OnTouch:
 				mes "- It makes a crunching sound -";
 				next;
 				mes "- After eating the acorn up, the squirrel dances around wildly. Suddenly it curls its body and throws something up with a spit-spit sound -";
-				delitem 1026,20;
+				delitem Acorn,20;
 				.@cyworld = rand(1,1000);
 				.@stworld = rand(1,150);
-				if (.@cyworld > 0 && .@cyworld < 100) getitem 733,1;
+				if (.@cyworld > 0 && .@cyworld < 100) getitem Crystal_Jewel___,1;
 				else if (.@cyworld == 100) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 730,1;
-					else getitem 7289,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel,1;
+					else getitem Olivine,1;
 				} else if (.@cyworld == 200) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 731,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel_,1;
 					else .@stonez1 = rand(1,10);
-						if (.@stonez1 < 6) getitem 7290,1;
-						else if (.@stonez1 > 5 && .@stonez1 < 8) getitem 7297,1;
-						else getitem 7292,1;
+						if (.@stonez1 < 6) getitem Phlogopite,1;
+						else if (.@stonez1 > 5 && .@stonez1 < 8) getitem Biotite,1;
+						else getitem Muscovite,1;
 				} else if (.@cyworld == 300) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 732,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel__,1;
 					else .@stonez2 = rand(1,10);
-						if (.@stonez2 < 6) getitem 7291,1;
-						else getitem 7294,1;
+						if (.@stonez2 < 6) getitem Agate,1;
+						else getitem Turquoise,1;
 				} else if (.@cyworld == 400) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 730,1;
-					else getitem 7295,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel,1;
+					else getitem Citrine,1;
 				} else if (.@cyworld == 500) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 731,1;
-					else getitem 7293,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel_,1;
+					else getitem Rose_Quartz,1;
 				} else if (.@cyworld == 600) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 732,1;
-					else getitem 7292,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel__,1;
+					else getitem Muscovite,1;
 				} else if (.@cyworld == 700) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 730,1;
-					else getitem 7290,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel,1;
+					else getitem Phlogopite,1;
 				} else if (.@cyworld == 800) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 731,1;
-					else getitem 7296,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel_,1;
+					else getitem Pyroxene,1;
 				} else if (.@cyworld == 900) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 732,1;
-					else getitem 7297,1;
-				} else if (.@cyworld == 1000) getitem 727,1;
-				else if (.@cyworld > 100 && .@cyworld < 500) getitem 733,1;
-				else if (.@cyworld > 500 && .@cyworld < 900) getitem 724,1;
-				else getitem 724,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel__,1;
+					else getitem Biotite,1;
+				} else if (.@cyworld == 1000) getitem White_Jewel,1;
+				else if (.@cyworld > 100 && .@cyworld < 500) getitem Crystal_Jewel___,1;
+				else if (.@cyworld > 500 && .@cyworld < 900) getitem Cardinal_Jewel_,1;
+				else getitem Cardinal_Jewel_,1;
 				close;
 			case 2:
 				mes "["+strcharinfo(0)+"]";
@@ -4090,15 +4090,15 @@ OnTouch:
 
 S_BS_1:
 	.@stworld = getarg(0);
-	if (.@stworld < 10) getitem 718,1;
-	else if (.@stworld < 20) getitem 719,1;
-	else if (.@stworld < 30) getitem 720,1;
-	else if (.@stworld < 40) getitem 721,1;
-	else if (.@stworld < 50) getitem 722,1;
-	else if (.@stworld < 60) getitem 723,1;
-	else if (.@stworld < 70) getitem 725,1;
-	else if (.@stworld < 80) getitem 728,1;
-	else if (.@stworld < 90) getitem 729,1;
+	if (.@stworld < 10) getitem Dark_Red_Jewel,1;
+	else if (.@stworld < 20) getitem Violet_Jewel,1;
+	else if (.@stworld < 30) getitem Skyblue_Jewel,1;
+	else if (.@stworld < 40) getitem Azure_Jewel,1;
+	else if (.@stworld < 50) getitem Scarlet_Jewel,1;
+	else if (.@stworld < 60) getitem Cardinal_Jewel,1;
+	else if (.@stworld < 70) getitem Red_Jewel,1;
+	else if (.@stworld < 80) getitem Golden_Jewel,1;
+	else if (.@stworld < 90) getitem Bluish_Green_Jewel,1;
 	return;
 }
 mosk_fild01,113,108,3	duplicate(Squirrel#mos_main)	Big Squirrel#mos	HIDDEN_NPC
@@ -4136,7 +4136,7 @@ OnTouch:
 			mes "give them back to me!";
 			mos_nowinter = 1;
 			.@getback = rand(1,20);
-			delitem 7762,.@getback;
+			delitem Yaga_Pestle,.@getback;
 			close2;
 			warp "mosk_dun02",53,217;
 			end;
@@ -4496,7 +4496,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "Did you get";
 		mes "all of the items?";
 		next;
-		setarray .@n, 940,20,908,5,7006,20,1061,10,7041,10,938,10,1051,1,990,5,7097,10;
+		setarray .@n, Grasshopper's_Leg,20,Spawn,5,Wing_Of_Red_Bat,20,Starsand_Of_Witch,10,Fine_Grit,10,Sticky_Mucus,10,Detonator,1,Boody_Red,5,Burning_Heart,10;
 		for (.@i = 0; .@i < getarraysize(.@n); .@i += 2) {
 			if (countitem(.@n[.@i]) < .@n[.@i+1]) {
 				.@f = 1;
@@ -4506,9 +4506,9 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		if (!.@f && (countitem(Crystal_Jewel) || countitem(Crystal_Jewel_) || countitem(Crystal_Jewel__))) {
 			for (.@i = 0; .@i < getarraysize(.@n); .@i += 2)
 				delitem .@n[.@i],.@n[.@i+1];
-			if (countitem(Crystal_Jewel)) delitem 730,1;
-			else if (countitem(Crystal_Jewel_)) delitem 731,1;
-			else if (countitem(Crystal_Jewel__)) delitem 732,1;
+			if (countitem(Crystal_Jewel)) delitem Crystal_Jewel,1;
+			else if (countitem(Crystal_Jewel_)) delitem Crystal_Jewel_,1;
+			else if (countitem(Crystal_Jewel__)) delitem Crystal_Jewel__,1;
 			mos_nowinter = 8;
 			mes "[Baba Yaga, the Horrible]";
 			mes "Right, you got them all.";
@@ -4591,7 +4591,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "Did you get";
 		mes "all of them?";
 		next;
-		setarray .@n, 940,20,908,5,7006,20,1061,10,7041,10,1051,1,990,5,7097,10;
+		setarray .@n, Grasshopper's_Leg,20,Spawn,5,Wing_Of_Red_Bat,20,Starsand_Of_Witch,10,Fine_Grit,10,Detonator,1,Boody_Red,5,Burning_Heart,10;
 		for (.@i = 0; .@i < getarraysize(.@n); .@i += 2) {
 			if (countitem(.@n[.@i]) < .@n[.@i+1]) {
 				.@f = 1;
@@ -4601,9 +4601,9 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		if (!.@f && (countitem(Crystal_Jewel) || countitem(Crystal_Jewel_) || countitem(Crystal_Jewel__))) {
 			for (.@i = 0; .@i < getarraysize(.@n); .@i += 2)
 				delitem .@n[.@i],.@n[.@i+1];
-			if (countitem(Crystal_Jewel)) delitem 730,1;
-			else if (countitem(Crystal_Jewel_)) delitem 731,1;
-			else if (countitem(Crystal_Jewel__)) delitem 732,1;
+			if (countitem(Crystal_Jewel)) delitem Crystal_Jewel,1;
+			else if (countitem(Crystal_Jewel_)) delitem Crystal_Jewel_,1;
+			else if (countitem(Crystal_Jewel__)) delitem Crystal_Jewel__,1;
 			mos_nowinter = 8;
 			mes "[Baba Yaga, the Horrible]";
 			mes "Right, you got them all.";
@@ -4798,7 +4798,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 			mes "Cough, cough!";
 			close;
 		}
-		delitem 7761,1;
+		delitem Magic_Gourd_Bottle,1;
 		mes "[Baba Yaga, the Horrible]";
 		mes "Anyway, give me the bottle and";
 		mes "think about";
@@ -4888,7 +4888,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "If you do this, what the villagers want";
 		mes "will be happening,";
 		mes "forever.";
-		getitem 7765,1;
+		getitem Yaga_Secret_Medicine,1;
 		mos_nowinter = 19;
 		close;
 	} else if (mos_nowinter == 19) {
@@ -5469,7 +5469,7 @@ moscovia,224,190,0	script	#nowinterplz	CLEAR_NPC,{
 		mes "-I drop the magic bottle";
 		mes "containing Baba Yaga's";
 		mes "Secret Medicine.-";
-		delitem 7765,1;
+		delitem Yaga_Secret_Medicine,1;
 		specialeffect EF_BARRIER;
 		mos_nowinter = 20;
 		next;
@@ -6329,7 +6329,7 @@ OnTouch:
 					mes "Here it is.";
 					mes "That was easy to find.";
 					mos_nowinter = 9;
-					getitem 7761,1;
+					getitem Magic_Gourd_Bottle,1;
 					close;
 				}
 				if (rand(1,20) > 14) {
@@ -6337,7 +6337,7 @@ OnTouch:
 					mes "Ah, I got it!";
 					mes "I better get out of here quickly.";
 					mos_nowinter = 9;
-					getitem 7761,1;
+					getitem Magic_Gourd_Bottle,1;
 					close;
 				}
 				mes "............";
@@ -6405,7 +6405,7 @@ mosk_in,131,92,3	script	#Csar	FAKE_NPC,7,7,{
 				mes "Yes, Here you are.";
 				next;
 				mes "-Offered the Yaga's Pestles.-";
-				delitem 7762,40;
+				delitem Yaga_Pestle,40;
 				next;
 				mes "[Csar Alexsay III]";
 				mes "Hm.. You do have them.";
@@ -7082,7 +7082,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 			donpcevent "Maria Morebna#rus46::OnDisable";
 			mes "[Koshei, the Immortal]";
 			mes "Stop! Where do you think you're going?!!!";
-			delitem 7876,1;
+			delitem Gold_Key,1;
 			rhea_rus_main = 48;
 			monster "mosk_dun01",45,256,"Koshei, the Immortal",1890,1,"Wall#rus04::OnMyMobDead";
 			donpcevent "Koshei#rus47::OnEnable";
@@ -7260,12 +7260,12 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 		rhea_rus_main = 52;
 		.@rus_food = rand(1,6);
 		switch (rand(1,6)) {
-			case 1: getitem 12093,1; break;
-			case 2: getitem 12088,1; break;
-			case 3: getitem 12073,1; break;
-			case 4: getitem 12078,1; break;
-			case 5: getitem 12083,1; break;
-			case 6: getitem 12098,1; break;
+			case 1: getitem Dex_Dish08,1; break;
+			case 2: getitem Agi_Dish08,1; break;
+			case 3: getitem Str_Dish08,1; break;
+			case 4: getitem Int_Dish08,1; break;
+			case 5: getitem Vit_Dish08,1; break;
+			case 6: getitem Luk_Dish08,1; break;
 		}
 		if (RENEWAL_EXP) {
 			if (BaseLevel < 56) getexp 5700,500;
@@ -7522,9 +7522,9 @@ moscovia,178,127,0	script	The Blacksmith#rus06	1_M_SMITH,{
 			mes "Well, you know what to do now. I will be waiting here.";
 			mes "Bahahaha~";
 			mes "And don't forget to wear these!";
-			delitem 999,25;
+			delitem Steel,25;
 			rhea_rus_main = 8;
-			if (BaseClass == Job_Merchant || BaseClass == Job_Swordman || BaseClass == Job_Thief || BaseClass == Job_Archer || BaseClass == Job_Ninja || BaseClass == Job_Gunslinger) getitem 2429,1; else getitem 2430,1; close;
+			if (BaseClass == Job_Merchant || BaseClass == Job_Swordman || BaseClass == Job_Thief || BaseClass == Job_Archer) getitem Iron_Boots01,1; else getitem Iron_Boots02,1; close;
 		}
 		mes "[The Blacksmith]";
 		mes "What are you doing? First, you must get me ^0000ff25 Steel^000000.";
@@ -7583,7 +7583,7 @@ moscovia,178,127,0	script	The Blacksmith#rus06	1_M_SMITH,{
 					mes "[The Blacksmith]";
 					mes "The forest is dangerous. Be very careful in there!";
 					mes "Ah and you shouldn't be needing those Steel Boots anymore. Good luck!";
-					if (countitem(Iron_Boots01)) delitem 2429,1; else delitem 2430,1;
+					if (countitem(Iron_Boots01)) delitem Iron_Boots01,1; else delitem Iron_Boots02,1;
 					rhea_rus_main = 9;
 					close;
 				}
@@ -7999,7 +7999,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 			mes "[Ryubaba]";
 			mes "Huhu, oh you jest. You know what you're talking about. Ah, this is a Choco drink that I have made. Give it a taste, isn't it good?";
 			rhea_rus_ring = 4;
-			getitem 573,1;
+			getitem Chocolate_Drink,1;
 			close;
 		} else if (rhea_rus_ring == 2) {
 			mes "[Ryubaba]";
@@ -8019,7 +8019,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 				if (countitem(Witherless_Rose) || countitem(Frozen_Rose)) {
 					mes "[Ryubaba]";
 					mes "Ok. Well, I forgive you.";
-					if (countitem(Witherless_Rose)) delitem 748,1; else delitem 749,1;
+					if (countitem(Witherless_Rose)) delitem Witherless_Rose,1; else delitem Frozen_Rose,1;
 					rhea_rus_ring = 4;
 					close;
 				}
@@ -8297,7 +8297,7 @@ moscovia,223,210,3	script	Little Boy#rus09	4_M_RUSCHILD,{
 				if (countitem(Candy)) {
 					mes "[Little Boy]";
 					mes "Sister Ryubaba likes presents! Especially flowers such as roses. She believes that they resemble her.";
-					if (countitem(Candy)) delitem 529,1; else delitem 538,1;
+					if (countitem(Candy)) delitem Candy,1; else delitem Well_Baked_Cookie,1;
 					rhea_rus_ring = 3;
 					close;
 				}
@@ -8419,9 +8419,9 @@ mosk_fild02,157,233,0	script	Shepherdess#rus10	1_F_04,{
 				next;
 				mes "- ^0000ffShepherdess gives me the^000000 -";
 				mes "- ^0000ff'Pointed Wooden Flute'!!^000000 -";
-				delitem 7882,25;
+				delitem Pointed_Branch,25;
 				rhea_rus_ring = 7;
-				getitem 7883,1;
+				getitem Pointed_Wooden_Flute,1;
 				close;
 			}
 			mes "[Shepherdess]";
@@ -8455,7 +8455,7 @@ mosk_fild02,157,233,0	script	Shepherdess#rus10	1_F_04,{
 			if (rand(1,3) == 2) {
 				mes "- I avoid the thorns and -";
 				mes "- cut off a branch!! -";
-				getitem 7882,1;
+				getitem Pointed_Branch,1;
 				donpcevent "Pointed Tree#rus11::OnDisable";
 				close;
 			}
@@ -8668,7 +8668,7 @@ OnTouch:
 		mes "- cool damp hair, you seem -";
 		mes "- the feel the sadness within -";
 		rhea_rus_hair = 9;
-		getitem 7878,2;
+		getitem Lusalka_Hair,2;
 		close;
 	} else if (rhea_rus_hair > 8) {
 		mes "- You feel that someone -";
@@ -9554,7 +9554,7 @@ mosk_fild02,243,270,0	script	Marozka#rus31	4_M_LGTGRAND,{
 			mes "[Marozka]";
 			mes "I hope you help Maria with your strength and kindness.";
 			rhea_rus_quiz = 30;
-			getitem 7879,10;
+			getitem Golden_Thread,10;
 			close;
 		}
 	}
@@ -9661,11 +9661,11 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		}
 		mes "[Baba Yaga]";
 		mes "Ok, let's begin. Ah, before that... Wait here!";
-		delitem 724,2;
-		delitem 969,3;
-		delitem 7877,1;
-		delitem 7878,2;
-		delitem 7879,10;
+		delitem Cardinal_Jewel_,2;
+		delitem Gold,3;
+		delitem Red_Ring,1;
+		delitem Lusalka_Hair,2;
+		delitem Golden_Thread,10;
 		rhea_rus_main = 10;
 		close;
 	} else if (rhea_rus_main == 10) {
@@ -9767,7 +9767,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 			mes "Ok.. Let's do this.";
 			mes "'Keep off the grass!!!'";
 			specialeffect EF_BEGINSPELL4;
-			delitem 7881,1;
+			delitem Book_Of_Magic,1;
 			rhea_rus_main = 28;
 			monster "mosk_dun02",52,210,"Violent Gardener",1493,1,"Baba Yaga#rus32::OnMyMobDead";
 			monster "mosk_dun02",53,210,"Dangerous Gardener",1500,1,"Baba Yaga#rus32::OnMyMobDead";
@@ -9852,7 +9852,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
-		getitem 7876,1;
+		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main == 42) {
 		mes "["+ strcharinfo(0) +"]";
@@ -9867,7 +9867,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
-		getitem 7876,1;
+		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main == 43) {
 		if (countitem(Babayaga_Silver_Spoon)) {
@@ -9882,9 +9882,9 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 			next;
 			mes "[Baba Yaga]";
 			mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
-			delitem 7880,1;
+			delitem Babayaga_Silver_Spoon,1;
 			rhea_rus_main = 47;
-			getitem 7876,1;
+			getitem Gold_Key,1;
 			close;
 		}
 		mes "["+ strcharinfo(0) +"]";
@@ -9909,7 +9909,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
-		getitem 7876,1;
+		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main == 45) {
 		mes "["+ strcharinfo(0) +"]";
@@ -9924,7 +9924,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
-		getitem 7876,1;
+		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main == 46) {
 		mes "["+ strcharinfo(0) +"]";
@@ -9939,7 +9939,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
-		getitem 7876,1;
+		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main > 46 && rhea_rus_main < 49) {
 		mes "[Baba Yaga]";
@@ -10024,10 +10024,10 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 			next;
 			mes "- ^0000ffYou get the 'Living Water'^000000 -";
 			mes "- ^0000ffand the 'Dead Water' !!^000000 -";
-			delitem 523,1;
-			delitem 12020,1;
-			delitem 610,2;
-			delitem 520,10;
+			delitem Holy_Water,1;
+			delitem Water_Of_Darkness,1;
+			delitem Leaf_Of_Yggdrasil,2;
+			delitem Leaflet_Of_Hinal,10;
 			rhea_rus_main = 51;
 			close;
 		}
@@ -10162,12 +10162,12 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 					next;
 					mes "[Baba Yaga]";
 					mes "Whenever you want more, come to me.";
-					delitem 501,.@redpotion_send;
-					delitem 1092,.@redtube_send;
-					delitem 7134,.@redcup_send;
-					delitem 512,.@redapple_send;
+					delitem Red_Potion,.@redpotion_send;
+					delitem Empty_Cylinder,.@redtube_send;
+					delitem Medicine_Bowl,.@redcup_send;
+					delitem Apple,.@redapple_send;
 					Zeny -= .@redzeny_send;
-					getitem 545,.@total_red01;
+					getitem Red_Slim_Potion,.@total_red01;
 					close;
 				}
 			}
@@ -10249,12 +10249,12 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 					next;
 					mes "[Baba Yaga]";
 					mes "Whenever you want more, come to me.";
-					delitem 503,.@yellpotion_send;
-					delitem 1092,.@yelltube_send;
-					delitem 7134,.@yellcup_send;
-					delitem 513,.@yellbanana_send;
+					delitem Yellow_Potion,.@yellpotion_send;
+					delitem Empty_Cylinder,.@yelltube_send;
+					delitem Medicine_Bowl,.@yellcup_send;
+					delitem Banana,.@yellbanana_send;
 					Zeny -= .@yellzeny_send;
-					getitem 546,.@total_yell01;
+					getitem Yellow_Slim_Potion,.@total_yell01;
 					close;
 				}
 			}
@@ -10684,7 +10684,7 @@ mosk_dun02,65,232,0	script	Noisy Coffin#rus36	4_NFCOFFIN,{
 						next;
 						mes "[Noisy Coffin]";
 						mes "Heek, heeee! Heeeeeek!";
-						delitem 523,1;
+						delitem Holy_Water,1;
 						rhea_rus_main = 17;
 						next;
 					} else {
@@ -10696,7 +10696,7 @@ mosk_dun02,65,232,0	script	Noisy Coffin#rus36	4_NFCOFFIN,{
 						next;
 						mes "[Noisy Coffin]";
 						mes "Ah, cold! No, it's cool! Was it fun? Was it fun?!";
-						delitem 523,1;
+						delitem Holy_Water,1;
 						next;
 						mes "["+ strcharinfo(0) +"]";
 						mes "......................................";
@@ -10833,7 +10833,7 @@ treasure01,165,58,0	script	Old Treasure Box#rus37	HIDDEN_NPC,{
 		next;
 		mes "- ^0000ff You find Baba Yaga's spoon !!^000000 -";
 		rhea_rus_main = 43;
-		getitem 7880,1;
+		getitem Babayaga_Silver_Spoon,1;
 		close;
 	} else if (rhea_rus_main == 43) {
 		mes "- The treasure box where you found the silver spoons -";
@@ -11109,7 +11109,7 @@ amatsu,233,234,3	script	Momotoro Publisher#rus42	4_F_JPN2,{
 		mes "Thank you for buying our books. If you need more books, contact us please.";
 		Zeny -= 5000;
 		rhea_rus_main = 27;
-		getitem 7881,1;
+		getitem Book_Of_Magic,1;
 		close;
 	} else if (rhea_rus_main > 26 && rhea_rus_main < 31) {
 		mes "[Momotoro Publisher]";
