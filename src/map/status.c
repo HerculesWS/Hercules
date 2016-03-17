@@ -2718,7 +2718,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 
 	// Base batk value is set on status->calc_misc
 	// weapon-type bonus (FIXME: Why is the weapon_atk bonus applied to base attack?)
-	if (sd->status.weapon < MAX_WEAPON_TYPE && sd->weapon_atk[sd->status.weapon])
+	if (sd->status.weapon < MAX_SINGLE_WEAPON_TYPE && sd->weapon_atk[sd->status.weapon])
 		bstatus->batk += sd->weapon_atk[sd->status.weapon];
 	// Absolute modifiers from passive skills
 #ifndef RENEWAL
@@ -4189,10 +4189,10 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st) 
 	float temp;
 	int skill_lv, val = 0;
 	amotion = status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype1];
-	if ( sd->status.weapon > MAX_WEAPON_TYPE )
+	if ( sd->status.weapon > MAX_SINGLE_WEAPON_TYPE)
 		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype2] / 4;
 	if ( sd->status.shield )
-		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class_)][MAX_WEAPON_TYPE];
+		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class_)][MAX_SINGLE_WEAPON_TYPE];
 	switch ( sd->status.weapon ) {
 		case W_BOW:
 		case W_MUSICAL:
@@ -4215,7 +4215,7 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st) 
 	amotion = ((int)(temp + ((float)(status->calc_aspd(&sd->bl, &sd->sc, 1) + val) * st->agi / 200)) - min(amotion, 200));
 #else
 	// base weapon delay
-	amotion = (sd->status.weapon < MAX_WEAPON_TYPE)
+	amotion = (sd->status.weapon < MAX_SINGLE_WEAPON_TYPE)
 		? (status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->status.weapon]) // single weapon
 		: (status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype1] + status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype2]) * 7 / 10; // dual-wield
 
@@ -12603,7 +12603,7 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 		{ "FuumaShuriken", W_HUUMA },
 		{ "TwoHandRod", W_2HSTAFF },
 #ifdef RENEWAL_ASPD
-		{ "Shield", MAX_WEAPON_TYPE }
+		{ "Shield", MAX_SINGLE_WEAPON_TYPE }
 #endif
 	};
 
@@ -12999,10 +12999,10 @@ int status_readdb(void)
 		memset(status->dbs->job_bonus,0,sizeof(status->dbs->job_bonus)); // Job-specific stats bonus
 	}
 	for ( i = 0; i < CLASS_COUNT; i++ ) {
-		for ( j = 0; j < MAX_WEAPON_TYPE; j++ )
+		for ( j = 0; j < MAX_SINGLE_WEAPON_TYPE; j++ )
 			status->dbs->aspd_base[i][j] = 2000;
 #ifdef RENEWAL_ASPD
-		status->dbs->aspd_base[i][MAX_WEAPON_TYPE] = 0;
+		status->dbs->aspd_base[i][MAX_SINGLE_WEAPON_TYPE] = 0;
 #endif
 	}
 

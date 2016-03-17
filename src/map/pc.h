@@ -657,7 +657,7 @@ END_ZEROED_BLOCK;
 #define pc_stop_attack(sd)        (unit->stop_attack(&(sd)->bl))
 
 //Weapon check considering dual wielding.
-#define pc_check_weapontype(sd, type) ((type)&((sd)->status.weapon < MAX_WEAPON_TYPE? \
+#define pc_check_weapontype(sd, type) ((type)&((sd)->status.weapon < MAX_SINGLE_WEAPON_TYPE? \
 	1<<(sd)->status.weapon:(1<<(sd)->weapontype1)|(1<<(sd)->weapontype2)|(1<<(sd)->status.weapon)))
 
 // clientside display macros (values to the left/right of the "+")
