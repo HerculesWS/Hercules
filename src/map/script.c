@@ -13641,15 +13641,20 @@ BUILDIN(specialeffect) {
 	if (script_hasdata(st,4)) {
 		struct npc_data *nd = npc->name2id(script_getstr(st,4));
 		if (nd != NULL)
-			clif->specialeffect(&nd->bl, type, target);
+			if (target == SELF) {
+				struct map_session_data *sd = script->rid2sd(st);
+				if (sd != NULL)
+					clif->specialeffect_single(&nd->bl,type,sd->fd);
+			} else
+				clif->specialeffect(&nd->bl, type, target);
+						
 	} else {
 		if (target == SELF) {
 			struct map_session_data *sd = script->rid2sd(st);
 			if (sd != NULL)
 				clif->specialeffect_single(bl,type,sd->fd);
-		} else {
+		} else
 			clif->specialeffect(bl, type, target);
-		}
 	}
 
 	return true;
