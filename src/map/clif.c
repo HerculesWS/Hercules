@@ -1049,6 +1049,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 #endif
 #if PACKETVER >= 20150513
 	p.body = vd->body_style;
+	safestrncpy(p.name, clif->get_bl_name(bl), NAME_LENGTH);
 #endif
 
 	clif->send(&p,sizeof(p),tsd?&tsd->bl:bl,target);
@@ -1189,6 +1190,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 #endif
 #if PACKETVER >= 20150513
 	p.body = vd->body_style;
+	safestrncpy(p.name, clif->get_bl_name(bl), NAME_LENGTH);
 #endif
 	if( disguised(bl) ) {
 		nullpo_retv(sd);
@@ -1280,6 +1282,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 #endif
 #if PACKETVER >= 20150513
 	p.body = vd->body_style;
+	safestrncpy(p.name, clif->get_bl_name(bl), NAME_LENGTH);
 #endif
 
 	clif->send(&p,sizeof(p),tsd?&tsd->bl:bl,target);
@@ -13284,7 +13287,7 @@ void clif_parse_GMKick(int fd, struct map_session_data *sd) {
 		case BL_PC:
 		{
 			char command[NAME_LENGTH+6];
-			sprintf(command, "%ckick %s", atcommand->at_symbol, status->get_name(target));
+			sprintf(command, "%ckick %s", atcommand->at_symbol, clif->get_bl_name(target));
 			atcommand->exec(fd, sd, command, true);
 		}
 		break;
@@ -13299,7 +13302,7 @@ void clif_parse_GMKick(int fd, struct map_session_data *sd) {
 				clif->GM_kickack(sd, 0);
 				return;
 			}
-			sprintf(command, "/kick %s (%d)", status->get_name(target), status->get_class(target));
+			sprintf(command, "/kick %s (%d)", clif->get_bl_name(target), status->get_class(target));
 			logs->atcommand(sd, command);
 			status_percent_damage(&sd->bl, target, 100, 0, true); // can invalidate 'target'
 		}
@@ -18760,6 +18763,22 @@ void clif_selectcart(struct map_session_data *sd)
 #endif
 }
 
+/**
+ * Returns the name of the given bl, in a client-friendly format.
+ *
+ * @param bl The requested bl.
+ * @return The bl's name (guaranteed to be non-NULL).
+ */
+const char *clif_get_bl_name(const struct block_list *bl)
+{
+	const char *name = status->get_name(bl);
+
+	if (name == NULL)
+		return "Unknown";
+
+	return name;
+}
+
 /* */
 unsigned short clif_decrypt_cmd( int cmd, struct map_session_data *sd ) {
 	if( sd ) {
@@ -19829,4 +19848,5 @@ void clif_defaults(void) {
 	clif->pHotkeyRowShift = clif_parse_HotkeyRowShift;
 	clif->dressroom_open = clif_dressroom_open;
 	clif->pOneClick_ItemIdentify = clif_parse_OneClick_ItemIdentify;
+	clif->get_bl_name = clif_get_bl_name;
 }

@@ -235,9 +235,9 @@ void script_reportsrc(struct script_state *st) {
 			break;
 		default:
 			if( bl->m >= 0 )
-				ShowDebug("Source (Non-NPC type %u): name %s at %s (%d,%d)\n", bl->type, status->get_name(bl), map->list[bl->m].name, bl->x, bl->y);
+				ShowDebug("Source (Non-NPC type %u): name %s at %s (%d,%d)\n", bl->type, clif->get_bl_name(bl), map->list[bl->m].name, bl->x, bl->y);
 			else
-				ShowDebug("Source (Non-NPC type %u): name %s (invisible/not on a map)\n", bl->type, status->get_name(bl));
+				ShowDebug("Source (Non-NPC type %u): name %s (invisible/not on a map)\n", bl->type, clif->get_bl_name(bl));
 			break;
 	}
 }
@@ -16817,7 +16817,7 @@ BUILDIN(unittalk) {
 	if( bl != NULL ) {
 		struct StringBuf sbuf;
 		StrBuf->Init(&sbuf);
-		StrBuf->Printf(&sbuf, "%s : %s", status->get_name(bl), message);
+		StrBuf->Printf(&sbuf, "%s : %s", clif->get_bl_name(bl), message);
 		clif->disp_overhead(bl, StrBuf->Value(&sbuf));
 		StrBuf->Destroy(&sbuf);
 	}
