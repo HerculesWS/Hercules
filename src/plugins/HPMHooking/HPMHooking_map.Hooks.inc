@@ -24145,6 +24145,33 @@ void HP_clif_pSelectCart(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
+const char* HP_clif_get_bl_name(const struct block_list *bl) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if( HPMHooks.count.HP_clif_get_bl_name_pre ) {
+		const char* (*preHookFunc) (const struct block_list *bl);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_get_bl_name_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_get_bl_name_pre[hIndex].func;
+			retVal___ = preHookFunc(bl);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.clif.get_bl_name(bl);
+	}
+	if( HPMHooks.count.HP_clif_get_bl_name_post ) {
+		const char* (*postHookFunc) (const char* retVal___, const struct block_list *bl);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_get_bl_name_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_get_bl_name_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl);
+		}
+	}
+	return retVal___;
+}
 /* cmdline */
 void HP_cmdline_init(void) {
 	int hIndex = 0;
@@ -72803,11 +72830,11 @@ struct status_data* HP_status_get_base_status(struct block_list *bl) {
 	}
 	return retVal___;
 }
-const char* HP_status_get_name(struct block_list *bl) {
+const char* HP_status_get_name(const struct block_list *bl) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
 	if( HPMHooks.count.HP_status_get_name_pre ) {
-		const char* (*preHookFunc) (struct block_list *bl);
+		const char* (*preHookFunc) (const struct block_list *bl);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_name_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_get_name_pre[hIndex].func;
@@ -72822,7 +72849,7 @@ const char* HP_status_get_name(struct block_list *bl) {
 		retVal___ = HPMHooks.source.status.get_name(bl);
 	}
 	if( HPMHooks.count.HP_status_get_name_post ) {
-		const char* (*postHookFunc) (const char* retVal___, struct block_list *bl);
+		const char* (*postHookFunc) (const char* retVal___, const struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_name_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_get_name_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl);
@@ -72830,11 +72857,11 @@ const char* HP_status_get_name(struct block_list *bl) {
 	}
 	return retVal___;
 }
-int HP_status_get_class(struct block_list *bl) {
+int HP_status_get_class(const struct block_list *bl) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_class_pre ) {
-		int (*preHookFunc) (struct block_list *bl);
+		int (*preHookFunc) (const struct block_list *bl);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_class_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_get_class_pre[hIndex].func;
@@ -72849,7 +72876,7 @@ int HP_status_get_class(struct block_list *bl) {
 		retVal___ = HPMHooks.source.status.get_class(bl);
 	}
 	if( HPMHooks.count.HP_status_get_class_post ) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl);
+		int (*postHookFunc) (int retVal___, const struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_class_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_get_class_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl);
@@ -72857,11 +72884,11 @@ int HP_status_get_class(struct block_list *bl) {
 	}
 	return retVal___;
 }
-int HP_status_get_lv(struct block_list *bl) {
+int HP_status_get_lv(const struct block_list *bl) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_lv_pre ) {
-		int (*preHookFunc) (struct block_list *bl);
+		int (*preHookFunc) (const struct block_list *bl);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_lv_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_get_lv_pre[hIndex].func;
@@ -72876,7 +72903,7 @@ int HP_status_get_lv(struct block_list *bl) {
 		retVal___ = HPMHooks.source.status.get_lv(bl);
 	}
 	if( HPMHooks.count.HP_status_get_lv_post ) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl);
+		int (*postHookFunc) (int retVal___, const struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_lv_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_get_lv_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl);
@@ -72965,11 +72992,11 @@ unsigned char HP_status_calc_attack_element(struct block_list *bl, struct status
 	}
 	return retVal___;
 }
-int HP_status_get_party_id(struct block_list *bl) {
+int HP_status_get_party_id(const struct block_list *bl) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_party_id_pre ) {
-		int (*preHookFunc) (struct block_list *bl);
+		int (*preHookFunc) (const struct block_list *bl);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_party_id_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_get_party_id_pre[hIndex].func;
@@ -72984,7 +73011,7 @@ int HP_status_get_party_id(struct block_list *bl) {
 		retVal___ = HPMHooks.source.status.get_party_id(bl);
 	}
 	if( HPMHooks.count.HP_status_get_party_id_post ) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl);
+		int (*postHookFunc) (int retVal___, const struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_party_id_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_get_party_id_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl);
@@ -72992,11 +73019,11 @@ int HP_status_get_party_id(struct block_list *bl) {
 	}
 	return retVal___;
 }
-int HP_status_get_guild_id(struct block_list *bl) {
+int HP_status_get_guild_id(const struct block_list *bl) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_guild_id_pre ) {
-		int (*preHookFunc) (struct block_list *bl);
+		int (*preHookFunc) (const struct block_list *bl);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_guild_id_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_get_guild_id_pre[hIndex].func;
@@ -73011,7 +73038,7 @@ int HP_status_get_guild_id(struct block_list *bl) {
 		retVal___ = HPMHooks.source.status.get_guild_id(bl);
 	}
 	if( HPMHooks.count.HP_status_get_guild_id_post ) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl);
+		int (*postHookFunc) (int retVal___, const struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_guild_id_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_get_guild_id_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl);
@@ -73019,11 +73046,11 @@ int HP_status_get_guild_id(struct block_list *bl) {
 	}
 	return retVal___;
 }
-int HP_status_get_emblem_id(struct block_list *bl) {
+int HP_status_get_emblem_id(const struct block_list *bl) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_emblem_id_pre ) {
-		int (*preHookFunc) (struct block_list *bl);
+		int (*preHookFunc) (const struct block_list *bl);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_emblem_id_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_get_emblem_id_pre[hIndex].func;
@@ -73038,7 +73065,7 @@ int HP_status_get_emblem_id(struct block_list *bl) {
 		retVal___ = HPMHooks.source.status.get_emblem_id(bl);
 	}
 	if( HPMHooks.count.HP_status_get_emblem_id_post ) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl);
+		int (*postHookFunc) (int retVal___, const struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_emblem_id_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_get_emblem_id_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl);
@@ -73046,11 +73073,11 @@ int HP_status_get_emblem_id(struct block_list *bl) {
 	}
 	return retVal___;
 }
-int HP_status_get_mexp(struct block_list *bl) {
+int HP_status_get_mexp(const struct block_list *bl) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_mexp_pre ) {
-		int (*preHookFunc) (struct block_list *bl);
+		int (*preHookFunc) (const struct block_list *bl);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_mexp_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_get_mexp_pre[hIndex].func;
@@ -73065,7 +73092,7 @@ int HP_status_get_mexp(struct block_list *bl) {
 		retVal___ = HPMHooks.source.status.get_mexp(bl);
 	}
 	if( HPMHooks.count.HP_status_get_mexp_post ) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl);
+		int (*postHookFunc) (int retVal___, const struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_mexp_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_get_mexp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl);
@@ -73073,11 +73100,11 @@ int HP_status_get_mexp(struct block_list *bl) {
 	}
 	return retVal___;
 }
-int HP_status_get_race2(struct block_list *bl) {
+int HP_status_get_race2(const struct block_list *bl) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_race2_pre ) {
-		int (*preHookFunc) (struct block_list *bl);
+		int (*preHookFunc) (const struct block_list *bl);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_race2_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_get_race2_pre[hIndex].func;
@@ -73092,7 +73119,7 @@ int HP_status_get_race2(struct block_list *bl) {
 		retVal___ = HPMHooks.source.status.get_race2(bl);
 	}
 	if( HPMHooks.count.HP_status_get_race2_post ) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl);
+		int (*postHookFunc) (int retVal___, const struct block_list *bl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_race2_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_get_race2_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, bl);
@@ -74284,11 +74311,11 @@ unsigned short HP_status_base_atk(const struct block_list *bl, const struct stat
 	}
 	return retVal___;
 }
-unsigned int HP_status_get_base_maxhp(struct map_session_data *sd, struct status_data *st) {
+unsigned int HP_status_get_base_maxhp(const struct map_session_data *sd, const struct status_data *st) {
 	int hIndex = 0;
 	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_base_maxhp_pre ) {
-		unsigned int (*preHookFunc) (struct map_session_data *sd, struct status_data *st);
+		unsigned int (*preHookFunc) (const struct map_session_data *sd, const struct status_data *st);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_base_maxhp_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_get_base_maxhp_pre[hIndex].func;
@@ -74303,7 +74330,7 @@ unsigned int HP_status_get_base_maxhp(struct map_session_data *sd, struct status
 		retVal___ = HPMHooks.source.status.get_base_maxhp(sd, st);
 	}
 	if( HPMHooks.count.HP_status_get_base_maxhp_post ) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, struct map_session_data *sd, struct status_data *st);
+		unsigned int (*postHookFunc) (unsigned int retVal___, const struct map_session_data *sd, const struct status_data *st);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_base_maxhp_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_get_base_maxhp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, st);
@@ -74311,11 +74338,11 @@ unsigned int HP_status_get_base_maxhp(struct map_session_data *sd, struct status
 	}
 	return retVal___;
 }
-unsigned int HP_status_get_base_maxsp(struct map_session_data *sd, struct status_data *st) {
+unsigned int HP_status_get_base_maxsp(const struct map_session_data *sd, const struct status_data *st) {
 	int hIndex = 0;
 	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_status_get_base_maxsp_pre ) {
-		unsigned int (*preHookFunc) (struct map_session_data *sd, struct status_data *st);
+		unsigned int (*preHookFunc) (const struct map_session_data *sd, const struct status_data *st);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_base_maxsp_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_status_get_base_maxsp_pre[hIndex].func;
@@ -74330,7 +74357,7 @@ unsigned int HP_status_get_base_maxsp(struct map_session_data *sd, struct status
 		retVal___ = HPMHooks.source.status.get_base_maxsp(sd, st);
 	}
 	if( HPMHooks.count.HP_status_get_base_maxsp_post ) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, struct map_session_data *sd, struct status_data *st);
+		unsigned int (*postHookFunc) (unsigned int retVal___, const struct map_session_data *sd, const struct status_data *st);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_status_get_base_maxsp_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_status_get_base_maxsp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, st);
