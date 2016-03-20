@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@
 #include "map/script.h" // item script processing
 #include "common/HPM.h"
 #include "common/conf.h"
+#include "common/db.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/random.h"
@@ -2585,13 +2586,9 @@ void itemdb_reload(void) {
 			sd->itemcheck = (enum pc_checkitem_types) battle->bc->item_check;
 
 		/* clear combo bonuses */
-		if (sd->combo_count) {
-			aFree(sd->combos);
-			sd->combos = NULL;
-			sd->combo_count = 0;
-			if( pc->load_combo(sd) > 0 )
-				status_calc_pc(sd,SCO_FORCE);
-		}
+		VECTOR_CLEAR(sd->combos);
+		if (pc->load_combo(sd) > 0)
+			status_calc_pc(sd, SCO_FORCE);
 
 		// Check for and delete unavailable/disabled items.
 		pc->checkitem(sd);

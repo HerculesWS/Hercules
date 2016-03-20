@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -44,6 +44,8 @@
 #include "map/unit.h"
 #include "map/vending.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
+#include "common/db.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
@@ -52,7 +54,6 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/utils.h"
-#include "common/conf.h"
 
 #include <math.h>
 #include <memory.h>
@@ -2585,8 +2586,8 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	}
 
 	/* we've got combos to process */
-	for( i = 0; i < sd->combo_count; i++ ) {
-		struct item_combo *combo = itemdb->id2combo(sd->combos[i].id);
+	for (i = 0; i < VECTOR_LENGTH(sd->combos); i++) {
+		struct item_combo *combo = itemdb->id2combo(VECTOR_INDEX(sd->combos, i).id);
 		unsigned char j;
 
 		/**
@@ -2605,7 +2606,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		if( j != combo->count )
 			continue;
 
-		script->run(sd->combos[i].bonus,0,sd->bl.id,0);
+		script->run(VECTOR_INDEX(sd->combos, i).bonus, 0, sd->bl.id, 0);
 		if (!calculating) //Abort, script->run retriggered this.
 			return 1;
 	}

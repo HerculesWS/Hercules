@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -546,8 +546,7 @@ END_ZEROED_BLOCK;
 	enum npc_timeout_type npc_idle_type;
 #endif
 
-	struct pc_combos *combos;
-	unsigned char combo_count;
+	VECTOR_DECL(struct pc_combos) combos;
 
 	/**
 	 * Guarantees your friend request is legit (for bugreport:4629)
