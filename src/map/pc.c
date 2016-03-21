@@ -7339,7 +7339,7 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		}
 
 		// do not reset basic skill
-		if( skill_id == NV_BASIC && (sd->class_&(MAPID_BASEMASK|JOBL_2)) != MAPID_NOVICE )
+		if( skill_id == NV_BASIC && ((sd->class_&(MAPID_BASEMASK|JOBL_2)) != MAPID_NOVICE || (sd->class_&MAPID_BASEMASK) != MAPID_SUMMONER) )
 			continue;
 
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERM_GRANTED )
