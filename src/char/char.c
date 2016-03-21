@@ -4618,7 +4618,7 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 	} else {
 #if PACKETVER >= 20151001
 		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26),RFIFOW(fd,27),RFIFOW(fd,29), RFIFOW(fd,31));
-#if PACKETVER >= 20120307
+#elif PACKETVER >= 20120307
 		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26),RFIFOW(fd,27),RFIFOW(fd,29), JOB_NOVICE);
 #else
 		result = chr->make_new_char_sql(sd, RFIFOP(fd,2),RFIFOB(fd,26),RFIFOB(fd,27),RFIFOB(fd,28),RFIFOB(fd,29),RFIFOB(fd,30),RFIFOB(fd,31),RFIFOB(fd,32),RFIFOW(fd,33),RFIFOW(fd,35), JOB_NOVICE);
