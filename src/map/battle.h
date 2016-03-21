@@ -574,6 +574,8 @@ struct Battle_Config {
 
 	int min_item_buy_price;
 	int min_item_sell_price;
+
+	int display_fake_hp_when_dead;
 };
 
 /* criteria for battle_config.idletime_critera */

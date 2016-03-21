@@ -2330,6 +2330,51 @@ static unsigned int status_get_base_maxhp(const struct map_session_data *sd, con
 	return (unsigned int)cap_value(val,0,UINT_MAX);
 }
 
+/**
+ * Calculates the HP that a character will have after death, on respawn.
+ *
+ * @param sd The character to calculate.
+ * @param st The character's status data.
+ */
+static unsigned int status_get_restart_hp(const struct map_session_data *sd, const struct status_data *st)
+{
+	unsigned int hp = 0;
+
+	if (sd->special_state.restart_full_recover)
+		return st->max_hp;
+
+	if ((sd->job & MAPID_BASEMASK) == MAPID_NOVICE && (sd->job & JOBL_2) == 0 && battle_config.restart_hp_rate < 50)
+		hp = st->max_hp / 2;
+	else
+		hp = APPLY_RATE(st->max_hp, battle_config.restart_hp_rate);
+
+	if (hp > 0)
+		return hp;
+
+	return 1;
+}
+
+/**
+ * Calculates the SP that a character will have after death, on respawn.
+ *
+ * @param sd The character to calculate.
+ * @param st The character's status data.
+ */
+static unsigned int status_get_restart_sp(const struct map_session_data *sd, const struct status_data *st)
+{
+	unsigned int sp = 0;
+
+	if (sd->special_state.restart_full_recover)
+		return st->max_sp;
+
+	sp = APPLY_RATE(st->max_sp, battle_config.restart_sp_rate);
+
+	if (sp > 0)
+		return sp;
+
+	return 1; // the minimum for the respawn setting is SP:1
+}
+
 static void status_calc_pc_additional(struct map_session_data *sd, enum e_status_calc_opt opt)
 {
 	/* Just used for Plugin to give bonuses. */
@@ -2884,20 +2929,8 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 	// ----- RESPAWN HP/SP -----
 	//
 	//Calc respawn hp and store it on base_status
-	if (sd->special_state.restart_full_recover)
-	{
-		bstatus->hp = bstatus->max_hp;
-		bstatus->sp = bstatus->max_sp;
-	} else {
-		status->calc_pc_recover_hp(sd, bstatus);
-		if(!bstatus->hp)
-			bstatus->hp = 1;
-
-		bstatus->sp = APPLY_RATE(bstatus->max_sp, battle_config.restart_sp_rate);
-
-		if( !bstatus->sp ) /* the minimum for the respawn setting is SP:1 */
-			bstatus->sp = 1;
-	}
+	bstatus->hp = status->get_restart_hp(sd, bstatus);
+	bstatus->sp = status->get_restart_sp(sd, bstatus);
 
 	// ----- MISC CALCULATION -----
 	status->calc_misc(&sd->bl, bstatus, sd->status.base_level);
@@ -13729,6 +13762,8 @@ void status_defaults(void)
 	status->base_atk = status_base_atk;
 	status->get_base_maxhp = status_get_base_maxhp;
 	status->get_base_maxsp = status_get_base_maxsp;
+	status->get_restart_hp = status_get_restart_hp;
+	status->get_restart_sp = status_get_restart_sp;
 	status->calc_npc_ = status_calc_npc_;
 	status->calc_str = status_calc_str;
 	status->calc_agi = status_calc_agi;

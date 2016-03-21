@@ -2384,6 +2384,8 @@ struct status_interface {
 	unsigned short (*base_atk) (const struct block_list *bl, const struct status_data *st);
 	unsigned int (*get_base_maxhp) (const struct map_session_data *sd, const struct status_data *st);
 	unsigned int (*get_base_maxsp) (const struct map_session_data *sd, const struct status_data *st);
+	unsigned int (*get_restart_hp) (const struct map_session_data *sd, const struct status_data *st);
+	unsigned int (*get_restart_sp) (const struct map_session_data *sd, const struct status_data *st);
 	int (*calc_npc_) (struct npc_data *nd, enum e_status_calc_opt opt);
 	unsigned short (*calc_str) (struct block_list *bl, struct status_change *sc, int str);
 	unsigned short (*calc_agi) (struct block_list *bl, struct status_change *sc, int agi);
