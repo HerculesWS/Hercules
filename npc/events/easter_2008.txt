@@ -46,7 +46,7 @@ prontera,111,99,5	script	Egg Salesman#prt::EggVendor	4W_M_02,{
 	mes "Eggs that I'm selling?";
 	next;
 	while(1) {
-		switch(select("What are you doing?:Why Chicken Eggs?:Sure, I'll buy some.:Never mind.")) {
+		switch(select("What are you doing?", "Why Chicken Eggs?", "Sure, I'll buy some.", "Never mind.")) {
 		case 1:
 			mes "[Egg Salesman]";
 			mes "What am I--? I'm";
@@ -238,7 +238,7 @@ prontera,230,312,3	script	Nerlen#es07	1_F_PRIEST,{
 	mes "Would you like me to";
 	mes "make some for you?";
 	next;
-	switch(select("What do I need to make Holy Eggs?:I want to make Holy Eggs.:Maybe next time.")) {
+	switch(select("What do I need to make Holy Eggs?", "I want to make Holy Eggs.", "Maybe next time.")) {
 	case 1:
 		mes "[Nerlen]";
 		mes "For each Holy Egg";
@@ -354,7 +354,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 			mes "Why don't";
 			mes "you... Join us?";
 			next;
-			switch(select("What for?:Um... But you're suspicious!")) {
+			switch(select("What for?", "Um... But you're suspicious!")) {
 			case 1:
 				mes "[Corps Member]";
 				mes "I see I've caught your";
@@ -394,7 +394,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 		mes "I hope you brought the";
 		mes "10 Holy Eggs I require.";
 		next;
-		switch(select("Give Holy Eggs:Don't Give Holy Eggs")) {
+		switch(select("Give Holy Eggs", "Don't Give Holy Eggs")) {
 		case 1:
 			mes "[Corps Member]";
 			mes "So you do wish to";
@@ -472,7 +472,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 		mes "Now, did you bring me";
 		mes "33 Holy Eggs for your task?";
 		next;
-		switch(select("Give Holy Eggs:Don't Give Holy Eggs")) {
+		switch(select("Give Holy Eggs", "Don't Give Holy Eggs")) {
 		case 1:
 			if (countitem(Holy_Egg) > 32) {
 				mes "[Corps Member]";

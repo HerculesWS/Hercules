@@ -149,7 +149,7 @@ prontera,216,70,2	script	Strife#pront	1_M_02,{
 			mes "[Strife]";
 			mes "MAGNUM BREAK!";
 			next;
-			if (select("I wanna be strong too!:Um... Do you best.") == 1) {
+			if (select("I wanna be strong too!", "Um... Do you best.") == 1) {
 				event_prt_nov_dreamtalk = 1;
 				mes "[Strife]";
 				mes "Wow...!";
@@ -213,7 +213,7 @@ prontera,216,70,2	script	Strife#pront	1_M_02,{
 		mes "awesomest Knight around!";
 		mes "It's... It's my most precious dream.";
 		next;
-		if (select("Do your best.:Quit it, kid.") == 1) {
+		if (select("Do your best.", "Quit it, kid.") == 1) {
 			mes "[Strife]";
 			mes "Yes, yes of course! Someday, I'll even be as strong as you! When that day comes, I hope that we can train together!";
 			close;
@@ -230,7 +230,7 @@ prontera,78,150,3	script	Dairenne#pront	4_F_01,{
 	mes "Ahh...";
 	mes "The streets are too crowded these days. *Cough Cough* Look at all this dust, not everything about living in the capital city is good. Anyway, may I help you?";
 	next;
-	if (select("Talk:Cancel") == 1) {
+	if (select("Talk", "Cancel") == 1) {
 		mes "[Towngirl Dairenne]";
 		mes "I wonder if you are interested in parties or dresses. Hehehe. These days, the hot topic is definitely the colorful, extravagent, magnificent dresses you can wear.";
 		next;
@@ -321,7 +321,7 @@ prt_in,180,20,2	script	Bartender#pront	1_M_PUBMASTER,{
 	next;
 	.@drink = 1;
 	while(.@drink) {
-		switch(select("'Cunch Crunch Sour'?:'Savory Yum Yum'?:Cancel.")) {
+		switch(select("'Cunch Crunch Sour'?", "'Savory Yum Yum'?", "Cancel.")) {
 		case 1:
 			mes "[Bartender]";
 			mes "The basic ingredients of my Crunch Crunch Sour are the ants roadming inside the Ant Hell in the desert.";
@@ -358,7 +358,7 @@ prt_in,173,24,2	script	Shevild#pront	4_M_03,{
 	mes "Hey, come on over and let's drink! I have lots of interesting stories to tell!";
 	mes "I know lots of things about Prontera. I have seen many fine views and I also have explored some monster lairs around this city.";
 	next;
-	if (select("How could you enter monster lairs?:Cancel") == 1) {
+	if (select("How could you enter monster lairs?", "Cancel") == 1) {
 		mes "[Shevild]";
 		mes "I may appear to be a drunken man but I am more than meets the eye.";
 		mes "Well, I happened to enter the places for carrying weapons for hunters or for delivering stuffs and whatsoever.";
@@ -373,7 +373,7 @@ prt_in,173,24,2	script	Shevild#pront	4_M_03,{
 		mes "That is also a reason why I keep my job.";
 		mes "Ah, I just recall being inside the maze and the spooky forest!";
 		next;
-		switch(select("The Maze?:The Spooky Forest?:Cancel")) {
+		switch(select("The Maze?", "The Spooky Forest?", "Cancel")) {
 		case 1:
 			mes "[Shevild]";
 			mes "Yes. Few days ago, I have entered a mysterious maze following a group of hunters at the north of Prontera.";
@@ -386,7 +386,7 @@ prt_in,173,24,2	script	Shevild#pront	4_M_03,{
 			mes "We were just circling around and then we decided to leave the place. That was one hell of the maze.";
 			mes "But I made up my mind that I would successfully explore the maze one day.";
 			next;
-			if (select("How can I get there?:Cancel") == 1) {
+			if (select("How can I get there?", "Cancel") == 1) {
 				mes "[Shevild]";
 				mes "Err? Haven't you still toured the outside of Prontera?";
 				mes "The maze can be found inside a forest at the north of Prontera. Go check the north west side of the forest.";
@@ -404,7 +404,7 @@ prt_in,173,24,2	script	Shevild#pront	4_M_03,{
 			mes "[Shevild]";
 			mes "Be forewarned that the forest is not a place to go on a picnic. If you drop something on the ground, the monkeys come out from nowhere and take away all of your possessions.";
 			next;
-			if (select("How can I get there?:Cancel") == 1) {
+			if (select("How can I get there?", "Cancel") == 1) {
 				mes "[Shevild]";
 				mes "There is no road directly leads to the ruins. But if you go north and keep heading to east, you will get there.";
 				mes "Oh, be careful on your way to the ruins because there are some weird plant things that assault passersby for no reason.";
@@ -487,7 +487,7 @@ prt_in,177,18,2	script	Marvin#pront	1_F_PUBGIRL,{
 	mes "Whether it's schmoozing with a member of the opposite sex, or battling monsters, I gotta say, it's all about ^333399skills^000000.";
 	next;
 	mes "[Marvin]";
-	if (Sex)
+	if (Sex == SEX_MALE)
 		mes "I can't help you much when it comes to the subject of talking to attractive women such as myself, but I can tell you a little more about skills that help in battle.";
 	else
 		mes "I don't really have any advice for skills when it comes to talking to a cute guy, but I can let you in on what I know about skills that help in battle.";
@@ -515,7 +515,7 @@ prt_in,284,168,3	script	Ginedin Rephere#pront	1_M_JOBTESTER,{
 	mes "[Tailor Ginedin Rephere]";
 	mes "Oh! I didn't realize I had a guest. How may I help you?";
 	next;
-	switch(select("Talk:Dye Clothing:Cancel")) {
+	switch(select("Talk", "Dye Clothing", "Cancel")) {
 	case 1:
 		mes "[Tailor Ginedin Rephere]";
 		mes "Life may have gotten a little better, but receiving all these orders? *Whew!* Young ladies these days must be very well off, so my services may no longer be a luxury.";
@@ -566,7 +566,7 @@ prt_church,103,76,0	script	Garnet#pront	1_F_02,{
 	next;
 	.@SkillChat = 1;
 	while(.@SkillChat) {
-		switch(select("About Heal:About Cure:About Increase AGI:About Angelus:About Blessing:About Warp Portal:End Conversation")) {
+		switch(select("About Heal", "About Cure", "About Increase AGI", "About Angelus", "About Blessing", "About Warp Portal", "End Conversation")) {
 		case 1:
 			mes "[Garnet]";
 			mes "You can recover your own HP with the ^6666CCHeal^000000 skill. Healing is one of the most important ways you can help your friends in battle.";
@@ -663,7 +663,7 @@ prt_church,103,71,0	script	Henson#pront	2_M_PHARMACIST,{
 	next;
 	.@SkillChat = 1;
 	while(.@SkillChat) {
-		switch(select("About Divine Protection:About Demon Bane:About Decrease AGI:About Signum Crusis :About Pneuma:About Ruwach:About Teleport:End conversation.")) {
+		switch(select("About Divine Protection", "About Demon Bane", "About Decrease AGI", "About Signum Crusis ", "About Pneuma", "About Ruwach", "About Teleport", "End conversation.")) {
 		case 1:
 			mes "[Henson]";
 			mes "If you want to permanently improve your Defense against the Undead, learn ^6666CCDivine Protection^000000.";

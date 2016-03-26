@@ -40,11 +40,11 @@ yuno,59,212,4	script	Juno Guide#yuno01::GuideJuno	8_F_GIRL,{
 	F_Navi("[Juno Guide]");
 	next;
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove marks from Mini-Map:Cancel")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove marks from Mini-Map", "Cancel")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Tool Shop ]:[ Forge ]:[ Airport ]:[ Government Building ]:[ Street of Book Stores ]:[ Inn & Pub ]:[ Sage Castle ]:[ Monster Academy ]:[ Library of the Republic ]:[ Weapon & Armor Shop ]:[ Juphero Plaza ]:[ Monster Museum ]:[ Schweicherbil Magic Academy ]:Previous Menu")) {
+				switch(select("[ Tool Shop ]", "[ Forge ]", "[ Airport ]", "[ Government Building ]", "[ Street of Book Stores ]", "[ Inn & Pub ]", "[ Sage Castle ]", "[ Monster Academy ]", "[ Library of the Republic ]", "[ Weapon & Armor Shop ]", "[ Juphero Plaza ]", "[ Monster Museum ]", "[ Schweicherbil Magic Academy ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Tool Shop","yuno,194,140","^FF0000");
 					viewpoint 1,194,140,0,0xFF0000;
@@ -123,7 +123,7 @@ yuno,59,212,4	script	Juno Guide#yuno01::GuideJuno	8_F_GIRL,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Kafra Employees ]:[ Eden Teleport Officer ]:Previous Menu")) {
+				switch(select("[ Kafra Employees ]", "[ Eden Teleport Officer ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, "^FA8072Kafra Employees^000000";
 					viewpoint 1,152,187,13,0xFA8072;

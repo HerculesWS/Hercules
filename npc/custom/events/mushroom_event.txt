@@ -23,7 +23,7 @@ prontera,142,228,6	script	Find the Mushroom	BLACK_MUSHROOM,{
 	if (.status || getgmlevel() < .GM) close;
 	mes "Start the event?";
 	next;
-	if(select("- No:- Yes") == 1) close;
+	if(select("- No", "- Yes") == 1) close;
 	donpcevent strnpcinfo(0)+"::OnMinute10";
 	mes "[ Find The Mushroom ]";
 	mes "Event started!";

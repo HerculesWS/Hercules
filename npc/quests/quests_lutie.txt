@@ -41,7 +41,7 @@ xmas,117,295,4	script	Vending Machine Man	4_M_BIBI,{
 	mes "Hmm...?";
 	mes "I, Titicupe, esteemed manager of the Toy Factory and genius inventor, has done it again! I've just created the world's most sophisticated vending machine!";
 	next;
-	switch(select("Talk to him about the Vending Machine:Items in the Vending Machine:Stop talking")) {
+	switch(select("Talk to him about the Vending Machine", "Items in the Vending Machine", "Stop talking")) {
 	case 1:
 		mes "[Titicupe]";
 		mes "Can you see the little snowman to the left side of me? Can you? If you look at his mouth closely, you'll see that it's been built quite largely. You might say, a bit too large for normal purposes...";
@@ -70,7 +70,7 @@ xmas,117,295,4	script	Vending Machine Man	4_M_BIBI,{
 		mes "Oh right! You need to know what kind of items to put into the Vending Machine to get what you want, yes? Go ahead... Ask me~";
 		emotion e_ic;
 		next;
-		switch(select("Raccoon Hat:Spore Hat:Wonder Nutshell:Ranbow Eggshell:Blush:Chef Hat:Candle:Cake Hat:End Conversation")) {
+		switch(select("Raccoon Hat", "Spore Hat", "Wonder Nutshell", "Ranbow Eggshell", "Blush", "Chef Hat", "Candle", "Cake Hat", "End Conversation")) {
 		case 1:
 			mes "[Titicupe]";
 			mes "Raccoon Hat?";
@@ -162,7 +162,7 @@ xmas,115,297,4	script	Vending Machine	HIDDEN_NPC,{
 	mes "[Audi]";
 	mes "^555555Exciting item vending machine. Invented by great Titicupe. Select the desired item and place required items into snowmouth receptacle.^000000";
 	next;
-	switch(select("^FF3355Notice (Must Read)^000000:Raccoon Hat:Spore Hat:Wonder Nutshell:Rainbow Eggshell:Blush:Chef Hat:Candle:Cake Hat:Cancel")) {
+	switch(select("^FF3355Notice (Must Read)^000000", "Raccoon Hat", "Spore Hat", "Wonder Nutshell", "Rainbow Eggshell", "Blush", "Chef Hat", "Candle", "Cake Hat", "Cancel")) {
 	case 1:
 		mes "[Audi]";
 		mes "Hi~ !";

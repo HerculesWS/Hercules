@@ -48,7 +48,7 @@ alberta,30,65,3	script	Akagi	4_M_JOB_ASSASSIN,{
 			mes "Tell me, do you seek";
 			mes "the path of patience?";
 			next;
-			if(select("No:Yes") == 1) {
+			if(select("No", "Yes") == 1) {
 				mes "[Akagi]";
 				mes "I see.";
 				mes "To each his own,";
@@ -176,7 +176,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "you a few of my skills if you";
 			mes "really want to be a Ninja.";
 			next;
-			if(select("Sure.:No, thanks.") == 2) {
+			if(select("Sure.", "No, thanks.") == 2) {
 				mes "[Cougar]";
 				mes "Hm? Well, alright.";
 				mes "Still, I don't see";
@@ -437,7 +437,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "mind, would you help me?";
 		mes "Then I can help you find Joe.";
 		next;
-		if(select("Don't worry, I'll find him alone.:Sure, I'll help you.") == 1) {
+		if(select("Don't worry, I'll find him alone.", "Sure, I'll help you.") == 1) {
 			mes "[Suspicious Man]";
 			mes "You sure about that...?";
 			mes "Red Leopard Joe is a true";
@@ -561,7 +561,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "Shall I directly send you";
 		mes "to Amatsu right now?";
 		next;
-		if(select("No, thanks.:Yes, please.") == 1) {
+		if(select("No, thanks.", "Yes, please.") == 1) {
 			mes "[Red Leopard Joe]";
 			mes "Alright. Well, I was";
 			mes "just trying to save";

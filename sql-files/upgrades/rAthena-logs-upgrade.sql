@@ -34,7 +34,7 @@ DROP TABLE IF EXISTS `cashlog`;
 ALTER TABLE `mvplog` MODIFY `prize` INT(11) NOT NULL DEFAULT '0';
 
 -- Upgrades to table `picklog`
-ALTER TABLE `picklog` MODIFY `type` enum('M','P','L','T','V','S','N','C','A','R','G','E','B','O','I','X','D','U') NOT NULL default 'P';
+ALTER TABLE `picklog` MODIFY `type` enum('M','P','L','T','V','S','N','C','A','R','G','E','B','O','I','X','D','U','K','Y','Z','W','Q','J','H','@','0','1','2') NOT NULL default 'P';
 ALTER TABLE `picklog` MODIFY `nameid` INT(11) NOT NULL DEFAULT '0';
 ALTER TABLE `picklog` MODIFY `card0` INT(11) NOT NULL DEFAULT '0';
 ALTER TABLE `picklog` MODIFY `card1` INT(11) NOT NULL DEFAULT '0';

@@ -398,7 +398,7 @@ struct flooritem_data {
 	struct item item_data;
 };
 
-enum status_point_types {
+enum status_point_types { //we better clean up this enum and change it name [Hemagx]
 	SP_SPEED,SP_BASEEXP,SP_JOBEXP,SP_KARMA,SP_MANNER,SP_HP,SP_MAXHP,SP_SP, // 0-7
 	SP_MAXSP,SP_STATUSPOINT,SP_0a,SP_BASELEVEL,SP_SKILLPOINT,SP_STR,SP_AGI,SP_VIT, // 8-15
 	SP_INT,SP_DEX,SP_LUK,SP_CLASS,SP_ZENY,SP_SEX,SP_NEXTBASEEXP,SP_NEXTJOBEXP, // 16-23
@@ -486,6 +486,7 @@ enum look {
 	LOOK_BODY,
 	LOOK_FLOOR,
 	LOOK_ROBE,
+	LOOK_BODY2,
 };
 
 // used by map_setcell()
@@ -715,7 +716,7 @@ struct map_data {
 		unsigned noknockback : 1;
 		unsigned notomb : 1;
 		unsigned nocashshop : 1;
-		unsigned noviewid : 22;
+		uint32 noviewid; ///< noviewid (bitmask - @see enum equip_pos)
 	} flag;
 	struct point save;
 	struct npc_data *npc[MAX_NPC_PER_MAP];
@@ -827,8 +828,91 @@ typedef struct homun_data       TBL_HOM;
 typedef struct mercenary_data   TBL_MER;
 typedef struct elemental_data   TBL_ELEM;
 
+/**
+ * Casts a block list to a specific type.
+ *
+ * @remark
+ *   The `bl` argument may be evaluated more than once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ * @retval NULL if bl is the wrong type or NULL.
+ */
 #define BL_CAST(type_, bl) \
-	( ((bl) == (struct block_list*)NULL || (bl)->type != (type_)) ? (T ## type_ *)NULL : (T ## type_ *)(bl) )
+	( ((bl) == (struct block_list *)NULL || (bl)->type != (type_)) ? (T ## type_ *)NULL : (T ## type_ *)(bl) )
+
+/**
+ * Casts a const block list to a specific type.
+ *
+ * @remark
+ *   The `bl` argument may be evaluated more than once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ * @retval NULL if bl is the wrong type or NULL.
+ */
+#define BL_CCAST(type_, bl) \
+	( ((bl) == (const struct block_list *)NULL || (bl)->type != (type_)) ? (const T ## type_ *)NULL : (const T ## type_ *)(bl) )
+
+/**
+ * Helper function for `BL_UCAST`.
+ *
+ * @warning
+ *   This function shouldn't be called on it own.
+ *
+ * The purpose of this function is to produce a compile-timer error if a non-bl
+ * object is passed to BL_UCAST. It's declared as static inline to let the
+ * compiler optimize out the function call overhead.
+ */
+static inline struct block_list *BL_UCAST_(struct block_list *bl) __attribute__((unused));
+static inline struct block_list *BL_UCAST_(struct block_list *bl)
+{
+	return bl;
+}
+
+/**
+ * Casts a block list to a specific type, without performing any type checks.
+ *
+ * @remark
+ *   The `bl` argument is guaranteed to be evaluated once and only once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ */
+#define BL_UCAST(type_, bl) \
+	((T ## type_ *)BL_UCAST_(bl))
+
+/**
+ * Helper function for `BL_UCCAST`.
+ *
+ * @warning
+ *   This function shouldn't be called on it own.
+ *
+ * The purpose of this function is to produce a compile-timer error if a non-bl
+ * object is passed to BL_UCAST. It's declared as static inline to let the
+ * compiler optimize out the function call overhead.
+ */
+static inline const struct block_list *BL_UCCAST_(const struct block_list *bl) __attribute__((unused));
+static inline const struct block_list *BL_UCCAST_(const struct block_list *bl)
+{
+	return bl;
+}
+
+/**
+ * Casts a const block list to a specific type, without performing any type checks.
+ *
+ * @remark
+ *   The `bl` argument is guaranteed to be evaluated once and only once.
+ *
+ * @param type_ The block list type (using symbols from enum bl_type).
+ * @param bl    The source block list to cast.
+ * @return The block list, cast to the correct type.
+ */
+#define BL_UCCAST(type_, bl) \
+	((const T ## type_ *)BL_UCCAST_(bl))
 
 struct charid_request {
 	struct charid_request* next;
@@ -1028,13 +1112,17 @@ END_ZEROED_BLOCK;
 	int (*vforeachininstance)(int (*func)(struct block_list*,va_list), int16 instance_id, int type, va_list ap);
 	int (*foreachininstance)(int (*func)(struct block_list*,va_list), int16 instance_id, int type,...);
 
-	struct map_session_data * (*id2sd) (int id);
-	struct mob_data * (*id2md) (int id);
-	struct npc_data * (*id2nd) (int id);
-	struct homun_data* (*id2hd) (int id);
-	struct mercenary_data* (*id2mc) (int id);
-	struct chat_data* (*id2cd) (int id);
-	struct block_list * (*id2bl) (int id);
+	struct map_session_data *(*id2sd) (int id);
+	struct npc_data *(*id2nd) (int id);
+	struct mob_data *(*id2md) (int id);
+	struct flooritem_data *(*id2fi) (int id);
+	struct chat_data *(*id2cd) (int id);
+	struct skill_unit *(*id2su) (int id);
+	struct pet_data *(*id2pd) (int id);
+	struct homun_data *(*id2hd) (int id);
+	struct mercenary_data *(*id2mc) (int id);
+	struct elemental_data *(*id2ed) (int id);
+	struct block_list *(*id2bl) (int id);
 	bool (*blid_exists) (int id);
 	int16 (*mapindex2mapid) (unsigned short map_index);
 	int16 (*mapname2mapid) (const char* name);

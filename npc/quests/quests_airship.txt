@@ -70,7 +70,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 	mes "Welcome to the Airship. If you have any questions or need any assistnace, please don't hesisitate to let me or one of the other crewman know.";
 	next;
 	if (kain_ticket == 0) {
-		switch(select("About the Airship...:Leave a Comment")) {
+		switch(select("About the Airship...", "Leave a Comment")) {
 		case 1:
 			kain_ticket = 1;
 			mes "[Kain Himere]";
@@ -128,7 +128,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			}
 		}
 	} else if (kain_ticket == 1) {
-		switch(select("About the Airship...:Make a remark")) {
+		switch(select("About the Airship...", "Make a remark")) {
 		case 1:
 			kain_ticket = 2;
 			mes "[Kain Himere]";
@@ -192,7 +192,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 		mes "E-excuse me...";
 		mes "^666666*Sniff*^000000";
 		next;
-		switch(select("What the hell...?:What's wrong?")) {
+		switch(select("What the hell...?", "What's wrong?")) {
 		case 1:
 			mes "[Kain Himere]";
 			mes "Oh, no there's no";
@@ -275,7 +275,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			mes "[Kain Himere]";
 			mes "By the way, where are you heading to?";
 			next;
-			switch(select("Einbroch:Juno")) {
+			switch(select("Einbroch", "Juno")) {
 			case 1:
 				kain_ticket = 4;
 				mes "["+strcharinfo(0)+"]";
@@ -305,7 +305,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 		mes "Oh, how are you?";
 		mes "Right, there's a favor I have to ask of you. Where are you heading?";
 		next;
-		switch(select("Einbroch:Juno")) {
+		switch(select("Einbroch", "Juno")) {
 		case 1:
 			kain_ticket = 4;
 			mes "["+strcharinfo(0)+"]";
@@ -345,7 +345,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 		mes "Oh...";
 		mes "What should I do now? Oh well, sorry for putting you through so much trouble.";
 		next;
-		switch(select("Do you know 'Miner's Song?':Do you remember 'Tarsha?'")) {
+		switch(select("Do you know 'Miner's Song?'", "Do you remember 'Tarsha?'")) {
 		case 1:
 			mes "[Kain Himere]";
 			mes "'Miner's Song...'";
@@ -487,7 +487,7 @@ OnTouch:
 	mes "can stop us, lads~!";
 	if (kain_ticket == 6) {
 		next;
-		switch(select("Hello!:What are you singing?")) {
+		switch(select("Hello!", "What are you singing?")) {
 		case 1:
 			mes "[Elle Cherno]";
 			mes "Let's get to work";
@@ -684,7 +684,7 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 		mes "["+strcharinfo(0)+"]";
 		mes "Yes, speaking of which, allow me to... Check something.";
 		next;
-		switch(select("Check her neck.:Check her hands.:Check her legs.:Check her forehead.")) {
+		switch(select("Check her neck.", "Check her hands.", "Check her legs.", "Check her forehead.")) {
 		case 1:
 			mes "^3355FFUh oh...";
 			mes "Nothing's there!^000000";
@@ -820,7 +820,7 @@ function	script	F_Cherno	{
 	mes "Oh, I didn't know we had";
 	mes "a guest? Hello, how are you?";
 	next;
-	switch(select("Nothing.:Your daughter asked me to visit you.")) {
+	switch(select("Nothing.", "Your daughter asked me to visit you.")) {
 	case 1:
 		mes "[Theo Cherno]";
 		mes "As you see, my wife and I are pretty";
@@ -906,7 +906,7 @@ ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 		mes "first thing you'll";
 		mes "see is yourself.";
 		next;
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			switch(rand(1,5)) {
 			case 1:
 				mes "["+strcharinfo(0)+"]";
@@ -1160,7 +1160,7 @@ ein_in01,117,80,5	script	Unidentified Machine#as	HIDDEN_NPC,{
 			mes "You're gonna repair " + getitemname(getbrokenid(.@choice)) + ".";
 			mes "Continue?";
 			next;
-			switch(select("Yes:No")) {
+			switch(select("Yes", "No")) {
 			case 1:
 				repair(.@choice);
 				next;
@@ -1648,7 +1648,7 @@ airplane_01,238,154,3	script	Airship Captain#01	4_M_REINDEER,{
 				mes "before? Are you just curious";
 				mes "or did you really want to know?";
 				next;
-				switch (select("No, not really...:Yes, I really want to know!")) {
+				switch (select("No, not really...", "Yes, I really want to know!")) {
 				case 1:
 					mes "[Tarlock]";
 					mes "Hahahaha~";
@@ -1676,7 +1676,7 @@ airplane_01,238,154,3	script	Airship Captain#01	4_M_REINDEER,{
 					mes "you that classified info if you";
 					mes "do a little favor for me first.";
 					next;
-					switch (select("Let me think about it.:Sure.")) {
+					switch (select("Let me think about it.", "Sure.")) {
 					case 1:
 						mes "[Tarlock]";
 						mes "Alright. But don't";
@@ -1952,7 +1952,7 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 		mes "merely curious, or did you";
 		mes "have some special reason?";
 		next;
-		switch(select("Just curious...:Well, there's someone I need to help...")) {
+		switch(select("Just curious...", "Well, there's someone I need to help...")) {
 		case 1:
 			mes "[Ferlock]";
 			mes "Just curious...?";
@@ -2333,7 +2333,7 @@ airplane,236,63,4	script	Hallen	4_M_KID1,{
 		mes "Howdy, howdy~";
 		mes "Welcome to the Airship.";
 		next;
-		switch(select("I'm not a passenger.:Hey kid, what are you doing?")) {
+		switch(select("I'm not a passenger.", "Hey kid, what are you doing?")) {
 		case 1:
 			emotion e_what,0;
 			mes "[Hallen]";
@@ -2408,7 +2408,7 @@ airplane,236,63,4	script	Hallen	4_M_KID1,{
 		mes "me a favor since I can't";
 		mes "really leave this joint?";
 		next;
-		switch(select("Sorry, but I'm busy...:What is it?")) {
+		switch(select("Sorry, but I'm busy...", "What is it?")) {
 		case 1:
 			mes "[Hallen]";
 			mes "Eh, alright. I guess";
@@ -2487,7 +2487,7 @@ airplane,236,63,4	script	Hallen	4_M_KID1,{
 		mes "help each other in";
 		mes "times of crisis?";
 		next;
-		switch(select("Not at all. Every man for himself!:Yes, I do.")) {
+		switch(select("Not at all. Every man for himself!", "Yes, I do.")) {
 		case 1:
 			mes "[Hallen]";
 			mes "Wh-what...?";
@@ -2832,7 +2832,7 @@ airplane,33,69,4	script	Kaci	1_F_MERCHANT_01,{
 		mes "letter really made my day~";
 		next;
 L_Ask:
-		switch(select("Ask about Hallen:Ask about Mawong:Ask about the Airship")) {
+		switch(select("Ask about Hallen", "Ask about Mawong", "Ask about the Airship")) {
 		case 1:
 			.@mesa = 1;
 			mes "[Kaci]";

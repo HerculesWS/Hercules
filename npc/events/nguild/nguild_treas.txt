@@ -72,7 +72,7 @@ function	script	F_GldTreasSw	{
 	mes "There's a small lever. Will you pull it?";
 	next;
 
-	if (select("Pull.:Do not.") == 1) {
+	if (select("Pull.", "Do not.") == 1) {
 		warp getarg(0),getarg(1),getarg(2);
 		return;
 	}

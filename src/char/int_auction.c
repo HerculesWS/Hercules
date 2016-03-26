@@ -73,7 +73,7 @@ void inter_auction_save(struct auction_data *auction)
 		auction_db, auction->seller_id, auction->buyer_id, auction->price, auction->buynow, auction->hours, (unsigned long)auction->timestamp, auction->item.nameid, auction->type, auction->item.refine, auction->item.attribute);
 	for( j = 0; j < MAX_SLOTS; j++ )
 		StrBuf->Printf(&buf, ", `card%d` = '%d'", j, auction->item.card[j]);
-	StrBuf->Printf(&buf, " WHERE `auction_id` = '%d'", auction->auction_id);
+	StrBuf->Printf(&buf, " WHERE `auction_id` = '%u'", auction->auction_id);
 
 	stmt = SQL->StmtMalloc(inter->sql_handle);
 	if( SQL_SUCCESS != SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
@@ -183,7 +183,7 @@ void inter_auction_delete(struct auction_data *auction)
 
 	auction_id = auction->auction_id;
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `auction_id` = '%d'", auction_db, auction_id) )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `auction_id` = '%u'", auction_db, auction_id) )
 		Sql_ShowDebug(inter->sql_handle);
 
 	if( auction->auction_end_timer != INVALID_TIMER )
@@ -462,7 +462,7 @@ void mapif_parse_auction_bid(int fd)
 	}
 
 	auction->buyer_id = char_id;
-	safestrncpy(auction->buyer_name, (char*)RFIFOP(fd,16), NAME_LENGTH);
+	safestrncpy(auction->buyer_name, RFIFOP(fd,16), NAME_LENGTH);
 	auction->price = bid;
 
 	if( bid >= auction->buynow )

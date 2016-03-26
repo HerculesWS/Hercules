@@ -71,7 +71,7 @@ moscovia,171,71,3	script	Berbayeff#npc	4_M_RUSMAN2,{
 		mes "All the villagers are blockheads,";
 		mes "so they treat me like an idiot.";
 		next;
-		if(select("I'm not interested in any story.:Tell me.") == 1) {
+		if(select("I'm not interested in any story.", "Tell me.") == 1) {
 			mes "[Berbayeff]";
 			mes "Indeed... You are not interested...";
 			mes "That's ok.";
@@ -297,7 +297,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 		mes "Yes. I am Mr. Ibanoff.";
 		mes "What's up?";
 		next;
-		if(select("Tell me an adventure story.:Lend me your ship.") == 1) {
+		if(select("Tell me an adventure story.", "Lend me your ship.") == 1) {
 			mes "[Mr. Ibanoff]";
 			mes "You are an adventurer, right?";
 			mes "You come from a strange land?";
@@ -352,7 +352,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 			mes "Next... Let's talk about";
 			mes "the haunting of a Goblin mob...!";
 			next;
-			if(select("I'll listen next time...:Interesting. Keep talking.") == 1) {
+			if(select("I'll listen next time...", "Interesting. Keep talking.") == 1) {
 				mes "[Mr. Ibanoff]";
 				mes "If not...Ooo, I can just";
 				mes "keep going and going...";
@@ -537,7 +537,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 		mes "[Mr. Ibanoff]";
 		mes "Will you depart?";
 		next;
-		if(select("I'm not ready.:Let's go.") == 1) {
+		if(select("I'm not ready.", "Let's go.") == 1) {
 			mes "[Mr. Ibanoff]";
 			mes "When you are ready to depart, tell me.";
 			close;
@@ -632,7 +632,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 		mes "once more, and I will gladly help";
 		mes "you find Whale Island!";
 		next;
-		if(select("Try again to find Whale Island.:Give up.") == 1) {
+		if(select("Try again to find Whale Island.", "Give up.") == 1) {
 			mes "[Mr. Ibanoff]";
 			mes "That does it! I expected it.";
 			mes "I knew you weren't the type to give up an adventure!";
@@ -659,7 +659,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 		mes "[Mr. Ibanoff]";
 		mes "Oh! Are you ready to depart?";
 		next;
-		if(select("I'm not ready.:Let's go.") == 1) {
+		if(select("I'm not ready.", "Let's go.") == 1) {
 			mes "[Mr. Ibanoff]";
 			mes "When you are ready to depart, tell me.";
 			close;
@@ -711,7 +711,7 @@ moscovia,135,49,5	script	Mr. Ibanoff#npc	4_M_RUSBALD,{
 		mes "[Mr. Ibanoff]";
 		mes "If so, do you want to go now?";
 		next;
-		if(select("Not yet.:Let's go.") == 1) {
+		if(select("Not yet.", "Let's go.") == 1) {
 			mes "[Mr. Ibanoff]";
 			mes "I see. I will wait.";
 			close;
@@ -1134,7 +1134,7 @@ S_Rud1:
 	mes "Which way?";
 	next;
 	setarray .@d$[1],"East","West","South","North";
-	.@j = select(implode(.@d$,":")) - 1;
+	.@j = select(implode(.@d$, ":")) - 1;
 	if (.@j == getarg(0)) {
 		mes "[Mr. Ibanoff]";
 		mes "Good. Firstly, we should";
@@ -1342,7 +1342,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		mes "Anyway, are you troubled?";
 		mes "What are you going to do?";
 		next;
-		if(select("Think more.:Don't you have a way?") == 1) {
+		if(select("Think more.", "Don't you have a way?") == 1) {
 			mes "[Aged Stranger]";
 			mes "Do that. Think carefully, the";
 			mes "answer is to be found...";
@@ -1416,7 +1416,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		mes "[Aged Stranger]";
 		mes "Okay, are you ready to go back to the mainland?";
 		next;
-		if(select("What are the materials?:I am ready.") == 1) {
+		if(select("What are the materials?", "I am ready.") == 1) {
 			mes "[Aged Stranger]";
 			mes "You should bring these materials:";
 			next;
@@ -1463,7 +1463,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		mes "to the mainland to find the";
 		mes "materials?";
 		next;
-		if(select("What are the materials?:I am ready.") == 1) {
+		if(select("What are the materials?", "I am ready.") == 1) {
 			mes "[Aged Stranger]";
 			mes "You should bring these materials:";
 			next;
@@ -1599,7 +1599,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		mes "If you want, I can send you back";
 		mes "to the mainland. What'll it be?";
 		next;
-		switch(select("Look around.:Go back to the mainland.:Venture into the unknown.")) {
+		switch(select("Look around.", "Go back to the mainland.", "Venture into the unknown.")) {
 		case 1:
 			mes "[Aged Stranger]";
 			mes "Well, well... Do as you please.";
@@ -1628,7 +1628,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 			mes "[Aged Stranger]";
 			mes "If you want, I'll send you there. What do you think of that?";
 			next;
-			if(select("Consider it.:Ok, please send me there.") == 1) {
+			if(select("Consider it.", "Ok, please send me there.") == 1) {
 				mes "[Aged Stranger]";
 				mes "Well, well... Do as you please.";
 				mes "If so, I will take a rest.";
@@ -1652,7 +1652,7 @@ mosk_fild01,86,104,3	script	Aged Stranger#npc	4_M_GUSLIMAN,{
 		mes "Or if you want, I can send you back";
 		mes "to the mainland. What'll it be?";
 		next;
-		if(select("Look around.:Go back to the mainland.") == 1) {
+		if(select("Look around.", "Go back to the mainland.") == 1) {
 			mes "[Aged Stranger]";
 			mes "Well, well... Do as you please.";
 			mes "If so, I will take a rest.";
@@ -1716,7 +1716,7 @@ S_AS_2:
 	mes "[Aged Stranger]";
 	mes "So, what will you do now?";
 	next;
-	switch (select("How would I get back here?:"+((getarg(0))?"I want to learn the Gusli":"")+":Go back to the mainland.")) {
+	switch (select("How would I get back here?", ((getarg(0))?"I want to learn the Gusli":""), "Go back to the mainland.")) {
 		case 1:
 			mes "[Aged Stranger]";
 			mes "You are my friend now,";
@@ -1864,12 +1864,12 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 		mes "sure no one ever doubts you.";
 		next;
 		if (countitem(Yaga_Pestle) > 39) {
-			if(select("Show the Yaga's Pestles.:Do nothing.") == 1) {
+			if(select("Show the Yaga's Pestles.", "Do nothing.") == 1) {
 				mes "[" + strcharinfo(0) + "]";
 				mes "Yes, Here you are.";
 				next;
 				mes "-Offered the Yaga's Pestles.-";
-				delitem 7762,40;
+				delitem Yaga_Pestle,40;
 				next;
 				mes "[Csar Alexsay III]";
 				mes "Hm.. You do have them.";
@@ -1905,9 +1905,9 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 		mes "Did you bring some evidence to";
 		mes "resolve your issue of doubt, traveler?";
 		next;
-		if(select("Yes, I did.:I am confused.") == 1) {
+		if(select("Yes, I did.", "I am confused.") == 1) {
 			if (countitem(Yaga_Pestle) > 39) {
-				delitem 7762,40;
+				delitem Yaga_Pestle,40;
 				mes "[Csar Alexsay III]";
 				mes "Good,";
 				mes "I won't doubt you anymore.";
@@ -2004,7 +2004,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 		mes "I give it as an atonement";
 		mes "to make my people happy.";
 		mos_nowinter = 21;
-		getitem 603,1;
+		getitem Old_Blue_Box,1;
 		next;
 		mes "[Csar Alexsay III]";
 		mes "Stay here as long as you want, and";
@@ -2154,7 +2154,7 @@ mosk_in,131,92,3	script	Csar Alexsay III#npc	4_M_RUSKING,{
 			mes "instrument. So mysterious... Hey!";
 			mes "Can you play it?";
 			next;
-			if(select("I can play.:I can't play it.") == 1) {
+			if(select("I can play.", "I can't play it.") == 1) {
 				mes "[Csar Alexsay III]";
 				mes "You can play it!";
 				mes "Good, play it right away!";
@@ -2403,7 +2403,7 @@ mosk_in,127,89,3	script	Prime Minister Dmitree#m	4_M_RUSMAN1,{
 		mes "[Prime Minister Dmitree]";
 		mes "Traveler, why have you come to the Csar's Palace?";
 		next;
-		if(select("Just to look around.:To see the dear Csar.") == 1) {
+		if(select("Just to look around.", "To see the dear Csar.") == 1) {
 			mes "[Prime Minister Dmitree]";
 			mes "If so... look around with caution. Do not bother the Csar.";
 			next;
@@ -2417,7 +2417,7 @@ mosk_in,127,89,3	script	Prime Minister Dmitree#m	4_M_RUSMAN1,{
 		mes "[Prime Minister Dmitree]";
 		mes "Did you come to see our dear Csar? If so, tell me your business with him in advance.";
 		next;
-		if(select("I'd like to say hello.:I have an adventure story for him.") == 1) {
+		if(select("I'd like to say hello.", "I have an adventure story for him.") == 1) {
 			mes "[Prime Minister Dmitree]";
 			mes "I will tell him directly about your business. You don't need to worry yourself with the Csar.";
 			close;
@@ -2480,7 +2480,7 @@ OnTouch:
 	mes "["+strcharinfo(0)+"]";
 	mes "Stop by the whale island?";
 	next;
-	if(select("Go to Whale Island.:Stay put.") == 1) {
+	if(select("Go to Whale Island.", "Stay put.") == 1) {
 		if (getequipid(EQI_ACC_L) == GUSLI || getequipid(EQI_ACC_R) == GUSLI) {
 			soundeffect "mos_gusli2.wav",0;
 			mes "-Slowly, your hands are on the";
@@ -2644,7 +2644,7 @@ function	script	F_MOS_1	{
 	mes "[Anna]";
 	mes "Oh, my................";
 	next;
-	if(select("Talk to her.:Just pass by her") == 2) {
+	if(select("Talk to her.", "Just pass by her") == 2) {
 		mes "[Gallina]";
 		mes "I'm worried that he's making trouble somewhere...";
 		close;
@@ -2687,7 +2687,7 @@ function	script	F_MOS_1	{
 	mes "But it's not good that I refuse your kindness";
 	mes "Will you find Mikhail for me?";
 	next;
-	if(select("I was not serious.:Yes, I will!") == 1) {
+	if(select("I was not serious.", "Yes, I will!") == 1) {
 		mes "[Gallina]";
 		mes "You meanie! I'm not in the mood for jokes.";
 		close;
@@ -2775,7 +2775,7 @@ mosk_in,148,274,1	script	Anna#mos	4_F_RUSCHILD,{
 		mes "Why are you here?";
 		next;
 		while(1) {
-			switch(select("About where Mikhail might be hiding:About their relationship:About the situation:Ask her about other things:End the conversation")) {
+			switch(select("About where Mikhail might be hiding", "About their relationship", "About the situation", "Ask her about other things", "End the conversation")) {
 				case 1:
 					mes "["+strcharinfo(0)+"]";
 					mes "Where is Mikhail?";
@@ -2946,7 +2946,7 @@ mosk_in,136,279,3	script	Bed#mos1	HIDDEN_NPC,{
 	mes "- There are sheets and a pillow which seem so neat and soft that I'll probably fall asleep as soon as I lie down on them. -";
 	if (mos_swan != 11) close;
 	next;
-	if(select("Check other things:Look it over ") == 1) {
+	if(select("Check other things", "Look it over ") == 1) {
 		mes "- You'll examine the bed later -";
 		close;
 	}
@@ -2983,7 +2983,7 @@ mosk_in,205,268,3	script	Fire pot#mos	HIDDEN_NPC,{
 		mes "- It's a fire pot that is used when Gallina bakes hotcakes.";
 		mes "It seems that it was used a long time ago. -";
 		next;
-		if(select("Check other things:Look it over") == 1) {
+		if(select("Check other things", "Look it over") == 1) {
 			mes "- You decide to check out other things -";
 			close;
 		}
@@ -2997,7 +2997,7 @@ mosk_in,205,268,3	script	Fire pot#mos	HIDDEN_NPC,{
 		}
 		mes "- As you look it over very carefully, you find some pieces of bread on the floor around the fire pot! -";
 		next;
-		switch(select("Mikhail is in the fire pot.:Mikhail is around the fire pot.:There's nothing between pieces of bread and Mikhail.")) {
+		switch(select("Mikhail is in the fire pot.", "Mikhail is around the fire pot.", "There's nothing between pieces of bread and Mikhail.")) {
 			case 1:
 				mes "["+strcharinfo(0)+"]";
 				mes "I finally found him.";
@@ -3139,7 +3139,7 @@ mosk_in,205,268,3	script	Fire pot#mos	HIDDEN_NPC,{
 		mes "Now I'm gonna give this back to Mom.";
 		donpcevent "Mikhail#mos::OnInit";
 		mos_swan = 25;
-		delitem 7764,1;
+		delitem High_Strength_Adhesive,1;
 		close;
 	}
 	mes "- It's a fire pot to heat the room or bake something -";
@@ -3161,7 +3161,7 @@ mosk_in,135,191,5	script	Landlord#mos	4_F_RUSWOMAN3,{
 	mes "It is the most comfortable and calmest place in all of Moscovia.";
 	next;
 	if (mos_swan == 3) {
-		switch(select("Save:Stay the night - 5000z:Ask her about Mikhail.")) {
+		switch(select("Save", "Stay the night - 5000z", "Ask her about Mikhail.")) {
 			case 1:
 				mes "[Landlord]";
 				mes "Your respawn point has been saved.";
@@ -3186,12 +3186,17 @@ mosk_in,135,191,5	script	Landlord#mos	4_F_RUSWOMAN3,{
 			case 3:
 				mes "[Landlord]";
 				emotion e_lv;
-				mes "Oh~! You look great! Look at the "+((Sex)?"solid muscle":"fair skin")+"!";
+				mes "Oh~! You look great! Look at the "+ (Sex == SEX_MALE ? "solid muscle" : "fair skin") +"!";
 				mes "But you look tired. Is it because of a long journey?";
 				next;
 				mes "[Landlord]";
-				mes "We've got a room available just for you. "+((Sex)?"It's the best in town. How about staying the night?":"It's like a princess' room.");
-				mes (Sex)?"I'll charge you at reasonable price for you, handsome guy.":"How about staying the night? I'll mark down the price for you, beautiful lady.";
+				if (Sex == SEX_MALE) {
+					mes "We've got a room available just for you. It's the best in town. How about staying the night?";
+					mes "I'll charge you at reasonable price for you, handsome guy.";
+				} else {
+					mes "We've got a room available just for you. It's like a princess' room.";
+					mes "How about staying the night? I'll mark down the price for you, beautiful lady.";
+				}
 				next;
 				mes "["+strcharinfo(0)+"]";
 				mes "Oh, I'm sorry but I didn't come to stay here.";
@@ -3209,7 +3214,7 @@ mosk_in,135,191,5	script	Landlord#mos	4_F_RUSWOMAN3,{
 				mes "[Landlord]";
 				mes "If you promise me to stay overnight, I'll tell you about what you want to know. Deal?";
 				next;
-				if(select("Refuse.:Stay overnight and get the info. - 5000z") == 1) {
+				if(select("Refuse.", "Stay overnight and get the info. - 5000z") == 1) {
 					emotion e_ag;
 					mes "[Landlord]";
 					mes "Well, get the info by yourself then.";
@@ -3243,7 +3248,7 @@ mosk_in,135,191,5	script	Landlord#mos	4_F_RUSWOMAN3,{
 		mes "Hohoho.";
 		next;
 		while(1) {
-			switch(select("Ask her about the inn:Ask her about Mikhail.:End the conversation")) {
+			switch(select("Ask her about the inn", "Ask her about Mikhail.", "End the conversation")) {
 				case 1:
 					mes "[Landlord]";
 					mes "The name of our inn came from a big apple tree which is outside of the village.";
@@ -3310,7 +3315,7 @@ mosk_in,135,191,5	script	Landlord#mos	4_F_RUSWOMAN3,{
 			}
 		}
 	}
-	if(select("Save:Stay the night - 5000z") == 1) {
+	if(select("Save", "Stay the night - 5000z") == 1) {
 		mes "[Landlord]";
 		mes "Your respawn point has been saved.";
 		mes "Hope we can see you again next time hoho.";
@@ -3346,7 +3351,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 		mes "Welcome to our pub.";
 		mes "I'm Alexandre of ^3131FF'Pub Stream'^000000. You can call me 'Sasha'.";
 		next;
-		if(select("Ask him about Mikhail.:Order a drink.") == 1) {
+		if(select("Ask him about Mikhail.", "Order a drink.") == 1) {
 			mes "["+strcharinfo(0)+"]";
 			mes "Sasha, has a little boy called 'Mikhail' came here?";
 			next;
@@ -3381,7 +3386,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 		mes "Although you may be an experienced adventurer, you look so young.";
 		mes "I recommend you these drinks. Which one will you take?";
 		next;
-		.@j = select("Milk - 1000z:Sticky_Herb juice - 1000z:They are all expensive!") - 1;
+		.@j = select("Milk - 1000z", "Sticky_Herb juice - 1000z", "They are all expensive!") - 1;
 		if (.@j == 2) {
 			mes "[Pub Owner]";
 			mes "Hahaha, too much for you eh cheapskate.";
@@ -3390,7 +3395,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 		if (Zeny > 999) {
 			Zeny -= 1000;
 			mos_swan = 9;
-			if (!.@j) getitem 519,1; else getitem 531,1;
+			if (!.@j) getitem Milk,1; else getitem Apple_Juice,1;
 			mes "[Pub Owner]";
 			mes "Here you are. This is what you ordered.";
 			mes "How do you like Moscovia?";
@@ -3448,12 +3453,12 @@ mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 		mes "Well, do you have some stories for me? or you've got something to ask me.";
 		mes "I recommend you those drinks.";
 		next;
-		switch(select("Milk - 1000z:Apple juice - 1000z:They are all expensive!")) {
+		switch(select("Milk - 1000z", "Apple juice - 1000z", "They are all expensive!")) {
 			case 1:
 				if (Zeny > 999) {
 					Zeny -= 1000;
 					mos_swan = 9;
-					getitem 519,1;
+					getitem Milk,1;
 					mes "[Pub Owner]";
 					mes "Here you are. This is what you ordered.";
 					mes "Enjoy yourself.";
@@ -3467,7 +3472,7 @@ mosk_in,141,212,3	script	Pub Owner#mos	4_M_RUSBALD,{
 				if (Zeny > 999) {
 					Zeny -= 1000;
 					mos_swan = 9;
-					getitem 531,1;
+					getitem Apple_Juice,1;
 					mes "[Pub Owner]";
 					mes "Here you are. This is what you ordered.";
 					mes "Enjoy yourself.";
@@ -3656,10 +3661,10 @@ mosk_in,147,202,3	script	Victor#mos	4_M_RUSMAN2,{
 			mes "Ok, done!";
 			mes "I don't want you to bother me any longer!";
 			mes "Please leave!";
-			delitem 7763,10;
-			delitem 7134,1;
+			delitem Sticky_Herb,10;
+			delitem Medicine_Bowl,1;
 			mos_swan = 24;
-			getitem 7764,1;
+			getitem High_Strength_Adhesive,1;
 			close;
 		}
 		mes "[Victor]";
@@ -3741,16 +3746,16 @@ mosk_dun03,153,90,3	script	Bubbling Swamp#mos1	CLEAR_NPC,{
 		if (rand(1,10) < 6) {
 			mes "- You have pricked your finger on a Sticky Herb. -";
 			if (mos_swan == 22) {
-				getitem 7763,1;
+				getitem Sticky_Herb,1;
 				mos_swan = 23;
 				close;
 			}
-			getitem 7763,1;
+			getitem Sticky_Herb,1;
 			++mos_swan;
 			close;
 		}
 		mes "- You have pricked your finger on a Green Herb. -";
-		getitem 511,1;
+		getitem Green_Herb,1;
 		close;
 	}
 	mes "- You can see a small swamp which seems very muddy. -";
@@ -3778,8 +3783,8 @@ mosk_in,211,259,5	script	Larissa#mos_01	4_F_RUSWOMAN2,{
 		mes "Here you are. This special pancake is for you.";
 		mes "It will be very delicious.";
 		mos_swan = 101;
-		getitem 592,5;
-		getitem 593,5;
+		getitem Jam_Pancake,5;
+		getitem Honey_Pancake,5;
 		next;
 		mes "[Larissa]";
 		mes "Whenever you'd like to eat these pancake, you come on by.";
@@ -3790,7 +3795,7 @@ mosk_in,211,259,5	script	Larissa#mos_01	4_F_RUSWOMAN2,{
 		mes "Did the pancake taste good?";
 		mes "Would you like another pancake?";
 		next;
-		if(select("Yes:No") == 1) {
+		if(select("Yes", "No") == 1) {
 			if (countitem(Old_Frying_Pan) && countitem(Milk) > 1 && countitem(White_Potion) > 1 && countitem(Cheese) && countitem(Wooden_Block) && countitem(Honey)) {
 				mes "[Larissa]";
 				mes "Let me check if you have all the ingredients.";
@@ -3805,7 +3810,7 @@ mosk_in,211,259,5	script	Larissa#mos_01	4_F_RUSWOMAN2,{
 				mes "[Larissa]";
 				mes "What should I do with the wheat flour?";
 				next;
-				switch(select("Turn it down.:Pass it through a sieve.:Press it with your fist.")) {
+				switch(select("Turn it down.", "Pass it through a sieve.", "Press it with your fist.")) {
 					case 1:
 						mes "[Larissa]";
 						mes "Oh, my! What are you doing now?";
@@ -3829,7 +3834,7 @@ mosk_in,211,259,5	script	Larissa#mos_01	4_F_RUSWOMAN2,{
 				mes "And then I'm adding an egg, some milk and a white potion.";
 				mes "What next?";
 				next;
-				if(select("Stir it up with great speed.:Do the same as she said.") == 1) {
+				if(select("Stir it up with great speed.", "Do the same as she said.") == 1) {
 					mes "[Larissa]";
 					mes "No, you don't have to do that way. It won't rise properly if you stir it too fast.";
 					next;
@@ -3846,7 +3851,7 @@ mosk_in,211,259,5	script	Larissa#mos_01	4_F_RUSWOMAN2,{
 				mes "Cook in low temperature. It'll rise and have bubbles on it.";
 				mes "When you see the bubbles, you can turn it over.";
 				next;
-				if(select("Cook in high temperature.:Can I turn it over now?") == 1) {
+				if(select("Cook in high temperature.", "Can I turn it over now?") == 1) {
 					mes "[Larissa]";
 					mes "No, you don't do that.";
 					mes "You'll burn it up.";
@@ -3862,7 +3867,7 @@ mosk_in,211,259,5	script	Larissa#mos_01	4_F_RUSWOMAN2,{
 				mes "Ok, turn it over. Oh it looks delicious";
 				mes "What should I top it with? First I put some cheese but the rest is up to you...";
 				next;
-				switch(select("Caviar:Mushrooms:Honey:Strawberry jam:Sour cream")) {
+				switch(select("Caviar", "Mushrooms", "Honey", "Strawberry jam", "Sour cream")) {
 					case 1:
 						mes "[Larissa]";
 						mes "Ok. you want caviar. Fortunately, I still have a little left.";
@@ -3897,9 +3902,9 @@ mosk_in,211,259,5	script	Larissa#mos_01	4_F_RUSWOMAN2,{
 						setarray .@n, 594,1;
 						break;
 				}
-				setarray .@di,7031,1,519,2,504,2,548,1,1019,1,518,1;
+				setarray .@di,Old_Frying_Pan,1,Milk,2,White_Potion,2,Cheese,1,Wooden_Block,1,Honey,1;
 				for (.@i = 0; .@i < getarraysize(.@di); .@i += 2)
-					delitem .@n[.@i],.@n[.@i+1];
+					delitem .@di[.@i],.@di[.@i+1];
 				getitem .@n,.@n[1];
 				close;
 			}
@@ -3931,7 +3936,7 @@ moscovia,208,182,7	script	Acorn Dealer#mos	4_M_RUSMAN1,{
 	mes "We have very fresh acorns. Everyone will like them!";
 	mes "You can buy one acorn for 100zeny!";
 	next;
-	if(select("Buy one.:What can I use them for?") == 2) {
+	if(select("Buy one.", "What can I use them for?") == 2) {
 		mes "[Acorn Dealer]";
 		mes "Well uh...";
 		mes "You can grind them to make";
@@ -3981,7 +3986,7 @@ moscovia,208,182,7	script	Acorn Dealer#mos	4_M_RUSMAN1,{
 	mes "Oh, thank you...";
 	mes "What do you think of them? They're fresh, aren't they?";
 	Zeny -= .@price;
-	getitem 1026,.@input;
+	getitem Acorn,.@input;
 	close;
 }
 
@@ -4001,7 +4006,7 @@ OnTouch:
 	mes "- When the animal comes across you, it starts to sniffle and purse up its lips. -";
 	next;
 	if (countitem(Acorn) > 19) {
-		switch(select("Give acorns to it.:Ignore it.:Ask about the squirrel.")) {
+		switch(select("Give acorns to it.", "Ignore it.", "Ask about the squirrel.")) {
 			case 1:
 				mes "- You take one of acorns out and hold it out to the squirrel. -";
 				next;
@@ -4012,55 +4017,55 @@ OnTouch:
 				mes "- It makes a crunching sound -";
 				next;
 				mes "- After eating the acorn up, the squirrel dances around wildly. Suddenly it curls its body and throws something up with a spit-spit sound -";
-				delitem 1026,20;
+				delitem Acorn,20;
 				.@cyworld = rand(1,1000);
 				.@stworld = rand(1,150);
-				if (.@cyworld > 0 && .@cyworld < 100) getitem 733,1;
+				if (.@cyworld > 0 && .@cyworld < 100) getitem Crystal_Jewel___,1;
 				else if (.@cyworld == 100) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 730,1;
-					else getitem 7289,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel,1;
+					else getitem Olivine,1;
 				} else if (.@cyworld == 200) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 731,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel_,1;
 					else .@stonez1 = rand(1,10);
-						if (.@stonez1 < 6) getitem 7290,1;
-						else if (.@stonez1 > 5 && .@stonez1 < 8) getitem 7297,1;
-						else getitem 7292,1;
+						if (.@stonez1 < 6) getitem Phlogopite,1;
+						else if (.@stonez1 > 5 && .@stonez1 < 8) getitem Biotite,1;
+						else getitem Muscovite,1;
 				} else if (.@cyworld == 300) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 732,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel__,1;
 					else .@stonez2 = rand(1,10);
-						if (.@stonez2 < 6) getitem 7291,1;
-						else getitem 7294,1;
+						if (.@stonez2 < 6) getitem Agate,1;
+						else getitem Turquoise,1;
 				} else if (.@cyworld == 400) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 730,1;
-					else getitem 7295,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel,1;
+					else getitem Citrine,1;
 				} else if (.@cyworld == 500) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 731,1;
-					else getitem 7293,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel_,1;
+					else getitem Rose_Quartz,1;
 				} else if (.@cyworld == 600) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 732,1;
-					else getitem 7292,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel__,1;
+					else getitem Muscovite,1;
 				} else if (.@cyworld == 700) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 730,1;
-					else getitem 7290,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel,1;
+					else getitem Phlogopite,1;
 				} else if (.@cyworld == 800) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 731,1;
-					else getitem 7296,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel_,1;
+					else getitem Pyroxene,1;
 				} else if (.@cyworld == 900) {
 					if (.@stworld > 0 && .@stworld < 90) callsub S_BS_1,.@stworld;
-					else if (.@stworld > 89 && .@stworld < 100) getitem 732,1;
-					else getitem 7297,1;
-				} else if (.@cyworld == 1000) getitem 727,1;
-				else if (.@cyworld > 100 && .@cyworld < 500) getitem 733,1;
-				else if (.@cyworld > 500 && .@cyworld < 900) getitem 724,1;
-				else getitem 724,1;
+					else if (.@stworld > 89 && .@stworld < 100) getitem Crystal_Jewel__,1;
+					else getitem Biotite,1;
+				} else if (.@cyworld == 1000) getitem White_Jewel,1;
+				else if (.@cyworld > 100 && .@cyworld < 500) getitem Crystal_Jewel___,1;
+				else if (.@cyworld > 500 && .@cyworld < 900) getitem Cardinal_Jewel_,1;
+				else getitem Cardinal_Jewel_,1;
 				close;
 			case 2:
 				mes "["+strcharinfo(0)+"]";
@@ -4085,15 +4090,15 @@ OnTouch:
 
 S_BS_1:
 	.@stworld = getarg(0);
-	if (.@stworld < 10) getitem 718,1;
-	else if (.@stworld < 20) getitem 719,1;
-	else if (.@stworld < 30) getitem 720,1;
-	else if (.@stworld < 40) getitem 721,1;
-	else if (.@stworld < 50) getitem 722,1;
-	else if (.@stworld < 60) getitem 723,1;
-	else if (.@stworld < 70) getitem 725,1;
-	else if (.@stworld < 80) getitem 728,1;
-	else if (.@stworld < 90) getitem 729,1;
+	if (.@stworld < 10) getitem Dark_Red_Jewel,1;
+	else if (.@stworld < 20) getitem Violet_Jewel,1;
+	else if (.@stworld < 30) getitem Skyblue_Jewel,1;
+	else if (.@stworld < 40) getitem Azure_Jewel,1;
+	else if (.@stworld < 50) getitem Scarlet_Jewel,1;
+	else if (.@stworld < 60) getitem Cardinal_Jewel,1;
+	else if (.@stworld < 70) getitem Red_Jewel,1;
+	else if (.@stworld < 80) getitem Golden_Jewel,1;
+	else if (.@stworld < 90) getitem Bluish_Green_Jewel,1;
 	return;
 }
 mosk_fild01,113,108,3	duplicate(Squirrel#mos_main)	Big Squirrel#mos	HIDDEN_NPC
@@ -4131,7 +4136,7 @@ OnTouch:
 			mes "give them back to me!";
 			mos_nowinter = 1;
 			.@getback = rand(1,20);
-			delitem 7762,.@getback;
+			delitem Yaga_Pestle,.@getback;
 			close2;
 			warp "mosk_dun02",53,217;
 			end;
@@ -4165,7 +4170,7 @@ OnTouch:
 			mes "You, chicken,";
 			mes "I need to kick your ass more.";
 			next;
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				mes "[Baba Yaga, the Horrible]";
 				mes "I will bewitch";
 				mes "and enslave you.";
@@ -4215,7 +4220,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "Yes, if you let me live, I will compensate you";
 		mes "with a present, how about that?";
 		next;
-		if(select("A present?:I don't need.") == 1) {
+		if(select("A present?", "I don't need.") == 1) {
 			mes "[Baba Yaga, the Horrible]";
 			mes "Yes, if you let me live";
 			mes "I will give you the Yaga Pestles";
@@ -4250,7 +4255,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "interested... ya?";
 		mes "What do you think about that?";
 		next;
-		if(select("Good, but I think you're lying.:I am not interested.") == 1) {
+		if(select("Good, but I think you're lying.", "I am not interested.") == 1) {
 			mes "[Baba Yaga, the Horrible]";
 			mes "Sure, you can trust me.";
 			mes "It is so complicated that I cannot";
@@ -4270,7 +4275,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 			mes "I can use the magic that";
 			mes "stops winter from returning. Will you help me?";
 			next;
-			if(select("Ok, I will.:No. I don't like it.") == 1) callsub S_BY_1;
+			if(select("Ok, I will.", "No. I don't like it.") == 1) callsub S_BY_1;
 			mes "[Baba Yaga, the Horrible]";
 			mes "Heeeek,";
 			mes "Just, just I need a little help.. It is really little.";
@@ -4302,7 +4307,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "Isn't that better for you";
 		mes "than hurting me?";
 		next;
-		if(select("Ok, tell me the story.:Let me think...") == 1) {
+		if(select("Ok, tell me the story.", "Let me think...") == 1) {
 			mes "[Baba Yaga, the Horrible]";
 			mes "Certainly, trust me.";
 			mes "It is so complicated that I cannot";
@@ -4322,7 +4327,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 			mes "I can use the magic that";
 			mes "stops winter from returning. Will you help me?";
 			next;
-			if(select("Ok, I will.:No. I don't like it.") == 1) callsub S_BY_1;
+			if(select("Ok, I will.", "No. I don't like it.") == 1) callsub S_BY_1;
 			mes "[Baba Yaga, the Horrible]";
 			mes "Heeeeek,";
 			mes "Just, just I need a little help.. It is really little.";
@@ -4346,7 +4351,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "[Baba Yaga, the Horrible]";
 		mes "Well, did you change your mind?";
 		next;
-		if(select("Ok, let's try.:Let me think more...") == 1) callsub S_BY_1;
+		if(select("Ok, let's try.", "Let me think more...") == 1) callsub S_BY_1;
 		mes "[Baba Yaga, the Horrible]";
 		mes "You think more...";
 		mes "What do you want from me...";
@@ -4389,7 +4394,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "a glue, no, to cast a spell";
 		mes "10 Sticky Mucus...";
 		next;
-		if(select("...Are you sure?:A glue? You want me to kill you?!") == 1) {
+		if(select("...Are you sure?", "A glue? You want me to kill you?!") == 1) {
 			mes "[Baba Yaga, the Horrible]";
 			mes "Yes, yes, I am certain. Why don't you trust me...";
 			next;
@@ -4491,7 +4496,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "Did you get";
 		mes "all of the items?";
 		next;
-		setarray .@n, 940,20,908,5,7006,20,1061,10,7041,10,938,10,1051,1,990,5,7097,10;
+		setarray .@n, Grasshopper's_Leg,20,Spawn,5,Wing_Of_Red_Bat,20,Starsand_Of_Witch,10,Fine_Grit,10,Sticky_Mucus,10,Detonator,1,Boody_Red,5,Burning_Heart,10;
 		for (.@i = 0; .@i < getarraysize(.@n); .@i += 2) {
 			if (countitem(.@n[.@i]) < .@n[.@i+1]) {
 				.@f = 1;
@@ -4501,9 +4506,9 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		if (!.@f && (countitem(Crystal_Jewel) || countitem(Crystal_Jewel_) || countitem(Crystal_Jewel__))) {
 			for (.@i = 0; .@i < getarraysize(.@n); .@i += 2)
 				delitem .@n[.@i],.@n[.@i+1];
-			if (countitem(Crystal_Jewel)) delitem 730,1;
-			else if (countitem(Crystal_Jewel_)) delitem 731,1;
-			else if (countitem(Crystal_Jewel__)) delitem 732,1;
+			if (countitem(Crystal_Jewel)) delitem Crystal_Jewel,1;
+			else if (countitem(Crystal_Jewel_)) delitem Crystal_Jewel_,1;
+			else if (countitem(Crystal_Jewel__)) delitem Crystal_Jewel__,1;
 			mos_nowinter = 8;
 			mes "[Baba Yaga, the Horrible]";
 			mes "Right, you got them all.";
@@ -4586,7 +4591,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "Did you get";
 		mes "all of them?";
 		next;
-		setarray .@n, 940,20,908,5,7006,20,1061,10,7041,10,1051,1,990,5,7097,10;
+		setarray .@n, Grasshopper's_Leg,20,Spawn,5,Wing_Of_Red_Bat,20,Starsand_Of_Witch,10,Fine_Grit,10,Detonator,1,Boody_Red,5,Burning_Heart,10;
 		for (.@i = 0; .@i < getarraysize(.@n); .@i += 2) {
 			if (countitem(.@n[.@i]) < .@n[.@i+1]) {
 				.@f = 1;
@@ -4596,9 +4601,9 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		if (!.@f && (countitem(Crystal_Jewel) || countitem(Crystal_Jewel_) || countitem(Crystal_Jewel__))) {
 			for (.@i = 0; .@i < getarraysize(.@n); .@i += 2)
 				delitem .@n[.@i],.@n[.@i+1];
-			if (countitem(Crystal_Jewel)) delitem 730,1;
-			else if (countitem(Crystal_Jewel_)) delitem 731,1;
-			else if (countitem(Crystal_Jewel__)) delitem 732,1;
+			if (countitem(Crystal_Jewel)) delitem Crystal_Jewel,1;
+			else if (countitem(Crystal_Jewel_)) delitem Crystal_Jewel_,1;
+			else if (countitem(Crystal_Jewel__)) delitem Crystal_Jewel__,1;
 			mos_nowinter = 8;
 			mes "[Baba Yaga, the Horrible]";
 			mes "Right, you got them all.";
@@ -4793,7 +4798,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 			mes "Cough, cough!";
 			close;
 		}
-		delitem 7761,1;
+		delitem Magic_Gourd_Bottle,1;
 		mes "[Baba Yaga, the Horrible]";
 		mes "Anyway, give me the bottle and";
 		mes "think about";
@@ -4883,7 +4888,7 @@ mosk_in,215,46,5	script	Baba Yaga, the Horrible	4_F_BABAYAGA,{
 		mes "If you do this, what the villagers want";
 		mes "will be happening,";
 		mes "forever.";
-		getitem 7765,1;
+		getitem Yaga_Secret_Medicine,1;
 		mos_nowinter = 19;
 		close;
 	} else if (mos_nowinter == 19) {
@@ -5044,7 +5049,7 @@ mosk_in,217,45,0	script	#book_russia	HIDDEN_NPC,{
 		mes "know where to read next time.";
 		close;
 	} else if (mos_nowinter == 16) {
-		if(select("Read from the preface.:Read from the marked page.") == 1) {
+		if(select("Read from the preface.", "Read from the marked page.") == 1) {
 			mes "...Therefore, this spell is";
 			mes "particularly good among our mighty ones.";
 			mes "Usually, the magic is considered";
@@ -5192,9 +5197,9 @@ mosk_in,221,43,0	script	#bowl	HIDDEN_NPC,{
 		mes "-Something is still being boiled in the pot.";
 		mes "What am I going to do?-";
 		next;
-		switch(select("Put the materials in it.:Pour water in it.:Stir it up.:It is over!")) {
+		switch(select("Put the materials in it.", "Pour water in it.", "Stir it up.", "It is over!")) {
 			case 1:
-				.@m = select (implode(.@m$,":")) - 1;
+				.@m = select(implode(.@m$,":")) - 1;
 				if ((!.@m && .@bat) || (.@m == 1 && .@mush) || (.@m == 2 && .@locker)) specialeffect EF_POISONHIT;
 				else {
 					specialeffect EF_SMOKE;
@@ -5249,9 +5254,9 @@ mosk_in,221,43,0	script	#bowl	HIDDEN_NPC,{
 	while(1) {
 		mes "-Well, What am I going to do?-";
 		next;
-		switch(select("Put the materials in it.:Pour water in it.:Stir it up.:It is over!")) {
+		switch(select("Put the materials in it.", "Pour water in it.", "Stir it up.", "It is over!")) {
 		case 1:
-			.@m = select (implode(.@m$,":")) - 1;
+			.@m = select(implode(.@m$,":")) - 1;
 			if (.@m >= 3) {
 				if (.@nankai == 5 || .@nankai == 6) {
 					if ((.@m == 3 && .@star) || (.@m == 4 && .@sand)) specialeffect EF_POISONHIT;
@@ -5358,11 +5363,11 @@ mosk_in,221,43,0	script	#bowl	HIDDEN_NPC,{
 	while(1) {
 		mes "-Well, What am I going to do?-";
 		next;
-		switch(select("Put the materials in it.:Pour water in it.:Stir it up.:It is over!")) {
+		switch(select("Put the materials in it.", "Pour water in it.", "Stir it up.", "It is over!")) {
 			case 1:
 				if (.@nankai != 11) {
 					setarray .@m2$, "Witched Starsand","Fine Grit","Detonator","Red Blood","Burning Heart";
-					.@m = select (implode(.@m2$,":")) - 1;
+					.@m = select(implode(.@m2$,":")) - 1;
 					if ((.@m == 2 && .@nankai == 9) || (.@m == 3 && .@nankai == 8) || (.@m == 4 && .@nankai == 10)) {
 						specialeffect EF_SMOKE;
 						++.@maho;
@@ -5376,7 +5381,7 @@ mosk_in,221,43,0	script	#bowl	HIDDEN_NPC,{
 					mes (.@m <= 1)?"Its smell slightly changes.-":((.@w)?"The smell gets worse.-":"The smell has been changed a little.-");
 				} else {
 					setarray .@m3$, "Witched Starsand","Fine Grit","Detonator","Red Blood","Burning Heart","Piece Of Diamond";
-					.@m = select (implode(.@m3$,":")) - 1;
+					.@m = select(implode(.@m3$,":")) - 1;
 					if (.@m != 5) specialeffect EF_POISONHIT;
 					else {
 						++.@maho;
@@ -5464,7 +5469,7 @@ moscovia,224,190,0	script	#nowinterplz	CLEAR_NPC,{
 		mes "-I drop the magic bottle";
 		mes "containing Baba Yaga's";
 		mes "Secret Medicine.-";
-		delitem 7765,1;
+		delitem Yaga_Secret_Medicine,1;
 		specialeffect EF_BARRIER;
 		mos_nowinter = 20;
 		next;
@@ -6318,13 +6323,13 @@ OnTouch:
 		mes "the dragon came back...";
 		next;
 		while(1) {
-			if(select("Look for it.:I will try next time.") == 1) {
+			if(select("Look for it.", "I will try next time.") == 1) {
 				if (BaseJob == Job_Thief) {
 					mes "["+strcharinfo(0)+"]";
 					mes "Here it is.";
 					mes "That was easy to find.";
 					mos_nowinter = 9;
-					getitem 7761,1;
+					getitem Magic_Gourd_Bottle,1;
 					close;
 				}
 				if (rand(1,20) > 14) {
@@ -6332,7 +6337,7 @@ OnTouch:
 					mes "Ah, I got it!";
 					mes "I better get out of here quickly.";
 					mos_nowinter = 9;
-					getitem 7761,1;
+					getitem Magic_Gourd_Bottle,1;
 					close;
 				}
 				mes "............";
@@ -6395,12 +6400,12 @@ mosk_in,131,92,3	script	#Csar	FAKE_NPC,7,7,{
 		mes "sure no one ever doubts you.";
 		next;
 		if (countitem(Yaga_Pestle) > 39) {
-			if(select("Show the Yaga's Pestles.:Do nothing.") == 1) {
+			if(select("Show the Yaga's Pestles.", "Do nothing.") == 1) {
 				mes "[" + strcharinfo(0) + "]";
 				mes "Yes, Here you are.";
 				next;
 				mes "-Offered the Yaga's Pestles.-";
-				delitem 7762,40;
+				delitem Yaga_Pestle,40;
 				next;
 				mes "[Csar Alexsay III]";
 				mes "Hm.. You do have them.";
@@ -6464,7 +6469,7 @@ moscovia,211,93,3	script	Irina#edq	4_F_RUSCHILD,{
 	mes "The Shafka has practicality and";
 	mes "it's spruce! Do you want one?";
 	next;
-	if(select("Learn about the Shafka.:Make a Shafka hat.") == 1) {
+	if(select("Learn about the Shafka.", "Make a Shafka hat.") == 1) {
 		mes "[Irina]";
 		mes "When I look at you, you seem to";
 		mes "want to put on something of a thick";
@@ -6563,7 +6568,7 @@ mosk_fild02,198,252,3	script	Sage#rus01	4_M_SAGE_C,{
 		mes "[Sage]";
 		mes "I've heard stories of the many adventurers from your lands. But, I haven't been able to talk with them much because they were always busy.";
 		next;
-		if(select("Sorry, but I'm busy.....:Ok, let's talk.") == 1) {
+		if(select("Sorry, but I'm busy.....", "Ok, let's talk.") == 1) {
 			mes "[Sage]";
 			mes "Ah, you are...";
 			mes "I just wanted to hear about news from other lands...";
@@ -6653,7 +6658,7 @@ mosk_dun01,169,162,0	script	Mysterious Stone#rus02	HIDDEN_NPC,{
 		mes "["+ strcharinfo(0) +"]";
 		mes "...Where should I go?";
 		next;
-		switch(select("Right:Left:Middle")) {
+		switch(select("Right", "Left", "Middle")) {
 			case 1:
 				mes "["+ strcharinfo(0) +"]";
 				mes "...What about the right...";
@@ -6813,7 +6818,7 @@ mosk_dun01,167,160,3	script	Gray Wolf#rus03	4_RUS_DWOLF,{
 		mes "[Gray Wolf]";
 		mes "I need brave adventurers, like you, to help me. Can you help me?";
 		next;
-		if(select("No, how can I trust you?:Ok, I'll help") == 1) {
+		if(select("No, how can I trust you?", "Ok, I'll help") == 1) {
 			mes "[Gray Wolf]";
 			mes "Hu.. you won't. But, I ask you again. Can you help me?";
 			next;
@@ -6946,7 +6951,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 			mes "[Girl's Voice]";
 			mes "What do you think? I can open a portal to the cave Do you want to go there now?";
 			next;
-			if(select("Not yet...:Open the portal!") == 1) {
+			if(select("Not yet...", "Open the portal!") == 1) {
 				mes "[Girl's Voice]";
 				mes "... When you're ready, just tell me.";
 				close;
@@ -7077,7 +7082,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 			donpcevent "Maria Morebna#rus46::OnDisable";
 			mes "[Koshei, the Immortal]";
 			mes "Stop! Where do you think you're going?!!!";
-			delitem 7876,1;
+			delitem Gold_Key,1;
 			rhea_rus_main = 48;
 			monster "mosk_dun01",45,256,"Koshei, the Immortal",1890,1,"Wall#rus04::OnMyMobDead";
 			donpcevent "Koshei#rus47::OnEnable";
@@ -7156,7 +7161,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 		mes "["+ strcharinfo(0) +"]";
 		mes "Ok... First...";
 		next;
-		if(select("Death Water:Life Water") == 1) {
+		if(select("Death Water", "Life Water") == 1) {
 			mes "["+ strcharinfo(0) +"]";
 			mes "I hope this works...";
 			next;
@@ -7195,7 +7200,7 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 		mes "["+ strcharinfo(0) +"]";
 		mes "Ok! Next...";
 		next;
-		if(select("Death Water:Life Water") == 1) {
+		if(select("Death Water", "Life Water") == 1) {
 			mes "["+ strcharinfo(0) +"]";
 			mes "Pour the 'Death Water' again...";
 			next;
@@ -7255,12 +7260,12 @@ mosk_dun01,45,259,0	script	Wall#rus04	HIDDEN_NPC,{
 		rhea_rus_main = 52;
 		.@rus_food = rand(1,6);
 		switch (rand(1,6)) {
-			case 1: getitem 12093,1; break;
-			case 2: getitem 12088,1; break;
-			case 3: getitem 12073,1; break;
-			case 4: getitem 12078,1; break;
-			case 5: getitem 12083,1; break;
-			case 6: getitem 12098,1; break;
+			case 1: getitem Dex_Dish08,1; break;
+			case 2: getitem Agi_Dish08,1; break;
+			case 3: getitem Str_Dish08,1; break;
+			case 4: getitem Int_Dish08,1; break;
+			case 5: getitem Vit_Dish08,1; break;
+			case 6: getitem Luk_Dish08,1; break;
 		}
 		if (RENEWAL_EXP) {
 			if (BaseLevel < 56) getexp 5700,500;
@@ -7517,9 +7522,9 @@ moscovia,178,127,0	script	The Blacksmith#rus06	1_M_SMITH,{
 			mes "Well, you know what to do now. I will be waiting here.";
 			mes "Bahahaha~";
 			mes "And don't forget to wear these!";
-			delitem 999,25;
+			delitem Steel,25;
 			rhea_rus_main = 8;
-			if (BaseClass == Job_Merchant || BaseClass == Job_Swordman || BaseClass == Job_Thief || BaseClass == Job_Archer || BaseClass == Job_Ninja || BaseClass == Job_Gunslinger) getitem 2429,1; else getitem 2430,1; close;
+			if (BaseClass == Job_Merchant || BaseClass == Job_Swordman || BaseClass == Job_Thief || BaseClass == Job_Archer) getitem Iron_Boots01,1; else getitem Iron_Boots02,1; close;
 		}
 		mes "[The Blacksmith]";
 		mes "What are you doing? First, you must get me ^0000ff25 Steel^000000.";
@@ -7578,7 +7583,7 @@ moscovia,178,127,0	script	The Blacksmith#rus06	1_M_SMITH,{
 					mes "[The Blacksmith]";
 					mes "The forest is dangerous. Be very careful in there!";
 					mes "Ah and you shouldn't be needing those Steel Boots anymore. Good luck!";
-					if (countitem(Iron_Boots01)) delitem 2429,1; else delitem 2430,1;
+					if (countitem(Iron_Boots01)) delitem Iron_Boots01,1; else delitem Iron_Boots02,1;
 					rhea_rus_main = 9;
 					close;
 				}
@@ -7594,7 +7599,7 @@ moscovia,178,127,0	script	The Blacksmith#rus06	1_M_SMITH,{
 		mes "[The Blacksmith]";
 		mes "You need ^0000ff2 Cursed Ruby, 3 Gold, 1 Red Ring, 2 Lusalka's Hair, 10 Golden Thread^000000 to make the key.";
 		next;
-		switch(select("Red Ring?:Lusalka's Hair?:Golden Thread?")) {
+		switch(select("Red Ring?", "Lusalka's Hair?", "Golden Thread?")) {
 			case 1:
 				mes "[The Blacksmith]";
 				mes "The Red Ring has powerful enchanting powers. I had one before, but I gave it to my friend, Vassili, as a gift.";
@@ -7694,7 +7699,7 @@ moscovia,206,81,0	script	Vassili Grandpapa#rus07	4_M_05,{
 			mes "[Vassili Grandpapa]";
 			mes "Hmm, are you an adventurer? So, how do you like it here?";
 			next;
-			if(select("It's so-so:I have something to ask...") == 1) {
+			if(select("It's so-so", "I have something to ask...") == 1) {
 				mes "[Vassili Grandpapa]";
 				mes "Hmm, you have traveled so much. I guess if you're tired from your trip then it's only natural, huhu.";
 				close;
@@ -7966,11 +7971,11 @@ moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 			mes "[Ryubaba]";
 			mes "Mmm, you must be an adventurer? What would you say? Have you seen somebody more beautiful than me? I doubt it. How can you find anyone more beautiful than me?";
 			next;
-			if(select("Are you crazy!:Yes, you are right.") == 1) {
+			if(select("Are you crazy!", "Yes, you are right.") == 1) {
 				mes "["+ strcharinfo(0) +"]";
 				mes "Are you crazy!? Don't you know how wide the world is and how many beautiful people there are? You're pretty full of it, country girl!";
 				next;
-				if (!Sex) {
+				if (Sex == SEX_FEMALE) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "Besides, if there was a most beautiful girl in the world it would be me, me, me!";
 				} else {
@@ -7994,7 +7999,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 			mes "[Ryubaba]";
 			mes "Huhu, oh you jest. You know what you're talking about. Ah, this is a Choco drink that I have made. Give it a taste, isn't it good?";
 			rhea_rus_ring = 4;
-			getitem 573,1;
+			getitem Chocolate_Drink,1;
 			close;
 		} else if (rhea_rus_ring == 2) {
 			mes "[Ryubaba]";
@@ -8014,7 +8019,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 				if (countitem(Witherless_Rose) || countitem(Frozen_Rose)) {
 					mes "[Ryubaba]";
 					mes "Ok. Well, I forgive you.";
-					if (countitem(Witherless_Rose)) delitem 748,1; else delitem 749,1;
+					if (countitem(Witherless_Rose)) delitem Witherless_Rose,1; else delitem Frozen_Rose,1;
 					rhea_rus_ring = 4;
 					close;
 				}
@@ -8160,7 +8165,7 @@ moscovia,213,216,3	script	Ryubaba#rus08	4_F_RUSWOMAN2,{
 				mes "["+ strcharinfo(0) +"]";
 				mes "...Mmmm, what should I do...";
 				next;
-				if(select("Exchange:Not exchange") == 1) {
+				if(select("Exchange", "Not exchange") == 1) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "...Mmmm, what should I do...";
 					mes "Ok, I will do it.";
@@ -8276,7 +8281,7 @@ moscovia,223,210,3	script	Little Boy#rus09	4_M_RUSCHILD,{
 				mes "[Little Boy]";
 				mes "Ah, do you have candies or cookies?";
 				next;
-				if(select("Give some:Don't give") == 2) {
+				if(select("Give some", "Don't give") == 2) {
 					mes "[Little Boy]";
 					mes "Hm! Hmph! Pish! !";
 					mes "You are the same as Sister Ryubaba!";
@@ -8292,7 +8297,7 @@ moscovia,223,210,3	script	Little Boy#rus09	4_M_RUSCHILD,{
 				if (countitem(Candy)) {
 					mes "[Little Boy]";
 					mes "Sister Ryubaba likes presents! Especially flowers such as roses. She believes that they resemble her.";
-					if (countitem(Candy)) delitem 529,1; else delitem 538,1;
+					if (countitem(Candy)) delitem Candy,1; else delitem Well_Baked_Cookie,1;
 					rhea_rus_ring = 3;
 					close;
 				}
@@ -8414,9 +8419,9 @@ mosk_fild02,157,233,0	script	Shepherdess#rus10	1_F_04,{
 				next;
 				mes "- ^0000ffShepherdess gives me the^000000 -";
 				mes "- ^0000ff'Pointed Wooden Flute'!!^000000 -";
-				delitem 7882,25;
+				delitem Pointed_Branch,25;
 				rhea_rus_ring = 7;
-				getitem 7883,1;
+				getitem Pointed_Wooden_Flute,1;
 				close;
 			}
 			mes "[Shepherdess]";
@@ -8450,7 +8455,7 @@ mosk_fild02,157,233,0	script	Shepherdess#rus10	1_F_04,{
 			if (rand(1,3) == 2) {
 				mes "- I avoid the thorns and -";
 				mes "- cut off a branch!! -";
-				getitem 7882,1;
+				getitem Pointed_Branch,1;
 				donpcevent "Pointed Tree#rus11::OnDisable";
 				close;
 			}
@@ -8521,7 +8526,7 @@ moscovia,166,145,1	script	Worried Mother#rus19	4_F_RUSWOMAN3,{
 			mes "[Worried Mother]";
 			mes "Did you go to the marsh in the Moscovia field? Did you see my daughter? I don't care even if she became Lusalka. I just want to know where she is.";
 			next;
-			if(select("Calm her down.:I will find her.") == 1) {
+			if(select("Calm her down.", "I will find her.") == 1) {
 				mes "["+ strcharinfo(0) +"]";
 				mes "She should be ok.";
 				mes "She will be back soon.";
@@ -8663,7 +8668,7 @@ OnTouch:
 		mes "- cool damp hair, you seem -";
 		mes "- the feel the sadness within -";
 		rhea_rus_hair = 9;
-		getitem 7878,2;
+		getitem Lusalka_Hair,2;
 		close;
 	} else if (rhea_rus_hair > 8) {
 		mes "- You feel that someone -";
@@ -8755,7 +8760,7 @@ mosk_fild02,124,202,3	script	Lusalka#rus23	4_F_RUSGREEN,{
 				mes "[Lusalka]";
 				mes "The night when he left, he said that he would go to the capital of Rune Midgarts. I am not sure if he is still there...";
 				next;
-				if(select("Ok, I will do it:I don't think I can do it...") == 2) {
+				if(select("Ok, I will do it", "I don't think I can do it...") == 2) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "Rune Midgarts is large! I don't think I can do it.";
 					next;
@@ -9494,7 +9499,7 @@ mosk_fild02,243,270,0	script	Marozka#rus31	4_M_LGTGRAND,{
 			mes "[Marozka]";
 			mes "...So? Have you decided?";
 			next;
-			if(select("I need more time...:I will take it!") == 1) {
+			if(select("I need more time...", "I will take it!") == 1) {
 				mes "[Marozka]";
 				mes "Ok then. Come back when you are ready.";
 				close;
@@ -9506,27 +9511,27 @@ mosk_fild02,243,270,0	script	Marozka#rus31	4_M_LGTGRAND,{
 			mes "[Marozka]";
 			mes "What is deaf, dumb, and blind and always tells the truth?";
 			next;
-			.@j = select("A Poring:A Picky:A Mirror:A Tree");
+			.@j = select("A Poring", "A Picky", "A Mirror", "A Tree");
 			.@rus_quiz01 = (.@j==3)?.@rus_quiz01+1:.@rus_quiz01;
 			mes "[Marozka]";
 			mes "If 4 cats can catch 4 mice every 4 minutes, what is the minimum number of cats needed to get 10 mice in 10 minutes?";
 			next;
-			.@j = select("4:5:6:10");
+			.@j = select("4", "5", "6", "10");
 			.@rus_quiz01 = (.@j==1)?.@rus_quiz01+1:.@rus_quiz01;
 			mes "[Marozka]";
 			mes "Which of these gets shorter during winter and longer during summer?";
 			next;
-			.@j = select("Sky:Day:Waves:Wind");
+			.@j = select("Sky", "Day", "Waves", "Wind");
 			.@rus_quiz01 = (.@j==2)?.@rus_quiz01+1:.@rus_quiz01;
 			mes "[Marozka]";
 			mes "Doris Etticoat, wears a petticoat and has a red nose; the longer she stands, the shorter she grows. What is she?";
 			next;
-			.@j = select("A Star:A Candle:A Sword:The Moon");
+			.@j = select("A Star", "A Candle", "A Sword", "The Moon");
 			.@rus_quiz01 = (.@j==2)?.@rus_quiz01+1:.@rus_quiz01;
 			mes "[Marozka]";
 			mes "My top and bottom are twins of a kind. The middle of me makes one body combined. If I stand tall and still, run faster I will. What am I?";
 			next;
-			.@j = select("A Woman:Valkyrie:The Moon:An Hourglass");
+			.@j = select("A Woman", "Valkyrie", "The Moon", "An Hourglass");
 			.@rus_quiz01 = (.@j==4)?.@rus_quiz01+1:.@rus_quiz01;
 			mes "[Marozka]";
 			mes "Now let's see how you did.";
@@ -9549,7 +9554,7 @@ mosk_fild02,243,270,0	script	Marozka#rus31	4_M_LGTGRAND,{
 			mes "[Marozka]";
 			mes "I hope you help Maria with your strength and kindness.";
 			rhea_rus_quiz = 30;
-			getitem 7879,10;
+			getitem Golden_Thread,10;
 			close;
 		}
 	}
@@ -9656,11 +9661,11 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		}
 		mes "[Baba Yaga]";
 		mes "Ok, let's begin. Ah, before that... Wait here!";
-		delitem 724,2;
-		delitem 969,3;
-		delitem 7877,1;
-		delitem 7878,2;
-		delitem 7879,10;
+		delitem Cardinal_Jewel_,2;
+		delitem Gold,3;
+		delitem Red_Ring,1;
+		delitem Lusalka_Hair,2;
+		delitem Golden_Thread,10;
 		rhea_rus_main = 10;
 		close;
 	} else if (rhea_rus_main == 10) {
@@ -9762,7 +9767,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 			mes "Ok.. Let's do this.";
 			mes "'Keep off the grass!!!'";
 			specialeffect EF_BEGINSPELL4;
-			delitem 7881,1;
+			delitem Book_Of_Magic,1;
 			rhea_rus_main = 28;
 			monster "mosk_dun02",52,210,"Violent Gardener",1493,1,"Baba Yaga#rus32::OnMyMobDead";
 			monster "mosk_dun02",53,210,"Dangerous Gardener",1500,1,"Baba Yaga#rus32::OnMyMobDead";
@@ -9847,7 +9852,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
-		getitem 7876,1;
+		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main == 42) {
 		mes "["+ strcharinfo(0) +"]";
@@ -9862,7 +9867,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
-		getitem 7876,1;
+		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main == 43) {
 		if (countitem(Babayaga_Silver_Spoon)) {
@@ -9877,9 +9882,9 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 			next;
 			mes "[Baba Yaga]";
 			mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
-			delitem 7880,1;
+			delitem Babayaga_Silver_Spoon,1;
 			rhea_rus_main = 47;
-			getitem 7876,1;
+			getitem Gold_Key,1;
 			close;
 		}
 		mes "["+ strcharinfo(0) +"]";
@@ -9904,7 +9909,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
-		getitem 7876,1;
+		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main == 45) {
 		mes "["+ strcharinfo(0) +"]";
@@ -9919,7 +9924,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
-		getitem 7876,1;
+		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main == 46) {
 		mes "["+ strcharinfo(0) +"]";
@@ -9934,7 +9939,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Here, help Maria with this key and watch out for Koshei. He is very dangerous. Kehehehehehe.";
 		rhea_rus_main = 47;
-		getitem 7876,1;
+		getitem Gold_Key,1;
 		close;
 	} else if (rhea_rus_main > 46 && rhea_rus_main < 49) {
 		mes "[Baba Yaga]";
@@ -10019,10 +10024,10 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 			next;
 			mes "- ^0000ffYou get the 'Living Water'^000000 -";
 			mes "- ^0000ffand the 'Dead Water' !!^000000 -";
-			delitem 523,1;
-			delitem 12020,1;
-			delitem 610,2;
-			delitem 520,10;
+			delitem Holy_Water,1;
+			delitem Water_Of_Darkness,1;
+			delitem Leaf_Of_Yggdrasil,2;
+			delitem Leaflet_Of_Hinal,10;
 			rhea_rus_main = 51;
 			close;
 		}
@@ -10081,7 +10086,7 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 		mes "[Baba Yaga]";
 		mes "Oh, you are back. What can I do for you?";
 		next;
-		switch(select("Condensed Red Potion:Condensed Yellow Potion:Cancel")) {
+		switch(select("Condensed Red Potion", "Condensed Yellow Potion", "Cancel")) {
 		case 1:
 			if (countitem(Red_Potion) > 0 && countitem(Empty_Cylinder) > 0 && countitem(Medicine_Bowl) > 0 && countitem(Apple) > 4) {
 				if (Zeny > 19) {
@@ -10157,12 +10162,12 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 					next;
 					mes "[Baba Yaga]";
 					mes "Whenever you want more, come to me.";
-					delitem 501,.@redpotion_send;
-					delitem 1092,.@redtube_send;
-					delitem 7134,.@redcup_send;
-					delitem 512,.@redapple_send;
+					delitem Red_Potion,.@redpotion_send;
+					delitem Empty_Cylinder,.@redtube_send;
+					delitem Medicine_Bowl,.@redcup_send;
+					delitem Apple,.@redapple_send;
 					Zeny -= .@redzeny_send;
-					getitem 545,.@total_red01;
+					getitem Red_Slim_Potion,.@total_red01;
 					close;
 				}
 			}
@@ -10244,12 +10249,12 @@ mosk_dun02,48,214,5	script	Baba Yaga#rus32	4_F_BABAYAGA,{
 					next;
 					mes "[Baba Yaga]";
 					mes "Whenever you want more, come to me.";
-					delitem 503,.@yellpotion_send;
-					delitem 1092,.@yelltube_send;
-					delitem 7134,.@yellcup_send;
-					delitem 513,.@yellbanana_send;
+					delitem Yellow_Potion,.@yellpotion_send;
+					delitem Empty_Cylinder,.@yelltube_send;
+					delitem Medicine_Bowl,.@yellcup_send;
+					delitem Banana,.@yellbanana_send;
 					Zeny -= .@yellzeny_send;
-					getitem 546,.@total_yell01;
+					getitem Yellow_Slim_Potion,.@total_yell01;
 					close;
 				}
 			}
@@ -10605,7 +10610,7 @@ mosk_dun02,65,232,0	script	Noisy Coffin#rus36	4_NFCOFFIN,{
 		mes "... How can I silence him...";
 		next;
 		while(1) {
-			switch(select("Pray:Sing a hymn:Pour Holy Water on him:Kick him")) {
+			switch(select("Pray", "Sing a hymn", "Pour Holy Water on him", "Kick him")) {
 			case 1:
 				if (rhea_rus_main == 17) {
 					mes "["+ strcharinfo(0) +"]";
@@ -10679,7 +10684,7 @@ mosk_dun02,65,232,0	script	Noisy Coffin#rus36	4_NFCOFFIN,{
 						next;
 						mes "[Noisy Coffin]";
 						mes "Heek, heeee! Heeeeeek!";
-						delitem 523,1;
+						delitem Holy_Water,1;
 						rhea_rus_main = 17;
 						next;
 					} else {
@@ -10691,7 +10696,7 @@ mosk_dun02,65,232,0	script	Noisy Coffin#rus36	4_NFCOFFIN,{
 						next;
 						mes "[Noisy Coffin]";
 						mes "Ah, cold! No, it's cool! Was it fun? Was it fun?!";
-						delitem 523,1;
+						delitem Holy_Water,1;
 						next;
 						mes "["+ strcharinfo(0) +"]";
 						mes "......................................";
@@ -10828,7 +10833,7 @@ treasure01,165,58,0	script	Old Treasure Box#rus37	HIDDEN_NPC,{
 		next;
 		mes "- ^0000ff You find Baba Yaga's spoon !!^000000 -";
 		rhea_rus_main = 43;
-		getitem 7880,1;
+		getitem Babayaga_Silver_Spoon,1;
 		close;
 	} else if (rhea_rus_main == 43) {
 		mes "- The treasure box where you found the silver spoons -";
@@ -10878,7 +10883,7 @@ treasure01,24,39,0	script	Old Bed#rus38	HIDDEN_NPC,{
 	if (rhea_rus_main == 21) {
 		mes "- An old bed covered with dust and must -";
 		next;
-		switch(select("On the bed:Under the bed:Bed sheet")) {
+		switch(select("On the bed", "Under the bed", "Bed sheet")) {
 			case 1:
 				mes "- Mushrooms grow on the bed -";
 				next;
@@ -10931,7 +10936,7 @@ treasure01,24,39,0	script	Old Bed#rus38	HIDDEN_NPC,{
 	} else if (rhea_rus_main > 21 && rhea_rus_main < 26) {
 		mes "- An old bed covered with dust and must -";
 		next;
-		switch(select("On the bed:Under the bed:Bed sheet")) {
+		switch(select("On the bed", "Under the bed", "Bed sheet")) {
 			case 1:
 				mes "- Mushrooms grow on the bed -";
 				next;
@@ -11104,7 +11109,7 @@ amatsu,233,234,3	script	Momotoro Publisher#rus42	4_F_JPN2,{
 		mes "Thank you for buying our books. If you need more books, contact us please.";
 		Zeny -= 5000;
 		rhea_rus_main = 27;
-		getitem 7881,1;
+		getitem Book_Of_Magic,1;
 		close;
 	} else if (rhea_rus_main > 26 && rhea_rus_main < 31) {
 		mes "[Momotoro Publisher]";
@@ -11166,7 +11171,7 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	HIDDEN_NPC,{
 		mes "[House Ghost]";
 		mes "I can't even drink my favorite milk... Being a ghost is too inconvenient.";
 		next;
-		if(select("Can I play with you?:So what can I do for you?") == 1) {
+		if(select("Can I play with you?", "So what can I do for you?") == 1) {
 			mes "[House Ghost]";
 			mes "Ehhh, are you sure?";
 			next;
@@ -11220,7 +11225,7 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	HIDDEN_NPC,{
 			cutin "sorry.bmp",4;
 			next;
 			.@rucard_game01 = rand(1,3);
-			switch(select("Poring:Angeling:Ghostring")) {
+			switch(select("Poring", "Angeling", "Ghostring")) {
 			case 1:
 				mes "["+ strcharinfo(0) +"]";
 				mes "Hmmm, I think it is the Poring Card!";
@@ -11478,7 +11483,7 @@ pay_dun04,163,186,0	script	Ghost Tree#rus45	HIDDEN_NPC,{
 		mes "[Ghost Tree]";
 		mes "Kuhuhuhu, if you want it, you must give me the correct answers to my questions!";
 		next;
-		if(select("Ok, ask me!:No, just give it to me!") == 2) {
+		if(select("Ok, ask me!", "No, just give it to me!") == 2) {
 			mes "[Ghost Tree]";
 			mes "What!? You are rude to ask for what you want by doing nothing!";
 			next;
@@ -11802,7 +11807,7 @@ mosk_dun01,3,3,3	script	Koshei GlobalVar#admin	4_F_RUSCHILD,{
 		mes "[Koshei GlobalVar]";
 		mes "What would you like to set the GlobalVar to?";
 		next;
-		switch(select("0:1:Cancel")) {
+		switch(select("0", "1", "Cancel")) {
 		case 1:
 			mes "[Koshei GlobalVar]";
 			mes "GlobalVar $@rus_req02 will now be set to '0'";

@@ -66,19 +66,23 @@ int merc_search_index(int class_)
 {
 	int i;
 	ARR_FIND(0, MAX_MERCENARY_CLASS, i, mercenary->db[i].class_ == class_);
-	return (i == MAX_MERCENARY_CLASS)?-1:i;
+	if (i == MAX_MERCENARY_CLASS)
+		return INDEX_NOT_FOUND;
+	return i;
 }
 
 bool merc_class(int class_)
 {
-	return (bool)(mercenary->search_index(class_) > -1);
+	if (mercenary->search_index(class_) != INDEX_NOT_FOUND)
+		return true;
+	return false;
 }
 
 struct view_data * merc_get_viewdata(int class_)
 {
 	int i = mercenary->search_index(class_);
-	if( i < 0 )
-		return 0;
+	if (i == INDEX_NOT_FOUND)
+		return NULL;
 
 	return &mercenary->db[i].vd;
 }
@@ -90,7 +94,7 @@ int merc_create(struct map_session_data *sd, int class_, unsigned int lifetime)
 	int i;
 	nullpo_retr(0,sd);
 
-	if( (i = mercenary->search_index(class_)) < 0 )
+	if ((i = mercenary->search_index(class_)) == INDEX_NOT_FOUND)
 		return 0;
 
 	db = &mercenary->db[i];
@@ -301,7 +305,8 @@ void merc_contract_init(struct mercenary_data *md)
 	md->regen.state.block = 0;
 }
 
-int merc_data_received(struct s_mercenary *merc, bool flag) {
+int merc_data_received(const struct s_mercenary *merc, bool flag)
+{
 	struct map_session_data *sd;
 	struct mercenary_data *md;
 	struct s_mercenary_db *db;
@@ -309,18 +314,19 @@ int merc_data_received(struct s_mercenary *merc, bool flag) {
 
 	if( (sd = map->charid2sd(merc->char_id)) == NULL )
 		return 0;
-	if( !flag || i < 0 )
-	{ // Not created - loaded - DB info
+	if (!flag || i == INDEX_NOT_FOUND) {
+		// Not created - loaded - DB info
 		sd->status.mer_id = 0;
 		return 0;
 	}
 
 	db = &mercenary->db[i];
 	if( !sd->md ) {
-		sd->md = md = (struct mercenary_data*)aCalloc(1,sizeof(struct mercenary_data));
+		CREATE(md, struct mercenary_data, 1);
 		md->bl.type = BL_MER;
 		md->bl.id = npc->get_new_npc_id();
 		md->devotion_flag = 0;
+		sd->md = md;
 
 		md->master = sd;
 		md->db = db;

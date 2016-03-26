@@ -128,14 +128,14 @@ function	script	F_Invest_Abyss	{
 	mes "There are 2 ways to invest, by Zeny or the Investment Certificate given out by the Cat Paw Merchant Guild.";
 	mes "Which way would you like to make your investment?";
 	next;
-	switch(select("Invest with Zeny.:Invest with Investment Certificates.:Cancel")) {
+	switch(select("Invest with Zeny.", "Invest with Investment Certificates.", "Cancel")) {
 	case 1:
 		mes getarg(1);
 		mes "So you've decided to invest in Zeny.";
 		mes "Minimum investment unit is ^4d4dff10,000 Zeny^000000.";
 		mes "You can invest a maximum of 50 units which is ^4d4dff500,000 Zeny^000000.";
 		next;
-		switch(select("1 unit 10,000 Zeny:10 units 100,000 Zeny:50 units 500,000 Zeny:Another amount:Cancel")) {
+		switch(select("1 unit 10,000 Zeny", "10 units 100,000 Zeny", "50 units 500,000 Zeny", "Another amount", "Cancel")) {
 		case 1:
 			.@units = 1;
 			break;
@@ -186,7 +186,7 @@ function	script	F_Invest_Abyss	{
 		mes "Wow, you've brought Investment Certificates.";
 		mes "How many certificates will you submit?";
 		next;
-		switch(select("1 Investment Certificate:5 Investment Certificates:Another amount:Cancel")) {
+		switch(select("1 Investment Certificate", "5 Investment Certificates", "Another amount", "Cancel")) {
 		case 1:
 			.@tickets = 1;
 			break;
@@ -406,7 +406,7 @@ prt_gld,2,2,0	script	Investment_total#fund00	CLEAR_NPC,{
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
 		mes "If you think the investment timer is dead, please adjust the timer.";
 		next;
-		switch(select("Turn on the timer:Cancel")) {
+		switch(select("Turn on the timer", "Cancel")) {
 		case 1:
 			donpcevent "Investment_total#fund00::OnTimerReset";
 			mes "You've turned on the timer.";
@@ -585,7 +585,7 @@ prt_gld,164,98,3	script	Revoting Manager#Invest2	4_M_BOSSCAT,{
 	mes "[Revoting Manager]";
 	mes "Would you like to participate in the vote for choosing where to connect the 'Abyss Gate'?";
 	next;
-	if(select("Participate in the vote.:Skip for now.") == 2) {
+	if(select("Participate in the vote.", "Skip for now.") == 2) {
 		mes "[Revoting Manager]";
 		mes "You've canceled the vote.";
 		close;
@@ -735,7 +735,7 @@ OnAgitInvest:
 	mes "I consult about investments for the Abyss Gate development.";
 	mes "How may I help you?";
 	next;
-	switch(select("What is the Abyss Gate?:Investing in the gate development?:I want to invest in this area.:Cancel")) {
+	switch(select("What is the Abyss Gate?", "Investing in the gate development?", "I want to invest in this area.", "Cancel")) {
 	case 1:
 		mes .@n$;
 		mes "It is only called the Abyss Gate for convenience but it's simply a ^4d4dffgap to another dimension^000000.";
@@ -773,7 +773,7 @@ OnAgitInvest:
 		mes "Are you curious about investing in the Gate development?";
 		mes "What do you want to know about?";
 		next;
-		switch(select("About the Gate?:About investments?:How to invest?:Benefits from investing?")) {
+		switch(select("About the Gate?", "About investments?", "How to invest?", "Benefits from investing?")) {
 		case 1:
 			mes .@n$;
 			mes "The Gate is what it is named after, a door.";
@@ -987,7 +987,7 @@ OnAgitInvest:
 		mes "Please visit as often as possible since the entrance fee is saved as an investment for the region.";
 		mes "Do you want to enter the Agit dungeon?";
 		next;
-		.@i = select(.@realm$+" Dungeon 1F - 10000z:"+.@realm$+" Dungeon 2F - 10000z:Cancel");
+		.@i = select(.@realm$+" Dungeon 1F - 10000z", ""+.@realm$+" Dungeon 2F - 10000z", "Cancel");
 		if (.@i == 3) {
 			mes .@n$;
 			mes "Canceled.";
@@ -1124,7 +1124,7 @@ OnAgitInvest:
 	mes "Hello, I am the Gate Manager from Cat Paw Merchant Guild warp department.";
 	mes "How may I help you today?";
 	next;
-	switch(select("Invest for gate connection:Deepest Layer Dungeon Access:Abyss Gate Access:Cancel")) {
+	switch(select("Invest for gate connection", "Deepest Layer Dungeon Access", "Abyss Gate Access", "Cancel")) {
 	case 1:
 		if (checkweight(Knife,1) == 0 || MaxWeight - Weight < 1000) {
 			mes "[Gate Manager]";
@@ -1273,7 +1273,7 @@ malangdo,218,126,4	script	Cat Paw Merchants Notice	4_BOARD3,{
 	mes "<< Cat Paw Merchants Notice >>";
 	mes "'^C379CEInvest Unused Items for Prizes!^000000'";
 	next;
-	switch(select("Read Notice:Check Event 1:Check Event 2")) {
+	switch(select("Read Notice", "Check Event 1", "Check Event 2")) {
 	case 1:
 		mes "- Notice -";
 		mes "Hello all Cat Paw Merchants customers! With your love, we Cat Paw Merchants are growing every day. All executives and staff members promise to do our best to further our frontier and development.";
@@ -1350,7 +1350,7 @@ malangdo,218,123,1	script	Namis#invest	4_CAT_SAILOR2,4,4,{
 	mes "Purr-Purr-Purrr-Purrrr-Pur~ Meow!!";
 	mes "Wh-- What? How rude. You scared me.";
 	next;
-	switch(select("What do you need? I'll invest!:What's the purpose of this event?:Were you asleep?")) {
+	switch(select("What do you need? I'll invest!", "What's the purpose of this event?", "Were you asleep?")) {
 	case 1:
 		break;
 	case 2:
@@ -1383,7 +1383,7 @@ malangdo,218,123,1	script	Namis#invest	4_CAT_SAILOR2,4,4,{
 	mes "[Namis]";
 	mes "So, which event do you wish to participate in?";
 	next;
-	switch(select("Not interested:Event 1 Items:Event 2 Items")) {
+	switch(select("Not interested", "Event 1 Items", "Event 2 Items")) {
 	case 1:
 		mes "[Namis]";
 		mes "Don't you mess with a busy cat!";
@@ -1453,7 +1453,7 @@ L_Check:
 	mes getarg(3);
 	mes "Oh! Almost forgot. Will you invest?";
 	next;
-	if(select("Invest:Don't Invest") == 2) {
+	if(select("Invest", "Don't Invest") == 2) {
 		mes "[Namis]";
 		mes "Don't you mess with a busy cat!";
 		close;
@@ -1489,13 +1489,13 @@ malangdo,215,119,4	script	Thanks Ticket Machine	2_VENDING_MACHINE1,{
 	mes "4. Hope you enjoy~^000000";
 	mes "- Mr. Cat, the Machine Owner -";
 	next;
-	switch(select("Finish:Purchase:Red Paw Jelly Bag (5 Tickets):Black Paw Jelly Bag (50 Tickets)")) {
+	switch(select("Finish", "Purchase", "Red Paw Jelly Bag (5 Tickets)", "Black Paw Jelly Bag (50 Tickets)")) {
 	case 1:
 		close;
 	case 2:
 		mes "The Vending Machine is selling items in the following list.";
 		next;
-		switch(select("Finish:1 Siege Arrow Quiver A (2 Tickets):1 Siege Arrow Quiver S (2 Tickets):30 White Potion (12 Tickets):30 White Slim Potion (14 Tickets):10 Dark Water (20 Tickets):20 Siege_Violet_Potion (30 Tickets):10 Coldproof Potion (30 Tickets):10 Thunderproof Potion (30 Tickets):10 Earthproof Potion (30 Tickets):10 Fireproof Potion (30 Tickets):10 Elemental Converter[Fire] (30 Tickets)")) {
+		switch(select("Finish", "1 Siege Arrow Quiver A (2 Tickets)", "1 Siege Arrow Quiver S (2 Tickets)", "30 White Potion (12 Tickets)", "30 White Slim Potion (14 Tickets)", "10 Dark Water (20 Tickets)", "20 Siege_Violet_Potion (30 Tickets)", "10 Coldproof Potion (30 Tickets)", "10 Thunderproof Potion (30 Tickets)", "10 Earthproof Potion (30 Tickets)", "10 Fireproof Potion (30 Tickets)", "10 Elemental Converter[Fire] (30 Tickets)")) {
 			case 1: close;
 			case 2: callsub L_Purchase,2,12678,1; //Siege_Arrow_Quiver_A
 			case 3: callsub L_Purchase,2,12677,1; //Siege_Arrow_Quiver_S

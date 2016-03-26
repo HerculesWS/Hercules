@@ -70,7 +70,7 @@ yuno,179,174,4	script	Gomer	4_M_REPAIR,{
 	mes "[Gomer]";
 	mes "That makes me feel good and I am about to make a new gear. I want you to help me. What do you say?";
 	next;
-	switch(select("I am not that interested.:What are you going to make?:Where do you get the materials?:I brought the materials.")) {
+	switch(select("I am not that interested.", "What are you going to make?", "Where do you get the materials?", "I brought the materials.")) {
 	case 1:
 		mes "[Gomer]";
 		mes "Nothing I can do";

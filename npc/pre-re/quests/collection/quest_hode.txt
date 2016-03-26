@@ -38,7 +38,7 @@ moc_fild17,208,346,5	script	Shone#Hode_Hunt	4_M_MOC_SOLDIER,{
 			mes "[Shone]";
 			mes "Have you finished hunting the 50 Hodes?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Shone]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -52,7 +52,7 @@ moc_fild17,208,346,5	script	Shone#Hode_Hunt	4_M_MOC_SOLDIER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Shone]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -78,7 +78,7 @@ moc_fild17,208,346,5	script	Shone#Hode_Hunt	4_M_MOC_SOLDIER,{
 			mes "[Shone]";
 			mes "Have you finished hunting the 50 Hodes?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Shone]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -92,7 +92,7 @@ moc_fild17,208,346,5	script	Shone#Hode_Hunt	4_M_MOC_SOLDIER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Shone]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -119,7 +119,7 @@ moc_fild17,208,346,5	script	Shone#Hode_Hunt	4_M_MOC_SOLDIER,{
 			mes "[Shone]";
 			mes "Have you finished hunting the 150 Hodes?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Shone]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -133,7 +133,7 @@ moc_fild17,208,346,5	script	Shone#Hode_Hunt	4_M_MOC_SOLDIER,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Shone]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -167,19 +167,19 @@ moc_fild17,208,346,5	script	Shone#Hode_Hunt	4_M_MOC_SOLDIER,{
 			mes "[Shone]";
 			mes "Hey do you think you can help me?";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Shone]";
 				mes "Thanks a lot, pal!";
 				next;
-				switch(select("Gather Items:Hunt Hodes:Cancel")) {
+				switch(select("Gather Items", "Hunt Hodes", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Shone]";
 					mes "I am trying to collect ^00CE0025 Earthworm Peelings^000000.";
 					mes "I will reward you if you help.";
 					next;
-					switch(select("I have 25 Earthworm Peelings:What was it again?")) {
+					switch(select("I have 25 Earthworm Peelings", "What was it again?")) {
 					case 1:
 						/*
 						if (checkweight(Orange_Potion,10) == 0) {
@@ -216,7 +216,7 @@ moc_fild17,208,346,5	script	Shone#Hode_Hunt	4_M_MOC_SOLDIER,{
 					mes "Ah, ok I think you can help me out by hunting some Hodes.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Hodes:100 Hodes:150 Hodes")) {
+					switch(select("50 Hodes", "100 Hodes", "150 Hodes")) {
 					case 1:
 						mes "[Shone]";
 						mes "Come back when you've finished your task and I will give you a small reward.";

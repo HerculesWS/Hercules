@@ -110,7 +110,9 @@ struct chrif_interface *chrif;
 #define chrif_check(a) do { if(!chrif->isconnected()) return a; } while(0)
 
 /// Resets all the data.
-void chrif_reset(void) {
+void chrif_reset(void) __attribute__ ((noreturn));
+void chrif_reset(void)
+{
 	// TODO kick everyone out and reset everything [FlavioJS]
 	exit(EXIT_FAILURE);
 }
@@ -163,7 +165,8 @@ bool chrif_auth_delete(int account_id, int char_id, enum sd_state state) {
 }
 
 //Moves the sd character to the auth_db structure.
-bool chrif_sd_to_auth(TBL_PC* sd, enum sd_state state) {
+bool chrif_sd_to_auth(struct map_session_data *sd, enum sd_state state)
+{
 	struct auth_node *node;
 
 	nullpo_retr(false, sd);
@@ -191,7 +194,7 @@ bool chrif_sd_to_auth(TBL_PC* sd, enum sd_state state) {
 	return true;
 }
 
-bool chrif_auth_logout(TBL_PC* sd, enum sd_state state)
+bool chrif_auth_logout(struct map_session_data *sd, enum sd_state state)
 {
 	nullpo_retr(false, sd);
 	if(sd->fd && state == ST_LOGOUT) { //Disassociate player, and free it after saving ack returns. [Skotlex]
@@ -204,7 +207,8 @@ bool chrif_auth_logout(TBL_PC* sd, enum sd_state state)
 	return chrif->sd_to_auth(sd, state);
 }
 
-bool chrif_auth_finished(TBL_PC* sd) {
+bool chrif_auth_finished(struct map_session_data *sd)
+{
 	struct auth_node *node;
 
 	nullpo_retr(false, sd);
@@ -360,7 +364,7 @@ void chrif_recvmap(int fd) {
 	}
 
 	if (battle_config.etc_log)
-		ShowStatus("Received maps from %d.%d.%d.%d:%d (%d maps)\n", CONVIP(ip), port, j);
+		ShowStatus("Received maps from %u.%u.%u.%u:%u (%d maps)\n", CONVIP(ip), port, j);
 
 	chrif->other_mapserver_count++;
 }
@@ -377,7 +381,7 @@ void chrif_removemap(int fd) {
 	chrif->other_mapserver_count--;
 
 	if(battle_config.etc_log)
-		ShowStatus("remove map of server %d.%d.%d.%d:%d (%d maps)\n", CONVIP(ip), port, j);
+		ShowStatus("remove map of server %u.%u.%u.%u:%u (%d maps)\n", CONVIP(ip), port, j);
 }
 
 // received after a character has been "final saved" on the char-server
@@ -590,10 +594,10 @@ void chrif_authok(int fd) {
 	int account_id, group_id, char_id;
 	uint32 login_id1,login_id2;
 	time_t expiration_time;
-	struct mmo_charstatus* charstatus;
+	const struct mmo_charstatus *charstatus;
 	struct auth_node *node;
 	bool changing_mapservers;
-	TBL_PC* sd;
+	struct map_session_data *sd = NULL;
 
 	//Check if both servers agree on the struct's size
 	if( RFIFOW(fd,2) - 25 != sizeof(struct mmo_charstatus) ) {
@@ -607,7 +611,7 @@ void chrif_authok(int fd) {
 	expiration_time = (time_t)(int32)RFIFOL(fd,16);
 	group_id = RFIFOL(fd,20);
 	changing_mapservers = (RFIFOB(fd,24));
-	charstatus = (struct mmo_charstatus*)RFIFOP(fd,25);
+	charstatus = RFIFOP(fd,25);
 	char_id = charstatus->char_id;
 
 	//Check if we don't already have player data in our server
@@ -792,7 +796,7 @@ bool chrif_char_ask_name(int acc, const char* character_name, unsigned short ope
 	WFIFOHEAD(chrif->fd,44);
 	WFIFOW(chrif->fd,0) = 0x2b0e;
 	WFIFOL(chrif->fd,2) = acc;
-	safestrncpy((char*)WFIFOP(chrif->fd,6), character_name, NAME_LENGTH);
+	safestrncpy(WFIFOP(chrif->fd,6), character_name, NAME_LENGTH);
 	WFIFOW(chrif->fd,30) = operation_type;
 
 	if (operation_type == CHAR_ASK_NAME_BAN || operation_type == CHAR_ASK_NAME_CHARBAN) {
@@ -823,7 +827,7 @@ bool chrif_changesex(struct map_session_data *sd, bool change_account)
 	WFIFOHEAD(chrif->fd,44);
 	WFIFOW(chrif->fd,0) = 0x2b0e;
 	WFIFOL(chrif->fd,2) = sd->status.account_id;
-	safestrncpy((char*)WFIFOP(chrif->fd,6), sd->status.name, NAME_LENGTH);
+	safestrncpy(WFIFOP(chrif->fd,6), sd->status.name, NAME_LENGTH);
 	WFIFOW(chrif->fd,30) = change_account ? CHAR_ASK_NAME_CHANGESEX : CHAR_ASK_NAME_CHANGECHARSEX;
 	if (!change_account)
 		WFIFOB(chrif->fd,32) = sd->status.sex == SEX_MALE ? SEX_FEMALE : SEX_MALE;
@@ -929,14 +933,14 @@ bool chrif_divorceack(int char_id, int partner_id) {
 		sd->status.partner_id = 0;
 		for(i = 0; i < MAX_INVENTORY; i++)
 			if (sd->status.inventory[i].nameid == WEDDING_RING_M || sd->status.inventory[i].nameid == WEDDING_RING_F)
-				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER);
+				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_DIVORCE);
 	}
 
 	if( ( sd = map->charid2sd(partner_id) ) != NULL && sd->status.partner_id == char_id ) {
 		sd->status.partner_id = 0;
 		for(i = 0; i < MAX_INVENTORY; i++)
 			if (sd->status.inventory[i].nameid == WEDDING_RING_M || sd->status.inventory[i].nameid == WEDDING_RING_F)
-				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_OTHER);
+				pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_DIVORCE);
 	}
 
 	return true;
@@ -1169,8 +1173,9 @@ bool chrif_save_scdata(struct map_session_data *sd) { //parses the sc_data of th
 				data.tick = DIFF_TICK32(td->tick,tick); //Duration that is left before ending.
 			else
 				data.tick = 0; //Negative tick does not necessarily mean that sc has expired
-		} else
-			data.tick = -1; //Infinite duration
+		} else {
+			data.tick = INFINITE_DURATION;
+		}
 		data.type = i;
 		data.val1 = sc->data[i]->val1;
 		data.val2 = sc->data[i]->val2;
@@ -1217,7 +1222,7 @@ bool chrif_load_scdata(int fd) {
 	count = RFIFOW(fd,12); //sc_count
 
 	for (i = 0; i < count; i++) {
-		struct status_change_data *data = (struct status_change_data*)RFIFOP(fd,14 + i*sizeof(struct status_change_data));
+		const struct status_change_data *data = RFIFOP(fd,14 + i*sizeof(struct status_change_data));
 		status->change_start(NULL, &sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4,
 		                     data->tick, SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_LOADED|SCFLAG_FIXEDRATE);
 	}
@@ -1392,15 +1397,15 @@ int chrif_parse(int fd) {
 	}
 
 	while (RFIFOREST(fd) >= 2) {
+		cmd = RFIFOW(fd,0);
+
 		if (VECTOR_LENGTH(HPM->packets[hpChrif_Parse]) > 0) {
-			int result = HPM->parse_packets(fd,hpChrif_Parse);
+			int result = HPM->parse_packets(fd,cmd,hpChrif_Parse);
 			if (result == 1)
 				continue;
 			if (result == 2)
 				return 0;
 		}
-
-		cmd = RFIFOW(fd,0);
 
 		if (cmd < 0x2af8 || cmd >= 0x2af8 + ARRAYLENGTH(chrif->packet_len_table) || chrif->packet_len_table[cmd-0x2af8] == 0) {
 			int result = intif->parse(fd); // Passed on to the intif
@@ -1408,7 +1413,7 @@ int chrif_parse(int fd) {
 			if (result == 1) continue; // Treated in intif
 			if (result == 2) return 0; // Didn't have enough data (len==-1)
 
-			ShowWarning("chrif_parse: session #%d, intif->parse failed (unrecognized command 0x%.4x).\n", fd, cmd);
+			ShowWarning("chrif_parse: session #%d, intif->parse failed (unrecognized command 0x%.4x).\n", fd, (unsigned int)cmd);
 			sockt->eof(fd);
 			return 0;
 		}
@@ -1432,10 +1437,10 @@ int chrif_parse(int fd) {
 			case 0x2b03: clif->charselectok(RFIFOL(fd,2), RFIFOB(fd,6)); break;
 			case 0x2b04: chrif->recvmap(fd); break;
 			case 0x2b06: chrif->changemapserverack(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14), RFIFOW(fd,18), RFIFOW(fd,20), RFIFOW(fd,22), RFIFOL(fd,24), RFIFOW(fd,28)); break;
-			case 0x2b09: map->addnickdb(RFIFOL(fd,2), (char*)RFIFOP(fd,6)); break;
+			case 0x2b09: map->addnickdb(RFIFOL(fd,2), RFIFOP(fd,6)); break;
 			case 0x2b0a: sockt->datasync(fd, false); break;
 			case 0x2b0d: chrif->changedsex(fd); break;
-			case 0x2b0f: chrif->char_ask_name_answer(RFIFOL(fd,2), (char*)RFIFOP(fd,6), RFIFOW(fd,30), RFIFOW(fd,32)); break;
+			case 0x2b0f: chrif->char_ask_name_answer(RFIFOL(fd,2), RFIFOP(fd,6), RFIFOW(fd,30), RFIFOW(fd,32)); break;
 			case 0x2b12: chrif->divorceack(RFIFOL(fd,2), RFIFOL(fd,6)); break;
 			case 0x2b14: chrif->idbanned(fd); break;
 			case 0x2b1b: chrif->recvfamelist(fd); break;
@@ -1449,7 +1454,7 @@ int chrif_parse(int fd) {
 			case 0x2b25: chrif->deadopt(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10)); break;
 			case 0x2b27: chrif->authfail(fd); break;
 			default:
-				ShowError("chrif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, cmd);
+				ShowError("chrif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, (unsigned int)cmd);
 				sockt->eof(fd);
 				return 0;
 		}
@@ -1476,8 +1481,8 @@ int send_usercount_tochar(int tid, int64 tick, int id, intptr_t data) {
  *------------------------------------------*/
 bool send_users_tochar(void) {
 	int users = 0, i = 0;
-	struct map_session_data* sd;
-	struct s_mapiterator* iter;
+	const struct map_session_data *sd;
+	struct s_mapiterator *iter;
 
 	chrif_check(false);
 
@@ -1487,7 +1492,7 @@ bool send_users_tochar(void) {
 	WFIFOW(chrif->fd,0) = 0x2aff;
 
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
+	for (sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
 		WFIFOL(chrif->fd,6+8*i) = sd->status.account_id;
 		WFIFOL(chrif->fd,6+8*i+4) = sd->status.char_id;
 		i++;

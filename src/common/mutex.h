@@ -32,7 +32,7 @@ typedef struct racond racond; // Condition Var
  *
  * @return not NULL
  */
-ramutex *ramutex_create();
+ramutex *ramutex_create(void);
 
 /**
  * Destroys a Mutex
@@ -70,7 +70,7 @@ void ramutex_unlock(ramutex *m);
  *
  * @return not NULL
  */
-racond *racond_create();
+racond *racond_create(void);
 
 /**
  * Destroy a Condition variable

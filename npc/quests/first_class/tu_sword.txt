@@ -63,7 +63,7 @@ izlude_in,82,163,3	script	Shurank	4_M_JOB_KNIGHT1,{
 	if(BaseClass == Job_Swordman && eaclass()&(EAJL_2|EAJL_UPPER|EAJL_THIRD)){
 		mes "From your raiment,";
 		mes "I see that you are";
-		if(Sex)
+		if (Sex == SEX_MALE)
 			mes "a man of the sword.";
 		else
 			mes "a woman of the sword.";
@@ -1125,7 +1125,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 		mes "This is a complex transposition cipher in which we remove one person's code from the rest of them. So who do you think is";
 		mes "the murderer?";
 		next;
-		switch(select("Hans:Bankley:Geil:Muetro")) {
+		switch(select("Hans", "Bankley", "Geil", "Muetro")) {
 		case 1:
 			mes "[Dequ'ee]";
 			mes "Hans...?";
@@ -1185,7 +1185,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 		mes "[Dequ'ee]";
 		mes "Hm, you guess the order and I'll try to formulate a cryptanalysis based on your guess.";
 		next;
-		switch(select("Muetro:Hans:Geil:Bankley")) {
+		switch(select("Muetro", "Hans", "Geil", "Bankley")) {
 		case 1:
 			mes "[Dequ'ee]";
 			mes "Okay, Muetro's";
@@ -1194,7 +1194,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			mes "code do you think";
 			mes "should go second?";
 			next;
-			switch(select("Hans:Geil:Bankley")) {
+			switch(select("Hans", "Geil", "Bankley")) {
 			case 1:
 				mes "[Dequ'ee]";
 				mes "Hans...?";
@@ -1203,7 +1203,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Geil:Bankley")) {
+				switch(select("Geil", "Bankley")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Muetro, Hans,";
@@ -1255,7 +1255,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Hans:Bankley")) {
+				switch(select("Hans", "Bankley")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Muetro, Geil,";
@@ -1307,7 +1307,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Hans:Geil")) {
+				switch(select("Hans", "Geil")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Muetro, Bankley,";
@@ -1361,7 +1361,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			mes "code do you think";
 			mes "should go second?";
 			next;
-			switch(select("Muetro:Geil:Bankley")) {
+			switch(select("Muetro", "Geil", "Bankley")) {
 			case 1:
 				mes "[Dequ'ee]";
 				mes "Muestro's...?";
@@ -1370,7 +1370,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Geil:Bankley")) {
+				switch(select("Geil", "Bankley")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Hans, Muetro,";
@@ -1422,7 +1422,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Muetro:Bankley")) {
+				switch(select("Muetro", "Bankley")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Hans, Geil,";
@@ -1474,7 +1474,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Muetro:Geil")) {
+				switch(select("Muetro", "Geil")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Hans, Bankley,";
@@ -1528,7 +1528,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			mes "code do you think";
 			mes "should go second?";
 			next;
-			switch(select("Muetro:Hans:Bankley")) {
+			switch(select("Muetro", "Hans", "Bankley")) {
 			case 1:
 				mes "[Dequ'ee]";
 				mes "Muestro's...?";
@@ -1537,7 +1537,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Hans:Bankley")) {
+				switch(select("Hans", "Bankley")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Geil, Muetro,";
@@ -1596,7 +1596,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Muetro:Bankley")) {
+				switch(select("Muetro", "Bankley")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Geil, Hans,";
@@ -1648,7 +1648,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Muetro:Hans")) {
+				switch(select("Muetro", "Hans")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Geil, Bankley,";
@@ -1702,7 +1702,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			mes "code do you think";
 			mes "should go second?";
 			next;
-			switch(select("Muetro:Hans:Geil")) {
+			switch(select("Muetro", "Hans", "Geil")) {
 			case 1:
 				mes "[Dequ'ee]";
 				mes "Muestro's...?";
@@ -1711,7 +1711,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Hans:Geil")) {
+				switch(select("Hans", "Geil")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Bankley, Muetro,";
@@ -1763,7 +1763,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Muetro:Geil")) {
+				switch(select("Muetro", "Geil")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Bankley, Hans,";
@@ -1813,7 +1813,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "the third code";
 				mes "would be...?";
 				next;
-				switch(select("Muetro:Hans")) {
+				switch(select("Muetro", "Hans")) {
 				case 1:
 					mes "[Dequ'ee]";
 					mes "Bankley, Geil,";
@@ -2045,20 +2045,20 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 		mes "What message does";
 		mes "Shurank have for me?";
 		next;
-		switch(select("Killer...:Murderer...")) {
+		switch(select("Killer...", "Murderer...")) {
 		case 1:
 			mes "[" + strcharinfo(0) + "]";
 			mes "What happened";
 			mes "to the killer?";
 			next;
-			switch(select("Who he is...:Who is behind...")) {
+			switch(select("Who he is...", "Who is behind...")) {
 			case 1:
 				mes "[" + strcharinfo(0) + "]";
 				mes "Did you find";
 				mes "out who he is?";
 				mes "If you did...";
 				next;
-				switch(select("Why are we...:What are we...")) {
+				switch(select("Why are we...", "What are we...")) {
 				case 1:
 					mes "[" + strcharinfo(0) + "]";
 					mes "Why are sitting";
@@ -2098,7 +2098,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "who's behind all this?";
 				mes "If you did...";
 				next;
-				switch(select("Why are we...:What are we...")) {
+				switch(select("Why are we...", "What are we...")) {
 				case 1:
 					mes "[" + strcharinfo(0) + "]";
 					mes "Why are sitting";
@@ -2139,14 +2139,14 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			mes "What happened";
 			mes "to the murderer?";
 			next;
-			switch(select("Who he is...:Who is behind...")) {
+			switch(select("Who he is...", "Who is behind...")) {
 			case 1:
 				mes "[" + strcharinfo(0) + "]";
 				mes "Did you find";
 				mes "out who he is?";
 				mes "If you did...";
 				next;
-				switch(select("Why are we...:What are we...")) {
+				switch(select("Why are we...", "What are we...")) {
 				case 1:
 					mes "[" + strcharinfo(0) + "]";
 					mes "Why are sitting";
@@ -2218,7 +2218,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 				mes "who's behind all this?";
 				mes "If you did...";
 				next;
-				switch(select("Why are we...:What are we...")) {
+				switch(select("Why are we...", "What are we...")) {
 				case 1:
 					mes "[" + strcharinfo(0) + "]";
 					mes "Why are sitting";

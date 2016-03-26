@@ -41,7 +41,7 @@ itemmall,19,74,5	script	Stylist#cash	4_F_02,{
 	mes "Give me a ^FF0000New Style Coupon^000000,";
 	mes "and I'll change your hair~";
 	next;
-	if (Sex == 1) {
+	if (Sex == SEX_MALE) {
 		mes "[Kaniki]";
 		mes "I have two special";
 		mes "hairstyles for men, the";
@@ -93,7 +93,7 @@ itemmall,19,74,5	script	Stylist#cash	4_F_02,{
 	mes "if you'd like me to";
 	mes "change your hairstyle?";
 	next;
-	if(select("Change Hairstyle:Don't Change") == 1) {
+	if(select("Change Hairstyle", "Don't Change") == 1) {
 		if (countitem(New_Style_Coupon) > 0) {
 			mes "[Kaniki]";
 			mes "Great, you brought";
@@ -101,8 +101,8 @@ itemmall,19,74,5	script	Stylist#cash	4_F_02,{
 			mes "Alright, which hairstyle";
 			mes "did you want to have?";
 			next;
-			if (Sex == 1) {
-				if(select("Emergency Heal Perm:Aura Blade Cut") == 1) {
+			if (Sex == SEX_MALE) {
+				if(select("Emergency Heal Perm", "Aura Blade Cut") == 1) {
 					delitem New_Style_Coupon,1;	// New_Style_Coupon
 					setlook 1,24;
 				}else{
@@ -110,7 +110,7 @@ itemmall,19,74,5	script	Stylist#cash	4_F_02,{
 					setlook 1,25;
 				}
 			}else{
-				if(select("Assumptio Perm:Soul Changer Cut") == 1) {
+				if(select("Assumptio Perm", "Soul Changer Cut") == 1) {
 					delitem New_Style_Coupon,1;	// New_Style_Coupon
 					setlook 1,24;
 				}else{

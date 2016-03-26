@@ -24,6 +24,9 @@
 #include "common/hercules.h"
 
 #include <stdio.h> // FILE*
+#ifndef WIN32
+#	include <unistd.h> // sleep()
+#endif
 
 /* [HCache] 1-byte key to ensure our method is the latest, we can modify to ensure the method matches */
 #define HCACHE_KEY 'k'
@@ -41,6 +44,9 @@ bool exists(const char* filename);
 
 /// calculates the value of A / B, in percent (rounded down)
 unsigned int get_percentage(const unsigned int A, const unsigned int B);
+
+int64 apply_percentrate64(int64 value, int rate, int maxrate);
+int apply_percentrate(int value, int rate, int maxrate);
 
 const char* timestamp2string(char* str, size_t size, time_t timestamp, const char* format);
 

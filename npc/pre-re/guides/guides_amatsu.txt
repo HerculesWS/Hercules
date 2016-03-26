@@ -48,7 +48,7 @@ amatsu,207,89,3	script	Amatsu Guide#ama	4_F_JPN,{
 	mes "Please tell me";
 	mes "if you want to know something.";
 	next;
-	switch(select("Palace:Tool Shop:Weapon Shop:Bar")) {
+	switch(select("Palace", "Tool Shop", "Weapon Shop", "Bar")) {
 	case 1:
 		viewpoint 1,85,235,0,0xFF3355;
 		mes "[Amachang]";
@@ -97,7 +97,7 @@ amatsu,251,283,4	script	Guide Man#2ama	8_M_JPNSOLDIER,{
 	mes "[Guide Man]";
 	mes "What are you looking for?";
 	next;
-	switch(select("Palace:Tool Shop:Weapon Shop:Bar")) {
+	switch(select("Palace", "Tool Shop", "Weapon Shop", "Bar")) {
 	case 1:
 		viewpoint 1,85,235,0,0xFF3355;
 		mes "[Guide Man]";

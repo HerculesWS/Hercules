@@ -23,7 +23,6 @@
 
 #include "map/pc_groups.h"
 #include "common/hercules.h"
-#include "common/conf.h"
 #include "common/db.h"
 
 #include <stdarg.h>
@@ -34,6 +33,7 @@
 struct map_session_data;
 struct AtCommandInfo;
 struct block_list;
+struct config_setting_t;
 
 /**
  * Defines
@@ -110,7 +110,7 @@ struct atcommand_interface {
 	bool (*create) (char *name, AtCommandFunc func);
 	bool (*can_use) (struct map_session_data *sd, const char *command);
 	bool (*can_use2) (struct map_session_data *sd, const char *command, AtCommandType type);
-	void (*load_groups) (GroupSettings **groups, config_setting_t **commands_, size_t sz);
+	void (*load_groups) (GroupSettings **groups, struct config_setting_t **commands_, size_t sz);
 	AtCommandInfo* (*exists) (const char* name);
 	bool (*msg_read) (const char *cfg_name, bool allow_override);
 	void (*final_msg) (void);

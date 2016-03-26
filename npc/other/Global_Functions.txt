@@ -160,7 +160,10 @@ function	script	F_Rand	{
 // Returns 1st argument if female, 2nd argument otherwise
 // Example: mes callfunc("F_Sex","What a beautiful lady!","What a handsome man!");
 function	script	F_SexMes	{
-	return getarg(Sex);
+	if (Sex == SEX_MALE)
+		return getarg(0);
+	else
+		return getarg(1);
 }
 
 //== Function F_Hi =========================================

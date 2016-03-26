@@ -45,7 +45,7 @@ geffen,115,107,5	script	Lord Kaho's Servant	1_M_PUBMASTER,{
 	mes .@n$;
 	mes "Are you ready for me to make this special item?";
 	next;
-	if(select("Sure am!:These requirements are unfathomable!")==2) {
+	if(select("Sure am!", "These requirements are unfathomable!")==2) {
 		mes .@n$;
 		mes "What I had to go through was more unfathomable...";
 		mes "If you succeed in getting these items, you will have incredible strength!";

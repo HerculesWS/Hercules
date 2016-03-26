@@ -50,14 +50,14 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 			mes "[Nelliorde]";
 			mes "Right, right, let me play a song for you. Would you care to listen?";
 			next;
-			switch(select("Sure, why not~:How about some news?:No thanks.")) {
+			switch(select("Sure, why not~", "How about some news?", "No thanks.")) {
 			case 1:
 				mes "[Nelliorde]";
 				mes "So, which song";
 				mes "would you like to hear?";
 				mes "Go ahead, pick one~";
 				next;
-				switch(select("Bragi's Poem:Eternal Chaos:Assassin in the Sunset:Der Ring des Nibelungen")) {
+				switch(select("Bragi's Poem", "Eternal Chaos", "Assassin in the Sunset", "Der Ring des Nibelungen")) {
 				case 1:
 					cutin "god_nelluad02",2;
 					mes "[Nelliorde]";
@@ -142,7 +142,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 				mes "What kind of news do";
 				mes "you wish to hear about?";
 				next;
-				switch(select("About Prontera!:About coastal areas.:Is the desert still hot?:How about the borderlands?")) {
+				switch(select("About Prontera!", "About coastal areas.", "Is the desert still hot?", "How about the borderlands?")) {
 				case 1:
 					mes "[Nelliorde]";
 					mes "What?! Prontera?!";
@@ -272,7 +272,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 			mes "After all, I especially";
 			mes "recommended you~";
 			next;
-			switch(select("Tell me a story.:Sing a song for me.")) {
+			switch(select("Tell me a story.", "Sing a song for me.")) {
 			case 1:
 				cutin "god_nelluad02",2;
 				mes "[Nelliorde]";
@@ -406,7 +406,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 			mes "[Nelliorde]";
 			mes "I happened to get this information from its headquarters in Juno. So how does that sound?";
 			next;
-			switch(select("Wee~ I want to hear!:Booooring~")) {
+			switch(select("Wee~ I want to hear!", "Booooring~")) {
 			case 1:
 				mes "[Nelliorde]";
 				mes "Well...!";
@@ -449,7 +449,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 					mes "[Nelliorde]";
 					mes "So what do you think? Isn't that interesting? Of course, you'd better speak to Mr. Kaili if you wish to learn more. If you'd like, I shall write you a letter or recommendation.";
 					next;
-					switch(select("Sure! Sounds good.:Sorry, I am not that interested.")) {
+					switch(select("Sure! Sounds good.", "Sorry, I am not that interested.")) {
 					case 1:
 						mes "[Nelliorde]";
 						mes "Excellent...!";
@@ -478,7 +478,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 				mes "that passes up a chance";
 				mes "for an adventure, yes?";
 				next;
-				switch(select("Tell me a story.:Sing a song for me.")) {
+				switch(select("Tell me a story.", "Sing a song for me.")) {
 				case 1:
 					cutin "god_nelluad02",2;
 					mes "[Nelliorde]";
@@ -609,7 +609,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 		mes "do you not?";
 		next;
 		mes "[Nelliorde]";
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "Hahahaha, forgive my rudeness,";
 			mes "but I fail to remember your name, although your face does seem rather familiar.";
 		}
@@ -624,7 +624,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 		mes "[Nelliorde]";
 		mes "So, aren't you curious about me? Feel free to ask me whatever you like! I'm the vagabond that will wander the earth till the end of his days, your friend who loves to sing under the moonlight~";
 		next;
-		switch(select("Who are you?:What's new?:Can you sing?")) {
+		switch(select("Who are you?", "What's new?", "Can you sing?")) {
 		case 1:
 			mes "[Nelliorde]";
 			mes "Why, I am Nelliorde, the Bard.";
@@ -672,7 +672,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 			mes "What kind of news do";
 			mes "you wish to know about?";
 			next;
-			switch(select("About Prontera!:About seaside areas.:Is the desert still hot?:How about the borderlands?")) {
+			switch(select("About Prontera!", "About seaside areas.", "Is the desert still hot?", "How about the borderlands?")) {
 			case 1:
 				mes "[Nelliorde]";
 				mes "What?! Prontera?!";
@@ -791,7 +791,7 @@ prt_fild08,175,374,3	script	Bard#brising	1_M_BARD,{
 			mes "Certainly, and if I may say so, pleasureably. Which song would";
 			mes "you care to hear?";
 			next;
-			switch(select("Bragi's Poem:Eternal Chaos:Assassin in the Sunset")) {
+			switch(select("Bragi's Poem", "Eternal Chaos", "Assassin in the Sunset")) {
 			case 1:
 				if (Zeny > 499) {
 					cutin "god_nelluad02",2;
@@ -958,7 +958,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 			mes "So what";
 			mes "do you think?";
 			next;
-			switch(select("I'm not sure...:I suppose you're right.")) {
+			switch(select("I'm not sure...", "I suppose you're right.")) {
 			case 1:
 				mes "[" + strcharinfo(0) + "]";
 				mes "I'm not sure...";
@@ -1194,7 +1194,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 			mes "I'll need your";
 			mes "help once again!";
 			next;
-			switch(select("Wah? It's not over?!:What is it this time?")) {
+			switch(select("Wah? It's not over?!", "What is it this time?")) {
 			case 1:
 				mes "[Enrico Kaili]";
 				mes "Hah...!";
@@ -1282,7 +1282,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 			mes "Work for me, and I shall";
 			mes "surely repay you.";
 			next;
-			switch(select("No thanks.:Sure, why not.")) {
+			switch(select("No thanks.", "Sure, why not.")) {
 			case 1:
 				mes "[Enrico Kaili]";
 				mes "What...?!";
@@ -1339,7 +1339,7 @@ yuno_in04,47,113,1	script	Studying Scholar#1	4_M_ALCHE_B,{
 			mes "As Nelliorde probably mentioned,";
 			mes "I need some help in completing my research. Since you adventurers are always traveling, I was hoping you'd help me find someone.";
 			next;
-			switch(select("I'm no good at finding people.:I can do that!")) {
+			switch(select("I'm no good at finding people.", "I can do that!")) {
 			case 1:
 				mes "[Enrico Kaili]";
 				mes "Oh... Really?";
@@ -1565,7 +1565,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 			mes "want to hear my";
 			mes "story after all?";
 			next;
-			switch(select("Yes, I would like to.:No, thanks.")) {
+			switch(select("Yes, I would like to.", "No, thanks.")) {
 			case 1:
 				mes "[Hermite Charles]";
 				mes "Thank you...";
@@ -1613,7 +1613,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 				mes "[Hermite Charles]";
 				mes "It's doesn't matter how insignificant the clues may be, anything will do. I want to know everything related to her!";
 				next;
-				switch(select("Uhhhhh...:Sorry, I can't.:When was the last time you saw her?")) {
+				switch(select("Uhhhhh...", "Sorry, I can't.", "When was the last time you saw her?")) {
 				case 1:
 					mes "[Hermite Charles]";
 					mes "Please consider my";
@@ -1628,7 +1628,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 					mes "[Hermite Charles]";
 					mes "If you've ever dearly loved someone, then you'd know how desperate I am. Please find Lowen for me. Please...";
 					next;
-					switch(select("...Alright.:I'm sorry, I don't think I can do it.")) {
+					switch(select("...Alright.", "I'm sorry, I don't think I can do it.")) {
 					case 1:
 						mes "[" + strcharinfo(0) + "]";
 						mes "Alright.";
@@ -1730,7 +1730,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 		mes "I quit already.";
 		mes "Leave me alone!";
 		next;
-		switch(select("Leave him alone.:Give him Kaili's Letter.")) {
+		switch(select("Leave him alone.", "Give him Kaili's Letter.")) {
 		case 1:
 			mes "^3355FFYou're not sure why he's so upset, but it doesn't seem to be the best time to try to speak with him. Perhaps later would be better...^000000";
 			god_brising = 4;
@@ -1754,7 +1754,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 			mes "Would you like to";
 			mes "listen to my story?";
 			next;
-			switch(select("Sure!:I'm busy, actually.")) {
+			switch(select("Sure!", "I'm busy, actually.")) {
 			case 1:
 				mes "[Hermite Charles]";
 				mes "Thank you...";
@@ -1802,7 +1802,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 				mes "[Hermite Charles]";
 				mes "It's doesn't matter how insignificant the clues may be, anything will do. I want to know everything related to her!";
 				next;
-				switch(select("Uhhhhh...:Sorry, I can't.:When was the last time you saw her?")) {
+				switch(select("Uhhhhh...", "Sorry, I can't.", "When was the last time you saw her?")) {
 				case 1:
 					mes "[Hermite Charles]";
 					mes "Please consider my";
@@ -1817,7 +1817,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 					mes "[Hermite Charles]";
 					mes "If you've ever dearly loved someone, then you'd know how desperate I am. Please find Lowen for me. Please...";
 					next;
-					switch(select("...Alright.:I'm sorry, I don't think I can do it.")) {
+					switch(select("...Alright.", "I'm sorry, I don't think I can do it.")) {
 					case 1:
 						mes "[" + strcharinfo(0) + "]";
 						mes "Alright.";
@@ -1918,7 +1918,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 		mes "But if you don't mind,";
 		mes "I want to be alone...";
 		next;
-		switch(select("Leave him alone.:Give him Kaili's Letter.")) {
+		switch(select("Leave him alone.", "Give him Kaili's Letter.")) {
 		case 1:
 			mes "^3355FFYou're not sure why he's so upset, but it doesn't seem to be the best time to try to speak with him. Perhaps later would be better...^000000";
 			god_brising = 4;
@@ -1942,7 +1942,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 			mes "Would you like to";
 			mes "listen to my story?";
 			next;
-			switch(select("Sure!:I'm busy, actually.")) {
+			switch(select("Sure!", "I'm busy, actually.")) {
 			case 1:
 				mes "[Hermite Charles]";
 				mes "Thank you...";
@@ -1990,7 +1990,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 				mes "[Hermite Charles]";
 				mes "It's doesn't matter how insignificant the clues may be, anything will do. I want to know everything related to her!";
 				next;
-				switch(select("Uhhhhh...:Sorry, I can't.:When was the last time you saw her?")) {
+				switch(select("Uhhhhh...", "Sorry, I can't.", "When was the last time you saw her?")) {
 				case 1:
 					mes "[Hermite Charles]";
 					mes "Please consider my";
@@ -2005,7 +2005,7 @@ prt_church,113,103,1	script	Praying Man	4_M_NFMAN,{
 					mes "[Hermite Charles]";
 					mes "If you've ever dearly loved someone, then you'd know how desperate I am. Please find Lowen for me. Please...";
 					next;
-					switch(select("...Alright.:I'm sorry, I don't think I can do it.")) {
+					switch(select("...Alright.", "I'm sorry, I don't think I can do it.")) {
 					case 1:
 						mes "[" + strcharinfo(0) + "]";
 						mes "Alright.";
@@ -2313,9 +2313,9 @@ prt_castle,84,51,5	script	Librarian#2	8W_SOLDIER,{
 		mes "person's name, as well";
 		mes "as your relationship.";
 		next;
-		switch(select("Lowen, Sibling:Lowen, Spouse:Lowen, Enemy:Lowen, a Friend")) {
+		switch(select("Lowen, Sibling", "Lowen, Spouse", "Lowen, Enemy", "Lowen, a Friend")) {
 		case 1:
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				mes "[Librarian]";
 				mes "How dare you";
 				mes "lie to the royal";
@@ -2362,7 +2362,7 @@ prt_castle,84,51,5	script	Librarian#2	8W_SOLDIER,{
 				close;
 			}
 		case 2:
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				mes "[Librarian]";
 				mes "Spouse...?";
 				mes "Well, I guess you look like a husband. Heh, I've got a girlfriend myself. Well, at least I think so. Anyway...";
@@ -2619,7 +2619,7 @@ gef_dun01,89,192,0	script	#lowentrace	HIDDEN_NPC,3,3,{
 		mes "^3355FFWill you";
 		mes "summon her?^000000";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			input @lowenstring$;
 			if (@lowenstring$ == "Lowen") {
@@ -2675,7 +2675,7 @@ gef_dun01,89,192,0	script	#lowentrace	HIDDEN_NPC,3,3,{
 		mes "^6E7B8BI-It's dangerous...";
 		mes "Be careful...^000000";
 		next;
-		switch(select("Ignore it.:What are you talking about?")) {
+		switch(select("Ignore it.", "What are you talking about?")) {
 		case 1:
 			close;
 		case 2:
@@ -2687,7 +2687,7 @@ gef_dun01,89,192,0	script	#lowentrace	HIDDEN_NPC,3,3,{
 			mes "But if you don't mind,";
 			mes "may I talk to you...?^000000";
 			next;
-			switch(select("Holy...! Run!:What are you?!")) {
+			switch(select("Holy...! Run!", "What are you?!")) {
 			case 1:
 				close;
 			case 2:
@@ -2741,7 +2741,7 @@ gef_dun01,203,48,0	script	#lowentrace1	HIDDEN_NPC,3,3,{
 		mes "Would you";
 		mes "like to summon her? ";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			input @lowenstring$;
 				if (@lowenstring$ == "Lowen") {
@@ -2751,7 +2751,7 @@ gef_dun01,203,48,0	script	#lowentrace1	HIDDEN_NPC,3,3,{
 					mes "You'll be with me";
 					mes "...Won't you?^000000";
 					next;
-					switch(select("Of course.:Sorry, I don't think I can...")) {
+					switch(select("Of course.", "Sorry, I don't think I can...")) {
 					case 1:
 						mes "[Lowen Ellenen]";
 						mes "^6E7B8BThank you,";
@@ -2807,7 +2807,7 @@ gef_dun01,203,48,0	script	#lowentrace1	HIDDEN_NPC,3,3,{
 		mes "^6E7B8BI-It's dangerous...";
 		mes "Be careful...^000000";
 		next;
-		switch(select("Ignore it.:What are you talking about?")) {
+		switch(select("Ignore it.", "What are you talking about?")) {
 		case 1:
 			close;
 		case 2:
@@ -2819,7 +2819,7 @@ gef_dun01,203,48,0	script	#lowentrace1	HIDDEN_NPC,3,3,{
 			mes "But if you don't mind,";
 			mes "may I talk to you...?^000000";
 			next;
-			switch(select("Holy...! Run!:What are you?!")) {
+			switch(select("Holy...! Run!", "What are you?!")) {
 			case 1:
 				close;
 			case 2:
@@ -2878,7 +2878,7 @@ que_god02,48,55,3	script	Lowen Ellenen	4_F_CRU,{
 		mes "I couldn't forgive myself for what I've done to my comrades. They";
 		mes "were killed because of me.";
 		next;
-		switch(select("You were cursed...?:You still have something to do.")) {
+		switch(select("You were cursed...?", "You still have something to do.")) {
 		case 1:
 			mes "["+ strcharinfo(0) +"]";
 			mes "You're saying...";
@@ -2971,7 +2971,7 @@ que_god02,54,64,4	script	Soldier#1_brising	8W_SOLDIER,1,1,{
 		mes "[Soldier]";
 		mes "Have you volunteered for monster subjugation? Would you like to start the mission now?";
 		next;
-		switch(select("Yes.:I need more time.")) {
+		switch(select("Yes.", "I need more time.")) {
 		case 1:
 			mes "[Soldier]";
 			mes "We're you're ready,";
@@ -3360,7 +3360,7 @@ que_god02,178,127,3	script	Valkyrie#1	4_F_VALKYRIE,{
 		mes "[Valkyrie]";
 		mes "Have you found the strength to release yourself from the guilt and the pain? I have been waiting for you. Will you accept my invitation to Valhalla?";
 		next;
-		switch(select("Yes, I will follow you.:Um... I'm not Lowen.")) {
+		switch(select("Yes, I will follow you.", "Um... I'm not Lowen.")) {
 		case 1:
 			mes "[Valkyrie]";
 			mes "Lowen Ellenen, misunderstood hero. I will now promote you";
@@ -3541,18 +3541,18 @@ xmas,38,105,0	script	#brisindwarf1	HIDDEN_NPC,3,3,{
 		next;
 		mes "^3355FFHowever, this particular mound strikes you as curious for some reason.^000000";
 		next;
-		switch(select("Sweep the snow away with your hand.:Poke the snow with your finger.:Cancel.")) {
+		switch(select("Sweep the snow away with your hand.", "Poke the snow with your finger.", "Cancel.")) {
 		case 1:
 			mes "^3355FFAs you sweep the snow with the palm of your hand, some of the snow melts, revealing a strange puzzle cube. It's multi-faceted, but you can read that each facet is inscribed with a lyric.";
 			next;
-			switch(select("Adjust the puzzle.:Quit.")) {
+			switch(select("Adjust the puzzle.", "Quit.")) {
 			case 1:
 				mes "[" + strcharinfo(0) + "]";
 				mes "Okay, um...";
 				mes "I guess I should";
 				mes "choose a lyric...";
 				next;
-				switch(select("Wanes in comparison:To that beautiful hair:All of our hearts:The beauty of the stars:To those dazzling eyes")) {
+				switch(select("Wanes in comparison", "To that beautiful hair", "All of our hearts", "The beauty of the stars", "To those dazzling eyes")) {
 				case 1:
 					mes "[" + strcharinfo(0) + "]";
 					mes "we gave...";
@@ -3575,7 +3575,7 @@ xmas,38,105,0	script	#brisindwarf1	HIDDEN_NPC,3,3,{
 					mes "To those dazzling eyes";
 					break;
 				}
-				switch(select("We gave:Wanes in comparison.:All of our hearts in:To the steps in:To those dazzling eyes")) {
+				switch(select("We gave", "Wanes in comparison.", "All of our hearts in", "To the steps in", "To those dazzling eyes")) {
 				case 1:
 					mes "we gave..";
 					break;
@@ -3593,7 +3593,7 @@ xmas,38,105,0	script	#brisindwarf1	HIDDEN_NPC,3,3,{
 					mes "To those dazzling eyes";
 					break;
 				}
-				switch(select("We gave:To that beautiful hair:All of our hearts in:To the steps in:We lost our hearts")) {
+				switch(select("We gave", "To that beautiful hair", "All of our hearts in", "To the steps in", "We lost our hearts")) {
 				case 1:
 					mes "We gave";
 					break;
@@ -3611,7 +3611,7 @@ xmas,38,105,0	script	#brisindwarf1	HIDDEN_NPC,3,3,{
 					.@point += 10;
 					break;
 				}
-				switch(select("To that golden hair:To that beautiful hair:All of our hearts in:To the steps in:To those dazzling eyes")) {
+				switch(select("To that golden hair", "To that beautiful hair", "All of our hearts in", "To the steps in", "To those dazzling eyes")) {
 				case 1:
 					mes "To that golden hair";
 					.@point += 10;
@@ -3629,7 +3629,7 @@ xmas,38,105,0	script	#brisindwarf1	HIDDEN_NPC,3,3,{
 					mes "To those dazzling eyes";
 					break;
 				}
-				switch(select("We gave:To that beautiful hair:And those dazzling eyes.:To the steps in:To those dazzling eyes")) {
+				switch(select("We gave", "To that beautiful hair", "And those dazzling eyes.", "To the steps in", "To those dazzling eyes")) {
 				case 1:
 					mes "We gave";
 					break;
@@ -3712,7 +3712,7 @@ xmas,36,103,4	script	Alfrik#1	4_M_DWARF,{
 		mes "What's up, human?";
 		mes "All of us have awakened.";
 		next;
-		switch(select("I just wanted to say hello.:What are Brisingamen's materials?")) {
+		switch(select("I just wanted to say hello.", "What are Brisingamen's materials?")) {
 		case 1:
 			mes "[Alfrik]";
 			mes "Your gesture is appreciated, but I'd rather hide than socialize. I don't want to be found by the crows of Odin!";
@@ -3767,13 +3767,13 @@ xmas,36,103,4	script	Alfrik#1	4_M_DWARF,{
 		mes "Loki? Heimdall?";
 		mes "Or was it Freya?";
 		next;
-		switch(select("No one, it was an accident!:It was Valkyrie.")) {
+		switch(select("No one, it was an accident!", "It was Valkyrie.")) {
 		case 1:
 			mes "[Alfrik]";
 			mes "Don't even think of lying to me, human! There's no way you could have awoken me without knowing";
 			mes "the password! Now, speak!";
 			next;
-			switch(select("Valkyrie told me.:It was a coincidence!")) {
+			switch(select("Valkyrie told me.", "It was a coincidence!")) {
 			case 1:
 				mes "[Alfrik]";
 				mes "Valkyrie...?";
@@ -3881,7 +3881,7 @@ xmas,36,103,4	script	Alfrik#1	4_M_DWARF,{
 		mes "Why are you still here?";
 		mes "I told you go wake Dvalin!";
 		next;
-		switch(select("Where is he?:Tell me more about Brisingamen.")) {
+		switch(select("Where is he?", "Tell me more about Brisingamen.")) {
 		case 1:
 			mes "[Alfrik]";
 			mes "Ah. Right.";
@@ -4003,7 +4003,7 @@ prt_fild02,185,269,0	script	#brisindwarf2	HIDDEN_NPC,3,3,{
 		mes "^3355FFIt's just an ordinary rock underneath the shadow of";
 		mes "a tree. But on closer inspection, you notice that the moss on top of the rock looks perfectly flat.^000000";
 		next;
-		switch(select("Step on it.:Sweep the surface.:Scratch the surface.:Kick it.")) {
+		switch(select("Step on it.", "Sweep the surface.", "Scratch the surface.", "Kick it.")) {
 		case 1:
 			mes "^3355FFYou gingerly place your foot on the top of the stone. The entire rock suddenly swings downward";
 			mes "into the ground, and you fall helplessly...^000000";
@@ -4038,7 +4038,7 @@ prt_fild02,185,269,0	script	#brisindwarf2	HIDDEN_NPC,3,3,{
 			mes "This was just like when I had to give Alfrik's password. Okay, let me see...";
 			.@point = 0;
 			next;
-			switch(select("To the tear drops dripping on the way:Her lovely scent:We gave:To the seducing red lips:Our hearts in")) {
+			switch(select("To the tear drops dripping on the way", "Her lovely scent", "We gave", "To the seducing red lips", "Our hearts in")) {
 			case 1:
 				mes "["+ strcharinfo(0) +"]";
 				mes "To the tear drops dripping on the way";
@@ -4061,7 +4061,7 @@ prt_fild02,185,269,0	script	#brisindwarf2	HIDDEN_NPC,3,3,{
 				mes "Our hearts in";
 				break;
 			}
-			switch(select("Still lingers in the wind.:To the scent drifted in the wind:We gave:To the seducing red lips:Our hearts in")) {
+			switch(select("Still lingers in the wind.", "To the scent drifted in the wind", "We gave", "To the seducing red lips", "Our hearts in")) {
 			case 1:
 				mes "Still lingers in the wind.";
 				.@point += 10;
@@ -4078,7 +4078,7 @@ prt_fild02,185,269,0	script	#brisindwarf2	HIDDEN_NPC,3,3,{
 				mes "Our hearts in";
 				break;
 			}
-			switch(select("To the tear drops dripping on the way:To the scent drifted in the wind:We gave:We surrendered our hearts:Our hearts in")) {
+			switch(select("To the tear drops dripping on the way", "To the scent drifted in the wind", "We gave", "We surrendered our hearts", "Our hearts in")) {
 			case 1:
 				mes "To the tear drops dripping on the way";
 				break;
@@ -4095,7 +4095,7 @@ prt_fild02,185,269,0	script	#brisindwarf2	HIDDEN_NPC,3,3,{
 				mes "Our hearts in";
 				break;
 			}
-			switch(select("To the tear drops dripping on the way:To the scent drifted in the wind:To those tender teardrops:To the seducing red lips:Our hearts in")) {
+			switch(select("To the tear drops dripping on the way", "To the scent drifted in the wind", "To those tender teardrops", "To the seducing red lips", "Our hearts in")) {
 			case 1:
 				mes "To the tear drops dripping on the way";
 				break;
@@ -4113,7 +4113,7 @@ prt_fild02,185,269,0	script	#brisindwarf2	HIDDEN_NPC,3,3,{
 				mes "Our hearts in";
 				break;
 			}
-			switch(select("To the tear drops dripping on the way:To the scent drifted in the wind:We gave:To the seducing red lips:Those seductive red lips")) {
+			switch(select("To the tear drops dripping on the way", "To the scent drifted in the wind", "We gave", "To the seducing red lips", "Those seductive red lips")) {
 			case 1:
 				mes "To the tear drops dripping on the way";
 				break;
@@ -4188,7 +4188,7 @@ prt_fild02,185,270,3	script	Dvalin#1	4_M_DWARF,{
 		mes "Tell me right now, or I'll...";
 		mes "I'll kick your ass!";
 		next;
-		switch(select("Help!:Alfrik sent me to wake you up!")) {
+		switch(select("Help!", "Alfrik sent me to wake you up!")) {
 		case 1:
 			mes "[Dvalin]";
 			mes "I don't know";
@@ -4374,7 +4374,7 @@ mjolnir_09,87,129,3	script	Berling#1	4_M_DWARF,{
 		mes "What do you want?";
 		mes "Wh-who are you?";
 		next;
-		switch(select("Dvalin wants you to wake up!:Tell me who you are first!")) {
+		switch(select("Dvalin wants you to wake up!", "Tell me who you are first!")) {
 		case 1:
 			mes "[Berling]";
 			mes "Dvalin?!";
@@ -4608,7 +4608,7 @@ OnTouch:
 		mes "Freya's presense on you?";
 		mes "Tell me who you are!";
 		next;
-		switch(select("I am sent by Berling.:Wah, you freaked me out!")) {
+		switch(select("I am sent by Berling.", "Wah, you freaked me out!")) {
 		case 1:
 			mes "[Male Voice]";
 			mes "Lies! Lies!";

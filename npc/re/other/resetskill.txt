@@ -57,7 +57,7 @@ izlude,127,175,3	script	Hypnotist#novice	4_F_TELEPORTER,{
 	mes "Job character to qualify.";
 	mes "Now, do you have any questions?";
 	next;
-	switch(select("^FF0000Stat/Skill Reset?:Reset stats:Reset skills^000000:Cancel")) {
+	switch(select("^FF0000Stat/Skill Reset?", "Reset stats", "Reset skills^000000", "Cancel")) {
 	case 1:
 		mes "[Hypnotist]";
 		mes "Stat/Skill Resets allow adventuers";
@@ -90,7 +90,7 @@ izlude,127,175,3	script	Hypnotist#novice	4_F_TELEPORTER,{
 		mes "want to proceed with";
 		mes "my ^FF0000"+.@str$+" Reset^000000 service?";
 		next;
-		if(select("Yes:Cancel") == 1)
+		if(select("Yes", "Cancel") == 1)
 			break;
 	case 4:
 		mes "[Hypnotist]";

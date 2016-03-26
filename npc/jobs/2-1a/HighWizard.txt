@@ -68,7 +68,7 @@ valkyrie,44,47,5	script	High Wizard#Valkyrie	4_M_JOB_WIZARD,{
 		mes "Would you like to";
 		mes "become a High Wizard?";
 		next;
-		if (select("No.:Yes.") == 1) {
+		if (select("No.", "Yes.") == 1) {
 			mes "[High Wizard]";
 			mes "When you're ready,";
 			mes "feel free to come back.";

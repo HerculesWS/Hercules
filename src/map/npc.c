@@ -147,8 +147,13 @@ int npc_get_new_npc_id(void) {
 	}
 }
 
-int npc_isnear_sub(struct block_list* bl, va_list args) {
-	struct npc_data *nd = (struct npc_data*)bl;
+int npc_isnear_sub(struct block_list *bl, va_list args)
+{
+	const struct npc_data *nd = NULL;
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_NPC);
+	nd = BL_UCCAST(BL_NPC, bl);
 
 	if( nd->option & (OPTION_HIDE|OPTION_INVISIBLE) )
 		return 0;
@@ -212,9 +217,9 @@ int npc_enable_sub(struct block_list *bl, va_list ap)
 
 	nullpo_ret(bl);
 	nullpo_ret(nd=va_arg(ap,struct npc_data *));
-	if(bl->type == BL_PC)
-	{
-		TBL_PC *sd = (TBL_PC*)bl;
+
+	if (bl->type == BL_PC) {
+		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 
 		if (nd->option&OPTION_INVISIBLE)
 			return 1;
@@ -272,9 +277,9 @@ int npc_enable(const char* name, int flag)
 /*==========================================
  * NPC lookup (get npc_data through npcname)
  *------------------------------------------*/
-struct npc_data* npc_name2id(const char* name)
+struct npc_data *npc_name2id(const char *name)
 {
-	return (struct npc_data *) strdb_get(npc->name_db, name);
+	return strdb_get(npc->name_db, name);
 }
 /**
  * For the Secure NPC Timeout option (check config/Secure.h) [RR]
@@ -566,10 +571,11 @@ struct timer_event_data {
 /*==========================================
  * triger 'OnTimerXXXX' events
  *------------------------------------------*/
-int npc_timerevent(int tid, int64 tick, int id, intptr_t data) {
+int npc_timerevent(int tid, int64 tick, int id, intptr_t data)
+{
 	int old_rid, old_timer;
 	int64 old_tick;
-	struct npc_data* nd=(struct npc_data *)map->id2bl(id);
+	struct npc_data *nd = map->id2nd(id);
 	struct npc_timerevent_list *te;
 	struct timer_event_data *ted = (struct timer_event_data*)data;
 	struct map_session_data *sd=NULL;
@@ -736,14 +742,13 @@ void npc_timerevent_quit(struct map_session_data* sd)
 	}
 
 	// Delete timer
-	nd = (struct npc_data *)map->id2bl(td->id);
+	nd = map->id2nd(td->id);
 	ted = (struct timer_event_data*)td->data;
 	timer->delete(sd->npc_timer_id, npc->timerevent);
 	sd->npc_timer_id = INVALID_TIMER;
 
 	// Execute OnTimerQuit
-	if( nd && nd->bl.type == BL_NPC )
-	{
+	if (nd != NULL) {
 		char buf[EVENT_NAME_LENGTH];
 		struct event_data *ev;
 
@@ -1027,15 +1032,14 @@ int npc_touch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
  *------------------------------------------*/
 int npc_untouch_areanpc(struct map_session_data* sd, int16 m, int16 x, int16 y)
 {
-	struct npc_data *nd;
+	struct npc_data *nd = NULL;
 	nullpo_retr(1, sd);
 
 	if (!sd->areanpc_id)
 		return 0;
 
-	nd = (struct npc_data *) map->id2bl(sd->areanpc_id);
-	if (!nd)
-	{
+	nd = map->id2nd(sd->areanpc_id);
+	if (nd == NULL) {
 		sd->areanpc_id = 0;
 		return 1;
 	}
@@ -1166,13 +1170,13 @@ int npc_check_areanpc(int flag, int16 m, int16 x, int16 y, int16 range) {
  *------------------------------------------*/
 struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* bl)
 {
-	struct npc_data *nd;
+	struct npc_data *nd = BL_CAST(BL_NPC, bl);
 	int distance = AREA_SIZE + 1;
 
 	nullpo_retr(NULL, sd);
-	if (bl == NULL) return NULL;
-	if (bl->type != BL_NPC) return NULL;
-	nd = (TBL_NPC*)bl;
+
+	if (nd == NULL)
+		return NULL;
 
 	if (sd->npc_id == bl->id)
 		return nd;
@@ -1297,8 +1301,8 @@ int npc_scriptcont(struct map_session_data* sd, int id, bool closing) {
 	nullpo_retr(1, sd);
 
 	if( id != sd->npc_id ){
-		TBL_NPC* nd_sd=(TBL_NPC*)map->id2bl(sd->npc_id);
-		TBL_NPC* nd = BL_CAST(BL_NPC, target);
+		struct npc_data *nd_sd = map->id2nd(sd->npc_id);
+		struct npc_data *nd = BL_CAST(BL_NPC, target);
 		ShowDebug("npc_scriptcont: %s (sd->npc_id=%d) is not %s (id=%d).\n",
 			nd_sd?(char*)nd_sd->name:"'Unknown NPC'", (int)sd->npc_id,
 			nd?(char*)nd->name:"'Unknown NPC'", (int)id);
@@ -1382,8 +1386,9 @@ int npc_buysellsel(struct map_session_data* sd, int id, int type) {
 /*==========================================
 * Cash Shop Buy List
 *------------------------------------------*/
-int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, unsigned short* item_list) {
-	int i, j, nameid, amount, new_, w, vt;
+int npc_cashshop_buylist(struct map_session_data *sd, int points, struct itemlist *item_list)
+{
+	int i, j, new_, w, vt;
 	struct npc_data *nd = NULL;
 	struct npc_item_list *shop = NULL;
 	unsigned short shop_size = 0;
@@ -1391,13 +1396,14 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 	if( sd->state.trading )
 		return ERROR_TYPE_EXCHANGE;
 
-	if( count <= 0 )
+	if (VECTOR_LENGTH(*item_list) <= 0)
 		return ERROR_TYPE_ITEM_ID;
 
 	if( points < 0 )
 		return ERROR_TYPE_MONEY;
 
-	if( !(nd = (struct npc_data *)map->id2bl(sd->npc_shopid)) )
+	nd = map->id2nd(sd->npc_shopid);
+	if (nd == NULL)
 		return ERROR_TYPE_NPC;
 
 	if( nd->subtype != CASHSHOP ) {
@@ -1416,24 +1422,23 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 	vt = 0; // Global Value
 
 	// Validating Process ----------------------------------------------------
-	for( i = 0; i < count; i++ ) {
-		nameid = item_list[i*2+1];
-		amount = item_list[i*2+0];
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 
-		if( !itemdb->exists(nameid) || amount <= 0 )
+		if (!itemdb->exists(entry->id) || entry->amount <= 0)
 			return ERROR_TYPE_ITEM_ID;
 
-		ARR_FIND(0,shop_size,j,shop[j].nameid == nameid);
-		if( j == shop_size || shop[j].value <= 0 )
+		ARR_FIND(0,shop_size,j,shop[j].nameid == entry->id);
+		if (j == shop_size || shop[j].value <= 0)
 			return ERROR_TYPE_ITEM_ID;
 
-		if( !itemdb->isstackable(nameid) && amount > 1 ) {
+		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
-						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
-			amount = item_list[i*2+0] = 1;
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->amount, entry->id);
+			entry->amount = 1;
 		}
 
-		switch( pc->checkadditem(sd,nameid,amount) ) {
+		switch (pc->checkadditem(sd, entry->id, entry->amount)) {
 			case ADDITEM_NEW:
 				new_++;
 				break;
@@ -1441,8 +1446,8 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 				return ERROR_TYPE_INVENTORY_WEIGHT;
 		}
 
-		vt += shop[j].value * amount;
-		w += itemdb_weight(nameid) * amount;
+		vt += shop[j].value * entry->amount;
+		w += itemdb_weight(entry->id) * entry->amount;
 	}
 
 	if( w + sd->weight > sd->max_weight )
@@ -1463,18 +1468,16 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 		pc->paycash(sd,vt,points);
 	}
 	// Delivery Process ----------------------------------------------------
-	for( i = 0; i < count; i++ ) {
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 		struct item item_tmp;
-
-		nameid = item_list[i*2+1];
-		amount = item_list[i*2+0];
 
 		memset(&item_tmp,0,sizeof(item_tmp));
 
-		if( !pet->create_egg(sd,nameid) ) {
-			item_tmp.nameid = nameid;
+		if (!pet->create_egg(sd, entry->id)) {
+			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
-			pc->additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
+			pc->additem(sd, &item_tmp, entry->amount, LOG_TYPE_NPC);
 		}
 	}
 
@@ -1482,7 +1485,7 @@ int npc_cashshop_buylist(struct map_session_data *sd, int points, int count, uns
 }
 
 //npc_buylist for script-controlled shops.
-int npc_buylist_sub(struct map_session_data* sd, int n, unsigned short* item_list, struct npc_data* nd)
+int npc_buylist_sub(struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd)
 {
 	char npc_ev[EVENT_NAME_LENGTH];
 	int i;
@@ -1494,9 +1497,12 @@ int npc_buylist_sub(struct map_session_data* sd, int n, unsigned short* item_lis
 	script->cleararray_pc(sd, "@bought_quantity", (void*)0);
 
 	// save list of bought items
-	for( i = 0; i < n; i++ ) {
-		script->setarray_pc(sd, "@bought_nameid", i, (void*)(intptr_t)item_list[i*2+1], &key_nameid);
-		script->setarray_pc(sd, "@bought_quantity", i, (void*)(intptr_t)item_list[i*2], &key_amount);
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		intptr_t nameid = entry->id;
+		intptr_t amount = entry->amount;
+		script->setarray_pc(sd, "@bought_nameid", i, (void *)nameid, &key_nameid);
+		script->setarray_pc(sd, "@bought_quantity", i, (void *)amount, &key_amount);
 	}
 
 	// invoke event
@@ -1559,8 +1565,8 @@ void npc_market_fromsql(void) {
  * Saves persistent NPC Market Data into SQL
  **/
 void npc_market_tosql(struct npc_data *nd, unsigned short index) {
-	if( SQL_ERROR == SQL->Query(map->mysql_handle, "REPLACE INTO `%s` VALUES ('%s','%d','%d')",
-		map->npc_market_data_db, nd->exname, nd->u.scr.shop->item[index].nameid, nd->u.scr.shop->item[index].qty) )
+	if (SQL_ERROR == SQL->Query(map->mysql_handle, "REPLACE INTO `%s` VALUES ('%s','%d','%u')",
+		map->npc_market_data_db, nd->exname, nd->u.scr.shop->item[index].nameid, nd->u.scr.shop->item[index].qty))
 		Sql_ShowDebug(map->mysql_handle);
 }
 /**
@@ -1631,11 +1637,10 @@ void npc_trader_update(int master) {
 	CREATE(master_nd->u.scr.shop,struct npc_shop_data,1);
 
 	iter = db_iterator(map->id_db);
-	for( bl = (struct block_list*)dbi_first(iter); dbi_exists(iter); bl = (struct block_list*)dbi_next(iter) ) {
-		if( bl->type == BL_NPC ) {
-			struct npc_data* nd = (struct npc_data*)bl;
-
-			if( nd->src_id == master ) {
+	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
+		if (bl->type == BL_NPC) {
+			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
+			if (nd->src_id == master) {
 				nd->u.scr.shop = master_nd->u.scr.shop;
 			}
 		}
@@ -1720,7 +1725,8 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	if( sd->state.trading )
 		return ERROR_TYPE_EXCHANGE;
 
-	if( !(nd = (struct npc_data *)map->id2bl(sd->npc_shopid)) )
+	nd = map->id2nd(sd->npc_shopid);
+	if (nd == NULL)
 		return ERROR_TYPE_NPC;
 
 	if( (item = itemdb->exists(nameid)) == NULL )
@@ -1764,9 +1770,9 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	if( w + sd->weight > sd->max_weight )
 		return ERROR_TYPE_INVENTORY_WEIGHT;
 
-	if( (double)shop[i].value * amount > INT_MAX ) {
+	if ((int64)shop[i].value * amount > INT_MAX) {
 		ShowWarning("npc_cashshop_buy: Item '%s' (%d) price overflow attempt!\n", item->name, nameid);
-		ShowDebug("(NPC:'%s' (%s,%d,%d), player:'%s' (%d/%d), value:%d, amount:%d)\n",
+		ShowDebug("(NPC:'%s' (%s,%d,%d), player:'%s' (%d/%d), value:%u, amount:%d)\n",
 				nd->exname, map->list[nd->bl.m].name, nd->bl.x, nd->bl.y,
 				sd->status.name, sd->status.account_id, sd->status.char_id,
 				shop[i].value, amount);
@@ -1800,14 +1806,18 @@ int npc_cashshop_buy(struct map_session_data *sd, int nameid, int amount, int po
 	return ERROR_TYPE_NONE;
 }
 
-/// Player item purchase from npc shop.
-///
-/// @param item_list 'n' pairs <amount,itemid>
-/// @return result code for clif->parse_NpcBuyListSend
-int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
+/**
+ * Processes a player item purchase from npc shop.
+ *
+ * @param sd        Buyer character.
+ * @param item_list List of items.
+ * @return result code for clif->parse_NpcBuyListSend.
+ */
+int npc_buylist(struct map_session_data *sd, struct itemlist *item_list)
+{
 	struct npc_data* nd;
 	struct npc_item_list *shop = NULL;
-	double z;
+	int64 z;
 	int i,j,w,skill_t,new_, idx = skill->get_index(MC_DISCOUNT);
 	unsigned short shop_size = 0;
 
@@ -1833,30 +1843,29 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 	w = 0;
 	new_ = 0;
 	// process entries in buy list, one by one
-	for( i = 0; i < n; ++i ) {
-		int nameid, amount, value;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		int value;
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 
 		// find this entry in the shop's sell list
 		ARR_FIND( 0, shop_size, j,
-				 item_list[i*2+1] == shop[j].nameid || //Normal items
-				 item_list[i*2+1] == itemdb_viewid(shop[j].nameid) //item_avail replacement
+				 entry->id == shop[j].nameid || //Normal items
+				 entry->id == itemdb_viewid(shop[j].nameid) //item_avail replacement
 				 );
-
-		if( j == shop_size )
+		if (j == shop_size)
 			return 3; // no such item in shop
 
-		amount = item_list[i*2+0];
-		nameid = item_list[i*2+1] = shop[j].nameid; //item_avail replacement
+		entry->id = shop[j].nameid; //item_avail replacement
 		value = shop[j].value;
 
-		if( !itemdb->exists(nameid) )
+		if (!itemdb->exists(entry->id))
 			return 3; // item no longer in itemdb
 
-		if( !itemdb->isstackable(nameid) && amount > 1 ) {
+		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
 			//Exploit? You can't buy more than 1 of equipment types o.O
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
-						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
-			amount = item_list[i*2+0] = 1;
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->amount, entry->id);
+			entry->amount = 1;
 		}
 
 		if( nd->master_nd ) {
@@ -1864,7 +1873,7 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 			continue;
 		}
 
-		switch( pc->checkadditem(sd,nameid,amount) ) {
+		switch (pc->checkadditem(sd, entry->id, entry->amount)) {
 			case ADDITEM_EXIST:
 				break;
 
@@ -1878,35 +1887,33 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 
 		value = pc->modifybuyvalue(sd,value);
 
-		z += (double)value * amount;
-		w += itemdb_weight(nameid) * amount;
+		z += (int64)value * entry->amount;
+		w += itemdb_weight(entry->id) * entry->amount;
 	}
 
-	if( nd->master_nd != NULL ) //Script-based shops.
-		return npc->buylist_sub(sd,n,item_list,nd->master_nd);
+	if (nd->master_nd != NULL) //Script-based shops.
+		return npc->buylist_sub(sd, item_list, nd->master_nd);
 
-	if( z > (double)sd->status.zeny )
+	if (z > sd->status.zeny)
 		return 1; // Not enough Zeny
 	if( w + sd->weight > sd->max_weight )
 		return 2; // Too heavy
 	if( pc->inventoryblank(sd) < new_ )
 		return 3; // Not enough space to store items
 
-	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
+	pc->payzeny(sd, (int)z, LOG_TYPE_NPC, NULL);
 
-	for( i = 0; i < n; ++i ) {
-		int nameid = item_list[i*2+1];
-		int amount = item_list[i*2+0];
-
-		if (itemdb_type(nameid) == IT_PETEGG) {
-			pet->create_egg(sd, nameid);
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		if (itemdb_type(entry->id) == IT_PETEGG) {
+			pet->create_egg(sd, entry->id);
 		} else {
 			struct item item_tmp;
 			memset(&item_tmp,0,sizeof(item_tmp));
-			item_tmp.nameid = nameid;
+			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
 
-			pc->additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
+			pc->additem(sd, &item_tmp, entry->amount, LOG_TYPE_NPC);
 		}
 	}
 
@@ -1916,10 +1923,10 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 			skill_t = sd->status.skill[idx].flag - SKILL_FLAG_REPLACED_LV_0;
 
 		if( skill_t > 0 ) {
-			z = z * (double)skill_t * (double)battle_config.shop_exp/10000.;
-			if( z < 1 )
+			z = apply_percentrate64(z, skill_t * battle_config.shop_exp, 10000);
+			if (z < 1)
 				z = 1;
-			pc->gainexp(sd,NULL,0,(int)z, false);
+			pc->gainexp(sd, NULL, 0, (int)z, false);
 		}
 	}
 
@@ -1927,21 +1934,22 @@ int npc_buylist(struct map_session_data* sd, int n, unsigned short* item_list) {
 }
 
 /**
- * parses incoming npc market purchase list
+ * Processes incoming npc market purchase list
  **/
-int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, struct packet_npc_market_purchase *p) {
+int npc_market_buylist(struct map_session_data *sd, struct itemlist *item_list)
+{
 	struct npc_data* nd;
 	struct npc_item_list *shop = NULL;
-	double z;
+	int64 z;
 	int i,j,w,new_;
 	unsigned short shop_size = 0;
 
 	nullpo_retr(1, sd);
-	nullpo_retr(1, p);
+	nullpo_retr(1, item_list);
 
 	nd = npc->checknear(sd,map->id2bl(sd->npc_shopid));
 
-	if( nd == NULL || nd->subtype != SCRIPT || !list_size || !nd->u.scr.shop || nd->u.scr.shop->type != NST_MARKET )
+	if (nd == NULL || nd->subtype != SCRIPT || VECTOR_LENGTH(*item_list) == 0 || !nd->u.scr.shop || nd->u.scr.shop->type != NST_MARKET)
 		return 1;
 
 	shop = nd->u.scr.shop->item;
@@ -1952,37 +1960,37 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 	new_ = 0;
 
 	// process entries in buy list, one by one
-	for( i = 0; i < list_size; ++i ) {
-		int nameid, amount, value;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		int value;
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 
 		// find this entry in the shop's sell list
 		ARR_FIND( 0, shop_size, j,
-				 p->list[i].ITID == shop[j].nameid || //Normal items
-				 p->list[i].ITID == itemdb_viewid(shop[j].nameid) //item_avail replacement
+				 entry->id == shop[j].nameid || //Normal items
+				 entry->id == itemdb_viewid(shop[j].nameid) //item_avail replacement
 				 );
-
-		if( j == shop_size ) /* TODO find official response for this */
+		if (j == shop_size) /* TODO find official response for this */
 			return 1; // no such item in shop
 
-		if( p->list[i].qty > shop[j].qty )
+		entry->id = shop[j].nameid; //item_avail replacement
+
+		if (entry->amount > (int)shop[j].qty)
 			return 1;
 
-		amount = p->list[i].qty;
-		nameid = p->list[i].ITID = shop[j].nameid; //item_avail replacement
 		value = shop[j].value;
 		npc_market_qty[i] = j;
 
-		if( !itemdb->exists(nameid) ) /* TODO find official response for this */
+		if (!itemdb->exists(entry->id)) /* TODO find official response for this */
 			return 1; // item no longer in itemdb
 
-		if( !itemdb->isstackable(nameid) && amount > 1 ) {
+		if (!itemdb->isstackable(entry->id) && entry->amount > 1) {
 			//Exploit? You can't buy more than 1 of equipment types o.O
 			ShowWarning("Player %s (%d:%d) sent a hexed packet trying to buy %d of non-stackable item %d!\n",
-						sd->status.name, sd->status.account_id, sd->status.char_id, amount, nameid);
-			amount = p->list[i].qty = 1;
+						sd->status.name, sd->status.account_id, sd->status.char_id, entry->amount, entry->id);
+			entry->amount = 1;
 		}
 
-		switch( pc->checkadditem(sd,nameid,amount) ) {
+		switch (pc->checkadditem(sd, entry->id, entry->amount)) {
 			case ADDITEM_EXIST:
 				break;
 			case ADDITEM_NEW:
@@ -1992,11 +2000,11 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 				return 1;
 		}
 
-		z += (double)value * amount;
-		w += itemdb_weight(nameid) * amount;
+		z += (int64)value * entry->amount;
+		w += itemdb_weight(entry->id) * entry->amount;
 	}
 
-	if( z > (double)sd->status.zeny ) /* TODO find official response for this */
+	if (z > sd->status.zeny) /* TODO find official response for this */
 		return 1; // Not enough Zeny
 
 	if( w + sd->weight > sd->max_weight ) /* TODO find official response for this */
@@ -2007,28 +2015,27 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 
 	pc->payzeny(sd,(int)z,LOG_TYPE_NPC, NULL);
 
-	for( i = 0; i < list_size; ++i ) {
-		int nameid = p->list[i].ITID;
-		int amount = p->list[i].qty;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); ++i) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
 
 		j = npc_market_qty[i];
 
-		if( p->list[i].qty > shop[j].qty ) /* wohoo someone tampered with the packet. */
+		if (entry->amount > (int)shop[j].qty) /* wohoo someone tampered with the packet. */
 			return 1;
 
-		shop[j].qty -= amount;
+		shop[j].qty -= entry->amount;
 
 		npc->market_tosql(nd,j);
 
-		if (itemdb_type(nameid) == IT_PETEGG) {
-			pet->create_egg(sd, nameid);
+		if (itemdb_type(entry->id) == IT_PETEGG) {
+			pet->create_egg(sd, entry->id);
 		} else {
 			struct item item_tmp;
 			memset(&item_tmp,0,sizeof(item_tmp));
-			item_tmp.nameid = nameid;
+			item_tmp.nameid = entry->id;
 			item_tmp.identify = 1;
 
-			pc->additem(sd,&item_tmp,amount,LOG_TYPE_NPC);
+			pc->additem(sd, &item_tmp, entry->amount, LOG_TYPE_NPC);
 		}
 	}
 
@@ -2036,7 +2043,7 @@ int npc_market_buylist(struct map_session_data* sd, unsigned short list_size, st
 }
 
 /// npc_selllist for script-controlled shops
-int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_list, struct npc_data* nd)
+int npc_selllist_sub(struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd)
 {
 	char npc_ev[EVENT_NAME_LENGTH];
 	char card_slot[NAME_LENGTH];
@@ -2063,21 +2070,28 @@ int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_li
 	}
 
 	// save list of to be sold items
-	for (i = 0; i < n; i++) {
-		int idx = item_list[i*2]-2;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		struct item *item = &sd->status.inventory[entry->id];
+		intptr_t nameid = item->nameid;
+		intptr_t amount = entry->amount;
+		intptr_t refine = item->refine;
+		intptr_t attribute = item->attribute;
+		intptr_t identify = item->identify;
 
-		script->setarray_pc(sd, "@sold_nameid", i, (void*)(intptr_t)sd->status.inventory[idx].nameid, &key_nameid);
-		script->setarray_pc(sd, "@sold_quantity", i, (void*)(intptr_t)item_list[i*2+1], &key_amount);
+		script->setarray_pc(sd, "@sold_nameid", i, (void*)nameid, &key_nameid);
+		script->setarray_pc(sd, "@sold_quantity", i, (void*)amount, &key_amount);
 
 		// process item based information into the arrays
-		script->setarray_pc(sd, "@sold_refine", i, (void*)(intptr_t)sd->status.inventory[idx].refine, &key_refine);
-		script->setarray_pc(sd, "@sold_attribute", i, (void*)(intptr_t)sd->status.inventory[idx].attribute, &key_attribute);
-		script->setarray_pc(sd, "@sold_identify", i, (void*)(intptr_t)sd->status.inventory[idx].identify, &key_identify);
+		script->setarray_pc(sd, "@sold_refine", i, (void*)refine, &key_refine);
+		script->setarray_pc(sd, "@sold_attribute", i, (void*)attribute, &key_attribute);
+		script->setarray_pc(sd, "@sold_identify", i, (void*)identify, &key_identify);
 
 		for (j = 0; j < MAX_SLOTS; j++) {
+			intptr_t card = item->card[j];
 			// store each of the cards/special info from the item in the array
 			snprintf(card_slot, sizeof(card_slot), "@sold_card%d", j + 1);
-			script->setarray_pc(sd, card_slot, i, (void*)(intptr_t)sd->status.inventory[idx].card[j], &key_card[j]);
+			script->setarray_pc(sd, card_slot, i, (void*)card, &key_card[j]);
 		}
 
 	}
@@ -2092,8 +2106,9 @@ int npc_selllist_sub(struct map_session_data* sd, int n, unsigned short* item_li
 ///
 /// @param item_list 'n' pairs <index,amount>
 /// @return result code for clif->parse_NpcSellListSend
-int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) {
-	double z;
+int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
+{
+	int64 z;
 	int i,skill_t, skill_idx = skill->get_index(MC_OVERCHARGE);
 	struct npc_data *nd;
 	bool duplicates[MAX_INVENTORY] = { 0 };
@@ -2113,13 +2128,11 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 	z = 0;
 
 	// verify the sell list
-	for (i = 0; i < n; i++) {
-		int nameid, amount, idx, value;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		int nameid, value, idx = entry->id;
 
-		idx    = item_list[i*2]-2;
-		amount = item_list[i*2+1];
-
-		if (idx >= MAX_INVENTORY || idx < 0 || amount < 0) {
+		if (idx >= MAX_INVENTORY || idx < 0 || entry->amount < 0) {
 			return 1;
 		}
 
@@ -2131,7 +2144,7 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 
 		nameid = sd->status.inventory[idx].nameid;
 
-		if (!nameid || !sd->inventory_data[idx] || sd->status.inventory[idx].amount < amount) {
+		if (!nameid || !sd->inventory_data[idx] || sd->status.inventory[idx].amount < entry->amount) {
 			return 1;
 		}
 
@@ -2142,27 +2155,25 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 
 		value = pc->modifysellvalue(sd, sd->inventory_data[idx]->value_sell);
 
-		z += (double)value*amount;
+		z += (int64)value * entry->amount;
 	}
 
 	if( nd->master_nd ) { // Script-controlled shops
-		return npc->selllist_sub(sd, n, item_list, nd->master_nd);
+		return npc->selllist_sub(sd, item_list, nd->master_nd);
 	}
 
 	// delete items
-	for( i = 0; i < n; i++ ) {
-		int amount, idx;
+	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
+		int idx = entry->id;
 
-		idx    = item_list[i*2]-2;
-		amount = item_list[i*2+1];
-
-		if( sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET ) {
-			if( pet->search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0 ) {
+		if (sd->inventory_data[idx]->type == IT_PETEGG && sd->status.inventory[idx].card[0] == CARD0_PET) {
+			if (pet->search_petDB_index(sd->status.inventory[idx].nameid, PET_EGG) >= 0) {
 				intif->delete_petdata(MakeDWord(sd->status.inventory[idx].card[1], sd->status.inventory[idx].card[2]));
 			}
 		}
 
-		pc->delitem(sd, idx, amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
+		pc->delitem(sd, idx, entry->amount, 0, DELITEM_SOLD, LOG_TYPE_NPC);
 	}
 
 	if( z > MAX_ZENY )
@@ -2176,8 +2187,8 @@ int npc_selllist(struct map_session_data* sd, int n, unsigned short* item_list) 
 			skill_t = sd->status.skill[skill_idx].flag - SKILL_FLAG_REPLACED_LV_0;
 
 		if( skill_t > 0 ) {
-			z = z * (double)skill_t * (double)battle_config.shop_exp/10000.;
-			if( z < 1 )
+			z = apply_percentrate64(z, skill_t * battle_config.shop_exp, 10000);
+			if (z < 1)
 				z = 1;
 			pc->gainexp(sd, NULL, 0, (int)z, false);
 		}
@@ -2271,9 +2282,7 @@ int npc_unload(struct npc_data* nd, bool single)
 	if (nd->chat_id) // remove npc chatroom object and kick users
 		chat->delete_npc_chat(nd);
 
-#ifdef PCRE_SUPPORT
 	npc_chat->finalize(nd); // deallocate npc PCRE data structures
-#endif
 
 	if (single && nd->path != NULL) {
 		npc->releasepathreference(nd->path);
@@ -2283,11 +2292,12 @@ int npc_unload(struct npc_data* nd, bool single)
 	if( single && nd->bl.m != -1 )
 		map->remove_questinfo(nd->bl.m,nd);
 
-	if( nd->src_id == 0 && ( nd->subtype == SHOP || nd->subtype == CASHSHOP ) ) //src check for duplicate shops [Orcao]
+	if (nd->src_id == 0 && ( nd->subtype == SHOP || nd->subtype == CASHSHOP)) {
+		//src check for duplicate shops [Orcao]
 		aFree(nd->u.shop.shop_item);
-	else if( nd->subtype == SCRIPT ) {
-		struct s_mapiterator* iter;
-		struct block_list* bl;
+	} else if (nd->subtype == SCRIPT) {
+		struct s_mapiterator *iter;
+		struct map_session_data *sd = NULL;
 
 		if( single ) {
 			npc->ev_db->foreach(npc->ev_db,npc->unload_ev,nd->exname); //Clean up all events related
@@ -2295,9 +2305,8 @@ int npc_unload(struct npc_data* nd, bool single)
 		}
 
 		iter = mapit_geteachpc();
-		for( bl = (struct block_list*)mapit->first(iter); mapit->exists(iter); bl = (struct block_list*)mapit->next(iter) ) {
-			struct map_session_data *sd = ((TBL_PC*)bl);
-			if( sd && sd->npc_timer_id != INVALID_TIMER ) {
+		for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
+			if (sd->npc_timer_id != INVALID_TIMER ) {
 				const struct TimerData *td = timer->get(sd->npc_timer_id);
 
 				if( td && td->id != nd->bl.id )
@@ -2498,7 +2507,7 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 	if( p ) { // <Display name>::<Unique name>
 		size_t len = p-name;
 		if( len > NAME_LENGTH ) {
-			ShowWarning("npc_parsename: Display name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
+			ShowWarning("npc_parsename: Display name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %d characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
 			safestrncpy(nd->name, name, sizeof(nd->name));
 		} else {
 			memcpy(nd->name, name, len);
@@ -2506,12 +2515,12 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 		}
 		len = strlen(p+2);
 		if( len > NAME_LENGTH )
-			ShowWarning("npc_parsename: Unique name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
+			ShowWarning("npc_parsename: Unique name of '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %d characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
 		safestrncpy(nd->exname, p+2, sizeof(nd->exname));
 	} else {// <Display name>
 		size_t len = strlen(name);
 		if( len > NAME_LENGTH )
-			ShowWarning("npc_parsename: Name '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %u characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
+			ShowWarning("npc_parsename: Name '%s' is too long (len=%u) in file '%s', line '%d'. Truncating to %d characters.\n", name, (unsigned int)len, filepath, strline(buffer,start-buffer), NAME_LENGTH);
 		safestrncpy(nd->name, name, sizeof(nd->name));
 		safestrncpy(nd->exname, name, sizeof(nd->exname));
 	}
@@ -2546,7 +2555,7 @@ void npc_parsename(struct npc_data* nd, const char* name, const char* start, con
 // Support for using Constants in place of NPC View IDs.
 int npc_parseview(const char* w4, const char* start, const char* buffer, const char* filepath) {
 	int val = FAKE_NPC, i = 0;
-	char viewid[1024]; // Max size of name from const.txt, see script->read_constdb.
+	char viewid[1024]; // Max size of name from constants.conf, see script->read_constdb.
 
 	// Extract view ID / constant
 	while (w4[i] != '\0') {
@@ -2563,7 +2572,7 @@ int npc_parseview(const char* w4, const char* start, const char* buffer, const c
 	{
 		// Check if constant exists and get its value.
 		if(!script->get_constant(viewid, &val)) {
-			ShowWarning("npc_parseview: Invalid NPC constant '%s' specified in file '%s', line'%d'. Defaulting to INVISIBLE_CLASS. \n", viewid, filepath, strline(buffer,start-buffer));
+			ShowWarning("npc_parseview: Invalid NPC constant '%s' specified in file '%s', line '%d'. Defaulting to INVISIBLE_CLASS.\n", viewid, filepath, strline(buffer,start-buffer));
 			val = INVISIBLE_CLASS;
 		}
 	} else {
@@ -2759,7 +2768,7 @@ const char *npc_parse_shop(const char *w1, const char *w2, const char *w3, const
 		}
 
 		if (dir < 0 || dir > 7) {
-			ShowError("npc_parse_ship: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
+			ShowError("npc_parse_shop: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 			return strchr(start,'\n');//continue
 		}
@@ -3430,10 +3439,17 @@ void npc_setcells(struct npc_data* nd) {
 	}
 }
 
-int npc_unsetcells_sub(struct block_list* bl, va_list ap) {
-	struct npc_data *nd = (struct npc_data*)bl;
-	int id =  va_arg(ap,int);
-	if (nd->bl.id == id) return 0;
+int npc_unsetcells_sub(struct block_list *bl, va_list ap)
+{
+	struct npc_data *nd = NULL;
+	int id = va_arg(ap, int);
+
+	nullpo_ret(bl);
+	Assert_ret(bl->type == BL_NPC);
+	nd = BL_UCAST(BL_NPC, bl);
+
+	if (nd->bl.id == id)
+		return 0;
 	npc->setcells(nd);
 	return 1;
 }
@@ -4526,7 +4542,7 @@ int npc_script_event(struct map_session_data* sd, enum npce_event type)
 	if (type == NPCE_MAX)
 		return 0;
 	if (!sd) {
-		ShowError("npc_script_event: NULL sd. Event Type %d\n", type);
+		ShowError("npc_script_event: NULL sd. Event Type %u\n", type);
 		return 0;
 	}
 	for (i = 0; i<script_event[type].event_count; i++)
@@ -4663,11 +4679,11 @@ int npc_reload(void) {
 
 	//Remove all npcs/mobs. [Skotlex]
 	iter = mapit_geteachiddb();
-	for( bl = (struct block_list*)mapit->first(iter); mapit->exists(iter); bl = (struct block_list*)mapit->next(iter) ) {
+	for (bl = mapit->first(iter); mapit->exists(iter); bl = mapit->next(iter)) {
 		switch(bl->type) {
 			case BL_NPC:
 				if( bl->id != npc->fake_nd->bl.id )// don't remove fake_nd
-					npc->unload((struct npc_data *)bl, false);
+					npc->unload(BL_UCAST(BL_NPC, bl), false);
 				break;
 			case BL_MOB:
 				unit->free(bl,CLR_OUTSIGHT);
@@ -4878,7 +4894,7 @@ int do_init_npc(bool minimal) {
 	}
 
 	// Init dummy NPC
-	npc->fake_nd = (struct npc_data *)aCalloc(1,sizeof(struct npc_data));
+	CREATE(npc->fake_nd, struct npc_data, 1);
 	npc->fake_nd->bl.m = -1;
 	npc->fake_nd->bl.id = npc->get_new_npc_id();
 	npc->fake_nd->class_ = FAKE_NPC;

@@ -41,7 +41,7 @@ xmas,140,137,3	script	Lutie Guide#xmas	4_F_KID3,{
 	F_Navi("[Lutie Guide]");
 	while (1) {
 		next;
-		switch(select("[ Gift Shop ]:[ Church ]:[ Weapon & Armor Shop ]:[ Tool Shop ]:[ Santa's House ]:[ Toy Factory ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Gift Shop ]", "[ Church ]", "[ Weapon & Armor Shop ]", "[ Tool Shop ]", "[ Santa's House ]", "[ Toy Factory ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			callsub L_Mark, F_Navi("Gift Shop","xmas,172,131","^008080");
 			viewpoint 1,172,131,2,0x008080;

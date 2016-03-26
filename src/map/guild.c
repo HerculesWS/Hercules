@@ -57,8 +57,9 @@ struct guild_interface *guild;
 /*==========================================
  * Retrieves and validates the sd pointer for this guild member [Skotlex]
  *------------------------------------------*/
-TBL_PC* guild_sd_check(int guild_id, int account_id, int char_id) {
-	TBL_PC* sd = map->id2sd(account_id);
+struct map_session_data *guild_sd_check(int guild_id, int account_id, int char_id)
+{
+	struct map_session_data *sd = map->id2sd(account_id);
 
 	if (!(sd && sd->status.char_id == char_id))
 		return NULL;
@@ -229,15 +230,18 @@ struct map_session_data* guild_getavailablesd(struct guild* g)
 }
 
 /// lookup: player AID/CID -> member index
-int guild_getindex(struct guild *g,int account_id,int char_id)
+int guild_getindex(const struct guild *g, int account_id, int char_id)
 {
 	int i;
 
 	if( g == NULL )
-		return -1;
+		return INDEX_NOT_FOUND;
 
 	ARR_FIND( 0, g->max_member, i, g->member[i].account_id == account_id && g->member[i].char_id == char_id );
-	return( i < g->max_member ) ? i : -1;
+	if (i == g->max_member)
+		return INDEX_NOT_FOUND;
+
+	return i;
 }
 
 /// lookup: player sd -> member position
@@ -285,9 +289,8 @@ int guild_payexp_timer_sub(DBKey key, DBData *data, va_list ap) {
 
 	c = DB->data2ptr(data);
 
-	if (
-		(g = guild->search(c->guild_id)) == NULL ||
-		(i = guild->getindex(g, c->account_id, c->char_id)) < 0
+	if ((g = guild->search(c->guild_id)) == NULL
+	 || (i = guild->getindex(g, c->account_id, c->char_id)) == INDEX_NOT_FOUND
 	) {
 		ers_free(guild->expcache_ers, c);
 		return 0;
@@ -432,7 +435,7 @@ int guild_npc_request_info(int guild_id,const char *event)
 }
 
 //Confirmation of the character belongs to guild
-int guild_check_member(struct guild *g)
+int guild_check_member(const struct guild *g)
 {
 	int i;
 	struct map_session_data *sd;
@@ -441,13 +444,12 @@ int guild_check_member(struct guild *g)
 	nullpo_ret(g);
 
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) )
-	{
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if( sd->status.guild_id != g->guild_id )
 			continue;
 
 		i = guild->getindex(g,sd->status.account_id,sd->status.char_id);
-		if (i < 0) {
+		if (i == INDEX_NOT_FOUND) {
 			sd->status.guild_id=0;
 			sd->guild_emblem_id=0;
 			ShowWarning("guild: check_member %d[%s] is not member\n",sd->status.account_id,sd->status.name);
@@ -465,7 +467,7 @@ int guild_recv_noinfo(int guild_id)
 	struct s_mapiterator* iter;
 
 	iter = mapit_getallusers();
-	for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
+	for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 		if( sd->status.guild_id == guild_id )
 			sd->status.guild_id = 0; // erase guild
 	}
@@ -475,7 +477,8 @@ int guild_recv_noinfo(int guild_id)
 }
 
 //Get and display information for all member
-int guild_recv_info(struct guild *sg) {
+int guild_recv_info(const struct guild *sg)
+{
 	struct guild *g,before;
 	int i,bm,m;
 	DBData data;
@@ -505,7 +508,7 @@ int guild_recv_info(struct guild *sg) {
 						tg[i] = guild->search(sg->alliance[i].guild_id);
 				}
 
-				for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
+				for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 					if (!sd->status.guild_id)
 						continue; // Not interested in guildless users
 
@@ -753,9 +756,9 @@ void guild_member_joined(struct map_session_data *sd)
 			guild->block_skill(sd, 300000);
 	}
 	i = guild->getindex(g, sd->status.account_id, sd->status.char_id);
-	if (i == -1)
+	if (i == INDEX_NOT_FOUND) {
 		sd->status.guild_id = 0;
-	else {
+	} else {
 		g->member[i].sd = sd;
 		sd->guild = g;
 
@@ -875,7 +878,7 @@ int guild_expulsion(struct map_session_data* sd, int guild_id, int account_id, i
 
 	// find the member and perform expulsion
 	i = guild->getindex(g, account_id, char_id);
-	if( i != -1 && strcmp(g->member[i].name,g->master) != 0 ) //Can't expel the GL!
+	if (i != INDEX_NOT_FOUND && strcmp(g->member[i].name,g->master) != 0) //Can't expel the GL!
 		intif->guild_leave(g->guild_id,account_id,char_id,1,mes);
 
 	return 0;
@@ -892,7 +895,7 @@ int guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, c
 		return 0; // no such guild (error!)
 
 	i = guild->getindex(g, account_id, char_id);
-	if( i == -1 )
+	if (i == INDEX_NOT_FOUND)
 		return 0; // not a member (inconsistency!)
 
 	online_member_sd = guild->getavailablesd(g);
@@ -939,14 +942,14 @@ int guild_member_withdraw(int guild_id, int account_id, int char_id, int flag, c
 
 void guild_retrieveitembound(int char_id,int aid,int guild_id) {
 #ifdef GP_BOUND_ITEMS
-	TBL_PC *sd = map->charid2sd(char_id);
-	if(sd){ //Character is online
+	struct map_session_data *sd = map->charid2sd(char_id);
+	if (sd != NULL) { //Character is online
 		pc->bound_clear(sd,IBT_GUILD);
 	} else { //Character is offline, ask char server to do the job
 		struct guild_storage *gstor = idb_get(gstorage->db,guild_id);
 		if(gstor && gstor->storage_status == 1) { //Someone is in guild storage, close them
 			struct s_mapiterator* iter = mapit_getallusers();
-			for( sd = (TBL_PC*)mapit->first(iter); mapit->exists(iter); sd = (TBL_PC*)mapit->next(iter) ) {
+			for (sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); sd = BL_UCAST(BL_PC, mapit->next(iter))) {
 				if(sd->status.guild_id == guild_id && sd->state.storage_flag == STORAGE_FLAG_GUILD) {
 					gstorage->close(sd);
 					break;
@@ -975,8 +978,8 @@ int guild_send_memberinfoshort(struct map_session_data *sd,int online)
 		sd->status.account_id,sd->status.char_id,online,sd->status.base_level,sd->status.class_);
 
 	if(!online){
-		int i=guild->getindex(g,sd->status.account_id,sd->status.char_id);
-		if(i>=0)
+		int i = guild->getindex(g,sd->status.account_id,sd->status.char_id);
+		if (i != INDEX_NOT_FOUND)
 			g->member[i].sd=NULL;
 		else
 			ShowError("guild_send_memberinfoshort: Failed to locate member %d:%d in guild %d!\n", sd->status.account_id, sd->status.char_id, g->guild_id);
@@ -993,7 +996,7 @@ int guild_send_memberinfoshort(struct map_session_data *sd,int online)
 
 int guild_recv_memberinfoshort(int guild_id,int account_id,int char_id,int online,int lv,int class_)
 { // cleaned up [LuzZza]
-	int i,alv,c,idx=-1,om=0,oldonline=-1;
+	int i, alv, c, idx = INDEX_NOT_FOUND, om = 0, oldonline = -1;
 	struct guild *g = guild->search(guild_id);
 
 	if(g == NULL)
@@ -1015,7 +1018,7 @@ int guild_recv_memberinfoshort(int guild_id,int account_id,int char_id,int onlin
 			om++;
 	}
 
-	if(idx == -1 || c == 0) {
+	if (idx == INDEX_NOT_FOUND || c == 0) {
 		//Treat char_id who doesn't match guild_id (not found as member)
 		struct map_session_data *sd = map->id2sd(account_id);
 		if(sd && sd->status.char_id == char_id) {
@@ -1117,7 +1120,7 @@ int guild_change_position(int guild_id,int idx,int mode,int exp_mode,const char 
 	nullpo_ret(name);
 
 	exp_mode = cap_value(exp_mode, 0, battle_config.guild_exp_limit);
-	p.mode=mode&GPERM_BOTH; // Invite and Expel
+	p.mode=mode&GPERM_MASK;
 	p.exp_mode=exp_mode;
 	safestrncpy(p.name,name,NAME_LENGTH);
 	return intif->guild_position(guild_id,idx,&p);
@@ -1126,7 +1129,7 @@ int guild_change_position(int guild_id,int idx,int mode,int exp_mode,const char 
 /*====================================================
  * Notification of member has changed his guild title
  *---------------------------------------------------*/
-int guild_position_changed(int guild_id,int idx,struct guild_position *p)
+int guild_position_changed(int guild_id, int idx, const struct guild_position *p)
 {
 	struct guild *g=guild->search(guild_id);
 	int i;
@@ -1229,7 +1232,7 @@ int guild_emblem_changed(int len,int guild_id,int emblem_id,const char *data)
 				continue;
 			// update permanent guardians
 			for( i = 0; i < ARRAYLENGTH(gc->guardian); ++i ) {
-				TBL_MOB* md = (gc->guardian[i].id ? map->id2md(gc->guardian[i].id) : NULL);
+				struct mob_data *md = gc->guardian[i].id ? map->id2md(gc->guardian[i].id) : NULL;
 				if( md == NULL || md->guardian_data == NULL )
 					continue;
 
@@ -1237,7 +1240,7 @@ int guild_emblem_changed(int len,int guild_id,int emblem_id,const char *data)
 			}
 			// update temporary guardians
 			for( i = 0; i < gc->temp_guardians_max; ++i ) {
-				TBL_MOB* md = (gc->temp_guardians[i] ? map->id2md(gc->temp_guardians[i]) : NULL);
+				struct mob_data *md = gc->temp_guardians[i] ? map->id2md(gc->temp_guardians[i]) : NULL;
 				if( md == NULL || md->guardian_data == NULL )
 					continue;
 
@@ -1328,7 +1331,7 @@ int guild_getexp(struct map_session_data *sd,int exp)
 /*====================================================
  * Ask to increase guildskill skill_id
  *---------------------------------------------------*/
-int guild_skillup(TBL_PC* sd, uint16 skill_id)
+int guild_skillup(struct map_session_data *sd, uint16 skill_id)
 {
 	struct guild* g;
 	int idx = skill_id - GD_SKILLBASE;
@@ -1883,7 +1886,8 @@ int guild_gm_changed(int guild_id, int account_id, int char_id)
 /*====================================================
  * Guild disbanded
  *---------------------------------------------------*/
-int guild_break(struct map_session_data *sd,char *name) {
+int guild_break(struct map_session_data *sd, const char *name)
+{
 	struct guild *g;
 	struct unit_data *ud;
 	int i;
@@ -2064,7 +2068,7 @@ void guild_castle_reconnect(int castle_id, int index, int value)
 }
 
 // Load castle data then invoke OnAgitInit* on last
-int guild_castledataloadack(int len, struct guild_castle *gc)
+int guild_castledataloadack(int len, const struct guild_castle *gc)
 {
 	int i;
 	int n = (len-4) / sizeof(struct guild_castle);
@@ -2208,7 +2212,7 @@ void guild_flag_remove(struct npc_data *nd) {
 			continue;
 
 		if( cursor != i ) {
-			memmove(&guild->flags[cursor], &guild->flags[i], sizeof(struct npc_data*));
+			memmove(&guild->flags[cursor], &guild->flags[i], sizeof(guild->flags[0]));
 		}
 		cursor++;
 	}

@@ -41,7 +41,7 @@ hugel,98,56,3	script	Hugel Guide Granny#huge	4_F_LGTGRAND,0,0,{
 	mes "If this is the first time for you to use the guide services, why don't you check the ''Notice'' menu first?";
 	while(1) {
 		next;
-		switch(select("Village Guide:Remove Marks from Mini-Map:Notice:Cancel")) {
+		switch(select("Village Guide", "Remove Marks from Mini-Map", "Notice", "Cancel")) {
 		case 1:
 			mes "[Hugel Guide Granny]";
 			mes "I can tell you any building location as long as it is in Hugel.";
@@ -51,13 +51,13 @@ hugel,98,56,3	script	Hugel Guide Granny#huge	4_F_LGTGRAND,0,0,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes.:No.") == 1) .@compass_check = 1;
+				if (select("Yes.", "No.") == 1) .@compass_check = 1;
 			}
 			.@loop = 1;
 			while(.@loop) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
-				switch(select("Church:Inn:Pub:Airport:Weapon Shop:Tool Shop:Party Supplies Shop:^3131FFHunter Job Change Place^000000:^3131FFShrine Expedition's Place^000000:Monster Race Arena:Bingo Game Room:Cancel")) {
+				switch(select("Church", "Inn", "Pub", "Airport", "Weapon Shop", "Tool Shop", "Party Supplies Shop", "^3131FFHunter Job Change Place^000000", "^3131FFShrine Expedition's Place^000000", "Monster Race Arena", "Bingo Game Room", "Cancel")) {
 				case 1:
 					mes "[Hugel Guide Granny]";
 					mes "Well, to me, this Church is rather like a place for old folks like me, you know...";

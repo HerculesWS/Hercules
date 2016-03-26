@@ -70,7 +70,7 @@ alde_alche,35,186,5	script	Alchemist Union Member	1_M_SIGNALCHE,{
 				mes "[Alchemist Union Member]";
 				mes "How's that sound? Do you want to meet a Geneticist?";
 				next;
-				switch(select("Of course, I want to meet a Geneticist.:I don't want to meet a Geneticist.")) {
+				switch(select("Of course, I want to meet a Geneticist.", "I don't want to meet a Geneticist.")) {
 				case 1:
 					mes "[Alchemist Union Member]";
 					mes "Wise choice!";
@@ -137,7 +137,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		mes "'Cause I'm from Rune-Midgart!";
 		mes "Have you ever been to Rune-Midgart? Everyone in Rune-Midgart speaks like this.";
 		next;
-		switch(select("Impossible?!:I'm also from Rune-Midgart.")) {
+		switch(select("Impossible?!", "I'm also from Rune-Midgart.")) {
 		case 1:
 			mes "[Devries]";
 			mes "Impossible?";
@@ -273,7 +273,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		mes "Popo, have you heard of my research?";
 		mes "You came here because of that, am I right?";
 		next;
-		switch(select("No.:Yes.")) {
+		switch(select("No.", "Yes.")) {
 		case 1:
 			mes "[Devries]";
 			mes "Well, it's all over your face.";
@@ -297,7 +297,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		mes "^FF0000If you become a Geneticist, you can't take the Alchemist's or Biochemist study course that you haven't investigated before.^000000";
 		mes "If that's all right for you, how about giving it a shot right now?.";
 		next;
-		switch(select("I'll try later.:I want to become a Geneticist!")) {
+		switch(select("I'll try later.", "I want to become a Geneticist!")) {
 		case 1:
 			mes "[Devries]";
 			mes "Alright.";
@@ -317,7 +317,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		mes "Popo!";
 		mes "Are you ready to give it a shot?";
 		next;
-		switch(select("No.:Yes!")) {
+		switch(select("No.", "Yes!")) {
 		case 1:
 			mes "[Devries]";
 			mes "You have to do your best! There is no easy way when looking for knowledge!";
@@ -402,7 +402,7 @@ job3_gen01,25,58,3	script	Devries#gen	4_LGTSCIENCE,{
 		mes "[Devries]";
 		mes "Is there a problem?";
 		next;
-		switch(select("Nothing.:The experiment failed.")) {
+		switch(select("Nothing.", "The experiment failed.")) {
 		case 1:
 			mes "[Devries]";
 			mes "Better get started, or I'll start to scream!!!";
@@ -599,11 +599,11 @@ job3_gen01,83,72,3	script	Delivery Box#generic	HIDDEN_NPC,{
 	mes "- There's a big box. -";
 	if (job_gen == 2) {
 		next;
-		switch(select("Open the box.:Check the address.:Do nothing.")) {
+		switch(select("Open the box.", "Check the address.", "Do nothing.")) {
 		case 1:
 			mes "- There are several cookie bags which are packed carefully in the box. -";
 			next;
-			switch(select("Take out a cookie bag.:Do nothing.")) {
+			switch(select("Take out a cookie bag.", "Do nothing.")) {
 			case 1:
 				mes "- You've taken out a cookie bag out of the box. -";
 				job_gen = 3;
@@ -628,7 +628,7 @@ job3_gen01,12,56,3	script	Plant Guide#generic	HIDDEN_NPC,{
 	mes "<The Easiest Alchemy in the World>";
 	mes "Written by Bob Ross.";
 	next;
-	switch(select("Animals:Plants:Minerals:Etc")) {
+	switch(select("Animals", "Plants", "Minerals", "Etc")) {
 	case 1:
 		mes "...Using animals in Alchemy can easily be practiced by anyone.";
 		mes "You can put the animals that you want to use on the white tray, imagine the goal you want to make and then practice the alchemy.";
@@ -667,7 +667,7 @@ function	script	Genetic_Job_Plant	{
 		if (!questprogress(getarg(0))) {
 			mes "- "+getarg(2)+" -";
 			next;
-			switch(select("Use it as a material.:Do not use.")) {
+			switch(select("Use it as a material.", "Do not use.")) {
 			case 1:
 				if (getarg(3, 0)) .@str$ = "some of the ";
 				mes "- You've acquired "+.@str$+getarg(1)+". -";
@@ -717,7 +717,7 @@ job3_gen01,7,50,3	script	Testing Table#gen	CLEAR_NPC,{
 	if (job_gen == 7) {
 		mes "- This is a testing table with a lot of equipment. I think I can study the combinations here with plants. -";
 		next;
-		if(select("Conduct an experiment.:Do not conduct an experiment.") == 2) {
+		if(select("Conduct an experiment.", "Do not conduct an experiment.") == 2) {
 			mes "- It's not the time to start an experiment. -";
 			close;
 		}
@@ -729,14 +729,14 @@ job3_gen01,7,50,3	script	Testing Table#gen	CLEAR_NPC,{
 		}
 		mes "What shall I do with these plant materials?";
 		next;
-		select("Break.:Smash into little pieces.:Crush.");
+		select("Break.", "Smash into little pieces.", "Crush.");
 		while (1) {
 			mes "What shall I do now?";
 			next;
 			if (rand(2))
-				select("Burn into Ashes.:Dip into distilled water.:Steam.");
+				select("Burn into Ashes.", "Dip into distilled water.", "Steam.");
 			else
-				select("Put it into a Testing Flask and Shake.:Freeze.:Heat.");
+				select("Put it into a Testing Flask and Shake.", "Freeze.", "Heat.");
 			if (!rand(7)) break;
 		}
 		mes "What shall I do now?";
@@ -744,7 +744,7 @@ job3_gen01,7,50,3	script	Testing Table#gen	CLEAR_NPC,{
 		select("Inject it into a testing seed.");
 		mes "What kind of seed should I pick?";
 		next;
-		select("Testing Seed - Type A:Testing Seed - Type B:Testing Seed - Type C:Testing Seed - Type D");
+		select("Testing Seed - Type A", "Testing Seed - Type B", "Testing Seed - Type C", "Testing Seed - Type D");
 		mes "I've put the prepared materials into the chosen testing seed.";
 		next;
 		mes "["+strcharinfo(0)+"]";
@@ -944,7 +944,7 @@ job3_gen01,91,48,3	script	Demi Calberine#gen	4_F_SCIENCE,{
 		mes "Sigh, haven't you finished practicing?";
 		mes "Do you want to enter the spore pen?";
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			mes "[Demi Calberine]";
 			mes "Have fun swinging your cart around~";
@@ -996,7 +996,7 @@ job3_gen01,18,39,3	script	Warning#gen	2_BULLETIN_BOARD,{
 	mes "If you bully my spores, I'll scream!!!";
 	if (job_gen < 75) close;
 	next;
-	switch(select("Get out of the pen.:Stay still.")) {
+	switch(select("Get out of the pen.", "Stay still.")) {
 	case 1:
 		mes "- I'd better get out before I get caught by Miss Devries. -";
 		close2;

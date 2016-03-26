@@ -353,7 +353,7 @@ static struct db_stats {
 };
 #define DB_COUNTSTAT(token) do { if ((stats.token) != UINT32_MAX) ++(stats.token); } while(0)
 #else /* !defined(DB_ENABLE_STATS) */
-#define DB_COUNTSTAT(token)
+#define DB_COUNTSTAT(token) (void)0
 #endif /* !defined(DB_ENABLE_STATS) */
 
 /* [Ind/Hercules] */

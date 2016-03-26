@@ -502,12 +502,12 @@ spl_in01,172,225,3	script	Wandering Poet#ep13	1_M_BARD,{
 	mes "[Poet Nell]";
 	mes "So do you want to listen to my playing?";
 	next;
-	switch(select("Sure.:Not really.")) {
+	switch(select("Sure.", "Not really.")) {
 	case 1:
 		mes "[Poet Nell]";
 		mes "What song do you want??";
 		next;
-		switch(select("Poet of Bragie:Chaos in Eternity:Sunset Assassin:Ring of Nibelungen")) {
+		switch(select("Poet of Bragie", "Chaos in Eternity", "Sunset Assassin", "Ring of Nibelungen")) {
 		case 1:
 			cutin "god_nelluad02",2;
 			mes "[Poet Nell]";

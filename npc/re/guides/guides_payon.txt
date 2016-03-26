@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C) 2012-2016  Hercules Dev Team
 //= Copyright (C)  Euphy
 //= Copyright (C)  L0ne_W0lf
 //=
@@ -30,10 +30,10 @@
 //================= Description ===========================================
 //= Guides for the city of Payon.
 //================= Current Version =======================================
-//= 1.2
+//= 1.2.1
 //=========================================================================
 
-payon,163,64,3	script	Guide#01payon::GuidePayon	4_M_PAY_SOLDIER,{
+payon,160,67,3	script	Guide#01payon::GuidePayon	4_M_PAY_SOLDIER,{
 	cutin "pay_soldier",2;
 	mes "[Payon Guide]";
 	mes "Welcome to ^8B4513Payon^000000,";
@@ -42,11 +42,11 @@ payon,163,64,3	script	Guide#01payon::GuidePayon	4_M_PAY_SOLDIER,{
 	F_Navi("[Payon Guide]");
 	next;
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Archer Village ]:[ Tool Shop ]:[ Weapon & Armor Shop ]:[ Inn & Tavern ]:[ Central Palace ]:[ Palace Court ]:[ Royal Kitchen ]:Previous Menu")) {
+				switch(select("[ Archer Village ]", "[ Tool Shop ]", "[ Weapon & Armor Shop ]", "[ Inn & Tavern ]", "[ Central Palace ]", "[ Palace Court ]", "[ Royal Kitchen ]", "Previous Menu")) {
 				case 1:
 					mes "[Payon Guide]";
 					mes F_Navi("Archer Village","payon,227,328","^B9062F")+" is where";
@@ -95,7 +95,7 @@ payon,163,64,3	script	Guide#01payon::GuidePayon	4_M_PAY_SOLDIER,{
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Eden Teleport Officer ]:[ Kafra Shop ]:[ Repair / Armsmith ]:[ Kafra Employee ]:[ Trap Specialist ]:[ Seiayblem ]:[ Leablem ]:[ Jade ]:[ Pet Groomer ]:[ Chef Assistant ]:Previous Menu")) {
+				switch(select("[ Eden Teleport Officer ]", "[ Kafra Shop ]", "[ Repair / Armsmith ]", "[ Kafra Employee ]", "[ Trap Specialist ]", "[ Seiayblem ]", "[ Leablem ]", "[ Jade ]", "[ Pet Groomer ]", "[ Chef Assistant ]", "Previous Menu")) {
 				case 1:
 					callsub L_Mark, F_Navi("Eden Teleport Officer","payon,177,111","^0000FF");
 					viewpoint 1,177,111,7,0x0A82FF;
@@ -225,7 +225,7 @@ pay_arche,86,33,4	script	Guide#05payon	4_M_PAY_SOLDIER,{
 	next;
 	.@str$ = "Would you like to check any other locations?";
 	while (1) {
-		switch(select("[ Payon Dungeon ]:[ Archer Guild ]:[ Tool Shop ]:[ Kafra Employee ]:[ Mercenary Guildsman ]:[ Alchemist Guildsman ]:[ Eden Teleport Officer ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Payon Dungeon ]", "[ Archer Guild ]", "[ Tool Shop ]", "[ Kafra Employee ]", "[ Mercenary Guildsman ]", "[ Alchemist Guildsman ]", "[ Eden Teleport Officer ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			mes "[Payon Guide]";
 			mes "Let me mark the entrance of";

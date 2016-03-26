@@ -38,12 +38,12 @@ bra_in01,27,24,3	script	Hotel Keeper#bra1	4_F_BRZ_WOMAN,{
 	mes "[Hotel Keeper]";
 	mes "Welcome to the beautiful Brasilis Hotel.";
 	next;
-	switch(select("Save:Rest -5000 zeny")) {
+	switch(select("Save", "Rest -5000 zeny")) {
 	case 1:
 		mes "[Hotel Keeper]";
 		mes "Do you want to save here at the Brasilis Hotel?";
 		next;
-		switch(select("No thank you.:Absolutely.")) {
+		switch(select("No thank you.", "Absolutely.")) {
 		case 1:
 			mes "[Hotel Keeper]";
 			mes "Ok then, enjoy your stay.";

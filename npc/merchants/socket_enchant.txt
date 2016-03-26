@@ -61,7 +61,7 @@
 	mes "Adding Slots may seem simple, but it's far more complicated than it looks.";
 	mes "If you're interested in my service, let me know.";
 	next;
-	switch(select("Add Slot to Weapon:Add Slot to Armor:Slot Attempt Info:Cancel"))
+	switch(select("Add Slot to Weapon", "Add Slot to Armor", "Slot Attempt Info", "Cancel"))
 	{
 		case 1:
 			mes "[Seiyablem]";
@@ -69,14 +69,14 @@
 			mes "I categorize weapons by their difficulty in adding a Slot, C Class being easiest and S Class the most difficult.";
 			mes "Which class would you like to try?";
 			next;
-			switch(select("C Class:B Class:A Class:S Class"))
+			switch(select("C Class", "B Class", "A Class", "S Class"))
 			{
 				case 1:
 					mes "[Seiyablem]";
 					mes "C Class, eh?";
 					mes "Now, I can only upgrade certain equipment in that class, so please choose one of the following items, so we can try to add a Slot to it.";
 					next;
-					switch(select("Trident:Rope:Violin"))
+					switch(select("Trident", "Rope", "Violin"))
 					{
 						case 1: callfunc "Func_Socket",1460,1461,40,66,200,1010,10;
 						case 2: callfunc "Func_Socket",1950,1951,40,66,200,1010,10;
@@ -88,7 +88,7 @@
 					mes "Alright, this is the average equipment category.";
 					mes "Please choose the weapon to which you'd like me to try to add a Slot.";
 					next;
-					switch(select("Chain:Gladius:Gakkung Bow:Pike:Haedonggum:Lute:Wire:Waghnakh:Arbalest Bow"))
+					switch(select("Chain", "Gladius", "Gakkung Bow", "Pike", "Haedonggum", "Lute", "Wire", "Waghnakh", "Arbalest Bow"))
 					{
 						case 1: callfunc "Func_Socket",1519,1520,40,61,300,1010,10;
 						case 2: callfunc "Func_Socket",1219,1220,40,61,300, 984, 1,999,5;
@@ -106,7 +106,7 @@
 					mes "This is some high risk territory!";
 					mes "Alright, which weapon would you like me to try adding a Slot?";
 					next;
-					switch(select("Hunter Bow:Survivor's Rod(INT):Zweihander:Flamberge:Infiltrator:Ballista:Stunner:Berserk:Claymore"))
+					switch(select("Hunter Bow", "Survivor's Rod(INT)", "Zweihander", "Flamberge", "Infiltrator", "Ballista", "Stunner", "Berserk", "Claymore"))
 					{
 						case 1: callfunc "Func_Socket",1718,1726,40,61,500,984,2,999,10;
 						case 2: callfunc "Func_Socket",1619,1620,40,61,500,984,5,999,10;
@@ -125,7 +125,7 @@
 					mes "It'd be a near miracle if I can actually pull this off.";
 					mes "Okay... Which weapon shall we try adding a Slot to?";
 					next;
-					switch(select("Gungnir:Poison Knife:Ice Pick:Sucsamad:Ginnungagap:Cutlas:Crescent Scythe:Survivor's Rod(DEX)"))
+					switch(select("Gungnir", "Poison Knife", "Ice Pick", "Sucsamad", "Ginnungagap", "Cutlas", "Crescent Scythe", "Survivor's Rod(DEX)"))
 					{
 						case 1: callfunc "Func_Socket", 1413, 1418,40,51,1000,984,5,999,10;
 						case 2: callfunc "Func_Socket", 1239,13016,40,51,1000,984,5,999,10;
@@ -145,7 +145,7 @@
 			mes "C Class is the easiest one, and S Class he hardest one.";
 			mes "Which class would you like to try?";
 			next;
-			switch(select("C Class:B Class:A Class:S Class"))
+			switch(select("C Class", "B Class", "A Class", "S Class"))
 			{
 				case 1:
 					mes "[Seiyablem]";
@@ -153,7 +153,7 @@
 					mes "Sounds reasonable.";
 					mes "Which armor would you like to try adding a Slot?";
 					next;
-					switch(select("Mantle:Coat:Circlet:Biretta"))
+					switch(select("Mantle", "Coat", "Circlet", "Biretta"))
 					{
 						case 1: callfunc "Func_Socket",2307,2308,40,66,200,999,3;
 						case 2: callfunc "Func_Socket",2309,2310,40,66,200,999,3;
@@ -165,7 +165,7 @@
 					mes "You have chosen average B Class.";
 					mes "So, what kind of armor do you have?";
 					next;
-					switch(select("Mirror Shield:Chain Mail:Saint Robe:Silk Robe:Boots:Shoes:Muffler:Guard:Buckler:Shield:Bongun Hat"))
+					switch(select("Mirror Shield", "Chain Mail", "Saint Robe", "Silk Robe", "Boots", "Shoes", "Muffler", "Guard", "Buckler", "Shield", "Bongun Hat"))
 					{
 						case 1:  callfunc "Func_Socket",2107,2108,40,61,250,999,5;
 						case 2:  callfunc "Func_Socket",2314,2315,40,61,250,999,5;
@@ -185,7 +185,7 @@
 					mes "This is some high risk territory!";
 					mes "Alright, which armor would you like me to try adding a Slot?";
 					next;
-					switch(select("Gemmed Sallet:Bucket Hat:Memory Book:Tights:Legion Plate Armor:Full Plate:Thief Clothes:Greaves:Coif:Manteau:Helm:Ninja Suit:Orc Helm:Ancient Cape:Monk Hat:Golden Gear:Brooch:Munak Hat"))
+					switch(select("Gemmed Sallet", "Bucket Hat", "Memory Book", "Tights", "Legion Plate Armor", "Full Plate", "Thief Clothes", "Greaves", "Coif", "Manteau", "Helm", "Ninja Suit", "Orc Helm", "Ancient Cape", "Monk Hat", "Golden Gear", "Brooch", "Munak Hat"))
 					{
 						case 1:  callfunc "Func_Socket",2230,2231,40,61,400,985,1;
 						case 2:  callfunc "Func_Socket",5114,5120,40,61,400,985,1;
@@ -212,7 +212,7 @@
 					mes "You sure about this?";
 					mes "Alright... Let me know the Armor to which you'd like to add a Slot, and I'll tell what I need to try it.";
 					next;
-					switch(select("Majestic Goat:Spiky Band:Bone Helm:Corsair:Crown:Tiara:Sphinx Hat:Robe of Cast:Earring:Ring:Bow Thimble"))
+					switch(select("Majestic Goat", "Spiky Band", "Bone Helm", "Corsair", "Crown", "Tiara", "Sphinx Hat", "Robe of Cast", "Earring", "Ring", "Bow Thimble"))
 					{
 						case 1:  callfunc "Func_Socket",2256,5160,40,51,2000,985,2;
 						case 2:  callfunc "Func_Socket",2258,5161,40,51,2000,985,2;
@@ -287,7 +287,7 @@ function	script	Func_Socket	{
 	}
 	mes "Do you still want to try to add a Slot?";
 	next;
-	switch(select("Attempt Slot Addition:Cancel"))
+	switch(select("Attempt Slot Addition", "Cancel"))
 	{
 		case 1:
 			if ((Zeny >= getarg(4)*1000) && (countitem(getarg(5)) >= getarg(6)) && (countitem(getarg(7,512)) >= getarg(8,0)) && (countitem(getarg(0)) > 0)) // if there's no getarg(7) and getarg(8) provided, check itemcount against 0 (we still need a valid item ID though)

@@ -45,7 +45,7 @@ alberta,246,82,3	script	Crewman#bra2	4W_SAILOR,{
 	mes "We recently found a new ocean route to get there easily.";
 	mes "It's just 10,000 zeny for a round trip! So do you want to go?";
 	next;
-	switch(select("Take me to Brasilis!:I'll stay here.")) {
+	switch(select("Take me to Brasilis!", "I'll stay here.")) {
 	case 1:
 		if (Zeny > 9999) {
 			mes "[Crewman]";
@@ -71,7 +71,7 @@ brasilis,316,57,3	script	Crewman#bra1	4W_SAILOR,{
 	mes "[Crewman]";
 	mes "My ship is going to back to Alberta, do you want to join us?";
 	next;
-	switch(select("Go back to Alberta.:Not yet~.")) {
+	switch(select("Go back to Alberta.", "Not yet~.")) {
 	case 1:
 		mes "[Crewman]";
 		mes "I sure do miss home.";
@@ -126,7 +126,7 @@ brasilis,137,77,5	script	Ice-Cream Maker	4_M_03,{
 	mes "Ice Cream~";
 	mes "Get 'yer Ice Cream!";
 	next;
-	switch(select("Give me one!:Ice Cream?:Cancel.")) {
+	switch(select("Give me one!", "Ice Cream?", "Cancel.")) {
 	case 1:
 		mes "[Ice Cream Maker]";
 		mes "Since there are so many people want to get a cool ice cream you can order only 5 at a time.";

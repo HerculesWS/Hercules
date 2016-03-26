@@ -55,7 +55,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			mes "beauty. Now tell me, are you";
 			mes "confident in your dancing...?";
 			next;
-			if (select("Of course, old crone!:I... I'm not sure...") == 1) {
+			if (select("Of course, old crone!", "I... I'm not sure...") == 1) {
 				mes "[Canell]";
 				mes "Ho-ho~ I believe you've";
 				mes "confused confidence with";
@@ -93,7 +93,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			mes "your current limitations. When";
 			mes "I'm finished with you, angels and demons won't resist your charms~";
 			next;
-			if (select("No way, you're not teaching me!:Alright, I'll see what I can learn.") == 1) {
+			if (select("No way, you're not teaching me!", "Alright, I'll see what I can learn.") == 1) {
 				mes "[Canell]";
 				mes "So... You still haven't";
 				mes "mastered the fine art of";
@@ -289,7 +289,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 			mes "Now, let me see you try it.";
 			emotion e_no1;
 			next;
-			switch(select("Un deux trois~-:Un, doux trois~:Un, deux, trois~")) {
+			switch(select("Un deux trois~-", "Un, doux trois~", "Un, deux, trois~")) {
 			default:
 				mes "[Canell]";
 				mes "No, no!";
@@ -397,7 +397,7 @@ comodo,204,172,5	script	Canell#qsk_dan01	4_F_07,{
 	}
 
 	else if (BaseJob != Job_Dancer) {
-		if (Sex == 0) {
+		if (Sex == SEX_FEMALE) {
 			mes "[Canell]";
 			mes "Oh, what a cute";
 			mes "little girl~! Such";

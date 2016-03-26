@@ -43,6 +43,8 @@ struct status_data;
 #define MAX_HAIR_COLOR  (battle->bc->max_hair_color)
 #define MIN_CLOTH_COLOR (battle->bc->min_cloth_color)
 #define MAX_CLOTH_COLOR (battle->bc->max_cloth_color)
+#define MIN_BODY_STYLE (battle->bc->min_body_style)
+#define MAX_BODY_STYLE (battle->bc->max_body_style)
 
 #define is_boss(bl)     (status_get_mode(bl)&MD_BOSS) // Can refine later [Aru]
 
@@ -529,9 +531,14 @@ struct Battle_Config {
 	int show_monster_hp_bar; // [Frost]
 
 	int fix_warp_hit_delay_abuse;
-	
+
+	// Refine Def/Atk
 	int costume_refine_def, shadow_refine_def;
 	int shadow_refine_atk;
+
+	// BodyStyle
+	int min_body_style, max_body_style;
+	int save_body_style;
 };
 
 /* criteria for battle_config.idletime_critera */

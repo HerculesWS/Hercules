@@ -1587,7 +1587,7 @@ arena_room,94,82,7	script	Arena Record Staff#aco	1_F_PRIEST,{
 	mes "Class Arena Challenges?";
 	mes "Please choose from the menu.";
 	next;
-	switch(select("Acolyte Mode:Priest - Level 70 or lower:Priest - Level 80 or lower:Priest - Level 90 or lower:Priest - Level 91 ~ "+(RENEWAL?"160":"99"))) {
+	switch(select("Acolyte Mode", "Priest - Level 70 or lower", "Priest - Level 80 or lower", "Priest - Level 90 or lower", "Priest - Level 91 ~ "+(RENEWAL?"160":"99"))) {
 	case 1:
 		.@acotop_t = $arn_acotop;
 		.@acotop_n$ = $arn_acotopn$;
@@ -1741,7 +1741,7 @@ arena_room,195,5,3	script	log-on-aco#arena	4_NFWISP,{
 		mes "particular mode in the";
 		mes "Arena Acolyte Class Mode.^000000";
 		next;
-		switch(select("Cancel:Acolyte:~level 70:~level 80:~level 90:~level "+(RENEWAL?"160":"99"))) {
+		switch(select("Cancel", "Acolyte", "~level 70", "~level 80", "~level 90", "~level "+(RENEWAL?"160":"99"))) {
 		case 1:
 			mes "^3355FFCommand has";
 			mes "been canceled.^000000";
@@ -1786,7 +1786,7 @@ arena_room,195,10,3	script	acolink#arena	4_NFWISP,{
 		mes "Class Mode. Choose";
 		mes "an option from the menu.";
 		next;
-		switch(select("Cancel:Warp ON:Warp OFF")) {
+		switch(select("Cancel", "Warp ON", "Warp OFF")) {
 		case 1:
 			mes "Command has";
 			mes "been canceled.";

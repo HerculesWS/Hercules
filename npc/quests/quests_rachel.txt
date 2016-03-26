@@ -77,7 +77,7 @@ ra_in01,384,246,3	script	Vincent#ra_in01	1_M_01,{
 		mes "ask you for your help with";
 		mes "a problem on his behalf.";
 		next;
-		switch(select("I'm too busy.:Sure, why not?")) {
+		switch(select("I'm too busy.", "Sure, why not?")) {
 		case 1:
 			mes "[Vincent]";
 			mes "I understand.";
@@ -1548,7 +1548,7 @@ ra_in01,235,194,5	script	Katinshuell	4_M_RACHMAN1,{
 		mes "Alright then, why";
 		mes "don't you explain this?";
 		next;
-		switch(select("Mr. Shendar's House:Lighthalzen:Freya's Spring:Bruspetti")) {
+		switch(select("Mr. Shendar's House", "Lighthalzen", "Freya's Spring", "Bruspetti")) {
 		case 1:
 			mes "[" + strcharinfo(0) + "]";
 			mes "Mr. Shendar, Bruspetti's";
@@ -1598,7 +1598,7 @@ ra_in01,235,194,5	script	Katinshuell	4_M_RACHMAN1,{
 			mes "me alone! Get away";
 			mes "from me right now!";
 			next;
-			switch(select("Mr. Shendar's House:Freya's Spring:Recent Break-up")) {
+			switch(select("Mr. Shendar's House", "Freya's Spring", "Recent Break-up")) {
 			case 1:
 				mes "[" + strcharinfo(0) + "]";
 				mes "So while she was away";
@@ -1651,7 +1651,7 @@ ra_in01,235,194,5	script	Katinshuell	4_M_RACHMAN1,{
 				next;
 				mes "[" + strcharinfo(0) + "]";
 				next;
-				switch(select("Mr. Shendar's house:Freya's Spring")) {
+				switch(select("Mr. Shendar's house", "Freya's Spring")) {
 				case 1:
 					mes "[" + strcharinfo(0) + "]";
 					mes "So while she was away";
@@ -2680,7 +2680,7 @@ rachel,157,183,3	script	Sincere Follower Urstia	4_F_MASK1,{
 		mes "touching even the hearts of";
 		mes "foreigners, leading them here!";
 		next;
-		if (select("Freya? I'd like to know more.:That's crazy talk!") == 1) {
+		if (select("Freya? I'd like to know more.", "That's crazy talk!") == 1) {
 			emotion e_ok;
 			mes "[Urstialla]";
 			mes "The day is coming when";
@@ -2783,7 +2783,7 @@ rachel,157,183,3	script	Sincere Follower Urstia	4_F_MASK1,{
 			mes "him to clean this necklace on";
 			mes "my behalf? Please, for my son...";
 			next;
-			if (select("But that's none of my business!:Alright, I'll do it.") == 1) {
+			if (select("But that's none of my business!", "Alright, I'll do it.") == 1) {
 				mes "[Urstialla]";
 				mes "I... I see.";
 				mes "I thought that Freya";
@@ -3340,7 +3340,7 @@ rachel,265,98,3	script	Hamion#aru	4_M_RACHMAN2,{
 		mes "If you have more than one,";
 		mes "I might take the wrong Hammer.";
 		next;
-		if (select("Let me check.:Don't worry, I checked.") == 1) {
+		if (select("Let me check.", "Don't worry, I checked.") == 1) {
 			mes "[Hamion]";
 			mes "Alright, it's always";
 			mes "better to be safe than";
@@ -3432,7 +3432,7 @@ rachel,113,96,5	script	Mohadian	4_M_MIDDLE,10,10,{
 		mes "benefit. We'd kill three birds";
 		mes "with one stone! What do you say?";
 		next;
-		if (select("No, thanks.:Sure.") == 1) {
+		if (select("No, thanks.", "Sure.") == 1) {
 			mes "[Mohadian]";
 			mes "Aww, how disappointing.";
 			mes "I was really sure that this";
@@ -3787,7 +3787,7 @@ OnTouch:
 			mes "^3355FFThe temple's";
 			mes "entrance is locked.^000000";
 			next;
-			select("Kick Door.:Smash Door with Weapon.");
+			select("Kick Door.", "Smash Door with Weapon.");
 			emotion e_omg,0,"Nemma#ra_temple";
 			mes "[Priestess Nemma]";
 			mes "Please don't do that!";
@@ -3808,7 +3808,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 			mes "May I ask what brings";
 			mes "you to the temple today?";
 			next;
-			if (select("Just sight-seeing.:I came to pray.") == 1) {
+			if (select("Just sight-seeing.", "I came to pray.") == 1) {
 				cutin "ra_nemma01",2;
 				mes "[Priestess Nemma]";
 				mes "I guess most foreigners";
@@ -3861,7 +3861,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 			mes "Would you be interested";
 			mes "in making a donation?";
 			next;
-			if (select("No, thanks.:Sure.") == 1) {
+			if (select("No, thanks.", "Sure.") == 1) {
 				cutin "ra_nemma01",2;
 				mes "[Priestess Nemma]";
 				mes "I understand. Well,";
@@ -3879,7 +3879,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 			mes "of 50,000 zeny, and we can only";
 			mes "accept up to 150,000 zeny at once. It's a bit complicated, I know...";
 			next;
-			switch(select("50,000z - 1 Lottery Ticket:100,000z - 2 Lottery Ticket:150,000z - 3 Lottery Ticket:Cancel")) {
+			switch(select("50,000z - 1 Lottery Ticket", "100,000z - 2 Lottery Ticket", "150,000z - 3 Lottery Ticket", "Cancel")) {
 			case 1:
 				callsub S_Donate,1,"50,000";
 				break;
@@ -3910,7 +3910,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 			mes "while ago. So what brings you";
 			mes "to the temple today, hmm?";
 			next;
-			switch(select("I've come to donate again.:Just sight-seeing.:I came to attend the service.:I just wanted to see you again.")) {
+			switch(select("I've come to donate again.", "Just sight-seeing.", "I came to attend the service.", "I just wanted to see you again.")) {
 			case 1:
 				mes "[Priestess Nemma]";
 				mes "You've come to make another";
@@ -3920,7 +3920,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 				mes "accept donations in increments of";
 				mes "50,000 zeny up to 150,000 zeny.";
 				next;
-				switch(select("50,000z - 1 Lottery Ticket:100,000z - 2 Lottery Ticket:150,000z - 3 Lottery Ticket:Cancel")) {
+				switch(select("50,000z - 1 Lottery Ticket", "100,000z - 2 Lottery Ticket", "150,000z - 3 Lottery Ticket", "Cancel")) {
 				case 1:
 					callsub S_Donate,1,"50,000";
 					break;
@@ -4097,7 +4097,7 @@ ra_temple,116,174,3	script	Nemma#ra_temple	4_F_TRAINEE,{
 			mes "Hey, did you bring me";
 			mes "^FF000020 Firecrackers^000000? Mmm?";
 			next;
-			if(select("Yes.:No, not yet.") == 1) {
+			if(select("Yes.", "No, not yet.") == 1) {
 				cutin "ra_nemma01",2;
 				mes "[Priestess Nemma]";
 				mes "Let's see...";
@@ -4169,7 +4169,7 @@ S_Donate:
 	if(getarg(0) == 1) mes "Ticket. Is that correct?";
 	else mes "Tickets. Is that correct?";
 	next;
-	if (select("No:Yes") == 1) {
+	if (select("No", "Yes") == 1) {
 		mes "[Priestess Nemma]";
 		mes "Oh, I see. Well, if you";
 		mes "don't have enough zeny with";
@@ -4282,7 +4282,7 @@ rachel,243,37,3	script	Kid#Candy Addict	4_M_CHILD1,{
 		mes "you like candy?";
 		if (ra_tem_q == 1) {
 			next;
-			switch(select("Not at all.:Yeah.:Sure, I love the stuff~:Not much.")) {
+			switch(select("Not at all.", "Yeah.", "Sure, I love the stuff~", "Not much.")) {
 			case 1:
 				mes "[Kid]";
 				mes "Hmpf! Okay.";
@@ -4341,7 +4341,7 @@ rachel,243,37,3	script	Kid#Candy Addict	4_M_CHILD1,{
 					mes "tell you something";
 					mes "really cool, yeah?";
 					next;
-					if (select("Sure.:No.") == 1) {
+					if (select("Sure.", "No.") == 1) {
 						mes "[Kid]";
 						mes "Yay~";
 						next;
@@ -4434,7 +4434,7 @@ rachel,243,37,3	script	Kid#Candy Addict	4_M_CHILD1,{
 				mes "cool secret, so promise";
 				mes "that you won't be mad anymore.";
 				next;
-				switch(select("No, thanks.:What's that?")) {
+				switch(select("No, thanks.", "What's that?")) {
 				case 1:
 					mes "[Kid]";
 					mes "Please~";
@@ -4501,7 +4501,7 @@ OnTouch:
 		mes "open window that";
 		mes "you can easily enter.^000000";
 		next;
-		if(select("Stay:Enter Through Window") == 2) {
+		if(select("Stay", "Enter Through Window") == 2) {
 			mes "^3355FFYou pull the window,";
 			mes "and it smoothly opens.";
 			mes "This is probably what";
@@ -4523,7 +4523,7 @@ OnTouch:
 		mes "enter the temple";
 		mes "through this window?^000000";
 		next;
-		if(select("Enter:Cancel") == 1) {
+		if(select("Enter", "Cancel") == 1) {
 			close2;
 			warp "que_rachel",62,82;
 			end;
@@ -4539,7 +4539,7 @@ OnTouch:
 que_rachel,63,82,0	script	Window#ra_temple	HIDDEN_NPC,{
 	mes "^3355FFThis window is open.^000000";
 	next;
-	if(select("Stay:Exit Through Window") == 2) {
+	if(select("Stay", "Exit Through Window") == 2) {
 		close2;
 		warp "ra_temple",73,208;
 		end;
@@ -4607,7 +4607,7 @@ OnTouch:
 		mes "ground that's darker than";
 		mes "the rest of the floor...^000000";
 		next;
-		if (select("Investigate:Ignore") == 1) {
+		if (select("Investigate", "Ignore") == 1) {
 			mes "^3355FFIt's too dark to";
 			mes "really see the spot^000000";
 			next;
@@ -4634,7 +4634,7 @@ OnTouch:
 		mes "no matter how many";
 		mes "times you look at it.^000000.";
 		next;
-		if (select("Investigate Again:Ignore") == 1) {
+		if (select("Investigate Again", "Ignore") == 1) {
 			mes "^3355FFThe blood on the ground";
 			mes "hasn't dried up yet, but";
 			mes "it's probably cold by now.^000000";
@@ -4707,7 +4707,7 @@ que_rachel,160,37,0	duplicate(nemma01)	nemma05	FAKE_NPC,5,5
 que_rachel,169,18,0	script	Quest Temple Exit#ra_tem	WARPNPC,2,2,{
 	mes "^3355FFThe gate is closed.^000000";
 	next;
-	switch(select("Push Gate:Examine Gate:Kick Gate:Smash Gate with Weapon")) {
+	switch(select("Push Gate", "Examine Gate", "Kick Gate", "Smash Gate with Weapon")) {
 	case 1:
 		mes "^3355FFYou push the gate";
 		mes "with all of your might...";
@@ -4879,7 +4879,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 		mes "I explain the task, you must";
 		mes "accept my request.";
 		next;
-		if (select("Let me think about it.:Yes, sure.") == 1) {
+		if (select("Let me think about it.", "Yes, sure.") == 1) {
 			mes "[High Priest Zhed]";
 			mes "I understand, but if you";
 			mes "change your mind, please";
@@ -5292,7 +5292,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 				mes "can see. What can I do";
 				mes "for you today, "+strcharinfo(0)+"?";
 				next;
-				switch(select("I just wanted to say hi.:Ask About Veins Incident")) {
+				switch(select("I just wanted to say hi.", "Ask About Veins Incident")) {
 				case 1:
 					mes "[High Priest Zhed]";
 					mes "As you well know, I'm only";
@@ -5593,7 +5593,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 				mes "[High Priest Zhed]";
 				mes "Hmm...";
 				next;
-				switch(select("How to Sneak into the Camp :The Moderates:The Hard-Liners")) {
+				switch(select("How to Sneak into the Camp ", "The Moderates", "The Hard-Liners")) {
 				case 1:
 					mes "[High Priest Zhed]";
 					mes "I still don't have any";
@@ -5739,7 +5739,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 					mes "Don't you think it's worth";
 					mes "checking out for now?";
 					next;
-					if (select("Yes:No") == 2) {
+					if (select("Yes", "No") == 2) {
 						mes "[High Priest Zhed]";
 						mes "Well, you never know";
 						mes "until you ask. Besides,";
@@ -5953,7 +5953,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 					mes "her full support. Will";
 					mes "you help me to do this?";
 					next;
-					if (select("Yes:No") == 2) {
+					if (select("Yes", "No") == 2) {
 						mes "Well... Asking for the";
 						mes "pope's support is the only";
 						mes "solution I've been able to";
@@ -6005,7 +6005,7 @@ ra_temin,277,159,3	script	High Priest Zhed#rachel	4_M_RACHOLD1,{
 					mes "exaggerate and... lie when";
 					mes "we feel it's necessary?";
 					next;
-					switch(select("Truth:Lies")) {
+					switch(select("Truth", "Lies")) {
 					case 1:
 						mes "[High Priest Zhed]";
 						mes "That's what I think too.";
@@ -6318,7 +6318,7 @@ ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 		mes "Have you come to";
 		mes "redeem Lottery Tickets?";
 		next;
-		if (select("Yes:No") == 1) goto L_Lottery;
+		if (select("Yes", "No") == 1) goto L_Lottery;
 		if (ra_tem_q == 12) {
 			cutin "ra_fano01",2;
 			mes "[Priestess Panno]";
@@ -6336,7 +6336,7 @@ ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 		mes "your days with joy.";
 		mes "Laughter. And prosperity.";
 		next;
-		switch(select("Redeem Lottery Tickets:Temple Information:Hey, what's happening?")) {
+		switch(select("Redeem Lottery Tickets", "Temple Information", "Hey, what's happening?")) {
 		case 1:
 			cutin "ra_fano03",2;
 			mes "[Priestess Panno]";
@@ -6347,7 +6347,7 @@ ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 			mes "know, in case you were saving";
 			mes "them for some weird reason.";
 			next;
-			if (select("Yes:No") == 1) goto L_Lottery;
+			if (select("Yes", "No") == 1) goto L_Lottery;
 			cutin "ra_fano03",2;
 			mes "[Priestess Panno]";
 			mes "You can redeem your";
@@ -6409,7 +6409,7 @@ ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 		mes "Good day.";
 		next;
 
-		switch(select("Redeem Lottery Tickets:Temple Information:Hey, did you open the gate?")) {
+		switch(select("Redeem Lottery Tickets", "Temple Information", "Hey, did you open the gate?")) {
 
 		case 1:
 			cutin "ra_fano01",2;
@@ -6429,7 +6429,7 @@ ra_temin,170,46,3	script	Panno#rachel	4_F_TRAINEE,{
 			mes "know, in case you were saving";
 			mes "them for some weird reason.";
 			next;
-			if (select("Yes:No") == 1) goto L_Lottery;
+			if (select("Yes", "No") == 1) goto L_Lottery;
 			mes "[Priestess Panno]";
 			mes "You can redeem your";
 			mes "Lottery Tickets at any";
@@ -6995,7 +6995,7 @@ ra_temsky,99,99,5	script	Pope#rachel	4_F_ARUNA_POP,{
 			mes "if I can learn anything";
 			mes "useful from the pope...^000000)";
 			next;
-			switch(select("Aren't you lonely?:Do you ever take a break?")) {
+			switch(select("Aren't you lonely?", "Do you ever take a break?")) {
 			case 1:
 				mes "[Pope]";
 				mes "Well, there are always";
@@ -7257,7 +7257,7 @@ OnTouch:
 		mes "shining object laid";
 		mes "on the floor.^000000";
 		next;
-		if (select("Ignore:Pick It Up") == 1) {
+		if (select("Ignore", "Pick It Up") == 1) {
 			mes "^3355FFYou decided to ignore";
 			mes "the small shining object,";
 			mes "no matter how important it";
@@ -7285,7 +7285,7 @@ OnTouch:
 		mes "Ground. However, the";
 		mes "door in your way is locked.^000000.";
 		next;
-		if (select("Quit:Use Small Key") == 2) {
+		if (select("Quit", "Use Small Key") == 2) {
 			mes "^3355FFYou insert the Small";
 			mes "Key that you found in";
 			mes "High Priest Zhed's room,";

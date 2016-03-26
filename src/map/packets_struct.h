@@ -584,6 +584,7 @@ struct packet_spawn_unit {
 #endif
 #if PACKETVER >= 20150513
 	short body;
+	char name[NAME_LENGTH];
 #endif
 } __attribute__((packed));
 
@@ -651,6 +652,7 @@ struct packet_unit_walking {
 #endif
 #if PACKETVER >= 20150513
 	short body;
+	char name[NAME_LENGTH];
 #endif
 } __attribute__((packed));
 
@@ -716,6 +718,7 @@ struct packet_idle_unit {
 #endif
 #if PACKETVER >= 20150513
 	short body;
+	char name[NAME_LENGTH];
 #endif
 } __attribute__((packed));
 
@@ -1105,7 +1108,7 @@ struct packet_npc_market_purchase {
 	struct {
 		unsigned short ITID;
 		int qty;
-	} list[MAX_INVENTORY];/* assuming MAX_INVENTORY is max since you can't hold more than MAX_INVENTORY items thus cant buy that many at once. */
+	} list[]; // Note: We assume this should be <= MAX_INVENTORY (since you can't hold more than MAX_INVENTORY items thus cant buy that many at once).
 } __attribute__((packed));
 
 struct packet_npc_market_result_ack {
@@ -1157,9 +1160,9 @@ struct packet_hotkey {
 	char Rotate;
 #endif
 	struct {
-		char isSkill;		// 0: Item, 1:Skill
-		unsigned int ID;	// Item/Skill ID
-		short count;		// Item Quantity/Skill Level
+		char isSkill;    // 0: Item, 1:Skill
+		unsigned int ID; // Item/Skill ID
+		short count;     // Item Quantity/Skill Level
 	} hotkey[MAX_HOTKEYS];
 #else // not HOTKEY_SAVING
 	UNAVAILABLE_STRUCT;

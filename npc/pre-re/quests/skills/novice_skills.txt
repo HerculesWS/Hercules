@@ -46,7 +46,7 @@ prt_in,234,133,4	script	Nami	1_F_01,{
 		mes "Actually, I'm really good.";
 		mes "Do you want me to try on you? ? ? . .";
 		next;
-		switch (select("Continue conversation:Slowly slink away. . . .")) {
+		switch (select("Continue conversation", "Slowly slink away. . . .")) {
 		case 1:
 			if ((skill_nov >= 0) && (skill_nov <= 2)) {
 				switch (skill_nov) {

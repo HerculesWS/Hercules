@@ -99,7 +99,7 @@ function Chk; function Cm;
 		else if (.Reset > 0)
 			mes "It will cost "+Cm(.Reset)+" Zeny.";
 		next;
-		switch(select(" ~ Abandon...: ~ ^777777Cancel^000000")) {
+		switch(select(" ~ Abandon...", " ~ ^777777Cancel^000000")) {
 		case 1:
 			if (.Reset > 0) {
 				if (Zeny < .Reset) {

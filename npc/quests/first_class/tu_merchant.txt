@@ -597,16 +597,15 @@ alberta_in,70,51,5	script	Guarnien	4W_M_02,{
 
 	mes "You've just started out as a Merchant, haven't you? How would you like to learn the fundamentals of business from an experienced colleague?";
 	next;
-	if(select("Sure!:I'll make it on my own!")==1){
+	if(select("Sure!", "I'll make it on my own!")==1){
 		tu_merchant = 1;
 		if(getskilllv(MC_INCCARRY) < 4){
 			setquest 8229;
 			mes "[Guarnien]";
-			if(Sex == 1){
+			if (Sex == SEX_MALE)
 				mes "Atta boy~!";
-			} else {
+			else
 				mes "Atta girl~!";
-			}
 			mes "But first things first!";
 			mes "You better learn the";
 			mes "^871F78Increase Weight Limit^000000 skill!";
@@ -686,7 +685,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 		mes "[Sagle]";
 		mes "I will sell you 10 Red Potions for ^871F78420 zeny^000000. You'd better get them now while they're still here!";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Sagle]";
 			mes "Excellent!";
@@ -733,7 +732,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 		mes "[Sagle]";
 		mes "I will sell you 10 Red Potions for ^871F78410 zeny^000000. You'd better get them now while they're still here!";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Sagle]";
 			mes "Excellent!";
@@ -781,7 +780,7 @@ prontera,66,111,3	script	Sagle	4_KID01,{
 		mes "[Sagle]";
 		mes "I will sell you 10 Red Potions for ^871F78390 zeny^000000. You'd better get them now while they're still here!";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Sagle]";
 			mes "Excellent!";
@@ -840,7 +839,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 		mes "10 Red Potions for 340 Zeny.";
 		mes "Would you like some?";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Kellion]";
 			mes "Good choice~";
@@ -879,7 +878,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 		mes "10 Red Potions for 390 Zeny.";
 		mes "Would you like some?";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Kellion]";
 			mes "Good choice~";
@@ -918,7 +917,7 @@ prontera,93,330,3	script	Kellion	4W_M_01,{
 		mes "10 Red Potions for 400 Zeny.";
 		mes "Would you like some?";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Kellion]";
 			mes "Good choice~";
@@ -977,7 +976,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 		mes "to buy 10 Red Potions";
 		mes "for 390 Zeny, kind adventurer?";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Aigie]";
 			mes "Thank you so much.";
@@ -1022,7 +1021,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 		mes "to buy 10 Red Potions";
 		mes "for 420 Zeny, kind adventurer?";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Aigie]";
 			mes "Thank you so much.";
@@ -1067,7 +1066,7 @@ prt_in,169,11,3	script	Aigie	4_F_03,{
 		mes "to buy 10 Red Potions";
 		mes "for 340 Zeny, kind adventurer?";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Aigie]";
 			mes "Thank you so much.";
@@ -1116,7 +1115,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 		mes "[Jayon]";
 		mes "If you've checked out the market for Red Potions, you know that my price is the best. I'm offering 10 Red Potions for only 410 Zeny!";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Jayon]";
 			mes "Heh heh...!";
@@ -1162,7 +1161,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 		mes "[Jayon]";
 		mes "If you've checked out the market for Red Potions, you know that my price is the best. I'm offering 10 Red Potions for only 400 Zeny!";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Jayon]";
 			mes "Heh heh...!";
@@ -1209,7 +1208,7 @@ prontera,247,129,3	script	Jayon	4_M_03,{
 		mes "[Jayon]";
 		mes "If you've checked out the market for Red Potions, you know that my price is the best. I'm offering 10 Red Potions for only 410 Zeny!";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Jayon]";
 			mes "Heh heh...!";
@@ -1271,7 +1270,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 		mes "I'll sell them to you";
 		mes "for the low price of 420 Zeny~";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Maos]";
 			mes "Excellent choice!";
@@ -1307,7 +1306,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 		mes "I'll sell them to you";
 		mes "for the low price of 340 Zeny~";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Maos]";
 			mes "Excellent choice!";
@@ -1342,7 +1341,7 @@ prt_in,251,129,3	script	Maos	4_M_SEAMAN,{
 		mes "I'll sell them to you";
 		mes "for the low price of 400 Zeny~";
 		next;
-		switch(select("Buy:Cancel")){
+		switch(select("Buy", "Cancel")){
 		case 1:
 			mes "[Maos]";
 			mes "Excellent choice!";

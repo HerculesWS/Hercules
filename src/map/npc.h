@@ -27,7 +27,11 @@
 #include "common/hercules.h"
 #include "common/db.h"
 
+#include <pcre.h>
+
+/* Forward declarations */
 struct hplugin_data_store;
+struct itemlist; // map/itemdb.h
 struct view_data;
 
 enum npc_parse_options {
@@ -138,7 +142,7 @@ enum actor_classes {
 #define MAX_NPC_CLASS 1000
 // New NPC range
 #define MAX_NPC_CLASS2_START 10001
-#define MAX_NPC_CLASS2_END 10178
+#define MAX_NPC_CLASS2_END 10203
 
 //Script NPC events.
 enum npce_event {
@@ -228,12 +232,12 @@ struct npc_interface {
 	int (*click) (struct map_session_data *sd, struct npc_data *nd);
 	int (*scriptcont) (struct map_session_data *sd, int id, bool closing);
 	int (*buysellsel) (struct map_session_data *sd, int id, int type);
-	int (*cashshop_buylist) (struct map_session_data *sd, int points, int count, unsigned short *item_list);
-	int (*buylist_sub) (struct map_session_data *sd, int n, unsigned short *item_list, struct npc_data *nd);
+	int (*cashshop_buylist) (struct map_session_data *sd, int points, struct itemlist *item_list);
+	int (*buylist_sub) (struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd);
 	int (*cashshop_buy) (struct map_session_data *sd, int nameid, int amount, int points);
-	int (*buylist) (struct map_session_data *sd, int n, unsigned short *item_list);
-	int (*selllist_sub) (struct map_session_data *sd, int n, unsigned short *item_list, struct npc_data *nd);
-	int (*selllist) (struct map_session_data *sd, int n, unsigned short *item_list);
+	int (*buylist) (struct map_session_data *sd, struct itemlist *item_list);
+	int (*selllist_sub) (struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd);
+	int (*selllist) (struct map_session_data *sd, struct itemlist *item_list);
 	int (*remove_map) (struct npc_data *nd);
 	int (*unload_ev) (DBKey key, DBData *data, va_list ap);
 	int (*unload_ev_label) (DBKey key, DBData *data, va_list ap);
@@ -289,7 +293,7 @@ struct npc_interface {
 	void (*trader_count_funds) (struct npc_data *nd, struct map_session_data *sd);
 	bool (*trader_pay) (struct npc_data *nd, struct map_session_data *sd, int price, int points);
 	void (*trader_update) (int master);
-	int (*market_buylist) (struct map_session_data* sd, unsigned short list_size, struct packet_npc_market_purchase *p);
+	int (*market_buylist) (struct map_session_data *sd, struct itemlist *item_list);
 	bool (*trader_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*market_fromsql) (void);
 	void (*market_tosql) (struct npc_data *nd, unsigned short index);
@@ -308,54 +312,36 @@ void npc_defaults(void);
 
 HPShared struct npc_interface *npc;
 
-/* comes from npc_chat.c */
-#ifdef PCRE_SUPPORT
-#include <pcre/include/pcre.h>
-#endif // PCRE_SUPPORT
-
 /**
  * Structure containing all info associated with a single pattern block
  */
 struct pcrematch_entry {
-#ifdef PCRE_SUPPORT
 	struct pcrematch_entry* next;
 	char* pattern;
 	pcre* pcre_;
 	pcre_extra* pcre_extra_;
 	char* label;
-#else // not PCRE_SUPPORT
-	UNAVAILABLE_STRUCT;
-#endif // PCRE_SUPPORT
 };
 
 /**
  * A set of patterns that can be activated and deactived with a single command
  */
 struct pcrematch_set {
-#ifdef PCRE_SUPPORT
 	struct pcrematch_set* prev;
 	struct pcrematch_set* next;
 	struct pcrematch_entry* head;
 	int setid;
-#else // not PCRE_SUPPORT
-	UNAVAILABLE_STRUCT;
-#endif // PCRE_SUPPORT
 };
 
 /**
  * Entire data structure hung off a NPC
  */
 struct npc_parse {
-#ifdef PCRE_SUPPORT
 	struct pcrematch_set* active;
 	struct pcrematch_set* inactive;
-#else // not PCRE_SUPPORT
-	UNAVAILABLE_STRUCT;
-#endif // PCRE_SUPPORT
 };
 
 struct npc_chat_interface {
-#ifdef PCRE_SUPPORT
 	int (*sub) (struct block_list* bl, va_list ap);
 	void (*finalize) (struct npc_data* nd);
 	void (*def_pattern) (struct npc_data* nd, int setid, const char* pattern, const char* label);
@@ -365,9 +351,6 @@ struct npc_chat_interface {
 	void (*activate_pcreset) (struct npc_data* nd, int setid);
 	struct pcrematch_set* (*lookup_pcreset) (struct npc_data* nd, int setid);
 	void (*finalize_pcrematch_entry) (struct pcrematch_entry* e);
-#else // not PCRE_SUPPORT
-	UNAVAILABLE_STRUCT;
-#endif // PCRE_SUPPORT
 };
 
 /**
@@ -376,7 +359,6 @@ struct npc_chat_interface {
  * should be moved into core/perhaps its own file once hpm is enhanced for login/char
  **/
 struct pcre_interface {
-#ifdef PCRE_SUPPORT
 	pcre *(*compile) (const char *pattern, int options, const char **errptr, int *erroffset, const unsigned char *tableptr);
 	pcre_extra *(*study) (const pcre *code, int options, const char **errptr);
 	int (*exec) (const pcre *code, const pcre_extra *extra, PCRE_SPTR subject, int length, int startoffset, int options, int *ovector, int ovecsize);
@@ -385,9 +367,6 @@ struct pcre_interface {
 	void (*free_substring) (const char *stringptr);
 	int (*copy_named_substring) (const pcre *code, const char *subject, int *ovector, int stringcount, const char *stringname, char *buffer, int buffersize);
 	int (*get_substring) (const char *subject, int *ovector, int stringcount, int stringnumber, const char **stringptr);
-#else // not PCRE_SUPPORT
-	UNAVAILABLE_STRUCT;
-#endif // PCRE_SUPPORT
 };
 
 /**

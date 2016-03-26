@@ -40,6 +40,7 @@ struct guild;
 struct homun_data;
 struct item;
 struct item_data;
+struct itemlist; // map/itemdb.h
 struct map_session_data;
 struct mercenary_data;
 struct mob_data;
@@ -58,12 +59,11 @@ struct view_data;
  * Defines
  **/
 #define packet_len(cmd) packet_db[cmd].len
-#define P2PTR(fd) RFIFO2PTR(fd)
 #define clif_menuskill_clear(sd) ((sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0)
 #define clif_disp_onlyself(sd,mes,len) clif->disp_message( &(sd)->bl, (mes), (len), SELF )
 #define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
 #define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
-#define RGB2BGR(c) ((c & 0x0000FF) << 16 | (c & 0x00FF00) | (c & 0xFF0000) >> 16)
+#define RGB2BGR(c) (((c) & 0x0000FF) << 16 | ((c) & 0x00FF00) | ((c) & 0xFF0000) >> 16)
 
 #define COLOR_RED     0xff0000U
 #define COLOR_GREEN   0x00ff00U
@@ -73,12 +73,6 @@ struct view_data;
 /**
  * Enumerations
  **/
-enum {// packet DB
-	MIN_PACKET_DB  = 0x0064,
-	MAX_PACKET_DB  = 0x0F00,
-	MAX_PACKET_POS = 20,
-};
-
 typedef enum send_target {
 	ALL_CLIENT,
 	ALL_SAMEMAP,
@@ -862,7 +856,7 @@ struct clif_interface {
 	void (*messageln) (const int fd, const char* mes);
 	/* message+s(printf) */
 	void (*messages) (const int fd, const char *mes, ...) __attribute__((format(printf, 2, 3)));
-	bool (*process_message) (struct map_session_data *sd, int format, char **name_, size_t *namelen_, char **message_, size_t *messagelen_);
+	bool (*process_message) (struct map_session_data *sd, int format, const char **name_, size_t *namelen_, const char **message_, size_t *messagelen_);
 	void (*wisexin) (struct map_session_data *sd,int type,int flag);
 	void (*wisall) (struct map_session_data *sd,int type,int flag);
 	void (*PMIgnoreList) (struct map_session_data* sd);
@@ -1004,7 +998,7 @@ struct clif_interface {
 	void (*mail_setattachment) (int fd, int index, uint8 flag);
 	/* auction-related */
 	void (*auction_openwindow) (struct map_session_data *sd);
-	void (*auction_results) (struct map_session_data *sd, short count, short pages, uint8 *buf);
+	void (*auction_results) (struct map_session_data *sd, short count, short pages, const uint8 *buf);
 	void (*auction_message) (int fd, unsigned char flag);
 	void (*auction_close) (int fd, unsigned char flag);
 	void (*auction_setitem) (int fd, int index, bool fail);
@@ -1058,7 +1052,7 @@ struct clif_interface {
 	void (*elemental_updatestatus) (struct map_session_data *sd, int type);
 	/* bgqueue */
 	void (*bgqueue_ack) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, unsigned char arena_id);
-	void (*bgqueue_notice_delete) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, char *name);
+	void (*bgqueue_notice_delete) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, const char *name);
 	void (*bgqueue_update_info) (struct map_session_data *sd, unsigned char arena_id, int position);
 	void (*bgqueue_joined) (struct map_session_data *sd, int pos);
 	void (*bgqueue_pcleft) (struct map_session_data *sd);
@@ -1087,7 +1081,7 @@ struct clif_interface {
 	int (*delay_damage_sub) (int tid, int64 tick, int id, intptr_t data);
 	/* NPC Market */
 	void (*npc_market_open) (struct map_session_data *sd, struct npc_data *nd);
-	void (*npc_market_purchase_ack) (struct map_session_data *sd, struct packet_npc_market_purchase *req, unsigned char response);
+	void (*npc_market_purchase_ack) (struct map_session_data *sd, const struct itemlist *item_list, unsigned char response);
 	/* */
 	bool (*parse_roulette_db) (void);
 	void (*roulette_generate_ack) (struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, short bonusItemID);
@@ -1338,6 +1332,12 @@ struct clif_interface {
 	void (*add_random_options) (unsigned char* buf, struct item* item);
 	void (*pHotkeyRowShift) (int fd, struct map_session_data *sd);
 	void (*dressroom_open) (struct map_session_data *sd, int view);
+	void (*pOneClick_ItemIdentify) (int fd,struct map_session_data *sd);
+	/* Cart Deco */
+	void (*selectcart) (struct map_session_data *sd);
+	void (*pSelectCart) (int fd, struct map_session_data *sd);
+
+	const char *(*get_bl_name) (const struct block_list *bl);
 };
 
 #ifdef HERCULES_CORE

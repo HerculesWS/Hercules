@@ -46,7 +46,7 @@ aldebaran,223,222,4	script	Mr. Claus	4_M_SANTA,{
 	mes "I wish all of you joy";
 	mes "and Christmas cheer!";
 	next;
-	switch(select("Info about Lutie:Move to 'Lutie':Cancel")) {
+	switch(select("Info about Lutie", "Move to 'Lutie'", "Cancel")) {
 	case 1:
 		mes "[Mr. Claus]";
 		mes "^3355FFLutie^000000, the fantastic Christmas Town! Always filled with the spirit of giving, Lutie is filled with appetizing cakes, tiny toy soldiers, and all sorts of wonderful things~!";
@@ -491,7 +491,7 @@ xmas,134,112,4	script	Snowman	4_M_SNOWMAN,{
 	mes "On the same spot...";
 	mes "Day after day after day after day after day after day after day after day after day after day...";
 	next;
-	switch(select("^3355FFSnowysnow?^000000:Info about the Christmas dungeon:Quit this conversation")) {
+	switch(select("^3355FFSnowysnow?^000000", "Info about the Christmas dungeon", "Quit this conversation")) {
 	case 1:
 		if (xmas_npc < 2) {
 			cutin "rutie_snownow01.bmp",2;
@@ -792,7 +792,7 @@ xmas,146,136,4	script	Hashokii	4_M_PIERROT,{
 	mes "La La La~!";
 	mes "Dum di Dum di Dum!";
 	next;
-	switch(select("Yo Clown boy, what's up?:About Snowysnow:Quit conversation")) {
+	switch(select("Yo Clown boy, what's up?", "About Snowysnow", "Quit conversation")) {
 	case 1:
 		mes "[Hashokii]";
 		mes "La La La~!";

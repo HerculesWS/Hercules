@@ -51,7 +51,7 @@
 // Cross Hat, Bulb Hairband, Striped Hairband, Blue Hairband
 comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 	mes "[Hair Ornament Girl]";
-	if (Sex == 1) {
+	if (Sex == SEX_MALE) {
 		mes "Oh, hello!";
 		mes "Would you like to order a hairband? They're great presents to give to your girlfriend, and show that you're thinking of her.";
 	}
@@ -63,7 +63,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 	mes "[Hair Ornament Girl]";
 	mes "If you give me a few simple items then I can make a gorgeous Hair Band. If you have any questions, go ahead and have a look.";
 	next;
-	switch(select("Cross Hat:Bulb Band:Stripe Hairband:Blue Hairband")) {
+	switch(select("Cross Hat", "Bulb Band", "Stripe Hairband", "Blue Hairband")) {
 	case 1:
 		if ((countitem(Rosary) > 0) && (countitem(Broken_Armor_Piece) > 499)) {
 			mes "[Hair Ornament Girl]";
@@ -77,7 +77,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			mes "[Hair Ornament Girl]";
 			mes "It's better to bring just to keep the requested items in your inventory. Did you check? Then let's make it, okay?";
 			next;
-			switch(select("No.:Yes.")) {
+			switch(select("No.", "Yes.")) {
 			case 1:
 				mes "[Hair Ornament Girl]";
 				mes "Ah, alright. I guess you should put all your other things into Kafra Storage first. Okay then, see you soon.";
@@ -123,7 +123,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			mes "[Hair Ornament Girl]";
 			mes "It's better to bring just to keep the requested items in your inventory. Did you check? Then let's make it, okay?";
 			next;
-			switch(select("No.:Yes.")) {
+			switch(select("No.", "Yes.")) {
 			case 1:
 				mes "[Hair Ornament Girl]";
 				mes "Ah, alright. I guess you should put all your other things into Kafra Storage first. Okay then, see you soon.";
@@ -164,7 +164,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			mes "[Hair Ornament Girl]";
 			mes "You want me to make it now?";
 			next;
-			switch(select("No.:Yes.")) {
+			switch(select("No.", "Yes.")) {
 			case 1:
 				mes "[Hair Ornament Girl]";
 				mes "See you later then~";
@@ -206,7 +206,7 @@ comodo,228,159,3	script	Hair Ornament Girl	8_F_GIRL,{
 			mes "[Hair Ornament Girl]";
 			mes "It's better to bring just to keep the requested items in your inventory. Did you check? Then let's make it, okay?";
 			next;
-			switch(select("No.:Yes.")) {
+			switch(select("No.", "Yes.")) {
 			case 1:
 				mes "[Hair Ornament Girl]";
 				mes "Ah, alright. I guess you should put all your other things into Kafra Storage first. Okay then, see you soon.";
@@ -252,7 +252,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 	mes "[Isac Mari]";
 	mes "I know how to make all sorts of worldly hats. But right now, I can't make these since I don't have the right items.";
 	next;
-	switch(select("Mine Helmet:Parcel Hat:Grief for Greed:Opera Phantom Mask")) {
+	switch(select("Mine Helmet", "Parcel Hat", "Grief for Greed", "Opera Phantom Mask")) {
 	case 1:
 		if ((countitem(Safety_Helmet) > 0) && (countitem(Candle) > 0) && (countitem(Steel) > 24) && (countitem(Crystal_Mirror) > 0)) {
 			mes "[Isac Mari]";
@@ -264,7 +264,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			mes "[Isac Mari]";
 			mes "It's better to keep only the items used to make the Mine Hat in your inventory. Did you check? If so, let's get started.";
 			next;
-			switch(select("Give me a minute~!:Let's make the Mine Hat.")) {
+			switch(select("Give me a minute~!", "Let's make the Mine Hat.")) {
 			case 1:
 				mes "[Isac Mari]";
 				mes "Alright. Please check your items again. It's much better to be safe than sorry.";
@@ -317,7 +317,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			mes "[Isac Mari]";
 			mes "It's better to keep only the items used to make the Parcel Hat in your inventory. Did you check? If so, let's get started.";
 			next;
-			switch(select("Give me a minute~!:Let's make the Parcel Hat.")) {
+			switch(select("Give me a minute~!", "Let's make the Parcel Hat.")) {
 			case 1:
 				mes "[Isac Mari]";
 				mes "Alright. Please check your items again. It's much better to be safe than sorry.";
@@ -374,7 +374,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			mes "[Isac Mari]";
 			mes "It's better to keep only the items used to make the Grief for Greed in your inventory. Did you check? If so, let's get started.";
 			next;
-			switch(select("Give me a minute~!:Let's make the Grief for Greed.")) {
+			switch(select("Give me a minute~!", "Let's make the Grief for Greed.")) {
 			case 1:
 				mes "[Isac Mari]";
 				mes "Alright. Please check your items again. It's much better to be safe than sorry.";
@@ -435,7 +435,7 @@ comodo,273,137,4	script	Traveler#head	4_F_GON,{
 			mes "[Isac Mari]";
 			mes "It's better to keep only the items used to make the Opera Mask in your inventory. Did you check? If so, let's get started.";
 			next;
-			switch(select("Give me a minute~!:Let's make the Opera Masque.")) {
+			switch(select("Give me a minute~!", "Let's make the Opera Masque.")) {
 			case 1:
 				mes "[Isac Mari]";
 				mes "Alright. Please check your items again. It's much better to be safe than sorry.";
@@ -498,7 +498,7 @@ comodo,206,310,4	script	Campground Boy#cmd	4_M_BIBI,{
 		mes "BBQ camping in Comodo is";
 		mes "heaven to a meat lover like me~";
 		next;
-		if (select("BBQ Camping...?:Cancel") == 1) {
+		if (select("BBQ Camping...?", "Cancel") == 1) {
 			mes "[Rochito]";
 			mes "Yeah man... You can eat";
 			mes "Komodoru meat all day when";
@@ -659,7 +659,7 @@ comodo,204,310,4	script	Camping Youth#cmd	1_M_YOUNGKNIGHT,{
 		mes "together for this barbeque";
 		mes "for such a long time~";
 		next;
-		if(select("Buddies...?:Cancel") == 1) {
+		if(select("Buddies...?", "Cancel") == 1) {
 			mes "[Rockha]";
 			mes "Yeah, some of us know";
 			mes "each other when we fought";
@@ -761,7 +761,7 @@ comodo,209,305,4	script	Camping Maiden#cmd	1_F_LIBRARYGIRL,{
 	mes "Having a good time, all of us";
 	mes "together in a time of peace~";
 	next;
-	if (select("War of the Witch?:Cancel") == 1) {
+	if (select("War of the Witch?", "Cancel") == 1) {
 		mes "[Emralhandas]";
 		mes "Before I tell you about the";
 		mes "War of the Witch, I guess";
@@ -1022,7 +1022,7 @@ cmd_in02,32,140,4	script	Chief#cmd	1_M_03,{
 		mes "Comodo, a city famous for its beauty and nightlife. I hope you";
 		mes "enjoy your stay, whether you are seeking excitement or relaxation~";
 		next;
-		switch(select("About Casino:About Banished Witch:Cancel")) {
+		switch(select("About Casino", "About Banished Witch", "Cancel")) {
 		case 1:
 			mes "[Tausupa]";
 			mes "Ah yes, Comodo is world";
@@ -1116,7 +1116,7 @@ comodo,88,97,4	script	Toruna#cmd	4_M_MANAGER,{
 	mes "you believe this entire city";
 	mes "is built inside a natural cave?";
 	next;
-	switch(select("This cave is huge!:This place sure is strange...:Cancel")) {
+	switch(select("This cave is huge!", "This place sure is strange...", "Cancel")) {
 	case 1:
 		mes "[Toruna]";
 		mes "Oh, this is a huge cave,";
@@ -1498,7 +1498,7 @@ comodo,187,153,4	script	Hullaris#cmd	4_F_GODEMOM,{
 		mes "Love togther, love together,";
 		mes "we've living on the floor~";
 		next;
-		if (select("Present Muzi's Coin:Um... Comodo Cheese?") == 1) {
+		if (select("Present Muzi's Coin", "Um... Comodo Cheese?") == 1) {
 			mes "^3355FFYou present Muzi's lucky";
 			mes "coin to the old woman.^000000";
 			next;
@@ -1593,7 +1593,7 @@ comodo,187,153,4	script	Hullaris#cmd	4_F_GODEMOM,{
 		mes "Love together~";
 		mes "Love! Love!";
 		mes "Love togeth-hm?";
-		if (Sex) {
+		if (Sex == SEX_MALE) {
 			mes "Boy, you're ruining";
 			mes "my groove! Now beat it!";
 		}

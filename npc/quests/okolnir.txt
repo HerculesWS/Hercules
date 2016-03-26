@@ -50,7 +50,7 @@ function	script	F_Okolnir	{
 			mes "This castle has a hidden secret.";
 			mes "That is the ^4d4dff'Okolnir'^000000.";
 			next;
-			switch(select("About Okolnir.:Go to Okolnir.:Cancel.")) {
+			switch(select("About Okolnir.", "Go to Okolnir.", "Cancel.")) {
 			case 1:
 				mes "[Guide]";
 				mes "Okolnir is a kind of virtual realm...";
@@ -88,7 +88,7 @@ function	script	F_Okolnir	{
 					mes "You can enter Okolnir now....";
 					mes "Do you want to go there?";
 					next;
-					switch(select("Sure let's go there.:No.")) {
+					switch(select("Sure let's go there.", "No.")) {
 					case 1:
 						if (countitem(Crystal_Key)) delitem Crystal_Key,countitem(Crystal_Key);
 						mes "[Guide]";
@@ -119,7 +119,7 @@ function	script	F_Okolnir	{
 			mes "... OK...";
 			mes "Good luck.";
 			next;
-			switch(select("Enter now.:No.")) {
+			switch(select("Enter now.", "No.")) {
 			case 1:
 				if (countitem(Crystal_Key) > 0) {
 					delitem Crystal_Key,countitem(Crystal_Key);
@@ -214,7 +214,7 @@ que_qsch05,345,23,0	warp	Gate02#gq_sch05	1,1,schg_cas05,369,306
 				mes "[Wish Maiden]";
 				mes "Are you ready to endure the trials to get the Goddess' glory?";
 				next;
-				switch(select("Yes, I am:Sorry, I'll try later")) {
+				switch(select("Yes, I am", "Sorry, I'll try later")) {
 				case 1:
 					cutin "wish_maiden12",1;
 					mes "[Wish Maiden]";
@@ -239,7 +239,7 @@ que_qsch05,345,23,0	warp	Gate02#gq_sch05	1,1,schg_cas05,369,306
 					mes "[Wish Maiden]";
 					mes "I will open the gate of Okolnir if your members are ready.";
 					next;
-					switch(select("We are ready.:We need more time.")) {
+					switch(select("We are ready.", "We need more time.")) {
 					case 1:
 						.@saram = getmapusers("que_q"+.@sub$);
 						if (((.@saram > 15) && (.@saram < 21))) {

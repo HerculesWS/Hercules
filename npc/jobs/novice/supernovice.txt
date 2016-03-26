@@ -70,7 +70,7 @@ aldeba_in,223,167,3	script	Tzerero#sn	4_M_SEAMAN,{
 		mes "^3355FFSuper Novi--^000000Huh?";
 		mes "What's that behind you?";
 		next;
-		select("Huh?:What is that?");
+		select("Huh?", "What is that?");
 		mes "^3355FFYou look behind you, but...";
 		mes "There's nothing's there.";
 		mes "Something fishy is going on here!^000000";
@@ -159,7 +159,7 @@ aldeba_in,223,167,3	script	Tzerero#sn	4_M_SEAMAN,{
 		mes "[Tzerero]";
 		mes "...a ^CE6300Super Novice^000000.";
 		next;
-		switch(select("Accept his offer.:Reject his offer.:Listen more carefully.")) {
+		switch(select("Accept his offer.", "Reject his offer.", "Listen more carefully.")) {
 		case 1:
 			if (getskilllv("NV_BASIC") < 9) {
 				mes "[Tzerero]";
@@ -406,7 +406,7 @@ aldeba_in,216,169,5	script	Esseray#sn	4_M_04,{
 aldebaran,54,238,5	script	Kafra Employee#sn	4_F_KAFRA1,{
 	if (BaseJob == Job_SuperNovice) {
 		mes "[Kafra Employee]";
-		if (Sex )
+		if (Sex == SEX_MALE)
 			mes "Hello, Mister Super Novice~";
 		else
 			mes "Hello, Super Novice, Ma'am.";
@@ -431,7 +431,7 @@ aldebaran,54,238,5	script	Kafra Employee#sn	4_F_KAFRA1,{
 		mes "[Kafra Employee]";
 		mes "Anyway, would you like to rent a cart? The service fee is 1,900 zeny.";
 		next;
-		if (select("Rent a Cart.:Cancel.") == 1) {
+		if (select("Rent a Cart.", "Cancel.") == 1) {
 			mes "[Kafra Employee]";
 			mes "Oh, here's the thing...";
 			mes "Have you learned the 'Push Cart'";
@@ -444,7 +444,7 @@ aldebaran,54,238,5	script	Kafra Employee#sn	4_F_KAFRA1,{
 			mes "So make sure that you have";
 			mes "the 'Push Cart' skill already.";
 			next;
-			if (select("Rent a Cart.:Cancel.") == 1) {
+			if (select("Rent a Cart.", "Cancel.") == 1) {
 				if (checkcart()) {
 					mes "[Kafra Employee]";
 					mes "Oh, you've already equipped a cart.";

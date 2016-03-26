@@ -98,7 +98,7 @@ moc_ruins,118,99,5	script	Roberto	4_M_ORIENT01,{
 			mes "but I was a newcomer, and the pressure... waaah~";
 			mes "I was very lonely~";
 			next;
-			switch (select("It must be hard. It's ok have faith.:Keep suffering.")) {
+			switch (select("It must be hard. It's ok have faith.", "Keep suffering.")) {
 			case 1:
 				mes "[Roberto]";
 				mes "Yes. Thank you...";
@@ -145,7 +145,7 @@ moc_ruins,118,99,5	script	Roberto	4_M_ORIENT01,{
 				close;
 			case 2:
 				mes "[Roberto]";
-				mes "...hey "+((Sex)?"mister":"miss")+".";
+				mes "...hey "+ (Sex == SEX_MALE ? "mister" : "miss") +".";
 				mes "...be careful at night.";
 				close;
 			}
@@ -193,7 +193,7 @@ payon,103,63,3	script	Jason	4_M_ORIENT01,3,3,{
 			mes "Someone like you would definitely be";
 			mes "able to know how to use Arrow Repel.";
 			next;
-			switch (select("What is that?:Teach me.")) {
+			switch (select("What is that?", "Teach me.")) {
 			case 1:
 				mes "[Jason]";
 				mes "...you're kidding, right?";

@@ -93,7 +93,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 			mes "Always full of happy moments~";
 			next;
 			mes "[Lalo]";
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				mes "Forget about your worries~";
 				mes "And enjoy everything~";
 			}
@@ -107,11 +107,13 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 	else if(BARD_Q == 0) {
 		cutin "job_bard_aiolo01",2;
 		mes "[Lalo]";
-		if (Sex) mes "Hi! Delightful Archer.";
-		else mes "Hello! Beautiful Archer Lady.";
+		if (Sex == SEX_MALE)
+			mes "Hi! Delightful Archer.";
+		else
+			mes "Hello! Beautiful Archer Lady.";
 		mes "How can a wanderer like me help you?";
 		next;
-		switch(select("You have a nice voice.:Could you sing for me, please?:Nothing.")) {
+		switch(select("You have a nice voice.", "Could you sing for me, please?", "Nothing.")) {
 		case 1:
 			mes "[Lalo]";
 			mes "Hahaha! Of course!";
@@ -156,11 +158,11 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 			mes "Hmm... that's always a good song to sing.";
 			mes "How was it? Don't you think it's a nice song?";
 			next;
-			if (select("Yes, it was very nice.:No, not really...") == 1) {
+			if (select("Yes, it was very nice.", "No, not really...") == 1) {
 				mes "[Lalo]";
 				mes "Thanks! if you enjoyed my song, it makes me happy, too.";
 				next;
-				if (Sex == 1 && JobLevel > 39) {
+				if (Sex == SEX_MALE && JobLevel > 39) {
 					mes "[Lalo]";
 					mes "It would be nice if more people went around and sang...";
 					mes "Well, it's quite ok as it is now... hmmhmm.";
@@ -203,13 +205,13 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 		mes "Hey there Archer fellow.";
 		mes "How can a wanderer like me help you?";
 		next;
-		switch(select("You have a nice voice.:Could you sing for me, please?:Nothing.")) {
+		switch(select("You have a nice voice.", "Could you sing for me, please?", "Nothing.")) {
 		case 1:
 			mes "[Lalo]";
 			mes "Hoho, your voice is rather nice as well?";
 			mes "Ever think about singing?";
 			next;
-			if (select("Of course!:I can't quite possibly...") == 1) {
+			if (select("Of course!", "I can't quite possibly...") == 1) {
 				mes "[Lalo]";
 				mes "Haha, nice attitude. You have to be like that to become a Bard.";
 				mes "I'll help you become a Bard then.";
@@ -854,7 +856,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 			mes "Do you want to just change jobs now?";
 			mes "Or do you want a present.";
 			next;
-			.@selection = select("Just change my job please.:I'd be thankful for a present.");
+			.@selection = select("Just change my job please.", "I'd be thankful for a present.");
 		}
 		if ((.@selection == 1) || (BARD_Q == 5)) {
 			if(SkillPoint) {
@@ -886,7 +888,7 @@ comodo,226,123,5	script	Wandering Bard	2_M_BARD_ORIENT,{
 					mes "Mmm? Seems like you haven't prepared all trunks the yet? ";
 					mes "Do you want to just change jobs anyways?";
 					next;
-					if (select("Yes, just change my job already.:No, I'll go prepare them.") == 2)
+					if (select("Yes, just change my job already.", "No, I'll go prepare them.") == 2)
 						break;
 				default:
 					completequest 3003;

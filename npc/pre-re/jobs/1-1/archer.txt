@@ -86,7 +86,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 	mes "[Archer Guildsman]";
 	mes "Good day. How may I help you?";
 	next;
-	switch(select("I want to be an Archer.:I need the requirements, please.:Nothing, thanks.")) {
+	switch(select("I want to be an Archer.", "I need the requirements, please.", "Nothing, thanks.")) {
 	case 1:
 		if (BaseJob == Job_Archer) {
 			mes "[Archer Guildsman]";
@@ -107,7 +107,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 			mes "Do you want to be an Archer?";
 			mes "If so, you need to fill out this application form.";
 			next;
-			if (select("Apply.:Cancel") == 1) {
+			if (select("Apply.", "Cancel") == 1) {
 				job_archer_q = 1;
 				setquest 1004;
 				mes "[Archer Guildsman]";
@@ -117,7 +117,7 @@ payon_in02,64,71,4	script	Archer Guildsman#archer	4_M_03,{
 				mes "If you think you've met them already, we can check that now.";
 				mes "Are you ready?";
 				next;
-				if (select("Yes, I am.:No, not yet.") == 1) {
+				if (select("Yes, I am.", "No, not yet.") == 1) {
 					mes "[Archer Guildsman]";
 					mes "Alright, let me check.";
 					next;

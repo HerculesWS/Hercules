@@ -22,7 +22,6 @@
 #define COMMON_SOCKET_H
 
 #include "common/hercules.h"
-#include "common/conf.h"
 #include "common/db.h"
 
 #ifdef WIN32
@@ -34,7 +33,9 @@
 #	include <sys/types.h>
 #endif
 
+/* Forward Declarations */
 struct hplugin_data_store;
+struct config_setting_t;
 
 #define FIFOSIZE_SERVERLINK 256*1024
 
@@ -46,16 +47,16 @@ struct hplugin_data_store;
 			sockt->realloc_writefifo((fd), (size)); \
 	} while(0)
 
-#define RFIFOP(fd,pos) (sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos))
-#define WFIFOP(fd,pos) (sockt->session[fd]->wdata + sockt->session[fd]->wdata_size + (pos))
+#define RFIFOP(fd,pos) ((const void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos)))
+#define WFIFOP(fd,pos) ((void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size + (pos)))
 
-#define RFIFOB(fd,pos) (*(uint8*)RFIFOP((fd),(pos)))
+#define RFIFOB(fd,pos) (*(const uint8*)RFIFOP((fd),(pos)))
 #define WFIFOB(fd,pos) (*(uint8*)WFIFOP((fd),(pos)))
-#define RFIFOW(fd,pos) (*(uint16*)RFIFOP((fd),(pos)))
+#define RFIFOW(fd,pos) (*(const uint16*)RFIFOP((fd),(pos)))
 #define WFIFOW(fd,pos) (*(uint16*)WFIFOP((fd),(pos)))
-#define RFIFOL(fd,pos) (*(uint32*)RFIFOP((fd),(pos)))
+#define RFIFOL(fd,pos) (*(const uint32*)RFIFOP((fd),(pos)))
 #define WFIFOL(fd,pos) (*(uint32*)WFIFOP((fd),(pos)))
-#define RFIFOQ(fd,pos) (*(uint64*)RFIFOP((fd),(pos)))
+#define RFIFOQ(fd,pos) (*(const uint64*)RFIFOP((fd),(pos)))
 #define WFIFOQ(fd,pos) (*(uint64*)WFIFOP((fd),(pos)))
 #define RFIFOSPACE(fd) (sockt->session[fd]->max_rdata - sockt->session[fd]->rdata_size)
 #define WFIFOSPACE(fd) (sockt->session[fd]->max_wdata - sockt->session[fd]->wdata_size)
@@ -76,16 +77,31 @@ struct hplugin_data_store;
 #define RFIFOSKIP(fd, len) (sockt->rfifoskip(fd, len))
 
 /* [Ind/Hercules] */
-#define RFIFO2PTR(fd) (void*)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos)
+#define RFIFO2PTR(fd) ((const void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos))
+#define RP2PTR(fd) RFIFO2PTR(fd)
+
+/* [Hemagx/Hercules] */
+#define WFIFO2PTR(fd) ((void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size))
+#define WP2PTR(fd) WFIFO2PTR(fd)
 
 // buffer I/O macros
-#define RBUFP(p,pos) (((uint8*)(p)) + (pos))
-#define RBUFB(p,pos) (*(uint8*)RBUFP((p),(pos)))
-#define RBUFW(p,pos) (*(uint16*)RBUFP((p),(pos)))
-#define RBUFL(p,pos) (*(uint32*)RBUFP((p),(pos)))
-#define RBUFQ(p,pos) (*(uint64*)RBUFP((p),(pos)))
+static inline const void *RBUFP_(const void *p, int pos) __attribute__((const, unused));
+static inline const void *RBUFP_(const void *p, int pos)
+{
+	return ((const uint8 *)p) + pos;
+}
+#define RBUFP(p,pos) RBUFP_(p, (int)(pos))
+#define RBUFB(p,pos) (*(const uint8 *)RBUFP((p),(pos)))
+#define RBUFW(p,pos) (*(const uint16 *)RBUFP((p),(pos)))
+#define RBUFL(p,pos) (*(const uint32 *)RBUFP((p),(pos)))
+#define RBUFQ(p,pos) (*(const uint64 *)RBUFP((p),(pos)))
 
-#define WBUFP(p,pos) (((uint8*)(p)) + (pos))
+static inline void *WBUFP_(void *p, int pos) __attribute__((const, unused));
+static inline void *WBUFP_(void *p, int pos)
+{
+	return ((uint8 *)p) + pos;
+}
+#define WBUFP(p,pos) WBUFP_(p, (int)(pos))
 #define WBUFB(p,pos) (*(uint8*)WBUFP((p),(pos)))
 #define WBUFW(p,pos) (*(uint16*)WBUFP((p),(pos)))
 #define WBUFL(p,pos) (*(uint32*)WBUFP((p),(pos)))
@@ -209,7 +225,7 @@ struct socket_interface {
 	uint32 (*lan_subnet_check) (uint32 ip, struct s_subnet *info);
 	bool (*allowed_ip_check) (uint32 ip);
 	bool (*trusted_ip_check) (uint32 ip);
-	int (*net_config_read_sub) (config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
+	int (*net_config_read_sub) (struct config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
 	void (*net_config_read) (const char *filename);
 };
 

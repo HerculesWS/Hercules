@@ -1717,7 +1717,7 @@ HPShared struct db_interface *DB;
  * @return negative if v1 is top, positive if v2 is top, 0 if equal.
  */
 #define BHEAP_MINTOPCMP(v1, v2) \
-	( v1 == v2 ? 0 : v1 < v2 ? -1 : 1 )
+	( (v1) == (v2) ? 0 : (v1) < (v2) ? -1 : 1 )
 
 /**
  * Generic comparator for a max-heap (maximum value at top).
@@ -1732,6 +1732,6 @@ HPShared struct db_interface *DB;
  * @return negative if v1 is top, positive if v2 is top, 0 if equal.
  */
 #define BHEAP_MAXTOPCMP(v1, v2) \
-	( v1 == v2 ? 0 : v1 > v2 ? -1 : 1 )
+	( (v1) == (v2) ? 0 : (v1) > (v2) ? -1 : 1 )
 
 #endif /* COMMON_DB_H */

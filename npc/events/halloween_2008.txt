@@ -58,7 +58,7 @@ payon,162,176,4	script	Halloween Magician#iRO08	4_M_BIBI,{
 		mes "Do you know the rules?";
 		next;
 		Hallow08Kill = 0;
-		if(select("Yes, I know.:No, I don't know.") == 2) {
+		if(select("Yes, I know.", "No, I don't know.") == 2) {
 			callsub(S_Rules);
 			callsub(S_MainMenu);
 			end;
@@ -218,7 +218,7 @@ S_TicketExchange:
 	next;
 	.@item_id = null;
 	.@amount = 0;
-	switch(select("Pumpkin Pie:Pumpkin-Head:Old Blue Box:Old Purple Box:Old Card Album")) {
+	switch(select("Pumpkin Pie", "Pumpkin-Head", "Old Blue Box", "Old Purple Box", "Old Card Album")) {
 	case 1:
 		.@amount = 5;
 		.@item_id = Pumpkin_Pie;

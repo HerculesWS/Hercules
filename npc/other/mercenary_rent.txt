@@ -49,7 +49,7 @@
 	mes .@npc$ + " Mercenary Guild.";
 	mes "What can I do for you?";
 	next;
-	switch(select("Hire Mercenary:Mercenary Info:Nothing:10th Grade Mercenaries")) {
+	switch(select("Hire Mercenary", "Mercenary Info", "Nothing", "10th Grade Mercenaries")) {
 		case 1:
 			mes "[Mercenary Manager]";
 			mes "You want to hire a";
@@ -73,7 +73,7 @@
 			mes "Base Level " + .@BaseLevel + " or higher, and";
 			mes "must pay the " + .@ZenyCost + ",000 zeny fee.";
 			next;
-			if(select("Yes:No") == 2) {
+			if(select("Yes", "No") == 2) {
 				mes "[Mercenary Manager]";
 				mes "Oh, really? Well, now";
 				mes "might not be a good time";
@@ -187,7 +187,7 @@
 			mes "Are you still interested in";
 			mes "forming this contract?";
 			next;
-			if (select("Yes:No") == 2) {
+			if (select("Yes", "No") == 2) {
 				mes "[Mercenary Manager]";
 				mes "I understand... It takes";
 				mes "hard work and sacrifice to";

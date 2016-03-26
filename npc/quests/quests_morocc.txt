@@ -52,7 +52,7 @@ moc_ruins,113,181,4	script	William	4_M_ORIENT02,{
 	mes "[William]";
 	mes "My family, the MacMillan Clan, has been producing Professional Traffic Signal Posts for more than 250 years. Nowadays, we are booking Special Orders for our unique ornament, ^3355FFStop Post^000000.";
 	next;
-	switch(select("Could I order one ^3355FFStop Post^000000?:Nah...")) {
+	switch(select("Could I order one ^3355FFStop Post^000000?", "Nah...")) {
 	case 1:
 		mes "[William]";
 		mes "This unique ornament, ^3355FFStop Post^000000, is a traffic signal on the road, and doubles as a hair ornament! This, we solemnly promise on the strength of a 100-year guarantee.";
@@ -93,7 +93,7 @@ moc_ruins,118,176,4	script	Alchemist	1_M_WIZARD,{
 	mes "Howdy, new customer!!";
 	mes "I know what you're gonna talk about. You want the Magic Glasses from me, riiiiight?";
 	next;
-	switch(select("What is that?:Manufacture:Ignore him")) {
+	switch(select("What is that?", "Manufacture", "Ignore him")) {
 	case 1:
 		mes "[Marius]";
 		mes "Hmm~!";
@@ -246,7 +246,7 @@ OnTouch:
 			mes "Besides, you can't risk making trouble here: this place";
 			mes "is full of deadly Assassins.";
 			next;
-			switch(select("Sure:Why should I?!")) {
+			switch(select("Sure", "Why should I?!")) {
 			case 1:
 				if (Zeny > 999) {
 					mes "[Litheron]";
@@ -362,14 +362,14 @@ que_job01,82,95,3	script	Bar Master#moc_main01	1_ETC_01,{
 		mes "What do you wanna drink?";
 	}
 	next;
-	switch(select("Order a Drink:Ask About Mission:Cancel")) {
+	switch(select("Order a Drink", "Ask About Mission", "Cancel")) {
 	case 1:
 		mes "[Master]";
 		mes "In this place, I only serve two drinks.";
 		mes "You want a Tropical Sograt or";
 		mes "a Vermilion on the Beach?";
 		next;
-		switch(select("Tropical Sograt:Vermilion on the Beach:Do you offer any free drinks?")) {
+		switch(select("Tropical Sograt", "Vermilion on the Beach", "Do you offer any free drinks?")) {
 		case 1:
 			if (checkweight(Spawn,200) == 0) {
 				mes "[Master]";
@@ -583,7 +583,7 @@ que_job01,49,49,5	script	Tao#dan_09	4_F_YUNYANG,{
 		mes "How's out, meow?";
 		next;
 		if (prt_curse == 24) {
-			switch(select("Is Marjana in?:I'm here to see you,Tao.")) {
+			switch(select("Is Marjana in?", "I'm here to see you,Tao.")) {
 			case 1:
 				mes "[Tao]";
 				mes "She's in the room on your left, meow~";
@@ -616,7 +616,7 @@ que_job01,49,49,5	script	Tao#dan_09	4_F_YUNYANG,{
 		mes "[Tao]";
 		mes "What's up, meow!";
 		next;
-		switch(select("So, it's just you, little brat?:What has gotten into you?!:Hey, stop meowing?!")) {
+		switch(select("So, it's just you, little brat?", "What has gotten into you?!", "Hey, stop meowing?!")) {
 		case 1:
 			mes "[Tao]";
 			mes "What are you talking about, meow!";
@@ -887,7 +887,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 		mes "No commoners are allowed in the area beyond this point.";
 		mes "This place is extremely dangerous so you are restricted from entering.";
 		next;
-		switch(select("Cancel Conversation:Ask What Happened")) {
+		switch(select("Cancel Conversation", "Ask What Happened")) {
 		case 1:
 			close;
 		case 2:
@@ -903,7 +903,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 			mes "[Continental Guard]";
 			mes "If you'd like to know more information, I suggest that you speak to the Continental Guard in charge of the accident site in Morroc Village.";
 			next;
-			switch(select("End Conversation:Ask About Guard's Location")) {
+			switch(select("End Conversation", "Ask About Guard's Location")) {
 			case 1:
 				close;
 			case 2:
@@ -913,7 +913,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 				mes "[Continental Guard]";
 				mes "If you'd like, I can send you there directly.";
 				next;
-				switch(select("No, thanks.:Please do.")) {
+				switch(select("No, thanks.", "Please do.")) {
 				case 1:
 					mes "[Continental Guard]";
 					mes "I see. Well then, for your safety, please leave this dangerous area as soon as possible.";
@@ -933,7 +933,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 		mes "No commoners are allowed in the area beyond this point.";
 		mes "This place is extremely dangerous so you are restricted from entering.";
 		next;
-		switch(select("Cancel Conversation:Enter the Field to Investigate:Move to Morroc's Accident Site")) {
+		switch(select("Cancel Conversation", "Enter the Field to Investigate", "Move to Morroc's Accident Site")) {
 		case 1:
 			close;
 		case 2:
@@ -1011,7 +1011,7 @@ moc_fild20,354,183,3	script	Continental Guard#01::MocConGuard	4_M_MOC_SOLDIER,3,
 			}
 			--.@partymembercount;
 		}
-		switch(select("Enter the First Field to Investigate:Enter the Second Field to Investigate:Return to Morroc's Accident Site:Cancel Conversation")) {
+		switch(select("Enter the First Field to Investigate", "Enter the Second Field to Investigate", "Return to Morroc's Accident Site", "Cancel Conversation")) {
 		case 1:
 			if ((.@onlinemembers > 1) && (countitem(Continental_Guard_Paper) > 0)) {
 				mes "[Continental Guard]";
@@ -1216,7 +1216,7 @@ morocc,176,103,3	script	Continental Official	4_M_SAGE_A,{
 		mes "[Continental Guard Official]";
 		mes "Welcome to the Morroc Subjugation Information Center. How may I help you?";
 		next;
-		switch(select("What is this place for?:I'm here to volunteer.:Tell me about the village situation.")) {
+		switch(select("What is this place for?", "I'm here to volunteer.", "Tell me about the village situation.")) {
 		case 1:
 			mes "[Continental Guard Official]";
 			mes "I'm stationed here to assist adventurers who wish to volunteer and help the Continental Guard fight Satan Morroc.";
@@ -1293,7 +1293,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 		mes "[Chief Balrog]";
 		mes "It looks like you have business with me. Please make it brief since I don't have a lot of time on my hands. There's lots of things I need to take care of...";
 		next;
-		switch(select("Ask about Continental Guards:I want to join the Continental Guard.:End Conversation")) {
+		switch(select("Ask about Continental Guards", "I want to join the Continental Guard.", "End Conversation")) {
 		case 1:
 			mes "[Chief Balrog]";
 			mes "The damage that Satan Morroc's resurrection has caused is obvious just by taking a look around this area.";
@@ -1331,7 +1331,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "[Chief Balrog]";
 				mes "I'm sorry, but inexperienced adventurers would just get in our way. I hope you understand. If you really want to help us, then please focus on your training for now.";
 				next;
-				switch(select("End Conversation:Ask Again")) {
+				switch(select("End Conversation", "Ask Again")) {
 				case 1:
 					close;
 				case 2:
@@ -1344,7 +1344,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 					mes "[Chief Balrog]";
 					mes "Please understand that this is for your own good. Fight some Porings or whatever else might be a good match for your level.";
 					next;
-					switch(select("End Conversation:You've just got to let me join!")) {
+					switch(select("End Conversation", "You've just got to let me join!")) {
 					case 1:
 						close;
 					case 2:
@@ -1357,7 +1357,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 						mes "[Chief Balrog]";
 						mes "Stop bothering me. You'd be nothing but a burden.";
 						next;
-						switch(select("Give Up:Give me a chance to prove myself!")) {
+						switch(select("Give Up", "Give me a chance to prove myself!")) {
 						case 1:
 							close;
 						case 2:
@@ -1382,7 +1382,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 							mes "[Chief Balrog]";
 							mes "I happened to hear that the monsters in the Lava Dungeon have everlasting flame which would solve our bonfire problems. I want you to gather those flames for us.";
 							next;
-							switch(select("That's too hard! Let me think about it!:No problem.")) {
+							switch(select("That's too hard! Let me think about it!", "No problem.")) {
 							case 1:
 								mes "[Chief Balrog]";
 								mes "Hmpf, I was right. I knew you wouldn't be able to handle such a simple task. I shouldn't have wasted my time with you.";
@@ -1454,7 +1454,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			mes "[Chief Balrog]";
 			mes "Now, I remember hearing that the monsters in the Ice Cave to the north have frozen hearts. Those hearts might be able to relieve those soldiers from the heat.";
 			next;
-			switch(select("That's too hard!:No problem. How many do you want?")) {
+			switch(select("That's too hard!", "No problem. How many do you want?")) {
 			case 1:
 				mes "[Chief Balrog]";
 				mes "I knew that'd be too tough for you. I'm glad you finally realized your limits before it was too late. It takes wisdom to recognize your weakness.";
@@ -1533,7 +1533,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 		mes "[Chief Balrog]";
 		mes "I guess you'd benefit from a full situational briefing. Shall I brief you now?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			mes "[Chief Balrog]";
 			mes "I'm going to tell you some basic information about fighting Satan Morroc as a member of the Continental Guard.";
@@ -1615,7 +1615,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			mes "[Chief Balrog]";
 			mes "I've prepared a few things to give as a reward for you. Let's see... I have three items. Which one do you like to receive?";
 			next;
-			switch(select("1. Seal of Continental Guard:2. Morroc Charm Stone:3. Morroc Ring")) {
+			switch(select("1. Seal of Continental Guard", "2. Morroc Charm Stone", "3. Morroc Ring")) {
 			case 1:
 				mes "[Chief Balrog]";
 				mes "The Seal of Continental Guard is an extremely valuable reward given directly from the kingdom court. It is a symbol of strength.";
@@ -1626,7 +1626,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "[Chief Balrog]";
 				mes "Do you really want the Seal of Continental Guard?";
 				next;
-				switch(select("1. Yes.:2. No.")) {
+				switch(select("1. Yes.", "2. No.")) {
 				case 1:
 					mes "[Chief Balrog]";
 					mes "Great, then I'll reward you with the Seal of Continental Guard. Congratulations.";
@@ -1658,7 +1658,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "[Chief Balrog]";
 				mes "Do you really want a Morroc Charm Stone?";
 				next;
-				switch(select("1. Yes.:2. No.")) {
+				switch(select("1. Yes.", "2. No.")) {
 				case 1:
 					mes "[Chief Balrog]";
 					mes "Great, then I'll reward you with a Morroc Charm Stone. Congratulations.";
@@ -1690,7 +1690,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 				mes "[Chief Balrog]";
 				mes "Do you really want a Morroc Ring?";
 				next;
-				switch(select("1. Yes.:2. No.")) {
+				switch(select("1. Yes.", "2. No.")) {
 				case 1:
 					mes "[Chief Balrog]";
 					mes "Great, then I'll reward you with a Morroc Ring. Congratulations.";
@@ -1727,7 +1727,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 		mes "[Chief Balrog]";
 		mes "I've prepared a few things to give as a reward for you. Let's see... I have three items. Which one do you like to receive?";
 		next;
-		switch(select("1. Seal of Continental Guard:2. Morroc Charm Stone:3. Morroc Ring")) {
+		switch(select("1. Seal of Continental Guard", "2. Morroc Charm Stone", "3. Morroc Ring")) {
 		case 1:
 			mes "[Chief Balrog]";
 			mes "The Seal of Continental Guard is an extremely valuable reward given directly from the kingdom court. It is a symbol of strength.";
@@ -1738,7 +1738,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			mes "[Chief Balrog]";
 			mes "Do you really want the Seal of Continental Guard?";
 			next;
-			switch(select("1. Yes.:2. No.")) {
+			switch(select("1. Yes.", "2. No.")) {
 			case 1:
 				mes "[Chief Balrog]";
 				mes "Great, then I'll reward you with the Seal of Continental Guard. Congratulations.";
@@ -1770,7 +1770,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			mes "[Chief Balrog]";
 			mes "Do you really want a Morroc Charm Stone?";
 			next;
-			switch(select("1. Yes.:2. No.")) {
+			switch(select("1. Yes.", "2. No.")) {
 			case 1:
 				mes "[Chief Balrog]";
 				mes "Great, then I'll reward you with a Morroc Charm Stone. Congratulations.";
@@ -1802,7 +1802,7 @@ morocc,159,113,3	script	Chief Balrog	4_M_CRU_OLD,{
 			mes "[Chief Balrog]";
 			mes "Do you really want a Morroc Ring?";
 			next;
-			switch(select("1. Yes.:2. No.")) {
+			switch(select("1. Yes.", "2. No.")) {
 			case 1:
 				mes "[Chief Balrog]";
 				mes "Great, then I'll reward you with a Morroc Ring. Congratulations.";
@@ -2068,7 +2068,7 @@ sec_in02,14,43,5	script	Morroc GlobalVar Admin::MorrocAdmin_sec	4_F_RUSGREEN,{
 		mes "[Helper]";
 		mes "What do you want?";
 		next;
-		switch(select("Cancel.:Reset")) {
+		switch(select("Cancel.", "Reset")) {
 		case 1:
 			mes "[Helper]";
 			mes "Alright.";
@@ -2123,7 +2123,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			next;
 			mes "^660000You wave your hand close to his face to get his attention. He seems, however, to be in his own dreams, completely oblivious of your presense.^000000";
 			next;
-			switch(select("Speak:Pass Him By")) {
+			switch(select("Speak", "Pass Him By")) {
 			case 1:
 				mes "["+ strcharinfo(0) +"]";
 				mes "Are you talking to yourself?";
@@ -2204,7 +2204,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 				mes "All I'm asking is to check out a book from Prontera Library for me. It sounds easy, doesn't it?";
 				mes "Well, you don't look like someone who loves reading, but I hope you at least know how to check out a book from a library.";
 				next;
-				if (Sex == 1) {
+				if (Sex == SEX_MALE) {
 					mes "[Benjamin]";
 					mes "If you help me, I'll show you a limited picture book edition of Mammi... Once. Hehehehe.";
 					mes "What do you say? You do want to help me, right?";
@@ -2219,7 +2219,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 				}
 				mes "^660000What do you want to do?^000000";
 				next;
-				switch(select("Help him:Don't help him")) {
+				switch(select("Help him", "Don't help him")) {
 				case 1:
 					mes "[Benjamin]";
 					mes "Wow, are you really going to help me?";
@@ -2314,7 +2314,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 			next;
 			mes "^660000He is staring at you arrogantly. Obviously, he doesn't care if you like the book or not.^000000";
 			next;
-			switch(select("I'll take it.:No, thanks.")) {
+			switch(select("I'll take it.", "No, thanks.")) {
 			case 1:
 				mes "'^660000Well, if it's for free, and there's no harm keeping it.'^000000";
 				next;
@@ -2376,7 +2376,7 @@ moc_ruins,137,70,3	script	Book-Touching Man#garas	1_M_02,{
 				mes "These will surely help me get closer to Mammi!";
 				mes "Give them to me!";
 				next;
-				switch(select("Give:Don't Give")) {
+				switch(select("Give", "Don't Give")) {
 				case 1:
 					mes "[Benjamin]";
 					mes "Oh, "+ strcharinfo(0) +"!";
@@ -2433,14 +2433,14 @@ prt_in,179,92,3	script	Library Curator#garas	1_M_LIBRARYMASTER,{
 		mes "Our library's Monster Encyclopedia has every monster in the Rune-Midgart Kingdom categorized by dungeon, to help our readers find them easily.";
 		mes "We also have many essential books for adventurers. Why don't you take a look?";
 		next;
-		switch(select("Search books.:Look around the library.")) {
+		switch(select("Search books.", "Look around the library.")) {
 		case 1:
 			mes "[Curator Guys]";
 			mes "Do you have a specific book in mind?";
 			mes "No problem, I'm here to assist you.";
 			mes "What kind of book are you looking for?";
 			next;
-			switch(select("Say the title.:Say the author.:Search by keyword.")) {
+			switch(select("Say the title.", "Say the author.", "Search by keyword.")) {
 			case 1:
 				mes "[Curator Guys]";
 				mes "Oh, do you know the title?";
@@ -3136,7 +3136,7 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 		mes "[Oliver Hilpert]";
 		mes "Did you change your mind about selling Lady Mammi's picture book to me?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			cutin "oliver_smile",2;
 			mes "[Oliver Hilpert]";
@@ -3273,7 +3273,7 @@ yuno_in04,169,123,3	script	Suspicious Man#oliver_h	4_M_ATEIL,{
 		mes "["+ strcharinfo(0) +"]";
 		mes "What if it was all caused by that crow feather? What if...?";
 		next;
-		switch(select("It was cursed by the pebble.:The crow has something to do with Oliver.")) {
+		switch(select("It was cursed by the pebble.", "The crow has something to do with Oliver.")) {
 		case 1:
 			mes "["+ strcharinfo(0) +"]";
 			mes "Ah, I see.";
@@ -3506,7 +3506,7 @@ yuno_in04,167,120,3	script	Worn-out Book#garas	HIDDEN_NPC,{
 		mes "As I told you earlier, it's something I'm willing to cross continents to get. Please?";
 		mes "I really want to buy your book!";
 		next;
-		switch(select("Sell:Don't Sell")) {
+		switch(select("Sell", "Don't Sell")) {
 		case 1:
 			mes "[Oliver Hilpert]";
 			mes "Wow, thanks!";
@@ -3891,7 +3891,7 @@ cave,82,97,3	script	Cave Settler#g1	4_M_CAVE1,3,3,{
 		mes "[Cave Settler]";
 		mes "No outsiders are allowed beyond this point.";
 		next;
-		switch(select("Step back.:No, listen to me!")) {
+		switch(select("Step back.", "No, listen to me!")) {
 		case 1:
 			mes "[Cave Settler]";
 			mes "Hah, I knew you would be scared of me!";
@@ -3980,7 +3980,7 @@ OnTouch:
 		mes "[Cave Settler]";
 		mes "No outsiders are allowed beyond this point.";
 		next;
-		switch(select("Step back.:No, listen to me!")) {
+		switch(select("Step back.", "No, listen to me!")) {
 		case 1:
 			mes "[Cave Settler]";
 			mes "Hah, I knew you would be scared of me!";
@@ -4126,7 +4126,7 @@ cave,22,186,3	script	Monsterous Man#zid	4_M_MUT1,{
 			mes "[Zid]";
 			mes "My name is Zid. Tell me what you want from me. I want to know more about this book.";
 			next;
-			switch(select("About the Cave Village:About Himself:About Eva:End Conversation")) {
+			switch(select("About the Cave Village", "About Himself", "About Eva", "End Conversation")) {
 			case 1:
 				mes "[Zid]";
 				mes "Did you notice that our villagers look different?";
@@ -4333,7 +4333,7 @@ prontera,153,353,4	script	Messenger#prince1	8W_SOLDIER,{
 				mes "[Messenger]";
 				mes "Oh, I don't want you to panic too much... Hmm... what I want to say is, Tristan the third, the ruler of Rune Midgarts...";
 				next;
-				switch(select("Passed away?:Came for a celebration again?")) {
+				switch(select("Passed away?", "Came for a celebration again?")) {
 				case 1:
 					emotion e_gasp;
 					mes "[Messenger]";
@@ -4488,7 +4488,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "What's wrong with you?";
 		mes "This is not an open area!";
 		next;
-		switch(select("Alright, Alright.:The Messenger directed me here.")) {
+		switch(select("Alright, Alright.", "The Messenger directed me here.")) {
 		case 1:
 			mes "[Inspector]";
 			mes "If you know it, why are you here? Get out of here!";
@@ -4538,7 +4538,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "most important thing to consider";
 				mes "as a leader of a hunt party?";
 				next;
-				switch(select("Strength and characteristics of the monster.:Efficiency of the hunt.:What we can get from the hunt.")) {
+				switch(select("Strength and characteristics of the monster.", "Efficiency of the hunt.", "What we can get from the hunt.")) {
 				case 1:
 					.@int += 10;
 					break;
@@ -4553,7 +4553,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "What if we lose a party member";
 				mes "during battle?";
 				next;
-				switch(select("Keep fighting until we can do it.:Find a new place and try differently.:Stop hunting and replenish.")) {
+				switch(select("Keep fighting until we can do it.", "Find a new place and try differently.", "Stop hunting and replenish.")) {
 				case 1:
 					.@brave += 10;
 					break;
@@ -4567,7 +4567,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "[Inspector]";
 				mes "What you get as a result of the hunt...";
 				next;
-				switch(select("Share it as agreed prior.:I don't want to care for sharing.:Give it to the member that needs it.")) {
+				switch(select("Share it as agreed prior.", "I don't want to care for sharing.", "Give it to the member that needs it.")) {
 				case 1:
 					.@int += 10;
 					break;
@@ -4582,7 +4582,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "What type of job class member";
 				mes "has to be cured while the enemy still lives?";
 				next;
-				switch(select("Priest, healer class.:Hunter, damage dealer.:Lord Knight, tanker.")) {
+				switch(select("Priest, healer class.", "Hunter, damage dealer.", "Lord Knight, tanker.")) {
 				case 1:
 					.@int += 10;
 					break;
@@ -4596,7 +4596,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "[Inspector]";
 				mes "Whom do you want to befriend the most?";
 				next;
-				switch(select("A strong person.:An experienced person.:A kind person.")) {
+				switch(select("A strong person.", "An experienced person.", "A kind person.")) {
 				case 1:
 					.@brave += 10;
 					break;
@@ -4611,7 +4611,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "What was your ability that helped";
 				mes "you the most during your training?";
 				next;
-				switch(select("Relationships with people.:Plenty of information gathering.:Discernment and driving force.")) {
+				switch(select("Relationships with people.", "Plenty of information gathering.", "Discernment and driving force.")) {
 				case 1:
 					.@solid += 10;
 					break;
@@ -4625,7 +4625,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "[Inspector]";
 				mes "How do you give encouragement to others, usually?";
 				next;
-				switch(select("Refer to a past failure.:Hesitating is the worst thing.:You are not alone.")) {
+				switch(select("Refer to a past failure.", "Hesitating is the worst thing.", "You are not alone.")) {
 				case 1:
 					.@int += 10;
 					break;
@@ -4640,7 +4640,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "What is an ultimate virtue";
 				mes "in your life?";
 				next;
-				switch(select("Growth of oneself.:World peace.:The pursuit of truth.")) {
+				switch(select("Growth of oneself.", "World peace.", "The pursuit of truth.")) {
 				case 1:
 					.@brave += 10;
 					break;
@@ -4656,7 +4656,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "the most if you were on a ";
 				mes "deserted island?";
 				next;
-				switch(select("Map:Flint:Weapon")) {
+				switch(select("Map", "Flint", "Weapon")) {
 				case 1:
 					.@int += 10;
 					break;
@@ -4670,7 +4670,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "[Inspector]";
 				mes "What type of story do you like the most?";
 				next;
-				switch(select("Love story.:Heroic epic.:Religious tale.")) {
+				switch(select("Love story.", "Heroic epic.", "Religious tale.")) {
 				case 1:
 					.@solid += 10;
 					break;
@@ -4686,7 +4686,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "new monster in a new area.";
 				mes "What do you do?";
 				next;
-				switch(select("Attack first.:Observe from a distance.:Flee away.")) {
+				switch(select("Attack first.", "Observe from a distance.", "Flee away.")) {
 				case 1:
 					.@brave += 10;
 					break;
@@ -4701,7 +4701,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 				mes "What has to be done first when";
 				mes "ruling the Rune Midgarts kingdom?";
 				next;
-				switch(select("Dominate countries by reinforcing militia.:Advancement of economy and technology.:Keep public security firm.")) {
+				switch(select("Dominate countries by reinforcing militia.", "Advancement of economy and technology.", "Keep public security firm.")) {
 				case 1:
 					.@brave += 10;
 					break;
@@ -4876,7 +4876,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "most important thing to consider";
 		mes "as a leader of a hunt party?";
 		next;
-		switch(select("Strength and characteristics of the monster.:Efficiency of the hunt.:What we can get from the hunt.")) {
+		switch(select("Strength and characteristics of the monster.", "Efficiency of the hunt.", "What we can get from the hunt.")) {
 		case 1:
 			.@int += 10;
 			break;
@@ -4891,7 +4891,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "What if we lose a party member";
 		mes "during battle?";
 		next;
-		switch(select("Keep fighting until we can do it.:Find a new place and try differently.:Stop hunting and replenish.")) {
+		switch(select("Keep fighting until we can do it.", "Find a new place and try differently.", "Stop hunting and replenish.")) {
 		case 1:
 			.@brave += 10;
 			break;
@@ -4905,7 +4905,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "[Inspector]";
 		mes "What you get as a result of the hunt...";
 		next;
-		switch(select("Share it as agreed prior.:I don't want to care for sharing.:Give it to the member that needs it.")) {
+		switch(select("Share it as agreed prior.", "I don't want to care for sharing.", "Give it to the member that needs it.")) {
 		case 1:
 			.@int += 10;
 			break;
@@ -4920,7 +4920,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "What type of job class member";
 		mes "has to be cured while the enemy still lives?";
 		next;
-		switch(select("Priest, healer class.:Hunter, damage dealer.:Lord Knight, tanker.")) {
+		switch(select("Priest, healer class.", "Hunter, damage dealer.", "Lord Knight, tanker.")) {
 		case 1:
 			.@int += 10;
 			break;
@@ -4934,7 +4934,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "[Inspector]";
 		mes "Whom do you want to befriend the most?";
 		next;
-		switch(select("A strong person.:An experienced person.:A kind person.")) {
+		switch(select("A strong person.", "An experienced person.", "A kind person.")) {
 		case 1:
 			.@brave += 10;
 			break;
@@ -4949,7 +4949,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "What was your ability that helped";
 		mes "you the most during your training?";
 		next;
-		switch(select("Relationships with people.:Plenty of information gathering.:Discernment and driving force.")) {
+		switch(select("Relationships with people.", "Plenty of information gathering.", "Discernment and driving force.")) {
 		case 1:
 			.@solid += 10;
 			break;
@@ -4963,7 +4963,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "[Inspector]";
 		mes "How do you give encouragement to others, usually?";
 		next;
-		switch(select("Refer to a past failure.:Hesitating is the worst thing.:You are not alone.")) {
+		switch(select("Refer to a past failure.", "Hesitating is the worst thing.", "You are not alone.")) {
 		case 1:
 			.@int += 10;
 			break;
@@ -4978,7 +4978,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "What is an ultimate virtue";
 		mes "in your life?";
 		next;
-		switch(select("Growth of oneself.:World peace.:The pursuit of truth.")) {
+		switch(select("Growth of oneself.", "World peace.", "The pursuit of truth.")) {
 		case 1:
 			.@brave += 10;
 			break;
@@ -4994,7 +4994,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "the most if you were on a ";
 		mes "deserted island?";
 		next;
-		switch(select("Map:Flint:Weapon")) {
+		switch(select("Map", "Flint", "Weapon")) {
 		case 1:
 			.@int += 10;
 			break;
@@ -5008,7 +5008,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "[Inspector]";
 		mes "What type of story do you like the most?";
 		next;
-		switch(select("Love story.:Heroic epic.:Religious tale.")) {
+		switch(select("Love story.", "Heroic epic.", "Religious tale.")) {
 		case 1:
 			.@solid += 10;
 			break;
@@ -5024,7 +5024,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "new monster in a new area.";
 		mes "What do you do?";
 		next;
-		switch(select("Attack first.:Observe from a distance.:Flee away.")) {
+		switch(select("Attack first.", "Observe from a distance.", "Flee away.")) {
 		case 1:
 			.@brave += 10;
 			break;
@@ -5039,7 +5039,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "What has to be done first when";
 		mes "ruling the Rune Midgarts kingdom?";
 		next;
-		switch(select("Dominate countries by reinforcing militia.:Advancement of economy and technology.:Keep public security firm.")) {
+		switch(select("Dominate countries by reinforcing militia.", "Advancement of economy and technology.", "Keep public security firm.")) {
 		case 1:
 			.@brave += 10;
 			break;
@@ -5147,7 +5147,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		mes "I will answer your questions first.";
 		next;
 		while(1) {
-			switch(select("What should I do, exactly?:The King died because of his illness?:Is my mission confidential??:I have no more questions.")) {
+			switch(select("What should I do, exactly?", "The King died because of his illness?", "Is my mission confidential??", "I have no more questions.")) {
 			case 1:
 				mes "[Inspector]";
 				mes "We have seven candidates from seven families. One per each family. The candidates are all in the same place, where I will introduce them to you.";
@@ -5297,7 +5297,7 @@ prt_castle,117,163,5	script	Inspector#prince	4_M_SAGE_C,{
 		if (nkprince_eisen != 10)
 			close;
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			if (questprogress(10005) == 2 && questprogress(10006) == 2 && questprogress(10007) == 2 && questprogress(10008) == 2
 			 && questprogress(10009) == 2 && questprogress(10010) == 2 && questprogress(10011) == 2) {
@@ -5413,7 +5413,7 @@ prt_castle,274,372,4	script	Servant#hans	1_M_02,{
 		mes "[Hans]";
 		mes "What can I do for you?";
 		next;
-		switch(select("Prince Erich told me to meet you.:Nothing much.")) {
+		switch(select("Prince Erich told me to meet you.", "Nothing much.")) {
 		case 1:
 			mes "[Hans]";
 			mes "Did Prince Erich...?";
@@ -5520,7 +5520,7 @@ prt_castle,339,202,3	script	Prince#urgen	4_M_4THPRIN1,{
 		mes "unforgettable, clear and beautiful voice.";
 		next;
 		while(1) {
-			switch(select("I want to know your background.:Let me know your view of the nation.:What are your hobbies or tastes?:Let me leave.")) {
+			switch(select("I want to know your background.", "Let me know your view of the nation.", "What are your hobbies or tastes?", "Let me leave.")) {
 			case 1:
 				mes "[Urugen]";
 				mes "My dashing face from";
@@ -5600,7 +5600,7 @@ prt_castle,289,201,3	script	Prince#helmut	4_M_5THPRIN1,{
 		next;
 		mes "-What subject should I start with?-";
 		next;
-		switch(select("Your background...:Your ambition...:Your view of the nation...:I want to meet others first.")) {
+		switch(select("Your background...", "Your ambition...", "Your view of the nation...", "I want to meet others first.")) {
 		case 1:
 			mes "[Helmut]";
 			mes "I don't know how others react but, I feel very uptight with your question. I shouldn't, but, I don't have a different view!";
@@ -5806,7 +5806,7 @@ prt_castle,391,205,3	script	Prince#poe	4_M_6THPRIN1,{
 			mes "from higher and lower.";
 			mes "Just one.";
 			next;
-			switch(select("Higher:Lower")) {
+			switch(select("Higher", "Lower")) {
 			case 1:
 				mes "[Poe]";
 				mes "Hmm... higher?...";
@@ -5889,7 +5889,7 @@ prt_castle,391,205,3	script	Prince#poe	4_M_6THPRIN1,{
 		mes "So... What do you want to know?!";
 		next;
 		while(1) {
-			switch(select("Your background story...:Your view of the nation...:Hobbies and interests...:I will come by later.")) {
+			switch(select("Your background story...", "Your view of the nation...", "Hobbies and interests...", "I will come by later.")) {
 			case 1:
 				mes "[Poe]";
 				mes "My background...";
@@ -5973,7 +5973,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 		mes "Appraiser.";
 		mes "Have you met the little girl in Aldebaran?";
 		next;
-		switch(select("Yes, I saw her for you.:No, I don't want to.")) {
+		switch(select("Yes, I saw her for you.", "No, I don't want to.")) {
 		case 1:
 			if (questprogress(10014) == 1) {
 				mes "[Peter]";
@@ -6058,7 +6058,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 			mes "Now, where shall we start?";
 			next;
 			while(1) {
-				switch(select("Your background story...:Your view of the nation...:Hobbies and interests...:I will come by later.")) {
+				switch(select("Your background story...", "Your view of the nation...", "Hobbies and interests...", "I will come by later.")) {
 				case 1:
 					mes "[Peter]";
 					mes "My family was not that influential. My childhood was not that abundant; I had to seek jobs and make money from part-time jobs.";
@@ -6108,7 +6108,7 @@ prt_castle,364,375,4	script	Prince#peter	4_M_3RDPRIN1,{
 					mes "Would you take these flowers and give thanks to that girl somewhere in Al de Baran?";
 					completequest 10008;
 					next;
-					switch(select("Okay, no problem.:Please ask it of another.")) {
+					switch(select("Okay, no problem.", "Please ask it of another.")) {
 					case 1:
 						mes "[Peter]";
 						mes "Yeah, thank you very much.";
@@ -6274,7 +6274,7 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 			mes "You come here so often.";
 			mes "I know you are a faithful person, engaged in a very important issue for the kingdom, but you come here more than is necessary...";
 			next;
-			switch(select("I have something...:Is that so? Then, see you later.")) {
+			switch(select("I have something...", "Is that so? Then, see you later.")) {
 			case 1:
 				mes "[" + strcharinfo(0) + "]";
 				mes "I saw a person from the Walter family.";
@@ -6428,7 +6428,7 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 			mes "[Ahrum]";
 			mes "If you react wrongfully to this incident, my death will be worthless...kuk... Do you understand?";
 			next;
-			switch(select("... Okay I will follow your will...:......")) {
+			switch(select("... Okay I will follow your will...", "......")) {
 			case 1:
 				mes "[" + strcharinfo(0) + "]";
 				mes "... Okay, I will follow your will. Don't worry...";
@@ -6499,7 +6499,7 @@ prt_castle,314,373,4	script	Prince#eisen	4_M_1STPRIN1,{
 			mes "[" + strcharinfo(0) + "]";
 			mes "I'd like to ask about...";
 			next;
-			switch(select("Your background story...:Your view of the nation...:Your hobbies or interests...:Never mind, I'll come by later.")) {
+			switch(select("Your background story...", "Your view of the nation...", "Your hobbies or interests...", "Never mind, I'll come by later.")) {
 			case 1:
 				mes "[Ahrum]";
 				mes "You aren't just trying to dissolve your curiosity about the king's family, are you?";
@@ -6735,7 +6735,7 @@ prt_castle,368,312,4	script	Prince#ern	4_M_2NDPRIN1,{
 		while(1) {
 			mes "-Well, what questions.-";
 			next;
-			switch(select("backgroud first.:I want to know your spirit of nationalism.: Your habbit and tastes.:I will be back.")) {
+			switch(select("backgroud first.", "I want to know your spirit of nationalism.", " Your habbit and tastes.", "I will be back.")) {
 			case 1:
 				mes "[Ernst]";
 				mes "Since I was young, I have grown up with a royal education. I haven't quarreled with others seriously, but I was not very polite either.";
@@ -7115,7 +7115,7 @@ prt_castle,314,372,0	script	Prince#another_ern1	4_M_2NDPRIN1,{
 		mes "[Ahrum]";
 		mes "If you react wrongfully to this incident, my death will be worthless...kuk... Do you understand?";
 		next;
-		switch(select("... Okay I will follow your will...:......")) {
+		switch(select("... Okay I will follow your will...", "......")) {
 		case 1:
 			mes "[" + strcharinfo(0) + "]";
 			mes "... Okay, I will follow your will. Don't worry...";

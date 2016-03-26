@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -23,10 +23,10 @@
 
 /* #include "map/map.h" */
 #include "common/hercules.h"
-#include "common/conf.h"
 #include "common/db.h"
 #include "common/mmo.h" // ITEM_NAME_LENGTH
 
+struct config_setting_t;
 struct script_code;
 struct hplugin_data_store;
 
@@ -64,6 +64,8 @@ enum item_itemid {
 	ITEMID_BRANCH_OF_DEAD_TREE   = 604,
 	ITEMID_ANODYNE               = 605,
 	ITEMID_ALOEBERA              = 606,
+	ITEMID_MAGNIFIER             = 611,
+	ITEMID_POISON_BOTTLE         = 678,
 	ITEMID_EMPTY_BOTTLE          = 713,
 	ITEMID_EMPERIUM              = 714,
 	ITEMID_YELLOW_GEMSTONE       = 715,
@@ -95,6 +97,10 @@ enum item_itemid {
 	ITEMID_ANGRA_MANYU           = 1599,
 	ITEMID_STRANGE_EMBRYO        = 6415,
 	ITEMID_FACE_PAINT            = 6120,
+	ITEMID_SCARLET_POINT         = 6360,
+	ITEMID_INDIGO_POINT          = 6361,
+	ITEMID_YELLOW_WISH_POINT     = 6362,
+	ITEMID_LIME_GREEN_POINT      = 6363,
 	ITEMID_STONE                 = 7049,
 	ITEMID_FIRE_BOTTLE           = 7135,
 	ITEMID_ACID_BOTTLE           = 7136,
@@ -131,6 +137,7 @@ enum item_itemid {
 	ITEMID_MAGIC_CASTLE          = 12308,
 	ITEMID_BULGING_HEAD          = 12309,
 	ITEMID_THICK_MANUAL50        = 12312,
+	ITEMID_NOVICE_MAGNIFIER      = 12325,
 	ITEMID_ANCILLA               = 12333,
 	ITEMID_REPAIR_A              = 12392,
 	ITEMID_REPAIR_B              = 12393,
@@ -149,6 +156,9 @@ enum item_itemid {
 	ITEMID_WOB_LOCAL             = 14585,
 	ITEMID_SIEGE_TELEPORT_SCROLL = 14591,
 	ITEMID_JOB_MANUAL50          = 14592,
+	ITEMID_PILEBUNCKER_S         = 16030,
+	ITEMID_PILEBUNCKER_P         = 16031,
+	ITEMID_PILEBUNCKER_T         = 16032,
 };
 
 enum cards_item_list {
@@ -385,6 +395,14 @@ enum ItemNouseRestrictions {
 	INR_ALL     = 0x1 ///< Sum of all the above values
 };
 
+/** Convenience item list (entry) used in various functions */
+struct itemlist_entry {
+	int id;       ///< Item ID or (inventory) index
+	int16 amount; ///< Amount
+};
+/** Convenience item list used in various functions */
+VECTOR_STRUCT_DECL(itemlist, struct itemlist_entry);
+
 struct item_combo {
 	struct script_code *script;
 	unsigned short nameid[MAX_ITEMS_PER_COMBO];/* nameid array */
@@ -468,7 +486,7 @@ struct item_data {
 	int delay;
 //Lupus: I rearranged order of these fields due to compatibility with ITEMINFO script command
 //       some script commands should be revised as well...
-	unsigned int class_base[3]; ///< Specifies if the base can wear this item (split in 3 indexes per type: 1-1, 2-1, 2-2)
+	uint64 class_base[3]; ///< Specifies if the base can wear this item (split in 3 indexes per type: 1-1, 2-1, 2-2)
 	unsigned class_upper : 6;   ///< Specifies if the upper-type can equip it (bitfield, 0x01: normal, 0x02: upper, 0x04: baby normal, 0x08: third normal, 0x10: third upper, 0x20: third baby)
 	struct {
 		unsigned short chance;
@@ -530,13 +548,14 @@ struct item_data {
 #define itemdb_canrefine(n)   (!itemdb->search(n)->flag.no_refine)
 
 #define itemdb_is_rune(n)        (((n) >= ITEMID_NAUTHIZ && (n) <= ITEMID_HAGALAZ) || (n) == ITEMID_LUX_ANIMA)
-#define itemdb_is_element(n)     ((n) >= ITEMID_BOODY_RED && (n) <= ITEMID_YELLOW_LIVE)
+#define itemdb_is_element(n)     ((n) >= ITEMID_SCARLET_POINT && (n) <= ITEMID_LIME_GREEN_POINT)
 #define itemdb_is_spellbook(n)   ((n) >= ITEMID_MAGIC_BOOK_FB && (n) <= ITEMID_MAGIC_BOOK_DL)
 #define itemdb_is_poison(n)      ((n) >= ITEMID_POISON_PARALYSIS && (n) <= ITEMID_POISON_FATIGUE)
 #define itemid_isgemstone(n)     ((n) >= ITEMID_YELLOW_GEMSTONE && (n) <= ITEMID_BLUE_GEMSTONE)
 #define itemdb_iscashfood(n)     ((n) >= ITEMID_STR_DISH10_ && (n) <= ITEMID_VIT_DISH10_)
 #define itemdb_is_GNbomb(n)      ((n) >= ITEMID_APPLE_BOMB && (n) <= ITEMID_VERY_HARD_LUMP)
 #define itemdb_is_GNthrowable(n) ((n) >= ITEMID_MYSTERIOUS_POWDER && (n) <= ITEMID_BLACK_THING_TO_THROW)
+#define itemid_is_pilebunker(n)  ((n) == ITEMID_PILEBUNCKER || (n) == ITEMID_PILEBUNCKER_P || (n) == ITEMID_PILEBUNCKER_S || (n) == ITEMID_PILEBUNCKER_T)
 #define itemdb_is_shadowequip(n) ((n) & (EQP_SHADOW_ARMOR|EQP_SHADOW_WEAPON|EQP_SHADOW_SHIELD|EQP_SHADOW_SHOES|EQP_SHADOW_ACC_R|EQP_SHADOW_ACC_L))
 #define itemdb_is_costumeequip(n) ((n) & (EQP_COSTUME_HEAD_TOP|EQP_COSTUME_HEAD_MID|EQP_COSTUME_HEAD_LOW|EQP_COSTUME_GARMENT))
 
@@ -597,7 +616,8 @@ struct itemdb_interface {
 	int (*searchname_array_sub) (DBKey key, DBData data, va_list ap);
 	int (*searchrandomid) (struct item_group *group);
 	const char* (*typename) (int type);
-	void (*jobid2mapid) (unsigned int *bclass, unsigned int jobmask);
+	void (*jobmask2mapid) (uint64 *bclass, uint64 jobmask);
+	void (*jobid2mapid) (uint64 *bclass, int job_id, bool enable);
 	void (*create_dummy_data) (void);
 	struct item_data* (*create_item_data) (int nameid);
 	int (*isequip) (int nameid);
@@ -617,11 +637,12 @@ struct itemdb_interface {
 	int (*isidentified) (int nameid);
 	int (*isidentified2) (struct item_data *data);
 	int (*combo_split_atoi) (char *str, int *val);
-	void (*read_combos) ();
+	void (*read_combos) (void);
 	int (*gendercheck) (struct item_data *id);
 	int (*validate_entry) (struct item_data *entry, int n, const char *source);
-	void (*readdb_additional_fields) (int itemid, config_setting_t *it, int n, const char *source);
-	int (*readdb_libconfig_sub) (config_setting_t *it, int n, const char *source);
+	void (*readdb_additional_fields) (int itemid, struct config_setting_t *it, int n, const char *source);
+	void (*readdb_job_sub) (struct item_data *id, struct config_setting_t *t);
+	int (*readdb_libconfig_sub) (struct config_setting_t *it, int n, const char *source);
 	int (*readdb_libconfig) (const char *filename);
 	uint64 (*unique_id) (struct map_session_data *sd);
 	void (*read) (bool minimal);
@@ -630,7 +651,7 @@ struct itemdb_interface {
 	void (*clear) (bool total);
 	struct item_combo * (*id2combo) (unsigned short id);
 	bool (*is_item_usable) (struct item_data *item);
-	bool (*lookup_const) (const config_setting_t *it, const char *name, int *value);
+	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
 };
 
 #ifdef HERCULES_CORE

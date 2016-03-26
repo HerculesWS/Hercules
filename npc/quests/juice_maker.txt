@@ -55,7 +55,7 @@ prt_in,49,172,3	script	Marianne#juice	1_M_INNKEEPER,{
 		mes "[Housewife Marianne]";
 		mes "Morrison!! Eat some fruits!! You don't want to become a slobby fat pig when you grow up, do you?";
 		next;
-		if (select("Talk:Cancel") == 1) {
+		if (select("Talk", "Cancel") == 1) {
 			mes "[Housewife Marianne]";
 			mes "Hm? ...You!";
 			mes "You're the one who gave, my little Morrison that Meat?! Did you come here thinking I wouldn't know about it?!";
@@ -85,7 +85,7 @@ prt_in,49,172,3	script	Marianne#juice	1_M_INNKEEPER,{
 	mes "[Housewife Marinaa]";
 	mes "Sigh~!! Like father, like son...";
 	next;
-	switch(select("Talk:Cancel")) {
+	switch(select("Talk", "Cancel")) {
 		mes "[Housewife Marianne]";
 		mes "*Sigh*... This is Morrison...";
 		mes "My one and only son.";
@@ -131,7 +131,7 @@ prt_in,47,173,3	script	Morrison#juice	4W_M_01,{
 	mes "No, don't make me eat it! I can't bear to taste fruits!";
 	next;
 	if (countitem(Meat) > 0) {
-		switch(select("Talk:Show the Meat:Cancel")) {
+		switch(select("Talk", "Show the Meat", "Cancel")) {
 		case 1:
 			mes "[Little Morrison]";
 			mes "Aaaagh!! Once or twice is enough!! I refuse to eat any more fruits! You have to peel them and there's so much juice that it makes you feel icky...";
@@ -147,7 +147,7 @@ prt_in,47,173,3	script	Morrison#juice	4W_M_01,{
 			mes "Excuse me...";
 			mes "C-can I please have one?";
 			next;
-			if (select("Give Meat:Don't Give Meat") == 1) {
+			if (select("Give Meat", "Don't Give Meat") == 1) {
 				delitem Meat,1;
 				++morison_meat;
 				mes "[Little Morrison]";
@@ -171,7 +171,7 @@ prt_in,47,173,3	script	Morrison#juice	4W_M_01,{
 			close;
 		}
 	}
-	if (select("Talk:Cancel") == 1) {
+	if (select("Talk", "Cancel") == 1) {
 		mes "[Little Morrison]";
 		mes "Aaah!! I can't eat any more fruits!";
 		next;
@@ -204,12 +204,12 @@ payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 		mes "Did you come to";
 		mes "process fruits as well?";
 		next;
-		switch(select("Make Juice.:Talk and get information about fruit processing.:Cancel.")) {
+		switch(select("Make Juice.", "Talk and get information about fruit processing.", "Cancel.")) {
 		case 1:
 			mes "[Merchant Marx Hansen]";
 			mes "What kind of fruit juice would you like to make?";
 			next;
-			switch(select("Apple Juice:Banana Juice:Carrot Juice:Grape Juice:Cancel")) {
+			switch(select("Apple Juice", "Banana Juice", "Carrot Juice", "Grape Juice", "Cancel")) {
 			case 1:
 				.@fruit = 512;
 				.@juice = 531;
@@ -245,7 +245,7 @@ payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 			mes "[Merchant Marx Hansen]";
 			mes "How many would you like?";
 			next;
-			switch(select("As many as I can.:I want a certain amount.:Cancel.")) {
+			switch(select("As many as I can.", "I want a certain amount.", "Cancel.")) {
 			case 1:
 				.@make = countitem(.@fruit);
 				if (countitem(Empty_Bottle) < .@make) .@make = countitem(Empty_Bottle);
@@ -337,7 +337,7 @@ payon_in03,188,146,5	script	Marx Hansen#juice	4_M_04,{
 		mes "Welcome.";
 		mes "How may I help you?";
 		next;
-		if (select("Talk:Cancel") == 1) {
+		if (select("Talk", "Cancel") == 1) {
 			mes "[Merchant Marx Hansen]";
 			mes "Before humans were able to develop such vast societies, they gathered fruit from trees to survive. Fruits may have been nature's blessing that allowed us to exist in the world.";
 			next;

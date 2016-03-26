@@ -93,7 +93,7 @@ comodo,171,137,1	script	Haith#um	4_F_03,{
 	emotion e_gg;
 	emotion e_gg,0,"La Ed#um";
 	next;
-	if (select("Pay 1,000 zeny:Refuse to pay") == 1) {
+	if (select("Pay 1,000 zeny", "Refuse to pay") == 1) {
 		if (Zeny > 999) {
 			Zeny -= 1000;
 			mes "[Haith]";
@@ -286,7 +286,7 @@ umbala,70,106,3	script	Utan Kid#um	4_F_UMGIRL,{
 		mes "richier than Utans! I beg you!";
 		emotion e_heh;
 		next;
-		if (select("(Nod head):(Shake head)") == 1) {
+		if (select("(Nod head)", "(Shake head)") == 1) {
 			mes "[Haatan]";
 			mes "Whoaaaa!!";
 			mes "You the man~!";
@@ -347,7 +347,7 @@ umbala,70,106,3	script	Utan Kid#um	4_F_UMGIRL,{
 		mes "Umbahumbah umbabahumbaumhumbah! Umbah!";
 		emotion e_heh;
 		next;
-		if (select("(Nod head):(Shake head)") == 1) {
+		if (select("(Nod head)", "(Shake head)") == 1) {
 			mes "[Haatan]";
 			mes "Umbaumbah!!";
 			mes "Um~bahumbah~ Um~baumbah~";
@@ -389,7 +389,7 @@ umbala,59,243,5	script	Utan Kid#1	4_M_UMKID,{
 		mes "....gimme a Meat.";
 		emotion e_rock;
 		next;
-		if (select("Give him Meat.:Refuse.") == 1) {
+		if (select("Give him Meat.", "Refuse.") == 1) {
 			if (countitem(Meat) > 0) {
 				mes "[Kotan]";
 				mes "Whoa, are you really giving me";
@@ -427,7 +427,7 @@ umbala,59,243,5	script	Utan Kid#1	4_M_UMKID,{
 		mes "......humbah.";
 		emotion e_rock;
 		next;
-		if (select("Umbah:Umbaboo") == 1) {
+		if (select("Umbah", "Umbaboo") == 1) {
 			if (countitem(Meat) > 0) {
 				mes "[???]";
 				mes "Umbaumbaumbabababah.";
@@ -827,7 +827,7 @@ umbala,194,104,4	script	Utan Kid#2	4_M_UMKID,{
 		mes "Huh? You're from Rune-Midgard,";
 		mes "aren't you? Have you ever been bungee jumping?";
 		next;
-		if (select("Yeah:No") == 1) {
+		if (select("Yeah", "No") == 1) {
 			mes "[Boorkatan]";
 			mes "Whoa, what a surprise! I never";
 			mes "would have thought someone from";
@@ -850,7 +850,7 @@ umbala,194,104,4	script	Utan Kid#2	4_M_UMKID,{
 		mes "Umbaumbababah umhumba.";
 		mes "Umbabaumumba umbaumbah?";
 		next;
-		if (select("Yeah:No") == 1) {
+		if (select("Yeah", "No") == 1) {
 			mes "[???]";
 			mes "Umba, Umumbah umbabah.";
 			mes "Umbaumbah umumbabah.";

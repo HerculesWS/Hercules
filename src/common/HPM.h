@@ -157,7 +157,7 @@ struct HPM_interface {
 	void (*share) (void *value, const char *name);
 	void (*config_read) (void);
 	char *(*pid2name) (unsigned int pid);
-	unsigned char (*parse_packets) (int fd, enum HPluginPacketHookingPoints point);
+	unsigned char (*parse_packets) (int fd, int packet_id, enum HPluginPacketHookingPoints point);
 	void (*load_sub) (struct hplugin *plugin);
 	bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
 	/* for custom config parsing */

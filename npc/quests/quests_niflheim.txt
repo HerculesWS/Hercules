@@ -197,7 +197,7 @@ OnTouch:
 		mes "It looks very well-shaped.^000000";
 		next;
 		mes "^3355FFWould you like to pick it up?^000000";
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			if (nif_esc < 10)
 				nif_esc += 2;
 			else if (nif_esc == 10)
@@ -219,7 +219,7 @@ OnTouch:
 		mes "It looks very well-shaped.^000000";
 		next;
 		mes "^3355FFWould you like to pick it up?^000000";
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			nif_esc += 2;
 			getitem Piano_Keyboard,1;
 		}
@@ -323,7 +323,7 @@ prt_in,161,20,3	script	Erious#nif	4_F_03,{
 		mes "leave me this way...";
 		emotion e_sob;
 		next;
-		if (select("Comfort him.:Neglect him.") == 1) {
+		if (select("Comfort him.", "Neglect him.") == 1) {
 			mes "[Erious]";
 			mes "Ah, thank you for your kindness.";
 			mes "*Sob* My wife died while I was on";
@@ -346,7 +346,7 @@ prt_in,161,20,3	script	Erious#nif	4_F_03,{
 			mes "I cannot leave my children here";
 			mes "without me. *Cries*";
 			next;
-			if (select("I can deliver your message to her.:I am so sorry to hear that.") == 1) {
+			if (select("I can deliver your message to her.", "I am so sorry to hear that.") == 1) {
 				mes "[Erious]";
 				mes "Oh, can you?";
 				mes "Thank you so much for your";
@@ -408,7 +408,7 @@ prt_in,161,20,3	script	Erious#nif	4_F_03,{
 		mes "for me... Um...So in the end...";
 		mes "Were you able to meet my Elly?";
 		next;
-		if (select("Yes.:Sorry, I couldn't.") == 1) {
+		if (select("Yes.", "Sorry, I couldn't.") == 1) {
 			if (nif_revive == 6 && countitem(Mementos) > 0) {
 				mes "[Erious]";
 				mes "Are you serious? What did she say?";
@@ -535,7 +535,7 @@ umbala,215,181,3	script	Billik	4_M_JOB_KNIGHT1,{
 		mes "It's a very dangerous place.";
 		mes "Why would you want to go there?";
 		next;
-		if (select("I have to meet somebody there.:It's a part of my adventure.") == 1) {
+		if (select("I have to meet somebody there.", "It's a part of my adventure.") == 1) {
 			mes "[Billik]";
 			mes "Someone you have to meet there...";
 			mes "Hmm... I suppose you wish to";
@@ -586,7 +586,7 @@ umbala,215,181,3	script	Billik	4_M_JOB_KNIGHT1,{
 niflheim,153,215,3	script	Feylin	4_M_NFDEADMAN2,{
 	if (nif_revive == 2) {
 		mes "[Feylin]";
-		mes "Poor "+((Sex)?"guy":"girl")+"...";
+		mes "Poor "+ (Sex == SEX_MALE ? "guy" : "girl") +"...";
 		mes "Dying at such a young age...";
 		mes "I am always sorry to see the";
 		mes "young pass away.";
@@ -627,7 +627,7 @@ niflheim,153,215,3	script	Feylin	4_M_NFDEADMAN2,{
 		mes "you are asking.";
 		emotion e_an;
 		next;
-		if (select("But...:I am sorry.") == 1) {
+		if (select("But...", "I am sorry.") == 1) {
 			mes "[Feylin]";
 			mes "You must know something...";
 			mes "Otherwise, you wouldn't be";
@@ -660,7 +660,7 @@ niflheim,153,215,3	script	Feylin	4_M_NFDEADMAN2,{
 			mes "The price that I demand may be";
 			mes "more that you expect...";
 			next;
-			if (select("I'm willing to do this.:I don't think I can do this.") == 1) {
+			if (select("I'm willing to do this.", "I don't think I can do this.") == 1) {
 				if (BaseLevel > 79) {
 					mes "[Feylin]";
 					mes "Alright, but you must promise";
@@ -676,7 +676,7 @@ niflheim,153,215,3	script	Feylin	4_M_NFDEADMAN2,{
 					mes "10 Yggdrasil Leaf to cast this";
 					mes "spell. Do you wish to continue?";
 					next;
-					if (select("Yes:No") == 1) {
+					if (select("Yes", "No") == 1) {
 						if (countitem(Leaf_Of_Yggdrasil) > 9) {
 							mes "[Feylin]";
 							mes "I see. Then we shall begin.";

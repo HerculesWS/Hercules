@@ -154,8 +154,8 @@ struct pet_interface {
 	int (*food) (struct map_session_data *sd, struct pet_data *pd);
 	int (*ai_sub_hard_lootsearch) (struct block_list *bl, va_list ap);
 	int (*menu) (struct map_session_data *sd, int menunum);
-	int (*change_name) (struct map_session_data *sd, char *name);
-	int (*change_name_ack) (struct map_session_data *sd, char *name, int flag);
+	int (*change_name) (struct map_session_data *sd, const char *name);
+	int (*change_name_ack) (struct map_session_data *sd, const char *name, int flag);
 	int (*equipitem) (struct map_session_data *sd, int index);
 	int (*randomwalk) (struct pet_data *pd, int64 tick);
 	int (*ai_sub_hard) (struct pet_data *pd, struct map_session_data *sd, int64 tick);
@@ -166,7 +166,7 @@ struct pet_interface {
 	int (*skill_bonus_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*recovery_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*skill_support_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*read_db) ();
+	int (*read_db) (void);
 };
 
 #ifdef HERCULES_CORE

@@ -47,7 +47,7 @@ alberta,118,160,3	script	Bullet Dealer Tony#alb::bdt	4_M_04,{
 		mes "the materials, and I'll make";
 		mes "you the bullets you need.";
 		next;
-		switch(select("Poison Sphere:Flare Sphere:Lighting Sphere:Blind Sphere:Freezing Sphere:Cancel")) {
+		switch(select("Poison Sphere", "Flare Sphere", "Lighting Sphere", "Blind Sphere", "Freezing Sphere", "Cancel")) {
 		case 1: callfunc "Bullet_Trade",937,10,13205; break;
 		case 2: callfunc "Bullet_Trade",7097,2,13203; break;
 		case 3: callfunc "Bullet_Trade",7053,3,13204; break;

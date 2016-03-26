@@ -75,7 +75,7 @@ struct quest_db *quest_db(int quest_id) {
  * @param sd Player's data
  * @return 0 in case of success, nonzero otherwise (i.e. the player has no quests)
  */
-int quest_pc_login(TBL_PC *sd)
+int quest_pc_login(struct map_session_data *sd)
 {
 #if PACKETVER < 20141022
 	int i;
@@ -106,7 +106,8 @@ int quest_pc_login(TBL_PC *sd)
  * @param quest_id ID of the quest to add.
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_add(TBL_PC *sd, int quest_id) {
+int quest_add(struct map_session_data *sd, int quest_id)
+{
 	int n;
 	struct quest_db *qi = quest->db(quest_id);
 
@@ -157,7 +158,8 @@ int quest_add(TBL_PC *sd, int quest_id) {
  * @param qid2 New quest to add
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_change(TBL_PC *sd, int qid1, int qid2) {
+int quest_change(struct map_session_data *sd, int qid1, int qid2)
+{
 	int i;
 	struct quest_db *qi = quest->db(qid2);
 
@@ -207,7 +209,8 @@ int quest_change(TBL_PC *sd, int qid1, int qid2) {
  * @param quest_id ID of the quest to remove
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_delete(TBL_PC *sd, int quest_id) {
+int quest_delete(struct map_session_data *sd, int quest_id)
+{
 	int i;
 
 	//Search for quest
@@ -249,15 +252,15 @@ int quest_delete(TBL_PC *sd, int quest_id) {
  *           int Party ID
  *           int Mob ID
  */
-int quest_update_objective_sub(struct block_list *bl, va_list ap) {
-	struct map_session_data *sd;
-	int mob_id, party_id;
+int quest_update_objective_sub(struct block_list *bl, va_list ap)
+{
+	struct map_session_data *sd = NULL;
+	int party_id = va_arg(ap, int);
+	int mob_id = va_arg(ap, int);
 
 	nullpo_ret(bl);
-	nullpo_ret(sd = (struct map_session_data *)bl);
-
-	party_id = va_arg(ap,int);
-	mob_id = va_arg(ap,int);
+	Assert_ret(bl->type == BL_PC);
+	sd = BL_UCAST(BL_PC, bl);
 
 	if( !sd->avail_quests )
 		return 0;
@@ -276,7 +279,7 @@ int quest_update_objective_sub(struct block_list *bl, va_list ap) {
  * @param sd     Character's data
  * @param mob_id Monster ID
  */
-void quest_update_objective(TBL_PC *sd, int mob_id)
+void quest_update_objective(struct map_session_data *sd, int mob_id)
 {
 	int i,j;
 
@@ -313,7 +316,7 @@ void quest_update_objective(TBL_PC *sd, int mob_id)
 			item.nameid = dropitem->nameid;
 			item.identify = itemdb->isidentified2(data);
 			item.amount = 1;
-			if((temp = pc->additem(sd, &item, 1, LOG_TYPE_OTHER)) != 0) { // TODO: We might want a new log type here?
+			if((temp = pc->additem(sd, &item, 1, LOG_TYPE_QUEST)) != 0) { // TODO: We might want a new log type here?
 				// Failed to obtain the item
 				clif->additem(sd, 0, 0, temp);
 			}
@@ -331,7 +334,8 @@ void quest_update_objective(TBL_PC *sd, int mob_id)
  * @param qs       New quest state
  * @return 0 in case of success, nonzero otherwise
  */
-int quest_update_status(TBL_PC *sd, int quest_id, enum quest_state qs) {
+int quest_update_status(struct map_session_data *sd, int quest_id, enum quest_state qs)
+{
 	int i;
 
 	ARR_FIND(0, sd->avail_quests, i, sd->quest_log[i].quest_id == quest_id);
@@ -380,7 +384,7 @@ int quest_update_status(TBL_PC *sd, int quest_id, enum quest_state qs) {
  *                    1 if the quest's timeout has expired
  *                    0 otherwise
  */
-int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type)
+int quest_check(struct map_session_data *sd, int quest_id, enum quest_check_type type)
 {
 	int i;
 
@@ -405,7 +409,7 @@ int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type)
 			}
 			return 0;
 		default:
-			ShowError("quest_check_quest: Unknown parameter %d",type);
+			ShowError("quest_check_quest: Unknown parameter %u", type);
 			break;
 	}
 
@@ -421,10 +425,10 @@ int quest_check(TBL_PC *sd, int quest_id, enum quest_check_type type)
  * @return The parsed quest entry.
  * @retval NULL in case of errors.
  */
-struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *source)
+struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, const char *source)
 {
 	struct quest_db *entry = NULL;
-	config_setting_t *t = NULL;
+	struct config_setting_t *t = NULL;
 	int i32 = 0, quest_id;
 	const char *str = NULL;
 	/*
@@ -473,7 +477,7 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
 		for (i = 0; i < len && entry->objectives_count < MAX_QUEST_OBJECTIVES; i++) {
 			// Note: We ensure that objectives_count < MAX_QUEST_OBJECTIVES because
 			//       quest_log (as well as the client) expect this maximum size.
-			config_setting_t *tt = libconfig->setting_get_elem(t, i);
+			struct config_setting_t *tt = libconfig->setting_get_elem(t, i);
 			int mob_id = 0, count = 0;
 			if (!tt)
 				break;
@@ -492,7 +496,7 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
 	if ((t=libconfig->setting_get_member(cs, "Drops")) && config_setting_is_list(t)) {
 		int i, len = libconfig->setting_length(t);
 		for (i = 0; i < len; i++) {
-			config_setting_t *tt = libconfig->setting_get_elem(t, i);
+			struct config_setting_t *tt = libconfig->setting_get_elem(t, i);
 			int mob_id = 0, nameid = 0, rate = 0;
 			if (!tt)
 				break;
@@ -523,13 +527,16 @@ struct quest_db *quest_read_db_sub(config_setting_t *cs, int n, const char *sour
 int quest_read_db(void)
 {
 	char filepath[256];
-	config_t quest_db_conf;
-	config_setting_t *qdb = NULL, *q = NULL;
+	struct config_t quest_db_conf;
+	struct config_setting_t *qdb = NULL, *q = NULL;
 	int i = 0, count = 0;
 	const char *filename = "quest_db.conf";
 
 	sprintf(filepath, "%s/%s", map->db_path, filename);
-	if (libconfig->read_file(&quest_db_conf, filepath) || !(qdb = libconfig->setting_get_member(quest_db_conf.root, "quest_db"))) {
+	if (!libconfig->load_file(&quest_db_conf, filepath))
+		return -1;
+
+	if ((qdb = libconfig->setting_get_member(quest_db_conf.root, "quest_db")) == NULL) {
 		ShowError("can't read %s\n", filepath);
 		return -1;
 	}

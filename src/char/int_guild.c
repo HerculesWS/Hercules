@@ -767,7 +767,7 @@ void inter_guild_sql_final(void)
 }
 
 // Get guild_id by its name. Returns 0 if not found, -1 on error.
-int inter_guild_search_guildname(char *str)
+int inter_guild_search_guildname(const char *str)
 {
 	int guild_id;
 	char esc_name[NAME_LENGTH*2+1];
@@ -1006,7 +1006,7 @@ int mapif_guild_broken(int guild_id, int flag)
 }
 
 // Send guild message
-int mapif_guild_message(int guild_id, int account_id, char *mes, int len, int sfd)
+int mapif_guild_message(int guild_id, int account_id, const char *mes, int len, int sfd)
 {
 	unsigned char buf[512];
 	nullpo_ret(mes);
@@ -1139,7 +1139,7 @@ int mapif_guild_master_changed(struct guild *g, int aid, int cid)
 	return 0;
 }
 
-int mapif_guild_castle_dataload(int fd, int sz, int *castle_ids)
+int mapif_guild_castle_dataload(int fd, int sz, const int *castle_ids)
 {
 	struct guild_castle *gc = NULL;
 	int num = (sz - 4) / sizeof(int);
@@ -1163,7 +1163,7 @@ int mapif_guild_castle_dataload(int fd, int sz, int *castle_ids)
 
 
 // Guild creation request
-int mapif_parse_CreateGuild(int fd,int account_id,char *name,struct guild_member *master)
+int mapif_parse_CreateGuild(int fd, int account_id, const char *name, const struct guild_member *master)
 {
 	struct guild *g;
 	int i=0;
@@ -1201,7 +1201,7 @@ int mapif_parse_CreateGuild(int fd,int account_id,char *name,struct guild_member
 	g->member[0].modified = GS_MEMBER_MODIFIED;
 
 	// Set default positions
-	g->position[0].mode = GPERM_BOTH;
+	g->position[0].mode = GPERM_ALL;
 	strcpy(g->position[0].name,"GuildMaster");
 	strcpy(g->position[MAX_GUILDPOSITION-1].name,"Newbie");
 	g->position[0].modified = g->position[MAX_GUILDPOSITION-1].modified = GS_POSITION_MODIFIED;
@@ -1259,7 +1259,7 @@ int mapif_parse_GuildInfo(int fd, int guild_id)
 }
 
 // Add member to guild
-int mapif_parse_GuildAddMember(int fd, int guild_id, struct guild_member *m)
+int mapif_parse_GuildAddMember(int fd, int guild_id, const struct guild_member *m)
 {
 	struct guild * g;
 	int i;
@@ -1455,7 +1455,7 @@ int mapif_parse_BreakGuild(int fd, int guild_id)
 }
 
 // Forward Guild message to others map servers
-int mapif_parse_GuildMessage(int fd, int guild_id, int account_id, char *mes, int len)
+int mapif_parse_GuildMessage(int fd, int guild_id, int account_id, const char *mes, int len)
 {
 	return mapif->guild_message(guild_id,account_id,mes,len, fd);
 }
@@ -1548,7 +1548,7 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 	{
 		case GMI_POSITION:
 		  {
-			g->member[i].position=*((short *)data);
+			g->member[i].position=*((const short *)data);
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER;
@@ -1557,7 +1557,7 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 		case GMI_EXP:
 		{
 			uint64 old_exp = g->member[i].exp;
-			g->member[i].exp=*((uint64 *)data);
+			g->member[i].exp=*((const uint64 *)data);
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			if (g->member[i].exp > old_exp) {
 				uint64 exp = g->member[i].exp - old_exp;
@@ -1582,7 +1582,7 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 		}
 		case GMI_HAIR:
 		{
-			g->member[i].hair=*((short *)data);
+			g->member[i].hair=*((const short *)data);
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER; //Save new data.
@@ -1590,7 +1590,7 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 		}
 		case GMI_HAIR_COLOR:
 		{
-			g->member[i].hair_color=*((short *)data);
+			g->member[i].hair_color=*((const short *)data);
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER; //Save new data.
@@ -1598,7 +1598,7 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 		}
 		case GMI_GENDER:
 		{
-			g->member[i].gender=*((short *)data);
+			g->member[i].gender=*((const short *)data);
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER; //Save new data.
@@ -1606,7 +1606,7 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 		}
 		case GMI_CLASS:
 		{
-			g->member[i].class_=*((short *)data);
+			g->member[i].class_=*((const short *)data);
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER; //Save new data.
@@ -1614,7 +1614,7 @@ int mapif_parse_GuildMemberInfoChange(int fd, int guild_id, int account_id, int 
 		}
 		case GMI_LEVEL:
 		{
-			g->member[i].lv=*((short *)data);
+			g->member[i].lv=*((const short *)data);
 			g->member[i].modified = GS_MEMBER_MODIFIED;
 			mapif->guild_memberinfochanged(guild_id,account_id,char_id,type,data,len);
 			g->save_flag |= GS_MEMBER; //Save new data.
@@ -1670,7 +1670,7 @@ int inter_guild_charname_changed(int guild_id, int account_id, int char_id, char
 }
 
 // Change a position desc
-int mapif_parse_GuildPosition(int fd, int guild_id, int idx, struct guild_position *p)
+int mapif_parse_GuildPosition(int fd, int guild_id, int idx, const struct guild_position *p)
 {
 	// Could make some improvement in speed, because only change guild_position
 	struct guild * g;
@@ -1809,7 +1809,7 @@ int mapif_parse_GuildEmblem(int fd, int len, int guild_id, int dummy, const char
 	return mapif->guild_emblem(g);
 }
 
-int mapif_parse_GuildCastleDataLoad(int fd, int len, int *castle_ids)
+int mapif_parse_GuildCastleDataLoad(int fd, int len, const int *castle_ids)
 {
 	return mapif->guild_castle_dataload(fd, len, castle_ids);
 }
@@ -1902,22 +1902,22 @@ int inter_guild_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd,0)) {
-	case 0x3030: mapif->parse_CreateGuild(fd,RFIFOL(fd,4),(char*)RFIFOP(fd,8),(struct guild_member *)RFIFOP(fd,32)); break;
+	case 0x3030: mapif->parse_CreateGuild(fd, RFIFOL(fd,4), RFIFOP(fd,8), RFIFOP(fd,32)); break;
 	case 0x3031: mapif->parse_GuildInfo(fd,RFIFOL(fd,2)); break;
-	case 0x3032: mapif->parse_GuildAddMember(fd,RFIFOL(fd,4),(struct guild_member *)RFIFOP(fd,8)); break;
-	case 0x3033: mapif->parse_GuildMasterChange(fd,RFIFOL(fd,4),(const char*)RFIFOP(fd,8),RFIFOW(fd,2)-8); break;
-	case 0x3034: mapif->parse_GuildLeave(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),(const char*)RFIFOP(fd,15)); break;
+	case 0x3032: mapif->parse_GuildAddMember(fd, RFIFOL(fd,4), RFIFOP(fd,8)); break;
+	case 0x3033: mapif->parse_GuildMasterChange(fd, RFIFOL(fd,4), RFIFOP(fd,8), RFIFOW(fd,2)-8); break;
+	case 0x3034: mapif->parse_GuildLeave(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOB(fd,14), RFIFOP(fd,15)); break;
 	case 0x3035: mapif->parse_GuildChangeMemberInfoShort(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),RFIFOW(fd,15),RFIFOW(fd,17)); break;
 	case 0x3036: mapif->parse_BreakGuild(fd,RFIFOL(fd,2)); break;
-	case 0x3037: mapif->parse_GuildMessage(fd,RFIFOL(fd,4),RFIFOL(fd,8),(char*)RFIFOP(fd,12),RFIFOW(fd,2)-12); break;
-	case 0x3039: mapif->parse_GuildBasicInfoChange(fd,RFIFOL(fd,4),RFIFOW(fd,8),(const int16 *)RFIFOP(fd,10),RFIFOW(fd,2)-10); break;
-	case 0x303A: mapif->parse_GuildMemberInfoChange(fd,RFIFOL(fd,4),RFIFOL(fd,8),RFIFOL(fd,12),RFIFOW(fd,16),(const char*)RFIFOP(fd,18),RFIFOW(fd,2)-18); break;
-	case 0x303B: mapif->parse_GuildPosition(fd,RFIFOL(fd,4),RFIFOL(fd,8),(struct guild_position *)RFIFOP(fd,12)); break;
+	case 0x3037: mapif->parse_GuildMessage(fd, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12), RFIFOW(fd,2)-12); break;
+	case 0x3039: mapif->parse_GuildBasicInfoChange(fd, RFIFOL(fd,4), RFIFOW(fd,8), RFIFOP(fd,10), RFIFOW(fd,2)-10); break;
+	case 0x303A: mapif->parse_GuildMemberInfoChange(fd, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOL(fd,12), RFIFOW(fd,16), RFIFOP(fd,18), RFIFOW(fd,2)-18); break;
+	case 0x303B: mapif->parse_GuildPosition(fd, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12)); break;
 	case 0x303C: mapif->parse_GuildSkillUp(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOL(fd,14)); break;
 	case 0x303D: mapif->parse_GuildAlliance(fd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOL(fd,14),RFIFOB(fd,18)); break;
-	case 0x303E: mapif->parse_GuildNotice(fd,RFIFOL(fd,2),(const char*)RFIFOP(fd,6),(const char*)RFIFOP(fd,66)); break;
-	case 0x303F: mapif->parse_GuildEmblem(fd,RFIFOW(fd,2)-12,RFIFOL(fd,4),RFIFOL(fd,8),(const char*)RFIFOP(fd,12)); break;
-	case 0x3040: mapif->parse_GuildCastleDataLoad(fd,RFIFOW(fd,2),(int *)RFIFOP(fd,4)); break;
+	case 0x303E: mapif->parse_GuildNotice(fd, RFIFOL(fd,2), RFIFOP(fd,6), RFIFOP(fd,66)); break;
+	case 0x303F: mapif->parse_GuildEmblem(fd, RFIFOW(fd,2)-12, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12)); break;
+	case 0x3040: mapif->parse_GuildCastleDataLoad(fd, RFIFOW(fd,2), RFIFOP(fd,4)); break;
 	case 0x3041: mapif->parse_GuildCastleDataSave(fd,RFIFOW(fd,2),RFIFOB(fd,4),RFIFOL(fd,5)); break;
 
 	default:

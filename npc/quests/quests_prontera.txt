@@ -61,7 +61,7 @@ prt_in,88,105,2	script	Recruiter	8W_SOLDIER,{
 		mes "[Recruiter]";
 		mes "Of course you're a volunteer for campaign to reclaim the Prontera Culvert. Would you let me warp you there?";
 		next;
-		if (select("Warp to Culvert Entrance.:Quit.") == 1) {
+		if (select("Warp to Culvert Entrance.", "Quit.") == 1) {
 			warp "prt_fild05",274,208;
 			end;
 		}
@@ -70,7 +70,7 @@ prt_in,88,105,2	script	Recruiter	8W_SOLDIER,{
 	mes "[Recruiter]";
 	mes "Ah, let me inform you that the Capital Defense Headquarter of the Rune-Midgarts Kingdom has now decided to recruit a punitive force due to the Prontera Culvert's situation.";
 	next;
-	switch(select("Volunteer.:Situation...?:Quit.")) {
+	switch(select("Volunteer.", "Situation...?", "Quit.")) {
 	case 1:
 		callsub S_Volunteer;
 		mes "[Recruiter]";
@@ -104,7 +104,7 @@ prt_in,88,105,2	script	Recruiter	8W_SOLDIER,{
 		mes "[Recruiter]";
 		mes "Warriors! Rune-Midgarts is calling you! Cleanse this land's pestilence and cast out the vermin in the Culvert! Only you... Can make a difference.";
 		next;
-		if (select("Volunteer.:Quit.") == 1) {
+		if (select("Volunteer.", "Quit.") == 1) {
 			callsub S_Volunteer;
 			mes "[Recruiter]";
 			mes "Adventurer...";
@@ -149,7 +149,7 @@ prt_fild05,270,212,5	script	Culvert Guardian	8W_SOLDIER,{
 		mes "Do you wish to";
 		mes "go inside?";
 		next;
-		if (select("Sure.:Quit.") == 1) {
+		if (select("Sure.", "Quit.") == 1) {
 			warp "prt_sewb1",131,247;
 			end;
 		}
@@ -170,7 +170,7 @@ prt_in,38,108,4	script	Teacher	1_M_INNKEEPER,{
 		mes "Oh...";
 		mes "Those Flowers in your hand are...";
 		next;
-		switch(select("Show Flowers:Present Flowers:Cancel")) {
+		switch(select("Show Flowers", "Present Flowers", "Cancel")) {
 		case 1:
 			mes "[Teacher]";
 			mes "Ah...";
@@ -207,7 +207,7 @@ prt_in,38,108,4	script	Teacher	1_M_INNKEEPER,{
 		mes "Don't you think...";
 		mes "Flowers are pretty?";
 		next;
-		switch(select("Talk:Quit")) {
+		switch(select("Talk", "Quit")) {
 		case 1:
 			mes "[Teacher]";
 			mes "When I was young,";
@@ -267,7 +267,7 @@ prontera,248,212,3	script	Busy Boy#prt	4_M_KID1,3,3,{
 			mes "books, but... I... Oh man,";
 			mes "I can't get scared now!";
 			next;
-			if (select("Speak with him:Ignore him") == 1) {
+			if (select("Speak with him", "Ignore him") == 1) {
 				mes "["+strcharinfo(0)+"]";
 				mes "Say, what seems";
 				mes "to be the problem?";
@@ -276,7 +276,7 @@ prontera,248,212,3	script	Busy Boy#prt	4_M_KID1,3,3,{
 				mes ".........?";
 				next;
 				mes "[Busy-Looking Boy]";
-				if (Sex) {
+				if (Sex == SEX_MALE) {
 					mes "Ack! You're that clumsy";
 					mes "dude who made me drop";
 				}
@@ -302,7 +302,7 @@ prontera,248,212,3	script	Busy Boy#prt	4_M_KID1,3,3,{
 			next;
 			select("Well, I, um...");
 			mes "[Busy-Looking Boy]";
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				mes "Yeah... A real";
 				mes "man wouldn't have";
 				mes "ditched back then";
@@ -471,7 +471,7 @@ OnTouch:
 			mes "himself off and began to";
 			mes "carefully pile the books.^000000";
 			next;
-			if (select("Leave:Help him pile the books") == 1) {
+			if (select("Leave", "Help him pile the books") == 1) {
 				mes "[Busy-Looking Boy]";
 				mes "Next time, look";
 				mes "where you're going,";
@@ -544,7 +544,7 @@ OnTouch:
 	end;
 
 S_GetBooks:
-	if (select("Help him:Don't help him") == 1) {
+	if (select("Help him", "Don't help him") == 1) {
 		mes "[Busy-Looking Boy]";
 		mes "Oh, thank you so much!";
 		mes "You don't understand how";
@@ -869,7 +869,7 @@ yuno,311,195,3	script	Historian#prt01	4_M_SAGE_A,{
 		mes "You should be able to find";
 		mes "her there doing research.";
 		next;
-		if (select("I will:Can I listen to that song again?") == 1) {
+		if (select("I will", "Can I listen to that song again?") == 1) {
 			mes "[Historian]";
 			mes "Once again, thank";
 			mes "you for your help.";
@@ -978,7 +978,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 		mes "though I'm not expecting";
 		mes "much if Karlomoff wrote it.";
 		next;
-		if (select("Ask her about her research:End conversation") == 1) {
+		if (select("Ask her about her research", "End conversation") == 1) {
 			mes "[Historian Rodafrian]";
 			mes "Oh, you know about the";
 			mes "Rekenber Historical Research";
@@ -1029,7 +1029,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 			mes "line! Actually, have you";
 			mes "heard this song before?";
 			next;
-			switch(select("Yes, I have.:Yes, but it is different.:No, sorry.")) {
+			switch(select("Yes, I have.", "Yes, but it is different.", "No, sorry.")) {
 			case 1:
 				mes "[Historian Rodafrian]";
 				mes "Oh, that's great!";
@@ -1199,7 +1199,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 		mes "not to tell anybody, though.";
 		mes "Should I take this risk?)^000000";
 		next;
-		if (select("Tell her about Jormungand's curse:Don't tell her") == 1) {
+		if (select("Tell her about Jormungand's curse", "Don't tell her") == 1) {
 			mes "^3355FFYou explain everything";
 			mes "that you have learned to";
 			mes "Rodafrian, choosing not";
@@ -1630,7 +1630,7 @@ mjolnir_01,313,269,5	script	Dazed Boy#prt	4_M_KID1,{
 		mes "down and began petting a";
 		mes "dog sitting next to him.^000000";
 		next;
-		if (select("What did you just sing?:Ignore them") == 1) {
+		if (select("What did you just sing?", "Ignore them") == 1) {
 			mes "[Absent-Minded Boy]";
 			mes "...";
 			mes "......";
@@ -1667,7 +1667,7 @@ mjolnir_01,313,269,5	script	Dazed Boy#prt	4_M_KID1,{
 			mes "more about that song? Try";
 			mes "not to worry about it: it's just an old children's tune.";
 			next;
-			if (select("Why are you here?:May I hear the song again?") == 1) {
+			if (select("Why are you here?", "May I hear the song again?") == 1) {
 				mes "[Exhausted-Looking Woman]";
 				mes ".................";
 				next;
@@ -1787,7 +1787,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 		mes "down and began petting a";
 		mes "dog sitting next to him.^000000";
 		next;
-		if (select("What did you just sing?:Ignore them") == 1) {
+		if (select("What did you just sing?", "Ignore them") == 1) {
 			mes "[Absent-Minded Boy]";
 			mes "...";
 			mes "......";
@@ -1824,7 +1824,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 			mes "more about that song? Try";
 			mes "not to worry about it: it's just an old children's tune.";
 			next;
-			if (select("Why are you here?:May I hear the song again?") == 1) {
+			if (select("Why are you here?", "May I hear the song again?") == 1) {
 				mes "[Exhausted-Looking Woman]";
 				mes ".................";
 				next;
@@ -2257,7 +2257,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "sent this adventurer here";
 		mes "for a favor, it probably means";
 		mes "she trusts this person. Besides, we need somebody to carry out";
-		if (Sex)
+		if (Sex == SEX_MALE)
 			mes "this task for us. Why not him?";
 		else
 			mes "this task for us. Why not her?";
@@ -2867,7 +2867,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 					mes "work for us. Whether you";
 					mes "can help is your choice.";
 					next;
-					if (select("Let me think about it.:Of course, I'll help.") == 1) {
+					if (select("Let me think about it.", "Of course, I'll help.") == 1) {
 						mes "[Father Bamph]";
 						mes "I hope that you decide";
 						mes "to help us. The safety of";
@@ -3051,7 +3051,7 @@ prt_church,23,89,3	script	Father Biscuss#tomb	1_M_PASTOR,{
 	mes "Are you ready to";
 	mes "head back upstairs?";
 	next;
-	if (select("Yes:No") == 1) {
+	if (select("Yes", "No") == 1) {
 		mes "[Father Biscuss]";
 		mes "Please follow me.";
 		next;
@@ -3270,7 +3270,7 @@ prt_church,24,111,5	script	#prince3	4_M_LIEMAN,{
 		mes "possibly be used to kill them?";
 		next;
 		while(1) {
-			if (select("A weapon!:Poison!") == 1) {
+			if (select("A weapon!", "Poison!") == 1) {
 				mes "[Father Bamph]";
 				mes "Hmm... But none of the";
 				mes "bodies had any wounds";
@@ -3373,7 +3373,7 @@ moc_fild16,201,295,5	script	Assassin Guildsman#poiso	4_M_ACROSS,{
 		mes "What business";
 		mes "brings you here?";
 		next;
-		if (select("Poison:Nothing") == 1) {
+		if (select("Poison", "Nothing") == 1) {
 			mes "["+strcharinfo(0)+"]";
 			mes "I need to talk to";
 			mes "a poison specialist.";
@@ -3578,7 +3578,7 @@ OnTouch:
 		mes "her the lyrics of that song, but Father Bamph is also waiting";
 		mes "for the info I've learned from the Assassin Guild. What should I do?";
 		next;
-		if (select("Go to Rodafrian:Go to Father Bamph") == 1) {
+		if (select("Go to Rodafrian", "Go to Father Bamph") == 1) {
 			mes "["+strcharinfo(0)+"]";
 			mes "Well, it's easier for me";
 			mes "to visit Rodafrian now.";
@@ -3620,7 +3620,7 @@ prt_in,162,99,4	script	Librarian#curse	1_F_02,{
 			mes "We don't have enough staff";
 			mes "to organize all these books...";
 			next;
-			if (select("Report the loss of the books:End Conversation") == 1) {
+			if (select("Report the loss of the books", "End Conversation") == 1) {
 				mes "[Librarian]";
 				mes "Oh, you lost some books?";
 				mes "Please write down the book";

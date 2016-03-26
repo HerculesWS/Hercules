@@ -40,7 +40,7 @@ prt_are_in,103,11,3	script	Arena Point Manager	4_M_JOB_HUNTER,{
 	mes "Al De Baran's Turbo Track, I can,";
 	mes "convert them into Arena Points.";
 	next;
-	switch(select("Point Check:Convert Points:^660000Conversion Info^000000")) {
+	switch(select("Point Check", "Convert Points", "^660000Conversion Info^000000")) {
 	case 1:
 		mes "[Arena Point Manager]";
 		mes "" + strcharinfo(0) + ",";
@@ -62,7 +62,7 @@ prt_are_in,103,11,3	script	Arena Point Manager	4_M_JOB_HUNTER,{
 		mes "when you convert more than 10";
 		mes "Track Points at one time, you can only convert in ^4D4DFFmultiples of 10^000000.";
 		next;
-		switch(select("2 TP -> 1 AP:4 TP -> 2 AP:6 TP -> 3 AP:8 TP -> 4 AP:10 TP and more:Cancel")) {
+		switch(select("2 TP -> 1 AP", "4 TP -> 2 AP", "6 TP -> 3 AP", "8 TP -> 4 AP", "10 TP and more", "Cancel")) {
 		case 1:
 			callsub S_ExchangePoints,28999,2,1;
 		case 2:

@@ -97,7 +97,7 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 		mes "What brings you";
 		mes "to this place?";
 		next;
-		if (select("I want to prepare for the Holy War!:Nothing in particular.") == 1) {
+		if (select("I want to prepare for the Holy War!", "Nothing in particular.") == 1) {
 			mes "[Michael Halig]";
 			mes "You wish to become";
 			mes "a Crusader...?";
@@ -121,7 +121,7 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 			mes "I don't know what type of person you are right now though. But";
 			mes "I shall test you if you desire. Are you willing to endure these tests in preparation for the Holy War?";
 			next;
-			if (select("Yes, I do.:I'd like to think about it.") == 1) {
+			if (select("Yes, I do.", "I'd like to think about it.") == 1) {
 				if(JobLevel < 40) {
 					mes "[Michael Halig]";
 					mes "Wait...";
@@ -214,8 +214,10 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 			close;
 		}
 		mes "[Michael Halig]";
-		if (Sex) mes "If you, too, are a man of the sword, constantly train and prepare yourself. No one knows when the Holy War may begin.";
-		else mes "As a woman of the sword, you must train diligently and constantly. Prepare yourself, for no one knows when the Holy War may be coming.";
+		if (Sex == SEX_MALE)
+			mes "If you, too, are a man of the sword, constantly train and prepare yourself. No one knows when the Holy War may begin.";
+		else
+			mes "As a woman of the sword, you must train diligently and constantly. Prepare yourself, for no one knows when the Holy War may be coming.";
 		close;
 	}
 	else if(CRUS_Q >= 1 && CRUS_Q <= 3) {
@@ -302,8 +304,10 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 		mes "[Michael Halig]";
 		mes "Now you are";
 		mes "one of us!";
-		if (Sex) mes "...Brother.";
-		else mes "...Comrade.";
+		if (Sex == SEX_MALE)
+			mes "...Brother.";
+		else
+			mes "...Comrade.";
 		next;
 		if(.@Joblevel != 50) getitem 504, 6;
 		else getitem 504, 12;
@@ -353,10 +357,12 @@ prt_castle,164,32,1	script	Man in Anguish	4_M_JOB_KNIGHT1,{
 	else if(CRUS_Q == 4) {
 		mes "What is it...?";
 		mes "Do you have business";
-		if (Sex) mes "with me, man of the sword?";
-		else mes "with me, woman of the sword?";
+		if (Sex == SEX_MALE)
+			mes "with me, man of the sword?";
+		else
+			mes "with me, woman of the sword?";
 		next;
-		if (select("I'd like to take the Crusader test.:Nothing.") == 1) {
+		if (select("I'd like to take the Crusader test.", "Nothing.") == 1) {
 			mes "[Murnak Mijoul]";
 			mes "You wish to become a Crusader...? Hm, fighting in the Holy War is an admirable goal we may both share.";
 			next;
@@ -402,7 +408,7 @@ prt_castle,164,32,1	script	Man in Anguish	4_M_JOB_KNIGHT1,{
 		mes "What is it...?";
 		mes "You're the Swordman from before. What happened, did you fail?";
 		next;
-		if (select("Let me retake the test.:What kind of test was that?!") == 1) {
+		if (select("Let me retake the test.", "What kind of test was that?!") == 1) {
 			mes "[Murnak Mijoul]";
 			mes "I'll let you retake the test as much as you like. But if you continuously fail, there's an inherent problem with your";
 			mes "state of mind.";
@@ -538,185 +544,185 @@ prt_church,95,127,3	script	Crusader	4_F_CRU,{
 			mes "[Gabriel Valentine]";
 			mes "1. Which attribute is the most effective in atttacking the Undead?";
 			next;
-			if (select("Neutral:Earth:Undead:Holy") == 4)
+			if (select("Neutral", "Earth", "Undead", "Holy") == 4)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "2. If the monster is a Level 2 Undead, how much more damage does a Holy attack do compared to Fire?";
 			next;
-			if (select("25 %:50 %:75 %:100 %") == 1)
+			if (select("25 %", "50 %", "75 %", "100 %") == 1)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "3. What item can you not get from an Evil Druid?";
 			next;
-			if (select("Monk Hat:Yggdrasil leaf:White Herb:Amulet ") == 1)
+			if (select("Monk Hat", "Yggdrasil leaf", "White Herb", "Amulet ") == 1)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "4. Which Undead monster";
 			mes "has the highest HP?";
 			next;
-			if (select("Ghoul:Skeleton Prisoner:Wraith:Zombie Prisoner") == 4)
+			if (select("Ghoul", "Skeleton Prisoner", "Wraith", "Zombie Prisoner") == 4)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "5. Which of the following monsters is a different size than the others?";
 			next;
-			if (select("Wraith:Khalitzburg:Drake:Evil Druid") == 3)
+			if (select("Wraith", "Khalitzburg", "Drake", "Evil Druid") == 3)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "6. Which card grants you tolerance to Undead property attacks?";
 			next;
-			if (select("Orc Skeleton Card:Orc Zombie Card:Ghoul Card:Skel Worker Card") == 2)
+			if (select("Orc Skeleton Card", "Orc Zombie Card", "Ghoul Card", "Skel Worker Card") == 2)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "7. What was the relationship between Munak and Bongun before they passed away?";
 			next;
-			if (select("Big Brother and Little Sister:Childhood friends in the same village:Stepbrother and sister:Complete strangers") == 2)
+			if (select("Big Brother and Little Sister", "Childhood friends in the same village", "Stepbrother and sister", "Complete strangers") == 2)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "8. Which of the following monsters is not aggressive?";
 			next;
-			if (select("Soldier Skeleton:Orc Skeleton:Skeleton:Skel Worker") == 3)
+			if (select("Soldier Skeleton", "Orc Skeleton", "Skeleton", "Skel Worker") == 3)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "9. What is the name of the shield in which a Munak Card has been inserted?";
 			next;
-			if (select("Atomic Shield:Amulet Shield:Hypnotic Shield:Homeroth Shield") == 2)
+			if (select("Atomic Shield", "Amulet Shield", "Hypnotic Shield", "Homeroth Shield") == 2)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "10. Which of the following monsters does not drop Memento?";
 			next;
-			if (select("Munak:Ghoul:Mummy:Soldier Skeleton") == 1)
+			if (select("Munak", "Ghoul", "Mummy", "Soldier Skeleton") == 1)
 				.@cru_t += 10;
 		}
 		else if (.@cru_m == 2) {
 			mes "[Gabriel Valentine]";
 			mes "1. Which of the following monsters is a different attribute than the others?";
 			next;
-			if (select("Carat:Wind Ghost:Isis:Wanderer") == 3)
+			if (select("Carat", "Wind Ghost", "Isis", "Wanderer") == 3)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "2. Which sword is effective in attacking Demon monsters?";
 			next;
-			if (select("Decussate Tsurugi:Hollowed Tsurugi:Damned Tsurugi:Drowsy Tsurugi") == 1)
+			if (select("Decussate Tsurugi", "Hollowed Tsurugi", "Damned Tsurugi", "Drowsy Tsurugi") == 1)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "3. Which item is NOT dropped by Dokebi?";
 			next;
-			if (select("Rough Elunium:Golden Hammer:Sword Mace:Mighty Staff") == 2)
+			if (select("Rough Elunium", "Golden Hammer", "Sword Mace", "Mighty Staff") == 2)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "4. Which Demon monster has the most HP?";
 			next;
-			if (select("Giearth:Magnolia:Dokebi:Marionette") == 4)
+			if (select("Giearth", "Magnolia", "Dokebi", "Marionette") == 4)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "5. Which Demon monster is a different size than the others?";
 			next;
-			if (select("Ghostring:Whisper:Deviruchi:Baphomet Junior") == 1)
+			if (select("Ghostring", "Whisper", "Deviruchi", "Baphomet Junior") == 1)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "6. Which shield reduces damage inflicted by Demon monsters?";
 			next;
-			if (select("Satanic Shield:Shield from Hell:Amulet Shield:Excellent Shield") == 2)
+			if (select("Satanic Shield", "Shield from Hell", "Amulet Shield", "Excellent Shield") == 2)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "7. Which attribute is the most effective on the Wind Ghost?";
 			next;
-			if (select("Water:Earth:Fire:Wind") == 2)
+			if (select("Water", "Earth", "Fire", "Wind") == 2)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "8. Which monster is different from the other Demon monsters?";
 			next;
-			if (select("Sohee:Isis:Dokebi:Whisper") == 4)
+			if (select("Sohee", "Isis", "Dokebi", "Whisper") == 4)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "9. What effect does the Marionette Card have?";
 			next;
-			if (select("Increase defense against Shadow attacks by 30 %:Increase defense against poison attacks by 30 %:Increase defense against Ghost attacks by 30 %:Increase defense against Neutral attacks by 30 %") == 3)
+			if (select("Increase defense against Shadow attacks by 30 %", "Increase defense against poison attacks by 30 %", "Increase defense against Ghost attacks by 30 %", "Increase defense against Neutral attacks by 30 %") == 3)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "10. Which of the following is an effective way to react when encountering a demon monster?";
 			next;
-			if (select("Scream, 'Evil one, go away!':Offer your soul and get a deal.:Put Holy Water on a weapon and attack.:Put on a Deviruchi hat.") == 3)
+			if (select("Scream, 'Evil one, go away!'", "Offer your soul and get a deal.", "Put Holy Water on a weapon and attack.", "Put on a Deviruchi hat.") == 3)
 				.@cru_t += 10;
 		}
 		else {
 			mes "[Gabriel Valentine]";
 			mes "1. What level of 'Divine Protection' do you need to learn 'Demon Bane?'";
 			next;
-			if (select("Level 1:Level 2:Level 3:Level 4") == 3)
+			if (select("Level 1", "Level 2", "Level 3", "Level 4") == 3)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "2. If your INT is 30, including INT bonuses from quipment, at level 55, how much HP does Level 5 Heal recover?";
 			next;
-			if (select("396:440:484:528") == 2)
+			if (select("396", "440", "484", "528") == 2)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "3. With Level 7 Divine Protection, by how much is your defense against the Undead increased?";
 			next;
-			if (select("21:22:23:24") == 1)
+			if (select("21", "22", "23", "24") == 1)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "4. Which of the following spears can attack Nightmare, which is endowed with the Ghost attribute?";
 			next;
-			if (select("Lance:Bill Guisarme:Cresent scythe:Zephyrus") == 4)
+			if (select("Lance", "Bill Guisarme", "Cresent scythe", "Zephyrus") == 4)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "5. What level of 'Heal' do you need to learn 'Cure?'";
 			next;
-			if (select("Level 1:Level 2:Level 3:Level 4") == 2)
+			if (select("Level 1", "Level 2", "Level 3", "Level 4") == 2)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "6. What is the attack speed when Level 3 Cavalier Mastery is learned?";
 			next;
-			if (select("70 % of normal speed:80 % of normal speed:90 % of normal speed:100 % of normal speed") == 2)
+			if (select("70 % of normal speed", "80 % of normal speed", "90 % of normal speed", "100 % of normal speed") == 2)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "7. Which of the following is not correct of the Demon Bane skill?";
 			next;
-			if (select("Increase attack on Undead:Only Acolytes can learn the skill:When mastered, + 30 increase:Passive Skill") == 2)
+			if (select("Increase attack on Undead", "Only Acolytes can learn the skill", "When mastered, + 30 increase", "Passive Skill") == 2)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "8. How much SP does Level 7 Heal use?";
 			next;
-			if (select("30:31:33:35") == 2)
+			if (select("30", "31", "33", "35") == 2)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "9. What status cannot be";
 			mes "cured with the Cure skill?";
 			next;
-			if (select("Curse:Silence:Chaos:Blind") == 1)
+			if (select("Curse", "Silence", "Chaos", "Blind") == 1)
 				.@cru_t += 10;
 
 			mes "[Gabriel Valentine]";
 			mes "10. What best describes a Crusader?";
 			next;
-			if (select("One preparing for matrimony.:One preparing for the Holy War.:One preparing consummation.:One preparing potions.") == 2)
+			if (select("One preparing for matrimony.", "One preparing for the Holy War.", "One preparing consummation.", "One preparing potions.") == 2)
 				.@cru_t += 10;
 
 		}
@@ -891,7 +897,7 @@ prt_castle,35,151,5	script	Patron Knight	4_M_CRU,{
 			mes "Would you like to begin now, or do you still need time to make preparations?";
 		}
 		next;
-		if (select("I would like to begin.:Give me some time to prepare.") == 1) {
+		if (select("I would like to begin.", "Give me some time to prepare.") == 1) {
 			if(getequipid(7) != 2608 && getequipid(8) != 2608) {
 				mes "[Bliant Piyord]";
 				mes "Just a second, you do not have a Rosary equipped. As a Crusader, you must always have a Rosary on your person.";

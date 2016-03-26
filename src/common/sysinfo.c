@@ -38,6 +38,7 @@
 #ifdef WIN32
 #	include <windows.h>
 #else
+#	include <sys/time.h> // time constants
 #	include <unistd.h>
 #endif
 
@@ -65,7 +66,7 @@ struct sysinfo_interface *sysinfo;
 #define VCSTYPE_UNKNOWN 0
 #define VCSTYPE_GIT 1
 #define VCSTYPE_SVN 2
-#define VCSTYPE_NONE -1
+#define VCSTYPE_NONE (-1)
 
 #ifdef WIN32
 /**
@@ -1052,6 +1053,19 @@ void sysinfo_final(void) {
 	sysinfo->p->vcstype_name = NULL;
 }
 
+static const char *sysinfo_time(void)
+{
+#if defined(WIN32)
+	return "ticks count";
+#elif defined(ENABLE_RDTSC)
+	return "rdtsc";
+#elif defined(HAVE_MONOTONIC_CLOCK)
+	return "monotonic clock";
+#else
+	return "time of day";
+#endif
+}
+
 /**
  * Interface default values initialization.
  */
@@ -1072,6 +1086,7 @@ void sysinfo_defaults(void) {
 	sysinfo->is64bit = sysinfo_is64bit;
 	sysinfo->compiler = sysinfo_compiler;
 	sysinfo->cflags = sysinfo_cflags;
+	sysinfo->time = sysinfo_time;
 	sysinfo->vcstype = sysinfo_vcstype;
 	sysinfo->vcstypeid = sysinfo_vcstypeid;
 	sysinfo->vcsrevision_src = sysinfo_vcsrevision_src;

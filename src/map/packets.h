@@ -2910,9 +2910,15 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x08A8,26,clif->pFriendsListAdd,2);
 	packet(0x0817,5,clif->pHomMenu,2,4);
 	packet(0x0923,36,clif->pStoragePassword,0);
-	packet(0x09e8,11,clif->pDull);	// CZ_OPEN_MAILBOX
-	packet(0x0a2e,6,clif->pDull);	// TITLE
-	packet(0x0a02,4);	// ZC_DRESSROOM_OPEN
+	packet(0x09E8,11,clif->pDull); // CZ_OPEN_MAILBOX
+	packet(0x0A2E,6,clif->pDull); // TITLE
+	packet(0x0A02,4); // ZC_DRESSROOM_OPEN
+	packet(0x0A35,4,clif->pOneClick_ItemIdentify,2);
+#endif
+
+#if PACKETVER >= 20150805 // RagexeRE
+	packet(0x097f,-1); // ZC_SELECTCART
+	packet(0x0980,7,clif->pSelectCart); // CZ_SELECTCART
 #endif
 
 /* PacketKeys: http://herc.ws/board/topic/1105-hercules-wpe-free-june-14th-patch/ */

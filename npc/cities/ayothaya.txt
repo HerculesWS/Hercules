@@ -47,7 +47,7 @@
 	mes "a land of exotic mystery,";
 	mes "my hometown Ayotaya!";
 	next;
-	switch(select("About Ayotaya.:Go to Ayotaya.:Cancel.")) {
+	switch(select("About Ayotaya.", "Go to Ayotaya.", "Cancel.")) {
 	case 1:
 		mes "[Aibakthing]";
 		mes "We Ayotayans are a pious people who value peace and sincerity. We endeavor to lead simple, yet noble, lives in harmony with nature.";
@@ -72,7 +72,7 @@
 		mes "If you're ready, we can leave";
 		mes "right now~";
 		next;
-		if (select("I'm ready, let's go!:No.") == 1) {
+		if (select("I'm ready, let's go!", "No.") == 1) {
 			if (Zeny > 9999) {
 				mes "[Aibakthing]";
 				mes "Hoo! Hah! Hoo! Hah!";
@@ -110,7 +110,7 @@ ayothaya,152,68,1	script	Aibakthing#ayo2	4_M_THAIONGBAK,{
 	mes "Hoo! Hah! Hmm! Hah!";
 	mes "So, how did you like Ayotaya? Did you get a chance to try Tom Yum Goong? When you're ready, I shall take you back home.";
 	next;
-	if (select("Go back to Alberta.:Cancel.") == 1) {
+	if (select("Go back to Alberta.", "Cancel.") == 1) {
 		mes "[Aibakthing]";
 		mes "You will be welcome to come back whenever you please. I hope that we will see each other again sometime soon. Thank you~";
 		close2;
@@ -301,7 +301,7 @@ ayothaya,241,264,5	script	Young Man#5ayothaya2	4_M_THAIONGBAK,{
 	mes "You wanna challenge";
 	mes "me to a match?";
 	next;
-	if (select("Sure!:Nah~") == 1) {
+	if (select("Sure!", "Nah~") == 1) {
 		mes "[Eik]";
 		mes "Ow ow ow!";
 		mes "I was just";

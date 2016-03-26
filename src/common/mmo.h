@@ -98,13 +98,19 @@
 #endif // 20090603
 #endif // 20070227
 
-/* Feb 1st 2012 */
-#if PACKETVER >= 20120201
-#	define NEW_CARTS
-#	define MAX_CARTS 9
+#if PACKETVER >= 20150805 /* Cart Decoration */
+	#define CART_DECORATION
+	#define MAX_CARTDECORATION_CARTS 3 // Currently there are 3 Carts available in kRO. [Frost]
 #else
-#	define MAX_CARTS 5
+	#define MAX_CARTDECORATION_CARTS 0
 #endif
+#if PACKETVER >= 20120201 /* New Geneticist Carts */
+	#define NEW_CARTS
+	#define MAX_BASE_CARTS 9
+#else
+	#define MAX_BASE_CARTS 5
+#endif
+#define MAX_CARTS (MAX_BASE_CARTS + MAX_CARTDECORATION_CARTS)
 
 #define MAX_INVENTORY 100
 //Max number of characters per account. Note that changing this setting alone is not enough if the client is not hexed to support more characters as well.
@@ -114,7 +120,7 @@
 #define MAX_SLOTS 4
 //Max amount of a single stacked item
 #define MAX_AMOUNT 30000
-#define MAX_ZENY 1000000000
+#define MAX_ZENY INT_MAX
 
 //Official Limit: 2.1b ( the var that stores the money doesn't go much higher than this by default )
 #define MAX_BANK_ZENY INT_MAX
@@ -207,7 +213,14 @@
 #define JOBL_BABY 0x2000  //8192
 #define JOBL_THIRD 0x4000 //16384
 
+//Packet DB
+#define MIN_PACKET_DB 0x0064 //what's the point of minimum packet id ? [hemagx]
+#define MAX_PACKET_DB 0x0F00
+#define MAX_PACKET_POS 20
+
 #define SCRIPT_VARNAME_LENGTH 32 ///< Maximum length of a script variable
+
+#define INFINITE_DURATION (-1) // Infinite duration for status changes
 
 struct hplugin_data_store;
 
@@ -262,6 +275,7 @@ struct item {
 
 //Equip position constants
 enum equip_pos {
+	EQP_NONE               = 0x000000,
 	EQP_HEAD_LOW           = 0x000001,
 	EQP_HEAD_MID           = 0x000200, //512
 	EQP_HEAD_TOP           = 0x000100, //256
@@ -380,11 +394,11 @@ struct script_reg_str {
 	char *value;
 };
 
-// For saving status changes across sessions. [Skotlex]
+/// For saving status changes across sessions. [Skotlex]
 struct status_change_data {
-	unsigned short type; //SC_type
-	int val1, val2, val3, val4;
-	unsigned int tick; //Remaining duration.
+	unsigned short type;        ///< Status change type (@see enum sc_type)
+	int val1, val2, val3, val4; ///< Parameters (meaning depends on type).
+	int tick;                   ///< Remaining duration.
 };
 
 struct storage_data {
@@ -461,7 +475,7 @@ struct s_elemental {
 	int elemental_id;
 	int char_id;
 	short class_;
-	int mode;
+	uint32 mode;
 	int hp, sp, max_hp, max_sp, matk, atk, atk2;
 	short hit, flee, amotion, def, mdef;
 	int life_time;
@@ -501,7 +515,7 @@ struct mmo_charstatus {
 	unsigned int option;
 	short manner; // Defines how many minutes a char will be muted, each negative point is equivalent to a minute.
 	unsigned char karma;
-	short hair,hair_color,clothes_color;
+	short hair,hair_color,clothes_color,body;
 	int party_id,guild_id,pet_id,hom_id,mer_id,ele_id;
 	int fame;
 
@@ -742,7 +756,8 @@ enum { //Change Member Infos
 enum guild_permission { // Guild permissions
 	GPERM_INVITE = 0x01,
 	GPERM_EXPEL = 0x10,
-	GPERM_BOTH = GPERM_INVITE|GPERM_EXPEL,
+	GPERM_ALL = GPERM_INVITE|GPERM_EXPEL,
+	GPERM_MASK = GPERM_ALL,
 };
 
 enum {
@@ -956,7 +971,7 @@ enum weapon_type {
 	W_GRENADE,   //21
 	W_HUUMA,     //22
 	W_2HSTAFF,   //23
-	MAX_WEAPON_TYPE,
+	MAX_SINGLE_WEAPON_TYPE,
 	// dual-wield constants
 	W_DOUBLE_DD, ///< 2 daggers
 	W_DOUBLE_SS, ///< 2 swords
@@ -964,6 +979,7 @@ enum weapon_type {
 	W_DOUBLE_DS, ///< dagger + sword
 	W_DOUBLE_DA, ///< dagger + axe
 	W_DOUBLE_SA, ///< sword + axe
+	MAX_WEAPON_TYPE,
 };
 
 enum ammo_type {
@@ -1030,6 +1046,10 @@ enum hz_char_ask_name_answer {
 // sanity checks...
 #if MAX_ZENY > INT_MAX
 #error MAX_ZENY is too big
+#endif
+
+#if MAX_SLOTS < 4
+#error MAX_SLOTS it too small
 #endif
 
 #endif /* COMMON_MMO_H */

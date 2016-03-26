@@ -101,7 +101,7 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 		mes "Alchemist Union.";
 		mes "How may I help you?";
 		next;
-		switch(select("I would like to learn about Alchemists.:I want to become an Alchemist.:Nothing.")) {
+		switch(select("I would like to learn about Alchemists.", "I want to become an Alchemist.", "Nothing.")) {
 		case 1:
 			mes "[Parmy Gianino]";
 			mes "Alchemists study and create new substances and items out of existing materials. Our knowledge allows us to change the properties of chemicals at the atomic level.";
@@ -154,7 +154,7 @@ alde_alche,27,185,5	script	Alchemist Guildsman#am	4_F_ALCHE,{
 			mes "you like to apply";
 			mes "for registration?";
 			next;
-			if (select("I would like to apply.:I'll do it later.") == 1) {
+			if (select("I would like to apply.", "I'll do it later.") == 1) {
 				if (JobLevel < 40) {
 					mes "[Parmy Gianino]";
 					mes "Hmmm...";
@@ -461,7 +461,7 @@ alde_alche,175,107,3	script	Fastidious Alchemist#am	4_M_ALCHE_B,{
 				mes "Wait...";
 				mes "Maybe I've";
 				mes "misjudged you.";
-				if (Sex) {
+				if (Sex == SEX_MALE) {
 					mes "You might be a pretty boy,";
 					mes "but I can tell you're smart";
 					mes "from your eyes.";
@@ -903,7 +903,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 		mes "What brings you";
 		mes "to this kind of place?";
 		next;
-		switch(select("I want to learn how to experiment.:Tell me more about flowers.:Nothing.")) {
+		switch(select("I want to learn how to experiment.", "Tell me more about flowers.", "Nothing.")) {
 		case 1:
 			mes "[Darwin]";
 			mes "You wish to";
@@ -1034,7 +1034,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			mes "as to let me have this flower?";
 			mes "I'm sure that this is the Moonlight Flower that I've been seeking!";
 			next;
-			if (select("Sorry, I can't give it to you.:I brought it to give to you.") == 1) {
+			if (select("Sorry, I can't give it to you.", "I brought it to give to you.") == 1) {
 				mes "[Darwin]";
 				mes "I understand.";
 				mes "You can't give";
@@ -1144,7 +1144,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			mes "I just explained to you.";
 			.@w_point = 0;
 			next;
-			switch(select("Prepare the Medicine Bowl.:Put the Medicine Bowl on your head.:Kick the Medicine Bowl.")) {
+			switch(select("Prepare the Medicine Bowl.", "Put the Medicine Bowl on your head.", "Kick the Medicine Bowl.")) {
 			case 1:
 				break;
 			case 2:
@@ -1160,7 +1160,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 				next;
 				break;
 			}
-			switch(select("Put some dirt in the Medicine Bowl.:Put some Herbs in the Medicine Bowl.:Put a Harp in the Medicine Bowl.")) {
+			switch(select("Put some dirt in the Medicine Bowl.", "Put some Herbs in the Medicine Bowl.", "Put a Harp in the Medicine Bowl.")) {
 			case 1:
 				++.@w_point;
 				mes "[Darwin]";
@@ -1180,7 +1180,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 				next;
 				break;
 			}
-			switch(select("Crush the Herbs.:Crush the Medicine Bowl.:Crush Darwin's foot.")) {
+			switch(select("Crush the Herbs.", "Crush the Medicine Bowl.", "Crush Darwin's foot.")) {
 			case 1:
 				break;
 			case 2:
@@ -1200,7 +1200,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 				next;
 				break;
 			}
-			switch(select("Spray clean water.:Drink clean water.:Pour clean water.")) {
+			switch(select("Spray clean water.", "Drink clean water.", "Pour clean water.")) {
 			case 1:
 				++.@w_point;
 				mes "[Darwin]";
@@ -1219,7 +1219,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			case 3:
 				break;
 			}
-			switch(select("Continue crushing the Herbs.:Continue eating the Herbs.:Continue dancing and singing.")) {
+			switch(select("Continue crushing the Herbs.", "Continue eating the Herbs.", "Continue dancing and singing.")) {
 			case 1:
 				break;
 			case 2:
@@ -1241,7 +1241,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 				next;
 				break;
 			}
-			switch(select("Put noodles in and fry it.:Pour it in an empty bottle.:Hold the Medicine Bowl and drink it.")) {
+			switch(select("Put noodles in and fry it.", "Pour it in an empty bottle.", "Hold the Medicine Bowl and drink it.")) {
 			case 1:
 				++.@w_point;
 				mes "[Darwin]";
@@ -1414,7 +1414,7 @@ alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 		mes "Um...";
 		mes "Who are you?";
 		next;
-		if (select("I want to become an Alchemist.:.......") == 2) {
+		if (select("I want to become an Alchemist.", ".......") == 2) {
 			mes "[Van Helmont]";
 			mes "Hmm...?";
 			mes "What, did you just want to watch? Fine, fine, but do it quietly and leave right when you're done.";
@@ -1433,7 +1433,7 @@ alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 		mes "my attention, so don't get";
 		mes "in the way.";
 		next;
-		if (select("Teach me something.:...") == 1) {
+		if (select("Teach me something.", "...") == 1) {
 			mes "[Van Helmont]";
 			mes "Argh...!";
 			mes "Didn't I just tell you not to bother me? What's so hard to understand about that?";
@@ -1499,7 +1499,7 @@ alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 		mes "......";
 		mes "Who are you?";
 		next;
-		if (select("I want to become an Alchemist?:.......") == 2) {
+		if (select("I want to become an Alchemist?", ".......") == 2) {
 			mes "[Van Helmont]";
 			mes "Hmm...?";
 			mes "What, did you just want to watch? Fine, fine, but do it quietly and leave right when you're done.";
@@ -1523,13 +1523,13 @@ alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 			mes "necessary to make";
 			mes "a Counteragent?";
 			next;
-			if (select("Karvodailnirol:Detrimindexta:Alcohol") != 1) .@w_point += 1;
+			if (select("Karvodailnirol", "Detrimindexta", "Alcohol") != 1) .@w_point += 1;
 			mes "[Van Helmont]";
 			mes "What item is not";
 			mes "necessary to make";
 			mes "a Mixture?";
 			next;
-			if (select("Karvodailnirol:Detrimindexta:Alcohol") != 2) .@w_point += 1;
+			if (select("Karvodailnirol", "Detrimindexta", "Alcohol") != 2) .@w_point += 1;
 			if (.@w_point > 0) {
 				mes "[Van Helmont]";
 				mes "Weren't you listening to Molgenstein at all? Maybe you";
@@ -1564,13 +1564,13 @@ alde_alche,79,19,5	script	Experiment Expert#am	4_M_ALCHE_A,{
 			mes "you need to make";
 			mes "a Counteragent?";
 			next;
-			select("Feather:Sticky Mucus:Animal Gore");
+			select("Feather", "Sticky Mucus", "Animal Gore");
 			mes "[Van Helmont]";
 			mes "What item do";
 			mes "you need to make";
 			mes "a Mixture?";
 			next;
-			select("Monster Feed:Ancient Lips:Rotten Bandage");
+			select("Monster Feed", "Ancient Lips", "Rotten Bandage");
 			mes "[Van Helmont]";
 			mes "Be honest. You don't know, do you?! Didn't I say to go to Molgenstein and have him teach you?!";
 			next;
@@ -1833,44 +1833,44 @@ alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 		case 1:
 			mes "t m y a n y e o b n e g p r i";
 			next;
-			if (select("Brake:Brass:Bug:Broken:Brigan?") == 5) .@alch_t += 10;
+			if (select("Brake", "Brass", "Bug", "Broken", "Brigan?") == 5) .@alch_t += 10;
 			mes "o n c u t a p j l e r s v m u";
 			next;
-			if (select("vendor:storage:weapon:simple:streetshop") == 1) .@alch_t += 10;
+			if (select("vendor", "storage", "weapon", "simple", "streetshop") == 1) .@alch_t += 10;
 			mes "t v a r m e g p h e u b o y l";
 			next;
-			if (select("molasses:party:leader:sweets:treacle") == 2) .@alch_t += 10;
+			if (select("molasses", "party", "leader", "sweets", "treacle") == 2) .@alch_t += 10;
 			mes "q z a h n a i n b r d p t n c";
 			next;
-			if (select("partisan:partizan:pato:paros:pack") == 2) .@alch_t += 10;
+			if (select("partisan", "partizan", "pato", "paros", "pack") == 2) .@alch_t += 10;
 			break;
 		case 2:
 			mes "m p d i c f a r o g n k w a s";
 			next;
-			if (select("packman:sunshine:ragnarok:wonderland:frost") == 1) .@alch_t += 10;
+			if (select("packman", "sunshine", "ragnarok", "wonderland", "frost") == 1) .@alch_t += 10;
 			mes "g b n o p r e f a r e t a s k";
 			next;
-			if (select("purple:smoker:ragnarok:bolt:burnt wood") == 3) .@alch_t += 10;
+			if (select("purple", "smoker", "ragnarok", "bolt", "burnt wood") == 3) .@alch_t += 10;
 			mes "u g n i s j e k c e o g n d p";
 			next;
-			if (select("scab:kinship:donate:source:opening") == 5) .@alch_t += 10;
+			if (select("scab", "kinship", "donate", "source", "opening") == 5) .@alch_t += 10;
 			mes "r o e h n r o m c a i n p t t";
 			next;
-			if (select("forgemerchant:potionmerchant:dcmerchant:vendingmerchant:battlemerchant") == 2) .@alch_t += 10;
+			if (select("forgemerchant", "potionmerchant", "dcmerchant", "vendingmerchant", "battlemerchant") == 2) .@alch_t += 10;
 			break;
 		case 3:
 			mes "s m i e x b w u n e t a g l r";
 			next;
-			if (select("tiger:wolf:pumpkin:tripped:tore") == 1) .@alch_t += 10;
+			if (select("tiger", "wolf", "pumpkin", "tripped", "tore") == 1) .@alch_t += 10;
 			mes "n i e g b o p d s o a u w r v";
 			next;
-			if (select("bash:provoke:endure:stun:abracadabra") == 3) .@alch_t += 10;
+			if (select("bash", "provoke", "endure", "stun", "abracadabra") == 3) .@alch_t += 10;
 			mes "l r m g r e x t a v i n e d e";
 			next;
-			if (select("alberta:latifoliate:crimson:maple:evergreen") == 5) .@alch_t += 10;
+			if (select("alberta", "latifoliate", "crimson", "maple", "evergreen") == 5) .@alch_t += 10;
 			mes "r o e h n r o m c a i n p t t";
 			next;
-			if (select("forgemerchant:potionmerchant:dcmerchant:vendingmerchant:battlemerchant") == 2) .@alch_t += 10;
+			if (select("forgemerchant", "potionmerchant", "dcmerchant", "vendingmerchant", "battlemerchant") == 2) .@alch_t += 10;
 			break;
 		}
 		mes "[Nicholas Flamel]";

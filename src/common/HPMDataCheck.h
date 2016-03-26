@@ -402,6 +402,8 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "item_package_rand_entry", sizeof(struct item_package_rand_entry), SERVER_TYPE_MAP },
 		{ "item_package_rand_group", sizeof(struct item_package_rand_group), SERVER_TYPE_MAP },
 		{ "itemdb_interface", sizeof(struct itemdb_interface), SERVER_TYPE_MAP },
+		{ "itemlist", sizeof(struct itemlist), SERVER_TYPE_MAP },
+		{ "itemlist_entry", sizeof(struct itemlist_entry), SERVER_TYPE_MAP },
 	#else
 		#define MAP_ITEMDB_H
 	#endif // MAP_ITEMDB_H
@@ -587,6 +589,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "s_autospell", sizeof(struct s_autospell), SERVER_TYPE_MAP },
 		{ "sg_data", sizeof(struct sg_data), SERVER_TYPE_MAP },
 		{ "skill_tree_entry", sizeof(struct skill_tree_entry), SERVER_TYPE_MAP },
+		{ "skill_tree_requirement", sizeof(struct skill_tree_requirement), SERVER_TYPE_MAP },
 		{ "weapon_data", sizeof(struct weapon_data), SERVER_TYPE_MAP },
 	#else
 		#define MAP_PC_H

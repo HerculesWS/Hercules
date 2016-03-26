@@ -44,11 +44,11 @@
 	next;
 	.@map$ = strnpcinfo(4);
 	while (1) {
-		switch(select("[ Main Facilities ]:[ Merchants & Helpers ]:Remove Marks from Mini-Map:Cancel")) {
+		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Cryptura Academy ]:[ Marina ]:[ International Airship ]:[ Arena ]:[ Kit Shop ]:[ Swordsman Guild ]:[ Enchant Association ]:[ Forge ]:Previous Menu")) {
+				switch(select("[ Cryptura Academy ]", "[ Marina ]", "[ International Airship ]", "[ Arena ]", "[ Kit Shop ]", "[ Swordsman Guild ]", "[ Enchant Association ]", "[ Forge ]", "Previous Menu")) {
 				case 1:
 					mes "[Izlude Guide]";
 					mes "Novice adventurers should go to "+F_Navi("Cryptura Academy","iz_ac01,100,39")+" to receive more information and training!";
@@ -121,7 +121,7 @@
 		case 2:
 			.@loop = 1;
 			while (.@loop) {
-				switch(select("[ Eden Teleport Officer ]:[ Kafra Employee ]:[ Hypnotist ]:[ Newlywed Helper ]:[ Mercenary Guildsman ]:[ Pet Groomer ]:Previous Menu")) {
+				switch(select("[ Eden Teleport Officer ]", "[ Kafra Employee ]", "[ Hypnotist ]", "[ Newlywed Helper ]", "[ Mercenary Guildsman ]", "[ Pet Groomer ]", "Previous Menu")) {
 				case 1:
 					mes "[Izlude Guide]";
 					mes "The "+F_Navi("Eden Teleport Officer",.@map$+",131,148","^0000FF");

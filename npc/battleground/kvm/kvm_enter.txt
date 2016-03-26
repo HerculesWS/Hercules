@@ -54,7 +54,7 @@ bat_room,164,178,5	script	KVM Mercenary Officer#1	4_M_KY_KNT,{
 	mes "[Guillaume Mercenary Officer]";
 	mes "Let them know the real might of Guillaume!";
 	next;
-	switch(select("I will fight with you.:End Conversation.")) {
+	switch(select("I will fight with you.", "End Conversation.")) {
 	case 1:
 		mes "[Guillaume Mercenary Officer]";
 		mes "Show them how strong we are.";
@@ -78,7 +78,7 @@ bat_room,167,178,5	script	Guillaume Knight#kvm	4_M_KY_SOLD,{
 	mes "Hello.";
 	mes "What do you want to know?";
 	next;
-	switch(select("Apply for KVM.:What is KVM?:How do I participate in KVM?:I want to know my Kreiger Points.")) {
+	switch(select("Apply for KVM.", "What is KVM?", "How do I participate in KVM?", "I want to know my Kreiger Points.")) {
 	case 1:
 		mes "[Guillaume Knight]";
 		mes "Applications are not available yet.";
@@ -152,7 +152,7 @@ bat_room,164,121,1	script	KVM Mercenary Officer#2	4_M_CRU_KNT,{
 	mes "[Croix Mercenary Officer]";
 	mes "Let them know the real might of Croix!";
 	next;
-	switch(select("I will fight with you.:End Conversation.")) {
+	switch(select("I will fight with you.", "End Conversation.")) {
 	case 1:
 		mes "[Croix Mercenary Officer]";
 		mes "Show them how strong we are.";
@@ -176,7 +176,7 @@ bat_room,167,121,1	script	Croix Knight#kvm	4_M_CRU_SOLD,{
 	mes "Hello.";
 	mes "What do you want to know?";
 	next;
-	switch(select("Apply for KVM.:What is KVM?:How do I participate in KVM?:I want to know my Kreiger Points.")) {
+	switch(select("Apply for KVM.", "What is KVM?", "How do I participate in KVM?", "I want to know my Kreiger Points.")) {
 	case 1:
 		mes "[Croix Knight]";
 		mes "Applications are not available yet.";

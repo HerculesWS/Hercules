@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2013-2015  Hercules Dev Team
-   Copyright (C) 2005-2010  Mark A Lindner
+   Copyright (C) 2013-2016  Hercules Dev Team
+   Copyright (C) 2005-2014  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -33,7 +33,7 @@
 
 struct scan_context
 {
-  config_t *config;
+  struct config_t *config;
   const char *top_filename;
   const char *files[MAX_INCLUDE_DEPTH];
   void *buffers[MAX_INCLUDE_DEPTH];

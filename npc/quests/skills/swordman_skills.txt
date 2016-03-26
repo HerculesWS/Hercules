@@ -48,7 +48,7 @@ izlude_in,118,175,4	script	Knight De Thomas	4W_M_02,{
 		mes "Being a swordsman must come with a lot of responsibility and sacrifice.";
 		next;
 		mes "[De Thomas]";
-		if (Sex == 0) {
+		if (Sex == SEX_FEMALE) {
 			mes "For these swordsmen and knights, there is a wonderful skill.";
 		}
 		else {
@@ -65,7 +65,7 @@ izlude_in,118,175,4	script	Knight De Thomas	4W_M_02,{
 		mes "but it will help a little.";
 		mes "What do you think? Would you like to learn this skill?";
 		next;
-		switch (select("What a nice skill! I want to learn it!:No, thank you.")) {
+		switch (select("What a nice skill! I want to learn it!", "No, thank you.")) {
 		case 1:
 			mes "[De Thomas]";
 			mes "Very well. I will tell you what you need to learn this skill.";
@@ -114,7 +114,7 @@ izlude_in,118,175,4	script	Knight De Thomas	4W_M_02,{
 		mes "Welcome back...";
 		mes "are you ready to learn Body Movin'?";
 		next;
-		switch (select("Yes.:No, I'm not ready yet.")) {
+		switch (select("Yes.", "No, I'm not ready yet.")) {
 		case 1:
 			if ((JobLevel > 34 || (BaseJob == Job_Knight || BaseJob == Job_Crusader)) && (countitem(Empty_Bottle) > 199) && (countitem(Wing_Of_Moth) > 0)) {
 				mes "[De Thomas]";
@@ -192,7 +192,7 @@ prt_in,75,88,5	script	Leon Von Frich	4_M_03,3,3,{
 			mes "to learn Fatal Blow!";
 			mes "So how about it? Would you like to learn?";
 			next;
-			switch (select("Yes!:No, I don't want to.:But, what is Fatal Blow?")) {
+			switch (select("Yes!", "No, I don't want to.", "But, what is Fatal Blow?")) {
 			case 1:
 				mes "[Leon]";
 				mes "OK, lets begin!";
@@ -235,7 +235,7 @@ prt_in,75,88,5	script	Leon Von Frich	4_M_03,3,3,{
 		next;
 		select("Eh, I... just...");
 		mes "[Leon]";
-		if (Sex == 0) {
+		if (Sex == SEX_FEMALE) {
 			mes "No need to be surprised.";
 			mes "If you use a sword, of course you ought to have a good arm!";
 		}
@@ -249,7 +249,7 @@ prt_in,75,88,5	script	Leon Von Frich	4_M_03,3,3,{
 		mes "[Leon]";
 		mes "Yes, I would like to give a present to an awesome swordsman like you.";
 		next;
-		switch (select("What present?:It's ok.")) {
+		switch (select("What present?", "It's ok.")) {
 		case 1:
 			mes "[Leon]";
 			mes "Haha nothing special, but a skill to attack the vital point!";
@@ -277,7 +277,7 @@ prt_in,75,88,5	script	Leon Von Frich	4_M_03,3,3,{
 		mes "and finally, I developed this wonderful new skill!";
 		mes "Would you like to learn this skill?";
 		next;
-		switch (select("Yes.:No.:Do you have any advice on how to eat sushi?")) {
+		switch (select("Yes.", "No.", "Do you have any advice on how to eat sushi?")) {
 		case 1:
 			mes "[Leon]";
 			mes "Ok. I'll tell you the requirements.";
@@ -359,7 +359,7 @@ prt_in,94,57,3	script	Juan	4_M_03,4,4,{
 			mes "You are ready to learn the";
 			mes "newest skill, Auto Berserk?!";
 			next;
-			switch (select("Hoho, I would like to learn it now.:What is that?")) {
+			switch (select("Hoho, I would like to learn it now.", "What is that?")) {
 			case 1:
 				mes "[Juan]";
 				mes "Ok. Then...";
@@ -445,7 +445,7 @@ prt_in,94,57,3	script	Juan	4_M_03,4,4,{
 		mes "Of course you could always use the";
 		mes "skill we developed to overcome these limits.";
 		next;
-		switch (select("Eh! What are you talking about?:Haha, there can't be such a thing.:Keuuuuuuuh!")) {
+		switch (select("Eh! What are you talking about?", "Haha, there can't be such a thing.", "Keuuuuuuuh!")) {
 		case 1:
 			mes "[Juan]";
 			mes "The skill is called Berserk.";

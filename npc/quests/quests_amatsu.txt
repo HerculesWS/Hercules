@@ -69,7 +69,7 @@ amatsu,223,236,3	script	Publisher#ama	4_M_JPN,{
 		mes "Dokebis, just like in the story!";
 		mes "There will also be rewards.";
 		next;
-		switch(select("What is Momotaro Story?:I want to try!:I'm busy right now...")) {
+		switch(select("What is Momotaro Story?", "I want to try!", "I'm busy right now...")) {
 		case 1:
 			mes "[Publisher]";
 			mes "Eh~!? How can you not know about";
@@ -262,7 +262,7 @@ ama_test,52,44,3	script	Assistant#ama	4_M_MANAGER,{
 		mes "First of all...Did you hear";
 		mes "about the story from the publisher?";
 		next;
-		if (select("Yes:No") == 1) {
+		if (select("Yes", "No") == 1) {
 			mes "[Satoshi]";
 			mes "Hehe...Good.";
 			mes "Momotaro Story is our";
@@ -331,7 +331,7 @@ ama_test,52,44,3	script	Assistant#ama	4_M_MANAGER,{
 		mes "Now what are you going to do?";
 		mes "Do you want to go in again?";
 		next;
-		if (select("Yes:No, I want to go back") == 1) {
+		if (select("Yes", "No, I want to go back") == 1) {
 			mes "[Satoshi]";
 			mes "The more effort you put into this, the sweeter victory will taste.";
 			mes "Good luck in fighting!";
@@ -597,7 +597,7 @@ ama_test,50,100,3	script	Coach#ama	4_M_JPN2,15,15,{
 	mes "Momotaro in the story!";
 	mes "Hohohoho...";
 	next;
-	switch(select("Well, well. It is nothing~:It was boring.")) {
+	switch(select("Well, well. It is nothing~", "It was boring.")) {
 	case 1:
 		mes "[Coach]";
 		mes "...Hohoho..";
@@ -646,7 +646,7 @@ ama_test,50,100,3	script	Coach#ama	4_M_JPN2,15,15,{
 		mes "^3163FFyou can't take this challenge.^000000";
 		mes "Also, this mission will be pretty hard.";
 		next;
-		if (select("Nah.. I'm good.:Bring it on, foo'!") == 1) {
+		if (select("Nah.. I'm good.", "Bring it on, foo'!") == 1) {
 			erasequest 8129;
 			mes "[Coach]";
 			mes "Hoho~I understand...";
@@ -1134,7 +1134,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 	mes "highly values the freshness of";
 	mes "fish slices. What brings you down here...?";
 	next;
-	switch(select("I would like to buy Sushi:I would like to buy fish slice:Do you need assistance?:Keep up the good work")) {
+	switch(select("I would like to buy Sushi", "I would like to buy fish slice", "Do you need assistance?", "Keep up the good work")) {
 	case 1:
 		mes "[Magumagu]";
 		mes "Alright...! How many?";
@@ -1142,7 +1142,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		mes "want just 1 Sushi. It is 74z.";
 		mes "If you want more, tell me.";
 		next;
-		switch(select("700z A set!:74z A piece!:I will try it later")) {
+		switch(select("700z A set!", "74z A piece!", "I will try it later")) {
 		case 1:
 			if (Zeny < 700) {
 				mes "[Magumagu]";
@@ -1183,7 +1183,7 @@ ama_in01,162,17,1	script	Sushi Master#ama	4_M_JPNOJI2,{
 		mes "1 fish slice is 37z.";
 		mes "If you want more, tell me.";
 		next;
-		switch(select("350z A set!:37z A piece!:I will try it later")) {
+		switch(select("350z A set!", "37z A piece!", "I will try it later")) {
 		case 1:
 			if (Zeny < 350) {
 				mes "[Magumagu]";
@@ -1481,7 +1481,7 @@ ama_in02,170,62,4	script	Soldier#ama2	8_M_JPNSOLDIER,{
 	mes "I'm Jiro, the administrator";
 	mes "of this Palace. What can I do for you?";
 	next;
-	switch(select("Issue me a Transit Permit:I want to live in Amatsu:Nothing")) {
+	switch(select("Issue me a Transit Permit", "I want to live in Amatsu", "Nothing")) {
 	case 1:
 		if (event_amatsu == 6) {
 			if (countitem(Lord's_Passable_Ticket) > 0) {
@@ -1495,7 +1495,7 @@ ama_in02,170,62,4	script	Soldier#ama2	8_M_JPNSOLDIER,{
 			mes "You need to pay 10,000 zeny as a tax";
 			mes "to issue another Transit Permit.";
 			next;
-			if (select("Issue one:Talk to you later") == 1) {
+			if (select("Issue one", "Talk to you later") == 1) {
 				Zeny -= 10000;
 				getitem Lord's_Passable_Ticket,1;
 				mes "[Jiro]";
@@ -1672,7 +1672,7 @@ ama_in02,115,177,7	script	Soldier#ama10	8_M_JPNSOLDIER,{
 	mes "What are you doing in here?";
 	mes "There is nothing interesting here.";
 	next;
-	if (select("That is true:Open the gate") == 1) {
+	if (select("That is true", "Open the gate") == 1) {
 		mes "[Jyuro]";
 		mes "There are much better things to enjoy in town. Have a good time...";
 		close;
@@ -1683,7 +1683,7 @@ ama_in02,115,177,7	script	Soldier#ama10	8_M_JPNSOLDIER,{
 			mes "You have the ticket...";
 			mes "Do you want me to send you now, or do you need a little instruction?";
 			next;
-			if (select("I will go in:Instruction, please") == 1) {
+			if (select("I will go in", "Instruction, please") == 1) {
 				mes "[Jyuro]";
 				mes "I will open the gate.";
 				mes "Take care of yourself...";
@@ -1735,7 +1735,7 @@ ama_in02,115,177,7	script	Soldier#ama10	8_M_JPNSOLDIER,{
 	emotion e_swt;
 	next;
 	if (countitem(Lord's_Passable_Ticket) > 0) {
-		if (select("Show him the ticket:Cancel") == 1) {
+		if (select("Show him the ticket", "Cancel") == 1) {
 			mes "[Jyuro]";
 			mes "What? That pass is...?";
 			mes "That Transit Permit is from";
@@ -1763,7 +1763,7 @@ ama_dun01,229,7,0	script	Soldier#ama11	8_M_JPNSOLDIER,{
 	mes "[Jyuro]";
 	mes "Do you want to go back?";
 	next;
-	if (select("Yes, I do:I will stay here") == 1) {
+	if (select("Yes, I do", "I will stay here") == 1) {
 		mes "[Jyuro]";
 		mes "Take care of yourself.";
 		close2;
@@ -1794,7 +1794,7 @@ ama_in02,200,176,4	script	Lord of Palace#ama	8_M_JPNMASTER,{
 		mes "you here? If it is not urgent,";
 		mes "come to me another time...!";
 		next;
-		switch(select("I heard about your mother...:Your last name is nice:Who are you?")) {
+		switch(select("I heard about your mother...", "Your last name is nice", "Who are you?")) {
 		case 1:
 			mes "[Ishida Yoshinaga]";
 			mes "Oh...So you know about her disease?";

@@ -47,7 +47,7 @@ iz_dun04,130,234,5	script	Gatekeeper#iz_dun	4_M_CRU_SOLD,{
 	mes "The monsters here are between levels 110 and 124.";
 	mes "And you must beware of the Kraken!";
 	next;
-	switch(select("Release the Kraken!:I'll stay here.")) {
+	switch(select("Release the Kraken!", "I'll stay here.")) {
 	case 1:
 		mes "[Gatekeeper]";
 		mes "Be cautious and good luck.";
@@ -67,7 +67,7 @@ iz_dun05,142,190,5	script	Guard#iz_dun	4_M_CRU_SOLD,{
 	mes "[Gatekeeper]";
 	mes "So I guess you want to go back to the fifth floor?";
 	next;
-	switch(select("Yes!:No, I'll stay.")) {
+	switch(select("Yes!", "No, I'll stay.")) {
 	case 1:
 		mes "[Gatekeeper]";
 		mes "Be safe, adventurer.";

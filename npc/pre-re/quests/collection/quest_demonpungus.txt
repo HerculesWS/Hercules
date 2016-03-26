@@ -38,7 +38,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 			mes "[Local Villager]";
 			mes "Have you finished hunting the 50 Demon Pungus?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Local Villager]";
 				mes "Hmm, I don't think you've hunted 50 yet...";
@@ -52,7 +52,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Local Villager]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -78,7 +78,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 			mes "[Local Villager]";
 			mes "Have you finished hunting the 50 Demon Pungus?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Local Villager]";
 				mes "Hmm, I don't think you've hunted 100 yet...";
@@ -92,7 +92,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Local Villager]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -119,7 +119,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 			mes "[Local Villager]";
 			mes "Have you finished hunting the 150 Demon Pungus?";
 			next;
-			switch(select("Yes:No:I want to quit")) {
+			switch(select("Yes", "No", "I want to quit")) {
 			case 1:
 				mes "[Local Villager]";
 				mes "Hmm, I don't think you've hunted 150 yet...";
@@ -133,7 +133,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 				mes "Are you sure that you want to stop hunting?";
 				mes "Any progress that you've made will be erased";
 				next;
-				switch(select("Yes:No")) {
+				switch(select("Yes", "No")) {
 				case 1:
 					mes "[Local Villager]";
 					mes "Ok then, well come back here if you change your mind.";
@@ -164,19 +164,19 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 			mes "Hey, you there. Yeah you!";
 			mes "Do you think you can help me with something?";
 			next;
-			switch(select("Sure:No")) {
+			switch(select("Sure", "No")) {
 			case 1:
 				mes "[Local Villager]";
 				mes "I am trying to make my way through but I can't seem to get past these Demon Pungus.";
 				next;
-				switch(select("Gather Items:Hunt Demon Pungus:Cancel")) {
+				switch(select("Gather Items", "Hunt Demon Pungus", "Cancel")) {
 				case 1:
 					// Item turn in
 					mes "[Local Villager]";
 					mes "Can you help by collecting ^FF0000Bacillus^000000?";
 					mes "I will reward you for helping clear this out for me.";
 					next;
-					switch(select("I have Bacillus:What did you need?")) {
+					switch(select("I have Bacillus", "What did you need?")) {
 					case 1:
 						/*
 						if (checkweight(White_Potion,10) == 0) {
@@ -214,7 +214,7 @@ ein_fild01,43,249,0	script	Local Villager#hunt	4_M_HUMAN_01,{
 					mes "Ah, ok I think you can help me out by hunting some Demon Pungus.";
 					mes "How many would you like to hunt?";
 					next;
-					switch(select("50 Demon Pungus:100 Demon Pungus:150 Demon Pungus")) {
+					switch(select("50 Demon Pungus", "100 Demon Pungus", "150 Demon Pungus")) {
 					case 1:
 						mes "[Local Villager]";
 						mes "Come back when you've finished your task and I will give you a small reward.";

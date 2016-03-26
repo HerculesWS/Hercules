@@ -48,7 +48,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 	mes "[Valerie]";
 	mes "If both abnormalities disappear then we must start the test over from scratch. What would you like to do?";
 	next;
-	switch(select("I don't have any abnormalities:I think my body has some abnormalities")) {
+	switch(select("I don't have any abnormalities", "I think my body has some abnormalities")) {
 	case 1:
 		mes "[Valerie]";
 		mes "That's a relief. Then please take care.";
@@ -57,7 +57,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 		mes "[Valerie]";
 		mes "Are you sure you want to intialize it and start over?";
 		next;
-		if(select("Nope:Yes, I want to start completely over") == 1) {
+		if(select("Nope", "Yes, I want to start completely over") == 1) {
 			mes "[Valerie]";
 			mes "I understand. I'll see you next time";
 			close;
@@ -65,7 +65,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 		mes "[Valerie]";
 		mes "All items related to the existing conditions will disappear. Are you okay with this?";
 		next;
-		if(select("Nope:Yes, I want to start completely over.") == 1) {
+		if(select("Nope", "Yes, I want to start completely over.") == 1) {
 			mes "[Valerie]";
 			mes "I understand. I'll see you next time.";
 			close;
@@ -73,7 +73,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 		mes "[Valerie]";
 		mes "It seems that there are a sea of people who seemed to be cursed of not being able to get a significant other after going through with this. Are you still okay with this? ";
 		next;
-		if(select("Nope:I still want to intialize.") == 1) {
+		if(select("Nope", "I still want to intialize.") == 1) {
 			mes "[Valerie]";
 			mes "I understand. I will see you next time.";
 			close;
@@ -81,7 +81,7 @@ prt_in,38,104,4	script	Valerie	4_F_VALKYRIE,{
 		mes "[Valerie]";
 		mes "In extreme cases, some become crippled and can get ulcers. Do you still want to intilize former processes?";
 		next;
-		if(select("Nope:Please intilize the former processes") == 1) {
+		if(select("Nope", "Please intilize the former processes") == 1) {
 			mes "[Valerie]";
 			mes "I understand. I will see you next time";
 			close;

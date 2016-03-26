@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C) 2012-2016  Hercules Dev Team
 //= Copyright (C)  L0ne_W0lf
 //= Copyright (C)  Kisuka
 //= Copyright (C)  Samuray22
@@ -32,10 +32,10 @@
 //================= Description ===========================================
 //= Official iRO TaeKwon Job Change Quest
 //================= Current Version =======================================
-//= 1.4
+//= 1.5
 //=========================================================================
 
-payon,157,141,5	script	Phoenix#TKJobChange	4_M_MONK,{
+-	script	Phoenix::TKJobChange	FAKE_NPC,{
 	if(Upper == 2) {
 		mes "[Phoenix]";
 		mes "Hello, child.";
@@ -196,7 +196,7 @@ payon,157,141,5	script	Phoenix#TKJobChange	4_M_MONK,{
 		mes "great difficulty, how do";
 		mes "you generally respond?";
 		next;
-		switch(select( "I face it head on.:Avoid it somehow.:Regroup and analyze the problem.")) {
+		switch(select( "I face it head on.", "Avoid it somehow.", "Regroup and analyze the problem.")) {
 		case 1:
 			mes "[Phoenix]";
 			mes "Yes, that is the answer";
@@ -271,7 +271,7 @@ payon,157,141,5	script	Phoenix#TKJobChange	4_M_MONK,{
 		mes "clash, causing heated conflict,";
 		mes "how would you respond?";
 		next;
-		switch( select("Insist that I'm right, regardless:Disregard conflicting viewpoint:Accept differences and learn from them")) {
+		switch( select("Insist that I'm right, regardless", "Disregard conflicting viewpoint", "Accept differences and learn from them")) {
 		case 1:
 			mes "[Phoenix]";
 			mes "It's important to have your";
@@ -400,11 +400,10 @@ payon,157,141,5	script	Phoenix#TKJobChange	4_M_MONK,{
 			mes "You are still young, so";
 			mes "I assume you'll want a job";
 			mes "title. Mm. In that case, you";
-			if(Sex == 0) {
+			if (Sex == SEX_FEMALE)
 				mes "are now a ^FF0000Taekwon Girl^000000.";
-			} else {
+			else
 				mes "are now a ^FF0000Taekwon Boy^000000.";
-			}
 			mes "Yes, that sounds good. ";
 			next;
 			mes "[Phoenix]";

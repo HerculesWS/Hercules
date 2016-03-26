@@ -42,7 +42,7 @@ alberta_in,173,76,4	script	Monster Tamer#alb	4_M_TELEPORTER,{
 	mes "[Iwado]";
 	mes "This is the height of the era of Monster Taming! Don't you feel the need to gather monster items to be able to connect and to communicate with the Cute Monsters!?";
 	next;
-	switch(select("^3355FF' Monster Taming '^000000 ?:Order ^3355FF' Monster Juice '^000000:Order ^3355FF' Singing Flower '^000000:Order ^3355FF' Wild Flower '^000000:Cancel")) {
+	switch(select("^3355FF' Monster Taming '^000000 ?", "Order ^3355FF' Monster Juice '^000000", "Order ^3355FF' Singing Flower '^000000", "Order ^3355FF' Wild Flower '^000000", "Cancel")) {
 	case 1:
 		mes "[Iwado]";
 		mes "These monster items, necessary to communicate with monsters, are a must have! We, the members of the Monster Tamer Guild, have a very reasonable offer.";
@@ -214,7 +214,7 @@ aldeba_in,168,175,4	script	Monster Tamer#alde	4_M_TELEPORTER,{
 	mes "I can make all sorts of neat things for your Cute Pet monster.";
 	mes "Just ask~";
 	next;
-	switch(select("^3355FF' Monster Taming '^000000?:Order ^3355FF' Skull Helm '^000000:Order ^3355FF' Monster Oxygen Mask '^000000:Order ^3355FF' Silk Ribbon '^000000:Order ^3355FF' Stellar Hairpin '^000000:Order ^3355FF' Tiny Egg Shell '^000000:Order ^3355FF' Rocker Glasses '^000000:Cancel")) {
+	switch(select("^3355FF' Monster Taming '^000000?", "Order ^3355FF' Skull Helm '^000000", "Order ^3355FF' Monster Oxygen Mask '^000000", "Order ^3355FF' Silk Ribbon '^000000", "Order ^3355FF' Stellar Hairpin '^000000", "Order ^3355FF' Tiny Egg Shell '^000000", "Order ^3355FF' Rocker Glasses '^000000", "Cancel")) {
 	case 1:
 		mes "[YuU]";
 		mes "The monster items that are";
@@ -492,7 +492,7 @@ aldeba_in,168,175,4	script	Monster Tamer#alde	4_M_TELEPORTER,{
 	mes "We will gather items";
 	mes "for your Cute Pets.";
 	next;
-	switch(select("^3355FF' Monster Taming '^000000?:Order ^3355FF' Book of Devil '^000000:Order ^3355FF' No Recipient '^000000:Order ^3355FF' Orc Trophy '^000000:Cancel")) {
+	switch(select("^3355FF' Monster Taming '^000000?", "Order ^3355FF' Book of Devil '^000000", "Order ^3355FF' No Recipient '^000000", "Order ^3355FF' Orc Trophy '^000000", "Cancel")) {
 	case 1:
 		mes "[Shogo]";
 		mes "The monster taming items are necessary to communicate with the monster of your choice! We Monster Tamer guild members have a very reasonable offer...";
@@ -645,7 +645,7 @@ comodo,112,182,0	script	Munak's Grandma	8_F_GRANDMOTHER,{
 		mes "[Munak's grandma]";
 		mes "Oh my...";
 		mes "Have you seen my granddaughter,";
-		if (Sex == 1) {
+		if (Sex == SEX_MALE) {
 			mes "boy? My poor granddaughter";
 		}
 		else {
@@ -681,7 +681,7 @@ comodo,112,182,0	script	Munak's Grandma	8_F_GRANDMOTHER,{
 		mes "leave my misery behind and came";
 		mes "here to Comodo...";
 		next;
-		switch(select("Oh come on! Cheer up!:Um, is this diary...?")) {
+		switch(select("Oh come on! Cheer up!", "Um, is this diary...?")) {
 		case 1:
 			mes "[Munak's Grandma]";
 			mes "It seems my granddaughter haunts my";
@@ -697,7 +697,7 @@ comodo,112,182,0	script	Munak's Grandma	8_F_GRANDMOTHER,{
 				mes "Th-This is her writing! Oh my...!";
 				next;
 				mes "[Munak's Grandma]";
-				if (Sex == 1) {
+				if (Sex == SEX_MALE) {
 					mes "Young man... I'll read this to you if";
 				}
 				else {
@@ -707,11 +707,11 @@ comodo,112,182,0	script	Munak's Grandma	8_F_GRANDMOTHER,{
 				mes "please. I no longer have anything";
 				mes "that belonged to her now...";
 				next;
-				switch(select("No way.:Ok, I will.")) {
+				switch(select("No way.", "Ok, I will.")) {
 				case 1:
 					mes "[Munak's Grandma]";
 					mes "Oh...?";
-					if (Sex == 1) {
+					if (Sex == SEX_MALE) {
 						mes "Alright, young man.";
 						mes "Thank you anyway.";
 					}
@@ -729,7 +729,7 @@ comodo,112,182,0	script	Munak's Grandma	8_F_GRANDMOTHER,{
 					delitem 1558,1;
 					delitem 901,1;
 					mes "[Munak's Grandma]";
-					if (Sex == 1) {
+					if (Sex == SEX_MALE) {
 						mes "Oh!";
 						mes "Thank you,";
 						mes "young man~!";

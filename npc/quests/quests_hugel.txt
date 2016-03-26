@@ -70,7 +70,7 @@ hu_in01,387,245,0	script	Allen Schuwell	4_M_DIEMAN,2,2,{
 			mes "find my son Postell and to";
 			mes "tell him to bring my medicine!";
 			next;
-			switch(select("Sure.:No, I'm sorry.")) {
+			switch(select("Sure.", "No, I'm sorry.")) {
 			case 1:
 				mes "[Allen]";
 				mes "Th-thank you so much!";
@@ -142,7 +142,7 @@ hu_in01,387,245,0	script	Allen Schuwell	4_M_DIEMAN,2,2,{
 			mes "would you please let me";
 			mes "have a White P-Potion?";
 			next;
-			switch(select("Give White Potion:Ignore")) {
+			switch(select("Give White Potion", "Ignore")) {
 			case 1:
 				if (!countitem(White_Potion)) {
 					mes "[Allen]";
@@ -467,7 +467,7 @@ hu_fild06,34,123,3	script	Postell Schuwell	4W_M_01,{
 		mes "all the medicines he's taking";
 		mes "are habit forming, you know?";
 		next;
-		switch(select("But your father needs you!:Habit forming?")) {
+		switch(select("But your father needs you!", "Habit forming?")) {
 		case 1:
 			mes "[Allen's Voice]";
 			mes "Yeah, I guess you're right.";
@@ -776,7 +776,7 @@ ein_in01,16,36,3	script	Morriphen	4_M_04,{
 			mes "Hmm...";
 			mes "What should I do?";
 			next;
-			switch(select("Leave him:Help him")) {
+			switch(select("Leave him", "Help him")) {
 			case 1:
 				mes "["+strcharinfo(0)+"]";
 				mes "You know, I'm a little";
@@ -1916,7 +1916,7 @@ hugel,70,137,5	script	Shede	4_F_CAPEGIRL,{
 		mes "At the same time, I have so many customers to serve...";
 		mes "In fact, I don't even have a time to cht-chat, hohoho.";
 		next;
-		switch(select("Do you want me to help you?:I will leave you alone")) {
+		switch(select("Do you want me to help you?", "I will leave you alone")) {
 		case 1:
 			mes "[Shede]";
 			mes "Oh~ how kind of you! Thank you so much~";
@@ -2179,7 +2179,7 @@ hu_in01,256,40,3	script	Herico	4_M_HUGRANFA,{
 		mes "and have figured out many things on your own.";
 		mes "Am I right?";
 		next;
-		switch(select("Yes, you are right.:I am not so sure.:No.")) {
+		switch(select("Yes, you are right.", "I am not so sure.", "No.")) {
 		case 1:
 			cutin "heri2.bmp",2;
 			mes "[Herico]";
@@ -2427,7 +2427,7 @@ hu_in01,256,40,3	script	Herico	4_M_HUGRANFA,{
 		mes "["+strcharinfo(0)+"]";
 		mes "Well, about the documents...";
 		next;
-		switch(select("I ate them.:Rekenber has taken them into their possession.")) {
+		switch(select("I ate them.", "Rekenber has taken them into their possession.")) {
 		case 1:
 			mes "I ate them.";
 			next;
@@ -2621,7 +2621,7 @@ hu_in01,256,40,3	script	Herico	4_M_HUGRANFA,{
 		mes "Let me hear your opinion.";
 		mes "Will you join me in destroying Regenschirm?";
 		next;
-		switch(select("Sorry, I won't:Yes, I will.")) {
+		switch(select("Sorry, I won't", "Yes, I will.")) {
 		case 1:
 			mes "[Herico]";
 			mes "I respect your decision since this is not something";
@@ -2840,12 +2840,12 @@ hu_in01,256,40,3	script	Herico	4_M_HUGRANFA,{
 			mes "[Herico]";
 			mes "Hey, welcome back.";
 			next;
-			switch(select("I brought Handcuffs:Regarding Sage Varmunt's documents")) {
+			switch(select("I brought Handcuffs", "Regarding Sage Varmunt's documents")) {
 			case 1:
 				mes "[Herico]";
 				mes "I am willing to exchange 1 of level 4 food with 100 Handcuffs.";
 				next;
-				if(select("Exchange:Cancel.") == 1) {
+				if(select("Exchange", "Cancel.") == 1) {
 					if (countitem(Armlet_Of_Prisoner) > 99) {
 						mes "[Herico]";
 						mes "There you go, thank you for your trouble.";
@@ -2918,7 +2918,7 @@ lhz_in03,39,44,3	script	Enquro Carson	4W_M_01,{
 		mes "especially when people are astonished by the news";
 		mes "which I am delivering to them.";
 		next;
-		switch(select("Mercenary Rebellion:News reporter job")) {
+		switch(select("Mercenary Rebellion", "News reporter job")) {
 		case 1:
 			mes "[Enquro Carson]";
 			mes "Hmm...Mercenary Rebellion...?";
@@ -3194,14 +3194,14 @@ hu_in01,317,312,0	script	Book	HIDDEN_NPC,{
 		mes "- You opened the book and found out -";
 		mes "- that there were a small book hidden behind.-";
 		next;
-		switch(select("Read the small book.:Leave it alone.")) {
+		switch(select("Read the small book.", "Leave it alone.")) {
 		case 1:
 			mes "- You picked up the small book. -";
 			mes "- The book owner must want to -";
 			mes "- keep it secret. -";
 			next;
 			while(1) {
-				switch(select("Page 1:Page 2:Page 3:Page 4:Page 5:Page 6:Page 7:Page 8:Page 9:Stop Reading.")) {
+				switch(select("Page 1", "Page 2", "Page 3", "Page 4", "Page 5", "Page 6", "Page 7", "Page 8", "Page 9", "Stop Reading.")) {
 				case 1:
 					mes "- You started reading the 1st page of the book. -";
 					next;
@@ -3327,7 +3327,7 @@ hu_in01,317,312,0	script	Book	HIDDEN_NPC,{
 					next;
 					mes "- You found a folded note between the pages that you were reading. -";
 					next;
-					if(select("Check the note.:Read the next page.") == 1) {
+					if(select("Check the note.", "Read the next page.") == 1) {
 						mes "^3131FF.........................^000000";
 						next;
 						mes "^3131FF...I am so sorry for hearing such devastating news and for your loss.";
@@ -3442,7 +3442,7 @@ einbech,208,124,3	script	Bomb Maker	4_M_REPAIR,{
 		mes "I am a professional Marine Sphere Bottle maker.";
 		mes "You can call me Boomer.";
 		next;
-		switch(select("Buy Marine Sphere Bottle.:End conversation.")) {
+		switch(select("Buy Marine Sphere Bottle.", "End conversation.")) {
 		case 1:
 			mes "[Boomer]";
 			mes "Heh, you want my Marine Sphere Bottles, huh?";
@@ -3456,7 +3456,7 @@ einbech,208,124,3	script	Bomb Maker	4_M_REPAIR,{
 			mes "considering its amazing performance!";
 			mes "You will regret if you miss this chance. Hahaha!";
 			next;
-			switch(select("Buy.:Cancel.")) {
+			switch(select("Buy.", "Cancel.")) {
 			case 1:
 				if (Zeny < 3000) {
 					mes "[Boomer]";
@@ -3492,7 +3492,7 @@ hu_fild06,168,359,3	script	Moks Mushrooms#Mush1	HIDDEN_NPC,{
 	if (hg_tre > 9 && hg_tre < 15) {
 		mes "- You found mushrooms that are as big as your palm. -";
 		next;
-		switch(select("Gather them.:Pass.")) {
+		switch(select("Gather them.", "Pass.")) {
 		case 1:
 			mes "- You decided to gather the mushrooms. -";
 			next;
@@ -3547,7 +3547,7 @@ hu_fild06,194,341,3	script	Moks Mushrooms#Mush2	HIDDEN_NPC,{
 	if (hg_tre > 9 && hg_tre < 15) {
 		mes "- You found mushrooms that are as big as your palm. -";
 		next;
-		switch(select("Gather them.:Pass.")) {
+		switch(select("Gather them.", "Pass.")) {
 		case 1:
 			mes "- You decided to gather the mushrooms. -";
 			next;
@@ -3602,7 +3602,7 @@ hu_fild06,198,339,3	script	Moks Mushrooms#Mush3	HIDDEN_NPC,{
 	if (hg_tre > 9 && hg_tre < 15) {
 		mes "- You found mushrooms that are as big as your palm. -";
 		next;
-		switch(select("Gather them.:Pass.")) {
+		switch(select("Gather them.", "Pass.")) {
 		case 1:
 			mes "- You decided to gather the mushrooms. -";
 			next;
@@ -3657,7 +3657,7 @@ hugel,209,163,3	script	Clam#C1	HIDDEN_NPC,{
 	if (hg_tre > 19 && hg_tre < 25) {
 		mes "- You found very fresh clams whose shells are shining under the sunlight. -";
 		next;
-		switch(select("Gather them.:Pass.")) {
+		switch(select("Gather them.", "Pass.")) {
 		case 1:
 			mes "- You started opening clam shells to gather Clam Flesh.-";
 			next;
@@ -3712,7 +3712,7 @@ hugel,203,166,3	script	Clam#C2	HIDDEN_NPC,{
 	if (hg_tre > 19 && hg_tre < 25) {
 		mes "- You found very fresh clams whose shells are shining under the sunlight. -";
 		next;
-		switch(select("Gather them.:Pass.")) {
+		switch(select("Gather them.", "Pass.")) {
 		case 1:
 			mes "- You started opening clam shells to gather Clam Flesh.-";
 			next;
@@ -3767,7 +3767,7 @@ hugel,217,158,3	script	Clam#C3	HIDDEN_NPC,{
 	if (hg_tre > 19 && hg_tre < 25) {
 		mes "- You found very fresh clams whose shells are shining under the sunlight. -";
 		next;
-		switch(select("Gather them.:Pass.")) {
+		switch(select("Gather them.", "Pass.")) {
 		case 1:
 			mes "- You started opening clam shells to gather Clam Flesh.-";
 			next;
@@ -3822,7 +3822,7 @@ hugel,204,150,3	script	Clam#C4	HIDDEN_NPC,{
 	if (hg_tre > 19 && hg_tre < 25) {
 		mes "- You found very fresh clams whose shells are shining under the sunlight. -";
 		next;
-		switch(select("Gather them.:Pass.")) {
+		switch(select("Gather them.", "Pass.")) {
 		case 1:
 			mes "- You started opening clam shells to gather Clam Flesh.-";
 			next;
@@ -3877,7 +3877,7 @@ hu_fild06,155,309,1	script	Moks Bugs#Bug1	THIEF_BUG_,{
 	if (hg_tre > 29 && hg_tre < 35) {
 		mes "- You found big brown Moks Bugs in the bushes. -";
 		next;
-		switch(select("Catch them.:Pass.")) {
+		switch(select("Catch them.", "Pass.")) {
 		case 1:
 			mes "- You nervously stretched your hands toward Moks Bugs.-";
 			next;
@@ -3932,7 +3932,7 @@ hu_fild06,218,320,1	script	Moks Bugs#Bug2	THIEF_BUG_,{
 	if (hg_tre > 29 && hg_tre < 35) {
 		mes "- You found big brown Moks Bugs in the bushes. -";
 		next;
-		switch(select("Catch them:Pass.")) {
+		switch(select("Catch them", "Pass.")) {
 		case 1:
 			mes "- You nervously stretched your hands toward Moks Bugs.-";
 			next;
@@ -3987,7 +3987,7 @@ hu_fild06,249,329,1	script	Moks Bugs#Bug3	THIEF_BUG_,{
 	if (hg_tre > 29 && hg_tre < 35) {
 		mes "- You found big brown Moks Bugs in the bushes. -";
 		next;
-		switch(select("Catch them:Pass.")) {
+		switch(select("Catch them", "Pass.")) {
 		case 1:
 			mes "- You nervously stretched your hands toward Moks Bugs.-";
 			next;
@@ -4042,7 +4042,7 @@ hu_fild06,218,373,1	script	Moks Bugs#Bug4	THIEF_BUG_,{
 	if (hg_tre > 29 && hg_tre < 35) {
 		mes "- You found big brown Moks Bugs in the bushes. -";
 		next;
-		switch(select("Catch them.:Pass.")) {
+		switch(select("Catch them.", "Pass.")) {
 		case 1:
 			mes "- You nervously stretched your hands toward Moks Bugs.-";
 			next;
@@ -4899,7 +4899,7 @@ hugel,107,67,3	script	Torpy	4_M_KID1,{
 			mes "Daddy where";
 			mes "are you?! Wah~!";
 			next;
-			switch(select("What's wrong?:Ignore")) {
+			switch(select("What's wrong?", "Ignore")) {
 			case 1:
 				mes "[Torpy]";
 				mes "My Daddy hasn't";
@@ -4921,7 +4921,7 @@ hugel,107,67,3	script	Torpy	4_M_KID1,{
 				mes "and then, a-and then...";
 				mes "I never found him!";
 				next;
-				switch(select("Really? Tell me more...:What, is that all...?")) {
+				switch(select("Really? Tell me more...", "What, is that all...?")) {
 				case 1:
 					mes "[Torpy]";
 					mes "Th-then my Mom got";
@@ -5203,7 +5203,7 @@ hugel,100,176,3	script	Suspicious Barrel	HIDDEN_NPC,{
 		mes "this barrel wants";
 		mes "Steamed Crab Nippers.^000000";
 		next;
-		switch(select("I'll bring you Steamed Crab Nippers:Ignore")) {
+		switch(select("I'll bring you Steamed Crab Nippers", "Ignore")) {
 		case 1:
 			mes "[Strange Man]";
 			mes "Please... cook me...";
@@ -5498,7 +5498,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 		mes "But if you're not interested,";
 		mes "you can just buy some now~";
 		next;
-		switch(select("Sure, I'll work for you!:I want to buy Fish Cake Soup.:See ya.")) {
+		switch(select("Sure, I'll work for you!", "I want to buy Fish Cake Soup.", "See ya.")) {
 		case 1:
 			mes "[Cellette]";
 			mes "Oh, thank you so much!";
@@ -5561,7 +5561,7 @@ hu_in01,15,372,3	script	Cellette Lavit	1_F_MERCHANT_02,{
 			mes "its delicious, hearty flavor~";
 			mes "Each order costs 100 zeny.";
 			next;
-			switch(select("Order a Fish Cake Soup:Cancel")) {
+			switch(select("Order a Fish Cake Soup", "Cancel")) {
 			case 1:
 				if (Zeny > 99) {
 					mes "[Cellette]";
@@ -5818,7 +5818,7 @@ hugel,76,134,3	script	Neha	4W_F_01,{
 			mes "this soup isn't good if it";
 			mes "isn't steaming hot?";
 			next;
-			if (Sex) {
+			if (Sex == SEX_MALE) {
 				mes "[Neha]";
 				mes "But... You're a handsome";
 				mes "fellow, so I'll forgive you...";
@@ -6151,7 +6151,7 @@ yuno,111,156,3	script	Euslan	4_F_01,{
 		mes "*Haaaaaaack*";
 		mes "*C-cough* *Sob*^000000";
 		next;
-		switch(select("Ignore:Speak to Euslan")) {
+		switch(select("Ignore", "Speak to Euslan")) {
 		case 1:
 			mes "[Euslan]";
 			mes "^333333*Sniff*";
@@ -6177,7 +6177,7 @@ yuno,111,156,3	script	Euslan	4_F_01,{
 		mes "*Cough Cough*";
 		mes "*Sob* *Sniff*^000000";
 		next;
-		switch(select("Ignore:Speak to Euslan")) {
+		switch(select("Ignore", "Speak to Euslan")) {
 		case 1:
 			mes "[Euslan]";
 			mes "^333333*Sniff*";
@@ -6198,7 +6198,7 @@ yuno,111,156,3	script	Euslan	4_F_01,{
 			next;
 			break;
 		}
-		switch(select("Nothing!:Are you alright?")) {
+		switch(select("Nothing!", "Are you alright?")) {
 		case 1:
 			mes "[Euslan]";
 			mes "Oh, I'm s-sorry...";
@@ -6230,7 +6230,7 @@ yuno,111,156,3	script	Euslan	4_F_01,{
 			next;
 			break;
 		}
-		switch(select("Leave her alone:Offer to find Thierry")) {
+		switch(select("Leave her alone", "Offer to find Thierry")) {
 		case 1:
 			mes "[Euslan]";
 			mes "Thierry... ^333333*Sob*^000000";
@@ -6300,7 +6300,7 @@ yuno,111,156,3	script	Euslan	4_F_01,{
 		mes "is he? ^333333*Sniff*^000000 Where's my";
 		mes "Thierry? I want to see him...";
 		next;
-		switch(select("Leave her alone:Offer to find Thierry")) {
+		switch(select("Leave her alone", "Offer to find Thierry")) {
 		case 1:
 			mes "[Euslan]";
 			mes "Thierry... ^333333*Sob*^000000";
@@ -6904,7 +6904,7 @@ hugel,56,104,3	script	Kurupe	4_M_SEAMAN,3,3,{
 		mes "Burupu for me, I'll be sure";
 		mes "to pay you for your effort.";
 		next;
-		switch(select("Sure.:Sorry, I'm busy.")) {
+		switch(select("Sure.", "Sorry, I'm busy.")) {
 		case 1:
 			mes "[Kurupe]";
 			mes "Thank you, you're a";
@@ -7002,7 +7002,7 @@ hugel,56,104,3	script	Kurupe	4_M_SEAMAN,3,3,{
 		mes "cow? I can always use a";
 		mes "dependable person like you.";
 		next;
-		switch(select("Sure, I'll milk Booboo.:What'll pay me this time?:Nah, just dropping by.")) {
+		switch(select("Sure, I'll milk Booboo.", "What'll pay me this time?", "Nah, just dropping by.")) {
 		case 1:
 			mes "[Kurupe]";
 			mes "Great, great! If you want";
@@ -7252,7 +7252,7 @@ hu_fild06,217,270,3	script	Burupu	4_M_HUBOY,3,3,{
 		mes "equipment. Let's see... Why not";
 		mes "give me 1 Rapier with 2 Slots? That's not too much to ask, right?";
 		next;
-		switch(select("Alright.:Whoa, that's too much!")) {
+		switch(select("Alright.", "Whoa, that's too much!")) {
 			case 1:
 				mes "[Burupu]";
 				mes "I'm glad you agree~";
@@ -7382,7 +7382,7 @@ hugel,72,101,0	script	Burupu's Instructions	HIDDEN_NPC,{
 	mes "Chapter 2: How to Treat Booboo";
 	mes "Chapter 3: Before You Begin";
 	next;
-	switch(select("Chapter 1:Chapter 2:Chapter 3")) {
+	switch(select("Chapter 1", "Chapter 2", "Chapter 3")) {
 	case 1:
 		mes "[Chapter 1]";
 		mes "Booboo is a very emotionally";
@@ -7407,7 +7407,7 @@ hugel,72,101,0	script	Burupu's Instructions	HIDDEN_NPC,{
 		mes "Booboo the Cow's Feelings";
 		mes "Part 2: Booboo's Songs";
 		next;
-		switch(select("Part 1:Part 2")) {
+		switch(select("Part 1", "Part 2")) {
 		case 1:
 			mes "[Chapter 2, Part 1]";
 			mes "Booboo the Cow usually";
@@ -7510,7 +7510,7 @@ hugel,68,99,3	script	Booboo the Cow	4_BULL,{
 		mes "has something that";
 		mes "she wants to tell you.^000000";
 		next;
-		switch(select("Attempt to Milk Booboo:It's not the right time!")) {
+		switch(select("Attempt to Milk Booboo", "It's not the right time!")) {
 		case 1:
 			if (countitem(Center_Potion) > 2) {
 				switch(rand(1,5)) {
@@ -7703,7 +7703,7 @@ hu_in01,19,161,0	script	Alex	1_F_SIGNZISK,{
 		mes "Huh...?";
 		mes "What do you want?";
 		next;
-		switch(select("Excuse me...:I saw the recruitment notice and...")) {
+		switch(select("Excuse me...", "I saw the recruitment notice and...")) {
 		case 1:
 			mes "[Alex]";
 			mes "Whatever you're";
@@ -7788,7 +7788,7 @@ hu_in01,19,161,0	script	Alex	1_F_SIGNZISK,{
 		mes "already. So will you help";
 		mes "us in our expedition?";
 		next;
-		switch(select("Who are the people in the next room?:Well...:Yes, I do.")) {
+		switch(select("Who are the people in the next room?", "Well...", "Yes, I do.")) {
 		case 1:
 			cutin "hu_alex02.bmp",2;
 			mes "[Alex]";
@@ -7858,7 +7858,7 @@ hu_in01,19,161,0	script	Alex	1_F_SIGNZISK,{
 		mes "you be headed to the";
 		mes "shrine already?";
 		next;
-		switch(select("What was I supposed to gather?:I'm leaving, I'm leaving!")) {
+		switch(select("What was I supposed to gather?", "I'm leaving, I'm leaving!")) {
 		case 1:
 			cutin "hu_alex03.bmp",2;
 			mes "[Alex]";
@@ -7890,7 +7890,7 @@ hu_in01,19,161,0	script	Alex	1_F_SIGNZISK,{
 		mes "So did you bring me";
 		mes "^3355FF5 Runes of the Darkness^000000?";
 		next;
-		switch(select("Er, not yet...:There you go!")) {
+		switch(select("Er, not yet...", "There you go!")) {
 		case 1:
 			cutin "hu_alex02.bmp",2;
 			mes "[Alex]";
@@ -8159,7 +8159,7 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 		mes "when the gods showed";
 		mes "themselves to humans!";
 		next;
-		switch(select("Nah, forget it.:Yes, I'll do it!")) {
+		switch(select("Nah, forget it.", "Yes, I'll do it!")) {
 		case 1:
 			cutin "hu_laura01.bmp",2;
 			mes "[Laura]";
@@ -8170,7 +8170,7 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 			mes "We need to work together to";
 			mes "build a better future, right?";
 			next;
-			if(select("But you can't pay me.:Alright, I'll do it.") == 1) {
+			if(select("But you can't pay me.", "Alright, I'll do it.") == 1) {
 				cutin "hu_laura04.bmp",2;
 				mes "[Laura]";
 				mes "You're right.";
@@ -8230,7 +8230,7 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 		mes "in the Odin Shrine on behalf";
 		mes "of the Rune-Midgarts Kingdom.";
 		next;
-		switch(select("About Alex and Julian:Alright, now I understand.")) {
+		switch(select("About Alex and Julian", "Alright, now I understand.")) {
 		case 1:
 			cutin "hu_laura01.bmp",2;
 			mes "["+strcharinfo(0)+"]";
@@ -8323,7 +8323,7 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 		mes "[Laura]";
 		mes "RIGHT?!";
 		next;
-		select("Yeah, yeah, whatever.:Sure thing.:I s-s-s-suppose...!:Yes, Ma'am!");
+		select("Yeah, yeah, whatever.", "Sure thing.", "I s-s-s-suppose...!", "Yes, Ma'am!");
 		hg_odin = 17;
 		cutin "hu_laura04.bmp",2;
 		mes "[Laura]";
@@ -8352,14 +8352,14 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 		mes "need to finish our research";
 		mes "for the good of mankind.";
 		next;
-		select("Yeah, yeah, whatever.:I see.:You're right, Ma'am.");
+		select("Yeah, yeah, whatever.", "I see.", "You're right, Ma'am.");
 		mes "[Laura]";
 		mes "Well, then.";
 		mes "Did you happen to";
 		mes "find anything while";
 		mes "you were there?";
 		next;
-		switch(select("Jellopies.:No.")) {
+		switch(select("Jellopies.", "No.")) {
 		case 1:
 			cutin "hu_laura01.bmp",2;
 			mes "[Laura]";
@@ -8388,7 +8388,7 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 		mes "be fair, I can offer you something from my special collection.";
 		mes "How does that sound?";
 		next;
-		switch(select("Who are the guys in the other room?:Well...:Yes!")) {
+		switch(select("Who are the guys in the other room?", "Well...", "Yes!")) {
 		case 1:
 			cutin "hu_laura01.bmp",2;
 			mes "[Laura]";
@@ -8456,7 +8456,7 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 		mes "to do, don't you? What";
 		mes "are you still doing here?";
 		next;
-		switch(select("What was I supposed to gather?:Don't worry, I'm leaving.")) {
+		switch(select("What was I supposed to gather?", "Don't worry, I'm leaving.")) {
 		case 1:
 			mes "[Laura]";
 			mes "You're supposed";
@@ -8485,7 +8485,7 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 		mes "So where are the Runes";
 		mes "of the Darkness you brought?";
 		next;
-		switch(select("Er, I don't have them yet...:Right here!")) {
+		switch(select("Er, I don't have them yet...", "Right here!")) {
 		case 1:
 			cutin "hu_laura03.bmp",2;
 			mes "[Laura]";
@@ -8668,7 +8668,7 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 		mes "[Laura]";
 		mes "...Hey, you.";
 		next;
-		if ( select( "...:...Me?" ) == 1)
+		if ( select( "...", "...Me?" ) == 1)
 		{
 			mes "[Laura]";
 			mes "Hey, hey!";
@@ -8703,7 +8703,7 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 		mes "[Laura]";
 		mes "RIGHT?!";
 		next;
-		select("Yeah, yeah, whatever.:Sure thing.:I s-s-s-suppose...!:Yes, Ma'am!");
+		select("Yeah, yeah, whatever.", "Sure thing.", "I s-s-s-suppose...!", "Yes, Ma'am!");
 		hg_odin = 17;
 		for(.@i = 11002; .@i <= 11005; ++.@i) {
 			if (questprogress(.@i) && questprogress(.@i) != 2)
@@ -8737,7 +8737,7 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 		mes "learned about the Schwaltzvalt";
 		mes "Republic Research Team.";
 		next;
-		switch(select("Giantes:Ymir's Heart:Nothing")) {
+		switch(select("Giantes", "Ymir's Heart", "Nothing")) {
 			case 1:
 				cutin "hu_laura04.bmp",2;
 				mes "["+strcharinfo(0)+"]";
@@ -8770,7 +8770,7 @@ hu_in01,14,11,4	script	Laura	1_F_GYPSY,{
 				mes "this? What exactly";
 				mes "is Ymir's Heart?";
 				next;
-				switch(select("It's candy.:It's a book.:It's a place.:Ymir was a giant..."))
+				switch(select("It's candy.", "It's a book.", "It's a place.", "Ymir was a giant..."))
 				{
 					case 1:
 						mes "["+strcharinfo(0)+"]";
@@ -9407,7 +9407,7 @@ OnTouch:
 		mes "I leave, have you got any";
 		mes "questions? Otherwise, I'll go.";
 		next;
-		switch(select("Who's Ashe?:What happened to Laura?")) {
+		switch(select("Who's Ashe?", "What happened to Laura?")) {
 			case 1:
 				mes "[???]";
 				mes "You'll never see her";
@@ -9476,7 +9476,7 @@ hugel,209,109,2	script	Boatman#hugel	4_M_SEAMAN,{
 	mes "fare for 1 passenger is";
 	mes "800 zeny. Shall we board?";
 	next;
-	switch(select("No, thanks.:Sure!")) {
+	switch(select("No, thanks.", "Sure!")) {
 		case 1:
 			mes "[Boatman]";
 			mes "Ah, alright.";
@@ -9519,7 +9519,7 @@ odin_tem01,93,146,4	script	Boatman	4_M_SEAMAN,{
 	mes "Hugel now, or did you";
 	mes "want to explore a bit more?";
 	next;
-	switch(select("I still need to look around...:Yes, take me back to Hugel.")) {
+	switch(select("I still need to look around...", "Yes, take me back to Hugel.")) {
 		case 1:
 			mes "[Boatman]";
 			mes "Well, alright.";
@@ -9746,7 +9746,7 @@ OnTouch:
 		mes "......";
 		mes ".........";
 		next;
-		switch(select("Pass:Explore")) {
+		switch(select("Pass", "Explore")) {
 		case 1:
 			mes "^3355FFYou decided to pass";
 			mes "by the shrine's remnants.^000000";
@@ -9757,7 +9757,7 @@ OnTouch:
 				mes "shimmer among the";
 				mes "remnants of the shrine.^000000";
 				next;
-				switch(select("Ignore:Pick it up")) {
+				switch(select("Ignore", "Pick it up")) {
 				case 1:
 					mes "^3355FFYou decide to continue";
 					mes "searching through the";

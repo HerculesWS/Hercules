@@ -57,7 +57,7 @@
 		mes "Brave ones...";
 		mes "Do you wish to return to your honorable place?";
 		next;
-		if(select("Return to the guild castle.:Quit.") == 1) {
+		if(select("Return to the guild castle.", "Quit.") == 1) {
 			close2;
 			if (getcharid(2) == getcastledata("gefg_cas02",1)) {
 				warp "gefg_cas02",178,43;
@@ -121,7 +121,7 @@ gefg_cas02,145,114,0	script	#lever_G02	HIDDEN_NPC,{
 	mes " ";
 	mes "There's a small lever. Will you pull it?";
 	next;
-	if(select("Pull.:Do not.") == 1) {
+	if(select("Pull.", "Do not.") == 1) {
 		close2;
 		warp "gefg_cas02",12,67;
 		end;

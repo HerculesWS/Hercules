@@ -94,7 +94,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			mes "bother me if you've";
 			mes "got nothing to say!";
 			next;
-			if (select("A cat?:Now I'm sleepy, too...") == 1) {
+			if (select("A cat?", "Now I'm sleepy, too...") == 1) {
 				mes "[Meow]";
 				mes "Yeah. Yeah, I'm a cat.";
 				mes "For now, anyway. Damn that";
@@ -126,7 +126,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 			mes "Guild. Although I don't really";
 			mes "want to, I pretty much don't have a choice. So what do you say?";
 			next;
-			if (select("Nah, I'm too sleepy...:Sure, I'd like to learn a new skill.") == 1) {
+			if (select("Nah, I'm too sleepy...", "Sure, I'd like to learn a new skill.") == 1) {
 				mes "[Meow]";
 				mes "^333333*Yaaaawn*^000000";
 				mes "Alright. If you wanna";
@@ -347,7 +347,7 @@ gef_tower,115,36,4	script	Meow#q_wiz	4_CAT,{
 		mes "bother me if you've";
 		mes "got nothing to say!";
 		next;
-		if (select("A cat?:Now I'm sleepy, too...") == 1) {
+		if (select("A cat?", "Now I'm sleepy, too...") == 1) {
 			mes "[Meow]";
 			mes "Yeah. Yeah, I'm a cat.";
 			mes "For now, anyway. Damn that";
@@ -385,7 +385,7 @@ prt_in,82,98,3	script	Simon Mayace#q_wiz	1_ETC_01,{
 		mes "tell the difference. Ah, may";
 		mes "I be of service to you?";
 		next;
-		if (select("I'm fine, thank you.:I want to learn about push backs.") == 1) {
+		if (select("I'm fine, thank you.", "I want to learn about push backs.") == 1) {
 			mes "[Simon]";
 			mes "I'm surprised that you chose";
 			mes "to practice magic: judging";

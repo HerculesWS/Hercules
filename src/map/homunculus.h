@@ -63,14 +63,15 @@ enum homun_id {
 #define homun_alive(x) ((x) && (x)->homunculus.vaporize == HOM_ST_ACTIVE && (x)->battle_status.hp > 0)
 
 #ifdef RENEWAL
-#define	HOMUN_LEVEL_STATWEIGHT_VALUE 0
-#define APPLY_HOMUN_LEVEL_STATWEIGHT()( \
-	hom->str_value = hom->agi_value = \
-	hom->vit_value = hom->int_value = \
-	hom->dex_value = hom->luk_value = hom->level / 10 - HOMUN_LEVEL_STATWEIGHT_VALUE \
-	)
+#define HOMUN_LEVEL_STATWEIGHT_VALUE 0
+#define APPLY_HOMUN_LEVEL_STATWEIGHT() \
+	do { \
+		hom->str_value = hom->agi_value = \
+		hom->vit_value = hom->int_value = \
+		hom->dex_value = hom->luk_value = hom->level / 10 - HOMUN_LEVEL_STATWEIGHT_VALUE; \
+	} while (false)
 #else
-#define APPLY_HOMUN_LEVEL_STATWEIGHT()
+#define APPLY_HOMUN_LEVEL_STATWEIGHT() (void)0
 #endif
 
 struct h_stats {
@@ -185,13 +186,13 @@ struct homunculus_interface {
 	bool (*feed) (struct map_session_data *sd, struct homun_data *hd);
 	int (*hunger_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*hunger_timer_delete) (struct homun_data *hd);
-	int (*change_name) (struct map_session_data *sd,char *name);
-	bool (*change_name_ack) (struct map_session_data *sd, char* name, int flag);
+	int (*change_name) (struct map_session_data *sd, const char *name);
+	bool (*change_name_ack) (struct map_session_data *sd, const char *name, int flag);
 	int (*db_search) (int key,int type);
-	bool (*create) (struct map_session_data *sd, struct s_homunculus *hom);
+	bool (*create) (struct map_session_data *sd, const struct s_homunculus *hom);
 	void (*init_timers) (struct homun_data * hd);
 	bool (*call) (struct map_session_data *sd);
-	bool (*recv_data) (int account_id, struct s_homunculus *sh, int flag);
+	bool (*recv_data) (int account_id, const struct s_homunculus *sh, int flag);
 	bool (*creation_request) (struct map_session_data *sd, int class_);
 	bool (*ressurect) (struct map_session_data* sd, unsigned char per, short x, short y);
 	void (*revive) (struct homun_data *hd, unsigned int hp, unsigned int sp);

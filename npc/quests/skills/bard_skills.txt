@@ -49,7 +49,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 		mes "D-don't come any closer!";
 		mes "I... I don't like you guys!";
 		next;
-		if (select("Wha--? Why the heck not?:Hey, take it easy, man.") == 1) {
+		if (select("Wha--? Why the heck not?", "Hey, take it easy, man.") == 1) {
 			mes "[Timid Young Man]";
 			mes "N-no! Don't look at me!";
 			mes "I know what you're trying";
@@ -80,7 +80,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 			mes "done anything to you!";
 			mes "J-just s-stay away!";
 			next;
-			if (select("Offer him a drink.:Reassure him that you're safe.") == 1) {
+			if (select("Offer him a drink.", "Reassure him that you're safe.") == 1) {
 				mes "[" + strcharinfo(0) + "]";
 				mes "Look, I don't know what";
 				mes "you've got against me, but";
@@ -131,7 +131,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 						mes "It tastes so good, and";
 						mes "now I feel sooo relaxed...";
 						next;
-						switch(select("See? I'm not dangerous at all~:So what makes someone like me so scary?")) {
+						switch(select("See? I'm not dangerous at all~", "So what makes someone like me so scary?")) {
 						case 1:
 							mes "[Timid Young Man]";
 							mes "Hmmm... Maybe.";
@@ -414,7 +414,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 				mes "no trouble for me to teach that";
 				mes "to you again if you'd like.";
 				next;
-				if (select("No, thanks.:Thanks, I'd appreciate that.") == 1) {
+				if (select("No, thanks.", "Thanks, I'd appreciate that.") == 1) {
 					mes "[Riott]";
 					mes "What...?";
 					mes "You really don't";
@@ -769,7 +769,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 					mes "hilarious at the time)";
 					mes "but yeah, that was me.";
 					next;
-					if (select("Please teach me that skill!:Oh, alright. Just checking.") == 1) {
+					if (select("Please teach me that skill!", "Oh, alright. Just checking.") == 1) {
 						mes "[Riott]";
 						mes "Hm? You want to learn";
 						mes "how to scramble minds";
@@ -1181,7 +1181,7 @@ morocc_in,166,76,7	script	Bartender#bard_qskill	1_ETC_01,{
 	mes "So what would";
 	mes "you like to order?";
 	next;
-	switch(select("Tropical Sograt:Vermilion on the Beach:Nothing, thanks.")) {
+	switch(select("Tropical Sograt", "Vermilion on the Beach", "Nothing, thanks.")) {
 	case 1:
 		if (MaxWeight - Weight < 2000) {
 			mes "[Bartender]";

@@ -102,7 +102,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				mes "for me to teach you";
 				mes "Dubious Salesmanship?";
 				next;
-				if (select("Sure.:No, thanks.") == 1) {
+				if (select("Sure.", "No, thanks.") == 1) {
 					mes "["+ strcharinfo(0) +"]";
 					mes "Sure. I'll try learning this";
 					mes "new skill. Who knows?";
@@ -554,7 +554,7 @@ geffen,172,52,1	script	Goodman#qsk_bs	4_M_DWARF,{
 				mes "skill right now. So what";
 				mes "do you say, kid?";
 				next;
-				if (select("Sounds good!:Maybe later~") == 1) {
+				if (select("Sounds good!", "Maybe later~") == 1) {
 					mes "[Goodman]";
 					mes "Heh! Good choice. Now,";
 					mes "the Greed skill automatically";

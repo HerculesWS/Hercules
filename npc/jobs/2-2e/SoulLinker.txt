@@ -52,7 +52,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 	}
 	if (Class == Job_Star_Gladiator) {
 		mes "[Kid]";
-		if (Sex == 1) {
+		if (Sex == SEX_MALE) {
 			mes "Aren't you a warrior";
 			mes "of the sun? I'm familiar";
 		}
@@ -100,7 +100,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 			mes "raise my voice, and";
 			mes "just get over here.";
 			next;
-			if (select("You're awfully rude for a kid!:Ignore him.") == 1) {
+			if (select("You're awfully rude for a kid!", "Ignore him.") == 1) {
 				mes "[Kid]";
 				mes "You're lucky I'm";
 				mes "taking an interest";
@@ -126,7 +126,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 				mes "wanna see wasted. Why don't";
 				mes "you become a ''Soul-Linker?''";
 				next;
-				if (select("Ha! Silly little boy~:Soul Linker?") == 1) {
+				if (select("Ha! Silly little boy~", "Soul Linker?") == 1) {
 					mes "[Kid]";
 					mes "You... You d-don't";
 					mes "believe me? I'm being";
@@ -165,7 +165,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 				mes "but I know it'll be possible";
 				mes "for you. So what do you say?";
 				next;
-				if (select("No. At least, not now...:Alright. What do I have to do?") == 1) {
+				if (select("No. At least, not now...", "Alright. What do I have to do?") == 1) {
 					mes "[Kid]";
 					mes "Ah, alright. Well,";
 					mes "if you ever decide to";
@@ -210,7 +210,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 				mes "^0000FF1 Witherless Rose^000000.";
 				mes "like I asked you to?";
 				next;
-				if (select("There you are.:No, not yet...") == 1) {
+				if (select("There you are.", "No, not yet...") == 1) {
 					if (countitem(Crystal_Jewel__) > 0 && countitem(Immortal_Heart) > 0 && countitem(Witherless_Rose) > 0) {
 						delitem Crystal_Jewel__,1;
 						delitem Immortal_Heart,1;
@@ -312,7 +312,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 			mes "enter the depths";
 			mes "of your mind again?";
 			next;
-			if (select("No:Yes") == 1) {
+			if (select("No", "Yes") == 1) {
 				mes "[Maia]";
 				mes "Well then, come";
 				mes "back to me when you";
@@ -406,7 +406,7 @@ OnTouch:
 			mes "speak with the spirits";
 			mes "if that is what you wish.";
 			next;
-			if (select("Converse more with the spirits:Become a Soul Linker") == 1) {
+			if (select("Converse more with the spirits", "Become a Soul Linker") == 1) {
 				mes "[Maia]";
 				mes "Alright. Try to hurry";
 				mes "since we can remain in";
@@ -701,7 +701,7 @@ sec_in02,35,153,0	script	Soul Linker Var	4_M_OPERATION,{
 		mes "reset the Soul Linker";
 		mes "Global Variable?";
 		next;
-		switch(select("Reset:Cancel")) {
+		switch(select("Reset", "Cancel")) {
 		case 1:
 			mes "[Soul Linker Var]";
 			mes "The Soul Linker";

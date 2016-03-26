@@ -80,7 +80,7 @@ comodo,193,151,4	script	Bor Robin#1	4_M_04,{
 	mes "to go, too?";
 	mes "It's a good opportunity to watch the Dancer job change test.";
 	next;
-	if (select("Go to the Job Change Area:Cancel") == 1) {
+	if (select("Go to the Job Change Area", "Cancel") == 1) {
 		mes "[Bor Robin]";
 		mes "Yaay~~";
 		mes "Let's go!";
@@ -153,7 +153,7 @@ job_duncer,43,93,4	script	Aile#da	4_F_07,{
 		cutin "",255;
 		end;
 	}
-	if (DANC_Q == 0 && Sex == 0 && BaseJob == Job_Archer) {
+	if (DANC_Q == 0 && Sex == SEX_FEMALE && BaseJob == Job_Archer) {
 		cutin "job_dancer_eir01",2;
 		mes "[Aile]";
 		mes "Welcome~!";
@@ -177,7 +177,7 @@ job_duncer,43,93,4	script	Aile#da	4_F_07,{
 		mes "So what do";
 		mes "you want to do~?";
 		next;
-		if (select("Fill out the application.:I'll pass.") == 1) {
+		if (select("Fill out the application.", "I'll pass.") == 1) {
 			if (JobLevel > 39) {
 				cutin "job_dancer_eir02",2;
 				mes "[Aile]";
@@ -228,8 +228,7 @@ job_duncer,43,93,4	script	Aile#da	4_F_07,{
 		close2;
 		cutin "",255;
 		end;
-	}
-	else if (Sex == 1) {
+	} else if (Sex == SEX_MALE) {
 		cutin "job_dancer_eir03",2;
 		mes "[Aile]";
 		mes "Welco--Mmm?";
@@ -525,14 +524,14 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 			mes "1. The Dancer's dance, ^CD6889Lady Luck^000000,";
 			mes "increases which of the following?";
 			next;
-			if (select("Intelligence (INT):Dexterity (DEX):Vitality (VIT):Critical Attack Rate") == 4)
+			if (select("Intelligence (INT)", "Dexterity (DEX)", "Vitality (VIT)", "Critical Attack Rate") == 4)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "2. Of the following,";
 			mes "which can you not consider";
 			mes "to be a dance?";
 			next;
-			switch(select("Tango:Tap Dance:HIP-HOP:Hip Shaker:Lightning Bolt")) {
+			switch(select("Tango", "Tap Dance", "HIP-HOP", "Hip Shaker", "Lightning Bolt")) {
 			default:
 				.@da_score -= 10;
 				break;
@@ -544,24 +543,24 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 			mes "3. Which of the following";
 			mes "best describes a Dancer?";
 			next;
-			if (select("Person who yells.:A loud person.:A person who dances.:A person who sings.") == 3)
+			if (select("Person who yells.", "A loud person.", "A person who dances.", "A person who sings.") == 3)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "4. Which of the following";
 			mes "cannot be associated with Comodo?";
 			next;
-			if (select("Beach city.:Dancer Job Change.:Always dark like the night.:Dungeons in 3 directions.:A lot of Thieves.") == 5)
+			if (select("Beach city.", "Dancer Job Change.", "Always dark like the night.", "Dungeons in 3 directions.", "A lot of Thieves.") == 5)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "5. Before Comodo, what is the region name of the region NorthEast of Pharoah's Lighthouse Island?";
 			next;
-			if (select("Elmeth Plateau:Comuko Beach:Comodo Beach:Ginai Swamp") == 3)
+			if (select("Elmeth Plateau", "Comuko Beach", "Comodo Beach", "Ginai Swamp") == 3)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "6. Who is the most";
 			mes "beautiful dancer?";
 			next;
-			switch(select("" + strcharinfo(0) + ":Bijou:Aile:Bonjour")) {
+			switch(select(strcharinfo(0), "Bijou", "Aile", "Bonjour")) {
 			case 1:
 				mes "[Bijou]";
 				mes "...";
@@ -584,26 +583,26 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 			mes "who can perform together";
 			mes "with a Dancer?";
 			next;
-			if (select("Assassin:Bard:Alchemist:Sage") == 2)
+			if (select("Assassin", "Bard", "Alchemist", "Sage") == 2)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "8. Which of the following";
 			mes "is not a specialty of Comodo?";
 			next;
-			if (select("Berserk Potion:Clam Shell:Crab Shell:Shining Stone") == 4)
+			if (select("Berserk Potion", "Clam Shell", "Crab Shell", "Shining Stone") == 4)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "9. Who is the manager";
 			mes "of the Comodo Casino?";
 			next;
-			if (select("Yoo:Moo:Hoon:Roul") == 2)
+			if (select("Yoo", "Moo", "Hoon", "Roul") == 2)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "10. Who accepts the";
 			mes "Dancer job change";
 			mes "applications?";
 			next;
-			if (select("Bijou:Aile:Athena:Sonotora") == 2)
+			if (select("Bijou", "Aile", "Athena", "Sonotora") == 2)
 				.@da_score += 10;
 			break;
 		case 2:
@@ -612,14 +611,14 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 			mes "of the combined skill,";
 			mes "^CD6889Mental Sensing^000000?";
 			next;
-			if (select("Instant monster death.:Doubles damage.:Increases experience.:Increases attack speed.") == 3)
+			if (select("Instant monster death.", "Doubles damage.", "Increases experience.", "Increases attack speed.") == 3)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "2. Which is considered";
 			mes "bad etiquette on the dance";
 			mes "floor after a dance?";
 			next;
-			if (select("Thank your partner.:Praise your partner's dance.:Ask to dance a different dance.:Criticize your partner.") == 4)
+			if (select("Thank your partner.", "Praise your partner's dance.", "Ask to dance a different dance.", "Criticize your partner.") == 4)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "3. Which is not an";
@@ -628,33 +627,33 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 			mes "a mistake while you";
 			mes "are dancing together?";
 			next;
-			if (select("Smile at each other and continue dancing.:Point out the mistake.:Ignore it if the dancer does not realize it.:Give them a smile.") == 2)
+			if (select("Smile at each other and continue dancing.", "Point out the mistake.", "Ignore it if the dancer does not realize it.", "Give them a smile.") == 2)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "4. In which town";
 			mes "can you change jobs";
 			mes "to a Dancer?";
 			next;
-			if (select("Cocomo:Sandarman:Comudo:Comodo") == 4)
+			if (select("Cocomo", "Sandarman", "Comudo", "Comodo") == 4)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "5. How many dungeons";
 			mes "are directly connected";
 			mes "to Comodo?";
 			next;
-			if (select("1:2:3:4") == 3)
+			if (select("1", "2", "3", "4") == 3)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "6. Which of the following";
 			mes "is not a Cute Pet monster?";
 			next;
-			if (select("Isis:Argiope:Dokebi:Deviruchi") == 2)
+			if (select("Isis", "Argiope", "Dokebi", "Deviruchi") == 2)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "7. Who is the most";
 			mes "graceful dancer?";
 			next;
-			switch(select("" + strcharinfo(0) + ":Bijou:Isis:Mercy Bokou")) {
+			switch(select(strcharinfo(0), "Bijou", "Isis", "Mercy Bokou")) {
 			case 1:
 				mes "[Bijou]";
 				mes "...";
@@ -677,18 +676,18 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 			mes "exact name of the";
 			mes "Kafra in Comodo?";
 			next;
-			if (select("Kafra Headquarters:Kafra West Headquarters:Kafra Service:Kafra Headquarters: Western Branch") == 4)
+			if (select("Kafra Headquarters", "Kafra West Headquarters", "Kafra Service", "Kafra Headquarters", " Western Branch") == 4)
 				.@da_score += 10;
 			mes "[......]";
 			mes "9. What is my name?";
 			next;
-			if (select("Borjuis:Bourgeois:Bijou:Beruberu") == 3)
+			if (select("Borjuis", "Bourgeois", "Bijou", "Beruberu") == 3)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "10. What is the";
 			mes "effect of ^CD6889Lullaby^000000?";
 			next;
-			if (select("Casts the Blind effect in the area.:Casts the Sleep effect on the area.:Puts a night effect on the area.:Freezes the area.") == 2)
+			if (select("Casts the Blind effect in the area.", "Casts the Sleep effect on the area.", "Puts a night effect on the area.", "Freezes the area.") == 2)
 				.@da_score += 10;
 			break;
 		case 3:
@@ -696,7 +695,7 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 			mes "1. What is the effect";
 			mes "of the skill ^CD6889Dance Lessons^000000?";
 			next;
-			switch(select("Increases INT:Increases the effect of dancing skills:Increase damage of Whip weapons.:Inflict Stun on a certain area around the caster.")) {
+			switch(select("Increases INT", "Increases the effect of dancing skills", "Increase damage of Whip weapons.", "Inflict Stun on a certain area around the caster.")) {
 			default:
 				break;
 			case 2:
@@ -711,25 +710,25 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 			mes "their feet and taps the";
 			mes "ground to create a rhythm?";
 			next;
-			if (select("Tap Dance:Improve Concentration:Tango:Double Strafing") == 1)
+			if (select("Tap Dance", "Improve Concentration", "Tango", "Double Strafing") == 1)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "3. Which of the following";
 			mes "is not a characteristic of a Dancer?";
 			next;
-			if (select("Uses Dance skills. :Attacks from a distance.:Uses Whips.:Uses Two-handed swords.") == 4)
+			if (select("Uses Dance skills. ", "Attacks from a distance.", "Uses Whips.", "Uses Two-handed swords.") == 4)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "4. Which town has";
 			mes "the most Dancers?";
 			next;
-			if (select("Al De Baran:Juno:Morroc:Comodo") == 4)
+			if (select("Al De Baran", "Juno", "Morroc", "Comodo") == 4)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "5. Of the following,";
 			mes "who dances most beautifully?";
 			next;
-			switch(select("" + strcharinfo(0) + ":Bijou:Isis:Guton Tak")) {
+			switch(select(strcharinfo(0), "Bijou", "Isis", "Guton Tak")) {
 			case 1:
 				mes "[Bijou]";
 				mes "...";
@@ -752,32 +751,32 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 			mes "better at than the other";
 			mes "job classes?";
 			next;
-			if (select("Health:Acting :Dancing :Magic ") == 3)
+			if (select("Health", "Acting ", "Dancing ", "Magic ") == 3)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "7. Who is the manager";
 			mes "of the Comodo Casino?";
 			next;
-			if (select("Ryu:Moo:Roul:Hoon") == 2)
+			if (select("Ryu", "Moo", "Roul", "Hoon") == 2)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "8. What item cannot";
 			mes "be equipped by a Dancer?";
 			next;
-			if (select("Kitty Band :Two-handed Sword:Sandals:Earring") == 2)
+			if (select("Kitty Band ", "Two-handed Sword", "Sandals", "Earring") == 2)
 				.@da_score += 10;
 			mes "[Bijou]";
 			mes "9. Do you think you";
 			mes "can say this quiz is";
 			mes "frustrating and annoying?";
 			next;
-			select("Yes:No");
+			select("Yes", "No");
 			.@da_score += 10;
 			mes "[Bijou]";
 			mes "10. Which of the following";
 			mes "is not a Jazz musician?";
 			next;
-			if (select("Art Blakey:Billie Holiday :Louis Armstrong :Bud Powell :Elder Willow ") == 5)
+			if (select("Art Blakey", "Billie Holiday ", "Louis Armstrong ", "Bud Powell ", "Elder Willow ") == 5)
 				.@da_score += 10;
 		}
 		mes "[Bijou]";
@@ -826,7 +825,7 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 		mes "If you like, I can";
 		mes "explain the instructions.";
 		next;
-		if (select("Listen to instructions.:Go to the testing area.") == 1) {
+		if (select("Listen to instructions.", "Go to the testing area.") == 1) {
 			mes "[Bijou]";
 			mes "First of all, each person gets ^CD68891 minute^000000 for the test, and everyone dances ^CD6889one at a time^000000. Don't worry if you've never danced before~";
 			next;

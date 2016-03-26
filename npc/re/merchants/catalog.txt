@@ -65,7 +65,7 @@ moc_para01,22,16,5	script	Catalog Magician#catal01	4_M_BIBI,{
 	mes "costs only 200z!";
 	mes "You can buy up to 50 pieces at once!";
 	next;
-	switch(select("Buy a ^007777Universal Catalog Silver^000000:I don't need it!:You don't look like a vendor!")) {
+	switch(select("Buy a ^007777Universal Catalog Silver^000000", "I don't need it!", "You don't look like a vendor!")) {
 	case 1:
 		mes "[Catalog Magician]";
 		mes "You... want all 50 pieces?";

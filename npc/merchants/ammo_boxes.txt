@@ -48,7 +48,7 @@ alberta,118,157,3	script	Magazine Dealer Kenny::mdk	4_M_01,{
 		mes "easily when they're in Magazines. Now, can I interest you in";
 		mes "anything in particular?";
 		next;
-		switch(select("Wind Sphere Pack:Shadow Sphere Pack:Poison Sphere Pack:Water Sphere Pack:Fire Sphere Pack:Cartridge:Blood Cartridge:Silver Cartridge:Cancel")) {
+		switch(select("Wind Sphere Pack", "Shadow Sphere Pack", "Poison Sphere Pack", "Water Sphere Pack", "Fire Sphere Pack", "Cartridge", "Blood Cartridge", "Silver Cartridge", "Cancel")) {
 		case 1: callfunc "Func_Casing",13204,12144; break;
 		case 2: callfunc "Func_Casing",13206,12145; break;
 		case 3: callfunc "Func_Casing",13205,12146; break;

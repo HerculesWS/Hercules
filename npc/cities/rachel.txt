@@ -294,7 +294,7 @@ rachel,206,30,3	script	Freya's Priest#play	4_F_TRAINEE,{
 	mes "Entertain me!";
 	emotion e_ag;
 	next;
-	if (select("What? You can't tell me what to do!:You got it.") == 1) {
+	if (select("What? You can't tell me what to do!", "You got it.") == 1) {
 		mes "[Freya's Priest]";
 		mes "Oh. That much is";
 		mes "true, I suppose.";
@@ -305,7 +305,7 @@ rachel,206,30,3	script	Freya's Priest#play	4_F_TRAINEE,{
 	mes "what will you be";
 	mes "doing to entertain me?";
 	next;
-	if (select("Here's a funny story...:I will do what you want me to do.") == 1) {
+	if (select("Here's a funny story...", "I will do what you want me to do.") == 1) {
 		mes "^3355FFYou told her the first";
 		mes "funny story that you";
 		mes "could think of.^000000";
@@ -455,7 +455,7 @@ ra_fild12,283,208,3	script	Apprentice Priestess	4_F_CHILD,{
 		mes "Welcome to Arunafeltz,";
 		mes "adventurer! Enjoy your stay~";
 		next;
-		if (select("Are you a guide?:Thanks, have a good day.") == 1) {
+		if (select("Are you a guide?", "Thanks, have a good day.") == 1) {
 			mes "[Papaii]";
 			mes "Oh, actually, if you";
 			mes "want to speak to a guide,";
@@ -504,7 +504,7 @@ ra_fild12,283,208,3	script	Apprentice Priestess	4_F_CHILD,{
 	mes "rest from your travels, why";
 	mes "don't you visit Rachel?";
 	next;
-	if (select("Are you a guide?:Tell me more about Rachel.") == 1) {
+	if (select("Are you a guide?", "Tell me more about Rachel.") == 1) {
 		mes "[Papaii]";
 		mes "Actually, my name is";
 		mes "Papaii, and I'm stationed";
@@ -595,7 +595,7 @@ ra_temple,167,155,4	script	Child Follower#3	4_F_CHILD,{
 	mes "sees you, I'm gonna";
 	mes "get caught, you jerk!";
 	next;
-	if (select("What are you doing?:Alright.") == 1) {
+	if (select("What are you doing?", "Alright.") == 1) {
 		mes "[Lewei]";
 		mes "Hellooo~?";
 		mes "Can't you see?";

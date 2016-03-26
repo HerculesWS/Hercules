@@ -101,9 +101,9 @@
 		md.damage = md.damage * 150 / 100 + md.damage * status->get_lv(src) / 100; \
 	} while(0)
 #else
-	#define RE_LVL_DMOD(val)
-	#define RE_LVL_MDMOD(val)
-	#define RE_LVL_TMDMOD()
+	#define RE_LVL_DMOD(val) (void)(val)
+	#define RE_LVL_MDMOD(val) (void)(val)
+	#define RE_LVL_TMDMOD() (void)0
 #endif
 
 // Renewal variable cast time reduction

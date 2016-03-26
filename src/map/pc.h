@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -41,7 +41,6 @@
  * Defines
  **/
 #define MAX_PC_BONUS 10
-#define MAX_PC_SKILL_REQUIRE 5
 #define MAX_PC_FEELHATE 3
 #define MAX_PC_DEVOTION 5          ///< Max amount of devotion targets
 #define PVP_CALCRANK_INTERVAL 1000 ///< PVP calculation interval
@@ -303,8 +302,8 @@ BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of st
 	int reseff[SC_COMMON_MAX-SC_COMMON_MIN+1];
 	int weapon_coma_ele[ELE_MAX];
 	int weapon_coma_race[RC_MAX];
-	int weapon_atk[16];
-	int weapon_atk_rate[16];
+	int weapon_atk[MAX_WEAPON_TYPE];
+	int weapon_atk_rate[MAX_WEAPON_TYPE];
 	int arrow_addele[ELE_MAX];
 	int arrow_addrace[RC_MAX];
 	int arrow_addsize[3];
@@ -658,7 +657,7 @@ END_ZEROED_BLOCK;
 #define pc_stop_attack(sd)        (unit->stop_attack(&(sd)->bl))
 
 //Weapon check considering dual wielding.
-#define pc_check_weapontype(sd, type) ((type)&((sd)->status.weapon < MAX_WEAPON_TYPE? \
+#define pc_check_weapontype(sd, type) ((type)&((sd)->status.weapon < MAX_SINGLE_WEAPON_TYPE? \
 	1<<(sd)->status.weapon:(1<<(sd)->weapontype1)|(1<<(sd)->weapontype2)|(1<<(sd)->status.weapon)))
 
 // clientside display macros (values to the left/right of the "+")
@@ -714,17 +713,19 @@ END_ZEROED_BLOCK;
 #define pc_can_give_items(sd) ( pc_has_permission((sd),PC_PERM_TRADE) )
 #define pc_can_give_bound_items(sd) ( pc_has_permission((sd),PC_PERM_TRADE_BOUND) )
 
+struct skill_tree_requirement {
+	short id;
+	unsigned short idx;
+	unsigned char lv;
+};
+
 struct skill_tree_entry {
 	short id;
 	unsigned short idx;
 	unsigned char max;
 	unsigned char joblv;
 	short inherited;
-	struct {
-		short id;
-		unsigned short idx;
-		unsigned char lv;
-	} need[MAX_PC_SKILL_REQUIRE];
+	VECTOR_DECL(struct skill_tree_requirement) need;
 }; // Celest
 
 struct sg_data {
@@ -833,7 +834,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*makesavestatus) (struct map_session_data *sd);
 	void (*respawn) (struct map_session_data* sd, clr_type clrtype);
 	int (*setnewpc) (struct map_session_data *sd, int account_id, int char_id, int login_id1, unsigned int client_tick, int sex, int fd);
-	bool (*authok) (struct map_session_data *sd, int login_id2, time_t expiration_time, int group_id, struct mmo_charstatus *st, bool changing_mapservers);
+	bool (*authok) (struct map_session_data *sd, int login_id2, time_t expiration_time, int group_id, const struct mmo_charstatus *st, bool changing_mapservers);
 	void (*authfail) (struct map_session_data *sd);
 	int (*reg_received) (struct map_session_data *sd);
 
@@ -1027,7 +1028,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*del_charm) (struct map_session_data *sd, int count, int type);
 
 	void (*baselevelchanged) (struct map_session_data *sd);
-	int (*level_penalty_mod) (int diff, unsigned char race, unsigned short mode, int type);
+	int (*level_penalty_mod) (int diff, unsigned char race, uint32 mode, int type);
 	int (*calc_skillpoint) (struct map_session_data* sd);
 
 	int (*invincible_timer) (int tid, int64 tick, int id, intptr_t data);
@@ -1052,6 +1053,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*autosave) (int tid, int64 tick, int id, intptr_t data);
 	int (*follow_timer) (int tid, int64 tick, int id, intptr_t data);
 	void (*read_skill_tree) (void);
+	void (*clear_skill_tree) (void);
 	int (*isUseitem) (struct map_session_data *sd,int n);
 	int (*show_steal) (struct block_list *bl,va_list ap);
 	int (*checkcombo) (struct map_session_data *sd, struct item_data *data );
@@ -1086,6 +1088,8 @@ END_ZEROED_BLOCK; /* End */
 
 	int (*check_job_name) (const char *name);
 	void (*update_idle_time) (struct map_session_data* sd, enum e_battle_config_idletime type);
+	
+	int (*have_magnifier) (struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

@@ -50,12 +50,12 @@ umbala,128,94,4	script	Adventurer#um	4_F_GON,{
 	mes "You're welcome to ask me about the";
 	mes "locations of buildings.";
 	next;
-	switch(select("Locations of buildings.:Remove marks on the mini map.:Quit.")) {
+	switch(select("Locations of buildings.", "Remove marks on the mini map.", "Quit.")) {
 	case 1:
 		mes "[Adventurer]";
 		mes "So, which one do you want to check?";
 		next;
-		switch(select("Chief's House:Shaman's House:Weapon Shop:Tool Shop:Bungee Jump Place:Cancel")) {
+		switch(select("Chief's House", "Shaman's House", "Weapon Shop", "Tool Shop", "Bungee Jump Place", "Cancel")) {
 		case 1:
 			mes "[Adventurer]";
 			mes "I have made a ^FF3355+^000000 mark";

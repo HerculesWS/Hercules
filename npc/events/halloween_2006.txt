@@ -79,7 +79,7 @@ prontera,164,69,3	script	Cool Devi#06_hw	4_DEVIRUCHI,{
 		mes "Says he...";
 		mes "I just can guess what he will say next. So what do you say?";
 		next;
-		if (select("What will he say?:I also know about it.") == 1) {
+		if (select("What will he say?", "I also know about it.") == 1) {
 			mes "[" + strcharinfo(0) + "]";
 			mes "What will he say?";
 			next;
@@ -121,7 +121,7 @@ prontera,164,69,3	script	Cool Devi#06_hw	4_DEVIRUCHI,{
 			mes "[Cool Devi]";
 			mes "says he.";
 			next;
-			if (select( "No, I'll come back later.:Oh, good. Make it now!") == 1) {
+			if (select( "No, I'll come back later.", "Oh, good. Make it now!") == 1) {
 				mes "[Gloomy Jack]";
 				mes "Huh?";
 				mes " ";
@@ -165,7 +165,7 @@ prontera,164,69,3	script	Cool Devi#06_hw	4_DEVIRUCHI,{
 			mes "[Cool Devi]";
 			mes "says he...";
 			next;
-			if (select( "No, I'll come back later.:Oh,good. Make it now!") == 1) {
+			if (select( "No, I'll come back later.", "Oh,good. Make it now!") == 1) {
 				mes "[Gloomy Jack]";
 				mes "Huh?";
 				mes " ";
@@ -275,7 +275,7 @@ geffen,145,132,3	script	Hoirin#06_hw	4_F_NOVICE,{
 		mes "[Hoirin]";
 		mes "If I have that! I can make best the Pumpkin pie!!!!!";
 		next;
-		if (select( "What's that?:Ignore.") == 1) {
+		if (select( "What's that?", "Ignore.") == 1) {
 			mes "[Hoirin]";
 			mes "What's the first image you see when you think of pumpkin?";
 			mes "I see Jack! I think Jack is the most evolved form of pumpkin!";
@@ -325,7 +325,7 @@ geffen,145,132,3	script	Hoirin#06_hw	4_F_NOVICE,{
 		mes "So, did you bring all materials?";
 		mes "Were there anything hard to find?";
 		next;
-		switch(select( "I brought all ingredients.:How can I get eggs?:No,I'm just passing by.")) {
+		switch(select( "I brought all ingredients.", "How can I get eggs?", "No,I'm just passing by.")) {
 		case 1:
 			if ((countitem(Pumpkin_Mojo) > 0) && (countitem(Pumpkin) > 1) && (countitem(Egg) > 1)) {
 				mes "[Hoirin]";
@@ -368,7 +368,7 @@ geffen,145,132,3	script	Hoirin#06_hw	4_F_NOVICE,{
 				mes "I can send you to where he is if you want.";
 				mes "^4d4dffBut only for once^000000.";
 				next;
-				if (select("Send me.:It's ok.") == 1) {
+				if (select("Send me.", "It's ok.") == 1) {
 					mes "[Hoirin]";
 					mes "Ok, go get the eggs.";
 					halloween = 101;
@@ -432,7 +432,7 @@ nif_in,19,32,3	script	Deviruchi#06_hw	4_DEVIRUCHI,{
 	mes "Well I'm not saying that I want it for free.";
 	mes "Don't worry, I won't let you down.";
 	next;
-	switch(select( "Give him the pumpkin pie.:Do not give him the pumpkin pie.:Huh? What pumkin pie?")) {
+	switch(select( "Give him the pumpkin pie.", "Do not give him the pumpkin pie.", "Huh? What pumkin pie?")) {
 	case 1:
 		if (countitem(Pumpkin_Pie) > 0) {
 			mes "[Loli Ruri]";
@@ -520,13 +520,13 @@ nif_fild01,165,115,3	script	Chicken Masta#06_hw	4_M_NFDEADMAN2,{
 		mes "...Are you looking for eggs?";
 		mes "Recently, people are asking me for eggs to make some kind of pie....are you one of them?";
 		next;
-		if (select( "Actually, yes. I came here to get some eggs.:Nope.") == 1) {
+		if (select( "Actually, yes. I came here to get some eggs.", "Nope.") == 1) {
 			mes "[Chicken Masta]";
 			mes "Ok. But some of my chickens ran away,";
 			mes "so I have no eggs much left.";
 			mes "1000 zeny for 2 eggs! how's that?";
 			next;
-			switch(select( "Ok,I'll take it.:I'll just buy one.:Whew~it's too expensive.")) {
+			switch(select( "Ok,I'll take it.", "I'll just buy one.", "Whew~it's too expensive.")) {
 			case 1:
 				if (Zeny > 1999) {
 					mes "[Chicken Masta]";
@@ -1050,12 +1050,12 @@ prontera,155,285,3	script	Familiar#06_hw01::HWFamiDup	4_NFBAT,{
 	mes "Do you have an invitation from Loli Ruri?";
 	mes "That's a kind of^4d4dffa special ticket to Nifflheim^000000..";
 	next;
-	if (select( "Yes, I do.:No, I don't.") == 1) {
+	if (select( "Yes, I do.", "No, I don't.") == 1) {
 		mes "[Familiar]";
 		mes "Do you want to go to Nifflheim?";
 		mes "It's available during Halloween.";
 		next;
-		if (select( "Yes, I do:No, I don't.") == 1) {
+		if (select( "Yes, I do", "No, I don't.") == 1) {
 			if (countitem(Niflheim_Ticket) > 0) {
 				mes "[Familiar]";
 				mes "I checked your ticket.";

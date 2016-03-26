@@ -141,6 +141,7 @@ struct spawn_info {
 };
 
 struct mob_db {
+	int mob_id;
 	char sprite[NAME_LENGTH],name[NAME_LENGTH],jname[NAME_LENGTH];
 	unsigned int base_exp,job_exp;
 	unsigned int mexp;
@@ -458,7 +459,7 @@ struct mob_interface {
 	int (*setdelayspawn) (struct mob_data *md);
 	int (*count_sub) (struct block_list *bl, va_list ap);
 	int (*spawn) (struct mob_data *md);
-	int (*can_changetarget) (struct mob_data *md, struct block_list *target, int mode);
+	int (*can_changetarget) (const struct mob_data *md, const struct block_list *target, uint32 mode);
 	int (*target) (struct mob_data *md, struct block_list *bl, int dist);
 	int (*ai_sub_hard_activesearch) (struct block_list *bl, va_list ap);
 	int (*ai_sub_hard_changechase) (struct block_list *bl, va_list ap);
@@ -504,20 +505,21 @@ struct mob_interface {
 	int (*skill_use) (struct mob_data *md, int64 tick, int event);
 	int (*skill_event) (struct mob_data *md, struct block_list *src, int64 tick, int flag);
 	int (*is_clone) (int class_);
-	int (*clone_spawn) (struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, int mode, int flag, unsigned int duration);
+	int (*clone_spawn) (struct map_session_data *sd, int16 m, int16 x, int16 y, const char *event, int master_id, uint32 mode, int flag, unsigned int duration);
 	int (*clone_delete) (struct mob_data *md);
 	unsigned int (*drop_adjust) (int baserate, int rate_adjust, unsigned short rate_min, unsigned short rate_max);
 	void (*item_dropratio_adjust) (int nameid, int mob_id, int *rate_adjust);
 	void (*readdb) (void);
-	bool (*lookup_const) (const config_setting_t *it, const char *name, int *value);
-	bool (*get_const) (const config_setting_t *it, int *value);
+	bool (*lookup_const) (const struct config_setting_t *it, const char *name, int *value);
+	bool (*get_const) (const struct config_setting_t *it, int *value);
+	int (*db_validate_entry) (struct mob_db *entry, int n, const char *source);
 	int (*read_libconfig) (const char *filename, bool ignore_missing);
-	void (*read_db_additional_fields) (struct mob_db *entry, int class_, config_setting_t *it, int n, const char *source);
-	bool (*read_db_sub) (config_setting_t *mobt, int id, const char *source);
-	void (*read_db_drops_sub) (struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t);
-	void (*read_db_mvpdrops_sub) (struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t);
-	int (*read_db_mode_sub) (struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t);
-	void (*read_db_stats_sub) (struct mob_db *entry, struct status_data *mstatus, int class_, config_setting_t *t);
+	void (*read_db_additional_fields) (struct mob_db *entry, struct config_setting_t *it, int n, const char *source);
+	int (*read_db_sub) (struct config_setting_t *mobt, int id, const char *source);
+	void (*read_db_drops_sub) (struct mob_db *entry, struct config_setting_t *t);
+	void (*read_db_mvpdrops_sub) (struct mob_db *entry, struct config_setting_t *t);
+	uint32 (*read_db_mode_sub) (struct mob_db *entry, struct config_setting_t *t);
+	void (*read_db_stats_sub) (struct mob_db *entry, struct config_setting_t *t);
 	void (*name_constants) (void);
 	bool (*readdb_mobavail) (char *str[], int columns, int current);
 	int (*read_randommonster) (void);
@@ -528,7 +530,7 @@ struct mob_interface {
 	bool (*readdb_race2) (char *fields[], int columns, int current);
 	bool (*readdb_itemratio) (char *str[], int columns, int current);
 	void (*load) (bool minimal);
-	void (*clear_spawninfo) ();
+	void (*clear_spawninfo) (void);
 	void (*destroy_mob_db) (int index);
 };
 

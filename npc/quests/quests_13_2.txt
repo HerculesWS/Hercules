@@ -65,7 +65,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 		mes "Cat Trading's available services are as followed.";
 		mes "For additional services, please consult Agent Gyaruk.";
 		next;
-		switch(select("Save your location:Cancel")) {
+		switch(select("Save your location", "Cancel")) {
 		case 1:
 			if (strnpcinfo(2) == "spl") savepoint "spl_fild02",32,225;
 			else savepoint "man_fild02",129,61;
@@ -85,7 +85,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 		mes "Cat Trading's available services are as followed.";
 		mes "For additional services, please consult Agent Gyaruk.";
 		next;
-		switch(select("Save your location:Use Storage:Cancel")) {
+		switch(select("Save your location", "Use Storage", "Cancel")) {
 		case 1:
 			if (strnpcinfo(2) == "spl") savepoint "spl_fild02",32,225;
 			else savepoint "man_fild02",129,61;
@@ -132,7 +132,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 		mes "Cat Trading's available services are as followed.";
 		mes "For additional services, please consult Agent Gyaruk.";
 		next;
-		switch(select("Save your location:Use Storage:Use Cat Warp (Midgard):Cancel")) {
+		switch(select("Save your location", "Use Storage", "Use Cat Warp (Midgard)", "Cancel")) {
 		case 1:
 			if (strnpcinfo(2) == "spl") savepoint "spl_fild02",32,225;
 			else savepoint "man_fild02",129,61;
@@ -174,20 +174,20 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 			mes "With " + ep13_yong1 + " credit points, we offer the following warp services. Please remember, you can't come back easily once you move to Midgard.";
 			next;
 			if ((ep13_yong1 > 39) && (ep13_yong1 < 50)) {
-				switch(select("Prontera -> 5500z:Cancel")) {
+				switch(select("Prontera -> 5500z", "Cancel")) {
 					case 1: Catwarp(5500,2);
 					case 2: close;
 				}
 			}
 			else if ((ep13_yong1 > 49) && (ep13_yong1 < 60)) {
-				switch(select("Alberta -> 5500z:Prontera -> 5500z:Cancel")) {
+				switch(select("Alberta -> 5500z", "Prontera -> 5500z", "Cancel")) {
 					case 1: Catwarp(5500,1);
 					case 2: Catwarp(5500,2);
 					case 3: close;
 				}
 			}
 			else if ((ep13_yong1 > 59) && (ep13_yong1 < 70)) {
-				switch(select("Alberta -> 5025z:Prontera -> 5025z:Izlude -> 5025z:Cancel")) {
+				switch(select("Alberta -> 5025z", "Prontera -> 5025z", "Izlude -> 5025z", "Cancel")) {
 					case 1: Catwarp(5025,1);
 					case 2: Catwarp(5025,2);
 					case 3: Catwarp(5025,3);
@@ -195,7 +195,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				}
 			}
 			else if ((ep13_yong1 > 69) && (ep13_yong1 < 80)) {
-				switch(select("Alberta -> 5025z:Prontera -> 5025z:Izlude -> 5025z:Geffen -> 5025z:Cancel")) {
+				switch(select("Alberta -> 5025z", "Prontera -> 5025z", "Izlude -> 5025z", "Geffen -> 5025z", "Cancel")) {
 					case 1: Catwarp(5025,1);
 					case 2: Catwarp(5025,2);
 					case 3: Catwarp(5025,3);
@@ -204,7 +204,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				}
 			}
 			else if ((ep13_yong1 > 79) && (ep13_yong1 < 90)) {
-				switch(select("Alberta -> 4765z:Prontera -> 4765z:Izlude -> 4765z:Geffen -> 4765z:Payon -> 4765z:Cancel")) {
+				switch(select("Alberta -> 4765z", "Prontera -> 4765z", "Izlude -> 4765z", "Geffen -> 4765z", "Payon -> 4765z", "Cancel")) {
 					case 1: Catwarp(4765,1);
 					case 2: Catwarp(4765,2);
 					case 3: Catwarp(4765,3);
@@ -214,7 +214,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				}
 			}
 			else if ((ep13_yong1 > 89) && (ep13_yong1 < 100)) {
-				switch(select("Alberta -> 4765z:Prontera -> 4765z:Izlude -> 4765z:Geffen -> 4765z:Payon -> 4765z:Morroc -> 4765z:Cancel")) {
+				switch(select("Alberta -> 4765z", "Prontera -> 4765z", "Izlude -> 4765z", "Geffen -> 4765z", "Payon -> 4765z", "Morroc -> 4765z", "Cancel")) {
 					case 1: Catwarp(4765,1);
 					case 2: Catwarp(4765,2);
 					case 3: Catwarp(4765,3);
@@ -225,7 +225,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				}
 			}
 			else if (ep13_yong1 > 99) {
-				switch(select("Alberta -> 4590z:Prontera -> 4590z:Izlude -> 4590z:Geffen -> 4590z:Payon -> 4590z:Morroc -> 4590z:Al De Baran -> 4590z:Cancel")) {
+				switch(select("Alberta -> 4590z", "Prontera -> 4590z", "Izlude -> 4590z", "Geffen -> 4590z", "Payon -> 4590z", "Morroc -> 4590z", "Al De Baran -> 4590z", "Cancel")) {
 					case 1: Catwarp(4590,1);
 					case 2: Catwarp(4590,2);
 					case 3: Catwarp(4590,3);
@@ -253,7 +253,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 		mes "Cat Trading's available services are as followed.";
 		mes "For additional services, please consult Agent Gyaruk.";
 		next;
-		switch(select("Save your location:Use Storage:Use Cat Warp (Midgard):Use Cat Warp (Jottunheim):Cancel")) {
+		switch(select("Save your location", "Use Storage", "Use Cat Warp (Midgard)", "Use Cat Warp (Jottunheim)", "Cancel")) {
 		case 1:
 			if (strnpcinfo(2) == "spl") savepoint "spl_fild02",32,225;
 			else savepoint "man_fild02",129,61;
@@ -295,7 +295,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 			mes "With " + ep13_yong1 + " credit points, we offer the following warp services. Please remember, you can't come back easily once you move to Midgard.";
 			next;
 			if ((ep13_yong1 > 99) && (ep13_yong1 < 200)) {
-				switch(select("Alberta -> 4590z:Prontera -> 4590z:Izlude -> 4590z:Geffen -> 4590z:Payon -> 4590z:Morroc -> 4590z:Al De Baran -> 4590z:Cancel")) {
+				switch(select("Alberta -> 4590z", "Prontera -> 4590z", "Izlude -> 4590z", "Geffen -> 4590z", "Payon -> 4590z", "Morroc -> 4590z", "Al De Baran -> 4590z", "Cancel")) {
 					case 1: Catwarp(4590,1);
 					case 2: Catwarp(4590,2);
 					case 3: Catwarp(4590,3);
@@ -307,7 +307,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				}
 			}
 			else if ((ep13_yong1 > 199) && (ep13_yong1 < 250)) {
-				switch(select("Alberta -> 4170z:Prontera -> 4170z:Izlude -> 4170z:Geffen -> 4170z:Payon -> 4170z:Morroc -> 4170z:Al De Baran -> 4170z:Juno -> 4170z:Cancel")) {
+				switch(select("Alberta -> 4170z", "Prontera -> 4170z", "Izlude -> 4170z", "Geffen -> 4170z", "Payon -> 4170z", "Morroc -> 4170z", "Al De Baran -> 4170z", "Juno -> 4170z", "Cancel")) {
 					case 1: Catwarp(4170,1);
 					case 2: Catwarp(4170,2);
 					case 3: Catwarp(4170,3);
@@ -321,7 +321,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				close;
 			}
 			else if ((ep13_yong1 > 249) && (ep13_yong1 < 300)) {
-				switch(select("Alberta -> 4025z:Prontera -> 4025z:Izlude -> 4025z:Geffen -> 4025z:Payon -> 4025z:Morroc -> 4025z:Al De Baran -> 4025z:Juno -> 4025z:Einbroch -> 4025z:Cancel")) {
+				switch(select("Alberta -> 4025z", "Prontera -> 4025z", "Izlude -> 4025z", "Geffen -> 4025z", "Payon -> 4025z", "Morroc -> 4025z", "Al De Baran -> 4025z", "Juno -> 4025z", "Einbroch -> 4025z", "Cancel")) {
 					case 1: Catwarp(4025,1);
 					case 2: Catwarp(4025,2);
 					case 3: Catwarp(4025,3);
@@ -336,7 +336,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				close;
 			}
 			else if (ep13_yong1 > 299) {
-				switch(select("Alberta -> 3970z:Prontera -> 3970z:Izlude -> 3970z:Geffen -> 3970z:Payon -> 3970z:Morroc -> 3970z:Al De Baran -> 3970z:Juno -> 3970z:Einbroch -> 3970z:Lighthalzen -> 3970z:Cancel")) {
+				switch(select("Alberta -> 3970z", "Prontera -> 3970z", "Izlude -> 3970z", "Geffen -> 3970z", "Payon -> 3970z", "Morroc -> 3970z", "Al De Baran -> 3970z", "Juno -> 3970z", "Einbroch -> 3970z", "Lighthalzen -> 3970z", "Cancel")) {
 					case 1: Catwarp(3970,1);
 					case 2: Catwarp(3970,2);
 					case 3: Catwarp(3970,3);
@@ -358,7 +358,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				close;
 			}
 		case 4:
-			if (strnpcinfo(2) == "spl") switch(select("Alliance Forces Post -> 5500z:Manuk Camp -> 7500z:Cancel")) {
+			if (strnpcinfo(2) == "spl") switch(select("Alliance Forces Post -> 5500z", "Manuk Camp -> 7500z", "Cancel")) {
 				case 1: Catwarp(5500,13);
 				case 2: Catwarp(5500,12);
 				case 3:
@@ -366,7 +366,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 					mes "Thank you for using our service.";
 					close;
 				}
-			else switch(select("Alliance Forces Post -> 5500z:Splendide Camp -> 7500z:Cancel")) {
+			else switch(select("Alliance Forces Post -> 5500z", "Splendide Camp -> 7500z", "Cancel")) {
 				case 1: Catwarp(5500,13);
 				case 2: Catwarp(5500,11);
 				case 3:
@@ -550,7 +550,7 @@ spl_in01,32,306,3	script	Splendide Guard#ep13md01	4_M_FAIRYSOLDIER,2,2,{
 			mes "My name is Arc.";
 			mes "By the way, hmm... Can you understand what I'm saying?";
 			next;
-			switch(select("Yes.:Shake my head")) {
+			switch(select("Yes.", "Shake my head")) {
 			case 1:
 				mes "[Arc]";
 				mes "What? Did you just say 'Yes'?";
@@ -596,7 +596,7 @@ spl_in01,32,306,3	script	Splendide Guard#ep13md01	4_M_FAIRYSOLDIER,2,2,{
 			mes "[Arc]";
 			mes "Anyways, I have a favor to ask you. Is it okay?";
 			next;
-			switch(select("What favor?:Not now.")) {
+			switch(select("What favor?", "Not now.")) {
 			case 1:
 				mes "[Arc]";
 				mes "Um...Ah..It's...";
@@ -635,7 +635,7 @@ spl_in01,32,306,3	script	Splendide Guard#ep13md01	4_M_FAIRYSOLDIER,2,2,{
 				mes "Exactly!";
 				mes "You're quite observant.";
 				next;
-				switch(select("Sure, I will do it.:Sorry, can't help you.")) {
+				switch(select("Sure, I will do it.", "Sorry, can't help you.")) {
 				case 1:
 					mes "[" + strcharinfo(0) + "]";
 					mes "But, I'm going to need more information if I'm going to look for her.";
@@ -1058,7 +1058,7 @@ OnTouch:
 		next;
 		mes "A cold breeze is blowing out from deep inside the tree.";
 		next;
-		switch(select("Follow the trace.:Looks dangerous... head back.")) {
+		switch(select("Follow the trace.", "Looks dangerous... head back.")) {
 		case 1:
 			mes "You take a one step forward carefully through the muddy roots and slip.";
 			ep13_mdrama = 6;
@@ -1075,7 +1075,7 @@ OnTouch:
 	else if (ep13_mdrama > 5) {
 		mes "Between huge roots, there is a hole leads to the underground cave.";
 		next;
-		switch(select("Go inside.:I'm not going in there.")) {
+		switch(select("Go inside.", "I'm not going in there.")) {
 		case 1:
 			mes "Again, you slip through the muddy roots.";
 			close2;
@@ -1182,7 +1182,7 @@ nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	CLEAR_NPC,{
 		mes "I need to bring back some evidence of this giant in the cave.";
 		mes "What should I bring with me?";
 		next;
-		switch(select("Hair:Muffler:Pants:Fragment of Bradium")) {
+		switch(select("Hair", "Muffler", "Pants", "Fragment of Bradium")) {
 		case 1:
 			mes "It won't come off. It's as if it is a tree rooted on a rock.";
 			close;
@@ -1192,7 +1192,7 @@ nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	CLEAR_NPC,{
 			next;
 			mes "And...what else should I take?";
 			next;
-			switch(select("Hair:Pants:Fragment of Bradium")) {
+			switch(select("Hair", "Pants", "Fragment of Bradium")) {
 			case 1:
 				mes "It won't come off. It's as if it is a tree rooted on a rock.";
 				close;
@@ -1216,7 +1216,7 @@ nyd_dun01,58,223,0	script	Petrified Sapha#ep13md03	CLEAR_NPC,{
 			mes "This will prove Terra's effort...";
 			mes "And what else?";
 			next;
-			switch(select("Hair:Muffler:Pants")) {
+			switch(select("Hair", "Muffler", "Pants")) {
 			case 1:
 				mes "It won't come off. It's as if it is a tree rooted on a rock.";
 				close;
@@ -1337,7 +1337,7 @@ OnTouch:
 	mes "It's the trunk of a Tree stretched out toward a hole in the ceiling.";
 	mes "Big thorns can be used as footholds.";
 	next;
-	switch(select("Climb up.:Never mind.")) {
+	switch(select("Climb up.", "Never mind.")) {
 		case 1:
 			warp "spl_fild01",376,65;
 			end;
@@ -1370,7 +1370,7 @@ manuk,278,177,5	script	Villager#ep13_11	4_MAN_PIOM,{
 			mes "(Hmm? a Fairy? Wounded?";
 			mes "Are they talking about Terra..?!)";
 			next;
-			switch(select("Break into their conversation.:Keep quiet and listen.")) {
+			switch(select("Break into their conversation.", "Keep quiet and listen.")) {
 			case 1:
 				mes "[" + strcharinfo(0) + "]";
 				mes "Excuse me for interrupting your conversation.";
@@ -1468,7 +1468,7 @@ manuk,281,177,3	script	Villager#ep13_12	4_MAN_BENKUNI,{
 			mes "(Hmm? a Fairy? Wounded?";
 			mes "Are they talking about Terra..?!)";
 			next;
-			switch(select("Break into their conversation.:Keep quiet and listen.")) {
+			switch(select("Break into their conversation.", "Keep quiet and listen.")) {
 			case 1:
 				mes "[" + strcharinfo(0) + "]";
 				mes "Excuse me for interrupting your conversation.";
@@ -1567,7 +1567,7 @@ man_in01,175,59,5	script	Snorren#ep13_13	4_MAN_PIOM,{
 			mes "Who are you?!";
 			mes "How could an outsider be here...?";
 			next;
-			switch(select("About the Captured Fairy.:What is this place?")) {
+			switch(select("About the Captured Fairy.", "What is this place?")) {
 			case 1:
 				mes "[Snorren]";
 				mes "How does an outsider like you know that?";
@@ -1592,7 +1592,7 @@ man_in01,175,59,5	script	Snorren#ep13_13	4_MAN_PIOM,{
 				mes "Frankly, I want to have a word with that Fairy.";
 				mes "But I don't understand their language.";
 				next;
-				switch(select("Why do you want to talk to her?:Do you need an interpreter?")) {
+				switch(select("Why do you want to talk to her?", "Do you need an interpreter?")) {
 				case 1:
 					break;
 				case 2:
@@ -1642,7 +1642,7 @@ man_in01,175,59,5	script	Snorren#ep13_13	4_MAN_PIOM,{
 				mes "That fairy attacked Ogen as he was trying to peek on your camp.";
 				mes "And she was drawn by Ogen's bradium and came all the way here to find more bradium!";
 				next;
-				switch(select("That could be right...:I don't see it that way...")) {
+				switch(select("That could be right...", "I don't see it that way...")) {
 				case 1:
 					mes "[" + strcharinfo(0) + "]";
 					mes "But does that Ore called bradium really possess an overwhelming magical power?";
@@ -1918,7 +1918,7 @@ man_in01,22,126,3	script	Captured Laphine#ep13md	4_F_FAIRYKID6,{
 			mes "[Wounded Laphine]";
 			mes "If I don't go back to him quickly, he... he is going to die!!";
 			next;
-			switch(select("Who is HE?:Is your name Terra?")) {
+			switch(select("Who is HE?", "Is your name Terra?")) {
 			case 1:
 				mes "[Wounded Laphine]";
 				mes "A giant... a giant in a cave...";
@@ -2382,7 +2382,7 @@ spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
 			mes "[Arc]";
 			mes "Ah, finally. I've been speaking with Terra while we waited for you.";
 			mes "Terra. This is who saved you...";
-			mes "You should thank "+((Sex)?"him.":"her.");
+			mes "You should thank "+ (Sex == SEX_MALE ? "him." : "her.");
 			next;
 			mes "[Terra]";
 			mes "Thank you...";
@@ -2725,7 +2725,7 @@ manuk,252,116,3	script	Manuk Galtun#ep13_2day	4_MAN_GALTUN,{
 			mes "[Strom]";
 			mes "Your language seems gentle, but it seems like you are here to create more tension.";
 			next;
-			switch(select("Keep the peace.:...")) {
+			switch(select("Keep the peace.", "...")) {
 			case 1:
 				mes "[" + strcharinfo(0) + "]";
 				mes "Yes, we humans are smaller than you... but...";
@@ -2863,7 +2863,7 @@ man_in01,378,276,3	script	Manuk Engineer#ep13_2	4_MAN_NITT,{
 				mes "Hello.";
 				mes "This is where we refine stones.";
 				next;
-				switch(select("About collecting stones.:About the usage of stones.")) {
+				switch(select("About collecting stones.", "About the usage of stones.")) {
 				case 1:
 					mes "[Manuk Engineer]";
 					mes "To prevent our bodies from becoming numb, we need Bradium.";
@@ -2877,7 +2877,7 @@ man_in01,378,276,3	script	Manuk Engineer#ep13_2	4_MAN_NITT,{
 					mes "I've already heard that you guys are good soldiers.";
 					mes "Would you mind terminating the Bradium Golem, and bringing back some Bradium for me?";
 					next;
-					switch(select("Sure, I don't mind.:Nope, I can't.")) {
+					switch(select("Sure, I don't mind.", "Nope, I can't.")) {
 					case 1:
 						mes "[Manuk Engineer]";
 						mes "Then take this mission.";
@@ -2965,7 +2965,7 @@ spl_in01,97,313,3	script	Laphine Craftsman#ep13	4_M_FAIRYKID5,{
 			mes "What's up??";
 			mes "I need to make more decorations for the Yai.";
 			next;
-			if (select("May I help you?:What's a Yai?") == 1) {
+			if (select("May I help you?", "What's a Yai?") == 1) {
 				mes "[Laphine craftsman]";
 				mes "You want to help?";
 				mes "This place is being used for battle but it is also our home.";
@@ -2986,7 +2986,7 @@ spl_in01,97,313,3	script	Laphine Craftsman#ep13	4_M_FAIRYKID5,{
 				mes "I heard that a water ghost has been appearing in the cave.";
 				mes "Can you bring me 15 Crystallized Teardrop and 15 Fluorescent Liquid?";
 				next;
-				if (select("Yes.:Sorry.") == 1) {
+				if (select("Yes.", "Sorry.") == 1) {
 					mes "[Laphine craftsman]";
 					mes "Please take my request.";
 					mes "Can you bring me 15 Crystallized Teardrop and 15 Fluorescent Liquid?";
@@ -3087,7 +3087,7 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 	mes "Ah, Taab isn't flexible at all.";
 	mes "Hey there! What's up??";
 	next;
-	if (select("Notice for criminal report:Cute pet investigation.") == 1) {
+	if (select("Notice for criminal report", "Cute pet investigation.") == 1) {
 		if (ep13_2_wanted == 1) {
 			if (questprogress(7076,HUNTING) == 2) {
 				mes "[Pinedel]";
@@ -3176,7 +3176,7 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 		mes "Do you want to help me gather more Dragon eggs today?";
 		mes "I want to try many things with those eggs.";
 		next;
-		if (select("Sure.:Sorry, I can't.") == 1) {
+		if (select("Sure.", "Sorry, I can't.") == 1) {
 			mes "[Pinedel]";
 			mes "Please collect 10 Draco Eggs.";
 			ep13_2_dayegg = 1;
@@ -3196,7 +3196,7 @@ mid_camp,146,306,3	script	Pet Breeder#ep13_eden01	4_F_SCIENCE,{
 	mes "The objective is one Dragon egg!";
 	mes "Can you bring me a Dragon Egg?";
 	next;
-	if (select("Yes.:Nope.") == 1) {
+	if (select("Yes.", "Nope.") == 1) {
 		mes "[Pinedel]";
 		mes "There would be Dragon nest in the cave you found out.";
 		mes "There should be nice Dragon Eggs.";
@@ -3246,7 +3246,7 @@ mid_camp,192,239,4	script	Wanted Sign#ep13_2ect01	4_BOARD3,{
 		next;
 		if (ep13_2_wanted == 0) {
 			mes "Do you accept Rin's request?";
-			if (select("I accept that request.:No, I can't.") == 1) {
+			if (select("I accept that request.", "No, I can't.") == 1) {
 				mes "I accepted Rin's request.";
 				ep13_2_wanted = 1;
 				setquest 7076;
@@ -3767,7 +3767,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 		mes "That Socially implied promise, if we could grasp the meaning of a system and structure, we will be able to understand other intellectual life form's language...";
 		mes "...................................And just who might you be?";
 		next;
-		switch(select("I am Me!:I don't have a name to tell you!")) {
+		switch(select("I am Me!", "I don't have a name to tell you!")) {
 		case 1:
 			break;
 		case 2:
@@ -3779,7 +3779,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 		mes "[Linguist Dictionary]";
 		mes "Ah~ I've heard from our Commander about you. You've done much for the Midgard Alliance Camp. Anyways, what brings you here?";
 		next;
-		switch(select("I thought I had confused you a bit...:What were you doing?")) {
+		switch(select("I thought I had confused you a bit...", "What were you doing?")) {
 		case 1:
 			mes "[Linguist Dictionary]";
 			mes "Confusion is a feeling that comes from distraction of one's mind when something that couldn't be predicted happens. I'm not a person who easily gets confused.";
@@ -4030,7 +4030,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 		next;
 		mes "- Dictionary stared at the paper intently. -";
 		next;
-		switch(select("He looks serious, Let's leave him alone:Talk to him")) {
+		switch(select("He looks serious, Let's leave him alone", "Talk to him")) {
 		case 1:
 			mes "[Linguist Dictionary]";
 			mes "............................";
@@ -4053,7 +4053,7 @@ mid_campin,168,82,3	script	Arunafeltz Linguist#1	4_M_TRAINEE,{
 		mes "Hmph!";
 		mes "Yes?";
 		next;
-		switch(select("He looks serious. Let's leave him alone.:Ask him what's going on.")) {
+		switch(select("He looks serious. Let's leave him alone.", "Ask him what's going on.")) {
 		case 1:
 			mes "[Linguist Dictionary]";
 			mes "............................";
@@ -4191,7 +4191,7 @@ mid_camp,147,256,3	script	Rune Midgarts Magician#1	4_M_JOB_WIZARD,{
 		mes "[Magician Whisper]";
 		mes "Without someone do us a favor and retrieve those gems, there's no way I could give you the sample.";
 		next;
-		switch(select("Then should I come back later?:What if I go and retrieve them?")) {
+		switch(select("Then should I come back later?", "What if I go and retrieve them?")) {
 		case 1:
 			mes "[Magician Whisper]";
 			mes ".............Sure, you could wait for 100 years...";
@@ -4459,7 +4459,7 @@ function	script	jewel_13_2	{
 			mes "- there's a "+getarg(0)+" Gem -";
 			mes "- half-buried. -";
 			next;
-			if(select("Dig out the Gem:Leave it alone")==2) {
+			if(select("Dig out the Gem", "Leave it alone")==2) {
 				mes "- You overspread some earth over the Gem -";
 				mes "- and left the Gem as it was. -";
 				next;
@@ -4582,7 +4582,7 @@ mid_camp,7,3,0	script	Translator Preparation#1	4_M_PAY_SOLDIER,{
 		next;
 		mes "What would you like to do?";
 		next;
-		switch(select("Receive EP13.1 Quest:Receive Quest Window - Meeting with Fairy and Giant")) {
+		switch(select("Receive EP13.1 Quest", "Receive Quest Window - Meeting with Fairy and Giant")) {
 		case 1:
 			mes "[EP 13 Translator Quest Preparation]";
 			mes "Episode 13.1 - The Report Quest Reward Item Received.";
@@ -4591,7 +4591,7 @@ mid_camp,7,3,0	script	Translator Preparation#1	4_M_PAY_SOLDIER,{
 			mes "Currently the Report Quest's Set Item is "+ep13_1_edq+".";
 			mes "Do you want to proceed?";
 			next;
-			if(select("No:Yes") == 1) {
+			if(select("No", "Yes") == 1) {
 				mes "[EP 13 Translator Quest Preparation]";
 				mes "Cancelled";
 				close;
@@ -4607,7 +4607,7 @@ mid_camp,7,3,0	script	Translator Preparation#1	4_M_PAY_SOLDIER,{
 			mes "[EP 13 Translator Quest Preparation]";
 			mes "Do you want to proceed?";
 			next;
-			if(select("No:Yes") == 1) {
+			if(select("No", "Yes") == 1) {
 				mes "[EP 13 Translator Quest Preparation]";
 				mes "Cancelled";
 				close;
@@ -4637,7 +4637,7 @@ man_in01,372,221,5	script	Scientist#lifeguard	4_MAN_BENKUNI,{
 			mes "[Dr. Lifeguard]";
 			mes "Huu... You see, we are afraid of such things... What a hard life.";
 			next;
-			select("A chronic disease?:Bradium?");
+			select("A chronic disease?", "Bradium?");
 			mes "[Dr. Lifeguard]";
 			mes "We Sapha, who are descendants of Hwergelmir, survived and rebuilt the Giant tribe in the flood of the blood of Ymir.";
 			next;
@@ -4805,7 +4805,7 @@ function	script	find_13_2	{
 	if (ep13_2_tre != .@check[0] || countitem(Portable_Toolbox) != 1 || countitem(Rough_Mineral) >= .@check[1]) end;
 	mes "- Just arrived at "+.@str$+". I think I can find the mineral by using the Mineral Detector in the Portable Toolbox. -";
 	next;
-	switch(select("Check current location.:Do nothing.")) {
+	switch(select("Check current location.", "Do nothing.")) {
 		case 1:
 			mes "- You pressed the button of the detector. -";
 			next;
@@ -4858,7 +4858,7 @@ mjolnir_12,220,37,0	duplicate(mjo_no_find)	#mj12_find_3	FAKE_NPC,5,5
 		if (countitem(Rough_Mineral) < 10) {
 			mes "- I can see some different colored minerals where the detector pointed to. This must be the mineral that Mr. Lifeguard told me about. -";
 			next;
-			switch(select("Mine minerals.:Do nothing.")) {
+			switch(select("Mine minerals.", "Do nothing.")) {
 			case 1:
 				mes "Clang! Clang! Clang! Clang!";
 				close2;
@@ -5209,7 +5209,7 @@ OnTouch:
 		if (countitem(Rough_Mineral) < 5) {
 			mes "- I can see some different colored minerals where the detector pointed to. This must be the mineral that Mr. Lifeguard told me about. -";
 			next;
-			switch(select("Mine minerals.:Do nothing.")) {
+			switch(select("Mine minerals.", "Do nothing.")) {
 			case 1:
 				mes "Clang! Clang! Clang! Clang!";
 				close2;
@@ -5342,7 +5342,7 @@ OnTouch:
 		if (countitem(Rough_Mineral) < 5) {
 			mes "- I can see some different colored minerals where the detector pointed to. This must be the mineral that Mr. Lifeguard told me about. -";
 			next;
-			switch(select("Mine minerals.:Do nothing.")) {
+			switch(select("Mine minerals.", "Do nothing.")) {
 			case 1:
 				mes "Clang! Clang! Clang! Clang!";
 				close2;
@@ -5785,7 +5785,7 @@ splendide,205,139,5	script	Exhausted Soldier#1	4_M_FAIRYSOLDIER,{
 				mes "[Exhausted Soldier]";
 				mes "Oh my hometown...";
 				next;
-				switch(select("Use perfume.:Don't use perfume.")) {
+				switch(select("Use perfume.", "Don't use perfume.")) {
 				case 1:
 					mes "(Spray-)";
 					specialeffect EF_SANCTUARY;
@@ -5845,7 +5845,7 @@ splendide,181,135,5	script	Exhausted Soldier#2	4_M_FAIRYSOLDIER,{
 				mes "[Exhausted Soldier]";
 				mes "Want to take a rest...";
 				next;
-				switch(select("Use perfume.:Don't use perfume.")) {
+				switch(select("Use perfume.", "Don't use perfume.")) {
 				case 1:
 					mes "(Spray-)";
 					specialeffect EF_SANCTUARY;
@@ -5902,7 +5902,7 @@ splendide,139,178,5	script	Exhausted Soldier#3	4_M_FAIRYSOLDIER,{
 				mes "[Exhausted Soldier]";
 				mes "My hometown Alfheim...";
 				next;
-				switch(select("Use perfume.:Don't use perfume.")) {
+				switch(select("Use perfume.", "Don't use perfume.")) {
 				case 1:
 					mes "(Spray-)";
 					specialeffect EF_SANCTUARY;
@@ -5962,7 +5962,7 @@ splendide,164,188,5	script	Exhausted Soldier#4	4_M_FAIRYSOLDIER,{
 				mes "[Exhausted Soldier]";
 				mes "Huu...";
 				next;
-				switch(select("Use perfume.:Don't use perfume.")) {
+				switch(select("Use perfume.", "Don't use perfume.")) {
 				case 1:
 					mes "(Spray-)";
 					specialeffect EF_SANCTUARY;
@@ -6022,7 +6022,7 @@ splendide,177,257,5	script	Exhausted Soldier#5	4_M_FAIRYSOLDIER,{
 				mes "[Exhausted Soldier]";
 				mes "Oh my hometown...";
 				next;
-				switch(select("Use perfume.:Don't use perfume.")) {
+				switch(select("Use perfume.", "Don't use perfume.")) {
 				case 1:
 					mes "(Spray-)";
 					specialeffect EF_SANCTUARY;
@@ -6082,7 +6082,7 @@ splendide,124,212,5	script	Exhausted Soldier#6	4_M_FAIRYSOLDIER,{
 				mes "[Exhausted Soldier]";
 				mes "Huu...";
 				next;
-				switch(select("Use perfume.:Don't use perfume.")) {
+				switch(select("Use perfume.", "Don't use perfume.")) {
 				case 1:
 					mes "(Spray-)";
 					specialeffect EF_SANCTUARY;
@@ -6142,7 +6142,7 @@ splendide,196,153,5	script	Exhausted Soldier#7	4_M_FAIRYSOLDIER,{
 				mes "[Exhausted Soldier]";
 				mes "Oh my hometown...";
 				next;
-				switch(select("Use perfume.:Don't use perfume.")) {
+				switch(select("Use perfume.", "Don't use perfume.")) {
 				case 1:
 					mes "(Spray-)";
 					specialeffect EF_SANCTUARY;
@@ -6279,7 +6279,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 			mes "[Industrious Man]";
 			mes "Would you like to help me with my search?";
 			next;
-			switch(select("What kind of search?:Sure.:Borrrring.")) {
+			switch(select("What kind of search?", "Sure.", "Borrrring.")) {
 			case 1:
 				mes "[Industrious Man]";
 				mes "To put it simply, I'm searching for fairies and giants that live around here.";
@@ -6292,7 +6292,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 				mes "What about it?";
 				mes "Are you interested?";
 				next;
-				switch(select("Sure.:Not really.")) {
+				switch(select("Sure.", "Not really.")) {
 				case 1:
 					mes "[Industrious Man]";
 					mes "Haha... I just know that I'm right!";
@@ -6441,7 +6441,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 		mes "Ah! You've returned!";
 		mes "Now are you interested in my research?";
 		next;
-		switch(select("Yes.:No.")) {
+		switch(select("Yes.", "No.")) {
 		case 1:
 			mes "[Industrious Man]";
 			mes "Haha... I just know that I'm right!";
@@ -6525,7 +6525,7 @@ mid_camp,283,198,5	script	Bazett Teablack#ep13bs	4_M_ALCHE_D,{
 		mes "[Bazett]";
 		mes "Oh! You're done with the investigation?";
 		next;
-		switch(select("Yes.:Not yet...")) {
+		switch(select("Yes.", "Not yet...")) {
 		case 1:
 			if (countitem(Bazett's_Order) < 1) {
 				mes "[Bazett]";
@@ -6865,7 +6865,7 @@ nyd_dun02,178,255,0	script	Strange Device#ep13_out	CLEAR_NPC,3,3,{
 	mes "There's something strange here.";
 	mes "Maybe that device can be controlled from here.";
 	next;
-	switch(select("Try to control.:Don't try to control it.")) {
+	switch(select("Try to control.", "Don't try to control it.")) {
 		case 1:
 			mes "You press the device buttons and it suddenly becomes dark.";
 			close2;
@@ -6892,7 +6892,7 @@ nyd_dun02,139,274,0	script	Strange Device#ep13_in	CLEAR_NPC,3,3,{
 		mes "There's a controllable device here.";
 		mes "You might be able to control that device from here.";
 		next;
-		switch(select("Control.:Quit.")) {
+		switch(select("Control.", "Quit.")) {
 		case 1:
 			if ($@08_ep13nydun02_in == 1) {
 				mes "Seems to have been started.";
@@ -7276,7 +7276,7 @@ nyd_dun02,1,1,0	script	ep13_nd2f_mng	CLEAR_NPC,{
 	if (callfunc("F_GM_NPC",1854,0) == 1) {
 		mes "Reset Control devices?";
 		next;
-		switch(select("Yes:No")) {
+		switch(select("Yes", "No")) {
 		case 1:
 			donpcevent "ep13_nd2f_mng::OnReset";
 			$@08_ep13nydun02_in = 0;

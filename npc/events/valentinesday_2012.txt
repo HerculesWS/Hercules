@@ -60,7 +60,7 @@ mosk_in,21,246,5	script	Pinkamenia	1_F_LIBRARYGIRL,{
 			close;
 		}
 		mes "Are you sure you want to trade ^00aa00"+.@SweetsCost[.@choice]+"x Love Flower ^000000 for ^0055FF"+getitemname(.@SweetsID[.@choice])+"^000000?";
-		if(select("No, I've changed my mind.:Yes, trade!") == 1) close;
+		if(select("No, I've changed my mind.", "Yes, trade!") == 1) close;
 		.@new = .@LFlowerID - .@SweetsCost[.@choice];
 		if (.@new < 0) .@new = 0;
 		delitem .@LFlowerID, .@SweetsCost[.@choice];

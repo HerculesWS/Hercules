@@ -42,7 +42,8 @@ moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
 		close;
 	}
 	for(.@i = 11124; .@i<11134; ++.@i)
-		if (questprogress(.@i,PLAYTIME) == 2) erasequest .@i;
+		if (questprogress(.@i,PLAYTIME) == 2)
+			erasequest .@i;
 	for(.@i = 11114; .@i<11123; ++.@i) {
 		.@state = questprogress(.@i,HUNTING);
 		if (.@state == 2) {
@@ -78,7 +79,7 @@ moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
 	mes " ";
 	mes " - Manager : Spike -";
 	next;
-	switch(select("Hornet Hunting:Condor Hunting:Grasshopper's Leg:Worm Tail Hunting:Spore Hunting:Pest Control:Muka Hunting:Familiar Hunting:Collect Feathers:Collect Poison Spores:Cancel")) {
+	switch(select("Hornet Hunting", "Condor Hunting", "Grasshopper's Leg", "Worm Tail Hunting", "Spore Hunting", "Pest Control", "Muka Hunting", "Familiar Hunting", "Collect Feathers", "Collect Poison Spores", "Cancel")) {
 		case 1: callsub L_Quest,11114,"Hornet Hunting"," - Hunt 10 ^4d4dff'Hornets'^000000 - "," - northwest of Prontera. - ";
 		case 2: callsub L_Quest,11115,"Condor Hunting"," - Hunt 20 ^4d4dff'Condors'^000000 - "," - south of Morroc. - ";
 		case 3: callsub L_Quest,11116,"Grasshopper's Leg"," - Hunt 10 ^4d4dff'Rockers'^000000 - "," - southwest of Prontera and - "," - bring 10 ^4d4dffGrasshopper's Legs^000000. - ";
@@ -93,7 +94,7 @@ moc_para01,36,38,3	script	Mission [11 - 25]#Tuto	4_BOARD3,{
 	}
 	end;
 L_Quest:
-	if (questprogress(getarg(0),PLAYTIME) == 1) {
+	if (questprogress(getarg(0)+10,PLAYTIME) == 1) {
 		mes " - Mission ^4d4dff"+getarg(1)+"^000000 - ";
 		mes " - is already finished for today. - ";
 		mes " ";
@@ -106,7 +107,7 @@ L_Quest:
 	mes " ";
 	mes " - Manager : Spike - ";
 	next;
-	if(select("I will do this mission.:Look for other missions.") == 2) {
+	if(select("I will do this mission.", "Look for other missions.") == 2) {
 		mes " - Let's search for -";
 		mes " - other missions. - ";
 		close;

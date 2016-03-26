@@ -44,7 +44,7 @@ rachel,138,146,5	script	Rachel Guide	4_M_RASWORD,{
 	.@loop1 = 1;
 	while(.@loop1) {
 		next;
-		switch(select("Village Guide:Remove Marks from Mini-Map:Notice:Cancel")) {
+		switch(select("Village Guide", "Remove Marks from Mini-Map", "Notice", "Cancel")) {
 		case 1:
 			mes "[Rachel Guide]";
 			mes "I can tell you any building location as long as it is in Rachel.";
@@ -54,14 +54,14 @@ rachel,138,146,5	script	Rachel Guide	4_M_RASWORD,{
 				mes "to mark locations";
 				mes "on your Mini-Map?";
 				next;
-				if (select("Yes:No") == 1) .@compass_check = 1;
+				if (select("Yes", "No") == 1) .@compass_check = 1;
 			}
 			.@loop2 = 1;
 			while(.@loop2) {
 				if (.@wait_button_chk == 0) .@wait_button_chk = 1;
 				else next;
 
-				switch(select("Cheshrumnir:Inn:Weapon Shop:Tool Shop:Airport:Cancel")) {
+				switch(select("Cheshrumnir", "Inn", "Weapon Shop", "Tool Shop", "Airport", "Cancel")) {
 				case 1:
 					mes "[Rachel Guide]";
 					mes "Cheshrumnir is a holy ground where pope, the incarnation of goddess Freya stays.";
