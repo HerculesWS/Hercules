@@ -7434,7 +7434,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				return 0;
 			break;
 		case SC_MAGNIFICAT:
-			if (sc->data[SC_OFFERTORIUM] || sc->option&OPTION_MADOGEAR) // Mado is immune to magnificat
+			if (sc->option&OPTION_MADOGEAR) // Mado is immune to magnificat
 				return 0;
 			break;
 		case SC_ONEHANDQUICKEN:
@@ -7637,10 +7637,6 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			if(sc->data[SC_HOVERING])
 				return 0;
 			break;
-		case SC_OFFERTORIUM:
-			if (sc->data[SC_MAGNIFICAT])
-				return 0;
-			break;
 	}
 
 	//Check for BOSS resistances
@@ -7747,6 +7743,14 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_KYRIE:
 			//Cancels Assumptio
 			status_change_end(bl, SC_ASSUMPTIO, INVALID_TIMER);
+			break;
+		case SC_MAGNIFICAT:
+			//Cancels Offertorium
+			status_change_end(bl, SC_OFFERTORIUM, INVALID_TIMER);
+			break;
+		case SC_OFFERTORIUM:
+			//Cancels Magnificat
+			status_change_end(bl, SC_MAGNIFICAT, INVALID_TIMER);
 			break;
 		case SC_DELUGE:
 			if (sc->data[SC_FOGWALL] && sc->data[SC_BLIND])
