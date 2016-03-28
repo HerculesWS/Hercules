@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -212,11 +212,6 @@
 #define JOBL_UPPER 0x1000 //4096
 #define JOBL_BABY 0x2000  //8192
 #define JOBL_THIRD 0x4000 //16384
-
-//Packet DB
-#define MIN_PACKET_DB 0x0064 //what's the point of minimum packet id ? [hemagx]
-#define MAX_PACKET_DB 0x0F00
-#define MAX_PACKET_POS 20
 
 #define SCRIPT_VARNAME_LENGTH 32 ///< Maximum length of a script variable
 

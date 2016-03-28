@@ -196,11 +196,11 @@ struct login_interface {
 	bool (*fromchar_parse_wrong_pincode) (int fd);
 	void (*fromchar_parse_accinfo) (int fd);
 	int (*parse_fromchar) (int fd);
-	void (*connection_problem) (int fd, uint8 status);
+	void (*connection_problem) (int fd, uint8 error);
 	void (*kick) (struct login_session_data* sd);
 	void (*auth_ok) (struct login_session_data* sd);
 	void (*auth_failed) (struct login_session_data* sd, int result);
-	void (*login_error) (int fd, uint8 status);
+	void (*login_error) (int fd, uint8 error);
 	void (*parse_ping) (int fd, struct login_session_data* sd);
 	void (*parse_client_md5) (int fd, struct login_session_data* sd);
 	bool (*parse_client_login) (int fd, struct login_session_data* sd, const char *ip);
