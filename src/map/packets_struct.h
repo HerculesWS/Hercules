@@ -1215,6 +1215,19 @@ struct packet_quest_list_header {
 	//struct packet_quest_list_info list[]; // Variable-length
 } __attribute__((packed));
 
+struct packet_chat_message {
+	uint16 packet_id;
+	int16 packet_len;
+	char message[];
+} __attribute__((packed));
+
+struct packet_whisper_message {
+	uint16 packet_id;
+	int16 packet_len;
+	char name[NAME_LENGTH];
+	char message[];
+} __attribute__((packed));
+
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
 #endif // not NetBSD < 6 / Solaris
