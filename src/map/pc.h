@@ -531,7 +531,7 @@ END_ZEROED_BLOCK;
 	unsigned char channel_count;
 	struct channel_data *gcbind;
 	unsigned char fontcolor;
-	unsigned int fontcolor_tid;
+	int fontcolor_tid;
 	int64 hchsysch_tick;
 
 	/* [Ind/Hercules] */
