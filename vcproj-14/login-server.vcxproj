@@ -159,6 +159,7 @@
     <ClInclude Include="..\src\login\HPMlogin.h" />
     <ClInclude Include="..\src\login\ipban.h" />
     <ClInclude Include="..\src\login\lclif.h" />
+    <ClInclude Include="..\src\login\lclif.p.h" />
     <ClInclude Include="..\src\login\login.h" />
     <ClInclude Include="..\src\login\loginlog.h" />
     <ClInclude Include="..\src\common\cbasetypes.h" />

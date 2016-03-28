@@ -24,6 +24,7 @@
 
 /* Forward Declarations */
 struct login_session_data;
+struct lclif_interface_private;
 
 /* Enums */
 /// Parse function return code
@@ -47,6 +48,8 @@ struct login_packet_db {
 };
 
 struct lclif_interface {
+	struct lclif_interface_private *p; ///< Private interface
+
 	void (*init)(void);
 	void (*final)(void);
 
@@ -58,7 +61,6 @@ struct lclif_interface {
 	const struct login_packet_db *(*packet)(int16 packet_id);
 	enum parsefunc_rcode (*parse_packet)(const struct login_packet_db *lpd, int fd, struct login_session_data *sd);
 	int (*parse)(int fd);
-	enum parsefunc_rcode (*parse_sub)(int fd, struct login_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

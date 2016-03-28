@@ -19,7 +19,7 @@
  */
 #define HERCULES_CORE
 
-#include "lclif.h"
+#include "lclif.p.h"
 
 #include "login/ipban.h"
 #include "login/login.h"
@@ -38,235 +38,8 @@
 #include "common/utils.h"
 
 struct lclif_interface lclif_s;
+struct lclif_interface_private lclif_p;
 struct lclif_interface *lclif;
-
-/* Definitions and macros */
-/// Maximum amount of packets processed at once from the same client
-#define MAX_PROCESSED_PACKETS (3)
-
-// Packet DB
-#define MIN_PACKET_DB 0x0064
-#define MAX_PACKET_DB 0x08ff
-
-/* Enums */
-
-/// Packet IDs
-enum login_packet_id {
-	// CA (Client to Login)
-	PACKET_ID_CA_LOGIN                = 0x0064,
-	PACKET_ID_CA_LOGIN2               = 0x01dd,
-	PACKET_ID_CA_LOGIN3               = 0x01fa,
-	PACKET_ID_CA_CONNECT_INFO_CHANGED = 0x0200,
-	PACKET_ID_CA_EXE_HASHCHECK        = 0x0204,
-	PACKET_ID_CA_LOGIN_PCBANG         = 0x0277,
-	PACKET_ID_CA_LOGIN4               = 0x027c,
-	PACKET_ID_CA_LOGIN_HAN            = 0x02b0,
-	PACKET_ID_CA_SSO_LOGIN_REQ        = 0x0825,
-	PACKET_ID_CA_REQ_HASH             = 0x01db,
-	PACKET_ID_CA_CHARSERVERCONNECT    = 0x2710, // Custom Hercules Packet
-	//PACKET_ID_CA_SSO_LOGIN_REQa       = 0x825a, /* unused */
-
-	// AC (Login to Client)
-	PACKET_ID_AC_ACCEPT_LOGIN         = 0x0069,
-	PACKET_ID_AC_REFUSE_LOGIN         = 0x006a,
-	PACKET_ID_SC_NOTIFY_BAN           = 0x0081,
-	PACKET_ID_AC_ACK_HASH             = 0x01dc,
-	PACKET_ID_AC_REFUSE_LOGIN_R2      = 0x083e,
-};
-
-/* Packets Structs */
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
-#endif // not NetBSD < 6 / Solaris
-
-/**
- * Packet structure for CA_LOGIN.
- */
-struct packet_CA_LOGIN {
-	int16 packet_id;   ///< Packet ID (#PACKET_ID_CA_LOGIN)
-	uint32 version;    ///< Client Version
-	char id[24];       ///< Username
-	char password[24]; ///< Password
-	uint8 clienttype;  ///< Client Type
-} __attribute__((packed));
-
-/**
- * Packet structure for CA_LOGIN2.
- */
-struct packet_CA_LOGIN2 {
-	int16 packet_id;        ///< Packet ID (#PACKET_ID_CA_LOGIN2)
-	uint32 version;         ///< Client Version
-	char id[24];            ///< Username
-	uint8 password_md5[16]; ///< Password hash
-	uint8 clienttype;       ///< Client Type
-} __attribute__((packed));
-
-/**
- * Packet structure for CA_LOGIN3.
- */
-struct packet_CA_LOGIN3 {
-	int16 packet_id;        ///< Packet ID (#PACKET_ID_CA_LOGIN3)
-	uint32 version;         ///< Client Version
-	char id[24];            ///< Username
-	uint8 password_md5[16]; ///< Password hash
-	uint8 clienttype;       ///< Client Type
-	uint8 clientinfo;       ///< Index of the connection in the clientinfo file (+10 if the command-line contains "pc")
-} __attribute__((packed));
-
-/**
- * Packet structure for CA_LOGIN4.
- */
-struct packet_CA_LOGIN4 {
-	int16 packet_id;        ///< Packet ID (#PACKET_ID_CA_LOGIN4)
-	uint32 version;         ///< Client Version
-	char id[24];            ///< Username
-	uint8 password_md5[16]; ///< Password hash
-	uint8 clienttype;       ///< Client Type
-	char mac_address[13];   ///< MAC Address
-} __attribute__((packed));
-
-/**
- * Packet structure for CA_LOGIN_PCBANG.
- */
-struct packet_CA_LOGIN_PCBANG {
-	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_LOGIN_PCBANG)
-	uint32 version;	      ///< Client Version
-	char id[24];          ///< Username
-	char password[24];    ///< Password
-	uint8 clienttype;     ///< Client Type
-	char ip[16];          ///< IP Address
-	char mac_address[13]; ///< MAC Address
-} __attribute__((packed));
-
-/**
- * Packet structure for CA_LOGIN_HAN.
- */
-struct packet_CA_LOGIN_HAN {
-	int16 packet_id;        ///< Packet ID (#PACKET_ID_CA_LOGIN_HAN)
-	uint32 version;         ///< Client Version
-	char id[24];            ///< Username
-	char password[24];      ///< Password
-	uint8 clienttype;       ///< Client Type
-	char ip[16];            ///< IP Address
-	char mac_address[13];   ///< MAC Address
-	uint8 is_han_game_user; ///< 'isGravityID'
-} __attribute__((packed));
-
-/**
- * Packet structure for CA_SSO_LOGIN_REQ.
- *
- * Variable-length packet.
- */
-struct packet_CA_SSO_LOGIN_REQ {
-	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_SSO_LOGIN_REQ)
-	int16 packet_len;     ///< Length (variable length)
-	uint32 version;       ///< Client Version
-	uint8 clienttype;     ///< Client Type
-	char id[24];          ///< Username
-	char password[27];    ///< Password
-	int8 mac_address[17]; ///< MAC Address
-	char ip[15];          ///< IP Address
-	char t1[];            ///< SSO Login Token (variable length)
-} __attribute__((packed));
-
-#if 0 // Unused
-struct packet_CA_SSO_LOGIN_REQa {
-	int16 packet_id;
-	int16 packet_len;
-	uint32 version;
-	uint8 clienttype;
-	char id[24];
-	int8 mac_address[17];
-	char ip[15];
-	char t1[];
-} __attribute__((packed));
-#endif // unused
-
-/**
- * Packet structure for CA_CONNECT_INFO_CHANGED.
- *
- * New alive packet. Used to verify if client is always alive.
- */
-struct packet_CA_CONNECT_INFO_CHANGED {
-	int16 packet_id; ///< Packet ID (#PACKET_ID_CA_CONNECT_INFO_CHANGED)
-	char id[24];    ///< account.userid
-} __attribute__((packed));
-
-/**
- * Packet structure for CA_EXE_HASHCHECK.
- *
- * (kRO 2004-05-31aSakexe langtype 0 and 6)
- */
-struct packet_CA_EXE_HASHCHECK {
-	int16 packet_id;      ///< Packet ID (#PACKET_ID_CA_EXE_HASHCHECK)
-	uint8 hash_value[16]; ///< Client MD5 hash
-} __attribute__((packed));
-
-/**
- * Packet structure for CA_REQ_HASH.
- */
-struct packet_CA_REQ_HASH {
-	int16 packet_id; ///< Packet ID (#PACKET_ID_CA_REQ_HASH)
-} __attribute__((packed));
-
-struct packet_CA_CHARSERVERCONNECT {
-	int16 packet_id;
-	char userid[24];
-	char password[24];
-	int32 unknown;
-	int32 ip;
-	int16 port;
-	char name[20];
-	int16 unknown2;
-	int16 type;
-	int16 new;
-} __attribute__((packed));
-
-struct packet_SC_NOTIFY_BAN {
-	int16 packet_id;
-	uint8 error_code;
-} __attribute__((packed));
-
-struct packet_AC_REFUSE_LOGIN {
-	int16 packet_id;
-	uint8 error_code;
-	char block_date[20];
-} __attribute__((packed));
-
-struct packet_AC_REFUSE_LOGIN_R2 {
-	int16 packet_id;
-	uint32 error_code;
-	char block_date[20];
-} __attribute__((packed));
-
-struct packet_AC_ACCEPT_LOGIN {
-	int16 packet_id;
-	int16 packet_len;
-	int32 auth_code;
-	uint32 aid;
-	uint32 user_level;
-	uint32 last_login_ip;
-	char last_login_time[26];
-	uint8 sex;
-	struct {
-		uint32 ip;
-		int16 port;
-		char name[20];
-		uint16 usercount;
-		uint16 state;
-		uint16 property;
-	} server_list[];
-} __attribute__((packed));
-
-struct packet_AC_ACK_HASH {
-	int16 packet_id;
-	int16 packet_len;
-	uint8 secret[];
-} __attribute__((packed));
-
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
-#endif // not NetBSD < 6 / Solaris
 
 struct login_packet_db packet_db[MAX_PACKET_DB + 1];
 
@@ -589,7 +362,7 @@ int lclif_parse(int fd)
 		if (packet_len < 2)
 			return 0;
 
-		result = lclif->parse_sub(fd, sd);
+		result = lclif->p->parse_sub(fd, sd);
 
 		switch (result) {
 		case PACKET_SKIP:
@@ -723,7 +496,7 @@ void packetdb_loaddb(void)
 
 void lclif_init(void)
 {
-	packetdb_loaddb();
+	lclif->p->packetdb_loaddb();
 }
 
 void lclif_final(void)
@@ -733,6 +506,7 @@ void lclif_final(void)
 void lclif_defaults(void)
 {
 	lclif = &lclif_s;
+	lclif->p = &lclif_p;
 
 	lclif->init = lclif_init;
 	lclif->final = lclif_final;
@@ -746,5 +520,7 @@ void lclif_defaults(void)
 	lclif->packet = lclif_packet;
 	lclif->parse_packet = lclif_parse_packet;
 	lclif->parse = lclif_parse;
-	lclif->parse_sub = lclif_parse_sub;
+
+	lclif->p->packetdb_loaddb = packetdb_loaddb;
+	lclif->p->parse_sub = lclif_parse_sub;
 }

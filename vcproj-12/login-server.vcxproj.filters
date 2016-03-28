@@ -243,6 +243,9 @@
     <ClInclude Include="..\src\login\lclif.h">
       <Filter>login</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\login\lclif.p.h">
+      <Filter>login</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">

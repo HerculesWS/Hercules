@@ -221,6 +221,7 @@
 /* Begin PBXFileReference section */
 		A5296FCA1CAC40CF001ABCAC /* lclif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lclif.c; path = src/login/lclif.c; sourceTree = SOURCE_ROOT; };
 		A5296FCB1CAC40CF001ABCAC /* lclif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lclif.h; path = src/login/lclif.h; sourceTree = SOURCE_ROOT; };
+		A5296FCC1CAC40CF001ABCAC /* lclif.p.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lclif.p.h; path = src/login/lclif.p.h; sourceTree = SOURCE_ROOT; };
 		A5380CCD1856CE180090CBC4 /* mapcache */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mapcache; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5380CD61856CE3C0090CBC4 /* mapcache.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mapcache.c; path = src/tool/mapcache.c; sourceTree = "<group>"; };
 		A5467AD11A16FCB4008AFAA6 /* loginif.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = loginif.c; path = src/char/loginif.c; sourceTree = SOURCE_ROOT; };
@@ -555,6 +556,7 @@
 			children = (
 				A5296FCA1CAC40CF001ABCAC /* lclif.c */,
 				A5296FCB1CAC40CF001ABCAC /* lclif.h */,
+				A5296FCC1CAC40CF001ABCAC /* lclif.p.h */,
 				A5B894A81A03CDD4005AD22E /* HPMlogin.c */,
 				A5B894A91A03CDD4005AD22E /* HPMlogin.h */,
 				A56CC68118564387009EB79C /* account_sql.c */,
