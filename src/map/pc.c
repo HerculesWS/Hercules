@@ -1856,7 +1856,7 @@ int pc_disguise_timer(int tid, int64 tick, int id, intptr_t data)
 	return 0;
 }
 
-int pc_disguise(struct map_session_data *sd, int class_) {
+int pc_disguise(struct map_session_data *sd, int class_, int tick) {
 	if (class_ == -1 && sd->disguise == -1)
 		return 0;
 	if (class_ >= 0 && sd->disguise == class_)
