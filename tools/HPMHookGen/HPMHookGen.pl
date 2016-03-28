@@ -237,6 +237,8 @@ sub parse($$) {
 			$rtinit = ' = HCS_STATUS_FAIL';
 		} elsif ($x =~ /^enum\s+bg_queue_types$/) { # Known enum bg_queue_types
 			$rtinit = ' = BGQT_INVALID';
+		} elsif ($x =~ /^enum\s+parsefunc_rcode$/) { # Known enum parsefunc_rcode
+			$rtinit = ' = PACKET_UNKNOWN';
 		} elsif ($x =~ /^(?:enum\s+)?DBOptions$/) { # Known enum DBOptions
 			$rtinit = ' = DB_OPT_BASE';
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers

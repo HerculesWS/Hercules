@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@
 
 struct mmo_account;
 struct AccountDB;
+struct login_packet_db;
 
 enum E_LOGINSERVER_ST
 {
@@ -41,6 +42,16 @@ enum password_enc {
 	PWENC_ENCRYPT  = 0x1, ///< passwordencrypt
 	PWENC_ENCRYPT2 = 0x2, ///< passwordencrypt2
 	PWENC_BOTH = PWENC_ENCRYPT|PWENC_ENCRYPT2, ///< both the above
+};
+
+/// Parse function return code
+enum parsefunc_rcode {
+	PACKET_VALID         =  1,
+	PACKET_INCOMPLETE    =  0,
+	PACKET_UNKNOWN       = -1,
+	PACKET_INVALIDLENGTH = -2,
+	PACKET_STOPPARSE     = -3,
+	PACKET_SKIP          = -4, //internal parser will skip this packet and go parser another, meant for plugins. [hemagx]
 };
 
 #define PASSWORDENC PWENC_BOTH
@@ -203,7 +214,7 @@ struct login_interface {
 	void (*login_error) (int fd, uint8 error);
 	void (*parse_ping) (int fd, struct login_session_data* sd);
 	void (*parse_client_md5) (int fd, struct login_session_data* sd);
-	bool (*parse_client_login) (int fd, struct login_session_data* sd, const char *ip);
+	bool (*client_login) (int fd, struct login_session_data *sd);
 	void (*send_coding_key) (int fd, struct login_session_data* sd);
 	void (*parse_request_coding_key) (int fd, struct login_session_data* sd);
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
@@ -213,6 +224,10 @@ struct login_interface {
 	int (*config_read) (const char *cfgName);
 	char *LOGIN_CONF_NAME;
 	char *NET_CONF_NAME; ///< Network configuration filename
+
+	// lclif
+	enum parsefunc_rcode (*parse_packet)(const struct login_packet_db *lpd, int fd, struct login_session_data *sd);
+	enum parsefunc_rcode (*parse_login_sub)(int fd, struct login_session_data *sd);
 };
 
 #ifdef HERCULES_CORE
