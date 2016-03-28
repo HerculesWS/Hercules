@@ -1385,13 +1385,64 @@ void login_kick(struct login_session_data* sd)
 	charif_sendallwos(-1, buf, 6);
 }
 
+bool login_send_server_list(struct login_session_data *sd)
+{
+	int server_num = 0, i, n, length;
+	uint32 ip;
+	struct packet_AC_ACCEPT_LOGIN *packet = NULL;
+
+	for (i = 0; i < ARRAYLENGTH(server); ++i) {
+		if (sockt->session_is_active(server[i].fd))
+			server_num++;
+	}
+	if (server_num == 0)
+		return false;
+
+	length = sizeof(*packet) + sizeof(packet->server_list[0]) * server_num;
+	ip = sockt->session[sd->fd]->client_addr;
+
+	// Allocate the packet
+	WFIFOHEAD(sd->fd, length);
+	packet = WP2PTR(sd->fd);
+
+	packet->packet_id = PACKET_ID_AC_ACCEPT_LOGIN;
+	packet->packet_len = length;
+	packet->auth_code = sd->login_id1;
+	packet->aid = sd->account_id;
+	packet->user_level = sd->login_id2;
+	packet->last_login_ip = 0; // Not used anymore
+	memset(packet->last_login_time, '\0', sizeof(packet->last_login_time)); // not used anymore
+	packet->sex = sex_str2num(sd->sex);
+	for (i = 0, n = 0;  i < ARRAYLENGTH(server); ++i) {
+		uint32 subnet_char_ip;
+
+		if (!sockt->session_is_valid(server[i].fd))
+			continue;
+
+		subnet_char_ip = login->lan_subnet_check(ip);
+		packet->server_list[n].ip = htonl((subnet_char_ip) ? subnet_char_ip : server[i].ip);
+		packet->server_list[n].port = sockt->ntows(htons(server[i].port)); // [!] LE byte order here [!]
+		safestrncpy(packet->server_list[n].name, server[i].name, 20);
+		packet->server_list[n].usercount = server[i].users;
+
+		if (server[i].type == CST_PAYING && sd->expiration_time > time(NULL))
+			packet->server_list[n].property = CST_NORMAL;
+		else
+			packet->server_list[n].property = server[i].type;
+
+		packet->server_list[n].state = server[i].new_;
+		++n;
+	}
+	WFIFOSET(sd->fd, length);
+
+	return true;
+}
+
 void login_auth_ok(struct login_session_data* sd)
 {
 	int fd = 0;
 	uint32 ip;
-	uint8 server_num, n;
 	struct login_auth_node* node;
-	int i;
 
 	nullpo_retv(sd);
 	fd = sd->fd;
@@ -1409,18 +1460,6 @@ void login_auth_ok(struct login_session_data* sd)
 		return;
 	} else if (login->config->min_group_id_to_connect >= 0 && login->config->group_id_to_connect == -1 && sd->group_id < login->config->min_group_id_to_connect) {
 		ShowStatus("Connection refused: the minimum group id required for connection is %d (account: %s, group: %d).\n", login->config->min_group_id_to_connect, sd->userid, sd->group_id);
-		login->connection_problem(fd, 1); // 01 = server closed
-		return;
-	}
-
-	server_num = 0;
-	for( i = 0; i < ARRAYLENGTH(server); ++i )
-		if (sockt->session_is_active(server[i].fd))
-			server_num++;
-
-	if( server_num == 0 )
-	{// if no char-server, don't send void list of servers, just disconnect the player with proper message
-		ShowStatus("Connection refused: there is no char-server online (account: %s).\n", sd->userid);
 		login->connection_problem(fd, 1); // 01 = server closed
 		return;
 	}
@@ -1450,48 +1489,15 @@ void login_auth_ok(struct login_session_data* sd)
 		}
 	}
 
+	if (!login_send_server_list(sd)) {
+		// if no char-server, don't send void list of servers, just disconnect the player with proper message
+		ShowStatus("Connection refused: there is no char-server online (account: %s).\n", sd->userid);
+		login->connection_problem(fd, 1); // 01 = server closed
+		return;
+	}
+
 	login_log(ip, sd->userid, 100, "login ok");
 	ShowStatus("Connection of the account '%s' accepted.\n", sd->userid);
-
-	{
-		struct packet_AC_ACCEPT_LOGIN *packet = NULL;
-		int length = sizeof(*packet) + sizeof(packet->server_list[0]) * server_num;
-		ip = sockt->session[sd->fd]->client_addr;
-
-		// Allocate the packet
-		WFIFOHEAD(sd->fd, length);
-		packet = WP2PTR(sd->fd);
-
-		packet->packet_id = PACKET_ID_AC_ACCEPT_LOGIN;
-		packet->packet_len = length;
-		packet->auth_code = sd->login_id1;
-		packet->aid = sd->account_id;
-		packet->user_level = sd->login_id2;
-		packet->last_login_ip = 0; // Not used anymore
-		memset(packet->last_login_time, '\0', sizeof(packet->last_login_time)); // not used anymore
-		packet->sex = sex_str2num(sd->sex);
-		for (i = 0, n = 0;  i < ARRAYLENGTH(server); ++i) {
-			uint32 subnet_char_ip;
-
-			if (!sockt->session_is_valid(server[i].fd))
-				continue;
-
-			subnet_char_ip = login->lan_subnet_check(ip);
-			packet->server_list[n].ip = htonl((subnet_char_ip) ? subnet_char_ip : server[i].ip);
-			packet->server_list[n].port = sockt->ntows(htons(server[i].port)); // [!] LE byte order here [!]
-			safestrncpy(packet->server_list[n].name, server[i].name, 20);
-			packet->server_list[n].usercount = server[i].users;
-
-			if (server[i].type == CST_PAYING && sd->expiration_time > time(NULL))
-				packet->server_list[n].property = CST_NORMAL;
-			else
-				packet->server_list[n].property = server[i].type;
-
-			packet->server_list[n].state = server[i].new_;
-			++n;
-		}
-		WFIFOSET(sd->fd, length);
-	}
 
 	// create temporary auth entry
 	CREATE(node, struct login_auth_node, 1);
@@ -1608,6 +1614,141 @@ void login_parse_client_md5(int fd, struct login_session_data* sd)
 	RFIFOSKIP(fd,sizeof(*packet));
 }
 
+// CA_LOGIN
+void login_parse_CA_LOGIN(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+void login_parse_CA_LOGIN(int fd, struct login_session_data *sd)
+{
+	const struct packet_CA_LOGIN *packet = RP2PTR(fd);
+
+	sd->version = packet->version;
+	sd->clienttype = packet->clienttype;
+	safestrncpy(sd->userid, packet->id, NAME_LENGTH);
+	safestrncpy(sd->passwd, packet->password, PASSWD_LEN);
+
+	RFIFOSKIP(fd, sizeof(*packet));
+
+	if (login->config->use_md5_passwds)
+		MD5_String(sd->passwd, sd->passwd);
+	sd->passwdenc = PWENC_NONE;
+}
+
+// CA_LOGIN2
+void login_parse_CA_LOGIN2(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+void login_parse_CA_LOGIN2(int fd, struct login_session_data *sd)
+{
+	const struct packet_CA_LOGIN2 *packet = RP2PTR(fd);
+
+	sd->version = packet->version;
+	sd->clienttype = packet->clienttype;
+	safestrncpy(sd->userid, packet->id, NAME_LENGTH);
+	bin2hex(sd->passwd, packet->password_md5, 16);
+	sd->passwdenc = PASSWORDENC;
+
+	RFIFOSKIP(fd, sizeof(*packet));
+}
+
+// CA_LOGIN3
+void login_parse_CA_LOGIN3(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+void login_parse_CA_LOGIN3(int fd, struct login_session_data *sd)
+{
+	const struct packet_CA_LOGIN3 *packet = RP2PTR(fd);
+
+	sd->version = packet->version;
+	sd->clienttype = packet->clienttype;
+	/* unused */
+	/* sd->clientinfo = packet->clientinfo; */
+	safestrncpy(sd->userid, packet->id, NAME_LENGTH);
+	bin2hex(sd->passwd, packet->password_md5, 16);
+	sd->passwdenc = PASSWORDENC;
+
+	RFIFOSKIP(fd, sizeof(*packet));
+}
+
+// CA_LOGIN4
+void login_parse_CA_LOGIN4(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+void login_parse_CA_LOGIN4(int fd, struct login_session_data *sd)
+{
+	const struct packet_CA_LOGIN4 *packet = RP2PTR(fd);
+
+	sd->version = packet->version;
+	sd->clienttype = packet->clienttype;
+	/* unused */
+	/* safestrncpy(sd->mac_address, packet->mac_address, sizeof(sd->mac_address)); */
+	safestrncpy(sd->userid, packet->id, NAME_LENGTH);
+	bin2hex(sd->passwd, packet->password_md5, 16);
+	sd->passwdenc = PASSWORDENC;
+
+	RFIFOSKIP(fd, sizeof(*packet));
+}
+
+// CA_LOGIN_PCBANG
+void login_parse_CA_LOGIN_PCBANG(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+void login_parse_CA_LOGIN_PCBANG(int fd, struct login_session_data *sd)
+{
+	const struct packet_CA_LOGIN_PCBANG *packet = RP2PTR(fd);
+
+	sd->version = packet->version;
+	sd->clienttype = packet->clienttype;
+	/* unused */
+	/* safestrncpy(sd->ip, packet->ip, sizeof(sd->ip)); */
+	/* safestrncpy(sd->mac_address, packet->mac_address, sizeof(sd->mac_address)); */
+	safestrncpy(sd->userid, packet->id, NAME_LENGTH);
+	safestrncpy(sd->passwd, packet->password, PASSWD_LEN);
+
+	RFIFOSKIP(fd, sizeof(*packet));
+
+	if (login->config->use_md5_passwds)
+		MD5_String(sd->passwd, sd->passwd);
+	sd->passwdenc = PWENC_NONE;
+}
+
+// CA_LOGIN_HAN
+void login_parse_CA_LOGIN_HAN(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+void login_parse_CA_LOGIN_HAN(int fd, struct login_session_data *sd)
+{
+	const struct packet_CA_LOGIN_HAN *packet = RP2PTR(fd);
+
+	sd->version = packet->version;
+	sd->clienttype = packet->clienttype;
+	/* unused */
+	/* safestrncpy(sd->ip, packet->ip, sizeof(sd->ip)); */
+	/* safestrncpy(sd->mac_address, packet->mac_address, sizeof(sd->mac_address)); */
+	/* sd->ishan = packet->is_han_game_user; */
+	safestrncpy(sd->userid, packet->id, NAME_LENGTH);
+	safestrncpy(sd->passwd, packet->password, PASSWD_LEN);
+
+	RFIFOSKIP(fd, sizeof(*packet));
+
+	if (login->config->use_md5_passwds)
+		MD5_String(sd->passwd, sd->passwd);
+	sd->passwdenc = PWENC_NONE;
+}
+
+// CA_SSO_LOGIN_REQ
+bool login_parse_CA_SSO_LOGIN_REQ(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+bool login_parse_CA_SSO_LOGIN_REQ(int fd, struct login_session_data *sd)
+{
+	const struct packet_CA_SSO_LOGIN_REQ *packet = RP2PTR(fd);
+	int tokenlen = (int)RFIFOREST(fd) - (int)sizeof(*packet);
+
+	if (tokenlen > PASSWD_LEN || tokenlen < 1) {
+		RFIFOSKIP(fd, RFIFOREST(fd)); // assume no other packet was sent
+		return false;
+	}
+
+	sd->clienttype = packet->clienttype;
+	sd->version = packet->version;
+	safestrncpy(sd->userid, packet->id, NAME_LENGTH);
+	safestrncpy(sd->passwd, packet->t1, min(tokenlen + 1, PASSWD_LEN)); // Variable-length field, don't copy more than necessary
+
+	RFIFOSKIP(fd, sizeof(*packet));
+
+	if (login->config->use_md5_passwds)
+		MD5_String(sd->passwd, sd->passwd);
+	sd->passwdenc = PWENC_NONE;
+	return true;
+}
+
 bool login_parse_client_login(int fd, struct login_session_data* sd, const char *const ip) __attribute__((nonnull (2)));
 bool login_parse_client_login(int fd, struct login_session_data* sd, const char *const ip)
 {
@@ -1616,126 +1757,28 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 
 	switch (command) {
 	case PACKET_ID_CA_SSO_LOGIN_REQ:
-	{
-		const struct packet_CA_SSO_LOGIN_REQ *packet = RP2PTR(fd);
-		int tokenlen = (int)RFIFOREST(fd) - (int)sizeof(*packet);
-
-		if (tokenlen > PASSWD_LEN || tokenlen < 1) {
-			RFIFOSKIP(fd, RFIFOREST(fd)); // assume no other packet was sent
+		if (!login_parse_CA_SSO_LOGIN_REQ(fd, sd)) {
 			login->auth_failed(sd, 3);
 			return true;
 		}
-
-		sd->clienttype = packet->clienttype;
-		sd->version = packet->version;
-		safestrncpy(sd->userid, packet->id, NAME_LENGTH);
-		safestrncpy(sd->passwd, packet->t1, min(tokenlen + 1, PASSWD_LEN)); // Variable-length field, don't copy more than necessary
-
-		RFIFOSKIP(fd, sizeof(*packet));
-
-		if (login->config->use_md5_passwds)
-			MD5_String(sd->passwd, sd->passwd);
-		sd->passwdenc = PWENC_NONE;
-	}
 		break;
 	case PACKET_ID_CA_LOGIN:
-	{
-		const struct packet_CA_LOGIN *packet = RP2PTR(fd);
-
-		sd->version = packet->version;
-		sd->clienttype = packet->clienttype;
-		safestrncpy(sd->userid, packet->id, NAME_LENGTH);
-		safestrncpy(sd->passwd, packet->password, PASSWD_LEN);
-
-		RFIFOSKIP(fd, sizeof(*packet));
-
-		if (login->config->use_md5_passwds)
-			MD5_String(sd->passwd, sd->passwd);
-		sd->passwdenc = PWENC_NONE;
-	}
+		login_parse_CA_LOGIN(fd, sd);
 		break;
 	case PACKET_ID_CA_LOGIN2:
-	{
-		const struct packet_CA_LOGIN2 *packet = RP2PTR(fd);
-
-		sd->version = packet->version;
-		sd->clienttype = packet->clienttype;
-		safestrncpy(sd->userid, packet->id, NAME_LENGTH);
-		bin2hex(sd->passwd, packet->password_md5, 16);
-		sd->passwdenc = PASSWORDENC;
-
-		RFIFOSKIP(fd, sizeof(*packet));
-	}
+		login_parse_CA_LOGIN2(fd, sd);
 		break;
 	case PACKET_ID_CA_LOGIN3:
-	{
-		const struct packet_CA_LOGIN3 *packet = RP2PTR(fd);
-
-		sd->version = packet->version;
-		sd->clienttype = packet->clienttype;
-		/* unused */
-		/* sd->clientinfo = packet->clientinfo; */
-		safestrncpy(sd->userid, packet->id, NAME_LENGTH);
-		bin2hex(sd->passwd, packet->password_md5, 16);
-		sd->passwdenc = PASSWORDENC;
-
-		RFIFOSKIP(fd, sizeof(*packet));
-	}
+		login_parse_CA_LOGIN3(fd, sd);
 		break;
 	case PACKET_ID_CA_LOGIN4:
-	{
-		const struct packet_CA_LOGIN4 *packet = RP2PTR(fd);
-
-		sd->version = packet->version;
-		sd->clienttype = packet->clienttype;
-		/* unused */
-		/* safestrncpy(sd->mac_address, packet->mac_address, sizeof(sd->mac_address)); */
-		safestrncpy(sd->userid, packet->id, NAME_LENGTH);
-		bin2hex(sd->passwd, packet->password_md5, 16);
-		sd->passwdenc = PASSWORDENC;
-
-		RFIFOSKIP(fd, sizeof(*packet));
-	}
+		login_parse_CA_LOGIN4(fd, sd);
 		break;
 	case PACKET_ID_CA_LOGIN_PCBANG:
-	{
-		const struct packet_CA_LOGIN_PCBANG *packet = RP2PTR(fd);
-
-		sd->version = packet->version;
-		sd->clienttype = packet->clienttype;
-		/* unused */
-		/* safestrncpy(sd->ip, packet->ip, sizeof(sd->ip)); */
-		/* safestrncpy(sd->mac_address, packet->mac_address, sizeof(sd->mac_address)); */
-		safestrncpy(sd->userid, packet->id, NAME_LENGTH);
-		safestrncpy(sd->passwd, packet->password, PASSWD_LEN);
-
-		RFIFOSKIP(fd, sizeof(*packet));
-
-		if (login->config->use_md5_passwds)
-			MD5_String(sd->passwd, sd->passwd);
-		sd->passwdenc = PWENC_NONE;
-	}
+		login_parse_CA_LOGIN_PCBANG(fd, sd);
 		break;
-
 	case PACKET_ID_CA_LOGIN_HAN:
-	{
-		const struct packet_CA_LOGIN_HAN *packet = RP2PTR(fd);
-
-		sd->version = packet->version;
-		sd->clienttype = packet->clienttype;
-		/* unused */
-		/* safestrncpy(sd->ip, packet->ip, sizeof(sd->ip)); */
-		/* safestrncpy(sd->mac_address, packet->mac_address, sizeof(sd->mac_address)); */
-		/* sd->ishan = packet->is_han_game_user; */
-		safestrncpy(sd->userid, packet->id, NAME_LENGTH);
-		safestrncpy(sd->passwd, packet->password, PASSWD_LEN);
-
-		RFIFOSKIP(fd, sizeof(*packet));
-
-		if (login->config->use_md5_passwds)
-			MD5_String(sd->passwd, sd->passwd);
-		sd->passwdenc = PWENC_NONE;
-	}
+		login_parse_CA_LOGIN_HAN(fd, sd);
 		break;
 	default:
 		RFIFOSKIP(fd,RFIFOREST(fd)); // assume no other packet was sent
@@ -1794,6 +1837,7 @@ void login_char_server_connection_status(int fd, struct login_session_data* sd, 
 	WFIFOSET(fd,3);
 }
 
+// CA_CHARSERVERCONNECT
 void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl) __attribute__((nonnull (2, 3)));
 void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl)
 {
