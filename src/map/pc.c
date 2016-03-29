@@ -1857,12 +1857,14 @@ int pc_disguise_timer(int tid, int64 tick, int id, intptr_t data)
 }
 
 int pc_disguise(struct map_session_data *sd, int class_, int tick) {
+	const struct TimerData *td;
+
 	if (class_ == -1 && sd->disguise == -1)
 		return 0;
 	if (class_ >= 0 && sd->disguise == class_)
 		return 0;
 
-	const struct TimerData *td = timer->get(sd->disguise_tid);
+	td = timer->get(sd->disguise_tid);
 
 	if ((class_ == -1 || tick > -1) && td != NULL && td->func == pc_disguise_timer)
 		timer->delete(sd->disguise_tid, pc_disguise_timer);
