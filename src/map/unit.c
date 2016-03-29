@@ -1794,7 +1794,7 @@ int unit_set_target(struct unit_data* ud, int target_id)
 		struct block_list* target;
 		if (ud->target && (target = map->id2bl(ud->target)) != NULL && (ux = unit->bl2ud(target)) != NULL && ux->target_count > 0)
 			--ux->target_count;
-		if (target_id && (target = map->id2bl(target_id)) != NULL && (ux = unit->bl2ud(target)) != NULL)
+		if (target_id && (target = map->id2bl(target_id)) != NULL && (ux = unit->bl2ud(target)) != NULL  && ux->target_count < 255)
 			++ux->target_count;
 	}
 

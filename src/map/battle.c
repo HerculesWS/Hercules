@@ -1367,7 +1367,7 @@ int64 battle_calc_defense(int attack_type, struct block_list *src, struct block_
 
 			if( battle_config.vit_penalty_type && battle_config.vit_penalty_target&target->type ) {
 				unsigned char target_count; //256 max targets should be a sane max
-				target_count = unit->counttargeted(target);
+				target_count = min(unit->counttargeted(target), (100 / battle_config.vit_penalty_num) + (battle_config.vit_penalty_count - 1));
 				if(target_count >= battle_config.vit_penalty_count) {
 					if(battle_config.vit_penalty_type == 1) {
 						if( !tsc || !tsc->data[SC_STEELBODY] )
