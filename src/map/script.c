@@ -5702,27 +5702,22 @@ BUILDIN(callfunc)
 	struct script_retinfo *ri;
 	struct script_code *scr = NULL;
 	struct reg_db *ref = NULL;
-	TBL_NPC *nd = NULL;
+	struct npc_data *nd = NULL;
 	struct script_data *data = script_getdata(st, 2);
 
-	if (!data_islabel(data) && !data_isfunclabel(data))
-	{
-		const char *str = script_getstr(st,2);
+	if( !data_islabel(data) && !data_isfunclabel(data) ) {
+		const char *str = script_getstr(st, 2);
 		scr = (struct script_code*)strdb_get(script->userfunc_db, str);
 
-		if (!scr)
-		{
-			if (stristr(str, "::"))
-			{
+		if (!scr) {
+			if (stristr(str, "::")) {
 				char labelname[NAME_LENGTH], npcname[NAME_LENGTH];
 
 				memset(labelname, '\0', sizeof(labelname));
 				memset(npcname, '\0', sizeof(npcname));
 
-				if (sscanf(str, "::%s", labelname) == 1 || sscanf(str, "%[^:]::%s", npcname, labelname) == 2)
-				{
-					if (!labelname[0] && !npcname[0])
-					{
+				if ( sscanf(str, "::%s", labelname) == 1 || sscanf(str, "%[^:]::%s", npcname, labelname) == 2 ) {
+					if ( !labelname[0] && !npcname[0] ) {
 						ShowError("script:callfunc: label not found! [%s]\n", str);
 						st->state = END;
 						return false;
@@ -5730,8 +5725,7 @@ BUILDIN(callfunc)
 
 					nd = (npcname[0]) ? npc->name2id(npcname) : map->id2nd(st->oid);
 
-					if (!nd)
-					{
+					if (!nd) {
 						ShowError("script:callfunc: no npc attached for label! [%s]\n", str);
 						st->state = END;
 						return false;
@@ -5739,29 +5733,23 @@ BUILDIN(callfunc)
 
 					ARR_FIND(0, nd->u.scr.label_list_num, k, (strcmp(nd->u.scr.label_list[k].name, labelname) == 0));
 
-					if (k == nd->u.scr.label_list_num)
-					{
+					if (k == nd->u.scr.label_list_num) {
 						ShowError("script:callfunc: label not found! [%s]\n", str);
 						st->state = END;
 						return false;
 					}
-				}
-				else
-				{
+				} else {
 					ShowError("script:callfunc: label not found! [%s]\n", str);
 					st->state = END;
 					return false;
 				}
-			}
-			else
-			{
+			} else {
 				ShowError("script:callfunc: argument is not a label or function not found! [%s]\n", str);
 				st->state = END;
 				return false;
 			}
 		}
-	}
-	else
+	} else
 		pos = script_getnum(st, 2);
 
 	ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 2);
