@@ -17089,7 +17089,7 @@ BUILDIN(warpportal) {
 	if( bl->type == BL_NPC )
 		unit->bl2ud2(bl); // ensure nd->ud is safe to edit
 
-	group = skill->unitsetting(bl, AL_WARP, 4, spx, spy, 0);
+	group = skill->unitsetting(bl, AL_WARP, 4, spx, spy, 0, 0);
 	if( group == NULL )
 		return true;// failed
 	group->val1 = (group->val1<<16)|(short)0;
