@@ -13262,7 +13262,7 @@ BUILDIN(clearitem)
  *------------------------------------------*/
 BUILDIN(disguise)
 {
-	int id, int tick = -1;
+	int id, tick = -1;
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
 		return true;
