@@ -3704,6 +3704,7 @@ const char *npc_parse_mob(const char *w1, const char *w2, const char *w3, const 
 	char mapname[32], mobname[NAME_LENGTH];
 	struct spawn_data mobspawn, *data;
 	struct mob_db* db;
+	char mob_constname[NAME_LENGTH]; // [Cretino]
 
 	memset(&mobspawn, 0, sizeof(struct spawn_data));
 
@@ -3714,7 +3715,7 @@ const char *npc_parse_mob(const char *w1, const char *w2, const char *w3, const 
 	// w4=<mob id>,<amount>,<delay1>,<delay2>{,<event>,<mob size>,<mob ai>}
 	if( sscanf(w1, "%31[^,],%d,%d,%d,%d", mapname, &x, &y, &xs, &ys) < 5
 	 || sscanf(w3, "%23[^,],%d", mobname, &mob_lv) < 1
-	 || sscanf(w4, "%d,%d,%u,%u,%50[^,],%d,%d[^\t\r\n]", &class_, &num, &mobspawn.delay1, &mobspawn.delay2, mobspawn.eventname, &size, &ai) < 4
+	 || sscanf(w4, "%23[^,],%d,%u,%u,%50[^,],%d,%d[^\t\r\n]", mob_constname, &num, &mobspawn.delay1, &mobspawn.delay2, mobspawn.eventname, &size, &ai) < 4
 	 ) {
 		ShowError("npc_parse_mob: Invalid mob definition in file '%s', line '%d'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 		if (retval) *retval = EXIT_FAILURE;
@@ -3735,6 +3736,19 @@ const char *npc_parse_mob(const char *w1, const char *w2, const char *w3, const 
 		if (retval) *retval = EXIT_FAILURE;
 		return strchr(start,'\n');// skip and continue
 	}
+
+	// Using 'npc->viewisid' to checks if given 'mobname' is an interger or constant. [Cretino]
+	if (!npc->viewisid(mob_constname))
+	{
+		if (!script->get_constant(mob_constname, &class_))
+		{
+			ShowError("npc_parse_mob: Invalid mob constant '%s' in file '%s', line '%d'.\n", mob_constname, filepath, strline(buffer,start-buffer));
+			if (retval) *retval = EXIT_FAILURE;
+			return strchr(start,'\n');// skip and continue
+		}
+	}
+	else
+		class_ = atoi(mob_constname);
 
 	// check monster ID if exists!
 	if( mob->db_checkid(class_) == 0 ) {
