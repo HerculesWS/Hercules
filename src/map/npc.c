@@ -2832,7 +2832,7 @@ const char *npc_parse_shop(const char *w1, const char *w2, const char *w3, const
 		m = -1;
 	} else {// w1=<map name>,<x>,<y>,<facing>
 		char mapname[32];
-		if( sscanf(w1, "%31[^,],%d,%d,%13[^\t]", mapname, &x, &y, &dir_name) != 4
+		if( sscanf(w1, "%31[^,],%d,%d,%13[^\t]", mapname, &x, &y, dir_name) != 4
 		 || strchr(w4, ',') == NULL
 		  ) {
 			ShowError("npc_parse_shop: Invalid shop definition in file '%s', line '%d'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
@@ -3091,7 +3091,7 @@ const char *npc_parse_script(const char *w1, const char *w2, const char *w3, con
 	} else {
 		// npc in a map
 		char mapname[32];
-		if (sscanf(w1, "%31[^,],%d,%d,%13[^\t]", mapname, &x, &y, &dir_name) != 4) {
+		if (sscanf(w1, "%31[^,],%d,%d,%13[^\t]", mapname, &x, &y, dir_name) != 4) {
 			ShowError("npc_parse_script: Invalid placement format for a script in file '%s', line '%d'. Skipping the rest of file...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 			if (retval) *retval = EXIT_FAILURE;
 			return NULL;// unknown format, don't continue
@@ -3426,7 +3426,7 @@ const char *npc_parse_duplicate(const char *w1, const char *w2, const char *w3, 
 		m = -1;
 	} else {
 		char mapname[32];
-		int fields = sscanf(w1, "%31[^,],%d,%d,%13[^\t]", mapname, &x, &y, &dir_name);
+		int fields = sscanf(w1, "%31[^,],%d,%d,%13[^\t]", mapname, &x, &y, dir_name);
 		if (dnd->subtype == WARP && fields == 3) {
 			// <map name>,<x>,<y>
 			dir = 0;
