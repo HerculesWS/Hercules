@@ -3738,16 +3738,13 @@ const char *npc_parse_mob(const char *w1, const char *w2, const char *w3, const 
 	}
 
 	// Using 'npc->viewisid' to checks if given 'mob_constname' is an interger or constant. [Cretino]
-	if (!npc->viewisid(mob_constname))
-	{
-		if (!script->get_constant(mob_constname, &class_))
-		{
+	if (!npc->viewisid(mob_constname)) {
+		if (!script->get_constant(mob_constname, &class_)) {
 			ShowError("npc_parse_mob: Invalid mob constant '%s' in file '%s', line '%d'.\n", mob_constname, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
 			return strchr(start,'\n');// skip and continue
 		}
-	}
-	else
+	} else
 		class_ = atoi(mob_constname);
 
 	// check monster ID if exists!
