@@ -71,11 +71,11 @@ struct item_data;
 
 ///////////////////////////////////////////////////////////////////////////////
 //## TODO possible enhancements: [FlavioJS]
-// - 'callfunc' supporting labels in the current npc "::LabelName"
-// - 'callfunc' supporting labels in other npcs "NpcName::LabelName"
+// - 'callfunc' supporting labels in the current npc "::LabelName" - OK [Cretino]
+// - 'callfunc' supporting labels in other npcs "NpcName::LabelName" - OK [Cretino]
 // - 'function FuncName;' function declarations reverting to global functions
 //   if local label isn't found
-// - join callfunc and callsub's functionality
+// - join callfunc and callsub's functionality - OK [Cretino]
 // - remove dynamic allocation in add_word()
 // - remove GETVALUE / SETVALUE
 // - clean up the set_reg / set_val / setd_sub mess
