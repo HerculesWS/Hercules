@@ -3737,7 +3737,7 @@ const char *npc_parse_mob(const char *w1, const char *w2, const char *w3, const 
 		return strchr(start,'\n');// skip and continue
 	}
 
-	// Using 'npc->viewisid' to checks if given 'mobname' is an interger or constant. [Cretino]
+	// Using 'npc->viewisid' to checks if given 'mob_constname' is an interger or constant. [Cretino]
 	if (!npc->viewisid(mob_constname))
 	{
 		if (!script->get_constant(mob_constname, &class_))
