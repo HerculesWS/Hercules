@@ -13262,15 +13262,18 @@ BUILDIN(clearitem)
  *------------------------------------------*/
 BUILDIN(disguise)
 {
-	int id;
+	int id, int tick = -1;
 	struct map_session_data *sd = script->rid2sd(st);
 	if (sd == NULL)
 		return true;
 
 	id = script_getnum(st,2);
 
+	if (script_hasdata(st, 3))
+		tick = script_getnum(st,3);
+
 	if (mob->db_checkid(id) || npc->db_checkid(id)) {
-		pc->disguise(sd, id);
+		pc->disguise(sd, id, tick);
 		script_pushint(st,id);
 	} else
 		script_pushint(st,0);
@@ -13288,7 +13291,7 @@ BUILDIN(undisguise)
 		return true;
 
 	if (sd->disguise != -1) {
-		pc->disguise(sd, -1);
+		pc->disguise(sd, -1, -1);
 		script_pushint(st,0);
 	} else {
 		script_pushint(st,1);
@@ -20658,7 +20661,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(setbattleflag,"si"),
 		BUILDIN_DEF(getbattleflag,"s"),
 		BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
-		BUILDIN_DEF(disguise,"i"), //disguise player. Lupus
+		BUILDIN_DEF(disguise,"i?"), //disguise player. Lupus (Timer by [Cretino])
 		BUILDIN_DEF(undisguise,""), //undisguise player. Lupus
 		BUILDIN_DEF(getmonsterinfo,"ii"), //Lupus
 		BUILDIN_DEF(addmonsterdrop,"vii"),
