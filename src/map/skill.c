@@ -10635,12 +10635,10 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 
 				if (sd && skill_id == SU_CN_METEOR) {
 					short item_idx = pc->search_inventory(sd, ITEMID_CATNIP_FRUIT);
-
 					if (item_idx >= 0) {
-						pc->delitem(sd, item_idx, 1, 0, 1, LOG_TYPE_CONSUME);
-						skill->area_temp[3] = 1;
-					} else
-						skill->area_temp[3] = 0;
+						pc->delitem(sd, item_idx, 1, 0, 1, LOG_TYPE_SKILL);
+						flag |= 1;
+					}
 				}
 
 				for( i = 0; i < 2 + (skill_lv>>1); i++ ) {
@@ -12225,12 +12223,19 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 						tsc->sg_counter++; //SG hit counter.
 					if (skill->attack(skill->get_type(sg->skill_id),ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0) <= 0 && tsc)
 						tsc->sg_counter=0; //Attack absorbed.
-				break;
+					break;
 		#endif
 				case GS_DESPERADO:
 					if (rnd()%100 < src->val1)
 						skill->attack(BF_WEAPON,ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
-				break;
+					break;
+				case SU_CN_METEOR:
+					if (sg->val1)
+						skill->area_temp[3] = 1;
+					else
+						skill->area_temp[3] = 0;
+					skill->attack(skill->get_type(sg->skill_id),ss,&unit->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
+					break;
 				default:
 					skill->attack(skill->get_type(sg->skill_id),ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
 			}
@@ -12815,7 +12820,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 						sec = 7000;
 					sg->limit = DIFF_TICK32(tick, sg->tick) + sec;
 				} else if (tsc->data[type] && bl->id == sg->val2)
-					skill->attack(skill_get_type(SU_SV_ROOTTWIST_ATK), ss, &src->bl, bl, SU_SV_ROOTTWIST_ATK, sg->skill_lv, tick, SD_LEVEL|SD_ANIMATION);
+					skill->attack(skill->get_type(SU_SV_ROOTTWIST_ATK), ss, &src->bl, bl, SU_SV_ROOTTWIST_ATK, sg->skill_lv, tick, SD_LEVEL|SD_ANIMATION);
 			}
 			break;
 	}
