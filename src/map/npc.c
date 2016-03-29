@@ -2837,7 +2837,7 @@ const char *npc_parse_shop(const char *w1, const char *w2, const char *w3, const
 		  ) {
 			ShowError("npc_parse_shop: Invalid shop definition in file '%s', line '%d'.\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
 			if (retval) *retval = EXIT_FAILURE;
-			return strchr(start,'\n');// skip and continue
+			return strchr(start,'\n');//continue
 		}
 
 		// Using 'npc->viewisid' to checks if given 'dir_name' is an interger or constant. [Cretino]
@@ -3109,7 +3109,7 @@ const char *npc_parse_script(const char *w1, const char *w2, const char *w3, con
 		{
 			ShowError("npc_parse_script: Invalid facing constant '%s' in file '%s', line '%d'.\n", dir_name, filepath, strline(buffer,start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
-			return strchr(start,'\n');//continue
+			return npc->skip_script(script_start, buffer, filepath, retval); // continue
 		}
 	}
 	else
@@ -3443,7 +3443,7 @@ const char *npc_parse_duplicate(const char *w1, const char *w2, const char *w3, 
 			{
 				ShowError("npc_parse_duplicate: Invalid facing constant '%s' in file '%s', line '%d'.\n", dir_name, filepath, strline(buffer,start-buffer));
 				if (retval) *retval = EXIT_FAILURE;
-				return strchr(start,'\n');//continue
+				return end; // try next
 			}
 		}
 		else
@@ -3453,7 +3453,7 @@ const char *npc_parse_duplicate(const char *w1, const char *w2, const char *w3, 
 		{
 			ShowError("npc_parse_duplicate: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
 			if (retval) *retval = EXIT_FAILURE;
-			return strchr(start,'\n');//continue
+			return end; // try next
 		}
 		m = map->mapname2mapid(mapname);
 	}
