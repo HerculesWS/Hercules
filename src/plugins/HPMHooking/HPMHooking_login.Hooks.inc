@@ -23,7 +23,7 @@
  *       as it will get overwritten.
  */
 
-/* HCache */
+/* HCache_interface */
 void HP_HCache_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_HCache_init_pre ) {
@@ -104,7 +104,7 @@ FILE* HP_HCache_open(const char *file, const char *opt) {
 	}
 	return retVal___;
 }
-/* cmdline */
+/* cmdline_interface */
 void HP_cmdline_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_cmdline_init_pre ) {
@@ -265,7 +265,7 @@ const char* HP_cmdline_arg_source(struct CmdlineArgData *arg) {
 	}
 	return retVal___;
 }
-/* console */
+/* console_interface */
 void HP_console_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_console_init_pre ) {
@@ -370,7 +370,7 @@ void HP_console_display_gplnotice(void) {
 	}
 	return;
 }
-/* core */
+/* core_interface */
 void HP_core_shutdown_callback(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_core_shutdown_callback_pre ) {
@@ -397,7 +397,7 @@ void HP_core_shutdown_callback(void) {
 	}
 	return;
 }
-/* DB */
+/* db_interface */
 enum DBOptions HP_DB_fix_options(enum DBType type, enum DBOptions options) {
 	int hIndex = 0;
 	enum DBOptions retVal___ = DB_OPT_BASE;
@@ -917,7 +917,7 @@ void HP_DB_final(void) {
 	}
 	return;
 }
-/* libconfig */
+/* libconfig_interface */
 int HP_libconfig_read(struct config_t *config, FILE *stream) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -2744,7 +2744,7 @@ int HP_libconfig_lookup_mutable_string(const struct config_t *config, const char
 	}
 	return retVal___;
 }
-/* login */
+/* login_interface */
 int HP_login_mmo_auth(struct login_session_data *sd, bool isServer) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -4237,7 +4237,7 @@ int HP_login_config_read(const char *cfgName) {
 	}
 	return retVal___;
 }
-/* iMalloc */
+/* malloc_interface */
 void HP_iMalloc_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_iMalloc_init_pre ) {
@@ -4610,7 +4610,7 @@ void HP_iMalloc_init_messages(void) {
 	}
 	return;
 }
-/* nullpo */
+/* nullpo_interface */
 void HP_nullpo_assert_report(const char *file, int line, const char *func, const char *targetname, const char *title) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_nullpo_assert_report_pre ) {
@@ -4637,7 +4637,7 @@ void HP_nullpo_assert_report(const char *file, int line, const char *func, const
 	}
 	return;
 }
-/* showmsg */
+/* showmsg_interface */
 void HP_showmsg_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_showmsg_init_pre ) {
@@ -4749,7 +4749,7 @@ int HP_showmsg_showMessageV(const char *string, va_list ap) {
 	}
 	return retVal___;
 }
-/* sockt */
+/* socket_interface */
 void HP_sockt_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_sockt_init_pre ) {
@@ -5496,7 +5496,7 @@ void HP_sockt_net_config_read(const char *filename) {
 	}
 	return;
 }
-/* SQL */
+/* sql_interface */
 int HP_SQL_Connect(struct Sql *self, const char *user, const char *passwd, const char *host, uint16 port, const char *db) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -6367,7 +6367,7 @@ void HP_SQL_StmtShowDebug_(struct SqlStmt *self, const char *debug_file, const u
 	}
 	return;
 }
-/* StrBuf */
+/* stringbuf_interface */
 StringBuf* HP_StrBuf_Malloc(void) {
 	int hIndex = 0;
 	StringBuf* retVal___ = NULL;
@@ -6640,7 +6640,7 @@ void HP_StrBuf_Free(StringBuf *self) {
 	}
 	return;
 }
-/* strlib */
+/* strlib_interface */
 char* HP_strlib_jstrescape(char *pt) {
 	int hIndex = 0;
 	char* retVal___ = NULL;
@@ -7046,7 +7046,7 @@ bool HP_strlib_bin2hex_(char *output, unsigned char *input, size_t count) {
 	}
 	return retVal___;
 }
-/* sv */
+/* sv_interface */
 int HP_sv_parse_next(struct s_svstate *svstate) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -7236,7 +7236,7 @@ bool HP_sv_readdb(const char *directory, const char *filename, char delim, int m
 	}
 	return retVal___;
 }
-/* sysinfo */
+/* sysinfo_interface */
 int HP_sysinfo_getpagesize(void) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -7720,7 +7720,7 @@ void HP_sysinfo_final(void) {
 	}
 	return;
 }
-/* timer */
+/* timer_interface */
 int64 HP_timer_gettick(void) {
 	int hIndex = 0;
 	int64 retVal___ = 0;

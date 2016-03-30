@@ -23,7 +23,7 @@
  *       as it will get overwritten.
  */
 
-/* HCache */
+/* HCache_interface */
 void HP_HCache_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_HCache_init_pre ) {
@@ -104,7 +104,7 @@ FILE* HP_HCache_open(const char *file, const char *opt) {
 	}
 	return retVal___;
 }
-/* chr */
+/* char_interface */
 int HP_chr_waiting_disconnect(int tid, int64 tick, int id, intptr_t data) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -4295,7 +4295,7 @@ int HP_chr_config_read(const char *cfgName) {
 	}
 	return retVal___;
 }
-/* cmdline */
+/* cmdline_interface */
 void HP_cmdline_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_cmdline_init_pre ) {
@@ -4456,7 +4456,7 @@ const char* HP_cmdline_arg_source(struct CmdlineArgData *arg) {
 	}
 	return retVal___;
 }
-/* console */
+/* console_interface */
 void HP_console_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_console_init_pre ) {
@@ -4561,7 +4561,7 @@ void HP_console_display_gplnotice(void) {
 	}
 	return;
 }
-/* core */
+/* core_interface */
 void HP_core_shutdown_callback(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_core_shutdown_callback_pre ) {
@@ -4588,7 +4588,7 @@ void HP_core_shutdown_callback(void) {
 	}
 	return;
 }
-/* DB */
+/* db_interface */
 enum DBOptions HP_DB_fix_options(enum DBType type, enum DBOptions options) {
 	int hIndex = 0;
 	enum DBOptions retVal___ = DB_OPT_BASE;
@@ -5108,7 +5108,7 @@ void HP_DB_final(void) {
 	}
 	return;
 }
-/* geoip */
+/* geoip_interface */
 const char* HP_geoip_getcountry(uint32 ipnum) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
@@ -5188,7 +5188,7 @@ void HP_geoip_init(void) {
 	}
 	return;
 }
-/* inter_auction */
+/* inter_auction_interface */
 int HP_inter_auction_count(int char_id, bool buy) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -5428,7 +5428,7 @@ void HP_inter_auction_sql_final(void) {
 	}
 	return;
 }
-/* inter_elemental */
+/* inter_elemental_interface */
 void HP_inter_elemental_sql_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_inter_elemental_sql_init_pre ) {
@@ -5508,7 +5508,7 @@ int HP_inter_elemental_parse_frommap(int fd) {
 	}
 	return retVal___;
 }
-/* inter_guild */
+/* inter_guild_interface */
 int HP_inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -6108,7 +6108,7 @@ int HP_inter_guild_broken(int guild_id) {
 	}
 	return retVal___;
 }
-/* inter_homunculus */
+/* inter_homunculus_interface */
 int HP_inter_homunculus_sql_init(void) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -6189,7 +6189,7 @@ int HP_inter_homunculus_parse_frommap(int fd) {
 	}
 	return retVal___;
 }
-/* inter */
+/* inter_interface */
 const char* HP_inter_msg_txt(int msg_number) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
@@ -6636,7 +6636,7 @@ void HP_inter_final(void) {
 	}
 	return;
 }
-/* inter_mail */
+/* inter_mail_interface */
 int HP_inter_mail_sql_init(void) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -6851,7 +6851,7 @@ void HP_inter_mail_sendmail(int send_id, const char *send_name, int dest_id, con
 	}
 	return;
 }
-/* inter_mercenary */
+/* inter_mercenary_interface */
 bool HP_inter_mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status) {
 	int hIndex = 0;
 	bool retVal___ = false;
@@ -7013,7 +7013,7 @@ int HP_inter_mercenary_parse_frommap(int fd) {
 	}
 	return retVal___;
 }
-/* inter_party */
+/* inter_party_interface */
 int HP_inter_party_check_lv(struct party_data *p) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -7363,7 +7363,7 @@ int HP_inter_party_CharOffline(int char_id, int party_id) {
 	}
 	return retVal___;
 }
-/* inter_pet */
+/* inter_pet_interface */
 int HP_inter_pet_tosql(const struct s_pet *p) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -7525,7 +7525,7 @@ int HP_inter_pet_parse_frommap(int fd) {
 	}
 	return retVal___;
 }
-/* inter_quest */
+/* inter_quest_interface */
 int HP_inter_quest_parse_frommap(int fd) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -7553,7 +7553,7 @@ int HP_inter_quest_parse_frommap(int fd) {
 	}
 	return retVal___;
 }
-/* inter_storage */
+/* inter_storage_interface */
 int HP_inter_storage_tosql(int account_id, struct storage_data *p) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -7796,7 +7796,7 @@ int HP_inter_storage_parse_frommap(int fd) {
 	}
 	return retVal___;
 }
-/* libconfig */
+/* libconfig_interface */
 int HP_libconfig_read(struct config_t *config, FILE *stream) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -9623,7 +9623,7 @@ int HP_libconfig_lookup_mutable_string(const struct config_t *config, const char
 	}
 	return retVal___;
 }
-/* loginif */
+/* loginif_interface */
 void HP_loginif_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_loginif_init_pre ) {
@@ -9962,7 +9962,7 @@ void HP_loginif_connect_to_server(void) {
 	}
 	return;
 }
-/* iMalloc */
+/* malloc_interface */
 void HP_iMalloc_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_iMalloc_init_pre ) {
@@ -10335,7 +10335,7 @@ void HP_iMalloc_init_messages(void) {
 	}
 	return;
 }
-/* mapif */
+/* mapif_interface */
 void HP_mapif_ban(int id, unsigned int flag, int status) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_mapif_ban_pre ) {
@@ -14833,7 +14833,7 @@ int HP_mapif_parse_NameChangeRequest(int fd) {
 	}
 	return retVal___;
 }
-/* mapindex */
+/* mapindex_interface */
 int HP_mapindex_init(void) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -15075,7 +15075,7 @@ bool HP_mapindex_check_default(void) {
 	}
 	return retVal___;
 }
-/* nullpo */
+/* nullpo_interface */
 void HP_nullpo_assert_report(const char *file, int line, const char *func, const char *targetname, const char *title) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_nullpo_assert_report_pre ) {
@@ -15102,7 +15102,7 @@ void HP_nullpo_assert_report(const char *file, int line, const char *func, const
 	}
 	return;
 }
-/* pincode */
+/* pincode_interface */
 void HP_pincode_handle(int fd, struct char_session_data *sd) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_pincode_handle_pre ) {
@@ -15365,7 +15365,7 @@ bool HP_pincode_config_read(char *w1, char *w2) {
 	}
 	return retVal___;
 }
-/* showmsg */
+/* showmsg_interface */
 void HP_showmsg_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_showmsg_init_pre ) {
@@ -15477,7 +15477,7 @@ int HP_showmsg_showMessageV(const char *string, va_list ap) {
 	}
 	return retVal___;
 }
-/* sockt */
+/* socket_interface */
 void HP_sockt_init(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_sockt_init_pre ) {
@@ -16224,7 +16224,7 @@ void HP_sockt_net_config_read(const char *filename) {
 	}
 	return;
 }
-/* SQL */
+/* sql_interface */
 int HP_SQL_Connect(struct Sql *self, const char *user, const char *passwd, const char *host, uint16 port, const char *db) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -17095,7 +17095,7 @@ void HP_SQL_StmtShowDebug_(struct SqlStmt *self, const char *debug_file, const u
 	}
 	return;
 }
-/* StrBuf */
+/* stringbuf_interface */
 StringBuf* HP_StrBuf_Malloc(void) {
 	int hIndex = 0;
 	StringBuf* retVal___ = NULL;
@@ -17368,7 +17368,7 @@ void HP_StrBuf_Free(StringBuf *self) {
 	}
 	return;
 }
-/* strlib */
+/* strlib_interface */
 char* HP_strlib_jstrescape(char *pt) {
 	int hIndex = 0;
 	char* retVal___ = NULL;
@@ -17774,7 +17774,7 @@ bool HP_strlib_bin2hex_(char *output, unsigned char *input, size_t count) {
 	}
 	return retVal___;
 }
-/* sv */
+/* sv_interface */
 int HP_sv_parse_next(struct s_svstate *svstate) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -17964,7 +17964,7 @@ bool HP_sv_readdb(const char *directory, const char *filename, char delim, int m
 	}
 	return retVal___;
 }
-/* sysinfo */
+/* sysinfo_interface */
 int HP_sysinfo_getpagesize(void) {
 	int hIndex = 0;
 	int retVal___ = 0;
@@ -18448,7 +18448,7 @@ void HP_sysinfo_final(void) {
 	}
 	return;
 }
-/* timer */
+/* timer_interface */
 int64 HP_timer_gettick(void) {
 	int hIndex = 0;
 	int64 retVal___ = 0;

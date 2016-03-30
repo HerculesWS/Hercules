@@ -23,25 +23,25 @@
  */
 
 struct HookingPointData HookingPoints[] = {
-/* HCache */
+/* HCache_interface */
 	{ HP_POP(HCache->init, HP_HCache_init) },
 	{ HP_POP(HCache->check, HP_HCache_check) },
 	{ HP_POP(HCache->open, HP_HCache_open) },
-/* cmdline */
+/* cmdline_interface */
 	{ HP_POP(cmdline->init, HP_cmdline_init) },
 	{ HP_POP(cmdline->final, HP_cmdline_final) },
 	{ HP_POP(cmdline->arg_add, HP_cmdline_arg_add) },
 	{ HP_POP(cmdline->exec, HP_cmdline_exec) },
 	{ HP_POP(cmdline->arg_next_value, HP_cmdline_arg_next_value) },
 	{ HP_POP(cmdline->arg_source, HP_cmdline_arg_source) },
-/* console */
+/* console_interface */
 	{ HP_POP(console->init, HP_console_init) },
 	{ HP_POP(console->final, HP_console_final) },
 	{ HP_POP(console->display_title, HP_console_display_title) },
 	{ HP_POP(console->display_gplnotice, HP_console_display_gplnotice) },
-/* core */
+/* core_interface */
 	{ HP_POP(core->shutdown_callback, HP_core_shutdown_callback) },
-/* DB */
+/* db_interface */
 	{ HP_POP(DB->fix_options, HP_DB_fix_options) },
 	{ HP_POP(DB->default_cmp, HP_DB_default_cmp) },
 	{ HP_POP(DB->default_hash, HP_DB_default_hash) },
@@ -61,7 +61,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(DB->data2ptr, HP_DB_data2ptr) },
 	{ HP_POP(DB->init, HP_DB_init) },
 	{ HP_POP(DB->final, HP_DB_final) },
-/* libconfig */
+/* libconfig_interface */
 	{ HP_POP(libconfig->read, HP_libconfig_read) },
 	{ HP_POP(libconfig->write, HP_libconfig_write) },
 	{ HP_POP(libconfig->set_options, HP_libconfig_set_options) },
@@ -130,7 +130,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(libconfig->setting_lookup_int16, HP_libconfig_setting_lookup_int16) },
 	{ HP_POP(libconfig->setting_lookup_mutable_string, HP_libconfig_setting_lookup_mutable_string) },
 	{ HP_POP(libconfig->lookup_mutable_string, HP_libconfig_lookup_mutable_string) },
-/* login */
+/* login_interface */
 	{ HP_POP(login->mmo_auth, HP_login_mmo_auth) },
 	{ HP_POP(login->mmo_auth_new, HP_login_mmo_auth_new) },
 	{ HP_POP(login->waiting_disconnect_timer, HP_login_waiting_disconnect_timer) },
@@ -187,7 +187,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(login->parse_login, HP_login_parse_login) },
 	{ HP_POP(login->config_set_defaults, HP_login_config_set_defaults) },
 	{ HP_POP(login->config_read, HP_login_config_read) },
-/* iMalloc */
+/* malloc_interface */
 	{ HP_POP(iMalloc->init, HP_iMalloc_init) },
 	{ HP_POP(iMalloc->final, HP_iMalloc_final) },
 	{ HP_POP(iMalloc->malloc, HP_iMalloc_malloc) },
@@ -202,14 +202,14 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(iMalloc->usage, HP_iMalloc_usage) },
 	{ HP_POP(iMalloc->post_shutdown, HP_iMalloc_post_shutdown) },
 	{ HP_POP(iMalloc->init_messages, HP_iMalloc_init_messages) },
-/* nullpo */
+/* nullpo_interface */
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },
-/* showmsg */
+/* showmsg_interface */
 	{ HP_POP(showmsg->init, HP_showmsg_init) },
 	{ HP_POP(showmsg->final, HP_showmsg_final) },
 	{ HP_POP(showmsg->clearScreen, HP_showmsg_clearScreen) },
 	{ HP_POP(showmsg->showMessageV, HP_showmsg_showMessageV) },
-/* sockt */
+/* socket_interface */
 	{ HP_POP(sockt->init, HP_sockt_init) },
 	{ HP_POP(sockt->final, HP_sockt_final) },
 	{ HP_POP(sockt->perform, HP_sockt_perform) },
@@ -238,7 +238,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sockt->trusted_ip_check, HP_sockt_trusted_ip_check) },
 	{ HP_POP(sockt->net_config_read_sub, HP_sockt_net_config_read_sub) },
 	{ HP_POP(sockt->net_config_read, HP_sockt_net_config_read) },
-/* SQL */
+/* sql_interface */
 	{ HP_POP(SQL->Connect, HP_SQL_Connect) },
 	{ HP_POP(SQL->GetTimeout, HP_SQL_GetTimeout) },
 	{ HP_POP(SQL->GetColumnNames, HP_SQL_GetColumnNames) },
@@ -271,7 +271,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(SQL->StmtFreeResult, HP_SQL_StmtFreeResult) },
 	{ HP_POP(SQL->StmtFree, HP_SQL_StmtFree) },
 	{ HP_POP(SQL->StmtShowDebug_, HP_SQL_StmtShowDebug_) },
-/* StrBuf */
+/* stringbuf_interface */
 	{ HP_POP(StrBuf->Malloc, HP_StrBuf_Malloc) },
 	{ HP_POP(StrBuf->Init, HP_StrBuf_Init) },
 	{ HP_POP(StrBuf->Vprintf, HP_StrBuf_Vprintf) },
@@ -282,7 +282,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(StrBuf->Clear, HP_StrBuf_Clear) },
 	{ HP_POP(StrBuf->Destroy, HP_StrBuf_Destroy) },
 	{ HP_POP(StrBuf->Free, HP_StrBuf_Free) },
-/* strlib */
+/* strlib_interface */
 	{ HP_POP(strlib->jstrescape, HP_strlib_jstrescape) },
 	{ HP_POP(strlib->jstrescapecpy, HP_strlib_jstrescapecpy) },
 	{ HP_POP(strlib->jmemescapecpy, HP_strlib_jmemescapecpy) },
@@ -298,7 +298,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(strlib->safestrnlen_, HP_strlib_safestrnlen_) },
 	{ HP_POP(strlib->strline_, HP_strlib_strline_) },
 	{ HP_POP(strlib->bin2hex_, HP_strlib_bin2hex_) },
-/* sv */
+/* sv_interface */
 	{ HP_POP(sv->parse_next, HP_sv_parse_next) },
 	{ HP_POP(sv->parse, HP_sv_parse) },
 	{ HP_POP(sv->split, HP_sv_split) },
@@ -306,7 +306,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sv->unescape_c, HP_sv_unescape_c) },
 	{ HP_POP(sv->skip_escaped_c, HP_sv_skip_escaped_c) },
 	{ HP_POP(sv->readdb, HP_sv_readdb) },
-/* sysinfo */
+/* sysinfo_interface */
 	{ HP_POP(sysinfo->getpagesize, HP_sysinfo_getpagesize) },
 	{ HP_POP(sysinfo->platform, HP_sysinfo_platform) },
 	{ HP_POP(sysinfo->osversion, HP_sysinfo_osversion) },
@@ -325,7 +325,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sysinfo->is_superuser, HP_sysinfo_is_superuser) },
 	{ HP_POP(sysinfo->init, HP_sysinfo_init) },
 	{ HP_POP(sysinfo->final, HP_sysinfo_final) },
-/* timer */
+/* timer_interface */
 	{ HP_POP(timer->gettick, HP_timer_gettick) },
 	{ HP_POP(timer->gettick_nocache, HP_timer_gettick_nocache) },
 	{ HP_POP(timer->add, HP_timer_add) },
