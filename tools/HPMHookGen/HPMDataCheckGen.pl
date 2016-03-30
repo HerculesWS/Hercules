@@ -3,7 +3,7 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2014-2015  Hercules Dev Team
+# Copyright (C) 2014-2016  Hercules Dev Team
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,10 +42,10 @@ foreach my $file (@files) {
 	my @filepath = split(/[\/\\]/, $data->{compounddef}->{$filekey}->{location}->[0]->{file});
 	my $foldername = uc($filepath[-2]);
 	next if $filepath[-1] eq "HPM.h"; # Skip the HPM core, plugins don't need it
-	my $filename = uc($filepath[-1]); $filename =~ s/-/_/g; $filename =~ s/\.[^.]*$//;
+	my $filename = uc($filepath[-1]); $filename =~ s/[.-]/_/g; $filename =~ s/\.[^.]*$//;
 	my $plugintypes = 'SERVER_TYPE_UNKNOWN';
 	if ($foldername eq 'COMMON') {
-		if ($filename eq 'MAPINDEX') {
+		if ($filename eq 'MAPINDEX_H') {
 			$plugintypes = 'SERVER_TYPE_CHAR|SERVER_TYPE_MAP';
 		} else {
 			$plugintypes = 'SERVER_TYPE_ALL';
@@ -57,7 +57,7 @@ foreach my $file (@files) {
 		name => $data->{compounddef}->{$filekey}->{compoundname}->[0],
 		type => $plugintypes,
 	};
-	my $name = "${foldername}_${filename}_H";
+	my $name = "${foldername}_${filename}";
 	push @{ $out{$name} }, $symboldata;
 }
 
