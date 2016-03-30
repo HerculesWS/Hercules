@@ -2848,8 +2848,9 @@ const char *npc_parse_shop(const char *w1, const char *w2, const char *w3, const
 					*retval = EXIT_FAILURE;
 				return strchr(start,'\n');//continue
 			}
-		} else
+		} else {
 			dir = atoi(dir_name);
+		}
 
 		if (dir < 0 || dir > 7) {
 			ShowError("npc_parse_shop: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
@@ -3108,8 +3109,9 @@ const char *npc_parse_script(const char *w1, const char *w2, const char *w3, con
 					*retval = EXIT_FAILURE;
 				return npc->skip_script(script_start, buffer, filepath, retval); // continue
 			}
-		} else
+		} else {
 			dir = atoi(dir_name);
+		}
 	}
 
 	if (dir < 0 || dir > 7) {
@@ -3441,8 +3443,9 @@ const char *npc_parse_duplicate(const char *w1, const char *w2, const char *w3, 
 				if (retval) *retval = EXIT_FAILURE;
 				return end; // try next
 			}
-		} else
+		} else {
 			dir = atoi(dir_name);
+		}
 
 		if (dir < 0 || dir > 7) {
 			ShowError("npc_parse_duplicate: Invalid NPC facing direction '%d' in file '%s', line '%d'.\n", dir, filepath, strline(buffer, start-buffer));
