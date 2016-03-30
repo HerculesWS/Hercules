@@ -2844,7 +2844,8 @@ const char *npc_parse_shop(const char *w1, const char *w2, const char *w3, const
 		if (!npc->viewisid(dir_name)) {
 			if (!script->get_constant(dir_name, &dir)) {
 				ShowError("npc_parse_shop: Invalid facing constant '%s' in file '%s', line '%d'.\n", dir_name, filepath, strline(buffer,start-buffer));
-				if (retval) *retval = EXIT_FAILURE;
+				if (retval)
+					*retval = EXIT_FAILURE;
 				return strchr(start,'\n');//continue
 			}
 		} else
@@ -3098,12 +3099,13 @@ const char *npc_parse_script(const char *w1, const char *w2, const char *w3, con
 	end = strchr(start,'\n');
 
 	// Skipping floating npcs
-	if ( m != -1 ) {
+	if (m != -1) {
 		// Using 'npc->viewisid' to checks if given 'dir_name' is an interger or constant. [Cretino]
 		if (!npc->viewisid(dir_name)) {
 			if (!script->get_constant(dir_name, &dir)) {
 				ShowError("npc_parse_script: Invalid facing constant '%s' in file '%s', line '%d'.\n", dir_name, filepath, strline(buffer,start-buffer));
-				if (retval) *retval = EXIT_FAILURE;
+				if (retval)
+					*retval = EXIT_FAILURE;
 				return npc->skip_script(script_start, buffer, filepath, retval); // continue
 			}
 		} else
@@ -3409,7 +3411,8 @@ const char *npc_parse_duplicate(const char *w1, const char *w2, const char *w3, 
 	dnd = npc->name2id(srcname);
 	if( dnd == NULL) {
 		ShowError("npc_parse_script: original npc not found for duplicate in file '%s', line '%d': %s\n", filepath, strline(buffer,start-buffer), srcname);
-		if (retval) *retval = EXIT_FAILURE;
+		if (retval)
+			*retval = EXIT_FAILURE;
 		return end;// next line, try to continue
 	}
 
