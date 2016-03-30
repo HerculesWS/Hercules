@@ -4131,7 +4131,7 @@ void script_check_buildin_argtype(struct script_state* st, int func)
 				}
 				break;
 			case 'x':
-				if( !data_islabel(data) && !data_isfunclabel(data) && !data_isstring(data) && !( data_isreference(data) && is_string_variable(name) ) ) {
+				if (!data_islabel(data) && !data_isfunclabel(data) && !data_isstring(data) && !(data_isreference(data) && is_string_variable(name))) {
 					// string and label
 					ShowWarning("Unexpected type for argument %d. Expected string or label, got %s\n", idx-1,script->op2name(data->type));
 					script->reportdata(data);
@@ -5698,35 +5698,36 @@ BUILDIN(goto)
 /// 'callfunc' support labels in other npcs "NpcName::LabelName"
 BUILDIN(callfunc)
 {
-	int i, j, k, pos = -1;
+	int i, j, k = 0, pos = -1;
 	struct script_retinfo *ri;
 	struct script_code *scr = NULL;
 	struct reg_db *ref = NULL;
 	struct npc_data *nd = NULL;
 	struct script_data *data = script_getdata(st, 2);
+	const char *func_name = script->getfuncname(st);
 
-	if( !data_islabel(data) && !data_isfunclabel(data) ) {
+	if (!data_islabel(data) && !data_isfunclabel(data)) {
 		const char *str = script_getstr(st, 2);
 		scr = (struct script_code*)strdb_get(script->userfunc_db, str);
 
-		if (!scr) {
+		if (scr == NULL) {
 			if (stristr(str, "::")) {
-				char labelname[NAME_LENGTH], npcname[NAME_LENGTH];
+				char labelname[NAME_LENGTH] = "", npcname[NAME_LENGTH] = "";
 
-				memset(labelname, '\0', sizeof(labelname));
-				memset(npcname, '\0', sizeof(npcname));
-
-				if ( sscanf(str, "::%s", labelname) == 1 || sscanf(str, "%[^:]::%s", npcname, labelname) == 2 ) {
-					if ( !labelname[0] && !npcname[0] ) {
-						ShowError("script:callfunc: label not found! [%s]\n", str);
+				if (sscanf(str, "::%23s", labelname) == 1 || sscanf(str, "%23[^:]::%23s", npcname, labelname) == 2) {
+					if (!labelname[0] && !npcname[0]) {
+						ShowError("script:%s: label not found! [%s]\n", func_name, str);
 						st->state = END;
 						return false;
 					}
 
-					nd = (npcname[0]) ? npc->name2id(npcname) : map->id2nd(st->oid);
+					if (npcname[0] != '\0')
+						nd = npc->name2id(npcname);
+					else
+						nd = map->id2nd(st->oid);
 
-					if (!nd) {
-						ShowError("script:callfunc: no npc attached for label! [%s]\n", str);
+					if (nd == NULL) {
+						ShowError("script:%s: no npc attached for label! [%s]\n", func_name, str);
 						st->state = END;
 						return false;
 					}
@@ -5734,68 +5735,124 @@ BUILDIN(callfunc)
 					ARR_FIND(0, nd->u.scr.label_list_num, k, (strcmp(nd->u.scr.label_list[k].name, labelname) == 0));
 
 					if (k == nd->u.scr.label_list_num) {
-						ShowError("script:callfunc: label not found! [%s]\n", str);
+						ShowError("script:%s: label not found! [%s]\n", func_name, str);
 						st->state = END;
 						return false;
 					}
 				} else {
-					ShowError("script:callfunc: label not found! [%s]\n", str);
+					ShowError("script:%s: label not found! [%s]\n", func_name, str);
 					st->state = END;
 					return false;
 				}
 			} else {
-				ShowError("script:callfunc: argument is not a label or function not found! [%s]\n", str);
+				ShowError("script:%s: argument is not a label or function not found! [%s]\n", func_name, str);
 				st->state = END;
 				return false;
 			}
 		}
-	} else
+	} else {
 		pos = script_getnum(st, 2);
+	}
 
-	ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 2);
-	ref[0].vars = st->stack->scope.vars;
-	if (!st->stack->scope.arrays)
-		st->stack->scope.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
-	ref[0].arrays = st->stack->scope.arrays;
-	ref[1].vars = st->script->local.vars;
-	if (!st->script->local.arrays)
-		st->script->local.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
-	ref[1].arrays = st->script->local.arrays;
+	if (strcmp(func_name, "callsub") == 0 || (nd != NULL && nd->bl.id == st->oid) || (strcmp(func_name, "callfunc") == 0 && pos != -1))
+	{
+		ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 1);
+		ref[0].vars = st->stack->scope.vars;
 
-	for( i = st->start+3, j = 0; i < st->end; i++, j++ ) {
-		struct script_data* data = script->push_copy(st->stack,i);
-		if( data_isreference(data) && !data->ref ) {
-			const char* name = reference_getname(data);
-			if( name[0] == '.' ) {
-				data->ref = (name[1] == '@' ? &ref[0] : &ref[1]);
+		if (!st->stack->scope.arrays)
+			st->stack->scope.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
+	
+		ref[0].arrays = st->stack->scope.arrays;
+
+		for(i = st->start+3, j = 0; i < st->end; i++, j++) {
+			data = script->push_copy(st->stack,i);
+			if (data_isreference(data) && !data->ref) {
+				const char* name = reference_getname(data);
+				if (name[0] == '.' && name[1] == '@')
+					data->ref = &ref[0];
 			}
 		}
+
+		CREATE(ri, struct script_retinfo, 1);
+		ri->script       = st->script;              // script code
+		ri->scope.vars   = st->stack->scope.vars;   // scope variables
+		ri->scope.arrays = st->stack->scope.arrays; // scope arrays
+		ri->pos          = st->pos;                 // script location
+		ri->nargs        = j;                       // argument count
+		ri->defsp        = st->stack->defsp;        // default stack pointer
+		script->push_retinfo(st->stack, ri, ref);
+
+		if (nd == NULL)
+			st->pos = pos;
+		else
+			st->pos = nd->u.scr.label_list[k].pos;
+
+		st->stack->defsp = st->stack->sp;
+		st->state = GOTO;
+		st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+		st->stack->scope.arrays = idb_alloc(DB_OPT_BASE);
 	}
+	else if (strcmp(func_name, "callfunc") == 0 && (scr != NULL || (nd != NULL && nd->bl.id != st->oid)))
+	{
+		ref = (struct reg_db *)aCalloc(sizeof(struct reg_db), 2);
+		ref[0].vars = st->stack->scope.vars;
 
-	CREATE(ri, struct script_retinfo, 1);
-	ri->script       = st->script;              // script code
-	ri->scope.vars   = st->stack->scope.vars;   // scope variables
-	ri->scope.arrays = st->stack->scope.arrays; // scope arrays
-	ri->pos          = st->pos;                 // script location
-	ri->nargs        = j;                       // argument count
-	ri->defsp        = st->stack->defsp;        // default stack pointer
-	script->push_retinfo(st->stack, ri, ref);
+		if (!st->stack->scope.arrays)
+			st->stack->scope.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
 
-	if (pos != -1 && !scr)
-		st->pos = pos;
+		ref[0].arrays = st->stack->scope.arrays;
+		ref[1].vars = st->script->local.vars;
+
+		if (!st->script->local.arrays)
+			st->script->local.arrays = idb_alloc(DB_OPT_BASE); // TODO: Can this happen? when?
+
+		ref[1].arrays = st->script->local.arrays;
+
+		for(i = st->start+3, j = 0; i < st->end; i++, j++) {
+			data = script->push_copy(st->stack,i);
+			if (data_isreference(data) && !data->ref) {
+				const char* name = reference_getname(data);
+				if (name[0] == '.')
+					data->ref = (name[1] == '@' ? &ref[0] : &ref[1]);
+			}
+		}
+
+		CREATE(ri, struct script_retinfo, 1);
+		ri->script       = st->script;              // script code
+		ri->scope.vars   = st->stack->scope.vars;   // scope variables
+		ri->scope.arrays = st->stack->scope.arrays; // scope arrays
+		ri->pos          = st->pos;                 // script location
+		ri->nargs        = j;                       // argument count
+		ri->defsp        = st->stack->defsp;        // default stack pointer
+		script->push_retinfo(st->stack, ri, ref);
+
+		if (scr != NULL)
+		{
+			st->pos = 0;
+			st->script = scr;
+		}
+		else
+		{
+			st->pos = nd->u.scr.label_list[k].pos;
+			st->script = nd->u.scr.script;
+		}
+
+		st->stack->defsp = st->stack->sp;
+		st->state = GOTO;
+		st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+		st->stack->scope.arrays = idb_alloc(DB_OPT_BASE);
+
+		if (!st->script->local.vars)
+			st->script->local.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+	}
 	else
 	{
-		st->pos = (scr) ? 0 : nd->u.scr.label_list[k].pos;
-		st->script = (scr) ? scr : nd->u.scr.script;
+		// TODO: Can this happen? when?
+		ShowError("script:%s: Unknown problem found!\n", func_name);
+		script->reportdata(data);
+		st->state = END;
+		return false;
 	}
-
-	st->stack->defsp = st->stack->sp;
-	st->state = GOTO;
-	st->stack->scope.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
-	st->stack->scope.arrays = idb_alloc(DB_OPT_BASE);
-
-	if( !st->script->local.vars )
-		st->script->local.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
 
 	return true;
 }
