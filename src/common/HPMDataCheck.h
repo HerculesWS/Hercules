@@ -276,6 +276,25 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#else
 		#define LOGIN_LCLIF_H
 	#endif // LOGIN_LCLIF_H
+	#ifdef LOGIN_LCLIF_P_H
+		{ "lclif_interface_private", sizeof(struct lclif_interface_private), SERVER_TYPE_LOGIN },
+		{ "packet_AC_ACCEPT_LOGIN", sizeof(struct packet_AC_ACCEPT_LOGIN), SERVER_TYPE_LOGIN },
+		{ "packet_AC_REFUSE_LOGIN", sizeof(struct packet_AC_REFUSE_LOGIN), SERVER_TYPE_LOGIN },
+		{ "packet_AC_REFUSE_LOGIN_R2", sizeof(struct packet_AC_REFUSE_LOGIN_R2), SERVER_TYPE_LOGIN },
+		{ "packet_CA_CHARSERVERCONNECT", sizeof(struct packet_CA_CHARSERVERCONNECT), SERVER_TYPE_LOGIN },
+		{ "packet_CA_CONNECT_INFO_CHANGED", sizeof(struct packet_CA_CONNECT_INFO_CHANGED), SERVER_TYPE_LOGIN },
+		{ "packet_CA_EXE_HASHCHECK", sizeof(struct packet_CA_EXE_HASHCHECK), SERVER_TYPE_LOGIN },
+		{ "packet_CA_LOGIN", sizeof(struct packet_CA_LOGIN), SERVER_TYPE_LOGIN },
+		{ "packet_CA_LOGIN2", sizeof(struct packet_CA_LOGIN2), SERVER_TYPE_LOGIN },
+		{ "packet_CA_LOGIN3", sizeof(struct packet_CA_LOGIN3), SERVER_TYPE_LOGIN },
+		{ "packet_CA_LOGIN4", sizeof(struct packet_CA_LOGIN4), SERVER_TYPE_LOGIN },
+		{ "packet_CA_LOGIN_HAN", sizeof(struct packet_CA_LOGIN_HAN), SERVER_TYPE_LOGIN },
+		{ "packet_CA_LOGIN_PCBANG", sizeof(struct packet_CA_LOGIN_PCBANG), SERVER_TYPE_LOGIN },
+		{ "packet_CA_SSO_LOGIN_REQ", sizeof(struct packet_CA_SSO_LOGIN_REQ), SERVER_TYPE_LOGIN },
+		{ "packet_SC_NOTIFY_BAN", sizeof(struct packet_SC_NOTIFY_BAN), SERVER_TYPE_LOGIN },
+	#else
+		#define LOGIN_LCLIF_P_H
+	#endif // LOGIN_LCLIF_P_H
 	#ifdef LOGIN_LOGIN_H
 		{ "Login_Config", sizeof(struct Login_Config), SERVER_TYPE_LOGIN },
 		{ "client_hash_node", sizeof(struct client_hash_node), SERVER_TYPE_LOGIN },

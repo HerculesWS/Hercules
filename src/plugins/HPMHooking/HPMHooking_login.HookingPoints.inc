@@ -72,7 +72,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(lclif->packet, HP_lclif_packet) },
 	{ HP_POP(lclif->parse_packet, HP_lclif_parse_packet) },
 	{ HP_POP(lclif->parse, HP_lclif_parse) },
-	{ HP_POP(lclif->parse_sub, HP_lclif_parse_sub) },
+/* lclif_interface_private */
+	{ HP_POP(lclif->p->packetdb_loaddb, HP_PRIV__lclif_packetdb_loaddb) },
+	{ HP_POP(lclif->p->parse_sub, HP_PRIV__lclif_parse_sub) },
 /* libconfig_interface */
 	{ HP_POP(libconfig->read, HP_libconfig_read) },
 	{ HP_POP(libconfig->write, HP_libconfig_write) },

@@ -110,8 +110,10 @@ struct {
 	struct HPMHookPoint *HP_lclif_parse_packet_post;
 	struct HPMHookPoint *HP_lclif_parse_pre;
 	struct HPMHookPoint *HP_lclif_parse_post;
-	struct HPMHookPoint *HP_lclif_parse_sub_pre;
-	struct HPMHookPoint *HP_lclif_parse_sub_post;
+	struct HPMHookPoint *HP_PRIV__lclif_packetdb_loaddb_pre;
+	struct HPMHookPoint *HP_PRIV__lclif_packetdb_loaddb_post;
+	struct HPMHookPoint *HP_PRIV__lclif_parse_sub_pre;
+	struct HPMHookPoint *HP_PRIV__lclif_parse_sub_post;
 	struct HPMHookPoint *HP_libconfig_read_pre;
 	struct HPMHookPoint *HP_libconfig_read_post;
 	struct HPMHookPoint *HP_libconfig_write_pre;
@@ -719,8 +721,10 @@ struct {
 	int HP_lclif_parse_packet_post;
 	int HP_lclif_parse_pre;
 	int HP_lclif_parse_post;
-	int HP_lclif_parse_sub_pre;
-	int HP_lclif_parse_sub_post;
+	int HP_PRIV__lclif_packetdb_loaddb_pre;
+	int HP_PRIV__lclif_packetdb_loaddb_post;
+	int HP_PRIV__lclif_parse_sub_pre;
+	int HP_PRIV__lclif_parse_sub_post;
 	int HP_libconfig_read_pre;
 	int HP_libconfig_read_post;
 	int HP_libconfig_write_pre;
@@ -1248,6 +1252,7 @@ struct {
 	struct core_interface core;
 	struct db_interface DB;
 	struct lclif_interface lclif;
+	struct lclif_interface_private PRIV__lclif;
 	struct libconfig_interface libconfig;
 	struct login_interface login;
 	struct malloc_interface iMalloc;

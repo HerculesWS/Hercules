@@ -1182,14 +1182,41 @@ int HP_lclif_parse(int fd) {
 	}
 	return retVal___;
 }
-enum parsefunc_rcode HP_lclif_parse_sub(int fd, struct login_session_data *sd) {
+/* lclif_interface_private */
+void HP_PRIV__lclif_packetdb_loaddb(void) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_PRIV__lclif_packetdb_loaddb_pre ) {
+		void (*preHookFunc) (void);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_packetdb_loaddb_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_PRIV__lclif_packetdb_loaddb_pre[hIndex].func;
+			preHookFunc();
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.PRIV__lclif.packetdb_loaddb();
+	}
+	if( HPMHooks.count.HP_PRIV__lclif_packetdb_loaddb_post ) {
+		void (*postHookFunc) (void);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_packetdb_loaddb_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_PRIV__lclif_packetdb_loaddb_post[hIndex].func;
+			postHookFunc();
+		}
+	}
+	return;
+}
+enum parsefunc_rcode HP_PRIV__lclif_parse_sub(int fd, struct login_session_data *sd) {
 	int hIndex = 0;
 	enum parsefunc_rcode retVal___ = PACKET_UNKNOWN;
-	if( HPMHooks.count.HP_lclif_parse_sub_pre ) {
+	if( HPMHooks.count.HP_PRIV__lclif_parse_sub_pre ) {
 		enum parsefunc_rcode (*preHookFunc) (int *fd, struct login_session_data *sd);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_lclif_parse_sub_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_lclif_parse_sub_pre[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_sub_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_sub_pre[hIndex].func;
 			retVal___ = preHookFunc(&fd, sd);
 		}
 		if( *HPMforce_return ) {
@@ -1198,12 +1225,12 @@ enum parsefunc_rcode HP_lclif_parse_sub(int fd, struct login_session_data *sd) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.lclif.parse_sub(fd, sd);
+		retVal___ = HPMHooks.source.PRIV__lclif.parse_sub(fd, sd);
 	}
-	if( HPMHooks.count.HP_lclif_parse_sub_post ) {
+	if( HPMHooks.count.HP_PRIV__lclif_parse_sub_post ) {
 		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int *fd, struct login_session_data *sd);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_lclif_parse_sub_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_lclif_parse_sub_post[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_sub_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_sub_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, &fd, sd);
 		}
 	}
