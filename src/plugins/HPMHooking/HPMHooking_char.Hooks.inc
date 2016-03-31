@@ -17747,11 +17747,11 @@ int HP_strlib_strline_(const char *str, size_t pos) {
 	}
 	return retVal___;
 }
-bool HP_strlib_bin2hex_(char *output, unsigned char *input, size_t count) {
+bool HP_strlib_bin2hex_(char *output, const unsigned char *input, size_t count) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_strlib_bin2hex__pre ) {
-		bool (*preHookFunc) (char *output, unsigned char *input, size_t *count);
+		bool (*preHookFunc) (char *output, const unsigned char *input, size_t *count);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_strlib_bin2hex__pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_strlib_bin2hex__pre[hIndex].func;
@@ -17766,7 +17766,7 @@ bool HP_strlib_bin2hex_(char *output, unsigned char *input, size_t count) {
 		retVal___ = HPMHooks.source.strlib.bin2hex_(output, input, count);
 	}
 	if( HPMHooks.count.HP_strlib_bin2hex__post ) {
-		bool (*postHookFunc) (bool retVal___, char *output, unsigned char *input, size_t *count);
+		bool (*postHookFunc) (bool retVal___, char *output, const unsigned char *input, size_t *count);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_strlib_bin2hex__post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_strlib_bin2hex__post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, output, input, &count);
