@@ -1,7 +1,7 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2012-2015  Hercules Dev Team
+# Copyright (C) 2012-2016  Hercules Dev Team
 # Copyright (C)  Athena Dev Teams
 #
 # Hercules is free software: you can redistribute it and/or modify
@@ -51,6 +51,7 @@ COMMON_H = atomic.h cbasetypes.h conf.h console.h core.h db.h des.h ers.h \
            grfio.h hercules.h HPM.h HPMi.h memmgr.h mapindex.h md5calc.h \
            mmo.h mutex.h nullpo.h random.h showmsg.h socket.h spinlock.h \
            sql.h strlib.h sysinfo.h thread.h timer.h utils.h winapi.h
+COMMON_PH =
 
 COMMON_SQL_OBJ = obj_sql/sql.o
 COMMON_SQL_H = sql.h
@@ -95,7 +96,7 @@ help:
 Makefile: Makefile.in
 	@$(MAKE) -C ../.. src/common/Makefile
 
-$(SYSINFO_INC): $(COMMON_C) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H)
+$(SYSINFO_INC): $(COMMON_C) $(COMMON_PH) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H)
 	@echo "	MAKE	$@"
 	@$(MAKE) -C ../.. sysinfo
 
@@ -131,20 +132,6 @@ common_mini: $(COMMON_MINI_OBJ) $(MT19937AR_OBJ) $(LIBCONFIG_OBJ) obj_all/common
 
 common_sql: $(COMMON_SQL_OBJ) obj_sql/common_sql.a Makefile
 
-obj_all/sysinfo.o: sysinfo.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(SYSINFO_INC) | obj_all
-
-obj_all/%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_all
-	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
-
-obj_all/mini%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_all
-	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) -DMINICORE @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
-
-obj_sql/%.o: %.c $(COMMON_H) $(COMMON_SQL_H) $(CONFIG_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_sql
-	@echo "	CC	$<"
-	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
-
 # missing object files
 $(MT19937AR_OBJ):
 	@echo "	MAKE	$@"
@@ -153,3 +140,19 @@ $(MT19937AR_OBJ):
 $(LIBCONFIG_OBJ):
 	@echo "	MAKE	$@"
 	@$(MAKE) -C $(LIBCONFIG_D)
+
+.SECONDEXPANSION:
+
+obj_all/sysinfo.o: sysinfo.c $(filter sysinfo.p.h, $(COMMON_PH)) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) $(SYSINFO_INC) | obj_all
+
+obj_all/%.o: %.c $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_all
+	@echo "	CC	$<"
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+
+obj_all/mini%.o: %.c $$(filter %.p.h, $(COMMON_PH)) $(COMMON_H) $(CONFIG_H) $(MT19937AR_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_all
+	@echo "	CC	$<"
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) -DMINICORE @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
+
+obj_sql/%.o: %.c $$(filter %.p.h, $(COMMON_PH)) $(COMMON_H) $(COMMON_SQL_H) $(CONFIG_H) $(LIBCONFIG_H) | $(SYSINFO_INC) obj_sql
+	@echo "	CC	$<"
+	@$(CC) @CFLAGS@ @DEFS@ $(COMMON_INCLUDE) $(THIRDPARTY_INCLUDE) @MYSQL_CFLAGS@ @CPPFLAGS@ -c $(OUTPUT_OPTION) $<
