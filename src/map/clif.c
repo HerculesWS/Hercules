@@ -8338,12 +8338,10 @@ void clif_refresh(struct map_session_data *sd)
 		if (sd->disguise_tid != -1) {
 			int new_time = (int)(sd->disguise_tick - timer->gettick());
 
-			if (new_time > 0) {
-				pc->disguise(sd, -1, -1);
+			pc->disguise(sd, -1, -1);
+
+			if (new_time > 0)
 				pc->disguise(sd, disguise, new_time);
-			} else {
-				pc->disguise(sd, -1, -1);
-			}
 		} else {
 			pc->disguise(sd, -1, -1);
 			pc->disguise(sd, disguise, -1);
