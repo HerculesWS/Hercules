@@ -4702,8 +4702,7 @@ ACMD(disguise)
 			id = 0; //Invalid id for either mobs or npcs.
 	} else {
 		//Acquired a Name
-		if ((id = mob->db_searchname(monster_name)) == 0)
-		{
+		if ((id = mob->db_searchname(monster_name)) == 0) {
 			struct npc_data* nd = npc->name2id(monster_name);
 			if (nd != NULL)
 				id = nd->class_;

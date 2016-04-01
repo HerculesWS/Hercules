@@ -292,6 +292,7 @@ struct map_session_data {
 	short weapontype1,weapontype2;
 	short disguise; // [Valaris]
 	int disguise_tid; // [Cretino]
+	int64 disguise_tick; // [Cretino]
 	struct weapon_data right_weapon, left_weapon;
 
 BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of status_calc_pc()
