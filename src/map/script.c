@@ -16818,8 +16818,12 @@ BUILDIN(unittalk) {
 	bl = map->id2bl(unit_id);
 	if( bl != NULL ) {
 		struct StringBuf sbuf;
+		char blname[NAME_LENGTH];
 		StrBuf->Init(&sbuf);
-		StrBuf->Printf(&sbuf, "%s : %s", clif->get_bl_name(bl), message);
+		safestrncpy(blname, clif->get_bl_name(bl), sizeof(blname));
+		if(bl->type == BL_NPC)
+			strtok(blname, "#");
+		StrBuf->Printf(&sbuf, "%s : %s", blname, message);
 		clif->disp_overhead(bl, StrBuf->Value(&sbuf));
 		StrBuf->Destroy(&sbuf);
 	}
