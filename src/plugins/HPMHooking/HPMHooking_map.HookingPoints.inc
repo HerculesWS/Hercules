@@ -2323,6 +2323,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->get_val_instance_num, HP_script_get_val_instance_num) },
 	{ HP_POP(script->get_val2, HP_script_get_val2) },
 	{ HP_POP(script->push_str, HP_script_push_str) },
+	{ HP_POP(script->push_conststr, HP_script_push_conststr) },
 	{ HP_POP(script->push_copy, HP_script_push_copy) },
 	{ HP_POP(script->pop_stack, HP_script_pop_stack) },
 	{ HP_POP(script->set_constant, HP_script_set_constant) },

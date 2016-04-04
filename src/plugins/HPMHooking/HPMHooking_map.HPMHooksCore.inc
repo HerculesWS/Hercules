@@ -4538,6 +4538,8 @@ struct {
 	struct HPMHookPoint *HP_script_get_val2_post;
 	struct HPMHookPoint *HP_script_push_str_pre;
 	struct HPMHookPoint *HP_script_push_str_post;
+	struct HPMHookPoint *HP_script_push_conststr_pre;
+	struct HPMHookPoint *HP_script_push_conststr_post;
 	struct HPMHookPoint *HP_script_push_copy_pre;
 	struct HPMHookPoint *HP_script_push_copy_post;
 	struct HPMHookPoint *HP_script_pop_stack_pre;
@@ -10419,6 +10421,8 @@ struct {
 	int HP_script_get_val2_post;
 	int HP_script_push_str_pre;
 	int HP_script_push_str_post;
+	int HP_script_push_conststr_pre;
+	int HP_script_push_conststr_post;
 	int HP_script_push_copy_pre;
 	int HP_script_push_copy_post;
 	int HP_script_pop_stack_pre;
