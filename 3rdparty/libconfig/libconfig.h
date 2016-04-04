@@ -109,12 +109,12 @@ struct config_t
   int options;
   unsigned short tab_width;
   short default_format;
-  const char *include_dir;
+  char *include_dir;
   const char *error_text;
   const char *error_file;
   int error_line;
   enum config_error_t error_type;
-  const char **filenames;
+  char **filenames;
   unsigned int num_filenames;
 };
 
@@ -206,7 +206,7 @@ extern LIBCONFIG_API struct config_setting_t *config_setting_set_string_elem(
   struct config_setting_t *setting, int idx, const char *value);
 
 #define /* const char * */ config_get_include_dir(/* const struct config_t * */ C) \
-  ((C)->include_dir)
+  ((const char *)(C)->include_dir)
 
 #define /* int */ config_setting_type(/* const struct config_setting_t * */ S) \
   ((S)->type)

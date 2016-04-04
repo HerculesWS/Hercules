@@ -128,7 +128,7 @@ HPExport struct hplugin_info pinfo = {
 };
 
 #define HP_POP(x,y) #x , (void**)(&x) , (void*)y , 0
-DBMap *hp_db;/* hooking points db -- for quick lookup */
+struct DBMap *hp_db;/* hooking points db -- for quick lookup */
 
 struct HookingPointData {
 	char* name;

@@ -8971,7 +8971,7 @@ bool clif_process_message(struct map_session_data *sd, int format, const char **
 
 void clif_channel_msg(struct channel_data *chan, struct map_session_data *sd, char *msg)
 {
-	DBIterator *iter;
+	struct DBIterator *iter;
 	struct map_session_data *user;
 	unsigned short msg_len;
 	uint32 color;
@@ -9005,7 +9005,7 @@ void clif_channel_msg(struct channel_data *chan, struct map_session_data *sd, ch
 
 void clif_channel_msg2(struct channel_data *chan, char *msg)
 {
-	DBIterator *iter;
+	struct DBIterator *iter;
 	struct map_session_data *user;
 	unsigned char buf[210];
 	unsigned short msg_len;

@@ -547,7 +547,7 @@ ACMD(jumpto) {
 		return false;
 	}
 
-	if((pl_sd=map->nick2sd((const char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
+	if ((pl_sd=map->nick2sd(message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -1511,7 +1511,7 @@ ACMD(help) {
 	clif->message(fd, atcmd_output);
 
 	{   // Display aliases
-		DBIterator* iter;
+		struct DBIterator *iter;
 		AtCommandInfo *command_info;
 		AliasInfo *alias_info = NULL;
 		StringBuf buf;
@@ -2747,7 +2747,7 @@ ACMD(recall) {
 		return false;
 	}
 
-	if((pl_sd=map->nick2sd((const char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
+	if ((pl_sd=map->nick2sd(message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -3072,7 +3072,7 @@ ACMD(kick)
 		return false;
 	}
 
-	if((pl_sd=map->nick2sd((const char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
+	if ((pl_sd=map->nick2sd(message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -5125,8 +5125,7 @@ ACMD(follow) {
 		return true;
 	}
 
-	if ((pl_sd = map->nick2sd((const char *)message)) == NULL)
-	{
+	if ((pl_sd = map->nick2sd(message)) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -5279,12 +5278,13 @@ ACMD(clearcart)
  *------------------------------------------*/
 #define MAX_SKILLID_PARTIAL_RESULTS 5
 #define MAX_SKILLID_PARTIAL_RESULTS_LEN 74 /* "skill " (6) + "%d:" (up to 5) + "%s" (up to 30) + " (%s)" (up to 33) */
-ACMD(skillid) {
+ACMD(skillid)
+{
 	int i, found = 0;
 	size_t skillen;
-	DBIterator* iter;
-	DBKey key;
-	DBData *data;
+	struct DBIterator *iter;
+	union DBKey key;
+	struct DBData *data;
 	char partials[MAX_SKILLID_PARTIAL_RESULTS][MAX_SKILLID_PARTIAL_RESULTS_LEN];
 
 	if (!*message) {
@@ -5603,7 +5603,7 @@ ACMD(changegm) {
 		return false;
 	}
 
-	if ((pl_sd=map->nick2sd((const char *) message)) == NULL || pl_sd->status.guild_id != sd->status.guild_id) {
+	if ((pl_sd=map->nick2sd(message)) == NULL || pl_sd->status.guild_id != sd->status.guild_id) {
 		clif->message(fd, msg_fd(fd,1184)); // Target character must be online and be a guild member.
 		return false;
 	}
@@ -5623,7 +5623,7 @@ ACMD(changeleader) {
 		return false;
 	}
 
-	if (party->changeleader(sd, map->nick2sd((const char *) message)))
+	if (party->changeleader(sd, map->nick2sd(message)))
 		return true;
 	return false;
 }
@@ -6382,7 +6382,7 @@ ACMD(trade) {
 		return false;
 	}
 
-	if ( (pl_sd = map->nick2sd((const char *)message)) == NULL ) {
+	if ((pl_sd = map->nick2sd(message)) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -6425,8 +6425,7 @@ ACMD(unmute) {
 		return false;
 	}
 
-	if ((pl_sd = map->nick2sd((const char *)message)) == NULL)
-	{
+	if ((pl_sd = map->nick2sd(message)) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -7667,9 +7666,10 @@ ACMD(showdelay)
  * @reject - reject invitation
  * @leave - leave duel
  *------------------------------------------*/
-ACMD(invite) {
+ACMD(invite)
+{
 	unsigned int did = sd->duel_group;
-	struct map_session_data *target_sd = map->nick2sd((const char *)message);
+	struct map_session_data *target_sd = map->nick2sd(message);
 
 	if (did == 0)
 	{
@@ -7741,8 +7741,7 @@ ACMD(duel) {
 			}
 			duel->create(sd, maxpl);
 		} else {
-			struct map_session_data *target_sd;
-			target_sd = map->nick2sd((const char *)message);
+			struct map_session_data *target_sd = map->nick2sd(message);
 			if (target_sd != NULL) {
 				unsigned int newduel;
 				if ((newduel = duel->create(sd, 2)) != -1) {
@@ -7884,7 +7883,7 @@ ACMD(clone) {
 		return false;
 	}
 
-	if ((pl_sd=map->nick2sd((const char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
+	if ((pl_sd=map->nick2sd(message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -8354,7 +8353,7 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 	char line_buff[CHATBOX_SIZE];
 	char* cur = line_buff;
 	AtCommandInfo* cmd;
-	DBIterator *iter = db_iterator(atcommand->db);
+	struct DBIterator *iter = db_iterator(atcommand->db);
 	int count = 0;
 
 	memset(line_buff,' ',CHATBOX_SIZE);
@@ -8500,30 +8499,34 @@ ACMD(set)
 
 	CREATE(data, struct script_data,1);
 
-	if( is_str ) {// string variable
-		switch( reg[0] ) {
+	if (is_str) {
+		// string variable
+		const char *str = NULL;
+		switch (reg[0]) {
 			case '@':
-				data->u.str = pc->readregstr(sd, script->add_str(reg));
+				str = pc->readregstr(sd, script->add_str(reg));
 				break;
 			case '$':
-				data->u.str = mapreg->readregstr(script->add_str(reg));
+				str = mapreg->readregstr(script->add_str(reg));
 				break;
 			case '#':
-				if( reg[1] == '#' )
-					data->u.str = pc_readaccountreg2str(sd, script->add_str(reg));// global
+				if (reg[1] == '#')
+					str = pc_readaccountreg2str(sd, script->add_str(reg));// global
 				else
-					data->u.str = pc_readaccountregstr(sd, script->add_str(reg));// local
+					str = pc_readaccountregstr(sd, script->add_str(reg));// local
 				break;
 			default:
-				data->u.str = pc_readglobalreg_str(sd, script->add_str(reg));
+				str = pc_readglobalreg_str(sd, script->add_str(reg));
 				break;
 		}
-		if( data->u.str == NULL || data->u.str[0] == '\0' ) {// empty string
+		if (str == NULL || str[0] == '\0') {
+			// empty string
 			data->type = C_CONSTSTR;
 			data->u.str = "";
-		} else {// duplicate string
+		} else {
+			// duplicate string
 			data->type = C_STR;
-			data->u.str = aStrdup(data->u.str);
+			data->u.mutstr = aStrdup(str);
 		}
 	} else {// integer variable
 		data->type = C_INT;
@@ -8551,7 +8554,7 @@ ACMD(set)
 			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1373),reg,data->u.num); // %s value is now :%d
 			break;
 		case C_STR:
-			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1374),reg,data->u.str); // %s value is now :%s
+			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1374),reg,data->u.mutstr); // %s value is now :%s
 			break;
 		case C_CONSTSTR:
 			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1375),reg); // %s is empty
@@ -8824,7 +8827,7 @@ ACMD(channel) {
 				clif->messagecolor_self(fd, channel->config->colors[k], atcmd_output);
 			}
 		} else {
-			DBIterator *iter = db_iterator(channel->db);
+			struct DBIterator *iter = db_iterator(channel->db);
 			bool show_all = pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ? true : false;
 			clif->message(fd, msg_fd(fd,1410)); // -- Public Channels
 			if (channel->config->local) {
@@ -9054,9 +9057,9 @@ ACMD(channel) {
 		clif->message(fd, atcmd_output);
 	} else if (strcmpi(subcmd,"banlist") == 0) {
 		// sub1 = channel name; sub2 = unused; sub3 = unused
-		DBIterator *iter = NULL;
-		DBKey key;
-		DBData *data;
+		struct DBIterator *iter = NULL;
+		union DBKey key;
+		struct DBData *data;
 		bool isA = pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)?true:false;
 		if (sub1[0] != '#') {
 			clif->message(fd, msg_fd(fd,1405));// Channel name must start with a '#'
@@ -9731,8 +9734,7 @@ const char* atcommand_checkalias(const char *aliasname) {
 
 /// AtCommand suggestion
 void atcommand_get_suggestions(struct map_session_data* sd, const char *name, bool is_atcmd_cmd) {
-	DBIterator* atcommand_iter;
-	DBIterator* alias_iter;
+	struct DBIterator *atcommand_iter, *alias_iter;
 	AtCommandInfo* command_info = NULL;
 	AliasInfo* alias_info = NULL;
 	AtCommandType type = is_atcmd_cmd ? COMMAND_ATCOMMAND : COMMAND_CHARCOMMAND;
@@ -10118,7 +10120,7 @@ static inline int atcommand_command_type2idx(AtCommandType type)
  */
 void atcommand_db_load_groups(GroupSettings **groups, struct config_setting_t **commands_, size_t sz)
 {
-	DBIterator *iter = db_iterator(atcommand->db);
+	struct DBIterator *iter = db_iterator(atcommand->db);
 	AtCommandInfo *atcmd;
 
 	nullpo_retv(groups);
@@ -10220,7 +10222,8 @@ bool atcommand_hp_add(char *name, AtCommandFunc func) {
 /**
  * @see DBApply
  */
-int atcommand_db_clear_sub(DBKey key, DBData *data, va_list args) {
+int atcommand_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
+{
 	AtCommandInfo *cmd = DB->data2ptr(data);
 	aFree(cmd->at_groups);
 	aFree(cmd->char_groups);

@@ -127,9 +127,8 @@ void channel_delete(struct channel_data *chan)
 	nullpo_retv(chan);
 
 	if (db_size(chan->users) && !channel->config->closing) {
-		DBIterator *iter;
 		struct map_session_data *sd;
-		iter = db_iterator(chan->users);
+		struct DBIterator *iter = db_iterator(chan->users);
 		for (sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
 			channel->leave_sub(chan, sd);
 		}
@@ -814,7 +813,7 @@ int do_init_channel(bool minimal)
 
 void do_final_channel(void)
 {
-	DBIterator *iter = db_iterator(channel->db);
+	struct DBIterator *iter = db_iterator(channel->db);
 	struct channel_data *chan;
 	unsigned char i;
 

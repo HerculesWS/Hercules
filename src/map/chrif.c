@@ -471,7 +471,8 @@ void chrif_connectack(int fd) {
 /**
  * @see DBApply
  */
-int chrif_reconnect(DBKey key, DBData *data, va_list ap) {
+int chrif_reconnect(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct auth_node *node = DB->data2ptr(data);
 
 	nullpo_ret(node);
@@ -681,7 +682,8 @@ void chrif_authfail(int fd) {/* HELLO WORLD. ip in RFIFOL 15 is not being used (
  * This can still happen (client times out while waiting for char to confirm auth data)
  * @see DBApply
  */
-int auth_db_cleanup_sub(DBKey key, DBData *data, va_list ap) {
+int auth_db_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct auth_node *node = DB->data2ptr(data);
 
 	nullpo_retr(1, node);
@@ -1617,7 +1619,8 @@ void chrif_del_scdata_single(int account_id, int char_id, short type)
 /**
  * @see DBApply
  */
-int auth_db_final(DBKey key, DBData *data, va_list ap) {
+int auth_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct auth_node *node = DB->data2ptr(data);
 
 	nullpo_ret(node);

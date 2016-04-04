@@ -162,7 +162,7 @@ unsigned short skillid2idx[MAX_SKILL_ID];
 //-----------------------------------------------------
 #define AUTH_TIMEOUT 30000
 
-static DBMap* auth_db; // int account_id -> struct char_auth_node*
+static struct DBMap *auth_db; // int account_id -> struct char_auth_node*
 
 //-----------------------------------------------------
 // Online User Database
@@ -171,7 +171,7 @@ static DBMap* auth_db; // int account_id -> struct char_auth_node*
 /**
  * @see DBCreateData
  */
-static DBData char_create_online_char_data(DBKey key, va_list args)
+static struct DBData char_create_online_char_data(union DBKey key, va_list args)
 {
 	struct online_char_data* character;
 	CREATE(character, struct online_char_data, 1);
@@ -313,7 +313,7 @@ void char_set_char_offline(int char_id, int account_id)
 /**
  * @see DBApply
  */
-static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
+static int char_db_setoffline(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
@@ -333,7 +333,7 @@ static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
 /**
  * @see DBApply
  */
-static int char_db_kickoffline(DBKey key, DBData *data, va_list ap)
+static int char_db_kickoffline(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
@@ -388,7 +388,7 @@ void char_set_all_offline_sql(void)
 /**
  * @see DBCreateData
  */
-static DBData char_create_charstatus(DBKey key, va_list args)
+static struct DBData char_create_charstatus(union DBKey key, va_list args)
 {
 	struct mmo_charstatus *cp;
 	cp = (struct mmo_charstatus *) aCalloc(1,sizeof(struct mmo_charstatus));
@@ -702,7 +702,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 int char_memitemdata_to_sql(const struct item items[], int max, int id, int tableswitch)
 {
 	StringBuf buf;
-	SqlStmt *stmt = NULL;
+	struct SqlStmt *stmt = NULL;
 	int i, j;
 	const char *tablename = NULL;
 	const char *selectoption = NULL;
@@ -915,7 +915,7 @@ int char_mmo_gender(const struct char_session_data *sd, const struct mmo_charsta
 // Loads the basic character rooster for the given account. Returns total buffer used.
 int char_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 {
-	SqlStmt* stmt;
+	struct SqlStmt *stmt;
 	struct mmo_charstatus p;
 	int j = 0, i;
 	char last_map[MAP_NAME_LENGTH_EXT];
@@ -1015,7 +1015,7 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	char t_msg[128] = "";
 	struct mmo_charstatus* cp;
 	StringBuf buf;
-	SqlStmt* stmt;
+	struct SqlStmt *stmt;
 	char last_map[MAP_NAME_LENGTH_EXT];
 	char save_map[MAP_NAME_LENGTH_EXT];
 	char point_map[MAP_NAME_LENGTH_EXT];
@@ -2341,7 +2341,7 @@ int char_parse_fromlogin_changesex_reply(int fd)
 	int char_id = 0, class_ = 0, guild_id = 0;
 	int i;
 	struct char_auth_node *node;
-	SqlStmt *stmt;
+	struct SqlStmt *stmt;
 
 	int acc = RFIFOL(fd,2);
 	int sex = RFIFOB(fd,6);
@@ -3277,7 +3277,7 @@ void char_ban(int account_id, int char_id, time_t *unban_time, short year, short
 {
 	time_t timestamp;
 	struct tm *tmtime;
-	SqlStmt* stmt = SQL->StmtMalloc(inter->sql_handle);
+	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
 
 	nullpo_retv(unban_time);
 
@@ -3298,8 +3298,8 @@ void char_ban(int account_id, int char_id, time_t *unban_time, short year, short
 	if( SQL_SUCCESS != SQL->StmtPrepare(stmt,
 		"UPDATE `%s` SET `unban_time` = ? WHERE `char_id` = ? LIMIT 1",
 		char_db)
-	   || SQL_SUCCESS != SQL->StmtBindParam(stmt,  0, SQLDT_LONG,   (void*)&timestamp,   sizeof(timestamp))
-	   || SQL_SUCCESS != SQL->StmtBindParam(stmt,  1, SQLDT_INT,    (void*)&char_id,     sizeof(char_id))
+	   || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_LONG, &timestamp, sizeof(timestamp))
+	   || SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_INT,  &char_id,   sizeof(char_id))
 	   || SQL_SUCCESS != SQL->StmtExecute(stmt)
 	) {
 		SqlStmt_ShowDebug(stmt);
@@ -5249,7 +5249,7 @@ int char_broadcast_user_count(int tid, int64 tick, int id, intptr_t data) {
  * Load this character's account id into the 'online accounts' packet
  * @see DBApply
  */
-static int char_send_accounts_tologin_sub(DBKey key, DBData *data, va_list ap)
+static int char_send_accounts_tologin_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_char_data* character = DB->data2ptr(data);
 	int* i = va_arg(ap, int*);
@@ -5318,7 +5318,7 @@ static int char_waiting_disconnect(int tid, int64 tick, int id, intptr_t data) {
 /**
  * @see DBApply
  */
-static int char_online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
+static int char_online_data_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_char_data *character= DB->data2ptr(data);
 	nullpo_ret(character);

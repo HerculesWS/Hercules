@@ -16554,7 +16554,8 @@ int skill_unit_timer_sub_onplace(struct block_list* bl, va_list ap) {
 /**
  * @see DBApply
  */
-int skill_unit_timer_sub(DBKey key, DBData *data, va_list ap) {
+int skill_unit_timer_sub(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct skill_unit* su = DB->data2ptr(data);
 	struct skill_unit_group* group = su->group;
 	int64 tick = va_arg(ap,int64);

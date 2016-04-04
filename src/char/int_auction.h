@@ -22,14 +22,16 @@
 #define CHAR_INT_AUCTION_H
 
 #include "common/hercules.h"
-#include "common/db.h"
 #include "common/mmo.h"
+
+/* Forward Declarations */
+struct DBMap; // common/db.h
 
 /**
  * inter_auction_interface interface
  **/
 struct inter_auction_interface {
-	DBMap* db; // int auction_id -> struct auction_data*
+	struct DBMap *db; // int auction_id -> struct auction_data*
 	int (*count) (int char_id, bool buy);
 	void (*save) (struct auction_data *auction);
 	unsigned int (*create) (struct auction_data *auction);

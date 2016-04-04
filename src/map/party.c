@@ -122,7 +122,8 @@ struct map_session_data *party_sd_check(int party_id, int account_id, int char_i
 
 	return sd;
 }
-int party_db_final(DBKey key, DBData *data, va_list ap) {
+int party_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct party_data *p;
 
 	if ((p = DB->data2ptr(data))) {
@@ -146,9 +147,8 @@ struct party_data* party_searchname(const char* str)
 {
 	struct party_data* p;
 
-	DBIterator *iter = db_iterator(party->db);
-	for( p = dbi_first(iter); dbi_exists(iter); p = dbi_next(iter) )
-	{
+	struct DBIterator *iter = db_iterator(party->db);
+	for (p = dbi_first(iter); dbi_exists(iter); p = dbi_next(iter)) {
 		if( strncmpi(p->party.name,str,NAME_LENGTH) == 0 )
 			break;
 	}
@@ -871,10 +871,11 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 	return 0;
 }
 
-int party_send_xy_timer(int tid, int64 tick, int id, intptr_t data) {
+int party_send_xy_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	struct DBIterator *iter = db_iterator(party->db);
 	struct party_data* p;
 
-	DBIterator *iter = db_iterator(party->db);
 	// for each existing party,
 	for( p = dbi_first(iter); dbi_exists(iter); p = dbi_next(iter) )
 	{
@@ -1284,7 +1285,7 @@ void party_recruit_search(struct map_session_data *sd, short level, short mapid,
 	int count = 0;
 	struct party_booking_ad_info* result_list[PARTY_BOOKING_RESULTS];
 	bool more_result = false;
-	DBIterator* iter = db_iterator(party->booking_db);
+	struct DBIterator *iter = db_iterator(party->booking_db);
 
 	memset(result_list, 0, sizeof(result_list));
 
@@ -1315,7 +1316,7 @@ void party_booking_search(struct map_session_data *sd, short level, short mapid,
 	int count = 0;
 	struct party_booking_ad_info* result_list[PARTY_BOOKING_RESULTS];
 	bool more_result = false;
-	DBIterator* iter = db_iterator(party->booking_db);
+	struct DBIterator *iter = db_iterator(party->booking_db);
 
 	memset(result_list, 0, sizeof(result_list));
 

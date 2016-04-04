@@ -55,7 +55,7 @@ struct HPM_interface *HPM;
 /**
  * (char*) data name -> (unsigned int) HPMDataCheck[] index
  **/
-DBMap *datacheck_db;
+struct DBMap *datacheck_db;
 int datacheck_version;
 const struct s_HPMDataCheck *datacheck_data;
 

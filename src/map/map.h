@@ -27,11 +27,12 @@
 #include "common/db.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
-#include "common/sql.h"
 
 #include <stdio.h>
 #include <stdarg.h>
 
+/* Forward Declarations */
+struct Sql; // common/sql.h
 struct mob_data;
 struct npc_data;
 struct channel_data;
@@ -993,7 +994,7 @@ struct map_interface {
 	char server_id[32];
 	char server_pw[100];
 	char server_db[32];
-	Sql* mysql_handle;
+	struct Sql *mysql_handle;
 
 	int port;
 	int users;
@@ -1003,16 +1004,16 @@ struct map_interface {
 
 	int16 index2mapid[MAX_MAPINDEX];
 	/* */
-	DBMap* id_db;     // int id -> struct block_list*
-	DBMap* pc_db;     // int id -> struct map_session_data*
-	DBMap* mobid_db;  // int id -> struct mob_data*
-	DBMap* bossid_db; // int id -> struct mob_data* (MVP db)
-	DBMap* map_db;    // unsigned int mapindex -> struct map_data_other_server*
-	DBMap* nick_db;   // int char_id -> struct charid2nick* (requested names of offline characters)
-	DBMap* charid_db; // int char_id -> struct map_session_data*
-	DBMap* regen_db;  // int id -> struct block_list* (status_natural_heal processing)
-	DBMap* zone_db;   // string => struct map_zone_data
-	DBMap* iwall_db;
+	struct DBMap *id_db;     // int id -> struct block_list*
+	struct DBMap *pc_db;     // int id -> struct map_session_data*
+	struct DBMap *mobid_db;  // int id -> struct mob_data*
+	struct DBMap *bossid_db; // int id -> struct mob_data* (MVP db)
+	struct DBMap *map_db;    // unsigned int mapindex -> struct map_data_other_server*
+	struct DBMap *nick_db;   // int char_id -> struct charid2nick* (requested names of offline characters)
+	struct DBMap *charid_db; // int char_id -> struct map_session_data*
+	struct DBMap *regen_db;  // int id -> struct block_list* (status_natural_heal processing)
+	struct DBMap *zone_db;   // string => struct map_zone_data
+	struct DBMap *iwall_db;
 	struct block_list **block_free;
 	int block_free_count, block_free_lock, block_free_list_size;
 	struct block_list **bl_list;
@@ -1166,7 +1167,7 @@ END_ZEROED_BLOCK;
 	int (*freeblock_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*searchrandfreecell) (int16 m, const struct block_list *bl, int16 *x, int16 *y, int stack);
 	int (*count_sub) (struct block_list *bl, va_list ap);
-	DBData (*create_charid2nick) (DBKey key, va_list args);
+	struct DBData (*create_charid2nick) (union DBKey key, va_list args);
 	int (*removemobs_sub) (struct block_list *bl, va_list ap);
 	struct mapcell (*gat2cell) (int gat);
 	int (*cell2gat) (struct mapcell cell);
@@ -1175,8 +1176,8 @@ END_ZEROED_BLOCK;
 	int (*sub_getcellp) (struct map_data *m, const struct block_list *bl, int16 x, int16 y, cell_chk cellchk);
 	void (*sub_setcell) (int16 m, int16 x, int16 y, cell_t cell, bool flag);
 	void (*iwall_nextxy) (int16 x, int16 y, int8 dir, int pos, int16 *x1, int16 *y1);
-	DBData (*create_map_data_other_server) (DBKey key, va_list args);
-	int (*eraseallipport_sub) (DBKey key, DBData *data, va_list va);
+	struct DBData (*create_map_data_other_server) (union DBKey key, va_list args);
+	int (*eraseallipport_sub) (union DBKey key, struct DBData *data, va_list va);
 	char* (*init_mapcache) (FILE *fp);
 	int (*readfromcache) (struct map_data *m, char *buffer);
 	int (*addmap) (const char *mapname);
@@ -1197,9 +1198,9 @@ END_ZEROED_BLOCK;
 	unsigned short (*zone_str2skillid) (const char *name);
 	enum bl_type (*zone_bl_type) (const char *entry, enum map_zone_skill_subtype *subtype);
 	void (*read_zone_db) (void);
-	int (*db_final) (DBKey key, DBData *data, va_list ap);
-	int (*nick_db_final) (DBKey key, DBData *data, va_list args);
-	int (*cleanup_db_sub) (DBKey key, DBData *data, va_list va);
+	int (*db_final) (union DBKey key, struct DBData *data, va_list ap);
+	int (*nick_db_final) (union DBKey key, struct DBData *data, va_list args);
+	int (*cleanup_db_sub) (union DBKey key, struct DBData *data, va_list va);
 	int (*abort_sub) (struct map_session_data *sd, va_list ap);
 	void (*update_cell_bl) (struct block_list *bl, bool increase);
 	int (*get_new_bonus_id) (void);

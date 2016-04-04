@@ -148,7 +148,7 @@ sub parse($$) {
 					$type1 .= "$1 ";
 					next;
 				}
-				if ($current =~ /^(struct|enum)\s+(.*)$/) { # enum and struct names
+				if ($current =~ /^(struct|enum|union)\s+(.*)$/) { # union, enum and struct names
 					$current = $2 // '';
 					$type1 .= "$1 ";
 				}
@@ -241,7 +241,7 @@ sub parse($$) {
 			$rtinit = ' = DB_OPT_BASE';
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
 			$rtinit = ' = NULL';
-		} elsif ($x =~ /^struct\s+.*$/ or $x eq 'DBData' or $x eq 'DBKey') { # Structs and unions
+		} elsif ($x =~ /^(?:struct|union)\s+.*$/) { # Structs and unions
 			$rtinit = '';
 			$rtmemset = 1;
 		} elsif ($x =~ /^float|double$/) { # Floating point variables

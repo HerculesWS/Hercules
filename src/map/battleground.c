@@ -279,7 +279,8 @@ bool bg_send_message(struct map_session_data *sd, const char *mes, int len) {
 /**
  * @see DBApply
  */
-int bg_send_xy_timer_sub(DBKey key, DBData *data, va_list ap) {
+int bg_send_xy_timer_sub(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct battleground_data *bgd = DB->data2ptr(data);
 	struct map_session_data *sd;
 	int i;
@@ -925,7 +926,8 @@ void do_init_battleground(bool minimal) {
 /**
  * @see DBApply
  */
-int bg_team_db_final(DBKey key, DBData *data, va_list ap) {
+int bg_team_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct battleground_data* bgd = DB->data2ptr(data);
 
 	HPM->data_store_destroy(&bgd->hdata);

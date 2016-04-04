@@ -47,7 +47,7 @@ static char   log_db_database[32] = "";
 static char   log_codepage[32] = "";
 static char   log_login_db[256] = "loginlog";
 
-static Sql* sql_handle = NULL;
+static struct Sql *sql_handle = NULL;
 static bool enabled = false;
 
 

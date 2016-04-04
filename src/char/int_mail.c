@@ -129,7 +129,7 @@ static int inter_mail_fromsql(int char_id, struct mail_data* md)
 int inter_mail_savemessage(struct mail_message* msg)
 {
 	StringBuf buf;
-	SqlStmt* stmt;
+	struct SqlStmt *stmt;
 	int j;
 
 	nullpo_ret(msg);

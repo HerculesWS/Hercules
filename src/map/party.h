@@ -85,8 +85,8 @@ struct party_booking_ad_info {
 * created by Susu
 *-------------------------------------*/
 struct party_interface {
-	DBMap* db; // int party_id -> struct party_data* (releases data)
-	DBMap* booking_db; // int char_id -> struct party_booking_ad_info* (releases data) // Party Booking [Spiria]
+	struct DBMap *db; // int party_id -> struct party_data* (releases data)
+	struct DBMap *booking_db; // int char_id -> struct party_booking_ad_info* (releases data) // Party Booking [Spiria]
 	unsigned int booking_nextid;
 	/* funcs */
 	void (*init) (bool minimal);
@@ -145,7 +145,7 @@ struct party_interface {
 	struct map_session_data *(*sd_check) (int party_id, int account_id, int char_id);
 	void (*check_state) (struct party_data *p);
 	struct party_booking_ad_info* (*create_booking_data) (void);
-	int (*db_final) (DBKey key, DBData *data, va_list ap);
+	int (*db_final) (union DBKey key, struct DBData *data, va_list ap);
 };
 
 #ifdef HERCULES_CORE

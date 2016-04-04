@@ -69,6 +69,7 @@
 #include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h" // WFIFO*()
+#include "common/sql.h"
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/utils.h"
@@ -1657,7 +1658,7 @@ int map_addflooritem(const struct block_list *bl, struct item *item_data, int am
 /**
  * @see DBCreateData
  */
-DBData create_charid2nick(DBKey key, va_list args)
+struct DBData create_charid2nick(union DBKey key, va_list args)
 {
 	struct charid2nick *p;
 	CREATE(p, struct charid2nick, 1);
@@ -1694,7 +1695,7 @@ void map_delnickdb(int charid, const char* name)
 {
 	struct charid2nick* p;
 	struct charid_request* req;
-	DBData data;
+	struct DBData data;
 
 	if (!map->nick_db->remove(map->nick_db, DB->i2key(charid), &data) || (p = DB->data2ptr(&data)) == NULL)
 		return;
@@ -2166,9 +2167,9 @@ struct map_session_data * map_nick2sd(const char *nick)
 /*==========================================
  * Convext Mirror
  *------------------------------------------*/
-struct mob_data * map_getmob_boss(int16 m)
+struct mob_data *map_getmob_boss(int16 m)
 {
-	DBIterator* iter;
+	struct DBIterator *iter;
 	struct mob_data *md = NULL;
 	bool found = false;
 
@@ -2230,11 +2231,11 @@ uint32 map_race_id2mask(int race)
 
 /// Applies func to all the players in the db.
 /// Stops iterating if func returns -1.
-void map_vforeachpc(int (*func)(struct map_session_data* sd, va_list args), va_list args) {
-	DBIterator* iter;
-	struct map_session_data* sd;
+void map_vforeachpc(int (*func)(struct map_session_data* sd, va_list args), va_list args)
+{
+	struct DBIterator *iter = db_iterator(map->pc_db);
+	struct map_session_data *sd = NULL;
 
-	iter = db_iterator(map->pc_db);
 	for( sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter) )
 	{
 		va_list argscopy;
@@ -2262,11 +2263,11 @@ void map_foreachpc(int (*func)(struct map_session_data* sd, va_list args), ...) 
 
 /// Applies func to all the mobs in the db.
 /// Stops iterating if func returns -1.
-void map_vforeachmob(int (*func)(struct mob_data* md, va_list args), va_list args) {
-	DBIterator* iter;
-	struct mob_data* md;
+void map_vforeachmob(int (*func)(struct mob_data* md, va_list args), va_list args)
+{
+	struct DBIterator *iter = db_iterator(map->mobid_db);
+	struct mob_data *md = NULL;
 
-	iter = db_iterator(map->mobid_db);
 	for (md = dbi_first(iter); dbi_exists(iter); md = dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
@@ -2293,11 +2294,11 @@ void map_foreachmob(int (*func)(struct mob_data* md, va_list args), ...) {
 
 /// Applies func to all the npcs in the db.
 /// Stops iterating if func returns -1.
-void map_vforeachnpc(int (*func)(struct npc_data* nd, va_list args), va_list args) {
-	DBIterator* iter;
-	struct block_list* bl;
+void map_vforeachnpc(int (*func)(struct npc_data* nd, va_list args), va_list args)
+{
+	struct DBIterator *iter = db_iterator(map->id_db);
+	struct block_list *bl = NULL;
 
-	iter = db_iterator(map->id_db);
 	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
 		if (bl->type == BL_NPC) {
 			struct npc_data *nd = BL_UCAST(BL_NPC, bl);
@@ -2327,11 +2328,11 @@ void map_foreachnpc(int (*func)(struct npc_data* nd, va_list args), ...) {
 
 /// Applies func to everything in the db.
 /// Stops iterating gif func returns -1.
-void map_vforeachregen(int (*func)(struct block_list* bl, va_list args), va_list args) {
-	DBIterator* iter;
-	struct block_list* bl;
+void map_vforeachregen(int (*func)(struct block_list* bl, va_list args), va_list args)
+{
+	struct DBIterator *iter = db_iterator(map->regen_db);
+	struct block_list *bl = NULL;
 
-	iter = db_iterator(map->regen_db);
 	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
@@ -2358,11 +2359,11 @@ void map_foreachregen(int (*func)(struct block_list* bl, va_list args), ...) {
 
 /// Applies func to everything in the db.
 /// Stops iterating if func returns -1.
-void map_vforeachiddb(int (*func)(struct block_list* bl, va_list args), va_list args) {
-	DBIterator* iter;
-	struct block_list* bl;
+void map_vforeachiddb(int (*func)(struct block_list* bl, va_list args), va_list args)
+{
+	struct DBIterator *iter = db_iterator(map->id_db);
+	struct block_list *bl = NULL;
 
-	iter = db_iterator(map->id_db);
 	for (bl = dbi_first(iter); dbi_exists(iter); bl = dbi_next(iter)) {
 		va_list argscopy;
 		int ret;
@@ -2389,11 +2390,10 @@ void map_foreachiddb(int (*func)(struct block_list* bl, va_list args), ...) {
 
 /// Iterator.
 /// Can filter by bl type.
-struct s_mapiterator
-{
-	enum e_mapitflags flags;// flags for special behaviour
-	enum bl_type types;// what bl types to return
-	DBIterator* dbi;// database iterator
+struct s_mapiterator {
+	enum e_mapitflags flags; ///< flags for special behaviour
+	enum bl_type types;      ///< what bl types to return
+	struct DBIterator *dbi;  ///< database iterator
 };
 
 /// Returns true if the block_list matches the description in the iterator.
@@ -3022,9 +3022,10 @@ bool map_iwall_set(int16 m, int16 x, int16 y, int size, int8 dir, bool shootable
 	return true;
 }
 
-void map_iwall_get(struct map_session_data *sd) {
+void map_iwall_get(struct map_session_data *sd)
+{
 	struct iwall_data *iwall;
-	DBIterator* iter;
+	struct DBIterator *iter;
 	int16 x1, y1;
 	int i;
 
@@ -3068,7 +3069,7 @@ void map_iwall_remove(const char *wall_name)
 /**
  * @see DBCreateData
  */
-DBData create_map_data_other_server(DBKey key, va_list args)
+struct DBData create_map_data_other_server(union DBKey key, va_list args)
 {
 	struct map_data_other_server *mdos;
 	unsigned short map_index = (unsigned short)key.ui;
@@ -3103,7 +3104,7 @@ int map_setipport(unsigned short map_index, uint32 ip, uint16 port)
  * Delete all the other maps server management
  * @see DBApply
  */
-int map_eraseallipport_sub(DBKey key, DBData *data, va_list va)
+int map_eraseallipport_sub(union DBKey key, struct DBData *data, va_list va)
 {
 	struct map_data_other_server *mdos = DB->data2ptr(data);
 	if(mdos->cell == NULL) {
@@ -3300,9 +3301,10 @@ void map_zone_clear_single(struct map_zone_data *zone) {
 /**
  *
  **/
-void map_zone_db_clear(void) {
-	struct map_zone_data *zone;
-	DBIterator *iter = db_iterator(map->zone_db);
+void map_zone_db_clear(void)
+{
+	struct DBIterator *iter = db_iterator(map->zone_db);
+	struct map_zone_data *zone = NULL;
 
 	for(zone = dbi_first(iter); dbi_exists(iter); zone = dbi_next(iter)) {
 		map->zone_clear_single(zone);
@@ -5445,7 +5447,8 @@ bool map_remove_questinfo(int m, struct npc_data *nd) {
 /**
  * @see DBApply
  */
-int map_db_final(DBKey key, DBData *data, va_list ap) {
+int map_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct map_data_other_server *mdos = DB->data2ptr(data);
 
 	if(mdos && iMalloc->verify_ptr(mdos) && mdos->cell == NULL)
@@ -5457,7 +5460,7 @@ int map_db_final(DBKey key, DBData *data, va_list ap) {
 /**
  * @see DBApply
  */
-int nick_db_final(DBKey key, DBData *data, va_list args)
+int nick_db_final(union DBKey key, struct DBData *data, va_list args)
 {
 	struct charid2nick* p = DB->data2ptr(data);
 	struct charid_request* req;
@@ -5504,7 +5507,8 @@ int cleanup_sub(struct block_list *bl, va_list ap) {
 /**
  * @see DBApply
  */
-int cleanup_db_sub(DBKey key, DBData *data, va_list va) {
+int cleanup_db_sub(union DBKey key, struct DBData *data, va_list va)
+{
 	return map->cleanup_sub(DB->data2ptr(data), va);
 }
 

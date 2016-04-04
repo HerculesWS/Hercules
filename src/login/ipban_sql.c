@@ -49,7 +49,7 @@ static char   ipban_codepage[32] = "";
 static char   ipban_table[32] = "ipbanlist";
 
 // globals
-static Sql* sql_handle = NULL;
+static struct Sql *sql_handle = NULL;
 static int cleanup_timer_id = INVALID_TIMER;
 static bool ipban_inited = false;
 

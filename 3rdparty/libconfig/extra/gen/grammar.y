@@ -54,7 +54,7 @@ extern int libconfig_yyget_lineno();
 static const char *err_array_elem_type = "mismatched element type in array";
 static const char *err_duplicate_setting = "duplicate setting name";
 
-#define _delete(P) free((void *)(P))
+#define _delete(P) free(P)
 
 #define IN_ARRAY() \
   (ctx->parent && (ctx->parent->type == CONFIG_TYPE_ARRAY))
@@ -332,7 +332,7 @@ simple_value:
   {
     if(IN_ARRAY() || IN_LIST())
     {
-      const char *s = parsectx_take_string(ctx);
+      char *s = parsectx_take_string(ctx);
       struct config_setting_t *e = config_setting_set_string_elem(ctx->parent, -1, s);
       _delete(s);
 
@@ -348,7 +348,7 @@ simple_value:
     }
     else
     {
-      const char *s = parsectx_take_string(ctx);
+      char *s = parsectx_take_string(ctx);
       config_setting_set_string(ctx->setting, s);
       _delete(s);
     }
