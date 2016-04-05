@@ -295,6 +295,21 @@ typedef uintptr_t uintptr;
 #define analyzer_noreturn
 #endif
 
+// gcc version (if any) - borrowed from Mana Plus
+#ifdef __GNUC__
+#define GCC_VERSION (__GNUC__ * 10000 \
+		+ __GNUC_MINOR__ * 100 \
+		+ __GNUC_PATCHLEVEL__)
+#else
+#define GCC_VERSION 0
+#endif
+
+// Pragma macro only enabled on gcc >= 4.5 or clang - borrowed from Mana Plus
+#if defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40500)
+#define PRAGMA_GCC45(str) _Pragma(#str)
+#else // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40500)
+#define PRAGMA_GCC45(str)
+#endif // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40500)
 
 // boolean types for C
 #if !defined(_MSC_VER) || _MSC_VER >= 1800
