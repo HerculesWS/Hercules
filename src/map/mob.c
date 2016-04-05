@@ -114,6 +114,8 @@ struct mob_chat *mob_chat(short id) {
 int mobdb_searchname(const char *str)
 {
 	int i;
+
+	nullpo_ret(str);
 	for(i=0;i<=MAX_MOB_DB;i++){
 		struct mob_db *monster = mob->db(i);
 		if(monster == mob->dummy) //Skip dummy mobs.
@@ -129,10 +131,13 @@ int mobdb_searchname(const char *str)
 	return 0;
 }
 int mobdb_searchname_array_sub(struct mob_db* monster, const char *str, int flag) {
+
+	nullpo_ret(monster);
 	if (monster == mob->dummy)
 		return 1;
 	if(!monster->base_exp && !monster->job_exp && monster->spawn[0].qty < 1)
 		return 1; // Monsters with no base/job exp and no spawn point are, by this criteria, considered "slave mobs" and excluded from search results
+	nullpo_ret(str);
 	if( !flag ) {
 		if(stristr(monster->jname,str))
 			return 0;
@@ -156,6 +161,7 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 {
 	struct npc_data *nd;
 
+	nullpo_retv(md);
 	if ( md->tomb_nid )
 		mob->mvptomb_destroy(md);
 
@@ -181,6 +187,7 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time)
 void mvptomb_destroy(struct mob_data *md) {
 	struct npc_data *nd;
 
+	nullpo_retv(md);
 	if ( (nd = map->id2nd(md->tomb_nid)) ) {
 		int16 m, i;
 
@@ -212,6 +219,7 @@ int mobdb_searchname_array(struct mob_db** data, int size, const char *str, int 
 {
 	int count = 0, i;
 	struct mob_db* monster;
+	nullpo_ret(data);
 	for(i=0;i<=MAX_MOB_DB;i++){
 		monster = mob->db(i);
 		if (monster == mob->dummy || mob->is_clone(i) ) //keep clones out (or you leak player stats)
@@ -253,6 +261,7 @@ int mob_parse_dataset(struct spawn_data *data)
 {
 	size_t len;
 
+	nullpo_ret(data);
 	if ((!mob->db_checkid(data->class_) && !mob->is_clone(data->class_)) || !data->num)
 		return 0;
 
@@ -276,6 +285,7 @@ int mob_parse_dataset(struct spawn_data *data)
  *------------------------------------------*/
 struct mob_data* mob_spawn_dataset(struct spawn_data *data) {
 	struct mob_data *md = NULL;
+	nullpo_retr(NULL, data);
 	CREATE(md, struct mob_data, 1);
 	md->bl.id= npc->get_new_npc_id();
 	md->bl.type = BL_MOB;
@@ -328,6 +338,7 @@ int mob_get_random_id(int type, int flag, int lv)
 		ShowError("mob_get_random_id: Invalid type (%d) of random monster.\n", type);
 		return 0;
 	}
+	Assert_ret(type >= 0 && type < MAX_RANDOMMONSTER);
 	do {
 		if (type)
 			class_ = summon[type].class_[rnd()%summon[type].qty];
@@ -634,6 +645,11 @@ int mob_spawn_guardian(const char* mapname, short x, short y, const char* mobnam
 	struct guild *g=NULL;
 	struct guild_castle *gc;
 	int16 m;
+
+	nullpo_ret(mapname);
+	nullpo_ret(mobname);
+	nullpo_ret(event);
+
 	memset(&data, 0, sizeof(struct spawn_data));
 	data.num = 1;
 
@@ -727,6 +743,10 @@ int mob_spawn_bg(const char* mapname, short x, short y, const char* mobname, int
 	struct mob_data *md = NULL;
 	struct spawn_data data;
 	int16 m;
+
+	nullpo_ret(mapname);
+	nullpo_ret(mobname);
+	nullpo_ret(event);
 
 	if( (m = map->mapname2mapid(mapname)) < 0 ) {
 		ShowWarning("mob_spawn_bg: Map [%s] not found.\n", mapname);
@@ -846,6 +866,8 @@ int mob_setdelayspawn(struct mob_data *md)
 	uint32 mode;
 	struct mob_db *db;
 
+	nullpo_ret(md);
+
 	if (!md->spawn) //Doesn't has respawn data!
 		return unit->free(&md->bl,CLR_DEAD);
 
@@ -903,6 +925,7 @@ int mob_spawn (struct mob_data *md)
 	int64 tick = timer->gettick();
 	int64 c = 0;
 
+	nullpo_retr(1, md);
 	md->last_thinktime = tick;
 	if (md->bl.prev != NULL)
 		unit->remove_map(&md->bl,CLR_RESPAWN,ALC_MARK);
@@ -992,6 +1015,8 @@ int mob_spawn (struct mob_data *md)
  *------------------------------------------*/
 int mob_can_changetarget(const struct mob_data *md, const struct block_list *target, uint32 mode)
 {
+	nullpo_ret(md);
+	nullpo_ret(target);
 	// if the monster was provoked ignore the above rule [celest]
 	if(md->state.provoke_flag)
 	{
@@ -1057,6 +1082,8 @@ int mob_ai_sub_hard_activesearch(struct block_list *bl, va_list ap)
 	md=va_arg(ap,struct mob_data *);
 	target= va_arg(ap,struct block_list**);
 	mode = va_arg(ap, uint32);
+	nullpo_ret(md);
+	nullpo_ret(target);
 
 	//If can't seek yet, not an enemy, or you can't attack it, skip.
 	if (md->bl.id == bl->id || (*target) == bl || !status->check_skilluse(&md->bl, bl, 0, 0))
@@ -1111,8 +1138,10 @@ int mob_ai_sub_hard_changechase(struct block_list *bl,va_list ap) {
 	struct block_list **target;
 
 	nullpo_ret(bl);
-	md=va_arg(ap,struct mob_data *);
-	target= va_arg(ap,struct block_list**);
+	md = va_arg(ap,struct mob_data *);
+	target = va_arg(ap,struct block_list**);
+	nullpo_ret(md);
+	nullpo_ret(target);
 
 	//If can't seek yet, not an enemy, or you can't attack it, skip.
 	if( md->bl.id == bl->id || *target == bl
@@ -1139,6 +1168,8 @@ int mob_ai_sub_hard_bg_ally(struct block_list *bl,va_list ap) {
 	nullpo_ret(bl);
 	md=va_arg(ap,struct mob_data *);
 	target= va_arg(ap,struct block_list**);
+	nullpo_retr(1, md);
+	nullpo_retr(1, target);
 
 	if( status->check_skilluse(&md->bl, bl, 0, 0) && battle->check_target(&md->bl,bl,BCT_ENEMY)<=0 ) {
 		(*target) = bl;
@@ -1157,6 +1188,8 @@ int mob_ai_sub_hard_lootsearch(struct block_list *bl,va_list ap)
 
 	md=va_arg(ap,struct mob_data *);
 	target= va_arg(ap,struct block_list**);
+	nullpo_ret(md);
+	nullpo_ret(target);
 
 	dist=distance_bl(&md->bl, bl);
 	if(mob->can_reach(md,bl,dist+1, MSS_LOOT) &&
@@ -1177,6 +1210,9 @@ int mob_warpchase_sub(struct block_list *bl,va_list ap) {
 	struct npc_data *nd = NULL;
 
 	nullpo_ret(bl);
+	nullpo_ret(target);
+	nullpo_ret(target_nd);
+	nullpo_ret(min_distance);
 	Assert_ret(bl->type == BL_NPC);
 	nd = BL_UCAST(BL_NPC, bl);
 
@@ -1201,6 +1237,7 @@ int mob_warpchase_sub(struct block_list *bl,va_list ap) {
 int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick) {
 	struct block_list *bl;
 
+	nullpo_ret(md);
 	bl=map->id2bl(md->master_id);
 
 	if (!bl || status->isdead(bl)) {
@@ -1378,6 +1415,7 @@ int mob_warpchase(struct mob_data *md, struct block_list *target)
 {
 	struct npc_data *warp = NULL;
 	int distance = AREA_SIZE;
+	nullpo_ret(md);
 	if (!(target && battle_config.mob_ai&0x40 && battle_config.mob_warp&1))
 		return 0; //Can't warp chase.
 
@@ -1405,6 +1443,7 @@ bool mob_ai_sub_hard(struct mob_data *md, int64 tick) {
 	uint32 mode;
 	int view_range, can_move;
 
+	nullpo_retr(false, md);
 	if(md->bl.prev == NULL || md->status.hp <= 0)
 		return false;
 
@@ -1702,6 +1741,7 @@ int mob_ai_sub_hard_timer(struct block_list *bl, va_list ap)
  *------------------------------------------*/
 int mob_ai_sub_foreachclient(struct map_session_data *sd, va_list ap) {
 	int64 tick;
+	nullpo_ret(sd);
 	tick=va_arg(ap, int64);
 	map->foreachinrange(mob->ai_sub_hard_timer,&sd->bl, AREA_SIZE+ACTIVE_AI_RANGE, BL_MOB,tick);
 
@@ -1810,7 +1850,10 @@ struct item_drop* mob_setdropitem(int nameid, int qty, struct item_data *data) {
  *------------------------------------------*/
 struct item_drop* mob_setlootitem(struct item* item)
 {
-	struct item_drop *drop = ers_alloc(item_drop_ers, struct item_drop);
+	struct item_drop *drop ;
+
+	nullpo_retr(NULL, item);
+	drop = ers_alloc(item_drop_ers, struct item_drop);
 	memcpy(&drop->item_data, item, sizeof(struct item));
 	drop->next = NULL;
 	return drop;
@@ -1847,6 +1890,9 @@ void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, struct ite
 {
 	struct map_session_data *sd = NULL;
 
+	nullpo_retv(md);
+	nullpo_retv(dlist);
+	nullpo_retv(ditem);
 	//Logs items, dropped by mobs [Lupus]
 	logs->pick_mob(md, loot?LOG_TYPE_LOOT:LOG_TYPE_PICKDROP_MONSTER, -ditem->item_data.amount, &ditem->item_data, NULL);
 
@@ -1931,6 +1977,9 @@ int mob_respawn(int tid, int64 tick, int id, intptr_t data) {
 void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 {
 	int char_id = 0, flag = MDLF_NORMAL;
+
+	nullpo_retv(md);
+	nullpo_retv(src);
 
 	if( damage < 0 )
 		return; //Do nothing for absorbed damage.
@@ -2042,6 +2091,7 @@ void mob_log_damage(struct mob_data *md, struct block_list *src, int damage)
 }
 //Call when a mob has received damage.
 void mob_damage(struct mob_data *md, struct block_list *src, int damage) {
+	nullpo_retv(md);
 	if (damage > 0) { //Store total damage...
 		if (UINT_MAX - (unsigned int)damage > md->tdmg)
 			md->tdmg+=damage;
@@ -2105,12 +2155,14 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		int id,zeny;
 		unsigned int base_exp,job_exp;
 	} pt[DAMAGELOG_SIZE] = { { 0 } };
-	int i, temp, count, m = md->bl.m;
+	int i, temp, count, m;
 	int dmgbltypes = 0;  // bitfield of all bl types, that caused damage to the mob and are eligible for exp distribution
 	unsigned int mvp_damage;
 	int64 tick = timer->gettick();
 	bool rebirth, homkillonly;
 
+	nullpo_retr(3, md);
+	m = md->bl.m;
 	mstatus = &md->status;
 
 	if( md->guardian_data && md->guardian_data->number >= 0 && md->guardian_data->number < MAX_GUARDIANS )
@@ -2663,6 +2715,8 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 void mob_revive(struct mob_data *md, unsigned int hp)
 {
 	int64 tick = timer->gettick();
+
+	nullpo_retv(md);
 	md->state.skillstate = MSS_IDLE;
 	md->last_thinktime = tick;
 	md->next_walktime = tick+rnd()%1000+MIN_RANDOMWALKTIME;
@@ -2810,6 +2864,7 @@ int mob_class_change (struct mob_data *md, int class_) {
  *------------------------------------------*/
 void mob_heal(struct mob_data *md, unsigned int heal)
 {
+	nullpo_retv(md);
 	if (battle_config.show_mob_info&3)
 		clif->charnameack (0, &md->bl);
 #if PACKETVER >= 20131223
@@ -2844,6 +2899,7 @@ int mob_warpslave_sub(struct block_list *bl, va_list ap)
 	range = va_arg(ap, int);
 
 	nullpo_ret(bl);
+	nullpo_ret(master);
 	Assert_ret(bl->type == BL_MOB);
 	md = BL_UCAST(BL_MOB, bl);
 
@@ -2861,6 +2917,7 @@ int mob_warpslave_sub(struct block_list *bl, va_list ap)
  * appear in randomly.
  *------------------------------------------*/
 int mob_warpslave(struct block_list *bl, int range) {
+	nullpo_ret(bl);
 	if (range < 1)
 		range = 1; //Min range needed to avoid crashes and stuff. [Skotlex]
 
@@ -2888,6 +2945,7 @@ int mob_countslave_sub(struct block_list *bl, va_list ap)
  * Counts the number of slaves a mob has on the map.
  *------------------------------------------*/
 int mob_countslave(struct block_list *bl) {
+	nullpo_ret(bl);
 	return map->foreachinmap(mob->countslave_sub, bl->m, BL_MOB,bl->id);
 }
 
@@ -3016,6 +3074,8 @@ int mob_getfriendhprate_sub(struct block_list *bl,va_list ap)
 	struct mob_data *md;
 
 	md = va_arg(ap,struct mob_data *);
+	nullpo_ret(bl);
+	nullpo_ret(md);
 	min_rate=va_arg(ap,int);
 	max_rate=va_arg(ap,int);
 	fr=va_arg(ap,struct block_list **);
@@ -3326,6 +3386,8 @@ int mobskill_use(struct mob_data *md, int64 tick, int event) {
 int mobskill_event(struct mob_data *md, struct block_list *src, int64 tick, int flag) {
 	int target_id, res = 0;
 
+	nullpo_ret(md);
+	nullpo_ret(src);
 	if(md->bl.prev == NULL || md->status.hp <= 0)
 		return 0;
 
@@ -3387,7 +3449,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 		return 0;
 
 	ARR_FIND( MOB_CLONE_START, MOB_CLONE_END, class_, mob->db_data[class_] == NULL );
-	if(class_ >= MOB_CLONE_END)
+	if(class_ < 0 || class_ >= MOB_CLONE_END)
 		return 0;
 
 	db = mob->db_data[class_]=(struct mob_db*)aCalloc(1, sizeof(struct mob_db));
@@ -3577,7 +3639,10 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 
 int mob_clone_delete(struct mob_data *md)
 {
-	const int class_ = md->class_;
+	int class_;
+
+	nullpo_ret(md);
+	class_ = md->class_;
 	if (class_ >= MOB_CLONE_START && class_ < MOB_CLONE_END
 		&& mob->db_data[class_]!=NULL) {
 		mob->destroy_mob_db(class_);
@@ -3667,6 +3732,7 @@ unsigned int mob_drop_adjust(int baserate, int rate_adjust, unsigned short rate_
  */
 void item_dropratio_adjust(int nameid, int mob_id, int *rate_adjust)
 {
+	nullpo_retv(rate_adjust);
 	if( item_drop_ratio_db[nameid] ) {
 		if( item_drop_ratio_db[nameid]->mob_id[0] ) { // only for listed mobs
 			int i;
@@ -3701,6 +3767,7 @@ static inline int mob_parse_dbrow_cap_value(int class_, int min, int max, int va
 void mob_read_db_stats_sub(struct mob_db *entry, struct config_setting_t *t)
 {
 	int i32;
+	nullpo_retv(entry);
 	if (mob->lookup_const(t, "Str", &i32) && i32 >= 0) {
 		entry->status.str = mob_parse_dbrow_cap_value(entry->mob_id, UINT16_MIN, UINT16_MAX, i32);
 	}
@@ -3784,6 +3851,7 @@ void mob_read_db_mvpdrops_sub(struct mob_db *entry, struct config_setting_t *t)
 	int idx = 0;
 	int i32;
 
+	nullpo_retv(entry);
 	while (idx < MAX_MVP_DROP && (drop = libconfig->setting_get_elem(t, i))) {
 		const char *name = config_setting_name(drop);
 		int rate_adjust = battle_config.item_rate_mvp;
@@ -3841,6 +3909,7 @@ void mob_read_db_drops_sub(struct mob_db *entry, struct config_setting_t *t)
 	int i32;
 	int k;
 
+	nullpo_retv(entry);
 	while (idx < MAX_MOB_DROP && (drop = libconfig->setting_get_elem(t, i))) {
 		const char *name = config_setting_name(drop);
 		int rate_adjust, type;
@@ -3962,6 +4031,7 @@ int mob_db_validate_entry(struct mob_db *entry, int n, const char *source)
 {
 	struct mob_data data;
 
+	nullpo_ret(entry);
 	if (entry->mob_id <= 1000 || entry->mob_id > MAX_MOB_DB) {
 		ShowError("mob_db_validate_entry: Invalid monster ID %d, must be in range %d-%d.\n", entry->mob_id, 1000, MAX_MOB_DB);
 		return 0;
@@ -4395,6 +4465,8 @@ bool mob_lookup_const(const struct config_setting_t *it, const char *name, int *
 bool mob_get_const(const struct config_setting_t *it, int *value)
 {
 	const char *str = config_setting_get_string(it);
+
+	nullpo_retr(false, value);
 	if (str && *str && script->get_constant(str, value))
 		return true;
 
@@ -4491,6 +4563,7 @@ bool mob_readdb_mobavail(char* str[], int columns, int current)
 {
 	int class_, k;
 
+	nullpo_retr(false, str);
 	class_=atoi(str[0]);
 
 	if(mob->db(class_) == mob->dummy) {
@@ -4602,6 +4675,8 @@ bool mob_parse_row_chatdb(char** str, const char* source, int line, int* last_ms
 	int msg_id;
 	size_t len;
 
+	nullpo_retr(false, str);
+	nullpo_retr(false, last_msg_id);
 	msg_id = atoi(str[0]);
 
 	if (msg_id <= 0 || msg_id > MAX_MOB_CHAT)
@@ -4786,6 +4861,7 @@ bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	int i =0, j, tmp;
 	uint16 sidx = 0;
 
+	nullpo_retr(false, str);
 	mob_id = atoi(str[0]);
 
 	if (mob_id > 0 && mob->db(mob_id) == mob->dummy)
@@ -5001,6 +5077,7 @@ bool mob_readdb_race2(char* fields[], int columns, int current)
 {
 	int race, i;
 
+	nullpo_retr(false, fields);
 	race = atoi(fields[0]);
 
 	if (race < RC2_NONE || race >= RC2_MAX) {
@@ -5025,6 +5102,8 @@ bool mob_readdb_race2(char* fields[], int columns, int current)
 bool mob_readdb_itemratio(char* str[], int columns, int current)
 {
 	int nameid, ratio, i;
+
+	nullpo_retr(false, str);
 	nameid = atoi(str[0]);
 
 	if( itemdb->exists(nameid) == NULL )
@@ -5126,7 +5205,9 @@ int do_init_mob(bool minimal) {
 
 void mob_destroy_mob_db(int index)
 {
-	struct mob_db *data = mob->db_data[index];
+	struct mob_db *data;
+	Assert_retv(index >= 0 && index <= MAX_MOB_DB);
+	data = mob->db_data[index];
 	HPM->data_store_destroy(&data->hdata);
 	aFree(data);
 	mob->db_data[index] = NULL;
