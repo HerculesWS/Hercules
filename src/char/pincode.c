@@ -377,7 +377,6 @@ bool pincode_config_read(const char *filename, const struct config_t *config, bo
 					continue;
 				}
 
-				VECTOR_ENSURE(pincode->blacklist, 1);
 				VECTOR_PUSH(pincode->blacklist, aStrdup(pin));
 				VECTOR_PUSH(duplicate, aStrdup(pin));
 			}

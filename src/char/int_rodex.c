@@ -222,7 +222,6 @@ static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64
 #endif
 
 			++count;
-			VECTOR_ENSURE(*mails, 1);
 			VECTOR_PUSH(*mails, msg);
 			memset(&msg, 0, sizeof(struct rodex_message));
 

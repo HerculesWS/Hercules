@@ -280,7 +280,6 @@ void console_load_defaults(void)
 		VECTOR_PUSH(console->input->commands, cmd);
 		default_list[i].self = cmd;
 		if (!default_list[i].connect) {
-			VECTOR_ENSURE(console->input->command_list, 1);
 			VECTOR_PUSH(console->input->command_list, cmd);
 		}
 	}
@@ -294,7 +293,6 @@ void console_load_defaults(void)
 			struct CParseEntry *parent = VECTOR_INDEX(console->input->commands, k);
 			Assert_retb(parent->type == CPET_CATEGORY);
 			cmd = default_list[i].self;
-			VECTOR_ENSURE(parent->u.children, 1);
 			VECTOR_PUSH(parent->u.children, cmd);
 		}
 	}
@@ -327,9 +325,7 @@ void console_parse_create(char *name, CParseFunc func)
 		CREATE(cmd, struct CParseEntry, 1);
 		safestrncpy(cmd->cmd, tok, CP_CMD_LENGTH);
 		cmd->type = CPET_UNKNOWN;
-		VECTOR_ENSURE(console->input->commands, 1);
 		VECTOR_PUSH(console->input->commands, cmd);
-		VECTOR_ENSURE(console->input->command_list, 1);
 		VECTOR_PUSH(console->input->command_list, cmd);
 	}
 
@@ -347,9 +343,7 @@ void console_parse_create(char *name, CParseFunc func)
 			CREATE(entry, struct CParseEntry, 1);
 			safestrncpy(entry->cmd, tok, CP_CMD_LENGTH);
 			entry->type = CPET_UNKNOWN;
-			VECTOR_ENSURE(console->input->commands, 1);
 			VECTOR_PUSH(console->input->commands, entry);
-			VECTOR_ENSURE(cmd->u.children, 1);
 			VECTOR_PUSH(cmd->u.children, entry);
 			cmd = entry;
 			continue;

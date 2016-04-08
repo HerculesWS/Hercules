@@ -2725,7 +2725,6 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 
 	CREATE(code,struct script_code,1);
 	VECTOR_INIT(code->script_buf);
-	VECTOR_ENSURE(code->script_buf, VECTOR_LENGTH(script->buf));
 	VECTOR_PUSHARRAY(code->script_buf, VECTOR_DATA(script->buf), VECTOR_LENGTH(script->buf));
 	code->local.vars = NULL;
 	code->local.arrays = NULL;
@@ -5324,8 +5323,7 @@ int script_load_translation(const char *file, uint8 lang_id)
 
 	script->add_language(script->get_translation_file_name(file));
 	if (lang_id >= VECTOR_LENGTH(atcommand->languages)) {
-		VECTOR_ENSURE(atcommand->languages, 1); // FIXME: We're not really ensuring it fits. Added a temp sanity check few lines above.
-		VECTOR_PUSHZEROED(atcommand->languages);
+		VECTOR_PUSHZEROED(atcommand->languages); // FIXME: We're not really ensuring it fits (and assigns the right index). Added a temp sanity check few lines above.
 	}
 
 	while (fgets(line, sizeof(line), fp) != NULL) {
@@ -22009,7 +22007,6 @@ BUILDIN(bindatcmd)
 
 	ARR_FIND(0, VECTOR_LENGTH(atcommand->bindings), i, strcmp(VECTOR_INDEX(atcommand->bindings, i)->command, atcmd) == 0);
 	if (i == VECTOR_LENGTH(atcommand->bindings)) {
-		VECTOR_ENSURE(atcommand->bindings, 1);
 		CREATE(entry, struct atcmd_binding_data, 1);
 		safestrncpy(entry->command, atcmd, sizeof entry->command);
 		VECTOR_PUSH(atcommand->bindings, entry);
@@ -22393,7 +22390,6 @@ int script_hqueue_create(void)
 	ARR_FIND(0, VECTOR_LENGTH(script->hq), i, !VECTOR_INDEX(script->hq, i).valid);
 
 	if (i == VECTOR_LENGTH(script->hq)) {
-		VECTOR_ENSURE(script->hq, 1);
 		VECTOR_PUSHZEROED(script->hq);
 	}
 	queue = &VECTOR_INDEX(script->hq, i);
@@ -22467,11 +22463,9 @@ bool script_hqueue_add(int idx, int var)
 		return false; // Entry already exists
 	}
 
-	VECTOR_ENSURE(queue->entries, 1);
 	VECTOR_PUSH(queue->entries, var);
 
 	if (var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) != NULL) {
-		VECTOR_ENSURE(sd->script_queues, 1);
 		VECTOR_PUSH(sd->script_queues, idx);
 	}
 	return true;
@@ -22719,13 +22713,11 @@ BUILDIN(queueiterator)
 	ARR_FIND(0, VECTOR_LENGTH(script->hqi), i, !VECTOR_INDEX(script->hqi, i).valid);
 
 	if (i == VECTOR_LENGTH(script->hqi)) {
-		VECTOR_ENSURE(script->hqi, 1);
 		VECTOR_PUSHZEROED(script->hqi);
 	}
 
 	iter = &VECTOR_INDEX(script->hqi, i);
 
-	VECTOR_ENSURE(iter->entries, VECTOR_LENGTH(queue->entries));
 	VECTOR_PUSHARRAY(iter->entries, VECTOR_DATA(queue->entries), VECTOR_LENGTH(queue->entries));
 
 	iter->pos = 0;
@@ -23968,7 +23960,6 @@ BUILDIN(hateffect)
 		}
 	}
 
-	VECTOR_ENSURE(sd->hatEffectId, 1);
 	VECTOR_PUSH(sd->hatEffectId, effectId);
 
 	clif->hat_effect_single(&sd->bl, effectId, enabled);

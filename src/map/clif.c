@@ -20468,7 +20468,6 @@ bool clif_attendancedb_libconfig_sub(struct config_setting_t *it, int n, const c
 	}
 	entry.qty = i32;
 
-	VECTOR_ENSURE(clif->attendance_data, 1);
 	VECTOR_PUSH(clif->attendance_data, entry);
 	return true;
 }

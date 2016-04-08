@@ -246,7 +246,6 @@ bool mapcache_read_maplist(const char *filepath)
 			continue;
 
 		if (sscanf(line, "%11s", map_name) == 1) {
-			VECTOR_ENSURE(maplist, 1);
 			VECTOR_PUSH(maplist, aStrdup(map_name));
 		}
 	}
