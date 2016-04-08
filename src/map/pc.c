@@ -9789,7 +9789,7 @@ int pc_checkcombo(struct map_session_data *sd, struct item_data *data ) {
 
 		/* we got here, means all items in the combo are matching */
 
-		VECTOR_ENSURE(sd->combos, 1, 1);
+		VECTOR_ENSURE(sd->combos, 1);
 		VECTOR_PUSHZEROED(sd->combos);
 		combo = &VECTOR_LAST(sd->combos);
 		combo->bonus = data->combos[i]->script;
@@ -11215,7 +11215,7 @@ void pc_read_skill_tree(void)
 						dst->joblv = src->joblv;
 						VECTOR_INIT(dst->need);
 						if (VECTOR_LENGTH(src->need) > 0) {
-							VECTOR_ENSURE(dst->need, VECTOR_LENGTH(src->need), 1);
+							VECTOR_ENSURE(dst->need, VECTOR_LENGTH(src->need));
 							VECTOR_PUSHARRAY(dst->need, VECTOR_DATA(src->need), VECTOR_LENGTH(src->need));
 						}
 					} else {
@@ -11229,7 +11229,7 @@ void pc_read_skill_tree(void)
 							struct skill_tree_requirement *sreq = &VECTOR_INDEX(src->need, l);
 							ARR_FIND(0, VECTOR_LENGTH(dst->need), m, VECTOR_INDEX(dst->need, m).id == sreq->id);
 							if (m == VECTOR_LENGTH(dst->need)) {
-								VECTOR_ENSURE(dst->need, 1, 1);
+								VECTOR_ENSURE(dst->need, 1);
 								VECTOR_PUSHCOPY(dst->need, sreq);
 							} else {
 								struct skill_tree_requirement *dreq = &VECTOR_INDEX(dst->need, m);
@@ -11306,7 +11306,7 @@ void pc_read_skill_tree(void)
 						}
 						ARR_FIND(0, VECTOR_LENGTH(tree_entry->need), l, VECTOR_INDEX(tree_entry->need, l).id == rsk_id);
 						if (l == VECTOR_LENGTH(tree_entry->need)) {
-							VECTOR_ENSURE(tree_entry->need, 1, 1);
+							VECTOR_ENSURE(tree_entry->need, 1);
 							VECTOR_PUSHZEROED(tree_entry->need);
 							req = &VECTOR_LAST(tree_entry->need);
 							req->id  = rsk_id;

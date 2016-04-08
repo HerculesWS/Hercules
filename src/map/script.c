@@ -608,7 +608,7 @@ int script_add_str(const char* p)
  */
 void add_scriptb(int a)
 {
-	VECTOR_ENSURE(script->buf, 1, SCRIPT_BLOCK_SIZE);
+	VECTOR_ENSURE_STEP(script->buf, 1, SCRIPT_BLOCK_SIZE);
 	VECTOR_PUSH(script->buf, (uint8)a);
 }
 
@@ -1284,14 +1284,14 @@ const char *parse_simpleexpr_string(const char *p)
 				if (n != 1)
 					ShowDebug("parse_simpleexpr: unexpected length %d after unescape (\"%.*s\" -> %.*s)\n", (int)n, (int)len, p, (int)n, buf);
 				p += len;
-				VECTOR_ENSURE(script->parse_simpleexpr_strbuf, 1, 512);
+				VECTOR_ENSURE_STEP(script->parse_simpleexpr_strbuf, 1, 512);
 				VECTOR_PUSH(script->parse_simpleexpr_strbuf, buf[0]);
 				continue;
 			}
 			if (*p == '\n') {
 				disp_error_message("parse_simpleexpr: unexpected newline @ string", p);
 			}
-			VECTOR_ENSURE(script->parse_simpleexpr_strbuf, 1, 512);
+			VECTOR_ENSURE_STEP(script->parse_simpleexpr_strbuf, 1, 512);
 			VECTOR_PUSH(script->parse_simpleexpr_strbuf, *p++);
 		}
 		if (*p == '\0')
@@ -1300,7 +1300,7 @@ const char *parse_simpleexpr_string(const char *p)
 		p = script->skip_space(p);
 	} while (*p != '\0' && *p == '"');
 
-	VECTOR_ENSURE(script->parse_simpleexpr_strbuf, 1, 512);
+	VECTOR_ENSURE_STEP(script->parse_simpleexpr_strbuf, 1, 512);
 	VECTOR_PUSH(script->parse_simpleexpr_strbuf, '\0');
 
 	script->add_translatable_string(&script->parse_simpleexpr_strbuf, start_point);
@@ -1369,7 +1369,7 @@ void script_add_translatable_string(const struct script_string_buf *string, cons
 	 || (st = strdb_get(script->syntax.translation_db, VECTOR_DATA(*string))) == NULL) {
 		script->addc(C_STR);
 
-		VECTOR_ENSURE(script->buf, VECTOR_LENGTH(*string), SCRIPT_BLOCK_SIZE);
+		VECTOR_ENSURE_STEP(script->buf, VECTOR_LENGTH(*string), SCRIPT_BLOCK_SIZE);
 
 		VECTOR_PUSHARRAY(script->buf, VECTOR_DATA(*string), VECTOR_LENGTH(*string));
 	} else {
@@ -1378,7 +1378,7 @@ void script_add_translatable_string(const struct script_string_buf *string, cons
 
 		script->addc(C_LSTR);
 
-		VECTOR_ENSURE(script->buf, (int)(sizeof(st->string_id) + sizeof(st->translations)), SCRIPT_BLOCK_SIZE);
+		VECTOR_ENSURE_STEP(script->buf, (int)(sizeof(st->string_id) + sizeof(st->translations)), SCRIPT_BLOCK_SIZE);
 		VECTOR_PUSHARRAY(script->buf, (void *)&st->string_id, sizeof(st->string_id));
 		VECTOR_PUSHARRAY(script->buf, (void *)&st->translations, sizeof(st->translations));
 
@@ -1386,7 +1386,7 @@ void script_add_translatable_string(const struct script_string_buf *string, cons
 			struct string_translation_entry *entry = (void *)(st->buf+st_cursor);
 			char *stringptr = &entry->string[0];
 			st_cursor += sizeof(*entry);
-			VECTOR_ENSURE(script->buf, (int)(sizeof(entry->lang_id) + sizeof(char *)), SCRIPT_BLOCK_SIZE);
+			VECTOR_ENSURE_STEP(script->buf, (int)(sizeof(entry->lang_id) + sizeof(char *)), SCRIPT_BLOCK_SIZE);
 			VECTOR_PUSHARRAY(script->buf, (void *)&entry->lang_id, sizeof(entry->lang_id));
 			VECTOR_PUSHARRAY(script->buf, (void *)&stringptr, sizeof(stringptr));
 			st_cursor += sizeof(uint8); // FIXME: What are we skipping here?
@@ -2725,7 +2725,7 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 
 	CREATE(code,struct script_code,1);
 	VECTOR_INIT(code->script_buf);
-	VECTOR_ENSURE(code->script_buf, VECTOR_LENGTH(script->buf), 1);
+	VECTOR_ENSURE(code->script_buf, VECTOR_LENGTH(script->buf));
 	VECTOR_PUSHARRAY(code->script_buf, VECTOR_DATA(script->buf), VECTOR_LENGTH(script->buf));
 	code->local.vars = NULL;
 	code->local.arrays = NULL;
@@ -5152,7 +5152,7 @@ void script_load_translations(void) {
 		struct DBMap *string_db;
 		struct string_translation *st = NULL;
 
-		VECTOR_ENSURE(script->translation_buf, total, 1);
+		VECTOR_ENSURE(script->translation_buf, total);
 
 		main_iter = db_iterator(script->translation_db);
 		for (string_db = dbi_first(main_iter); dbi_exists(main_iter); string_db = dbi_next(main_iter)) {
@@ -5324,7 +5324,7 @@ int script_load_translation(const char *file, uint8 lang_id)
 
 	script->add_language(script->get_translation_file_name(file));
 	if (lang_id >= VECTOR_LENGTH(atcommand->languages)) {
-		VECTOR_ENSURE(atcommand->languages, 1, 1); // FIXME: We're not really ensuring it fits. Added a temp sanity check few lines above.
+		VECTOR_ENSURE(atcommand->languages, 1); // FIXME: We're not really ensuring it fits. Added a temp sanity check few lines above.
 		VECTOR_PUSHZEROED(atcommand->languages);
 	}
 
@@ -5344,7 +5344,7 @@ int script_load_translation(const char *file, uint8 lang_id)
 				// Continuation line
 				(void)VECTOR_POP(msgstr); // Pop final '\0'
 				for (i = 8; i < len - 2; i++) {
-					VECTOR_ENSURE(msgstr, 1, 512);
+					VECTOR_ENSURE_STEP(msgstr, 1, 512);
 					if (line[i] == '\\' && line[i+1] == '"') {
 						VECTOR_PUSH(msgstr, '"');
 						i++;
@@ -5352,7 +5352,7 @@ int script_load_translation(const char *file, uint8 lang_id)
 						VECTOR_PUSH(msgstr, line[i]);
 					}
 				}
-				VECTOR_ENSURE(msgstr, 1, 512);
+				VECTOR_ENSURE_STEP(msgstr, 1, 512);
 				VECTOR_PUSH(msgstr, '\0');
 				continue;
 			}
@@ -5390,7 +5390,7 @@ int script_load_translation(const char *file, uint8 lang_id)
 		if (strncasecmp(line, "msgid \"", 7) == 0) {
 			VECTOR_TRUNCATE(msgid);
 			for (i = 7; i < len - 2; i++) {
-				VECTOR_ENSURE(msgid, 1, 512);
+				VECTOR_ENSURE_STEP(msgid, 1, 512);
 				if (line[i] == '\\' && line[i+1] == '"') {
 					VECTOR_PUSH(msgid, '"');
 					i++;
@@ -5398,7 +5398,7 @@ int script_load_translation(const char *file, uint8 lang_id)
 					VECTOR_PUSH(msgid, line[i]);
 				}
 			}
-			VECTOR_ENSURE(msgid, 1, 512);
+			VECTOR_ENSURE_STEP(msgid, 1, 512);
 			VECTOR_PUSH(msgid, '\0');
 
 			// New id, reset string if any
@@ -5409,7 +5409,7 @@ int script_load_translation(const char *file, uint8 lang_id)
 		if (VECTOR_LENGTH(msgid) > 0 && strncasecmp(line, "msgstr \"", 8) == 0) {
 			VECTOR_TRUNCATE(msgstr);
 			for (i = 8; i < len - 2; i++) {
-				VECTOR_ENSURE(msgstr, 1, 512);
+				VECTOR_ENSURE_STEP(msgstr, 1, 512);
 				if (line[i] == '\\' && line[i+1] == '"') {
 					VECTOR_PUSH(msgstr, '"');
 					i++;
@@ -5417,7 +5417,7 @@ int script_load_translation(const char *file, uint8 lang_id)
 					VECTOR_PUSH(msgstr, line[i]);
 				}
 			}
-			VECTOR_ENSURE(msgstr, 1, 512);
+			VECTOR_ENSURE_STEP(msgstr, 1, 512);
 			VECTOR_PUSH(msgstr, '\0');
 
 			continue;
@@ -22009,7 +22009,7 @@ BUILDIN(bindatcmd)
 
 	ARR_FIND(0, VECTOR_LENGTH(atcommand->bindings), i, strcmp(VECTOR_INDEX(atcommand->bindings, i)->command, atcmd) == 0);
 	if (i == VECTOR_LENGTH(atcommand->bindings)) {
-		VECTOR_ENSURE(atcommand->bindings, 1, 1);
+		VECTOR_ENSURE(atcommand->bindings, 1);
 		CREATE(entry, struct atcmd_binding_data, 1);
 		safestrncpy(entry->command, atcmd, sizeof entry->command);
 		VECTOR_PUSH(atcommand->bindings, entry);
@@ -22393,7 +22393,7 @@ int script_hqueue_create(void)
 	ARR_FIND(0, VECTOR_LENGTH(script->hq), i, !VECTOR_INDEX(script->hq, i).valid);
 
 	if (i == VECTOR_LENGTH(script->hq)) {
-		VECTOR_ENSURE(script->hq, 1, 1);
+		VECTOR_ENSURE(script->hq, 1);
 		VECTOR_PUSHZEROED(script->hq);
 	}
 	queue = &VECTOR_INDEX(script->hq, i);
@@ -22467,11 +22467,11 @@ bool script_hqueue_add(int idx, int var)
 		return false; // Entry already exists
 	}
 
-	VECTOR_ENSURE(queue->entries, 1, 1);
+	VECTOR_ENSURE(queue->entries, 1);
 	VECTOR_PUSH(queue->entries, var);
 
 	if (var >= START_ACCOUNT_NUM && (sd = map->id2sd(var)) != NULL) {
-		VECTOR_ENSURE(sd->script_queues, 1, 1);
+		VECTOR_ENSURE(sd->script_queues, 1);
 		VECTOR_PUSH(sd->script_queues, idx);
 	}
 	return true;
@@ -22719,13 +22719,13 @@ BUILDIN(queueiterator)
 	ARR_FIND(0, VECTOR_LENGTH(script->hqi), i, !VECTOR_INDEX(script->hqi, i).valid);
 
 	if (i == VECTOR_LENGTH(script->hqi)) {
-		VECTOR_ENSURE(script->hqi, 1, 1);
+		VECTOR_ENSURE(script->hqi, 1);
 		VECTOR_PUSHZEROED(script->hqi);
 	}
 
 	iter = &VECTOR_INDEX(script->hqi, i);
 
-	VECTOR_ENSURE(iter->entries, VECTOR_LENGTH(queue->entries), 1);
+	VECTOR_ENSURE(iter->entries, VECTOR_LENGTH(queue->entries));
 	VECTOR_PUSHARRAY(iter->entries, VECTOR_DATA(queue->entries), VECTOR_LENGTH(queue->entries));
 
 	iter->pos = 0;
@@ -23968,7 +23968,7 @@ BUILDIN(hateffect)
 		}
 	}
 
-	VECTOR_ENSURE(sd->hatEffectId, 1, 1);
+	VECTOR_ENSURE(sd->hatEffectId, 1);
 	VECTOR_PUSH(sd->hatEffectId, effectId);
 
 	clif->hat_effect_single(&sd->bl, effectId, enabled);

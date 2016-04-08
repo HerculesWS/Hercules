@@ -158,7 +158,7 @@ bool HPM_map_add_atcommand(char *name, AtCommandFunc func)
 		}
 	}
 
-	VECTOR_ENSURE(atcommand_list, 1, 1);
+	VECTOR_ENSURE(atcommand_list, 1);
 	VECTOR_PUSHZEROED(atcommand_list);
 	entry = &VECTOR_LAST(atcommand_list);
 

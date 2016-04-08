@@ -162,14 +162,14 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 
 		line_length = (int)(line_end - line_start);
 		if (line_length > 0) {
-			VECTOR_ENSURE(lang_export_line_buf, line_length + 1, 512);
+			VECTOR_ENSURE_STEP(lang_export_line_buf, line_length + 1, 512);
 			VECTOR_PUSHARRAY(lang_export_line_buf, line_start, line_length);
 			VECTOR_PUSH(lang_export_line_buf, '\0');
 
 			normalize_name(VECTOR_DATA(lang_export_line_buf), "\r\n\t "); // [!] Note: VECTOR_LENGTH() will lie.
 		}
 
-		VECTOR_ENSURE(lang_export_escaped_buf, 4*VECTOR_LENGTH(*string)+1, 1);
+		VECTOR_ENSURE(lang_export_escaped_buf, 4*VECTOR_LENGTH(*string)+1);
 		VECTOR_LENGTH(lang_export_escaped_buf) = (int)sv->escape_c(VECTOR_DATA(lang_export_escaped_buf),
 				VECTOR_DATA(*string),
 				VECTOR_LENGTH(*string)-1, /* exclude null terminator */

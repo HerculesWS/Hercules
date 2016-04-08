@@ -181,7 +181,7 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 	}
 
 	if (VECTOR_LENGTH(atcommand->languages) == 0) {
-		VECTOR_ENSURE(atcommand->languages, 1, 1);
+		VECTOR_ENSURE(atcommand->languages, 1);
 		VECTOR_PUSHZEROED(atcommand->languages);
 	}
 	lang = &VECTOR_FIRST(atcommand->languages);

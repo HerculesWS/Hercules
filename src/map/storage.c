@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -214,7 +214,7 @@ int storage_additem(struct map_session_data* sd, struct item* item_data, int amo
 	ARR_FIND(0, VECTOR_LENGTH(sd->storage.item), i, VECTOR_INDEX(sd->storage.item, i).nameid == 0);
 
 	if (i == VECTOR_LENGTH(sd->storage.item)) {
-		VECTOR_ENSURE(sd->storage.item, 1, 1);
+		VECTOR_ENSURE(sd->storage.item, 1);
 		VECTOR_PUSH(sd->storage.item, *item_data);
 		it = &VECTOR_LAST(sd->storage.item);
 	} else {

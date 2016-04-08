@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -307,7 +307,7 @@ bool cmdline_arg_add(unsigned int pluginID, const char *name, char shortname, Cm
 	struct CmdlineArgData *data = NULL;
 
 	nullpo_retr(false, name);
-	VECTOR_ENSURE(cmdline->args_data, 1, 1);
+	VECTOR_ENSURE(cmdline->args_data, 1);
 	VECTOR_PUSHZEROED(cmdline->args_data);
 	data = &VECTOR_LAST(cmdline->args_data);
 	data->pluginID = pluginID;

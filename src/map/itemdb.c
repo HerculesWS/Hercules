@@ -1350,7 +1350,7 @@ void itemdb_read_options(void)
 
 	VECTOR_INIT(duplicate_id);
 
-	VECTOR_ENSURE(duplicate_id, libconfig->setting_length(ito), 1);
+	VECTOR_ENSURE(duplicate_id, libconfig->setting_length(ito));
 
 	while ((conf = libconfig->setting_get_elem(ito, index++))) {
 		struct item_option t_opt = { 0 }, *s_opt = NULL;

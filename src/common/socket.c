@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -1300,7 +1300,7 @@ bool access_list_add(struct config_setting_t *setting, const char *list_name, st
 	if ((setting_length = libconfig->setting_length(setting)) <= 0)
 		return false;
 
-	VECTOR_ENSURE(*access_list, setting_length, 1);
+	VECTOR_ENSURE(*access_list, setting_length);
 	for (i = 0; i < setting_length; i++) {
 		struct access_control acc;
 		if ((temp = libconfig->setting_get_string_elem(setting, i)) == NULL) {
@@ -2000,7 +2000,7 @@ int socket_net_config_read_sub(struct config_setting_t *t, struct s_subnet_vecto
 
 	len = libconfig->setting_length(t);
 
-	VECTOR_ENSURE(*list, len, 1);
+	VECTOR_ENSURE(*list, len);
 	for (i = 0; i < len; ++i) {
 		const char *subnet = libconfig->setting_get_string_elem(t, i);
 		struct s_subnet *entry = NULL;

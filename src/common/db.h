@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -1216,13 +1216,24 @@ HPShared struct db_interface *DB;
 /**
  * Ensures that the array has the target number of empty positions.
  *
+ * Increases the capacity.
+ *
+ * @param _vec  Vector.
+ * @param _n    Desired empty positions.
+ */
+#define VECTOR_ENSURE(_vec, _n) \
+	VECTOR_ENSURE_STEP(_vec, _n, 1)
+
+/**
+ * Ensures that the array has the target number of empty positions.
+ *
  * Increases the capacity in multiples of _step.
  *
  * @param _vec  Vector.
  * @param _n    Desired empty positions.
  * @param _step Increase.
  */
-#define VECTOR_ENSURE(_vec, _n, _step) \
+#define VECTOR_ENSURE_STEP(_vec, _n, _step) \
 	do { \
 		int _newcapacity_ = VECTOR_CAPACITY(_vec); \
 		while ((_n) + VECTOR_LENGTH(_vec) > _newcapacity_) \
@@ -1511,7 +1522,7 @@ HPShared struct db_interface *DB;
  * @param _step Increase.
  */
 #define BHEAP_ENSURE(_heap, _n, _step) \
-	VECTOR_ENSURE(_heap, _n, _step)
+	VECTOR_ENSURE_STEP(_heap, _n, _step)
 
 /**
  * Returns the top value of the heap.

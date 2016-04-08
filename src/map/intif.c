@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2016  Hercules Dev Team
+ * Copyright (C) 2012-2018  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -491,7 +491,7 @@ void intif_parse_account_storage(int fd)
 
 	storage_count = (payload_size/sizeof(struct item));
 
-	VECTOR_ENSURE(sd->storage.item, storage_count, 1);
+	VECTOR_ENSURE(sd->storage.item, storage_count);
 
 	sd->storage.aggregate = storage_count; // Total items in storage.
 
@@ -2546,7 +2546,7 @@ void intif_parse_RequestRodexOpenInbox(int fd)
 
 	for (i = 0, j = 24; i < count; ++i, j += sizeof(struct rodex_message)) {
 		struct rodex_message msg = { 0 };
-		VECTOR_ENSURE(sd->rodex.messages, 1, 1);
+		VECTOR_ENSURE(sd->rodex.messages, 1);
 		memcpy(&msg, RFIFOP(fd, j), sizeof(struct rodex_message));
 		VECTOR_PUSH(sd->rodex.messages, msg);
 	}

@@ -734,7 +734,7 @@ void read_channels_config(void)
 		if( (colors = libconfig->setting_get_member(settings, "colors")) != NULL ) {
 			int color_count = libconfig->setting_length(colors);
 			VECTOR_CLEAR(channel->config->colors);
-			VECTOR_ENSURE(channel->config->colors, color_count, 1);
+			VECTOR_ENSURE(channel->config->colors, color_count);
 			for (i = 0; i < color_count; i++) {
 				struct config_setting_t *color = libconfig->setting_get_elem(colors, i);
 				struct channel_color *entry = NULL;

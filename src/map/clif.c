@@ -10995,7 +10995,7 @@ void clif_parse_NpcBuyListSend(int fd, struct map_session_data* sd)
 		int i;
 
 		VECTOR_INIT(item_list);
-		VECTOR_ENSURE(item_list, n, 1);
+		VECTOR_ENSURE(item_list, n);
 		for (i = 0; i < n; i++) {
 			struct itemlist_entry entry = { 0 };
 
@@ -11047,7 +11047,7 @@ void clif_parse_NpcSellListSend(int fd,struct map_session_data *sd)
 		int i;
 
 		VECTOR_INIT(item_list);
-		VECTOR_ENSURE(item_list, n, 1);
+		VECTOR_ENSURE(item_list, n);
 
 		for (i = 0; i < n; i++) {
 			struct itemlist_entry entry = { 0 };
@@ -15989,7 +15989,7 @@ void clif_parse_cashshop_buy(int fd, struct map_session_data *sd)
 		}
 
 		VECTOR_INIT(item_list);
-		VECTOR_ENSURE(item_list, count, 1);
+		VECTOR_ENSURE(item_list, count);
 		for (i = 0; i < count; i++) {
 			struct itemlist_entry entry = { 0 };
 
@@ -17129,7 +17129,7 @@ void clif_parse_ItemListWindowSelected(int fd, struct map_session_data *sd)
 	}
 
 	VECTOR_INIT(item_list);
-	VECTOR_ENSURE(item_list, n, 1);
+	VECTOR_ENSURE(item_list, n);
 	for (i = 0; i < n; i++) {
 		struct itemlist_entry entry = { 0 };
 		entry.id = (int)RFIFOW(fd, 12 + 4 * i) - 2; // Inventory index
@@ -19013,7 +19013,7 @@ void clif_parse_NPCMarketPurchase(int fd, struct map_session_data *sd)
 	Assert_retv(count >= 0 && count <= MAX_INVENTORY);
 
 	VECTOR_INIT(item_list);
-	VECTOR_ENSURE(item_list, count, 1);
+	VECTOR_ENSURE(item_list, count);
 
 	for (i = 0; i < count; i++) {
 		struct itemlist_entry entry = { 0 };
@@ -20468,7 +20468,7 @@ bool clif_attendancedb_libconfig_sub(struct config_setting_t *it, int n, const c
 	}
 	entry.qty = i32;
 
-	VECTOR_ENSURE(clif->attendance_data, 1, 1);
+	VECTOR_ENSURE(clif->attendance_data, 1);
 	VECTOR_PUSH(clif->attendance_data, entry);
 	return true;
 }

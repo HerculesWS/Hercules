@@ -362,7 +362,7 @@ void bg_config_read(void) {
 		if ((arenas = libconfig->setting_get_member(settings, "arenas")) != NULL) {
 			int i;
 			int arena_count = libconfig->setting_length(arenas);
-			VECTOR_ENSURE(bg->arenas, arena_count, 1);
+			VECTOR_ENSURE(bg->arenas, arena_count);
 			for (i = 0; i < arena_count; i++) {
 				struct config_setting_t *arena = libconfig->setting_get_elem(arenas, i);
 				struct config_setting_t *reward;
