@@ -1419,7 +1419,7 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	return -1; // account OK
 }
 
-void login_connection_problem(int fd, uint8 error)
+void login_connection_error(int fd, uint8 error)
 {
 	struct packet_SC_NOTIFY_BAN *packet = NULL;
 	WFIFOHEAD(fd, sizeof(*packet));
@@ -1503,17 +1503,17 @@ void login_auth_ok(struct login_session_data* sd)
 	if( core->runflag != LOGINSERVER_ST_RUNNING )
 	{
 		// players can only login while running
-		login->connection_problem(fd, 1); // 01 = server closed
+		login->connection_error(fd, 1); // 01 = server closed
 		return;
 	}
 
 	if (login->config->group_id_to_connect >= 0 && sd->group_id != login->config->group_id_to_connect) {
 		ShowStatus("Connection refused: the required group id for connection is %d (account: %s, group: %d).\n", login->config->group_id_to_connect, sd->userid, sd->group_id);
-		login->connection_problem(fd, 1); // 01 = server closed
+		login->connection_error(fd, 1); // 01 = server closed
 		return;
 	} else if (login->config->min_group_id_to_connect >= 0 && login->config->group_id_to_connect == -1 && sd->group_id < login->config->min_group_id_to_connect) {
 		ShowStatus("Connection refused: the minimum group id required for connection is %d (account: %s, group: %d).\n", login->config->min_group_id_to_connect, sd->userid, sd->group_id);
-		login->connection_problem(fd, 1); // 01 = server closed
+		login->connection_error(fd, 1); // 01 = server closed
 		return;
 	}
 
@@ -1528,7 +1528,7 @@ void login_auth_ok(struct login_session_data* sd)
 				if( data->waiting_disconnect == INVALID_TIMER )
 					data->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, login->waiting_disconnect_timer, sd->account_id, 0);
 
-				login->connection_problem(fd, 8); // 08 = Server still recognizes your last login
+				login->connection_error(fd, 8); // 08 = Server still recognizes your last login
 				return;
 			}
 			else
@@ -1545,7 +1545,7 @@ void login_auth_ok(struct login_session_data* sd)
 	if (!login_send_server_list(sd)) {
 		// if no char-server, don't send void list of servers, just disconnect the player with proper message
 		ShowStatus("Connection refused: there is no char-server online (account: %s).\n", sd->userid);
-		login->connection_problem(fd, 1); // 01 = server closed
+		login->connection_error(fd, 1); // 01 = server closed
 		return;
 	}
 
@@ -1576,10 +1576,11 @@ void login_auth_ok(struct login_session_data* sd)
 	}
 }
 
-void login_auth_failed(struct login_session_data* sd, int result)
+void login_auth_failed(struct login_session_data *sd, int result)
 {
 	int fd;
 	uint32 ip;
+	time_t ban_time = 0;
 	nullpo_retv(sd);
 
 	fd = sd->fd;
@@ -1618,6 +1619,16 @@ void login_auth_failed(struct login_session_data* sd, int result)
 	if (result == 1 && login->config->dynamic_pass_failure_ban && !sockt->trusted_ip_check(ip))
 		ipban_log(ip); // log failed password attempt
 
+	if (result == 6) {
+		struct mmo_account acc = { 0 };
+		if (accounts->load_str(accounts, &acc, sd->userid))
+			ban_time = acc.unban_time;
+	}
+	login->send_auth_failed(fd, ban_time, result);
+}
+
+void login_send_auth_failed(int fd, time_t ban, uint32 error)
+{
 #if PACKETVER >= 20120000 /* not sure when this started */
 	struct packet_AC_REFUSE_LOGIN_R2 *packet = NULL;
 	int packet_id = PACKET_ID_AC_REFUSE_LOGIN_R2;
@@ -1628,14 +1639,11 @@ void login_auth_failed(struct login_session_data* sd, int result)
 	WFIFOHEAD(fd, sizeof(*packet));
 	packet = WP2PTR(fd);
 	packet->packet_id = packet_id;
-	packet->error_code = result;
-	if (result == 6) {
-		struct mmo_account acc;
-		time_t unban_time = ( accounts->load_str(accounts, &acc, sd->userid) ) ? acc.unban_time : 0;
-		timestamp2string(packet->block_date, sizeof(packet->block_date), unban_time, login->config->date_format);
-	} else {
+	packet->error_code = error;
+	if (error == 6)
+		timestamp2string(packet->block_date, sizeof(packet->block_date), ban, login->config->date_format);
+	else
 		memset(packet->block_date, '\0', sizeof(packet->block_date));
-	}
 	WFIFOSET(fd, sizeof(*packet));
 }
 
@@ -2518,8 +2526,9 @@ void login_defaults(void) {
 	login->parse_login = login_parse_login;
 	login->auth_ok = login_auth_ok;
 	login->auth_failed = login_auth_failed;
+	login->send_auth_failed = login_send_auth_failed;
 	login->char_server_connection_status = login_char_server_connection_status;
-	login->connection_problem = login_connection_problem;
+	login->connection_error = login_connection_error;
 	login->kick = login_kick;
 	login->login_error = login_login_error;
 	login->send_coding_key = login_send_coding_key;
