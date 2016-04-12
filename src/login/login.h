@@ -28,7 +28,6 @@
 
 struct mmo_account;
 struct AccountDB;
-struct login_packet_db;
 
 enum E_LOGINSERVER_ST
 {
@@ -42,16 +41,6 @@ enum password_enc {
 	PWENC_ENCRYPT  = 0x1, ///< passwordencrypt
 	PWENC_ENCRYPT2 = 0x2, ///< passwordencrypt2
 	PWENC_BOTH = PWENC_ENCRYPT|PWENC_ENCRYPT2, ///< both the above
-};
-
-/// Parse function return code
-enum parsefunc_rcode {
-	PACKET_VALID         =  1,
-	PACKET_INCOMPLETE    =  0,
-	PACKET_UNKNOWN       = -1,
-	PACKET_INVALIDLENGTH = -2,
-	PACKET_STOPPARSE     = -3,
-	PACKET_SKIP          = -4, //internal parser will skip this packet and go parser another, meant for plugins. [hemagx]
 };
 
 #define PASSWORDENC PWENC_BOTH
@@ -207,28 +196,16 @@ struct login_interface {
 	bool (*fromchar_parse_wrong_pincode) (int fd);
 	void (*fromchar_parse_accinfo) (int fd);
 	int (*parse_fromchar) (int fd);
-	void (*connection_error) (int fd, uint8 error);
 	void (*kick) (struct login_session_data* sd);
 	void (*auth_ok) (struct login_session_data* sd);
 	void (*auth_failed) (struct login_session_data* sd, int result);
-	void (*send_auth_failed) (int fd, time_t ban, uint32 error);
-	void (*login_error) (int fd, uint8 error);
-	void (*parse_ping) (int fd, struct login_session_data* sd);
-	void (*parse_client_md5) (int fd, struct login_session_data* sd);
 	bool (*client_login) (int fd, struct login_session_data *sd);
-	void (*send_coding_key) (int fd, struct login_session_data* sd);
-	void (*parse_request_coding_key) (int fd, struct login_session_data* sd);
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
 	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
-	int (*parse_login) (int fd);
 	void (*config_set_defaults) (void);
 	int (*config_read) (const char *cfgName);
 	char *LOGIN_CONF_NAME;
 	char *NET_CONF_NAME; ///< Network configuration filename
-
-	// lclif
-	enum parsefunc_rcode (*parse_packet)(const struct login_packet_db *lpd, int fd, struct login_session_data *sd);
-	enum parsefunc_rcode (*parse_login_sub)(int fd, struct login_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

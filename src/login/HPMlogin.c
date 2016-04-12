@@ -25,6 +25,7 @@
 #include "common/cbasetypes.h"
 
 #include "login/account.h"
+#include "login/lclif.h"
 #include "login/login.h"
 #include "common/HPMi.h"
 #include "common/conf.h"
