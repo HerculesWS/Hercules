@@ -1197,6 +1197,15 @@ void login_kick(struct login_session_data* sd)
 	charif_sendallwos(-1, buf, 6);
 }
 
+void login_event_notify(struct login_session_data* sd)
+{
+	nullpo_retv(sd);
+	WFIFOHEAD(fd, 6);
+	WFIFOW(fd, 0) = 0x23d;
+	WFIFOL(fd, 2) = 1;
+	WFIFOSET(fd, 6);
+}
+
 void login_auth_ok(struct login_session_data* sd)
 {
 	int fd = 0;
@@ -1264,7 +1273,11 @@ void login_auth_ok(struct login_session_data* sd)
 
 	login_log(ip, sd->userid, 100, "login ok");
 	ShowStatus("Connection of the account '%s' accepted.\n", sd->userid);
-
+	
+	// Event Notification
+	if (login->config->event_notify == true)
+		login->event_notify(sd);
+	
 	WFIFOHEAD(fd,47+32*server_num);
 	WFIFOW(fd,0) = 0x69;
 	WFIFOW(fd,2) = 47+32*server_num;
@@ -1726,6 +1739,8 @@ void login_config_set_defaults(void)
 
 	login->config->client_hash_check = 0;
 	login->config->client_hash_nodes = NULL;
+	
+	login->config->event_notify = false;
 }
 
 //-----------------------------------
@@ -1833,6 +1848,8 @@ int login_config_read(const char *cfgName)
 				login->config->client_hash_nodes = nnode;
 			}
 		}
+		else if(!strcmpi(w1, "event_notification"))
+			login->config->event_notify = (bool)config_switch(w2);
 		else if(!strcmpi(w1, "import"))
 			login_config_read(w2);
 		else
@@ -2125,4 +2142,5 @@ void login_defaults(void) {
 	login->config_read = login_config_read;
 	login->LOGIN_CONF_NAME = NULL;
 	login->NET_CONF_NAME = NULL;
+	login->event_notify = login_event_notify;
 }
