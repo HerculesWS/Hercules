@@ -48,6 +48,9 @@ struct login_interface *login;
 struct Login_Config login_config_;
 struct mmo_char_server server[MAX_SERVERS]; // char server data
 
+/// Maximum amount of packets processed at once from the same client
+#define MAX_PROCESSED_PACKETS (3)
+
 // Packet DB
 #define MIN_PACKET_DB 0x0064
 #define MAX_PACKET_DB 0x08ff
@@ -1821,8 +1824,8 @@ bool login_client_login(int fd, struct login_session_data *sd)
 	return false;
 }
 
-void login_send_coding_key(int fd, struct login_session_data* sd) __attribute__((nonnull (2)));
-void login_send_coding_key(int fd, struct login_session_data* sd)
+void login_send_coding_key(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+void login_send_coding_key(int fd, struct login_session_data *sd)
 {
 	struct packet_AC_ACK_HASH *packet = NULL;
 	int16 size = sizeof(*packet) + sd->md5keylen;
@@ -1951,6 +1954,7 @@ enum parsefunc_rcode login_parse_packet(const struct login_packet_db *lpd, int f
 int login_parse_login(int fd)
 {
 	struct login_session_data *sd = NULL;
+	int i;
 	char ip[16];
 	uint32 ipl = sockt->session[fd]->client_addr;
 	sockt->ip2str(ipl, ip);
@@ -1977,7 +1981,7 @@ int login_parse_login(int fd)
 		sd->fd = fd;
 	}
 
-	while (RFIFOREST(fd) >= 2) {
+	for (i = 0; i < MAX_PROCESSED_PACKETS; ++i) {
 		enum parsefunc_rcode result;
 		int16 packet_id = RFIFOW(fd, 0);
 		int packet_len = (int)RFIFOREST(fd);
