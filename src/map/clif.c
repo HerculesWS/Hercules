@@ -77,7 +77,7 @@
 struct clif_interface clif_s;
 struct clif_interface *clif;
 
-struct s_packet_db packet_db[MAX_PACKET_DB + 1];
+struct s_packet_db *packet_db;
 
 /* re-usable */
 static struct packet_itemlist_normal itemlist_normal;
@@ -19059,6 +19059,7 @@ int do_init_clif(bool minimal)
 	if (minimal)
 		return 0;
 
+	packet_db = clif->packet_db;
 	packetdb_loaddb();
 
 	sockt->set_defaultparse(clif->parse);

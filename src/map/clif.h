@@ -58,7 +58,7 @@ struct view_data;
 /**
  * Defines
  **/
-#define packet_len(cmd) packet_db[cmd].len
+#define packet_len(cmd) clif->packet_db[cmd].len
 #define clif_menuskill_clear(sd) ((sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0)
 #define clif_disp_onlyself(sd,mes,len) clif->disp_message( &(sd)->bl, (mes), (len), SELF )
 #define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
@@ -596,6 +596,7 @@ struct clif_interface {
 	bool ally_only;
 	/* */
 	struct eri *delayed_damage_ers;
+	struct s_packet_db packet_db[MAX_PACKET_DB + 1];
 	/* core */
 	int (*init) (bool minimal);
 	void (*final) (void);
