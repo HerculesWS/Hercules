@@ -361,9 +361,14 @@ foreach my $file (@files) { # Loop through the xml files
 					$astart <=> $bstart
 				} @$memberdef) { # Loop through the members
 			my $t = $f->{argsstring}->[0];
+			my $def = $f->{definition}->[0];
+			if ($f->{type}->[0] =~ /^\s*LoginParseFunc\s*\*\s*$/) {
+				$t = ')(int fd, struct login_session_data *sd)'; # typedef LoginParseFunc
+				$def =~ s/^LoginParseFunc\s*\*\s*(.*)$/enum parsefunc_rcode(* $1) (int fd, struct login_session_data *sd)/;
+			}
 			next unless ref $t ne 'HASH' and $t =~ /^[^\[]/; # If it's not a string, or if it starts with an array subscript, we can skip it
 
-			my $if = parse($t, $f->{definition}->[0]);
+			my $if = parse($t, $def);
 			next unless scalar keys %$if; # If it returns an empty hash reference, an error must've occurred
 
 			# Skip variadic functions, we only allow hooks on their arglist equivalents.

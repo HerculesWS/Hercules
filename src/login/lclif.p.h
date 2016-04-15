@@ -259,6 +259,18 @@ struct packet_AC_ACK_HASH {
 struct lclif_interface_private {
 	void (*packetdb_loaddb)(void);
 	enum parsefunc_rcode (*parse_sub)(int fd, struct login_session_data *sd);
+
+	LoginParseFunc *parse_CA_CONNECT_INFO_CHANGED;
+	LoginParseFunc *parse_CA_EXE_HASHCHECK;
+	LoginParseFunc *parse_CA_LOGIN;
+	LoginParseFunc *parse_CA_LOGIN2;
+	LoginParseFunc *parse_CA_LOGIN3;
+	LoginParseFunc *parse_CA_LOGIN4;
+	LoginParseFunc *parse_CA_LOGIN_PCBANG;
+	LoginParseFunc *parse_CA_LOGIN_HAN;
+	LoginParseFunc *parse_CA_SSO_LOGIN_REQ;
+	LoginParseFunc *parse_CA_REQ_HASH;
+	LoginParseFunc *parse_CA_CHARSERVERCONNECT;
 };
 
 #endif // LOGIN_LCLIF_P_H

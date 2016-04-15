@@ -450,7 +450,7 @@ const struct login_packet_db *lclif_packet(int16 packet_id)
 enum parsefunc_rcode lclif_parse_packet(const struct login_packet_db *lpd, int fd, struct login_session_data *sd)
 {
 	int result;
-	result = lpd->pFunc(fd, sd);
+	result = (*lpd->pFunc)(fd, sd);
 	RFIFOSKIP(fd, (lpd->len == -1) ? RFIFOW(fd, 2) : lpd->len);
 	return result;
 }
@@ -461,10 +461,10 @@ void packetdb_loaddb(void)
 	struct packet {
 		int16 packet_id;
 		int16 packet_len;
-		int (*pFunc)(int, struct login_session_data *);
+		LoginParseFunc **pFunc;
 	} packet[] = {
-#define packet_def(name) { PACKET_ID_ ## name, sizeof(struct packet_ ## name), lclif_parse_ ## name }
-#define packet_def2(name, len) { PACKET_ID_ ## name, (len), lclif_parse_ ## name }
+#define packet_def(name) { PACKET_ID_ ## name, sizeof(struct packet_ ## name), &lclif->p->parse_ ## name }
+#define packet_def2(name, len) { PACKET_ID_ ## name, (len), &lclif->p->parse_ ## name }
 		packet_def(CA_CONNECT_INFO_CHANGED),
 		packet_def(CA_EXE_HASHCHECK),
 		packet_def(CA_LOGIN),
@@ -491,7 +491,7 @@ void packetdb_loaddb(void)
 
 	//Explict case, we will save character login packet in position 0 which is unused and not valid by normal
 	packet_db[0].len = sizeof(struct packet_CA_CHARSERVERCONNECT);
-	packet_db[0].pFunc = lclif_parse_CA_CHARSERVERCONNECT;
+	packet_db[0].pFunc = &lclif->p->parse_CA_CHARSERVERCONNECT;
 }
 
 void lclif_init(void)
@@ -523,4 +523,16 @@ void lclif_defaults(void)
 
 	lclif->p->packetdb_loaddb = packetdb_loaddb;
 	lclif->p->parse_sub = lclif_parse_sub;
+
+	lclif->p->parse_CA_CONNECT_INFO_CHANGED = lclif_parse_CA_CONNECT_INFO_CHANGED;
+	lclif->p->parse_CA_EXE_HASHCHECK        = lclif_parse_CA_EXE_HASHCHECK;
+	lclif->p->parse_CA_LOGIN                = lclif_parse_CA_LOGIN;
+	lclif->p->parse_CA_LOGIN2               = lclif_parse_CA_LOGIN2;
+	lclif->p->parse_CA_LOGIN3               = lclif_parse_CA_LOGIN3;
+	lclif->p->parse_CA_LOGIN4               = lclif_parse_CA_LOGIN4;
+	lclif->p->parse_CA_LOGIN_PCBANG         = lclif_parse_CA_LOGIN_PCBANG;
+	lclif->p->parse_CA_LOGIN_HAN            = lclif_parse_CA_LOGIN_HAN;
+	lclif->p->parse_CA_SSO_LOGIN_REQ        = lclif_parse_CA_SSO_LOGIN_REQ;
+	lclif->p->parse_CA_REQ_HASH             = lclif_parse_CA_REQ_HASH;
+	lclif->p->parse_CA_CHARSERVERCONNECT    = lclif_parse_CA_CHARSERVERCONNECT;
 }

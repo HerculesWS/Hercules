@@ -43,8 +43,8 @@ typedef enum parsefunc_rcode (LoginParseFunc)(int fd, struct login_session_data 
 /* Structs */
 /// Login packet DB entry
 struct login_packet_db {
-	int16 len;             ///< Packet length
-	LoginParseFunc *pFunc; ///< Packet parsing function
+	int16 len;              ///< Packet length
+	LoginParseFunc **pFunc; ///< Packet parsing function
 };
 
 struct lclif_interface {
