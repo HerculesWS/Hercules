@@ -194,16 +194,18 @@ sub parse($$) {
 		$indirectionlvl++ if ($array); # Arrays are pointer, no matter how cute you write them
 
 		push(@args, {
-			var     => $var,
-			callvar => $callvar,
-			type    => $type1.$array.$type2,
-			orig    => $type1 eq '...' ? '...' : trim("$type1 $indir$var$array $type2"),
-			indir   => $indirectionlvl,
-			hookf   => $type1 eq '...' ? "va_list ${var}" : trim("$type1 $dereference$indir$var$array $type2"),
-			hookc   => trim("$addressof$callvar"),
-			origc   => trim($callvar),
-			pre     => $pre_code,
-			post    => $post_code,
+			var       => $var,
+			callvar   => $callvar,
+			type      => $type1.$array.$type2,
+			orig      => $type1 eq '...' ? '...' : trim("$type1 $indir$var$array $type2"),
+			indir     => $indirectionlvl,
+			hookpref  => $type1 eq '...' ? "va_list ${var}" : trim("$type1 $dereference$indir$var$array $type2"),
+			hookpostf => $type1 eq '...' ? "va_list ${var}" : trim("$type1 $indir$var$array $type2"),
+			hookprec  => trim("$addressof$callvar"),
+			hookpostc => trim("$callvar"),
+			origc     => trim($callvar),
+			pre       => $pre_code,
+			post      => $post_code,
 		});
 		$lastvar = $var;
 	}
@@ -416,10 +418,10 @@ foreach my $file (@files) { # Loop through the xml files
 					$if->{postcall} .= ', ';
 				}
 				$if->{handlerdef} .= $arg->{orig};
-				$if->{predef} .= $arg->{hookf};
-				$if->{precall} .= $arg->{hookc};
-				$if->{postdef} .= $arg->{hookf};
-				$if->{postcall} .= $arg->{hookc};
+				$if->{predef} .= $arg->{hookpref};
+				$if->{precall} .= $arg->{hookprec};
+				$if->{postdef} .= $arg->{hookpostf};
+				$if->{postcall} .= $arg->{hookpostc};
 				$if->{origcall} .= $arg->{origc};
 				$i++; $j++;
 			}
