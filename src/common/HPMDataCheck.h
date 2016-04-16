@@ -277,6 +277,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		#define LOGIN_LCLIF_H
 	#endif // LOGIN_LCLIF_H
 	#ifdef LOGIN_LCLIF_P_H
+		{ "lclif_interface_dbs", sizeof(struct lclif_interface_dbs), SERVER_TYPE_LOGIN },
 		{ "lclif_interface_private", sizeof(struct lclif_interface_private), SERVER_TYPE_LOGIN },
 		{ "packet_AC_ACCEPT_LOGIN", sizeof(struct packet_AC_ACCEPT_LOGIN), SERVER_TYPE_LOGIN },
 		{ "packet_AC_REFUSE_LOGIN", sizeof(struct packet_AC_REFUSE_LOGIN), SERVER_TYPE_LOGIN },
