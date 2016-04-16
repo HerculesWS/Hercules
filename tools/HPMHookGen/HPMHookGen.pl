@@ -359,6 +359,7 @@ foreach my $file (@files) { # Loop through the xml files
 					my $bstart = $b->{location}->[0]->{bodystart} || $b->{location}->[0]->{line};
 					$astart <=> $bstart
 				} @$memberdef) { # Loop through the members
+			next unless $f->{kind} eq 'variable'; # Skip macros
 			my $t = $f->{argsstring}->[0];
 			my $def = $f->{definition}->[0];
 			if ($f->{type}->[0] =~ /^\s*LoginParseFunc\s*\*\s*$/) {
