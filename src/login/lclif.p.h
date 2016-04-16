@@ -282,9 +282,18 @@ struct packet_AC_ACK_HASH {
 #endif // not NetBSD < 6 / Solaris
 
 /**
+ * Login Client Interface additional data
+ */
+struct lclif_interface_dbs {
+	struct login_packet_db packet_db[MAX_PACKET_DB + 1]; ///< Packet database.
+};
+
+/**
  * Login Client Interface Private Interface
  */
 struct lclif_interface_private {
+	struct lclif_interface_dbs *dbs;
+
 	/**
 	 * Populates the packet database.
 	 */

@@ -43,9 +43,8 @@
 
 struct lclif_interface lclif_s;
 struct lclif_interface_private lclif_p;
+struct lclif_interface_dbs lclif_dbs;
 struct lclif_interface *lclif;
-
-struct login_packet_db packet_db[MAX_PACKET_DB + 1]; ///< Packet database.
 
 /// @copydoc lclif_interface::connection_error()
 void lclif_connection_error(int fd, uint8 error)
@@ -462,12 +461,12 @@ enum parsefunc_rcode lclif_parse_sub(int fd, struct login_session_data *sd)
 const struct login_packet_db *lclif_packet(int16 packet_id)
 {
 	if (packet_id == PACKET_ID_CA_CHARSERVERCONNECT)
-		return &packet_db[0];
+		return &lclif->p->dbs->packet_db[0];
 
 	if (packet_id > MAX_PACKET_DB || packet_id < MIN_PACKET_DB)
 		return NULL;
 
-	return &packet_db[packet_id];
+	return &lclif->p->dbs->packet_db[packet_id];
 }
 
 /// @copydoc lclif_interface::parse_packet()
@@ -505,18 +504,18 @@ void packetdb_loaddb(void)
 	};
 	int length = ARRAYLENGTH(packet);
 
-	memset(packet_db, '\0', sizeof(packet_db));
+	memset(lclif->p->dbs->packet_db, '\0', sizeof(lclif->p->dbs->packet_db));
 
 	for (i = 0; i < length; ++i) {
 		int16 packet_id = packet[i].packet_id;
 		Assert_retb(packet_id >= MIN_PACKET_DB && packet_id < MAX_PACKET_DB);
-		packet_db[packet_id].len = packet[i].packet_len;
-		packet_db[packet_id].pFunc = packet[i].pFunc;
+		lclif->p->dbs->packet_db[packet_id].len = packet[i].packet_len;
+		lclif->p->dbs->packet_db[packet_id].pFunc = packet[i].pFunc;
 	}
 
 	//Explict case, we will save character login packet in position 0 which is unused and not valid by normal
-	packet_db[0].len = sizeof(struct packet_CA_CHARSERVERCONNECT);
-	packet_db[0].pFunc = &lclif->p->parse_CA_CHARSERVERCONNECT;
+	lclif->p->dbs->packet_db[0].len = sizeof(struct packet_CA_CHARSERVERCONNECT);
+	lclif->p->dbs->packet_db[0].pFunc = &lclif->p->parse_CA_CHARSERVERCONNECT;
 }
 
 /// @copydoc lclif_interface::init()
@@ -535,6 +534,7 @@ void lclif_defaults(void)
 {
 	lclif = &lclif_s;
 	lclif->p = &lclif_p;
+	lclif->p->dbs = &lclif_dbs;
 
 	lclif->init = lclif_init;
 	lclif->final = lclif_final;
