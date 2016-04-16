@@ -20,6 +20,10 @@
 #ifndef LOGIN_LCLIF_P_H
 #define LOGIN_LCLIF_P_H
 
+/** @file
+ * Private header for the login client interface.
+ */
+
 #include "login/lclif.h"
 
 #include "common/hercules.h"
@@ -194,59 +198,83 @@ struct packet_CA_REQ_HASH {
 	int16 packet_id; ///< Packet ID (#PACKET_ID_CA_REQ_HASH)
 } __attribute__((packed));
 
+/**
+ * Packet structure for CA_CHARSERVERCONNECT.
+ *
+ * This packet is used internally, to signal a char-server connection.
+ */
 struct packet_CA_CHARSERVERCONNECT {
-	int16 packet_id;
-	char userid[24];
-	char password[24];
+	int16 packet_id;   ///< Packet ID (#PACKET_ID_CA_CHARSERVERCONNECT)
+	char userid[24];   ///< Username
+	char password[24]; ///< Password
 	int32 unknown;
-	int32 ip;
-	int16 port;
-	char name[20];
+	int32 ip;          ///< Charserver IP
+	int16 port;        ///< Charserver port
+	char name[20];     ///< Charserver name
 	int16 unknown2;
-	int16 type;
-	int16 new;
+	int16 type;        ///< Charserver type
+	int16 new;         ///< Whether charserver is to be marked as new
 } __attribute__((packed));
 
+/**
+ * Packet structure for SC_NOTIFY_BAN.
+ */
 struct packet_SC_NOTIFY_BAN {
-	int16 packet_id;
-	uint8 error_code;
+	int16 packet_id;  ///< Packet ID (#PACKET_ID_SC_NOTIFY_BAN)
+	uint8 error_code; ///< Error code
 } __attribute__((packed));
 
+/**
+ * Packet structure for AC_REFUSE_LOGIN.
+ */
 struct packet_AC_REFUSE_LOGIN {
-	int16 packet_id;
-	uint8 error_code;
-	char block_date[20];
+	int16 packet_id;     ///< Packet ID (#PACKET_ID_AC_REFUSE_LOGIN)
+	uint8 error_code;    ///< Error code
+	char block_date[20]; ///< Ban expiration date
 } __attribute__((packed));
 
+/**
+ * Packet structure for AC_REFUSE_LOGIN_R2.
+ */
 struct packet_AC_REFUSE_LOGIN_R2 {
-	int16 packet_id;
-	uint32 error_code;
-	char block_date[20];
+	int16 packet_id;     ///< Packet ID (#PACKET_ID_AC_REFUSE_LOGIN_R2)
+	uint32 error_code;   ///< Error code
+	char block_date[20]; ///< Ban expiration date
 } __attribute__((packed));
 
+/**
+ * Packet structure for AC_ACCEPT_LOGIN.
+ *
+ * Variable-length packet.
+ */
 struct packet_AC_ACCEPT_LOGIN {
-	int16 packet_id;
-	int16 packet_len;
-	int32 auth_code;
-	uint32 aid;
-	uint32 user_level;
-	uint32 last_login_ip;
-	char last_login_time[26];
-	uint8 sex;
+	int16 packet_id;          ///< Packet ID (#PACKET_ID_AC_ACCEPT_LOGIN)
+	int16 packet_len;         ///< Packet length (variable length)
+	int32 auth_code;          ///< Authentication code
+	uint32 aid;               ///< Account ID
+	uint32 user_level;        ///< User level
+	uint32 last_login_ip;     ///< Last login IP
+	char last_login_time[26]; ///< Last login timestamp
+	uint8 sex;                ///< Account sex
 	struct {
-		uint32 ip;
-		int16 port;
-		char name[20];
-		uint16 usercount;
-		uint16 state;
-		uint16 property;
-	} server_list[];
+		uint32 ip;        ///< Server IP address
+		int16 port;       ///< Server port
+		char name[20];    ///< Server name
+		uint16 usercount; ///< Online users
+		uint16 state;     ///< Server state
+		uint16 property;  ///< Server property
+	} server_list[];          ///< List of charservers
 } __attribute__((packed));
 
+/**
+ * Packet structure for AC_ACK_HASH.
+ *
+ * Variable-length packet
+ */
 struct packet_AC_ACK_HASH {
-	int16 packet_id;
-	int16 packet_len;
-	uint8 secret[];
+	int16 packet_id;  ///< Packet ID (#PACKET_ID_AC_ACK_HASH)
+	int16 packet_len; ///< Packet length (variable length)
+	uint8 secret[];   ///< Challenge string
 } __attribute__((packed));
 
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
@@ -257,20 +285,31 @@ struct packet_AC_ACK_HASH {
  * Login Client Interface Private Interface
  */
 struct lclif_interface_private {
+	/**
+	 * Populates the packet database.
+	 */
 	void (*packetdb_loaddb)(void);
+
+	/**
+	 * Attempts to validate and parse a received packet.
+	 *
+	 * @param fd  Client connection file descriptor.
+	 * @param sd  Session data.
+	 * @return Parse result error code.
+	 */
 	enum parsefunc_rcode (*parse_sub)(int fd, struct login_session_data *sd);
 
-	LoginParseFunc *parse_CA_CONNECT_INFO_CHANGED;
-	LoginParseFunc *parse_CA_EXE_HASHCHECK;
-	LoginParseFunc *parse_CA_LOGIN;
-	LoginParseFunc *parse_CA_LOGIN2;
-	LoginParseFunc *parse_CA_LOGIN3;
-	LoginParseFunc *parse_CA_LOGIN4;
-	LoginParseFunc *parse_CA_LOGIN_PCBANG;
-	LoginParseFunc *parse_CA_LOGIN_HAN;
-	LoginParseFunc *parse_CA_SSO_LOGIN_REQ;
-	LoginParseFunc *parse_CA_REQ_HASH;
-	LoginParseFunc *parse_CA_CHARSERVERCONNECT;
+	LoginParseFunc *parse_CA_CONNECT_INFO_CHANGED; ///< Packet handler for #packet_CA_CONNECT_INFO_CHANGED.
+	LoginParseFunc *parse_CA_EXE_HASHCHECK;        ///< Packet handler for #packet_CA_EXE_HASHCHECK.
+	LoginParseFunc *parse_CA_LOGIN;                ///< Packet handler for #packet_CA_LOGIN.
+	LoginParseFunc *parse_CA_LOGIN2;               ///< Packet handler for #packet_CA_LOGIN2.
+	LoginParseFunc *parse_CA_LOGIN3;               ///< Packet handler for #packet_CA_LOGIN3.
+	LoginParseFunc *parse_CA_LOGIN4;               ///< Packet handler for #packet_CA_LOGIN4.
+	LoginParseFunc *parse_CA_LOGIN_PCBANG;         ///< Packet handler for #packet_CA_LOGIN_PCBANG.
+	LoginParseFunc *parse_CA_LOGIN_HAN;            ///< Packet handler for #packet_CA_LOGIN_HAN.
+	LoginParseFunc *parse_CA_SSO_LOGIN_REQ;        ///< Packet handler for #packet_CA_SSO_LOGIN_REQ.
+	LoginParseFunc *parse_CA_REQ_HASH;             ///< Packet handler for #packet_CA_REQ_HASH.
+	LoginParseFunc *parse_CA_CHARSERVERCONNECT;    ///< Packet handler for #packet_CA_CHARSERVERCONNECT.
 };
 
 #endif // LOGIN_LCLIF_P_H

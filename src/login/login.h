@@ -26,6 +26,10 @@
 #include "common/db.h"
 #include "common/mmo.h" // NAME_LENGTH,SEX_*
 
+/** @file
+ * Login interface.
+ */
+
 struct mmo_account;
 struct AccountDB;
 

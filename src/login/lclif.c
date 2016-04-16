@@ -37,12 +37,17 @@
 #include "common/strlib.h"
 #include "common/utils.h"
 
+/** @file
+ * Implementation of the login client interface.
+ */
+
 struct lclif_interface lclif_s;
 struct lclif_interface_private lclif_p;
 struct lclif_interface *lclif;
 
-struct login_packet_db packet_db[MAX_PACKET_DB + 1];
+struct login_packet_db packet_db[MAX_PACKET_DB + 1]; ///< Packet database.
 
+/// @copydoc lclif_interface::connection_error()
 void lclif_connection_error(int fd, uint8 error)
 {
 	struct packet_SC_NOTIFY_BAN *packet = NULL;
@@ -53,12 +58,14 @@ void lclif_connection_error(int fd, uint8 error)
 	WFIFOSET(fd, sizeof(*packet));
 }
 
+/// @copydoc lclif_interface_private::parse_CA_CONNECT_INFO_CHANGED()
 enum parsefunc_rcode lclif_parse_CA_CONNECT_INFO_CHANGED(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 enum parsefunc_rcode lclif_parse_CA_CONNECT_INFO_CHANGED(int fd, struct login_session_data *sd)
 {
 	return PACKET_VALID;
 }
 
+/// @copydoc lclif_interface_private::parse_CA_EXE_HASHCHECK()
 enum parsefunc_rcode lclif_parse_CA_EXE_HASHCHECK(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 enum parsefunc_rcode lclif_parse_CA_EXE_HASHCHECK(int fd, struct login_session_data *sd)
 {
@@ -68,6 +75,7 @@ enum parsefunc_rcode lclif_parse_CA_EXE_HASHCHECK(int fd, struct login_session_d
 	return PACKET_VALID;
 }
 
+/// @copydoc lclif_interface_private::parse_CA_LOGIN()
 enum parsefunc_rcode lclif_parse_CA_LOGIN(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 enum parsefunc_rcode lclif_parse_CA_LOGIN(int fd, struct login_session_data *sd)
 {
@@ -86,6 +94,7 @@ enum parsefunc_rcode lclif_parse_CA_LOGIN(int fd, struct login_session_data *sd)
 	return PACKET_VALID;
 }
 
+/// @copydoc lclif_interface_private::parse_CA_LOGIN2()
 enum parsefunc_rcode lclif_parse_CA_LOGIN2(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 enum parsefunc_rcode lclif_parse_CA_LOGIN2(int fd, struct login_session_data *sd)
 {
@@ -101,6 +110,7 @@ enum parsefunc_rcode lclif_parse_CA_LOGIN2(int fd, struct login_session_data *sd
 	return PACKET_VALID;
 }
 
+/// @copydoc lclif_interface_private::parse_CA_LOGIN3()
 enum parsefunc_rcode lclif_parse_CA_LOGIN3(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 enum parsefunc_rcode lclif_parse_CA_LOGIN3(int fd, struct login_session_data *sd)
 {
@@ -118,6 +128,7 @@ enum parsefunc_rcode lclif_parse_CA_LOGIN3(int fd, struct login_session_data *sd
 	return PACKET_VALID;
 }
 
+/// @copydoc lclif_interface_private::parse_CA_LOGIN4()
 enum parsefunc_rcode lclif_parse_CA_LOGIN4(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 enum parsefunc_rcode lclif_parse_CA_LOGIN4(int fd, struct login_session_data *sd)
 {
@@ -135,6 +146,7 @@ enum parsefunc_rcode lclif_parse_CA_LOGIN4(int fd, struct login_session_data *sd
 	return PACKET_VALID;
 }
 
+/// @copydoc lclif_interface_private::parse_CA_LOGIN_PCBANG()
 enum parsefunc_rcode lclif_parse_CA_LOGIN_PCBANG(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 enum parsefunc_rcode lclif_parse_CA_LOGIN_PCBANG(int fd, struct login_session_data *sd)
 {
@@ -156,6 +168,7 @@ enum parsefunc_rcode lclif_parse_CA_LOGIN_PCBANG(int fd, struct login_session_da
 	return PACKET_VALID;
 }
 
+/// @copydoc lclif_interface_private::parse_CA_LOGIN_HAN()
 enum parsefunc_rcode lclif_parse_CA_LOGIN_HAN(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 enum parsefunc_rcode lclif_parse_CA_LOGIN_HAN(int fd, struct login_session_data *sd)
 {
@@ -178,6 +191,7 @@ enum parsefunc_rcode lclif_parse_CA_LOGIN_HAN(int fd, struct login_session_data 
 	return PACKET_VALID;
 }
 
+/// @copydoc lclif_interface_private::parse_CA_SSO_LOGIN_REQ()
 enum parsefunc_rcode lclif_parse_CA_SSO_LOGIN_REQ(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 enum parsefunc_rcode lclif_parse_CA_SSO_LOGIN_REQ(int fd, struct login_session_data *sd)
 {
@@ -203,6 +217,7 @@ enum parsefunc_rcode lclif_parse_CA_SSO_LOGIN_REQ(int fd, struct login_session_d
 	return PACKET_VALID;
 }
 
+/// @copydoc lclif_interface_private::parse_CA_REQ_HASH()
 enum parsefunc_rcode lclif_parse_CA_REQ_HASH(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 enum parsefunc_rcode lclif_parse_CA_REQ_HASH(int fd, struct login_session_data *sd)
 {
@@ -214,6 +229,7 @@ enum parsefunc_rcode lclif_parse_CA_REQ_HASH(int fd, struct login_session_data *
 	return PACKET_VALID;
 }
 
+/// @copydoc lclif_interface_private::parse_CA_CHARSERVERCONNECT()
 enum parsefunc_rcode lclif_parse_CA_CHARSERVERCONNECT(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 enum parsefunc_rcode lclif_parse_CA_CHARSERVERCONNECT(int fd, struct login_session_data *sd)
 {
@@ -226,6 +242,7 @@ enum parsefunc_rcode lclif_parse_CA_CHARSERVERCONNECT(int fd, struct login_sessi
 	return PACKET_STOPPARSE;
 }
 
+/// @copydoc lclif_interface::server_list()
 bool lclif_send_server_list(struct login_session_data *sd)
 {
 	int server_num = 0, i, n, length;
@@ -279,6 +296,7 @@ bool lclif_send_server_list(struct login_session_data *sd)
 	return true;
 }
 
+/// @copydoc lclif_interface::auth_failed()
 void lclif_send_auth_failed(int fd, time_t ban, uint32 error)
 {
 #if PACKETVER >= 20120000 /* not sure when this started */
@@ -299,6 +317,7 @@ void lclif_send_auth_failed(int fd, time_t ban, uint32 error)
 	WFIFOSET(fd, sizeof(*packet));
 }
 
+/// @copydoc lclif_interface::login_error()
 void lclif_send_login_error(int fd, uint8 error)
 {
 	struct packet_AC_REFUSE_LOGIN *packet = NULL;
@@ -310,6 +329,7 @@ void lclif_send_login_error(int fd, uint8 error)
 	WFIFOSET(fd, sizeof(*packet));
 }
 
+/// @copydoc lclif_interface::coding_key()
 void lclif_send_coding_key(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
 void lclif_send_coding_key(int fd, struct login_session_data *sd)
 {
@@ -324,6 +344,7 @@ void lclif_send_coding_key(int fd, struct login_session_data *sd)
 	WFIFOSET(fd, size);
 }
 
+/// @copydoc lclif_interface::parse()
 int lclif_parse(int fd)
 {
 	struct login_session_data *sd = NULL;
@@ -389,6 +410,7 @@ int lclif_parse(int fd)
 	return 0;
 }
 
+/// @copydoc lclif_interface_private::parse_sub()
 enum parsefunc_rcode lclif_parse_sub(int fd, struct login_session_data *sd)
 {
 	int packet_len = (int)RFIFOREST(fd);
@@ -436,6 +458,7 @@ enum parsefunc_rcode lclif_parse_sub(int fd, struct login_session_data *sd)
 	return PACKET_VALID;
 }
 
+/// @copydoc lclif_interface::packet()
 const struct login_packet_db *lclif_packet(int16 packet_id)
 {
 	if (packet_id == PACKET_ID_CA_CHARSERVERCONNECT)
@@ -447,6 +470,7 @@ const struct login_packet_db *lclif_packet(int16 packet_id)
 	return &packet_db[packet_id];
 }
 
+/// @copydoc lclif_interface::parse_packet()
 enum parsefunc_rcode lclif_parse_packet(const struct login_packet_db *lpd, int fd, struct login_session_data *sd)
 {
 	int result;
@@ -455,6 +479,7 @@ enum parsefunc_rcode lclif_parse_packet(const struct login_packet_db *lpd, int f
 	return result;
 }
 
+/// @copydoc lclif_interface_private::packetdb_loaddb()
 void packetdb_loaddb(void)
 {
 	int i;
@@ -494,15 +519,18 @@ void packetdb_loaddb(void)
 	packet_db[0].pFunc = &lclif->p->parse_CA_CHARSERVERCONNECT;
 }
 
+/// @copydoc lclif_interface::init()
 void lclif_init(void)
 {
 	lclif->p->packetdb_loaddb();
 }
 
+/// @copydoc lclif_interface::final()
 void lclif_final(void)
 {
 }
 
+/// Interface base initialization.
 void lclif_defaults(void)
 {
 	lclif = &lclif_s;

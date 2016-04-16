@@ -44,6 +44,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/** @file
+ * Implementation of the login interface.
+ */
+
 struct login_interface login_s;
 struct login_interface *login;
 struct Login_Config login_config_;
