@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -25,6 +25,10 @@
 #include "common/core.h" // CORE_ST_LAST
 #include "common/db.h"
 #include "common/mmo.h" // NAME_LENGTH,SEX_*
+
+/** @file
+ * Login interface.
+ */
 
 struct mmo_account;
 struct AccountDB;
@@ -196,19 +200,12 @@ struct login_interface {
 	bool (*fromchar_parse_wrong_pincode) (int fd);
 	void (*fromchar_parse_accinfo) (int fd);
 	int (*parse_fromchar) (int fd);
-	void (*connection_problem) (int fd, uint8 status);
 	void (*kick) (struct login_session_data* sd);
 	void (*auth_ok) (struct login_session_data* sd);
 	void (*auth_failed) (struct login_session_data* sd, int result);
-	void (*login_error) (int fd, uint8 status);
-	void (*parse_ping) (int fd, struct login_session_data* sd);
-	void (*parse_client_md5) (int fd, struct login_session_data* sd);
-	bool (*parse_client_login) (int fd, struct login_session_data* sd, const char *ip);
-	void (*send_coding_key) (int fd, struct login_session_data* sd);
-	void (*parse_request_coding_key) (int fd, struct login_session_data* sd);
+	bool (*client_login) (int fd, struct login_session_data *sd);
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
 	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
-	int (*parse_login) (int fd);
 	void (*config_set_defaults) (void);
 	int (*config_read) (const char *cfgName);
 	char *LOGIN_CONF_NAME;

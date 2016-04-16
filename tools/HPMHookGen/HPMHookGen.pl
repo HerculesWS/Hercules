@@ -3,7 +3,7 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2013-2015  Hercules Dev Team
+# Copyright (C) 2013-2016  Hercules Dev Team
 #
 # Hercules is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ sub parse($$) {
 	$p =~ s/^.*?\)\((.*)\).*$/$1/; # Clean up extra parentheses )(around the arglist)
 
 	# Retrieve return type
-	unless ($d =~ /^(.+)\(\*\s*[a-zA-Z0-9_]+_interface::([^\)]+)\s*\)\s*\(.*\)$/) {
+	unless ($d =~ /^(.+)\(\*\s*[a-zA-Z0-9_]+_interface(?:_private)?::([^\)]+)\s*\)\s*\(.*\)$/) {
 		print "Error: unable to parse '$d'\n";
 		return {};
 	}
@@ -237,6 +237,8 @@ sub parse($$) {
 			$rtinit = ' = HCS_STATUS_FAIL';
 		} elsif ($x =~ /^enum\s+bg_queue_types$/) { # Known enum bg_queue_types
 			$rtinit = ' = BGQT_INVALID';
+		} elsif ($x =~ /^enum\s+parsefunc_rcode$/) { # Known enum parsefunc_rcode
+			$rtinit = ' = PACKET_UNKNOWN';
 		} elsif ($x =~ /^(?:enum\s+)?DBOptions$/) { # Known enum DBOptions
 			$rtinit = ' = DB_OPT_BASE';
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
@@ -273,6 +275,7 @@ sub parse($$) {
 }
 
 my %key2original;
+my %key2pointer;
 my @files = grep { -f } glob 'doxyoutput/xml/*interface*.xml';
 my %ifs;
 my %keys = (
@@ -308,8 +311,9 @@ foreach my $file (@files) { # Loop through the xml files
 	}
 	my @filepath = split(/[\/\\]/, $loc->{file});
 	my $foldername = uc($filepath[-2]);
-	my $filename = uc($filepath[-1]); $filename =~ s/-/_/g; $filename =~ s/\.[^.]*$//;
-	my $guardname = "${foldername}_${filename}_H";
+	my $filename = uc($filepath[-1]); $filename =~ s/[.-]/_/g; $filename =~ s/\.[^.]*$//;
+	my $guardname = "${foldername}_${filename}";
+	my $private = $key =~ /_interface_private$/ ? 1 : 0;
 
 	# Some known interfaces with different names
 	if ($key =~ /battleground/) {
@@ -344,6 +348,9 @@ foreach my $file (@files) { # Loop through the xml files
 	} else {
 		$key =~ s/_interface//;
 	}
+	$key =~ s/^(.*)_private$/PRIV__$1/ if $private;
+	my $pointername = $key;
+	$pointername =~ s/^PRIV__(.*)$/$1->p/ if $private;
 
 	my $sectiondef = $data->{compounddef}->{$filekey}->{sectiondef};
 	foreach my $v (@$sectiondef) { # Loop through the sections
@@ -354,9 +361,14 @@ foreach my $file (@files) { # Loop through the xml files
 					$astart <=> $bstart
 				} @$memberdef) { # Loop through the members
 			my $t = $f->{argsstring}->[0];
+			my $def = $f->{definition}->[0];
+			if ($f->{type}->[0] =~ /^\s*LoginParseFunc\s*\*\s*$/) {
+				$t = ')(int fd, struct login_session_data *sd)'; # typedef LoginParseFunc
+				$def =~ s/^LoginParseFunc\s*\*\s*(.*)$/enum parsefunc_rcode(* $1) (int fd, struct login_session_data *sd)/;
+			}
 			next unless ref $t ne 'HASH' and $t =~ /^[^\[]/; # If it's not a string, or if it starts with an array subscript, we can skip it
 
-			my $if = parse($t, $f->{definition}->[0]);
+			my $if = parse($t, $def);
 			next unless scalar keys %$if; # If it returns an empty hash reference, an error must've occurred
 
 			# Skip variadic functions, we only allow hooks on their arglist equivalents.
@@ -431,6 +443,7 @@ foreach my $file (@files) { # Loop through the xml files
 			$if->{origcall} .= ");";
 
 			$key2original{$key} = $original;
+			$key2pointer{$key} = $pointername;
 			$ifs{$key} = [] unless $ifs{$key};
 			push(@{ $ifs{$key} }, $if);
 		}
@@ -442,6 +455,7 @@ foreach my $file (@files) { # Loop through the xml files
 	$fileguards{$key} = {
 		guard => $guardname,
 		type => $servermask,
+		private => $private,
 	};
 }
 
@@ -495,6 +509,7 @@ foreach my $servertype (keys %keys) {
 EOF
 
 		foreach my $key (@$keysref) {
+			next if $fileguards{$key}->{private};
 			print FH <<"EOF";
 #ifdef $fileguards{$key}->{guard} /* $key */
 struct $key2original{$key} *$key;
@@ -510,6 +525,7 @@ HPExport const char *HPM_shared_symbols(int server_type)
 EOF
 
 		foreach my $key (@$keysref) {
+			next if $fileguards{$key}->{private};
 			print FH <<"EOF";
 #ifdef $fileguards{$key}->{guard} /* $key */
 if ((server_type&($fileguards{$key}->{type})) && !HPM_SYMBOL("$exportsymbols{$key}", $key)) return "$exportsymbols{$key}";
@@ -558,11 +574,11 @@ struct HookingPointData HookingPoints[] = {
 EOF
 
 	foreach my $key (@$keysref) {
-		print FH "/* ".$key." */\n";
+		print FH "/* $key2original{$key} */\n";
 		foreach my $if (@{ $ifs{$key} }) {
 
 			print FH <<"EOF";
-	{ HP_POP($key\->$if->{name}, $if->{hname}) },
+	{ HP_POP($key2pointer{$key}\->$if->{name}, $if->{hname}) },
 EOF
 
 			$idx += 2;
@@ -610,7 +626,7 @@ EOF
 	foreach my $key (@$keysref) {
 
 		print FH <<"EOF";
-memcpy(&HPMHooks.source.$key, $key, sizeof(struct $key2original{$key}));
+memcpy(&HPMHooks.source.$key, $key2pointer{$key}, sizeof(struct $key2original{$key}));
 EOF
 	}
 	close FH;
@@ -724,7 +740,7 @@ EOF
 	foreach my $key (@$keysref) {
 
 		print FH <<"EOF";
-/* $key */
+/* $key2original{$key} */
 EOF
 
 		foreach my $if (@{ $ifs{$key} }) {

@@ -129,6 +129,9 @@ struct irc_bot_interface *ircbot;
 #ifdef MAP_ITEMDB_H /* itemdb */
 struct itemdb_interface *itemdb;
 #endif // MAP_ITEMDB_H
+#ifdef LOGIN_LCLIF_H /* lclif */
+struct lclif_interface *lclif;
+#endif // LOGIN_LCLIF_H
 #ifdef COMMON_CONF_H /* libconfig */
 struct libconfig_interface *libconfig;
 #endif // COMMON_CONF_H
@@ -358,6 +361,9 @@ if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("ircbot", ircbot)) return "ir
 #ifdef MAP_ITEMDB_H /* itemdb */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("itemdb", itemdb)) return "itemdb";
 #endif // MAP_ITEMDB_H
+#ifdef LOGIN_LCLIF_H /* lclif */
+if ((server_type&(SERVER_TYPE_LOGIN)) && !HPM_SYMBOL("lclif", lclif)) return "lclif";
+#endif // LOGIN_LCLIF_H
 #ifdef COMMON_CONF_H /* libconfig */
 if ((server_type&(SERVER_TYPE_ALL)) && !HPM_SYMBOL("libconfig", libconfig)) return "libconfig";
 #endif // COMMON_CONF_H

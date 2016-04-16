@@ -28,6 +28,8 @@ memcpy(&HPMHooks.source.cmdline, cmdline, sizeof(struct cmdline_interface));
 memcpy(&HPMHooks.source.console, console, sizeof(struct console_interface));
 memcpy(&HPMHooks.source.core, core, sizeof(struct core_interface));
 memcpy(&HPMHooks.source.DB, DB, sizeof(struct db_interface));
+memcpy(&HPMHooks.source.lclif, lclif, sizeof(struct lclif_interface));
+memcpy(&HPMHooks.source.PRIV__lclif, lclif->p, sizeof(struct lclif_interface_private));
 memcpy(&HPMHooks.source.libconfig, libconfig, sizeof(struct libconfig_interface));
 memcpy(&HPMHooks.source.login, login, sizeof(struct login_interface));
 memcpy(&HPMHooks.source.iMalloc, iMalloc, sizeof(struct malloc_interface));

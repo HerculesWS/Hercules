@@ -1,7 +1,7 @@
 # This file is part of Hercules.
 # http://herc.ws - http://github.com/HerculesWS/Hercules
 #
-# Copyright (C) 2012-2015  Hercules Dev Team
+# Copyright (C) 2012-2016  Hercules Dev Team
 # Copyright (C)  Athena Dev Teams
 #
 # Hercules is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ CONFIG_D = ../config
 CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 
 COMMON_D = ../common
-COMMON_H = $(wildcard $(COMMON_D)/*.h)
+COMMON_H = $(filter-out %.p.h, $(wildcard $(COMMON_D)/*.h))
 SYSINFO_INC = $(COMMON_D)/sysinfo.inc
 COMMON_INCLUDE = -I..
 
