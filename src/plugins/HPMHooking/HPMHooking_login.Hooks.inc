@@ -176,10 +176,10 @@ bool HP_cmdline_arg_add(unsigned int pluginID, const char *name, char shortname,
 		retVal___ = HPMHooks.source.cmdline.arg_add(pluginID, name, shortname, func, help, options);
 	}
 	if( HPMHooks.count.HP_cmdline_arg_add_post ) {
-		bool (*postHookFunc) (bool retVal___, unsigned int *pluginID, const char *name, char *shortname, CmdlineExecFunc *func, const char *help, unsigned int *options);
+		bool (*postHookFunc) (bool retVal___, unsigned int pluginID, const char *name, char shortname, CmdlineExecFunc func, const char *help, unsigned int options);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_cmdline_arg_add_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_cmdline_arg_add_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &pluginID, name, &shortname, &func, help, &options);
+			retVal___ = postHookFunc(retVal___, pluginID, name, shortname, func, help, options);
 		}
 	}
 	return retVal___;
@@ -203,10 +203,10 @@ int HP_cmdline_exec(int argc, char **argv, unsigned int options) {
 		retVal___ = HPMHooks.source.cmdline.exec(argc, argv, options);
 	}
 	if( HPMHooks.count.HP_cmdline_exec_post ) {
-		int (*postHookFunc) (int retVal___, int *argc, char **argv, unsigned int *options);
+		int (*postHookFunc) (int retVal___, int argc, char **argv, unsigned int options);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_cmdline_exec_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_cmdline_exec_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &argc, argv, &options);
+			retVal___ = postHookFunc(retVal___, argc, argv, options);
 		}
 	}
 	return retVal___;
@@ -230,10 +230,10 @@ bool HP_cmdline_arg_next_value(const char *name, int current_arg, int argc) {
 		retVal___ = HPMHooks.source.cmdline.arg_next_value(name, current_arg, argc);
 	}
 	if( HPMHooks.count.HP_cmdline_arg_next_value_post ) {
-		bool (*postHookFunc) (bool retVal___, const char *name, int *current_arg, int *argc);
+		bool (*postHookFunc) (bool retVal___, const char *name, int current_arg, int argc);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_cmdline_arg_next_value_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_cmdline_arg_next_value_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, name, &current_arg, &argc);
+			retVal___ = postHookFunc(retVal___, name, current_arg, argc);
 		}
 	}
 	return retVal___;
@@ -417,10 +417,10 @@ enum DBOptions HP_DB_fix_options(enum DBType type, enum DBOptions options) {
 		retVal___ = HPMHooks.source.DB.fix_options(type, options);
 	}
 	if( HPMHooks.count.HP_DB_fix_options_post ) {
-		enum DBOptions (*postHookFunc) (enum DBOptions retVal___, enum DBType *type, enum DBOptions *options);
+		enum DBOptions (*postHookFunc) (enum DBOptions retVal___, enum DBType type, enum DBOptions options);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_DB_fix_options_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_DB_fix_options_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &type, &options);
+			retVal___ = postHookFunc(retVal___, type, options);
 		}
 	}
 	return retVal___;
@@ -444,10 +444,10 @@ DBComparator HP_DB_default_cmp(enum DBType type) {
 		retVal___ = HPMHooks.source.DB.default_cmp(type);
 	}
 	if( HPMHooks.count.HP_DB_default_cmp_post ) {
-		DBComparator (*postHookFunc) (DBComparator retVal___, enum DBType *type);
+		DBComparator (*postHookFunc) (DBComparator retVal___, enum DBType type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_DB_default_cmp_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_DB_default_cmp_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &type);
+			retVal___ = postHookFunc(retVal___, type);
 		}
 	}
 	return retVal___;
@@ -471,10 +471,10 @@ DBHasher HP_DB_default_hash(enum DBType type) {
 		retVal___ = HPMHooks.source.DB.default_hash(type);
 	}
 	if( HPMHooks.count.HP_DB_default_hash_post ) {
-		DBHasher (*postHookFunc) (DBHasher retVal___, enum DBType *type);
+		DBHasher (*postHookFunc) (DBHasher retVal___, enum DBType type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_DB_default_hash_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_DB_default_hash_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &type);
+			retVal___ = postHookFunc(retVal___, type);
 		}
 	}
 	return retVal___;
@@ -498,10 +498,10 @@ DBReleaser HP_DB_default_release(enum DBType type, enum DBOptions options) {
 		retVal___ = HPMHooks.source.DB.default_release(type, options);
 	}
 	if( HPMHooks.count.HP_DB_default_release_post ) {
-		DBReleaser (*postHookFunc) (DBReleaser retVal___, enum DBType *type, enum DBOptions *options);
+		DBReleaser (*postHookFunc) (DBReleaser retVal___, enum DBType type, enum DBOptions options);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_DB_default_release_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_DB_default_release_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &type, &options);
+			retVal___ = postHookFunc(retVal___, type, options);
 		}
 	}
 	return retVal___;
@@ -525,10 +525,10 @@ DBReleaser HP_DB_custom_release(enum DBReleaseOption which) {
 		retVal___ = HPMHooks.source.DB.custom_release(which);
 	}
 	if( HPMHooks.count.HP_DB_custom_release_post ) {
-		DBReleaser (*postHookFunc) (DBReleaser retVal___, enum DBReleaseOption *which);
+		DBReleaser (*postHookFunc) (DBReleaser retVal___, enum DBReleaseOption which);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_DB_custom_release_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_DB_custom_release_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &which);
+			retVal___ = postHookFunc(retVal___, which);
 		}
 	}
 	return retVal___;
@@ -552,10 +552,10 @@ struct DBMap* HP_DB_alloc(const char *file, const char *func, int line, enum DBT
 		retVal___ = HPMHooks.source.DB.alloc(file, func, line, type, options, maxlen);
 	}
 	if( HPMHooks.count.HP_DB_alloc_post ) {
-		struct DBMap* (*postHookFunc) (struct DBMap* retVal___, const char *file, const char *func, int *line, enum DBType *type, enum DBOptions *options, unsigned short *maxlen);
+		struct DBMap* (*postHookFunc) (struct DBMap* retVal___, const char *file, const char *func, int line, enum DBType type, enum DBOptions options, unsigned short maxlen);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_DB_alloc_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_DB_alloc_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, file, func, &line, &type, &options, &maxlen);
+			retVal___ = postHookFunc(retVal___, file, func, line, type, options, maxlen);
 		}
 	}
 	return retVal___;
@@ -579,10 +579,10 @@ union DBKey HP_DB_i2key(int key) {
 		retVal___ = HPMHooks.source.DB.i2key(key);
 	}
 	if( HPMHooks.count.HP_DB_i2key_post ) {
-		union DBKey (*postHookFunc) (union DBKey retVal___, int *key);
+		union DBKey (*postHookFunc) (union DBKey retVal___, int key);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_DB_i2key_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_DB_i2key_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &key);
+			retVal___ = postHookFunc(retVal___, key);
 		}
 	}
 	return retVal___;
@@ -606,10 +606,10 @@ union DBKey HP_DB_ui2key(unsigned int key) {
 		retVal___ = HPMHooks.source.DB.ui2key(key);
 	}
 	if( HPMHooks.count.HP_DB_ui2key_post ) {
-		union DBKey (*postHookFunc) (union DBKey retVal___, unsigned int *key);
+		union DBKey (*postHookFunc) (union DBKey retVal___, unsigned int key);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_DB_ui2key_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_DB_ui2key_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &key);
+			retVal___ = postHookFunc(retVal___, key);
 		}
 	}
 	return retVal___;
@@ -660,10 +660,10 @@ union DBKey HP_DB_i642key(int64 key) {
 		retVal___ = HPMHooks.source.DB.i642key(key);
 	}
 	if( HPMHooks.count.HP_DB_i642key_post ) {
-		union DBKey (*postHookFunc) (union DBKey retVal___, int64 *key);
+		union DBKey (*postHookFunc) (union DBKey retVal___, int64 key);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_DB_i642key_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_DB_i642key_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &key);
+			retVal___ = postHookFunc(retVal___, key);
 		}
 	}
 	return retVal___;
@@ -687,10 +687,10 @@ union DBKey HP_DB_ui642key(uint64 key) {
 		retVal___ = HPMHooks.source.DB.ui642key(key);
 	}
 	if( HPMHooks.count.HP_DB_ui642key_post ) {
-		union DBKey (*postHookFunc) (union DBKey retVal___, uint64 *key);
+		union DBKey (*postHookFunc) (union DBKey retVal___, uint64 key);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_DB_ui642key_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_DB_ui642key_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &key);
+			retVal___ = postHookFunc(retVal___, key);
 		}
 	}
 	return retVal___;
@@ -714,10 +714,10 @@ struct DBData HP_DB_i2data(int data) {
 		retVal___ = HPMHooks.source.DB.i2data(data);
 	}
 	if( HPMHooks.count.HP_DB_i2data_post ) {
-		struct DBData (*postHookFunc) (struct DBData retVal___, int *data);
+		struct DBData (*postHookFunc) (struct DBData retVal___, int data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_DB_i2data_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_DB_i2data_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &data);
+			retVal___ = postHookFunc(retVal___, data);
 		}
 	}
 	return retVal___;
@@ -741,10 +741,10 @@ struct DBData HP_DB_ui2data(unsigned int data) {
 		retVal___ = HPMHooks.source.DB.ui2data(data);
 	}
 	if( HPMHooks.count.HP_DB_ui2data_post ) {
-		struct DBData (*postHookFunc) (struct DBData retVal___, unsigned int *data);
+		struct DBData (*postHookFunc) (struct DBData retVal___, unsigned int data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_DB_ui2data_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_DB_ui2data_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &data);
+			retVal___ = postHookFunc(retVal___, data);
 		}
 	}
 	return retVal___;
@@ -980,10 +980,10 @@ void HP_lclif_connection_error(int fd, uint8 error) {
 		HPMHooks.source.lclif.connection_error(fd, error);
 	}
 	if( HPMHooks.count.HP_lclif_connection_error_post ) {
-		void (*postHookFunc) (int *fd, uint8 *error);
+		void (*postHookFunc) (int fd, uint8 error);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_lclif_connection_error_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_lclif_connection_error_post[hIndex].func;
-			postHookFunc(&fd, &error);
+			postHookFunc(fd, error);
 		}
 	}
 	return;
@@ -1033,10 +1033,10 @@ void HP_lclif_auth_failed(int fd, time_t ban, uint32 error) {
 		HPMHooks.source.lclif.auth_failed(fd, ban, error);
 	}
 	if( HPMHooks.count.HP_lclif_auth_failed_post ) {
-		void (*postHookFunc) (int *fd, time_t *ban, uint32 *error);
+		void (*postHookFunc) (int fd, time_t ban, uint32 error);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_lclif_auth_failed_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_lclif_auth_failed_post[hIndex].func;
-			postHookFunc(&fd, &ban, &error);
+			postHookFunc(fd, ban, error);
 		}
 	}
 	return;
@@ -1059,10 +1059,10 @@ void HP_lclif_login_error(int fd, uint8 error) {
 		HPMHooks.source.lclif.login_error(fd, error);
 	}
 	if( HPMHooks.count.HP_lclif_login_error_post ) {
-		void (*postHookFunc) (int *fd, uint8 *error);
+		void (*postHookFunc) (int fd, uint8 error);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_lclif_login_error_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_lclif_login_error_post[hIndex].func;
-			postHookFunc(&fd, &error);
+			postHookFunc(fd, error);
 		}
 	}
 	return;
@@ -1085,10 +1085,10 @@ void HP_lclif_coding_key(int fd, struct login_session_data *sd) {
 		HPMHooks.source.lclif.coding_key(fd, sd);
 	}
 	if( HPMHooks.count.HP_lclif_coding_key_post ) {
-		void (*postHookFunc) (int *fd, struct login_session_data *sd);
+		void (*postHookFunc) (int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_lclif_coding_key_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_lclif_coding_key_post[hIndex].func;
-			postHookFunc(&fd, sd);
+			postHookFunc(fd, sd);
 		}
 	}
 	return;
@@ -1112,10 +1112,10 @@ const struct login_packet_db* HP_lclif_packet(int16 packet_id) {
 		retVal___ = HPMHooks.source.lclif.packet(packet_id);
 	}
 	if( HPMHooks.count.HP_lclif_packet_post ) {
-		const struct login_packet_db* (*postHookFunc) (const struct login_packet_db* retVal___, int16 *packet_id);
+		const struct login_packet_db* (*postHookFunc) (const struct login_packet_db* retVal___, int16 packet_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_lclif_packet_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_lclif_packet_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &packet_id);
+			retVal___ = postHookFunc(retVal___, packet_id);
 		}
 	}
 	return retVal___;
@@ -1139,10 +1139,10 @@ enum parsefunc_rcode HP_lclif_parse_packet(const struct login_packet_db *lpd, in
 		retVal___ = HPMHooks.source.lclif.parse_packet(lpd, fd, sd);
 	}
 	if( HPMHooks.count.HP_lclif_parse_packet_post ) {
-		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, const struct login_packet_db *lpd, int *fd, struct login_session_data *sd);
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, const struct login_packet_db *lpd, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_lclif_parse_packet_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_lclif_parse_packet_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, lpd, &fd, sd);
+			retVal___ = postHookFunc(retVal___, lpd, fd, sd);
 		}
 	}
 	return retVal___;
@@ -1166,10 +1166,10 @@ int HP_lclif_parse(int fd) {
 		retVal___ = HPMHooks.source.lclif.parse(fd);
 	}
 	if( HPMHooks.count.HP_lclif_parse_post ) {
-		int (*postHookFunc) (int retVal___, int *fd);
+		int (*postHookFunc) (int retVal___, int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_lclif_parse_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_lclif_parse_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd);
+			retVal___ = postHookFunc(retVal___, fd);
 		}
 	}
 	return retVal___;
@@ -1220,10 +1220,10 @@ enum parsefunc_rcode HP_PRIV__lclif_parse_sub(int fd, struct login_session_data 
 		retVal___ = HPMHooks.source.PRIV__lclif.parse_sub(fd, sd);
 	}
 	if( HPMHooks.count.HP_PRIV__lclif_parse_sub_post ) {
-		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int *fd, struct login_session_data *sd);
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_sub_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_sub_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd);
+			retVal___ = postHookFunc(retVal___, fd, sd);
 		}
 	}
 	return retVal___;
@@ -1247,10 +1247,10 @@ enum parsefunc_rcode HP_PRIV__lclif_parse_CA_CONNECT_INFO_CHANGED(int fd, struct
 		retVal___ = HPMHooks.source.PRIV__lclif.parse_CA_CONNECT_INFO_CHANGED(fd, sd);
 	}
 	if( HPMHooks.count.HP_PRIV__lclif_parse_CA_CONNECT_INFO_CHANGED_post ) {
-		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int *fd, struct login_session_data *sd);
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_CONNECT_INFO_CHANGED_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_CONNECT_INFO_CHANGED_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd);
+			retVal___ = postHookFunc(retVal___, fd, sd);
 		}
 	}
 	return retVal___;
@@ -1274,10 +1274,10 @@ enum parsefunc_rcode HP_PRIV__lclif_parse_CA_EXE_HASHCHECK(int fd, struct login_
 		retVal___ = HPMHooks.source.PRIV__lclif.parse_CA_EXE_HASHCHECK(fd, sd);
 	}
 	if( HPMHooks.count.HP_PRIV__lclif_parse_CA_EXE_HASHCHECK_post ) {
-		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int *fd, struct login_session_data *sd);
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_EXE_HASHCHECK_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_EXE_HASHCHECK_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd);
+			retVal___ = postHookFunc(retVal___, fd, sd);
 		}
 	}
 	return retVal___;
@@ -1301,10 +1301,10 @@ enum parsefunc_rcode HP_PRIV__lclif_parse_CA_LOGIN(int fd, struct login_session_
 		retVal___ = HPMHooks.source.PRIV__lclif.parse_CA_LOGIN(fd, sd);
 	}
 	if( HPMHooks.count.HP_PRIV__lclif_parse_CA_LOGIN_post ) {
-		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int *fd, struct login_session_data *sd);
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_LOGIN_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_LOGIN_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd);
+			retVal___ = postHookFunc(retVal___, fd, sd);
 		}
 	}
 	return retVal___;
@@ -1328,10 +1328,10 @@ enum parsefunc_rcode HP_PRIV__lclif_parse_CA_LOGIN2(int fd, struct login_session
 		retVal___ = HPMHooks.source.PRIV__lclif.parse_CA_LOGIN2(fd, sd);
 	}
 	if( HPMHooks.count.HP_PRIV__lclif_parse_CA_LOGIN2_post ) {
-		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int *fd, struct login_session_data *sd);
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_LOGIN2_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_LOGIN2_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd);
+			retVal___ = postHookFunc(retVal___, fd, sd);
 		}
 	}
 	return retVal___;
@@ -1355,10 +1355,10 @@ enum parsefunc_rcode HP_PRIV__lclif_parse_CA_LOGIN3(int fd, struct login_session
 		retVal___ = HPMHooks.source.PRIV__lclif.parse_CA_LOGIN3(fd, sd);
 	}
 	if( HPMHooks.count.HP_PRIV__lclif_parse_CA_LOGIN3_post ) {
-		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int *fd, struct login_session_data *sd);
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_LOGIN3_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_LOGIN3_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd);
+			retVal___ = postHookFunc(retVal___, fd, sd);
 		}
 	}
 	return retVal___;
@@ -1382,10 +1382,10 @@ enum parsefunc_rcode HP_PRIV__lclif_parse_CA_LOGIN4(int fd, struct login_session
 		retVal___ = HPMHooks.source.PRIV__lclif.parse_CA_LOGIN4(fd, sd);
 	}
 	if( HPMHooks.count.HP_PRIV__lclif_parse_CA_LOGIN4_post ) {
-		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int *fd, struct login_session_data *sd);
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_LOGIN4_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_LOGIN4_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd);
+			retVal___ = postHookFunc(retVal___, fd, sd);
 		}
 	}
 	return retVal___;
@@ -1409,10 +1409,10 @@ enum parsefunc_rcode HP_PRIV__lclif_parse_CA_LOGIN_PCBANG(int fd, struct login_s
 		retVal___ = HPMHooks.source.PRIV__lclif.parse_CA_LOGIN_PCBANG(fd, sd);
 	}
 	if( HPMHooks.count.HP_PRIV__lclif_parse_CA_LOGIN_PCBANG_post ) {
-		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int *fd, struct login_session_data *sd);
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_LOGIN_PCBANG_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_LOGIN_PCBANG_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd);
+			retVal___ = postHookFunc(retVal___, fd, sd);
 		}
 	}
 	return retVal___;
@@ -1436,10 +1436,10 @@ enum parsefunc_rcode HP_PRIV__lclif_parse_CA_LOGIN_HAN(int fd, struct login_sess
 		retVal___ = HPMHooks.source.PRIV__lclif.parse_CA_LOGIN_HAN(fd, sd);
 	}
 	if( HPMHooks.count.HP_PRIV__lclif_parse_CA_LOGIN_HAN_post ) {
-		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int *fd, struct login_session_data *sd);
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_LOGIN_HAN_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_LOGIN_HAN_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd);
+			retVal___ = postHookFunc(retVal___, fd, sd);
 		}
 	}
 	return retVal___;
@@ -1463,10 +1463,10 @@ enum parsefunc_rcode HP_PRIV__lclif_parse_CA_SSO_LOGIN_REQ(int fd, struct login_
 		retVal___ = HPMHooks.source.PRIV__lclif.parse_CA_SSO_LOGIN_REQ(fd, sd);
 	}
 	if( HPMHooks.count.HP_PRIV__lclif_parse_CA_SSO_LOGIN_REQ_post ) {
-		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int *fd, struct login_session_data *sd);
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_SSO_LOGIN_REQ_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_SSO_LOGIN_REQ_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd);
+			retVal___ = postHookFunc(retVal___, fd, sd);
 		}
 	}
 	return retVal___;
@@ -1490,10 +1490,10 @@ enum parsefunc_rcode HP_PRIV__lclif_parse_CA_REQ_HASH(int fd, struct login_sessi
 		retVal___ = HPMHooks.source.PRIV__lclif.parse_CA_REQ_HASH(fd, sd);
 	}
 	if( HPMHooks.count.HP_PRIV__lclif_parse_CA_REQ_HASH_post ) {
-		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int *fd, struct login_session_data *sd);
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_REQ_HASH_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_REQ_HASH_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd);
+			retVal___ = postHookFunc(retVal___, fd, sd);
 		}
 	}
 	return retVal___;
@@ -1517,10 +1517,10 @@ enum parsefunc_rcode HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT(int fd, struct lo
 		retVal___ = HPMHooks.source.PRIV__lclif.parse_CA_CHARSERVERCONNECT(fd, sd);
 	}
 	if( HPMHooks.count.HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_post ) {
-		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int *fd, struct login_session_data *sd);
+		enum parsefunc_rcode (*postHookFunc) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd);
+			retVal___ = postHookFunc(retVal___, fd, sd);
 		}
 	}
 	return retVal___;
@@ -1597,10 +1597,10 @@ void HP_libconfig_set_options(struct config_t *config, int options) {
 		HPMHooks.source.libconfig.set_options(config, options);
 	}
 	if( HPMHooks.count.HP_libconfig_set_options_post ) {
-		void (*postHookFunc) (struct config_t *config, int *options);
+		void (*postHookFunc) (struct config_t *config, int options);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_set_options_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_set_options_post[hIndex].func;
-			postHookFunc(config, &options);
+			postHookFunc(config, options);
 		}
 	}
 	return;
@@ -2133,10 +2133,10 @@ int HP_libconfig_setting_set_int(struct config_setting_t *setting, int value) {
 		retVal___ = HPMHooks.source.libconfig.setting_set_int(setting, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_int_post ) {
-		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, int *value);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, int value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_int_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_int_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &value);
+			retVal___ = postHookFunc(retVal___, setting, value);
 		}
 	}
 	return retVal___;
@@ -2160,10 +2160,10 @@ int HP_libconfig_setting_set_int64(struct config_setting_t *setting, long long v
 		retVal___ = HPMHooks.source.libconfig.setting_set_int64(setting, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_int64_post ) {
-		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, long long *value);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, long long value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_int64_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_int64_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &value);
+			retVal___ = postHookFunc(retVal___, setting, value);
 		}
 	}
 	return retVal___;
@@ -2187,10 +2187,10 @@ int HP_libconfig_setting_set_float(struct config_setting_t *setting, double valu
 		retVal___ = HPMHooks.source.libconfig.setting_set_float(setting, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_float_post ) {
-		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, double *value);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, double value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_float_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_float_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &value);
+			retVal___ = postHookFunc(retVal___, setting, value);
 		}
 	}
 	return retVal___;
@@ -2214,10 +2214,10 @@ int HP_libconfig_setting_set_bool(struct config_setting_t *setting, int value) {
 		retVal___ = HPMHooks.source.libconfig.setting_set_bool(setting, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_bool_post ) {
-		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, int *value);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, int value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_bool_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_bool_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &value);
+			retVal___ = postHookFunc(retVal___, setting, value);
 		}
 	}
 	return retVal___;
@@ -2268,10 +2268,10 @@ int HP_libconfig_setting_set_format(struct config_setting_t *setting, short form
 		retVal___ = HPMHooks.source.libconfig.setting_set_format(setting, format);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_format_post ) {
-		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, short *format);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *setting, short format);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_format_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_format_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &format);
+			retVal___ = postHookFunc(retVal___, setting, format);
 		}
 	}
 	return retVal___;
@@ -2322,10 +2322,10 @@ int HP_libconfig_setting_get_int_elem(const struct config_setting_t *setting, in
 		retVal___ = HPMHooks.source.libconfig.setting_get_int_elem(setting, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_int_elem_post ) {
-		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, int *idx);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, int idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_int_elem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &idx);
+			retVal___ = postHookFunc(retVal___, setting, idx);
 		}
 	}
 	return retVal___;
@@ -2349,10 +2349,10 @@ long long HP_libconfig_setting_get_int64_elem(const struct config_setting_t *set
 		retVal___ = HPMHooks.source.libconfig.setting_get_int64_elem(setting, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_int64_elem_post ) {
-		long long (*postHookFunc) (long long retVal___, const struct config_setting_t *setting, int *idx);
+		long long (*postHookFunc) (long long retVal___, const struct config_setting_t *setting, int idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_int64_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_int64_elem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &idx);
+			retVal___ = postHookFunc(retVal___, setting, idx);
 		}
 	}
 	return retVal___;
@@ -2376,10 +2376,10 @@ double HP_libconfig_setting_get_float_elem(const struct config_setting_t *settin
 		retVal___ = HPMHooks.source.libconfig.setting_get_float_elem(setting, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_float_elem_post ) {
-		double (*postHookFunc) (double retVal___, const struct config_setting_t *setting, int *idx);
+		double (*postHookFunc) (double retVal___, const struct config_setting_t *setting, int idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_float_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_float_elem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &idx);
+			retVal___ = postHookFunc(retVal___, setting, idx);
 		}
 	}
 	return retVal___;
@@ -2403,10 +2403,10 @@ int HP_libconfig_setting_get_bool_elem(const struct config_setting_t *setting, i
 		retVal___ = HPMHooks.source.libconfig.setting_get_bool_elem(setting, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_bool_elem_post ) {
-		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, int *idx);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, int idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_bool_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_bool_elem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &idx);
+			retVal___ = postHookFunc(retVal___, setting, idx);
 		}
 	}
 	return retVal___;
@@ -2430,10 +2430,10 @@ const char* HP_libconfig_setting_get_string_elem(const struct config_setting_t *
 		retVal___ = HPMHooks.source.libconfig.setting_get_string_elem(setting, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_string_elem_post ) {
-		const char* (*postHookFunc) (const char* retVal___, const struct config_setting_t *setting, int *idx);
+		const char* (*postHookFunc) (const char* retVal___, const struct config_setting_t *setting, int idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_string_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_string_elem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &idx);
+			retVal___ = postHookFunc(retVal___, setting, idx);
 		}
 	}
 	return retVal___;
@@ -2457,10 +2457,10 @@ struct config_setting_t* HP_libconfig_setting_set_int_elem(struct config_setting
 		retVal___ = HPMHooks.source.libconfig.setting_set_int_elem(setting, idx, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_int_elem_post ) {
-		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int *idx, int *value);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int idx, int value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_int_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_int_elem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &idx, &value);
+			retVal___ = postHookFunc(retVal___, setting, idx, value);
 		}
 	}
 	return retVal___;
@@ -2484,10 +2484,10 @@ struct config_setting_t* HP_libconfig_setting_set_int64_elem(struct config_setti
 		retVal___ = HPMHooks.source.libconfig.setting_set_int64_elem(setting, idx, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_int64_elem_post ) {
-		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int *idx, long long *value);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int idx, long long value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_int64_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_int64_elem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &idx, &value);
+			retVal___ = postHookFunc(retVal___, setting, idx, value);
 		}
 	}
 	return retVal___;
@@ -2511,10 +2511,10 @@ struct config_setting_t* HP_libconfig_setting_set_float_elem(struct config_setti
 		retVal___ = HPMHooks.source.libconfig.setting_set_float_elem(setting, idx, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_float_elem_post ) {
-		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int *idx, double *value);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int idx, double value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_float_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_float_elem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &idx, &value);
+			retVal___ = postHookFunc(retVal___, setting, idx, value);
 		}
 	}
 	return retVal___;
@@ -2538,10 +2538,10 @@ struct config_setting_t* HP_libconfig_setting_set_bool_elem(struct config_settin
 		retVal___ = HPMHooks.source.libconfig.setting_set_bool_elem(setting, idx, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_bool_elem_post ) {
-		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int *idx, int *value);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int idx, int value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_bool_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_bool_elem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &idx, &value);
+			retVal___ = postHookFunc(retVal___, setting, idx, value);
 		}
 	}
 	return retVal___;
@@ -2565,10 +2565,10 @@ struct config_setting_t* HP_libconfig_setting_set_string_elem(struct config_sett
 		retVal___ = HPMHooks.source.libconfig.setting_set_string_elem(setting, idx, value);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_set_string_elem_post ) {
-		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int *idx, const char *value);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *setting, int idx, const char *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_set_string_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_set_string_elem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &idx, value);
+			retVal___ = postHookFunc(retVal___, setting, idx, value);
 		}
 	}
 	return retVal___;
@@ -2646,10 +2646,10 @@ struct config_setting_t* HP_libconfig_setting_get_elem(const struct config_setti
 		retVal___ = HPMHooks.source.libconfig.setting_get_elem(setting, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_get_elem_post ) {
-		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, const struct config_setting_t *setting, unsigned int *idx);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, const struct config_setting_t *setting, unsigned int idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_get_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_get_elem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, &idx);
+			retVal___ = postHookFunc(retVal___, setting, idx);
 		}
 	}
 	return retVal___;
@@ -2700,10 +2700,10 @@ struct config_setting_t* HP_libconfig_setting_add(struct config_setting_t *paren
 		retVal___ = HPMHooks.source.libconfig.setting_add(parent, name, type);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_add_post ) {
-		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *parent, const char *name, int *type);
+		struct config_setting_t* (*postHookFunc) (struct config_setting_t* retVal___, struct config_setting_t *parent, const char *name, int type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_add_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_add_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, parent, name, &type);
+			retVal___ = postHookFunc(retVal___, parent, name, type);
 		}
 	}
 	return retVal___;
@@ -2754,10 +2754,10 @@ int HP_libconfig_setting_remove_elem(struct config_setting_t *parent, unsigned i
 		retVal___ = HPMHooks.source.libconfig.setting_remove_elem(parent, idx);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_remove_elem_post ) {
-		int (*postHookFunc) (int retVal___, struct config_setting_t *parent, unsigned int *idx);
+		int (*postHookFunc) (int retVal___, struct config_setting_t *parent, unsigned int idx);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_remove_elem_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_remove_elem_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, parent, &idx);
+			retVal___ = postHookFunc(retVal___, parent, idx);
 		}
 	}
 	return retVal___;
@@ -3317,10 +3317,10 @@ int HP_libconfig_setting_lookup_mutable_string(const struct config_setting_t *se
 		retVal___ = HPMHooks.source.libconfig.setting_lookup_mutable_string(setting, name, out, out_size);
 	}
 	if( HPMHooks.count.HP_libconfig_setting_lookup_mutable_string_post ) {
-		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, const char *name, char *out, size_t *out_size);
+		int (*postHookFunc) (int retVal___, const struct config_setting_t *setting, const char *name, char *out, size_t out_size);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_setting_lookup_mutable_string_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_setting_lookup_mutable_string_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, setting, name, out, &out_size);
+			retVal___ = postHookFunc(retVal___, setting, name, out, out_size);
 		}
 	}
 	return retVal___;
@@ -3344,10 +3344,10 @@ int HP_libconfig_lookup_mutable_string(const struct config_t *config, const char
 		retVal___ = HPMHooks.source.libconfig.lookup_mutable_string(config, name, out, out_size);
 	}
 	if( HPMHooks.count.HP_libconfig_lookup_mutable_string_post ) {
-		int (*postHookFunc) (int retVal___, const struct config_t *config, const char *name, char *out, size_t *out_size);
+		int (*postHookFunc) (int retVal___, const struct config_t *config, const char *name, char *out, size_t out_size);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_libconfig_lookup_mutable_string_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_libconfig_lookup_mutable_string_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, config, name, out, &out_size);
+			retVal___ = postHookFunc(retVal___, config, name, out, out_size);
 		}
 	}
 	return retVal___;
@@ -3372,10 +3372,10 @@ int HP_login_mmo_auth(struct login_session_data *sd, bool isServer) {
 		retVal___ = HPMHooks.source.login.mmo_auth(sd, isServer);
 	}
 	if( HPMHooks.count.HP_login_mmo_auth_post ) {
-		int (*postHookFunc) (int retVal___, struct login_session_data *sd, bool *isServer);
+		int (*postHookFunc) (int retVal___, struct login_session_data *sd, bool isServer);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_mmo_auth_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_mmo_auth_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, &isServer);
+			retVal___ = postHookFunc(retVal___, sd, isServer);
 		}
 	}
 	return retVal___;
@@ -3399,10 +3399,10 @@ int HP_login_mmo_auth_new(const char *userid, const char *pass, const char sex, 
 		retVal___ = HPMHooks.source.login.mmo_auth_new(userid, pass, sex, last_ip);
 	}
 	if( HPMHooks.count.HP_login_mmo_auth_new_post ) {
-		int (*postHookFunc) (int retVal___, const char *userid, const char *pass, const char *sex, const char *last_ip);
+		int (*postHookFunc) (int retVal___, const char *userid, const char *pass, const char sex, const char *last_ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_mmo_auth_new_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_mmo_auth_new_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, userid, pass, &sex, last_ip);
+			retVal___ = postHookFunc(retVal___, userid, pass, sex, last_ip);
 		}
 	}
 	return retVal___;
@@ -3426,10 +3426,10 @@ int HP_login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t data
 		retVal___ = HPMHooks.source.login.waiting_disconnect_timer(tid, tick, id, data);
 	}
 	if( HPMHooks.count.HP_login_waiting_disconnect_timer_post ) {
-		int (*postHookFunc) (int retVal___, int *tid, int64 *tick, int *id, intptr_t *data);
+		int (*postHookFunc) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_waiting_disconnect_timer_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_waiting_disconnect_timer_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &tid, &tick, &id, &data);
+			retVal___ = postHookFunc(retVal___, tid, tick, id, data);
 		}
 	}
 	return retVal___;
@@ -3457,11 +3457,11 @@ struct DBData HP_login_create_online_user(union DBKey key, va_list args) {
 		va_end(args___copy);
 	}
 	if( HPMHooks.count.HP_login_create_online_user_post ) {
-		struct DBData (*postHookFunc) (struct DBData retVal___, union DBKey *key, va_list args);
+		struct DBData (*postHookFunc) (struct DBData retVal___, union DBKey key, va_list args);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_create_online_user_post; hIndex++ ) {
 			va_list args___copy; va_copy(args___copy, args);
 			postHookFunc = HPMHooks.list.HP_login_create_online_user_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &key, args___copy);
+			retVal___ = postHookFunc(retVal___, key, args___copy);
 			va_end(args___copy);
 		}
 	}
@@ -3486,10 +3486,10 @@ struct online_login_data* HP_login_add_online_user(int char_server, int account_
 		retVal___ = HPMHooks.source.login.add_online_user(char_server, account_id);
 	}
 	if( HPMHooks.count.HP_login_add_online_user_post ) {
-		struct online_login_data* (*postHookFunc) (struct online_login_data* retVal___, int *char_server, int *account_id);
+		struct online_login_data* (*postHookFunc) (struct online_login_data* retVal___, int char_server, int account_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_add_online_user_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_add_online_user_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &char_server, &account_id);
+			retVal___ = postHookFunc(retVal___, char_server, account_id);
 		}
 	}
 	return retVal___;
@@ -3512,10 +3512,10 @@ void HP_login_remove_online_user(int account_id) {
 		HPMHooks.source.login.remove_online_user(account_id);
 	}
 	if( HPMHooks.count.HP_login_remove_online_user_post ) {
-		void (*postHookFunc) (int *account_id);
+		void (*postHookFunc) (int account_id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_remove_online_user_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_remove_online_user_post[hIndex].func;
-			postHookFunc(&account_id);
+			postHookFunc(account_id);
 		}
 	}
 	return;
@@ -3543,11 +3543,11 @@ int HP_login_online_db_setoffline(union DBKey key, struct DBData *data, va_list 
 		va_end(ap___copy);
 	}
 	if( HPMHooks.count.HP_login_online_db_setoffline_post ) {
-		int (*postHookFunc) (int retVal___, union DBKey *key, struct DBData *data, va_list ap);
+		int (*postHookFunc) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_online_db_setoffline_post; hIndex++ ) {
 			va_list ap___copy; va_copy(ap___copy, ap);
 			postHookFunc = HPMHooks.list.HP_login_online_db_setoffline_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &key, data, ap___copy);
+			retVal___ = postHookFunc(retVal___, key, data, ap___copy);
 			va_end(ap___copy);
 		}
 	}
@@ -3576,11 +3576,11 @@ int HP_login_online_data_cleanup_sub(union DBKey key, struct DBData *data, va_li
 		va_end(ap___copy);
 	}
 	if( HPMHooks.count.HP_login_online_data_cleanup_sub_post ) {
-		int (*postHookFunc) (int retVal___, union DBKey *key, struct DBData *data, va_list ap);
+		int (*postHookFunc) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_online_data_cleanup_sub_post; hIndex++ ) {
 			va_list ap___copy; va_copy(ap___copy, ap);
 			postHookFunc = HPMHooks.list.HP_login_online_data_cleanup_sub_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &key, data, ap___copy);
+			retVal___ = postHookFunc(retVal___, key, data, ap___copy);
 			va_end(ap___copy);
 		}
 	}
@@ -3605,10 +3605,10 @@ int HP_login_online_data_cleanup(int tid, int64 tick, int id, intptr_t data) {
 		retVal___ = HPMHooks.source.login.online_data_cleanup(tid, tick, id, data);
 	}
 	if( HPMHooks.count.HP_login_online_data_cleanup_post ) {
-		int (*postHookFunc) (int retVal___, int *tid, int64 *tick, int *id, intptr_t *data);
+		int (*postHookFunc) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_online_data_cleanup_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_online_data_cleanup_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &tid, &tick, &id, &data);
+			retVal___ = postHookFunc(retVal___, tid, tick, id, data);
 		}
 	}
 	return retVal___;
@@ -3632,10 +3632,10 @@ int HP_login_sync_ip_addresses(int tid, int64 tick, int id, intptr_t data) {
 		retVal___ = HPMHooks.source.login.sync_ip_addresses(tid, tick, id, data);
 	}
 	if( HPMHooks.count.HP_login_sync_ip_addresses_post ) {
-		int (*postHookFunc) (int retVal___, int *tid, int64 *tick, int *id, intptr_t *data);
+		int (*postHookFunc) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_sync_ip_addresses_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_sync_ip_addresses_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &tid, &tick, &id, &data);
+			retVal___ = postHookFunc(retVal___, tid, tick, id, data);
 		}
 	}
 	return retVal___;
@@ -3686,10 +3686,10 @@ bool HP_login_check_password(const char *md5key, int passwdenc, const char *pass
 		retVal___ = HPMHooks.source.login.check_password(md5key, passwdenc, passwd, refpass);
 	}
 	if( HPMHooks.count.HP_login_check_password_post ) {
-		bool (*postHookFunc) (bool retVal___, const char *md5key, int *passwdenc, const char *passwd, const char *refpass);
+		bool (*postHookFunc) (bool retVal___, const char *md5key, int passwdenc, const char *passwd, const char *refpass);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_check_password_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_check_password_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, md5key, &passwdenc, passwd, refpass);
+			retVal___ = postHookFunc(retVal___, md5key, passwdenc, passwd, refpass);
 		}
 	}
 	return retVal___;
@@ -3713,10 +3713,10 @@ uint32 HP_login_lan_subnet_check(uint32 ip) {
 		retVal___ = HPMHooks.source.login.lan_subnet_check(ip);
 	}
 	if( HPMHooks.count.HP_login_lan_subnet_check_post ) {
-		uint32 (*postHookFunc) (uint32 retVal___, uint32 *ip);
+		uint32 (*postHookFunc) (uint32 retVal___, uint32 ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_lan_subnet_check_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_lan_subnet_check_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &ip);
+			retVal___ = postHookFunc(retVal___, ip);
 		}
 	}
 	return retVal___;
@@ -3739,10 +3739,10 @@ void HP_login_fromchar_accinfo(int fd, int account_id, int u_fd, int u_aid, int 
 		HPMHooks.source.login.fromchar_accinfo(fd, account_id, u_fd, u_aid, u_group, map_fd, acc);
 	}
 	if( HPMHooks.count.HP_login_fromchar_accinfo_post ) {
-		void (*postHookFunc) (int *fd, int *account_id, int *u_fd, int *u_aid, int *u_group, int *map_fd, struct mmo_account *acc);
+		void (*postHookFunc) (int fd, int account_id, int u_fd, int u_aid, int u_group, int map_fd, struct mmo_account *acc);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_accinfo_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_accinfo_post[hIndex].func;
-			postHookFunc(&fd, &account_id, &u_fd, &u_aid, &u_group, &map_fd, acc);
+			postHookFunc(fd, account_id, u_fd, u_aid, u_group, map_fd, acc);
 		}
 	}
 	return;
@@ -3765,10 +3765,10 @@ void HP_login_fromchar_account(int fd, int account_id, struct mmo_account *acc) 
 		HPMHooks.source.login.fromchar_account(fd, account_id, acc);
 	}
 	if( HPMHooks.count.HP_login_fromchar_account_post ) {
-		void (*postHookFunc) (int *fd, int *account_id, struct mmo_account *acc);
+		void (*postHookFunc) (int fd, int account_id, struct mmo_account *acc);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_account_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_account_post[hIndex].func;
-			postHookFunc(&fd, &account_id, acc);
+			postHookFunc(fd, account_id, acc);
 		}
 	}
 	return;
@@ -3791,10 +3791,10 @@ void HP_login_fromchar_account_update_other(int account_id, unsigned int state) 
 		HPMHooks.source.login.fromchar_account_update_other(account_id, state);
 	}
 	if( HPMHooks.count.HP_login_fromchar_account_update_other_post ) {
-		void (*postHookFunc) (int *account_id, unsigned int *state);
+		void (*postHookFunc) (int account_id, unsigned int state);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_account_update_other_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_account_update_other_post[hIndex].func;
-			postHookFunc(&account_id, &state);
+			postHookFunc(account_id, state);
 		}
 	}
 	return;
@@ -3817,10 +3817,10 @@ void HP_login_fromchar_auth_ack(int fd, int account_id, uint32 login_id1, uint32
 		HPMHooks.source.login.fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, node);
 	}
 	if( HPMHooks.count.HP_login_fromchar_auth_ack_post ) {
-		void (*postHookFunc) (int *fd, int *account_id, uint32 *login_id1, uint32 *login_id2, uint8 *sex, int *request_id, struct login_auth_node *node);
+		void (*postHookFunc) (int fd, int account_id, uint32 login_id1, uint32 login_id2, uint8 sex, int request_id, struct login_auth_node *node);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_auth_ack_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_auth_ack_post[hIndex].func;
-			postHookFunc(&fd, &account_id, &login_id1, &login_id2, &sex, &request_id, node);
+			postHookFunc(fd, account_id, login_id1, login_id2, sex, request_id, node);
 		}
 	}
 	return;
@@ -3843,10 +3843,10 @@ void HP_login_fromchar_ban(int account_id, time_t timestamp) {
 		HPMHooks.source.login.fromchar_ban(account_id, timestamp);
 	}
 	if( HPMHooks.count.HP_login_fromchar_ban_post ) {
-		void (*postHookFunc) (int *account_id, time_t *timestamp);
+		void (*postHookFunc) (int account_id, time_t timestamp);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_ban_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_ban_post[hIndex].func;
-			postHookFunc(&account_id, &timestamp);
+			postHookFunc(account_id, timestamp);
 		}
 	}
 	return;
@@ -3869,10 +3869,10 @@ void HP_login_fromchar_change_sex_other(int account_id, char sex) {
 		HPMHooks.source.login.fromchar_change_sex_other(account_id, sex);
 	}
 	if( HPMHooks.count.HP_login_fromchar_change_sex_other_post ) {
-		void (*postHookFunc) (int *account_id, char *sex);
+		void (*postHookFunc) (int account_id, char sex);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_change_sex_other_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_change_sex_other_post[hIndex].func;
-			postHookFunc(&account_id, &sex);
+			postHookFunc(account_id, sex);
 		}
 	}
 	return;
@@ -3895,10 +3895,10 @@ void HP_login_fromchar_pong(int fd) {
 		HPMHooks.source.login.fromchar_pong(fd);
 	}
 	if( HPMHooks.count.HP_login_fromchar_pong_post ) {
-		void (*postHookFunc) (int *fd);
+		void (*postHookFunc) (int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_pong_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_pong_post[hIndex].func;
-			postHookFunc(&fd);
+			postHookFunc(fd);
 		}
 	}
 	return;
@@ -3921,10 +3921,10 @@ void HP_login_fromchar_parse_auth(int fd, int id, const char *ip) {
 		HPMHooks.source.login.fromchar_parse_auth(fd, id, ip);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_auth_post ) {
-		void (*postHookFunc) (int *fd, int *id, const char *ip);
+		void (*postHookFunc) (int fd, int id, const char *ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_auth_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_auth_post[hIndex].func;
-			postHookFunc(&fd, &id, ip);
+			postHookFunc(fd, id, ip);
 		}
 	}
 	return;
@@ -3947,10 +3947,10 @@ void HP_login_fromchar_parse_update_users(int fd, int id) {
 		HPMHooks.source.login.fromchar_parse_update_users(fd, id);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_update_users_post ) {
-		void (*postHookFunc) (int *fd, int *id);
+		void (*postHookFunc) (int fd, int id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_update_users_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_update_users_post[hIndex].func;
-			postHookFunc(&fd, &id);
+			postHookFunc(fd, id);
 		}
 	}
 	return;
@@ -3973,10 +3973,10 @@ void HP_login_fromchar_parse_request_change_email(int fd, int id, const char *ip
 		HPMHooks.source.login.fromchar_parse_request_change_email(fd, id, ip);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_request_change_email_post ) {
-		void (*postHookFunc) (int *fd, int *id, const char *ip);
+		void (*postHookFunc) (int fd, int id, const char *ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_request_change_email_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_request_change_email_post[hIndex].func;
-			postHookFunc(&fd, &id, ip);
+			postHookFunc(fd, id, ip);
 		}
 	}
 	return;
@@ -3999,10 +3999,10 @@ void HP_login_fromchar_parse_account_data(int fd, int id, const char *ip) {
 		HPMHooks.source.login.fromchar_parse_account_data(fd, id, ip);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_account_data_post ) {
-		void (*postHookFunc) (int *fd, int *id, const char *ip);
+		void (*postHookFunc) (int fd, int id, const char *ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_account_data_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_account_data_post[hIndex].func;
-			postHookFunc(&fd, &id, ip);
+			postHookFunc(fd, id, ip);
 		}
 	}
 	return;
@@ -4025,10 +4025,10 @@ void HP_login_fromchar_parse_ping(int fd) {
 		HPMHooks.source.login.fromchar_parse_ping(fd);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_ping_post ) {
-		void (*postHookFunc) (int *fd);
+		void (*postHookFunc) (int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_ping_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_ping_post[hIndex].func;
-			postHookFunc(&fd);
+			postHookFunc(fd);
 		}
 	}
 	return;
@@ -4051,10 +4051,10 @@ void HP_login_fromchar_parse_change_email(int fd, int id, const char *ip) {
 		HPMHooks.source.login.fromchar_parse_change_email(fd, id, ip);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_change_email_post ) {
-		void (*postHookFunc) (int *fd, int *id, const char *ip);
+		void (*postHookFunc) (int fd, int id, const char *ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_change_email_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_change_email_post[hIndex].func;
-			postHookFunc(&fd, &id, ip);
+			postHookFunc(fd, id, ip);
 		}
 	}
 	return;
@@ -4077,10 +4077,10 @@ void HP_login_fromchar_parse_account_update(int fd, int id, const char *ip) {
 		HPMHooks.source.login.fromchar_parse_account_update(fd, id, ip);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_account_update_post ) {
-		void (*postHookFunc) (int *fd, int *id, const char *ip);
+		void (*postHookFunc) (int fd, int id, const char *ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_account_update_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_account_update_post[hIndex].func;
-			postHookFunc(&fd, &id, ip);
+			postHookFunc(fd, id, ip);
 		}
 	}
 	return;
@@ -4103,10 +4103,10 @@ void HP_login_fromchar_parse_ban(int fd, int id, const char *ip) {
 		HPMHooks.source.login.fromchar_parse_ban(fd, id, ip);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_ban_post ) {
-		void (*postHookFunc) (int *fd, int *id, const char *ip);
+		void (*postHookFunc) (int fd, int id, const char *ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_ban_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_ban_post[hIndex].func;
-			postHookFunc(&fd, &id, ip);
+			postHookFunc(fd, id, ip);
 		}
 	}
 	return;
@@ -4129,10 +4129,10 @@ void HP_login_fromchar_parse_change_sex(int fd, int id, const char *ip) {
 		HPMHooks.source.login.fromchar_parse_change_sex(fd, id, ip);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_change_sex_post ) {
-		void (*postHookFunc) (int *fd, int *id, const char *ip);
+		void (*postHookFunc) (int fd, int id, const char *ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_change_sex_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_change_sex_post[hIndex].func;
-			postHookFunc(&fd, &id, ip);
+			postHookFunc(fd, id, ip);
 		}
 	}
 	return;
@@ -4155,10 +4155,10 @@ void HP_login_fromchar_parse_account_reg2(int fd, int id, const char *ip) {
 		HPMHooks.source.login.fromchar_parse_account_reg2(fd, id, ip);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_account_reg2_post ) {
-		void (*postHookFunc) (int *fd, int *id, const char *ip);
+		void (*postHookFunc) (int fd, int id, const char *ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_account_reg2_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_account_reg2_post[hIndex].func;
-			postHookFunc(&fd, &id, ip);
+			postHookFunc(fd, id, ip);
 		}
 	}
 	return;
@@ -4181,10 +4181,10 @@ void HP_login_fromchar_parse_unban(int fd, int id, const char *ip) {
 		HPMHooks.source.login.fromchar_parse_unban(fd, id, ip);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_unban_post ) {
-		void (*postHookFunc) (int *fd, int *id, const char *ip);
+		void (*postHookFunc) (int fd, int id, const char *ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_unban_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_unban_post[hIndex].func;
-			postHookFunc(&fd, &id, ip);
+			postHookFunc(fd, id, ip);
 		}
 	}
 	return;
@@ -4207,10 +4207,10 @@ void HP_login_fromchar_parse_account_online(int fd, int id) {
 		HPMHooks.source.login.fromchar_parse_account_online(fd, id);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_account_online_post ) {
-		void (*postHookFunc) (int *fd, int *id);
+		void (*postHookFunc) (int fd, int id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_account_online_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_account_online_post[hIndex].func;
-			postHookFunc(&fd, &id);
+			postHookFunc(fd, id);
 		}
 	}
 	return;
@@ -4233,10 +4233,10 @@ void HP_login_fromchar_parse_account_offline(int fd) {
 		HPMHooks.source.login.fromchar_parse_account_offline(fd);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_account_offline_post ) {
-		void (*postHookFunc) (int *fd);
+		void (*postHookFunc) (int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_account_offline_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_account_offline_post[hIndex].func;
-			postHookFunc(&fd);
+			postHookFunc(fd);
 		}
 	}
 	return;
@@ -4259,10 +4259,10 @@ void HP_login_fromchar_parse_online_accounts(int fd, int id) {
 		HPMHooks.source.login.fromchar_parse_online_accounts(fd, id);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_online_accounts_post ) {
-		void (*postHookFunc) (int *fd, int *id);
+		void (*postHookFunc) (int fd, int id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_online_accounts_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_online_accounts_post[hIndex].func;
-			postHookFunc(&fd, &id);
+			postHookFunc(fd, id);
 		}
 	}
 	return;
@@ -4285,10 +4285,10 @@ void HP_login_fromchar_parse_request_account_reg2(int fd) {
 		HPMHooks.source.login.fromchar_parse_request_account_reg2(fd);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_request_account_reg2_post ) {
-		void (*postHookFunc) (int *fd);
+		void (*postHookFunc) (int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_request_account_reg2_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_request_account_reg2_post[hIndex].func;
-			postHookFunc(&fd);
+			postHookFunc(fd);
 		}
 	}
 	return;
@@ -4311,10 +4311,10 @@ void HP_login_fromchar_parse_update_wan_ip(int fd, int id) {
 		HPMHooks.source.login.fromchar_parse_update_wan_ip(fd, id);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_update_wan_ip_post ) {
-		void (*postHookFunc) (int *fd, int *id);
+		void (*postHookFunc) (int fd, int id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_update_wan_ip_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_update_wan_ip_post[hIndex].func;
-			postHookFunc(&fd, &id);
+			postHookFunc(fd, id);
 		}
 	}
 	return;
@@ -4337,10 +4337,10 @@ void HP_login_fromchar_parse_all_offline(int fd, int id) {
 		HPMHooks.source.login.fromchar_parse_all_offline(fd, id);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_all_offline_post ) {
-		void (*postHookFunc) (int *fd, int *id);
+		void (*postHookFunc) (int fd, int id);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_all_offline_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_all_offline_post[hIndex].func;
-			postHookFunc(&fd, &id);
+			postHookFunc(fd, id);
 		}
 	}
 	return;
@@ -4363,10 +4363,10 @@ void HP_login_fromchar_parse_change_pincode(int fd) {
 		HPMHooks.source.login.fromchar_parse_change_pincode(fd);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_change_pincode_post ) {
-		void (*postHookFunc) (int *fd);
+		void (*postHookFunc) (int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_change_pincode_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_change_pincode_post[hIndex].func;
-			postHookFunc(&fd);
+			postHookFunc(fd);
 		}
 	}
 	return;
@@ -4390,10 +4390,10 @@ bool HP_login_fromchar_parse_wrong_pincode(int fd) {
 		retVal___ = HPMHooks.source.login.fromchar_parse_wrong_pincode(fd);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_wrong_pincode_post ) {
-		bool (*postHookFunc) (bool retVal___, int *fd);
+		bool (*postHookFunc) (bool retVal___, int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_wrong_pincode_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_wrong_pincode_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd);
+			retVal___ = postHookFunc(retVal___, fd);
 		}
 	}
 	return retVal___;
@@ -4416,10 +4416,10 @@ void HP_login_fromchar_parse_accinfo(int fd) {
 		HPMHooks.source.login.fromchar_parse_accinfo(fd);
 	}
 	if( HPMHooks.count.HP_login_fromchar_parse_accinfo_post ) {
-		void (*postHookFunc) (int *fd);
+		void (*postHookFunc) (int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_fromchar_parse_accinfo_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_fromchar_parse_accinfo_post[hIndex].func;
-			postHookFunc(&fd);
+			postHookFunc(fd);
 		}
 	}
 	return;
@@ -4443,10 +4443,10 @@ int HP_login_parse_fromchar(int fd) {
 		retVal___ = HPMHooks.source.login.parse_fromchar(fd);
 	}
 	if( HPMHooks.count.HP_login_parse_fromchar_post ) {
-		int (*postHookFunc) (int retVal___, int *fd);
+		int (*postHookFunc) (int retVal___, int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_parse_fromchar_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_parse_fromchar_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd);
+			retVal___ = postHookFunc(retVal___, fd);
 		}
 	}
 	return retVal___;
@@ -4521,10 +4521,10 @@ void HP_login_auth_failed(struct login_session_data *sd, int result) {
 		HPMHooks.source.login.auth_failed(sd, result);
 	}
 	if( HPMHooks.count.HP_login_auth_failed_post ) {
-		void (*postHookFunc) (struct login_session_data *sd, int *result);
+		void (*postHookFunc) (struct login_session_data *sd, int result);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_auth_failed_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_auth_failed_post[hIndex].func;
-			postHookFunc(sd, &result);
+			postHookFunc(sd, result);
 		}
 	}
 	return;
@@ -4548,10 +4548,10 @@ bool HP_login_client_login(int fd, struct login_session_data *sd) {
 		retVal___ = HPMHooks.source.login.client_login(fd, sd);
 	}
 	if( HPMHooks.count.HP_login_client_login_post ) {
-		bool (*postHookFunc) (bool retVal___, int *fd, struct login_session_data *sd);
+		bool (*postHookFunc) (bool retVal___, int fd, struct login_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_client_login_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_client_login_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, sd);
+			retVal___ = postHookFunc(retVal___, fd, sd);
 		}
 	}
 	return retVal___;
@@ -4574,10 +4574,10 @@ void HP_login_char_server_connection_status(int fd, struct login_session_data *s
 		HPMHooks.source.login.char_server_connection_status(fd, sd, status);
 	}
 	if( HPMHooks.count.HP_login_char_server_connection_status_post ) {
-		void (*postHookFunc) (int *fd, struct login_session_data *sd, uint8 *status);
+		void (*postHookFunc) (int fd, struct login_session_data *sd, uint8 status);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_char_server_connection_status_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_char_server_connection_status_post[hIndex].func;
-			postHookFunc(&fd, sd, &status);
+			postHookFunc(fd, sd, status);
 		}
 	}
 	return;
@@ -4600,10 +4600,10 @@ void HP_login_parse_request_connection(int fd, struct login_session_data *sd, co
 		HPMHooks.source.login.parse_request_connection(fd, sd, ip, ipl);
 	}
 	if( HPMHooks.count.HP_login_parse_request_connection_post ) {
-		void (*postHookFunc) (int *fd, struct login_session_data *sd, const char *ip, uint32 *ipl);
+		void (*postHookFunc) (int fd, struct login_session_data *sd, const char *ip, uint32 ipl);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_parse_request_connection_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_parse_request_connection_post[hIndex].func;
-			postHookFunc(&fd, sd, ip, &ipl);
+			postHookFunc(fd, sd, ip, ipl);
 		}
 	}
 	return;
@@ -4733,10 +4733,10 @@ void* HP_iMalloc_malloc(size_t size, const char *file, int line, const char *fun
 		retVal___ = HPMHooks.source.iMalloc.malloc(size, file, line, func);
 	}
 	if( HPMHooks.count.HP_iMalloc_malloc_post ) {
-		void* (*postHookFunc) (void* retVal___, size_t *size, const char *file, int *line, const char *func);
+		void* (*postHookFunc) (void* retVal___, size_t size, const char *file, int line, const char *func);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_iMalloc_malloc_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_iMalloc_malloc_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &size, file, &line, func);
+			retVal___ = postHookFunc(retVal___, size, file, line, func);
 		}
 	}
 	return retVal___;
@@ -4760,10 +4760,10 @@ void* HP_iMalloc_calloc(size_t num, size_t size, const char *file, int line, con
 		retVal___ = HPMHooks.source.iMalloc.calloc(num, size, file, line, func);
 	}
 	if( HPMHooks.count.HP_iMalloc_calloc_post ) {
-		void* (*postHookFunc) (void* retVal___, size_t *num, size_t *size, const char *file, int *line, const char *func);
+		void* (*postHookFunc) (void* retVal___, size_t num, size_t size, const char *file, int line, const char *func);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_iMalloc_calloc_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_iMalloc_calloc_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &num, &size, file, &line, func);
+			retVal___ = postHookFunc(retVal___, num, size, file, line, func);
 		}
 	}
 	return retVal___;
@@ -4787,10 +4787,10 @@ void* HP_iMalloc_realloc(void *p, size_t size, const char *file, int line, const
 		retVal___ = HPMHooks.source.iMalloc.realloc(p, size, file, line, func);
 	}
 	if( HPMHooks.count.HP_iMalloc_realloc_post ) {
-		void* (*postHookFunc) (void* retVal___, void *p, size_t *size, const char *file, int *line, const char *func);
+		void* (*postHookFunc) (void* retVal___, void *p, size_t size, const char *file, int line, const char *func);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_iMalloc_realloc_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_iMalloc_realloc_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, p, &size, file, &line, func);
+			retVal___ = postHookFunc(retVal___, p, size, file, line, func);
 		}
 	}
 	return retVal___;
@@ -4814,10 +4814,10 @@ void* HP_iMalloc_reallocz(void *p, size_t size, const char *file, int line, cons
 		retVal___ = HPMHooks.source.iMalloc.reallocz(p, size, file, line, func);
 	}
 	if( HPMHooks.count.HP_iMalloc_reallocz_post ) {
-		void* (*postHookFunc) (void* retVal___, void *p, size_t *size, const char *file, int *line, const char *func);
+		void* (*postHookFunc) (void* retVal___, void *p, size_t size, const char *file, int line, const char *func);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_iMalloc_reallocz_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_iMalloc_reallocz_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, p, &size, file, &line, func);
+			retVal___ = postHookFunc(retVal___, p, size, file, line, func);
 		}
 	}
 	return retVal___;
@@ -4841,10 +4841,10 @@ char* HP_iMalloc_astrdup(const char *p, const char *file, int line, const char *
 		retVal___ = HPMHooks.source.iMalloc.astrdup(p, file, line, func);
 	}
 	if( HPMHooks.count.HP_iMalloc_astrdup_post ) {
-		char* (*postHookFunc) (char* retVal___, const char *p, const char *file, int *line, const char *func);
+		char* (*postHookFunc) (char* retVal___, const char *p, const char *file, int line, const char *func);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_iMalloc_astrdup_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_iMalloc_astrdup_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, p, file, &line, func);
+			retVal___ = postHookFunc(retVal___, p, file, line, func);
 		}
 	}
 	return retVal___;
@@ -4868,10 +4868,10 @@ char* HP_iMalloc_astrndup(const char *p, size_t size, const char *file, int line
 		retVal___ = HPMHooks.source.iMalloc.astrndup(p, size, file, line, func);
 	}
 	if( HPMHooks.count.HP_iMalloc_astrndup_post ) {
-		char* (*postHookFunc) (char* retVal___, const char *p, size_t *size, const char *file, int *line, const char *func);
+		char* (*postHookFunc) (char* retVal___, const char *p, size_t size, const char *file, int line, const char *func);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_iMalloc_astrndup_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_iMalloc_astrndup_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, p, &size, file, &line, func);
+			retVal___ = postHookFunc(retVal___, p, size, file, line, func);
 		}
 	}
 	return retVal___;
@@ -4894,10 +4894,10 @@ void HP_iMalloc_free(void *p, const char *file, int line, const char *func) {
 		HPMHooks.source.iMalloc.free(p, file, line, func);
 	}
 	if( HPMHooks.count.HP_iMalloc_free_post ) {
-		void (*postHookFunc) (void *p, const char *file, int *line, const char *func);
+		void (*postHookFunc) (void *p, const char *file, int line, const char *func);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_iMalloc_free_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_iMalloc_free_post[hIndex].func;
-			postHookFunc(p, file, &line, func);
+			postHookFunc(p, file, line, func);
 		}
 	}
 	return;
@@ -5053,10 +5053,10 @@ void HP_nullpo_assert_report(const char *file, int line, const char *func, const
 		HPMHooks.source.nullpo.assert_report(file, line, func, targetname, title);
 	}
 	if( HPMHooks.count.HP_nullpo_assert_report_post ) {
-		void (*postHookFunc) (const char *file, int *line, const char *func, const char *targetname, const char *title);
+		void (*postHookFunc) (const char *file, int line, const char *func, const char *targetname, const char *title);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_nullpo_assert_report_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_nullpo_assert_report_post[hIndex].func;
-			postHookFunc(file, &line, func, targetname, title);
+			postHookFunc(file, line, func, targetname, title);
 		}
 	}
 	return;
@@ -5245,10 +5245,10 @@ int HP_sockt_perform(int next) {
 		retVal___ = HPMHooks.source.sockt.perform(next);
 	}
 	if( HPMHooks.count.HP_sockt_perform_post ) {
-		int (*postHookFunc) (int retVal___, int *next);
+		int (*postHookFunc) (int retVal___, int next);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_perform_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_perform_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &next);
+			retVal___ = postHookFunc(retVal___, next);
 		}
 	}
 	return retVal___;
@@ -5271,10 +5271,10 @@ void HP_sockt_datasync(int fd, bool send) {
 		HPMHooks.source.sockt.datasync(fd, send);
 	}
 	if( HPMHooks.count.HP_sockt_datasync_post ) {
-		void (*postHookFunc) (int *fd, bool *send);
+		void (*postHookFunc) (int fd, bool send);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_datasync_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_datasync_post[hIndex].func;
-			postHookFunc(&fd, &send);
+			postHookFunc(fd, send);
 		}
 	}
 	return;
@@ -5298,10 +5298,10 @@ int HP_sockt_make_listen_bind(uint32 ip, uint16 port) {
 		retVal___ = HPMHooks.source.sockt.make_listen_bind(ip, port);
 	}
 	if( HPMHooks.count.HP_sockt_make_listen_bind_post ) {
-		int (*postHookFunc) (int retVal___, uint32 *ip, uint16 *port);
+		int (*postHookFunc) (int retVal___, uint32 ip, uint16 port);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_make_listen_bind_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_make_listen_bind_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &ip, &port);
+			retVal___ = postHookFunc(retVal___, ip, port);
 		}
 	}
 	return retVal___;
@@ -5325,10 +5325,10 @@ int HP_sockt_make_connection(uint32 ip, uint16 port, struct hSockOpt *opt) {
 		retVal___ = HPMHooks.source.sockt.make_connection(ip, port, opt);
 	}
 	if( HPMHooks.count.HP_sockt_make_connection_post ) {
-		int (*postHookFunc) (int retVal___, uint32 *ip, uint16 *port, struct hSockOpt *opt);
+		int (*postHookFunc) (int retVal___, uint32 ip, uint16 port, struct hSockOpt *opt);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_make_connection_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_make_connection_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &ip, &port, opt);
+			retVal___ = postHookFunc(retVal___, ip, port, opt);
 		}
 	}
 	return retVal___;
@@ -5352,10 +5352,10 @@ int HP_sockt_realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_si
 		retVal___ = HPMHooks.source.sockt.realloc_fifo(fd, rfifo_size, wfifo_size);
 	}
 	if( HPMHooks.count.HP_sockt_realloc_fifo_post ) {
-		int (*postHookFunc) (int retVal___, int *fd, unsigned int *rfifo_size, unsigned int *wfifo_size);
+		int (*postHookFunc) (int retVal___, int fd, unsigned int rfifo_size, unsigned int wfifo_size);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_realloc_fifo_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_realloc_fifo_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, &rfifo_size, &wfifo_size);
+			retVal___ = postHookFunc(retVal___, fd, rfifo_size, wfifo_size);
 		}
 	}
 	return retVal___;
@@ -5379,10 +5379,10 @@ int HP_sockt_realloc_writefifo(int fd, size_t addition) {
 		retVal___ = HPMHooks.source.sockt.realloc_writefifo(fd, addition);
 	}
 	if( HPMHooks.count.HP_sockt_realloc_writefifo_post ) {
-		int (*postHookFunc) (int retVal___, int *fd, size_t *addition);
+		int (*postHookFunc) (int retVal___, int fd, size_t addition);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_realloc_writefifo_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_realloc_writefifo_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, &addition);
+			retVal___ = postHookFunc(retVal___, fd, addition);
 		}
 	}
 	return retVal___;
@@ -5406,10 +5406,10 @@ int HP_sockt_wfifoset(int fd, size_t len) {
 		retVal___ = HPMHooks.source.sockt.wfifoset(fd, len);
 	}
 	if( HPMHooks.count.HP_sockt_wfifoset_post ) {
-		int (*postHookFunc) (int retVal___, int *fd, size_t *len);
+		int (*postHookFunc) (int retVal___, int fd, size_t len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_wfifoset_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_wfifoset_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, &len);
+			retVal___ = postHookFunc(retVal___, fd, len);
 		}
 	}
 	return retVal___;
@@ -5433,10 +5433,10 @@ int HP_sockt_rfifoskip(int fd, size_t len) {
 		retVal___ = HPMHooks.source.sockt.rfifoskip(fd, len);
 	}
 	if( HPMHooks.count.HP_sockt_rfifoskip_post ) {
-		int (*postHookFunc) (int retVal___, int *fd, size_t *len);
+		int (*postHookFunc) (int retVal___, int fd, size_t len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_rfifoskip_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_rfifoskip_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd, &len);
+			retVal___ = postHookFunc(retVal___, fd, len);
 		}
 	}
 	return retVal___;
@@ -5459,10 +5459,10 @@ void HP_sockt_close(int fd) {
 		HPMHooks.source.sockt.close(fd);
 	}
 	if( HPMHooks.count.HP_sockt_close_post ) {
-		void (*postHookFunc) (int *fd);
+		void (*postHookFunc) (int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_close_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_close_post[hIndex].func;
-			postHookFunc(&fd);
+			postHookFunc(fd);
 		}
 	}
 	return;
@@ -5486,10 +5486,10 @@ bool HP_sockt_session_is_valid(int fd) {
 		retVal___ = HPMHooks.source.sockt.session_is_valid(fd);
 	}
 	if( HPMHooks.count.HP_sockt_session_is_valid_post ) {
-		bool (*postHookFunc) (bool retVal___, int *fd);
+		bool (*postHookFunc) (bool retVal___, int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_session_is_valid_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_session_is_valid_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd);
+			retVal___ = postHookFunc(retVal___, fd);
 		}
 	}
 	return retVal___;
@@ -5513,10 +5513,10 @@ bool HP_sockt_session_is_active(int fd) {
 		retVal___ = HPMHooks.source.sockt.session_is_active(fd);
 	}
 	if( HPMHooks.count.HP_sockt_session_is_active_post ) {
-		bool (*postHookFunc) (bool retVal___, int *fd);
+		bool (*postHookFunc) (bool retVal___, int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_session_is_active_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_session_is_active_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &fd);
+			retVal___ = postHookFunc(retVal___, fd);
 		}
 	}
 	return retVal___;
@@ -5539,10 +5539,10 @@ void HP_sockt_flush(int fd) {
 		HPMHooks.source.sockt.flush(fd);
 	}
 	if( HPMHooks.count.HP_sockt_flush_post ) {
-		void (*postHookFunc) (int *fd);
+		void (*postHookFunc) (int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_flush_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_flush_post[hIndex].func;
-			postHookFunc(&fd);
+			postHookFunc(fd);
 		}
 	}
 	return;
@@ -5591,10 +5591,10 @@ void HP_sockt_set_nonblocking(int fd, unsigned long yes) {
 		HPMHooks.source.sockt.set_nonblocking(fd, yes);
 	}
 	if( HPMHooks.count.HP_sockt_set_nonblocking_post ) {
-		void (*postHookFunc) (int *fd, unsigned long *yes);
+		void (*postHookFunc) (int fd, unsigned long yes);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_set_nonblocking_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_set_nonblocking_post[hIndex].func;
-			postHookFunc(&fd, &yes);
+			postHookFunc(fd, yes);
 		}
 	}
 	return;
@@ -5617,10 +5617,10 @@ void HP_sockt_set_defaultparse(ParseFunc defaultparse) {
 		HPMHooks.source.sockt.set_defaultparse(defaultparse);
 	}
 	if( HPMHooks.count.HP_sockt_set_defaultparse_post ) {
-		void (*postHookFunc) (ParseFunc *defaultparse);
+		void (*postHookFunc) (ParseFunc defaultparse);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_set_defaultparse_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_set_defaultparse_post[hIndex].func;
-			postHookFunc(&defaultparse);
+			postHookFunc(defaultparse);
 		}
 	}
 	return;
@@ -5671,10 +5671,10 @@ const char* HP_sockt_ip2str(uint32 ip, char *ip_str) {
 		retVal___ = HPMHooks.source.sockt.ip2str(ip, ip_str);
 	}
 	if( HPMHooks.count.HP_sockt_ip2str_post ) {
-		const char* (*postHookFunc) (const char* retVal___, uint32 *ip, char *ip_str);
+		const char* (*postHookFunc) (const char* retVal___, uint32 ip, char *ip_str);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_ip2str_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_ip2str_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &ip, ip_str);
+			retVal___ = postHookFunc(retVal___, ip, ip_str);
 		}
 	}
 	return retVal___;
@@ -5725,10 +5725,10 @@ uint16 HP_sockt_ntows(uint16 netshort) {
 		retVal___ = HPMHooks.source.sockt.ntows(netshort);
 	}
 	if( HPMHooks.count.HP_sockt_ntows_post ) {
-		uint16 (*postHookFunc) (uint16 retVal___, uint16 *netshort);
+		uint16 (*postHookFunc) (uint16 retVal___, uint16 netshort);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_ntows_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_ntows_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &netshort);
+			retVal___ = postHookFunc(retVal___, netshort);
 		}
 	}
 	return retVal___;
@@ -5752,10 +5752,10 @@ int HP_sockt_getips(uint32 *ips, int max) {
 		retVal___ = HPMHooks.source.sockt.getips(ips, max);
 	}
 	if( HPMHooks.count.HP_sockt_getips_post ) {
-		int (*postHookFunc) (int retVal___, uint32 *ips, int *max);
+		int (*postHookFunc) (int retVal___, uint32 *ips, int max);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_getips_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_getips_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, ips, &max);
+			retVal___ = postHookFunc(retVal___, ips, max);
 		}
 	}
 	return retVal___;
@@ -5778,10 +5778,10 @@ void HP_sockt_eof(int fd) {
 		HPMHooks.source.sockt.eof(fd);
 	}
 	if( HPMHooks.count.HP_sockt_eof_post ) {
-		void (*postHookFunc) (int *fd);
+		void (*postHookFunc) (int fd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_eof_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_eof_post[hIndex].func;
-			postHookFunc(&fd);
+			postHookFunc(fd);
 		}
 	}
 	return;
@@ -5805,10 +5805,10 @@ uint32 HP_sockt_lan_subnet_check(uint32 ip, struct s_subnet *info) {
 		retVal___ = HPMHooks.source.sockt.lan_subnet_check(ip, info);
 	}
 	if( HPMHooks.count.HP_sockt_lan_subnet_check_post ) {
-		uint32 (*postHookFunc) (uint32 retVal___, uint32 *ip, struct s_subnet *info);
+		uint32 (*postHookFunc) (uint32 retVal___, uint32 ip, struct s_subnet *info);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_lan_subnet_check_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_lan_subnet_check_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &ip, info);
+			retVal___ = postHookFunc(retVal___, ip, info);
 		}
 	}
 	return retVal___;
@@ -5832,10 +5832,10 @@ bool HP_sockt_allowed_ip_check(uint32 ip) {
 		retVal___ = HPMHooks.source.sockt.allowed_ip_check(ip);
 	}
 	if( HPMHooks.count.HP_sockt_allowed_ip_check_post ) {
-		bool (*postHookFunc) (bool retVal___, uint32 *ip);
+		bool (*postHookFunc) (bool retVal___, uint32 ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_allowed_ip_check_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_allowed_ip_check_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &ip);
+			retVal___ = postHookFunc(retVal___, ip);
 		}
 	}
 	return retVal___;
@@ -5859,10 +5859,10 @@ bool HP_sockt_trusted_ip_check(uint32 ip) {
 		retVal___ = HPMHooks.source.sockt.trusted_ip_check(ip);
 	}
 	if( HPMHooks.count.HP_sockt_trusted_ip_check_post ) {
-		bool (*postHookFunc) (bool retVal___, uint32 *ip);
+		bool (*postHookFunc) (bool retVal___, uint32 ip);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sockt_trusted_ip_check_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sockt_trusted_ip_check_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &ip);
+			retVal___ = postHookFunc(retVal___, ip);
 		}
 	}
 	return retVal___;
@@ -5940,10 +5940,10 @@ int HP_SQL_Connect(struct Sql *self, const char *user, const char *passwd, const
 		retVal___ = HPMHooks.source.SQL.Connect(self, user, passwd, host, port, db);
 	}
 	if( HPMHooks.count.HP_SQL_Connect_post ) {
-		int (*postHookFunc) (int retVal___, struct Sql *self, const char *user, const char *passwd, const char *host, uint16 *port, const char *db);
+		int (*postHookFunc) (int retVal___, struct Sql *self, const char *user, const char *passwd, const char *host, uint16 port, const char *db);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_SQL_Connect_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_SQL_Connect_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, self, user, passwd, host, &port, db);
+			retVal___ = postHookFunc(retVal___, self, user, passwd, host, port, db);
 		}
 	}
 	return retVal___;
@@ -5994,10 +5994,10 @@ int HP_SQL_GetColumnNames(struct Sql *self, const char *table, char *out_buf, si
 		retVal___ = HPMHooks.source.SQL.GetColumnNames(self, table, out_buf, buf_len, sep);
 	}
 	if( HPMHooks.count.HP_SQL_GetColumnNames_post ) {
-		int (*postHookFunc) (int retVal___, struct Sql *self, const char *table, char *out_buf, size_t *buf_len, char *sep);
+		int (*postHookFunc) (int retVal___, struct Sql *self, const char *table, char *out_buf, size_t buf_len, char sep);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_SQL_GetColumnNames_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_SQL_GetColumnNames_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, self, table, out_buf, &buf_len, &sep);
+			retVal___ = postHookFunc(retVal___, self, table, out_buf, buf_len, sep);
 		}
 	}
 	return retVal___;
@@ -6102,10 +6102,10 @@ size_t HP_SQL_EscapeStringLen(struct Sql *self, char *out_to, const char *from, 
 		retVal___ = HPMHooks.source.SQL.EscapeStringLen(self, out_to, from, from_len);
 	}
 	if( HPMHooks.count.HP_SQL_EscapeStringLen_post ) {
-		size_t (*postHookFunc) (size_t retVal___, struct Sql *self, char *out_to, const char *from, size_t *from_len);
+		size_t (*postHookFunc) (size_t retVal___, struct Sql *self, char *out_to, const char *from, size_t from_len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_SQL_EscapeStringLen_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_SQL_EscapeStringLen_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, self, out_to, from, &from_len);
+			retVal___ = postHookFunc(retVal___, self, out_to, from, from_len);
 		}
 	}
 	return retVal___;
@@ -6297,10 +6297,10 @@ int HP_SQL_GetData(struct Sql *self, size_t col, char **out_buf, size_t *out_len
 		retVal___ = HPMHooks.source.SQL.GetData(self, col, out_buf, out_len);
 	}
 	if( HPMHooks.count.HP_SQL_GetData_post ) {
-		int (*postHookFunc) (int retVal___, struct Sql *self, size_t *col, char **out_buf, size_t *out_len);
+		int (*postHookFunc) (int retVal___, struct Sql *self, size_t col, char **out_buf, size_t *out_len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_SQL_GetData_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_SQL_GetData_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, self, &col, out_buf, out_len);
+			retVal___ = postHookFunc(retVal___, self, col, out_buf, out_len);
 		}
 	}
 	return retVal___;
@@ -6349,10 +6349,10 @@ void HP_SQL_ShowDebug_(struct Sql *self, const char *debug_file, const unsigned 
 		HPMHooks.source.SQL.ShowDebug_(self, debug_file, debug_line);
 	}
 	if( HPMHooks.count.HP_SQL_ShowDebug__post ) {
-		void (*postHookFunc) (struct Sql *self, const char *debug_file, const unsigned long *debug_line);
+		void (*postHookFunc) (struct Sql *self, const char *debug_file, const unsigned long debug_line);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_SQL_ShowDebug__post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_SQL_ShowDebug__post[hIndex].func;
-			postHookFunc(self, debug_file, &debug_line);
+			postHookFunc(self, debug_file, debug_line);
 		}
 	}
 	return;
@@ -6543,10 +6543,10 @@ int HP_SQL_StmtBindParam(struct SqlStmt *self, size_t idx, enum SqlDataType buff
 		retVal___ = HPMHooks.source.SQL.StmtBindParam(self, idx, buffer_type, buffer, buffer_len);
 	}
 	if( HPMHooks.count.HP_SQL_StmtBindParam_post ) {
-		int (*postHookFunc) (int retVal___, struct SqlStmt *self, size_t *idx, enum SqlDataType *buffer_type, const void *buffer, size_t *buffer_len);
+		int (*postHookFunc) (int retVal___, struct SqlStmt *self, size_t idx, enum SqlDataType buffer_type, const void *buffer, size_t buffer_len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_SQL_StmtBindParam_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_SQL_StmtBindParam_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, self, &idx, &buffer_type, buffer, &buffer_len);
+			retVal___ = postHookFunc(retVal___, self, idx, buffer_type, buffer, buffer_len);
 		}
 	}
 	return retVal___;
@@ -6651,10 +6651,10 @@ int HP_SQL_StmtBindColumn(struct SqlStmt *self, size_t idx, enum SqlDataType buf
 		retVal___ = HPMHooks.source.SQL.StmtBindColumn(self, idx, buffer_type, buffer, buffer_len, out_length, out_is_null);
 	}
 	if( HPMHooks.count.HP_SQL_StmtBindColumn_post ) {
-		int (*postHookFunc) (int retVal___, struct SqlStmt *self, size_t *idx, enum SqlDataType *buffer_type, void *buffer, size_t *buffer_len, uint32 *out_length, int8 *out_is_null);
+		int (*postHookFunc) (int retVal___, struct SqlStmt *self, size_t idx, enum SqlDataType buffer_type, void *buffer, size_t buffer_len, uint32 *out_length, int8 *out_is_null);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_SQL_StmtBindColumn_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_SQL_StmtBindColumn_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, self, &idx, &buffer_type, buffer, &buffer_len, out_length, out_is_null);
+			retVal___ = postHookFunc(retVal___, self, idx, buffer_type, buffer, buffer_len, out_length, out_is_null);
 		}
 	}
 	return retVal___;
@@ -6783,10 +6783,10 @@ void HP_SQL_StmtShowDebug_(struct SqlStmt *self, const char *debug_file, const u
 		HPMHooks.source.SQL.StmtShowDebug_(self, debug_file, debug_line);
 	}
 	if( HPMHooks.count.HP_SQL_StmtShowDebug__post ) {
-		void (*postHookFunc) (struct SqlStmt *self, const char *debug_file, const unsigned long *debug_line);
+		void (*postHookFunc) (struct SqlStmt *self, const char *debug_file, const unsigned long debug_line);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_SQL_StmtShowDebug__post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_SQL_StmtShowDebug__post[hIndex].func;
-			postHookFunc(self, debug_file, &debug_line);
+			postHookFunc(self, debug_file, debug_line);
 		}
 	}
 	return;
@@ -7138,10 +7138,10 @@ int HP_strlib_jmemescapecpy(char *pt, const char *spt, int size) {
 		retVal___ = HPMHooks.source.strlib.jmemescapecpy(pt, spt, size);
 	}
 	if( HPMHooks.count.HP_strlib_jmemescapecpy_post ) {
-		int (*postHookFunc) (int retVal___, char *pt, const char *spt, int *size);
+		int (*postHookFunc) (int retVal___, char *pt, const char *spt, int size);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_strlib_jmemescapecpy_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_strlib_jmemescapecpy_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, pt, spt, &size);
+			retVal___ = postHookFunc(retVal___, pt, spt, size);
 		}
 	}
 	return retVal___;
@@ -7273,10 +7273,10 @@ size_t HP_strlib_strnlen_(const char *string, size_t maxlen) {
 		retVal___ = HPMHooks.source.strlib.strnlen_(string, maxlen);
 	}
 	if( HPMHooks.count.HP_strlib_strnlen__post ) {
-		size_t (*postHookFunc) (size_t retVal___, const char *string, size_t *maxlen);
+		size_t (*postHookFunc) (size_t retVal___, const char *string, size_t maxlen);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_strlib_strnlen__post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_strlib_strnlen__post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, string, &maxlen);
+			retVal___ = postHookFunc(retVal___, string, maxlen);
 		}
 	}
 	return retVal___;
@@ -7381,10 +7381,10 @@ char* HP_strlib_safestrncpy_(char *dst, const char *src, size_t n) {
 		retVal___ = HPMHooks.source.strlib.safestrncpy_(dst, src, n);
 	}
 	if( HPMHooks.count.HP_strlib_safestrncpy__post ) {
-		char* (*postHookFunc) (char* retVal___, char *dst, const char *src, size_t *n);
+		char* (*postHookFunc) (char* retVal___, char *dst, const char *src, size_t n);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_strlib_safestrncpy__post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_strlib_safestrncpy__post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, dst, src, &n);
+			retVal___ = postHookFunc(retVal___, dst, src, n);
 		}
 	}
 	return retVal___;
@@ -7408,10 +7408,10 @@ size_t HP_strlib_safestrnlen_(const char *string, size_t maxlen) {
 		retVal___ = HPMHooks.source.strlib.safestrnlen_(string, maxlen);
 	}
 	if( HPMHooks.count.HP_strlib_safestrnlen__post ) {
-		size_t (*postHookFunc) (size_t retVal___, const char *string, size_t *maxlen);
+		size_t (*postHookFunc) (size_t retVal___, const char *string, size_t maxlen);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_strlib_safestrnlen__post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_strlib_safestrnlen__post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, string, &maxlen);
+			retVal___ = postHookFunc(retVal___, string, maxlen);
 		}
 	}
 	return retVal___;
@@ -7435,10 +7435,10 @@ int HP_strlib_strline_(const char *str, size_t pos) {
 		retVal___ = HPMHooks.source.strlib.strline_(str, pos);
 	}
 	if( HPMHooks.count.HP_strlib_strline__post ) {
-		int (*postHookFunc) (int retVal___, const char *str, size_t *pos);
+		int (*postHookFunc) (int retVal___, const char *str, size_t pos);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_strlib_strline__post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_strlib_strline__post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, str, &pos);
+			retVal___ = postHookFunc(retVal___, str, pos);
 		}
 	}
 	return retVal___;
@@ -7462,10 +7462,10 @@ bool HP_strlib_bin2hex_(char *output, const unsigned char *input, size_t count) 
 		retVal___ = HPMHooks.source.strlib.bin2hex_(output, input, count);
 	}
 	if( HPMHooks.count.HP_strlib_bin2hex__post ) {
-		bool (*postHookFunc) (bool retVal___, char *output, const unsigned char *input, size_t *count);
+		bool (*postHookFunc) (bool retVal___, char *output, const unsigned char *input, size_t count);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_strlib_bin2hex__post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_strlib_bin2hex__post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, output, input, &count);
+			retVal___ = postHookFunc(retVal___, output, input, count);
 		}
 	}
 	return retVal___;
@@ -7517,10 +7517,10 @@ int HP_sv_parse(const char *str, int len, int startoff, char delim, int *out_pos
 		retVal___ = HPMHooks.source.sv.parse(str, len, startoff, delim, out_pos, npos, opt);
 	}
 	if( HPMHooks.count.HP_sv_parse_post ) {
-		int (*postHookFunc) (int retVal___, const char *str, int *len, int *startoff, char *delim, int *out_pos, int *npos, enum e_svopt *opt);
+		int (*postHookFunc) (int retVal___, const char *str, int len, int startoff, char delim, int *out_pos, int npos, enum e_svopt opt);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sv_parse_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sv_parse_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, str, &len, &startoff, &delim, out_pos, &npos, &opt);
+			retVal___ = postHookFunc(retVal___, str, len, startoff, delim, out_pos, npos, opt);
 		}
 	}
 	return retVal___;
@@ -7544,10 +7544,10 @@ int HP_sv_split(char *str, int len, int startoff, char delim, char **out_fields,
 		retVal___ = HPMHooks.source.sv.split(str, len, startoff, delim, out_fields, nfields, opt);
 	}
 	if( HPMHooks.count.HP_sv_split_post ) {
-		int (*postHookFunc) (int retVal___, char *str, int *len, int *startoff, char *delim, char **out_fields, int *nfields, enum e_svopt *opt);
+		int (*postHookFunc) (int retVal___, char *str, int len, int startoff, char delim, char **out_fields, int nfields, enum e_svopt opt);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sv_split_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sv_split_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, str, &len, &startoff, &delim, out_fields, &nfields, &opt);
+			retVal___ = postHookFunc(retVal___, str, len, startoff, delim, out_fields, nfields, opt);
 		}
 	}
 	return retVal___;
@@ -7571,10 +7571,10 @@ size_t HP_sv_escape_c(char *out_dest, const char *src, size_t len, const char *e
 		retVal___ = HPMHooks.source.sv.escape_c(out_dest, src, len, escapes);
 	}
 	if( HPMHooks.count.HP_sv_escape_c_post ) {
-		size_t (*postHookFunc) (size_t retVal___, char *out_dest, const char *src, size_t *len, const char *escapes);
+		size_t (*postHookFunc) (size_t retVal___, char *out_dest, const char *src, size_t len, const char *escapes);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sv_escape_c_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sv_escape_c_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, out_dest, src, &len, escapes);
+			retVal___ = postHookFunc(retVal___, out_dest, src, len, escapes);
 		}
 	}
 	return retVal___;
@@ -7598,10 +7598,10 @@ size_t HP_sv_unescape_c(char *out_dest, const char *src, size_t len) {
 		retVal___ = HPMHooks.source.sv.unescape_c(out_dest, src, len);
 	}
 	if( HPMHooks.count.HP_sv_unescape_c_post ) {
-		size_t (*postHookFunc) (size_t retVal___, char *out_dest, const char *src, size_t *len);
+		size_t (*postHookFunc) (size_t retVal___, char *out_dest, const char *src, size_t len);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sv_unescape_c_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sv_unescape_c_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, out_dest, src, &len);
+			retVal___ = postHookFunc(retVal___, out_dest, src, len);
 		}
 	}
 	return retVal___;
@@ -7652,10 +7652,10 @@ bool HP_sv_readdb(const char *directory, const char *filename, char delim, int m
 		retVal___ = HPMHooks.source.sv.readdb(directory, filename, delim, mincols, maxcols, maxrows, parseproc);
 	}
 	if( HPMHooks.count.HP_sv_readdb_post ) {
-		bool (*postHookFunc) (bool retVal___, const char *directory, const char *filename, char *delim, int *mincols, int *maxcols, int *maxrows, bool ( *parseproc ) (char *fields[], int columns, int current));
+		bool (*postHookFunc) (bool retVal___, const char *directory, const char *filename, char delim, int mincols, int maxcols, int maxrows, bool ( *parseproc ) (char *fields[], int columns, int current));
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_sv_readdb_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_sv_readdb_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, directory, filename, &delim, &mincols, &maxcols, &maxrows, parseproc);
+			retVal___ = postHookFunc(retVal___, directory, filename, delim, mincols, maxcols, maxrows, parseproc);
 		}
 	}
 	return retVal___;
@@ -8218,10 +8218,10 @@ int HP_timer_add(int64 tick, TimerFunc func, int id, intptr_t data) {
 		retVal___ = HPMHooks.source.timer.add(tick, func, id, data);
 	}
 	if( HPMHooks.count.HP_timer_add_post ) {
-		int (*postHookFunc) (int retVal___, int64 *tick, TimerFunc *func, int *id, intptr_t *data);
+		int (*postHookFunc) (int retVal___, int64 tick, TimerFunc func, int id, intptr_t data);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_timer_add_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_timer_add_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &tick, &func, &id, &data);
+			retVal___ = postHookFunc(retVal___, tick, func, id, data);
 		}
 	}
 	return retVal___;
@@ -8245,10 +8245,10 @@ int HP_timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data, int
 		retVal___ = HPMHooks.source.timer.add_interval(tick, func, id, data, interval);
 	}
 	if( HPMHooks.count.HP_timer_add_interval_post ) {
-		int (*postHookFunc) (int retVal___, int64 *tick, TimerFunc *func, int *id, intptr_t *data, int *interval);
+		int (*postHookFunc) (int retVal___, int64 tick, TimerFunc func, int id, intptr_t data, int interval);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_timer_add_interval_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_timer_add_interval_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &tick, &func, &id, &data, &interval);
+			retVal___ = postHookFunc(retVal___, tick, func, id, data, interval);
 		}
 	}
 	return retVal___;
@@ -8272,10 +8272,10 @@ const struct TimerData* HP_timer_get(int tid) {
 		retVal___ = HPMHooks.source.timer.get(tid);
 	}
 	if( HPMHooks.count.HP_timer_get_post ) {
-		const struct TimerData* (*postHookFunc) (const struct TimerData* retVal___, int *tid);
+		const struct TimerData* (*postHookFunc) (const struct TimerData* retVal___, int tid);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_timer_get_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_timer_get_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &tid);
+			retVal___ = postHookFunc(retVal___, tid);
 		}
 	}
 	return retVal___;
@@ -8299,10 +8299,10 @@ int HP_timer_delete(int tid, TimerFunc func) {
 		retVal___ = HPMHooks.source.timer.delete(tid, func);
 	}
 	if( HPMHooks.count.HP_timer_delete_post ) {
-		int (*postHookFunc) (int retVal___, int *tid, TimerFunc *func);
+		int (*postHookFunc) (int retVal___, int tid, TimerFunc func);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_timer_delete_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_timer_delete_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &tid, &func);
+			retVal___ = postHookFunc(retVal___, tid, func);
 		}
 	}
 	return retVal___;
@@ -8326,10 +8326,10 @@ int64 HP_timer_addtick(int tid, int64 tick) {
 		retVal___ = HPMHooks.source.timer.addtick(tid, tick);
 	}
 	if( HPMHooks.count.HP_timer_addtick_post ) {
-		int64 (*postHookFunc) (int64 retVal___, int *tid, int64 *tick);
+		int64 (*postHookFunc) (int64 retVal___, int tid, int64 tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_timer_addtick_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_timer_addtick_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &tid, &tick);
+			retVal___ = postHookFunc(retVal___, tid, tick);
 		}
 	}
 	return retVal___;
@@ -8353,10 +8353,10 @@ int64 HP_timer_settick(int tid, int64 tick) {
 		retVal___ = HPMHooks.source.timer.settick(tid, tick);
 	}
 	if( HPMHooks.count.HP_timer_settick_post ) {
-		int64 (*postHookFunc) (int64 retVal___, int *tid, int64 *tick);
+		int64 (*postHookFunc) (int64 retVal___, int tid, int64 tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_timer_settick_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_timer_settick_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &tid, &tick);
+			retVal___ = postHookFunc(retVal___, tid, tick);
 		}
 	}
 	return retVal___;
@@ -8380,10 +8380,10 @@ int HP_timer_add_func_list(TimerFunc func, char *name) {
 		retVal___ = HPMHooks.source.timer.add_func_list(func, name);
 	}
 	if( HPMHooks.count.HP_timer_add_func_list_post ) {
-		int (*postHookFunc) (int retVal___, TimerFunc *func, char *name);
+		int (*postHookFunc) (int retVal___, TimerFunc func, char *name);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_timer_add_func_list_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_timer_add_func_list_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &func, name);
+			retVal___ = postHookFunc(retVal___, func, name);
 		}
 	}
 	return retVal___;
@@ -8434,10 +8434,10 @@ int HP_timer_perform(int64 tick) {
 		retVal___ = HPMHooks.source.timer.perform(tick);
 	}
 	if( HPMHooks.count.HP_timer_perform_post ) {
-		int (*postHookFunc) (int retVal___, int64 *tick);
+		int (*postHookFunc) (int retVal___, int64 tick);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_timer_perform_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_timer_perform_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, &tick);
+			retVal___ = postHookFunc(retVal___, tick);
 		}
 	}
 	return retVal___;
