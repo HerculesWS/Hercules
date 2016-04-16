@@ -8334,8 +8334,18 @@ void clif_refresh(struct map_session_data *sd)
 
 	if( disguised(&sd->bl) ) {/* refresh-da */
 		short disguise = sd->disguise;
-		pc->disguise(sd, -1);
-		pc->disguise(sd, disguise);
+
+		if (sd->disguise_tid != -1) {
+			int new_time = (int)(sd->disguise_tick - timer->gettick());
+
+			pc->disguise(sd, -1, -1);
+
+			if (new_time > 0)
+				pc->disguise(sd, disguise, new_time);
+		} else {
+			pc->disguise(sd, -1, -1);
+			pc->disguise(sd, disguise, -1);
+		}
 	}
 
 	clif->refresh_storagewindow(sd);
@@ -9707,7 +9717,7 @@ int clif_undisguise_timer(int tid, int64 tick, int id, intptr_t data) {
 	if( (sd = map->id2sd(id)) ) {
 		sd->fontcolor_tid = INVALID_TIMER;
 		if( sd->fontcolor && sd->disguise == sd->status.class_ )
-			pc->disguise(sd,-1);
+			pc->disguise(sd,-1,-1);
 	}
 	return 0;
 }
@@ -9787,7 +9797,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 
 		if( sd->disguise == -1 ) {
 			sd->fontcolor_tid = timer->add(timer->gettick()+5000, clif->undisguise_timer, sd->bl.id, 0);
-			pc->disguise(sd,sd->status.class_);
+			pc->disguise(sd,sd->status.class_,-1);
 			if( pc_isdead(sd) )
 				clif->clearunit_single(-sd->bl.id, CLR_DEAD, sd->fd);
 			if( unit->is_walking(&sd->bl) )

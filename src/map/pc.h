@@ -292,6 +292,8 @@ struct map_session_data {
 	} item_delay[MAX_ITEMDELAYS]; // [Paradox924X]
 	short weapontype1,weapontype2;
 	short disguise; // [Valaris]
+	int disguise_tid; // [Cretino]
+	int64 disguise_tick; // [Cretino]
 	struct weapon_data right_weapon, left_weapon;
 
 BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of status_calc_pc()
@@ -1014,7 +1016,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*inventory_rental_clear) (struct map_session_data *sd);
 	void (*inventory_rental_add) (struct map_session_data *sd, int seconds);
 
-	int (*disguise) (struct map_session_data *sd, int class_);
+	int (*disguise) (struct map_session_data *sd, int class_, int tick);
 	bool (*isautolooting) (struct map_session_data *sd, int nameid);
 
 	void (*overheat) (struct map_session_data *sd, int val);

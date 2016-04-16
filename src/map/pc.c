@@ -1152,6 +1152,8 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 	sd->guild_y = -1;
 
 	sd->disguise = -1;
+	sd->disguise_tick = -1;
+	sd->disguise_tid = -1;
 
 	sd->instance = NULL;
 	sd->instances = 0;
@@ -1821,11 +1823,45 @@ int pc_updateweightstatus(struct map_session_data *sd)
 	return 0;
 }
 
-int pc_disguise(struct map_session_data *sd, int class_) {
+int pc_disguise_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	int class_ = (int)data;
+	struct block_list *bl = map->id2bl(id);
+	struct map_session_data *sd;
+
+	if (bl == NULL)
+		return 0;
+
+	sd = BL_CAST(BL_PC, bl);
+
+	if (sd == NULL)
+		return 0;
+
+	sd->disguise_tick = -1;
+	sd->disguise_tid = -1;
+
+	if (class_ >= 0 && sd->disguise == class_)
+		pc->disguise(sd, -1, -1);
+
+	return 0;
+}
+
+int pc_disguise(struct map_session_data *sd, int class_, int tick) {
 	if (class_ == -1 && sd->disguise == -1)
 		return 0;
 	if (class_ >= 0 && sd->disguise == class_)
 		return 0;
+
+	if ((class_ == -1 || tick > -1) && sd->disguise_tid != -1) {
+		timer->delete(sd->disguise_tid, pc_disguise_timer);
+		sd->disguise_tick = -1;
+		sd->disguise_tid = -1;
+	}
+
+	if (tick > -1) {
+		sd->disguise_tick = timer->gettick() + tick;
+		sd->disguise_tid = timer->add(sd->disguise_tick, pc_disguise_timer, sd->bl.id, class_);
+	}
 
 	if (pc_isinvisible(sd)) { //Character is invisible. Stealth class-change. [Skotlex]
 		sd->disguise = class_; //viewdata is set on uncloaking.
@@ -8474,7 +8510,7 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	//Change look, if disguised, you need to undisguise
 	//to correctly calculate new job sprite without
 	if (sd->disguise != -1)
-		pc->disguise(sd, -1);
+		pc->disguise(sd, -1, -1);
 
 	status->set_viewdata(&sd->bl, job);
 	clif->changelook(&sd->bl,LOOK_BASE,sd->vd.class_); // move sprite update to prevent client crashes with incompatible equipment [Valaris]

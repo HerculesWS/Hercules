@@ -4682,26 +4682,28 @@ ACMD(jailtime)
 }
 
 /*==========================================
- * @disguise <mob_id> by [Valaris] (simplified by [Yor])
+ * @disguise <mob_id> by [Valaris] (simplified by [Yor]) (Timer by [Cretino])
  *------------------------------------------*/
 ACMD(disguise)
 {
-	int id = 0;
+	int id = 0, tick = -1;
+	char monster_name[NAME_LENGTH];
 
-	if (!*message) {
-		clif->message(fd, msg_fd(fd,1143)); // Please enter a Monster/NPC name/ID (usage: @disguise <name/ID>).
+	memset(monster_name, '\0', sizeof(monster_name));
+
+	if (!*message || (sscanf(message, "%23[^,], %12d", monster_name, &tick) < 1)) {
+		clif->message(fd, msg_fd(fd,1143)); // Please enter a Monster/NPC name/ID (usage: @disguise <name/ID>, <tick>).
 		return false;
 	}
 
-	if ((id = atoi(message)) > 0) {
+	if ((id = atoi(monster_name)) > 0) {
 		//Acquired an ID
 		if (!mob->db_checkid(id) && !npc->db_checkid(id))
 			id = 0; //Invalid id for either mobs or npcs.
 	} else {
 		//Acquired a Name
-		if ((id = mob->db_searchname(message)) == 0)
-		{
-			struct npc_data* nd = npc->name2id(message);
+		if ((id = mob->db_searchname(monster_name)) == 0) {
+			struct npc_data* nd = npc->name2id(monster_name);
 			if (nd != NULL)
 				id = nd->class_;
 		}
@@ -4724,28 +4726,31 @@ ACMD(disguise)
 		return false;
 	}
 
-	pc->disguise(sd, id);
+	pc->disguise(sd, id, tick);
 	clif->message(fd, msg_fd(fd,122)); // Disguise applied.
 
 	return true;
 }
 
 /*==========================================
- * DisguiseAll
+ * DisguiseAll (Timer by [Cretino])
  *------------------------------------------*/
 ACMD(disguiseall)
 {
-	int mob_id=0;
+	int mob_id=0, tick = -1;
 	struct map_session_data *pl_sd;
 	struct s_mapiterator* iter;
+	char monster_name[NAME_LENGTH];
 
-	if (!*message) {
-		clif->message(fd, msg_fd(fd,1145)); // Please enter a Monster/NPC name/ID (usage: @disguiseall <name/ID>).
+	memset(monster_name, '\0', sizeof(monster_name));
+
+	if (!*message || (sscanf(message, "%23[^,], %12d", monster_name, &tick) < 1)) {
+		clif->message(fd, msg_fd(fd,1145)); // Please enter a Monster/NPC name/ID (usage: @disguiseall <name/ID>, <tick>).
 		return false;
 	}
 
-	if ((mob_id = mob->db_searchname(message)) == 0) // check name first (to avoid possible name begining by a number)
-		mob_id = atoi(message);
+	if ((mob_id = mob->db_searchname(monster_name)) == 0) // check name first (to avoid possible name begining by a number)
+		mob_id = atoi(monster_name);
 
 	if (!mob->db_checkid(mob_id) && !npc->db_checkid(mob_id)) { //if mob or npc...
 		clif->message(fd, msg_fd(fd,123)); // Monster/NPC name/id not found.
@@ -4754,7 +4759,7 @@ ACMD(disguiseall)
 
 	iter = mapit_getallusers();
 	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter)))
-		pc->disguise(pl_sd, mob_id);
+		pc->disguise(pl_sd, mob_id, tick);
 	mapit->free(iter);
 
 	clif->message(fd, msg_fd(fd,122)); // Disguise applied.
@@ -4766,15 +4771,15 @@ ACMD(disguiseall)
  *------------------------------------------*/
 ACMD(disguiseguild)
 {
-	int id = 0, i;
+	int id = 0, i, tick = -1;
 	char monster[NAME_LENGTH], guild_name[NAME_LENGTH];
 	struct guild *g;
 
 	memset(monster, '\0', sizeof(monster));
 	memset(guild_name, '\0', sizeof(guild_name));
 
-	if (!*message || sscanf(message, "%23[^,], %23[^\r\n]", monster, guild_name) < 2) {
-		clif->message(fd, msg_fd(fd,1146)); // Please enter a mob name/ID and guild name/ID (usage: @disguiseguild <mob name/ID>, <guild name/ID>).
+	if (!*message || (sscanf(message, "%23[^,], %23[^,], %12d", monster, guild_name, &tick) < 2 && sscanf(message, "%23[^,], %23[^\r\n]", monster, guild_name) < 2)) {
+		clif->message(fd, msg_fd(fd,1146)); // Please enter a mob name/ID and guild name/ID (usage: @disguiseguild <mob name/ID>, <guild name/ID>, <tick>).
 		return false;
 	}
 
@@ -4802,7 +4807,7 @@ ACMD(disguiseguild)
 	for (i = 0; i < g->max_member; i++) {
 		struct map_session_data *pl_sd = g->member[i].sd;
 		if (pl_sd && !pc_hasmount(pl_sd))
-			pc->disguise(pl_sd, id);
+			pc->disguise(pl_sd, id, tick);
 	}
 
 	clif->message(fd, msg_fd(fd,122)); // Disguise applied.
@@ -4815,7 +4820,7 @@ ACMD(disguiseguild)
 ACMD(undisguise)
 {
 	if (sd->disguise != -1) {
-		pc->disguise(sd, -1);
+		pc->disguise(sd, -1, -1);
 		clif->message(fd, msg_fd(fd,124)); // Disguise removed.
 	} else {
 		clif->message(fd, msg_fd(fd,125)); // You're not disguised.
@@ -4835,7 +4840,7 @@ ACMD(undisguiseall) {
 	iter = mapit_getallusers();
 	for (pl_sd = BL_UCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCAST(BL_PC, mapit->next(iter)))
 		if( pl_sd->disguise != -1 )
-			pc->disguise(pl_sd, -1);
+			pc->disguise(pl_sd, -1, -1);
 	mapit->free(iter);
 
 	clif->message(fd, msg_fd(fd,124)); // Disguise removed.
@@ -4867,7 +4872,7 @@ ACMD(undisguiseguild)
 	for (i = 0; i < g->max_member; i++) {
 		struct map_session_data *pl_sd = g->member[i].sd;
 		if (pl_sd && pl_sd->disguise != -1)
-			pc->disguise(pl_sd, -1);
+			pc->disguise(pl_sd, -1, -1);
 	}
 
 	clif->message(fd, msg_fd(fd,124)); // Disguise removed.
