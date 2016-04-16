@@ -75,6 +75,17 @@ struct HookingPointData HookingPoints[] = {
 /* lclif_interface_private */
 	{ HP_POP(lclif->p->packetdb_loaddb, HP_PRIV__lclif_packetdb_loaddb) },
 	{ HP_POP(lclif->p->parse_sub, HP_PRIV__lclif_parse_sub) },
+	{ HP_POP(lclif->p->parse_CA_CONNECT_INFO_CHANGED, HP_PRIV__lclif_parse_CA_CONNECT_INFO_CHANGED) },
+	{ HP_POP(lclif->p->parse_CA_EXE_HASHCHECK, HP_PRIV__lclif_parse_CA_EXE_HASHCHECK) },
+	{ HP_POP(lclif->p->parse_CA_LOGIN, HP_PRIV__lclif_parse_CA_LOGIN) },
+	{ HP_POP(lclif->p->parse_CA_LOGIN2, HP_PRIV__lclif_parse_CA_LOGIN2) },
+	{ HP_POP(lclif->p->parse_CA_LOGIN3, HP_PRIV__lclif_parse_CA_LOGIN3) },
+	{ HP_POP(lclif->p->parse_CA_LOGIN4, HP_PRIV__lclif_parse_CA_LOGIN4) },
+	{ HP_POP(lclif->p->parse_CA_LOGIN_PCBANG, HP_PRIV__lclif_parse_CA_LOGIN_PCBANG) },
+	{ HP_POP(lclif->p->parse_CA_LOGIN_HAN, HP_PRIV__lclif_parse_CA_LOGIN_HAN) },
+	{ HP_POP(lclif->p->parse_CA_SSO_LOGIN_REQ, HP_PRIV__lclif_parse_CA_SSO_LOGIN_REQ) },
+	{ HP_POP(lclif->p->parse_CA_REQ_HASH, HP_PRIV__lclif_parse_CA_REQ_HASH) },
+	{ HP_POP(lclif->p->parse_CA_CHARSERVERCONNECT, HP_PRIV__lclif_parse_CA_CHARSERVERCONNECT) },
 /* libconfig_interface */
 	{ HP_POP(libconfig->read, HP_libconfig_read) },
 	{ HP_POP(libconfig->write, HP_libconfig_write) },
