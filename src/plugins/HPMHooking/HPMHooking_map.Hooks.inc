@@ -2335,15 +2335,15 @@ int HP_battle_calc_drain(int64 damage, int rate, int per) {
 	}
 	return retVal___;
 }
-int HP_battle_config_read(const char *cfgName) {
+bool HP_battle_config_read(const char *filename, bool imported) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_battle_config_read_pre ) {
-		int (*preHookFunc) (const char **cfgName);
+		bool (*preHookFunc) (const char **filename, bool *imported);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_read_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_battle_config_read_pre[hIndex].func;
-			retVal___ = preHookFunc(&cfgName);
+			retVal___ = preHookFunc(&filename, &imported);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -2351,13 +2351,13 @@ int HP_battle_config_read(const char *cfgName) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.battle.config_read(cfgName);
+		retVal___ = HPMHooks.source.battle.config_read(filename, imported);
 	}
 	if( HPMHooks.count.HP_battle_config_read_post ) {
-		int (*postHookFunc) (int retVal___, const char *cfgName);
+		bool (*postHookFunc) (bool retVal___, const char *filename, bool imported);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_read_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_battle_config_read_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, cfgName);
+			retVal___ = postHookFunc(retVal___, filename, imported);
 		}
 	}
 	return retVal___;
@@ -2388,15 +2388,15 @@ void HP_battle_config_set_defaults(void) {
 	}
 	return;
 }
-int HP_battle_config_set_value(const char *w1, const char *w2) {
+bool HP_battle_config_set_value_sub(int index, int value) {
 	int hIndex = 0;
-	int retVal___ = 0;
-	if( HPMHooks.count.HP_battle_config_set_value_pre ) {
-		int (*preHookFunc) (const char **w1, const char **w2);
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_battle_config_set_value_sub_pre ) {
+		bool (*preHookFunc) (int *index, int *value);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_set_value_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_battle_config_set_value_pre[hIndex].func;
-			retVal___ = preHookFunc(&w1, &w2);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_set_value_sub_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_battle_config_set_value_sub_pre[hIndex].func;
+			retVal___ = preHookFunc(&index, &value);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -2404,13 +2404,40 @@ int HP_battle_config_set_value(const char *w1, const char *w2) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.battle.config_set_value(w1, w2);
+		retVal___ = HPMHooks.source.battle.config_set_value_sub(index, value);
+	}
+	if( HPMHooks.count.HP_battle_config_set_value_sub_post ) {
+		bool (*postHookFunc) (bool retVal___, int index, int value);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_set_value_sub_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_battle_config_set_value_sub_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, index, value);
+		}
+	}
+	return retVal___;
+}
+bool HP_battle_config_set_value(const char *param, const char *value) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_battle_config_set_value_pre ) {
+		bool (*preHookFunc) (const char **param, const char **value);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_set_value_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_battle_config_set_value_pre[hIndex].func;
+			retVal___ = preHookFunc(&param, &value);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.battle.config_set_value(param, value);
 	}
 	if( HPMHooks.count.HP_battle_config_set_value_post ) {
-		int (*postHookFunc) (int retVal___, const char *w1, const char *w2);
+		bool (*postHookFunc) (bool retVal___, const char *param, const char *value);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_config_set_value_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_battle_config_set_value_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, w1, w2);
+			retVal___ = postHookFunc(retVal___, param, value);
 		}
 	}
 	return retVal___;

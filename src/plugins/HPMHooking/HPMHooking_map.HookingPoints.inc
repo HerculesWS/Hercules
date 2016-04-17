@@ -115,6 +115,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(battle->calc_drain, HP_battle_calc_drain) },
 	{ HP_POP(battle->config_read, HP_battle_config_read) },
 	{ HP_POP(battle->config_set_defaults, HP_battle_config_set_defaults) },
+	{ HP_POP(battle->config_set_value_sub, HP_battle_config_set_value_sub) },
 	{ HP_POP(battle->config_set_value, HP_battle_config_set_value) },
 	{ HP_POP(battle->config_get_value, HP_battle_config_get_value) },
 	{ HP_POP(battle->config_adjust, HP_battle_config_adjust) },
