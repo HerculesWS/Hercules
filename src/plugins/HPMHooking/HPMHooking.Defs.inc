@@ -198,12 +198,14 @@ typedef int64 (*HPMHOOK_pre_battle_add_mastery) (struct map_session_data **sd, s
 typedef int64 (*HPMHOOK_post_battle_add_mastery) (int64 retVal___, struct map_session_data *sd, struct block_list *target, int64 dmg, int type);
 typedef int (*HPMHOOK_pre_battle_calc_drain) (int64 *damage, int *rate, int *per);
 typedef int (*HPMHOOK_post_battle_calc_drain) (int retVal___, int64 damage, int rate, int per);
-typedef int (*HPMHOOK_pre_battle_config_read) (const char **cfgName);
-typedef int (*HPMHOOK_post_battle_config_read) (int retVal___, const char *cfgName);
+typedef bool (*HPMHOOK_pre_battle_config_read) (const char **filename, bool *imported);
+typedef bool (*HPMHOOK_post_battle_config_read) (bool retVal___, const char *filename, bool imported);
 typedef void (*HPMHOOK_pre_battle_config_set_defaults) (void);
 typedef void (*HPMHOOK_post_battle_config_set_defaults) (void);
-typedef int (*HPMHOOK_pre_battle_config_set_value) (const char **w1, const char **w2);
-typedef int (*HPMHOOK_post_battle_config_set_value) (int retVal___, const char *w1, const char *w2);
+typedef bool (*HPMHOOK_pre_battle_config_set_value_sub) (int *index, int *value);
+typedef bool (*HPMHOOK_post_battle_config_set_value_sub) (bool retVal___, int index, int value);
+typedef bool (*HPMHOOK_pre_battle_config_set_value) (const char **param, const char **value);
+typedef bool (*HPMHOOK_post_battle_config_set_value) (bool retVal___, const char *param, const char *value);
 typedef bool (*HPMHOOK_pre_battle_config_get_value) (const char **w1, int **value);
 typedef bool (*HPMHOOK_post_battle_config_get_value) (bool retVal___, const char *w1, int *value);
 typedef void (*HPMHOOK_pre_battle_config_adjust) (void);
