@@ -283,7 +283,7 @@ AC_ARG_ENABLE(
 		case $enableval in
 			"no");;
 			"yes");;
-			*) AC_MSG_ERROR([[invalid argument --enable-lto=$disableval... stopping]]);;
+			*) AC_MSG_ERROR([[invalid argument --enable-lto=$enableval... stopping]]);;
 		esac
 	],
 	[enable_lto="no"]
@@ -306,7 +306,7 @@ AC_ARG_ENABLE(
 		case $enableval in
 			"no");;
 			"yes");;
-			*) AC_MSG_ERROR([[invalid argument --enable-static=$disableval... stopping]]);;
+			*) AC_MSG_ERROR([[invalid argument --enable-static=$enableval... stopping]]);;
 		esac
 	],
 	[enable_static="no"]
@@ -331,7 +331,7 @@ AC_ARG_ENABLE(
 			"no");;
 			"yes");;
 			"full");;
-			*) AC_MSG_ERROR([[invalid argument --enable-sanitize=$disableval... stopping]]);;
+			*) AC_MSG_ERROR([[invalid argument --enable-sanitize=$enableval... stopping]]);;
 		esac
 	],
 	[enable_sanitize="no"]
