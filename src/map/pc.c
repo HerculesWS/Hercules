@@ -1864,8 +1864,8 @@ int pc_disguise(struct map_session_data *sd, int class_) {
 			clif->cartlist(sd);
 			clif->updatestatus(sd,SP_CARTINFO);
 		}
-		if (sd->chatID) {
-			struct chat_data *cd = map->id2cd(sd->chatID);
+		if (sd->chat_id != 0) {
+			struct chat_data *cd = map->id2cd(sd->chat_id);
 
 			if (cd != NULL)
 				clif->dispchat(cd,0);

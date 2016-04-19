@@ -16479,7 +16479,7 @@ BUILDIN(checkchatting) {
 		sd = script->rid2sd(st);
 
 	if (sd != NULL)
-		script_pushint(st,(sd->chatID != 0));
+		script_pushint(st, (sd->chat_id != 0));
 	else
 		script_pushint(st,0);
 

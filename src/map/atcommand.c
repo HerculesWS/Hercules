@@ -3793,7 +3793,7 @@ ACMD(mapinfo)
 		if( pl_sd->mapindex == m_index ) {
 			if( pl_sd->state.vending )
 				vend_num++;
-			else if ((cd = map->id2cd(pl_sd->chatID)) != NULL && cd->usersd[0] == pl_sd)
+			else if ((cd = map->id2cd(pl_sd->chat_id)) != NULL && cd->usersd[0] == pl_sd)
 				chat_num++;
 		}
 	}
@@ -3972,7 +3972,7 @@ ACMD(mapinfo)
 			clif->message(fd, msg_fd(fd,1113)); // ----- Chats in Map -----
 			iter = mapit_getallusers();
 			for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
-				if ((cd = map->id2cd(pl_sd->chatID)) != NULL && pl_sd->mapindex == m_index && cd->usersd[0] == pl_sd) {
+				if ((cd = map->id2cd(pl_sd->chat_id)) != NULL && pl_sd->mapindex == m_index && cd->usersd[0] == pl_sd) {
 					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1114), // Chat: %s | Player: %s | Location: %d %d
 							cd->title, pl_sd->status.name, cd->bl.x, cd->bl.y);
 					clif->message(fd, atcmd_output);

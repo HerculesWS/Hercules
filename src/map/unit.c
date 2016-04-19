@@ -2433,7 +2433,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 					status_change_end(d_bl,SC__SHADOWFORM,INVALID_TIMER);
 			}
 			//Leave/reject all invitations.
-			if(sd->chatID)
+			if (sd->chat_id != 0)
 				chat->leave(sd, false);
 			if(sd->trade_partner)
 				trade->cancel(sd);

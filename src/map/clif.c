@@ -319,17 +319,17 @@ int clif_send_sub(struct block_list *bl, va_list ap) {
 				return 0;
 		break;
 		case AREA_WOC:
-			if (sd->chatID || bl == src_bl)
+			if (sd->chat_id != 0 || bl == src_bl)
 				return 0;
 		break;
 		case AREA_WOSC: {
 			if (src_bl->type == BL_PC) {
 				const struct map_session_data *ssd = BL_UCCAST(BL_PC, src_bl);
-				if (ssd != NULL && sd->chatID != 0 && (sd->chatID == ssd->chatID))
+				if (ssd != NULL && sd->chat_id != 0 && (sd->chat_id == ssd->chat_id))
 					return 0;
 			} else if (src_bl->type == BL_NPC) {
 				const struct npc_data *nd = BL_UCCAST(BL_NPC, src_bl);
-				if (nd != NULL && sd->chatID != 0 && (sd->chatID == nd->chat_id))
+				if (nd != NULL && sd->chat_id != 0 && (sd->chat_id == nd->chat_id))
 					return 0;
 			}
 		}
@@ -435,7 +435,7 @@ bool clif_send(const void* buf, int len, struct block_list* bl, enum send_target
 			{
 				const struct chat_data *cd = NULL;
 				if (sd != NULL) {
-					cd = map->id2cd(sd->chatID);
+					cd = map->id2cd(sd->chat_id);
 				} else {
 					cd = BL_CCAST(BL_CHAT, bl);
 				}
@@ -4115,8 +4115,8 @@ void clif_getareachar_pc(struct map_session_data* sd,struct map_session_data* ds
 
 	nullpo_retv(sd);
 	nullpo_retv(dstsd);
-	if( dstsd->chatID ) {
-		struct chat_data *cd = map->id2cd(dstsd->chatID);
+	if (dstsd->chat_id != 0) {
+		struct chat_data *cd = map->id2cd(dstsd->chat_id);
 		if (cd != NULL && cd->usersd[0] == dstsd)
 			clif->dispchat(cd,sd->fd);
 	} else if( dstsd->state.vending )
@@ -4618,9 +4618,9 @@ int clif_outsight(struct block_list *bl,va_list ap)
 			case BL_PC:
 				if (sd->vd.class_ != INVISIBLE_CLASS)
 					clif->clearunit_single(bl->id,CLR_OUTSIGHT,tsd->fd);
-				if (sd->chatID) {
-					struct chat_data *cd = map->id2cd(sd->chatID);
-					if(cd->usersd[0]==sd)
+				if (sd->chat_id != 0) {
+					struct chat_data *cd = map->id2cd(sd->chat_id);
+					if (cd != NULL && cd->usersd[0] == sd)
 						clif->dispchat(cd,tsd->fd);
 				}
 				if( sd->state.vending )
@@ -8316,7 +8316,7 @@ void clif_refresh(struct map_session_data *sd)
 		clif->elemental_info(sd);
 	map->foreachinrange(clif->getareachar,&sd->bl,AREA_SIZE,BL_ALL,sd);
 	clif->weather_check(sd);
-	if( sd->chatID )
+	if (sd->chat_id != 0)
 		chat->leave(sd, false);
 	if( sd->state.vending )
 		clif->openvending(sd, sd->bl.id, sd->vending);
@@ -9786,7 +9786,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data *sd)
 		outlen = (int)strlen(full_message) + 1;
 	}
 
-	if (sd->fontcolor != 0 && sd->chatID == 0) {
+	if (sd->fontcolor != 0 && sd->chat_id == 0) {
 		uint32 color = 0;
 
 		if (sd->disguise == -1) {
@@ -9829,7 +9829,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data *sd)
 		else
 			safestrncpy(WBUFP(buf, 8), full_message, outlen);
 		//FIXME: chat has range of 9 only
-		clif->send(buf, WBUFW(buf, 2), &sd->bl, sd->chatID ? CHAT_WOS : AREA_CHAT_WOC);
+		clif->send(buf, WBUFW(buf, 2), &sd->bl, sd->chat_id != 0 ? CHAT_WOS : AREA_CHAT_WOC);
 		aFree(buf);
 	}
 
@@ -10362,7 +10362,7 @@ void clif_parse_UseItem(int fd, struct map_session_data *sd)
 		return;
 	}
 
-	if ( (!sd->npc_id && pc_istrading(sd)) || sd->chatID )
+	if ((!sd->npc_id && pc_istrading(sd)) || sd->chat_id != 0)
 		return;
 
 	//Whether the item is used or not is irrelevant, the char ain't idle. [Skotlex]
@@ -10736,7 +10736,7 @@ void clif_parse_TradeRequest(int fd,struct map_session_data *sd) {
 
 	t_sd = map->id2sd(RFIFOL(fd,2));
 
-	if(!sd->chatID && pc_cant_act(sd))
+	if (sd->chat_id == 0 && pc_cant_act(sd))
 		return; //You can trade while in a chatroom.
 
 	// @noask [LuzZza]
