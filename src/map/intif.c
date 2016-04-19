@@ -279,12 +279,14 @@ int intif_wis_replay(int id, int flag)
 // The transmission of GM only Wisp/Page from server to inter-server
 int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 {
-	size_t mes_len;
+	int mes_len;
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(wisp_name);
 	nullpo_ret(mes);
-	mes_len = strlen(mes) + 1; // + null
+	mes_len = (int)strlen(mes) + 1; // + null
+	Assert_ret(mes_len > 0 && mes_len <= INT16_MAX - 32);
+
 	WFIFOHEAD(inter_fd, mes_len + 32);
 	WFIFOW(inter_fd,0) = 0x3003;
 	WFIFOW(inter_fd,2) = mes_len + 32;
