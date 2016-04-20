@@ -841,7 +841,7 @@ struct clif_interface {
 	void (*clearchat) (struct chat_data *cd,int fd);
 	void (*leavechat) (struct chat_data* cd, struct map_session_data* sd, bool flag);
 	void (*changechatstatus) (struct chat_data* cd);
-	void (*wis_message) (int fd, const char* nick, const char* mes, size_t mes_len);
+	void (*wis_message) (int fd, const char *nick, const char *mes, int mes_len);
 	void (*wis_end) (int fd, int flag);
 	void (*disp_message) (struct block_list *src, const char *mes, enum send_target target);
 	void (*broadcast) (struct block_list *bl, const char *mes, int len, int type, enum send_target target);

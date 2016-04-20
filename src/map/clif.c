@@ -5805,7 +5805,7 @@ void clif_upgrademessage(int fd, int result, int item_id)
 /// Whisper is transmitted to the destination player (ZC_WHISPER).
 /// 0097 <packet len>.W <nick>.24B <message>.?B
 /// 0097 <packet len>.W <nick>.24B <isAdmin>.L <message>.?B (PACKETVER >= 20091104)
-void clif_wis_message(int fd, const char *nick, const char *mes, size_t mes_len)
+void clif_wis_message(int fd, const char *nick, const char *mes, int mes_len)
 {
 #if PACKETVER >= 20091104
 	struct map_session_data *ssd = NULL;
@@ -10229,7 +10229,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 		// if there are 'Test' player on an other map-server and 'test' player on this map-server,
 		// and if we ask for 'Test', we must not contact 'test' player
 		// so, we send information to inter-server, which is the only one which decide (and copy correct name).
-		intif->wis_message(sd, target, message, strlen(message));
+		intif->wis_message(sd, target, message, (int)strlen(message));
 		return;
 	}
 
@@ -10243,10 +10243,10 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 	}
 
 	// if player is autotrading
-	if( dstsd->state.autotrade ) {
+	if (dstsd->state.autotrade) {
 		char output[256];
 		sprintf(output, "%s is in autotrade mode and cannot receive whispered messages.", dstsd->status.name);
-		clif->wis_message(fd, map->wisp_server_name, output, strlen(output) + 1);
+		clif->wis_message(fd, map->wisp_server_name, output, (int)strlen(output) + 1);
 		return;
 	}
 
@@ -10263,7 +10263,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 	clif->wis_end(fd, 0); // 0: success to send wisper
 
 	// Normal message
-	clif->wis_message(dstsd->fd, sd->status.name, message, strlen(message));
+	clif->wis_message(dstsd->fd, sd->status.name, message, (int)strlen(message));
 }
 
 void clif_parse_Broadcast(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));

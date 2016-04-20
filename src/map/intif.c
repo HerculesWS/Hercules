@@ -231,7 +231,7 @@ int intif_main_message(struct map_session_data* sd, const char* message)
 }
 
 // The transmission of Wisp/Page to inter-server (player not found on this server)
-int intif_wis_message(struct map_session_data *sd, const char *nick, const char *mes, size_t mes_len)
+int intif_wis_message(struct map_session_data *sd, const char *nick, const char *mes, int mes_len)
 {
 	if (intif->CheckForCharServer())
 		return 0;
@@ -660,7 +660,7 @@ int intif_guild_addmember(int guild_id,struct guild_member *m)
 }
 
 // Request a new leader for guild
-int intif_guild_change_gm(int guild_id, const char* name, size_t len)
+int intif_guild_change_gm(int guild_id, const char *name, int len)
 {
 	if (intif->CheckForCharServer())
 		return 0;

@@ -1829,7 +1829,7 @@ int guild_gm_change(int guild_id, struct map_session_data *sd)
 		return 0;
 
 	//Notify servers that master has changed.
-	intif->guild_change_gm(guild_id, sd->status.name, strlen(sd->status.name)+1);
+	intif->guild_change_gm(guild_id, sd->status.name, (int)strlen(sd->status.name)+1);
 	return 1;
 }
 

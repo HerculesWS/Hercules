@@ -11195,7 +11195,7 @@ void pc_scdata_received(struct map_session_data *sd) {
 		time_t exp_time = sd->expiration_time;
 		char tmpstr[1024];
 		strftime(tmpstr, sizeof(tmpstr) - 1, msg_sd(sd,501), localtime(&exp_time)); // "Your account time limit is: %d-%m-%Y %H:%M:%S."
-		clif->wis_message(sd->fd, map->wisp_server_name, tmpstr, strlen(tmpstr)+1);
+		clif->wis_message(sd->fd, map->wisp_server_name, tmpstr, (int)strlen(tmpstr)+1);
 
 		pc->expire_check(sd);
 	}
