@@ -100,6 +100,7 @@ struct pcre_interface *libpcre;
  */
 void finalize_pcrematch_entry(struct pcrematch_entry* e)
 {
+	nullpo_retv(e);
 	libpcre->free(e->pcre_);
 	libpcre->free(e->pcre_extra_);
 	aFree(e->pattern);
@@ -111,7 +112,10 @@ void finalize_pcrematch_entry(struct pcrematch_entry* e)
  */
 struct pcrematch_set* lookup_pcreset(struct npc_data* nd, int setid) {
 	struct pcrematch_set *pcreset;
-	struct npc_parse *npcParse = nd->chatdb;
+	struct npc_parse *npcParse;
+
+	nullpo_retr(NULL, nd);
+	npcParse = nd->chatdb;
 	if (npcParse == NULL)
 		nd->chatdb = npcParse = (struct npc_parse *)aCalloc(sizeof(struct npc_parse), 1);
 
@@ -151,7 +155,9 @@ struct pcrematch_set* lookup_pcreset(struct npc_data* nd, int setid) {
 void activate_pcreset(struct npc_data* nd, int setid)
 {
 	struct pcrematch_set *pcreset;
-	struct npc_parse *npcParse = nd->chatdb;
+	struct npc_parse *npcParse;
+	nullpo_retv(nd);
+	npcParse = nd->chatdb;
 	if (npcParse == NULL)
 		return; // Nothing to activate...
 	pcreset = npcParse->inactive;
@@ -184,7 +190,9 @@ void activate_pcreset(struct npc_data* nd, int setid)
 void deactivate_pcreset(struct npc_data* nd, int setid)
 {
 	struct pcrematch_set *pcreset;
-	struct npc_parse *npcParse = nd->chatdb;
+	struct npc_parse *npcParse;
+	nullpo_retv(nd);
+	npcParse = nd->chatdb;
 	if (npcParse == NULL)
 		return; // Nothing to deactivate...
 	if (setid == -1) {
@@ -221,7 +229,9 @@ void delete_pcreset(struct npc_data* nd, int setid)
 {
 	int active = 1;
 	struct pcrematch_set *pcreset;
-	struct npc_parse *npcParse = nd->chatdb;
+	struct npc_parse *npcParse;
+	nullpo_retv(nd);
+	npcParse = nd->chatdb;
 	if (npcParse == NULL)
 		return; // Nothing to deactivate...
 	pcreset = npcParse->active;
@@ -269,8 +279,12 @@ void delete_pcreset(struct npc_data* nd, int setid)
  */
 struct pcrematch_entry* create_pcrematch_entry(struct pcrematch_set* set)
 {
-	struct pcrematch_entry * e =  (struct pcrematch_entry *) aCalloc(sizeof(struct pcrematch_entry), 1);
-	struct pcrematch_entry * last = set->head;
+	struct pcrematch_entry *e;
+	struct pcrematch_entry *last;
+
+	nullpo_retr(NULL, set);
+	e = (struct pcrematch_entry *)aCalloc(sizeof(struct pcrematch_entry), 1);
+	last = set->head;
 
 	// Normally we would have just stuck it at the end of the list but
 	// this doesn't sink up with peoples usage pattern.  They wanted
@@ -303,6 +317,7 @@ void npc_chat_def_pattern(struct npc_data* nd, int setid, const char* pattern, c
 
 	struct pcrematch_set * s = npc_chat->lookup_pcreset(nd, setid);
 	struct pcrematch_entry *e = npc_chat->create_pcrematch_entry(s);
+	nullpo_retv(e);
 	e->pattern = aStrdup(pattern);
 	e->label = aStrdup(label);
 	e->pcre_ = libpcre->compile(pattern, PCRE_CASELESS, &err, &erroff, NULL);
@@ -317,7 +332,10 @@ void npc_chat_def_pattern(struct npc_data* nd, int setid, const char* pattern, c
  */
 void npc_chat_finalize(struct npc_data* nd)
 {
-	struct npc_parse *npcParse = nd->chatdb;
+	struct npc_parse *npcParse;
+
+	nullpo_retv(nd);
+	npcParse = nd->chatdb;
 	if (npcParse == NULL)
 		return;
 
@@ -358,6 +376,8 @@ int npc_chat_sub(struct block_list* bl, va_list ap)
 	len = va_arg(ap,int);
 	sd = va_arg(ap,struct map_session_data *);
 
+	nullpo_ret(sd);
+
 	// iterate across all active sets
 	for (pcreset = npcParse->active; pcreset != NULL; pcreset = pcreset->next)
 	{
@@ -373,7 +393,7 @@ int npc_chat_sub(struct block_list* bl, va_list ap)
 				// save out the matched strings
 				for (i = 0; i < r; i++)
 				{
-					char var[6], val[255];
+					char var[12], val[255];
 					snprintf(var, sizeof(var), "$@p%i$", i);
 					libpcre->copy_substring(msg, offsets, r, i, val, sizeof(val));
 					script->set_var(sd, var, val);
