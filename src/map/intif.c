@@ -150,7 +150,7 @@ int intif_rename(struct map_session_data *sd, int type, const char *name)
 }
 
 // GM Send a message
-int intif_broadcast(const char* mes, size_t len, int type)
+int intif_broadcast(const char *mes, int len, int type)
 {
 	int lp = (type&BC_COLOR_MASK) ? 4 : 0;
 
@@ -182,7 +182,7 @@ int intif_broadcast(const char* mes, size_t len, int type)
 	return 0;
 }
 
-int intif_broadcast2(const char* mes, size_t len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY)
+int intif_broadcast2(const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY)
 {
 	nullpo_ret(mes);
 	Assert_ret(len < 32000);
@@ -222,7 +222,7 @@ int intif_main_message(struct map_session_data* sd, const char* message)
 	snprintf( output, sizeof(output), msg_txt(386), sd->status.name, message );
 
 	// send the message using the inter-server broadcast service
-	intif->broadcast2( output, strlen(output) + 1, 0xFE000000, 0, 0, 0, 0 );
+	intif->broadcast2(output, (int)strlen(output) + 1, 0xFE000000, 0, 0, 0, 0);
 
 	// log the chat message
 	logs->chat( LOG_CHAT_MAINCHAT, 0, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, message );

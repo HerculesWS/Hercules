@@ -2447,7 +2447,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 				char message[128];
 				sprintf (message, msg_txt(541), mvp_sd->status.name, md->name, it->jname, (float)drop_rate/100);
 				//MSG: "'%s' won %s's %s (chance: %0.02f%%)"
-				intif->broadcast(message, strlen(message)+1, BC_DEFAULT);
+				intif->broadcast(message, (int)strlen(message)+1, BC_DEFAULT);
 			}
 
 			/* heres the thing we got the feature set up however we're still discussing how to best define the ids,
@@ -2600,7 +2600,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 						char message[128];
 						sprintf(message, msg_txt(541), mvp_sd->status.name, md->name, data->jname, rate/100.);
 						//MSG: "'%s' won %s's %s (chance: %0.02f%%)"
-						intif->broadcast(message, strlen(message)+1, BC_DEFAULT);
+						intif->broadcast(message, (int)strlen(message)+1, BC_DEFAULT);
 					}
 
 					if((temp = pc->additem(mvp_sd,&item,1,LOG_TYPE_PICKDROP_PLAYER)) != 0) {
