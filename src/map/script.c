@@ -13791,7 +13791,7 @@ BUILDIN(dispbottom)
 		int color = script_getnum(st,3);
 		clif->messagecolor_self(sd->fd, color, message);
 	} else {
-		clif_disp_onlyself(sd, message, (int)strlen(message));
+		clif_disp_onlyself(sd, message);
 	}
 
 	return true;

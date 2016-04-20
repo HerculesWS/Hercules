@@ -7949,19 +7949,21 @@ void clif_marriage_proposal(int fd, struct map_session_data *sd, struct map_sess
 /*==========================================
  * Displays a message using the guild-chat colors to the specified targets. [Skotlex]
  *------------------------------------------*/
-void clif_disp_message(struct block_list* src, const char* mes, size_t len, enum send_target target)
+void clif_disp_message(struct block_list *src, const char *mes, enum send_target target)
 {
 	unsigned char buf[256];
+	int len;
 
+	nullpo_retv(mes);
+	nullpo_retv(src);
+
+	len = (int)strlen(mes);
 	if (len == 0)
 		return;
 
-	nullpo_retv(src);
-	nullpo_retv(mes);
-
-	if (len > sizeof(buf)-5) {
-		ShowWarning("clif_disp_message: Truncated message '%s' (len=%"PRIuS", max=%"PRIuS", aid=%d).\n", mes, len, sizeof(buf)-5, src->id);
-		len = sizeof(buf)-5;
+	if (len > (int)sizeof(buf)-5) {
+		ShowWarning("clif_disp_message: Truncated message '%s' (len=%d, max=%"PRIuS", aid=%d).\n", mes, len, sizeof(buf)-5, src->id);
+		len = (int)sizeof(buf)-5;
 	}
 
 	WBUFW(buf, 0) = 0x17f;
@@ -10738,10 +10740,10 @@ void clif_noask_sub(struct map_session_data *src, struct map_session_data *targe
 	nullpo_retv(src);
 	// Your request has been rejected by autoreject option.
 	msg = msg_sd(src,392);
-	clif_disp_onlyself(src, msg, strlen(msg));
+	clif_disp_onlyself(src, msg);
 	//Notice that a request was rejected.
 	snprintf(output, 256, msg_sd(target,393+type), src->status.name, 256);
-	clif_disp_onlyself(target, output, strlen(output));
+	clif_disp_onlyself(target, output);
 }
 
 void clif_parse_TradeRequest(int fd,struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -14659,7 +14661,7 @@ void clif_Mail_refreshinbox(struct map_session_data *sd)
 	if( md->full ) {// TODO: is this official?
 		char output[100];
 		sprintf(output, "Inbox is full (Max %d). Delete some mails.", MAIL_MAX_INBOX);
-		clif_disp_onlyself(sd, output, strlen(output));
+		clif_disp_onlyself(sd, output);
 	}
 }
 

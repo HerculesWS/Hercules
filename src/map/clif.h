@@ -60,7 +60,7 @@ struct view_data;
  **/
 #define packet_len(cmd) packet_db[cmd].len
 #define clif_menuskill_clear(sd) ((sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0)
-#define clif_disp_onlyself(sd,mes,len) clif->disp_message( &(sd)->bl, (mes), (len), SELF )
+#define clif_disp_onlyself(sd, mes) clif->disp_message(&(sd)->bl, (mes), SELF)
 #define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
 #define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
 #define RGB2BGR(c) (((c) & 0x0000FF) << 16 | ((c) & 0x00FF00) | ((c) & 0xFF0000) >> 16)
@@ -843,7 +843,7 @@ struct clif_interface {
 	void (*changechatstatus) (struct chat_data* cd);
 	void (*wis_message) (int fd, const char* nick, const char* mes, size_t mes_len);
 	void (*wis_end) (int fd, int flag);
-	void (*disp_message) (struct block_list* src, const char* mes, size_t len, enum send_target target);
+	void (*disp_message) (struct block_list *src, const char *mes, enum send_target target);
 	void (*broadcast) (struct block_list *bl, const char *mes, int len, int type, enum send_target target);
 	void (*broadcast2) (struct block_list *bl, const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, enum send_target target);
 	void (*messagecolor_self) (int fd, uint32 color, const char *msg);
