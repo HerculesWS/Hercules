@@ -798,12 +798,16 @@ int party_send_logout(struct map_session_data *sd)
 	return 1;
 }
 
-int party_send_message(struct map_session_data *sd,const char *mes,int len)
+int party_send_message(struct map_session_data *sd, const char *mes)
 {
-	if(sd->status.party_id==0)
+	int len = (int)strlen(mes);
+
+	nullpo_ret(sd);
+
+	if (sd->status.party_id == 0)
 		return 0;
-	intif->party_message(sd->status.party_id,sd->status.account_id,mes,len);
-	party->recv_message(sd->status.party_id,sd->status.account_id,mes,len);
+	intif->party_message(sd->status.party_id, sd->status.account_id, mes, len);
+	party->recv_message(sd->status.party_id, sd->status.account_id, mes, len);
 
 	// Chat logging type 'P' / Party Chat
 	logs->chat(LOG_CHAT_PARTY, sd->status.party_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);

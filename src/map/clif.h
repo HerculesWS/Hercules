@@ -943,7 +943,7 @@ struct clif_interface {
 	void (*bg_hp) (struct map_session_data *sd);
 	void (*bg_xy) (struct map_session_data *sd);
 	void (*bg_xy_remove) (struct map_session_data *sd);
-	void (*bg_message) (struct battleground_data *bgd, int src_id, const char *name, const char *mes, size_t len);
+	void (*bg_message) (struct battleground_data *bgd, int src_id, const char *name, const char *mes);
 	void (*bg_updatescore) (int16 m);
 	void (*bg_updatescore_single) (struct map_session_data *sd);
 	void (*sendbgemblem_area) (struct map_session_data *sd);

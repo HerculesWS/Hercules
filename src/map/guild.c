@@ -1060,14 +1060,15 @@ int guild_recv_memberinfoshort(int guild_id,int account_id,int char_id,int onlin
 /*====================================================
  * Send a message to whole guild
  *---------------------------------------------------*/
-int guild_send_message(struct map_session_data *sd,const char *mes,int len)
+int guild_send_message(struct map_session_data *sd, const char *mes)
 {
+	int len = (int)strlen(mes);
 	nullpo_ret(sd);
 
-	if(sd->status.guild_id==0)
+	if (sd->status.guild_id == 0)
 		return 0;
-	intif->guild_message(sd->status.guild_id,sd->status.account_id,mes,len);
-	guild->recv_message(sd->status.guild_id,sd->status.account_id,mes,len);
+	intif->guild_message(sd->status.guild_id, sd->status.account_id, mes, len);
+	guild->recv_message(sd->status.guild_id, sd->status.account_id, mes, len);
 
 	// Chat logging type 'G' / Guild Chat
 	logs->chat(LOG_CHAT_GUILD, sd->status.guild_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
