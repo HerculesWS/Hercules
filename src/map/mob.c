@@ -2556,60 +2556,62 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 		pc->gainexp(mvp_sd, &md->bl, mexp,0, false);
 		log_mvp[1] = mexp;
 
-		if( !(map->list[m].flag.nomvploot || type&1) ) {
+		if (!(map->list[m].flag.nomvploot || type&1)) {
 			/* pose them randomly in the list -- so on 100% drop servers it wont always drop the same item */
-			int mdrop_id[MAX_MVP_DROP];
-			int mdrop_p[MAX_MVP_DROP];
-			struct item item;
+			struct {
+				int nameid;
+				int p;
+			} mdrop[MAX_MVP_DROP] = { { 0 } };
 
-			memset(&mdrop_id,0,MAX_MVP_DROP*sizeof(int));
+			for (i = 0; i < MAX_MVP_DROP; i++) {
+				int rpos;
+				if (md->db->mvpitem[i].nameid == 0)
+					continue;
+				do {
+					rpos = rnd()%MAX_MVP_DROP;
+				} while (mdrop[rpos].nameid != 0);
 
-			for(i = 0; i < MAX_MVP_DROP; i++) {
-				while( 1 ) {
-					int va = rnd()%MAX_MVP_DROP;
-					if( !mdrop_id[va] || !md->db->mvpitem[i].nameid ) {
-						mdrop_id[va] = md->db->mvpitem[i].nameid;
-						mdrop_p[va]  = md->db->mvpitem[i].p;
-						break;
-					}
-				}
+				mdrop[rpos].nameid = md->db->mvpitem[i].nameid;
+				mdrop[rpos].p = md->db->mvpitem[i].p;
 			}
 
-			for(i = 0; i < MAX_MVP_DROP; i++) {
-				struct item_data *data;
-				if(mdrop_id[i] <= 0)
-					continue;
-				if(! (data = itemdb->exists(mdrop_id[i])) )
-					continue;
+			for (i = 0; i < MAX_MVP_DROP; i++) {
+				struct item_data *data = NULL;
+				int rate = 0;
 
-				temp = mdrop_p[i];
-				if(temp <= 0 && !battle_config.drop_rate0item)
-					temp = 1;
-				if(temp <= rnd()%10000+1) //if ==0, then it doesn't drop
+				if (mdrop[i].nameid <= 0)
+					continue;
+				if ((data = itemdb->exists(mdrop[i].nameid)) == NULL)
 					continue;
 
-				memset(&item,0,sizeof(item));
-				item.nameid=mdrop_id[i];
-				item.identify= itemdb->isidentified2(data);
-				clif->mvp_item(mvp_sd,item.nameid);
-				log_mvp[0] = item.nameid;
+				rate = mdrop[i].p;
+				if (rate <= 0 && !battle_config.drop_rate0item)
+					rate = 1;
+				if (rate > rnd()%10000) {
+					struct item item = { 0 };
 
-				//A Rare MVP Drop Global Announce by Lupus
-				if(temp<=battle_config.rare_drop_announce) {
-					char message[128];
-					sprintf (message, msg_txt(541), mvp_sd->status.name, md->name, data->jname, temp/100.);
-					//MSG: "'%s' won %s's %s (chance: %0.02f%%)"
-					intif->broadcast(message, strlen(message)+1, BC_DEFAULT);
+					item.nameid = mdrop[i].nameid;
+					item.identify = itemdb->isidentified2(data);
+					clif->mvp_item(mvp_sd, item.nameid);
+					log_mvp[0] = item.nameid;
+
+					//A Rare MVP Drop Global Announce by Lupus
+					if (rate <= battle_config.rare_drop_announce) {
+						char message[128];
+						sprintf(message, msg_txt(541), mvp_sd->status.name, md->name, data->jname, rate/100.);
+						//MSG: "'%s' won %s's %s (chance: %0.02f%%)"
+						intif->broadcast(message, strlen(message)+1, BC_DEFAULT);
+					}
+
+					if((temp = pc->additem(mvp_sd,&item,1,LOG_TYPE_PICKDROP_PLAYER)) != 0) {
+						clif->additem(mvp_sd,0,0,temp);
+						map->addflooritem(&md->bl, &item, 1, mvp_sd->bl.m, mvp_sd->bl.x, mvp_sd->bl.y, mvp_sd->status.char_id, (second_sd?second_sd->status.char_id : 0), (third_sd ? third_sd->status.char_id : 0), 1);
+					}
+
+					//Logs items, MVP prizes [Lupus]
+					logs->pick_mob(md, LOG_TYPE_MVP, -1, &item, data);
+					break;
 				}
-
-				if((temp = pc->additem(mvp_sd,&item,1,LOG_TYPE_PICKDROP_PLAYER)) != 0) {
-					clif->additem(mvp_sd,0,0,temp);
-					map->addflooritem(&md->bl, &item, 1, mvp_sd->bl.m, mvp_sd->bl.x, mvp_sd->bl.y, mvp_sd->status.char_id, (second_sd?second_sd->status.char_id : 0), (third_sd ? third_sd->status.char_id : 0), 1);
-				}
-
-				//Logs items, MVP prizes [Lupus]
-				logs->pick_mob(md, LOG_TYPE_MVP, -1, &item, data);
-				break;
 			}
 		}
 
