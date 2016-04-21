@@ -4340,10 +4340,6 @@ struct {
 	struct HPMHookPoint *HP_pc_db_checkid_post;
 	struct HPMHookPoint *HP_pc_validate_levels_pre;
 	struct HPMHookPoint *HP_pc_validate_levels_post;
-	struct HPMHookPoint *HP_pc_process_chat_message_pre;
-	struct HPMHookPoint *HP_pc_process_chat_message_post;
-	struct HPMHookPoint *HP_pc_check_supernovice_call_pre;
-	struct HPMHookPoint *HP_pc_check_supernovice_call_post;
 	struct HPMHookPoint *HP_pc_autotrade_load_pre;
 	struct HPMHookPoint *HP_pc_autotrade_load_post;
 	struct HPMHookPoint *HP_pc_autotrade_update_pre;
@@ -4362,6 +4358,10 @@ struct {
 	struct HPMHookPoint *HP_pc_update_idle_time_post;
 	struct HPMHookPoint *HP_pc_have_magnifier_pre;
 	struct HPMHookPoint *HP_pc_have_magnifier_post;
+	struct HPMHookPoint *HP_pc_process_chat_message_pre;
+	struct HPMHookPoint *HP_pc_process_chat_message_post;
+	struct HPMHookPoint *HP_pc_check_supernovice_call_pre;
+	struct HPMHookPoint *HP_pc_check_supernovice_call_post;
 	struct HPMHookPoint *HP_libpcre_compile_pre;
 	struct HPMHookPoint *HP_libpcre_compile_post;
 	struct HPMHookPoint *HP_libpcre_study_pre;
@@ -10229,10 +10229,6 @@ struct {
 	int HP_pc_db_checkid_post;
 	int HP_pc_validate_levels_pre;
 	int HP_pc_validate_levels_post;
-	int HP_pc_process_chat_message_pre;
-	int HP_pc_process_chat_message_post;
-	int HP_pc_check_supernovice_call_pre;
-	int HP_pc_check_supernovice_call_post;
 	int HP_pc_autotrade_load_pre;
 	int HP_pc_autotrade_load_post;
 	int HP_pc_autotrade_update_pre;
@@ -10251,6 +10247,10 @@ struct {
 	int HP_pc_update_idle_time_post;
 	int HP_pc_have_magnifier_pre;
 	int HP_pc_have_magnifier_post;
+	int HP_pc_process_chat_message_pre;
+	int HP_pc_process_chat_message_post;
+	int HP_pc_check_supernovice_call_pre;
+	int HP_pc_check_supernovice_call_post;
 	int HP_libpcre_compile_pre;
 	int HP_libpcre_compile_post;
 	int HP_libpcre_study_pre;

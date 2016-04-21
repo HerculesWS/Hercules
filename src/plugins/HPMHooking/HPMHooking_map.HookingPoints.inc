@@ -2220,8 +2220,6 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->expire_check, HP_pc_expire_check) },
 	{ HP_POP(pc->db_checkid, HP_pc_db_checkid) },
 	{ HP_POP(pc->validate_levels, HP_pc_validate_levels) },
-	{ HP_POP(pc->process_chat_message, HP_pc_process_chat_message) },
-	{ HP_POP(pc->check_supernovice_call, HP_pc_check_supernovice_call) },
 	{ HP_POP(pc->autotrade_load, HP_pc_autotrade_load) },
 	{ HP_POP(pc->autotrade_update, HP_pc_autotrade_update) },
 	{ HP_POP(pc->autotrade_start, HP_pc_autotrade_start) },
@@ -2231,6 +2229,8 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(pc->check_job_name, HP_pc_check_job_name) },
 	{ HP_POP(pc->update_idle_time, HP_pc_update_idle_time) },
 	{ HP_POP(pc->have_magnifier, HP_pc_have_magnifier) },
+	{ HP_POP(pc->process_chat_message, HP_pc_process_chat_message) },
+	{ HP_POP(pc->check_supernovice_call, HP_pc_check_supernovice_call) },
 /* pcre_interface */
 	{ HP_POP(libpcre->compile, HP_libpcre_compile) },
 	{ HP_POP(libpcre->study, HP_libpcre_study) },
