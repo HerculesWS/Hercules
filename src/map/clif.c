@@ -9743,37 +9743,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data* sd)
 		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
 	}
 
-	if( (sd->class_&MAPID_UPPERMASK) == MAPID_SUPER_NOVICE ) {
-		unsigned int next = pc->nextbaseexp(sd);
-		if( next == 0 ) next = pc->thisbaseexp(sd);
-		if( next ) { // 0%, 10%, 20%, ...
-			int percent = (int)( ( (float)sd->status.base_exp/(float)next )*1000. );
-			if( (battle_config.snovice_call_type || percent) && ( percent%100 ) == 0 ) {// 10.0%, 20.0%, ..., 90.0%
-				switch (sd->state.snovice_call_flag) {
-					case 0:
-						if( strstr(message, msg_txt(1479)) ) // "Dear angel, can you hear my voice?"
-							sd->state.snovice_call_flag = 1;
-						break;
-					case 1: {
-						char buf[256];
-						snprintf(buf, 256, msg_txt(1480), sd->status.name);
-						if( strstr(message, buf) ) // "I am %s Super Novice~"
-							sd->state.snovice_call_flag = 2;
-					}
-						break;
-					case 2:
-						if( strstr(message, msg_txt(1481)) ) // "Help me out~ Please~ T_T"
-							sd->state.snovice_call_flag = 3;
-						break;
-					case 3:
-						sc_start(NULL,&sd->bl, status->skill2sc(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
-						clif->skill_nodamage(&sd->bl, &sd->bl, MO_EXPLOSIONSPIRITS, 5, 1);  // prayer always shows successful Lv5 cast and disregards noskill restrictions
-						sd->state.snovice_call_flag = 0;
-						break;
-				}
-			}
-		}
-	}
+	pc->check_supernovice_call(sd, message);
 
 	pc->update_idle_time(sd, BCIDLE_CHAT);
 

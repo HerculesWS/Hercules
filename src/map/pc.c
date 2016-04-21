@@ -11516,6 +11516,57 @@ int pc_have_magnifier(struct map_session_data *sd)
 	return n;
 }
 
+/**
+ * Checks a chat message, scanning for the Super Novice prayer sequence.
+ *
+ * If a match is found, the angel is invoked or the counter is incremented as
+ * appropriate.
+ *
+ * @param sd      The sender character.
+ * @param message The message text.
+ */
+void pc_check_supernovice_call(struct map_session_data *sd, const char *message)
+{
+	unsigned int next = pc->nextbaseexp(sd);
+	int percent = 0;
+
+	if ((sd->class_&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE)
+		return;
+	if (next == 0)
+		next = pc->thisbaseexp(sd);
+	if (next == 0)
+		return;
+
+	// 0%, 10%, 20%, ...
+	percent = (int)( ( (float)sd->status.base_exp/(float)next )*1000. );
+	if ((battle_config.snovice_call_type != 0 || percent != 0) && (percent%100) == 0) {
+		// 10.0%, 20.0%, ..., 90.0%
+		switch (sd->state.snovice_call_flag) {
+		case 0:
+			if (strstr(message, msg_txt(1479))) // "Dear angel, can you hear my voice?"
+				sd->state.snovice_call_flag = 1;
+			break;
+		case 1:
+		{
+			char buf[256];
+			snprintf(buf, 256, msg_txt(1480), sd->status.name);
+			if (strstr(message, buf)) // "I am %s Super Novice~"
+				sd->state.snovice_call_flag = 2;
+		}
+			break;
+		case 2:
+			if (strstr(message, msg_txt(1481))) // "Help me out~ Please~ T_T"
+				sd->state.snovice_call_flag = 3;
+			break;
+		case 3:
+			sc_start(NULL, &sd->bl, status->skill2sc(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
+			clif->skill_nodamage(&sd->bl, &sd->bl, MO_EXPLOSIONSPIRITS, 5, 1);  // prayer always shows successful Lv5 cast and disregards noskill restrictions
+			sd->state.snovice_call_flag = 0;
+			break;
+		}
+	}
+}
+
 void do_final_pc(void) {
 	db_destroy(pc->itemcd_db);
 	pc->at_db->destroy(pc->at_db,pc->autotrade_final);
@@ -11870,6 +11921,8 @@ void pc_defaults(void) {
 	pc->expire_check = pc_expire_check;
 	pc->db_checkid = pc_db_checkid;
 	pc->validate_levels = pc_validate_levels;
+
+	pc->check_supernovice_call = pc_check_supernovice_call;
 
 	/**
 	 * Autotrade persistency [Ind/Hercules <3]
