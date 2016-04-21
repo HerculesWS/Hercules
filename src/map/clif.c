@@ -8931,6 +8931,8 @@ const char *clif_process_chat_message(struct map_session_data *sd, const struct 
 	safestrncpy(out_buf, packet->message, textlen+1); // [!] packet->message is not necessarily NUL terminated
 	message = out_buf + namelen + 3;
 
+	if (!pc->process_chat_message(sd, message))
+		return NULL;
 	return message;
 }
 
@@ -8992,6 +8994,9 @@ bool clif_process_whisper_message(struct map_session_data *sd, const struct pack
 
 	safestrncpy(out_name, packet->name, namelen+1); // [!] packet->name is not NUL terminated
 	safestrncpy(out_message, packet->message, messagelen+1); // [!] packet->message is not necessarily NUL terminated
+
+	if (!pc->process_chat_message(sd, out_message))
+		return false;
 
 	return true;
 }
@@ -9767,21 +9772,7 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data *sd)
 	if (message == NULL)
 		return;
 
-	if( atcommand->exec(fd, sd, message, true)  )
-		return;
-
-	if( !pc->can_talk(sd) )
-		return;
-
-	if( battle_config.min_chat_delay ) { //[Skotlex]
-		if (DIFF_TICK(sd->cantalk_tick, timer->gettick()) > 0)
-			return;
-		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
-	}
-
 	pc->check_supernovice_call(sd, message);
-
-	pc->update_idle_time(sd, BCIDLE_CHAT);
 
 	if (sd->gcbind != NULL) {
 		channel->send(sd->gcbind, sd, message);
@@ -10150,22 +10141,6 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 
 	if (!clif->process_whisper_message(sd, packet, target, message, sizeof message))
 		return;
-
-	if ( atcommand->exec(fd, sd, message, true) )
-		return;
-
-	// Statuses that prevent the player from whispering
-	if( !pc->can_talk(sd) )
-		return;
-
-	if (battle_config.min_chat_delay) { //[Skotlex]
-		if (DIFF_TICK(sd->cantalk_tick, timer->gettick()) > 0) {
-			return;
-		}
-		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
-	}
-
-	pc->update_idle_time(sd, BCIDLE_CHAT);
 
 	// Chat logging type 'W' / Whisper
 	logs->chat(LOG_CHAT_WHISPER, 0, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, target, message);
@@ -11985,20 +11960,6 @@ void clif_parse_PartyMessage(int fd, struct map_session_data *sd)
 	if (clif->process_chat_message(sd, packet, message, sizeof message) == NULL)
 		return;
 
-	if( atcommand->exec(fd, sd, message, true)  )
-		return;
-
-	if( !pc->can_talk(sd) )
-		return;
-
-	if (battle_config.min_chat_delay) {
-		if (DIFF_TICK(sd->cantalk_tick, timer->gettick()) > 0)
-			return;
-		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
-	}
-
-	pc->update_idle_time(sd, BCIDLE_CHAT);
-
 	party->send_message(sd, message, (int)strlen(message));
 }
 
@@ -13096,20 +13057,6 @@ void clif_parse_GuildMessage(int fd, struct map_session_data *sd)
 
 	if (clif->process_chat_message(sd, packet, message, sizeof message) == NULL)
 		return;
-
-	if( atcommand->exec(fd, sd, message, true) )
-		return;
-
-	if( !pc->can_talk(sd) )
-		return;
-
-	if (battle_config.min_chat_delay) {
-		if (DIFF_TICK(sd->cantalk_tick, timer->gettick()) > 0)
-			return;
-		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
-	}
-
-	pc->update_idle_time(sd, BCIDLE_CHAT);
 
 	if (sd->bg_id)
 		bg->send_message(sd, message, (int)strlen(message));
@@ -16214,20 +16161,6 @@ void clif_parse_BattleChat(int fd, struct map_session_data *sd)
 
 	if (clif->process_chat_message(sd, packet, message, sizeof message) == NULL)
 		return;
-
-	if( atcommand->exec(fd, sd, message, true) )
-		return;
-
-	if( !pc->can_talk(sd) )
-		return;
-
-	if( battle_config.min_chat_delay ) {
-		if( DIFF_TICK(sd->cantalk_tick, timer->gettick()) > 0 )
-			return;
-		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
-	}
-
-	pc->update_idle_time(sd, BCIDLE_CHAT);
 
 	bg->send_message(sd, message, (int)strlen(message));
 }

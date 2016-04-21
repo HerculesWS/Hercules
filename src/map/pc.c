@@ -11517,6 +11517,36 @@ int pc_have_magnifier(struct map_session_data *sd)
 }
 
 /**
+ * Verifies a chat message, searching for atcommands, checking if the sender
+ * character can chat, and updating the idle timer.
+ *
+ * @param sd      The sender character.
+ * @param message The message text.
+ * @return Whether the message is a valid chat message.
+ */
+bool pc_process_chat_message(struct map_session_data *sd, const char *message)
+{
+	if (atcommand->exec(sd->fd, sd, message, true)) {
+		return false;
+	}
+
+	if (!pc->can_talk(sd)) {
+		return false;
+	}
+
+	if (battle_config.min_chat_delay != 0) {
+		if (DIFF_TICK(sd->cantalk_tick, timer->gettick()) > 0) {
+			return false;
+		}
+		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
+	}
+
+	pc->update_idle_time(sd, BCIDLE_CHAT);
+
+	return true;
+}
+
+/**
  * Checks a chat message, scanning for the Super Novice prayer sequence.
  *
  * If a match is found, the angel is invoked or the counter is incremented as
@@ -11923,6 +11953,7 @@ void pc_defaults(void) {
 	pc->validate_levels = pc_validate_levels;
 
 	pc->check_supernovice_call = pc_check_supernovice_call;
+	pc->process_chat_message = pc_process_chat_message;
 
 	/**
 	 * Autotrade persistency [Ind/Hercules <3]
