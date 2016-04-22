@@ -58,7 +58,7 @@ struct status_change_entry;
 #define MAX_SKILLUNITGROUP        25
 #define MAX_SKILL_ITEM_REQUIRE    10
 #define MAX_SKILLUNITGROUPTICKSET 25
-#define MAX_SKILL_NAME_LENGTH     30
+#define MAX_SKILL_NAME_LENGTH     32
 
 // (Epoque:) To-do: replace this macro with some sort of skill tree check (rather than hard-coded skill names)
 #define skill_ischangesex(id) ( \
@@ -2033,11 +2033,24 @@ struct skill_interface {
 	int (*unit_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*unit_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*init_unit_layout) (void);
-	bool (*parse_row_skilldb) (char* split[], int columns, int current);
-	bool (*parse_row_requiredb) (char* split[], int columns, int current);
-	bool (*parse_row_castdb) (char* split[], int columns, int current);
-	bool (*parse_row_castnodexdb) (char* split[], int columns, int current);
-	bool (*parse_row_unitdb) (char* split[], int columns, int current);
+	void (*validate_hittype) (struct config_setting_t *conf, struct s_skill_db *skill);
+	void (*validate_skilltype) (struct config_setting_t *conf, struct s_skill_db *skill);
+	void (*validate_attacktype) (struct config_setting_t *conf, struct s_skill_db *skill);
+	void (*validate_element) (struct config_setting_t *conf, struct s_skill_db *skill);
+	void (*validate_skillinfo) (struct config_setting_t *conf, struct s_skill_db *skill);
+	void (*validate_damagetype) (struct config_setting_t *conf, struct s_skill_db *skill);
+	void (*validate_castnodex) (struct config_setting_t *conf, struct s_skill_db *skill, bool delay);
+	void (*validate_weapontype) (struct config_setting_t *conf,  struct s_skill_db *skill);
+	void (*validate_ammotype) (struct config_setting_t *conf,  struct s_skill_db *skill);
+	void (*validate_state) (struct config_setting_t *conf, struct s_skill_db *skill);
+	void (*validate_item_requirements) (struct config_setting_t *conf, struct s_skill_db *skill);
+	void (*validate_unit_target) (struct config_setting_t *conf, struct s_skill_db *skill);
+	void (*validate_unit_flag) (struct config_setting_t *conf,  struct s_skill_db *skill);
+	void (*validate_additional_fields) (struct config_setting_t *conf, struct s_skill_db *skill);
+	bool (*validate_skilldb) (struct s_skill_db *skt, const char *source);
+	bool (*read_skilldb) (const char *filename);
+	void (*config_set_level) (struct config_setting_t *conf, int *arr);
+	void (*level_set_value) (int *arr, int value);
 	bool (*parse_row_producedb) (char* split[], int columns, int current);
 	bool (*parse_row_createarrowdb) (char* split[], int columns, int current);
 	bool (*parse_row_abradb) (char* split[], int columns, int current);
