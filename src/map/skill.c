@@ -54,6 +54,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "common/utils.h"
+#include "common/conf.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -18798,220 +18799,6 @@ void skill_cooldown_load(struct map_session_data * sd) {
 	}
 }
 
-/*==========================================
- * sub-function of DB reading.
- * skill_db.txt
- *------------------------------------------*/
-bool skill_parse_row_skilldb(char* split[], int columns, int current) {
-// id,range,hit,inf,element,nk,splash,max,list_num,castcancel,cast_defence_rate,inf2,maxcount,skill_type,blow_count,name,description
-	uint16 skill_id = atoi(split[0]);
-	uint16 idx;
-	if( (skill_id >= GD_SKILLRANGEMIN && skill_id <= GD_SKILLRANGEMAX)
-	||  (skill_id >= HM_SKILLRANGEMIN && skill_id <= HM_SKILLRANGEMAX)
-	||  (skill_id >= MC_SKILLRANGEMIN && skill_id <= MC_SKILLRANGEMAX)
-	||  (skill_id >= EL_SKILLRANGEMIN && skill_id <= EL_SKILLRANGEMAX) ) {
-		ShowWarning("skill_parse_row_skilldb: Skill id %d is forbidden (interferes with guild/homun/mercenary skill mapping)!\n", skill_id);
-		return false;
-	}
-
-	idx = skill->get_index(skill_id);
-	if( !idx ) // invalid skill id
-		return false;
-
-	skill->dbs->db[idx].nameid = skill_id;
-	skill->split_atoi(split[1],skill->dbs->db[idx].range);
-	skill->dbs->db[idx].hit = atoi(split[2]);
-	skill->dbs->db[idx].inf = atoi(split[3]);
-	skill->split_atoi(split[4],skill->dbs->db[idx].element);
-	skill->dbs->db[idx].nk = (int)strtol(split[5], NULL, 0);
-	skill->split_atoi(split[6],skill->dbs->db[idx].splash);
-	skill->dbs->db[idx].max = atoi(split[7]);
-	skill->split_atoi(split[8],skill->dbs->db[idx].num);
-
-	if( strcmpi(split[9],"yes") == 0 )
-		skill->dbs->db[idx].castcancel = 1;
-	else
-		skill->dbs->db[idx].castcancel = 0;
-	skill->dbs->db[idx].cast_def_rate = atoi(split[10]);
-	skill->dbs->db[idx].inf2 = (int)strtol(split[11], NULL, 0);
-	skill->split_atoi(split[12],skill->dbs->db[idx].maxcount);
-	if( strcmpi(split[13],"weapon") == 0 )
-		skill->dbs->db[idx].skill_type = BF_WEAPON;
-	else if( strcmpi(split[13],"magic") == 0 )
-		skill->dbs->db[idx].skill_type = BF_MAGIC;
-	else if( strcmpi(split[13],"misc") == 0 )
-		skill->dbs->db[idx].skill_type = BF_MISC;
-	else
-		skill->dbs->db[idx].skill_type = 0;
-	skill->split_atoi(split[14],skill->dbs->db[idx].blewcount);
-	safestrncpy(skill->dbs->db[idx].name, trim(split[15]), sizeof(skill->dbs->db[idx].name));
-	safestrncpy(skill->dbs->db[idx].desc, trim(split[16]), sizeof(skill->dbs->db[idx].desc));
-	strdb_iput(skill->name2id_db, skill->dbs->db[idx].name, skill_id);
-	script->set_constant2(skill->dbs->db[idx].name, (int)skill_id, false, false);
-
-	return true;
-}
-
-bool skill_parse_row_requiredb(char* split[], int columns, int current) {
-// skill_id,HPCost,MaxHPTrigger,SPCost,HPRateCost,SPRateCost,ZenyCost,RequiredWeapons,RequiredAmmoTypes,RequiredAmmoAmount,RequiredState,SpiritSphereCost,RequiredItemID1,RequiredItemAmount1,RequiredItemID2,RequiredItemAmount2,RequiredItemID3,RequiredItemAmount3,RequiredItemID4,RequiredItemAmount4,RequiredItemID5,RequiredItemAmount5,RequiredItemID6,RequiredItemAmount6,RequiredItemID7,RequiredItemAmount7,RequiredItemID8,RequiredItemAmount8,RequiredItemID9,RequiredItemAmount9,RequiredItemID10,RequiredItemAmount10
-	char* p;
-	int j;
-
-	uint16 skill_id = atoi(split[0]);
-	uint16 idx = skill->get_index(skill_id);
-	if( !idx ) // invalid skill id
-		return false;
-
-	skill->split_atoi(split[1],skill->dbs->db[idx].hp);
-	skill->split_atoi(split[2],skill->dbs->db[idx].mhp);
-	skill->split_atoi(split[3],skill->dbs->db[idx].sp);
-	skill->split_atoi(split[4],skill->dbs->db[idx].hp_rate);
-	skill->split_atoi(split[5],skill->dbs->db[idx].sp_rate);
-	skill->split_atoi(split[6],skill->dbs->db[idx].zeny);
-
-	//Which weapon type are required, see doc/item_db for types
-	p = split[7];
-	for( j = 0; j < 32; j++ ) {
-		int l = atoi(p);
-		if( l == 99 ) { // Any weapon
-			skill->dbs->db[idx].weapon = 0;
-			break;
-		} else
-			skill->dbs->db[idx].weapon |= 1<<l;
-		p = strchr(p,':');
-		if(!p)
-			break;
-		p++;
-	}
-
-	//FIXME: document this
-	p = split[8];
-	for( j = 0; j < 32; j++ ) {
-		int l = atoi(p);
-		if( l == 99 ) { // Any ammo type
-			skill->dbs->db[idx].ammo = 0xFFFFFFFF;
-			break;
-		} else if( l ) // 0 stands for no requirement
-			skill->dbs->db[idx].ammo |= 1<<l;
-		p = strchr(p,':');
-		if( !p )
-			break;
-		p++;
-	}
-	skill->split_atoi(split[9],skill->dbs->db[idx].ammo_qty);
-
-	if(      strcmpi(split[10],"hiding")              == 0 ) skill->dbs->db[idx].state = ST_HIDING;
-	else if( strcmpi(split[10],"cloaking")            == 0 ) skill->dbs->db[idx].state = ST_CLOAKING;
-	else if( strcmpi(split[10],"hidden")              == 0 ) skill->dbs->db[idx].state = ST_HIDDEN;
-	else if( strcmpi(split[10],"riding")              == 0 ) skill->dbs->db[idx].state = ST_RIDING;
-	else if( strcmpi(split[10],"falcon")              == 0 ) skill->dbs->db[idx].state = ST_FALCON;
-	else if( strcmpi(split[10],"cart")                == 0 ) skill->dbs->db[idx].state = ST_CART;
-	else if( strcmpi(split[10],"shield")              == 0 ) skill->dbs->db[idx].state = ST_SHIELD;
-	else if( strcmpi(split[10],"sight")               == 0 ) skill->dbs->db[idx].state = ST_SIGHT;
-	else if( strcmpi(split[10],"explosionspirits")    == 0 ) skill->dbs->db[idx].state = ST_EXPLOSIONSPIRITS;
-	else if( strcmpi(split[10],"cartboost")           == 0 ) skill->dbs->db[idx].state = ST_CARTBOOST;
-	else if( strcmpi(split[10],"recover_weight_rate") == 0 ) skill->dbs->db[idx].state = ST_RECOV_WEIGHT_RATE;
-	else if( strcmpi(split[10],"move_enable")         == 0 ) skill->dbs->db[idx].state = ST_MOVE_ENABLE;
-	else if( strcmpi(split[10],"water")               == 0 ) skill->dbs->db[idx].state = ST_WATER;
-	else if( strcmpi(split[10],"dragon")              == 0 ) skill->dbs->db[idx].state = ST_RIDINGDRAGON;
-	else if( strcmpi(split[10],"warg")                == 0 ) skill->dbs->db[idx].state = ST_WUG;
-	else if( strcmpi(split[10],"ridingwarg")          == 0 ) skill->dbs->db[idx].state = ST_RIDINGWUG;
-	else if( strcmpi(split[10],"mado")                == 0 ) skill->dbs->db[idx].state = ST_MADO;
-	else if( strcmpi(split[10],"elementalspirit")     == 0 ) skill->dbs->db[idx].state = ST_ELEMENTALSPIRIT;
-	else if( strcmpi(split[10],"poisonweapon")        == 0 ) skill->dbs->db[idx].state = ST_POISONINGWEAPON;
-	else if( strcmpi(split[10],"rollingcutter")       == 0 ) skill->dbs->db[idx].state = ST_ROLLINGCUTTER;
-	else if( strcmpi(split[10],"mh_fighting")         == 0 ) skill->dbs->db[idx].state = ST_MH_FIGHTING;
-	else if( strcmpi(split[10],"mh_grappling")        == 0 ) skill->dbs->db[idx].state = ST_MH_GRAPPLING;
-	else if( strcmpi(split[10],"peco")                == 0 ) skill->dbs->db[idx].state = ST_PECO;
-	/**
-	 * Unknown or no state
-	 **/
-	else skill->dbs->db[idx].state = ST_NONE;
-
-	skill->split_atoi(split[11],skill->dbs->db[idx].spiritball);
-	for( j = 0; j < MAX_SKILL_ITEM_REQUIRE; j++ ) {
-		skill->dbs->db[idx].itemid[j] = atoi(split[12+ 2*j]);
-		skill->dbs->db[idx].amount[j] = atoi(split[13+ 2*j]);
-	}
-
-	return true;
-}
-
-bool skill_parse_row_castdb(char* split[], int columns, int current) {
-// skill_id,CastingTime,AfterCastActDelay,AfterCastWalkDelay,Duration1,Duration2
-	uint16 skill_id = atoi(split[0]);
-	uint16 idx = skill->get_index(skill_id);
-	if( !idx ) // invalid skill id
-		return false;
-
-	skill->split_atoi(split[1],skill->dbs->db[idx].cast);
-	skill->split_atoi(split[2],skill->dbs->db[idx].delay);
-	skill->split_atoi(split[3],skill->dbs->db[idx].walkdelay);
-	skill->split_atoi(split[4],skill->dbs->db[idx].upkeep_time);
-	skill->split_atoi(split[5],skill->dbs->db[idx].upkeep_time2);
-	skill->split_atoi(split[6],skill->dbs->db[idx].cooldown);
-#ifdef RENEWAL_CAST
-	skill->split_atoi(split[7],skill->dbs->db[idx].fixed_cast);
-#endif
-	return true;
-}
-
-bool skill_parse_row_castnodexdb(char* split[], int columns, int current) {
-// Skill id,Cast,Delay (optional)
-	uint16 skill_id = atoi(split[0]);
-	uint16 idx = skill->get_index(skill_id);
-	if( !idx ) // invalid skill id
-		return false;
-
-	skill->split_atoi(split[1],skill->dbs->db[idx].castnodex);
-	if( split[2] ) // optional column
-		skill->split_atoi(split[2],skill->dbs->db[idx].delaynodex);
-
-	return true;
-}
-
-bool skill_parse_row_unitdb(char* split[], int columns, int current) {
-// ID,unit ID,unit ID 2,layout,range,interval,target,flag
-	uint16 skill_id = atoi(split[0]);
-	uint16 idx = skill->get_index(skill_id);
-	if( !idx ) // invalid skill id
-		return false;
-
-	skill->dbs->db[idx].unit_id[0] = (int)strtol(split[1],NULL,16);
-	skill->dbs->db[idx].unit_id[1] = (int)strtol(split[2],NULL,16);
-	skill->split_atoi(split[3],skill->dbs->db[idx].unit_layout_type);
-	skill->split_atoi(split[4],skill->dbs->db[idx].unit_range);
-	skill->dbs->db[idx].unit_interval = atoi(split[5]);
-
-	if( strcmpi(split[6],"noenemy")==0 ) skill->dbs->db[idx].unit_target = BCT_NOENEMY;
-	else if( strcmpi(split[6],"friend")==0 ) skill->dbs->db[idx].unit_target = BCT_NOENEMY;
-	else if( strcmpi(split[6],"party")==0 ) skill->dbs->db[idx].unit_target = BCT_PARTY;
-	else if( strcmpi(split[6],"ally")==0 ) skill->dbs->db[idx].unit_target = BCT_PARTY|BCT_GUILD;
-	else if( strcmpi(split[6],"guild")==0 ) skill->dbs->db[idx].unit_target = BCT_GUILD;
-	else if( strcmpi(split[6],"all")==0 ) skill->dbs->db[idx].unit_target = BCT_ALL;
-	else if( strcmpi(split[6],"enemy")==0 ) skill->dbs->db[idx].unit_target = BCT_ENEMY;
-	else if( strcmpi(split[6],"self")==0 ) skill->dbs->db[idx].unit_target = BCT_SELF;
-	else if( strcmpi(split[6],"sameguild")==0 ) skill->dbs->db[idx].unit_target = BCT_GUILD|BCT_SAMEGUILD;
-	else if( strcmpi(split[6],"noone")==0 ) skill->dbs->db[idx].unit_target = BCT_NOONE;
-	else skill->dbs->db[idx].unit_target = (int)strtol(split[6],NULL,16);
-
-	skill->dbs->db[idx].unit_flag = (int)strtol(split[7],NULL,16);
-
-	if (skill->dbs->db[idx].unit_flag&UF_DEFNOTENEMY && battle_config.defnotenemy)
-		skill->dbs->db[idx].unit_target = BCT_NOENEMY;
-
-	//By default, target just characters.
-	skill->dbs->db[idx].unit_target |= BL_CHAR;
-	if (skill->dbs->db[idx].unit_flag&UF_NOPC)
-		skill->dbs->db[idx].unit_target &= ~BL_PC;
-	if (skill->dbs->db[idx].unit_flag&UF_NOMOB)
-		skill->dbs->db[idx].unit_target &= ~BL_MOB;
-	if (skill->dbs->db[idx].unit_flag&UF_SKILL)
-		skill->dbs->db[idx].unit_target |= BL_SKILL;
-
-	return true;
-}
-
 bool skill_parse_row_producedb(char* split[], int columns, int current) {
 // ProduceItemID,ItemLV,RequireSkill,Requireskill_lv,MaterialID1,MaterialAmount1,......
 	int x,y;
@@ -19180,6 +18967,1095 @@ bool skill_parse_row_changematerialdb(char* split[], int columns, int current) {
 	return true;
 }
 
+/**
+ * Sets Level based configuration for skill groups from skill_db.conf [ Smokexyz/Hercules ]
+ * @param *conf    pointer to config setting.
+ * @param *arr     pointer to array to be set.
+ * @return int     number of array elements parsed.
+ */
+int skill_config_set_level(struct config_setting_t *conf, int *arr)
+{
+	int i=0;
+	
+	if (config_setting_is_group(conf)) {
+		for (i=0; i<MAX_SKILL_LEVEL; i++) {
+			char name[5];
+			sprintf(name, "Lv%d", i+1);
+			libconfig->setting_lookup_int(conf, name, &arr[i]);
+		}
+	} else if (config_setting_is_array(conf)) {
+		for (i=0; i<config_setting_length(conf) && i < MAX_SKILL_LEVEL; i++) {
+			arr[i] = libconfig->setting_get_int_elem(conf, i);
+		}
+	} else {
+		int val=libconfig->setting_get_int(conf);
+		for(i=0; i<MAX_SKILL_LEVEL; i++) {
+			arr[i] = val;
+		}
+	}
+	
+	return i;
+}
+
+/**
+ * Sets all values in a skill level array to a specified value [ Smokexyz/Hercules ]
+ * @param *arr    pointer to array being parsed.
+ * @param value   value being set for the array.
+ * @return int    number of array elements parsed.
+ */
+int skill_level_set_value(int *arr, int value)
+{
+	int i=0;
+	
+	for(i=0; i<MAX_SKILL_LEVEL; i++) {
+		arr[i] = value;
+	}
+	
+	return i;
+}
+	
+/**
+ * Validates SkillType when reading skill_db.conf
+ * @param name   contains entry name
+ * @param type   contains boolean entry value
+ * @param *inf   pointer to db.inf
+ * @return 0 on success, 1 if duplicate entry, 2 if invalid entry.
+ */
+int skill_validate_skilltype(const char *name, bool type, int *inf)
+{
+	if (strcmpi(name, "Enemy") == 0 && type) {
+		if (*inf&INF_ATTACK_SKILL)
+			return 1;
+		else
+			*inf |= INF_ATTACK_SKILL;
+	} else if (strcmpi(name, "Place") == 0 && type) {
+		if (*inf&INF_GROUND_SKILL)
+			return 1;
+		else
+			*inf |= INF_GROUND_SKILL;
+	} else if (strcmpi(name, "Self") == 0 && type) {
+		if (*inf&INF_SELF_SKILL)
+			return 1;
+		else
+			*inf |= INF_SELF_SKILL;
+	} else if (strcmpi(name, "Friend") == 0 && type) {
+		if (*inf&INF_SUPPORT_SKILL)
+			return 1;
+		else
+			*inf |= INF_SUPPORT_SKILL;
+	} else if (strcmpi(name, "Trap") == 0 && type) {
+		if(*inf&INF_TARGET_TRAP)
+			return 1;
+		else
+			*inf |= INF_TARGET_TRAP;
+	} else if (strcmpi(name, "Passive") != 0) {
+		return 2; // invalid type
+	}
+	
+	return 0;
+}
+	
+/**
+ * Validates SkillInfo when reading skill_db.conf
+ * @param name   contains entry name
+ * @param type   contains boolean entry value
+ * @param *inf   pointer to db.inf2
+ * @return 0 on success, 1 if duplicate entry, 2 if invalid entry.
+ */
+int skill_validate_skillinfo(const char *name, bool type, int *inf2)
+{
+	if (strcmpi(name, "Quest") == 0 && type) {
+		if (*inf2&INF2_QUEST_SKILL)
+			return 1;
+		else
+			*inf2 |= INF2_QUEST_SKILL;
+	} else if (strcmpi(name, "NPC") == 0 && type) {
+		if (*inf2&INF2_NPC_SKILL)
+			return 1;
+		else
+			*inf2 |= INF2_NPC_SKILL;
+	} else if (strcmpi(name, "Wedding") == 0 && type) {
+		if (*inf2&INF2_WEDDING_SKILL)
+			return 1;
+		else
+			*inf2 |= INF2_WEDDING_SKILL;
+	} else if (strcmpi(name, "Spirit") == 0 && type) {
+		if (*inf2&INF2_SPIRIT_SKILL)
+			return 1;
+		else
+			*inf2 |= INF2_SPIRIT_SKILL;
+	} else if (strcmpi(name, "Guild") == 0 && type) {
+		if (*inf2&INF2_GUILD_SKILL)
+			return 1;
+		else
+			*inf2 |= INF2_GUILD_SKILL;
+	} else if (strcmpi(name, "Song") == 0 && type) {
+		if (*inf2&INF2_SONG_DANCE)
+			return 1;
+		else
+			*inf2 |= INF2_SONG_DANCE;
+	} else if (strcmpi(name, "Ensemble") == 0 && type) {
+		if (*inf2&INF2_ENSEMBLE_SKILL)
+			return 1;
+		else
+			*inf2 |= INF2_ENSEMBLE_SKILL;
+	} else if (strcmpi(name, "Trap") == 0 && type) {
+		if (*inf2&INF2_TRAP)
+			return 1;
+		else
+			*inf2 |= INF2_TRAP;
+	} else if (strcmpi(name, "TargetSelf") == 0 && type) {
+		if (*inf2&INF2_TARGET_SELF)
+			return 1;
+		else
+			*inf2 |= INF2_TARGET_SELF;
+	} else if (strcmpi(name, "NoCastSelf") == 0 && type) {
+		if (*inf2&INF2_NO_TARGET_SELF)
+			return 1;
+		else
+			*inf2 |= INF2_NO_TARGET_SELF;
+	} else if (strcmpi(name, "PartyOnly") == 0 && type) {
+		if (*inf2&INF2_PARTY_ONLY)
+			return 1;
+		else
+			*inf2 |= INF2_PARTY_ONLY;
+	} else if (strcmpi(name, "GuildOnly") == 0 && type) {
+		if (*inf2&INF2_GUILD_ONLY)
+			return 1;
+		else
+			*inf2 |= INF2_GUILD_ONLY;
+	} else if (strcmpi(name, "NoEnemy") == 0 && type) {
+		if (*inf2&INF2_NO_ENEMY)
+			return 1;
+		else
+			*inf2 |= INF2_NO_ENEMY;
+	} else if (strcmpi(name, "IgnoreLandProtector") == 0 && type) {
+		if (*inf2&INF2_NOLP)
+			return 1;
+		else
+			*inf2 |= INF2_NOLP;
+	} else if (strcmpi(name, "Chorus") == 0 && type) {
+		if (*inf2&INF2_CHORUS_SKILL)
+			return 1;
+		else
+			*inf2 |= INF2_CHORUS_SKILL;
+	} else if (strcmpi(name, "None") != 0) {
+		return 2; // invalid type
+	}
+	
+	return 0;
+}
+	
+/**
+ * Validates DamageType when reading skill_db.conf
+ * @param name   contains entry name
+ * @param type   contains boolean entry value.
+ * @param *nk    pointer to db.nk
+ * @return 0 on success, 1 if duplicate, 2 if invalid entry.
+ */
+int skill_validate_damagetype(const char *name, bool type, int *nk)
+{
+	if (strcmpi(name, "NoDamage") == 0 && type) {
+		if (*nk&NK_NO_DAMAGE)
+			return 1;
+		else
+			*nk |= NK_NO_DAMAGE;
+	} else if (strcmpi(name, "SplashArea") == 0 && type) {
+		if (*nk&NK_SPLASH)
+			return 1;
+		else
+			*nk |= NK_SPLASH;
+	} else if (strcmpi(name, "SplitDamage") == 0 && type) {
+		if (*nk&NK_SPLASHSPLIT)
+			return 1;
+		else
+			*nk |= NK_SPLASHSPLIT;
+	} else if (strcmpi(name, "IgnoreCards") == 0 && type) {
+		if (*nk&NK_NO_CARDFIX_ATK)
+			return 1;
+		else
+			*nk |= NK_NO_CARDFIX_ATK;
+	} else if (strcmpi(name, "IgnoreElement") == 0 && type) {
+		if (*nk&NK_NO_ELEFIX)
+			return 1;
+		else
+			*nk |= NK_NO_ELEFIX;
+	} else if (strcmpi(name, "IgnoreDefense") == 0 && type) {
+		if (*nk&NK_IGNORE_DEF)
+			return 1;
+		else
+			*nk |= NK_IGNORE_DEF;
+	} else if (strcmpi(name, "IgnoreFlee") == 0 && type) {
+		if (*nk&NK_IGNORE_FLEE)
+			return 1;
+		else
+			*nk |= NK_IGNORE_FLEE;
+	} else if (strcmpi(name, "IgnoreDefCards") == 0 && type) {
+		if (*nk&NK_NO_CARDFIX_DEF)
+			return 1;
+		else
+			*nk |= NK_NO_CARDFIX_DEF;
+	} else {
+		return 2; // invalid type
+	}
+	
+	return 0;
+}
+/**
+ * Validates CastTimeOptions and SkillDelayOptions
+ * when parsing skill_db.conf
+ * @param   name    contains the setting's name
+ * @param   type    contains the setting's boolean value
+ * @param   nodex   pointer to db.(cast/delay)nodex
+ * @return  0 on success, 1 if duplicate, 2 if invalid entry.
+ */
+int skill_validate_castnodex(const char *name, bool type, int *nodex)
+{
+	if (strcmpi(name, "IgnoreDex") == 0 && type) {
+		if(*nodex&1<<0)
+			return 1;
+		else
+			*nodex |= 1<<0;
+	} else if (strcmpi(name, "IgnoreStatusEffect") == 0 && type) {
+		if(*nodex&1<<1)
+			return 1;
+		else
+			*nodex |= 1<<1;
+		
+	} else if (strcmpi(name, "IgnoreItemBonus") == 0 && type) {
+		if(*nodex&1<<2)
+			return 1;
+		else
+			*nodex |= 1<<2;
+	} else {
+		return 2; // invalid type
+	}
+	
+	return 0;
+}
+
+/**
+ * Validates WeaponTypes
+ * when parsing skill_db.conf
+ * @param   name    contains the setting's name
+ * @param   type    contains the setting's boolean value
+ * @param   wp      pointer to db.weapon
+ * @return  0 on success, 1 if duplicate, 2 if invalid entry.
+ */
+int skill_validate_weapontype(const char *name, bool type, int *wp)
+{
+	if (strcmpi(name, "NoWeapon") == 0 && type) {
+		if (*wp&1<<W_FIST)
+			return 1;
+		else
+			*wp |= 1<<W_FIST;
+	} else if (strcmpi(name, "Daggers") == 0 && type) {
+		if (*wp&1<<W_DAGGER)
+			return 1;
+		else
+			*wp |= 1<<W_DAGGER;
+	} else if (strcmpi(name, "1HSwords") == 0 && type) {
+		if (*wp&1<<W_1HSWORD)
+			return 1;
+		else
+			*wp |= 1<<W_1HSWORD;
+	} else if (strcmpi(name, "2HSwords") == 0 && type) {
+		if (*wp&1<<W_2HSWORD)
+			return 1;
+		else
+			*wp |= 1<<W_2HSWORD;
+	} else if (strcmpi(name, "1HSpears") == 0 && type) {
+		if (*wp&1<<W_1HSPEAR)
+			return 1;
+		else
+			*wp |= 1<<W_1HSPEAR;
+	} else if (strcmpi(name, "2HSpears") == 0 && type) {
+		if (*wp&1<<W_2HSPEAR)
+			return 1;
+		else
+			*wp |= 1<<W_2HSPEAR;
+	} else if (strcmpi(name, "1HAxes") == 0 && type) {
+		if (*wp&1<<W_1HAXE)
+			return 1;
+		else
+			*wp |= 1<<W_1HAXE;
+	} else if (strcmpi(name, "2HAxes") == 0 && type) {
+		if (*wp&1<<W_2HAXE)
+			return 1;
+		else
+			*wp |= 1<<W_2HAXE;
+	} else if (strcmpi(name, "Maces") == 0 && type) {
+		if (*wp&1<<W_MACE)
+			return 1;
+		else
+			*wp |= 1<<W_MACE;
+	} else if (strcmpi(name, "2HMaces") == 0 && type) {
+		if (*wp&1<<W_2HMACE)
+			return 1;
+		else
+			*wp |= 1<<W_2HMACE;
+	} else if (strcmpi(name, "Staves") == 0 && type) {
+		if (*wp&1<<W_STAFF)
+			return 1;
+		else
+			*wp |= 1<<W_STAFF;
+	} else if (strcmpi(name, "Bows") == 0 && type) {
+		if (*wp&1<<W_BOW)
+			return 1;
+		else
+			*wp |= 1<<W_BOW;
+	} else if (strcmpi(name, "Knuckles") == 0 && type) {
+		if (*wp&1<<W_KNUCKLE)
+			return 1;
+		else
+			*wp |= 1<<W_KNUCKLE;
+	} else if (strcmpi(name, "Instruments") == 0 && type) {
+		if (*wp&1<<W_MUSICAL)
+			return 1;
+		else
+			*wp |= 1<<W_MUSICAL;
+	} else if (strcmpi(name, "Whips") == 0 && type) {
+		if (*wp&1<<W_WHIP)
+			return 1;
+		else
+			*wp |= 1<<W_WHIP;
+	} else if (strcmpi(name, "Books") == 0 && type) {
+		if (*wp&1<<W_BOOK)
+			return 1;
+		else
+			*wp |= 1<<W_BOOK;
+	} else if (strcmpi(name, "Katars") == 0 && type) {
+		if (*wp&1<<W_KATAR)
+			return 1;
+		else
+			*wp |= 1<<W_KATAR;
+	} else if (strcmpi(name, "Revolvers") == 0 && type) {
+		if (*wp&1<<W_REVOLVER)
+			return 1;
+		else
+			*wp |= 1<<W_REVOLVER;
+	} else if (strcmpi(name, "Rifles") == 0 && type) {
+		if (*wp&1<<W_RIFLE)
+			return 1;
+		else
+			*wp |= 1<<W_RIFLE;
+	} else if (strcmpi(name, "GatlingGuns") == 0 && type) {
+		if (*wp&1<<W_GATLING)
+			return 1;
+		else
+			*wp |= 1<<W_GATLING;
+	} else if (strcmpi(name, "Shotguns") == 0 && type) {
+		if (*wp&1<<W_SHOTGUN)
+			return 1;
+		else
+			*wp |= 1<<W_SHOTGUN;
+	} else if (strcmpi(name, "GrenadeLaunchers") == 0 && type) {
+		if (*wp&1<<W_GRENADE)
+			return 1;
+		else
+			*wp |= 1<<W_GRENADE;
+	} else if (strcmpi(name, "FuumaShurikens") == 0 && type) {
+		if (*wp&1<<W_HUUMA)
+			return 1;
+		else
+			*wp |= 1<<W_HUUMA;
+	} else if (strcmpi(name, "2HStaves") == 0 && type) {
+		if (*wp&1<<W_2HSTAFF)
+			return 1;
+		else
+			*wp |= 1<<W_2HSTAFF;
+	}
+	 /*  MAX_SINGLE_WEAPON_TYPE excluded */
+	else if (strcmpi(name, "DWDaggers") == 0 && type) {
+		if (*wp&1<<W_DOUBLE_DD)
+			return 1;
+		else
+			*wp |= 1<<W_DOUBLE_DD;
+	} else if (strcmpi(name, "DWSwords") == 0 && type) {
+		if (*wp&1<<W_DOUBLE_SS)
+			return 1;
+		else
+			*wp |= 1<<W_DOUBLE_SS;
+	} else if (strcmpi(name, "DWAxes") == 0 && type) {
+		if (*wp&1<<W_DOUBLE_AA)
+			return 1;
+		else
+			*wp |= 1<<W_DOUBLE_AA;
+	} else if (strcmpi(name, "DWDaggerSword") == 0 && type) {
+		if (*wp&1<<W_DOUBLE_DS)
+			return 1;
+		else
+			*wp |= 1<<W_DOUBLE_DS;
+	} else if (strcmpi(name, "DWDaggerAxe") == 0 && type) {
+		if (*wp&1<<W_DOUBLE_DA)
+			return 1;
+		else
+			*wp |= 1<<W_DOUBLE_DA;
+	} else if (strcmpi(name, "DWSwordAxe") == 0 && type) {
+		if (*wp&1<<W_DOUBLE_SA)
+			return 1;
+		else
+			*wp |= 1<<W_DOUBLE_SA;
+	} else if (strcmpi(name, "All") == 0) {
+		*wp = 0;
+	} else {
+		return 2; // invalid type
+	}
+	
+	return 0; // all good
+}
+/**
+ * Validates AmmunitionTypes
+ * when parsing skill_db.conf
+ * @param   name    contains the setting's name
+ * @param   type    contain's the setting's boolean value
+ * @param   *ammo   pointer to db.ammo
+ * @return
+ */
+int skill_validate_ammotype(const char *name, bool type, int *ammo)
+{
+	if (strcmpi(name, "A_ARROW") == 0 && type) {
+		if (*ammo&1<<A_ARROW)
+			return 1;
+		else
+			*ammo |= 1<<A_ARROW;
+	} else if (strcmpi(name, "A_DAGGER") == 0 && type) {
+		if (*ammo&1<<A_DAGGER)
+			return 1;
+		else
+			*ammo |= 1<<A_DAGGER;
+	} else if (strcmpi(name, "A_BULLET") == 0 && type) {
+		if (*ammo&1<<A_BULLET)
+			return 1;
+		else
+			*ammo |= 1<<A_BULLET;
+	} else if (strcmpi(name, "A_SHELL") == 0 && type) {
+		if (*ammo&1<<A_SHELL)
+			return 1;
+		else
+			*ammo |= 1<<A_SHELL;
+	} else if (strcmpi(name, "A_GRENADE") == 0 && type) {
+		if (*ammo&1<<A_GRENADE)
+			return 1;
+		else
+			*ammo |= 1<<A_GRENADE;
+	} else if (strcmpi(name, "A_SHURIKEN") == 0 && type) {
+		if (*ammo&1<<A_SHURIKEN)
+			return 1;
+		else
+			*ammo |= 1<<A_SHURIKEN;
+	} else if (strcmpi(name, "A_KUNAI") == 0 && type) {
+		if (*ammo&1<<A_KUNAI)
+			return 1;
+		else
+			*ammo |= 1<<A_KUNAI;
+	} else if (strcmpi(name, "A_CANNONBALL") == 0 && type) {
+		if (*ammo&1<<A_CANNONBALL)
+			return 1;
+		else
+			*ammo |= 1<<A_CANNONBALL;
+	} else if (strcmpi(name, "A_THROWWEAPON") == 0 && type) {
+		if (*ammo&1<<A_THROWWEAPON)
+			return 1;
+		else
+			*ammo |= 1<<A_THROWWEAPON;
+	} else if (strcmpi(name, "All") == 0) {
+		*ammo = 0xFFFFFFFF;
+	} else {
+		return 2; // Invalid Entry
+	}
+
+	return 0;
+}
+/**
+ * Validate Skill Unit Flag
+ * when parsing skill_db.conf
+ * @param   name    contains the setting's name
+ * @param   type    contain's the setting's boolean value
+ * @param   *flag   pointer to db.flag
+ * @return 0 on success, 1 if duplicate and 2 if invalid entry.
+ */
+int skill_validate_unit_flag(const char *name, bool type, int *flag)
+{
+	if (strcmpi(name, "UF_DEFNOTENEMY") == 0 && type) {
+		if (*flag&UF_DEFNOTENEMY)
+			return 1;
+		else
+			*flag |= UF_DEFNOTENEMY;
+	} else if (strcmpi(name, "UF_NOREITERATION") == 0 && type) {
+		if (*flag&UF_NOREITERATION)
+			return 1;
+		else
+			*flag |= UF_NOREITERATION;
+	} else if (strcmpi(name, "UF_NOFOOTSET") == 0 && type) {
+		if (*flag&UF_NOFOOTSET)
+			return 1;
+		else
+			*flag |= UF_NOFOOTSET;
+	} else if (strcmpi(name, "UF_NOOVERLAP") == 0 && type) {
+		if (*flag&UF_NOOVERLAP)
+			return 1;
+		else
+			*flag |= UF_NOOVERLAP;
+	} else if (strcmpi(name, "UF_PATHCHECK") == 0 && type) {
+		if (*flag&UF_PATHCHECK)
+			return 1;
+		else
+			*flag |= UF_PATHCHECK;
+	} else if (strcmpi(name, "UF_NOPC") == 0 && type) {
+		if (*flag&UF_NOPC)
+			return 1;
+		else
+			*flag |= UF_NOPC;
+	} else if (strcmpi(name, "UF_NOMOB") == 0 && type) {
+		if (*flag&UF_NOMOB)
+			return 1;
+		else
+			*flag |= UF_NOMOB;
+	} else if (strcmpi(name, "UF_SKILL") == 0 && type) {
+		if (*flag&UF_SKILL)
+			return 1;
+		else
+			*flag |= UF_SKILL;
+	} else if (strcmpi(name, "UF_DANCE") == 0 && type) {
+		if (*flag&UF_DANCE)
+			return 1;
+		else
+			*flag |= UF_DANCE;
+	} else if (strcmpi(name, "UF_ENSEMBLE") == 0 && type) {
+		if (*flag&UF_ENSEMBLE)
+			return 1;
+		else
+			*flag |= UF_ENSEMBLE;
+	} else if (strcmpi(name, "UF_SONG") == 0 && type) {
+		if (*flag&UF_SONG)
+			return 1;
+		else
+			*flag |= UF_SONG;
+	} else if (strcmpi(name, "UF_DUALMODE") == 0 && type) {
+		if (*flag&UF_DUALMODE)
+			return 1;
+		else
+			*flag |= UF_DUALMODE;
+	} else if (strcmpi(name, "UF_RANGEDSINGLEUNIT") == 0 && type) {
+		if (*flag&UF_RANGEDSINGLEUNIT)
+			return 1;
+		else
+			*flag |= UF_RANGEDSINGLEUNIT;
+	} else {
+		return 2; // Invalid Type
+	}
+	
+	return 0;
+}
+/**
+ * Shoots a warning message with details in the
+ * event of a duplicate entry while parsing skill_db.conf
+ * @param   *setting    Contains the name of the setting.
+ * @param   *value      Contains the value of the faulty setting.
+ * @param   skill_id    Contains the ID of the skill being parsed.
+ * @param   *source     Contains the file path.
+ */
+void skill_readdb_duplicate_warning(const char *value, const char *setting, int skill_id, const char *source)
+{
+	ShowWarning("skill_read_skilldb: Duplicate entry '%s' in setting '%s' for SkillId %d in '%s', ignoring...\n", value, setting, skill_id, source);
+}
+
+/**
+ * Shoots an error message with details in the event
+ * of an Invalid entry when parsing skill_db.conf
+ * @param   *setting    Contains the name of the setting.
+ * @param   *value      Contains the value of the faulty setting.
+ * @param   skill_id    Contains the ID of the skill being parsed.
+ * @param   *source     Contains the file path.
+ */
+void skill_readdb_invalid_error(const char *value, const char *setting, int skill_id, const char *source)
+{
+	ShowError("skill_read_skilldb: Invalid entry '%s' in setting '%s' for Skill Id %d in '%s'.", value, setting, skill_id, source);
+}
+	
+/**
+ * Validates a skill entry and adds it to the database. [ Smokexyz/Hercules ]
+ * @param  sk        contains skill data to be checked.
+ * @param  n         entry number of the skill being parsed.
+ * @param  *source   filepath constant.
+ * @return boolean   true on success.
+ */
+bool skill_validate_skilldb(struct s_skill_db *sk, int n, const char *source)
+{
+	int idx = skill->get_index(sk->nameid);
+	
+	if (idx  == 0) {
+		ShowWarning("skill_validate_skilldb: Invalid skill Id %d provided in '%s'! ... skipping\n", sk->nameid, source);
+		ShowInfo("It is possible that the skill Id is 0 or forbidden (interferes with guild/homun/mercenary skill mapping).\n");
+		return false;
+	} else if (sk->max > MAX_SKILL_LEVEL || sk->max <= 0) {
+		ShowError("skill_validate_skilldb: Invalid Max Level %d specified for skill Id %d in '%s', skipping...\n", sk->max, sk->nameid, source);
+		return false;
+	}
+	
+	memmove(&skill->dbs->db[idx],sk,sizeof(struct s_skill_db));
+	strdb_iput(skill->name2id_db, skill->dbs->db[idx].name, skill->dbs->db[idx].nameid);
+	script->set_constant2(skill->dbs->db[idx].name, (int)skill->dbs->db[idx].nameid, false, false);
+	
+	return true;
+}
+	
+/**
+ * Reads skill_db.conf from relative filepath and processes [ Smokexyz/Hercules ]
+ * entries into the skill database.
+ * @param  filename     contains the file path and name.
+ * @return boolean      true on success
+ */
+bool skill_read_skilldb(const char *filename)
+{
+	struct config_t skilldb;
+	struct config_setting_t *sk, *conf;
+	char filepath[256];
+	int count=0, index=0;
+	bool duplicate[MAX_SKILL] = {0};
+	
+	nullpo_retr(false, filename);
+
+	sprintf(filepath,"db/%s",filename);
+	
+	if (!libconfig->load_file(&skilldb, filepath)) {
+		return false; // Libconfig error report.
+	} else if ((sk=libconfig->setting_get_member(skilldb.root, "skill_db")) == NULL) {
+		ShowError("skill_read_skilldb: Skill DB could not be loaded, please check '%s'.\n", filepath);
+		return false;
+	}
+	
+	while ((conf = libconfig->setting_get_elem(sk,index++))){
+		int idx=0, skill_id=0, temp=0, check=0;
+		const char *tstr;
+		struct config_setting_t *t = { 0 }, *tt = { 0 };
+		struct s_skill_db tmp_db = { 0 };
+		bool type=false;
+		
+		/* Skill ID */
+		if (!libconfig->setting_lookup_int(conf, "Id", &skill_id)) {
+			ShowError("skill_read_skilldb: Skill Id not specified for entry %d in '%s', skipping...\n", index+1, filepath );
+			continue;
+		}
+		
+		tmp_db.nameid = skill_id;
+		
+		if((idx = skill->get_index(skill_id)) == 0)
+			continue;
+
+		if (duplicate[idx] == true) {
+			ShowWarning("skill_read_skilldb: Duplicate Skill Id %d in entry %d in '%s', skipping...\n", skill_id, index+1, filepath);
+			continue;
+		}
+		/* Skill Name Constant */
+		if (!libconfig->setting_lookup_string(conf, "Name", &tstr)) {
+			ShowError("skill_read_skilldb: Name not specified for skill Id %d in '%s', skipping...\n", skill_id, filepath);
+			continue;
+		} else {
+			char *name = aStrdup(tstr);
+			safestrncpy(tmp_db.name, trim(name), sizeof(tmp_db.name));
+			aFree(name);
+		}
+		/* Skill Description */
+		if (libconfig->setting_lookup_string(conf, "Description", &tstr)) {
+			char *desc = aStrdup(tstr);
+			safestrncpy(tmp_db.desc, trim(desc), sizeof(tmp_db.desc));
+			aFree(desc);
+		}
+		/* Max Level */
+		if (!libconfig->setting_lookup_int(conf, "MaxLevel", &temp)) {
+			ShowError("skill_read_skilldb: MaxLevel not specified for skill Id %d in '%s', skipping...\n", skill_id, filepath);
+			continue;
+		} else {
+			tmp_db.max = temp;
+		}
+		/* Range */
+		if ((t=libconfig->setting_get_member(conf, "Range")))
+			skill->config_set_level(t, tmp_db.range);
+		/* Hit */
+		if (libconfig->setting_lookup_string(conf, "Hit", &tstr)) {
+			if (strcmpi(tstr, "BDT_SKILL") == 0)
+				tmp_db.hit = BDT_SKILL;
+			else if (strcmpi(tstr, "BDT_MULTIHIT") == 0)
+				tmp_db.hit = BDT_MULTIHIT;
+			else if (strcmpi(tstr, "BDT_NORMAL") == 0)
+				tmp_db.hit = BDT_NORMAL;
+			else
+				skill->readdb_invalid_error("Hit", tstr, skill_id, filepath);
+		}
+		/* Skill Type */
+		if((t=libconfig->setting_get_member(conf, "SkillType")) && config_setting_is_group(t)) {
+			int j=0;
+			while ((tt = libconfig->setting_get_elem(t, j++)) && j < 5) {
+				type = libconfig->setting_get_bool(tt);
+				const char *name = config_setting_name(tt);
+				check = skill->validate_skilltype(name, type, &tmp_db.inf);
+				
+				if (check == 1) {
+					skill->readdb_duplicate_warning(name, config_setting_name(t), skill_id, filepath);
+					continue;
+				} else if (check == 2) {
+					skill->readdb_invalid_error(name, config_setting_name(t), skill_id, filepath);
+					continue;
+				}
+			}
+		}
+		/* Skill Info */
+		if ((t=libconfig->setting_get_member(conf, "SkillInfo")) && config_setting_is_array(t)) {
+			int j=0;
+			while ((tt = libconfig->setting_get_elem(t, j++)) && j < 15) {
+				type = libconfig->setting_get_bool(tt);
+				const char *name = config_setting_name(tt);
+				check = skill->validate_skillinfo(name, type, &tmp_db.inf2);
+				
+				if (check == 1) {
+					skill->readdb_duplicate_warning(name, config_setting_name(t), skill_id, filepath);
+					continue;
+				} else if (check == 2) {
+					skill->readdb_invalid_error(name, config_setting_name(t), skill_id, filepath);
+					continue;
+				}
+			}
+		}
+		/* Skill Attack Type */
+		if (libconfig->setting_lookup_string(conf, "AttackType", &tstr)) {
+			if (!strcmpi(tstr, "Weapon"))
+				tmp_db.skill_type = BF_WEAPON;
+			else if (!strcmpi(tstr, "Magic"))
+				tmp_db.skill_type = BF_MAGIC;
+			else if (!strcmpi(tstr, "Misc"))
+				tmp_db.skill_type = BF_MISC;
+			else
+				skill->readdb_invalid_error(tstr, "AttackType", skill_id, filepath);
+		}
+		/* Skill Element */
+		if ((t=libconfig->setting_get_member(conf, "Element")) && config_setting_is_group(t)) {
+			int j=0;
+			char lv[5];
+			for (j=0; j < MAX_SKILL_LEVEL; j++) {
+				sprintf(lv, "Lv%d",j+1);
+				if (libconfig->setting_lookup_string(t, lv, &tstr)) {
+					if (strcmpi(tstr,"Ele_Weapon") == 0)
+						tmp_db.element[j] = -1;
+					else if (strcmpi(tstr,"Ele_Endowed") == 0)
+						tmp_db.element[j] = -2;
+					else if (strcmpi(tstr,"Ele_Random") == 0)
+						tmp_db.element[j] = -3;
+					else if (!script->get_constant(tstr,&tmp_db.element[j]))
+						skill->readdb_invalid_error(tstr, config_setting_name(t), skill_id, filepath);
+				}
+			}
+		} else if (libconfig->setting_lookup_string(conf, "Element", &tstr)) {
+			if(strcmpi(tstr,"Ele_Weapon") == 0)
+				skill->level_set_value(tmp_db.element, -1);
+			else if (strcmpi(tstr,"Ele_Endowed") == 0)
+				skill->level_set_value(tmp_db.element, -2);
+			else if (strcmpi(tstr,"Ele_Random") == 0)
+				skill->level_set_value(tmp_db.element, -3);
+			else if (script->get_constant(tstr, &temp))
+				skill->level_set_value(tmp_db.element, temp);
+			else
+				skill->readdb_invalid_error(tstr, "Element", skill_id, filepath);
+		}
+		/* Damage Type */
+		if ((t=libconfig->setting_get_member(conf, "DamageType")) && config_setting_is_array(t)) {
+			int j=0;
+			while ((tt = libconfig->setting_get_elem(t, j++)) && j < 8) {
+				type = libconfig->setting_get_bool(tt);
+				const char *name = config_setting_name(tt);
+				
+				int k = skill->validate_damagetype(name, type, &tmp_db.nk);
+				
+				if (k == 1) {
+					skill->readdb_duplicate_warning(name, config_setting_name(t), skill_id, filepath);
+					continue;
+				} else if (k == 2) {
+					skill->readdb_invalid_error(name, config_setting_name(t), skill_id, filepath);
+					continue;
+				}
+			}
+		}
+		/* Splash Range */
+		if ((t = libconfig->setting_get_member(conf, "SplashRange")))
+			skill->config_set_level(t, tmp_db.splash);
+		/* Number of Hits */
+		if ((t = libconfig->setting_get_member(conf, "NumberOfHits")) && config_setting_is_group(t))
+			skill->config_set_level(t, tmp_db.num);
+		else if ((libconfig->setting_lookup_int(conf, "NumberOfHits", &temp)))
+			skill->level_set_value(tmp_db.num, temp);
+		else skill->level_set_value(tmp_db.num, 1); // Default 1
+		/* Interrupt Cast */
+		libconfig->setting_lookup_bool(conf, "InterruptCast", &tmp_db.castcancel);
+		/* Cast Defense Rate */
+		libconfig->setting_lookup_int(conf, "CastDefRate", &tmp_db.cast_def_rate);
+		/* Skill Instances */
+		if ((t = libconfig->setting_get_member(conf, "SkillInstances")))
+			skill->config_set_level(t, tmp_db.maxcount);
+		/* Knock-Back Tiles */
+		if ((t = libconfig->setting_get_member(conf, "KnockBackTiles")))
+			skill->config_set_level(t, tmp_db.blewcount);
+		/**
+		 * Skill Cast / Delay data handling
+		 */
+		/* Cast Time */
+		if ((t=libconfig->setting_get_member(conf, "CastTime")))
+			skill->config_set_level(t, tmp_db.cast);
+		/* After Cast Act Delay */
+		if ((t=libconfig->setting_get_member(conf, "AfterCastActDelay")))
+			skill->config_set_level(t, tmp_db.delay);
+		/* After Cast Walk Delay */
+		if ((t=libconfig->setting_get_member(conf, "AfterCastWalkDelay")))
+			skill->config_set_level(t, tmp_db.walkdelay);
+		/* Skill Data/Duration */
+		if ((t=libconfig->setting_get_member(conf, "SkillData1")))
+			skill->config_set_level(t, tmp_db.upkeep_time);
+		/* Skill Data/Duration 2 */
+		if ((t=libconfig->setting_get_member(conf, "SkillData2")))
+			skill->config_set_level(t, tmp_db.upkeep_time2);
+		/* Skill Cool Down */
+		if ((t=libconfig->setting_get_member(conf, "CoolDown")))
+			skill->config_set_level(t, tmp_db.cooldown);
+#ifdef RENEWAL_CAST
+		/* Fixed Casting Time */
+		if ((t=libconfig->setting_get_member(conf, "FixedCastTime")))
+			skill->config_set_level(t, tmp_db.fixed_cast);
+#endif
+		/* Cast Time Options */
+		if ((t=libconfig->setting_get_member(conf, "CastTimeOptions")) && config_setting_is_group(t)) {
+			int j = 0, tmpopt = 0;
+			while ((tt = libconfig->setting_get_elem(t, j++)) && j < 4) {
+				const char *name = config_setting_name(tt);
+				type = libconfig->setting_get_bool(tt);
+				
+				check = skill->validate_castnodex(name, type, &tmpopt);
+				
+				if (check == 1)
+					skill->readdb_duplicate_warning(name, config_setting_name(t), skill_id, filepath);
+				else if (check == 2)
+					skill->readdb_invalid_error(name, config_setting_name(t), skill_id, filepath);
+			}
+			skill->level_set_value(tmp_db.castnodex, tmpopt);
+		}
+		/* Skill Delay Options */
+		if ((t=libconfig->setting_get_member(conf, "SkillDelayOptions")) && config_setting_is_array(t)) {
+			int j = 0, tmpopt = 0;
+			while ((tt = libconfig->setting_get_elem(t, j++)) && j < 4) {
+				const char *name = config_setting_name(tt);
+				type = libconfig->setting_get_bool(tt);
+				
+				check = skill->validate_castnodex(name, type, &tmpopt);
+				
+				if (check == 1)
+					skill->readdb_duplicate_warning(name, config_setting_name(t), skill_id, filepath);
+				else if (check == 2)
+					skill->readdb_invalid_error(name, config_setting_name(t), skill_id, filepath);
+			}
+			skill->level_set_value(tmp_db.delaynodex, tmpopt);
+		}
+		/**
+		 * Skill Requirements data handling
+		 */
+		if ((t=libconfig->setting_get_member(conf, "Requirements")) && config_setting_is_group(t)) {
+			/* HP Costs */
+			if ((tt = libconfig->setting_get_member(t, "HPCost")))
+				skill->config_set_level(tt, tmp_db.hp);
+			/* Max HP Trigger */
+			if ((tt = libconfig->setting_get_member(t, "MaxHPTrigger")))
+				skill->config_set_level(tt, tmp_db.mhp);
+			/* SP Cost */
+			if ((tt = libconfig->setting_get_member(t, "SPCost")))
+				skill->config_set_level(tt, tmp_db.sp);
+			/* HP Rate */
+			if ((tt = libconfig->setting_get_member(t, "HPRate")))
+				skill->config_set_level(tt, tmp_db.hp_rate);
+			/* SP Rate */
+			if ((tt = libconfig->setting_get_member(t, "SPRate")))
+				skill->config_set_level(tt, tmp_db.sp_rate);
+			/* Zeny Cost */
+			if ((tt = libconfig->setting_get_member(t, "ZenyCost")))
+				skill->config_set_level(tt, tmp_db.zeny);
+			/* Spirit Sphere Cost */
+			if ((tt = libconfig->setting_get_member(t, "SpiritSphereCost")))
+				skill->config_set_level(tt, tmp_db.spiritball);
+			/* Weapon Types */
+			if ((tt = libconfig->setting_get_member(t, "WeaponTypes")) && config_setting_is_group(tt)) {
+				int j = 0;
+				struct config_setting_t *wpt = { 0 };
+				while ((wpt = libconfig->setting_get_elem(tt, j++)) && j < 30) {
+					type = libconfig->setting_get_bool(wpt);
+					const char *name = config_setting_name(wpt);
+					
+					check = skill->validate_weapontype(name, type, &tmp_db.weapon);
+					
+					if (check == 1)
+						skill->readdb_duplicate_warning(name, config_setting_name(tt), skill_id, filepath);
+					else if (check == 2)
+						skill->readdb_invalid_error(name, config_setting_name(tt), skill_id, filepath);
+				}
+			} else if (libconfig->setting_lookup_string(t, "WeaponTypes", &tstr)) {
+				check = skill->validate_weapontype(tstr, true, &tmp_db.weapon);
+				
+				if (check == 1)
+					skill->readdb_duplicate_warning(tstr, "WeaponTypes", skill_id, filepath);
+				else if (check == 2)
+					skill->readdb_invalid_error(tstr, "WeaponTypes", skill_id, filepath);
+			}
+			/* Ammunition Types */
+			if ((tt = libconfig->setting_get_member(t, "AmmoTypes")) && config_setting_is_group(tt)) {
+				int j = 0;
+				struct config_setting_t *amt = { 0 };
+				while ((amt = libconfig->setting_get_elem(tt, j++)) && j < 9) {
+					const char *name = config_setting_name(amt);
+					type = libconfig->setting_get_bool(amt);
+					
+					check = skill->validate_ammotype(name, type, &tmp_db.ammo);
+					
+					if (check == 1) {
+						skill->readdb_duplicate_warning(name, config_setting_name(tt), skill_id, filepath);
+						continue;
+					} else if (check == 2) {
+						skill->readdb_invalid_error(name, config_setting_name(tt), skill_id, filepath);
+						continue;
+					}
+				}
+			} else if( libconfig->setting_lookup_string(t, "AmmoTypes",  &tstr)) {
+				check = skill->validate_ammotype(tstr, true, &tmp_db.ammo);
+				
+				if (check == 1)
+					skill->readdb_duplicate_warning(tstr, "AmmoTypes", skill_id, filepath);
+				else if (check == 2)
+					skill->readdb_invalid_error(tstr, "AmmoTypes", skill_id, filepath);
+			}
+			/* Ammunition Amount */
+			if ((tt = libconfig->setting_get_member(t, "AmmoAmount")))
+				skill->config_set_level(tt, tmp_db.ammo_qty);
+			/* State */
+			if (libconfig->setting_lookup_string(t, "State", &tstr) && strcmpi(tstr,"None") != ST_NONE) {
+				if (     strcmpi(tstr,"Hiding")             == 0 ) tmp_db.state = ST_HIDING;
+				else if (strcmpi(tstr,"Cloaking")           == 0 ) tmp_db.state = ST_CLOAKING;
+				else if (strcmpi(tstr,"Hidden")             == 0 ) tmp_db.state = ST_HIDDEN;
+				else if (strcmpi(tstr,"Riding")             == 0 ) tmp_db.state = ST_RIDING;
+				else if (strcmpi(tstr,"Falcon")             == 0 ) tmp_db.state = ST_FALCON;
+				else if (strcmpi(tstr,"Cart")               == 0 ) tmp_db.state = ST_CART;
+				else if (strcmpi(tstr,"Shield")             == 0 ) tmp_db.state = ST_SHIELD;
+				else if (strcmpi(tstr,"Sight")              == 0 ) tmp_db.state = ST_SIGHT;
+				else if (strcmpi(tstr,"ExplosionSpirits")   == 0 ) tmp_db.state = ST_EXPLOSIONSPIRITS;
+				else if (strcmpi(tstr,"CartBoost")          == 0 ) tmp_db.state = ST_CARTBOOST;
+				else if (strcmpi(tstr,"NotOverWeight")      == 0 ) tmp_db.state = ST_RECOV_WEIGHT_RATE;
+				else if (strcmpi(tstr,"Moveable")           == 0 ) tmp_db.state = ST_MOVE_ENABLE;
+				else if (strcmpi(tstr,"InWater")            == 0 ) tmp_db.state = ST_WATER;
+				else if (strcmpi(tstr,"Dragon")             == 0 ) tmp_db.state = ST_RIDINGDRAGON;
+				else if (strcmpi(tstr,"Warg")               == 0 ) tmp_db.state = ST_WUG;
+				else if (strcmpi(tstr,"RidingWarg")         == 0 ) tmp_db.state = ST_RIDINGWUG;
+				else if (strcmpi(tstr,"MadoGear")           == 0 ) tmp_db.state = ST_MADO;
+				else if (strcmpi(tstr,"ElementalSpirit")    == 0 ) tmp_db.state = ST_ELEMENTALSPIRIT;
+				else if (strcmpi(tstr,"PoisonWeapon")       == 0 ) tmp_db.state = ST_POISONINGWEAPON;
+				else if (strcmpi(tstr,"RollingCutter")      == 0 ) tmp_db.state = ST_ROLLINGCUTTER;
+				else if (strcmpi(tstr,"MH_Fighting")        == 0 ) tmp_db.state = ST_MH_FIGHTING;
+				else if (strcmpi(tstr,"MH_Grappling")       == 0 ) tmp_db.state = ST_MH_FIGHTING;
+				else if (strcmpi(tstr,"Peco")               == 0 ) tmp_db.state = ST_PECO;
+				else
+					ShowWarning("skill_read_requiredb_sub: Invalid state %s given for skill Id %d in '%s', defaulting to 'none' \n", tstr, skill_id, filepath);
+			}
+			/* Spirit Sphere Cost */
+			if ((tt = libconfig->setting_get_member(t, "SpiritSphereCost")))
+				skill->config_set_level(tt, tmp_db.spiritball);
+			/* Item Requirements and Amounts */
+			if ((tt=libconfig->setting_get_member(t, "Items")) && config_setting_is_group(t)) {
+				int itx=0, nameid[MAX_SKILL_ITEM_REQUIRE] = {0}, amount[MAX_SKILL_ITEM_REQUIRE] = {0};
+				struct config_setting_t *it;
+				
+				while((it=libconfig->setting_get_elem(tt, itx)) && itx < MAX_SKILL_ITEM_REQUIRE) {
+					const char *name = config_setting_name(it);
+					
+					if( name[0] == 'I' && name[1] == 'D' && itemdb->exists(atoi(name+2)) )
+						nameid[itx] = atoi(name+2);
+					else if(!script->get_constant(name, &nameid[itx])) {
+						ShowWarning("skill_read_skilldb: Invalid required Item '%s' given for skill Id %d in '%s', skipping...\n",name, skill_id, filepath);
+						continue;
+					}
+					skill->config_set_level(it, amount);
+					itx++;
+				}
+				memmove(&tmp_db.itemid, &nameid, sizeof(nameid));
+				memmove(&tmp_db.amount, &amount, sizeof(amount));
+			}
+		}
+		/**
+		 * Skill Unit data handling
+		 */
+		if ((t=libconfig->setting_get_member(conf, "Unit")) && config_setting_is_group(t)) {
+			if ((tt=libconfig->setting_get_member(t, "Id")) && config_setting_is_array(tt)) {
+				tmp_db.unit_id[0] = libconfig->setting_get_int_elem(tt, 0);
+				tmp_db.unit_id[1] = libconfig->setting_get_int_elem(tt, 1);
+			} else libconfig->setting_lookup_int(t, "Id", &tmp_db.unit_id[0]);
+			
+			if((tt=libconfig->setting_get_member(t, "Layout")))
+				skill->config_set_level(tt, tmp_db.unit_layout_type);
+			
+			if((tt=libconfig->setting_get_member(t, "Range")))
+				skill->config_set_level(tt, tmp_db.unit_range);
+			
+			if(libconfig->setting_lookup_int(t, "Interval", &temp))
+				tmp_db.unit_interval = temp;
+			
+			if(libconfig->setting_lookup_string(t, "Target", &tstr)) {
+				if(!strcmpi(tstr,"NotEnemy")) tmp_db.unit_target = BCT_NOENEMY;
+				else if(!strcmpi(tstr,"NotParty")) tmp_db.unit_target = BCT_NOPARTY;
+				else if (!strcmpi(tstr,"NotGuild")) tmp_db.unit_target = BCT_NOGUILD;
+				else if(!strcmpi(tstr,"Friend")) tmp_db.unit_target = BCT_NOENEMY;
+				else if(!strcmpi(tstr,"Party")) tmp_db.unit_target = BCT_PARTY;
+				else if(!strcmpi(tstr,"Ally")) tmp_db.unit_target = BCT_PARTY|BCT_GUILD;
+				else if(!strcmpi(tstr,"Guild")) tmp_db.unit_target = BCT_GUILD;
+				else if(!strcmpi(tstr,"All")) tmp_db.unit_target = BCT_ALL;
+				else if(!strcmpi(tstr,"Enemy")) tmp_db.unit_target = BCT_ENEMY;
+				else if(!strcmpi(tstr,"Self")) tmp_db.unit_target = BCT_SELF;
+				else if(!strcmpi(tstr,"SameGuild")) tmp_db.unit_target = BCT_GUILD|BCT_SAMEGUILD;
+				
+				if (tmp_db.unit_flag&UF_DEFNOTENEMY && battle_config.defnotenemy)
+					tmp_db.unit_target = BCT_NOENEMY;
+				
+				//By default, target just characters.
+				tmp_db.unit_target |= BL_CHAR;
+				if (tmp_db.unit_flag&UF_NOPC)
+					tmp_db.unit_target &= ~BL_PC;
+				if (tmp_db.unit_flag&UF_NOMOB)
+					tmp_db.unit_target &= ~BL_MOB;
+				if (tmp_db.unit_flag&UF_SKILL)
+					tmp_db.unit_target |= BL_SKILL;
+			}
+			
+			if ((tt=libconfig->setting_get_member(t, "Flag")) && config_setting_is_group(tt)) {
+				int j=0;
+				struct config_setting_t *flagt = { 0 };
+				while ((flagt = libconfig->setting_get_elem(tt, j++)) && j < 14) {
+					const char *name = config_setting_name(flagt);
+					type = libconfig->setting_get_bool(flagt);
+					
+					check = skill->validate_unit_flag(name, type, &tmp_db.unit_flag);
+					
+					if (check == 1) {
+						skill->readdb_duplicate_warning(name, config_setting_name(tt), skill_id, filepath);
+						continue;
+					} else if (check == 2) {
+						skill->readdb_invalid_error(name, config_setting_name(tt), skill_id, filepath);
+						continue;
+					}
+				}
+			}
+		}
+		
+		// validate the skill entry, add it to the duplicate array and increment count on success.
+		if ((duplicate[idx] = skill->validate_skilldb(&tmp_db, index-1, filepath)))
+			count++;
+	}
+	
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	
+	return true;
+}
+
 /*===============================
  * DB reading.
  * skill_db.txt
@@ -19205,26 +20081,20 @@ void skill_readdb(bool minimal) {
 	safestrncpy(skill->dbs->db[0].name, "UNKNOWN_SKILL", sizeof(skill->dbs->db[0].name));
 	safestrncpy(skill->dbs->db[0].desc, "Unknown Skill", sizeof(skill->dbs->db[0].desc));
 
+	itemdb->name_constants(); // refresh ItemDB constants before loading of skills
+	
 #ifdef ENABLE_CASE_CHECK
-	script->parser_current_file = DBPATH"skill_db.txt";
+	script->parser_current_file = DBPATH"skill_db.conf";
 #endif // ENABLE_CASE_CHECK
-	sv->readdb(map->db_path, DBPATH"skill_db.txt",           ',',  17,                       17,               MAX_SKILL_DB, skill->parse_row_skilldb);
+	//sv->readdb(map->db_path, DBPATH"skill_db.txt",           ',',  17,                       17,               MAX_SKILL_DB, skill->parse_row_skilldb);
+	skill->read_skilldb(DBPATH"skill_db.conf");
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = NULL;
 #endif // ENABLE_CASE_CHECK
 
 	if (minimal)
 		return;
-
-	sv->readdb(map->db_path, DBPATH"skill_require_db.txt",   ',',  32,                       32,               MAX_SKILL_DB, skill->parse_row_requiredb);
-#ifdef RENEWAL_CAST
-	sv->readdb(map->db_path, "re/skill_cast_db.txt",         ',',   8,                        8,               MAX_SKILL_DB, skill->parse_row_castdb);
-#else
-	sv->readdb(map->db_path, "pre-re/skill_cast_db.txt",     ',',   7,                        7,               MAX_SKILL_DB, skill->parse_row_castdb);
-#endif
-	sv->readdb(map->db_path, DBPATH"skill_castnodex_db.txt", ',',   2,                        3,               MAX_SKILL_DB, skill->parse_row_castnodexdb);
-	sv->readdb(map->db_path, DBPATH"skill_unit_db.txt",      ',',   8,                        8,               MAX_SKILL_DB, skill->parse_row_unitdb);
-
+	
 	skill->init_unit_layout();
 	sv->readdb(map->db_path, "produce_db.txt",               ',',   4, 4+2*MAX_PRODUCE_RESOURCE,       MAX_SKILL_PRODUCE_DB, skill->parse_row_producedb);
 	sv->readdb(map->db_path, "create_arrow_db.txt",          ',', 1+2,   1+2*MAX_ARROW_RESOURCE,         MAX_SKILL_ARROW_DB, skill->parse_row_createarrowdb);
@@ -19507,11 +20377,21 @@ void skill_defaults(void) {
 	skill->unit_timer = skill_unit_timer;
 	skill->unit_timer_sub = skill_unit_timer_sub;
 	skill->init_unit_layout = skill_init_unit_layout;
-	skill->parse_row_skilldb = skill_parse_row_skilldb;
-	skill->parse_row_requiredb = skill_parse_row_requiredb;
-	skill->parse_row_castdb = skill_parse_row_castdb;
-	skill->parse_row_castnodexdb = skill_parse_row_castnodexdb;
-	skill->parse_row_unitdb = skill_parse_row_unitdb;
+	/* Skill DB Libconfig */
+	skill->validate_skilltype = skill_validate_skilltype;
+	skill->validate_skillinfo = skill_validate_skillinfo;
+	skill->validate_damagetype = skill_validate_damagetype;
+	skill->validate_castnodex = skill_validate_castnodex;
+	skill->validate_weapontype = skill_validate_weapontype;
+	skill->validate_ammotype = skill_validate_ammotype;
+	skill->validate_unit_flag = skill_validate_unit_flag;
+	skill->readdb_duplicate_warning = skill_readdb_duplicate_warning;
+	skill->readdb_invalid_error = skill_readdb_invalid_error;
+	skill->validate_skilldb = skill_validate_skilldb;
+	skill->read_skilldb = skill_read_skilldb;
+	skill->config_set_level = skill_config_set_level;
+	skill->level_set_value = skill_level_set_value;
+	/* */
 	skill->parse_row_producedb = skill_parse_row_producedb;
 	skill->parse_row_createarrowdb = skill_parse_row_createarrowdb;
 	skill->parse_row_abradb = skill_parse_row_abradb;

@@ -58,7 +58,7 @@ struct status_change_entry;
 #define MAX_SKILLUNITGROUP        25
 #define MAX_SKILL_ITEM_REQUIRE    10
 #define MAX_SKILLUNITGROUPTICKSET 25
-#define MAX_SKILL_NAME_LENGTH     30
+#define MAX_SKILL_NAME_LENGTH     32
 
 // (Epoque:) To-do: replace this macro with some sort of skill tree check (rather than hard-coded skill names)
 #define skill_ischangesex(id) ( \
@@ -2033,11 +2033,19 @@ struct skill_interface {
 	int (*unit_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*unit_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*init_unit_layout) (void);
-	bool (*parse_row_skilldb) (char* split[], int columns, int current);
-	bool (*parse_row_requiredb) (char* split[], int columns, int current);
-	bool (*parse_row_castdb) (char* split[], int columns, int current);
-	bool (*parse_row_castnodexdb) (char* split[], int columns, int current);
-	bool (*parse_row_unitdb) (char* split[], int columns, int current);
+	int (*validate_skilltype) (const char *name, bool type, int *inf);
+	int (*validate_skillinfo) (const char *name, bool type, int *inf2);
+	int (*validate_damagetype) (const char *name, bool type, int *nk);
+	int (*validate_castnodex) (const char *name, bool type, int *nodex);
+	int (*validate_weapontype) (const char *name, bool type, int *wp);
+	int (*validate_ammotype) (const char *name, bool type, int *ammo);
+	int (*validate_unit_flag) (const char *name, bool type, int *flag);
+	void (*readdb_duplicate_warning) (const char *value, const char *setting, int skill_id, const char *source);
+	void (*readdb_invalid_error) (const char *value, const char *setting, int skill_id, const char *source);
+	bool (*validate_skilldb) (struct s_skill_db *skt, int n, const char *source);
+	bool (*read_skilldb) (const char *filename);
+	int (*config_set_level) (struct config_setting_t *conf, int *arr);
+	int (*level_set_value) (int *arr, int value);
 	bool (*parse_row_producedb) (char* split[], int columns, int current);
 	bool (*parse_row_createarrowdb) (char* split[], int columns, int current);
 	bool (*parse_row_abradb) (char* split[], int columns, int current);
