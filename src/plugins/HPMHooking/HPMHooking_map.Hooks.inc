@@ -57863,59 +57863,6 @@ void HP_pc_validate_levels(void) {
 	}
 	return;
 }
-bool HP_pc_process_chat_message(struct map_session_data *sd, const char *message) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if( HPMHooks.count.HP_pc_process_chat_message_pre ) {
-		bool (*preHookFunc) (struct map_session_data *sd, const char *message);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_process_chat_message_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_pc_process_chat_message_pre[hIndex].func;
-			retVal___ = preHookFunc(sd, message);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.pc.process_chat_message(sd, message);
-	}
-	if( HPMHooks.count.HP_pc_process_chat_message_post ) {
-		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, const char *message);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_process_chat_message_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_pc_process_chat_message_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, message);
-		}
-	}
-	return retVal___;
-}
-void HP_pc_check_supernovice_call(struct map_session_data *sd, const char *message) {
-	int hIndex = 0;
-	if( HPMHooks.count.HP_pc_check_supernovice_call_pre ) {
-		void (*preHookFunc) (struct map_session_data *sd, const char *message);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_check_supernovice_call_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_pc_check_supernovice_call_pre[hIndex].func;
-			preHookFunc(sd, message);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return;
-		}
-	}
-	{
-		HPMHooks.source.pc.check_supernovice_call(sd, message);
-	}
-	if( HPMHooks.count.HP_pc_check_supernovice_call_post ) {
-		void (*postHookFunc) (struct map_session_data *sd, const char *message);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_check_supernovice_call_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_pc_check_supernovice_call_post[hIndex].func;
-			postHookFunc(sd, message);
-		}
-	}
-	return;
-}
 void HP_pc_autotrade_load(void) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_pc_autotrade_load_pre ) {
@@ -58158,6 +58105,59 @@ int HP_pc_have_magnifier(struct map_session_data *sd) {
 		}
 	}
 	return retVal___;
+}
+bool HP_pc_process_chat_message(struct map_session_data *sd, const char *message) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_pc_process_chat_message_pre ) {
+		bool (*preHookFunc) (struct map_session_data *sd, const char *message);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_process_chat_message_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_process_chat_message_pre[hIndex].func;
+			retVal___ = preHookFunc(sd, message);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.pc.process_chat_message(sd, message);
+	}
+	if( HPMHooks.count.HP_pc_process_chat_message_post ) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd, const char *message);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_process_chat_message_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_process_chat_message_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd, message);
+		}
+	}
+	return retVal___;
+}
+void HP_pc_check_supernovice_call(struct map_session_data *sd, const char *message) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_pc_check_supernovice_call_pre ) {
+		void (*preHookFunc) (struct map_session_data *sd, const char *message);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_check_supernovice_call_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_pc_check_supernovice_call_pre[hIndex].func;
+			preHookFunc(sd, message);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.pc.check_supernovice_call(sd, message);
+	}
+	if( HPMHooks.count.HP_pc_check_supernovice_call_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, const char *message);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_check_supernovice_call_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_pc_check_supernovice_call_post[hIndex].func;
+			postHookFunc(sd, message);
+		}
+	}
+	return;
 }
 /* pcre_interface */
 pcre* HP_libpcre_compile(const char *pattern, int options, const char **errptr, int *erroffset, const unsigned char *tableptr) {
