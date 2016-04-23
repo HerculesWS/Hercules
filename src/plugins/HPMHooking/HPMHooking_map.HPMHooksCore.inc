@@ -984,8 +984,10 @@ struct {
 	struct HPMHookPoint *HP_clif_message_post;
 	struct HPMHookPoint *HP_clif_messageln_pre;
 	struct HPMHookPoint *HP_clif_messageln_post;
-	struct HPMHookPoint *HP_clif_process_message_pre;
-	struct HPMHookPoint *HP_clif_process_message_post;
+	struct HPMHookPoint *HP_clif_process_chat_message_pre;
+	struct HPMHookPoint *HP_clif_process_chat_message_post;
+	struct HPMHookPoint *HP_clif_process_whisper_message_pre;
+	struct HPMHookPoint *HP_clif_process_whisper_message_post;
 	struct HPMHookPoint *HP_clif_wisexin_pre;
 	struct HPMHookPoint *HP_clif_wisexin_post;
 	struct HPMHookPoint *HP_clif_wisall_pre;
@@ -4338,6 +4340,10 @@ struct {
 	struct HPMHookPoint *HP_pc_db_checkid_post;
 	struct HPMHookPoint *HP_pc_validate_levels_pre;
 	struct HPMHookPoint *HP_pc_validate_levels_post;
+	struct HPMHookPoint *HP_pc_process_chat_message_pre;
+	struct HPMHookPoint *HP_pc_process_chat_message_post;
+	struct HPMHookPoint *HP_pc_check_supernovice_call_pre;
+	struct HPMHookPoint *HP_pc_check_supernovice_call_post;
 	struct HPMHookPoint *HP_pc_autotrade_load_pre;
 	struct HPMHookPoint *HP_pc_autotrade_load_post;
 	struct HPMHookPoint *HP_pc_autotrade_update_pre;
@@ -6867,8 +6873,10 @@ struct {
 	int HP_clif_message_post;
 	int HP_clif_messageln_pre;
 	int HP_clif_messageln_post;
-	int HP_clif_process_message_pre;
-	int HP_clif_process_message_post;
+	int HP_clif_process_chat_message_pre;
+	int HP_clif_process_chat_message_post;
+	int HP_clif_process_whisper_message_pre;
+	int HP_clif_process_whisper_message_post;
 	int HP_clif_wisexin_pre;
 	int HP_clif_wisexin_post;
 	int HP_clif_wisall_pre;
@@ -10221,6 +10229,10 @@ struct {
 	int HP_pc_db_checkid_post;
 	int HP_pc_validate_levels_pre;
 	int HP_pc_validate_levels_post;
+	int HP_pc_process_chat_message_pre;
+	int HP_pc_process_chat_message_post;
+	int HP_pc_check_supernovice_call_pre;
+	int HP_pc_check_supernovice_call_post;
 	int HP_pc_autotrade_load_pre;
 	int HP_pc_autotrade_load_post;
 	int HP_pc_autotrade_update_pre;

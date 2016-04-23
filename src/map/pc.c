@@ -11516,6 +11516,87 @@ int pc_have_magnifier(struct map_session_data *sd)
 	return n;
 }
 
+/**
+ * Verifies a chat message, searching for atcommands, checking if the sender
+ * character can chat, and updating the idle timer.
+ *
+ * @param sd      The sender character.
+ * @param message The message text.
+ * @return Whether the message is a valid chat message.
+ */
+bool pc_process_chat_message(struct map_session_data *sd, const char *message)
+{
+	if (atcommand->exec(sd->fd, sd, message, true)) {
+		return false;
+	}
+
+	if (!pc->can_talk(sd)) {
+		return false;
+	}
+
+	if (battle_config.min_chat_delay != 0) {
+		if (DIFF_TICK(sd->cantalk_tick, timer->gettick()) > 0) {
+			return false;
+		}
+		sd->cantalk_tick = timer->gettick() + battle_config.min_chat_delay;
+	}
+
+	pc->update_idle_time(sd, BCIDLE_CHAT);
+
+	return true;
+}
+
+/**
+ * Checks a chat message, scanning for the Super Novice prayer sequence.
+ *
+ * If a match is found, the angel is invoked or the counter is incremented as
+ * appropriate.
+ *
+ * @param sd      The sender character.
+ * @param message The message text.
+ */
+void pc_check_supernovice_call(struct map_session_data *sd, const char *message)
+{
+	unsigned int next = pc->nextbaseexp(sd);
+	int percent = 0;
+
+	if ((sd->class_&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE)
+		return;
+	if (next == 0)
+		next = pc->thisbaseexp(sd);
+	if (next == 0)
+		return;
+
+	// 0%, 10%, 20%, ...
+	percent = (int)( ( (float)sd->status.base_exp/(float)next )*1000. );
+	if ((battle_config.snovice_call_type != 0 || percent != 0) && (percent%100) == 0) {
+		// 10.0%, 20.0%, ..., 90.0%
+		switch (sd->state.snovice_call_flag) {
+		case 0:
+			if (strstr(message, msg_txt(1479))) // "Dear angel, can you hear my voice?"
+				sd->state.snovice_call_flag = 1;
+			break;
+		case 1:
+		{
+			char buf[256];
+			snprintf(buf, 256, msg_txt(1480), sd->status.name);
+			if (strstr(message, buf)) // "I am %s Super Novice~"
+				sd->state.snovice_call_flag = 2;
+		}
+			break;
+		case 2:
+			if (strstr(message, msg_txt(1481))) // "Help me out~ Please~ T_T"
+				sd->state.snovice_call_flag = 3;
+			break;
+		case 3:
+			sc_start(NULL, &sd->bl, status->skill2sc(MO_EXPLOSIONSPIRITS), 100, 17, skill->get_time(MO_EXPLOSIONSPIRITS, 5)); //Lv17-> +50 critical (noted by Poki) [Skotlex]
+			clif->skill_nodamage(&sd->bl, &sd->bl, MO_EXPLOSIONSPIRITS, 5, 1);  // prayer always shows successful Lv5 cast and disregards noskill restrictions
+			sd->state.snovice_call_flag = 0;
+			break;
+		}
+	}
+}
+
 void do_final_pc(void) {
 	db_destroy(pc->itemcd_db);
 	pc->at_db->destroy(pc->at_db,pc->autotrade_final);
@@ -11870,6 +11951,9 @@ void pc_defaults(void) {
 	pc->expire_check = pc_expire_check;
 	pc->db_checkid = pc_db_checkid;
 	pc->validate_levels = pc_validate_levels;
+
+	pc->check_supernovice_call = pc_check_supernovice_call;
+	pc->process_chat_message = pc_process_chat_message;
 
 	/**
 	 * Autotrade persistency [Ind/Hercules <3]
