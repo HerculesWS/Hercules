@@ -609,7 +609,10 @@ void read_channels_config(void)
 			local_autojoin = 0, ally_autojoin = 0,
 			allow_user_channel_creation = 0,
 			irc_enabled = 0,
-			irc_autojoin = 0;
+			irc_autojoin = 0,
+			irc_flood_protection_rate = 0,
+			irc_flood_protection_burst = 0,
+			irc_flood_protection_enabled = 0;
 
 		if( !libconfig->setting_lookup_string(settings, "map_local_channel_name", &local_name) )
 			local_name = "map";
@@ -686,13 +689,32 @@ void read_channels_config(void)
 		libconfig->setting_lookup_bool(settings, "map_local_channel_autojoin", &local_autojoin);
 		libconfig->setting_lookup_bool(settings, "ally_channel_autojoin", &ally_autojoin);
 		libconfig->setting_lookup_bool(settings, "irc_channel_autojoin", &irc_autojoin);
-
 		if (local_autojoin)
 			channel->config->local_autojoin = true;
 		if (ally_autojoin)
 			channel->config->ally_autojoin = true;
 		if (irc_autojoin)
 			channel->config->irc_autojoin = true;
+
+		libconfig->setting_lookup_int(settings, "irc_flood_protection_burst", &irc_flood_protection_burst);
+
+		if (irc_flood_protection_enabled) {
+			ircbot->flood_protection_enabled = true;
+
+			libconfig->setting_lookup_bool(settings, "irc_flood_protection_enabled", &irc_flood_protection_enabled);
+			libconfig->setting_lookup_int(settings, "irc_flood_protection_rate", &irc_flood_protection_rate);
+
+			if (irc_flood_protection_rate > 0)
+				ircbot->flood_protection_rate = irc_flood_protection_rate;
+			else
+				ircbot->flood_protection_rate = 1000;
+			if (irc_flood_protection_burst > 0)
+				ircbot->flood_protection_burst = irc_flood_protection_burst;
+			else
+				ircbot->flood_protection_burst = 3;
+		} else {
+			ircbot->flood_protection_enabled = false;
+		}
 
 		libconfig->setting_lookup_bool(settings, "allow_user_channel_creation", &allow_user_channel_creation);
 

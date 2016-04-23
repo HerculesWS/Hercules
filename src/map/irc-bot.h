@@ -39,6 +39,11 @@ struct irc_func {
 	void (*func)(int, char*, char*, char*, char*);
 };
 
+struct message_flood {
+	char message[IRC_MESSAGE_LENGTH];
+	struct message_flood *next;
+};
+
 struct irc_bot_interface {
 	int fd;
 	bool isIn, isOn;
@@ -46,6 +51,15 @@ struct irc_bot_interface {
 	unsigned char fails;
 	uint32 ip;
 	unsigned short port;
+	/* messages flood protection */
+	bool flood_protection_enabled;
+	int flood_protection_rate;
+	int flood_protection_burst;
+	int64 last_message_tick;
+	int messages_burst_count;
+	int queue_tid;
+	struct message_flood *message_current;
+	struct message_flood *message_last;
 	/* */
 	struct channel_data *channel;
 	/* */
@@ -67,7 +81,9 @@ struct irc_bot_interface {
 	int (*identify_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*join_timer) (int tid, int64 tick, int id, intptr_t data);
 	/* */
-	void (*send)(char *str);
+	int (*queue_timer) (int tid, int64 tick, int id, intptr_t data);
+	void (*queue) (char *str);
+	void (*send)(char *str, bool force);
 	void (*relay) (const char *name, const char *msg);
 	/* */
 	void (*pong) (int fd, char *cmd, char *source, char *target, char *msg);

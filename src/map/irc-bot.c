@@ -80,9 +80,9 @@ int irc_identify_timer(int tid, int64 tick, int id, intptr_t data) {
 		return 0;
 
 	sprintf(send_string, "USER HerculesWS%d 8 * : Hercules IRC Bridge",rnd()%777);
-	ircbot->send(send_string);
+	ircbot->send(send_string, true);
 	sprintf(send_string, "NICK %s", channel->config->irc_nick);
-	ircbot->send(send_string);
+	ircbot->send(send_string, true);
 
 	timer->add(timer->gettick() + 3000, ircbot->join_timer, 0, 0);
 
@@ -99,14 +99,15 @@ int irc_join_timer(int tid, int64 tick, int id, intptr_t data) {
 
 	if (channel->config->irc_nick_pw[0] != '\0') {
 		sprintf(send_string, "PRIVMSG NICKSERV : IDENTIFY %s", channel->config->irc_nick_pw);
-		ircbot->send(send_string);
+		ircbot->send(send_string, true);
 		if (channel->config->irc_use_ghost) {
 			sprintf(send_string, "PRIVMSG NICKSERV : GHOST %s %s", channel->config->irc_nick, channel->config->irc_nick_pw);
+			ircbot->send(send_string, true);
 		}
 	}
 
 	sprintf(send_string, "JOIN %s", channel->config->irc_channel);
-	ircbot->send(send_string);
+	ircbot->send(send_string, true);
 	ircbot->isIn = true;
 
 	return 0;
@@ -235,15 +236,84 @@ void irc_parse_sub(int fd, char *str) {
 }
 
 /**
+ * Decides if an IRC Command should be queued or not, based on the flood protection settings.
+ *
+ * @param str Command to be checked
+ **/
+void irc_queue(char *str)
+{
+	struct message_flood *queue_entry = NULL;
+
+	if (!ircbot->flood_protection_enabled) {
+		ircbot->send(str, true);
+		return;
+	}
+
+	if (ircbot->message_current == NULL) {
+		// No queue yet
+		if (ircbot->messages_burst_count < ircbot->flood_protection_burst) {
+			ircbot->send(str, true);
+			if (DIFF_TICK(timer->gettick(), ircbot->last_message_tick) <= ircbot->flood_protection_rate)
+				ircbot->messages_burst_count++;
+			else
+				ircbot->messages_burst_count = 0;
+			ircbot->last_message_tick = timer->gettick();
+		} else { //queue starts
+			CREATE(queue_entry, struct message_flood, 1);
+			safestrncpy(queue_entry->message, str, sizeof(queue_entry->message));
+			queue_entry->next = NULL;
+			ircbot->message_current = queue_entry;
+			ircbot->message_last = queue_entry;
+			ircbot->queue_tid = timer->add(timer->gettick() + ircbot->flood_protection_rate, ircbot->queue_timer, 0, 0); //start queue timer
+			ircbot->messages_burst_count = 0;
+		}
+	} else {
+		CREATE(queue_entry, struct message_flood, 1);
+		safestrncpy(queue_entry->message, str, sizeof(queue_entry->message));
+		queue_entry->next = NULL;
+		ircbot->message_last->next = queue_entry;
+		ircbot->message_last = queue_entry;
+	}
+}
+
+int irc_queue_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	struct message_flood *queue_entry = ircbot->message_current;
+	nullpo_ret(queue_entry);
+
+	ircbot->send(queue_entry->message, true);
+	if (queue_entry->next != NULL) {
+		ircbot->message_current = queue_entry->next;
+		ircbot->queue_tid = timer->add(timer->gettick() + ircbot->flood_protection_rate, ircbot->queue_timer, 0, 0);
+	} else {
+		ircbot->message_current = NULL;
+		ircbot->message_last = NULL;
+		ircbot->queue_tid = INVALID_TIMER;
+	}
+
+	aFree(queue_entry);
+
+	return 0;
+}
+
+/**
  * Send a raw command to the irc server
  * @param str Command to send
  */
-void irc_send(char *str) {
+void irc_send(char *str, bool force)
+{
 	size_t len;
 	nullpo_retv(str);
 	len = strlen(str) + 2;
 	if (len > IRC_MESSAGE_LENGTH-3)
 		len = IRC_MESSAGE_LENGTH-3;
+
+	if (!force && ircbot->flood_protection_enabled) {
+		// Add to queue
+		ircbot->queue(str);
+		return;
+	}
+
 	WFIFOHEAD(ircbot->fd, len);
 	snprintf(WFIFOP(ircbot->fd,0),IRC_MESSAGE_LENGTH, "%s\r\n", str);
 	WFIFOSET(ircbot->fd, len);
@@ -256,7 +326,7 @@ void irc_send(char *str) {
 void irc_pong(int fd, char *cmd, char *source, char *target, char *msg) {
 	nullpo_retv(cmd);
 	snprintf(send_string, IRC_MESSAGE_LENGTH, "PONG %s", cmd);
-	ircbot->send(send_string);
+	ircbot->send(send_string, false);
 }
 
 /**
@@ -283,7 +353,7 @@ void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) 
 		// Ignore it
 	} else if( strcmpi(cmd,"PING") == 0 ) {
 		snprintf(send_string, IRC_MESSAGE_LENGTH, "NOTICE %s :\001PING %s\001",source_nick,msg);
-		ircbot->send(send_string);
+		ircbot->send(send_string, false);
 	} else if( strcmpi(cmd,"TIME") == 0 ) {
 		time_t time_server;  // variable for number of seconds (used with time() function)
 		struct tm *datetime; // variable for time in structure ->tm_mday, ->tm_sec, ...
@@ -297,10 +367,10 @@ void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) 
 		strftime(temp, sizeof(temp)-1, msg_txt(230), datetime); // Server time (normal time): %A, %B %d %Y %X.
 
 		snprintf(send_string, IRC_MESSAGE_LENGTH, "NOTICE %s :\001TIME %s\001",source_nick,temp);
-		ircbot->send(send_string);
+		ircbot->send(send_string, false);
 	} else if( strcmpi(cmd,"VERSION") == 0 ) {
 		snprintf(send_string, IRC_MESSAGE_LENGTH, "NOTICE %s :\001VERSION Hercules.ws IRC Bridge\001",source_nick);
-		ircbot->send(send_string);
+		ircbot->send(send_string, false);
 #ifdef IRCBOT_DEBUG
 	} else {
 		ShowWarning("Unknown CTCP command received %s (%s) from %s\n",cmd,msg,source);
@@ -428,7 +498,7 @@ void irc_relay(const char *name, const char *msg)
 	else
 		sprintf(send_string,"PRIVMSG %s :%s", channel->config->irc_channel, msg);
 
-	ircbot->send(send_string);
+	ircbot->send(send_string, false);
 }
 
 /**
@@ -479,6 +549,8 @@ void irc_bot_init(bool minimal) {
 	ircbot->isOn = false;
 
 	timer->add_func_list(ircbot->connect_timer, "irc_connect_timer");
+	timer->add_func_list(ircbot->queue_timer, "irc_queue_timer");
+
 	timer->add(timer->gettick() + 7000, ircbot->connect_timer, 0, 0);
 }
 
@@ -491,8 +563,17 @@ void irc_bot_final(void) {
 	if (!channel->config->irc)
 		return;
 	if( ircbot->isOn ) {
-		ircbot->send("QUIT :Hercules is shutting down");
+		ircbot->send("QUIT :Hercules is shutting down", true);
 		sockt->close(ircbot->fd);
+	}
+
+	if (ircbot->queue_tid != INVALID_TIMER)
+		timer->delete(ircbot->queue_tid, ircbot->queue_timer);
+
+	while (ircbot->message_current != NULL) {
+		struct message_flood *next = ircbot->message_current->next;
+		aFree(ircbot->message_current);
+		ircbot->message_current = next;
 	}
 
 	for( i = 0; i < ircbot->funcs.size; i++ ) {
@@ -509,6 +590,15 @@ void ircbot_defaults(void) {
 
 	ircbot->channel = NULL;
 
+	ircbot->flood_protection_enabled = true;
+	ircbot->flood_protection_rate = 1000;
+	ircbot->flood_protection_burst = 3;
+	ircbot->last_message_tick = INVALID_TIMER;
+	ircbot->queue_tid = INVALID_TIMER;
+	ircbot->messages_burst_count = 0;
+	ircbot->message_current = NULL;
+	ircbot->message_last = NULL;
+
 	ircbot->init = irc_bot_init;
 	ircbot->final = irc_bot_final;
 
@@ -522,6 +612,8 @@ void ircbot_defaults(void) {
 	ircbot->identify_timer = irc_identify_timer;
 	ircbot->join_timer = irc_join_timer;
 
+	ircbot->queue_timer = irc_queue_timer;
+	ircbot->queue = irc_queue;
 	ircbot->send = irc_send;
 	ircbot->relay = irc_relay;
 
