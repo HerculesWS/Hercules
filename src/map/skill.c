@@ -11716,7 +11716,7 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 
 			if (bl->type == BL_PC && !working) {
 				struct map_session_data *sd = BL_UCAST(BL_PC, bl);
-				if ((!sd->chatID || battle_config.chat_warpportal) && sd->ud.to_x == src->bl.x && sd->ud.to_y == src->bl.y) {
+				if ((sd->chat_id == 0 || battle_config.chat_warpportal) && sd->ud.to_x == src->bl.x && sd->ud.to_y == src->bl.y) {
 					int x = sg->val2>>16;
 					int y = sg->val2&0xffff;
 					int count = sg->val1>>16;
@@ -13122,7 +13122,8 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 
 	nullpo_ret(sd);
 
-	if (sd->chatID) return 0;
+	if (sd->chat_id != 0)
+		return 0;
 
 	if (pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id) {
 		//GMs don't override the skillItem check, otherwise they can use items without them being consumed! [Skotlex]
@@ -14088,7 +14089,7 @@ int skill_check_condition_castend(struct map_session_data* sd, uint16 skill_id, 
 
 	nullpo_ret(sd);
 
-	if( sd->chatID )
+	if (sd->chat_id != 0)
 		return 0;
 
 	if( pc_has_permission(sd, PC_PERM_SKILL_UNCONDITIONAL) && sd->skillitem != skill_id ) {

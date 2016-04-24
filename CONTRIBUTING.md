@@ -56,7 +56,8 @@ debug mode.
   fixes, make separate commits. Even if this causes commits that only affect
   one line of code.
 * Check for unnecessary whitespace with `git diff --check` before committing.
-* Make sure you follow our [coding style guidelines](http://TODO).
+* Make sure you follow our [coding style
+  guidelines](https://github.com/HerculesWS/Hercules/wiki/Coding-Style).
 * Make sure your commit messages are complete, describe the changes you made,
   and in proper English language. Make sure you mention the ID of the issue
   you fix.

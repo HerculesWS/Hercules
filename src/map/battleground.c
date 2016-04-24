@@ -171,7 +171,7 @@ int bg_team_leave(struct map_session_data *sd, enum bg_team_leave_type flag) {
 				sprintf(output, "Server : %s has been afk-kicked from the battlefield...", sd->status.name);
 				break;
 		}
-		clif->bg_message(bgd, 0, "Server", output, strlen(output) + 1);
+		clif->bg_message(bgd, 0, "Server", output);
 	}
 
 	if( bgd->logout_event[0] && flag )
@@ -265,14 +265,15 @@ int bg_team_get_id(struct block_list *bl) {
 	return 0;
 }
 
-bool bg_send_message(struct map_session_data *sd, const char *mes, int len) {
+bool bg_send_message(struct map_session_data *sd, const char *mes)
+{
 	struct battleground_data *bgd;
 
 	nullpo_ret(sd);
 	nullpo_ret(mes);
 	if( sd->bg_id == 0 || (bgd = bg->team_search(sd->bg_id)) == NULL )
 		return false; // Couldn't send message
-	clif->bg_message(bgd, sd->bl.id, sd->status.name, mes, len);
+	clif->bg_message(bgd, sd->bl.id, sd->status.name, mes);
 	return true;
 }
 
