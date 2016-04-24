@@ -414,6 +414,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 	#ifdef MAP_IRC_BOT_H
 		{ "irc_bot_interface", sizeof(struct irc_bot_interface), SERVER_TYPE_MAP },
 		{ "irc_func", sizeof(struct irc_func), SERVER_TYPE_MAP },
+		{ "message_flood", sizeof(struct message_flood), SERVER_TYPE_MAP },
 	#else
 		#define MAP_IRC_BOT_H
 	#endif // MAP_IRC_BOT_H

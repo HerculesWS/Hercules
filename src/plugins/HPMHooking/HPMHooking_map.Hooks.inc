@@ -34383,13 +34383,40 @@ int HP_ircbot_join_timer(int tid, int64 tick, int id, intptr_t data) {
 	}
 	return retVal___;
 }
-void HP_ircbot_send(char *str) {
+int HP_ircbot_queue_timer(int tid, int64 tick, int id, intptr_t data) {
 	int hIndex = 0;
-	if( HPMHooks.count.HP_ircbot_send_pre ) {
+	int retVal___ = 0;
+	if( HPMHooks.count.HP_ircbot_queue_timer_pre ) {
+		int (*preHookFunc) (int *tid, int64 *tick, int *id, intptr_t *data);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_queue_timer_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_ircbot_queue_timer_pre[hIndex].func;
+			retVal___ = preHookFunc(&tid, &tick, &id, &data);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.ircbot.queue_timer(tid, tick, id, data);
+	}
+	if( HPMHooks.count.HP_ircbot_queue_timer_post ) {
+		int (*postHookFunc) (int retVal___, int *tid, int64 *tick, int *id, intptr_t *data);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_queue_timer_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_ircbot_queue_timer_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, &tid, &tick, &id, &data);
+		}
+	}
+	return retVal___;
+}
+void HP_ircbot_queue(char *str) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_ircbot_queue_pre ) {
 		void (*preHookFunc) (char *str);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_send_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_ircbot_send_pre[hIndex].func;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_queue_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_ircbot_queue_pre[hIndex].func;
 			preHookFunc(str);
 		}
 		if( *HPMforce_return ) {
@@ -34398,13 +34425,39 @@ void HP_ircbot_send(char *str) {
 		}
 	}
 	{
-		HPMHooks.source.ircbot.send(str);
+		HPMHooks.source.ircbot.queue(str);
+	}
+	if( HPMHooks.count.HP_ircbot_queue_post ) {
+		void (*postHookFunc) (char *str);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_queue_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_ircbot_queue_post[hIndex].func;
+			postHookFunc(str);
+		}
+	}
+	return;
+}
+void HP_ircbot_send(char *str, bool force) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_ircbot_send_pre ) {
+		void (*preHookFunc) (char *str, bool *force);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_send_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_ircbot_send_pre[hIndex].func;
+			preHookFunc(str, &force);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.ircbot.send(str, force);
 	}
 	if( HPMHooks.count.HP_ircbot_send_post ) {
-		void (*postHookFunc) (char *str);
+		void (*postHookFunc) (char *str, bool *force);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_send_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_ircbot_send_post[hIndex].func;
-			postHookFunc(str);
+			postHookFunc(str, &force);
 		}
 	}
 	return;
@@ -34482,6 +34535,32 @@ void HP_ircbot_privmsg(int fd, char *cmd, char *source, char *target, char *msg)
 		void (*postHookFunc) (int *fd, char *cmd, char *source, char *target, char *msg);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_privmsg_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_ircbot_privmsg_post[hIndex].func;
+			postHookFunc(&fd, cmd, source, target, msg);
+		}
+	}
+	return;
+}
+void HP_ircbot_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_ircbot_privmsg_ctcp_pre ) {
+		void (*preHookFunc) (int *fd, char *cmd, char *source, char *target, char *msg);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_privmsg_ctcp_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_ircbot_privmsg_ctcp_pre[hIndex].func;
+			preHookFunc(&fd, cmd, source, target, msg);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.ircbot.privmsg_ctcp(fd, cmd, source, target, msg);
+	}
+	if( HPMHooks.count.HP_ircbot_privmsg_ctcp_post ) {
+		void (*postHookFunc) (int *fd, char *cmd, char *source, char *target, char *msg);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_ircbot_privmsg_ctcp_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_ircbot_privmsg_ctcp_post[hIndex].func;
 			postHookFunc(&fd, cmd, source, target, msg);
 		}
 	}
