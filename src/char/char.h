@@ -68,7 +68,11 @@ struct mmo_map_server {
 	VECTOR_DECL(uint16) maps;
 };
 
-#define MAX_MAP_SERVERS 2
+/**
+ * deprecated feature, multi map been a dangerous in-complete feature for so long and going to be removed.
+ * USE IT AT YOUR OWN RISK!
+ */
+#define MAX_MAP_SERVERS 1
 
 #define DEFAULT_AUTOSAVE_INTERVAL (300*1000)
 

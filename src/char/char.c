@@ -62,6 +62,14 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
+#if MAX_MAP_SERVERS > 1
+#	ifdef _MSC_VER
+#		pragma message("WARNING: your settings allow more than one map server to connect, this is deprecated dangerous feature USE IT AT YOUR OWN RISK")
+#	else
+#		warning your settings allow more than one map server to connect, this is deprecated dangerous feature USE IT AT YOUR OWN RISK
+#	endif
+#endif
+
 // private declarations
 char char_db[256] = "char";
 char scdata_db[256] = "sc_data";
