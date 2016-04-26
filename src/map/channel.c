@@ -696,13 +696,13 @@ void read_channels_config(void)
 		if (irc_autojoin)
 			channel->config->irc_autojoin = true;
 
-		libconfig->setting_lookup_int(settings, "irc_flood_protection_burst", &irc_flood_protection_burst);
+		libconfig->setting_lookup_bool(settings, "irc_flood_protection_enabled", &irc_flood_protection_enabled);
 
 		if (irc_flood_protection_enabled) {
 			ircbot->flood_protection_enabled = true;
 
-			libconfig->setting_lookup_bool(settings, "irc_flood_protection_enabled", &irc_flood_protection_enabled);
 			libconfig->setting_lookup_int(settings, "irc_flood_protection_rate", &irc_flood_protection_rate);
+			libconfig->setting_lookup_int(settings, "irc_flood_protection_burst", &irc_flood_protection_burst);
 
 			if (irc_flood_protection_rate > 0)
 				ircbot->flood_protection_rate = irc_flood_protection_rate;
