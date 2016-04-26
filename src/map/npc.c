@@ -4965,14 +4965,8 @@ static void npc_debug_warps(void) {
 int do_init_npc(bool minimal) {
 	int i;
 
-	memset(&npc->base_ud, 0, sizeof( struct unit_data) );
-	npc->base_ud.bl             = NULL;
-	npc->base_ud.walktimer      = INVALID_TIMER;
-	npc->base_ud.skilltimer     = INVALID_TIMER;
-	npc->base_ud.attacktimer    = INVALID_TIMER;
-	npc->base_ud.attackabletime =
-	npc->base_ud.canact_tick    =
-	npc->base_ud.canmove_tick   = timer->gettick();
+	unit->init_ud(&npc->base_ud);
+	npc->base_ud.bl = NULL;
 
 	//Stock view data for normal npcs.
 	memset(&npc_viewdb, 0, sizeof(npc_viewdb));
