@@ -1220,6 +1220,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	ud = unit->bl2ud(src);
 
 	if(ud == NULL) return 0;
+
 	sc = status->get_sc(src);
 	if (sc && !sc->count)
 		sc = NULL; //Unneeded
@@ -2289,11 +2290,18 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 
 // unit_data initialization process
 void unit_dataset(struct block_list *bl) {
-	struct unit_data *ud;
-	nullpo_retv(ud = unit->bl2ud(bl));
+	struct unit_data *ud = unit->bl2ud(bl);
+	nullpo_retv(ud);
 
-	memset( ud, 0, sizeof( struct unit_data) );
-	ud->bl             = bl;
+	unit->init_ud(ud);
+	ud->bl = bl;
+}
+
+void unit_init_ud(struct unit_data *ud)
+{
+	nullpo_retv(ud);
+
+	memset (ud, 0, sizeof(struct unit_data));
 	ud->walktimer      = INVALID_TIMER;
 	ud->skilltimer     = INVALID_TIMER;
 	ud->attacktimer    = INVALID_TIMER;
@@ -2895,6 +2903,7 @@ void unit_defaults(void) {
 	/* */
 	unit->bl2ud = unit_bl2ud;
 	unit->bl2ud2 = unit_bl2ud2;
+	unit->init_ud = unit_init_ud;
 	unit->attack_timer = unit_attack_timer;
 	unit->walktoxy_timer = unit_walktoxy_timer;
 	unit->walktoxy_sub = unit_walktoxy_sub;
