@@ -77927,6 +77927,32 @@ struct unit_data* HP_unit_bl2ud2(struct block_list *bl) {
 	}
 	return retVal___;
 }
+void HP_unit_init_ud(struct unit_data *ud) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_unit_init_ud_pre ) {
+		void (*preHookFunc) (struct unit_data *ud);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_init_ud_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_unit_init_ud_pre[hIndex].func;
+			preHookFunc(ud);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.unit.init_ud(ud);
+	}
+	if( HPMHooks.count.HP_unit_init_ud_post ) {
+		void (*postHookFunc) (struct unit_data *ud);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_unit_init_ud_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_unit_init_ud_post[hIndex].func;
+			postHookFunc(ud);
+		}
+	}
+	return;
+}
 int HP_unit_attack_timer(int tid, int64 tick, int id, intptr_t data) {
 	int hIndex = 0;
 	int retVal___ = 0;

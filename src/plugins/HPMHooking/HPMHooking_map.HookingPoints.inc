@@ -2974,6 +2974,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(unit->final, HP_unit_final) },
 	{ HP_POP(unit->bl2ud, HP_unit_bl2ud) },
 	{ HP_POP(unit->bl2ud2, HP_unit_bl2ud2) },
+	{ HP_POP(unit->init_ud, HP_unit_init_ud) },
 	{ HP_POP(unit->attack_timer, HP_unit_attack_timer) },
 	{ HP_POP(unit->walktoxy_timer, HP_unit_walktoxy_timer) },
 	{ HP_POP(unit->walktoxy_sub, HP_unit_walktoxy_sub) },

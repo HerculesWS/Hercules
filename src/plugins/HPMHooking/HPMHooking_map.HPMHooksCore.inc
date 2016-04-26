@@ -5812,6 +5812,8 @@ struct {
 	struct HPMHookPoint *HP_unit_bl2ud_post;
 	struct HPMHookPoint *HP_unit_bl2ud2_pre;
 	struct HPMHookPoint *HP_unit_bl2ud2_post;
+	struct HPMHookPoint *HP_unit_init_ud_pre;
+	struct HPMHookPoint *HP_unit_init_ud_post;
 	struct HPMHookPoint *HP_unit_attack_timer_pre;
 	struct HPMHookPoint *HP_unit_attack_timer_post;
 	struct HPMHookPoint *HP_unit_walktoxy_timer_pre;
@@ -11707,6 +11709,8 @@ struct {
 	int HP_unit_bl2ud_post;
 	int HP_unit_bl2ud2_pre;
 	int HP_unit_bl2ud2_post;
+	int HP_unit_init_ud_pre;
+	int HP_unit_init_ud_post;
 	int HP_unit_attack_timer_pre;
 	int HP_unit_attack_timer_post;
 	int HP_unit_walktoxy_timer_pre;
