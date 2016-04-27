@@ -6614,7 +6614,7 @@ void clif_party_withdraw(struct party_data* p, struct map_session_data* sd, int 
 
 /// Party chat message (ZC_NOTIFY_CHAT_PARTY).
 /// 0109 <packet len>.W <account id>.L <message>.?B
-void clif_party_message(struct party_data* p, int account_id, const char* mes, int len)
+void clif_party_message(struct party_data *p, int account_id, const char *mes, int len)
 {
 	struct map_session_data *sd;
 	int i;
@@ -6622,22 +6622,24 @@ void clif_party_message(struct party_data* p, int account_id, const char* mes, i
 	nullpo_retv(p);
 	nullpo_retv(mes);
 
-	for(i=0; i < MAX_PARTY && !p->data[i].sd;i++);
-	if(i < MAX_PARTY){
-		unsigned char buf[1024];
+	ARR_FIND(0, MAX_PARTY, i, p->data[i].sd != NULL);
 
-		if (len > sizeof(buf)-8) {
-			ShowWarning("clif_party_message: Truncated message '%s' (len=%d, max=%"PRIuS", party_id=%d).\n",
-			            mes, len, sizeof(buf)-8, p->party.party_id);
-			len = sizeof(buf)-8;
+	if (i < MAX_PARTY) {
+		unsigned char buf[1024];
+		int maxlen = (int)sizeof(buf) - 9;
+
+		if (len > maxlen) {
+			ShowWarning("clif_party_message: Truncated message '%s' (len=%d, max=%d, party_id=%d).\n",
+			            mes, len, maxlen, p->party.party_id);
+			len = maxlen;
 		}
 
 		sd = p->data[i].sd;
-		WBUFW(buf,0)=0x109;
-		WBUFW(buf,2)=len+8;
-		WBUFL(buf,4)=account_id;
-		safestrncpy(WBUFP(buf,8), mes, len);
-		clif->send(buf,len+8,&sd->bl,PARTY);
+		WBUFW(buf,0) = 0x109;
+		WBUFW(buf,2) = len+9;
+		WBUFL(buf,4) = account_id;
+		safestrncpy(WBUFP(buf,8), mes, len+1);
+		clif->send(buf, len+9, &sd->bl, PARTY);
 	}
 }
 
@@ -16164,7 +16166,7 @@ void clif_bg_message(struct battleground_data *bgd, int src_id, const char *name
 	WBUFW(buf,2) = len + NAME_LENGTH + 8;
 	WBUFL(buf,4) = src_id;
 	memcpy(WBUFP(buf,8), name, NAME_LENGTH);
-	memcpy(WBUFP(buf,32), mes, len);
+	memcpy(WBUFP(buf,32), mes, len); // [!] no NUL terminator
 	clif->send(buf,WBUFW(buf,2), &sd->bl, BG);
 
 	aFree(buf);
