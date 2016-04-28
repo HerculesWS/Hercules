@@ -728,6 +728,7 @@ if test "$enable_sanitize" != "no" ; then
 		AC_CHECK_SANITIZER_FLAG(return)
 		AC_CHECK_SANITIZER_FLAG(signed-integer-overflow)
 		AC_CHECK_SANITIZER_FLAG(bounds)
+		AC_CHECK_SANITIZER_FLAG(bounds-strict)
 		AC_CHECK_SANITIZER_FLAG(object-size)
 		AC_CHECK_SANITIZER_FLAG(float-divide-by-zero)
 		AC_CHECK_SANITIZER_FLAG(float-cast-overflow)
