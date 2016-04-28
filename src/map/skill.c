@@ -9280,7 +9280,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 				improv_skill_lv = 4 + skill_lv;
 				clif->skill_nodamage (src, bl, skill_id, skill_lv, 1);
 
-				if (sd == NULL) {
+				if (sd != NULL) {
 					sd->state.abra_flag = 2;
 					sd->skillitem = improv_skill_id;
 					sd->skillitemlv = improv_skill_lv;
