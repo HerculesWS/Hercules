@@ -10085,6 +10085,7 @@ int buildin_killmonsterall_sub_strip(struct block_list *bl,va_list ap)
 	struct mob_data *md;
 
 	md = BL_CAST(BL_MOB, bl);
+	nullpo_ret(md);
 	if (md->npc_event[0])
 		md->npc_event[0] = 0;
 

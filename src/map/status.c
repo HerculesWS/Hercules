@@ -5576,9 +5576,9 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 		{
 			int val = 0;
 
-			if( sd && sc->data[SC_HIDING] && pc->checkskill(sd,RG_TUNNELDRIVE) > 0 )
+			if ( sd && sc->data[SC_HIDING] && pc->checkskill(sd,RG_TUNNELDRIVE) > 0 ) {
 				val = 120 - 6 * pc->checkskill(sd,RG_TUNNELDRIVE);
-			else
+			} else {
 				if( sd && sc->data[SC_CHASEWALK] && sc->data[SC_CHASEWALK]->val3 < 0 )
 					val = sc->data[SC_CHASEWALK]->val3;
 				else
@@ -5648,8 +5648,8 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 					if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate > 0 ) // permanent item-based speedup
 						val = max( val, sd->bonus.speed_rate + sd->bonus.speed_add_rate );
 				}
-
-				speed_rate += val;
+			}
+			speed_rate += val;
 		}
 
 		//GetMoveHasteValue1()
@@ -7495,8 +7495,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
 			break;
 		case SC_NOEQUIPSHIELD:
-			if( val2 == 1 ) val2 = 0; //GX effect. Do not take shield off..
-			else
+			if (val2 == 1) {
+				val2 = 0; //GX effect. Do not take shield off..
+			} else {
 				if (sd && !(flag&SCFLAG_LOADED)) {
 					int i;
 					if(sd->bonus.unstripable_equip&EQP_SHIELD)
@@ -7506,8 +7507,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 						return 0;
 					pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
 				}
-				if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
-				break;
+			}
+			if (tick == 1)
+				return 1; //Minimal duration: Only strip without causing the SC
+			break;
 		case SC_NOEQUIPARMOR:
 			if (sd && !(flag&SCFLAG_LOADED)) {
 				int i;
