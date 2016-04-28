@@ -854,7 +854,7 @@ AC_CHECK_COMPILER_WFLAG(missing-include-dirs)
 AC_CHECK_COMPILER_WFLAG(suggest-attribute=noreturn)
 AC_CHECK_COMPILER_WFLAG(undef)
 #AC_CHECK_COMPILER_WFLAG(cast-align)
-AC_CHECK_COMPILER_WFLAG(logical-op)
+#AC_CHECK_COMPILER_WFLAG(logical-op) # some useless warnings
 AC_CHECK_COMPILER_WFLAG(nested-externs)
 AC_CHECK_COMPILER_WFLAG(old-style-definition)
 AC_CHECK_COMPILER_WFLAG(overlength-strings)

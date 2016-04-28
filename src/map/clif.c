@@ -9785,8 +9785,6 @@ void clif_parse_GlobalMessage(int fd, struct map_session_data *sd)
 	bool is_fakename = false;
 	int outlen = 0;
 
-	nullpo_retv(sd);
-
 	packet = RP2PTR(fd);
 	message = clif->process_chat_message(sd, packet, full_message, sizeof full_message);
 	if (message == NULL)
@@ -17801,7 +17799,6 @@ void clif_parse_bgqueue_checkstate(int fd, struct map_session_data *sd)
 {
 	const struct packet_bgqueue_checkstate *p = RP2PTR(fd);
 
-	nullpo_retv(sd);
 	if (sd->bg_queue.arena && sd->bg_queue.type) {
 		clif->bgqueue_update_info(sd,sd->bg_queue.arena->id,bg->id2pos(sd->bg_queue.arena->queue_id,sd->status.account_id));
 	} else {
