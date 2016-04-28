@@ -676,7 +676,7 @@ if test "$enable_lto" != "no" ; then
 	)
 fi
 
-AC_DEFUN(AC_CHECK_SANITIZER_FLAG,
+AC_DEFUN([AC_CHECK_SANITIZER_FLAG],
 	[
 		AC_MSG_CHECKING([whether $CC supports -fsanitize=$1])
 		OLD_CFLAGS="$CFLAGS"
@@ -742,7 +742,7 @@ if test "$enable_sanitize" != "no" ; then
 fi
 
 
-AC_DEFUN(AC_CHECK_COMPILER_WFLAG,
+AC_DEFUN([AC_CHECK_COMPILER_WFLAG],
 	[
 		AC_MSG_CHECKING([whether $CC supports -W$1])
 		OLD_CFLAGS="$CFLAGS"
@@ -777,7 +777,7 @@ AC_DEFUN(AC_CHECK_COMPILER_WFLAG,
 	]
 )
 
-AC_DEFUN(AC_CHECK_COMPILER_WNOFLAG,
+AC_DEFUN([AC_CHECK_COMPILER_WNOFLAG],
 	[
 		AC_MSG_CHECKING([whether $CC supports -Wno-$1])
 		OLD_CFLAGS="$CFLAGS"
