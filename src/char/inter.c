@@ -968,8 +968,8 @@ int mapif_wis_message(struct WisData *wd)
 	//if (wd->len > 2047-56) wd->len = 2047-56; //Force it to fit to avoid crashes. [Skotlex]
 	if (wd->len < 0)
 		wd->len = 0;
-	if (wd->len >= sizeof(wd->msg) - 1)
-		wd->len = sizeof(wd->msg) - 1;
+	if (wd->len >= (int)sizeof(wd->msg) - 1)
+		wd->len = (int)sizeof(wd->msg) - 1;
 
 	WBUFW(buf, 0) = 0x3801;
 	WBUFW(buf, 2) = 56 +wd->len;
@@ -1172,7 +1172,7 @@ int mapif_parse_WisToGM(int fd)
 {
 	unsigned char buf[2048]; // 0x3003/0x3803 <packet_len>.w <wispname>.24B <min_gm_level>.w <message>.?B
 
-	memcpy(WBUFP(buf,0), RFIFOP(fd,0), RFIFOW(fd,2));
+	memcpy(WBUFP(buf,0), RFIFOP(fd,0), RFIFOW(fd,2)); // Message contains the NUL terminator (see intif_wis_message_to_gm())
 	WBUFW(buf, 0) = 0x3803;
 	mapif->sendall(buf, RFIFOW(fd,2));
 

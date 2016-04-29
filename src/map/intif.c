@@ -988,7 +988,7 @@ void intif_parse_WisMessage(int fd) {
 		return;
 	}
 	//Success to send whisper.
-	clif->wis_message(sd->fd, wisp_source, RFIFOP(fd,56),RFIFOW(fd,2)-56);
+	clif->wis_message(sd->fd, wisp_source, RFIFOP(fd,56),RFIFOW(fd,2)-57);
 	intif_wis_replay(id,0);   // success
 }
 
@@ -1032,9 +1032,9 @@ void mapif_parse_WisToGM(int fd)
 	char mbuf[255] = { 0 };
 	char *message;
 
-	mes_len =  RFIFOW(fd,2) - 32;
+	mes_len =  RFIFOW(fd,2) - 33; // Length not including the NUL terminator
 	Assert_retv(mes_len > 0 && mes_len < 32000);
-	message = (char *) (mes_len >= 255 ? (char *) aMalloc(mes_len) : mbuf);
+	message = (mes_len >= 255 ? aMalloc(mes_len) : mbuf);
 
 	permission = RFIFOL(fd,28);
 	safestrncpy(Wisp_name, RFIFOP(fd,4), NAME_LENGTH);

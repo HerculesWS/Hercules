@@ -5814,21 +5814,21 @@ void clif_wis_message(int fd, const char *nick, const char *mes, int mes_len)
 	nullpo_retv(mes);
 
 #if PACKETVER < 20091104
-	WFIFOHEAD(fd, mes_len + NAME_LENGTH + 4);
+	WFIFOHEAD(fd, mes_len + NAME_LENGTH + 5);
 	WFIFOW(fd,0) = 0x97;
-	WFIFOW(fd,2) = mes_len + NAME_LENGTH + 4;
+	WFIFOW(fd,2) = mes_len + NAME_LENGTH + 5;
 	safestrncpy(WFIFOP(fd,4), nick, NAME_LENGTH);
-	safestrncpy(WFIFOP(fd,28), mes, mes_len);
+	safestrncpy(WFIFOP(fd,28), mes, mes_len + 1);
 	WFIFOSET(fd,WFIFOW(fd,2));
 #else
 	ssd = map->nick2sd(nick);
 
-	WFIFOHEAD(fd, mes_len + NAME_LENGTH + 8);
+	WFIFOHEAD(fd, mes_len + NAME_LENGTH + 9);
 	WFIFOW(fd,0) = 0x97;
-	WFIFOW(fd,2) = mes_len + NAME_LENGTH + 8;
+	WFIFOW(fd,2) = mes_len + NAME_LENGTH + 9;
 	safestrncpy(WFIFOP(fd,4), nick, NAME_LENGTH);
 	WFIFOL(fd,28) = (ssd && pc_get_group_level(ssd) == 99) ? 1 : 0; // isAdmin; if nonzero, also displays text above char
-	safestrncpy(WFIFOP(fd,32), mes, mes_len);
+	safestrncpy(WFIFOP(fd,32), mes, mes_len + 1);
 	WFIFOSET(fd,WFIFOW(fd,2));
 #endif
 }
@@ -10246,7 +10246,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 	if (dstsd->state.autotrade) {
 		char output[256];
 		sprintf(output, "%s is in autotrade mode and cannot receive whispered messages.", dstsd->status.name);
-		clif->wis_message(fd, map->wisp_server_name, output, (int)strlen(output) + 1);
+		clif->wis_message(fd, map->wisp_server_name, output, (int)strlen(output));
 		return;
 	}
 
