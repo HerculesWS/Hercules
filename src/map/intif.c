@@ -1007,7 +1007,8 @@ void intif_parse_WisEnd(int fd)
 	return;
 }
 
-int mapif_parse_WisToGM_sub(struct map_session_data* sd,va_list va) {
+int intif_parse_WisToGM_sub(struct map_session_data *sd, va_list va)
+{
 	int permission = va_arg(va, int);
 	char *wisp_name;
 	char *message;
@@ -1025,7 +1026,7 @@ int mapif_parse_WisToGM_sub(struct map_session_data* sd,va_list va) {
 
 // Received wisp message from map-server via char-server for ALL gm
 // 0x3003/0x3803 <packet_len>.w <wispname>.24B <permission>.l <message>.?B
-void mapif_parse_WisToGM(int fd)
+void intif_parse_WisToGM(int fd)
 {
 	int permission, mes_len;
 	char Wisp_name[NAME_LENGTH];
@@ -1040,7 +1041,7 @@ void mapif_parse_WisToGM(int fd)
 	safestrncpy(Wisp_name, RFIFOP(fd,4), NAME_LENGTH);
 	safestrncpy(message, RFIFOP(fd,32), mes_len);
 	// information is sent to all online GM
-	map->foreachpc(mapif_parse_WisToGM_sub, permission, Wisp_name, message, mes_len);
+	map->foreachpc(intif->pWisToGM_sub, permission, Wisp_name, message, mes_len);
 
 	if (message != mbuf)
 		aFree(message);
@@ -2491,8 +2492,8 @@ void intif_defaults(void) {
 	/* parse functions */
 	intif->pWisMessage = intif_parse_WisMessage;
 	intif->pWisEnd = intif_parse_WisEnd;
-	intif->pWisToGM_sub = mapif_parse_WisToGM_sub;
-	intif->pWisToGM = mapif_parse_WisToGM;
+	intif->pWisToGM_sub = intif_parse_WisToGM_sub;
+	intif->pWisToGM = intif_parse_WisToGM;
 	intif->pRegisters = intif_parse_Registers;
 	intif->pChangeNameOk = intif_parse_ChangeNameOk;
 	intif->pMessageToFD = intif_parse_MessageToFD;
