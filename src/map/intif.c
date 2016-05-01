@@ -1035,11 +1035,11 @@ void intif_parse_WisToGM(int fd)
 
 	mes_len =  RFIFOW(fd,2) - 33; // Length not including the NUL terminator
 	Assert_retv(mes_len > 0 && mes_len < 32000);
-	message = (mes_len >= 255 ? aMalloc(mes_len) : mbuf);
+	message = (mes_len >= 255 ? aMalloc(mes_len + 1) : mbuf);
 
 	permission = RFIFOL(fd,28);
 	safestrncpy(Wisp_name, RFIFOP(fd,4), NAME_LENGTH);
-	safestrncpy(message, RFIFOP(fd,32), mes_len);
+	safestrncpy(message, RFIFOP(fd,32), mes_len + 1);
 	// information is sent to all online GM
 	map->foreachpc(intif->pWisToGM_sub, permission, Wisp_name, message, mes_len);
 
