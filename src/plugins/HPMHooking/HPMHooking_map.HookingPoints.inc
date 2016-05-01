@@ -1,5 +1,6 @@
 /**
  * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
  * Copyright (C) 2013-2016  Hercules Dev Team
  *

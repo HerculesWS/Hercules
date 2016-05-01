@@ -25,6 +25,7 @@
 #include "common/core.h"
 #include "common/showmsg.h"
 
+struct HPMHooking_interface;
 struct Sql; // common/sql.h
 struct script_state;
 struct AtCommandInfo;
@@ -32,7 +33,7 @@ struct socket_data;
 struct map_session_data;
 struct hplugin_data_store;
 
-#define HPM_VERSION "1.1"
+#define HPM_VERSION "1.2"
 #define HPM_ADDCONF_LENGTH 40
 
 struct hplugin_info {
@@ -71,11 +72,6 @@ enum HPluginPacketHookingPoints {
 	hpPHP_MAX,
 };
 
-enum HPluginHookType {
-	HOOK_TYPE_PRE,
-	HOOK_TYPE_POST,
-};
-
 /**
  * Data types for plugin custom data.
  */
@@ -106,13 +102,6 @@ enum HPluginConfType {
 	HPCT_SCRIPT,     ///< script.conf (map-server)
 	HPCT_MAX,
 };
-
-#define addHookPre(tname,hook) (HPMi->AddHook(HOOK_TYPE_PRE,(tname),(hook),HPMi->pid))
-#define addHookPost(tname,hook) (HPMi->AddHook(HOOK_TYPE_POST,(tname),(hook),HPMi->pid))
-/* need better names ;/ */
-/* will not run the original function after pre-hook processing is complete (other hooks will run) */
-#define hookStop() (HPMi->HookStop(__func__,HPMi->pid))
-#define hookStopped() (HPMi->HookStopped())
 
 #define addArg(name, param,func,help) (HPMi->addArg(HPMi->pid,(name),(param),(cmdline_arg_ ## func),(help)))
 /* HPData handy redirects */
@@ -231,10 +220,6 @@ struct HPMi_interface {
 	void (*removeFromHPData) (enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store, uint32 classid);
 	/* packet */
 	bool (*addPacket) (unsigned short cmd, unsigned short length, void (*receive)(int fd), unsigned int point, unsigned int pluginID);
-	/* Hooking */
-	bool (*AddHook) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
-	void (*HookStop) (const char *func, unsigned int pID);
-	bool (*HookStopped) (void);
 	/* program --arg/-a */
 	bool (*addArg) (unsigned int pluginID, char *name, bool has_param, CmdlineExecFunc func, const char *help);
 	/* battle-config recv param */
@@ -243,6 +228,9 @@ struct HPMi_interface {
 	void (*addPCGPermission) (unsigned int pluginID, char *name, unsigned int *mask);
 
 	struct Sql *sql_handle;
+
+	/* Hooking */
+	struct HPMHooking_interface *hooking;
 };
 #ifdef HERCULES_CORE
 #define HPM_SYMBOL(n, s) (HPM->share((s), (n)), true)

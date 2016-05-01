@@ -187,28 +187,29 @@ sub parse($$) {
 			$post_code = "va_end(${callvar});";
 			$var = '';
 			$variadic = 1;
-		} elsif (!$indirectionlvl) { # Increase indirection level when necessary
+		} else { # Increase indirection level when necessary
 			$dereference = '*';
 			$addressof = '&';
 		}
 		$indirectionlvl++ if ($array); # Arrays are pointer, no matter how cute you write them
 
 		push(@args, {
-			var     => $var,
-			callvar => $callvar,
-			type    => $type1.$array.$type2,
-			orig    => $type1 eq '...' ? '...' : trim("$type1 $indir$var$array $type2"),
-			indir   => $indirectionlvl,
-			hookf   => $type1 eq '...' ? "va_list ${var}" : trim("$type1 $dereference$indir$var$array $type2"),
-			hookc   => trim("$addressof$callvar"),
-			origc   => trim($callvar),
-			pre     => $pre_code,
-			post    => $post_code,
+			var       => $var,
+			callvar   => $callvar,
+			type      => $type1.$array.$type2,
+			orig      => $type1 eq '...' ? '...' : trim("$type1 $indir$var$array $type2"),
+			indir     => $indirectionlvl,
+			hookpref  => $type1 eq '...' ? "va_list ${var}" : trim("$type1 $dereference$indir$var$array $type2"),
+			hookpostf => $type1 eq '...' ? "va_list ${var}" : trim("$type1 $indir$var$array $type2"),
+			hookprec  => trim("$addressof$callvar"),
+			hookpostc => trim("$callvar"),
+			origc     => trim($callvar),
+			pre       => $pre_code,
+			post      => $post_code,
 		});
 		$lastvar = $var;
 	}
 
-	my $rtmemset = 0;
 	my $rtinit = '';
 	foreach ($rt) { # Decide initialization for the return value
 		my $x = $_;
@@ -244,8 +245,7 @@ sub parse($$) {
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
 			$rtinit = ' = NULL';
 		} elsif ($x =~ /^(?:struct|union)\s+.*$/) { # Structs and unions
-			$rtinit = '';
-			$rtmemset = 1;
+			$rtinit = ' = { 0 }';
 		} elsif ($x =~ /^float|double$/) { # Floating point variables
 			$rtinit = ' = 0.';
 		} elsif ($x =~ /^(?:(?:un)?signed\s+)?(?:char|int|long|short)$/
@@ -267,7 +267,6 @@ sub parse($$) {
 		vname    => $variadic ? "v$name" : $name,
 		type     => $rt,
 		typeinit => $rtinit,
-		memset   => $rtmemset,
 		variadic => $variadic,
 		args     => \@args,
 		notes    => $notes,
@@ -419,10 +418,10 @@ foreach my $file (@files) { # Loop through the xml files
 					$if->{postcall} .= ', ';
 				}
 				$if->{handlerdef} .= $arg->{orig};
-				$if->{predef} .= $arg->{hookf};
-				$if->{precall} .= $arg->{hookc};
-				$if->{postdef} .= $arg->{hookf};
-				$if->{postcall} .= $arg->{hookc};
+				$if->{predef} .= $arg->{hookpref};
+				$if->{precall} .= $arg->{hookprec};
+				$if->{postdef} .= $arg->{hookpostf};
+				$if->{postcall} .= $arg->{hookpostc};
 				$if->{origcall} .= $arg->{origc};
 				$i++; $j++;
 			}
@@ -460,6 +459,34 @@ foreach my $file (@files) { # Loop through the xml files
 }
 
 my $year = (localtime)[5] + 1900;
+
+my $fileheader = <<"EOF";
+/**
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2013-$year  Hercules Dev Team
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * NOTE: This file was auto-generated and should never be manually edited,
+ *       as it will get overwritten.
+ */
+EOF
+
 foreach my $servertype (keys %keys) {
 	my $keysref = $keys{$servertype};
 	# Some interfaces use different names
@@ -480,31 +507,7 @@ foreach my $servertype (keys %keys) {
 			or die "cannot open > $fname: $!";
 
 		print FH <<"EOF";
-/**
- * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
- *
- * Copyright (C) 2015-$year  Hercules Dev Team
- *
- * Hercules is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
- * NOTE: This file was auto-generated and should never be manually edited,
- *       as it will get overwritten.
- */
-
+$fileheader
 #if !defined(HERCULES_CORE)
 EOF
 
@@ -538,6 +541,36 @@ EOF
 }
 EOF
 		close FH;
+
+		$fname = "../../src/plugins/HPMHooking/HPMHooking.Defs.inc";
+		open(FH, ">", $fname)
+			or die "cannot open > $fname: $!";
+
+		print FH <<"EOF";
+$fileheader
+EOF
+
+		foreach my $key (@$keysref) {
+			print FH <<"EOF";
+#ifdef $fileguards{$key}->{guard} /* $key */
+EOF
+
+			foreach my $if (@{ $ifs{$key} }) {
+				my ($predef, $postdef) = ($if->{predef}, $if->{postdef});
+				$predef =~ s/preHookFunc/HPMHOOK_pre_${key}_$if->{name}/;
+				$postdef =~ s/postHookFunc/HPMHOOK_post_${key}_$if->{name}/;
+
+				print FH <<"EOF";
+typedef $predef
+typedef $postdef
+EOF
+			}
+			print FH <<"EOF";
+#endif // $fileguards{$key}->{guard}
+EOF
+		}
+		close FH;
+
 		next;
 	}
 
@@ -546,30 +579,7 @@ EOF
 		or die "cannot open > $fname: $!";
 
 	print FH <<"EOF";
-/**
- * This file is part of Hercules.
- *
- * Copyright (C) 2013-$year  Hercules Dev Team
- *
- * Hercules is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
- * NOTE: This file was auto-generated and should never be manually edited,
- *       as it will get overwritten.
- */
-
+$fileheader
 struct HookingPointData HookingPoints[] = {
 EOF
 
@@ -597,31 +607,7 @@ EOF
 		or die "cannot open > $fname: $!";
 
 	print FH <<"EOF";
-/**
- * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
- *
- * Copyright (C) 2013-$year  Hercules Dev Team
- *
- * Hercules is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
- * NOTE: This file was auto-generated and should never be manually edited,
- *       as it will get overwritten.
- */
-
+$fileheader
 EOF
 	foreach my $key (@$keysref) {
 
@@ -636,31 +622,7 @@ EOF
 		or die "cannot open > $fname: $!";
 
 	print FH <<"EOF";
-/**
- * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
- *
- * Copyright (C) 2013-$year  Hercules Dev Team
- *
- * Hercules is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
- * NOTE: This file was auto-generated and should never be manually edited,
- *       as it will get overwritten.
- */
-
+$fileheader
 struct {
 EOF
 
@@ -711,31 +673,7 @@ EOF
 		or die "cannot open > $fname: $!";
 
 	print FH <<"EOF";
-/**
- * This file is part of Hercules.
- * http://herc.ws - http://github.com/HerculesWS/Hercules
- *
- * Copyright (C) 2013-$year  Hercules Dev Team
- *
- * Hercules is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
- * NOTE: This file was auto-generated and should never be manually edited,
- *       as it will get overwritten.
- */
-
+$fileheader
 EOF
 	foreach my $key (@$keysref) {
 
@@ -748,7 +686,6 @@ EOF
 
 			unless ($if->{type} eq 'void') {
 				$initialization  = "\n\t$if->{type} retVal___$if->{typeinit};";
-				$initialization .= "\n\tmemset(&retVal___, '\\0', sizeof($if->{type}));" if $if->{memset};
 			}
 
 			$beforeblock3 .= "\n\t\t\t$_" foreach (@{ $if->{before} });

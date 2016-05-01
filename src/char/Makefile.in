@@ -23,7 +23,7 @@ CONFIG_D = ../config
 CONFIG_H = $(wildcard $(CONFIG_D)/*.h) $(wildcard $(CONFIG_D)/*/*.h)
 
 COMMON_D = ../common
-COMMON_H = $(filter-out %.p.h, $(wildcard $(COMMON_D)/*.h))
+COMMON_H = $(filter-out %.p.h, $(wildcard $(COMMON_D)/*.h)) ../plugins/HPMHooking.h
 SYSINFO_INC = $(COMMON_D)/sysinfo.inc
 COMMON_INCLUDE = -I..
 
