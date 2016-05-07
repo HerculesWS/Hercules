@@ -189,7 +189,7 @@ include_dir_open  ^[ \t]*@include_dir[ \t]+\"
 <INCLUDE_D>\\\"         { scanctx_append_string(yyextra, "\""); }
 <INCLUDE_D>\"           {
         const char *error;
-        const char* basedir;
+        char* basedir;
         FILE *fp = NULL;
 
         basedir = scanctx_getpath(yyextra);

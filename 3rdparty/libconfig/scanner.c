@@ -1397,7 +1397,7 @@ YY_RULE_SETUP
 #line 190 "scanner.l"
 {
         const char *error;
-        const char* basedir;
+        char* basedir;
         FILE *fp = NULL;
 
         basedir = scanctx_getpath(yyextra);

@@ -104,7 +104,7 @@ FILE *scanctx_push_include(struct scan_context *ctx, void *buffer,
   if(fp)
   {
     ctx->streams[ctx->depth] = fp;
-    ctx->files[ctx->depth] = __scanctx_add_filename(ctx, file);
+    ctx->files[ctx->depth] = __scanctx_add_filename(ctx, strdup(file));
     ctx->buffers[ctx->depth] = buffer;
     ++(ctx->depth);
       *error = NULL;
@@ -119,10 +119,10 @@ FILE *scanctx_push_include(struct scan_context *ctx, void *buffer,
 
 /* ------------------------------------------------------------------------- */
 
-const char *scanctx_getpath(struct scan_context *ctx)
+char *scanctx_getpath(struct scan_context *ctx)
 {
-  const char *name;
-  const char *full_path = NULL;
+  char *name;
+  char *full_path = NULL;
 
   name = scanctx_take_string(ctx);
   if(/*(name[0] != FILE_SEPARATOR[0]) && */ctx->config->include_dir) /* don't accept absolute pathnames! [Haru] */
@@ -139,7 +139,7 @@ const char *scanctx_getpath(struct scan_context *ctx)
 
 /* ------------------------------------------------------------------------- */
 
-const char *scanctx_filename(struct scan_context *ctx,const char* dirname, const char* filename)
+char *scanctx_filename(struct scan_context *ctx,const char* dirname, const char* filename)
 {
   const char *basedir = dirname ? dirname : ctx->basedir;
   char *full_file = malloc(strlen(basedir) + strlen(filename) + 2);
@@ -179,7 +179,7 @@ extern const char *scanctx_dirnext(struct scan_context* ctx)
   return dentries[ctx->de_cur++]->d_name;
 }
 
-int scanctx_dirscan(struct scan_context* ctx, const char* dirname,
+int scanctx_dirscan(struct scan_context* ctx, char* dirname,
                     int (*filter)(const struct dirent *),
                     int (*compar)(const struct dirent **, const struct dirent **))
 {

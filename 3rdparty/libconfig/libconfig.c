@@ -1676,7 +1676,7 @@ int config_setting_remove(struct config_setting_t *parent, const char *name)
     while(settingName && !strchr(PATH_TOKENS, *settingName))
       ++settingName;
 
-    if(*settingName == '\0')
+    if(settingName == NULL || *settingName == '\0')
     {
       settingName = lastFound;
       break;

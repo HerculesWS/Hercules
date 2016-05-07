@@ -45,7 +45,7 @@ struct scan_context
   unsigned int num_filenames;
   int depth;
   struct dirent **dentries;
-  const char *basedir;	/* basedir for @include_dir */
+  char *basedir;	/* basedir for @include_dir */
   unsigned de_max, de_cur;	/* counters into dirent* array */
 };
 
@@ -53,11 +53,11 @@ extern void scanctx_init(struct scan_context *ctx, const char *top_filename);
 extern char **scanctx_cleanup(struct scan_context *ctx,
                               unsigned int *num_filenames);
 
-extern const char *scanctx_getpath(struct scan_context *ctx);
-extern const char *scanctx_filename(struct scan_context *ctx, const char *dirname, const char *filename);
+extern char *scanctx_getpath(struct scan_context *ctx);
+extern char *scanctx_filename(struct scan_context *ctx, const char *dirname, const char *filename);
 
 extern const char* scanctx_dirnext(struct scan_context* ctx);
-extern int   scanctx_dirscan(struct scan_context* ctx, const char* dirname,
+extern int   scanctx_dirscan(struct scan_context* ctx, char* dirname,
 				int (*filter)(const struct dirent *),
 				int (*compar)(const struct dirent **, const struct dirent **));
 extern void  scanctx_dirend(struct scan_context* ctx);
