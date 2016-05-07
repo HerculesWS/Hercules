@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
    Copyright (C) 2013-2016  Hercules Dev Team
-   Copyright (C) 2005-2014  Mark A Lindner
+   Copyright (C) 2005-2015  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -141,6 +141,14 @@ extern LIBCONFIG_API void config_set_destructor(struct config_t *config,
                                                 void (*destructor)(void *));
 extern LIBCONFIG_API void config_set_include_dir(struct config_t *config,
                                                  const char *include_dir);
+
+extern LIBCONFIG_API void config_set_float_precision(struct config_t *config,
+                                                          unsigned short digits);
+extern LIBCONFIG_API unsigned short config_get_float_precision(const struct config_t *config);
+
+extern LIBCONFIG_API void config_set_tab_width(struct config_t *config,
+                                               unsigned short width);
+extern LIBCONFIG_API unsigned short config_get_tab_width(const struct config_t *config);
 
 extern LIBCONFIG_API void config_init(struct config_t *config);
 extern LIBCONFIG_API void config_destroy(struct config_t *config);
@@ -293,13 +301,6 @@ extern LIBCONFIG_API int config_lookup_string(const struct config_t *config,
 
 #define /* short */ config_get_default_format(/* struct config_t * */ C)       \
   ((C)->default_format)
-
-#define /* void */ config_set_tab_width(/* struct config_t * */ C,     \
-                                        /* unsigned short */ W) \
-  (C)->tab_width = ((W) & 0x0F)
-
-#define /* unsigned char */ config_get_tab_width(/* const struct config_t * */ C) \
-  ((C)->tab_width)
 
 #define /* unsigned short */ config_setting_source_line(   \
   /* const struct config_setting_t * */ S)                        \

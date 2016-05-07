@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
    Copyright (C) 2013-2016  Hercules Dev Team
-   Copyright (C) 2005-2014  Mark A Lindner
+   Copyright (C) 2005-2015  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -47,7 +47,11 @@
 
 #define PATH_TOKENS ":/"
 #define CHUNK_SIZE 16
-#define FLOAT_PRECISION DBL_DIG
+#define FLOAT_PRECISION 2
+
+#define TAB2DIGITS(x)  (((x) & 0xFF00) >> 8)
+#define DIGITS2TAB(x)  (((x) & 0xFF) << 8)
+#define TAB2TAB(x)     ((x) & 0xF)
 
 #define _new(T) calloc(1, sizeof(T)) /* zeroed */
 #define _delete(P) free(P)
@@ -222,7 +226,10 @@ static void __config_write_value(const struct config_t *config,
     {
       char *q;
 
-      snprintf(fbuf, sizeof(fbuf) - 3, "%.*g", FLOAT_PRECISION, value->fval);
+      snprintf(fbuf, sizeof(fbuf) - 3, "%.*f",
+               TAB2DIGITS(config->tab_width),   /* XXX: hack; See config_set_float_precision */
+               value->fval
+      );
 
       /* check for exponent */
       q = strchr(fbuf, 'e');
@@ -369,7 +376,7 @@ static void __config_write_value(const struct config_t *config,
           fputc('\n', stream);
 
           if(depth > 1)
-            __config_indent(stream, depth, config->tab_width);
+            __config_indent(stream, depth, TAB2TAB(config->tab_width));
         }
 
         fprintf(stream, "{\n");
@@ -385,7 +392,7 @@ static void __config_write_value(const struct config_t *config,
       }
 
       if(depth > 1)
-        __config_indent(stream, depth, config->tab_width);
+        __config_indent(stream, depth, TAB2TAB(config->tab_width));
 
       if(depth > 0)
         fputc('}', stream);
@@ -648,7 +655,7 @@ static void __config_write_setting(const struct config_t *config,
     config, CONFIG_OPTION_COLON_ASSIGNMENT_FOR_NON_GROUPS) ? ':' : '=';
 
   if(depth > 1)
-    __config_indent(stream, depth, config->tab_width);
+    __config_indent(stream, depth, TAB2TAB(config->tab_width));
 
 
   if(setting->name)
@@ -758,6 +765,34 @@ void config_destroy(struct config_t *config)
 
 /* ------------------------------------------------------------------------- */
 
+void config_set_tab_width(struct config_t *config,
+                          unsigned short width)
+{
+  /* As per documentation: valid range= 0..15 */
+  config->tab_width = (width <= 15) ? width : 15;
+}
+
+/* ------------------------------------------------------------------------- */
+
+unsigned short config_get_tab_width(const struct config_t *config)
+{
+  return TAB2TAB(config->tab_width);
+}
+
+/* ------------------------------------------------------------------------- */
+void config_set_float_precision(struct config_t *config,
+                                          unsigned short digits)
+{
+  config->tab_width |= DIGITS2TAB(digits);
+}
+
+unsigned short config_get_float_precision(const struct config_t *config)
+{
+  return TAB2DIGITS(config->tab_width);
+}
+
+/* ------------------------------------------------------------------------- */
+
 void config_init(struct config_t *config)
 {
   memset((void *)config, 0, sizeof(struct config_t));
@@ -768,7 +803,13 @@ void config_init(struct config_t *config)
   config->options = (CONFIG_OPTION_SEMICOLON_SEPARATORS
                      | CONFIG_OPTION_COLON_ASSIGNMENT_FOR_GROUPS
                      | CONFIG_OPTION_OPEN_BRACE_ON_SEPARATE_LINE);
-  config->tab_width = 2;
+
+  /* @version 1.6: piggyback float_digits on top of tab_width
+   * (ab)using the existing macros' 0x0F mask in order to preserve
+   * API & ABI compatibility ; changes are fully backwards compatible
+   */
+  config->tab_width = FLOAT_PRECISION;
+  config->tab_width |= DIGITS2TAB(2);    /* float_digits */
 }
 
 /* ------------------------------------------------------------------------- */
@@ -1615,6 +1656,8 @@ int config_setting_remove(struct config_setting_t *parent, const char *name)
 {
   unsigned int idx;
   struct config_setting_t *setting;
+  const char *settingName;
+  const char *lastFound;
 
   if(! parent)
     return(CONFIG_FALSE);
@@ -1622,10 +1665,29 @@ int config_setting_remove(struct config_setting_t *parent, const char *name)
   if(parent->type != CONFIG_TYPE_GROUP)
     return(CONFIG_FALSE);
 
-  if(! (setting = __config_list_search(parent->value.list, name, &idx)))
+  setting = config_setting_lookup(parent, name);
+  if(!setting)
     return(CONFIG_FALSE);
 
-  __config_list_remove(parent->value.list, idx);
+  settingName = name;
+  do
+  {
+    lastFound = settingName;
+    while(settingName && !strchr(PATH_TOKENS, *settingName))
+      ++settingName;
+
+    if(*settingName == '\0')
+    {
+      settingName = lastFound;
+      break;
+    }
+
+  }while(*++settingName);
+
+  if(!(setting = __config_list_search(setting->parent->value.list, settingName, &idx)))
+    return(CONFIG_FALSE);
+
+  __config_list_remove(setting->parent->value.list, idx);
   __config_setting_destroy(setting);
 
   return(CONFIG_TRUE);
