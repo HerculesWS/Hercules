@@ -33083,60 +33083,6 @@ int HP_intif_create_pet(int account_id, int char_id, short pet_type, short pet_l
 	}
 	return retVal___;
 }
-int HP_intif_broadcast(const char *mes, int len, int type) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if (HPMHooks.count.HP_intif_broadcast_pre > 0) {
-		int (*preHookFunc) (const char **mes, int *len, int *type);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_broadcast_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_intif_broadcast_pre[hIndex].func;
-			retVal___ = preHookFunc(&mes, &len, &type);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.intif.broadcast(mes, len, type);
-	}
-	if (HPMHooks.count.HP_intif_broadcast_post > 0) {
-		int (*postHookFunc) (int retVal___, const char *mes, int len, int type);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_broadcast_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_intif_broadcast_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, mes, len, type);
-		}
-	}
-	return retVal___;
-}
-int HP_intif_broadcast2(const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY) {
-	int hIndex = 0;
-	int retVal___ = 0;
-	if (HPMHooks.count.HP_intif_broadcast2_pre > 0) {
-		int (*preHookFunc) (const char **mes, int *len, unsigned int *fontColor, short *fontType, short *fontSize, short *fontAlign, short *fontY);
-		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_broadcast2_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_intif_broadcast2_pre[hIndex].func;
-			retVal___ = preHookFunc(&mes, &len, &fontColor, &fontType, &fontSize, &fontAlign, &fontY);
-		}
-		if (*HPMforce_return) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.intif.broadcast2(mes, len, fontColor, fontType, fontSize, fontAlign, fontY);
-	}
-	if (HPMHooks.count.HP_intif_broadcast2_post > 0) {
-		int (*postHookFunc) (int retVal___, const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_intif_broadcast2_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_intif_broadcast2_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, mes, len, fontColor, fontType, fontSize, fontAlign, fontY);
-		}
-	}
-	return retVal___;
-}
 int HP_intif_main_message(struct map_session_data *sd, const char *message) {
 	int hIndex = 0;
 	int retVal___ = 0;
