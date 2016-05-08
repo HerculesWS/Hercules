@@ -10657,12 +10657,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 	dstsd = map->nick2sd(target);
 
 	if (dstsd == NULL || strcmp(dstsd->status.name, target) != 0) {
-		// player is not on this map-server
-		// At this point, don't send wisp/page if it's not exactly the same name, because (example)
-		// if there are 'Test' player on an other map-server and 'test' player on this map-server,
-		// and if we ask for 'Test', we must not contact 'test' player
-		// so, we send information to inter-server, which is the only one which decide (and copy correct name).
-		intif->wis_message(sd, target, message, (int)strlen(message));
+		clif->wis_end(fd, 1); // 1: target character is not logged in
 		return;
 	}
 

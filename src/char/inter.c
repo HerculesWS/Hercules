@@ -69,7 +69,7 @@ int party_share_level = 10;
 
 // recv. packet list
 int inter_recv_packet_length[] = {
-	 0,-1, 7,-1, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
+	 0, 0, 0,-1, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
 	 6,-1, 0, 0,  0, 0, 0, 0, 10,-1, 0, 0,  0, 0,  0, 0,    // 3010- Account Storage [Smokexyz]
 	-1,10,-1,14, 14,19, 6,-1, 14,14, 0, 0,  0, 0,  0, 0,    // 3020- Party
 	-1, 6,-1,-1, 55,19, 6,-1, 14,-1,-1,-1, 18,19,186,-1,    // 3030-
@@ -86,8 +86,6 @@ struct WisData {
 	int64 tick;
 	unsigned char src[24], dst[24], msg[512];
 };
-static struct DBMap *wis_db = NULL; // int wis_id -> struct WisData*
-static int wis_dellist[WISDELLIST_MAX], wis_delnum;
 
 #define MAX_JOB_NAMES 150
 static char* msg_table[MAX_JOB_NAMES]; //  messages 550 ~ 699 are job names
@@ -969,7 +967,6 @@ int inter_init_sql(const char *file)
 			Sql_ShowDebug(inter->sql_handle);
 	}
 
-	wis_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	inter_guild->sql_init();
 	inter_storage->sql_init();
 	inter_party->sql_init();
@@ -989,8 +986,6 @@ int inter_init_sql(const char *file)
 // finalize
 void inter_final(void)
 {
-	wis_db->destroy(wis_db, NULL);
-
 	inter_guild->sql_final();
 	inter_storage->sql_final();
 	inter_party->sql_final();
@@ -1014,46 +1009,6 @@ int inter_mapif_init(int fd)
 
 
 //--------------------------------------------------------
-
-// Wis sending
-int mapif_wis_message(struct WisData *wd)
-{
-	unsigned char buf[2048];
-	nullpo_ret(wd);
-	//if (wd->len > 2047-56) wd->len = 2047-56; //Force it to fit to avoid crashes. [Skotlex]
-	if (wd->len < 0)
-		wd->len = 0;
-	if (wd->len >= (int)sizeof(wd->msg) - 1)
-		wd->len = (int)sizeof(wd->msg) - 1;
-
-	WBUFW(buf, 0) = 0x3801;
-	WBUFW(buf, 2) = 56 +wd->len;
-	WBUFL(buf, 4) = wd->id;
-	memcpy(WBUFP(buf, 8), wd->src, NAME_LENGTH);
-	memcpy(WBUFP(buf,32), wd->dst, NAME_LENGTH);
-	memcpy(WBUFP(buf,56), wd->msg, wd->len);
-	wd->count = mapif->sendall(buf,WBUFW(buf,2));
-
-	return 0;
-}
-
-void mapif_wis_response(int fd, const unsigned char *src, int flag)
-{
-	unsigned char buf[27];
-	nullpo_retv(src);
-	WBUFW(buf, 0)=0x3802;
-	memcpy(WBUFP(buf, 2),src,24);
-	WBUFB(buf,26)=flag;
-	mapif->send(fd,buf,27);
-}
-
-// Wis sending result
-int mapif_wis_end(struct WisData *wd, int flag)
-{
-	nullpo_ret(wd);
-	mapif->wis_response(wd->fd, wd->src, flag);
-	return 0;
-}
 
 #if 0
 // Account registry transfer to map-server
@@ -1088,131 +1043,6 @@ int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason)
 }
 
 //--------------------------------------------------------
-
-/**
- * Existence check of WISP data
- * @see DBApply
- */
-int inter_check_ttl_wisdata_sub(union DBKey key, struct DBData *data, va_list ap)
-{
-	int64 tick;
-	struct WisData *wd = DB->data2ptr(data);
-	nullpo_ret(wd);
-	tick = va_arg(ap, int64);
-
-	if (DIFF_TICK(tick, wd->tick) > WISDATA_TTL && wis_delnum < WISDELLIST_MAX)
-		wis_dellist[wis_delnum++] = wd->id;
-
-	return 0;
-}
-
-int inter_check_ttl_wisdata(void)
-{
-	int64 tick = timer->gettick();
-	int i;
-
-	do {
-		wis_delnum = 0;
-		wis_db->foreach(wis_db, inter->check_ttl_wisdata_sub, tick);
-		for(i = 0; i < wis_delnum; i++) {
-			struct WisData *wd = (struct WisData*)idb_get(wis_db, wis_dellist[i]);
-			ShowWarning("inter: wis data id=%d time out : from %s to %s\n", wd->id, wd->src, wd->dst);
-			// removed. not send information after a timeout. Just no answer for the player
-			//mapif->wis_end(wd, 1); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-			idb_remove(wis_db, wd->id);
-		}
-	} while(wis_delnum >= WISDELLIST_MAX);
-
-	return 0;
-}
-
-//--------------------------------------------------------
-
-// Wisp/page request to send
-int mapif_parse_WisRequest(int fd)
-{
-	struct WisData* wd;
-	char name[NAME_LENGTH];
-	char esc_name[NAME_LENGTH*2+1];// escaped name
-	char* data;
-	size_t len;
-
-
-	if ( fd <= 0 ) {return 0;} // check if we have a valid fd
-
-	if (RFIFOW(fd,2)-52 >= sizeof(wd->msg)) {
-		ShowWarning("inter: Wis message size too long.\n");
-		return 0;
-	} else if (RFIFOW(fd,2)-52 <= 0) { // normally, impossible, but who knows...
-		ShowError("inter: Wis message doesn't exist.\n");
-		return 0;
-	}
-
-	safestrncpy(name, RFIFOP(fd,28), NAME_LENGTH); //Received name may be too large and not contain \0! [Skotlex]
-
-	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `name` FROM `%s` WHERE `name`='%s'", char_db, esc_name) )
-		Sql_ShowDebug(inter->sql_handle);
-
-	// search if character exists before to ask all map-servers
-	if( SQL_SUCCESS != SQL->NextRow(inter->sql_handle) )
-	{
-		mapif->wis_response(fd, RFIFOP(fd, 4), 1);
-	}
-	else
-	{// Character exists. So, ask all map-servers
-		// to be sure of the correct name, rewrite it
-		SQL->GetData(inter->sql_handle, 0, &data, &len);
-		memset(name, 0, NAME_LENGTH);
-		memcpy(name, data, min(len, NAME_LENGTH));
-		// if source is destination, don't ask other servers.
-		if (strncmp(RFIFOP(fd,4), name, NAME_LENGTH) == 0) {
-			mapif->wis_response(fd, RFIFOP(fd, 4), 1);
-		}
-		else
-		{
-			static int wisid = 0;
-			CREATE(wd, struct WisData, 1);
-
-			// Whether the failure of previous wisp/page transmission (timeout)
-			inter->check_ttl_wisdata();
-
-			wd->id = ++wisid;
-			wd->fd = fd;
-			wd->len= RFIFOW(fd,2)-52;
-			memcpy(wd->src, RFIFOP(fd, 4), NAME_LENGTH);
-			memcpy(wd->dst, RFIFOP(fd,28), NAME_LENGTH);
-			memcpy(wd->msg, RFIFOP(fd,52), wd->len);
-			wd->tick = timer->gettick();
-			idb_put(wis_db, wd->id, wd);
-			mapif->wis_message(wd);
-		}
-	}
-
-	SQL->FreeResult(inter->sql_handle);
-	return 0;
-}
-
-
-// Wisp/page transmission result
-int mapif_parse_WisReply(int fd)
-{
-	int id, flag;
-	struct WisData *wd;
-
-	id = RFIFOL(fd,2);
-	flag = RFIFOB(fd,6);
-	wd = (struct WisData*)idb_get(wis_db, id);
-	if (wd == NULL)
-		return 0; // This wisp was probably suppress before, because it was timeout of because of target was found on another map-server
-
-	if ((--wd->count) <= 0 || flag != 1) {
-		mapif->wis_end(wd, flag); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-		idb_remove(wis_db, id);
-	}
-
-	return 0;
-}
 
 // Received wisp message from map-server for ALL gm (just copy the message and resends it to ALL map-servers)
 int mapif_parse_WisToGM(int fd)
@@ -1374,8 +1204,6 @@ int inter_parse_frommap(int fd)
 		return 2;
 
 	switch(cmd) {
-	case 0x3001: mapif->parse_WisRequest(fd); break;
-	case 0x3002: mapif->parse_WisReply(fd); break;
 	case 0x3003: mapif->parse_WisToGM(fd); break;
 	case 0x3004: mapif->parse_Registry(fd); break;
 	case 0x3005: mapif->parse_RegistryRequest(fd); break;
@@ -1424,8 +1252,6 @@ void inter_defaults(void)
 	inter->log = inter_log;
 	inter->init_sql = inter_init_sql;
 	inter->mapif_init = inter_mapif_init;
-	inter->check_ttl_wisdata_sub = inter_check_ttl_wisdata_sub;
-	inter->check_ttl_wisdata = inter_check_ttl_wisdata;
 	inter->check_length = inter_check_length;
 	inter->parse_frommap = inter_parse_frommap;
 	inter->final = inter_final;
