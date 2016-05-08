@@ -69,7 +69,7 @@ int party_share_level = 10;
 
 // recv. packet list
 int inter_recv_packet_length[] = {
-	-1,-1, 7,-1, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
+	 0,-1, 7,-1, -1,13,36, (2 + 4 + 4 + 4 + NAME_LENGTH),  0, 0, 0, 0,  0, 0,  0, 0, // 3000-
 	 6,-1, 0, 0,  0, 0, 0, 0, 10,-1, 0, 0,  0, 0,  0, 0,    // 3010- Account Storage [Smokexyz]
 	-1,10,-1,14, 14,19, 6,-1, 14,14, 0, 0,  0, 0,  0, 0,    // 3020- Party
 	-1, 6,-1,-1, 55,19, 6,-1, 14,-1,-1,-1, 18,19,186,-1,    // 3030-
@@ -1015,27 +1015,6 @@ int inter_mapif_init(int fd)
 
 //--------------------------------------------------------
 
-// broadcast sending
-int mapif_broadcast(const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd)
-{
-	unsigned char *buf = (unsigned char*)aMalloc((len)*sizeof(unsigned char));
-
-	nullpo_ret(mes);
-	Assert_ret(len >= 16);
-	WBUFW(buf,0) = 0x3800;
-	WBUFW(buf,2) = len;
-	WBUFL(buf,4) = fontColor;
-	WBUFW(buf,8) = fontType;
-	WBUFW(buf,10) = fontSize;
-	WBUFW(buf,12) = fontAlign;
-	WBUFW(buf,14) = fontY;
-	memcpy(WBUFP(buf,16), mes, len - 16);
-	mapif->sendallwos(sfd, buf, len);
-
-	aFree(buf);
-	return 0;
-}
-
 // Wis sending
 int mapif_wis_message(struct WisData *wd)
 {
@@ -1148,14 +1127,6 @@ int inter_check_ttl_wisdata(void)
 }
 
 //--------------------------------------------------------
-
-// broadcast sending
-int mapif_parse_broadcast(int fd)
-{
-	mapif->broadcast(RFIFOP(fd,16), RFIFOW(fd,2), RFIFOL(fd,4), RFIFOW(fd,8), RFIFOW(fd,10), RFIFOW(fd,12), RFIFOW(fd,14), fd);
-	return 0;
-}
-
 
 // Wisp/page request to send
 int mapif_parse_WisRequest(int fd)
@@ -1403,7 +1374,6 @@ int inter_parse_frommap(int fd)
 		return 2;
 
 	switch(cmd) {
-	case 0x3000: mapif->parse_broadcast(fd); break;
 	case 0x3001: mapif->parse_WisRequest(fd); break;
 	case 0x3002: mapif->parse_WisReply(fd); break;
 	case 0x3003: mapif->parse_WisToGM(fd); break;

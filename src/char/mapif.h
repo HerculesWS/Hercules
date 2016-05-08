@@ -199,13 +199,11 @@ struct mapif_interface {
 	void (*parse_accinfo) (int fd);
 	void (*parse_accinfo2) (bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass,
 			const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate, int group_id, int logincount, int state);
-	int (*broadcast) (const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd);
 	int (*wis_message) (struct WisData *wd);
 	void (*wis_response) (int fd, const unsigned char *src, int flag);
 	int (*wis_end) (struct WisData *wd, int flag);
 	int (*account_reg_reply) (int fd,int account_id,int char_id, int type);
 	int (*disconnectplayer) (int fd, int account_id, int char_id, int reason);
-	int (*parse_broadcast) (int fd);
 	int (*parse_WisRequest) (int fd);
 	int (*parse_WisReply) (int fd);
 	int (*parse_WisToGM) (int fd);
