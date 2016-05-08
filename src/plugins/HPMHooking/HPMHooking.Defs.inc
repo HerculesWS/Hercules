@@ -1430,6 +1430,10 @@ typedef void (*HPMHOOK_pre_clif_wis_message) (int *fd, const char **nick, const 
 typedef void (*HPMHOOK_post_clif_wis_message) (int fd, const char *nick, const char *mes, int mes_len);
 typedef void (*HPMHOOK_pre_clif_wis_end) (int *fd, int *flag);
 typedef void (*HPMHOOK_post_clif_wis_end) (int fd, int flag);
+typedef void (*HPMHOOK_pre_clif_wis_message_to_gm) (const char **source_name, int *permission, const char **message);
+typedef void (*HPMHOOK_post_clif_wis_message_to_gm) (const char *source_name, int permission, const char *message);
+typedef int (*HPMHOOK_pre_clif_wis_message_to_gm_sub) (struct map_session_data **sd, va_list va);
+typedef int (*HPMHOOK_post_clif_wis_message_to_gm_sub) (int retVal___, struct map_session_data *sd, va_list va);
 typedef void (*HPMHOOK_pre_clif_disp_message) (struct block_list **src, const char **mes, enum send_target *target);
 typedef void (*HPMHOOK_post_clif_disp_message) (struct block_list *src, const char *mes, enum send_target target);
 typedef void (*HPMHOOK_pre_clif_broadcast) (struct block_list **bl, const char **mes, int *len, int *type, enum send_target *target);
@@ -3198,8 +3202,6 @@ typedef int (*HPMHOOK_pre_intif_create_pet) (int *account_id, int *char_id, shor
 typedef int (*HPMHOOK_post_intif_create_pet) (int retVal___, int account_id, int char_id, short pet_type, short pet_lv, short pet_egg_id, short pet_equip, short intimate, short hungry, char rename_flag, char incubate, char *pet_name);
 typedef int (*HPMHOOK_pre_intif_main_message) (struct map_session_data **sd, const char **message);
 typedef int (*HPMHOOK_post_intif_main_message) (int retVal___, struct map_session_data *sd, const char *message);
-typedef int (*HPMHOOK_pre_intif_wis_message_to_gm) (char **Wisp_name, int *permission, char **mes);
-typedef int (*HPMHOOK_post_intif_wis_message_to_gm) (int retVal___, char *Wisp_name, int permission, char *mes);
 typedef int (*HPMHOOK_pre_intif_saveregistry) (struct map_session_data **sd);
 typedef int (*HPMHOOK_post_intif_saveregistry) (int retVal___, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_intif_request_registry) (struct map_session_data **sd, int *flag);
@@ -3342,10 +3344,6 @@ typedef void (*HPMHOOK_pre_intif_request_accinfo) (int *u_fd, int *aid, int *gro
 typedef void (*HPMHOOK_post_intif_request_accinfo) (int u_fd, int aid, int group_lv, char *query);
 typedef int (*HPMHOOK_pre_intif_CheckForCharServer) (void);
 typedef int (*HPMHOOK_post_intif_CheckForCharServer) (int retVal___);
-typedef int (*HPMHOOK_pre_intif_pWisToGM_sub) (struct map_session_data **sd, va_list va);
-typedef int (*HPMHOOK_post_intif_pWisToGM_sub) (int retVal___, struct map_session_data *sd, va_list va);
-typedef void (*HPMHOOK_pre_intif_pWisToGM) (int *fd);
-typedef void (*HPMHOOK_post_intif_pWisToGM) (int fd);
 typedef void (*HPMHOOK_pre_intif_pRegisters) (int *fd);
 typedef void (*HPMHOOK_post_intif_pRegisters) (int fd);
 typedef void (*HPMHOOK_pre_intif_pAccountStorage) (int *fd);
@@ -4716,8 +4714,6 @@ typedef int (*HPMHOOK_pre_mapif_account_reg_reply) (int *fd, int *account_id, in
 typedef int (*HPMHOOK_post_mapif_account_reg_reply) (int retVal___, int fd, int account_id, int char_id, int type);
 typedef int (*HPMHOOK_pre_mapif_disconnectplayer) (int *fd, int *account_id, int *char_id, int *reason);
 typedef int (*HPMHOOK_post_mapif_disconnectplayer) (int retVal___, int fd, int account_id, int char_id, int reason);
-typedef int (*HPMHOOK_pre_mapif_parse_WisToGM) (int *fd);
-typedef int (*HPMHOOK_post_mapif_parse_WisToGM) (int retVal___, int fd);
 typedef int (*HPMHOOK_pre_mapif_parse_Registry) (int *fd);
 typedef int (*HPMHOOK_post_mapif_parse_Registry) (int retVal___, int fd);
 typedef int (*HPMHOOK_pre_mapif_parse_RegistryRequest) (int *fd);
