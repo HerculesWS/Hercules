@@ -6067,6 +6067,29 @@ void clif_wis_message(int fd, const char *nick, const char *mes, int mes_len)
 #endif
 }
 
+void clif_wis_message_to_gm(const char *source_name, int permission, const char *message)
+{
+	int len = (int)strlen(message);
+	map->foreachpc(clif->wis_message_to_gm_sub, permission, source_name, message, len);
+}
+
+int clif_wis_message_to_gm_sub(struct map_session_data *sd, va_list va)
+{
+	int permission = va_arg(va, int);
+	const char *source_name;
+	const char *message;
+	int len;
+
+	nullpo_ret(sd);
+	if (!pc_has_permission(sd, permission))
+		return 0;
+	source_name = va_arg(va, const char *);
+	message = va_arg(va, const char *);
+	len = va_arg(va, int);
+	clif->wis_message(sd->fd, source_name, message, len);
+	return 1;
+}
+
 /// Inform the player about the result of his whisper action (ZC_ACK_WHISPER).
 /// 0098 <result>.B
 /// result:
@@ -10179,7 +10202,7 @@ void clif_parse_GetCharNameRequest(int fd, struct map_session_data *sd) {
 		sprintf(gm_msg, "Hack on NameRequest: character '%s' (account: %d) requested the name of an invisible target (id: %d).\n", sd->status.name, sd->status.account_id, id);
 		ShowWarning(gm_msg);
 		// information is sent to all online GMs
-		intif->wis_message_to_gm(map->wisp_server_name, battle_config.hack_info_GM_level, gm_msg);
+		clif->wis_message_to_gm(map->wisp_server_name, battle_config.hack_info_GM_level, gm_msg);
 		return;
 	}
 #endif // 0
@@ -21158,6 +21181,8 @@ void clif_defaults(void) {
 	clif->changechatstatus = clif_changechatstatus;
 	clif->wis_message = clif_wis_message;
 	clif->wis_end = clif_wis_end;
+	clif->wis_message_to_gm = clif_wis_message_to_gm;
+	clif->wis_message_to_gm_sub = clif_wis_message_to_gm_sub;
 	clif->disp_message = clif_disp_message;
 	clif->broadcast = clif_broadcast;
 	clif->broadcast2 = clif_broadcast2;

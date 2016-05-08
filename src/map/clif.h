@@ -899,6 +899,8 @@ struct clif_interface {
 	void (*changechatstatus) (struct chat_data* cd);
 	void (*wis_message) (int fd, const char *nick, const char *mes, int mes_len);
 	void (*wis_end) (int fd, int flag);
+	void (*wis_message_to_gm) (const char *source_name, int permission, const char *message);
+	int (*wis_message_to_gm_sub) (struct map_session_data *sd, va_list va);
 	void (*disp_message) (struct block_list *src, const char *mes, enum send_target target);
 	void (*broadcast) (struct block_list *bl, const char *mes, int len, int type, enum send_target target);
 	void (*broadcast2) (struct block_list *bl, const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, enum send_target target);

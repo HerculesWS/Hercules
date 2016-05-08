@@ -209,7 +209,6 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
     const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate, int group_id, int logincount, int state);
 int mapif_account_reg_reply(int fd,int account_id,int char_id, int type);
 int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason);
-int mapif_parse_WisToGM(int fd);
 int mapif_parse_Registry(int fd);
 int mapif_parse_RegistryRequest(int fd);
 void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int flag, const char *const name);
@@ -395,7 +394,6 @@ void mapif_defaults(void) {
 	mapif->parse_accinfo2 = mapif_parse_accinfo2;
 	mapif->account_reg_reply = mapif_account_reg_reply;
 	mapif->disconnectplayer = mapif_disconnectplayer;
-	mapif->parse_WisToGM = mapif_parse_WisToGM;
 	mapif->parse_Registry = mapif_parse_Registry;
 	mapif->parse_RegistryRequest = mapif_parse_RegistryRequest;
 	mapif->namechange_ack = mapif_namechange_ack;
