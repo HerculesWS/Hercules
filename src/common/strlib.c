@@ -271,10 +271,9 @@ char* strlib_strtok_r(char *s1, const char *s2, char **lasts)
 
 size_t strlib_strnlen(const char *string, size_t maxlen)
 {
-// TODO: The _MSC_VER check can probably be removed (we no longer support VS
-// versions <= 2003, do we?), but this implementation might be still necessary
-// for NetBSD 5.x and possibly some Solaris versions.
-#if !(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)
+// TODO: Verify whether this implementation is still necessary for NetBSD 5.x
+// and possibly some Solaris versions.
+#if !(defined(WIN32) && defined(_MSC_VER)) && !defined(HAVE_STRNLEN)
 /* Find the length of STRING, but scan at most MAXLEN characters.
  * If no '\0' terminator is found in that many characters, return MAXLEN.
  */
@@ -1114,7 +1113,7 @@ void strlib_defaults(void) {
 	strlib->normalize_name_ = strlib_normalize_name;
 	strlib->stristr_ = strlib_stristr;
 
-#if !(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)
+#if !(defined(WIN32) && defined(_MSC_VER)) && !defined(HAVE_STRNLEN)
 	strlib->strnlen_ = strlib_strnlen;
 #else
 	strlib->strnlen_ = NULL;

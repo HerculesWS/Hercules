@@ -252,16 +252,13 @@ typedef uintptr_t uintptr;
 #if defined(__BORLANDC__) || _MSC_VER < 1900
 #define snprintf    _snprintf
 #endif
-#if defined(_MSC_VER) && _MSC_VER < 1400
-#define vsnprintf   _vsnprintf
-#endif
 #else
 #define strcmpi     strcasecmp
 #define stricmp     strcasecmp
 #define strncmpi    strncasecmp
 #define strnicmp    strncasecmp
 #endif
-#if defined(_MSC_VER) && _MSC_VER > 1200
+#if defined(_MSC_VER)
 #define strtoull    _strtoui64
 #define strtoll     _strtoi64
 #endif
