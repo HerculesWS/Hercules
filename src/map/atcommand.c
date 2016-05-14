@@ -6779,7 +6779,7 @@ ACMD(showmobs)
 	clif->message(fd, atcmd_output);
 
 	it = mapit_geteachmob();
-	for (md = BL_UCCAST(BL_MOB, mapit->first(it)); mapit->next(it); md = BL_UCCAST(BL_MOB, mapit->next(it))) {
+	for (md = BL_UCCAST(BL_MOB, mapit->first(it)); mapit->exists(it); md = BL_UCCAST(BL_MOB, mapit->next(it))) {
 		if( md->bl.m != sd->bl.m )
 			continue;
 		if( mob_id != -1 && md->class_ != mob_id )
