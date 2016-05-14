@@ -329,24 +329,6 @@ typedef char bool;
 //#define swap(a,b) if (a != b) ((a ^= b), (b ^= a), (a ^= b))
 // but is vulnerable to 'if (foo) swap(bar, baz); else quux();', causing the else to nest incorrectly.
 #define swap(a,b) do { if ((a) != (b)) { (a) ^= (b); (b) ^= (a); (a) ^= (b); } } while(0)
-#if 0 //to be activated soon, more tests needed on how VS works with the macro above
-#ifdef WIN32
-#undef swap
-#define swap(a,b)__asm { \
-	__asm mov eax, dword ptr [a] \
-	__asm cmp eax, dword ptr [b] \
-	__asm je  _ret               \
-	__asm xor eax, dword ptr [b] \
-	__asm mov dword ptr [a], eax \
-	__asm xor eax, dword ptr [b] \
-	__asm mov dword ptr [b], eax \
-	__asm xor eax, dword ptr [a] \
-	__asm mov dword ptr [a], eax \
-	__asm _ret:                  \
-}
-#endif
-#endif
-
 #define swap_ptr(a,b) do { if ((a) != (b)) (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (b) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); } while(0)
 
 #ifndef max
