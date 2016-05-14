@@ -332,7 +332,7 @@ struct NORMALITEM_INFO {
 	struct EQUIPSLOTINFO slot;
 #endif
 #if PACKETVER >= 20080102
-	int HireExpireDate;
+	int32 HireExpireDate;
 #endif
 #if PACKETVER >= 20120925
 	struct {
@@ -369,7 +369,7 @@ struct EQUIPITEM_INFO {
 	uint8 RefiningLevel;
 	struct EQUIPSLOTINFO slot;
 #if PACKETVER >= 20071002
-	int HireExpireDate;
+	int32 HireExpireDate;
 #endif
 #if PACKETVER >= 20080102
 	uint16 bindOnEquipType;
@@ -408,8 +408,8 @@ struct packet_authok {
 struct packet_monster_hp {
 	int16 PacketType;
 	uint32 GID;
-	int HP;
-	int MaxHP;
+	int32 HP;
+	int32 MaxHP;
 } __attribute__((packed));
 
 struct packet_sc_notick {
@@ -436,7 +436,7 @@ struct packet_additem {
 	uint8 type;
 	uint8 result;
 #if PACKETVER >= 20061218
-	int HireExpireDate;
+	int32 HireExpireDate;
 #endif
 #if PACKETVER >= 20071002
 	uint16 bindOnEquipType;
@@ -544,14 +544,14 @@ struct packet_spawn_unit {
 #if PACKETVER < 20080102
 	int16 effectState;
 #else
-	int effectState;
+	int32 effectState;
 #endif
 	int16 job;
 	int16 head;
 #if PACKETVER < 7
 	int16 weapon;
 #else
-	int weapon;
+	int32 weapon;
 #endif
 	int16 accessory;
 #if PACKETVER < 7
@@ -569,7 +569,7 @@ struct packet_spawn_unit {
 	int16 GEmblemVer;
 	int16 honor;
 #if PACKETVER > 7
-	int virtue;
+	int32 virtue;
 #else
 	int16 virtue;
 #endif
@@ -583,8 +583,8 @@ struct packet_spawn_unit {
 	int16 font;
 #endif
 #if PACKETVER >= 20120221
-	int maxHP;
-	int HP;
+	int32 maxHP;
+	int32 HP;
 	uint8 isBoss;
 #endif
 #if PACKETVER >= 20150513
@@ -611,14 +611,14 @@ struct packet_unit_walking {
 #if PACKETVER < 7
 	int16 effectState;
 #else
-	int effectState;
+	int32 effectState;
 #endif
 	int16 job;
 	int16 head;
 #if PACKETVER < 7
 	int16 weapon;
 #else
-	int weapon;
+	int32 weapon;
 #endif
 	int16 accessory;
 	uint32 moveStartTime;
@@ -637,7 +637,7 @@ struct packet_unit_walking {
 	int16 GEmblemVer;
 	int16 honor;
 #if PACKETVER > 7
-	int virtue;
+	int32 virtue;
 #else
 	int16 virtue;
 #endif
@@ -651,8 +651,8 @@ struct packet_unit_walking {
 	int16 font;
 #endif
 #if PACKETVER >= 20120221
-	int maxHP;
-	int HP;
+	int32 maxHP;
+	int32 HP;
 	uint8 isBoss;
 #endif
 #if PACKETVER >= 20150513
@@ -677,14 +677,14 @@ struct packet_idle_unit {
 #if PACKETVER < 20080102
 	int16 effectState;
 #else
-	int effectState;
+	int32 effectState;
 #endif
 	int16 job;
 	int16 head;
 #if PACKETVER < 7
 	int16 weapon;
 #else
-	int weapon;
+	int32 weapon;
 #endif
 	int16 accessory;
 #if PACKETVER < 7
@@ -702,7 +702,7 @@ struct packet_idle_unit {
 	int16 GEmblemVer;
 	int16 honor;
 #if PACKETVER > 7
-	int virtue;
+	int32 virtue;
 #else
 	int16 virtue;
 #endif
@@ -717,8 +717,8 @@ struct packet_idle_unit {
 	int16 font;
 #endif
 #if PACKETVER >= 20120221
-	int maxHP;
-	int HP;
+	int32 maxHP;
+	int32 HP;
 	uint8 isBoss;
 #endif
 #if PACKETVER >= 20150513
@@ -737,9 +737,9 @@ struct packet_status_change {
 #endif
 #if PACKETVER >= 20090121
 	uint32 Left;
-	int val1;
-	int val2;
-	int val3;
+	int32 val1;
+	int32 val2;
+	int32 val3;
 #endif
 } __attribute__((packed));
 
@@ -756,9 +756,9 @@ struct packet_status_change2 {
 	uint32 AID;
 	uint8 state;
 	uint32 Left;
-	int val1;
-	int val2;
-	int val3;
+	int32 val1;
+	int32 val2;
+	int32 val3;
 } __attribute__((packed));
 
 struct packet_maptypeproperty2 {
@@ -801,7 +801,7 @@ struct packet_bgqueue_register {
 struct packet_bgqueue_update_info {
 	int16 PacketType;
 	char bg_name[NAME_LENGTH];
-	int position;
+	int32 position;
 } __attribute__((packed));
 
 struct packet_bgqueue_checkstate {
@@ -824,7 +824,7 @@ struct packet_bgqueue_battlebegin_ack {
 struct packet_bgqueue_notify_entry {
 	int16 PacketType;
 	char name[NAME_LENGTH];
-	int position;
+	int32 position;
 } __attribute__((packed));
 
 struct packet_bgqueue_battlebegins {
@@ -876,40 +876,40 @@ struct packet_banking_check {
 struct packet_banking_deposit_req {
 	int16 PacketType;
 	uint32 AID;
-	int Money;
+	int32 Money;
 } __attribute__((packed));
 
 struct packet_banking_withdraw_req {
 	int16 PacketType;
 	uint32 AID;
-	int Money;
+	int32 Money;
 } __attribute__((packed));
 
 struct packet_banking_deposit_ack {
 	int16 PacketType;
 	int16 Reason;
 	int64 Money;
-	int Balance;
+	int32 Balance;
 } __attribute__((packed));
 
 struct packet_banking_withdraw_ack {
 	int16 PacketType;
 	int16 Reason;
 	int64 Money;
-	int Balance;
+	int32 Balance;
 } __attribute__((packed));
 
 /* Roulette System [Yommy/Hercules] */
 struct packet_roulette_open_ack {
 	int16 PacketType;
 	int8 Result;
-	int Serial;
+	int32 Serial;
 	int8 Step;
 	int8 Idx;
 	int16 AdditionItemID;
-	int GoldPoint;
-	int SilverPoint;
-	int BronzePoint;
+	int32 GoldPoint;
+	int32 SilverPoint;
+	int32 BronzePoint;
 } __attribute__((packed));
 
 struct packet_roulette_info_ack {
@@ -935,9 +935,9 @@ struct packet_roulette_generate_ack {
 	uint16 Step;
 	uint16 Idx;
 	uint16 AdditionItemID;
-	int RemainGold;
-	int RemainSilver;
-	int RemainBronze;
+	int32 RemainGold;
+	int32 RemainSilver;
+	int32 RemainBronze;
 } __attribute__((packed));
 
 struct packet_roulette_itemrecv_req {
@@ -1049,7 +1049,7 @@ struct packet_skill_entry {
 	int16 xPos;
 	int16 yPos;
 #if PACKETVER >= 20121212
-	int job;
+	int32 job;
 #else
 	uint8 job;
 #endif
@@ -1079,12 +1079,12 @@ struct packet_damage {
 	uint32 GID;
 	uint32 targetGID;
 	uint32 startTime;
-	int attackMT;
-	int attackedMT;
+	int32 attackMT;
+	int32 attackedMT;
 #if PACKETVER < 20071113
 	int16 damage;
 #else
-	int damage;
+	int32 damage;
 #endif
 #if PACKETVER >= 20131223
 	uint8 is_sp_damaged;
@@ -1094,7 +1094,7 @@ struct packet_damage {
 #if PACKETVER < 20071113
 	int16 leftDamage;
 #else
-	int leftDamage;
+	int32 leftDamage;
 #endif
 } __attribute__((packed));
 
@@ -1112,7 +1112,7 @@ struct packet_npc_market_purchase {
 	int16 PacketLength;
 	struct {
 		uint16 ITID;
-		int qty;
+		int32 qty;
 	} list[]; // Note: We assume this should be <= MAX_INVENTORY (since you can't hold more than MAX_INVENTORY items thus cant buy that many at once).
 } __attribute__((packed));
 
