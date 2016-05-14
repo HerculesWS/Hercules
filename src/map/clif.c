@@ -12821,7 +12821,7 @@ bool clif_validate_emblem(const uint8 *emblem, unsigned long emblem_len) {
 		//uint8 b;
 		//uint8 g;
 		//uint8 r;
-		unsigned int rgb:24;
+		uint32 rgb:24;
 	} __attribute__((packed));
 #if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #pragma pack(pop)
