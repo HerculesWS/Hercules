@@ -316,13 +316,13 @@ struct EQUIPSLOTINFO {
 } __attribute__((packed));
 
 struct NORMALITEM_INFO {
-	short index;
+	int16 index;
 	uint16 ITID;
 	uint8 type;
 #if PACKETVER < 20120925
 	uint8 IsIdentified;
 #endif
-	short count;
+	int16 count;
 #if PACKETVER >= 20120925
 	uint32 WearState;
 #else
@@ -344,13 +344,13 @@ struct NORMALITEM_INFO {
 } __attribute__((packed));
 
 struct RndOptions {
-	short index;
-	short value;
+	int16 index;
+	int16 value;
 	uint8 param;
 } __attribute__((packed));
 
 struct EQUIPITEM_INFO {
-	short index;
+	int16 index;
 	uint16 ITID;
 	uint8 type;
 #if PACKETVER < 20120925
@@ -392,13 +392,13 @@ struct EQUIPITEM_INFO {
 } __attribute__((packed));
 
 struct packet_authok {
-	short PacketType;
+	int16 PacketType;
 	uint32 startTime;
 	uint8 PosDir[3];
 	uint8 xSize;
 	uint8 ySize;
 #if PACKETVER >= 20080102
-	short font;
+	int16 font;
 #endif
 #if PACKETVER >= 20141022
 	uint8 sex;
@@ -406,21 +406,21 @@ struct packet_authok {
 } __attribute__((packed));
 
 struct packet_monster_hp {
-	short PacketType;
+	int16 PacketType;
 	uint32 GID;
 	int HP;
 	int MaxHP;
 } __attribute__((packed));
 
 struct packet_sc_notick {
-	short PacketType;
-	short index;
+	int16 PacketType;
+	int16 index;
 	uint32 AID;
 	uint8 state;
 } __attribute__((packed));
 
 struct packet_additem {
-	short PacketType;
+	int16 PacketType;
 	uint16 Index;
 	uint16 count;
 	uint16 nameid;
@@ -447,51 +447,51 @@ struct packet_additem {
 } __attribute__((packed));
 
 struct packet_dropflooritem {
-	short PacketType;
+	int16 PacketType;
 	uint32 ITAID;
 	uint16 ITID;
 #if PACKETVER >= 20130000 /* not sure date */
 	uint16 type;
 #endif
 	uint8 IsIdentified;
-	short xPos;
-	short yPos;
+	int16 xPos;
+	int16 yPos;
 	uint8 subX;
 	uint8 subY;
-	short count;
+	int16 count;
 } __attribute__((packed));
 struct packet_idle_unit2 {
 #if PACKETVER < 20091103
-	short PacketType;
+	int16 PacketType;
 #if PACKETVER >= 20071106
 	uint8 objecttype;
 #endif
 	uint32 GID;
-	short speed;
-	short bodyState;
-	short healthState;
-	short effectState;
-	short job;
-	short head;
-	short weapon;
-	short accessory;
-	short shield;
-	short accessory2;
-	short accessory3;
-	short headpalette;
-	short bodypalette;
-	short headDir;
+	int16 speed;
+	int16 bodyState;
+	int16 healthState;
+	int16 effectState;
+	int16 job;
+	int16 head;
+	int16 weapon;
+	int16 accessory;
+	int16 shield;
+	int16 accessory2;
+	int16 accessory3;
+	int16 headpalette;
+	int16 bodypalette;
+	int16 headDir;
 	uint32 GUID;
-	short GEmblemVer;
-	short honor;
-	short virtue;
+	int16 GEmblemVer;
+	int16 honor;
+	int16 virtue;
 	uint8 isPKModeON;
 	uint8 sex;
 	uint8 PosDir[3];
 	uint8 xSize;
 	uint8 ySize;
 	uint8 state;
-	short clevel;
+	int16 clevel;
 #else // ! PACKETVER < 20091103
 	UNAVAILABLE_STRUCT;
 #endif // PACKETVER < 20091103
@@ -499,25 +499,25 @@ struct packet_idle_unit2 {
 
 struct packet_spawn_unit2 {
 #if PACKETVER < 20091103
-	short PacketType;
+	int16 PacketType;
 #if PACKETVER >= 20071106
 	uint8 objecttype;
 #endif
 	uint32 GID;
-	short speed;
-	short bodyState;
-	short healthState;
-	short effectState;
-	short head;
-	short weapon;
-	short accessory;
-	short job;
-	short shield;
-	short accessory2;
-	short accessory3;
-	short headpalette;
-	short bodypalette;
-	short headDir;
+	int16 speed;
+	int16 bodyState;
+	int16 healthState;
+	int16 effectState;
+	int16 head;
+	int16 weapon;
+	int16 accessory;
+	int16 job;
+	int16 shield;
+	int16 accessory2;
+	int16 accessory3;
+	int16 headpalette;
+	int16 bodypalette;
+	int16 headDir;
 	uint8 isPKModeON;
 	uint8 sex;
 	uint8 PosDir[3];
@@ -529,58 +529,58 @@ struct packet_spawn_unit2 {
 } __attribute__((packed));
 
 struct packet_spawn_unit {
-	short PacketType;
+	int16 PacketType;
 #if PACKETVER >= 20091103
-	short PacketLength;
+	int16 PacketLength;
 	uint8 objecttype;
 #endif
 #if PACKETVER >= 20131223
 	uint32 AID;
 #endif
 	uint32 GID;
-	short speed;
-	short bodyState;
-	short healthState;
+	int16 speed;
+	int16 bodyState;
+	int16 healthState;
 #if PACKETVER < 20080102
-	short effectState;
+	int16 effectState;
 #else
 	int effectState;
 #endif
-	short job;
-	short head;
+	int16 job;
+	int16 head;
 #if PACKETVER < 7
-	short weapon;
+	int16 weapon;
 #else
 	int weapon;
 #endif
-	short accessory;
+	int16 accessory;
 #if PACKETVER < 7
-	short shield;
+	int16 shield;
 #endif
-	short accessory2;
-	short accessory3;
-	short headpalette;
-	short bodypalette;
-	short headDir;
+	int16 accessory2;
+	int16 accessory3;
+	int16 headpalette;
+	int16 bodypalette;
+	int16 headDir;
 #if PACKETVER >= 20101124
-	short robe;
+	int16 robe;
 #endif
 	uint32 GUID;
-	short GEmblemVer;
-	short honor;
+	int16 GEmblemVer;
+	int16 honor;
 #if PACKETVER > 7
 	int virtue;
 #else
-	short virtue;
+	int16 virtue;
 #endif
 	uint8 isPKModeON;
 	uint8 sex;
 	uint8 PosDir[3];
 	uint8 xSize;
 	uint8 ySize;
-	short clevel;
+	int16 clevel;
 #if PACKETVER >= 20080102
-	short font;
+	int16 font;
 #endif
 #if PACKETVER >= 20120221
 	int maxHP;
@@ -588,15 +588,15 @@ struct packet_spawn_unit {
 	uint8 isBoss;
 #endif
 #if PACKETVER >= 20150513
-	short body;
+	int16 body;
 	char name[NAME_LENGTH];
 #endif
 } __attribute__((packed));
 
 struct packet_unit_walking {
-	short PacketType;
+	int16 PacketType;
 #if PACKETVER >= 20091103
-	short PacketLength;
+	int16 PacketLength;
 #endif
 #if PACKETVER > 20071106
 	uint8 objecttype;
@@ -605,50 +605,50 @@ struct packet_unit_walking {
 	uint32 AID;
 #endif
 	uint32 GID;
-	short speed;
-	short bodyState;
-	short healthState;
+	int16 speed;
+	int16 bodyState;
+	int16 healthState;
 #if PACKETVER < 7
-	short effectState;
+	int16 effectState;
 #else
 	int effectState;
 #endif
-	short job;
-	short head;
+	int16 job;
+	int16 head;
 #if PACKETVER < 7
-	short weapon;
+	int16 weapon;
 #else
 	int weapon;
 #endif
-	short accessory;
+	int16 accessory;
 	uint32 moveStartTime;
 #if PACKETVER < 7
-	short shield;
+	int16 shield;
 #endif
-	short accessory2;
-	short accessory3;
-	short headpalette;
-	short bodypalette;
-	short headDir;
+	int16 accessory2;
+	int16 accessory3;
+	int16 headpalette;
+	int16 bodypalette;
+	int16 headDir;
 #if PACKETVER >= 20101124
-	short robe;
+	int16 robe;
 #endif
 	uint32 GUID;
-	short GEmblemVer;
-	short honor;
+	int16 GEmblemVer;
+	int16 honor;
 #if PACKETVER > 7
 	int virtue;
 #else
-	short virtue;
+	int16 virtue;
 #endif
 	uint8 isPKModeON;
 	uint8 sex;
 	uint8 MoveData[6];
 	uint8 xSize;
 	uint8 ySize;
-	short clevel;
+	int16 clevel;
 #if PACKETVER >= 20080102
-	short font;
+	int16 font;
 #endif
 #if PACKETVER >= 20120221
 	int maxHP;
@@ -656,55 +656,55 @@ struct packet_unit_walking {
 	uint8 isBoss;
 #endif
 #if PACKETVER >= 20150513
-	short body;
+	int16 body;
 	char name[NAME_LENGTH];
 #endif
 } __attribute__((packed));
 
 struct packet_idle_unit {
-	short PacketType;
+	int16 PacketType;
 #if PACKETVER >= 20091103
-	short PacketLength;
+	int16 PacketLength;
 	uint8 objecttype;
 #endif
 #if PACKETVER >= 20131223
 	uint32 AID;
 #endif
 	uint32 GID;
-	short speed;
-	short bodyState;
-	short healthState;
+	int16 speed;
+	int16 bodyState;
+	int16 healthState;
 #if PACKETVER < 20080102
-	short effectState;
+	int16 effectState;
 #else
 	int effectState;
 #endif
-	short job;
-	short head;
+	int16 job;
+	int16 head;
 #if PACKETVER < 7
-	short weapon;
+	int16 weapon;
 #else
 	int weapon;
 #endif
-	short accessory;
+	int16 accessory;
 #if PACKETVER < 7
-	short shield;
+	int16 shield;
 #endif
-	short accessory2;
-	short accessory3;
-	short headpalette;
-	short bodypalette;
-	short headDir;
+	int16 accessory2;
+	int16 accessory3;
+	int16 headpalette;
+	int16 bodypalette;
+	int16 headDir;
 #if PACKETVER >= 20101124
-	short robe;
+	int16 robe;
 #endif
 	uint32 GUID;
-	short GEmblemVer;
-	short honor;
+	int16 GEmblemVer;
+	int16 honor;
 #if PACKETVER > 7
 	int virtue;
 #else
-	short virtue;
+	int16 virtue;
 #endif
 	uint8 isPKModeON;
 	uint8 sex;
@@ -712,9 +712,9 @@ struct packet_idle_unit {
 	uint8 xSize;
 	uint8 ySize;
 	uint8 state;
-	short clevel;
+	int16 clevel;
 #if PACKETVER >= 20080102
-	short font;
+	int16 font;
 #endif
 #if PACKETVER >= 20120221
 	int maxHP;
@@ -722,14 +722,14 @@ struct packet_idle_unit {
 	uint8 isBoss;
 #endif
 #if PACKETVER >= 20150513
-	short body;
+	int16 body;
 	char name[NAME_LENGTH];
 #endif
 } __attribute__((packed));
 
 struct packet_status_change {
-	short PacketType;
-	short index;
+	int16 PacketType;
+	int16 index;
 	uint32 AID;
 	uint8 state;
 #if PACKETVER >= 20120618
@@ -744,15 +744,15 @@ struct packet_status_change {
 } __attribute__((packed));
 
 struct packet_status_change_end {
-	short PacketType;
-	short index;
+	int16 PacketType;
+	int16 index;
 	uint32 AID;
 	uint8 state;
 } __attribute__((packed));
 
 struct packet_status_change2 {
-	short PacketType;
-	short index;
+	int16 PacketType;
+	int16 index;
 	uint32 AID;
 	uint8 state;
 	uint32 Left;
@@ -762,8 +762,8 @@ struct packet_status_change2 {
 } __attribute__((packed));
 
 struct packet_maptypeproperty2 {
-	short PacketType;
-	short type;
+	int16 PacketType;
+	int16 type;
 	struct {
 		uint32 party             : 1;  // Show attack cursor on non-party members (PvP)
 		uint32 guild             : 1;  // Show attack cursor on non-guild members (GvG)
@@ -781,67 +781,67 @@ struct packet_maptypeproperty2 {
 } __attribute__((packed));
 
 struct packet_bgqueue_ack {
-	short PacketType;
+	int16 PacketType;
 	uint8 type;
 	char bg_name[NAME_LENGTH];
 } __attribute__((packed));
 
 struct packet_bgqueue_notice_delete {
-	short PacketType;
+	int16 PacketType;
 	uint8 type;
 	char bg_name[NAME_LENGTH];
 } __attribute__((packed));
 
 struct packet_bgqueue_register {
-	short PacketType;
-	short type;
+	int16 PacketType;
+	int16 type;
 	char bg_name[NAME_LENGTH];
 } __attribute__((packed));
 
 struct packet_bgqueue_update_info {
-	short PacketType;
+	int16 PacketType;
 	char bg_name[NAME_LENGTH];
 	int position;
 } __attribute__((packed));
 
 struct packet_bgqueue_checkstate {
-	short PacketType;
+	int16 PacketType;
 	char bg_name[NAME_LENGTH];
 } __attribute__((packed));
 
 struct packet_bgqueue_revoke_req {
-	short PacketType;
+	int16 PacketType;
 	char bg_name[NAME_LENGTH];
 } __attribute__((packed));
 
 struct packet_bgqueue_battlebegin_ack {
-	short PacketType;
+	int16 PacketType;
 	uint8 result;
 	char bg_name[NAME_LENGTH];
 	char game_name[NAME_LENGTH];
 } __attribute__((packed));
 
 struct packet_bgqueue_notify_entry {
-	short PacketType;
+	int16 PacketType;
 	char name[NAME_LENGTH];
 	int position;
 } __attribute__((packed));
 
 struct packet_bgqueue_battlebegins {
-	short PacketType;
+	int16 PacketType;
 	char bg_name[NAME_LENGTH];
 	char game_name[NAME_LENGTH];
 } __attribute__((packed));
 
 struct packet_script_clear {
-	short PacketType;
+	int16 PacketType;
 	uint32 NpcID;
 } __attribute__((packed));
 
 /* made possible thanks to Yommy!! */
 struct packet_package_item_announce {
-	short PacketType;
-	short PacketLength;
+	int16 PacketType;
+	int16 PacketLength;
 	uint8 type;
 	uint16 ItemID;
 	char len;
@@ -852,8 +852,8 @@ struct packet_package_item_announce {
 
 /* made possible thanks to Yommy!! */
 struct packet_item_drop_announce {
-	short PacketType;
-	short PacketLength;
+	int16 PacketType;
+	int16 PacketLength;
 	uint8 type;
 	uint16 ItemID;
 	char len;
@@ -863,58 +863,58 @@ struct packet_item_drop_announce {
 } __attribute__((packed));
 
 struct packet_cart_additem_ack {
-	short PacketType;
+	int16 PacketType;
 	char result;
 } __attribute__((packed));
 
 struct packet_banking_check {
-	short PacketType;
+	int16 PacketType;
 	int64 Money;
-	short Reason;
+	int16 Reason;
 } __attribute__((packed));
 
 struct packet_banking_deposit_req {
-	short PacketType;
+	int16 PacketType;
 	uint32 AID;
 	int Money;
 } __attribute__((packed));
 
 struct packet_banking_withdraw_req {
-	short PacketType;
+	int16 PacketType;
 	uint32 AID;
 	int Money;
 } __attribute__((packed));
 
 struct packet_banking_deposit_ack {
-	short PacketType;
-	short Reason;
+	int16 PacketType;
+	int16 Reason;
 	int64 Money;
 	int Balance;
 } __attribute__((packed));
 
 struct packet_banking_withdraw_ack {
-	short PacketType;
-	short Reason;
+	int16 PacketType;
+	int16 Reason;
 	int64 Money;
 	int Balance;
 } __attribute__((packed));
 
 /* Roulette System [Yommy/Hercules] */
 struct packet_roulette_open_ack {
-	short PacketType;
+	int16 PacketType;
 	char Result;
 	int Serial;
 	char Step;
 	char Idx;
-	short AdditionItemID;
+	int16 AdditionItemID;
 	int GoldPoint;
 	int SilverPoint;
 	int BronzePoint;
 } __attribute__((packed));
 
 struct packet_roulette_info_ack {
-	short PacketType;
-	short PacketLength;
+	int16 PacketType;
+	int16 PacketLength;
 	uint32 RouletteSerial;
 	struct {
 		uint16 Row;
@@ -925,12 +925,12 @@ struct packet_roulette_info_ack {
 } __attribute__((packed));
 
 struct packet_roulette_close_ack {
-	short PacketType;
+	int16 PacketType;
 	uint8 Result;
 } __attribute__((packed));
 
 struct packet_roulette_generate_ack {
-	short PacketType;
+	int16 PacketType;
 	uint8 Result;
 	uint16 Step;
 	uint16 Idx;
@@ -941,31 +941,31 @@ struct packet_roulette_generate_ack {
 } __attribute__((packed));
 
 struct packet_roulette_itemrecv_req {
-	short PacketType;
+	int16 PacketType;
 	uint8 Condition;
 } __attribute__((packed));
 
 struct packet_roulette_itemrecv_ack {
-	short PacketType;
+	int16 PacketType;
 	uint8 Result;
 	uint16 AdditionItemID;
 } __attribute__((packed));
 
 struct packet_itemlist_normal {
-	short PacketType;
-	short PacketLength;
+	int16 PacketType;
+	int16 PacketLength;
 	struct NORMALITEM_INFO list[MAX_ITEMLIST];
 } __attribute__((packed));
 
 struct packet_itemlist_equip {
-	short PacketType;
-	short PacketLength;
+	int16 PacketType;
+	int16 PacketLength;
 	struct EQUIPITEM_INFO list[MAX_ITEMLIST];
 } __attribute__((packed));
 
 struct packet_storelist_normal {
-	short PacketType;
-	short PacketLength;
+	int16 PacketType;
+	int16 PacketLength;
 #if PACKETVER >= 20120925
 	char name[NAME_LENGTH];
 #endif
@@ -973,8 +973,8 @@ struct packet_storelist_normal {
 } __attribute__((packed));
 
 struct packet_storelist_equip {
-	short PacketType;
-	short PacketLength;
+	int16 PacketType;
+	int16 PacketLength;
 #if PACKETVER >= 20120925
 	char name[NAME_LENGTH];
 #endif
@@ -982,7 +982,7 @@ struct packet_storelist_equip {
 } __attribute__((packed));
 
 struct packet_equip_item {
-	short PacketType;
+	int16 PacketType;
 	uint16 index;
 #if PACKETVER >= 20120925
 	uint32 wearLocation;
@@ -992,7 +992,7 @@ struct packet_equip_item {
 } __attribute__((packed));
 
 struct packet_equipitem_ack {
-	short PacketType;
+	int16 PacketType;
 	uint16 index;
 #if PACKETVER >= 20120925
 	uint32 wearLocation;
@@ -1006,7 +1006,7 @@ struct packet_equipitem_ack {
 } __attribute__((packed));
 
 struct packet_unequipitem_ack {
-	short PacketType;
+	int16 PacketType;
 	uint16 index;
 #if PACKETVER >= 20120925
 	uint32 wearLocation;
@@ -1017,37 +1017,37 @@ struct packet_unequipitem_ack {
 } __attribute__((packed));
 
 struct packet_viewequip_ack {
-	short PacketType;
-	short PacketLength;
+	int16 PacketType;
+	int16 PacketLength;
 	char characterName[NAME_LENGTH];
-	short job;
-	short head;
-	short accessory;
-	short accessory2;
-	short accessory3;
+	int16 job;
+	int16 head;
+	int16 accessory;
+	int16 accessory2;
+	int16 accessory3;
 #if PACKETVER >= 20101124
-	short robe;
+	int16 robe;
 #endif
-	short headpalette;
-	short bodypalette;
+	int16 headpalette;
+	int16 bodypalette;
 	uint8 sex;
 	struct EQUIPITEM_INFO list[MAX_INVENTORY];
 } __attribute__((packed));
 
 struct packet_notify_bounditem {
-	short PacketType;
+	int16 PacketType;
 	uint16 index;
 } __attribute__((packed));
 
 struct packet_skill_entry {
-	short PacketType;
+	int16 PacketType;
 #if PACKETVER >= 20110718
-	short PacketLength;
+	int16 PacketLength;
 #endif
 	uint32 AID;
 	uint32 creatorAID;
-	short xPos;
-	short yPos;
+	int16 xPos;
+	int16 yPos;
 #if PACKETVER >= 20121212
 	int job;
 #else
@@ -1063,11 +1063,11 @@ struct packet_skill_entry {
 } __attribute__((packed));
 
 struct packet_graffiti_entry {
-	short PacketType;
+	int16 PacketType;
 	uint32 AID;
 	uint32 creatorAID;
-	short xPos;
-	short yPos;
+	int16 xPos;
+	int16 yPos;
 	uint8 job;
 	uint8 isVisible;
 	uint8 isContens;
@@ -1075,31 +1075,31 @@ struct packet_graffiti_entry {
 } __attribute__((packed));
 
 struct packet_damage {
-	short PacketType;
+	int16 PacketType;
 	uint32 GID;
 	uint32 targetGID;
 	uint32 startTime;
 	int attackMT;
 	int attackedMT;
 #if PACKETVER < 20071113
-	short damage;
+	int16 damage;
 #else
 	int damage;
 #endif
 #if PACKETVER >= 20131223
 	uint8 is_sp_damaged;
 #endif
-	short count;
+	int16 count;
 	uint8 action;
 #if PACKETVER < 20071113
-	short leftDamage;
+	int16 leftDamage;
 #else
 	int leftDamage;
 #endif
 } __attribute__((packed));
 
 struct packet_gm_monster_item {
-	short PacketType;
+	int16 PacketType;
 #if PACKETVER >= 20131218
 	char str[100];
 #else
@@ -1108,8 +1108,8 @@ struct packet_gm_monster_item {
 } __attribute__((packed));
 
 struct packet_npc_market_purchase {
-	short PacketType;
-	short PacketLength;
+	int16 PacketType;
+	int16 PacketLength;
 	struct {
 		uint16 ITID;
 		int qty;
@@ -1117,8 +1117,8 @@ struct packet_npc_market_purchase {
 } __attribute__((packed));
 
 struct packet_npc_market_result_ack {
-	short PacketType;
-	short PacketLength;
+	int16 PacketType;
+	int16 PacketLength;
 	uint8 result;
 	struct {
 		uint16 ITID;
@@ -1128,8 +1128,8 @@ struct packet_npc_market_result_ack {
 } __attribute__((packed));
 
 struct packet_npc_market_open {
-	short PacketType;
-	short PacketLength;
+	int16 PacketType;
+	int16 PacketLength;
 	/* inner struct figured by Ind after some annoying hour of debugging (data Thanks to Yommy) */
 	struct {
 		uint16 nameid;
@@ -1144,7 +1144,7 @@ struct packet_npc_market_open {
 } __attribute__((packed));
 
 struct packet_wis_end {
-	short PacketType;
+	int16 PacketType;
 	char result;
 #if PACKETVER >= 20131223
 	uint32 unknown;/* maybe AID, not sure what for (works sending as 0) */
@@ -1153,21 +1153,21 @@ struct packet_wis_end {
 
 
 struct packet_party_leader_changed {
-	short PacketType;
+	int16 PacketType;
 	uint32 prev_leader_aid;
 	uint32 new_leader_aid;
 } __attribute__((packed));
 
 struct packet_hotkey {
 #ifdef HOTKEY_SAVING
-	short PacketType;
+	int16 PacketType;
 #if PACKETVER >= 20141022
 	char Rotate;
 #endif
 	struct {
 		char isSkill; // 0: Item, 1:Skill
 		uint32 ID;    // Item/Skill ID
-		short count;  // Item Quantity/Skill Level
+		int16 count;  // Item Quantity/Skill Level
 	} hotkey[MAX_HOTKEYS];
 #else // not HOTKEY_SAVING
 	UNAVAILABLE_STRUCT;
