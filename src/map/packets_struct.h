@@ -312,12 +312,12 @@ enum packet_headers {
  * structs for data
  */
 struct EQUIPSLOTINFO {
-	unsigned short card[4];
+	uint16 card[4];
 } __attribute__((packed));
 
 struct NORMALITEM_INFO {
 	short index;
-	unsigned short ITID;
+	uint16 ITID;
 	uint8 type;
 #if PACKETVER < 20120925
 	uint8 IsIdentified;
@@ -326,7 +326,7 @@ struct NORMALITEM_INFO {
 #if PACKETVER >= 20120925
 	unsigned int WearState;
 #else
-	unsigned short WearState;
+	uint16 WearState;
 #endif
 #if PACKETVER >= 5
 	struct EQUIPSLOTINFO slot;
@@ -351,7 +351,7 @@ struct RndOptions {
 
 struct EQUIPITEM_INFO {
 	short index;
-	unsigned short ITID;
+	uint16 ITID;
 	uint8 type;
 #if PACKETVER < 20120925
 	uint8 IsIdentified;
@@ -360,8 +360,8 @@ struct EQUIPITEM_INFO {
 	unsigned int location;
 	unsigned int WearState;
 #else
-	unsigned short location;
-	unsigned short WearState;
+	uint16 location;
+	uint16 WearState;
 #endif
 #if PACKETVER < 20120925
 	uint8 IsDamaged;
@@ -372,10 +372,10 @@ struct EQUIPITEM_INFO {
 	int HireExpireDate;
 #endif
 #if PACKETVER >= 20080102
-	unsigned short bindOnEquipType;
+	uint16 bindOnEquipType;
 #endif
 #if PACKETVER >= 20100629
-	unsigned short wItemSpriteNumber;
+	uint16 wItemSpriteNumber;
 #endif
 #if PACKETVER >= 20150226
 	uint8 option_count;
@@ -421,9 +421,9 @@ struct packet_sc_notick {
 
 struct packet_additem {
 	short PacketType;
-	unsigned short Index;
-	unsigned short count;
-	unsigned short nameid;
+	uint16 Index;
+	uint16 count;
+	uint16 nameid;
 	uint8 IsIdentified;
 	uint8 IsDamaged;
 	uint8 refiningLevel;
@@ -431,7 +431,7 @@ struct packet_additem {
 #if PACKETVER >= 20120925
 	unsigned int location;
 #else
-	unsigned short location;
+	uint16 location;
 #endif
 	uint8 type;
 	uint8 result;
@@ -439,7 +439,7 @@ struct packet_additem {
 	int HireExpireDate;
 #endif
 #if PACKETVER >= 20071002
-	unsigned short bindOnEquipType;
+	uint16 bindOnEquipType;
 #endif
 #if PACKETVER >= 20150226
 	struct RndOptions option_data[5];
@@ -449,9 +449,9 @@ struct packet_additem {
 struct packet_dropflooritem {
 	short PacketType;
 	unsigned int ITAID;
-	unsigned short ITID;
+	uint16 ITID;
 #if PACKETVER >= 20130000 /* not sure date */
-	unsigned short type;
+	uint16 type;
 #endif
 	uint8 IsIdentified;
 	short xPos;
@@ -843,11 +843,11 @@ struct packet_package_item_announce {
 	short PacketType;
 	short PacketLength;
 	uint8 type;
-	unsigned short ItemID;
+	uint16 ItemID;
 	char len;
 	char Name[NAME_LENGTH];
 	char unknown;
-	unsigned short BoxItemID;
+	uint16 BoxItemID;
 } __attribute__((packed));
 
 /* made possible thanks to Yommy!! */
@@ -855,7 +855,7 @@ struct packet_item_drop_announce {
 	short PacketType;
 	short PacketLength;
 	uint8 type;
-	unsigned short ItemID;
+	uint16 ItemID;
 	char len;
 	char Name[NAME_LENGTH];
 	char monsterNameLen;
@@ -917,10 +917,10 @@ struct packet_roulette_info_ack {
 	short PacketLength;
 	unsigned int RouletteSerial;
 	struct {
-		unsigned short Row;
-		unsigned short Position;
-		unsigned short ItemId;
-		unsigned short Count;
+		uint16 Row;
+		uint16 Position;
+		uint16 ItemId;
+		uint16 Count;
 	} ItemInfo[42];
 } __attribute__((packed));
 
@@ -932,9 +932,9 @@ struct packet_roulette_close_ack {
 struct packet_roulette_generate_ack {
 	short PacketType;
 	uint8 Result;
-	unsigned short Step;
-	unsigned short Idx;
-	unsigned short AdditionItemID;
+	uint16 Step;
+	uint16 Idx;
+	uint16 AdditionItemID;
 	int RemainGold;
 	int RemainSilver;
 	int RemainBronze;
@@ -948,7 +948,7 @@ struct packet_roulette_itemrecv_req {
 struct packet_roulette_itemrecv_ack {
 	short PacketType;
 	uint8 Result;
-	unsigned short AdditionItemID;
+	uint16 AdditionItemID;
 } __attribute__((packed));
 
 struct packet_itemlist_normal {
@@ -983,35 +983,35 @@ struct packet_storelist_equip {
 
 struct packet_equip_item {
 	short PacketType;
-	unsigned short index;
+	uint16 index;
 #if PACKETVER >= 20120925
 	unsigned int wearLocation;
 #else
-	unsigned short wearLocation;
+	uint16 wearLocation;
 #endif
 } __attribute__((packed));
 
 struct packet_equipitem_ack {
 	short PacketType;
-	unsigned short index;
+	uint16 index;
 #if PACKETVER >= 20120925
 	unsigned int wearLocation;
 #else
-	unsigned short wearLocation;
+	uint16 wearLocation;
 #endif
 #if PACKETVER >= 20100629
-	unsigned short wItemSpriteNumber;
+	uint16 wItemSpriteNumber;
 #endif
 	uint8 result;
 } __attribute__((packed));
 
 struct packet_unequipitem_ack {
 	short PacketType;
-	unsigned short index;
+	uint16 index;
 #if PACKETVER >= 20120925
 	unsigned int wearLocation;
 #else
-	unsigned short wearLocation;
+	uint16 wearLocation;
 #endif
 	uint8 result;
 } __attribute__((packed));
@@ -1036,7 +1036,7 @@ struct packet_viewequip_ack {
 
 struct packet_notify_bounditem {
 	short PacketType;
-	unsigned short index;
+	uint16 index;
 } __attribute__((packed));
 
 struct packet_skill_entry {
@@ -1111,7 +1111,7 @@ struct packet_npc_market_purchase {
 	short PacketType;
 	short PacketLength;
 	struct {
-		unsigned short ITID;
+		uint16 ITID;
 		int qty;
 	} list[]; // Note: We assume this should be <= MAX_INVENTORY (since you can't hold more than MAX_INVENTORY items thus cant buy that many at once).
 } __attribute__((packed));
@@ -1121,8 +1121,8 @@ struct packet_npc_market_result_ack {
 	short PacketLength;
 	uint8 result;
 	struct {
-		unsigned short ITID;
-		unsigned short qty;
+		uint16 ITID;
+		uint16 qty;
 		unsigned int price;
 	} list[MAX_INVENTORY];/* assuming MAX_INVENTORY is max since you can't hold more than MAX_INVENTORY items thus cant buy that many at once. */
 } __attribute__((packed));
@@ -1132,11 +1132,11 @@ struct packet_npc_market_open {
 	short PacketLength;
 	/* inner struct figured by Ind after some annoying hour of debugging (data Thanks to Yommy) */
 	struct {
-		unsigned short nameid;
+		uint16 nameid;
 		uint8 type;
 		unsigned int price;
 		unsigned int qty;
-		unsigned short view;
+		uint16 view;
 	// It seems that the client doesn't have any hard-coded limit for this list
 	// it's possible to send up to 1890 items without dropping a packet that's
 	// too large [Panikon]
