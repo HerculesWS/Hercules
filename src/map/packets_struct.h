@@ -844,9 +844,9 @@ struct packet_package_item_announce {
 	int16 PacketLength;
 	uint8 type;
 	uint16 ItemID;
-	char len;
+	int8 len;
 	char Name[NAME_LENGTH];
-	char unknown;
+	int8 unknown;
 	uint16 BoxItemID;
 } __attribute__((packed));
 
@@ -856,7 +856,7 @@ struct packet_item_drop_announce {
 	int16 PacketLength;
 	uint8 type;
 	uint16 ItemID;
-	char len;
+	int8 len;
 	char Name[NAME_LENGTH];
 	char monsterNameLen;
 	char monsterName[NAME_LENGTH];
@@ -864,7 +864,7 @@ struct packet_item_drop_announce {
 
 struct packet_cart_additem_ack {
 	int16 PacketType;
-	char result;
+	int8 result;
 } __attribute__((packed));
 
 struct packet_banking_check {
@@ -902,10 +902,10 @@ struct packet_banking_withdraw_ack {
 /* Roulette System [Yommy/Hercules] */
 struct packet_roulette_open_ack {
 	int16 PacketType;
-	char Result;
+	int8 Result;
 	int Serial;
-	char Step;
-	char Idx;
+	int8 Step;
+	int8 Idx;
 	int16 AdditionItemID;
 	int GoldPoint;
 	int SilverPoint;
@@ -1054,7 +1054,7 @@ struct packet_skill_entry {
 	uint8 job;
 #endif
 #if PACKETVER >= 20110718
-	char RadiusRange;
+	int8 RadiusRange;
 #endif
 	uint8 isVisible;
 #if PACKETVER >= 20130731
@@ -1145,7 +1145,7 @@ struct packet_npc_market_open {
 
 struct packet_wis_end {
 	int16 PacketType;
-	char result;
+	int8 result;
 #if PACKETVER >= 20131223
 	uint32 unknown;/* maybe AID, not sure what for (works sending as 0) */
 #endif
@@ -1162,10 +1162,10 @@ struct packet_hotkey {
 #ifdef HOTKEY_SAVING
 	int16 PacketType;
 #if PACKETVER >= 20141022
-	char Rotate;
+	int8 Rotate;
 #endif
 	struct {
-		char isSkill; // 0: Item, 1:Skill
+		int8 isSkill; // 0: Item, 1:Skill
 		uint32 ID;    // Item/Skill ID
 		int16 count;  // Item Quantity/Skill Level
 	} hotkey[MAX_HOTKEYS];
