@@ -825,7 +825,8 @@ mal_in02,174,64,5	script	Linguist Devore#mal	4_CAT_MERMASTER,{
 		mes "If you see the words on the first page of this book, there's a sentence seeming like short conversation.";
 		next;
 		mes "[Linguist Devore]";
-		mes "It's like this, for the question, ¬¬¬Ñ¬Ü ¬ã¬Ú?, it says, ¬¡¬Ù ¬ã¬ì¬Þ ¬Õ¬à¬Ò¬â¬Ö, ¬Ò¬Ý¬Ñ¬Ô¬à¬Õ¬Ñ¬â¬ñ. ¬¡ ¬£¬Ú¬Ö?";
+		mes sprintf(_("It's like this, for the question, %s, it says, %s"),
+				"¬¬¬Ñ¬Ü ¬ã¬Ú?", "¬¡¬Ù ¬ã¬ì¬Þ ¬Õ¬à¬Ò¬â¬Ö, ¬Ò¬Ý¬Ñ¬Ô¬à¬Õ¬Ñ¬â¬ñ. ¬¡ ¬£¬Ú¬Ö?");
 		next;
 		mes "[Linguist Devore]";
 		mes "Though I tried talking to Biscuit like this, there was no feedback.";
@@ -9649,7 +9650,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 		case 1: // Attack
 			mes "How would you like to attack?";
 			mes " ";
-			mes "¡¡ Tip !!";
+			mes "- Tip -";
 			mes "Choose back: ^FF0000You win if the cat shows the back of its paw.^000000";
 			mes "Choose palm: ^FF0000You win if the cat shows the palm of its paw.^000000";
 			next;
@@ -9695,7 +9696,7 @@ mal_in01,134,221,4	script	KungKung#gamer	4_M_BABYCAT,{
 		case 2: // Defend
 			mes "How would you like to defend?";
 			mes " ";
-			mes "¡¡ Tip !!";
+			mes "- Tip -";
 			mes "Choose back: ^FF0000You win if the cat shows the back of its paw.^000000";
 			mes "Choose palm: ^FF0000You win if the cat shows the palm of its paw.^000000";
 			next;

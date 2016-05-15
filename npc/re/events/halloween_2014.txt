@@ -29,12 +29,6 @@
 //= along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=========================================================================
 //= Halloween Event (2014)
-//================= File Encoding =========================================
-//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//= -If the encoding is correct, the next three lines have the same length-
-//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
-//= ============ ============================================= ============
-//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
 //================= Description ===========================================
 //= The Official 2014 Halloween Event
 //=
@@ -692,7 +686,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 			mes "You could be a 'fake'!";
 			next;
 			mes "[Nathan]";
-			mes "Da...dÂ¡Â¦?";
+			mes "Da...d...?";
 			next;
 			mes "[Bolak]";
 			mes "Nathan!! Even you doubt your own father?";
