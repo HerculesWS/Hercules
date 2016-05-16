@@ -15239,129 +15239,224 @@ BUILDIN(implode)
 // Implements C sprintf, except format %n. The resulting string is
 // returned, instead of being saved in variable by reference.
 //-------------------------------------------------------
-BUILDIN(sprintf) {
-	unsigned int argc = 0, arg = 0;
-	const char* format;
-	char* p;
-	char* q;
-	char* buf  = NULL;
-	char* buf2 = NULL;
-	struct script_data* data;
-	size_t len, buf2_len = 0;
+BUILDIN(sprintf)
+{
+	const char *format = script_getstr(st, 2);
+	const char *p = NULL, *np = NULL;
 	StringBuf final_buf;
+	char *buf = NULL;
+	int buf_len = 0;
+	int lastarg = 2;
+	int argc = script_lastdata(st) + 1;
 
-	// Fetch init data
-	format = script_getstr(st, 2);
-	argc = script_lastdata(st)-2;
-	len = strlen(format);
-
-	// Skip parsing, where no parsing is required.
-	if(len==0) {
-		script_pushconststr(st,"");
-		return true;
-	}
-
-	// Pessimistic alloc
-	CREATE(buf, char, len+1);
-
-	// Need not be parsed, just solve stuff like %%.
-	if(argc==0) {
-		memcpy(buf,format,len+1);
-		script_pushstrcopy(st, buf);
-		aFree(buf);
-		return true;
-	}
-
-	safestrncpy(buf, format, len+1);
-
-	// Issue sprintf for each parameter
 	StrBuf->Init(&final_buf);
-	q = buf;
-	while((p = strchr(q, '%'))!=NULL) {
-		if(p!=q) {
-			len = p-q+1;
-			if(buf2_len<len) {
-				RECREATE(buf2, char, len);
-				buf2_len = len;
+
+	p = format;
+
+	/*
+	 * format-string = "" / *(text / placeholder)
+	 * placeholder = "%%" / "%n" / std-placeholder
+	 * std-placeholder = "%" [pos-parameter] [flags] [width] [precision] [length] type
+	 * pos-parameter = number "$"
+	 * flags = *("-" / "+" / "0" / SP)
+	 * width = number / ("*" [pos-parameter])
+	 * precision = "." (number / ("*" [pos-parameter]))
+	 * length = "hh" / "h" / "l" / "ll" / "L" / "z" / "j" / "t"
+	 * type = "d" / "i" / "u" / "f" / "F" / "e" / "E" / "g" / "G" / "x" / "X" / "o" / "s" / "c" / "p" / "a" / "A"
+	 * number = digit-nonzero *DIGIT
+	 * digit-nonzero = "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9"
+	 */
+
+	while ((np = strchr(p, '%')) != NULL) {
+		bool flag_plus = false, flag_minus = false, flag_zero = false, flag_space = false;
+		bool positional_arg = false;
+		int width = 0, nextarg = lastarg + 1, thisarg = nextarg;
+
+		if (p != np) {
+			int len = (int)(np - p + 1);
+			if (buf_len < len) {
+				RECREATE(buf, char, len);
+				buf_len = len;
 			}
-			safestrncpy(buf2, q, len);
-			StrBuf->AppendStr(&final_buf, buf2);
-			q = p;
+			safestrncpy(buf, p, len);
+			StrBuf->AppendStr(&final_buf, buf);
 		}
-		p = q+1;
-		if(*p=='%') {  // %%
+
+		p = np;
+		np++;
+
+		// placeholder = "%%" ; (special case)
+		if (*np == '%') {
 			StrBuf->AppendStr(&final_buf, "%");
-			q+=2;
+			p = np + 1;
 			continue;
 		}
-		if(*p=='n') {  // %n
+		// placeholder = "%n" ; (ignored)
+		if (*np == 'n') {
 			ShowWarning("buildin_sprintf: Format %%n not supported! Skipping...\n");
 			script->reportsrc(st);
-			q+=2;
+			lastarg = nextarg;
+			p = np + 1;
 			continue;
 		}
-		if(arg>=argc) {
-			ShowError("buildin_sprintf: Not enough arguments passed!\n");
-			aFree(buf);
-			if(buf2) aFree(buf2);
-			StrBuf->Destroy(&final_buf);
-			script_pushconststr(st,"");
-			return false;
-		}
-		if((p = strchr(q+1, '%'))==NULL) {
-			p = strchr(q, 0);  // EOS
-		}
-		len = p-q+1;
-		if(buf2_len<len) {
-			RECREATE(buf2, char, len);
-			buf2_len = len;
-		}
-		safestrncpy(buf2, q, len);
-		q = p;
 
-		// Note: This assumes the passed value being the correct
-		// type to the current format specifier. If not, the server
-		// probably crashes or returns anything else, than expected,
-		// but it would behave in normal code the same way so it's
-		// the scripter's responsibility.
-		data = script_getdata(st, arg+3);
-		if(data_isstring(data)) {  // String
-			StrBuf->Printf(&final_buf, buf2, script_getstr(st, arg+3));
-		} else if(data_isint(data)) {  // Number
-			StrBuf->Printf(&final_buf, buf2, script_getnum(st, arg+3));
-		} else if(data_isreference(data)) {  // Variable
-			char* name = reference_getname(data);
-			if(name[strlen(name)-1]=='$') {  // var Str
-				StrBuf->Printf(&final_buf, buf2, script_getstr(st, arg+3));
-			} else {  // var Int
-				StrBuf->Printf(&final_buf, buf2, script_getnum(st, arg+3));
+		// std-placeholder = "%" [pos-parameter] [flags] [width] [precision] [length] type
+
+		// pos-parameter = number "$"
+		if (ISDIGIT(*np) && *np != '0') {
+			const char *pp = np;
+			while (ISDIGIT(*pp))
+				pp++;
+			if (*pp == '$') {
+				thisarg = atoi(np) + 2;
+				positional_arg = true;
+				np = pp + 1;
 			}
-		} else {  // Unsupported type
-			ShowError("buildin_sprintf: Unknown argument type!\n");
-			aFree(buf);
-			if(buf2) aFree(buf2);
+		}
+
+		if (thisarg >= argc) {
+			ShowError("buildin_sprintf: Not enough arguments passed!\n");
+			if (buf != NULL)
+				aFree(buf);
 			StrBuf->Destroy(&final_buf);
 			script_pushconststr(st,"");
 			return false;
 		}
-		arg++;
+
+		// flags = *("-" / "+" / "0" / SP)
+		while (true) {
+			if (*np == '-') {
+				flag_minus = true;
+			} else if (*np == '+') {
+				flag_plus = true;
+			} else if (*np == ' ') {
+				flag_space = true;
+			} else if (*np == '0') {
+				flag_zero = true;
+			} else {
+				break;
+			}
+			np++;
+		}
+
+		// width = number / ("*" [pos-parameter])
+		if (ISDIGIT(*np)) {
+			width = atoi(np);
+			while (ISDIGIT(*np))
+				np++;
+		} else if (*np == '*') {
+			bool positional_widtharg = false;
+			int width_arg;
+			np++;
+			// pos-parameter = number "$"
+			if (ISDIGIT(*np) && *np != '0') {
+				const char *pp = np;
+				while (ISDIGIT(*pp))
+					pp++;
+				if (*pp == '$') {
+					width_arg = atoi(np) + 2;
+					positional_widtharg = true;
+					np = pp + 1;
+				}
+			}
+			if (!positional_widtharg) {
+				width_arg = nextarg;
+				nextarg++;
+				if (!positional_arg)
+					thisarg++;
+			}
+
+			if (width_arg >= argc || thisarg >= argc) {
+				ShowError("buildin_sprintf: Not enough arguments passed!\n");
+				if (buf != NULL)
+					aFree(buf);
+				StrBuf->Destroy(&final_buf);
+				script_pushconststr(st,"");
+				return false;
+			}
+			width = script_getnum(st, width_arg);
+		}
+
+		// precision = "." (number / ("*" [pos-parameter])) ; (not needed/implemented)
+
+		// length = "hh" / "h" / "l" / "ll" / "L" / "z" / "j" / "t" ; (not needed/implemented)
+
+		// type = "d" / "i" / "u" / "f" / "F" / "e" / "E" / "g" / "G" / "x" / "X" / "o" / "s" / "c" / "p" / "a" / "A"
+		if (buf_len < 16) {
+			RECREATE(buf, char, 16);
+			buf_len = 16;
+		}
+		{
+			int i = 0;
+			memset(buf, '\0', buf_len);
+			buf[i++] = '%';
+			if (flag_minus)
+				buf[i++] = '-';
+			if (flag_plus)
+				buf[i++] = '+';
+			else if (flag_space) // ignored if '+' is specified
+				buf[i++] = ' ';
+			if (flag_zero)
+				buf[i++] = '0';
+			if (width > 0)
+				safesnprintf(buf + i, buf_len - i - 1, "%d", width);
+		}
+		buf[(int)strlen(buf)] = *np;
+		switch (*np) {
+		case 'd':
+		case 'i':
+		case 'u':
+		case 'x':
+		case 'X':
+		case 'o':
+			// Piggyback printf
+			StrBuf->Printf(&final_buf, buf, script_getnum(st, thisarg));
+			break;
+		case 's':
+			// Piggyback printf
+			StrBuf->Printf(&final_buf, buf, script_getstr(st, thisarg));
+			break;
+		case 'c':
+		{
+			const char *str = script_getstr(st, thisarg);
+			// Piggyback printf
+			StrBuf->Printf(&final_buf, buf, str[0]);
+		}
+			break;
+		case 'f':
+		case 'F':
+		case 'e':
+		case 'E':
+		case 'g':
+		case 'G':
+		case 'p':
+		case 'a':
+		case 'A':
+			ShowWarning("buildin_sprintf: Format %%%c not supported! Skipping...\n", *np);
+			script->reportsrc(st);
+			lastarg = nextarg;
+			p = np + 1;
+			continue;
+		default:
+			ShowError("buildin_sprintf: Invalid format string.\n");
+			if (buf != NULL)
+				aFree(buf);
+			StrBuf->Destroy(&final_buf);
+			script_pushconststr(st,"");
+			return false;
+		}
+		lastarg = nextarg;
+		p = np + 1;
 	}
 
-	// Append anything left
-	if(*q) {
-		StrBuf->AppendStr(&final_buf, q);
-	}
-
-	// Passed more, than needed
-	if(arg<argc) {
-		ShowWarning("buildin_sprintf: Unused arguments passed.\n");
-		script->reportsrc(st);
-	}
+	// Append the remaining part
+	if (p != NULL)
+		StrBuf->AppendStr(&final_buf, p);
 
 	script_pushstrcopy(st, StrBuf->Value(&final_buf));
 
-	aFree(buf);
-	if(buf2) aFree(buf2);
+	if (buf != NULL)
+		aFree(buf);
 	StrBuf->Destroy(&final_buf);
 
 	return true;

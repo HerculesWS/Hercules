@@ -8067,10 +8067,75 @@ Example:
 
 *sprintf(<format>{,param{,param{,...}}})
 
-C style sprintf. The resulting string is returned same as in PHP. All C 
-format specifiers are supported except %n. For more info check sprintf 
-function at www.cplusplus.com 
-Number of params is only limited by Hercules' script engine.
+C style sprintf. The resulting string is returned.
+
+The format string can contain placeholders (format specifiers) using the
+following structure:
+
+  %[parameter][flags][width]type
+
+The following format specifier types are supported:
+
+%%: Prints a literal '%' (special case, doesn't support parameter, flag, width)
+%d, %i: Formats the specified value as a decimal signed number
+%u: Formats the specified value as a decimal unsigned number
+%x: Formats the specified value as a hexadecimal (lowercase) unsigned number
+%X: Formats the specified value as a hexadecimal (uppercase) unsigned number
+%o: Formats the specified value as an octal unsigned number
+%s: Formats the specified value as a string
+%c: Formats the specified value as a character (only uses the first character
+    of strings)
+
+The following format specifier types are not supported:
+
+%n (not implemented due to safety concerns)
+%f, %F, %e, %E, %g, %G (the script engine doesn't use floating point values)
+%p (the script engine doesn't use pointers)
+%a, %A (not supported, use 0x%x and 0x%X respectively instead)
+
+An ordinal parameter can be specified in the form 'x$' (where x is a number),
+to reorder the output (this may be useful in translated strings, where the
+sentence order may be different from the original order). Example:
+
+	// Name, level, job name
+	mes(sprintf("Hello, I'm %s, a level %d %s", strcharinfo(PC_NAME), BaseLevel, jobname(Class)));
+
+When translating the sentence to other languages (for example Italian),
+swapping some arguments may be appropriate, and it may be desirable to keep the
+actual arguments in the same order (i.e. when translating through the HULD):
+
+	// Job name is printed before the level, although they're specified in the opposite order.
+	// Name, job name, level
+	mes(sprintf("Ciao, io sono %1$s, un %3$s di livello %2$d", strcharinfo(PC_NAME), BaseLevel, jobname(Class)));
+
+The supported format specifier flags are:
+
+- (minus): Left-align the output of this format specifier. (the default is to
+  right-align the output).
++ (plus): Prepends a plus for positive signed-numeric types. positive = '+',
+  negative = '-'.
+(space): Prepends a space for positive signed-numeric types. positive = ' ',
+  negative = '-'.  This flag is ignored if the '+' flag exists.
+0 (zero): When a field width option is specified, prepends zeros for numeric
+  types. (the default prepends spaces).
+A field width can be specified.
+
+	mes(sprintf("The temperature is %+d degrees Celsius", .@temperature)); // Keeps the '+' sign in front of positive values
+	.@map_name$ = sprintf("quiz_%02d", .@i); // Keeps the leading 0 in "quiz_00", etc
+
+A field width may be specified, to ensure that 'at least' that many characters
+are printed. If a star ('*') is specified as width, then the width is read as
+argument to the sprintf() function. This also supports positional arguments.
+
+	sprintf("%04d", 10) // Returns "0010"
+	sprintf("%0*d", 5, 10) // Returns "00010"
+	sprintf("%5d", 10) // Returns "   10"
+	sprintf("%-5d", 10) // Returns "10   "
+	sprintf("%10s", "Hello") // Returns "     Hello";
+	sprintf("%-10s", "Hello") // Returns "Hello    ";
+
+Precision ('.X') and length ('hh', 'h', 'l', 'll', 'L', 'z', 'j', 't')
+specifiers are not implemented (not necessary for the script engine purposes)
 
 Example:
 	.@format$ = "The %s contains %d monkeys";
