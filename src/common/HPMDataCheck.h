@@ -648,6 +648,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "casecheck_data", sizeof(struct casecheck_data), SERVER_TYPE_MAP },
 		{ "reg_db", sizeof(struct reg_db), SERVER_TYPE_MAP },
 		{ "script_array", sizeof(struct script_array), SERVER_TYPE_MAP },
+		{ "script_buf", sizeof(struct script_buf), SERVER_TYPE_MAP },
 		{ "script_code", sizeof(struct script_code), SERVER_TYPE_MAP },
 		{ "script_data", sizeof(struct script_data), SERVER_TYPE_MAP },
 		{ "script_function", sizeof(struct script_function), SERVER_TYPE_MAP },
@@ -662,6 +663,7 @@ HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
 		{ "script_syntax_data", sizeof(struct script_syntax_data), SERVER_TYPE_MAP },
 		{ "str_data_struct", sizeof(struct str_data_struct), SERVER_TYPE_MAP },
 		{ "string_translation", sizeof(struct string_translation), SERVER_TYPE_MAP },
+		{ "string_translation_entry", sizeof(struct string_translation_entry), SERVER_TYPE_MAP },
 	#else
 		#define MAP_SCRIPT_H
 	#endif // MAP_SCRIPT_H
