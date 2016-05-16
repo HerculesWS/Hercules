@@ -62302,6 +62302,140 @@ const char* HP_script_parse_simpleexpr(const char *p) {
 	}
 	return retVal___;
 }
+const char* HP_script_parse_simpleexpr_paren(const char *p) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if( HPMHooks.count.HP_script_parse_simpleexpr_paren_pre ) {
+		const char* (*preHookFunc) (const char **p);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_simpleexpr_paren_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_parse_simpleexpr_paren_pre[hIndex].func;
+			retVal___ = preHookFunc(&p);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.parse_simpleexpr_paren(p);
+	}
+	if( HPMHooks.count.HP_script_parse_simpleexpr_paren_post ) {
+		const char* (*postHookFunc) (const char* retVal___, const char *p);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_simpleexpr_paren_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_parse_simpleexpr_paren_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, p);
+		}
+	}
+	return retVal___;
+}
+const char* HP_script_parse_simpleexpr_number(const char *p) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if( HPMHooks.count.HP_script_parse_simpleexpr_number_pre ) {
+		const char* (*preHookFunc) (const char **p);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_simpleexpr_number_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_parse_simpleexpr_number_pre[hIndex].func;
+			retVal___ = preHookFunc(&p);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.parse_simpleexpr_number(p);
+	}
+	if( HPMHooks.count.HP_script_parse_simpleexpr_number_post ) {
+		const char* (*postHookFunc) (const char* retVal___, const char *p);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_simpleexpr_number_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_parse_simpleexpr_number_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, p);
+		}
+	}
+	return retVal___;
+}
+const char* HP_script_parse_simpleexpr_string(const char *p) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if( HPMHooks.count.HP_script_parse_simpleexpr_string_pre ) {
+		const char* (*preHookFunc) (const char **p);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_simpleexpr_string_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_parse_simpleexpr_string_pre[hIndex].func;
+			retVal___ = preHookFunc(&p);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.parse_simpleexpr_string(p);
+	}
+	if( HPMHooks.count.HP_script_parse_simpleexpr_string_post ) {
+		const char* (*postHookFunc) (const char* retVal___, const char *p);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_simpleexpr_string_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_parse_simpleexpr_string_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, p);
+		}
+	}
+	return retVal___;
+}
+const char* HP_script_parse_simpleexpr_name(const char *p) {
+	int hIndex = 0;
+	const char* retVal___ = NULL;
+	if( HPMHooks.count.HP_script_parse_simpleexpr_name_pre ) {
+		const char* (*preHookFunc) (const char **p);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_simpleexpr_name_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_parse_simpleexpr_name_pre[hIndex].func;
+			retVal___ = preHookFunc(&p);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.script.parse_simpleexpr_name(p);
+	}
+	if( HPMHooks.count.HP_script_parse_simpleexpr_name_post ) {
+		const char* (*postHookFunc) (const char* retVal___, const char *p);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_parse_simpleexpr_name_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_parse_simpleexpr_name_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, p);
+		}
+	}
+	return retVal___;
+}
+void HP_script_add_translatable_string(const struct script_string_buf *string, const char *start_point) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_script_add_translatable_string_pre ) {
+		void (*preHookFunc) (const struct script_string_buf **string, const char **start_point);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_add_translatable_string_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_script_add_translatable_string_pre[hIndex].func;
+			preHookFunc(&string, &start_point);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.script.add_translatable_string(string, start_point);
+	}
+	if( HPMHooks.count.HP_script_add_translatable_string_post ) {
+		void (*postHookFunc) (const struct script_string_buf *string, const char *start_point);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_script_add_translatable_string_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_script_add_translatable_string_post[hIndex].func;
+			postHookFunc(string, start_point);
+		}
+	}
+	return;
+}
 const char* HP_script_parse_expr(const char *p) {
 	int hIndex = 0;
 	const char* retVal___ = NULL;
