@@ -731,10 +731,14 @@ struct script_interface {
 	int (*add_word) (const char *p);
 	const char* (*parse_callfunc) (const char *p, int require_paren, int is_custom);
 	void (*parse_nextline) (bool first, const char *p);
-	const char* (*parse_variable) (const char *p);
-	const char* (*parse_simpleexpr) (const char *p);
-	const char* (*parse_expr) (const char *p);
-	const char* (*parse_line) (const char *p);
+	const char *(*parse_variable) (const char *p);
+	const char *(*parse_simpleexpr) (const char *p);
+	const char *(*parse_simpleexpr_paren) (const char *p);
+	const char *(*parse_simpleexpr_number) (const char *p);
+	const char *(*parse_simpleexpr_string) (const char *p);
+	const char *(*parse_simpleexpr_name) (const char *p);
+	const char *(*parse_expr) (const char *p);
+	const char *(*parse_line) (const char *p);
 	void (*read_constdb) (void);
 	void (*constdb_comment) (const char *comment);
 	void (*load_parameters) (void);

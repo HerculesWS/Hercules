@@ -1174,216 +1174,246 @@ int script_string_dup(char *str)
 /*==========================================
  * Analysis section
  *------------------------------------------*/
-const char* parse_simpleexpr(const char *p)
+const char *parse_simpleexpr(const char *p)
 {
 	p=script->skip_space(p);
 
-	if(*p==';' || *p==',')
+	if (*p == ';' || *p == ',')
 		disp_error_message("parse_simpleexpr: unexpected end of expression",p);
-	if(*p=='(') {
-		int i = script->syntax.curly_count-1;
-		if (i >= 0 && script->syntax.curly[i].type == TYPE_ARGLIST)
-			++script->syntax.curly[i].count;
-		p=script->parse_subexpr(p+1,-1);
-		p=script->skip_space(p);
-		if( (i=script->syntax.curly_count-1) >= 0 && script->syntax.curly[i].type == TYPE_ARGLIST
-		  && script->syntax.curly[i].flag == ARGLIST_UNDEFINED && --script->syntax.curly[i].count == 0
-		) {
-			if( *p == ',' ) {
-				script->syntax.curly[i].flag = ARGLIST_PAREN;
-				return p;
-			} else {
-				script->syntax.curly[i].flag = ARGLIST_NO_PAREN;
-			}
-		}
-		if( *p != ')' )
-			disp_error_message("parse_simpleexpr: unmatched ')'",p);
-		++p;
-	} else if(is_number(p)) {
-		char *np;
-		long long lli;
-		while(*p == '0' && ISDIGIT(p[1])) p++; // Skip leading zeros, we don't support octal literals
-		lli=strtoll(p,&np,0);
-		if( lli < INT_MIN ) {
-			lli = INT_MIN;
-			script->disp_warning_message("parse_simpleexpr: underflow detected, capping value to INT_MIN",p);
-		} else if( lli > INT_MAX ) {
-			lli = INT_MAX;
-			script->disp_warning_message("parse_simpleexpr: overflow detected, capping value to INT_MAX",p);
-		}
-		script->addi((int)lli); // Cast is safe, as it's already been checked for overflows
-		p=np;
-	} else if(*p=='"') {
-		struct string_translation *st = NULL;
-		const char *start_point = p;
-		bool duplicate = true;
-
-		do {
-			p++;
-			while( *p && *p != '"' ) {
-				if( (unsigned char)p[-1] <= 0x7e && *p == '\\' ) {
-					char buf[8];
-					size_t len = sv->skip_escaped_c(p) - p;
-					size_t n = sv->unescape_c(buf, p, len);
-					if( n != 1 )
-						ShowDebug("parse_simpleexpr: unexpected length %d after unescape (\"%.*s\" -> %.*s)\n", (int)n, (int)len, p, (int)n, buf);
-					p += len;
-					VECTOR_ENSURE(script->parse_simpleexpr_str, 1, 512);
-					VECTOR_PUSH(script->parse_simpleexpr_str, buf[0]);
-					continue;
-				} else if( *p == '\n' ) {
-					disp_error_message("parse_simpleexpr: unexpected newline @ string",p);
-				}
-				VECTOR_ENSURE(script->parse_simpleexpr_str, 1, 512);
-				VECTOR_PUSH(script->parse_simpleexpr_str, *p++);
-			}
-			if(!*p)
-				disp_error_message("parse_simpleexpr: unexpected end of file @ string",p);
-			p++; //'"'
-			p = script->skip_space(p);
-		} while( *p && *p == '"' );
-
-		VECTOR_ENSURE(script->parse_simpleexpr_str, 1, 512);
-		VECTOR_PUSH(script->parse_simpleexpr_str, '\0');
-
-		if (script->syntax.translation_db == NULL
-		 || (st = strdb_get(script->syntax.translation_db, VECTOR_DATA(script->parse_simpleexpr_str))) == NULL) {
-			script->addc(C_STR);
-
-			VECTOR_ENSURE(script->buf, VECTOR_LENGTH(script->parse_simpleexpr_str), SCRIPT_BLOCK_SIZE);
-
-			VECTOR_PUSHARRAY(script->buf, VECTOR_DATA(script->parse_simpleexpr_str), VECTOR_LENGTH(script->parse_simpleexpr_str));
-		} else {
-			unsigned char u;
-			int st_cursor = 0;
-
-			script->addc(C_LSTR);
-
-			VECTOR_ENSURE(script->buf, (int)(sizeof(st->string_id) + sizeof(st->translations)), SCRIPT_BLOCK_SIZE);
-			VECTOR_PUSHARRAY(script->buf, (void *)&st->string_id, sizeof(st->string_id));
-			VECTOR_PUSHARRAY(script->buf, (void *)&st->translations, sizeof(st->translations));
-
-			for (u = 0; u != st->translations; u++) {
-				struct string_translation_entry *entry = (void *)(st->buf+st_cursor);
-				char *stringptr = &entry->string[0];
-				st_cursor += sizeof(*entry);
-				VECTOR_ENSURE(script->buf, (int)(sizeof(entry->lang_id) + sizeof(char *)), SCRIPT_BLOCK_SIZE);
-				VECTOR_PUSHARRAY(script->buf, (void *)&entry->lang_id, sizeof(entry->lang_id));
-				VECTOR_PUSHARRAY(script->buf, (void *)&stringptr, sizeof(stringptr));
-				st_cursor += sizeof(uint8); // FIXME: What are we skipping here?
-				while (st->buf[st_cursor++] != 0)
-					(void)0; // Skip string
-				st_cursor += sizeof(uint8); // FIXME: What are we skipping here?
-			}
-		}
-
-		/* When exporting we don't know what is a translation and what isn't */
-		if (script->lang_export_fp && VECTOR_LENGTH(script->parse_simpleexpr_str) > 1) {
-			// The length of script->parse_simpleexpr_str will always be at least 1 because of the '\0'
-			if( !script->syntax.strings ) {
-				script->syntax.strings = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, 0);
-			}
-
-			if (!strdb_exists(script->syntax.strings, VECTOR_DATA(script->parse_simpleexpr_str))) {
-				strdb_put(script->syntax.strings, VECTOR_DATA(script->parse_simpleexpr_str), NULL);
-				duplicate = false;
-			}
-		}
-
-		if( script->lang_export_fp && !duplicate &&
-			( ( ( script->syntax.last_func == script->buildin_mes_offset ||
-				 script->syntax.last_func == script->buildin_select_offset )
-				) || script->syntax.lang_macro_active ) ) {
-			const char *line_start = start_point;
-			const char *line_end = start_point;
-			int line_length;
-
-			while( line_start > script->parser_current_src ) {
-				if( *line_start != '\n' )
-					line_start--;
-				else
-					break;
-			}
-
-			while( *line_end != '\n' && *line_end != '\0' )
-				line_end++;
-
-			line_length = (int)(line_end - line_start);
-			if( line_length > 0 ) {
-				VECTOR_ENSURE(script->lang_export_line_buf, line_length + 1, 512);
-				VECTOR_PUSHARRAY(script->lang_export_line_buf, line_start, line_length);
-				VECTOR_PUSH(script->lang_export_line_buf, '\0');
-
-				normalize_name(VECTOR_DATA(script->lang_export_line_buf), "\r\n\t "); // [!] Note: VECTOR_LENGTH() will lie.
-			}
-
-			VECTOR_ENSURE(script->lang_export_escaped_buf, 4*VECTOR_LENGTH(script->parse_simpleexpr_str)+1, 1);
-			VECTOR_LENGTH(script->lang_export_escaped_buf) = (int)sv->escape_c(VECTOR_DATA(script->lang_export_escaped_buf),
-					VECTOR_DATA(script->parse_simpleexpr_str),
-					VECTOR_LENGTH(script->parse_simpleexpr_str)-1, /* exclude null terminator */
-					"\"");
-			VECTOR_PUSH(script->lang_export_escaped_buf, '\0');
-
-			fprintf(script->lang_export_fp, "#: %s\n"
-					"# %s\n"
-					"msgctxt \"%s\"\n"
-					"msgid \"%s\"\n"
-					"msgstr \"\"\n",
-					script->parser_current_file ? script->parser_current_file : "Unknown File",
-					VECTOR_DATA(script->lang_export_line_buf),
-					script->parser_current_npc_name ? script->parser_current_npc_name : "Unknown NPC",
-					VECTOR_DATA(script->lang_export_escaped_buf)
-			);
-			VECTOR_TRUNCATE(script->lang_export_line_buf);
-			VECTOR_TRUNCATE(script->lang_export_escaped_buf);
-		}
-		VECTOR_TRUNCATE(script->parse_simpleexpr_str);
+	if (*p == '(') {
+		return script->parse_simpleexpr_paren(p);
+	} else if (is_number(p)) {
+		return script->parse_simpleexpr_number(p);
+	} else if(*p == '"') {
+		return script->parse_simpleexpr_string(p);
 	} else {
-		int l;
-		const char* pv;
+		return script->parse_simpleexpr_name(p);
+	}
+}
 
-		// label , register , function etc
-		if(script->skip_word(p)==p)
-			disp_error_message("parse_simpleexpr: unexpected character",p);
+const char *parse_simpleexpr_paren(const char *p)
+{
+	int i = script->syntax.curly_count - 1;
+	if (i >= 0 && script->syntax.curly[i].type == TYPE_ARGLIST)
+		++script->syntax.curly[i].count;
 
-		l=script->add_word(p);
-		if( script->str_data[l].type == C_FUNC || script->str_data[l].type == C_USERFUNC || script->str_data[l].type == C_USERFUNC_POS) {
-			return script->parse_callfunc(p,1,0);
-#ifdef SCRIPT_CALLFUNC_CHECK
+	p = script->parse_subexpr(p + 1, -1);
+	p = script->skip_space(p);
+	if ((i = script->syntax.curly_count - 1) >= 0
+	 && script->syntax.curly[i].type == TYPE_ARGLIST
+	 && script->syntax.curly[i].flag == ARGLIST_UNDEFINED
+	 && --script->syntax.curly[i].count == 0
+	) {
+		if (*p == ',') {
+			script->syntax.curly[i].flag = ARGLIST_PAREN;
+			return p;
 		} else {
-			const char* name = script->get_str(l);
-			if( strdb_get(script->userfunc_db,name) != NULL ) {
-				return script->parse_callfunc(p,1,1);
+			script->syntax.curly[i].flag = ARGLIST_NO_PAREN;
+		}
+	}
+	if (*p != ')')
+		disp_error_message("parse_simpleexpr: unmatched ')'", p);
+
+	return p + 1;
+}
+
+const char *parse_simpleexpr_number(const char *p)
+{
+	char *np = NULL;
+	long long lli;
+
+	while (*p == '0' && ISDIGIT(p[1]))
+		p++; // Skip leading zeros, we don't support octal literals
+
+	lli = strtoll(p, &np, 0);
+	if (lli < INT_MIN) {
+		lli = INT_MIN;
+		script->disp_warning_message("parse_simpleexpr: underflow detected, capping value to INT_MIN", p);
+	} else if (lli > INT_MAX) {
+		lli = INT_MAX;
+		script->disp_warning_message("parse_simpleexpr: overflow detected, capping value to INT_MAX", p);
+	}
+	script->addi((int)lli); // Cast is safe, as it's already been checked for overflows
+
+	return np;
+}
+
+const char *parse_simpleexpr_string(const char *p)
+{
+	struct string_translation *st = NULL;
+	const char *start_point = p;
+	bool duplicate = true;
+
+	do {
+		p++;
+		while (*p != '\0' && *p != '"') {
+			if ((unsigned char)p[-1] <= 0x7e && *p == '\\') {
+				char buf[8];
+				size_t len = sv->skip_escaped_c(p) - p;
+				size_t n = sv->unescape_c(buf, p, len);
+				if (n != 1)
+					ShowDebug("parse_simpleexpr: unexpected length %d after unescape (\"%.*s\" -> %.*s)\n", (int)n, (int)len, p, (int)n, buf);
+				p += len;
+				VECTOR_ENSURE(script->parse_simpleexpr_str, 1, 512);
+				VECTOR_PUSH(script->parse_simpleexpr_str, buf[0]);
+				continue;
 			}
+			if (*p == '\n') {
+				disp_error_message("parse_simpleexpr: unexpected newline @ string", p);
+			}
+			VECTOR_ENSURE(script->parse_simpleexpr_str, 1, 512);
+			VECTOR_PUSH(script->parse_simpleexpr_str, *p++);
+		}
+		if (*p == '\0')
+			disp_error_message("parse_simpleexpr: unexpected end of file @ string", p);
+		p++; //'"'
+		p = script->skip_space(p);
+	} while (*p != '\0' && *p == '"');
+
+	VECTOR_ENSURE(script->parse_simpleexpr_str, 1, 512);
+	VECTOR_PUSH(script->parse_simpleexpr_str, '\0');
+
+	if (script->syntax.translation_db == NULL
+	 || (st = strdb_get(script->syntax.translation_db, VECTOR_DATA(script->parse_simpleexpr_str))) == NULL) {
+		script->addc(C_STR);
+
+		VECTOR_ENSURE(script->buf, VECTOR_LENGTH(script->parse_simpleexpr_str), SCRIPT_BLOCK_SIZE);
+
+		VECTOR_PUSHARRAY(script->buf, VECTOR_DATA(script->parse_simpleexpr_str), VECTOR_LENGTH(script->parse_simpleexpr_str));
+	} else {
+		unsigned char u;
+		int st_cursor = 0;
+
+		script->addc(C_LSTR);
+
+		VECTOR_ENSURE(script->buf, (int)(sizeof(st->string_id) + sizeof(st->translations)), SCRIPT_BLOCK_SIZE);
+		VECTOR_PUSHARRAY(script->buf, (void *)&st->string_id, sizeof(st->string_id));
+		VECTOR_PUSHARRAY(script->buf, (void *)&st->translations, sizeof(st->translations));
+
+		for (u = 0; u != st->translations; u++) {
+			struct string_translation_entry *entry = (void *)(st->buf+st_cursor);
+			char *stringptr = &entry->string[0];
+			st_cursor += sizeof(*entry);
+			VECTOR_ENSURE(script->buf, (int)(sizeof(entry->lang_id) + sizeof(char *)), SCRIPT_BLOCK_SIZE);
+			VECTOR_PUSHARRAY(script->buf, (void *)&entry->lang_id, sizeof(entry->lang_id));
+			VECTOR_PUSHARRAY(script->buf, (void *)&stringptr, sizeof(stringptr));
+			st_cursor += sizeof(uint8); // FIXME: What are we skipping here?
+			while (st->buf[st_cursor++] != 0)
+				(void)0; // Skip string
+			st_cursor += sizeof(uint8); // FIXME: What are we skipping here?
+		}
+	}
+
+	/* When exporting we don't know what is a translation and what isn't */
+	if (script->lang_export_fp != NULL && VECTOR_LENGTH(script->parse_simpleexpr_str) > 1) {
+		// The length of script->parse_simpleexpr_str will always be at least 1 because of the '\0'
+		if (script->syntax.strings == NULL) {
+			script->syntax.strings = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, 0);
+		}
+
+		if (!strdb_exists(script->syntax.strings, VECTOR_DATA(script->parse_simpleexpr_str))) {
+			strdb_put(script->syntax.strings, VECTOR_DATA(script->parse_simpleexpr_str), NULL);
+			duplicate = false;
+		}
+	}
+
+	if (script->lang_export_fp != NULL && !duplicate &&
+		( ( ( script->syntax.last_func == script->buildin_mes_offset ||
+			 script->syntax.last_func == script->buildin_select_offset )
+			) || script->syntax.lang_macro_active ) ) {
+		const char *line_start = start_point;
+		const char *line_end = start_point;
+		int line_length;
+
+		while( line_start > script->parser_current_src ) {
+			if( *line_start != '\n' )
+				line_start--;
+			else
+				break;
+		}
+
+		while( *line_end != '\n' && *line_end != '\0' )
+			line_end++;
+
+		line_length = (int)(line_end - line_start);
+		if( line_length > 0 ) {
+			VECTOR_ENSURE(script->lang_export_line_buf, line_length + 1, 512);
+			VECTOR_PUSHARRAY(script->lang_export_line_buf, line_start, line_length);
+			VECTOR_PUSH(script->lang_export_line_buf, '\0');
+
+			normalize_name(VECTOR_DATA(script->lang_export_line_buf), "\r\n\t "); // [!] Note: VECTOR_LENGTH() will lie.
+		}
+
+		VECTOR_ENSURE(script->lang_export_escaped_buf, 4*VECTOR_LENGTH(script->parse_simpleexpr_str)+1, 1);
+		VECTOR_LENGTH(script->lang_export_escaped_buf) = (int)sv->escape_c(VECTOR_DATA(script->lang_export_escaped_buf),
+				VECTOR_DATA(script->parse_simpleexpr_str),
+				VECTOR_LENGTH(script->parse_simpleexpr_str)-1, /* exclude null terminator */
+				"\"");
+		VECTOR_PUSH(script->lang_export_escaped_buf, '\0');
+
+		fprintf(script->lang_export_fp, "#: %s\n"
+				"# %s\n"
+				"msgctxt \"%s\"\n"
+				"msgid \"%s\"\n"
+				"msgstr \"\"\n",
+				script->parser_current_file ? script->parser_current_file : "Unknown File",
+				VECTOR_DATA(script->lang_export_line_buf),
+				script->parser_current_npc_name ? script->parser_current_npc_name : "Unknown NPC",
+				VECTOR_DATA(script->lang_export_escaped_buf)
+		);
+		VECTOR_TRUNCATE(script->lang_export_line_buf);
+		VECTOR_TRUNCATE(script->lang_export_escaped_buf);
+	}
+	VECTOR_TRUNCATE(script->parse_simpleexpr_str);
+
+	return p;
+}
+
+const char *parse_simpleexpr_name(const char *p)
+{
+	int l;
+	const char *pv = NULL;
+
+	// label , register , function etc
+	if (script->skip_word(p) == p)
+		disp_error_message("parse_simpleexpr: unexpected character", p);
+
+	l = script->add_word(p);
+	if (script->str_data[l].type == C_FUNC || script->str_data[l].type == C_USERFUNC || script->str_data[l].type == C_USERFUNC_POS) {
+		return script->parse_callfunc(p,1,0);
+#ifdef SCRIPT_CALLFUNC_CHECK
+	} else {
+		const char *name = script->get_str(l);
+		if (strdb_get(script->userfunc_db,name) != NULL) {
+			return script->parse_callfunc(p, 1, 1);
+		}
 #endif
-		}
+	}
 
-		if( (pv = script->parse_variable(p)) ) {
-			// successfully processed a variable assignment
-			return pv;
-		}
+	if ((pv = script->parse_variable(p)) != NULL) {
+		// successfully processed a variable assignment
+		return pv;
+	}
 
-		if (script->str_data[l].type == C_INT && script->str_data[l].deprecated) {
-			disp_warning_message("This constant is deprecated and it will be removed in a future version. Please see the script documentation and constants.conf for an alternative.\n", p);
-		}
+	if (script->str_data[l].type == C_INT && script->str_data[l].deprecated) {
+		disp_warning_message("This constant is deprecated and it will be removed in a future version. Please see the script documentation and constants.conf for an alternative.\n", p);
+	}
 
-		p=script->skip_word(p);
-		if( *p == '[' ) {
-			// array(name[i] => getelementofarray(name,i) )
-			script->addl(script->buildin_getelementofarray_ref);
-			script->addc(C_ARG);
-			script->addl(l);
+	p = script->skip_word(p);
+	if (*p == '[') {
+		// array(name[i] => getelementofarray(name,i) )
+		script->addl(script->buildin_getelementofarray_ref);
+		script->addc(C_ARG);
+		script->addl(l);
 
-			p=script->parse_subexpr(p+1,-1);
-			p=script->skip_space(p);
-			if( *p != ']' )
-				disp_error_message("parse_simpleexpr: unmatched ']'",p);
-			++p;
-			script->addc(C_FUNC);
-		} else {
-			script->addl(l);
-		}
-
+		p = script->parse_subexpr(p + 1, -1);
+		p = script->skip_space(p);
+		if (*p != ']')
+			disp_error_message("parse_simpleexpr: unmatched ']'", p);
+		++p;
+		script->addc(C_FUNC);
+	} else {
+		script->addl(l);
 	}
 
 	return p;
@@ -21266,6 +21296,10 @@ void script_defaults(void) {
 	script->parse_nextline = parse_nextline;
 	script->parse_variable = parse_variable;
 	script->parse_simpleexpr = parse_simpleexpr;
+	script->parse_simpleexpr_paren = parse_simpleexpr_paren;
+	script->parse_simpleexpr_number = parse_simpleexpr_number;
+	script->parse_simpleexpr_string = parse_simpleexpr_string;
+	script->parse_simpleexpr_name = parse_simpleexpr_name;
 	script->parse_expr = parse_expr;
 	script->parse_line = parse_line;
 	script->read_constdb = read_constdb;
