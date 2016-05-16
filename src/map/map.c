@@ -6002,45 +6002,6 @@ static CMDLINEARG(loadscript)
 }
 
 /**
- * --generate-translations
- *
- * Creates "./generated_translations.pot"
- * @see cmdline->exec
- **/
-static CMDLINEARG(generatetranslations) {
-	script->lang_export_file = aStrdup("./generated_translations.pot");
-
-	if (!(script->lang_export_fp = fopen(script->lang_export_file,"wb"))) {
-		ShowError("export-dialog: failed to open '%s' for writing\n",script->lang_export_file);
-	} else {
-		time_t t = time(NULL);
-		struct tm *lt = localtime(&t);
-		int year = lt->tm_year+1900;
-		fprintf(script->lang_export_fp,
-				"# This file is part of Hercules.\n"
-				"# http://herc.ws - http://github.com/HerculesWS/Hercules\n"
-				"#\n"
-				"# Copyright (C) 2013-%d  Hercules Dev Team\n"
-				"#\n"
-				"# Hercules is free software: you can redistribute it and/or modify\n"
-				"# it under the terms of the GNU General Public License as published by\n"
-				"# the Free Software Foundation, either version 3 of the License, or\n"
-				"# (at your option) any later version.\n"
-				"#\n"
-				"# This program is distributed in the hope that it will be useful,\n"
-				"# but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-				"# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-				"# GNU General Public License for more details.\n"
-				"#\n"
-				"# You should have received a copy of the GNU General Public License\n"
-				"# along with this program.  If not, see <http://www.gnu.org/licenses/>.\n",
-				year);
-	}
-	core->runflag = CORE_ST_STOP;
-	return true;
-}
-
-/**
  * Defines the local command line arguments
  */
 void cmdline_args_init_local(void)
@@ -6056,7 +6017,6 @@ void cmdline_args_init_local(void)
 	CMDLINEARG_DEF2(log-config, logconfig, "Alternative logging configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
 	CMDLINEARG_DEF2(script-check, scriptcheck, "Doesn't run the server, only tests the scripts passed through --load-script.", CMDLINE_OPT_SILENT);
 	CMDLINEARG_DEF2(load-script, loadscript, "Loads an additional script (can be repeated).", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(generate-translations, generatetranslations, "Creates './generated_translations.pot' file with all translateable strings from scripts, server terminates afterwards.", CMDLINE_OPT_NORMAL);
 }
 
 int do_init(int argc, char *argv[])

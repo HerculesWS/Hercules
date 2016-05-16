@@ -502,8 +502,7 @@ struct script_syntax_data {
 	int index; // Number of the syntax used in the script
 	int last_func; // buildin index of the last parsed function
 	unsigned int nested_call; //Dont really know what to call this
-	bool lang_macro_active;
-	struct DBMap *strings; // string map parsed (used when exporting strings only)
+	bool lang_macro_active; // Used to generate translation strings
 	struct DBMap *translation_db; //non-null if this npc has any translated strings to be linked
 };
 
@@ -619,9 +618,6 @@ struct script_interface {
 	/* */
 	unsigned int *generic_ui_array;
 	unsigned int generic_ui_array_size;
-	/* Set during startup when attempting to export the lang, unset after server initialization is over */
-	FILE *lang_export_fp;
-	char *lang_export_file;/* for lang_export_fp */
 	/* set and unset on npc_parse_script */
 	const char *parser_current_npc_name;
 	/* */
@@ -636,8 +632,6 @@ struct script_interface {
 	uint8 max_lang_id;
 	/* */
 	struct script_string_buf parse_simpleexpr_strbuf;
-	struct script_string_buf lang_export_line_buf;
-	struct script_string_buf lang_export_escaped_buf;
 	/* */
 	int parse_cleanup_timer_id;
 	/*  */

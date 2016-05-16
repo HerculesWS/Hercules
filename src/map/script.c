@@ -1331,7 +1331,6 @@ const char *parse_simpleexpr_name(const char *p)
 void script_add_translatable_string(const struct script_string_buf *string, const char *start_point)
 {
 	struct string_translation *st = NULL;
-	bool duplicate = true;
 
 	if (script->syntax.translation_db == NULL
 	 || (st = strdb_get(script->syntax.translation_db, VECTOR_DATA(*string))) == NULL) {
@@ -1362,67 +1361,6 @@ void script_add_translatable_string(const struct script_string_buf *string, cons
 				(void)0; // Skip string
 			st_cursor += sizeof(uint8); // FIXME: What are we skipping here?
 		}
-	}
-
-	/* When exporting we don't know what is a translation and what isn't */
-	if (script->lang_export_fp != NULL && VECTOR_LENGTH(*string) > 1) {
-		// The length of script->parse_simpleexpr_strbuf will always be at least 1 because of the '\0'
-		if (script->syntax.strings == NULL) {
-			script->syntax.strings = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, 0);
-		}
-
-		if (!strdb_exists(script->syntax.strings, VECTOR_DATA(*string))) {
-			strdb_put(script->syntax.strings, VECTOR_DATA(*string), NULL);
-			duplicate = false;
-		}
-	}
-
-	if (script->lang_export_fp != NULL && !duplicate &&
-		( ( ( script->syntax.last_func == script->buildin_mes_offset ||
-			 script->syntax.last_func == script->buildin_select_offset )
-			) || script->syntax.lang_macro_active ) ) {
-		const char *line_start = start_point;
-		const char *line_end = start_point;
-		int line_length;
-
-		while( line_start > script->parser_current_src ) {
-			if( *line_start != '\n' )
-				line_start--;
-			else
-				break;
-		}
-
-		while( *line_end != '\n' && *line_end != '\0' )
-			line_end++;
-
-		line_length = (int)(line_end - line_start);
-		if( line_length > 0 ) {
-			VECTOR_ENSURE(script->lang_export_line_buf, line_length + 1, 512);
-			VECTOR_PUSHARRAY(script->lang_export_line_buf, line_start, line_length);
-			VECTOR_PUSH(script->lang_export_line_buf, '\0');
-
-			normalize_name(VECTOR_DATA(script->lang_export_line_buf), "\r\n\t "); // [!] Note: VECTOR_LENGTH() will lie.
-		}
-
-		VECTOR_ENSURE(script->lang_export_escaped_buf, 4*VECTOR_LENGTH(*string)+1, 1);
-		VECTOR_LENGTH(script->lang_export_escaped_buf) = (int)sv->escape_c(VECTOR_DATA(script->lang_export_escaped_buf),
-				VECTOR_DATA(*string),
-				VECTOR_LENGTH(*string)-1, /* exclude null terminator */
-				"\"");
-		VECTOR_PUSH(script->lang_export_escaped_buf, '\0');
-
-		fprintf(script->lang_export_fp, "\n#: %s\n"
-				"# %s\n"
-				"msgctxt \"%s\"\n"
-				"msgid \"%s\"\n"
-				"msgstr \"\"\n",
-				script->parser_current_file ? script->parser_current_file : "Unknown File",
-				VECTOR_DATA(script->lang_export_line_buf),
-				script->parser_current_npc_name ? script->parser_current_npc_name : "Unknown NPC",
-				VECTOR_DATA(script->lang_export_escaped_buf)
-		);
-		VECTOR_TRUNCATE(script->lang_export_line_buf);
-		VECTOR_TRUNCATE(script->lang_export_escaped_buf);
 	}
 }
 
@@ -2563,9 +2501,6 @@ struct script_code* parse_script(const char *src,const char *file,int line,int o
 	if( script->parse_cleanup_timer_id == INVALID_TIMER ) {
 		script->parse_cleanup_timer_id = timer->add(timer->gettick() + 10, script->parse_cleanup_timer, 0, 0);
 	}
-
-	if( script->syntax.strings ) /* used only when generating translation file */
-		db_destroy(script->syntax.strings);
 
 	memset(&script->syntax,0,sizeof(script->syntax));
 	script->syntax.last_func = -1;/* as valid values are >= 0 */
@@ -4875,9 +4810,6 @@ void do_final_script(void)
 
 	script->clear_translations(false);
 	script->parser_clean_leftovers();
-
-	if( script->lang_export_file )
-		aFree(script->lang_export_file);
 }
 
 /**
@@ -5195,14 +5127,7 @@ void script_parser_clean_leftovers(void)
 		script->translation_db = NULL;
 	}
 
-	if( script->syntax.strings ) { /* used only when generating translation file */
-		db_destroy(script->syntax.strings);
-		script->syntax.strings = NULL;
-	}
-
 	VECTOR_CLEAR(script->parse_simpleexpr_strbuf);
-	VECTOR_CLEAR(script->lang_export_line_buf);
-	VECTOR_CLEAR(script->lang_export_escaped_buf);
 }
 
 /**
@@ -5221,8 +5146,6 @@ int script_parse_cleanup_timer(int tid, int64 tick, int id, intptr_t data) {
  *------------------------------------------*/
 void do_init_script(bool minimal) {
 	script->parse_cleanup_timer_id = INVALID_TIMER;
-	VECTOR_INIT(script->lang_export_line_buf);
-	VECTOR_INIT(script->lang_export_escaped_buf);
 	VECTOR_INIT(script->parse_simpleexpr_strbuf);
 
 	script->st_db = idb_alloc(DB_OPT_BASE);

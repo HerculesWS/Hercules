@@ -5002,12 +5002,6 @@ int do_init_npc(bool minimal) {
 		timer->add_func_list(npc->timerevent,"npc_timerevent");
 	}
 
-	if( script->lang_export_fp ) {
-		ShowInfo("Lang exported to '%s'\n",script->lang_export_file);
-		fclose(script->lang_export_fp);
-		script->lang_export_fp = NULL;
-	}
-
 	// Init dummy NPC
 	CREATE(npc->fake_nd, struct npc_data, 1);
 	npc->fake_nd->bl.m = -1;
