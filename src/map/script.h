@@ -635,7 +635,7 @@ struct script_interface {
 	char **languages;
 	uint8 max_lang_id;
 	/* */
-	struct script_string_buf parse_simpleexpr_str;
+	struct script_string_buf parse_simpleexpr_strbuf;
 	struct script_string_buf lang_export_line_buf;
 	struct script_string_buf lang_export_escaped_buf;
 	/* */
@@ -737,6 +737,7 @@ struct script_interface {
 	const char *(*parse_simpleexpr_number) (const char *p);
 	const char *(*parse_simpleexpr_string) (const char *p);
 	const char *(*parse_simpleexpr_name) (const char *p);
+	void (*add_translatable_string) (const struct script_string_buf *string, const char *start_point);
 	const char *(*parse_expr) (const char *p);
 	const char *(*parse_line) (const char *p);
 	void (*read_constdb) (void);
