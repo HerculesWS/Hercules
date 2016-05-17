@@ -1225,9 +1225,9 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 				"I just explained to you.";
 			.@w_point = 0;
 			next;
-			switch (select(sprintf(_("Prepare the %s."), getitemname(Medicine_Bowl)),
-					sprintf(_("Put the %s on your head."), getitemname(Medicine_Bowl)),
-					sprintf(_("Kick the %s."), getitemname(Medicine_Bowl)))) {
+			switch (select(sprintf(_$("Prepare the %s."), getitemname(Medicine_Bowl)),
+					sprintf(_$("Put the %s on your head."), getitemname(Medicine_Bowl)),
+					sprintf(_$("Kick the %s."), getitemname(Medicine_Bowl)))) {
 			case 1:
 				break;
 			case 2:
@@ -1243,9 +1243,9 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 				next;
 				break;
 			}
-			switch (select(sprintf(_("Put some dirt in the %s."), getitemname(Medicine_Bowl)),
-					sprintf(_("Put some Herbs in the %s."), getitemname(Medicine_Bowl)),
-					sprintf(_("Put a Harp in the %s."), getitemname(Medicine_Bowl)))) {
+			switch (select(sprintf(_$("Put some dirt in the %s."), getitemname(Medicine_Bowl)),
+					sprintf(_$("Put some Herbs in the %s."), getitemname(Medicine_Bowl)),
+					sprintf(_$("Put a Harp in the %s."), getitemname(Medicine_Bowl)))) {
 			case 1:
 				++.@w_point;
 				mes "[Darwin]";
@@ -1266,7 +1266,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 				break;
 			}
 			switch (select("Crush the Herbs.",
-					sprintf(_("Crush the %s."), getitemname(Medicine_Bowl)),
+					sprintf(_$("Crush the %s."), getitemname(Medicine_Bowl)),
 					"Crush Darwin's foot.")) {
 			case 1:
 				break;
@@ -1334,7 +1334,7 @@ alde_alche,13,15,7	script	Studying Man#am	4_M_ALCHE_C,{
 			}
 			switch (select("Put noodles in and fry it.",
 					"Pour it in an empty bottle.",
-					sprintf(_("Hold the %s and drink it."), getitemname(Medicine_Bowl)))) {
+					sprintf(_$("Hold the %s and drink it."), getitemname(Medicine_Bowl)))) {
 			case 1:
 				++.@w_point;
 				mes "[Darwin]";

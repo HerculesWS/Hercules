@@ -825,7 +825,7 @@ mal_in02,174,64,5	script	Linguist Devore#mal	4_CAT_MERMASTER,{
 		mes "If you see the words on the first page of this book, there's a sentence seeming like short conversation.";
 		next;
 		mes "[Linguist Devore]";
-		mes sprintf(_("It's like this, for the question, %s, it says, %s"),
+		mes sprintf(_$("It's like this, for the question, %s, it says, %s"),
 				"¬¬¬Ñ¬Ü ¬ã¬Ú?", "¬¡¬Ù ¬ã¬ì¬Þ ¬Õ¬à¬Ò¬â¬Ö, ¬Ò¬Ý¬Ñ¬Ô¬à¬Õ¬Ñ¬â¬ñ. ¬¡ ¬£¬Ú¬Ö?");
 		next;
 		mes "[Linguist Devore]";
