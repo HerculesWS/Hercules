@@ -503,6 +503,7 @@ struct script_syntax_data {
 	int last_func; // buildin index of the last parsed function
 	unsigned int nested_call; //Dont really know what to call this
 	bool lang_macro_active; // Used to generate translation strings
+	bool lang_macro_fmtstring_active; // Used to generate translation strings
 	struct DBMap *translation_db; //non-null if this npc has any translated strings to be linked
 };
 
@@ -624,6 +625,7 @@ struct script_interface {
 	int buildin_mes_offset;
 	int buildin_select_offset;
 	int buildin_lang_macro_offset;
+	int buildin_lang_macro_fmtstring_offset;
 	/* */
 	struct DBMap *translation_db;/* npc_name => DBMap (strings) */
 	VECTOR_DECL(uint8 *) translation_buf;

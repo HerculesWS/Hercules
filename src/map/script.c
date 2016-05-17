@@ -810,8 +810,11 @@ const char* parse_callfunc(const char* p, int require_paren, int is_custom)
 	if (script->str_data[func].type == C_FUNC) {
 		script->syntax.nested_call++;
 		if (script->syntax.last_func != -1) {
-			if( script->str_data[func].val == script->buildin_lang_macro_offset ) {
+			if (script->str_data[func].val == script->buildin_lang_macro_offset) {
 				script->syntax.lang_macro_active = true;
+				macro = true;
+			} else if (script->str_data[func].val == script->buildin_lang_macro_fmtstring_offset) {
+				script->syntax.lang_macro_fmtstring_active = true;
 				macro = true;
 			}
 		}
@@ -907,8 +910,10 @@ const char* parse_callfunc(const char* p, int require_paren, int is_custom)
 			disp_error_message("parse_callfunc: expected ')' to close argument list",p);
 		++p;
 
-		if( script->str_data[func].val == script->buildin_lang_macro_offset )
+		if (script->str_data[func].val == script->buildin_lang_macro_offset)
 			script->syntax.lang_macro_active = false;
+		else if (script->str_data[func].val == script->buildin_lang_macro_fmtstring_offset)
+			script->syntax.lang_macro_fmtstring_active = false;
 	}
 
 	if (!macro) {
@@ -20272,6 +20277,7 @@ bool script_add_builtin(const struct script_function *buildin, bool override) {
 		else if( strcmp(buildin->name, "mes") == 0 ) script->buildin_mes_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "select") == 0 ) script->buildin_select_offset = script->buildin_count;
 		else if( strcmp(buildin->name, "_") == 0 ) script->buildin_lang_macro_offset = script->buildin_count;
+		else if( strcmp(buildin->name, "_$") == 0 ) script->buildin_lang_macro_fmtstring_offset = script->buildin_count;
 
 		offset = script->buildin_count;
 
@@ -20877,6 +20883,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(showscript, "s?"),
 		BUILDIN_DEF(mergeitem,""),
 		BUILDIN_DEF(_,"s"),
+		BUILDIN_DEF2(_, "_$", "s"),
 	};
 	int i, len = ARRAYLENGTH(BUILDIN);
 	RECREATE(script->buildin, char *, script->buildin_count + len); // Pre-alloc to speed up

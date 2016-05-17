@@ -94,6 +94,8 @@ CMDLINEARG(generatetranslations)
 void script_add_translatable_string_posthook(const struct script_string_buf *string, const char *start_point)
 {
 	bool duplicate = true;
+	bool is_translatable_string = false;
+	bool is_translatable_fmtstring = false;
 
 	/* When exporting we don't know what is a translation and what isn't */
 	if (lang_export_fp != NULL && VECTOR_LENGTH(*string) > 1) {
@@ -108,13 +110,26 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 		}
 	}
 
-	if (lang_export_fp != NULL && !duplicate &&
-		( ( ( script->syntax.last_func == script->buildin_mes_offset ||
-			 script->syntax.last_func == script->buildin_select_offset )
-			) || script->syntax.lang_macro_active ) ) {
+	if (!duplicate) {
+		if (script->syntax.last_func == script->buildin_mes_offset
+		 || script->syntax.last_func == script->buildin_select_offset
+		 || script->syntax.lang_macro_active
+		 ) {
+			is_translatable_string = true;
+		} else if (script->syntax.lang_macro_fmtstring_active) {
+			is_translatable_fmtstring = true;
+		}
+	}
+
+	if (lang_export_fp != NULL && (is_translatable_string || is_translatable_fmtstring)) {
 		const char *line_start = start_point;
 		const char *line_end = start_point;
 		int line_length;
+		bool has_percent_sign = false;
+
+		if (!is_translatable_fmtstring && strchr(VECTOR_DATA(*string), '%') != NULL) {
+			has_percent_sign = true;
+		}
 
 		while( line_start > script->parser_current_src ) {
 			if( *line_start != '\n' )
@@ -145,11 +160,13 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 		fprintf(lang_export_fp, "\n#: %s\n"
 				"# %s\n"
 				"msgctxt \"%s\"\n"
+				"%s"
 				"msgid \"%s\"\n"
 				"msgstr \"\"\n",
 				script->parser_current_file ? script->parser_current_file : "Unknown File",
 				VECTOR_DATA(lang_export_line_buf),
 				script->parser_current_npc_name ? script->parser_current_npc_name : "Unknown NPC",
+				is_translatable_fmtstring ? "#, c-format\n" : (has_percent_sign ? "#, no-c-format\n" : ""),
 				VECTOR_DATA(lang_export_escaped_buf)
 		);
 		VECTOR_TRUNCATE(lang_export_line_buf);
