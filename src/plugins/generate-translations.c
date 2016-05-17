@@ -61,7 +61,7 @@ CMDLINEARG(generatetranslations)
 {
 	lang_export_file = aStrdup("./generated_translations.pot");
 
-	if (!(lang_export_fp = fopen(lang_export_file, "wb"))) {
+	if ((lang_export_fp = fopen(lang_export_file, "wb")) == NULL) {
 		ShowError("export-dialog: failed to open '%s' for writing\n", lang_export_file);
 	} else {
 		time_t t = time(NULL);
@@ -97,8 +97,11 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 	bool is_translatable_string = false;
 	bool is_translatable_fmtstring = false;
 
+	if (!generating_translations || lang_export_fp == NULL)
+		return;
+
 	/* When exporting we don't know what is a translation and what isn't */
-	if (lang_export_fp != NULL && VECTOR_LENGTH(*string) > 1) {
+	if (VECTOR_LENGTH(*string) > 1) {
 		// The length of *string will always be at least 1 because of the '\0'
 		if (translatable_strings == NULL) {
 			translatable_strings = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, 0);
@@ -123,7 +126,7 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 		}
 	}
 
-	if (lang_export_fp != NULL && (is_translatable_string || is_translatable_fmtstring)) {
+	if (is_translatable_string || is_translatable_fmtstring) {
 		const char *line_start = start_point;
 		const char *line_end = start_point;
 		int line_length;
@@ -133,18 +136,14 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 			has_percent_sign = true;
 		}
 
-		while( line_start > script->parser_current_src ) {
-			if( *line_start != '\n' )
-				line_start--;
-			else
-				break;
-		}
+		while (line_start > script->parser_current_src && *line_start != '\n')
+			line_start--;
 
-		while( *line_end != '\n' && *line_end != '\0' )
+		while (*line_end != '\n' && *line_end != '\0')
 			line_end++;
 
 		line_length = (int)(line_end - line_start);
-		if( line_length > 0 ) {
+		if (line_length > 0) {
 			VECTOR_ENSURE(lang_export_line_buf, line_length + 1, 512);
 			VECTOR_PUSHARRAY(lang_export_line_buf, line_start, line_length);
 			VECTOR_PUSH(lang_export_line_buf, '\0');
@@ -161,14 +160,14 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 
 		fprintf(lang_export_fp, "\n#: %s\n"
 				"# %s\n"
-				"msgctxt \"%s\"\n"
 				"%s"
+				"msgctxt \"%s\"\n"
 				"msgid \"%s\"\n"
 				"msgstr \"\"\n",
 				script->parser_current_file ? script->parser_current_file : "Unknown File",
 				VECTOR_DATA(lang_export_line_buf),
-				script->parser_current_npc_name ? script->parser_current_npc_name : "Unknown NPC",
 				is_translatable_fmtstring ? "#, c-format\n" : (has_percent_sign ? "#, no-c-format\n" : ""),
+				script->parser_current_npc_name ? script->parser_current_npc_name : "Unknown NPC",
 				VECTOR_DATA(lang_export_escaped_buf)
 		);
 		VECTOR_TRUNCATE(lang_export_line_buf);
@@ -178,15 +177,16 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 
 struct script_code *parse_script_prehook(const char **src, const char **file, int *line, int *options, int **retval)
 {
-	if (translatable_strings != NULL) /* used only when generating translation file */
+	if (translatable_strings != NULL) {
 		db_destroy(translatable_strings);
-	translatable_strings = NULL;
+		translatable_strings = NULL;
+	}
 	return NULL;
 }
 
 void script_parser_clean_leftovers_posthook(void)
 {
-	if (translatable_strings != NULL) { /* used only when generating translation file */
+	if (translatable_strings != NULL) {
 		db_destroy(translatable_strings);
 		translatable_strings = NULL;
 	}
@@ -199,18 +199,22 @@ bool msg_config_read_posthook(bool retVal, const char *cfg_name, bool allow_over
 {
 	static int called = 1;
 
-	if (retVal && ++called == 1) { //Original
-		if (lang_export_fp != NULL) {
-			int i;
-			for (i = 0; i < MAX_MSG; i++) {
-				if (atcommand->msg_table[0][i] != NULL) {
-					fprintf(lang_export_fp, "msgctxt \"messages.conf\"\n"
-							"msgid \"%s\"\n"
-							"msgstr \"\"\n",
-							atcommand->msg_table[0][i]
-							);
-				}
-			}
+	if (!generating_translations || lang_export_fp == NULL)
+		return retVal;
+
+	if (!retVal)
+		return retVal;
+
+	if (++called == 1) { // Original
+		int i;
+		for (i = 0; i < MAX_MSG; i++) {
+			if (atcommand->msg_table[0][i] == NULL)
+				continue;
+			fprintf(lang_export_fp, "msgctxt \"messages.conf\"\n"
+					"msgid \"%s\"\n"
+					"msgstr \"\"\n",
+					atcommand->msg_table[0][i]
+			       );
 		}
 	}
 
@@ -235,7 +239,7 @@ HPExport void plugin_init(void)
 
 HPExport void server_online(void)
 {
-	if (lang_export_fp != NULL) {
+	if (generating_translations && lang_export_fp != NULL) {
 		ShowInfo("Lang exported to '%s'\n", lang_export_file);
 		fclose(lang_export_fp);
 		lang_export_fp = NULL;
@@ -245,6 +249,8 @@ HPExport void server_online(void)
 
 HPExport void plugin_final(void)
 {
-	if (lang_export_file != NULL)
+	if (lang_export_file != NULL) {
 		aFree(lang_export_file);
+		lang_export_file = NULL;
+	}
 }
