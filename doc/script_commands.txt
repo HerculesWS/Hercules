@@ -1105,6 +1105,41 @@ field for cash windows. It is used to remove items that are set as currency.
 Should be used along with OnCountFunds, see /doc/sample/npc_trader_sample.txt
 for more information.
 
+OnRentalExpireEvent:
+
+This special label is triggered when a rental item expired. It also return a set of 
+temporary variable that stored the information of expired item.
+Example :
+	
+	-	script	rental_expired	-1,{
+		
+		OnRentalExpireEvent:
+			// do whatever you want here when item expired.
+			dispbottom " ---- Item Expired ---- ";
+			dispbottom " > @expire_itemid = "+@expire_itemid;
+			dispbottom " > @expire_refine = "+@expire_refine;
+			dispbottom " > @expire_identify = "+@expire_identify;
+			dispbottom " > @expire_attribute = "+@expire_attribute;
+			dispbottom " > @expire_bound = "+@expire_bound;
+			dispbottom " > @expire_uniqueid = "+@expire_uniqueid;
+			dispbottom " > @expire_card[0] = "+getitemname( @expire_card[0] );
+			dispbottom " > @expire_card[1] = "+getitemname( @expire_card[1] );
+			dispbottom " > @expire_card[2] = "+getitemname( @expire_card[2] );
+			dispbottom " > @expire_card[3] = "+getitemname( @expire_card[3] );
+			
+			// must clear variables to avoid possible exploit !!
+			// especially with multiple NPCs running same label
+			@expire_itemid = 0;
+			@expire_refine = 0;
+			@expire_identify = 0;
+			@expire_attribute = 0;
+			@expire_bound = 0;
+			@expire_uniqueid = 0;
+			deletearray @expire_card;
+			end;
+	}
+
+
 On<label name>:
 
 These special labels are used with Mob scripts mostly, and script commands 

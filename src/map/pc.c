@@ -477,6 +477,7 @@ int pc_inventory_rental_clear(struct map_session_data *sd)
 /* assumes i is valid (from default areas where it is called, it is) */
 void pc_rental_expire(struct map_session_data *sd, int i) {
 	short nameid = sd->status.inventory[i].nameid;
+	int j;
 
 	/* Soon to be dropped, we got plans to integrate it with item db */
 	switch( nameid ) {
@@ -538,6 +539,17 @@ void pc_rental_expire(struct map_session_data *sd, int i) {
 			}
 			break;
 	}
+
+	pc->setreg(sd, script->add_str("@expire_itemid"), nameid);
+	pc->setreg(sd, script->add_str("@expire_refine"), sd->status.inventory[i].refine);
+	pc->setreg(sd, script->add_str("@expire_identify"), sd->status.inventory[i].identify);
+	pc->setreg(sd, script->add_str("@expire_attribute"), sd->status.inventory[i].attribute);
+	pc->setreg(sd, script->add_str("@expire_bound"), sd->status.inventory[i].bound);
+	// pc->setreg(sd, script->add_str("@expire_uniqueid"), sd->status.inventory[i].unique_id);
+	for (j = 0; j < MAX_SLOTS; j++) {
+		pc->setreg(sd, reference_uid(script->add_str("@expire_card"), j), sd->status.inventory[i].card[j]);
+	}
+	npc->script_event(sd, NPCE_RENTALEXPIRE);
 
 	clif->rental_expired(sd->fd, i, sd->status.inventory[i].nameid);
 	pc->delitem(sd, i, sd->status.inventory[i].amount, 0, DELITEM_NORMAL, LOG_TYPE_RENTAL);
