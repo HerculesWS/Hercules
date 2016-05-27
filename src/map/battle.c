@@ -3680,7 +3680,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 
 				if (sc){
 					if( sc->data[SC_TELEKINESIS_INTENSE] && s_ele == ELE_GHOST )
-						ad.damage += sc->data[SC_TELEKINESIS_INTENSE]->val3;
+						ad.damage += ad.damage * sc->data[SC_TELEKINESIS_INTENSE]->val3 / 100;
 				}
 				switch(skill_id){
 					case MG_FIREBOLT:
