@@ -1544,7 +1544,7 @@ int char_check_char_name(char * name, char * esc_name)
  *  -5: 'Symbols in Character Names are forbidden'
  *  char_id: Success
  **/
-int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, int16 starting_class)
+int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, int16 starting_class, uint8 sex)
 {
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
@@ -1587,17 +1587,27 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 	if( sd->found_char[slot] != -1 )
 		return -2; /* character account limit exceeded */
 
+	switch (sex) {
+		case SEX_FEMALE:
+			sex = 'F';
+			break;
+		case SEX_MALE:
+			sex = 'M';
+			break;
+		default:
+			return -2;	// Char Creation Denied
+	}
+
 #if PACKETVER >= 20120307
 	// Insert the new char entry to the database
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `status_point`,`str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
-		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`) VALUES ("
-		"'%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
+		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`, `sex`) VALUES ("
+		"'%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%c')",
 		char_db, sd->account_id , slot, esc_name, starting_class, start_zeny, 48, str, agi, vit, int_, dex, luk,
 		(40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
-		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y) )
-	{
-		Sql_ShowDebug(inter->sql_handle);
-		return -2; //No, stop the procedure!
+		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y, sex)) {
+			Sql_ShowDebug(inter->sql_handle);
+			return -2; //No, stop the procedure!
 	}
 #else
 	//Insert the new char entry to the database
@@ -1647,7 +1657,7 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 		}
 	}
 
-	ShowInfo("Created char: account: %d, char: %d, slot: %d, name: %s\n", sd->account_id, char_id, slot, name);
+	ShowInfo("Created char: account: %d, char: %d, slot: %d, name: %s, sex: %c\n", sd->account_id, char_id, slot, name, sex);
 	return char_id;
 }
 
@@ -4633,13 +4643,13 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 		//turn character creation on/off [Kevin]
 		result = -2;
 	} else {
-	#if PACKETVER >= 20151001
-		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26), RFIFOW(fd,27), RFIFOW(fd,29), RFIFOW(fd, 31));
-	#elif PACKETVER >= 20120307
-		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26), RFIFOW(fd,27), RFIFOW(fd,29), JOB_NOVICE);
-	#else
-		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), RFIFOB(fd,26), RFIFOB(fd,27), RFIFOB(fd,28), RFIFOB(fd,29), RFIFOB(fd,30), RFIFOB(fd,31), RFIFOB(fd,32), RFIFOW(fd,33), RFIFOW(fd,35), JOB_NOVICE);
-	#endif
+#if PACKETVER >= 20151001
+		result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), RFIFOW(fd, 31), RFIFOB(fd, 35));
+#elif PACKETVER >= 20120307
+		result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), JOB_NOVICE, 'U');
+#else
+		result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), RFIFOB(fd, 26), RFIFOB(fd, 27), RFIFOB(fd, 28), RFIFOB(fd, 29), RFIFOB(fd, 30), RFIFOB(fd, 31), RFIFOB(fd, 32), RFIFOW(fd, 33), RFIFOW(fd, 35), JOB_NOVICE, 'U');
+#endif
 	}
 
 	//'Charname already exists' (-1), 'Char creation denied' (-2) and 'You are underaged' (-3)
@@ -5042,7 +5052,7 @@ int char_parse_char(int fd)
 			// S 0a39 <name>.24B <slot>.B <hair color>.W <hair style>.W <starting job class ID>.W <Unknown>.(W or 2 B's)??? <sex>.B
 			case 0xa39:
 			{
-				FIFOSD_CHECK(36);	
+				FIFOSD_CHECK(36);
 #elif PACKETVER >= 20120307
 			// S 0970 <name>.24B <slot>.B <hair color>.W <hair style>.W
 			case 0x970:
