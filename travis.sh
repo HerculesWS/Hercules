@@ -75,7 +75,7 @@ case "$MODE" in
 		;;
 	build)
 		(cd tools && ./validateinterfaces.py silent) || aborterror "Interface validation error."
-		./configure $@ || aborterror "Configure error, aborting build."
+		./configure $@ || (cat config.log && aborterror "Configure error, aborting build.")
 		make sql -j3 || aborterror "Build failed."
 		make plugin.script_mapquit -j3 || aborterror "Build failed."
 		;;
