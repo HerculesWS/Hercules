@@ -5248,19 +5248,10 @@ const char *script_getfuncname(struct script_state *st) {
 BUILDIN(mes)
 {
 	struct map_session_data *sd = script->rid2sd(st);
-	if( sd == NULL )
+	if (sd == NULL)
 		return true;
 
-	if( !script_hasdata(st, 3) ) {// only a single line detected in the script
-		clif->scriptmes(sd, st->oid, script_getstr(st, 2));
-	} else {// parse multiple lines as they exist
-		int i;
-
-		for( i = 2; script_hasdata(st, i); i++ ) {
-			// send the message to the client
-			clif->scriptmes(sd, st->oid, script_getstr(st, i));
-		}
-	}
+	clif->scriptmes(sd, st->oid, script_getstr(st, 2));
 
 	return true;
 }
@@ -20354,7 +20345,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(__setr,"rv?"),
 
 		// NPC interaction
-		BUILDIN_DEF(mes,"s*"),
+		BUILDIN_DEF(mes,"s"),
 		BUILDIN_DEF(next,""),
 		BUILDIN_DEF(close,""),
 		BUILDIN_DEF(close2,""),

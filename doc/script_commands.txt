@@ -1188,7 +1188,7 @@ From here on, we will have the commands sorted as followed:
 //=====================================
 ---------------------------------------
 
-*mes "<string>"{,"<string>"..."<string>"};
+*mes "<string>";
 
 This command will displays a box on the screen for the invoking character, 
 if no such box is displayed already, and will print the string specified 
@@ -1219,14 +1219,6 @@ Notice that the text coloring is handled purely by the client. If you use
 non-English characters, the color codes might get screwed if they stick to 
 letters with no intervening space. Separating them with spaces from the 
 letters on either side solves the problem.
-
-To display multiple lines of message while only using a single mes; 
-command, use the script command in the following format:
-
-    mes "Line 1", "Line 2", "Line 3";
-
-This will display 3 different lines while only consuming a single line in
-the relevant script file.
 
 If you're using a client from 2011-10-10aRagexe.exe onwards, you can also 
 use automatic navigation and open URLs in browser by using some HTML-like
