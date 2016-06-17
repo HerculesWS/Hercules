@@ -9480,7 +9480,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case SU_TUNABELLY:
 		{
-			int heal;
+			int heal = 0;
 			if (!dstmd || dstmd->class_ != MOBID_EMPELIUM || !mob_is_battleground(dstmd)) {
 				heal = ((2 * skill_lv - 1) * 10) * status_get_max_hp(bl) / 100;
 				status->heal(bl, heal, 0, 0);
@@ -12234,7 +12234,7 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 						skill->area_temp[3] = 1;
 					else
 						skill->area_temp[3] = 0;
-					skill->attack(skill->get_type(sg->skill_id),ss,&unit->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
+					skill->attack(skill->get_type(sg->skill_id),ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
 					break;
 				default:
 					skill->attack(skill->get_type(sg->skill_id),ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
