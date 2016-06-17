@@ -1235,6 +1235,23 @@ Clicking Google will open the browser and point to Google website.
 
 ---------------------------------------
 
+*mesf("<format>"{,<param>{, <param>{, ...}}})
+
+This command will display a box on the screen for the invoking character,
+if no such box is displayed already, and will print the string specified
+into that box, after applying the same format-string replacements as sprintf().
+
+Example:
+
+	mesf("Hello, I'm %s, a level %d %s", strcharinfo(PC_NAME), BaseLevel, jobname(Class));
+	// is equivalent to:
+	mes(sprintf("Hello, I'm %s, a level %d %s", strcharinfo(PC_NAME), BaseLevel, jobname(Class)));
+
+This command is a combination of mes() and sprintf(). See their documentation
+for more details.
+
+---------------------------------------
+
 *next;
 
 This command will display a 'next' button in the message window for the 
