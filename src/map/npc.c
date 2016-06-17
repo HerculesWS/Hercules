@@ -62,17 +62,6 @@
 struct npc_interface npc_s;
 struct npc_interface *npc;
 
-static int npc_id=START_NPC_NUM;
-static int npc_warp=0;
-static int npc_shop=0;
-static int npc_script=0;
-static int npc_mob=0;
-static int npc_delay_mob=0;
-static int npc_cache_mob=0;
-
-static const char *npc_last_path;
-static const char *npc_last_ref;
-struct npc_path_data *npc_last_npd;
 
 //For holding the view data of npc classes. [Skotlex]
 static struct view_data npc_viewdb[MAX_NPC_CLASS];
@@ -132,15 +121,15 @@ bool npc_db_checkid(int id)
 /// Returns a new npc id that isn't being used in id_db.
 /// Fatal error if nothing is available.
 int npc_get_new_npc_id(void) {
-	if( npc_id >= START_NPC_NUM && !map->blid_exists(npc_id) )
-		return npc_id++;// available
+	if (npc->npc_id >= START_NPC_NUM && !map->blid_exists(npc->npc_id))
+		return npc->npc_id++;// available
 	else {// find next id
-		int base_id = npc_id;
-		while( base_id != ++npc_id ) {
-			if( npc_id < START_NPC_NUM )
-				npc_id = START_NPC_NUM;
-			if( !map->blid_exists(npc_id) )
-				return npc_id++;// available
+		int base_id = npc->npc_id;
+		while (base_id != ++npc->npc_id) {
+			if (npc->npc_id < START_NPC_NUM)
+				npc->npc_id = START_NPC_NUM;
+			if (!map->blid_exists(npc->npc_id))
+				return npc->npc_id++;// available
 		}
 		// full loop, nothing available
 		ShowFatalError("npc_get_new_npc_id: All ids are taken. Exiting...");
@@ -2509,10 +2498,10 @@ const char *npc_retainpathreference(const char *filepath)
 	struct npc_path_data * npd = NULL;
 	nullpo_ret(filepath);
 
-	if (npc_last_path == filepath) {
-		if (npc_last_npd != NULL)
-			npc_last_npd->references++;
-		return npc_last_ref;
+	if (npc->npc_last_path == filepath) {
+		if (npc->npc_last_npd != NULL)
+			npc->npc_last_npd->references++;
+		return npc->npc_last_ref;
 	}
 
 	if ((npd = strdb_get(npc->path_db,filepath)) == NULL) {
@@ -2527,9 +2516,9 @@ const char *npc_retainpathreference(const char *filepath)
 
 	npd->references++;
 
-	npc_last_npd = npd;
-	npc_last_ref = npd->path;
-	npc_last_path = filepath;
+	npc->npc_last_npd = npd;
+	npc->npc_last_ref = npd->path;
+	npc->npc_last_path = filepath;
 
 	return npd->path;
 }
@@ -2545,7 +2534,7 @@ void npc_releasepathreference(const char *filepath)
 
 	nullpo_retv(filepath);
 
-	if (filepath != npc_last_ref) {
+	if (filepath != npc->npc_last_ref) {
 		npd = strdb_get(npc->path_db, filepath);
 	}
 
@@ -2785,7 +2774,7 @@ const char *npc_parse_warp(const char *w1, const char *w2, const char *w3, const
 	nd->u.warp.y = to_y;
 	nd->u.warp.xs = xs;
 	nd->u.warp.ys = ys;
-	npc_warp++;
+	npc->npc_warp++;
 
 	npc->add_to_location(nd);
 
@@ -2930,7 +2919,7 @@ const char *npc_parse_shop(const char *w1, const char *w2, const char *w3, const
 	npc->parsename(nd, w3, start, buffer, filepath);
 	nd->path = npc->retainpathreference(filepath);
 
-	++npc_shop;
+	++npc->npc_shop;
 	npc->add_to_location(nd);
 
 	return strchr(start,'\n');// continue
@@ -3136,7 +3125,7 @@ const char *npc_parse_script(const char *w1, const char *w2, const char *w3, con
 	if( options&NPO_TRADER )
 		nd->u.scr.trader = true;
 	nd->u.scr.shop = NULL;
-	++npc_script;
+	++npc->npc_script;
 	npc->add_to_location(nd);
 
 	//-----------------------------------------
@@ -3206,7 +3195,7 @@ bool npc_duplicate_script_sub(struct npc_data *nd, const struct npc_data *snd, i
 	nullpo_retr(false, nd);
 	nullpo_retr(false, snd);
 
-	++npc_script;
+	++npc->npc_script;
 	nd->u.scr.xs = xs;
 	nd->u.scr.ys = ys;
 	nd->u.scr.script = snd->u.scr.script;
@@ -3253,7 +3242,7 @@ bool npc_duplicate_shop_sub(struct npc_data *nd, const struct npc_data *snd, int
 	nullpo_retr(false, nd);
 	nullpo_retr(false, snd);
 
-	++npc_shop;
+	++npc->npc_shop;
 	nd->u.shop.shop_item = snd->u.shop.shop_item;
 	nd->u.shop.count = snd->u.shop.count;
 
@@ -3271,7 +3260,7 @@ bool npc_duplicate_warp_sub(struct npc_data *nd, const struct npc_data *snd, int
 	nullpo_retr(false, nd);
 	nullpo_retr(false, snd);
 
-	++npc_warp;
+	++npc->npc_warp;
 	nd->u.warp.xs = xs;
 	nd->u.warp.ys = ys;
 	nd->u.warp.mapindex = snd->u.warp.mapindex;
@@ -3967,7 +3956,7 @@ const char *npc_parse_mob(const char *w1, const char *w2, const char *w3, const 
 	// spawn / cache the new mobs
 	if( battle_config.dynamic_mobs && map->addmobtolist(data->m, data) >= 0 ) {
 		data->state.dynamic = true;
-		npc_cache_mob += data->num;
+		npc->npc_cache_mob += data->num;
 
 		// check if target map has players
 		// (usually shouldn't occur when map server is just starting,
@@ -3978,10 +3967,10 @@ const char *npc_parse_mob(const char *w1, const char *w2, const char *w3, const 
 	} else {
 		data->state.dynamic = false;
 		npc->parse_mob2(data);
-		npc_delay_mob += data->num;
+		npc->npc_delay_mob += data->num;
 	}
 
-	npc_mob++;
+	npc->npc_mob++;
 
 	return strchr(start,'\n');// continue
 }
@@ -4778,12 +4767,12 @@ void npc_process_files( int npc_min ) {
 		"\t-'"CL_WHITE"%d"CL_RESET"' Spawn sets\n"
 		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Cached\n"
 		"\t-'"CL_WHITE"%d"CL_RESET"' Mobs Not Cached\n",
-		npc_id - npc_min, npc_warp, npc_shop, npc_script, npc_mob, npc_cache_mob, npc_delay_mob);
+		npc->npc_id - npc_min, npc->npc_warp, npc->npc_shop, npc->npc_script, npc->npc_mob, npc->npc_cache_mob, npc->npc_delay_mob);
 }
 
 //Clear then reload npcs files
 int npc_reload(void) {
-	int npc_new_min = npc_id;
+	int npc_new_min = npc->npc_id;
 	struct s_mapiterator* iter;
 	struct block_list* bl;
 
@@ -4799,9 +4788,9 @@ int npc_reload(void) {
 	db_clear(npc->ev_db);
 	npc->ev_label_db->clear(npc->ev_label_db, npc->ev_label_db_clear_sub);
 
-	npc_last_npd = NULL;
-	npc_last_path = NULL;
-	npc_last_ref = NULL;
+	npc->npc_last_npd = NULL;
+	npc->npc_last_path = NULL;
+	npc->npc_last_ref = NULL;
 
 	//Remove all npcs/mobs. [Skotlex]
 	iter = mapit_geteachiddb();
@@ -4841,8 +4830,8 @@ int npc_reload(void) {
 	// clear mob spawn lookup index
 	mob->clear_spawninfo();
 
-	npc_warp = npc_shop = npc_script = 0;
-	npc_mob = npc_cache_mob = npc_delay_mob = 0;
+	npc->npc_warp = npc->npc_shop = npc->npc_script = 0;
+	npc->npc_mob = npc->npc_cache_mob = npc->npc_delay_mob = 0;
 
 	// reset mapflags
 	map->flags_init();
@@ -4982,9 +4971,9 @@ int do_init_npc(bool minimal) {
 	npc->name_db = strdb_alloc(DB_OPT_BASE, NAME_LENGTH);
 	npc->path_db = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, 0);
 
-	npc_last_npd = NULL;
-	npc_last_path = NULL;
-	npc_last_ref = NULL;
+	npc->npc_last_npd = NULL;
+	npc->npc_last_path = NULL;
+	npc->npc_last_ref = NULL;
 
 	// Should be loaded before npc processing, otherwise labels could overwrite constant values
 	// and lead to undefined behavior [Panikon]
@@ -5028,7 +5017,7 @@ int do_init_npc(bool minimal) {
 	strcpy(npc->fake_nd->name,"FAKE_NPC");
 	memcpy(npc->fake_nd->exname, npc->fake_nd->name, 9);
 
-	npc_script++;
+	npc->npc_script++;
 	npc->fake_nd->bl.type = BL_NPC;
 	npc->fake_nd->subtype = SCRIPT;
 
@@ -5041,6 +5030,17 @@ int do_init_npc(bool minimal) {
 }
 void npc_defaults(void) {
 	npc = &npc_s;
+
+	npc->npc_id = START_NPC_NUM;
+	npc->npc_warp = 0;
+	npc->npc_shop = 0;
+	npc->npc_script = 0;
+	npc->npc_mob = 0;
+	npc->npc_delay_mob = 0;
+	npc->npc_cache_mob = 0;
+	npc->npc_last_path = NULL;
+	npc->npc_last_ref = NULL;
+	npc->npc_last_npd = NULL;
 
 	npc->motd = NULL;
 	npc->ev_db = NULL;
