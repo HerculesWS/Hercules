@@ -188,6 +188,16 @@ struct npc_interface {
 	/* npc trader global data, for ease of transition between the script, cleared on every usage */
 	bool trader_ok;
 	int trader_funds[2];
+	int npc_id;
+	int npc_warp;
+	int npc_shop;
+	int npc_script;
+	int npc_mob;
+	int npc_delay_mob;
+	int npc_cache_mob;
+	const char *npc_last_path;
+	const char *npc_last_ref;
+	struct npc_path_data *npc_last_npd;
 	/* */
 	int (*init) (bool minimal);
 	int (*final) (void);
