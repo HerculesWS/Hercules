@@ -45,7 +45,7 @@ item_db: (
 		Rogue: true/false             (boolean, defaults to false)
 		Alchemist: true/false         (boolean, defaults to false)
 		Bard: true/false              (boolean, defaults to false)
-		Gungslinger: true/false       (boolean, defaults to false)
+		Gunslinger: true/false       (boolean, defaults to false)
 		Ninja: true/false             (boolean, defaults to false)
 		Taekwon: true/false           (boolean, defaults to false)
 		Star_Gladiator: true/false    (boolean, defaults to false)

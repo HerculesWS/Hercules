@@ -984,8 +984,10 @@ struct {
 	struct HPMHookPoint *HP_clif_message_post;
 	struct HPMHookPoint *HP_clif_messageln_pre;
 	struct HPMHookPoint *HP_clif_messageln_post;
-	struct HPMHookPoint *HP_clif_process_message_pre;
-	struct HPMHookPoint *HP_clif_process_message_post;
+	struct HPMHookPoint *HP_clif_process_chat_message_pre;
+	struct HPMHookPoint *HP_clif_process_chat_message_post;
+	struct HPMHookPoint *HP_clif_process_whisper_message_pre;
+	struct HPMHookPoint *HP_clif_process_whisper_message_post;
 	struct HPMHookPoint *HP_clif_wisexin_pre;
 	struct HPMHookPoint *HP_clif_wisexin_post;
 	struct HPMHookPoint *HP_clif_wisall_pre;
@@ -1854,6 +1856,8 @@ struct {
 	struct HPMHookPoint *HP_clif_selectcart_post;
 	struct HPMHookPoint *HP_clif_pSelectCart_pre;
 	struct HPMHookPoint *HP_clif_pSelectCart_post;
+	struct HPMHookPoint *HP_clif_get_bl_name_pre;
+	struct HPMHookPoint *HP_clif_get_bl_name_post;
 	struct HPMHookPoint *HP_cmdline_init_pre;
 	struct HPMHookPoint *HP_cmdline_init_post;
 	struct HPMHookPoint *HP_cmdline_final_pre;
@@ -2610,6 +2614,10 @@ struct {
 	struct HPMHookPoint *HP_ircbot_identify_timer_post;
 	struct HPMHookPoint *HP_ircbot_join_timer_pre;
 	struct HPMHookPoint *HP_ircbot_join_timer_post;
+	struct HPMHookPoint *HP_ircbot_queue_timer_pre;
+	struct HPMHookPoint *HP_ircbot_queue_timer_post;
+	struct HPMHookPoint *HP_ircbot_queue_pre;
+	struct HPMHookPoint *HP_ircbot_queue_post;
 	struct HPMHookPoint *HP_ircbot_send_pre;
 	struct HPMHookPoint *HP_ircbot_send_post;
 	struct HPMHookPoint *HP_ircbot_relay_pre;
@@ -2618,6 +2626,8 @@ struct {
 	struct HPMHookPoint *HP_ircbot_pong_post;
 	struct HPMHookPoint *HP_ircbot_privmsg_pre;
 	struct HPMHookPoint *HP_ircbot_privmsg_post;
+	struct HPMHookPoint *HP_ircbot_privmsg_ctcp_pre;
+	struct HPMHookPoint *HP_ircbot_privmsg_ctcp_post;
 	struct HPMHookPoint *HP_ircbot_userjoin_pre;
 	struct HPMHookPoint *HP_ircbot_userjoin_post;
 	struct HPMHookPoint *HP_ircbot_userleave_pre;
@@ -4354,6 +4364,10 @@ struct {
 	struct HPMHookPoint *HP_pc_update_idle_time_post;
 	struct HPMHookPoint *HP_pc_have_magnifier_pre;
 	struct HPMHookPoint *HP_pc_have_magnifier_post;
+	struct HPMHookPoint *HP_pc_process_chat_message_pre;
+	struct HPMHookPoint *HP_pc_process_chat_message_post;
+	struct HPMHookPoint *HP_pc_check_supernovice_call_pre;
+	struct HPMHookPoint *HP_pc_check_supernovice_call_post;
 	struct HPMHookPoint *HP_libpcre_compile_pre;
 	struct HPMHookPoint *HP_libpcre_compile_post;
 	struct HPMHookPoint *HP_libpcre_study_pre;
@@ -4536,6 +4550,8 @@ struct {
 	struct HPMHookPoint *HP_script_get_val2_post;
 	struct HPMHookPoint *HP_script_push_str_pre;
 	struct HPMHookPoint *HP_script_push_str_post;
+	struct HPMHookPoint *HP_script_push_conststr_pre;
+	struct HPMHookPoint *HP_script_push_conststr_post;
 	struct HPMHookPoint *HP_script_push_copy_pre;
 	struct HPMHookPoint *HP_script_push_copy_post;
 	struct HPMHookPoint *HP_script_pop_stack_pre;
@@ -4658,6 +4674,8 @@ struct {
 	struct HPMHookPoint *HP_script_read_constdb_post;
 	struct HPMHookPoint *HP_script_constdb_comment_pre;
 	struct HPMHookPoint *HP_script_constdb_comment_post;
+	struct HPMHookPoint *HP_script_load_parameters_pre;
+	struct HPMHookPoint *HP_script_load_parameters_post;
 	struct HPMHookPoint *HP_script_print_line_pre;
 	struct HPMHookPoint *HP_script_print_line_post;
 	struct HPMHookPoint *HP_script_errorwarning_sub_pre;
@@ -5794,6 +5812,8 @@ struct {
 	struct HPMHookPoint *HP_unit_bl2ud_post;
 	struct HPMHookPoint *HP_unit_bl2ud2_pre;
 	struct HPMHookPoint *HP_unit_bl2ud2_post;
+	struct HPMHookPoint *HP_unit_init_ud_pre;
+	struct HPMHookPoint *HP_unit_init_ud_post;
 	struct HPMHookPoint *HP_unit_attack_timer_pre;
 	struct HPMHookPoint *HP_unit_attack_timer_post;
 	struct HPMHookPoint *HP_unit_walktoxy_timer_pre;
@@ -6861,8 +6881,10 @@ struct {
 	int HP_clif_message_post;
 	int HP_clif_messageln_pre;
 	int HP_clif_messageln_post;
-	int HP_clif_process_message_pre;
-	int HP_clif_process_message_post;
+	int HP_clif_process_chat_message_pre;
+	int HP_clif_process_chat_message_post;
+	int HP_clif_process_whisper_message_pre;
+	int HP_clif_process_whisper_message_post;
 	int HP_clif_wisexin_pre;
 	int HP_clif_wisexin_post;
 	int HP_clif_wisall_pre;
@@ -7731,6 +7753,8 @@ struct {
 	int HP_clif_selectcart_post;
 	int HP_clif_pSelectCart_pre;
 	int HP_clif_pSelectCart_post;
+	int HP_clif_get_bl_name_pre;
+	int HP_clif_get_bl_name_post;
 	int HP_cmdline_init_pre;
 	int HP_cmdline_init_post;
 	int HP_cmdline_final_pre;
@@ -8487,6 +8511,10 @@ struct {
 	int HP_ircbot_identify_timer_post;
 	int HP_ircbot_join_timer_pre;
 	int HP_ircbot_join_timer_post;
+	int HP_ircbot_queue_timer_pre;
+	int HP_ircbot_queue_timer_post;
+	int HP_ircbot_queue_pre;
+	int HP_ircbot_queue_post;
 	int HP_ircbot_send_pre;
 	int HP_ircbot_send_post;
 	int HP_ircbot_relay_pre;
@@ -8495,6 +8523,8 @@ struct {
 	int HP_ircbot_pong_post;
 	int HP_ircbot_privmsg_pre;
 	int HP_ircbot_privmsg_post;
+	int HP_ircbot_privmsg_ctcp_pre;
+	int HP_ircbot_privmsg_ctcp_post;
 	int HP_ircbot_userjoin_pre;
 	int HP_ircbot_userjoin_post;
 	int HP_ircbot_userleave_pre;
@@ -10231,6 +10261,10 @@ struct {
 	int HP_pc_update_idle_time_post;
 	int HP_pc_have_magnifier_pre;
 	int HP_pc_have_magnifier_post;
+	int HP_pc_process_chat_message_pre;
+	int HP_pc_process_chat_message_post;
+	int HP_pc_check_supernovice_call_pre;
+	int HP_pc_check_supernovice_call_post;
 	int HP_libpcre_compile_pre;
 	int HP_libpcre_compile_post;
 	int HP_libpcre_study_pre;
@@ -10413,6 +10447,8 @@ struct {
 	int HP_script_get_val2_post;
 	int HP_script_push_str_pre;
 	int HP_script_push_str_post;
+	int HP_script_push_conststr_pre;
+	int HP_script_push_conststr_post;
 	int HP_script_push_copy_pre;
 	int HP_script_push_copy_post;
 	int HP_script_pop_stack_pre;
@@ -10535,6 +10571,8 @@ struct {
 	int HP_script_read_constdb_post;
 	int HP_script_constdb_comment_pre;
 	int HP_script_constdb_comment_post;
+	int HP_script_load_parameters_pre;
+	int HP_script_load_parameters_post;
 	int HP_script_print_line_pre;
 	int HP_script_print_line_post;
 	int HP_script_errorwarning_sub_pre;
@@ -11671,6 +11709,8 @@ struct {
 	int HP_unit_bl2ud_post;
 	int HP_unit_bl2ud2_pre;
 	int HP_unit_bl2ud2_post;
+	int HP_unit_init_ud_pre;
+	int HP_unit_init_ud_post;
 	int HP_unit_attack_timer_pre;
 	int HP_unit_attack_timer_post;
 	int HP_unit_walktoxy_timer_pre;

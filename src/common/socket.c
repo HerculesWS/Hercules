@@ -975,7 +975,7 @@ static int access_debug    = 0;
 static int ddos_count      = 10;
 static int ddos_interval   = 3*1000;
 static int ddos_autoreset  = 10*60*1000;
-DBMap *connect_history = NULL;
+struct DBMap *connect_history = NULL;
 
 static int connect_check_(uint32 ip);
 
@@ -1089,7 +1089,7 @@ static int connect_check_clear(int tid, int64 tick, int id, intptr_t data) {
 	int clear = 0;
 	int list  = 0;
 	ConnectHistory *hist = NULL;
-	DBIterator *iter;
+	struct DBIterator *iter;
 
 	if( !db_size(connect_history) )
 		return 0;

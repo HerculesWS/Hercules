@@ -551,7 +551,7 @@ void instance_destroy(int instance_id) {
 	struct party_data *p = NULL;
 	struct guild *g = NULL;
 	short *iptr = NULL;
-	int type, j;
+	int type;
 	unsigned int now = (unsigned int)time(NULL);
 
 	if( !instance->valid(instance_id) )
@@ -596,9 +596,10 @@ void instance_destroy(int instance_id) {
 	}
 
 	if( iptr != NULL ) {
-		ARR_FIND(0, *icptr, j, iptr[j] == instance_id);
-		if( j != *icptr )
-			iptr[j] = -1;
+		int i;
+		ARR_FIND(0, *icptr, i, iptr[i] == instance_id);
+		if (i != *icptr)
+			iptr[i] = -1;
 	}
 
 	if (instance->list[instance_id].map) {

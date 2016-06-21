@@ -384,38 +384,6 @@
 - `cell_chknovending`: 12
 - `cell_chknochat`: 13
 
-### Parameters
-
-- `BaseExp`: [param]
-- `JobExp`: [param]
-- `Karma`: [param]
-- `Manner`: [param]
-- `Hp`: [param]
-- `MaxHp`: [param]
-- `Sp`: [param]
-- `MaxSp`: [param]
-- `StatusPoint`: [param]
-- `BaseLevel`: [param]
-- `SkillPoint`: [param]
-- `Class`: [param]
-- `Zeny`: [param]
-- `Sex`: [param]
-- `NextBaseExp`: [param]
-- `NextJobExp`: [param]
-- `Weight`: [param]
-- `MaxWeight`: [param]
-- `JobLevel`: [param]
-- `Upper`: [param]
-- `BaseJob`: [param]
-- `BaseClass`: [param]
-- `killerrid`: [param]
-- `killedrid`: [param]
-- `SlotChange`: [param]
-- `CharRename`: [param]
-- `ModExp`: [param]
-- `ModDrop`: [param]
-- `ModDeath`: [param]
-
 ### Bonuses / Parameter IDs
 
 - `bMaxHP`: 6
@@ -3683,7 +3651,7 @@
 - `MAX_GUILD_STORAGE`: 600
 - `MAX_CART`: 100
 - `MAX_INVENTORY`: 100
-- `MAX_ZENY`: 1000000000
+- `MAX_ZENY`: 2147483647
 - `MAX_BG_MEMBERS`: 30
 - `MAX_CHAT_USERS`: 20
 - `MAX_REFINE`: 20
@@ -3805,6 +3773,42 @@
 - `RENEWAL_LVDMG`: 1
 - `RENEWAL_EDP`: 1
 - `RENEWAL_ASPD`: 1
+
+
+## Parameters (source)
+
+
+### Parameters
+
+- `BaseExp`: [param]
+- `JobExp`: [param]
+- `Karma`: [param]
+- `Manner`: [param]
+- `Hp`: [param]
+- `MaxHp`: [param]
+- `Sp`: [param]
+- `MaxSp`: [param]
+- `StatusPoint`: [param]
+- `BaseLevel`: [param]
+- `SkillPoint`: [param]
+- `Class`: [param]
+- `Zeny`: [param]
+- `Sex`: [param]
+- `NextBaseExp`: [param]
+- `NextJobExp`: [param]
+- `Weight`: [param]
+- `MaxWeight`: [param]
+- `JobLevel`: [param]
+- `Upper`: [param]
+- `BaseJob`: [param]
+- `BaseClass`: [param]
+- `killerrid`: [param]
+- `killedrid`: [param]
+- `SlotChange`: [param]
+- `CharRename`: [param]
+- `ModExp`: [param]
+- `ModDrop`: [param]
+- `ModDeath`: [param]
 
 
 ## Skills (db/re/skill_db.txt)

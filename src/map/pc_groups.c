@@ -75,7 +75,7 @@ static void read_config(void) {
 
 	if (groups != NULL) {
 		GroupSettings *group_settings = NULL;
-		DBIterator *iter = NULL;
+		struct DBIterator *iter = NULL;
 		int i, loop = 0;
 
 		group_count = libconfig->setting_length(groups);
@@ -465,7 +465,7 @@ void do_init_pc_groups(void) {
 /**
  * @see DBApply
  */
-static int group_db_clear_sub(DBKey key, DBData *data, va_list args)
+static int group_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
 {
 	GroupSettings *group = DB->data2ptr(data);
 	if (group->name)

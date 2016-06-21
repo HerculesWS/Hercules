@@ -2255,7 +2255,8 @@ int status_calc_pet_(struct pet_data *pd, enum e_status_calc_opt opt)
 	return 1;
 }
 
-unsigned int status_get_base_maxsp(struct map_session_data* sd, struct status_data *st) {
+unsigned int status_get_base_maxsp(const struct map_session_data *sd, const struct status_data *st)
+{
 	uint64 val = pc->class2idx(sd->status.class_);
 
 	val = status->dbs->SP_table[val][sd->status.base_level];
@@ -2272,7 +2273,8 @@ unsigned int status_get_base_maxsp(struct map_session_data* sd, struct status_da
 	return (unsigned int)cap_value(val, 0, UINT_MAX);
 }
 
-unsigned int status_get_base_maxhp(struct map_session_data *sd, struct status_data *st) {
+unsigned int status_get_base_maxhp(const struct map_session_data *sd, const struct status_data *st)
+{
 	uint64 val = pc->class2idx(sd->status.class_);
 
 	val = status->dbs->HP_table[val][sd->status.base_level];
@@ -2718,7 +2720,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 
 	// Base batk value is set on status->calc_misc
 	// weapon-type bonus (FIXME: Why is the weapon_atk bonus applied to base attack?)
-	if (sd->status.weapon < MAX_WEAPON_TYPE && sd->weapon_atk[sd->status.weapon])
+	if (sd->status.weapon < MAX_SINGLE_WEAPON_TYPE && sd->weapon_atk[sd->status.weapon])
 		bstatus->batk += sd->weapon_atk[sd->status.weapon];
 	// Absolute modifiers from passive skills
 #ifndef RENEWAL
@@ -3518,10 +3520,18 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 		regen->flag &=~RGN_SP; //No natural SP regen
 	}
 
+
+	// Tension relax allows the user to recover HP while overweight
+	// at 1x speed. Other SC ignored? [csnv]
 	if (sc->data[SC_TENSIONRELAX]) {
-		regen->rate.hp += 2;
-		if (regen->sregen)
-			regen->sregen->rate.hp += 3;
+		if (sc->data[SC_WEIGHTOVER50] || sc->data[SC_WEIGHTOVER90]) {
+			regen->flag &= ~RGN_SP;
+			regen->rate.hp = 1;
+		} else {
+			regen->rate.hp += 2;
+			if (regen->sregen)
+				regen->sregen->rate.hp += 3;
+		}
 	}
 
 	if (sc->data[SC_MAGNIFICAT]) {
@@ -4189,10 +4199,10 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st) 
 	float temp;
 	int skill_lv, val = 0;
 	amotion = status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype1];
-	if ( sd->status.weapon > MAX_WEAPON_TYPE )
+	if ( sd->status.weapon > MAX_SINGLE_WEAPON_TYPE)
 		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype2] / 4;
 	if ( sd->status.shield )
-		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class_)][MAX_WEAPON_TYPE];
+		amotion += status->dbs->aspd_base[pc->class2idx(sd->status.class_)][MAX_SINGLE_WEAPON_TYPE];
 	switch ( sd->status.weapon ) {
 		case W_BOW:
 		case W_MUSICAL:
@@ -4215,7 +4225,7 @@ int status_base_amotion_pc(struct map_session_data *sd, struct status_data *st) 
 	amotion = ((int)(temp + ((float)(status->calc_aspd(&sd->bl, &sd->sc, 1) + val) * st->agi / 200)) - min(amotion, 200));
 #else
 	// base weapon delay
-	amotion = (sd->status.weapon < MAX_WEAPON_TYPE)
+	amotion = (sd->status.weapon < MAX_SINGLE_WEAPON_TYPE)
 		? (status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->status.weapon]) // single weapon
 		: (status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype1] + status->dbs->aspd_base[pc->class2idx(sd->status.class_)][sd->weapontype2]) * 7 / 10; // dual-wield
 
@@ -5566,9 +5576,9 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 		{
 			int val = 0;
 
-			if( sd && sc->data[SC_HIDING] && pc->checkskill(sd,RG_TUNNELDRIVE) > 0 )
+			if ( sd && sc->data[SC_HIDING] && pc->checkskill(sd,RG_TUNNELDRIVE) > 0 ) {
 				val = 120 - 6 * pc->checkskill(sd,RG_TUNNELDRIVE);
-			else
+			} else {
 				if( sd && sc->data[SC_CHASEWALK] && sc->data[SC_CHASEWALK]->val3 < 0 )
 					val = sc->data[SC_CHASEWALK]->val3;
 				else
@@ -5638,8 +5648,8 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 					if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate > 0 ) // permanent item-based speedup
 						val = max( val, sd->bonus.speed_rate + sd->bonus.speed_add_rate );
 				}
-
-				speed_rate += val;
+			}
+			speed_rate += val;
 		}
 
 		//GetMoveHasteValue1()
@@ -6241,7 +6251,13 @@ uint32 status_calc_mode(const struct block_list *bl, const struct status_change 
 	return mode & MD_MASK;
 }
 
-const char *status_get_name(struct block_list *bl)
+/**
+ * Returns the name of the given bl.
+ *
+ * @param bl The requested bl.
+ * @return The bl's name or NULL if not available.
+ */
+const char *status_get_name(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6257,7 +6273,7 @@ const char *status_get_name(struct block_list *bl)
 		case BL_HOM: return BL_UCCAST(BL_HOM, bl)->homunculus.name;
 		case BL_NPC: return BL_UCCAST(BL_NPC, bl)->name;
 	}
-	return "Unknown";
+	return NULL;
 }
 
 /*==========================================
@@ -6266,7 +6282,7 @@ const char *status_get_name(struct block_list *bl)
 *   0 = fail
 *   class_id = success
 *------------------------------------------*/
-int status_get_class(struct block_list *bl)
+int status_get_class(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6286,7 +6302,7 @@ int status_get_class(struct block_list *bl)
 *   1 = fail
 *   level = success
 *------------------------------------------*/
-int status_get_lv(struct block_list *bl)
+int status_get_lv(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6376,7 +6392,8 @@ unsigned short status_get_speed(struct block_list *bl)
 	return status->get_status_data(bl)->speed;
 }
 
-int status_get_party_id(struct block_list *bl) {
+int status_get_party_id(const struct block_list *bl)
+{
 	nullpo_ret(bl);
 	switch (bl->type) {
 	case BL_PC:
@@ -6431,7 +6448,7 @@ int status_get_party_id(struct block_list *bl) {
 	return 0;
 }
 
-int status_get_guild_id(struct block_list *bl)
+int status_get_guild_id(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	switch (bl->type) {
@@ -6497,7 +6514,8 @@ int status_get_guild_id(struct block_list *bl)
 	return 0;
 }
 
-int status_get_emblem_id(struct block_list *bl) {
+int status_get_emblem_id(const struct block_list *bl)
+{
 	nullpo_ret(bl);
 	switch (bl->type) {
 	case BL_PC:
@@ -6558,7 +6576,7 @@ int status_get_emblem_id(struct block_list *bl) {
 	return 0;
 }
 
-int status_get_mexp(struct block_list *bl)
+int status_get_mexp(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	if (bl->type == BL_MOB)
@@ -6568,7 +6586,7 @@ int status_get_mexp(struct block_list *bl)
 	return 0;
 }
 
-int status_get_race2(struct block_list *bl)
+int status_get_race2(const struct block_list *bl)
 {
 	nullpo_ret(bl);
 	if (bl->type == BL_MOB)
@@ -7477,8 +7495,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
 			break;
 		case SC_NOEQUIPSHIELD:
-			if( val2 == 1 ) val2 = 0; //GX effect. Do not take shield off..
-			else
+			if (val2 == 1) {
+				val2 = 0; //GX effect. Do not take shield off..
+			} else {
 				if (sd && !(flag&SCFLAG_LOADED)) {
 					int i;
 					if(sd->bonus.unstripable_equip&EQP_SHIELD)
@@ -7488,8 +7507,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 						return 0;
 					pc->unequipitem(sd, i, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
 				}
-				if (tick == 1) return 1; //Minimal duration: Only strip without causing the SC
-				break;
+			}
+			if (tick == 1)
+				return 1; //Minimal duration: Only strip without causing the SC
+			break;
 		case SC_NOEQUIPARMOR:
 			if (sd && !(flag&SCFLAG_LOADED)) {
 				int i;
@@ -11592,7 +11613,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 			if( --(sce->val4) > 0 ) {
 				struct block_list *src = map->id2bl(sce->val2);
 				int damage;
-				if( !src || (src && (status->isdead(src) || src->m != bl->m || distance_bl(src, bl) >= 12)) )
+				if (src == NULL || (status->isdead(src) || src->m != bl->m || distance_bl(src, bl) >= 12))
 					break;
 				map->freeblock_lock();
 				damage =  sce->val3;
@@ -12432,8 +12453,10 @@ int status_natural_heal(struct block_list* bl, va_list args) {
 		}
 	}
 
-	if (flag && regen->state.overweight)
-		flag=0;
+	// SC_TENSIONRELAX allows HP to be recovered even when overweight. [csnv]
+	if (flag && regen->state.overweight && (sc == NULL || sc->data[SC_TENSIONRELAX] == NULL)) {
+		flag = 0;
+	}
 
 	ud = unit->bl2ud(bl);
 
@@ -12603,7 +12626,7 @@ void status_read_job_db_sub(int idx, const char *name, struct config_setting_t *
 		{ "FuumaShuriken", W_HUUMA },
 		{ "TwoHandRod", W_2HSTAFF },
 #ifdef RENEWAL_ASPD
-		{ "Shield", MAX_WEAPON_TYPE }
+		{ "Shield", MAX_SINGLE_WEAPON_TYPE }
 #endif
 	};
 
@@ -12941,7 +12964,7 @@ int status_readdb_refine_libconfig(const char *filename) {
 	struct config_t refine_db_conf;
 	struct config_setting_t *r;
 	char filepath[256];
-	int i = 0, count = 0,type = 0;
+	int i = 0, count = 0;
 
 	sprintf(filepath, "%s/%s", map->db_path, filename);
 	if (!libconfig->load_file(&refine_db_conf, filepath))
@@ -12951,10 +12974,13 @@ int status_readdb_refine_libconfig(const char *filename) {
 
 	while((r = libconfig->setting_get_elem(refine_db_conf.root,i++))) {
 		char *name = config_setting_name(r);
-		if((type=status->readdb_refine_libconfig_sub(r, name, filename))) {
-			if( duplicate[type-1] ) {
+		int type = status->readdb_refine_libconfig_sub(r, name, filename);
+		if (type != 0) {
+			if (duplicate[type-1]) {
 				ShowWarning("status_readdb_refine_libconfig: duplicate entry for %s in \"%s\", overwriting previous entry...\n", name, filename);
-			} else duplicate[type-1] = true;
+			} else {
+				duplicate[type-1] = true;
+			}
 			count++;
 		}
 	}
@@ -12999,10 +13025,10 @@ int status_readdb(void)
 		memset(status->dbs->job_bonus,0,sizeof(status->dbs->job_bonus)); // Job-specific stats bonus
 	}
 	for ( i = 0; i < CLASS_COUNT; i++ ) {
-		for ( j = 0; j < MAX_WEAPON_TYPE; j++ )
+		for ( j = 0; j < MAX_SINGLE_WEAPON_TYPE; j++ )
 			status->dbs->aspd_base[i][j] = 2000;
 #ifdef RENEWAL_ASPD
-		status->dbs->aspd_base[i][MAX_WEAPON_TYPE] = 0;
+		status->dbs->aspd_base[i][MAX_SINGLE_WEAPON_TYPE] = 0;
 #endif
 	}
 

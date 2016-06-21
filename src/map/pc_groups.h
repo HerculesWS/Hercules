@@ -22,9 +22,9 @@
 #define MAP_PC_GROUPS_H
 
 #include "common/hercules.h"
-#include "common/db.h"
 
 /* Forward Declarations */
+struct DBMap; // common/db.h
 struct config_setting_t;
 
 /// PC permissions
@@ -91,8 +91,8 @@ struct pc_groups_new_permission {
 
 struct pc_groups_interface {
 	/* */
-	DBMap* db; // id -> GroupSettings
-	DBMap* name_db; // name -> GroupSettings
+	struct DBMap *db; // id -> GroupSettings
+	struct DBMap *name_db; // name -> GroupSettings
 	/* */
 	struct pc_groups_permission_table *permissions;
 	unsigned char permission_count;

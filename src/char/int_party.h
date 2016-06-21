@@ -22,8 +22,10 @@
 #define CHAR_INT_PARTY_H
 
 #include "common/hercules.h"
-#include "common/db.h"
 #include "common/mmo.h"
+
+/* Forward Declarations */
+struct DBMap; // common/db.h
 
 //Party Flags on what to save/delete.
 enum {
@@ -47,7 +49,7 @@ struct party_data {
  **/
 struct inter_party_interface {
 	struct party_data *pt;
-	DBMap* db;  // int party_id -> struct party_data*
+	struct DBMap *db;  // int party_id -> struct party_data*
 	int (*check_lv) (struct party_data *p);
 	void (*calc_state) (struct party_data *p);
 	int (*tosql) (struct party *p, int flag, int index);

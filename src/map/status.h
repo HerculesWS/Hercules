@@ -1789,9 +1789,13 @@ enum si_type {
 	//SI_DORAM_BUF_01                        = 935,
 	//SI_DORAM_BUF_02                        = 936,
 	//SI_SPRITEMABLE                         = 937,
+	//SI_EP16_2_BUFF_SS                      = 963,
+	//SI_EP16_2_BUFF_SC                      = 964,
+	//SI_EP16_2_BUFF_AC                      = 965,
 
 	SI_MAX,
 };
+
 // JOINTBEAT stackable ailments
 enum e_joint_break
 {
@@ -1803,7 +1807,6 @@ enum e_joint_break
 	BREAK_NECK     = 0x20, // current attack does 2x damage, inflicts 'bleeding' for 30 seconds
 	BREAK_FLAGS    = BREAK_ANKLE | BREAK_WRIST | BREAK_KNEE | BREAK_SHOULDER | BREAK_WAIST | BREAK_NECK,
 };
-
 
 /**
  * Mob mode definitions. [Skotlex]
@@ -2159,7 +2162,7 @@ BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when sta
 	int max_weight_base[CLASS_COUNT];
 	int HP_table[CLASS_COUNT][MAX_LEVEL + 1];
 	int SP_table[CLASS_COUNT][MAX_LEVEL + 1];
-	int aspd_base[CLASS_COUNT][MAX_WEAPON_TYPE+1]; // +1 for RENEWAL_ASPD
+	int aspd_base[CLASS_COUNT][MAX_SINGLE_WEAPON_TYPE+1]; // +1 for RENEWAL_ASPD
 	sc_type Skill2SCTable[MAX_SKILL];  // skill  -> status
 	int IconChangeTable[SC_MAX];          // status -> "icon" (icon is a bit of a misnomer, since there exist values with no icon associated)
 	unsigned int ChangeFlagTable[SC_MAX]; // status -> flags
@@ -2216,17 +2219,17 @@ struct status_interface {
 	struct regen_data * (*get_regen_data) (struct block_list *bl);
 	struct status_data * (*get_status_data) (struct block_list *bl);
 	struct status_data * (*get_base_status) (struct block_list *bl);
-	const char * (*get_name) (struct block_list *bl);
-	int (*get_class) (struct block_list *bl);
-	int (*get_lv) (struct block_list *bl);
+	const char *(*get_name) (const struct block_list *bl);
+	int (*get_class) (const struct block_list *bl);
+	int (*get_lv) (const struct block_list *bl);
 	defType (*get_def) (struct block_list *bl);
 	unsigned short (*get_speed) (struct block_list *bl);
 	unsigned char (*calc_attack_element) (struct block_list *bl, struct status_change *sc, int element);
-	int (*get_party_id) (struct block_list *bl);
-	int (*get_guild_id) (struct block_list *bl);
-	int (*get_emblem_id) (struct block_list *bl);
-	int (*get_mexp) (struct block_list *bl);
-	int (*get_race2) (struct block_list *bl);
+	int (*get_party_id) (const struct block_list *bl);
+	int (*get_guild_id) (const struct block_list *bl);
+	int (*get_emblem_id) (const struct block_list *bl);
+	int (*get_mexp) (const struct block_list *bl);
+	int (*get_race2) (const struct block_list *bl);
 	struct view_data * (*get_viewdata) (struct block_list *bl);
 	void (*set_viewdata) (struct block_list *bl, int class_);
 	void (*change_init) (struct block_list *bl);
@@ -2272,8 +2275,8 @@ struct status_interface {
 	void (*initDummyData) (void);
 	int (*base_amotion_pc) (struct map_session_data *sd, struct status_data *st);
 	unsigned short (*base_atk) (const struct block_list *bl, const struct status_data *st);
-	unsigned int (*get_base_maxhp) (struct map_session_data *sd, struct status_data *st);
-	unsigned int (*get_base_maxsp) (struct map_session_data *sd, struct status_data *st);
+	unsigned int (*get_base_maxhp) (const struct map_session_data *sd, const struct status_data *st);
+	unsigned int (*get_base_maxsp) (const struct map_session_data *sd, const struct status_data *st);
 	int (*calc_npc_) (struct npc_data *nd, enum e_status_calc_opt opt);
 	unsigned short (*calc_str) (struct block_list *bl, struct status_change *sc, int str);
 	unsigned short (*calc_agi) (struct block_list *bl, struct status_change *sc, int agi);

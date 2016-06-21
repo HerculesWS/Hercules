@@ -547,7 +547,7 @@ ACMD(jumpto) {
 		return false;
 	}
 
-	if((pl_sd=map->nick2sd((const char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
+	if ((pl_sd=map->nick2sd(message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -1091,9 +1091,9 @@ ACMD(kami)
 
 		sscanf(message, "%199[^\n]", atcmd_output);
 		if (stristr(info->command, "l") != NULL)
-			clif->broadcast(&sd->bl, atcmd_output, strlen(atcmd_output) + 1, BC_DEFAULT, ALL_SAMEMAP);
+			clif->broadcast(&sd->bl, atcmd_output, (int)strlen(atcmd_output) + 1, BC_DEFAULT, ALL_SAMEMAP);
 		else
-			intif->broadcast(atcmd_output, strlen(atcmd_output) + 1, (*(info->command + 4) == 'b' || *(info->command + 4) == 'B') ? BC_BLUE : BC_YELLOW);
+			intif->broadcast(atcmd_output, (int)strlen(atcmd_output) + 1, (*(info->command + 4) == 'b' || *(info->command + 4) == 'B') ? BC_BLUE : BC_YELLOW);
 	} else {
 		if(!*message || (sscanf(message, "%10u %199[^\n]", &color, atcmd_output) < 2)) {
 			clif->message(fd, msg_fd(fd,981)); // Please enter color and message (usage: @kamic <color> <message>).
@@ -1104,7 +1104,7 @@ ACMD(kami)
 			clif->message(fd, msg_fd(fd,982)); // Invalid color.
 			return false;
 		}
-		intif->broadcast2(atcmd_output, strlen(atcmd_output) + 1, color, 0x190, 12, 0, 0);
+		intif->broadcast2(atcmd_output, (int)strlen(atcmd_output) + 1, color, 0x190, 12, 0, 0);
 	}
 	return true;
 }
@@ -1511,7 +1511,7 @@ ACMD(help) {
 	clif->message(fd, atcmd_output);
 
 	{   // Display aliases
-		DBIterator* iter;
+		struct DBIterator *iter;
 		AtCommandInfo *command_info;
 		AliasInfo *alias_info = NULL;
 		StringBuf buf;
@@ -2747,7 +2747,7 @@ ACMD(recall) {
 		return false;
 	}
 
-	if((pl_sd=map->nick2sd((const char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
+	if ((pl_sd=map->nick2sd(message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -3072,7 +3072,7 @@ ACMD(kick)
 		return false;
 	}
 
-	if((pl_sd=map->nick2sd((const char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
+	if ((pl_sd=map->nick2sd(message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -3643,6 +3643,8 @@ ACMD(reloadbattleconf)
 	memcpy(&prev_config, &battle_config, sizeof(prev_config));
 
 	battle->config_read(map->BATTLE_CONF_FILENAME);
+	if (prev_config.feature_roulette == 0 && battle_config.feature_roulette == 1 && !clif->parse_roulette_db())
+		battle_config.feature_roulette = 0;
 
 	if( prev_config.item_rate_mvp          != battle_config.item_rate_mvp
 	   ||  prev_config.item_rate_common       != battle_config.item_rate_common
@@ -3791,7 +3793,7 @@ ACMD(mapinfo)
 		if( pl_sd->mapindex == m_index ) {
 			if( pl_sd->state.vending )
 				vend_num++;
-			else if ((cd = map->id2cd(pl_sd->chatID)) != NULL && cd->usersd[0] == pl_sd)
+			else if ((cd = map->id2cd(pl_sd->chat_id)) != NULL && cd->usersd[0] == pl_sd)
 				chat_num++;
 		}
 	}
@@ -3970,7 +3972,7 @@ ACMD(mapinfo)
 			clif->message(fd, msg_fd(fd,1113)); // ----- Chats in Map -----
 			iter = mapit_getallusers();
 			for (pl_sd = BL_UCCAST(BL_PC, mapit->first(iter)); mapit->exists(iter); pl_sd = BL_UCCAST(BL_PC, mapit->next(iter))) {
-				if ((cd = map->id2cd(pl_sd->chatID)) != NULL && pl_sd->mapindex == m_index && cd->usersd[0] == pl_sd) {
+				if ((cd = map->id2cd(pl_sd->chat_id)) != NULL && pl_sd->mapindex == m_index && cd->usersd[0] == pl_sd) {
 					safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,1114), // Chat: %s | Player: %s | Location: %d %d
 							cd->title, pl_sd->status.name, cd->bl.x, cd->bl.y);
 					clif->message(fd, atcmd_output);
@@ -4909,7 +4911,7 @@ ACMD(broadcast)
 	}
 
 	safesnprintf(atcmd_output, sizeof(atcmd_output), "%s: %s", sd->status.name, message);
-	intif->broadcast(atcmd_output, strlen(atcmd_output) + 1, BC_DEFAULT);
+	intif->broadcast(atcmd_output, (int)strlen(atcmd_output) + 1, BC_DEFAULT);
 
 	return true;
 }
@@ -4928,7 +4930,7 @@ ACMD(localbroadcast)
 
 	safesnprintf(atcmd_output, sizeof(atcmd_output), "%s: %s", sd->status.name, message);
 
-	clif->broadcast(&sd->bl, atcmd_output, strlen(atcmd_output) + 1, BC_DEFAULT, ALL_SAMEMAP);
+	clif->broadcast(&sd->bl, atcmd_output, (int)strlen(atcmd_output) + 1, BC_DEFAULT, ALL_SAMEMAP);
 
 	return true;
 }
@@ -5123,8 +5125,7 @@ ACMD(follow) {
 		return true;
 	}
 
-	if ((pl_sd = map->nick2sd((const char *)message)) == NULL)
-	{
+	if ((pl_sd = map->nick2sd(message)) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -5262,7 +5263,7 @@ ACMD(clearcart)
 
 	for( i = 0; i < MAX_CART; i++ )
 		if(sd->status.cart[i].nameid > 0)
-			pc->cart_delitem(sd, i, sd->status.cart[i].amount, 1, LOG_TYPE_OTHER);
+			pc->cart_delitem(sd, i, sd->status.cart[i].amount, 1, LOG_TYPE_COMMAND);
 
 	clif->clearcart(fd);
 	clif->updatestatus(sd,SP_CARTINFO);
@@ -5277,12 +5278,13 @@ ACMD(clearcart)
  *------------------------------------------*/
 #define MAX_SKILLID_PARTIAL_RESULTS 5
 #define MAX_SKILLID_PARTIAL_RESULTS_LEN 74 /* "skill " (6) + "%d:" (up to 5) + "%s" (up to 30) + " (%s)" (up to 33) */
-ACMD(skillid) {
+ACMD(skillid)
+{
 	int i, found = 0;
 	size_t skillen;
-	DBIterator* iter;
-	DBKey key;
-	DBData *data;
+	struct DBIterator *iter;
+	union DBKey key;
+	struct DBData *data;
 	char partials[MAX_SKILLID_PARTIAL_RESULTS][MAX_SKILLID_PARTIAL_RESULTS_LEN];
 
 	if (!*message) {
@@ -5601,7 +5603,7 @@ ACMD(changegm) {
 		return false;
 	}
 
-	if ((pl_sd=map->nick2sd((const char *) message)) == NULL || pl_sd->status.guild_id != sd->status.guild_id) {
+	if ((pl_sd=map->nick2sd(message)) == NULL || pl_sd->status.guild_id != sd->status.guild_id) {
 		clif->message(fd, msg_fd(fd,1184)); // Target character must be online and be a guild member.
 		return false;
 	}
@@ -5621,7 +5623,7 @@ ACMD(changeleader) {
 		return false;
 	}
 
-	if (party->changeleader(sd, map->nick2sd((const char *) message)))
+	if (party->changeleader(sd, map->nick2sd(message)))
 		return true;
 	return false;
 }
@@ -6380,7 +6382,7 @@ ACMD(trade) {
 		return false;
 	}
 
-	if ( (pl_sd = map->nick2sd((const char *)message)) == NULL ) {
+	if ((pl_sd = map->nick2sd(message)) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -6423,8 +6425,7 @@ ACMD(unmute) {
 		return false;
 	}
 
-	if ((pl_sd = map->nick2sd((const char *)message)) == NULL)
-	{
+	if ((pl_sd = map->nick2sd(message)) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -6778,7 +6779,7 @@ ACMD(showmobs)
 	clif->message(fd, atcmd_output);
 
 	it = mapit_geteachmob();
-	for (md = BL_UCCAST(BL_MOB, mapit->first(it)); mapit->next(it); md = BL_UCCAST(BL_MOB, mapit->next(it))) {
+	for (md = BL_UCCAST(BL_MOB, mapit->first(it)); mapit->exists(it); md = BL_UCCAST(BL_MOB, mapit->next(it))) {
 		if( md->bl.m != sd->bl.m )
 			continue;
 		if( mob_id != -1 && md->class_ != mob_id )
@@ -7665,9 +7666,10 @@ ACMD(showdelay)
  * @reject - reject invitation
  * @leave - leave duel
  *------------------------------------------*/
-ACMD(invite) {
+ACMD(invite)
+{
 	unsigned int did = sd->duel_group;
-	struct map_session_data *target_sd = map->nick2sd((const char *)message);
+	struct map_session_data *target_sd = map->nick2sd(message);
 
 	if (did == 0)
 	{
@@ -7739,8 +7741,7 @@ ACMD(duel) {
 			}
 			duel->create(sd, maxpl);
 		} else {
-			struct map_session_data *target_sd;
-			target_sd = map->nick2sd((const char *)message);
+			struct map_session_data *target_sd = map->nick2sd(message);
 			if (target_sd != NULL) {
 				unsigned int newduel;
 				if ((newduel = duel->create(sd, 2)) != -1) {
@@ -7835,7 +7836,7 @@ ACMD(cash)
 				// If this option is set, the message is already sent by pc function
 				if( !battle_config.cashshop_show_points ){
 					sprintf(output, msg_fd(fd,505), ret, sd->cashPoints);
-					clif_disp_onlyself(sd, output, strlen(output));
+					clif_disp_onlyself(sd, output);
 					clif->message(fd, output);
 				}
 			} else
@@ -7843,7 +7844,7 @@ ACMD(cash)
 		} else {
 			if( (ret=pc->paycash(sd, -value, 0)) >= 0){
 			    sprintf(output, msg_fd(fd,410), ret, sd->cashPoints);
-				clif_disp_onlyself(sd, output, strlen(output));
+				clif_disp_onlyself(sd, output);
 				clif->message(fd, output);
 			} else
 				clif->message(fd, msg_fd(fd,41)); // Unable to decrease the number/value.
@@ -7854,7 +7855,7 @@ ACMD(cash)
 				// If this option is set, the message is already sent by pc function
 				if( !battle_config.cashshop_show_points ){
 					sprintf(output, msg_fd(fd,506), ret, sd->kafraPoints);
-					clif_disp_onlyself(sd, output, strlen(output));
+					clif_disp_onlyself(sd, output);
 					clif->message(fd, output);
 				}
 			} else
@@ -7862,7 +7863,7 @@ ACMD(cash)
 		} else {
 			if( (ret=pc->paycash(sd, -value, -value)) >= 0){
 			    sprintf(output, msg_fd(fd,411), ret, sd->kafraPoints);
-				clif_disp_onlyself(sd, output, strlen(output));
+				clif_disp_onlyself(sd, output);
 				clif->message(fd, output);
 			} else
 				clif->message(fd, msg_fd(fd,41)); // Unable to decrease the number/value.
@@ -7882,7 +7883,7 @@ ACMD(clone) {
 		return false;
 	}
 
-	if ((pl_sd=map->nick2sd((const char *)message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
+	if ((pl_sd=map->nick2sd(message)) == NULL && (pl_sd=map->charid2sd(atoi(message))) == NULL) {
 		clif->message(fd, msg_fd(fd,3)); // Character not found.
 		return false;
 	}
@@ -7957,7 +7958,7 @@ ACMD(request)
 
 	safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,278), message); // (@request): %s
 	intif->wis_message_to_gm(sd->status.name, PC_PERM_RECEIVE_REQUESTS, atcmd_output);
-	clif_disp_onlyself(sd, atcmd_output, strlen(atcmd_output));
+	clif_disp_onlyself(sd, atcmd_output);
 	clif->message(sd->fd,msg_fd(fd,279)); // @request sent.
 	return true;
 }
@@ -8352,7 +8353,7 @@ void atcommand_commands_sub(struct map_session_data* sd, const int fd, AtCommand
 	char line_buff[CHATBOX_SIZE];
 	char* cur = line_buff;
 	AtCommandInfo* cmd;
-	DBIterator *iter = db_iterator(atcommand->db);
+	struct DBIterator *iter = db_iterator(atcommand->db);
 	int count = 0;
 
 	memset(line_buff,' ',CHATBOX_SIZE);
@@ -8498,30 +8499,34 @@ ACMD(set)
 
 	CREATE(data, struct script_data,1);
 
-	if( is_str ) {// string variable
-		switch( reg[0] ) {
+	if (is_str) {
+		// string variable
+		const char *str = NULL;
+		switch (reg[0]) {
 			case '@':
-				data->u.str = pc->readregstr(sd, script->add_str(reg));
+				str = pc->readregstr(sd, script->add_str(reg));
 				break;
 			case '$':
-				data->u.str = mapreg->readregstr(script->add_str(reg));
+				str = mapreg->readregstr(script->add_str(reg));
 				break;
 			case '#':
-				if( reg[1] == '#' )
-					data->u.str = pc_readaccountreg2str(sd, script->add_str(reg));// global
+				if (reg[1] == '#')
+					str = pc_readaccountreg2str(sd, script->add_str(reg));// global
 				else
-					data->u.str = pc_readaccountregstr(sd, script->add_str(reg));// local
+					str = pc_readaccountregstr(sd, script->add_str(reg));// local
 				break;
 			default:
-				data->u.str = pc_readglobalreg_str(sd, script->add_str(reg));
+				str = pc_readglobalreg_str(sd, script->add_str(reg));
 				break;
 		}
-		if( data->u.str == NULL || data->u.str[0] == '\0' ) {// empty string
+		if (str == NULL || str[0] == '\0') {
+			// empty string
 			data->type = C_CONSTSTR;
 			data->u.str = "";
-		} else {// duplicate string
+		} else {
+			// duplicate string
 			data->type = C_STR;
-			data->u.str = aStrdup(data->u.str);
+			data->u.mutstr = aStrdup(str);
 		}
 	} else {// integer variable
 		data->type = C_INT;
@@ -8549,7 +8554,7 @@ ACMD(set)
 			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1373),reg,data->u.num); // %s value is now :%d
 			break;
 		case C_STR:
-			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1374),reg,data->u.str); // %s value is now :%s
+			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1374),reg,data->u.mutstr); // %s value is now :%s
 			break;
 		case C_CONSTSTR:
 			safesnprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd,1375),reg); // %s is empty
@@ -8822,7 +8827,7 @@ ACMD(channel) {
 				clif->messagecolor_self(fd, channel->config->colors[k], atcmd_output);
 			}
 		} else {
-			DBIterator *iter = db_iterator(channel->db);
+			struct DBIterator *iter = db_iterator(channel->db);
 			bool show_all = pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN) ? true : false;
 			clif->message(fd, msg_fd(fd,1410)); // -- Public Channels
 			if (channel->config->local) {
@@ -9052,9 +9057,9 @@ ACMD(channel) {
 		clif->message(fd, atcmd_output);
 	} else if (strcmpi(subcmd,"banlist") == 0) {
 		// sub1 = channel name; sub2 = unused; sub3 = unused
-		DBIterator *iter = NULL;
-		DBKey key;
-		DBData *data;
+		struct DBIterator *iter = NULL;
+		union DBKey key;
+		struct DBData *data;
 		bool isA = pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)?true:false;
 		if (sub1[0] != '#') {
 			clif->message(fd, msg_fd(fd,1405));// Channel name must start with a '#'
@@ -9729,8 +9734,7 @@ const char* atcommand_checkalias(const char *aliasname) {
 
 /// AtCommand suggestion
 void atcommand_get_suggestions(struct map_session_data* sd, const char *name, bool is_atcmd_cmd) {
-	DBIterator* atcommand_iter;
-	DBIterator* alias_iter;
+	struct DBIterator *atcommand_iter, *alias_iter;
 	AtCommandInfo* command_info = NULL;
 	AliasInfo* alias_info = NULL;
 	AtCommandType type = is_atcmd_cmd ? COMMAND_ATCOMMAND : COMMAND_CHARCOMMAND;
@@ -10116,7 +10120,7 @@ static inline int atcommand_command_type2idx(AtCommandType type)
  */
 void atcommand_db_load_groups(GroupSettings **groups, struct config_setting_t **commands_, size_t sz)
 {
-	DBIterator *iter = db_iterator(atcommand->db);
+	struct DBIterator *iter = db_iterator(atcommand->db);
 	AtCommandInfo *atcmd;
 
 	nullpo_retv(groups);
@@ -10218,7 +10222,8 @@ bool atcommand_hp_add(char *name, AtCommandFunc func) {
 /**
  * @see DBApply
  */
-int atcommand_db_clear_sub(DBKey key, DBData *data, va_list args) {
+int atcommand_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
+{
 	AtCommandInfo *cmd = DB->data2ptr(data);
 	aFree(cmd->at_groups);
 	aFree(cmd->char_groups);

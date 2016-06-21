@@ -25,6 +25,7 @@
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
+#include "common/sql.h"
 #include "common/strlib.h"
 #include "map/battle.h"
 #include "map/itemdb.h"

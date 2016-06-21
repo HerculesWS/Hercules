@@ -91,9 +91,9 @@ int do_init(int argc, char **argv){
 
 		// Everything fine?
 		if (val != (THRC*PERINC)) {
-			printf("FAILED! (Result: %u, Expected: %u)\n",  val,  (THRC*PERINC));
+			printf("FAILED! (Result: %u, Expected: %d)\n",  val,  (THRC*PERINC));
 		} else {
-			printf("OK! (Result: %u, Expected: %u)\n", val, (THRC*PERINC));
+			printf("OK! (Result: %u, Expected: %d)\n", val, (THRC*PERINC));
 			ok++;
 		}
 

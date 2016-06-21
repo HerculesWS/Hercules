@@ -150,7 +150,7 @@ int intif_rename(struct map_session_data *sd, int type, const char *name)
 }
 
 // GM Send a message
-int intif_broadcast(const char* mes, size_t len, int type)
+int intif_broadcast(const char *mes, int len, int type)
 {
 	int lp = (type&BC_COLOR_MASK) ? 4 : 0;
 
@@ -182,7 +182,7 @@ int intif_broadcast(const char* mes, size_t len, int type)
 	return 0;
 }
 
-int intif_broadcast2(const char* mes, size_t len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY)
+int intif_broadcast2(const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY)
 {
 	nullpo_ret(mes);
 	Assert_ret(len < 32000);
@@ -222,7 +222,7 @@ int intif_main_message(struct map_session_data* sd, const char* message)
 	snprintf( output, sizeof(output), msg_txt(386), sd->status.name, message );
 
 	// send the message using the inter-server broadcast service
-	intif->broadcast2( output, strlen(output) + 1, 0xFE000000, 0, 0, 0, 0 );
+	intif->broadcast2(output, (int)strlen(output) + 1, 0xFE000000, 0, 0, 0, 0);
 
 	// log the chat message
 	logs->chat( LOG_CHAT_MAINCHAT, 0, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, message );
@@ -231,7 +231,7 @@ int intif_main_message(struct map_session_data* sd, const char* message)
 }
 
 // The transmission of Wisp/Page to inter-server (player not found on this server)
-int intif_wis_message(struct map_session_data *sd, const char *nick, const char *mes, size_t mes_len)
+int intif_wis_message(struct map_session_data *sd, const char *nick, const char *mes, int mes_len)
 {
 	if (intif->CheckForCharServer())
 		return 0;
@@ -279,12 +279,14 @@ int intif_wis_replay(int id, int flag)
 // The transmission of GM only Wisp/Page from server to inter-server
 int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 {
-	size_t mes_len;
+	int mes_len;
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(wisp_name);
 	nullpo_ret(mes);
-	mes_len = strlen(mes) + 1; // + null
+	mes_len = (int)strlen(mes) + 1; // + null
+	Assert_ret(mes_len > 0 && mes_len <= INT16_MAX - 32);
+
 	WFIFOHEAD(inter_fd, mes_len + 32);
 	WFIFOW(inter_fd,0) = 0x3003;
 	WFIFOW(inter_fd,2) = mes_len + 32;
@@ -300,10 +302,11 @@ int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 }
 
 //Request for saving registry values.
-int intif_saveregistry(struct map_session_data *sd) {
-	DBIterator *iter;
-	DBKey key;
-	DBData *data;
+int intif_saveregistry(struct map_session_data *sd)
+{
+	struct DBIterator *iter;
+	union DBKey key;
+	struct DBData *data;
 	int plen = 0;
 	size_t len;
 
@@ -657,7 +660,7 @@ int intif_guild_addmember(int guild_id,struct guild_member *m)
 }
 
 // Request a new leader for guild
-int intif_guild_change_gm(int guild_id, const char* name, size_t len)
+int intif_guild_change_gm(int guild_id, const char *name, int len)
 {
 	if (intif->CheckForCharServer())
 		return 0;
@@ -985,7 +988,7 @@ void intif_parse_WisMessage(int fd) {
 		return;
 	}
 	//Success to send whisper.
-	clif->wis_message(sd->fd, wisp_source, RFIFOP(fd,56),RFIFOW(fd,2)-56);
+	clif->wis_message(sd->fd, wisp_source, RFIFOP(fd,56),RFIFOW(fd,2)-57);
 	intif_wis_replay(id,0);   // success
 }
 
@@ -1004,7 +1007,8 @@ void intif_parse_WisEnd(int fd)
 	return;
 }
 
-int mapif_parse_WisToGM_sub(struct map_session_data* sd,va_list va) {
+int intif_parse_WisToGM_sub(struct map_session_data *sd, va_list va)
+{
 	int permission = va_arg(va, int);
 	char *wisp_name;
 	char *message;
@@ -1022,22 +1026,22 @@ int mapif_parse_WisToGM_sub(struct map_session_data* sd,va_list va) {
 
 // Received wisp message from map-server via char-server for ALL gm
 // 0x3003/0x3803 <packet_len>.w <wispname>.24B <permission>.l <message>.?B
-void mapif_parse_WisToGM(int fd)
+void intif_parse_WisToGM(int fd)
 {
 	int permission, mes_len;
 	char Wisp_name[NAME_LENGTH];
 	char mbuf[255] = { 0 };
 	char *message;
 
-	mes_len =  RFIFOW(fd,2) - 32;
+	mes_len =  RFIFOW(fd,2) - 33; // Length not including the NUL terminator
 	Assert_retv(mes_len > 0 && mes_len < 32000);
-	message = (char *) (mes_len >= 255 ? (char *) aMalloc(mes_len) : mbuf);
+	message = (mes_len >= 255 ? aMalloc(mes_len + 1) : mbuf);
 
 	permission = RFIFOL(fd,28);
 	safestrncpy(Wisp_name, RFIFOP(fd,4), NAME_LENGTH);
-	safestrncpy(message, RFIFOP(fd,32), mes_len);
+	safestrncpy(message, RFIFOP(fd,32), mes_len + 1);
 	// information is sent to all online GM
-	map->foreachpc(mapif_parse_WisToGM_sub, permission, Wisp_name, message, mes_len);
+	map->foreachpc(intif->pWisToGM_sub, permission, Wisp_name, message, mes_len);
 
 	if (message != mbuf)
 		aFree(message);
@@ -1110,7 +1114,7 @@ void intif_parse_Registers(int fd)
 				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
 				cursor += len + 1;
 
-				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)sval, NULL);
+				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, sval, NULL);
 			}
 		/**
 		 * Vessel!
@@ -1132,7 +1136,7 @@ void intif_parse_Registers(int fd)
 				ival = RFIFOL(fd, cursor);
 				cursor += 4;
 
-				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)h64BPTRSIZE(ival), NULL);
+				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (const void *)h64BPTRSIZE(ival), NULL);
 			}
 		}
 		script->parser_current_file = NULL;/* reset */
@@ -1653,7 +1657,7 @@ void intif_parse_MailInboxReceived(int fd) {
 	else if( battle_config.mail_show_status && ( battle_config.mail_show_status == 1 || sd->mail.inbox.unread ) ) {
 		char output[128];
 		sprintf(output, msg_sd(sd,510), sd->mail.inbox.unchecked, sd->mail.inbox.unread + sd->mail.inbox.unchecked);
-		clif_disp_onlyself(sd, output, strlen(output));
+		clif_disp_onlyself(sd, output);
 	}
 }
 /*------------------------------------------
@@ -2488,8 +2492,8 @@ void intif_defaults(void) {
 	/* parse functions */
 	intif->pWisMessage = intif_parse_WisMessage;
 	intif->pWisEnd = intif_parse_WisEnd;
-	intif->pWisToGM_sub = mapif_parse_WisToGM_sub;
-	intif->pWisToGM = mapif_parse_WisToGM;
+	intif->pWisToGM_sub = intif_parse_WisToGM_sub;
+	intif->pWisToGM = intif_parse_WisToGM;
 	intif->pRegisters = intif_parse_Registers;
 	intif->pChangeNameOk = intif_parse_ChangeNameOk;
 	intif->pMessageToFD = intif_parse_MessageToFD;

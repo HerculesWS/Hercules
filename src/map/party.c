@@ -122,7 +122,8 @@ struct map_session_data *party_sd_check(int party_id, int account_id, int char_i
 
 	return sd;
 }
-int party_db_final(DBKey key, DBData *data, va_list ap) {
+int party_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct party_data *p;
 
 	if ((p = DB->data2ptr(data))) {
@@ -146,9 +147,8 @@ struct party_data* party_searchname(const char* str)
 {
 	struct party_data* p;
 
-	DBIterator *iter = db_iterator(party->db);
-	for( p = dbi_first(iter); dbi_exists(iter); p = dbi_next(iter) )
-	{
+	struct DBIterator *iter = db_iterator(party->db);
+	for (p = dbi_first(iter); dbi_exists(iter); p = dbi_next(iter)) {
 		if( strncmpi(p->party.name,str,NAME_LENGTH) == 0 )
 			break;
 	}
@@ -798,12 +798,16 @@ int party_send_logout(struct map_session_data *sd)
 	return 1;
 }
 
-int party_send_message(struct map_session_data *sd,const char *mes,int len)
+int party_send_message(struct map_session_data *sd, const char *mes)
 {
-	if(sd->status.party_id==0)
+	int len = (int)strlen(mes);
+
+	nullpo_ret(sd);
+
+	if (sd->status.party_id == 0)
 		return 0;
-	intif->party_message(sd->status.party_id,sd->status.account_id,mes,len);
-	party->recv_message(sd->status.party_id,sd->status.account_id,mes,len);
+	intif->party_message(sd->status.party_id, sd->status.account_id, mes, len);
+	party->recv_message(sd->status.party_id, sd->status.account_id, mes, len);
 
 	// Chat logging type 'P' / Party Chat
 	logs->chat(LOG_CHAT_PARTY, sd->status.party_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
@@ -871,10 +875,11 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 	return 0;
 }
 
-int party_send_xy_timer(int tid, int64 tick, int id, intptr_t data) {
+int party_send_xy_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	struct DBIterator *iter = db_iterator(party->db);
 	struct party_data* p;
 
-	DBIterator *iter = db_iterator(party->db);
 	// for each existing party,
 	for( p = dbi_first(iter); dbi_exists(iter); p = dbi_next(iter) )
 	{
@@ -1284,7 +1289,7 @@ void party_recruit_search(struct map_session_data *sd, short level, short mapid,
 	int count = 0;
 	struct party_booking_ad_info* result_list[PARTY_BOOKING_RESULTS];
 	bool more_result = false;
-	DBIterator* iter = db_iterator(party->booking_db);
+	struct DBIterator *iter = db_iterator(party->booking_db);
 
 	memset(result_list, 0, sizeof(result_list));
 
@@ -1315,7 +1320,7 @@ void party_booking_search(struct map_session_data *sd, short level, short mapid,
 	int count = 0;
 	struct party_booking_ad_info* result_list[PARTY_BOOKING_RESULTS];
 	bool more_result = false;
-	DBIterator* iter = db_iterator(party->booking_db);
+	struct DBIterator *iter = db_iterator(party->booking_db);
 
 	memset(result_list, 0, sizeof(result_list));
 

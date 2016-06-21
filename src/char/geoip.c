@@ -132,9 +132,8 @@ void geoip_final(bool shutdown)
  **/
 void geoip_init(void)
 {
-	int i, fno;
+	int fno;
 	char db_type = 1;
-	unsigned char delim[3];
 	struct stat bufa;
 	FILE *db;
 
@@ -165,6 +164,8 @@ void geoip_init(void)
 	if (fseek(db, -3l, SEEK_END) != 0) {
 		db_type = 0;
 	} else {
+		int i;
+		unsigned char delim[3];
 		for (i = 0; i < GEOIP_STRUCTURE_INFO_MAX_SIZE; i++) {
 			if (fread(delim, sizeof(delim[0]), 3, db) != 3) {
 				db_type = 0;

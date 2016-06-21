@@ -118,16 +118,6 @@
 #include <limits.h>
 #include <time.h>
 
-// temporary fix for bugreport:4961 (unintended conversion from signed to unsigned)
-// (-20 >= UCHAR_MAX) returns true
-// (-20 >= USHRT_MAX) returns true
-#if defined(__FreeBSD__) && defined(__x86_64)
-#undef UCHAR_MAX
-#define UCHAR_MAX ((unsigned char)0xff)
-#undef USHRT_MAX
-#define USHRT_MAX ((unsigned short)0xffff)
-#endif
-
 // ILP64 isn't supported, so always 32 bits?
 #ifndef UINT_MAX
 #define UINT_MAX 0xffffffff
@@ -262,16 +252,13 @@ typedef uintptr_t uintptr;
 #if defined(__BORLANDC__) || _MSC_VER < 1900
 #define snprintf    _snprintf
 #endif
-#if defined(_MSC_VER) && _MSC_VER < 1400
-#define vsnprintf   _vsnprintf
-#endif
 #else
 #define strcmpi     strcasecmp
 #define stricmp     strcasecmp
 #define strncmpi    strncasecmp
 #define strnicmp    strncasecmp
 #endif
-#if defined(_MSC_VER) && _MSC_VER > 1200
+#if defined(_MSC_VER)
 #define strtoull    _strtoui64
 #define strtoll     _strtoi64
 #endif
@@ -295,6 +282,21 @@ typedef uintptr_t uintptr;
 #define analyzer_noreturn
 #endif
 
+// gcc version (if any) - borrowed from Mana Plus
+#ifdef __GNUC__
+#define GCC_VERSION (__GNUC__ * 10000 \
+		+ __GNUC_MINOR__ * 100 \
+		+ __GNUC_PATCHLEVEL__)
+#else
+#define GCC_VERSION 0
+#endif
+
+// Pragma macro only enabled on gcc >= 4.5 or clang - borrowed from Mana Plus
+#if defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40500)
+#define PRAGMA_GCC45(str) _Pragma(#str)
+#else // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40500)
+#define PRAGMA_GCC45(str)
+#endif // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40500)
 
 // boolean types for C
 #if !defined(_MSC_VER) || _MSC_VER >= 1800
@@ -327,24 +329,6 @@ typedef char bool;
 //#define swap(a,b) if (a != b) ((a ^= b), (b ^= a), (a ^= b))
 // but is vulnerable to 'if (foo) swap(bar, baz); else quux();', causing the else to nest incorrectly.
 #define swap(a,b) do { if ((a) != (b)) { (a) ^= (b); (b) ^= (a); (a) ^= (b); } } while(0)
-#if 0 //to be activated soon, more tests needed on how VS works with the macro above
-#ifdef WIN32
-#undef swap
-#define swap(a,b)__asm { \
-	__asm mov eax, dword ptr [a] \
-	__asm cmp eax, dword ptr [b] \
-	__asm je  _ret               \
-	__asm xor eax, dword ptr [b] \
-	__asm mov dword ptr [a], eax \
-	__asm xor eax, dword ptr [b] \
-	__asm mov dword ptr [b], eax \
-	__asm xor eax, dword ptr [a] \
-	__asm mov dword ptr [a], eax \
-	__asm _ret:                  \
-}
-#endif
-#endif
-
 #define swap_ptr(a,b) do { if ((a) != (b)) (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (b) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); } while(0)
 
 #ifndef max

@@ -169,7 +169,7 @@ static void MD5_String2binary(const char * string, unsigned char * output)
 //var
 	/*8bit*/
 	unsigned char padding_message[64]; //Extended message   512bit 64byte
-	const unsigned char *pstring;            //The position of string in the present scanning notes is held.
+	const unsigned char *pstring;      // The position of string in the present scanning notes is held.
 
 	/*32bit*/
 	unsigned int string_byte_len,     //The byte chief of string is held.
@@ -192,7 +192,7 @@ static void MD5_String2binary(const char * string, unsigned char * output)
 	//Step 1.Append Padding Bits (extension of a mark bit)
 	//1-1
 	string_byte_len = (unsigned int)strlen(string);    //The byte chief of a character sequence is acquired.
-	pstring = (const unsigned char *)string; //The position of the present character sequence is set.
+	pstring = (const unsigned char *)string; // The position of the present character sequence is set.
 
 	//1-2  Repeat calculation until length becomes less than 64 bytes.
 	for (i=string_byte_len; 64<=i; i-=64,pstring+=64)
@@ -200,7 +200,7 @@ static void MD5_String2binary(const char * string, unsigned char * output)
 
 	//1-3
 	copy_len = string_byte_len % 64;                               //The number of bytes which remained is computed.
-	strncpy((char *)padding_message, (const char *)pstring, copy_len); //A message is copied to an extended bit sequence.
+	strncpy((char *)padding_message, (const char *)pstring, copy_len); // A message is copied to an extended bit sequence.
 	memset(padding_message+copy_len, 0, 64 - copy_len);           //It buries by 0 until it becomes extended bit length.
 	padding_message[copy_len] |= 0x80;                            //The next of a message is 1.
 

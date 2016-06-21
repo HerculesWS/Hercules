@@ -277,7 +277,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 {
 #ifdef GP_BOUND_ITEMS
 	StringBuf buf;
-	SqlStmt* stmt;
+	struct SqlStmt *stmt;
 	struct item item;
 	int j, i=0, s=0, bound_qt=0;
 	struct item items[MAX_INVENTORY];

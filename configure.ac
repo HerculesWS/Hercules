@@ -283,7 +283,7 @@ AC_ARG_ENABLE(
 		case $enableval in
 			"no");;
 			"yes");;
-			*) AC_MSG_ERROR([[invalid argument --enable-lto=$disableval... stopping]]);;
+			*) AC_MSG_ERROR([[invalid argument --enable-lto=$enableval... stopping]]);;
 		esac
 	],
 	[enable_lto="no"]
@@ -306,7 +306,7 @@ AC_ARG_ENABLE(
 		case $enableval in
 			"no");;
 			"yes");;
-			*) AC_MSG_ERROR([[invalid argument --enable-static=$disableval... stopping]]);;
+			*) AC_MSG_ERROR([[invalid argument --enable-static=$enableval... stopping]]);;
 		esac
 	],
 	[enable_static="no"]
@@ -331,10 +331,36 @@ AC_ARG_ENABLE(
 			"no");;
 			"yes");;
 			"full");;
-			*) AC_MSG_ERROR([[invalid argument --enable-sanitize=$disableval... stopping]]);;
+			*) AC_MSG_ERROR([[invalid argument --enable-sanitize=$enableval... stopping]]);;
 		esac
 	],
 	[enable_sanitize="no"]
+)
+
+
+#
+# -Werror compiler flag
+# It's not always possible (if at all) to pass -Werror in the CFLAGS, since
+# autoconf often generates test-code that produces warnings.
+# Reference: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=734104
+#
+AC_ARG_ENABLE(
+	[Werror],
+	AC_HELP_STRING(
+		[--enable-Werror],
+		[
+			Enables -Werror in the compiler flags. (disabled by default)
+		]
+	),
+	[
+		enable_Werror="$enableval"
+		case $enableval in
+			"no");;
+			"yes");;
+			*) AC_MSG_ERROR([[invalid argument --enable-Werror=$enableval... stopping]]);;
+		esac
+	],
+	[enable_Werror="no"]
 )
 
 
@@ -466,6 +492,7 @@ AC_LANG([C])
 # -Wunused-parameter -Wunused-but-set-parameter unused parameters
 # -Wunused-macros unused macro warnings, but it also enable unused parameters
 # -Wstrict-prototypes show warning in grammar.y
+# -wdiscarded-qualifiers show different const removal
 # attributes suggestion
 #  -Wsuggest-attribute=const -Wsuggest-attribute=format -Wsuggest-attribute=pure
 
@@ -649,7 +676,7 @@ if test "$enable_lto" != "no" ; then
 	)
 fi
 
-AC_DEFUN(AC_CHECK_SANITIZER_FLAG,
+AC_DEFUN([AC_CHECK_SANITIZER_FLAG],
 	[
 		AC_MSG_CHECKING([whether $CC supports -fsanitize=$1])
 		OLD_CFLAGS="$CFLAGS"
@@ -702,6 +729,7 @@ if test "$enable_sanitize" != "no" ; then
 		AC_CHECK_SANITIZER_FLAG(return)
 		AC_CHECK_SANITIZER_FLAG(signed-integer-overflow)
 		AC_CHECK_SANITIZER_FLAG(bounds)
+		AC_CHECK_SANITIZER_FLAG(bounds-strict)
 		AC_CHECK_SANITIZER_FLAG(object-size)
 		AC_CHECK_SANITIZER_FLAG(float-divide-by-zero)
 		AC_CHECK_SANITIZER_FLAG(float-cast-overflow)
@@ -714,7 +742,7 @@ if test "$enable_sanitize" != "no" ; then
 fi
 
 
-AC_DEFUN(AC_CHECK_COMPILER_WFLAG,
+AC_DEFUN([AC_CHECK_COMPILER_WFLAG],
 	[
 		AC_MSG_CHECKING([whether $CC supports -W$1])
 		OLD_CFLAGS="$CFLAGS"
@@ -749,7 +777,7 @@ AC_DEFUN(AC_CHECK_COMPILER_WFLAG,
 	]
 )
 
-AC_DEFUN(AC_CHECK_COMPILER_WNOFLAG,
+AC_DEFUN([AC_CHECK_COMPILER_WNOFLAG],
 	[
 		AC_MSG_CHECKING([whether $CC supports -Wno-$1])
 		OLD_CFLAGS="$CFLAGS"
@@ -827,14 +855,18 @@ AC_CHECK_COMPILER_WFLAG(missing-include-dirs)
 AC_CHECK_COMPILER_WFLAG(suggest-attribute=noreturn)
 AC_CHECK_COMPILER_WFLAG(undef)
 #AC_CHECK_COMPILER_WFLAG(cast-align)
-AC_CHECK_COMPILER_WFLAG(logical-op)
+#AC_CHECK_COMPILER_WFLAG(logical-op) # some useless warnings
 AC_CHECK_COMPILER_WFLAG(nested-externs)
 AC_CHECK_COMPILER_WFLAG(old-style-definition)
 AC_CHECK_COMPILER_WFLAG(overlength-strings)
 AC_CHECK_COMPILER_WFLAG(redundant-decls)
+AC_CHECK_COMPILER_WFLAG(cast-qual)
+AC_CHECK_COMPILER_WFLAG(misleading-indentation)
+AC_CHECK_COMPILER_WFLAG(null-dereference)
 AC_CHECK_COMPILER_WNOFLAG(format-nonliteral)
 AC_CHECK_COMPILER_WNOFLAG(switch)
 AC_CHECK_COMPILER_WNOFLAG(missing-field-initializers)
+AC_CHECK_COMPILER_WNOFLAG(suggest-attribute=format)
 
 # Certain versions of gcc make -Wshadow completely useless by making it flood
 # you with unnecessary warnings <https://lkml.org/lkml/2006/11/28/239>
@@ -1376,6 +1408,35 @@ if test "$enable_static" != "no" ; then
 	CFLAGS="$OLD_CFLAGS"
 	LDFLAGS="$OLD_LDFLAGS"
 	LIBS="$OLD_LIBS"
+fi
+
+#
+# -Werror compiler flag
+#
+if test "$enable_Werror" != "no" ; then
+
+	OLD_CFLAGS="$CFLAGS"
+	CFLAGS="$CFLAGS -Werror"
+
+	AC_MSG_CHECKING([whether $CC supports -Werror])
+	AC_RUN_IFELSE(
+		[AC_LANG_SOURCE([
+			int main(int argc, char **argv){
+				return 0;
+			}
+		])],
+		[
+			AC_MSG_RESULT([yes])
+		],
+		[
+			AC_MSG_RESULT([no])
+			CFLAGS="$OLD_CFLAGS"
+			LDFLAGS="$OLD_LDFLAGS"
+		],
+		[
+			AC_MSG_RESULT([guessing no])
+		]
+	)
 fi
 
 AC_SUBST(STATIC, ${STATIC})

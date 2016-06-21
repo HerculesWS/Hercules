@@ -52,7 +52,7 @@ struct quest *mapif_quests_fromsql(int char_id, int *count)
 {
 	struct quest *questlog = NULL;
 	struct quest tmp_quest;
-	SqlStmt *stmt;
+	struct SqlStmt *stmt;
 	StringBuf buf;
 	int i;
 	int sqlerror = SQL_SUCCESS;

@@ -127,9 +127,8 @@ void channel_delete(struct channel_data *chan)
 	nullpo_retv(chan);
 
 	if (db_size(chan->users) && !channel->config->closing) {
-		DBIterator *iter;
 		struct map_session_data *sd;
-		iter = db_iterator(chan->users);
+		struct DBIterator *iter = db_iterator(chan->users);
 		for (sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
 			channel->leave_sub(chan, sd);
 		}
@@ -610,7 +609,10 @@ void read_channels_config(void)
 			local_autojoin = 0, ally_autojoin = 0,
 			allow_user_channel_creation = 0,
 			irc_enabled = 0,
-			irc_autojoin = 0;
+			irc_autojoin = 0,
+			irc_flood_protection_rate = 0,
+			irc_flood_protection_burst = 0,
+			irc_flood_protection_enabled = 0;
 
 		if( !libconfig->setting_lookup_string(settings, "map_local_channel_name", &local_name) )
 			local_name = "map";
@@ -641,64 +643,78 @@ void read_channels_config(void)
 			const char *irc_server, *irc_channel,
 				 *irc_nick, *irc_nick_pw;
 			int irc_use_ghost = 0;
-			if( libconfig->setting_lookup_string(settings, "irc_channel_network", &irc_server) ) {
-				if( !strstr(irc_server,":") ) {
-					channel->config->irc = false;
-					ShowWarning("channels.conf : network port wasn't found in 'irc_channel_network', disabling irc channel...\n");
-				} else {
-					unsigned char d = 0, dlen = strlen(irc_server);
-					char server[40];
-					if (dlen > 39)
-						dlen = 39;
-					memset(server, '\0', sizeof(server));
-
-					for(d = 0; d < dlen; d++) {
-						if(irc_server[d] == ':') {
-							memcpy(server, irc_server, d);
-							safestrncpy(channel->config->irc_server, server, 40);
-							memcpy(server, &irc_server[d+1], dlen - d - 1);
-							channel->config->irc_server_port = atoi(server);
-							break;
-						}
-					}
-				}
-			} else {
+			if (!libconfig->setting_lookup_string(settings, "irc_channel_network", &irc_server)) {
 				channel->config->irc = false;
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_network wasn't found, disabling irc channel...\n");
+			} else {
+				char *server = aStrdup(irc_server);
+				char *port = strchr(server, ':');
+				if (port == NULL) {
+					channel->config->irc = false;
+					ShowWarning("channels.conf: network port wasn't found in 'irc_channel_network', disabling irc channel...\n");
+				} else if ((size_t)(port-server) > sizeof channel->config->irc_server - 1) {
+					channel->config->irc = false;
+					ShowWarning("channels.conf: server name is too long in 'irc_channel_network', disabling irc channel...\n");
+				} else {
+					*port = '\0';
+					port++;
+					safestrncpy(channel->config->irc_server, server, sizeof channel->config->irc_server);
+					channel->config->irc_server_port = atoi(port);
+				}
+				aFree(server);
 			}
-			if( libconfig->setting_lookup_string(settings, "irc_channel_channel", &irc_channel) )
+			if (libconfig->setting_lookup_string(settings, "irc_channel_channel", &irc_channel)) {
 				safestrncpy(channel->config->irc_channel, irc_channel, 50);
-			else {
+			} else {
 				channel->config->irc = false;
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_channel wasn't found, disabling irc channel...\n");
 			}
-			if( libconfig->setting_lookup_string(settings, "irc_channel_nick", &irc_nick) ) {
-				if( strcmpi(irc_nick,"Hercules_chSysBot") == 0 ) {
+			if (libconfig->setting_lookup_string(settings, "irc_channel_nick", &irc_nick)) {
+				if (strcmpi(irc_nick,"Hercules_chSysBot") == 0) {
 					sprintf(channel->config->irc_nick, "Hercules_chSysBot%d",rnd()%777);
-				} else
+				} else {
 					safestrncpy(channel->config->irc_nick, irc_nick, 40);
+				}
 			} else {
 				channel->config->irc = false;
 				ShowWarning("channels.conf : irc channel enabled but irc_channel_nick wasn't found, disabling irc channel...\n");
 			}
-			if( libconfig->setting_lookup_string(settings, "irc_channel_nick_pw", &irc_nick_pw) ) {
+			if (libconfig->setting_lookup_string(settings, "irc_channel_nick_pw", &irc_nick_pw)) {
 				safestrncpy(channel->config->irc_nick_pw, irc_nick_pw, 30);
 				config_setting_lookup_bool(settings, "irc_channel_use_ghost", &irc_use_ghost);
 				channel->config->irc_use_ghost = irc_use_ghost;
 			}
-
 		}
 
 		libconfig->setting_lookup_bool(settings, "map_local_channel_autojoin", &local_autojoin);
 		libconfig->setting_lookup_bool(settings, "ally_channel_autojoin", &ally_autojoin);
 		libconfig->setting_lookup_bool(settings, "irc_channel_autojoin", &irc_autojoin);
-
 		if (local_autojoin)
 			channel->config->local_autojoin = true;
 		if (ally_autojoin)
 			channel->config->ally_autojoin = true;
 		if (irc_autojoin)
 			channel->config->irc_autojoin = true;
+
+		libconfig->setting_lookup_bool(settings, "irc_flood_protection_enabled", &irc_flood_protection_enabled);
+
+		if (irc_flood_protection_enabled) {
+			ircbot->flood_protection_enabled = true;
+
+			libconfig->setting_lookup_int(settings, "irc_flood_protection_rate", &irc_flood_protection_rate);
+			libconfig->setting_lookup_int(settings, "irc_flood_protection_burst", &irc_flood_protection_burst);
+
+			if (irc_flood_protection_rate > 0)
+				ircbot->flood_protection_rate = irc_flood_protection_rate;
+			else
+				ircbot->flood_protection_rate = 1000;
+			if (irc_flood_protection_burst > 0)
+				ircbot->flood_protection_burst = irc_flood_protection_burst;
+			else
+				ircbot->flood_protection_burst = 3;
+		} else {
+			ircbot->flood_protection_enabled = false;
+		}
 
 		libconfig->setting_lookup_bool(settings, "allow_user_channel_creation", &allow_user_channel_creation);
 
@@ -814,7 +830,7 @@ int do_init_channel(bool minimal)
 
 void do_final_channel(void)
 {
-	DBIterator *iter = db_iterator(channel->db);
+	struct DBIterator *iter = db_iterator(channel->db);
 	struct channel_data *chan;
 	unsigned char i;
 

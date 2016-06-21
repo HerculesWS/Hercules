@@ -38,25 +38,23 @@ static const char *err_include_too_deep = "include file nesting too deep";
 /* ------------------------------------------------------------------------- */
 
 static const char *__scanctx_add_filename(struct scan_context *ctx,
-                                          const char *filename)
+                                          char *filename)
 {
   unsigned int count = ctx->num_filenames;
-  const char **f;
+  char **f;
 
   for(f = ctx->filenames; count > 0; ++f, --count)
   {
     if(!strcmp(*f, filename))
     {
-      free((void *)filename);
+      free(filename);
       return(*f); /* already in list */
     }
   }
 
   if((ctx->num_filenames % CHUNK_SIZE) == 0)
   {
-    ctx->filenames = (const char **)realloc(
-      (void *)ctx->filenames,
-      (ctx->num_filenames + CHUNK_SIZE) * sizeof(const char *));
+    ctx->filenames = realloc(ctx->filenames, (ctx->num_filenames + CHUNK_SIZE) * sizeof(char *));
   }
 
   ctx->filenames[ctx->num_filenames] = filename;
@@ -69,16 +67,14 @@ static const char *__scanctx_add_filename(struct scan_context *ctx,
 void scanctx_init(struct scan_context *ctx, const char *top_filename)
 {
   memset(ctx, 0, sizeof(struct scan_context));
-#ifndef __clang_analyzer__ // FIXME: Clang's static analyzer doesn't like this
   if(top_filename)
     ctx->top_filename = __scanctx_add_filename(ctx, strdup(top_filename));
-#endif // __clang_analyzer__
 }
 
 /* ------------------------------------------------------------------------- */
 
-const char **scanctx_cleanup(struct scan_context *ctx,
-                             unsigned int *num_filenames)
+char **scanctx_cleanup(struct scan_context *ctx,
+                       unsigned int *num_filenames)
 {
   int i;
 
@@ -97,7 +93,7 @@ FILE *scanctx_push_include(struct scan_context *ctx, void *buffer,
                            const char **error)
 {
   FILE *fp = NULL;
-  const char *file;
+  char *file;
   char *full_file = NULL;
 
   *error = NULL;
@@ -119,20 +115,18 @@ FILE *scanctx_push_include(struct scan_context *ctx, void *buffer,
   }
 
   fp = fopen(full_file ? full_file : file, "rt");
-  free((void *)full_file);
+  free(full_file);
 
   if(fp)
   {
     ctx->streams[ctx->depth] = fp;
-#ifndef __clang_analyzer__ // FIXME: Clang's static analyzer doesn't like this
     ctx->files[ctx->depth] = __scanctx_add_filename(ctx, file);
-#endif // __clang_analyzer__
     ctx->buffers[ctx->depth] = buffer;
     ++(ctx->depth);
   }
   else
   {
-    free((void *)file);
+    free(file);
     *error = err_bad_include;
   }
 
