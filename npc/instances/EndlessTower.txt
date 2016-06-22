@@ -267,7 +267,7 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 		case 3:
 			end;
 		}
-	} else if (.@etower_timer == 1 && .@etower_timer2 == 2) {
+	} else if (.@etower_timer == 1 && (.@etower_timer2 == 2 || etower_partyid != getcharid(1))) {
 
 		.@dun_lim_time = etower_timer+604800; // 1 week
 		.@dun_lim_time2 = etower_timer+14400; // 4 hours
@@ -315,6 +315,7 @@ L_Enter:
 		mapannounce "e_tower", strcharinfo(0)+" of the party, " +getarg(3)+", is entering the dungeon, Endless Tower.",bc_map,"0x00ff99",FW_NORMAL,12;
 		if (getarg(1)) {
 			etower_timer = gettimetick(2);
+			etower_partyid = getcharid(1);
 			setquest 60200;
 			setquest 60201;
 		}
