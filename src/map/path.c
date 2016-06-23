@@ -89,6 +89,7 @@ int path_blownpos(struct block_list *bl, int16 m,int16 x0,int16 y0,int16 dx,int1
 {
 	struct map_data *md;
 
+	Assert_retr(-1, m < 0 || m >= map->count);
 	if( !map->list[m].cell )
 		return -1;
 	md = &map->list[m];
@@ -125,6 +126,8 @@ bool path_search_long(struct shootpath_data *spd,struct block_list *bl,int16 m,i
 	int weight;
 	struct map_data *md;
 	struct shootpath_data s_spd;
+
+	Assert_retr(false, m < 0 || m >= map->count);
 
 	if( spd == NULL )
 		spd = &s_spd; // use dummy output variable
@@ -257,6 +260,8 @@ bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int1
 	register int i, x, y, dx, dy;
 	struct map_data *md;
 	struct walkpath_data s_wpd;
+
+	Assert_retr(false, m < 0 || m >= map->count);
 
 	if (wpd == NULL)
 		wpd = &s_wpd; // use dummy output variable
