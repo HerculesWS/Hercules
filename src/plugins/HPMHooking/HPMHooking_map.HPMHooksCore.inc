@@ -1390,6 +1390,10 @@ struct {
 	struct HPMHookPoint *HP_clif_comparemergeitem_post;
 	struct HPMHookPoint *HP_clif_ackmergeitems_pre;
 	struct HPMHookPoint *HP_clif_ackmergeitems_post;
+	struct HPMHookPoint *HP_clif_isdisguised_pre;
+	struct HPMHookPoint *HP_clif_isdisguised_post;
+	struct HPMHookPoint *HP_clif_bl_type_pre;
+	struct HPMHookPoint *HP_clif_bl_type_post;
 	struct HPMHookPoint *HP_clif_pWantToConnection_pre;
 	struct HPMHookPoint *HP_clif_pWantToConnection_post;
 	struct HPMHookPoint *HP_clif_pLoadEndAck_pre;
@@ -7287,6 +7291,10 @@ struct {
 	int HP_clif_comparemergeitem_post;
 	int HP_clif_ackmergeitems_pre;
 	int HP_clif_ackmergeitems_post;
+	int HP_clif_isdisguised_pre;
+	int HP_clif_isdisguised_post;
+	int HP_clif_bl_type_pre;
+	int HP_clif_bl_type_post;
 	int HP_clif_pWantToConnection_pre;
 	int HP_clif_pWantToConnection_post;
 	int HP_clif_pLoadEndAck_pre;

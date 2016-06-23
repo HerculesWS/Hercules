@@ -1724,6 +1724,10 @@ typedef int (*HPMHOOK_pre_clif_comparemergeitem) (const void **a, const void **b
 typedef int (*HPMHOOK_post_clif_comparemergeitem) (int retVal___, const void *a, const void *b);
 typedef void (*HPMHOOK_pre_clif_ackmergeitems) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_ackmergeitems) (int fd, struct map_session_data *sd);
+typedef bool (*HPMHOOK_pre_clif_isdisguised) (struct block_list **bl);
+typedef bool (*HPMHOOK_post_clif_isdisguised) (bool retVal___, struct block_list *bl);
+typedef unsigned char (*HPMHOOK_pre_clif_bl_type) (struct block_list **bl);
+typedef unsigned char (*HPMHOOK_post_clif_bl_type) (unsigned char retVal___, struct block_list *bl);
 typedef void (*HPMHOOK_pre_clif_pWantToConnection) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pWantToConnection) (int fd, struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_clif_pLoadEndAck) (int *fd, struct map_session_data **sd);

@@ -18110,6 +18110,60 @@ void HP_clif_ackmergeitems(int fd, struct map_session_data *sd) {
 	}
 	return;
 }
+bool HP_clif_isdisguised(struct block_list *bl) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_clif_isdisguised_pre ) {
+		bool (*preHookFunc) (struct block_list **bl);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_isdisguised_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_isdisguised_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.clif.isdisguised(bl);
+	}
+	if( HPMHooks.count.HP_clif_isdisguised_post ) {
+		bool (*postHookFunc) (bool retVal___, struct block_list *bl);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_isdisguised_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_isdisguised_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl);
+		}
+	}
+	return retVal___;
+}
+unsigned char HP_clif_bl_type(struct block_list *bl) {
+	int hIndex = 0;
+	unsigned char retVal___ = 0;
+	if( HPMHooks.count.HP_clif_bl_type_pre ) {
+		unsigned char (*preHookFunc) (struct block_list **bl);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_bl_type_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_bl_type_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.clif.bl_type(bl);
+	}
+	if( HPMHooks.count.HP_clif_bl_type_post ) {
+		unsigned char (*postHookFunc) (unsigned char retVal___, struct block_list *bl);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_bl_type_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_bl_type_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl);
+		}
+	}
+	return retVal___;
+}
 void HP_clif_pWantToConnection(int fd, struct map_session_data *sd) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_pWantToConnection_pre ) {
