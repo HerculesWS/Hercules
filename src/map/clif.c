@@ -190,7 +190,7 @@ static inline void RFIFOPOS2(int fd, unsigned short pos, short* x0, short* y0, s
 #endif // 0
 
 //To identify disguised characters.
-static inline bool disguised(struct block_list* bl)
+bool clif_isdisguised(struct block_list* bl)
 {
 	struct map_session_data *sd = BL_CAST(BL_PC, bl);
 	if (sd == NULL || sd->disguise == -1)
@@ -275,7 +275,7 @@ static inline unsigned char clif_bl_type(struct block_list *bl) {
 			vd = status->get_viewdata(bl);
 			nullpo_retr(CLUT_NPC, vd);
 
-			if (disguised(bl) && !pc->db_checkid(vd->class_))
+			if (clif->isdisguised(bl) && !pc->db_checkid(vd->class_))
 				return CLUT_NPC;
 			else
 				return CLUT_PC;
@@ -841,7 +841,7 @@ void clif_clearunit_area(struct block_list* bl, clr_type type)
 
 	clif->send(buf, packet_len(0x80), bl, type == CLR_DEAD ? AREA : AREA_WOS);
 
-	if(disguised(bl)) {
+	if (clif->isdisguised(bl)) {
 		WBUFL(buf,2) = -bl->id;
 		clif->send(buf, packet_len(0x80), bl, SELF);
 	}
@@ -1072,7 +1072,7 @@ void clif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enu
 
 	clif->send(&p,sizeof(p),tsd?&tsd->bl:bl,target);
 
-	if( disguised(bl) ) {
+	if (clif->isdisguised(bl)) {
 #if PACKETVER >= 20091103
 		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
 		p.GID = -bl->id;
@@ -1210,7 +1210,7 @@ void clif_spawn_unit(struct block_list* bl, enum send_target target) {
 	p.body = vd->body_style;
 	safestrncpy(p.name, clif->get_bl_name(bl), NAME_LENGTH);
 #endif
-	if( disguised(bl) ) {
+	if (clif->isdisguised(bl)) {
 		nullpo_retv(sd);
 		if( sd->status.class_ != sd->disguise )
 			clif->send(&p,sizeof(p),bl,target);
@@ -1305,7 +1305,7 @@ void clif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd, 
 
 	clif->send(&p,sizeof(p),tsd?&tsd->bl:bl,target);
 
-	if( disguised(bl) ) {
+	if (clif->isdisguised(bl)) {
 #if PACKETVER >= 20091103
 		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
 		p.GID = -bl->id;
@@ -1774,7 +1774,7 @@ void clif_move(struct unit_data *ud)
 
 	clif->send(buf, packet_len(0x86), bl, AREA_WOS);
 
-	if (disguised(bl)) {
+	if (clif->isdisguised(bl)) {
 		WBUFL(buf,2)=-bl->id;
 		clif->send(buf, packet_len(0x86), bl, SELF);
 	}
@@ -1867,7 +1867,7 @@ void clif_fixpos(struct block_list *bl) {
 	WBUFW(buf,8) = bl->y;
 	clif->send(buf, packet_len(0x88), bl, AREA);
 
-	if( disguised(bl) ) {
+	if (clif->isdisguised(bl)) {
 		WBUFL(buf,2) = -bl->id;
 		clif->send(buf, packet_len(0x88), bl, SELF);
 	}
@@ -3216,7 +3216,7 @@ void clif_changelook(struct block_list *bl,int type,int val)
 	}
 
 	// prevent leaking the presence of GM-hidden objects
-	if( sc && sc->option&OPTION_INVISIBLE && !disguised(bl) )
+	if (sc && sc->option&OPTION_INVISIBLE && !clif->isdisguised(bl))
 		target = SELF;
 #if PACKETVER < 4
 	clif->sendlook(bl, bl->id, type, val, 0, target);
@@ -3227,11 +3227,12 @@ void clif_changelook(struct block_list *bl,int type,int val)
 		val = vd->weapon;
 		val2 = vd->shield;
 	}
-	if( disguised(bl) ) {
+	if (clif->isdisguised(bl)) {
 		clif->sendlook(bl, bl->id, type, val, val2, AREA_WOS);
 		clif->sendlook(bl, -bl->id, type, val, val2, SELF);
-	} else
+	} else {
 		clif->sendlook(bl, bl->id, type, val, val2, target);
+	}
 #endif
 }
 
@@ -3512,15 +3513,16 @@ void clif_changeoption(struct block_list* bl)
 	WBUFW(buf,8) = (sc) ? sc->opt2 : 0;
 	WBUFL(buf,10) = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
 	WBUFB(buf,14) = (sd)? sd->status.karma : 0;
-	if(disguised(bl)) {
+	if (clif->isdisguised(bl)) {
 		clif->send(buf,packet_len(0x229),bl,AREA_WOS);
 		WBUFL(buf,2) = -bl->id;
 		clif->send(buf,packet_len(0x229),bl,SELF);
 		WBUFL(buf,2) = bl->id;
 		WBUFL(buf,10) = OPTION_INVISIBLE;
 		clif->send(buf,packet_len(0x229),bl,SELF);
-	} else
+	} else {
 		clif->send(buf,packet_len(0x229),bl,AREA);
+	}
 #else
 	WBUFW(buf,0) = 0x119;
 	WBUFL(buf,2) = bl->id;
@@ -3528,15 +3530,16 @@ void clif_changeoption(struct block_list* bl)
 	WBUFW(buf,8) = (sc) ? sc->opt2 : 0;
 	WBUFL(buf,10) = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
 	WBUFB(buf,12) = (sd)? sd->status.karma : 0;
-	if(disguised(bl)) {
+	if (clif->isdisguised(bl)) {
 		clif->send(buf,packet_len(0x119),bl,AREA_WOS);
 		WBUFL(buf,2) = -bl->id;
 		clif->send(buf,packet_len(0x119),bl,SELF);
 		WBUFL(buf,2) = bl->id;
 		WBUFW(buf,10) = OPTION_INVISIBLE;
 		clif->send(buf,packet_len(0x119),bl,SELF);
-	} else
+	} else {
 		clif->send(buf,packet_len(0x119),bl,AREA);
+	}
 #endif
 }
 
@@ -3554,15 +3557,16 @@ void clif_changeoption2(struct block_list* bl) {
 	WBUFL(buf,6) = (sc != NULL) ? sc->option : ((bl->type == BL_NPC) ? BL_UCCAST(BL_NPC, bl)->option : 0);
 	WBUFL(buf,10) = clif_setlevel(bl);
 	WBUFL(buf,14) = (sc) ? sc->opt3 : 0;
-	if(disguised(bl)) {
+	if (clif->isdisguised(bl)) {
 		clif->send(buf,packet_len(0x28a),bl,AREA_WOS);
 		WBUFL(buf,2) = -bl->id;
 		clif->send(buf,packet_len(0x28a),bl,SELF);
 		WBUFL(buf,2) = bl->id;
 		WBUFL(buf,6) = OPTION_INVISIBLE;
 		clif->send(buf,packet_len(0x28a),bl,SELF);
-	} else
+	} else {
 		clif->send(buf,packet_len(0x28a),bl,AREA);
+	}
 }
 
 /// Notifies the client about the result of an item use request.
@@ -4350,16 +4354,17 @@ int clif_damage(struct block_list* src, struct block_list* dst, int sdelay, int 
 	p.is_sp_damaged = 0; // TODO: IsSPDamage - Displays blue digits.
 #endif
 
-	if(disguised(dst)) {
+	if (clif->isdisguised(dst)) {
 		clif->send(&p,sizeof(p),dst,AREA_WOS);
 		p.targetGID = -dst->id;
 		clif->send(&p,sizeof(p),dst,SELF);
-	} else
+	} else {
 		clif->send(&p,sizeof(p),dst,AREA);
+	}
 
-	if(disguised(src)) {
+	if (clif->isdisguised(src)) {
 		p.GID = -src->id;
-		if (disguised(dst))
+		if (clif->isdisguised(dst))
 			p.targetGID = dst->id;
 
 		if(damage > 0) p.damage = -1;
@@ -4408,7 +4413,7 @@ void clif_sitting(struct block_list* bl)
 	WBUFB(buf,26) = 2;
 	clif->send(buf, packet_len(0x8a), bl, AREA);
 
-	if(disguised(bl)) {
+	if (clif->isdisguised(bl)) {
 		WBUFL(buf, 2) = - bl->id;
 		clif->send(buf, packet_len(0x8a), bl, SELF);
 	}
@@ -4427,7 +4432,7 @@ void clif_standing(struct block_list* bl)
 	WBUFB(buf,26) = 3;
 	clif->send(buf, packet_len(0x8a), bl, AREA);
 
-	if(disguised(bl)) {
+	if (clif->isdisguised(bl)) {
 		WBUFL(buf, 2) = - bl->id;
 		clif->send(buf, packet_len(0x8a), bl, SELF);
 	}
@@ -4925,12 +4930,13 @@ void clif_skillcasting(struct block_list* bl, int src_id, int dst_id, int dst_x,
 	WBUFB(buf,24) = 0;  // isDisposable
 #endif
 
-	if (disguised(bl)) {
+	if (clif->isdisguised(bl)) {
 		clif->send(buf,packet_len(cmd), bl, AREA_WOS);
 		WBUFL(buf,2) = -src_id;
 		clif->send(buf,packet_len(cmd), bl, SELF);
-	} else
+	} else {
 		clif->send(buf,packet_len(cmd), bl, AREA);
+	}
 }
 
 /// Notifies clients in area, that an object canceled casting (ZC_DISPEL).
@@ -5060,16 +5066,17 @@ int clif_skill_damage(struct block_list *src, struct block_list *dst, int64 tick
 	WBUFW(buf, 26) = skill_lv;
 	WBUFW(buf, 28) = div;
 	WBUFB(buf, 30) = type;
-	if (disguised(dst)) {
+	if (clif->isdisguised(dst)) {
 		clif->send(buf, packet_len(0x114), dst, AREA_WOS);
 		WBUFL(buf, 8) = -dst->id;
 		clif->send(buf, packet_len(0x114), dst, SELF);
-	} else
+	} else {
 		clif->send(buf, packet_len(0x114), dst, AREA);
+	}
 
-	if (disguised(src)) {
+	if (clif->isdisguised(src)) {
 		WBUFL(buf, 4) = -src->id;
-		if (disguised(dst))
+		if (clif->isdisguised(dst))
 			WBUFL(buf, 8) = dst->id;
 		if (damage > 0)
 			WBUFW(buf, 24) = -1;
@@ -5099,16 +5106,17 @@ int clif_skill_damage(struct block_list *src, struct block_list *dst, int64 tick
 #else
 	WBUFB(buf, 32) = (type == BDT_SKILL) ? BDT_MULTIHIT : type;
 #endif
-	if (disguised(dst)) {
+	if (clif->isdisguised(dst)) {
 		clif->send(buf, packet_len(0x1de), dst, AREA_WOS);
 		WBUFL(buf,8)=-dst->id;
 		clif->send(buf, packet_len(0x1de), dst, SELF);
-	} else
+	} else {
 		clif->send(buf, packet_len(0x1de), dst, AREA);
+	}
 
-	if (disguised(src)) {
+	if (clif->isdisguised(src)) {
 		WBUFL(buf, 4) = -src->id;
-		if (disguised(dst))
+		if (clif->isdisguised(dst))
 			WBUFL(buf, 8) = dst->id;
 		if (damage > 0)
 			WBUFL(buf, 24) = -1;
@@ -5157,15 +5165,15 @@ int clif_skill_damage2(struct block_list *src, struct block_list *dst, int64 tic
 	WBUFW(buf,32)=div;
 	WBUFB(buf,34)=type;
 	clif->send(buf,packet_len(0x115),src,AREA);
-	if(disguised(src)) {
+	if (clif->isdisguised(src)) {
 		WBUFL(buf,4)=-src->id;
 		if(damage > 0)
 			WBUFW(buf,28)=-1;
 		clif->send(buf,packet_len(0x115),src,SELF);
 	}
-	if (disguised(dst)) {
+	if (clif->isdisguised(dst)) {
 		WBUFL(buf,8)=-dst->id;
-		if (disguised(src))
+		if (clif->isdisguised(src))
 			WBUFL(buf,4)=src->id;
 		else if(damage > 0)
 			WBUFW(buf,28)=-1;
@@ -5192,16 +5200,16 @@ int clif_skill_nodamage(struct block_list *src,struct block_list *dst,uint16 ski
 	WBUFL(buf,10)=src?src->id:0;
 	WBUFB(buf,14)=fail;
 
-	if (disguised(dst)) {
+	if (clif->isdisguised(dst)) {
 		clif->send(buf,packet_len(0x11a),dst,AREA_WOS);
 		WBUFL(buf,6)=-dst->id;
 		clif->send(buf,packet_len(0x11a),dst,SELF);
 	} else
 		clif->send(buf,packet_len(0x11a),dst,AREA);
 
-	if(src && disguised(src)) {
+	if (src && clif->isdisguised(src)) {
 		WBUFL(buf,10)=-src->id;
-		if (disguised(dst))
+		if (clif->isdisguised(dst))
 			WBUFL(buf,6)=dst->id;
 		clif->send(buf,packet_len(0x11a),src,SELF);
 	}
@@ -5223,12 +5231,13 @@ void clif_skill_poseffect(struct block_list *src, uint16 skill_id, int val, int 
 	WBUFW(buf,10)=x;
 	WBUFW(buf,12)=y;
 	WBUFL(buf,14)=(uint32)tick;
-	if(disguised(src)) {
+	if (clif->isdisguised(src)) {
 		clif->send(buf,packet_len(0x117),src,AREA_WOS);
 		WBUFL(buf,4)=-src->id;
 		clif->send(buf,packet_len(0x117),src,SELF);
-	} else
+	} else {
 		clif->send(buf,packet_len(0x117),src,AREA);
+	}
 }
 
 /// Presents a list of available warp destinations (ZC_WARPLIST).
@@ -5700,7 +5709,7 @@ void clif_resurrection(struct block_list *bl,int type)
 	WBUFW(buf,6)=0;
 
 	clif->send(buf,packet_len(0x148),bl, type == 1 ? AREA : AREA_WOS);
-	if (disguised(bl)) {
+	if (clif->isdisguised(bl)) {
 		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 		if (sd->fontcolor) {
 			WBUFL(buf,2)=-bl->id;
@@ -8189,7 +8198,7 @@ void clif_specialeffect(struct block_list* bl, int type, enum send_target target
 
 	clif->send(buf, packet_len(0x1f3), bl, target);
 
-	if (disguised(bl)) {
+	if (clif->isdisguised(bl)) {
 		WBUFL(buf,2) = -bl->id;
 		clif->send(buf, packet_len(0x1f3), bl, SELF);
 	}
@@ -8221,8 +8230,7 @@ void clif_specialeffect_value(struct block_list* bl, int effect_id, int num, sen
 
 	clif->send(buf, packet_len(0x284), bl, target);
 
-	if( disguised(bl) )
-	{
+	if (clif->isdisguised(bl)) {
 		WBUFL(buf,2) = -bl->id;
 		clif->send(buf, packet_len(0x284), bl, SELF);
 	}
@@ -8370,7 +8378,7 @@ void clif_refresh(struct map_session_data *sd)
 
 	mail->clear(sd);
 
-	if( disguised(&sd->bl) ) {/* refresh-da */
+	if (clif->isdisguised(&sd->bl)) {/* refresh-da */
 		short disguise = sd->disguise;
 		pc->disguise(sd, -1);
 		pc->disguise(sd, disguise);
@@ -8585,8 +8593,7 @@ void clif_slide(struct block_list *bl, int x, int y)
 	WBUFW(buf, 8) = y;
 	clif->send(buf, packet_len(0x1ff), bl, AREA);
 
-	if( disguised(bl) )
-	{
+	if (clif->isdisguised(bl)) {
 		WBUFL(buf,2) = -bl->id;
 		clif->send(buf, packet_len(0x1ff), bl, SELF);
 	}
@@ -9758,7 +9765,7 @@ void clif_parse_GetCharNameRequest(int fd, struct map_session_data *sd) {
 	// 'see people in GM hide' cheat detection
 #if 0 /* disabled due to false positives (network lag + request name of char that's about to hide = race condition) */
 	sc = status->get_sc(bl);
-	if (sc && sc->option&OPTION_INVISIBLE && !disguised(bl) &&
+	if (sc && sc->option&OPTION_INVISIBLE && !clif->isdisguised(bl) &&
 		bl->type != BL_NPC && //Skip hidden NPCs which can be seen using Maya Purple
 		pc_get_group_level(sd) < battle_config.hack_info_GM_level
 	) {
@@ -9928,7 +9935,7 @@ void clif_changed_dir(struct block_list *bl, enum send_target target)
 
 	clif->send(buf, packet_len(0x9c), bl, target);
 
-	if (disguised(bl)) {
+	if (clif->isdisguised(bl)) {
 		WBUFL(buf,2) = -bl->id;
 		WBUFW(buf,6) = 0;
 		clif->send(buf, packet_len(0x9c), bl, SELF);
@@ -19609,6 +19616,8 @@ void clif_defaults(void) {
 	clif->ackmergeitems = clif_ackmergeitems;
 	/* Cart Deco */
 	clif->selectcart = clif_selectcart;
+	/* */
+	clif->isdisguised = clif_isdisguised;
 
 	/*------------------------
 	 *- Parse Incoming Packet

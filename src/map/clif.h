@@ -1108,7 +1108,8 @@ struct clif_interface {
 	void (*cancelmergeitem) (int fd, struct map_session_data *sd);
 	int (*comparemergeitem) (const void *a, const void *b);
 	void (*ackmergeitems) (int fd, struct map_session_data *sd);
-
+	/* */
+	bool (*isdisguised) (struct block_list* bl);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/
