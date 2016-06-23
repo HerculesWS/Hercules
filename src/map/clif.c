@@ -267,19 +267,37 @@ uint32 clif_refresh_ip(void)
 
 #if PACKETVER >= 20071106
 static inline unsigned char clif_bl_type(struct block_list *bl) {
-	nullpo_retr(0x1, bl);
+	struct view_data *vd;
+	nullpo_retr(CLUT_NPC, bl);
+
 	switch (bl->type) {
-		case BL_PC:    return (disguised(bl) && !pc->db_checkid(status->get_viewdata(bl)->class_))? 0x1:0x0; //PC_TYPE
-		case BL_ITEM:  return 0x2; //ITEM_TYPE
-		case BL_SKILL: return 0x3; //SKILL_TYPE
-		case BL_CHAT:  return 0x4; //UNKNOWN_TYPE
-		case BL_MOB:   return pc->db_checkid(status->get_viewdata(bl)->class_)?0x0:0x5; //NPC_MOB_TYPE
-		case BL_NPC:   return pc->db_checkid(status->get_viewdata(bl)->class_)?0x0:0x6; //NPC_EVT_TYPE
-		case BL_PET:   return pc->db_checkid(status->get_viewdata(bl)->class_)?0x0:0x7; //NPC_PET_TYPE
-		case BL_HOM:   return 0x8; //NPC_HOM_TYPE
-		case BL_MER:   return 0x9; //NPC_MERSOL_TYPE
-		case BL_ELEM:  return 0xa; //NPC_ELEMENTAL_TYPE
-		default:       return 0x1; //NPC_TYPE
+		case BL_PC:
+			vd = status->get_viewdata(bl);
+			nullpo_retr(CLUT_NPC, vd);
+
+			if (disguised(bl) && !pc->db_checkid(vd->class_))
+				return CLUT_NPC;
+			else
+				return CLUT_PC;
+		case BL_ITEM:  return CLUT_ITEM;
+		case BL_SKILL: return CLUT_SKILL;
+		case BL_CHAT:  return CLUT_UNKNOW;
+		case BL_MOB:
+			vd = status->get_viewdata(bl);
+			nullpo_retr(CLUT_NPC, vd);
+			return pc->db_checkid(vd->class_)? CLUT_PC:CLUT_MOB;
+		case BL_NPC:
+			vd = status->get_viewdata(bl);
+			nullpo_retr(CLUT_NPC, vd);
+			return pc->db_checkid(vd->class_)? CLUT_PC:CLUT_EVENT;
+		case BL_PET:
+			vd = status->get_viewdata(bl);
+			nullpo_retr(CLUT_NPC, vd);
+			return pc->db_checkid(vd->class_)? CLUT_PC:CLUT_PET;
+		case BL_HOM:   return CLUT_HOMNUCLUS;
+		case BL_MER:   return CLUT_MERCNARY;
+		case BL_ELEM:  return CLUT_ELEMENTAL;
+		default:       return CLUT_NPC;
 	}
 }
 #endif
