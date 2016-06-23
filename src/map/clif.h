@@ -520,7 +520,7 @@ enum CLOSE_ROULETTE_ACK {
 
 /**
  * Reason for item deletion (clif->delitem)
- */
+ **/
 enum delitem_reason {
 	DELITEM_NORMAL         = 0, /// Normal
 	DELITEM_SKILLUSE       = 1, /// Item used for a skill
@@ -532,14 +532,31 @@ enum delitem_reason {
 	DELITEM_ANALYSIS       = 7, /// Consumed by Four Spirit Analysis (SO_EL_ANALYSIS) skill
 };
 
-/*
-* Merge items reasons
-*/
+/**
+ * Merge items reasons
+ **/
 
 enum mergeitem_reason {
 	MERGEITEM_SUCCESS =  0x0,
 	MERGEITEM_FAILD =  0x1,
 	MERGEITEM_MAXCOUNTFAILD =  0x2,
+};
+
+/**
+ * Clif Unit Type
+ **/
+enum clif_unittype {
+	CLUT_PC =  0x0,
+	CLUT_NPC =  0x1,
+	CLUT_ITEM =  0x2,
+	CLUT_SKILL =  0x3,
+	CLUT_UNKNOW =  0x4,
+	CLUT_MOB =  0x5,
+	CLUT_EVENT =  0x6,
+	CLUT_PET =  0x7,
+	CLUT_HOMNUCLUS =  0x8,
+	CLUT_MERCNARY =  0x9,
+	CLUT_ELEMENTAL =  0xa,
 };
 
 /**
@@ -1091,7 +1108,9 @@ struct clif_interface {
 	void (*cancelmergeitem) (int fd, struct map_session_data *sd);
 	int (*comparemergeitem) (const void *a, const void *b);
 	void (*ackmergeitems) (int fd, struct map_session_data *sd);
-
+	/* */
+	bool (*isdisguised) (struct block_list* bl);
+	unsigned char (*bl_type) (struct block_list *bl);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/
