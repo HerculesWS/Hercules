@@ -1110,6 +1110,7 @@ struct clif_interface {
 	void (*ackmergeitems) (int fd, struct map_session_data *sd);
 	/* */
 	bool (*isdisguised) (struct block_list* bl);
+	unsigned char (*bl_type) (struct block_list *bl);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/
