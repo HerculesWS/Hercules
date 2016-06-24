@@ -6009,6 +6009,46 @@ int battle_damage_area(struct block_list *bl, va_list ap) {
 
 	return 0;
 }
+
+bool battle_check_arrows(struct map_session_data *sd)
+{
+	int index = sd->equip_index[EQI_AMMO];
+	if (index < 0) {
+		if (sd->weapontype1 > W_KATAR && sd->weapontype1 < W_HUUMA)
+			clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+		else
+			clif->arrow_fail(sd, 0);
+		return false;
+	}
+	//Ammo check by Ishizu-chan
+	if (sd->inventory_data[index]) {
+		switch (sd->status.weapon) {
+			case W_BOW:
+				if (sd->inventory_data[index]->look != A_ARROW) {
+					clif->arrow_fail(sd, 0);
+					return false;
+				}
+				break;
+			case W_REVOLVER:
+			case W_RIFLE:
+			case W_GATLING:
+			case W_SHOTGUN:
+				if (sd->inventory_data[index]->look != A_BULLET) {
+					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+					return false;
+				}
+				break;
+			case W_GRENADE:
+				if (sd->inventory_data[index]->look != A_GRENADE) {
+					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+					return false;
+				}
+				break;
+		}
+	}
+	return true;
+}
+
 /*==========================================
  * Do a basic physical attack (call trough unit_attack_timer)
  *------------------------------------------*/
@@ -6046,39 +6086,8 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 		sd->state.arrow_atk = (sd->status.weapon == W_BOW || (sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE));
 		if (sd->state.arrow_atk)
 		{
-			int index = sd->equip_index[EQI_AMMO];
-			if (index<0) {
-				if ( sd->weapontype1 > W_KATAR && sd->weapontype1 < W_HUUMA )
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
-				else
-					clif->arrow_fail(sd, 0);
+			if (battle->check_arrows(sd) == false)
 				return ATK_NONE;
-			}
-			//Ammo check by Ishizu-chan
-			if (sd->inventory_data[index])
-			switch (sd->status.weapon) {
-			case W_BOW:
-				if (sd->inventory_data[index]->look != A_ARROW) {
-					clif->arrow_fail(sd,0);
-					return ATK_NONE;
-				}
-			break;
-			case W_REVOLVER:
-			case W_RIFLE:
-			case W_GATLING:
-			case W_SHOTGUN:
-				if (sd->inventory_data[index]->look != A_BULLET) {
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
-					return ATK_NONE;
-				}
-			break;
-			case W_GRENADE:
-				if (sd->inventory_data[index]->look != A_GRENADE) {
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
-					return ATK_NONE;
-				}
-			break;
-			}
 		}
 	}
 	if (sc && sc->count) {
@@ -7605,6 +7614,7 @@ void battle_defaults(void) {
 	battle->calc_gvg_damage = battle_calc_gvg_damage;
 	battle->calc_bg_damage = battle_calc_bg_damage;
 	battle->weapon_attack = battle_weapon_attack;
+	battle->check_arrows = battle_check_arrows;
 	battle->calc_weapon_attack = battle_calc_weapon_attack;
 	battle->delay_damage = battle_delay_damage;
 	battle->drain = battle_drain;
