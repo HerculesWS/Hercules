@@ -304,6 +304,7 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 		close;
 	} else {
 		etower_timer = 0;
+		etower_id = 0;
 		erasequest 60200;
 		erasequest 60201;
 		mes "^0000ffThe records and after effects related to the Endless Tower have been removed. You can generate and enter the Endless Tower again.^000000";
