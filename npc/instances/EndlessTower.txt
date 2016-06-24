@@ -216,6 +216,9 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 	.@etower_timer = questprogress(60200,PLAYTIME); // 1 week
 	.@etower_timer2 = questprogress(60201,PLAYTIME); // 4 hours
 
+	if (has_instance2("1@tower") >= 0)
+		.@instance = has_instance2("1@tower");
+
 	if (!instance_check_party(.@party_id,2)) {
 		mes "Make or join a party with more than 1 member and try again.";
 		close;
@@ -244,9 +247,10 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 				}
 				instance_set_timeout 14400,300,.@instance;
 				instance_init(.@instance);
+				$@etower_id[.@instance] = gettimetick(2);
 				close;
 			case 2:
-				callsub L_Enter,0,1,.@md_name$,.@p_name$;
+				callsub L_Enter,0,1,.@md_name$,.@p_name$,.@instance;
 			case 3:
 				mes "I will move you to Alberta.";
 				close2;
@@ -258,7 +262,7 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 		}
 		switch(select("Enter the "+.@md_name$, "Return to Alberta", "Cancel")) {
 		case 1:
-			callsub L_Enter,1,1,.@md_name$,.@p_name$;
+			callsub L_Enter,1,1,.@md_name$,.@p_name$,.@instance;
 		case 2:
 			mes "I will move you to Alberta.";
 			close2;
@@ -267,7 +271,7 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 		case 3:
 			end;
 		}
-	} else if (.@etower_timer == 1 && .@etower_timer2 == 2) {
+	} else if (.@etower_timer == 1 && (.@etower_timer2 == 2 || etower_id != $@etower_id[.@instance])) {
 
 		.@dun_lim_time = etower_timer+604800; // 1 week
 		.@dun_lim_time2 = etower_timer+14400; // 4 hours
@@ -315,6 +319,7 @@ L_Enter:
 		mapannounce "e_tower", strcharinfo(0)+" of the party, " +getarg(3)+", is entering the dungeon, Endless Tower.",bc_map,"0x00ff99",FW_NORMAL,12;
 		if (getarg(1)) {
 			etower_timer = gettimetick(2);
+			etower_id = $@etower_id[getarg(4)];
 			setquest 60200;
 			setquest 60201;
 		}
