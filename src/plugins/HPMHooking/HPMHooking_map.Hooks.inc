@@ -1265,6 +1265,33 @@ enum damage_lv HP_battle_weapon_attack(struct block_list *bl, struct block_list 
 	}
 	return retVal___;
 }
+bool HP_battle_check_arrows(struct map_session_data *sd) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_battle_check_arrows_pre ) {
+		bool (*preHookFunc) (struct map_session_data **sd);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_check_arrows_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_battle_check_arrows_pre[hIndex].func;
+			retVal___ = preHookFunc(&sd);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.battle.check_arrows(sd);
+	}
+	if( HPMHooks.count.HP_battle_check_arrows_post ) {
+		bool (*postHookFunc) (bool retVal___, struct map_session_data *sd);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_battle_check_arrows_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_battle_check_arrows_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, sd);
+		}
+	}
+	return retVal___;
+}
 struct Damage HP_battle_calc_weapon_attack(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int wflag) {
 	int hIndex = 0;
 	struct Damage retVal___ = { 0 };

@@ -114,6 +114,8 @@ struct {
 	struct HPMHookPoint *HP_battle_calc_bg_damage_post;
 	struct HPMHookPoint *HP_battle_weapon_attack_pre;
 	struct HPMHookPoint *HP_battle_weapon_attack_post;
+	struct HPMHookPoint *HP_battle_check_arrows_pre;
+	struct HPMHookPoint *HP_battle_check_arrows_post;
 	struct HPMHookPoint *HP_battle_calc_weapon_attack_pre;
 	struct HPMHookPoint *HP_battle_calc_weapon_attack_post;
 	struct HPMHookPoint *HP_battle_delay_damage_pre;
@@ -6015,6 +6017,8 @@ struct {
 	int HP_battle_calc_bg_damage_post;
 	int HP_battle_weapon_attack_pre;
 	int HP_battle_weapon_attack_post;
+	int HP_battle_check_arrows_pre;
+	int HP_battle_check_arrows_post;
 	int HP_battle_calc_weapon_attack_pre;
 	int HP_battle_calc_weapon_attack_post;
 	int HP_battle_delay_damage_pre;
