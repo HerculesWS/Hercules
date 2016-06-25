@@ -711,6 +711,24 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Callfunc (return NPC variables from another NPC)", callfunc("F_TestVarOfAnotherNPC", "TestVarOfAnotherNPC"), 1);
 	callsub(OnCheck, "Callfunc (return NPC variables from another NPC - local variable overwrite check)", .x, 2);
 
+	callsub(OnCheckStr, "sprintf (%%)",         sprintf("'%%'"), "'%'");
+	callsub(OnCheckStr, "sprintf (%d)",         sprintf("'%d'", 5), "'5'");
+	callsub(OnCheckStr, "sprintf (neg. %d)",    sprintf("'%d'", -5), "'-5'");
+	callsub(OnCheckStr, "sprintf (%u)",         sprintf("'%u'", 5), "'5'");
+	callsub(OnCheckStr, "sprintf (%x)",         sprintf("'%x'", 10), "'a'");
+	callsub(OnCheckStr, "sprintf (%X)",         sprintf("'%X'", 31), "'1F'");
+	callsub(OnCheckStr, "sprintf (%s)",         sprintf("'%s'", "Hello World!"), "'Hello World!'");
+	callsub(OnCheckStr, "sprintf (%c)",         sprintf("'%c'", "Hello World!"), "'H'");
+	callsub(OnCheckStr, "sprintf (%+d)",        sprintf("'%+d'", 5), "'+5'");
+	callsub(OnCheckStr, "sprintf (%{n}d)",      sprintf("'%5d'", 5), "'    5'");
+	callsub(OnCheckStr, "sprintf (%-{n}d)",     sprintf("'%-5d'", 5), "'5    '");
+	callsub(OnCheckStr, "sprintf (%-+{n}d)",    sprintf("'%-+5d'", 5), "'+5   '");
+	callsub(OnCheckStr, "sprintf (%+0{n}d)",    sprintf("'%+05d'", 5), "'+0005'");
+	callsub(OnCheckStr, "sprintf (%0*d)",       sprintf("'%0*d'", 5, 10), "'00010'");
+	callsub(OnCheckStr, "sprintf (Two args)",   sprintf("'%+05d' '%x'", 5, 0x7f), "'+0005' '7f'");
+	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$+05d'", 5, 6), "'+0006'");
+	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$s' '%1$c'", "First", "Second"), "'Second' 'F'");
+
 	if (.errors) {
 		debugmes "Script engine self-test   [ \033[0;31mFAILED\033[0m ]";
 		debugmes "**** The test was completed with " + .errors + " errors. ****";

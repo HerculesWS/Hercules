@@ -33,7 +33,7 @@ OnInit:
 	end;
 
 OnHour06:
-	killmonster "Uneasy_Check::OnZombieDead";	//The Sun kills undead in the morning
+	killmonster "prontera", "Uneasy_Check::OnZombieDead"; //The Sun kills undead in the morning
 	end;
 
 OnHour01:
@@ -54,7 +54,7 @@ OnZombieDead:
 	end;
 
 L_Start_Undead:
-	killmonster "Uneasy_Check::OnZombieDead";	//kills any left monsters
+	killmonster "prontera", "Uneasy_Check::OnZombieDead"; //kills any left monsters
 	enablenpc "Mother Mathana";
 //call some monsters in the city
 	set $@UNEASY_MOB, 65;
@@ -98,7 +98,7 @@ L_Undead_Walk:
 	mes "[Mother Mathana]";
 	mes "Upon pouring the cemetery with that water we'll get " + $UNEASY_DL + " safe nights!";
 	next;
-	killmonster "Uneasy_Check::OnZombieDead";	//kills any left monsters
+	killmonster "prontera", "Uneasy_Check::OnZombieDead"; //kills any left monsters
 	mes "[Mother Mathana]";
 	mes "See, "+ $UNEASY_H$ +"? They all are gone now!";
 	next;

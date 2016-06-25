@@ -3432,7 +3432,8 @@ L_ShowReport:
 	mes "the mysterious power.";
 	mes " ";
 	mes "<Material analysis>";
-	mes "*** Temperature ***** 33.5¡Æ";
+	mes sprintf("*** %s ***** 33.5¡Æ",
+			_("Temperature"));
 	mes "*** PH ************ 9.8";
 	mes "*** Solid residues *** 176";
 	mes "*** K+ ************ 0,23";

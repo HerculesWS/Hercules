@@ -293,10 +293,10 @@ glast_01,196,326,1	script	Porter#07	4_M_TWBOY,{
 umbala,188,98,3	script	Porter#08	4_M_TWBOY,{
 	callfunc "F_Porter",8;
 }
-comodo,203,75,8	script	Porter#09	4_M_TWBOY,{
+comodo,203,75,0	script	Porter#09	4_M_TWBOY,{
 	callfunc "F_Porter",9;
 }
-amatsu,115,78,8	script	Porter#10	4_M_TWBOY,{
+amatsu,115,78,0	script	Porter#10	4_M_TWBOY,{
 	callfunc "F_Porter",10;
 }
 niflheim,132,242,5	script	Porter#11	4_M_TWBOY,{
@@ -305,7 +305,7 @@ niflheim,132,242,5	script	Porter#11	4_M_TWBOY,{
 xmas,232,309,5	script	Porter#12	4_M_TWBOY,{
 	callfunc "F_Porter",12;
 }
-louyang,35,279,8	script	Porter#13	4_M_TWBOY,{
+louyang,35,279,0	script	Porter#13	4_M_TWBOY,{
 	callfunc "F_Porter",13;
 }
 gonryun,82,95,7	script	Porter#14	4_M_TWBOY,{

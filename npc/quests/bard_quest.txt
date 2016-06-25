@@ -1458,8 +1458,8 @@ morocc,134,111,3	script	Bard#3	2_M_BARD_ORIENT,{
 				next;
 				mes "^3355FFKino Kitty coughed a few times, wiping his mouth with his sleeve. As he adjusts the guitar strings, you notice small stains of blood on his sleeve. Then, he began to sing.^000000";
 				next;
-				mes "^D43D1ABrave hero Siegfried ";
-				mes "Vanquished a mighty dragon	";
+				mes "^D43D1ABrave hero Siegfried";
+				mes "Vanquished a mighty dragon";
 				mes "Its blood coated his skin";
 				mes "Making it impenetrable";
 				mes "Save for one tender spot";

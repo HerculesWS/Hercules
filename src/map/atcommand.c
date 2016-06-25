@@ -132,7 +132,6 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 	int msg_number;
 	char line[1024], w1[1024], w2[1024];
 	FILE *fp;
-	static int called = 1;
 
 	nullpo_retr(false, cfg_name);
 	if ((fp = fopen(cfg_name, "r")) == NULL) {
@@ -169,21 +168,6 @@ bool msg_config_read(const char *cfg_name, bool allow_override) {
 		}
 	}
 	fclose(fp);
-
-	if( ++called == 1 ) { //Original
-		if( script->lang_export_fp ) {
-			int i;
-			for(i = 0; i < MAX_MSG;i++) {
-				if( atcommand->msg_table[0][i] != NULL ) {
-					fprintf(script->lang_export_fp, "msgctxt \"messages.conf\"\n"
-							"msgid \"%s\"\n"
-							"msgstr \"\"\n",
-							atcommand->msg_table[0][i]
-							);
-				}
-			}
-		}
-	}
 
 	return true;
 }

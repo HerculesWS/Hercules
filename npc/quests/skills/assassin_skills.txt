@@ -29,12 +29,6 @@
 //= along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=========================================================================
 //= Assassin Skills Quests
-//================= File Encoding =========================================
-//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//= -If the encoding is correct, the next three lines have the same length-
-//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
-//= ============ ============================================= ============
-//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
 //================= Description ===========================================
 //= Quests for skills: Venom Knife, Sonic Acceleration
 //================= Current Version =======================================
@@ -979,9 +973,7 @@ OnTouch:
 	}
 }
 
-// FIXME[Haru]: Why do we have a Korean name here? Can anyone translate it?
-//      Google translate says Â¡Â¡ (jingjing) = Whining, but it doesn't make much sense to me.
-moc_pryd04,85,96,0	script	Â¡Â¡#crypt	FAKE_NPC,3,3,{
+moc_pryd04,85,96,0	script	Glimmer#crypt	FAKE_NPC,3,3,{
 OnTouch:
 	if (ASSN_SK == 4) {
 		specialeffect EF_CONE;

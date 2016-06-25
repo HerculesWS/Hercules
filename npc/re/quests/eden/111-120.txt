@@ -878,7 +878,7 @@ moc_para01,17,95,5	script	Mingmin#1	4_F_GENETIC,{
 						case 3:
 							mes "[Mingmin]";
 							if (questprogress(13098,PLAYTIME) == 1)
-								mes "They all look the same for me.	I should research harder.";
+								mes "They all look the same for me. I should research harder.";
 							else if (questprogress(13097,HUNTING) == 1) {
 								cutin "º£³ªÅõ",3;  //venatu_card
 								mes "There is one more reason why many adventurers are sent to Juperos and that is my real request.";

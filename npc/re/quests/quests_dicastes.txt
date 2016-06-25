@@ -52,9 +52,9 @@
 manuk,321,182,5	script	Entrance Manager#ep133	4_MAN_GALTUN,{
 	if (!isequipped(2782)) {
 		mes "[Average Galten]";
-		mes "¢¤¡ð¡ú? ¢£ ¡ù¡ð...";
-		mes "¡ï¡ò¡Ð ¢¤ ?";
-		mes "¡ñ¡ï..?";
+		mes sprintf("¢¤¡ð¡ú? ¢£ ¡ù¡ð...");
+		mes sprintf("¡ï¡ò¡Ð ¢¤ ?");
+		mes sprintf("¡ñ¡ï..?");
 		close;
 	}
 	if (ep13_3_invite >= 4) {
@@ -81,7 +81,7 @@ manuk,321,182,5	script	Entrance Manager#ep133	4_MAN_GALTUN,{
 dic_dun01,266,113,5	script	Curious Sapha#ep13_3_	4_MAN_BENKUNI,{
 	if (!isequipped(2782)) {
 		mes "[Curious Sapha]";
-		mes "¡ö¡ñ¡Ð ¡ò ¡õ?";
+		mes sprintf("¡ö¡ñ¡Ð ¡ò ¡õ?");
 		next;
 		mes "- Cannot understand a word. -";
 		close;
@@ -207,8 +207,8 @@ sec_in02,16,43,5	script	Scaraba Dungeon Entrance	4_MAN_BENKUNI,{
 	if (compare(strnpcinfo(0),"ep133_26")) {
 		if (!isequipped(2782)) {
 			mes "[Vigilante]";
-			mes "¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?";
-			mes "¢¤¡ö¡ø ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...";
+			mes sprintf("¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?");
+			mes sprintf("¢¤¡ö¡ø ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...");
 			next;
 			mes "The Vigilante says something and then shakes his head.";
 			mes "Looks like a negative reaction from the looks of his firm pose holding his shield in front of him.";
@@ -231,9 +231,9 @@ sec_in02,16,43,5	script	Scaraba Dungeon Entrance	4_MAN_BENKUNI,{
 	}
 	if (!isequipped(2782)) {
 		mes "[Vigilante]";
-		mes "¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?";
-		mes "¢¤¡ö¡ø ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...";
-		mes "¡ð¡ú¢± ¡ô ¡ò¡õ¡ú ¡õ..! ";
+		mes sprintf("¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?");
+		mes sprintf("¢¤¡ö¡ø ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...");
+		mes sprintf("¡ð¡ú¢± ¡ô ¡ò¡õ¡ú ¡õ..! ");
 		next;
 		mes "Cannot communicate with him.";
 		close;
@@ -267,8 +267,8 @@ dic_dun01,30,216,5	duplicate(Vigilante#main)	Vigilante#ep133_26	4_MAN_GALTUN1
 dic_dun01,284,102,5	script	Dirty Vigilante#ep13_3	4_MAN_GALTUN,{
 	if (!isequipped(2782)) {
 		mes "[Vigilante]";
-		mes "¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó¢¤¡ö¡ø ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û.";
-		mes "¡ð¡ú¢± ¡ô ¡ò¡õ¡ú ¡õ..! ";
+		mes sprintf("¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó¢¤¡ö¡ø ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û.");
+		mes sprintf("¡ð¡ú¢± ¡ô ¡ò¡õ¡ú ¡õ..! ");
 		next;
 		mes "Cannot understand a word.";
 		close;
@@ -361,8 +361,8 @@ OnEnable:
 -	script	Guard#ep133_11	4_MAN_GALTUN1,{
 	if (!isequipped(2782)) {
 		mes "[Capital City Guard]";
-		mes "¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?";
-		mes "¡ð¡ú¢± ¡ô ¡ò¡õ¡ú ¡õ..!";
+		mes sprintf("¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?");
+		mes sprintf("¡ð¡ú¢± ¡ô ¡ò¡õ¡ú ¡õ..!");
 		next;
 		mes "- Cannot communicate with him. -";
 		close;
@@ -502,8 +502,8 @@ dic_in01,48,263,5	script	Hunting Dept. 1 Manager	4_MAN_BENKUNI,{
 		close;
 	}
 	if (!isequipped(2782)) {
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "I don't feel confident in talking since you wouldn't understand anything.";
 		close;
@@ -572,8 +572,8 @@ dic_in01,51,266,6	script	Hunting Dept. 2 Manager	4_MAN_BENKUNI,{
 		close;
 	}
 	if (!isequipped(2782)) {
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "I don't feel confident in talking since you wouldn't understand anything.";
 		close;
@@ -641,8 +641,8 @@ dic_in01,51,270,7	script	Supply Dept. 1 Manager	4_MAN_BENKUNI,{
 		close;
 	}
 	if (!isequipped(2782)) {
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "I don't feel confident in talking since you wouldn't understand anything.";
 		close;
@@ -712,8 +712,8 @@ dic_in01,48,273,1	script	Supply Dept. 2 Manager	4_MAN_BENKUNI,{
 		close;
 	}
 	if (!isequipped(2782)) {
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "I don't feel confident in talking since you wouldn't understand anything.";
 		close;
@@ -779,8 +779,8 @@ dic_in01,43,273,1	script	Transport Dept. 1 Mgr	4_MAN_BENKUNI,{
 		close;
 	}
 	if (!isequipped(2782)) {
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "I don't feel confident in talking since you wouldn't understand anything.";
 		close;
@@ -853,8 +853,8 @@ dic_in01,40,270,2	script	Transport Dept. 2 Mgr	4_MAN_BENKUNI,{
 		close;
 	}
 	if (!isequipped(2782)) {
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "I don't feel confident in talking since you wouldn't understand anything.";
 		close;
@@ -921,8 +921,8 @@ dic_in01,40,193,1	script	Papyrus#0001	4_MAN_NITT,{
 		close;
 	}
 	if (!isequipped(2782)) {
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "I don't feel confident in talking since you wouldn't understand anything.";
 		close;
@@ -1204,9 +1204,9 @@ cmd_fild08,324,163,0	script	Stone Hearts	CLEAR_NPC,{ unknown_d(12215,953); }
 dic_in01,138,225,3	script	Diel Guard#ep133_19	4_MAN_GALTUN1,{
 	if (!isequipped(2782)) {
 		mes "[Diel Guard]";
-		mes "¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?";
-		mes "¢¤¡ö¡ø ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...";
-		mes "¡ð¡ú¢± ¡ô ¡ò¡õ¡ú ¡õ..!";
+		mes sprintf("¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?");
+		mes sprintf("¢¤¡ö¡ø ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...");
+		mes sprintf("¡ð¡ú¢± ¡ô ¡ò¡õ¡ú ¡õ..!");
 		next;
 		mes "Cannot communicate with him.";
 		close;
@@ -1267,9 +1267,9 @@ dic_in01,242,182,0	script	Elevator#5f_to_4f	CLEAR_NPC,{
 dic_in01,263,193,3	script	Diel Guard#ep133_20	4_MAN_GALTUN,{
 	if (!isequipped(2782)) {
 		mes "[Diel Guard]";
-		mes "¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?";
-		mes "¢¤¡ö¡ø ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...";
-		mes "¡ð¡ú¢± ¡ô ¡ò¡õ¡ú ¡õ..!";
+		mes sprintf("¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?");
+		mes sprintf("¢¤¡ö¡ø ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...");
+		mes sprintf("¡ð¡ú¢± ¡ô ¡ò¡õ¡ú ¡õ..!");
 		next;
 		mes "Cannot communicate with him.";
 		close;
@@ -1804,8 +1804,8 @@ OnTouch:
 	if (ep13_3_secret == 19) {
 		if (!isequipped(2782)) {
 			mes "[Quiet Voice]";
-			mes "¡þ¡ù¡ó ¢¤¡ö¡ø....";
-			mes "¡ò¡õ¡ú ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...";
+			mes sprintf("¡þ¡ù¡ó ¢¤¡ö¡ø....");
+			mes sprintf("¡ò¡õ¡ú ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...");
 		}
 		else {
 			mes "[Quiet Voice]";
@@ -1821,9 +1821,9 @@ OnTouch:
 dic_in01,158,188,3	script	Jarute HesLanta#ep133_2	4_MAN_JERUTOO,{
 	if (!isequipped(2782)) {
 		mes "[Jarute HesLanta]";
-		mes "¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?";
-		mes "¢¤¡ö¡ø ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...";
-		mes "¡ð¡ú¢± ¡ô ¡ò¡õ¡ú ¡õ..!";
+		mes sprintf("¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?");
+		mes sprintf("¢¤¡ö¡ø ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...");
+		mes sprintf("¡ð¡ú¢± ¡ô ¡ò¡õ¡ú ¡õ..!");
 		next;
 		mes "Cannot communicate with him.";
 		mes "Sapha's minister looks hopeless.";
@@ -2331,8 +2331,8 @@ dicastes01,223,190,1	script	Calyon#pa8029	4_MAN_NITT,{
 		close;
 	}
 	if (!isequipped(2782)) {
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "I don't feel confident in talking since you wouldn't understand anything.";
 		close;
@@ -2504,8 +2504,8 @@ dicastes01,211,178,2	script	Moltuka#pa0829	4_MAN_NITT,{
 		close;
 	}
 	if (!isequipped(2782)) {
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "I don't feel confident in talking since you wouldn't understand anything.";
 		close;
@@ -2728,8 +2728,8 @@ dicastes01,175,217,5	script	Kalipo#pa0829	4_MAN_NITT,{
 		close;
 	}
 	if (!isequipped(2782)) {
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "I don't feel confident in talking since you wouldn't understand anything.";
 		close;
@@ -2870,8 +2870,8 @@ dicastes01,187,230,5	script	Laponte#pa0829	4_MAN_NITT,{
 		close;
 	}
 	if (!isequipped(2782)) {
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "I don't feel confident in talking since you wouldn't understand anything.";
 		close;
@@ -3041,8 +3041,8 @@ dicastes01,208,230,3	script	Pura#pa0829	4_MAN_NITT,{
 		close;
 	}
 	if (!isequipped(2782)) {
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "I don't feel confident in talking since you wouldn't understand anything.";
 		close;
@@ -3232,8 +3232,8 @@ dicastes01,225,211,3	script	Tragis#pa0829	4_MAN_NITT,{
 		close;
 	}
 	if (!isequipped(2782)) {
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "I don't feel confident in talking since you wouldn't understand anything.";
 		close;
@@ -4300,8 +4300,8 @@ dic_in01,245,119,4	script	Shay#ep133_13	4_M_ACROSS,{
 dicastes01,207,210,5	script	Walking Knit#ep133_15	4_MAN_BENKUNI,{
 	if (!isequipped(2782)) {
 		mes "[Knit]";
-		mes "¡õ¢£¡ô";
-		mes "¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£";
+		mes sprintf("¡õ¢£¡ô");
+		mes sprintf("¡ö¡ø¡ó ¢£ ¡ö¡ñ¡ï ¡ù ¡ð¢²¢£");
 		next;
 		mes "Cannot communicate with him.";
 		close;
@@ -4398,9 +4398,9 @@ dicastes01,207,210,5	script	Walking Knit#ep133_15	4_MAN_BENKUNI,{
 dicastes01,112,248,5	script	Resting Piom#ep133_16	4_MAN_PIOM5,{
 	mes "[Piom]";
 	if (!isequipped(2782)) {
-		mes "¡ñ¡÷¢¤ ¡ö ¢±¡ñ¡ú?";
-		mes "¡ò¢³~!";
-		mes "¡Ð¢²¢¤ ¢± ¡ü¡ñ¡õ ¢³ ¡ð !!!";
+		mes sprintf("¡ñ¡÷¢¤ ¡ö ¢±¡ñ¡ú?");
+		mes sprintf("¡ò¢³~!");
+		mes sprintf("¡Ð¢²¢¤ ¢± ¡ü¡ñ¡õ ¢³ ¡ð !!!");
 		next;
 		mes "Cannot communicate with him.";
 		close;
@@ -4471,8 +4471,8 @@ dicastes01,112,248,5	script	Resting Piom#ep133_16	4_MAN_PIOM5,{
 dicastes01,249,140,3	script	Training Galten#ep133_17	4_MAN_GALTUN,{
 	if (!isequipped(2782)) {
 		mes "[Galten]";
-		mes "¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü";
-		mes "¡ø¡ô¡ü";
+		mes sprintf("¡ø¡ô¡ü ¡ø ¡ø¡ô¡ü");
+		mes sprintf("¡ø¡ô¡ü");
 		next;
 		mes "Cannot communicate with him.";
 		close;
@@ -5045,8 +5045,8 @@ dicastes01,117,262,0	script	Frede#13_3	4_MAN_PIOM5,2,2,{
 		close;
 	}
 	mes "[Frede]";
-	mes "¢£¡ô¡ñ ¡û";
-	mes "¡ú¡ö¡ø ¢£ ¡ô";
+	mes sprintf("¢£¡ô¡ñ ¡û");
+	mes sprintf("¡ú¡ö¡ø ¢£ ¡ô");
 	close;
 OnTouch:
 	if (isequipped(2782) && ep13_3_invite > 5 && ep13_3_bra < 1) {
@@ -5352,8 +5352,8 @@ dic_in01,165,104,0	script	Frede#13_3_in	4_MAN_PIOM,{
 		close;
 	}
 	mes "[Frede]";
-	mes "¢£¡ô¡ñ ¡û ";
-	mes "¡ú¡ö¡ø ¢£ ¡ô";
+	mes sprintf("¢£¡ô¡ñ ¡û ");
+	mes sprintf("¡ú¡ö¡ø ¢£ ¡ô");
 	close;
 }
 
@@ -5450,9 +5450,9 @@ dic_dun01,205,43,5	script	Brian#ep13_3_	4_MAN_PIOM4,{
 		close;
 	}
 	mes "[Brian]";
-	mes "¡ô¡õ¡ó ¡ø ¡ð¢±¡û ¡ö ¡ð";
-	mes "¡ð¡þ¡þ ¡ù ¡Ð¡ñ¡ï ¢¤";
-	mes "¡ô¡ò¢² ¡ø";
+	mes sprintf("¡ô¡õ¡ó ¡ø ¡ð¢±¡û ¡ö ¡ð");
+	mes sprintf("¡ð¡þ¡þ ¡ù ¡Ð¡ñ¡ï ¢¤");
+	mes sprintf("¡ô¡ò¢² ¡ø");
 	close;
 }
 
@@ -5576,9 +5576,9 @@ dic_dun01,153,107,4	script	Tyler#13_3	4_MAN_PIOM6,{
 		close;
 	}
 	mes "[Tyler]";
-	mes "¡ï¡þ¡÷";
-	mes "¡þ¡ó¡Ð ¡þ ¡Ð¡ø¢± ¡ü ";
-	mes "¡ó¡ø¢¤ ¡ó ";
+	mes sprintf("¡ï¡þ¡÷");
+	mes sprintf("¡þ¡ó¡Ð ¡þ ¡Ð¡ø¢± ¡ü ");
+	mes sprintf("¡ó¡ø¢¤ ¡ó ");
 	close;
 }
 
@@ -5679,8 +5679,8 @@ dic_dun01,235,243,0	script	John#13_3	4_MAN_PIOM,{
 		close;
 	}
 	mes "[John]";
-	mes "¡ù¡õ¡Ð ¢³ ¡ó";
-	mes "¡ï¡ï¡ò ¡÷ ¡þ¡ð¡ö ¢£ ¡ñ¡ü¡ú ¡ó ¢¤¡ü ¡ó ";
+	mes sprintf("¡ù¡õ¡Ð ¢³ ¡ó");
+	mes sprintf("¡ï¡ï¡ò ¡÷ ¡þ¡ð¡ö ¢£ ¡ñ¡ü¡ú ¡ó ¢¤¡ü ¡ó ");
 	close;
 }
 
@@ -5773,13 +5773,14 @@ dic_dun02,110,127,5	script	Rose#13_3	4_MAN_PIOM6,{
 		next;
 		mes "[Rose]";
 		mes "We must be connected?";
-		mes "^f57d7dHahaha¢½^000000";
+		mes sprintf("^f57d7d%s¢½^000000",
+				_("Hahaha"));;
 		close;
 	}
 	mes "[Rose]";
-	mes "¡ù¡ó¡ð ¢² ¡ð";
-	mes "¡û¡ö¡÷ ¡ù ¢³";
-	mes "¢£¡ó¢²";
+	mes sprintf("¡ù¡ó¡ð ¢² ¡ð");
+	mes sprintf("¡û¡ö¡÷ ¡ù ¢³");
+	mes sprintf("¢£¡ó¢²");
 	close;
 }
 
@@ -5872,8 +5873,8 @@ dic_dun01,64,107,7	script	Bain#13_3	4_MAN_PIOM4,{
 		close;
 	}
 	mes "[Bain]";
-	mes "¡ó¡ø¢± ¡÷ ";
-	mes "¡ö¡ñ¡Ð ¡ò ¡õ";
+	mes sprintf("¡ó¡ø¢± ¡÷ ");
+	mes sprintf("¡ö¡ñ¡Ð ¡ò ¡õ");
 	close;
 }
 
@@ -5970,11 +5971,11 @@ dic_dun01,58,225,4	script	Lash#13_3	4_MAN_PIOM5,{
 		close;
 	}
 	mes "[Lash]";
-	mes "¡ô¡õ¡ó ¡ø ¡ð¢±¡û ¡ö ¡ð";
-	mes "¡ð¡þ¡þ ¡ù ¡Ð¡ñ¡ï ¢¤ ";
-	mes "¡ô¡ò¢² ¡ø ";
-	mes "¡÷";
-	mes "¡õ¢³¡ñ ¡õ ¡ñ";
+	mes sprintf("¡ô¡õ¡ó ¡ø ¡ð¢±¡û ¡ö ¡ð");
+	mes sprintf("¡ð¡þ¡þ ¡ù ¡Ð¡ñ¡ï ¢¤ ");
+	mes sprintf("¡ô¡ò¢² ¡ø ");
+	mes sprintf("¡÷");
+	mes sprintf("¡õ¢³¡ñ ¡õ ¡ñ");
 	close;
 }
 
@@ -6095,9 +6096,9 @@ dic_in01,349,129,5	script	Bouy#13_3	4_MAN_BENKUNI,{
 		close;
 	}
 	mes "[Bouy]";
-	mes "¡ø¡ö¡þ ¡ù ¡ú¡ð¡ï ¡ø";
-	mes "¡ï¡ú¡ö ¡ù";
-	mes "¡õ¡ï¡õ ¡ò";
+	mes sprintf("¡ø¡ö¡þ ¡ù ¡ú¡ð¡ï ¡ø");
+	mes sprintf("¡ï¡ú¡ö ¡ù");
+	mes sprintf("¡õ¡ï¡õ ¡ò");
 	close;
 }
 
@@ -6591,9 +6592,9 @@ mid_campin,168,128,3	script	Sapha from Manuk	4_MAN_JERUTOO,{
 		mes "That is it.";
 	}
 	mes "[Sapha]";
-	mes "¢¤¡ð¡ú? ¢£ ¡ù¡ð...";
-	mes "¡ï¡ò¡Ð ¢¤ ?";
-	mes "¡ñ¡ï..?";
+	mes sprintf("¢¤¡ð¡ú? ¢£ ¡ù¡ð...");
+	mes sprintf("¡ï¡ò¡Ð ¢¤ ?");
+	mes sprintf("¡ñ¡ï..?");
 	next;
 	mes "[Hound]";
 	mes "Where is your interpreter ring?";
@@ -6673,9 +6674,9 @@ OnInit:
 man_in01,315,52,3	script	Guard Captain Avalanche	4_MAN_GALTUN,{
 	mes "[Guard Captain Avalanche]";
 	if (!isequipped(2782)) {
-		mes "¢¤¡ð¡ú? ¢£ ¡ù¡ð...";
-		mes "¡ï¡ò¡Ð ¢¤ ?";
-		mes "¡ñ¡ï..?";
+		mes sprintf("¢¤¡ð¡ú? ¢£ ¡ù¡ð...");
+		mes sprintf("¡ï¡ò¡Ð ¢¤ ?");
+		mes sprintf("¡ñ¡ï..?");
 		close;
 	}
 	if (ep13_3_invite == 4) {
@@ -6751,8 +6752,8 @@ man_in01,315,52,3	script	Guard Captain Avalanche	4_MAN_GALTUN,{
 dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 	if (!isequipped(2782)) {
 		mes "[Clerk Knit]";
-		mes "¡ð¡ñ¡ô ¡õ ¡ü¢±¢³ ¡ö ¡ò...?";
-		mes "¢¤¡ö¡ø ... ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...";
+		mes sprintf("¡ð¡ñ¡ô ¡õ ¡ü¢±¢³ ¡ö ¡ò...?");
+		mes sprintf("¢¤¡ö¡ø ... ¢³ ¡÷¢£¡ü ¡ø ¡Ð¡õ¡û...");
 		next;
 		mes "- Cannot communicate with him. -";
 		close;

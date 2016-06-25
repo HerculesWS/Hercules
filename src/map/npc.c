@@ -3759,7 +3759,7 @@ const char *npc_parse_function(const char *w1, const char *w2, const char *w3, c
 		struct script_code *oldscript = (struct script_code*)DB->data2ptr(&old_data);
 		ShowWarning("npc_parse_function: Overwriting user function [%s] in file '%s', line '%d'.\n", w3, filepath, strline(buffer,start-buffer));
 		script->free_vars(oldscript->local.vars);
-		aFree(oldscript->script_buf);
+		VECTOR_CLEAR(oldscript->script_buf);
 		aFree(oldscript);
 	}
 
@@ -5000,12 +5000,6 @@ int do_init_npc(bool minimal) {
 
 		timer->add_func_list(npc->event_do_clock,"npc_event_do_clock");
 		timer->add_func_list(npc->timerevent,"npc_timerevent");
-	}
-
-	if( script->lang_export_fp ) {
-		ShowInfo("Lang exported to '%s'\n",script->lang_export_file);
-		fclose(script->lang_export_fp);
-		script->lang_export_fp = NULL;
 	}
 
 	// Init dummy NPC
