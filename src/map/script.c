@@ -4910,28 +4910,42 @@ void script_load_translations(void) {
 }
 
 /**
+ * Generates a language name from a translation filename.
  *
- **/
+ * @param file The filename.
+ * @return The corresponding translation name.
+ */
 const char *script_get_translation_file_name(const char *file)
 {
-	int i, len = (int)strlen(file), last_bar = -1, last_dot = -1;
+	const char *basename = NULL, *last_dot = NULL;
 
-	for(i = 0; i < len; i++) {
-		if( file[i] == '/' || file[i] == '\\' )
-			last_bar = i;
-		else if ( file[i] == '.' )
-			last_dot = i;
+	nullpo_retr("Unknown", file);
+
+	basename = strrchr(file, '/');;
+#ifdef WIN32
+	{
+		const char *basename_windows = strrchr(file, '\\');
+		if (basename_windows > basename)
+			basename = basename_windows;
 	}
+#endif // WIN32
+	if (basename == NULL)
+		basename = file;
+	else
+		basename++; // Skip slash
+	Assert_retr("Unknown", *basename != '\0');
 
-	if( last_bar != -1 || last_dot != -1 ) {
+	last_dot = strrchr(basename, '.');
+	if (last_dot != NULL) {
 		static char file_name[200];
-		if( last_bar != -1 && last_dot < last_bar )
-			last_dot = -1;
-		safestrncpy(file_name, file+(last_bar >= 0 ? last_bar+1 : 0), ( last_dot >= 0 ? ( last_bar >= 0 ? last_dot - last_bar : last_dot ) : sizeof(file_name) ));
+		if (last_dot == basename)
+			return basename + 1;
+
+		safestrncpy(file_name, basename, last_dot - basename + 1);
 		return file_name;
 	}
 
-	return file;
+	return basename;
 }
 
 /**
