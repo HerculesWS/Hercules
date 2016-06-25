@@ -1965,7 +1965,7 @@ alde_alche,145,19,1	script	Chief Researcher#am	1_M_LIBRARYMASTER,{
 		case 1:
 			mes "t m y a n y e o b n e g p r i";
 			next;
-			if (select("Brake", "Brass" "Bug", "Broken", "Brigan?") == 5)
+			if (select("Brake", "Brass", "Bug", "Broken", "Brigan?") == 5)
 				.@alch_t += 10;
 			mes "o n c u t a p j l e r s v m u";
 			next;
