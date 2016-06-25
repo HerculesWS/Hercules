@@ -993,15 +993,6 @@ int party_exp_share(struct party_data* p, struct block_list* src, unsigned int b
 #endif
 
 	for (i = 0; i < c; i++) {
-#ifdef RENEWAL_EXP
-		struct mob_data *md = BL_CAST(BL_MOB, src);
-		if (md != NULL && md->db->mexp == 0) {
-			int rate = pc->level_penalty_mod(md->level - (sd[i])->status.base_level, md->status.race, md->status.mode, 1);
-
-			base_exp = (unsigned int)cap_value(base_exp_bonus * rate / 100, 1, UINT_MAX);
-			job_exp = (unsigned int)cap_value(job_exp_bonus * rate / 100, 1, UINT_MAX);
-		}
-#endif
 		pc->gainexp(sd[i], src, base_exp, job_exp, false);
 
 		if (zeny) // zeny from mobs [Valaris]

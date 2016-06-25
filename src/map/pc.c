@@ -6663,37 +6663,72 @@ int pc_checkjoblevelup(struct map_session_data *sd)
  * Alters EXP based on self bonuses that do not get shared with the party
  **/
 void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned int *job_exp, struct block_list *src) {
-	int bonus = 0;
-	struct status_data *st = status->get_status_data(src);
+	int buff_ratio = 0, buff_job_ratio = 0, race_ratio = 0, pk_ratio = 0;
+	int64 jexp, bexp;
 
 	nullpo_retv(sd);
 	nullpo_retv(base_exp);
 	nullpo_retv(job_exp);
-	if (sd->expaddrace[st->race])
-		bonus += sd->expaddrace[st->race];
-	bonus += sd->expaddrace[(st->mode&MD_BOSS) ? RC_BOSS : RC_NONBOSS];
 
-	if (battle_config.pk_mode
-	 && (int)(status->get_lv(src) - sd->status.base_level) >= 20)
-		bonus += 15; // pk_mode additional exp if monster >20 levels [Valaris]
+	jexp = *job_exp;
+	bexp = *base_exp;
 
-	if (sd->sc.data[SC_CASH_PLUSEXP])
-		bonus += sd->sc.data[SC_CASH_PLUSEXP]->val1;
-	if (sd->sc.data[SC_OVERLAPEXPUP])
-		bonus += sd->sc.data[SC_OVERLAPEXPUP]->val1;
+	if (src != NULL) {
+		const struct status_data *st = status->get_status_data(src);
 
-	*base_exp = (unsigned int) cap_value(*base_exp + apply_percentrate64(*base_exp, bonus, 100), 1, UINT_MAX);
+#ifdef RENEWAL_EXP //should happen first before we caluclate any modifiers
+		if (src->type == BL_MOB) {
+			const struct mob_data *md = BL_UCAST(BL_MOB, src);
+			int re_mod;
+			re_mod = pc->level_penalty_mod(md->level - sd->status.base_level, md->status.race, md->status.mode, 1);
+			jexp = apply_percentrate64(jexp, re_mod, 100);
+			bexp = apply_percentrate64(bexp, re_mod, 100);
+		}
+#endif
 
+		//Race modifier
+		if (sd->expaddrace[st->race])
+			race_ratio += sd->expaddrace[st->race];
+		race_ratio += sd->expaddrace[(st->mode&MD_BOSS) ? RC_BOSS : RC_NONBOSS];
+	}
+
+
+	//PK modifier
+	/* this doesn't exist in Aegis, instead there's a CrazyKiller check which double all EXP from this point */
+	if (battle_config.pk_mode && (int)(status->get_lv(src) - sd->status.base_level) >= 20)
+		pk_ratio += 15; // pk_mode additional exp if monster >20 levels [Valaris]
+
+
+	//Buffs modifier
+	if (sd->sc.data[SC_CASH_PLUSEXP]) {
+		buff_job_ratio += sd->sc.data[SC_CASH_PLUSEXP]->val1;
+		buff_ratio += sd->sc.data[SC_CASH_PLUSEXP]->val1;
+	}
+	if (sd->sc.data[SC_OVERLAPEXPUP]) {
+		buff_job_ratio  += sd->sc.data[SC_OVERLAPEXPUP]->val1;
+		buff_ratio += sd->sc.data[SC_OVERLAPEXPUP]->val1;
+	}
 	if (sd->sc.data[SC_CASH_PLUSONLYJOBEXP])
-		bonus += sd->sc.data[SC_CASH_PLUSONLYJOBEXP]->val1;
+		buff_job_ratio += sd->sc.data[SC_CASH_PLUSONLYJOBEXP]->val1;
 
-	*job_exp = (unsigned int) cap_value(*job_exp + apply_percentrate64(*job_exp, bonus, 100), 1, UINT_MAX);
+	//Applying Race and PK modifier First then Premium (Perment modifier) and finally buff modifier
+	jexp += apply_percentrate64(jexp, race_ratio, 100);
+	jexp += apply_percentrate64(jexp, pk_ratio, 100);
+
+	bexp += apply_percentrate64(bexp, race_ratio, 100);
+	bexp += apply_percentrate64(bexp, pk_ratio, 100);
+
 
 	if (sd->status.mod_exp != 100) {
-		*base_exp = (unsigned int) cap_value(apply_percentrate64(*base_exp, sd->status.mod_exp, 100), 1, UINT_MAX);
-		*job_exp  = (unsigned int) cap_value(apply_percentrate64(*job_exp, sd->status.mod_exp, 100), 1, UINT_MAX);
-
+		jexp = apply_percentrate64(jexp, sd->status.mod_exp, 100);
+		bexp = apply_percentrate64(bexp, sd->status.mod_exp, 100);
 	}
+
+	bexp += apply_percentrate64(bexp, buff_ratio, 100);
+	jexp += apply_percentrate64(jexp, buff_ratio + buff_job_ratio, 100);
+
+	*job_exp = (unsigned int)cap_value(jexp, 1, UINT_MAX);
+	*base_exp = (unsigned int)cap_value(bexp, 1, UINT_MAX);
 }
 
 /**
@@ -6707,24 +6742,25 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
 	unsigned int nextb=0, nextj=0;
 	nullpo_ret(sd);
 
-	if(sd->bl.prev == NULL || pc_isdead(sd))
+	if (sd->bl.prev == NULL || pc_isdead(sd))
 		return false;
 
-	if(!battle_config.pvp_exp && map->list[sd->bl.m].flag.pvp)  // [MouseJstr]
+	if (!battle_config.pvp_exp && map->list[sd->bl.m].flag.pvp)  // [MouseJstr]
 		return false; // no exp on pvp maps
 
-	if( pc_has_permission(sd,PC_PERM_DISABLE_EXP) )
+	if (pc_has_permission(sd,PC_PERM_DISABLE_EXP))
 		return false;
 
-	if(sd->status.guild_id>0)
-		base_exp-=guild->payexp(sd,base_exp);
+	if (src) 
+		pc->calcexp(sd, &base_exp, &job_exp, src);
 
-	if(src) pc->calcexp(sd, &base_exp, &job_exp, src);
+	if (sd->status.guild_id > 0)
+		base_exp -= guild->payexp(sd,base_exp);
 
 	nextb = pc->nextbaseexp(sd);
 	nextj = pc->nextjobexp(sd);
 
-	if(sd->state.showexp || battle_config.max_exp_gain_rate){
+	if (sd->state.showexp || battle_config.max_exp_gain_rate) {
 		if (nextb > 0)
 			nextbp = (float) base_exp / (float) nextb;
 		if (nextj > 0)
