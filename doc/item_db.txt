@@ -179,6 +179,7 @@ Job:  Job restrictions. If this block is omitted, item can be equipped by all cl
 		Dark Collector (2^28): 0x10000000
 		Kagerou/Oboro  (2^29): 0x20000000
 		Rebellion      (2^30): 0x40000000
+		Summoner       (2^31): 0x80000000
 		Some other commonly used values:
 		All except novice:     0xFFFFFFFE
 		All (default value):   0xFFFFFFFF

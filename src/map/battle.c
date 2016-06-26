@@ -1883,6 +1883,12 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 						pc->del_charm(sd, sd->charm_count, sd->charm_type);
 					}
 					break;
+				case SU_SV_STEMSPEAR:
+					skillratio += 600;
+					break;
+				case SU_CN_METEOR:
+						skillratio += 100 + 100 * skill_lv;
+					break;
 				default:
 					battle->calc_skillratio_magic_unknown(&attack_type, src, target, &skill_id, &skill_lv, &skillratio, &flag);
 					break;
@@ -2283,6 +2289,27 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 				case GC_DARKCROW:
 					skillratio += 100 * (skill_lv - 1);
+					break;
+				/**
+				 * Summoner
+				**/
+				case SU_BITE:
+					skillratio += 100;
+					break;
+				case SU_SCRATCH:
+					skillratio += -50 + 50 * skill_lv;
+					break;
+				case SU_SCAROFTAROU:
+					skillratio += -100 + 100 * skill_lv;
+					break;
+				case SU_PICKYPECK:
+				case SU_PICKYPECK_DOUBLE_ATK:
+					skillratio += 100 + 100 * skill_lv;
+					if (status_get_max_hp(target) / 100 <= 50)
+						skillratio *= 2;
+					break;
+				case SU_LUNATICCARROTBEAT:
+					skillratio += 100 + 100 * skill_lv;
 					break;
 				/**
 					* Arch Bishop
@@ -3063,6 +3090,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			else if( (flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON) )
 				damage -= 50 * damage / 100;//50% reduction to physical ranged attacks
 		}
+		
+		if ( sc->data[SC_SU_STOOP] )
+			damage -= damage * 90 / 100;
 
 		// Compressed code, fixed by map.h [Epoque]
 		if (src->type == BL_MOB) {
@@ -3170,6 +3200,17 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			}
 			if((--sce->val3)<=0 || (sce->val2<=0) || skill_id == AL_HOLYLIGHT)
 				status_change_end(bl, SC_KYRIE, INVALID_TIMER);
+		}
+
+		if ((sce = sc->data[SC_TUNAPARTY]) && damage > 0) {
+			clif->specialeffect(bl, 336, AREA);
+			sce->val2 -= (int)cap_value(damage, INT_MIN, INT_MAX);
+			if (sce->val2 >= 0)
+				damage = 0;
+			else
+			  	damage = -sce->val2;
+			if (/*(--sce->val3) <= 0 ||*/ (sce->val2 <= 0))
+				status_change_end(bl, SC_TUNAPARTY, INVALID_TIMER);
 		}
 
 		if( sc->data[SC_MEIKYOUSISUI] && rnd()%100 < 40 ) // custom value
@@ -3662,6 +3703,9 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 			case AB_RENOVATIO:
 				//Damage calculation from iRO wiki. [Jobbie]
 				ad.damage = status->get_lv(src) * 10 + sstatus->int_;
+				break;
+			case SU_SV_ROOTTWIST_ATK:
+				ad.damage = 100;
 				break;
 			default: {
 				unsigned int skillratio = 100; //Skill dmg modifiers.
@@ -5180,6 +5224,13 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				if (hd != NULL)
 					ATK_ADD(hd->homunculus.spiritball * 3);
 			}
+			if ((wd.flag&(BF_LONG|BF_MAGIC)) == BF_LONG) {
+				if (sd && pc->checkskill(sd, SU_POWEROFLIFE) > 0) {
+					if (pc->checkskill(sd, SU_SCAROFTAROU) == 5 && pc->checkskill(sd, SU_PICKYPECK) == 5 && pc->checkskill(sd, SU_ARCLOUSEDASH) == 5 && pc->checkskill(sd, SU_LUNATICCARROTBEAT) == 5) {
+						ATK_ADDRATE(20);
+					}
+				}
+			}
 		}
 
 		switch (skill_id) {
@@ -5244,6 +5295,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			if( sc && sc->data[SC_MTF_RANGEATK] )
 				ATK_ADDRATE(sc->data[SC_MTF_RANGEATK]->val1);// temporary it should be 'bonus.long_attack_atk_rate'
 	#endif
+			if (sc->data[SC_ARCLOUSEDASH] && sc->data[SC_ARCLOUSEDASH]->val4) {
+				ATK_ADDRATE(sc->data[SC_ARCLOUSEDASH]->val4);
+			}
 			if( (i=pc->checkskill(sd,AB_EUCHARISTICA)) > 0 &&
 				(tstatus->race == RC_DEMON || tstatus->def_ele == ELE_DARK) )
 				ATK_ADDRATE(-i);
@@ -7213,6 +7267,7 @@ static const struct battle_data {
 	{ "max_third_parameter",                &battle_config.max_third_parameter,             130,    10,     10000,          },
 	{ "max_baby_third_parameter",           &battle_config.max_baby_third_parameter,        117,    10,     10000,          },
 	{ "max_extended_parameter",             &battle_config.max_extended_parameter,          125,    10,     10000,          },
+	{ "max_summoner_parameter",             &battle_config.max_summoner_parameter,          120,    10,     10000,          },
 	{ "atcommand_max_stat_bypass",          &battle_config.atcommand_max_stat_bypass,       0,      0,      100,            },
 	{ "skill_amotion_leniency",             &battle_config.skill_amotion_leniency,          90,     0,      300             },
 	{ "mvp_tomb_enabled",                   &battle_config.mvp_tomb_enabled,                1,      0,      1               },
