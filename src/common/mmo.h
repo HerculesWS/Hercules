@@ -311,6 +311,11 @@ struct quest {
 	enum quest_state state;          ///< Current quest state
 };
 
+enum attribute_flag {
+	ATTR_NONE   = 0,
+	ATTR_BROKEN = 1,
+};
+
 struct item {
 	int id;
 	short nameid;

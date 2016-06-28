@@ -4137,8 +4137,9 @@ ACMD(repairall)
 
 	count = 0;
 	for (i = 0; i < MAX_INVENTORY; i++) {
-		if (sd->status.inventory[i].nameid && sd->status.inventory[i].attribute == 1) {
-			sd->status.inventory[i].attribute = 0;
+		if (sd->status.inventory[i].nameid && (sd->status.inventory[i].attribute & ATTR_BROKEN) != 0) {
+			sd->status.inventory[i].attribute |= ATTR_BROKEN;
+			sd->status.inventory[i].attribute ^= ATTR_BROKEN;
 			clif->produce_effect(sd, 0, sd->status.inventory[i].nameid);
 			count++;
 		}
