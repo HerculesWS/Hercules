@@ -9653,7 +9653,7 @@ int pc_equipitem(struct map_session_data *sd,int n,int req_pos)
 
 	if(battle_config.battle_log)
 		ShowInfo("equip %d(%d) %x:%x\n", sd->status.inventory[n].nameid, n, (unsigned int)(id ? id->equip : 0), (unsigned int)req_pos);
-	if(!pc->isequip(sd,n) || !(pos&req_pos) || sd->status.inventory[n].equip != 0 || sd->status.inventory[n].attribute==1 ) { // [Valaris]
+	if(!pc->isequip(sd,n) || !(pos&req_pos) || sd->status.inventory[n].equip != 0 || (sd->status.inventory[n].attribute & ATTR_BROKEN) != 0 ) { // [Valaris]
 		// FIXME: pc->isequip: equip level failure uses 2 instead of 0
 		clif->equipitemack(sd,n,0,EIA_FAIL); // fail
 		return 0;

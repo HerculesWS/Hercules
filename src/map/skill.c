@@ -2005,7 +2005,7 @@ int skill_break_equip (struct block_list *bl, unsigned short where, int rate, in
 	if (sd) {
 		for (i = 0; i < EQI_MAX; i++) {
 			int j = sd->equip_index[i];
-			if (j < 0 || sd->status.inventory[j].attribute == 1 || !sd->inventory_data[j])
+			if (j < 0 || (sd->status.inventory[j].attribute & ATTR_BROKEN) != 0 || !sd->inventory_data[j])
 				continue;
 
 			switch(i) {
@@ -2031,7 +2031,7 @@ int skill_break_equip (struct block_list *bl, unsigned short where, int rate, in
 					continue;
 			}
 			if (flag) {
-				sd->status.inventory[j].attribute = 1;
+				sd->status.inventory[j].attribute |= ATTR_BROKEN;
 				pc->unequipitem(sd, j, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
 			}
 		}
@@ -15222,7 +15222,7 @@ void skill_repairweapon (struct map_session_data *sd, int idx) {
 		return; //Invalid index??
 
 	item = &target_sd->status.inventory[idx];
-	if( item->nameid <= 0 || item->attribute == 0 )
+	if( item->nameid <= 0 || (item->attribute & ATTR_BROKEN) == 0 )
 		return; //Again invalid item....
 
 	if( sd != target_sd && !battle->check_range(&sd->bl,&target_sd->bl, skill->get_range2(&sd->bl, sd->menuskill_id,sd->menuskill_val2) ) ){
@@ -15241,7 +15241,8 @@ void skill_repairweapon (struct map_session_data *sd, int idx) {
 
 	clif->skill_nodamage(&sd->bl,&target_sd->bl,sd->menuskill_id,1,1);
 
-	item->attribute = 0;/* clear broken state */
+	item->attribute |= ATTR_BROKEN;
+	item->attribute ^= ATTR_BROKEN; /* clear broken state */
 
 	clif->equiplist(target_sd);
 

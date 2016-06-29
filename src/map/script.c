@@ -8604,7 +8604,7 @@ BUILDIN(getbrokenid)
 
 	num=script_getnum(st,2);
 	for(i=0; i<MAX_INVENTORY; i++) {
-		if(sd->status.inventory[i].attribute) {
+		if ((sd->status.inventory[i].attribute & ATTR_BROKEN) != 0) {
 			brokencounter++;
 			if(num==brokencounter) {
 				id=sd->status.inventory[i].nameid;
@@ -8629,7 +8629,7 @@ BUILDIN(getbrokencount)
 		return true;
 
 	for (i = 0; i < MAX_INVENTORY; i++) {
-		if (sd->status.inventory[i].attribute)
+		if ((sd->status.inventory[i].attribute & ATTR_BROKEN) != 0)
 			counter++;
 	}
 
@@ -8651,10 +8651,11 @@ BUILDIN(repair)
 
 	num=script_getnum(st,2);
 	for(i=0; i<MAX_INVENTORY; i++) {
-		if(sd->status.inventory[i].attribute) {
+		if ((sd->status.inventory[i].attribute & ATTR_BROKEN) != 0) {
 			repaircounter++;
 			if(num==repaircounter) {
-				sd->status.inventory[i].attribute=0;
+				sd->status.inventory[i].attribute |= ATTR_BROKEN;
+				sd->status.inventory[i].attribute ^= ATTR_BROKEN;
 				clif->equiplist(sd);
 				clif->produce_effect(sd, 0, sd->status.inventory[i].nameid);
 				clif->misceffect(&sd->bl, 3);
@@ -8678,9 +8679,10 @@ BUILDIN(repairall)
 
 	for(i = 0; i < MAX_INVENTORY; i++)
 	{
-		if(sd->status.inventory[i].nameid && sd->status.inventory[i].attribute)
+		if (sd->status.inventory[i].nameid && (sd->status.inventory[i].attribute & ATTR_BROKEN) != 0)
 		{
-			sd->status.inventory[i].attribute = 0;
+			sd->status.inventory[i].attribute |= ATTR_BROKEN;
+			sd->status.inventory[i].attribute ^= ATTR_BROKEN;
 			clif->produce_effect(sd,0,sd->status.inventory[i].nameid);
 			repaircounter++;
 		}
