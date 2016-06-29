@@ -64,7 +64,9 @@ enum refine_type {
 	REFINE_TYPE_WEAPON2 = 2,
 	REFINE_TYPE_WEAPON3 = 3,
 	REFINE_TYPE_WEAPON4 = 4,
+#ifndef REFINE_TYPE_MAX
 	REFINE_TYPE_MAX     = 5
+#endif
 };
 
 /**
@@ -825,8 +827,9 @@ typedef enum sc_type {
 	SC_M_LIFEPOTION,
 	SC_G_LIFEPOTION, // 640
 	SC_MYSTICPOWDER,
-
+#ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
+#endif
 } sc_type;
 
 /// Official status change ids, used to display status icons in the client.
@@ -1792,8 +1795,9 @@ enum si_type {
 	//SI_EP16_2_BUFF_SS                      = 963,
 	//SI_EP16_2_BUFF_SC                      = 964,
 	//SI_EP16_2_BUFF_AC                      = 965,
-
+#ifndef SI_MAX
 	SI_MAX,
+#endif
 };
 
 // JOINTBEAT stackable ailments
