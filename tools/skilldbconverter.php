@@ -28,21 +28,6 @@
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 * Credits : Smokexyz */
 
-// Do not touch anything below this line
-// unless you know what you're doing.
-
-$sopts = "re:pre-re:dir:c:dbg";
-$lopts = array(
-	"renewal",
-	"pre-renewal",
-	"directory",
-	"with-debug",
-	"with-constants",
-	"help:"
-);
-
-$options = getopt($sopts, $lopts);
-
 // Credits before anything else.
 printcredits();
 
