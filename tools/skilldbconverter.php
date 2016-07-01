@@ -88,14 +88,10 @@ if ($dir) {
 $debug = (issetarg("-dbg") || issetarg("--with-debug"));
 
 if ($debug) {
-	print "Debug Mode Enabled.\n";
+	print "\033[0;33mDebug Mode Enabled.\033[0;0m\n";
 }
 
-if($help) {
-	gethelp();
-}
-
-if (!$renewal && !$prere) {
+if($help || (!$renewal && !$prere)) {
 	gethelp();
 }
 
@@ -223,7 +219,7 @@ if($debug) {
 fclose($castnodex);
 
 /***
-* Connect to SQL to gather Aegis item name informations.
+* Read item_db.conf to gather aegis item name informations.
 */
 if($constants)  {
 	$itemdb[] = array();
@@ -319,7 +315,6 @@ if($debug) {
 fclose($skmain);
 print $linecount." entries found in skill_db.txt.\n";
 
-// Anything printed below this line is treated as an Error/Warning during conversion.
 $i=0;
 $skmain = fopen(DIRPATH.$file, "r") or die("Unable to open '".DIRPATH.$file."'.\n");
 // Begin converting process.
@@ -345,8 +340,9 @@ while(!feof($skmain)) {
 	$blow_count = $arr[14];
 	$name = $arr[15];
 	if(strlen(substr($arr[16], 0, strpos($arr[16], "//"))))
-	$description = substr($arr[16], 0, strpos($arr[16], "//"));
-	else $description = $arr[16];
+		$description = substr($arr[16], 0, strpos($arr[16], "//"));
+	else
+		$description = $arr[16];
 
 	$putsk .=  "{\n".
 	"\tId: ".$id."\n".
@@ -377,7 +373,7 @@ while(!feof($skmain)) {
 		if($skcast['data2'][$key] != 0) $putsk .=  "\tSkillData2: ".leveled($skcast['data2'][$key], $max, $id)."\n";
 		if($skcast['cooldown'][$key] != 0) $putsk .=  "\tCoolDown: ".leveled($skcast['cooldown'][$key], $max, $id)."\n";
 		if(defined('RENEWAL') && strlen($skcast['fixedcast'][$key])>1 && $skcast['fixedcast'][$key] != 0)
-		$putsk .=  "\tFixedCastTime: ".leveled($skcast['fixedcast'][$key], $max, $id)."\n";
+			$putsk .=  "\tFixedCastTime: ".leveled($skcast['fixedcast'][$key], $max, $id)."\n";
 	}
 	// Cast NoDex
 	unset($key);
@@ -448,7 +444,7 @@ while(!feof($skmain)) {
 			if(isset($skunit['UnitID2'][$key]) && strlen($skunit['UnitID2'][$key])) {
 				$putsk .=  "\t\tId: [ ".$skunit['UnitID'][$key].", ".$skunit['UnitID2'][$key]." ]\n";
 			} else $putsk .=  "\t\tId: ".$skunit['UnitID'][$key]." \n";
-			}
+		}
 		if(isset($skunit['Layout'][$key]) && $skunit['Layout'][$key] != 0) $putsk .=  "\t\tLayout: ".leveled($skunit['Layout'][$key], $max, $id, 1)."\n";
 		if(isset($skunit['Range'][$key]) && $skunit['Range'][$key] != 0) $putsk .=  "\t\tRange: ".leveled($skunit['Range'][$key], $max, $id, 1)."\n";
 		if(isset($skunit['Interval'][$key])) $putsk .=  "\t\tInterval: ".leveled($skunit['Interval'][$key], $max, $id, 1)."\n";
@@ -460,9 +456,13 @@ while(!feof($skmain)) {
 	}
 	// close skill
 	$putsk .=  "},\n";
+	// Display progress bar
 	show_status($i++, $linecount);
 }
 show_status($linecount, $linecount);
+/**
+ * Print final messages and exit the script, conversion has completed.
+ */
 print "\n";
 print "The skill database has been \033[1;32msuccessfully\033[0m converted to Hercules libconfig\n";
 print "and has been saved in '".DIRPATH."skill_db.conf'.\n";
@@ -480,9 +480,8 @@ if($debug) {
 file_put_contents(DIRPATH.$skconf, $putsk);
 fclose($skmain);
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/*                              Functions [Smokexyz]                           */
+/* Functions
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 function show_status($done, $total) {
@@ -497,34 +496,20 @@ function get_element($ele,$id)
 {
 	switch($ele)
 	{
-		case -1:
-		return "Ele_Weapon";
-		case -2:
-		return "Ele_Endowed";
-		case -3:
-		return "Ele_Random";
-		case 0:
-		return "Ele_Neutral";
-		case 1:
-		return "Ele_Water";
-		case 2:
-		return "Ele_Earth";
-		case 3:
-		return "Ele_Fire";
-		case 4:
-		return "Ele_Wind";
-		case 5:
-		return "Ele_Poison";
-		case 6:
-		return "Ele_Holy";
-		case 7:
-		return "Ele_Dark";
-		case 8:
-		return "Ele_Ghost";
-		case 9:
-		return "Ele_Undead";
-		default:
-		print "Unknown Element ".$ele." provided for skill Id ".$id."\n";
+		case -1: return "Ele_Weapon";
+		case -2: return "Ele_Endowed";
+		case -3: return "Ele_Random";
+		case 0:  return "Ele_Neutral";
+		case 1:  return "Ele_Water";
+		case 2:  return "Ele_Earth";
+		case 3:  return "Ele_Fire";
+		case 4:  return "Ele_Wind";
+		case 5:  return "Ele_Poison";
+		case 6:  return "Ele_Holy";
+		case 7:  return "Ele_Dark";
+		case 8:  return "Ele_Ghost";
+		case 9:  return "Ele_Undead";
+		default: print "Unknown Element ".$ele." provided for skill Id ".$id."\n";
 	}
 
 	return NULL;
@@ -545,7 +530,7 @@ function leveled_ele($str, $max, $skill_id)
 		}
 		$retval .= "\t}";
 	} else {
-			$retval = "\"".get_element($str,$skill_id)."\"";
+		$retval = "\"".get_element($str,$skill_id)."\"";
 	}
 
 	return $retval;
@@ -686,7 +671,8 @@ function getnk($nk)
 	$retval = "{\n";
 	foreach($bitmask as $key => $val) {
 		if($key == "SplitDamage") {
-			if($nk&$bitmask["SplashArea"]) continue;
+			if($nk&$bitmask["SplashArea"])
+				continue;
 			else {
 				$retval .= "\t\tSplashArea: true\n";
 			}
@@ -761,12 +747,12 @@ function getweapontypes($list, $id)
 		for($i=0; $i<sizeof($type); $i++) {
 			$wmask |= 1<<$type[$i];
 			if($type[$i] > 30 || $type[$i] < 0)
-			print "\r\033[0;31mWarning\033[0;0m - Invalid weapon type ".$i." for skill ID ".$id."\n";
+				print "\r\033[0;31mWarning\033[0;0m - Invalid weapon type ".$i." for skill ID ".$id."\n";
 		}
 		$retval = "{\n";
 		for($j=0; $j<sizeof($type); $j++) {
 			if($wmask&1<<$type[$j])
-			$retval .= "\t\t\t".$bitmask[$type[$j]].": true\n";
+				$retval .= "\t\t\t".$bitmask[$type[$j]].": true\n";
 		}
 		$retval .= "\t\t}";
 	} else {
@@ -844,8 +830,9 @@ function getunitflag($flag, $id)
 			$ret .= "\t\t\t".$key.": true\n";
 		}
 	}
+
 	if($flag > array_sum($bitmask))
-	print "\r\033[0;31mWarning\033[0;0m - Invalid Unit Flag ".$flag." provided for skill Id ".$id."\n";
+		print "\r\033[0;31mWarning\033[0;0m - Invalid Unit Flag ".$flag." provided for skill Id ".$id."\n";
 
 	$ret .= "\t\t}";
 
