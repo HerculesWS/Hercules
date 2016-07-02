@@ -146,22 +146,17 @@ int inter_guild_tosql(struct guild *g,int flag)
 	*t_info = '\0';
 
 	// Insert a new guild the guild
-	if (flag&GS_BASIC && g->guild_id == -1)
-	{
+	if (flag&GS_BASIC && g->guild_id == -1) {
 		strcat(t_info, " guild_create");
 
 		// Create a new guild
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` "
-			"(`name`,`master`,`guild_lv`,`max_member`,`average_lv`,`char_id`) "
-			"VALUES ('%s', '%s', '%d', '%d', '%d', '%d')",
-			guild_db, esc_name, esc_master, g->guild_lv, g->max_member, g->average_lv, g->member[0].char_id) )
-		{
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` "
+				"(`name`,`master`,`guild_lv`,`max_member`,`average_lv`,`char_id`) "
+				"VALUES ('%s', '%s', '%d', '%d', '%d', '%d')",
+				guild_db, esc_name, esc_master, g->guild_lv, g->max_member, g->average_lv, g->member[0].char_id)) {
 			Sql_ShowDebug(inter->sql_handle);
-			if (g->guild_id == -1)
-				return 0; //Failed to create guild!
-		}
-		else
-		{
+			return 0; //Failed to create guild!
+		} else {
 			g->guild_id = (int)SQL->LastInsertId(inter->sql_handle);
 			new_guild = 1;
 		}
