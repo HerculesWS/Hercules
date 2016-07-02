@@ -11566,10 +11566,10 @@ void clif_parse_OneClick_ItemIdentify(int fd, struct map_session_data *sd)
 	int cmd = RFIFOW(fd,0);
 	short idx = RFIFOW(fd, packet_db[cmd].pos[0]) - 2;
 	int n;
-	
+
 	if (idx < 0 || idx >= MAX_INVENTORY || sd->inventory_data[idx] == NULL || sd->status.inventory[idx].nameid <= 0)
 		return;
-	
+
 	if ((n = pc->have_magnifier(sd) ) != INDEX_NOT_FOUND &&
 		pc->delitem(sd, n, 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME) == 0)
 		skill->identify(sd, idx);

@@ -250,22 +250,22 @@ ACMD(send)
 			clif->message(fd, atcmd_output);
 			return false;
 		}
-		
+
 		if (len) {
 			// show packet length
 			safesnprintf(atcmd_output, sizeof(atcmd_output), msg_fd(fd,904), type, clif->packet(type)->len); // Packet 0x%x length: %d
 			clif->message(fd, atcmd_output);
 			return true;
 		}
-		
+
 		len = clif->packet(type)->len;
-		
+
 		if (len == -1) {
 			// dynamic packet
 			len = SHRT_MAX-4; // maximum length
 			off = 4;
 		}
-		
+
 		WFIFOHEAD(sd->fd, len);
 		WFIFOW(sd->fd,0)=TOW(type);
 
@@ -3732,7 +3732,7 @@ ACMD(reloadscript) {
  * 1 = Show users in that map and their location
  * 2 = Shows NPCs in that map
  * 3 = Shows the chats in that map
- TODO# add the missing mapflags e.g. adjust_skill_damage to display
+ * TODO# add the missing mapflags e.g. adjust_skill_damage to display
  *------------------------------------------*/
 ACMD(mapinfo)
 {

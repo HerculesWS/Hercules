@@ -389,12 +389,12 @@ bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecF
 
 	ARR_FIND(0, VECTOR_LENGTH(cmdline->args_data), i, strcmp(VECTOR_INDEX(cmdline->args_data, i).name, name) == 0);
 
-       if (i != VECTOR_LENGTH(cmdline->args_data)) {
-               ShowError("HPM:add_arg:%s duplicate! (from %s)\n",name,HPM->pid2name(pluginID));
-               return false;
-       }
+	if (i != VECTOR_LENGTH(cmdline->args_data)) {
+		ShowError("HPM:add_arg:%s duplicate! (from %s)\n",name,HPM->pid2name(pluginID));
+		return false;
+	}
 
-       return cmdline->arg_add(pluginID, name, '\0', func, help, has_param ? CMDLINE_OPT_PARAM : CMDLINE_OPT_NORMAL);
+	return cmdline->arg_add(pluginID, name, '\0', func, help, has_param ? CMDLINE_OPT_PARAM : CMDLINE_OPT_NORMAL);
 }
 
 /**

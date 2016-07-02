@@ -67,11 +67,6 @@ struct map_info {
 	int32 len;
 };
 
- /*************************************
- * Big-endian compatibility functions *
- * Moved to utils.h                   *
- *************************************/
-
 // Reads a map from GRF's GAT and RSW files
 int read_map(char *name, struct map_data *m)
 {

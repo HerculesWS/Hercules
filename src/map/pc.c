@@ -4131,7 +4131,7 @@ bool pc_can_insert_card_into(struct map_session_data* sd, int idx_card, int idx_
 	ARR_FIND( 0, sd->inventory_data[idx_equip]->slot, i, sd->status.inventory[idx_equip].card[i] == 0);
 	if (i == sd->inventory_data[idx_equip]->slot)
 		return false; // no free slots
-        return true;
+	return true;
 }
 
 /**
@@ -4151,7 +4151,7 @@ bool pc_can_insert_card(struct map_session_data* sd, int idx_card)
 		return false; // target card missing
 	if (sd->inventory_data[idx_card]->type != IT_CARD)
 		return false; // must be a card
-        return true;
+	return true;
 }
 
 /*==========================================
@@ -6751,7 +6751,7 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
 	if (pc_has_permission(sd,PC_PERM_DISABLE_EXP))
 		return false;
 
-	if (src) 
+	if (src)
 		pc->calcexp(sd, &base_exp, &job_exp, src);
 
 	if (sd->status.guild_id > 0)
@@ -12110,6 +12110,6 @@ void pc_defaults(void) {
 
 	pc->check_job_name = pc_check_job_name;
 	pc->update_idle_time = pc_update_idle_time;
-	
+
 	pc->have_magnifier = pc_have_magnifier;
 }

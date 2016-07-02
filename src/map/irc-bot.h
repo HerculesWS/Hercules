@@ -83,7 +83,7 @@ struct irc_bot_interface {
 	 * @see do_sockets
 	 */
 	int (*parse) (int fd);
-	
+
 	/**
 	 * Parse a received message from the irc server, and do the appropriate action
 	 * for the detected command
@@ -135,7 +135,7 @@ struct irc_bot_interface {
 	 * @see timer_interface::do_timer
 	 */
 	int (*queue_timer) (int tid, int64 tick, int id, intptr_t data);
-	
+
 	/**
 	 * Decides if an IRC Command should be queued or not, based on the flood protection settings.
 	 *
@@ -155,7 +155,7 @@ struct irc_bot_interface {
 	 * @param msg  Message text
 	 */
 	void (*relay) (const char *name, const char *msg);
-	
+
 	/**
 	 * Handler for the PING IRC command (send back a PONG)
 	 * @see irc_bot_interface::parse_sub

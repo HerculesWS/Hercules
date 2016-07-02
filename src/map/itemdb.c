@@ -342,7 +342,7 @@ const char* itemdb_typename(int type)
 	return "Unknown Type";
 }
 
- /**
+/**
  * Converts the JobID to the format used by map-server to check item
  * restriction as per job.
  *
@@ -1658,7 +1658,7 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 
 void itemdb_readdb_additional_fields(int itemid, struct config_setting_t *it, int n, const char *source)
 {
-    // do nothing. plugins can do own work
+	// do nothing. plugins can do own work
 }
 
 /**
