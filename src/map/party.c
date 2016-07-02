@@ -957,9 +957,6 @@ int party_exp_share(struct party_data* p, struct block_list* src, unsigned int b
 {
 	struct map_session_data* sd[MAX_PARTY];
 	unsigned int i, c;
-#ifdef RENEWAL_EXP
-	unsigned int job_exp_bonus, base_exp_bonus;
-#endif
 
 	nullpo_ret(p);
 	nullpo_ret(src);
@@ -986,11 +983,6 @@ int party_exp_share(struct party_data* p, struct block_list* src, unsigned int b
 		if (zeny)
 			zeny = (unsigned int) cap_value(zeny * bonus/100, INT_MIN, INT_MAX);
 	}
-
-#ifdef RENEWAL_EXP
-	base_exp_bonus = base_exp;
-	job_exp_bonus  = job_exp;
-#endif
 
 	for (i = 0; i < c; i++) {
 		pc->gainexp(sd[i], src, base_exp, job_exp, false);
