@@ -117,7 +117,9 @@ void db2sql_fileheader(void)
 			"-- NOTE: This file was auto-generated and should never be manually edited,\n"
 			"--       as it will get overwritten. If you need to modify this file,\n"
 			"--       please consider modifying the corresponding .conf file inside\n"
-			"--       the db folder, and then re-run the db2sql plugin.\n"
+			"--       the db folder, and then re-run the db2sql plugin.\n\n"
+
+			"-- GENERATED FILE DO NOT EDIT --\n"
 			"\n", year);
 }
 

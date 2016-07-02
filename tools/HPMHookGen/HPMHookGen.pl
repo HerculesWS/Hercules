@@ -485,6 +485,8 @@ my $fileheader = <<"EOF";
  * NOTE: This file was auto-generated and should never be manually edited,
  *       as it will get overwritten.
  */
+
+/* GENERATED FILE DO NOT EDIT */
 EOF
 
 foreach my $servertype (keys %keys) {

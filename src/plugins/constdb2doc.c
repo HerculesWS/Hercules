@@ -177,7 +177,8 @@ void do_constdb2doc(void)
 
 	constdb2doc_itemdb();
 
-	fprintf(out_fp, "> End of list\n");
+	fprintf(out_fp, "> End of list\n\n");
+	fprintf(out_fp, "<!--GENERATED FILE DO NOT EDIT-->\n");
 
 	fclose(out_fp);
 }
