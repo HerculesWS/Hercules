@@ -23,6 +23,8 @@
  *       as it will get overwritten.
  */
 
+/* GENERATED FILE DO NOT EDIT */
+
 /* HCache_interface */
 void HP_HCache_init(void) {
 	int hIndex = 0;

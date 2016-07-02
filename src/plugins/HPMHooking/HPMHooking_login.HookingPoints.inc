@@ -23,6 +23,8 @@
  *       as it will get overwritten.
  */
 
+/* GENERATED FILE DO NOT EDIT */
+
 struct HookingPointData HookingPoints[] = {
 /* HCache_interface */
 	{ HP_POP(HCache->init, HP_HCache_init) },

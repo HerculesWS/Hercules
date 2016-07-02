@@ -23,6 +23,8 @@
  *       as it will get overwritten.
  */
 
+/* GENERATED FILE DO NOT EDIT */
+
 #ifdef COMMON_UTILS_H /* HCache */
 typedef void (*HPMHOOK_pre_HCache_init) (void);
 typedef void (*HPMHOOK_post_HCache_init) (void);

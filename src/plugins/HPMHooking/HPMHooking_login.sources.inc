@@ -23,6 +23,8 @@
  *       as it will get overwritten.
  */
 
+/* GENERATED FILE DO NOT EDIT */
+
 memcpy(&HPMHooks.source.HCache, HCache, sizeof(struct HCache_interface));
 memcpy(&HPMHooks.source.cmdline, cmdline, sizeof(struct cmdline_interface));
 memcpy(&HPMHooks.source.console, console, sizeof(struct console_interface));

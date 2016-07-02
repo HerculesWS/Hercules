@@ -23,6 +23,8 @@
  *       as it will get overwritten.
  */
 
+/* GENERATED FILE DO NOT EDIT */
+
 #ifndef HPM_DATA_CHECK_H
 #define HPM_DATA_CHECK_H
 
