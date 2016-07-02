@@ -21,6 +21,8 @@
 --       please consider modifying the corresponding .conf file inside
 --       the db folder, and then re-run the db2sql plugin.
 
+-- GENERATED FILE DO NOT EDIT --
+
 --
 -- Table structure for table `mob_db`
 --
