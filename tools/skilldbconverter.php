@@ -32,7 +32,7 @@
 printcredits();
 
 if(!isset($argv[1]))
-gethelp();
+	gethelp();
 
 function issetarg($arg) {
 	global $argv;
@@ -924,7 +924,7 @@ function getcomments($re)
 		Range: Skill Range                            (int) (optional, defaults to 0) (can be grouped by Levels)
 		Note: Range < 5 is considered Melee range.
 		Hit: Hit Type                                 (int) (optional, default \"BDT_NORMAL\")
-		[ Types - \"BDT_SKILL\" or \"BDT_MULTIHIT\" ]
+													  Types - \"BDT_SKILL\", \"BDT_MULTIHIT\" or \"BDT_NORMAL\" ]
 		SkillType: {                                  (bool, defaults to \"Passive\")
 			Passive: true/false                       (boolean, defaults to false)
 			Enemy: true/false                         (boolean, defaults to false)
@@ -952,34 +952,35 @@ function getcomments($re)
 		}
 		AttackType: Attack Type                       (string, defaults to \"None\")
 		Types: \"None\", \"Weapon\", \"Magic\" or \"Misc\"
-		Element: \"Element Type\"                     (string) (Optional field - Default \"Ele_Neutral\") (can be grouped by Levels)
-		Types: \"Ele_Neutral\", \"Ele_Water\", \"Ele_Earth\", \"Ele_Fire\", \"Ele_Wind\"
-		\"Ele_Poison\", \"Ele_Holy\", \"Ele_Dark\", \"Ele_Ghost\", \"Ele_Undead\"
-		\"Ele_Weapon\" - Uses weapon's element.
-		\"Ele_Endowed\" - Uses Endowed element.
-		\"Ele_Random\" - Uses random element.
+		Element: \"Element Type\"                     (string) (Optional field - Default \"Ele_Neutral\")
+													  (can be grouped by Levels)
+													  Types: \"Ele_Neutral\", \"Ele_Water\", \"Ele_Earth\", \"Ele_Fire\", \"Ele_Wind\"
+													  \"Ele_Poison\", \"Ele_Holy\", \"Ele_Dark\", \"Ele_Ghost\", \"Ele_Undead\"
+													  \"Ele_Weapon\" - Uses weapon's element.
+													  \"Ele_Endowed\" - Uses Endowed element.
+													  \"Ele_Random\" - Uses random element.
 		DamageType: {                                 (bool, default to \"NoDamage\")
-			NoDamage: true/false                       - No damage skill
-			SplashArea: true/false                     - Has splash area (requires source modification)
-			SplitDamage: true/false                    - Damage should be split among targets (requires 'SplashArea' in order to work)
-			IgnoreCards: true/false                    - Skill ignores caster's % damage cards (misc type always ignores)
-			IgnoreElement: true/false                  - Skill ignores elemental adjustments
-			IgnoreDefense: true/false                  - Skill ignores target's defense (misc type always ignores)
-			IgnoreFlee: true/false                     - Skill ignores target's flee (magic type always ignores)
-			IgnoreDefCards: true/false                 - Skill ignores target's def cards
+			NoDamage: true/false                       No damage skill
+			SplashArea: true/false                     Has splash area (requires source modification)
+			SplitDamage: true/false                    Damage should be split among targets (requires 'SplashArea' in order to work)
+			IgnoreCards: true/false                    Skill ignores caster's % damage cards (misc type always ignores)
+			IgnoreElement: true/false                  Skill ignores elemental adjustments
+			IgnoreDefense: true/false                  Skill ignores target's defense (misc type always ignores)
+			IgnoreFlee: true/false                     Skill ignores target's flee (magic type always ignores)
+			IgnoreDefCards: true/false                 Skill ignores target's def cards
 		}
 		SplashRange: Damage Splash Area               (int, defaults to 0) (can be grouped by Levels)
 		Note: -1 for screen-wide.
 		NumberOfHits: Number of Hits                  (int, defaults to 1) (can be grouped by Levels)
-		Note: when positive, damage is increased by hits,
-		negative values just show number of hits without
-		increasing total damage.
+													  Note: when positive, damage is increased by hits,
+													  negative values just show number of hits without
+													  increasing total damage.
 		InterruptCast: Cast Interruption              (bool, defaults to true)
 		CastDefRate: Cast Defense Reduction           (int, defaults to 0)
 		SkillInstances: Skill instances               (int, defaults to 0) (can be grouped by Levels)
-		Notes: max amount of skill instances to place on the ground when
-		player_land_skill_limit/monster_land_skill_limit is enabled. For skills
-		that attack using a path, this is the path length to be used.
+													  Notes: max amount of skill instances to place on the ground when
+													  player_land_skill_limit/monster_land_skill_limit is enabled. For skills
+													  that attack using a path, this is the path length to be used.
 		KnockBackTiles: Knock-back by 'n' Tiles       (int, defaults to 0) (can be grouped by Levels)
 		CastTime: Skill cast Time (in ms)             (int, defaults to 0) (can be grouped by Levels)
 		AfterCastActDelay: Skill Delay (in ms)        (int, defaults to 0) (can be grouped by Levels)
@@ -989,29 +990,31 @@ function getcomments($re)
 		CoolDown: Skill Cooldown (in ms)              (int, defaults to 0) (can be grouped by Levels)
 		".($re?
 		"FixedCastTime: Fixed Cast Time (in ms)       (int, defaults to 0) (can be grouped by Levels)
-		Note: when 0, uses 20% of cast time and less than
-		0 means no fixed cast time.":"")."
+													   Note: when 0, uses 20% of cast time and less than
+													   0 means no fixed cast time.":"")."
 		CastTimeOptions: {
 			IgnoreDex: true/false                     (boolean, defaults to false)
 			IgnoreStatusEffect: true/false            (boolean, defaults to false)
 			IgnoreItemBonus: true/false               (boolean, defaults to false)
-			Note: Delay setting 'IgnoreDex' only makes sense when delay_dependon_dex is enabled.
+													   Note: Delay setting 'IgnoreDex' only makes sense when
+													   delay_dependon_dex is enabled.
 		}
 		SkillDelayOptions: {
 			IgnoreDex: true/false                     (boolean, defaults to false)
 			IgnoreStatusEffect: true/false            (boolean, defaults to false)
 			IgnoreItemBonus: true/false               (boolean, defaults to false)
-			Note: Delay setting 'IgnoreDex' only makes sense when delay_dependon_dex is enabled.
+													  Note: Delay setting 'IgnoreDex' only makes sense when
+													  delay_dependon_dex is enabled.
 		}
 		Requirements: {
 			HPCost: HP Cost                           (int, defaults to 0) (can be grouped by Levels)
 			SPCost: SP Cost                           (int, defaults to 0) (can be grouped by Levels)
 			HPRateCost: HP % Cost                     (int, defaults to 0) (can be grouped by Levels)
-			Note: If positive, it is a percent of your current hp,
-			otherwise it is a percent of your max hp.
+													  Note: If positive, it is a percent of your current hp,
+													  otherwise it is a percent of your max hp.
 			SPRateCost: SP % Cost                     (int, defaults to 0) (can be grouped by Levels)
-			Note: If positive, it is a percent of your current sp,
-			otherwise it is a percent of your max sp.
+													  Note: If positive, it is a percent of your current sp,
+													  otherwise it is a percent of your max sp.
 			ZenyCost: Zeny Cost                       (int, defaults to 0) (can be grouped by Levels)
 			WeaponTypes: {                            (bool or string, defaults to \"All\")
 				NoWeapon: true/false                  (boolean, defaults to false)
@@ -1059,35 +1062,35 @@ function getcomments($re)
 			}
 			AmmoAmount: Ammunition Amount             (int, defaults to 0) (can be grouped by Levels)
 			State: \"Required State\"                 (string, defaults to \"None\") (can be grouped by Levels)
-			Types : 'None' = Nothing special
-			'Moveable' = Requires to be able to move
-			'NotOverWeight' = Requires to be less than 50% weight
-			'InWater' = Requires to be standing on a water cell
-			'Cart' = Requires a Pushcart
-			'Riding' = Requires to ride either a peco or a dragon
-			'Falcon' = Requires a Falcon
-			'Sight' = Requires Sight skill activated
-			'Hiding' = Requires Hiding skill activated
-			'Cloaking' = Requires Cloaking skill activated
-			'ExplosionSpirits' = Requires Fury skill activated
-			'CartBoost' = Requires a Pushcart and Cart Boost skill activated
-			'Shield' = Requires a 0,shield equipped
-			'Warg' = Requires a Warg
-			'Dragon' = Requires to ride a Dragon
-			'RidingWarg' = Requires to ride a Warg
-			'Mado' = Requires to have an active mado
-			'PoisonWeapon' = Requires to be under Poisoning Weapon.
-			'RollingCutter' = Requires at least one Rotation Counter from Rolling Cutter.
-			'ElementalSpirit' = Requires to have an Elemental Spirit summoned.
-			'MH_Fighting' = Requires Eleanor fighthing mode
-			'MH_Grappling' = Requires Eleanor grappling mode
-			'Peco' = Requires riding a peco
+													  Types : 'None' = Nothing special
+													  'Moveable' = Requires to be able to move
+													  'NotOverWeight' = Requires to be less than 50% weight
+													  'InWater' = Requires to be standing on a water cell
+													  'Cart' = Requires a Pushcart
+													  'Riding' = Requires to ride either a peco or a dragon
+													  'Falcon' = Requires a Falcon
+													  'Sight' = Requires Sight skill activated
+													  'Hiding' = Requires Hiding skill activated
+													  'Cloaking' = Requires Cloaking skill activated
+													  'ExplosionSpirits' = Requires Fury skill activated
+													  'CartBoost' = Requires a Pushcart and Cart Boost skill activated
+													  'Shield' = Requires a 0,shield equipped
+													  'Warg' = Requires a Warg
+													  'Dragon' = Requires to ride a Dragon
+													  'RidingWarg' = Requires to ride a Warg
+													  'Mado' = Requires to have an active mado
+													  'PoisonWeapon' = Requires to be under Poisoning Weapon.
+													  'RollingCutter' = Requires at least one Rotation Counter from Rolling Cutter.
+													  'ElementalSpirit' = Requires to have an Elemental Spirit summoned.
+													  'MH_Fighting' = Requires Eleanor fighthing mode
+													  'MH_Grappling' = Requires Eleanor grappling mode
+													  'Peco' = Requires riding a peco
 			SpiritSphereCost: Spirit Sphere Cost      (int, defaults to 0) (can be grouped by Levels)
 			Items: {
 				ItemID or Aegis_Name : Amount         (int, defaults to 0) (can be grouped by Levels)
-				Item example: \"ID717\" or \"Blue_Gemstone\".
-				Notes: Items with amount 0 will not be consumed.
-				Amount can also be grouped by levels.
+													  Item example: \"ID717\" or \"Blue_Gemstone\".
+													  Notes: Items with amount 0 will not be consumed.
+													  Amount can also be grouped by levels.
 			}
 		}
 		Unit: {
@@ -1096,16 +1099,16 @@ function getcomments($re)
 			Range: Unit Range                         (int, defaults to 0) (can be grouped by Levels)
 			Interval: Unit Interval                   (int, defaults to 0) (can be grouped by Levels)
 			Target: \"Unit Target\"                   (string, defaults to \"None\")
-			Types:
-			All             - affects everyone
-			NotEnemy        - affects anyone who isn't an enemy
-			Friend          - affects party, guildmates and neutral players
-			Party           - affects party only
-			Guild           - affects guild only
-			Ally            - affects party and guildmates only
-			Sameguild       - affects guild but not allies
-			Enemy           - affects enemies only
-			None            - affects nobody
+													  Types:
+													  All             - affects everyone
+													  NotEnemy        - affects anyone who isn't an enemy
+													  Friend          - affects party, guildmates and neutral players
+													  Party           - affects party only
+													  Guild           - affects guild only
+													  Ally            - affects party and guildmates only
+													  Sameguild       - affects guild but not allies
+													  Enemy           - affects enemies only
+													  None            - affects nobody
 			Flag: {
 				UF_DEFNOTENEMY: true/false            (boolean, defaults to false)
 				UF_NOREITERATION: true/false          (boolean, defaults to false)
