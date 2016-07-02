@@ -19012,7 +19012,7 @@ void skill_level_set_value(int *arr, int value)
  * Validates SkillType when reading skill_db.conf
  * @param name   contains entry name
  * @param type   contains boolean entry value
- * @param *inf   pointer to db.inf
+ * @param sk      pointer to temporary skill_db storage
  * @return 0 on success, 1 if duplicate entry, 2 if invalid entry.
  */
 int skill_validate_skilltype(const char *name, bool type, struct s_skill_db *sk)
@@ -19094,7 +19094,7 @@ int skill_validate_skilltype(const char *name, bool type, struct s_skill_db *sk)
  * Validates SkillInfo when reading skill_db.conf
  * @param name   contains entry name
  * @param type   contains boolean entry value
- * @param *inf   pointer to db.inf2
+ * @param sk      pointer to temporary skill_db storage
  * @return 0 on success, 1 if duplicate entry, 2 if invalid entry.
  */
 int skill_validate_skillinfo(const char *name, bool type, struct s_skill_db *sk)
@@ -19296,7 +19296,7 @@ int skill_validate_skillinfo(const char *name, bool type, struct s_skill_db *sk)
  * Validates DamageType when reading skill_db.conf
  * @param name   contains entry name
  * @param type   contains boolean entry value.
- * @param *sk    pointer to temporary skill_db storage
+ * @param sk      pointer to temporary skill_db storage
  * @return 0 on success, 1 if duplicate, 2 if invalid entry.
  */
 int skill_validate_damagetype(const char *name, bool type, struct s_skill_db *sk)
@@ -19479,145 +19479,145 @@ int skill_validate_castnodex(const char *name, bool type, int *nodex)
 int skill_validate_weapontype(const char *name, bool type, struct s_skill_db *sk)
 {
 	if (type) {
-		if (strcmpi(name, "NoWeapon") == 0 && type) {
+		if (strcmpi(name, "NoWeapon") == 0) {
 			if (sk->weapon&1<<W_FIST) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_FIST;
 			}
-		} else if (strcmpi(name, "Daggers") == 0 && type) {
+		} else if (strcmpi(name, "Daggers") == 0) {
 			if (sk->weapon&1<<W_DAGGER) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_DAGGER;
 			}
-		} else if (strcmpi(name, "1HSwords") == 0 && type) {
+		} else if (strcmpi(name, "1HSwords") == 0) {
 			if (sk->weapon&1<<W_1HSWORD) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_1HSWORD;
 			}
-		} else if (strcmpi(name, "2HSwords") == 0 && type) {
+		} else if (strcmpi(name, "2HSwords") == 0) {
 			if (sk->weapon&1<<W_2HSWORD) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_2HSWORD;
 			}
-		} else if (strcmpi(name, "1HSpears") == 0 && type) {
+		} else if (strcmpi(name, "1HSpears") == 0) {
 			if (sk->weapon&1<<W_1HSPEAR) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_1HSPEAR;
 			}
-		} else if (strcmpi(name, "2HSpears") == 0 && type) {
+		} else if (strcmpi(name, "2HSpears") == 0) {
 			if (sk->weapon&1<<W_2HSPEAR) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_2HSPEAR;
 			}
-		} else if (strcmpi(name, "1HAxes") == 0 && type) {
+		} else if (strcmpi(name, "1HAxes") == 0) {
 			if (sk->weapon&1<<W_1HAXE) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_1HAXE;
 			}
-		} else if (strcmpi(name, "2HAxes") == 0 && type) {
+		} else if (strcmpi(name, "2HAxes") == 0) {
 			if (sk->weapon&1<<W_2HAXE) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_2HAXE;
 			}
-		} else if (strcmpi(name, "Maces") == 0 && type) {
+		} else if (strcmpi(name, "Maces") == 0) {
 			if (sk->weapon&1<<W_MACE) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_MACE;
 			}
-		} else if (strcmpi(name, "2HMaces") == 0 && type) {
+		} else if (strcmpi(name, "2HMaces") == 0) {
 			if (sk->weapon&1<<W_2HMACE) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_2HMACE;
 			}
-		} else if (strcmpi(name, "Staves") == 0 && type) {
+		} else if (strcmpi(name, "Staves") == 0) {
 			if (sk->weapon&1<<W_STAFF) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_STAFF;
 			}
-		} else if (strcmpi(name, "Bows") == 0 && type) {
+		} else if (strcmpi(name, "Bows") == 0) {
 			if (sk->weapon&1<<W_BOW) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_BOW;
 			}
-		} else if (strcmpi(name, "Knuckles") == 0 && type) {
+		} else if (strcmpi(name, "Knuckles") == 0) {
 			if (sk->weapon&1<<W_KNUCKLE) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_KNUCKLE;
 			}
-		} else if (strcmpi(name, "Instruments") == 0 && type) {
+		} else if (strcmpi(name, "Instruments") == 0) {
 			if (sk->weapon&1<<W_MUSICAL) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_MUSICAL;
 			}
-		} else if (strcmpi(name, "Whips") == 0 && type) {
+		} else if (strcmpi(name, "Whips") == 0) {
 			if (sk->weapon&1<<W_WHIP) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_WHIP;
 			}
-		} else if (strcmpi(name, "Books") == 0 && type) {
+		} else if (strcmpi(name, "Books") == 0) {
 			if (sk->weapon&1<<W_BOOK) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_BOOK;
 			}
-		} else if (strcmpi(name, "Katars") == 0 && type) {
+		} else if (strcmpi(name, "Katars") == 0) {
 			if (sk->weapon&1<<W_KATAR) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_KATAR;
 			}
-		} else if (strcmpi(name, "Revolvers") == 0 && type) {
+		} else if (strcmpi(name, "Revolvers") == 0) {
 			if (sk->weapon&1<<W_REVOLVER) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_REVOLVER;
 			}
-		} else if (strcmpi(name, "Rifles") == 0 && type) {
+		} else if (strcmpi(name, "Rifles") == 0) {
 			if (sk->weapon&1<<W_RIFLE) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_RIFLE;
 			}
-		} else if (strcmpi(name, "GatlingGuns") == 0 && type) {
+		} else if (strcmpi(name, "GatlingGuns") == 0) {
 			if (sk->weapon&1<<W_GATLING) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_GATLING;
 			}
-		} else if (strcmpi(name, "Shotguns") == 0 && type) {
+		} else if (strcmpi(name, "Shotguns") == 0) {
 			if (sk->weapon&1<<W_SHOTGUN) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_SHOTGUN;
 			}
-		} else if (strcmpi(name, "GrenadeLaunchers") == 0 && type) {
+		} else if (strcmpi(name, "GrenadeLaunchers") == 0) {
 			if (sk->weapon&1<<W_GRENADE) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_GRENADE;
 			}
-		} else if (strcmpi(name, "FuumaShurikens") == 0 && type) {
+		} else if (strcmpi(name, "FuumaShurikens") == 0) {
 			if (sk->weapon&1<<W_HUUMA) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_HUUMA;
 			}
-		} else if (strcmpi(name, "2HStaves") == 0 && type) {
+		} else if (strcmpi(name, "2HStaves") == 0) {
 			if (sk->weapon&1<<W_2HSTAFF) {
 				return 1;
 			} else {
@@ -19625,37 +19625,37 @@ int skill_validate_weapontype(const char *name, bool type, struct s_skill_db *sk
 			}
 		}
 	 /*  MAX_SINGLE_WEAPON_TYPE excluded */
-		else if (strcmpi(name, "DWDaggers") == 0 && type) {
+		else if (strcmpi(name, "DWDaggers") == 0) {
 			if (sk->weapon&1<<W_DOUBLE_DD) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_DOUBLE_DD;
 			}
-		} else if (strcmpi(name, "DWSwords") == 0 && type) {
+		} else if (strcmpi(name, "DWSwords") == 0) {
 			if (sk->weapon&1<<W_DOUBLE_SS) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_DOUBLE_SS;
 			}
-		} else if (strcmpi(name, "DWAxes") == 0 && type) {
+		} else if (strcmpi(name, "DWAxes") == 0) {
 			if (sk->weapon&1<<W_DOUBLE_AA) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_DOUBLE_AA;
 			}
-		} else if (strcmpi(name, "DWDaggerSword") == 0 && type) {
+		} else if (strcmpi(name, "DWDaggerSword") == 0) {
 			if (sk->weapon&1<<W_DOUBLE_DS) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_DOUBLE_DS;
 			}
-		} else if (strcmpi(name, "DWDaggerAxe") == 0 && type) {
+		} else if (strcmpi(name, "DWDaggerAxe") == 0) {
 			if (sk->weapon&1<<W_DOUBLE_DA) {
 				return 1;
 			} else {
 				sk->weapon |= 1<<W_DOUBLE_DA;
 			}
-		} else if (strcmpi(name, "DWSwordAxe") == 0 && type) {
+		} else if (strcmpi(name, "DWSwordAxe") == 0) {
 			if (sk->weapon&1<<W_DOUBLE_SA) {
 				return 1;
 			} else {
@@ -19667,145 +19667,145 @@ int skill_validate_weapontype(const char *name, bool type, struct s_skill_db *sk
 			return 2; // invalid type
 		}
 	} else {
-		if (strcmpi(name, "NoWeapon") == 0 && type) {
+		if (strcmpi(name, "NoWeapon") == 0) {
 			if (sk->weapon&1<<W_FIST) {
 				sk->weapon &= ~(1<<W_FIST);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "Daggers") == 0 && type) {
+		} else if (strcmpi(name, "Daggers") == 0) {
 			if (sk->weapon&1<<W_DAGGER) {
 				sk->weapon &= ~(1<<W_DAGGER);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "1HSwords") == 0 && type) {
+		} else if (strcmpi(name, "1HSwords") == 0) {
 			if (sk->weapon&1<<W_1HSWORD) {
 				sk->weapon &= ~(1<<W_1HSWORD);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "2HSwords") == 0 && type) {
+		} else if (strcmpi(name, "2HSwords") == 0) {
 			if (sk->weapon&1<<W_2HSWORD) {
 				sk->weapon &= ~(1<<W_2HSWORD);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "1HSpears") == 0 && type) {
+		} else if (strcmpi(name, "1HSpears") == 0) {
 			if (sk->weapon&1<<W_1HSPEAR) {
 				sk->weapon &= ~(1<<W_1HSPEAR);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "2HSpears") == 0 && type) {
+		} else if (strcmpi(name, "2HSpears") == 0) {
 			if (sk->weapon&1<<W_2HSPEAR) {
 				sk->weapon &= ~(1<<W_2HSPEAR);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "1HAxes") == 0 && type) {
+		} else if (strcmpi(name, "1HAxes") == 0) {
 			if (sk->weapon&1<<W_1HAXE) {
 				sk->weapon &= ~(1<<W_1HAXE);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "2HAxes") == 0 && type) {
+		} else if (strcmpi(name, "2HAxes") == 0) {
 			if (sk->weapon&1<<W_2HAXE) {
 				sk->weapon &= ~(1<<W_2HAXE);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "Maces") == 0 && type) {
+		} else if (strcmpi(name, "Maces") == 0) {
 			if (sk->weapon&1<<W_MACE) {
 				sk->weapon &= ~(1<<W_MACE);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "2HMaces") == 0 && type) {
+		} else if (strcmpi(name, "2HMaces") == 0) {
 			if (sk->weapon&1<<W_2HMACE) {
 				sk->weapon &= ~(1<<W_2HMACE);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "Staves") == 0 && type) {
+		} else if (strcmpi(name, "Staves") == 0) {
 			if (sk->weapon&1<<W_STAFF) {
 				sk->weapon &= ~(1<<W_STAFF);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "Bows") == 0 && type) {
+		} else if (strcmpi(name, "Bows") == 0) {
 			if (sk->weapon&1<<W_BOW) {
 				sk->weapon &= ~(1<<W_BOW);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "Knuckles") == 0 && type) {
+		} else if (strcmpi(name, "Knuckles") == 0) {
 			if (sk->weapon&1<<W_KNUCKLE) {
 				sk->weapon &= ~(1<<W_KNUCKLE);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "Instruments") == 0 && type) {
+		} else if (strcmpi(name, "Instruments") == 0) {
 			if (sk->weapon&1<<W_MUSICAL) {
 				sk->weapon &= ~(1<<W_MUSICAL);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "Whips") == 0 && type) {
+		} else if (strcmpi(name, "Whips") == 0) {
 			if (sk->weapon&1<<W_WHIP) {
 				sk->weapon &= ~(1<<W_WHIP);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "Books") == 0 && type) {
+		} else if (strcmpi(name, "Books") == 0) {
 			if (sk->weapon&1<<W_BOOK) {
 				sk->weapon &= ~(1<<W_BOOK);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "Katars") == 0 && type) {
+		} else if (strcmpi(name, "Katars") == 0) {
 			if (sk->weapon&1<<W_KATAR) {
 				sk->weapon &= ~(1<<W_KATAR);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "Revolvers") == 0 && type) {
+		} else if (strcmpi(name, "Revolvers") == 0) {
 			if (sk->weapon&1<<W_REVOLVER) {
 				sk->weapon &= ~(1<<W_REVOLVER);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "Rifles") == 0 && type) {
+		} else if (strcmpi(name, "Rifles") == 0) {
 			if (sk->weapon&1<<W_RIFLE) {
 				sk->weapon &= ~(1<<W_RIFLE);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "GatlingGuns") == 0 && type) {
+		} else if (strcmpi(name, "GatlingGuns") == 0) {
 			if (sk->weapon&1<<W_GATLING) {
 				sk->weapon &= ~(1<<W_GATLING);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "Shotguns") == 0 && type) {
+		} else if (strcmpi(name, "Shotguns") == 0) {
 			if (sk->weapon&1<<W_SHOTGUN) {
 				sk->weapon &= ~(1<<W_SHOTGUN);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "GrenadeLaunchers") == 0 && type) {
+		} else if (strcmpi(name, "GrenadeLaunchers") == 0) {
 			if (sk->weapon&1<<W_GRENADE) {
 				sk->weapon &= ~(1<<W_GRENADE);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "FuumaShurikens") == 0 && type) {
+		} else if (strcmpi(name, "FuumaShurikens") == 0) {
 			if (sk->weapon&1<<W_HUUMA) {
 				sk->weapon &= ~(1<<W_HUUMA);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "2HStaves") == 0 && type) {
+		} else if (strcmpi(name, "2HStaves") == 0) {
 			if (sk->weapon&1<<W_2HSTAFF) {
 				sk->weapon &= ~(1<<W_2HSTAFF);
 			} else {
@@ -19813,37 +19813,37 @@ int skill_validate_weapontype(const char *name, bool type, struct s_skill_db *sk
 			}
 		}
 	 /*  MAX_SINGLE_WEAPON_TYPE excluded */
-		else if (strcmpi(name, "DWDaggers") == 0 && type) {
+		else if (strcmpi(name, "DWDaggers") == 0) {
 			if (sk->weapon&1<<W_DOUBLE_DD) {
 				sk->weapon &= ~(1<<W_DOUBLE_DD);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "DWSwords") == 0 && type) {
+		} else if (strcmpi(name, "DWSwords") == 0) {
 			if (sk->weapon&1<<W_DOUBLE_SS) {
 				sk->weapon &= ~(1<<W_DOUBLE_SS);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "DWAxes") == 0 && type) {
+		} else if (strcmpi(name, "DWAxes") == 0) {
 			if (sk->weapon&1<<W_DOUBLE_AA) {
 				sk->weapon &= ~(1<<W_DOUBLE_AA);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "DWDaggerSword") == 0 && type) {
+		} else if (strcmpi(name, "DWDaggerSword") == 0) {
 			if (sk->weapon&1<<W_DOUBLE_DS) {
 				sk->weapon &= ~(1<<W_DOUBLE_DS);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "DWDaggerAxe") == 0 && type) {
+		} else if (strcmpi(name, "DWDaggerAxe") == 0) {
 			if (sk->weapon&1<<W_DOUBLE_DA) {
 				sk->weapon &= ~(1<<W_DOUBLE_DA);
 			} else {
 				return 1;
 			}
-		} else if (strcmpi(name, "DWSwordAxe") == 0 && type) {
+		} else if (strcmpi(name, "DWSwordAxe") == 0) {
 			if (sk->weapon&1<<W_DOUBLE_SA) {
 				sk->weapon &= ~(1<<W_DOUBLE_SA);
 			} else {
@@ -19864,7 +19864,7 @@ int skill_validate_weapontype(const char *name, bool type, struct s_skill_db *sk
  * when parsing skill_db.conf
  * @param   name    contains the setting's name
  * @param   type    contain's the setting's boolean value
- * @param   *ammo   pointer to db.ammo
+ * @param   sk      pointer to temporary skill_db storage
  * @return
  */
 int skill_validate_ammotype(const char *name, bool type, struct s_skill_db *sk)
@@ -19998,7 +19998,7 @@ int skill_validate_ammotype(const char *name, bool type, struct s_skill_db *sk)
  * when parsing skill_db.conf
  * @param   name    contains the setting's name
  * @param   type    contain's the setting's boolean value
- * @param   *flag   pointer to db.flag
+ * @param   sk      pointer to temporary skill_db storage
  * @return 0 on success, 1 if duplicate and 2 if invalid entry.
  */
 int skill_validate_unit_flag(const char *name, bool type, struct s_skill_db *sk)
@@ -20253,15 +20253,14 @@ bool skill_read_skilldb(const char *filename)
 			ShowWarning("skill_read_skilldb: Duplicate Skill Id %d in entry %d in '%s', skipping...\n", skill_id, index, filepath);
 			continue;
 		}
+		
 		/* Skill Name Constant */
 		if (!libconfig->setting_lookup_mutable_string(conf, "Name", tmp_db.name, sizeof(tmp_db.name))) {
 			ShowError("skill_read_skilldb: Name not specified for skill Id %d in '%s', skipping...\n", skill_id, filepath);
 			continue;
 		}
-
 		/* Skill Description */
 		libconfig->setting_lookup_mutable_string(conf, "Description", tmp_db.desc, sizeof(tmp_db.desc));
-
 		/* Max Level */
 		if (!libconfig->setting_lookup_int(conf, "MaxLevel", &temp)) {
 			ShowError("skill_read_skilldb: MaxLevel not specified for skill Id %d in '%s', skipping...\n", skill_id, filepath);
@@ -20386,7 +20385,7 @@ bool skill_read_skilldb(const char *filename)
 			skill->level_set_value(tmp_db.num, 1); // Default 1
 
 		/* Interrupt Cast */
-		if(libconfig->setting_lookup_bool(conf, "InterruptCast", &tmp_db.castcancel) == 0)
+		if (libconfig->setting_lookup_bool(conf, "InterruptCast", &tmp_db.castcancel) == 0)
 			tmp_db.castcancel = 1;
 		/* Cast Defense Rate */
 		libconfig->setting_lookup_int(conf, "CastDefRate", &tmp_db.cast_def_rate);
