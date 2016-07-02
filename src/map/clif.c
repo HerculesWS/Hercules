@@ -11192,7 +11192,7 @@ void clif_parse_UseSkillToId(int fd, struct map_session_data *sd)
 
 	sd->skillitem = sd->skillitemlv = 0;
 
-	if( skill_id >= GD_SKILLBASE ) {
+	if (skill_id >= GD_SKILLBASE && skill_id < GD_MAX) {
 		if( sd->state.gmaster_flag )
 			skill_lv = guild->checkskill(sd->guild, skill_id);
 		else
