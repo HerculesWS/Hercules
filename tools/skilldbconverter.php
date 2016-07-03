@@ -52,7 +52,7 @@ $directory = function() use($argv) {
 	if ($arg) {
 		$part = explode("=", $argv[$arg]);
 		if(!isset($part[1])) {
-			die("A directory path was not provided! \n");
+			die("A directory path was not provided!\n");
 		} else if(!is_dir($part[1])) {
 			die("The given directory ".$part[1]." doesn't exist.\n");
 		} else {
@@ -74,6 +74,7 @@ $debug = (issetarg("-dbg") || issetarg("--with-debug"));
 
 if ($debug) {
 	print "\033[0;33mDebug Mode Enabled.\033[0;0m\n";
+	$t_init = microtime_float();
 }
 
 if($help || (!$renewal && !$prere)) {
@@ -116,7 +117,7 @@ if ($constants) {
 	print "Using of Item Constants : enabled\n";
 } else {
 	print "Using of Item Constants : disabled.\n";
-	print "If you wish to use Item Constants instead of ID's use option -c \n";
+	print "If you wish to use Item Constants instead of ID's use option -c\n";
 }
 
 /* Begin the Loading of Files */
@@ -152,7 +153,7 @@ while(!feof($requiredb))
 	}
 	$i++;
 }
-if($debug) {
+if ($debug) {
 	print "\033[0;34m[Debug]\033[0;0m Read require_db Memory: ".print_mem()."\n";
 }
 fclose($requiredb);
@@ -164,9 +165,9 @@ $i=0;
 while(!feof($skillcastdb))
 {
 	$line = fgets($skillcastdb);
-	if(substr($line, 0, 2) == "//" || strlen($line) < 10) continue;
+	if (substr($line, 0, 2) == "//" || strlen($line) < 10) continue;
 	$arr = explode(",",$line);
-	if(!isset($arr[0])) continue;
+	if (!isset($arr[0])) continue;
 	$skcast["ID"][$i] = $arr[0]; // SkillCastDBId
 	$skcast["casttime"][$i] = $arr[1];
 	$skcast["actdelay"][$i] = $arr[2];
@@ -344,7 +345,7 @@ while(!feof($skmain)) {
 	if($nk && $nk != "0x0") $putsk .=  "\tDamageType: ".getnk($nk)."\n";
 	if($splash) $putsk .=  "\tSplashRange: ".leveled($splash, $max, $id)."\n";
 	if($list_num != "1") $putsk .=  "\tNumberOfHits: ".leveled($list_num, $max, $id)."\n";
-	if($castcancel && $inf) $putsk .=  "\tInterruptCast: true \n";
+	if($castcancel && $inf) $putsk .=  "\tInterruptCast: true\n";
 	if($cast_defence_rate) $putsk .=  "\tCastDefRate: ".$cast_defence_rate."\n";
 	if($maxcount) $putsk .=  "\tSkillInstances: ".leveled($maxcount, $max, $id)."\n";
 	if($blow_count) $putsk .=  "\tKnockBackTiles: ".leveled($blow_count, $max, $id)."\n";
@@ -375,7 +376,7 @@ while(!feof($skmain)) {
 	unset($key);
 	$key = array_search($id, $skreq['ID']);
 	if($key) {
-		$putsk .=  "\tRequirements: { \n";
+		$putsk .=  "\tRequirements: {\n";
 		if ($skreq['HPCost'][$key]) $putsk .=  "\t\tHPCost: ".leveled($skreq['HPCost'][$key], $max, $id, 1)."\n";
 		if ($skreq['SPCost'][$key]) $putsk .=  "\t\tSPCost: ".leveled($skreq['SPCost'][$key], $max, $id, 1)."\n";
 		if ($skreq['HPRateCost'][$key]) $putsk .=  "\t\tHPRateCost: ".leveled($skreq['HPRateCost'][$key], $max, $id, 1)."\n";
@@ -416,19 +417,19 @@ while(!feof($skmain)) {
 					}
 				}
 			}
-			$putsk .=  "\t\t} \n";
+			$putsk .=  "\t\t}\n";
 		}
-		$putsk .=  "\t} \n";
+		$putsk .=  "\t}\n";
 	}
 
 	unset($key);
 	$key = array_search($id, $skunit['ID']);
 	if($key) {
-		$putsk .=  "\tUnit: { \n";
+		$putsk .=  "\tUnit: {\n";
 		if(isset($skunit['UnitID'][$key])) {
 			if(isset($skunit['UnitID2'][$key]) && strlen($skunit['UnitID2'][$key])) {
 				$putsk .=  "\t\tId: [ ".$skunit['UnitID'][$key].", ".$skunit['UnitID2'][$key]." ]\n";
-			} else $putsk .=  "\t\tId: ".$skunit['UnitID'][$key]." \n";
+			} else $putsk .=  "\t\tId: ".$skunit['UnitID'][$key]."\n";
 		}
 		if(isset($skunit['Layout'][$key]) && $skunit['Layout'][$key] != 0) $putsk .=  "\t\tLayout: ".leveled($skunit['Layout'][$key], $max, $id, 1)."\n";
 		if(isset($skunit['Range'][$key]) && $skunit['Range'][$key] != 0) $putsk .=  "\t\tRange: ".leveled($skunit['Range'][$key], $max, $id, 1)."\n";
@@ -451,7 +452,7 @@ show_status($linecount, $linecount);
 print "\n";
 print "The skill database has been \033[1;32msuccessfully\033[0m converted to Hercules libconfig\n";
 print "and has been saved in '".DIRPATH."skill_db.conf'.\n";
-print "The following files are now deprecated and can be deleted - \n";
+print "The following files are now deprecated and can be deleted -\n";
 print DIRPATH."skill_db.txt\n";
 print DIRPATH."skill_cast_db.txt\n";
 print DIRPATH."skill_castnodex_db.txt\n";
@@ -459,15 +460,22 @@ print DIRPATH."skill_require_db.txt\n";
 print DIRPATH."skill_unit_db.txt\n";
 $putsk .=  ")";
 $skconf = "skill_db.conf";
+file_put_contents(DIRPATH.$skconf, $putsk);
 if($debug) {
 	print "\033[0;34m[Debug]\033[0;0m Memory after converting: ".print_mem()."\n";
+	print "\033[0;34m[Debug]\033[0;0m Execution Time : ".(microtime_float()-$t_init)."s\n";
 }
-file_put_contents(DIRPATH.$skconf, $putsk);
 fclose($skmain);
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /* Functions
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+function microtime_float()
+{
+    list($usec, $sec) = explode(" ", microtime());
+    return ((float)$usec + (float)$sec);
+}
 
 function show_status($done, $total) {
 	$perc = floor(($done / $total) * 100);
@@ -848,7 +856,7 @@ function gethelp()
 	print "\t-dbg    [--with-debug]       print debug information.\n";
 	print "\t-h      [--help]             to display this help text.\n\n";
 	print "----------------------- Additional Notes ----------------------\n";
-	print "\033[0;31mImportant!\033[0;0m \n";
+	print "\033[0;31mImportant!\033[0;0m\n";
 	print "* Please be advised that either and only one of the arguments -re/-pre-re\n";
 	print "must be specified on execution.\n";
 	print "* When using the -dir option, -re/-pre-re options must be specified. If\n";
@@ -865,12 +873,12 @@ function gethelp()
 
 function printcredits()
 {
-	print "      _   _                     _            \n";
-	print "     | | | |                   | |           \n";
-	print "     | |_| | ___ _ __ ___ _   _| | ___  ___  \n";
-	print "     |  _  |/ _ \ '__/ __| | | | |/ _ \/ __| \n";
+	print "      _   _                     _           \n";
+	print "     | | | |                   | |          \n";
+	print "     | |_| | ___ _ __ ___ _   _| | ___  ___ \n";
+	print "     |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|\n";
 	print "     | | | |  __/ | | (__| |_| | |  __/\__ \ \n";
-	print "     \_| |_/\___|_|  \___|\__,_|_|\___||___/ \n";
+	print "     \_| |_/\___|_|  \___|\__,_|_|\___||___/\n";
 	print "\033[0;36mHercules Skill Database TXT to Libconfig Converter by Smokexyz\033[0m\n";
 	print "Copyright (C) 2016  \033[0;32mSmokexyz/Hercules\033[0m\n";
 	print "-----------------------------------------------\n\n";

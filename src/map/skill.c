@@ -19226,18 +19226,18 @@ void skill_validate_attacktype(struct config_setting_t *conf, struct s_skill_db 
  * @param sk     struct, pointer to s_skill_db
  * @return (void)
  */
-void skill_validate_element(struct config_setting_t *ele_t, struct s_skill_db *sk)
+void skill_validate_element(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	const char *type = NULL;
 	struct config_setting_t *t = NULL;
 
-	if ((t=libconfig->setting_get_member(ele_t, "Element")) && config_setting_is_group(ele_t)) {
+	if ((t=libconfig->setting_get_member(conf, "Element")) && config_setting_is_group(t)) {
 		int j = 0;
 		char lv[5];
 
 		for (j=0; j < MAX_SKILL_LEVEL; j++) {
 			sprintf(lv, "Lv%d",j+1);
-			if (libconfig->setting_lookup_string(ele_t, lv, &type)) {
+			if (libconfig->setting_lookup_string(t, lv, &type)) {
 				if (strcmpi(type,"Ele_Weapon") == 0)
 					sk->element[j] = -1;
 				else if (strcmpi(type,"Ele_Endowed") == 0)
@@ -19245,11 +19245,11 @@ void skill_validate_element(struct config_setting_t *ele_t, struct s_skill_db *s
 				else if (strcmpi(type,"Ele_Random") == 0)
 					sk->element[j] = -3;
 				else if (!script->get_constant(type,&sk->element[j]))
-					skilldb_invalid_error(type, config_setting_name(ele_t), sk->nameid);
+					skilldb_invalid_error(type, config_setting_name(conf), sk->nameid);
 			}
 		}
 
-	} else if (libconfig->setting_lookup_string(ele_t, "Element", &type)) {
+	} else if (libconfig->setting_lookup_string(conf, "Element", &type)) {
 		int ele = 0;
 
 		if (strcmpi(type,"Ele_Weapon") == 0)
@@ -19259,7 +19259,7 @@ void skill_validate_element(struct config_setting_t *ele_t, struct s_skill_db *s
 		else if (strcmpi(type,"Ele_Random") == 0)
 			ele = -3;
 		else if (!script->get_constant(type, &ele)) {
-			skilldb_invalid_error(type, config_setting_name(ele_t), sk->nameid);
+			skilldb_invalid_error(type, config_setting_name(conf), sk->nameid);
 			return;
 		}
 
@@ -19777,7 +19777,7 @@ void skill_validate_item_requirements(struct config_setting_t *conf, struct s_sk
 				continue;
 			}
 
-			skill->config_set_level(it, sk->amount);
+			sk->amount[itx] = libconfig->setting_get_int(it);
 			itx++;
 		}
 	}
@@ -19940,6 +19940,17 @@ void skill_validate_unit_flag(struct config_setting_t *conf, struct s_skill_db *
 		}
 	}
 }
+/**
+ * Validate additional field settings via plugins
+ * when parsing skill_db.conf
+ * @param   conf    struct, pointer to the skill configuration
+ * @param   sk      struct, struct, pointer to s_skill_db
+ * @return  (void)
+ */
+void skill_validate_additional_fields(struct config_setting_t *conf, struct s_skill_db *sk)
+{
+	// Does nothing like a boss. *cough* plugins *cough*
+}
 
 /**
  * Validates a skill entry and adds it to the database. [ Smokexyz/Hercules ]
@@ -20084,7 +20095,6 @@ bool skill_read_skilldb(const char *filename)
 		/* Knock-Back Tiles */
 		if ((t = libconfig->setting_get_member(conf, "KnockBackTiles")))
 			skill->config_set_level(t, tmp_db.blewcount);
-
 		/**
 		 * Skill Cast / Delay data handling
 		 */
@@ -20206,6 +20216,9 @@ bool skill_read_skilldb(const char *filename)
 			/* Target */
 			skill->validate_unit_target(t, &tmp_db);
 		}
+
+		/* Additional Fields for Plugins */
+		skill->validate_additional_fields(conf, &tmp_db);
 		
 		// Validate the skill entry, add it to the duplicate array and increment count on success.
 		if ((duplicate[idx] = skill->validate_skilldb(&tmp_db, filepath)))
@@ -20555,6 +20568,7 @@ void skill_defaults(void) {
 	skill->validate_item_requirements = skill_validate_item_requirements;
 	skill->validate_unit_target = skill_validate_unit_target;
 	skill->validate_unit_flag = skill_validate_unit_flag;
+	skill->validate_additional_fields = skill_validate_additional_fields;
 	skill->validate_skilldb = skill_validate_skilldb;
 	skill->read_skilldb = skill_read_skilldb;
 	skill->config_set_level = skill_config_set_level;

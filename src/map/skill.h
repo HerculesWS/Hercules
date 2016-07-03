@@ -2046,6 +2046,7 @@ struct skill_interface {
 	void (*validate_item_requirements) (struct config_setting_t *conf, struct s_skill_db *skill);
 	void (*validate_unit_target) (struct config_setting_t *conf, struct s_skill_db *skill);
 	void (*validate_unit_flag) (struct config_setting_t *conf,  struct s_skill_db *skill);
+	void (*validate_additional_fields) (struct config_setting_t *conf, struct s_skill_db *skill);
 	bool (*validate_skilldb) (struct s_skill_db *skt, const char *source);
 	bool (*read_skilldb) (const char *filename);
 	void (*config_set_level) (struct config_setting_t *conf, int *arr);
