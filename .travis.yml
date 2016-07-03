@@ -6,6 +6,7 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - gcc-5
+    - gcc-6
 
 install:
   - ./travis.sh getplugins || true
@@ -42,6 +43,10 @@ matrix:
     env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --enable-Werror"
   - compiler: gcc
     env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --disable-renewal --enable-Werror"
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-6 --disable-manager --enable-Werror"
+  - compiler: gcc
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-6 --disable-manager --disable-renewal --enable-Werror"
   
 notifications:
   email: false
