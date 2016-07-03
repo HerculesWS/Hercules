@@ -31,17 +31,17 @@ matrix:
   - env: ignore=this
   include:
   - compiler: clang
-    env: CONFIGURE_FLAGS="--enable-debug"
+    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror"
   - compiler: clang
-    env: CONFIGURE_FLAGS="--enable-debug --disable-renewal"
+    env: CONFIGURE_FLAGS="--enable-debug --disable-renewal --enable-Werror"
   - compiler: gcc
-    env: CONFIGURE_FLAGS="--enable-debug"
+    env: CONFIGURE_FLAGS="--enable-debug --enable-Werror"
   - compiler: gcc
-    env: CONFIGURE_FLAGS="--enable-debug --disable-renewal"
+    env: CONFIGURE_FLAGS="--enable-debug --disable-renewal --enable-Werror"
   - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager"
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --enable-Werror"
   - compiler: gcc
-    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --disable-renewal"
+    env: LDFLAGS="-fuse-ld=gold" CONFIGURE_FLAGS="--enable-debug --enable-sanitize=full CC=gcc-5 --disable-manager --disable-renewal --enable-Werror"
   
 notifications:
   email: false
