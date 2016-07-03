@@ -18981,9 +18981,9 @@ void skill_config_set_level(struct config_setting_t *conf, int *arr)
 
 	if (config_setting_is_group(conf)) {
 		for (i=0; i<MAX_SKILL_LEVEL; i++) {
-			char name[5];
-			sprintf(name, "Lv%d", i+1);
-			libconfig->setting_lookup_int(conf, name, &arr[i]);
+			char level[5];
+			sprintf(level, "Lv%d", i+1);
+			libconfig->setting_lookup_int(conf, level, &arr[i]);
 		}
 	} else if (config_setting_is_array(conf)) {
 		for (i=0; i<config_setting_length(conf) && i < MAX_SKILL_LEVEL; i++) {
@@ -19001,6 +19001,7 @@ void skill_config_set_level(struct config_setting_t *conf, int *arr)
  * Sets all values in a skill level array to a specified value [ Smokexyz/Hercules ]
  * @param *arr    pointer to array being parsed.
  * @param value   value being set for the array.
+ * @return (void)
  */
 void skill_level_set_value(int *arr, int value)
 {
@@ -19027,16 +19028,13 @@ void skill_validate_hittype(struct config_setting_t *conf, struct s_skill_db *sk
 			return;
 		}
 	}
-
-	return;
 }
 
 /**
- * Validates SkillType when reading skill_db.conf
- * @param name   contains entry name
- * @param type   contains boolean entry value
- * @param sk      pointer to temporary skill_db storage
- * @return 0 on success, 1 if duplicate entry, 2 if invalid entry.
+ * Validates "SkillType" when reading skill_db.conf
+ * @param conf   struct, pointer to skill configuration
+ * @param sk     struct, pointer to s_skill_db
+ * @return (void)
  */
 void skill_validate_skilltype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
@@ -19083,16 +19081,13 @@ void skill_validate_skilltype(struct config_setting_t *conf, struct s_skill_db *
 			}
 		}
 	}
-	
-	return;
 }
 	
 /**
- * Validates SkillInfo when reading skill_db.conf
- * @param name   contains entry name
- * @param type   contains boolean entry value
- * @param sk      pointer to temporary skill_db storage
- * @return 0 on success, 1 if duplicate entry, 2 if invalid entry.
+ * Validates "SkillInfo" when reading skill_db.conf
+ * @param conf   struct, pointer to skill configuration
+ * @param sk     struct, pointer to s_skill_db
+ * @return (void)
  */
 void skill_validate_skillinfo(struct config_setting_t *conf, struct s_skill_db *sk)
 {
@@ -19199,10 +19194,14 @@ void skill_validate_skillinfo(struct config_setting_t *conf, struct s_skill_db *
 			}
 		}
 	}
-	
-	return;
 }
 
+/**
+ * Validates "AttackType" when reading skill_db.conf
+ * @param conf   struct, pointer to skill configuration
+ * @param sk     struct, pointer to s_skill_db
+ * @return (void)
+ */
 void skill_validate_attacktype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	const char *type = NULL;
@@ -19219,10 +19218,14 @@ void skill_validate_attacktype(struct config_setting_t *conf, struct s_skill_db 
 			return;
 		}
 	}
-
-	return;
 }
 
+/**
+ * Validates "Element" when reading skill_db.conf
+ * @param ele_t   struct, pointer to skill configuration
+ * @param sk     struct, pointer to s_skill_db
+ * @return (void)
+ */
 void skill_validate_element(struct config_setting_t *ele_t, struct s_skill_db *sk)
 {
 	const char *type = NULL;
@@ -19262,16 +19265,13 @@ void skill_validate_element(struct config_setting_t *ele_t, struct s_skill_db *s
 
 		skill->level_set_value(sk->element, ele);
 	}
-
-	return;
 }
 
 /**
- * Validates DamageType when reading skill_db.conf
- * @param name   contains entry name
- * @param type   contains boolean entry value.
- * @param sk      pointer to temporary skill_db storage
- * @return 0 on success, 1 if duplicate, 2 if invalid entry.
+ * Validates "DamageType" when reading skill_db.conf
+ * @param conf   struct, pointer to skill configuration
+ * @param sk     struct, pointer to s_skill_db
+ * @return (void)
  */
 void skill_validate_damagetype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
@@ -19336,17 +19336,14 @@ void skill_validate_damagetype(struct config_setting_t *conf, struct s_skill_db 
 			}
 		}
 	}
-	
-	return;
 }
 
 /**
- * Validates CastTimeOptions and SkillDelayOptions
- * when parsing skill_db.conf
- * @param   name    contains the setting's name
- * @param   sk      pointer to temporary skill storage
- * @param   delay   boolean switch for skill cast / delay
- * @return  0 on success, 1 if duplicate, 2 if invalid entry.
+ * Validates "SkillCast/DelayOptions" when reading skill_db.conf
+ * @param conf   struct, pointer to skill configuration
+ * @param sk     struct, pointer to s_skill_db
+ * @param delay  boolean, switch for cast/delay setting
+ * @return (void)
  */
 void skill_validate_castnodex(struct config_setting_t *conf, struct s_skill_db *sk, bool delay)
 {
@@ -19384,10 +19381,16 @@ void skill_validate_castnodex(struct config_setting_t *conf, struct s_skill_db *
 		}
 		skill->level_set_value(delay?sk->delaynodex:sk->castnodex, tmpopt);
 	}
-	
-	return;
 }
 
+/**
+ * Validates the "WeaponTypes" flag
+ * when parsing skill_db.conf
+ * @param   *type    const char, weapon type flag
+ * @param   on       boolean, switch for the flag
+ * @param   *sk      struct, pointer to s_skill_db
+ * @return void
+ */
 int skill_validate_weapontype_sub(const char *type, bool on, struct s_skill_db *sk )
 {
 	if (strcmpi(type, "NoWeapon") == 0) {
@@ -19581,18 +19584,18 @@ int skill_validate_weapontype_sub(const char *type, bool on, struct s_skill_db *
 
 	return 0;
 }
+
 /**
- * Validates WeaponTypes
+ * Validates "WeaponTypes"
  * when parsing skill_db.conf
- * @param   name    contains the setting's name
- * @param   type    contains the setting's boolean value
- * @param   sk      pointer to temporary skill_db storage
- * @return  0 on success, 1 if duplicate, 2 if invalid entry.
+ * @param   conf    struct, pointer to the skill configuration
+ * @param   sk      struct, struct, pointer to s_skill_db
+ * @return  (void)
  */
 void skill_validate_weapontype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	struct config_setting_t *tt = NULL;
-	const char *tstr = NULL;
+	const char *type = NULL;
 
 	if ((tt = libconfig->setting_get_member(conf, "WeaponTypes")) && config_setting_is_group(tt)) {
 		int j = 0;
@@ -19601,72 +19604,78 @@ void skill_validate_weapontype(struct config_setting_t *conf, struct s_skill_db 
 			if (skill_validate_weapontype_sub(config_setting_name(wpt), libconfig->setting_get_bool_real(wpt), sk))
 				skilldb_invalid_error(config_setting_name(wpt), config_setting_name(tt), sk->nameid);
 		}
-	} else if (libconfig->setting_lookup_string(conf, "WeaponTypes", &tstr)) {
-		if (skill_validate_weapontype_sub(tstr, true, sk))
-			skilldb_invalid_error(tstr, "WeaponTypes", sk->nameid);
+	} else if (libconfig->setting_lookup_string(conf, "WeaponTypes", &type)) {
+		if (skill_validate_weapontype_sub(type, true, sk))
+			skilldb_invalid_error(type, "WeaponTypes", sk->nameid);
 	}
-
-	return;
 }
 
-int skill_validate_ammotype_sub(const char *name, bool type, struct s_skill_db *sk)
+/**
+ * Validates the "AmmoTypes" flag
+ * when parsing skill_db.conf
+ * @param   type    string, ammo type flag
+ * @param   on      boolean, switch for the flag
+ * @param   sk      struct, pointer to s_skill_db
+ * @return void
+ */
+int skill_validate_ammotype_sub(const char *type, bool on, struct s_skill_db *sk)
 {
-	if (strcmpi(name, "A_ARROW") == 0) {
-		if (type) {
+	if (strcmpi(type, "A_ARROW") == 0) {
+		if (on) {
 			sk->ammo |= 1<<A_ARROW;
 		} else {
 			sk->ammo &= ~(1<<A_ARROW);
 		}
-	} else if (strcmpi(name, "A_DAGGER") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "A_DAGGER") == 0) {
+		if (on) {
 			sk->ammo |= 1<<A_DAGGER;
 		} else {
 			sk->ammo &= ~(1<<A_DAGGER);
 		}
-	} else if (strcmpi(name, "A_BULLET") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "A_BULLET") == 0) {
+		if (on) {
 			sk->ammo |= 1<<A_BULLET;
 		} else {
 			sk->ammo &= ~(1<<A_BULLET);
 		}
-	} else if (strcmpi(name, "A_SHELL") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "A_SHELL") == 0) {
+		if (on) {
 			sk->ammo |= 1<<A_SHELL;
 		} else {
 			sk->ammo &= ~(1<<A_SHELL);
 		}
-	} else if (strcmpi(name, "A_GRENADE") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "A_GRENADE") == 0) {
+		if (on) {
 			sk->ammo |= 1<<A_GRENADE;
 		} else {
 			sk->ammo &= ~(1<<A_GRENADE);
 		}
-	} else if (strcmpi(name, "A_SHURIKEN") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "A_SHURIKEN") == 0) {
+		if (on) {
 			sk->ammo |= 1<<A_SHURIKEN;
 		} else {
 			sk->ammo &= ~(1<<A_SHURIKEN);
 		}
-	} else if (strcmpi(name, "A_KUNAI") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "A_KUNAI") == 0) {
+		if (on) {
 			sk->ammo |= 1<<A_KUNAI;
 		} else {
 			sk->ammo &= ~(1<<A_KUNAI);
 		}
-	} else if (strcmpi(name, "A_CANNONBALL") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "A_CANNONBALL") == 0) {
+		if (on) {
 			sk->ammo |= 1<<A_CANNONBALL;
 		} else {
 			sk->ammo &= ~(1<<A_CANNONBALL);
 		}
-	} else if (strcmpi(name, "A_THROWWEAPON") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "A_THROWWEAPON") == 0) {
+		if (on) {
 			sk->ammo |= 1<<A_THROWWEAPON;
 		} else {
 			sk->ammo &= ~(1<<A_THROWWEAPON);
 		}
-	} else if (strcmpi(name, "All") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "All") == 0) {
+		if (on) {
 			sk->ammo = 0xFFFFFFFF;
 		} else {
 			sk->ammo = 0;
@@ -19679,12 +19688,11 @@ int skill_validate_ammotype_sub(const char *name, bool type, struct s_skill_db *
 }
 
 /**
- * Validates AmmunitionTypes
+ * Validates the "AmmoTypes" flag
  * when parsing skill_db.conf
- * @param   name    contains the setting's name
- * @param   type    contain's the setting's boolean value
- * @param   sk      pointer to temporary skill_db storage
- * @return
+ * @param   conf    pointer to the skill configuration
+ * @param   sk      struct, pointer to s_skill_db
+ * @return void
  */
 void skill_validate_ammotype(struct config_setting_t *conf, struct s_skill_db *sk)
 {
@@ -19702,45 +19710,55 @@ void skill_validate_ammotype(struct config_setting_t *conf, struct s_skill_db *s
 		if (skill_validate_ammotype_sub(tstr, true, sk))
 			skilldb_invalid_error(tstr, "AmmoTypes", sk->nameid);
 	}
-
-	return;
 }
 
+/**
+ * Validates the "State" flag
+ * when parsing skill_db.conf
+ * @param   conf    struct, pointer to the skill configuration
+ * @param   sk      struct, pointer to s_skill_db
+ * @return void
+ */
 void skill_validate_state(struct config_setting_t *conf, struct s_skill_db *sk)
 {
-	const char *tstr = NULL;
+	const char *type = NULL;
 
-	if (libconfig->setting_lookup_string(conf, "State", &tstr) && strcmpi(tstr,"None") != ST_NONE) {
-		if (     strcmpi(tstr,"Hiding")           == 0 ) sk->state = ST_HIDING;
-		else if (strcmpi(tstr,"Cloaking")         == 0 ) sk->state = ST_CLOAKING;
-		else if (strcmpi(tstr,"Hidden")           == 0 ) sk->state = ST_HIDDEN;
-		else if (strcmpi(tstr,"Riding")           == 0 ) sk->state = ST_RIDING;
-		else if (strcmpi(tstr,"Falcon")           == 0 ) sk->state = ST_FALCON;
-		else if (strcmpi(tstr,"Cart")             == 0 ) sk->state = ST_CART;
-		else if (strcmpi(tstr,"Shield")           == 0 ) sk->state = ST_SHIELD;
-		else if (strcmpi(tstr,"Sight")            == 0 ) sk->state = ST_SIGHT;
-		else if (strcmpi(tstr,"ExplosionSpirits") == 0 ) sk->state = ST_EXPLOSIONSPIRITS;
-		else if (strcmpi(tstr,"CartBoost")        == 0 ) sk->state = ST_CARTBOOST;
-		else if (strcmpi(tstr,"NotOverWeight")    == 0 ) sk->state = ST_RECOV_WEIGHT_RATE;
-		else if (strcmpi(tstr,"Moveable")         == 0 ) sk->state = ST_MOVE_ENABLE;
-		else if (strcmpi(tstr,"InWater")          == 0 ) sk->state = ST_WATER;
-		else if (strcmpi(tstr,"Dragon")           == 0 ) sk->state = ST_RIDINGDRAGON;
-		else if (strcmpi(tstr,"Warg")             == 0 ) sk->state = ST_WUG;
-		else if (strcmpi(tstr,"RidingWarg")       == 0 ) sk->state = ST_RIDINGWUG;
-		else if (strcmpi(tstr,"MadoGear")         == 0 ) sk->state = ST_MADO;
-		else if (strcmpi(tstr,"ElementalSpirit")  == 0 ) sk->state = ST_ELEMENTALSPIRIT;
-		else if (strcmpi(tstr,"PoisonWeapon")     == 0 ) sk->state = ST_POISONINGWEAPON;
-		else if (strcmpi(tstr,"RollingCutter")    == 0 ) sk->state = ST_ROLLINGCUTTER;
-		else if (strcmpi(tstr,"MH_Fighting")      == 0 ) sk->state = ST_MH_FIGHTING;
-		else if (strcmpi(tstr,"MH_Grappling")     == 0 ) sk->state = ST_MH_FIGHTING;
-		else if (strcmpi(tstr,"Peco")             == 0 ) sk->state = ST_PECO;
+	if (libconfig->setting_lookup_string(conf, "State", &type) && strcmpi(type,"None") != ST_NONE) {
+		if (     strcmpi(type,"Hiding")           == 0 ) sk->state = ST_HIDING;
+		else if (strcmpi(type,"Cloaking")         == 0 ) sk->state = ST_CLOAKING;
+		else if (strcmpi(type,"Hidden")           == 0 ) sk->state = ST_HIDDEN;
+		else if (strcmpi(type,"Riding")           == 0 ) sk->state = ST_RIDING;
+		else if (strcmpi(type,"Falcon")           == 0 ) sk->state = ST_FALCON;
+		else if (strcmpi(type,"Cart")             == 0 ) sk->state = ST_CART;
+		else if (strcmpi(type,"Shield")           == 0 ) sk->state = ST_SHIELD;
+		else if (strcmpi(type,"Sight")            == 0 ) sk->state = ST_SIGHT;
+		else if (strcmpi(type,"ExplosionSpirits") == 0 ) sk->state = ST_EXPLOSIONSPIRITS;
+		else if (strcmpi(type,"CartBoost")        == 0 ) sk->state = ST_CARTBOOST;
+		else if (strcmpi(type,"NotOverWeight")    == 0 ) sk->state = ST_RECOV_WEIGHT_RATE;
+		else if (strcmpi(type,"Moveable")         == 0 ) sk->state = ST_MOVE_ENABLE;
+		else if (strcmpi(type,"InWater")          == 0 ) sk->state = ST_WATER;
+		else if (strcmpi(type,"Dragon")           == 0 ) sk->state = ST_RIDINGDRAGON;
+		else if (strcmpi(type,"Warg")             == 0 ) sk->state = ST_WUG;
+		else if (strcmpi(type,"RidingWarg")       == 0 ) sk->state = ST_RIDINGWUG;
+		else if (strcmpi(type,"MadoGear")         == 0 ) sk->state = ST_MADO;
+		else if (strcmpi(type,"ElementalSpirit")  == 0 ) sk->state = ST_ELEMENTALSPIRIT;
+		else if (strcmpi(type,"PoisonWeapon")     == 0 ) sk->state = ST_POISONINGWEAPON;
+		else if (strcmpi(type,"RollingCutter")    == 0 ) sk->state = ST_ROLLINGCUTTER;
+		else if (strcmpi(type,"MH_Fighting")      == 0 ) sk->state = ST_MH_FIGHTING;
+		else if (strcmpi(type,"MH_Grappling")     == 0 ) sk->state = ST_MH_FIGHTING;
+		else if (strcmpi(type,"Peco")             == 0 ) sk->state = ST_PECO;
 		else
-			skilldb_invalid_error(tstr, "State", sk->nameid);
+			skilldb_invalid_error(type, "State", sk->nameid);
 	}
-
-	return;
 }
 
+/**
+ * Validates the "Items" flag
+ * when parsing skill_db.conf
+ * @param   conf    struct, pointer to the skill configuration
+ * @param   sk      struct, pointer to s_skill_db
+ * @return void
+ */
 void skill_validate_item_requirements(struct config_setting_t *conf, struct s_skill_db *sk)
 {
 	struct config_setting_t *tt = NULL;
@@ -19750,12 +19768,12 @@ void skill_validate_item_requirements(struct config_setting_t *conf, struct s_sk
 		struct config_setting_t *it;
 
 		while((it=libconfig->setting_get_elem(tt, itx)) && itx < MAX_SKILL_ITEM_REQUIRE) {
-			const char *name = config_setting_name(it);
+			const char *type = config_setting_name(it);
 
-			if( name[0] == 'I' && name[1] == 'D' && itemdb->exists(atoi(name+2)) )
-				sk->itemid[itx] = atoi(name+2);
-			else if(!script->get_constant(name, &sk->itemid[itx])) {
-				ShowWarning("skill_read_skilldb: Invalid required Item '%s' given for skill Id %d in '%s', skipping...\n",name, sk->nameid, DBPATH"skill_db.conf");
+			if( type[0] == 'I' && type[1] == 'D' && itemdb->exists(atoi(type+2)) )
+				sk->itemid[itx] = atoi(type+2);
+			else if(!script->get_constant(type, &sk->itemid[itx])) {
+				ShowWarning("skill_read_skilldb: Invalid required Item '%s' given for skill Id %d in '%s', skipping...\n",type, sk->nameid, DBPATH"skill_db.conf");
 				continue;
 			}
 
@@ -19765,24 +19783,30 @@ void skill_validate_item_requirements(struct config_setting_t *conf, struct s_sk
 	}
 }
 
-// This function should be called after unit flag is set.
+/**
+ * Validates the "Unit > Target" flag
+ * when parsing skill_db.conf
+ * @param   conf    struct, pointer to the skill configuration
+ * @param   sk      struct, pointer to s_skill_db
+ * @return void
+ */
 void skill_validate_unit_target(struct config_setting_t *conf, struct s_skill_db *sk)
 {
-	const char *tstr = NULL;
+	const char *type = NULL;
 
-	if(libconfig->setting_lookup_string(conf, "Target", &tstr)) {
+	if(libconfig->setting_lookup_string(conf, "Target", &type)) {
 
-		if(!strcmpi(tstr,"NotEnemy")) sk->unit_target = BCT_NOENEMY;
-		else if(!strcmpi(tstr,"NotParty")) sk->unit_target = BCT_NOPARTY;
-		else if (!strcmpi(tstr,"NotGuild")) sk->unit_target = BCT_NOGUILD;
-		else if(!strcmpi(tstr,"Friend")) sk->unit_target = BCT_NOENEMY;
-		else if(!strcmpi(tstr,"Party")) sk->unit_target = BCT_PARTY;
-		else if(!strcmpi(tstr,"Ally")) sk->unit_target = BCT_PARTY|BCT_GUILD;
-		else if(!strcmpi(tstr,"Guild")) sk->unit_target = BCT_GUILD;
-		else if(!strcmpi(tstr,"All")) sk->unit_target = BCT_ALL;
-		else if(!strcmpi(tstr,"Enemy")) sk->unit_target = BCT_ENEMY;
-		else if(!strcmpi(tstr,"Self")) sk->unit_target = BCT_SELF;
-		else if(!strcmpi(tstr,"SameGuild")) sk->unit_target = BCT_GUILD|BCT_SAMEGUILD;
+		if(!strcmpi(type,"NotEnemy")) sk->unit_target = BCT_NOENEMY;
+		else if(!strcmpi(type,"NotParty")) sk->unit_target = BCT_NOPARTY;
+		else if (!strcmpi(type,"NotGuild")) sk->unit_target = BCT_NOGUILD;
+		else if(!strcmpi(type,"Friend")) sk->unit_target = BCT_NOENEMY;
+		else if(!strcmpi(type,"Party")) sk->unit_target = BCT_PARTY;
+		else if(!strcmpi(type,"Ally")) sk->unit_target = BCT_PARTY|BCT_GUILD;
+		else if(!strcmpi(type,"Guild")) sk->unit_target = BCT_GUILD;
+		else if(!strcmpi(type,"All")) sk->unit_target = BCT_ALL;
+		else if(!strcmpi(type,"Enemy")) sk->unit_target = BCT_ENEMY;
+		else if(!strcmpi(type,"Self")) sk->unit_target = BCT_SELF;
+		else if(!strcmpi(type,"SameGuild")) sk->unit_target = BCT_GUILD|BCT_SAMEGUILD;
 
 		if (sk->unit_flag&UF_DEFNOTENEMY && battle_config.defnotenemy)
 			sk->unit_target = BCT_NOENEMY;
@@ -19799,82 +19823,90 @@ void skill_validate_unit_target(struct config_setting_t *conf, struct s_skill_db
 	}
 }
 
-int skill_validate_unit_flag_sub(const char *name, bool type, struct s_skill_db *sk)
+/**
+ * Validates the "Unit > Flag" setting
+ * when parsing skill_db.conf
+ * @param   type     const char, name of the flag being parsed.
+ * @param   on       boolean, switch for flag setting
+ * @param   sk       struct, pointer to s_skill_db.
+ * @return  (void)
+ */
+int skill_validate_unit_flag_sub(const char *type, bool on, struct s_skill_db *sk)
 {
-	if (strcmpi(name, "UF_DEFNOTENEMY") == 0) {
-		if (type) {
+	if (strcmpi(type, "UF_DEFNOTENEMY") == 0) {
+		if (on) {
 			sk->unit_flag |= UF_DEFNOTENEMY;
 		} else {
 			sk->unit_flag &= ~UF_DEFNOTENEMY;
 		}
-	} else if (strcmpi(name, "UF_NOREITERATION") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "UF_NOREITERATION") == 0) {
+		if (on) {
 			sk->unit_flag |= UF_NOREITERATION;
 		} else {
 			sk->unit_flag &= ~UF_NOREITERATION;
 		}
-	} else if (strcmpi(name, "UF_NOFOOTSET") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "UF_NOFOOTSET") == 0) {
+		if (on) {
 			sk->unit_flag |= UF_NOFOOTSET;
 		} else {
 			sk->unit_flag &= ~UF_NOFOOTSET;
 		}
-	} else if (strcmpi(name, "UF_NOOVERLAP") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "UF_NOOVERLAP") == 0) {
+		if (on) {
 			sk->unit_flag |= UF_NOOVERLAP;
 		} else {
 			sk->unit_flag &= ~UF_NOOVERLAP;
 		}
-	} else if (strcmpi(name, "UF_PATHCHECK") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "UF_PATHCHECK") == 0) {
+		if (on) {
 			sk->unit_flag |= UF_PATHCHECK;
 		} else {
 			sk->unit_flag &= ~UF_PATHCHECK;
 		}
-	} else if (strcmpi(name, "UF_NOPC") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "UF_NOPC") == 0) {
+		if (on) {
 			sk->unit_flag |= UF_NOPC;
 		} else {
 			sk->unit_flag &= ~UF_NOPC;
 		}
-	} else if (strcmpi(name, "UF_NOMOB") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "UF_NOMOB") == 0) {
+		if (on) {
 			sk->unit_flag |= UF_NOMOB;
 		} else {
 			sk->unit_flag &= ~UF_NOMOB;
 		}
-	} else if (strcmpi(name, "UF_SKILL") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "UF_SKILL") == 0) {
+		if (on) {
 			sk->unit_flag |= UF_SKILL;
 		} else {
 			sk->unit_flag &= ~UF_SKILL;
 		}
-	} else if (strcmpi(name, "UF_DANCE") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "UF_DANCE") == 0) {
+		if (on) {
 			sk->unit_flag |= UF_DANCE;
 		} else {
 			sk->unit_flag &= ~UF_DANCE;
 		}
-	} else if (strcmpi(name, "UF_ENSEMBLE") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "UF_ENSEMBLE") == 0) {
+		if (on) {
 			sk->unit_flag |= UF_ENSEMBLE;
 		} else {
 			sk->unit_flag &= ~UF_ENSEMBLE;
 		}
-	} else if (strcmpi(name, "UF_SONG") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "UF_SONG") == 0) {
+		if (on) {
 			sk->unit_flag |= UF_SONG;
 		} else {
 			sk->unit_flag &= ~UF_SONG;
 		}
-	} else if (strcmpi(name, "UF_DUALMODE") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "UF_DUALMODE") == 0) {
+		if (on) {
 			sk->unit_flag |= UF_DUALMODE;
 		} else {
 			sk->unit_flag &= ~UF_DUALMODE;
 		}
-	} else if (strcmpi(name, "UF_RANGEDSINGLEUNIT") == 0) {
-		if (type) {
+	} else if (strcmpi(type, "UF_RANGEDSINGLEUNIT") == 0) {
+		if (on) {
 			sk->unit_flag |= UF_RANGEDSINGLEUNIT;
 		} else {
 			sk->unit_flag &= ~UF_RANGEDSINGLEUNIT;
@@ -19887,12 +19919,11 @@ int skill_validate_unit_flag_sub(const char *name, bool type, struct s_skill_db 
 }
 
 /**
- * Validate Skill Unit Flag
+ * Validate "Unit > Flag" setting
  * when parsing skill_db.conf
- * @param   name    contains the setting's name
- * @param   type    contain's the setting's boolean value
- * @param   sk      pointer to temporary skill_db storage
- * @return 0 on success, 1 if duplicate and 2 if invalid entry.
+ * @param   conf    struct, pointer to the skill configuration
+ * @param   sk      struct, struct, pointer to s_skill_db
+ * @return  (void)
  */
 void skill_validate_unit_flag(struct config_setting_t *conf, struct s_skill_db *sk)
 {
@@ -19908,18 +19939,15 @@ void skill_validate_unit_flag(struct config_setting_t *conf, struct s_skill_db *
 				skilldb_invalid_error(name, config_setting_name(t), sk->nameid);
 		}
 	}
-
-	return;
 }
 
 /**
  * Validates a skill entry and adds it to the database. [ Smokexyz/Hercules ]
  * @param  sk        contains skill data to be checked.
- * @param  n         entry number of the skill being parsed.
  * @param  *source   filepath constant.
  * @return boolean   true on success.
  */
-bool skill_validate_skilldb(struct s_skill_db *sk, int n, const char *source)
+bool skill_validate_skilldb(struct s_skill_db *sk, const char *source)
 {
 	int idx = skill->get_index(sk->nameid);
 	
@@ -20145,7 +20173,6 @@ bool skill_read_skilldb(const char *filename)
 
 			/* Item Requirements and Amounts */
 			skill->validate_item_requirements(t, &tmp_db);
-
 		}
 
 		/**
@@ -20173,15 +20200,15 @@ bool skill_read_skilldb(const char *filename)
 			if(libconfig->setting_lookup_int(t, "Interval", &temp))
 				tmp_db.unit_interval = temp;
 
-			/* Target */
-			skill->validate_unit_target(t, &tmp_db);
-
 			/* Flag */
 			skill->validate_unit_flag(t, &tmp_db);
+
+			/* Target */
+			skill->validate_unit_target(t, &tmp_db);
 		}
 		
 		// Validate the skill entry, add it to the duplicate array and increment count on success.
-		if ((duplicate[idx] = skill->validate_skilldb(&tmp_db, index-1, filepath)))
+		if ((duplicate[idx] = skill->validate_skilldb(&tmp_db, filepath)))
 			count++;
 	}
 	
