@@ -5823,6 +5823,8 @@ int do_init(int argc, char **argv) {
 	}
 #endif
 
+	ShowWarning("test fail warning\n");
+
 	inter->init_sql(chr->INTER_CONF_NAME); // inter server configuration
 
 	auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
