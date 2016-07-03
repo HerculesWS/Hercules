@@ -130,7 +130,11 @@ struct showmsg_interface {
 #define ShowSQL(fmt, ...) (showmsg->showSQL((fmt), ##__VA_ARGS__))
 #define ShowInfo(fmt, ...) (showmsg->showInfo((fmt), ##__VA_ARGS__))
 #define ShowNotice(fmt, ...) (showmsg->showNotice((fmt), ##__VA_ARGS__))
+#ifdef BUILDBOT
+#define ShowWarning(fmt, ...) (showmsg->showError((fmt), ##__VA_ARGS__))
+#else  // BUILDBOT
 #define ShowWarning(fmt, ...) (showmsg->showWarning((fmt), ##__VA_ARGS__))
+#endif  // BUILDBOT
 #define ShowDebug(fmt, ...) (showmsg->showDebug((fmt), ##__VA_ARGS__))
 #define ShowError(fmt, ...) (showmsg->showError((fmt), ##__VA_ARGS__))
 #define ShowFatalError(fmt, ...) (showmsg->showFatalError((fmt), ##__VA_ARGS__))
