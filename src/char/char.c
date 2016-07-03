@@ -5758,11 +5758,25 @@ static CMDLINEARG(netconfig)
 	chr->NET_CONF_NAME = aStrdup(params);
 	return true;
 }
+
+/**
+ * --run-once handler
+ *
+ * Causes the server to run its loop once, and shutdown. Useful for testing.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(runonce)
+{
+	core->runflag = CORE_ST_STOP;
+	return true;
+}
+
 /**
  * Initializes the command line arguments handlers.
  */
 void cmdline_args_init_local(void)
 {
+	CMDLINEARG_DEF2(run-once, runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
 	CMDLINEARG_DEF2(char-config, charconfig, "Alternative char-server configuration.", CMDLINE_OPT_PARAM);
 	CMDLINEARG_DEF2(inter-config, interconfig, "Alternative inter-server configuration.", CMDLINE_OPT_PARAM);
 	CMDLINEARG_DEF2(net-config, netconfig, "Alternative network configuration.", CMDLINE_OPT_PARAM);
