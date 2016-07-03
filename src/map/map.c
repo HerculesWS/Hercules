@@ -6062,7 +6062,9 @@ int do_init(int argc, char *argv[])
 			char ip_str[16];
 			sockt->ip2str(sockt->addr_[0], ip_str);
 
+#ifndef BUILDBOT
 			ShowWarning("Not all IP addresses in /conf/map-server.conf configured, auto-detecting...\n");
+#endif
 
 			if (sockt->naddr_ == 0)
 				ShowError("Unable to determine your IP address...\n");

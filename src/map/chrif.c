@@ -236,11 +236,13 @@ void chrif_setpasswd(char *pwd) {
 
 // security check, prints warning if using default password
 void chrif_checkdefaultlogin(void) {
+#ifndef BUILDBOT
 	if (strcmp(chrif->userid, "s1")==0 && strcmp(chrif->passwd, "p1")==0) {
 		ShowWarning("Using the default user/password s1/p1 is NOT RECOMMENDED.\n");
 		ShowNotice("Please edit your 'login' table to create a proper inter-server user/password (gender 'S')\n");
 		ShowNotice("and then edit your user/password in conf/map-server.conf (or conf/import/map_conf.txt)\n");
 	}
+#endif
 }
 
 // sets char-server's ip address
