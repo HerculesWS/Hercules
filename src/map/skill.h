@@ -2100,6 +2100,9 @@ struct skill_interface {
 	bool (*get_requirement_off_unknown) (struct status_change *sc, uint16 *skill_id);
 	bool (*get_requirement_item_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i);
 	void (*get_requirement_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, struct skill_condition *req);
+	int (*splash_target) (struct block_list* bl);
+	int (*check_npc_chaospanic) (struct block_list *bl, va_list args);
+	int (*count_wos) (struct block_list *bl, va_list ap);
 };
 
 #ifdef HERCULES_CORE
