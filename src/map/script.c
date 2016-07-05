@@ -4042,10 +4042,17 @@ void op_1(struct script_state* st, int op)
 ///
 /// @param st Script state whose stack arguments should be inspected.
 /// @param func Built-in function for which the arguments are intended.
-void script_check_buildin_argtype(struct script_state* st, int func)
+bool script_check_buildin_argtype(struct script_state* st, int func)
 {
 	int idx, invalid = 0;
-	char* sf = script->buildin[script->str_data[func].val];
+	char* sf;
+	if (script->str_data[func].val < 0 || script->str_data[func].val >= script->buildin_count) {
+		ShowDebug("Function: %s\n", script->get_str(func));
+		ShowError("Script data corruption detected!\n");
+		script->reportsrc(st);
+		return false;
+	}
+	sf = script->buildin[script->str_data[func].val];
 
 	for (idx = 2; script_hasdata(st, idx); idx++) {
 		struct script_data* data = script_getdata(st, idx);
@@ -4116,6 +4123,7 @@ void script_check_buildin_argtype(struct script_state* st, int func)
 		ShowDebug("Function: %s\n", script->get_str(func));
 		script->reportsrc(st);
 	}
+	return true;
 }
 
 /// Executes a buildin command.
@@ -4153,7 +4161,11 @@ int run_func(struct script_state *st)
 	}
 
 	if( script->config.warn_func_mismatch_argtypes ) {
-		script->check_buildin_argtype(st, func);
+		if (script->check_buildin_argtype(st, func) == false)
+		{
+			st->state = END;
+			return 1;
+		}
 	}
 
 	if(script->str_data[func].func) {

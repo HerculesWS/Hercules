@@ -758,7 +758,7 @@ struct script_interface {
 	void (*op_2num) (struct script_state *st, int op, int i1, int i2);
 	void (*op_2) (struct script_state *st, int op);
 	void (*op_1) (struct script_state *st, int op);
-	void (*check_buildin_argtype) (struct script_state *st, int func);
+	bool (*check_buildin_argtype) (struct script_state *st, int func);
 	void (*detach_state) (struct script_state *st, bool dequeue_event);
 	int (*db_free_code_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*add_autobonus) (const char *autobonus);
