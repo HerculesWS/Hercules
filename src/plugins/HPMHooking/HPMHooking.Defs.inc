@@ -5894,8 +5894,8 @@ typedef void (*HPMHOOK_pre_script_op_2) (struct script_state **st, int *op);
 typedef void (*HPMHOOK_post_script_op_2) (struct script_state *st, int op);
 typedef void (*HPMHOOK_pre_script_op_1) (struct script_state **st, int *op);
 typedef void (*HPMHOOK_post_script_op_1) (struct script_state *st, int op);
-typedef void (*HPMHOOK_pre_script_check_buildin_argtype) (struct script_state **st, int *func);
-typedef void (*HPMHOOK_post_script_check_buildin_argtype) (struct script_state *st, int func);
+typedef bool (*HPMHOOK_pre_script_check_buildin_argtype) (struct script_state **st, int *func);
+typedef bool (*HPMHOOK_post_script_check_buildin_argtype) (bool retVal___, struct script_state *st, int func);
 typedef void (*HPMHOOK_pre_script_detach_state) (struct script_state **st, bool *dequeue_event);
 typedef void (*HPMHOOK_post_script_detach_state) (struct script_state *st, bool dequeue_event);
 typedef int (*HPMHOOK_pre_script_db_free_code_sub) (union DBKey *key, struct DBData **data, va_list ap);
@@ -6478,6 +6478,12 @@ typedef bool (*HPMHOOK_pre_skill_get_requirement_item_unknown) (struct status_ch
 typedef bool (*HPMHOOK_post_skill_get_requirement_item_unknown) (bool retVal___, struct status_change *sc, struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i);
 typedef void (*HPMHOOK_pre_skill_get_requirement_unknown) (struct status_change **sc, struct map_session_data **sd, uint16 **skill_id, uint16 **skill_lv, struct skill_condition **req);
 typedef void (*HPMHOOK_post_skill_get_requirement_unknown) (struct status_change *sc, struct map_session_data *sd, uint16 *skill_id, uint16 *skill_lv, struct skill_condition *req);
+typedef int (*HPMHOOK_pre_skill_splash_target) (struct block_list **bl);
+typedef int (*HPMHOOK_post_skill_splash_target) (int retVal___, struct block_list *bl);
+typedef int (*HPMHOOK_pre_skill_check_npc_chaospanic) (struct block_list **bl, va_list args);
+typedef int (*HPMHOOK_post_skill_check_npc_chaospanic) (int retVal___, struct block_list *bl, va_list args);
+typedef int (*HPMHOOK_pre_skill_count_wos) (struct block_list **bl, va_list ap);
+typedef int (*HPMHOOK_post_skill_count_wos) (int retVal___, struct block_list *bl, va_list ap);
 #endif // MAP_SKILL_H
 #ifdef COMMON_SOCKET_H /* sockt */
 typedef void (*HPMHOOK_pre_sockt_init) (void);
@@ -6828,6 +6834,14 @@ typedef void (*HPMHOOK_pre_status_read_job_db) (void);
 typedef void (*HPMHOOK_post_status_read_job_db) (void);
 typedef void (*HPMHOOK_pre_status_read_job_db_sub) (int *idx, const char **name, struct config_setting_t **jdb);
 typedef void (*HPMHOOK_post_status_read_job_db_sub) (int idx, const char *name, struct config_setting_t *jdb);
+typedef void (*HPMHOOK_pre_status_set_sc) (uint16 *skill_id, sc_type *sc, int *icon, unsigned int *flag);
+typedef void (*HPMHOOK_post_status_set_sc) (uint16 skill_id, sc_type sc, int icon, unsigned int flag);
+typedef void (*HPMHOOK_pre_status_copy) (struct status_data **a, const struct status_data **b);
+typedef void (*HPMHOOK_post_status_copy) (struct status_data *a, const struct status_data *b);
+typedef unsigned short (*HPMHOOK_pre_status_base_matk_min) (const struct status_data **st);
+typedef unsigned short (*HPMHOOK_post_status_base_matk_min) (unsigned short retVal___, const struct status_data *st);
+typedef unsigned short (*HPMHOOK_pre_status_base_matk_max) (const struct status_data **st);
+typedef unsigned short (*HPMHOOK_post_status_base_matk_max) (unsigned short retVal___, const struct status_data *st);
 #endif // MAP_STATUS_H
 #ifdef MAP_STORAGE_H /* storage */
 typedef void (*HPMHOOK_pre_storage_reconnect) (void);

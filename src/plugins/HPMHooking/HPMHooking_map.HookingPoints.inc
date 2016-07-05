@@ -2713,6 +2713,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(skill->get_requirement_off_unknown, HP_skill_get_requirement_off_unknown) },
 	{ HP_POP(skill->get_requirement_item_unknown, HP_skill_get_requirement_item_unknown) },
 	{ HP_POP(skill->get_requirement_unknown, HP_skill_get_requirement_unknown) },
+	{ HP_POP(skill->splash_target, HP_skill_splash_target) },
+	{ HP_POP(skill->check_npc_chaospanic, HP_skill_check_npc_chaospanic) },
+	{ HP_POP(skill->count_wos, HP_skill_count_wos) },
 /* socket_interface */
 	{ HP_POP(sockt->init, HP_sockt_init) },
 	{ HP_POP(sockt->final, HP_sockt_final) },
@@ -2888,6 +2891,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(status->readdb_scconfig, HP_status_readdb_scconfig) },
 	{ HP_POP(status->read_job_db, HP_status_read_job_db) },
 	{ HP_POP(status->read_job_db_sub, HP_status_read_job_db_sub) },
+	{ HP_POP(status->set_sc, HP_status_set_sc) },
+	{ HP_POP(status->copy, HP_status_copy) },
+	{ HP_POP(status->base_matk_min, HP_status_base_matk_min) },
+	{ HP_POP(status->base_matk_max, HP_status_base_matk_max) },
 /* storage_interface */
 	{ HP_POP(storage->reconnect, HP_storage_reconnect) },
 	{ HP_POP(storage->delitem, HP_storage_delitem) },
