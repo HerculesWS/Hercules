@@ -202,14 +202,20 @@ bool usercheck(void)
 #ifndef _WIN32
 	if (sysinfo->is_superuser()) {
 		if (!isatty(fileno(stdin))) {
+#ifdef BUILDBOT
+			return true;
+#else  // BUILDBOT
 			ShowFatalError("You are running Hercules with root privileges, it is not necessary, nor recommended. "
 					"Aborting.\n");
 			return false; // Don't allow noninteractive execution regardless.
+#endif  // BUILDBOT
 		}
 		ShowError("You are running Hercules with root privileges, it is not necessary, nor recommended.\n");
 #ifdef I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
+#ifndef BUILDBOT
 #warning This Hercules build is not eligible to obtain support by the developers.
 #warning The setting I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT is deprecated and should not be used.
+#endif  // BUILDBOT
 #else // not I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
 		ShowNotice("Execution will be paused for 60 seconds. Press Ctrl-C if you wish to quit.\n");
 		ShowNotice("If you want to get rid of this message, please open %s and uncomment, near the top, the line saying:\n"
