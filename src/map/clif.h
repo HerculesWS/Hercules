@@ -546,17 +546,17 @@ enum mergeitem_reason {
  * Clif Unit Type
  **/
 enum clif_unittype {
-	CLUT_PC =  0x0,
-	CLUT_NPC =  0x1,
-	CLUT_ITEM =  0x2,
-	CLUT_SKILL =  0x3,
-	CLUT_UNKNOW =  0x4,
-	CLUT_MOB =  0x5,
-	CLUT_EVENT =  0x6,
-	CLUT_PET =  0x7,
-	CLUT_HOMNUCLUS =  0x8,
-	CLUT_MERCNARY =  0x9,
-	CLUT_ELEMENTAL =  0xa,
+	CLUT_PC        = 0x0,
+	CLUT_NPC       = 0x1,
+	CLUT_ITEM      = 0x2,
+	CLUT_SKILL     = 0x3,
+	CLUT_UNKNOWN   = 0x4,
+	CLUT_MOB       = 0x5,
+	CLUT_EVENT     = 0x6,
+	CLUT_PET       = 0x7,
+	CLUT_HOMNUCLUS = 0x8,
+	CLUT_MERCNARY  = 0x9,
+	CLUT_ELEMENTAL = 0xa,
 };
 
 /**

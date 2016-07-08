@@ -265,42 +265,50 @@ uint32 clif_refresh_ip(void)
 	return 0;
 }
 
+unsigned char clif_bl_type(struct block_list *bl)
+{
 #if PACKETVER >= 20071106
-unsigned char clif_bl_type(struct block_list *bl) {
 	struct view_data *vd;
 	nullpo_retr(CLUT_NPC, bl);
 
 	switch (bl->type) {
-		case BL_PC:
-			vd = status->get_viewdata(bl);
-			nullpo_retr(CLUT_NPC, vd);
+	case BL_PC:
+		vd = status->get_viewdata(bl);
+		nullpo_retr(CLUT_NPC, vd);
 
-			if (clif->isdisguised(bl) && !pc->db_checkid(vd->class_))
-				return CLUT_NPC;
-			else
-				return CLUT_PC;
-		case BL_ITEM:  return CLUT_ITEM;
-		case BL_SKILL: return CLUT_SKILL;
-		case BL_CHAT:  return CLUT_UNKNOW;
-		case BL_MOB:
-			vd = status->get_viewdata(bl);
-			nullpo_retr(CLUT_NPC, vd);
-			return pc->db_checkid(vd->class_)? CLUT_PC:CLUT_MOB;
-		case BL_NPC:
-			vd = status->get_viewdata(bl);
-			nullpo_retr(CLUT_NPC, vd);
-			return pc->db_checkid(vd->class_)? CLUT_PC:CLUT_EVENT;
-		case BL_PET:
-			vd = status->get_viewdata(bl);
-			nullpo_retr(CLUT_NPC, vd);
-			return pc->db_checkid(vd->class_)? CLUT_PC:CLUT_PET;
-		case BL_HOM:   return CLUT_HOMNUCLUS;
-		case BL_MER:   return CLUT_MERCNARY;
-		case BL_ELEM:  return CLUT_ELEMENTAL;
-		default:       return CLUT_NPC;
+		if (clif->isdisguised(bl) && !pc->db_checkid(vd->class_))
+			return CLUT_NPC;
+		return CLUT_PC;
+	case BL_ITEM:
+		return CLUT_ITEM;
+	case BL_SKILL:
+		return CLUT_SKILL;
+	case BL_CHAT:
+		return CLUT_UNKNOWN;
+	case BL_MOB:
+		vd = status->get_viewdata(bl);
+		nullpo_retr(CLUT_NPC, vd);
+		return pc->db_checkid(vd->class_) ? CLUT_PC : CLUT_MOB;
+	case BL_NPC:
+		vd = status->get_viewdata(bl);
+		nullpo_retr(CLUT_NPC, vd);
+		return pc->db_checkid(vd->class_) ? CLUT_PC : CLUT_EVENT;
+	case BL_PET:
+		vd = status->get_viewdata(bl);
+		nullpo_retr(CLUT_NPC, vd);
+		return pc->db_checkid(vd->class_) ? CLUT_PC : CLUT_PET;
+	case BL_HOM:
+		return CLUT_HOMNUCLUS;
+	case BL_MER:
+		return CLUT_MERCNARY;
+	case BL_ELEM:
+		return CLUT_ELEMENTAL;
+	default:
+		return CLUT_NPC;
 	}
-}
 #endif
+	return CLUT_UNKNOWN;
+}
 
 /*==========================================
  * sub process of clif_send
