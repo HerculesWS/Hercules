@@ -24,6 +24,7 @@
 #include "common/memmgr.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
+#include "common/sysinfo.h"
 #include "map/atcommand.h"
 #include "map/map.h"
 #include "map/script.h"
@@ -67,6 +68,8 @@ CMDLINEARG(generatetranslations)
 		time_t t = time(NULL);
 		struct tm *lt = localtime(&t);
 		int year = lt->tm_year+1900;
+		char timestring[128] = "";
+		strftime(timestring, sizeof(timestring), "%Y-%m-%d %H:%M:%S%z", lt);
 		fprintf(lang_export_fp,
 				"# This file is part of Hercules.\n"
 				"# http://herc.ws - http://github.com/HerculesWS/Hercules\n"
@@ -84,8 +87,22 @@ CMDLINEARG(generatetranslations)
 				"# GNU General Public License for more details.\n"
 				"#\n"
 				"# You should have received a copy of the GNU General Public License\n"
-				"# along with this program.  If not, see <http://www.gnu.org/licenses/>.\n",
-				year);
+				"# along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n"
+
+				"#,fuzzy\n"
+				"msgid \"\"\n"
+				"msgstr \"\"\n"
+				"\"Project-Id-Version: %s\\n\"\n"
+				"\"Report-Msgid-Bugs-To: dev@herc.ws\\n\"\n"
+				"\"POT-Creation-Date: %s\\n\"\n"
+				"\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\"\n"
+				"\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\"\n"
+				"\"Language-Team: LANGUAGE <LL@li.org>\\n\"\n"
+				"\"Language: \\n\"\n"
+				"\"MIME-Version: 1.0\\n\"\n"
+				"\"Content-Type: text/plain; charset=ISO-8859-1\\n\"\n"
+				"\"Content-Transfer-Encoding: 8bit\\n\"\n\n",
+				year, sysinfo->vcsrevision_scripts(), timestring);
 	}
 	generating_translations = true;
 	return true;
