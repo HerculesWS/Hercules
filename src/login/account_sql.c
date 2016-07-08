@@ -606,9 +606,9 @@ static bool mmo_auth_fromsql(AccountDB_SQL* db, struct mmo_account* acc, int acc
 	SQL->GetData(sql_handle,  7, &data, NULL); acc->unban_time = atol(data);
 	SQL->GetData(sql_handle,  8, &data, NULL); acc->expiration_time = atol(data);
 	SQL->GetData(sql_handle,  9, &data, NULL); acc->logincount = (unsigned int)strtoul(data, NULL, 10);
-	SQL->GetData(sql_handle, 10, &data, NULL); safestrncpy(acc->lastlogin, data, sizeof(acc->lastlogin));
+	SQL->GetData(sql_handle, 10, &data, NULL); safestrncpy(acc->lastlogin, data != NULL ? data : "", sizeof(acc->lastlogin));
 	SQL->GetData(sql_handle, 11, &data, NULL); safestrncpy(acc->last_ip, data, sizeof(acc->last_ip));
-	SQL->GetData(sql_handle, 12, &data, NULL); safestrncpy(acc->birthdate, data, sizeof(acc->birthdate));
+	SQL->GetData(sql_handle, 12, &data, NULL); safestrncpy(acc->birthdate, data != NULL ? data : "", sizeof(acc->birthdate));
 	SQL->GetData(sql_handle, 13, &data, NULL); acc->char_slots = (uint8)atoi(data);
 	SQL->GetData(sql_handle, 14, &data, NULL); safestrncpy(acc->pincode, data, sizeof(acc->pincode));
 	SQL->GetData(sql_handle, 15, &data, NULL); acc->pincode_change = (unsigned int)atol(data);
