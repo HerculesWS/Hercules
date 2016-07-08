@@ -48,6 +48,7 @@ FILE *lang_export_fp;
 char *lang_export_file;/* for lang_export_fp */
 struct script_string_buf lang_export_line_buf;
 struct script_string_buf lang_export_escaped_buf;
+int lang_export_stringcount;
 
 /// Whether the translations template generator will automatically run.
 bool generating_translations = false;
@@ -187,6 +188,7 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 				script->parser_current_npc_name ? script->parser_current_npc_name : "Unknown NPC",
 				VECTOR_DATA(lang_export_escaped_buf)
 		);
+		lang_export_stringcount++;
 		VECTOR_TRUNCATE(lang_export_line_buf);
 		VECTOR_TRUNCATE(lang_export_escaped_buf);
 	}
@@ -232,6 +234,7 @@ bool msg_config_read_posthook(bool retVal, const char *cfg_name, bool allow_over
 					"msgstr \"\"\n",
 					atcommand->msg_table[0][i]
 			       );
+			lang_export_stringcount++;
 		}
 	}
 
@@ -248,6 +251,7 @@ HPExport void server_preinit(void)
 	addHookPre(script, parse, parse_script_prehook);
 	addHookPost(script, parser_clean_leftovers, script_parser_clean_leftovers_posthook);
 	addHookPost(atcommand, msg_read, msg_config_read_posthook);
+	lang_export_stringcount = 0;
 }
 
 HPExport void plugin_init(void)
@@ -257,7 +261,7 @@ HPExport void plugin_init(void)
 HPExport void server_online(void)
 {
 	if (generating_translations && lang_export_fp != NULL) {
-		ShowInfo("Lang exported to '%s'\n", lang_export_file);
+		ShowInfo("Translations template exported to '%s' with %d strings.\n", lang_export_file, lang_export_stringcount);
 		fclose(lang_export_fp);
 		lang_export_fp = NULL;
 	}
