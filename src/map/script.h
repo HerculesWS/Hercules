@@ -816,6 +816,7 @@ struct script_interface {
 	unsigned short (*mapindexname2id) (struct script_state *st, const char* name);
 	int (*string_dup) (char *str);
 	void (*load_translations) (void);
+	bool (*load_translation_addstring) (const char *file, uint8 lang_id, const char *msgctxt, const struct script_string_buf *msgid, const struct script_string_buf *msgstr);
 	int (*load_translation) (const char *file, uint8 lang_id);
 	int (*translation_db_destroyer) (union DBKey key, struct DBData *data, va_list ap);
 	void (*clear_translations) (bool reload);

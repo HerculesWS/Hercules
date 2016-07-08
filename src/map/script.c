@@ -4961,6 +4961,78 @@ const char *script_get_translation_file_name(const char *file)
 }
 
 /**
+ * Parses and adds a translated string to the translations database.
+ *
+ * @param file    Translations file being parsed (for error messages).
+ * @param lang_id Language ID being parsed.
+ * @param msgctxt Message context (i.e. NPC name)
+ * @param msgid   Message ID (source string)
+ * @param msgstr  Translated message
+ * @return success state
+ * @retval true if a new string was added.
+ */
+bool script_load_translation_addstring(const char *file, uint8 lang_id, const char *msgctxt, const struct script_string_buf *msgid, const struct script_string_buf *msgstr)
+{
+	nullpo_retr(false, file);
+	nullpo_retr(false, msgctxt);
+	nullpo_retr(false, msgid);
+	nullpo_retr(false, msgstr);
+
+	if (VECTOR_LENGTH(*msgid) <= 1) {
+		// Empty ID (i.e. header) to be ignored
+		return false;
+	}
+
+	if (VECTOR_LENGTH(*msgstr) <= 1) {
+		// Empty (untranslated) string to be ignored
+		return false;
+	}
+
+	if (msgctxt[0] == '\0') {
+		// Missing context
+		ShowWarning("script_load_translation: Missing context for msgid '%s' in '%s'. Skipping.\n",
+				VECTOR_DATA(*msgid), file);
+		return false;
+	}
+
+	if (strcasecmp(msgctxt, "messages.conf") == 0) {
+		int i;
+		for (i = 0; i < MAX_MSG; i++) {
+			if (atcommand->msg_table[0][i] != NULL && strcmpi(atcommand->msg_table[0][i], VECTOR_DATA(*msgid)) == 0) {
+				if (atcommand->msg_table[lang_id][i] != NULL)
+					aFree(atcommand->msg_table[lang_id][i]);
+				atcommand->msg_table[lang_id][i] = aStrdup(VECTOR_DATA(*msgstr));
+				break;
+			}
+		}
+	} else {
+		int msgstr_len = VECTOR_LENGTH(*msgstr);
+		int inner_len = 1 + msgstr_len + 1; //uint8 lang_id + msgstr_len + '\0'
+		struct string_translation *st = NULL;
+		struct DBMap *string_db;
+
+		if ((string_db = strdb_get(script->translation_db, msgctxt)) == NULL) {
+			string_db = strdb_alloc(DB_OPT_DUP_KEY, 0);
+			strdb_put(script->translation_db, msgctxt, string_db);
+		}
+
+		if ((st = strdb_get(string_db, VECTOR_DATA(*msgid))) == NULL) {
+			CREATE(st, struct string_translation, 1);
+			st->string_id = script->string_dup(VECTOR_DATA(*msgid));
+			strdb_put(string_db, VECTOR_DATA(*msgid), st);
+		}
+		RECREATE(st->buf, uint8, st->len + inner_len);
+
+		WBUFB(st->buf, st->len) = lang_id;
+		safestrncpy(WBUFP(st->buf, st->len + 1), VECTOR_DATA(*msgstr), msgstr_len + 1);
+
+		st->translations++;
+		st->len += inner_len;
+	}
+	return true;
+}
+
+/**
  * Parses an individual translation file.
  *
  * @param file The filename to parse.
@@ -4972,12 +5044,11 @@ int script_load_translation(const char *file, uint8 lang_id)
 	int translations = 0;
 	char line[1024];
 	char msgctxt[NAME_LENGTH*2+1] = { 0 };
-	struct DBMap *string_db;
-	size_t i;
 	FILE *fp;
+	int lineno = 0;
 	struct script_string_buf msgid, msgstr;
 
-	if( !(fp = fopen(file,"rb")) ) {
+	if ((fp = fopen(file,"rb")) == NULL) {
 		ShowError("load_translation: failed to open '%s' for reading\n",file);
 		return 0;
 	}
@@ -4986,36 +5057,73 @@ int script_load_translation(const char *file, uint8 lang_id)
 	VECTOR_INIT(msgstr);
 
 	script->add_language(script->get_translation_file_name(file));
-	if( lang_id >= atcommand->max_message_table )
+	if (lang_id >= atcommand->max_message_table)
 		atcommand->expand_message_table();
 
-	while(fgets(line, sizeof(line), fp)) {
-		size_t len = strlen(line);
+	while (fgets(line, sizeof(line), fp) != NULL) {
+		int len = (int)strlen(line);
+		int i;
+		lineno++;
 
-		if( len <= 1 )
+		if(len <= 1)
 			continue;
 
-		if( line[0] == '#' )
+		if (line[0] == '#')
 			continue;
 
-		if( strncasecmp(line,"msgctxt \"", 9) == 0 ) {
+		if (VECTOR_LENGTH(msgid) > 0 && VECTOR_LENGTH(msgstr) > 0) {
+			if (line[0] == '"') {
+				// Continuation line
+				(void)VECTOR_POP(msgstr); // Pop final '\0'
+				for (i = 8; i < len - 2; i++) {
+					VECTOR_ENSURE(msgstr, 1, 512);
+					if (line[i] == '\\' && line[i+1] == '"') {
+						VECTOR_PUSH(msgstr, '"');
+						i++;
+					} else {
+						VECTOR_PUSH(msgstr, line[i]);
+					}
+				}
+				VECTOR_ENSURE(msgstr, 1, 512);
+				VECTOR_PUSH(msgstr, '\0');
+				continue;
+			}
+
+			// Add string
+			if (script->load_translation_addstring(file, lang_id, msgctxt, &msgid, &msgstr))
+				translations++;
+
+			msgctxt[0] = '\0';
+			VECTOR_TRUNCATE(msgid);
+			VECTOR_TRUNCATE(msgstr);
+		}
+
+		if (strncasecmp(line,"msgctxt \"", 9) == 0) {
 			int cursor = 0;
 			msgctxt[0] = '\0';
-			for(i = 9; i < len - 2; i++) {
-				if( line[i] == '\\' && line[i+1] == '"' ) {
+			for (i = 9; i < len - 2; i++) {
+				if (line[i] == '\\' && line[i+1] == '"') {
 					msgctxt[cursor] = '"';
 					i++;
-				} else
+				} else {
 					msgctxt[cursor] = line[i];
+				}
 				if (++cursor >= (int)sizeof(msgctxt) - 1)
 					break;
 			}
 			msgctxt[cursor] = '\0';
-		} else if ( strncasecmp(line, "msgid \"", 7) == 0 ) {
+
+			// New context, reset everything
 			VECTOR_TRUNCATE(msgid);
-			for(i = 7; i < len - 2; i++) {
+			VECTOR_TRUNCATE(msgstr);
+			continue;
+		}
+		
+		if (strncasecmp(line, "msgid \"", 7) == 0) {
+			VECTOR_TRUNCATE(msgid);
+			for (i = 7; i < len - 2; i++) {
 				VECTOR_ENSURE(msgid, 1, 512);
-				if( line[i] == '\\' && line[i+1] == '"' ) {
+				if (line[i] == '\\' && line[i+1] == '"') {
 					VECTOR_PUSH(msgid, '"');
 					i++;
 				} else {
@@ -5024,11 +5132,17 @@ int script_load_translation(const char *file, uint8 lang_id)
 			}
 			VECTOR_ENSURE(msgid, 1, 512);
 			VECTOR_PUSH(msgid, '\0');
-		} else if ( len > 9 && line[9] != '"' && strncasecmp(line, "msgstr \"",8) == 0 ) {
+
+			// New id, reset string if any
 			VECTOR_TRUNCATE(msgstr);
-			for(i = 8; i < len - 2; i++) {
+			continue;
+		}
+
+		if (VECTOR_LENGTH(msgid) > 0 && strncasecmp(line, "msgstr \"", 8) == 0) {
+			VECTOR_TRUNCATE(msgstr);
+			for (i = 8; i < len - 2; i++) {
 				VECTOR_ENSURE(msgstr, 1, 512);
-				if( line[i] == '\\' && line[i+1] == '"' ) {
+				if (line[i] == '\\' && line[i+1] == '"') {
 					VECTOR_PUSH(msgstr, '"');
 					i++;
 				} else {
@@ -5037,49 +5151,18 @@ int script_load_translation(const char *file, uint8 lang_id)
 			}
 			VECTOR_ENSURE(msgstr, 1, 512);
 			VECTOR_PUSH(msgstr, '\0');
+
+			continue;
 		}
 
-		if( msgctxt[0] && VECTOR_LENGTH(msgid) > 1 && VECTOR_LENGTH(msgstr) > 1 ) {
-			int msgstr_len = VECTOR_LENGTH(msgstr);
-			unsigned int inner_len = 1 + (uint32)msgstr_len + 1; //uint8 lang_id + msgstr_len + '\0'
+		ShowWarning("script_load_translation: Unexpected input at '%s' in file '%s' line %d. Skipping.\n",
+				line, file, lineno);
+	}
 
-			if( strcasecmp(msgctxt, "messages.conf") == 0 ) {
-				int k;
-
-				for(k = 0; k < MAX_MSG; k++) {
-					if( atcommand->msg_table[0][k] && strcmpi(atcommand->msg_table[0][k], VECTOR_DATA(msgid)) == 0 ) {
-						if( atcommand->msg_table[lang_id][k] )
-							aFree(atcommand->msg_table[lang_id][k]);
-						atcommand->msg_table[lang_id][k] = aStrdup(VECTOR_DATA(msgstr));
-						break;
-					}
-				}
-			} else {
-				struct string_translation *st = NULL;
-
-				if( !( string_db = strdb_get(script->translation_db, msgctxt) ) ) {
-					string_db = strdb_alloc(DB_OPT_DUP_KEY, 0);
-					strdb_put(script->translation_db, msgctxt, string_db);
-				}
-
-				if ((st = strdb_get(string_db, VECTOR_DATA(msgid))) == NULL) {
-					CREATE(st, struct string_translation, 1);
-					st->string_id = script->string_dup(VECTOR_DATA(msgid));
-					strdb_put(string_db, VECTOR_DATA(msgid), st);
-				}
-				RECREATE(st->buf, uint8, st->len + inner_len);
-
-				WBUFB(st->buf, st->len) = lang_id;
-				safestrncpy(WBUFP(st->buf, st->len + 1), VECTOR_DATA(msgstr), msgstr_len + 1);
-
-				st->translations++;
-				st->len += inner_len;
-			}
-			msgctxt[0] = '\0';
-			VECTOR_TRUNCATE(msgid);
-			VECTOR_TRUNCATE(msgstr);
+	// Add last string
+	if (VECTOR_LENGTH(msgid) > 0 && VECTOR_LENGTH(msgstr) > 0) {
+		if (script->load_translation_addstring(file, lang_id, msgctxt, &msgid, &msgstr))
 			translations++;
-		}
 	}
 
 	fclose(fp);
@@ -21429,6 +21512,7 @@ void script_defaults(void) {
 	script->mapindexname2id = script_mapindexname2id;
 	script->string_dup = script_string_dup;
 	script->load_translations = script_load_translations;
+	script->load_translation_addstring = script_load_translation_addstring;
 	script->load_translation = script_load_translation;
 	script->translation_db_destroyer = script_translation_db_destroyer;
 	script->clear_translations = script_clear_translations;
