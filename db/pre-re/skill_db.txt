@@ -686,7 +686,7 @@
 2005,1,6,2,4,0x2,2,5,1,no,0,0,0,weapon,3,	RK_WINDCUTTER,Wind Cutter
 2006,0,6,4,-1,0x2,5,5,1,no,0,0,0,weapon,0,	RK_IGNITIONBREAK,Ignition Break
 2007,0,0,0,0,0,0,5,0,no,0,0,0,weapon,0,		RK_DRAGONTRAINING,Dragon Training
-2008,9,6,2,3,0x2,1:1:1:2:2:2:3:3:4:4,10,1,no,0,0,0,weapon,0,	RK_DRAGONBREATH,Dragon Breath
+2008,9,6,2,3,0x42,1:1:1:2:2:2:3:3:4:4,10,1,no,0,0,0,weapon,0,    RK_DRAGONBREATH,Dragon Breath
 2009,0,6,4,0,0x3,3:4:5:6:7,5,1,yes,0,0,0,none,0,	RK_DRAGONHOWLING,Dragon Howling
 2010,0,0,0,0,0,0,10,0,no,0,0,0,none,0,		RK_RUNEMASTERY,Rune Mastery
 2011,0,6,4,0,0x1,0,1,1,yes,0,0,0,none,0,	RK_MILLENNIUMSHIELD,Millenium Shield
@@ -1098,7 +1098,7 @@
 5001,1,8,1,-1,0,0,5,3,no,0,0,0,weapon,0,	GC_DARKCROW,Dark Claw
 5002,0,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		RA_UNLIMIT,Unlimited
 5003,7,6,1,-1,0x2,4:5:6:7:8,5,1,no,0,0,0,weapon,0,	GN_ILLUSIONDOPING,Illusion Doping
-5004,9,6,2,1,0x2,1:1:1:2:2:2:3:3:4:4,10,1,no,0,0,0,weapon,0,	RK_DRAGONBREATH_WATER,Dragon Breath - Water
+5004,9,6,2,1,0x42,1:1:1:2:2:2:3:3:4:4,10,1,no,0,0,0,weapon,0,    RK_DRAGONBREATH_WATER,Dragon Breath - Water
 5005,0,6,4,0,0x3,3,1,1,no,0,0,0,none,0,		RK_LUXANIMA,Lux Anima
 5006,1,6,2,3,0,0,5,1,no,0,0,3,misc,0,		NC_MAGMA_ERUPTION,Magma Eruption
 5007,0,6,4,0,0x3,5:6:7:8:9,5,1,no,0,0,0,none,0,	WM_FRIGG_SONG,Frigg's Song
@@ -1134,7 +1134,7 @@
 8018,9,6,4,0,0x1,0,5,1,no,0,0,0,none,0,		MH_SUMMON_LEGION,Summon Legion
 8019,5,6,1,5,0,0,5,1,no,0,0,0,weapon,0,		MH_NEEDLE_OF_PARALYZE,Needle of Paralyze
 8020,5,6,2,5,0,0,5,1,no,0,0,1,weapon,0,		MH_POISON_MIST,Poison Mist
-8021,1,6,1,0,0x1,0,5,1,no,0,0,0,none,0,		MH_PAIN_KILLER,Pain Killer
+8021,1,6,16,0,0x1,0,5,1,no,0,0,0,none,0,	MH_PAIN_KILLER,Pain Killer
 8022,0,6,4,0,0,0x1,5,1,no,0,0,0,none,0,		MH_LIGHT_OF_REGENE,Light of Regene
 8023,0,6,4,0,0,0x1,5,1,no,0,0,0,none,0,		MH_OVERED_BOOST,Overed Boost
 8024,7,8,1,4:0:4:0:4,0,0,5,-6,yes,0,0,0,magic,0,	MH_ERASER_CUTTER,Eraser Cutter

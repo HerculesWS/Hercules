@@ -9587,11 +9587,11 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val2 = 2*val1; //def reduction
 				val3 = 500*val1; //varcast augmentation
 				break;
-			case SC_PAIN_KILLER: //[Lighta] need real info
-				val2 = 2*val1; //aspd reduction %
-				val3 = 2*val1; //dmg reduction %
-				if(sc->data[SC_NEEDLE_OF_PARALYZE])
-					sc_start(src, bl, SC_ENDURE, 100, val1, tick); //start endure for same duration
+			case SC_PAIN_KILLER:
+				val2 = 10 * val1; // ASPD reduction %
+				val3 = min((( 200 * val1 ) * status_get_lv(src)) / 150, 1000); // flat DMG reduction up to a maximum of 1000 [iRO Wiki]
+				if(sc->data[SC_PARALYSE])
+					sc_start(src,bl, SC_ENDURE, 100, val1, tick); // Start endure for same duration
 				break;
 			case SC_STYLE_CHANGE: //[Lighta] need real info
 				tick = INFINITE_DURATION;
