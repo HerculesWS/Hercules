@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C) 2012-2016  Hercules Dev Team
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -32,8 +32,8 @@
 hugel,178,142,0	script	toairplane#hugel	WARPNPC,1,1,{
 	end;
 OnTouch:
-	mes "To use the airship, you are required to pay 1,200 zeny or a Free Airship Ticket.";
-	mes "Would you like to use the service?";
+	mes("To use the airship, you are required to pay 1,200 zeny or a Free Airship Ticket.");
+	mes("Would you like to use the service?");
 	next;
 	if (select("Yes", "No") == 1) {
 		if (countitem(Free_Flying_Ship_Ticket) > 0) {
@@ -46,10 +46,10 @@ OnTouch:
 			warp "airplane",244,58;
 			end;
 		}
-		mes "I am sorry, but you do not have enough money.";
-		mes "Please remember, you are required to pay 1,200 zeny to use the service.";
+		mes("I am sorry, but you do not have enough money.");
+		mes("Please remember, you are required to pay 1,200 zeny to use the service.");
 		close;
 	}
-	mes "Thank you, please come again.";
+	mes("Thank you, please come again.");
 	close;
 }
