@@ -1941,7 +1941,7 @@ struct skill_interface {
 	int (*break_equip) (struct block_list *bl, unsigned short where, int rate, int flag);
 	int (*strip_equip) (struct block_list *bl, unsigned short where, int rate, int lv, int time);
 	struct skill_unit_group* (*id2group) (int group_id);
-	struct skill_unit_group *(*unitsetting) (struct block_list* src, uint16 skill_id, uint16 skill_lv, short x, short y, int flag);
+	struct skill_unit_group *(*unitsetting) (struct block_list* src, uint16 skill_id, uint16 skill_lv, short x, short y, int flag, int duration);
 	struct skill_unit *(*initunit) (struct skill_unit_group *group, int idx, int x, int y, int val1, int val2);
 	int (*delunit) (struct skill_unit *su);
 	struct skill_unit_group *(*init_unitgroup) (struct block_list* src, int count, uint16 skill_id, uint16 skill_lv, int unit_id, int limit, int interval);
