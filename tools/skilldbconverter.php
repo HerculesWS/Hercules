@@ -400,7 +400,7 @@ while(!feof($skmain)) {
 					while (isset($items) && isset($items[$it])) {
 						if ($constants && $itemID) {
 							$itkey = array_search($items[$it], $itemdb['ID']);
-							if($itkey == 0) $itemname = "ID".$itemID;
+							if($itkey == 0) $itemname = "ID".$items[$it];
 							else $itemname = $itemdb['name'][$itkey];
 							$putsk .=  "\t\t\t".trim($itemname).": ".leveled($itemamt, $max, $id, 2)."\n";
 						} else if (intval($itemID)) {
