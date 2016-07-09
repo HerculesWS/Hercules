@@ -69450,15 +69450,379 @@ void HP_skill_init_unit_layout(void) {
 	}
 	return;
 }
-bool HP_skill_parse_row_skilldb(char *split[], int columns, int current) {
+void HP_skill_validate_hittype(struct config_setting_t *conf, struct s_skill_db *skill) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_hittype_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_hittype_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_hittype_pre[hIndex].func;
+			preHookFunc(&conf, &skill);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_hittype(conf, skill);
+	}
+	if( HPMHooks.count.HP_skill_validate_hittype_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_hittype_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_hittype_post[hIndex].func;
+			postHookFunc(conf, skill);
+		}
+	}
+	return;
+}
+void HP_skill_validate_skilltype(struct config_setting_t *conf, struct s_skill_db *skill) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_skilltype_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_skilltype_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_skilltype_pre[hIndex].func;
+			preHookFunc(&conf, &skill);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_skilltype(conf, skill);
+	}
+	if( HPMHooks.count.HP_skill_validate_skilltype_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_skilltype_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_skilltype_post[hIndex].func;
+			postHookFunc(conf, skill);
+		}
+	}
+	return;
+}
+void HP_skill_validate_attacktype(struct config_setting_t *conf, struct s_skill_db *skill) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_attacktype_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_attacktype_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_attacktype_pre[hIndex].func;
+			preHookFunc(&conf, &skill);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_attacktype(conf, skill);
+	}
+	if( HPMHooks.count.HP_skill_validate_attacktype_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_attacktype_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_attacktype_post[hIndex].func;
+			postHookFunc(conf, skill);
+		}
+	}
+	return;
+}
+void HP_skill_validate_element(struct config_setting_t *conf, struct s_skill_db *skill) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_element_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_element_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_element_pre[hIndex].func;
+			preHookFunc(&conf, &skill);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_element(conf, skill);
+	}
+	if( HPMHooks.count.HP_skill_validate_element_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_element_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_element_post[hIndex].func;
+			postHookFunc(conf, skill);
+		}
+	}
+	return;
+}
+void HP_skill_validate_skillinfo(struct config_setting_t *conf, struct s_skill_db *skill) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_skillinfo_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_skillinfo_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_skillinfo_pre[hIndex].func;
+			preHookFunc(&conf, &skill);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_skillinfo(conf, skill);
+	}
+	if( HPMHooks.count.HP_skill_validate_skillinfo_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_skillinfo_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_skillinfo_post[hIndex].func;
+			postHookFunc(conf, skill);
+		}
+	}
+	return;
+}
+void HP_skill_validate_damagetype(struct config_setting_t *conf, struct s_skill_db *skill) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_damagetype_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_damagetype_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_damagetype_pre[hIndex].func;
+			preHookFunc(&conf, &skill);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_damagetype(conf, skill);
+	}
+	if( HPMHooks.count.HP_skill_validate_damagetype_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_damagetype_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_damagetype_post[hIndex].func;
+			postHookFunc(conf, skill);
+		}
+	}
+	return;
+}
+void HP_skill_validate_castnodex(struct config_setting_t *conf, struct s_skill_db *skill, bool delay) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_castnodex_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill, bool *delay);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_castnodex_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_castnodex_pre[hIndex].func;
+			preHookFunc(&conf, &skill, &delay);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_castnodex(conf, skill, delay);
+	}
+	if( HPMHooks.count.HP_skill_validate_castnodex_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill, bool delay);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_castnodex_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_castnodex_post[hIndex].func;
+			postHookFunc(conf, skill, delay);
+		}
+	}
+	return;
+}
+void HP_skill_validate_weapontype(struct config_setting_t *conf, struct s_skill_db *skill) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_weapontype_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_weapontype_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_weapontype_pre[hIndex].func;
+			preHookFunc(&conf, &skill);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_weapontype(conf, skill);
+	}
+	if( HPMHooks.count.HP_skill_validate_weapontype_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_weapontype_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_weapontype_post[hIndex].func;
+			postHookFunc(conf, skill);
+		}
+	}
+	return;
+}
+void HP_skill_validate_ammotype(struct config_setting_t *conf, struct s_skill_db *skill) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_ammotype_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_ammotype_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_ammotype_pre[hIndex].func;
+			preHookFunc(&conf, &skill);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_ammotype(conf, skill);
+	}
+	if( HPMHooks.count.HP_skill_validate_ammotype_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_ammotype_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_ammotype_post[hIndex].func;
+			postHookFunc(conf, skill);
+		}
+	}
+	return;
+}
+void HP_skill_validate_state(struct config_setting_t *conf, struct s_skill_db *skill) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_state_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_state_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_state_pre[hIndex].func;
+			preHookFunc(&conf, &skill);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_state(conf, skill);
+	}
+	if( HPMHooks.count.HP_skill_validate_state_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_state_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_state_post[hIndex].func;
+			postHookFunc(conf, skill);
+		}
+	}
+	return;
+}
+void HP_skill_validate_item_requirements(struct config_setting_t *conf, struct s_skill_db *skill) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_item_requirements_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_item_requirements_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_item_requirements_pre[hIndex].func;
+			preHookFunc(&conf, &skill);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_item_requirements(conf, skill);
+	}
+	if( HPMHooks.count.HP_skill_validate_item_requirements_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_item_requirements_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_item_requirements_post[hIndex].func;
+			postHookFunc(conf, skill);
+		}
+	}
+	return;
+}
+void HP_skill_validate_unit_target(struct config_setting_t *conf, struct s_skill_db *skill) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_unit_target_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_unit_target_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_unit_target_pre[hIndex].func;
+			preHookFunc(&conf, &skill);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_unit_target(conf, skill);
+	}
+	if( HPMHooks.count.HP_skill_validate_unit_target_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_unit_target_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_unit_target_post[hIndex].func;
+			postHookFunc(conf, skill);
+		}
+	}
+	return;
+}
+void HP_skill_validate_unit_flag(struct config_setting_t *conf, struct s_skill_db *skill) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_unit_flag_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_unit_flag_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_unit_flag_pre[hIndex].func;
+			preHookFunc(&conf, &skill);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_unit_flag(conf, skill);
+	}
+	if( HPMHooks.count.HP_skill_validate_unit_flag_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_unit_flag_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_unit_flag_post[hIndex].func;
+			postHookFunc(conf, skill);
+		}
+	}
+	return;
+}
+void HP_skill_validate_additional_fields(struct config_setting_t *conf, struct s_skill_db *skill) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_skill_validate_additional_fields_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, struct s_skill_db **skill);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_additional_fields_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_additional_fields_pre[hIndex].func;
+			preHookFunc(&conf, &skill);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.skill.validate_additional_fields(conf, skill);
+	}
+	if( HPMHooks.count.HP_skill_validate_additional_fields_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, struct s_skill_db *skill);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_additional_fields_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_additional_fields_post[hIndex].func;
+			postHookFunc(conf, skill);
+		}
+	}
+	return;
+}
+bool HP_skill_validate_skilldb(struct s_skill_db *skt, const char *source) {
 	int hIndex = 0;
 	bool retVal___ = false;
-	if( HPMHooks.count.HP_skill_parse_row_skilldb_pre ) {
-		bool (*preHookFunc) (char **split[], int *columns, int *current);
+	if( HPMHooks.count.HP_skill_validate_skilldb_pre ) {
+		bool (*preHookFunc) (struct s_skill_db **skt, const char **source);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_skilldb_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_skill_parse_row_skilldb_pre[hIndex].func;
-			retVal___ = preHookFunc(&split, &columns, &current);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_skilldb_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_validate_skilldb_pre[hIndex].func;
+			retVal___ = preHookFunc(&skt, &source);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -69466,26 +69830,26 @@ bool HP_skill_parse_row_skilldb(char *split[], int columns, int current) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.parse_row_skilldb(split, columns, current);
+		retVal___ = HPMHooks.source.skill.validate_skilldb(skt, source);
 	}
-	if( HPMHooks.count.HP_skill_parse_row_skilldb_post ) {
-		bool (*postHookFunc) (bool retVal___, char *split[], int columns, int current);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_skilldb_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_skill_parse_row_skilldb_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, split, columns, current);
+	if( HPMHooks.count.HP_skill_validate_skilldb_post ) {
+		bool (*postHookFunc) (bool retVal___, struct s_skill_db *skt, const char *source);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_validate_skilldb_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_validate_skilldb_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, skt, source);
 		}
 	}
 	return retVal___;
 }
-bool HP_skill_parse_row_requiredb(char *split[], int columns, int current) {
+bool HP_skill_read_skilldb(const char *filename) {
 	int hIndex = 0;
 	bool retVal___ = false;
-	if( HPMHooks.count.HP_skill_parse_row_requiredb_pre ) {
-		bool (*preHookFunc) (char **split[], int *columns, int *current);
+	if( HPMHooks.count.HP_skill_read_skilldb_pre ) {
+		bool (*preHookFunc) (const char **filename);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_requiredb_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_skill_parse_row_requiredb_pre[hIndex].func;
-			retVal___ = preHookFunc(&split, &columns, &current);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_read_skilldb_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_read_skilldb_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -69493,97 +69857,68 @@ bool HP_skill_parse_row_requiredb(char *split[], int columns, int current) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.parse_row_requiredb(split, columns, current);
+		retVal___ = HPMHooks.source.skill.read_skilldb(filename);
 	}
-	if( HPMHooks.count.HP_skill_parse_row_requiredb_post ) {
-		bool (*postHookFunc) (bool retVal___, char *split[], int columns, int current);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_requiredb_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_skill_parse_row_requiredb_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, split, columns, current);
+	if( HPMHooks.count.HP_skill_read_skilldb_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *filename);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_read_skilldb_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_read_skilldb_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename);
 		}
 	}
 	return retVal___;
 }
-bool HP_skill_parse_row_castdb(char *split[], int columns, int current) {
+void HP_skill_config_set_level(struct config_setting_t *conf, int *arr) {
 	int hIndex = 0;
-	bool retVal___ = false;
-	if( HPMHooks.count.HP_skill_parse_row_castdb_pre ) {
-		bool (*preHookFunc) (char **split[], int *columns, int *current);
+	if( HPMHooks.count.HP_skill_config_set_level_pre ) {
+		void (*preHookFunc) (struct config_setting_t **conf, int **arr);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_castdb_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_skill_parse_row_castdb_pre[hIndex].func;
-			retVal___ = preHookFunc(&split, &columns, &current);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_config_set_level_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_config_set_level_pre[hIndex].func;
+			preHookFunc(&conf, &arr);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
-			return retVal___;
+			return;
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.parse_row_castdb(split, columns, current);
+		HPMHooks.source.skill.config_set_level(conf, arr);
 	}
-	if( HPMHooks.count.HP_skill_parse_row_castdb_post ) {
-		bool (*postHookFunc) (bool retVal___, char *split[], int columns, int current);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_castdb_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_skill_parse_row_castdb_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, split, columns, current);
+	if( HPMHooks.count.HP_skill_config_set_level_post ) {
+		void (*postHookFunc) (struct config_setting_t *conf, int *arr);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_config_set_level_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_config_set_level_post[hIndex].func;
+			postHookFunc(conf, arr);
 		}
 	}
-	return retVal___;
+	return;
 }
-bool HP_skill_parse_row_castnodexdb(char *split[], int columns, int current) {
+void HP_skill_level_set_value(int *arr, int value) {
 	int hIndex = 0;
-	bool retVal___ = false;
-	if( HPMHooks.count.HP_skill_parse_row_castnodexdb_pre ) {
-		bool (*preHookFunc) (char **split[], int *columns, int *current);
+	if( HPMHooks.count.HP_skill_level_set_value_pre ) {
+		void (*preHookFunc) (int **arr, int *value);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_castnodexdb_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_skill_parse_row_castnodexdb_pre[hIndex].func;
-			retVal___ = preHookFunc(&split, &columns, &current);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_level_set_value_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_skill_level_set_value_pre[hIndex].func;
+			preHookFunc(&arr, &value);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
-			return retVal___;
+			return;
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.skill.parse_row_castnodexdb(split, columns, current);
+		HPMHooks.source.skill.level_set_value(arr, value);
 	}
-	if( HPMHooks.count.HP_skill_parse_row_castnodexdb_post ) {
-		bool (*postHookFunc) (bool retVal___, char *split[], int columns, int current);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_castnodexdb_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_skill_parse_row_castnodexdb_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, split, columns, current);
+	if( HPMHooks.count.HP_skill_level_set_value_post ) {
+		void (*postHookFunc) (int *arr, int value);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_level_set_value_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_skill_level_set_value_post[hIndex].func;
+			postHookFunc(arr, value);
 		}
 	}
-	return retVal___;
-}
-bool HP_skill_parse_row_unitdb(char *split[], int columns, int current) {
-	int hIndex = 0;
-	bool retVal___ = false;
-	if( HPMHooks.count.HP_skill_parse_row_unitdb_pre ) {
-		bool (*preHookFunc) (char **split[], int *columns, int *current);
-		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_unitdb_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_skill_parse_row_unitdb_pre[hIndex].func;
-			retVal___ = preHookFunc(&split, &columns, &current);
-		}
-		if( *HPMforce_return ) {
-			*HPMforce_return = false;
-			return retVal___;
-		}
-	}
-	{
-		retVal___ = HPMHooks.source.skill.parse_row_unitdb(split, columns, current);
-	}
-	if( HPMHooks.count.HP_skill_parse_row_unitdb_post ) {
-		bool (*postHookFunc) (bool retVal___, char *split[], int columns, int current);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_skill_parse_row_unitdb_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_skill_parse_row_unitdb_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, split, columns, current);
-		}
-	}
-	return retVal___;
+	return;
 }
 bool HP_skill_parse_row_producedb(char *split[], int columns, int current) {
 	int hIndex = 0;
