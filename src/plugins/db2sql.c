@@ -291,7 +291,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		} else {
 			ui64 = UINT64_MAX;
 		}
-		StrBuf->Printf(&buf, "'0x%"PRIX64"',", ui64);
+		StrBuf->Printf(&buf, "'%"PRIu64"',", ui64);
 
 		// equip_upper
 		if (libconfig->setting_lookup_int(entry, "Upper", &i32) && i32 >= 0)
@@ -625,7 +625,7 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 		StrBuf->Printf(&buf, "%d,", md->status.def_ele + 20 * md->status.ele_lv);
 
 		// Mode
-		StrBuf->Printf(&buf, "0x%X,", md->status.mode);
+		StrBuf->Printf(&buf, "%u,", md->status.mode);
 
 		// Speed
 		StrBuf->Printf(&buf, "%u,", md->status.speed);
