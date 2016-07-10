@@ -10866,6 +10866,32 @@ void HP_clif_sc_load(struct block_list *bl, int tid, enum send_target target, in
 	}
 	return;
 }
+void HP_clif_sc_continue(struct block_list *bl, int tid, enum send_target target, int type, int val1, int val2, int val3) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_sc_continue_pre ) {
+		void (*preHookFunc) (struct block_list **bl, int *tid, enum send_target *target, int *type, int *val1, int *val2, int *val3);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_sc_continue_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_sc_continue_pre[hIndex].func;
+			preHookFunc(&bl, &tid, &target, &type, &val1, &val2, &val3);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.sc_continue(bl, tid, target, type, val1, val2, val3);
+	}
+	if( HPMHooks.count.HP_clif_sc_continue_post ) {
+		void (*postHookFunc) (struct block_list *bl, int tid, enum send_target target, int type, int val1, int val2, int val3);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_sc_continue_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_sc_continue_post[hIndex].func;
+			postHookFunc(bl, tid, target, type, val1, val2, val3);
+		}
+	}
+	return;
+}
 void HP_clif_sc_end(struct block_list *bl, int tid, enum send_target target, int type) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_sc_end_pre ) {

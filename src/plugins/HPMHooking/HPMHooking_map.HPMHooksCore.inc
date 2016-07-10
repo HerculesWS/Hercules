@@ -836,6 +836,8 @@ struct {
 	struct HPMHookPoint *HP_clif_skill_itemlistwindow_post;
 	struct HPMHookPoint *HP_clif_sc_load_pre;
 	struct HPMHookPoint *HP_clif_sc_load_post;
+	struct HPMHookPoint *HP_clif_sc_continue_pre;
+	struct HPMHookPoint *HP_clif_sc_continue_post;
 	struct HPMHookPoint *HP_clif_sc_end_pre;
 	struct HPMHookPoint *HP_clif_sc_end_post;
 	struct HPMHookPoint *HP_clif_initialstatus_pre;
@@ -6789,6 +6791,8 @@ struct {
 	int HP_clif_skill_itemlistwindow_post;
 	int HP_clif_sc_load_pre;
 	int HP_clif_sc_load_post;
+	int HP_clif_sc_continue_pre;
+	int HP_clif_sc_continue_post;
 	int HP_clif_sc_end_pre;
 	int HP_clif_sc_end_post;
 	int HP_clif_initialstatus_pre;

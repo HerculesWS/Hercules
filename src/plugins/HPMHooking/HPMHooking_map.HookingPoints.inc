@@ -440,6 +440,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->autoshadowspell_list, HP_clif_autoshadowspell_list) },
 	{ HP_POP(clif->skill_itemlistwindow, HP_clif_skill_itemlistwindow) },
 	{ HP_POP(clif->sc_load, HP_clif_sc_load) },
+	{ HP_POP(clif->sc_continue, HP_clif_sc_continue) },
 	{ HP_POP(clif->sc_end, HP_clif_sc_end) },
 	{ HP_POP(clif->initialstatus, HP_clif_initialstatus) },
 	{ HP_POP(clif->cooldown_list, HP_clif_cooldown_list) },
