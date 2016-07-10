@@ -24,6 +24,7 @@
 #include "common/memmgr.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
+#include "common/sysinfo.h"
 #include "map/atcommand.h"
 #include "map/map.h"
 #include "map/script.h"
@@ -47,6 +48,7 @@ FILE *lang_export_fp;
 char *lang_export_file;/* for lang_export_fp */
 struct script_string_buf lang_export_line_buf;
 struct script_string_buf lang_export_escaped_buf;
+int lang_export_stringcount;
 
 /// Whether the translations template generator will automatically run.
 bool generating_translations = false;
@@ -67,6 +69,8 @@ CMDLINEARG(generatetranslations)
 		time_t t = time(NULL);
 		struct tm *lt = localtime(&t);
 		int year = lt->tm_year+1900;
+		char timestring[128] = "";
+		strftime(timestring, sizeof(timestring), "%Y-%m-%d %H:%M:%S%z", lt);
 		fprintf(lang_export_fp,
 				"# This file is part of Hercules.\n"
 				"# http://herc.ws - http://github.com/HerculesWS/Hercules\n"
@@ -84,8 +88,22 @@ CMDLINEARG(generatetranslations)
 				"# GNU General Public License for more details.\n"
 				"#\n"
 				"# You should have received a copy of the GNU General Public License\n"
-				"# along with this program.  If not, see <http://www.gnu.org/licenses/>.\n",
-				year);
+				"# along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n"
+
+				"#,fuzzy\n"
+				"msgid \"\"\n"
+				"msgstr \"\"\n"
+				"\"Project-Id-Version: %s\\n\"\n"
+				"\"Report-Msgid-Bugs-To: dev@herc.ws\\n\"\n"
+				"\"POT-Creation-Date: %s\\n\"\n"
+				"\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\"\n"
+				"\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\"\n"
+				"\"Language-Team: LANGUAGE <LL@li.org>\\n\"\n"
+				"\"Language: \\n\"\n"
+				"\"MIME-Version: 1.0\\n\"\n"
+				"\"Content-Type: text/plain; charset=ISO-8859-1\\n\"\n"
+				"\"Content-Transfer-Encoding: 8bit\\n\"\n\n",
+				year, sysinfo->vcsrevision_scripts(), timestring);
 	}
 	generating_translations = true;
 	return true;
@@ -170,6 +188,7 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 				script->parser_current_npc_name ? script->parser_current_npc_name : "Unknown NPC",
 				VECTOR_DATA(lang_export_escaped_buf)
 		);
+		lang_export_stringcount++;
 		VECTOR_TRUNCATE(lang_export_line_buf);
 		VECTOR_TRUNCATE(lang_export_escaped_buf);
 	}
@@ -215,6 +234,7 @@ bool msg_config_read_posthook(bool retVal, const char *cfg_name, bool allow_over
 					"msgstr \"\"\n",
 					atcommand->msg_table[0][i]
 			       );
+			lang_export_stringcount++;
 		}
 	}
 
@@ -231,6 +251,7 @@ HPExport void server_preinit(void)
 	addHookPre(script, parse, parse_script_prehook);
 	addHookPost(script, parser_clean_leftovers, script_parser_clean_leftovers_posthook);
 	addHookPost(atcommand, msg_read, msg_config_read_posthook);
+	lang_export_stringcount = 0;
 }
 
 HPExport void plugin_init(void)
@@ -240,7 +261,7 @@ HPExport void plugin_init(void)
 HPExport void server_online(void)
 {
 	if (generating_translations && lang_export_fp != NULL) {
-		ShowInfo("Lang exported to '%s'\n", lang_export_file);
+		ShowInfo("Translations template exported to '%s' with %d strings.\n", lang_export_file, lang_export_stringcount);
 		fclose(lang_export_fp);
 		lang_export_fp = NULL;
 	}
