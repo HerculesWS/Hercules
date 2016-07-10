@@ -1455,7 +1455,7 @@ bool clif_spawn(struct block_list *bl)
 			if (sd->bg_id != 0 && map->list[sd->bl.m].flag.battleground)
 				clif->sendbgemblem_area(sd);
 			for (i = 0; i < sd->sc_display_count; i++) {
-				clif->sc_load(&sd->bl, sd->bl.id,AREA,status->dbs->IconChangeTable[sd->sc_display[i]->type],sd->sc_display[i]->val1,sd->sc_display[i]->val2,sd->sc_display[i]->val3);
+				clif->sc_continue(&sd->bl, sd->bl.id,AREA,status->dbs->IconChangeTable[sd->sc_display[i]->type],sd->sc_display[i]->val1,sd->sc_display[i]->val2,sd->sc_display[i]->val3);
 			}
 			if (sd->charm_type != CHARM_TYPE_NONE && sd->charm_count > 0)
 				clif->spiritcharm(sd);
@@ -4186,7 +4186,7 @@ void clif_getareachar_pc(struct map_session_data* sd,struct map_session_data* ds
 		clif->charm_single(sd->fd, dstsd);
 
 	for( i = 0; i < dstsd->sc_display_count; i++ ) {
-		clif->sc_load(&sd->bl,dstsd->bl.id,SELF,status->dbs->IconChangeTable[dstsd->sc_display[i]->type],dstsd->sc_display[i]->val1,dstsd->sc_display[i]->val2,dstsd->sc_display[i]->val3);
+		clif->sc_continue(&sd->bl,dstsd->bl.id,SELF,status->dbs->IconChangeTable[dstsd->sc_display[i]->type],dstsd->sc_display[i]->val1,dstsd->sc_display[i]->val2,dstsd->sc_display[i]->val3);
 	}
 	if( (sd->status.party_id && dstsd->status.party_id == sd->status.party_id) || //Party-mate, or hpdisp setting.
 		(sd->bg_id && sd->bg_id == dstsd->bg_id) || //BattleGround
@@ -19319,6 +19319,7 @@ void clif_defaults(void) {
 	clif->autoshadowspell_list = clif_autoshadowspell_list;
 	clif->skill_itemlistwindow = clif_skill_itemlistwindow;
 	clif->sc_load = clif_status_change2;
+	clif->sc_continue = clif_status_change2;
 	clif->sc_end = clif_status_change_end;
 	clif->initialstatus = clif_initialstatus;
 	clif->cooldown_list = clif_skill_cooldown_list;
