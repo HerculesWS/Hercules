@@ -6436,7 +6436,7 @@ eclage,222,131,3	script	Wandering Merchant#ecl	1_M_SIGNMCNT,{
 		mes "stench of alcohol -";
 	}
 	else if (ep14_2_detect == 7) {
-		if (questprogress(9248) == 1) {
+		if (questprogress(9258) == 1) {
 			mes "- Upon getting closer,";
 			mes "I smell a terrible";
 			mes "stench of alcohol -";
