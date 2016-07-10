@@ -74,14 +74,14 @@ enum refine_type {
  * @see db/sc_config.txt for more information
  **/
 typedef enum sc_conf_type {
-	SC_NO_REM_DEATH  = 0x01,
-	SC_NO_SAVE       = 0x02,
-	SC_NO_DISPELL    = 0x04,
-	SC_NO_CLEARANCE  = 0x08,
-	SC_BUFF          = 0x10,
-	SC_DEBUFF        = 0x20,
-	SC_MADO_NO_RESET = 0x40,
-	SC_NO_CLEAR      = 0x80,
+	SC_NO_REM_DEATH    = 0x001, ///< Cannot be removed by death
+	SC_NO_SAVE         = 0x002, ///< Cannot be saved
+	SC_NO_DISPELL      = 0x004, ///< Cannot be reset by Dispell
+	SC_NO_CLEARANCE    = 0x008, ///< Cannot be reset by Clearance
+	SC_BUFF            = 0x010, ///< SC Considered as buff and be removed by Hermode and etc.
+	SC_DEBUFF          = 0x020, ///< SC considered as debuff and be removed by Gospel and etc.
+	SC_MADO_NO_RESET   = 0x040, ///< cannot be reset when MADO Gear is taken off.
+	SC_NO_CLEAR        = 0x080, ///< cannot be reset by 'sc_end SC_ALL' and status change clear.
 } sc_conf_type;
 
 /**
@@ -96,6 +96,16 @@ enum scstart_flag {
 	SCFLAG_FIXEDRATE = 0x08, ///< rate should not be reduced (not evaluated in status_change_start, but in some calls to other functions).
 	SCFLAG_NOICON    = 0x10, ///< Status icon (SI) should not be sent.
 	SCFLAG_ALL = SCFLAG_NONE|SCFLAG_NOAVOID|SCFLAG_FIXEDTICK|SCFLAG_LOADED|SCFLAG_FIXEDRATE|SCFLAG_NOICON
+};
+
+/**
+ * Flags to be used with change_clear_buffs
+ */
+enum scclear_flag {
+	SC_CLEAR_BUFF             = 0x1, ///< Clears Buff
+	SC_CLEAR_DEBUFF           = 0x2, ///< Clears Debuff
+	SC_CLEAR_DEBUFF_SPECIAL   = 0x4, ///< Clears specific debuff with a refresh
+	SC_CLEAR_CHEMICAL_PROTECT = 0x8, ///< Clears chemical protection
 };
 
 // Status changes listing. These code are for use by the server.
@@ -2247,7 +2257,7 @@ struct status_interface {
 	int (*change_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*change_timer_sub) (struct block_list* bl, va_list ap);
 	int (*change_clear) (struct block_list* bl, int type);
-	int (*change_clear_buffs) (struct block_list* bl, int type);
+	int (*change_clear_buffs) (struct block_list* bl, enum scclear_flag type);
 	void (*calc_bl_) (struct block_list *bl, enum scb_flag flag, enum e_status_calc_opt opt);
 	int (*calc_mob_) (struct mob_data* md, enum e_status_calc_opt opt);
 	int (*calc_pet_) (struct pet_data* pd, enum e_status_calc_opt opt);

@@ -8515,7 +8515,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					// self effect
 					val2 = tick/10000;
 					tick_time = 10000; // [GodLesZ] tick time
-					status->change_clear_buffs(bl,3); //Remove buffs/debuffs
+					status->change_clear_buffs(bl, SC_CLEAR_BUFF | SC_CLEAR_DEBUFF | SC_CLEAR_CHEMICAL_PROTECT); //Remove buffs/debuffs
 				}
 				break;
 
@@ -9333,7 +9333,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				}
 				val4 = tick / 5000;
 				tick_time = 5000; // [GodLesZ] tick time
-				status->change_clear_buffs(bl,3); //Remove buffs/debuffs
+				status->change_clear_buffs(bl, SC_CLEAR_BUFF | SC_CLEAR_DEBUFF); //Remove buffs/debuffs
 				break;
 			case SC_CRESCENTELBOW:
 				val2 = (sd ? sd->status.job_level : 2) / 2 + 50 + 5 * val1;
@@ -12230,12 +12230,17 @@ void status_update_matk(struct block_list *bl) {
 	return;
 }
 
-/*==========================================
-* Clears buffs/debuffs of a character.
-* type&1 -> buffs, type&2 -> debuffs
-* type&4 -> especific debuffs(implemented with refresh)
-*------------------------------------------*/
-int status_change_clear_buffs (struct block_list* bl, int type) {
+/**
+ * Clears buffs/debuffs on an object
+ * @param bl: Object to clear [PC|MOB|HOM|MER|ELEM]
+ * @param type: Type to remove
+ *	&1: Clear Buffs
+ *	&2: Clear Debuffs
+ *	&4: Specific debuffs with a refresh
+ *  &8: Clear Chemical Protection
+ */
+int status_change_clear_buffs(struct block_list* bl, enum scclear_flag type)
+{
 	int i;
 	struct status_change *sc= status->get_sc(bl);
 
@@ -12282,6 +12287,13 @@ int status_change_clear_buffs (struct block_list* bl, int type) {
 			if(type&4)
 				continue;
 			sc->data[i]->val2 = 0;
+			break;
+		case SC_PROTECTWEAPON:
+		case SC_PROTECTSHIELD:
+		case SC_PROTECTARMOR:
+		case SC_PROTECTHELM:
+			if (!(type&8))
+				continue;
 			break;
 		default:
 			if(type&4)
