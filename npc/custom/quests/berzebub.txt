@@ -11,7 +11,7 @@
 //= 1.2 Optimized. [Euphy]
 //============================================================
 
-prontera,165,178,8	script	Old Woman	8_F_GRANDMOTHER,{
+prontera,165,178,0	script	Old Woman	8_F_GRANDMOTHER,{
 
 	setarray .@items[0],714,25,1061,100,1095,200,618,10,1551,2,1614,1,727,20;
 	set .@n$,"[Old Woman]";

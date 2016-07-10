@@ -97,7 +97,7 @@ bool chat_createpcchat(struct map_session_data* sd, const char* title, const cha
 	nullpo_ret(title);
 	nullpo_ret(pass);
 
-	if( sd->chatID )
+	if (sd->chat_id != 0)
 		return false; //Prevent people abusing the chat system by creating multiple chats, as pointed out by End of Exam. [Skotlex]
 
 	if( sd->state.vending || sd->state.buyingstore )
@@ -142,8 +142,10 @@ bool chat_joinchat(struct map_session_data* sd, int chatid, const char* pass) {
 	nullpo_ret(pass);
 	cd = map->id2cd(chatid);
 
-	if( cd == NULL || cd->bl.type != BL_CHAT || cd->bl.m != sd->bl.m || sd->state.vending || sd->state.buyingstore || sd->chatID || ((cd->owner->type == BL_NPC) ? cd->users+1 : cd->users) >= cd->limit )
-	{
+	if (cd == NULL || cd->bl.type != BL_CHAT || cd->bl.m != sd->bl.m
+	 || sd->state.vending || sd->state.buyingstore || sd->chat_id != 0
+	 || ((cd->owner->type == BL_NPC) ? cd->users+1 : cd->users) >= cd->limit
+	) {
 		clif->joinchatfail(sd,0); // room full
 		return false;
 	}
@@ -204,8 +206,8 @@ int chat_leavechat(struct map_session_data* sd, bool kicked) {
 
 	nullpo_retr(0, sd);
 
-	cd = map->id2cd(sd->chatID);
-	if( cd == NULL ) {
+	cd = map->id2cd(sd->chat_id);
+	if (cd == NULL) {
 		pc_setchatid(sd, 0);
 		return 0;
 	}
@@ -279,7 +281,7 @@ bool chat_changechatowner(struct map_session_data* sd, const char* nextownername
 	nullpo_ret(sd);
 	nullpo_ret(nextownername);
 
-	cd = map->id2cd(sd->chatID);
+	cd = map->id2cd(sd->chat_id);
 	if (cd == NULL || &sd->bl != cd->owner)
 		return false;
 
@@ -324,7 +326,7 @@ bool chat_changechatstatus(struct map_session_data* sd, const char* title, const
 	nullpo_ret(title);
 	nullpo_ret(pass);
 
-	cd = map->id2cd(sd->chatID);
+	cd = map->id2cd(sd->chat_id);
 	if (cd == NULL || &sd->bl != cd->owner)
 		return false;
 
@@ -352,7 +354,7 @@ bool chat_kickchat(struct map_session_data* sd, const char* kickusername) {
 	nullpo_ret(sd);
 	nullpo_ret(kickusername);
 
-	cd = map->id2cd(sd->chatID);
+	cd = map->id2cd(sd->chat_id);
 
 	if (cd == NULL || &sd->bl != cd->owner)
 		return false;

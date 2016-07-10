@@ -410,12 +410,12 @@ void *grfio_reads(const char *fname, int *size)
 		// LocalFileCheck
 		char lfname[256];
 		FILE *in;
-		unsigned char *buf = NULL;
 		grfio_localpath_create(lfname, sizeof(lfname), (entry && entry->fnd) ? entry->fnd : fname);
 
 		in = fopen(lfname, "rb");
 		if (in != NULL) {
 			int declen;
+			unsigned char *buf = NULL;
 			fseek(in,0,SEEK_END);
 			declen = (int)ftell(in);
 			if (declen == -1) {

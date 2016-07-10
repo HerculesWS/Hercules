@@ -163,7 +163,7 @@ bool mapif_homunculus_save(const struct s_homunculus *hd)
 		flag = false;
 	} else {
 		int i;
-		SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
+		struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
 
 		if (SQL_ERROR == SQL->StmtPrepare(stmt, "REPLACE INTO `%s` (`homun_id`, `id`, `lv`) VALUES (%d, ?, ?)", skill_homunculus_db, hd->hom_id)) {
 			SqlStmt_ShowDebug(stmt);
@@ -171,8 +171,8 @@ bool mapif_homunculus_save(const struct s_homunculus *hd)
 		} else {
 			for (i = 0; i < MAX_HOMUNSKILL; ++i) {
 				if (hd->hskill[i].id > 0 && hd->hskill[i].lv != 0) {
-					SQL->StmtBindParam(stmt, 0, SQLDT_USHORT, (void*)&hd->hskill[i].id, 0); // FIXME: StmtBindParam should take const void
-					SQL->StmtBindParam(stmt, 1, SQLDT_USHORT, (void*)&hd->hskill[i].lv, 0); // FIXME: StmtBindParam should take const void
+					SQL->StmtBindParam(stmt, 0, SQLDT_USHORT, &hd->hskill[i].id, 0);
+					SQL->StmtBindParam(stmt, 1, SQLDT_USHORT, &hd->hskill[i].lv, 0);
 					if (SQL_ERROR == SQL->StmtExecute(stmt)) {
 						SqlStmt_ShowDebug(stmt);
 						flag = false;

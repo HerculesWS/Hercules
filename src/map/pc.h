@@ -33,8 +33,9 @@
 #include "map/status.h" // enum sc_type, OPTION_*
 #include "map/unit.h" // struct unit_data, struct view_data
 #include "map/vending.h" // struct s_vending
-#include "common/hercules.h"
+#include "common/db.h"
 #include "common/ers.h" // struct eri
+#include "common/hercules.h"
 #include "common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS
 
 /**
@@ -257,7 +258,7 @@ struct map_session_data {
 	struct script_state *st;
 	char npc_str[CHATBOX_SIZE]; // for passing npc input box text to script engine
 	int npc_timer_id; //For player attached npc timers. [Skotlex]
-	unsigned int chatID;
+	int chat_id;
 	int64 idletime;
 	struct {
 		int npc_id;
@@ -530,7 +531,7 @@ END_ZEROED_BLOCK;
 	unsigned char channel_count;
 	struct channel_data *gcbind;
 	unsigned char fontcolor;
-	unsigned int fontcolor_tid;
+	int fontcolor_tid;
 	int64 hchsysch_tick;
 
 	/* [Ind/Hercules] */
@@ -609,15 +610,15 @@ END_ZEROED_BLOCK;
 #define pc_setsit(sd)         ( (sd)->state.dead_sit = (sd)->vd.dead_sit = 2 )
 #define pc_isdead(sd)         ( (sd)->state.dead_sit == 1 )
 #define pc_issit(sd)          ( (sd)->vd.dead_sit == 2 )
-#define pc_isidle(sd)         ( (sd)->chatID || (sd)->state.vending || (sd)->state.buyingstore || DIFF_TICK(sockt->last_tick, (sd)->idletime) >= battle->bc->idle_no_share )
+#define pc_isidle(sd)         ( (sd)->chat_id != 0 || (sd)->state.vending || (sd)->state.buyingstore || DIFF_TICK(sockt->last_tick, (sd)->idletime) >= battle->bc->idle_no_share )
 #define pc_istrading(sd)      ( (sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->state.trading )
-#define pc_cant_act(sd)       ( (sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->chatID || ((sd)->sc.opt1 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading || (sd)->state.storage_flag || (sd)->state.prevend )
+#define pc_cant_act(sd)       ( (sd)->npc_id || (sd)->state.vending || (sd)->state.buyingstore || (sd)->chat_id != 0 || ((sd)->sc.opt1 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading || (sd)->state.storage_flag || (sd)->state.prevend )
 
 /* equals pc_cant_act except it doesn't check for chat rooms */
 #define pc_cant_act2(sd)       ( (sd)->npc_id || (sd)->state.buyingstore || ((sd)->sc.opt1 && (sd)->sc.opt1 != OPT1_BURNING) || (sd)->state.trading || (sd)->state.storage_flag || (sd)->state.prevend )
 
 #define pc_setdir(sd,b,h)     ( (sd)->ud.dir = (b) ,(sd)->head_dir = (h) )
-#define pc_setchatid(sd,n)    ( (sd)->chatID = n )
+#define pc_setchatid(sd,n)    ( (sd)->chat_id = (n) )
 #define pc_ishiding(sd)       ( (sd)->sc.option&(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK) )
 #define pc_iscloaking(sd)     ( !((sd)->sc.option&OPTION_CHASEWALK) && ((sd)->sc.option&OPTION_CLOAK) )
 #define pc_ischasewalk(sd)    ( (sd)->sc.option&OPTION_CHASEWALK )
@@ -784,9 +785,9 @@ struct autotrade_vending {
 struct pc_interface {
 
 	/* */
-	DBMap *at_db;/* char id -> struct autotrade_vending */
+	struct DBMap *at_db;/* char id -> struct autotrade_vending */
 	/* */
-	DBMap* itemcd_db;
+	struct DBMap *itemcd_db;
 	/* */
 	int day_timer_tid;
 	int night_timer_tid;
@@ -1084,12 +1085,15 @@ END_ZEROED_BLOCK; /* End */
 	void (*autotrade_start) (struct map_session_data *sd);
 	void (*autotrade_prepare) (struct map_session_data *sd);
 	void (*autotrade_populate) (struct map_session_data *sd);
-	int (*autotrade_final) (DBKey key, DBData *data, va_list ap);
+	int (*autotrade_final) (union DBKey key, struct DBData *data, va_list ap);
 
 	int (*check_job_name) (const char *name);
 	void (*update_idle_time) (struct map_session_data* sd, enum e_battle_config_idletime type);
-	
+
 	int (*have_magnifier) (struct map_session_data *sd);
+
+	bool (*process_chat_message) (struct map_session_data *sd, const char *message);
+	void (*check_supernovice_call) (struct map_session_data *sd, const char *message);
 };
 
 #ifdef HERCULES_CORE

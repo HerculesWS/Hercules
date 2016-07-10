@@ -291,40 +291,6 @@ bool sysinfo_svn_get_revision(char **out) {
 		if (*out != NULL)
 			return true;
 	}
-
-	// subversion 1.6 and older?
-	if ((fp = fopen(".svn/entries", "r")) != NULL) {
-		char line[1024];
-		int rev;
-		// Check the version
-		if (fgets(line, sizeof(line), fp)) {
-			if (!ISDIGIT(line[0])) {
-				// XML File format
-				while (fgets(line,sizeof(line),fp))
-					if (strstr(line,"revision=")) break;
-				if (sscanf(line," %*[^\"]\"%d%*[^\n]", &rev) == 1) {
-					if (*out != NULL)
-						aFree(*out);
-					*out = aCalloc(1, 8);
-					snprintf(*out, 8, "%d", rev);
-				}
-			} else {
-				// Bin File format
-				if (fgets(line, sizeof(line), fp) == NULL) { printf("Can't get bin name\n"); } // Get the name
-				if (fgets(line, sizeof(line), fp) == NULL) { printf("Can't get entries kind\n"); } // Get the entries kind
-				if (fgets(line, sizeof(line), fp)) { // Get the rev numver
-					if (*out != NULL)
-						aFree(*out);
-					*out = aCalloc(1, 8);
-					snprintf(*out, 8, "%d", atoi(line));
-				}
-			}
-		}
-		fclose(fp);
-
-		if (*out != NULL)
-			return true;
-	}
 #endif
 	if (*out != NULL)
 		aFree(*out);

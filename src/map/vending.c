@@ -118,7 +118,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 	// some checks
 	z = 0; // zeny counter
 	w = 0;  // weight counter
-	for( i = 0; i < count; i++ ) {
+	for (i = 0; i < count; i++) {
 		short amount = *(const uint16*)(data + 4*i + 0);
 		short idx    = *(const uint16*)(data + 4*i + 2);
 		idx -= 2;
@@ -184,7 +184,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 		z -= apply_percentrate64(z, battle_config.vending_tax, 10000);
 	pc->getzeny(vsd, (int)z, LOG_TYPE_VENDING, sd);
 
-	for( i = 0; i < count; i++ ) {
+	for (i = 0; i < count; i++) {
 		short amount = *(const uint16*)(data + 4*i + 0);
 		short idx    = *(const uint16*)(data + 4*i + 2);
 		idx -= 2;
@@ -199,7 +199,7 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
 		if( battle_config.buyer_name ) {
 			char temp[256];
 			sprintf(temp, msg_sd(vsd,265), sd->status.name);
-			clif_disp_onlyself(vsd,temp,strlen(temp));
+			clif_disp_onlyself(vsd, temp);
 		}
 	}
 
@@ -265,7 +265,7 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 
 	// filter out invalid items
 	i = 0;
-	for( j = 0; j < count; j++ ) {
+	for (j = 0; j < count; j++) {
 		short index        = *(const uint16*)(data + 8*j + 0);
 		short amount       = *(const uint16*)(data + 8*j + 2);
 		unsigned int value = *(const uint32*)(data + 8*j + 4);
@@ -276,7 +276,7 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 		 || pc->cartitem_amount(sd, index, amount) < 0 // invalid item or insufficient quantity
 		//NOTE: official server does not do any of the following checks!
 		 || !sd->status.cart[index].identify // unidentified item
-		 || sd->status.cart[index].attribute == 1 // broken item
+		 || (sd->status.cart[index].attribute & ATTR_BROKEN) != 0 // broken item
 		 || sd->status.cart[index].expire_time // It should not be in the cart but just in case
 		 || (sd->status.cart[index].bound && !pc_can_give_bound_items(sd)) // can't trade bound items w/o permission
 		 || !itemdb_cantrade(&sd->status.cart[index], pc_get_group_level(sd), pc_get_group_level(sd)) ) // untradeable item

@@ -37,6 +37,51 @@ m4_ifdef([AC_USE_SYSTEM_EXTENSIONS],
 	[AC_GNU_SOURCE]
 )
 
+# Root-check
+host_is="`uname`"
+case $host_os in
+CYGWIN*)
+	;;
+*)
+	if type id >/dev/null 2>&1; then
+		euid="`id -u`"
+		if test "$euid" == "0"; then
+			echo ""
+			echo "********************************************************************************"
+			echo '*                            W A R N I N G      /!\                            *'
+			echo "********************************************************************************"
+			echo "* It appears that you're planning to run Hercules with root privileges. That's *"
+			echo "* not necessary, nor recommended, and it may open your machine to unnecessary  *"
+			echo "* security risks.  You should never ever run software as root unless it        *"
+			echo "* requires the extra privileges (which Hercules does not.)                     *"
+			echo "*                                                                              *"
+			echo "* More info:                                                                   *"
+			echo "* http://www.tldp.org/HOWTO/Security-HOWTO/local-security.html                 *"
+			echo "* https://wiki.debian.org/sudo                                                 *"
+			echo "* http://wiki.centos.org/TipsAndTricks/BecomingRoot                            *"
+			echo "* http://fedoraproject.org/wiki/Configuring_Sudo                               *"
+			echo "* https://help.ubuntu.com/community/RootSudo                                   *"
+			echo "* http://www.freebsdwiki.net/index.php/Root                                    *"
+			echo "*                                                                              *"
+			echo "* If your service provider forces (or encourages) you to run server software   *"
+			echo "* as root, please complain to them. It is a very bad idea.                     *"
+			echo "********************************************************************************"
+			echo "Execution will be paused for 60 seconds... Press Ctrl-C now if you wish to stop."
+			for j in 1 2 3 4 5 6; do
+				for i in 1 2 3 4 5 6 7 8 9 10; do
+					printf "\a. "
+					sleep 1
+				done
+				echo ""
+			done
+			echo ""
+			echo "Resuming as root. If anything breaks, you'll get to keep the pieces."
+			sleep 2
+		fi
+	fi
+	;;
+esac
+
 #
 # Memory managers
 #
@@ -95,6 +140,36 @@ AC_ARG_ENABLE(
 	],
 	[enable_packetver_re="no"]
 )
+
+
+#
+# Epoll
+#
+AC_ARG_ENABLE([epoll],
+	[AS_HELP_STRING([--enable-epoll],[use epoll(4) on Linux])],
+	[enable_epoll=$enableval],
+	[enable_epoll=no]
+)
+if test x$enable_epoll = xno; then
+	have_linux_epoll=no
+else
+	AC_MSG_CHECKING([for Linux epoll(4)])
+	AC_LINK_IFELSE([AC_LANG_PROGRAM(
+		[
+		#ifndef __linux__
+		#error This is not Linux
+		#endif
+		#include <sys/epoll.h>
+		],
+		[epoll_create1 (EPOLL_CLOEXEC);])],
+		[have_linux_epoll=yes],
+		[have_linux_epoll=no]
+	)
+	AC_MSG_RESULT([$have_linux_epoll])
+fi
+if test x$enable_epoll,$have_linux_epoll = xyes,no; then
+    AC_MSG_ERROR([epoll support explicitly enabled but not available])
+fi
 
 
 #
@@ -283,7 +358,7 @@ AC_ARG_ENABLE(
 		case $enableval in
 			"no");;
 			"yes");;
-			*) AC_MSG_ERROR([[invalid argument --enable-lto=$disableval... stopping]]);;
+			*) AC_MSG_ERROR([[invalid argument --enable-lto=$enableval... stopping]]);;
 		esac
 	],
 	[enable_lto="no"]
@@ -306,7 +381,7 @@ AC_ARG_ENABLE(
 		case $enableval in
 			"no");;
 			"yes");;
-			*) AC_MSG_ERROR([[invalid argument --enable-static=$disableval... stopping]]);;
+			*) AC_MSG_ERROR([[invalid argument --enable-static=$enableval... stopping]]);;
 		esac
 	],
 	[enable_static="no"]
@@ -331,10 +406,36 @@ AC_ARG_ENABLE(
 			"no");;
 			"yes");;
 			"full");;
-			*) AC_MSG_ERROR([[invalid argument --enable-sanitize=$disableval... stopping]]);;
+			*) AC_MSG_ERROR([[invalid argument --enable-sanitize=$enableval... stopping]]);;
 		esac
 	],
 	[enable_sanitize="no"]
+)
+
+
+#
+# -Werror compiler flag
+# It's not always possible (if at all) to pass -Werror in the CFLAGS, since
+# autoconf often generates test-code that produces warnings.
+# Reference: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=734104
+#
+AC_ARG_ENABLE(
+	[Werror],
+	AC_HELP_STRING(
+		[--enable-Werror],
+		[
+			Enables -Werror in the compiler flags. (disabled by default)
+		]
+	),
+	[
+		enable_Werror="$enableval"
+		case $enableval in
+			"no");;
+			"yes");;
+			*) AC_MSG_ERROR([[invalid argument --enable-Werror=$enableval... stopping]]);;
+		esac
+	],
+	[enable_Werror="no"]
 )
 
 
@@ -466,6 +567,7 @@ AC_LANG([C])
 # -Wunused-parameter -Wunused-but-set-parameter unused parameters
 # -Wunused-macros unused macro warnings, but it also enable unused parameters
 # -Wstrict-prototypes show warning in grammar.y
+# -wdiscarded-qualifiers show different const removal
 # attributes suggestion
 #  -Wsuggest-attribute=const -Wsuggest-attribute=format -Wsuggest-attribute=pure
 
@@ -649,7 +751,7 @@ if test "$enable_lto" != "no" ; then
 	)
 fi
 
-AC_DEFUN(AC_CHECK_SANITIZER_FLAG,
+AC_DEFUN([AC_CHECK_SANITIZER_FLAG],
 	[
 		AC_MSG_CHECKING([whether $CC supports -fsanitize=$1])
 		OLD_CFLAGS="$CFLAGS"
@@ -702,6 +804,7 @@ if test "$enable_sanitize" != "no" ; then
 		AC_CHECK_SANITIZER_FLAG(return)
 		AC_CHECK_SANITIZER_FLAG(signed-integer-overflow)
 		AC_CHECK_SANITIZER_FLAG(bounds)
+		AC_CHECK_SANITIZER_FLAG(bounds-strict)
 		AC_CHECK_SANITIZER_FLAG(object-size)
 		AC_CHECK_SANITIZER_FLAG(float-divide-by-zero)
 		AC_CHECK_SANITIZER_FLAG(float-cast-overflow)
@@ -714,7 +817,7 @@ if test "$enable_sanitize" != "no" ; then
 fi
 
 
-AC_DEFUN(AC_CHECK_COMPILER_WFLAG,
+AC_DEFUN([AC_CHECK_COMPILER_WFLAG],
 	[
 		AC_MSG_CHECKING([whether $CC supports -W$1])
 		OLD_CFLAGS="$CFLAGS"
@@ -749,7 +852,7 @@ AC_DEFUN(AC_CHECK_COMPILER_WFLAG,
 	]
 )
 
-AC_DEFUN(AC_CHECK_COMPILER_WNOFLAG,
+AC_DEFUN([AC_CHECK_COMPILER_WNOFLAG],
 	[
 		AC_MSG_CHECKING([whether $CC supports -Wno-$1])
 		OLD_CFLAGS="$CFLAGS"
@@ -827,14 +930,18 @@ AC_CHECK_COMPILER_WFLAG(missing-include-dirs)
 AC_CHECK_COMPILER_WFLAG(suggest-attribute=noreturn)
 AC_CHECK_COMPILER_WFLAG(undef)
 #AC_CHECK_COMPILER_WFLAG(cast-align)
-AC_CHECK_COMPILER_WFLAG(logical-op)
+#AC_CHECK_COMPILER_WFLAG(logical-op) # some useless warnings
 AC_CHECK_COMPILER_WFLAG(nested-externs)
 AC_CHECK_COMPILER_WFLAG(old-style-definition)
 AC_CHECK_COMPILER_WFLAG(overlength-strings)
 AC_CHECK_COMPILER_WFLAG(redundant-decls)
+AC_CHECK_COMPILER_WFLAG(cast-qual)
+AC_CHECK_COMPILER_WFLAG(misleading-indentation)
+AC_CHECK_COMPILER_WFLAG(null-dereference)
 AC_CHECK_COMPILER_WNOFLAG(format-nonliteral)
 AC_CHECK_COMPILER_WNOFLAG(switch)
 AC_CHECK_COMPILER_WNOFLAG(missing-field-initializers)
+AC_CHECK_COMPILER_WNOFLAG(suggest-attribute=format)
 
 # Certain versions of gcc make -Wshadow completely useless by making it flood
 # you with unnecessary warnings <https://lkml.org/lkml/2006/11/28/239>
@@ -1055,6 +1162,18 @@ fi
 case $enable_packetver_re in
 	"yes")
 		CPPFLAGS="$CPPFLAGS -DENABLE_PACKETVER_RE"
+		;;
+	"no")
+		# default value
+		;;
+esac
+
+#
+# Epoll
+#
+case $have_linux_epoll in
+	"yes")
+		CPPFLAGS="$CPPFLAGS -DSOCKET_EPOLL"
 		;;
 	"no")
 		# default value
@@ -1376,6 +1495,35 @@ if test "$enable_static" != "no" ; then
 	CFLAGS="$OLD_CFLAGS"
 	LDFLAGS="$OLD_LDFLAGS"
 	LIBS="$OLD_LIBS"
+fi
+
+#
+# -Werror compiler flag
+#
+if test "$enable_Werror" != "no" ; then
+
+	OLD_CFLAGS="$CFLAGS"
+	CFLAGS="$CFLAGS -Werror"
+
+	AC_MSG_CHECKING([whether $CC supports -Werror])
+	AC_RUN_IFELSE(
+		[AC_LANG_SOURCE([
+			int main(int argc, char **argv){
+				return 0;
+			}
+		])],
+		[
+			AC_MSG_RESULT([yes])
+		],
+		[
+			AC_MSG_RESULT([no])
+			CFLAGS="$OLD_CFLAGS"
+			LDFLAGS="$OLD_LDFLAGS"
+		],
+		[
+			AC_MSG_RESULT([guessing no])
+		]
+	)
 fi
 
 AC_SUBST(STATIC, ${STATIC})

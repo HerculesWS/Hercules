@@ -23,8 +23,9 @@
 
 #include "map/map.h" // struct block_list, CHATROOM_TITLE_SIZE
 #include "common/hercules.h"
-#include "common/db.h"
 
+/* Forward Declarations */
+struct DBMap; // common/db.h
 struct chat_data;
 struct map_session_data;
 struct npc_data;
@@ -46,7 +47,7 @@ struct chat_data {
 	struct block_list* owner;
 	char npc_event[EVENT_NAME_LENGTH];
 	/* isn't this a waste? there is a enormous overhead, wouldn't something like skill_blockpc_start be better here? [Ind] */
-	DBMap* kick_list;                ///< DBMap of users who were kicked from this chat
+	struct DBMap *kick_list;         ///< DBMap of users who were kicked from this chat
 };
 
 /*=====================================

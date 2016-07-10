@@ -42,3 +42,12 @@ ALTER TABLE `zenylog` MODIFY `type` ENUM('M','T','V','S','N','A','E','B','I','D'
 
 -- Add 'P' and 'C' types in `zenylog`
 ALTER TABLE `zenylog` MODIFY `type` ENUM('T','V','P','M','S','N','D','C','A','E','I','B') NOT NULL DEFAULT 'S';
+
+ALTER TABLE `atcommandlog` MODIFY `atcommand_date` DATETIME NULL;
+ALTER TABLE `branchlog` MODIFY `branch_date` DATETIME NULL;
+ALTER TABLE `chatlog` MODIFY `time` DATETIME NULL;
+ALTER TABLE `loginlog` MODIFY `time` DATETIME NULL;
+ALTER TABLE `mvplog` MODIFY `mvp_date` DATETIME NULL;
+ALTER TABLE `npclog` MODIFY `npc_date` DATETIME NULL;
+ALTER TABLE `picklog` MODIFY `time` DATETIME NULL;
+ALTER TABLE `zenylog` MODIFY `time` DATETIME NULL;

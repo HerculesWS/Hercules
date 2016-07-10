@@ -236,11 +236,13 @@ void chrif_setpasswd(char *pwd) {
 
 // security check, prints warning if using default password
 void chrif_checkdefaultlogin(void) {
+#ifndef BUILDBOT
 	if (strcmp(chrif->userid, "s1")==0 && strcmp(chrif->passwd, "p1")==0) {
 		ShowWarning("Using the default user/password s1/p1 is NOT RECOMMENDED.\n");
 		ShowNotice("Please edit your 'login' table to create a proper inter-server user/password (gender 'S')\n");
 		ShowNotice("and then edit your user/password in conf/map-server.conf (or conf/import/map_conf.txt)\n");
 	}
+#endif
 }
 
 // sets char-server's ip address
@@ -471,7 +473,8 @@ void chrif_connectack(int fd) {
 /**
  * @see DBApply
  */
-int chrif_reconnect(DBKey key, DBData *data, va_list ap) {
+int chrif_reconnect(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct auth_node *node = DB->data2ptr(data);
 
 	nullpo_ret(node);
@@ -681,7 +684,8 @@ void chrif_authfail(int fd) {/* HELLO WORLD. ip in RFIFOL 15 is not being used (
  * This can still happen (client times out while waiting for char to confirm auth data)
  * @see DBApply
  */
-int auth_db_cleanup_sub(DBKey key, DBData *data, va_list ap) {
+int auth_db_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct auth_node *node = DB->data2ptr(data);
 
 	nullpo_retr(1, node);
@@ -1617,7 +1621,8 @@ void chrif_del_scdata_single(int account_id, int char_id, short type)
 /**
  * @see DBApply
  */
-int auth_db_final(DBKey key, DBData *data, va_list ap) {
+int auth_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct auth_node *node = DB->data2ptr(data);
 
 	nullpo_ret(node);

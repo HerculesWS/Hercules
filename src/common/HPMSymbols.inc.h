@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2015-2016  Hercules Dev Team
+ * Copyright (C) 2013-2016  Hercules Dev Team
  *
  * Hercules is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@
  * NOTE: This file was auto-generated and should never be manually edited,
  *       as it will get overwritten.
  */
+
+/* GENERATED FILE DO NOT EDIT */
 
 #if !defined(HERCULES_CORE)
 #ifdef COMMON_UTILS_H /* HCache */
@@ -129,6 +131,9 @@ struct irc_bot_interface *ircbot;
 #ifdef MAP_ITEMDB_H /* itemdb */
 struct itemdb_interface *itemdb;
 #endif // MAP_ITEMDB_H
+#ifdef LOGIN_LCLIF_H /* lclif */
+struct lclif_interface *lclif;
+#endif // LOGIN_LCLIF_H
 #ifdef COMMON_CONF_H /* libconfig */
 struct libconfig_interface *libconfig;
 #endif // COMMON_CONF_H
@@ -358,6 +363,9 @@ if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("ircbot", ircbot)) return "ir
 #ifdef MAP_ITEMDB_H /* itemdb */
 if ((server_type&(SERVER_TYPE_MAP)) && !HPM_SYMBOL("itemdb", itemdb)) return "itemdb";
 #endif // MAP_ITEMDB_H
+#ifdef LOGIN_LCLIF_H /* lclif */
+if ((server_type&(SERVER_TYPE_LOGIN)) && !HPM_SYMBOL("lclif", lclif)) return "lclif";
+#endif // LOGIN_LCLIF_H
 #ifdef COMMON_CONF_H /* libconfig */
 if ((server_type&(SERVER_TYPE_ALL)) && !HPM_SYMBOL("libconfig", libconfig)) return "libconfig";
 #endif // COMMON_CONF_H

@@ -48,10 +48,7 @@ struct irc_bot_interface *ircbot;
 
 char send_string[IRC_MESSAGE_LENGTH];
 
-/**
- * Timer callback to (re-)connect to an IRC server
- * @see timer->do_timer
- */
+/// @copydoc irc_bot_interface::connect_timer()
 int irc_connect_timer(int tid, int64 tick, int id, intptr_t data) {
 	struct hSockOpt opt;
 	if( ircbot->isOn || ++ircbot->fails >= 3 )
@@ -71,53 +68,43 @@ int irc_connect_timer(int tid, int64 tick, int id, intptr_t data) {
 	return 0;
 }
 
-/**
- * Timer callback to send identification commands to an IRC server
- * @see timer->do_timer
- */
+/// @copydoc irc_bot_interface::identify_timer()
 int irc_identify_timer(int tid, int64 tick, int id, intptr_t data) {
 	if( !ircbot->isOn )
 		return 0;
 
 	sprintf(send_string, "USER HerculesWS%d 8 * : Hercules IRC Bridge",rnd()%777);
-	ircbot->send(send_string);
+	ircbot->send(send_string, true);
 	sprintf(send_string, "NICK %s", channel->config->irc_nick);
-	ircbot->send(send_string);
+	ircbot->send(send_string, true);
 
 	timer->add(timer->gettick() + 3000, ircbot->join_timer, 0, 0);
 
 	return 0;
 }
 
-/**
- * Timer callback to join channels (and optionally send NickServ commands)
- * @see timer->do_timer
- */
+/// @copydoc irc_bot_interface::join_timer()
 int irc_join_timer(int tid, int64 tick, int id, intptr_t data) {
 	if( !ircbot->isOn )
 		return 0;
 
 	if (channel->config->irc_nick_pw[0] != '\0') {
 		sprintf(send_string, "PRIVMSG NICKSERV : IDENTIFY %s", channel->config->irc_nick_pw);
-		ircbot->send(send_string);
+		ircbot->send(send_string, true);
 		if (channel->config->irc_use_ghost) {
 			sprintf(send_string, "PRIVMSG NICKSERV : GHOST %s %s", channel->config->irc_nick, channel->config->irc_nick_pw);
+			ircbot->send(send_string, true);
 		}
 	}
 
 	sprintf(send_string, "JOIN %s", channel->config->irc_channel);
-	ircbot->send(send_string);
+	ircbot->send(send_string, true);
 	ircbot->isIn = true;
 
 	return 0;
 }
 
-/**
- * Search the handler for a given IRC received command
- * @param function_name Name of the received IRC command
- * @return              Function pointer to the command handler, NULL in case
- *                      of unhandled commands
- */
+/// @copydoc irc_bot_interface::func_search()
 struct irc_func* irc_func_search(char* function_name) {
 	int i;
 	nullpo_retr(NULL, function_name);
@@ -129,10 +116,7 @@ struct irc_func* irc_func_search(char* function_name) {
 	return NULL;
 }
 
-/**
- * Parser for the IRC server connection
- * @see do_sockets
- */
+/// @copydoc irc_bot_interface::parse()
 int irc_parse(int fd) {
 	char *parse_string = NULL, *p = NULL, *str_safe = NULL;
 
@@ -166,16 +150,7 @@ int irc_parse(int fd) {
 	return 0;
 }
 
-/**
- * Parse the source from a received irc message
- * @param source Source string, as reported by the server
- * @param nick   Pointer to a string where to return the nick (may not be NULL,
- *               needs to be able to fit an IRC_NICK_LENGTH long string)
- * @param ident  Pointer to a string where to return the ident (may not be
- *               NULL, needs to be able to fit an IRC_IDENT_LENGTH long string)
- * @param host   Pointer to a string where to return the hostname (may not be
- *               NULL, needs to be able to fit an IRC_HOST_LENGTH long string)
- */
+/// @copydoc irc_bot_interface::parse_source()
 void irc_parse_source(char *source, char *nick, char *ident, char *host) {
 	int i, pos = 0;
 	size_t len;
@@ -199,12 +174,7 @@ void irc_parse_source(char *source, char *nick, char *ident, char *host) {
 	}
 }
 
-/**
- * Parse a received message from the irc server, and do the appropriate action
- * for the detected command
- * @param fd  IRC server connection file descriptor
- * @param str Raw received message
- */
+/// @copydoc irc_bot_interface::parse_sub()
 void irc_parse_sub(int fd, char *str) {
 	char source[180], command[60], buf1[IRC_MESSAGE_LENGTH], buf2[IRC_MESSAGE_LENGTH];
 	char *target = buf1, *message = buf2;
@@ -234,35 +204,92 @@ void irc_parse_sub(int fd, char *str) {
 	func->func(fd,command,source,target,message);
 }
 
-/**
- * Send a raw command to the irc server
- * @param str Command to send
- */
-void irc_send(char *str) {
+/// @copydoc irc_bot_interface::queue()
+void irc_queue(char *str)
+{
+	struct message_flood *queue_entry = NULL;
+
+	if (!ircbot->flood_protection_enabled) {
+		ircbot->send(str, true);
+		return;
+	}
+
+	if (ircbot->message_current == NULL) {
+		// No queue yet
+		if (ircbot->messages_burst_count < ircbot->flood_protection_burst) {
+			ircbot->send(str, true);
+			if (DIFF_TICK(timer->gettick(), ircbot->last_message_tick) <= ircbot->flood_protection_rate)
+				ircbot->messages_burst_count++;
+			else
+				ircbot->messages_burst_count = 0;
+			ircbot->last_message_tick = timer->gettick();
+		} else { //queue starts
+			CREATE(queue_entry, struct message_flood, 1);
+			safestrncpy(queue_entry->message, str, sizeof(queue_entry->message));
+			queue_entry->next = NULL;
+			ircbot->message_current = queue_entry;
+			ircbot->message_last = queue_entry;
+			ircbot->queue_tid = timer->add(timer->gettick() + ircbot->flood_protection_rate, ircbot->queue_timer, 0, 0); //start queue timer
+			ircbot->messages_burst_count = 0;
+		}
+	} else {
+		CREATE(queue_entry, struct message_flood, 1);
+		safestrncpy(queue_entry->message, str, sizeof(queue_entry->message));
+		queue_entry->next = NULL;
+		ircbot->message_last->next = queue_entry;
+		ircbot->message_last = queue_entry;
+	}
+}
+
+/// @copydoc irc_bot_interface::queue_timer()
+int irc_queue_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	struct message_flood *queue_entry = ircbot->message_current;
+	nullpo_ret(queue_entry);
+
+	ircbot->send(queue_entry->message, true);
+	if (queue_entry->next != NULL) {
+		ircbot->message_current = queue_entry->next;
+		ircbot->queue_tid = timer->add(timer->gettick() + ircbot->flood_protection_rate, ircbot->queue_timer, 0, 0);
+	} else {
+		ircbot->message_current = NULL;
+		ircbot->message_last = NULL;
+		ircbot->queue_tid = INVALID_TIMER;
+	}
+
+	aFree(queue_entry);
+
+	return 0;
+}
+
+/// @copydoc irc_bot_interface::send()
+void irc_send(char *str, bool force)
+{
 	size_t len;
 	nullpo_retv(str);
 	len = strlen(str) + 2;
 	if (len > IRC_MESSAGE_LENGTH-3)
 		len = IRC_MESSAGE_LENGTH-3;
+
+	if (!force && ircbot->flood_protection_enabled) {
+		// Add to queue
+		ircbot->queue(str);
+		return;
+	}
+
 	WFIFOHEAD(ircbot->fd, len);
 	snprintf(WFIFOP(ircbot->fd,0),IRC_MESSAGE_LENGTH, "%s\r\n", str);
 	WFIFOSET(ircbot->fd, len);
 }
 
-/**
- * Handler for the PING IRC command (send back a PONG)
- * @see irc_parse_sub
- */
+/// @copydoc irc_interface_bot::pong()
 void irc_pong(int fd, char *cmd, char *source, char *target, char *msg) {
 	nullpo_retv(cmd);
 	snprintf(send_string, IRC_MESSAGE_LENGTH, "PONG %s", cmd);
-	ircbot->send(send_string);
+	ircbot->send(send_string, false);
 }
 
-/**
- * Handler for CTCP commands received via PRIVMSG
- * @see irc_privmsg
- */
+/// @copydoc irc_interface_bot::privmsg_ctcp()
 void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) {
 	char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
 
@@ -283,7 +310,7 @@ void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) 
 		// Ignore it
 	} else if( strcmpi(cmd,"PING") == 0 ) {
 		snprintf(send_string, IRC_MESSAGE_LENGTH, "NOTICE %s :\001PING %s\001",source_nick,msg);
-		ircbot->send(send_string);
+		ircbot->send(send_string, false);
 	} else if( strcmpi(cmd,"TIME") == 0 ) {
 		time_t time_server;  // variable for number of seconds (used with time() function)
 		struct tm *datetime; // variable for time in structure ->tm_mday, ->tm_sec, ...
@@ -297,10 +324,10 @@ void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) 
 		strftime(temp, sizeof(temp)-1, msg_txt(230), datetime); // Server time (normal time): %A, %B %d %Y %X.
 
 		snprintf(send_string, IRC_MESSAGE_LENGTH, "NOTICE %s :\001TIME %s\001",source_nick,temp);
-		ircbot->send(send_string);
+		ircbot->send(send_string, false);
 	} else if( strcmpi(cmd,"VERSION") == 0 ) {
 		snprintf(send_string, IRC_MESSAGE_LENGTH, "NOTICE %s :\001VERSION Hercules.ws IRC Bridge\001",source_nick);
-		ircbot->send(send_string);
+		ircbot->send(send_string, false);
 #ifdef IRCBOT_DEBUG
 	} else {
 		ShowWarning("Unknown CTCP command received %s (%s) from %s\n",cmd,msg,source);
@@ -308,10 +335,7 @@ void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char *msg) 
 	}
 }
 
-/**
- * Handler for the PRIVMSG IRC command (action depends on the message contents)
- * @see irc_parse_sub
- */
+/// @copydoc irc_bot_interface::privmsg()
 void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 	size_t len = msg ? strlen(msg) : 0;
 	nullpo_retv(source);
@@ -322,7 +346,7 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 		command[0] = message[0] = '\0';
 		sscanf(msg, "\001%499[^\001\r\n ] %499[^\r\n\001]\001", command, message);
 
-		irc_privmsg_ctcp(fd, command, source, target, message);
+		ircbot->privmsg_ctcp(fd, command, source, target, message);
 #ifdef IRCBOT_DEBUG
 	} else if (strcmpi(target, channel->config->irc_nick) == 0) {
 		ShowDebug("irc_privmsg: Received message from %s: '%s'\n", source ? source : "(null)", msg);
@@ -349,11 +373,7 @@ void irc_privmsg(int fd, char *cmd, char *source, char *target, char *msg) {
 	}
 }
 
-/**
- * Handler for the JOIN IRC command (notify an in-game channel of users joining
- * the IRC channel)
- * @see irc_parse_sub
- */
+/// @copydoc irc_bot_interface::userjoin()
 void irc_userjoin(int fd, char *cmd, char *source, char *target, char *msg) {
 	char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
 
@@ -369,11 +389,7 @@ void irc_userjoin(int fd, char *cmd, char *source, char *target, char *msg) {
 	}
 }
 
-/**
- * Handler for the PART and QUIT IRC commands (notify an in-game channel of
- * users leaving the IRC channel)
- * @see irc_parse_sub
- */
+/// @copydoc irc_bot_interface::userleave()
 void irc_userleave(int fd, char *cmd, char *source, char *target, char *msg) {
 	char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
 
@@ -392,11 +408,7 @@ void irc_userleave(int fd, char *cmd, char *source, char *target, char *msg) {
 	}
 }
 
-/**
- * Handler for the NICK IRC commands (notify an in-game channel of users
- * changing their name while in the IRC channel)
- * @see irc_parse_sub
- */
+/// @copydoc irc_bot_interface::usernick()
 void irc_usernick(int fd, char *cmd, char *source, char *target, char *msg) {
 	char source_nick[IRC_NICK_LENGTH], source_ident[IRC_IDENT_LENGTH], source_host[IRC_HOST_LENGTH];
 
@@ -412,11 +424,7 @@ void irc_usernick(int fd, char *cmd, char *source, char *target, char *msg) {
 	}
 }
 
-/**
- * Relay a chat message to the irc channel the bot is connected to
- * @param name Sender's name
- * @param msg  Message text
- */
+/// @copydoc irc_bot_interface::relay()
 void irc_relay(const char *name, const char *msg)
 {
 	if (!ircbot->isIn)
@@ -428,12 +436,10 @@ void irc_relay(const char *name, const char *msg)
 	else
 		sprintf(send_string,"PRIVMSG %s :%s", channel->config->irc_channel, msg);
 
-	ircbot->send(send_string);
+	ircbot->send(send_string, false);
 }
 
-/**
- * IRC bot initializer
- */
+/// @copydoc irc_bot_interface::init()
 void irc_bot_init(bool minimal) {
 	/// Command handlers
 	const struct irc_func irc_func_base[] = {
@@ -479,20 +485,29 @@ void irc_bot_init(bool minimal) {
 	ircbot->isOn = false;
 
 	timer->add_func_list(ircbot->connect_timer, "irc_connect_timer");
+	timer->add_func_list(ircbot->queue_timer, "irc_queue_timer");
+
 	timer->add(timer->gettick() + 7000, ircbot->connect_timer, 0, 0);
 }
 
-/**
- * IRC bot finalizer
- */
+/// @copydoc irc_bot_interface::final()
 void irc_bot_final(void) {
 	int i;
 
 	if (!channel->config->irc)
 		return;
 	if( ircbot->isOn ) {
-		ircbot->send("QUIT :Hercules is shutting down");
+		ircbot->send("QUIT :Hercules is shutting down", true);
 		sockt->close(ircbot->fd);
+	}
+
+	if (ircbot->queue_tid != INVALID_TIMER)
+		timer->delete(ircbot->queue_tid, ircbot->queue_timer);
+
+	while (ircbot->message_current != NULL) {
+		struct message_flood *next = ircbot->message_current->next;
+		aFree(ircbot->message_current);
+		ircbot->message_current = next;
 	}
 
 	for( i = 0; i < ircbot->funcs.size; i++ ) {
@@ -509,6 +524,15 @@ void ircbot_defaults(void) {
 
 	ircbot->channel = NULL;
 
+	ircbot->flood_protection_enabled = true;
+	ircbot->flood_protection_rate = 1000;
+	ircbot->flood_protection_burst = 3;
+	ircbot->last_message_tick = INVALID_TIMER;
+	ircbot->queue_tid = INVALID_TIMER;
+	ircbot->messages_burst_count = 0;
+	ircbot->message_current = NULL;
+	ircbot->message_last = NULL;
+
 	ircbot->init = irc_bot_init;
 	ircbot->final = irc_bot_final;
 
@@ -522,11 +546,14 @@ void ircbot_defaults(void) {
 	ircbot->identify_timer = irc_identify_timer;
 	ircbot->join_timer = irc_join_timer;
 
+	ircbot->queue_timer = irc_queue_timer;
+	ircbot->queue = irc_queue;
 	ircbot->send = irc_send;
 	ircbot->relay = irc_relay;
 
 	ircbot->pong = irc_pong;
 	ircbot->privmsg = irc_privmsg;
+	ircbot->privmsg_ctcp = irc_privmsg_ctcp;
 
 	ircbot->userjoin = irc_userjoin;
 	ircbot->userleave = irc_userleave;

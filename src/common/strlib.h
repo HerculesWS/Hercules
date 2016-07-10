@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -33,7 +33,7 @@
 #define normalize_name(str,delims) (strlib->normalize_name_((str),(delims)))
 #define stristr(haystack,needle)   (strlib->stristr_((haystack),(needle)))
 
-#if !(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)
+#if !(defined(WIN32) && defined(_MSC_VER)) && !defined(HAVE_STRNLEN)
 	#define strnlen(string,maxlen) (strlib->strnlen_((string),(maxlen)))
 #endif
 
@@ -98,7 +98,7 @@ struct strlib_interface {
 	char *(*normalize_name_) (char* str,const char* delims);
 	const char *(*stristr_) (const char *haystack, const char *needle);
 
-	/* only used when '!(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)', needs to be defined at all times however  */
+	/* only used when '!(defined(WIN32) && defined(_MSC_VER)) && !defined(HAVE_STRNLEN)', needs to be defined at all times however  */
 	size_t (*strnlen_) (const char* string, size_t maxlen);
 
 	/* only used when 'WIN32' */
@@ -125,7 +125,7 @@ struct strlib_interface {
 	/// Produces the hexadecimal representation of the given input.
 	/// The output buffer must be at least count*2+1 in size.
 	/// Returns true on success, false on failure.
-	bool (*bin2hex_) (char* output, unsigned char* input, size_t count);
+	bool (*bin2hex_) (char *output, const unsigned char *input, size_t count);
 };
 
 struct stringbuf_interface {

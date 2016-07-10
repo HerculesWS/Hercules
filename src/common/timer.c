@@ -51,7 +51,7 @@ struct timer_interface *timer;
 // timers (array)
 static struct TimerData* timer_data = NULL;
 static int timer_data_max = 0;
-static int timer_data_num = 0;
+static int timer_data_num = 1;
 
 // free timers (array)
 static int* free_timer_list = NULL;
@@ -369,6 +369,7 @@ int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data, int in
 
 /// Retrieves internal timer data
 const struct TimerData* timer_get(int tid) {
+	Assert_retr(NULL, tid > 0);
 	return ( tid >= 0 && tid < timer_data_num ) ? &timer_data[tid] : NULL;
 }
 
@@ -379,7 +380,7 @@ int timer_do_delete(int tid, TimerFunc func)
 {
 	nullpo_ret(func);
 
-	if( tid < 0 || tid >= timer_data_num ) {
+	if (tid < 1 || tid >= timer_data_num) {
 		ShowError("timer_do_delete error : no such timer [%d](%p(%s))\n", tid, func, search_timer_func_list(func));
 		Assert_retr(-1, 0);
 		return -1;
@@ -406,6 +407,11 @@ int timer_do_delete(int tid, TimerFunc func)
 /// Adjusts a timer's expiration time.
 /// Returns the new tick value, or -1 if it fails.
 int64 timer_addtick(int tid, int64 tick) {
+	if (tid < 1 || tid >= timer_data_num) {
+		ShowError("timer_addtick error : no such timer [%d]\n", tid);
+		Assert_retr(-1, 0);
+		return -1;
+	}
 	return timer->settick(tid, timer_data[tid].tick+tick);
 }
 

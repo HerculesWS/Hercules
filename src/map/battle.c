@@ -3512,8 +3512,6 @@ int battle_blewcount_bonus(struct map_session_data *sd, uint16 skill_id) {
 struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int mflag) {
 	int nk;
 	short s_ele = 0;
-	unsigned int skillratio = 100; //Skill dmg modifiers.
-
 	struct map_session_data *sd = NULL;
 	struct status_change *sc;
 	struct Damage ad;
@@ -3666,6 +3664,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 				ad.damage = status->get_lv(src) * 10 + sstatus->int_;
 				break;
 			default: {
+				unsigned int skillratio = 100; //Skill dmg modifiers.
 				MATK_ADD( status->get_matk(src, 2) );
 #ifdef RENEWAL
 				ad.damage = battle->calc_cardfix(BF_MAGIC, src, target, nk, s_ele, 0, ad.damage, 0, ad.flag);
@@ -4276,7 +4275,6 @@ void battle_calc_misc_attack_unknown(struct block_list *src, struct block_list *
 // FIXME: wflag is undocumented
 struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int wflag)
 {
-	unsigned int skillratio = 100; //Skill dmg modifiers.
 	short temp=0;
 	short s_ele, s_ele_;
 	int i, nk;
@@ -4775,6 +4773,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	} //End hit/miss calculation
 
 	if (flag.hit && !flag.infdef) { //No need to do the math for plants
+		unsigned int skillratio = 100; //Skill dmg modifiers.
 		//Hitting attack
 
 //Assuming that 99% of the cases we will not need to check for the flag.rh... we don't.
@@ -6010,6 +6009,46 @@ int battle_damage_area(struct block_list *bl, va_list ap) {
 
 	return 0;
 }
+
+bool battle_check_arrows(struct map_session_data *sd)
+{
+	int index = sd->equip_index[EQI_AMMO];
+	if (index < 0) {
+		if (sd->weapontype1 > W_KATAR && sd->weapontype1 < W_HUUMA)
+			clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+		else
+			clif->arrow_fail(sd, 0);
+		return false;
+	}
+	//Ammo check by Ishizu-chan
+	if (sd->inventory_data[index]) {
+		switch (sd->status.weapon) {
+			case W_BOW:
+				if (sd->inventory_data[index]->look != A_ARROW) {
+					clif->arrow_fail(sd, 0);
+					return false;
+				}
+				break;
+			case W_REVOLVER:
+			case W_RIFLE:
+			case W_GATLING:
+			case W_SHOTGUN:
+				if (sd->inventory_data[index]->look != A_BULLET) {
+					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+					return false;
+				}
+				break;
+			case W_GRENADE:
+				if (sd->inventory_data[index]->look != A_GRENADE) {
+					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+					return false;
+				}
+				break;
+		}
+	}
+	return true;
+}
+
 /*==========================================
  * Do a basic physical attack (call trough unit_attack_timer)
  *------------------------------------------*/
@@ -6047,39 +6086,8 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 		sd->state.arrow_atk = (sd->status.weapon == W_BOW || (sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE));
 		if (sd->state.arrow_atk)
 		{
-			int index = sd->equip_index[EQI_AMMO];
-			if (index<0) {
-				if ( sd->weapontype1 > W_KATAR && sd->weapontype1 < W_HUUMA )
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
-				else
-					clif->arrow_fail(sd, 0);
+			if (battle->check_arrows(sd) == false)
 				return ATK_NONE;
-			}
-			//Ammo check by Ishizu-chan
-			if (sd->inventory_data[index])
-			switch (sd->status.weapon) {
-			case W_BOW:
-				if (sd->inventory_data[index]->look != A_ARROW) {
-					clif->arrow_fail(sd,0);
-					return ATK_NONE;
-				}
-			break;
-			case W_REVOLVER:
-			case W_RIFLE:
-			case W_GATLING:
-			case W_SHOTGUN:
-				if (sd->inventory_data[index]->look != A_BULLET) {
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
-					return ATK_NONE;
-				}
-			break;
-			case W_GRENADE:
-				if (sd->inventory_data[index]->look != A_GRENADE) {
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
-					return ATK_NONE;
-				}
-			break;
-			}
 		}
 	}
 	if (sc && sc->count) {
@@ -7606,6 +7614,7 @@ void battle_defaults(void) {
 	battle->calc_gvg_damage = battle_calc_gvg_damage;
 	battle->calc_bg_damage = battle_calc_bg_damage;
 	battle->weapon_attack = battle_weapon_attack;
+	battle->check_arrows = battle_check_arrows;
 	battle->calc_weapon_attack = battle_calc_weapon_attack;
 	battle->delay_damage = battle_delay_damage;
 	battle->drain = battle_drain;

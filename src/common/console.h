@@ -24,8 +24,10 @@
 #include "common/db.h"
 #include "common/mutex.h"
 #include "common/spinlock.h"
-#include "common/sql.h"
 #include "common/thread.h"
+
+/* Forward Declarations */
+struct Sql; // common/sql.h
 
 /**
  * Queue Max
@@ -78,7 +80,7 @@ struct console_input_interface {
 	VECTOR_DECL(struct CParseEntry *) command_list;
 	VECTOR_DECL(struct CParseEntry *) commands;
 	/* */
-	Sql *SQL;
+	struct Sql *SQL;
 	/* */
 	void (*parse_init) (void);
 	void (*parse_final) (void);
@@ -90,7 +92,7 @@ struct console_input_interface {
 	void (*load_defaults) (void);
 	void (*parse_list_subs) (struct CParseEntry *cmd, unsigned char depth);
 	void (*addCommand) (char *name, CParseFunc func);
-	void (*setSQL) (Sql *SQL_handle);
+	void (*setSQL) (struct Sql *SQL_handle);
 #else // not CONSOLE_INPUT
 	UNAVAILABLE_STRUCT;
 #endif

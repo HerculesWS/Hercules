@@ -38,35 +38,39 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
+#ifdef SOCKET_EPOLL
+#include <sys/epoll.h>
+#endif  // SOCKET_EPOLL
+
 #ifdef WIN32
 #	include "common/winapi.h"
-#else
+#else  // WIN32
 #	include <arpa/inet.h>
 #	include <errno.h>
 #	include <net/if.h>
 #	include <netdb.h>
 #if defined __linux__ || defined __linux
 #       include <linux/tcp.h>
-#else
+#else  // defined __linux__ || defined __linux
 #	include <netinet/in.h>
 #	include <netinet/tcp.h>
-#endif
+#endif  // defined __linux__ || defined __linux
 #	include <sys/ioctl.h>
 #	include <sys/socket.h>
 #	include <sys/time.h>
 #	include <unistd.h>
 
-#	ifndef SIOCGIFCONF
-#		include <sys/sockio.h> // SIOCGIFCONF on Solaris, maybe others? [Shinomori]
-#	endif
-#	ifndef FIONBIO
-#		include <sys/filio.h> // FIONBIO on Solaris [FlavioJS]
-#	endif
+#ifndef SIOCGIFCONF
+#	include <sys/sockio.h> // SIOCGIFCONF on Solaris, maybe others? [Shinomori]
+#endif  // SIOCGIFCONF
+#ifndef FIONBIO
+#	include <sys/filio.h> // FIONBIO on Solaris [FlavioJS]
+#endif  // FIONBIO
 
-#	ifdef HAVE_SETRLIMIT
-#		include <sys/resource.h>
-#	endif
-#endif
+#ifdef HAVE_SETRLIMIT
+#	include <sys/resource.h>
+#endif  // HAVE_SETRLIMIT
+#endif  // WIN32
 
 /**
  * Socket Interface Source
@@ -82,7 +86,7 @@ struct socket_data **session;
 void send_shortlist_add_fd(int fd);
 // Do pending network sends (and eof handling) from the shortlist.
 void send_shortlist_do_sends(void);
-#endif
+#endif  // SEND_SHORTLIST
 
 /////////////////////////////////////////////////////////////////////
 #if defined(WIN32)
@@ -212,7 +216,7 @@ char* sErr(int code)
 #define sFD_ZERO                                    FD_ZERO
 
 /////////////////////////////////////////////////////////////////////
-#else
+#else  // defined(WIN32)
 /////////////////////////////////////////////////////////////////////
 // nix portability layer
 
@@ -244,29 +248,40 @@ char* sErr(int code)
 #define sFD_ZERO FD_ZERO
 
 /////////////////////////////////////////////////////////////////////
-#endif
+#endif  // defined(WIN32)
 /////////////////////////////////////////////////////////////////////
 
 #ifndef MSG_NOSIGNAL
 	#define MSG_NOSIGNAL 0
-#endif
+#endif  // MSG_NOSIGNAL
 
+#ifndef SOCKET_EPOLL
+// Select based Event Dispatcher:
 fd_set readfds;
+
+#else  // SOCKET_EPOLL
+// Epoll based Event Dispatcher:
+static int epoll_maxevents = (FD_SETSIZE / 2);
+static int epfd = SOCKET_ERROR;
+static struct epoll_event epevent;
+static struct epoll_event *epevents = NULL;
+
+#endif  // SOCKET_EPOLL
 
 // Maximum packet size in bytes, which the client is able to handle.
 // Larger packets cause a buffer overflow and stack corruption.
 #if PACKETVER >= 20131223
 static size_t socket_max_client_packet = 0xFFFF;
-#else
+#else  // PACKETVER >= 20131223
 static size_t socket_max_client_packet = 0x6000;
-#endif
+#endif  // PACKETVER >= 20131223
 
 #ifdef SHOW_SERVER_STATS
 // Data I/O statistics
 static size_t socket_data_i = 0, socket_data_ci = 0, socket_data_qi = 0;
 static size_t socket_data_o = 0, socket_data_co = 0, socket_data_qo = 0;
 static time_t socket_data_last_tick = 0;
-#endif
+#endif  // SHOW_SERVER_STATS
 
 // initial recv buffer size (this will also be the max. size)
 // biggest known packet: S 0153 <len>.w <emblem data>.?B -> 24x24 256 color .bmp (0153 + len.w + 1618/1654/1756 bytes)
@@ -282,14 +297,14 @@ static time_t socket_data_last_tick = 0;
 int send_shortlist_array[FD_SETSIZE];// we only support FD_SETSIZE sockets, limit the array to that
 int send_shortlist_count = 0;// how many fd's are in the shortlist
 uint32 send_shortlist_set[(FD_SETSIZE+31)/32];// to know if specific fd's are already in the shortlist
-#endif
+#endif  // SEND_SHORTLIST
 
 static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse);
 
 #ifndef MINICORE
 	int ip_rules = 1;
 	static int connect_check(uint32 ip);
-#endif
+#endif  // MINICORE
 
 const char* error_msg(void)
 {
@@ -380,13 +395,13 @@ void setsocketopts(int fd, struct hSockOpt *opt)
 		ShowWarning("setsocketopts: Unable to set SO_LINGER mode for connection #%d!\n", fd);
 
 #ifdef TCP_THIN_LINEAR_TIMEOUTS
-    if (sSetsockopt(fd, IPPROTO_TCP, TCP_THIN_LINEAR_TIMEOUTS, (char *)&yes, sizeof(yes)))
-	    ShowWarning("setsocketopts: Unable to set TCP_THIN_LINEAR_TIMEOUTS mode for connection #%d!\n", fd);
-#endif
+	if (sSetsockopt(fd, IPPROTO_TCP, TCP_THIN_LINEAR_TIMEOUTS, (char *)&yes, sizeof(yes)))
+		ShowWarning("setsocketopts: Unable to set TCP_THIN_LINEAR_TIMEOUTS mode for connection #%d!\n", fd);
+#endif  // TCP_THIN_LINEAR_TIMEOUTS
 #ifdef TCP_THIN_DUPACK
-    if (sSetsockopt(fd, IPPROTO_TCP, TCP_THIN_DUPACK, (char *)&yes, sizeof(yes)))
-	    ShowWarning("setsocketopts: Unable to set TCP_THIN_DUPACK mode for connection #%d!\n", fd);
-#endif
+	if (sSetsockopt(fd, IPPROTO_TCP, TCP_THIN_DUPACK, (char *)&yes, sizeof(yes)))
+		ShowWarning("setsocketopts: Unable to set TCP_THIN_DUPACK mode for connection #%d!\n", fd);
+#endif  // TCP_THIN_DUPACK
 }
 
 /*======================================
@@ -398,7 +413,7 @@ void set_eof(int fd)
 #ifdef SEND_SHORTLIST
 		// Add this socket to the shortlist for eof handling.
 		send_shortlist_add_fd(fd);
-#endif
+#endif  // SEND_SHORTLIST
 		sockt->session[fd]->flag.eof = 1;
 	}
 }
@@ -436,7 +451,7 @@ int recv_to_fifo(int fd)
 	{
 		socket_data_ci += len;
 	}
-#endif
+#endif  // SHOW_SERVER_STATS
 	return 0;
 }
 
@@ -453,12 +468,12 @@ int send_from_fifo(int fd)
 	len = sSend(fd, (const char *) sockt->session[fd]->wdata, (int)sockt->session[fd]->wdata_size, MSG_NOSIGNAL);
 
 	if( len == SOCKET_ERROR )
-	{//An exception has occurred
+	{ //An exception has occurred
 		if( sErrno != S_EWOULDBLOCK ) {
 			//ShowDebug("send_from_fifo: %s, ending connection #%d\n", error_msg(), fd);
 #ifdef SHOW_SERVER_STATS
 			socket_data_qo -= sockt->session[fd]->wdata_size;
-#endif
+#endif  // SHOW_SERVER_STATS
 			sockt->session[fd]->wdata_size = 0; //Clear the send queue as we can't send anymore. [Skotlex]
 			sockt->eof(fd);
 		}
@@ -480,7 +495,7 @@ int send_from_fifo(int fd)
 		{
 			socket_data_co += len;
 		}
-#endif
+#endif  // SHOW_SERVER_STATS
 	}
 
 	return 0;
@@ -534,10 +549,26 @@ int connect_client(int listen_fd) {
 		sockt->close(fd);
 		return -1;
 	}
-#endif
+#endif  // MINICORE
+
+#ifndef SOCKET_EPOLL
+	// Select Based Event Dispatcher
+	sFD_SET(fd,&readfds);
+
+#else  // SOCKET_EPOLL
+	// Epoll based Event Dispatcher
+	epevent.data.fd = fd;
+	epevent.events = EPOLLIN;
+
+	if(epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &epevent) == SOCKET_ERROR){
+		ShowError("connect_client: New Socket #%d failed to add to epoll event dispatcher: %s\n", fd, error_msg());
+		sClose(fd);
+		return -1;
+	}
+
+#endif  // SOCKET_EPOLL
 
 	if( sockt->fd_max <= fd ) sockt->fd_max = fd + 1;
-	sFD_SET(fd,&readfds);
 
 	create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse);
 	sockt->session[fd]->client_addr = ntohl(client_address.sin_addr.s_addr);
@@ -586,8 +617,26 @@ int make_listen_bind(uint32 ip, uint16 port)
 		exit(EXIT_FAILURE);
 	}
 
+
+#ifndef SOCKET_EPOLL
+	// Select Based Event Dispatcher
+	sFD_SET(fd,&readfds);
+
+#else  // SOCKET_EPOLL
+	// Epoll based Event Dispatcher
+	epevent.data.fd = fd;
+	epevent.events = EPOLLIN;
+
+	if(epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &epevent) == SOCKET_ERROR){
+		ShowError("make_listen_bind: failed to add listener socket #%d to epoll event dispatcher: %s\n", fd, error_msg());
+		sClose(fd);
+		exit(EXIT_FAILURE);
+	}
+
+#endif  // SOCKET_EPOLL
+
 	if(sockt->fd_max <= fd) sockt->fd_max = fd + 1;
-	sFD_SET(fd, &readfds);
+
 
 	create_session(fd, connect_client, null_send, null_parse);
 	sockt->session[fd]->client_addr = 0; // just listens
@@ -637,8 +686,25 @@ int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt) {
 	//Now the socket can be made non-blocking. [Skotlex]
 	sockt->set_nonblocking(fd, 1);
 
-	if (sockt->fd_max <= fd) sockt->fd_max = fd + 1;
+
+#ifndef SOCKET_EPOLL
+	// Select Based Event Dispatcher
 	sFD_SET(fd,&readfds);
+
+#else  // SOCKET_EPOLL
+	// Epoll based Event Dispatcher
+	epevent.data.fd = fd;
+	epevent.events = EPOLLIN;
+
+	if(epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &epevent) == SOCKET_ERROR){
+		ShowError("make_connection: failed to add socket #%d to epoll event dispatcher: %s\n", fd, error_msg());
+		sClose(fd);
+		return -1;
+	}
+
+#endif  // SOCKET_EPOLL
+
+	if(sockt->fd_max <= fd) sockt->fd_max = fd + 1;
 
 	create_session(fd, recv_to_fifo, send_from_fifo, default_func_parse);
 	sockt->session[fd]->client_addr = ntohl(remote_address.sin_addr.s_addr);
@@ -668,7 +734,7 @@ static void delete_session(int fd)
 #ifdef SHOW_SERVER_STATS
 		socket_data_qi -= sockt->session[fd]->rdata_size - sockt->session[fd]->rdata_pos;
 		socket_data_qo -= sockt->session[fd]->wdata_size;
-#endif
+#endif  // SHOW_SERVER_STATS
 		aFree(sockt->session[fd]->rdata);
 		aFree(sockt->session[fd]->wdata);
 		if( sockt->session[fd]->session_data )
@@ -741,7 +807,7 @@ int rfifoskip(int fd, size_t len)
 	s->rdata_pos = s->rdata_pos + len;
 #ifdef SHOW_SERVER_STATS
 	socket_data_qi -= len;
-#endif
+#endif  // SHOW_SERVER_STATS
 	return 0;
 }
 
@@ -792,7 +858,7 @@ int wfifoset(int fd, size_t len)
 	s->wdata_size += len;
 #ifdef SHOW_SERVER_STATS
 	socket_data_qo += len;
-#endif
+#endif  // SHOW_SERVER_STATS
 	//If the interserver has 200% of its normal size full, flush the data.
 	if( s->flag.server && s->wdata_size >= 2*FIFOSIZE_SERVERLINK )
 		sockt->flush(fd);
@@ -806,22 +872,24 @@ int wfifoset(int fd, size_t len)
 
 #ifdef SEND_SHORTLIST
 	send_shortlist_add_fd(fd);
-#endif
+#endif  // SEND_SHORTLIST
 
 	return 0;
 }
 
 int do_sockets(int next)
 {
+#ifndef SOCKET_EPOLL
 	fd_set rfd;
 	struct timeval timeout;
+#endif  // SOCKET_EPOLL
 	int ret,i;
 
 	// PRESEND Timers are executed before do_sendrecv and can send packets and/or set sessions to eof.
 	// Send remaining data and process client-side disconnects here.
 #ifdef SEND_SHORTLIST
 	send_shortlist_do_sends();
-#else
+#else  // SEND_SHORTLIST
 	for (i = 1; i < sockt->fd_max; i++)
 	{
 		if(!sockt->session[fd]
@@ -830,7 +898,10 @@ int do_sockets(int next)
 		if(sockt->session[fd]>wdata_size)
 			sockt->session[fd]>func_send(i);
 	}
-#endif
+#endif  // SEND_SHORTLIST
+
+#ifndef SOCKET_EPOLL
+	// Select based Event Dispatcher:
 
 	// can timeout until the next tick
 	timeout.tv_sec  = next/1000;
@@ -848,6 +919,20 @@ int do_sockets(int next)
 		}
 		return 0; // interrupted by a signal, just loop and try again
 	}
+#else  // SOCKET_EPOLL
+	// Epoll based Event Dispatcher
+
+	ret = epoll_wait(epfd, epevents, epoll_maxevents, next);
+	if(ret == SOCKET_ERROR)
+	{
+		if( sErrno != S_EINTR )
+		{
+			ShowFatalError("do_sockets: epoll_wait() failed, %s!\n", error_msg());
+			exit(EXIT_FAILURE);
+		}
+		return 0; // interrupted by a signal, just loop and try again
+	}
+#endif  // SOCKET_EPOLL
 
 	sockt->last_tick = time(NULL);
 
@@ -859,7 +944,33 @@ int do_sockets(int next)
 		if( sockt->session[fd] )
 			sockt->session[fd]->func_recv(fd);
 	}
-#else
+#elif defined(SOCKET_EPOLL)
+	// epoll based selection
+
+	for( i = 0; i < ret; i++ )
+	{
+		struct epoll_event *it = &epevents[i];
+		struct socket_data *sock = sockt->session[ it->data.fd ];
+
+		if(!sock)
+			continue;
+
+		if ((it->events & EPOLLERR) ||
+			(it->events & EPOLLHUP) ||
+			(!(it->events & EPOLLIN)))
+		{
+			// Got Error on this connection
+			sockt->eof( it->data.fd );
+
+		} else if (it->events & EPOLLIN) {
+			// data wainting
+			sock->func_recv( it->data.fd );
+
+		}
+
+	}
+
+#else  // defined(SOCKET_EPOLL)
 	// otherwise assume that the fd_set is a bit-array and enumerate it in a standard way
 	for( i = 1; ret && i < sockt->fd_max; ++i )
 	{
@@ -869,12 +980,12 @@ int do_sockets(int next)
 			--ret;
 		}
 	}
-#endif
+#endif  // defined(SOCKET_EPOLL)
 
 	// POSTSEND Send remaining data and handle eof sessions.
 #ifdef SEND_SHORTLIST
 	send_shortlist_do_sends();
-#else
+#else  // SEND_SHORTLIST
 	for (i = 1; i < sockt->fd_max; i++)
 	{
 		if(!sockt->session[i])
@@ -888,7 +999,7 @@ int do_sockets(int next)
 			sockt->session[i]->func_parse(i); //This should close the session immediately.
 		}
 	}
-#endif
+#endif  // SEND_SHORTLIST
 
 	// parse input data on each socket
 	for(i = 1; i < sockt->fd_max; i++)
@@ -931,14 +1042,14 @@ int do_sockets(int next)
 		sprintf(buf, "In: %.03f kB/s (%.03f kB/s, Q: %.03f kB) | Out: %.03f kB/s (%.03f kB/s, Q: %.03f kB) | RAM: %.03f MB", socket_data_i/1024., socket_data_ci/1024., socket_data_qi/1024., socket_data_o/1024., socket_data_co/1024., socket_data_qo/1024., iMalloc->usage()/1024.);
 #ifdef _WIN32
 		SetConsoleTitle(buf);
-#else
+#else  // _WIN32
 		ShowMessage("\033[s\033[1;1H\033[2K%s\033[u", buf);
-#endif
+#endif  // _WIN32
 		socket_data_last_tick = sockt->last_tick;
 		socket_data_i = socket_data_ci = 0;
 		socket_data_o = socket_data_co = 0;
 	}
-#endif
+#endif  // SHOW_SERVER_STATS
 
 	return 0;
 }
@@ -975,7 +1086,7 @@ static int access_debug    = 0;
 static int ddos_count      = 10;
 static int ddos_interval   = 3*1000;
 static int ddos_autoreset  = 10*60*1000;
-DBMap *connect_history = NULL;
+struct DBMap *connect_history = NULL;
 
 static int connect_check_(uint32 ip);
 
@@ -1089,7 +1200,7 @@ static int connect_check_clear(int tid, int64 tick, int id, intptr_t data) {
 	int clear = 0;
 	int list  = 0;
 	ConnectHistory *hist = NULL;
-	DBIterator *iter;
+	struct DBIterator *iter;
 
 	if( !db_size(connect_history) )
 		return 0;
@@ -1160,7 +1271,7 @@ int access_ipmask(const char* str, AccessControl* acc)
 	return 1;
 }
 //////////////////////////////
-#endif
+#endif  // MINICORE
 //////////////////////////////
 
 int socket_config_read(const char* cfgName)
@@ -1184,7 +1295,15 @@ int socket_config_read(const char* cfgName)
 			sockt->stall_time = atoi(w2);
 			if( sockt->stall_time < 3 )
 				sockt->stall_time = 3;/* a minimum is required to refrain it from killing itself */
+		} 
+#ifdef SOCKET_EPOLL
+		else if(!strcmpi(w1, "epoll_maxevents")) {
+			epoll_maxevents = atoi(w2);
+			if(epoll_maxevents < 16){
+				epoll_maxevents = 16; // minimum that seems to be useful
+			}
 		}
+#endif  // SOCKET_EPOLL
 #ifndef MINICORE
 		else if (!strcmpi(w1, "enable_ip_rules")) {
 			ip_rules = config_switch(w2);
@@ -1218,7 +1337,7 @@ int socket_config_read(const char* cfgName)
 			access_debug = config_switch(w2);
 		else if (!strcmpi(w1,"socket_max_client_packet"))
 			socket_max_client_packet = strtoul(w2, NULL, 0);
-#endif
+#endif  // MINICORE
 		else if (!strcmpi(w1, "import"))
 			socket_config_read(w2);
 		else
@@ -1239,7 +1358,7 @@ void socket_final(void)
 		aFree(access_allow);
 	if( access_deny )
 		aFree(access_deny);
-#endif
+#endif  // MINICORE
 
 	for( i = 1; i < sockt->fd_max; i++ )
 		if(sockt->session[i])
@@ -1255,6 +1374,18 @@ void socket_final(void)
 	VECTOR_CLEAR(sockt->lan_subnets);
 	VECTOR_CLEAR(sockt->allowed_ips);
 	VECTOR_CLEAR(sockt->trusted_ips);
+
+#ifdef SOCKET_EPOLL
+	if(epfd != SOCKET_ERROR){
+		close(epfd);
+		epfd = SOCKET_ERROR;
+	}
+	if(epevents != NULL){
+		aFree(epevents);
+		epevents = NULL;
+	}
+#endif  // SOCKET_EPOLL
+
 }
 
 /// Closes a socket.
@@ -1264,7 +1395,17 @@ void socket_close(int fd)
 		return;// invalid
 
 	sockt->flush(fd); // Try to send what's left (although it might not succeed since it's a nonblocking socket)
+
+#ifndef SOCKET_EPOLL
+	// Select based Event Dispatcher
 	sFD_CLR(fd, &readfds);// this needs to be done before closing the socket
+#else  // SOCKET_EPOLL
+	// Epoll based Event Dispatcher
+	epevent.data.fd = fd;
+	epevent.events = EPOLLIN;
+	epoll_ctl(epfd, EPOLL_CTL_DEL, fd, &epevent);	// removing the socket from epoll when it's being closed is not required but recommended
+#endif  // SOCKET_EPOLL
+
 	sShutdown(fd, SHUT_RDWR); // Disallow further reads/writes
 	sClose(fd); // We don't really care if these closing functions return an error, we are just shutting down and not reusing this socket.
 	if (sockt->session[fd]) delete_session(fd);
@@ -1401,19 +1542,38 @@ void socket_init(void)
 			}
 		}
 	}
-#endif
+#endif  // defined(HAVE_SETRLIMIT) && !defined(CYGWIN)
 
 	// Get initial local ips
 	sockt->naddr_ = sockt->getips(sockt->addr_,16);
 
+	socket_config_read(SOCKET_CONF_FILENAME);
+
+#ifndef SOCKET_EPOLL
+	// Select based Event Dispatcher:
 	sFD_ZERO(&readfds);
+	ShowInfo("Server uses '" CL_WHITE "select" CL_RESET "' as event dispatcher\n");
+
+#else  // SOCKET_EPOLL
+	// Epoll based Event Dispatcher:
+	epfd = epoll_create(FD_SETSIZE);	// 2.6.8 or newer ignores the expected socket amount argument
+	if(epfd == SOCKET_ERROR){
+		ShowError("Failed to Create Epoll Event Dispatcher: %s\n", error_msg());
+		exit(EXIT_FAILURE);
+	}
+
+	memset(&epevent, 0x00, sizeof(struct epoll_event));
+	epevents = aCalloc(epoll_maxevents, sizeof(struct epoll_event));
+
+	ShowInfo("Server uses '" CL_WHITE "epoll" CL_RESET "' with up to " CL_WHITE "%d" CL_RESET " events per cycle as event dispatcher\n", epoll_maxevents);
+
+#endif  // SOCKET_EPOLL
+
 #if defined(SEND_SHORTLIST)
 	memset(send_shortlist_set, 0, sizeof(send_shortlist_set));
-#endif
+#endif  // defined(SEND_SHORTLIST)
 
 	CREATE(sockt->session, struct socket_data *, FD_SETSIZE);
-
-	socket_config_read(SOCKET_CONF_FILENAME);
 
 	// initialize last send-receive tick
 	sockt->last_tick = time(NULL);
@@ -1427,7 +1587,7 @@ void socket_init(void)
 	connect_history = uidb_alloc(DB_OPT_RELEASE_DATA);
 	timer->add_func_list(connect_check_clear, "connect_check_clear");
 	timer->add_interval(timer->gettick()+1000, connect_check_clear, 0, 0, 5*60*1000);
-#endif
+#endif  // MINICORE
 
 	ShowInfo("Server supports up to '"CL_WHITE"%"PRIu64""CL_RESET"' concurrent connections.\n", rlim_cur);
 }
@@ -1617,7 +1777,7 @@ void send_shortlist_do_sends(void)
 		}
 	}
 }
-#endif
+#endif  // SEND_SHORTLIST
 
 /**
  * Checks whether the given IP comes from LAN or WAN.
@@ -1752,10 +1912,12 @@ void socket_net_config_read(const char *filename)
 		ShowError("No allowed server IP ranges configured. This server won't be able to accept connections from any char servers.\n");
 	}
 	ARR_FIND(0, VECTOR_LENGTH(sockt->allowed_ips), i, SUBNET_MATCH(0, VECTOR_INDEX(sockt->allowed_ips, i).ip, VECTOR_INDEX(sockt->allowed_ips, i).mask));
+#ifndef BUILDBOT
 	if (i != VECTOR_LENGTH(sockt->allowed_ips)) {
 		ShowWarning("Using a wildcard IP range in the allowed server IPs is NOT RECOMMENDED.\n");
 		ShowNotice("Please edit your '%s' allowed list to fit your network configuration.\n", filename);
 	}
+#endif  // BUILDBOT
 	libconfig->destroy(&network_config);
 	return;
 }

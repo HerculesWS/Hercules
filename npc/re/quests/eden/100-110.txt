@@ -87,7 +87,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 				mes "That person standing next to me is my master... He came back after long journey of practice.";
 				next;
 				mes "[Gelkah]";
-				mes "I understand you might	wonder why a Sura wants an Archbishop as a teacher...";
+				mes "I understand you might wonder why a Sura wants an Archbishop as a teacher...";
 			}
 			else {
 				cutin "gelca03",2;

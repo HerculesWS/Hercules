@@ -40,13 +40,13 @@ struct scan_context
   FILE *streams[MAX_INCLUDE_DEPTH];
   int depth;
   strbuf_t string;
-  const char **filenames;
+  char **filenames;
   unsigned int num_filenames;
 };
 
 extern void scanctx_init(struct scan_context *ctx, const char *top_filename);
-extern const char **scanctx_cleanup(struct scan_context *ctx,
-                                    unsigned int *num_filenames);
+extern char **scanctx_cleanup(struct scan_context *ctx,
+                              unsigned int *num_filenames);
 
 extern FILE *scanctx_push_include(struct scan_context *ctx, void *prev_buffer,
                                   const char **error);

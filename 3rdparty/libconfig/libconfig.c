@@ -49,8 +49,8 @@
 #define CHUNK_SIZE 16
 #define FLOAT_PRECISION DBL_DIG
 
-#define _new(T) (T *)calloc(1, sizeof(T)) /* zeroed */
-#define _delete(P) free((void *)(P))
+#define _new(T) calloc(1, sizeof(T)) /* zeroed */
+#define _delete(P) free(P)
 
 /* ------------------------------------------------------------------------- */
 
@@ -567,7 +567,7 @@ static int __config_read(struct config_t *config, FILE *stream, const char *file
 
   /* Reinitialize the config */
   void (*destructor)(void *) = config->destructor;
-  const char *include_dir = config->include_dir;
+  char *include_dir = config->include_dir;
   unsigned short tab_width = config->tab_width;
   int options = config->options;
 
@@ -743,7 +743,7 @@ int config_write_file(struct config_t *config, const char *filename)
 void config_destroy(struct config_t *config)
 {
   unsigned int count = config->num_filenames;
-  const char **f;
+  char **f;
 
   __config_setting_destroy(config->root);
 

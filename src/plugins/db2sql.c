@@ -25,6 +25,7 @@
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
+#include "common/sql.h"
 #include "common/strlib.h"
 #include "map/battle.h"
 #include "map/itemdb.h"
@@ -77,6 +78,7 @@ int (*mob_read_db_sub) (struct config_setting_t *it, int n, const char *source);
  */
 void hstr(const char *str)
 {
+	nullpo_retv(str);
 	if (strlen(str) > tosql.buf[3].len) {
 		tosql.buf[3].len = tosql.buf[3].len + strlen(str) + 1000;
 		RECREATE(tosql.buf[3].p,char,tosql.buf[3].len);
@@ -116,7 +118,9 @@ void db2sql_fileheader(void)
 			"-- NOTE: This file was auto-generated and should never be manually edited,\n"
 			"--       as it will get overwritten. If you need to modify this file,\n"
 			"--       please consider modifying the corresponding .conf file inside\n"
-			"--       the db folder, and then re-run the db2sql plugin.\n"
+			"--       the db folder, and then re-run the db2sql plugin.\n\n"
+
+			"-- GENERATED FILE DO NOT EDIT --\n"
 			"\n", year);
 }
 
@@ -287,7 +291,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		} else {
 			ui64 = UINT64_MAX;
 		}
-		StrBuf->Printf(&buf, "'0x%"PRIX64"',", ui64);
+		StrBuf->Printf(&buf, "'%"PRIu64"',", ui64);
 
 		// equip_upper
 		if (libconfig->setting_lookup_int(entry, "Upper", &i32) && i32 >= 0)
@@ -375,8 +379,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 		}
 
 		// script
-		if (it->script) {
-			libconfig->setting_lookup_string(entry, "Script", &bonus);
+		if (it->script && libconfig->setting_lookup_string(entry, "Script", &bonus)) {
 			hstr(bonus);
 			str = tosql.buf[3].p;
 			if (strlen(str) > tosql.buf[0].len) {
@@ -384,12 +387,13 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 				RECREATE(tosql.buf[0].p,char,tosql.buf[0].len);
 			}
 			SQL->EscapeString(NULL, tosql.buf[0].p, str);
+			StrBuf->Printf(&buf, "'%s',", tosql.buf[0].p);
+		} else {
+			StrBuf->AppendStr(&buf, "'',");
 		}
-		StrBuf->Printf(&buf, "'%s',", it->script?tosql.buf[0].p:"");
 
 		// equip_script
-		if (it->equip_script) {
-			libconfig->setting_lookup_string(entry, "OnEquipScript", &bonus);
+		if (it->equip_script && libconfig->setting_lookup_string(entry, "OnEquipScript", &bonus)) {
 			hstr(bonus);
 			str = tosql.buf[3].p;
 			if (strlen(str) > tosql.buf[1].len) {
@@ -397,12 +401,13 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 				RECREATE(tosql.buf[1].p,char,tosql.buf[1].len);
 			}
 			SQL->EscapeString(NULL, tosql.buf[1].p, str);
+			StrBuf->Printf(&buf, "'%s',", tosql.buf[1].p);
+		} else {
+			StrBuf->AppendStr(&buf, "'',");
 		}
-		StrBuf->Printf(&buf, "'%s',", it->equip_script?tosql.buf[1].p:"");
 
 		// unequip_script
-		if (it->unequip_script) {
-			libconfig->setting_lookup_string(entry, "OnUnequipScript", &bonus);
+		if (it->unequip_script && libconfig->setting_lookup_string(entry, "OnUnequipScript", &bonus)) {
 			hstr(bonus);
 			str = tosql.buf[3].p;
 			if (strlen(str) > tosql.buf[2].len) {
@@ -410,8 +415,10 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source)
 				RECREATE(tosql.buf[2].p,char,tosql.buf[2].len);
 			}
 			SQL->EscapeString(NULL, tosql.buf[2].p, str);
+			StrBuf->Printf(&buf, "'%s'", tosql.buf[2].p);
+		} else {
+			StrBuf->AppendStr(&buf, "''");
 		}
-		StrBuf->Printf(&buf, "'%s'", it->unequip_script?tosql.buf[2].p:"");
 
 		fprintf(tosql.fp, "REPLACE INTO `%s` VALUES (%s);\n", tosql.db_name, StrBuf->Value(&buf));
 
@@ -618,7 +625,7 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 		StrBuf->Printf(&buf, "%d,", md->status.def_ele + 20 * md->status.ele_lv);
 
 		// Mode
-		StrBuf->Printf(&buf, "0x%X,", md->status.mode);
+		StrBuf->Printf(&buf, "%u,", md->status.mode);
 
 		// Speed
 		StrBuf->Printf(&buf, "%u,", md->status.speed);

@@ -337,3 +337,16 @@ INSERT INTO `global_acc_reg_str_db` (`account_id`, `key`, `index`, `value`) SELE
 -- Dropping now useless table
 DROP TABLE `global_reg_value`;
 
+ALTER TABLE `charlog` MODIFY `time` DATETIME NULL;
+ALTER TABLE `interlog` MODIFY `time` DATETIME NULL;
+ALTER TABLE `ipbanlist` MODIFY `btime` DATETIME NULL;
+ALTER TABLE `ipbanlist` MODIFY `rtime` DATETIME NULL;
+ALTER TABLE `login` MODIFY `lastlogin` DATETIME NULL;
+ALTER TABLE `login` MODIFY `birthdate` DATE NULL;
+
+UPDATE `charlog` SET `time` = NULL WHERE `time` = '0000-00-00 00:00:00';
+UPDATE `interlog` SET `time` = NULL WHERE `time` = '0000-00-00 00:00:00';
+UPDATE `ipbanlist` SET `btime` = NULL WHERE `btime` = '0000-00-00 00:00:00';
+UPDATE `ipbanlist` SET `rtime` = NULL WHERE `rtime` = '0000-00-00 00:00:00';
+UPDATE `login` SET `lastlogin` = NULL WHERE `lastlogin` = '0000-00-00 00:00:00';
+UPDATE `login` SET `birthdate` = NULL WHERE `birthdate` = '0000-00-00';

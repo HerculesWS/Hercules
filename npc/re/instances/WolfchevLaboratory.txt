@@ -27,12 +27,6 @@
 //= along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=========================================================================
 //= Wolfchev's Laboratory
-//================= File Encoding =========================================
-//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//= -If the encoding is correct, the next three lines have the same length-
-//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
-//= ============ ============================================= ============
-//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
 //================= Description ===========================================
 //= Defeat Wolfchev's human experimentations.
 //================= Current Version =======================================
@@ -592,8 +586,7 @@ lighthalzen,342,291,4	script	Weird old man#Bio4Reward	4_M_EINOLD,{
 					break;
 				case 4:
 					mes "<<Ygnus Stale[1]>>";
-					// FIXME[Haru]: Anyone knows what Â¹ÃŸÃˆÂ­ means?
-					mes "When doing short distance attack, cast Â¹ÃŸÃˆÂ­ to the player and to the enemy with a certain chance.";
+					mes "When doing short distance attack, Chance of inflicting o rreceiving Burn status when dealing physical damage.";
 					mes "Two-Handed Axe / ATK 250 / Weight 190 / Fire Property / Weapon Lv 4 / Required Lv 95 / Socket 1 / for High Swordman/Merchant Classes";
 					callsub L_Reward, Ygnus_Stale, 50, 100, 35;
 					break;
@@ -2803,7 +2796,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 
 //== The Lab No.3 >> Boss's Room Warp portal ===============
 1@lhz,83,62,0	script	#potal_03	WARPNPC,2,2,{
-  end;
+	end;
 
 	OnInstanceInit:
 		disablenpc instance_npcname("#potal_03");
@@ -2990,9 +2983,9 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 
 //== Bosses ================================================
 -	script	bio4FBoss	FAKE_NPC,{
-  end;
+	end;
 
-  OnEnable:
+OnEnable:
 	.@map$ = instance_mapname("1@lhz");
 	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
 	specialeffect EF_SUI_EXPLOSION;
@@ -3038,7 +3031,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	disablenpc instance_npcname(strnpcinfo(0));
 	end;
 
-  OnDisable:
+OnDisable:
 	killmonster instance_mapname("1@lhz"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
 	disablenpc instance_npcname(strnpcinfo(0));
 	end;

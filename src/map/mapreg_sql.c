@@ -28,6 +28,7 @@
 #include "common/db.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
+#include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/sql.h"
 #include "common/strlib.h"
@@ -76,6 +77,7 @@ bool mapreg_setreg(int64 uid, int val) {
 	unsigned int i = script_getvaridx(uid);
 	const char* name = script->get_str(num);
 
+	nullpo_retr(true, name);
 	if( val != 0 ) {
 		if( (m = i64db_get(mapreg->regs.vars, uid)) ) {
 			m->u.i = val;
@@ -131,6 +133,8 @@ bool mapreg_setregstr(int64 uid, const char* str) {
 	int num = script_getvarid(uid);
 	unsigned int i   = script_getvaridx(uid);
 	const char* name = script->get_str(num);
+
+	nullpo_retr(true, name);
 
 	if( str == NULL || *str == 0 ) {
 		if( i )
@@ -190,7 +194,7 @@ void script_load_mapreg(void) {
 	   | varname | index | value |
 	   +-------------------------+
 	                                */
-	SqlStmt* stmt = SQL->StmtMalloc(map->mysql_handle);
+	struct SqlStmt *stmt = SQL->StmtMalloc(map->mysql_handle);
 	char varname[SCRIPT_VARNAME_LENGTH+1];
 	int index;
 	char value[255+1];
@@ -236,15 +240,17 @@ void script_load_mapreg(void) {
 /**
  * Saves permanent variables to database.
  */
-void script_save_mapreg(void) {
+void script_save_mapreg(void)
+{
 	if (mapreg->dirty) {
-		DBIterator *iter = db_iterator(mapreg->regs.vars);
-		struct mapreg_save *m;
+		struct DBIterator *iter = db_iterator(mapreg->regs.vars);
+		struct mapreg_save *m = NULL;
 		for (m = dbi_first(iter); dbi_exists(iter); m = dbi_next(iter)) {
 			if (m->save) {
 				int num = script_getvarid(m->uid);
 				int i   = script_getvaridx(m->uid);
 				const char* name = script->get_str(num);
+				nullpo_retv(name);
 				if (!m->is_string) {
 					if( SQL_ERROR == SQL->Query(map->mysql_handle, "UPDATE `%s` SET `value`='%d' WHERE `varname`='%s' AND `index`='%d' LIMIT 1", mapreg->table, m->u.i, name, i) )
 						Sql_ShowDebug(map->mysql_handle);
@@ -277,7 +283,8 @@ int script_autosave_mapreg(int tid, int64 tick, int id, intptr_t data) {
  *
  * @see DBApply
  */
-int mapreg_destroyreg(DBKey key, DBData *data, va_list ap) {
+int mapreg_destroyreg(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct mapreg_save *m = NULL;
 
 	if (data->type != DB_DATA_PTR) // Sanity check
@@ -344,6 +351,8 @@ void mapreg_init(void) {
  * Loads the mapreg configuration file.
  */
 bool mapreg_config_read(const char* w1, const char* w2) {
+	nullpo_retr(false, w1);
+	nullpo_retr(false, w2);
 	if(!strcmpi(w1, "mapreg_db"))
 		safestrncpy(mapreg->table, w2, sizeof(mapreg->table));
 	else

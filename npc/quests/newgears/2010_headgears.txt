@@ -195,8 +195,8 @@ lhz_in02,276,281,1	script	Drunken Man#Necktie	4_M_ALCHE_A,{
 	mes "[Drunken Man]";
 	mes "Once I wear the Necktie on my head,";
 	mes "I will be no match for you!";
-	mes "You must be nervous¡¦";
-	mes "Hmm¡¦ where is the Necktie?";
+	mes "You must be nervous...";
+	mes "Hmm... where is the Necktie?";
 	next;
 	// If having the materials
 	if ((countitem(Cobaltblue_Dyestuffs) > 0) && (countitem(Oil_Paper) > 29) && (countitem(Transparent_Cloth) > 99) && (countitem(Spool) > 19)) {
@@ -310,7 +310,7 @@ comodo,236,164,0	script	Hat Girl#Hair_Brush	1_F_04,{
 		mes "[Hat Girl]";
 		mes "Okay, I'll do it right away!";
 		next;
-		mes "Ch ch ch... combining...ch ch¡¦";
+		mes "Ch ch ch... combining...ch ch...";
 		emotion e_swt2,1;
 		next;
 		mes "[Hat Girl]";
@@ -454,7 +454,7 @@ alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
 			mes "... ...";
 			next;
 			mes "[" + strcharinfo(0) + "]";
-			mes "Hmm... I guess I was fooled by that little	kid.";
+			mes "Hmm... I guess I was fooled by that little kid.";
 			close;
 		}
 		mes "[Bebete]";
@@ -943,7 +943,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 			mes "For make it";
 			mes "the fruitful training,";
 			mes "Get around and kill";
-			mes "^FF000020 Chung E and 50	Civil Servant^000000!";
+			mes "^FF000020 Chung E and 50 Civil Servant^000000!";
 			next;
 			if (select("What a bullshit!", "Let's go!") == 1) {
 					mes "[Alonie]";
@@ -1033,7 +1033,7 @@ alberta,120,206,3	script	Alonie#Solo_Play_Box	4_M_UMKID,{
 		mes "Hmm, It's not enough.";
 		mes "Playing alone is not that easy!";
 		mes "Go and kill";
-		mes "^FF000020 Chung E and 50	Civil Servant^000000!";
+		mes "^FF000020 Chung E and 50 Civil Servant^000000!";
 		if (questprogress(1104,HUNTING) == 1) {
 			erasequest 1104;
 			setquest 1108;

@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -26,6 +26,7 @@
 #include "login/account.h"
 #include "login/ipban.h"
 #include "login/loginlog.h"
+#include "login/lclif.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
 #include "common/core.h"
@@ -42,6 +43,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+/** @file
+ * Implementation of the login interface.
+ */
 
 struct login_interface login_s;
 struct login_interface *login;
@@ -63,7 +68,7 @@ AccountDB* accounts = NULL;
 /**
  * @see DBCreateData
  */
-static DBData login_create_online_user(DBKey key, va_list args)
+static struct DBData login_create_online_user(union DBKey key, va_list args)
 {
 	struct online_login_data* p;
 	CREATE(p, struct online_login_data, 1);
@@ -112,7 +117,7 @@ static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t 
 /**
  * @see DBApply
  */
-static int login_online_db_setoffline(DBKey key, DBData *data, va_list ap)
+static int login_online_db_setoffline(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_login_data* p = DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
@@ -134,7 +139,7 @@ static int login_online_db_setoffline(DBKey key, DBData *data, va_list ap)
 /**
  * @see DBApply
  */
-static int login_online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
+static int login_online_data_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_login_data *character= DB->data2ptr(data);
 	nullpo_ret(character);
@@ -1180,14 +1185,6 @@ int login_mmo_auth(struct login_session_data* sd, bool isServer) {
 	return -1; // account OK
 }
 
-void login_connection_problem(int fd, uint8 status)
-{
-	WFIFOHEAD(fd,3);
-	WFIFOW(fd,0) = 0x81;
-	WFIFOB(fd,2) = status;
-	WFIFOSET(fd,3);
-}
-
 void login_kick(struct login_session_data* sd)
 {
 	uint8 buf[6];
@@ -1201,9 +1198,7 @@ void login_auth_ok(struct login_session_data* sd)
 {
 	int fd = 0;
 	uint32 ip;
-	uint8 server_num, n;
 	struct login_auth_node* node;
-	int i;
 
 	nullpo_retv(sd);
 	fd = sd->fd;
@@ -1211,29 +1206,17 @@ void login_auth_ok(struct login_session_data* sd)
 	if( core->runflag != LOGINSERVER_ST_RUNNING )
 	{
 		// players can only login while running
-		login->connection_problem(fd, 1); // 01 = server closed
+		lclif->connection_error(fd, 1); // 01 = server closed
 		return;
 	}
 
 	if (login->config->group_id_to_connect >= 0 && sd->group_id != login->config->group_id_to_connect) {
 		ShowStatus("Connection refused: the required group id for connection is %d (account: %s, group: %d).\n", login->config->group_id_to_connect, sd->userid, sd->group_id);
-		login->connection_problem(fd, 1); // 01 = server closed
+		lclif->connection_error(fd, 1); // 01 = server closed
 		return;
 	} else if (login->config->min_group_id_to_connect >= 0 && login->config->group_id_to_connect == -1 && sd->group_id < login->config->min_group_id_to_connect) {
 		ShowStatus("Connection refused: the minimum group id required for connection is %d (account: %s, group: %d).\n", login->config->min_group_id_to_connect, sd->userid, sd->group_id);
-		login->connection_problem(fd, 1); // 01 = server closed
-		return;
-	}
-
-	server_num = 0;
-	for( i = 0; i < ARRAYLENGTH(server); ++i )
-		if (sockt->session_is_active(server[i].fd))
-			server_num++;
-
-	if( server_num == 0 )
-	{// if no char-server, don't send void list of servers, just disconnect the player with proper message
-		ShowStatus("Connection refused: there is no char-server online (account: %s).\n", sd->userid);
-		login->connection_problem(fd, 1); // 01 = server closed
+		lclif->connection_error(fd, 1); // 01 = server closed
 		return;
 	}
 
@@ -1248,7 +1231,7 @@ void login_auth_ok(struct login_session_data* sd)
 				if( data->waiting_disconnect == INVALID_TIMER )
 					data->waiting_disconnect = timer->add(timer->gettick()+AUTH_TIMEOUT, login->waiting_disconnect_timer, sd->account_id, 0);
 
-				login->connection_problem(fd, 8); // 08 = Server still recognizes your last login
+				lclif->connection_error(fd, 8); // 08 = Server still recognizes your last login
 				return;
 			}
 			else
@@ -1262,41 +1245,15 @@ void login_auth_ok(struct login_session_data* sd)
 		}
 	}
 
+	if (!lclif->server_list(sd)) {
+		// if no char-server, don't send void list of servers, just disconnect the player with proper message
+		ShowStatus("Connection refused: there is no char-server online (account: %s).\n", sd->userid);
+		lclif->connection_error(fd, 1); // 01 = server closed
+		return;
+	}
+
 	login_log(ip, sd->userid, 100, "login ok");
 	ShowStatus("Connection of the account '%s' accepted.\n", sd->userid);
-
-	WFIFOHEAD(fd,47+32*server_num);
-	WFIFOW(fd,0) = 0x69;
-	WFIFOW(fd,2) = 47+32*server_num;
-	WFIFOL(fd,4) = sd->login_id1;
-	WFIFOL(fd,8) = sd->account_id;
-	WFIFOL(fd,12) = sd->login_id2;
-	WFIFOL(fd,16) = 0; // in old version, that was for ip (not more used)
-	//memcpy(WFIFOP(fd,20), sd->lastlogin, 24); // in old version, that was for name (not more used)
-	memset(WFIFOP(fd,20), 0, 24);
-	WFIFOW(fd,44) = 0; // unknown
-	WFIFOB(fd,46) = sex_str2num(sd->sex);
-	for (i = 0, n = 0; i < ARRAYLENGTH(server); ++i) {
-		uint32 subnet_char_ip;
-
-		if (!sockt->session_is_valid(server[i].fd))
-			continue;
-
-		subnet_char_ip = login->lan_subnet_check(ip);
-		WFIFOL(fd,47+n*32) = htonl((subnet_char_ip) ? subnet_char_ip : server[i].ip);
-		WFIFOW(fd,47+n*32+4) = sockt->ntows(htons(server[i].port)); // [!] LE byte order here [!]
-		memcpy(WFIFOP(fd,47+n*32+6), server[i].name, 20);
-		WFIFOW(fd,47+n*32+26) = server[i].users;
-
-		if( server[i].type == CST_PAYING && sd->expiration_time > time(NULL) )
-			WFIFOW(fd,47+n*32+28) = CST_NORMAL;
-		else
-			WFIFOW(fd,47+n*32+28) = server[i].type;
-
-		WFIFOW(fd,47+n*32+30) = server[i].new_;
-		n++;
-	}
-	WFIFOSET(fd,47+32*server_num);
 
 	// create temporary auth entry
 	CREATE(node, struct login_auth_node, 1);
@@ -1322,10 +1279,11 @@ void login_auth_ok(struct login_session_data* sd)
 	}
 }
 
-void login_auth_failed(struct login_session_data* sd, int result)
+void login_auth_failed(struct login_session_data *sd, int result)
 {
 	int fd;
 	uint32 ip;
+	time_t ban_time = 0;
 	nullpo_retv(sd);
 
 	fd = sd->fd;
@@ -1364,121 +1322,23 @@ void login_auth_failed(struct login_session_data* sd, int result)
 	if (result == 1 && login->config->dynamic_pass_failure_ban && !sockt->trusted_ip_check(ip))
 		ipban_log(ip); // log failed password attempt
 
-#if PACKETVER >= 20120000 /* not sure when this started */
-	WFIFOHEAD(fd,26);
-	WFIFOW(fd,0) = 0x83e;
-	WFIFOL(fd,2) = result;
-	if( result != 6 )
-		memset(WFIFOP(fd,6), '\0', 20);
-	else { // 6 = Your are Prohibited to log in until %s
-		struct mmo_account acc;
-		time_t unban_time = ( accounts->load_str(accounts, &acc, sd->userid) ) ? acc.unban_time : 0;
-		timestamp2string(WFIFOP(fd,6), 20, unban_time, login->config->date_format);
+	if (result == 6) {
+		struct mmo_account acc = { 0 };
+		if (accounts->load_str(accounts, &acc, sd->userid))
+			ban_time = acc.unban_time;
 	}
-	WFIFOSET(fd,26);
-#else
-	WFIFOHEAD(fd,23);
-	WFIFOW(fd,0) = 0x6a;
-	WFIFOB(fd,2) = (uint8)result;
-	if( result != 6 )
-		memset(WFIFOP(fd,3), '\0', 20);
-	else { // 6 = Your are Prohibited to log in until %s
-		struct mmo_account acc;
-		time_t unban_time = ( accounts->load_str(accounts, &acc, sd->userid) ) ? acc.unban_time : 0;
-		timestamp2string(WFIFOP(fd,3), 20, unban_time, login->config->date_format);
-	}
-	WFIFOSET(fd,23);
-#endif
+	lclif->auth_failed(fd, ban_time, result);
 }
 
-void login_login_error(int fd, uint8 status)
+bool login_client_login(int fd, struct login_session_data *sd) __attribute__((nonnull (2)));
+bool login_client_login(int fd, struct login_session_data *sd)
 {
-	WFIFOHEAD(fd,23);
-	WFIFOW(fd,0) = 0x6a;
-	WFIFOB(fd,2) = status;
-	WFIFOSET(fd,23);
-}
-
-void login_parse_ping(int fd, struct login_session_data* sd) __attribute__((nonnull (2)));
-void login_parse_ping(int fd, struct login_session_data* sd)
-{
-	RFIFOSKIP(fd,26);
-}
-
-void login_parse_client_md5(int fd, struct login_session_data* sd) __attribute__((nonnull (2)));
-void login_parse_client_md5(int fd, struct login_session_data* sd)
-{
-	sd->has_client_hash = 1;
-	memcpy(sd->client_hash, RFIFOP(fd, 2), 16);
-
-	RFIFOSKIP(fd,18);
-}
-
-bool login_parse_client_login(int fd, struct login_session_data* sd, const char *const ip) __attribute__((nonnull (2)));
-bool login_parse_client_login(int fd, struct login_session_data* sd, const char *const ip)
-{
-	uint32 version;
-	char username[NAME_LENGTH];
-	char password[PASSWD_LEN];
-	unsigned char passhash[16];
-	uint8 clienttype;
 	int result;
-	uint16 command = RFIFOW(fd,0);
-	bool israwpass = (command==0x0064 || command==0x0277 || command==0x02b0 || command == 0x0825);
+	char ip[16];
+	uint32 ipl = sockt->session[fd]->client_addr;
+	sockt->ip2str(ipl, ip);
 
-	// Shinryo: For the time being, just use token as password.
-	if(command == 0x0825)
-	{
-		const char *accname = RFIFOP(fd, 9);
-		const char *token = RFIFOP(fd, 0x5C);
-		size_t uAccLen = strlen(accname);
-		size_t uTokenLen = RFIFOREST(fd) - 0x5C;
-
-		version = RFIFOL(fd,4);
-
-		if(uAccLen <= 0 || uTokenLen <= 0) {
-			login->auth_failed(sd, 3);
-			return true;
-		}
-
-		safestrncpy(username, accname, NAME_LENGTH);
-		safestrncpy(password, token, min(uTokenLen+1, PASSWD_LEN)); // Variable-length field, don't copy more than necessary
-		clienttype = RFIFOB(fd, 8);
-	}
-	else
-	{
-		version = RFIFOL(fd,2);
-		safestrncpy(username, RFIFOP(fd,6), NAME_LENGTH);
-		if( israwpass )
-		{
-			safestrncpy(password, RFIFOP(fd,30), NAME_LENGTH);
-			clienttype = RFIFOB(fd,54);
-		}
-		else
-		{
-			memcpy(passhash, RFIFOP(fd,30), 16);
-			clienttype = RFIFOB(fd,46);
-		}
-	}
-	RFIFOSKIP(fd,RFIFOREST(fd)); // assume no other packet was sent
-
-	sd->clienttype = clienttype;
-	sd->version = version;
-	safestrncpy(sd->userid, username, NAME_LENGTH);
-	if( israwpass )
-	{
-		ShowStatus("Request for connection of %s (ip: %s).\n", sd->userid, ip);
-		safestrncpy(sd->passwd, password, PASSWD_LEN);
-		if (login->config->use_md5_passwds)
-			MD5_String(sd->passwd, sd->passwd);
-		sd->passwdenc = PWENC_NONE;
-	}
-	else
-	{
-		ShowStatus("Request for connection (passwdenc mode) of %s (ip: %s).\n", sd->userid, ip);
-		bin2hex(sd->passwd, passhash, 16); // raw binary data here!
-		sd->passwdenc = PASSWORDENC;
-	}
+	ShowStatus("Request for connection %sof %s (ip: %s).\n", sd->passwdenc == PASSWORDENC ? " (passwdenc mode)" : "", sd->userid, ip);
 
 	if (sd->passwdenc != PWENC_NONE && login->config->use_md5_passwds) {
 		login->auth_failed(sd, 3); // send "rejected from server"
@@ -1486,32 +1346,12 @@ bool login_parse_client_login(int fd, struct login_session_data* sd, const char 
 	}
 
 	result = login->mmo_auth(sd, false);
-
 	if( result == -1 )
 		login->auth_ok(sd);
 	else
 		login->auth_failed(sd, result);
+
 	return false;
-}
-
-void login_send_coding_key(int fd, struct login_session_data* sd) __attribute__((nonnull (2)));
-void login_send_coding_key(int fd, struct login_session_data* sd)
-{
-	WFIFOHEAD(fd,4 + sd->md5keylen);
-	WFIFOW(fd,0) = 0x01dc;
-	WFIFOW(fd,2) = 4 + sd->md5keylen;
-	memcpy(WFIFOP(fd,4), sd->md5key, sd->md5keylen);
-	WFIFOSET(fd,WFIFOW(fd,2));
-}
-
-void login_parse_request_coding_key(int fd, struct login_session_data* sd) __attribute__((nonnull (2)));
-void login_parse_request_coding_key(int fd, struct login_session_data* sd)
-{
-	memset(sd->md5key, '\0', sizeof(sd->md5key));
-	sd->md5keylen = (uint16)(12 + rnd() % 4);
-	MD5_Salt(sd->md5keylen, sd->md5key);
-
-	login->send_coding_key(fd, sd);
 }
 
 void login_char_server_connection_status(int fd, struct login_session_data* sd, uint8 status) __attribute__((nonnull (2)));
@@ -1523,6 +1363,7 @@ void login_char_server_connection_status(int fd, struct login_session_data* sd, 
 	WFIFOSET(fd,3);
 }
 
+// CA_CHARSERVERCONNECT
 void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl) __attribute__((nonnull (2, 3)));
 void login_parse_request_connection(int fd, struct login_session_data* sd, const char *const ip, uint32 ipl)
 {
@@ -1545,7 +1386,6 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 	safestrncpy(server_name, RFIFOP(fd,60), 20);
 	type = RFIFOW(fd,82);
 	new_ = RFIFOW(fd,84);
-	RFIFOSKIP(fd,86);
 
 	ShowInfo("Connection request of the char-server '%s' @ %u.%u.%u.%u:%u (account: '%s', pass: '%s', ip: '%s')\n", server_name, CONVIP(server_ip), server_port, sd->userid, sd->passwd, ip);
 	sprintf(message, "charserver - %s@%u.%u.%u.%u:%u", server_name, CONVIP(server_ip), server_port);
@@ -1582,121 +1422,6 @@ void login_parse_request_connection(int fd, struct login_session_data* sd, const
 		login->char_server_connection_status(fd, sd, 3);
 	}
 }
-
-//----------------------------------------------------------------------------------------
-// Default packet parsing (normal players or char-server connection requests)
-//----------------------------------------------------------------------------------------
-int login_parse_login(int fd)
-{
-	struct login_session_data* sd = (struct login_session_data*)sockt->session[fd]->session_data;
-
-	char ip[16];
-	uint32 ipl = sockt->session[fd]->client_addr;
-	sockt->ip2str(ipl, ip);
-
-	if( sockt->session[fd]->flag.eof )
-	{
-		ShowInfo("Closed connection from '"CL_WHITE"%s"CL_RESET"'.\n", ip);
-		sockt->close(fd);
-		return 0;
-	}
-
-	if( sd == NULL )
-	{
-		// Perform ip-ban check
-		if (login->config->ipban && !sockt->trusted_ip_check(ipl) && ipban_check(ipl)) {
-			ShowStatus("Connection refused: IP isn't authorized (deny/allow, ip: %s).\n", ip);
-			login_log(ipl, "unknown", -3, "ip banned");
-			login->login_error(fd, 3); // 3 = Rejected from Server
-			sockt->eof(fd);
-			return 0;
-		}
-
-		// create a session for this new connection
-		CREATE(sockt->session[fd]->session_data, struct login_session_data, 1);
-		sd = (struct login_session_data*)sockt->session[fd]->session_data;
-		sd->fd = fd;
-	}
-
-	while (RFIFOREST(fd) >= 2) {
-		uint16 command = RFIFOW(fd,0);
-
-		if (VECTOR_LENGTH(HPM->packets[hpParse_Login]) > 0) {
-			int result = HPM->parse_packets(fd,command,hpParse_Login);
-			if (result == 1)
-				continue;
-			if (result == 2)
-				return 0;
-		}
-
-		switch (command) {
-
-		case 0x0200: // New alive packet: structure: 0x200 <account.userid>.24B. used to verify if client is always alive.
-			if (RFIFOREST(fd) < 26)
-				return 0;
-			login->parse_ping(fd, sd);
-		break;
-
-		// client md5 hash (binary)
-		case 0x0204: // S 0204 <md5 hash>.16B (kRO 2004-05-31aSakexe langtype 0 and 6)
-			if (RFIFOREST(fd) < 18)
-				return 0;
-
-			login->parse_client_md5(fd, sd);
-		break;
-
-		// request client login (raw password)
-		case 0x0064: // S 0064 <version>.L <username>.24B <password>.24B <clienttype>.B
-		case 0x0277: // S 0277 <version>.L <username>.24B <password>.24B <clienttype>.B <ip address>.16B <adapter address>.13B
-		case 0x02b0: // S 02b0 <version>.L <username>.24B <password>.24B <clienttype>.B <ip address>.16B <adapter address>.13B <g_isGravityID>.B
-		// request client login (md5-hashed password)
-		case 0x01dd: // S 01dd <version>.L <username>.24B <password hash>.16B <clienttype>.B
-		case 0x01fa: // S 01fa <version>.L <username>.24B <password hash>.16B <clienttype>.B <?>.B(index of the connection in the clientinfo file (+10 if the command-line contains "pc"))
-		case 0x027c: // S 027c <version>.L <username>.24B <password hash>.16B <clienttype>.B <?>.13B(junk)
-		case 0x0825: // S 0825 <packetsize>.W <version>.L <clienttype>.B <userid>.24B <password>.27B <mac>.17B <ip>.15B <token>.(packetsize - 0x5C)B
-		{
-			size_t packet_len = RFIFOREST(fd);
-
-			if( (command == 0x0064 && packet_len < 55)
-			||  (command == 0x0277 && packet_len < 84)
-			||  (command == 0x02b0 && packet_len < 85)
-			||  (command == 0x01dd && packet_len < 47)
-			||  (command == 0x01fa && packet_len < 48)
-			||  (command == 0x027c && packet_len < 60)
-			||  (command == 0x0825 && (packet_len < 4 || packet_len < RFIFOW(fd, 2))) )
-				return 0;
-		}
-		{
-			if (login->parse_client_login(fd, sd, ip))
-				return 0;
-		}
-		break;
-
-		case 0x01db: // Sending request of the coding key
-			RFIFOSKIP(fd,2);
-		{
-			login->parse_request_coding_key(fd, sd);
-		}
-		break;
-
-		case 0x2710: // Connection request of a char-server
-			if (RFIFOREST(fd) < 86)
-				return 0;
-		{
-			login->parse_request_connection(fd, sd, ip, ipl);
-		}
-		return 0; // processing will continue elsewhere
-
-		default:
-			ShowNotice("Abnormal end of connection (ip: %s): Unknown packet 0x%x\n", ip, command);
-			sockt->eof(fd);
-			return 0;
-		}
-	}
-
-	return 0;
-}
-
 
 void login_config_set_defaults(void)
 {
@@ -1892,6 +1617,8 @@ int do_final(void) {
 		login->fd = -1;
 	}
 
+	lclif->final();
+
 	HPM_login_do_final();
 
 	aFree(login->LOGIN_CONF_NAME);
@@ -1944,6 +1671,19 @@ static CMDLINEARG(loginconfig)
 	login->LOGIN_CONF_NAME = aStrdup(params);
 	return true;
 }
+
+/**
+ * --run-once handler
+ *
+ * Causes the server to run its loop once, and shutdown. Useful for testing.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(runonce)
+{
+	core->runflag = CORE_ST_STOP;
+	return true;
+}
+
 /**
  * --net-config handler
  *
@@ -1961,6 +1701,7 @@ static CMDLINEARG(netconfig)
  */
 void cmdline_args_init_local(void)
 {
+	CMDLINEARG_DEF2(run-once, runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
 	CMDLINEARG_DEF2(login-config, loginconfig, "Alternative login-server configuration.", CMDLINE_OPT_PARAM);
 	CMDLINEARG_DEF2(net-config, netconfig, "Alternative subnet configuration.", CMDLINE_OPT_PARAM);
 }
@@ -1981,12 +1722,15 @@ int do_init(int argc, char** argv)
 	}
 
 	login_defaults();
+	lclif_defaults();
 
 	// read login-server configuration
 	login->config_set_defaults();
 
 	login->LOGIN_CONF_NAME = aStrdup("conf/login-server.conf");
 	login->NET_CONF_NAME   = aStrdup("conf/network.conf");
+
+	lclif->init();
 
 	HPM_login_do_init();
 	cmdline->exec(argc, argv, CMDLINE_OPT_PREINIT);
@@ -2014,8 +1758,8 @@ int do_init(int argc, char** argv)
 	// Interserver auth init
 	login->auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
 
-	// set default parser as login_parse_login function
-	sockt->set_defaultparse(login->parse_login);
+	// set default parser as lclif->parse function
+	sockt->set_defaultparse(lclif->parse);
 
 	// every 10 minutes cleanup online account db.
 	timer->add_func_list(login->online_data_cleanup, "login->online_data_cleanup");
@@ -2107,19 +1851,12 @@ void login_defaults(void) {
 	login->fromchar_parse_accinfo = login_fromchar_parse_accinfo;
 
 	login->parse_fromchar = login_parse_fromchar;
-	login->parse_login = login_parse_login;
-	login->parse_ping = login_parse_ping;
-	login->parse_client_md5 = login_parse_client_md5;
-	login->parse_client_login = login_parse_client_login;
-	login->parse_request_coding_key = login_parse_request_coding_key;
+	login->client_login = login_client_login;
 	login->parse_request_connection = login_parse_request_connection;
 	login->auth_ok = login_auth_ok;
 	login->auth_failed = login_auth_failed;
 	login->char_server_connection_status = login_char_server_connection_status;
-	login->connection_problem = login_connection_problem;
 	login->kick = login_kick;
-	login->login_error = login_login_error;
-	login->send_coding_key = login_send_coding_key;
 
 	login->config_set_defaults = login_config_set_defaults;
 	login->config_read = login_config_read;

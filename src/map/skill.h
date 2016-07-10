@@ -58,7 +58,7 @@ struct status_change_entry;
 #define MAX_SKILLUNITGROUP        25
 #define MAX_SKILL_ITEM_REQUIRE    10
 #define MAX_SKILLUNITGROUPTICKSET 25
-#define MAX_SKILL_NAME_LENGTH     30
+#define MAX_SKILL_NAME_LENGTH     32
 
 // (Epoque:) To-do: replace this macro with some sort of skill tree check (rather than hard-coded skill names)
 #define skill_ischangesex(id) ( \
@@ -1856,12 +1856,12 @@ struct skill_interface {
 	void (*reload) (void);
 	void (*read_db) (bool minimal);
 	/* */
-	DBMap* cd_db; // char_id -> struct skill_cd
-	DBMap* name2id_db;
-	DBMap* unit_db; // int id -> struct skill_unit*
-	DBMap* usave_db; // char_id -> struct skill_unit_save
-	DBMap* group_db;// int group_id -> struct skill_unit_group*
-	DBMap* bowling_db;// int mob_id -> struct mob_data*s
+	struct DBMap *cd_db; // char_id -> struct skill_cd
+	struct DBMap *name2id_db;
+	struct DBMap *unit_db; // int id -> struct skill_unit*
+	struct DBMap *usave_db; // char_id -> struct skill_unit_save
+	struct DBMap *group_db;// int group_id -> struct skill_unit_group*
+	struct DBMap *bowling_db;// int mob_id -> struct mob_data*s
 	/* */
 	struct eri *unit_ers; //For handling skill_unit's [Skotlex]
 	struct eri *timer_ers; //For handling skill_timerskills [Skotlex]
@@ -2031,13 +2031,26 @@ struct skill_interface {
 	int (*blockmerc_end) (int tid, int64 tick, int id, intptr_t data);
 	int (*split_atoi) (char *str, int *val);
 	int (*unit_timer) (int tid, int64 tick, int id, intptr_t data);
-	int (*unit_timer_sub) (DBKey key, DBData *data, va_list ap);
+	int (*unit_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*init_unit_layout) (void);
-	bool (*parse_row_skilldb) (char* split[], int columns, int current);
-	bool (*parse_row_requiredb) (char* split[], int columns, int current);
-	bool (*parse_row_castdb) (char* split[], int columns, int current);
-	bool (*parse_row_castnodexdb) (char* split[], int columns, int current);
-	bool (*parse_row_unitdb) (char* split[], int columns, int current);
+	void (*validate_hittype) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_skilltype) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_attacktype) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_element) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_skillinfo) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_damagetype) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_castnodex) (struct config_setting_t *conf, struct s_skill_db *sk, bool delay);
+	void (*validate_weapontype) (struct config_setting_t *conf,  struct s_skill_db *sk);
+	void (*validate_ammotype) (struct config_setting_t *conf,  struct s_skill_db *sk);
+	void (*validate_state) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_item_requirements) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_unit_target) (struct config_setting_t *conf, struct s_skill_db *sk);
+	void (*validate_unit_flag) (struct config_setting_t *conf,  struct s_skill_db *sk);
+	void (*validate_additional_fields) (struct config_setting_t *conf, struct s_skill_db *sk);
+	bool (*validate_skilldb) (struct s_skill_db *skt, const char *source);
+	bool (*read_skilldb) (const char *filename);
+	void (*config_set_level) (struct config_setting_t *conf, int *arr);
+	void (*level_set_value) (int *arr, int value);
 	bool (*parse_row_producedb) (char* split[], int columns, int current);
 	bool (*parse_row_createarrowdb) (char* split[], int columns, int current);
 	bool (*parse_row_abradb) (char* split[], int columns, int current);
@@ -2100,6 +2113,9 @@ struct skill_interface {
 	bool (*get_requirement_off_unknown) (struct status_change *sc, uint16 *skill_id);
 	bool (*get_requirement_item_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, uint16 *idx, int *i);
 	void (*get_requirement_unknown) (struct status_change *sc, struct map_session_data* sd, uint16 *skill_id, uint16 *skill_lv, struct skill_condition *req);
+	int (*splash_target) (struct block_list* bl);
+	int (*check_npc_chaospanic) (struct block_list *bl, va_list args);
+	int (*count_wos) (struct block_list *bl, va_list ap);
 };
 
 #ifdef HERCULES_CORE

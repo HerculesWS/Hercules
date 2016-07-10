@@ -40,6 +40,17 @@
 /// your map-server using more resources while this is active, comment the line
 #define SCRIPT_CALLFUNC_CHECK
 
+/**
+ * Strip linebreaks from `mes` dialogs.
+ *
+ * Leave this line commented out to keep the hard line-breaks (`\r`) in the
+ * displayed `mes` dialogs (as in official servers).
+ * Uncomment it to strip the line-breaks and replace them with spaces, letting
+ * the client automatically wrap text in dialogs, depending on font size and
+ * dialog window size (may work better for clients using a non-standard font).
+ */
+//#define SCRIPT_MES_STRIP_LINEBREAK
+
 /// Comment to disable Hercules' console_parse
 /// CONSOLE_INPUT allows you to type commands into the server's console,
 /// Disabling it saves one thread.

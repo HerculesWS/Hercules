@@ -2839,7 +2839,7 @@ iz_ac01,134,47,5	script	Trainer Mainz#ac	4_M_KY_KNT,4,4,{
 		mes "Please keep in mind that I really wanted to have it but since you look exhausted I offered it to you first!";
 		emotion e_no1;
 		next;
-		mes "- You open the lunchbox and there is some type of food inside ¡©";
+		mes "- You open the lunchbox and there is some type of food inside -";
 		next;
 		mes "[Mainz]";
 		mes "Wahahahat! Don't hesitate and just take it!";
@@ -10875,7 +10875,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 						case 2:
 							mes "[Vicente]";
 							mes "Correct!";
-							mes "You have a good memory£¡";
+							mes "You have a good memory!";
 							cutin "sc_vicente03.bmp", 2;
 							next;
 							break;
@@ -10941,7 +10941,7 @@ iz_ac02,49,134,5	script	Vicente#ac	4_M_HUMAN_02,{
 							case 2:
 								mes "[Vicente]";
 								mes "Correct!";
-								mes "You have a good memory£¡";
+								mes "You have a good memory!";
 								cutin "sc_vicente03.bmp", 2;
 								next;
 								break;
@@ -13297,7 +13297,7 @@ izlude,155,132,3	script	Locas#iz	4_M_02,{
 			switch(select("refining price", "refining effect", "Finish the explanation.")) {
 			case 1:
 				mes "[Locas]";
-				mes "©öFrom the word itself, refining price is ^3E86C3 the price for refining once^000000.";
+				mes "From the word itself, refining price is ^3E86C3 the price for refining once^000000.";
 				next;
 				mes "[Locas]";
 				mes "But, there are differences in the essential material according the (zeny) and weapon level.";

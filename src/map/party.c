@@ -58,6 +58,9 @@ struct party_interface *party;
  * Used when creating/adding people to a party. [Skotlex]
  *------------------------------------------*/
 void party_fill_member(struct party_member* member, struct map_session_data* sd, unsigned int leader) {
+	nullpo_retv(member);
+	nullpo_retv(sd);
+
 	member->account_id = sd->status.account_id;
 	member->char_id    = sd->status.char_id;
 	safestrncpy(member->name, sd->status.name, NAME_LENGTH);
@@ -122,7 +125,8 @@ struct map_session_data *party_sd_check(int party_id, int account_id, int char_i
 
 	return sd;
 }
-int party_db_final(DBKey key, DBData *data, va_list ap) {
+int party_db_final(union DBKey key, struct DBData *data, va_list ap)
+{
 	struct party_data *p;
 
 	if ((p = DB->data2ptr(data))) {
@@ -146,9 +150,8 @@ struct party_data* party_searchname(const char* str)
 {
 	struct party_data* p;
 
-	DBIterator *iter = db_iterator(party->db);
-	for( p = dbi_first(iter); dbi_exists(iter); p = dbi_next(iter) )
-	{
+	struct DBIterator *iter = db_iterator(party->db);
+	for (p = dbi_first(iter); dbi_exists(iter); p = dbi_next(iter)) {
 		if( strncmpi(p->party.name,str,NAME_LENGTH) == 0 )
 			break;
 	}
@@ -161,6 +164,9 @@ int party_create(struct map_session_data *sd, const char *name,int item,int item
 {
 	struct party_member leader;
 	char tname[NAME_LENGTH];
+
+	nullpo_retr(0, sd);
+	nullpo_retr(0, name);
 
 	safestrncpy(tname, name, NAME_LENGTH);
 	trim(tname);
@@ -228,6 +234,7 @@ int party_recv_noinfo(int party_id, int char_id) {
 
 void party_check_state(struct party_data *p) {
 	int i;
+	nullpo_retv(p);
 	memset(&p->state, 0, sizeof(p->state));
 	for (i = 0; i < MAX_PARTY; i ++) {
 		if (!p->party.member[i].online) continue; //Those not online shouldn't apart to skill usage and all that.
@@ -407,6 +414,8 @@ void party_reply_invite(struct map_session_data *sd,int party_id,int flag) {
 	struct map_session_data* tsd;
 	struct party_member member;
 
+	nullpo_retv(sd);
+
 	if( sd->party_invite != party_id )
 	{// forged
 		sd->party_invite = 0;
@@ -436,8 +445,11 @@ void party_reply_invite(struct map_session_data *sd,int party_id,int flag) {
 //- Player must be authed/active and belong to a party before calling this method
 void party_member_joined(struct map_session_data *sd)
 {
-	struct party_data* p = party->search(sd->status.party_id);
+	struct party_data* p;
 	int i;
+
+	nullpo_retv(sd);
+	p = party->search(sd->status.party_id);
 	if (!p) {
 		party->request_info(sd->status.party_id, sd->status.char_id);
 		return;
@@ -536,6 +548,7 @@ int party_removemember(struct map_session_data* sd, int account_id, const char *
 	if( !p->party.member[i].leader )
 		return 0; // only party leader may remove members
 
+	nullpo_retr(0, name);
 	ARR_FIND( 0, MAX_PARTY, i, p->party.member[i].account_id == account_id && strncmp(p->party.member[i].name,name,NAME_LENGTH) == 0 );
 	if( i == MAX_PARTY )
 		return 0; // no such char in party
@@ -550,6 +563,7 @@ int party_leave(struct map_session_data *sd)
 	struct party_data *p;
 	int i;
 
+	nullpo_ret(sd);
 	p = party->search(sd->status.party_id);
 	if( p == NULL )
 		return 0;
@@ -743,6 +757,8 @@ void party_send_movemap(struct map_session_data *sd)
 {
 	struct party_data *p;
 
+	nullpo_retv(sd);
+
 	if( sd->status.party_id==0 )
 		return;
 
@@ -782,6 +798,8 @@ int party_send_logout(struct map_session_data *sd)
 	struct party_data *p;
 	int i;
 
+	nullpo_ret(sd);
+
 	if(!sd->status.party_id)
 		return 0;
 
@@ -798,12 +816,19 @@ int party_send_logout(struct map_session_data *sd)
 	return 1;
 }
 
-int party_send_message(struct map_session_data *sd,const char *mes,int len)
+int party_send_message(struct map_session_data *sd, const char *mes)
 {
-	if(sd->status.party_id==0)
+	int len;
+
+	nullpo_ret(sd);
+	nullpo_ret(mes);
+
+	len = (int)strlen(mes);
+
+	if (sd->status.party_id == 0)
 		return 0;
-	intif->party_message(sd->status.party_id,sd->status.account_id,mes,len);
-	party->recv_message(sd->status.party_id,sd->status.account_id,mes,len);
+	intif->party_message(sd->status.party_id, sd->status.account_id, mes, len);
+	party->recv_message(sd->status.party_id, sd->status.account_id, mes, len);
 
 	// Chat logging type 'P' / Party Chat
 	logs->chat(LOG_CHAT_PARTY, sd->status.party_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
@@ -843,6 +868,8 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 			return 0; //Unknown case?
 	}
 
+	nullpo_ret(sd);
+
 	for(i=0;i<MAX_PARTY;i++){
 		if ((p_sd = p->data[i].sd) == NULL)
 			continue;
@@ -871,10 +898,11 @@ int party_skill_check(struct map_session_data *sd, int party_id, uint16 skill_id
 	return 0;
 }
 
-int party_send_xy_timer(int tid, int64 tick, int id, intptr_t data) {
+int party_send_xy_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	struct DBIterator *iter = db_iterator(party->db);
 	struct party_data* p;
 
-	DBIterator *iter = db_iterator(party->db);
 	// for each existing party,
 	for( p = dbi_first(iter); dbi_exists(iter); p = dbi_next(iter) )
 	{
@@ -929,11 +957,9 @@ int party_exp_share(struct party_data* p, struct block_list* src, unsigned int b
 {
 	struct map_session_data* sd[MAX_PARTY];
 	unsigned int i, c;
-#ifdef RENEWAL_EXP
-	unsigned int job_exp_bonus, base_exp_bonus;
-#endif
 
 	nullpo_ret(p);
+	nullpo_ret(src);
 
 	// count the number of players eligible for exp sharing
 	for (i = c = 0; i < MAX_PARTY; i++) {
@@ -958,21 +984,7 @@ int party_exp_share(struct party_data* p, struct block_list* src, unsigned int b
 			zeny = (unsigned int) cap_value(zeny * bonus/100, INT_MIN, INT_MAX);
 	}
 
-#ifdef RENEWAL_EXP
-	base_exp_bonus = base_exp;
-	job_exp_bonus  = job_exp;
-#endif
-
 	for (i = 0; i < c; i++) {
-#ifdef RENEWAL_EXP
-		struct mob_data *md = BL_CAST(BL_MOB, src);
-		if (md != NULL && md->db->mexp == 0) {
-			int rate = pc->level_penalty_mod(md->level - (sd[i])->status.base_level, md->status.race, md->status.mode, 1);
-
-			base_exp = (unsigned int)cap_value(base_exp_bonus * rate / 100, 1, UINT_MAX);
-			job_exp = (unsigned int)cap_value(job_exp_bonus * rate / 100, 1, UINT_MAX);
-		}
-#endif
 		pc->gainexp(sd[i], src, base_exp, job_exp, false);
 
 		if (zeny) // zeny from mobs [Valaris]
@@ -986,8 +998,12 @@ int party_share_loot(struct party_data* p, struct map_session_data* sd, struct i
 {
 	struct map_session_data *target = NULL;
 	int i;
+
+	nullpo_ret(item_data);
+
 	if (p && p->party.item&2 && (first_charid || !(battle_config.party_share_type&1)))
 	{
+		nullpo_ret(sd);
 		//item distribution to party members.
 		if (battle_config.party_share_type&2) {
 			//Round Robin
@@ -1049,6 +1065,7 @@ int party_share_loot(struct party_data* p, struct map_session_data* sd, struct i
 
 int party_send_dot_remove(struct map_session_data *sd)
 {
+	nullpo_ret(sd);
 	if (sd->status.party_id)
 		clif->party_xy_remove(sd);
 	return 0;
@@ -1064,6 +1081,7 @@ int party_sub_count(struct block_list *bl, va_list ap)
 	nullpo_ret(bl);
 	Assert_ret(bl->type == BL_PC);
 	sd = BL_UCCAST(BL_PC, bl);
+	nullpo_ret(sd);
 
 	if (sd->state.autotrade)
 		return 0;
@@ -1176,6 +1194,9 @@ void party_recruit_register(struct map_session_data *sd, short level, const char
 #ifdef PARTY_RECRUIT
 	struct party_booking_ad_info *pb_ad;
 
+	nullpo_retv(sd);
+	nullpo_retv(notice);
+
 	pb_ad = (struct party_booking_ad_info*)idb_get(party->booking_db, sd->status.char_id);
 
 	if( pb_ad == NULL )
@@ -1205,6 +1226,9 @@ void party_booking_register(struct map_session_data *sd, short level, short mapi
 #ifndef PARTY_RECRUIT
 	struct party_booking_ad_info *pb_ad;
 	int i;
+
+	nullpo_retv(sd);
+	nullpo_retv(job);
 
 	pb_ad = (struct party_booking_ad_info*)idb_get(party->booking_db, sd->status.char_id);
 	if( pb_ad == NULL )
@@ -1239,6 +1263,7 @@ void party_recruit_update(struct map_session_data *sd, const char *notice) {
 #ifdef PARTY_RECRUIT
 	struct party_booking_ad_info *pb_ad;
 
+	nullpo_retv(sd);
 	pb_ad = (struct party_booking_ad_info*)idb_get(party->booking_db, sd->status.char_id);
 
 	if( pb_ad == NULL )
@@ -1259,6 +1284,9 @@ void party_booking_update(struct map_session_data *sd, short* job) {
 #ifndef PARTY_RECRUIT
 	int i;
 	struct party_booking_ad_info *pb_ad;
+
+	nullpo_retv(sd);
+	nullpo_retv(job);
 
 	pb_ad = (struct party_booking_ad_info*)idb_get(party->booking_db, sd->status.char_id);
 
@@ -1284,8 +1312,9 @@ void party_recruit_search(struct map_session_data *sd, short level, short mapid,
 	int count = 0;
 	struct party_booking_ad_info* result_list[PARTY_BOOKING_RESULTS];
 	bool more_result = false;
-	DBIterator* iter = db_iterator(party->booking_db);
+	struct DBIterator *iter = db_iterator(party->booking_db);
 
+	nullpo_retv(sd);
 	memset(result_list, 0, sizeof(result_list));
 
 	for( pb_ad = dbi_first(iter); dbi_exists(iter); pb_ad = dbi_next(iter) )
@@ -1315,7 +1344,9 @@ void party_booking_search(struct map_session_data *sd, short level, short mapid,
 	int count = 0;
 	struct party_booking_ad_info* result_list[PARTY_BOOKING_RESULTS];
 	bool more_result = false;
-	DBIterator* iter = db_iterator(party->booking_db);
+	struct DBIterator *iter = db_iterator(party->booking_db);
+
+	nullpo_retv(sd);
 
 	memset(result_list, 0, sizeof(result_list));
 
@@ -1351,6 +1382,8 @@ void party_booking_search(struct map_session_data *sd, short level, short mapid,
 bool party_booking_delete(struct map_session_data *sd)
 {
 	struct party_booking_ad_info* pb_ad;
+
+	nullpo_retr(false, sd);
 
 	if((pb_ad = (struct party_booking_ad_info*)idb_get(party->booking_db, sd->status.char_id))!=NULL)
 	{

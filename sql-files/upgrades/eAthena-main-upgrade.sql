@@ -111,3 +111,17 @@ ALTER TABLE `inventory` CHANGE `nsiuid` `unique_id` BIGINT( 20 ) NOT NULL DEFAUL
 ALTER TABLE `mail` CHANGE `nsiuid` `unique_id` BIGINT( 20 ) NOT NULL DEFAULT '0';
 
 ALTER TABLE `storage` CHANGE `nsiuid` `unique_id` BIGINT( 20 ) NOT NULL DEFAULT '0';
+
+ALTER TABLE `charlog` MODIFY `time` DATETIME NULL;
+ALTER TABLE `interlog` MODIFY `time` DATETIME NULL;
+ALTER TABLE `ipbanlist` MODIFY `btime` DATETIME NULL;
+ALTER TABLE `ipbanlist` MODIFY `rtime` DATETIME NULL;
+ALTER TABLE `login` MODIFY `lastlogin` DATETIME NULL;
+ALTER TABLE `login` MODIFY `birthdate` DATE NULL;
+
+UPDATE `charlog` SET `time` = NULL WHERE `time` = '0000-00-00 00:00:00';
+UPDATE `interlog` SET `time` = NULL WHERE `time` = '0000-00-00 00:00:00';
+UPDATE `ipbanlist` SET `btime` = NULL WHERE `btime` = '0000-00-00 00:00:00';
+UPDATE `ipbanlist` SET `rtime` = NULL WHERE `rtime` = '0000-00-00 00:00:00';
+UPDATE `login` SET `lastlogin` = NULL WHERE `lastlogin` = '0000-00-00 00:00:00';
+UPDATE `login` SET `birthdate` = NULL WHERE `birthdate` = '0000-00-00';

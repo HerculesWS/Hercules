@@ -87,7 +87,7 @@ L_Menu:
 				mes "[Gyo]";
 				mes "To make a ^ff0000"+getitemname(.@item_make)+", "+callsub(L_Ingredients,.@item_make)+".^000000";
 				if (.@item_make==Wolf_Armguard)
-					mes "Can you feel it? The throbbing of the wolf blood・";
+					mes "Can you feel it? The throbbing of the wolf blood...";
 				else if (.@item_make==Crescent_Armguard)
 					mes "A crescent as beautiful and clear as a crystal will be engraved on it.";
 				else if (.@item_make==Ninja_Scale_Armor)
@@ -104,38 +104,38 @@ L_Menu:
 				}
 				else if (.@item_make == Crescent_Armguard){
 					mes "Decreases post skill delay for 2% for every enhancement.";
-      				mes "Shield Type, Defense 70, Slot 1";
-      				mes "Required Level 100, Ninja Type Only";
+					mes "Shield Type, Defense 70, Slot 1";
+					mes "Required Level 100, Ninja Type Only";
 				}
 				else if (.@item_make == Ninja_Scale_Armor){
-      				mes "MHP+15%, MSP-30%.";
-      				mes "Armor Type, Defense 90, Slot 1";
-      				mes "Required Level 100, Ninja Type Only";
+					mes "MHP+15%, MSP-30%.";
+					mes "Armor Type, Defense 90, Slot 1";
+					mes "Required Level 100, Ninja Type Only";
 				}
 				else if (.@item_make == Tenebris_Latitantes){
 					mes "Chance to activate Lvl. 1 Illusion - Shadow when attacked by melee attacks.";
-      				mes "Armor Type, Defense 60, Slot 1";
-      				mes "Required Level 100, Ninja Type Only";
+					mes "Armor Type, Defense 60, Slot 1";
+					mes "Required Level 100, Ninja Type Only";
 				}
 				break;
 			case 3:
 				mes "[Gyo]";
-        		mes "Make sure that ^ff0000you have the correct ingredients and equipment at hand.^000000";
-        		mes "No use crying over it later.";
-        		next;
-        		if (select("Combine.", "Quit.") == 2) {
+				mes "Make sure that ^ff0000you have the correct ingredients and equipment at hand.^000000";
+				mes "No use crying over it later.";
+				next;
+				if (select("Combine.", "Quit.") == 2) {
 					mes "[Gyo]";
 					mes "Looks like you need more time to decide.";
 					close;
 				}
-                if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
+				if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
 					mes "- Hold on!! -";
 					mes "- You cannot receive items -";
 					mes "- because you carry too much. -";
 					mes "- Please try again -";
 					mes "- after lightening your burden. -";
 					close;
-                }
+				}
 				mes "[Gyo]";
 				switch(.@item_make){
 					case 2172:	//Wolf_Armguard
@@ -144,7 +144,7 @@ L_Menu:
 							delitem Wolf_Blood,10; //Wolf_Blood
 							getitem Wolf_Armguard,1; //Wolf_Armguard
 							mes "Can you feel the wolfish instinct?";
-							mes "Wild, but beautiful・";
+							mes "Wild, but beautiful...";
 						}
 						else {
 							mes "You don't have enough ingredients.";
@@ -272,82 +272,81 @@ L_Menu:
 				mes "["+ getitemname(getarg(0)) +"]";
 				if (.@item_make == Raksasa_Dagger){
 					mes "INT+3 MATK+100.";
-      				mes "Dagger Type, ATK 120, Slot 1";
-      				mes "Required Level 110, Ninja Type Only";
+					mes "Dagger Type, ATK 120, Slot 1";
+					mes "Required Level 110, Ninja Type Only";
 				}
 				else if (.@item_make == Mikatsuki){
 					mes "MATK + 120, Fluctuated Casting and SP use decreased by 5% upon skill use.";
-      				mes "Dagger Type, ATK 50, Weapon Lvl. 4";
-      				mes "Slot 1";
-      				mes "Required Level 100, Ninja Type Only";
+					mes "Dagger Type, ATK 50, Weapon Lvl. 4";
+				mes "Slot 1";
+				mes "Required Level 100, Ninja Type Only";
 				}
 				else if (.@item_make == Huuma_Swirling_Petal){
-      				mes "MATK + 50, Petal Shuriken  skill damage increased by 20%.";
-      				mes "Shuriken Type, ATK 150";
-      				mes "Weapon Lvl. 3, Slot 2";
-      				mes "Required Level 110, Ninja Type Only";
+					mes "MATK + 50, Petal Shuriken  skill damage increased by 20%.";
+					mes "Shuriken Type, ATK 150";
+					mes "Weapon Lvl. 3, Slot 2";
+					mes "Required Level 110, Ninja Type Only";
 				}
 				break;
 			case 3:
 				mes "[Ki]";
-        		mes "Make sure that ^ff0000you have the correct ingredients and equipment at hand.^000000";
-        		mes "No use crying over it later.";
-        		next;
-        		if (select("Combine.", "Quit.") == 2) {
+				mes "Make sure that ^ff0000you have the correct ingredients and equipment at hand.^000000";
+				mes "No use crying over it later.";
+				next;
+				if (select("Combine.", "Quit.") == 2) {
 					mes "[Ki]";
 					mes "Think carefully~~";
 					close;
 				}
-                if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
+				if (checkweight(Knife,1) == 0 || (MaxWeight - Weight) < 2000) {
 					mes "- Hold on!! -";
 					mes "- You cannot receive items -";
 					mes "- because you carry too much. -";
 					mes "- Please try again -";
 					mes "- after lightening your burden. -";
 					close;
-                }
+				}
 				mes "[Ki]";
 				switch(.@item_make){
 					case 13076:	//Raksasa_Dagger
-						 if (countitem(Murasame_) && countitem(Dark_Red_Jewel)) {
-                                delitem Murasame_,1; //Murasame_
-                                delitem Dark_Red_Jewel,1; //Dark_Red_Jewel
-                                getitem Raksasa_Dagger,1; //Raksasa_Dagger
-                                mes "Oh yes...";
-                                mes "It is a beautiful glow...";
-                            }
-                            else {
-                            	mes "Hmm... You do not have enough to make a Raksasa Dagger.";
-                            	mes "Why don't you check again?";
-                            	mes "Some just can't give up what they hold.";
-                            }
+						if (countitem(Murasame_) && countitem(Dark_Red_Jewel)) {
+							delitem Murasame_,1; //Murasame_
+							delitem Dark_Red_Jewel,1; //Dark_Red_Jewel
+							getitem Raksasa_Dagger,1; //Raksasa_Dagger
+							mes "Oh yes...";
+							mes "It is a beautiful glow...";
+						} else {
+							mes "Hmm... You do not have enough to make a Raksasa Dagger.";
+							mes "Why don't you check again?";
+							mes "Some just can't give up what they hold.";
+						}
 						break;
 					case 13078: //Mikatsuki
-						 if (countitem(Hakujin_) && countitem(White_Jewel)) {
-                                delitem Hakujin_,1; //Hakujin_
-                                delitem White_Jewel,1; //White_Jewel
-                                getitem Mikatsuki,1; //Mikatsuki
-                                mes "Splendid・";
-                                mes "It is always mesmerizing to look upon such a beautiful weapon・";
-                            }
-                            else {
-                                mes "Hmm... You do not have enough to make a Mikatsuki.";
-                                mes "Why don't you check again?";
-                                mes "Some just can't give up what they hold.";
-                            }
-						 break;
+						if (countitem(Hakujin_) && countitem(White_Jewel)) {
+							delitem Hakujin_,1; //Hakujin_
+							delitem White_Jewel,1; //White_Jewel
+							getitem Mikatsuki,1; //Mikatsuki
+							mes "Splendid...";
+							mes "It is always mesmerizing to look upon such a beautiful weapon...";
+						}
+						else {
+							mes "Hmm... You do not have enough to make a Mikatsuki.";
+							mes "Why don't you check again?";
+							mes "Some just can't give up what they hold.";
+						}
+						break;
 					case 13313:	//Huuma_Swirling_Petal
-						 if (countitem(Huuma_Calm_Mind) && countitem(Broken_Shuriken) > 99) {
-                                delitem Huuma_Calm_Mind,1; //Huuma_Calm_Mind
-                                delitem Broken_Shuriken,100; //Broken_Shuriken
-                                getitem Huuma_Swirling_Petal,1; //Huuma_Swirling_Petal
-                                mes "Swirling Petal!!";
-                            }
-                            else {
-                                mes "Hmm... You do not have enough to make Petal Shurikens.";
-                                mes "Why don't you check again?";
-                                mes "Some just can't give up what they hold.";
-                            }
+						if (countitem(Huuma_Calm_Mind) && countitem(Broken_Shuriken) > 99) {
+							delitem Huuma_Calm_Mind,1; //Huuma_Calm_Mind
+							delitem Broken_Shuriken,100; //Broken_Shuriken
+							getitem Huuma_Swirling_Petal,1; //Huuma_Swirling_Petal
+							mes "Swirling Petal!!";
+						}
+						else {
+							mes "Hmm... You do not have enough to make Petal Shurikens.";
+							mes "Why don't you check again?";
+							mes "Some just can't give up what they hold.";
+						}
 						break;
 				}
 				close;

@@ -94,8 +94,8 @@ struct atcommand_interface {
 	struct atcmd_binding_data** binding;
 	int binding_count;
 	/* other vars */
-	DBMap* db; //name -> AtCommandInfo
-	DBMap* alias_db; //alias -> AtCommandInfo
+	struct DBMap *db; //name -> AtCommandInfo
+	struct DBMap *alias_db; //alias -> AtCommandInfo
 	/**
 	 * msg_table[lang_id][msg_id]
 	 * Server messages (0-499 reserved for GM commands, 500-999 reserved for others)
@@ -135,7 +135,7 @@ struct atcommand_interface {
 	/* */
 	void (*commands_sub) (struct map_session_data* sd, const int fd, AtCommandType type);
 	void (*cmd_db_clear) (void);
-	int (*cmd_db_clear_sub) (DBKey key, DBData *data, va_list args);
+	int (*cmd_db_clear_sub) (union DBKey key, struct DBData *data, va_list args);
 	void (*doload) (void);
 	void (*base_commands) (void);
 	bool (*add) (char *name, AtCommandFunc func, bool replace);
@@ -152,7 +152,8 @@ void atcommand_defaults(void);
 HPShared struct atcommand_interface *atcommand;
 
 /* stay here */
-#define ACMD(x) static bool atcommand_ ## x (const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info) __attribute__((nonnull (2, 3, 4, 5))); \
-    static bool atcommand_ ## x (const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info)
+#define ACMD(x) \
+	static bool atcommand_ ## x (const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info) __attribute__((nonnull (2, 3, 4, 5))); \
+	static bool atcommand_ ## x (const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info)
 
 #endif /* MAP_ATCOMMAND_H */
