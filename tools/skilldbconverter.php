@@ -269,7 +269,7 @@ while(!feof($unitdb)) {
 	$skunit['Range'][$i] = $arr[4];
 	$skunit['Interval'][$i] = $arr[5];
 	$skunit['Target'][$i] = $arr[6];
-	$skunit['Flag'][$i] = substr($arr[7],2);
+	$skunit['Flag'][$i] = hexdec($arr[7]);
 	$i++;
 }
 if($debug) {
@@ -303,6 +303,8 @@ print $linecount." entries found in skill_db.txt.\n";
 $i=0;
 $skmain = fopen(DIRPATH.$file, "r") or die("Unable to open '".DIRPATH.$file."'.\n");
 // Begin converting process.
+$max_level = 10;
+$max_items = 10;
 while(!feof($skmain)) {
 	$line = fgets($skmain);
 	if(substr($line, 0, 2) == "//" || strlen($line) < 10) continue;
@@ -316,7 +318,7 @@ while(!feof($skmain)) {
 	$nk = $arr[5];
 	$splash = $arr[6];
 	$max = $arr[7];
-	$max = ($max>10)?10:(($max<1)?1:$max);
+	$max = ($max < 1) ? 1 : $max;
 	$list_num = $arr[8];
 	$castcancel = $arr[9];
 	$cast_defence_rate = $arr[10];
@@ -335,36 +337,36 @@ while(!feof($skmain)) {
 	"\tName: \"".trim($name)."\"\n".
 	"\tDescription: \"".trim($description)."\"\n".
 	"\tMaxLevel: ".$max."\n";
-	if($range) $putsk .=  "\tRange: ".leveled($range, $max, $id)."\n";
+	if($range) $putsk .=  "\tRange: ".leveled_guessfill($range, $max_level, $id)."\n";
 	if($hit==8) $putsk .=  "\tHit: \"BDT_MULTIHIT\"\n";
 	else if($hit==6) $putsk .=  "\tHit: \"BDT_SKILL\"\n";
 	if($inf) $putsk .=  "\tSkillType: ".getinf($inf)."\n";
 	if($inf2) $putsk .=  "\tSkillInfo: ".getinf2($inf2)."\n";
-	if($skill_type != "none" && $inf) $putsk .=  "\tAttackType: \"".ucfirst($skill_type)."\"\n";
-	if($element) $putsk .=  "\tElement: ".leveled_ele($element, $max, $id)."\n";
+	if($skill_type != "none") $putsk .=  "\tAttackType: \"".ucfirst($skill_type)."\"\n";
+	if($element) $putsk .=  "\tElement: ".leveled_ele($element, $max_level, $id)."\n";
 	if($nk && $nk != "0x0") $putsk .=  "\tDamageType: ".getnk($nk)."\n";
-	if($splash) $putsk .=  "\tSplashRange: ".leveled($splash, $max, $id)."\n";
-	if($list_num != "1") $putsk .=  "\tNumberOfHits: ".leveled($list_num, $max, $id)."\n";
-	if($castcancel && $inf) $putsk .=  "\tInterruptCast: true\n";
+	if($splash) $putsk .=  "\tSplashRange: ".leveled_guessfill($splash, $max_level, $id)."\n";
+	if($list_num != "1") $putsk .=  "\tNumberOfHits: ".leveled_guessfill($list_num, $max_level, $id)."\n";
+	if($castcancel == "yes") $putsk .=  "\tInterruptCast: true\n";
 	if($cast_defence_rate) $putsk .=  "\tCastDefRate: ".$cast_defence_rate."\n";
-	if($maxcount) $putsk .=  "\tSkillInstances: ".leveled($maxcount, $max, $id)."\n";
-	if($blow_count) $putsk .=  "\tKnockBackTiles: ".leveled($blow_count, $max, $id)."\n";
+	if($maxcount) $putsk .=  "\tSkillInstances: ".leveled_guessfill($maxcount, $max_level, $id)."\n";
+	if($blow_count) $putsk .=  "\tKnockBackTiles: ".leveled_guessfill($blow_count, $max_level, $id)."\n";
 	// Cast Db
 	$key = array_search($id, $skcast['ID']);
-	if($key) {
-		if($skcast['casttime'][$key]) $putsk .=  "\tCastTime: ".leveled($skcast['casttime'][$key], $max, $id)."\n";
-		if($skcast['actdelay'][$key]) $putsk .=  "\tAfterCastActDelay: ".leveled($skcast['actdelay'][$key], $max, $id)."\n";
-		if($skcast['walkdelay'][$key] != 0) $putsk .=  "\tAfterCastWalkDelay: ".leveled($skcast['walkdelay'][$key], $max, $id)."\n";
-		if($skcast['data1'][$key] != 0) $putsk .=  "\tSkillData1: ".leveled($skcast['data1'][$key], $max, $id)."\n";
-		if($skcast['data2'][$key] != 0) $putsk .=  "\tSkillData2: ".leveled($skcast['data2'][$key], $max, $id)."\n";
-		if($skcast['cooldown'][$key] != 0) $putsk .=  "\tCoolDown: ".leveled($skcast['cooldown'][$key], $max, $id)."\n";
-		if(defined('RENEWAL') && strlen($skcast['fixedcast'][$key])>1 && $skcast['fixedcast'][$key] != 0)
-			$putsk .=  "\tFixedCastTime: ".leveled($skcast['fixedcast'][$key], $max, $id)."\n";
+	if($key !== FALSE) {
+		if($skcast['casttime'][$key]) $putsk .=  "\tCastTime: ".leveled_guessfill($skcast['casttime'][$key], $max_level, $id)."\n";
+		if($skcast['actdelay'][$key]) $putsk .=  "\tAfterCastActDelay: ".leveled_guessfill($skcast['actdelay'][$key], $max_level, $id)."\n";
+		if($skcast['walkdelay'][$key] !== '0') $putsk .=  "\tAfterCastWalkDelay: ".leveled_guessfill($skcast['walkdelay'][$key], $max_level, $id)."\n";
+		if($skcast['data1'][$key] !== '0') $putsk .=  "\tSkillData1: ".leveled_guessfill($skcast['data1'][$key], $max_level, $id)."\n";
+		if($skcast['data2'][$key] !== '0') $putsk .=  "\tSkillData2: ".leveled_guessfill($skcast['data2'][$key], $max_level, $id)."\n";
+		if($skcast['cooldown'][$key] !== '0') $putsk .=  "\tCoolDown: ".leveled_guessfill($skcast['cooldown'][$key], $max_level, $id)."\n";
+		if(defined('RENEWAL') && strlen($skcast['fixedcast'][$key]) > 1 && $skcast['fixedcast'][$key] !== '0')
+			$putsk .=  "\tFixedCastTime: ".leveled_guessfill($skcast['fixedcast'][$key], $max_level, $id)."\n";
 	}
 	// Cast NoDex
 	unset($key);
 	$key = array_search($id, $sknodex['ID']);
-	if($key) {
+	if($key !== FALSE) {
 		if (isset($sknodex["cast"][$key]) && $sknodex["cast"][$key] != 0) $putsk .=  "\tCastTimeOptions: ".getnocast($sknodex["cast"][$key], $id)."\n";
 		if (isset($sknodex["delay"][$key]) && $sknodex["delay"][$key] != 0) $putsk .=  "\tSkillDelayOptions: ".getnocast($sknodex["delay"][$key], $id)."\n";
 		unset($sknodex["ID"][$key]);
@@ -375,19 +377,19 @@ while(!feof($skmain)) {
 	// require DB
 	unset($key);
 	$key = array_search($id, $skreq['ID']);
-	if($key) {
+	if($key !== FALSE) {
 		$putsk .=  "\tRequirements: {\n";
-		if ($skreq['HPCost'][$key]) $putsk .=  "\t\tHPCost: ".leveled($skreq['HPCost'][$key], $max, $id, 1)."\n";
-		if ($skreq['SPCost'][$key]) $putsk .=  "\t\tSPCost: ".leveled($skreq['SPCost'][$key], $max, $id, 1)."\n";
-		if ($skreq['HPRateCost'][$key]) $putsk .=  "\t\tHPRateCost: ".leveled($skreq['HPRateCost'][$key], $max, $id, 1)."\n";
-		if ($skreq['SPRateCost'][$key]) $putsk .=  "\t\tSPRateCost: ".leveled($skreq['SPRateCost'][$key], $max, $id, 1)."\n";
-		if ($skreq['ZenyCost'][$key]) $putsk .=  "\t\tZenyCost: ".leveled($skreq['ZenyCost'][$key], $max, $id, 1)."\n";
+		if ($skreq['HPCost'][$key]) $putsk .=  "\t\tHPCost: ".leveled_guessfill($skreq['HPCost'][$key], $max_level, $id, 1)."\n";
+		if ($skreq['SPCost'][$key]) $putsk .=  "\t\tSPCost: ".leveled_guessfill($skreq['SPCost'][$key], $max_level, $id, 1)."\n";
+		if ($skreq['HPRateCost'][$key]) $putsk .=  "\t\tHPRateCost: ".leveled_guessfill($skreq['HPRateCost'][$key], $max_level, $id, 1)."\n";
+		if ($skreq['SPRateCost'][$key]) $putsk .=  "\t\tSPRateCost: ".leveled_guessfill($skreq['SPRateCost'][$key], $max_level, $id, 1)."\n";
+		if ($skreq['ZenyCost'][$key]) $putsk .=  "\t\tZenyCost: ".leveled_guessfill($skreq['ZenyCost'][$key], $max_level, $id, 1)."\n";
 		if ($skreq['Weapons'][$key] != 99) $putsk .=  "\t\tWeaponTypes: ".getweapontypes($skreq['Weapons'][$key], $id)."\n";
 		if ($skreq['AmmoTypes'][$key] == 99) $putsk .=  "\t\tAmmoTypes: \"All\"\n";
 		else if ($skreq['AmmoTypes'][$key]) $putsk .=  "\t\tAmmoTypes: ".getammotypes($skreq['AmmoTypes'][$key], $id)."\n";
-		if ($skreq['AmmoAmount'][$key]) $putsk .=  "\t\tAmmoAmount: ".leveled($skreq['AmmoAmount'][$key],  $max, $id, 1)."\n";
+		if ($skreq['AmmoAmount'][$key]) $putsk .=  "\t\tAmmoAmount: ".leveled_guessfill($skreq['AmmoAmount'][$key],  $max_level, $id, 1)."\n";
 		if ($skreq['State'][$key] != "none" && $skreq['State'][$key]) $putsk .=  "\t\tState: \"".getstate($skreq['State'][$key],$id)."\"\n";
-		if ($skreq['SpiritSphere'][$key]) $putsk .=  "\t\tSpiritSphereCost: ".leveled($skreq['SpiritSphere'][$key], $max, $id, 1)."\n";
+		if ($skreq['SpiritSphere'][$key]) $putsk .=  "\t\tSpiritSphereCost: ".leveled_guessfill($skreq['SpiritSphere'][$key], $max_level, $id, 1)."\n";
 		if ($skreqit['ItemId'][$key][0] > 0) {
 			$putsk .=  "\t\tItems: {\n";
 			for ($index=0; $index<sizeof($skreqit['ItemId'][$key]); $index++) {
@@ -400,22 +402,26 @@ while(!feof($skmain)) {
 					while (isset($items) && isset($items[$it])) {
 						if ($constants && $itemID) {
 							$itkey = array_search($items[$it], $itemdb['ID']);
-							if($itkey == 0) $itemname = "ID".$items[$it];
-							else $itemname = $itemdb['name'][$itkey];
-							$putsk .=  "\t\t\t".trim($itemname).": ".leveled($itemamt, $max, $id, 2)."\n";
+							if($itkey === FALSE)
+								$itemname = "ID".$items[$it];
+							else
+								$itemname = $itemdb['name'][$itkey];
+							$putsk .=  "\t\t\t".trim($itemname).": ".leveled($itemamt, $max_level, $id, 2)."\n";
 						} else if (intval($itemID)) {
-							$putsk .=  "\t\t\tID".$items[$it].": ".leveled($itemamt, $max, $id, 2)."\n";
+							$putsk .=  "\t\t\tID".$items[$it].": ".leveled($itemamt, $max_level, $id, 2)."\n";
 						}
 						$it++;
 					}
 				} else {
 					if ($constants && $itemID) {
 						$itkey = array_search($skreqit['ItemId'][$key][$index], $itemdb['ID']);
-						if($itkey == 0) $itemname = "ID".$itemID;
-						else $itemname = $itemdb['name'][$itkey];
-						$putsk .=  "\t\t\t".trim($itemname).": ".leveled($itemamt, $max, $id, 2)."\n";
+						if($itkey === FALSE)
+							$itemname = "ID".$itemID;
+						else
+							$itemname = $itemdb['name'][$itkey];
+						$putsk .=  "\t\t\t".trim($itemname).": ".leveled($itemamt, $max_items, $id, 2)."\n";
 					} else if ($itemID) {
-						$putsk .=  "\t\t\tID".$itemID.": ".leveled($itemamt, $max, $id, 2)."\n";
+						$putsk .=  "\t\t\tID".$itemID.": ".leveled($itemamt, $max_items, $id, 2)."\n";
 					}
 				}
 			}
@@ -426,20 +432,22 @@ while(!feof($skmain)) {
 
 	unset($key);
 	$key = array_search($id, $skunit['ID']);
-	if($key) {
+	if($key !== FALSE) {
 		$putsk .=  "\tUnit: {\n";
 		if(isset($skunit['UnitID'][$key])) {
 			if(isset($skunit['UnitID2'][$key]) && strlen($skunit['UnitID2'][$key])) {
 				$putsk .=  "\t\tId: [ ".$skunit['UnitID'][$key].", ".$skunit['UnitID2'][$key]." ]\n";
 			} else $putsk .=  "\t\tId: ".$skunit['UnitID'][$key]."\n";
 		}
-		if(isset($skunit['Layout'][$key]) && $skunit['Layout'][$key] != 0) $putsk .=  "\t\tLayout: ".leveled($skunit['Layout'][$key], $max, $id, 1)."\n";
-		if(isset($skunit['Range'][$key]) && $skunit['Range'][$key] != 0) $putsk .=  "\t\tRange: ".leveled($skunit['Range'][$key], $max, $id, 1)."\n";
-		if(isset($skunit['Interval'][$key])) $putsk .=  "\t\tInterval: ".leveled($skunit['Interval'][$key], $max, $id, 1)."\n";
+		if(isset($skunit['Layout'][$key]) && $skunit['Layout'][$key] != 0) $putsk .=  "\t\tLayout: ".leveled_guessfill($skunit['Layout'][$key], $max_level, $id, 1)."\n";
+		if(isset($skunit['Range'][$key]) && $skunit['Range'][$key] != 0) $putsk .=  "\t\tRange: ".leveled_guessfill($skunit['Range'][$key], $max_level, $id, 1)."\n";
+#		if(isset($skunit['Interval'][$key])) $putsk .=  "\t\tInterval: ".leveled_guessfill($skunit['Interval'][$key], $max_level, $id, 1)."\n";
+# in memory present space only for one interval, but in old db intervals present for each level
+		if(isset($skunit['Interval'][$key])) $putsk .=  "\t\tInterval: ".intval($skunit['Interval'][$key])."\n";
 		if(isset($skunit['Target'][$key]) && $skunit['Target'][$key] != "noone") $putsk .=  "\t\tTarget: \"".trim(ucfirst($skunit['Target'][$key]))."\"\n";
-		if(isset($skunit['Flag'][$key]) && intval($skunit['Flag'][$key]) > 0
-		&& $skunit['Flag'][$key] != "")
+		if(isset($skunit['Flag'][$key]) && $skunit['Flag'][$key] != "") {
 			$putsk .=  "\t\tFlag: ".getunitflag($skunit['Flag'][$key], $id)."\n";
+		}
 		$putsk .=  "\t}\n";
 	}
 	// close skill
@@ -475,8 +483,8 @@ fclose($skmain);
 
 function microtime_float()
 {
-    list($usec, $sec) = explode(" ", microtime());
-    return ((float)$usec + (float)$sec);
+	list($usec, $sec) = explode(" ", microtime());
+	return ((float)$usec + (float)$sec);
 }
 
 function show_status($done, $total) {
@@ -515,13 +523,8 @@ function leveled_ele($str, $max, $skill_id)
 	{
 		$lvs = explode(":", $str);
 		$retval = "{\n";
-		for($i=0; $i<$max && isset($lvs[$i]); $i++) {
-			if (isset($lvs[$i])) {
-				$retval .= "\t\tLv".($i+1).": \"".get_element($lvs[$i],$skill_id)."\"\n";
-			} else {
-				print "\r\033[0;31mWarning\033[0;0m - Invalid Level ".($i+1)." provided in Element Level for Skill Id ".$skill_id."\n";
-				continue;
-			}
+		for($i = 0; $i < $max && isset($lvs[$i]); $i++) {
+			$retval .= "\t\tLv".($i+1).": \"".get_element($lvs[$i],$skill_id)."\"\n";
 		}
 		$retval .= "\t}";
 	} else {
@@ -552,11 +555,69 @@ function leveled($str, $max, $id, $tab=0)
 	if(strpos($str, ':') == true) {
 		$lvs = explode(":", trim($str));
 		$retval = "{\n";
-		for($i=0; $i<$max && isset($lvs[$i]); $i++) {
-			if(isset($lvs[$i])) {
+		for ($i = 0; $i < $max && isset($lvs[$i]); $i++) {
+			$retval .= $ittab."Lv".($i+1).": ".$lvs[$i]."\n";
+		}
+		$retval .= $endtab."}";
+	} else {
+		$retval = intval($str);
+	}
+
+	return $retval;
+}
+
+function leveled_guessfill($str, $max, $id, $tab=0)
+{
+	switch($tab) {
+		case 1:
+			$ittab = "\t\t\t";
+			$endtab = "\t\t";
+			break;
+		case 2:
+			$ittab = "\t\t\t\t";
+			$endtab = "\t\t\t";
+			break;
+		default:
+			$ittab = "\t\t";
+			$endtab = "\t";
+			break;
+	}
+
+	$retval = "";
+	if(strpos($str, ':') == true) {
+		$lvs = explode(":", trim($str));
+		$retval = "{\n";
+		for ($i = 0; $i < $max && isset($lvs[$i]); $i++) {
+			$retval .= $ittab."Lv".($i+1).": ".$lvs[$i]."\n";
+		}
+		if ($i < $max) {
+			/* Algorithm borrowed from skill_split_atoi(), as used by the old parser */
+			for ($step = 1; $step <= $i/2; $step++) {
+				$diff = $lvs[$i - 1] - $lvs[$i - $step - 1];
+				for ($j = $i - 1; $j >= $step; $j--)
+					if ($lvs[$j] - $lvs[$j - $step] != $diff)
+						break;
+
+				if ($j >= $step) //No match, try next step.
+					continue;
+
+				for(; $i < $max; $i++) { //Apply linear increase
+					$lvs[$i] = $lvs[$i - $step] + $diff;
+					if ($lvs[$i] < 1 && $lvs[$i - 1] >= 0) {
+						//Check if we have switched from + to -, cap the decrease to 0 in said cases.
+						$lvs[$i] = 1;
+						$diff = 0;
+						$step = 1;
+					}
+					$retval .= $ittab."Lv".($i+1).": ".$lvs[$i]."\n";
+				}
+				$retval .= $endtab."}";
+				return $retval;
+			}
+			//Okay.. we can't figure this one out, just fill out the stuff with the previous value.
+			for (; $i < $max; $i++) {
+				$lvs[$i] = $lvs[$i - 1];
 				$retval .= $ittab."Lv".($i+1).": ".$lvs[$i]."\n";
-			} else {
-				print "\r\033[0;31mWarning\033[0;0m - Invalid Level index ".($i+1)." provided in skill Id ".$id."\n";
 			}
 		}
 		$retval .= $endtab."}";
@@ -654,7 +715,7 @@ function getnk($nk)
 {
 	$bitmask = array(
 		"NoDamage"         =>   intval(0x01), //- No damage skill
-		"SplashArea"       =>   intval(0x02)+intval(0x04), //- Has splash area (requires source modification)
+		"SplashArea"       =>   intval(0x02), //- Has splash area (requires source modification)
 		"SplitDamage"      =>   intval(0x04), //- Damage should be split among targets (requires 0x02 in order to work)
 		"IgnoreCards"      =>   intval(0x08), //- Skill ignores caster's % damage cards (misc type always ignores)
 		"IgnoreElement"    =>   intval(0x10), //- Skill ignores elemental adjustments
@@ -665,13 +726,9 @@ function getnk($nk)
 	$nk = intval($nk,16);
 	$retval = "{\n";
 	foreach($bitmask as $key => $val) {
-		if($key == "SplitDamage") {
-			if($nk&$bitmask["SplashArea"])
-				continue;
-			else {
-				$retval .= "\t\tSplashArea: true\n";
-			}
-		} else if($nk&$val) $retval .= "\t\t".$key.": true\n";
+		if($nk&$val) {
+			$retval .= "\t\t".$key.": true\n";
+		}
 	}
 	$retval .= "\t}";
 
@@ -815,8 +872,7 @@ function getunitflag($flag, $id)
 		'UF_RANGEDSINGLEUNIT' =>  intval(0x2000)          //0x2000(UF_RANGEDSINGLEUNIT)Layout hack, use layout range propriety but only display center.
 	);
 
-	$count = 0; $flag = 0;
-	$flag = intval($flag,16);
+	$count = 0;
 	if($flag <= 0) return 0;
 
 	$ret = "{\n";
