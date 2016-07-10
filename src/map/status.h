@@ -74,14 +74,15 @@ enum refine_type {
  * @see db/sc_config.txt for more information
  **/
 typedef enum sc_conf_type {
-	SC_NO_REM_DEATH  = 0x01,
-	SC_NO_SAVE       = 0x02,
-	SC_NO_DISPELL    = 0x04,
-	SC_NO_CLEARANCE  = 0x08,
-	SC_BUFF          = 0x10,
-	SC_DEBUFF        = 0x20,
-	SC_MADO_NO_RESET = 0x40,
-	SC_NO_CLEAR      = 0x80,
+	SC_NO_REM_DEATH  = 0x001,
+	SC_NO_SAVE       = 0x002,
+	SC_NO_DISPELL    = 0x004,
+	SC_NO_CLEARANCE  = 0x008,
+	SC_BUFF          = 0x010,
+	SC_DEBUFF        = 0x020,
+	SC_MADO_NO_RESET = 0x040,
+	SC_NO_CLEAR      = 0x080,
+	SC_VISIBLE       = 0x100
 } sc_conf_type;
 
 /**
