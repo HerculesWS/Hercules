@@ -5992,6 +5992,8 @@ typedef int (*HPMHOOK_pre_script_string_dup) (char **str);
 typedef int (*HPMHOOK_post_script_string_dup) (int retVal___, char *str);
 typedef void (*HPMHOOK_pre_script_load_translations) (void);
 typedef void (*HPMHOOK_post_script_load_translations) (void);
+typedef bool (*HPMHOOK_pre_script_load_translation_addstring) (const char **file, uint8 *lang_id, const char **msgctxt, const struct script_string_buf **msgid, const struct script_string_buf **msgstr);
+typedef bool (*HPMHOOK_post_script_load_translation_addstring) (bool retVal___, const char *file, uint8 lang_id, const char *msgctxt, const struct script_string_buf *msgid, const struct script_string_buf *msgstr);
 typedef int (*HPMHOOK_pre_script_load_translation) (const char **file, uint8 *lang_id);
 typedef int (*HPMHOOK_post_script_load_translation) (int retVal___, const char *file, uint8 lang_id);
 typedef int (*HPMHOOK_pre_script_translation_db_destroyer) (union DBKey *key, struct DBData **data, va_list ap);

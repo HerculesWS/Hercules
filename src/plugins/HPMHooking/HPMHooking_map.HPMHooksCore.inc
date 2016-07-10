@@ -4828,6 +4828,8 @@ struct {
 	struct HPMHookPoint *HP_script_string_dup_post;
 	struct HPMHookPoint *HP_script_load_translations_pre;
 	struct HPMHookPoint *HP_script_load_translations_post;
+	struct HPMHookPoint *HP_script_load_translation_addstring_pre;
+	struct HPMHookPoint *HP_script_load_translation_addstring_post;
 	struct HPMHookPoint *HP_script_load_translation_pre;
 	struct HPMHookPoint *HP_script_load_translation_post;
 	struct HPMHookPoint *HP_script_translation_db_destroyer_pre;
@@ -10783,6 +10785,8 @@ struct {
 	int HP_script_string_dup_post;
 	int HP_script_load_translations_pre;
 	int HP_script_load_translations_post;
+	int HP_script_load_translation_addstring_pre;
+	int HP_script_load_translation_addstring_post;
 	int HP_script_load_translation_pre;
 	int HP_script_load_translation_post;
 	int HP_script_translation_db_destroyer_pre;

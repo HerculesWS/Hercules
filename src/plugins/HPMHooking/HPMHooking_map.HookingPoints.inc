@@ -2470,6 +2470,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(script->mapindexname2id, HP_script_mapindexname2id) },
 	{ HP_POP(script->string_dup, HP_script_string_dup) },
 	{ HP_POP(script->load_translations, HP_script_load_translations) },
+	{ HP_POP(script->load_translation_addstring, HP_script_load_translation_addstring) },
 	{ HP_POP(script->load_translation, HP_script_load_translation) },
 	{ HP_POP(script->translation_db_destroyer, HP_script_translation_db_destroyer) },
 	{ HP_POP(script->clear_translations, HP_script_clear_translations) },
