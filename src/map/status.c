@@ -11402,17 +11402,7 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data) {
 							mushroom_skill_id = skill->dbs->magicmushroom_db[i].skill_id;
 						} while (mushroom_skill_id == 0);
 
-						switch( skill->get_casttype(mushroom_skill_id) ) { // Magic Mushroom skills are buffs or area damage
-							case CAST_GROUND:
-								skill->castend_pos2(bl,bl->x,bl->y,mushroom_skill_id,1,tick,0);
-								break;
-							case CAST_NODAMAGE:
-								skill->castend_nodamage_id(bl,bl,mushroom_skill_id,1,tick,0);
-								break;
-							case CAST_DAMAGE:
-								skill->castend_damage_id(bl,bl,mushroom_skill_id,1,tick,0);
-								break;
-						}
+						skill->castend_type(skill->get_casttype(mushroom_skill_id), bl, bl, mushroom_skill_id, 1, tick, 0);
 					}
 
 					clif->emotion(bl,E_HEH);

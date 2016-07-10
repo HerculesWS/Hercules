@@ -6269,17 +6269,7 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 		sp = skill->get_sp(skill_id,skill_lv) * 2 / 3;
 
 		if (status->charge(src, 0, sp)) {
-			switch (skill->get_casttype(skill_id)) {
-				case CAST_GROUND:
-					skill->castend_pos2(src, target->x, target->y, skill_id, skill_lv, tick, flag);
-					break;
-				case CAST_NODAMAGE:
-					skill->castend_nodamage_id(src, target, skill_id, skill_lv, tick, flag);
-					break;
-				case CAST_DAMAGE:
-					skill->castend_damage_id(src, target, skill_id, skill_lv, tick, flag);
-					break;
-			}
+			skill->castend_type(skill->get_casttype(skill_id), src, target, skill_id, skill_lv, tick, flag);
 		}
 	}
 	if (sd) {
@@ -6325,19 +6315,8 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 
 				sd->state.autocast = 1;
 				skill->consume_requirement(sd,r_skill,r_lv,3);
-				switch( type ) {
-					case CAST_GROUND:
-						skill->castend_pos2(src, target->x, target->y, r_skill, r_lv, tick, flag);
-						break;
-					case CAST_NODAMAGE:
-						skill->castend_nodamage_id(src, target, r_skill, r_lv, tick, flag);
-						break;
-					case CAST_DAMAGE:
-						skill->castend_damage_id(src, target, r_skill, r_lv, tick, flag);
-						break;
-				}
+				skill->castend_type(type, src, target, r_skill, r_lv, tick, flag);
 				sd->state.autocast = 0;
-
 				sd->ud.canact_tick = tick + skill->delay_fix(src, r_skill, r_lv);
 				clif->status_change(src, SI_POSTDELAY, 1, skill->delay_fix(src, r_skill, r_lv), 0, 0, 1);
 			}
