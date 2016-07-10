@@ -269,7 +269,7 @@ while(!feof($unitdb)) {
 	$skunit['Range'][$i] = $arr[4];
 	$skunit['Interval'][$i] = $arr[5];
 	$skunit['Target'][$i] = $arr[6];
-	$skunit['Flag'][$i] = substr($arr[7],2);
+	$skunit['Flag'][$i] = hexdec($arr[7]);
 	$i++;
 }
 if($debug) {
@@ -340,18 +340,18 @@ while(!feof($skmain)) {
 	else if($hit==6) $putsk .=  "\tHit: \"BDT_SKILL\"\n";
 	if($inf) $putsk .=  "\tSkillType: ".getinf($inf)."\n";
 	if($inf2) $putsk .=  "\tSkillInfo: ".getinf2($inf2)."\n";
-	if($skill_type != "none" && $inf) $putsk .=  "\tAttackType: \"".ucfirst($skill_type)."\"\n";
+	if($skill_type != "none") $putsk .=  "\tAttackType: \"".ucfirst($skill_type)."\"\n";
 	if($element) $putsk .=  "\tElement: ".leveled_ele($element, $max, $id)."\n";
 	if($nk && $nk != "0x0") $putsk .=  "\tDamageType: ".getnk($nk)."\n";
 	if($splash) $putsk .=  "\tSplashRange: ".leveled($splash, $max, $id)."\n";
 	if($list_num != "1") $putsk .=  "\tNumberOfHits: ".leveled($list_num, $max, $id)."\n";
-	if($castcancel && $inf) $putsk .=  "\tInterruptCast: true\n";
+	if($castcancel == "yes") $putsk .=  "\tInterruptCast: true\n";
 	if($cast_defence_rate) $putsk .=  "\tCastDefRate: ".$cast_defence_rate."\n";
 	if($maxcount) $putsk .=  "\tSkillInstances: ".leveled($maxcount, $max, $id)."\n";
 	if($blow_count) $putsk .=  "\tKnockBackTiles: ".leveled($blow_count, $max, $id)."\n";
 	// Cast Db
 	$key = array_search($id, $skcast['ID']);
-	if($key) {
+	if($key !== FALSE) {
 		if($skcast['casttime'][$key]) $putsk .=  "\tCastTime: ".leveled($skcast['casttime'][$key], $max, $id)."\n";
 		if($skcast['actdelay'][$key]) $putsk .=  "\tAfterCastActDelay: ".leveled($skcast['actdelay'][$key], $max, $id)."\n";
 		if($skcast['walkdelay'][$key] != 0) $putsk .=  "\tAfterCastWalkDelay: ".leveled($skcast['walkdelay'][$key], $max, $id)."\n";
@@ -375,7 +375,7 @@ while(!feof($skmain)) {
 	// require DB
 	unset($key);
 	$key = array_search($id, $skreq['ID']);
-	if($key) {
+	if($key !== FALSE) {
 		$putsk .=  "\tRequirements: {\n";
 		if ($skreq['HPCost'][$key]) $putsk .=  "\t\tHPCost: ".leveled($skreq['HPCost'][$key], $max, $id, 1)."\n";
 		if ($skreq['SPCost'][$key]) $putsk .=  "\t\tSPCost: ".leveled($skreq['SPCost'][$key], $max, $id, 1)."\n";
@@ -426,7 +426,7 @@ while(!feof($skmain)) {
 
 	unset($key);
 	$key = array_search($id, $skunit['ID']);
-	if($key) {
+	if($key !== FALSE) {
 		$putsk .=  "\tUnit: {\n";
 		if(isset($skunit['UnitID'][$key])) {
 			if(isset($skunit['UnitID2'][$key]) && strlen($skunit['UnitID2'][$key])) {
@@ -437,9 +437,9 @@ while(!feof($skmain)) {
 		if(isset($skunit['Range'][$key]) && $skunit['Range'][$key] != 0) $putsk .=  "\t\tRange: ".leveled($skunit['Range'][$key], $max, $id, 1)."\n";
 		if(isset($skunit['Interval'][$key])) $putsk .=  "\t\tInterval: ".leveled($skunit['Interval'][$key], $max, $id, 1)."\n";
 		if(isset($skunit['Target'][$key]) && $skunit['Target'][$key] != "noone") $putsk .=  "\t\tTarget: \"".trim(ucfirst($skunit['Target'][$key]))."\"\n";
-		if(isset($skunit['Flag'][$key]) && intval($skunit['Flag'][$key]) > 0
-		&& $skunit['Flag'][$key] != "")
+		if(isset($skunit['Flag'][$key]) && $skunit['Flag'][$key] != "") {
 			$putsk .=  "\t\tFlag: ".getunitflag($skunit['Flag'][$key], $id)."\n";
+		}
 		$putsk .=  "\t}\n";
 	}
 	// close skill
@@ -654,7 +654,7 @@ function getnk($nk)
 {
 	$bitmask = array(
 		"NoDamage"         =>   intval(0x01), //- No damage skill
-		"SplashArea"       =>   intval(0x02)+intval(0x04), //- Has splash area (requires source modification)
+		"SplashArea"       =>   intval(0x02), //- Has splash area (requires source modification)
 		"SplitDamage"      =>   intval(0x04), //- Damage should be split among targets (requires 0x02 in order to work)
 		"IgnoreCards"      =>   intval(0x08), //- Skill ignores caster's % damage cards (misc type always ignores)
 		"IgnoreElement"    =>   intval(0x10), //- Skill ignores elemental adjustments
@@ -665,13 +665,9 @@ function getnk($nk)
 	$nk = intval($nk,16);
 	$retval = "{\n";
 	foreach($bitmask as $key => $val) {
-		if($key == "SplitDamage") {
-			if($nk&$bitmask["SplashArea"])
-				continue;
-			else {
-				$retval .= "\t\tSplashArea: true\n";
-			}
-		} else if($nk&$val) $retval .= "\t\t".$key.": true\n";
+		if($nk&$val) {
+			$retval .= "\t\t".$key.": true\n";
+		}
 	}
 	$retval .= "\t}";
 
@@ -815,8 +811,7 @@ function getunitflag($flag, $id)
 		'UF_RANGEDSINGLEUNIT' =>  intval(0x2000)          //0x2000(UF_RANGEDSINGLEUNIT)Layout hack, use layout range propriety but only display center.
 	);
 
-	$count = 0; $flag = 0;
-	$flag = intval($flag,16);
+	$count = 0;
 	if($flag <= 0) return 0;
 
 	$ret = "{\n";
