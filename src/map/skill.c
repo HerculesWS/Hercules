@@ -83,6 +83,69 @@ struct s_skill_dbs skilldbs;
 
 struct skill_interface *skill;
 
+void skill_dump_db(void)
+{
+	int i;
+	FILE *fp = fopen("skilldb_dump.txt", "w");
+	nullpo_retv(fp);
+
+	for (i = 0; i < MAX_SKILL_DB; i++) {
+		int j;
+		const struct s_skill_db *entry = &skill->dbs->db[i];
+		if (entry->nameid == 0)
+			continue;
+		fprintf(fp, "SKILL ID %hu\n", entry->nameid);
+		fprintf(fp, "Name: '%s'\n", entry->name);
+		fprintf(fp, "Desc: '%s'\n", entry->desc);
+		fprintf(fp, "Range:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->range[j]); fprintf(fp, "\n");
+		fprintf(fp, "Hit: %d\n", entry->hit);
+		fprintf(fp, "Inf: %u\n", (unsigned int)entry->inf);
+		fprintf(fp, "Element:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->element[j]); fprintf(fp, "\n");
+		fprintf(fp, "Nk: %u\n", (unsigned int)entry->nk);
+		fprintf(fp, "Splash:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->splash[j]); fprintf(fp, "\n");
+		fprintf(fp, "Max: %d\n", entry->max);
+		fprintf(fp, "Num:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->num[j]); fprintf(fp, "\n");
+		fprintf(fp, "Cast:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->cast[j]); fprintf(fp, "\n");
+		fprintf(fp, "Walkdelay:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->walkdelay[j]); fprintf(fp, "\n");
+		fprintf(fp, "Delay:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->delay[j]); fprintf(fp, "\n");
+#ifdef RENEWAL_CAST
+		fprintf(fp, "Fixed Cast:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->fixed_cast[j]); fprintf(fp, "\n");
+#endif
+		fprintf(fp, "Upkeep Time:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->upkeep_time[j]); fprintf(fp, "\n");
+		fprintf(fp, "Upkeep Time2:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->upkeep_time2[j]); fprintf(fp, "\n");
+		fprintf(fp, "Cooldown:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->cooldown[j]); fprintf(fp, "\n");
+		fprintf(fp, "Cast Cancel: %d\n", entry->castcancel);
+		fprintf(fp, "Cast Def Rate: %d\n", entry->cast_def_rate);
+		fprintf(fp, "Inf2: %d\n", entry->inf2);
+		fprintf(fp, "Max Count:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->maxcount[j]); fprintf(fp, "\n");
+		fprintf(fp, "Skill Type: %d\n", entry->skill_type);
+		fprintf(fp, "Blewcount:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->blewcount[j]); fprintf(fp, "\n");
+		fprintf(fp, "HP:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->hp[j]); fprintf(fp, "\n");
+		fprintf(fp, "SP:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->sp[j]); fprintf(fp, "\n");
+		fprintf(fp, "MHP:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->mhp[j]); fprintf(fp, "\n");
+		fprintf(fp, "HP Rate:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->hp_rate[j]); fprintf(fp, "\n");
+		fprintf(fp, "SP Rate:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->sp_rate[j]); fprintf(fp, "\n");
+		fprintf(fp, "Zeny:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->zeny[j]); fprintf(fp, "\n");
+		fprintf(fp, "Weapon: %u\n", (unsigned int)entry->weapon);
+		fprintf(fp, "Ammo: %d\n", entry->ammo);
+		fprintf(fp, "Ammo qty:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->ammo_qty[j]); fprintf(fp, "\n");
+		fprintf(fp, "State: %d\n", entry->state);
+		fprintf(fp, "Spiritball:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->spiritball[j]); fprintf(fp, "\n");
+		fprintf(fp, "Items:"); for (j = 0; j < MAX_SKILL_ITEM_REQUIRE; j++) fprintf(fp, " %d(%d)", entry->itemid[j], entry->amount[j]); fprintf(fp, "\n");
+		fprintf(fp, "Castnodex:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->castnodex[j]); fprintf(fp, "\n");
+		fprintf(fp, "Delaynodex:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->delaynodex[j]); fprintf(fp, "\n");
+		fprintf(fp, "Nocast: %d\n", entry->nocast);
+		fprintf(fp, "Unit ID: %d %d\n", entry->unit_id[0], entry->unit_id[1]);
+		fprintf(fp, "Unit Layout Type:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->unit_layout_type[j]); fprintf(fp, "\n");
+		fprintf(fp, "Unit Range:"); for (j = 0; j < MAX_SKILL_LEVEL; j++) fprintf(fp, " %d", entry->unit_range[j]); fprintf(fp, "\n");
+		fprintf(fp, "Unit Interval: %d\n", entry->unit_interval);
+		fprintf(fp, "Unit Target: %d\n", entry->unit_target);
+		fprintf(fp, "Unit Flag: %u\n", (unsigned int)entry->unit_flag);
+		fprintf(fp, "================\n\n");
+	}
+	fclose(fp);
+}
+
 //Since only mob-casted splash skills can hit ice-walls
 int skill_splash_target(struct block_list* bl)
 {
@@ -19295,9 +19358,9 @@ void skill_validate_damagetype(struct config_setting_t *conf, struct s_skill_db 
 				}
 			} else if (strcmpi(type, "SplashArea") == 0) {
 				if (on) {
-					sk->nk |= NK_SPLASH;
+					sk->nk |= NK_SPLASH_ONLY;
 				} else {
-					sk->nk &= ~NK_SPLASH;
+					sk->nk &= ~NK_SPLASH_ONLY;
 				}
 			} else if (strcmpi(type, "SplitDamage") == 0) {
 				if (on) {
@@ -19564,9 +19627,9 @@ int skill_validate_weapontype_sub(const char *type, bool on, struct s_skill_db *
 		}
 	} else if (strcmpi(type, "DWDaggerSword") == 0) {
 		if (on) {
-			sk->weapon |= 1<<W_DOUBLE_DA;
+			sk->weapon |= 1<<W_DOUBLE_DS;
 		} else {
-			sk->weapon &= ~(1<<W_DOUBLE_DA);
+			sk->weapon &= ~(1<<W_DOUBLE_DS);
 		}
 	} else if (strcmpi(type, "DWDaggerAxe") == 0) {
 		if (on) {
@@ -19583,6 +19646,7 @@ int skill_validate_weapontype_sub(const char *type, bool on, struct s_skill_db *
 	} else if (strcmpi(type, "All") == 0) {
 		sk->weapon = 0;
 	} else {
+		ShowError("Item %d. Unknown weapon type %s\n", sk->nameid, type);
 		return 1; // invalid type
 	}
 
@@ -19603,8 +19667,8 @@ void skill_validate_weapontype(struct config_setting_t *conf, struct s_skill_db 
 
 	if ((tt = libconfig->setting_get_member(conf, "WeaponTypes")) && config_setting_is_group(tt)) {
 		int j = 0;
-		struct config_setting_t *wpt = { 0 };
-		while ((wpt = libconfig->setting_get_elem(tt, j++)) && j < 30) {
+		struct config_setting_t *wpt = NULL;
+		while ((wpt = libconfig->setting_get_elem(tt, j++)) != NULL) {
 			if (skill_validate_weapontype_sub(config_setting_name(wpt), libconfig->setting_get_bool_real(wpt), sk))
 				skilldb_invalid_error(config_setting_name(wpt), config_setting_name(tt), sk->nameid);
 		}
@@ -19749,7 +19813,7 @@ void skill_validate_state(struct config_setting_t *conf, struct s_skill_db *sk)
 		else if (strcmpi(type,"PoisonWeapon")     == 0 ) sk->state = ST_POISONINGWEAPON;
 		else if (strcmpi(type,"RollingCutter")    == 0 ) sk->state = ST_ROLLINGCUTTER;
 		else if (strcmpi(type,"MH_Fighting")      == 0 ) sk->state = ST_MH_FIGHTING;
-		else if (strcmpi(type,"MH_Grappling")     == 0 ) sk->state = ST_MH_FIGHTING;
+		else if (strcmpi(type,"MH_Grappling")     == 0 ) sk->state = ST_MH_GRAPPLING;
 		else if (strcmpi(type,"Peco")             == 0 ) sk->state = ST_PECO;
 		else
 			skilldb_invalid_error(type, "State", sk->nameid);
@@ -19771,7 +19835,7 @@ void skill_validate_item_requirements(struct config_setting_t *conf, struct s_sk
 		int itx=-1;
 		struct config_setting_t *it;
 
-		while((it=libconfig->setting_get_elem(tt, itx++)) && itx < MAX_SKILL_ITEM_REQUIRE) {
+		while((it=libconfig->setting_get_elem(tt, ++itx)) && itx < MAX_SKILL_ITEM_REQUIRE) {
 			const char *type = config_setting_name(it);
 
 			if( type[0] == 'I' && type[1] == 'D' && itemdb->exists(atoi(type+2)) )
@@ -19781,7 +19845,13 @@ void skill_validate_item_requirements(struct config_setting_t *conf, struct s_sk
 				continue;
 			}
 
-			sk->amount[itx] = libconfig->setting_get_int(it);
+			if (config_setting_is_group(it)) {
+				// TODO: Per-level item requirements are not implemented yet!
+				// We just take the first level for the time being (old txt behavior)
+				sk->amount[itx] = libconfig->setting_get_int_elem(it, 0);
+			} else {
+				sk->amount[itx] = libconfig->setting_get_int(it);
+			}
 		}
 	}
 }
@@ -19810,20 +19880,20 @@ void skill_validate_unit_target(struct config_setting_t *conf, struct s_skill_db
 		else if(!strcmpi(type,"Enemy")) sk->unit_target = BCT_ENEMY;
 		else if(!strcmpi(type,"Self")) sk->unit_target = BCT_SELF;
 		else if(!strcmpi(type,"SameGuild")) sk->unit_target = BCT_GUILD|BCT_SAMEGUILD;
-
-		if (sk->unit_flag&UF_DEFNOTENEMY && battle_config.defnotenemy)
-			sk->unit_target = BCT_NOENEMY;
-
-		//By default, target just characters.
-		sk->unit_target |= BL_CHAR;
-
-		if (sk->unit_flag&UF_NOPC)
-			sk->unit_target &= ~BL_PC;
-		if (sk->unit_flag&UF_NOMOB)
-			sk->unit_target &= ~BL_MOB;
-		if (sk->unit_flag&UF_SKILL)
-			sk->unit_target |= BL_SKILL;
 	}
+
+	if (sk->unit_flag & UF_DEFNOTENEMY && battle_config.defnotenemy)
+		sk->unit_target = BCT_NOENEMY;
+
+	//By default, target just characters.
+	sk->unit_target |= BL_CHAR;
+
+	if (sk->unit_flag & UF_NOPC)
+		sk->unit_target &= ~BL_PC;
+	if (sk->unit_flag & UF_NOMOB)
+		sk->unit_target &= ~BL_MOB;
+	if (sk->unit_flag & UF_SKILL)
+		sk->unit_target |= BL_SKILL;
 }
 
 /**
@@ -19969,7 +20039,7 @@ bool skill_validate_skilldb(struct s_skill_db *sk, const char *source)
 		ShowWarning("skill_validate_skilldb: Invalid skill Id %d provided in '%s'! ... skipping\n", sk->nameid, source);
 		ShowInfo("It is possible that the skill Id is 0 or unavailable (interferes with guild/homun/mercenary skill mapping).\n");
 		return false;
-	} else if (sk->max > MAX_SKILL_LEVEL || sk->max <= 0) {
+	} else if (sk->max <= 0) {
 		ShowError("skill_validate_skilldb: Invalid Max Level %d specified for skill Id %d in '%s', skipping...\n", sk->max, sk->nameid, source);
 		return false;
 	}
@@ -20088,8 +20158,8 @@ bool skill_read_skilldb(const char *filename)
 			skill->level_set_value(tmp_db.num, 1); // Default 1
 
 		/* Interrupt Cast */
-		if (libconfig->setting_lookup_bool(conf, "InterruptCast", &tmp_db.castcancel) == 0)
-			tmp_db.castcancel = 1;
+		if (libconfig->setting_lookup_bool(conf, "InterruptCast", &tmp_db.castcancel) == CONFIG_FALSE)
+			tmp_db.castcancel = 0;
 
 		/* Cast Defense Rate */
 		libconfig->setting_lookup_int(conf, "CastDefRate", &tmp_db.cast_def_rate);
@@ -20155,11 +20225,11 @@ bool skill_read_skilldb(const char *filename)
 				skill->config_set_level(tt, tmp_db.sp);
 
 			/* HP Rate */
-			if ((tt = libconfig->setting_get_member(t, "HPRate")))
+			if ((tt = libconfig->setting_get_member(t, "HPRateCost")))
 				skill->config_set_level(tt, tmp_db.hp_rate);
 
 			/* SP Rate */
-			if ((tt = libconfig->setting_get_member(t, "SPRate")))
+			if ((tt = libconfig->setting_get_member(t, "SPRateCost")))
 				skill->config_set_level(tt, tmp_db.sp_rate);
 
 			/* Zeny Cost */
@@ -20171,10 +20241,10 @@ bool skill_read_skilldb(const char *filename)
 				skill->config_set_level(tt, tmp_db.spiritball);
 
 			/* Weapon Types */
-			skill->validate_weapontype(conf, &tmp_db);
+			skill->validate_weapontype(t, &tmp_db);
 
 			/* Ammunition Types */
-			skill->validate_ammotype(conf, &tmp_db);
+			skill->validate_ammotype(t, &tmp_db);
 
 			/* Ammunition Amount */
 			if ((tt = libconfig->setting_get_member(t, "AmmoAmount")))
@@ -20291,6 +20361,9 @@ void skill_readdb(bool minimal) {
 	sv->readdb(map->db_path, "skill_reproduce_db.txt",       ',',   1,                        1,               MAX_SKILL_DB, skill->parse_row_reproducedb);
 	sv->readdb(map->db_path, "skill_improvise_db.txt",       ',',   2,                        2,     MAX_SKILL_IMPROVISE_DB, skill->parse_row_improvisedb);
 	sv->readdb(map->db_path, "skill_changematerial_db.txt",  ',',   4,                    4+2*5,       MAX_SKILL_PRODUCE_DB, skill->parse_row_changematerialdb);
+
+
+	skill_dump_db();
 }
 
 void skill_reload(void)
