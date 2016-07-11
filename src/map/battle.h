@@ -539,6 +539,9 @@ struct Battle_Config {
 	// BodyStyle
 	int min_body_style, max_body_style;
 	int save_body_style;
+
+	// Warp Face Direction
+	int player_warp_keep_direction;
 };
 
 /* criteria for battle_config.idletime_critera */
