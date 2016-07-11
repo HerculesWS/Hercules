@@ -1,0 +1,462 @@
+--- good.txt	2016-07-11 22:44:25.000000000 +0300
++++ bad.txt	2016-07-11 23:07:47.055797977 +0300
+@@ -19227,101 +19227,101 @@
+ Range: 0 0 0 0 0 0 0 0 0 0
+ Hit: 0
+ Inf: 0
+ Element: 0 0 0 0 0 0 0 0 0 0
+ Nk: 0
+ Splash: 0 0 0 0 0 0 0 0 0 0
+ Max: 5
+ Num: 0 0 0 0 0 0 0 0 0 0
+ Cast: 0 0 0 0 0 0 0 0 0 0
+ Walkdelay: 0 0 0 0 0 0 0 0 0 0
+ Delay: 0 0 0 0 0 0 0 0 0 0
+ Fixed Cast: 0 0 0 0 0 0 0 0 0 0
+ Upkeep Time: 0 0 0 0 0 0 0 0 0 0
+ Upkeep Time2: 0 0 0 0 0 0 0 0 0 0
+ Cooldown: 0 0 0 0 0 0 0 0 0 0
+ Cast Cancel: 0
+ Cast Def Rate: 0
+ Inf2: 0
+ Max Count: 0 0 0 0 0 0 0 0 0 0
+ Skill Type: 1
+ Blewcount: 0 0 0 0 0 0 0 0 0 0
+ HP: 0 0 0 0 0 0 0 0 0 0
+ SP: 0 0 0 0 0 0 0 0 0 0
+ MHP: 0 0 0 0 0 0 0 0 0 0
+ HP Rate: 0 0 0 0 0 0 0 0 0 0
+ SP Rate: 0 0 0 0 0 0 0 0 0 0
+ Zeny: 0 0 0 0 0 0 0 0 0 0
+ Weapon: 0
+ Ammo: 0
+ Ammo qty: 0 0 0 0 0 0 0 0 0 0
+ State: 0
+ Spiritball: 0 0 0 0 0 0 0 0 0 0
+ Items: 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0)
+ Castnodex: 0 0 0 0 0 0 0 0 0 0
+ Delaynodex: 0 0 0 0 0 0 0 0 0 0
+ Nocast: 0
+ Unit ID: 0 0
+ Unit Layout Type: 0 0 0 0 0 0 0 0 0 0
+ Unit Range: 0 0 0 0 0 0 0 0 0 0
+ Unit Interval: 0
+ Unit Target: 0
+ Unit Flag: 0
+ ================
+ 
+ SKILL ID 425
+ Name: 'TK_SEVENWIND'
+ Desc: 'Mild Wind'
+ Range: 0 0 0 0 0 0 0 0 0 0
+ Hit: 6
+ Inf: 4
+-Element: 2 4 1 3 8 7 6 6 6 6
++Element: 2 4 1 3 8 7 6 0 0 0
+ Nk: 1
+ Splash: 0 0 0 0 0 0 0 0 0 0
+ Max: 7
+ Num: 1 1 1 1 1 1 1 1 1 1
+ Cast: 0 0 0 0 0 0 0 0 0 0
+ Walkdelay: 0 0 0 0 0 0 0 0 0 0
+ Delay: 0 0 0 0 0 0 0 0 0 0
+ Fixed Cast: 0 0 0 0 0 0 0 0 0 0
+ Upkeep Time: 300000 300000 300000 300000 300000 300000 300000 300000 300000 300000
+ Upkeep Time2: 0 0 0 0 0 0 0 0 0 0
+ Cooldown: 0 0 0 0 0 0 0 0 0 0
+ Cast Cancel: 0
+ Cast Def Rate: 0
+ Inf2: 0
+ Max Count: 0 0 0 0 0 0 0 0 0 0
+ Skill Type: 1
+ Blewcount: 0 0 0 0 0 0 0 0 0 0
+ HP: 0 0 0 0 0 0 0 0 0 0
+ SP: 20 20 20 20 50 50 50 50 50 50
+ MHP: 0 0 0 0 0 0 0 0 0 0
+ HP Rate: 0 0 0 0 0 0 0 0 0 0
+ SP Rate: 0 0 0 0 0 0 0 0 0 0
+ Zeny: 0 0 0 0 0 0 0 0 0 0
+ Weapon: 0
+ Ammo: 0
+ Ammo qty: 0 0 0 0 0 0 0 0 0 0
+ State: 0
+ Spiritball: 0 0 0 0 0 0 0 0 0 0
+ Items: 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0)
+ Castnodex: 0 0 0 0 0 0 0 0 0 0
+ Delaynodex: 0 0 0 0 0 0 0 0 0 0
+ Nocast: 0
+ Unit ID: 0 0
+ Unit Layout Type: 0 0 0 0 0 0 0 0 0 0
+ Unit Range: 0 0 0 0 0 0 0 0 0 0
+ Unit Interval: 0
+ Unit Target: 0
+ Unit Flag: 0
+ ================
+ 
+ SKILL ID 426
+ Name: 'TK_HIGHJUMP'
+ Desc: 'Taekwon Jump'
+ Range: 0 0 0 0 0 0 0 0 0 0
+ Hit: 6
+ Inf: 4
+ Element: 0 0 0 0 0 0 0 0 0 0
+ Nk: 1
+ Splash: 0 0 0 0 0 0 0 0 0 0
+ Max: 5
+@@ -28016,148 +28016,148 @@
+ Range: 0 0 0 0 0 0 0 0 0 0
+ Hit: 6
+ Inf: 4
+ Element: 0 0 0 0 0 0 0 0 0 0
+ Nk: 0
+ Splash: 0 0 0 0 0 0 0 0 0 0
+ Max: 5
+ Num: 1 1 1 1 1 1 1 1 1 1
+ Cast: 800 700 600 500 400 300 200 100 1 1
+ Walkdelay: 0 0 0 0 0 0 0 0 0 0
+ Delay: 0 0 0 0 0 0 0 0 0 0
+ Fixed Cast: 200 300 400 500 600 700 800 900 1000 1100
+ Upkeep Time: 30000 45000 60000 75000 90000 105000 120000 135000 150000 165000
+ Upkeep Time2: 0 0 0 0 0 0 0 0 0 0
+ Cooldown: 0 0 0 0 0 0 0 0 0 0
+ Cast Cancel: 0
+ Cast Def Rate: 0
+ Inf2: 0
+ Max Count: 0 0 0 0 0 0 0 0 0 0
+ Skill Type: 0
+ Blewcount: 0 0 0 0 0 0 0 0 0 0
+ HP: 0 0 0 0 0 0 0 0 0 0
+ SP: 70 90 110 130 150 170 190 210 230 250
+ MHP: 0 0 0 0 0 0 0 0 0 0
+ HP Rate: 0 0 0 0 0 0 0 0 0 0
+ SP Rate: 0 0 0 0 0 0 0 0 0 0
+ Zeny: 0 0 0 0 0 0 0 0 0 0
+ Weapon: 0
+ Ammo: 0
+ Ammo qty: 0 0 0 0 0 0 0 0 0 0
+ State: 0
+ Spiritball: 0 0 0 0 0 0 0 0 0 0
+ Items: 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0)
+ Castnodex: 0 0 0 0 0 0 0 0 0 0
+ Delaynodex: 0 0 0 0 0 0 0 0 0 0
+ Nocast: 0
+ Unit ID: 0 0
+ Unit Layout Type: 0 0 0 0 0 0 0 0 0 0
+ Unit Range: 0 0 0 0 0 0 0 0 0 0
+ Unit Interval: 0
+ Unit Target: 0
+ Unit Flag: 0
+ ================
+ 
+ SKILL ID 8024
+ Name: 'MH_ERASER_CUTTER'
+ Desc: 'Eraser Cutter'
+ Range: 7 7 7 7 7 7 7 7 7 7
+ Hit: 8
+ Inf: 1
+-Element: 4 0 4 0 4 1 1 1 1 1
++Element: 4 0 4 0 4 0 0 0 0 0
+ Nk: 0
+ Splash: 0 0 0 0 0 0 0 0 0 0
+ Max: 5
+ Num: -6 -6 -6 -6 -6 -6 -6 -6 -6 -6
+ Cast: 1000 1500 2000 2500 3000 3500 4000 4500 5000 5500
+ Walkdelay: 0 0 0 0 0 0 0 0 0 0
+ Delay: 2000 2000 2000 2000 2000 2000 2000 2000 2000 2000
+ Fixed Cast: -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+ Upkeep Time: 0 0 0 0 0 0 0 0 0 0
+ Upkeep Time2: 0 0 0 0 0 0 0 0 0 0
+ Cooldown: 0 0 0 0 0 0 0 0 0 0
+ Cast Cancel: 1
+ Cast Def Rate: 0
+ Inf2: 0
+ Max Count: 0 0 0 0 0 0 0 0 0 0
+ Skill Type: 2
+ Blewcount: 0 0 0 0 0 0 0 0 0 0
+ HP: 0 0 0 0 0 0 0 0 0 0
+ SP: 25 30 35 40 45 50 55 60 65 70
+ MHP: 0 0 0 0 0 0 0 0 0 0
+ HP Rate: 0 0 0 0 0 0 0 0 0 0
+ SP Rate: 0 0 0 0 0 0 0 0 0 0
+ Zeny: 0 0 0 0 0 0 0 0 0 0
+ Weapon: 0
+ Ammo: 0
+ Ammo qty: 0 0 0 0 0 0 0 0 0 0
+ State: 0
+ Spiritball: 0 0 0 0 0 0 0 0 0 0
+ Items: 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0)
+ Castnodex: 0 0 0 0 0 0 0 0 0 0
+ Delaynodex: 0 0 0 0 0 0 0 0 0 0
+ Nocast: 0
+ Unit ID: 0 0
+ Unit Layout Type: 0 0 0 0 0 0 0 0 0 0
+ Unit Range: 0 0 0 0 0 0 0 0 0 0
+ Unit Interval: 0
+ Unit Target: 0
+ Unit Flag: 0
+ ================
+ 
+ SKILL ID 8025
+ Name: 'MH_XENO_SLASHER'
+ Desc: 'Xeno Slasher'
+ Range: 7 7 7 7 7 7 7 7 7 7
+ Hit: 8
+ Inf: 2
+-Element: 4 0 4 0 4 1 1 1 1 1
++Element: 4 0 4 0 4 0 0 0 0 0
+ Nk: 2
+ Splash: 2 2 3 3 4 4 5 5 6 6
+ Max: 5
+ Num: -6 -6 -6 -6 -6 -6 -6 -6 -6 -6
+ Cast: 1500 2500 3500 4500 5500 6500 7500 8500 9500 10500
+ Walkdelay: 0 0 0 0 0 0 0 0 0 0
+ Delay: 5000 5000 5000 5000 5000 5000 5000 5000 5000 5000
+ Fixed Cast: 500 500 500 500 500 500 500 500 500 500
+ Upkeep Time: 500 500 500 500 500 500 500 500 500 500
+ Upkeep Time2: 0 0 0 0 0 0 0 0 0 0
+ Cooldown: 0 0 0 0 0 0 0 0 0 0
+ Cast Cancel: 0
+ Cast Def Rate: 0
+ Inf2: 0
+ Max Count: 0 0 0 0 0 0 0 0 0 0
+ Skill Type: 2
+ Blewcount: 0 0 0 0 0 0 0 0 0 0
+ HP: 0 0 0 0 0 0 0 0 0 0
+ SP: 90 100 110 120 130 140 150 160 170 180
+ MHP: 0 0 0 0 0 0 0 0 0 0
+ HP Rate: 0 0 0 0 0 0 0 0 0 0
+ SP Rate: 0 0 0 0 0 0 0 0 0 0
+ Zeny: 0 0 0 0 0 0 0 0 0 0
+ Weapon: 0
+ Ammo: 0
+ Ammo qty: 0 0 0 0 0 0 0 0 0 0
+ State: 0
+ Spiritball: 0 0 0 0 0 0 0 0 0 0
+ Items: 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0)
+ Castnodex: 0 0 0 0 0 0 0 0 0 0
+ Delaynodex: 0 0 0 0 0 0 0 0 0 0
+ Nocast: 0
+ Unit ID: 134 0
+ Unit Layout Type: 0 0 0 0 0 0 0 0 0 0
+ Unit Range: 2 2 3 3 4 4 5 5 6 6
+ Unit Interval: 1000
+ Unit Target: 131611
+ Unit Flag: 24
+ ================
+ 
+ SKILL ID 8026
+ Name: 'MH_SILENT_BREEZE'
+ Desc: 'Silent Breeze'
+ Range: 5 5 7 7 9 9 11 11 13 13
+ Hit: 6
+ Inf: 16
+ Element: 0 0 0 0 0 0 0 0 0 0
+ Nk: 1
+ Splash: 0 0 0 0 0 0 0 0 0 0
+ Max: 5
+@@ -40876,101 +40876,101 @@
+ Ammo qty: 0 0 0 0 0 0 0 0 0 0
+ State: 17
+ Spiritball: 0 0 0 0 0 0 0 0 0 0
+ Items: 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0)
+ Castnodex: 0 0 0 0 0 0 0 0 0 0
+ Delaynodex: 0 0 0 0 0 0 0 0 0 0
+ Nocast: 0
+ Unit ID: 0 0
+ Unit Layout Type: 0 0 0 0 0 0 0 0 0 0
+ Unit Range: 0 0 0 0 0 0 0 0 0 0
+ Unit Interval: 0
+ Unit Target: 0
+ Unit Flag: 0
+ ================
+ 
+ SKILL ID 2257
+ Name: 'NC_PILEBUNKER'
+ Desc: 'Pile Bunker'
+ Range: 3 3 3 3 3 3 3 3 3 3
+ Hit: 6
+ Inf: 1
+ Element: -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+ Nk: 0
+ Splash: 0 0 0 0 0 0 0 0 0 0
+ Max: 3
+ Num: 1 1 1 1 1 1 1 1 1 1
+ Cast: 0 0 0 0 0 0 0 0 0 0
+ Walkdelay: 0 0 0 0 0 0 0 0 0 0
+ Delay: 2000 2000 2000 2000 2000 2000 2000 2000 2000 2000
+ Fixed Cast: -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+ Upkeep Time: 0 0 0 0 0 0 0 0 0 0
+ Upkeep Time2: 0 0 0 0 0 0 0 0 0 0
+ Cooldown: 5000 5000 5000 5000 5000 5000 5000 5000 5000 5000
+ Cast Cancel: 0
+ Cast Def Rate: 0
+ Inf2: 0
+ Max Count: 0 0 0 0 0 0 0 0 0 0
+ Skill Type: 1
+ Blewcount: 0 0 0 0 0 0 0 0 0 0
+ HP: 0 0 0 0 0 0 0 0 0 0
+ SP: 50 50 50 50 50 50 50 50 50 50
+ MHP: 0 0 0 0 0 0 0 0 0 0
+ HP Rate: 0 0 0 0 0 0 0 0 0 0
+ SP Rate: 0 0 0 0 0 0 0 0 0 0
+ Zeny: 0 0 0 0 0 0 0 0 0 0
+ Weapon: 0
+ Ammo: 0
+ Ammo qty: 0 0 0 0 0 0 0 0 0 0
+ State: 17
+ Spiritball: 0 0 0 0 0 0 0 0 0 0
+-Items: 1549(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0)
++Items: 1549(0) 16030(0) 16031(0) 16032(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0)
+ Castnodex: 0 0 0 0 0 0 0 0 0 0
+ Delaynodex: 0 0 0 0 0 0 0 0 0 0
+ Nocast: 0
+ Unit ID: 0 0
+ Unit Layout Type: 0 0 0 0 0 0 0 0 0 0
+ Unit Range: 0 0 0 0 0 0 0 0 0 0
+ Unit Interval: 0
+ Unit Target: 0
+ Unit Flag: 0
+ ================
+ 
+ SKILL ID 2258
+ Name: 'NC_VULCANARM'
+ Desc: 'Vulcan Arm'
+ Range: 13 13 13 13 13 13 13 13 13 13
+ Hit: 6
+ Inf: 1
+ Element: -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+ Nk: 2
+ Splash: 1 1 1 1 1 1 1 1 1 1
+ Max: 3
+ Num: 1 1 1 1 1 1 1 1 1 1
+ Cast: 0 0 0 0 0 0 0 0 0 0
+ Walkdelay: 0 0 0 0 0 0 0 0 0 0
+ Delay: 300 200 100 1 1 1 1 1 1 1
+ Fixed Cast: -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+ Upkeep Time: 0 0 0 0 0 0 0 0 0 0
+ Upkeep Time2: 0 0 0 0 0 0 0 0 0 0
+ Cooldown: 0 0 0 0 0 0 0 0 0 0
+ Cast Cancel: 0
+ Cast Def Rate: 0
+ Inf2: 0
+ Max Count: 0 0 0 0 0 0 0 0 0 0
+ Skill Type: 1
+ Blewcount: 0 0 0 0 0 0 0 0 0 0
+ HP: 0 0 0 0 0 0 0 0 0 0
+ SP: 2 4 6 8 10 12 14 16 18 20
+ MHP: 0 0 0 0 0 0 0 0 0 0
+ HP Rate: 0 0 0 0 0 0 0 0 0 0
+ SP Rate: 0 0 0 0 0 0 0 0 0 0
+ Zeny: 0 0 0 0 0 0 0 0 0 0
+ Weapon: 0
+ Ammo: 0
+ Ammo qty: 0 0 0 0 0 0 0 0 0 0
+ State: 17
+ Spiritball: 0 0 0 0 0 0 0 0 0 0
+ Items: 6145(1) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0)
+ Castnodex: 0 0 0 0 0 0 0 0 0 0
+ Delaynodex: 0 0 0 0 0 0 0 0 0 0
+ Nocast: 0
+@@ -48268,101 +48268,101 @@
+ ================
+ 
+ SKILL ID 2486
+ Name: 'GN_FIRE_EXPANSION'
+ Desc: 'Fire Expansion'
+ Range: 9 9 9 9 9 9 9 9 9 9
+ Hit: 6
+ Inf: 2
+ Element: 0 0 0 0 0 0 0 0 0 0
+ Nk: 0
+ Splash: 0 0 0 0 0 0 0 0 0 0
+ Max: 5
+ Num: 1 1 1 1 1 1 1 1 1 1
+ Cast: 2000 2000 2000 2000 2000 2000 2000 2000 2000 2000
+ Walkdelay: 0 0 0 0 0 0 0 0 0 0
+ Delay: 500 500 500 500 500 500 500 500 500 500
+ Fixed Cast: -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+ Upkeep Time: 0 0 0 0 0 0 0 0 0 0
+ Upkeep Time2: 0 0 0 0 0 0 0 0 0 0
+ Cooldown: 0 0 0 0 0 0 0 0 0 0
+ Cast Cancel: 1
+ Cast Def Rate: 0
+ Inf2: 0
+ Max Count: 0 0 0 0 0 0 0 0 0 0
+ Skill Type: 0
+ Blewcount: 0 0 0 0 0 0 0 0 0 0
+ HP: 0 0 0 0 0 0 0 0 0 0
+ SP: 30 35 40 45 50 55 60 65 70 75
+ MHP: 0 0 0 0 0 0 0 0 0 0
+ HP Rate: 0 0 0 0 0 0 0 0 0 0
+ SP Rate: 0 0 0 0 0 0 0 0 0 0
+ Zeny: 0 0 0 0 0 0 0 0 0 0
+ Weapon: 0
+ Ammo: 0
+ Ammo qty: 0 0 0 0 0 0 0 0 0 0
+ State: 0
+ Spiritball: 0 0 0 0 0 0 0 0 0 0
+ Items: 6216(1) 6213(1) 6214(1) 6215(1) 7136(1) 0(0) 0(0) 0(0) 0(0) 0(0)
+ Castnodex: 0 0 0 0 0 0 0 0 0 0
+ Delaynodex: 0 0 0 0 0 0 0 0 0 0
+ Nocast: 0
+ Unit ID: 0 0
+ Unit Layout Type: 0 0 0 0 0 0 0 0 0 0
+ Unit Range: 0 0 0 0 0 0 0 0 0 0
+ Unit Interval: 0
+ Unit Target: 0
+ Unit Flag: 0
+ ================
+ 
+ SKILL ID 2487
+-Name: 'GN_FIRE_EXPANSION_SMOKE_POWDE'
++Name: 'GN_FIRE_EXPANSION_SMOKE_POWDER'
+ Desc: 'Fire Expansion Smoke Powder'
+ Range: 9 9 9 9 9 9 9 9 9 9
+ Hit: 6
+ Inf: 2
+ Element: 0 0 0 0 0 0 0 0 0 0
+ Nk: 0
+ Splash: 0 0 0 0 0 0 0 0 0 0
+ Max: 1
+ Num: 1 1 1 1 1 1 1 1 1 1
+ Cast: 0 0 0 0 0 0 0 0 0 0
+ Walkdelay: 0 0 0 0 0 0 0 0 0 0
+ Delay: 0 0 0 0 0 0 0 0 0 0
+ Fixed Cast: -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+ Upkeep Time: 10000 12000 14000 16000 18000 20000 22000 24000 26000 28000
+ Upkeep Time2: 0 0 0 0 0 0 0 0 0 0
+ Cooldown: 0 0 0 0 0 0 0 0 0 0
+ Cast Cancel: 0
+ Cast Def Rate: 0
+ Inf2: 0
+ Max Count: 0 0 0 0 0 0 0 0 0 0
+ Skill Type: 0
+ Blewcount: 0 0 0 0 0 0 0 0 0 0
+ HP: 0 0 0 0 0 0 0 0 0 0
+ SP: 1 1 1 1 1 1 1 1 1 1
+ MHP: 0 0 0 0 0 0 0 0 0 0
+ HP Rate: 0 0 0 0 0 0 0 0 0 0
+ SP Rate: 0 0 0 0 0 0 0 0 0 0
+ Zeny: 0 0 0 0 0 0 0 0 0 0
+ Weapon: 0
+ Ammo: 0
+ Ammo qty: 0 0 0 0 0 0 0 0 0 0
+ State: 0
+ Spiritball: 0 0 0 0 0 0 0 0 0 0
+ Items: 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0) 0(0)
+ Castnodex: 0 0 0 0 0 0 0 0 0 0
+ Delaynodex: 0 0 0 0 0 0 0 0 0 0
+ Nocast: 0
+ Unit ID: 232 0
+ Unit Layout Type: 0 0 0 0 0 0 0 0 0 0
+ Unit Range: 3 3 3 3 3 3 3 3 3 3
+ Unit Interval: 1000
+ Unit Target: 131611
+ Unit Flag: 0
+ ================
+ 
+ SKILL ID 2488
+ Name: 'GN_FIRE_EXPANSION_TEAR_GAS'
+ Desc: 'Fire Expansion Tear Gas'
+ Range: 9 9 9 9 9 9 9 9 9 9
+ Hit: 6
