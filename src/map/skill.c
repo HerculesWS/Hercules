@@ -20088,8 +20088,8 @@ bool skill_read_skilldb(const char *filename)
 			skill->level_set_value(tmp_db.num, 1); // Default 1
 
 		/* Interrupt Cast */
-		if (libconfig->setting_lookup_bool(conf, "InterruptCast", &tmp_db.castcancel) == 0)
-			tmp_db.castcancel = 1;
+		if (libconfig->setting_lookup_bool(conf, "InterruptCast", &tmp_db.castcancel) == CONFIG_FALSE)
+			tmp_db.castcancel = 0;
 
 		/* Cast Defense Rate */
 		libconfig->setting_lookup_int(conf, "CastDefRate", &tmp_db.cast_def_rate);
