@@ -21,6 +21,7 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <assert.h>
 
 /* end standard C headers. */
 
@@ -1701,6 +1702,8 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 		YY_CURRENT_BUFFER_LVALUE =
             libconfig_yy_create_buffer(yyin,YY_BUF_SIZE ,yyscanner);
 	}
+
+	assert(YY_CURRENT_BUFFER != NULL); // Fixes compiler warning -Wnull-dereference on gcc-6 and -O3
 
 	libconfig_yy_init_buffer(YY_CURRENT_BUFFER,input_file ,yyscanner);
 	libconfig_yy_load_buffer_state(yyscanner );
