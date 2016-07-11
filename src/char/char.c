@@ -61,8 +61,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#ifndef WIN32
-#	include <unistd.h>
+
+#if MAX_MAP_SERVERS > 1
+#	ifdef _MSC_VER
+#		pragma message("WARNING: your settings allow more than one map server to connect, this is deprecated dangerous feature USE IT AT YOUR OWN RISK")
+#	else
+#		warning your settings allow more than one map server to connect, this is deprecated dangerous feature USE IT AT YOUR OWN RISK
+#	endif
 #endif
 
 // private declarations
@@ -165,7 +170,7 @@ unsigned short skillid2idx[MAX_SKILL_ID];
 //-----------------------------------------------------
 #define AUTH_TIMEOUT 30000
 
-static DBMap* auth_db; // int account_id -> struct char_auth_node*
+static struct DBMap *auth_db; // int account_id -> struct char_auth_node*
 
 //-----------------------------------------------------
 // Online User Database
@@ -174,7 +179,7 @@ static DBMap* auth_db; // int account_id -> struct char_auth_node*
 /**
  * @see DBCreateData
  */
-static DBData char_create_online_char_data(DBKey key, va_list args)
+static struct DBData char_create_online_char_data(union DBKey key, va_list args)
 {
 	struct online_char_data* character;
 	CREATE(character, struct online_char_data, 1);
@@ -316,7 +321,7 @@ void char_set_char_offline(int char_id, int account_id)
 /**
  * @see DBApply
  */
-static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
+static int char_db_setoffline(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
@@ -336,7 +341,7 @@ static int char_db_setoffline(DBKey key, DBData *data, va_list ap)
 /**
  * @see DBApply
  */
-static int char_db_kickoffline(DBKey key, DBData *data, va_list ap)
+static int char_db_kickoffline(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_char_data* character = (struct online_char_data*)DB->data2ptr(data);
 	int server_id = va_arg(ap, int);
@@ -391,7 +396,7 @@ void char_set_all_offline_sql(void)
 /**
  * @see DBCreateData
  */
-static DBData char_create_charstatus(DBKey key, va_list args)
+static struct DBData char_create_charstatus(union DBKey key, va_list args)
 {
 	struct mmo_charstatus *cp;
 	cp = (struct mmo_charstatus *) aCalloc(1,sizeof(struct mmo_charstatus));
@@ -419,7 +424,7 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 
 	//map inventory data
 	if( memcmp(p->inventory, cp->inventory, sizeof(p->inventory)) ) {
-		if (!chr->inventory_to_sql(p->inventory, MAX_INVENTORY, p->char_id))
+		if (!chr->memitemdata_to_sql(p->inventory, MAX_INVENTORY, p->char_id, TABLE_INVENTORY))
 			strcat(save_status, " inventory");
 		else
 			errors++;
@@ -469,11 +474,11 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		if( p->show_equip )
 			opt |= OPT_SHOW_EQUIP;
 
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `base_level`='%d', `job_level`='%d',"
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `base_level`='%u', `job_level`='%u',"
 			"`base_exp`='%u', `job_exp`='%u', `zeny`='%d',"
-			"`max_hp`='%d',`hp`='%d',`max_sp`='%d',`sp`='%d',`status_point`='%d',`skill_point`='%d',"
+			"`max_hp`='%d',`hp`='%d',`max_sp`='%d',`sp`='%d',`status_point`='%u',`skill_point`='%u',"
 			"`str`='%d',`agi`='%d',`vit`='%d',`int`='%d',`dex`='%d',`luk`='%d',"
-			"`option`='%d',`party_id`='%d',`guild_id`='%d',`pet_id`='%d',`homun_id`='%d',`elemental_id`='%d',"
+			"`option`='%u',`party_id`='%d',`guild_id`='%d',`pet_id`='%d',`homun_id`='%d',`elemental_id`='%d',"
 			"`weapon`='%d',`shield`='%d',`head_top`='%d',`head_mid`='%d',`head_bottom`='%d',"
 			"`last_map`='%s',`last_x`='%d',`last_y`='%d',`save_map`='%s',`save_x`='%d',`save_y`='%d', `rename`='%d',"
 			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u', `font`='%u', `uniqueitem_counter` ='%u',"
@@ -692,30 +697,40 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 	return 0;
 }
 
-/// Saves an array of 'item' entries into the specified table.
+/**
+ * Saves an array of 'item' entries into the specified table.
+ *
+ * @param items       The items array.
+ * @param max         The array size.
+ * @param id          The character/account/guild ID (depending on tableswitch).
+ * @param tableswitch The type of table (@see enum inventory_table_type).
+ * @return Error code.
+ * @retval 0 in case of success.
+ */
 int char_memitemdata_to_sql(const struct item items[], int max, int id, int tableswitch)
 {
 	StringBuf buf;
-	SqlStmt* stmt;
-	int i;
-	int j;
-	const char* tablename;
-	const char* selectoption;
-	struct item item; // temp storage variable
-	bool* flag; // bit array for inventory matching
+	struct SqlStmt *stmt = NULL;
+	int i, j;
+	const char *tablename = NULL;
+	const char *selectoption = NULL;
+	bool has_favorite = false;
+	struct item item = { 0 }; // temp storage variable
+	bool *flag = NULL; // bit array for inventory matching
 	bool found;
 	int errors = 0;
 
+	nullpo_ret(items);
+
 	switch (tableswitch) {
-	case TABLE_INVENTORY:     tablename = inventory_db;     selectoption = "char_id";    break;
+	case TABLE_INVENTORY:     tablename = inventory_db;     selectoption = "char_id";    has_favorite = true; break;
 	case TABLE_CART:          tablename = cart_db;          selectoption = "char_id";    break;
 	case TABLE_STORAGE:       tablename = storage_db;       selectoption = "account_id"; break;
 	case TABLE_GUILD_STORAGE: tablename = guild_storage_db; selectoption = "guild_id";   break;
 	default:
 		ShowError("Invalid table name!\n");
-		return 1;
+		Assert_retr(1, tableswitch);
 	}
-
 
 	// The following code compares inventory with current database values
 	// and performs modification/deletion/insertion only on relevant rows.
@@ -723,22 +738,22 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 	// it significantly reduces cpu load on the database server.
 
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`");
-	for( j = 0; j < MAX_SLOTS; ++j )
+	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`");
+	for (j = 0; j < MAX_SLOTS; ++j)
 		StrBuf->Printf(&buf, ", `card%d`", j);
+	if (has_favorite)
+		StrBuf->AppendStr(&buf, ", `favorite`");
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `%s`='%d'", tablename, selectoption, id);
 
 	stmt = SQL->StmtMalloc(inter->sql_handle);
-	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
-	||  SQL_ERROR == SQL->StmtExecute(stmt) )
-	{
+	if (SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
+	 || SQL_ERROR == SQL->StmtExecute(stmt)) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		StrBuf->Destroy(&buf);
 		return 1;
 	}
 
-	memset(&item, 0, sizeof(item));
 	SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &item.id,          0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &item.nameid,      0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &item.amount,      0, NULL, NULL);
@@ -748,30 +763,32 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.attribute,   0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, 0, NULL, NULL);
 	SQL->StmtBindColumn(stmt, 8, SQLDT_UCHAR,     &item.bound,       0, NULL, NULL);
-	for( j = 0; j < MAX_SLOTS; ++j )
-		SQL->StmtBindColumn(stmt, 9+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
+	SQL->StmtBindColumn(stmt, 9, SQLDT_UINT64,    &item.unique_id,   0, NULL, NULL);
+	for (j = 0; j < MAX_SLOTS; ++j)
+		SQL->StmtBindColumn(stmt, 10+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
+	if (has_favorite)
+		SQL->StmtBindColumn(stmt, 10+MAX_SLOTS, SQLDT_UCHAR, &item.favorite, 0, NULL, NULL);
 
 	// bit array indicating which inventory items have already been matched
-	flag = (bool*) aCalloc(max, sizeof(bool));
+	flag = aCalloc(max, sizeof(bool));
 
-	while( SQL_SUCCESS == SQL->StmtNextRow(stmt) )
-	{
+	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
 		found = false;
 		// search for the presence of the item in the char's inventory
-		for( i = 0; i < max; ++i )
-		{
+		for (i = 0; i < max; ++i) {
 			// skip empty and already matched entries
-			if( items[i].nameid == 0 || flag[i] )
+			if (items[i].nameid == 0 || flag[i])
 				continue;
 
-			if( items[i].nameid == item.nameid
+			if (items[i].nameid == item.nameid
+			 && items[i].unique_id == item.unique_id
 			 && items[i].card[0] == item.card[0]
 			 && items[i].card[2] == item.card[2]
 			 && items[i].card[3] == item.card[3]
 			) {
-				//They are the same item.
-				ARR_FIND( 0, MAX_SLOTS, j, items[i].card[j] != item.card[j] );
-				if( j == MAX_SLOTS
+				// They are the same item.
+				ARR_FIND(0, MAX_SLOTS, j, items[i].card[j] != item.card[j]);
+				if (j == MAX_SLOTS
 				 && items[i].amount == item.amount
 				 && items[i].equip == item.equip
 				 && items[i].identify == item.identify
@@ -779,19 +796,21 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 				 && items[i].attribute == item.attribute
 				 && items[i].expire_time == item.expire_time
 				 && items[i].bound == item.bound
+				 && (!has_favorite || items[i].favorite == item.favorite)
 				) {
 					; //Do nothing.
 				} else {
 					// update all fields.
 					StrBuf->Clear(&buf);
-					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%d', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `bound`='%d'",
+					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%u', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `bound`='%d'",
 						tablename, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound);
-					for( j = 0; j < MAX_SLOTS; ++j )
+					for (j = 0; j < MAX_SLOTS; ++j)
 						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);
+					if (has_favorite)
+						StrBuf->Printf(&buf, ", `favorite`='%d'", items[i].favorite);
 					StrBuf->Printf(&buf, " WHERE `id`='%d' LIMIT 1", item.id);
 
-					if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
-					{
+					if (SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf))) {
 						Sql_ShowDebug(inter->sql_handle);
 						errors++;
 					}
@@ -801,10 +820,9 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 				break; //skip to next item in the db.
 			}
 		}
-		if( !found )
-		{// Item not present in inventory, remove it.
-			if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE from `%s` where `id`='%d' LIMIT 1", tablename, item.id) )
-			{
+		if (!found) {
+			// Item not present in inventory, remove it.
+			if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE from `%s` where `id`='%d' LIMIT 1", tablename, item.id)) {
 				Sql_ShowDebug(inter->sql_handle);
 				errors++;
 			}
@@ -814,173 +832,34 @@ int char_memitemdata_to_sql(const struct item items[], int max, int id, int tabl
 
 	StrBuf->Clear(&buf);
 	StrBuf->Printf(&buf, "INSERT INTO `%s`(`%s`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `bound`, `unique_id`", tablename, selectoption);
-	for( j = 0; j < MAX_SLOTS; ++j )
+	for (j = 0; j < MAX_SLOTS; ++j)
 		StrBuf->Printf(&buf, ", `card%d`", j);
+	if (has_favorite)
+		StrBuf->AppendStr(&buf, ", `favorite`");
 	StrBuf->AppendStr(&buf, ") VALUES ");
 
 	found = false;
 	// insert non-matched items into the db as new items
-	for( i = 0; i < max; ++i )
-	{
+	for (i = 0; i < max; ++i) {
 		// skip empty and already matched entries
-		if( items[i].nameid == 0 || flag[i] )
+		if (items[i].nameid == 0 || flag[i])
 			continue;
 
-		if( found )
+		if (found)
 			StrBuf->AppendStr(&buf, ",");
 		else
 			found = true;
 
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
+		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
 			id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].bound, items[i].unique_id);
-		for( j = 0; j < MAX_SLOTS; ++j )
+		for (j = 0; j < MAX_SLOTS; ++j)
 			StrBuf->Printf(&buf, ", '%d'", items[i].card[j]);
+		if (has_favorite)
+			StrBuf->Printf(&buf, ", '%d'", items[i].favorite);
 		StrBuf->AppendStr(&buf, ")");
 	}
 
-	if( found && SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) )
-	{
-		Sql_ShowDebug(inter->sql_handle);
-		errors++;
-	}
-
-	StrBuf->Destroy(&buf);
-	aFree(flag);
-
-	return errors;
-}
-/* pretty much a copy of chr->memitemdata_to_sql except it handles inventory_db exclusively,
- * - this is required because inventory db is the only one with the 'favorite' column. */
-int char_inventory_to_sql(const struct item items[], int max, int id) {
-	StringBuf buf;
-	SqlStmt* stmt;
-	int i;
-	int j;
-	struct item item; // temp storage variable
-	bool* flag; // bit array for inventory matching
-	bool found;
-	int errors = 0;
-
-	nullpo_ret(items);
-
-	// The following code compares inventory with current database values
-	// and performs modification/deletion/insertion only on relevant rows.
-	// This approach is more complicated than a trivial delete&insert, but
-	// it significantly reduces cpu load on the database server.
-
-	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `favorite`, `bound`");
-	for( j = 0; j < MAX_SLOTS; ++j )
-		StrBuf->Printf(&buf, ", `card%d`", j);
-	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`='%d'", inventory_db, id);
-
-	stmt = SQL->StmtMalloc(inter->sql_handle);
-	if( SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
-	   ||  SQL_ERROR == SQL->StmtExecute(stmt) )
-	{
-		SqlStmt_ShowDebug(stmt);
-		SQL->StmtFree(stmt);
-		StrBuf->Destroy(&buf);
-		return 1;
-	}
-
-	memset(&item, 0, sizeof(item));
-	SQL->StmtBindColumn(stmt, 0, SQLDT_INT,       &item.id,          0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 1, SQLDT_SHORT,     &item.nameid,      0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 2, SQLDT_SHORT,     &item.amount,      0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 3, SQLDT_UINT,      &item.equip,       0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 4, SQLDT_CHAR,      &item.identify,    0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 5, SQLDT_CHAR,      &item.refine,      0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 6, SQLDT_CHAR,      &item.attribute,   0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 7, SQLDT_UINT,      &item.expire_time, 0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 8, SQLDT_CHAR,      &item.favorite,    0, NULL, NULL);
-	SQL->StmtBindColumn(stmt, 9, SQLDT_UCHAR,     &item.bound,       0, NULL, NULL);
-	for( j = 0; j < MAX_SLOTS; ++j )
-		SQL->StmtBindColumn(stmt, 10+j, SQLDT_SHORT, &item.card[j], 0, NULL, NULL);
-
-	// bit array indicating which inventory items have already been matched
-	flag = (bool*) aCalloc(max, sizeof(bool));
-
-	while( SQL_SUCCESS == SQL->StmtNextRow(stmt) ) {
-		found = false;
-		// search for the presence of the item in the char's inventory
-		for( i = 0; i < max; ++i ) {
-			// skip empty and already matched entries
-			if( items[i].nameid == 0 || flag[i] )
-				continue;
-
-			if( items[i].nameid == item.nameid
-			 && items[i].card[0] == item.card[0]
-			 && items[i].card[2] == item.card[2]
-			 && items[i].card[3] == item.card[3]
-			) {
-				//They are the same item.
-				ARR_FIND( 0, MAX_SLOTS, j, items[i].card[j] != item.card[j] );
-				if( j == MAX_SLOTS
-				 && items[i].amount == item.amount
-				 && items[i].equip == item.equip
-				 && items[i].identify == item.identify
-				 && items[i].refine == item.refine
-				 && items[i].attribute == item.attribute
-				 && items[i].expire_time == item.expire_time
-				 && items[i].favorite == item.favorite
-				 && items[i].bound == item.bound
-				) {
-					; //Do nothing.
-				} else {
-					// update all fields.
-					StrBuf->Clear(&buf);
-					StrBuf->Printf(&buf, "UPDATE `%s` SET `amount`='%d', `equip`='%d', `identify`='%d', `refine`='%d',`attribute`='%d', `expire_time`='%u', `favorite`='%d', `bound`='%d'",
-							inventory_db, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].favorite, items[i].bound);
-					for( j = 0; j < MAX_SLOTS; ++j )
-						StrBuf->Printf(&buf, ", `card%d`=%d", j, items[i].card[j]);
-					StrBuf->Printf(&buf, " WHERE `id`='%d' LIMIT 1", item.id);
-
-					if( SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) ) {
-						Sql_ShowDebug(inter->sql_handle);
-						errors++;
-					}
-				}
-
-				found = flag[i] = true; //Item dealt with,
-				break; //skip to next item in the db.
-			}
-		}
-		if( !found ) {// Item not present in inventory, remove it.
-			if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE from `%s` where `id`='%d' LIMIT 1", inventory_db, item.id) ) {
-				Sql_ShowDebug(inter->sql_handle);
-				errors++;
-			}
-		}
-	}
-	SQL->StmtFree(stmt);
-
-	StrBuf->Clear(&buf);
-	StrBuf->Printf(&buf, "INSERT INTO `%s` (`char_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `expire_time`, `favorite`, `bound`, `unique_id`", inventory_db);
-	for( j = 0; j < MAX_SLOTS; ++j )
-		StrBuf->Printf(&buf, ", `card%d`", j);
-	StrBuf->AppendStr(&buf, ") VALUES ");
-
-	found = false;
-	// insert non-matched items into the db as new items
-	for( i = 0; i < max; ++i ) {
-		// skip empty and already matched entries
-		if( items[i].nameid == 0 || flag[i] )
-			continue;
-
-		if( found )
-			StrBuf->AppendStr(&buf, ",");
-		else
-			found = true;
-
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%u', '%d', '%d', '%"PRIu64"'",
-						 id, items[i].nameid, items[i].amount, items[i].equip, items[i].identify, items[i].refine, items[i].attribute, items[i].expire_time, items[i].favorite, items[i].bound, items[i].unique_id);
-		for( j = 0; j < MAX_SLOTS; ++j )
-			StrBuf->Printf(&buf, ", '%d'", items[i].card[j]);
-		StrBuf->AppendStr(&buf, ")");
-	}
-
-	if( found && SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf)) ) {
+	if (found && SQL_ERROR == SQL->QueryStr(inter->sql_handle, StrBuf->Value(&buf))) {
 		Sql_ShowDebug(inter->sql_handle);
 		errors++;
 	}
@@ -1044,7 +923,7 @@ int char_mmo_gender(const struct char_session_data *sd, const struct mmo_charsta
 // Loads the basic character rooster for the given account. Returns total buffer used.
 int char_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 {
-	SqlStmt* stmt;
+	struct SqlStmt *stmt;
 	struct mmo_charstatus p;
 	int j = 0, i;
 	char last_map[MAP_NAME_LENGTH_EXT];
@@ -1144,7 +1023,7 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	char t_msg[128] = "";
 	struct mmo_charstatus* cp;
 	StringBuf buf;
-	SqlStmt* stmt;
+	struct SqlStmt *stmt;
 	char last_map[MAP_NAME_LENGTH_EXT];
 	char save_map[MAP_NAME_LENGTH_EXT];
 	char point_map[MAP_NAME_LENGTH_EXT];
@@ -1660,7 +1539,8 @@ int char_check_char_name(char * name, char * esc_name)
  *  -5: 'Symbols in Character Names are forbidden'
  *  char_id: Success
  **/
-int char_make_new_char_sql(struct char_session_data* sd, char* name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style) {
+int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style)
+{
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
 	int char_id, flag, k, l;
@@ -2010,7 +1890,7 @@ int char_mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 
 	//When the weapon is sent and your option is riding, the client crashes on login!?
 	// FIXME[Haru]: is OPTION_HANBOK intended to be part of this list? And if it is, should the list also include other OPTION_ costumes?
-	WBUFW(buf,56) = p->option&(OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR|OPTION_HANBOK) ? 0 : p->weapon;
+	WBUFW(buf,56) = (p->option&(OPTION_RIDING|OPTION_DRAGON|OPTION_WUG|OPTION_WUGRIDER|OPTION_MADOGEAR|OPTION_HANBOK)) ? 0 : p->weapon;
 
 	WBUFW(buf,58) = p->base_level;
 	WBUFW(buf,60) = min(p->skill_point, INT16_MAX);
@@ -2033,7 +1913,7 @@ int char_mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 	offset += 2;
 #endif
 #if (PACKETVER >= 20100720 && PACKETVER <= 20100727) || PACKETVER >= 20100803
-	mapindex->getmapname_ext(mapindex_id2name(p->last_point.map), (char*)WBUFP(buf,108));
+	mapindex->getmapname_ext(mapindex_id2name(p->last_point.map), WBUFP(buf,108));
 	offset += MAP_NAME_LENGTH_EXT;
 #endif
 #if PACKETVER >= 20100803
@@ -2087,7 +1967,7 @@ void char_mmo_char_send_ban_list(int fd, struct char_session_data *sd) {
 
 		for(i = 0, c = 0; i < MAX_CHARS; i++) {
 			if( sd->unban_time[i] ) {
-				timestamp2string((char*)WFIFOP(fd,8 + (28*c)), 20, sd->unban_time[i], "%Y-%m-%d %H:%M:%S");
+				timestamp2string(WFIFOP(fd,8 + (28*c)), 20, sd->unban_time[i], "%Y-%m-%d %H:%M:%S");
 
 				if( sd->unban_time[i] > now )
 					WFIFOL(fd, 4 + (24*c)) = sd->found_char[i];
@@ -2380,8 +2260,8 @@ void char_parse_fromlogin_account_data(int fd)
 			sd->char_slots = MAX_CHARS;/* cap to maximum */
 		} else if ( sd->char_slots <= 0 )/* no value aka 0 in sql */
 			sd->char_slots = MAX_CHARS;/* cap to maximum */
-		safestrncpy(sd->birthdate, (const char*)RFIFOP(fd,52), sizeof(sd->birthdate));
-		safestrncpy(sd->pincode, (const char*)RFIFOP(fd,63), sizeof(sd->pincode));
+		safestrncpy(sd->birthdate, RFIFOP(fd,52), sizeof(sd->birthdate));
+		safestrncpy(sd->pincode, RFIFOP(fd,63), sizeof(sd->pincode));
 		sd->pincode_change = RFIFOL(fd,68);
 		// continued from chr->auth_ok...
 		if( (max_connect_user == 0 && sd->group_id != gm_allow_group) ||
@@ -2469,7 +2349,7 @@ int char_parse_fromlogin_changesex_reply(int fd)
 	int char_id = 0, class_ = 0, guild_id = 0;
 	int i;
 	struct char_auth_node *node;
-	SqlStmt *stmt;
+	struct SqlStmt *stmt;
 
 	int acc = RFIFOL(fd,2);
 	int sex = RFIFOB(fd,6);
@@ -2608,9 +2488,8 @@ void char_parse_fromlogin_accinfo2_failed(int fd)
 void char_parse_fromlogin_accinfo2_ok(int fd)
 {
 	mapif->parse_accinfo2(true, RFIFOL(fd,167), RFIFOL(fd,171), RFIFOL(fd,175), RFIFOL(fd,179),
-	                     (char*)RFIFOP(fd,2), (char*)RFIFOP(fd,26), (char*)RFIFOP(fd,59),
-	                     (char*)RFIFOP(fd,99), (char*)RFIFOP(fd,119), (char*)RFIFOP(fd,151),
-	                     (char*)RFIFOP(fd,156), RFIFOL(fd,115), RFIFOL(fd,143), RFIFOL(fd,147));
+	                      RFIFOP(fd,2), RFIFOP(fd,26), RFIFOP(fd,59), RFIFOP(fd,99), RFIFOP(fd,119),
+	                      RFIFOP(fd,151), RFIFOP(fd,156), RFIFOL(fd,115), RFIFOL(fd,143), RFIFOL(fd,147));
 	RFIFOSKIP(fd,183);
 }
 
@@ -2788,7 +2667,7 @@ void char_global_accreg_to_login_add (const char *key, unsigned int index, intpt
 	WFIFOB(chr->login_fd, nlen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 	nlen += 1;
 
-	safestrncpy((char*)WFIFOP(chr->login_fd,nlen), key, len);
+	safestrncpy(WFIFOP(chr->login_fd,nlen), key, len);
 	nlen += len;
 
 	WFIFOL(chr->login_fd, nlen) = index;
@@ -2805,7 +2684,7 @@ void char_global_accreg_to_login_add (const char *key, unsigned int index, intpt
 			WFIFOB(chr->login_fd, nlen) = (unsigned char)len;/* won't be higher; the column size is 254 */
 			nlen += 1;
 
-			safestrncpy((char*)WFIFOP(chr->login_fd,nlen), sval, len);
+			safestrncpy(WFIFOP(chr->login_fd,nlen), sval, len);
 			nlen += len;
 		}
 	} else {
@@ -3096,7 +2975,7 @@ void char_parse_frommap_map_names(int fd, int id)
 		VECTOR_PUSH(chr->server[id].maps, RFIFOW(fd,i));
 	}
 
-	ShowStatus("Map-Server %d connected: %d maps, from IP %d.%d.%d.%d port %d.\n",
+	ShowStatus("Map-Server %d connected: %d maps, from IP %u.%u.%u.%u port %d.\n",
 			id, (int)VECTOR_LENGTH(chr->server[id].maps), CONVIP(chr->server[id].ip), chr->server[id].port);
 	ShowStatus("Map-server %d loading complete.\n", id);
 
@@ -3292,7 +3171,7 @@ void char_parse_frommap_char_select_req(int fd)
 	}
 }
 
-void char_change_map_server_ack(int fd, uint8 *data, bool ok)
+void char_change_map_server_ack(int fd, const uint8 *data, bool ok)
 {
 	WFIFOHEAD(fd,30);
 	WFIFOW(fd,0) = 0x2b06;
@@ -3371,7 +3250,7 @@ void char_char_name_ack(int fd, int char_id)
 	WFIFOHEAD(fd,30);
 	WFIFOW(fd,0) = 0x2b09;
 	WFIFOL(fd,2) = char_id;
-	chr->loadName(char_id, (char*)WFIFOP(fd,6));
+	chr->loadName(char_id, WFIFOP(fd,6));
 	WFIFOSET(fd,30);
 }
 
@@ -3406,7 +3285,7 @@ void char_ban(int account_id, int char_id, time_t *unban_time, short year, short
 {
 	time_t timestamp;
 	struct tm *tmtime;
-	SqlStmt* stmt = SQL->StmtMalloc(inter->sql_handle);
+	struct SqlStmt *stmt = SQL->StmtMalloc(inter->sql_handle);
 
 	nullpo_retv(unban_time);
 
@@ -3427,8 +3306,8 @@ void char_ban(int account_id, int char_id, time_t *unban_time, short year, short
 	if( SQL_SUCCESS != SQL->StmtPrepare(stmt,
 		"UPDATE `%s` SET `unban_time` = ? WHERE `char_id` = ? LIMIT 1",
 		char_db)
-	   || SQL_SUCCESS != SQL->StmtBindParam(stmt,  0, SQLDT_LONG,   (void*)&timestamp,   sizeof(timestamp))
-	   || SQL_SUCCESS != SQL->StmtBindParam(stmt,  1, SQLDT_INT,    (void*)&char_id,     sizeof(char_id))
+	   || SQL_SUCCESS != SQL->StmtBindParam(stmt, 0, SQLDT_LONG, &timestamp, sizeof(timestamp))
+	   || SQL_SUCCESS != SQL->StmtBindParam(stmt, 1, SQLDT_INT,  &char_id,   sizeof(char_id))
 	   || SQL_SUCCESS != SQL->StmtExecute(stmt)
 	) {
 		SqlStmt_ShowDebug(stmt);
@@ -3460,7 +3339,7 @@ void char_ask_name_ack(int fd, int acc, const char* name, int type, int result)
 	WFIFOHEAD(fd,34);
 	WFIFOW(fd, 0) = 0x2b0f;
 	WFIFOL(fd, 2) = acc;
-	safestrncpy((char*)WFIFOP(fd,6), name, NAME_LENGTH);
+	safestrncpy(WFIFOP(fd,6), name, NAME_LENGTH);
 	WFIFOW(fd,30) = type;
 	WFIFOW(fd,32) = result;
 	WFIFOSET(fd,34);
@@ -3515,7 +3394,7 @@ void char_parse_frommap_change_account(int fd)
 	char esc_name[NAME_LENGTH*2+1];
 
 	int acc = RFIFOL(fd,2); // account_id of who ask (-1 if server itself made this request)
-	const char* name = (char*)RFIFOP(fd,6); // name of the target character
+	const char *name = RFIFOP(fd,6); // name of the target character
 	int type = RFIFOW(fd,30); // type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
 	short year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
 	int sex = SEX_MALE;
@@ -3658,7 +3537,7 @@ void char_parse_frommap_ragsrvinfo(int fd)
 
 	SQL->EscapeString(inter->sql_handle, esc_server_name, chr->server_name);
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` SET `index`='%d',`name`='%s',`exp`='%d',`jexp`='%d',`drop`='%d'",
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` SET `index`='%d',`name`='%s',`exp`='%u',`jexp`='%u',`drop`='%u'",
 		ragsrvinfo_db, fd, esc_server_name, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10)) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
@@ -3834,7 +3713,7 @@ void char_parse_frommap_auth_request(int fd, int id)
 void char_parse_frommap_update_ip(int fd, int id)
 {
 	chr->server[id].ip = ntohl(RFIFOL(fd, 2));
-	ShowInfo("Updated IP address of map-server #%d to %d.%d.%d.%d.\n", id, CONVIP(chr->server[id].ip));
+	ShowInfo("Updated IP address of map-server #%d to %u.%u.%u.%u.\n", id, CONVIP(chr->server[id].ip));
 	RFIFOSKIP(fd,6);
 }
 
@@ -3858,17 +3737,13 @@ void char_parse_frommap_request_stats_report(int fd)
 
 	WFIFOHEAD(sfd, RFIFOW(fd,2) );
 
-	memcpy((char*)WFIFOP(sfd,0), (char*)RFIFOP(fd, 0), RFIFOW(fd,2));
+	memcpy(WFIFOP(sfd,0), RFIFOP(fd, 0), RFIFOW(fd,2));
 
 	WFIFOSET(sfd, RFIFOW(fd,2) );
 
 	do {
 		sockt->flush(sfd);
-#ifdef WIN32
-		Sleep(1);
-#else
-		sleep(1);
-#endif
+		HSleep(1);
 	} while( !sockt->session[sfd]->flag.eof && sockt->session[sfd]->wdata_size );
 
 	sockt->close(sfd);
@@ -3887,9 +3762,11 @@ void char_parse_frommap_scdata_update(int fd)
 	int val4 = RFIFOL(fd, 24);
 	short type = RFIFOW(fd, 10);
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`char_id`,`type`,`tick`,`val1`,`val2`,`val3`,`val4`) VALUES ('%d','%d','%d',-1,'%d','%d','%d','%d')",
-								scdata_db, account_id, char_id, type, val1, val2, val3, val4) )
-	{
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s`"
+			" (`account_id`,`char_id`,`type`,`tick`,`val1`,`val2`,`val3`,`val4`)"
+			" VALUES ('%d','%d','%d','%d','%d','%d','%d','%d')",
+			scdata_db, account_id, char_id, type, INFINITE_DURATION, val1, val2, val3, val4)
+	) {
 		Sql_ShowDebug(inter->sql_handle);
 	}
 	RFIFOSKIP(fd, 28);
@@ -4457,7 +4334,7 @@ void char_parse_char_connect(int fd, struct char_session_data* sd, uint32 ipl)
 
 	RFIFOSKIP(fd,17);
 
-	ShowInfo("request connect - account_id:%d/login_id1:%d/login_id2:%d\n", account_id, login_id1, login_id2);
+	ShowInfo("request connect - account_id:%d/login_id1:%u/login_id2:%u\n", account_id, login_id1, login_id2);
 
 	if (sd) {
 		//Received again auth packet for already authenticated account?? Discard it.
@@ -4519,7 +4396,7 @@ void char_send_map_info(int fd, int i, uint32 subnet_map_ip, struct mmo_charstat
 	WFIFOHEAD(fd,28);
 	WFIFOW(fd,0) = 0x71;
 	WFIFOL(fd,2) = cd->char_id;
-	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), (char*)WFIFOP(fd,6));
+	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(fd,6));
 	WFIFOL(fd,22) = htonl((subnet_map_ip) ? subnet_map_ip : chr->server[i].ip);
 	WFIFOW(fd,26) = sockt->ntows(htons(chr->server[i].port)); // [!] LE byte order here [!]
 	WFIFOSET(fd,28);
@@ -4530,7 +4407,7 @@ void char_send_wait_char_server(int fd)
 	WFIFOHEAD(fd, 24);
 	WFIFOW(fd, 0) = 0x840;
 	WFIFOW(fd, 2) = 24;
-	safestrncpy((char*)WFIFOP(fd,4), "0", 20);/* we can't send empty (otherwise the list will pop up) */
+	safestrncpy(WFIFOP(fd,4), "0", 20);/* we can't send empty (otherwise the list will pop up) */
 	WFIFOSET(fd, 24);
 }
 
@@ -4740,9 +4617,9 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 		result = -2;
 	} else {
 	#if PACKETVER >= 20120307
-		result = chr->make_new_char_sql(sd, (char*)RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26),RFIFOW(fd,27),RFIFOW(fd,29));
+		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26),RFIFOW(fd,27),RFIFOW(fd,29));
 	#else
-		result = chr->make_new_char_sql(sd, (char*)RFIFOP(fd,2),RFIFOB(fd,26),RFIFOB(fd,27),RFIFOB(fd,28),RFIFOB(fd,29),RFIFOB(fd,30),RFIFOB(fd,31),RFIFOB(fd,32),RFIFOW(fd,33),RFIFOW(fd,35));
+		result = chr->make_new_char_sql(sd, RFIFOP(fd,2),RFIFOB(fd,26),RFIFOB(fd,27),RFIFOB(fd,28),RFIFOB(fd,29),RFIFOB(fd,30),RFIFOB(fd,31),RFIFOB(fd,32),RFIFOW(fd,33),RFIFOW(fd,35));
 	#endif
 	}
 
@@ -4856,7 +4733,7 @@ void char_parse_char_rename_char(int fd, struct char_session_data* sd)
 	int i, cid =RFIFOL(fd,2);
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
-	safestrncpy(name, (char *)RFIFOP(fd,6), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(fd,6), NAME_LENGTH);
 	RFIFOSKIP(fd,30);
 
 	ARR_FIND( 0, MAX_CHARS, i, sd->found_char[i] == cid );
@@ -4881,7 +4758,7 @@ void char_parse_char_rename_char2(int fd, struct char_session_data* sd)
 	int i, aid = RFIFOL(fd,2), cid =RFIFOL(fd,6);
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
-	safestrncpy(name, (char *)RFIFOP(fd,10), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(fd,10), NAME_LENGTH);
 	RFIFOSKIP(fd,34);
 
 	if( aid != sd->account_id )
@@ -4978,11 +4855,10 @@ void char_login_map_server_ack(int fd, uint8 flag)
 
 void char_parse_char_login_map_server(int fd, uint32 ipl)
 {
-	char* l_user = (char*)RFIFOP(fd,2);
-	char* l_pass = (char*)RFIFOP(fd,26);
+	char l_user[24], l_pass[24];
 	int i;
-	l_user[23] = '\0';
-	l_pass[23] = '\0';
+	safestrncpy(l_user, RFIFOP(fd,2), 24);
+	safestrncpy(l_pass, RFIFOP(fd,26), 24);
 
 	ARR_FIND( 0, ARRAYLENGTH(chr->server), i, chr->server[i].fd <= 0 );
 	if (core->runflag != CHARSERVER_ST_RUNNING ||
@@ -5293,7 +5169,7 @@ int char_parse_char(int fd)
 	return 0;
 }
 
-int mapif_sendall(unsigned char *buf, unsigned int len)
+int mapif_sendall(const unsigned char *buf, unsigned int len)
 {
 	int i, c;
 
@@ -5381,7 +5257,7 @@ int char_broadcast_user_count(int tid, int64 tick, int id, intptr_t data) {
  * Load this character's account id into the 'online accounts' packet
  * @see DBApply
  */
-static int char_send_accounts_tologin_sub(DBKey key, DBData *data, va_list ap)
+static int char_send_accounts_tologin_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_char_data* character = DB->data2ptr(data);
 	int* i = va_arg(ap, int*);
@@ -5450,7 +5326,7 @@ static int char_waiting_disconnect(int tid, int64 tick, int id, intptr_t data) {
 /**
  * @see DBApply
  */
-static int char_online_data_cleanup_sub(DBKey key, DBData *data, va_list ap)
+static int char_online_data_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct online_char_data *character= DB->data2ptr(data);
 	nullpo_ret(character);
@@ -5882,11 +5758,25 @@ static CMDLINEARG(netconfig)
 	chr->NET_CONF_NAME = aStrdup(params);
 	return true;
 }
+
+/**
+ * --run-once handler
+ *
+ * Causes the server to run its loop once, and shutdown. Useful for testing.
+ * @see cmdline->exec
+ */
+static CMDLINEARG(runonce)
+{
+	core->runflag = CORE_ST_STOP;
+	return true;
+}
+
 /**
  * Initializes the command line arguments handlers.
  */
 void cmdline_args_init_local(void)
 {
+	CMDLINEARG_DEF2(run-once, runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
 	CMDLINEARG_DEF2(char-config, charconfig, "Alternative char-server configuration.", CMDLINE_OPT_PARAM);
 	CMDLINEARG_DEF2(inter-config, interconfig, "Alternative inter-server configuration.", CMDLINE_OPT_PARAM);
 	CMDLINEARG_DEF2(net-config, netconfig, "Alternative network configuration.", CMDLINE_OPT_PARAM);
@@ -5925,11 +5815,13 @@ int do_init(int argc, char **argv) {
 	sockt->net_config_read(chr->NET_CONF_NAME);
 	chr->sql_config_read(chr->SQL_CONF_NAME);
 
+#ifndef BUILDBOT
 	if (strcmp(chr->userid, "s1")==0 && strcmp(chr->passwd, "p1")==0) {
 		ShowWarning("Using the default user/password s1/p1 is NOT RECOMMENDED.\n");
 		ShowNotice("Please edit your 'login' table to create a proper inter-server user/password (gender 'S')\n");
 		ShowNotice("And then change the user/password to use in conf/char-server.conf (or conf/import/char_conf.txt)\n");
 	}
+#endif
 
 	inter->init_sql(chr->INTER_CONF_NAME); // inter server configuration
 
@@ -6068,7 +5960,6 @@ void char_defaults(void)
 	chr->create_charstatus = char_create_charstatus;
 	chr->mmo_char_tosql = char_mmo_char_tosql;
 	chr->memitemdata_to_sql = char_memitemdata_to_sql;
-	chr->inventory_to_sql = char_inventory_to_sql;
 	chr->mmo_gender = char_mmo_gender;
 	chr->mmo_chars_fromsql = char_mmo_chars_fromsql;
 	chr->mmo_char_fromsql = char_mmo_char_fromsql;

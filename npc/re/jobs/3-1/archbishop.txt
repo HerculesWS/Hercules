@@ -79,7 +79,7 @@ prt_church,103,88,3	script	Praying Minister#arch	1_M_PASTOR,{
 			mes "All ministers of Odin should be diligent. They should never be too lazy to serve Odin.";
 			next;
 			mes "[Praying Minister]";
-			mes (Sex?"Brother":"Sister")+", how has your life been? Have you lived it to its fullest?";
+			mes (Sex == SEX_MALE ? "Brother" : "Sister") +", how has your life been? Have you lived it to its fullest?";
 			mes "Have you served your life in the light of Odin?";
 			next;
 			mes "[Praying Minister]";
@@ -91,7 +91,7 @@ prt_church,103,88,3	script	Praying Minister#arch	1_M_PASTOR,{
 			mes "We should not fall prey to lies and deceit.";
 			next;
 			mes "[Praying Minister]";
-			mes (Sex?"Brother":"Sister")+"...";
+			mes (Sex == SEX_MALE ? "Brother" : "Sister") +"...";
 			mes "Even though we serve Odin, we are normal people.";
 			mes "We can be degraded in spite of ourselves and we must realize that.";
 			next;
@@ -232,7 +232,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "[Priest Dayan]";
 		mes "Ah~, yes.";
 		mes "Yes, I am.";
-		mes "I'm Dayan. Nice to meet you "+(Sex?"Brother.":"Sister.");
+		mes "I'm Dayan. Nice to meet you "+ (Sex == SEX_MALE ? "Brother." : "Sister.");
 		next;
 		mes "The old priest gives you an ear to ear grin. ";
 		next;
@@ -269,7 +269,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "Eh... are you?";
 		mes "A pilgrimage to the Holy Land...";
 		mes "It has been a long time since I've seen such a devout minister.";
-		mes "Welcome. "+(Sex?"Brother.":"Sister.");
+		mes "Welcome. "+ (Sex == SEX_MALE ? "Brother." : "Sister.");
 		next;
 		mes "The old priest gives you a gracious smile.";
 		next;
@@ -293,7 +293,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "Mimir's spring wells with intelligence, myth says that if Odin lets you have his eye that you will gain all of the knowledge within that spring.";
 		next;
 		mes "[Priest Dayan]";
-		mes Sex?"Brother.":"Sister.";
+		mes Sex == SEX_MALE ? "Brother." : "Sister.";
 		mes "Through the Holy Pilgrimage, we can make ourselves pious by cleansing our bodies and souls.";
 		next;
 		mes "[Priest Dayan]";
@@ -395,7 +395,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		mes "Thanks for your kind words.";
 		next;
 		mes "[Priest Dayan]";
-		mes Sex?"Brother.":"Sister.";
+		mes Sex == SEX_MALE ? "Brother." : "Sister.";
 		mes "Now, there is a place you should go to.";
 		next;
 		mes "[Priest Dayan]";
@@ -415,7 +415,7 @@ umbala,139,227,3	script	Priest#arch	1_M_PASTOR,{
 		next;
 		mes "[Priest Dayan]";
 		mes "Thank you very much.";
-		mes "Feel free to visit here when you want to pray, "+(Sex?"brother.":"sister.");
+		mes "Feel free to visit here when you want to pray, "+ (Sex == SEX_MALE ? "brother." : "sister.");
 		mes "A visit from a friend always makes me happy.";
 		job_arch = 4;
 		changequest 2188,2189;
@@ -599,7 +599,7 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		mes "[Vinue]";
 		mes "Ah, Welcome.";
 		mes "It's not time to have a service yet...";
-		mes "Are you here to pray, "+(Sex?"brother":"sister")+"?";
+		mes "Are you here to pray, "+ (Sex == SEX_MALE ? "brother" : "sister") +"?";
 		next;
 		mes "[" + strcharinfo(0) + "]";
 		mes "I came here to say hello from Priest Dayan from Prontera.";
@@ -618,7 +618,7 @@ hu_in01,205,204,7	script	Praying Nun#benew	1_F_PRIEST,{
 		next;
 		mes "[Vinue]";
 		mes "Ah...";
-		mes "He's very kind. As are you "+(Sex?"brother":"sister")+".";
+		mes "He's very kind. As are you "+ (Sex == SEX_MALE ? "brother" : "sister") +".";
 		next;
 		mes "[Vinue]";
 		mes "But don't worry.";

@@ -52,6 +52,7 @@
 #	define aRealloc(p,n) (iMalloc->realloc((p),(n),ALC_MARK))
 #	define aReallocz(p,n) (iMalloc->reallocz((p),(n),ALC_MARK))
 #	define aStrdup(p)    (iMalloc->astrdup((p),ALC_MARK))
+#	define aStrndup(p,n) (iMalloc->astrndup((p),(n),ALC_MARK))
 #	define aFree(p)      (iMalloc->free((p),ALC_MARK))
 
 /////////////// Buffer Creation /////////////////
@@ -85,6 +86,7 @@ struct malloc_interface {
 	void* (*realloc)(void *p, size_t size, const char *file, int line, const char *func);
 	void* (*reallocz)(void *p, size_t size, const char *file, int line, const char *func);
 	char* (*astrdup)(const char *p, const char *file, int line, const char *func);
+	char *(*astrndup)(const char *p, size_t size, const char *file, int line, const char *func);
 	void  (*free)(void *p, const char *file, int line, const char *func);
 	/* */
 	void (*memory_check)(void);

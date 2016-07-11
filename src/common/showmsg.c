@@ -23,10 +23,9 @@
 #include "showmsg.h"
 
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/core.h" //[Ind] - For SERVER_TYPE
 #include "common/strlib.h" // StringBuf
-
-#include <libconfig/libconfig.h>
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -245,13 +244,13 @@ int VFPRINTF(HANDLE handle, const char *fmt, va_list argptr)
 					continue;
 				} else if (*q == ';') {
 					// delimiter
-					if (numpoint < sizeof(numbers)/sizeof(*numbers)) {
+					if (numpoint < ARRAYLENGTH(numbers)) {
 						// go to next array position
 						numpoint++;
 					} else {
 						// array is full, so we 'forget' the first value
-						memmove(numbers,numbers+1,sizeof(numbers)/sizeof(*numbers)-1);
-						numbers[sizeof(numbers)/sizeof(*numbers)-1]=0;
+						memmove(numbers, numbers+1, ARRAYLENGTH(numbers)-1);
+						numbers[ARRAYLENGTH(numbers)-1]=0;
 					}
 					++q;
 					// and next number
@@ -606,9 +605,6 @@ int vShowMessage_(enum msg_type flag, const char *string, va_list ap)
 {
 	va_list apcopy;
 	char prefix[100];
-#if defined(DEBUGLOGMAP) || defined(DEBUGLOGCHAR) || defined(DEBUGLOGLOGIN)
-	FILE *fp;
-#endif
 
 	if (!string || *string == '\0') {
 		ShowError("Empty string passed to vShowMessage_().\n");
@@ -703,8 +699,8 @@ int vShowMessage_(enum msg_type flag, const char *string, va_list ap)
 	}
 
 #if defined(DEBUGLOGMAP) || defined(DEBUGLOGCHAR) || defined(DEBUGLOGLOGIN)
-	if(strlen(DEBUGLOGPATH) > 0) {
-		fp=fopen(DEBUGLOGPATH,"a");
+	if (strlen(DEBUGLOGPATH) > 0) {
+		FILE *fp = fopen(DEBUGLOGPATH,"a");
 		if (fp == NULL) {
 			FPRINTF(STDERR, CL_RED"[ERROR]"CL_RESET": Could not open '"CL_WHITE"%s"CL_RESET"', access denied.\n", DEBUGLOGPATH);
 			FFLUSH(STDERR);
@@ -799,14 +795,14 @@ void showmsg_showWarning(const char *string, ...)
 	vShowMessage_(MSG_WARNING, string, ap);
 	va_end(ap);
 }
-void showmsg_showConfigWarning(config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
-void showmsg_showConfigWarning(config_setting_t *config, const char *string, ...)
+void showmsg_showConfigWarning(struct config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
+void showmsg_showConfigWarning(struct config_setting_t *config, const char *string, ...)
 {
 	StringBuf buf;
 	va_list ap;
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, string);
-	StrBuf->Printf(&buf, " (%s:%d)\n", config_setting_source_file(config), config_setting_source_line(config));
+	StrBuf->Printf(&buf, " (%s:%u)\n", config_setting_source_file(config), config_setting_source_line(config));
 	va_start(ap, string);
 	vShowMessage_(MSG_WARNING, StrBuf->Value(&buf), ap);
 	va_end(ap);

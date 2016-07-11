@@ -461,7 +461,7 @@ int mapif_party_broken(int party_id, int flag)
 }
 
 //Remarks in the party
-int mapif_party_message(int party_id, int account_id, char *mes, int len, int sfd)
+int mapif_party_message(int party_id, int account_id, const char *mes, int len, int sfd)
 {
 	unsigned char buf[512];
 	nullpo_ret(mes);
@@ -479,13 +479,13 @@ int mapif_party_message(int party_id, int account_id, char *mes, int len, int sf
 
 
 // Create Party
-int mapif_parse_CreateParty(int fd, char *name, int item, int item2, struct party_member *leader)
+int mapif_parse_CreateParty(int fd, const char *name, int item, int item2, const struct party_member *leader)
 {
 	struct party_data *p;
 	int i;
 	nullpo_ret(name);
 	nullpo_ret(leader);
-	if( (p=inter_party->search_partyname(name))!=NULL){
+	if (!*name || (p = inter_party->search_partyname(name)) != NULL) {
 		mapif->party_created(fd,leader->account_id,leader->char_id,NULL);
 		return 0;
 	}
@@ -493,9 +493,12 @@ int mapif_parse_CreateParty(int fd, char *name, int item, int item2, struct part
 	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorized
 		for (i = 0; i < NAME_LENGTH && name[i]; i++)
 			if (strchr(char_name_letters, name[i]) == NULL) {
-				if( name[i] == '"' ) { /* client-special-char */
-					normalize_name(name,"\"");
-					mapif->parse_CreateParty(fd,name,item,item2,leader);
+				if (name[i] == '"') { /* client-special-char */
+					char *newname = aStrndup(name, NAME_LENGTH-1);
+					normalize_name(newname,"\"");
+					trim(newname);
+					mapif->parse_CreateParty(fd, newname, item, item2, leader);
+					aFree(newname);
 					return 0;
 				}
 				mapif->party_created(fd,leader->account_id,leader->char_id,NULL);
@@ -511,7 +514,7 @@ int mapif_parse_CreateParty(int fd, char *name, int item, int item2, struct part
 
 	p = (struct party_data*)aCalloc(1, sizeof(struct party_data));
 
-	memcpy(p->party.name,name,NAME_LENGTH);
+	safestrncpy(p->party.name, name, NAME_LENGTH);
 	p->party.exp=0;
 	p->party.item=(item?1:0)|(item2?2:0);
 
@@ -547,7 +550,7 @@ void mapif_parse_PartyInfo(int fd, int party_id, int char_id)
 }
 
 // Add a player to party request
-int mapif_parse_PartyAddMember(int fd, int party_id, struct party_member *member)
+int mapif_parse_PartyAddMember(int fd, int party_id, const struct party_member *member)
 {
 	struct party_data *p;
 	int i;
@@ -729,7 +732,7 @@ int mapif_parse_BreakParty(int fd, int party_id)
 }
 
 //Party sending the message
-int mapif_parse_PartyMessage(int fd, int party_id, int account_id, char *mes, int len)
+int mapif_parse_PartyMessage(int fd, int party_id, int account_id, const char *mes, int len)
 {
 	return mapif->party_message(party_id,account_id,mes,len, fd);
 }
@@ -767,14 +770,14 @@ int inter_party_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd,0)) {
-	case 0x3020: mapif->parse_CreateParty(fd, (char*)RFIFOP(fd,4), RFIFOB(fd,28), RFIFOB(fd,29), (struct party_member*)RFIFOP(fd,30)); break;
+	case 0x3020: mapif->parse_CreateParty(fd, RFIFOP(fd,4), RFIFOB(fd,28), RFIFOB(fd,29), RFIFOP(fd,30)); break;
 	case 0x3021: mapif->parse_PartyInfo(fd, RFIFOL(fd,2), RFIFOL(fd,6)); break;
-	case 0x3022: mapif->parse_PartyAddMember(fd, RFIFOL(fd,4), (struct party_member*)RFIFOP(fd,8)); break;
+	case 0x3022: mapif->parse_PartyAddMember(fd, RFIFOL(fd,4), RFIFOP(fd,8)); break;
 	case 0x3023: mapif->parse_PartyChangeOption(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOW(fd,10), RFIFOW(fd,12)); break;
 	case 0x3024: mapif->parse_PartyLeave(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10)); break;
 	case 0x3025: mapif->parse_PartyChangeMap(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOW(fd,14), RFIFOB(fd,16), RFIFOW(fd,17)); break;
 	case 0x3026: mapif->parse_BreakParty(fd, RFIFOL(fd,2)); break;
-	case 0x3027: mapif->parse_PartyMessage(fd, RFIFOL(fd,4), RFIFOL(fd,8), (char*)RFIFOP(fd,12), RFIFOW(fd,2)-12); break;
+	case 0x3027: mapif->parse_PartyMessage(fd, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12), RFIFOW(fd,2)-12); break;
 	case 0x3029: mapif->parse_PartyLeaderChange(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10)); break;
 	default:
 		return 0;

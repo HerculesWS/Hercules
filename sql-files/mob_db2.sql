@@ -21,6 +21,8 @@
 --       please consider modifying the corresponding .conf file inside
 --       the db folder, and then re-run the db2sql plugin.
 
+-- GENERATED FILE DO NOT EDIT --
+
 --
 -- Table structure for table `mob_db2`
 --
@@ -52,7 +54,7 @@ CREATE TABLE `mob_db2` (
   `Scale` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
   `Race` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
   `Element` TINYINT(4) UNSIGNED NOT NULL DEFAULT '0',
-  `Mode` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
+  `Mode` INT(11) UNSIGNED NOT NULL DEFAULT '0',
   `Speed` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `aDelay` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',
   `aMotion` SMALLINT(6) UNSIGNED NOT NULL DEFAULT '0',

@@ -1621,7 +1621,7 @@ niflheim,197,192,3	duplicate(Warpra#0)	Warpra#9	4_F_KAFRA5
 pay_arche,39,135,4	duplicate(Warpra#0)	Warpra#10	4_F_KAFRA5
 prt_fild05,273,215,4	duplicate(Warpra#0)	Warpra#11	4_F_KAFRA5
 tur_dun01,148,239,4	duplicate(Warpra#0)	Warpra#12	4_F_KAFRA5
-valkyrie,48,35,8	duplicate(Warpra#0)	Warpra#13	4_F_KAFRA5
+valkyrie,48,35,0	duplicate(Warpra#0)	Warpra#13	4_F_KAFRA5
 yuno_fild03,37,135,4	duplicate(Warpra#0)	Warpra#14	4_F_KAFRA5
 
 alberta,32,240,4	script	Warpra#15	4_F_KAFRA5,{ callfunc "QWS_Town_Warpra",1,"Alberta Town"; close; }

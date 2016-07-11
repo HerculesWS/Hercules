@@ -937,7 +937,7 @@ int unit_warp(struct block_list *bl,short m,short x,short y,clr_type type)
 	if (x<0 || y<0) {
 		//Random map position.
 		if (!map->search_freecell(NULL, m, &x, &y, -1, -1, 1)) {
-			ShowWarning("unit_warp failed. Unit Id:%d/Type:%d, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, map->list[m].name, x, y);
+			ShowWarning("unit_warp failed. Unit Id:%d/Type:%u, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, map->list[m].name, x, y);
 			return 2;
 
 		}
@@ -947,7 +947,7 @@ int unit_warp(struct block_list *bl,short m,short x,short y,clr_type type)
 
 		if (!map->search_freecell(NULL, m, &x, &y, 4, 4, 1)) {
 			//Can't find a nearby cell
-			ShowWarning("unit_warp failed. Unit Id:%d/Type:%d, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, map->list[m].name, x, y);
+			ShowWarning("unit_warp failed. Unit Id:%d/Type:%u, target position map %d (%s) at [%d,%d]\n", bl->id, bl->type, m, map->list[m].name, x, y);
 			return 2;
 		}
 	}
@@ -1220,6 +1220,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	ud = unit->bl2ud(src);
 
 	if(ud == NULL) return 0;
+
 	sc = status->get_sc(src);
 	if (sc && !sc->count)
 		sc = NULL; //Unneeded
@@ -2289,11 +2290,18 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 
 // unit_data initialization process
 void unit_dataset(struct block_list *bl) {
-	struct unit_data *ud;
-	nullpo_retv(ud = unit->bl2ud(bl));
+	struct unit_data *ud = unit->bl2ud(bl);
+	nullpo_retv(ud);
 
-	memset( ud, 0, sizeof( struct unit_data) );
-	ud->bl             = bl;
+	unit->init_ud(ud);
+	ud->bl = bl;
+}
+
+void unit_init_ud(struct unit_data *ud)
+{
+	nullpo_retv(ud);
+
+	memset (ud, 0, sizeof(struct unit_data));
 	ud->walktimer      = INVALID_TIMER;
 	ud->skilltimer     = INVALID_TIMER;
 	ud->attacktimer    = INVALID_TIMER;
@@ -2433,7 +2441,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 					status_change_end(d_bl,SC__SHADOWFORM,INVALID_TIMER);
 			}
 			//Leave/reject all invitations.
-			if(sd->chatID)
+			if (sd->chat_id != 0)
 				chat->leave(sd, false);
 			if(sd->trade_partner)
 				trade->cancel(sd);
@@ -2895,6 +2903,7 @@ void unit_defaults(void) {
 	/* */
 	unit->bl2ud = unit_bl2ud;
 	unit->bl2ud2 = unit_bl2ud2;
+	unit->init_ud = unit_init_ud;
 	unit->attack_timer = unit_attack_timer;
 	unit->walktoxy_timer = unit_walktoxy_timer;
 	unit->walktoxy_sub = unit_walktoxy_sub;

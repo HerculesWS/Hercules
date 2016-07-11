@@ -23,6 +23,8 @@
  *       as it will get overwritten.
  */
 
+/* GENERATED FILE DO NOT EDIT */
+
 struct {
 	struct HPMHookPoint *HP_HCache_init_pre;
 	struct HPMHookPoint *HP_HCache_init_post;
@@ -62,8 +64,6 @@ struct {
 	struct HPMHookPoint *HP_chr_mmo_char_tosql_post;
 	struct HPMHookPoint *HP_chr_memitemdata_to_sql_pre;
 	struct HPMHookPoint *HP_chr_memitemdata_to_sql_post;
-	struct HPMHookPoint *HP_chr_inventory_to_sql_pre;
-	struct HPMHookPoint *HP_chr_inventory_to_sql_post;
 	struct HPMHookPoint *HP_chr_mmo_gender_pre;
 	struct HPMHookPoint *HP_chr_mmo_gender_post;
 	struct HPMHookPoint *HP_chr_mmo_chars_fromsql_pre;
@@ -610,10 +610,10 @@ struct {
 	struct HPMHookPoint *HP_libconfig_read_post;
 	struct HPMHookPoint *HP_libconfig_write_pre;
 	struct HPMHookPoint *HP_libconfig_write_post;
-	struct HPMHookPoint *HP_libconfig_set_auto_convert_pre;
-	struct HPMHookPoint *HP_libconfig_set_auto_convert_post;
-	struct HPMHookPoint *HP_libconfig_get_auto_convert_pre;
-	struct HPMHookPoint *HP_libconfig_get_auto_convert_post;
+	struct HPMHookPoint *HP_libconfig_set_options_pre;
+	struct HPMHookPoint *HP_libconfig_set_options_post;
+	struct HPMHookPoint *HP_libconfig_get_options_pre;
+	struct HPMHookPoint *HP_libconfig_get_options_post;
 	struct HPMHookPoint *HP_libconfig_read_string_pre;
 	struct HPMHookPoint *HP_libconfig_read_string_post;
 	struct HPMHookPoint *HP_libconfig_read_file_src_pre;
@@ -638,6 +638,8 @@ struct {
 	struct HPMHookPoint *HP_libconfig_setting_get_bool_post;
 	struct HPMHookPoint *HP_libconfig_setting_get_string_pre;
 	struct HPMHookPoint *HP_libconfig_setting_get_string_post;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_pre;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_post;
 	struct HPMHookPoint *HP_libconfig_setting_lookup_int_pre;
 	struct HPMHookPoint *HP_libconfig_setting_lookup_int_post;
 	struct HPMHookPoint *HP_libconfig_setting_lookup_int64_pre;
@@ -700,8 +702,6 @@ struct {
 	struct HPMHookPoint *HP_libconfig_setting_set_hook_post;
 	struct HPMHookPoint *HP_libconfig_lookup_pre;
 	struct HPMHookPoint *HP_libconfig_lookup_post;
-	struct HPMHookPoint *HP_libconfig_lookup_from_pre;
-	struct HPMHookPoint *HP_libconfig_lookup_from_post;
 	struct HPMHookPoint *HP_libconfig_lookup_int_pre;
 	struct HPMHookPoint *HP_libconfig_lookup_int_post;
 	struct HPMHookPoint *HP_libconfig_lookup_int64_pre;
@@ -712,8 +712,8 @@ struct {
 	struct HPMHookPoint *HP_libconfig_lookup_bool_post;
 	struct HPMHookPoint *HP_libconfig_lookup_string_pre;
 	struct HPMHookPoint *HP_libconfig_lookup_string_post;
-	struct HPMHookPoint *HP_libconfig_read_file_pre;
-	struct HPMHookPoint *HP_libconfig_read_file_post;
+	struct HPMHookPoint *HP_libconfig_load_file_pre;
+	struct HPMHookPoint *HP_libconfig_load_file_post;
 	struct HPMHookPoint *HP_libconfig_setting_copy_simple_pre;
 	struct HPMHookPoint *HP_libconfig_setting_copy_simple_post;
 	struct HPMHookPoint *HP_libconfig_setting_copy_elem_pre;
@@ -722,6 +722,26 @@ struct {
 	struct HPMHookPoint *HP_libconfig_setting_copy_aggregate_post;
 	struct HPMHookPoint *HP_libconfig_setting_copy_pre;
 	struct HPMHookPoint *HP_libconfig_setting_copy_post;
+	struct HPMHookPoint *HP_libconfig_setting_get_bool_real_pre;
+	struct HPMHookPoint *HP_libconfig_setting_get_bool_real_post;
+	struct HPMHookPoint *HP_libconfig_setting_get_uint32_pre;
+	struct HPMHookPoint *HP_libconfig_setting_get_uint32_post;
+	struct HPMHookPoint *HP_libconfig_setting_get_uint16_pre;
+	struct HPMHookPoint *HP_libconfig_setting_get_uint16_post;
+	struct HPMHookPoint *HP_libconfig_setting_get_int16_pre;
+	struct HPMHookPoint *HP_libconfig_setting_get_int16_post;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_bool_real_pre;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_bool_real_post;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_uint32_pre;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_uint32_post;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_uint16_pre;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_uint16_post;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_int16_pre;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_int16_post;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_mutable_string_pre;
+	struct HPMHookPoint *HP_libconfig_setting_lookup_mutable_string_post;
+	struct HPMHookPoint *HP_libconfig_lookup_mutable_string_pre;
+	struct HPMHookPoint *HP_libconfig_lookup_mutable_string_post;
 	struct HPMHookPoint *HP_loginif_init_pre;
 	struct HPMHookPoint *HP_loginif_init_post;
 	struct HPMHookPoint *HP_loginif_final_pre;
@@ -762,6 +782,8 @@ struct {
 	struct HPMHookPoint *HP_iMalloc_reallocz_post;
 	struct HPMHookPoint *HP_iMalloc_astrdup_pre;
 	struct HPMHookPoint *HP_iMalloc_astrdup_post;
+	struct HPMHookPoint *HP_iMalloc_astrndup_pre;
+	struct HPMHookPoint *HP_iMalloc_astrndup_post;
 	struct HPMHookPoint *HP_iMalloc_free_pre;
 	struct HPMHookPoint *HP_iMalloc_free_post;
 	struct HPMHookPoint *HP_iMalloc_memory_check_pre;
@@ -818,6 +840,8 @@ struct {
 	struct HPMHookPoint *HP_mapif_auction_bid_post;
 	struct HPMHookPoint *HP_mapif_parse_auction_bid_pre;
 	struct HPMHookPoint *HP_mapif_parse_auction_bid_post;
+	struct HPMHookPoint *HP_mapif_elemental_create_pre;
+	struct HPMHookPoint *HP_mapif_elemental_create_post;
 	struct HPMHookPoint *HP_mapif_elemental_save_pre;
 	struct HPMHookPoint *HP_mapif_elemental_save_post;
 	struct HPMHookPoint *HP_mapif_elemental_load_pre;
@@ -918,6 +942,8 @@ struct {
 	struct HPMHookPoint *HP_mapif_homunculus_saved_post;
 	struct HPMHookPoint *HP_mapif_homunculus_renamed_pre;
 	struct HPMHookPoint *HP_mapif_homunculus_renamed_post;
+	struct HPMHookPoint *HP_mapif_homunculus_create_pre;
+	struct HPMHookPoint *HP_mapif_homunculus_create_post;
 	struct HPMHookPoint *HP_mapif_homunculus_save_pre;
 	struct HPMHookPoint *HP_mapif_homunculus_save_post;
 	struct HPMHookPoint *HP_mapif_homunculus_load_pre;
@@ -962,6 +988,8 @@ struct {
 	struct HPMHookPoint *HP_mapif_mail_send_post;
 	struct HPMHookPoint *HP_mapif_parse_mail_send_pre;
 	struct HPMHookPoint *HP_mapif_parse_mail_send_post;
+	struct HPMHookPoint *HP_mapif_mercenary_create_pre;
+	struct HPMHookPoint *HP_mapif_mercenary_create_post;
 	struct HPMHookPoint *HP_mapif_mercenary_save_pre;
 	struct HPMHookPoint *HP_mapif_mercenary_save_post;
 	struct HPMHookPoint *HP_mapif_mercenary_load_pre;
@@ -1441,8 +1469,6 @@ struct {
 	int HP_chr_mmo_char_tosql_post;
 	int HP_chr_memitemdata_to_sql_pre;
 	int HP_chr_memitemdata_to_sql_post;
-	int HP_chr_inventory_to_sql_pre;
-	int HP_chr_inventory_to_sql_post;
 	int HP_chr_mmo_gender_pre;
 	int HP_chr_mmo_gender_post;
 	int HP_chr_mmo_chars_fromsql_pre;
@@ -1989,10 +2015,10 @@ struct {
 	int HP_libconfig_read_post;
 	int HP_libconfig_write_pre;
 	int HP_libconfig_write_post;
-	int HP_libconfig_set_auto_convert_pre;
-	int HP_libconfig_set_auto_convert_post;
-	int HP_libconfig_get_auto_convert_pre;
-	int HP_libconfig_get_auto_convert_post;
+	int HP_libconfig_set_options_pre;
+	int HP_libconfig_set_options_post;
+	int HP_libconfig_get_options_pre;
+	int HP_libconfig_get_options_post;
 	int HP_libconfig_read_string_pre;
 	int HP_libconfig_read_string_post;
 	int HP_libconfig_read_file_src_pre;
@@ -2017,6 +2043,8 @@ struct {
 	int HP_libconfig_setting_get_bool_post;
 	int HP_libconfig_setting_get_string_pre;
 	int HP_libconfig_setting_get_string_post;
+	int HP_libconfig_setting_lookup_pre;
+	int HP_libconfig_setting_lookup_post;
 	int HP_libconfig_setting_lookup_int_pre;
 	int HP_libconfig_setting_lookup_int_post;
 	int HP_libconfig_setting_lookup_int64_pre;
@@ -2079,8 +2107,6 @@ struct {
 	int HP_libconfig_setting_set_hook_post;
 	int HP_libconfig_lookup_pre;
 	int HP_libconfig_lookup_post;
-	int HP_libconfig_lookup_from_pre;
-	int HP_libconfig_lookup_from_post;
 	int HP_libconfig_lookup_int_pre;
 	int HP_libconfig_lookup_int_post;
 	int HP_libconfig_lookup_int64_pre;
@@ -2091,8 +2117,8 @@ struct {
 	int HP_libconfig_lookup_bool_post;
 	int HP_libconfig_lookup_string_pre;
 	int HP_libconfig_lookup_string_post;
-	int HP_libconfig_read_file_pre;
-	int HP_libconfig_read_file_post;
+	int HP_libconfig_load_file_pre;
+	int HP_libconfig_load_file_post;
 	int HP_libconfig_setting_copy_simple_pre;
 	int HP_libconfig_setting_copy_simple_post;
 	int HP_libconfig_setting_copy_elem_pre;
@@ -2101,6 +2127,26 @@ struct {
 	int HP_libconfig_setting_copy_aggregate_post;
 	int HP_libconfig_setting_copy_pre;
 	int HP_libconfig_setting_copy_post;
+	int HP_libconfig_setting_get_bool_real_pre;
+	int HP_libconfig_setting_get_bool_real_post;
+	int HP_libconfig_setting_get_uint32_pre;
+	int HP_libconfig_setting_get_uint32_post;
+	int HP_libconfig_setting_get_uint16_pre;
+	int HP_libconfig_setting_get_uint16_post;
+	int HP_libconfig_setting_get_int16_pre;
+	int HP_libconfig_setting_get_int16_post;
+	int HP_libconfig_setting_lookup_bool_real_pre;
+	int HP_libconfig_setting_lookup_bool_real_post;
+	int HP_libconfig_setting_lookup_uint32_pre;
+	int HP_libconfig_setting_lookup_uint32_post;
+	int HP_libconfig_setting_lookup_uint16_pre;
+	int HP_libconfig_setting_lookup_uint16_post;
+	int HP_libconfig_setting_lookup_int16_pre;
+	int HP_libconfig_setting_lookup_int16_post;
+	int HP_libconfig_setting_lookup_mutable_string_pre;
+	int HP_libconfig_setting_lookup_mutable_string_post;
+	int HP_libconfig_lookup_mutable_string_pre;
+	int HP_libconfig_lookup_mutable_string_post;
 	int HP_loginif_init_pre;
 	int HP_loginif_init_post;
 	int HP_loginif_final_pre;
@@ -2141,6 +2187,8 @@ struct {
 	int HP_iMalloc_reallocz_post;
 	int HP_iMalloc_astrdup_pre;
 	int HP_iMalloc_astrdup_post;
+	int HP_iMalloc_astrndup_pre;
+	int HP_iMalloc_astrndup_post;
 	int HP_iMalloc_free_pre;
 	int HP_iMalloc_free_post;
 	int HP_iMalloc_memory_check_pre;
@@ -2197,6 +2245,8 @@ struct {
 	int HP_mapif_auction_bid_post;
 	int HP_mapif_parse_auction_bid_pre;
 	int HP_mapif_parse_auction_bid_post;
+	int HP_mapif_elemental_create_pre;
+	int HP_mapif_elemental_create_post;
 	int HP_mapif_elemental_save_pre;
 	int HP_mapif_elemental_save_post;
 	int HP_mapif_elemental_load_pre;
@@ -2297,6 +2347,8 @@ struct {
 	int HP_mapif_homunculus_saved_post;
 	int HP_mapif_homunculus_renamed_pre;
 	int HP_mapif_homunculus_renamed_post;
+	int HP_mapif_homunculus_create_pre;
+	int HP_mapif_homunculus_create_post;
 	int HP_mapif_homunculus_save_pre;
 	int HP_mapif_homunculus_save_post;
 	int HP_mapif_homunculus_load_pre;
@@ -2341,6 +2393,8 @@ struct {
 	int HP_mapif_mail_send_post;
 	int HP_mapif_parse_mail_send_pre;
 	int HP_mapif_parse_mail_send_post;
+	int HP_mapif_mercenary_create_pre;
+	int HP_mapif_mercenary_create_post;
 	int HP_mapif_mercenary_save_pre;
 	int HP_mapif_mercenary_save_post;
 	int HP_mapif_mercenary_load_pre;

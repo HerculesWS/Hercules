@@ -5128,10 +5128,10 @@ OnTouch:
 		mes "who robbed our house.";
 		next;
 		mes "[Mother Rosa]";
-		mes "How can you believe what "+((!Sex)?"s":"")+"he's saying?";
-		mes "How do you know "+((!Sex)?"s":"")+"he's not lying";
-		mes "after robbing our stuff "+((!Sex)?"her":"him")+"self?";
-		mes "Search "+((!Sex)?"her":"his")+" possessions immediately!!";
+		mes "How can you believe what "+ (Sex == SEX_FEMALE ? "she's" : "he's")+ " saying?";
+		mes "How do you know "+ (Sex == SEX_FEMALE ? "she's" : "he's") +" not lying";
+		mes "after robbing our stuff "+ (Sex == SEX_FEMALE ? "herself" : "himself") +"?";
+		mes "Search "+ (Sex == SEX_FEMALE ? "her" : "his") +" possessions immediately!!";
 		next;
 		mes "[Father Dames]";
 		mes "No, how could you say such things?";
@@ -6436,7 +6436,7 @@ eclage,222,131,3	script	Wandering Merchant#ecl	1_M_SIGNMCNT,{
 		mes "stench of alcohol -";
 	}
 	else if (ep14_2_detect == 7) {
-		if (questprogress(9248) == 1) {
+		if (questprogress(9258) == 1) {
 			mes "- Upon getting closer,";
 			mes "I smell a terrible";
 			mes "stench of alcohol -";
@@ -12028,7 +12028,7 @@ ecl_in04,105,216,4	script	Hiel's Workshop#pa0829	HIDDEN_NPC,{
 				next;
 				cutin "EP14_etran1",1;
 				mes "[Etran]";
-				mes "Welcome welcomeow~! We are cat merchants, always serving guests as our kingeow~! Special sale! One piece of meat for 200Á¦´Ï!!";
+				mes "Welcome welcomeow~! We are cat merchants, always serving guests as our kingeow~! Special sale! One piece of meat for 200meow!!";
 				next;
 				cutin "EP14_robert1",1;
 				mes "[Robert]";

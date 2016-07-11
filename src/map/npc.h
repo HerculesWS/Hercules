@@ -29,7 +29,9 @@
 
 #include <pcre.h>
 
+/* Forward declarations */
 struct hplugin_data_store;
+struct itemlist; // map/itemdb.h
 struct view_data;
 
 enum npc_parse_options {
@@ -140,7 +142,7 @@ enum actor_classes {
 #define MAX_NPC_CLASS 1000
 // New NPC range
 #define MAX_NPC_CLASS2_START 10001
-#define MAX_NPC_CLASS2_END 10178
+#define MAX_NPC_CLASS2_END 10203
 
 //Script NPC events.
 enum npce_event {
@@ -175,10 +177,10 @@ struct npc_path_data {
 struct npc_interface {
 	/* */
 	struct npc_data *motd;
-	DBMap *ev_db; // const char* event_name -> struct event_data*
-	DBMap *ev_label_db; // const char* label_name (without leading "::") -> struct linkdb_node**   (key: struct npc_data*; data: struct event_data*)
-	DBMap *name_db; // const char* npc_name -> struct npc_data*
-	DBMap *path_db;
+	struct DBMap *ev_db; // const char* event_name -> struct event_data*
+	struct DBMap *ev_label_db; // const char* label_name (without leading "::") -> struct linkdb_node**   (key: struct npc_data*; data: struct event_data*)
+	struct DBMap *name_db; // const char* npc_name -> struct npc_data*
+	struct DBMap *path_db;
 	struct eri *timer_event_ers; //For the npc timer data. [Skotlex]
 	struct npc_data *fake_nd;
 	struct npc_src_list *src_files;
@@ -186,6 +188,16 @@ struct npc_interface {
 	/* npc trader global data, for ease of transition between the script, cleared on every usage */
 	bool trader_ok;
 	int trader_funds[2];
+	int npc_id;
+	int npc_warp;
+	int npc_shop;
+	int npc_script;
+	int npc_mob;
+	int npc_delay_mob;
+	int npc_cache_mob;
+	const char *npc_last_path;
+	const char *npc_last_ref;
+	struct npc_path_data *npc_last_npd;
 	/* */
 	int (*init) (bool minimal);
 	int (*final) (void);
@@ -201,7 +213,7 @@ struct npc_interface {
 	int (*enable) (const char *name, int flag);
 	struct npc_data* (*name2id) (const char *name);
 	int (*event_dequeue) (struct map_session_data *sd);
-	DBData (*event_export_create) (DBKey key, va_list args);
+	struct DBData (*event_export_create) (union DBKey key, va_list args);
 	int (*event_export) (struct npc_data *nd, int i);
 	int (*event_sub) (struct map_session_data *sd, struct event_data *ev, const char *eventname);
 	void (*event_doall_sub) (void *key, void *data, va_list ap);
@@ -230,15 +242,15 @@ struct npc_interface {
 	int (*click) (struct map_session_data *sd, struct npc_data *nd);
 	int (*scriptcont) (struct map_session_data *sd, int id, bool closing);
 	int (*buysellsel) (struct map_session_data *sd, int id, int type);
-	int (*cashshop_buylist) (struct map_session_data *sd, int points, int count, unsigned short *item_list);
-	int (*buylist_sub) (struct map_session_data *sd, int n, unsigned short *item_list, struct npc_data *nd);
+	int (*cashshop_buylist) (struct map_session_data *sd, int points, struct itemlist *item_list);
+	int (*buylist_sub) (struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd);
 	int (*cashshop_buy) (struct map_session_data *sd, int nameid, int amount, int points);
-	int (*buylist) (struct map_session_data *sd, int n, unsigned short *item_list);
-	int (*selllist_sub) (struct map_session_data *sd, int n, unsigned short *item_list, struct npc_data *nd);
-	int (*selllist) (struct map_session_data *sd, int n, unsigned short *item_list);
+	int (*buylist) (struct map_session_data *sd, struct itemlist *item_list);
+	int (*selllist_sub) (struct map_session_data *sd, struct itemlist *item_list, struct npc_data *nd);
+	int (*selllist) (struct map_session_data *sd, struct itemlist *item_list);
 	int (*remove_map) (struct npc_data *nd);
-	int (*unload_ev) (DBKey key, DBData *data, va_list ap);
-	int (*unload_ev_label) (DBKey key, DBData *data, va_list ap);
+	int (*unload_ev) (union DBKey key, struct DBData *data, va_list ap);
+	int (*unload_ev_label) (union DBKey key, struct DBData *data, va_list ap);
 	int (*unload_dup_sub) (struct npc_data *nd, va_list args);
 	void (*unload_duplicates) (struct npc_data *nd);
 	int (*unload) (struct npc_data *nd, bool single);
@@ -280,8 +292,8 @@ struct npc_interface {
 	int (*parsesrcfile) (const char *filepath, bool runOnInit);
 	int (*script_event) (struct map_session_data *sd, enum npce_event type);
 	void (*read_event_script) (void);
-	int (*path_db_clear_sub) (DBKey key, DBData *data, va_list args);
-	int (*ev_label_db_clear_sub) (DBKey key, DBData *data, va_list args);
+	int (*path_db_clear_sub) (union DBKey key, struct DBData *data, va_list args);
+	int (*ev_label_db_clear_sub) (union DBKey key, struct DBData *data, va_list args);
 	int (*reload) (void);
 	bool (*unloadfile) (const char *filepath);
 	void (*do_clear_npc) (void);
@@ -291,7 +303,7 @@ struct npc_interface {
 	void (*trader_count_funds) (struct npc_data *nd, struct map_session_data *sd);
 	bool (*trader_pay) (struct npc_data *nd, struct map_session_data *sd, int price, int points);
 	void (*trader_update) (int master);
-	int (*market_buylist) (struct map_session_data* sd, unsigned short list_size, struct packet_npc_market_purchase *p);
+	int (*market_buylist) (struct map_session_data *sd, struct itemlist *item_list);
 	bool (*trader_open) (struct map_session_data *sd, struct npc_data *nd);
 	void (*market_fromsql) (void);
 	void (*market_tosql) (struct npc_data *nd, unsigned short index);

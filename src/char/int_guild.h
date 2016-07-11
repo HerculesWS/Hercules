@@ -44,8 +44,8 @@ enum {
  * inter_guild interface
  **/
 struct inter_guild_interface {
-	DBMap* guild_db; // int guild_id -> struct guild*
-	DBMap* castle_db;
+	struct DBMap *guild_db; // int guild_id -> struct guild*
+	struct DBMap *castle_db;
 	unsigned int exp[MAX_GUILDLEVEL];
 
 	int (*save_timer) (int tid, int64 tick, int id, intptr_t data);
@@ -58,9 +58,9 @@ struct inter_guild_interface {
 	int (*CharOnline) (int char_id, int guild_id);
 	int (*CharOffline) (int char_id, int guild_id);
 	int (*sql_init) (void);
-	int (*db_final) (DBKey key, DBData *data, va_list ap);
+	int (*db_final) (union DBKey key, struct DBData *data, va_list ap);
 	void (*sql_final) (void);
-	int (*search_guildname) (char *str);
+	int (*search_guildname) (const char *str);
 	bool (*check_empty) (struct guild *g);
 	unsigned int (*nextexp) (int level);
 	int (*checkskill) (struct guild *g, int id);

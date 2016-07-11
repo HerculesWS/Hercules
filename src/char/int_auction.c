@@ -47,7 +47,7 @@ static int inter_auction_count(int char_id, bool buy)
 {
 	int i = 0;
 	struct auction_data *auction;
-	DBIterator *iter = db_iterator(inter_auction->db);
+	struct DBIterator *iter = db_iterator(inter_auction->db);
 
 	for( auction = dbi_first(iter); dbi_exists(iter); auction = dbi_next(iter) )
 	{
@@ -63,7 +63,7 @@ void inter_auction_save(struct auction_data *auction)
 {
 	int j;
 	StringBuf buf;
-	SqlStmt* stmt;
+	struct SqlStmt *stmt;
 
 	if( !auction )
 		return;
@@ -73,7 +73,7 @@ void inter_auction_save(struct auction_data *auction)
 		auction_db, auction->seller_id, auction->buyer_id, auction->price, auction->buynow, auction->hours, (unsigned long)auction->timestamp, auction->item.nameid, auction->type, auction->item.refine, auction->item.attribute);
 	for( j = 0; j < MAX_SLOTS; j++ )
 		StrBuf->Printf(&buf, ", `card%d` = '%d'", j, auction->item.card[j]);
-	StrBuf->Printf(&buf, " WHERE `auction_id` = '%d'", auction->auction_id);
+	StrBuf->Printf(&buf, " WHERE `auction_id` = '%u'", auction->auction_id);
 
 	stmt = SQL->StmtMalloc(inter->sql_handle);
 	if( SQL_SUCCESS != SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
@@ -93,7 +93,7 @@ unsigned int inter_auction_create(struct auction_data *auction)
 {
 	int j;
 	StringBuf buf;
-	SqlStmt* stmt;
+	struct SqlStmt *stmt;
 
 	if( !auction )
 		return false;
@@ -183,7 +183,7 @@ void inter_auction_delete(struct auction_data *auction)
 
 	auction_id = auction->auction_id;
 
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `auction_id` = '%d'", auction_db, auction_id) )
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `auction_id` = '%u'", auction_db, auction_id) )
 		Sql_ShowDebug(inter->sql_handle);
 
 	if( auction->auction_end_timer != INVALID_TIMER )
@@ -280,7 +280,7 @@ void mapif_parse_auction_requestlist(int fd)
 	int price = RFIFOL(fd,10);
 	short type = RFIFOW(fd,8), page = max(1,RFIFOW(fd,14));
 	unsigned char buf[5 * sizeof(struct auction_data)];
-	DBIterator *iter = db_iterator(inter_auction->db);
+	struct DBIterator *iter = db_iterator(inter_auction->db);
 	struct auction_data *auction;
 	short i = 0, j = 0, pages = 1;
 
@@ -462,7 +462,7 @@ void mapif_parse_auction_bid(int fd)
 	}
 
 	auction->buyer_id = char_id;
-	safestrncpy(auction->buyer_name, (char*)RFIFOP(fd,16), NAME_LENGTH);
+	safestrncpy(auction->buyer_name, RFIFOP(fd,16), NAME_LENGTH);
 	auction->price = bid;
 
 	if( bid >= auction->buynow )

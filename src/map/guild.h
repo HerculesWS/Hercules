@@ -71,10 +71,10 @@ struct guild_interface {
 	void (*init) (bool minimal);
 	void (*final) (void);
 	/* */
-	DBMap* db; // int guild_id -> struct guild*
-	DBMap* castle_db; // int castle_id -> struct guild_castle*
-	DBMap* expcache_db; // int char_id -> struct guild_expcache*
-	DBMap* infoevent_db; // int guild_id -> struct eventlist*
+	struct DBMap *db; // int guild_id -> struct guild*
+	struct DBMap *castle_db; // int castle_id -> struct guild_castle*
+	struct DBMap *expcache_db; // int char_id -> struct guild_expcache*
+	struct DBMap *infoevent_db; // int guild_id -> struct eventlist*
 	/* */
 	struct eri *expcache_ers; //For handling of guild exp payment.
 	/* */
@@ -98,7 +98,7 @@ struct guild_interface {
 	struct guild_castle *(*mapindex2gc) (short map_index);
 	/* */
 	struct map_session_data *(*getavailablesd) (struct guild *g);
-	int (*getindex) (struct guild *g,int account_id,int char_id);
+	int (*getindex) (const struct guild *g, int account_id, int char_id);
 	int (*getposition) (struct guild *g, struct map_session_data *sd);
 	unsigned int (*payexp) (struct map_session_data *sd,unsigned int exp);
 	int (*getexp) (struct map_session_data *sd,int exp); // [Celest]
@@ -107,7 +107,7 @@ struct guild_interface {
 	int (*created) (int account_id,int guild_id);
 	int (*request_info) (int guild_id);
 	int (*recv_noinfo) (int guild_id);
-	int (*recv_info) (struct guild *sg);
+	int (*recv_info) (const struct guild *sg);
 	int (*npc_request_info) (int guild_id,const char *ev);
 	int (*invite) (struct map_session_data *sd,struct map_session_data *tsd);
 	int (*reply_invite) (struct map_session_data *sd,int guild_id,int flag);
@@ -130,23 +130,23 @@ struct guild_interface {
 	int (*change_memberposition) (int guild_id,int account_id,int char_id,short idx);
 	int (*memberposition_changed) (struct guild *g,int idx,int pos);
 	int (*change_position) (int guild_id,int idx,int mode,int exp_mode,const char *name);
-	int (*position_changed) (int guild_id,int idx,struct guild_position *p);
+	int (*position_changed) (int guild_id, int idx, const struct guild_position *p);
 	int (*change_notice) (struct map_session_data *sd,int guild_id,const char *mes1,const char *mes2);
 	int (*notice_changed) (int guild_id,const char *mes1,const char *mes2);
 	int (*change_emblem) (struct map_session_data *sd,int len,const char *data);
 	int (*emblem_changed) (int len,int guild_id,int emblem_id,const char *data);
-	int (*send_message) (struct map_session_data *sd,const char *mes,int len);
+	int (*send_message) (struct map_session_data *sd, const char *mes);
 	int (*recv_message) (int guild_id,int account_id,const char *mes,int len);
 	int (*send_dot_remove) (struct map_session_data *sd);
 	int (*skillupack) (int guild_id,uint16 skill_id,int account_id);
-	int (*dobreak) (struct map_session_data *sd,char *name);
+	int (*dobreak) (struct map_session_data *sd, const char *name);
 	int (*broken) (int guild_id,int flag);
 	int (*gm_change) (int guild_id, struct map_session_data *sd);
 	int (*gm_changed) (int guild_id, int account_id, int char_id);
 	/* */
 	void (*castle_map_init) (void);
 	int (*castledatasave) (int castle_id,int index,int value);
-	int (*castledataloadack) (int len, struct guild_castle *gc);
+	int (*castledataloadack) (int len, const struct guild_castle *gc);
 	void (*castle_reconnect) (int castle_id, int index, int value);
 	/* */
 	void (*agit_start) (void);
@@ -166,17 +166,17 @@ struct guild_interface {
 	struct map_session_data *(*sd_check) (int guild_id, int account_id, int char_id);
 	bool (*read_guildskill_tree_db) (char* split[], int columns, int current);
 	bool (*read_castledb) (char* str[], int columns, int current);
-	int (*payexp_timer_sub) (DBKey key, DBData *data, va_list ap);
-	int (*send_xy_timer_sub) (DBKey key, DBData *data, va_list ap);
+	int (*payexp_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
+	int (*send_xy_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*send_xy_timer) (int tid, int64 tick, int id, intptr_t data);
-	DBData (*create_expcache) (DBKey key, va_list args);
-	int (*eventlist_db_final) (DBKey key, DBData *data, va_list ap);
-	int (*expcache_db_final) (DBKey key, DBData *data, va_list ap);
-	int (*castle_db_final) (DBKey key, DBData *data, va_list ap);
-	int (*broken_sub) (DBKey key, DBData *data, va_list ap);
-	int (*castle_broken_sub) (DBKey key, DBData *data, va_list ap);
+	struct DBData (*create_expcache) (union DBKey key, va_list args);
+	int (*eventlist_db_final) (union DBKey key, struct DBData *data, va_list ap);
+	int (*expcache_db_final) (union DBKey key, struct DBData *data, va_list ap);
+	int (*castle_db_final) (union DBKey key, struct DBData *data, va_list ap);
+	int (*broken_sub) (union DBKey key, struct DBData *data, va_list ap);
+	int (*castle_broken_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*makemember) (struct guild_member *m,struct map_session_data *sd);
-	int (*check_member) (struct guild *g);
+	int (*check_member) (const struct guild *g);
 	int (*get_alliance_count) (struct guild *g,int flag);
 	void (*castle_reconnect_sub) (void *key, void *data, va_list ap);
 };

@@ -132,7 +132,7 @@ int intif_delete_petdata(int pet_id)
 	return 1;
 }
 
-int intif_rename(struct map_session_data *sd, int type, char *name)
+int intif_rename(struct map_session_data *sd, int type, const char *name)
 {
 	if (intif->CheckForCharServer())
 		return 1;
@@ -150,7 +150,7 @@ int intif_rename(struct map_session_data *sd, int type, char *name)
 }
 
 // GM Send a message
-int intif_broadcast(const char* mes, size_t len, int type)
+int intif_broadcast(const char *mes, int len, int type)
 {
 	int lp = (type&BC_COLOR_MASK) ? 4 : 0;
 
@@ -182,7 +182,7 @@ int intif_broadcast(const char* mes, size_t len, int type)
 	return 0;
 }
 
-int intif_broadcast2(const char* mes, size_t len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY)
+int intif_broadcast2(const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY)
 {
 	nullpo_ret(mes);
 	Assert_ret(len < 32000);
@@ -222,7 +222,7 @@ int intif_main_message(struct map_session_data* sd, const char* message)
 	snprintf( output, sizeof(output), msg_txt(386), sd->status.name, message );
 
 	// send the message using the inter-server broadcast service
-	intif->broadcast2( output, strlen(output) + 1, 0xFE000000, 0, 0, 0, 0 );
+	intif->broadcast2(output, (int)strlen(output) + 1, 0xFE000000, 0, 0, 0, 0);
 
 	// log the chat message
 	logs->chat( LOG_CHAT_MAINCHAT, 0, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, message );
@@ -231,7 +231,7 @@ int intif_main_message(struct map_session_data* sd, const char* message)
 }
 
 // The transmission of Wisp/Page to inter-server (player not found on this server)
-int intif_wis_message(struct map_session_data *sd, char *nick, char *mes, size_t mes_len)
+int intif_wis_message(struct map_session_data *sd, const char *nick, const char *mes, int mes_len)
 {
 	if (intif->CheckForCharServer())
 		return 0;
@@ -279,12 +279,14 @@ int intif_wis_replay(int id, int flag)
 // The transmission of GM only Wisp/Page from server to inter-server
 int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 {
-	size_t mes_len;
+	int mes_len;
 	if (intif->CheckForCharServer())
 		return 0;
 	nullpo_ret(wisp_name);
 	nullpo_ret(mes);
-	mes_len = strlen(mes) + 1; // + null
+	mes_len = (int)strlen(mes) + 1; // + null
+	Assert_ret(mes_len > 0 && mes_len <= INT16_MAX - 32);
+
 	WFIFOHEAD(inter_fd, mes_len + 32);
 	WFIFOW(inter_fd,0) = 0x3003;
 	WFIFOW(inter_fd,2) = mes_len + 32;
@@ -300,10 +302,11 @@ int intif_wis_message_to_gm(char *wisp_name, int permission, char *mes)
 }
 
 //Request for saving registry values.
-int intif_saveregistry(struct map_session_data *sd) {
-	DBIterator *iter;
-	DBKey key;
-	DBData *data;
+int intif_saveregistry(struct map_session_data *sd)
+{
+	struct DBIterator *iter;
+	union DBKey key;
+	struct DBData *data;
 	int plen = 0;
 	size_t len;
 
@@ -350,7 +353,7 @@ int intif_saveregistry(struct map_session_data *sd) {
 		WFIFOB(inter_fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy((char*)WFIFOP(inter_fd,plen), varname, len);
+		safestrncpy(WFIFOP(inter_fd,plen), varname, len);
 		plen += len;
 
 		WFIFOL(inter_fd, plen) = script_getvaridx(key.i64);
@@ -368,7 +371,7 @@ int intif_saveregistry(struct map_session_data *sd) {
 				WFIFOB(inter_fd, plen) = (unsigned char)len;/* won't be higher; the column size is 254 */
 				plen += 1;
 
-				safestrncpy((char*)WFIFOP(inter_fd,plen), p->value, len);
+				safestrncpy(WFIFOP(inter_fd,plen), p->value, len);
 				plen += len;
 			} else {
 				script->reg_destroy_single(sd,key.i64,&p->flag);
@@ -463,7 +466,7 @@ int intif_send_guild_storage(int account_id,struct guild_storage *gstor)
 }
 
 // Party creation request
-int intif_create_party(struct party_member *member,char *name,int item,int item2)
+int intif_create_party(struct party_member *member, const char *name, int item, int item2)
 {
 	if (intif->CheckForCharServer())
 		return 0;
@@ -657,7 +660,7 @@ int intif_guild_addmember(int guild_id,struct guild_member *m)
 }
 
 // Request a new leader for guild
-int intif_guild_change_gm(int guild_id, const char* name, size_t len)
+int intif_guild_change_gm(int guild_id, const char *name, int len)
 {
 	if (intif->CheckForCharServer())
 		return 0;
@@ -684,7 +687,7 @@ int intif_guild_leave(int guild_id,int account_id,int char_id,int flag,const cha
 	WFIFOL(inter_fd, 6) = account_id;
 	WFIFOL(inter_fd,10) = char_id;
 	WFIFOB(inter_fd,14) = flag;
-	safestrncpy((char*)WFIFOP(inter_fd,15),mes,40);
+	safestrncpy(WFIFOP(inter_fd,15),mes,40);
 	WFIFOSET(inter_fd,55);
 	return 0;
 }
@@ -837,8 +840,8 @@ int intif_guild_notice(int guild_id,const char *mes1,const char *mes2)
 	WFIFOHEAD(inter_fd,186);
 	WFIFOW(inter_fd,0)=0x303e;
 	WFIFOL(inter_fd,2)=guild_id;
-	memcpy(WFIFOP(inter_fd,6),mes1,MAX_GUILDMES1);
-	memcpy(WFIFOP(inter_fd,66),mes2,MAX_GUILDMES2);
+	safestrncpy(WFIFOP(inter_fd, 6), mes1, MAX_GUILDMES1);
+	safestrncpy(WFIFOP(inter_fd, 66), mes2, MAX_GUILDMES2);
 	WFIFOSET(inter_fd,186);
 	return 0;
 }
@@ -956,13 +959,13 @@ int intif_homunculus_requestdelete(int homun_id)
 // Wisp/Page reception // rewritten by [Yor]
 void intif_parse_WisMessage(int fd) {
 	struct map_session_data* sd;
-	char *wisp_source;
+	const char *wisp_source;
 	char name[NAME_LENGTH];
 	int id, i;
 
 	id=RFIFOL(fd,4);
 
-	safestrncpy(name, (char*)RFIFOP(fd,32), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(fd,32), NAME_LENGTH);
 	sd = map->nick2sd(name);
 	if(sd == NULL || strcmp(sd->status.name, name) != 0) {
 		//Not found
@@ -973,7 +976,7 @@ void intif_parse_WisMessage(int fd) {
 		intif_wis_replay(id, 2);
 		return;
 	}
-	wisp_source = (char *) RFIFOP(fd,8); // speed up [Yor]
+	wisp_source = RFIFOP(fd,8); // speed up [Yor]
 	for(i=0; i < MAX_IGNORE_LIST &&
 		sd->ignore[i].name[0] != '\0' &&
 		strcmp(sd->ignore[i].name, wisp_source) != 0
@@ -985,24 +988,27 @@ void intif_parse_WisMessage(int fd) {
 		return;
 	}
 	//Success to send whisper.
-	clif->wis_message(sd->fd, wisp_source, (char*)RFIFOP(fd,56),RFIFOW(fd,2)-56);
+	clif->wis_message(sd->fd, wisp_source, RFIFOP(fd,56),RFIFOW(fd,2)-57);
 	intif_wis_replay(id,0);   // success
 }
 
 // Wisp/page transmission result reception
-void intif_parse_WisEnd(int fd) {
+void intif_parse_WisEnd(int fd)
+{
 	struct map_session_data* sd;
+	const char *playername = RFIFOP(fd, 2);
 
 	if (battle_config.etc_log)
-		ShowInfo("intif_parse_wisend: player: %s, flag: %d\n", RFIFOP(fd,2), RFIFOB(fd,26)); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
-	sd = map->nick2sd((char *)RFIFOP(fd,2));
+		ShowInfo("intif_parse_wisend: player: %s, flag: %d\n", playername, RFIFOB(fd,26)); // flag: 0: success to send whisper, 1: target character is not logged in?, 2: ignored by target
+	sd = map->nick2sd(playername);
 	if (sd != NULL)
 		clif->wis_end(sd->fd, RFIFOB(fd,26));
 
 	return;
 }
 
-int mapif_parse_WisToGM_sub(struct map_session_data* sd,va_list va) {
+int intif_parse_WisToGM_sub(struct map_session_data *sd, va_list va)
+{
 	int permission = va_arg(va, int);
 	char *wisp_name;
 	char *message;
@@ -1020,22 +1026,22 @@ int mapif_parse_WisToGM_sub(struct map_session_data* sd,va_list va) {
 
 // Received wisp message from map-server via char-server for ALL gm
 // 0x3003/0x3803 <packet_len>.w <wispname>.24B <permission>.l <message>.?B
-void mapif_parse_WisToGM(int fd)
+void intif_parse_WisToGM(int fd)
 {
 	int permission, mes_len;
 	char Wisp_name[NAME_LENGTH];
 	char mbuf[255] = { 0 };
 	char *message;
 
-	mes_len =  RFIFOW(fd,2) - 32;
+	mes_len =  RFIFOW(fd,2) - 33; // Length not including the NUL terminator
 	Assert_retv(mes_len > 0 && mes_len < 32000);
-	message = (char *) (mes_len >= 255 ? (char *) aMalloc(mes_len) : mbuf);
+	message = (mes_len >= 255 ? aMalloc(mes_len + 1) : mbuf);
 
 	permission = RFIFOL(fd,28);
-	safestrncpy(Wisp_name, (char*)RFIFOP(fd,4), NAME_LENGTH);
-	safestrncpy(message, (char*)RFIFOP(fd,32), mes_len);
+	safestrncpy(Wisp_name, RFIFOP(fd,4), NAME_LENGTH);
+	safestrncpy(message, RFIFOP(fd,32), mes_len + 1);
 	// information is sent to all online GM
-	map->foreachpc(mapif_parse_WisToGM_sub, permission, Wisp_name, message, mes_len);
+	map->foreachpc(intif->pWisToGM_sub, permission, Wisp_name, message, mes_len);
 
 	if (message != mbuf)
 		aFree(message);
@@ -1098,17 +1104,17 @@ void intif_parse_Registers(int fd)
 			char sval[254];
 			for (i = 0; i < max; i++) {
 				int len = RFIFOB(fd, cursor);
-				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
+				safestrncpy(key, RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
 				cursor += len + 1;
 
 				index = RFIFOL(fd, cursor);
 				cursor += 4;
 
 				len = RFIFOB(fd, cursor);
-				safestrncpy(sval, (char*)RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
+				safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
 				cursor += len + 1;
 
-				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)sval, NULL);
+				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, sval, NULL);
 			}
 		/**
 		 * Vessel!
@@ -1121,7 +1127,7 @@ void intif_parse_Registers(int fd)
 				int ival;
 
 				int len = RFIFOB(fd, cursor);
-				safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
+				safestrncpy(key, RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
 				cursor += len + 1;
 
 				index = RFIFOL(fd, cursor);
@@ -1130,7 +1136,7 @@ void intif_parse_Registers(int fd)
 				ival = RFIFOL(fd, cursor);
 				cursor += 4;
 
-				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (void*)h64BPTRSIZE(ival), NULL);
+				script->set_reg(NULL,sd,reference_uid(script->add_str(key), index), key, (const void *)h64BPTRSIZE(ival), NULL);
 			}
 		}
 		script->parser_current_file = NULL;/* reset */
@@ -1156,7 +1162,7 @@ void intif_parse_LoadGuildStorage(int fd)
 	sd=map->id2sd( RFIFOL(fd,4) );
 	if( flag ){ //If flag != 0, we attach a player and open the storage
 		if(sd==NULL){
-			ShowError("intif_parse_LoadGuildStorage: user not found %d\n",RFIFOL(fd,4));
+			ShowError("intif_parse_LoadGuildStorage: user not found %u\n", RFIFOL(fd,4));
 			return;
 		}
 	}
@@ -1194,29 +1200,29 @@ void intif_parse_SaveGuildStorage(int fd)
 void intif_parse_PartyCreated(int fd)
 {
 	if(battle_config.etc_log)
-		ShowInfo("intif: party created by account %d\n\n", RFIFOL(fd,2));
-	party->created(RFIFOL(fd,2), RFIFOL(fd,6),RFIFOB(fd,10),RFIFOL(fd,11), (char *)RFIFOP(fd,15));
+		ShowInfo("intif: party created by account %u\n\n", RFIFOL(fd,2));
+	party->created(RFIFOL(fd,2), RFIFOL(fd,6),RFIFOB(fd,10),RFIFOL(fd,11), RFIFOP(fd,15));
 }
 
 // Receive party info
 void intif_parse_PartyInfo(int fd) {
 	if (RFIFOW(fd,2) == 12) {
-		ShowWarning("intif: party noinfo (char_id=%d party_id=%d)\n", RFIFOL(fd,4), RFIFOL(fd,8));
+		ShowWarning("intif: party noinfo (char_id=%u party_id=%u)\n", RFIFOL(fd,4), RFIFOL(fd,8));
 		party->recv_noinfo(RFIFOL(fd,8), RFIFOL(fd,4));
 		return;
 	}
 
 	if (RFIFOW(fd,2) != 8+sizeof(struct party))
-		ShowError("intif: party info: data size mismatch (char_id=%d party_id=%d packet_len=%d expected_len=%"PRIuS")\n",
+		ShowError("intif: party info: data size mismatch (char_id=%u party_id=%u packet_len=%d expected_len=%"PRIuS")\n",
 		          RFIFOL(fd,4), RFIFOL(fd,8), RFIFOW(fd,2), 8+sizeof(struct party));
-	party->recv_info((struct party *)RFIFOP(fd,8), RFIFOL(fd,4));
+	party->recv_info(RFIFOP(fd,8), RFIFOL(fd,4));
 }
 
 // ACK adding party member
 void intif_parse_PartyMemberAdded(int fd)
 {
 	if(battle_config.etc_log)
-		ShowInfo("intif: party member added Party (%d), Account(%d), Char(%d)\n",RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
+		ShowInfo("intif: party member added Party (%u), Account(%u), Char(%u)\n", RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10));
 	party->member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10), RFIFOB(fd, 14));
 }
 
@@ -1230,7 +1236,7 @@ void intif_parse_PartyOptionChanged(int fd)
 void intif_parse_PartyMemberWithdraw(int fd)
 {
 	if(battle_config.etc_log)
-		ShowInfo("intif: party member withdraw: Party(%d), Account(%d), Char(%d)\n",RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
+		ShowInfo("intif: party member withdraw: Party(%u), Account(%u), Char(%u)\n", RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10));
 	party->member_withdraw(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10));
 }
 
@@ -1247,7 +1253,7 @@ void intif_parse_PartyMove(int fd)
 
 // ACK party messages
 void intif_parse_PartyMessage(int fd) {
-	party->recv_message(RFIFOL(fd,4),RFIFOL(fd,8),(char *) RFIFOP(fd,12),RFIFOW(fd,2)-12);
+	party->recv_message(RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12), RFIFOW(fd,2)-12);
 }
 
 // ACK guild creation
@@ -1258,26 +1264,26 @@ void intif_parse_GuildCreated(int fd) {
 // ACK guild infos
 void intif_parse_GuildInfo(int fd) {
 	if (RFIFOW(fd,2) == 8) {
-		ShowWarning("intif: guild noinfo %d\n",RFIFOL(fd,4));
+		ShowWarning("intif: guild noinfo %u\n", RFIFOL(fd,4));
 		guild->recv_noinfo(RFIFOL(fd,4));
 		return;
 	}
 	if (RFIFOW(fd,2)!=sizeof(struct guild)+4)
-		ShowError("intif: guild info: data size mismatch - Gid: %d recv size: %d Expected size: %"PRIuS"\n",
-		          RFIFOL(fd,4),RFIFOW(fd,2),sizeof(struct guild)+4);
-	guild->recv_info((struct guild *)RFIFOP(fd,4));
+		ShowError("intif: guild info: data size mismatch - Gid: %u recv size: %d Expected size: %"PRIuS"\n",
+		          RFIFOL(fd,4), RFIFOW(fd,2), sizeof(struct guild)+4);
+	guild->recv_info(RFIFOP(fd,4));
 }
 
 // ACK adding guild member
 void intif_parse_GuildMemberAdded(int fd) {
 	if(battle_config.etc_log)
-		ShowInfo("intif: guild member added %d %d %d %d\n",RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14));
+		ShowInfo("intif: guild member added %u %u %u %d\n", RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOB(fd,14));
 	guild->member_added(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14));
 }
 
 // ACK member leaving guild
 void intif_parse_GuildMemberWithdraw(int fd) {
-	guild->member_withdraw(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOB(fd,14),(char *)RFIFOP(fd,55),(char *)RFIFOP(fd,15));
+	guild->member_withdraw(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOB(fd,14), RFIFOP(fd,55), RFIFOP(fd,15));
 }
 
 // ACK guild member basic info
@@ -1308,15 +1314,19 @@ void intif_parse_GuildBasicInfoChanged(int fd) {
 		case GBI_SKILLPOINT: g->skill_point = RFIFOL(fd,10); break;
 		case GBI_SKILLLV: {
 			int idx, max;
-			struct guild_skill *gs = (struct guild_skill *)RFIFOP(fd,10);
+			const struct guild_skill *p_gs = RFIFOP(fd,10);
+			struct guild_skill *gs = NULL;
 
-			idx = gs->id - GD_SKILLBASE;
+			idx = p_gs->id - GD_SKILLBASE;
 			Assert_retv(idx >= 0 && idx < MAX_GUILDSKILL);
+
+			gs = &g->skill[idx];
+			memcpy(gs, p_gs, sizeof(*gs));
+
 			max = guild->skill_get_max(gs->id);
-			if( gs->lv > max )
+			if (gs->lv > max)
 				gs->lv = max;
 
-			memcpy(&(g->skill[idx]), gs, sizeof(g->skill[idx]));
 			break;
 		}
 	}
@@ -1340,7 +1350,7 @@ void intif_parse_GuildMemberInfoChanged(int fd) {
 		return;
 
 	idx = guild->getindex(g,account_id,char_id);
-	if( idx == -1 )
+	if (idx == INDEX_NOT_FOUND)
 		return;
 
 	switch( type ) {
@@ -1357,9 +1367,9 @@ void intif_parse_GuildMemberInfoChanged(int fd) {
 // ACK change of guild title
 void intif_parse_GuildPosition(int fd) {
 	if (RFIFOW(fd,2)!=sizeof(struct guild_position)+12)
-		ShowError("intif: guild info: data size mismatch (%d) %d != %"PRIuS"\n",
-		          RFIFOL(fd,4),RFIFOW(fd,2),sizeof(struct guild_position)+12);
-	guild->position_changed(RFIFOL(fd,4),RFIFOL(fd,8),(struct guild_position *)RFIFOP(fd,12));
+		ShowError("intif: guild info: data size mismatch (%u) %d != %"PRIuS"\n",
+		          RFIFOL(fd,4), RFIFOW(fd,2), sizeof(struct guild_position) + 12);
+	guild->position_changed(RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12));
 }
 
 // ACK change of guild skill update
@@ -1369,27 +1379,27 @@ void intif_parse_GuildSkillUp(int fd) {
 
 // ACK change of guild relationship
 void intif_parse_GuildAlliance(int fd) {
-	guild->allianceack(RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),RFIFOL(fd,14),RFIFOB(fd,18),(char *) RFIFOP(fd,19),(char *) RFIFOP(fd,43));
+	guild->allianceack(RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOL(fd,14), RFIFOB(fd,18), RFIFOP(fd,19), RFIFOP(fd,43));
 }
 
 // ACK change of guild notice
 void intif_parse_GuildNotice(int fd) {
-	guild->notice_changed(RFIFOL(fd,2),(char *) RFIFOP(fd,6),(char *) RFIFOP(fd,66));
+	guild->notice_changed(RFIFOL(fd,2), RFIFOP(fd,6), RFIFOP(fd,66));
 }
 
 // ACK change of guild emblem
 void intif_parse_GuildEmblem(int fd) {
-	guild->emblem_changed(RFIFOW(fd,2)-12,RFIFOL(fd,4),RFIFOL(fd,8), (char *)RFIFOP(fd,12));
+	guild->emblem_changed(RFIFOW(fd,2)-12, RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12));
 }
 
 // ACK guild message
 void intif_parse_GuildMessage(int fd) {
-	guild->recv_message(RFIFOL(fd,4),RFIFOL(fd,8),(char *) RFIFOP(fd,12),RFIFOW(fd,2)-12);
+	guild->recv_message(RFIFOL(fd,4), RFIFOL(fd,8), RFIFOP(fd,12), RFIFOW(fd,2)-12);
 }
 
 // Reply guild castle data request
 void intif_parse_GuildCastleDataLoad(int fd) {
-	guild->castledataloadack(RFIFOW(fd,2), (struct guild_castle *)RFIFOP(fd,4));
+	guild->castledataloadack(RFIFOW(fd,2), RFIFOP(fd,4));
 }
 
 // ACK change of guildmaster
@@ -1440,10 +1450,10 @@ void intif_parse_ChangeNameOk(int fd)
 	case 0: //Players [NOT SUPPORTED YET]
 		break;
 	case 1: //Pets
-		pet->change_name_ack(sd, (char*)RFIFOP(fd,12), RFIFOB(fd,11));
+		pet->change_name_ack(sd, RFIFOP(fd,12), RFIFOB(fd,11));
 		break;
 	case 2: //Hom
-		homun->change_name_ack(sd, (char*)RFIFOP(fd,12), RFIFOB(fd,11));
+		homun->change_name_ack(sd, RFIFOP(fd,12), RFIFOB(fd,11));
 		break;
 	}
 	return;
@@ -1459,7 +1469,7 @@ void intif_parse_CreateHomunculus(int fd) {
 			ShowError("intif: create homun data: data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_homunculus));
 		return;
 	}
-	homun->recv_data(RFIFOL(fd,4), (struct s_homunculus*)RFIFOP(fd,9), RFIFOB(fd,8)) ;
+	homun->recv_data(RFIFOL(fd,4), RFIFOP(fd,9), RFIFOB(fd,8)) ;
 }
 
 void intif_parse_RecvHomunculusData(int fd) {
@@ -1470,13 +1480,13 @@ void intif_parse_RecvHomunculusData(int fd) {
 			ShowError("intif: homun data: data size mismatch %d != %"PRIuS"\n", len, sizeof(struct s_homunculus));
 		return;
 	}
-	homun->recv_data(RFIFOL(fd,4), (struct s_homunculus*)RFIFOP(fd,9), RFIFOB(fd,8));
+	homun->recv_data(RFIFOL(fd,4), RFIFOP(fd,9), RFIFOB(fd,8));
 }
 
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
 void intif_parse_SaveHomunculusOk(int fd) {
 	if(RFIFOB(fd,6) != 1)
-		ShowError("homunculus data save failure for account %d\n", RFIFOL(fd,2));
+		ShowError("homunculus data save failure for account %u\n", RFIFOL(fd,2));
 }
 
 /* Really? Whats the point, shouldn't be sent when successful then [Ind] */
@@ -1527,7 +1537,7 @@ void intif_parse_QuestLog(int fd) {
 			sd->quest_log = NULL;
 		}
 	} else {
-		struct quest *received = (struct quest *)RFIFOP(fd, 8);
+		const struct quest *received = RFIFOP(fd, 8);
 		int i, k = num_received;
 		if (sd->quest_log) {
 			RECREATE(sd->quest_log, struct quest, num_received);
@@ -1647,7 +1657,7 @@ void intif_parse_MailInboxReceived(int fd) {
 	else if( battle_config.mail_show_status && ( battle_config.mail_show_status == 1 || sd->mail.inbox.unread ) ) {
 		char output[128];
 		sprintf(output, msg_sd(sd,510), sd->mail.inbox.unchecked, sd->mail.inbox.unread + sd->mail.inbox.unchecked);
-		clif_disp_onlyself(sd, output, strlen(output));
+		clif_disp_onlyself(sd, output);
 	}
 }
 /*------------------------------------------
@@ -1691,7 +1701,7 @@ void intif_parse_MailGetAttach(int fd) {
 	sd = map->charid2sd( RFIFOL(fd,4) );
 
 	if (sd == NULL) {
-		ShowError("intif_parse_MailGetAttach: char not found %d\n",RFIFOL(fd,4));
+		ShowError("intif_parse_MailGetAttach: char not found %u\n", RFIFOL(fd,4));
 		return;
 	}
 
@@ -1769,7 +1779,7 @@ void intif_parse_MailReturn(int fd) {
 	short fail = RFIFOB(fd,10);
 
 	if( sd == NULL ) {
-		ShowError("intif_parse_MailReturn: char not found %d\n",RFIFOL(fd,2));
+		ShowError("intif_parse_MailReturn: char not found %u\n", RFIFOL(fd, 2));
 		return;
 	}
 
@@ -1837,8 +1847,8 @@ void intif_parse_MailSend(int fd) {
 void intif_parse_MailNew(int fd) {
 	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,2));
 	int mail_id = RFIFOL(fd,6);
-	const char* sender_name = (char*)RFIFOP(fd,10);
-	const char* title = (char*)RFIFOP(fd,34);
+	const char *sender_name = RFIFOP(fd,10);
+	const char *title = RFIFOP(fd,34);
 
 	if( sd == NULL )
 		return;
@@ -1876,7 +1886,7 @@ void intif_parse_AuctionResults(int fd) {
 	struct map_session_data *sd = map->charid2sd(RFIFOL(fd,4));
 	short count = RFIFOW(fd,8);
 	short pages = RFIFOW(fd,10);
-	uint8* data = RFIFOP(fd,12);
+	const uint8 *data = RFIFOP(fd,12);
 
 	if( sd == NULL )
 		return;
@@ -2063,7 +2073,7 @@ void intif_parse_MercenaryReceived(int fd) {
 		return;
 	}
 
-	mercenary->data_received((struct s_mercenary*)RFIFOP(fd,5), RFIFOB(fd,4));
+	mercenary->data_received(RFIFOP(fd,5), RFIFOB(fd,4));
 }
 
 int intif_mercenary_request(int merc_id, int char_id)
@@ -2145,7 +2155,7 @@ void intif_parse_ElementalReceived(int fd) {
 		return;
 	}
 
-	elemental->data_received((struct s_elemental*)RFIFOP(fd,5), RFIFOB(fd,4));
+	elemental->data_received(RFIFOP(fd,5), RFIFOB(fd,4));
 }
 
 int intif_elemental_request(int ele_id, int char_id)
@@ -2207,7 +2217,7 @@ void intif_request_accinfo( int u_fd, int aid, int group_lv, char* query ) {
 	WFIFOL(inter_fd,2) = u_fd;
 	WFIFOL(inter_fd,6) = aid;
 	WFIFOL(inter_fd,10) = group_lv;
-	safestrncpy((char *)WFIFOP(inter_fd,14), query, NAME_LENGTH);
+	safestrncpy(WFIFOP(inter_fd,14), query, NAME_LENGTH);
 
 	WFIFOSET(inter_fd,2 + 4 + 4 + 4 + NAME_LENGTH);
 
@@ -2224,7 +2234,7 @@ void intif_parse_MessageToFD(int fd) {
 		/* matching e.g. previous fd owner didn't dc during request or is still the same */
 		if( sd && sd->bl.id == aid ) {
 			char msg[512];
-			safestrncpy(msg, (char*)RFIFOP(fd,12), RFIFOW(fd,2) - 12);
+			safestrncpy(msg, RFIFOP(fd,12), RFIFOW(fd,2) - 12);
 			clif->messagecolor_self(u_fd, COLOR_DEFAULT ,msg);
 		}
 
@@ -2288,9 +2298,9 @@ int intif_parse(int fd)
 	switch(cmd){
 		case 0x3800:
 			if (RFIFOL(fd,4) == 0xFF000000) //Normal announce.
-				clif->broadcast(NULL, (char *) RFIFOP(fd,16), packet_len-16, BC_DEFAULT, ALL_CLIENT);
+				clif->broadcast(NULL, RFIFOP(fd,16), packet_len-16, BC_DEFAULT, ALL_CLIENT);
 			else //Color announce.
-				clif->broadcast2(NULL, (char *) RFIFOP(fd,16), packet_len-16, RFIFOL(fd,4), RFIFOW(fd,8), RFIFOW(fd,10), RFIFOW(fd,12), RFIFOW(fd,14), ALL_CLIENT);
+				clif->broadcast2(NULL, RFIFOP(fd,16), packet_len-16, RFIFOL(fd,4), RFIFOW(fd,8), RFIFOW(fd,10), RFIFOW(fd,12), RFIFOW(fd,14), ALL_CLIENT);
 			break;
 		case 0x3801: intif->pWisMessage(fd); break;
 		case 0x3802: intif->pWisEnd(fd); break;
@@ -2482,8 +2492,8 @@ void intif_defaults(void) {
 	/* parse functions */
 	intif->pWisMessage = intif_parse_WisMessage;
 	intif->pWisEnd = intif_parse_WisEnd;
-	intif->pWisToGM_sub = mapif_parse_WisToGM_sub;
-	intif->pWisToGM = mapif_parse_WisToGM;
+	intif->pWisToGM_sub = intif_parse_WisToGM_sub;
+	intif->pWisToGM = intif_parse_WisToGM;
 	intif->pRegisters = intif_parse_Registers;
 	intif->pChangeNameOk = intif_parse_ChangeNameOk;
 	intif->pMessageToFD = intif_parse_MessageToFD;

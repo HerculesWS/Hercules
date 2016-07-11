@@ -37,8 +37,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define STORAGE_MEMINC 16
-
 struct inter_storage_interface inter_storage_s;
 struct inter_storage_interface *inter_storage;
 
@@ -99,7 +97,7 @@ int inter_storage_fromsql(int account_id, struct storage_data* p)
 }
 
 /// Save guild_storage data to sql
-int inter_storage_guild_storage_tosql(int guild_id, struct guild_storage* p)
+int inter_storage_guild_storage_tosql(int guild_id, const struct guild_storage *p)
 {
 	nullpo_ret(p);
 	chr->memitemdata_to_sql(p->items, MAX_GUILD_STORAGE, guild_id, TABLE_GUILD_STORAGE);
@@ -197,7 +195,7 @@ int mapif_load_guild_storage(int fd, int account_id, int guild_id, char flag)
 		WFIFOL(fd,4) = account_id;
 		WFIFOL(fd,8) = guild_id;
 		WFIFOB(fd,12) = flag; //1 open storage, 0 don't open
-		inter_storage->guild_storage_fromsql(guild_id, (struct guild_storage*)WFIFOP(fd,13));
+		inter_storage->guild_storage_fromsql(guild_id, WFIFOP(fd,13));
 		WFIFOSET(fd, WFIFOW(fd,2));
 		return 0;
 	}
@@ -249,7 +247,7 @@ int mapif_parse_SaveGuildStorage(int fd)
 		} else if(SQL->NumRows(inter->sql_handle) > 0) {
 			// guild exists
 			SQL->FreeResult(inter->sql_handle);
-			inter_storage->guild_storage_tosql(guild_id, (struct guild_storage*)RFIFOP(fd,12));
+			inter_storage->guild_storage_tosql(guild_id, RFIFOP(fd,12));
 			mapif->save_guild_storage_ack(fd, RFIFOL(fd,4), guild_id, 0);
 			return 0;
 		}
@@ -279,7 +277,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 {
 #ifdef GP_BOUND_ITEMS
 	StringBuf buf;
-	SqlStmt* stmt;
+	struct SqlStmt *stmt;
 	struct item item;
 	int j, i=0, s=0, bound_qt=0;
 	struct item items[MAX_INVENTORY];
@@ -418,7 +416,7 @@ int mapif_parse_ItemBoundRetrieve_sub(int fd)
 		if( j )
 			StrBuf->AppendStr(&buf, ",");
 
-		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%"PRIu64"'",
+		StrBuf->Printf(&buf, "('%d', '%d', '%d', '%u', '%d', '%d', '%d', '%u', '%d', '%"PRIu64"'",
 			guild_id, items[j].nameid, items[j].amount, items[j].equip, items[j].identify, items[j].refine,
 			items[j].attribute, items[j].expire_time, items[j].bound, items[j].unique_id);
 		for( s = 0; s < MAX_SLOTS; ++s )

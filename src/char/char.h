@@ -68,11 +68,15 @@ struct mmo_map_server {
 	VECTOR_DECL(uint16) maps;
 };
 
-#define MAX_MAP_SERVERS 2
+/**
+ * deprecated feature, multi map been a dangerous in-complete feature for so long and going to be removed.
+ * USE IT AT YOUR OWN RISK!
+ */
+#define MAX_MAP_SERVERS 1
 
 #define DEFAULT_AUTOSAVE_INTERVAL (300*1000)
 
-enum {
+enum inventory_table_type {
 	TABLE_INVENTORY,
 	TABLE_CART,
 	TABLE_STORAGE,
@@ -98,8 +102,8 @@ struct char_interface {
 	struct mmo_map_server server[MAX_MAP_SERVERS];
 	int login_fd;
 	int char_fd;
-	DBMap* online_char_db; // int account_id -> struct online_char_data*
-	DBMap* char_db_;
+	struct DBMap *online_char_db; // int account_id -> struct online_char_data*
+	struct DBMap *char_db_;
 	char userid[NAME_LENGTH];
 	char passwd[NAME_LENGTH];
 	char server_name[20];
@@ -115,21 +119,20 @@ struct char_interface {
 
 	int (*waiting_disconnect) (int tid, int64 tick, int id, intptr_t data);
 	int (*delete_char_sql) (int char_id);
-	DBData (*create_online_char_data) (DBKey key, va_list args);
+	struct DBData (*create_online_char_data) (union DBKey key, va_list args);
 	void (*set_account_online) (int account_id);
 	void (*set_account_offline) (int account_id);
 	void (*set_char_charselect) (int account_id);
 	void (*set_char_online) (int map_id, int char_id, int account_id);
 	void (*set_char_offline) (int char_id, int account_id);
-	int (*db_setoffline) (DBKey key, DBData *data, va_list ap);
-	int (*db_kickoffline) (DBKey key, DBData *data, va_list ap);
+	int (*db_setoffline) (union DBKey key, struct DBData *data, va_list ap);
+	int (*db_kickoffline) (union DBKey key, struct DBData *data, va_list ap);
 	void (*set_login_all_offline) (void);
 	void (*set_all_offline) (int id);
 	void (*set_all_offline_sql) (void);
-	DBData (*create_charstatus) (DBKey key, va_list args);
+	struct DBData (*create_charstatus) (union DBKey key, va_list args);
 	int (*mmo_char_tosql) (int char_id, struct mmo_charstatus* p);
 	int (*memitemdata_to_sql) (const struct item items[], int max, int id, int tableswitch);
-	int (*inventory_to_sql) (const struct item items[], int max, int id);
 	int (*mmo_gender) (const struct char_session_data *sd, const struct mmo_charstatus *p, char sex);
 	int (*mmo_chars_fromsql) (struct char_session_data* sd, uint8* buf);
 	int (*mmo_char_fromsql) (int char_id, struct mmo_charstatus* p, bool load_everything);
@@ -137,7 +140,7 @@ struct char_interface {
 	bool (*char_slotchange) (struct char_session_data *sd, int fd, unsigned short from, unsigned short to);
 	int (*rename_char_sql) (struct char_session_data *sd, int char_id);
 	int (*check_char_name) (char * name, char * esc_name);
-	int (*make_new_char_sql) (struct char_session_data* sd, char* name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style);
+	int (*make_new_char_sql) (struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style);
 	int (*divorce_char_sql) (int partner_id1, int partner_id2);
 	int (*count_users) (void);
 	int (*mmo_char_tobuf) (uint8* buffer, struct mmo_charstatus* p);
@@ -189,7 +192,7 @@ struct char_interface {
 	void (*parse_frommap_save_character) (int fd, int id);
 	void (*select_ack) (int fd, int account_id, uint8 flag);
 	void (*parse_frommap_char_select_req) (int fd);
-	void (*change_map_server_ack) (int fd, uint8 *data, bool ok);
+	void (*change_map_server_ack) (int fd, const uint8 *data, bool ok);
 	void (*parse_frommap_change_map_server) (int fd);
 	void (*parse_frommap_remove_friend) (int fd);
 	void (*char_name_ack) (int fd, int char_id);
@@ -264,10 +267,10 @@ struct char_interface {
 	int (*parse_char_unknown_packet) (int fd, uint32 ipl);
 	int (*parse_char) (int fd);
 	int (*broadcast_user_count) (int tid, int64 tick, int id, intptr_t data);
-	int (*send_accounts_tologin_sub) (DBKey key, DBData *data, va_list ap);
+	int (*send_accounts_tologin_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*send_accounts_tologin) (int tid, int64 tick, int id, intptr_t data);
 	int (*check_connect_login_server) (int tid, int64 tick, int id, intptr_t data);
-	int (*online_data_cleanup_sub) (DBKey key, DBData *data, va_list ap);
+	int (*online_data_cleanup_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
 	void (*sql_config_read) (const char* cfgName);
 	void (*config_dispatch) (char *w1, char *w2);

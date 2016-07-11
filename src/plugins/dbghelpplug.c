@@ -446,17 +446,17 @@ Dhp__PrintProcessInfo(
 			fprintf(log_file,
 				"eip=%08x esp=%08x ebp=%08x iopl=%1x %s %s %s %s %s %s %s %s %s %s\n",
 				context->Eip, context->Esp, context->Ebp,
-				(context->EFlags >> 12) & 3,                  //  IOPL level value
-				context->EFlags & 0x00100000 ? "vip" : "   ", //  VIP (virtual interrupt pending)
-				context->EFlags & 0x00080000 ? "vif" : "   ", //  VIF (virtual interrupt flag)
-				context->EFlags & 0x00000800 ? "ov"  : "nv",  //  VIF (virtual interrupt flag)
-				context->EFlags & 0x00000400 ? "dn"  : "up",  //  OF (overflow flag)
-				context->EFlags & 0x00000200 ? "ei"  : "di",  //  IF (interrupt enable flag)
-				context->EFlags & 0x00000080 ? "ng"  : "pl",  //  SF (sign flag)
-				context->EFlags & 0x00000040 ? "zr"  : "nz",  //  ZF (zero flag)
-				context->EFlags & 0x00000010 ? "ac"  : "na",  //  AF (aux carry flag)
-				context->EFlags & 0x00000004 ? "po"  : "pe",  //  PF (parity flag)
-				context->EFlags & 0x00000001 ? "cy"  : "nc"); //  CF (carry flag)
+				(context->EFlags >> 12) & 3,                    //  IOPL level value
+				(context->EFlags & 0x00100000) ? "vip" : "   ", //  VIP (virtual interrupt pending)
+				(context->EFlags & 0x00080000) ? "vif" : "   ", //  VIF (virtual interrupt flag)
+				(context->EFlags & 0x00000800) ? "ov"  : "nv",  //  VIF (virtual interrupt flag)
+				(context->EFlags & 0x00000400) ? "dn"  : "up",  //  OF (overflow flag)
+				(context->EFlags & 0x00000200) ? "ei"  : "di",  //  IF (interrupt enable flag)
+				(context->EFlags & 0x00000080) ? "ng"  : "pl",  //  SF (sign flag)
+				(context->EFlags & 0x00000040) ? "zr"  : "nz",  //  ZF (zero flag)
+				(context->EFlags & 0x00000010) ? "ac"  : "na",  //  AF (aux carry flag)
+				(context->EFlags & 0x00000004) ? "po"  : "pe",  //  PF (parity flag)
+				(context->EFlags & 0x00000001) ? "cy"  : "nc"); //  CF (carry flag)
 		}
 		if( context->ContextFlags & CONTEXT_SEGMENTS )
 		{
@@ -467,8 +467,7 @@ Dhp__PrintProcessInfo(
 				context->SegDs,
 				context->SegEs,
 				context->SegFs,
-				context->SegGs,
-				context->EFlags);
+				context->SegGs);
 			if( context->ContextFlags & CONTEXT_CONTROL )
 				fprintf(log_file,
 					"             efl=%08x",
@@ -951,7 +950,6 @@ Dhp__PrintDataValue(
 	//
 	ULONG64 length = 0;
 	DWORD basetype;
-	BOOL isValid = TRUE;
 
 	assert( pInterData != NULL );
 	log_file = pInterData->log_file;
@@ -1260,7 +1258,7 @@ Dhp__PrintDataInfo(
 	}
 	else if( pSymInfo->Flags & SYMFLAG_REGISTER )
 	{
-		scope = ( pSymInfo->Flags & SYMFLAG_PARAMETER ? PARAM : LOCAL ); // register, optimized out(?)
+		scope = (pSymInfo->Flags & SYMFLAG_PARAMETER) ? PARAM : LOCAL; // register, optimized out(?)
 	}
 	else
 	{

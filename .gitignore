@@ -21,6 +21,8 @@ Thumbs.db
 /*.suo
 /*.exp
 /*.lib
+/*.VC.db
+/*.VC.opendb
 /autom4te.cache/
 /start-log.txt
 /char-server

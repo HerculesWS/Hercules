@@ -44,6 +44,23 @@ function aborterror {
 	exit 1
 }
 
+function run_server {
+	$1 --run-once $2 2>runlog.txt
+	export errcode=$?
+	export teststr=$(cat runlog.txt)
+	if [[ -n "${teststr}" ]]; then
+		echo "Errors found in running server $1."
+		cat runlog.txt
+		aborterror "Errors found in running server $1."
+	else
+		echo "No errors found for server $1."
+	fi
+	if [ ${errcode} -ne 0 ]; then
+		echo "server $1 terminated with exit code ${errcode}"
+		aborterror "Test failed"
+	fi
+}
+
 case "$MODE" in
 	createdb|importdb|test)
 		DBNAME="$1"
@@ -75,7 +92,7 @@ case "$MODE" in
 		;;
 	build)
 		(cd tools && ./validateinterfaces.py silent) || aborterror "Interface validation error."
-		./configure $@ || aborterror "Configure error, aborting build."
+		./configure $@ || (cat config.log && aborterror "Configure error, aborting build.")
 		make sql -j3 || aborterror "Build failed."
 		make plugin.script_mapquit -j3 || aborterror "Build failed."
 		;;
@@ -112,20 +129,9 @@ EOF
 		ARGS="--load-script npc/dev/test.txt "
 		ARGS="--load-plugin script_mapquit $ARGS --load-script npc/dev/ci_test.txt"
 		echo "Running Hercules with command line: ./map-server --run-once $ARGS"
-		./map-server --run-once $ARGS 2>runlog.txt
-		export errcode=$?
-		export teststr=$(cat runlog.txt)
-		if [[ -n "${teststr}" ]]; then
-			echo "Sanitizer errors found."
-			cat runlog.txt
-			aborterror "Sanitize errors found."
-		else
-			echo "No sanitizer errors found."
-		fi
-		if [ ${errcode} -ne 0 ]; then
-			echo "server terminated with exit code ${errcode}"
-			aborterror "Test failed"
-		fi
+		run_server ./login-server
+		run_server ./char-server
+		run_server ./map-server "$ARGS"
 		;;
 	getplugins)
 		echo "Cloning plugins repository..."

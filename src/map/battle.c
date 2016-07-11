@@ -2717,15 +2717,16 @@ void battle_calc_skillratio_weapon_unknown(int *attack_type, struct block_list *
  * After this we apply bg/gvg reduction
  *------------------------------------------*/
 int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Damage *d,int64 damage,uint16 skill_id,uint16 skill_lv) {
-	struct map_session_data *sd = NULL;
-	struct status_change *sc, *tsc;
+	struct map_session_data *s_sd, *t_sd;
+	struct status_change *s_sc, *sc;
 	struct status_change_entry *sce;
 	int div_, flag;
 
 	nullpo_ret(bl);
 	nullpo_ret(d);
 
-	sd = BL_CAST(BL_PC, bl);
+	s_sd = BL_CAST(BL_PC, src);
+	t_sd = BL_CAST(BL_PC, bl);
 	div_ = d->div_;
 	flag = d->flag;
 
@@ -2735,22 +2736,22 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		return 0;
 	if( battle_config.ksprotection && mob->ksprotected(src, bl) )
 		return 0;
-	if (sd != NULL) {
+	if (t_sd != NULL) {
 		//Special no damage states
-		if(flag&BF_WEAPON && sd->special_state.no_weapon_damage)
-			damage -= damage * sd->special_state.no_weapon_damage / 100;
+		if(flag&BF_WEAPON && t_sd->special_state.no_weapon_damage)
+			damage -= damage * t_sd->special_state.no_weapon_damage / 100;
 
-		if(flag&BF_MAGIC && sd->special_state.no_magic_damage)
-			damage -= damage * sd->special_state.no_magic_damage / 100;
+		if(flag&BF_MAGIC && t_sd->special_state.no_magic_damage)
+			damage -= damage * t_sd->special_state.no_magic_damage / 100;
 
-		if(flag&BF_MISC && sd->special_state.no_misc_damage)
-			damage -= damage * sd->special_state.no_misc_damage / 100;
+		if(flag&BF_MISC && t_sd->special_state.no_misc_damage)
+			damage -= damage * t_sd->special_state.no_misc_damage / 100;
 
 		if(!damage) return 0;
 	}
 
+	s_sc = status->get_sc(src);
 	sc = status->get_sc(bl);
-	tsc = status->get_sc(src);
 
 	if( sc && sc->data[SC_INVINCIBLE] && !sc->data[SC_INVINCIBLEOFF] )
 		return 1;
@@ -2838,7 +2839,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		}
 		if( sc->data[SC__MAELSTROM] && (flag&BF_MAGIC) && skill_id && (skill->get_inf(skill_id)&INF_GROUND_SKILL) ) {
 			// {(Maelstrom Skill LevelxAbsorbed Skill Level)+(Caster's Job/5)}/2
-			int sp = (sc->data[SC__MAELSTROM]->val1 * skill_lv + (sd ? sd->status.job_level / 5 : 0)) / 2;
+			int sp = (sc->data[SC__MAELSTROM]->val1 * skill_lv + (t_sd ? t_sd->status.job_level / 5 : 0)) / 2;
 			status->heal(bl, 0, sp, 3);
 			d->dmg_lv = ATK_BLOCK;
 			return 0;
@@ -2916,7 +2917,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if(sc->data[SC_DODGE_READY] && ( !sc->opt1 || sc->opt1 == OPT1_BURNING ) &&
 			(flag&BF_LONG || sc->data[SC_STRUP])
 			&& rnd()%100 < 20) {
-			if (sd && pc_issit(sd)) pc->setstand(sd); //Stand it to dodge.
+			if (t_sd && pc_issit(t_sd)) pc->setstand(t_sd); //Stand it to dodge.
 			clif->skill_nodamage(bl,bl,TK_DODGE,1,1);
 			if (!sc->data[SC_COMBOATTACK])
 				sc_start4(src, bl, SC_COMBOATTACK, 100, TK_JUMPKICK, src->id, 1, 0, 2000);
@@ -2987,13 +2988,12 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 #endif
 
 		if( damage ) {
-			struct map_session_data *tsd = BL_CAST(BL_PC, src);
 			if( sc->data[SC_DEEP_SLEEP] ) {
 				damage += damage / 2; // 1.5 times more damage while in Deep Sleep.
 				status_change_end(bl,SC_DEEP_SLEEP,INVALID_TIMER);
 			}
-			if( tsd && sd && sc->data[SC_COLD] && flag&BF_WEAPON ){
-				switch(tsd->status.weapon){
+			if( s_sd && t_sd && sc->data[SC_COLD] && flag&BF_WEAPON ){
+				switch(s_sd->status.weapon){
 					case W_MACE:
 					case W_2HMACE:
 					case W_1HAXE:
@@ -3002,7 +3002,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 						break;
 					case W_MUSICAL:
 					case W_WHIP:
-						if(!sd->state.arrow_atk)
+						if(!t_sd->state.arrow_atk)
 							break;
 					case W_BOW:
 					case W_REVOLVER:
@@ -3131,8 +3131,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if( (sce = sc->data[SC_STONEHARDSKIN]) && flag&(BF_SHORT|BF_WEAPON) && damage > 0 ) {
 			sce->val2 -= (int)cap_value(damage,INT_MIN,INT_MAX);
 			if( src->type == BL_PC ) {
-				struct map_session_data *ssd = BL_CAST(BL_PC, src);
-				if (ssd && ssd->status.weapon != W_BOW)
+				if (s_sd && s_sd->status.weapon != W_BOW)
 					skill->break_equip(src, EQP_WEAPON, 3000, BCT_SELF);
 			} else
 				skill->break_equip(src, EQP_WEAPON, 3000, BCT_SELF);
@@ -3209,31 +3208,31 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if( sc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * sc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
 			status->change_spread(bl, src); // Deadly infect attacked side
 
-		if (sd && damage > 0 && (sce = sc->data[SC_GENTLETOUCH_ENERGYGAIN]) != NULL) {
+		if (t_sd && damage > 0 && (sce = sc->data[SC_GENTLETOUCH_ENERGYGAIN]) != NULL) {
 			if ( rnd() % 100 < sce->val2 )
-				pc->addspiritball(sd, skill->get_time(MO_CALLSPIRITS, 1), pc->getmaxspiritball(sd, 0));
+				pc->addspiritball(t_sd, skill->get_time(MO_CALLSPIRITS, 1), pc->getmaxspiritball(t_sd, 0));
 		}
 	}
 
 	//SC effects from caster side.
-	if (tsc && tsc->count) {
-		if( tsc->data[SC_INVINCIBLE] && !tsc->data[SC_INVINCIBLEOFF] )
+	if (s_sc && s_sc->count) {
+		if( s_sc->data[SC_INVINCIBLE] && !s_sc->data[SC_INVINCIBLEOFF] )
 			damage += damage * 75 / 100;
 		// [Epoque]
 		if (bl->type == BL_MOB) {
 			const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 			int i;
 
-			if (((sce=tsc->data[SC_MANU_ATK]) != NULL && (flag&BF_WEAPON))
-			 || ((sce=tsc->data[SC_MANU_MATK]) != NULL && (flag&BF_MAGIC))) {
+			if (((sce=s_sc->data[SC_MANU_ATK]) != NULL && (flag&BF_WEAPON))
+			 || ((sce=s_sc->data[SC_MANU_MATK]) != NULL && (flag&BF_MAGIC))) {
 				for (i = 0; i < ARRAYLENGTH(mob->manuk); i++)
 					if (md->class_ == mob->manuk[i]) {
 						damage += damage * sce->val1 / 100;
 						break;
 					}
 			}
-			if (((sce=tsc->data[SC_SPL_ATK]) != NULL && (flag&BF_WEAPON))
-			 || ((sce=tsc->data[SC_SPL_MATK]) != NULL && (flag&BF_MAGIC))) {
+			if (((sce=s_sc->data[SC_SPL_ATK]) != NULL && (flag&BF_WEAPON))
+			 || ((sce=s_sc->data[SC_SPL_MATK]) != NULL && (flag&BF_MAGIC))) {
 				for (i = 0; i < ARRAYLENGTH(mob->splendide); i++)
 					if (md->class_ == mob->splendide[i]) {
 						damage += damage * sce->val1 / 100;
@@ -3241,31 +3240,30 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 					}
 			}
 		}
-		if( tsc->data[SC_POISONINGWEAPON] ) {
+		if( s_sc->data[SC_POISONINGWEAPON] ) {
 			struct status_data *tstatus = status->get_status_data(bl);
-			if ( !(flag&BF_SKILL) && (flag&BF_WEAPON) && damage > 0 && rnd()%100 < tsc->data[SC_POISONINGWEAPON]->val3 ) {
+			if ( !(flag&BF_SKILL) && (flag&BF_WEAPON) && damage > 0 && rnd()%100 < s_sc->data[SC_POISONINGWEAPON]->val3 ) {
 				short rate = 100;
-				if ( tsc->data[SC_POISONINGWEAPON]->val1 == 9 ) // Oblivion Curse gives a 2nd success chance after the 1st one passes which is reducible. [Rytech]
+				if ( s_sc->data[SC_POISONINGWEAPON]->val1 == 9 ) // Oblivion Curse gives a 2nd success chance after the 1st one passes which is reducible. [Rytech]
 					rate = 100 - tstatus->int_ * 4 / 5;
-				sc_start(src,bl,tsc->data[SC_POISONINGWEAPON]->val2,rate,tsc->data[SC_POISONINGWEAPON]->val1,skill->get_time2(GC_POISONINGWEAPON,1) - (tstatus->vit + tstatus->luk) / 2 * 1000);
+				sc_start(src,bl,s_sc->data[SC_POISONINGWEAPON]->val2,rate,s_sc->data[SC_POISONINGWEAPON]->val1,skill->get_time2(GC_POISONINGWEAPON,1) - (tstatus->vit + tstatus->luk) / 2 * 1000);
 			}
 		}
-		if( tsc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * tsc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
+		if( s_sc->data[SC__DEADLYINFECT] && flag&BF_SHORT && damage > 0 && rnd()%100 < 30 + 10 * s_sc->data[SC__DEADLYINFECT]->val1 && !is_boss(src) )
 			status->change_spread(src, bl);
-		if (tsc->data[SC_SHIELDSPELL_REF] && tsc->data[SC_SHIELDSPELL_REF]->val1 == 1 && damage > 0)
+		if (s_sc->data[SC_SHIELDSPELL_REF] && s_sc->data[SC_SHIELDSPELL_REF]->val1 == 1 && damage > 0)
 			skill->break_equip(bl,EQP_ARMOR,10000,BCT_ENEMY );
-		if (tsc->data[SC_STYLE_CHANGE] && rnd()%2) {
+		if (s_sc->data[SC_STYLE_CHANGE] && rnd()%2) {
 			struct homun_data *hd = BL_CAST(BL_HOM,bl);
 			if (hd) homun->addspiritball(hd, 10);
 		}
-		if (src->type == BL_PC && damage > 0 && (sce = tsc->data[SC_GENTLETOUCH_ENERGYGAIN]) != NULL) {
-			struct map_session_data *tsd = BL_UCAST(BL_PC, src);
-			if (tsd != NULL && rnd() % 100 < sce->val2)
-				pc->addspiritball(tsd, skill->get_time(MO_CALLSPIRITS, 1), pc->getmaxspiritball(tsd, 0));
+		if (src->type == BL_PC && damage > 0 && (sce = s_sc->data[SC_GENTLETOUCH_ENERGYGAIN]) != NULL) {
+			if (s_sd != NULL && rnd() % 100 < sce->val2)
+				pc->addspiritball(s_sd, skill->get_time(MO_CALLSPIRITS, 1), pc->getmaxspiritball(s_sd, 0));
 		}
 	}
 	/* no data claims these settings affect anything other than players */
-	if( damage && sd && bl->type == BL_PC ) {
+	if( damage && t_sd && bl->type == BL_PC ) {
 		switch( skill_id ) {
 			//case PA_PRESSURE: /* pressure also belongs to this list but it doesn't reach this area -- so don't worry about it */
 			case HW_GRAVITATION:
@@ -3307,14 +3305,13 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if (skill_id)
 			mob->skill_event(md, src, timer->gettick(), MSC_SKILLUSED|(skill_id<<16));
 	}
-	if (sd && pc_ismadogear(sd) && rnd()%100 < 50) {
+	if (t_sd && pc_ismadogear(t_sd) && rnd()%100 < 50) {
 		int element = -1;
 		if (!skill_id || (element = skill->get_ele(skill_id, skill_lv)) == -1) {
 			// Take weapon's element
 			struct status_data *sstatus = NULL;
-			struct map_session_data *ssd = BL_CAST(BL_PC, src);
-			if (src->type == BL_PC && ssd->bonus.arrow_ele != 0) {
-				element = ssd->bonus.arrow_ele;
+			if (s_sd != NULL && s_sd->bonus.arrow_ele != 0) {
+				element = s_sd->bonus.arrow_ele;
 			} else if ((sstatus = status->get_status_data(src)) != NULL) {
 				element = sstatus->rhw.ele;
 			}
@@ -3326,9 +3323,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			element = rnd()%ELE_MAX;
 		}
 		if (element == ELE_FIRE)
-			pc->overheat(sd, 1);
+			pc->overheat(t_sd, 1);
 		else if (element == ELE_WATER)
-			pc->overheat(sd, -1);
+			pc->overheat(t_sd, -1);
 	}
 
 	return damage;
@@ -3515,8 +3512,6 @@ int battle_blewcount_bonus(struct map_session_data *sd, uint16 skill_id) {
 struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int mflag) {
 	int nk;
 	short s_ele = 0;
-	unsigned int skillratio = 100; //Skill dmg modifiers.
-
 	struct map_session_data *sd = NULL;
 	struct status_change *sc;
 	struct Damage ad;
@@ -3669,6 +3664,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 				ad.damage = status->get_lv(src) * 10 + sstatus->int_;
 				break;
 			default: {
+				unsigned int skillratio = 100; //Skill dmg modifiers.
 				MATK_ADD( status->get_matk(src, 2) );
 #ifdef RENEWAL
 				ad.damage = battle->calc_cardfix(BF_MAGIC, src, target, nk, s_ele, 0, ad.damage, 0, ad.flag);
@@ -4279,7 +4275,6 @@ void battle_calc_misc_attack_unknown(struct block_list *src, struct block_list *
 // FIXME: wflag is undocumented
 struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int wflag)
 {
-	unsigned int skillratio = 100; //Skill dmg modifiers.
 	short temp=0;
 	short s_ele, s_ele_;
 	int i, nk;
@@ -4778,17 +4773,16 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 	} //End hit/miss calculation
 
 	if (flag.hit && !flag.infdef) { //No need to do the math for plants
+		unsigned int skillratio = 100; //Skill dmg modifiers.
 		//Hitting attack
 
 //Assuming that 99% of the cases we will not need to check for the flag.rh... we don't.
 //ATK_RATE scales the damage. 100 = no change. 50 is halved, 200 is doubled, etc
 #define ATK_RATE( a ) do { int64 temp__ = (a); wd.damage= wd.damage*temp__/100 ; if(flag.lh) wd.damage2= wd.damage2*temp__/100; } while(0)
-#define ATK_RATE2( a , b ) do { wd.damage= wd.damage*(a)/100 ; if(flag.lh) wd.damage2= wd.damage2*(b)/100; } while(0)
 #define ATK_RATER(a) ( wd.damage = wd.damage*(a)/100 )
 #define ATK_RATEL(a) ( wd.damage2 = wd.damage2*(a)/100 )
 //Adds dmg%. 100 = +100% (double) damage. 10 = +10% damage
 #define ATK_ADDRATE( a ) do { int64 temp__ = (a); wd.damage+= wd.damage*temp__/100; if(flag.lh) wd.damage2+= wd.damage2*temp__/100; } while(0)
-#define ATK_ADDRATE2( a , b ) do { wd.damage+= wd.damage*(a)/100 ; if(flag.lh) wd.damage2+= wd.damage2*(b)/100; } while(0)
 //Adds an absolute value to damage. 100 = +100 damage
 #define ATK_ADD( a ) do { int64 temp__ = (a); wd.damage += temp__; if (flag.lh) wd.damage2 += temp__; } while(0)
 #define ATK_ADD2( a , b ) do { wd.damage += (a); if (flag.lh) wd.damage2 += (b); } while(0)
@@ -6015,6 +6009,46 @@ int battle_damage_area(struct block_list *bl, va_list ap) {
 
 	return 0;
 }
+
+bool battle_check_arrows(struct map_session_data *sd)
+{
+	int index = sd->equip_index[EQI_AMMO];
+	if (index < 0) {
+		if (sd->weapontype1 > W_KATAR && sd->weapontype1 < W_HUUMA)
+			clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+		else
+			clif->arrow_fail(sd, 0);
+		return false;
+	}
+	//Ammo check by Ishizu-chan
+	if (sd->inventory_data[index]) {
+		switch (sd->status.weapon) {
+			case W_BOW:
+				if (sd->inventory_data[index]->look != A_ARROW) {
+					clif->arrow_fail(sd, 0);
+					return false;
+				}
+				break;
+			case W_REVOLVER:
+			case W_RIFLE:
+			case W_GATLING:
+			case W_SHOTGUN:
+				if (sd->inventory_data[index]->look != A_BULLET) {
+					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+					return false;
+				}
+				break;
+			case W_GRENADE:
+				if (sd->inventory_data[index]->look != A_GRENADE) {
+					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
+					return false;
+				}
+				break;
+		}
+	}
+	return true;
+}
+
 /*==========================================
  * Do a basic physical attack (call trough unit_attack_timer)
  *------------------------------------------*/
@@ -6052,39 +6086,8 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 		sd->state.arrow_atk = (sd->status.weapon == W_BOW || (sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE));
 		if (sd->state.arrow_atk)
 		{
-			int index = sd->equip_index[EQI_AMMO];
-			if (index<0) {
-				if ( sd->weapontype1 > W_KATAR && sd->weapontype1 < W_HUUMA )
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
-				else
-					clif->arrow_fail(sd, 0);
+			if (battle->check_arrows(sd) == false)
 				return ATK_NONE;
-			}
-			//Ammo check by Ishizu-chan
-			if (sd->inventory_data[index])
-			switch (sd->status.weapon) {
-			case W_BOW:
-				if (sd->inventory_data[index]->look != A_ARROW) {
-					clif->arrow_fail(sd,0);
-					return ATK_NONE;
-				}
-			break;
-			case W_REVOLVER:
-			case W_RIFLE:
-			case W_GATLING:
-			case W_SHOTGUN:
-				if (sd->inventory_data[index]->look != A_BULLET) {
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
-					return ATK_NONE;
-				}
-			break;
-			case W_GRENADE:
-				if (sd->inventory_data[index]->look != A_GRENADE) {
-					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
-					return ATK_NONE;
-				}
-			break;
-			}
 		}
 	}
 	if (sc && sc->count) {
@@ -6373,11 +6376,9 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 	return wd.dmg_lv;
 }
 #undef ATK_RATE
-#undef ATK_RATE2
 #undef ATK_RATER
 #undef ATK_RATEL
 #undef ATK_ADDRATE
-#undef ATK_ADDRATE2
 #undef ATK_ADD
 #undef ATK_ADD2
 #undef GET_NORMAL_ATTACK
@@ -7383,19 +7384,19 @@ void Hercules_report(char* date, char *time_c) {
 	WBUFW(buf,2) = 262 + ( bd_size * ( BFLAG_LENGTH + 4 ) );
 	WBUFW(buf,4) = 0x9f;
 
-	safestrncpy((char*)WBUFP(buf,6), date, 12);
-	safestrncpy((char*)WBUFP(buf,18), time_c, 9);
-	safestrncpy((char*)WBUFP(buf,27), timestring, 24);
+	safestrncpy(WBUFP(buf,6), date, 12);
+	safestrncpy(WBUFP(buf,18), time_c, 9);
+	safestrncpy(WBUFP(buf,27), timestring, 24);
 
-	safestrncpy((char*)WBUFP(buf,51), sysinfo->platform(), 16);
-	safestrncpy((char*)WBUFP(buf,67), sysinfo->osversion(), 50);
-	safestrncpy((char*)WBUFP(buf,117), sysinfo->cpu(), 32);
+	safestrncpy(WBUFP(buf,51), sysinfo->platform(), 16);
+	safestrncpy(WBUFP(buf,67), sysinfo->osversion(), 50);
+	safestrncpy(WBUFP(buf,117), sysinfo->cpu(), 32);
 	WBUFL(buf,149) = sysinfo->cpucores();
-	safestrncpy((char*)WBUFP(buf,153), sysinfo->arch(), 8);
+	safestrncpy(WBUFP(buf,153), sysinfo->arch(), 8);
 	WBUFB(buf,161) = sysinfo->vcstypeid();
 	WBUFB(buf,162) = sysinfo->is64bit();
-	safestrncpy((char*)WBUFP(buf,163), sysinfo->vcsrevision_src(), 41);
-	safestrncpy((char*)WBUFP(buf,204), sysinfo->vcsrevision_scripts(), 41);
+	safestrncpy(WBUFP(buf,163), sysinfo->vcsrevision_src(), 41);
+	safestrncpy(WBUFP(buf,204), sysinfo->vcsrevision_scripts(), 41);
 	WBUFB(buf,245) = (sysinfo->is_superuser()? 1 : 0);
 	WBUFL(buf,246) = map->getusers();
 
@@ -7404,7 +7405,7 @@ void Hercules_report(char* date, char *time_c) {
 
 	WBUFL(buf,258) = bd_size;
 	for( i = 0; i < bd_size; i++ ) {
-		safestrncpy((char*)WBUFP(buf,262 + ( i * ( BFLAG_LENGTH + 4 ) ) ), battle_data[i].str, BFLAG_LENGTH);
+		safestrncpy(WBUFP(buf,262 + ( i * ( BFLAG_LENGTH + 4 ) ) ), battle_data[i].str, BFLAG_LENGTH);
 		WBUFL(buf,262 + BFLAG_LENGTH + ( i * ( BFLAG_LENGTH + 4 )  )  ) = *battle_data[i].val;
 	}
 
@@ -7613,6 +7614,7 @@ void battle_defaults(void) {
 	battle->calc_gvg_damage = battle_calc_gvg_damage;
 	battle->calc_bg_damage = battle_calc_bg_damage;
 	battle->weapon_attack = battle_weapon_attack;
+	battle->check_arrows = battle_check_arrows;
 	battle->calc_weapon_attack = battle_calc_weapon_attack;
 	battle->delay_damage = battle_delay_damage;
 	battle->drain = battle_drain;

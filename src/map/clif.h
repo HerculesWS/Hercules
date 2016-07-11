@@ -40,6 +40,7 @@ struct guild;
 struct homun_data;
 struct item;
 struct item_data;
+struct itemlist; // map/itemdb.h
 struct map_session_data;
 struct mercenary_data;
 struct mob_data;
@@ -59,7 +60,7 @@ struct view_data;
  **/
 #define packet_len(cmd) packet_db[cmd].len
 #define clif_menuskill_clear(sd) ((sd)->menuskill_id = (sd)->menuskill_val = (sd)->menuskill_val2 = 0)
-#define clif_disp_onlyself(sd,mes,len) clif->disp_message( &(sd)->bl, (mes), (len), SELF )
+#define clif_disp_onlyself(sd, mes) clif->disp_message(&(sd)->bl, (mes), SELF)
 #define MAX_ROULETTE_LEVEL 7 /** client-defined value **/
 #define MAX_ROULETTE_COLUMNS 9 /** client-defined value **/
 #define RGB2BGR(c) (((c) & 0x0000FF) << 16 | ((c) & 0x00FF00) | ((c) & 0xFF0000) >> 16)
@@ -519,7 +520,7 @@ enum CLOSE_ROULETTE_ACK {
 
 /**
  * Reason for item deletion (clif->delitem)
- */
+ **/
 enum delitem_reason {
 	DELITEM_NORMAL         = 0, /// Normal
 	DELITEM_SKILLUSE       = 1, /// Item used for a skill
@@ -531,14 +532,31 @@ enum delitem_reason {
 	DELITEM_ANALYSIS       = 7, /// Consumed by Four Spirit Analysis (SO_EL_ANALYSIS) skill
 };
 
-/*
-* Merge items reasons
-*/
+/**
+ * Merge items reasons
+ **/
 
 enum mergeitem_reason {
 	MERGEITEM_SUCCESS =  0x0,
 	MERGEITEM_FAILD =  0x1,
 	MERGEITEM_MAXCOUNTFAILD =  0x2,
+};
+
+/**
+ * Clif Unit Type
+ **/
+enum clif_unittype {
+	CLUT_PC        = 0x0,
+	CLUT_NPC       = 0x1,
+	CLUT_ITEM      = 0x2,
+	CLUT_SKILL     = 0x3,
+	CLUT_UNKNOWN   = 0x4,
+	CLUT_MOB       = 0x5,
+	CLUT_EVENT     = 0x6,
+	CLUT_PET       = 0x7,
+	CLUT_HOMNUCLUS = 0x8,
+	CLUT_MERCNARY  = 0x9,
+	CLUT_ELEMENTAL = 0xa,
 };
 
 /**
@@ -562,8 +580,8 @@ struct cdelayed_damage {
 };
 
 struct merge_item {
-    int16 position;
-    int16 nameid;
+	int16 position;
+	int16 nameid;
 };
 
 /**
@@ -773,6 +791,7 @@ struct clif_interface {
 	int (*autoshadowspell_list) (struct map_session_data *sd);
 	int (*skill_itemlistwindow) ( struct map_session_data *sd, uint16 skill_id, uint16 skill_lv );
 	void (*sc_load) (struct block_list *bl, int tid, enum send_target target, int type, int val1, int val2, int val3);
+	void (*sc_continue) (struct block_list *bl, int tid, enum send_target target, int type, int val1, int val2, int val3);
 	void (*sc_end) (struct block_list *bl, int tid, enum send_target target, int type);
 	void (*initialstatus) (struct map_session_data *sd);
 	void (*cooldown_list) (int fd, struct skill_cd* cd);
@@ -840,11 +859,11 @@ struct clif_interface {
 	void (*clearchat) (struct chat_data *cd,int fd);
 	void (*leavechat) (struct chat_data* cd, struct map_session_data* sd, bool flag);
 	void (*changechatstatus) (struct chat_data* cd);
-	void (*wis_message) (int fd, const char* nick, const char* mes, size_t mes_len);
+	void (*wis_message) (int fd, const char *nick, const char *mes, int mes_len);
 	void (*wis_end) (int fd, int flag);
-	void (*disp_message) (struct block_list* src, const char* mes, size_t len, enum send_target target);
-	void (*broadcast) (struct block_list* bl, const char* mes, size_t len, int type, enum send_target target);
-	void (*broadcast2) (struct block_list* bl, const char* mes, size_t len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, enum send_target target);
+	void (*disp_message) (struct block_list *src, const char *mes, enum send_target target);
+	void (*broadcast) (struct block_list *bl, const char *mes, int len, int type, enum send_target target);
+	void (*broadcast2) (struct block_list *bl, const char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, enum send_target target);
 	void (*messagecolor_self) (int fd, uint32 color, const char *msg);
 	void (*messagecolor) (struct block_list* bl, uint32 color, const char* msg);
 	void (*disp_overhead) (struct block_list *bl, const char* mes);
@@ -855,7 +874,8 @@ struct clif_interface {
 	void (*messageln) (const int fd, const char* mes);
 	/* message+s(printf) */
 	void (*messages) (const int fd, const char *mes, ...) __attribute__((format(printf, 2, 3)));
-	bool (*process_message) (struct map_session_data *sd, int format, char **name_, size_t *namelen_, char **message_, size_t *messagelen_);
+	const char *(*process_chat_message) (struct map_session_data *sd, const struct packet_chat_message *packet, char *out_buf, int out_buflen);
+	bool (*process_whisper_message) (struct map_session_data *sd, const struct packet_whisper_message *packet, char *out_name, char *out_message, int out_messagelen);
 	void (*wisexin) (struct map_session_data *sd,int type,int flag);
 	void (*wisall) (struct map_session_data *sd,int type,int flag);
 	void (*PMIgnoreList) (struct map_session_data* sd);
@@ -941,7 +961,7 @@ struct clif_interface {
 	void (*bg_hp) (struct map_session_data *sd);
 	void (*bg_xy) (struct map_session_data *sd);
 	void (*bg_xy_remove) (struct map_session_data *sd);
-	void (*bg_message) (struct battleground_data *bgd, int src_id, const char *name, const char *mes, size_t len);
+	void (*bg_message) (struct battleground_data *bgd, int src_id, const char *name, const char *mes);
 	void (*bg_updatescore) (int16 m);
 	void (*bg_updatescore_single) (struct map_session_data *sd);
 	void (*sendbgemblem_area) (struct map_session_data *sd);
@@ -997,7 +1017,7 @@ struct clif_interface {
 	void (*mail_setattachment) (int fd, int index, uint8 flag);
 	/* auction-related */
 	void (*auction_openwindow) (struct map_session_data *sd);
-	void (*auction_results) (struct map_session_data *sd, short count, short pages, uint8 *buf);
+	void (*auction_results) (struct map_session_data *sd, short count, short pages, const uint8 *buf);
 	void (*auction_message) (int fd, unsigned char flag);
 	void (*auction_close) (int fd, unsigned char flag);
 	void (*auction_setitem) (int fd, int index, bool fail);
@@ -1051,7 +1071,7 @@ struct clif_interface {
 	void (*elemental_updatestatus) (struct map_session_data *sd, int type);
 	/* bgqueue */
 	void (*bgqueue_ack) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_ACK response, unsigned char arena_id);
-	void (*bgqueue_notice_delete) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, char *name);
+	void (*bgqueue_notice_delete) (struct map_session_data *sd, enum BATTLEGROUNDS_QUEUE_NOTICE_DELETED response, const char *name);
 	void (*bgqueue_update_info) (struct map_session_data *sd, unsigned char arena_id, int position);
 	void (*bgqueue_joined) (struct map_session_data *sd, int pos);
 	void (*bgqueue_pcleft) (struct map_session_data *sd);
@@ -1080,7 +1100,7 @@ struct clif_interface {
 	int (*delay_damage_sub) (int tid, int64 tick, int id, intptr_t data);
 	/* NPC Market */
 	void (*npc_market_open) (struct map_session_data *sd, struct npc_data *nd);
-	void (*npc_market_purchase_ack) (struct map_session_data *sd, struct packet_npc_market_purchase *req, unsigned char response);
+	void (*npc_market_purchase_ack) (struct map_session_data *sd, const struct itemlist *item_list, unsigned char response);
 	/* */
 	bool (*parse_roulette_db) (void);
 	void (*roulette_generate_ack) (struct map_session_data *sd, unsigned char result, short stage, short prizeIdx, short bonusItemID);
@@ -1089,7 +1109,9 @@ struct clif_interface {
 	void (*cancelmergeitem) (int fd, struct map_session_data *sd);
 	int (*comparemergeitem) (const void *a, const void *b);
 	void (*ackmergeitems) (int fd, struct map_session_data *sd);
-
+	/* */
+	bool (*isdisguised) (struct block_list* bl);
+	unsigned char (*bl_type) (struct block_list *bl);
 	/*------------------------
 	 *- Parse Incoming Packet
 	 *------------------------*/
@@ -1333,8 +1355,10 @@ struct clif_interface {
 	void (*dressroom_open) (struct map_session_data *sd, int view);
 	void (*pOneClick_ItemIdentify) (int fd,struct map_session_data *sd);
 	/* Cart Deco */
-	void(*selectcart) (struct map_session_data *sd);
-	void(*pSelectCart) (int fd, struct map_session_data *sd);
+	void (*selectcart) (struct map_session_data *sd);
+	void (*pSelectCart) (int fd, struct map_session_data *sd);
+
+	const char *(*get_bl_name) (const struct block_list *bl);
 };
 
 #ifdef HERCULES_CORE

@@ -42,6 +42,7 @@
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
+#include "common/sql.h"
 #include "common/strlib.h"
 #include "common/timer.h"
 
@@ -82,7 +83,7 @@ struct WisData {
 	int64 tick;
 	unsigned char src[24], dst[24], msg[512];
 };
-static DBMap* wis_db = NULL; // int wis_id -> struct WisData*
+static struct DBMap *wis_db = NULL; // int wis_id -> struct WisData*
 static int wis_dellist[WISDELLIST_MAX], wis_delnum;
 
 #define MAX_JOB_NAMES 150
@@ -413,7 +414,7 @@ void inter_vmsg_to_fd(int fd, int u_fd, int aid, char* msg, va_list ap)
 	WFIFOW(fd,2) = 12 + (unsigned short)len;
 	WFIFOL(fd,4) = u_fd;
 	WFIFOL(fd,8) = aid;
-	safestrncpy((char*)WFIFOP(fd,12), msg_out, len);
+	safestrncpy(WFIFOP(fd,12), msg_out, len);
 
 	WFIFOSET(fd,12 + len);
 
@@ -446,7 +447,7 @@ void mapif_parse_accinfo(int fd)
 	int account_id;
 	char *data;
 
-	safestrncpy(query, (char*) RFIFOP(fd,14), NAME_LENGTH);
+	safestrncpy(query, RFIFOP(fd,14), NAME_LENGTH);
 
 	SQL->EscapeString(inter->sql_handle, query_esq, query);
 
@@ -665,7 +666,7 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy((char*)WFIFOP(fd,plen), data, len);
+		safestrncpy(WFIFOP(fd,plen), data, len);
 		plen += len;
 
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
@@ -679,7 +680,7 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 254 */
 		plen += 1;
 
-		safestrncpy((char*)WFIFOP(fd,plen), data, len);
+		safestrncpy(WFIFOP(fd,plen), data, len);
 		plen += len;
 
 		WFIFOW(fd, 14) += 1;
@@ -746,7 +747,7 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy((char*)WFIFOP(fd,plen), data, len);
+		safestrncpy(WFIFOP(fd,plen), data, len);
 		plen += len;
 
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
@@ -939,7 +940,7 @@ int inter_mapif_init(int fd)
 //--------------------------------------------------------
 
 // broadcast sending
-int mapif_broadcast(unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd)
+int mapif_broadcast(const unsigned char *mes, int len, unsigned int fontColor, short fontType, short fontSize, short fontAlign, short fontY, int sfd)
 {
 	unsigned char *buf = (unsigned char*)aMalloc((len)*sizeof(unsigned char));
 
@@ -967,8 +968,8 @@ int mapif_wis_message(struct WisData *wd)
 	//if (wd->len > 2047-56) wd->len = 2047-56; //Force it to fit to avoid crashes. [Skotlex]
 	if (wd->len < 0)
 		wd->len = 0;
-	if (wd->len >= sizeof(wd->msg) - 1)
-		wd->len = sizeof(wd->msg) - 1;
+	if (wd->len >= (int)sizeof(wd->msg) - 1)
+		wd->len = (int)sizeof(wd->msg) - 1;
 
 	WBUFW(buf, 0) = 0x3801;
 	WBUFW(buf, 2) = 56 +wd->len;
@@ -981,7 +982,7 @@ int mapif_wis_message(struct WisData *wd)
 	return 0;
 }
 
-void mapif_wis_response(int fd, unsigned char *src, int flag)
+void mapif_wis_response(int fd, const unsigned char *src, int flag)
 {
 	unsigned char buf[27];
 	nullpo_retv(src);
@@ -1037,7 +1038,7 @@ int mapif_disconnectplayer(int fd, int account_id, int char_id, int reason)
  * Existence check of WISP data
  * @see DBApply
  */
-int inter_check_ttl_wisdata_sub(DBKey key, DBData *data, va_list ap)
+int inter_check_ttl_wisdata_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	int64 tick;
 	struct WisData *wd = DB->data2ptr(data);
@@ -1084,7 +1085,6 @@ int mapif_parse_broadcast(int fd)
 int mapif_parse_WisRequest(int fd)
 {
 	struct WisData* wd;
-	static int wisid = 0;
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];// escaped name
 	char* data;
@@ -1101,7 +1101,7 @@ int mapif_parse_WisRequest(int fd)
 		return 0;
 	}
 
-	safestrncpy(name, (char*)RFIFOP(fd,28), NAME_LENGTH); //Received name may be too large and not contain \0! [Skotlex]
+	safestrncpy(name, RFIFOP(fd,28), NAME_LENGTH); //Received name may be too large and not contain \0! [Skotlex]
 
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `name` FROM `%s` WHERE `name`='%s'", char_db, esc_name) )
@@ -1119,12 +1119,12 @@ int mapif_parse_WisRequest(int fd)
 		memset(name, 0, NAME_LENGTH);
 		memcpy(name, data, min(len, NAME_LENGTH));
 		// if source is destination, don't ask other servers.
-		if( strncmp((const char*)RFIFOP(fd,4), name, NAME_LENGTH) == 0 )
-		{
+		if (strncmp(RFIFOP(fd,4), name, NAME_LENGTH) == 0) {
 			mapif->wis_response(fd, RFIFOP(fd, 4), 1);
 		}
 		else
 		{
+			static int wisid = 0;
 			CREATE(wd, struct WisData, 1);
 
 			// Whether the failure of previous wisp/page transmission (timeout)
@@ -1172,7 +1172,7 @@ int mapif_parse_WisToGM(int fd)
 {
 	unsigned char buf[2048]; // 0x3003/0x3803 <packet_len>.w <wispname>.24B <min_gm_level>.w <message>.?B
 
-	memcpy(WBUFP(buf,0), RFIFOP(fd,0), RFIFOW(fd,2));
+	memcpy(WBUFP(buf,0), RFIFOP(fd,0), RFIFOW(fd,2)); // Message contains the NUL terminator (see intif_wis_message_to_gm())
 	WBUFW(buf, 0) = 0x3803;
 	mapif->sendall(buf, RFIFOW(fd,2));
 
@@ -1195,7 +1195,7 @@ int mapif_parse_Registry(int fd)
 		for(i = 0; i < count; i++) {
 			unsigned int index;
 			int len = RFIFOB(fd, cursor);
-			safestrncpy(key, (char*)RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
+			safestrncpy(key, RFIFOP(fd, cursor + 1), min((int)sizeof(key), len));
 			cursor += len + 1;
 
 			index = RFIFOL(fd, cursor);
@@ -1213,7 +1213,7 @@ int mapif_parse_Registry(int fd)
 				/* str */
 				case 2:
 					len = RFIFOB(fd, cursor);
-					safestrncpy(sval, (char*)RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
+					safestrncpy(sval, RFIFOP(fd, cursor + 1), min((int)sizeof(sval), len));
 					cursor += len + 1;
 					inter->savereg(account_id,char_id,key,index,(intptr_t)sval,true);
 					break;
@@ -1261,13 +1261,13 @@ void mapif_namechange_ack(int fd, int account_id, int char_id, int type, int fla
 int mapif_parse_NameChangeRequest(int fd)
 {
 	int account_id, char_id, type;
-	char* name;
+	const char *name;
 	int i;
 
 	account_id = RFIFOL(fd,2);
 	char_id = RFIFOL(fd,6);
 	type = RFIFOB(fd,10);
-	name = (char*)RFIFOP(fd,11);
+	name = RFIFOP(fd,11);
 
 	// Check Authorized letters/symbols in the name
 	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorized

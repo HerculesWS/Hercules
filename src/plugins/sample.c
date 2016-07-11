@@ -29,6 +29,7 @@
 #include "map/pc.h"
 #include "map/script.h"
 
+#include "plugins/HPMHooking.h"
 #include "common/HPMDataCheck.h" /* should always be the last Hercules file included! (if you don't make it last, it'll intentionally break compile time) */
 
 #include <stdio.h>
@@ -80,10 +81,10 @@ void sample_packet0f3(int fd) {
 		data->lastMSGPosition.y = sd->status.last_point.y;
 		data->someNumber = rand()%777;
 
-		ShowInfo("Created Appended sockt->session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
+		ShowInfo("Created Appended sockt->session[] data, %d %d %d %u\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		addToSession(sockt->session[fd],data,0,true);
 	} else {
-		ShowInfo("Existent Appended sockt->session[] data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
+		ShowInfo("Existent Appended sockt->session[] data, %d %d %d %u\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		if( rand()%4 == 2 ) {
 			ShowInfo("Removing Appended sockt->session[] data\n");
 			removeFromSession(sockt->session[fd],0);
@@ -99,10 +100,10 @@ void sample_packet0f3(int fd) {
 		data->lastMSGPosition.y = sd->status.last_point.y;
 		data->someNumber = rand()%777;
 
-		ShowInfo("Created Appended map_session_data data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
+		ShowInfo("Created Appended map_session_data data, %d %d %d %u\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		addToMSD(sd,data,0,true);
 	} else {
-		ShowInfo("Existent Appended map_session_data data, %d %d %d %d\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
+		ShowInfo("Existent Appended map_session_data data, %d %d %d %u\n",data->lastMSGPosition.map,data->lastMSGPosition.x,data->lastMSGPosition.y,data->someNumber);
 		if( rand()%4 == 2 ) {
 			ShowInfo("Removing Appended map_session_data data\n");
 			removeFromMSD(sd,0);
@@ -113,20 +114,23 @@ void sample_packet0f3(int fd) {
 }
 int my_pc_dropitem_storage;/* storage var */
 /* my custom prehook for pc_dropitem, checks if amount of item being dropped is higher than 1 and if so cap it to 1 and store the value of how much it was */
-int my_pc_dropitem_pre(struct map_session_data *sd,int *n,int *amount) {
+int my_pc_dropitem_pre(struct map_session_data **sd, int *n, int *amount)
+{
 	my_pc_dropitem_storage = 0;
-	if( *amount > 1 ) {
+	if (*amount > 1) {
 		my_pc_dropitem_storage = *amount;
 		*amount = 1;
 	}
 	return 0;
 }
 /* postHook receive retVal as the first param, allows posthook to act accordingly to whatever the original was going to return */
-int my_pc_dropitem_post(int retVal, struct map_session_data *sd,int *n,int *amount) {
-	if( retVal != 1 ) return retVal;/* we don't do anything if pc_dropitem didn't return 1 (success) */
-	if( my_pc_dropitem_storage ) {/* signs whether pre-hook did this */
+int my_pc_dropitem_post(int retVal, struct map_session_data *sd, int n, int amount)
+{
+	if (retVal != 1)
+		return retVal;/* we don't do anything if pc_dropitem didn't return 1 (success) */
+	if (my_pc_dropitem_storage) {/* signs whether pre-hook did this */
 		char output[99];
-		safesnprintf(output,99,"[ Warning ] you can only drop 1 item at a time, capped from %d to 1",my_pc_dropitem_storage);
+		safesnprintf(output, 99, "[ Warning ] you can only drop 1 item at a time, capped from %d to 1", my_pc_dropitem_storage);
 		clif->messagecolor_self(sd->fd, COLOR_RED, output);
 	}
 	return 1;
@@ -199,13 +203,13 @@ HPExport void plugin_init (void) {
 		/* in this sample we add a PreHook to pc->dropitem */
 		/* to identify whether the item being dropped is on amount higher than 1 */
 		/* if so, it stores the amount on a variable (my_pc_dropitem_storage) and changes the amount to 1 */
-		addHookPre("pc->dropitem",my_pc_dropitem_pre);
+		addHookPre(pc, dropitem, my_pc_dropitem_pre);
 
 		/* in this sample we add a PostHook to pc->dropitem */
 		/* if the original pc->dropitem was successful and the amount stored on my_pc_dropitem_storage is higher than 1, */
 		/* our posthook will display a message to the user about the cap */
 		/* - by checking whether it was successful (retVal value) it allows for the originals conditions to take place */
-		addHookPost("pc->dropitem",my_pc_dropitem_post);
+		addHookPost(pc, dropitem, my_pc_dropitem_post);
 	}
 }
 /* triggered when server starts loading, before any server-specific data is set */

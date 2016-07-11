@@ -52,7 +52,7 @@ struct quest *mapif_quests_fromsql(int char_id, int *count)
 {
 	struct quest *questlog = NULL;
 	struct quest tmp_quest;
-	SqlStmt *stmt;
+	struct SqlStmt *stmt;
 	StringBuf buf;
 	int i;
 	int sqlerror = SQL_SUCCESS;
@@ -154,7 +154,7 @@ bool mapif_quest_add(int char_id, struct quest qd)
 	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
 		StrBuf->Printf(&buf, ", `count%d`", i+1);
 	}
-	StrBuf->Printf(&buf, ") VALUES ('%d', '%d', '%d', '%d'", qd.quest_id, char_id, qd.state, qd.time);
+	StrBuf->Printf(&buf, ") VALUES ('%d', '%d', '%u', '%u'", qd.quest_id, char_id, qd.state, qd.time);
 	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
 		StrBuf->Printf(&buf, ", '%d'", qd.count[i]);
 	}
@@ -182,7 +182,7 @@ bool mapif_quest_update(int char_id, struct quest qd)
 	int i;
 
 	StrBuf->Init(&buf);
-	StrBuf->Printf(&buf, "UPDATE `%s` SET `state`='%d'", quest_db, qd.state);
+	StrBuf->Printf(&buf, "UPDATE `%s` SET `state`='%u'", quest_db, qd.state);
 	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
 		StrBuf->Printf(&buf, ", `count%d`='%d'", i+1, qd.count[i]);
 	}
@@ -218,11 +218,12 @@ int mapif_parse_quest_save(int fd)
 {
 	int i, j, k, old_n, new_n = (RFIFOW(fd,2)-8)/sizeof(struct quest);
 	int char_id = RFIFOL(fd,4);
-	struct quest *old_qd = NULL, *new_qd = NULL;
+	struct quest *old_qd = NULL;
+	const struct quest *new_qd = NULL;
 	bool success = true;
 
 	if (new_n > 0)
-		new_qd = (struct quest*)RFIFOP(fd,8);
+		new_qd = RFIFOP(fd,8);
 
 	old_qd = mapif->quests_fromsql(char_id, &old_n);
 

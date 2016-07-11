@@ -669,7 +669,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 				next;
 				mes "[Mana]";
 				mes "So if you can use";
-				mes "Fire Well strategically";
+				mes "Fire Wall strategically";
 				mes "and effectively, it can";
 				mes "be a very powerful skill~";
 				.@skill_e6 = 1;
@@ -781,7 +781,7 @@ geffen,67,180,4	script	New Mage Manager#M	8_F,{
 		mes "a message, saying that";
 		mes "you've done a great job in";
 		mes "completing your mission.";
-		mes "Very nice work, "+PcName+"~";
+		mes "Very nice work, "+strcharinfo(0)+"~";
 		next;
 		mes "[Mana]";
 		mes "It seems like there are";

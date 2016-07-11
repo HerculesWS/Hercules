@@ -1,8 +1,8 @@
 /* -*- mode: C -*- */
 /* ----------------------------------------------------------------------------
    libconfig - A library for processing structured configuration files
-   Copyright (C) 2013-2015  Hercules Dev Team
-   Copyright (C) 2005-2010  Mark A Lindner
+   Copyright (C) 2013-2016  Hercules Dev Team
+   Copyright (C) 2005-2014  Mark A Lindner
 
    This file is part of libconfig.
 
@@ -23,7 +23,7 @@
 */
 
 %defines
-%output="y.tab.c"
+%output "y.tab.c"
 %pure-parser
 %lex-param{void *scanner}
 %parse-param{void *scanner}
@@ -54,7 +54,7 @@ extern int libconfig_yyget_lineno();
 static const char *err_array_elem_type = "mismatched element type in array";
 static const char *err_duplicate_setting = "duplicate setting name";
 
-#define _delete(P) free((void *)(P))
+#define _delete(P) free(P)
 
 #define IN_ARRAY() \
   (ctx->parent && (ctx->parent->type == CONFIG_TYPE_ARRAY))
@@ -63,7 +63,7 @@ static const char *err_duplicate_setting = "duplicate setting name";
   (ctx->parent && (ctx->parent->type == CONFIG_TYPE_LIST))
 
 static void capture_parse_pos(void *scanner, struct scan_context *scan_ctx,
-                              config_setting_t *setting)
+                              struct config_setting_t *setting)
 {
   setting->line = (unsigned int)libconfig_yyget_lineno(scanner);
   setting->file = scanctx_current_filename(scan_ctx);
@@ -206,8 +206,8 @@ simple_value:
   {
     if(IN_ARRAY() || IN_LIST())
     {
-      config_setting_t *e = config_setting_set_bool_elem(ctx->parent, -1,
-                                                         (int)$1);
+      struct config_setting_t *e = config_setting_set_bool_elem(ctx->parent, -1,
+                                                                (int)$1);
 
       if(! e)
       {
@@ -226,7 +226,7 @@ simple_value:
   {
     if(IN_ARRAY() || IN_LIST())
     {
-      config_setting_t *e = config_setting_set_int_elem(ctx->parent, -1, $1);
+      struct config_setting_t *e = config_setting_set_int_elem(ctx->parent, -1, $1);
       if(! e)
       {
         libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
@@ -248,7 +248,7 @@ simple_value:
   {
     if(IN_ARRAY() || IN_LIST())
     {
-      config_setting_t *e = config_setting_set_int64_elem(ctx->parent, -1, $1);
+      struct config_setting_t *e = config_setting_set_int64_elem(ctx->parent, -1, $1);
       if(! e)
       {
         libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
@@ -270,7 +270,7 @@ simple_value:
   {
     if(IN_ARRAY() || IN_LIST())
     {
-      config_setting_t *e = config_setting_set_int_elem(ctx->parent, -1, $1);
+      struct config_setting_t *e = config_setting_set_int_elem(ctx->parent, -1, $1);
       if(! e)
       {
         libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
@@ -292,7 +292,7 @@ simple_value:
   {
     if(IN_ARRAY() || IN_LIST())
     {
-      config_setting_t *e = config_setting_set_int64_elem(ctx->parent, -1, $1);
+      struct config_setting_t *e = config_setting_set_int64_elem(ctx->parent, -1, $1);
       if(! e)
       {
         libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
@@ -314,7 +314,7 @@ simple_value:
   {
     if(IN_ARRAY() || IN_LIST())
     {
-      config_setting_t *e = config_setting_set_float_elem(ctx->parent, -1, $1);
+      struct config_setting_t *e = config_setting_set_float_elem(ctx->parent, -1, $1);
       if(! e)
       {
         libconfig_yyerror(scanner, ctx, scan_ctx, err_array_elem_type);
@@ -332,8 +332,8 @@ simple_value:
   {
     if(IN_ARRAY() || IN_LIST())
     {
-      const char *s = parsectx_take_string(ctx);
-      config_setting_t *e = config_setting_set_string_elem(ctx->parent, -1, s);
+      char *s = parsectx_take_string(ctx);
+      struct config_setting_t *e = config_setting_set_string_elem(ctx->parent, -1, s);
       _delete(s);
 
       if(! e)
@@ -348,7 +348,7 @@ simple_value:
     }
     else
     {
-      const char *s = parsectx_take_string(ctx);
+      char *s = parsectx_take_string(ctx);
       config_setting_set_string(ctx->setting, s);
       _delete(s);
     }

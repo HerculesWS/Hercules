@@ -33,6 +33,7 @@
 #include "common/strlib.h"
 #include "common/sysinfo.h"
 #include "common/nullpo.h"
+#include "common/utils.h"
 
 #ifndef MINICORE
 #	include "common/HPM.h"
@@ -42,7 +43,6 @@
 #	include "common/sql.h"
 #	include "common/thread.h"
 #	include "common/timer.h"
-#	include "common/utils.h"
 #endif
 
 #ifndef _WIN32
@@ -53,6 +53,28 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+/*
+ * Uncomment the line below if you want to silence the root warning on startup
+ * (not recommended, as it opens the machine to security risks. You should
+ * never ever run software as root unless it requires the extra privileges
+ * (which Hercules does not.)
+ * More info:
+ * http://www.tldp.org/HOWTO/Security-HOWTO/local-security.html
+ * http://www.gentoo.org/doc/en/security/security-handbook.xml?style=printable&part=1&chap=1#doc_chap4
+ * http://wiki.centos.org/TipsAndTricks/BecomingRoot
+ * http://fedoraproject.org/wiki/Configuring_Sudo
+ * https://help.ubuntu.com/community/RootSudo
+ * http://www.freebsdwiki.net/index.php/Root
+ *
+ * If your service provider forces (or encourages) you to run server software
+ * as root, please complain to them before and after uncommenting this line,
+ * since it is a very bad idea.
+ * Please note that NO SUPPORT will be given if you uncomment the following line.
+ */
+//#define I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
+// And don't complain to us if the XYZ plugin you installed wiped your hard disk, or worse.
+// Note: This feature is deprecated, and should not be used.
 
 /// Called when a terminate signal is received.
 void (*shutdown_callback)(void) = NULL;
@@ -172,11 +194,51 @@ void signals_init (void) {
 
 /**
  * Warns the user if executed as superuser (root)
+ *
+ * @retval false if the check didn't pass and the program should be terminated.
  */
-void usercheck(void) {
+bool usercheck(void)
+{
+#ifndef _WIN32
 	if (sysinfo->is_superuser()) {
-		ShowWarning("You are running Hercules with root privileges, it is not necessary.\n");
+		if (!isatty(fileno(stdin))) {
+#ifdef BUILDBOT
+			return true;
+#else  // BUILDBOT
+			ShowFatalError("You are running Hercules with root privileges, it is not necessary, nor recommended. "
+					"Aborting.\n");
+			return false; // Don't allow noninteractive execution regardless.
+#endif  // BUILDBOT
+		}
+		ShowError("You are running Hercules with root privileges, it is not necessary, nor recommended.\n");
+#ifdef I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
+#ifndef BUILDBOT
+#warning This Hercules build is not eligible to obtain support by the developers.
+#warning The setting I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT is deprecated and should not be used.
+#endif  // BUILDBOT
+#else // not I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
+		ShowNotice("Execution will be paused for 60 seconds. Press Ctrl-C if you wish to quit.\n");
+		ShowNotice("If you want to get rid of this message, please open %s and uncomment, near the top, the line saying:\n"
+				"\t\"//#define I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT\"\n", __FILE__);
+		ShowNotice("Note: In a near future, this courtesy notice will go away. "
+				"Please update your infrastructure not to require root privileges before then.\n");
+		ShowWarning("It's recommended that you " CL_WHITE "press CTRL-C now!" CL_RESET "\n");
+		{
+			int i;
+			for (i = 0; i < 60; i++) {
+				ShowMessage("\a *");
+				HSleep(1);
+			}
+		}
+		ShowMessage("\n");
+		ShowNotice("Resuming operations with root privileges. "
+				CL_RED "If anything breaks, you get to keep the pieces, "
+				"and the Hercules developers won't be able to help you."
+				CL_RESET "\n");
+#endif // I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
 	}
+#endif // not _WIN32
+	return true;
 }
 
 void core_defaults(void) {
@@ -426,7 +488,8 @@ int main (int argc, char **argv) {
 	if (!(showmsg->silent&0x1))
 		console->display_title();
 
-	usercheck();
+	if (!usercheck())
+		return EXIT_FAILURE;
 
 #ifdef MINICORE // minimalist Core
 	do_init(argc,argv);

@@ -21,11 +21,11 @@
 #ifndef MAP_STATUS_H
 #define MAP_STATUS_H
 
-#include "common/conf.h"
 #include "common/hercules.h"
 #include "common/mmo.h" // NEW_CARTS
 
 struct block_list;
+struct config_setting_t;
 struct elemental_data;
 struct homun_data;
 struct mercenary_data;
@@ -64,7 +64,9 @@ enum refine_type {
 	REFINE_TYPE_WEAPON2 = 2,
 	REFINE_TYPE_WEAPON3 = 3,
 	REFINE_TYPE_WEAPON4 = 4,
+#ifndef REFINE_TYPE_MAX
 	REFINE_TYPE_MAX     = 5
+#endif
 };
 
 /**
@@ -72,14 +74,15 @@ enum refine_type {
  * @see db/sc_config.txt for more information
  **/
 typedef enum sc_conf_type {
-	SC_NO_REM_DEATH  = 0x01,
-	SC_NO_SAVE       = 0x02,
-	SC_NO_DISPELL    = 0x04,
-	SC_NO_CLEARANCE  = 0x08,
-	SC_BUFF          = 0x10,
-	SC_DEBUFF        = 0x20,
-	SC_MADO_NO_RESET = 0x40,
-	SC_NO_CLEAR      = 0x80,
+	SC_NO_REM_DEATH  = 0x001,
+	SC_NO_SAVE       = 0x002,
+	SC_NO_DISPELL    = 0x004,
+	SC_NO_CLEARANCE  = 0x008,
+	SC_BUFF          = 0x010,
+	SC_DEBUFF        = 0x020,
+	SC_MADO_NO_RESET = 0x040,
+	SC_NO_CLEAR      = 0x080,
+	SC_VISIBLE       = 0x100
 } sc_conf_type;
 
 /**
@@ -825,8 +828,9 @@ typedef enum sc_type {
 	SC_M_LIFEPOTION,
 	SC_G_LIFEPOTION, // 640
 	SC_MYSTICPOWDER,
-
+#ifndef SC_MAX
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
+#endif
 } sc_type;
 
 /// Official status change ids, used to display status icons in the client.
@@ -1789,9 +1793,14 @@ enum si_type {
 	//SI_DORAM_BUF_01                        = 935,
 	//SI_DORAM_BUF_02                        = 936,
 	//SI_SPRITEMABLE                         = 937,
-
+	//SI_EP16_2_BUFF_SS                      = 963,
+	//SI_EP16_2_BUFF_SC                      = 964,
+	//SI_EP16_2_BUFF_AC                      = 965,
+#ifndef SI_MAX
 	SI_MAX,
+#endif
 };
+
 // JOINTBEAT stackable ailments
 enum e_joint_break
 {
@@ -1804,26 +1813,33 @@ enum e_joint_break
 	BREAK_FLAGS    = BREAK_ANKLE | BREAK_WRIST | BREAK_KNEE | BREAK_SHOULDER | BREAK_WAIST | BREAK_NECK,
 };
 
-
-//Mode definitions to clear up code reading. [Skotlex]
+/**
+ * Mob mode definitions. [Skotlex]
+ *
+ * @see doc/mob_db_mode_list.txt for a description of each mode.
+ */
 enum e_mode
 {
-	MD_CANMOVE            = 0x0001,
-	MD_LOOTER             = 0x0002,
-	MD_AGGRESSIVE         = 0x0004,
-	MD_ASSIST             = 0x0008,
-	MD_CASTSENSOR_IDLE    = 0x0010,
-	MD_BOSS               = 0x0020,
-	MD_PLANT              = 0x0040,
-	MD_CANATTACK          = 0x0080,
-	MD_DETECTOR           = 0x0100,
-	MD_CASTSENSOR_CHASE   = 0x0200,
-	MD_CHANGECHASE        = 0x0400,
-	MD_ANGRY              = 0x0800,
-	MD_CHANGETARGET_MELEE = 0x1000,
-	MD_CHANGETARGET_CHASE = 0x2000,
-	MD_TARGETWEAK         = 0x4000,
-	MD_MASK               = 0xFFFF,
+	MD_NONE               = 0x00000000,
+	MD_CANMOVE            = 0x00000001,
+	MD_LOOTER             = 0x00000002,
+	MD_AGGRESSIVE         = 0x00000004,
+	MD_ASSIST             = 0x00000008,
+	MD_CASTSENSOR_IDLE    = 0x00000010,
+	MD_BOSS               = 0x00000020,
+	MD_PLANT              = 0x00000040,
+	MD_CANATTACK          = 0x00000080,
+	MD_DETECTOR           = 0x00000100,
+	MD_CASTSENSOR_CHASE   = 0x00000200,
+	MD_CHANGECHASE        = 0x00000400,
+	MD_ANGRY              = 0x00000800,
+	MD_CHANGETARGET_MELEE = 0x00001000,
+	MD_CHANGETARGET_CHASE = 0x00002000,
+	MD_TARGETWEAK         = 0x00004000,
+	MD_NOKNOCKBACK        = 0x00008000,
+	//MD_RANDOMTARGET     = 0x00010000, // Not implemented
+	// Note: This should be kept within INT_MAX, since it's often cast to int.
+	MD_MASK               = 0x7FFFFFFF,
 };
 
 //Status change option definitions (options are what makes status changes visible to chars
@@ -1975,8 +1991,8 @@ struct status_data {
 		batk,
 		matk_min, matk_max,
 		speed,
-		amotion, adelay, dmotion,
-		mode;
+		amotion, adelay, dmotion;
+	uint32 mode;
 	short
 		hit, flee, cri, flee2,
 		def2, mdef2,
@@ -2151,7 +2167,7 @@ BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when sta
 	int max_weight_base[CLASS_COUNT];
 	int HP_table[CLASS_COUNT][MAX_LEVEL + 1];
 	int SP_table[CLASS_COUNT][MAX_LEVEL + 1];
-	int aspd_base[CLASS_COUNT][MAX_WEAPON_TYPE+1]; // +1 for RENEWAL_ASPD
+	int aspd_base[CLASS_COUNT][MAX_SINGLE_WEAPON_TYPE+1]; // +1 for RENEWAL_ASPD
 	sc_type Skill2SCTable[MAX_SKILL];  // skill  -> status
 	int IconChangeTable[SC_MAX];          // status -> "icon" (icon is a bit of a misnomer, since there exist values with no icon associated)
 	unsigned int ChangeFlagTable[SC_MAX]; // status -> flags
@@ -2161,7 +2177,7 @@ BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when sta
 	/* */
 	struct s_refine_info refine_info[REFINE_TYPE_MAX];
 	/* */
-	int atkmods[3][MAX_WEAPON_TYPE];//ATK weapon modification for size (size_fix.txt)
+	int atkmods[3][MAX_SINGLE_WEAPON_TYPE];//ATK weapon modification for size (size_fix.txt)
 	char job_bonus[CLASS_COUNT][MAX_LEVEL];
 	sc_conf_type sc_conf[SC_MAX];
 END_ZEROED_BLOCK; /* End */
@@ -2208,17 +2224,17 @@ struct status_interface {
 	struct regen_data * (*get_regen_data) (struct block_list *bl);
 	struct status_data * (*get_status_data) (struct block_list *bl);
 	struct status_data * (*get_base_status) (struct block_list *bl);
-	const char * (*get_name) (struct block_list *bl);
-	int (*get_class) (struct block_list *bl);
-	int (*get_lv) (struct block_list *bl);
+	const char *(*get_name) (const struct block_list *bl);
+	int (*get_class) (const struct block_list *bl);
+	int (*get_lv) (const struct block_list *bl);
 	defType (*get_def) (struct block_list *bl);
 	unsigned short (*get_speed) (struct block_list *bl);
 	unsigned char (*calc_attack_element) (struct block_list *bl, struct status_change *sc, int element);
-	int (*get_party_id) (struct block_list *bl);
-	int (*get_guild_id) (struct block_list *bl);
-	int (*get_emblem_id) (struct block_list *bl);
-	int (*get_mexp) (struct block_list *bl);
-	int (*get_race2) (struct block_list *bl);
+	int (*get_party_id) (const struct block_list *bl);
+	int (*get_guild_id) (const struct block_list *bl);
+	int (*get_emblem_id) (const struct block_list *bl);
+	int (*get_mexp) (const struct block_list *bl);
+	int (*get_race2) (const struct block_list *bl);
 	struct view_data * (*get_viewdata) (struct block_list *bl);
 	void (*set_viewdata) (struct block_list *bl, int class_);
 	void (*change_init) (struct block_list *bl);
@@ -2264,8 +2280,8 @@ struct status_interface {
 	void (*initDummyData) (void);
 	int (*base_amotion_pc) (struct map_session_data *sd, struct status_data *st);
 	unsigned short (*base_atk) (const struct block_list *bl, const struct status_data *st);
-	unsigned int (*get_base_maxhp) (struct map_session_data *sd, struct status_data *st);
-	unsigned int (*get_base_maxsp) (struct map_session_data *sd, struct status_data *st);
+	unsigned int (*get_base_maxhp) (const struct map_session_data *sd, const struct status_data *st);
+	unsigned int (*get_base_maxsp) (const struct map_session_data *sd, const struct status_data *st);
 	int (*calc_npc_) (struct npc_data *nd, enum e_status_calc_opt opt);
 	unsigned short (*calc_str) (struct block_list *bl, struct status_change *sc, int str);
 	unsigned short (*calc_agi) (struct block_list *bl, struct status_change *sc, int agi);
@@ -2288,7 +2304,7 @@ struct status_interface {
 	unsigned int (*calc_maxsp) (struct block_list *bl, struct status_change *sc, unsigned int maxsp);
 	unsigned char (*calc_element) (struct block_list *bl, struct status_change *sc, int element);
 	unsigned char (*calc_element_lv) (struct block_list *bl, struct status_change *sc, int lv);
-	unsigned short (*calc_mode) (struct block_list *bl, struct status_change *sc, int mode);
+	uint32 (*calc_mode) (const struct block_list *bl, const struct status_change *sc, uint32 mode);
 	unsigned short (*calc_ematk) (struct block_list *bl, struct status_change *sc, int matk);
 	void (*calc_bl_main) (struct block_list *bl, int flag);
 	void (*display_add) (struct map_session_data *sd, enum sc_type type, int dval1, int dval2, int dval3);
@@ -2298,10 +2314,14 @@ struct status_interface {
 	bool (*readdb_job2) (char *fields[], int columns, int current);
 	bool (*readdb_sizefix) (char *fields[], int columns, int current);
 	int (*readdb_refine_libconfig) (const char *filename);
-	int (*readdb_refine_libconfig_sub) (config_setting_t *r, const char *name, const char *source);
+	int (*readdb_refine_libconfig_sub) (struct config_setting_t *r, const char *name, const char *source);
 	bool (*readdb_scconfig) (char *fields[], int columns, int current);
 	void (*read_job_db) (void);
-	void (*read_job_db_sub) (int idx, const char *name, config_setting_t *jdb);
+	void (*read_job_db_sub) (int idx, const char *name, struct config_setting_t *jdb);
+	void (*set_sc) (uint16 skill_id, sc_type sc, int icon, unsigned int flag);
+	void (*copy) (struct status_data *a, const struct status_data *b);
+	unsigned short (*base_matk_min) (const struct status_data *st);
+	unsigned short (*base_matk_max) (const struct status_data *st);
 };
 
 #ifdef HERCULES_CORE

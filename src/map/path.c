@@ -89,6 +89,7 @@ int path_blownpos(struct block_list *bl, int16 m,int16 x0,int16 y0,int16 dx,int1
 {
 	struct map_data *md;
 
+	Assert_retr(-1, m >= 0 && m < map->count);
 	if( !map->list[m].cell )
 		return -1;
 	md = &map->list[m];
@@ -125,6 +126,8 @@ bool path_search_long(struct shootpath_data *spd,struct block_list *bl,int16 m,i
 	int weight;
 	struct map_data *md;
 	struct shootpath_data s_spd;
+
+	Assert_retr(false, m >= 0 && m < map->count);
 
 	if( spd == NULL )
 		spd = &s_spd; // use dummy output variable
@@ -254,9 +257,11 @@ static int add_path(struct node_heap *heap, struct path_node *tp, int16 x, int16
  *------------------------------------------*/
 bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int16 x0, int16 y0, int16 x1, int16 y1, int flag, cell_chk cell)
 {
-	register int i, j, x, y, dx, dy;
+	register int i, x, y, dx, dy;
 	struct map_data *md;
 	struct walkpath_data s_wpd;
+
+	Assert_retr(false, m >= 0 && m < map->count);
 
 	if (wpd == NULL)
 		wpd = &s_wpd; // use dummy output variable
@@ -315,8 +320,7 @@ bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int1
 		}
 
 		return false; // easy path unsuccessful
-	}
-	else { // !(flag&1)
+	} else { // !(flag&1)
 		// A* (A-star) pathfinding
 		// We always use A* for finding walkpaths because it is what game client uses.
 		// Easy pathfinding cuts corners of non-walkable cells, but client always walks around it.
@@ -331,6 +335,7 @@ bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int1
 		int xs = md->xs - 1;
 		int ys = md->ys - 1;
 		int len = 0;
+		int j;
 		memset(tp, 0, sizeof(tp));
 
 		// Start node
@@ -407,7 +412,7 @@ bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 m, int1
 		}
 
 		for (it = current; it->parent != NULL; it = it->parent, len++);
-		if (len > sizeof(wpd->path)) {
+		if (len > (int)sizeof(wpd->path)) {
 			return false;
 		}
 

@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -25,6 +25,10 @@
 #include "common/core.h" // CORE_ST_LAST
 #include "common/db.h"
 #include "common/mmo.h" // NAME_LENGTH,SEX_*
+
+/** @file
+ * Login interface.
+ */
 
 struct mmo_account;
 struct AccountDB;
@@ -149,8 +153,8 @@ struct online_login_data {
  * Login.c Interface
  **/
 struct login_interface {
-	DBMap* auth_db;
-	DBMap* online_db;
+	struct DBMap *auth_db;
+	struct DBMap *online_db;
 	int fd;
 	struct Login_Config *config;
 	struct AccountDB* accounts;
@@ -158,11 +162,11 @@ struct login_interface {
 	int (*mmo_auth) (struct login_session_data* sd, bool isServer);
 	int (*mmo_auth_new) (const char* userid, const char* pass, const char sex, const char* last_ip);
 	int (*waiting_disconnect_timer) (int tid, int64 tick, int id, intptr_t data);
-	DBData (*create_online_user) (DBKey key, va_list args);
+	struct DBData (*create_online_user) (union DBKey key, va_list args);
 	struct online_login_data* (*add_online_user) (int char_server, int account_id);
 	void (*remove_online_user) (int account_id);
-	int (*online_db_setoffline) (DBKey key, DBData *data, va_list ap);
-	int (*online_data_cleanup_sub) (DBKey key, DBData *data, va_list ap);
+	int (*online_db_setoffline) (union DBKey key, struct DBData *data, va_list ap);
+	int (*online_data_cleanup_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
 	int (*sync_ip_addresses) (int tid, int64 tick, int id, intptr_t data);
 	bool (*check_encrypted) (const char* str1, const char* str2, const char* passwd);
@@ -196,19 +200,12 @@ struct login_interface {
 	bool (*fromchar_parse_wrong_pincode) (int fd);
 	void (*fromchar_parse_accinfo) (int fd);
 	int (*parse_fromchar) (int fd);
-	void (*connection_problem) (int fd, uint8 status);
 	void (*kick) (struct login_session_data* sd);
 	void (*auth_ok) (struct login_session_data* sd);
 	void (*auth_failed) (struct login_session_data* sd, int result);
-	void (*login_error) (int fd, uint8 status);
-	void (*parse_ping) (int fd, struct login_session_data* sd);
-	void (*parse_client_md5) (int fd, struct login_session_data* sd);
-	bool (*parse_client_login) (int fd, struct login_session_data* sd, const char *ip);
-	void (*send_coding_key) (int fd, struct login_session_data* sd);
-	void (*parse_request_coding_key) (int fd, struct login_session_data* sd);
+	bool (*client_login) (int fd, struct login_session_data *sd);
 	void (*char_server_connection_status) (int fd, struct login_session_data* sd, uint8 status);
 	void (*parse_request_connection) (int fd, struct login_session_data* sd, const char *ip, uint32 ipl);
-	int (*parse_login) (int fd);
 	void (*config_set_defaults) (void);
 	int (*config_read) (const char *cfgName);
 	char *LOGIN_CONF_NAME;

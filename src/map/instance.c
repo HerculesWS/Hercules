@@ -106,7 +106,7 @@ int instance_create(int owner_id, const char *name, enum instance_owner_type typ
 			icptr = &g->instances;
 			break;
 		default:
-			ShowError("instance_create: unknown type %d for owner_id %d and name %s.\n", type,owner_id,name);
+			ShowError("instance_create: unknown type %u for owner_id %d and name %s.\n", type, owner_id, name);
 			return -1;
 	}
 
@@ -551,7 +551,7 @@ void instance_destroy(int instance_id) {
 	struct party_data *p = NULL;
 	struct guild *g = NULL;
 	short *iptr = NULL;
-	int type, j;
+	int type;
 	unsigned int now = (unsigned int)time(NULL);
 
 	if( !instance->valid(instance_id) )
@@ -591,14 +591,15 @@ void instance_destroy(int instance_id) {
 			icptr = &g->instances;
 			break;
 		default:
-			ShowError("instance_destroy: unknown type %d for owner_id %d and name '%s'.\n", instance->list[instance_id].owner_type,instance->list[instance_id].owner_id,instance->list[instance_id].name);
+			ShowError("instance_destroy: unknown type %u for owner_id %d and name '%s'.\n", instance->list[instance_id].owner_type, instance->list[instance_id].owner_id, instance->list[instance_id].name);
 			break;
 	}
 
 	if( iptr != NULL ) {
-		ARR_FIND(0, *icptr, j, iptr[j] == instance_id);
-		if( j != *icptr )
-			iptr[j] = -1;
+		int i;
+		ARR_FIND(0, *icptr, i, iptr[i] == instance_id);
+		if (i != *icptr)
+			iptr[i] = -1;
 	}
 
 	if (instance->list[instance_id].map) {

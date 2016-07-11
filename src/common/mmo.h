@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -120,34 +120,74 @@
 #define MAX_SLOTS 4
 //Max amount of a single stacked item
 #define MAX_AMOUNT 30000
-#define MAX_ZENY 1000000000
+#define MAX_ZENY INT_MAX
 
 //Official Limit: 2.1b ( the var that stores the money doesn't go much higher than this by default )
 #define MAX_BANK_ZENY INT_MAX
 
+#ifndef MAX_LEVEL
 #define MAX_LEVEL 175
+#endif
 #define MAX_FAME 1000000000
 #define MAX_CART 100
+#ifndef MAX_SKILL
 #define MAX_SKILL 1478
+#endif
+#ifndef MAX_SKILL_ID
 #define MAX_SKILL_ID 10015   // [Ind/Hercules] max used skill ID
+#endif
+#ifndef MAX_SKILL_TREE
 // Update this max as necessary. 86 is the value needed for Expanded Super Novice.
 #define MAX_SKILL_TREE 86
+#endif
+#ifndef DEFAULT_WALK_SPEED
 #define DEFAULT_WALK_SPEED 150
+#endif
+#ifndef MIN_WALK_SPEED
 #define MIN_WALK_SPEED 20 /* below 20 clips animation */
+#endif
+#ifndef MAX_WALK_SPEED
 #define MAX_WALK_SPEED 1000
+#endif
+#ifndef MAX_STORAGE
 #define MAX_STORAGE 600
+#endif
+#ifndef MAX_GUILD_STORAGE
 #define MAX_GUILD_STORAGE 600
+#endif
+#ifndef MAX_PARTY
 #define MAX_PARTY 12
+#endif
+#ifndef BASE_GUILD_SIZE
 #define BASE_GUILD_SIZE 16               // Base guild members (without GD_EXTENSION)
+#endif
+#ifndef MAX_GUILD
 #define MAX_GUILD (BASE_GUILD_SIZE+10*6) // Increased max guild members +6 per 1 extension levels [Lupus]
+#endif
+#ifndef MAX_GUILDPOSITION
 #define MAX_GUILDPOSITION 20             // Increased max guild positions to accomodate for all members [Valaris] (removed) [PoW]
+#endif
+#ifndef MAX_GUILDEXPULSION
 #define MAX_GUILDEXPULSION 32
+#endif
+#ifndef MAX_GUILDALLIANCE
 #define MAX_GUILDALLIANCE 16
+#endif
+#ifndef MAX_GUILDSKILL
 #define MAX_GUILDSKILL 15                // Increased max guild skills because of new skills [Sara-chan]
+#endif
+#ifndef MAX_GUILDLEVEL
 #define MAX_GUILDLEVEL 50
+#endif
+#ifndef MAX_GUARDIANS
 #define MAX_GUARDIANS 8                  // Local max per castle. [Skotlex]
+#endif
+#ifndef MAX_QUEST_OBJECTIVES
 #define MAX_QUEST_OBJECTIVES 3           // Max quest objectives for a quest
+#endif
+#ifndef MAX_START_ITEMS
 #define MAX_START_ITEMS 32               // Max number of items allowed to be given to a char whenever it's created. [mkbu95]
+#endif
 
 // for produce
 #define MIN_ATTRIBUTE 0
@@ -170,7 +210,9 @@
 #define MAP_NAME_LENGTH (11 + 1)
 #define MAP_NAME_LENGTH_EXT (MAP_NAME_LENGTH + 4)
 
+#ifndef MAX_FRIENDS
 #define MAX_FRIENDS 40
+#endif
 #define MAX_MEMOPOINTS 3
 
 // Size of the fame list arrays.
@@ -186,8 +228,12 @@
 #define MAX_GUILDMES2 120
 
 // Base Homun skill.
+#ifndef HM_SKILLBASE
 #define HM_SKILLBASE 8001
+#endif
+#ifndef MAX_HOMUNSKILL
 #define MAX_HOMUNSKILL 43
+#endif
 
 // Mail System
 #define MAIL_MAX_INBOX 30
@@ -195,13 +241,23 @@
 #define MAIL_BODY_LENGTH 200
 
 // Mercenary System
+#ifndef MC_SKILLBASE
 #define MC_SKILLBASE 8201
+#endif
+#ifndef MAX_MERCSKILL
 #define MAX_MERCSKILL 40
+#endif
 
 // Elemental System
+#ifndef MAX_ELEMENTALSKILL
 #define MAX_ELEMENTALSKILL 42
+#endif
+#ifndef EL_SKILLBASE
 #define EL_SKILLBASE 8401
+#endif
+#ifndef MAX_ELESKILLTREE
 #define MAX_ELESKILLTREE 3
+#endif
 
 // The following system marks a different job ID system used by the map server,
 // which makes a lot more sense than the normal one. [Skotlex]
@@ -213,12 +269,9 @@
 #define JOBL_BABY 0x2000  //8192
 #define JOBL_THIRD 0x4000 //16384
 
-//Packet DB
-#define MIN_PACKET_DB 0x0064 //what's the point of minimum packet id ? [hemagx]
-#define MAX_PACKET_DB 0x0F00
-#define MAX_PACKET_POS 20
-
 #define SCRIPT_VARNAME_LENGTH 32 ///< Maximum length of a script variable
+
+#define INFINITE_DURATION (-1) // Infinite duration for status changes
 
 struct hplugin_data_store;
 
@@ -236,7 +289,9 @@ enum item_types {
 	IT_AMMO,    //10
 	IT_DELAYCONSUME,//11
 	IT_CASH = 18,
+#ifndef IT_MAX
 	IT_MAX
+#endif
 };
 
 #define INDEX_NOT_FOUND (-1) ///< Used as invalid/failure value in various functions that return an index
@@ -254,6 +309,11 @@ struct quest {
 	unsigned int time;               ///< Expiration time
 	int count[MAX_QUEST_OBJECTIVES]; ///< Kill counters of each quest objective
 	enum quest_state state;          ///< Current quest state
+};
+
+enum attribute_flag {
+	ATTR_NONE   = 0,
+	ATTR_BROKEN = 1,
 };
 
 struct item {
@@ -328,7 +388,9 @@ enum e_item_bound_type {
 	IBT_GUILD     = 0x2,
 	IBT_PARTY     = 0x3,
 	IBT_CHARACTER = 0x4,
+#ifndef IBT_MAX
 	IBT_MAX       = 0x4,
+#endif
 };
 
 enum {
@@ -392,11 +454,11 @@ struct script_reg_str {
 	char *value;
 };
 
-// For saving status changes across sessions. [Skotlex]
+/// For saving status changes across sessions. [Skotlex]
 struct status_change_data {
-	unsigned short type; //SC_type
-	int val1, val2, val3, val4;
-	unsigned int tick; //Remaining duration.
+	unsigned short type;        ///< Status change type (@see enum sc_type)
+	int val1, val2, val3, val4; ///< Parameters (meaning depends on type).
+	int tick;                   ///< Remaining duration.
 };
 
 struct storage_data {
@@ -473,7 +535,7 @@ struct s_elemental {
 	int elemental_id;
 	int char_id;
 	short class_;
-	int mode;
+	uint32 mode;
 	int hp, sp, max_hp, max_sp, matk, atk, atk2;
 	short hit, flee, amotion, def, mdef;
 	int life_time;
@@ -775,7 +837,9 @@ enum {
 	GD_RESTORE=10012,
 	GD_EMERGENCYCALL=10013,
 	GD_DEVELOPMENT=10014,
+#ifndef GD_MAX
 	GD_MAX,
+#endif
 };
 
 //These mark the ID of the jobs, as expected by the client. [Skotlex]
@@ -932,7 +996,9 @@ enum {
 	JOB_OBORO,
 	JOB_REBELLION = 4215,
 
+#ifndef JOB_MAX
 	JOB_MAX,
+#endif
 };
 
 //Total number of classes (for data storage)
@@ -969,7 +1035,9 @@ enum weapon_type {
 	W_GRENADE,   //21
 	W_HUUMA,     //22
 	W_2HSTAFF,   //23
-	MAX_WEAPON_TYPE,
+#ifndef MAX_SINGLE_WEAPON_TYPE
+	MAX_SINGLE_WEAPON_TYPE,
+#endif
 	// dual-wield constants
 	W_DOUBLE_DD, ///< 2 daggers
 	W_DOUBLE_SS, ///< 2 swords
@@ -977,6 +1045,9 @@ enum weapon_type {
 	W_DOUBLE_DS, ///< dagger + sword
 	W_DOUBLE_DA, ///< dagger + axe
 	W_DOUBLE_SA, ///< sword + axe
+#ifndef MAX_WEAPON_TYPE
+	MAX_WEAPON_TYPE,
+#endif
 };
 
 enum ammo_type {
@@ -1043,6 +1114,10 @@ enum hz_char_ask_name_answer {
 // sanity checks...
 #if MAX_ZENY > INT_MAX
 #error MAX_ZENY is too big
+#endif
+
+#if MAX_SLOTS < 4
+#error MAX_SLOTS it too small
 #endif
 
 #endif /* COMMON_MMO_H */

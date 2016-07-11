@@ -38,6 +38,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 #include "common/nullpo.h"
+#include "plugins/HPMHooking.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,11 +52,12 @@ struct malloc_interface iMalloc_HPM;
 struct malloc_interface *HPMiMalloc;
 struct HPM_interface HPM_s;
 struct HPM_interface *HPM;
+struct HPMHooking_core_interface HPMHooking_core_s;
 
 /**
  * (char*) data name -> (unsigned int) HPMDataCheck[] index
  **/
-DBMap *datacheck_db;
+struct DBMap *datacheck_db;
 int datacheck_version;
 const struct s_HPMDataCheck *datacheck_data;
 
@@ -214,11 +216,11 @@ bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplugin_data
 			break;
 		default:
 			if (HPM->data_store_validate_sub == NULL) {
-				ShowError("HPM:validateHPData failed, type %d needs sub-handler!\n",type);
+				ShowError("HPM:validateHPData failed, type %u needs sub-handler!\n", type);
 				return false;
 			}
 			if (!HPM->data_store_validate_sub(type, storeptr, initialize)) {
-				ShowError("HPM:HPM:validateHPData failed, unknown type %d!\n",type);
+				ShowError("HPM:HPM:validateHPData failed, unknown type %u!\n", type);
 				return false;
 			}
 			break;
@@ -228,7 +230,7 @@ bool hplugin_data_store_validate(enum HPluginDataTypes type, struct hplugin_data
 		store = *storeptr;
 	}
 	if (store->type != type) {
-		ShowError("HPM:HPM:validateHPData failed, store type mismatch %d != %d.\n",store->type, type);
+		ShowError("HPM:HPM:validateHPData failed, store type mismatch %u != %u.\n", store->type, type);
 		return false;
 	}
 	return true;
@@ -253,7 +255,7 @@ void hplugins_addToHPData(enum HPluginDataTypes type, uint32 pluginID, struct hp
 
 	if (!HPM->data_store_validate(type, storeptr, true)) {
 		/* woo it failed! */
-		ShowError("HPM:addToHPData:%s: failed, type %d (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
+		ShowError("HPM:addToHPData:%s: failed, type %u (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
 		return;
 	}
 	store = *storeptr;
@@ -294,7 +296,7 @@ void *hplugins_getFromHPData(enum HPluginDataTypes type, uint32 pluginID, struct
 
 	if (!HPM->data_store_validate(type, &store, false)) {
 		/* woo it failed! */
-		ShowError("HPM:getFromHPData:%s: failed, type %d (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
+		ShowError("HPM:getFromHPData:%s: failed, type %u (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
 		return NULL;
 	}
 	if (!store)
@@ -322,7 +324,7 @@ void hplugins_removeFromHPData(enum HPluginDataTypes type, uint32 pluginID, stru
 
 	if (!HPM->data_store_validate(type, &store, false)) {
 		/* woo it failed! */
-		ShowError("HPM:removeFromHPData:%s: failed, type %d (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
+		ShowError("HPM:removeFromHPData:%s: failed, type %u (%u|%u)\n", HPM->pid2name(pluginID), type, pluginID, classid);
 		return;
 	}
 	if (!store)
@@ -341,13 +343,13 @@ void hplugins_removeFromHPData(enum HPluginDataTypes type, uint32 pluginID, stru
 /* TODO: add ability for tracking using pID for the upcoming runtime load/unload support. */
 bool HPM_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID)
 {
-	if (!HPM->hooking) {
+	if (!HPM->hooking->enabled) {
 		ShowError("HPM:AddHook Fail! '%s' tried to hook to '%s' but HPMHooking is disabled!\n",HPM->pid2name(pID),target);
 		return false;
 	}
 	/* search if target is a known hook point within 'common' */
 	/* if not check if a sub-hooking list is available (from the server) and run it by */
-	if (HPM->addhook_sub && HPM->addhook_sub(type,target,hook,pID))
+	if (HPM->hooking->addhook_sub != NULL && HPM->hooking->addhook_sub(type,target,hook,pID))
 		return true;
 
 	ShowError("HPM:AddHook: unknown Hooking Point '%s'!\n",target);
@@ -358,12 +360,12 @@ bool HPM_AddHook(enum HPluginHookType type, const char *target, void *hook, unsi
 void HPM_HookStop(const char *func, unsigned int pID)
 {
 	/* track? */
-	HPM->force_return = true;
+	HPM->hooking->force_return = true;
 }
 
-bool HPM_HookStopped (void)
+bool HPM_HookStopped(void)
 {
-	return HPM->force_return;
+	return HPM->hooking->force_return;
 }
 
 /**
@@ -387,12 +389,12 @@ bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecF
 
 	ARR_FIND(0, VECTOR_LENGTH(cmdline->args_data), i, strcmp(VECTOR_INDEX(cmdline->args_data, i).name, name) == 0);
 
-       if (i != VECTOR_LENGTH(cmdline->args_data)) {
-               ShowError("HPM:add_arg:%s duplicate! (from %s)\n",name,HPM->pid2name(pluginID));
-               return false;
-       }
+	if (i != VECTOR_LENGTH(cmdline->args_data)) {
+		ShowError("HPM:add_arg:%s duplicate! (from %s)\n",name,HPM->pid2name(pluginID));
+		return false;
+	}
 
-       return cmdline->arg_add(pluginID, name, '\0', func, help, has_param ? CMDLINE_OPT_PARAM : CMDLINE_OPT_NORMAL);
+	return cmdline->arg_add(pluginID, name, '\0', func, help, has_param ? CMDLINE_OPT_PARAM : CMDLINE_OPT_NORMAL);
 }
 
 /**
@@ -567,16 +569,20 @@ struct hplugin *hplugin_load(const char* filename) {
 	plugin->hpi->addToHPData        = hplugins_addToHPData;
 	plugin->hpi->getFromHPData      = hplugins_getFromHPData;
 	plugin->hpi->removeFromHPData   = hplugins_removeFromHPData;
-	plugin->hpi->AddHook            = HPM_AddHook;
-	plugin->hpi->HookStop           = HPM_HookStop;
-	plugin->hpi->HookStopped        = HPM_HookStopped;
 	plugin->hpi->addArg             = hpm_add_arg;
 	plugin->hpi->addConf            = hplugins_addconf;
+	if ((plugin->hpi->hooking = plugin_import(plugin->dll, "HPMHooking_s", struct HPMHooking_interface *)) != NULL) {
+		plugin->hpi->hooking->AddHook     = HPM_AddHook;
+		plugin->hpi->hooking->HookStop    = HPM_HookStop;
+		plugin->hpi->hooking->HookStopped = HPM_HookStopped;
+	}
 	/* server specific */
 	if( HPM->load_sub )
 		HPM->load_sub(plugin);
 
-	ShowStatus("HPM: Loaded plugin '"CL_WHITE"%s"CL_RESET"' (%s).\n", plugin->info->name, plugin->info->version);
+	ShowStatus("HPM: Loaded plugin '"CL_WHITE"%s"CL_RESET"' (%s)%s.\n",
+			plugin->info->name, plugin->info->version,
+			plugin->hpi->hooking != NULL ? " built with HPMHooking support" : "");
 
 	return plugin;
 }
@@ -616,8 +622,8 @@ CMDLINEARG(loadplugin)
  * Reads the plugin configuration and loads the plugins as necessary.
  */
 void hplugins_config_read(void) {
-	config_t plugins_conf;
-	config_setting_t *plist = NULL;
+	struct config_t plugins_conf;
+	struct config_setting_t *plist = NULL;
 	const char *config_filename = "conf/plugins.conf"; // FIXME hardcoded name
 	FILE *fp;
 	int i;
@@ -628,12 +634,12 @@ void hplugins_config_read(void) {
 		fclose(fp);
 	}
 
-	if (libconfig->read_file(&plugins_conf, config_filename))
+	if (!libconfig->load_file(&plugins_conf, config_filename))
 		return;
 
 	plist = libconfig->lookup(&plugins_conf, "plugins_list");
 	for (i = 0; i < VECTOR_LENGTH(HPM->cmdline_load_plugins); i++) {
-		config_setting_t *entry = libconfig->setting_add(plist, NULL, CONFIG_TYPE_STRING);
+		struct config_setting_t *entry = libconfig->setting_add(plist, NULL, CONFIG_TYPE_STRING);
 		config_setting_set_string(entry, VECTOR_INDEX(HPM->cmdline_load_plugins, i));
 	}
 
@@ -660,12 +666,13 @@ void hplugins_config_read(void) {
 					bool (*addhook_sub) (enum HPluginHookType type, const char *target, void *hook, unsigned int pID);
 					if ((func = plugin_import(plugin->dll, "Hooked",const char * (*)(bool *))) != NULL
 					 && (addhook_sub = plugin_import(plugin->dll, "HPM_Plugin_AddHook",bool (*)(enum HPluginHookType, const char *, void *, unsigned int))) != NULL) {
-						const char *failed = func(&HPM->force_return);
+						const char *failed = func(&HPM->hooking->force_return);
 						if (failed) {
 							ShowError("HPM: failed to retrieve '%s' for '"CL_WHITE"%s"CL_RESET"'!\n", failed, plugin_name);
 						} else {
-							HPM->hooking = true;
-							HPM->addhook_sub = addhook_sub;
+							HPM->hooking->enabled = true;
+							HPM->hooking->addhook_sub = addhook_sub;
+							HPM->hooking->Hooked = func; // The purpose of this is type-checking 'func' at compile time.
 						}
 					}
 				}
@@ -1046,11 +1053,10 @@ void hpm_final(void)
 void hpm_defaults(void)
 {
 	HPM = &HPM_s;
+	HPM->hooking = &HPMHooking_core_s;
 
 	memset(&HPM->filenames, 0, sizeof(HPM->filenames));
 	VECTOR_INIT(HPM->cmdline_load_plugins);
-	HPM->force_return = false;
-	HPM->hooking = false;
 	/* */
 	HPM->init = hpm_init;
 	HPM->final = hpm_final;
@@ -1067,7 +1073,6 @@ void hpm_defaults(void)
 	HPM->pid2name = hplugins_id2name;
 	HPM->parse_packets = hplugins_parse_packets;
 	HPM->load_sub = NULL;
-	HPM->addhook_sub = NULL;
 	HPM->parseConf = hplugins_parse_conf;
 	HPM->getBattleConf = hplugins_get_battle_conf;
 	HPM->DataCheck = HPM_DataCheck;
@@ -1078,4 +1083,9 @@ void hpm_defaults(void)
 	HPM->data_store_create = hplugin_data_store_create;
 	HPM->data_store_validate = hplugin_data_store_validate;
 	HPM->data_store_validate_sub = NULL;
+
+	HPM->hooking->enabled = false;
+	HPM->hooking->force_return = false;
+	HPM->hooking->addhook_sub = NULL;
+	HPM->hooking->Hooked = NULL;
 }

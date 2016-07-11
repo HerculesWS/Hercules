@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -271,10 +271,9 @@ char* strlib_strtok_r(char *s1, const char *s2, char **lasts)
 
 size_t strlib_strnlen(const char *string, size_t maxlen)
 {
-// TODO: The _MSC_VER check can probably be removed (we no longer support VS
-// versions <= 2003, do we?), but this implementation might be still necessary
-// for NetBSD 5.x and possibly some Solaris versions.
-#if !(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)
+// TODO: Verify whether this implementation is still necessary for NetBSD 5.x
+// and possibly some Solaris versions.
+#if !(defined(WIN32) && defined(_MSC_VER)) && !defined(HAVE_STRNLEN)
 /* Find the length of STRING, but scan at most MAXLEN characters.
  * If no '\0' terminator is found in that many characters, return MAXLEN.
  */
@@ -424,13 +423,12 @@ int strlib_strline(const char *str, size_t pos)
 /// @param output Output string
 /// @param input Binary input buffer
 /// @param count Number of bytes to convert
-bool strlib_bin2hex(char *output, unsigned char *input, size_t count)
+bool strlib_bin2hex(char *output, const unsigned char *input, size_t count)
 {
 	char toHex[] = "0123456789abcdef";
 	size_t i;
 
-	for( i = 0; i < count; ++i )
-	{
+	for (i = 0; i < count; ++i) {
 		*output++ = toHex[(*input & 0xF0) >> 4];
 		*output++ = toHex[(*input & 0x0F) >> 0];
 		++input;
@@ -630,6 +628,7 @@ int sv_parse(const char* str, int len, int startoff, char delim, int* out_pos, i
 	svstate.opt = opt;
 	svstate.delim = delim;
 	svstate.done = false;
+	svstate.start = 0;
 
 	// parse
 	count = 0;
@@ -773,6 +772,7 @@ size_t sv_escape_c(char* out_dest, const char* src, size_t len, const char* esca
 						case '\v': out_dest[j++] = 'v'; break;
 						case '\f': out_dest[j++] = 'f'; break;
 						case '\?': out_dest[j++] = '?'; break;
+						case '\"': out_dest[j++] = '"'; break;
 						default:// to octal
 							out_dest[j++] = '0'+((char)(((unsigned char)src[i]&0700)>>6));
 							out_dest[j++] = '0'+((char)(((unsigned char)src[i]&0070)>>3));
@@ -1114,7 +1114,7 @@ void strlib_defaults(void) {
 	strlib->normalize_name_ = strlib_normalize_name;
 	strlib->stristr_ = strlib_stristr;
 
-#if !(defined(WIN32) && defined(_MSC_VER) && _MSC_VER >= 1400) && !defined(HAVE_STRNLEN)
+#if !(defined(WIN32) && defined(_MSC_VER)) && !defined(HAVE_STRNLEN)
 	strlib->strnlen_ = strlib_strnlen;
 #else
 	strlib->strnlen_ = NULL;

@@ -71,7 +71,7 @@ static const char *test_libconfig_defaults(void)
 
 static const char *test_libconfig_init_destroy(void)
 {
-	config_t config;
+	struct config_t config;
 	libconfig->init(&config);
 	if (config.root == NULL || config.root != config_root_setting(&config)) {
 		return "Unable to create config.";
@@ -85,7 +85,7 @@ static const char *test_libconfig_init_destroy(void)
 
 static const char *test_libconfig_read_file_src(void)
 {
-	config_t config;
+	struct config_t config;
 #define FILENAME "src/test/libconfig/test.conf"
 	if (libconfig->read_file_src(&config, FILENAME) == CONFIG_FALSE) {
 		libconfig->destroy(&config);
@@ -102,7 +102,7 @@ static const char *test_libconfig_read_file_src(void)
 
 static const char *test_libconfig_read(void)
 {
-	config_t config;
+	struct config_t config;
 #define FILENAME "src/test/libconfig/test.conf"
 	FILE *fp = fopen(FILENAME, "r");
 	if (!fp) {
@@ -113,6 +113,7 @@ static const char *test_libconfig_read(void)
 		libconfig->destroy(&config);
 		return "Unable to read from file '" FILENAME "'.";
 	}
+	fclose(fp);
 #undef FILENAME
 	if (config.root == NULL) {
 		libconfig->destroy(&config);
@@ -122,11 +123,11 @@ static const char *test_libconfig_read(void)
 	return NULL;
 }
 
-static const char *test_libconfig_read_file(void)
+static const char *test_libconfig_load_file(void)
 {
-	config_t config;
+	struct config_t config;
 #define FILENAME "src/test/libconfig/test.conf"
-	if (libconfig->read_file(&config, FILENAME) != 0) {
+	if (libconfig->load_file(&config, FILENAME) == CONFIG_FALSE) {
 		return "Unable to read file '" FILENAME "'.";
 	}
 #undef FILENAME
@@ -140,19 +141,19 @@ static const char *test_libconfig_read_file(void)
 
 static const char *test_libconfig_write(void)
 {
-	//void (*write) (const config_t *config, FILE *stream);
+	//void (*write) (const struct config_t *config, FILE *stream);
 	return "TEST NOT IMPLEMENTED";
 }
 
 static const char *test_libconfig_write_file(void)
 {
-	//int (*write_file) (config_t *config, const char *filename);
+	//int (*write_file) (struct config_t *config, const char *filename);
 	return "TEST NOT IMPLEMENTED";
 }
 
 static const char *test_libconfig_read_string(void)
 {
-	config_t config;
+	struct config_t config;
 	if (libconfig->read_string(&config, "") == CONFIG_FALSE) {
 		libconfig->destroy(&config);
 		return "Unable to read from string.";
@@ -167,7 +168,7 @@ static const char *test_libconfig_read_string(void)
 
 static const char *test_libconfig_syntax(void)
 {
-	config_t config;
+	struct config_t config;
 	const char *input = "/* Test File */\n"
 		"Setting_Int: 1;\n"
 		"Setting_Int64: 1L;\n"
@@ -193,14 +194,13 @@ static const char *test_libconfig_syntax(void)
 
 static const char *test_libconfig_set_include_dir(void)
 {
-	//void (*set_include_dir) (config_t *config, const char *include_dir);
+	//void (*set_include_dir) (struct config_t *config, const char *include_dir);
 	return "TEST NOT IMPLEMENTED";
 }
 
 static const char *test_libconfig_lookup(void)
 {
-	config_t config;
-	config_setting_t *t = NULL;
+	struct config_t config;
 	int32 i32;
 	int64 i64;
 	double f;
@@ -221,14 +221,14 @@ static const char *test_libconfig_lookup(void)
 		return "Unable to parse configuration.";
 	}
 
-	if ((t = libconfig->lookup(&config, "Setting_Int")) == NULL) {
+	if (libconfig->lookup(&config, "Setting_Int") == NULL) {
 		libconfig->destroy(&config);
 		return "libconfig->lookup failed.";
 	}
 
-	if ((t = libconfig->lookup_from(config.root, "Setting_Int")) == NULL) {
+	if (libconfig->setting_lookup(config.root, "Setting_Int") == NULL) {
 		libconfig->destroy(&config);
-		return "libconfig->lookup_from failed.";
+		return "libconfig->setting_lookup failed.";
 	}
 
 	if (libconfig->lookup_int(&config, "Setting_Int", &i32) == CONFIG_FALSE || i32 != 1) {
@@ -263,8 +263,8 @@ static const char *test_libconfig_lookup(void)
 
 static const char *test_libconfig_setting_get(void)
 {
-	config_t config;
-	config_setting_t *t = NULL;
+	struct config_t config;
+	struct config_setting_t *t = NULL;
 	double f;
 	const char *str;
 	const char *input = "/* Test File */\n"
@@ -366,17 +366,17 @@ static const char *test_libconfig_setting_get(void)
 
 static const char *test_libconfig_set(void)
 {
-	//int (*setting_set_int) (config_setting_t *setting ,int value);
-	//int (*setting_set_int64) (config_setting_t *setting, long long value);
-	//int (*setting_set_float) (config_setting_t *setting, double value);
-	//int (*setting_set_bool) (config_setting_t *setting, int value);
-	//int (*setting_set_string) (config_setting_t *setting, const char *value);
+	//int (*setting_set_int) (struct config_setting_t *setting ,int value);
+	//int (*setting_set_int64) (struct config_setting_t *setting, long long value);
+	//int (*setting_set_float) (struct config_setting_t *setting, double value);
+	//int (*setting_set_bool) (struct config_setting_t *setting, int value);
+	//int (*setting_set_string) (struct config_setting_t *setting, const char *value);
 	return "TEST NOT IMPLEMENTED";
 }
 
 static const char *test_libconfig_setting_lookup(void)
 {
-	config_t config;
+	struct config_t config;
 	int32 i32;
 	int64 i64;
 	double f;
@@ -429,8 +429,8 @@ static const char *test_libconfig_setting_lookup(void)
 
 static const char *test_libconfig_setting_types(void)
 {
-	config_t config;
-	config_setting_t *t;
+	struct config_t config;
+	struct config_setting_t *t;
 	const char *input = "/* Test File */\n"
 		"Setting_Int: 1;\n"
 		"Setting_Int64: 1L;\n"
@@ -523,7 +523,7 @@ static const char *test_libconfig_setting_types(void)
 
 static const char *test_libconfig_values(void)
 {
-	config_t config;
+	struct config_t config;
 	int32 i32;
 	int64 i64;
 	const char *input = "/* Test File */\n"
@@ -583,7 +583,7 @@ static const char *test_libconfig_values(void)
 
 static const char *test_libconfig_path_lookup(void)
 {
-	config_t config;
+	struct config_t config;
 	int32 i32;
 	const char *input = "/* Test File */\n"
 		"Setting_Array: [1, 2, 3];\n"
@@ -666,7 +666,7 @@ static const char *test_libconfig_path_lookup(void)
 
 static const char *test_libconfig_setting_names(void)
 {
-	config_t config;
+	struct config_t config;
 	int32 i32;
 	const char *input = "/* Test File */\n"
 		"Setting'with'apostrophes: 1;\n"
@@ -724,9 +724,9 @@ static const char *test_libconfig_setting_names(void)
 
 static const char *test_libconfig_duplicate_keys(void)
 {
-	config_t config;
+	struct config_t config;
 	int32 i32;
-	config_setting_t *t, *tt;
+	struct config_setting_t *t, *tt;
 	int i = 0;
 	const char *input = "/* Test File */\n"
 		"Setting_Group: {\n"
@@ -775,7 +775,7 @@ static const char *test_libconfig_duplicate_keys(void)
 
 static const char *test_libconfig_special_string_syntax(void)
 {
-	config_t config;
+	struct config_t config;
 	const char *str;
 	const char *input = "/* Test File */\n"
 		"SpecialString: <\"This is an \"Item_Script\" Special String\n\tWith a line-break inside.\">;\n"
@@ -809,33 +809,33 @@ int do_init(int argc, char **argv)
 	TEST("libconfig->init and libconfig->destroy", test_libconfig_init_destroy);
 	TEST("libconfig->read_file_src", test_libconfig_read_file_src);
 	TEST("libconfig->read", test_libconfig_read);
-	TEST("libconfig->read_file", test_libconfig_read_file);
+	TEST("libconfig->load_file", test_libconfig_load_file);
 	(void)test_libconfig_write; //TEST("libconfig->write", test_libconfig_write);
 	(void)test_libconfig_write_file; //TEST("libconfig->write_file", test_libconfig_write_file);
 	TEST("libconfig->read_string", test_libconfig_read_string);
 	TEST("libconfig syntax", test_libconfig_syntax);
 	(void)test_libconfig_set_include_dir; //TEST("libconfig->set_include_dir", test_libconfig_set_include_dir);
-	//int (*setting_set_format) (config_setting_t *setting, short format);
-	//short (*setting_get_format) (const config_setting_t *setting);
-	//config_setting_t * (*setting_set_int_elem) (config_setting_t *setting, int idx, int value);
-	//config_setting_t * (*setting_set_int64_elem) (config_setting_t *setting, int idx, long long value);
-	//config_setting_t * (*setting_set_float_elem) (config_setting_t *setting, int idx, double value);
-	//config_setting_t * (*setting_set_bool_elem) (config_setting_t *setting, int idx, int value);
-	//config_setting_t * (*setting_set_string_elem) (config_setting_t *setting, int idx, const char *value);
-	//config_setting_t * (*setting_add) (config_setting_t *parent, const char *name, int type);
-	//int (*setting_remove) (config_setting_t *parent, const char *name);
-	//int (*setting_remove_elem) (config_setting_t *parent, unsigned int idx);
-	//void (*setting_set_hook) (config_setting_t *setting, void *hook);
-	//void (*set_destructor) (config_t *config, void (*destructor)(void *));
+	//int (*setting_set_format) (struct config_setting_t *setting, short format);
+	//short (*setting_get_format) (const struct config_setting_t *setting);
+	//struct config_setting_t * (*setting_set_int_elem) (struct config_setting_t *setting, int idx, int value);
+	//struct config_setting_t * (*setting_set_int64_elem) (struct config_setting_t *setting, int idx, long long value);
+	//struct config_setting_t * (*setting_set_float_elem) (struct config_setting_t *setting, int idx, double value);
+	//struct config_setting_t * (*setting_set_bool_elem) (struct config_setting_t *setting, int idx, int value);
+	//struct config_setting_t * (*setting_set_string_elem) (struct config_setting_t *setting, int idx, const char *value);
+	//struct config_setting_t * (*setting_add) (struct config_setting_t *parent, const char *name, int type);
+	//int (*setting_remove) (struct config_setting_t *parent, const char *name);
+	//int (*setting_remove_elem) (struct config_setting_t *parent, unsigned int idx);
+	//void (*setting_set_hook) (struct config_setting_t *setting, void *hook);
+	//void (*set_destructor) (struct config_t *config, void (*destructor)(void *));
 	TEST("libconfig->lookup_*", test_libconfig_lookup);
 	TEST("libconfig->setting_get_*", test_libconfig_setting_get);
 	(void)test_libconfig_set; //TEST("libconfig->setting_set_*", test_libconfig_setting_set);
 	TEST("libconfig->setting_lookup_*", test_libconfig_setting_lookup);
 	TEST("setting types", test_libconfig_setting_types);
-	//void (*setting_copy_simple) (config_setting_t *parent, const config_setting_t *src);
-	//void (*setting_copy_elem) (config_setting_t *parent, const config_setting_t *src);
-	//void (*setting_copy_aggregate) (config_setting_t *parent, const config_setting_t *src);
-	//int (*setting_copy) (config_setting_t *parent, const config_setting_t *src);
+	//void (*setting_copy_simple) (struct config_setting_t *parent, const struct config_setting_t *src);
+	//void (*setting_copy_elem) (struct config_setting_t *parent, const struct config_setting_t *src);
+	//void (*setting_copy_aggregate) (struct config_setting_t *parent, const struct config_setting_t *src);
+	//int (*setting_copy) (struct config_setting_t *parent, const struct config_setting_t *src);
 	TEST("values", test_libconfig_values);
 	TEST("path lookup", test_libconfig_path_lookup);
 	TEST("setting key names", test_libconfig_setting_names);

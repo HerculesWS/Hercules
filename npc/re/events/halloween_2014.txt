@@ -29,12 +29,6 @@
 //= along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //=========================================================================
 //= Halloween Event (2014)
-//================= File Encoding =========================================
-//= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
-//= -If the encoding is correct, the next three lines have the same length-
-//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
-//= ============ ============================================= ============
-//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
 //================= Description ===========================================
 //= The Official 2014 Halloween Event
 //=
@@ -68,7 +62,7 @@
 	} else {
 		if (questprogress(14450) ==  2) {
 			mes "[Mighty Priest]";
-			mes ""+(Sex ? "Brother" : "Sister")+", it's good to see you again!";
+			mes (Sex == SEX_MALE ? "Brother" : "Sister") +", it's good to see you again!";
 			mes "came here to see me because of that?";
 			next;
 			mes "[Mighty Priest]";
@@ -181,13 +175,13 @@
 			next;
 			mes "[Mighty Priest]";
 			mes "I feel much better now!";
-			mes ""+(Sex ? "Brother" : "Sister")+", thank you so much for waking me up.";
+			mes (Sex == SEX_MALE ? "Brother" : "Sister") +", thank you so much for waking me up.";
 			next;
 			mes "["+strcharinfo(0)+"]";
 			mes "What made you so tired?";
 			next;
 			mes "[Mighty Priest]";
-			mes ""+(Sex ? "Brother" : "Sister")+", you didn't have any damage yet?";
+			mes (Sex == SEX_MALE ? "Brother" : "Sister") +", you didn't have any damage yet?";
 			next;
 			mes "["+strcharinfo(0)+"]";
 			mes "What happened to you?";
@@ -213,7 +207,7 @@
 			mes "Could you maybe help me out?";
 			next;
 			mes "[Mighty Priest]";
-			mes "They would not damage you at all, "+(Sex ? "brother" : "sister")+".";
+			mes "They would not damage you at all, "+ (Sex == SEX_MALE ? "brother" : "sister") +".";
 			mes "I would also give you a reward for the trouble.";
 			next;
 			mes "[Mighty Priest]";
@@ -692,7 +686,7 @@ niflheim,196,185,3	script	Bolak#14hal	4_M_DRAKE,{
 			mes "You could be a 'fake'!";
 			next;
 			mes "[Nathan]";
-			mes "Da...dÂ¡Â¦?";
+			mes "Da...d...?";
 			next;
 			mes "[Bolak]";
 			mes "Nathan!! Even you doubt your own father?";
@@ -1426,7 +1420,7 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 	} else if (questprogress(14455) == 1) {
 		mes "[Sister Haley]";
 		mes "I hope all is well with everyone visiting here~";
-		mes "Oh! Is it you, "+(Sex ? "brother" : "sister")+"? How is it going with the thing you need to do?";
+		mes "Oh! Is it you, "+ (Sex == SEX_MALE ? "brother" : "sister") +"? How is it going with the thing you need to do?";
 		next;
 		mes "["+strcharinfo(0)+"]";
 		mes "Well.. I could identify the live ones.";
@@ -1598,7 +1592,7 @@ prt_church,96,91,4	script	Spiritual Sister#14hal	1_F_PRIEST,5,5,{
 	} else if (questprogress(14451) == 1) {
 		mes "[Sister Haley]";
 		mes "I hope all is well with everyone visiting here~";
-		mes "What makes you come here, "+(Sex ? "brother" : "sister")+"?";
+		mes "What makes you come here, "+ (Sex == SEX_MALE? "brother" : "sister") +"?";
 		next;
 		mes "[I told her what happened in Nifflheim.]";
 		next;

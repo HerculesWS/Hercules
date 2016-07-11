@@ -52,8 +52,8 @@ struct guild_storage_interface *gstorage;
  *------------------------------------------*/
 int storage_comp_item(const void *i1_, const void *i2_)
 {
-	struct item *i1 = (struct item *)i1_;
-	struct item *i2 = (struct item *)i2_;
+	const struct item *i1 = i1_;
+	const struct item *i2 = i2_;
 
 	if (i1->nameid == i2->nameid)
 		return 0;
@@ -79,7 +79,7 @@ void storage_sortitem(struct item* items, unsigned int size)
  * Parses storage and saves 'dirty' ones upon reconnect. [Skotlex]
  * @see DBApply
  */
-int storage_reconnect_sub(DBKey key, DBData *data, va_list ap)
+int storage_reconnect_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct guild_storage *stor = DB->data2ptr(data);
 	if (stor->dirty && stor->storage_status == 0) //Save closed storages.
@@ -366,7 +366,7 @@ void storage_storage_quit(struct map_session_data* sd, int flag) {
 /**
  * @see DBCreateData
  */
-DBData create_guildstorage(DBKey key, va_list args)
+struct DBData create_guildstorage(union DBKey key, va_list args)
 {
 	struct guild_storage *gs = NULL;
 	gs = (struct guild_storage *) aCalloc(sizeof(struct guild_storage), 1);

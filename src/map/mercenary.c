@@ -66,19 +66,23 @@ int merc_search_index(int class_)
 {
 	int i;
 	ARR_FIND(0, MAX_MERCENARY_CLASS, i, mercenary->db[i].class_ == class_);
-	return (i == MAX_MERCENARY_CLASS)?-1:i;
+	if (i == MAX_MERCENARY_CLASS)
+		return INDEX_NOT_FOUND;
+	return i;
 }
 
 bool merc_class(int class_)
 {
-	return (bool)(mercenary->search_index(class_) > -1);
+	if (mercenary->search_index(class_) != INDEX_NOT_FOUND)
+		return true;
+	return false;
 }
 
 struct view_data * merc_get_viewdata(int class_)
 {
 	int i = mercenary->search_index(class_);
-	if( i < 0 )
-		return 0;
+	if (i == INDEX_NOT_FOUND)
+		return NULL;
 
 	return &mercenary->db[i].vd;
 }
@@ -90,7 +94,7 @@ int merc_create(struct map_session_data *sd, int class_, unsigned int lifetime)
 	int i;
 	nullpo_retr(0,sd);
 
-	if( (i = mercenary->search_index(class_)) < 0 )
+	if ((i = mercenary->search_index(class_)) == INDEX_NOT_FOUND)
 		return 0;
 
 	db = &mercenary->db[i];
@@ -230,6 +234,7 @@ int mercenary_set_calls(struct mercenary_data *md, int value)
 
 int mercenary_save(struct mercenary_data *md)
 {
+	nullpo_retr(1, md);
 	md->mercenary.hp = md->battle_status.hp;
 	md->mercenary.sp = md->battle_status.sp;
 	md->mercenary.life_time = mercenary->get_lifetime(md);
@@ -261,7 +266,10 @@ int merc_contract_end_timer(int tid, int64 tick, int id, intptr_t data) {
 
 int merc_delete(struct mercenary_data *md, int reply)
 {
-	struct map_session_data *sd = md->master;
+	struct map_session_data *sd;
+
+	nullpo_retr(0, md);
+	sd = md->master;
 	md->mercenary.life_time = 0;
 
 	mercenary->contract_stop(md);
@@ -295,22 +303,26 @@ void merc_contract_stop(struct mercenary_data *md)
 
 void merc_contract_init(struct mercenary_data *md)
 {
+	nullpo_retv(md);
 	if( md->contract_timer == INVALID_TIMER )
 		md->contract_timer = timer->add(timer->gettick() + md->mercenary.life_time, mercenary->contract_end_timer, md->master->bl.id, 0);
 
 	md->regen.state.block = 0;
 }
 
-int merc_data_received(struct s_mercenary *merc, bool flag) {
+int merc_data_received(const struct s_mercenary *merc, bool flag)
+{
 	struct map_session_data *sd;
 	struct mercenary_data *md;
 	struct s_mercenary_db *db;
-	int i = mercenary->search_index(merc->class_);
+	int i;
 
+	nullpo_ret(merc);
+	i = mercenary->search_index(merc->class_);
 	if( (sd = map->charid2sd(merc->char_id)) == NULL )
 		return 0;
-	if( !flag || i < 0 )
-	{ // Not created - loaded - DB info
+	if (!flag || i == INDEX_NOT_FOUND) {
+		// Not created - loaded - DB info
 		sd->status.mer_id = 0;
 		return 0;
 	}
@@ -365,6 +377,7 @@ int merc_data_received(struct s_mercenary *merc, bool flag) {
 
 void mercenary_heal(struct mercenary_data *md, int hp, int sp)
 {
+	nullpo_retv(md);
 	if( hp )
 		clif->mercenary_updatestatus(md->master, SP_HP);
 	if( sp )
@@ -382,12 +395,14 @@ int mercenary_killbonus(struct mercenary_data *md)
 	const enum sc_type scs[] = { SC_MER_FLEE, SC_MER_ATK, SC_MER_HP, SC_MER_SP, SC_MER_HIT };
 	int index = rnd() % ARRAYLENGTH(scs);
 
+	nullpo_ret(md);
 	sc_start(NULL,&md->bl, scs[index], 100, rnd() % 5, 600000);
 	return 0;
 }
 
 int mercenary_kills(struct mercenary_data *md)
 {
+	nullpo_ret(md);
 	md->mercenary.kill_count++;
 	md->mercenary.kill_count = cap_value(md->mercenary.kill_count, 0, INT_MAX);
 
@@ -420,6 +435,8 @@ bool read_mercenarydb_sub(char* str[], int columns, int current) {
 	struct s_mercenary_db *db;
 	struct status_data *mstatus;
 
+	nullpo_retr(false, str);
+	Assert_retr(false, current >= 0 && current < MAX_MERCENARY_CLASS);
 	db = &mercenary->db[current];
 	db->class_ = atoi(str[0]);
 	safestrncpy(db->sprite, str[1], NAME_LENGTH);
@@ -481,6 +498,7 @@ bool read_mercenary_skilldb_sub(char* str[], int columns, int current)
 	int i, class_;
 	uint16 skill_id, skill_lv;
 
+	nullpo_retr(false, str);
 	class_ = atoi(str[0]);
 	ARR_FIND(0, MAX_MERCENARY_CLASS, i, class_ == mercenary->db[i].class_);
 	if( i == MAX_MERCENARY_CLASS )

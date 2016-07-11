@@ -267,10 +267,10 @@ function SF_RetrieveRingM {
 		mes "What happened to your "+getitemname($@wed_ring)+"? You didn't lose it... did you? We need it to continue with the ceremony!";
 		close;
 	}
-	if ($wed_bride_sex)
-		set @item, 2634;	//Groom's wedding ring
+	if ($wed_bride_sex == SEX_MALE)
+		@item = 2634; //Groom's wedding ring
 	else
-		set @item, 2635;	//Bride's wedding ring
+		@item = 2635; //Bride's wedding ring
 	if (getnameditem(@item,$wed_groom$) == 0) {
 		mes "You don't seem to have enough space to carry the ring... go free up some space and come back to reclaim your partner's ring.";
 		close;
@@ -293,10 +293,10 @@ function SF_RetrieveRingF {
 		mes "What happened to your "+getitemname($@wed_ring)+"? You didn't lose it... did you? We need it to continue with the ceremony!";
 		close;
 	}
-	if ($wed_groom_sex)
-		set @item, 2634;	//Groom's wedding ring
+	if ($wed_groom_sex == SEX_MALE)
+		@item = 2634; //Groom's wedding ring
 	else
-		set @item, 2635;	//Bride's wedding ring
+		@item = 2635; //Bride's wedding ring
 
 	if (getnameditem(@item,$wed_bride$) == 0) {
 		mes "You don't seem to have enough space to carry the ring... go free up some space and come back to reclaim your partner's ring.";
@@ -392,19 +392,19 @@ OnTimer55000:
 
 //Subfunction: Checks that the groom/bride is still wearing their stuff.
 function SF_equip_check {
-	if (Sex && getequipid(2) != 7170) {
+	if (Sex == SEX_MALE && getequipid(2) != 7170) {
 		mes "["+@name$+"]";
 		mes "Child, what did you do with your "+getitemname(7170)+"?";
 		emotion e_dots;
 		return 0;
 	}
-	if (Sex == 0 && getequipid(2) != 2338) {
+	if (Sex == SEX_FEMALE && getequipid(2) != 2338) {
 		mes "["+@name$+"]";
 		mes "Child, you are supposed to wear a "+getitemname(2338)+" at all times during the ceremony...";
 		emotion e_dots;
 		return 0;
 	}
-	if (Sex == 0 && $@wed_veil && getequipid(1) != 2206) {
+	if (Sex == SEX_FEMALE && $@wed_veil && getequipid(1) != 2206) {
 		mes "["+@name$+"]";
 		mes "Child, you can't take off your "+getitemname(2206)+" yet....";
 		emotion e_dots;
@@ -416,9 +416,9 @@ function SF_equip_check {
 //Subfunction: Resets wedding variables.
 function SF_wed_end {
 	set $wed_groom$,"";
-	set $wed_groom_sex, 0;
+	$wed_groom_sex = -1;
 	set $wed_bride$,"";
-	set $wed_bride_sex, 0;
+	$wed_bride_sex = -1;
 	set $wed_groom_progress,0;
 	set $wed_bride_progress,0;
 	set $wed_progress,0;
@@ -487,7 +487,7 @@ function SF_Register {
 		mes "Very well, whom would you like to register as?";
 		next;
 		set @submenu, select("Groom","Bride","Cancel");
-	} else if (Sex) { //Groom
+	} else if (Sex == SEX_MALE) { //Groom
 		mes "["+@name$+"]";
 		mes "Very well, will you register as the Groom?";
 		next;
@@ -547,7 +547,7 @@ function SF_WedProgress {
 			mes "Tell your groom to register, what is taking so long? Time is running out.";
 		close;
 	}
-	if (($wed_groom_progress == 0) && (Sex == 1 || $@wed_allow == 1)) {
+	if ($wed_groom_progress == 0 && (Sex == SEX_MALE || $@wed_allow == 1)) {
 		mes "["+@name$+"]";
 		mes $wed_bride$+" is waiting for the groom to register. Are you the one who came to register as groom?";
 		next;
@@ -569,7 +569,7 @@ function SF_WedProgress {
 		}
 
 	}
-	if (($wed_bride_progress == 0) && (Sex == 0 || $@wed_allow == 1)) {
+	if ($wed_bride_progress == 0 && (Sex == SEX_FEMALE || $@wed_allow == 1)) {
 		mes "["+@name$+"]";
 		mes $wed_groom$+" is waiting for the bride to register. Are you the one who came to register as the bride?";
 		next;
@@ -660,9 +660,9 @@ OnTimer60000:
 	emotion e_hmm;
 
 	set $wed_groom$,"";
-	set $wed_groom_sex, 0;
+	$wed_groom_sex = -1;
 	set $wed_bride$,"";
-	set $wed_bride_sex, 0;
+	$wed_bride_sex = -1;
 	set $wed_groom_progress,0;
 	set $wed_bride_progress,0;
 	set $wed_progress,0;
@@ -685,7 +685,7 @@ function SF_TryRegister {
 		emotion e_gasp;
 		close;
 	}
-	if (Sex)
+	if (Sex == SEX_MALE)
 		set @item, 7170;
 	else
 		set @item, 2338;
@@ -695,7 +695,7 @@ function SF_TryRegister {
 		mes "You should be wearing a "+getitemname(@item)+" if you want to get married.";
 		close;
 	}
-	if (Sex == 0 && $@wed_veil && getequipid(1) != 2206) {
+	if (Sex == SEX_FEMALE && $@wed_veil && getequipid(1) != 2206) {
 		mes "["+@name$+"]";
 		mes "Where is your "+getitemname(2206)+"? It's a necessary complement to your dress.";
 		close;
@@ -721,13 +721,13 @@ function SF_TryRegister {
 	if (@bride) {
 		set $wed_bride_progress,1;
 		set $wed_bride$,strcharinfo(0);
-		set $wed_bride_sex, Sex;
+		$wed_bride_sex = Sex;
 		if ($@wedding_effect == 1) //Store account id for effect.
 			set $wedding_effect_id, getcharid(3);
 	} else {
 		set $wed_groom_progress,1;
 		set $wed_groom$,strcharinfo(0);
-		set $wed_groom_sex, Sex;
+		$wed_groom_sex = Sex;
 		if ($@wedding_effect == 2) //Store account id for effect.
 			set $wedding_effect_id, getcharid(3);
 	}

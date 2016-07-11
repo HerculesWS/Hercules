@@ -23,9 +23,10 @@
 
 #include "common/hercules.h"
 
-#include <libconfig/libconfig.h>
-
 #include <stdarg.h>
+
+/* Forward Declarations */
+struct config_setting_t;
 
 // for help with the console colors look here:
 // http://www.edoceo.com/liberum/?doc=printf-with-color
@@ -118,7 +119,7 @@ struct showmsg_interface {
 	void (*showDebug) (const char *, ...) __attribute__((format(printf, 1, 2)));
 	void (*showError) (const char *, ...) __attribute__((format(printf, 1, 2)));
 	void (*showFatalError) (const char *, ...) __attribute__((format(printf, 1, 2)));
-	void (*showConfigWarning) (config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
+	void (*showConfigWarning) (struct config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
 };
 
 /* the purpose of these macros is simply to not make calling them be an annoyance */
@@ -129,7 +130,11 @@ struct showmsg_interface {
 #define ShowSQL(fmt, ...) (showmsg->showSQL((fmt), ##__VA_ARGS__))
 #define ShowInfo(fmt, ...) (showmsg->showInfo((fmt), ##__VA_ARGS__))
 #define ShowNotice(fmt, ...) (showmsg->showNotice((fmt), ##__VA_ARGS__))
+#ifdef BUILDBOT
+#define ShowWarning(fmt, ...) (showmsg->showError((fmt), ##__VA_ARGS__))
+#else  // BUILDBOT
 #define ShowWarning(fmt, ...) (showmsg->showWarning((fmt), ##__VA_ARGS__))
+#endif  // BUILDBOT
 #define ShowDebug(fmt, ...) (showmsg->showDebug((fmt), ##__VA_ARGS__))
 #define ShowError(fmt, ...) (showmsg->showError((fmt), ##__VA_ARGS__))
 #define ShowFatalError(fmt, ...) (showmsg->showFatalError((fmt), ##__VA_ARGS__))

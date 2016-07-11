@@ -49,7 +49,7 @@ static char   ipban_codepage[32] = "";
 static char   ipban_table[32] = "ipbanlist";
 
 // globals
-static Sql* sql_handle = NULL;
+static struct Sql *sql_handle = NULL;
 static int cleanup_timer_id = INVALID_TIMER;
 static bool ipban_inited = false;
 
@@ -259,7 +259,7 @@ void ipban_log(uint32 ip)
 	if (failures >= login->config->dynamic_pass_failure_ban_limit)
 	{
 		uint8* p = (uint8*)&ip;
-		if (SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s`(`list`,`btime`,`rtime`,`reason`) VALUES ('%u.%u.%u.*', NOW() , NOW() +  INTERVAL %d MINUTE ,'Password error ban')",
+		if (SQL_ERROR == SQL->Query(sql_handle, "INSERT INTO `%s`(`list`,`btime`,`rtime`,`reason`) VALUES ('%u.%u.%u.*', NOW() , NOW() +  INTERVAL %u MINUTE ,'Password error ban')",
 			ipban_table, p[3], p[2], p[1], login->config->dynamic_pass_failure_ban_duration))
 		{
 			Sql_ShowDebug(sql_handle);

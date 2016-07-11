@@ -436,7 +436,7 @@ spl_in01,281,329,3	script	Splendide Guard#tre	4_M_FAIRYSOLDIER,{
 	}
 	else {
 		mes "[Splendide Guard]";
-		mes "AnduVeldRe Ko VeldReFulo So LomaurDu So	So ";
+		mes "AnduVeldRe Ko VeldReFulo So LomaurDu So So";
 		close;
 	}
 }

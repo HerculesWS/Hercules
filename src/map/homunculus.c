@@ -391,7 +391,7 @@ bool homunculus_levelup(struct homun_data *hd) {
 			growth_max_hp, growth_max_sp,
 			growth_str/10.0, growth_agi/10.0, growth_vit/10.0,
 			growth_int/10.0, growth_dex/10.0, growth_luk/10.0);
-		clif_disp_onlyself(hd->master,output,strlen(output));
+		clif_disp_onlyself(hd->master, output);
 	}
 	return true;
 }
@@ -399,7 +399,7 @@ bool homunculus_levelup(struct homun_data *hd) {
 int homunculus_change_class(struct homun_data *hd, short class_) {
 	int i = homun->db_search(class_,HOMUNCULUS_CLASS);
 	nullpo_retr(0, hd);
-	if(i < 0)
+	if (i == INDEX_NOT_FOUND)
 		return 0;
 	hd->homunculusDB = &homun->dbs->db[i];
 	hd->homunculus.class_ = class_;
@@ -705,7 +705,8 @@ void homunculus_hunger_timer_delete(struct homun_data *hd) {
 	}
 }
 
-int homunculus_change_name(struct map_session_data *sd,char *name) {
+int homunculus_change_name(struct map_session_data *sd, const char *name)
+{
 	int i;
 	struct homun_data *hd;
 	nullpo_retr(1, sd);
@@ -725,21 +726,26 @@ int homunculus_change_name(struct map_session_data *sd,char *name) {
 	return intif_rename_hom(sd, name);
 }
 
-bool homunculus_change_name_ack(struct map_session_data *sd, char* name, int flag) {
+bool homunculus_change_name_ack(struct map_session_data *sd, const char *name, int flag)
+{
 	struct homun_data *hd;
+	char *newname = NULL;
 	nullpo_retr(false, sd);
 	nullpo_retr(false, name);
 	hd = sd->hd;
 	nullpo_retr(false, hd);
 	if (!homun_alive(hd)) return false;
 
-	normalize_name(name," ");//bugreport:3032
+	newname = aStrndup(name, NAME_LENGTH-1);
+	normalize_name(newname, " ");//bugreport:3032 // FIXME[Haru]: This should be normalized by the inter-server (so that it's const here)
 
-	if ( !flag || !strlen(name) ) {
+	if (flag == 0 || strlen(newname) == 0) {
 		clif->message(sd->fd, msg_sd(sd,280)); // You cannot use this name
+		aFree(newname);
 		return false;
 	}
-	safestrncpy(hd->homunculus.name,name,NAME_LENGTH);
+	safestrncpy(hd->homunculus.name, newname, NAME_LENGTH);
+	aFree(newname);
 	clif->charnameack (0,&hd->bl);
 	hd->homunculus.rename_flag = 1;
 	clif->hominfo(sd,hd,0);
@@ -763,14 +769,25 @@ int homunculus_db_search(int key,int type) {
 					return i;
 				break;
 			default:
-				return -1;
+				return INDEX_NOT_FOUND;
 		}
 	}
-	return -1;
+	return INDEX_NOT_FOUND;
 }
 
-// Create homunc structure
-bool homunculus_create(struct map_session_data *sd, struct s_homunculus *hom) {
+/**
+ * Creates and initializes an homunculus.
+ *
+ * @remark
+ *   The char_id field in the source homunculus data is ignored (the sd's
+ *   character ID is used instead).
+ *
+ * @param sd  The owner character.
+ * @param hom The homunculus source data.
+ * @retval false in case of errors.
+ */
+bool homunculus_create(struct map_session_data *sd, const struct s_homunculus *hom)
+{
 	struct homun_data *hd;
 	int i = 0;
 
@@ -780,7 +797,7 @@ bool homunculus_create(struct map_session_data *sd, struct s_homunculus *hom) {
 	Assert_retr(false, sd->status.hom_id == 0 || sd->hd == 0 || sd->hd->master == sd);
 
 	i = homun->db_search(hom->class_,HOMUNCULUS_CLASS);
-	if(i < 0) {
+	if (i == INDEX_NOT_FOUND) {
 		ShowError("homunculus_create: unknown class [%d] for homunculus '%s', requesting deletion.\n", hom->class_, hom->name);
 		sd->status.hom_id = 0;
 		intif->homunculus_requestdelete(hom->hom_id);
@@ -794,6 +811,7 @@ bool homunculus_create(struct map_session_data *sd, struct s_homunculus *hom) {
 	hd->master = sd;
 	hd->homunculusDB = &homun->dbs->db[i];
 	memcpy(&hd->homunculus, hom, sizeof(struct s_homunculus));
+	hd->homunculus.char_id = sd->status.char_id; // Fix character ID if necessary.
 	hd->exp_next = homun->dbs->exptable[hd->homunculus.level - 1];
 
 	status->set_viewdata(&hd->bl, hd->homunculus.class_);
@@ -863,35 +881,38 @@ bool homunculus_call(struct map_session_data *sd) {
 }
 
 // Receive homunculus data from char server
-bool homunculus_recv_data(int account_id, struct s_homunculus *sh, int flag) {
+bool homunculus_recv_data(int account_id, const struct s_homunculus *sh, int flag)
+{
 	struct map_session_data *sd;
 	struct homun_data *hd;
 
 	nullpo_retr(false, sh);
+
 	sd = map->id2sd(account_id);
-	if(!sd)
+	if (sd == NULL)
 		return false;
-	if (sd->status.char_id != sh->char_id) {
-		if (sd->status.hom_id == sh->hom_id)
-			sh->char_id = sd->status.char_id; //Correct char id.
-		else
-			return false;
-	}
-	if(!flag) { // Failed to load
+
+	if (flag == 0) { // Failed to load
 		sd->status.hom_id = 0;
 		return false;
 	}
 
-	if (!sd->status.hom_id) //Hom just created.
+	if (sd->status.char_id != sh->char_id && sd->status.hom_id != sh->hom_id)
+		return false;
+
+	if (sd->status.hom_id == 0) //Hom just created.
 		sd->status.hom_id = sh->hom_id;
 
-	if (sd->hd) //uh? Overwrite the data.
-		memcpy(&sd->hd->homunculus, sh, sizeof(struct s_homunculus));
-	else
+	if (sd->hd != NULL) {
+		//uh? Overwrite the data.
+		memcpy(&sd->hd->homunculus, sh, sizeof sd->hd->homunculus);
+		sd->hd->homunculus.char_id = sd->status.char_id; // Correct char id if necessary.
+	} else {
 		homun->create(sd, sh);
+	}
 
 	hd = sd->hd;
-	if(hd && hd->homunculus.hp && hd->homunculus.vaporize == HOM_ST_ACTIVE && hd->bl.prev == NULL && sd->bl.prev != NULL) {
+	if(hd != NULL && hd->homunculus.hp && hd->homunculus.vaporize == HOM_ST_ACTIVE && hd->bl.prev == NULL && sd->bl.prev != NULL) {
 		enum homun_type htype = homun->class2type(hd->homunculus.class_);
 
 		map->addblock(&hd->bl);
@@ -927,7 +948,8 @@ bool homunculus_creation_request(struct map_session_data *sd, int class_) {
 	nullpo_retr(false, sd);
 
 	i = homun->db_search(class_,HOMUNCULUS_CLASS);
-	if(i < 0) return false;
+	if (i == INDEX_NOT_FOUND)
+		return false;
 
 	memset(&hom, 0, sizeof(struct s_homunculus));
 	//Initial data

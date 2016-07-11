@@ -23,7 +23,9 @@
 
 #include "common/cbasetypes.h"
 #include "common/mmo.h" // ACCOUNT_REG2_NUM
-#include "common/sql.h" // Sql
+
+/* Forward declarations */
+struct Sql; // common/sql.h
 
 typedef struct AccountDB AccountDB;
 typedef struct AccountDBIterator AccountDBIterator;
@@ -158,7 +160,7 @@ struct AccountDB
 };
 
 #ifdef HERCULES_CORE
-Sql *account_db_sql_up(AccountDB* self);
+struct Sql *account_db_sql_up(AccountDB* self);
 
 void mmo_send_accreg2(AccountDB* self, int fd, int account_id, int char_id);
 void mmo_save_accreg2(AccountDB* self, int fd, int account_id, int char_id);

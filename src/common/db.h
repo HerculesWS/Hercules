@@ -43,8 +43,7 @@
  *    2007/11/09 - Added an iterator to the database.                        *
  *    2.1 (Athena build #???#) - Portability fix                             *
  *      - Fixed the portability of casting to union and added the functions  *
- *        {@link DBMap#ensure(DBMap,DBKey,DBCreateData,...)} and             *
- *        {@link DBMap#clear(DBMap,DBApply,...)}.                            *
+ *        struct DBMap#ensure() and struct DBMap#clear().                    *
  *    2.0 (Athena build 4859) - Transition version                           *
  *      - Almost everything recoded with a strategy similar to objects,      *
  *        database structure is maintained.                                  *
@@ -64,41 +63,42 @@
 
 #include <stdarg.h>
 
-/*****************************************************************************\
+/*****************************************************************************
  *  (1) Section with public typedefs, enums, unions, structures and defines. *
- *  DBRelease    - Enumeration of release options.                           *
- *  DBType       - Enumeration of database types.                            *
- *  DBOptions    - Bitfield enumeration of database options.                 *
- *  DBKey        - Union of used key types.                                  *
- *  DBDataType   - Enumeration of data types.                                *
- *  DBData       - Struct for used data types.                               *
- *  DBApply      - Format of functions applied to the databases.             *
- *  DBMatcher    - Format of matchers used in DBMap::getall.                 *
- *  DBComparator - Format of the comparators used by the databases.          *
- *  DBHasher     - Format of the hashers used by the databases.              *
- *  DBReleaser   - Format of the releasers used by the databases.            *
- *  DBIterator   - Database iterator.                                        *
- *  DBMap        - Database interface.                                       *
-\*****************************************************************************/
+ *  enum DBReleaseOption - Enumeration of release options.                   *
+ *  enum DBType          - Enumeration of database types.                    *
+ *  enum DBOptions       - Bitfield enumeration of database options.         *
+ *  union DBKey          - Union of used key types.                          *
+ *  enum DBDataType      - Enumeration of data types.                        *
+ *  struct DBData        - Struct for used data types.                       *
+ *  DBApply              - Format of functions applied to the databases.     *
+ *  DBMatcher            - Format of matchers used in struct DBMap#getall(). *
+ *  DBComparator         - Format of the comparators used by the databases.  *
+ *  DBHasher             - Format of the hashers used by the databases.      *
+ *  DBReleaser           - Format of the releasers used by the databases.    *
+ *  struct DBIterator    - Database iterator.                                *
+ *  struct DBMap         - Database interface.                               *
+ *****************************************************************************/
 
 /**
  * Bitfield with what should be released by the releaser function (if the
  * function supports it).
  * @public
  * @see #DBReleaser
- * @see #db_custom_release(DBRelease)
+ * @see #db_custom_release()
  */
-typedef enum DBRelease {
+enum DBReleaseOption {
 	DB_RELEASE_NOTHING = 0x0,
 	DB_RELEASE_KEY     = 0x1,
 	DB_RELEASE_DATA    = 0x2,
 	DB_RELEASE_BOTH    = DB_RELEASE_KEY|DB_RELEASE_DATA,
-} DBRelease;
+};
 
 /**
  * Supported types of database.
- * See {@link #db_fix_options(DBType,DBOptions)} for restrictions of the
- * types of databases.
+ *
+ * See #db_fix_options() for restrictions of the types of databases.
+ *
  * @param DB_INT Uses int's for keys
  * @param DB_UINT Uses unsigned int's for keys
  * @param DB_STRING Uses strings for keys.
@@ -106,27 +106,28 @@ typedef enum DBRelease {
  * @param DB_INT64 Uses int64's for keys
  * @param DB_UINT64 Uses uint64's for keys
  * @public
- * @see #DBOptions
- * @see #DBKey
- * @see #db_fix_options(DBType,DBOptions)
- * @see #db_default_cmp(DBType)
- * @see #db_default_hash(DBType)
- * @see #db_default_release(DBType,DBOptions)
- * @see #db_alloc(const char *,int,DBType,DBOptions,unsigned short)
+ * @see enum DBOptions
+ * @see union DBKey
+ * @see #db_fix_options()
+ * @see #db_default_cmp()
+ * @see #db_default_hash()
+ * @see #db_default_release()
+ * @see #db_alloc()
  */
-typedef enum DBType {
+enum DBType {
 	DB_INT,
 	DB_UINT,
 	DB_STRING,
 	DB_ISTRING,
 	DB_INT64,
 	DB_UINT64,
-} DBType;
+};
 
 /**
  * Bitfield of options that define the behavior of the database.
- * See {@link #db_fix_options(DBType,DBOptions)} for restrictions of the
- * types of databases.
+ *
+ * See #db_fix_options() for restrictions of the types of databases.
+ *
  * @param DB_OPT_BASE Base options: does not duplicate keys, releases nothing
  *          and does not allow NULL keys or NULL data.
  * @param DB_OPT_DUP_KEY Duplicates the keys internally. If DB_OPT_RELEASE_KEY
@@ -134,17 +135,17 @@ typedef enum DBType {
  * @param DB_OPT_RELEASE_KEY Releases the key.
  * @param DB_OPT_RELEASE_DATA Releases the data whenever an entry is removed
  *          from the database.
- *          WARNING: for functions that return the data (like DBMap::remove),
+ *          WARNING: for functions that return the data (like struct DBMap#remove()),
  *          a dangling pointer will be returned.
  * @param DB_OPT_RELEASE_BOTH Releases both key and data.
  * @param DB_OPT_ALLOW_NULL_KEY Allow NULL keys in the database.
  * @param DB_OPT_ALLOW_NULL_DATA Allow NULL data in the database.
  * @public
- * @see #db_fix_options(DBType,DBOptions)
- * @see #db_default_release(DBType,DBOptions)
- * @see #db_alloc(const char *,int,DBType,DBOptions,unsigned short)
+ * @see #db_fix_options()
+ * @see #db_default_release()
+ * @see #db_alloc()
  */
-typedef enum DBOptions {
+enum DBOptions {
 	DB_OPT_BASE            = 0x00,
 	DB_OPT_DUP_KEY         = 0x01,
 	DB_OPT_RELEASE_KEY     = 0x02,
@@ -152,7 +153,7 @@ typedef enum DBOptions {
 	DB_OPT_RELEASE_BOTH    = DB_OPT_RELEASE_KEY|DB_OPT_RELEASE_DATA,
 	DB_OPT_ALLOW_NULL_KEY  = 0x08,
 	DB_OPT_ALLOW_NULL_DATA = 0x10,
-} DBOptions;
+};
 
 /**
  * Union of key types used by the database.
@@ -160,18 +161,19 @@ typedef enum DBOptions {
  * @param ui Type of key for DB_UINT databases
  * @param str Type of key for DB_STRING and DB_ISTRING databases
  * @public
- * @see #DBType
- * @see DBMap#get
- * @see DBMap#put
- * @see DBMap#remove
+ * @see enum DBType
+ * @see struct DBMap#get()
+ * @see struct DBMap#put()
+ * @see struct DBMap#remove()
  */
-typedef union DBKey {
+union DBKey {
 	int i;
 	unsigned int ui;
 	const char *str;
+	char *mutstr;
 	int64 i64;
 	uint64 ui64;
-} DBKey;
+};
 
 /**
  * Supported types of database data.
@@ -179,13 +181,13 @@ typedef union DBKey {
  * @param DB_DATA_UINT Uses unsigned ints for data.
  * @param DB_DATA_PTR Uses void pointers for data.
  * @public
- * @see #DBData
+ * @see struct DBData
  */
-typedef enum DBDataType {
+enum DBDataType {
 	DB_DATA_INT,
 	DB_DATA_UINT,
 	DB_DATA_PTR,
-} DBDataType;
+};
 
 /**
  * Struct for data types used by the database.
@@ -196,14 +198,14 @@ typedef enum DBDataType {
  * @param u.ptr Data of void* type
  * @public
  */
-typedef struct DBData {
-	DBDataType type;
+struct DBData {
+	enum DBDataType type;
 	union {
 		int i;
 		unsigned int ui;
 		void *ptr;
 	} u;
-} DBData;
+};
 
 /**
  * Format of functions that create the data for the key when the entry doesn't
@@ -212,10 +214,10 @@ typedef struct DBData {
  * @param args Extra arguments of the function
  * @return Data identified by the key to be put in the database
  * @public
- * @see DBMap#vensure
- * @see DBMap#ensure
+ * @see struct DBMap#vensure()
+ * @see struct DBMap#ensure()
  */
-typedef DBData (*DBCreateData)(DBKey key, va_list args);
+typedef struct DBData (*DBCreateData)(union DBKey key, va_list args);
 
 /**
  * Format of functions to be applied to an unspecified quantity of entries of
@@ -227,12 +229,12 @@ typedef DBData (*DBCreateData)(DBKey key, va_list args);
  * @param args Extra arguments of the function
  * @return Value to be added up by the function that is applying this
  * @public
- * @see DBMap#vforeach
- * @see DBMap#foreach
- * @see DBMap#vdestroy
- * @see DBMap#destroy
+ * @see struct DBMap#vforeach()
+ * @see struct DBMap#foreach()
+ * @see struct DBMap#vdestroy()
+ * @see struct DBMap#destroy()
  */
-typedef int (*DBApply)(DBKey key, DBData *data, va_list args);
+typedef int (*DBApply)(union DBKey key, struct DBData *data, va_list args);
 
 /**
  * Format of functions that match database entries.
@@ -243,9 +245,9 @@ typedef int (*DBApply)(DBKey key, DBData *data, va_list args);
  * @param args Extra arguments of the function
  * @return 0 if a match, another number otherwise
  * @public
- * @see DBMap#getall
+ * @see struct DBMap#getall()
  */
-typedef int (*DBMatcher)(DBKey key, DBData data, va_list args);
+typedef int (*DBMatcher)(union DBKey key, struct DBData data, va_list args);
 
 /**
  * Format of the comparators used internally by the database system.
@@ -257,9 +259,9 @@ typedef int (*DBMatcher)(DBKey key, DBData data, va_list args);
  *          databases.
  * @return 0 if equal, negative if lower and positive if higher
  * @public
- * @see #db_default_cmp(DBType)
+ * @see #db_default_cmp()
  */
-typedef int (*DBComparator)(DBKey key1, DBKey key2, unsigned short maxlen);
+typedef int (*DBComparator)(union DBKey key1, union DBKey key2, unsigned short maxlen);
 
 /**
  * Format of the hashers used internally by the database system.
@@ -269,9 +271,9 @@ typedef int (*DBComparator)(DBKey key1, DBKey key2, unsigned short maxlen);
  *          databases.
  * @return Hash of the key
  * @public
- * @see #db_default_hash(DBType)
+ * @see #db_default_hash()
  */
-typedef uint64 (*DBHasher)(DBKey key, unsigned short maxlen);
+typedef uint64 (*DBHasher)(union DBKey key, unsigned short maxlen);
 
 /**
  * Format of the releaser used by the database system.
@@ -281,27 +283,25 @@ typedef uint64 (*DBHasher)(DBKey key, unsigned short maxlen);
  * @param data Data of the database entry
  * @param which What is being requested to be released
  * @public
- * @see #DBRelease
- * @see #db_default_releaser(DBType,DBOptions)
- * @see #db_custom_release(DBRelease)
+ * @see enum DBReleaseOption
+ * @see #db_default_releaser()
+ * @see #db_custom_release()
  */
-typedef void (*DBReleaser)(DBKey key, DBData data, DBRelease which);
-
-typedef struct DBIterator DBIterator;
-typedef struct DBMap DBMap;
+typedef void (*DBReleaser)(union DBKey key, struct DBData data, enum DBReleaseOption which);
 
 /**
  * Database iterator.
+ *
  * Supports forward iteration, backward iteration and removing entries from the database.
  * The iterator is initially positioned before the first entry of the database.
+ *
  * While the iterator exists the database is locked internally, so invoke
- * {@link DBIterator#destroy} as soon as possible.
+ * struct DBIterator#destroy() as soon as possible.
+ *
  * @public
- * @see #DBMap
+ * @see struct DBMap
  */
-struct DBIterator
-{
-
+struct DBIterator {
 	/**
 	 * Fetches the first entry in the database.
 	 * Returns the data of the entry.
@@ -311,7 +311,7 @@ struct DBIterator
 	 * @return Data of the entry
 	 * @protected
 	 */
-	DBData* (*first)(DBIterator* self, DBKey* out_key);
+	struct DBData *(*first)(struct DBIterator *self, union DBKey *out_key);
 
 	/**
 	 * Fetches the last entry in the database.
@@ -322,7 +322,7 @@ struct DBIterator
 	 * @return Data of the entry
 	 * @protected
 	 */
-	DBData* (*last)(DBIterator* self, DBKey* out_key);
+	struct DBData *(*last)(struct DBIterator *self, union DBKey *out_key);
 
 	/**
 	 * Fetches the next entry in the database.
@@ -333,7 +333,7 @@ struct DBIterator
 	 * @return Data of the entry
 	 * @protected
 	 */
-	DBData* (*next)(DBIterator* self, DBKey* out_key);
+	struct DBData *(*next)(struct DBIterator *self, union DBKey *out_key);
 
 	/**
 	 * Fetches the previous entry in the database.
@@ -344,7 +344,7 @@ struct DBIterator
 	 * @return Data of the entry
 	 * @protected
 	 */
-	DBData* (*prev)(DBIterator* self, DBKey* out_key);
+	struct DBData *(*prev)(struct DBIterator *self, union DBKey *out_key);
 
 	/**
 	 * Returns true if the fetched entry exists.
@@ -354,27 +354,29 @@ struct DBIterator
 	 * @return true is the entry exists
 	 * @protected
 	 */
-	bool (*exists)(DBIterator* self);
+	bool (*exists)(struct DBIterator *self);
 
 	/**
 	 * Removes the current entry from the database.
-	 * NOTE: {@link DBIterator#exists} will return false until another entry
-	 *       is fetched
+	 *
+	 * NOTE: struct DBIterator#exists() will return false until another
+	 * entry is fetched.
+	 *
 	 * Puts data of the removed entry in out_data, if out_data is not NULL.
 	 * @param self Iterator
 	 * @param out_data Data of the removed entry.
 	 * @return 1 if entry was removed, 0 otherwise
 	 * @protected
-	 * @see DBMap#remove
+	 * @see struct DBMap#remove()
 	 */
-	int (*remove)(DBIterator* self, DBData *out_data);
+	int (*remove)(struct DBIterator *self, struct DBData *out_data);
 
 	/**
 	 * Destroys this iterator and unlocks the database.
 	 * @param self Iterator
 	 * @protected
 	 */
-	void (*destroy)(DBIterator* self);
+	void (*destroy)(struct DBIterator *self);
 
 };
 
@@ -382,7 +384,7 @@ struct DBIterator
  * Public interface of a database. Only contains functions.
  * All the functions take the interface as the first argument.
  * @public
- * @see #db_alloc(const char*,int,DBType,DBOptions,unsigned short)
+ * @see #db_alloc()
  */
 struct DBMap {
 
@@ -395,7 +397,7 @@ struct DBMap {
 	 * @return New iterator
 	 * @protected
 	 */
-	DBIterator* (*iterator)(DBMap* self);
+	struct DBIterator *(*iterator)(struct DBMap *self);
 
 	/**
 	 * Returns true if the entry exists.
@@ -404,7 +406,7 @@ struct DBMap {
 	 * @return true is the entry exists
 	 * @protected
 	 */
-	bool (*exists)(DBMap* self, DBKey key);
+	bool (*exists)(struct DBMap *self, union DBKey key);
 
 	/**
 	 * Get the data of the entry identified by the key.
@@ -413,10 +415,11 @@ struct DBMap {
 	 * @return Data of the entry or NULL if not found
 	 * @protected
 	 */
-	DBData* (*get)(DBMap* self, DBKey key);
+	struct DBData *(*get)(struct DBMap *self, union DBKey key);
 
 	/**
-	 * Just calls {@link DBMap#vgetall}.
+	 * Just calls struct DBMap#vgetall().
+	 *
 	 * Get the data of the entries matched by <code>match</code>.
 	 * It puts a maximum of <code>max</code> entries into <code>buf</code>.
 	 * If <code>buf</code> is NULL, it only counts the matches.
@@ -430,9 +433,9 @@ struct DBMap {
 	 * @param ... Extra arguments for match
 	 * @return The number of entries that matched
 	 * @protected
-	 * @see DBMap#vgetall(DBMap*,void **,unsigned int,DBMatcher,va_list)
+	 * @see struct DBMap#vgetall()
 	 */
-	unsigned int (*getall)(DBMap* self, DBData** buf, unsigned int max, DBMatcher match, ...);
+	unsigned int (*getall)(struct DBMap *self, struct DBData **buf, unsigned int max, DBMatcher match, ...);
 
 	/**
 	 * Get the data of the entries matched by <code>match</code>.
@@ -448,24 +451,25 @@ struct DBMap {
 	 * @param ... Extra arguments for match
 	 * @return The number of entries that matched
 	 * @protected
-	 * @see DBMap#getall(DBMap*,void **,unsigned int,DBMatcher,...)
+	 * @see struct DBMap#getall()
 	 */
-	unsigned int (*vgetall)(DBMap* self, DBData** buf, unsigned int max, DBMatcher match, va_list args);
+	unsigned int (*vgetall)(struct DBMap *self, struct DBData **buf, unsigned int max, DBMatcher match, va_list args);
 
 	/**
-	 * Just calls {@link DBMap#vensure}.
-	 * Get the data of the entry identified by the key.
-	 * If the entry does not exist, an entry is added with the data returned by
-	 * <code>create</code>.
+	 * Just calls struct DBMap#vensure().
+	 *
+	 * Get the data of the entry identified by the key.  If the entry does
+	 * not exist, an entry is added with the data returned by `create`.
+	 *
 	 * @param self Database
 	 * @param key Key that identifies the entry
 	 * @param create Function used to create the data if the entry doesn't exist
 	 * @param ... Extra arguments for create
 	 * @return Data of the entry
 	 * @protected
-	 * @see DBMap#vensure(DBMap*,DBKey,DBCreateData,va_list)
+	 * @see struct DBMap#vensure()
 	 */
-	DBData* (*ensure)(DBMap* self, DBKey key, DBCreateData create, ...);
+	struct DBData *(*ensure)(struct DBMap *self, union DBKey key, DBCreateData create, ...);
 
 	/**
 	 * Get the data of the entry identified by the key.
@@ -477,9 +481,9 @@ struct DBMap {
 	 * @param args Extra arguments for create
 	 * @return Data of the entry
 	 * @protected
-	 * @see DBMap#ensure(DBMap*,DBKey,DBCreateData,...)
+	 * @see struct DBMap#ensure()
 	 */
-	DBData* (*vensure)(DBMap* self, DBKey key, DBCreateData create, va_list args);
+	struct DBData *(*vensure)(struct DBMap *self, union DBKey key, DBCreateData create, va_list args);
 
 	/**
 	 * Put the data identified by the key in the database.
@@ -492,7 +496,7 @@ struct DBMap {
 	 * @return 1 if if the entry already exists, 0 otherwise
 	 * @protected
 	 */
-	int (*put)(DBMap* self, DBKey key, DBData data, DBData *out_data);
+	int (*put)(struct DBMap *self, union DBKey key, struct DBData data, struct DBData *out_data);
 
 	/**
 	 * Remove an entry from the database.
@@ -504,10 +508,11 @@ struct DBMap {
 	 * @return 1 if if the entry already exists, 0 otherwise
 	 * @protected
 	 */
-	int (*remove)(DBMap* self, DBKey key, DBData *out_data);
+	int (*remove)(struct DBMap *self, union DBKey key, struct DBData *out_data);
 
 	/**
-	 * Just calls {@link DBMap#vforeach}.
+	 * Just calls struct DBMap#vforeach().
+	 *
 	 * Apply <code>func</code> to every entry in the database.
 	 * Returns the sum of values returned by func.
 	 * @param self Database
@@ -515,9 +520,9 @@ struct DBMap {
 	 * @param ... Extra arguments for func
 	 * @return Sum of the values returned by func
 	 * @protected
-	 * @see DBMap#vforeach(DBMap*,DBApply,va_list)
+	 * @see struct DBMap#vforeach()
 	 */
-	int (*foreach)(DBMap* self, DBApply func, ...);
+	int (*foreach)(struct DBMap *self, DBApply func, ...);
 
 	/**
 	 * Apply <code>func</code> to every entry in the database.
@@ -527,12 +532,13 @@ struct DBMap {
 	 * @param args Extra arguments for func
 	 * @return Sum of the values returned by func
 	 * @protected
-	 * @see DBMap#foreach(DBMap*,DBApply,...)
+	 * @see struct DBMap#foreach()
 	 */
-	int (*vforeach)(DBMap* self, DBApply func, va_list args);
+	int (*vforeach)(struct DBMap *self, DBApply func, va_list args);
 
 	/**
-	 * Just calls {@link DBMap#vclear}.
+	 * Just calls struct DBMap#vclear().
+	 *
 	 * Removes all entries from the database.
 	 * Before deleting an entry, func is applied to it.
 	 * Releases the key and the data.
@@ -542,9 +548,9 @@ struct DBMap {
 	 * @param ... Extra arguments for func
 	 * @return Sum of values returned by func
 	 * @protected
-	 * @see DBMap#vclear(DBMap*,DBApply,va_list)
+	 * @see struct DBMap#vclear()
 	 */
-	int (*clear)(DBMap* self, DBApply func, ...);
+	int (*clear)(struct DBMap *self, DBApply func, ...);
 
 	/**
 	 * Removes all entries from the database.
@@ -556,12 +562,12 @@ struct DBMap {
 	 * @param args Extra arguments for func
 	 * @return Sum of values returned by func
 	 * @protected
-	 * @see DBMap#clear(DBMap*,DBApply,...)
+	 * @see struct DBMap#clear()
 	 */
-	int (*vclear)(DBMap* self, DBApply func, va_list args);
+	int (*vclear)(struct DBMap *self, DBApply func, va_list args);
 
 	/**
-	 * Just calls {@link DBMap#vdestroy}.
+	 * Just calls DBMap#vdestroy().
 	 * Finalize the database, feeing all the memory it uses.
 	 * Before deleting an entry, func is applied to it.
 	 * Releases the key and the data.
@@ -573,9 +579,9 @@ struct DBMap {
 	 * @param ... Extra arguments for func
 	 * @return Sum of values returned by func
 	 * @protected
-	 * @see DBMap#vdestroy(DBMap*,DBApply,va_list)
+	 * @see struct DBMap#vdestroy()
 	 */
-	int (*destroy)(DBMap* self, DBApply func, ...);
+	int (*destroy)(struct DBMap *self, DBApply func, ...);
 
 	/**
 	 * Finalize the database, feeing all the memory it uses.
@@ -588,9 +594,9 @@ struct DBMap {
 	 * @param args Extra arguments for func
 	 * @return Sum of values returned by func
 	 * @protected
-	 * @see DBMap#destroy(DBMap*,DBApply,...)
+	 * @see struct DBMap#destroy()
 	 */
-	int (*vdestroy)(DBMap* self, DBApply func, va_list args);
+	int (*vdestroy)(struct DBMap *self, DBApply func, va_list args);
 
 	/**
 	 * Return the size of the database (number of items in the database).
@@ -598,7 +604,7 @@ struct DBMap {
 	 * @return Size of the database
 	 * @protected
 	 */
-	unsigned int (*size)(DBMap* self);
+	unsigned int (*size)(struct DBMap *self);
 
 	/**
 	 * Return the type of the database.
@@ -606,7 +612,7 @@ struct DBMap {
 	 * @return Type of the database
 	 * @protected
 	 */
-	DBType (*type)(DBMap* self);
+	enum DBType (*type)(struct DBMap *self);
 
 	/**
 	 * Return the options of the database.
@@ -614,7 +620,7 @@ struct DBMap {
 	 * @return Options of the database
 	 * @protected
 	 */
-	DBOptions (*options)(DBMap* self);
+	enum DBOptions (*options)(struct DBMap *self);
 
 };
 
@@ -712,7 +718,7 @@ struct DBMap {
 #define dbi_exists(dbi)     ( (dbi)->exists(dbi) )
 #define dbi_destroy(dbi)    ( (dbi)->destroy(dbi) )
 
-/*****************************************************************************\
+/*****************************************************************************
  *  (2) Section with public functions.                                       *
  *  db_fix_options     - Fix the options for a type of database.             *
  *  db_default_cmp     - Get the default comparator for a type of database.  *
@@ -721,20 +727,20 @@ struct DBMap {
  *           with the fixed options.                                         *
  *  db_custom_release  - Get the releaser that behaves as specified.         *
  *  db_alloc           - Allocate a new database.                            *
- *  db_i2key           - Manual cast from 'int' to 'DBKey'.                  *
- *  db_ui2key          - Manual cast from 'unsigned int' to 'DBKey'.         *
- *  db_str2key         - Manual cast from 'unsigned char *' to 'DBKey'.      *
- *  db_i642key         - Manual cast from 'int64' to 'DBKey'.                *
- *  db_ui642key        - Manual cast from 'uint64' to 'DBKey'.               *
- *  db_i2data          - Manual cast from 'int' to 'DBData'.                 *
- *  db_ui2data         - Manual cast from 'unsigned int' to 'DBData'.        *
- *  db_ptr2data        - Manual cast from 'void*' to 'DBData'.               *
- *  db_data2i          - Gets 'int' value from 'DBData'.                     *
- *  db_data2ui         - Gets 'unsigned int' value from 'DBData'.            *
- *  db_data2ptr        - Gets 'void*' value from 'DBData'.                   *
+ *  db_i2key           - Manual cast from `int` to `union DBKey`.            *
+ *  db_ui2key          - Manual cast from `unsigned int` to `union DBKey`.   *
+ *  db_str2key         - Manual cast from `unsigned char *` to `union DBKey`.*
+ *  db_i642key         - Manual cast from `int64` to `union DBKey`.          *
+ *  db_ui642key        - Manual cast from `uint64` to `union DBKey`.         *
+ *  db_i2data          - Manual cast from `int` to `struct DBData`.          *
+ *  db_ui2data         - Manual cast from `unsigned int` to `struct DBData`. *
+ *  db_ptr2data        - Manual cast from `void*` to `struct DBData`.        *
+ *  db_data2i          - Gets `int` value from `struct DBData`.              *
+ *  db_data2ui         - Gets `unsigned int` value from `struct DBData`.     *
+ *  db_data2ptr        - Gets `void*` value from `struct DBData`.            *
  *  db_init            - Initializes the database system.                    *
  *  db_final           - Finalizes the database system.                      *
-\*****************************************************************************/
+ *****************************************************************************/
 
 struct db_interface {
 /**
@@ -745,66 +751,71 @@ struct db_interface {
  * @param options Original options of the database
  * @return Fixed options of the database
  * @private
- * @see #DBType
- * @see #DBOptions
- * @see #db_default_release(DBType,DBOptions)
+ * @see enum DBType
+ * @see enum DBOptions
+ * @see #db_default_release()
  */
-DBOptions (*fix_options) (DBType type, DBOptions options);
+enum DBOptions (*fix_options) (enum DBType type, enum DBOptions options);
 
 /**
  * Returns the default comparator for the type of database.
  * @param type Type of database
  * @return Comparator for the type of database or NULL if unknown database
  * @public
- * @see #DBType
+ * @see enum DBType
  * @see #DBComparator
  */
-DBComparator (*default_cmp) (DBType type);
+DBComparator (*default_cmp) (enum DBType type);
 
 /**
  * Returns the default hasher for the specified type of database.
  * @param type Type of database
  * @return Hasher of the type of database or NULL if unknown database
  * @public
- * @see #DBType
+ * @see enum DBType
  * @see #DBHasher
  */
-DBHasher (*default_hash) (DBType type);
+DBHasher (*default_hash) (enum DBType type);
 
 /**
  * Returns the default releaser for the specified type of database with the
  * specified options.
- * NOTE: the options are fixed by {@link #db_fix_options(DBType,DBOptions)}
- * before choosing the releaser
+ *
+ * NOTE: the options are fixed by #db_fix_options() before choosing the
+ * releaser.
+ *
  * @param type Type of database
  * @param options Options of the database
  * @return Default releaser for the type of database with the fixed options
  * @public
- * @see #DBType
- * @see #DBOptions
+ * @see enum DBType
+ * @see enum DBOptions
  * @see #DBReleaser
- * @see #db_fix_options(DBType,DBOptions)
- * @see #db_custom_release(DBRelease)
+ * @see #db_fix_options()
+ * @see #db_custom_release()
  */
-DBReleaser (*default_release) (DBType type, DBOptions options);
+DBReleaser (*default_release) (enum DBType type, enum DBOptions options);
 
 /**
  * Returns the releaser that behaves as <code>which</code> specifies.
  * @param which Defines what the releaser releases
  * @return Releaser for the specified release options
  * @public
- * @see #DBRelease
+ * @see enum DBReleaseOption
  * @see #DBReleaser
- * @see #db_default_release(DBType,DBOptions)
+ * @see #db_default_release()
  */
-DBReleaser (*custom_release)  (DBRelease which);
+DBReleaser (*custom_release)  (enum DBReleaseOption which);
 
 /**
  * Allocate a new database of the specified type.
+ *
  * It uses the default comparator, hasher and releaser of the specified
  * database type and fixed options.
- * NOTE: the options are fixed by {@link #db_fix_options(DBType,DBOptions)}
- * before creating the database.
+ *
+ * NOTE: the options are fixed by #db_fix_options() before creating the
+ * database.
+ *
  * @param file File where the database is being allocated
  * @param line Line of the file where the database is being allocated
  * @param type Type of database
@@ -813,14 +824,14 @@ DBReleaser (*custom_release)  (DBRelease which);
  *          databases. If 0, the maximum number of maxlen is used (64K).
  * @return The interface of the database
  * @public
- * @see #DBType
- * @see #DBMap
- * @see #db_default_cmp(DBType)
- * @see #db_default_hash(DBType)
- * @see #db_default_release(DBType,DBOptions)
- * @see #db_fix_options(DBType,DBOptions)
+ * @see enum DBType
+ * @see struct DBMap
+ * @see #db_default_cmp()
+ * @see #db_default_hash()
+ * @see #db_default_release()
+ * @see #db_fix_options()
  */
-DBMap* (*alloc) (const char *file, const char *func, int line, DBType type, DBOptions options, unsigned short maxlen);
+struct DBMap *(*alloc) (const char *file, const char *func, int line, enum DBType type, enum DBOptions options, unsigned short maxlen);
 
 /**
  * Manual cast from 'int' to the union DBKey.
@@ -828,7 +839,7 @@ DBMap* (*alloc) (const char *file, const char *func, int line, DBType type, DBOp
  * @return The key as a DBKey union
  * @public
  */
-DBKey (*i2key) (int key);
+union DBKey (*i2key) (int key);
 
 /**
  * Manual cast from 'unsigned int' to the union DBKey.
@@ -836,7 +847,7 @@ DBKey (*i2key) (int key);
  * @return The key as a DBKey union
  * @public
  */
-DBKey (*ui2key) (unsigned int key);
+union DBKey (*ui2key) (unsigned int key);
 
 /**
  * Manual cast from 'unsigned char *' to the union DBKey.
@@ -844,7 +855,7 @@ DBKey (*ui2key) (unsigned int key);
  * @return The key as a DBKey union
  * @public
  */
-DBKey (*str2key) (const char *key);
+union DBKey (*str2key) (const char *key);
 
 /**
  * Manual cast from 'int64' to the union DBKey.
@@ -852,7 +863,7 @@ DBKey (*str2key) (const char *key);
  * @return The key as a DBKey union
  * @public
  */
-DBKey (*i642key) (int64 key);
+union DBKey (*i642key) (int64 key);
 
 /**
  * Manual cast from 'uint64' to the union DBKey.
@@ -860,7 +871,7 @@ DBKey (*i642key) (int64 key);
  * @return The key as a DBKey union
  * @public
  */
-DBKey (*ui642key) (uint64 key);
+union DBKey (*ui642key) (uint64 key);
 
 /**
  * Manual cast from 'int' to the struct DBData.
@@ -868,7 +879,7 @@ DBKey (*ui642key) (uint64 key);
  * @return The data as a DBData struct
  * @public
  */
-DBData (*i2data) (int data);
+struct DBData (*i2data) (int data);
 
 /**
  * Manual cast from 'unsigned int' to the struct DBData.
@@ -876,7 +887,7 @@ DBData (*i2data) (int data);
  * @return The data as a DBData struct
  * @public
  */
-DBData (*ui2data) (unsigned int data);
+struct DBData (*ui2data) (unsigned int data);
 
 /**
  * Manual cast from 'void *' to the struct DBData.
@@ -884,7 +895,7 @@ DBData (*ui2data) (unsigned int data);
  * @return The data as a DBData struct
  * @public
  */
-DBData (*ptr2data) (void *data);
+struct DBData (*ptr2data) (void *data);
 
 /**
  * Gets int type data from struct DBData.
@@ -893,7 +904,7 @@ DBData (*ptr2data) (void *data);
  * @return Integer value of the data.
  * @public
  */
-int (*data2i) (DBData *data);
+int (*data2i) (struct DBData *data);
 
 /**
  * Gets unsigned int type data from struct DBData.
@@ -902,7 +913,7 @@ int (*data2i) (DBData *data);
  * @return Unsigned int value of the data.
  * @public
  */
-unsigned int (*data2ui) (DBData *data);
+unsigned int (*data2ui) (struct DBData *data);
 
 /**
  * Gets void* type data from struct DBData.
@@ -911,7 +922,7 @@ unsigned int (*data2ui) (DBData *data);
  * @return Void* value of the data.
  * @public
  */
-void* (*data2ptr) (DBData *data);
+void* (*data2ptr) (struct DBData *data);
 
 /**
  * Initialize the database system.
@@ -1382,6 +1393,16 @@ HPShared struct db_interface *DB;
 			memmove(&VECTOR_INDEX(_vec, _idx), &VECTOR_INDEX(_vec, (_idx)+(_n)), (VECTOR_LENGTH(_vec)-((_idx)+(_n)))*sizeof(VECTOR_FIRST(_vec))); \
 		VECTOR_LENGTH(_vec) -= (_n); /* decrease length */ \
 	} while(false)
+
+/**
+ * Removes all values from the vector.
+ *
+ * Does not free the allocated data.
+ */
+#define VECTOR_TRUNCATE(_vec) \
+	do { \
+		VECTOR_LENGTH(_vec) = 0; \
+	} while (false)
 
 /**
  * Clears the vector, freeing allocated data.

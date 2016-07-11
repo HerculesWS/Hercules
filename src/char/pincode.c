@@ -32,6 +32,7 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 struct pincode_interface pincode_s;
@@ -66,7 +67,7 @@ void pincode_check(int fd, struct char_session_data* sd) {
 	char pin[5] = "\0\0\0\0";
 
 	nullpo_retv(sd);
-	safestrncpy(pin, (char*)RFIFOP(fd, 6), sizeof(pin));
+	safestrncpy(pin, RFIFOP(fd, 6), sizeof(pin));
 	pincode->decrypt(sd->pincode_seed, pin);
 	if( pincode->compare( fd, sd, pin ) ){
 		struct online_char_data* character;
@@ -95,12 +96,12 @@ void pincode_change(int fd, struct char_session_data* sd) {
 	char oldpin[5] = "\0\0\0\0", newpin[5] = "\0\0\0\0";
 
 	nullpo_retv(sd);
-	safestrncpy(oldpin, (char*)RFIFOP(fd,6), sizeof(oldpin));
+	safestrncpy(oldpin, RFIFOP(fd,6), sizeof(oldpin));
 	pincode->decrypt(sd->pincode_seed,oldpin);
 	if( !pincode->compare( fd, sd, oldpin ) )
 		return;
 
-	safestrncpy(newpin, (char*)RFIFOP(fd,10), sizeof(newpin));
+	safestrncpy(newpin, RFIFOP(fd,10), sizeof(newpin));
 	pincode->decrypt(sd->pincode_seed,newpin);
 	pincode->update( sd->account_id, newpin );
 	safestrncpy(sd->pincode, newpin, sizeof(sd->pincode));
@@ -111,7 +112,7 @@ void pincode_setnew(int fd, struct char_session_data* sd) {
 	char newpin[5] = "\0\0\0\0";
 
 	nullpo_retv(sd);
-	safestrncpy(newpin, (char*)RFIFOP(fd,6), sizeof(newpin));
+	safestrncpy(newpin, RFIFOP(fd,6), sizeof(newpin));
 	pincode->decrypt(sd->pincode_seed,newpin);
 	pincode->update( sd->account_id, newpin );
 	safestrncpy(sd->pincode, newpin, sizeof(sd->pincode));
@@ -143,7 +144,7 @@ void pincode_notifyLoginPinUpdate(int account_id, char* pin) {
 	WFIFOHEAD(chr->login_fd,11);
 	WFIFOW(chr->login_fd,0) = 0x2738;
 	WFIFOL(chr->login_fd,2) = account_id;
-	safestrncpy( (char*)WFIFOP(chr->login_fd,6), pin, 5 );
+	safestrncpy(WFIFOP(chr->login_fd,6), pin, 5);
 	WFIFOSET(chr->login_fd,11);
 }
 

@@ -524,7 +524,7 @@ geffen,132,38,3	script	Bard#2	1_M_BARD,{
 		mes "At Nine, love is reborn.";
 		mes "At Ten, my Love is gone.";
 		mes "At Eleven I find out why.";
-		if (Sex)
+		if (Sex == SEX_MALE)
 			mes "At Twelve I see his new girlfriend?";
 		else
 			mes "At Twelve I see her new boyfriend?";
@@ -858,7 +858,7 @@ geffen,132,38,3	script	Bard#2	1_M_BARD,{
 		mes "At Nine, love is reborn.";
 		mes "At Ten, my Love is gone.";
 		mes "At Eleven I find out why.";
-		if (Sex)
+		if (Sex == SEX_MALE)
 			mes "At Twelve I see her new boyfriend?";
 		else
 			mes "At Twelve I see his new girlfriend?";
@@ -1261,7 +1261,7 @@ S_StorySong:
 				// For 3 and 4 cases we set more chance earlier on .@random
 				if(getarg(0) == 3 || getarg(0) == 4){
 					mes "[Errende]";
-					if (Sex)
+					if (Sex == SEX_MALE)
 						mes "Heroic warrior,";
 					else
 						mes "My fair lady,";
@@ -1458,8 +1458,8 @@ morocc,134,111,3	script	Bard#3	2_M_BARD_ORIENT,{
 				next;
 				mes "^3355FFKino Kitty coughed a few times, wiping his mouth with his sleeve. As he adjusts the guitar strings, you notice small stains of blood on his sleeve. Then, he began to sing.^000000";
 				next;
-				mes "^D43D1ABrave hero Siegfried ";
-				mes "Vanquished a mighty dragon	";
+				mes "^D43D1ABrave hero Siegfried";
+				mes "Vanquished a mighty dragon";
 				mes "Its blood coated his skin";
 				mes "Making it impenetrable";
 				mes "Save for one tender spot";
@@ -2037,7 +2037,7 @@ morocc,134,111,3	script	Bard#3	2_M_BARD_ORIENT,{
 				}
 
 			} else {
-				if (Sex) {
+				if (Sex == SEX_MALE) {
 					mes "[Kino Kitty]";
 					mes "You're such a nice young man. I will remember your name. I would much appreciate it if you would also remember mine.";
 					next;
@@ -2897,7 +2897,7 @@ yuno_in04,33,119,3	script	Adventurer#1	4_M_ROGUE,{
 	mes "Err...?";
 	mes "What is it?";
 	next;
-	if (!Sex) {
+	if (Sex == SEX_FEMALE) {
 		emotion e_heh;
 		mes "[Energetic Young Man]";
 		mes "Oh...!";

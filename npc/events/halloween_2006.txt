@@ -735,7 +735,7 @@ nif_fild01,219,267,4	duplicate(HwChicken)	Masta's chicken#06_hw03	4_NFCOCK
 nif_fild01,199,240,5	duplicate(HwChicken)	Masta's chicken#06_hw04	4_NFCOCK
 nif_fild01,316,97,6	duplicate(HwChicken)	Masta's chicken#06_hw05	4_NFCOCK
 nif_fild01,147,343,7	duplicate(HwChicken)	Masta's chicken#06_hw06	4_NFCOCK
-nif_fild01,185,325,8	duplicate(HwChicken)	Masta's chicken#06_hw07	4_NFCOCK
+nif_fild01,185,325,0	duplicate(HwChicken)	Masta's chicken#06_hw07	4_NFCOCK
 nif_fild01,133,105,1	duplicate(HwChicken)	Masta's chicken#06_hw08	4_NFCOCK
 nif_fild01,331,329,2	duplicate(HwChicken)	Masta's chicken#06_hw09	4_NFCOCK
 

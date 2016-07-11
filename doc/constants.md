@@ -384,38 +384,6 @@
 - `cell_chknovending`: 12
 - `cell_chknochat`: 13
 
-### Parameters
-
-- `BaseExp`: [param]
-- `JobExp`: [param]
-- `Karma`: [param]
-- `Manner`: [param]
-- `Hp`: [param]
-- `MaxHp`: [param]
-- `Sp`: [param]
-- `MaxSp`: [param]
-- `StatusPoint`: [param]
-- `BaseLevel`: [param]
-- `SkillPoint`: [param]
-- `Class`: [param]
-- `Zeny`: [param]
-- `Sex`: [param]
-- `NextBaseExp`: [param]
-- `NextJobExp`: [param]
-- `Weight`: [param]
-- `MaxWeight`: [param]
-- `JobLevel`: [param]
-- `Upper`: [param]
-- `BaseJob`: [param]
-- `BaseClass`: [param]
-- `killerrid`: [param]
-- `killedrid`: [param]
-- `SlotChange`: [param]
-- `CharRename`: [param]
-- `ModExp`: [param]
-- `ModDrop`: [param]
-- `ModDeath`: [param]
-
 ### Bonuses / Parameter IDs
 
 - `bMaxHP`: 6
@@ -3425,6 +3393,31 @@
 - `4_BLOODYMAN`: 10176
 - `4_GIBBET`: 10177
 - `4_DULLAHAN`: 10178
+- `4_M_LAZY`: 10179
+- `4_M_GONY`: 10180
+- `4_M_ROOKIE`: 10181
+- `4_M_PHILOFONTES`: 10182
+- `4_F_ESTLOVELOY`: 10183
+- `4_F_LEEDSH`: 10184
+- `4_F_DIENE`: 10185
+- `4_F_COATNEIS`: 10186
+- `4_M_RUPERT`: 10187
+- `4_M_FALLENGONY`: 10188
+- `4_M_EISEN`: 10189
+- `4_F_DEADEVIL`: 10190
+- `4_F_HUNTER_EVIL`: 10191
+- `4_F_ELENA`: 10192
+- `4_F_ANYA`: 10193
+- `4_M_SEIREN_UC`: 10194
+- `4_M_GUNSLINGER2`: 10195
+- `4_M_GUNSLINGER3`: 10196
+- `4_M_REBELLION2`: 10197
+- `4_M_REBELLION3`: 10198
+- `4_F_GUNSLINGER2`: 10199
+- `4_F_GUNSLINGER3`: 10200
+- `4_F_REBELLION2`: 10201
+- `4_F_REBELLION3`: 10202
+- `4_M_ILYA`: 10203
 
 ### Mercenary IDs
 
@@ -3636,6 +3629,11 @@
 - `C_GOLD`: 16766720
 - `C_VIOLET`: 15631086
 
+### Genders
+
+- `SEX_FEMALE`: 0
+- `SEX_MALE`: 1
+
 
 ## Hardcoded Constants (source)
 
@@ -3653,7 +3651,7 @@
 - `MAX_GUILD_STORAGE`: 600
 - `MAX_CART`: 100
 - `MAX_INVENTORY`: 100
-- `MAX_ZENY`: 1000000000
+- `MAX_ZENY`: 2147483647
 - `MAX_BG_MEMBERS`: 30
 - `MAX_CHAT_USERS`: 20
 - `MAX_REFINE`: 20
@@ -3775,6 +3773,42 @@
 - `RENEWAL_LVDMG`: 1
 - `RENEWAL_EDP`: 1
 - `RENEWAL_ASPD`: 1
+
+
+## Parameters (source)
+
+
+### Parameters
+
+- `BaseExp`: [param]
+- `JobExp`: [param]
+- `Karma`: [param]
+- `Manner`: [param]
+- `Hp`: [param]
+- `MaxHp`: [param]
+- `Sp`: [param]
+- `MaxSp`: [param]
+- `StatusPoint`: [param]
+- `BaseLevel`: [param]
+- `SkillPoint`: [param]
+- `Class`: [param]
+- `Zeny`: [param]
+- `Sex`: [param]
+- `NextBaseExp`: [param]
+- `NextJobExp`: [param]
+- `Weight`: [param]
+- `MaxWeight`: [param]
+- `JobLevel`: [param]
+- `Upper`: [param]
+- `BaseJob`: [param]
+- `BaseClass`: [param]
+- `killerrid`: [param]
+- `killedrid`: [param]
+- `SlotChange`: [param]
+- `CharRename`: [param]
+- `ModExp`: [param]
+- `ModDrop`: [param]
+- `ModDeath`: [param]
 
 
 ## Skills (db/re/skill_db.txt)
@@ -4807,7 +4841,7 @@
 - `GN_CRAZYWEED_ATK`: 2484
 - `GN_DEMONIC_FIRE`: 2485
 - `GN_FIRE_EXPANSION`: 2486
-- `GN_FIRE_EXPANSION_SMOKE_POWDE`: 2487
+- `GN_FIRE_EXPANSION_SMOKE_POWDER`: 2487
 - `GN_FIRE_EXPANSION_TEAR_GAS`: 2488
 - `GN_FIRE_EXPANSION_ACID`: 2489
 - `GN_HELLS_PLANT`: 2490
@@ -16570,3 +16604,5 @@
 - `EXP2`: 29027
 
 > End of list
+
+<!--GENERATED FILE DO NOT EDIT-->

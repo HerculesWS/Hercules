@@ -472,7 +472,7 @@ niflheim,179,168,5	script	Kentucky#2013HE	4_NFCOCK,{
 	close;
 }
 
-niflheim,177,166,8	script	Chicken#2013HE	4_NFCOCK,{
+niflheim,177,166,0	script	Chicken#2013HE	4_NFCOCK,{
 	mes "[Chicken]";
 	mes "Hey Kentucky!!";
 	mes "You are eating alone too much!";

@@ -288,7 +288,7 @@ static void ers_obj_destroy(ERS *self)
 
 	if (instance->Count > 0)
 		if (!(instance->Options & ERS_OPT_CLEAR))
-			ShowWarning("Memory leak detected at ERS '%s', %d objects not freed.\n", instance->Name, instance->Count);
+			ShowWarning("Memory leak detected at ERS '%s', %u objects not freed.\n", instance->Name, instance->Count);
 
 	if (--instance->Cache->ReferenceCount <= 0)
 		ers_free_cache(instance->Cache, true);
@@ -313,7 +313,7 @@ void ers_cache_size(ERS *self, unsigned int new_size) {
 	nullpo_retv(instance);
 
 	if( !(instance->Cache->Options&ERS_OPT_FLEX_CHUNK) ) {
-		ShowWarning("ers_cache_size: '%s' has adjusted its chunk size to '%d', however ERS_OPT_FLEX_CHUNK is missing!\n",instance->Name,new_size);
+		ShowWarning("ers_cache_size: '%s' has adjusted its chunk size to '%u', however ERS_OPT_FLEX_CHUNK is missing!\n", instance->Name, new_size);
 	}
 
 	instance->Cache->ChunkSize = new_size;
@@ -382,7 +382,7 @@ void ers_report(void) {
 	for (cache = CacheList; cache; cache = cache->Next) {
 		cache_c++;
 		ShowMessage(CL_BOLD"[ERS Cache of size '"CL_NORMAL""CL_WHITE"%u"CL_NORMAL""CL_BOLD"' report]\n"CL_NORMAL, cache->ObjectSize);
-		ShowMessage("\tinstances          : %u\n", cache->ReferenceCount);
+		ShowMessage("\tinstances          : %d\n", cache->ReferenceCount);
 		ShowMessage("\tblocks in use      : %u/%u\n", cache->UsedObjs, cache->UsedObjs+cache->Free);
 		ShowMessage("\tblocks unused      : %u\n", cache->Free);
 		ShowMessage("\tmemory in use      : %.2f MB\n", cache->UsedObjs == 0 ? 0. : (double)((cache->UsedObjs * cache->ObjectSize)/1024)/1024);

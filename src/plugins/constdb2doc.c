@@ -93,6 +93,10 @@ void constdb2doc_constdb(void)
 	script->hardcoded_constants();
 	fprintf(out_fp, "\n");
 
+	fprintf(out_fp, "## Parameters (source)\n\n");
+	script->load_parameters();
+	fprintf(out_fp, "\n");
+
 	/* Unlink */
 	script->set_constant = script_set_constant;
 	script->constdb_comment = script_constdb_comment;
@@ -173,7 +177,8 @@ void do_constdb2doc(void)
 
 	constdb2doc_itemdb();
 
-	fprintf(out_fp, "> End of list\n");
+	fprintf(out_fp, "> End of list\n\n");
+	fprintf(out_fp, "<!--GENERATED FILE DO NOT EDIT-->\n");
 
 	fclose(out_fp);
 }

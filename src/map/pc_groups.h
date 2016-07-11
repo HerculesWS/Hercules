@@ -22,8 +22,10 @@
 #define MAP_PC_GROUPS_H
 
 #include "common/hercules.h"
-#include "common/conf.h"
-#include "common/db.h"
+
+/* Forward Declarations */
+struct DBMap; // common/db.h
+struct config_setting_t;
 
 /// PC permissions
 enum e_pc_permission {
@@ -66,11 +68,11 @@ struct GroupSettings {
 	bool log_commands; // groups.[].log_commands
 	int index; // internal index of the group (contiguous range starting at 0) [Ind]
 	/// Following are used/available only during config reading
-	config_setting_t *commands; // groups.[].commands
-	config_setting_t *permissions; // groups.[].permissions
-	config_setting_t *inherit; // groups.[].inherit
+	struct config_setting_t *commands; // groups.[].commands
+	struct config_setting_t *permissions; // groups.[].permissions
+	struct config_setting_t *inherit; // groups.[].inherit
 	bool inheritance_done; // have all inheritance rules been evaluated?
-	config_setting_t *root; // groups.[]
+	struct config_setting_t *root; // groups.[]
 };
 
 typedef struct GroupSettings GroupSettings;
@@ -89,8 +91,8 @@ struct pc_groups_new_permission {
 
 struct pc_groups_interface {
 	/* */
-	DBMap* db; // id -> GroupSettings
-	DBMap* name_db; // name -> GroupSettings
+	struct DBMap *db; // id -> GroupSettings
+	struct DBMap *name_db; // name -> GroupSettings
 	/* */
 	struct pc_groups_permission_table *permissions;
 	unsigned char permission_count;

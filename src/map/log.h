@@ -22,11 +22,11 @@
 #define MAP_LOG_H
 
 #include "common/hercules.h"
-#include "common/sql.h"
 
 /**
  * Declarations
  **/
+struct Sql; // common/sql.h
 struct item;
 struct item_data;
 struct map_session_data;
@@ -57,29 +57,40 @@ typedef enum e_log_chat_type {
 } e_log_chat_type;
 
 typedef enum e_log_pick_type {
-	LOG_TYPE_NONE             = 0,
-	LOG_TYPE_TRADE            = 0x00001,
-	LOG_TYPE_VENDING          = 0x00002,
-	LOG_TYPE_PICKDROP_PLAYER  = 0x00004,
-	LOG_TYPE_PICKDROP_MONSTER = 0x00008,
-	LOG_TYPE_NPC              = 0x00010,
-	LOG_TYPE_SCRIPT           = 0x00020,
-	LOG_TYPE_STEAL            = 0x00040,
-	LOG_TYPE_CONSUME          = 0x00080,
-	LOG_TYPE_PRODUCE          = 0x00100,
-	LOG_TYPE_MVP              = 0x00200,
-	LOG_TYPE_COMMAND          = 0x00400,
-	LOG_TYPE_STORAGE          = 0x00800,
-	LOG_TYPE_GSTORAGE         = 0x01000,
-	LOG_TYPE_MAIL             = 0x02000,
-	LOG_TYPE_AUCTION          = 0x04000,
-	LOG_TYPE_BUYING_STORE     = 0x08000,
-	LOG_TYPE_OTHER            = 0x10000,
-	LOG_TYPE_BANK             = 0x20000,
+	LOG_TYPE_NONE             = 0x00000000,
+	LOG_TYPE_TRADE            = 0x00000001,
+	LOG_TYPE_VENDING          = 0x00000002,
+	LOG_TYPE_PICKDROP_PLAYER  = 0x00000004,
+	LOG_TYPE_PICKDROP_MONSTER = 0x00000008,
+	LOG_TYPE_NPC              = 0x00000010,
+	LOG_TYPE_SCRIPT           = 0x00000020,
+	LOG_TYPE_STEAL            = 0x00000040,
+	LOG_TYPE_CONSUME          = 0x00000080,
+	LOG_TYPE_PRODUCE          = 0x00000100,
+	LOG_TYPE_MVP              = 0x00000200,
+	LOG_TYPE_COMMAND          = 0x00000400,
+	LOG_TYPE_STORAGE          = 0x00000800,
+	LOG_TYPE_GSTORAGE         = 0x00001000,
+	LOG_TYPE_MAIL             = 0x00002000,
+	LOG_TYPE_AUCTION          = 0x00004000,
+	LOG_TYPE_BUYING_STORE     = 0x00008000,
+	LOG_TYPE_OTHER            = 0x00010000,
+	LOG_TYPE_BANK             = 0x00020000,
+	LOG_TYPE_DIVORCE          = 0x00040000,
+	LOG_TYPE_ROULETTE         = 0x00080000,
+	LOG_TYPE_RENTAL           = 0x00100000,
+	LOG_TYPE_CARD             = 0x00200000,
+	LOG_TYPE_INV_INVALID      = 0x00400000,
+	LOG_TYPE_CART_INVALID     = 0x00800000,
+	LOG_TYPE_EGG              = 0x01000000,
+	LOG_TYPE_QUEST            = 0x02000000,
+	LOG_TYPE_SKILL            = 0x04000000,
+	LOG_TYPE_REFINE           = 0x08000000,
+
 	// combinations
 	LOG_TYPE_LOOT             = LOG_TYPE_PICKDROP_MONSTER|LOG_TYPE_CONSUME,
 	// all
-	LOG_TYPE_ALL              = 0xFFFFF,
+	LOG_TYPE_ALL              = 0xFFFFFFFF,
 } e_log_pick_type;
 
 /// filters for item logging
@@ -116,7 +127,7 @@ struct log_interface {
 	char db_id[32];
 	char db_pw[100];
 	char db_name[32];
-	Sql* mysql_handle;
+	struct Sql *mysql_handle;
 	/* */
 	void (*pick_pc) (struct map_session_data* sd, e_log_pick_type type, int amount, struct item* itm, struct item_data *data);
 	void (*pick_mob) (struct mob_data* md, e_log_pick_type type, int amount, struct item* itm, struct item_data *data);
