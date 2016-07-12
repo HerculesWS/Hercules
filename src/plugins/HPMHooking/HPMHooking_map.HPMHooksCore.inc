@@ -110,6 +110,8 @@ struct {
 	struct HPMHookPoint *HP_battle_calc_attack_post;
 	struct HPMHookPoint *HP_battle_calc_damage_pre;
 	struct HPMHookPoint *HP_battle_calc_damage_post;
+	struct HPMHookPoint *HP_battle_calc_pc_damage_pre;
+	struct HPMHookPoint *HP_battle_calc_pc_damage_post;
 	struct HPMHookPoint *HP_battle_calc_gvg_damage_pre;
 	struct HPMHookPoint *HP_battle_calc_gvg_damage_post;
 	struct HPMHookPoint *HP_battle_calc_bg_damage_pre;
@@ -5134,8 +5136,12 @@ struct {
 	struct HPMHookPoint *HP_skill_enchant_elemental_end_post;
 	struct HPMHookPoint *HP_skill_not_ok_pre;
 	struct HPMHookPoint *HP_skill_not_ok_post;
+	struct HPMHookPoint *HP_skill_not_ok_unknown_pre;
+	struct HPMHookPoint *HP_skill_not_ok_unknown_post;
 	struct HPMHookPoint *HP_skill_not_ok_hom_pre;
 	struct HPMHookPoint *HP_skill_not_ok_hom_post;
+	struct HPMHookPoint *HP_skill_not_ok_hom_unknown_pre;
+	struct HPMHookPoint *HP_skill_not_ok_hom_unknown_post;
 	struct HPMHookPoint *HP_skill_not_ok_mercenary_pre;
 	struct HPMHookPoint *HP_skill_not_ok_mercenary_post;
 	struct HPMHookPoint *HP_skill_chastle_mob_changetarget_pre;
@@ -5146,6 +5152,8 @@ struct {
 	struct HPMHookPoint *HP_skill_produce_mix_post;
 	struct HPMHookPoint *HP_skill_arrow_create_pre;
 	struct HPMHookPoint *HP_skill_arrow_create_post;
+	struct HPMHookPoint *HP_skill_castend_type_pre;
+	struct HPMHookPoint *HP_skill_castend_type_post;
 	struct HPMHookPoint *HP_skill_castend_nodamage_id_pre;
 	struct HPMHookPoint *HP_skill_castend_nodamage_id_post;
 	struct HPMHookPoint *HP_skill_castend_damage_id_pre;
@@ -5230,6 +5238,8 @@ struct {
 	struct HPMHookPoint *HP_skill_unitsetmapcell_post;
 	struct HPMHookPoint *HP_skill_unit_onplace_timer_pre;
 	struct HPMHookPoint *HP_skill_unit_onplace_timer_post;
+	struct HPMHookPoint *HP_skill_unit_onplace_timer_unknown_pre;
+	struct HPMHookPoint *HP_skill_unit_onplace_timer_unknown_post;
 	struct HPMHookPoint *HP_skill_unit_effect_pre;
 	struct HPMHookPoint *HP_skill_unit_effect_post;
 	struct HPMHookPoint *HP_skill_unit_timer_sub_onplace_pre;
@@ -5250,6 +5260,8 @@ struct {
 	struct HPMHookPoint *HP_skill_unit_timer_sub_post;
 	struct HPMHookPoint *HP_skill_init_unit_layout_pre;
 	struct HPMHookPoint *HP_skill_init_unit_layout_post;
+	struct HPMHookPoint *HP_skill_init_unit_layout_unknown_pre;
+	struct HPMHookPoint *HP_skill_init_unit_layout_unknown_post;
 	struct HPMHookPoint *HP_skill_validate_hittype_pre;
 	struct HPMHookPoint *HP_skill_validate_hittype_post;
 	struct HPMHookPoint *HP_skill_validate_skilltype_pre;
@@ -6149,6 +6161,8 @@ struct {
 	int HP_battle_calc_attack_post;
 	int HP_battle_calc_damage_pre;
 	int HP_battle_calc_damage_post;
+	int HP_battle_calc_pc_damage_pre;
+	int HP_battle_calc_pc_damage_post;
 	int HP_battle_calc_gvg_damage_pre;
 	int HP_battle_calc_gvg_damage_post;
 	int HP_battle_calc_bg_damage_pre;
@@ -11173,8 +11187,12 @@ struct {
 	int HP_skill_enchant_elemental_end_post;
 	int HP_skill_not_ok_pre;
 	int HP_skill_not_ok_post;
+	int HP_skill_not_ok_unknown_pre;
+	int HP_skill_not_ok_unknown_post;
 	int HP_skill_not_ok_hom_pre;
 	int HP_skill_not_ok_hom_post;
+	int HP_skill_not_ok_hom_unknown_pre;
+	int HP_skill_not_ok_hom_unknown_post;
 	int HP_skill_not_ok_mercenary_pre;
 	int HP_skill_not_ok_mercenary_post;
 	int HP_skill_chastle_mob_changetarget_pre;
@@ -11185,6 +11203,8 @@ struct {
 	int HP_skill_produce_mix_post;
 	int HP_skill_arrow_create_pre;
 	int HP_skill_arrow_create_post;
+	int HP_skill_castend_type_pre;
+	int HP_skill_castend_type_post;
 	int HP_skill_castend_nodamage_id_pre;
 	int HP_skill_castend_nodamage_id_post;
 	int HP_skill_castend_damage_id_pre;
@@ -11269,6 +11289,8 @@ struct {
 	int HP_skill_unitsetmapcell_post;
 	int HP_skill_unit_onplace_timer_pre;
 	int HP_skill_unit_onplace_timer_post;
+	int HP_skill_unit_onplace_timer_unknown_pre;
+	int HP_skill_unit_onplace_timer_unknown_post;
 	int HP_skill_unit_effect_pre;
 	int HP_skill_unit_effect_post;
 	int HP_skill_unit_timer_sub_onplace_pre;
@@ -11289,6 +11311,8 @@ struct {
 	int HP_skill_unit_timer_sub_post;
 	int HP_skill_init_unit_layout_pre;
 	int HP_skill_init_unit_layout_post;
+	int HP_skill_init_unit_layout_unknown_pre;
+	int HP_skill_init_unit_layout_unknown_post;
 	int HP_skill_validate_hittype_pre;
 	int HP_skill_validate_hittype_post;
 	int HP_skill_validate_skilltype_pre;

@@ -114,6 +114,8 @@ typedef struct Damage (*HPMHOOK_pre_battle_calc_attack) (int *attack_type, struc
 typedef struct Damage (*HPMHOOK_post_battle_calc_attack) (struct Damage retVal___, int attack_type, struct block_list *bl, struct block_list *target, uint16 skill_id, uint16 skill_lv, int count);
 typedef int64 (*HPMHOOK_pre_battle_calc_damage) (struct block_list **src, struct block_list **bl, struct Damage **d, int64 *damage, uint16 *skill_id, uint16 *skill_lv);
 typedef int64 (*HPMHOOK_post_battle_calc_damage) (int64 retVal___, struct block_list *src, struct block_list *bl, struct Damage *d, int64 damage, uint16 skill_id, uint16 skill_lv);
+typedef int64 (*HPMHOOK_pre_battle_calc_pc_damage) (struct block_list **src, struct block_list **bl, struct Damage **d, int64 *damage, uint16 *skill_id, uint16 *skill_lv);
+typedef int64 (*HPMHOOK_post_battle_calc_pc_damage) (int64 retVal___, struct block_list *src, struct block_list *bl, struct Damage *d, int64 damage, uint16 skill_id, uint16 skill_lv);
 typedef int64 (*HPMHOOK_pre_battle_calc_gvg_damage) (struct block_list **src, struct block_list **bl, int64 *damage, int *div_, uint16 *skill_id, uint16 *skill_lv, int *flag);
 typedef int64 (*HPMHOOK_post_battle_calc_gvg_damage) (int64 retVal___, struct block_list *src, struct block_list *bl, int64 damage, int div_, uint16 skill_id, uint16 skill_lv, int flag);
 typedef int64 (*HPMHOOK_pre_battle_calc_bg_damage) (struct block_list **src, struct block_list **bl, int64 *damage, int *div_, uint16 *skill_id, uint16 *skill_lv, int *flag);
@@ -6314,8 +6316,12 @@ typedef int (*HPMHOOK_pre_skill_enchant_elemental_end) (struct block_list **bl, 
 typedef int (*HPMHOOK_post_skill_enchant_elemental_end) (int retVal___, struct block_list *bl, int type);
 typedef int (*HPMHOOK_pre_skill_not_ok) (uint16 *skill_id, struct map_session_data **sd);
 typedef int (*HPMHOOK_post_skill_not_ok) (int retVal___, uint16 skill_id, struct map_session_data *sd);
+typedef int (*HPMHOOK_pre_skill_not_ok_unknown) (uint16 *skill_id, struct map_session_data **sd);
+typedef int (*HPMHOOK_post_skill_not_ok_unknown) (int retVal___, uint16 skill_id, struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_skill_not_ok_hom) (uint16 *skill_id, struct homun_data **hd);
 typedef int (*HPMHOOK_post_skill_not_ok_hom) (int retVal___, uint16 skill_id, struct homun_data *hd);
+typedef int (*HPMHOOK_pre_skill_not_ok_hom_unknown) (uint16 *skill_id, struct homun_data **hd);
+typedef int (*HPMHOOK_post_skill_not_ok_hom_unknown) (int retVal___, uint16 skill_id, struct homun_data *hd);
 typedef int (*HPMHOOK_pre_skill_not_ok_mercenary) (uint16 *skill_id, struct mercenary_data **md);
 typedef int (*HPMHOOK_post_skill_not_ok_mercenary) (int retVal___, uint16 skill_id, struct mercenary_data *md);
 typedef int (*HPMHOOK_pre_skill_chastle_mob_changetarget) (struct block_list **bl, va_list ap);
@@ -6326,6 +6332,8 @@ typedef int (*HPMHOOK_pre_skill_produce_mix) (struct map_session_data **sd, uint
 typedef int (*HPMHOOK_post_skill_produce_mix) (int retVal___, struct map_session_data *sd, uint16 skill_id, int nameid, int slot1, int slot2, int slot3, int qty);
 typedef int (*HPMHOOK_pre_skill_arrow_create) (struct map_session_data **sd, int *nameid);
 typedef int (*HPMHOOK_post_skill_arrow_create) (int retVal___, struct map_session_data *sd, int nameid);
+typedef void (*HPMHOOK_pre_skill_castend_type) (int *type, struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
+typedef void (*HPMHOOK_post_skill_castend_type) (int type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 typedef int (*HPMHOOK_pre_skill_castend_nodamage_id) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
 typedef int (*HPMHOOK_post_skill_castend_nodamage_id) (int retVal___, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 typedef int (*HPMHOOK_pre_skill_castend_damage_id) (struct block_list **src, struct block_list **bl, uint16 *skill_id, uint16 *skill_lv, int64 *tick, int *flag);
@@ -6410,6 +6418,8 @@ typedef void (*HPMHOOK_pre_skill_unitsetmapcell) (struct skill_unit **src, uint1
 typedef void (*HPMHOOK_post_skill_unitsetmapcell) (struct skill_unit *src, uint16 skill_id, uint16 skill_lv, cell_t cell, bool flag);
 typedef int (*HPMHOOK_pre_skill_unit_onplace_timer) (struct skill_unit **src, struct block_list **bl, int64 *tick);
 typedef int (*HPMHOOK_post_skill_unit_onplace_timer) (int retVal___, struct skill_unit *src, struct block_list *bl, int64 tick);
+typedef void (*HPMHOOK_pre_skill_unit_onplace_timer_unknown) (struct skill_unit **src, struct block_list **bl, int64 **tick);
+typedef void (*HPMHOOK_post_skill_unit_onplace_timer_unknown) (struct skill_unit *src, struct block_list *bl, int64 *tick);
 typedef int (*HPMHOOK_pre_skill_unit_effect) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_skill_unit_effect) (int retVal___, struct block_list *bl, va_list ap);
 typedef int (*HPMHOOK_pre_skill_unit_timer_sub_onplace) (struct block_list **bl, va_list ap);
@@ -6430,6 +6440,8 @@ typedef int (*HPMHOOK_pre_skill_unit_timer_sub) (union DBKey *key, struct DBData
 typedef int (*HPMHOOK_post_skill_unit_timer_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
 typedef void (*HPMHOOK_pre_skill_init_unit_layout) (void);
 typedef void (*HPMHOOK_post_skill_init_unit_layout) (void);
+typedef void (*HPMHOOK_pre_skill_init_unit_layout_unknown) (int *skill_idx);
+typedef void (*HPMHOOK_post_skill_init_unit_layout_unknown) (int skill_idx);
 typedef void (*HPMHOOK_pre_skill_validate_hittype) (struct config_setting_t **conf, struct s_skill_db **sk);
 typedef void (*HPMHOOK_post_skill_validate_hittype) (struct config_setting_t *conf, struct s_skill_db *sk);
 typedef void (*HPMHOOK_pre_skill_validate_skilltype) (struct config_setting_t **conf, struct s_skill_db **sk);
