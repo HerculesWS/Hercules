@@ -2271,6 +2271,12 @@ typedef void (*HPMHOOK_post_DB_init) (void);
 typedef void (*HPMHOOK_pre_DB_final) (void);
 typedef void (*HPMHOOK_post_DB_final) (void);
 #endif // COMMON_DB_H
+#ifdef COMMON_DES_H /* des */
+typedef void (*HPMHOOK_pre_des_decrypt_block) (struct des_bit64 **block);
+typedef void (*HPMHOOK_post_des_decrypt_block) (struct des_bit64 *block);
+typedef void (*HPMHOOK_pre_des_decrypt) (unsigned char **data, size_t *size);
+typedef void (*HPMHOOK_post_des_decrypt) (unsigned char *data, size_t size);
+#endif // COMMON_DES_H
 #ifdef MAP_DUEL_H /* duel */
 typedef int (*HPMHOOK_pre_duel_create) (struct map_session_data **sd, const unsigned int *maxpl);
 typedef int (*HPMHOOK_post_duel_create) (int retVal___, struct map_session_data *sd, const unsigned int maxpl);
@@ -2365,6 +2371,22 @@ typedef void (*HPMHOOK_post_geoip_final) (bool shutdown);
 typedef void (*HPMHOOK_pre_geoip_init) (void);
 typedef void (*HPMHOOK_post_geoip_init) (void);
 #endif // CHAR_GEOIP_H
+#ifdef COMMON_GRFIO_H /* grfio */
+typedef void (*HPMHOOK_pre_grfio_init) (const char **fname);
+typedef void (*HPMHOOK_post_grfio_init) (const char *fname);
+typedef void (*HPMHOOK_pre_grfio_final) (void);
+typedef void (*HPMHOOK_post_grfio_final) (void);
+typedef void* (*HPMHOOK_pre_grfio_reads) (const char **fname, int **size);
+typedef void* (*HPMHOOK_post_grfio_reads) (void* retVal___, const char *fname, int *size);
+typedef const char* (*HPMHOOK_pre_grfio_find_file) (const char **fname);
+typedef const char* (*HPMHOOK_post_grfio_find_file) (const char* retVal___, const char *fname);
+typedef unsigned long (*HPMHOOK_pre_grfio_crc32) (const unsigned char **buf, unsigned int *len);
+typedef unsigned long (*HPMHOOK_post_grfio_crc32) (unsigned long retVal___, const unsigned char *buf, unsigned int len);
+typedef int (*HPMHOOK_pre_grfio_decode_zip) (void **dest, unsigned long **dest_len, const void **source, unsigned long *source_len);
+typedef int (*HPMHOOK_post_grfio_decode_zip) (int retVal___, void *dest, unsigned long *dest_len, const void *source, unsigned long source_len);
+typedef int (*HPMHOOK_pre_grfio_encode_zip) (void **dest, unsigned long **dest_len, const void **source, unsigned long *source_len);
+typedef int (*HPMHOOK_post_grfio_encode_zip) (int retVal___, void *dest, unsigned long *dest_len, const void *source, unsigned long source_len);
+#endif // COMMON_GRFIO_H
 #ifdef MAP_GUILD_H /* guild */
 typedef void (*HPMHOOK_pre_guild_init) (bool *minimal);
 typedef void (*HPMHOOK_post_guild_init) (bool minimal);
@@ -4427,6 +4449,14 @@ typedef void (*HPMHOOK_post_mapreg_reload) (void);
 typedef bool (*HPMHOOK_pre_mapreg_config_read) (const char **w1, const char **w2);
 typedef bool (*HPMHOOK_post_mapreg_config_read) (bool retVal___, const char *w1, const char *w2);
 #endif // MAP_MAPREG_H
+#ifdef COMMON_MD5CALC_H /* md5 */
+typedef void (*HPMHOOK_pre_md5_string) (const char **string, char **output);
+typedef void (*HPMHOOK_post_md5_string) (const char *string, char *output);
+typedef void (*HPMHOOK_pre_md5_binary) (const char **string, unsigned char **output);
+typedef void (*HPMHOOK_post_md5_binary) (const char *string, unsigned char *output);
+typedef void (*HPMHOOK_pre_md5_salt) (int *len, char **output);
+typedef void (*HPMHOOK_post_md5_salt) (int len, char *output);
+#endif // COMMON_MD5CALC_H
 #ifdef MAP_MERCENARY_H /* mercenary */
 typedef void (*HPMHOOK_pre_mercenary_init) (bool *minimal);
 typedef void (*HPMHOOK_post_mercenary_init) (bool minimal);
@@ -4687,6 +4717,28 @@ typedef void (*HPMHOOK_post_mob_clear_spawninfo) (void);
 typedef void (*HPMHOOK_pre_mob_destroy_mob_db) (int *index);
 typedef void (*HPMHOOK_post_mob_destroy_mob_db) (int index);
 #endif // MAP_MOB_H
+#ifdef COMMON_MUTEX_H /* mutex */
+typedef struct mutex_data* (*HPMHOOK_pre_mutex_create) (void);
+typedef struct mutex_data* (*HPMHOOK_post_mutex_create) (struct mutex_data* retVal___);
+typedef void (*HPMHOOK_pre_mutex_destroy) (struct mutex_data **m);
+typedef void (*HPMHOOK_post_mutex_destroy) (struct mutex_data *m);
+typedef void (*HPMHOOK_pre_mutex_lock) (struct mutex_data **m);
+typedef void (*HPMHOOK_post_mutex_lock) (struct mutex_data *m);
+typedef bool (*HPMHOOK_pre_mutex_trylock) (struct mutex_data **m);
+typedef bool (*HPMHOOK_post_mutex_trylock) (bool retVal___, struct mutex_data *m);
+typedef void (*HPMHOOK_pre_mutex_unlock) (struct mutex_data **m);
+typedef void (*HPMHOOK_post_mutex_unlock) (struct mutex_data *m);
+typedef struct cond_data* (*HPMHOOK_pre_mutex_cond_create) (void);
+typedef struct cond_data* (*HPMHOOK_post_mutex_cond_create) (struct cond_data* retVal___);
+typedef void (*HPMHOOK_pre_mutex_cond_destroy) (struct cond_data **c);
+typedef void (*HPMHOOK_post_mutex_cond_destroy) (struct cond_data *c);
+typedef void (*HPMHOOK_pre_mutex_cond_wait) (struct cond_data **c, struct mutex_data **m, sysint *timeout_ticks);
+typedef void (*HPMHOOK_post_mutex_cond_wait) (struct cond_data *c, struct mutex_data *m, sysint timeout_ticks);
+typedef void (*HPMHOOK_pre_mutex_cond_signal) (struct cond_data **c);
+typedef void (*HPMHOOK_post_mutex_cond_signal) (struct cond_data *c);
+typedef void (*HPMHOOK_pre_mutex_cond_broadcast) (struct cond_data **c);
+typedef void (*HPMHOOK_post_mutex_cond_broadcast) (struct cond_data *c);
+#endif // COMMON_MUTEX_H
 #ifdef MAP_NPC_H /* npc_chat */
 typedef int (*HPMHOOK_pre_npc_chat_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_npc_chat_sub) (int retVal___, struct block_list *bl, va_list ap);
@@ -5663,6 +5715,24 @@ typedef int (*HPMHOOK_post_quest_read_db) (int retVal___);
 typedef struct quest_db* (*HPMHOOK_pre_quest_read_db_sub) (struct config_setting_t **cs, int *n, const char **source);
 typedef struct quest_db* (*HPMHOOK_post_quest_read_db_sub) (struct quest_db* retVal___, struct config_setting_t *cs, int n, const char *source);
 #endif // MAP_QUEST_H
+#ifdef COMMON_RANDOM_H /* rnd */
+typedef void (*HPMHOOK_pre_rnd_init) (void);
+typedef void (*HPMHOOK_post_rnd_init) (void);
+typedef void (*HPMHOOK_pre_rnd_final) (void);
+typedef void (*HPMHOOK_post_rnd_final) (void);
+typedef void (*HPMHOOK_pre_rnd_seed) (uint32 *seed);
+typedef void (*HPMHOOK_post_rnd_seed) (uint32 seed);
+typedef int32 (*HPMHOOK_pre_rnd_random) (void);
+typedef int32 (*HPMHOOK_post_rnd_random) (int32 retVal___);
+typedef uint32 (*HPMHOOK_pre_rnd_roll) (uint32 *dice_faces);
+typedef uint32 (*HPMHOOK_post_rnd_roll) (uint32 retVal___, uint32 dice_faces);
+typedef int32 (*HPMHOOK_pre_rnd_value) (int32 *min, int32 *max);
+typedef int32 (*HPMHOOK_post_rnd_value) (int32 retVal___, int32 min, int32 max);
+typedef double (*HPMHOOK_pre_rnd_uniform) (void);
+typedef double (*HPMHOOK_post_rnd_uniform) (double retVal___);
+typedef double (*HPMHOOK_pre_rnd_uniform53) (void);
+typedef double (*HPMHOOK_post_rnd_uniform53) (double retVal___);
+#endif // COMMON_RANDOM_H
 #ifdef MAP_SCRIPT_H /* script */
 typedef void (*HPMHOOK_pre_script_init) (bool *minimal);
 typedef void (*HPMHOOK_post_script_init) (bool minimal);
@@ -7009,6 +7079,30 @@ typedef void (*HPMHOOK_post_sysinfo_init) (void);
 typedef void (*HPMHOOK_pre_sysinfo_final) (void);
 typedef void (*HPMHOOK_post_sysinfo_final) (void);
 #endif // COMMON_SYSINFO_H
+#ifdef COMMON_THREAD_H /* thread */
+typedef void (*HPMHOOK_pre_thread_init) (void);
+typedef void (*HPMHOOK_post_thread_init) (void);
+typedef void (*HPMHOOK_pre_thread_final) (void);
+typedef void (*HPMHOOK_post_thread_final) (void);
+typedef struct thread_handle* (*HPMHOOK_pre_thread_create) (threadFunc *entry_point, void **param);
+typedef struct thread_handle* (*HPMHOOK_post_thread_create) (struct thread_handle* retVal___, threadFunc entry_point, void *param);
+typedef struct thread_handle* (*HPMHOOK_pre_thread_create_opt) (threadFunc *entry_point, void **param, size_t *stack_size, enum thread_priority *prio);
+typedef struct thread_handle* (*HPMHOOK_post_thread_create_opt) (struct thread_handle* retVal___, threadFunc entry_point, void *param, size_t stack_size, enum thread_priority prio);
+typedef void (*HPMHOOK_pre_thread_destroy) (struct thread_handle **handle);
+typedef void (*HPMHOOK_post_thread_destroy) (struct thread_handle *handle);
+typedef struct thread_handle* (*HPMHOOK_pre_thread_self) (void);
+typedef struct thread_handle* (*HPMHOOK_post_thread_self) (struct thread_handle* retVal___);
+typedef int (*HPMHOOK_pre_thread_get_tid) (void);
+typedef int (*HPMHOOK_post_thread_get_tid) (int retVal___);
+typedef bool (*HPMHOOK_pre_thread_wait) (struct thread_handle **handle, void ***out_exit_code);
+typedef bool (*HPMHOOK_post_thread_wait) (bool retVal___, struct thread_handle *handle, void **out_exit_code);
+typedef void (*HPMHOOK_pre_thread_prio_set) (struct thread_handle **handle, enum thread_priority *prio);
+typedef void (*HPMHOOK_post_thread_prio_set) (struct thread_handle *handle, enum thread_priority prio);
+typedef enum thread_priority (*HPMHOOK_pre_thread_prio_get) (struct thread_handle **handle);
+typedef enum thread_priority (*HPMHOOK_post_thread_prio_get) (enum thread_priority retVal___, struct thread_handle *handle);
+typedef void (*HPMHOOK_pre_thread_yield) (void);
+typedef void (*HPMHOOK_post_thread_yield) (void);
+#endif // COMMON_THREAD_H
 #ifdef COMMON_TIMER_H /* timer */
 typedef int64 (*HPMHOOK_pre_timer_gettick) (void);
 typedef int64 (*HPMHOOK_post_timer_gettick) (int64 retVal___);

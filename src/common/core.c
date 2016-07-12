@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -26,23 +26,27 @@
 #include "common/cbasetypes.h"
 #include "common/console.h"
 #include "common/db.h"
+#include "common/des.h"
+#include "common/grfio.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
-#include "common/random.h"
+#include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
 #include "common/sysinfo.h"
-#include "common/nullpo.h"
+#include "common/timer.h"
 #include "common/utils.h"
 
 #ifndef MINICORE
 #	include "common/HPM.h"
 #	include "common/conf.h"
 #	include "common/ers.h"
+#	include "common/md5calc.h"
+#	include "common/mutex.h"
+#	include "common/random.h"
 #	include "common/socket.h"
 #	include "common/sql.h"
 #	include "common/thread.h"
-#	include "common/timer.h"
 #endif
 
 #ifndef _WIN32
@@ -253,12 +257,18 @@ void core_defaults(void) {
 	malloc_defaults();
 	showmsg_defaults();
 	cmdline_defaults();
+	des_defaults();
+	grfio_defaults(); // Note: grfio is lazily loaded. grfio->init() and grfio->final() are not automatically called.
 #ifndef MINICORE
+	mutex_defaults();
 	libconfig_defaults();
 	sql_defaults();
 	timer_defaults();
 	db_defaults();
 	socket_defaults();
+	rnd_defaults();
+	md5_defaults();
+	thread_defaults();
 #endif
 }
 /**
@@ -498,7 +508,7 @@ int main (int argc, char **argv) {
 	set_server_type();
 
 	Sql_Init();
-	rathread_init();
+	thread->init();
 	DB->init();
 	signals_init();
 
@@ -509,8 +519,7 @@ int main (int argc, char **argv) {
 	timer->init();
 
 	/* timer first */
-	rnd_init();
-	srand((unsigned int)timer->gettick());
+	rnd->init();
 
 	console->init();
 
@@ -535,8 +544,9 @@ int main (int argc, char **argv) {
 	timer->final();
 	sockt->final();
 	DB->final();
-	rathread_final();
+	thread->final();
 	ers_final();
+	rnd->final();
 #endif
 	cmdline->final();
 	//sysinfo->final(); Called by iMalloc->final()

@@ -990,6 +990,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(DB->data2ptr, HP_DB_data2ptr) },
 	{ HP_POP(DB->init, HP_DB_init) },
 	{ HP_POP(DB->final, HP_DB_final) },
+/* des_interface */
+	{ HP_POP(des->decrypt_block, HP_des_decrypt_block) },
+	{ HP_POP(des->decrypt, HP_des_decrypt) },
 /* duel_interface */
 	{ HP_POP(duel->create, HP_duel_create) },
 	{ HP_POP(duel->invite, HP_duel_invite) },
@@ -1033,6 +1036,14 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(elemental->ai_sub_foreachclient, HP_elemental_ai_sub_foreachclient) },
 	{ HP_POP(elemental->ai_timer, HP_elemental_ai_timer) },
 	{ HP_POP(elemental->read_db, HP_elemental_read_db) },
+/* grfio_interface */
+	{ HP_POP(grfio->init, HP_grfio_init) },
+	{ HP_POP(grfio->final, HP_grfio_final) },
+	{ HP_POP(grfio->reads, HP_grfio_reads) },
+	{ HP_POP(grfio->find_file, HP_grfio_find_file) },
+	{ HP_POP(grfio->crc32, HP_grfio_crc32) },
+	{ HP_POP(grfio->decode_zip, HP_grfio_decode_zip) },
+	{ HP_POP(grfio->encode_zip, HP_grfio_encode_zip) },
 /* guild_interface */
 	{ HP_POP(guild->init, HP_guild_init) },
 	{ HP_POP(guild->final, HP_guild_final) },
@@ -1698,6 +1709,10 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mapreg->destroyreg, HP_mapreg_destroyreg) },
 	{ HP_POP(mapreg->reload, HP_mapreg_reload) },
 	{ HP_POP(mapreg->config_read, HP_mapreg_config_read) },
+/* md5_interface */
+	{ HP_POP(md5->string, HP_md5_string) },
+	{ HP_POP(md5->binary, HP_md5_binary) },
+	{ HP_POP(md5->salt, HP_md5_salt) },
 /* mercenary_interface */
 	{ HP_POP(mercenary->init, HP_mercenary_init) },
 	{ HP_POP(mercenary->class, HP_mercenary_class) },
@@ -1828,6 +1843,17 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(mob->load, HP_mob_load) },
 	{ HP_POP(mob->clear_spawninfo, HP_mob_clear_spawninfo) },
 	{ HP_POP(mob->destroy_mob_db, HP_mob_destroy_mob_db) },
+/* mutex_interface */
+	{ HP_POP(mutex->create, HP_mutex_create) },
+	{ HP_POP(mutex->destroy, HP_mutex_destroy) },
+	{ HP_POP(mutex->lock, HP_mutex_lock) },
+	{ HP_POP(mutex->trylock, HP_mutex_trylock) },
+	{ HP_POP(mutex->unlock, HP_mutex_unlock) },
+	{ HP_POP(mutex->cond_create, HP_mutex_cond_create) },
+	{ HP_POP(mutex->cond_destroy, HP_mutex_cond_destroy) },
+	{ HP_POP(mutex->cond_wait, HP_mutex_cond_wait) },
+	{ HP_POP(mutex->cond_signal, HP_mutex_cond_signal) },
+	{ HP_POP(mutex->cond_broadcast, HP_mutex_cond_broadcast) },
 /* npc_chat_interface */
 	{ HP_POP(npc_chat->sub, HP_npc_chat_sub) },
 	{ HP_POP(npc_chat->finalize, HP_npc_chat_finalize) },
@@ -2305,6 +2331,15 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(quest->clear, HP_quest_clear) },
 	{ HP_POP(quest->read_db, HP_quest_read_db) },
 	{ HP_POP(quest->read_db_sub, HP_quest_read_db_sub) },
+/* rnd_interface */
+	{ HP_POP(rnd->init, HP_rnd_init) },
+	{ HP_POP(rnd->final, HP_rnd_final) },
+	{ HP_POP(rnd->seed, HP_rnd_seed) },
+	{ HP_POP(rnd->random, HP_rnd_random) },
+	{ HP_POP(rnd->roll, HP_rnd_roll) },
+	{ HP_POP(rnd->value, HP_rnd_value) },
+	{ HP_POP(rnd->uniform, HP_rnd_uniform) },
+	{ HP_POP(rnd->uniform53, HP_rnd_uniform53) },
 /* script_interface */
 	{ HP_POP(script->init, HP_script_init) },
 	{ HP_POP(script->final, HP_script_final) },
@@ -2978,6 +3013,18 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sysinfo->is_superuser, HP_sysinfo_is_superuser) },
 	{ HP_POP(sysinfo->init, HP_sysinfo_init) },
 	{ HP_POP(sysinfo->final, HP_sysinfo_final) },
+/* thread_interface */
+	{ HP_POP(thread->init, HP_thread_init) },
+	{ HP_POP(thread->final, HP_thread_final) },
+	{ HP_POP(thread->create, HP_thread_create) },
+	{ HP_POP(thread->create_opt, HP_thread_create_opt) },
+	{ HP_POP(thread->destroy, HP_thread_destroy) },
+	{ HP_POP(thread->self, HP_thread_self) },
+	{ HP_POP(thread->get_tid, HP_thread_get_tid) },
+	{ HP_POP(thread->wait, HP_thread_wait) },
+	{ HP_POP(thread->prio_set, HP_thread_prio_set) },
+	{ HP_POP(thread->prio_get, HP_thread_prio_get) },
+	{ HP_POP(thread->yield, HP_thread_yield) },
 /* timer_interface */
 	{ HP_POP(timer->gettick, HP_timer_gettick) },
 	{ HP_POP(timer->gettick_nocache, HP_timer_gettick_nocache) },

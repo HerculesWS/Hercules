@@ -242,6 +242,8 @@ sub parse($$) {
 			$rtinit = ' = PACKET_UNKNOWN';
 		} elsif ($x =~ /^(?:enum\s+)?DBOptions$/) { # Known enum DBOptions
 			$rtinit = ' = DB_OPT_BASE';
+		} elsif ($x =~ /^enum\s+thread_priority$/) { # Known enum DBOptions
+			$rtinit = ' = THREADPRIO_NORMAL';
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
 			$rtinit = ' = NULL';
 		} elsif ($x =~ /^(?:struct|union)\s+.*$/) { # Structs and unions
@@ -304,6 +306,9 @@ foreach my $file (@files) { # Loop through the xml files
 	} elsif ($key eq "mapindex_interface") {
 		push @servertypes, ("map", "char"); # Currently not used by the login server
 		$servermask = 'SERVER_TYPE_MAP|SERVER_TYPE_CHAR';
+	} elsif ($key eq "grfio_interface") {
+		push @servertypes, ("map"); # Currently not used by the login and char servers
+		$servermask = 'SERVER_TYPE_MAP';
 	} else {
 		push @servertypes, ("map", "char", "login");
 		$servermask = 'SERVER_TYPE_ALL';
@@ -359,6 +364,7 @@ foreach my $file (@files) { # Loop through the xml files
 					my $bstart = $b->{location}->[0]->{bodystart} || $b->{location}->[0]->{line};
 					$astart <=> $bstart
 				} @$memberdef) { # Loop through the members
+			next unless $f->{kind} eq 'variable'; # Skip macros
 			my $t = $f->{argsstring}->[0];
 			my $def = $f->{definition}->[0];
 			if ($f->{type}->[0] =~ /^\s*LoginParseFunc\s*\*\s*$/) {

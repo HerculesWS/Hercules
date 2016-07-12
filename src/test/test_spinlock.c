@@ -38,7 +38,7 @@
 #define PERINC 100000
 #define LOOPS 47
 
-static SPIN_LOCK lock;
+static struct spin_lock lock;
 static unsigned int val = 0;
 static volatile int32 done_threads = 0;
 
@@ -60,13 +60,14 @@ static  void *worker(void *p){
 	return NULL;
 }//end: worker()
 
-int do_init(int argc, char **argv){
-	rAthread *t[THRC];
+int do_init(int argc, char **argv)
+{
+	struct thread_handle *t[THRC];
 	int j, i;
 	int ok;
 
 	ShowStatus("==========\n");
-	ShowStatus("TEST: %u Runs,  (%u Threads)\n", LOOPS, THRC);
+	ShowStatus("TEST: %d Runs,  (%d Threads)\n", LOOPS, THRC);
 	ShowStatus("This can take a while\n");
 	ShowStatus("\n\n");
 
@@ -78,13 +79,13 @@ int do_init(int argc, char **argv){
 		InitializeSpinLock(&lock);
 
 		for(i =0; i < THRC; i++){
-			t[i] = rathread_createEx( worker,  NULL,  1024*512,  RAT_PRIO_NORMAL);
+			t[i] = thread->create_opt(worker, NULL, 1024*512, THREADPRIO_NORMAL);
 		}
 
 		while(1){
 			if(InterlockedCompareExchange(&done_threads, THRC, THRC) == THRC)
 				break;
-			rathread_yield();
+			thread->yield();
 		}
 
 		FinalizeSpinLock(&lock);

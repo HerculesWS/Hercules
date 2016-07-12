@@ -16,6 +16,9 @@
     <ClCompile Include="..\src\common\ers.c">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\common\grfio.c">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\common\HPM.c">
       <Filter>common</Filter>
     </ClCompile>
@@ -23,6 +26,9 @@
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\mapindex.c">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common\md5calc.c">
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\common\nullpo.c">
@@ -150,6 +156,9 @@
     <ClInclude Include="..\src\common\ers.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\common\grfio.h">
+      <Filter>common</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\common\HPM.h">
       <Filter>common</Filter>
     </ClInclude>
@@ -160,6 +169,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\mapindex.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\md5calc.h">
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\src\common\mmo.h">

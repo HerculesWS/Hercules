@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -2851,7 +2851,7 @@ void map_cellfromcache(struct map_data *m) {
 		size = (unsigned long)info->xs*(unsigned long)info->ys;
 
 		// TO-DO: Maybe handle the scenario, if the decoded buffer isn't the same size as expected? [Shinryo]
-		decode_zip(decode_buffer, &size, m->cellPos+sizeof(struct map_cache_map_info), info->len);
+		grfio->decode_zip(decode_buffer, &size, m->cellPos+sizeof(struct map_cache_map_info), info->len);
 		CREATE(m->cell, struct mapcell, size);
 
 		// Set cell properties
@@ -3579,17 +3579,18 @@ void map_flags_init(void) {
 int map_waterheight(char* mapname)
 {
 	char fn[256];
-	char *rsw, *found;
+	char *rsw = NULL;
+	const char *found;
 
 	nullpo_retr(NO_WATER, mapname);
 	//Look up for the rsw
 	snprintf(fn, sizeof(fn), "data\\%s.rsw", mapname);
 
-	if ( (found = grfio_find_file(fn)) )
+	if ((found = grfio->find_file(fn)))
 		safestrncpy(fn, found, sizeof(fn)); // replace with real name
 
 	// read & convert fn
-	rsw = (char *) grfio_read (fn);
+	rsw = grfio_read(fn);
 	if (rsw) {
 		//Load water height from file
 		int wh = (int) *(float*)(rsw+166);
@@ -3613,7 +3614,7 @@ int map_readgat (struct map_data* m)
 	nullpo_ret(m);
 	sprintf(filename, "data\\%s.gat", m->name);
 
-	gat = (uint8 *) grfio_read(filename);
+	gat = grfio_read(filename);
 	if (gat == NULL)
 		return 0;
 
@@ -5677,8 +5678,8 @@ int do_final(void) {
 	map->map_db->destroy(map->map_db, map->db_final);
 
 	mapindex->final();
-	if(map->enable_grf)
-		grfio_final();
+	if (map->enable_grf)
+		grfio->final();
 
 	db_destroy(map->id_db);
 	db_destroy(map->pc_db);
@@ -6122,8 +6123,8 @@ int do_init(int argc, char *argv[])
 		}
 	}
 
-	if(map->enable_grf)
-		grfio_init(map->GRF_PATH_FILENAME);
+	if (map->enable_grf)
+		grfio->init(map->GRF_PATH_FILENAME);
 
 	map->readallmaps();
 

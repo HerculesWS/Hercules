@@ -64,6 +64,9 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(DB->data2ptr, HP_DB_data2ptr) },
 	{ HP_POP(DB->init, HP_DB_init) },
 	{ HP_POP(DB->final, HP_DB_final) },
+/* des_interface */
+	{ HP_POP(des->decrypt_block, HP_des_decrypt_block) },
+	{ HP_POP(des->decrypt, HP_des_decrypt) },
 /* lclif_interface */
 	{ HP_POP(lclif->init, HP_lclif_init) },
 	{ HP_POP(lclif->final, HP_lclif_final) },
@@ -223,8 +226,32 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(iMalloc->usage, HP_iMalloc_usage) },
 	{ HP_POP(iMalloc->post_shutdown, HP_iMalloc_post_shutdown) },
 	{ HP_POP(iMalloc->init_messages, HP_iMalloc_init_messages) },
+/* md5_interface */
+	{ HP_POP(md5->string, HP_md5_string) },
+	{ HP_POP(md5->binary, HP_md5_binary) },
+	{ HP_POP(md5->salt, HP_md5_salt) },
+/* mutex_interface */
+	{ HP_POP(mutex->create, HP_mutex_create) },
+	{ HP_POP(mutex->destroy, HP_mutex_destroy) },
+	{ HP_POP(mutex->lock, HP_mutex_lock) },
+	{ HP_POP(mutex->trylock, HP_mutex_trylock) },
+	{ HP_POP(mutex->unlock, HP_mutex_unlock) },
+	{ HP_POP(mutex->cond_create, HP_mutex_cond_create) },
+	{ HP_POP(mutex->cond_destroy, HP_mutex_cond_destroy) },
+	{ HP_POP(mutex->cond_wait, HP_mutex_cond_wait) },
+	{ HP_POP(mutex->cond_signal, HP_mutex_cond_signal) },
+	{ HP_POP(mutex->cond_broadcast, HP_mutex_cond_broadcast) },
 /* nullpo_interface */
 	{ HP_POP(nullpo->assert_report, HP_nullpo_assert_report) },
+/* rnd_interface */
+	{ HP_POP(rnd->init, HP_rnd_init) },
+	{ HP_POP(rnd->final, HP_rnd_final) },
+	{ HP_POP(rnd->seed, HP_rnd_seed) },
+	{ HP_POP(rnd->random, HP_rnd_random) },
+	{ HP_POP(rnd->roll, HP_rnd_roll) },
+	{ HP_POP(rnd->value, HP_rnd_value) },
+	{ HP_POP(rnd->uniform, HP_rnd_uniform) },
+	{ HP_POP(rnd->uniform53, HP_rnd_uniform53) },
 /* showmsg_interface */
 	{ HP_POP(showmsg->init, HP_showmsg_init) },
 	{ HP_POP(showmsg->final, HP_showmsg_final) },
@@ -346,6 +373,18 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sysinfo->is_superuser, HP_sysinfo_is_superuser) },
 	{ HP_POP(sysinfo->init, HP_sysinfo_init) },
 	{ HP_POP(sysinfo->final, HP_sysinfo_final) },
+/* thread_interface */
+	{ HP_POP(thread->init, HP_thread_init) },
+	{ HP_POP(thread->final, HP_thread_final) },
+	{ HP_POP(thread->create, HP_thread_create) },
+	{ HP_POP(thread->create_opt, HP_thread_create_opt) },
+	{ HP_POP(thread->destroy, HP_thread_destroy) },
+	{ HP_POP(thread->self, HP_thread_self) },
+	{ HP_POP(thread->get_tid, HP_thread_get_tid) },
+	{ HP_POP(thread->wait, HP_thread_wait) },
+	{ HP_POP(thread->prio_set, HP_thread_prio_set) },
+	{ HP_POP(thread->prio_get, HP_thread_prio_get) },
+	{ HP_POP(thread->yield, HP_thread_yield) },
 /* timer_interface */
 	{ HP_POP(timer->gettick, HP_timer_gettick) },
 	{ HP_POP(timer->gettick_nocache, HP_timer_gettick_nocache) },

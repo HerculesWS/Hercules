@@ -77,13 +77,13 @@ int read_map(char *name, struct map_data *m)
 
 	// Open map GAT
 	sprintf(filename,"data\\%s.gat", name);
-	gat = (unsigned char *)grfio_read(filename);
+	gat = grfio_read(filename);
 	if (gat == NULL)
 		return 0;
 
 	// Open map RSW
 	sprintf(filename,"data\\%s.rsw", name);
-	rsw = (unsigned char *)grfio_read(filename);
+	rsw = grfio_read(filename);
 
 	// Read water height
 	if (rsw) {
@@ -139,7 +139,7 @@ bool cache_map(char *name, struct map_data *m)
 	len = (unsigned long)m->xs*(unsigned long)m->ys*2;
 	write_buf = (unsigned char *)aMalloc(len);
 	// Compress the cells and get the compressed length
-	encode_zip(write_buf, &len, m->cells, m->xs*m->ys);
+	grfio->encode_zip(write_buf, &len, m->cells, m->xs*m->ys);
 
 	// Fill the map header
 	safestrncpy(info.name, name, MAP_NAME_LENGTH);
@@ -286,7 +286,7 @@ int do_init(int argc, char** argv)
 	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
 
 	ShowStatus("Initializing grfio with %s\n", grf_list_file);
-	grfio_init(grf_list_file);
+	grfio->init(grf_list_file);
 
 	// Attempt to open the map cache file and force rebuild if not found
 	ShowStatus("Opening map cache: %s\n", map_cache_file);
@@ -360,7 +360,7 @@ int do_init(int argc, char** argv)
 	fclose(map_cache_fp);
 
 	ShowStatus("Finalizing grfio\n");
-	grfio_final();
+	grfio->final();
 
 	ShowInfo("%d maps now in cache\n", header.map_count);
 

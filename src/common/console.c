@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -57,6 +57,7 @@ struct console_interface console_s;
 struct console_interface *console;
 #ifdef CONSOLE_INPUT
 struct console_input_interface console_input_s;
+struct spin_lock console_ptlock_s;
 
 struct {
 	char queue[CONSOLE_PARSE_SIZE][MAX_CONSOLE_INPUT];
@@ -464,45 +465,45 @@ void *cThread_main(void *x) {
 
 			console->input->parse(input);
 			if( input[0] != '\0' ) {/* did we get something? */
-				EnterSpinLock(&console->input->ptlock);
+				EnterSpinLock(console->input->ptlock);
 
 				if( cinput.count == CONSOLE_PARSE_SIZE ) {
-					LeaveSpinLock(&console->input->ptlock);
+					LeaveSpinLock(console->input->ptlock);
 					continue;/* drop */
 				}
 
 				safestrncpy(cinput.queue[cinput.count++],input,MAX_CONSOLE_INPUT);
-				LeaveSpinLock(&console->input->ptlock);
+				LeaveSpinLock(console->input->ptlock);
 			}
 		}
-		ramutex_lock( console->input->ptmutex );
-		racond_wait( console->input->ptcond, console->input->ptmutex, -1 );
-		ramutex_unlock( console->input->ptmutex );
+		mutex->lock(console->input->ptmutex);
+		mutex->cond_wait(console->input->ptcond, console->input->ptmutex, -1);
+		mutex->unlock(console->input->ptmutex);
 	}
 
 	return NULL;
 }
 int console_parse_timer(int tid, int64 tick, int id, intptr_t data) {
 	int i;
-	EnterSpinLock(&console->input->ptlock);
+	EnterSpinLock(console->input->ptlock);
 	for(i = 0; i < cinput.count; i++) {
 		console->input->parse_sub(cinput.queue[i]);
 	}
 	cinput.count = 0;
-	LeaveSpinLock(&console->input->ptlock);
-	racond_signal(console->input->ptcond);
+	LeaveSpinLock(console->input->ptlock);
+	mutex->cond_signal(console->input->ptcond);
 	return 0;
 }
 void console_parse_final(void) {
 	if( console->input->ptstate ) {
 		InterlockedDecrement(&console->input->ptstate);
-		racond_signal(console->input->ptcond);
+		mutex->cond_signal(console->input->ptcond);
 
 		/* wait for thread to close */
-		rathread_wait(console->input->pthread, NULL);
+		thread->wait(console->input->pthread, NULL);
 
-		racond_destroy(console->input->ptcond);
-		ramutex_destroy(console->input->ptmutex);
+		mutex->cond_destroy(console->input->ptcond);
+		mutex->destroy(console->input->ptmutex);
 	}
 }
 void console_parse_init(void) {
@@ -510,12 +511,12 @@ void console_parse_init(void) {
 
 	console->input->ptstate = 1;
 
-	InitializeSpinLock(&console->input->ptlock);
+	InitializeSpinLock(console->input->ptlock);
 
-	console->input->ptmutex = ramutex_create();
-	console->input->ptcond = racond_create();
+	console->input->ptmutex = mutex->create();
+	console->input->ptcond = mutex->cond_create();
 
-	if( (console->input->pthread = rathread_create(console->input->pthread_main, NULL)) == NULL ){
+	if( (console->input->pthread = thread->create(console->input->pthread_main, NULL)) == NULL ){
 		ShowFatalError("console_parse_init: failed to spawn console_parse thread.\n");
 		exit(EXIT_FAILURE);
 	}
@@ -563,6 +564,7 @@ void console_defaults(void)
 	console->display_gplnotice = display_gplnotice;
 #ifdef CONSOLE_INPUT
 	console->input = &console_input_s;
+	console->input->ptlock = &console_ptlock_s;
 	console->input->parse_init = console_parse_init;
 	console->input->parse_final = console_parse_final;
 	console->input->parse_timer = console_parse_timer;
