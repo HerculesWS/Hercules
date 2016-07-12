@@ -1976,12 +1976,15 @@ struct skill_interface {
 	bool (*can_cloak) (struct map_session_data *sd);
 	int (*enchant_elemental_end) (struct block_list *bl, int type);
 	int (*not_ok) (uint16 skill_id, struct map_session_data *sd);
+	int (*not_ok_unknown) (uint16 skill_id, struct map_session_data *sd);
 	int (*not_ok_hom) (uint16 skill_id, struct homun_data *hd);
+	int (*not_ok_hom_unknown) (uint16 skill_id, struct homun_data *hd);
 	int (*not_ok_mercenary) (uint16 skill_id, struct mercenary_data *md);
 	int (*chastle_mob_changetarget) (struct block_list *bl,va_list ap);
 	int (*can_produce_mix) ( struct map_session_data *sd, int nameid, int trigger, int qty);
 	int (*produce_mix) ( struct map_session_data *sd, uint16 skill_id, int nameid, int slot1, int slot2, int slot3, int qty );
 	int (*arrow_create) ( struct map_session_data *sd,int nameid);
+	void (*castend_type) (int type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*castend_nodamage_id) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
 	int (*castend_damage_id) (struct block_list* src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick,int flag);
 	int (*castend_pos2) (struct block_list *src, int x, int y, uint16 skill_id, uint16 skill_lv, int64 tick, int flag);
@@ -2024,6 +2027,7 @@ struct skill_interface {
 	int (*sit_out) (struct block_list *bl, va_list ap);
 	void (*unitsetmapcell) (struct skill_unit *src, uint16 skill_id, uint16 skill_lv, cell_t cell, bool flag);
 	int (*unit_onplace_timer) (struct skill_unit *src, struct block_list *bl, int64 tick);
+	void (*unit_onplace_timer_unknown) (struct skill_unit *src, struct block_list *bl, int64 *tick);
 	int (*unit_effect) (struct block_list* bl, va_list ap);
 	int (*unit_timer_sub_onplace) (struct block_list* bl, va_list ap);
 	int (*unit_move_sub) (struct block_list* bl, va_list ap);
@@ -2034,6 +2038,7 @@ struct skill_interface {
 	int (*unit_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*unit_timer_sub) (union DBKey key, struct DBData *data, va_list ap);
 	void (*init_unit_layout) (void);
+	void (*init_unit_layout_unknown) (int skill_idx);
 	void (*validate_hittype) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_skilltype) (struct config_setting_t *conf, struct s_skill_db *sk);
 	void (*validate_attacktype) (struct config_setting_t *conf, struct s_skill_db *sk);

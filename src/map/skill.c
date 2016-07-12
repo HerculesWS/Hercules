@@ -581,8 +581,17 @@ int skillnotok (uint16 skill_id, struct map_session_data *sd)
 				return 1;
 			}
 			break;
-
+		default:
+			return skill->not_ok_unknown(skill_id, sd);
 	}
+	return (map->list[m].flag.noskill);
+}
+
+int skill_notok_unknown(uint16 skill_id, struct map_session_data *sd)
+{
+	int16 m;
+	nullpo_retr (1, sd);
+	m = sd->bl.m;
 	return (map->list[m].flag.noskill);
 }
 
@@ -612,8 +621,16 @@ int skillnotok_hom(uint16 skill_id, struct homun_data *hd)
 			if(hd->sc.data[SC_GOLDENE_FERSE])
 				return 1;
 			break;
+	    default:
+			return skill->not_ok_hom_unknown(skill_id, hd);
 	}
 
+	//Use master's criteria.
+	return skill->not_ok(skill_id, hd->master);
+}
+
+int skillnotok_hom_unknown(uint16 skill_id, struct homun_data *hd)
+{
 	//Use master's criteria.
 	return skill->not_ok(skill_id, hd->master);
 }
@@ -1548,17 +1565,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 			sd->state.autocast = 1;
 			skill->consume_requirement(sd,temp,auto_skill_lv,1);
 			skill->toggle_magicpower(src, temp);
-			switch (type) {
-				case CAST_GROUND:
-					skill->castend_pos2(src, tbl->x, tbl->y, temp, auto_skill_lv, tick, 0);
-					break;
-				case CAST_NODAMAGE:
-					skill->castend_nodamage_id(src, tbl, temp, auto_skill_lv, tick, 0);
-					break;
-				case CAST_DAMAGE:
-					skill->castend_damage_id(src, tbl, temp, auto_skill_lv, tick, 0);
-					break;
-			}
+			skill->castend_type(type, src, tbl, temp, auto_skill_lv, tick, 0);
 			sd->state.autocast = 0;
 			//Set canact delay. [Skotlex]
 			ud = unit->bl2ud(src);
@@ -1686,11 +1693,7 @@ int skill_onskillusage(struct map_session_data *sd, struct block_list *bl, uint1
 		sd->state.autocast = 1;
 		sd->autospell3[i].lock = true;
 		skill->consume_requirement(sd,temp,skill_lv,1);
-		switch( type ) {
-			case CAST_GROUND:   skill->castend_pos2(&sd->bl, tbl->x, tbl->y, temp, skill_lv, tick, 0); break;
-			case CAST_NODAMAGE: skill->castend_nodamage_id(&sd->bl, tbl, temp, skill_lv, tick, 0); break;
-			case CAST_DAMAGE:   skill->castend_damage_id(&sd->bl, tbl, temp, skill_lv, tick, 0); break;
-		}
+		skill->castend_type(type, &sd->bl, tbl, temp, skill_lv, tick, 0);
 		sd->autospell3[i].lock = false;
 		sd->state.autocast = 0;
 	}
@@ -1900,17 +1903,7 @@ int skill_counter_additional_effect(struct block_list* src, struct block_list *b
 
 			dstsd->state.autocast = 1;
 			skill->consume_requirement(dstsd,auto_skill_id,auto_skill_lv,1);
-			switch (type) {
-				case CAST_GROUND:
-					skill->castend_pos2(bl, tbl->x, tbl->y, auto_skill_id, auto_skill_lv, tick, 0);
-					break;
-				case CAST_NODAMAGE:
-					skill->castend_nodamage_id(bl, tbl, auto_skill_id, auto_skill_lv, tick, 0);
-					break;
-				case CAST_DAMAGE:
-					skill->castend_damage_id(bl, tbl, auto_skill_id, auto_skill_lv, tick, 0);
-					break;
-			}
+			skill->castend_type(type, bl, tbl, auto_skill_id, auto_skill_lv, tick, 0);
 			dstsd->state.autocast = 0;
 			// Set canact delay. [Skotlex]
 			ud = unit->bl2ud(bl);
@@ -3556,6 +3549,21 @@ int skill_reveal_trap(struct block_list *bl, va_list ap)
 	return 0;
 }
 
+void skill_castend_type(int type, struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag)
+{
+	switch (type) {
+		case CAST_GROUND:
+			skill->castend_pos2(src, bl->x, bl->y, skill_id, skill_lv, tick, flag);
+			break;
+		case CAST_NODAMAGE:
+			skill->castend_nodamage_id(src, bl, skill_id, skill_lv, tick, flag);
+			break;
+		case CAST_DAMAGE:
+			skill->castend_damage_id(src, bl, skill_id, skill_lv, tick, flag);
+			break;
+	}
+}
+
 /*==========================================
  *
  *
@@ -4491,18 +4499,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					if( !skill->check_condition_castbegin(sd, spell_skill_id, spell_skill_lv) )
 						break;
 
-					switch( skill->get_casttype(spell_skill_id) ) {
-						case CAST_GROUND:
-							skill->castend_pos2(src, bl->x, bl->y, spell_skill_id, spell_skill_lv, tick, 0);
-							break;
-						case CAST_NODAMAGE:
-							skill->castend_nodamage_id(src, bl, spell_skill_id, spell_skill_lv, tick, 0);
-							break;
-						case CAST_DAMAGE:
-							skill->castend_damage_id(src, bl, spell_skill_id, spell_skill_lv, tick, 0);
-							break;
-					}
-
+					skill->castend_type(skill->get_casttype(spell_skill_id), src, bl, spell_skill_id, spell_skill_lv, tick, 0);
 					sd->ud.canact_tick = tick + skill->delay_fix(src, spell_skill_id, spell_skill_lv);
 					clif->status_change(src, SI_POSTDELAY, 1, skill->delay_fix(src, spell_skill_id, spell_skill_lv), 0, 0, 0);
 
@@ -11886,7 +11883,8 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 	return skill_id;
 }
 
-void skill_unit_onplace_unknown(struct skill_unit *src, struct block_list *bl, int64 *tick) {
+void skill_unit_onplace_unknown(struct skill_unit *src, struct block_list *bl, int64 *tick)
+{
 }
 
 /*==========================================
@@ -12649,6 +12647,9 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			status->change_start(ss, bl, SC_BLIND, rnd() % 100 > sg->skill_lv * 10, sg->skill_lv, sg->skill_id, 0, 0,
 			                     skill->get_time2(sg->skill_id, sg->skill_lv), SCFLAG_FIXEDTICK|SCFLAG_FIXEDRATE);
 			break;
+		default:
+			skill->unit_onplace_timer_unknown(src, bl, &tick);
+			break;
 	}
 
 	if (bl->type == BL_MOB && ss != bl)
@@ -12656,6 +12657,11 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 
 	return skill_id;
 }
+
+void skill_unit_onplace_timer_unknown(struct skill_unit *src, struct block_list *bl, int64 *tick)
+{
+}
+
 /*==========================================
  * Triggered when a char steps out of a skill cell
  *------------------------------------------*/
@@ -18484,7 +18490,7 @@ void skill_init_unit_layout (void)
 				}
 				break;
 			default:
-				ShowError("unknown unit layout at skill %d\n",i);
+				skill->init_unit_layout_unknown(i);
 				break;
 		}
 		if (!skill->dbs->unit_layout[pos].count)
@@ -18583,6 +18589,11 @@ void skill_init_unit_layout (void)
 		pos++;
 	}
 
+}
+
+void skill_init_unit_layout_unknown(int skill_idx)
+{
+	ShowError("unknown unit layout at skill %d\n", skill_idx);
 }
 
 int skill_block_check(struct block_list *bl, sc_type type , uint16 skill_id) {
@@ -20466,6 +20477,7 @@ void skill_defaults(void) {
 	skill->is_combo = skill_is_combo;
 	skill->name2id = skill_name2id;
 	skill->isammotype = skill_isammotype;
+	skill->castend_type = skill_castend_type;
 	skill->castend_id = skill_castend_id;
 	skill->castend_pos = skill_castend_pos;
 	skill->castend_map = skill_castend_map;
@@ -20511,7 +20523,9 @@ void skill_defaults(void) {
 	skill->can_cloak = skill_can_cloak;
 	skill->enchant_elemental_end = skill_enchant_elemental_end;
 	skill->not_ok = skillnotok;
+	skill->not_ok_unknown = skill_notok_unknown;
 	skill->not_ok_hom = skillnotok_hom;
+	skill->not_ok_hom_unknown = skillnotok_hom_unknown;
 	skill->not_ok_mercenary = skillnotok_mercenary;
 	skill->chastle_mob_changetarget = skill_chastle_mob_changetarget;
 	skill->can_produce_mix = skill_can_produce_mix;
@@ -20559,6 +20573,7 @@ void skill_defaults(void) {
 	skill->sit_out = skill_sit_out;
 	skill->unitsetmapcell = skill_unitsetmapcell;
 	skill->unit_onplace_timer = skill_unit_onplace_timer;
+	skill->unit_onplace_timer_unknown = skill_unit_onplace_timer_unknown;
 	skill->unit_effect = skill_unit_effect;
 	skill->unit_timer_sub_onplace = skill_unit_timer_sub_onplace;
 	skill->unit_move_sub = skill_unit_move_sub;
@@ -20569,6 +20584,7 @@ void skill_defaults(void) {
 	skill->unit_timer = skill_unit_timer;
 	skill->unit_timer_sub = skill_unit_timer_sub;
 	skill->init_unit_layout = skill_init_unit_layout;
+	skill->init_unit_layout_unknown = skill_init_unit_layout_unknown;
 	/* Skill DB Libconfig */
 	skill->validate_hittype = skill_validate_hittype;
 	skill->validate_attacktype = skill_validate_attacktype;
