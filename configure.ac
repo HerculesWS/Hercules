@@ -789,6 +789,32 @@ AC_DEFUN([AC_CHECK_SANITIZER_FLAG],
 	]
 )
 
+AC_DEFUN([AC_CHECK_FLAG],
+	[
+		AC_MSG_CHECKING([whether $CC supports $1])
+		OLD_CFLAGS="$CFLAGS"
+		CFLAGS="$CFLAGS $1"
+		OLD_LDFLAGS="$LDFLAGS"
+		LDFLAGS="$LDFLAGS $1"
+		AC_COMPILE_IFELSE(
+			[AC_LANG_SOURCE([int foo;])],
+			[
+				AC_MSG_RESULT([yes])
+			],
+			[
+				AC_MSG_RESULT([no])
+				CFLAGS="$OLD_CFLAGS"
+				LDFLAGS="$OLD_LDFLAGS"
+			],
+			[
+				AC_MSG_RESULT([guessing no])
+				CFLAGS="$OLD_CFLAGS"
+				LDFLAGS="$OLD_LDFLAGS"
+			]
+		)
+	]
+)
+
 #
 # sanitize Support test
 #
@@ -813,6 +839,7 @@ if test "$enable_sanitize" != "no" ; then
 		AC_CHECK_SANITIZER_FLAG(bool)
 		AC_CHECK_SANITIZER_FLAG(enum)
 		AC_CHECK_SANITIZER_FLAG(vptr)
+		AC_CHECK_FLAG(-fno-omit-frame-pointer)
 	fi
 fi
 
