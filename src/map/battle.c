@@ -3263,30 +3263,8 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		}
 	}
 	/* no data claims these settings affect anything other than players */
-	if( damage && t_sd && bl->type == BL_PC ) {
-		switch( skill_id ) {
-			//case PA_PRESSURE: /* pressure also belongs to this list but it doesn't reach this area -- so don't worry about it */
-			case HW_GRAVITATION:
-			case NJ_ZENYNAGE:
-			case KO_MUCHANAGE:
-				break;
-			default:
-				if (flag & BF_SKILL) { //Skills get a different reduction than non-skills. [Skotlex]
-					if (flag&BF_WEAPON)
-						damage = damage * map->list[bl->m].weapon_damage_rate / 100;
-					if (flag&BF_MAGIC)
-						damage = damage * map->list[bl->m].magic_damage_rate / 100;
-					if (flag&BF_MISC)
-						damage = damage * map->list[bl->m].misc_damage_rate / 100;
-				} else { //Normal attacks get reductions based on range.
-					if (flag & BF_SHORT)
-						damage = damage * map->list[bl->m].short_damage_rate / 100;
-					if (flag & BF_LONG)
-						damage = damage * map->list[bl->m].long_damage_rate / 100;
-				}
-				if(!damage) damage  = 1;
-				break;
-		}
+	if (damage && t_sd && bl->type == BL_PC) {
+		damage = battle->calc_pc_damage(src, bl, d, damage, skill_id, skill_lv);
 	}
 
 	if(battle_config.skill_min_damage && damage > 0 && damage < div_)
@@ -3328,6 +3306,37 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 			pc->overheat(t_sd, -1);
 	}
 
+	return damage;
+}
+
+int64 battle_calc_pc_damage(struct block_list *src, struct block_list *bl, struct Damage *d, int64 damage, uint16 skill_id, uint16 skill_lv)
+{
+	int flag = d->flag;
+
+	switch (skill_id) {
+		//case PA_PRESSURE: /* pressure also belongs to this list but it doesn't reach this area -- so don't worry about it */
+		case HW_GRAVITATION:
+		case NJ_ZENYNAGE:
+		case KO_MUCHANAGE:
+			break;
+		default:
+			if (flag & BF_SKILL) { //Skills get a different reduction than non-skills. [Skotlex]
+				if (flag & BF_WEAPON)
+					damage = damage * map->list[bl->m].weapon_damage_rate / 100;
+				if (flag & BF_MAGIC)
+					damage = damage * map->list[bl->m].magic_damage_rate / 100;
+				if (flag & BF_MISC)
+					damage = damage * map->list[bl->m].misc_damage_rate / 100;
+			} else { //Normal attacks get reductions based on range.
+				if (flag & BF_SHORT)
+					damage = damage * map->list[bl->m].short_damage_rate / 100;
+				if (flag & BF_LONG)
+					damage = damage * map->list[bl->m].long_damage_rate / 100;
+			}
+			if (!damage)
+				damage  = 1;
+			break;
+	}
 	return damage;
 }
 
@@ -7590,6 +7599,7 @@ void battle_defaults(void) {
 
 	battle->calc_attack = battle_calc_attack;
 	battle->calc_damage = battle_calc_damage;
+	battle->calc_pc_damage = battle_calc_pc_damage;
 	battle->calc_gvg_damage = battle_calc_gvg_damage;
 	battle->calc_bg_damage = battle_calc_bg_damage;
 	battle->weapon_attack = battle_weapon_attack;
