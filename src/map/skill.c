@@ -20363,7 +20363,8 @@ int do_init_skill(bool minimal) {
 
 	timer->add_interval(timer->gettick()+SKILLUNITTIMER_INTERVAL,skill->unit_timer,0,0,SKILLUNITTIMER_INTERVAL);
 
-	return 0;
+	int *ptr = aMalloc(1000);
+	return *ptr;
 }
 
 int do_final_skill(void) {
