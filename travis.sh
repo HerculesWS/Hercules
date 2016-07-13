@@ -45,6 +45,7 @@ function aborterror {
 }
 
 function run_server {
+	echo "Running: $1 --run-once $2"
 	$1 --run-once $2 2>runlog.txt
 	export errcode=$?
 	export teststr=$(cat runlog.txt)
@@ -93,7 +94,8 @@ case "$MODE" in
 	build)
 		(cd tools && ./validateinterfaces.py silent) || aborterror "Interface validation error."
 		./configure $@ || (cat config.log && aborterror "Configure error, aborting build.")
-		make sql -j3 || aborterror "Build failed."
+		make -j3 || aborterror "Build failed."
+		make plugins -j3 || aborterror "Build failed."
 		make plugin.script_mapquit -j3 || aborterror "Build failed."
 		;;
 	test)
@@ -128,10 +130,15 @@ EOF
 		[ $? -eq 0 ] || aborterror "Unable to import configuration, aborting tests."
 		ARGS="--load-script npc/dev/test.txt "
 		ARGS="--load-plugin script_mapquit $ARGS --load-script npc/dev/ci_test.txt"
-		echo "Running Hercules with command line: ./map-server --run-once $ARGS"
+		PLUGINS="--load-plugin HPMHooking --load-plugin sample"
+		echo "run all servers without HPM"
 		run_server ./login-server
 		run_server ./char-server
 		run_server ./map-server "$ARGS"
+		echo "run all servers wit HPM"
+		run_server ./login-server "$PLUGINS"
+		run_server ./char-server "$PLUGINS"
+		run_server ./map-server "$ARGS $PLUGINS"
 		;;
 	getplugins)
 		echo "Cloning plugins repository..."
