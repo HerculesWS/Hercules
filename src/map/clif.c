@@ -2994,14 +2994,24 @@ void clif_updatestatus(struct map_session_data *sd,int type)
 			len = packet_len(0xb1);
 			break;
 		case SP_NEXTBASEEXP:
-			WFIFOW(fd,0)=0xb1;
-			WFIFOL(fd,4)=pc->nextbaseexp(sd);
+		{
+			int next_exp = pc->nextbaseexp(sd);
+			if (battle_config.max_level_exp > 0 && next_exp == 0)
+				next_exp = battle_config.max_level_exp;
+			WFIFOW(fd,0)= 0xb1;
+			WFIFOL(fd,4)= next_exp;
 			len = packet_len(0xb1);
+		}
 			break;
 		case SP_NEXTJOBEXP:
-			WFIFOW(fd,0)=0xb1;
-			WFIFOL(fd,4)=pc->nextjobexp(sd);
+		{
+			int next_exp = pc->nextjobexp(sd);
+			if (battle_config.max_level_exp > 0 && next_exp == 0)
+				next_exp = battle_config.max_level_exp;
+			WFIFOW(fd,0)= 0xb1;
+			WFIFOL(fd,4)= next_exp;
 			len = packet_len(0xb1);
+		}
 			break;
 
 		/**
