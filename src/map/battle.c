@@ -7247,6 +7247,7 @@ static const struct battle_data {
 	{ "min_body_style",                     &battle_config.min_body_style,                  0,      0,      SHRT_MAX,       },
 	{ "max_body_style",                     &battle_config.max_body_style,                  4,      0,      SHRT_MAX,       },
 	{ "save_body_style",                    &battle_config.save_body_style,                 0,      0,      1,              },
+	{ "bow_unequip_arrow",                  &battle_config.bow_unequip_arrow,               1,      0,      1,              },
 };
 #ifndef STATS_OPT_OUT
 /**
