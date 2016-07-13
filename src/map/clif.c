@@ -9547,7 +9547,7 @@ void clif_parse_LoadEndAck(int fd, struct map_session_data *sd) {
 		clif->clearunit_area(&sd->bl, CLR_DEAD);
 	else {
 		skill->usave_trigger(sd);
-		if (battle_config.player_warp_keep_direction)
+		if (battle_config.player_warp_keep_direction == 1)
 			clif->changed_dir(&sd->bl, SELF); // Visually updates player facing direction
 	}
 

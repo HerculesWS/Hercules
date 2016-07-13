@@ -5580,7 +5580,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 		npc->script_event(sd, NPCE_LOGOUT);
 		//remove from map, THEN change x/y coordinates
 		unit->remove_map_pc(sd,clrtype);
-		if (!battle_config.player_warp_keep_direction)
+		if (battle_config.player_warp_keep_direction == 0)
 			sd->ud.dir = 0; // makes character face north
 		sd->mapindex = map_index;
 		sd->bl.x=x;
@@ -5612,7 +5612,7 @@ int pc_setpos(struct map_session_data* sd, unsigned short map_index, int x, int 
 		vending->close(sd);
 	}
 
-	if (!battle_config.player_warp_keep_direction)
+	if (battle_config.player_warp_keep_direction == 0)
 		sd->ud.dir = 0; // makes character face north
 
 	if(sd->bl.prev != NULL){
