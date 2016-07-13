@@ -11728,14 +11728,14 @@ void HP_clif_skill_warppoint(struct map_session_data *sd, uint16 skill_id, uint1
 	}
 	return;
 }
-void HP_clif_skillcasting(struct block_list *bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, int property, int casttime) {
+void HP_clif_useskill(struct block_list *bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, uint16 skill_lv, int casttime) {
 	int hIndex = 0;
-	if( HPMHooks.count.HP_clif_skillcasting_pre ) {
-		void (*preHookFunc) (struct block_list **bl, int *src_id, int *dst_id, int *dst_x, int *dst_y, uint16 *skill_id, int *property, int *casttime);
+	if( HPMHooks.count.HP_clif_useskill_pre ) {
+		void (*preHookFunc) (struct block_list **bl, int *src_id, int *dst_id, int *dst_x, int *dst_y, uint16 *skill_id, uint16 *skill_lv, int *casttime);
 		*HPMforce_return = false;
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_skillcasting_pre; hIndex++ ) {
-			preHookFunc = HPMHooks.list.HP_clif_skillcasting_pre[hIndex].func;
-			preHookFunc(&bl, &src_id, &dst_id, &dst_x, &dst_y, &skill_id, &property, &casttime);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_useskill_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_useskill_pre[hIndex].func;
+			preHookFunc(&bl, &src_id, &dst_id, &dst_x, &dst_y, &skill_id, &skill_lv, &casttime);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -11743,13 +11743,13 @@ void HP_clif_skillcasting(struct block_list *bl, int src_id, int dst_id, int dst
 		}
 	}
 	{
-		HPMHooks.source.clif.skillcasting(bl, src_id, dst_id, dst_x, dst_y, skill_id, property, casttime);
+		HPMHooks.source.clif.useskill(bl, src_id, dst_id, dst_x, dst_y, skill_id, skill_lv, casttime);
 	}
-	if( HPMHooks.count.HP_clif_skillcasting_post ) {
-		void (*postHookFunc) (struct block_list *bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, int property, int casttime);
-		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_skillcasting_post; hIndex++ ) {
-			postHookFunc = HPMHooks.list.HP_clif_skillcasting_post[hIndex].func;
-			postHookFunc(bl, src_id, dst_id, dst_x, dst_y, skill_id, property, casttime);
+	if( HPMHooks.count.HP_clif_useskill_post ) {
+		void (*postHookFunc) (struct block_list *bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, uint16 skill_lv, int casttime);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_useskill_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_useskill_post[hIndex].func;
+			postHookFunc(bl, src_id, dst_id, dst_x, dst_y, skill_id, skill_lv, casttime);
 		}
 	}
 	return;

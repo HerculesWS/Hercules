@@ -902,8 +902,8 @@ struct {
 	struct HPMHookPoint *HP_clif_skill_estimation_post;
 	struct HPMHookPoint *HP_clif_skill_warppoint_pre;
 	struct HPMHookPoint *HP_clif_skill_warppoint_post;
-	struct HPMHookPoint *HP_clif_skillcasting_pre;
-	struct HPMHookPoint *HP_clif_skillcasting_post;
+	struct HPMHookPoint *HP_clif_useskill_pre;
+	struct HPMHookPoint *HP_clif_useskill_post;
 	struct HPMHookPoint *HP_clif_produce_effect_pre;
 	struct HPMHookPoint *HP_clif_produce_effect_post;
 	struct HPMHookPoint *HP_clif_devotion_pre;
@@ -6953,8 +6953,8 @@ struct {
 	int HP_clif_skill_estimation_post;
 	int HP_clif_skill_warppoint_pre;
 	int HP_clif_skill_warppoint_post;
-	int HP_clif_skillcasting_pre;
-	int HP_clif_skillcasting_post;
+	int HP_clif_useskill_pre;
+	int HP_clif_useskill_post;
 	int HP_clif_produce_effect_pre;
 	int HP_clif_produce_effect_post;
 	int HP_clif_devotion_pre;

@@ -473,7 +473,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->skill_poseffect, HP_clif_skill_poseffect) },
 	{ HP_POP(clif->skill_estimation, HP_clif_skill_estimation) },
 	{ HP_POP(clif->skill_warppoint, HP_clif_skill_warppoint) },
-	{ HP_POP(clif->skillcasting, HP_clif_skillcasting) },
+	{ HP_POP(clif->useskill, HP_clif_useskill) },
 	{ HP_POP(clif->produce_effect, HP_clif_produce_effect) },
 	{ HP_POP(clif->devotion, HP_clif_devotion) },
 	{ HP_POP(clif->spiritball, HP_clif_spiritball) },

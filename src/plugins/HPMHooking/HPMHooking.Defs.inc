@@ -1236,8 +1236,8 @@ typedef void (*HPMHOOK_pre_clif_skill_estimation) (struct map_session_data **sd,
 typedef void (*HPMHOOK_post_clif_skill_estimation) (struct map_session_data *sd, struct block_list *dst);
 typedef void (*HPMHOOK_pre_clif_skill_warppoint) (struct map_session_data **sd, uint16 *skill_id, uint16 *skill_lv, unsigned short *map1, unsigned short *map2, unsigned short *map3, unsigned short *map4);
 typedef void (*HPMHOOK_post_clif_skill_warppoint) (struct map_session_data *sd, uint16 skill_id, uint16 skill_lv, unsigned short map1, unsigned short map2, unsigned short map3, unsigned short map4);
-typedef void (*HPMHOOK_pre_clif_skillcasting) (struct block_list **bl, int *src_id, int *dst_id, int *dst_x, int *dst_y, uint16 *skill_id, int *property, int *casttime);
-typedef void (*HPMHOOK_post_clif_skillcasting) (struct block_list *bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, int property, int casttime);
+typedef void (*HPMHOOK_pre_clif_useskill) (struct block_list **bl, int *src_id, int *dst_id, int *dst_x, int *dst_y, uint16 *skill_id, uint16 *skill_lv, int *casttime);
+typedef void (*HPMHOOK_post_clif_useskill) (struct block_list *bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, uint16 skill_lv, int casttime);
 typedef void (*HPMHOOK_pre_clif_produce_effect) (struct map_session_data **sd, int *flag, int *nameid);
 typedef void (*HPMHOOK_post_clif_produce_effect) (struct map_session_data *sd, int flag, int nameid);
 typedef void (*HPMHOOK_pre_clif_devotion) (struct block_list **src, struct map_session_data **tsd);
