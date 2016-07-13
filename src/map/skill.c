@@ -5162,7 +5162,7 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 			ud->skill_lv = ud->skilltarget = 0;
 		}
 
-		if (src->id != target->id)
+		if ((src->type&battle_config.update_direction) && src->id != target->id)
 			unit->setdir(src, map->calc_dir(src, target->x, target->y));
 
 		map->freeblock_unlock();
@@ -10059,7 +10059,8 @@ int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		if( sd && sd->skillitem != AL_WARP ) // Warp-Portal thru items will clear data in skill_castend_map. [Inkfish]
 			sd->skillitem = sd->skillitemlv = 0;
 
-		unit->setdir(src, map->calc_dir(src, ud->skillx, ud->skilly));
+		if (src->type&battle_config.update_direction)
+			unit->setdir(src, map->calc_dir(src, ud->skillx, ud->skilly));
 
 		if (ud->skilltimer == INVALID_TIMER) {
 			if (md) md->skill_idx = -1;

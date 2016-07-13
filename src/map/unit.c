@@ -1626,7 +1626,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	ud->skill_lv      = skill_lv;
 
 	if( casttime > 0 ) {
-		if (src->id != target->id) // self-targeted skills shouldn't show different direction
+		if ((src->type&battle_config.update_direction) && src->id != target->id) // self-targeted skills shouldn't show different direction
 			unit->setdir(src, map->calc_dir(src, target->x, target->y));
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_id, src->id, 0 );
 		if( sd && (pc->checkskill(sd,SA_FREECAST) > 0 || skill_id == LG_EXEEDBREAK) )
@@ -1771,7 +1771,8 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 	// in official this is triggered even if no cast time.
 	clif->useskill(src, src->id, 0, skill_x, skill_y, skill_id, skill_lv, casttime);
 	if( casttime > 0 ) {
-		unit->setdir(src, map->calc_dir(src, skill_x, skill_y));
+		if (src->type&battle_config.update_direction)
+			unit->setdir(src, map->calc_dir(src, skill_x, skill_y));
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_pos, src->id, 0 );
 		if ( (sd && pc->checkskill(sd, SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK ) {
 			status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
@@ -2209,7 +2210,8 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 	}
 
 	if(ud->state.attack_continue) {
-		unit->setdir(src, map->calc_dir(src, target->x, target->y));
+		if (src->type&battle_config.update_direction)
+			unit->setdir(src, map->calc_dir(src, target->x, target->y));
 		if( src->type == BL_PC )
 			pc->update_idle_time(sd, BCIDLE_ATTACK);
 		ud->attacktimer = timer->add(ud->attackabletime,unit->attack_timer,src->id,0);
