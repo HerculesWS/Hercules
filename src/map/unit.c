@@ -1574,7 +1574,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);// even though this is not how official works but this will do the trick. bugreport:6829
 
 	// in official this is triggered even if no cast time.
-	clif->skillcasting(src, src->id, target_id, 0,0, skill_id, skill->get_ele(skill_id, skill_lv), casttime);
+	clif->useskill(src, src->id, target_id, 0,0, skill_id, skill_lv, casttime);
 	if( casttime > 0 || temp )
 	{
 		if (sd != NULL && target->type == BL_MOB) {
@@ -1769,7 +1769,7 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 
 	unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
 	// in official this is triggered even if no cast time.
-	clif->skillcasting(src, src->id, 0, skill_x, skill_y, skill_id, skill->get_ele(skill_id, skill_lv), casttime);
+	clif->useskill(src, src->id, 0, skill_x, skill_y, skill_id, skill_lv, casttime);
 	if( casttime > 0 ) {
 		unit->setdir(src, map->calc_dir(src, skill_x, skill_y));
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_pos, src->id, 0 );

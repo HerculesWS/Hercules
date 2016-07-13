@@ -825,7 +825,7 @@ struct clif_interface {
 	void (*skill_poseffect) (struct block_list *src, uint16 skill_id, int val, int x, int y, int64 tick);
 	void (*skill_estimation) (struct map_session_data *sd,struct block_list *dst);
 	void (*skill_warppoint) (struct map_session_data* sd, uint16 skill_id, uint16 skill_lv, unsigned short map1, unsigned short map2, unsigned short map3, unsigned short map4);
-	void (*skillcasting) (struct block_list* bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, int property, int casttime);
+	void (*useskill) (struct block_list* bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, uint16 skill_lv, int casttime);
 	void (*produce_effect) (struct map_session_data* sd,int flag,int nameid);
 	void (*devotion) (struct block_list *src, struct map_session_data *tsd);
 	void (*spiritball) (struct block_list *bl);

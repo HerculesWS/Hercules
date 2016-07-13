@@ -4931,7 +4931,7 @@ void clif_skillinfo(struct map_session_data *sd,int skill_id, int inf)
 /// is disposable:
 ///     0 = yellow chat text "[src name] will use skill [skill name]."
 ///     1 = no text
-void clif_skillcasting(struct block_list* bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, int property, int casttime)
+void clif_useskill(struct block_list* bl, int src_id, int dst_id, int dst_x, int dst_y, uint16 skill_id, uint16 skill_lv, int casttime)
 {
 #if PACKETVER < 20091124
 	const int cmd = 0x13e;
@@ -4939,6 +4939,7 @@ void clif_skillcasting(struct block_list* bl, int src_id, int dst_id, int dst_x,
 	const int cmd = 0x7fb;
 #endif
 	unsigned char buf[32];
+	int property = skill->get_ele(skill_id, skill_lv);
 
 	WBUFW(buf,0) = cmd;
 	WBUFL(buf,2) = src_id;
@@ -19354,7 +19355,7 @@ void clif_defaults(void) {
 	clif->skill_poseffect = clif_skill_poseffect;
 	clif->skill_estimation = clif_skill_estimation;
 	clif->skill_warppoint = clif_skill_warppoint;
-	clif->skillcasting = clif_skillcasting;
+	clif->useskill = clif_useskill;
 	clif->produce_effect = clif_produceeffect;
 	clif->devotion = clif_devotion;
 	clif->spiritball = clif_spiritball;
