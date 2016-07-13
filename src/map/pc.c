@@ -1762,7 +1762,7 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 			{
 				// if neither 2nd nor 3rd jobchange levels are known, we have to assume a default for 2nd
 				if (!sd->change_level_3rd)
-					sd->change_level_2nd = pc->max_level[pc->class2idx(pc->mapid2jobid(sd->class_&MAPID_UPPERMASK, sd->status.sex))][1];
+					sd->change_level_2nd = pc->max_level[pc->class2idx(pc->mapid2jobid(sd->class_&MAPID_UPPERMASK, sd->status.sex))][1]; // FIXME
 				else
 					sd->change_level_2nd = 1 + skill_point + sd->status.skill_point
 						- (sd->status.job_level - 1)
@@ -6824,12 +6824,12 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
 /*==========================================
  * Returns max level for this character.
  *------------------------------------------*/
-unsigned int pc_maxbaselv(struct map_session_data *sd)
+unsigned int pc_maxbaselv(struct map_session_data *sd) // FIXME
 {
 	return pc->max_level[pc->class2idx(sd->status.class_)][0];
 }
 
-unsigned int pc_maxjoblv(struct map_session_data *sd)
+unsigned int pc_maxjoblv(struct map_session_data *sd) // FIXME
 {
 	return pc->max_level[pc->class2idx(sd->status.class_)][1];
 }
@@ -11046,7 +11046,7 @@ int pc_readdb(void) {
 	while(fgets(line, sizeof(line), fp)) {
 		int jobs[CLASS_COUNT], job_count, job, job_id;
 		int type;
-		unsigned int ui,maxlv;
+		int maxlv;
 		char *split[4];
 		if(line[0]=='/' && line[1]=='/')
 			continue;
@@ -11068,7 +11068,7 @@ int pc_readdb(void) {
 		}
 		maxlv = atoi(split[0]);
 		if (maxlv > MAX_LEVEL) {
-			ShowWarning("pc_readdb: Specified max level %u for job %d is beyond server's limit (%d).\n ", maxlv, job_id, MAX_LEVEL);
+			ShowWarning("pc_readdb: Specified max level %d for job %d is beyond server's limit (%d).\n ", maxlv, job_id, MAX_LEVEL);
 			maxlv = MAX_LEVEL;
 		}
 		count++;
@@ -11079,15 +11079,15 @@ int pc_readdb(void) {
 		//The reasoning behind the -2 is this... if the max level is 5, then the array
 		//should look like this:
 		//0: x, 1: x, 2: x: 3: x 4: 0 <- last valid value is at 3.
-		while ((ui = pc->max_level[job][type]) >= 2 && pc->exp_table[job][type][ui-2] <= 0)
+		while ((i = pc->max_level[job][type]) >= 2 && pc->exp_table[job][type][i-2] <= 0)
 			pc->max_level[job][type]--;
 		if (pc->max_level[job][type] < maxlv) {
-			ShowWarning("pc_readdb: Specified max %u for job %d, but that job's exp table only goes up to level %u.\n", maxlv, job_id, pc->max_level[job][type]);
+			ShowWarning("pc_readdb: Specified max %d for job %d, but that job's exp table only goes up to level %d.\n", maxlv, job_id, pc->max_level[job][type]);
 			ShowInfo("Filling the missing values with the last exp entry.\n");
 			//Fill the requested values with the last entry.
-			ui = (pc->max_level[job][type] <= 2? 0: pc->max_level[job][type]-2);
-			for (; ui+2 < maxlv; ui++)
-				pc->exp_table[job][type][ui] = pc->exp_table[job][type][ui-1];
+			i = (pc->max_level[job][type] <= 2 ? 0: pc->max_level[job][type]-2);
+			for (; i+2 < maxlv; i++)
+				pc->exp_table[job][type][i] = pc->exp_table[job][type][i-1];
 			pc->max_level[job][type] = maxlv;
 		}
 		//ShowDebug("%s - Class %d: %d\n", type?"Job":"Base", job_id, pc->max_level[job][type]);
@@ -11100,7 +11100,7 @@ int pc_readdb(void) {
 			job = pc->class2idx(job_id);
 			memcpy(pc->exp_table[job][type], pc->exp_table[jobs[0]][type], sizeof(pc->exp_table[0][0]));
 			pc->max_level[job][type] = maxlv;
-			//ShowDebug("%s - Class %d: %u\n", type?"Job":"Base", job_id, pc->max_level[job][type]);
+			//ShowDebug("%s - Class %d: %d\n", type?"Job":"Base", job_id, pc->max_level[job][type]);
 		}
 	}
 	fclose(fp);
@@ -11228,9 +11228,9 @@ void pc_validate_levels(void) {
 		if (i == JOB_WEDDING || i == JOB_XMAS || i == JOB_SUMMER)
 			continue; //Classes that do not need exp tables.
 		j = pc->class2idx(i);
-		if (!pc->max_level[j][0])
+		if (pc->max_level[j][0] == 0)
 			ShowWarning("Class %s (%d) does not has a base exp table.\n", pc->job_name(i), i);
-		if (!pc->max_level[j][1])
+		if (pc->max_level[j][1] == 0)
 			ShowWarning("Class %s (%d) does not has a job exp table.\n", pc->job_name(i), i);
 	}
 }
