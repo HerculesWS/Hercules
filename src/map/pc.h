@@ -914,10 +914,10 @@ END_ZEROED_BLOCK; /* End */
 	int (*checkbaselevelup) (struct map_session_data *sd);
 	int (*checkjoblevelup) (struct map_session_data *sd);
 	bool (*gainexp) (struct map_session_data *sd, struct block_list *src, unsigned int base_exp, unsigned int job_exp, bool is_quest);
-	unsigned int (*nextbaseexp) (struct map_session_data *sd);
-	unsigned int (*thisbaseexp) (struct map_session_data *sd);
-	unsigned int (*nextjobexp) (struct map_session_data *sd);
-	unsigned int (*thisjobexp) (struct map_session_data *sd);
+	unsigned int (*nextbaseexp) (const struct map_session_data *sd);
+	unsigned int (*thisbaseexp) (const struct map_session_data *sd);
+	unsigned int (*nextjobexp) (const struct map_session_data *sd);
+	unsigned int (*thisjobexp) (const struct map_session_data *sd);
 	int (*gets_status_point) (int level);
 	int (*need_status_point) (struct map_session_data *sd,int type,int val);
 	int (*maxparameterincrease) (struct map_session_data* sd, int type);
@@ -958,7 +958,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*changelook) (struct map_session_data *sd,int type,int val);
 	int (*equiplookall) (struct map_session_data *sd);
 
-	int (*readparam) (struct map_session_data *sd,int type);
+	int (*readparam) (const struct map_session_data *sd, int type);
 	int (*setparam) (struct map_session_data *sd,int type,int val);
 	int (*readreg) (struct map_session_data *sd, int64 reg);
 	void (*setreg) (struct map_session_data *sd, int64 reg,int val);

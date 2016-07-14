@@ -6839,7 +6839,7 @@ int pc_maxjoblv(const struct map_session_data *sd)
  *------------------------------------------*/
 
 //Base exp needed for next level.
-unsigned int pc_nextbaseexp(struct map_session_data *sd)
+unsigned int pc_nextbaseexp(const struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
@@ -6850,7 +6850,7 @@ unsigned int pc_nextbaseexp(struct map_session_data *sd)
 }
 
 //Base exp needed for this level.
-unsigned int pc_thisbaseexp(struct map_session_data *sd)
+unsigned int pc_thisbaseexp(const struct map_session_data *sd)
 {
 	if ((int)sd->status.base_level > pc->maxbaselv(sd) || sd->status.base_level <= 1) // FIXME
 		return 0;
@@ -6866,7 +6866,7 @@ unsigned int pc_thisbaseexp(struct map_session_data *sd)
  *------------------------------------------*/
 
 //Job exp needed for next level.
-unsigned int pc_nextjobexp(struct map_session_data *sd)
+unsigned int pc_nextjobexp(const struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
@@ -6876,7 +6876,7 @@ unsigned int pc_nextjobexp(struct map_session_data *sd)
 }
 
 //Job exp needed for this level.
-unsigned int pc_thisjobexp(struct map_session_data *sd)
+unsigned int pc_thisjobexp(const struct map_session_data *sd)
 {
 	if ((int)sd->status.job_level > pc->maxjoblv(sd) || sd->status.job_level <= 1) // FIXME
 		return 0;
@@ -7984,7 +7984,7 @@ void pc_revive(struct map_session_data *sd,unsigned int hp, unsigned int sp) {
 /*==========================================
  * script reading pc status registry
  *------------------------------------------*/
-int pc_readparam(struct map_session_data* sd,int type)
+int pc_readparam(const struct map_session_data *sd, int type)
 {
 	int val = 0;
 
@@ -8042,7 +8042,7 @@ int pc_readparam(struct map_session_data* sd,int type)
 		case SP_VARCASTRATE:
 #endif
 		case SP_CASTRATE:
-				val = sd->castrate+=val;
+				val = sd->castrate;
 			break;
 		case SP_MAXHPRATE:       val = sd->hprate; break;
 		case SP_MAXSPRATE:       val = sd->sprate; break;
