@@ -2405,7 +2405,7 @@ int mob_dead(struct mob_data *md, struct block_list *src, int type) {
 					drop_rate += (int)(0.5+drop_rate*status_get_luk(src)*battle_config.drops_by_luk2/10000.);
 			}
 			if (sd && battle_config.pk_mode &&
-				(int)(md->level - sd->status.base_level) >= 20)
+				md->level - sd->status.base_level >= 20)
 				drop_rate = (int)(drop_rate*1.25); // pk_mode increase drops if 20 level difference [Valaris]
 
 			// Increase drop rate if user has SC_CASH_RECEIVEITEM

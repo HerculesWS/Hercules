@@ -156,8 +156,8 @@ bool chat_joinchat(struct map_session_data* sd, int chatid, const char* pass) {
 		return false;
 	}
 
-	if( sd->status.base_level < cd->minLvl || sd->status.base_level > cd->maxLvl ) {
-		if(sd->status.base_level < cd->minLvl)
+	if (sd->status.base_level < (int)cd->minLvl || sd->status.base_level > (int)cd->maxLvl) { // FIXME
+		if(sd->status.base_level < (int)cd->minLvl) // FIXME
 			clif->joinchatfail(sd,5); // too low level
 		else
 			clif->joinchatfail(sd,6); // too high level

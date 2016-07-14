@@ -1364,17 +1364,17 @@ ACMD(baselevelup)
 	}
 
 	if (level > 0) {
-		if ((int)sd->status.base_level >= pc->maxbaselv(sd)) { // check for max level by Valaris // FIXME
+		if (sd->status.base_level >= pc->maxbaselv(sd)) { // check for max level by Valaris
 			clif->message(fd, msg_fd(fd,47)); // Base level can't go any higher.
 			return false;
 		} // End Addition
-		if (level > pc->maxbaselv(sd) || level > pc->maxbaselv(sd) - (int)sd->status.base_level) // fix positive overflow // FIXME
-			level = pc->maxbaselv(sd) - (int)sd->status.base_level; // FIXME
+		if (level > pc->maxbaselv(sd) || level > pc->maxbaselv(sd) - sd->status.base_level) // fix positive overflow
+			level = pc->maxbaselv(sd) - sd->status.base_level;
 		for (i = 0; i < level; i++)
 			status_point += pc->gets_status_point(sd->status.base_level + i);
 
 		sd->status.status_point += status_point;
-		sd->status.base_level += (unsigned int)level;
+		sd->status.base_level += level;
 		status_calc_pc(sd, SCO_FORCE);
 		status_percent_heal(&sd->bl, 100, 100);
 		clif->misceffect(&sd->bl, 0);
@@ -1385,7 +1385,7 @@ ACMD(baselevelup)
 			return false;
 		}
 		level*=-1;
-		if ((unsigned int)level >= sd->status.base_level)
+		if (level >= sd->status.base_level)
 			level = sd->status.base_level-1;
 		for (i = 0; i > -level; i--)
 			status_point += pc->gets_status_point(sd->status.base_level + i - 1);
@@ -1395,7 +1395,7 @@ ACMD(baselevelup)
 			sd->status.status_point = 0;
 		else
 			sd->status.status_point -= status_point;
-		sd->status.base_level -= (unsigned int)level;
+		sd->status.base_level -= level;
 		clif->message(fd, msg_fd(fd,22)); // Base level lowered.
 		status_calc_pc(sd, SCO_FORCE);
 	}
@@ -1422,13 +1422,13 @@ ACMD(joblevelup)
 		return false;
 	}
 	if (level > 0) {
-		if ((int)sd->status.job_level >= pc->maxjoblv(sd)) { // FIXME
+		if (sd->status.job_level >= pc->maxjoblv(sd)) {
 			clif->message(fd, msg_fd(fd,23)); // Job level can't go any higher.
 			return false;
 		}
-		if (level > pc->maxjoblv(sd) || level > pc->maxjoblv(sd) - (int)sd->status.job_level) // fix positive overflow // FIXME
+		if (level > pc->maxjoblv(sd) || level > pc->maxjoblv(sd) - sd->status.job_level) // fix positive overflow
 			level = pc->maxjoblv(sd) - sd->status.job_level;
-		sd->status.job_level += (unsigned int)level;
+		sd->status.job_level += level;
 		sd->status.skill_point += level;
 		clif->misceffect(&sd->bl, 1);
 		clif->message(fd, msg_fd(fd,24)); // Job level raised.
@@ -1438,9 +1438,9 @@ ACMD(joblevelup)
 			return false;
 		}
 		level *=-1;
-		if ((unsigned int)level >= sd->status.job_level) // fix negative overflow
+		if (level >= sd->status.job_level) // fix negative overflow
 			level = sd->status.job_level-1;
-		sd->status.job_level -= (unsigned int)level;
+		sd->status.job_level -= level;
 		if (sd->status.skill_point < level)
 			pc->resetskill(sd, PCRESETSKILL_NONE); //Reset skills since we need to subtract more points.
 		if (sd->status.skill_point < level)

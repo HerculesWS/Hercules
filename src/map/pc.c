@@ -960,11 +960,11 @@ int pc_isequip(struct map_session_data *sd,int n)
 	if(pc_has_permission(sd, PC_PERM_USE_ALL_EQUIPMENT))
 		return 1;
 
-	if (item->elv && sd->status.base_level < (unsigned int)item->elv) {
+	if (item->elv && sd->status.base_level < item->elv) {
 		clif->msgtable(sd, MSG_ITEM_CANT_EQUIP_LVL);
 		return 0;
 	}
-	if (item->elvmax && sd->status.base_level > (unsigned int)item->elvmax) {
+	if (item->elvmax && sd->status.base_level > item->elvmax) {
 		clif->msgtable(sd, MSG_ITEM_CANT_EQUIP_LVL);
 		return 0;
 	}
@@ -1583,7 +1583,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 						break;
 					}
 				}
-				if (sd->status.job_level < pc->skill_tree[c][i].joblv) {
+				if (sd->status.job_level < (int)pc->skill_tree[c][i].joblv) {
 					int jobid = pc->mapid2jobid(sd->class_, sd->status.sex); // need to get its own skilltree
 					if (jobid > -1) {
 						if (!pc->skill_tree[pc->class2idx(jobid)][i].inherited)
@@ -1687,7 +1687,7 @@ void pc_check_skilltree(struct map_session_data *sd, int skill_id)
 			if (!satisfied)
 				continue;
 
-			if (sd->status.job_level < pc->skill_tree[c][i].joblv) {
+			if (sd->status.job_level < (int)pc->skill_tree[c][i].joblv) {
 				int jobid = pc->mapid2jobid(sd->class_, sd->status.sex); // need to get its own skilltree
 				if (jobid > -1) {
 					if (!pc->skill_tree[pc->class2idx(jobid)][i].inherited)
@@ -4878,12 +4878,12 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	if(item->sex != 2 && sd->status.sex != item->sex)
 		return 0;
 	//Required level check
-	if (item->elv && sd->status.base_level < (unsigned int)item->elv) {
+	if (item->elv && sd->status.base_level < item->elv) {
 		clif->msgtable(sd, MSG_ITEM_CANT_USE_LVL);
 		return 0;
 	}
 
-	if (item->elvmax && sd->status.base_level > (unsigned int)item->elvmax) {
+	if (item->elvmax && sd->status.base_level > item->elvmax) {
 		clif->msgtable(sd, MSG_ITEM_CANT_USE_LVL);
 		return 0;
 	}
@@ -6579,7 +6579,7 @@ int pc_checkbaselevelup(struct map_session_data *sd) {
 			sd->status.base_exp = next-1;
 
 		next = pc->gets_status_point(sd->status.base_level);
-		sd->status.base_level ++;
+		sd->status.base_level++;
 		sd->status.status_point += next;
 
 	} while ((next=pc->nextbaseexp(sd)) > 0 && sd->status.base_exp >= next);
@@ -6621,7 +6621,7 @@ void pc_baselevelchanged(struct map_session_data *sd) {
 	nullpo_retv(sd);
 	for( i = 0; i < EQI_MAX; i++ ) {
 		if( sd->equip_index[i] >= 0 ) {
-			if( sd->inventory_data[ sd->equip_index[i] ]->elvmax && sd->status.base_level > (unsigned int)sd->inventory_data[ sd->equip_index[i] ]->elvmax )
+			if (sd->inventory_data[sd->equip_index[i]]->elvmax != 0 && sd->status.base_level > sd->inventory_data[ sd->equip_index[i] ]->elvmax)
 				pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
 		}
 	}
@@ -6641,7 +6641,7 @@ int pc_checkjoblevelup(struct map_session_data *sd)
 		if(!battle_config.multi_level_up && sd->status.job_exp > next-1)
 			sd->status.job_exp = next-1;
 
-		sd->status.job_level ++;
+		sd->status.job_level++;
 		sd->status.skill_point ++;
 
 	} while ((next=pc->nextjobexp(sd)) > 0 && sd->status.job_exp >= next);
@@ -6695,7 +6695,7 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
 
 	//PK modifier
 	/* this doesn't exist in Aegis, instead there's a CrazyKiller check which double all EXP from this point */
-	if (battle_config.pk_mode && (int)(status->get_lv(src) - sd->status.base_level) >= 20)
+	if (battle_config.pk_mode && status->get_lv(src) - sd->status.base_level >= 20)
 		pk_ratio += 15; // pk_mode additional exp if monster >20 levels [Valaris]
 
 
@@ -6843,7 +6843,7 @@ unsigned int pc_nextbaseexp(const struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	if ((int)sd->status.base_level >= pc->maxbaselv(sd) || sd->status.base_level <= 0) // FIXME
+	if (sd->status.base_level >= pc->maxbaselv(sd) || sd->status.base_level <= 0)
 		return 0;
 
 	return pc->exp_table[pc->class2idx(sd->status.class_)][0][sd->status.base_level-1];
@@ -6852,7 +6852,7 @@ unsigned int pc_nextbaseexp(const struct map_session_data *sd)
 //Base exp needed for this level.
 unsigned int pc_thisbaseexp(const struct map_session_data *sd)
 {
-	if ((int)sd->status.base_level > pc->maxbaselv(sd) || sd->status.base_level <= 1) // FIXME
+	if (sd->status.base_level > pc->maxbaselv(sd) || sd->status.base_level <= 1)
 		return 0;
 
 	return pc->exp_table[pc->class2idx(sd->status.class_)][0][sd->status.base_level-2];
@@ -6870,7 +6870,7 @@ unsigned int pc_nextjobexp(const struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	if ((int)sd->status.job_level >= pc->maxjoblv(sd) || sd->status.job_level <= 0) // FIXME
+	if (sd->status.job_level >= pc->maxjoblv(sd) || sd->status.job_level <= 0)
 		return 0;
 	return pc->exp_table[pc->class2idx(sd->status.class_)][1][sd->status.job_level-1];
 }
@@ -6878,7 +6878,7 @@ unsigned int pc_nextjobexp(const struct map_session_data *sd)
 //Job exp needed for this level.
 unsigned int pc_thisjobexp(const struct map_session_data *sd)
 {
-	if ((int)sd->status.job_level > pc->maxjoblv(sd) || sd->status.job_level <= 1) // FIXME
+	if (sd->status.job_level > pc->maxjoblv(sd) || sd->status.job_level <= 1)
 		return 0;
 	return pc->exp_table[pc->class2idx(sd->status.class_)][1][sd->status.job_level-2];
 }
@@ -7293,7 +7293,7 @@ int pc_resetstate(struct map_session_data* sd)
 		// New statpoint table used here - Dexity
 		if (sd->status.base_level > MAX_LEVEL) {
 			//pc->statp[] goes out of bounds, can't reset!
-			ShowError("pc_resetstate: Can't reset stats of %d:%d, the base level (%u) is greater than the max level supported (%d)\n",
+			ShowError("pc_resetstate: Can't reset stats of %d:%d, the base level (%d) is greater than the max level supported (%d)\n",
 				sd->status.account_id, sd->status.char_id, sd->status.base_level, MAX_LEVEL);
 			return 0;
 		}
@@ -8144,13 +8144,13 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 	case SP_BASELEVEL:
 		if (val > pc->maxbaselv(sd)) //Capping to max
 			val = pc->maxbaselv(sd);
-		if ((unsigned int)val > sd->status.base_level) {
+		if (val > sd->status.base_level) {
 			int stat = 0, i;
-			for (i = 0; i < (int)((unsigned int)val - sd->status.base_level); i++)
+			for (i = 0; i < val - sd->status.base_level; i++)
 				stat += pc->gets_status_point(sd->status.base_level + i);
 			sd->status.status_point += stat;
 		}
-		sd->status.base_level = (unsigned int)val;
+		sd->status.base_level = val;
 		sd->status.base_exp = 0;
 		// clif->updatestatus(sd, SP_BASELEVEL);  // Gets updated at the bottom
 		clif->updatestatus(sd, SP_NEXTBASEEXP);
@@ -8163,13 +8163,13 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		}
 		break;
 	case SP_JOBLEVEL:
-		if ((unsigned int)val >= sd->status.job_level) {
+		if (val >= sd->status.job_level) {
 			if (val > pc->maxjoblv(sd))
 				val = pc->maxjoblv(sd);
 			sd->status.skill_point += val - sd->status.job_level;
 			clif->updatestatus(sd, SP_SKILLPOINT);
 		}
-		sd->status.job_level = (unsigned int)val;
+		sd->status.job_level = val;
 		sd->status.job_exp = 0;
 		// clif->updatestatus(sd, SP_JOBLEVEL);  // Gets updated at the bottom
 		clif->updatestatus(sd, SP_NEXTJOBEXP);
@@ -8487,12 +8487,12 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 
 	// changing from 1st to 2nd job
 	if ((b_class&JOBL_2) && !(sd->class_&JOBL_2) && (b_class&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE) {
-		sd->change_level_2nd = sd->status.job_level;
+		sd->change_level_2nd = sd->status.job_level; // FIXME
 		pc_setglobalreg (sd, script->add_str("jobchange_level"), sd->change_level_2nd);
 	}
 	// changing from 2nd to 3rd job
 	else if((b_class&JOBL_THIRD) && !(sd->class_&JOBL_THIRD)) {
-		sd->change_level_3rd = sd->status.job_level;
+		sd->change_level_3rd = sd->status.job_level; // FIXME
 		pc_setglobalreg (sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
 	}
 
@@ -8544,8 +8544,8 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	sd->status.job_level=1;
 	sd->status.job_exp=0;
 
-	if ((int)sd->status.base_level > pc->maxbaselv(sd)) { // FIXME
-		sd->status.base_level = pc->maxbaselv(sd); // FIXME
+	if (sd->status.base_level > pc->maxbaselv(sd)) {
+		sd->status.base_level = pc->maxbaselv(sd);
 		sd->status.base_exp=0;
 		pc->resetstate(sd);
 		clif->updatestatus(sd,SP_STATUSPOINT);

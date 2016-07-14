@@ -590,7 +590,7 @@ struct mmo_charstatus {
 	short robe;
 
 	char name[NAME_LENGTH];
-	unsigned int base_level,job_level;
+	int base_level, job_level;
 	short str,agi,vit,int_,dex,luk;
 	unsigned char slot,sex;
 

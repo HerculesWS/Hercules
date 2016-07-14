@@ -6891,7 +6891,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 						return 1;
 					}
 					if( skill_id == AM_BERSERKPITCHER ) {
-						if( dstsd && dstsd->status.base_level < (unsigned int)sd->inventory_data[i]->elv ) {
+						if (dstsd && dstsd->status.base_level < sd->inventory_data[i]->elv) {
 							clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 							map->freeblock_unlock();
 							return 1;
@@ -15322,7 +15322,7 @@ void skill_weaponrefine (struct map_session_data *sd, int idx)
 			if( sd->status.class_ == JOB_MECHANIC_T )
 				per += 100;
 			else
-				per += 5 * ((signed int)sd->status.job_level - 50);
+				per += 5 * (sd->status.job_level - 50);
 
 			pc->delitem(sd, i, 1, 0, DELITEM_NORMAL, LOG_TYPE_REFINE); // FIXME: is this the correct reason flag?
 			if (per > rnd() % 1000) {
