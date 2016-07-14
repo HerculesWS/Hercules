@@ -6824,12 +6824,12 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
 /*==========================================
  * Returns max level for this character.
  *------------------------------------------*/
-unsigned int pc_maxbaselv(struct map_session_data *sd) // FIXME
+int pc_maxbaselv(const struct map_session_data *sd)
 {
 	return pc->max_level[pc->class2idx(sd->status.class_)][0];
 }
 
-unsigned int pc_maxjoblv(struct map_session_data *sd) // FIXME
+int pc_maxjoblv(const struct map_session_data *sd)
 {
 	return pc->max_level[pc->class2idx(sd->status.class_)][1];
 }
@@ -6843,7 +6843,7 @@ unsigned int pc_nextbaseexp(struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	if(sd->status.base_level>=pc->maxbaselv(sd) || sd->status.base_level<=0)
+	if ((int)sd->status.base_level >= pc->maxbaselv(sd) || sd->status.base_level <= 0) // FIXME
 		return 0;
 
 	return pc->exp_table[pc->class2idx(sd->status.class_)][0][sd->status.base_level-1];
@@ -6852,7 +6852,7 @@ unsigned int pc_nextbaseexp(struct map_session_data *sd)
 //Base exp needed for this level.
 unsigned int pc_thisbaseexp(struct map_session_data *sd)
 {
-	if(sd->status.base_level>pc->maxbaselv(sd) || sd->status.base_level<=1)
+	if ((int)sd->status.base_level > pc->maxbaselv(sd) || sd->status.base_level <= 1) // FIXME
 		return 0;
 
 	return pc->exp_table[pc->class2idx(sd->status.class_)][0][sd->status.base_level-2];
@@ -6870,7 +6870,7 @@ unsigned int pc_nextjobexp(struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	if(sd->status.job_level>=pc->maxjoblv(sd) || sd->status.job_level<=0)
+	if ((int)sd->status.job_level >= pc->maxjoblv(sd) || sd->status.job_level <= 0) // FIXME
 		return 0;
 	return pc->exp_table[pc->class2idx(sd->status.class_)][1][sd->status.job_level-1];
 }
@@ -6878,7 +6878,7 @@ unsigned int pc_nextjobexp(struct map_session_data *sd)
 //Job exp needed for this level.
 unsigned int pc_thisjobexp(struct map_session_data *sd)
 {
-	if(sd->status.job_level>pc->maxjoblv(sd) || sd->status.job_level<=1)
+	if ((int)sd->status.job_level > pc->maxjoblv(sd) || sd->status.job_level <= 1) // FIXME
 		return 0;
 	return pc->exp_table[pc->class2idx(sd->status.class_)][1][sd->status.job_level-2];
 }
@@ -7717,7 +7717,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 				if (md->target_id==sd->bl.id)
 					mob->unlocktarget(md,tick);
 				if (battle_config.mobs_level_up && md->status.hp
-				 && (unsigned int)md->level < pc->maxbaselv(sd)
+				 && md->level < pc->maxbaselv(sd)
 				 && !md->guardian_data && md->special_state.ai == AI_NONE// Guardians/summons should not level. [Skotlex]
 				) {
 					// monster level up [Valaris]
@@ -8142,7 +8142,7 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 
 	switch(type){
 	case SP_BASELEVEL:
-		if ((unsigned int)val > pc->maxbaselv(sd)) //Capping to max
+		if (val > pc->maxbaselv(sd)) //Capping to max
 			val = pc->maxbaselv(sd);
 		if ((unsigned int)val > sd->status.base_level) {
 			int stat = 0, i;
@@ -8164,7 +8164,8 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		break;
 	case SP_JOBLEVEL:
 		if ((unsigned int)val >= sd->status.job_level) {
-			if ((unsigned int)val > pc->maxjoblv(sd)) val = pc->maxjoblv(sd);
+			if (val > pc->maxjoblv(sd))
+				val = pc->maxjoblv(sd);
 			sd->status.skill_point += val - sd->status.job_level;
 			clif->updatestatus(sd, SP_SKILLPOINT);
 		}
@@ -8543,8 +8544,8 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	sd->status.job_level=1;
 	sd->status.job_exp=0;
 
-	if (sd->status.base_level > pc->maxbaselv(sd)) {
-		sd->status.base_level = pc->maxbaselv(sd);
+	if ((int)sd->status.base_level > pc->maxbaselv(sd)) { // FIXME
+		sd->status.base_level = pc->maxbaselv(sd); // FIXME
 		sd->status.base_exp=0;
 		pc->resetstate(sd);
 		clif->updatestatus(sd,SP_STATUSPOINT);

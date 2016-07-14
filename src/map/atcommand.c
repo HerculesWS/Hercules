@@ -1364,12 +1364,12 @@ ACMD(baselevelup)
 	}
 
 	if (level > 0) {
-		if (sd->status.base_level >= pc->maxbaselv(sd)) { // check for max level by Valaris
+		if ((int)sd->status.base_level >= pc->maxbaselv(sd)) { // check for max level by Valaris // FIXME
 			clif->message(fd, msg_fd(fd,47)); // Base level can't go any higher.
 			return false;
 		} // End Addition
-		if ((unsigned int)level > pc->maxbaselv(sd) || (unsigned int)level > pc->maxbaselv(sd) - sd->status.base_level) // fix positive overflow
-			level = pc->maxbaselv(sd) - sd->status.base_level;
+		if (level > pc->maxbaselv(sd) || level > pc->maxbaselv(sd) - (int)sd->status.base_level) // fix positive overflow // FIXME
+			level = pc->maxbaselv(sd) - (int)sd->status.base_level; // FIXME
 		for (i = 0; i < level; i++)
 			status_point += pc->gets_status_point(sd->status.base_level + i);
 
@@ -1422,11 +1422,11 @@ ACMD(joblevelup)
 		return false;
 	}
 	if (level > 0) {
-		if (sd->status.job_level >= pc->maxjoblv(sd)) {
+		if ((int)sd->status.job_level >= pc->maxjoblv(sd)) { // FIXME
 			clif->message(fd, msg_fd(fd,23)); // Job level can't go any higher.
 			return false;
 		}
-		if ((unsigned int)level > pc->maxjoblv(sd) || (unsigned int)level > pc->maxjoblv(sd) - sd->status.job_level) // fix positive overflow
+		if (level > pc->maxjoblv(sd) || level > pc->maxjoblv(sd) - (int)sd->status.job_level) // fix positive overflow // FIXME
 			level = pc->maxjoblv(sd) - sd->status.job_level;
 		sd->status.job_level += (unsigned int)level;
 		sd->status.skill_point += level;

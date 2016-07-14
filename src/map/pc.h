@@ -909,8 +909,8 @@ END_ZEROED_BLOCK; /* End */
 	int (*follow) (struct map_session_data *sd, int target_id); // [MouseJstr]
 	int (*stop_following) (struct map_session_data *sd);
 
-	unsigned int (*maxbaselv) (struct map_session_data *sd);
-	unsigned int (*maxjoblv) (struct map_session_data *sd);
+	int (*maxbaselv) (const struct map_session_data *sd);
+	int (*maxjoblv) (const struct map_session_data *sd);
 	int (*checkbaselevelup) (struct map_session_data *sd);
 	int (*checkjoblevelup) (struct map_session_data *sd);
 	bool (*gainexp) (struct map_session_data *sd, struct block_list *src, unsigned int base_exp, unsigned int job_exp, bool is_quest);
