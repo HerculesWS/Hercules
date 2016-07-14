@@ -44,7 +44,7 @@ struct chat_interface *chat;
 
 /// Initializes a chatroom object (common functionality for both pc and npc chatrooms).
 /// Returns a chatroom object on success, or NULL on failure.
-struct chat_data* chat_createchat(struct block_list* bl, const char* title, const char* pass, int limit, bool pub, int trigger, const char* ev, int zeny, int minLvl, int maxLvl)
+struct chat_data* chat_createchat(struct block_list* bl, const char* title, const char* pass, int limit, bool pub, int trigger, const char* ev, int zeny, int min_level, int max_level)
 {
 	struct chat_data* cd;
 	nullpo_retr(NULL, bl);
@@ -62,8 +62,8 @@ struct chat_data* chat_createchat(struct block_list* bl, const char* title, cons
 	cd->limit = min(limit, ARRAYLENGTH(cd->usersd));
 	cd->trigger = trigger;
 	cd->zeny = zeny;
-	cd->minLvl = minLvl;
-	cd->maxLvl = maxLvl;
+	cd->min_level = min_level;
+	cd->max_level = max_level;
 	memset(cd->usersd, 0, sizeof(cd->usersd));
 	cd->owner = bl;
 	safestrncpy(cd->npc_event, ev, sizeof(cd->npc_event));
@@ -156,8 +156,8 @@ bool chat_joinchat(struct map_session_data* sd, int chatid, const char* pass) {
 		return false;
 	}
 
-	if (sd->status.base_level < (int)cd->minLvl || sd->status.base_level > (int)cd->maxLvl) { // FIXME
-		if(sd->status.base_level < (int)cd->minLvl) // FIXME
+	if (sd->status.base_level < cd->min_level || sd->status.base_level > cd->max_level) {
+		if(sd->status.base_level < cd->min_level)
 			clif->joinchatfail(sd,5); // too low level
 		else
 			clif->joinchatfail(sd,6); // too high level
@@ -375,7 +375,7 @@ bool chat_kickchat(struct map_session_data* sd, const char* kickusername) {
 /*==========================================
  * Creates a chat room for the npc
  *------------------------------------------*/
-bool chat_createnpcchat(struct npc_data* nd, const char* title, int limit, bool pub, int trigger, const char* ev, int zeny, int minLvl, int maxLvl)
+bool chat_createnpcchat(struct npc_data* nd, const char* title, int limit, bool pub, int trigger, const char* ev, int zeny, int min_level, int max_level)
 {
 	struct chat_data* cd;
 	nullpo_ret(nd);
@@ -385,12 +385,12 @@ bool chat_createnpcchat(struct npc_data* nd, const char* title, int limit, bool 
 		return false;
 	}
 
-	if( zeny > MAX_ZENY || maxLvl > MAX_LEVEL ) {
+	if (zeny > MAX_ZENY || max_level > MAX_LEVEL) {
 		ShowError("chat_createnpcchat: npc '%s' has a required lvl or amount of zeny over the max limit!\n", nd->exname);
 		return false;
 	}
 
-	cd = chat->create(&nd->bl, title, "", limit, pub, trigger, ev, zeny, minLvl, maxLvl);
+	cd = chat->create(&nd->bl, title, "", limit, pub, trigger, ev, zeny, min_level, max_level);
 
 	if( cd ) {
 		nd->chat_id = cd->bl.id;

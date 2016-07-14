@@ -11928,8 +11928,8 @@ BUILDIN(getwaitingroomstate)
 		case 32: script_pushint(st, (cd->users >= cd->limit)); break;
 		case 33: script_pushint(st, (cd->users >= cd->trigger)); break;
 
-		case 34: script_pushint(st, cd->minLvl); break;
-		case 35: script_pushint(st, cd->maxLvl); break;
+		case 34: script_pushint(st, cd->min_level); break;
+		case 35: script_pushint(st, cd->max_level); break;
 		case 36: script_pushint(st, cd->zeny); break;
 		default: script_pushint(st, -1); break;
 	}
