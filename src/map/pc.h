@@ -456,8 +456,8 @@ END_ZEROED_BLOCK;
 	int eventtimer[MAX_EVENTTIMER];
 	unsigned short eventcount; // [celest]
 
-	unsigned char change_level_2nd; // job level when changing from 1st to 2nd class [jobchange_level in global_reg_value]
-	unsigned char change_level_3rd; // job level when changing from 2nd to 3rd class [jobchange_level_3rd in global_reg_value]
+	int change_level_2nd; // job level when changing from 1st to 2nd class [jobchange_level in global_reg_value]
+	int change_level_3rd; // job level when changing from 2nd to 3rd class [jobchange_level_3rd in global_reg_value]
 
 	char fakename[NAME_LENGTH]; // fake names [Valaris]
 
@@ -564,7 +564,7 @@ END_ZEROED_BLOCK;
 
 	/* */
 	struct {
-		unsigned int second,third;
+		int second, third;
 	} sktree;
 
 	/**

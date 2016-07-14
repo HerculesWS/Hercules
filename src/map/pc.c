@@ -1756,28 +1756,25 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 	else if ((sd->class_&JOBL_2) && (sd->class_&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE)
 	{
 		// regenerate change_level_2nd
-		if (!sd->change_level_2nd)
-		{
-			if (sd->class_&JOBL_THIRD)
-			{
+		if (sd->change_level_2nd == 0) {
+			if (sd->class_&JOBL_THIRD) {
 				// if neither 2nd nor 3rd jobchange levels are known, we have to assume a default for 2nd
-				if (!sd->change_level_3rd)
-					sd->change_level_2nd = pc->max_level[pc->class2idx(pc->mapid2jobid(sd->class_&MAPID_UPPERMASK, sd->status.sex))][1]; // FIXME
-				else
-					sd->change_level_2nd = 1 + skill_point + sd->status.skill_point
+				if (sd->change_level_3rd == 0) {
+					sd->change_level_2nd = pc->max_level[pc->class2idx(pc->mapid2jobid(sd->class_&MAPID_UPPERMASK, sd->status.sex))][1];
+				} else {
+					sd->change_level_2nd = 1 + skill_point + (int)sd->status.skill_point // FIXME
 						- (sd->status.job_level - 1)
 						- (sd->change_level_3rd - 1)
 						- novice_skills;
-			}
-			else
-			{
-				sd->change_level_2nd = 1 + skill_point + sd->status.skill_point
+				}
+			} else {
+				sd->change_level_2nd = 1 + skill_point + (int)sd->status.skill_point // FIXME
 						- (sd->status.job_level - 1)
 						- novice_skills;
 
 			}
 
-			pc_setglobalreg (sd, script->add_str("jobchange_level"), sd->change_level_2nd);
+			pc_setglobalreg(sd, script->add_str("jobchange_level"), sd->change_level_2nd);
 		}
 
 		if (skill_point < novice_skills + (sd->change_level_2nd - 1)) {
@@ -1785,12 +1782,12 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 			sd->sktree.second = ( novice_skills + (sd->change_level_2nd - 1) ) - skill_point;
 		} else if(sd->class_&JOBL_THIRD) { // limit 3rd class to 2nd class/trans job levels
 			// regenerate change_level_3rd
-			if (!sd->change_level_3rd) {
-					sd->change_level_3rd = 1 + skill_point + sd->status.skill_point
+			if (sd->change_level_3rd == 0) {
+					sd->change_level_3rd = 1 + skill_point + (int)sd->status.skill_point // FIXME
 						- (sd->status.job_level - 1)
 						- (sd->change_level_2nd - 1)
 						- novice_skills;
-					pc_setglobalreg (sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
+					pc_setglobalreg(sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
 			}
 
 			if (skill_point < novice_skills + (sd->change_level_2nd - 1) + (sd->change_level_3rd - 1)) {
@@ -7129,9 +7126,9 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 		if (!pc_has_permission(sd, PC_PERM_ALL_SKILL)) // may skill everything at any time anyways, and this would cause a huge slowdown
 			clif->skillinfoblock(sd);
 	} else if( battle_config.skillup_limit ){
-		if (sd->sktree.second)
+		if (sd->sktree.second != 0)
 			clif->msgtable_num(sd, MSG_SKILL_POINTS_LEFT_JOB1, sd->sktree.second);
-		else if (sd->sktree.third)
+		else if (sd->sktree.third != 0)
 			clif->msgtable_num(sd, MSG_SKILL_POINTS_LEFT_JOB2, sd->sktree.third);
 		else if (pc->calc_skillpoint(sd) < 9) /* TODO: official response? */
 			clif->messagecolor_self(sd->fd, COLOR_RED, "You need the basic skills");
@@ -8487,13 +8484,13 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 
 	// changing from 1st to 2nd job
 	if ((b_class&JOBL_2) && !(sd->class_&JOBL_2) && (b_class&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE) {
-		sd->change_level_2nd = sd->status.job_level; // FIXME
-		pc_setglobalreg (sd, script->add_str("jobchange_level"), sd->change_level_2nd);
+		sd->change_level_2nd = sd->status.job_level;
+		pc_setglobalreg(sd, script->add_str("jobchange_level"), sd->change_level_2nd);
 	}
 	// changing from 2nd to 3rd job
 	else if((b_class&JOBL_THIRD) && !(sd->class_&JOBL_THIRD)) {
-		sd->change_level_3rd = sd->status.job_level; // FIXME
-		pc_setglobalreg (sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
+		sd->change_level_3rd = sd->status.job_level;
+		pc_setglobalreg(sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
 	}
 
 	if(sd->cloneskill_id) {

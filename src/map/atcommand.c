@@ -9295,8 +9295,9 @@ ACMD(costume){
 }
 /* for debugging purposes (so users can easily provide us with debug info) */
 /* should be trashed as soon as its no longer necessary */
-ACMD(skdebug) {
-	safesnprintf(atcmd_output, sizeof(atcmd_output),"second: %u; third: %u", sd->sktree.second, sd->sktree.third);
+ACMD(skdebug)
+{
+	safesnprintf(atcmd_output, sizeof(atcmd_output),"second: %d; third: %d", sd->sktree.second, sd->sktree.third);
 	clif->message(fd,atcmd_output);
 	safesnprintf(atcmd_output, sizeof(atcmd_output),"pc_calc_skilltree_normalize_job: %d",pc->calc_skilltree_normalize_job(sd));
 	clif->message(fd,atcmd_output);
