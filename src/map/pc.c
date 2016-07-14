@@ -960,11 +960,11 @@ int pc_isequip(struct map_session_data *sd,int n)
 	if(pc_has_permission(sd, PC_PERM_USE_ALL_EQUIPMENT))
 		return 1;
 
-	if (item->elv && sd->status.base_level < (unsigned int)item->elv) {
+	if (item->elv && sd->status.base_level < item->elv) {
 		clif->msgtable(sd, MSG_ITEM_CANT_EQUIP_LVL);
 		return 0;
 	}
-	if (item->elvmax && sd->status.base_level > (unsigned int)item->elvmax) {
+	if (item->elvmax && sd->status.base_level > item->elvmax) {
 		clif->msgtable(sd, MSG_ITEM_CANT_EQUIP_LVL);
 		return 0;
 	}
@@ -1583,7 +1583,7 @@ int pc_calc_skilltree(struct map_session_data *sd)
 						break;
 					}
 				}
-				if (sd->status.job_level < pc->skill_tree[c][i].joblv) {
+				if (sd->status.job_level < (int)pc->skill_tree[c][i].joblv) {
 					int jobid = pc->mapid2jobid(sd->class_, sd->status.sex); // need to get its own skilltree
 					if (jobid > -1) {
 						if (!pc->skill_tree[pc->class2idx(jobid)][i].inherited)
@@ -1687,7 +1687,7 @@ void pc_check_skilltree(struct map_session_data *sd, int skill_id)
 			if (!satisfied)
 				continue;
 
-			if (sd->status.job_level < pc->skill_tree[c][i].joblv) {
+			if (sd->status.job_level < (int)pc->skill_tree[c][i].joblv) {
 				int jobid = pc->mapid2jobid(sd->class_, sd->status.sex); // need to get its own skilltree
 				if (jobid > -1) {
 					if (!pc->skill_tree[pc->class2idx(jobid)][i].inherited)
@@ -1756,28 +1756,25 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 	else if ((sd->class_&JOBL_2) && (sd->class_&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE)
 	{
 		// regenerate change_level_2nd
-		if (!sd->change_level_2nd)
-		{
-			if (sd->class_&JOBL_THIRD)
-			{
+		if (sd->change_level_2nd == 0) {
+			if (sd->class_&JOBL_THIRD) {
 				// if neither 2nd nor 3rd jobchange levels are known, we have to assume a default for 2nd
-				if (!sd->change_level_3rd)
+				if (sd->change_level_3rd == 0) {
 					sd->change_level_2nd = pc->max_level[pc->class2idx(pc->mapid2jobid(sd->class_&MAPID_UPPERMASK, sd->status.sex))][1];
-				else
+				} else {
 					sd->change_level_2nd = 1 + skill_point + sd->status.skill_point
 						- (sd->status.job_level - 1)
 						- (sd->change_level_3rd - 1)
 						- novice_skills;
-			}
-			else
-			{
+				}
+			} else {
 				sd->change_level_2nd = 1 + skill_point + sd->status.skill_point
 						- (sd->status.job_level - 1)
 						- novice_skills;
 
 			}
 
-			pc_setglobalreg (sd, script->add_str("jobchange_level"), sd->change_level_2nd);
+			pc_setglobalreg(sd, script->add_str("jobchange_level"), sd->change_level_2nd);
 		}
 
 		if (skill_point < novice_skills + (sd->change_level_2nd - 1)) {
@@ -1785,12 +1782,12 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 			sd->sktree.second = ( novice_skills + (sd->change_level_2nd - 1) ) - skill_point;
 		} else if(sd->class_&JOBL_THIRD) { // limit 3rd class to 2nd class/trans job levels
 			// regenerate change_level_3rd
-			if (!sd->change_level_3rd) {
+			if (sd->change_level_3rd == 0) {
 					sd->change_level_3rd = 1 + skill_point + sd->status.skill_point
 						- (sd->status.job_level - 1)
 						- (sd->change_level_2nd - 1)
 						- novice_skills;
-					pc_setglobalreg (sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
+					pc_setglobalreg(sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
 			}
 
 			if (skill_point < novice_skills + (sd->change_level_2nd - 1) + (sd->change_level_3rd - 1)) {
@@ -4878,12 +4875,12 @@ int pc_isUseitem(struct map_session_data *sd,int n)
 	if(item->sex != 2 && sd->status.sex != item->sex)
 		return 0;
 	//Required level check
-	if (item->elv && sd->status.base_level < (unsigned int)item->elv) {
+	if (item->elv && sd->status.base_level < item->elv) {
 		clif->msgtable(sd, MSG_ITEM_CANT_USE_LVL);
 		return 0;
 	}
 
-	if (item->elvmax && sd->status.base_level > (unsigned int)item->elvmax) {
+	if (item->elvmax && sd->status.base_level > item->elvmax) {
 		clif->msgtable(sd, MSG_ITEM_CANT_USE_LVL);
 		return 0;
 	}
@@ -6578,14 +6575,15 @@ int pc_checkbaselevelup(struct map_session_data *sd) {
 		return 0;
 
 	do {
+		int status_points = 0;
 		sd->status.base_exp -= next;
 		//Kyoki pointed out that the max overcarry exp is the exp needed for the previous level -1. [Skotlex]
 		if(!battle_config.multi_level_up && sd->status.base_exp > next-1)
 			sd->status.base_exp = next-1;
 
-		next = pc->gets_status_point(sd->status.base_level);
-		sd->status.base_level ++;
-		sd->status.status_point += next;
+		status_points = pc->gets_status_point(sd->status.base_level);
+		sd->status.base_level++;
+		sd->status.status_point += status_points;
 
 	} while ((next=pc->nextbaseexp(sd)) > 0 && sd->status.base_exp >= next);
 
@@ -6626,7 +6624,7 @@ void pc_baselevelchanged(struct map_session_data *sd) {
 	nullpo_retv(sd);
 	for( i = 0; i < EQI_MAX; i++ ) {
 		if( sd->equip_index[i] >= 0 ) {
-			if( sd->inventory_data[ sd->equip_index[i] ]->elvmax && sd->status.base_level > (unsigned int)sd->inventory_data[ sd->equip_index[i] ]->elvmax )
+			if (sd->inventory_data[sd->equip_index[i]]->elvmax != 0 && sd->status.base_level > sd->inventory_data[ sd->equip_index[i] ]->elvmax)
 				pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
 		}
 	}
@@ -6646,8 +6644,8 @@ int pc_checkjoblevelup(struct map_session_data *sd)
 		if(!battle_config.multi_level_up && sd->status.job_exp > next-1)
 			sd->status.job_exp = next-1;
 
-		sd->status.job_level ++;
-		sd->status.skill_point ++;
+		sd->status.job_level++;
+		sd->status.skill_point++;
 
 	} while ((next=pc->nextjobexp(sd)) > 0 && sd->status.job_exp >= next);
 
@@ -6700,7 +6698,7 @@ void pc_calcexp(struct map_session_data *sd, unsigned int *base_exp, unsigned in
 
 	//PK modifier
 	/* this doesn't exist in Aegis, instead there's a CrazyKiller check which double all EXP from this point */
-	if (battle_config.pk_mode && (int)(status->get_lv(src) - sd->status.base_level) >= 20)
+	if (battle_config.pk_mode && status->get_lv(src) - sd->status.base_level >= 20)
 		pk_ratio += 15; // pk_mode additional exp if monster >20 levels [Valaris]
 
 
@@ -6829,12 +6827,12 @@ bool pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
 /*==========================================
  * Returns max level for this character.
  *------------------------------------------*/
-unsigned int pc_maxbaselv(struct map_session_data *sd)
+int pc_maxbaselv(const struct map_session_data *sd)
 {
 	return pc->max_level[pc->class2idx(sd->status.class_)][0];
 }
 
-unsigned int pc_maxjoblv(struct map_session_data *sd)
+int pc_maxjoblv(const struct map_session_data *sd)
 {
 	return pc->max_level[pc->class2idx(sd->status.class_)][1];
 }
@@ -6844,20 +6842,20 @@ unsigned int pc_maxjoblv(struct map_session_data *sd)
  *------------------------------------------*/
 
 //Base exp needed for next level.
-unsigned int pc_nextbaseexp(struct map_session_data *sd)
+unsigned int pc_nextbaseexp(const struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	if(sd->status.base_level>=pc->maxbaselv(sd) || sd->status.base_level<=0)
+	if (sd->status.base_level >= pc->maxbaselv(sd) || sd->status.base_level <= 0)
 		return 0;
 
 	return pc->exp_table[pc->class2idx(sd->status.class_)][0][sd->status.base_level-1];
 }
 
 //Base exp needed for this level.
-unsigned int pc_thisbaseexp(struct map_session_data *sd)
+unsigned int pc_thisbaseexp(const struct map_session_data *sd)
 {
-	if(sd->status.base_level>pc->maxbaselv(sd) || sd->status.base_level<=1)
+	if (sd->status.base_level > pc->maxbaselv(sd) || sd->status.base_level <= 1)
 		return 0;
 
 	return pc->exp_table[pc->class2idx(sd->status.class_)][0][sd->status.base_level-2];
@@ -6871,19 +6869,19 @@ unsigned int pc_thisbaseexp(struct map_session_data *sd)
  *------------------------------------------*/
 
 //Job exp needed for next level.
-unsigned int pc_nextjobexp(struct map_session_data *sd)
+unsigned int pc_nextjobexp(const struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	if(sd->status.job_level>=pc->maxjoblv(sd) || sd->status.job_level<=0)
+	if (sd->status.job_level >= pc->maxjoblv(sd) || sd->status.job_level <= 0)
 		return 0;
 	return pc->exp_table[pc->class2idx(sd->status.class_)][1][sd->status.job_level-1];
 }
 
 //Job exp needed for this level.
-unsigned int pc_thisjobexp(struct map_session_data *sd)
+unsigned int pc_thisjobexp(const struct map_session_data *sd)
 {
-	if(sd->status.job_level>pc->maxjoblv(sd) || sd->status.job_level<=1)
+	if (sd->status.job_level > pc->maxjoblv(sd) || sd->status.job_level <= 1)
 		return 0;
 	return pc->exp_table[pc->class2idx(sd->status.class_)][1][sd->status.job_level-2];
 }
@@ -7134,9 +7132,9 @@ int pc_skillup(struct map_session_data *sd,uint16 skill_id) {
 		if (!pc_has_permission(sd, PC_PERM_ALL_SKILL)) // may skill everything at any time anyways, and this would cause a huge slowdown
 			clif->skillinfoblock(sd);
 	} else if( battle_config.skillup_limit ){
-		if (sd->sktree.second)
+		if (sd->sktree.second != 0)
 			clif->msgtable_num(sd, MSG_SKILL_POINTS_LEFT_JOB1, sd->sktree.second);
-		else if (sd->sktree.third)
+		else if (sd->sktree.third != 0)
 			clif->msgtable_num(sd, MSG_SKILL_POINTS_LEFT_JOB2, sd->sktree.third);
 		else if (pc->calc_skillpoint(sd) < 9) /* TODO: official response? */
 			clif->messagecolor_self(sd->fd, COLOR_RED, "You need the basic skills");
@@ -7298,7 +7296,7 @@ int pc_resetstate(struct map_session_data* sd)
 		// New statpoint table used here - Dexity
 		if (sd->status.base_level > MAX_LEVEL) {
 			//pc->statp[] goes out of bounds, can't reset!
-			ShowError("pc_resetstate: Can't reset stats of %d:%d, the base level (%u) is greater than the max level supported (%d)\n",
+			ShowError("pc_resetstate: Can't reset stats of %d:%d, the base level (%d) is greater than the max level supported (%d)\n",
 				sd->status.account_id, sd->status.char_id, sd->status.base_level, MAX_LEVEL);
 			return 0;
 		}
@@ -7722,7 +7720,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src) {
 				if (md->target_id==sd->bl.id)
 					mob->unlocktarget(md,tick);
 				if (battle_config.mobs_level_up && md->status.hp
-				 && (unsigned int)md->level < pc->maxbaselv(sd)
+				 && md->level < pc->maxbaselv(sd)
 				 && !md->guardian_data && md->special_state.ai == AI_NONE// Guardians/summons should not level. [Skotlex]
 				) {
 					// monster level up [Valaris]
@@ -7989,7 +7987,7 @@ void pc_revive(struct map_session_data *sd,unsigned int hp, unsigned int sp) {
 /*==========================================
  * script reading pc status registry
  *------------------------------------------*/
-int pc_readparam(struct map_session_data* sd,int type)
+int pc_readparam(const struct map_session_data *sd, int type)
 {
 	int val = 0;
 
@@ -8047,7 +8045,7 @@ int pc_readparam(struct map_session_data* sd,int type)
 		case SP_VARCASTRATE:
 #endif
 		case SP_CASTRATE:
-				val = sd->castrate+=val;
+				val = sd->castrate;
 			break;
 		case SP_MAXHPRATE:       val = sd->hprate; break;
 		case SP_MAXSPRATE:       val = sd->sprate; break;
@@ -8147,15 +8145,15 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 
 	switch(type){
 	case SP_BASELEVEL:
-		if ((unsigned int)val > pc->maxbaselv(sd)) //Capping to max
+		if (val > pc->maxbaselv(sd)) //Capping to max
 			val = pc->maxbaselv(sd);
-		if ((unsigned int)val > sd->status.base_level) {
+		if (val > sd->status.base_level) {
 			int stat = 0, i;
-			for (i = 0; i < (int)((unsigned int)val - sd->status.base_level); i++)
+			for (i = 0; i < val - sd->status.base_level; i++)
 				stat += pc->gets_status_point(sd->status.base_level + i);
 			sd->status.status_point += stat;
 		}
-		sd->status.base_level = (unsigned int)val;
+		sd->status.base_level = val;
 		sd->status.base_exp = 0;
 		// clif->updatestatus(sd, SP_BASELEVEL);  // Gets updated at the bottom
 		clif->updatestatus(sd, SP_NEXTBASEEXP);
@@ -8168,12 +8166,13 @@ int pc_setparam(struct map_session_data *sd,int type,int val)
 		}
 		break;
 	case SP_JOBLEVEL:
-		if ((unsigned int)val >= sd->status.job_level) {
-			if ((unsigned int)val > pc->maxjoblv(sd)) val = pc->maxjoblv(sd);
+		if (val >= sd->status.job_level) {
+			if (val > pc->maxjoblv(sd))
+				val = pc->maxjoblv(sd);
 			sd->status.skill_point += val - sd->status.job_level;
 			clif->updatestatus(sd, SP_SKILLPOINT);
 		}
-		sd->status.job_level = (unsigned int)val;
+		sd->status.job_level = val;
 		sd->status.job_exp = 0;
 		// clif->updatestatus(sd, SP_JOBLEVEL);  // Gets updated at the bottom
 		clif->updatestatus(sd, SP_NEXTJOBEXP);
@@ -8492,12 +8491,12 @@ int pc_jobchange(struct map_session_data *sd,int job, int upper)
 	// changing from 1st to 2nd job
 	if ((b_class&JOBL_2) && !(sd->class_&JOBL_2) && (b_class&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE) {
 		sd->change_level_2nd = sd->status.job_level;
-		pc_setglobalreg (sd, script->add_str("jobchange_level"), sd->change_level_2nd);
+		pc_setglobalreg(sd, script->add_str("jobchange_level"), sd->change_level_2nd);
 	}
 	// changing from 2nd to 3rd job
 	else if((b_class&JOBL_THIRD) && !(sd->class_&JOBL_THIRD)) {
 		sd->change_level_3rd = sd->status.job_level;
-		pc_setglobalreg (sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
+		pc_setglobalreg(sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
 	}
 
 	if(sd->cloneskill_id) {
@@ -11051,7 +11050,7 @@ int pc_readdb(void) {
 	while(fgets(line, sizeof(line), fp)) {
 		int jobs[CLASS_COUNT], job_count, job, job_id;
 		int type;
-		unsigned int ui,maxlv;
+		int maxlv;
 		char *split[4];
 		if(line[0]=='/' && line[1]=='/')
 			continue;
@@ -11073,7 +11072,7 @@ int pc_readdb(void) {
 		}
 		maxlv = atoi(split[0]);
 		if (maxlv > MAX_LEVEL) {
-			ShowWarning("pc_readdb: Specified max level %u for job %d is beyond server's limit (%d).\n ", maxlv, job_id, MAX_LEVEL);
+			ShowWarning("pc_readdb: Specified max level %d for job %d is beyond server's limit (%d).\n ", maxlv, job_id, MAX_LEVEL);
 			maxlv = MAX_LEVEL;
 		}
 		count++;
@@ -11084,15 +11083,15 @@ int pc_readdb(void) {
 		//The reasoning behind the -2 is this... if the max level is 5, then the array
 		//should look like this:
 		//0: x, 1: x, 2: x: 3: x 4: 0 <- last valid value is at 3.
-		while ((ui = pc->max_level[job][type]) >= 2 && pc->exp_table[job][type][ui-2] <= 0)
+		while ((i = pc->max_level[job][type]) >= 2 && pc->exp_table[job][type][i-2] <= 0)
 			pc->max_level[job][type]--;
 		if (pc->max_level[job][type] < maxlv) {
-			ShowWarning("pc_readdb: Specified max %u for job %d, but that job's exp table only goes up to level %u.\n", maxlv, job_id, pc->max_level[job][type]);
+			ShowWarning("pc_readdb: Specified max %d for job %d, but that job's exp table only goes up to level %d.\n", maxlv, job_id, pc->max_level[job][type]);
 			ShowInfo("Filling the missing values with the last exp entry.\n");
 			//Fill the requested values with the last entry.
-			ui = (pc->max_level[job][type] <= 2? 0: pc->max_level[job][type]-2);
-			for (; ui+2 < maxlv; ui++)
-				pc->exp_table[job][type][ui] = pc->exp_table[job][type][ui-1];
+			i = (pc->max_level[job][type] <= 2 ? 0: pc->max_level[job][type]-2);
+			for (; i+2 < maxlv; i++)
+				pc->exp_table[job][type][i] = pc->exp_table[job][type][i-1];
 			pc->max_level[job][type] = maxlv;
 		}
 		//ShowDebug("%s - Class %d: %d\n", type?"Job":"Base", job_id, pc->max_level[job][type]);
@@ -11105,7 +11104,7 @@ int pc_readdb(void) {
 			job = pc->class2idx(job_id);
 			memcpy(pc->exp_table[job][type], pc->exp_table[jobs[0]][type], sizeof(pc->exp_table[0][0]));
 			pc->max_level[job][type] = maxlv;
-			//ShowDebug("%s - Class %d: %u\n", type?"Job":"Base", job_id, pc->max_level[job][type]);
+			//ShowDebug("%s - Class %d: %d\n", type?"Job":"Base", job_id, pc->max_level[job][type]);
 		}
 	}
 	fclose(fp);
@@ -11233,9 +11232,9 @@ void pc_validate_levels(void) {
 		if (i == JOB_WEDDING || i == JOB_XMAS || i == JOB_SUMMER)
 			continue; //Classes that do not need exp tables.
 		j = pc->class2idx(i);
-		if (!pc->max_level[j][0])
+		if (pc->max_level[j][0] == 0)
 			ShowWarning("Class %s (%d) does not has a base exp table.\n", pc->job_name(i), i);
-		if (!pc->max_level[j][1])
+		if (pc->max_level[j][1] == 0)
 			ShowWarning("Class %s (%d) does not has a job exp table.\n", pc->job_name(i), i);
 	}
 }

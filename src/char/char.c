@@ -474,9 +474,9 @@ int char_mmo_char_tosql(int char_id, struct mmo_charstatus* p)
 		if( p->show_equip )
 			opt |= OPT_SHOW_EQUIP;
 
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `base_level`='%u', `job_level`='%u',"
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `base_level`='%d', `job_level`='%d',"
 			"`base_exp`='%u', `job_exp`='%u', `zeny`='%d',"
-			"`max_hp`='%d',`hp`='%d',`max_sp`='%d',`sp`='%d',`status_point`='%u',`skill_point`='%u',"
+			"`max_hp`='%d',`hp`='%d',`max_sp`='%d',`sp`='%d',`status_point`='%d',`skill_point`='%d',"
 			"`str`='%d',`agi`='%d',`vit`='%d',`int`='%d',`dex`='%d',`luk`='%d',"
 			"`option`='%u',`party_id`='%d',`guild_id`='%d',`pet_id`='%d',`homun_id`='%d',`elemental_id`='%d',"
 			"`weapon`='%d',`shield`='%d',`head_top`='%d',`head_mid`='%d',`head_bottom`='%d',"
@@ -958,8 +958,8 @@ int char_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1,  SQLDT_UCHAR,  &p.slot, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2,  SQLDT_STRING, &p.name, sizeof(p.name), NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_SHORT,  &p.class_, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_UINT,   &p.base_level, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_UINT,   &p.job_level, 0, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_INT,    &p.base_level, 0, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_INT,    &p.job_level, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_UINT,   &p.base_exp, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 7,  SQLDT_UINT,   &p.job_exp, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 8,  SQLDT_INT,    &p.zeny, 0, NULL, NULL)
@@ -973,8 +973,8 @@ int char_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 16, SQLDT_INT,    &p.hp, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 17, SQLDT_INT,    &p.max_sp, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 18, SQLDT_INT,    &p.sp, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 19, SQLDT_UINT,   &p.status_point, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 20, SQLDT_UINT,   &p.skill_point, 0, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 19, SQLDT_INT,    &p.status_point, 0, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 20, SQLDT_INT,    &p.skill_point, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 21, SQLDT_UINT,   &p.option, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 22, SQLDT_UCHAR,  &p.karma, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 23, SQLDT_SHORT,  &p.manner, 0, NULL, NULL)
@@ -1068,8 +1068,8 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2,  SQLDT_UCHAR,  &p->slot, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_STRING, &p->name, sizeof(p->name), NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_SHORT,  &p->class_, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_UINT,   &p->base_level, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_UINT,   &p->job_level, 0, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_INT,    &p->base_level, 0, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_INT,    &p->job_level, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 7,  SQLDT_UINT,   &p->base_exp, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 8,  SQLDT_UINT,   &p->job_exp, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 9,  SQLDT_INT,    &p->zeny, 0, NULL, NULL)
@@ -1083,8 +1083,8 @@ int char_mmo_char_fromsql(int char_id, struct mmo_charstatus* p, bool load_every
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 17, SQLDT_INT,    &p->hp, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 18, SQLDT_INT,    &p->max_sp, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 19, SQLDT_INT,    &p->sp, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 20, SQLDT_UINT,   &p->status_point, 0, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 21, SQLDT_UINT,   &p->skill_point, 0, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 20, SQLDT_INT,    &p->status_point, 0, NULL, NULL)
+	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 21, SQLDT_INT,    &p->skill_point, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 22, SQLDT_UINT,   &p->option, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 23, SQLDT_UCHAR,  &p->karma, 0, NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 24, SQLDT_SHORT,  &p->manner, 0, NULL, NULL)
@@ -4222,7 +4222,7 @@ static void char_delete2_accept(int fd, struct char_session_data* sd)
 {// CH: <0829>.W <char id>.L <birth date:YYMMDD>.6B
 	char birthdate[8+1];
 	int char_id, i;
-	unsigned int base_level;
+	int base_level;
 	char* data;
 	time_t delete_date;
 
@@ -4256,7 +4256,7 @@ static void char_delete2_accept(int fd, struct char_session_data* sd)
 		return;
 	}
 
-	SQL->GetData(inter->sql_handle, 0, &data, NULL); base_level = (unsigned int)strtoul(data, NULL, 10);
+	SQL->GetData(inter->sql_handle, 0, &data, NULL); base_level = atoi(data);
 	SQL->GetData(inter->sql_handle, 1, &data, NULL); delete_date = strtoul(data, NULL, 10);
 
 	if( !delete_date || delete_date>time(NULL) )
@@ -4271,8 +4271,8 @@ static void char_delete2_accept(int fd, struct char_session_data* sd)
 		return;
 	}
 
-	if( ( char_del_level > 0 && base_level >= (unsigned int)char_del_level ) || ( char_del_level < 0 && base_level <= (unsigned int)(-char_del_level) ) )
-	{// character level config restriction
+	if ((char_del_level > 0 && base_level >= char_del_level) || (char_del_level < 0 && base_level <= -char_del_level)) {
+		// character level config restriction
 		chr->delete2_accept_ack(fd, char_id, 2); // 2: Due to system settings can not be deleted
 		return;
 	}

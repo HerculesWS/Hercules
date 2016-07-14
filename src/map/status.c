@@ -2169,9 +2169,7 @@ int status_calc_pet_(struct pet_data *pd, enum e_status_calc_opt opt)
 
 	if (battle_config.pet_lv_rate && pd->msd) {
 		struct map_session_data *sd = pd->msd;
-		int lv;
-
-		lv =sd->status.base_level*battle_config.pet_lv_rate/100;
+		int lv = sd->status.base_level * battle_config.pet_lv_rate / 100;
 		if (lv < 0)
 			lv = 1;
 		if (lv != pd->pet.level || opt&SCO_FIRST) {
@@ -2630,7 +2628,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt) {
 
 	// Job bonuses
 	index = pc->class2idx(sd->status.class_);
-	for(i=0;i<(int)sd->status.job_level && i<MAX_LEVEL;i++){
+	for (i = 0; i < sd->status.job_level && i < MAX_LEVEL; i++) {
 		if(!status->dbs->job_bonus[index][i])
 			continue;
 		switch(status->dbs->job_bonus[index][i]) {

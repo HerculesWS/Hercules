@@ -6774,9 +6774,9 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			if (
 				(s_sd->class_&MAPID_UPPERMASK) == MAPID_NOVICE ||
 				(t_sd->class_&MAPID_UPPERMASK) == MAPID_NOVICE ||
-				(int)s_sd->status.base_level < battle_config.pk_min_level ||
-				(int)t_sd->status.base_level < battle_config.pk_min_level ||
-				(battle_config.pk_level_range && abs((int)s_sd->status.base_level - (int)t_sd->status.base_level) > battle_config.pk_level_range)
+				s_sd->status.base_level < battle_config.pk_min_level ||
+				t_sd->status.base_level < battle_config.pk_min_level ||
+				(battle_config.pk_level_range && abs(s_sd->status.base_level - t_sd->status.base_level) > battle_config.pk_level_range)
 			)
 				state &= ~BCT_ENEMY;
 		}

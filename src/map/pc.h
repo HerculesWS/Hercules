@@ -456,8 +456,8 @@ END_ZEROED_BLOCK;
 	int eventtimer[MAX_EVENTTIMER];
 	unsigned short eventcount; // [celest]
 
-	unsigned char change_level_2nd; // job level when changing from 1st to 2nd class [jobchange_level in global_reg_value]
-	unsigned char change_level_3rd; // job level when changing from 2nd to 3rd class [jobchange_level_3rd in global_reg_value]
+	int change_level_2nd; // job level when changing from 1st to 2nd class [jobchange_level in global_reg_value]
+	int change_level_3rd; // job level when changing from 2nd to 3rd class [jobchange_level_3rd in global_reg_value]
 
 	char fakename[NAME_LENGTH]; // fake names [Valaris]
 
@@ -564,7 +564,7 @@ END_ZEROED_BLOCK;
 
 	/* */
 	struct {
-		unsigned int second,third;
+		int second, third;
 	} sktree;
 
 	/**
@@ -795,7 +795,7 @@ struct pc_interface {
 
 BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when status_defaults() is executed */
 	unsigned int exp_table[CLASS_COUNT][2][MAX_LEVEL];
-	unsigned int max_level[CLASS_COUNT][2];
+	int max_level[CLASS_COUNT][2];
 	unsigned int statp[MAX_LEVEL+1];
 	unsigned int level_penalty[3][RC_MAX][MAX_LEVEL*2+1];
 	/* */
@@ -909,15 +909,15 @@ END_ZEROED_BLOCK; /* End */
 	int (*follow) (struct map_session_data *sd, int target_id); // [MouseJstr]
 	int (*stop_following) (struct map_session_data *sd);
 
-	unsigned int (*maxbaselv) (struct map_session_data *sd);
-	unsigned int (*maxjoblv) (struct map_session_data *sd);
+	int (*maxbaselv) (const struct map_session_data *sd);
+	int (*maxjoblv) (const struct map_session_data *sd);
 	int (*checkbaselevelup) (struct map_session_data *sd);
 	int (*checkjoblevelup) (struct map_session_data *sd);
 	bool (*gainexp) (struct map_session_data *sd, struct block_list *src, unsigned int base_exp, unsigned int job_exp, bool is_quest);
-	unsigned int (*nextbaseexp) (struct map_session_data *sd);
-	unsigned int (*thisbaseexp) (struct map_session_data *sd);
-	unsigned int (*nextjobexp) (struct map_session_data *sd);
-	unsigned int (*thisjobexp) (struct map_session_data *sd);
+	unsigned int (*nextbaseexp) (const struct map_session_data *sd);
+	unsigned int (*thisbaseexp) (const struct map_session_data *sd);
+	unsigned int (*nextjobexp) (const struct map_session_data *sd);
+	unsigned int (*thisjobexp) (const struct map_session_data *sd);
 	int (*gets_status_point) (int level);
 	int (*need_status_point) (struct map_session_data *sd,int type,int val);
 	int (*maxparameterincrease) (struct map_session_data* sd, int type);
@@ -958,7 +958,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*changelook) (struct map_session_data *sd,int type,int val);
 	int (*equiplookall) (struct map_session_data *sd);
 
-	int (*readparam) (struct map_session_data *sd,int type);
+	int (*readparam) (const struct map_session_data *sd, int type);
 	int (*setparam) (struct map_session_data *sd,int type,int val);
 	int (*readreg) (struct map_session_data *sd, int64 reg);
 	void (*setreg) (struct map_session_data *sd, int64 reg,int val);

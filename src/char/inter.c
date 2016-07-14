@@ -474,7 +474,7 @@ void mapif_parse_accinfo(int fd)
 				inter->msg_to_fd(fd, u_fd, aid, "Your query returned the following %d results, please be more specific...",(int)SQL->NumRows(inter->sql_handle));
 				while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
 					int class_;
-					short base_level, job_level, online;
+					int base_level, job_level, online;
 					char name[NAME_LENGTH];
 
 					SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
@@ -546,7 +546,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
 		while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
 			char *data;
 			int char_id, class_;
-			short char_num, base_level, job_level, online;
+			int char_num, base_level, job_level, online;
 			char name[NAME_LENGTH];
 
 			SQL->GetData(inter->sql_handle, 0, &data, NULL); char_id = atoi(data);

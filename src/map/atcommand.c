@@ -1368,13 +1368,13 @@ ACMD(baselevelup)
 			clif->message(fd, msg_fd(fd,47)); // Base level can't go any higher.
 			return false;
 		} // End Addition
-		if ((unsigned int)level > pc->maxbaselv(sd) || (unsigned int)level > pc->maxbaselv(sd) - sd->status.base_level) // fix positive overflow
+		if (level > pc->maxbaselv(sd) || level > pc->maxbaselv(sd) - sd->status.base_level) // fix positive overflow
 			level = pc->maxbaselv(sd) - sd->status.base_level;
 		for (i = 0; i < level; i++)
 			status_point += pc->gets_status_point(sd->status.base_level + i);
 
 		sd->status.status_point += status_point;
-		sd->status.base_level += (unsigned int)level;
+		sd->status.base_level += level;
 		status_calc_pc(sd, SCO_FORCE);
 		status_percent_heal(&sd->bl, 100, 100);
 		clif->misceffect(&sd->bl, 0);
@@ -1385,7 +1385,7 @@ ACMD(baselevelup)
 			return false;
 		}
 		level*=-1;
-		if ((unsigned int)level >= sd->status.base_level)
+		if (level >= sd->status.base_level)
 			level = sd->status.base_level-1;
 		for (i = 0; i > -level; i--)
 			status_point += pc->gets_status_point(sd->status.base_level + i - 1);
@@ -1395,7 +1395,7 @@ ACMD(baselevelup)
 			sd->status.status_point = 0;
 		else
 			sd->status.status_point -= status_point;
-		sd->status.base_level -= (unsigned int)level;
+		sd->status.base_level -= level;
 		clif->message(fd, msg_fd(fd,22)); // Base level lowered.
 		status_calc_pc(sd, SCO_FORCE);
 	}
@@ -1426,9 +1426,9 @@ ACMD(joblevelup)
 			clif->message(fd, msg_fd(fd,23)); // Job level can't go any higher.
 			return false;
 		}
-		if ((unsigned int)level > pc->maxjoblv(sd) || (unsigned int)level > pc->maxjoblv(sd) - sd->status.job_level) // fix positive overflow
+		if (level > pc->maxjoblv(sd) || level > pc->maxjoblv(sd) - sd->status.job_level) // fix positive overflow
 			level = pc->maxjoblv(sd) - sd->status.job_level;
-		sd->status.job_level += (unsigned int)level;
+		sd->status.job_level += level;
 		sd->status.skill_point += level;
 		clif->misceffect(&sd->bl, 1);
 		clif->message(fd, msg_fd(fd,24)); // Job level raised.
@@ -1438,9 +1438,9 @@ ACMD(joblevelup)
 			return false;
 		}
 		level *=-1;
-		if ((unsigned int)level >= sd->status.job_level) // fix negative overflow
+		if (level >= sd->status.job_level) // fix negative overflow
 			level = sd->status.job_level-1;
-		sd->status.job_level -= (unsigned int)level;
+		sd->status.job_level -= level;
 		if (sd->status.skill_point < level)
 			pc->resetskill(sd, PCRESETSKILL_NONE); //Reset skills since we need to subtract more points.
 		if (sd->status.skill_point < level)
@@ -2296,30 +2296,18 @@ ACMD(displaystatus)
 ACMD(statuspoint)
 {
 	int point;
-	unsigned int new_status_point;
+	int new_status_point;
 
 	if (!*message || (point = atoi(message)) == 0) {
 		clif->message(fd, msg_fd(fd,1010)); // Please enter a number (usage: @stpoint <number of points>).
 		return false;
 	}
 
-	if(point < 0)
-	{
-		if(sd->status.status_point < (unsigned int)(-point))
-		{
-			new_status_point = 0;
-		}
-		else
-		{
-			new_status_point = sd->status.status_point + point;
-		}
-	}
-	else if(UINT_MAX - sd->status.status_point < (unsigned int)point)
-	{
-		new_status_point = UINT_MAX;
-	}
-	else
-	{
+	if (point < 0 && sd->status.status_point + point < 0) {
+		new_status_point = 0;
+	} else if (point > 0 && (int64)sd->status.status_point + point > INT_MAX) {
+		new_status_point = INT_MAX;
+	} else {
 		new_status_point = sd->status.status_point + point;
 	}
 
@@ -2344,30 +2332,18 @@ ACMD(statuspoint)
 ACMD(skillpoint)
 {
 	int point;
-	unsigned int new_skill_point;
+	int new_skill_point;
 
 	if (!*message || (point = atoi(message)) == 0) {
 		clif->message(fd, msg_fd(fd,1011)); // Please enter a number (usage: @skpoint <number of points>).
 		return false;
 	}
 
-	if(point < 0)
-	{
-		if(sd->status.skill_point < (unsigned int)(-point))
-		{
-			new_skill_point = 0;
-		}
-		else
-		{
-			new_skill_point = sd->status.skill_point + point;
-		}
-	}
-	else if(UINT_MAX - sd->status.skill_point < (unsigned int)point)
-	{
-		new_skill_point = UINT_MAX;
-	}
-	else
-	{
+	if (point < 0 && sd->status.skill_point + point < 0) {
+		new_skill_point = 0;
+	} else if (point > 0 && (int64)sd->status.skill_point + point > INT_MAX) {
+		new_skill_point = INT_MAX;
+	} else {
 		new_skill_point = sd->status.skill_point + point;
 	}
 
@@ -9295,8 +9271,9 @@ ACMD(costume){
 }
 /* for debugging purposes (so users can easily provide us with debug info) */
 /* should be trashed as soon as its no longer necessary */
-ACMD(skdebug) {
-	safesnprintf(atcmd_output, sizeof(atcmd_output),"second: %u; third: %u", sd->sktree.second, sd->sktree.third);
+ACMD(skdebug)
+{
+	safesnprintf(atcmd_output, sizeof(atcmd_output),"second: %d; third: %d", sd->sktree.second, sd->sktree.third);
 	clif->message(fd,atcmd_output);
 	safesnprintf(atcmd_output, sizeof(atcmd_output),"pc_calc_skilltree_normalize_job: %d",pc->calc_skilltree_normalize_job(sd));
 	clif->message(fd,atcmd_output);
