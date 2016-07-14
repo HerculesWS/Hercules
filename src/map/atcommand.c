@@ -2296,30 +2296,18 @@ ACMD(displaystatus)
 ACMD(statuspoint)
 {
 	int point;
-	unsigned int new_status_point;
+	int new_status_point;
 
 	if (!*message || (point = atoi(message)) == 0) {
 		clif->message(fd, msg_fd(fd,1010)); // Please enter a number (usage: @stpoint <number of points>).
 		return false;
 	}
 
-	if(point < 0)
-	{
-		if(sd->status.status_point < (unsigned int)(-point))
-		{
-			new_status_point = 0;
-		}
-		else
-		{
-			new_status_point = sd->status.status_point + point;
-		}
-	}
-	else if(UINT_MAX - sd->status.status_point < (unsigned int)point)
-	{
-		new_status_point = UINT_MAX;
-	}
-	else
-	{
+	if (point < 0 && sd->status.status_point + point < 0) {
+		new_status_point = 0;
+	} else if (point > 0 && (int64)sd->status.status_point + point > INT_MAX) {
+		new_status_point = INT_MAX;
+	} else {
 		new_status_point = sd->status.status_point + point;
 	}
 
@@ -2344,30 +2332,18 @@ ACMD(statuspoint)
 ACMD(skillpoint)
 {
 	int point;
-	unsigned int new_skill_point;
+	int new_skill_point;
 
 	if (!*message || (point = atoi(message)) == 0) {
 		clif->message(fd, msg_fd(fd,1011)); // Please enter a number (usage: @skpoint <number of points>).
 		return false;
 	}
 
-	if(point < 0)
-	{
-		if(sd->status.skill_point < (unsigned int)(-point))
-		{
-			new_skill_point = 0;
-		}
-		else
-		{
-			new_skill_point = sd->status.skill_point + point;
-		}
-	}
-	else if(UINT_MAX - sd->status.skill_point < (unsigned int)point)
-	{
-		new_skill_point = UINT_MAX;
-	}
-	else
-	{
+	if (point < 0 && sd->status.skill_point + point < 0) {
+		new_skill_point = 0;
+	} else if (point > 0 && (int64)sd->status.skill_point + point > INT_MAX) {
+		new_skill_point = INT_MAX;
+	} else {
 		new_skill_point = sd->status.skill_point + point;
 	}
 

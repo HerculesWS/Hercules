@@ -1762,13 +1762,13 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 				if (sd->change_level_3rd == 0) {
 					sd->change_level_2nd = pc->max_level[pc->class2idx(pc->mapid2jobid(sd->class_&MAPID_UPPERMASK, sd->status.sex))][1];
 				} else {
-					sd->change_level_2nd = 1 + skill_point + (int)sd->status.skill_point // FIXME
+					sd->change_level_2nd = 1 + skill_point + sd->status.skill_point
 						- (sd->status.job_level - 1)
 						- (sd->change_level_3rd - 1)
 						- novice_skills;
 				}
 			} else {
-				sd->change_level_2nd = 1 + skill_point + (int)sd->status.skill_point // FIXME
+				sd->change_level_2nd = 1 + skill_point + sd->status.skill_point
 						- (sd->status.job_level - 1)
 						- novice_skills;
 
@@ -1783,7 +1783,7 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 		} else if(sd->class_&JOBL_THIRD) { // limit 3rd class to 2nd class/trans job levels
 			// regenerate change_level_3rd
 			if (sd->change_level_3rd == 0) {
-					sd->change_level_3rd = 1 + skill_point + (int)sd->status.skill_point // FIXME
+					sd->change_level_3rd = 1 + skill_point + sd->status.skill_point
 						- (sd->status.job_level - 1)
 						- (sd->change_level_2nd - 1)
 						- novice_skills;
@@ -6570,14 +6570,15 @@ int pc_checkbaselevelup(struct map_session_data *sd) {
 		return 0;
 
 	do {
+		int status_points = 0;
 		sd->status.base_exp -= next;
 		//Kyoki pointed out that the max overcarry exp is the exp needed for the previous level -1. [Skotlex]
 		if(!battle_config.multi_level_up && sd->status.base_exp > next-1)
 			sd->status.base_exp = next-1;
 
-		next = pc->gets_status_point(sd->status.base_level);
+		status_points = pc->gets_status_point(sd->status.base_level);
 		sd->status.base_level++;
-		sd->status.status_point += next;
+		sd->status.status_point += status_points;
 
 	} while ((next=pc->nextbaseexp(sd)) > 0 && sd->status.base_exp >= next);
 
@@ -6639,7 +6640,7 @@ int pc_checkjoblevelup(struct map_session_data *sd)
 			sd->status.job_exp = next-1;
 
 		sd->status.job_level++;
-		sd->status.skill_point ++;
+		sd->status.skill_point++;
 
 	} while ((next=pc->nextjobexp(sd)) > 0 && sd->status.job_exp >= next);
 

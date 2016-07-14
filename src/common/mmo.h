@@ -570,7 +570,7 @@ struct mmo_charstatus {
 	int bank_vault;
 
 	short class_;
-	unsigned int status_point,skill_point;
+	int status_point, skill_point;
 	int hp,max_hp,sp,max_sp;
 	unsigned int option;
 	short manner; // Defines how many minutes a char will be muted, each negative point is equivalent to a minute.
