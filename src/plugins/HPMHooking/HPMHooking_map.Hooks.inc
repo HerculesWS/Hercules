@@ -4400,15 +4400,15 @@ bool HP_chat_kick(struct map_session_data *sd, const char *kickusername) {
 	}
 	return retVal___;
 }
-bool HP_chat_create_npc_chat(struct npc_data *nd, const char *title, int limit, bool pub, int trigger, const char *ev, int zeny, int minLvl, int maxLvl) {
+bool HP_chat_create_npc_chat(struct npc_data *nd, const char *title, int limit, bool pub, int trigger, const char *ev, int zeny, int min_level, int max_level) {
 	int hIndex = 0;
 	bool retVal___ = false;
 	if( HPMHooks.count.HP_chat_create_npc_chat_pre ) {
-		bool (*preHookFunc) (struct npc_data **nd, const char **title, int *limit, bool *pub, int *trigger, const char **ev, int *zeny, int *minLvl, int *maxLvl);
+		bool (*preHookFunc) (struct npc_data **nd, const char **title, int *limit, bool *pub, int *trigger, const char **ev, int *zeny, int *min_level, int *max_level);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_create_npc_chat_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_chat_create_npc_chat_pre[hIndex].func;
-			retVal___ = preHookFunc(&nd, &title, &limit, &pub, &trigger, &ev, &zeny, &minLvl, &maxLvl);
+			retVal___ = preHookFunc(&nd, &title, &limit, &pub, &trigger, &ev, &zeny, &min_level, &max_level);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -4416,13 +4416,13 @@ bool HP_chat_create_npc_chat(struct npc_data *nd, const char *title, int limit, 
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.chat.create_npc_chat(nd, title, limit, pub, trigger, ev, zeny, minLvl, maxLvl);
+		retVal___ = HPMHooks.source.chat.create_npc_chat(nd, title, limit, pub, trigger, ev, zeny, min_level, max_level);
 	}
 	if( HPMHooks.count.HP_chat_create_npc_chat_post ) {
-		bool (*postHookFunc) (bool retVal___, struct npc_data *nd, const char *title, int limit, bool pub, int trigger, const char *ev, int zeny, int minLvl, int maxLvl);
+		bool (*postHookFunc) (bool retVal___, struct npc_data *nd, const char *title, int limit, bool pub, int trigger, const char *ev, int zeny, int min_level, int max_level);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_create_npc_chat_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_chat_create_npc_chat_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, nd, title, limit, pub, trigger, ev, zeny, minLvl, maxLvl);
+			retVal___ = postHookFunc(retVal___, nd, title, limit, pub, trigger, ev, zeny, min_level, max_level);
 		}
 	}
 	return retVal___;
@@ -4562,15 +4562,15 @@ bool HP_chat_trigger_event(struct chat_data *cd) {
 	}
 	return retVal___;
 }
-struct chat_data* HP_chat_create(struct block_list *bl, const char *title, const char *pass, int limit, bool pub, int trigger, const char *ev, int zeny, int minLvl, int maxLvl) {
+struct chat_data* HP_chat_create(struct block_list *bl, const char *title, const char *pass, int limit, bool pub, int trigger, const char *ev, int zeny, int min_level, int max_level) {
 	int hIndex = 0;
 	struct chat_data* retVal___ = NULL;
 	if( HPMHooks.count.HP_chat_create_pre ) {
-		struct chat_data* (*preHookFunc) (struct block_list **bl, const char **title, const char **pass, int *limit, bool *pub, int *trigger, const char **ev, int *zeny, int *minLvl, int *maxLvl);
+		struct chat_data* (*preHookFunc) (struct block_list **bl, const char **title, const char **pass, int *limit, bool *pub, int *trigger, const char **ev, int *zeny, int *min_level, int *max_level);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_create_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_chat_create_pre[hIndex].func;
-			retVal___ = preHookFunc(&bl, &title, &pass, &limit, &pub, &trigger, &ev, &zeny, &minLvl, &maxLvl);
+			retVal___ = preHookFunc(&bl, &title, &pass, &limit, &pub, &trigger, &ev, &zeny, &min_level, &max_level);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -4578,13 +4578,13 @@ struct chat_data* HP_chat_create(struct block_list *bl, const char *title, const
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.chat.create(bl, title, pass, limit, pub, trigger, ev, zeny, minLvl, maxLvl);
+		retVal___ = HPMHooks.source.chat.create(bl, title, pass, limit, pub, trigger, ev, zeny, min_level, max_level);
 	}
 	if( HPMHooks.count.HP_chat_create_post ) {
-		struct chat_data* (*postHookFunc) (struct chat_data* retVal___, struct block_list *bl, const char *title, const char *pass, int limit, bool pub, int trigger, const char *ev, int zeny, int minLvl, int maxLvl);
+		struct chat_data* (*postHookFunc) (struct chat_data* retVal___, struct block_list *bl, const char *title, const char *pass, int limit, bool pub, int trigger, const char *ev, int zeny, int min_level, int max_level);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_chat_create_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_chat_create_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, bl, title, pass, limit, pub, trigger, ev, zeny, minLvl, maxLvl);
+			retVal___ = postHookFunc(retVal___, bl, title, pass, limit, pub, trigger, ev, zeny, min_level, max_level);
 		}
 	}
 	return retVal___;
@@ -54902,11 +54902,11 @@ int HP_pc_stop_following(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-unsigned int HP_pc_maxbaselv(struct map_session_data *sd) {
+int HP_pc_maxbaselv(const struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned int retVal___ = 0;
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_maxbaselv_pre ) {
-		unsigned int (*preHookFunc) (struct map_session_data **sd);
+		int (*preHookFunc) (const struct map_session_data **sd);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_maxbaselv_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_maxbaselv_pre[hIndex].func;
@@ -54921,7 +54921,7 @@ unsigned int HP_pc_maxbaselv(struct map_session_data *sd) {
 		retVal___ = HPMHooks.source.pc.maxbaselv(sd);
 	}
 	if( HPMHooks.count.HP_pc_maxbaselv_post ) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, struct map_session_data *sd);
+		int (*postHookFunc) (int retVal___, const struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_maxbaselv_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_maxbaselv_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd);
@@ -54929,11 +54929,11 @@ unsigned int HP_pc_maxbaselv(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-unsigned int HP_pc_maxjoblv(struct map_session_data *sd) {
+int HP_pc_maxjoblv(const struct map_session_data *sd) {
 	int hIndex = 0;
-	unsigned int retVal___ = 0;
+	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_maxjoblv_pre ) {
-		unsigned int (*preHookFunc) (struct map_session_data **sd);
+		int (*preHookFunc) (const struct map_session_data **sd);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_maxjoblv_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_maxjoblv_pre[hIndex].func;
@@ -54948,7 +54948,7 @@ unsigned int HP_pc_maxjoblv(struct map_session_data *sd) {
 		retVal___ = HPMHooks.source.pc.maxjoblv(sd);
 	}
 	if( HPMHooks.count.HP_pc_maxjoblv_post ) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, struct map_session_data *sd);
+		int (*postHookFunc) (int retVal___, const struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_maxjoblv_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_maxjoblv_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd);
@@ -55037,11 +55037,11 @@ bool HP_pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned
 	}
 	return retVal___;
 }
-unsigned int HP_pc_nextbaseexp(struct map_session_data *sd) {
+unsigned int HP_pc_nextbaseexp(const struct map_session_data *sd) {
 	int hIndex = 0;
 	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_nextbaseexp_pre ) {
-		unsigned int (*preHookFunc) (struct map_session_data **sd);
+		unsigned int (*preHookFunc) (const struct map_session_data **sd);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_nextbaseexp_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_nextbaseexp_pre[hIndex].func;
@@ -55056,7 +55056,7 @@ unsigned int HP_pc_nextbaseexp(struct map_session_data *sd) {
 		retVal___ = HPMHooks.source.pc.nextbaseexp(sd);
 	}
 	if( HPMHooks.count.HP_pc_nextbaseexp_post ) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, struct map_session_data *sd);
+		unsigned int (*postHookFunc) (unsigned int retVal___, const struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_nextbaseexp_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_nextbaseexp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd);
@@ -55064,11 +55064,11 @@ unsigned int HP_pc_nextbaseexp(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-unsigned int HP_pc_thisbaseexp(struct map_session_data *sd) {
+unsigned int HP_pc_thisbaseexp(const struct map_session_data *sd) {
 	int hIndex = 0;
 	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_thisbaseexp_pre ) {
-		unsigned int (*preHookFunc) (struct map_session_data **sd);
+		unsigned int (*preHookFunc) (const struct map_session_data **sd);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_thisbaseexp_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_thisbaseexp_pre[hIndex].func;
@@ -55083,7 +55083,7 @@ unsigned int HP_pc_thisbaseexp(struct map_session_data *sd) {
 		retVal___ = HPMHooks.source.pc.thisbaseexp(sd);
 	}
 	if( HPMHooks.count.HP_pc_thisbaseexp_post ) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, struct map_session_data *sd);
+		unsigned int (*postHookFunc) (unsigned int retVal___, const struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_thisbaseexp_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_thisbaseexp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd);
@@ -55091,11 +55091,11 @@ unsigned int HP_pc_thisbaseexp(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-unsigned int HP_pc_nextjobexp(struct map_session_data *sd) {
+unsigned int HP_pc_nextjobexp(const struct map_session_data *sd) {
 	int hIndex = 0;
 	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_nextjobexp_pre ) {
-		unsigned int (*preHookFunc) (struct map_session_data **sd);
+		unsigned int (*preHookFunc) (const struct map_session_data **sd);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_nextjobexp_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_nextjobexp_pre[hIndex].func;
@@ -55110,7 +55110,7 @@ unsigned int HP_pc_nextjobexp(struct map_session_data *sd) {
 		retVal___ = HPMHooks.source.pc.nextjobexp(sd);
 	}
 	if( HPMHooks.count.HP_pc_nextjobexp_post ) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, struct map_session_data *sd);
+		unsigned int (*postHookFunc) (unsigned int retVal___, const struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_nextjobexp_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_nextjobexp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd);
@@ -55118,11 +55118,11 @@ unsigned int HP_pc_nextjobexp(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-unsigned int HP_pc_thisjobexp(struct map_session_data *sd) {
+unsigned int HP_pc_thisjobexp(const struct map_session_data *sd) {
 	int hIndex = 0;
 	unsigned int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_thisjobexp_pre ) {
-		unsigned int (*preHookFunc) (struct map_session_data **sd);
+		unsigned int (*preHookFunc) (const struct map_session_data **sd);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_thisjobexp_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_thisjobexp_pre[hIndex].func;
@@ -55137,7 +55137,7 @@ unsigned int HP_pc_thisjobexp(struct map_session_data *sd) {
 		retVal___ = HPMHooks.source.pc.thisjobexp(sd);
 	}
 	if( HPMHooks.count.HP_pc_thisjobexp_post ) {
-		unsigned int (*postHookFunc) (unsigned int retVal___, struct map_session_data *sd);
+		unsigned int (*postHookFunc) (unsigned int retVal___, const struct map_session_data *sd);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_thisjobexp_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_thisjobexp_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd);
@@ -56134,11 +56134,11 @@ int HP_pc_equiplookall(struct map_session_data *sd) {
 	}
 	return retVal___;
 }
-int HP_pc_readparam(struct map_session_data *sd, int type) {
+int HP_pc_readparam(const struct map_session_data *sd, int type) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_readparam_pre ) {
-		int (*preHookFunc) (struct map_session_data **sd, int *type);
+		int (*preHookFunc) (const struct map_session_data **sd, int *type);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_readparam_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_readparam_pre[hIndex].func;
@@ -56153,7 +56153,7 @@ int HP_pc_readparam(struct map_session_data *sd, int type) {
 		retVal___ = HPMHooks.source.pc.readparam(sd, type);
 	}
 	if( HPMHooks.count.HP_pc_readparam_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, int type);
+		int (*postHookFunc) (int retVal___, const struct map_session_data *sd, int type);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_readparam_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_readparam_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, sd, type);
