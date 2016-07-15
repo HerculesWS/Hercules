@@ -138,7 +138,7 @@ int skill_get_index (uint16 skill_id)
 	}
 
 	// validate result
-	if( !skill_id || skill_id >= MAX_SKILL_DB )
+	if( skill_id  <= 0 || skill_id >= MAX_SKILL_DB )
 		return 0;
 
 	return skill_id;
@@ -169,10 +169,11 @@ void skill_chk(uint16* skill_id) {
 } while(0)
 #define skill_glv(lv) min((lv),MAX_SKILL_LEVEL-1)
 // Skill DB
+//FIXME: either follow syntax rules, or turn this to macros [hemagx]
 int skill_get_hit( uint16 skill_id )               { skill_get (skill->dbs->db[skill_id].hit, skill_id); }
 int skill_get_inf( uint16 skill_id )               { skill_get (skill->dbs->db[skill_id].inf, skill_id); }
 int skill_get_ele( uint16 skill_id , uint16 skill_lv )      { Assert_ret(skill_lv > 0); skill_get (skill->dbs->db[skill_id].element[skill_glv(skill_lv-1)], skill_id); }
-int skill_get_nk( uint16 skill_id )                { skill_get (skill->dbs->db[skill_id].nk, skill_id); }
+int skill_get_nk( uint16 skill_id )                { skill_get (skill->dbs->db[skill_id].nk, skill_id); } //bitwise field here, should be uint32 [hemagx]
 int skill_get_max( uint16 skill_id )               { skill_get (skill->dbs->db[skill_id].max, skill_id); }
 int skill_get_range( uint16 skill_id , uint16 skill_lv )    { Assert_ret(skill_lv > 0); skill_get2 (skill->dbs->db[skill_id].range[skill_glv(skill_lv-1)], skill_id, skill_lv); }
 int skill_get_splash( uint16 skill_id , uint16 skill_lv )   { Assert_ret(skill_lv > 0); skill_get2 ( (skill->dbs->db[skill_id].splash[skill_glv(skill_lv-1)]>=0?skill->dbs->db[skill_id].splash[skill_glv(skill_lv-1)]:AREA_SIZE), skill_id, skill_lv);  }
@@ -2234,7 +2235,8 @@ int skill_magic_reflect(struct block_list* src, struct block_list* bl, int type)
  *-------------------------------------------------------------------------*/
 int skill_attack(int attack_type, struct block_list* src, struct block_list *dsrc, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int64 tick, int flag)
 {
-	struct Damage dmg;
+	struct Damage dmg = { 0 };
+	struct battle_skill_data bd = { 0 };
 	struct status_data *sstatus, *tstatus;
 	struct status_change *sc;
 	struct map_session_data *sd, *tsd;
@@ -2270,6 +2272,14 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			)
 		return 0;
 
+	// Fills the structs for battle to calculate damage
+	bd.skill_id = skill_id;
+	bd.skill_level = skill_lv;
+	bd.skill_flag = flag&0xFFF; // FIXME: is &0xFFF correct here? it also passes flags to battle. [hemagx]
+	bd.attack_type = attack_type;
+	bd.src = src;
+	bd.target = bl;
+
 	sstatus = status->get_status_data(src);
 	tstatus = status->get_status_data(bl);
 	sc = status->get_sc(bl);
@@ -2287,7 +2297,7 @@ int skill_attack(int attack_type, struct block_list* src, struct block_list *dsr
 			return 0;
 	}
 
-	dmg = battle->calc_attack(attack_type,src,bl,skill_id,skill_lv,flag&0xFFF);
+	battle->calc_attack(&bd, &dmg);
 
 	//Skotlex: Adjusted to the new system
 	if (src->type == BL_PET) { // [Valaris]
@@ -19523,7 +19533,7 @@ void skill_validate_skilltype(struct config_setting_t *conf, struct s_skill_db *
 		}
 	}
 }
-	
+
 /**
  * Validates "SkillInfo" when reading skill_db.conf
  * @param conf   struct, pointer to skill configuration
@@ -20435,7 +20445,7 @@ void skill_validate_additional_fields(struct config_setting_t *conf, struct s_sk
 bool skill_validate_skilldb(struct s_skill_db *sk, const char *source)
 {
 	int idx;
-	
+
 	nullpo_retr(false, sk);
 	idx = skill->get_index(sk->nameid);
 	if (idx  == 0) {
@@ -20453,10 +20463,10 @@ bool skill_validate_skilldb(struct s_skill_db *sk, const char *source)
 	strdb_iput(skill->name2id_db, skill->dbs->db[idx].name, skill->dbs->db[idx].nameid);
 	/* Set Name to Id script constants */
 	script->set_constant2(skill->dbs->db[idx].name, (int)skill->dbs->db[idx].nameid, false, false);
-	
+
 	return true;
 }
-	
+
 /**
  * Reads skill_db.conf from relative filepath and processes [ Smokexyz/Hercules ]
  * entries into the skill database.
@@ -20470,11 +20480,11 @@ bool skill_read_skilldb(const char *filename)
 	char filepath[256];
 	int count=0, index=0;
 	bool duplicate[MAX_SKILL] = {0};
-	
+
 	nullpo_retr(false, filename);
 
 	sprintf(filepath,"db/%s",filename);
-	
+
 	if (!libconfig->load_file(&skilldb, filepath)) {
 		return false; // Libconfig error report.
 	}
@@ -20496,9 +20506,9 @@ bool skill_read_skilldb(const char *filename)
 			ShowError("skill_read_skilldb: Skill Id not specified for entry %d in '%s', skipping...\n", index, filepath );
 			continue;
 		}
-		
+
 		tmp_db.nameid = skill_id;
-		
+
 		if((idx = skill->get_index(skill_id)) == 0) {
 			ShowError("skill_read_skilldb: Skill Id %d is out of range, or within a reserved range (for guild, homunculus, mercenary or elemental skills). skipping...\n", idx);
 			continue;
@@ -20508,7 +20518,7 @@ bool skill_read_skilldb(const char *filename)
 			ShowWarning("skill_read_skilldb: Duplicate Skill Id %d in entry %d in '%s', skipping...\n", skill_id, index, filepath);
 			continue;
 		}
-		
+
 		/* Skill Name Constant */
 		if (!libconfig->setting_lookup_mutable_string(conf, "Name", tmp_db.name, sizeof(tmp_db.name))) {
 			ShowError("skill_read_skilldb: Name not specified for skill Id %d in '%s', skipping...\n", skill_id, filepath);
@@ -20698,12 +20708,12 @@ bool skill_read_skilldb(const char *filename)
 
 		/* Additional Fields for Plugins */
 		skill->validate_additional_fields(conf, &tmp_db);
-		
+
 		// Validate the skill entry, add it to the duplicate array and increment count on success.
 		if ((duplicate[idx] = skill->validate_skilldb(&tmp_db, filepath)))
 			count++;
 	}
-	
+
 	libconfig->destroy(&skilldb);
 
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
@@ -20735,7 +20745,7 @@ void skill_readdb(bool minimal)
 	safestrncpy(skill->dbs->db[0].desc, "Unknown Skill", sizeof(skill->dbs->db[0].desc));
 
 	itemdb->name_constants(); // refresh ItemDB constants before loading of skills
-	
+
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = DBPATH"skill_db.conf";
 #endif // ENABLE_CASE_CHECK
@@ -20746,7 +20756,7 @@ void skill_readdb(bool minimal)
 
 	if (minimal)
 		return;
-	
+
 	skill->init_unit_layout();
 	sv->readdb(map->db_path, "produce_db.txt",               ',',   4, 4+2*MAX_PRODUCE_RESOURCE,       MAX_SKILL_PRODUCE_DB, skill->parse_row_producedb);
 	sv->readdb(map->db_path, "create_arrow_db.txt",          ',', 1+2,   1+2*MAX_ARROW_RESOURCE,         MAX_SKILL_ARROW_DB, skill->parse_row_createarrowdb);

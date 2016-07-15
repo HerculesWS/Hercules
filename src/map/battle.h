@@ -52,7 +52,7 @@ struct status_data;
  * Enumerations
  **/
 
-enum {
+enum battle_flag {
 	// Flag of the final calculation
 	BF_WEAPON     = 0x0001,
 	BF_MAGIC      = 0x0002,
@@ -115,6 +115,11 @@ enum battle_dmg_type {
 	//BDT_TOUCH       = 12, // (touch skill?)
 };
 
+enum battle_special_flags {
+	BSF_IGNORE_PLANT        = 0x1, ///< Ignore plant type reducment to 1 damage
+	BSF_SPECIAL_CALCULATION = 0x2, ///< In case a skill need to do it's own damage calculation process
+};
+
 /**
  * Structures
  **/
@@ -125,8 +130,12 @@ struct Damage {
 	int type,div_; //chk clif_damage for type @TODO add an enum ? ;  nb of hit
 	int amotion,dmotion;
 	int blewcount; //nb of knockback
-	int flag; //chk BF_* flag, (enum below)
+	uint32 flag; //chk BF_* flag, (enum below)
 	enum damage_lv dmg_lv; //ATK_LUCKY,ATK_FLEE,ATK_DEF
+	uint32 special_flags; //enum battle_special_flags
+	uint32 nk; //nk field from skill databse look at skill.h
+	int skill_element;
+	int redirect_skill_id;
 };
 
 struct Battle_Config {
@@ -577,12 +586,35 @@ struct delay_damage {
 	enum bl_type src_type;
 };
 
+struct battle_skill_data {
+	struct block_list *src;
+	struct block_list *target;
+	int attack_type;
+	int skill_id;
+	int skill_level;
+	uint32 skill_flag; // FIXME: this also holds targets countand many bitmasks that can conflict [hemagx]
+};
+
+/**
+ * Functions Typedefs
+ **/
+typedef void (BattleSkillFunc) (const struct battle_skill_data *bd, struct Damage *dmg);
+
+/**
+ * Battle Additional Data Interface
+ **/
+struct battle_interface_dbs {
+	BattleSkillFunc *BattleSkillList[MAX_SKILL];
+};
+
+
 /**
  * Battle.c Interface
  **/
 struct battle_interface {
 	/* */
 	struct Battle_Config *bc;
+	struct battle_interface_dbs *dbs;
 	/* */
 	int attr_fix_table[4][ELE_MAX][ELE_MAX];
 	struct eri *delay_damage_ers; //For battle delay damage structures.
@@ -591,7 +623,7 @@ struct battle_interface {
 	/* final */
 	void (*final) (void);
 	/* damage calculation */
-	struct Damage (*calc_attack) (int attack_type, struct block_list *bl, struct block_list *target, uint16 skill_id, uint16 skill_lv, int count);
+	void (*calc_attack) (const struct battle_skill_data *bd, struct Damage *dmg);
 	/* generic final damage calculation */
 	int64 (*calc_damage) (struct block_list *src, struct block_list *bl, struct Damage *d, int64 damage, uint16 skill_id, uint16 skill_lv);
 	/* pc special damage calculation */
@@ -604,8 +636,6 @@ struct battle_interface {
 	enum damage_lv (*weapon_attack) (struct block_list *bl, struct block_list *target, int64 tick, int flag);
 	/* check is equipped ammo and this ammo allowed */
 	bool (*check_arrows) (struct map_session_data *sd);
-	/* calculate weapon attack */
-	struct Damage (*calc_weapon_attack) (struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int wflag);
 	/* delays damage or skills by a timer */
 	int (*delay_damage) (int64 tick, int amotion, struct block_list *src, struct block_list *target, int attack_type, uint16 skill_id, uint16 skill_lv, int64 damage, enum damage_lv dmg_lv, int ddelay, bool additional_effects);
 	/* drain damage */
@@ -660,8 +690,9 @@ struct battle_interface {
 	int (*range_type) (struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv);
 	int64 (*calc_base_damage) (struct block_list *src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, int nk, bool n_ele, short s_ele, short s_ele_, int type, int flag, int flag2);
 	int64 (*calc_base_damage2) (struct status_data *st, struct weapon_atk *wa, struct status_change *sc, unsigned short t_size, struct map_session_data *sd, int flag);
-	struct Damage (*calc_misc_attack) (struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int mflag);
+	void (*calc_misc_attack) (const struct battle_skill_data *bd, struct Damage *dmg);
 	struct Damage (*calc_magic_attack) (struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int mflag);
+	struct Damage (*calc_weapon_attack) (struct block_list *src,struct block_list *target,uint16 skill_id,uint16 skill_lv,int mflag);
 	int (*adjust_skill_damage) (int m, unsigned short skill_id);
 	int64 (*add_mastery) (struct map_session_data *sd,struct block_list *target,int64 dmg,int type);
 	int (*calc_drain) (int64 damage, int rate, int per);
@@ -680,7 +711,10 @@ struct battle_interface {
 	void (*calc_masteryfix_unknown) (struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int64 *damage, int *div, bool *left, bool *weapon);
 	void (*calc_skillratio_magic_unknown) (int *attack_type, struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *skillratio, int *flag);
 	void (*calc_skillratio_weapon_unknown) (int *attack_type, struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *skillratio, int *flag);
-	void (*calc_misc_attack_unknown) (struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *mflag, struct Damage *md);
+	bool (*init_damage) (const struct battle_skill_data *bd, struct Damage *dmg);
+	bool (*call_skillfunction_sub) (int skill_index, const struct battle_skill_data *bd, struct Damage *dmg);
+	bool (*call_skillfunction) (const struct battle_skill_data *bd, struct Damage *dmg);
+	void (*load_skillfunctionlist) (void);
 };
 
 #ifdef HERCULES_CORE
