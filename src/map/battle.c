@@ -3905,23 +3905,22 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
  *------------------------------------------*/
 void battle_calc_misc_attack(const struct battle_skill_data *bd, struct Damage *dmg)
 {
-	int i = 0;
-
-	struct map_session_data *sd;
-	const struct status_data *sstatus, *tstatus;
-	const struct status_change *tsc;
+	int bonus = 0;
+	struct map_session_data *src_sd;
+	const struct status_data *src_status, *target_status;
+	const struct status_change *target_sc;
 
 	nullpo_retv(bd);
 	nullpo_retv(dmg);
 
-	sd = BL_CAST(BL_PC, bd->src);
-	sstatus = status->get_status_data(bd->src);
-	tstatus = status->get_status_data(bd->target);
-	tsc = status->get_sc(bd->target);
+	src_sd = BL_CAST(BL_PC, bd->src);
+	src_status = status->get_status_data(bd->src);
+	target_status = status->get_status_data(bd->target);
+	target_sc = status->get_sc(bd->target);
 
-	if(sd) {
-		sd->state.arrow_atk = 0;
-		dmg->blewcount += battle->blewcount_bonus(sd, bd->skill_id);
+	if (src_sd != NULL) {
+		src_sd->state.arrow_atk = 0;
+		dmg->blewcount += battle->blewcount_bonus(src_sd, bd->skill_id);
 	}
 
 	if (dmg->nk&NK_SPLASHSPLIT) { // Divide ATK among targets
@@ -3933,18 +3932,17 @@ void battle_calc_misc_attack(const struct battle_skill_data *bd, struct Damage *
 
 	damage_div_fix(dmg->damage, dmg->div_);
 
-	if (!(dmg->nk&NK_IGNORE_FLEE))
-	{
-		i = 0; //Temp for "hit or no hit"
-		if(tsc && tsc->opt1 && tsc->opt1 != OPT1_STONEWAIT && tsc->opt1 != OPT1_BURNING)
-			i = 1;
-		else {
-			short
-				flee = tstatus->flee,
+	if (!(dmg->nk&NK_IGNORE_FLEE)) {
+		bool has_hit = false;
+		if (target_sc != NULL && target_sc->opt1 && target_sc->opt1 != OPT1_STONEWAIT && target_sc->opt1 != OPT1_BURNING) {
+			has_hit = true;
+		} else {
+			short flee = target_status->flee;
+			short hitrate;
 #ifdef RENEWAL
-				hitrate = 0; //Default hitrate
+			hitrate = 0; //Default hitrate
 #else
-				hitrate = 80; //Default hitrate
+			hitrate = 80; //Default hitrate
 #endif
 
 			if(battle_config.agi_penalty_type && battle_config.agi_penalty_target&bd->target->type) {
@@ -3960,10 +3958,10 @@ void battle_calc_misc_attack(const struct battle_skill_data *bd, struct Damage *
 				}
 			}
 
-			hitrate+= sstatus->hit - flee;
+			hitrate += src_status->hit - flee;
 #ifdef RENEWAL
-			if( sd ) //in Renewal hit bonus from Vultures Eye is not anymore shown in status window
-				hitrate += pc->checkskill(sd,AC_VULTURE);
+			if (src_sd != NULL) //in Renewal hit bonus from Vultures Eye is not anymore shown in status window
+				hitrate += pc->checkskill(src_sd,AC_VULTURE);
 #endif
 			if( bd->skill_id == KO_MUCHANAGE )
 				hitrate = (int)((10 - ((float)1 / (status_get_dex(bd->src) + status_get_luk(bd->src))) * 500) * ((float)bd->skill_level / 2 + 5));
@@ -3971,15 +3969,16 @@ void battle_calc_misc_attack(const struct battle_skill_data *bd, struct Damage *
 			hitrate = cap_value(hitrate, battle_config.min_hitrate, battle_config.max_hitrate);
 
 			if(rnd()%100 < hitrate)
-				i = 1;
+				has_hit = true;
 		}
-		if (!i) {
+		if (!has_hit) {
 			dmg->damage = 0;
 			dmg->dmg_lv = ATK_FLEE;
 		}
 	}
 #ifndef HMAP_ZONE_DAMAGE_CAP_TYPE
 	if (bd->skill_id) {
+		int i;
 		for (i = 0; i < map->list[bd->target->m].zone->capped_skills_count; i++) {
 			if (bd->skill_id == map->list[bd->target->m].zone->capped_skills[i]->nameid && (map->list[bd->target->m].zone->capped_skills[i]->type & bd->target->type)) {
 				if (bd->target->type == BL_MOB && map->list[bd->target->m].zone->capped_skills[i]->subtype != MZS_NONE) {
@@ -4002,20 +4001,20 @@ void battle_calc_misc_attack(const struct battle_skill_data *bd, struct Damage *
 	dmg->damage = battle->calc_cardfix(BF_MISC, bd->src, bd->target, dmg->nk, dmg->skill_element, 0, dmg->damage, 0, dmg->flag);
 	dmg->damage = battle->calc_cardfix2(bd->src, bd->target, dmg->damage, dmg->skill_element, dmg->nk, dmg->flag);
 
-	if (sd && (i = pc->skillatk_bonus(sd, dmg->redirect_skill_id)) != 0)
-		dmg->damage += dmg->damage * i / 100;
+	if (src_sd != NULL && (bonus = pc->skillatk_bonus(src_sd, dmg->redirect_skill_id)) != 0)
+		dmg->damage += dmg->damage * bonus / 100;
 
-	if ((i = battle->adjust_skill_damage(bd->src->m, bd->skill_id)) != 0)
-		dmg->damage = dmg->damage * i / 100;
+	if ((bonus = battle->adjust_skill_damage(bd->src->m, bd->skill_id)) != 0)
+		dmg->damage = dmg->damage * bonus / 100;
 
 	if (dmg->damage < 0)
 		dmg->damage = 0;
 
-	if (dmg->damage > 0 && tstatus->mode&MD_PLANT && !(dmg->special_flags&BSF_IGNORE_PLANT))
+	if (dmg->damage > 0 && target_status->mode&MD_PLANT && !(dmg->special_flags&BSF_IGNORE_PLANT))
 		dmg->damage = 1;
 
 	if (!(dmg->nk&NK_NO_ELEFIX))
-		dmg->damage = battle->attr_fix(bd->src, bd->target, dmg->damage, dmg->skill_element, tstatus->def_ele, tstatus->ele_lv);
+		dmg->damage = battle->attr_fix(bd->src, bd->target, dmg->damage, dmg->skill_element, target_status->def_ele, target_status->ele_lv);
 
 	dmg->damage = battle->calc_damage(bd->src, bd->target, dmg, dmg->damage, bd->skill_id, bd->skill_level);
 
@@ -5419,12 +5418,12 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
  *------------------------------------------*/
 void battle_calc_attack(const struct battle_skill_data *bd, struct Damage *dmg)
 {
-	struct map_session_data *sd;
+	struct map_session_data *src_sd;
 
 	nullpo_retv(bd);
 	nullpo_retv(dmg);
 
-	sd = BL_CAST(BL_PC, bd->src);
+	src_sd = BL_CAST(BL_PC,bd->src);
 
 	if (bd->attack_type == BF_MISC) { //Currently only BF_MISC is refactored
 		if (!battle->init_damage(bd, dmg))
@@ -5479,21 +5478,23 @@ void battle_calc_attack(const struct battle_skill_data *bd, struct Damage *dmg)
 		if (dmg->dmg_lv == ATK_DEF /*&& attack_type&(BF_MAGIC|BF_MISC)*/) // Isn't it that additional effects don't apply if miss?
 			dmg->dmg_lv = ATK_MISS;
 		dmg->dmotion = 0;
-	} else // Some skills like Weaponry Research will cause damage even if attack is dodged
+	} else {
+		// Some skills like Weaponry Research will cause damage even if attack is dodged
 		dmg->dmg_lv = ATK_DEF;
+	}
 
-	if (sd != NULL && dmg->damage + dmg->damage2 > 1) {
+	if (src_sd != NULL && dmg->damage + dmg->damage2 > 1) {
 		// HPVanishRate
-		if (sd->bonus.hp_vanish_rate && sd->bonus.hp_vanish_trigger && rnd() % 1000 < sd->bonus.hp_vanish_rate &&
-			((dmg->flag&sd->bonus.hp_vanish_trigger&BF_WEAPONMASK) || (dmg->flag&sd->bonus.hp_vanish_trigger&BF_RANGEMASK)
-			|| (dmg->flag&sd->bonus.hp_vanish_trigger&BF_SKILLMASK)))
-			status_percent_damage(&sd->bl, bd->target, -sd->bonus.hp_vanish_per, 0, false);
+		if (src_sd->bonus.hp_vanish_rate && src_sd->bonus.hp_vanish_trigger && rnd() % 1000 < src_sd->bonus.hp_vanish_rate &&
+			((dmg->flag&src_sd->bonus.hp_vanish_trigger&BF_WEAPONMASK) || (dmg->flag&src_sd->bonus.hp_vanish_trigger&BF_RANGEMASK)
+			|| (dmg->flag&src_sd->bonus.hp_vanish_trigger&BF_SKILLMASK)))
+			status_percent_damage(&src_sd->bl, bd->target, -src_sd->bonus.hp_vanish_per, 0, false);
 
 		// SPVanishRate
-		if (sd->bonus.sp_vanish_rate && sd->bonus.sp_vanish_trigger && rnd() % 1000 < sd->bonus.sp_vanish_rate &&
-			((dmg->flag&sd->bonus.sp_vanish_trigger&BF_WEAPONMASK) || (dmg->flag&sd->bonus.sp_vanish_trigger&BF_RANGEMASK)
-			|| (dmg->flag&sd->bonus.sp_vanish_trigger&BF_SKILLMASK)))
-			status_percent_damage(&sd->bl, bd->target, 0, -sd->bonus.sp_vanish_per, false);
+		if (src_sd->bonus.sp_vanish_rate && src_sd->bonus.sp_vanish_trigger && rnd() % 1000 < src_sd->bonus.sp_vanish_rate &&
+			((dmg->flag&src_sd->bonus.sp_vanish_trigger&BF_WEAPONMASK) || (dmg->flag&src_sd->bonus.sp_vanish_trigger&BF_RANGEMASK)
+			|| (dmg->flag&src_sd->bonus.sp_vanish_trigger&BF_SKILLMASK)))
+			status_percent_damage(&src_sd->bl, bd->target, 0, -src_sd->bonus.sp_vanish_per, false);
 	}
 }
 
