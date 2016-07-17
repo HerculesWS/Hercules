@@ -73,7 +73,7 @@ if ($dir) {
 $debug = (issetarg("-dbg") || issetarg("--with-debug"));
 
 if ($debug) {
-	print "\033[0;33mDebug Mode Enabled.\033[0;0m\n";
+	print "\033[0mDebug Mode Enabled.\n";
 	$t_init = microtime_float();
 }
 
@@ -108,9 +108,9 @@ if($constants) array_push($file_check, DIRPATH."item_db.conf");
 
 foreach($file_check as $file) {
 	if(file_exists($file))
-		print $file." - \033[0;32mFound\033[0;0m\n";
+		print $file." - Found\n";
 	else
-		die($file." - \033[0;31mNot Found!\033[0;0m\n");
+		die($file." - Not Found!\n");
 }
 
 if ($constants) {
@@ -124,7 +124,7 @@ if ($constants) {
 $i=0;
 $file="skill_require_db.txt";
 $requiredb = fopen(DIRPATH.$file, "r") or die("Unable to open '".DIRPATH.$file."'.\n");
-print "\033[0;32mReading\033[0;0m '".DIRPATH.$file."' ...\n";
+print "Reading '".DIRPATH.$file."' ...\n";
 while(!feof($requiredb))
 {
 	$line = fgets($requiredb);
@@ -153,13 +153,13 @@ while(!feof($requiredb))
 	$i++;
 }
 if ($debug) {
-	print "\033[0;34m[Debug]\033[0;0m Read require_db Memory: ".print_mem()."\n";
+	print "[Debug] Read require_db Memory: ".print_mem()."\n";
 }
 fclose($requiredb);
 
 $file="skill_cast_db.txt";
 $skillcastdb = fopen(DIRPATH.$file, "r") or die("Unable to open '".DIRPATH.$file."'.\n");
-print "\033[0;32mReading\033[0;0m '".DIRPATH.$file."' ...\n";
+print "Reading '".DIRPATH.$file."' ...\n";
 $i=0;
 while(!feof($skillcastdb))
 {
@@ -179,13 +179,13 @@ while(!feof($skillcastdb))
 	$i++;
 }
 if($debug) {
-	print "\033[0;34m[Debug]\033[0;0m Read cast_db Memory: ".print_mem()."\n";
+	print "[Debug] Read cast_db Memory: ".print_mem()."\n";
 }
 fclose($skillcastdb);
 
 $file="skill_castnodex_db.txt";
 $castnodex = fopen(DIRPATH.$file, "r") or die("Unable to open '".DIRPATH.$file."'.\n");
-print "\033[0;32mReading\033[0;0m '".DIRPATH.$file."' ...\n";
+print "Reading '".DIRPATH.$file."' ...\n";
 $i=0;
 while(!feof($castnodex))
 {
@@ -199,7 +199,7 @@ while(!feof($castnodex))
 	$i++;
 }
 if($debug) {
-	print "\033[0;34m[Debug]\033[0;0m Read cast_nodex Memory: ".print_mem()."\n";
+	print "[Debug] Read cast_nodex Memory: ".print_mem()."\n";
 }
 fclose($castnodex);
 
@@ -212,7 +212,7 @@ if ($constants)  {
 	$file = "item_db.conf";
 	if(file_exists(DIRPATH.$file)) {
 		$itemconf = fopen(DIRPATH.$file, "r") or die ("Unable to open '".DIRPATH.$file."'.\n");
-		print "\033[0;32mReading\033[0;0m '".DIRPATH.$file."' ...\n";
+		print "Reading '".DIRPATH.$file."' ...\n";
 
 		$started = false;
 		$i=0;
@@ -241,7 +241,7 @@ if ($constants)  {
 			}
 		}
 		if($debug) {
-			print "\033[0;34m[Debug]\033[0;0m Read item_db Memory: ".print_mem()."\n";
+			print "[Debug] Read item_db Memory: ".print_mem()."\n";
 		}
 		fclose($itemconf);
 	} else {
@@ -256,7 +256,7 @@ if ($constants)  {
 $i=0;
 $file="skill_unit_db.txt";
 $unitdb = fopen(DIRPATH.$file, "r") or die("Unable to open '".DIRPATH.$file."'.\n");
-print "\033[0;32mReading\033[0;0m '".DIRPATH.$file."' ...\n";
+print "Reading '".DIRPATH.$file."' ...\n";
 while(!feof($unitdb)) {
 	$line = fgets($unitdb);
 	if(substr($line, 0, 2) == "//" || strlen($line) < 10) continue;
@@ -273,7 +273,7 @@ while(!feof($unitdb)) {
 	$i++;
 }
 if($debug) {
-	print "\033[0;34m[Debug]\033[0;0m Read unit_db Memory: ".print_mem()."\n";
+	print "[Debug] Read unit_db Memory: ".print_mem()."\n";
 }
 fclose($unitdb);
 
@@ -285,7 +285,7 @@ $putsk .= "skill_db: (\n";
 // Get Main Skilldb File
 $file="skill_db.txt";
 $skmain = fopen(DIRPATH.$file, "r") or die("Unable to open '".DIRPATH.$file."'.\n");
-print "\033[0;32mReading\033[0;0m '".DIRPATH.$file."' ...\n";
+print "Reading '".DIRPATH.$file."' ...\n";
 $linecount = 0;
 
 // Get Number of entries
@@ -295,7 +295,7 @@ while(!feof($skmain)) {
 	$linecount++;
 }
 if($debug) {
-	print "\033[0;34m[Debug]\033[0;0m Read skill_db Memory: ".print_mem()."\n";
+	print "[Debug] Read skill_db Memory: ".print_mem()."\n";
 }
 fclose($skmain);
 print $linecount." entries found in skill_db.txt.\n";
@@ -460,7 +460,7 @@ show_status($linecount, $linecount);
  * Print final messages and exit the script, conversion has completed.
  */
 print "\n";
-print "The skill database has been \033[1;32msuccessfully\033[0m converted to Hercules' libconfig\n";
+print "The skill database has been successfully converted to Hercules' libconfig\n";
 print "format and has been saved as '".DIRPATH."skill_db.conf'.\n";
 print "The following files are now deprecated and can be deleted -\n";
 print DIRPATH."skill_db.txt\n";
@@ -472,8 +472,8 @@ $putsk .=  ")";
 $skconf = "skill_db.conf";
 file_put_contents(DIRPATH.$skconf, $putsk);
 if($debug) {
-	print "\033[0;34m[Debug]\033[0;0m Memory after converting: ".print_mem()."\n";
-	print "\033[0;34m[Debug]\033[0;0m Execution Time : ".(microtime_float()-$t_init)."s\n";
+	print "[Debug] Memory after converting: ".print_mem()."\n";
+	print "[Debug] Execution Time : ".(microtime_float()-$t_init)."s\n";
 }
 fclose($skmain);
 
@@ -492,7 +492,7 @@ function show_status($done, $total) {
 	$perc = floor($perc/2);
 	$left = 50-$perc;
 	$finalperc = $perc * 2;
-	$write = sprintf("\033[0G\033[2K[%'={$perc}s>%-{$left}s] - $finalperc%% - $done/$total", "", "");
+	$write = sprintf("[%'={$perc}s>%-{$left}s] - $finalperc%% - $done/$total\r", "", "");
 	fwrite(STDERR, $write);
 }
 function get_element($ele,$id)
@@ -512,7 +512,7 @@ function get_element($ele,$id)
 		case 7:  return "Ele_Dark";
 		case 8:  return "Ele_Ghost";
 		case 9:  return "Ele_Undead";
-		default: print "\r\033[0;31mWarning\033[0;0mUnknown Element ".$ele." provided for skill Id ".$id."\n";
+		default: print "\rWarningUnknown Element ".$ele." provided for skill Id ".$id."\n";
 	}
 
 	return NULL;
@@ -653,7 +653,7 @@ function getstate($state,$id)
 	else if( strcmp($state,"mh_fighting")         == 0 ) return "MH_Fighting";
 	else if( strcmp($state,"mh_grappling")        == 0 ) return "MH_Grappling";
 	else if( strcmp($state,"peco")                == 0 ) return "Peco";
-	else print "\r\033[0;31mWarning\033[0;0m - Invalid State ".$state." provided for Skill ID ".$id.", please correct this manually.\n";
+	else print "\rWarning - Invalid State ".$state." provided for Skill ID ".$id.", please correct this manually.\n";
 }
 
 function getinf($inf)
@@ -745,7 +745,7 @@ function getnocast($opt, $id)
 	);
 
 	if($opt > array_sum($bitmask) || $opt < 0)
-		print "\r\033[0;31mWarning\033[0;0m - a bitmask for CastNoDex entry for skill ID ".$id." is higher than total of masks or lower than 0.";
+		print "\rWarning - a bitmask for CastNoDex entry for skill ID ".$id." is higher than total of masks or lower than 0.";
 
 	$retval = "{\n";
 	foreach($bitmask as $key => $val) {
@@ -799,7 +799,7 @@ function getweapontypes($list, $id)
 		for($i=0; $i<sizeof($type); $i++) {
 			$wmask |= 1<<$type[$i];
 			if($type[$i] > 30 || $type[$i] < 0)
-				print "\r\033[0;31mWarning\033[0;0m - Invalid weapon type ".$i." for skill ID ".$id."\n";
+				print "\rWarning - Invalid weapon type ".$i." for skill ID ".$id."\n";
 		}
 		$retval = "{\n";
 		for($j=0; $j<sizeof($type); $j++) {
@@ -835,7 +835,7 @@ function getammotypes($list, $id) {
 		for($i=0; $i<sizeof($type); $i++) {
 			$wmask |= 1<<$type[$i];
 			if($type[$i] > 9 || $type[$i] < 1) {
-				print "\r\033[0;31mWarning\033[0;0m - Invalid weapon type ".$i." for skill ID ".$id."\n";
+				print "\rWarning - Invalid weapon type ".$i." for skill ID ".$id."\n";
 			}
 		}
 		$retval = "{\n";
@@ -883,7 +883,7 @@ function getunitflag($flag, $id)
 	}
 
 	if($flag > array_sum($bitmask))
-		print "\r\033[0;31mWarning\033[0;0m - Invalid Unit Flag ".$flag." provided for skill Id ".$id."\n";
+		print "\rWarning - Invalid Unit Flag ".$flag." provided for skill Id ".$id."\n";
 
 	$ret .= "\t\t}";
 
@@ -913,7 +913,7 @@ function gethelp()
 	print "\t-dbg    [--with-debug]       print debug information.\n";
 	print "\t-h      [--help]             to display this help text.\n\n";
 	print "----------------------- Additional Notes ----------------------\n";
-	print "\033[0;31mImportant!\033[0;0m\n";
+	print "Important!\n";
 	print "* Please be advised that either and only one of the arguments -re/-pre-re\n";
 	print "  must be specified on execution.\n";
 	print "* When using the -dir option, -re/-pre-re options must be specified. \n";
@@ -923,8 +923,8 @@ function gethelp()
 	print "  from any of the directories that it reads from or prints to.\n\n";
 	print "* Prior to using this tool, please ensure at least 30MB of free RAM.\n";
 	print "----------------------- Usage Example -------------------------\n";
-	print "- \033[0;32mRenewal Conversion\033[0;0m: php skilldbconverter.php --renewal\n";
-	print "- \033[0;32mPre-renewal Conversion\033[0;0m: php skilldbconverter.php --pre-renewal\n";
+	print "- Renewal Conversion: php skilldbconverter.php --renewal\n";
+	print "- Pre-renewal Conversion: php skilldbconverter.php --pre-renewal\n";
 	print "----------------------------------------------------------------\n";
 	exit;
 }
@@ -937,8 +937,8 @@ function printcredits()
 	print "     |  _  |/ _ \ '__/ __| | | | |/ _ \/ __|\n";
 	print "     | | | |  __/ | | (__| |_| | |  __/\__ \ \n";
 	print "     \_| |_/\___|_|  \___|\__,_|_|\___||___/\n";
-	print "\033[0;36mHercules Skill Database TXT to Libconfig Converter by Smokexyz\033[0m\n";
-	print "Copyright (C) 2016  \033[0;32mHercules\033[0m\n";
+	print "Hercules Skill Database TXT to Libconfig Converter by Smokexyz\n";
+	print "Copyright (C) 2016  Hercules\n";
 	print "-----------------------------------------------\n\n";
 }
 
