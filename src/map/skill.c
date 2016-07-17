@@ -20261,12 +20261,6 @@ bool skill_read_skilldb(const char *filename)
 
 /*===============================
  * DB reading.
- * skill_db.txt
- * skill_require_db.txt
- * skill_cast_db.txt
- * skill_castnodex_db.txt
- * skill_nocast_db.txt
- * skill_unit_db.txt
  * produce_db.txt
  * create_arrow_db.txt
  * abra_db.txt
@@ -20289,7 +20283,6 @@ void skill_readdb(bool minimal) {
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = DBPATH"skill_db.conf";
 #endif // ENABLE_CASE_CHECK
-	//sv->readdb(map->db_path, DBPATH"skill_db.txt",           ',',  17,                       17,               MAX_SKILL_DB, skill->parse_row_skilldb);
 	skill->read_skilldb(DBPATH"skill_db.conf");
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = NULL;
