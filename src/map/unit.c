@@ -1053,8 +1053,10 @@ int unit_can_move(struct block_list *bl) {
 	if (!ud)
 		return 0;
 
-	if (ud->skilltimer != INVALID_TIMER && ud->skill_id != LG_EXEEDBREAK && (!sd || !pc->checkskill(sd, SA_FREECAST) || skill->get_inf2(ud->skill_id)&INF2_GUILD_SKILL))
+	if (ud->skilltimer != INVALID_TIMER && ud->skill_id != LG_EXEEDBREAK &&
+	    (!sd || (!pc->checkskill(sd, SA_FREECAST) && (skill->get_inf2(ud->skill_id) & (INF2_GUILD_SKILL | INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) == 0))) {
 		return 0; // prevent moving while casting
+	}
 
 	if (DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0)
 		return 0;
@@ -1629,7 +1631,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		if (src->id != target->id) // self-targeted skills shouldn't show different direction
 			unit->setdir(src, map->calc_dir(src, target->x, target->y));
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_id, src->id, 0 );
-		if( sd && (pc->checkskill(sd,SA_FREECAST) > 0 || skill_id == LG_EXEEDBREAK) )
+		if (sd && (pc->checkskill(sd, SA_FREECAST) > 0 || skill_id == LG_EXEEDBREAK || (skill->get_inf2(ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0))
 			status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
 	} else
 		skill->castend_id(ud->skilltimer,tick,src->id,0);
@@ -1773,7 +1775,7 @@ int unit_skilluse_pos2( struct block_list *src, short skill_x, short skill_y, ui
 	if( casttime > 0 ) {
 		unit->setdir(src, map->calc_dir(src, skill_x, skill_y));
 		ud->skilltimer = timer->add( tick+casttime, skill->castend_pos, src->id, 0 );
-		if ( (sd && pc->checkskill(sd, SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK ) {
+		if ((sd && pc->checkskill(sd, SA_FREECAST) > 0) || skill_id == LG_EXEEDBREAK || (skill->get_inf2(ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0) {
 			status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
 		}
 	} else {
@@ -2118,10 +2120,10 @@ int unit_attack_timer_sub(struct block_list* src, int tid, int64 tick) {
 		return 0;
 	}
 
-	if( ud->skilltimer != INVALID_TIMER && !(sd && pc->checkskill(sd,SA_FREECAST) > 0) )
+	if (ud->skilltimer != INVALID_TIMER && !(sd && (pc->checkskill(sd, SA_FREECAST) > 0 || (skill->get_inf2(ud->skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) != 0)))
 		return 0; // can't attack while casting
 
-	if( !battle_config.sdelay_attack_enable && DIFF_TICK(ud->canact_tick,tick) > 0 && !(sd && pc->checkskill(sd,SA_FREECAST) > 0) )
+	if (!battle_config.sdelay_attack_enable && DIFF_TICK(ud->canact_tick, tick) > 0 && !(sd && (pc->checkskill(sd, SA_FREECAST) > 0 || (skill->get_inf2(ud->skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) != 0)))
 	{ // attacking when under cast delay has restrictions:
 		if( tid == INVALID_TIMER ) { //requested attack.
 			if(sd) clif->skill_fail(sd,1,USESKILL_FAIL_SKILLINTERVAL,0);
@@ -2270,7 +2272,7 @@ int unit_skillcastcancel(struct block_list *bl,int type)
 
 	ud->skilltimer = INVALID_TIMER;
 
-	if( sd && pc->checkskill(sd,SA_FREECAST) > 0 )
+	if (sd && (pc->checkskill(sd, SA_FREECAST) > 0 || (skill->get_inf2(ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0))
 		status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
 
 	if( sd ) {
