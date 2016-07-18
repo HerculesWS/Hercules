@@ -2592,7 +2592,7 @@ glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 // White Knight Card cost 70 red coagulated spells or 3000 blue coagulated spells
 // Khalitzburg Knight Card cost 100 red coagulated spells or 5000 blue coagulated spells
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-glast_01,188,273,5	script	White Knightage#card	4_WHITEKNIGHT,{
+glast_01,188,273,5	script	White Knightage#1a	4_WHITEKNIGHT,{
 	disable_items;
 	mes("[White Knightage]");	// custom
 		if (MaxWeight - Weight < 1000) {
@@ -2625,7 +2625,7 @@ glast_01,188,273,5	script	White Knightage#card	4_WHITEKNIGHT,{
 		}
 	}
 
-glast_01,192,273,3	script	Khalitzburg Knightage#card	4_F_KHALITZBURG,{
+glast_01,192,273,3	script	Khalitzburg Knightage#1a	4_F_KHALITZBURG,{
 	disable_items;
 	mes("[Khalitzburg Knightage]");	// custom
 		if (MaxWeight - Weight < 1000) {
