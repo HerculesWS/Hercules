@@ -1015,6 +1015,10 @@ function getcomments($re)
 		NoEnemy: true/false                     (boolean, defaults to false)
 		IgnoreLandProtector: true/false         (boolean, defaults to false)
 		Chorus: true/false                      (boolean, defaults to false)
+		FreeCastReduced: true/false             (boolean, defaults to false)
+							Works like skill SA_FREECAST, allow move and attack with reduced speed.
+		FreeCastNormal: true/false              (boolean, defaults to false)
+							Works like FreeCastReduced, but not reduce speed.
 	}
 	AttackType: \"Attack Type\"                   (string, defaults to \"None\")
 	                                            Types: \"None\", \"Weapon\", \"Magic\" or \"Misc\"

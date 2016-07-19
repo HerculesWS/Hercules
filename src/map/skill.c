@@ -4916,12 +4916,11 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data) {
 			return 0;
 		}
 
-		if( sd && ud->skilltimer != INVALID_TIMER && (pc->checkskill(sd,SA_FREECAST) > 0 || ud->skill_id == LG_EXEEDBREAK) )
+		if (sd && ud->skilltimer != INVALID_TIMER && (pc->checkskill(sd, SA_FREECAST) > 0 || ud->skill_id == LG_EXEEDBREAK || (skill->get_inf2(ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0))
 		{// restore original walk speed
 			ud->skilltimer = INVALID_TIMER;
 			status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
 		}
-
 		ud->skilltimer = INVALID_TIMER;
 	}
 
@@ -9946,7 +9945,7 @@ int skill_castend_pos(int tid, int64 tick, int id, intptr_t data)
 		return 0;
 	}
 
-	if( sd && ud->skilltimer != INVALID_TIMER && ( pc->checkskill(sd,SA_FREECAST) > 0 || ud->skill_id == LG_EXEEDBREAK ) )
+	if (sd && ud->skilltimer != INVALID_TIMER && (pc->checkskill(sd, SA_FREECAST) > 0 || ud->skill_id == LG_EXEEDBREAK || (skill->get_inf2(ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0))
 	{// restore original walk speed
 		ud->skilltimer = INVALID_TIMER;
 		status_calc_bl(&sd->bl, SCB_SPEED|SCB_ASPD);
@@ -19203,6 +19202,18 @@ void skill_validate_skillinfo(struct config_setting_t *conf, struct s_skill_db *
 					sk->inf2 |= INF2_CHORUS_SKILL;
 				} else {
 					sk->inf2 &= ~INF2_CHORUS_SKILL;
+				}
+			} else if (strcmpi(type, "FreeCastNormal") == 0) {
+				if (on) {
+					sk->inf2 |= INF2_FREE_CAST_NORMAL;
+				} else {
+					sk->inf2 &= ~INF2_FREE_CAST_NORMAL;
+				}
+			} else if (strcmpi(type, "FreeCastReduced") == 0) {
+				if (on) {
+					sk->inf2 |= INF2_FREE_CAST_REDUCED;
+				} else {
+					sk->inf2 &= ~INF2_FREE_CAST_REDUCED;
 				}
 			} else if (strcmpi(type, "None") != 0) {
 				skilldb_invalid_error(type, config_setting_name(t), sk->nameid);

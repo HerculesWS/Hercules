@@ -3886,8 +3886,16 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag) {
 #endif
 			if ( st->aspd_rate != 1000 ) // absolute percentage modifier
 				amotion = amotion * st->aspd_rate / 1000;
-			if ( sd && sd->ud.skilltimer != INVALID_TIMER && pc->checkskill(sd, SA_FREECAST) > 0 )
-				amotion = amotion * 5 * (pc->checkskill(sd, SA_FREECAST) + 10) / 100;
+			if (sd && sd->ud.skilltimer != INVALID_TIMER) {
+				if (pc->checkskill(sd, SA_FREECAST) > 0) {
+					amotion = amotion * 5 * (pc->checkskill(sd, SA_FREECAST) + 10) / 100;
+				} else {
+					struct unit_data *ud = unit->bl2ud(bl);
+					if (ud && (skill->get_inf2(ud->skill_id) & INF2_FREE_CAST_REDUCED) != 0) {
+						amotion = amotion * 5 * (ud->skill_lv + 10) / 100;
+					}
+				}
+			}
 #ifdef RENEWAL_ASPD
 			amotion += (max(0xc3 - amotion, 2) * (st->aspd_rate2 + status->calc_aspd(bl, sc, 2))) / 100;
 			amotion = 10 * (200 - amotion) + sd->bonus.aspd_add;
@@ -5497,19 +5505,22 @@ signed short status_calc_mdef2(struct block_list *bl, struct status_change *sc, 
 unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc, int speed)
 {
 	struct map_session_data *sd = BL_CAST(BL_PC, bl);
-	int speed_rate;
+	int speed_rate = -1;
 
 	if( sc == NULL || ( sd && sd->state.permanent_speed ) )
 		return (unsigned short)cap_value(speed,MIN_WALK_SPEED,MAX_WALK_SPEED);
 
-	if( sd && sd->ud.skilltimer != INVALID_TIMER && (pc->checkskill(sd,SA_FREECAST) > 0 || sd->ud.skill_id == LG_EXEEDBREAK) )
+	if (sd && sd->ud.skilltimer != INVALID_TIMER)
 	{
-		if( sd->ud.skill_id == LG_EXEEDBREAK )
+		if (sd->ud.skill_id == LG_EXEEDBREAK) {
 			speed_rate = 160 - 10 * sd->ud.skill_lv;
-		else
+		} else if ((skill->get_inf2(sd->ud.skill_id) & INF2_FREE_CAST_REDUCED) != 0) {
+			speed_rate = 175 - 5 * sd->ud.skill_lv;
+		} else if (pc->checkskill(sd, SA_FREECAST) > 0) {
 			speed_rate = 175 - 5 * pc->checkskill(sd,SA_FREECAST);
+		}
 	}
-	else
+	if (speed_rate == -1)
 	{
 		speed_rate = 100;
 
