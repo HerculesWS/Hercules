@@ -116,13 +116,13 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 		case 1:
 			.@instance = instance_create(.@md_name$,.@party_id);
 			if (.@instance < 0) {
-				mesf("Party Name: "+.@p_name$+" \r"
-					"Party Leader: "+strcharinfo(0)+"\r"
-					"^0000FF"+.@md_name$+" ^000000- Reservation Failed!");
+				mesf("Party Name: %s \r"
+					"Party Leader: %s \r"
+					"^0000ff %s ^000000- Reservation Failed!", .@p_name$, strcharinfo(0), .@md_name$);
 				close;
 			}
 			if (instance_attachmap("1@gl_k",.@instance) == "" || instance_attachmap("2@gl_k", .@instance) == "") {
-				mesf("^0000FF"+.@md_name$+"^000000 - Reservation Failed!");
+				mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
 				instance_destroy(.@instance);
 				close;
 			}
@@ -134,7 +134,8 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 
 		case 2:
 			if (has_instance("1@gl_k") == "" ) {
-				mesf("The memorial dungeon ^0000FF"+.@md_name$+"^000000 does not exist. The party leader did not generate the dungeon yet.");
+				mesf("The memorial dungeon ^0000FF%s^000000 does not exist.\r"
+					"The party leader did not generate the dungeon yet.", .@md_name$);
 				close;
 			} else {
 				mapannounce("glast_01", _(strcharinfo(0)+", member of the party "+.@p_name$+" entered the instance "+.@md_name$+"."), bc_map, "0x00ff99");
@@ -174,7 +175,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 		npctalk _("Are you the one Herico sent to help me?");
 		next;
 		select("Oh. Well I...");
-		mesf("["+strcharinfo(0)+"]");
+		mesf("[%s]", strcharinfo(0));
 		mes("Ah yes, I am. Herico told me to meet you.");
 		unittalk getcharid(3), _("Ah yes, I am. Herico told me to meet you.");
 		next;
@@ -184,7 +185,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 		npctalk _("We don't have much time. We must report to Sir. Heinrich about Himelmez's invasion.");
 		next;
 		select("Himelmez...");
-		mesf("["+strcharinfo(0)+"]");
+		mesf("[%s]", strcharinfo(0));
 		mes("Who is Himelmez?");
 		unittalk getcharid(3), _("Who is Himelmez?");
 		next;
@@ -230,7 +231,7 @@ OnEnable:
 	end;
 }
 1@gl_k,145,54,6	script	Khalitzburg Knight#1	4_F_KHALITZBURG,{
-	mesf("["+strnpcinfo(1)+"]");
+	mesf("[%s]", strnpcinfo(1));
 	switch ((atoi(strnpcinfo(2)) + 1) / 2) {
 	
 		case 1: mes("Is there something you need?"); break;
@@ -278,7 +279,7 @@ OnEnable:
 	if (getcharid(0) == getpartyleader(getcharid(1),2)) {
 		cutin "gl_heinrich2", 2;
 		select("Sir. Heinrich. Varmundt...");
-		mesf("["+strcharinfo(0)+"]");
+		mesf("[%s]", strcharinfo(0));
 		mes("Sir. Heinrich. Do you know what is happening in the castle now?");
 		unittalk getcharid(3), _("Sir. Heinrich. Do you know what is happening in the castle now?");
 		next;
@@ -291,7 +292,7 @@ OnEnable:
 		npctalk _("What is it? Something wrong with the castle?");
 		next;
 		select("Himelmez's invasion...");
-		mesf("["+strcharinfo(0)+"]");
+		mesf("[%s]", strcharinfo(0));
 		mes("Dead man's Valkyrie, Himelmez is coming to take the Ymir's Heart piece hidden inside this castle!");
 		unittalk getcharid(3), _("Dead man's Valkyrie, Himelmez is coming to take the Ymir's Heart piece hidden inside this castle!");
 		next;
@@ -310,8 +311,8 @@ OnEnable:
 		donpcevent instance_npcname("Varmundt#ghinstance2")+"::OnTalk2";
 		next;
 		select("Even if you don't believe me...");
-		mesf("["+strcharinfo(0)+"]");
-		mesf("I can't make you believe me, but there's no time to argue!");
+		mesf("[%s]", strcharinfo(0));
+		mes("I can't make you believe me, but there's no time to argue!");
 		unittalk getcharid(3), _("I can't make you believe me, but there's no time to argue!");
 		cutin "gl_barmund2", 255;
 		next;
@@ -825,7 +826,7 @@ OnMyMobDead:
 		npctalk _("Save me! Save me!!!"), 1;
 		next;
 		select("Hold on!Are you the only survivor?");
-		mesf("["+strcharinfo(0)+"]");
+		mesf("[%s]", strcharinfo(0));
 		mes("Hold on!\r"
 			"Are you the only survivor?");
 		unittalk getcharid(3), _("Hold on! Are you the only survivor?");
@@ -842,7 +843,7 @@ OnMyMobDead:
 		npctalk _("Altar boy Domun : All I could do was... Just hide in here... Nothing, nothing I could do...");
 		next;
 		select("Pull it together!");
-		mesf("["+strcharinfo(0)+"]");
+		mesf("[%s]", strcharinfo(0));
 		mes("Wake up kid! Go east and find the middle passage to the outside! That is safe!");
 		unittalk getcharid(3), _("Wake up kid! Go east and find the middle passage to the outside! That is safe!"); // Displays 1st Letter of char name in small?
 		next;
@@ -853,7 +854,7 @@ OnMyMobDead:
 		npctalk _("Altar boy Domun : To the east passage? Alone? How?");
 		next;
 		select("I will give you a weapon.");
-		mesf("["+strcharinfo(0)+"]");
+		mesf("[%s]", strcharinfo(0));
 		mes("Here's a weapon. Just close your eye and swing for those monsters.");
 		unittalk getcharid(3), _("Here's a weapon. Just close your eye and swing for those monsters.");
 		next;
@@ -916,7 +917,7 @@ OnMyMobDead:
 		specialeffect EF_CRASHEARTH;
 		next;
 		select("Relax! I'm not a monster!");
-		mesf("["+strcharinfo(0)+"]");
+		mesf("[%s]", strcharinfo(0));
 		mes("Relax! I am Human. Are you alone? Anyone else here?");
 		unittalk getcharid(3), _("Relax! I am Human. Are you alone? Anyone else here?");
 		next;
@@ -925,7 +926,7 @@ OnMyMobDead:
 		npctalk _("Holgren the Destroyer : It's only me alive.");
 		next;
 		select("It's dangerous here...");
-		mesf("["+strcharinfo(0)+"]");
+		mesf("[%s]", strcharinfo(0));
 		mes("It's dangerous here. You know the way to the middle passage? Can you move?");
 		unittalk getcharid(3), _("It's dangerous here. You know the way to the middle passage? Can you move?"); // Displays 1st Letter of char name in small?
 		next;
@@ -934,7 +935,7 @@ OnMyMobDead:
 		npctalk _("Holgren the Destroyer : Yes, I can move. I need to get out of here.");
 		next;
 		select("Be safe...");
-		mesf("["+strcharinfo(0)+"]");
+		mesf("[%s]", strcharinfo(0));
 		mes("Sorry, I can't go with you.");
 		unittalk getcharid(3), _("Sorry, I can't go with you.");
 		next;
@@ -2222,7 +2223,7 @@ glast_01,210,273,5	script	Hugin's Butler	1_F_04,{
 				case 6:
 				case 7:
 					mes("[Hugin's Butler]");
-					mesf("Are you sure about buying Temporal ^FF0000"+.@type$[.@select-2]+"^000000 Boots? There is no refund.");
+					mesf("Are you sure about buying Temporal ^FF0000%s^000000 Boots? There is no refund.", .@type$[.@select-2]);
 					next;
 					if (select("Think again","Yes, I am sure.") == 2) {
 						mes("[Hugin's Butler]");
@@ -2329,7 +2330,7 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 				.@scs = .@enchant_rate[0];
 				.@number = 1;
 				mes("[Hugin's Magic Master]");
-				mesf("Want to enchant ^0000FF"+.@equip_name$+"^000000? For the "+.@number+"st enchanting, you need ^FF0000"+.@cost+"^000000 ^0000FFCoagulated Spells.^000000");
+				mesf("Want to enchant ^0000FF%s^000000? For the %dst enchanting, you need ^FF0000%d^000000 ^0000FFCoagulated Spells.^000000", .@equip_name$, .@number, .@cost);
 				next;
 				.@select = select("Quit","Fighting Spirit","Archery","Spell","Vitality","Attack Speed","Lucky");
 				switch (.@select) {
@@ -2396,15 +2397,15 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 							mes("Seems you already completed the best upgrade option in your 4th slot. For that I can give a random bonus effect to your 3rd slot. And of course, with certain payment...");
 							next;
 							mes("[Hugin's Magic Master]");
-							mesf("Enchanting ^0000FF"+.@equip_name$+"^000000's 3rd slot for obtaining a random bonus effect. Requires ^FF0000"+.@cost+"^000000 ^0000FFCoagulated Spells^000000");
+							mesf("Enchanting ^0000FF%s^000000's 3rd slot for obtaining a random bonus effect. Requires ^FF0000%s^000000 ^0000FFCoagulated Spells^000000", .@equip_name$, .@cost);
 							next;
 							if (select("Quit","Effect Upgrade!") == 1) {
 								mes("[Hugin's Magic Master]");
 								mes("Ok, come back when you are ready.");
 								close;
 							}
-							if (countitem(Coagulated_Spell) < .@cost) {mesf("Hmm, you are missing "+(.@cost - countitem(Coagulated_Spell))+" Coagulated Spells. Go get more, and then we can talk about more enchants."); close;}
-							if (.@random > .@scs) {mesf("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}
+							if (countitem(Coagulated_Spell) < .@cost) {mesf("Hmm, you are missing %s Coagulated Spells. Go get more, and then we can talk about more enchants.", .@cost - countitem(Coagulated_Spell)); close;}
+							if (.@random > .@scs) {mes("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}
 							specialeffect2 EF_REPAIRWEAPON;
 							delitem Coagulated_Spell, .@cost;
 							delequip .@part;
@@ -2454,15 +2455,15 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 				else if (.@card3 == .@enchant3rd[5])
 					.@enchant = .@enchant4th[5];
 				mes("[Hugin's Magic Master]");
-				mesf("Enchanting ^0000FF"+.@equip_name$+"^000000's 4th slot as ^0000FF"+.@number+"^000000 level effect. Requires ^FF0000"+.@cost+"^000000 ^0000FFCoagulated Spells.^000000");
+				mesf("Enchanting ^0000FF%s^000000's 4th slot as ^0000FF%d^000000 level effect. Requires ^FF0000%d^000000 ^0000FFCoagulated Spells.^000000", .@equip_name$, .@number, .@cost);
 				next;
 				if (select("Quit","Effect Upgrade!") == 1) {
 					mes("[Hugin's Magic Master]");
 					mes("Ok, come back when you are ready.");
 					close;
 				}
-				if (countitem(Coagulated_Spell) < .@cost) {mesf("Hmm, you are missing "+(.@cost - countitem(Coagulated_Spell))+" Coagulated Spells. Go get more, and then we can talk about more enchants."); close;}
-				if (.@random > .@scs) {mesf("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}			
+				if (countitem(Coagulated_Spell) < .@cost) {mesf("Hmm, you are missing %d Coagulated Spells. Go get more, and then we can talk about more enchants.", .@cost - countitem(Coagulated_Spell)); close;}
+				if (.@random > .@scs) {mes("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}			
 			}
 			break;
 		default:
@@ -2471,13 +2472,13 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 			close;
 		}
 		mes("[Hugin's Magic Master]");
-		if (countitem(Coagulated_Spell) < .@cost) {mesf("Hmm, you are missing "+(.@cost - countitem(Coagulated_Spell))+" Coagulated Spells. Go get more, and then we can talk about more enchants."); close;}
-		if (.@random > .@scs) {mesf("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}
+		if (countitem(Coagulated_Spell) < .@cost) {mesf("Hmm, you are missing %d Coagulated Spells. Go get more, and then we can talk about more enchants.", .@cost - countitem(Coagulated_Spell)); close;}
+		if (.@random > .@scs) {mes("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}	
 		specialeffect2 EF_REPAIRWEAPON;
 		delitem Coagulated_Spell,.@cost;
 		delequip .@part;
 		mes("[Hugin's Magic Master]");
-		mesf("Adding enchant  number ^630000"+.@number+"^000000.");
+		mesf("Adding enchant  number ^630000%d^000000.", .@number);
 		getitem2 .@equip_id, 1, 1, .@equip_refine, 0, .@card0, 0, 0, .@enchant;
 		close;
 }
@@ -2562,7 +2563,7 @@ glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 				.@chance = .@slotchance[.@select-2];
 				if (countitem(.@item) < .@cost) {
 				mes("[Hugin's Craftsman]");
-				mesf("Requires ^FF0000"+.@cost+"^000000 ^0000FF"+getitemname(.@item)+"^000000.");
+				mesf("Requires ^FF0000%d^000000 ^0000FF%d^000000.", .@cost, getitemname(.@item));
 				close;
 				}
 		}
@@ -2576,7 +2577,7 @@ glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 				close;
 			}
 		mes("[Hugin's Craftsman]");
-		mesf("Yuhuu~ we succeed. There you go... A slot has been added to your ^FF0000"+getitemname(.@equip_id)+"^000000. Thank you for believing in me.");
+		mesf("Yuhuu~ we succeed. There you go... A slot has been added to your ^FF0000%d^000000. Thank you for believing in me.", getitemname(.@equip_id));
 		delitem .@item, .@cost;
 		specialeffect2 EF_PHARMACY_OK;
 		delequip .@part;
@@ -2630,7 +2631,7 @@ glast_01,188,273,5	script	White Knight#1a	4_WHITEKNIGHT,{
 				.@cost = .@cost[.@select-2];
 				if (countitem(.@item) < .@cost) {
 				mes("[White Knight]");
-				mesf("Requires ^0000FF"+.@cost+" "+getitemname(.@item)+"^000000.");
+				mesf("Requires ^0000FF%d %d^000000.", .@cost, getitemname(.@item));
 				close;
 				}
 			delitem .@item, .@cost;
@@ -2663,7 +2664,7 @@ glast_01,192,273,3	script	Khalitzburg Knight#1a	4_F_KHALITZBURG,{
 				.@cost = .@cost[.@select-2];
 				if (countitem(.@item) < .@cost) {
 				mes("[Khalitzburg Knight]");
-				mesf("Requires ^0000FF"+.@cost+" "+getitemname(.@item)+"^000000.");
+				mesf("Requires ^0000FF%d %d^000000.", .@cost, getitemname(.@item));
 				close;
 				}
 			delitem .@item, .@cost;
