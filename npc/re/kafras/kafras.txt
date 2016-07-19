@@ -62,7 +62,7 @@ moc_para01,10,185,4	script	Kafra Employee::kaf_eden	4_F_KAFRA7,{
 	callfunc "F_Kafra",5,2,0,80,0;
 }
 
-//== Glastheim ================================================
+//== Glastheim =============================================
 glast_01,200,275,5	script	Kafra Employee::kaf_glast	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	callfunc "F_Kafra",0,3,2,500,700;
