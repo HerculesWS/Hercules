@@ -40,7 +40,7 @@
 2@gl_k	mapflag	src4instance
 
 glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
-	if (BaseLevel < 130) {			// custom text
+	if (BaseLevel < 130) {			// Custom text
 		mes("[Hugin]");
 		mes("Why don't you come back after becoming stronger Maybe, level 130.");
 		close;
@@ -2164,7 +2164,8 @@ OnEnable:
 	end;
 }
 
-// Merchant, and Upgrade NPC - Get Temporal Boots --> refine them to +7 --> exchange to Temporal_STAT_Boots
+// Merchant, and Trade NPC - Get Temporal Boots --> exchange to Temporal_STAT_Boots
+// Upon trade all refines got removed
 // Uses Temporal_Crystal 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 glast_01,210,273,5	script	Hugin's Butler	1_F_04,{
@@ -2174,7 +2175,7 @@ glast_01,210,273,5	script	Hugin's Butler	1_F_04,{
 			mes("Your bag is too heavy. Reduce some weight and come back.");
 			close;
 		}
-	mes("I would like to thank you for helping my master Hugin. I can transmute your ^FF0000Temporal Crystals^000000 into a pair of boots that have withstood the test of time... the ^FF0000Temporal Boots^000000");
+	mes("I would like to thank you for helping my master Hugin. I can transmute your ^FF0000Temporal Crystals^000000 into a pair of boots that have withstood the test of time... the ^FF0000Temporal Boots^000000.");
 	next;
 	mes("[Hugin's Butler]");
 	mes("What would you like me to do young adventurer?");
@@ -2182,9 +2183,9 @@ glast_01,210,273,5	script	Hugin's Butler	1_F_04,{
 	switch (select("Give me the Temporal Boots","Upgrade my Temporal Boots")) {
 	
 	case 1:
-		if (countitem(Temporal_Crystal) > 0) {	// custom text but official mechanic
+		if (countitem(Temporal_Crystal) > 0) {
 			mes("[Hugin's Butler]");
-			mes("Take these Temporal Boots. I can upgrade them ^FF0000once you refined them to +7^000000");
+			mes("Take these Temporal Boots. We can upgrade your Temporal Boots with 5 Temporal Crystals.");
 			delitem Temporal_Crystal, 1;
 			getitem Temporal_Boots, 1;
 			close;
@@ -2195,16 +2196,15 @@ glast_01,210,273,5	script	Hugin's Butler	1_F_04,{
 	
 	case 2:
 		.@part = EQI_SHOES;
-		.@equip_refine = getequiprefinerycnt(.@part);
-		if (!getequipisequiped(.@part) || (.@equip_refine < 7)) {	// need Temporal Boots +7 in order to exchange
+		if (!getequipisequiped(.@part)) {
 			mes("[Hugin's Butler]");
-			mes("Wear ^0000FFTemporal Boots^000000 and be sure they are ^0000FFrefined at least to +7^000000, and then talk to me again.");
+			mes("Wear the ^0000FFTemporal Boots^000000 you want to upgrade, and then talk to me once again.");
 			close;
 		}
 		if (isequipped(Temporal_Boots)) {	// check 
 			if (countitem(Temporal_Crystal) >= 5) {	
 				mes("[Hugin's Butler]");
-				mes("You can trade ^0000FF1 Temporal Boots +7 and 5 Temporal Crystals^000000 for 1 of the following items. ^FF0000Previous refine rate will retain with these new ones^000000.");
+				mes("You can trade ^0000FF1 Temporal Boots and 5 Temporal Crystals^000000 for 1 of the following items. ^FF0000Previous refine rate will not be retained with these new ones^000000.");
 				next;
 				setarray .@type$[0],"Strength","Intelligence","Agility","Vitality","Dexterity","Lucky";
 				setarray .@equip_type[0],Temporal_STR_Boots, Temporal_INT_Boots, Temporal_AGI_Boots, Temporal_VIT_Boots, Temporal_DEX_Boots, Temporal_LUK_Boots;
@@ -2229,7 +2229,7 @@ glast_01,210,273,5	script	Hugin's Butler	1_F_04,{
 						mes("The boots has been upgraded as you want.");
 						delequip .@part;
 						delitem Temporal_Crystal, 5;
-						getitem2 .@equip_type[.@select-2], 1, 1, .@equip_refine, 0, 0, 0, 0, 0; // Temporal_STR_Boots,Temporal_INT_Boots,Temporal_AGI_Boots,Temporal_VIT_Boots,Temporal_DEX_Boots,Temporal_LUK_Boots
+						getitem2 .@equip_type[.@select-2], 1, 1, 0, 0, 0, 0, 0, 0; // Temporal_STR_Boots,Temporal_INT_Boots,Temporal_AGI_Boots,Temporal_VIT_Boots,Temporal_DEX_Boots,Temporal_LUK_Boots
 						close;
 					}
 					mes("[Hugin's Butler]");
@@ -2248,42 +2248,46 @@ glast_01,210,273,5	script	Hugin's Butler	1_F_04,{
 }
 
 // Enchant NPC - Coagulated Spell to enchants on 4th slot. First one to pick --> upgraded --> additional random enchant on 3rd slot
-// Can NOT enchant slotted Temporal_STAT_Boots
+// Adding a socket on the Craftsman NPC will remove the 3rd and 4th slot enchants of the Temporal_STAT_Boots
+// Enchanting can fail, the 3th slot random one is guaranteed
+// Refine remains
 // Item Used: Coagulated_Spell
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{
+glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to official enchant mechanics
 	disable_items;
 	if (MaxWeight - Weight < 1000) {
 		mes("Your bag is too heavy. Reduce some weight and come back.");
 		close;
 	}
-	mes("[Hugin's Magic Master]"); // custom text
-	mes("So you came to enchant the Temporal Boots. Be aware that Boots with sockets cannot be enchanted, and this upgrade is only possible for the boots you are wearing.");
+	mes("[Hugin's Magic Master]"); // Custom text
+	mes("So you came to enchant the Temporal Boots. Be aware that adding a socket do your boots will remove my enchants as well as it's refine. It is only possible for the boots you are wearing.");
 	next;
 	if (select("How does the enchanting work?","Give effect to my Temporal Boots") == 1) {
 		mes("[Hugin's Magic Master]");
 		mes("You can obtain ^0000FFCoagulated Spell^000000 through your time travels.");
 		next;
 		mes("[Hugin's Magic Master]");
-		mes("I can enchant your Temporal Boots with a variing amount of that item. ^0000FFNot normal type boots^000000. Only possible for those 6 expanded boots.");
+		mes("I can enchant your Temporal Boots with a variing amount of that item. ^0000FFAvailable for all Temporal STAT Boots^000000.");
 		next;
 		mes("[Hugin's Magic Master]");
-		mes("But, once you put a socket into the item, you cannot enchant it. Be sure to remember that.");
+		mes("But, once you try to put a socket into the item, it will be resetted. So if you want a socket, you should do it first. Be sure to remember that.");
 		next;
 		mes("[Hugin's Magic Master]");
 		mes("I don't give out effect randomly. You can pick which effect you want for the item.");
 		next;
 		mes("[Hugin's Magic Master]");
-		mes("Of course it is for 4th slot only. You can have small effect at the start and then the effect grows stronger.");
+		mes("Of course it is for 4th slot only. You can have small effect at the start and then the effect grows stronger.\r"
+			"^FF0000Remember: It can fail and break your item!^000000");
 		next;
 		mes("[Hugin's Magic Master]");
-		mes("To get to the final option upgrade it will require way more Coagulated Spell items. Don't forget that.");
+		mes("To get to the final option upgrade it will require way more Coagulated Spells. Don't forget that.");
 		next;
 		mes("[Hugin's Magic Master]");
-		mes("Once the 4th slot completes the best option, you get to have a random bonus effect to the 3rd slot. With.. certain payment~");
+		mes("Once the 4th slot completes the best option, you get to have a random bonus effect to the 3rd slot. With.. certain payment and a ^0000FFguaranteed success rate~^000000");
 		next;
 		mes("[Hugin's Magic Master]");
-		mes("Also, you don't lose the item even if the enchant fails, we also guarantee keeping card and refine rate. But we can't initialize enchanting.");
+		mes("^FF0000Again: there is a risk on failing and breaking the item^000000.\r"
+			"But if the enchant is applied successful, ^0000FFthe refine and everything else will be retained.^000000");
 		next;
 		mes("[Hugin's Magic Master]");
 		mes("Phew... Anyways, that's all for basic enchant information. Now you should see for yourself.");
@@ -2298,12 +2302,15 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{
 		.@equip_refine = getequiprefinerycnt(.@part);
 		.@equip_id = getequipid(.@part);
 		.@equip_name$ = getequipname(.@part);
+		.@card0 = getequipcardid(.@part,0);
 		.@card3 = getequipcardid(.@part,3);
 		setarray .@enchant1st[0],Fighting_Spirit4, Expert_Archer1, Spell2, Vitality2, Attack_Delay_1, Luck3;
 		setarray .@enchant2nd[0],Fighting_Spirit5, Expert_Archer2, Spell3, Vitality3, Attack_Delay_2, Luck4;
 		setarray .@enchant3rd[0],Fighting_Spirit6, Expert_Archer3, Spell4, MHP1, Attack_Delay_3, Luck5;
 		setarray .@enchant4th[0],Fighting_Spirit7, Expert_Archer4, Spell5, MHP2, Attack_Delay_4, Luck6;
 		setarray .@enchant_cost[0],1,4,15,30,10; // Coagulated_Spell costs
+		setarray .@enchant_rate[0],90,80,70,50,100; // Enchant Success Rate in %
+		.@random = rand(1,100);
 		switch (.@equip_id) {
 		case Temporal_STR_Boots:
 		case Temporal_INT_Boots:
@@ -2311,8 +2318,15 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{
 		case Temporal_VIT_Boots:
 		case Temporal_DEX_Boots:
 		case Temporal_LUK_Boots:
+		case Temporal_STR_Boots_:
+		case Temporal_INT_Boots_:
+		case Temporal_AGI_Boots_:
+		case Temporal_VIT_Boots_:
+		case Temporal_DEX_Boots_:
+		case Temporal_LUK_Boots_:
 			if (!.@card3) { //4th slot 1st try enchanting
 				.@cost = .@enchant_cost[0];
+				.@scs = .@enchant_rate[0];
 				.@number = 1;
 				mes("[Hugin's Magic Master]");
 				mes("Want to enchant ^0000FF"+.@equip_name$+"^000000? For the "+.@number+"st enchanting, you need ^FF0000"+.@cost+"^000000 ^0000FFCoagulated Spells.^000000");
@@ -2346,19 +2360,23 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{
 				if (.@card3 == .@enchant1st[0] || .@card3 == .@enchant1st[1] || .@card3 == .@enchant1st[2] ||
 					.@card3 == .@enchant1st[3] || .@card3 == .@enchant1st[4] || .@card3 == .@enchant1st[5]) {
 					.@cost = .@enchant_cost[1];
+					.@scs = .@enchant_rate[1];
 					.@number = 2;
 				} else if (.@card3 == .@enchant2nd[0] || .@card3 == .@enchant2nd[1] || .@card3 == .@enchant2nd[2] ||
 					.@card3 == .@enchant2nd[3] || .@card3 == .@enchant2nd[4] || .@card3 == .@enchant2nd[5]) {
 					.@cost = .@enchant_cost[2];
+					.@scs = .@enchant_rate[2];
 					.@number = 3;
 				} else if (.@card3 == .@enchant3rd[0] || .@card3 == .@enchant3rd[1] || .@card3 == .@enchant3rd[2] ||
 					.@card3 == .@enchant3rd[3] || .@card3 == .@enchant3rd[4] || .@card3 == .@enchant3rd[5]) {
 					.@cost = .@enchant_cost[3];
+					.@scs = .@enchant_rate[3];
 					.@number = 4;
 				} else if (.@card3 == .@enchant4th[0] || .@card3 == .@enchant4th[1] || .@card3 == .@enchant4th[2] ||
 					.@card3 == .@enchant4th[3] || .@card3 == .@enchant4th[4] || .@card3 == .@enchant4th[5]) {
 					.@card2 = getequipcardid(.@part,2);
 					.@cost = .@enchant_cost[4];
+					.@scs = .@enchant_rate[4];
 					if (.@card2) {
 						mes("[Hugin's Magic Master]"); // Custom text
 						mes("Your shoes have reached the maximum option to enchant.");
@@ -2371,7 +2389,7 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{
 						case Expert_Archer4:
 						case Spell5:
 						case MHP2:
-						case Attack_Delay_4: // DelayafterAttack4Lv <-- doen't accept constant?
+						case Attack_Delay_4: 
 						case Luck6:
 							.@enchant = callfunc("F_Rand",Bear's_Power, Runaway_Magic, Speed_Of_Light, Muscle_Fool, Hawkeye, Lucky_Day);
 							mes("[Hugin's Magic Master]"); // Custom text
@@ -2385,13 +2403,14 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{
 								mes("Ok, come back when you are ready.");
 								close;
 							}
-							if (countitem(Coagulated_Spell) < .@cost) {callsub Costs;}
+							if (countitem(Coagulated_Spell) < .@cost) {mes("Hmm, you are missing "+(.@cost - countitem(Coagulated_Spell))+" Coagulated Spells. Go get more, and then we can talk about more enchants."); close;}
+							if (.@random > .@scs) {mes("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}
 							specialeffect2 EF_REPAIRWEAPON;
-							delitem Coagulated_Spell,.@cost;
+							delitem Coagulated_Spell, .@cost;
 							delequip .@part;
 							mes("[Hugin's Magic Master]");
 							mes("This is it! This special stone is now yours Hahaha... I am really the only master of these things. Thank you for believing in me.");
-							getitem2 .@equip_id, 1, 1, .@equip_refine, 0, 0, 0, .@enchant,.@card3;
+							getitem2 .@equip_id, 1, 1, .@equip_refine, 0, .@card0, 0, .@enchant, .@card3;
 							close;
 					}
 				}
@@ -2442,7 +2461,8 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{
 					mes("Ok, come back when you are ready.");
 					close;
 				}
-				if (countitem(Coagulated_Spell) < .@cost) {callsub Costs;}
+				if (countitem(Coagulated_Spell) < .@cost) {mes("Hmm, you are missing "+(.@cost - countitem(Coagulated_Spell))+" Coagulated Spells. Go get more, and then we can talk about more enchants."); close;}
+				if (.@random > .@scs) {mes("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}			
 			}
 			break;
 		default:
@@ -2450,23 +2470,20 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{
 			mes("This is not the right item for this enchant. Remember, only those 6 types of Temporal Boots are available for enchanting.");
 			close;
 		}
-		if (countitem(Coagulated_Spell) < .@cost) {callsub Costs;}
+		mes("[Hugin's Magic Master]");
+		if (countitem(Coagulated_Spell) < .@cost) {mes("Hmm, you are missing "+(.@cost - countitem(Coagulated_Spell))+" Coagulated Spells. Go get more, and then we can talk about more enchants."); close;}
+		if (.@random > .@scs) {mes("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}
 		specialeffect2 EF_REPAIRWEAPON;
 		delitem Coagulated_Spell,.@cost;
 		delequip .@part;
 		mes("[Hugin's Magic Master]");
 		mes("Adding enchant  number ^630000"+.@number+"^000000.");
-		getitem2 .@equip_id, 1, 1, .@equip_refine, 0, 0, 0, 0, .@enchant;
-		close;
-	
-	Costs:
-		mes("[Hugin's Magic Master]");
-		mes("Hmm, you are missing "+(.@cost - countitem(Coagulated_Spell))+" Coagulated Spell items. Go get more, and then we can talk about more enchants.");
+		getitem2 .@equip_id, 1, 1, .@equip_refine, 0, .@card0, 0, 0, .@enchant;
 		close;
 }
-
+		
 // Socket NPC - Contaminated_Magic or Temporal_Crystal to add card slot
-// After the boots were slotted, you can NOT enchant them anymore
+// After the boots were slotted, you can still enchant, but slotting removes any enchants and refines applied before.
 // Item Used: Contaminated_Magic, Temporal_Crystal
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
@@ -2498,10 +2515,7 @@ glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 	mes("Are you sure you are wearing the item?");
 	close;
 	}
-	.@equip_refine = getequiprefinerycnt(.@part);
 	.@equip_id = getequipid(.@part);
-	.@card2 = getequipcardid(.@part,2);
-	.@card3 = getequipcardid(.@part,3);
 	switch (.@equip_id) {
 	case Temporal_STR_Boots:
 	case Temporal_INT_Boots:
@@ -2568,17 +2582,17 @@ glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 		delequip .@part;
 		// todo: read aegis name and attach "_" to worn constant
 		if (.@equip_id == Temporal_STR_Boots) {
-			getitem2 Temporal_STR_Boots_, 1, 1, .@equip_refine, 0, 0, 0, .@card2,.@card3;
+			getitem2 Temporal_STR_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
 		} else if (.@equip_id == Temporal_INT_Boots) {
-			getitem2 Temporal_INT_Boots_, 1, 1, .@equip_refine, 0, 0, 0, .@card2,.@card3;
+			getitem2 Temporal_INT_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
 		} else if (.@equip_id == Temporal_AGI_Boots) {
-			getitem2 Temporal_AGI_Boots_, 1, 1, .@equip_refine, 0, 0, 0, .@card2,.@card3;
+			getitem2 Temporal_AGI_Boots_, 1, 1, 0, 0, 0, 0, .0, 0;
 		} else if (.@equip_id == Temporal_VIT_Boots) {
-			getitem2 Temporal_VIT_Boots_, 1, 1, .@equip_refine, 0, 0, 0, .@card2,.@card3;
+			getitem2 Temporal_VIT_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
 		} else if (.@equip_id == Temporal_DEX_Boots) {
-			getitem2 Temporal_DEX_Boots_, 1, 1, .@equip_refine, 0, 0, 0, .@card2,.@card3;
+			getitem2 Temporal_DEX_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
 		} else if (.@equip_id == Temporal_LUK_Boots) {
-			getitem2 Temporal_LUK_Boots_, 1, 1, .@equip_refine, 0, 0, 0, .@card2,.@card3;
+			getitem2 Temporal_LUK_Boots_, 1, 1, 0, 0, 0, 0, 0, 0;
 		}
 		close;
 	default:
