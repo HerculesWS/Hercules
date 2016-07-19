@@ -40,12 +40,12 @@
 2@gl_k	mapflag	src4instance
 
 glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
-	if (BaseLevel < 130) {			// Custom text
+	if (BaseLevel < 130) {	// iRO text
 		mes("[Hugin]");
 		mes("Why don't you come back after becoming stronger Maybe, level 130.");
 		close;
 	} else {
-			if (!questprogress(12316)) {	// iRO text
+			if (!questprogress(12316)) {
 			mes("[Hugin]");
 			mes("A long time ago, this castle did not look like this.");
 			next;
@@ -116,13 +116,13 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 		case 1:
 			.@instance = instance_create(.@md_name$,.@party_id);
 			if (.@instance < 0) {
-				mes("Party Name: "+.@p_name$);
-				mes("Party Leader: "+strcharinfo(0));
-				mes("^0000ff"+.@md_name$+" ^000000- Reservation Failed!");
+				mesf("Party Name: "+.@p_name$+" \r"
+					"Party Leader: "+strcharinfo(0)+"\r"
+					"^0000FF"+.@md_name$+" ^000000- Reservation Failed!");
 				close;
 			}
 			if (instance_attachmap("1@gl_k",.@instance) == "" || instance_attachmap("2@gl_k", .@instance) == "") {
-				mes("^0000ff"+.@md_name$+"^000000 - Reservation Failed!");
+				mesf("^0000FF"+.@md_name$+"^000000 - Reservation Failed!");
 				instance_destroy(.@instance);
 				close;
 			}
@@ -134,7 +134,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 
 		case 2:
 			if (has_instance("1@gl_k") == "" ) {
-				mes("The memorial dungeon ^0000ff"+.@md_name$+"^000000 does not exist. The party leader did not generate the dungeon yet.");
+				mesf("The memorial dungeon ^0000FF"+.@md_name$+"^000000 does not exist. The party leader did not generate the dungeon yet.");
 				close;
 			} else {
 				mapannounce("glast_01", _(strcharinfo(0)+", member of the party "+.@p_name$+" entered the instance "+.@md_name$+"."), bc_map, "0x00ff99");
@@ -157,7 +157,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 		mes("Staying healthy is important so please take a break and come back again later.");
 		close;
 	} else {
-		mes("^0000ffAll trace of access to Old Glast Heim have been removed. Now you can talk with Hugin again.^000000");
+		mes("^0000FFAll trace of access to Old Glast Heim have been removed. Now you can talk with Hugin again.^000000");
 		erasequest 12317;
 		if (questprogress(12318)) erasequest 12318;
 		if (questprogress(12319)) erasequest 12319;
@@ -170,11 +170,11 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 	if (getcharid(0) == getpartyleader(getcharid(1),2)) {
 		cutin "gl_barmund1",2;
 		mes("[Varmundt]");
-		mes("Are you the one ^0000ffHerico^000000 sent to help me?");
+		mes("Are you the one ^0000FFHerico^000000 sent to help me?");
 		npctalk _("Are you the one Herico sent to help me?");
 		next;
 		select("Oh. Well I...");
-		mes("["+strcharinfo(0)+"]");
+		mesf("["+strcharinfo(0)+"]");
 		mes("Ah yes, I am. Herico told me to meet you.");
 		unittalk getcharid(3), _("Ah yes, I am. Herico told me to meet you.");
 		next;
@@ -184,7 +184,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 		npctalk _("We don't have much time. We must report to Sir. Heinrich about Himelmez's invasion.");
 		next;
 		select("Himelmez...");
-		mes("["+strcharinfo(0)+"]");
+		mesf("["+strcharinfo(0)+"]");
 		mes("Who is Himelmez?");
 		unittalk getcharid(3), _("Who is Himelmez?");
 		next;
@@ -229,8 +229,8 @@ OnEnable:
 	hideoffnpc instance_npcname("Varmundt#ghinstance1");
 	end;
 }
-1@gl_k,145,54,6	script	Khalitzburg Knightage#1	4_F_KHALITZBURG,{
-	mes("["+strnpcinfo(1)+"]");
+1@gl_k,145,54,6	script	Khalitzburg Knight#1	4_F_KHALITZBURG,{
+	mesf("["+strnpcinfo(1)+"]");
 	switch ((atoi(strnpcinfo(2)) + 1) / 2) {
 	
 		case 1: mes("Is there something you need?"); break;
@@ -253,32 +253,32 @@ OnEnable:
 	hideoffnpc instance_npcname(strnpcinfo(0));
 	end;
 }
-1@gl_k,154,54,3	duplicate(Khalitzburg Knightage#1)	Khalitzburg Knightage#2	4_F_KHALITZBURG
-1@gl_k,145,59,6	duplicate(Khalitzburg Knightage#1)	White Knight#3	4_WHITEKNIGHT
-1@gl_k,154,59,3	duplicate(Khalitzburg Knightage#1)	White Knight#4	4_WHITEKNIGHT
-1@gl_k,145,64,6	duplicate(Khalitzburg Knightage#1)	Khalitzburg Knightage#5	4_F_KHALITZBURG
-1@gl_k,154,64,3	duplicate(Khalitzburg Knightage#1)	Khalitzburg Knightage#6	4_F_KHALITZBURG
-1@gl_k,145,69,6	duplicate(Khalitzburg Knightage#1)	White Knight#7	4_WHITEKNIGHT
-1@gl_k,154,69,3	duplicate(Khalitzburg Knightage#1)	White Knight#8	4_WHITEKNIGHT
-1@gl_k,145,74,6	duplicate(Khalitzburg Knightage#1)	Khalitzburg Knightage#9	4_F_KHALITZBURG
-1@gl_k,154,74,3	duplicate(Khalitzburg Knightage#1)	Khalitzburg Knightage#10	4_F_KHALITZBURG
-1@gl_k,145,79,6	duplicate(Khalitzburg Knightage#1)	White Knight#11	4_WHITEKNIGHT
-1@gl_k,154,79,3	duplicate(Khalitzburg Knightage#1)	White Knight#12	4_WHITEKNIGHT
-1@gl_k,145,84,6	duplicate(Khalitzburg Knightage#1)	Khalitzburg Knightage#13	4_F_KHALITZBURG
-1@gl_k,154,84,3	duplicate(Khalitzburg Knightage#1)	Khalitzburg Knightage#14	4_F_KHALITZBURG
-1@gl_k,145,89,6	duplicate(Khalitzburg Knightage#1)	White Knight#15	4_WHITEKNIGHT
-1@gl_k,154,89,3	duplicate(Khalitzburg Knightage#1)	White Knight#16	4_WHITEKNIGHT
-1@gl_k,145,94,6	duplicate(Khalitzburg Knightage#1)	Khalitzburg Knightage#17	4_F_KHALITZBURG
-1@gl_k,154,94,3	duplicate(Khalitzburg Knightage#1)	Khalitzburg Knightage#18	4_F_KHALITZBURG
-1@gl_k,145,99,6	duplicate(Khalitzburg Knightage#1)	White Knight#19	4_WHITEKNIGHT
-1@gl_k,154,99,3	duplicate(Khalitzburg Knightage#1)	White Knight#20	4_WHITEKNIGHT
-1@gl_k,145,104,6	duplicate(Khalitzburg Knightage#1)	Khalitzburg Knightage#21	4_F_KHALITZBURG
-1@gl_k,154,104,3	duplicate(Khalitzburg Knightage#1)	Khalitzburg Knightage#22	4_F_KHALITZBURG
+1@gl_k,154,54,3	duplicate(Khalitzburg Knight#1)	Khalitzburg Knight#2	4_F_KHALITZBURG
+1@gl_k,145,59,6	duplicate(Khalitzburg Knight#1)	White Knight#3	4_WHITEKNIGHT
+1@gl_k,154,59,3	duplicate(Khalitzburg Knight#1)	White Knight#4	4_WHITEKNIGHT
+1@gl_k,145,64,6	duplicate(Khalitzburg Knight#1)	Khalitzburg Knight#5	4_F_KHALITZBURG
+1@gl_k,154,64,3	duplicate(Khalitzburg Knight#1)	Khalitzburg Knight#6	4_F_KHALITZBURG
+1@gl_k,145,69,6	duplicate(Khalitzburg Knight#1)	White Knight#7	4_WHITEKNIGHT
+1@gl_k,154,69,3	duplicate(Khalitzburg Knight#1)	White Knight#8	4_WHITEKNIGHT
+1@gl_k,145,74,6	duplicate(Khalitzburg Knight#1)	Khalitzburg Knight#9	4_F_KHALITZBURG
+1@gl_k,154,74,3	duplicate(Khalitzburg Knight#1)	Khalitzburg Knight#10	4_F_KHALITZBURG
+1@gl_k,145,79,6	duplicate(Khalitzburg Knight#1)	White Knight#11	4_WHITEKNIGHT
+1@gl_k,154,79,3	duplicate(Khalitzburg Knight#1)	White Knight#12	4_WHITEKNIGHT
+1@gl_k,145,84,6	duplicate(Khalitzburg Knight#1)	Khalitzburg Knight#13	4_F_KHALITZBURG
+1@gl_k,154,84,3	duplicate(Khalitzburg Knight#1)	Khalitzburg Knight#14	4_F_KHALITZBURG
+1@gl_k,145,89,6	duplicate(Khalitzburg Knight#1)	White Knight#15	4_WHITEKNIGHT
+1@gl_k,154,89,3	duplicate(Khalitzburg Knight#1)	White Knight#16	4_WHITEKNIGHT
+1@gl_k,145,94,6	duplicate(Khalitzburg Knight#1)	Khalitzburg Knight#17	4_F_KHALITZBURG
+1@gl_k,154,94,3	duplicate(Khalitzburg Knight#1)	Khalitzburg Knight#18	4_F_KHALITZBURG
+1@gl_k,145,99,6	duplicate(Khalitzburg Knight#1)	White Knight#19	4_WHITEKNIGHT
+1@gl_k,154,99,3	duplicate(Khalitzburg Knight#1)	White Knight#20	4_WHITEKNIGHT
+1@gl_k,145,104,6	duplicate(Khalitzburg Knight#1)	Khalitzburg Knight#21	4_F_KHALITZBURG
+1@gl_k,154,104,3	duplicate(Khalitzburg Knight#1)	Khalitzburg Knight#22	4_F_KHALITZBURG
 1@gl_k,149,100,6	script	Heinrich#ghinstance1	4_M_HEINRICH,{
 	if (getcharid(0) == getpartyleader(getcharid(1),2)) {
 		cutin "gl_heinrich2", 2;
 		select("Sir. Heinrich. Varmundt...");
-		mes("["+strcharinfo(0)+"]");
+		mesf("["+strcharinfo(0)+"]");
 		mes("Sir. Heinrich. Do you know what is happening in the castle now?");
 		unittalk getcharid(3), _("Sir. Heinrich. Do you know what is happening in the castle now?");
 		next;
@@ -291,7 +291,7 @@ OnEnable:
 		npctalk _("What is it? Something wrong with the castle?");
 		next;
 		select("Himelmez's invasion...");
-		mes("["+strcharinfo(0)+"]");
+		mesf("["+strcharinfo(0)+"]");
 		mes("Dead man's Valkyrie, Himelmez is coming to take the Ymir's Heart piece hidden inside this castle!");
 		unittalk getcharid(3), _("Dead man's Valkyrie, Himelmez is coming to take the Ymir's Heart piece hidden inside this castle!");
 		next;
@@ -310,8 +310,8 @@ OnEnable:
 		donpcevent instance_npcname("Varmundt#ghinstance2")+"::OnTalk2";
 		next;
 		select("Even if you don't believe me...");
-		mes("["+strcharinfo(0)+"]");
-		mes("I can't make you believe me, but there's no time to argue!");
+		mesf("["+strcharinfo(0)+"]");
+		mesf("I can't make you believe me, but there's no time to argue!");
 		unittalk getcharid(3), _("I can't make you believe me, but there's no time to argue!");
 		cutin "gl_barmund2", 255;
 		next;
@@ -328,7 +328,7 @@ OnEnable:
 		donpcevent instance_npcname("Heinrich#ghinstance2")+"::OnEnable";
 		donpcevent instance_npcname("Himelmez#ghinstance1")+"::OnEnable";
 		donpcevent instance_npcname("#talkinstance1")+"::OnEnable";
-		mapannounce(instance_mapname("1@gl_k"), _("????'s: Muahahahaha~!"), bc_map, "0xFFFF00", FW_NORMAL, 18);
+		mapannounce(instance_mapname("1@gl_k"), _("????: Muahahahaha~!"), bc_map, "0xFFFF00", FW_NORMAL, 18);
 		cutin "gl_heinrich1", 255;
 		end;
 	} else {
@@ -539,13 +539,13 @@ OnTimer90500:
 	end;
 OnTimer92000:
 	for (.@i=1; .@i<=20; .@i+=4) {
-		hideonnpc instance_npcname("Khalitzburg Knightage#"+.@i);
-		hideonnpc instance_npcname("Khalitzburg Knightage#"+(.@i+1));
+		hideonnpc instance_npcname("Khalitzburg Knight#"+.@i);
+		hideonnpc instance_npcname("Khalitzburg Knight#"+(.@i+1));
 		hideonnpc instance_npcname("White Knight#"+(.@i+2));
 		hideonnpc instance_npcname("White Knight#"+(.@i+3));
 	}
-	hideonnpc instance_npcname("Khalitzburg Knightage#21");
-	hideonnpc instance_npcname("Khalitzburg Knightage#22");
+	hideonnpc instance_npcname("Khalitzburg Knight#21");
+	hideonnpc instance_npcname("Khalitzburg Knight#22");
 	.@map$ = instance_mapname("1@gl_k");
 	.@label$ = instance_npcname("#talkinstance1")+"::OnMyMobDead"; 
 	monster .@map$,145,59,"Abysmal Knight",2470,1,.@label$;
@@ -825,7 +825,7 @@ OnMyMobDead:
 		npctalk _("Save me! Save me!!!"), 1;
 		next;
 		select("Hold on!Are you the only survivor?");
-		mes("["+strcharinfo(0)+"]");
+		mesf("["+strcharinfo(0)+"]");
 		mes("Hold on!\r"
 			"Are you the only survivor?");
 		unittalk getcharid(3), _("Hold on! Are you the only survivor?");
@@ -842,7 +842,7 @@ OnMyMobDead:
 		npctalk _("Altar boy Domun : All I could do was... Just hide in here... Nothing, nothing I could do...");
 		next;
 		select("Pull it together!");
-		mes("["+strcharinfo(0)+"]");
+		mesf("["+strcharinfo(0)+"]");
 		mes("Wake up kid! Go east and find the middle passage to the outside! That is safe!");
 		unittalk getcharid(3), _("Wake up kid! Go east and find the middle passage to the outside! That is safe!"); // Displays 1st Letter of char name in small?
 		next;
@@ -853,7 +853,7 @@ OnMyMobDead:
 		npctalk _("Altar boy Domun : To the east passage? Alone? How?");
 		next;
 		select("I will give you a weapon.");
-		mes("["+strcharinfo(0)+"]");
+		mesf("["+strcharinfo(0)+"]");
 		mes("Here's a weapon. Just close your eye and swing for those monsters.");
 		unittalk getcharid(3), _("Here's a weapon. Just close your eye and swing for those monsters.");
 		next;
@@ -916,7 +916,7 @@ OnMyMobDead:
 		specialeffect EF_CRASHEARTH;
 		next;
 		select("Relax! I'm not a monster!");
-		mes("["+strcharinfo(0)+"]");
+		mesf("["+strcharinfo(0)+"]");
 		mes("Relax! I am Human. Are you alone? Anyone else here?");
 		unittalk getcharid(3), _("Relax! I am Human. Are you alone? Anyone else here?");
 		next;
@@ -925,7 +925,7 @@ OnMyMobDead:
 		npctalk _("Holgren the Destroyer : It's only me alive.");
 		next;
 		select("It's dangerous here...");
-		mes("["+strcharinfo(0)+"]");
+		mesf("["+strcharinfo(0)+"]");
 		mes("It's dangerous here. You know the way to the middle passage? Can you move?");
 		unittalk getcharid(3), _("It's dangerous here. You know the way to the middle passage? Can you move?"); // Displays 1st Letter of char name in small?
 		next;
@@ -934,7 +934,7 @@ OnMyMobDead:
 		npctalk _("Holgren the Destroyer : Yes, I can move. I need to get out of here.");
 		next;
 		select("Be safe...");
-		mes("["+strcharinfo(0)+"]");
+		mesf("["+strcharinfo(0)+"]");
 		mes("Sorry, I can't go with you.");
 		unittalk getcharid(3), _("Sorry, I can't go with you.");
 		next;
@@ -2222,7 +2222,7 @@ glast_01,210,273,5	script	Hugin's Butler	1_F_04,{
 				case 6:
 				case 7:
 					mes("[Hugin's Butler]");
-					mes("Are you sure about buying Temporal ^FF0000"+.@type$[.@select-2]+"^000000 Boots? There is no refund.");
+					mesf("Are you sure about buying Temporal ^FF0000"+.@type$[.@select-2]+"^000000 Boots? There is no refund.");
 					next;
 					if (select("Think again","Yes, I am sure.") == 2) {
 						mes("[Hugin's Butler]");
@@ -2329,7 +2329,7 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 				.@scs = .@enchant_rate[0];
 				.@number = 1;
 				mes("[Hugin's Magic Master]");
-				mes("Want to enchant ^0000FF"+.@equip_name$+"^000000? For the "+.@number+"st enchanting, you need ^FF0000"+.@cost+"^000000 ^0000FFCoagulated Spells.^000000");
+				mesf("Want to enchant ^0000FF"+.@equip_name$+"^000000? For the "+.@number+"st enchanting, you need ^FF0000"+.@cost+"^000000 ^0000FFCoagulated Spells.^000000");
 				next;
 				.@select = select("Quit","Fighting Spirit","Archery","Spell","Vitality","Attack Speed","Lucky");
 				switch (.@select) {
@@ -2396,15 +2396,15 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 							mes("Seems you already completed the best upgrade option in your 4th slot. For that I can give a random bonus effect to your 3rd slot. And of course, with certain payment...");
 							next;
 							mes("[Hugin's Magic Master]");
-							mes("Enchanting ^0000FF"+.@equip_name$+"^000000's 3rd slot for obtaining a random bonus effect. Requires ^FF0000"+.@cost+"^000000 ^0000FFCoagulated Spells^000000");
+							mesf("Enchanting ^0000FF"+.@equip_name$+"^000000's 3rd slot for obtaining a random bonus effect. Requires ^FF0000"+.@cost+"^000000 ^0000FFCoagulated Spells^000000");
 							next;
 							if (select("Quit","Effect Upgrade!") == 1) {
 								mes("[Hugin's Magic Master]");
 								mes("Ok, come back when you are ready.");
 								close;
 							}
-							if (countitem(Coagulated_Spell) < .@cost) {mes("Hmm, you are missing "+(.@cost - countitem(Coagulated_Spell))+" Coagulated Spells. Go get more, and then we can talk about more enchants."); close;}
-							if (.@random > .@scs) {mes("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}
+							if (countitem(Coagulated_Spell) < .@cost) {mesf("Hmm, you are missing "+(.@cost - countitem(Coagulated_Spell))+" Coagulated Spells. Go get more, and then we can talk about more enchants."); close;}
+							if (.@random > .@scs) {mesf("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}
 							specialeffect2 EF_REPAIRWEAPON;
 							delitem Coagulated_Spell, .@cost;
 							delequip .@part;
@@ -2454,15 +2454,15 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 				else if (.@card3 == .@enchant3rd[5])
 					.@enchant = .@enchant4th[5];
 				mes("[Hugin's Magic Master]");
-				mes("Enchanting ^0000FF"+.@equip_name$+"^000000's 4th slot as ^0000FF"+.@number+"^000000 level effect. Requires ^FF0000"+.@cost+"^000000 ^0000FFCoagulated Spells.^000000");
+				mesf("Enchanting ^0000FF"+.@equip_name$+"^000000's 4th slot as ^0000FF"+.@number+"^000000 level effect. Requires ^FF0000"+.@cost+"^000000 ^0000FFCoagulated Spells.^000000");
 				next;
 				if (select("Quit","Effect Upgrade!") == 1) {
 					mes("[Hugin's Magic Master]");
 					mes("Ok, come back when you are ready.");
 					close;
 				}
-				if (countitem(Coagulated_Spell) < .@cost) {mes("Hmm, you are missing "+(.@cost - countitem(Coagulated_Spell))+" Coagulated Spells. Go get more, and then we can talk about more enchants."); close;}
-				if (.@random > .@scs) {mes("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}			
+				if (countitem(Coagulated_Spell) < .@cost) {mesf("Hmm, you are missing "+(.@cost - countitem(Coagulated_Spell))+" Coagulated Spells. Go get more, and then we can talk about more enchants."); close;}
+				if (.@random > .@scs) {mesf("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}			
 			}
 			break;
 		default:
@@ -2471,13 +2471,13 @@ glast_01,212,273,4	script	Hugin's Magic Master	1_F_01,{ // Custom text due to of
 			close;
 		}
 		mes("[Hugin's Magic Master]");
-		if (countitem(Coagulated_Spell) < .@cost) {mes("Hmm, you are missing "+(.@cost - countitem(Coagulated_Spell))+" Coagulated Spells. Go get more, and then we can talk about more enchants."); close;}
-		if (.@random > .@scs) {mes("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}
+		if (countitem(Coagulated_Spell) < .@cost) {mesf("Hmm, you are missing "+(.@cost - countitem(Coagulated_Spell))+" Coagulated Spells. Go get more, and then we can talk about more enchants."); close;}
+		if (.@random > .@scs) {mesf("Arrggg, we failed. Better luck next time."); specialeffect2 EF_PHARMACY_FAIL; delitem Coagulated_Spell, .@cost; delequip .@part; close;}
 		specialeffect2 EF_REPAIRWEAPON;
 		delitem Coagulated_Spell,.@cost;
 		delequip .@part;
 		mes("[Hugin's Magic Master]");
-		mes("Adding enchant  number ^630000"+.@number+"^000000.");
+		mesf("Adding enchant  number ^630000"+.@number+"^000000.");
 		getitem2 .@equip_id, 1, 1, .@equip_refine, 0, .@card0, 0, 0, .@enchant;
 		close;
 }
@@ -2562,7 +2562,7 @@ glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 				.@chance = .@slotchance[.@select-2];
 				if (countitem(.@item) < .@cost) {
 				mes("[Hugin's Craftsman]");
-				mes("Requires ^FF0000"+.@cost+"^000000 ^0000FF"+getitemname(.@item)+"^000000.");
+				mesf("Requires ^FF0000"+.@cost+"^000000 ^0000FF"+getitemname(.@item)+"^000000.");
 				close;
 				}
 		}
@@ -2576,7 +2576,7 @@ glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 				close;
 			}
 		mes("[Hugin's Craftsman]");
-		mes("Yuhuu~ we succeed. There you go... A slot has been added to your ^FF0000"+getitemname(.@equip_id)+"^000000. Thank you for believing in me.");
+		mesf("Yuhuu~ we succeed. There you go... A slot has been added to your ^FF0000"+getitemname(.@equip_id)+"^000000. Thank you for believing in me.");
 		delitem .@item, .@cost;
 		specialeffect2 EF_PHARMACY_OK;
 		delequip .@part;
@@ -2602,26 +2602,26 @@ glast_01,210,270,0	script	Hugin's Craftsman	4_F_JOB_BLACKSMITH,{
 	}
 }
 
-// White Knightage Cards
+// Knight Cards
 // White Knight Card cost 70 red coagulated spells or 3000 blue coagulated spells
 // Khalitzburg Knight Card cost 100 red coagulated spells or 5000 blue coagulated spells
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-glast_01,188,273,5	script	White Knightage#1a	4_WHITEKNIGHT,{
+glast_01,188,273,5	script	White Knight#1a	4_WHITEKNIGHT,{
 	disable_items;
-	mes("[White Knightage]");	// custom
+	mes("[White Knight]");	// custom
 		if (MaxWeight - Weight < 1000) {
 			mes("Your bag is too heavy. Reduce some weight and come back.");
 			close;
 		}
-	mes("I exchange you a White Knightage Card for ^0000FF3000 Coagulated Spell^000000 or ^FF000070 Contaminated Magic^000000.");
-	mes("<ITEMLINK>White Knightage Card<INFO>4608</INFO></ITEMLINK>");
+	mes("I exchange you a White Knight Card for ^0000FF3000 Coagulated Spell^000000 or ^FF000070 Contaminated Magic^000000.");
+	mes("<ITEMLINK>White Knight Card<INFO>4608</INFO></ITEMLINK>");
 	next;
 	setarray .@item[0], Coagulated_Spell, Contaminated_Magic;
 	setarray .@cost[0], 3000, 70;
 	.@select = select("Cancel","^0000FFUse Coagulated Spell^000000","^FF0000UseContaminated Magic^000000");
 		switch (.@select) {
 			case 1:
-				mes("[White Knightage]");
+				mes("[White Knight]");
 				mes("Come back any time.");
 				close;
 			case 2:
@@ -2629,32 +2629,32 @@ glast_01,188,273,5	script	White Knightage#1a	4_WHITEKNIGHT,{
 				.@item = .@item[.@select-2];
 				.@cost = .@cost[.@select-2];
 				if (countitem(.@item) < .@cost) {
-				mes("[White Knightage]");
-				mes("Requires ^0000FF"+.@cost+" "+getitemname(.@item)+"^000000.");
+				mes("[White Knight]");
+				mesf("Requires ^0000FF"+.@cost+" "+getitemname(.@item)+"^000000.");
 				close;
 				}
 			delitem .@item, .@cost;
-			getitem White_Knightage_Card, 1;
+			getitem White_Knight_Card, 1;
 			close;
 		}
 	}
 
-glast_01,192,273,3	script	Khalitzburg Knightage#1a	4_F_KHALITZBURG,{
+glast_01,192,273,3	script	Khalitzburg Knight#1a	4_F_KHALITZBURG,{
 	disable_items;
-	mes("[Khalitzburg Knightage]");	// custom
+	mes("[Khalitzburg Knight]");	// custom
 		if (MaxWeight - Weight < 1000) {
 			mes("Your bag is too heavy. Reduce some weight and come back.");
 			close;
 		}
-	mes("I exchange you a Khalitzburg Knightage Card for ^0000FF5000 Coagulated Spell^000000 or ^FF0000100 Contaminated Magic^000000.");
-	mes("<ITEMLINK>Khalitzburg Knightage Card<INFO>4609</INFO></ITEMLINK>");
+	mes("I exchange you a Khalitzburg Knight Card for ^0000FF5000 Coagulated Spell^000000 or ^FF0000100 Contaminated Magic^000000.");
+	mes("<ITEMLINK>Khalitzburg Knight Card<INFO>4609</INFO></ITEMLINK>");
 	next;
 	setarray .@item[0], Coagulated_Spell, Contaminated_Magic;
 	setarray .@cost[0], 5000, 100;
 	.@select = select("Cancel","^0000FFUse Coagulated Spell^000000","^FF0000UseContaminated Magic^000000");
 		switch (.@select) {
 			case 1:
-				mes("[Khalitzburg Knightage]");
+				mes("[Khalitzburg Knight]");
 				mes("Come back any time.");
 				close;
 			case 2:
@@ -2662,12 +2662,12 @@ glast_01,192,273,3	script	Khalitzburg Knightage#1a	4_F_KHALITZBURG,{
 				.@item = .@item[.@select-2];
 				.@cost = .@cost[.@select-2];
 				if (countitem(.@item) < .@cost) {
-				mes("[Khalitzburg Knightage]");
-				mes("Requires ^0000FF"+.@cost+" "+getitemname(.@item)+"^000000.");
+				mes("[Khalitzburg Knight]");
+				mesf("Requires ^0000FF"+.@cost+" "+getitemname(.@item)+"^000000.");
 				close;
 				}
 			delitem .@item, .@cost;
-			getitem Khalitzburg_Knightage_Card, 1;
+			getitem Khalitzburg_Knight_Card, 1;
 			close;
 		}
 	}
