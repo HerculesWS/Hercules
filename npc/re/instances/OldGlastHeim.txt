@@ -499,7 +499,7 @@ OnEnable:
 	end;
 
 OnTalk1:
-	npctalk(_("Well well~ Am I interrupting you? Weren't you expecting me?");
+	npctalk(_("Well well~ Am I interrupting you? Weren't you expecting me?"));
 	end;
 
 OnTalk2:
