@@ -186,7 +186,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 	cutin("gl_barmund2", 2);
 	mes("[Varmundt]");
 	mes("We don't have much time. We must report to Sir. Heinrich about Himelmez's invasion.");
-	npctalk _("We don't have much time. We must report to Sir. Heinrich about Himelmez's invasion.");
+	npctalk(_("We don't have much time. We must report to Sir. Heinrich about Himelmez's invasion."));
 	next;
 	select("Himelmez...");
 	mesf("[%s]", strcharinfo(0));
@@ -201,7 +201,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 	cutin("gl_barmund2", 2);
 	mes("[Varmundt]");
 	mes("She is the Ruler of Death, Dead man's Valkyrie. Himelmez is looking to take the heart of Ymir from us.");
-	npctalk _("She is the Ruler of Death, Dead man's Valkyrie. Himelmez is looking to take the heart of Ymir from us.");
+	npctalk(_("She is the Ruler of Death, Dead man's Valkyrie. Himelmez is looking to take the heart of Ymir from us."));
 	next;
 	mes("[Varmundt]");
 	mes("She might even destroy this whole castle if she wanted to.");
@@ -499,7 +499,7 @@ OnEnable:
 	end;
 
 OnTalk1:
-	npctalk _("Well well~ Am I interrupting you? Weren't you expecting me?");
+	npctalk(_("Well well~ Am I interrupting you? Weren't you expecting me?");
 	end;
 
 OnTalk2:
@@ -965,7 +965,7 @@ OnMyMobDead:
 	select("I will give you a weapon.");
 	mesf("[%s]", strcharinfo(0));
 	mes("Here's a weapon. Just close your eye and swing for those monsters.");
-	unittalk getcharid(3), _("Here's a weapon. Just close your eye and swing for those monsters.");
+	unittalk(getcharid(3), _("Here's a weapon. Just close your eye and swing for those monsters."));
 	next;
 	mes("[Altar boy Domun]");
 	mes("Ok, I... I'l try.");
@@ -1035,7 +1035,7 @@ OnMyMobDead:
 	select("Relax! I'm not a monster!");
 	mesf("[%s]", strcharinfo(0));
 	mes("Relax! I am Human. Are you alone? Anyone else here?");
-	unittalk getcharid(3), _("Relax! I am Human. Are you alone? Anyone else here?");
+	unittalk(getcharid(3), _("Relax! I am Human. Are you alone? Anyone else here?"));
 	next;
 	mes("[Holgren the Destroyer]");
 	mes("It's only me alive.");
