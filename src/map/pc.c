@@ -4646,13 +4646,13 @@ int pc_dropitem(struct map_session_data *sd,int n,int amount)
 		return 0;
 
 	if( map->list[sd->bl.m].flag.nodrop ) {
-		clif->message (sd->fd, msg_sd(sd,271));
-		return 0; //Can't drop items in nodrop mapflag maps.
+		clif->message (sd->fd, msg_sd(sd,271)); // You can't drop items in this map
+		return 0;
 	}
 
 	if( !pc->candrop(sd,&sd->status.inventory[n]) )
 	{
-		clif->message (sd->fd, msg_sd(sd,263));
+		clif->message (sd->fd, msg_sd(sd,263)); // This item cannot be dropped.
 		return 0;
 	}
 
@@ -5097,7 +5097,7 @@ int pc_cart_additem(struct map_session_data *sd,struct item *item_data,int amoun
 
 	if (!itemdb_cancartstore(item_data, pc_get_group_level(sd)) || (item_data->bound > IBT_ACCOUNT && !pc_can_give_bound_items(sd))) {
 		// Check item trade restrictions
-		clif->message (sd->fd, msg_sd(sd,264));
+		clif->message (sd->fd, msg_sd(sd,264)); // This item cannot be stored.
 		return 1;/* TODO: there is no official response to this? */
 	}
 

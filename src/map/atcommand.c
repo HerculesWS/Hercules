@@ -466,11 +466,11 @@ ACMD(mapmove) {
 			x = y = 0; //Invalid cell, use random spot.
 	}
 	if (map->list[m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
-		clif->message(fd, msg_fd(fd,247));
+		clif->message(fd, msg_fd(fd,247)); // You are not authorized to warp to this map.
 		return false;
 	}
 	if (sd->bl.m >= 0 && map->list[sd->bl.m].flag.nowarp && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) {
-		clif->message(fd, msg_fd(fd,248));
+		clif->message(fd, msg_fd(fd,248)); // You are not authorized to warp from your current map.
 		return false;
 	}
 	if (pc->setpos(sd, map_index, x, y, CLR_TELEPORT) != 0) {
@@ -854,7 +854,7 @@ ACMD(storage)
 		return false;
 
 	if (storage->open(sd) == 1) { //Already open.
-		clif->message(fd, msg_fd(fd,250));
+		clif->message(fd, msg_fd(fd,250)); // You have already opened your storage. Close it first.
 		return false;
 	}
 
@@ -869,7 +869,7 @@ ACMD(storage)
 ACMD(guildstorage)
 {
 	if (!sd->status.guild_id) {
-		clif->message(fd, msg_fd(fd,252));
+		clif->message(fd, msg_fd(fd,252)); // You are not in a guild.
 		return false;
 	}
 
@@ -877,12 +877,12 @@ ACMD(guildstorage)
 		return false;
 
 	if (sd->state.storage_flag == STORAGE_FLAG_NORMAL) {
-		clif->message(fd, msg_fd(fd,250));
+		clif->message(fd, msg_fd(fd,250)); // You have already opened your storage. Close it first.
 		return false;
 	}
 
 	if (sd->state.storage_flag == STORAGE_FLAG_GUILD) {
-		clif->message(fd, msg_fd(fd,251));
+		clif->message(fd, msg_fd(fd,251)); // You have already opened your guild storage. Close it first.
 		return false;
 	}
 
