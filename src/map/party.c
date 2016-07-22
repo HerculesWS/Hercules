@@ -338,7 +338,7 @@ int party_invite(struct map_session_data *sd,struct map_session_data *tsd)
 	ARR_FIND(0, MAX_PARTY, i, p->data[i].sd == sd);
 
 	if( i == MAX_PARTY || !p->party.member[i].leader ) {
-		clif->message(sd->fd, msg_sd(sd,282));
+		clif->message(sd->fd, msg_sd(sd,282)); // You need to be a party leader to use this command.
 		return 0;
 	}
 
@@ -660,12 +660,12 @@ bool party_changeleader(struct map_session_data *sd, struct map_session_data *ts
 		return false;
 
 	if (!tsd || tsd->status.party_id != sd->status.party_id) {
-		clif->message(sd->fd, msg_sd(sd,283));
+		clif->message(sd->fd, msg_sd(sd,283)); // Target character must be online and in your current party.
 		return false;
 	}
 
 	if( map->list[sd->bl.m].flag.partylock ) {
-		clif->message(sd->fd, msg_sd(sd,287));
+		clif->message(sd->fd, msg_sd(sd,287)); // You cannot change party leaders in this map.
 		return false;
 	}
 
@@ -677,8 +677,7 @@ bool party_changeleader(struct map_session_data *sd, struct map_session_data *ts
 		return false; //Shouldn't happen
 
 	if (!p->party.member[mi].leader) {
-		//Need to be a party leader.
-		clif->message(sd->fd, msg_sd(sd,282));
+		clif->message(sd->fd, msg_sd(sd,282)); // You need to be a party leader to use this command.
 		return false;
 	}
 

@@ -6390,7 +6390,7 @@ void clif_party_inviteack(struct map_session_data* sd, const char* nick, int res
 
 #if PACKETVER < 20070904
 	if( result == 7 ) {
-		clif->message(fd, msg_sd(sd,3));
+		clif->message(fd, msg_sd(sd,3)); // Character not found.
 		return;
 	}
 #endif
@@ -10071,7 +10071,7 @@ void clif_parse_WisMessage(int fd, struct map_session_data* sd)
 			if (k < sd->channel_count || channel->join(chan, sd, NULL, true) == HCS_STATUS_OK) {
 				channel->send(chan,sd,message);
 			} else {
-				clif->message(fd, msg_fd(fd,1402));
+				clif->message(fd, msg_fd(fd,1402)); //You're not in that channel, type '@join <#channel_name>'
 			}
 			return;
 		}
@@ -11580,7 +11580,7 @@ void clif_parse_CreateParty(int fd, struct map_session_data *sd) {
 
 	if( map->list[sd->bl.m].flag.partylock ) {
 		// Party locked.
-		clif->message(fd, msg_fd(fd,227));
+		clif->message(fd, msg_fd(fd,227)); // Party modification is disabled in this map.
 		return;
 	}
 	if( battle_config.basic_skill_check && pc->checkskill(sd,NV_BASIC) < 7 ) {
@@ -11599,7 +11599,7 @@ void clif_parse_CreateParty2(int fd, struct map_session_data *sd) {
 
 	if( map->list[sd->bl.m].flag.partylock ) {
 		// Party locked.
-		clif->message(fd, msg_fd(fd,227));
+		clif->message(fd, msg_fd(fd,227)); // Party modification is disabled in this map.
 		return;
 	}
 	if( battle_config.basic_skill_check && pc->checkskill(sd,NV_BASIC) < 7 ) {
@@ -11619,7 +11619,7 @@ void clif_parse_PartyInvite(int fd, struct map_session_data *sd) {
 
 	if(map->list[sd->bl.m].flag.partylock) {
 		// Party locked.
-		clif->message(fd, msg_fd(fd,227));
+		clif->message(fd, msg_fd(fd,227)); // Party modification is disabled in this map.
 		return;
 	}
 
@@ -11640,7 +11640,7 @@ void clif_parse_PartyInvite2(int fd, struct map_session_data *sd) {
 
 	if(map->list[sd->bl.m].flag.partylock) {
 		// Party locked.
-		clif->message(fd, msg_fd(fd,227));
+		clif->message(fd, msg_fd(fd,227)); // Party modification is disabled in this map.
 		return;
 	}
 
@@ -11677,7 +11677,7 @@ void clif_parse_ReplyPartyInvite2(int fd,struct map_session_data *sd)
 void clif_parse_LeaveParty(int fd, struct map_session_data *sd) {
 	if(map->list[sd->bl.m].flag.partylock) {
 		// Party locked.
-		clif->message(fd, msg_fd(fd,227));
+		clif->message(fd, msg_fd(fd,227)); // Party modification is disabled in this map.
 		return;
 	}
 	party->leave(sd);
@@ -11689,7 +11689,7 @@ void clif_parse_LeaveParty(int fd, struct map_session_data *sd) {
 void clif_parse_RemovePartyMember(int fd, struct map_session_data *sd) {
 	if(map->list[sd->bl.m].flag.partylock) {
 		// Party locked.
-		clif->message(fd, msg_fd(fd,227));
+		clif->message(fd, msg_fd(fd,227)); // Party modification is disabled in this map.
 		return;
 	}
 	party->removemember(sd,RFIFOL(fd,2),(char*)RFIFOP(fd,6));
@@ -12449,8 +12449,7 @@ void clif_parse_CreateGuild(int fd,struct map_session_data *sd) {
 	name[NAME_LENGTH-1] = '\0';
 
 	if(map->list[sd->bl.m].flag.guildlock) {
-		//Guild locked.
-		clif->message(fd, msg_fd(fd,228));
+		clif->message(fd, msg_fd(fd,228)); // Guild modification is disabled in this map.
 		return;
 	}
 
@@ -12718,8 +12717,7 @@ bool clif_sub_guild_invite(int fd, struct map_session_data *sd, struct map_sessi
 		return false;
 
 	if ( map->list[sd->bl.m].flag.guildlock ) {
-		//Guild locked.
-		clif->message(fd, msg_fd(fd,228));
+		clif->message(fd, msg_fd(fd,228)); // Guild modification is disabled in this map.
 		return false;
 	}
 
@@ -12765,8 +12763,7 @@ void clif_parse_GuildReplyInvite(int fd,struct map_session_data *sd)
 /// 0159 <guild id>.L <account id>.L <char id>.L <reason>.40B
 void clif_parse_GuildLeave(int fd,struct map_session_data *sd) {
 	if(map->list[sd->bl.m].flag.guildlock) {
-		//Guild locked.
-		clif->message(fd, msg_fd(fd,228));
+		clif->message(fd, msg_fd(fd,228)); // Guild modification is disabled in this map.
 		return;
 	}
 	if( sd->bg_id ) {
@@ -12782,8 +12779,7 @@ void clif_parse_GuildLeave(int fd,struct map_session_data *sd) {
 /// 015b <guild id>.L <account id>.L <char id>.L <reason>.40B
 void clif_parse_GuildExpulsion(int fd,struct map_session_data *sd) {
 	if( map->list[sd->bl.m].flag.guildlock || sd->bg_id ) {
-		// Guild locked.
-		clif->message(fd, msg_fd(fd,228));
+		clif->message(fd, msg_fd(fd,228)); // Guild modification is disabled in this map.
 		return;
 	}
 	guild->expulsion(sd,RFIFOL(fd,2),RFIFOL(fd,6),RFIFOL(fd,10),(char*)RFIFOP(fd,14));
@@ -12835,8 +12831,7 @@ void clif_parse_GuildRequestAlliance(int fd, struct map_session_data *sd) {
 		return;
 
 	if(map->list[sd->bl.m].flag.guildlock) {
-		//Guild locked.
-		clif->message(fd, msg_fd(fd,228));
+		clif->message(fd, msg_fd(fd,228)); // Guild modification is disabled in this map.
 		return;
 	}
 
@@ -12873,8 +12868,7 @@ void clif_parse_GuildDelAlliance(int fd, struct map_session_data *sd) {
 		return;
 
 	if(map->list[sd->bl.m].flag.guildlock) {
-		//Guild locked.
-		clif->message(fd, msg_fd(fd,228));
+		clif->message(fd, msg_fd(fd,228)); // Guild modification is disabled in this map.
 		return;
 	}
 	guild->delalliance(sd,RFIFOL(fd,2),RFIFOL(fd,6));
@@ -12890,8 +12884,7 @@ void clif_parse_GuildOpposition(int fd, struct map_session_data *sd) {
 		return;
 
 	if(map->list[sd->bl.m].flag.guildlock) {
-		//Guild locked.
-		clif->message(fd, msg_fd(fd,228));
+		clif->message(fd, msg_fd(fd,228)); // Guild modification is disabled in this map.
 		return;
 	}
 
@@ -12914,8 +12907,7 @@ void clif_parse_GuildOpposition(int fd, struct map_session_data *sd) {
 ///     field name and size is same as the one in CH_DELETE_CHAR.
 void clif_parse_GuildBreak(int fd, struct map_session_data *sd) {
 	if( map->list[sd->bl.m].flag.guildlock ) {
-		//Guild locked.
-		clif->message(fd, msg_fd(fd,228));
+		clif->message(fd, msg_fd(fd,228)); // Guild modification is disabled in this map.
 		return;
 	}
 	guild->dobreak(sd,(char*)RFIFOP(fd,2));
@@ -13621,7 +13613,7 @@ void clif_parse_FriendsListAdd(int fd, struct map_session_data *sd) {
 
 	// Friend doesn't exist (no player with this name)
 	if (f_sd == NULL) {
-		clif->message(fd, msg_fd(fd,3));
+		clif->message(fd, msg_fd(fd,3)); // "Character not found."
 		return;
 	}
 
@@ -14923,7 +14915,7 @@ void clif_parse_Auction_register(int fd, struct map_session_data *sd)
 
 	// Auction checks...
 	if( sd->status.inventory[sd->auction.index].bound && !pc_can_give_bound_items(sd) ) {
-		clif->message(sd->fd, msg_sd(sd,293));
+		clif->message(sd->fd, msg_sd(sd,293)); // This bound item cannot be traded to that character.
 		clif->auction_message(fd, 2); // The auction has been canceled
 		return;
 	}
@@ -14976,7 +14968,7 @@ void clif_parse_Auction_bid(int fd, struct map_session_data *sd)
 	int bid = RFIFOL(fd,6);
 
 	if( !pc_can_give_items(sd) ) { //They aren't supposed to give zeny [Inkfish]
-		clif->message(sd->fd, msg_sd(sd,246));
+		clif->message(sd->fd, msg_sd(sd,246)); // Your GM level doesn't authorize you to perform this action.
 		return;
 	}
 
@@ -17842,7 +17834,7 @@ void clif_parse_RouletteOpen(int fd, struct map_session_data* sd) {
 	struct packet_roulette_open_ack p;
 	
 	if( !battle_config.feature_roulette ) {
-		clif->message(fd,"Roulette is disabled");
+		clif->message(fd, msg_fd(fd,82)); // Roulette is disabled
 		return;
 	}
 	
@@ -17863,7 +17855,7 @@ void clif_parse_RouletteInfo(int fd, struct map_session_data* sd) {
 	unsigned short i, j, count = 0;
 
 	if( !battle_config.feature_roulette ) {
-		clif->message(fd,"Roulette is disabled");
+		clif->message(fd, msg_fd(fd,82)); // Roulette is disabled
 		return;
 	}
 	
@@ -17887,7 +17879,7 @@ void clif_parse_RouletteInfo(int fd, struct map_session_data* sd) {
 void clif_parse_RouletteClose(int fd, struct map_session_data* sd) {
 	
 	if( !battle_config.feature_roulette ) {
-		clif->message(fd,"Roulette is disabled");
+		clif->message(fd, msg_fd(fd,82)); // Roulette is disabled
 		return;
 	}
 	
@@ -17903,7 +17895,7 @@ void clif_parse_RouletteGenerate(int fd, struct map_session_data* sd) {
 	short stage = sd->roulette.stage;
 	
 	if( !battle_config.feature_roulette ) {
-		clif->message(fd,"Roulette is disabled");
+		clif->message(fd, msg_fd(fd,82)); // Roulette is disabled
 		return;
 	}
 		
@@ -17959,7 +17951,7 @@ void clif_parse_RouletteRecvItem(int fd, struct map_session_data* sd) {
 	struct packet_roulette_itemrecv_ack p;
 	
 	if( !battle_config.feature_roulette ) {
-		clif->message(fd,"Roulette is disabled");
+		clif->message(fd, msg_fd(fd,82)); // Roulette is disabled
 		return;
 	}
 	

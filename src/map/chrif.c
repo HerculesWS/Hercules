@@ -966,9 +966,9 @@ void chrif_idbanned(int fd) {
 		if(0<ret_status && ret_status<=9)
 			clif->message(sd->fd, msg_sd(sd,411+ret_status)); // Message IDs (for search convenience): 412, 413, 414, 415, 416, 417, 418, 419, 420
 		else if(ret_status==100)
-			clif->message(sd->fd, msg_sd(sd,421));
+			clif->message(sd->fd, msg_sd(sd,421)); // Your account has been totally erased.
 		else
-			clif->message(sd->fd, msg_sd(sd,420)); //"Your account has not more authorized."
+			clif->message(sd->fd, msg_sd(sd,420)); //"Your account is not longer authorized."
 	} else if (RFIFOB(fd,6) == 1) { // 1: ban
 		time_t timestamp;
 		char tmpstr[2048];

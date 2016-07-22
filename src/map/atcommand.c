@@ -852,7 +852,7 @@ ACMD(storage)
 		return false;
 
 	if (storage->open(sd) == 1) { //Already open.
-		clif->message(fd, msg_fd(fd,250));
+		clif->message(fd, msg_fd(fd,250)); // You have already opened your storage. Close it first.
 		return false;
 	}
 
@@ -868,7 +868,7 @@ ACMD(storage)
 ACMD(guildstorage)
 {
 	if (!sd->status.guild_id) {
-		clif->message(fd, msg_fd(fd,252));
+		clif->message(fd, msg_fd(fd,252)); // You are not in a guild.
 		return false;
 	}
 
@@ -876,12 +876,12 @@ ACMD(guildstorage)
 		return false;
 
 	if (sd->state.storage_flag == 1) {
-		clif->message(fd, msg_fd(fd,250));
+		clif->message(fd, msg_fd(fd,250)); // You have already opened your storage. Close it first.
 		return false;
 	}
 
 	if (sd->state.storage_flag == 2) {
-		clif->message(fd, msg_fd(fd,251));
+		clif->message(fd, msg_fd(fd,251)); // You have already opened your guild storage. Close it first.
 		return false;
 	}
 
