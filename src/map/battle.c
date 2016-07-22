@@ -7409,30 +7409,51 @@ bool battle_init_damage(const struct battle_skill_data *bd, struct Damage *dmg)
 {
 	const struct status_data *src_status = status->get_status_data(bd->src);
 	const struct status_data *target_status = status->get_status_data(bd->target);
+	const struct map_session_data *src_sd = BL_CAST(BL_PC, bd->src);
+
+	//Those are shared between all types no need to set explictly in each attack type
+	dmg->nk = skill->get_nk(bd->skill_id);
+	dmg->div_ = skill->get_num(bd->skill_id, bd->skill_level);
+	dmg->dmotion = target_status->dmotion;
+	dmg->blewcount = skill->get_blewcount(bd->skill_id, bd->skill_level);
+	dmg->dmg_lv = ATK_DEF;
+	dmg->redirect_skill_id = bd->skill_id;
+	dmg->skill_element = skill->get_ele(bd->skill_id, bd->skill_level);
+	dmg->flag |= battle->range_type(bd->src, bd->target, bd->skill_id, bd->skill_level);
 
 	switch (bd->attack_type) {
 		case BF_MISC:
 			dmg->amotion = (skill->get_inf(bd->skill_id)&INF_GROUND_SKILL) ? 0 : src_status->amotion;
-			dmg->dmotion = target_status->dmotion;
-			dmg->div_ = skill->get_num(bd->skill_id, bd->skill_level);
-			dmg->blewcount = skill->get_blewcount(bd->skill_id, bd->skill_level);
-			dmg->dmg_lv = ATK_DEF;
-			dmg->flag = BF_MISC|BF_SKILL;
-			dmg->flag |= battle->range_type(bd->src, bd->target, bd->skill_id, bd->skill_level);
-			dmg->skill_element = skill->get_ele(bd->skill_id, bd->skill_level);
-			dmg->redirect_skill_id = bd->skill_id;
+			dmg->flag |= BF_MISC|BF_SKILL;
 
 			if (dmg->skill_element < ELE_NEUTRAL && dmg->skill_element != -3) //Attack that takes weapon's element for misc attacks? Make it neutral [Skotlex]
 				dmg->skill_element = ELE_NEUTRAL;
 			else if (dmg->skill_element == -3) //Use random element
 				dmg->skill_element = rnd()%ELE_MAX;
 			break;
+		case BF_MAGIC:
+			dmg->amotion = (skill->get_inf(bd->skill_id)&INF_GROUND_SKILL) ? 0 : src_status->amotion; //Amotion should be 0 for ground skills.
+			dmg->flag |= BF_MAGIC|BF_SKILL;
+			dmg->magic_flag.imdef  = (dmg->nk&NK_IGNORE_DEF)? 1 : 0;
+			dmg->magic_flag.infdef = (target_status->mode&MD_PLANT)? 1 : 0;
+
+			if (dmg->skill_element == -1) {
+				dmg->skill_element = src_status->rhw.ele;
+			} else if (dmg->skill_element == -2) {
+				dmg->skill_element = status_get_attack_sc_element(bd->src,status->get_sc(bd->src));
+			} else if (dmg->skill_element == -3) {
+				dmg->skill_element = rnd()%ELE_MAX;
+			}
+
+			if (src_sd != NULL && src_sd->charm_type != CHARM_TYPE_NONE && src_sd->charm_count >= MAX_SPIRITCHARM)
+				dmg->skill_element = src_sd->charm_type;
+
+			break;
 		default:
 			ShowError("battle_init_damage: unknow attack type passed (%d)", bd->attack_type);
 			return false;
 	}
 
-	dmg->nk = skill->get_nk(bd->skill_id);
 	return true;
 }
 

@@ -136,6 +136,11 @@ struct Damage {
 	uint32 nk; //nk field from skill databse look at skill.h
 	int skill_element;
 	int redirect_skill_id;
+
+	struct {
+		unsigned imdef  : 2;
+		unsigned infdef : 1;
+	} magic_flag;
 };
 
 struct Battle_Config {
