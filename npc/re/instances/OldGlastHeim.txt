@@ -337,7 +337,7 @@ OnEnable:
 	donpcevent(instance_npcname("Heinrich#ghinstance2")+"::OnEnable");
 	donpcevent(instance_npcname("Himelmez#ghinstance1")+"::OnEnable");
 	donpcevent(instance_npcname("#talkinstance1")+"::OnEnable");
-	mapannounce(instance_mapname("1@gl_k"), _("????: Muahahahaha~!"), bc_map, "0xFFFF00", FW_NORMAL, 18);
+	mapannounce(instance_mapname("1@gl_k"), _("????: Muahahahaha~!"), bc_map, C_YELLOW, FW_NORMAL, 18);
 	cutin("gl_heinrich1", 255);
 	end;
 
@@ -543,11 +543,11 @@ OnTimer103000:
 	end;
 
 OnTimer106000:
-	mapannounce(instance_mapname("1@gl_k"), _("Sir. Heinrich: Death to all!"), bc_map, "0xFFFF00", FW_NORMAL, 18);
+	mapannounce(instance_mapname("1@gl_k"), _("Sir. Heinrich: Death to all!"), bc_map, C_YELLOW, FW_NORMAL, 18);
 	end;
 
 OnTimer109000:
-	mapannounce(instance_mapname("1@gl_k"), _("Sir. Heinrich: Go back to the darkness!"), bc_map, "0xFFFF00", FW_NORMAL, 18);
+	mapannounce(instance_mapname("1@gl_k"), _("Sir. Heinrich: Go back to the darkness!"), bc_map, C_YELLOW, FW_NORMAL, 18);
 	end;
 
 OnTimer109500:
@@ -666,7 +666,7 @@ OnTimer148500:
 	stopnpctimer;
 	donpcevent instance_npcname("#ghinstancewarp1")+"::OnEnable";
 	donpcevent instance_npcname("#ghinstancewarp2")+"::OnEnable";
-	mapannounce(instance_mapname("1@gl_k"), _("A portal has opened to the west."), bc_map, "0xFFFF00");
+	mapannounce(instance_mapname("1@gl_k"), _("A portal has opened to the west."), bc_map, C_YELLOW);
 	donpcevent instance_npcname("#talkinstance1")+"::OnDisable";
 	donpcevent instance_npcname("#ghmemorialmob01")+"::OnEnable";
 	end;
@@ -792,7 +792,7 @@ OnMyMobDead:
 	.@label$ = instance_npcname("#ghmemorialmob01")+"::OnMyMobDead";
 	.@mob_dead_num = 56 - mobcount(.@map$,.@label$);
 	if (.@mob_dead_num > 35) {
-		mapannounce(.@map$, _("Himelmez's curse is getting weaker. Find any survivors!"), bc_map, "0xFFFFFF");
+		mapannounce(.@map$, _("Himelmez's curse is getting weaker. Find any survivors!"), bc_map, C_WHITE);
 		killmonster .@map$,.@label$;
 		donpcevent instance_npcname("Altar boy Domun#clearGH")+"::OnEnable";
 		donpcevent instance_npcname("#ghmemorialmob01")+"::OnDisable";
@@ -877,7 +877,7 @@ OnEnable:
 	donpcevent instance_npcname("#ghinstancewarp4")+"::OnEnable";
 	.@map$ = instance_mapname("1@gl_k");
 	.@label$ = instance_npcname("#ghmemorialmob02")+"::OnMyMobDead";
-	mapannounce(.@map$, _("A portal has opened to the east."), bc_map, "0xFFFF00");
+	mapannounce(.@map$, _("A portal has opened to the east."), bc_map, C_YELLOW);
 	areamonster(.@map$, 241, 113, 291, 19, _("Outraged Refiner"), MG_GHOUL, 12, .@label$);
 	areamonster(.@map$, 241, 113, 291, 19, _("Decomposed Blacksmith"), MG_ZOMBIE, 12, .@label$);
 	areamonster(.@map$, 227, 217, 291, 135, _("Outraged Refiner"), MG_GHOUL, 12, .@label$);
@@ -889,7 +889,7 @@ OnMyMobDead:
 	.@label$ = instance_npcname("#ghmemorialmob02")+"::OnMyMobDead";
 	.@mob_dead_num = 48 - mobcount(.@map$,.@label$);
 	if (.@mob_dead_num > 28) {
-		mapannounce(.@map$, _("Himelmez's curse is getting weaker. Find any survivors!"), bc_map, "0xFFFFFF");
+		mapannounce(.@map$, _("Himelmez's curse is getting weaker. Find any survivors!"), bc_map, C_WHITE);
 		killmonster .@map$,.@label$;
 		donpcevent instance_npcname("Holgren the Destroyer")+"::OnEnable";
 		donpcevent instance_npcname("#ghmemorialmob02")+"::OnDisable";
@@ -1034,7 +1034,7 @@ OnEnable:
 	donpcevent instance_npcname("#ghinstancewarp6")+"::OnEnable";
 	.@map$ = instance_mapname("1@gl_k");
 	.@label$ = instance_npcname("#ghmemorialmob03")+"::OnMyMobDead";
-	mapannounce(.@map$, _("A portal has appeared to the northwest."), bc_map, "0xFFFF00");
+	mapannounce(.@map$, _("A portal has appeared to the northwest."), bc_map, C_YELLOW);
 	areamonster(.@map$, 17, 259, 53, 180, _("Hungry Palace Guard"), MG_RAYDRIC, 11, .@label$);
 	areamonster(.@map$, 17, 259, 53, 180, _("Outraged Archer"), MG_RAYDRIC_ARCHER, 14, .@label$);
 	areamonster(.@map$, 62, 281, 73, 186, _("Hungry Palace Guard"), MG_RAYDRIC, 11, .@label$);
@@ -1050,7 +1050,7 @@ OnMyMobDead:
 	.@label$ = instance_npcname("#ghmemorialmob03")+"::OnMyMobDead";
 	.@mob_dead_num = 100 - mobcount(.@map$,.@label$);
 	if (.@mob_dead_num > 85) {
-		mapannounce(.@map$, _("Himelmez: Not bad. Thought you would be dead by now by my creatures~"), bc_map, "0xFFFFFF");
+		mapannounce(.@map$, _("Himelmez: Not bad. Thought you would be dead by now by my creatures~"), bc_map, C_WHITE);
 		killmonster .@map$,.@label$;
 		donpcevent instance_npcname("#GHMclear3")+"::OnEnable";
 		donpcevent instance_npcname("Heinrich#ghinstance4")+"::OnEnable";
@@ -1080,7 +1080,7 @@ OnEnable:
 OnMyMobDead:
 	.@map$ = instance_mapname("1@gl_k");
 	if (mobcount(.@map$,instance_npcname("#ghmemorialmob04")+"::OnMyMobDead") < 1) {
-		mapannounce(.@map$, _("Opening 2nd floor entrance towards 12 O'clock direction."), bc_map, "0xFFFF00");
+		mapannounce(.@map$, _("Opening 2nd floor entrance towards 12 O'clock direction."), bc_map, C_YELLOW);
 		donpcevent instance_npcname("#ghinstancewarp7")+"::OnEnable";
 		donpcevent instance_npcname("#ghinstancewarp14")+"::OnEnable";
 		npctalk(_("I collected some items dropped from its body. You can take it from me."), instance_npcname("Varmundt#ghinstance3"));
@@ -1112,7 +1112,7 @@ OnEnable:
 	end;
 
 OnTimer2000:
-	mapannounce(instance_mapname("1@gl_k"), _("Himelmez: I'll wait for you at the north of the castle. I want to see you how lucky you are."), bc_map, "0xFFFFFF");
+	mapannounce(instance_mapname("1@gl_k"), _("Himelmez: I'll wait for you at the north of the castle. I want to see you how lucky you are."), bc_map, C_WHITE);
 	stopnpctimer;
 	end;
 }
@@ -1179,7 +1179,7 @@ OnTimer32000:
 	end;
 
 OnTimer35000:
-	mapannounce(instance_mapname("1@gl_k"), _("An echoing comes from deep inside of the knight's shrine."), bc_map, "0xFFFFFF");
+	mapannounce(instance_mapname("1@gl_k"), _("An echoing comes from deep inside of the knight's shrine."), bc_map, C_WHITE);
 	end;
 
 OnTimer38000:
@@ -1427,7 +1427,7 @@ OnTimer66000:
 	end;
 
 OnTimer69000:
-	mapannounce(instance_mapname("2@gl_k"), _("A portal to the west has opened in the central hallway."), bc_map, "0xFFFF00");
+	mapannounce(instance_mapname("2@gl_k"), _("A portal to the west has opened in the central hallway."), bc_map, C_YELLOW);
 	donpcevent instance_npcname("#ghinstancewarp8")+"::OnEnable";
 	donpcevent instance_npcname("#ghinstancewarp9")+"::OnEnable";
 	donpcevent instance_npcname("#ghmemorialmob06")+"::OnEnable";
@@ -1465,7 +1465,7 @@ OnMyMobDead:
 	.@map$ = instance_mapname("2@gl_k");
 	'MyMobs = 'MyMobs - 1;
 	if ('MyMobs == 0) {
-		mapannounce(.@map$, _("Evil Forces are appearing in this area."), bc_map, "0xFFFF00", FW_NORMAL, 18);
+		mapannounce(.@map$, _("Evil Forces are appearing in this area."), bc_map, C_YELLOW, FW_NORMAL, 18);
 		donpcevent instance_npcname("#ghmemorialmob06")+"::OnDisable2";
 		donpcevent instance_npcname("#ghmemorialmob07")+"::OnEnable";
 		donpcevent instance_npcname("#ghmemorialmob05")+"::OnDisable";
@@ -1556,7 +1556,7 @@ OnEnable:
 OnMyMobDead:
 	.@map$ = instance_mapname("2@gl_k");
 	if (mobcount(.@map$,instance_npcname("#ghmemorialmob07")+"::OnMyMobDead") < 1) {
-		mapannounce(.@map$, _("A portal has opened to the east in the central hallway."), bc_map, "0xFFFF00");
+		mapannounce(.@map$, _("A portal has opened to the east in the central hallway."), bc_map, C_YELLOW);
 		donpcevent instance_npcname("#ghinstancewarp10")+"::OnEnable";
 		donpcevent instance_npcname("#ghinstancewarp11")+"::OnEnable";
 		donpcevent instance_npcname("#ghmemorialmob08")+"::OnEnable";
@@ -1589,7 +1589,7 @@ OnMyMobDead:
 	.@map$ = instance_mapname("2@gl_k");
 	'MyMobs = 'MyMobs-1;
 	if ('MyMobs == 0) {
-		mapannounce(.@map$, _("An evil presence has teleported into this area."), bc_map, "0xFFFF00", FW_NORMAL, 18);
+		mapannounce(.@map$, _("An evil presence has teleported into this area."), bc_map, C_YELLOW, FW_NORMAL, 18);
 		donpcevent instance_npcname("#ghmemorialmob09")+"::OnEnable";
 		donpcevent instance_npcname("#ghmemorialmob08")+"::OnDisable";
 	} else {
@@ -1631,7 +1631,7 @@ OnEnable:
 OnMyMobDead:
 	.@map$ = instance_mapname("2@gl_k");
 	if (mobcount(.@map$,instance_npcname("#ghmemorialmob09")+"::OnMyMobDead") < 1) {
-		mapannounce(.@map$, _("A new portal has appeared at the end of the central corridor."), bc_map, "0xFFFF00");
+		mapannounce(.@map$, _("A new portal has appeared at the end of the central corridor."), bc_map, C_YELLOW);
 		donpcevent instance_npcname("#ghinstancewarp12")+"::OnEnable";
 		donpcevent instance_npcname("#ghinstancewarp13")+"::OnEnable";
 		donpcevent instance_npcname("#controlGH6")+"::OnEnable";
@@ -1744,7 +1744,7 @@ OnEnable:
 	end;
 
 OnTouch:
-	mapannounce(instance_mapname("2@gl_k"), _("???: Do not come here! It's a trap... Kkkkah!!!"), bc_map, "0xFF0000", FW_NORMAL, 18);
+	mapannounce(instance_mapname("2@gl_k"), _("???: Do not come here! It's a trap... Kkkkah!!!"), bc_map, C_RED, FW_NORMAL, 18);
 	specialeffect EF_BASH;
 	donpcevent instance_npcname("Himelmez#ghinstance3")+"::OnEnable";
 	donpcevent instance_npcname("Heinrich#ghinstance6")+"::OnEnable";
@@ -1938,7 +1938,7 @@ OnTimer70000:
 	end;
 
 OnTimer73000:
-	mapannounce(instance_mapname("2@gl_k"), _("Gerhalt's body changing."), bc_map, "0xFFFFFF");
+	mapannounce(instance_mapname("2@gl_k"), _("Gerhalt's body changing."), bc_map, C_WHITE);
 	end;
 
 OnTimer76000:
@@ -2701,7 +2701,7 @@ glast_01,188,273,5	script	White Knight#1a	4_WHITEKNIGHT,{
 	next;
 	setarray .@item[0], Coagulated_Spell, Contaminated_Magic;
 	setarray .@cost[0], 3000, 70;
-	.@select = select("Cancel", "^0000FFUse Coagulated Spell^000000", "^FF0000UseContaminated Magic^000000");
+	.@select = select("Cancel", "^0000FFUse Coagulated Spell^000000", "^FF0000Use Contaminated Magic^000000");
 	switch (.@select) {
 	case 1:
 		mes("[White Knight]");
@@ -2734,7 +2734,7 @@ glast_01,192,273,3	script	Khalitzburg Knight#1a	4_F_KHALITZBURG,{
 	next;
 	setarray .@item[0], Coagulated_Spell, Contaminated_Magic;
 	setarray .@cost[0], 5000, 100;
-	.@select = select("Cancel", "^0000FFUse Coagulated Spell^000000", "^FF0000UseContaminated Magic^000000");
+	.@select = select("Cancel", "^0000FFUse Coagulated Spell^000000", "^FF0000Use Contaminated Magic^000000");
 	switch (.@select) {
 	case 1:
 		mes("[Khalitzburg Knight]");
