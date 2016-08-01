@@ -407,7 +407,7 @@ bool hpm_add_arg(unsigned int pluginID, char *name, bool has_param, CmdlineExecF
  * @retval true if the listener was added successfully.
  * @retval false in case of error.
  */
-bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*parse_func) (const char *key, const char *val), int (*return_func) (const char *key))
+bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *name, void (*parse_func) (const char *key, const char *val), int (*return_func) (const char *key), bool required)
 {
 	struct HPConfListenStorage *conf;
 	int i;
@@ -442,6 +442,7 @@ bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, char *na
 	safestrncpy(conf->key, name, HPM_ADDCONF_LENGTH);
 	conf->parse_func = parse_func;
 	conf->return_func = return_func;
+	conf->required = required;
 
 	return true;
 }
@@ -879,7 +880,7 @@ bool hplugins_parse_battle_conf(const struct config_t *config, const char *filen
 		const struct HPConfListenStorage *entry = &VECTOR_INDEX(HPM->config_listeners[HPCT_BATTLE], i);
 		const char *config_name = entry->key;
 		if ((setting = libconfig->lookup(config, config_name)) == NULL) {
-			if (!imported) {
+			if (!imported && entry->required) {
 				ShowWarning("Missing configuration '%s' in file %s!\n", config_name, filename);
 				retval = false;
 			}
