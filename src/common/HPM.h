@@ -123,6 +123,7 @@ struct HPConfListenStorage {
 	char key[HPM_ADDCONF_LENGTH];
 	void (*parse_func) (const char *key, const char *val);
 	int (*return_func) (const char *key);
+	bool required;
 };
 
 /* Hercules Plugin Manager Interface */
