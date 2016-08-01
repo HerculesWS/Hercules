@@ -81,9 +81,9 @@ dali,130,107,5	script	Leon the Adventurer#Sara	4_M_DST_GRAND,{ // instance CD ch
 			end;
 		} else {
 			mes("You wish to relive the past again?");
-			next;
-				if (select("Yes","No") == 2)
+			if (select("Yes","No") == 2)
 					close;
+			next;	
 			mes("[Leon the Adventurer]");
 			mes("Please venture through the dimensional device and report to me what you find within.");
 			next;
