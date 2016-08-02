@@ -795,6 +795,9 @@ moc_prydn2	mapflag	nomemo
 // Ghost Palace ===========
 1@spa	mapflag	nomemo
 
+// Sara's Memory Instance ===========
+1@sara	mapflag	nomemo
+
 //evt_zombie	mapflag	nomemo
 
 // Poring War ====================

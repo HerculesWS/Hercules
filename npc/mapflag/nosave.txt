@@ -349,6 +349,9 @@ que_lhz	mapflag	nosave	SavePoint
 // Ghost Palace ===========
 1@spa	mapflag	nosave	SavePoint
 
+// Sara's Memory Instance ===========
+1@sara	mapflag	nosave	SavePoint
+
 //evt_zombie	mapflag	nosave	SavePoint
 
 // Poring War ====================

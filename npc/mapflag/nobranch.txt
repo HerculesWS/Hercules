@@ -408,6 +408,9 @@ ecl_hub01	mapflag	nobranch
 // Ghost Palace ===========
 1@spa	mapflag	nobranch
 
+// Sara's Memory Instance ===========
+1@sara	mapflag	nobranch
+
 //evt_zombie	mapflag	nobranch
 
 // Poring War ==================
