@@ -159,7 +159,7 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 		close;
 	}
 	.@sara_time = questprogress(15002, PLAYTIME);
-	if ( .@sara_time == 1) {
+	if (.@sara_time == 1) {
 		mes("[Leon the Adventurer]");
 		mes("I think that in about 20 hours after you last entered the rift will stable enough for you to\r"
 			"transverse it again.");
@@ -192,7 +192,7 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 				mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
 				close;
 			}
-			if (instance_attachmap("1@sara", .@instance) == "" ) {
+			if (instance_attachmap("1@sara", .@instance) == "") {
 				mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
 				instance_destroy(.@instance);
 				close;
@@ -202,7 +202,7 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 			mes("^FF0000The dimensional boots up cleanly. Use the device to enter the crack in space and time.^000000");
 			close;
 		case 2:
-			if ( has_instance("1@sara") == "" ) {
+			if (has_instance("1@sara") == "") {
 				mesf("The memorial dungeon ^0000FF%s^000000 does not exist.\r"
 					"The party leader did not generate the dungeon yet.", .@md_name$);
 				close;
@@ -240,7 +240,7 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 	next;
 	mes("[Sara Irene]");
 	mes("My father is doyen of this village! I just take after my mother.");
-	donpcevent instance_npcname("Sara Irene#saratalk")+"::OnChat1";
+	npctalk(_("My father is doyen of this village! I just take after my mother."), instance_npcname("Sara Irene#saratalk"));
 	next;
 	mesf("[%s]", strcharinfo(0));
 	mes("Oh! I am sorry! Uh... Why are you standing out here all alone?");
@@ -248,39 +248,39 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 	next;
 	mes("[Sara Irene]");
 	mes("I am waiting for my father. He said that he will be here soon.");
-	donpcevent instance_npcname("Sara Irene#saratalk")+"::OnChat2";
+	npctalk(_("I am waiting for my father. He said that he will be here soon."), instance_npcname("Sara Irene#saratalk"));
 	next;
 	mes("^FF0000An older man exits the house. Sara's face brightens at the sight of him.^000000");
 	donpcevent instance_npcname("Doyen Irene#sarains")+"::OnEnable";
 	next;
 	mes("[Sara Irene]");
 	mes("Hi daddy!");
-	donpcevent instance_npcname("Sara Irene#saratalk")+"::OnChat3";
+	npctalk(_("Hi daddy!"), instance_npcname("Sara Irene#saratalk"));
 	next;
 	cutin "sara_elder_irine1.bmp", 2;
 	mes("[Doyen Irene]");
 	mes("Sweetheart you look so happy.");
-	donpcevent instance_npcname("Doyen Irene#sarains")+"::OnChat1";
+	npctalk(_("Sweetheart you look so happy."), instance_npcname("Doyen Irene#sarains"));
 	next;
 	cutin "sara_9sara1.bmp", 2;
 	mes("[Sara Irene]");
 	mes("You said you would come back soon! I waited for you and you lied!");
-	donpcevent instance_npcname("Sara Irene#saratalk")+"::OnChat4";
+	npctalk(_("You said you would come back soon! I waited for you and you lied!"), instance_npcname("Sara Irene#saratalk"));
 	next;
 	cutin "sara_elder_irine1.bmp", 2;
 	mes("[Doyen Irene]");
 	mes("Sweetheart, I am sorry I made you wait so long. The meeting with the village elders took longer than expected.");
-	donpcevent instance_npcname("Doyen Irene#sarains")+"::OnChat2";
+	npctalk(_("Sweetheart, I am sorry I made you wait so long. The meeting with the village elders took longer than expected."), instance_npcname("Doyen Irene#sarains"));
 	next;
 	cutin "sara_9sara1.bmp", 2;
 	mes("[Sara Irene]");
 	mes("I hate those old fogeys.");
-	donpcevent instance_npcname("Sara Irene#saratalk")+"::OnChat5";
+	npctalk(_("I hate those old fogeys."), instance_npcname("Sara Irene#saratalk"));
 	next;
 	cutin "sara_elder_irine1.bmp", 2;
 	mes("[Doyen Irene]");
 	mes("Don't say that sweetheart... Who is this with you?");
-	donpcevent instance_npcname("Doyen Irene#sarains")+"::OnChat3";
+	npctalk(_("Don't say that sweetheart... Who is this with you?"), instance_npcname("Doyen Irene#sarains"));
 	next;
 	mes("^FF0000Doyen Irene stares at you with fire in this eyes.^000000");
 	dispbottom(_("Doyen Irene stares at you with fire in this eyes."));
@@ -292,17 +292,17 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 	cutin "sara_9sara1.bmp", 2;
 	mes("[Sara Irene]");
 	mes("Here you go daddy!");
-	donpcevent instance_npcname("Sara Irene#saratalk")+"::OnChat6";
+	npctalk(_("Here you go daddy!"), instance_npcname("Sara Irene#saratalk"));
 	next;
 	cutin "sara_elder_irine1.bmp", 2;
 	mes("[Doyen Irene]");
 	mes("Oh Sara, should I have them?");
-	donpcevent instance_npcname("Doyen Irene#sarains")+"::OnChat4";
+	npctalk(_("Oh Sara, should I have them?"), instance_npcname("Doyen Irene#sarains"));
 	next;
 	cutin "sara_9sara1.bmp", 2;
 	mes("[Sara Irene]");
 	mes("Of course silly daddy!");
-	donpcevent instance_npcname("Sara Irene#saratalk")+"::OnChat7";
+	npctalk(_("Of course silly daddy!"), instance_npcname("Sara Irene#saratalk"));
 	next;
 	mes("^FF0000After being given the flowers the Doyen's mood seems to greatly improve.^000000");
 	dispbottom(_("After being given the flowers the Doyen's mood seems to greatly improve."));
@@ -310,17 +310,17 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 	cutin "sara_elder_irine1.bmp", 2;
 	mes("[Doyen Irene]");
 	mes("Alright my princess, where should we go now?");
-	donpcevent instance_npcname("Doyen Irene#sarains")+"::OnChat5";
+	npctalk(_("Alright my princess, where should we go now?"), instance_npcname("Doyen Irene#sarains"));
 	next;
 	cutin "sara_9sara1.bmp", 2;
 	mes("[Sara Irene]");
 	mes("Oh daddy! Let's go to the top of that hill over there!");
-	donpcevent instance_npcname("Sara Irene#saratalk")+"::OnChat8";
+	npctalk(_("Oh daddy! Let's go to the top of that hill over there!"), instance_npcname("Sara Irene#saratalk"));
 	next;
 	cutin "sara_elder_irine1.bmp", 2;
 	mes("[Doyen Irene]");
 	mes("Hah! Hold onto me tight!");
-	donpcevent instance_npcname("Doyen Irene#sarains")+"::OnChat6";
+	npctalk(_("Hah! Hold onto me tight!"), instance_npcname("Doyen Irene#sarains"));
 	next;
 	cutin "sara_elder_irine1.bmp", 255;
 	mes("^FF0000As they wander off you hear strange voices from around the corner...^000000");
@@ -331,23 +331,23 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 	next;
 	mes("[Strange Old Man A]");
 	mes("I can feel Sara's power growing. We cannot just stand by and let her achieve her full potential!");
-	donpcevent instance_npcname("Strange Old Man A#stalk")+"::OnChat1";
+	npctalk(_("I can feel Sara's power growing. We cannot just stand by and let her achieve her full potential!"), instance_npcname("Strange Old Man A#stalk"));
 	next;
 	mes("[Strange Old Man B]");
 	mes("She was born under a bad sign and her mother isn't even one of us!");
-	donpcevent instance_npcname("Strange Old Man B#stalk")+"::OnChat1";
+	npctalk(_("She was born under a bad sign and her mother isn't even one of us!"), instance_npcname("Strange Old Man B#stalk"));
 	next;
 	mes("[Strange Old Man B]");
 	mes("Someday she will cause blood to flow in our streets.");
-	donpcevent instance_npcname("Strange Old Man B#stalk")+"::OnChat2";
+	npctalk(_("Someday she will cause blood to flow in our streets."), instance_npcname("Strange Old Man B#stalk"));
 	next;
 	mes("[Strange Old Man A]");
 	mes("We have to do something before the Holy creatures select her. I asked HIM to take care of it.");
-	donpcevent instance_npcname("Strange Old Man A#stalk")+"::OnChat2";
+	npctalk(_("We have to do something before the Holy creatures select her. I asked HIM to take care of it."), instance_npcname("Strange Old Man A#stalk"));
 	next;
 	mes("[Strange Old Man B]");
 	mes("We will see... I look forward to hearing the bad news that has befallen her...");
-	donpcevent instance_npcname("Strange Old Man B#stalk")+"::OnChat3";
+	npctalk(_("We will see... I look forward to hearing the bad news that has befallen her..."), instance_npcname("Strange Old Man B#stalk"));
 	next;
 	mes("^FF0000The old man wander off it seems Sara might be in danger. We have to do something!^000000");
 	dispbottom(_("The old man wander off it seems Sara might be in danger. We have to do something!"));
@@ -382,24 +382,6 @@ OnEnable:
 OnDisable:
 	hideonnpc instance_npcname("Doyen Irene#sarains");
 	end;
-OnChat1:
-	npctalk(_("Sweetheart you look so happy."));
-	end;
-OnChat2:
-	npctalk(_("Sweetheart, I am sorry I made you wait so long. The meeting with the village elders took longer than expected."));
-	end;
-OnChat3:
-	npctalk(_("Don't say that sweetheart... Who is this with you?"));
-	end;
-OnChat4:
-	npctalk(_("Oh Sara, should I have them?"));
-	end;
-OnChat5:
-	npctalk(_("Alright my princess, where should we go now?"));
-	end;
-OnChat6:
-	npctalk(_("Hah! Hold onto me tight!"));
-	end;
 }
 
 1@sara,260,156,0	script	Sara Irene#saratalk	HIDDEN_NPC,{
@@ -412,30 +394,6 @@ OnEnable:
 	end;
 OnDisable:
 	hideonnpc instance_npcname("Sara Irene#saratalk");
-	end;
-OnChat1:
-	npctalk(_("My father is doyen of this village! I just take after my mother."));
-	end;
-OnChat2:
-	npctalk(_("I am waiting for my father. He said that he will be here soon."));
-	end;
-OnChat3:
-	npctalk(_("Hi daddy!"));
-	end;
-OnChat4:
-	npctalk(_("You said you would come back soon! I waited for you and you lied!"));
-	end;
-OnChat5:
-	npctalk(_("I hate those old fogeys."));
-	end;
-OnChat6:
-	npctalk(_("Here you go daddy!"));
-	end;
-OnChat7:
-	npctalk(_("Of course silly daddy!"));
-	end;
-OnChat8:
-	npctalk(_("Oh daddy! Let's go to the top of that hill over there!"));
 	end;
 }
 
@@ -451,12 +409,6 @@ OnEnable:
 OnDisable:
 	hideonnpc instance_npcname("Strange Old Man A#stalk");
 	end;
-OnChat1:
-	npctalk(_("I can feel Sara's power growing. We cannot just stand by and let her achieve her full potential!"));
-	end;
-OnChat2:
-	npctalk(_("We have to do something before the Holy creatures select her. I asked HIM to take care of it."));
-	end;
 }
 
 1@sara,260,156,0	script	Strange Old Man B#stalk	FAKE_NPC,{
@@ -469,15 +421,6 @@ OnEnable:
 	end;
 OnDisable:
 	hideonnpc instance_npcname("Strange Old Man B#stalk");
-	end;
-OnChat1:
-	npctalk(_("She was born under a bad sign and her mother isn't even one of us!"));
-	end;
-OnChat2:
-	npctalk(_("Someday she will cause blood to flow in our streets."));
-	end;
-OnChat3:
-	npctalk(_("We will see... I look forward to hearing the bad news that has befallen her..."));
 	end;
 }
 
@@ -655,7 +598,7 @@ OnTouch:
 	cutin "sara_elder_irine4.bmp", 2;
 	mes("[Doyen Irene]");
 	mes("Ahh Sara! I was just looking for you...");
-	donpcevent instance_npcname("Doyen Irene#sarains1")+"::OnChat1";
+	npctalk(_("Ahh Sara! I was just looking for you..."), instance_npcname("Doyen Irene#sarains1"));
 	next;
 	cutin "sara_9sara2.bmp", 2;
 	mes("[Sara Irene]");
@@ -670,7 +613,7 @@ OnTouch:
 	cutin "sara_elder_irine3.bmp", 2;
 	mes("[Doyen Irene]");
 	mes("Guards! GUARDS! There is a murderer here! Catch him!");
-	donpcevent instance_npcname("Doyen Irene#sarains1")+"::OnChat2";
+	npctalk(_("Guards! GUARDS! There is a murderer here! Catch him!"), instance_npcname("Doyen Irene#sarains1"));
 	next;
 	mes("^FF0000The sound of many pairs of boots can be heard running outside!^000000");
 	dispbottom(_("The sound of many pairs of boots can be heard running outside!"));
@@ -729,12 +672,6 @@ OnEnable:
 	end;
 OnDisable:
 	hideonnpc instance_npcname("Doyen Irene#sarains1");
-	end;
-OnChat1:
-	npctalk(_("Ahh Sara! I was just looking for you..."));
-	end;
-OnChat2:
-	npctalk(_("Guards! GUARDS! There is a murderer here! Catch him!"));
 	end;
 }
 
@@ -1079,7 +1016,7 @@ OnMyMobDead:
 	cutin "sara_elder_irine4.bmp", 2;
 	mes("[Doyen Irene]");
 	mes("Sara...");
-	donpcevent instance_npcname("Doyen Irene#sarains2")+"::OnChat1";
+	npctalk(_("Sara..."), instance_npcname("Doyen Irene#sarains2"));
 	next;
 	cutin "sara_9sara2.bmp", 2;
 	mes("[Sara Irene]");
@@ -1089,7 +1026,7 @@ OnMyMobDead:
 	cutin "sara_elder_irine4.bmp", 2;
 	mes("[Doyen Irene]");
 	mes("I have been looking for you Sara. Please come with daddy it is very dangerous here!");
-	donpcevent instance_npcname("Doyen Irene#sarains2")+"::OnChat2";
+	npctalk(_("I have been looking for you Sara. Please come with daddy it is very dangerous here!"), instance_npcname("Doyen Irene#sarains2"));
 	next;
 	mesf("[%s]", strcharinfo(0));
 	mes("I won't let you take Sara!");
@@ -1098,7 +1035,7 @@ OnMyMobDead:
 	cutin "sara_elder_irine3.bmp", 2;
 	mes("[Doyen Irene]");
 	mes("The murderer is here! Guards! We will finish him once and for all!");
-	donpcevent instance_npcname("Doyen Irene#sarains2")+"::OnChat3";
+	npctalk(_("The murderer is here! Guards! We will finish him once and for all!"), instance_npcname("Doyen Irene#sarains2"));
 	next;
 	mesf("[%s]", strcharinfo(0));
 	mes("Sara... run! Save yourself!");
@@ -1135,15 +1072,6 @@ OnEnable:
 	end;
 OnDisable:
 	hideonnpc instance_npcname("Doyen Irene#sarains2");
-	end;
-OnChat1:
-	npctalk(_("Sara..."));
-	end;
-OnChat2:
-	npctalk(_("I have been looking for you Sara. Please come with daddy it is very dangerous here!"));
-	end;
-OnChat3:
-	npctalk(_("The murderer is here! Guards! We will finish him once and for all!"));
 	end;
 }
 
@@ -1312,18 +1240,18 @@ OnDisable:
 	cutin "sara_beholder.bmp", 2;
 	mes("[?????]");
 	mes("The time travellers cannot interfere any longer. You cannot stop us from meeting Sara.");
-	donpcevent instance_npcname("????-#saratalk")+"::OnChat1";
+	npctalk(_("The time travellers cannot interfere any longer. You cannot stop us from meeting Sara."), instance_npcname("????-#saratalk"));
 	next;
 	mes("[?????]");
 	mes("You should go back to the time where you belong.");
-	donpcevent instance_npcname("????-#saratalk")+"::OnChat2";
+	npctalk(_("You should go back to the time where you belong."), instance_npcname("????-#saratalk"));
 	next;
 	mes("^FF0000As you fall to the ground two dark figures approach Sara.^000000");
 	dispbottom(_("As you fall to the ground two dark figures approach Sara."));
 	next;
 	mes("[?????]");
 	mes("A girl full of betrayal, despair, and hate. We will guide you to your ultimate fate.");
-	donpcevent instance_npcname("????-#saratalk")+"::OnChat3";
+	npctalk(_("A girl full of betrayal, despair, and hate. We will guide you to your ultimate fate."), instance_npcname("????-#saratalk"));
 	next;
 	cutin "sara_9sara2.bmp", 2;
 	mes("[Sara Irene]");
@@ -1333,7 +1261,7 @@ OnDisable:
 	cutin "sara_beholder.bmp", 2;
 	mes("[?????]");
 	mes("Sara Irene, he will make your dreams come true.");
-	donpcevent instance_npcname("????-#saratalk")+"::OnChat4";
+	npctalk(_("Sara Irene, he will make your dreams come true."), instance_npcname("????-#saratalk"));
 	next;
 	cutin "sara_beholder.bmp", 255;
 	mes("^FF0000One of the cloaked strangers covers Sara with their cloak and all three figures disappear.^000000");
@@ -1371,18 +1299,6 @@ OnEnable:
 	end;
 OnDisable:
 	hideonnpc instance_npcname("????-#saratalk");
-	end;
-OnChat1:
-	npctalk(_("The time travellers cannot interfere any longer. You cannot stop us from meeting Sara."));
-	end;
-OnChat2:
-	npctalk(_("You should go back to the time where you belong."));
-	end;
-OnChat3:
-	npctalk(_("A girl full of betrayal, despair, and hate. We will guide you to your ultimate fate."));
-	end;
-OnChat4:
-	npctalk(_("Sara Irene, he will make your dreams come true."));
 	end;
 }
 
