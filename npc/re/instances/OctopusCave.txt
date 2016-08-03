@@ -261,7 +261,7 @@ OnEnable:
 	.@map$ = instance_mapname("1@cash");
 	switch (.@i) {
 	case 1:
-		areamonster(.@map$, 34, 96, 38, 100, _("Octopus's Henchman"0, MD_OCTOPUS, 3, .@label$);
+		areamonster(.@map$, 34, 96, 38, 100, _("Octopus's Henchman"), MD_OCTOPUS, 3, .@label$);
 		areamonster(.@map$, 39, 90, 41, 92, _("Octopus's Henchman"), MD_OCTOPUS, 2, .@label$);
 		areamonster(.@map$, 38, 76, 40, 78, _("Octopus's Henchman"), MD_OCTOPUS, 2, .@label$);
 		areamonster(.@map$, 39, 58, 41, 60, _("Octopus's Henchman"), MD_OCTOPUS, 2, .@label$);
