@@ -64,33 +64,33 @@ mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 		switch (select("Ask what's going on.", "Ask to open the gate.", "Go to other location.")) {
 		case 1:
 			mes("[Starfish]");
-			mes("Lately, our Starfish lady is\r"
-				"suffering with some issues, ooh ooh.");
-			mes("Something bad happen in this\r"
-				"peaceful place, hehe!");
+			mes("Lately, our Starfish lady is");
+			mes("suffering with some issues, ooh ooh.");
+			mes("Something bad happen in this");
+			mes("peaceful place, hehe!");
 			next;
 			mes("[Starfish]");
-			mes("Weird looking limbs came out\r"
-				"from the hole there,\r"
-				"tried to kidnap our lady Starfish.");
+			mes("Weird looking limbs came out");
+			mes("from the hole there,");
+			mes("tried to kidnap our lady Starfish.");
 			mes("Ooh Ooh.");
 			next;
 			mes("[Starfish]");
-			mes("It seems those limbs belong to\r"
-				"that ugly octopus.");
-			mes("That monster should be taken care of,\r"
-				"but it's hard for ourselves only to make it happen, hehe.");
+			mes("It seems those limbs belong to");
+			mes("that ugly octopus.");
+			mes("That monster should be taken care of,");
+			mes("but it's hard for ourselves only to make it happen, hehe.");
 			next;
 			mes("[Starfish]");
-			mes("I want to find someone special,\r"
-				"and ask to punish this ugly octopus.");
-			mes("I hope this octopus won't ever\r"
-				"harass our lady, hehe.");
+			mes("I want to find someone special,");
+			mes("and ask to punish this ugly octopus.");
+			mes("I hope this octopus won't ever");
+			mes("harass our lady, hehe.");
 			next;
 			mes("[Starfish]");
 			mes("Go catch that octopus and stick it to this pick.");
-			mes("If you bring back the pick, I will\r"
-				"open this gate for a while.");
+			mes("If you bring back the pick, I will");
+			mes("open this gate for a while.");
 			mes("You should challenge if you are interested, hehe.");
 			next;
 			break;
@@ -123,14 +123,14 @@ mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 
 				mes("[Starfish]");
 				mesf("I will open the gate for a while to ^0000FF%s^000000.", .@md_name$);
-				mes("Please catch that pervert octopus,\r"
-					"and come back with it sticked to the pick, hehe.");
+				mes("Please catch that pervert octopus,");
+				mes("and come back with it sticked to the pick, hehe.");
 				close;
 			}
 			mes("[Starfish]");
-			mes("Prepare a pick first,\r"
-				"so you can thread that octopus\r"
-				"with that pick.");
+			mes("Prepare a pick first,");
+			mes("so you can thread that octopus");
+			mes("with that pick.");
 			mes("Then, I will let you in for a while, hehe.");
 			close;
 		case 3:
@@ -142,8 +142,8 @@ mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 }
 
 mal_dun01,153,237,5	script	Weird Entrance	CLEAR_NPC,{
-	mes("There is a strange entrance\r"
-		"blocked roughly with some boards.");
+	mes("There is a strange entrance");
+	mes("blocked roughly with some boards.");
 	next;
 	switch (select("Go in.", "Stop.")) {
 	case 1:
@@ -156,8 +156,8 @@ mal_dun01,153,237,5	script	Weird Entrance	CLEAR_NPC,{
 					close;
 				}
 				mes("[Starfish]");
-				mes("Shhh... Weird aura is\r"
-					"coming from that entrance.");
+				mes("Shhh... Weird aura is");
+				mes("coming from that entrance.");
 				mes("Big trouble is waiting, if you go in now.");
 				close;
 			}
@@ -167,9 +167,9 @@ mal_dun01,153,237,5	script	Weird Entrance	CLEAR_NPC,{
 			end;
 		}
 		mes("[Starfish]");
-		mes("You should definitely prepare\r"
-			"hunting stick if you want to\r"
-			"punish the Octopus.");
+		mes("You should definitely prepare");
+		mes("hunting stick if you want to");
+		mes("punish the Octopus.");
 		mes("Or I will not let you in! Hehe.");
 		close;
 	case 2:
