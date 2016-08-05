@@ -41,7 +41,7 @@ c_tower1,232,222,5	script	Belljamin Button#ct	4_M_RUSMAN2,{
 	mes("Time, memories, environments... all can become warped here.");
 	next;
 	mes("[Belljamin Button]");
-	mes("I'm  begging you not to ask more about it. It might put your life in danger.");
+	mes("I'm begging you not to ask more about it. It might put your life in danger.");
 	next;
 	switch (select("Don't ask", "Go to 2nd floor of warped tower", "Go to 3rd floor of warped tower")) {
 	case 1:
@@ -140,7 +140,7 @@ c_tower2_,274,26,3	script	Belljamin Button#nct1	4_M_RUSCHILD,{
 			mes("[Belljamin Button]");
 			mes("Imagine your favourite drink in a cup. Slowly stir the cup with a spoon, and peer through as the drink change colour.");
 			close2;
-			warp "c_tower1",235,223;
+			warp "c_tower1", 235, 223;
 			end;
 		}
 		break;
