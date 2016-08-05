@@ -307,6 +307,7 @@
 18728:15061:2495:20700,{ bonus bAllStats, 1; bonus2 bSubEle, Ele_Water, 50; }
 18776:20710,{ bonus bAgi,5; bonus bFlee,10; }
 18824:18825,{ bonus bMaxHP,100; bonus2 bSubEle,Ele_Neutral,getequiprefinerycnt(EQI_HEAD_TOP); }
+18874:2109:2971,{ bonus bHPrecovRate,15; bonus bSPrecovRate,15; bonus bMatkRate,7; }
 18997:28326:28327,{ bonus bSpeedRate,10; bonus bBaseAtk,50; bonus bMatk,50; if(getequiprefinerycnt(EQI_HEAD_TOP)>=9){ bonus bMaxHPrate,10; bonus bMaxSPrate,50; } }
 19026:15138,{ bonus2 bAddRaceTolerance, RC_Fish, 10 + getequiprefinerycnt(EQI_ARMOR); }
 19026:20756,{ .@r = getequiprefinerycnt(EQI_GARMENT); bonus2 bSPGainRace, RC_Fish, 10; bonus3 bAddMonsterDropItem, Shusi, RC_Fish, (5 + .@r); bonus3 bAddMonsterDropItem, Fish_Slice, RC_Fish, (5 + .@r); bonus2 bAddItemHealRate, Shusi, 5; bonus2 bAddItemHealRate, Fish_Slice, 5; bonus bHPrecovRate, (5 + .@r); }
