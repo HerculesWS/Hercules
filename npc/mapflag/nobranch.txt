@@ -405,6 +405,9 @@ ecl_in04	mapflag	nobranch
 1@ecl	mapflag	nobranch
 ecl_hub01	mapflag	nobranch
 
+// Sara's Memory Instance ===========
+1@sara	mapflag	nobranch
+
 //evt_zombie	mapflag	nobranch
 
 // Poring War ==================
