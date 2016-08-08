@@ -1429,6 +1429,7 @@ lou_in02,265,69,5	script	Doctor#lyang	4_F_CHNDOCTOR,{
 		mes "^3355FF10 Sprout^000000 and";
 		mes "^3355FF5 Honey Pot^000000.";
 		ch_par = 17;
+		changequest 11056,11057;
 		close;
 	}
 	else if (ch_par == 17) {
