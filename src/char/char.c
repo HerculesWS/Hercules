@@ -3807,8 +3807,11 @@ int char_parse_frommap(int fd)
 		int packet_id = RFIFOW(fd,0);
 		if (VECTOR_LENGTH(HPM->packets[hpParse_FromMap]) > 0) {
 			int result = HPM->parse_packets(fd,packet_id,hpParse_FromMap);
-			if (result == 1)
+			if (result == 1) {
+				if (sockt->session[fd] == NULL)
+					return 0;
 				continue;
+			}
 			if (result == 2)
 				return 0;
 		}
