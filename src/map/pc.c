@@ -1226,6 +1226,9 @@ bool pc_authok(struct map_session_data *sd, int login_id2, time_t expiration_tim
 
 	clif->authok(sd);
 
+	//Auth is fully okay, update last_login
+	sd->status.last_login = time(NULL);
+
 	//Prevent S. Novices from getting the no-death bonus just yet. [Skotlex]
 	sd->die_counter=-1;
 
