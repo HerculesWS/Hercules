@@ -901,7 +901,7 @@ END_ZEROED_BLOCK; /* End */
 	bool (*can_insert_card_into) (struct map_session_data* sd, int idx_card, int idx_equip);
 
 	int (*steal_item) (struct map_session_data *sd,struct block_list *bl, uint16 skill_lv);
-	int (*steal_coin) (struct map_session_data *sd,struct block_list *bl);
+	int (*steal_coin) (struct map_session_data *sd,struct block_list *bl, uint16 skill_lv);
 
 	int (*modifybuyvalue) (struct map_session_data *sd,int orig_value);
 	int (*modifysellvalue) (struct map_session_data *sd,int orig_value);
