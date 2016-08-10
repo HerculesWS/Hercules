@@ -1407,6 +1407,8 @@ ACMD(baselevelup)
 	pc->baselevelchanged(sd);
 	if(sd->status.party_id)
 		party->send_levelup(sd);
+	npc->script_event(sd, NPCE_BASELVUP); // Trigger OnPCBaseLvUpEvent
+
 	return true;
 }
 
@@ -1455,6 +1457,7 @@ ACMD(joblevelup)
 	clif->updatestatus(sd, SP_NEXTJOBEXP);
 	clif->updatestatus(sd, SP_SKILLPOINT);
 	status_calc_pc(sd, SCO_FORCE);
+	npc->script_event(sd, NPCE_JOBLVUP); // Trigger OnPCJobLvUpEvent
 
 	return true;
 }
