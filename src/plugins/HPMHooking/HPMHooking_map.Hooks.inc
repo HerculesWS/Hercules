@@ -54767,15 +54767,15 @@ int HP_pc_steal_item(struct map_session_data *sd, struct block_list *bl, uint16 
 	}
 	return retVal___;
 }
-int HP_pc_steal_coin(struct map_session_data *sd, struct block_list *bl) {
+int HP_pc_steal_coin(struct map_session_data *sd, struct block_list *bl, uint16 skill_lv) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if( HPMHooks.count.HP_pc_steal_coin_pre ) {
-		int (*preHookFunc) (struct map_session_data **sd, struct block_list **bl);
+		int (*preHookFunc) (struct map_session_data **sd, struct block_list **bl, uint16 *skill_lv);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_steal_coin_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_pc_steal_coin_pre[hIndex].func;
-			retVal___ = preHookFunc(&sd, &bl);
+			retVal___ = preHookFunc(&sd, &bl, &skill_lv);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -54783,13 +54783,13 @@ int HP_pc_steal_coin(struct map_session_data *sd, struct block_list *bl) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.steal_coin(sd, bl);
+		retVal___ = HPMHooks.source.pc.steal_coin(sd, bl, skill_lv);
 	}
 	if( HPMHooks.count.HP_pc_steal_coin_post ) {
-		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct block_list *bl);
+		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct block_list *bl, uint16 skill_lv);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_pc_steal_coin_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_pc_steal_coin_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, sd, bl);
+			retVal___ = postHookFunc(retVal___, sd, bl, skill_lv);
 		}
 	}
 	return retVal___;

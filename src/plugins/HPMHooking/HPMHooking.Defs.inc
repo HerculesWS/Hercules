@@ -5256,8 +5256,8 @@ typedef bool (*HPMHOOK_pre_pc_can_insert_card_into) (struct map_session_data **s
 typedef bool (*HPMHOOK_post_pc_can_insert_card_into) (bool retVal___, struct map_session_data *sd, int idx_card, int idx_equip);
 typedef int (*HPMHOOK_pre_pc_steal_item) (struct map_session_data **sd, struct block_list **bl, uint16 *skill_lv);
 typedef int (*HPMHOOK_post_pc_steal_item) (int retVal___, struct map_session_data *sd, struct block_list *bl, uint16 skill_lv);
-typedef int (*HPMHOOK_pre_pc_steal_coin) (struct map_session_data **sd, struct block_list **bl);
-typedef int (*HPMHOOK_post_pc_steal_coin) (int retVal___, struct map_session_data *sd, struct block_list *bl);
+typedef int (*HPMHOOK_pre_pc_steal_coin) (struct map_session_data **sd, struct block_list **bl, uint16 *skill_lv);
+typedef int (*HPMHOOK_post_pc_steal_coin) (int retVal___, struct map_session_data *sd, struct block_list *bl, uint16 skill_lv);
 typedef int (*HPMHOOK_pre_pc_modifybuyvalue) (struct map_session_data **sd, int *orig_value);
 typedef int (*HPMHOOK_post_pc_modifybuyvalue) (int retVal___, struct map_session_data *sd, int orig_value);
 typedef int (*HPMHOOK_pre_pc_modifysellvalue) (struct map_session_data **sd, int *orig_value);
