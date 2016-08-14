@@ -1089,22 +1089,22 @@ OnDisable:
 	end;
 OnRespawn:
 	.@map$ = instance_mapname("1@sara");
-	'mobid = monster(.@map$, 150, 232, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	unittalk('mobid, _("I am getting too old for this sh-"));
-	'mobid = monster(.@map$, 150, 227, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	unittalk('mobid, _("For Payon!!"));
-	'mobid = monster(.@map$, 150, 222, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	unittalk('mobid, _("For Payon!!"));
-	'mobid = monster(.@map$, 150, 217, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	unittalk('mobid, _("For Payon!!"));
-	'mobid = monster(.@map$, 161, 232, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	unittalk('mobid, _("For Payon!!"));
-	'mobid = monster(.@map$, 161, 227, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	unittalk('mobid, _("For Payon!!"));
-	'mobid = monster(.@map$, 161, 222, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	unittalk('mobid, _("For Payon!!"));
-	'mobid = monster(.@map$, 161, 217, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	unittalk('mobid, _("For Payon!!"));
+	.@mobid = monster(.@map$, 150, 232, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	unittalk(.@mobid, _("I am getting too old for this sh-"));
+	.@mobid = monster(.@map$, 150, 227, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
+	.@mobid = monster(.@map$, 150, 222, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
+	.@mobid = monster(.@map$, 150, 217, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
+	.@mobid = monster(.@map$, 161, 232, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
+	.@mobid = monster(.@map$, 161, 227, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
+	.@mobid = monster(.@map$, 161, 222, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
+	.@mobid = monster(.@map$, 161, 217, _("Payon Town Guard"), PAYONSOLDIER2, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	unittalk(.@mobid, _("For Payon!!"));
 	end;
 OnMyMobDead:
 	.@callnum = 8;
@@ -1133,8 +1133,8 @@ OnDisable:
 	end;
 OnRespawn:
 	.@map$ = instance_mapname("1@sara");
-	'mobid = monster(.@map$, 155, 226, _("Doyen Irene"), IRENE_ELDER, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	unittalk('mobid, _("I will have revenge for Sara's Mom!"));
+	.@mobid = monster(.@map$, 155, 226, _("Doyen Irene"), IRENE_ELDER, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	unittalk(.@mobid, _("I will have revenge for Sara's Mom!"));
 	end;
 OnMyMobDead:
 	.@callnum = 1;
