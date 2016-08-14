@@ -817,8 +817,11 @@ int login_parse_fromchar(int fd)
 
 		if (VECTOR_LENGTH(HPM->packets[hpParse_FromChar]) > 0) {
 			int result = HPM->parse_packets(fd,command,hpParse_FromChar);
-			if (result == 1)
+			if (result == 1) {
+				if (sockt->session[fd] == NULL)
+					return 0;
 				continue;
+			}
 			if (result == 2)
 				return 0;
 		}
