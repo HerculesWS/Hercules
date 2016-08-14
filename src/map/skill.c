@@ -6538,7 +6538,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case RG_STEALCOIN:
 			if(sd) {
-				int amount = pc->steal_coin(sd, bl);
+				int amount = pc->steal_coin(sd, bl, skill_lv);
 				if( amount > 0 ) {
 					dstmd->state.provoke_flag = src->id;
 					mob->target(dstmd, src, skill->get_range2(src, skill_id, skill_lv));
