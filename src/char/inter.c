@@ -572,6 +572,7 @@ void mapif_parse_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int acc
  **/
 void inter_savereg(int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string)
 {
+	char val_esq[1000];
 	nullpo_retv(key);
 	/* to login server we go! */
 	if( key[0] == '#' && key[1] == '#' ) {/* global account reg */
@@ -583,7 +584,8 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 	} else if ( key[0] == '#' ) {/* local account reg */
 		if( is_string ) {
 			if( val ) {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", acc_reg_str_db, account_id, key, index, (char*)val) )
+				SQL->EscapeString(inter->sql_handle, val_esq, (char*)val);
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`account_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", acc_reg_str_db, account_id, key, index, val_esq) )
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
 				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", acc_reg_str_db, account_id, key, index) )
@@ -601,7 +603,8 @@ void inter_savereg(int account_id, int char_id, const char *key, unsigned int in
 	} else { /* char reg */
 		if( is_string ) {
 			if( val ) {
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", char_reg_str_db, char_id, key, index, (char*)val) )
+				SQL->EscapeString(inter->sql_handle, val_esq, (char*)val);
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`char_id`,`key`,`index`,`value`) VALUES ('%d','%s','%u','%s')", char_reg_str_db, char_id, key, index, val_esq) )
 					Sql_ShowDebug(inter->sql_handle);
 			} else {
 				if( SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `char_id` = '%d' AND `key` = '%s' AND `index` = '%u' LIMIT 1", char_reg_str_db, char_id, key, index) )
