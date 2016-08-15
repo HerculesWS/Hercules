@@ -79,4 +79,4 @@ c_tower3_,0,0,0,0	monster	Big Bell	2917,110,5000,0,0
 c_tower3_,0,0,0,0	monster	Time Keeper	2918,3,5000,0,0
 c_tower3_,0,0,0,0	monster	Owl Viscount	2921,1,5000,1800000,0
 c_tower3_,0,0,0,0	monster	Owl Marquis	2923,1,5000,5000,0
-c_tower3_,0,0,0,0	boss_monster	Timeholder	3074,1,7200000,0,0
+c_tower3_,0,0,0,0	boss_monster	Time Holder	3074,1,7200000,0,0
