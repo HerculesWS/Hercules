@@ -7929,6 +7929,96 @@ BUILDIN(makeitem)
 	return true;
 }
 
+/*==========================================
+* makeitem2 <item id>,<amount>,<identify>,<refine>,<attribute>,<card1>,<card2>,<card3>,<card4>,{"<map name>",<X>,<Y>,<range>};
+*------------------------------------------*/
+BUILDIN(makeitem2)
+{
+	struct map_session_data *sd = NULL;
+	struct item_data *i_data;
+	int nameid, amount;
+	int16 x, y, m, range;
+	struct item item_tmp;
+
+	if (script_isstringtype(st, 2)) {
+		const char *name = script_getstr(st, 2);
+		struct item_data *item_data = itemdb->search_name(name);
+		if (item_data)
+			nameid = item_data->nameid;
+		else
+			nameid = UNKNOWN_ITEM_ID;
+	}
+	else {
+		nameid = script_getnum(st, 2);
+	}
+
+	i_data = itemdb->exists(nameid);
+	if (nameid <= 0 || i_data == NULL) {
+		ShowError("makeitem2: Unknown item %d requested.\n", nameid);
+		return true;
+	}
+
+	if (script_hasdata(st, 11)) {
+		m = map->mapname2mapid(script_getstr(st, 11));
+	}
+	else {
+		sd = script->rid2sd(st);
+		if (sd == NULL)
+			return true;
+		m = sd->bl.m;
+	}
+
+	if (m == -1) {
+		ShowError("makeitem2: Nonexistant map requested.\n");
+		return true;
+	}
+
+	x = (script_hasdata(st, 12) ? script_getnum(st, 12) : 0);
+	y = (script_hasdata(st, 13) ? script_getnum(st, 13) : 0);
+
+	if (x < 0 || y < 0) {
+		sd = map->id2sd(st->rid);
+		if (sd == NULL) {
+			x = 0;
+			y = 0;
+			map->search_freecell(NULL, m, &x, &y, -1, -1, 1); // pick random position on map
+		}
+		else {
+			range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, battle_config.area_size) : 3);
+			map->search_freecell(&sd->bl, sd->bl.m, &x, &y, range, range, 0);	// Locate spot next to player.
+		}
+	}
+	else if (x <= 0 || x >= map->list[m].xs || y <= 0 || y >= map->list[m].ys) // pick random position on map
+		map->search_freecell(NULL, m, &x, &y, -1, -1, 1);
+
+	// if equip or weapon or egg type only drop one.
+	switch (i_data->type) {
+	case IT_ARMOR:
+	case IT_WEAPON:
+	case IT_PETARMOR:
+	case IT_PETEGG:
+		amount = 1;
+		break;
+	default:
+		amount = cap_value(script_getnum(st, 3), 1, MAX_AMOUNT);
+		break;
+	}
+
+	memset(&item_tmp, 0, sizeof(item_tmp));
+	item_tmp.nameid = nameid;
+	item_tmp.identify = script_getnum(st, 4);
+	item_tmp.refine = cap_value(script_getnum(st, 5), 0, MAX_REFINE);
+	item_tmp.attribute = script_getnum(st, 6);
+	item_tmp.card[0] = (short)script_getnum(st, 7);
+	item_tmp.card[1] = (short)script_getnum(st, 8);
+	item_tmp.card[2] = (short)script_getnum(st, 9);
+	item_tmp.card[3] = (short)script_getnum(st, 10);
+
+	map->addflooritem(NULL, &item_tmp, amount, m, x, y, 0, 0, 0, 0);
+
+	return true;
+}
+
 /// Counts / deletes the current item given by idx.
 /// Used by buildin_delitem_search
 /// Relies on all input data being already fully valid.
@@ -20551,6 +20641,7 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(getnameditem,"vv"),
 		BUILDIN_DEF2(grouprandomitem,"groupranditem","i"),
 		BUILDIN_DEF(makeitem,"visii"),
+		BUILDIN_DEF(makeitem2,"viiiiiiii????"),
 		BUILDIN_DEF(delitem,"vi?"),
 		BUILDIN_DEF(delitem2,"viiiiiiii?"),
 		BUILDIN_DEF2(enableitemuse,"enable_items",""),
