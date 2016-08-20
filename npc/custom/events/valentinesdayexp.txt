@@ -30,17 +30,15 @@ prontera,156,172,4	script	Tine	1_M_MERCHANT,{
 	mes "Some married chocolate lovers almost double their experience at trainings!";
 	mes "But everything isn't so simply...";
 	next;
-	menu "Wow! Tell me more!",M_INFO,"Marri... what?",-;
-
-	mes "[Tine]";
-	mes "Are you a single?";
-	mes "Today is a great date to ask your beloved half for marriage!";
-	next;
-	mes "[Tine]";
-	mes "The Marriage fee is ridiculous low these days!";
-	close;
-
-M_INFO:
+	if (select("Wow! Tell me more!", "Marri... what?") == 2) {
+		mes "[Tine]";
+		mes "Are you a single?";
+		mes "Today is a great date to ask your beloved half for marriage!";
+		next;
+		mes "[Tine]";
+		mes "The Marriage fee is ridiculous low these days!";
+		close;
+	}
 	mes "[Tine]";
 	mes "The magic effect posesses only handmade chocolate from grand-grand-grand-whoever recipes!";
 	next;
@@ -82,16 +80,14 @@ alberta,26,243,4	script	Stephen#val1	1_M_MERCHANT,{
 	mes "That's right, don't you love chocolate.... I do.";
 	mes "And you are in luck, because I'm selling them for only 5,000 zeny a piece!";
 	next;
-	menu "I want some chocolate!",M_CHOCO,"No thanks.",-;
-
-	mes "[Stephen]";
-	mes "You don't want any chocolate?";
-	mes "I'm telling you! You'll regret it!";
-	mes "You better get some now... you won't come across Chocolate like this ever again!";
-	mes "Think it over and visit me again sometime.";
-	close;
-
-M_CHOCO:
+	if (select("I want some chocolate!", "No thanks.") != 1) {
+		mes "[Stephen]";
+		mes "You don't want any chocolate?";
+		mes "I'm telling you! You'll regret it!";
+		mes "You better get some now... you won't come across Chocolate like this ever again!";
+		mes "Think it over and visit me again sometime.";
+		close;
+	}
 	mes "[Stephen]";
 	mes "Hah!";
 	mes "I knew it!";
@@ -147,14 +143,12 @@ alberta,29,243,4	script	Jainie#val1	1_M_INNKEEPER,{
 	mes "It would be great if you bought some too...";
 	mes "I will be making white chocolates for a while so...";
 	next;
-	menu "I want some white chocolate!",M_CHOCO,"No thanks.",-;
-
-	mes "[Jainie]";
-	mes "You don't like white chocolate?";
-	mes "Then buy some Stephen's black one!";
-	close;
-
-M_CHOCO:
+	if (select("I want some white chocolate!", "No thanks.") != 1) {
+		mes "[Jainie]";
+		mes "You don't like white chocolate?";
+		mes "Then buy some Stephen's black one!";
+		close;
+	}
 	mes "[Jainie]";
 	mes "I can't sell you more then 5 at once....but, if you really need more....";
 	mes "you can come back again.";
@@ -199,85 +193,84 @@ prt_castle,54,34,4	script	Carl Orleans#val1	1_M_01,{
 	mes "[Carl Orleans]";
 	mes "Yes? What can I cook for you?";
 	next;
-	menu "Black handmade Chocolate, please",-,"I want a White handmade Chocolate...",M_WHITE,"I'm lost, sorry to bother you.",M_End;
-
-	mes "[Carl Orleans]";
-	mes "Well, I just might be able to fulfill your needs...";
-	next;
-	if (countitem(Chocolate)<3) {
+	switch (select("Black handmade Chocolate, please", "I want a White handmade Chocolate...", "I'm lost, sorry to bother you.")) {
+	case 1:
 		mes "[Carl Orleans]";
-		mes "I'm sorry you do not have enough Chocolate Bars to do this.";
-		if(rand(2))mes "They say Stephen from Alberta used to sell good Chocolate.";
+		mes "Well, I just might be able to fulfill your needs...";
+		next;
+		if (countitem(Chocolate)<3) {
+			mes "[Carl Orleans]";
+			mes "I'm sorry you do not have enough Chocolate Bars to do this.";
+			if(rand(2))mes "They say Stephen from Alberta used to sell good Chocolate.";
+			close;
+		}
+		delitem 558,3;
+		mes "[Carl Orleans]";
+		mes "You got 3 pieces of pure chocolate I see.";
+		mes "Give them to me...";
+		next;
+		mes "[Carl Orleans]";
+		mes "Ok, now I will only create my special handmade chocolates if you promise to use it wisely.";
+		next;
+		mes "[Carl Orleans]";
+		mes "....Hmmmmmm.....";
+		mes "Well...";
+		next;
+		getitem 559,1;
+		mes "[Carl Orleans]";
+		mes "Here.";
+		if(rand(2))close;
+		mes "I hope you give it to someone special, because its a special chocolate.";
+		mes "As you know... only I can create this.";
+		next;
+		mes "[Carl Orleans]";
+		mes "Enjoy.";
+		close;
+	case 2:
+		mes "[Carl Orleans]";
+		mes "Well, I just might be able to fulfill your needs...";
+		next;
+		if (countitem(White_Chocolate)<3) {
+			mes "[Carl Orleans]";
+			mes "I'm sorry you do not have enough White Chocolate Bars to do this.";
+			if(rand(2))mes "They say Jainie from Alberta used to sell good White Chocolate.";
+			close;
+		}
+		delitem 561,3;
+		mes "[Carl Orleans]";
+		mes "You got 3 pieces of pure white chocolate I see.";
+		mes "Give them to me...";
+		next;
+		mes "[Carl Orleans]";
+		mes "Ok, now I will only create my special handmade chocolates if you promise to use it wisely.";
+		next;
+		mes "[Carl Orleans]";
+		mes "....Hmmmmmm.....";
+		mes "Well...";
+		next;
+		getitem 560,1;
+		mes "[Carl Orleans]";
+		mes "Here.";
+		if(rand(2))close;
+		mes "I hope you give it to someone special, because its a special chocolate.";
+		mes "As you know... only I can create this.";
+		next;
+		mes "[Carl Orleans]";
+		mes "Enjoy.";
+		close;
+	case 3:
+		mes "[Carl Orleans]";
+		mes "Oh.. well, if you want me to make some of my special handmade Chocolate....";
+		mes "You will need to give me at least ^0000FF 3 Chocolates^000000 or ^0000FF 3 White Chocolates^000000.";
+		if(rand(2))close;
+		next;
+		mes "[Carl Orleans]";
+		mes "That's right, only ^0000FF 3 Chocolates^000000 or ^0000FF 3 White Chocolates^000000.";
+		mes "Bring them to me and you'll get what you came for.";
+		if(rand(2))close;
+		next;
+		mes "[Carl Orleans]";
+		mes "See You.";
 		close;
 	}
-	delitem 558,3;
-	mes "[Carl Orleans]";
-	mes "You got 3 pieces of pure chocolate I see.";
-	mes "Give them to me...";
-	next;
-	mes "[Carl Orleans]";
-	mes "Ok, now I will only create my special handmade chocolates if you promise to use it wisely.";
-	next;
-	mes "[Carl Orleans]";
-	mes "....Hmmmmmm.....";
-	mes "Well...";
-	next;
-	getitem 559,1;
-	mes "[Carl Orleans]";
-	mes "Here.";
-	if(rand(2))close;
-	mes "I hope you give it to someone special, because its a special chocolate.";
-	mes "As you know... only I can create this.";
-	next;
-	mes "[Carl Orleans]";
-	mes "Enjoy.";
-	close;
-
-M_WHITE:
-	mes "[Carl Orleans]";
-	mes "Well, I just might be able to fulfill your needs...";
-	next;
-	if (countitem(White_Chocolate)<3) {
-		mes "[Carl Orleans]";
-		mes "I'm sorry you do not have enough White Chocolate Bars to do this.";
-		if(rand(2))mes "They say Jainie from Alberta used to sell good White Chocolate.";
-		close;
-	}
-	delitem 561,3;
-	mes "[Carl Orleans]";
-	mes "You got 3 pieces of pure white chocolate I see.";
-	mes "Give them to me...";
-	next;
-	mes "[Carl Orleans]";
-	mes "Ok, now I will only create my special handmade chocolates if you promise to use it wisely.";
-	next;
-	mes "[Carl Orleans]";
-	mes "....Hmmmmmm.....";
-	mes "Well...";
-	next;
-	getitem 560,1;
-	mes "[Carl Orleans]";
-	mes "Here.";
-	if(rand(2))close;
-	mes "I hope you give it to someone special, because its a special chocolate.";
-	mes "As you know... only I can create this.";
-	next;
-	mes "[Carl Orleans]";
-	mes "Enjoy.";
-	close;
-
-M_End:
-	mes "[Carl Orleans]";
-	mes "Oh.. well, if you want me to make some of my special handmade Chocolate....";
-	mes "You will need to give me at least ^0000FF 3 Chocolates^000000 or ^0000FF 3 White Chocolates^000000.";
-	if(rand(2))close;
-	next;
-	mes "[Carl Orleans]";
-	mes "That's right, only ^0000FF 3 Chocolates^000000 or ^0000FF 3 White Chocolates^000000.";
-	mes "Bring them to me and you'll get what you came for.";
-	if(rand(2))close;
-	next;
-	mes "[Carl Orleans]";
-	mes "See You.";
-	close;
 }
