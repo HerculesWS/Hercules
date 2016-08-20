@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -25,6 +25,10 @@
 #include "common/core.h" // CORE_ST_LAST
 #include "common/db.h"
 #include "common/mmo.h"
+
+/* Forward Declarations */
+struct config_setting_t; // common/conf.h
+struct config_t; // common/conf.h
 
 enum E_CHARSERVER_ST {
 	CHARSERVER_ST_RUNNING = CORE_ST_LAST,
@@ -110,12 +114,15 @@ struct char_interface {
 	uint32 ip;
 	uint16 port;
 	int server_type;
-	int new_display;
+	int16 new_display; ///< Display 'New' in the server list.
 
 	char *CHAR_CONF_NAME;
 	char *NET_CONF_NAME; ///< Network config filename
 	char *SQL_CONF_NAME;
 	char *INTER_CONF_NAME;
+
+	bool show_save_log; ///< Show loading/saving messages.
+	bool enable_logs;   ///< Whether to log char server operations.
 
 	int (*waiting_disconnect) (int tid, int64 tick, int id, intptr_t data);
 	int (*delete_char_sql) (int char_id);
@@ -272,9 +279,24 @@ struct char_interface {
 	int (*check_connect_login_server) (int tid, int64 tick, int id, intptr_t data);
 	int (*online_data_cleanup_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*online_data_cleanup) (int tid, int64 tick, int id, intptr_t data);
-	void (*sql_config_read) (const char* cfgName);
-	void (*config_dispatch) (char *w1, char *w2);
-	int (*config_read) (const char* cfgName);
+
+	bool (*sql_config_read) (const char *filename, bool imported);
+	bool (*sql_config_read_registry) (const char *filename, const struct config_t *config, bool imported);
+	bool (*sql_config_read_pc) (const char *filename, const struct config_t *config, bool imported);
+	bool (*sql_config_read_guild) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read) (const char *filename, bool imported);
+	bool (*config_read_database) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_console) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_player_fame) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_player_deletion) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_player_name) (const char *filename, const struct config_t *config, bool imported);
+	void (*config_set_start_item) (const struct config_setting_t *setting);
+	bool (*config_read_player_new) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_player) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_permission) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_set_ip) (const char *type, const char *value, uint32 *out_ip, char *out_ip_str);
+	bool (*config_read_inter) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_top) (const char *filename, const struct config_t *config, bool imported);
 };
 
 #ifdef HERCULES_CORE
@@ -282,7 +304,6 @@ extern int char_name_option;
 extern char char_name_letters[];
 extern bool char_gm_read;
 extern int autosave_interval;
-extern int save_log;
 extern char db_path[];
 extern char char_db[256];
 extern char scdata_db[256];
@@ -318,7 +339,6 @@ extern char char_reg_str_db[32];
 extern char char_reg_num_db[32];
 
 extern int guild_exp_rate;
-extern int log_inter;
 
 void char_load_defaults(void);
 void char_defaults(void);

@@ -213,11 +213,12 @@ HPExport void plugin_init (void) {
 	}
 }
 /* triggered when server starts loading, before any server-specific data is set */
-HPExport void server_preinit (void) {
+HPExport void server_preinit(void)
+{
 	/* makes map server listen to mysetting:value in any "battleconf" file (including imported or custom ones) */
 	/* value is not limited to numbers, its passed to our plugins handler (parse_my_setting) as const char *,
 	 * however for battle config to be returned to our script engine we need it to be number (int) so keep use it as int only */
-	addBattleConf("my_setting",parse_my_setting,return_my_setting);
+	addBattleConf("my_setting", parse_my_setting, return_my_setting, false);
 }
 /* run when server is ready (online) */
 HPExport void server_online (void) {

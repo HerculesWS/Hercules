@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes);
 void login_log(uint32 ip, const char* username, int rcode, const char* message);
 bool loginlog_init(void);
 bool loginlog_final(void);
-bool loginlog_config_read(const char* w1, const char* w2);
+bool loginlog_config_read(const char *filename, bool imported);
 #endif // HERCULES_CORE
 
 #endif /* LOGIN_LOGINLOG_H */

@@ -99,35 +99,49 @@ case "$MODE" in
 		make plugin.script_mapquit -j3 || aborterror "Build failed."
 		;;
 	test)
-		cat >> conf/import/login_conf.txt << EOF
-ipban.sql.db_username: $DBUSER
-ipban.sql.db_password: $DBPASS
-ipban.sql.db_database: $DBNAME
-account.sql.db_username: $DBUSER
-account.sql.db_password: $DBPASS
-account.sql.db_database: $DBNAME
-account.sql.db_hostname: localhost
+		cat > conf/travis_sql_connection.conf << EOF
+sql_connection: {
+	//default_codepage: ""
+	//case_sensitive: false
+	db_hostname: "localhost"
+	db_username: "$DBUSER"
+	db_password: "$DBPASS"
+	db_database: "$DBNAME"
+	//codepage:""
+}
 EOF
-		[ $? -eq 0 ] || aborterror "Unable to import configuration, aborting tests."
-		cat >> conf/import/inter_conf.txt << EOF
-sql.db_username: $DBUSER
-sql.db_password: $DBPASS
-sql.db_database: $DBNAME
-sql.db_hostname: localhost
-char_server_id: $DBUSER
-char_server_pw: $DBPASS
-char_server_db: $DBNAME
-char_server_ip: localhost
-map_server_id: $DBUSER
-map_server_pw: $DBPASS
-map_server_db: $DBNAME
-map_server_ip: localhost
-log_db_id: $DBUSER
-log_db_pw: $DBPASS
-log_db_db: $DBNAME
-log_db_ip: localhost
+		[ $? -eq 0 ] || aborterror "Unable to write database configuration, aborting tests."
+		cat > conf/import/login-server.conf << EOF
+login_configuration: {
+	account: {
+		@include "conf/travis_sql_connection.conf"
+		ipban: {
+			@include "conf/travis_sql_connection.conf"
+		}
+	}
+}
 EOF
-		[ $? -eq 0 ] || aborterror "Unable to import configuration, aborting tests."
+		[ $? -eq 0 ] || aborterror "Unable to override login-server configuration, aborting tests."
+		cat > conf/import/char-server.conf << EOF
+char_configuration: {
+	@include "conf/travis_sql_connection.conf"
+}
+EOF
+		[ $? -eq 0 ] || aborterror "Unable to override char-server configuration, aborting tests."
+		cat > conf/import/map-server.conf << EOF
+map_configuration: {
+	@include "conf/travis_sql_connection.conf"
+}
+EOF
+		[ $? -eq 0 ] || aborterror "Unable to override map-server configuration, aborting tests."
+		cat > conf/import/inter-server.conf << EOF
+inter_configuration: {
+	log: {
+		@include "conf/travis_sql_connection.conf"
+	}
+}
+EOF
+		[ $? -eq 0 ] || aborterror "Unable to override inter-server configuration, aborting tests."
 		ARGS="--load-script npc/dev/test.txt "
 		ARGS="--load-plugin script_mapquit $ARGS --load-script npc/dev/ci_test.txt"
 		PLUGINS="--load-plugin HPMHooking --load-plugin sample"
