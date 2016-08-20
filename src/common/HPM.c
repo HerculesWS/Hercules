@@ -826,7 +826,7 @@ char* HPM_astrdup(const char *p, const char *file, int line, const char *func) {
  * @retval true if a registered plugin was found to handle the entry.
  * @retval false if no registered plugins could be found.
  */
-bool hplugins_parse_conf(const char *w1, const char *w2, enum HPluginConfType point)
+bool hplugins_parse_conf_entry(const char *w1, const char *w2, enum HPluginConfType point)
 {
 	int i;
 	ARR_FIND(0, VECTOR_LENGTH(HPM->config_listeners[point]), i, strcmpi(w1, VECTOR_INDEX(HPM->config_listeners[point], i).key) == 0);
@@ -860,11 +860,65 @@ bool hplugins_get_battle_conf(const char *w1, int *value)
 }
 
 /**
- * Parses battle config entries registered by plugins.
+ * Parses configuration entries registered by plugins.
  *
  * @param config   The configuration file to parse.
  * @param filename Path to configuration file.
+ * @param point    The type of configuration file.
  * @param imported Whether the current config is imported from another file.
+ * @retval false in case of error.
+ */
+bool hplugins_parse_conf(const struct config_t *config, const char *filename, enum HPluginConfType point, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+	int i, val, type;
+	char buf[1024];
+	bool retval = true;
+
+	nullpo_retr(false, config);
+
+	for (i = 0; i < VECTOR_LENGTH(HPM->config_listeners[point]); i++) {
+		const struct HPConfListenStorage *entry = &VECTOR_INDEX(HPM->config_listeners[point], i);
+		const char *config_name = entry->key;
+		const char *str = buf;
+		if ((setting = libconfig->lookup(config, config_name)) == NULL) {
+			if (!imported && entry->required) {
+				ShowWarning("Missing configuration '%s' in file %s!\n", config_name, filename);
+				retval = false;
+			}
+			continue;
+		}
+
+		switch ((type = config_setting_type(setting))) {
+		case CONFIG_TYPE_INT:
+			val = libconfig->setting_get_int(setting);
+			sprintf(buf, "%d", val); // FIXME: Remove this when support to int's as value is added
+			str = buf;
+			break;
+		case CONFIG_TYPE_BOOL:
+			val = libconfig->setting_get_bool(setting);
+			sprintf(buf, "%d", val); // FIXME: Remove this when support to int's as value is added
+			str = buf;
+			break;
+		case CONFIG_TYPE_STRING:
+			str = libconfig->setting_get_string(setting);
+			break;
+		default: // Unsupported type
+			ShowWarning("Setting %s has unsupported type %d, ignoring...\n", config_name, type);
+			retval = false;
+			continue;
+		}
+		entry->parse_func(config_name, str);
+	}
+	return retval;
+}
+
+/**
+ * parses battle config entries registered by plugins.
+ *
+ * @param config   the configuration file to parse.
+ * @param filename path to configuration file.
+ * @param imported whether the current config is imported from another file.
  * @retval false in case of error.
  */
 bool hplugins_parse_battle_conf(const struct config_t *config, const char *filename, bool imported)
@@ -1120,7 +1174,8 @@ void hpm_defaults(void)
 	HPM->pid2name = hplugins_id2name;
 	HPM->parse_packets = hplugins_parse_packets;
 	HPM->load_sub = NULL;
-	HPM->parseConf = hplugins_parse_conf;
+	HPM->parse_conf_entry = hplugins_parse_conf_entry;
+	HPM->parse_conf = hplugins_parse_conf;
 	HPM->parse_battle_conf = hplugins_parse_battle_conf;
 	HPM->getBattleConf = hplugins_get_battle_conf;
 	HPM->DataCheck = HPM_DataCheck;

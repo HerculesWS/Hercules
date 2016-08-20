@@ -4556,7 +4556,8 @@ bool script_config_read(const char *filename, bool imported)
 	libconfig->setting_lookup_int(setting, "input_min_value", &script->config.input_min_value);
 	libconfig->setting_lookup_int(setting, "input_max_value", &script->config.input_max_value);
 
-	// TODO HPM->parseConf(w1, w2, HPCT_SCRIPT));
+	if (!HPM->parse_conf(&config, filename, HPCT_SCRIPT, imported))
+		retval = false;
 
 	// import should overwrite any previous configuration, so it should be called last
 	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {

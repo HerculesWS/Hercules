@@ -1847,7 +1847,8 @@ bool login_config_read(const char *filename, bool imported)
 	if (!loginlog_config_read("conf/common/inter-server.conf", imported)) // Only inter-server
 		retval = false;
 
-	// TODO HPM->parseConf(w1, w2, HPCT_LOGIN);
+	if (!HPM->parse_conf(&config, filename, HPCT_LOGIN, imported))
+		retval = false;
 
 	ShowInfo("Finished reading %s.\n", filename);
 

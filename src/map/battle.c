@@ -7438,7 +7438,7 @@ bool battle_set_value(const char *param, const char *value)
 
 	ARR_FIND(0, ARRAYLENGTH(battle_data), i, strcmpi(param, battle_data[i].str) == 0);
 	if (i == ARRAYLENGTH(battle_data)) {
-		if (HPM->parseConf(param, value, HPCT_BATTLE)) /* if plugin-owned, succeed */
+		if (HPM->parse_conf_entry(param, value, HPCT_BATTLE)) /* if plugin-owned, succeed */
 			return true;
 		return false; // not found
 	}

@@ -685,7 +685,8 @@ bool log_config_read(const char *filename, bool imported)
 	if (!log_config_read_filter(filename, &config, imported))
 		retval = false;
 
-	// TODO HPM->parseConf(w1, w2, HPCT_LOG);
+	if (!HPM->parse_conf(&config, filename, HPCT_LOG, imported))
+		retval = false;
 
 	target = logs->config.sql_logs ? "table" : "file";
 

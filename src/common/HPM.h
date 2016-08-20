@@ -163,7 +163,8 @@ struct HPM_interface {
 	unsigned char (*parse_packets) (int fd, int packet_id, enum HPluginPacketHookingPoints point);
 	void (*load_sub) (struct hplugin *plugin);
 	/* for custom config parsing */
-	bool (*parseConf) (const char *w1, const char *w2, enum HPluginConfType point);
+	bool (*parse_conf) (const struct config_t *config, const char *filename, enum HPluginConfType point, bool imported);
+	bool (*parse_conf_entry) (const char *w1, const char *w2, enum HPluginConfType point);
 	bool (*getBattleConf) (const char* w1, int *value);
 	/* validates plugin data */
 	bool (*DataCheck) (struct s_HPMDataCheck *src, unsigned int size, int version, char *name);

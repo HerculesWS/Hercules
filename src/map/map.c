@@ -4255,7 +4255,8 @@ bool inter_config_read(const char *filename, bool imported)
 	if (!map->inter_config_read_connection(filename, &config, imported))
 		retval = false;
 
-	// TODO HPM->parseConf(w1, w2, HPCT_MAP_INTER);
+	if (!HPM->parse_conf(&config, filename, HPCT_MAP_INTER, imported))
+		retval = false;
 
 	// import should overwrite any previous configuration, so it should be called last
 	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
