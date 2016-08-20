@@ -73,25 +73,30 @@ Wherever you refer to a map, use 'mapname' instead of 'mapname.gat'.
 Script loading structure
 ------------------------
 
-Scripts are loaded by the map server as referenced in the 
-'conf/map-server.conf' configuration file, but in the default 
-configuration, it doesn't load any script files itself. Instead, it loads 
-the file 'npc/scripts_main.conf' which itself contains references to other 
-files. The actual scripts are loaded from txt files, which are linked up 
-like this:
+Scripts are loaded by the map server as referenced in the
+'npc/(pre-)re/scripts_main.conf' configuration file.
 
-npc: <path to a filename>
+The file contains a list of scripts to be loaded (or other configuration files
+to be parsed, through the @include directive), in the following format:
 
-Any line like this, invoked, ultimately, by 'map-server.conf' will load up 
-the script contained in this file, which will make the script available. 
-No file will get loaded twice, to prevent possible errors.
+npc_global_list: (
+    "npc/path/to/the/script/to/load.txt",
+    "npc/other/file.txt",
+@include "npc/other_configuration_file.conf"
+)
 
-Another configuration file option of relevance is:
+Any script will only get loaded once even if specified twice, to prevent
+possible errors.
 
-delnpc: <path to a filename>
+It's possible to specify scripts to exclude from loading, by inserting them
+(using the same syntax) in the list available in npc/scripts_removed.conf:
 
-This will unload a specified script filename from memory, which, while 
-seemingly useless, may sometimes be required.
+npc_removed_list: (
+    "npc/path/to/the/file/to/skip.txt",
+)
+
+Script file format
+------------------
 
 Whenever '//' is encountered in a line upon reading, everything beyond 
 this on that line is considered to be a comment and is ignored. This works 
@@ -161,7 +166,7 @@ monster database (which contains an uppercase name used to summon the
 monster with a GM command).
 
 Amount is the amount of monsters that will be spawned when this command is 
-executed, it is affected by spawn rates in 'battle.conf'.
+executed, it is affected by spawn rates in 'conf/map/battle.conf'.
 
 Delay1 and delay2 control monster respawn delays - the first one is the 
 fixed base respawn time, and the second is random variance on top of the 
@@ -1635,7 +1640,7 @@ receive free Zeny as a result.
 
 The command has two optional arguments and a return value. 
 The default value of 'min' and 'max' can be set with 'input_min_value' and 
-'input_max_value' in script.conf.
+'input_max_value' in conf/map/script.conf.
 For numeric inputs the value is capped to the range [min,max]. Returns 1 
 if the value was higher than 'max', -1 if lower than 'min' and 0 otherwise.
 For string inputs it returns 1 if the string was longer than 'max', -1 is 
@@ -3773,13 +3778,13 @@ Example 2:
 
 *basicskillcheck()
 
-This function will return the state of the configuration option 
-'basic_skill_check' in 'battle.conf'. Returns 1 if the option is enabled 
-and 0 if it isn't. If the 'basic_skill_check' option is enabled, which it 
-is by default, characters must have a certain number of basic skill levels 
-to sit, request a trade, use emotions, etc. Making your script behave 
-differently depending on whether the characters must actually have the 
-skill to do all these things might in some cases be required.
+This function will return the state of the configuration option
+'basic_skill_check' in 'conf/map/battle.conf'. Returns 1 if the option is
+enabled and 0 if it isn't. If the 'basic_skill_check' option is enabled, which
+it is by default, characters must have a certain number of basic skill levels
+to sit, request a trade, use emotions, etc. Making your script behave
+differently depending on whether the characters must actually have the skill to
+do all these things might in some cases be required.
 
 ---------------------------------------
 
@@ -5064,9 +5069,9 @@ disable changing equips while running that script in particular. Note that
 if a different script also calls disable_items, it will override the last 
 call (so you may want to call this command at the start of your script 
 without assuming the effect is still in effect).
-If 'item_enabled_npc' option is set to Yes in 'items.conf' all NPC are 
-allowing changing of equipment by default except for those have been set 
-with 'disable_items'.
+If 'item_enabled_npc' option is set to true in 'conf/map/battle/items.conf' all
+NPC are allowing changing of equipment by default except for those have been
+set with 'disable_items'.
 
 ---------------------------------------
 
@@ -5493,8 +5498,8 @@ Used in reset NPC's (duh!).
 This command takes off all the skill points on the invoking character, so 
 they only have Basic Skill blanked out (lvl 0) left, and returns the 
 points for them to spend again. Nothing else will change but the skills. 
-Quest skills will also reset if 'quest_skill_reset' option is set to Yes 
-in 'battle.conf'. If the 'quest_skill_learn' option is set in there, the 
+Quest skills will also reset if 'quest_skill_reset' option is set to true in
+'conf/map/battle.conf'. If the 'quest_skill_learn' option is set in there, the
 points in the quest skills will also count towards the total.
 
 Used in reset NPC's (duh!).
@@ -6969,8 +6974,8 @@ mapflag's state.
 *getbattleflag("<battle flag>")
 
 Sets or gets the value of the given battle flag.
-Battle flags are the flags found in the battle/*.conf files and is also 
-used in Lupus' variable rates script.
+Battle flags are the flags found in the conf/map/battle/*.conf files and is
+also used in Lupus' variable rates script.
 
 Examples:
 
@@ -7187,7 +7192,7 @@ window). It will not be displayed anywhere else.
 *logmes "<message>";
 
 This command will write the message given to the map server NPC log file, 
-as specified in 'conf/logs.conf'. If SQL logging is enabled, the message 
+as specified in 'conf/map/logs.conf'. If SQL logging is enabled, the message
 will go to the 'npclog' table.
 
 If logs are not enabled for NPCs, nothing will happen.
@@ -8290,7 +8295,7 @@ rate if the pet intimacy is at the maximum possible.
 
 The behavior modified with the above mentioned commands will only be 
 exhibited if the pet is loyal and appropriate configuration options are 
-set in 'battle.conf'.
+set in 'conf/map/battle.conf'.
 
 Pet scripts in the database normally run whenever a pet of that type 
 hatches from the egg. Other commands usable in item scripts (see 'bonus') 
