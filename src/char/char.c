@@ -5919,6 +5919,7 @@ bool char_config_read_player_new(const char *filename, const struct config_t *co
 #else
 	const char *start_point_setting = "start_point_pre";
 #endif
+	int64 i64 = 0;
 
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
@@ -5930,10 +5931,12 @@ bool char_config_read_player_new(const char *filename, const struct config_t *co
 		return false;
 	}
 
-	if (libconfig->setting_lookup_int(setting, "zeny", &start_zeny) == CONFIG_TRUE) {
-		if (start_zeny > MAX_ZENY) {
+	if (libconfig->setting_lookup_int64(setting, "zeny", &i64) == CONFIG_TRUE) {
+		if (i64 > MAX_ZENY) {
 			ShowWarning("char_config_read: player/new/zeny is too big! Capping to MAX_ZENY.\n");
 			start_zeny = MAX_ZENY;
+		} else {
+			start_zeny = (int)i64;
 		}
 	}
 
@@ -6016,8 +6019,8 @@ bool char_config_set_ip(const char *type, const char *value, uint32 *out_ip, cha
 		return false;
 	*out_ip = ip;
 
-	ShowStatus("%s IP address : %s -> %s\n", type, out_ip_str[0] ? out_ip_str : "0.0.0.0", sockt->ip2str(ip, NULL));
-	safestrncpy(out_ip_str, value, sizeof(out_ip_str));
+	ShowStatus("%s IP address : %s -> %s\n", type, out_ip_str[0] != '\0' ? out_ip_str : "0.0.0.0", sockt->ip2str(ip, NULL));
+	safestrncpy(out_ip_str, value, sizeof *out_ip_str);
 	return true;
 }
 
