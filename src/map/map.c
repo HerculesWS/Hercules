@@ -4295,7 +4295,7 @@ bool inter_config_read_connection(const char *filename, const struct config_t *c
 		return false;
 	}
 
-	libconfig->setting_lookup_int(setting, "port", &logs->db_port);
+	libconfig->setting_lookup_int(setting, "db_port", &logs->db_port);
 	libconfig->setting_lookup_mutable_string(setting, "db_hostname", logs->db_ip, sizeof(logs->db_ip));
 	libconfig->setting_lookup_mutable_string(setting, "db_username", logs->db_id, sizeof(logs->db_id));
 	libconfig->setting_lookup_mutable_string(setting, "db_password", logs->db_pw, sizeof(logs->db_pw));
