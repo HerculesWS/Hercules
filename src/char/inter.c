@@ -793,6 +793,34 @@ int inter_accreg_fromsql(int account_id,int char_id, int fd, int type)
 }
 
 /**
+ * Reads the 'inter_configuration/log' config entry and initializes required variables.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool inter_config_read_log(const char *filename, const struct config_t *config, bool imported)
+{
+	const struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "inter_configuration/log")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("sql_config_read: inter_configuration/log was not found in %s!\n", filename);
+		return false;
+	}
+
+	libconfig->setting_lookup_bool_real(setting, "log_inter", &inter->enable_logs);
+
+	return true;
+}
+
+/**
  * Reads the 'char_configuration/sql_connection' config entry and initializes required variables.
  *
  * @param filename Path to configuration file (used in error and warning messages).
@@ -854,7 +882,9 @@ bool inter_config_read(const char *filename, bool imported)
 		return false;
 	}
 	libconfig->setting_lookup_int(setting, "party_share_level", &party_share_level);
-	libconfig->setting_lookup_bool_real(setting, "log_inter", &inter->enable_logs);
+
+	if (!inter->config_read_log(filename, &config, imported))
+		retval = false;
 
 	ShowInfo("Done reading %s.\n", filename);
 
@@ -1418,5 +1448,6 @@ void inter_defaults(void)
 	inter->check_length = inter_check_length;
 	inter->parse_frommap = inter_parse_frommap;
 	inter->final = inter_final;
+	inter->config_read_log = inter_config_read_log;
 	inter->config_read_connection = inter_config_read_connection;
 }

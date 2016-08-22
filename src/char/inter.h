@@ -54,6 +54,7 @@ struct inter_interface {
 	int (*parse_frommap) (int fd);
 	void (*final) (void);
 	bool (*config_read) (const char *filename, bool imported);
+	bool (*config_read_log) (const char *filename, const struct config_t *config, bool imported);
 	bool (*config_read_connection) (const char *filename, const struct config_t *config, bool imported);
 };
 
