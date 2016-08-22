@@ -2876,6 +2876,8 @@ typedef void (*HPMHOOK_pre_inter_final) (void);
 typedef void (*HPMHOOK_post_inter_final) (void);
 typedef bool (*HPMHOOK_pre_inter_config_read) (const char **filename, bool *imported);
 typedef bool (*HPMHOOK_post_inter_config_read) (bool retVal___, const char *filename, bool imported);
+typedef bool (*HPMHOOK_pre_inter_config_read_log) (const char **filename, const struct config_t **config, bool *imported);
+typedef bool (*HPMHOOK_post_inter_config_read_log) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
 typedef bool (*HPMHOOK_pre_inter_config_read_connection) (const char **filename, const struct config_t **config, bool *imported);
 typedef bool (*HPMHOOK_post_inter_config_read_connection) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
 #endif // CHAR_INTER_H

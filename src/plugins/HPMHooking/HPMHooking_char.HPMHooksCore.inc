@@ -552,6 +552,8 @@ struct {
 	struct HPMHookPoint *HP_inter_final_post;
 	struct HPMHookPoint *HP_inter_config_read_pre;
 	struct HPMHookPoint *HP_inter_config_read_post;
+	struct HPMHookPoint *HP_inter_config_read_log_pre;
+	struct HPMHookPoint *HP_inter_config_read_log_post;
 	struct HPMHookPoint *HP_inter_config_read_connection_pre;
 	struct HPMHookPoint *HP_inter_config_read_connection_post;
 	struct HPMHookPoint *HP_inter_mail_sql_init_pre;
@@ -2055,6 +2057,8 @@ struct {
 	int HP_inter_final_post;
 	int HP_inter_config_read_pre;
 	int HP_inter_config_read_post;
+	int HP_inter_config_read_log_pre;
+	int HP_inter_config_read_log_post;
 	int HP_inter_config_read_connection_pre;
 	int HP_inter_config_read_connection_post;
 	int HP_inter_mail_sql_init_pre;

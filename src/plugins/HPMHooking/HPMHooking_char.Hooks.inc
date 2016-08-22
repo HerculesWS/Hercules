@@ -7060,6 +7060,33 @@ bool HP_inter_config_read(const char *filename, bool imported) {
 	}
 	return retVal___;
 }
+bool HP_inter_config_read_log(const char *filename, const struct config_t *config, bool imported) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if( HPMHooks.count.HP_inter_config_read_log_pre ) {
+		bool (*preHookFunc) (const char **filename, const struct config_t **config, bool *imported);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_inter_config_read_log_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_inter_config_read_log_pre[hIndex].func;
+			retVal___ = preHookFunc(&filename, &config, &imported);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.inter.config_read_log(filename, config, imported);
+	}
+	if( HPMHooks.count.HP_inter_config_read_log_post ) {
+		bool (*postHookFunc) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_inter_config_read_log_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_inter_config_read_log_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, filename, config, imported);
+		}
+	}
+	return retVal___;
+}
 bool HP_inter_config_read_connection(const char *filename, const struct config_t *config, bool imported) {
 	int hIndex = 0;
 	bool retVal___ = false;

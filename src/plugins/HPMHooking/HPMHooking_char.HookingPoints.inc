@@ -302,6 +302,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(inter->parse_frommap, HP_inter_parse_frommap) },
 	{ HP_POP(inter->final, HP_inter_final) },
 	{ HP_POP(inter->config_read, HP_inter_config_read) },
+	{ HP_POP(inter->config_read_log, HP_inter_config_read_log) },
 	{ HP_POP(inter->config_read_connection, HP_inter_config_read_connection) },
 /* inter_mail_interface */
 	{ HP_POP(inter_mail->sql_init, HP_inter_mail_sql_init) },
