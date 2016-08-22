@@ -5982,7 +5982,12 @@ bool char_config_read_permission(const char *filename, const struct config_t *co
 	}
 
 	libconfig->setting_lookup_bool_real(setting, "enable_char_creation", &enable_char_creation);
-	libconfig->setting_lookup_int16(setting, "display_new", &chr->new_display);
+	if (libconfig->setting_lookup_int16(setting, "display_new", &chr->new_display) != CONFIG_TRUE) {
+		// While normally true/false makes sense, we may accept any int16 here (it's passed as is to the client)
+		int i32 = 0;
+		if (libconfig->setting_lookup_bool(setting, "display_new", &i32) == CONFIG_TRUE)
+			chr->new_display = i32 == 0 ? 0 : 1;
+	}
 	libconfig->setting_lookup_int(setting, "max_connect_user", &max_connect_user);
 	libconfig->setting_lookup_int(setting, "gm_allow_group", &gm_allow_group);
 	libconfig->setting_lookup_int(setting, "maintenance_min_group_id", &char_maintenance_min_group_id);
