@@ -79,8 +79,8 @@ Toggles the display of experience gain messages.
 @showzeny
 
 Toggles the display of Zeny gain messages.
-Configuration for zeny being dropped by mobs is in '/conf/battle/monster.conf':
-zeny_from_mobs: yes
+Configuration for zeny being dropped by mobs is in 'conf/map/battle/monster.conf':
+zeny_from_mobs: true
 
 ---------------------------------------
 
@@ -905,7 +905,7 @@ Changes Kafra Points by the specified amount.
 @dye <default: 0-4>
 
 Changes appearance based on the given parameters.
-The min/max values are set in '/conf/battle/client.conf'.
+The min/max values are set in 'conf/map/battle/client.conf'.
 
 ---------------------------------------
 
@@ -945,7 +945,7 @@ Additionally, @sizeall will change the size of all online players.
 @leave
 
 Duel-organizing commands.
-Some options can be found in '/conf/battle/misc.conf'.
+Some options can be found in 'conf/map/battle/misc.conf'.
 
 ---------------------------------------
 
@@ -1188,7 +1188,7 @@ Changes a battle_config flag without rebooting the server.
 @adjgroup <group ID>
 
 Changes the group of a character (lasts until relog).
-The groups are specified in '/conf/groups.conf'.
+The groups are specified in 'conf/groups.conf'.
 
 ---------------------------------------
 
@@ -1273,7 +1273,7 @@ Warps all online characters of a party to your location.
 
 Allows you to spy on any party's Party Chat.
 At least one member of that party must be online.
-NOTE: map server needs to be configured to enable spying to use this command (enable_spy: yes)
+NOTE: map server needs to be configured to enable spying to use this command (enable_spy: true)
 
 ---------------------------------------
 
@@ -1336,7 +1336,7 @@ Warps all online characters of a guild to your location.
 
 Allows you to spy on any guild's Guild Chat. 
 At least one member of that guild must be online.
-NOTE: map server needs to be configured to enable spying to use this command (enable_spy: yes)
+NOTE: map server needs to be configured to enable spying to use this command (enable_spy: true)
 
 ---------------------------------------
 

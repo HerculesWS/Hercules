@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -85,7 +85,7 @@ int inter_pet_tosql(const struct s_pet *p)
 		pet_id = p->pet_id;
 	}
 
-	if (save_log)
+	if (chr->show_save_log)
 		ShowInfo("Pet saved %d - %s.\n", pet_id, p->name);
 
 	return pet_id;
@@ -130,7 +130,7 @@ int inter_pet_fromsql(int pet_id, struct s_pet* p)
 		p->hungry = cap_value(p->hungry, 0, 100);
 		p->intimate = cap_value(p->intimate, 0, 1000);
 
-		if( save_log )
+		if (chr->show_save_log)
 			ShowInfo("Pet loaded (%d - %s).\n", pet_id, p->name);
 	}
 	return 0;

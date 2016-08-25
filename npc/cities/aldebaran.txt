@@ -36,7 +36,7 @@
 //================= Description ===========================================
 //= Aldebaran Town NPCs
 //================= Current Version =======================================
-//= 2.3
+//= 2.4
 //=========================================================================
 
 //== Aldebaran =============================================
@@ -1098,7 +1098,7 @@ aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 		.@list$ = "";
 		.@numitemchoices = 0;
 		for (.@i = 0; .@i < getarraysize(.@choices) - 3; .@i += 3) { // Skip the last entry as it's handled separately
-			.@list$ += .@choices[i] + "- " + getitemname(.@choices[.@i+1]) + " " + .@choices[.@i+2] + " ea:";
+			.@list$ += .@choices[.@i] + "- " + getitemname(.@choices[.@i+1]) + " " + .@choices[.@i+2] + " ea:";
 			++.@numitemchoices;
 		}
 		.@list$ += .@choices[.@i] + "- " + .@ordinal$ + " Lottery Chance!:" + .@changepage$ +":Cancel";
@@ -1111,7 +1111,7 @@ aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 				continue;
 			}
 			RESRVPTS -= .@choices[.@chosen * 3];
-			if (.@chosen < .@numitemchances) {
+			if (.@chosen < .@numitemchoices) {
 				// Item
 				mes "[Kafra]";
 				mes "Here you are.";

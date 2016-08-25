@@ -41,6 +41,7 @@
 #include "map/status.h"
 #include "common/HPM.h"
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/ers.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
@@ -7018,7 +7019,7 @@ static const struct battle_data {
 	{ "show_steal_in_same_party",           &battle_config.show_steal_in_same_party,        0,      0,      1,              },
 	{ "party_hp_mode",                      &battle_config.party_hp_mode,                   0,      0,      1,              },
 	{ "show_party_share_picker",            &battle_config.party_show_share_picker,         1,      0,      1,              },
-	{ "show_picker.item_type",              &battle_config.show_picker_item_type,           112,    0,      INT_MAX,        },
+	{ "show_picker_item_type",              &battle_config.show_picker_item_type,           112,    0,      INT_MAX,        },
 	{ "party_update_interval",              &battle_config.party_update_interval,           1000,   100,    INT_MAX,        },
 	{ "party_item_share_type",              &battle_config.party_share_type,                0,      0,      1|2|3,          },
 	{ "attack_attr_none",                   &battle_config.attack_attr_none,                ~BL_PC, BL_NUL, BL_ALL,         },
@@ -7177,14 +7178,14 @@ static const struct battle_data {
 	{ "display_status_timers",              &battle_config.display_status_timers,           1,      0,      1,              },
 	{ "skill_add_heal_rate",                &battle_config.skill_add_heal_rate,             7,      0,      INT_MAX,        },
 	{ "eq_single_target_reflectable",       &battle_config.eq_single_target_reflectable,    1,      0,      1,              },
-	{ "invincible.nodamage",                &battle_config.invincible_nodamage,             0,      0,      1,              },
+	{ "invincible_nodamage",                &battle_config.invincible_nodamage,             0,      0,      1,              },
 	{ "mob_slave_keep_target",              &battle_config.mob_slave_keep_target,           0,      0,      1,              },
 	{ "autospell_check_range",              &battle_config.autospell_check_range,           0,      0,      1,              },
 	{ "knockback_left",                     &battle_config.knockback_left,                  1,      0,      1,              },
 	{ "client_reshuffle_dice",              &battle_config.client_reshuffle_dice,           0,      0,      1,              },
 	{ "client_sort_storage",                &battle_config.client_sort_storage,             0,      0,      1,              },
-	{ "feature.buying_store",               &battle_config.feature_buying_store,            1,      0,      1,              },
-	{ "feature.search_stores",              &battle_config.feature_search_stores,           1,      0,      1,              },
+	{ "features/buying_store",              &battle_config.feature_buying_store,            1,      0,      1,              },
+	{ "features/search_stores",             &battle_config.feature_search_stores,           1,      0,      1,              },
 	{ "searchstore_querydelay",             &battle_config.searchstore_querydelay,         10,      0,      INT_MAX,        },
 	{ "searchstore_maxresults",             &battle_config.searchstore_maxresults,         30,      1,      INT_MAX,        },
 	{ "display_party_name",                 &battle_config.display_party_name,              0,      0,      1,              },
@@ -7204,7 +7205,7 @@ static const struct battle_data {
 	{ "atcommand_max_stat_bypass",          &battle_config.atcommand_max_stat_bypass,       0,      0,      100,            },
 	{ "skill_amotion_leniency",             &battle_config.skill_amotion_leniency,          90,     0,      300             },
 	{ "mvp_tomb_enabled",                   &battle_config.mvp_tomb_enabled,                1,      0,      1               },
-	{ "feature.atcommand_suggestions",      &battle_config.atcommand_suggestions_enabled,   0,      0,      1               },
+	{ "features/atcommand_suggestions",     &battle_config.atcommand_suggestions_enabled,   0,      0,      1               },
 	{ "min_npc_vendchat_distance",          &battle_config.min_npc_vendchat_distance,       3,      0,      100             },
 	{ "vendchat_near_hiddennpc",            &battle_config.vendchat_near_hiddennpc,         0,      0,      1               },
 	{ "atcommand_mobinfo_type",             &battle_config.atcommand_mobinfo_type,          0,      0,      1               },
@@ -7225,8 +7226,8 @@ static const struct battle_data {
 	{ "client_accept_chatdori",             &battle_config.client_accept_chatdori,          0,      0,      INT_MAX,        },
 	{ "snovice_call_type",                  &battle_config.snovice_call_type,               0,      0,      1,              },
 	{ "guild_notice_changemap",             &battle_config.guild_notice_changemap,          2,      0,      2,              },
-	{ "feature.banking",                    &battle_config.feature_banking,                 1,      0,      1,              },
-	{ "feature.auction",                    &battle_config.feature_auction,                 0,      0,      2,              },
+	{ "features/banking",                   &battle_config.feature_banking,                 1,      0,      1,              },
+	{ "features/auction",                   &battle_config.feature_auction,                 0,      0,      2,              },
 	{ "idletime_criteria",                  &battle_config.idletime_criteria,            0x25,      1,      INT_MAX,        },
 	{ "mon_trans_disable_in_gvg",           &battle_config.mon_trans_disable_in_gvg,        0,      0,      1,              },
 	{ "case_sensitive_aegisnames",          &battle_config.case_sensitive_aegisnames,       1,      0,      1,              },
@@ -7238,7 +7239,7 @@ static const struct battle_data {
 	{ "monster_chase_refresh",              &battle_config.mob_chase_refresh,               1,      0,      30,             },
 	{ "mob_icewall_walk_block",             &battle_config.mob_icewall_walk_block,          75,     0,      255,            },
 	{ "boss_icewall_walk_block",            &battle_config.boss_icewall_walk_block,         0,      0,      255,            },
-	{ "feature.roulette",                   &battle_config.feature_roulette,                1,      0,      1,              },
+	{ "features/roulette",                  &battle_config.feature_roulette,                1,      0,      1,              },
 	{ "show_monster_hp_bar",                &battle_config.show_monster_hp_bar,             1,      0,      1,              },
 	{ "fix_warp_hit_delay_abuse",           &battle_config.fix_warp_hit_delay_abuse,        0,      0,      1,              },
 	{ "costume_refine_def",                 &battle_config.costume_refine_def,              1,      0,      1,              },
@@ -7248,6 +7249,7 @@ static const struct battle_data {
 	{ "max_body_style",                     &battle_config.max_body_style,                  4,      0,      SHRT_MAX,       },
 	{ "save_body_style",                    &battle_config.save_body_style,                 0,      0,      1,              },
 	{ "player_warp_keep_direction",         &battle_config.player_warp_keep_direction,      0,      0,      1,              },
+	{ "atcommand_levelup_events",	        &battle_config.atcommand_levelup_events,	    0,      0,      1,				},
 };
 #ifndef STATS_OPT_OUT
 /**
@@ -7412,28 +7414,36 @@ static int Hercules_report_timer(int tid, int64 tick, int id, intptr_t data) {
 }
 #endif
 
-int battle_set_value(const char* w1, const char* w2)
+bool battle_set_value_sub(int index, int value)
 {
-	int val = config_switch(w2);
+	Assert_retr(false, index >= 0);
+	if (value < battle_data[index].min || value > battle_data[index].max) {
+		ShowWarning("Value for setting '%s': %d is invalid (min:%d max:%d)! Defaulting to %d...\n",
+				battle_data[index].str, value, battle_data[index].min, battle_data[index].max, battle_data[index].defval);
+		value = battle_data[index].defval;
+	}
+	*battle_data[index].val = value;
+	return true;
+}
+
+bool battle_set_value(const char *param, const char *value)
+{
+	int val;
 	int i;
 
-	nullpo_retr(1, w1);
-	nullpo_retr(1, w2);
-	ARR_FIND(0, ARRAYLENGTH(battle_data), i, strcmpi(w1, battle_data[i].str) == 0);
+	nullpo_retr(false, param);
+	nullpo_retr(false, value);
+
+	val = config_switch(value);
+
+	ARR_FIND(0, ARRAYLENGTH(battle_data), i, strcmpi(param, battle_data[i].str) == 0);
 	if (i == ARRAYLENGTH(battle_data)) {
-		if( HPM->parseConf(w1,w2,HPCT_BATTLE) ) /* if plugin-owned, succeed */
-			return 1;
-		return 0; // not found
+		if (HPM->parse_conf_entry(param, value, HPCT_BATTLE)) /* if plugin-owned, succeed */
+			return true;
+		return false; // not found
 	}
 
-	if (val < battle_data[i].min || val > battle_data[i].max)
-	{
-		ShowWarning("Value for setting '%s': %s is invalid (min:%i max:%i)! Defaulting to %i...\n", w1, w2, battle_data[i].min, battle_data[i].max, battle_data[i].defval);
-		val = battle_data[i].defval;
-	}
-
-	*battle_data[i].val = val;
-	return 1;
+	return battle->config_set_value_sub(i, val);
 }
 
 bool battle_get_value(const char *w1, int *value)
@@ -7484,36 +7494,36 @@ void battle_adjust_conf(void) {
 
 #if PACKETVER < 20100427
 	if( battle_config.feature_buying_store ) {
-		ShowWarning("conf/battle/feature.conf buying_store is enabled but it requires PACKETVER 2010-04-27 or newer, disabling...\n");
+		ShowWarning("conf/map/battle/feature.conf buying_store is enabled but it requires PACKETVER 2010-04-27 or newer, disabling...\n");
 		battle_config.feature_buying_store = 0;
 	}
 #endif
 
 #if PACKETVER < 20100803
 	if( battle_config.feature_search_stores ) {
-		ShowWarning("conf/battle/feature.conf search_stores is enabled but it requires PACKETVER 2010-08-03 or newer, disabling...\n");
+		ShowWarning("conf/map/battle/feature.conf search_stores is enabled but it requires PACKETVER 2010-08-03 or newer, disabling...\n");
 		battle_config.feature_search_stores = 0;
 	}
 #endif
 
 #if PACKETVER < 20130724
 	if( battle_config.feature_banking ) {
-		ShowWarning("conf/battle/feature.conf banking is enabled but it requires PACKETVER 2013-07-24 or newer, disabling...\n");
+		ShowWarning("conf/map/battle/feature.conf banking is enabled but it requires PACKETVER 2013-07-24 or newer, disabling...\n");
 		battle_config.feature_banking = 0;
 	}
 #endif
 
 #if PACKETVER < 20141022
 	if( battle_config.feature_roulette ) {
-		ShowWarning("conf/battle/feature.conf roulette is enabled but it requires PACKETVER 2014-10-22 or newer, disabling...\n");
+		ShowWarning("conf/map/battle/feature.conf roulette is enabled but it requires PACKETVER 2014-10-22 or newer, disabling...\n");
 		battle_config.feature_roulette = 0;
 	}
 #endif
 
 #if PACKETVER > 20120000 && PACKETVER < 20130515 /* exact date (when it started) not known */
 	if( battle_config.feature_auction == 1 ) {
-		ShowWarning("conf/battle/feature.conf:feature.auction is enabled but it is not stable on PACKETVER "EXPAND_AND_QUOTE(PACKETVER)", disabling...\n");
-		ShowWarning("conf/battle/feature.conf:feature.auction change value to '2' to silence this warning and maintain it enabled\n");
+		ShowWarning("conf/map/battle/feature.conf:features/auction is enabled but it is not stable on PACKETVER "EXPAND_AND_QUOTE(PACKETVER)", disabling...\n");
+		ShowWarning("conf/map/battle/feature.conf:features/auction change value to '2' to silence this warning and maintain it enabled\n");
 		battle_config.feature_auction = 0;
 	}
 #endif
@@ -7524,48 +7534,78 @@ void battle_adjust_conf(void) {
 #endif
 }
 
-int battle_config_read(const char* cfgName)
+/**
+ * Dynamically reads battle configuration and initializes required variables.
+ *
+ * @param filename Path to configuration file.
+ * @param imported Whether the current config is imported from another file.
+ * @retval false in case of error.
+ */
+bool battle_config_read(const char *filename, bool imported)
 {
-	FILE* fp;
-	static int count = 0;
+	struct config_t config;
+	const struct config_setting_t *setting = NULL;
+	int i;
+	const char *import = NULL;
+	bool retval = true;
 
-	nullpo_ret(cfgName);
+	nullpo_retr(false, filename);
 
-	if (count == 0)
+	if (!libconfig->load_file(&config, filename))
+		return false; // Error message is already shown by libconfig->load_file()
+
+	if (!imported)
 		battle->config_set_defaults();
 
-	count++;
+	for (i = 0; i < ARRAYLENGTH(battle_data); i++) {
+		int type, val;
+		char config_name[256];
+		safesnprintf(config_name, sizeof config_name, "battle_configuration/%s", battle_data[i].str);
 
-	fp = fopen(cfgName,"r");
-	if (fp == NULL)
-		ShowError("File not found: %s\n", cfgName);
-	else
-	{
-		char line[1024], w1[1024], w2[1024];
-		while(fgets(line, sizeof(line), fp))
-		{
-			if (line[0] == '/' && line[1] == '/')
-				continue;
-			if (sscanf(line, "%1023[^:]:%1023s", w1, w2) != 2)
-				continue;
-			if (strcmpi(w1, "import") == 0)
-				battle->config_read(w2);
-			else
-			if (battle->config_set_value(w1, w2) == 0)
-				ShowWarning("Unknown setting '%s' in file %s\n", w1, cfgName);
+		if ((setting = libconfig->lookup(&config, config_name)) == NULL) {
+			if (!imported) {
+				ShowWarning("Missing configuration '%s' in file %s!\n", config_name, filename);
+				retval = false;
+			}
+			continue;
 		}
 
-		fclose(fp);
+		switch ((type = config_setting_type(setting))) {
+		case CONFIG_TYPE_INT:
+			val = libconfig->setting_get_int(setting);
+			break;
+		case CONFIG_TYPE_BOOL:
+			val = libconfig->setting_get_bool(setting);
+			break;
+		default: // Unsupported type
+			ShowWarning("Setting %s has unsupported type %d, ignoring...\n", config_name, type);
+			retval = false;
+			continue;
+		}
+
+		if (!battle->config_set_value_sub(i, val))
+			retval = false;
 	}
 
-	count--;
+	if (!HPM->parse_battle_conf(&config, filename, imported))
+		retval = false;
 
-	if (count == 0) {
+	// import should overwrite any previous configuration, so it should be called last
+	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
+		if (strcmp(import, filename) == 0 || strcmp(import, map->BATTLE_CONF_FILENAME) == 0) {
+			ShowWarning("battle_config_read: Loop detected! Skipping 'import'...\n");
+		} else {
+			if (!battle->config_read(import, true))
+				retval = false;
+		}
+	}
+
+	libconfig->destroy(&config);
+	if (!imported) {
 		battle->config_adjust();
 		clif->bc_ready();
 	}
-
-	return 0;
+	return retval;
 }
 
 void do_init_battle(bool minimal) {
@@ -7644,6 +7684,7 @@ void battle_defaults(void) {
 	battle->calc_drain = battle_calc_drain;
 	battle->config_read = battle_config_read;
 	battle->config_set_defaults = battle_set_defaults;
+	battle->config_set_value_sub = battle_set_value_sub;
 	battle->config_set_value = battle_set_value;
 	battle->config_get_value = battle_get_value;
 	battle->config_adjust = battle_adjust_conf;

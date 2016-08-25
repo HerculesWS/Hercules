@@ -30,14 +30,14 @@ yuno_in01,32,178,3	script	Ahlma	4_F_MAID,{
 	mes "Welcome to The Treasure Hunter Guild.";
 	mes "How may I help you?";
 	next;
-	menu "Save",-,"Quit",N_Quit;
+	if (select("Save", "Quit") != 1) {
+		mes "[Ahlma]";
+		mes "Well if you think you are safe, good on you.";
+		close;
+	}
 	mes "[Ahlma]";
 	mes "Ok, saved. Thank you ~ See you soon~";
 	savepoint "yuno_in01",34,176;
-	close;
-N_Quit:
-	mes "[Ahlma]";
-	mes "Well if you think you are safe, good on you.";
 	close;
 N_Member:
 	mes "Sorry, members only.";

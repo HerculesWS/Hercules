@@ -5,7 +5,7 @@
 //===== Current Version: =====================================
 //= 20131031
 //===== Description: =========================================
-//= Player group permissions, configured in /conf/groups.conf.
+//= Player group permissions, configured in conf/groups.conf.
 //============================================================
 
 can_trade : Ability to trade or otherwise distribute items (drop, storage, vending etc...).

@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -23,7 +23,9 @@
 
 #include "common/hercules.h"
 
+/* Forward Declarations */
 struct char_session_data;
+struct config_t; // common/conf.h
 
 enum PincodeResponseCode {
 	PINCODE_OK      = 0,
@@ -55,7 +57,7 @@ struct pincode_interface {
 	void (*change) (int fd, struct char_session_data* sd);
 	int  (*compare) (int fd, struct char_session_data* sd, char* pin);
 	void (*check) (int fd, struct char_session_data* sd);
-	bool (*config_read) (char *w1, char *w2);
+	bool (*config_read) (const char *filename, const struct config_t *config, bool imported);
 };
 
 #ifdef HERCULES_CORE

@@ -1398,6 +1398,7 @@ ACMD(baselevelup)
 		sd->status.base_level -= level;
 		clif->message(fd, msg_fd(fd,22)); // Base level lowered.
 		status_calc_pc(sd, SCO_FORCE);
+		level *= -1;
 	}
 	sd->status.base_exp = 0;
 	clif->updatestatus(sd, SP_STATUSPOINT);
@@ -1407,6 +1408,10 @@ ACMD(baselevelup)
 	pc->baselevelchanged(sd);
 	if(sd->status.party_id)
 		party->send_levelup(sd);
+	
+	if (level > 0 && battle_config.atcommand_levelup_events)
+		npc->script_event(sd, NPCE_BASELVUP); // Trigger OnPCBaseLvUpEvent
+
 	return true;
 }
 
@@ -1448,6 +1453,7 @@ ACMD(joblevelup)
 		else
 			sd->status.skill_point -= level;
 		clif->message(fd, msg_fd(fd,25)); // Job level lowered.
+		level *= -1;
 	}
 	sd->status.job_exp = 0;
 	clif->updatestatus(sd, SP_JOBLEVEL);
@@ -1455,6 +1461,9 @@ ACMD(joblevelup)
 	clif->updatestatus(sd, SP_NEXTJOBEXP);
 	clif->updatestatus(sd, SP_SKILLPOINT);
 	status_calc_pc(sd, SCO_FORCE);
+
+	if (level > 0 && battle_config.atcommand_levelup_events)
+		npc->script_event(sd, NPCE_JOBLVUP); // Trigger OnPCJobLvUpEvent
 
 	return true;
 }
@@ -3602,7 +3611,7 @@ ACMD(reloadbattleconf)
 	struct Battle_Config prev_config;
 	memcpy(&prev_config, &battle_config, sizeof(prev_config));
 
-	battle->config_read(map->BATTLE_CONF_FILENAME);
+	battle->config_read(map->BATTLE_CONF_FILENAME, false);
 	if (prev_config.feature_roulette == 0 && battle_config.feature_roulette == 1 && !clif->parse_roulette_db())
 		battle_config.feature_roulette = 0;
 

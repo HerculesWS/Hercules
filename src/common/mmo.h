@@ -185,9 +185,6 @@
 #ifndef MAX_QUEST_OBJECTIVES
 #define MAX_QUEST_OBJECTIVES 3           // Max quest objectives for a quest
 #endif
-#ifndef MAX_START_ITEMS
-#define MAX_START_ITEMS 32               // Max number of items allowed to be given to a char whenever it's created. [mkbu95]
-#endif
 
 // for produce
 #define MIN_ATTRIBUTE 0
@@ -360,7 +357,7 @@ enum equip_pos {
 
 struct point {
 	unsigned short map;
-	short x,y;
+	int16 x, y;
 };
 
 enum e_skill_flag
@@ -1068,6 +1065,7 @@ enum e_char_server_type {
 	CST_OVER18      = 2,
 	CST_PAYING      = 3,
 	CST_F2P         = 4,
+	CST_MAX,
 };
 
 enum e_pc_reg_loading {

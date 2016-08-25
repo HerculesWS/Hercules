@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -23,27 +23,22 @@
 #include "loginlog.h"
 
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
+#include "common/showmsg.h"
 #include "common/socket.h"
 #include "common/sql.h"
 #include "common/strlib.h"
 
 #include <stdlib.h> // exit
 
-// global sql settings (in ipban_sql.c)
-static char   global_db_hostname[32] = "127.0.0.1";
-static uint16 global_db_port = 3306;
-static char   global_db_username[32] = "ragnarok";
-static char   global_db_password[100] = "ragnarok";
-static char   global_db_database[32] = "ragnarok";
-static char   global_codepage[32] = "";
-// local sql settings
-static char   log_db_hostname[32] = "";
-static uint16 log_db_port = 0;
-static char   log_db_username[32] = "";
-static char   log_db_password[100] = "";
-static char   log_db_database[32] = "";
+// Sql settings
+static char   log_db_hostname[32] = "127.0.0.1";
+static uint16 log_db_port = 3306;
+static char   log_db_username[32] = "ragnarok";
+static char   log_db_password[100] = "ragnarok";
+static char   log_db_database[32] = "ragnarok";
 static char   log_codepage[32] = "";
 static char   log_login_db[256] = "loginlog";
 
@@ -102,42 +97,16 @@ void login_log(uint32 ip, const char* username, int rcode, const char* message)
 
 bool loginlog_init(void)
 {
-	const char* username;
-	const char* password;
-	const char* hostname;
-	uint16      port;
-	const char* database;
-	const char* codepage;
-
-	if( log_db_hostname[0] != '\0' )
-	{// local settings
-		username = log_db_username;
-		password = log_db_password;
-		hostname = log_db_hostname;
-		port     = log_db_port;
-		database = log_db_database;
-		codepage = log_codepage;
-	}
-	else
-	{// global settings
-		username = global_db_username;
-		password = global_db_password;
-		hostname = global_db_hostname;
-		port     = global_db_port;
-		database = global_db_database;
-		codepage = global_codepage;
-	}
-
 	sql_handle = SQL->Malloc();
 
-	if( SQL_ERROR == SQL->Connect(sql_handle, username, password, hostname, port, database) )
-	{
+	if (SQL_ERROR == SQL->Connect(sql_handle, log_db_username, log_db_password,
+	                              log_db_hostname, log_db_port, log_db_database)) {
 		Sql_ShowDebug(sql_handle);
 		SQL->Free(sql_handle);
 		exit(EXIT_FAILURE);
 	}
 
-	if( codepage[0] != '\0' && SQL_ERROR == SQL->SetEncoding(sql_handle, codepage) )
+	if (log_codepage[0] != '\0' && SQL_ERROR == SQL->SetEncoding(sql_handle, log_codepage))
 		Sql_ShowDebug(sql_handle);
 
 	enabled = true;
@@ -152,60 +121,105 @@ bool loginlog_final(void)
 	return true;
 }
 
-bool loginlog_config_read(const char* key, const char* value)
+/**
+ * Reads 'inter_configuration/database_names' and initializes required
+ * variables/Sets global configuration.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool loginlog_config_read_names(const char *filename, struct config_t *config, bool imported)
 {
-	const char* signature;
+	struct config_setting_t *setting = NULL;
 
-	nullpo_ret(key);
-	nullpo_ret(value);
-	signature = "sql.";
-	if( strncmpi(key, signature, strlen(signature)) == 0 )
-	{
-		key += strlen(signature);
-		if( strcmpi(key, "db_hostname") == 0 )
-			safestrncpy(global_db_hostname, value, sizeof(global_db_hostname));
-		else
-		if( strcmpi(key, "db_port") == 0 )
-			global_db_port = (uint16)strtoul(value, NULL, 10);
-		else
-		if( strcmpi(key, "db_username") == 0 )
-			safestrncpy(global_db_username, value, sizeof(global_db_username));
-		else
-		if( strcmpi(key, "db_password") == 0 )
-			safestrncpy(global_db_password, value, sizeof(global_db_password));
-		else
-		if( strcmpi(key, "db_database") == 0 )
-			safestrncpy(global_db_database, value, sizeof(global_db_database));
-		else
-		if( strcmpi(key, "codepage") == 0 )
-			safestrncpy(global_codepage, value, sizeof(global_codepage));
-		else
-			return false;// not found
-		return true;
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "inter_configuration/database_names")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("loginlog_config_read: inter_configuration/database_names was not found in %s!\n", filename);
+		return false;
 	}
 
-	if( strcmpi(key, "log_db_ip") == 0 )
-		safestrncpy(log_db_hostname, value, sizeof(log_db_hostname));
-	else
-	if( strcmpi(key, "log_db_port") == 0 )
-		log_db_port = (uint16)strtoul(value, NULL, 10);
-	else
-	if( strcmpi(key, "log_db_id") == 0 )
-		safestrncpy(log_db_username, value, sizeof(log_db_username));
-	else
-	if( strcmpi(key, "log_db_pw") == 0 )
-		safestrncpy(log_db_password, value, sizeof(log_db_password));
-	else
-	if( strcmpi(key, "log_db_db") == 0 )
-		safestrncpy(log_db_database, value, sizeof(log_db_database));
-	else
-	if( strcmpi(key, "log_codepage") == 0 )
-		safestrncpy(log_codepage, value, sizeof(log_codepage));
-	else
-	if( strcmpi(key, "log_login_db") == 0 )
-		safestrncpy(log_login_db, value, sizeof(log_login_db));
-	else
-		return false;
+	libconfig->setting_lookup_mutable_string(setting, "login_db", log_login_db, sizeof(log_login_db));
 
 	return true;
+}
+
+/**
+ * Reads 'inter_configuration.log' and initializes required variables/Sets
+ * global configuration.
+ *
+ * @param filename Path to configuration file (used in error and warning messages).
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool loginlog_config_read_log(const char *filename, struct config_t *config, bool imported)
+{
+	struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, filename);
+	nullpo_retr(false, config);
+
+	if ((setting = libconfig->lookup(config, "inter_configuration/log/sql_connection")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("loginlog_config_read: inter_configuration/log/sql_connection was not found in %s!\n", filename);
+		return false;
+	}
+
+	libconfig->setting_lookup_mutable_string(setting, "db_hostname", log_db_hostname, sizeof(log_db_hostname));
+	libconfig->setting_lookup_mutable_string(setting, "db_database", log_db_database, sizeof(log_db_database));
+	libconfig->setting_lookup_mutable_string(setting, "db_username", log_db_username, sizeof(log_db_username));
+	libconfig->setting_lookup_mutable_string(setting, "db_password", log_db_password, sizeof(log_db_password));
+
+	libconfig->setting_lookup_uint16(setting, "db_port", &log_db_port);
+	libconfig->setting_lookup_mutable_string(setting, "codepage", log_codepage, sizeof(log_codepage));
+
+	return true;
+}
+
+/**
+ * Reads 'inter_configuration' and initializes required variables/Sets global
+ * configuration.
+ *
+ * @param filename Path to configuration file.
+ * @param config   The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ **/
+bool loginlog_config_read(const char *filename, bool imported)
+{
+	struct config_t config;
+	const char *import = NULL;
+	bool retval = true;
+
+	nullpo_retr(false, filename);
+
+	if (!libconfig->load_file(&config, filename))
+		return false; // Error message is already shown by libconfig->load_file
+
+	if (!loginlog_config_read_names(filename, &config, imported))
+		retval = false;
+	if (!loginlog_config_read_log(filename, &config, imported))
+		retval = false;
+
+	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
+		if (strcmp(import, filename) == 0 || strcmp(import, "conf/common/inter-server.conf") == 0) {
+			ShowWarning("inter_config_read: Loop detected! Skipping 'import'...\n");
+		} else {
+			if (!loginlog_config_read(import, true))
+				retval = false;
+		}
+	}
+
+	libconfig->destroy(&config);
+	return retval;
 }

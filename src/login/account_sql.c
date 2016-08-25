@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 #include "account.h"
 
 #include "common/cbasetypes.h"
+#include "common/conf.h"
 #include "common/console.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
@@ -45,14 +46,7 @@ typedef struct AccountDB_SQL
 
 	struct Sql *accounts; // SQL accounts storage
 
-	// global sql settings
-	char   global_db_hostname[32];
-	uint16 global_db_port;
-	char   global_db_username[32];
-	char   global_db_password[100];
-	char   global_db_database[32];
-	char   global_codepage[32];
-	// local sql settings
+	// Sql settings
 	char   db_hostname[32];
 	uint16 db_port;
 	char   db_username[32];
@@ -81,7 +75,7 @@ typedef struct AccountDBIterator_SQL
 static bool account_db_sql_init(AccountDB* self);
 static void account_db_sql_destroy(AccountDB* self);
 static bool account_db_sql_get_property(AccountDB* self, const char* key, char* buf, size_t buflen);
-static bool account_db_sql_set_property(AccountDB* self, const char* option, const char* value);
+static bool account_db_sql_set_property(AccountDB* self, struct config_t *config, bool imported);
 static bool account_db_sql_create(AccountDB* self, struct mmo_account* acc);
 static bool account_db_sql_remove(AccountDB* self, const int account_id);
 static bool account_db_sql_save(AccountDB* self, const struct mmo_account* acc);
@@ -113,19 +107,12 @@ AccountDB* account_db_sql(void)
 
 	// initialize to default values
 	db->accounts = NULL;
-	// global sql settings
-	safestrncpy(db->global_db_hostname, "127.0.0.1", sizeof(db->global_db_hostname));
-	db->global_db_port = 3306;
-	safestrncpy(db->global_db_username, "ragnarok", sizeof(db->global_db_username));
-	safestrncpy(db->global_db_password, "ragnarok", sizeof(db->global_db_password));
-	safestrncpy(db->global_db_database, "ragnarok", sizeof(db->global_db_database));
-	safestrncpy(db->global_codepage, "", sizeof(db->global_codepage));
-	// local sql settings
-	safestrncpy(db->db_hostname, "", sizeof(db->db_hostname));
+	// Sql settings
+	safestrncpy(db->db_hostname, "127.0.0.1", sizeof(db->db_hostname));
 	db->db_port = 3306;
-	safestrncpy(db->db_username, "", sizeof(db->db_username));
-	safestrncpy(db->db_password, "", sizeof(db->db_password));
-	safestrncpy(db->db_database, "", sizeof(db->db_database));
+	safestrncpy(db->db_username, "ragnarok", sizeof(db->db_username));
+	safestrncpy(db->db_password, "ragnarok", sizeof(db->db_password));
+	safestrncpy(db->db_database, "ragnarok", sizeof(db->db_database));
 	safestrncpy(db->codepage, "", sizeof(db->codepage));
 	// other settings
 	db->case_sensitive = false;
@@ -144,46 +131,22 @@ AccountDB* account_db_sql(void)
 static bool account_db_sql_init(AccountDB* self)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	struct Sql *sql_handle;
-	const char* username;
-	const char* password;
-	const char* hostname;
-	uint16      port;
-	const char* database;
-	const char* codepage;
+	struct Sql *sql_handle = NULL;
 
 	nullpo_ret(db);
+
 	db->accounts = SQL->Malloc();
 	sql_handle = db->accounts;
 
-	if( db->db_hostname[0] != '\0' )
-	{// local settings
-		username = db->db_username;
-		password = db->db_password;
-		hostname = db->db_hostname;
-		port     = db->db_port;
-		database = db->db_database;
-		codepage = db->codepage;
-	}
-	else
-	{// global settings
-		username = db->global_db_username;
-		password = db->global_db_password;
-		hostname = db->global_db_hostname;
-		port     = db->global_db_port;
-		database = db->global_db_database;
-		codepage = db->global_codepage;
-	}
-
-	if( SQL_ERROR == SQL->Connect(sql_handle, username, password, hostname, port, database) )
-	{
+	if (SQL_ERROR == SQL->Connect(sql_handle, db->db_username, db->db_password,
+	                              db->db_hostname, db->db_port, db->db_database)) {
 		Sql_ShowDebug(sql_handle);
 		SQL->Free(db->accounts);
 		db->accounts = NULL;
 		return false;
 	}
 
-	if( codepage[0] != '\0' && SQL_ERROR == SQL->SetEncoding(sql_handle, codepage) )
+	if (db->codepage[0] != '\0' && SQL_ERROR == SQL->SetEncoding(sql_handle, db->codepage))
 		Sql_ShowDebug(sql_handle);
 
 	Sql_HerculesUpdateCheck(db->accounts);
@@ -207,6 +170,15 @@ static void account_db_sql_destroy(AccountDB* self)
 /// Gets a property from this database.
 static bool account_db_sql_get_property(AccountDB* self, const char* key, char* buf, size_t buflen)
 {
+	/* TODO:
+	 * This functionality is not being used as of now, it was removed in
+	 * commit 5479f9631f8579d03fbfd14d8a49c7976226a156, it is meant to get
+	 * engine properties when more than one engine is available.  I'll
+	 * re-add it as soon as I can, following the new standards.  If anyone
+	 * is interested in this functionality you can contact me in our boards
+	 * and I'll try to add it sooner (Pan) [Panikon]
+	 */
+#if 0
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
 	const char* signature;
 
@@ -225,32 +197,6 @@ static bool account_db_sql_get_property(AccountDB* self, const char* key, char* 
 		else
 		if( strcmpi(key, "comment") == 0 )
 			safesnprintf(buf, buflen, "SQL Account Database");
-		else
-			return false;// not found
-		return true;
-	}
-
-	signature = "sql.";
-	if( strncmpi(key, signature, strlen(signature)) == 0 )
-	{
-		key += strlen(signature);
-		if( strcmpi(key, "db_hostname") == 0 )
-			safesnprintf(buf, buflen, "%s", db->global_db_hostname);
-		else
-		if( strcmpi(key, "db_port") == 0 )
-			safesnprintf(buf, buflen, "%d", db->global_db_port);
-		else
-		if( strcmpi(key, "db_username") == 0 )
-			safesnprintf(buf, buflen, "%s", db->global_db_username);
-		else
-		if( strcmpi(key, "db_password") == 0 )
-			safesnprintf(buf, buflen, "%s", db->global_db_password);
-		else
-		if( strcmpi(key, "db_database") == 0 )
-			safesnprintf(buf, buflen, "%s", db->global_db_database);
-		else
-		if( strcmpi(key, "codepage") == 0 )
-			safesnprintf(buf, buflen, "%s", db->global_codepage);
 		else
 			return false;// not found
 		return true;
@@ -295,82 +241,91 @@ static bool account_db_sql_get_property(AccountDB* self, const char* key, char* 
 	}
 
 	return false;// not found
+#endif // 0
+	return false;
 }
 
-/// if the option is supported, adjusts the internal state
-static bool account_db_sql_set_property(AccountDB* self, const char* key, const char* value)
+/**
+ * Reads the 'inter_configuration' config file and initializes required variables.
+ *
+ * @param db       Self.
+ * @param filename Path to configuration file
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+bool account_db_read_inter(AccountDB_SQL *db, const char *filename, bool imported)
+{
+	struct config_t config;
+	struct config_setting_t *setting = NULL;
+
+	nullpo_retr(false, db);
+	nullpo_retr(false, filename);
+
+	if (!libconfig->load_file(&config, filename))
+		return false; // Error message is already shown by libconfig->load_file
+
+	if ((setting = libconfig->lookup(&config, "inter_configuration/database_names")) == NULL) {
+		libconfig->destroy(&config);
+		if (imported)
+			return true;
+		ShowError("account_db_sql_set_property: inter_configuration/database_names was not found!\n");
+		return false;
+	}
+	libconfig->setting_lookup_mutable_string(setting, "account_db", db->account_db, sizeof(db->account_db));
+
+	if ((setting = libconfig->lookup(&config, "inter_configuration/database_names/registry")) == NULL) {
+		libconfig->destroy(&config);
+		if (imported)
+			return true;
+		ShowError("account_db_sql_set_property: inter_configuration/database_names/registry was not found!\n");
+		return false;
+	}
+	libconfig->setting_lookup_mutable_string(setting, "global_acc_reg_str_db", db->global_acc_reg_str_db, sizeof(db->global_acc_reg_str_db));
+	libconfig->setting_lookup_mutable_string(setting, "global_acc_reg_num_db", db->global_acc_reg_num_db, sizeof(db->global_acc_reg_num_db));
+
+	// TODO: Proper import mechanism for this file
+
+	libconfig->destroy(&config);
+	return true;
+}
+
+/**
+ * Loads the sql configuration.
+ *
+ * @param self   Self.
+ * @param config The current config being parsed.
+ * @param imported Whether the current config is imported from another file.
+ *
+ * @retval false in case of error.
+ */
+static bool account_db_sql_set_property(AccountDB* self, struct config_t *config, bool imported)
 {
 	AccountDB_SQL* db = (AccountDB_SQL*)self;
-	const char* signature;
+	struct config_setting_t *setting = NULL;
 
 	nullpo_ret(db);
-	nullpo_ret(key);
-	nullpo_ret(value);
-	signature = "sql.";
-	if( strncmp(key, signature, strlen(signature)) == 0 )
-	{
-		key += strlen(signature);
-		if( strcmpi(key, "db_hostname") == 0 )
-			safestrncpy(db->global_db_hostname, value, sizeof(db->global_db_hostname));
-		else
-		if( strcmpi(key, "db_port") == 0 )
-			db->global_db_port = (uint16)strtoul(value, NULL, 10);
-		else
-		if( strcmpi(key, "db_username") == 0 )
-			safestrncpy(db->global_db_username, value, sizeof(db->global_db_username));
-		else
-		if( strcmpi(key, "db_password") == 0 )
-			safestrncpy(db->global_db_password, value, sizeof(db->global_db_password));
-		else
-		if( strcmpi(key, "db_database") == 0 )
-			safestrncpy(db->global_db_database, value, sizeof(db->global_db_database));
-		else
-		if( strcmpi(key, "codepage") == 0 )
-			safestrncpy(db->global_codepage, value, sizeof(db->global_codepage));
-		else
-			return false;// not found
-		return true;
+	nullpo_ret(config);
+
+	if ((setting = libconfig->lookup(config, "login_configuration/account/sql_connection")) == NULL) {
+		if (imported)
+			return true;
+		ShowError("account_db_sql_set_property: login_configuration/account/sql_connection was not found!\n");
+		ShowWarning("account_db_sql_set_property: Defaulting sql_connection...\n");
+		return false;
 	}
 
-	signature = "account.sql.";
-	if( strncmp(key, signature, strlen(signature)) == 0 )
-	{
-		key += strlen(signature);
-		if( strcmpi(key, "db_hostname") == 0 )
-			safestrncpy(db->db_hostname, value, sizeof(db->db_hostname));
-		else
-		if( strcmpi(key, "db_port") == 0 )
-			db->db_port = (uint16)strtoul(value, NULL, 10);
-		else
-		if( strcmpi(key, "db_username") == 0 )
-			safestrncpy(db->db_username, value, sizeof(db->db_username));
-		else
-		if( strcmpi(key, "db_password") == 0 )
-			safestrncpy(db->db_password, value, sizeof(db->db_password));
-		else
-		if( strcmpi(key, "db_database") == 0 )
-			safestrncpy(db->db_database, value, sizeof(db->db_database));
-		else
-		if( strcmpi(key, "codepage") == 0 )
-			safestrncpy(db->codepage, value, sizeof(db->codepage));
-		else
-		if( strcmpi(key, "case_sensitive") == 0 )
-			db->case_sensitive = (bool)config_switch(value);
-		else
-		if( strcmpi(key, "account_db") == 0 )
-			safestrncpy(db->account_db, value, sizeof(db->account_db));
-		else
-		if( strcmpi(key, "global_acc_reg_str_db") == 0 )
-			safestrncpy(db->global_acc_reg_str_db, value, sizeof(db->global_acc_reg_str_db));
-		else
-		if( strcmpi(key, "global_acc_reg_num_db") == 0 )
-			safestrncpy(db->global_acc_reg_num_db, value, sizeof(db->global_acc_reg_num_db));
-		else
-			return false;// not found
-		return true;
-	}
+	libconfig->setting_lookup_mutable_string(setting, "db_hostname", db->db_hostname, sizeof(db->db_hostname));
+	libconfig->setting_lookup_mutable_string(setting, "db_username", db->db_username, sizeof(db->db_username));
+	libconfig->setting_lookup_mutable_string(setting, "db_password", db->db_password, sizeof(db->db_password));
+	libconfig->setting_lookup_mutable_string(setting, "db_database", db->db_database, sizeof(db->db_database));
+	libconfig->setting_lookup_mutable_string(setting, "codepage", db->codepage, sizeof(db->codepage)); // FIXME: Why do we need both codepage and default_codepage?
+	libconfig->setting_lookup_uint16(setting, "db_port", &db->db_port);
+	libconfig->setting_lookup_bool_real(setting, "case_sensitive", &db->case_sensitive);
 
-	return false;// not found
+	account_db_read_inter(db, "conf/common/inter-server.conf", imported);
+
+	return true;
 }
 
 /// create a new account entry

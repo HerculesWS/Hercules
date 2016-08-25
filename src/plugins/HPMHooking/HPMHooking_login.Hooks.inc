@@ -4689,15 +4689,15 @@ void HP_login_config_set_defaults(void) {
 	}
 	return;
 }
-int HP_login_config_read(const char *cfgName) {
+bool HP_login_config_read(const char *filename, bool included) {
 	int hIndex = 0;
-	int retVal___ = 0;
+	bool retVal___ = false;
 	if( HPMHooks.count.HP_login_config_read_pre ) {
-		int (*preHookFunc) (const char **cfgName);
+		bool (*preHookFunc) (const char **filename, bool *included);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_config_read_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_login_config_read_pre[hIndex].func;
-			retVal___ = preHookFunc(&cfgName);
+			retVal___ = preHookFunc(&filename, &included);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -4705,13 +4705,13 @@ int HP_login_config_read(const char *cfgName) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.login.config_read(cfgName);
+		retVal___ = HPMHooks.source.login.config_read(filename, included);
 	}
 	if( HPMHooks.count.HP_login_config_read_post ) {
-		int (*postHookFunc) (int retVal___, const char *cfgName);
+		bool (*postHookFunc) (bool retVal___, const char *filename, bool included);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_login_config_read_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_login_config_read_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, cfgName);
+			retVal___ = postHookFunc(retVal___, filename, included);
 		}
 	}
 	return retVal___;

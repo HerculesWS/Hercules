@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -23,6 +23,9 @@
 
 #include "common/cbasetypes.h"
 
+/* Forward Declarations */
+struct config_t; // common/conf.h
+
 #ifdef HERCULES_CORE
 // TODO: Interface
 // initialize
@@ -37,8 +40,8 @@ bool ipban_check(uint32 ip);
 // increases failure count for the specified IP
 void ipban_log(uint32 ip);
 
-// parses configuration option
-bool ipban_config_read(const char *key, const char* value);
+// parses configuration options
+bool ipban_config_read(const char *filename, struct config_t *config, bool imported);
 #endif // HERCULES_CORE
 
 #endif /* LOGIN_IPBAN_H */

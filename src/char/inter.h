@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -28,11 +28,13 @@
 
 /* Forward Declarations */
 struct Sql; // common/sql.h
+struct config_t; // common/conf.h
 
 /**
  * inter interface
  **/
 struct inter_interface {
+	bool enable_logs; ///< Whether to log inter-server operations.
 	struct Sql *sql_handle;
 	const char* (*msg_txt) (int msg_number);
 	bool (*msg_config_read) (const char *cfg_name, bool allow_override);
@@ -42,7 +44,6 @@ struct inter_interface {
 	void (*msg_to_fd) (int fd, int u_fd, int aid, char *msg, ...) __attribute__((format(printf, 4, 5)));
 	void (*savereg) (int account_id, int char_id, const char *key, unsigned int index, intptr_t val, bool is_string);
 	int (*accreg_fromsql) (int account_id,int char_id, int fd, int type);
-	int (*config_read) (const char* cfgName);
 	int (*vlog) (char* fmt, va_list ap);
 	int (*log) (char* fmt, ...);
 	int (*init_sql) (const char *file);
@@ -52,10 +53,13 @@ struct inter_interface {
 	int (*check_length) (int fd, int length);
 	int (*parse_frommap) (int fd);
 	void (*final) (void);
+	bool (*config_read) (const char *filename, bool imported);
+	bool (*config_read_log) (const char *filename, const struct config_t *config, bool imported);
+	bool (*config_read_connection) (const char *filename, const struct config_t *config, bool imported);
 };
 
 #ifdef HERCULES_CORE
-extern unsigned int party_share_level;
+extern int party_share_level; ///< Share range for parties.
 
 void inter_defaults(void);
 #endif // HERCULES_CORE

@@ -2,7 +2,7 @@
  * This file is part of Hercules.
  * http://herc.ws - http://github.com/HerculesWS/Hercules
  *
- * Copyright (C) 2012-2015  Hercules Dev Team
+ * Copyright (C) 2012-2016  Hercules Dev Team
  * Copyright (C)  Athena Dev Teams
  *
  * Hercules is free software: you can redistribute it and/or modify
@@ -190,7 +190,7 @@ int inter_party_tosql(struct party *p, int flag, int index)
 			Sql_ShowDebug(inter->sql_handle);
 	}
 
-	if( save_log )
+	if (chr->show_save_log)
 		ShowInfo("Party Saved (%d - %s)\n", party_id, p->name);
 	return 1;
 }
@@ -257,7 +257,7 @@ struct party_data *inter_party_fromsql(int party_id)
 	}
 	SQL->FreeResult(inter->sql_handle);
 
-	if( save_log )
+	if (chr->show_save_log)
 		ShowInfo("Party loaded (%d - %s).\n", party_id, p->party.name);
 	//Add party to memory.
 	CREATE(p, struct party_data, 1);
