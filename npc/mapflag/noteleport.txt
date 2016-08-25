@@ -467,6 +467,10 @@ nyd_dun02	mapflag	noteleport
 2@nyd	mapflag	noteleport
 2@nyd	mapflag	monster_noteleport
 
+// Sara's Memory Instance ===========
+1@sara	mapflag	noteleport
+1@sara	mapflag	monster_noteleport
+
 //evt_zombie	mapflag	noteleport
 
 // Poring War ====================
