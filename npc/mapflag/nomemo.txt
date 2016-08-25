@@ -792,6 +792,9 @@ moc_prydn2	mapflag	nomemo
 1@nyd	mapflag	nomemo
 2@nyd	mapflag	nomemo
 
+// Ghost Palace ===========
+1@spa	mapflag	nomemo
+
 //evt_zombie	mapflag	nomemo
 
 // Poring War ====================

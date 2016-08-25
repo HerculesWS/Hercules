@@ -78,3 +78,6 @@
 
 // Inside Eclage ===========
 1@ecl	mapflag	partylock
+
+// Ghost Palace ===========
+1@spa	mapflag	partylock

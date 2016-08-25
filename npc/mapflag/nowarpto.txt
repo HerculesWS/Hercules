@@ -168,6 +168,9 @@ spl_in01	mapflag	nowarpto
 1@nyd	mapflag	nowarpto
 2@nyd	mapflag	nowarpto
 
+// Ghost Palace ===========
+1@spa	mapflag	nowarpto
+
 // Poring War ====================
 poring_w01	mapflag	nowarpto
 poring_w02	mapflag	nowarpto
