@@ -313,9 +313,9 @@ OnInstanceInit:
 	else {
 		if (questprogress(40024))
 			completequest 40024;
-		mes("It is time to leave Palace of the ghost.");
-		mes("Everything is completed.");
-		mes("Everything will be vanished...");
+		mes("It is time to leave Palace of the ghost.\r"
+			"Everything is completed.\r"
+			"Everything will be vanished...");
 		close2();
 		if (first_time_gpmission)
 			getitem Gray_Piece, 1;
@@ -544,8 +544,8 @@ OnInstanceInit:
 	npctalk(_("I need more blood..Sakray, offer me his blood."), instance_npcname("Thanatos Magic Trace#gp5"));
 	next;
 	mes("[Sakray]");
-	mes("Okay, that is good. A travller.");
-	mes("Did you see?");
+	mes("Okay, that is good. A travller.\r"
+		"Did you see?");
 	npctalk(_("Okay, that is good. A travller. Did you see?"), instance_npcname("Sakray#gp5"));
 	next;
 	mesf("[%s]", strcharinfo(0));
@@ -622,7 +622,7 @@ OnSummon:
 OnTimer2000:
 	stopnpctimer;
 	unittalk('talkid[0], _("What is this..??"));
- 	unittalk('talkid[1], _("Wake up! look at us... We are monsters?"));
+	unittalk('talkid[1], _("Wake up! look at us... We are monsters?"));
 	unittalk('talkid[2], _("Sakray killed the princess!"));
 	end;
 OnMyMobDead:
@@ -705,14 +705,17 @@ OnInstanceInit:
 	mes("The cursed knight...\r"
 		"Please help me save the soul of Sakray.");
 	next;
-	setarray .@items_list, 13441, 21009, 1438, 1496, 1669, 2023, 18119, 13093, 28000, 1836, 16028, 28100, 1933, 1988, 2187, 15090, 15091, 20721, 22033, 18820;
+	setarray .@items_list$, "Thanatos_Sword", "Thanatos_Great_Sword", "Thanatos_Spear", "Thanatos_Long_Spear", "Thanatos_Staff", "Thanatos_Two-Handed_Staff", "Thanatos_Bow", 
+							"Thanatos_Dagger", "Thanatos_Katar", "Thanatos_Knuckles", "Thanatos_Hammer", "Thanatos_Axe", "Thanatos_Violin", "Thanatos_Whip", "Gray_Shield", 
+							"Gray_Armor", "Gray_Robe", "Gray_Cloak", "Boots_of_Gray", "Gray_Helmet";
+
 	setarray .@cost, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 100, 100, 100, 100, 100, 100;
 	.@menulist$ = "";
-	for (.@i = 0; .@i < getarraysize(.@items_list); ++.@i)
-		.@menulist$ += getitemname(.@items_list[.@i])+":";
+	for (.@i = 0; .@i < getarraysize(.@items_list$); ++.@i)
+		.@menulist$ += getitemname(.@items_list$[.@i])+":";
 	while (true) {
 		.@choice = select(.@menulist$, "Cancel") - 1;
-		if (.@choice == getarraysize(.@items_list)) {
+		if (.@choice == getarraysize(.@items_list$)) {
 			mes("[King]");
 			mes("Someday, Sakray will get out of his curse for sure.\r"
 				"I believe collecting Gray Shards is the only method to save him.");
@@ -721,7 +724,7 @@ OnInstanceInit:
 		next;
 		mes("[King]");
 		mesf("to make a ^FF0000%s^000000 \r"
-			 "I need %d ^009900Gray Shard^000000", getitemname(.@items_list[.@choice]), .@cost[.@choice]);
+			 "I need %d ^009900Gray Shard^000000", getitemname(.@items_list$[.@choice]), .@cost[.@choice]);
 		switch (select("Cancel", "hand over "+.@cost[.@choice]+" Gray Shard.")) {
 		case 1:
 			next;
@@ -734,12 +737,12 @@ OnInstanceInit:
 			if (countitem(Gray_Piece) < .@cost[.@choice]) {
 				mes("[King]");
 				mes("You don't have enough Gray Shards.");
-				mesf("I need %d Gray Shards to make a ^FF0000%s.^000000", .@cost[.@choice], getitemname(.@items_list[.@choice]));
+				mesf("I need %d Gray Shards to make a ^FF0000%s.^000000", .@cost[.@choice], getitemname(.@items_list$[.@choice]));
 				break;
 			}
 			mes("[King]");
 			mesf("I will make a ^FF0000%s^000000 \r"
-				 "with %d ^009900Gray Shard^000000", getitemname(.@items_list[.@choice]), .@cost[.@choice]);
+				 "with %d ^009900Gray Shard^000000", getitemname(.@items_list$[.@choice]), .@cost[.@choice]);
 			next;
 			mes("[King]");
 			mes("You see a light through the folded hands of the king and it gradually takes on a shape.");
@@ -747,13 +750,13 @@ OnInstanceInit:
 			mes("[King]");
 			mesf("All right, it is done.\r"
 				 "Take this ^FF0000%s.^000000\r"
-				 "Use it to confront Sakray and Thanatos.", getitemname(.@items_list[.@choice]));
+				 "Use it to confront Sakray and Thanatos.", getitemname(.@items_list$[.@choice]));
 			next;
 			mes("[King]");
 			mes("The power requires a sacrifice.\r"
 				"Please be careful...");
 			delitem Gray_Piece, .@cost[.@choice];
-			getitem .@items_list[.@choice], 1;
+			getitem .@items_list$[.@choice], 1;
 			close();
 		}
 	}
