@@ -384,7 +384,7 @@ OnSummon:
 OnTimer2000:
 	stopnpctimer;
 	unittalk('talkid[0], _("Faithful Guards"));
- 	unittalk('talkid[1], _("Run!"));
+	unittalk('talkid[1], _("Run!"));
 	unittalk('talkid[2], _("Being framed..."));
 	end;
 OnMyMobDead:
