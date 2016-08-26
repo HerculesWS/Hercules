@@ -200,6 +200,9 @@ nguild_prt	mapflag	noicewall
 // Inside Eclage ===========
 1@ecl	mapflag	noicewall
 
+// Ghost Palace ===========
+1@spa	mapflag	noicewall
+
 // Poring War ====================
 poring_w01	mapflag	noicewall
 poring_w02	mapflag	noicewall

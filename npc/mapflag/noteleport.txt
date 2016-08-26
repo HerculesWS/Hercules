@@ -467,6 +467,10 @@ nyd_dun02	mapflag	noteleport
 2@nyd	mapflag	noteleport
 2@nyd	mapflag	monster_noteleport
 
+// Ghost Palace ===========
+1@spa	mapflag	noteleport
+1@spa	mapflag	monster_noteleport
+
 //evt_zombie	mapflag	noteleport
 
 // Poring War ====================
