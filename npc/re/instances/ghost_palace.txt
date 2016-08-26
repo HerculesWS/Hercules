@@ -544,9 +544,9 @@ OnInstanceInit:
 	npctalk(_("I need more blood..Sakray, offer me his blood."), instance_npcname("Thanatos Magic Trace#gp5"));
 	next;
 	mes("[Sakray]");
-	mes("Okay, that is good. A travller.\r"
+	mes("Okay, that is good. A traveller.\r"
 		"Did you see?");
-	npctalk(_("Okay, that is good. A travller. Did you see?"), instance_npcname("Sakray#gp5"));
+	npctalk(_("Okay, that is good. A traveller. Did you see?"), instance_npcname("Sakray#gp5"));
 	next;
 	mesf("[%s]", strcharinfo(0));
 	mes("Sakray, What do you want sympathy? Or is it a trap?");
