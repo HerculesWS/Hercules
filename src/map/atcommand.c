@@ -2018,10 +2018,8 @@ ACMD(monster)
 	count = 0;
 	range = (int)sqrt((float)number) +2; // calculation of an odd number (+ 4 area around)
 	for (i = 0; i < number; i++) {
-		int k;
 		map->search_freecell(&sd->bl, 0, &mx,  &my, range, range, 0);
-		k = mob->once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, eventname, size, AI_NONE|(mob_id == MOBID_EMPELIUM?0x200:0x0));
-		count += (k != 0) ? 1 : 0;
+		count += VECTOR_LENGTH(mob->once_spawn(sd, sd->bl.m, mx, my, name, mob_id, 1, eventname, size, AI_NONE|(mob_id == MOBID_EMPELIUM?0x200:0x0)));
 	}
 
 	if (count != 0)
