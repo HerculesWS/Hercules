@@ -1099,11 +1099,11 @@ OnTouch:
 	specialeffect EF_LEXDIVINA;
 	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	.@map$ = instance_mapname("2@cata");
-	if (strnpcinfo(NPC_HIDDENNAME) == "0") areamobuseskill .@map$,79,81,10,1929,"NPC_INVINCIBLEOFF",1,0,0,e_hlp,0;
-	else if (strnpcinfo(NPC_HIDDENNAME) == "2") areamobuseskill .@map$,123,109,10,1929,"NPC_INVINCIBLEOFF",1,0,0,e_hlp,0;
-	else if (strnpcinfo(NPC_HIDDENNAME) == "4") areamobuseskill .@map$,123,22,10,1929,"NPC_INVINCIBLEOFF",1,0,0,e_hlp,0;
-	else if (strnpcinfo(NPC_HIDDENNAME) == "8") areamobuseskill .@map$,35,21,10,1929,"NPC_INVINCIBLEOFF",1,0,0,e_hlp,0;
-	else if (strnpcinfo(NPC_HIDDENNAME) == "10") areamobuseskill .@map$,35,109,10,1929,"NPC_INVINCIBLEOFF",1,0,0,e_hlp,0;
+	if (strnpcinfo(NPC_NAME_HIDDEN) == "0") areamobuseskill .@map$,79,81,10,1929,"NPC_INVINCIBLEOFF",1,0,0,e_hlp,0;
+	else if (strnpcinfo(NPC_NAME_HIDDEN) == "2") areamobuseskill .@map$,123,109,10,1929,"NPC_INVINCIBLEOFF",1,0,0,e_hlp,0;
+	else if (strnpcinfo(NPC_NAME_HIDDEN) == "4") areamobuseskill .@map$,123,22,10,1929,"NPC_INVINCIBLEOFF",1,0,0,e_hlp,0;
+	else if (strnpcinfo(NPC_NAME_HIDDEN) == "8") areamobuseskill .@map$,35,21,10,1929,"NPC_INVINCIBLEOFF",1,0,0,e_hlp,0;
+	else if (strnpcinfo(NPC_NAME_HIDDEN) == "10") areamobuseskill .@map$,35,109,10,1929,"NPC_INVINCIBLEOFF",1,0,0,e_hlp,0;
 	percentheal -50,0;
 	sc_start Eff_Stone,20000,0;
 	setquest 3041;

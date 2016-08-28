@@ -2308,7 +2308,7 @@ new_5-3,97,50,4	duplicate(NvEden)	Eden Group Officer#nv5	4_F_NOVICE,5,5
 		mes "I see, then let me guide you to another level. Which level do you want to go to?";
 		next;
 		for(.@i = 1; .@i<6; ++.@i) {
-			if (!compare(strnpcinfo(NPC_HIDDENNAME),"nv"+.@i))
+			if (!compare(strnpcinfo(NPC_NAME_HIDDEN),"nv"+.@i))
 				.@menu$ += "Send me to Level "+.@i;
 			.@menu$ += ":";
 		}

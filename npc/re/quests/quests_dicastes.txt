@@ -413,7 +413,7 @@ OnEnable:
 		end;
 	}
 	mes "[Capital City Guard]";
-	mes "Unknown situation occurred. Case " + strnpcinfo(NPC_HIDDENNAME);
+	mes "Unknown situation occurred. Case " + strnpcinfo(NPC_NAME_HIDDEN);
 	mes "Please inquiry with a GM.";
 	close;
 }
@@ -4798,7 +4798,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 		mes "- You can too many items to proceed with the quest. -";
 		close;
 	}
-	.@n$ = strnpcinfo(NPC_VISIBLENAME);
+	.@n$ = strnpcinfo(NPC_NAME_VISIBLE);
 	setarray .@npc$, 	"Rock Pile",	"Dirt Pile",	"Split Earth";
 	setarray .@item, 	6307,			6306,			6305;
 	.@size = getarraysize(.@npc$);
@@ -6105,7 +6105,7 @@ dic_in01,349,129,5	script	Bouy#13_3	4_MAN_BENKUNI,{
 //== Sapha's Visit =========================================
 -	script	Expedition#ep133_is	FAKE_NPC,{
 	if (ep13_3_invite) {
-		if (compare(strnpcinfo(NPC_VISIBLENAME),"Maha")) {
+		if (compare(strnpcinfo(NPC_NAME_VISIBLE),"Maha")) {
 			mes "[Maha]";
 			mes "But I do think the Sapha race is overly kind, almost unnaturally.";
 			mes "Guess it'll be fine.";
@@ -6951,7 +6951,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 }
 //== Enchantment NPCs ======================================
 -	script	dic_enc#main	FAKE_NPC,{
-	.@re$ = strnpcinfo(NPC_VISIBLENAME);
+	.@re$ = strnpcinfo(NPC_NAME_VISIBLE);
 	.@n$ = "["+.@re$+"]";
 	if (!checkweight (1201,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";

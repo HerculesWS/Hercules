@@ -433,7 +433,7 @@ OnEnable1:
 	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	specialeffect EF_BAT2;
-	switch(atoi(charat(strnpcinfo(NPC_HIDDENNAME),4))) {
+	switch(atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),4))) {
 	case 1:
 		areamonster .@map$,49,171,51,173,"Bangungot's Mangkukulam",2339,1,.@label$;
 		areamonster .@map$,51,171,53,173,"Bangungot's Mangkukulam",2339,1,.@label$;
@@ -466,7 +466,7 @@ OnEnable2:
 	end;
 */
 OnEnable3:
-	.@i = atoi(charat(strnpcinfo(NPC_HIDDENNAME),4))+1;
+	.@i = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),4))+1;
 	donpcevent instance_npcname("#Ward"+.@i+" Entry")+"::OnEnable1";
 	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
@@ -478,7 +478,7 @@ OnTimer1000:
 	if (mobcount(.@map$,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
 		specialeffect EF_BAT2;
 		donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnEnable3";
-		switch(atoi(charat(strnpcinfo(NPC_HIDDENNAME),4))) {
+		switch(atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),4))) {
 			case 1: .@str$ = "Bangungot: I will let you see the pain and the agony actually be real....."; break;
 			case 2: .@str$ = "Bangungot: Diseased spirits are the source of my energy, and my life..."; break;
 			case 3: .@str$ = "Bangungot: Scream more....and more...... your pain..."; break;
@@ -984,7 +984,7 @@ OnTimer30000:
 1@ma_h,60,87,4	script	Screaming Patient#2	4_M_PATIENT,{
 	end;
 OnEnable:
-	switch(atoi(strnpcinfo(NPC_HIDDENNAME))) {
+	switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
 		case 2: .@str$ = "Screaming Patient: Aaaaargh!!"; break;
 		case 3: .@str$ = "Patient in Pain: Oooooowwww!! It's killing me!!!"; break;
 		case 4: .@str$ = "Passed Out Patient: ........"; break;

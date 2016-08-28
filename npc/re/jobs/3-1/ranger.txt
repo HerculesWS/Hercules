@@ -1591,7 +1591,7 @@ OnEnable:
 	initnpctimer;
 	getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
 	monster "job3_rang02",.@x,.@y,"Egg Bomb",1047,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
-	switch(atoi(strnpcinfo(NPC_HIDDENNAME))%3) {
+	switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))%3) {
 		case 0: .@str$ = "Hey, I am going to explode. What are you going to do?"; break;
 		case 1: .@str$ = "I... no, I can't stand anymore!!"; break;
 		case 2: .@str$ = "I am almost done now... Don't stop me."; break;
@@ -1605,7 +1605,7 @@ OnDisable:
 	end;
 OnMyMobDead:
 	++$@job_rang_point03;
-	switch(atoi(strnpcinfo(NPC_HIDDENNAME))%3) {
+	switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))%3) {
 		case 0: .@str$ = "The world is meaningless and my dream is so far away..."; break;
 		case 1: .@str$ = "Don't be relieved. Misery always comes from carelessness."; break;
 		case 2: .@str$ = "Alas, it was only a dream for a short time..."; break;

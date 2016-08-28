@@ -87,7 +87,7 @@ iz_int,96,73,0	script	iz_int_iz	WARPNPC,2,2,{
 
 	OnTouch:
 		savepoint "izlude", 128, 98;
-		warp "izlude"+strnpcinfo(NPC_HIDDENNAME)+"", 195, 209;
+		warp "izlude"+strnpcinfo(NPC_NAME_HIDDEN)+"", 195, 209;
 		end;
 }
 

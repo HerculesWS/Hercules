@@ -273,7 +273,7 @@ OnTouchNPC:
 	end;
 
 	function	F_Num	{
-		return atoi(strnpcinfo(NPC_HIDDENNAME));
+		return atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	}
 
 	function	F_Ord	{
@@ -288,7 +288,7 @@ OnTouchNPC:
 	}
 
 OnInit:
-	if (strnpcinfo(NPC_HIDDENNAME) != "" )
+	if (strnpcinfo(NPC_NAME_HIDDEN) != "" )
 		disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
@@ -1789,7 +1789,7 @@ OnDisable:
 	end;
 
 OnInit:
-	if (strnpcinfo(NPC_HIDDENNAME) != "main")
+	if (strnpcinfo(NPC_NAME_HIDDEN) != "main")
 		disablenpc strnpcinfo(NPC_NAME);
 	end;
 
@@ -1894,8 +1894,8 @@ OnTouchNPC:
 
 OnDisable:
 	for(.@i = 1; .@i < 7; ++.@i) {
-		disablenpc "Luk#"+strnpcinfo(NPC_HIDDENNAME)+"_"+.@i;
-		disablenpc "Tire#"+strnpcinfo(NPC_HIDDENNAME)+"_"+.@i;
+		disablenpc "Luk#"+strnpcinfo(NPC_NAME_HIDDEN)+"_"+.@i;
+		disablenpc "Tire#"+strnpcinfo(NPC_NAME_HIDDEN)+"_"+.@i;
 	}
 	disablenpc strnpcinfo(NPC_NAME);
 	end;

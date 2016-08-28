@@ -7951,18 +7951,18 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 					malaya_bang = 15;
 					changequest 11295,11296;
 					getitem Lesser_Agimat,1;
-					donpcevent "Tent"+replacestr(strnpcinfo(NPC_UNIQUENAME),"MalayaStick","")+"#ma::OnEnable";
+					donpcevent "Tent"+replacestr(strnpcinfo(NPC_NAME_UNIQUE),"MalayaStick","")+"#ma::OnEnable";
 					next;
 					mes "Better show Las the talisman.";
 					close;
 				} else {
 					getitem Lesser_Agimat,1;
-					donpcevent "Tent"+replacestr(strnpcinfo(NPC_UNIQUENAME),"MalayaStick","")+"#ma::OnEnable";
+					donpcevent "Tent"+replacestr(strnpcinfo(NPC_NAME_UNIQUE),"MalayaStick","")+"#ma::OnEnable";
 					close;
 				}
 			} else {
 				mes "After pulling out the deeply planted stick, an uneasy feeling washes over.";
-				donpcevent "Tent"+replacestr(strnpcinfo(NPC_UNIQUENAME),"MalayaStick","")+"#ma::OnEnable";
+				donpcevent "Tent"+replacestr(strnpcinfo(NPC_NAME_UNIQUE),"MalayaStick","")+"#ma::OnEnable";
 				close;
 			}
 		case 2:
@@ -7975,10 +7975,10 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 	}
 	end;
 OnEnable:
-	enablenpc strnpcinfo(NPC_UNIQUENAME); // NPC name is too long for strnpcinfo(NPC_NAME).
+	enablenpc strnpcinfo(NPC_NAME_UNIQUE); // NPC name is too long for strnpcinfo(NPC_NAME).
 	end;
 OnDisable:
-	disablenpc strnpcinfo(NPC_UNIQUENAME);
+	disablenpc strnpcinfo(NPC_NAME_UNIQUE);
 	end;
 }
 malaya,40,52,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick1	4_BULLETIN_BOARD2
@@ -8006,10 +8006,10 @@ OnDisable:
 	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnTimer1000:
-	donpcevent "MalayaStick"+replacestr(strnpcinfo(NPC_VISIBLENAME),"Tent","")+"::OnDisable";
+	donpcevent "MalayaStick"+replacestr(strnpcinfo(NPC_NAME_VISIBLE),"Tent","")+"::OnDisable";
 	end;
 OnTimer30000:
-	donpcevent "MalayaStick"+replacestr(strnpcinfo(NPC_VISIBLENAME),"Tent","")+"::OnEnable";
+	donpcevent "MalayaStick"+replacestr(strnpcinfo(NPC_NAME_VISIBLE),"Tent","")+"::OnEnable";
 	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 }

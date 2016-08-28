@@ -1283,14 +1283,14 @@ que_qsch05,1,4,0	duplicate(#piamette_main)	#piamette_sch05	CLEAR_NPC
 
 OnEnable:
 	.@sub$ = callfunc("F_Okolnir");
-	.@c = charat(strnpcinfo(NPC_HIDDENNAME),9);
+	.@c = charat(strnpcinfo(NPC_NAME_HIDDEN),9);
 	enablenpc "#getspell0"+.@c+"_"+.@sub$;
 	specialeffect EF_LOCKON;
 	end;
 
 OnDisable:
 	.@sub$ = callfunc("F_Okolnir");
-	.@c = charat(strnpcinfo(NPC_HIDDENNAME),9);
+	.@c = charat(strnpcinfo(NPC_NAME_HIDDEN),9);
 	disablenpc "#getspell0"+.@c+"_"+.@sub$;
 	end;
 
@@ -1904,7 +1904,7 @@ que_qsch05,2,10,0	duplicate(#main_stone03)	#sch05_stone03	CLEAR_NPC
 	end;
 OnTouch:
 	.@sub$ = callfunc("F_Okolnir");
-	.@in = charat(strnpcinfo(NPC_HIDDENNAME),getstrlen(strnpcinfo(NPC_HIDDENNAME))-1);
+	.@in = charat(strnpcinfo(NPC_NAME_HIDDEN),getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1);
 	disablenpc "Guard of Shadow#"+.@sub$+"_0"+.@in;
 	switch (.@in) {
 		case 1: setarray .@n, 234,284,235,285,236,286; break;
@@ -1918,7 +1918,7 @@ OnTouch:
 
 OnDisable:
 	.@sub$ = callfunc("F_Okolnir");
-	.@in = charat(strnpcinfo(NPC_HIDDENNAME),getstrlen(strnpcinfo(NPC_HIDDENNAME))-1);
+	.@in = charat(strnpcinfo(NPC_NAME_HIDDEN),getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1);
 	killmonster "que_q"+.@sub$,"Guard of Shadow#"+.@sub$+"_0"+.@in+"::OnMyMobDead";
 	disablenpc "Guard of Shadow#"+.@sub$+"_0"+.@in;
 	end;
@@ -1978,7 +1978,7 @@ que_qsch05,225,303,5	duplicate(Guard of Shadow#main_all)	Guard of Shadow#sch05_0
 
 OnTouch:
 	.@sub$ = callfunc("F_Okolnir");
-	.@in = charat(strnpcinfo(NPC_HIDDENNAME),getstrlen(strnpcinfo(NPC_HIDDENNAME))-1);
+	.@in = charat(strnpcinfo(NPC_NAME_HIDDEN),getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1);
 	disablenpc "Bloody Hunter#"+.@sub$+"_ac0"+.@in;
 	switch (.@in) {
 		case 1: setarray .@n, 265,297,266,296,267,295;
@@ -1992,7 +1992,7 @@ OnTouch:
 
 OnDisable:
 	.@sub$ = callfunc("F_Okolnir");
-	.@in = charat(strnpcinfo(NPC_HIDDENNAME),getstrlen(strnpcinfo(NPC_HIDDENNAME))-1);
+	.@in = charat(strnpcinfo(NPC_NAME_HIDDEN),getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1);
 	killmonster "que_q"+.@sub$,"Bloody Hunter#"+.@sub$+"_ac0"+.@in+"::OnMyMobDead";
 	disablenpc "Bloody Hunter#"+.@sub$+"_ac0"+.@in;
 	end;
@@ -2052,7 +2052,7 @@ que_qsch05,279,300,3	duplicate(Bloody Hunter#main_all)	Bloody Hunter#sch05_ac04	
 
 OnTouch:
 	.@sub$ = callfunc("F_Okolnir");
-	.@in = charat(strnpcinfo(NPC_HIDDENNAME),getstrlen(strnpcinfo(NPC_HIDDENNAME))-1);
+	.@in = charat(strnpcinfo(NPC_NAME_HIDDEN),getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1);
 	disablenpc "Temple Keeper#"+.@sub$+"_ac0"+.@in;
 	switch (.@in) {
 		case 1: setarray .@n, 246,330,247,330,248,330; break;
@@ -2064,7 +2064,7 @@ OnTouch:
 
 OnDisable:
 	.@sub$ = callfunc("F_Okolnir");
-	.@in = charat(strnpcinfo(NPC_HIDDENNAME),getstrlen(strnpcinfo(NPC_HIDDENNAME))-1);
+	.@in = charat(strnpcinfo(NPC_NAME_HIDDEN),getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1);
 	killmonster "que_q"+.@sub$,"Temple Keeper#"+.@sub$+"_ac0"+.@in+"::OnMyMobDead";
 	disablenpc "Temple Keeper#"+.@sub$+"_ac0"+.@in;
 	end;

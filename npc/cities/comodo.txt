@@ -355,7 +355,7 @@ cmd_fild07,52,280,4	script	Hallosu#cmd	4W_SAILOR,{
 }
 
 cmd_fild07,299,83,4	script	Zain#cmd	4W_SAILOR,{
-	.@n$ = "["+strnpcinfo(NPC_VISIBLENAME)+"]";
+	.@n$ = "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
 	mes .@n$;
 	mes "Would you like to";
 	mes "board a ship on the";

@@ -43,7 +43,7 @@
 		mes "Can't continue because you have too many heavy objects. Let's try to continue after reducing the weight.";
 		close;
 	}
-	if (strnpcinfo(NPC_VISIBLENAME) == "Jeremy") {
+	if (strnpcinfo(NPC_NAME_VISIBLE) == "Jeremy") {
 		.@Jeremy = 1;
 		.@n$ = "[Jeremy]";
 		setarray .@equip_name$[0],  "Armor",  "Shoes",  "Garment", "Upper Hat";

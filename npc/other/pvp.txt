@@ -308,7 +308,7 @@ function	script	F_PVP_FSRS	{
 		}
 	}
 	if (strnpcinfo(NPC_MAP) == "pvp_y_room") {
-		.@base$ = "pvp_y_"+strnpcinfo(NPC_HIDDENNAME);
+		.@base$ = "pvp_y_"+strnpcinfo(NPC_NAME_HIDDEN);
 		setarray .@maps$[0],	.@base$+"-1",	.@base$+"-2",	.@base$+"-3",	.@base$+"-4",	.@base$+"-5";
 		setarray .@name$[0],	"Prontera",		"Izlude",		"Payon",		"Alberta",		"Morroc";
 		setarray .@Limit[0],	128,			128,			128,			128,			128;

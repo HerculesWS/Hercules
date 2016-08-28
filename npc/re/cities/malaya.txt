@@ -153,7 +153,7 @@ ma_in01,30,94,4	script	Inn Keeper#ma	4_F_MALAYA,{
 -	script	Unidentified Creature#i	FAKE_NPC,{
 	end;
 OnInit:
-	switch(atoi(strnpcinfo(NPC_HIDDENNAME))) {
+	switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
 		case 1: setarray .@npc$,"01","02","03","04"; break;
 		case 5: setarray .@npc$,"05","06","07","08"; break;
 		case 9: setarray .@npc$,"09","10","11"; break;
@@ -171,7 +171,7 @@ OnDisable:
 	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnBingx2:
-	switch(atoi(strnpcinfo(NPC_HIDDENNAME))) {
+	switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
 		case 1: setarray .@npc$,"02","03","04"; break;
 		case 5: setarray .@npc$,"06","07","08"; break;
 		case 9: setarray .@npc$,"10","11"; break;
@@ -190,7 +190,7 @@ OnTouch:
 			close;
 		}
 		if (rand(1,5)%2) {
-			switch(atoi(strnpcinfo(NPC_HIDDENNAME))) {
+			switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
 				case 1: $ma_name04$ = strcharinfo(0); break;
 				case 5: $ma_name05$ = strcharinfo(0); break;
 				case 9: $ma_name06$ = strcharinfo(0); break;
@@ -217,7 +217,7 @@ OnDisable:
 	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnBingx2:
-	switch(atoi(strnpcinfo(NPC_HIDDENNAME))) {
+	switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
 		case 2: setarray .@npc$,"01","03","04"; break;
 		case 3: setarray .@npc$,"01","02","04"; break;
 		case 4: setarray .@npc$,"01","02","03"; break;
@@ -234,7 +234,7 @@ OnBingx2:
 	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 OnTouch:
-	.@i = atoi(strnpcinfo(NPC_HIDDENNAME));
+	.@i = atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	if (.@i%4 == 2) {
 		if (getcharid(0) == getpartyleader(getcharid(1),2))
 			.@pass = 1;

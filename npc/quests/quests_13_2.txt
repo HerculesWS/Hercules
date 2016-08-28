@@ -67,7 +67,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 		next;
 		switch(select("Save your location", "Cancel")) {
 		case 1:
-			if (strnpcinfo(NPC_HIDDENNAME) == "spl") savepoint "spl_fild02",32,225;
+			if (strnpcinfo(NPC_NAME_HIDDEN) == "spl") savepoint "spl_fild02",32,225;
 			else savepoint "man_fild02",129,61;
 			mes "[Cat Hand Agent]";
 			mes "Thank you.";
@@ -87,7 +87,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 		next;
 		switch(select("Save your location", "Use Storage", "Cancel")) {
 		case 1:
-			if (strnpcinfo(NPC_HIDDENNAME) == "spl") savepoint "spl_fild02",32,225;
+			if (strnpcinfo(NPC_NAME_HIDDEN) == "spl") savepoint "spl_fild02",32,225;
 			else savepoint "man_fild02",129,61;
 			mes "[Cat Hand Agent]";
 			mes "Thank you.";
@@ -134,7 +134,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 		next;
 		switch(select("Save your location", "Use Storage", "Use Cat Warp (Midgard)", "Cancel")) {
 		case 1:
-			if (strnpcinfo(NPC_HIDDENNAME) == "spl") savepoint "spl_fild02",32,225;
+			if (strnpcinfo(NPC_NAME_HIDDEN) == "spl") savepoint "spl_fild02",32,225;
 			else savepoint "man_fild02",129,61;
 			mes "[Cat Hand Agent]";
 			mes "Thank you.";
@@ -255,7 +255,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 		next;
 		switch(select("Save your location", "Use Storage", "Use Cat Warp (Midgard)", "Use Cat Warp (Jottunheim)", "Cancel")) {
 		case 1:
-			if (strnpcinfo(NPC_HIDDENNAME) == "spl") savepoint "spl_fild02",32,225;
+			if (strnpcinfo(NPC_NAME_HIDDEN) == "spl") savepoint "spl_fild02",32,225;
 			else savepoint "man_fild02",129,61;
 			mes "[Cat Hand Agent]";
 			mes "Thank you.";
@@ -358,7 +358,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				close;
 			}
 		case 4:
-			if (strnpcinfo(NPC_HIDDENNAME) == "spl") switch(select("Alliance Forces Post -> 5500z", "Manuk Camp -> 7500z", "Cancel")) {
+			if (strnpcinfo(NPC_NAME_HIDDEN) == "spl") switch(select("Alliance Forces Post -> 5500z", "Manuk Camp -> 7500z", "Cancel")) {
 				case 1: Catwarp(5500,13);
 				case 2: Catwarp(5500,12);
 				case 3:
@@ -2463,7 +2463,7 @@ spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
 			close;
 		}
 		else if (ep13_mdrama == 27) {
-			if (strnpcinfo(NPC_VISIBLENAME) == "Arc") {
+			if (strnpcinfo(NPC_NAME_VISIBLE) == "Arc") {
 				mes "[Arc]";
 				mes "Terra. Get some rest...";
 				mes "Rest easy...";
@@ -2475,18 +2475,18 @@ spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
 				mes "I'm sorry... And. You...";
 			}
 			next;
-			mes "["+strnpcinfo(NPC_VISIBLENAME)+"]";
+			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
 			mes "Originally... we Laphine were extremely reluctant to have others in our area.";
 			mes strcharinfo(0) + ", you will be a special exception.";
 			next;
-			mes "["+strnpcinfo(NPC_VISIBLENAME)+"]";
-			if (strnpcinfo(NPC_VISIBLENAME) == "Arc") mes "That's what Terra wants too.";
+			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
+			if (strnpcinfo(NPC_NAME_VISIBLE) == "Arc") mes "That's what Terra wants too.";
 			mes "It might be cramped, but you are always welcome to visit us.";
 			ep13_mdrama = 28;
 			close;
 		}
 		else if (ep13_mdrama > 27) {
-			if (strnpcinfo(NPC_VISIBLENAME) == "Arc") {
+			if (strnpcinfo(NPC_NAME_VISIBLE) == "Arc") {
 				mes "[Arc]";
 				mes "How are you adapting to Splendide?";
 				mes "Terra's still not fully recovered yet, so keep that in mind.";
@@ -2500,7 +2500,7 @@ spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
 		}
 		else {
 			// custom translation
-			if (strnpcinfo(NPC_VISIBLENAME) == "Arc") {
+			if (strnpcinfo(NPC_NAME_VISIBLE) == "Arc") {
 				mes "[Arc]";
 				mes "The back of the right ... ";
 				mes "......";
@@ -2514,7 +2514,7 @@ spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
 		}
 	}
 	else {
-		if (strnpcinfo(NPC_VISIBLENAME) == "Arc") {
+		if (strnpcinfo(NPC_NAME_VISIBLE) == "Arc") {
 			mes "[Arc]";
 			mes "HirWosWeh. Yee DiebVilFar U manTalVil.";
 			mes "LarsNeiser...??";

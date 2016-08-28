@@ -42,8 +42,8 @@ ecl_fild01,118,311,4	script	Teleport Cat No.1#1	4_M_BOSSCAT,{
 	mes "[Teleport Cat]";
 	mes "We provide teleport service between various regions based on our accumulated knowledge. We accept Malangdo Canned Specialties or Zeny, so you can pay however you like it~";
 	next;
-	.@index[0] = .index[(atoi(strnpcinfo(NPC_HIDDENNAME))*2-2)];
-	.@index[1] = .index[(atoi(strnpcinfo(NPC_HIDDENNAME))*2-1)];
+	.@index[0] = .index[(atoi(strnpcinfo(NPC_NAME_HIDDEN))*2-2)];
+	.@index[1] = .index[(atoi(strnpcinfo(NPC_NAME_HIDDEN))*2-1)];
 	.@menu$ = "Forget it:";
 	for (.@i=0; .@i < getarraysize(.maps$); .@i++){
 		for (.@j=0; .@j<2; .@j++){

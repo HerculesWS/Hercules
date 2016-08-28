@@ -218,7 +218,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 	case 1:
 		mes "[Eden Teleport Officer]";
 		mes "Let's go to our secret base!";
-		nak_warp = strnpcinfo(NPC_HIDDENNAME);
+		nak_warp = strnpcinfo(NPC_NAME_HIDDEN);
 		close2;
 		warp "moc_para01",31,14;
 		end;

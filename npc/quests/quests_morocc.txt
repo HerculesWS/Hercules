@@ -1110,7 +1110,7 @@ moc_fild20,203,336,5	duplicate(MocConGuard)	Continental Guard#07	4_M_MOC_SOLDIER
 moc_fild20,215,336,3	duplicate(MocConGuard)	Continental Guard#08	4_M_MOC_SOLDIER,3,3
 
 -	script	Continental Messenger#00::ConMessenger	4_M_MOCASS1,3,3,{
-	.@area$ = strnpcinfo(NPC_HIDDENNAME);
+	.@area$ = strnpcinfo(NPC_NAME_HIDDEN);
 	if (.@area$ == "01") { .@area$ = "Prontera"; }
 	else if (.@area$ == "02") { .@area$ = "Geffen"; }
 	else if (.@area$ == "03") { .@area$ = "Payon"; }
