@@ -1005,13 +1005,13 @@ OnAgitInvest:
 		Zeny -= 10000;
 		setd "$fund_"+.@npc$+"_extra", getd("$fund_"+.@npc$+"_extra") + 1;
 		close2;
-		if (compare(strnpcinfo(2),"alde"))
+		if (compare(strnpcinfo(NPC_HIDDENNAME),"alde"))
 			warp "gld_dun02"+((.@i == 2)?"_2":""),32,122;
-		else if (compare(strnpcinfo(2),"gef"))
+		else if (compare(strnpcinfo(NPC_HIDDENNAME),"gef"))
 			warp "gld_dun04"+((.@i == 2)?"_2":""),39,258;
-		else if (compare(strnpcinfo(2),"pay"))
+		else if (compare(strnpcinfo(NPC_HIDDENNAME),"pay"))
 			warp "gld_dun01"+((.@i == 2)?"_2":""),186,165;
-		else if (compare(strnpcinfo(2),"prt"))
+		else if (compare(strnpcinfo(NPC_HIDDENNAME),"prt"))
 			warp "gld_dun03"+((.@i == 2)?"_2":""),164,268;
 		end;
 	} else if (.@status == 2) {
@@ -1098,17 +1098,17 @@ OnAgitInvest:
 //== Inside Castles - Gate Managers ========================
 -	script	Gate Manager#castle	FAKE_NPC,{
 
-	.@id = atoi(charat(strnpcinfo(2),getstrlen(strnpcinfo(2))-1));
-	if (compare(strnpcinfo(2),"alde")) {
+	.@id = atoi(charat(strnpcinfo(NPC_HIDDENNAME),getstrlen(strnpcinfo(NPC_HIDDENNAME))-1));
+	if (compare(strnpcinfo(NPC_HIDDENNAME),"alde")) {
 		.@npc$ = "alde";
 		.@realm$ = "Luina";
-	} else if (compare(strnpcinfo(2),"gef")) {
+	} else if (compare(strnpcinfo(NPC_HIDDENNAME),"gef")) {
 		.@npc$ = "gef";
 		.@realm$ = "Britoniah";
-	} else if (compare(strnpcinfo(2),"pay")) {
+	} else if (compare(strnpcinfo(NPC_HIDDENNAME),"pay")) {
 		.@npc$ = "pay";
 		.@realm$ = "Greenwood Lake";
-	} else if (compare(strnpcinfo(2),"prt")) {
+	} else if (compare(strnpcinfo(NPC_HIDDENNAME),"prt")) {
 		.@npc$ = "prt";
 		.@realm$ = "Valkyrie Realm";
 	}
@@ -1161,7 +1161,7 @@ OnAgitInvest:
 		mes "You are interested in exploring the "+.@realm$+" Guild Dungeon Deepest Layer (2F).";
 		mes "Let me guide you. Good luck.";
 		close2;
-		if (compare(strnpcinfo(2),"alde")) {
+		if (compare(strnpcinfo(NPC_HIDDENNAME),"alde")) {
 			switch(.@id) {
 				case 1: warp "gld_dun02_2",32,122; end;
 				case 2: warp "gld_dun02_2",79,30; end;
@@ -1169,7 +1169,7 @@ OnAgitInvest:
 				case 4: warp "gld_dun02_2",160,148; end;
 				case 5: warp "gld_dun02_2",103,169; end;
 			}
-		} else if (compare(strnpcinfo(2),"gef")) {
+		} else if (compare(strnpcinfo(NPC_HIDDENNAME),"gef")) {
 			switch(.@id) {
 				case 1: warp "gld_dun04_2",39,258; end;
 				case 2: warp "gld_dun04_2",125,270; end;
@@ -1177,7 +1177,7 @@ OnAgitInvest:
 				case 4: warp "gld_dun04_2",268,108; end;
 				case 5: warp "gld_dun04_2",230,35; end;
 			}
-		} else if (compare(strnpcinfo(2),"pay")) {
+		} else if (compare(strnpcinfo(NPC_HIDDENNAME),"pay")) {
 			switch(.@id) {
 				case 1: warp "gld_dun01_2",186,165; end;
 				case 2: warp "gld_dun01_2",54,165; end;
@@ -1185,7 +1185,7 @@ OnAgitInvest:
 				case 4: warp "gld_dun01_2",186,39; end;
 				case 5: warp "gld_dun01_2",223,202; end;
 			}
-		} else if (compare(strnpcinfo(2),"prt")) {
+		} else if (compare(strnpcinfo(NPC_HIDDENNAME),"prt")) {
 			switch(.@id) {
 				case 1: warp "gld_dun03_2",28,251; end;
 				case 2: warp "gld_dun03_2",164,268; end;
@@ -1200,7 +1200,7 @@ OnAgitInvest:
 		mes "[Gate Manager]";
 		mes "Let me guide you to the Abyss Gap connected with "+.@realm$+", the Abyss Gate 'Way of the Warrior'.";
 		close2;
-		if (compare(strnpcinfo(2),"alde")) {
+		if (compare(strnpcinfo(NPC_HIDDENNAME),"alde")) {
 			switch(.@id) {
 				case 1: warp "gld2_ald",175,41; end;
 				case 2: warp "gld2_ald",77,64; end;
@@ -1208,7 +1208,7 @@ OnAgitInvest:
 				case 4: warp "gld2_ald",104,246; end;
 				case 5: warp "gld2_ald",241,156; end;
 			}
-		} else if (compare(strnpcinfo(2),"gef")) {
+		} else if (compare(strnpcinfo(NPC_HIDDENNAME),"gef")) {
 			switch(.@id) {
 				case 1: warp "gld2_gef",28,199; end;
 				case 2: warp "gld2_gef",217,46; end;
@@ -1216,7 +1216,7 @@ OnAgitInvest:
 				case 4: warp "gld2_gef",30,67; end;
 				case 5: warp "gld2_gef",115,40; end;
 			}
-		} else if (compare(strnpcinfo(2),"pay")) {
+		} else if (compare(strnpcinfo(NPC_HIDDENNAME),"pay")) {
 			switch(.@id) {
 				case 1: warp "gld2_pay",33,112; end;
 				case 2: warp "gld2_pay",119,27; end;
@@ -1224,7 +1224,7 @@ OnAgitInvest:
 				case 4: warp "gld2_pay",175,221; end;
 				case 5: warp "gld2_pay",61,221; end;
 			}
-		} else if (compare(strnpcinfo(2),"prt")) {
+		} else if (compare(strnpcinfo(NPC_HIDDENNAME),"prt")) {
 			switch(.@id) {
 				case 1: warp "gld2_prt",10,27; end;
 				case 2: warp "gld2_prt",14,247; end;

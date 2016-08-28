@@ -2110,7 +2110,7 @@ OnDisable:
 	.hide = 0;
 	end;
 OnTouch:
-	.@seal = atoi(charat(strnpcinfo(2),2));
+	.@seal = atoi(charat(strnpcinfo(NPC_HIDDENNAME),2));
 	if (.hide & (1<<.@seal)) end;
 
 	//  .@i: ItemID,MobID,MapX,MapY,EffectNum

@@ -8444,7 +8444,7 @@ mid_camp,88,100,7	script	Cat Hand Mining Agent	4_CAT,{
 		else if (.@rhea_ran == 16) getitem Yellow_Live,1;
 		else getitem Unidentified_Mineral,1;
 		initnpctimer;
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 		end;
 	}
 	else {
@@ -8455,7 +8455,7 @@ mid_camp,88,100,7	script	Cat Hand Mining Agent	4_CAT,{
 	end;
 
 OnTimer120000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }
@@ -13710,11 +13710,11 @@ OnTimer11000:
 
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
