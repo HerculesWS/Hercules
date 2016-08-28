@@ -116,7 +116,7 @@ prontera,152,192,5	script	Pumpkin Hat Researcher	4_M_05,{
 //== Buffs - Trick or Treaters =============================
 -	script	Trick or Treater::09Treats	4_M_KID1,2,2,{
 OnTouch:
-	hideoffnpc strnpcinfo(3);
+	hideoffnpc strnpcinfo(NPC_UNIQUENAME);
 	initnpctimer;
 	mes "[Trick or Treater]";
 	mes "Hooray! hooray! Hooray!";
@@ -215,17 +215,17 @@ OnInit:
 	end;
 
 OnEnableTreat:
-	enablenpc strnpcinfo(3);
-	hideonnpc strnpcinfo(3);
+	enablenpc strnpcinfo(NPC_UNIQUENAME);
+	hideonnpc strnpcinfo(NPC_UNIQUENAME);
 	end;
 
 OnTimer15000:
-	hideonnpc strnpcinfo(3);
-	disablenpc strnpcinfo(3);
+	hideonnpc strnpcinfo(NPC_UNIQUENAME);
+	disablenpc strnpcinfo(NPC_UNIQUENAME);
 	end;
 
 OnTimer300000:
-	donpcevent strnpcinfo(3)+"::OnEnableTreat";
+	donpcevent strnpcinfo(NPC_UNIQUENAME)+"::OnEnableTreat";
 	stopnpctimer;
 	end;
 }

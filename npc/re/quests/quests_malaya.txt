@@ -1487,7 +1487,7 @@ malaya,62,274,0	script	Sand Trap#malaya	4_SOIL,{
 	mes "someone scattered on the sea water.";
 	close2;
 	progressbar "0xffff00", 5;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	getitem Salt_Bag, 1; // Salt_Bag
 	mes "[" + strcharinfo(0) + "]";
@@ -1495,7 +1495,7 @@ malaya,62,274,0	script	Sand Trap#malaya	4_SOIL,{
 	close;
 
 OnTimer30000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }
@@ -1519,7 +1519,7 @@ ma_fild01,178,206,0	script	Black Bamboo#malaya	CLEAR_NPC,4,4,{
 	mes "If some of it is cut off and sharpened, I think it will suffice for the Sharpened Bamboo Imelda wanted.";
 	close2;
 	progressbar "0xffff00", 3;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	getitem Sharp_Bamboo, 1;
 	mes "[" + strcharinfo(0) + "]";
@@ -1531,7 +1531,7 @@ OnTouch:
 	}
 	end;
 OnTimer30000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }
@@ -3150,10 +3150,10 @@ ma_fild01,251,93,3	script	Lost Child#malaya01	4_F_BARYO_GIRL,{
 		setquest 7389;
 		erasequest 7388;
 		close2;
-		disablenpc strnpcinfo(0);
-		if (strnpcinfo(0) == "Lost Child#malaya01") {
+		disablenpc strnpcinfo(NPC_NAME);
+		if (strnpcinfo(NPC_NAME) == "Lost Child#malaya01") {
 			enablenpc "Lost Child#malaya02";
-		} else if (strnpcinfo(0) == "Lost Child#malaya01") {
+		} else if (strnpcinfo(NPC_NAME) == "Lost Child#malaya01") {
 			enablenpc "Lost Child#malaya03";
 		} else {
 			enablenpc "Lost Child#malaya01";
@@ -3183,8 +3183,8 @@ ma_fild01,251,93,3	script	Lost Child#malaya01	4_F_BARYO_GIRL,{
 	end;
 
 OnInit:
-	if (strnpcinfo(0) != "Lost Child#malaya01")
-		disablenpc strnpcinfo(0);
+	if (strnpcinfo(NPC_NAME) != "Lost Child#malaya01")
+		disablenpc strnpcinfo(NPC_NAME);
 }
 ma_fild01,114,141,3	duplicate(Lost Child#malaya01)	Lost Child#malaya02	4_F_BARYO_GIRL
 ma_fild01,130,314,3	duplicate(Lost Child#malaya01)	Lost Child#malaya03	4_F_BARYO_GIRL
@@ -4561,13 +4561,13 @@ OnInit:
 		mes "[" + strcharinfo(0) + "]";
 		mes "It's warm as a mother's bosom.";
 		getitem Collected_Sample,1;
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 		initnpctimer;
 		close;
 	}
 	end;
 OnTimer20000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }
@@ -7951,18 +7951,18 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 					malaya_bang = 15;
 					changequest 11295,11296;
 					getitem Lesser_Agimat,1;
-					donpcevent "Tent"+replacestr(strnpcinfo(3),"MalayaStick","")+"#ma::OnEnable";
+					donpcevent "Tent"+replacestr(strnpcinfo(NPC_UNIQUENAME),"MalayaStick","")+"#ma::OnEnable";
 					next;
 					mes "Better show Las the talisman.";
 					close;
 				} else {
 					getitem Lesser_Agimat,1;
-					donpcevent "Tent"+replacestr(strnpcinfo(3),"MalayaStick","")+"#ma::OnEnable";
+					donpcevent "Tent"+replacestr(strnpcinfo(NPC_UNIQUENAME),"MalayaStick","")+"#ma::OnEnable";
 					close;
 				}
 			} else {
 				mes "After pulling out the deeply planted stick, an uneasy feeling washes over.";
-				donpcevent "Tent"+replacestr(strnpcinfo(3),"MalayaStick","")+"#ma::OnEnable";
+				donpcevent "Tent"+replacestr(strnpcinfo(NPC_UNIQUENAME),"MalayaStick","")+"#ma::OnEnable";
 				close;
 			}
 		case 2:
@@ -7975,10 +7975,10 @@ malaya,53,68,4	script	Bushes#ma	CLEAR_NPC,{
 	}
 	end;
 OnEnable:
-	enablenpc strnpcinfo(3); // NPC name is too long for strnpcinfo(0).
+	enablenpc strnpcinfo(NPC_UNIQUENAME); // NPC name is too long for strnpcinfo(NPC_NAME).
 	end;
 OnDisable:
-	disablenpc strnpcinfo(3);
+	disablenpc strnpcinfo(NPC_UNIQUENAME);
 	end;
 }
 malaya,40,52,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick1	4_BULLETIN_BOARD2
@@ -7995,22 +7995,22 @@ malaya,59,84,4	duplicate(MalayaStick)	Suspicious Wooden Stick::MalayaStick10	4_B
 -	script	Tent#ma	FAKE_NPC,{ //557
 	end;
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnDisable:
 	stopnpctimer;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnTimer1000:
-	donpcevent "MalayaStick"+replacestr(strnpcinfo(1),"Tent","")+"::OnDisable";
+	donpcevent "MalayaStick"+replacestr(strnpcinfo(NPC_VISIBLENAME),"Tent","")+"::OnDisable";
 	end;
 OnTimer30000:
-	donpcevent "MalayaStick"+replacestr(strnpcinfo(1),"Tent","")+"::OnEnable";
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent "MalayaStick"+replacestr(strnpcinfo(NPC_VISIBLENAME),"Tent","")+"::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 }
 -	duplicate(Tent#ma)	Tent1#ma	FAKE_NPC
@@ -9156,13 +9156,13 @@ ma_fild01,164,231,6	script	Beat Catching Boy#pin10	4_M_BARYO_BOY,{
 	close;
 OnInit:
 	if (!$malaya_pintados_00)
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 ma_fild01,170,228,4	duplicate(Beat Catching Boy#pin10)	Beat Catching Boy#pin11	4_M_BARYO_BOY

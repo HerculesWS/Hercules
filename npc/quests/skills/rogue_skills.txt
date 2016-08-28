@@ -1174,7 +1174,7 @@ OnDisable:
 prt_are01,149,162,0	script	Kienna#1st	8_F_GIRL,1,1,{
 	end;
 OnTouch:
-	callfunc "F_Kienna",strnpcinfo(2);
+	callfunc "F_Kienna",strnpcinfo(NPC_HIDDENNAME);
 	end;
 }
 prt_are01,136,150,0	duplicate(Kienna#1st)	Kienna#2nd	8_F_GIRL,1,1

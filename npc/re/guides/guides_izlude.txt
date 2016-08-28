@@ -42,7 +42,7 @@
 	mes "Do you need help navigating the town?";
 	F_Navi("[Izlude Guide]");
 	next;
-	.@map$ = strnpcinfo(4);
+	.@map$ = strnpcinfo(NPC_MAP);
 	while (1) {
 		switch(select("[ Main Facilities ]", "[ Merchants & Helpers ]", "Remove Marks from Mini-Map", "Cancel")) {
 		case 1:

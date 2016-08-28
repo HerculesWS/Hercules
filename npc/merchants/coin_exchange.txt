@@ -37,7 +37,7 @@
 
 //== Manuk & Splendide =====================================
 -	script	::merchant_13_2	FAKE_NPC,{
-	.@n$ = "["+strnpcinfo(1)+"]";
+	.@n$ = "["+strnpcinfo(NPC_VISIBLENAME)+"]";
 	mes .@n$;
 	if (isequipped(2782) && ep13_2_rhea == 100) {
 		if (!checkweight(Knife,1)) {
@@ -48,7 +48,7 @@
 		mes "Hello.";
 		mes "What are you looking for?";
 		next;
-		if (strnpcinfo(1) == "Merchant of Manuk") {
+		if (strnpcinfo(NPC_VISIBLENAME) == "Merchant of Manuk") {
 			setarray .@items[2],12342,12343,12348;
 			.@Book = 11019; //Manuk_Selling_Item
 			.@coin = 6080; //Manuk_Coin
@@ -93,7 +93,7 @@
 		close;
 	}
 	else {
-		if (strnpcinfo(1) == "Merchant of Manuk") {
+		if (strnpcinfo(NPC_VISIBLENAME) == "Merchant of Manuk") {
 			mes "Rtt od d";
 			mes "Qwo hd is d irr";
 		}

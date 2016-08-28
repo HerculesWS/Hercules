@@ -166,11 +166,11 @@
 		mes "Position successfully saved...";
 		mes "Thank you very much!";
 		mes "We will see you again soon.";
-		if(strnpcinfo(4) == "morocc_in") { savepoint "morocc_in",141,139; }
-		if(strnpcinfo(4) == "alberta_in") { savepoint "alberta_in",22,148; }
-		if(strnpcinfo(4) == "prt_in") { savepoint "prt_in",54,137; }
-		if(strnpcinfo(4) == "geffen_in") { savepoint "geffen_in",70,59; }
-		if(strnpcinfo(4) == "payon_in01") { savepoint "payon_in01",142,46; }
+		if(strnpcinfo(NPC_MAP) == "morocc_in") { savepoint "morocc_in",141,139; }
+		if(strnpcinfo(NPC_MAP) == "alberta_in") { savepoint "alberta_in",22,148; }
+		if(strnpcinfo(NPC_MAP) == "prt_in") { savepoint "prt_in",54,137; }
+		if(strnpcinfo(NPC_MAP) == "geffen_in") { savepoint "geffen_in",70,59; }
+		if(strnpcinfo(NPC_MAP) == "payon_in01") { savepoint "payon_in01",142,46; }
 		break;
 	case 5:
 		mes "[PVP Narrator]";
@@ -307,8 +307,8 @@ function	script	F_PVP_FSRS	{
 			close;
 		}
 	}
-	if (strnpcinfo(4) == "pvp_y_room") {
-		.@base$ = "pvp_y_"+strnpcinfo(2);
+	if (strnpcinfo(NPC_MAP) == "pvp_y_room") {
+		.@base$ = "pvp_y_"+strnpcinfo(NPC_HIDDENNAME);
 		setarray .@maps$[0],	.@base$+"-1",	.@base$+"-2",	.@base$+"-3",	.@base$+"-4",	.@base$+"-5";
 		setarray .@name$[0],	"Prontera",		"Izlude",		"Payon",		"Alberta",		"Morroc";
 		setarray .@Limit[0],	128,			128,			128,			128,			128;

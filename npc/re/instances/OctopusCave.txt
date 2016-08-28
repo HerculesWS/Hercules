@@ -252,12 +252,12 @@ OnMyMobDead:
 1@cash,20,114,0	script	oct_foot1	HIDDEN_WARP_NPC,6,6,{
 	end;
 OnInstanceInit:
-	donpcevent instance_npcname(strnpcinfo(0))+"::OnDisable";
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable";
 	end;
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
-	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
-	.@i = atoi(charat(strnpcinfo(0),8));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
+	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
+	.@i = atoi(charat(strnpcinfo(NPC_NAME),8));
 	.@map$ = instance_mapname("1@cash");
 	switch(.@i) {
 	case 1:
@@ -315,21 +315,21 @@ OnEnable:
 	}
 	end;
 OnDisable:
-	killmonster instance_mapname("1@cash"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead"; // Not in official script.
-	disablenpc instance_npcname(strnpcinfo(0));
+	killmonster instance_mapname("1@cash"),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead"; // Not in official script.
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnTouch:
-	if (getd("."+strnpcinfo(0)+instance_id())) end;
-	setd "."+strnpcinfo(0)+instance_id(),1;
-	hideonnpc instance_npcname(strnpcinfo(0));
+	if (getd("."+strnpcinfo(NPC_NAME)+instance_id())) end;
+	setd "."+strnpcinfo(NPC_NAME)+instance_id(),1;
+	hideonnpc instance_npcname(strnpcinfo(NPC_NAME));
 	mapannounce instance_mapname("1@cash"),"Come out all my babies and help me out!",bc_map,"0xFFFF00";
 	initnpctimer;
 	end;
 OnTimer5000:
 	.@map$ = instance_mapname("1@cash");
 	mapannounce .@map$,"Let's give them a lesson!",bc_map,"0xFFFF00";
-	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
-	.@i = atoi(charat(strnpcinfo(0),8));
+	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
+	.@i = atoi(charat(strnpcinfo(NPC_NAME),8));
 	switch(.@i) {
 	case 1:
 		areamonster .@map$,18,112,22,116,"Octopus's Henchman",2192,3,.@label$;
@@ -350,21 +350,21 @@ OnTimer5000:
 	}
 	end;
 OnTimer30000:
-	setd "."+strnpcinfo(0)+instance_id(),0;
+	setd "."+strnpcinfo(NPC_NAME)+instance_id(),0;
 	stopnpctimer;
-	.@i = atoi(charat(strnpcinfo(0),8));
+	.@i = atoi(charat(strnpcinfo(NPC_NAME),8));
 	donpcevent instance_npcname("oct_foot_exit"+.@i)+"::OnEnable";
-	donpcevent instance_npcname(strnpcinfo(0))+"::OnDisable";
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable";
 	end;
 OnMyMobDead:
 	.@map$ = instance_mapname("1@cash");
-	if (mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
+	if (mobcount(.@map$,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
 		mapannounce .@map$,"You hurt my babies!!? You'll have to pay for this!!!",bc_map,"0x00ff99";
-		setd "."+strnpcinfo(0)+instance_id(),0;
+		setd "."+strnpcinfo(NPC_NAME)+instance_id(),0;
 		stopnpctimer;
-		.@i = atoi(charat(strnpcinfo(0),8));
+		.@i = atoi(charat(strnpcinfo(NPC_NAME),8));
 		donpcevent instance_npcname("oct_foot_exit"+.@i)+"::OnEnable";
-		donpcevent instance_npcname(strnpcinfo(0))+"::OnDisable";
+		donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable";
 		end;
 	}
 	end;
@@ -376,10 +376,10 @@ OnMyMobDead:
 1@cash,16,117,0	script	oct_foot_exit1	WARPNPC,2,2,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnTouch:
 	warp instance_mapname("1@cash"),198,99;
@@ -705,7 +705,7 @@ OnTouch:
 1@cash,190,208,0	script	oct_exit_1	WARPNPC,2,2,{
 	end;
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnTouch:
 	mes "Do you want to go out from the octopus dungeon?";

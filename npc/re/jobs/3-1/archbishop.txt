@@ -1007,7 +1007,7 @@ OnTouch:
 		delitem ValkyrieA_Scroll,1;
 		// fall through
 	} else if (getmercinfo(1) == 2037) {
-		if (strnpcinfo(0) == "#arch_1_10")
+		if (strnpcinfo(NPC_NAME) == "#arch_1_10")
 			viewpoint 1,113,327,1,0xFF9900;
 		.@randht = rand(1,10);
 		if (.@randht < 8)

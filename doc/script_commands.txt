@@ -2363,11 +2363,11 @@ using only numbers reduces script readability
 This function will return the various parts of the name of the calling NPC.
 Whatever it returns is determined by type.
 
- 0 - The NPC's display name (visible#hidden)
- 1 - The visible part of the NPC's display name
- 2 - The hidden part of the NPC's display name
- 3 - The NPC's unique name (::name)
- 4 - The name of the map the NPC is in.
+(0) NPC_NAME	    - The NPC's display name (visible#hidden)
+(1) NPC_VISIBLENAME - The visible part of the NPC's display name
+(2) NPC_HIDDENNAME  - The hidden part of the NPC's display name
+(3) NPC_UNIQUENAME  - The NPC's unique name (::name)
+(4) NPC_MAP		    - The name of the map the NPC is in.
 
 ---------------------------------------
 

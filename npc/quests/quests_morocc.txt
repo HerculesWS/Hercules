@@ -1110,7 +1110,7 @@ moc_fild20,203,336,5	duplicate(MocConGuard)	Continental Guard#07	4_M_MOC_SOLDIER
 moc_fild20,215,336,3	duplicate(MocConGuard)	Continental Guard#08	4_M_MOC_SOLDIER,3,3
 
 -	script	Continental Messenger#00::ConMessenger	4_M_MOCASS1,3,3,{
-	.@area$ = strnpcinfo(2);
+	.@area$ = strnpcinfo(NPC_HIDDENNAME);
 	if (.@area$ == "01") { .@area$ = "Prontera"; }
 	else if (.@area$ == "02") { .@area$ = "Geffen"; }
 	else if (.@area$ == "03") { .@area$ = "Payon"; }
@@ -2074,7 +2074,7 @@ sec_in02,14,43,5	script	Morroc GlobalVar Admin::MorrocAdmin_sec	4_F_RUSGREEN,{
 			mes "Alright.";
 			close;
 		case 2:
-			if (strnpcinfo(4) == "sec_in02")
+			if (strnpcinfo(NPC_MAP) == "sec_in02")
 				mes "You can reset at moc_fild21 5 5.";
 			else {
 				mes "Reset starts.";

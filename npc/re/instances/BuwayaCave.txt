@@ -337,7 +337,7 @@ OnDisable:
 1@ma_c,97,74,0	script	#yunobi1	HIDDEN_WARP_NPC,{
 	end;
 OnInstanceInit:
-	hideonnpc instance_npcname(strnpcinfo(0));
+	hideonnpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnEnable:
 	specialeffect EF_MAPPILLAR2;

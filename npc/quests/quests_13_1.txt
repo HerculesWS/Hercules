@@ -4640,7 +4640,7 @@ mid_camp,336,171,1	script	Camp Guard#man1	4_M_EIN_SOLDIER,{
 		mes "Please be careful out there.";
 		mes "If you encounter any threats or strange phenomenon, then please don't hesitate to report to us at the garrison.";
 		close2;
-		switch(atoi(charat(strnpcinfo(2),3))) {
+		switch(atoi(charat(strnpcinfo(NPC_HIDDENNAME),3))) {
 		case 1:
 			if (ep13_animal == 1)
 				ep13_animal = 2;

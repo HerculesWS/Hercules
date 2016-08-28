@@ -212,7 +212,7 @@ OnTimer180000:
 // callfunc "F_Mora_Mist",<warp to enable>,<success message>,<fail message>{,<end flag>}
 function	script	F_Mora_Mist	{
 	.@map$ = instance_mapname("1@mist");
-	if (mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead") == 0) {
+	if (mobcount(.@map$,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") == 0) {
 		mes "Obviously no one is taking care of it.";
 		mes "It seems like you can chop down the garden tree.";
 		next;
@@ -221,7 +221,7 @@ function	script	F_Mora_Mist	{
 		mes "You chop down the tree, which was blocking the path of the maze, "+((getarg(3,0))?"clearing the way out of the forest.":"so now you can continue.");
 		mapannounce .@map$,getarg(1),bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
 		enablenpc instance_npcname(getarg(0));
-		disablenpc instance_npcname(strnpcinfo(0));
+		disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 		close;
 	} else
 		mapannounce .@map$,((getarg(3,0))?getarg(2):getarg(2)+"'s Cry: Huh? Who's doing bad things to my tree?!"),bc_map,"0xccffcc"; //FW_NORMAL 12 0 0
@@ -461,7 +461,7 @@ OnMyMobDead:
 
 1@mist,73,290,0	script	Mysterious Flower#1	CLEAR_NPC,{
 	specialeffect EF_LEVEL99_4;
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	getitem Mysterious_Seed,1;
 	end;
 }

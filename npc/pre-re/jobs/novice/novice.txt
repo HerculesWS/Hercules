@@ -2661,7 +2661,7 @@ new_1-3,95,30,4	script	Trainer#nv1::NovHoffman	4_M_02,{
 		mes "I see, then let me guide";
 		mes "you to a training ground that has stronger monsters. May God be with you...";
 		next;
-		if (strnpcinfo(2) == "nv1") {
+		if (strnpcinfo(NPC_HIDDENNAME) == "nv1") {
 			if (rand(2)) {
 				warp "new_2-3",96,21;
 			}
@@ -2681,7 +2681,7 @@ new_1-3,95,30,4	script	Trainer#nv1::NovHoffman	4_M_02,{
 		mes "be careful, it can get";
 		mes "pretty difficult...";
 		next;
-		if (strnpcinfo(2) == "nv1" || strnpcinfo(2) == "nv2" || strnpcinfo(2) == "nv3") {
+		if (strnpcinfo(NPC_HIDDENNAME) == "nv1" || strnpcinfo(NPC_HIDDENNAME) == "nv2" || strnpcinfo(NPC_HIDDENNAME) == "nv3") {
 			if (rand(2)) {
 				warp "new_4-3",96,21;
 			}

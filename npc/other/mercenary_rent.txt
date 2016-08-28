@@ -39,7 +39,7 @@
 	setarray .@name$, 	"Spear", 			"Sword", 			"Bow";
 	setarray .@faith$, 	"SPEAR_MERC_GUILD",	"SWORD_MERC_GUILD",	"ARCH_MERC_GUILD";
 	setarray .@item, 	12182,				12172,				12162;
-	.@npc$ = strnpcinfo(2);
+	.@npc$ = strnpcinfo(NPC_HIDDENNAME);
 	.@size = getarraysize(.@name$);
 	for (.@i = 0; .@i < .@size; ++.@i)
 		if (.@npc$ == .@name$[.@i]) .@type = .@i;

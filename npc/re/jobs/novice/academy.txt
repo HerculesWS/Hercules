@@ -776,7 +776,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 							mes "<NAVI>[the Academy building]<INFO>iz_ac01,100,39</INFO></NAVI>.";
 							mes "Anybody can enroll, so take advantage of it.";
 							next;
-							emotion e_gasp, 0, "Information Staff#"+strnpcinfo(2);
+							emotion e_gasp, 0, "Information Staff#"+strnpcinfo(NPC_HIDDENNAME);
 							mes "[Information Staff]";
 							mes "Sorry to interrupt.";
 							mes "But ^4d4dff if you need location info, please ask me.^000000";
@@ -798,7 +798,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 							mes "If there are more adventurers like you, the future will be brighter.";
 							mes "Hahahaha.";
 							next;
-							emotion e_gasp, 0, "Information Staff#"+strnpcinfo(2);
+							emotion e_gasp, 0, "Information Staff#"+strnpcinfo(NPC_HIDDENNAME);
 							mes "[Information Staff]";
 							mes "Sorry to interrupt.";
 							mes "But ^4d4dff if you need location info, please ask me.^000000";
@@ -817,7 +817,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 							mes "<NAVI>[the academy building]<INFO>iz_ac01,100,39</INFO></NAVI>.";
 							mes "What is well, is well- isn't it?";
 							next;
-							emotion e_gasp, 0, "Information Staff#"+strnpcinfo(2);
+							emotion e_gasp, 0, "Information Staff#"+strnpcinfo(NPC_HIDDENNAME);
 							mes "[Information Staff]";
 							mes "You are correct.";
 							mes "Preperation is the key.";
@@ -852,7 +852,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 						mes "<NAVI>[the Academy building]<INFO>iz_ac01,100,39</INFO></NAVI>.";
 						mes "Anybody can enroll, so take advantage of it.";
 						next;
-						emotion e_gasp, 0, "Information Staff#"+strnpcinfo(2);
+						emotion e_gasp, 0, "Information Staff#"+strnpcinfo(NPC_HIDDENNAME);
 						mes "[Information Staff]";
 						mes "Sorry to interrupt.";
 						mes "But ^4d4dff if you need location info, please ask me.^000000";
@@ -874,7 +874,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 						mes "If there are more adventurers like you, the future will be brighter.";
 						mes "Hahahaha.";
 						next;
-						emotion e_gasp, 0, "Information Staff#"+strnpcinfo(2);
+						emotion e_gasp, 0, "Information Staff#"+strnpcinfo(NPC_HIDDENNAME);
 						mes "[Information Staff]";
 						mes "Sorry to interrupt.";
 						mes "But ^4d4dff if you need location info, please ask me.^000000";
@@ -893,7 +893,7 @@ izlude,122,207,3	script	Criatura Academy Staff#0	4_M_KHKYEL,3,3,{
 						mes "<NAVI>[the academy building]<INFO>iz_ac01,100,39</INFO></NAVI>.";
 						mes "What is well, is well- isn't it?";
 						next;
-						emotion e_gasp, 0, "Information Staff#"+strnpcinfo(2);
+						emotion e_gasp, 0, "Information Staff#"+strnpcinfo(NPC_HIDDENNAME);
 						mes "[Information Staff]";
 						mes "You are correct.";
 						mes "Preperation is the key.";
@@ -2108,19 +2108,19 @@ izlude,141,251,0	script	Cultivated Red Plant#0	RED_PLANT,3,3,{
 
 	OnTouch:
 		if (questprogress(7478) == 1 && !questprogress(7479))
-			donpcevent "Cultivated Red Plant#"+strnpcinfo(2)+"::OnDisable";
+			donpcevent "Cultivated Red Plant#"+strnpcinfo(NPC_HIDDENNAME)+"::OnDisable";
 		end;
 
 	OnDisable:
 		specialeffect EF_STEAL;
-		disablenpc "Cultivated Red Plant#"+strnpcinfo(2);
+		disablenpc "Cultivated Red Plant#"+strnpcinfo(NPC_HIDDENNAME);
 		emotion e_gasp, 1;
-		emotion e_heh, 0, "Academy Student#"+strnpcinfo(2);
+		emotion e_heh, 0, "Academy Student#"+strnpcinfo(NPC_HIDDENNAME);
 		initnpctimer;
 		end;
 
 	OnTimer30000:
-		enablenpc "Cultivated Red Plant#"+strnpcinfo(2);
+		enablenpc "Cultivated Red Plant#"+strnpcinfo(NPC_HIDDENNAME);
 		stopnpctimer;
 		end;
 }
@@ -2138,8 +2138,8 @@ izlude,140,249,7	script	Academy Student#0	4_M_NOV_RUMIN,{
 		close;
 	}
 	if (questprogress(7478) == 1 && !questprogress(7479)) {
-		specialeffect EF_STEAL, AREA, "Cultivated Red Plant#"+strnpcinfo(2);
-		donpcevent "Cultivated Red Plant#"+strnpcinfo(2)+"::OnDisable";
+		specialeffect EF_STEAL, AREA, "Cultivated Red Plant#"+strnpcinfo(NPC_HIDDENNAME);
+		donpcevent "Cultivated Red Plant#"+strnpcinfo(NPC_HIDDENNAME)+"::OnDisable";
 		emotion e_gasp, 1;
 		emotion e_heh;
 		mes "[Lumin]";
@@ -2200,7 +2200,7 @@ izlude,140,249,7	script	Academy Student#0	4_M_NOV_RUMIN,{
 		next;
 		mes "[Lumin]";
 		mes "Ah... see it's growing back.";
-		enablenpc "Cultivated Red Plant#"+strnpcinfo(2);
+		enablenpc "Cultivated Red Plant#"+strnpcinfo(NPC_HIDDENNAME);
 		close2;
 	} else {
 		if (Class == Job_Novice) {
@@ -3738,11 +3738,11 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 			mes "[Dacquoise]";
 			mes "I am Dacquoise, the pupil of the legendary chef of Rune Midgard, ^0000cdCharles Orleans^000000.";
 			next;
-			emotion e_no1, 0, "Eclaire#"+strnpcinfo(2);
+			emotion e_no1, 0, "Eclaire#"+strnpcinfo(NPC_HIDDENNAME);
 			mes "[Eclaire]";
 			mes "And we are also club members of Sir Orleans' ^0000cdfan club- Loverleans^000000.";
 			next;
-			emotion e_lv,"Mille Feuille#"+strnpcinfo(2);
+			emotion e_lv,"Mille Feuille#"+strnpcinfo(NPC_HIDDENNAME);
 			mes "[Mille Feuille]";
 			mes "Orlean belongs to all of us!";
 			next;
@@ -3765,7 +3765,7 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 			mes "[Eclaire]";
 			mes "You, do you want to know more about cooking?";
 			next;
-			emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(2);
+			emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(NPC_HIDDENNAME);
 			mes "[Mille Feuille]";
 			mes "Will you exeprience the various spectrums of cooking?";
 			next;
@@ -3784,11 +3784,11 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 			mes "[Dacquoise]";
 			mes "Ok, we will be kind guides to the journey of cooking!!";
 			next;
-			emotion e_no1, 0, "Eclaire#"+strnpcinfo(2);
+			emotion e_no1, 0, "Eclaire#"+strnpcinfo(NPC_HIDDENNAME);
 			mes "[Eclaire]";
 			mes "It's ok with me, asking me everthing you want to know.";
 			next;
-			emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(2);
+			emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(NPC_HIDDENNAME);
 			mes "[Mille Feuille]";
 			mes "Kindness is our spice~";
 			next;
@@ -3848,18 +3848,18 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 				mes "[Dacquoise]";
 				mes "Right, cooking needs some preparation. This can also be divided into two catagories.";
 				next;
-				emotion e_gasp,"Dacquoise#"+strnpcinfo(2);
+				emotion e_gasp,"Dacquoise#"+strnpcinfo(NPC_HIDDENNAME);
 				break;
 			case 3:
 				emotion e_an;
 				mes "[Dacquoise]";
 				mes "What is this? What a waste of time!";
 				next;
-				emotion e_ag, 0, "Eclaire#"+strnpcinfo(2);
+				emotion e_ag, 0, "Eclaire#"+strnpcinfo(NPC_HIDDENNAME);
 				mes "[Eclaire]";
 				mes "I thought we were going to get more members!";
 				next;
-				emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(2);
+				emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(NPC_HIDDENNAME);
 				mes "[Mille Feuille]";
 				mes "Never show up again!!";
 				close;
@@ -3924,11 +3924,11 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 					next;
 					mes "[Eclaire]";
 					mes "You have insulted us!";
-					emotion e_ag, 0, "Eclaire#"+strnpcinfo(2);
+					emotion e_ag, 0, "Eclaire#"+strnpcinfo(NPC_HIDDENNAME);
 					next;
 					mes "[Mille Feuille]";
 					mes "Come back again, if you want to learn later~ I guess...";
-					emotion e_dots, 0, "Mille Feuille#"+strnpcinfo(2);
+					emotion e_dots, 0, "Mille Feuille#"+strnpcinfo(NPC_HIDDENNAME);
 					close2;
 					if(questprogress(14154) == 1)
 						erasequest 14154;
@@ -3951,12 +3951,12 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 					next;
 					mes "[Eclaire]";
 					mes "Go hunting after eating this. You will feel your power enhanced.";
-					emotion e_no1, 0, "Eclaire#"+strnpcinfo(2);
+					emotion e_no1, 0, "Eclaire#"+strnpcinfo(NPC_HIDDENNAME);
 					next;
 					mes "[Mille Feuille]";
 					mes "If you really want to cook, go and see ^0000ffSir. Charles Orleans at the basement of Prontera castle^000000!!";
 					mes "Kya... Sir Orleans!!";
-					emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(2);
+					emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(NPC_HIDDENNAME);
 					close2;
 					delitem Clover, 1; // Clover
 					delitem Green_Herb, 1; // Green_Herb
@@ -3973,11 +3973,11 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 					next;
 					mes "[Eclaire]";
 					mes "Try this. It will make you run like you are a flying bee.";
-					emotion e_no1, 0, "Eclaire#"+strnpcinfo(2);
+					emotion e_no1, 0, "Eclaire#"+strnpcinfo(NPC_HIDDENNAME);
 					next;
 					mes "[Mille Feuille]";
 					mes "If you really want to cook, go and see ^0000ffSir. Charles Orleans at the basement of Prontera castle^000000!! You must be attracted by him!!";
-					emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(2);
+					emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(NPC_HIDDENNAME);
 					close2;
 					delitem Apple, 1; // Apple
 					delitem Carrot, 2; // Carrot
@@ -3993,11 +3993,11 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 					next;
 					mes "[Eclaire]";
 					mes "Can you feel unknown power coursing through your veins? You're eating it!";
-					emotion e_no1, 0, "Eclaire#"+strnpcinfo(2);
+					emotion e_no1, 0, "Eclaire#"+strnpcinfo(NPC_HIDDENNAME);
 					next;
 					mes "[Mille Feuille]";
 					mes "If you are really curious about the cooking, go seek Sir. Charles Orleans at the basement of Prontera Castle.";
-					emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(2);
+					emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(NPC_HIDDENNAME);
 					close2;
 					delitem Jellopy, 1; // Jellopy
 					delitem Fluff, 1; // Fluff
@@ -4015,12 +4015,12 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 					mes "[Eclaire]";
 					mes "If you eat this. You will never miss your target!";
 					mes "In fact, never miss the target for level 1!";
-					emotion e_no1, 0, "Eclaire#"+strnpcinfo(2);
+					emotion e_no1, 0, "Eclaire#"+strnpcinfo(NPC_HIDDENNAME);
 					next;
 					mes "[Mille Feuille]";
 					mes "Go and see Sir. Charles Orleans at the basement of Prontera castle!!";
 					mes "You can learn real cooking from him!";
-					emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(2);
+					emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(NPC_HIDDENNAME);
 					close2;
 					delitem Apple, 1; // Apple
 					delitem Clover, 1; // Clover
@@ -4056,14 +4056,14 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 				mes "[Dacquoise]";
 				mes "Why are you saying you will make them?";
 				next;
-				emotion e_hmm, 0, "Mille Feuille#"+strnpcinfo(2);
+				emotion e_hmm, 0, "Mille Feuille#"+strnpcinfo(NPC_HIDDENNAME);
 				mes "[Mille Feuille]";
 				mes "Ah, Why not?";
 				next;
 				mes "[Dacquoise]";
 				mes "I am the leader of this flame cooking trio chefs!";
 				next;
-				emotion e_omg, 0, "Eclaire#"+strnpcinfo(2);
+				emotion e_omg, 0, "Eclaire#"+strnpcinfo(NPC_HIDDENNAME);
 				mes "[Eclaire]";
 				mes "What?!! When was that decided?";
 				next;
@@ -4071,11 +4071,11 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 				mes "[Dacquoise]";
 				mes "Is there anyone who is older than me?";
 				next;
-				emotion e_omg, 0, "Eclaire#"+strnpcinfo(2);
+				emotion e_omg, 0, "Eclaire#"+strnpcinfo(NPC_HIDDENNAME);
 				mes "[Eclaire]";
 				mes "Age! There is nothing I can do with it.";
 				next;
-				emotion e_ok,"Mille Feuille#"+strnpcinfo(2);
+				emotion e_ok,"Mille Feuille#"+strnpcinfo(NPC_HIDDENNAME);
 				mes "[Mille Feuille]";
 				mes "Just because you're one year older, you want to automatically be rejected. Anyone have an objection?";
 				next;
@@ -4202,11 +4202,11 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 			mes "[Dacquoise]";
 			mes "I am Dacquoise, the pupil of the legendary chef of Rune Midgard, ^0000cdCharles Orleans^000000.";
 			next;
-			emotion e_no1, 0, "Eclaire#"+strnpcinfo(2);
+			emotion e_no1, 0, "Eclaire#"+strnpcinfo(NPC_HIDDENNAME);
 			mes "[Eclaire]";
 			mes "Steaks not only increase stats but also recover both your HP and SP.";
 			next;
-			emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(2);
+			emotion e_lv, 0, "Mille Feuille#"+strnpcinfo(NPC_HIDDENNAME);
 			mes "[Mille Feuille]";
 			mes "If you really want to cook, go and see^0000cd Sir. Charles Orleans at the basement of Prontera castle^000000!! You must be attracted by him!!";
 			close;
@@ -4474,7 +4474,7 @@ iz_ac01,59,83,3	script	Battle Instructor#08	4_M_NOV_HUNT,{
 					mes "Ok, I'll send you to the West field of Izlude.";
 					mes "Be sure you know how to get back.";
 					close2;
-					warp "prt_fild"+strnpcinfo(2), 344, 213;
+					warp "prt_fild"+strnpcinfo(NPC_HIDDENNAME), 344, 213;
 					end;
 				case 3:
 					mes "[Battle Instructor Subino]";
@@ -5484,15 +5484,15 @@ izlude,95,146,5	script	Mom#iz	4_F_CAVE1,{
 	mes "[Mom]";
 	mes "^0000cd[Come to me, honey~]^000000";
 	next;
-	enablenpc "Etinifni#"+strnpcinfo(2);
-	specialeffect EF_PORTAL, AREA, "Etinifni#"+strnpcinfo(2);
+	enablenpc "Etinifni#"+strnpcinfo(NPC_HIDDENNAME);
+	specialeffect EF_PORTAL, AREA, "Etinifni#"+strnpcinfo(NPC_HIDDENNAME);
 	mes "[Etinifni]";
 	mes "What's up? Where am I?";
 	next;
 	mes "[Mom]";
 	mes "Here!";
 	next;
-	emotion e_ag, 0, "Etinifni#"+strnpcinfo(2);
+	emotion e_ag, 0, "Etinifni#"+strnpcinfo(NPC_HIDDENNAME);
 	mes "[Etinifni]";
 	mes "Ah... Again!! I have been out hunting Orcs.";
 	next;
@@ -5505,12 +5505,12 @@ izlude,95,146,5	script	Mom#iz	4_F_CAVE1,{
 	mes "[Mom]";
 	mes "What? This moron?!";
 	next;
-	emotion e_sigh, 0, "Etinifni#"+strnpcinfo(2);
+	emotion e_sigh, 0, "Etinifni#"+strnpcinfo(NPC_HIDDENNAME);
 	mes "[Etinifni]";
 	mes "OK. I will do it.";
 	next;
-	disablenpc "Etinifni#"+strnpcinfo(2);
-	emotion e_sob, 0, "Dad#"+strnpcinfo(2);
+	disablenpc "Etinifni#"+strnpcinfo(NPC_HIDDENNAME);
+	emotion e_sob, 0, "Dad#"+strnpcinfo(NPC_HIDDENNAME);
 	mes "[Dad]";
 	mes "I am sorry... Dad has no power over your mom.";
 	close;
@@ -5549,7 +5549,7 @@ izlude,97,144,1	script	Etinifni#iz	4_M_DEWBOY,{
 	close;
 
 	OnInit:
-		disablenpc "Etinifni#"+strnpcinfo(2);
+		disablenpc "Etinifni#"+strnpcinfo(NPC_HIDDENNAME);
 		end;
 }
 
@@ -5571,8 +5571,8 @@ izlude,99,138,3	script	Romantic Male#iz	4_M_SITDOWN,{
 	mes "[Romantic Male]";
 	mes "Are you lifting up our good old memories renting my wedding dress and your tuxedo!! It will strenghthen our relationship, won't it?";
 	next;
-	specialeffect EF_HEARTCASTING, AREA, "Romantic Female#"+strnpcinfo(2);
-	emotion e_kis, 0, "Romantic Female#"+strnpcinfo(2);
+	specialeffect EF_HEARTCASTING, AREA, "Romantic Female#"+strnpcinfo(NPC_HIDDENNAME);
+	emotion e_kis, 0, "Romantic Female#"+strnpcinfo(NPC_HIDDENNAME);
 	mes "[Romantic Male]";
 	mes "Honey~~ I love you!! Sweetheart~";
 	next;
@@ -5592,7 +5592,7 @@ izlude,97,138,5	script	Romantic Female#iz	4_F_SITDOWN,{
 	mes "[Romantic Female]";
 	mes "Shout like this when I miss you, honey!!";
 	next;
-	emotion e_lv, 0, "Romantic Female#"+strnpcinfo(2);
+	emotion e_lv, 0, "Romantic Female#"+strnpcinfo(NPC_HIDDENNAME);
 	mes "[Romantic Female]";
 	mes "^0000cd[I miss you.]^000000";
 	next;
@@ -5605,20 +5605,20 @@ izlude,97,138,5	script	Romantic Female#iz	4_F_SITDOWN,{
 	mes "[Romantic Female]";
 	mes "You are tired of sitting, aren't you?";
 	next;
-	specialeffect EF_HEARTCASTING, AREA, "Romantic Female#"+strnpcinfo(2);
-	emotion e_kis, 0, "Romantic Female#"+strnpcinfo(2);
+	specialeffect EF_HEARTCASTING, AREA, "Romantic Female#"+strnpcinfo(NPC_HIDDENNAME);
+	emotion e_kis, 0, "Romantic Female#"+strnpcinfo(NPC_HIDDENNAME);
 	mes "[Romantic Female]";
 	mes "My sweetheart!!! I love you!!!";
 	next;
 	mes "[Romantic Male]";
 	mes "Yes, thank you for sharing your SP! You are also tired, aren't you?";
 	next;
-	specialeffect EF_HEARTCASTING, AREA, "Romantic Male#"+strnpcinfo(2);
-	emotion e_kis2, 0, "Romantic Male#"+strnpcinfo(2);
+	specialeffect EF_HEARTCASTING, AREA, "Romantic Male#"+strnpcinfo(NPC_HIDDENNAME);
+	emotion e_kis2, 0, "Romantic Male#"+strnpcinfo(NPC_HIDDENNAME);
 	mes "[Romantic Male]";
 	mes "My sweetheart!! I love you!!!";
 	next;
-	emotion e_lv, 0, "Romantic Female#"+strnpcinfo(2);
+	emotion e_lv, 0, "Romantic Female#"+strnpcinfo(NPC_HIDDENNAME);
 	mes "[Romantic Female]";
 	mes "Kia~ You are Coolest!!!";
 	close;
@@ -6151,7 +6151,7 @@ iz_ac01,159,32,3	script	Hungry Trainee#ac	4_M_SIT_NOVICE,{
 	mes "Wonder when my order will get taken... it's already been an hour...";
 	mes "Look at the helpers lingering on the side...";
 	next;
-	emotion e_an, 0, "Scholarship Trainee#"+strnpcinfo(2);
+	emotion e_an, 0, "Scholarship Trainee#"+strnpcinfo(NPC_HIDDENNAME);
 	mes "[Scholarship Trainee]";
 	mes "Ugh... this guy...";
 	mes "I already told you eight hundred times! It's buffet style! Ah!";
@@ -11750,7 +11750,7 @@ iz_ac02,62,139,3	script	Lumin#ac	4_M_NOV_RUMIN,{
 			mes "Lumin changing clothes piece by piece.";
 			specialeffect2 EF_SPHERE;
 			specialeffect2 EF_SPHERE;
-			classchange "Lumin#"+strnpcinfo(2), 4_M_THIEF_RUMIN;
+			classchange "Lumin#"+strnpcinfo(NPC_HIDDENNAME), 4_M_THIEF_RUMIN;
 			next;
 			cutin "thf_lumin01.bmp", 2;
 			mes "[Lumin]";
@@ -11764,7 +11764,7 @@ iz_ac02,62,139,3	script	Lumin#ac	4_M_NOV_RUMIN,{
 			close2;
 			specialeffect2 EF_SPHERE;
 			specialeffect2 EF_SPHERE;
-			classchange "Lumin#"+strnpcinfo(2), 4_M_NOV_RUMIN;
+			classchange "Lumin#"+strnpcinfo(NPC_HIDDENNAME), 4_M_NOV_RUMIN;
 			cutin "", 255;
 			end;
 		}
@@ -11786,25 +11786,25 @@ iz_ac02,1,1,0	script	#nbacStone01	CLEAR_NPC,{
 	end;
 
 	OnInit:
-		donpcevent "#"+strnpcinfo(2)+"::OnSpawn";
+		donpcevent "#"+strnpcinfo(NPC_HIDDENNAME)+"::OnSpawn";
 		end;
 
 	OnReset:
-		killmonster strnpcinfo(4),"#"+strnpcinfo(2)+"::OnMyMobDead";
-		donpcevent "#"+strnpcinfo(2)+"::OnSpawn";
+		killmonster strnpcinfo(NPC_MAP),"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
+		donpcevent "#"+strnpcinfo(NPC_HIDDENNAME)+"::OnSpawn";
 		end;
 
 	OnMyMobDead:
-		.@dead_num = mobcount(""+strnpcinfo(4)+"", "#"+strnpcinfo(2)+"::OnMyMobDead");
+		.@dead_num = mobcount(""+strnpcinfo(NPC_MAP)+"", "#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead");
 		if (.@dead_num < 1)
-			donpcevent "#"+strnpcinfo(2)+"::OnSpawn";
+			donpcevent "#"+strnpcinfo(NPC_HIDDENNAME)+"::OnSpawn";
 		end;
 
 	OnSpawn:
-		monster strnpcinfo(4),59,143,"Poring",R_PORING,1,"#"+strnpcinfo(2)+"::OnMyMobDead";
-		monster strnpcinfo(4),60,143,"Poring",R_PORING,1,"#"+strnpcinfo(2)+"::OnMyMobDead";
-		monster strnpcinfo(4),61,143,"Poring",R_PORING,1,"#"+strnpcinfo(2)+"::OnMyMobDead";
-		monster strnpcinfo(4),62,143,"Poring",R_PORING,1,"#"+strnpcinfo(2)+"::OnMyMobDead";
+		monster strnpcinfo(NPC_MAP),59,143,"Poring",R_PORING,1,"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
+		monster strnpcinfo(NPC_MAP),60,143,"Poring",R_PORING,1,"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
+		monster strnpcinfo(NPC_MAP),61,143,"Poring",R_PORING,1,"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
+		monster strnpcinfo(NPC_MAP),62,143,"Poring",R_PORING,1,"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
 		end;
 }
 
@@ -11818,25 +11818,25 @@ iz_ac02,1,1,0	script	#nbacStone02	CLEAR_NPC,{
 	end;
 
 	OnInit:
-		donpcevent "#"+strnpcinfo(2)+"::OnSpawn";
+		donpcevent "#"+strnpcinfo(NPC_HIDDENNAME)+"::OnSpawn";
 		end;
 
 	OnReset:
-		killmonster strnpcinfo(4),"#"+strnpcinfo(2)+"::OnMyMobDead";
-		donpcevent "#"+strnpcinfo(2)+"::OnSpawn";
+		killmonster strnpcinfo(NPC_MAP),"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
+		donpcevent "#"+strnpcinfo(NPC_HIDDENNAME)+"::OnSpawn";
 		end;
 
 	OnMyMobDead:
-		.@dead_num = mobcount(""+strnpcinfo(4)+"", "#"+strnpcinfo(2)+"::OnMyMobDead");
+		.@dead_num = mobcount(""+strnpcinfo(NPC_MAP)+"", "#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead");
 		if (.@dead_num < 1)
-			donpcevent "#"+strnpcinfo(2)+"::OnSpawn";
+			donpcevent "#"+strnpcinfo(NPC_HIDDENNAME)+"::OnSpawn";
 		end;
 
 	OnSpawn:
-		monster strnpcinfo(4),59,137,"Poring",R_PORING,1,"#"+strnpcinfo(2)+"::OnMyMobDead";
-		monster strnpcinfo(4),60,137,"Poring",R_PORING,1,"#"+strnpcinfo(2)+"::OnMyMobDead";
-		monster strnpcinfo(4),61,137,"Poring",R_PORING,1,"#"+strnpcinfo(2)+"::OnMyMobDead";
-		monster strnpcinfo(4),62,137,"Poring",R_PORING,1,"#"+strnpcinfo(2)+"::OnMyMobDead";
+		monster strnpcinfo(NPC_MAP),59,137,"Poring",R_PORING,1,"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
+		monster strnpcinfo(NPC_MAP),60,137,"Poring",R_PORING,1,"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
+		monster strnpcinfo(NPC_MAP),61,137,"Poring",R_PORING,1,"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
+		monster strnpcinfo(NPC_MAP),62,137,"Poring",R_PORING,1,"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
 		end;
 }
 
@@ -11850,25 +11850,25 @@ iz_ac02,1,1,0	script	#nbacStone03	CLEAR_NPC,{
 	end;
 
 	OnInit:
-		donpcevent "#"+strnpcinfo(2)+"::OnSpawn";
+		donpcevent "#"+strnpcinfo(NPC_HIDDENNAME)+"::OnSpawn";
 		end;
 
 	OnReset:
-		killmonster strnpcinfo(4),"#"+strnpcinfo(2)+"::OnMyMobDead";
-		donpcevent "#"+strnpcinfo(2)+"::OnSpawn";
+		killmonster strnpcinfo(NPC_MAP),"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
+		donpcevent "#"+strnpcinfo(NPC_HIDDENNAME)+"::OnSpawn";
 		end;
 
 	OnMyMobDead:
-		.@dead_num = mobcount(""+strnpcinfo(4)+"", "#"+strnpcinfo(2)+"::OnMyMobDead");
+		.@dead_num = mobcount(""+strnpcinfo(NPC_MAP)+"", "#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead");
 		if (.@dead_num < 1)
-			donpcevent "#"+strnpcinfo(2)+"::OnSpawn";
+			donpcevent "#"+strnpcinfo(NPC_HIDDENNAME)+"::OnSpawn";
 		end;
 
 	OnSpawn:
-		monster strnpcinfo(4),59,131,"Poring",R_PORING,1,"#"+strnpcinfo(2)+"::OnMyMobDead";
-		monster strnpcinfo(4),60,131,"Poring",R_PORING,1,"#"+strnpcinfo(2)+"::OnMyMobDead";
-		monster strnpcinfo(4),61,131,"Poring",R_PORING,1,"#"+strnpcinfo(2)+"::OnMyMobDead";
-		monster strnpcinfo(4),62,131,"Poring",R_PORING,1,"#"+strnpcinfo(2)+"::OnMyMobDead";
+		monster strnpcinfo(NPC_MAP),59,131,"Poring",R_PORING,1,"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
+		monster strnpcinfo(NPC_MAP),60,131,"Poring",R_PORING,1,"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
+		monster strnpcinfo(NPC_MAP),61,131,"Poring",R_PORING,1,"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
+		monster strnpcinfo(NPC_MAP),62,131,"Poring",R_PORING,1,"#"+strnpcinfo(NPC_HIDDENNAME)+"::OnMyMobDead";
 		end;
 }
 
@@ -12008,7 +12008,7 @@ iz_ac02,156,169,5	script	Acolyte Leader Alice#2	4_F_ACOLYTE,{
 				mes "[Alice Yisha]";
 				mes "Ask ^ff0000if you want to experience skills of an Acolyte, ask the sister next to you^000000.";
 				mes "Now I am reading an introductory skill.";
-				emotion e_omg, 0, "A Nun#"+strnpcinfo(2);
+				emotion e_omg, 0, "A Nun#"+strnpcinfo(NPC_HIDDENNAME);
 				close2;
 				cutin "", 255;
 				end;
@@ -14080,15 +14080,15 @@ new_1-1,53,114,3	script	Training Instructor#1a	4_F_03,{
 	mes "I will send you to Izlude.";
 	close2;
 	erasequest 7117, 7127;
-	if (strnpcinfo(4) == "new_1-1" || strnpcinfo(4) == "new_1-2" || strnpcinfo(4) == "new_1-3" || strnpcinfo(4) == "new_1-4") {
+	if (strnpcinfo(NPC_MAP) == "new_1-1" || strnpcinfo(NPC_MAP) == "new_1-2" || strnpcinfo(NPC_MAP) == "new_1-3" || strnpcinfo(NPC_MAP) == "new_1-4") {
 		.@warp$ = "iz_int";
-	} else if (strnpcinfo(4) == "new_2-1" || strnpcinfo(4) == "new_2-2" || strnpcinfo(4) == "new_2-3" || strnpcinfo(4) == "new_2-4") {
+	} else if (strnpcinfo(NPC_MAP) == "new_2-1" || strnpcinfo(NPC_MAP) == "new_2-2" || strnpcinfo(NPC_MAP) == "new_2-3" || strnpcinfo(NPC_MAP) == "new_2-4") {
 		.@warp$ = "iz_int01";
-	} else if (strnpcinfo(4) == "new_3-1" || strnpcinfo(4) == "new_3-2" || strnpcinfo(4) == "new_3-3" || strnpcinfo(4) == "new_3-4") {
+	} else if (strnpcinfo(NPC_MAP) == "new_3-1" || strnpcinfo(NPC_MAP) == "new_3-2" || strnpcinfo(NPC_MAP) == "new_3-3" || strnpcinfo(NPC_MAP) == "new_3-4") {
 		.@warp$ = "iz_int02";
-	} else if (strnpcinfo(4) == "new_4-1" || strnpcinfo(4) == "new_4-2" || strnpcinfo(4) == "new_4-3" || strnpcinfo(4) == "new_4-4") {
+	} else if (strnpcinfo(NPC_MAP) == "new_4-1" || strnpcinfo(NPC_MAP) == "new_4-2" || strnpcinfo(NPC_MAP) == "new_4-3" || strnpcinfo(NPC_MAP) == "new_4-4") {
 		.@warp$ = "iz_int03";
-	} else if (strnpcinfo(4) == "new_5-1" || strnpcinfo(4) == "new_5-2" || strnpcinfo(4) == "new_5-3" || strnpcinfo(4) == "new_5-4") {
+	} else if (strnpcinfo(NPC_MAP) == "new_5-1" || strnpcinfo(NPC_MAP) == "new_5-2" || strnpcinfo(NPC_MAP) == "new_5-3" || strnpcinfo(NPC_MAP) == "new_5-4") {
 		.@warp$ = "iz_int04";
 	}
 	savepoint .@warp$, 98, 88;

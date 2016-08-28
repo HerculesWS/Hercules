@@ -1699,10 +1699,10 @@ tha_t08,90,153,0	script	Shining Crystal#tt_r1	CLEAR_NPC,{
 
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 tha_t08,90,62,0	duplicate(Shining Crystal#tt_r1)	Shining Crystal#tt_r2	CLEAR_NPC
@@ -1733,10 +1733,10 @@ tha_t08,49,153,0	script	Shining Crystal#tt_y1	CLEAR_NPC,{
 
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 tha_t08,90,150,0	duplicate(Shining Crystal#tt_y1)	Shining Crystal#tt_y2	CLEAR_NPC
@@ -1767,10 +1767,10 @@ tha_t08,49,65,0	script	Shining Crystal#tt_b1	CLEAR_NPC,{
 
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 tha_t08,49,150,0	duplicate(Shining Crystal#tt_b1)	Shining Crystal#tt_b2	CLEAR_NPC
@@ -1801,10 +1801,10 @@ tha_t08,90,65,0	script	Shining Crystal#tt_g1	CLEAR_NPC,{
 
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 tha_t08,49,62,0	duplicate(Shining Crystal#tt_g1)	Shining Crystal#tt_g2	CLEAR_NPC
@@ -2102,11 +2102,11 @@ OnTimer3000:
 thana_boss,217,167,3	script	Memory Seal#tt1	G_THA_MAERO,3,3,{
 	end;
 OnEnable:
-	hideoffnpc strnpcinfo(0);
+	hideoffnpc strnpcinfo(NPC_NAME);
 	.hide = 0;
 	end;
 OnDisable:
-	hideonnpc strnpcinfo(0);
+	hideonnpc strnpcinfo(NPC_NAME);
 	.hide = 0;
 	end;
 OnTouch:
@@ -2153,11 +2153,11 @@ OnTouch:
 		mes "into the crest, causing";
 		mes "its glow to intensify.^000000";
 		close2;
-		hideonnpc strnpcinfo(0);
+		hideonnpc strnpcinfo(NPC_NAME);
 		.hide |= (1<<.@seal);
 		delitem .@i[0],1;
 		specialeffect .@i[4];
-		monster "thana_boss",.@i[2],.@i[3],.@j$,.@i[1],1,strnpcinfo(0)+"::OnMyMobDead";
+		monster "thana_boss",.@i[2],.@i[3],.@j$,.@i[1],1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 		switch($@thana_summon2) {
 			case 0: .@str$ = "... who... released... the... Memory... of... "+.@j$+"...?"; break;
 			case 1: .@str$ = "... why... did you... release... the... Memory... of... "+.@j$+"...?"; break;
