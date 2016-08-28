@@ -3563,6 +3563,14 @@
 - `PC_GUILD`: 2
 - `PC_MAP`: 3
 
+### strnpcinfo
+
+- `NPC_NAME`: 0
+- `NPC_NAME_VISIBLE`: 1
+- `NPC_NAME_HIDDEN`: 2
+- `NPC_NAME_UNIQUE`: 3
+- `NPC_MAP`: 4
+
 ### sc_start
 
 - `SCFLAG_NONE`: 0
