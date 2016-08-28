@@ -35,7 +35,7 @@
 //=========================================================================
 
 ayothaya,203,169,4	script	Ayothaya Guide Noi#01ay	4_F_THAIGIRL,{
-	if (strnpcinfo(0) == "Ayothaya Guide Noi#01ay")
+	if (strnpcinfo(NPC_NAME) == "Ayothaya Guide Noi#01ay")
 		.@n$ = "[Noi]";
 	else
 		.@n$ = "[Noa]";

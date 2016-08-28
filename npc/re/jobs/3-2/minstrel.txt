@@ -828,18 +828,18 @@ OnTimer300000:
 yuno,146,168,0	script	Karian#cmd2	4_M_BARD,{
 	end;
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 OnTimer100000:
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	stopnpctimer;
 	end;
 }

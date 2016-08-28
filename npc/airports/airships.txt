@@ -39,11 +39,11 @@ airplane,243,73,0	script	#AirshipWarp-1	WARPNPC,1,1,{
 OnInit:
 OnHide:
 	specialeffect EF_BASH;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnUnhide:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	specialeffect EF_SUMMONSLAVE;
 	end;
 
@@ -680,11 +680,11 @@ OnTouch:
 OnInit:
 OnHide:
 	specialeffect EF_BASH;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnUnhide:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	specialeffect EF_SUMMONSLAVE;
 	end;
 }

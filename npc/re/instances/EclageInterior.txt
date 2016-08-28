@@ -156,11 +156,11 @@ ecl_hub01,130,15,0	script	It is closed shut.	CLEAR_NPC,{
 	end;
 
 OnInstanceInit:
-	hideonnpc instance_npcname(strnpcinfo(0));
+	hideonnpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:
-	hideoffnpc instance_npcname(strnpcinfo(0));
+	hideoffnpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 }
 
@@ -175,7 +175,7 @@ OnEnable:
 1@ecl,42,80,5	script	Suspicious Creature#5	MOROCC_2_142,{
 	end;
 OnInstanceInit:
-	hideonnpc instance_npcname(strnpcinfo(0));
+	hideonnpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 }
 
@@ -188,7 +188,7 @@ OnInstanceInit:
 
 OnInstanceInit:
 	.mob_summoned = 0;
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:

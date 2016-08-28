@@ -1669,16 +1669,16 @@ que_lhz,140,231,1	script	Human Guinea pig#01	CHEN,{
 	end;
 
 	OnInit:
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 		end;
 
 	OnEnable:
-		enablenpc strnpcinfo(0);
+		enablenpc strnpcinfo(NPC_NAME);
 		end;
 
 	OnDisable:
 		specialeffect EF_FLASHER;
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 		end;
 }
 
@@ -2004,17 +2004,17 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	OnEnable:
 		.@map$ = instance_mapname("1@lhz");
 		mapannounce .@map$,"[Security System] Security system Activated !! Experimental animals are released. The persons concerned have to evacuate.",bc_map,"0xff9977";
-		areamonster .@map$,35,159,50,169,"Starving Lab animal",MD_DESERT_WOLF,rand(10,15),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+		areamonster .@map$,35,159,50,169,"Starving Lab animal",MD_DESERT_WOLF,rand(10,15),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 		initnpctimer;
 		end;
 
 	OnDisable:
-		killmonster instance_mapname("1@lhz"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+		killmonster instance_mapname("1@lhz"),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 		end;
 
 	OnTimer180000:
 		stopnpctimer;
-		if(mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
+		if(mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
 			donpcevent instance_npcname("Lab1#1_1")+"::OnType_02";
 			mapannounce instance_mapname("1@lhz"),"[Security System] The Lab No.1's security system has been stopped.",bc_map,"0xff9977";
 		} else {
@@ -2023,7 +2023,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 
 	OnMyMobDead:
-		if(mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
+		if(mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
 			donpcevent instance_npcname("Lab1#1_1")+"::OnType_02";
 			mapannounce instance_mapname("1@lhz"),"[Security System] The Lab No.1's security system has been stopped.",bc_map,"0xff9977";
 			stopnpctimer;
@@ -2566,7 +2566,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		progressbar "0xffff00", 20;
 		stopnpctimer;
 		donpcevent instance_npcname("Lab2#2_2")+"::OnDisableValve1";
-		disablenpc instance_npcname(strnpcinfo(0));
+		disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 		end;
 	} else {
 		mes "Let your party leader handle the valve.";
@@ -2574,16 +2574,16 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	}
 
 	OnInstanceInit:
-		disablenpc instance_npcname(strnpcinfo(0));
+		disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 		end;
 
 	OnEnable:
-		enablenpc instance_npcname(strnpcinfo(0));
+		enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 		initnpctimer;
 		end;
 
 	OnTimer3000:
-		specialeffect EF_DRAGONSMOKE,AREA,instance_npcname(strnpcinfo(0));
+		specialeffect EF_DRAGONSMOKE,AREA,instance_npcname(strnpcinfo(NPC_NAME));
 		stopnpctimer;
 		initnpctimer;
 		end;
@@ -2987,86 +2987,86 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 
 OnEnable:
 	.@map$ = instance_mapname("1@lhz");
-	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 	specialeffect EF_SUI_EXPLOSION;
-	if(strnpcinfo(0) == "Seyren Windsor#boss01") {
+	if(strnpcinfo(NPC_NAME) == "Seyren Windsor#boss01") {
 		monster .@map$,129,154,"Load Knight Seyren",B_SEYREN,1,.@label$;
 	}
-	if(strnpcinfo(0) == "Cecile Damon#boss02") {
+	if(strnpcinfo(NPC_NAME) == "Cecile Damon#boss02") {
 		monster .@map$,125,150,"Sniper Cecile",B_SHECIL,1,.@label$;
 	}
-	if(strnpcinfo(0) == "Gertie Wie#boss03") {
+	if(strnpcinfo(NPC_NAME) == "Gertie Wie#boss03") {
 		monster .@map$,121,146,"Stalker Gertie",B_GERTIE,1,.@label$;
 	}
-	if(strnpcinfo(0) == "Eremes Guile#boss04") {
+	if(strnpcinfo(NPC_NAME) == "Eremes Guile#boss04") {
 		monster .@map$,117,142,"Assassin Cross Eremes",B_EREMES,1,.@label$;
 	}
-	if(strnpcinfo(0) == "Trentini#boss05") {
+	if(strnpcinfo(NPC_NAME) == "Trentini#boss05") {
 		monster .@map$,117,125,"Gypsy Trentini",B_TRENTINI,1,.@label$;
 	}
-	if(strnpcinfo(0) == "Chen Liu#boss06") {
+	if(strnpcinfo(NPC_NAME) == "Chen Liu#boss06") {
 		monster .@map$,121,121,"Champion Chen",B_CHEN,1,.@label$;
 	}
-	if(strnpcinfo(0) == "Alphochio Basil#boss07") {
+	if(strnpcinfo(NPC_NAME) == "Alphochio Basil#boss07") {
 		monster .@map$,125,117,"Crown Alphochio",B_ALPHOCCIO,1,.@label$;
 	}
-	if(strnpcinfo(0) == "Flamel Emul#boss08") {
+	if(strnpcinfo(NPC_NAME) == "Flamel Emul#boss08") {
 		monster .@map$,129,113,"Creator Flamel",B_FLAMEL,1,.@label$;
 	}
-	if(strnpcinfo(0) == "Randel Lawrence#boss09") {
+	if(strnpcinfo(NPC_NAME) == "Randel Lawrence#boss09") {
 		monster .@map$,146,113,"Paladin Randel",B_RANDEL,1,.@label$;
 	}
-	if(strnpcinfo(0) == "Celia Alde#boss10") {
+	if(strnpcinfo(NPC_NAME) == "Celia Alde#boss10") {
 		monster .@map$,150,117,"Professor Celia",B_CELIA,1,.@label$;
 	}
-	if(strnpcinfo(0) == "Kathryne Keyron#boss11") {
+	if(strnpcinfo(NPC_NAME) == "Kathryne Keyron#boss11") {
 		monster .@map$,154,121,"High Wizard Kathryne",B_KATRINN,1,.@label$;
 	}
-	if(strnpcinfo(0) == "Margaretha Sorin#boss12") {
+	if(strnpcinfo(NPC_NAME) == "Margaretha Sorin#boss12") {
 		monster .@map$,158,125,"High Priest Margaretha",B_MAGALETA,1,.@label$;
 	}
-	if(strnpcinfo(0) == "Howard Alt-Eisen#boss13") {
+	if(strnpcinfo(NPC_NAME) == "Howard Alt-Eisen#boss13") {
 		monster .@map$,158,142,"White Smith Howard",B_HARWORD,1,.@label$;
 	}
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnDisable:
-	killmonster instance_mapname("1@lhz"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
-	disablenpc instance_npcname(strnpcinfo(0));
+	killmonster instance_mapname("1@lhz"),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 	OnMyMobDead:
-		if (mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
+		if (mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
 			.@map$ = instance_mapname("1@lhz");
-			if(strnpcinfo(0) == "Seyren Windsor#boss01")
+			if(strnpcinfo(NPC_NAME) == "Seyren Windsor#boss01")
 				mapannounce .@map$,"Awww... Where are all my fellows....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Cecile Damon#boss02")
+			else if (strnpcinfo(NPC_NAME) == "Cecile Damon#boss02")
 				mapannounce .@map$,"Any..one, please help.. please.....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Gertie Wie#boss03")
+			else if (strnpcinfo(NPC_NAME) == "Gertie Wie#boss03")
 				mapannounce .@map$,".. did I act too.. rashly...?",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Eremes Guile#boss04")
+			else if (strnpcinfo(NPC_NAME) == "Eremes Guile#boss04")
 				mapannounce .@map$,"Ah..... I am absolutely defeated....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Trentini#boss05")
+			else if (strnpcinfo(NPC_NAME) == "Trentini#boss05")
 				mapannounce .@map$,"ah.. If I.. ever can ... dance and.... sing...happily....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Chen Liu#boss06")
+			else if (strnpcinfo(NPC_NAME) == "Chen Liu#boss06")
 				mapannounce .@map$,"I.... am so .. sorry....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Alphochio Basil#boss07")
+			else if (strnpcinfo(NPC_NAME) == "Alphochio Basil#boss07")
 				mapannounce .@map$,"...the new song......was ....for.....her....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Flamel Emul#boss08")
+			else if (strnpcinfo(NPC_NAME) == "Flamel Emul#boss08")
 				mapannounce .@map$,"Ha...I wanted to show.... the new potion....",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Randel Lawrence#boss09")
+			else if (strnpcinfo(NPC_NAME) == "Randel Lawrence#boss09")
 				mapannounce .@map$,"Wooooo.. everyone got defeated.....??",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Celia Alde#boss10")
+			else if (strnpcinfo(NPC_NAME) == "Celia Alde#boss10")
 				mapannounce .@map$,"No..... this experiment is.....dang...",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Kathryne Keyron#boss11")
+			else if (strnpcinfo(NPC_NAME) == "Kathryne Keyron#boss11")
 				mapannounce .@map$,"awww.. is everyone Ok....?",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Margaretha Sorin#boss12")
+			else if (strnpcinfo(NPC_NAME) == "Margaretha Sorin#boss12")
 				mapannounce .@map$,"My good boy.. Don't cry... ah.... our Great Odin.. please save us...",bc_map,"0xFD3B02";
-			else if (strnpcinfo(0) == "Howard Alt-Eisen#boss13")
+			else if (strnpcinfo(NPC_NAME) == "Howard Alt-Eisen#boss13")
 				mapannounce .@map$,"oh...no.... can't breath.... and my sister...?? sister!!",bc_map,"0xFD3B02";
 			donpcevent instance_npcname("Wolfchev#last")+"::OnEnable";
-			donpcevent instance_npcname(strnpcinfo(0))+"::OnDisable";
+			donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable";
 		}
 		end;
 }

@@ -1236,13 +1236,13 @@ mid_camp,13,138,3	script	Dispatched Rune Knight#1	4_M_01,2,2,{
 		mes "I've been waiting for you Rune Knight candidate. I'm helping the candidates as a favor to Ms. Serpeone.";
 		next;
 		mes "[Dispatched Rune Knight]";
-		if (strnpcinfo(0) == "Dispatched Rune Knight#1") {
+		if (strnpcinfo(NPC_NAME) == "Dispatched Rune Knight#1") {
 			mes "Do you want to go out to the Splendide field?";
 			next;
 			if(select("Move to Splendide field", "Cancel.") == 1)
 				warp "spl_fild01",355,325;
 			close;
-		} else if (strnpcinfo(0) == "Dispatched Rune Knight#2") {
+		} else if (strnpcinfo(NPC_NAME) == "Dispatched Rune Knight#2") {
 			mes "Do you want to go back to the expeditionary team's post?";
 			next;
 			if(select("Yes please.", "Not yet.") == 1)

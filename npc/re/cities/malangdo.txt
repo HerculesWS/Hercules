@@ -44,7 +44,7 @@
 		next;
 		mes "[Dolangmal]";
 		.@s$ = "Why don't you go to ^A2314BMalangdo^000000?";
-		switch(atoi(strnpcinfo(2))) {
+		switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
 			case 1: mes "How is that? The crowded city of Prontera is good, but why don't you go our heaven of the cats, ^A2314BMalangdo^000000?"; break;
 			case 2: mes "Why don't you go to ^A2314BMalangdo^000000? That place is better than Geffen, where there are only crowds of simple honest wizards."; break;
 			case 3: mes "The fresh air of Payon is not bad, but why don't you go better place like the heaven of the cats, ^A2314BMalangdo^000000?"; break;
@@ -174,7 +174,7 @@ lighthalzen,254,83,5	duplicate(Dolangmal)	Dolangmal#8	4_CAT_DOWN
 mora,57,150,4	duplicate(Dolangmal)	Dolangmal#9	4_CAT_DOWN
 
 -	script	::Odgnalam	FAKE_NPC,{
-	mes "This cat is sleeping in the warm "+((strnpcinfo(2) == "albe")?"Alberta":"Izlude")+" sun.";
+	mes "This cat is sleeping in the warm "+((strnpcinfo(NPC_NAME_HIDDEN) == "albe")?"Alberta":"Izlude")+" sun.";
 	next;
 	if(select("Let him sleep", "Talk to him") == 1) close;
 	mes "[Odgnalam]";

@@ -707,22 +707,22 @@ OnAgitInvest:
 //== Realms - Merchant Guilds, Gate Managers, Status Boards =
 -	script	Cat Paw Merchant Guild	FAKE_NPC,{
 
-	if (compare(strnpcinfo(4),"alde")) {
+	if (compare(strnpcinfo(NPC_MAP),"alde")) {
 		.@npc$ = "alde";
 		.@name$ = "Megrez";
 		.@realm$ = "Luina";
 		.@intro$ = "Luina Branch Manager in Al De Baran";
-	} else if (compare(strnpcinfo(4),"gef")) {
+	} else if (compare(strnpcinfo(NPC_MAP),"gef")) {
 		.@npc$ = "gef";
 		.@name$ = "Meraq";
 		.@realm$ = "Britoniah";
 		.@intro$ = "Britoniah Branch Manager";
-	} else if (compare(strnpcinfo(4),"pay")) {
+	} else if (compare(strnpcinfo(NPC_MAP),"pay")) {
 		.@npc$ = "pay";
 		.@name$ = "Phecda";
 		.@realm$ = "Greenwood Lake";
 		.@intro$ = "Payon Greenwood Lake Branch Manager";
-	} else if (compare(strnpcinfo(4),"prt")) {
+	} else if (compare(strnpcinfo(NPC_MAP),"prt")) {
 		.@npc$ = "prt";
 		.@name$ = "Dubae";
 		.@realm$ = "Valkyrie Realm";
@@ -949,22 +949,22 @@ OnAgitInvest:
 
 -	script	Gate Manager#realm	FAKE_NPC,{
 
-	if (compare(strnpcinfo(4),"alde")) {
+	if (compare(strnpcinfo(NPC_MAP),"alde")) {
 		.@npc$ = "alde";
 		.@name$ = "Alkor";
 		.@gate$ = "Hero's Tears";
 		.@realm$ = "Luina";
-	} else if (compare(strnpcinfo(4),"gef")) {
+	} else if (compare(strnpcinfo(NPC_MAP),"gef")) {
 		.@npc$ = "gef";
 		.@name$ = "Mizar";
 		.@gate$ = "Hill of the Dead";
 		.@realm$ = "Britoniah";
-	} else if (compare(strnpcinfo(4),"pay")) {
+	} else if (compare(strnpcinfo(NPC_MAP),"pay")) {
 		.@npc$ = "pay";
 		.@name$ = "Alkaid";
 		.@gate$ = "Winds of the Ancient";
 		.@realm$ = "Greenwood Lake";
-	} else if (compare(strnpcinfo(4),"prt")) {
+	} else if (compare(strnpcinfo(NPC_MAP),"prt")) {
 		.@npc$ = "prt";
 		.@name$ = "Arios";
 		.@gate$ = "Way of the Warrior";
@@ -1005,13 +1005,13 @@ OnAgitInvest:
 		Zeny -= 10000;
 		setd "$fund_"+.@npc$+"_extra", getd("$fund_"+.@npc$+"_extra") + 1;
 		close2;
-		if (compare(strnpcinfo(2),"alde"))
+		if (compare(strnpcinfo(NPC_NAME_HIDDEN),"alde"))
 			warp "gld_dun02"+((.@i == 2)?"_2":""),32,122;
-		else if (compare(strnpcinfo(2),"gef"))
+		else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"gef"))
 			warp "gld_dun04"+((.@i == 2)?"_2":""),39,258;
-		else if (compare(strnpcinfo(2),"pay"))
+		else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"pay"))
 			warp "gld_dun01"+((.@i == 2)?"_2":""),186,165;
-		else if (compare(strnpcinfo(2),"prt"))
+		else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"prt"))
 			warp "gld_dun03"+((.@i == 2)?"_2":""),164,268;
 		end;
 	} else if (.@status == 2) {
@@ -1031,16 +1031,16 @@ OnAgitInvest:
 -	script	Investment Status Board	FAKE_NPC,{
 	.@invest_status = callfunc("F_Invest_Status");
 	if (.@invest_status == 1) {
-		if (compare(strnpcinfo(4),"alde")) {
+		if (compare(strnpcinfo(NPC_MAP),"alde")) {
 			.@npc$ = "alde";
 			.@realm$ = "Luina";
-		} else if (compare(strnpcinfo(4),"gef")) {
+		} else if (compare(strnpcinfo(NPC_MAP),"gef")) {
 			.@npc$ = "gef";
 			.@realm$ = "Britoniah";
-		} else if (compare(strnpcinfo(4),"pay")) {
+		} else if (compare(strnpcinfo(NPC_MAP),"pay")) {
 			.@npc$ = "pay";
 			.@realm$ = "Greenwood Lake";
-		} else if (compare(strnpcinfo(4),"prt")) {
+		} else if (compare(strnpcinfo(NPC_MAP),"prt")) {
 			.@npc$ = "prt";
 			.@realm$ = "Valkyrie Realm";
 		}
@@ -1098,22 +1098,22 @@ OnAgitInvest:
 //== Inside Castles - Gate Managers ========================
 -	script	Gate Manager#castle	FAKE_NPC,{
 
-	.@id = atoi(charat(strnpcinfo(2),getstrlen(strnpcinfo(2))-1));
-	if (compare(strnpcinfo(2),"alde")) {
+	.@id = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1));
+	if (compare(strnpcinfo(NPC_NAME_HIDDEN),"alde")) {
 		.@npc$ = "alde";
 		.@realm$ = "Luina";
-	} else if (compare(strnpcinfo(2),"gef")) {
+	} else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"gef")) {
 		.@npc$ = "gef";
 		.@realm$ = "Britoniah";
-	} else if (compare(strnpcinfo(2),"pay")) {
+	} else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"pay")) {
 		.@npc$ = "pay";
 		.@realm$ = "Greenwood Lake";
-	} else if (compare(strnpcinfo(2),"prt")) {
+	} else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"prt")) {
 		.@npc$ = "prt";
 		.@realm$ = "Valkyrie Realm";
 	}
 
-	.@GID = getcastledata(strnpcinfo(4),1);
+	.@GID = getcastledata(strnpcinfo(NPC_MAP),1);
 	if (getcharid(2) != .@GID) {
 		mes "[Gate Manager]";
 		mes "You don't seem to be the member of guild owning this castle.";
@@ -1161,7 +1161,7 @@ OnAgitInvest:
 		mes "You are interested in exploring the "+.@realm$+" Guild Dungeon Deepest Layer (2F).";
 		mes "Let me guide you. Good luck.";
 		close2;
-		if (compare(strnpcinfo(2),"alde")) {
+		if (compare(strnpcinfo(NPC_NAME_HIDDEN),"alde")) {
 			switch(.@id) {
 				case 1: warp "gld_dun02_2",32,122; end;
 				case 2: warp "gld_dun02_2",79,30; end;
@@ -1169,7 +1169,7 @@ OnAgitInvest:
 				case 4: warp "gld_dun02_2",160,148; end;
 				case 5: warp "gld_dun02_2",103,169; end;
 			}
-		} else if (compare(strnpcinfo(2),"gef")) {
+		} else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"gef")) {
 			switch(.@id) {
 				case 1: warp "gld_dun04_2",39,258; end;
 				case 2: warp "gld_dun04_2",125,270; end;
@@ -1177,7 +1177,7 @@ OnAgitInvest:
 				case 4: warp "gld_dun04_2",268,108; end;
 				case 5: warp "gld_dun04_2",230,35; end;
 			}
-		} else if (compare(strnpcinfo(2),"pay")) {
+		} else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"pay")) {
 			switch(.@id) {
 				case 1: warp "gld_dun01_2",186,165; end;
 				case 2: warp "gld_dun01_2",54,165; end;
@@ -1185,7 +1185,7 @@ OnAgitInvest:
 				case 4: warp "gld_dun01_2",186,39; end;
 				case 5: warp "gld_dun01_2",223,202; end;
 			}
-		} else if (compare(strnpcinfo(2),"prt")) {
+		} else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"prt")) {
 			switch(.@id) {
 				case 1: warp "gld_dun03_2",28,251; end;
 				case 2: warp "gld_dun03_2",164,268; end;
@@ -1200,7 +1200,7 @@ OnAgitInvest:
 		mes "[Gate Manager]";
 		mes "Let me guide you to the Abyss Gap connected with "+.@realm$+", the Abyss Gate 'Way of the Warrior'.";
 		close2;
-		if (compare(strnpcinfo(2),"alde")) {
+		if (compare(strnpcinfo(NPC_NAME_HIDDEN),"alde")) {
 			switch(.@id) {
 				case 1: warp "gld2_ald",175,41; end;
 				case 2: warp "gld2_ald",77,64; end;
@@ -1208,7 +1208,7 @@ OnAgitInvest:
 				case 4: warp "gld2_ald",104,246; end;
 				case 5: warp "gld2_ald",241,156; end;
 			}
-		} else if (compare(strnpcinfo(2),"gef")) {
+		} else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"gef")) {
 			switch(.@id) {
 				case 1: warp "gld2_gef",28,199; end;
 				case 2: warp "gld2_gef",217,46; end;
@@ -1216,7 +1216,7 @@ OnAgitInvest:
 				case 4: warp "gld2_gef",30,67; end;
 				case 5: warp "gld2_gef",115,40; end;
 			}
-		} else if (compare(strnpcinfo(2),"pay")) {
+		} else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"pay")) {
 			switch(.@id) {
 				case 1: warp "gld2_pay",33,112; end;
 				case 2: warp "gld2_pay",119,27; end;
@@ -1224,7 +1224,7 @@ OnAgitInvest:
 				case 4: warp "gld2_pay",175,221; end;
 				case 5: warp "gld2_pay",61,221; end;
 			}
-		} else if (compare(strnpcinfo(2),"prt")) {
+		} else if (compare(strnpcinfo(NPC_NAME_HIDDEN),"prt")) {
 			switch(.@id) {
 				case 1: warp "gld2_prt",10,27; end;
 				case 2: warp "gld2_prt",14,247; end;

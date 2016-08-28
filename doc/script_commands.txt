@@ -2363,11 +2363,11 @@ using only numbers reduces script readability
 This function will return the various parts of the name of the calling NPC.
 Whatever it returns is determined by type.
 
- 0 - The NPC's display name (visible#hidden)
- 1 - The visible part of the NPC's display name
- 2 - The hidden part of the NPC's display name
- 3 - The NPC's unique name (::name)
- 4 - The name of the map the NPC is in.
+(0) NPC_NAME	    - The NPC's display name (visible#hidden)
+(1) NPC_NAME_VISIBLE - The visible part of the NPC's display name
+(2) NPC_NAME_HIDDEN  - The hidden part of the NPC's display name
+(3) NPC_NAME_UNIQUE  - The NPC's unique name (::name)
+(4) NPC_MAP		    - The name of the map the NPC is in.
 
 ---------------------------------------
 
@@ -6454,7 +6454,7 @@ mechanism (like sleep()).
 Example:
 <NPC Header> {
 	dispbottom("Starting a 5 second timer...");
-	addtimer(5000, strnpcinfo(3)+"::On5secs");
+	addtimer(5000, strnpcinfo(NPC_NAME_UNIQUE)+"::On5secs");
 	end;
 On5secs:
 	dispbottom("5 seconds have passed!");
@@ -7503,7 +7503,7 @@ When a user types the command "@test", an angel effect will be shown.
 
 -	script	atcmd_example	FAKE_NPC,{
 OnInit:
-	bindatcmd("test", strnpcinfo(3)+"::OnAtcommand");
+	bindatcmd("test", strnpcinfo(NPC_NAME_UNIQUE)+"::OnAtcommand");
 	end;
 OnAtcommand:
 	specialeffect2(EF_ANGEL2);
@@ -7541,7 +7541,7 @@ case it expects spaces. For example:
 
 -	script	atcmd_example	FAKE_NPC,{
 OnInit:
-	bindatcmd("test", strnpcinfo(3)+"::OnAtcommand");
+	bindatcmd("test", strnpcinfo(NPC_NAME_UNIQUE)+"::OnAtcommand");
 	end;
 OnAtcommand:
 	// This command expects a character name (that may contain spaces) as

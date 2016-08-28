@@ -779,8 +779,8 @@ S_Erasequest2:
 }
 
 -	script	Trace of an adventurer	FAKE_NPC,{
-	.@quest = 13106 + atoi(strnpcinfo(2));
-	.@delay = 13110 + atoi(strnpcinfo(2));
+	.@quest = 13106 + atoi(strnpcinfo(NPC_NAME_HIDDEN));
+	.@delay = 13110 + atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	if (questprogress(.@quest) == 1) {
 		mes "I found traces of someone who was here but I cannot find a clue. Lets go back and report to Aigu.";
 		erasequest .@quest;

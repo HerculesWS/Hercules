@@ -3062,10 +3062,10 @@ OnTimer5000:
 	end;
 OnInit:
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
@@ -3386,17 +3386,17 @@ OnMyMobDead:
 job3_guil03,2,2,0	script	#3rdgc_sunchal_kill01	CLEAR_NPC,{
 	end;
 OnEnable:
-	.@i = atoi(charat(strnpcinfo(0),20));
+	.@i = atoi(charat(strnpcinfo(NPC_NAME),20));
 	setarray .@x[1],74,124,103;
 	setarray .@y[1],63, 78, 24;
-	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(0)+"::OnMyMobDead";
+	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 OnStop:
 	mapannounce "job3_guil03","Guard : Am I imagining things? I just heard something...",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
 	stopnpctimer;
 	end;
 OnReset:
-	killmonster "job3_guil03",strnpcinfo(0)+"::OnMyMobDead";
+	killmonster "job3_guil03",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 OnMyMobDead:
 	initnpctimer;
@@ -3419,32 +3419,32 @@ job3_guil03,2,4,0	duplicate(#3rdgc_sunchal_kill01)	#3rdgc_sunchal_kill03	CLEAR_N
 job3_guil03,64,68,3	script	#3rdgc_gojung_kill01	4_M_DSTMAN,7,7,{
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnStop:
 	mapannounce "job3_guil03","Guard : Am I imagining things? I just heard something.",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
 	stopnpctimer;
 	end;
 OnReset:
-	killmonster "job3_guil03",strnpcinfo(0)+"::OnMyMobDead";
+	killmonster "job3_guil03",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 OnTouch:
-	.@i = atoi(charat(strnpcinfo(0),19));
+	.@i = atoi(charat(strnpcinfo(NPC_NAME),19));
 	setarray .@x[1],64,86,83;
 	setarray .@y[1],68,63,36;
 	mapannounce "job3_guil03","Guard : Who are you?!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
-	disablenpc strnpcinfo(0);
-	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(0)+"::OnMyMobDead";
+	disablenpc strnpcinfo(NPC_NAME);
+	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	initnpctimer;
 	end;
 OnMyMobDead:
 	stopnpctimer;
 	end;
 OnTimer5000:
-	if (strnpcinfo(0) == "#3rdgc_gojung_kill03") end;
+	if (strnpcinfo(NPC_NAME) == "#3rdgc_gojung_kill03") end;
 OnTimer10000:
 	mapannounce "job3_guil03","Guard : I need support! Take caution!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
 	donpcevent "#3rdgc_guard::OnEnable";
@@ -3458,7 +3458,7 @@ job3_guil03,88,71,0	script	#3rdgc_safezone01	HIDDEN_WARP_NPC,1,1,{
 	end;
 OnTouch:
 	mes "It's a good bush to hide yourself.";
-	donpcevent strnpcinfo(0)+"::OnTimer";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnTimer";
 	close;
 OnTimer:
 	//FIXME: This is a workaround for...
@@ -3491,7 +3491,7 @@ job3_guil03,111,51,7	script	Priest from Rachel	4_M_MIDDLE1,{
 		next;
 		mes "[Priest from Rachel]";
 		mes "Because of you, you ruined everything!";
-		setnpcdisplay(strnpcinfo(0), HIDEN_PRIEST);
+		setnpcdisplay(strnpcinfo(NPC_NAME), HIDEN_PRIEST);
 		next;
 		mes "[Priest from Rachel]";
 		mes "You want to destroy us forever!";

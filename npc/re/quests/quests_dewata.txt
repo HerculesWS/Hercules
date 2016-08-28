@@ -1596,7 +1596,7 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 			mes "something smashes down on your head, right where that soft spot is, $#*@! that's a one in a million shot.";
 			percentheal -30,0;
 			close2;
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			warp "dew_fild01",371,211;
 			end;
 		}
@@ -1619,14 +1619,14 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 		break;
 	}
 	close2;
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnTimer60000:
@@ -1634,10 +1634,10 @@ OnTimer180000:
 OnTimer120000:
 OnTimer240000:
 	if(rand(2))
-		donpcevent strnpcinfo(0)+"::OnEnable";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnEnable";
 	end;
 OnTimer300000:
-	donpcevent strnpcinfo(0)+"::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnEnable";
 	end;
 }
 dew_fild01,247,62,0	duplicate(DewataPalm)	Palm Tree#drink01	CLEAR_NPC

@@ -672,10 +672,10 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 			specialeffect EF_TELEPORTATION;
 			mes "The magic spell has been casted.";
 			halloween = 103;
-			disablenpc "Masta's chicken#"+strnpcinfo(1);
+			disablenpc "Masta's chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 			close2;
 			sleep 180000;
-			enablenpc "Masta's chicken#"+strnpcinfo(1);
+			enablenpc "Masta's chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 			end;
 		}
 		else {
@@ -695,13 +695,13 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 	if( @egg_temp == 3) {
 		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
 		mes "You got an 'egg' in the place where the chicken disappeared.";
-		disablenpc "Chicken#"+strnpcinfo(1);
+		disablenpc "Chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 		getitem Egg,1;
 		close;
 	}
 	else {
 		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
-		disablenpc "Chicken#"+strnpcinfo(1);
+		disablenpc "Chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 		close;
 	}
 }
@@ -711,13 +711,13 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 	if( @egg_temp == 3) {
 		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
 		mes "You got an 'egg' in the place where the chicken disappeared.";
-		disablenpc "Chicken#"+strnpcinfo(1);
+		disablenpc "Chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 		getitem Egg,1;
 		close;
 	}
 	else {
 		mes "As soon as you got close to the chicken and touched it, it disappeared completely.";
-		disablenpc "Chicken#"+strnpcinfo(1);
+		disablenpc "Chicken#"+strnpcinfo(NPC_NAME_VISIBLE);
 		close;
 	}
 

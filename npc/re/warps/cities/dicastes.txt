@@ -66,7 +66,7 @@ dic_in01,242,182,0	script	#eldicastes0016	CLEAR_NPC,{
 
 // Elevators
 -	script	Elevator#main	FAKE_NPC,{
-	.@n = atoi(strnpcinfo(2));
+	.@n = atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	.@eq = (isequipped(2782))?1:0;
 	if (.@n <= 4) {
 		.@m$ = (.@eq)?"Civil Services:Archive Room:Situation Room:Administrative Office":"¢³¡ð¡Ð:¡ñ¡ñ¡ò:¡ø¡ø¡ð:¡÷¡ú¡ð";

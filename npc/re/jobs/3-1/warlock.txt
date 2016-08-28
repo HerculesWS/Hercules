@@ -40,7 +40,7 @@
 OnTouch:
 	if (job_wl > 1) {
 		mes " - There is a strange distortion here - ";
-		if (strnpcinfo(0) == "#distorted_space_1" && (Class == Job_Warlock || Class == Job_Warlock_T || Class == Job_Baby_Warlock)) {
+		if (strnpcinfo(NPC_NAME) == "#distorted_space_1" && (Class == Job_Warlock || Class == Job_Warlock_T || Class == Job_Baby_Warlock)) {
 			close2;
 			if (countitem(Special_Exchange_Coupon) > 0)
 				warp "spl_in02",79,102;
@@ -58,7 +58,7 @@ OnTouch:
 			close;
 		}
 	}
-	if (BaseLevel > 94 && (strnpcinfo(0) == "#distorted_space_2" || BaseJob == Job_Wizard)) {
+	if (BaseLevel > 94 && (strnpcinfo(NPC_NAME) == "#distorted_space_2" || BaseJob == Job_Wizard)) {
 		mes " - There is a strange distortion here - ";
 		next;
 		switch(select("Search the area.", "Ignore it.")) {
@@ -801,36 +801,36 @@ OnDisable:
 
 -	script	The chamber of magic#2	FAKE_NPC,{
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
-	monster "job3_war02",23,32,"Magic Monster",2047,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",23,21,"Magic Monster",2048,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",34,32,"Magic Monster",2049,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",34,21,"Magic Monster",2050,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",23,32,"Magic Monster",2047,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",23,21,"Magic Monster",2048,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",34,32,"Magic Monster",2049,1,strnpcinfo(0)+"::OnMyMobDead";
-	monster "job3_war02",34,21,"Magic Monster",2050,1,strnpcinfo(0)+"::OnMyMobDead";
+	enablenpc strnpcinfo(NPC_NAME);
+	monster "job3_war02",23,32,"Magic Monster",2047,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",23,21,"Magic Monster",2048,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",34,32,"Magic Monster",2049,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",34,21,"Magic Monster",2050,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",23,32,"Magic Monster",2047,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",23,21,"Magic Monster",2048,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",34,32,"Magic Monster",2049,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	monster "job3_war02",34,21,"Magic Monster",2050,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	initnpctimer;
 	end;
 OnReset:
-	killmonster "job3_war02",strnpcinfo(0)+"::OnMyMobDead";
+	killmonster "job3_war02",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnMyMobDead:
-	if (mobcount("job3_war02",strnpcinfo(0)+"::OnMyMobDead") < 1) {
+	if (mobcount("job3_war02",strnpcinfo(NPC_NAME)+"::OnMyMobDead") < 1) {
 		stopnpctimer;
 		mapannounce "job3_war02","The Monster Invasion has been stopped.",bc_map;
-		.@str$ = "The chamber of magic#"+((strnpcinfo(0) == "The chamber of magic#2")?"3":"4");
+		.@str$ = "The chamber of magic#"+((strnpcinfo(NPC_NAME) == "The chamber of magic#2")?"3":"4");
 		donpcevent .@str$+"::OnEnable";
 	}
 	end;
 OnTimer3000:
-	if (strnpcinfo(0) != "The chamber of magic#2") end;
+	if (strnpcinfo(NPC_NAME) != "The chamber of magic#2") end;
 	mapannounce "job3_war02","A Magical Power fragment has been created in the Magic Chamber Room.",bc_map;
 	end;
 OnTimer4000:

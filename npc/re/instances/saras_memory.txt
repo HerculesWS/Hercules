@@ -763,77 +763,77 @@ OnTimer5000:
 	end;
 OnRespawn:
 	.@map$ = instance_mapname("1@sara");
-	monster(.@map$, .@x, .@y, "Maggot", MG_ARCLOUSE, .@mobs, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,107,325,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,115,325,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,116,317,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,108,317,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,116,311,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,108,311,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$, .@x, .@y, "Maggot", MG_ARCLOUSE, .@mobs, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,107,325,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,115,325,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,116,317,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,108,317,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,116,311,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,108,311,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,101,295,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,105,295,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,109,295,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,113,295,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,117,295,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,121,295,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,101,295,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,105,295,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,109,295,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,113,295,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,117,295,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,121,295,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,122,227,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,122,225,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,122,223,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,122,221,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,122,219,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,122,217,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,121,227,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,121,225,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,121,223,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,121,221,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,121,219,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,121,217,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,122,227,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,122,225,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,122,223,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,122,221,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,122,219,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,122,217,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,121,227,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,121,225,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,121,223,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,121,221,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,121,219,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,121,217,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,151,231,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,153,231,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,155,231,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,157,231,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,159,231,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,161,231,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,151,231,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,153,231,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,155,231,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,157,231,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,159,231,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,161,231,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,187,215,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,187,217,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,187,219,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,187,221,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,187,223,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,187,225,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,188,215,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,188,217,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,188,219,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,188,221,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,188,223,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,188,225,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,187,215,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,187,217,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,187,219,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,187,221,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,187,223,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,187,225,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,188,215,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,188,217,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,188,219,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,188,221,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,188,223,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,188,225,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,192,250,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,194,250,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,196,250,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,198,250,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,192,250,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,194,250,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,196,250,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,198,250,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,196,254,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,196,256,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,196,258,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,199,254,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,199,256,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,199,258,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,196,254,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,196,256,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,196,258,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,199,254,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,199,256,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,199,258,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,204,246,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,204,248,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,204,250,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,204,252,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,204,254,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,206,251,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,204,246,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,204,248,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,204,250,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,204,252,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,204,254,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,206,251,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	end;
 OnMyMobDead:
 	.@callnum = 58;
 	.@map$ = instance_mapname("1@sara");
-	.@a_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	.@a_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	.@mob_dead_num = .@callnum - .@a_mob_num;
 	if (.@mob_dead_num > 57) {
 		viewpoint 1, 209, 250, 1, C_GREEN;
@@ -860,32 +860,32 @@ OnDisable:
 	end;
 OnRespawn:
 	.@map$ = instance_mapname("1@sara");
-	monster(.@map$,228,312,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,227,312,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,229,315,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,228,312,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,227,312,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,229,315,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,247,290,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,248,290,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,249,290,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,247,290,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,248,290,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,249,290,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,223,264,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,230,248,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,227,248,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,223,264,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,230,248,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,227,248,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,238,229,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,225,220,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,228,220,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,238,229,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,225,220,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,228,220,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,220,212,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,223,212,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,220,212,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,223,212,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,219,203,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,222,203,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,219,203,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,222,203,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	end;
 OnMyMobDead:
 	.@callnum = 16;
 	.@map$ = instance_mapname("1@sara");
-	.@b_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	.@b_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	.@mob_dead_num = .@callnum - .@b_mob_num;
 	if (.@mob_dead_num > 15) {
 		viewpoint 1, 226, 190, 1, C_GREEN;
@@ -912,64 +912,64 @@ OnDisable:
 	end;
 OnRespawn:
 	.@map$ = instance_mapname("1@sara");
-	monster(.@map$, 255,91,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$, 255,92,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$, 255,93,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$, 255,94,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,254,91,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,254,92,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,254,93,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,254,94,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$, 255,91,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 255,92,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 255,93,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$, 255,94,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,254,91,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,254,92,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,254,93,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,254,94,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,228,65,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,228,64,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,228,63,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,228,62,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,228,65,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,228,64,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,228,63,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,228,62,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,198,62,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,195,56,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,195,60,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,195,62,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,192,56,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,192,60,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,192,62,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,198,62,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,195,56,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,195,60,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,195,62,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,192,56,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,192,60,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,192,62,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,187,68,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,188,63,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,187,68,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,188,63,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,120,39,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,121,39,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,121,39,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,120,39,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,121,39,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,121,39,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,93,64,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,93,68,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,93,72,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,93,76,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,90,64,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,90,68,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,90,72,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,90,76,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,93,64,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,93,68,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,93,72,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,93,76,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,90,64,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,90,68,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,90,72,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,90,76,"A Gentle Guard Dog",2545,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,87,67,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,87,63,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,87,59,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,87,55,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,87,67,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,87,63,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,87,59,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,87,55,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,84,67,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,84,63,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,84,59,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,84,55,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,84,67,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,84,63,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,84,59,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,84,55,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,81,67,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,81,63,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,81,59,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,81,55,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,81,51,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,81,67,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,81,63,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,81,59,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,81,55,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,81,51,"A Fierce Guard Dog",2546,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	end;
 OnMyMobDead:
 	.@callnum = 45;
 	.@map$ = instance_mapname("1@sara");
-	.@c_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	.@c_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	.@mob_dead_num = .@callnum - .@c_mob_num;
 	if (.@mob_dead_num > 44) {
 		viewpoint 1, 166, 67, 1, C_GREEN;
@@ -996,63 +996,63 @@ OnDisable:
 	end;
 OnRespawn:
 	.@map$ = instance_mapname("1@sara");
-	monster(.@map$,155,97,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,157,97,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,159,97,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,161,97,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,155,97,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,157,97,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,159,97,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,161,97,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,201,113,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,204,113,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,207,113,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,210,113,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,213,113,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,201,113,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,204,113,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,207,113,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,210,113,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,213,113,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,201,117,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,204,117,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,207,117,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,210,117,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,213,117,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,201,117,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,204,117,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,207,117,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,210,117,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,213,117,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,223,152,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,223,148,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,223,144,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,223,152,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,223,148,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,223,144,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,221,152,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,221,148,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,221,144,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,221,152,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,221,148,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,221,144,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,151,174,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,153,174,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,155,174,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,157,174,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,159,174,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,151,174,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,153,174,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,155,174,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,157,174,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,159,174,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,151,177,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,153,177,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,155,177,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,157,177,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,159,177,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,151,177,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,153,177,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,155,177,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,157,177,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,159,177,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,151,180,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,153,180,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,155,180,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,157,180,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,159,180,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,151,180,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,153,180,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,155,180,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,157,180,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,159,180,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,173,139,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,170,139,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,167,139,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,164,139,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,173,139,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,170,139,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,167,139,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,164,139,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 
-	monster(.@map$,173,137,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,170,137,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,167,137,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	monster(.@map$,164,137,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,173,137,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,170,137,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,167,137,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	monster(.@map$,164,137,"Payon Town Guard",2543,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	end;
 OnMyMobDead:
 	.@callnum = 43;
 	.@map$ = instance_mapname("1@sara");
-	.@d_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	.@d_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	.@mob_dead_num = .@callnum - .@d_mob_num;
 	if (.@mob_dead_num > 42) {
 		viewpoint 1, 155, 180, 1, C_GREEN;
@@ -1161,27 +1161,27 @@ OnDisable:
 	end;
 OnRespawn:
 	.@map$ = instance_mapname("1@sara");
-	monster(.@map$,150,232,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,150,232,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	unittalk($@mobid[0], _("I am getting too old for this sh-"));
-	monster(.@map$,150,227,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,150,227,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	unittalk($@mobid[0], _("For Payon!!"));
-	monster(.@map$,150,222,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,150,222,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	unittalk($@mobid[0], _("For Payon!!"));
-	monster(.@map$,150,217,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,150,217,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	unittalk($@mobid[0], _("For Payon!!"));
-	monster(.@map$,161,232,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,161,232,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	unittalk($@mobid[0], _("For Payon!!"));
-	monster(.@map$,161,227,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,161,227,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	unittalk($@mobid[0], _("For Payon!!"));
-	monster(.@map$,161,222,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,161,222,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	unittalk($@mobid[0], _("For Payon!!"));
-	monster(.@map$,161,217,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,161,217,"Payon Town Guard",2544,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	unittalk($@mobid[0], _("For Payon!!"));
 	end;
 OnMyMobDead:
 	.@callnum = 8;
 	.@map$ = instance_mapname("1@sara");
-	.@f_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	.@f_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	.@mob_dead_num = .@callnum - .@f_mob_num;
 	if (.@mob_dead_num > 7) {
 		mapannounce(instance_mapname("1@sara"),_("<SYSTEM> Doyen Irene draws his blade!"), bc_map, C_YELLOW);
@@ -1205,13 +1205,13 @@ OnDisable:
 	end;
 OnRespawn:
 	.@map$ = instance_mapname("1@sara");
-	monster(.@map$,155,226,"Doyen Irene",2542,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	monster(.@map$,155,226,"Doyen Irene",2542,1,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	unittalk($@mobid[0], _("I will have revenge for Sara's Mom!"));
 	end;
 OnMyMobDead:
 	.@callnum = 1;
 	.@map$ = instance_mapname("1@sara");
-	.@g_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	.@g_mob_num = mobcount(.@map$, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	.@mob_dead_num = .@callnum - .@g_mob_num;
 	if (.@mob_dead_num > 0) {
 		mapannounce(instance_mapname("1@sara"), _("<SYSTEM> Doyen Irene has fallen."), bc_map, C_YELLOW);
