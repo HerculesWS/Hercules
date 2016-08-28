@@ -18,30 +18,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LOGIN_IPBAN_H
-#define LOGIN_IPBAN_H
+#ifndef LOGIN_IPBAN_P_H
+#define LOGIN_IPBAN_P_H
 
-#include "common/cbasetypes.h"
-#include "common/hercules.h"
+#include "ipban.h"
 
-/* Forward Declarations */
-struct config_t; // common/conf.h
-struct ipban_interface_private;
-
-// The login ipban automatic ban interface
-struct ipban_interface {
-	struct ipban_interface_private *p; ///< Private interface
-	void (*init) (void);
-	void (*final) (void);
-	bool (*check) (uint32 ip);
-	void (*log) (uint32 ip);
-	bool (*config_read) (const char *filename, struct config_t *config, bool imported);
+struct ipban_config {
+	// Sql settings
+	uint16 db_port;
+	char   db_hostname[32];
+	char   db_username[32];
+	char   db_password[100];
+	char   db_database[32];
+	char   db_codepage[32];
+	char   db_table[32];	
 };
 
-#ifdef HERCULES_CORE
-void ipban_defaults(void);
-#endif // HERCULES_CORE
+// The login ipban automatic ban private interface
+struct ipban_interface_private {
+	struct ipban_config *config;
 
-HPShared struct ipban_interface *ipban;
+	struct Sql *sql_handle;
+	int cleanup_timer_id;
+	bool inited;
 
-#endif /* LOGIN_IPBAN_H */
+	int (*cleanup) (int tid, int64 tick, int id, intptr_t data);
+	bool (*config_read_inter) (const char *filename, bool imported);
+	bool (*config_read_connection) (const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_dynamic) (const char *filename, struct config_t *config, bool imported);
+};
+#endif

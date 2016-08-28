@@ -7,9 +7,6 @@
     <ClCompile Include="..\src\login\HPMlogin.c">
       <Filter>login</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\login\ipban_sql.c">
-      <Filter>login</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\login\login.c">
       <Filter>login</Filter>
     </ClCompile>
@@ -98,6 +95,9 @@
       <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="..\src\login\lclif.c">
+      <Filter>login</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\login\ipban.c">
       <Filter>login</Filter>
     </ClCompile>
   </ItemGroup>
@@ -250,6 +250,10 @@
       <Filter>login</Filter>
     </ClInclude>
     <ClInclude Include="..\src\login\lclif.p.h">
+      <Filter>login</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\common\conf.h" />
+    <ClInclude Include="..\src\login\ipban.p.h">
       <Filter>login</Filter>
     </ClInclude>
   </ItemGroup>
