@@ -6454,7 +6454,7 @@ mechanism (like sleep()).
 Example:
 <NPC Header> {
 	dispbottom("Starting a 5 second timer...");
-	addtimer(5000, strnpcinfo(3)+"::On5secs");
+	addtimer(5000, strnpcinfo(NPC_UNIQUENAME)+"::On5secs");
 	end;
 On5secs:
 	dispbottom("5 seconds have passed!");
@@ -7503,7 +7503,7 @@ When a user types the command "@test", an angel effect will be shown.
 
 -	script	atcmd_example	FAKE_NPC,{
 OnInit:
-	bindatcmd("test", strnpcinfo(3)+"::OnAtcommand");
+	bindatcmd("test", strnpcinfo(NPC_UNIQUENAME)+"::OnAtcommand");
 	end;
 OnAtcommand:
 	specialeffect2(EF_ANGEL2);
@@ -7541,7 +7541,7 @@ case it expects spaces. For example:
 
 -	script	atcmd_example	FAKE_NPC,{
 OnInit:
-	bindatcmd("test", strnpcinfo(3)+"::OnAtcommand");
+	bindatcmd("test", strnpcinfo(NPC_UNIQUENAME)+"::OnAtcommand");
 	end;
 OnAtcommand:
 	// This command expects a character name (that may contain spaces) as
