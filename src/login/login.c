@@ -1325,8 +1325,9 @@ void login_auth_failed(struct login_session_data *sd, int result)
 		login_log(ip, sd->userid, result, error); // FIXME: result can be 100, conflicting with the value 100 we use for successful login...
 	}
 
-	if (result == 1 && !sockt->trusted_ip_check(ip))
-		ipban->log(ip); // log failed password attempt
+	if (result == 1 && ipban->is_enabled() && !sockt->trusted_ip_check(ip)) {
+		ipban->add(ip); // ip ban if conditions applies
+	}
 
 	if (result == 6) {
 		struct mmo_account acc = { 0 };

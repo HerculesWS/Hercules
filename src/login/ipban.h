@@ -34,9 +34,11 @@ struct ipban_interface {
 	void (*init) (void);
 	void (*final) (void);
 	bool (*check) (uint32 ip);
-	void (*log) (uint32 ip);
+	void (*add) (uint32 ip);
 	bool (*config_read) (const char *filename, struct config_t *config, bool imported);
 	bool (*is_enabled) (void);
+	void (*log_faildattempt) (uint32 ip);
+	int  (*get_faildattempts) (uint32 ip);
 };
 
 #ifdef HERCULES_CORE

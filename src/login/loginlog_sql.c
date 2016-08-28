@@ -31,6 +31,7 @@
 #include "common/sql.h"
 #include "common/strlib.h"
 
+#include "ipban.h"
 #include <stdlib.h> // exit
 
 // Sql settings
@@ -45,30 +46,6 @@ static char   log_login_db[256] = "loginlog";
 static struct Sql *sql_handle = NULL;
 static bool enabled = false;
 
-
-// Returns the number of failed login attempts by the ip in the last minutes.
-unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
-{
-	unsigned long failures = 0;
-
-	if( !enabled )
-		return 0;
-
-	if( SQL_ERROR == SQL->Query(sql_handle, "SELECT count(*) FROM `%s` WHERE `ip` = '%s' AND `rcode` = '1' AND `time` > NOW() - INTERVAL %u MINUTE",
-		log_login_db, sockt->ip2str(ip,NULL), minutes) )// how many times failed account? in one ip.
-		Sql_ShowDebug(sql_handle);
-
-	if( SQL_SUCCESS == SQL->NextRow(sql_handle) )
-	{
-		char* data;
-		SQL->GetData(sql_handle, 0, &data, NULL);
-		failures = strtoul(data, NULL, 10);
-		SQL->FreeResult(sql_handle);
-	}
-	return failures;
-}
-
-
 /*=============================================
  * Records an event in the login log
  *---------------------------------------------*/
@@ -81,6 +58,10 @@ void login_log(uint32 ip, const char* username, int rcode, const char* message)
 
 	nullpo_retv(username);
 	nullpo_retv(message);
+
+	if (ipban->is_enabled() && rcode == 1)
+		ipban->log_faildattempt(ip);
+
 	if( !enabled )
 		return;
 

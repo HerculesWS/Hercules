@@ -22,35 +22,36 @@
 #define LOGIN_IPBAN_P_H
 
 #include "ipban.h"
+#include "common/db.h"
 
 struct ipban_config {
-	// Sql settings
-	uint16 db_port;
-	char   db_hostname[32];
-	char   db_username[32];
-	char   db_password[100];
-	char   db_database[32];
-	char   db_codepage[32];
-	char   db_table[32];
-	uint32 cleanup_interval;                  ///< interval (in seconds) to clean up expired IP bans
-	bool enabled;                                   ///< perform IP blocking (via contents of `ipbanlist`) ?
-	bool dynamic_pass_failure_ban;                  ///< automatic IP blocking due to failed login attemps ?
-	uint32 dynamic_pass_failure_ban_interval;       ///< how far to scan the loginlog for password failures
-	uint32 dynamic_pass_failure_ban_limit;          ///< number of failures needed to trigger the ipban
-	uint32 dynamic_pass_failure_ban_duration;       ///< duration of the ipban
+	int cleanup_interval;                          ///< interval (in seconds) to clean up expired IP bans
+	bool enabled;                                  ///< perform IP blocking (via contents of `ipbanlist`) ?
+	bool dynamic_pass_failure_ban;                 ///< automatic IP blocking due to failed login attemps ?
+	int64 dynamic_pass_failure_ban_interval;       ///< how far to scan the loginlog for password failures
+	int64 dynamic_pass_failure_ban_limit;          ///< number of failures needed to trigger the ipban
+	int64 dynamic_pass_failure_ban_duration;       ///< duration of the ipban
+};
+
+struct ipban_entry {
+	uint32 ip;
+	int64 end_timestamp;
+	int failed_attempts;
+	int64 last_failed_attempt_timestamp;
 };
 
 // The login ipban automatic ban private interface
 struct ipban_interface_private {
 	struct ipban_config *config;
 
-	struct Sql *sql_handle;
+	struct DBMap *ipban;
 	int cleanup_timer_id;
-	bool inited;
+	bool enabled; ///< The actual status of ipban right now
 
 	int (*cleanup) (int tid, int64 tick, int id, intptr_t data);
-	bool (*config_read_inter) (const char *filename, bool imported);
-	bool (*config_read_connection) (const char *filename, struct config_t *config, bool imported);
 	bool (*config_read_dynamic) (const char *filename, struct config_t *config, bool imported);
+	bool (*enable) (void);
+	bool (*disable) (void);
+	struct DBData (*ensure_entry) (union DBKey key, va_list args);
 };
 #endif
