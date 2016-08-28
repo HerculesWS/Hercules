@@ -49,7 +49,7 @@ quiz_00,49,31,4	script	MVP Arena Guide	4_M_TWTEAMAN,{
 
 // Keepers
 function	script	Keeper	{
-	mes "[ ^0065DF"+strnpcinfo(1)+"^000000 ]";
+	mes "[ ^0065DF"+strnpcinfo(NPC_NAME_VISIBLE)+"^000000 ]";
 	mes "Which arena would you";
 	mes "like to enter?";
 	set .@menu$,"";
@@ -57,7 +57,7 @@ function	script	Keeper	{
 		set .@menu$, .@menu$+"Arena "+.@i+" ["+getmapusers("pvp_n_"+.@i+"-"+getarg(0))+"/20]:";
 	set .@i, select(.@menu$);
 	if (getmapusers("pvp_n_"+.@i+"-"+getarg(0))>19) {
-		mes "[ ^0065DF"+strnpcinfo(1)+"^000000 ]";
+		mes "[ ^0065DF"+strnpcinfo(NPC_NAME_VISIBLE)+"^000000 ]";
 		mes "Sorry, this arena is full!";
 		close;
 	}

@@ -970,7 +970,7 @@ job3_gen01,91,48,3	script	Demi Calberine#gen	4_F_SCIENCE,{
 		mes "- You found a little metal fragment. -";
 		job_gen = job_gen+1;
 		specialeffect EF_BASH;
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 		initnpctimer;
 		close;
 	} else if (job_gen == 74) {
@@ -979,7 +979,7 @@ job3_gen01,91,48,3	script	Demi Calberine#gen	4_F_SCIENCE,{
 	}
 	end;
 OnTimer7000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }

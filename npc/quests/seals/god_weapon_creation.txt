@@ -830,7 +830,7 @@ OnDisable:
 
 que_god01,154,67,0	script	god_failwarp#1	FAKE_NPC,4,7,{
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnTouch:
 	warp "prontera",156,324;

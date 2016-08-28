@@ -102,7 +102,7 @@ xmas,162,209,5	script	Aspiring Wanderer, Soy	4_F_06,{
 			close;
 		}
 	} else if (job_wan == 1) {
-		if (strnpcinfo(0) == "Aspiring Wanderer, Soy") {
+		if (strnpcinfo(NPC_NAME) == "Aspiring Wanderer, Soy") {
 			mes "[Soy]";
 			mes "The performance will be held in front of the Christmas tree here in Lutie.";
 			mes "I can't wait! Ah~ I'm losing my senses, Mimi.";
@@ -120,7 +120,7 @@ xmas,162,209,5	script	Aspiring Wanderer, Soy	4_F_06,{
 		mes "<Nollio> is the best!!";
 		close;
 	} else {
-		if (strnpcinfo(0) == "Aspiring Wanderer, Soy") {
+		if (strnpcinfo(NPC_NAME) == "Aspiring Wanderer, Soy") {
 			mes "[Soy]";
 			mes "I want to become an famous Wanderer too, Mimi.";
 		} else {
@@ -1044,7 +1044,7 @@ OnInit:
 -	script	#wander_xmas	FAKE_NPC,{
 	end;
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 xmas,149,135,3	duplicate(#wander_xmas)	Guitar Song#xmas	4_M_MINSTREL

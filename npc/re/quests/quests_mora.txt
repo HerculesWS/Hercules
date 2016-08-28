@@ -382,7 +382,7 @@ OnTouch:
 		mes "- It's just an ordinary bush. -";
 		close;
 	}
-	.@i = atoi(charat(strnpcinfo(2),9));
+	.@i = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),9));
 	.@rand = rand(1,3);
 	mes "[Unarmed Laphine]";
 	mes "Aaaarrrrrggggghhhhh!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
@@ -401,18 +401,18 @@ OnTouch:
 	donpcevent "Bush"+.@i+"Timer::OnEnable";
 	close;
 OnEnable:
-	enablenpc strnpcinfo(0);
-	donpcevent "Bush"+charat(strnpcinfo(2),9)+"Timer::OnDisable";
+	enablenpc strnpcinfo(NPC_NAME);
+	donpcevent "Bush"+charat(strnpcinfo(NPC_NAME_HIDDEN),9)+"Timer::OnDisable";
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
 -	script	#mora_pouch	FAKE_NPC,{
 	end;
 OnTouch:
-	.@i = atoi(charat(strnpcinfo(2),9));
+	.@i = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),9));
 	if (ep14_1_bs == .@i+3) {
 		if (countitem(Small_Pocket) == 0) {
 			if (checkweight(Knife,1) == 0) {
@@ -452,18 +452,18 @@ OnTouch:
 -	script	#mora_fairy	FAKE_NPC,{
 	end;
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 OnTimer5000:
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	stopnpctimer;
 	end;
 }
@@ -507,22 +507,22 @@ spl_fild02,186,260,6	duplicate(#mora_fairy)	Fairy#cmd63	4_F_FAIRYKID4
 -	script	#mora_bush_timer	FAKE_NPC,{
 	end;
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnDisable:
 	stopnpctimer;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnTimer1000:
-	donpcevent "Bush#ep14_1_bs"+charat(strnpcinfo(0),4)+"::OnDisable";
+	donpcevent "Bush#ep14_1_bs"+charat(strnpcinfo(NPC_NAME),4)+"::OnDisable";
 	end;
 OnTimer600000:
-	donpcevent "Bush#ep14_1_bs"+charat(strnpcinfo(0),4)+"::OnEnable";
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent "Bush#ep14_1_bs"+charat(strnpcinfo(NPC_NAME),4)+"::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 }
 spl_fild02,180,1,0	duplicate(#mora_bush_timer)	Bush1Timer	4_F_FAIRYKID5
@@ -4102,19 +4102,19 @@ OnFullon:
 		mes "What will you do?";
 		next;
 		if(select("Collect samples.", "Leave.") == 2) {
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			end;
 		}
 		if (countitem(Bathtub_R_Sample) >= 10) {
 			mes "You will not need additional samples.";
 			close2;
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			end;
 		}
 		if (countitem(Empty_Cylinder) == 0) {
 			mes "To obtain a sample, you need a sample tube.";
 			close2;
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			end;
 		}
 		mes "Collecting samples.";
@@ -4126,7 +4126,7 @@ OnFullon:
 				mes "that it is difficult to collect samples.";
 				mes "You will have to lighten your load and come back.";
 				close2;
-				donpcevent strnpcinfo(0)+"::OnDisable";
+				donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 				end;
 			}
 			mes "Bath water sample collection complete.";
@@ -4137,7 +4137,7 @@ OnFullon:
 			percentheal 5,5;
 		}
 		close2;
-		donpcevent strnpcinfo(0)+"::OnDisable";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 		end;
 	} else if (questprogress(5021) || questprogress(5022)) {
 		if (questprogress(5021)) {
@@ -4152,13 +4152,13 @@ OnFullon:
 		mes "What do you want to do?";
 		next;
 		if(select("Look further.", "Leave.") == 2) {
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			end;
 		}
 		if (countitem(.@item) >= 10) {
 			mes "You will not need additional samples.";
 			close2;
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			end;
 		}
 		progressbar "ffff00",3;
@@ -4175,7 +4175,7 @@ OnFullon:
 		} else
 			mes "You thought you saw it on the ground, but it was an illusion.";
 		close2;
-		donpcevent strnpcinfo(0)+"::OnDisable";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 		end;
 	} else {
 		mes "???";
@@ -4186,16 +4186,16 @@ OnFullon:
 	}
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnReset:
 	if (rand(2))
-		donpcevent strnpcinfo(0)+"::OnEnable";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnEnable";
 	else
 		initnpctimer;
 	end;
@@ -4205,10 +4205,10 @@ OnTimer30000:
 OnTimer40000:
 OnTimer50000:
 	if (rand(2))
-		donpcevent strnpcinfo(0)+"::OnEnable";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnEnable";
 	end;
 OnTimer60000:
-	donpcevent strnpcinfo(0)+"::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnEnable";
 	end;
 OnTouch:
 	if (questprogress(5034) == 2 || ep14_1_muk == 0 || rand(5)) {
@@ -4238,7 +4238,7 @@ mora,116,81,0	duplicate(???#mora)	???#ep14_muk04	CLEAR_NPC,2,2
 mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 
 -	script	#mora_puddle	FAKE_NPC,{
-	.@i = atoi(charat(strnpcinfo(2),9));
+	.@i = atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),9));
 
 	// This script has a lot of checks,
 	// so arrays are only set when used.

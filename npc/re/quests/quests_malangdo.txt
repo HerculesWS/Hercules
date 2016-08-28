@@ -1335,7 +1335,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 			mes "- Ground is a bit cracked. -";
 			mes "- Used a stapler. -";
 			.off = 1;
-			donpcevent "Crackt"+substr(strnpcinfo(2),3,getstrlen(strnpcinfo(2))-1)+"#mal::OnEnable";
+			donpcevent "Crackt"+substr(strnpcinfo(NPC_NAME_HIDDEN),3,getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1)+"#mal::OnEnable";
 			close;
 		} else if (.@ma_cr1 == 7) {
 			mes "- With the crack opening -";
@@ -1388,7 +1388,7 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 						mes "- the other cracks. -";
 					}
 					.off = 1;
-					donpcevent "Crackt"+substr(strnpcinfo(2),3,getstrlen(strnpcinfo(2))-1)+"#mal::OnEnable";
+					donpcevent "Crackt"+substr(strnpcinfo(NPC_NAME_HIDDEN),3,getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1)+"#mal::OnEnable";
 					close;
 				}
 			}
@@ -1399,11 +1399,11 @@ mal_in02,140,94,0	script	Bob#mal	4_CAT_DOWN,{
 	mes "- not enough supporters yet. -";
 	close;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 OnDisable:
 	.off = 0;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 malangdo,114,157,0	duplicate(Crack#mal0)	Crack#mal1	4_CRACK
@@ -1420,22 +1420,22 @@ malangdo,162,183,0	duplicate(Crack#mal0)	Crack#mal10	4_CRACK
 -	script	Crackt0#mal	FAKE_NPC,{
 	end;
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnDisable:
 	stopnpctimer;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnTimer1000:
-	donpcevent "Crack#mal"+substr(strnpcinfo(1),6,getstrlen(strnpcinfo(1))-1)+"::OnDisable";
+	donpcevent "Crack#mal"+substr(strnpcinfo(NPC_NAME_VISIBLE),6,getstrlen(strnpcinfo(NPC_NAME_VISIBLE))-1)+"::OnDisable";
 	end;
 OnTimer30000:
-	donpcevent "Crack#mal"+substr(strnpcinfo(1),6,getstrlen(strnpcinfo(1))-1)+"::OnEnable";
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent "Crack#mal"+substr(strnpcinfo(NPC_NAME_VISIBLE),6,getstrlen(strnpcinfo(NPC_NAME_VISIBLE))-1)+"::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 }
 -	duplicate(Crackt0#mal)	Crackt1#mal	FAKE_NPC
@@ -1930,18 +1930,18 @@ mal_in01,116,168,0	script	Dry Machine#mal	2_SLOT_MACHINE,{
 			emotion e_omg,1;
 		}
 		.off = 1;
-		donpcevent "Water Sand"+strnpcinfo(2)+"#mal::OnEnable";
+		donpcevent "Water Sand"+strnpcinfo(NPC_NAME_HIDDEN)+"#mal::OnEnable";
 		close;
 	}
 	mes "- Seeems suspicious. -";
 	mes "- But it's just sand... -";
 	close;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 OnDisable:
 	.off = 0;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 malangdo,221,139,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#1	4_SOIL
@@ -1957,22 +1957,22 @@ malangdo,242,175,0	duplicate(Suspicious Sand Pile#0)	Suspicious Sand Pile#10	4_S
 
 -	script	Water Sand0#mal	FAKE_NPC,{
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnDisable:
 	stopnpctimer;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnTimer1000:
-	donpcevent "Suspicious Sand Pile#"+substr(strnpcinfo(1),10,getstrlen(strnpcinfo(1))-1)+"::OnDisable";
+	donpcevent "Suspicious Sand Pile#"+substr(strnpcinfo(NPC_NAME_VISIBLE),10,getstrlen(strnpcinfo(NPC_NAME_VISIBLE))-1)+"::OnDisable";
 	end;
 OnTimer30000:
-	donpcevent "Suspicious Sand Pile#"+substr(strnpcinfo(1),10,getstrlen(strnpcinfo(1))-1)+"::OnEnable";
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent "Suspicious Sand Pile#"+substr(strnpcinfo(NPC_NAME_VISIBLE),10,getstrlen(strnpcinfo(NPC_NAME_VISIBLE))-1)+"::OnEnable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 }
 -	duplicate(Water Sand0#mal)	Water Sand1#mal	FAKE_NPC
@@ -2604,7 +2604,7 @@ mal_dun01,133,125,5	script	Star Candy#mal	4_F_STARFISHGIRL,{
 }
 
 -	script	#skin_mal	FAKE_NPC,{
-	.@index = atoi(strnpcinfo(2));
+	.@index = atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	switch(.@index) {
 		case 29: .@str$ = "dry"; break;
 		case 30: .@str$ = "prickly"; break;
@@ -4175,7 +4175,7 @@ malangdo,133,134,0	script	Strange Pile of Sand#7	4_SOIL,{
 		close;
 	}
 	if (questprogress(7268)) {
-		.@quest = (strnpcinfo(0) == "Strange Pile of Sand#7")?7270:7275;
+		.@quest = (strnpcinfo(NPC_NAME) == "Strange Pile of Sand#7")?7270:7275;
 		if (!questprogress(.@quest)) {
 			mes "The pile of sand is billowed like a grave. Should be something in there.";
 			mes "According to rumors, cats have a habit to bury with sand after stool...";
@@ -5488,7 +5488,7 @@ L_Viewpoint:
 		mes "This is the Duruduru compass from the Meow Bravery Team.";
 		close;
 	}
-	.@index = atoi(strnpcinfo(2));
+	.@index = atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	switch(.@index) {
 	case 1:
 		setarray .@var[0],11,25;
@@ -5511,7 +5511,7 @@ L_Viewpoint:
 		.@color$ = "white";
 		break;
 	}
-	mes "Delicate "+.@color$+" lights surround the "+strnpcinfo(1)+".";
+	mes "Delicate "+.@color$+" lights surround the "+strnpcinfo(NPC_NAME_VISIBLE)+".";
 	if (nyadven02 < 11) {
 		mes "After inserting the card and pressing the button, characters appear on the screen.";
 		next;
@@ -5560,7 +5560,7 @@ L_Viewpoint:
 			input .@input;
 			if (.@input == .@nori_c) {
 				mes "The card slides out with a sound after entering the number.";
-				mes "^4d4dffYou have passed the "+strnpcinfo(1)+"! Run to the next destination!^000000";
+				mes "^4d4dffYou have passed the "+strnpcinfo(NPC_NAME_VISIBLE)+"! Run to the next destination!^000000";
 				mes "You should run for the next destination.";
 				++nyadven02;
 				close;

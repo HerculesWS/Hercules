@@ -1254,27 +1254,27 @@ OnTimer5000:
 	end;
 
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	callfunc "F_Tower_Monster",
-		atoi(replacestr(strnpcinfo(0),"FGate102tower","")) + 1,
-		strnpcinfo(4),
-		instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+		atoi(replacestr(strnpcinfo(NPC_NAME),"FGate102tower","")) + 1,
+		strnpcinfo(NPC_MAP),
+		instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 	end;
 
 OnTouch_:
 	callfunc "F_Tower_Warp",
-		atoi(replacestr(strnpcinfo(0),"FGate102tower","")) + 1,
-		strnpcinfo(4);
+		atoi(replacestr(strnpcinfo(NPC_NAME),"FGate102tower","")) + 1,
+		strnpcinfo(NPC_MAP);
 	end;
 
 OnMyMobDead:
-	.@map$ = strnpcinfo(4);
-	.@level = atoi(replacestr(strnpcinfo(0),"FGate102tower","")) + 1;
-	.@mob_dead_num = mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	.@map$ = strnpcinfo(NPC_MAP);
+	.@level = atoi(replacestr(strnpcinfo(NPC_NAME),"FGate102tower","")) + 1;
+	.@mob_dead_num = mobcount(.@map$,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
 		initnpctimer;
 		//SetItemPartyInMap in_102floor .@level
@@ -1283,8 +1283,8 @@ OnMyMobDead:
 	end;
 
 OnTimer5000:
-	.@level = atoi(replacestr(strnpcinfo(0),"FGate102tower","")) + 1;
-	mapannounce strnpcinfo(4), "All Monsters on the "+callsub(L_Display,.@level)+" Level have been defeated.",bc_map,"0xffff00";
+	.@level = atoi(replacestr(strnpcinfo(NPC_NAME),"FGate102tower","")) + 1;
+	mapannounce strnpcinfo(NPC_MAP), "All Monsters on the "+callsub(L_Display,.@level)+" Level have been defeated.",bc_map,"0xffff00";
 	donpcevent instance_npcname(.@level+"FGate102tower")+"::OnEnable";
 	stopnpctimer;
 	end;

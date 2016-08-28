@@ -338,7 +338,7 @@ louyang,84,254,0	script	Exit#lou	HIDDEN_NPC,{
 		if (rand(1,100) == 34) {
 			percentheal -99,0;
 			warp "louyang",86,269;
-			mapannounce "louyang",""+strnpcinfo(0)+" : Oh God, I'm faaaaaaaaaaaalling~~!!!!",bc_map;
+			mapannounce "louyang",""+strnpcinfo(NPC_NAME)+" : Oh God, I'm faaaaaaaaaaaalling~~!!!!",bc_map;
 		}
 		else {
 			warp "lou_in01",10,18;

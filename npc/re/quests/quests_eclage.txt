@@ -42,8 +42,8 @@ ecl_fild01,118,311,4	script	Teleport Cat No.1#1	4_M_BOSSCAT,{
 	mes "[Teleport Cat]";
 	mes "We provide teleport service between various regions based on our accumulated knowledge. We accept Malangdo Canned Specialties or Zeny, so you can pay however you like it~";
 	next;
-	.@index[0] = .index[(atoi(strnpcinfo(2))*2-2)];
-	.@index[1] = .index[(atoi(strnpcinfo(2))*2-1)];
+	.@index[0] = .index[(atoi(strnpcinfo(NPC_NAME_HIDDEN))*2-2)];
+	.@index[1] = .index[(atoi(strnpcinfo(NPC_NAME_HIDDEN))*2-1)];
 	.@menu$ = "Forget it:";
 	for (.@i=0; .@i < getarraysize(.maps$); .@i++){
 		for (.@j=0; .@j<2; .@j++){
@@ -12838,8 +12838,8 @@ ecl_tdun02,99,63,5	script	Rosi#No.1	4_F_HUWOMAN,1,1,{
 	end;
 
 OnInit:
-	if (atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) ) > 1){
-		disablenpc strnpcinfo(0);
+	if (atoi( charat( strnpcinfo(NPC_NAME), getstrlen(strnpcinfo(NPC_NAME))-1 ) ) > 1){
+		disablenpc strnpcinfo(NPC_NAME);
 	}
 	end;
 
@@ -12856,7 +12856,7 @@ OnTouch:
 			close;
 		}
 		if ((questprogress(13055) == 1) && (questprogress(13056) == 1)) {
-			.@npc_uin = atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) );
+			.@npc_uin = atoi( charat( strnpcinfo(NPC_NAME), getstrlen(strnpcinfo(NPC_NAME))-1 ) );
 			mes "[Rosi]";
 			mes "It's you again! Oh, is it because I'm a woman? Let me make it clear here. I'm going nowhere until I get a news item.";
 			erasequest 13056;
@@ -12881,7 +12881,7 @@ OnTouch:
 	}
 	else if (ep14_2_nines == 2) {
 		if ((questprogress(13055) == 1) && (questprogress(13056) == 1)) {
-			.@npc_uin = atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) );
+			.@npc_uin = atoi( charat( strnpcinfo(NPC_NAME), getstrlen(strnpcinfo(NPC_NAME))-1 ) );
 			mes "[Rosi]";
 			mes "Oh my gosh! You scared me! What are you doing here?";
 			next;
@@ -12929,8 +12929,8 @@ ecl_tdun01,11,62,5	script	Euncheong#No.1	4_M_HUBOY,1,1,{
 	end;
 
 OnInit:
-	if (atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) ) > 1){
-		disablenpc strnpcinfo(0);
+	if (atoi( charat( strnpcinfo(NPC_NAME), getstrlen(strnpcinfo(NPC_NAME))-1 ) ) > 1){
+		disablenpc strnpcinfo(NPC_NAME);
 	}
 	end;
 
@@ -12947,7 +12947,7 @@ OnTouch:
 			close;
 		}
 		if ((questprogress(13055) == 1) && (questprogress(13057) == 1)) {
-			.@npc_uin = atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) );
+			.@npc_uin = atoi( charat( strnpcinfo(NPC_NAME), getstrlen(strnpcinfo(NPC_NAME))-1 ) );
 			mes "[Euncheong]";
 			mes "You really shouldn't worry about me. I'll go out when I'm done exploring...Tell him I'm doing okay.";
 			next;
@@ -12975,7 +12975,7 @@ OnTouch:
 	}
 	else if (ep14_2_nines == 2) {
 		if ((questprogress(13055) == 1) && (questprogress(13057) == 1)){
-			.@npc_uin = atoi( charat( strnpcinfo(0), getstrlen(strnpcinfo(0))-1 ) );
+			.@npc_uin = atoi( charat( strnpcinfo(NPC_NAME), getstrlen(strnpcinfo(NPC_NAME))-1 ) );
 			mes "[Euncheong]";
 			mes "Are you an adventurer, too? Don't you dare cut in here. I was here first.";
 			next;
@@ -19386,7 +19386,7 @@ OnTimer8000:
 que_avan01,22,40,3	script	Avant's Summon#tlact01	DARK_PRIEST,{
 	end;
 OnInit:
-	hideonnpc strnpcinfo(0);
+	hideonnpc strnpcinfo(NPC_NAME);
 	end;
 }
 

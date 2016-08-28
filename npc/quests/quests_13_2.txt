@@ -67,7 +67,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 		next;
 		switch(select("Save your location", "Cancel")) {
 		case 1:
-			if (strnpcinfo(2) == "spl") savepoint "spl_fild02",32,225;
+			if (strnpcinfo(NPC_NAME_HIDDEN) == "spl") savepoint "spl_fild02",32,225;
 			else savepoint "man_fild02",129,61;
 			mes "[Cat Hand Agent]";
 			mes "Thank you.";
@@ -87,7 +87,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 		next;
 		switch(select("Save your location", "Use Storage", "Cancel")) {
 		case 1:
-			if (strnpcinfo(2) == "spl") savepoint "spl_fild02",32,225;
+			if (strnpcinfo(NPC_NAME_HIDDEN) == "spl") savepoint "spl_fild02",32,225;
 			else savepoint "man_fild02",129,61;
 			mes "[Cat Hand Agent]";
 			mes "Thank you.";
@@ -134,7 +134,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 		next;
 		switch(select("Save your location", "Use Storage", "Use Cat Warp (Midgard)", "Cancel")) {
 		case 1:
-			if (strnpcinfo(2) == "spl") savepoint "spl_fild02",32,225;
+			if (strnpcinfo(NPC_NAME_HIDDEN) == "spl") savepoint "spl_fild02",32,225;
 			else savepoint "man_fild02",129,61;
 			mes "[Cat Hand Agent]";
 			mes "Thank you.";
@@ -255,7 +255,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 		next;
 		switch(select("Save your location", "Use Storage", "Use Cat Warp (Midgard)", "Use Cat Warp (Jottunheim)", "Cancel")) {
 		case 1:
-			if (strnpcinfo(2) == "spl") savepoint "spl_fild02",32,225;
+			if (strnpcinfo(NPC_NAME_HIDDEN) == "spl") savepoint "spl_fild02",32,225;
 			else savepoint "man_fild02",129,61;
 			mes "[Cat Hand Agent]";
 			mes "Thank you.";
@@ -358,7 +358,7 @@ spl_fild02,25,211,4	script	Cat Hand Agent#spl	4_M_BOSSCAT,{
 				close;
 			}
 		case 4:
-			if (strnpcinfo(2) == "spl") switch(select("Alliance Forces Post -> 5500z", "Manuk Camp -> 7500z", "Cancel")) {
+			if (strnpcinfo(NPC_NAME_HIDDEN) == "spl") switch(select("Alliance Forces Post -> 5500z", "Manuk Camp -> 7500z", "Cancel")) {
 				case 1: Catwarp(5500,13);
 				case 2: Catwarp(5500,12);
 				case 3:
@@ -426,7 +426,7 @@ man_fild02,132,47,4	duplicate(Cat Hand Agent#spl)	Cat Hand Agent#man	4_M_BOSSCAT
 		else if (.@rhea_ran == 17) getitem Manuk_Coin,1;
 		else getitem Unidentified_Mineral,1;
 		initnpctimer;
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 		end;
 	}
 	else {
@@ -437,7 +437,7 @@ man_fild02,132,47,4	duplicate(Cat Hand Agent#spl)	Cat Hand Agent#man	4_M_BOSSCAT
 	end;
 
 OnTimer120000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }
@@ -2463,7 +2463,7 @@ spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
 			close;
 		}
 		else if (ep13_mdrama == 27) {
-			if (strnpcinfo(1) == "Arc") {
+			if (strnpcinfo(NPC_NAME_VISIBLE) == "Arc") {
 				mes "[Arc]";
 				mes "Terra. Get some rest...";
 				mes "Rest easy...";
@@ -2475,18 +2475,18 @@ spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
 				mes "I'm sorry... And. You...";
 			}
 			next;
-			mes "["+strnpcinfo(1)+"]";
+			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
 			mes "Originally... we Laphine were extremely reluctant to have others in our area.";
 			mes strcharinfo(0) + ", you will be a special exception.";
 			next;
-			mes "["+strnpcinfo(1)+"]";
-			if (strnpcinfo(1) == "Arc") mes "That's what Terra wants too.";
+			mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
+			if (strnpcinfo(NPC_NAME_VISIBLE) == "Arc") mes "That's what Terra wants too.";
 			mes "It might be cramped, but you are always welcome to visit us.";
 			ep13_mdrama = 28;
 			close;
 		}
 		else if (ep13_mdrama > 27) {
-			if (strnpcinfo(1) == "Arc") {
+			if (strnpcinfo(NPC_NAME_VISIBLE) == "Arc") {
 				mes "[Arc]";
 				mes "How are you adapting to Splendide?";
 				mes "Terra's still not fully recovered yet, so keep that in mind.";
@@ -2500,7 +2500,7 @@ spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
 		}
 		else {
 			// custom translation
-			if (strnpcinfo(1) == "Arc") {
+			if (strnpcinfo(NPC_NAME_VISIBLE) == "Arc") {
 				mes "[Arc]";
 				mes "The back of the right ... ";
 				mes "......";
@@ -2514,7 +2514,7 @@ spl_in02,236,92,5	script	Arc#ep13md_l02	4_M_FAIRYSOLDIER,{
 		}
 	}
 	else {
-		if (strnpcinfo(1) == "Arc") {
+		if (strnpcinfo(NPC_NAME_VISIBLE) == "Arc") {
 			mes "[Arc]";
 			mes "HirWosWeh. Yee DiebVilFar U manTalVil.";
 			mes "LarsNeiser...??";
@@ -3270,23 +3270,23 @@ mid_camp,192,239,4	script	Wanted Sign#ep13_2ect01	4_BOARD3,{
 	if ((ep13_2_dayegg == 1) && (countitem(Egg_Of_Draco) < 10)) {
 		mes "We just got fresh eggs from the dragon nest.";
 		getitem Egg_Of_Draco,1;
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 		initnpctimer;
 		close;
 	}
 	end;
 
 OnTimer420000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
@@ -3305,23 +3305,23 @@ nyd_dun02,68,256,0	script	Dragon Egg#ep13_degg_1	4_DRAGON_EGG,{
 	if ((ep13_2_dayegg == 1) && (countitem(Egg_Of_Draco) < 10)) {
 		mes "We just got fresh eggs from the dragon nest.";
 		getitem Egg_Of_Draco,1;
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 		initnpctimer;
 		close;
 	}
 	end;
 
 OnTimer240000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 nyd_dun02,68,256,0	duplicate(Dragon Egg#ep13_degg_1)	Dragon Egg#ep13_degg11	4_DRAGON_EGG
@@ -3336,23 +3336,23 @@ nyd_dun02,201,166,0	script	Dragon Egg#ep13_degg_2	4_DRAGON_EGG,{
 	if ((ep13_2_dayegg == 1) && (countitem(Egg_Of_Draco) < 10)) {
 		mes "We just got fresh eggs from the dragon nest.";
 		getitem Egg_Of_Draco,1;
-		disablenpc strnpcinfo(0);
+		disablenpc strnpcinfo(NPC_NAME);
 		initnpctimer;
 		close;
 	}
 	end;
 
 OnTimer120000:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnDisable:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 nyd_dun02,201,166,0	duplicate(Dragon Egg#ep13_degg_2)	Dragon Egg#ep13_degg16	4_DRAGON_EGG
@@ -4876,8 +4876,8 @@ mjolnir_12,220,37,0	duplicate(mjo_no_find)	#mj12_find_3	FAKE_NPC,5,5
 					else if (.@stst == 1) getitem Rough_Mineral,1;
 					else getitem Rough_Mineral,2;
 					close2;
-					donpcevent strnpcinfo(0)+"_t::OnEnable";
-					disablenpc strnpcinfo(0);
+					donpcevent strnpcinfo(NPC_NAME)+"_t::OnEnable";
+					disablenpc strnpcinfo(NPC_NAME);
 					end;
 				}
 			case 2:
@@ -4893,7 +4893,7 @@ mjolnir_12,220,37,0	duplicate(mjo_no_find)	#mj12_find_3	FAKE_NPC,5,5
 	end;
 
 OnInit:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnTouch:
@@ -5226,8 +5226,8 @@ OnTouch:
 					if (.@stst == 5) getitem Rough_Mineral,5;
 					else if (.@stst == 1) getitem Rough_Mineral,2;
 					else getitem Rough_Mineral,1;
-					donpcevent strnpcinfo(0)+"_t::OnEnable";
-					disablenpc strnpcinfo(0);
+					donpcevent strnpcinfo(NPC_NAME)+"_t::OnEnable";
+					disablenpc strnpcinfo(NPC_NAME);
 					close;
 				}
 			case 2:
@@ -5243,7 +5243,7 @@ OnTouch:
 	end;
 
 OnInit:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnTouch:
@@ -5359,8 +5359,8 @@ OnTouch:
 					if (.@stst == 5) getitem Rough_Mineral,5;
 					else if (.@stst == 1) getitem Rough_Mineral,2;
 					else getitem Rough_Mineral,1;
-					donpcevent strnpcinfo(0)+"_t::OnEnable";
-					disablenpc strnpcinfo(0);
+					donpcevent strnpcinfo(NPC_NAME)+"_t::OnEnable";
+					disablenpc strnpcinfo(NPC_NAME);
 					close;
 				}
 			case 2:
@@ -5376,7 +5376,7 @@ OnTouch:
 	end;
 
 OnInit:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnTouch:
@@ -6940,7 +6940,7 @@ OnTouch:
 
 -	script	ep13_warp_s_0	FAKE_NPC,{
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 OnTimer2000:
 OnTimer4000:
@@ -6954,18 +6954,18 @@ OnTimer8000:
 
 OnTimer10000:
 	specialeffect EF_STEAL;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnDisable:
 	specialeffect EF_WIND;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
 -	script	ep13_warp_s_1	FAKE_NPC,{
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 OnTimer2000:
 OnTimer4000:
@@ -6980,18 +6980,18 @@ OnTimer10000:
 
 OnTimer12000:
 	specialeffect EF_STEAL;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnDisable:
 	specialeffect EF_WIND;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
 -	script	ep13_warp_s_2	FAKE_NPC,{
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 OnTimer2000:
 OnTimer4000:
@@ -7007,12 +7007,12 @@ OnTimer12000:
 
 OnTimer15000:
 	specialeffect EF_STEAL;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnDisable:
 	specialeffect EF_WIND;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 

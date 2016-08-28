@@ -166,7 +166,7 @@ ve_in,237,125,0	script	King Crab#job_shu	1_M_PAY_ELDER,{
 		setquest 11155;
 		close;
 	} else {
-		if (strnpcinfo(0) == "King Crab#job_shu") {
+		if (strnpcinfo(NPC_NAME) == "King Crab#job_shu") {
 			mes "[King Crab]";
 			mes "How come a little rookie knocked me out! Me! The great King Crab...";
 		} else {

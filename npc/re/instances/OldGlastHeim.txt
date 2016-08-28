@@ -231,8 +231,8 @@ OnEnable:
 }
 
 1@gl_k,145,54,6	script	Khalitzburg Knight#1	4_F_KHALITZBURG,{
-	mesf("[%s]", strnpcinfo(1));
-	switch ((atoi(strnpcinfo(2)) + 1) / 2) {
+	mesf("[%s]", strnpcinfo(NPC_NAME_VISIBLE));
+	switch ((atoi(strnpcinfo(NPC_NAME_HIDDEN)) + 1) / 2) {
 		case 1: mes("Is there something you need?"); break;
 		case 2: mes("What can I do for you?"); break;
 		case 3: mes("..."); break;
@@ -247,10 +247,10 @@ OnEnable:
 	}
 	close;
 OnDisable:
-	hideonnpc instance_npcname(strnpcinfo(0));
+	hideonnpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 OnEnable:
-	hideoffnpc instance_npcname(strnpcinfo(0));
+	hideoffnpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 }
 
@@ -680,11 +680,11 @@ OnMyMobDead:
 
 OnInstanceInit:
 OnDisable:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEffect1:
@@ -721,17 +721,17 @@ OnEffect1:
 
 OnInstanceInit:
 OnDisable:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnTouch:
 	.@map1$ = instance_mapname("1@gl_k");
 	.@map2$ = instance_mapname("2@gl_k");
-	switch (atoi(replacestr(strnpcinfo(2), "ghinstancewarp", ""))) {
+	switch (atoi(replacestr(strnpcinfo(NPC_NAME_HIDDEN), "ghinstancewarp", ""))) {
 		case 1: warp .@map1$,80,80; break;
 		case 2: warp .@map1$,105,80; break;
 		case 3: warp .@map1$,215,79; break;
@@ -963,8 +963,8 @@ OnTouch:
 	else .@mobs = 7;
 	getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
 	specialeffect EF_VENOMDUST;
-	monster(.@map$, .@x, .@y, "Maggot", MG_ARCLOUSE, .@mobs, instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
-	disablenpc instance_npcname(strnpcinfo(0));
+	monster(.@map$, .@x, .@y, "Maggot", MG_ARCLOUSE, .@mobs, instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead");
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnMyMobDead:
@@ -972,11 +972,11 @@ OnMyMobDead:
 
 OnInstanceInit:
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnDisable:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 }
 

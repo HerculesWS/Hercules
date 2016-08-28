@@ -609,56 +609,56 @@ function	script	F_KafSet	{
 	deletearray @wrpP$;
 	deletearray @viewpX;
 	deletearray @viewpY;
-	if (strnpcinfo(4) == "prontera") {
+	if (strnpcinfo(NPC_MAP) == "prontera") {
 		setarray @wrpD$, "Izlude", "Geffen", "Payon", "Morroc", "Orc Dungeon", "Alberta";
 		setarray @wrpP, 600, 1200, 1200, 1200, 1200, 1800;
 		setarray @viewpX, 151, 29, 282, 152;
 		setarray @viewpY, 29, 207, 200, 326;
-	} else if (strnpcinfo(4) == "alberta") {
+	} else if (strnpcinfo(NPC_MAP) == "alberta") {
 		setarray @wrpP, 1200, 1800, 1800;
 		setarray @wrpD$, "Payon", "Morroc", "Prontera";
 		setarray @viewpX, 28, 113, 0, 0;
 		setarray @viewpY, 229, 60, 0, 0;
-	} else if (strnpcinfo(4) == "aldebaran") {
+	} else if (strnpcinfo(NPC_MAP) == "aldebaran") {
 		setarray @wrpP, 1200, 1200, 1800, 1700;
 		setarray @wrpD$, "Geffen", "Juno" , "Izlude", "Mjolnir Dead Pit";
-	} else if (strnpcinfo(4) == "comodo" ) {
+	} else if (strnpcinfo(NPC_MAP) == "comodo" ) {
 		setarray @wrpD$, "Morroc", "Comodo Pharos Beacon", "Umbala";
 		setarray @wrpP, 1800, 1200, 1800;
-	} else if (strnpcinfo(4) == "cmd_fild07") {
+	} else if (strnpcinfo(NPC_MAP) == "cmd_fild07") {
 		setarray @wrpD$, "Comodo", "Morroc";
 		setarray @wrpP, 1200, 1200;
-	} else if (strnpcinfo(4) == "geffen") {
+	} else if (strnpcinfo(NPC_MAP) == "geffen") {
 		setarray @wrpD$, "Prontera", "Al De Baran", "Orc Dungeon", "Mjolnir Dead Pit";
 		setarray @wrpP, 1200, 1200, 1200, 1700;
 		setarray @viewpX, 120, 203;
 		setarray @viewpY, 62, 123;
-	} else if (strnpcinfo(4) == "izlude") {
+	} else if (strnpcinfo(NPC_MAP) == "izlude") {
 		setarray @wrpD$, "Geffen", "Payon", "Morroc", "Al De Baran";
 		setarray @wrpP, 1200, 1200, 1200, 1800;
-	} else if (strnpcinfo(4) == "morocc") {
+	} else if (strnpcinfo(NPC_MAP) == "morocc") {
 		setarray @wrpD$, "Prontera", "Payon", "Alberta", "Comodo", "Comodo Pharos Beacon";
 		setarray @wrpP, 1200, 1200, 1800, 1800, 1200;
 		setarray @viewpX, 156, 163, 28, 292;
 		setarray @viewpY, 97, 260, 167, 211;
-	} else if (strnpcinfo(4) == "umbala") {
+	} else if (strnpcinfo(NPC_MAP) == "umbala") {
 		setarray @wrpD$, "Comodo";
 		setarray @wrpP, 1800;
-	} else if (strnpcinfo(4) == "payon") {
+	} else if (strnpcinfo(NPC_MAP) == "payon") {
 		setarray @wrpD$, "Prontera", "Alberta", "Morroc";
 		setarray @wrpP, 1200, 1200, 1200;
-	} else if (strnpcinfo(4) == "yuno") {
+	} else if (strnpcinfo(NPC_MAP) == "yuno") {
 		setarray @wrpD$, "Al De Baran";
 		setarray @wrpP, 1200;
 		setarray @viewpX, 328, 278, 153, 0;
 		setarray @viewpY, 108, 221, 187, 0;
-	} else if (strnpcinfo(4) == "job3_rune01") {
+	} else if (strnpcinfo(NPC_MAP) == "job3_rune01") {
 		setarray @wrpD$, "Izlude", "Geffen", "Payon", "Morroc", "Alberta";
 		setarray @wrpP, 600, 1200, 1200, 1200, 1800;
-	} else if (strnpcinfo(4) == "rachel") {
+	} else if (strnpcinfo(NPC_MAP) == "rachel") {
 		setarray @wrpD$, "Veins";
 		setarray @wrpP, 2200;
-	} else if (strnpcinfo(4) == "veins") {
+	} else if (strnpcinfo(NPC_MAP) == "veins") {
 		setarray @wrpD$, "Rachel";
 		setarray @wrpP, 2200;
 	}
