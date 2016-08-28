@@ -44,7 +44,7 @@ void ipban_init(void)
 {
 	ipban->p->inited = true;
 
-	if (!login->config->ipban)
+	if (!ipban->p->config->enabled)
 		return;// ipban disabled
 
 	// establish connections
@@ -59,10 +59,10 @@ void ipban_init(void)
 	if (ipban->p->config->db_codepage[0] != '\0' && SQL_ERROR == SQL->SetEncoding(ipban->p->sql_handle, ipban->p->config->db_codepage))
 		Sql_ShowDebug(ipban->p->sql_handle);
 
-	if (login->config->ipban_cleanup_interval > 0) {
+	if (ipban->p->config->cleanup_interval > 0) {
 		// set up periodic cleanup of connection history and active bans
 		timer->add_func_list(ipban->p->cleanup, "ipban_cleanup");
-		ipban->p->cleanup_timer_id = timer->add_interval(timer->gettick()+10, ipban->p->cleanup, 0, 0, login->config->ipban_cleanup_interval*1000);
+		ipban->p->cleanup_timer_id = timer->add_interval(timer->gettick()+10, ipban->p->cleanup, 0, 0, ipban->p->config->cleanup_interval*1000);
 	} else {
 		// make sure it gets cleaned up on login-server start regardless of interval-based cleanups
 		ipban->p->cleanup(0,0,0,0);
@@ -72,10 +72,10 @@ void ipban_init(void)
 // finalize
 void ipban_final(void)
 {
-	if (!login->config->ipban)
+	if (!ipban->p->config->enabled)
 		return;// ipban disabled
 
-	if (login->config->ipban_cleanup_interval > 0)
+	if (ipban->p->config->cleanup_interval > 0)
 		// release data
 		timer->delete(ipban->p->cleanup_timer_id, ipban->p->cleanup);
 
@@ -188,10 +188,10 @@ bool ipban_config_read_dynamic(const char *filename, struct config_t *config, bo
 		return false;
 	}
 
-	libconfig->setting_lookup_bool_real(setting, "enabled", &login->config->dynamic_pass_failure_ban);
-	libconfig->setting_lookup_uint32(setting, "ban_interval", &login->config->dynamic_pass_failure_ban_interval);
-	libconfig->setting_lookup_uint32(setting, "ban_limit", &login->config->dynamic_pass_failure_ban_limit);
-	libconfig->setting_lookup_uint32(setting, "ban_duration", &login->config->dynamic_pass_failure_ban_duration);
+	libconfig->setting_lookup_bool_real(setting, "enabled", &ipban->p->config->dynamic_pass_failure_ban);
+	libconfig->setting_lookup_uint32(setting, "ban_interval", &ipban->p->config->dynamic_pass_failure_ban_interval);
+	libconfig->setting_lookup_uint32(setting, "ban_limit", &ipban->p->config->dynamic_pass_failure_ban_limit);
+	libconfig->setting_lookup_uint32(setting, "ban_duration", &ipban->p->config->dynamic_pass_failure_ban_duration);
 
 	return true;
 }
@@ -222,8 +222,8 @@ bool ipban_config_read(const char *filename, struct config_t *config, bool impor
 		return false;
 	}
 
-	libconfig->setting_lookup_bool_real(setting, "enabled", &login->config->ipban);
-	libconfig->setting_lookup_uint32(setting, "cleanup_interval", &login->config->ipban_cleanup_interval);
+	libconfig->setting_lookup_bool_real(setting, "enabled", &ipban->p->config->enabled);
+	libconfig->setting_lookup_uint32(setting, "cleanup_interval", &ipban->p->config->cleanup_interval);
 
 	if (!ipban->p->config_read_inter("conf/common/inter-server.conf", imported))
 		retval = false;
@@ -242,7 +242,7 @@ bool ipban_check(uint32 ip)
 	char* data = NULL;
 	int matches;
 
-	if (!login->config->ipban)
+	if (!ipban->p->config->enabled)
 		return false;// ipban disabled
 
 	if( SQL_ERROR == SQL->Query(ipban->p->sql_handle, "SELECT count(*) FROM `%s` WHERE `rtime` > NOW() AND (`list` = '%u.*.*.*' OR `list` = '%u.%u.*.*' OR `list` = '%u.%u.%u.*' OR `list` = '%u.%u.%u.%u')",
@@ -268,17 +268,17 @@ void ipban_log(uint32 ip)
 {
 	unsigned long failures;
 
-	if (!login->config->ipban)
+	if (!ipban->p->config->enabled || !ipban->p->config->dynamic_pass_failure_ban)
 		return;// ipban disabled
 
-	failures = loginlog_failedattempts(ip, login->config->dynamic_pass_failure_ban_interval);// how many times failed account? in one ip.
+	failures = loginlog_failedattempts(ip, ipban->p->config->dynamic_pass_failure_ban_interval);// how many times failed account? in one ip.
 
 	// if over the limit, add a temporary ban entry
-	if (failures >= login->config->dynamic_pass_failure_ban_limit)
+	if (failures >= ipban->p->config->dynamic_pass_failure_ban_limit)
 	{
 		uint8* p = (uint8*)&ip;
 		if (SQL_ERROR == SQL->Query(ipban->p->sql_handle, "INSERT INTO `%s`(`list`,`btime`,`rtime`,`reason`) VALUES ('%u.%u.%u.*', NOW() , NOW() +  INTERVAL %u MINUTE ,'Password error ban')",
-			ipban->p->config->db_table, p[3], p[2], p[1], login->config->dynamic_pass_failure_ban_duration))
+			ipban->p->config->db_table, p[3], p[2], p[1], ipban->p->config->dynamic_pass_failure_ban_duration))
 		{
 			Sql_ShowDebug(ipban->p->sql_handle);
 		}
@@ -287,13 +287,18 @@ void ipban_log(uint32 ip)
 
 // remove expired bans
 int ipban_cleanup(int tid, int64 tick, int id, intptr_t data) {
-	if (!login->config->ipban)
+	if (!ipban->p->config->enabled)
 		return 0;// ipban disabled
 
 	if( SQL_ERROR == SQL->Query(ipban->p->sql_handle, "DELETE FROM `%s` WHERE `rtime` <= NOW()", ipban->p->config->db_table) )
 		Sql_ShowDebug(ipban->p->sql_handle);
 
 	return 0;
+}
+
+bool ipban_is_enabled(void)
+{
+	return ipban->p->config->enabled;
 }
 
 void ipban_defaults (void)
@@ -309,6 +314,12 @@ void ipban_defaults (void)
 	safestrncpy(ipban->p->config->db_database, "ragnarok", sizeof(ipban->p->config->db_database));
 	ipban->p->config->db_codepage[0] = '\0';
 	safestrncpy(ipban->p->config->db_table, "ipbanlist", sizeof(ipban->p->config->db_table));
+	ipban->p->config->cleanup_interval = 60;
+	ipban->p->config->enabled = true;
+	ipban->p->config->dynamic_pass_failure_ban = true;
+	ipban->p->config->dynamic_pass_failure_ban_interval = 5;
+	ipban->p->config->dynamic_pass_failure_ban_limit = 7;
+	ipban->p->config->dynamic_pass_failure_ban_duration = 5;
 
 	ipban->p->sql_handle = NULL;
 	ipban->p->cleanup_timer_id = INVALID_TIMER;
@@ -323,4 +334,5 @@ void ipban_defaults (void)
 	ipban->check = ipban_check;
 	ipban->log = ipban_log;
 	ipban->config_read = ipban_config_read;
+	ipban->is_enabled = ipban_is_enabled;
 }

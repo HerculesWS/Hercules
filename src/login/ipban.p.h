@@ -31,7 +31,13 @@ struct ipban_config {
 	char   db_password[100];
 	char   db_database[32];
 	char   db_codepage[32];
-	char   db_table[32];	
+	char   db_table[32];
+	uint32 cleanup_interval;                  ///< interval (in seconds) to clean up expired IP bans
+	bool enabled;                                   ///< perform IP blocking (via contents of `ipbanlist`) ?
+	bool dynamic_pass_failure_ban;                  ///< automatic IP blocking due to failed login attemps ?
+	uint32 dynamic_pass_failure_ban_interval;       ///< how far to scan the loginlog for password failures
+	uint32 dynamic_pass_failure_ban_limit;          ///< number of failures needed to trigger the ipban
+	uint32 dynamic_pass_failure_ban_duration;       ///< duration of the ipban
 };
 
 // The login ipban automatic ban private interface

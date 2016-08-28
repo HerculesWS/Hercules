@@ -360,7 +360,7 @@ int lclif_parse(int fd)
 
 	if ((sd = sockt->session[fd]->session_data) == NULL) {
 		// Perform ip-ban check
-		if (login->config->ipban && !sockt->trusted_ip_check(ipl) && ipban->check(ipl)) {
+		if (ipban->is_enabled() && !sockt->trusted_ip_check(ipl) && ipban->check(ipl)) {
 			ShowStatus("Connection refused: IP isn't authorized (deny/allow, ip: %s).\n", ip);
 			login_log(ipl, "unknown", -3, "ip banned");
 			lclif->login_error(fd, 3); // 3 = Rejected from Server

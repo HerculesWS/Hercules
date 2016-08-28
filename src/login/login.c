@@ -1325,7 +1325,7 @@ void login_auth_failed(struct login_session_data *sd, int result)
 		login_log(ip, sd->userid, result, error); // FIXME: result can be 100, conflicting with the value 100 we use for successful login...
 	}
 
-	if (result == 1 && login->config->dynamic_pass_failure_ban && !sockt->trusted_ip_check(ip))
+	if (result == 1 && !sockt->trusted_ip_check(ip))
 		ipban->log(ip); // log failed password attempt
 
 	if (result == 6) {
@@ -1433,7 +1433,6 @@ void login_config_set_defaults(void)
 {
 	login->config->login_ip = INADDR_ANY;
 	login->config->login_port = 6900;
-	login->config->ipban_cleanup_interval = 60;
 	login->config->ip_sync_interval = 0;
 	login->config->log_login = true;
 	safestrncpy(login->config->date_format, "%Y-%m-%d %H:%M:%S", sizeof(login->config->date_format));
@@ -1447,11 +1446,6 @@ void login_config_set_defaults(void)
 	login->config->allowed_regs = 1;
 	login->config->time_allowed = 10;
 
-	login->config->ipban = true;
-	login->config->dynamic_pass_failure_ban = true;
-	login->config->dynamic_pass_failure_ban_interval = 5;
-	login->config->dynamic_pass_failure_ban_limit = 7;
-	login->config->dynamic_pass_failure_ban_duration = 5;
 	login->config->use_dnsbl = false;
 	VECTOR_INIT(login->config->dnsbl_servers);
 
