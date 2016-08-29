@@ -1827,7 +1827,7 @@ tha_t12,161,57,0	script	Gold Religious Statue#tt	HIDDEN_NPC,{
 				delitem Magic_Gem_Yellow,1;
 				$@thana_summon = 1;
 				donpcevent "#tteffect01::OnEnable";
-				mapannounce "tha_t12","The golden magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+				mapannounce "tha_t12","The golden magic power has released part of the seal.",bc_map,C_LIME; //FW_NORMAL 12 0 0
 				close;
 			}
 			mes "Someone has already inserted a Charm Stone into this statue.";
@@ -1857,7 +1857,7 @@ tha_t12,154,17,0	script	Green Wiseman Statue#tt	HIDDEN_NPC,{
 				delitem Magic_Gem_Green,1;
 				$@thana_summon = 2;
 				donpcevent "#tteffect02::OnEnable";
-				mapannounce "tha_t12","The green magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+				mapannounce "tha_t12","The green magic power has released part of the seal.",bc_map,C_LIME; //FW_NORMAL 12 0 0
 				close;
 			}
 			mes "Someone has already inserted a Charm Stone into this statue.";
@@ -1887,7 +1887,7 @@ tha_t12,103,17,0	script	Blue Angel Statue#tt	HIDDEN_NPC,{
 				delitem Magic_Gem_Blue,1;
 				$@thana_summon = 3;
 				donpcevent "#tteffect03::OnEnable";
-				mapannounce "tha_t12","The blue magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+				mapannounce "tha_t12","The blue magic power has released part of the seal.",bc_map,C_LIME; //FW_NORMAL 12 0 0
 				close;
 			}
 			mes "Someone has already inserted a Charm Stone into this statue.";
@@ -1917,7 +1917,7 @@ tha_t12,96,57,0	script	Bloody Knight Statue#tt	HIDDEN_NPC,{
 				delitem Magic_Gem_Red,1;
 				$@thana_summon = 4;
 				donpcevent "#tteffect04::OnEnable";
-				mapannounce "tha_t12","The red magic power has released part of the seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+				mapannounce "tha_t12","The red magic power has released part of the seal.",bc_map,C_LIME; //FW_NORMAL 12 0 0
 				close;
 			}
 			mes "Someone has already inserted a Charm Stone into this statue.";
@@ -1951,7 +1951,7 @@ tha_t12,129,86,0	script	Dark Devil Statue#tt	HIDDEN_NPC,{
 				donpcevent "#tteffect02::OnStop";
 				donpcevent "#tteffect03::OnStop";
 				donpcevent "#tteffect04::OnStop";
-				mapannounce "tha_t12","The Black Charm Stone's magic power has released the final seal.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+				mapannounce "tha_t12","The Black Charm Stone's magic power has released the final seal.",bc_map,C_LIME; //FW_NORMAL 12 0 0
 				close;
 			}
 			mes "Someone has already inserted a Charm Stone into this statue.";
@@ -2164,7 +2164,7 @@ OnTouch:
 			case 2: .@str$ = "... ugh... stop it... the Memory of "+.@j$+"..."; break;
 			default: .@str$ = "... finally... you released the last piece of Memory..."; break;
 		}
-		mapannounce "thana_boss",.@str$,bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+		mapannounce "thana_boss",.@str$,bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 		end;
 	}
 	mes "^3355FFThat action had no";
@@ -2198,22 +2198,22 @@ OnTouch:
 	}
 	end;
 OnTimer1000:
-	mapannounce "thana_boss","Thanatos : RAWWWWWWWWWWWWWWWWR!",bc_map,"0xff0000"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","Thanatos : RAWWWWWWWWWWWWWWWWR!",bc_map,C_RED; //FW_NORMAL 12 0 0
 	end;
 OnTimer4000:
-	mapannounce "thana_boss","Thanatos : ... crashed... broken... spread... and come back as tears...",bc_map,"0xff0000"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","Thanatos : ... crashed... broken... spread... and come back as tears...",bc_map,C_RED; //FW_NORMAL 12 0 0
 	end;
 OnTimer7000:
-	mapannounce "thana_boss","Thanatos : I live again to fulfill my ambition!",bc_map,"0xff0000"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","Thanatos : I live again to fulfill my ambition!",bc_map,C_RED; //FW_NORMAL 12 0 0
 	end;
 OnTimer10000:
-	mapannounce "thana_boss","Thanatos : ... gives off a strong bloody scent... soaked in sorrow...",bc_map,"0xff0000"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","Thanatos : ... gives off a strong bloody scent... soaked in sorrow...",bc_map,C_RED; //FW_NORMAL 12 0 0
 	end;
 OnTimer13000:
-	mapannounce "thana_boss","Thanatos : I will remove all people who invade this continent again!",bc_map,"0xff0000"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","Thanatos : I will remove all people who invade this continent again!",bc_map,C_RED; //FW_NORMAL 12 0 0
 	end;
 OnTimer16000:
-	mapannounce "thana_boss","Thanatos : Come, be the first to fall before my might!",bc_map,"0xff0000"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","Thanatos : Come, be the first to fall before my might!",bc_map,C_RED; //FW_NORMAL 12 0 0
 	donpcevent "Memory Seal#tt5::OnDisable";
 	donpcevent "#sommon_thanatos::OnEnable";
 	$@thana_summon2 = 5;
@@ -2243,7 +2243,7 @@ OnEnable:
 	end;
 OnMyMobDead:
 	if (mobcount("thana_boss","#sommon_thanatos::OnMyMobDead") < 1) {
-		mapannounce "thana_boss","RAWWWWWWWWWWR........ This can't be.........................",bc_map,"0xff0000"; //FW_NORMAL 12 0 0
+		mapannounce "thana_boss","RAWWWWWWWWWWR........ This can't be.........................",bc_map,C_RED; //FW_NORMAL 12 0 0
 		donpcevent "#cooltime_thana::OnEnable";
 		$@thana_summon = 6;
 	}
@@ -2263,31 +2263,31 @@ OnStop:
 	stopnpctimer;
 	end;
 OnTimer3000:
-	mapannounce "thana_boss","Warning!!",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","Warning!!",bc_map,C_LIME; //FW_NORMAL 12 0 0
 	end;
 OnTimer6000:
-	mapannounce "thana_boss","The seal will re-activate in 30 seconds.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","The seal will re-activate in 30 seconds.",bc_map,C_LIME; //FW_NORMAL 12 0 0
 	end;
 OnTimer16000:
-	mapannounce "thana_boss","20 seconds left...",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","20 seconds left...",bc_map,C_LIME; //FW_NORMAL 12 0 0
 	end;
 OnTimer26000:
-	mapannounce "thana_boss","10 seconds left...",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","10 seconds left...",bc_map,C_LIME; //FW_NORMAL 12 0 0
 	end;
 OnTimer31000:
-	mapannounce "thana_boss","5 seconds.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","5 seconds.",bc_map,C_LIME; //FW_NORMAL 12 0 0
 	end;
 OnTimer32000:
-	mapannounce "thana_boss","4 seconds.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","4 seconds.",bc_map,C_LIME; //FW_NORMAL 12 0 0
 	end;
 OnTimer33000:
-	mapannounce "thana_boss","3 seconds.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","3 seconds.",bc_map,C_LIME; //FW_NORMAL 12 0 0
 	end;
 OnTimer34000:
-	mapannounce "thana_boss","2 seconds.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","2 seconds.",bc_map,C_LIME; //FW_NORMAL 12 0 0
 	end;
 OnTimer35000:
-	mapannounce "thana_boss","Time's up!",bc_map,"0xff0000"; //FW_NORMAL 12 0 0
+	mapannounce "thana_boss","Time's up!",bc_map,C_RED; //FW_NORMAL 12 0 0
 	end;
 OnTimer36000:
 OnTimer37000:

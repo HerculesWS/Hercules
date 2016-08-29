@@ -312,7 +312,7 @@ L_Enter:
 		mes "The party leader did not generate the dungeon yet.";
 		close;
 	} else {
-		mapannounce "e_tower", strcharinfo(0)+" of the party, " +getarg(3)+", is entering the dungeon, Endless Tower.",bc_map,"0x00ff99",FW_NORMAL,12;
+		mapannounce "e_tower", strcharinfo(0)+" of the party, " +getarg(3)+", is entering the dungeon, Endless Tower.",bc_map,C_SPRING_GREEN,FW_NORMAL,12;
 		if (getarg(1)) {
 			etower_timer = gettimetick(2);
 			setquest 60200;
@@ -329,7 +329,7 @@ L_Enter:
 e_tower,30,30,2	script	Huge Vortex	CLEAR_NPC,2,2,{
 	end;
 OnTouch:
-	mapannounce "e_tower","[ " + strcharinfo(0) + " ], seems to be engulfed by a huge vortex",bc_map,"0x00ff99",FW_NORMAL,12;
+	mapannounce "e_tower","[ " + strcharinfo(0) + " ], seems to be engulfed by a huge vortex",bc_map,C_SPRING_GREEN,FW_NORMAL,12;
 	warp "alberta",223,36;
 	end;
 }
@@ -384,7 +384,7 @@ OnTimer1000:
 	end;
 
 OnTimer1740000:
-	mapannounce "e_tower", "The Purification Stone will be destroyed in one minute.",bc_map,"0x00ff99";
+	mapannounce "e_tower", "The Purification Stone will be destroyed in one minute.",bc_map,C_SPRING_GREEN;
 	end;
 
 OnTimer1800000:
@@ -1209,7 +1209,7 @@ function	script	F_Tower_Warp	{
 		close;
 	}
 	delitem Dark_Ashes,.@i;
-	mapannounce instance_mapname("1@tower"), strcharinfo(0)+". You will be warped to the "+.@level$[.@i]+" Level.",bc_map,"0x00ff99";
+	mapannounce instance_mapname("1@tower"), strcharinfo(0)+". You will be warped to the "+.@level$[.@i]+" Level.",bc_map,C_SPRING_GREEN;
 	warp instance_mapname(.@map$[.@i]),52,354;
 	close;
 
@@ -1218,7 +1218,7 @@ OnInstanceInit:
 	end;
 
 OnTimer10000:
-	mapannounce instance_mapname("1@tower"), "Notice : Taming a monster does not count towards defeating them.",bc_map,"0xff0000";
+	mapannounce instance_mapname("1@tower"), "Notice : Taming a monster does not count towards defeating them.",bc_map,C_RED;
 	stopnpctimer;
 	end;
 }
@@ -1240,11 +1240,11 @@ OnMyMobDead:
 		initnpctimer;
 		//SetItemPartyInMap in_102floor 1
 	} else
-		mapannounce .@map$, "Remaining Monsters on the 1st Level - "+.@mob_dead_num,bc_map,"0x00ff99";
+		mapannounce .@map$, "Remaining Monsters on the 1st Level - "+.@mob_dead_num,bc_map,C_SPRING_GREEN;
 	end;
 
 OnTimer5000:
-	mapannounce instance_mapname("1@tower"), "All Monsters on the 1st Level have been defeated.",bc_map,"0xffff00";
+	mapannounce instance_mapname("1@tower"), "All Monsters on the 1st Level have been defeated.",bc_map,C_YELLOW;
 	donpcevent instance_npcname("1FGate102tower")+"::OnEnable";
 	stopnpctimer;
 	end;
@@ -1279,12 +1279,12 @@ OnMyMobDead:
 		initnpctimer;
 		//SetItemPartyInMap in_102floor .@level
 	} else
-		mapannounce .@map$, "Remaining Monsters on the "+callsub(L_Display,.@level)+" Level - "+.@mob_dead_num,bc_map,"0x00ff99";
+		mapannounce .@map$, "Remaining Monsters on the "+callsub(L_Display,.@level)+" Level - "+.@mob_dead_num,bc_map,C_SPRING_GREEN;
 	end;
 
 OnTimer5000:
 	.@level = atoi(replacestr(strnpcinfo(NPC_NAME),"FGate102tower","")) + 1;
-	mapannounce strnpcinfo(NPC_MAP), "All Monsters on the "+callsub(L_Display,.@level)+" Level have been defeated.",bc_map,"0xffff00";
+	mapannounce strnpcinfo(NPC_MAP), "All Monsters on the "+callsub(L_Display,.@level)+" Level have been defeated.",bc_map,C_YELLOW;
 	donpcevent instance_npcname(.@level+"FGate102tower")+"::OnEnable";
 	stopnpctimer;
 	end;
@@ -1370,10 +1370,10 @@ OnInstanceInit:
 
 OnTimer15000:
 OnTimer60000:
-	mapannounce instance_mapname("1@tower"), "Notice : In any abnormal situation where you defeat a monster, you can't advance to the next level!",bc_map,"0xff0000";
+	mapannounce instance_mapname("1@tower"), "Notice : In any abnormal situation where you defeat a monster, you can't advance to the next level!",bc_map,C_RED;
 	end;
 OnTimer120000:
-	mapannounce instance_mapname("1@tower"), "Notice : In any abnormal situation where you defeat a monster, you can't advance to the next level!",bc_map,"0xff0000";
+	mapannounce instance_mapname("1@tower"), "Notice : In any abnormal situation where you defeat a monster, you can't advance to the next level!",bc_map,C_RED;
 	stopnpctimer;
 	end;
 }
@@ -1418,11 +1418,11 @@ OnMyMobDead:
 		//SetItemPartyInMap in_102floor 26
 	}
 	else
-		mapannounce .@map$, "Remaining Monsters on the 26th Level - " + .@mob_dead_num,bc_map,"0x00ff99";
+		mapannounce .@map$, "Remaining Monsters on the 26th Level - " + .@mob_dead_num,bc_map,C_SPRING_GREEN;
 	end;
 
 OnTimer5000:
-	mapannounce instance_mapname("2@tower"), "All Monsters on the 26th Level have been defeated.",bc_map,"0xffff00";
+	mapannounce instance_mapname("2@tower"), "All Monsters on the 26th Level have been defeated.",bc_map,C_YELLOW;
 	donpcevent instance_npcname("26FGate102tower")+"::OnEnable";
 	stopnpctimer;
 	end;
@@ -1533,11 +1533,11 @@ OnMyMobDead:
 		//SetItemPartyInMap in_102floor 51
 	}
 	else
-		mapannounce .@map$, "Remaining Monsters on the 51st Level - " + .@mob_dead_num,bc_map,"0x00ff99";
+		mapannounce .@map$, "Remaining Monsters on the 51st Level - " + .@mob_dead_num,bc_map,C_SPRING_GREEN;
 	end;
 
 OnTimer5000:
-	mapannounce instance_mapname("3@tower"), "All Monsters on the 51st Level have been defeated.",bc_map,"0xffff00";
+	mapannounce instance_mapname("3@tower"), "All Monsters on the 51st Level have been defeated.",bc_map,C_YELLOW;
 	donpcevent instance_npcname("51FGate102tower")+"::OnEnable";
 	stopnpctimer;
 	end;
@@ -1648,11 +1648,11 @@ OnMyMobDead:
 		//SetItemPartyInMap in_102floor 76
 	}
 	else
-		mapannounce .@map$,"Remaining Monsters on the 76th Level - " + .@mob_dead_num,bc_map,"0x00ff99";
+		mapannounce .@map$,"Remaining Monsters on the 76th Level - " + .@mob_dead_num,bc_map,C_SPRING_GREEN;
 	end;
 
 OnTimer5000:
-	mapannounce instance_mapname("4@tower"),"All Monsters on the 76th Level have been defeated.",bc_map,"0xffff00";
+	mapannounce instance_mapname("4@tower"),"All Monsters on the 76th Level have been defeated.",bc_map,C_YELLOW;
 	donpcevent instance_npcname("76FGate102tower")+"::OnEnable";
 	stopnpctimer;
 	end;
@@ -1854,7 +1854,7 @@ OnMyMobDead:
 	.@map$ = instance_mapname("5@tower");
 	.@mob_dead_num = mobcount(.@map$,instance_npcname("#102FShadowDust1")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
-		mapannounce .@map$, "Mysterious Voice: Who are you to dare intrude upon my sanctuary?!",bc_map,"0xffff00";
+		mapannounce .@map$, "Mysterious Voice: Who are you to dare intrude upon my sanctuary?!",bc_map,C_YELLOW;
 		donpcevent instance_npcname("#102FShadowDust")+"::OnDisable";
 		donpcevent instance_npcname("Lucid Crystal#102")+"::OnEnable";
 		//SetItemPartyInMap in_102floor 100
@@ -1991,24 +1991,24 @@ OnEnable:
 	end;
 
 OnTimer500:
-	mapannounce instance_mapname("6@tower"),"Guests, huh? I hope you've come here knowing that you'll be buried in this place. If you didn't know, well... it's too late!",bc_map,"0x00ffcc";
+	mapannounce instance_mapname("6@tower"),"Guests, huh? I hope you've come here knowing that you'll be buried in this place. If you didn't know, well... it's too late!",bc_map,C_BRIGHT_TURQUOISE;
 	end;
 
 OnTimer5500:
-	mapannounce instance_mapname("6@tower"),"This is why you adventurers always end up dead.",bc_map,"0x00ffcc";
+	mapannounce instance_mapname("6@tower"),"This is why you adventurers always end up dead.",bc_map,C_BRIGHT_TURQUOISE;
 	end;
 
 OnTimer10500:
-	mapannounce instance_mapname("6@tower"),"I may applaud you for your courage... Of course, I intend to play with you a little bit first.",bc_map,"0x00ffcc";
+	mapannounce instance_mapname("6@tower"),"I may applaud you for your courage... Of course, I intend to play with you a little bit first.",bc_map,C_BRIGHT_TURQUOISE;
 	end;
 
 OnTimer15500:
-	mapannounce instance_mapname("6@tower"),"You know, I like watching humans running around in fear.",bc_map,"0x00ffcc";
+	mapannounce instance_mapname("6@tower"),"You know, I like watching humans running around in fear.",bc_map,C_BRIGHT_TURQUOISE;
 	end;
 
 OnTimer20500:
 	.@map$ = instance_mapname("6@tower");
-	mapannounce .@map$,"Let's see who runs fastest. Are you ready?",bc_map,"0x00ffcc";
+	mapannounce .@map$,"Let's see who runs fastest. Are you ready?",bc_map,C_BRIGHT_TURQUOISE;
 	stopnpctimer;
 	areamonster .@map$,151,66,153,106,"Bone Guardian",1152,50,instance_npcname("#1st Beeper")+"::OnMyMobDead";
 	areamonster .@map$,158,66,160,106,"Bone Guardian",1152,50,instance_npcname("#1st Beeper")+"::OnMyMobDead";
@@ -2022,7 +2022,7 @@ OnMyMobDead:
 		//SetItemPartyInMap in_102floor 101
 	}
 	else
-		mapannounce .@map$,"Remaining Targets " + .@mob_dead_num + "ea",bc_map,"0x00ff99";
+		mapannounce .@map$,"Remaining Targets " + .@mob_dead_num + "ea",bc_map,C_SPRING_GREEN;
 	end;
 }
 
@@ -2034,16 +2034,16 @@ OnEnable:
 	end;
 
 OnTimer500:
-	mapannounce instance_mapname("6@tower"),"Well, I guess they aren't too challenging for you.",bc_map,"0x00ffcc";
+	mapannounce instance_mapname("6@tower"),"Well, I guess they aren't too challenging for you.",bc_map,C_BRIGHT_TURQUOISE;
 	end;
 
 OnTimer5500:
-	mapannounce instance_mapname("6@tower"),"Let's speed up a little bit, shall we?",bc_map,"0x00ffcc";
+	mapannounce instance_mapname("6@tower"),"Let's speed up a little bit, shall we?",bc_map,C_BRIGHT_TURQUOISE;
 	end;
 
 OnTimer10500:
 	.@map$ = instance_mapname("6@tower");
-	mapannounce .@map$,"I demand an encore!",bc_map,"0x00ffcc";
+	mapannounce .@map$,"I demand an encore!",bc_map,C_BRIGHT_TURQUOISE;
 	stopnpctimer;
 	areamonster .@map$,151,66,153,106,"Wind Guardian",1263,30,instance_npcname("#2nd Beeper")+"::OnMyMobDead";
 	areamonster .@map$,158,66,160,106,"Wind Guardian",1263,30,instance_npcname("#2nd Beeper")+"::OnMyMobDead";
@@ -2057,7 +2057,7 @@ OnMyMobDead:
 		//SetItemPartyInMap in_102floor 102
 	}
 	else
-		mapannounce .@map$,"Remaining Targets " + .@mob_dead_num + "ea",bc_map,"0x00ff99";
+		mapannounce .@map$,"Remaining Targets " + .@mob_dead_num + "ea",bc_map,C_SPRING_GREEN;
 	end;
 }
 
@@ -2069,16 +2069,16 @@ OnEnable:
 	end;
 
 OnTimer500:
-	mapannounce instance_mapname("6@tower"),"Yes, this is getting exciting!",bc_map,"0x00ffcc";
+	mapannounce instance_mapname("6@tower"),"Yes, this is getting exciting!",bc_map,C_BRIGHT_TURQUOISE;
 	end;
 
 OnTimer5500:
-	mapannounce instance_mapname("6@tower"),"I'll remember you as one of a few that have managed to entertain me.",bc_map,"0x00ffcc";
+	mapannounce instance_mapname("6@tower"),"I'll remember you as one of a few that have managed to entertain me.",bc_map,C_BRIGHT_TURQUOISE;
 	end;
 
 OnTimer10500:
 	.@map$ = instance_mapname("6@tower");
-	mapannounce .@map$,"How would you like to play one more round?",bc_map,"0x00ffcc";
+	mapannounce .@map$,"How would you like to play one more round?",bc_map,C_BRIGHT_TURQUOISE;
 	stopnpctimer;
 	areamonster .@map$,151,66,153,106,"Sword Edge Guardian",1132,20,instance_npcname("#3rd Beeper")+"::OnMyMobDead";
 	areamonster .@map$,158,66,160,106,"Sword Edge Guardian",1132,20,instance_npcname("#3rd Beeper")+"::OnMyMobDead";
@@ -2092,7 +2092,7 @@ OnMyMobDead:
 		//SetItemPartyInMap in_102floor 103
 	}
 	else
-		mapannounce .@map$,"Remaining Targets " + .@mob_dead_num + "ea",bc_map,"0x00ff99";
+		mapannounce .@map$,"Remaining Targets " + .@mob_dead_num + "ea",bc_map,C_SPRING_GREEN;
 	end;
 }
 
@@ -2104,16 +2104,16 @@ OnEnable:
 	end;
 
 OnTimer500:
-	mapannounce instance_mapname("6@tower"),"Okay, the time has come to make my appearance!",bc_map,"0x00ffcc";
+	mapannounce instance_mapname("6@tower"),"Okay, the time has come to make my appearance!",bc_map,C_BRIGHT_TURQUOISE;
 	end;
 
 OnTimer5500:
-	mapannounce instance_mapname("6@tower"),"Do you want to know who I am?",bc_map,"0x00ffcc";
+	mapannounce instance_mapname("6@tower"),"Do you want to know who I am?",bc_map,C_BRIGHT_TURQUOISE;
 	end;
 
 OnTimer10500:
 	.@map$ = instance_mapname("6@tower");
-	mapannounce .@map$,"You'll soon know. Mine is the face of death!",bc_map,"0x00ffcc";
+	mapannounce .@map$,"You'll soon know. Mine is the face of death!",bc_map,C_BRIGHT_TURQUOISE;
 	stopnpctimer;
 	monster .@map$,156,147,"Nacht Sieger",1956,1,instance_npcname("#4th Beeper")+"::OnMyMobDead";
 	end;
@@ -2190,15 +2190,15 @@ OnEnable:
 	end;
 
 OnTimer500:
-	mapannounce instance_mapname("6@tower"),"This... This can't be happening! I can't be defeated!",bc_map,"0xffff00";
+	mapannounce instance_mapname("6@tower"),"This... This can't be happening! I can't be defeated!",bc_map,C_YELLOW;
 	end;
 
 OnTimer5500:
-	mapannounce instance_mapname("6@tower"),"Nooo! My soul... My shell...! Nooo~!",bc_map,"0xffff00";
+	mapannounce instance_mapname("6@tower"),"Nooo! My soul... My shell...! Nooo~!",bc_map,C_YELLOW;
 	end;
 
 OnTimer10500:
-	mapannounce instance_mapname("6@tower"),"Nacht Sieger's body has turned into dark ashes that scattered in the wind.",bc_map,"0x00ffcc";
+	mapannounce instance_mapname("6@tower"),"Nacht Sieger's body has turned into dark ashes that scattered in the wind.",bc_map,C_BRIGHT_TURQUOISE;
 	stopnpctimer;
 	end;
 }

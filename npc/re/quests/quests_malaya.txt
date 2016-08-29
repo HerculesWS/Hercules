@@ -1486,7 +1486,7 @@ malaya,62,274,0	script	Sand Trap#malaya	4_SOIL,{
 	mes "Salt can be scraped off the dried leaves";
 	mes "someone scattered on the sea water.";
 	close2;
-	progressbar "0xffff00", 5;
+	progressbar C_YELLOW, 5;
 	disablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	getitem Salt_Bag, 1; // Salt_Bag
@@ -1518,7 +1518,7 @@ ma_fild01,178,206,0	script	Black Bamboo#malaya	CLEAR_NPC,4,4,{
 	mes "There's bamboo here with black cane and leaves.";
 	mes "If some of it is cut off and sharpened, I think it will suffice for the Sharpened Bamboo Imelda wanted.";
 	close2;
-	progressbar "0xffff00", 3;
+	progressbar C_YELLOW, 3;
 	disablenpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	getitem Sharp_Bamboo, 1;
@@ -2115,7 +2115,7 @@ malaya,119,217,3	script	Blacksmith Pandoi	4_M_DEWBOY,{
 			mes "It'll take just a second.";
 			mes "Pandoi can do it in a jiffy!";
 			close2;
-			progressbar "0xffff00", .@time;
+			progressbar C_YELLOW, .@time;
 			delitem Silver_Bracelet, .@amount * 2;
 			getitem Silver_Cross, .@amount; // Silver_Cross
 			mes "[Pandoi]";
@@ -8389,7 +8389,7 @@ OnTimer1800000:
 OnEnable:
 	initnpctimer;
 	donpcevent "Pintados Manager#pin::OnEnableNPC";
-	announce "The 'Pintados Festival' will be held for a week in Baryo Mahiwaga.",bc_all,"0xFB9D04",FW_NORMAL,12;
+	announce "The 'Pintados Festival' will be held for a week in Baryo Mahiwaga.",bc_all,C_CALIFORNIA,FW_NORMAL,12;
 	end;
 OnDisable:
 	stopnpctimer;
@@ -8398,7 +8398,7 @@ OnDisable:
 	$malaya_pintados_02 = 0;
 	$malaya_pintados_03 = 0;
 	donpcevent "Pintados Manager#pin::OnDisableNPC";
-	announce "The 'Pintados Festival' ended with great success.",bc_all,"0xFB9D04",FW_NORMAL,12;
+	announce "The 'Pintados Festival' ended with great success.",bc_all,C_CALIFORNIA,FW_NORMAL,12;
 	end;
 OnEnableNPC:
 	.@str$ = "::OnEnable";

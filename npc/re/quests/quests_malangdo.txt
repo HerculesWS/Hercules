@@ -6249,7 +6249,7 @@ L_ShowLights:
 		if (.@i+1 == getarg(0))
 			mes "Shines according to this order.";
 		cutin .@Cutin$[.@rand],4;
-		progressbar "0xFFFF00",1;
+		progressbar C_YELLOW,1;
 	}
 	cutin "nya_off",4;
 	mes "The buttons below are shining now.";

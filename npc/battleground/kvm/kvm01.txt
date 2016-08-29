@@ -160,8 +160,8 @@ OnGuillaumeDie:
 		bg_updatescore "bat_c01",.Guillaume_Count,.Croix_Count;
 		if( .Guillaume_Count < 1 ) donpcevent "KvM01_BG::OnCroixWin";
 		else {
-			mapannounce("bat_c01", sprintf(_$("The number of Guillaumes is %d."), .Guillaume_Count), bc_map, "0x00ff00");
-			mapannounce("bat_c01", sprintf(_$("The number of Croixes is %d."), .Croix_Count), bc_map, "0x00ff00");
+			mapannounce("bat_c01", sprintf(_$("The number of Guillaumes is %d."), .Guillaume_Count), bc_map, C_LIME);
+			mapannounce("bat_c01", sprintf(_$("The number of Croixes is %d."), .Croix_Count), bc_map, C_LIME);
 		}
 	}
 	end;
@@ -174,8 +174,8 @@ OnCroixDie:
 		bg_updatescore "bat_c01",.Guillaume_Count,.Croix_Count;
 		if( .Croix_Count < 1 ) donpcevent "KvM01_BG::OnGuillaumeWin";
 		else {
-			mapannounce("bat_c01", sprintf(_$("The number of Guillaumes is %d."), .Guillaume_Count), bc_map, "0x00ff00");
-			mapannounce("bat_c01", sprintf(_$("The number of Croixes is %d."), .Croix_Count), bc_map, "0x00ff00");
+			mapannounce("bat_c01", sprintf(_$("The number of Guillaumes is %d."), .Guillaume_Count), bc_map, C_LIME);
+			mapannounce("bat_c01", sprintf(_$("The number of Croixes is %d."), .Croix_Count), bc_map, C_LIME);
 		}
 	}
 	end;
@@ -206,16 +206,16 @@ OnStart:
 	end;
 
 OnTimer1000:
-	mapannounce("bat_c01", _("In 1 minute, KVM will start."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("In 1 minute, KVM will start."), bc_map, C_LIME);
 	end;
 
 OnTimer3000:
-	mapannounce("bat_c01", _("The maximum time for a KVM battle is 5 minutes."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("The maximum time for a KVM battle is 5 minutes."), bc_map, C_LIME);
 	end;
 
 OnTimer6000:
-	mapannounce("bat_c01", _("Please prepare for the KVM battle."), bc_map, "0x00ff00");
-	mapannounce("bat_c01", _("You can buff your people."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("Please prepare for the KVM battle."), bc_map, C_LIME);
+	mapannounce("bat_c01", _("You can buff your people."), bc_map, C_LIME);
 	donpcevent "#A_camp_start01::OnEnable";
 	donpcevent "#B_camp_start01::OnEnable";
 	end;
@@ -226,26 +226,26 @@ OnTimer13000:
 	end;
 
 OnTimer30000:
-	mapannounce("bat_c01", _("30 seconds remaining to start KVM battle."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("30 seconds remaining to start KVM battle."), bc_map, C_LIME);
 	end;
 
 OnTimer45000:
-	mapannounce("bat_c01", _("15 seconds remaining to start KVM battle."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("15 seconds remaining to start KVM battle."), bc_map, C_LIME);
 	donpcevent "::OnKvM01One";
 	end;
 
 OnTimer50000:
-	mapannounce("bat_c01", _("10 seconds remaining to start KVM battle."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("10 seconds remaining to start KVM battle."), bc_map, C_LIME);
 	donpcevent "::OnKvM01Two";
 	end;
 
 OnTimer55000:
-	mapannounce("bat_c01", _("5 seconds remaining to start KVM battle."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("5 seconds remaining to start KVM battle."), bc_map, C_LIME);
 	donpcevent "::OnKvM01One";
 	end;
 
 OnTimer59000:
-	mapannounce("bat_c01", _("KVM is now commencing."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("KVM is now commencing."), bc_map, C_LIME);
 	donpcevent "::OnKvM01Two";
 	end;
 
@@ -257,7 +257,7 @@ OnTimer61000:
 	{
 		$@KvM01BG_Victory = 3;
 		$@KvM01BG = 3;
-		mapannounce("bat_c01", _("There are not enough players to start the battle"), bc_map, "0x696969");
+		mapannounce("bat_c01", _("There are not enough players to start the battle"), bc_map, C_DOVE_GRAY);
 		stopnpctimer;
 		donpcevent "KvM01_BG::OnStop";
 		end;
@@ -268,27 +268,27 @@ OnTimer61000:
 	end;
 
 OnTimer300000:
-	mapannounce("bat_c01", _("1 minute remaining to finish the KVM battle."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("1 minute remaining to finish the KVM battle."), bc_map, C_LIME);
 	end;
 
 OnTimer330000:
-	mapannounce("bat_c01", _("30 seconds remaining to finish the KVM battle."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("30 seconds remaining to finish the KVM battle."), bc_map, C_LIME);
 	end;
 
 OnTimer345000:
-	mapannounce("bat_c01", _("15 seconds remaining to finish the KVM battle."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("15 seconds remaining to finish the KVM battle."), bc_map, C_LIME);
 	end;
 
 OnTimer350000:
-	mapannounce("bat_c01", _("10 seconds remaining to finish the KVM battle."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("10 seconds remaining to finish the KVM battle."), bc_map, C_LIME);
 	end;
 
 OnTimer355000:
-	mapannounce("bat_c01", _("5 seconds remaining to finish the KVM battle."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("5 seconds remaining to finish the KVM battle."), bc_map, C_LIME);
 	end;
 
 OnTimer360000:
-	mapannounce("bat_c01", _("The KVM battle is over."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("The KVM battle is over."), bc_map, C_LIME);
 	if( .Croix_Count > .Guillaume_Count )
 		donpcevent "KvM01_BG::OnCroixWin";
 	else if( .Croix_Count < .Guillaume_Count )
@@ -297,9 +297,9 @@ OnTimer360000:
 	{ // Draw Game
 		$@KvM01BG = 3;
 		$@KvM01BG_Victory = 3;
-		mapannounce("bat_c01", sprintf(_$("The number of Guillaumes is %d."), .Guillaume_Count), bc_map, "0x00ff00");
-		mapannounce("bat_c01", sprintf(_$("The number of Croixes is %d."), .Croix_Count), bc_map, "0x00ff00");
-		mapannounce("bat_c01", _("This battle has ended in a draw."), bc_map, "0x00ff00");
+		mapannounce("bat_c01", sprintf(_$("The number of Guillaumes is %d."), .Guillaume_Count), bc_map, C_LIME);
+		mapannounce("bat_c01", sprintf(_$("The number of Croixes is %d."), .Croix_Count), bc_map, C_LIME);
+		mapannounce("bat_c01", _("This battle has ended in a draw."), bc_map, C_LIME);
 		donpcevent "KvM01_BG::OnStop";
 	}
 	end;
@@ -307,18 +307,18 @@ OnTimer360000:
 OnGuillaumeWin:
 	$@KvM01BG = 3;
 	$@KvM01BG_Victory = 1;
-	mapannounce("bat_c01", _("Guillaume wins!"), bc_map, "0x00ff00");
-	mapannounce("bat_c01", _("Congratulations to Guillaume members."), bc_map, "0x00ff00");
-	mapannounce("bat_c01", _("Everyone will be moved to the start point."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("Guillaume wins!"), bc_map, C_LIME);
+	mapannounce("bat_c01", _("Congratulations to Guillaume members."), bc_map, C_LIME);
+	mapannounce("bat_c01", _("Everyone will be moved to the start point."), bc_map, C_LIME);
 	donpcevent "KvM01_BG::OnStop";
 	end;
 
 OnCroixWin:
 	$@KvM01BG = 3;
 	$@KvM01BG_Victory = 2;
-	mapannounce("bat_c01", _("Croix wins!"), bc_map, "0x00ff00");
-	mapannounce("bat_c01", _("Congratulations to Croix members."), bc_map, "0x00ff00");
-	mapannounce("bat_c01", _("Everyone will be moved to the start point."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("Croix wins!"), bc_map, C_LIME);
+	mapannounce("bat_c01", _("Congratulations to Croix members."), bc_map, C_LIME);
+	mapannounce("bat_c01", _("Everyone will be moved to the start point."), bc_map, C_LIME);
 	donpcevent "KvM01_BG::OnStop";
 	end;
 
@@ -356,21 +356,21 @@ OnBegin:
 	end;
 
 OnTimer1000:
-	mapannounce("bat_c01", _("Please apply with the Officer to acquire KVM points."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("Please apply with the Officer to acquire KVM points."), bc_map, C_LIME);
 	end;
 
 OnTimer3000:
-	mapannounce("bat_c01", _("The Officer will grant you the points for 30 seconds."), bc_map, "0x00ff00");
-	mapannounce("bat_c01", _("In 30 seconds, the Officer will be sent away."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("The Officer will grant you the points for 30 seconds."), bc_map, C_LIME);
+	mapannounce("bat_c01", _("In 30 seconds, the Officer will be sent away."), bc_map, C_LIME);
 	end;
 
 OnTimer5000:
-	mapannounce("bat_c01", _("Unless you talk to the Officer, you cannot gain the points."), bc_map, "0x00ff00");
-	mapannounce("bat_c01", _("Please be careful."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("Unless you talk to the Officer, you cannot gain the points."), bc_map, C_LIME);
+	mapannounce("bat_c01", _("Please be careful."), bc_map, C_LIME);
 	end;
 
 OnTimer55000:
-	mapannounce("bat_c01", _("You will be sent back."), bc_map, "0x00ff00");
+	mapannounce("bat_c01", _("You will be sent back."), bc_map, C_LIME);
 	end;
 
 OnTimer60000:

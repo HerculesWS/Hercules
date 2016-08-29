@@ -64,124 +64,124 @@ OnInit:
 	initnpctimer;
 	end;
 OnTimer20000:
-	mapannounce("airplane", _("We are heading to Einbroch."), bc_map, "0x00ff00");
+	mapannounce("airplane", _("We are heading to Einbroch."), bc_map, C_LIME);
 	end;
 OnTimer50000:
-	mapannounce("airplane", _("We will arrive in Einbroch shortly."), bc_map, "0x00ff00");
+	mapannounce("airplane", _("We will arrive in Einbroch shortly."), bc_map, C_LIME);
 	end;
 OnTimer60000:
 	$@airplanelocation = 1;
 	donpcevent "#AirshipWarp-1::OnUnhide";
 	donpcevent "#AirshipWarp-2::OnUnhide";
-	mapannounce("airplane", _("Welcome to Einbroch. Have a safe trip."), bc_map, "0x00ff00");
+	mapannounce("airplane", _("Welcome to Einbroch. Have a safe trip."), bc_map, C_LIME);
 	end;
 OnTimer70000:
-	mapannounce("airplane", _("Currently we are in Einbroch. The Airship will take off shortly."), bc_map, "0x00ff00");
+	mapannounce("airplane", _("Currently we are in Einbroch. The Airship will take off shortly."), bc_map, C_LIME);
 	end;
 OnTimer80000:
 	donpcevent "#AirshipWarp-1::OnHide";
 	donpcevent "#AirshipWarp-2::OnHide";
-	mapannounce("airplane", _("The Airship is now taking off. Our next destination is Lighthalzen."), bc_map, "0x70dbdb");
+	mapannounce("airplane", _("The Airship is now taking off. Our next destination is Lighthalzen."), bc_map, C_VIKING);
 	end;
 OnTimer100000:
-	mapannounce("airplane", _("We are heading to Lighthalzen."), bc_map, "0x70dbdb");
+	mapannounce("airplane", _("We are heading to Lighthalzen."), bc_map, C_VIKING);
 	end;
 OnTimer130000:
-	mapannounce("airplane", _("We will arrive in Lighthalzen shortly."), bc_map, "0x70dbdb");
+	mapannounce("airplane", _("We will arrive in Lighthalzen shortly."), bc_map, C_VIKING);
 	end;
 OnTimer140000:
 	$@airplanelocation = 2;
 	donpcevent "#AirshipWarp-1::OnUnhide";
 	donpcevent "#AirshipWarp-2::OnUnhide";
-	mapannounce("airplane", _("Welcome to Lighthalzen. Have a safe trip."), bc_map, "0x70dbdb");
+	mapannounce("airplane", _("Welcome to Lighthalzen. Have a safe trip."), bc_map, C_VIKING);
 	end;
 OnTimer150000:
-	mapannounce("airplane", _("Currently we are in Lighthalzen. The Airship will leave shortly."), bc_map, "0x70dbdb");
+	mapannounce("airplane", _("Currently we are in Lighthalzen. The Airship will leave shortly."), bc_map, C_VIKING);
 	end;
 OnTimer160000:
 	donpcevent "#AirshipWarp-1::OnHide";
 	donpcevent "#AirshipWarp-2::OnHide";
-	mapannounce("airplane", _("The Airship is leaving the ground. Our next destination is Einbroch."), bc_map, "0x00ff00");
+	mapannounce("airplane", _("The Airship is leaving the ground. Our next destination is Einbroch."), bc_map, C_LIME);
 	end;
 OnTimer180000:
-	mapannounce("airplane", _("We are heading to Einbroch."), bc_map, "0x00ff00");
+	mapannounce("airplane", _("We are heading to Einbroch."), bc_map, C_LIME);
 	end;
 OnTimer210000:
-	mapannounce("airplane", _("We will arrive in Einbroch shortly."), bc_map, "0x00FF00");
+	mapannounce("airplane", _("We will arrive in Einbroch shortly."), bc_map, C_LIME);
 	end;
 OnTimer220000:
 	$@airplanelocation = 1;
 	donpcevent "#AirshipWarp-1::OnUnhide";
 	donpcevent "#AirshipWarp-2::OnUnhide";
-	mapannounce("airplane", _("Welcome to Einbroch. Have a safe trip."), bc_map, "0x00ff00");
+	mapannounce("airplane", _("Welcome to Einbroch. Have a safe trip."), bc_map, C_LIME);
 	end;
 OnTimer230000:
-	mapannounce("airplane", _("Currently we are in Einbroch. The Airship will take off shortly."), bc_map, "0x00ff00");
+	mapannounce("airplane", _("Currently we are in Einbroch. The Airship will take off shortly."), bc_map, C_LIME);
 	end;
 OnTimer240000:
 	donpcevent "#AirshipWarp-1::OnHide";
 	donpcevent "#AirshipWarp-2::OnHide";
-	mapannounce("airplane", _("The Airship is now taking off. Our next destination is Juno."), bc_map, "0xff8200");
+	mapannounce("airplane", _("The Airship is now taking off. Our next destination is Juno."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer260000:
-	mapannounce("airplane", _("We are heading to Juno."), bc_map, "0xff8200");
+	mapannounce("airplane", _("We are heading to Juno."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer290000:
-	mapannounce("airplane", _("We will arrive in Juno shortly."), bc_map, "0xff8200");
+	mapannounce("airplane", _("We will arrive in Juno shortly."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer300000:
 	$@airplanelocation = 0;
 	donpcevent "#AirshipWarp-1::OnUnhide";
 	donpcevent "#AirshipWarp-2::OnUnhide";
-	mapannounce("airplane", _("Welcome to Juno. Have a safe trip."), bc_map, "0xff8200");
+	mapannounce("airplane", _("Welcome to Juno. Have a safe trip."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer310000:
-	mapannounce("airplane", _("Currently we are in Juno. The Airship will leave shortly."), bc_map, "0xff8200");
+	mapannounce("airplane", _("Currently we are in Juno. The Airship will leave shortly."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer320000:
 	donpcevent "#AirshipWarp-1::OnHide";
 	donpcevent "#AirshipWarp-2::OnHide";
-	mapannounce("airplane", _("The Airship is leaving the ground. Our next destination is Hugel."), bc_map, "0xca4bf3");
+	mapannounce("airplane", _("The Airship is leaving the ground. Our next destination is Hugel."), bc_map, C_HELIOTROPE);
 	end;
 OnTimer340000:
-	mapannounce("airplane", _("We are heading to Hugel."), bc_map, "0xca4bf3");
+	mapannounce("airplane", _("We are heading to Hugel."), bc_map, C_HELIOTROPE);
 	end;
 OnTimer370000:
-	mapannounce("airplane", _("We will arrive in Hugel shortly."), bc_map, "0xca4bf3");
+	mapannounce("airplane", _("We will arrive in Hugel shortly."), bc_map, C_HELIOTROPE);
 	end;
 OnTimer380000:
 	$@airplanelocation = 3;
 	donpcevent "#AirshipWarp-1::OnUnhide";
 	donpcevent "#AirshipWarp-2::OnUnhide";
-	mapannounce("airplane", _("Welcome to Hugel. Have a safe trip."), bc_map, "0xca4bf3");
+	mapannounce("airplane", _("Welcome to Hugel. Have a safe trip."), bc_map, C_HELIOTROPE);
 	end;
 OnTimer390000:
-	mapannounce("airplane", _("Currently we are in Hugel. The Airship will leave shortly."), bc_map, "0xca4bf3");
+	mapannounce("airplane", _("Currently we are in Hugel. The Airship will leave shortly."), bc_map, C_HELIOTROPE);
 	end;
 OnTimer400000:
 	donpcevent "#AirshipWarp-1::OnHide";
 	donpcevent "#AirshipWarp-2::OnHide";
-	mapannounce("airplane", _("The Airship is leaving the ground. Our next destination is Juno."), bc_map, "0xff8200");
+	mapannounce("airplane", _("The Airship is leaving the ground. Our next destination is Juno."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer420000:
-	mapannounce("airplane", _("We are heading to Juno."), bc_map, "0xff8200");
+	mapannounce("airplane", _("We are heading to Juno."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer450000:
-	mapannounce("airplane", _("We will arrive in Juno shortly."), bc_map, "0xff8200");
+	mapannounce("airplane", _("We will arrive in Juno shortly."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer460000:
 	$@airplanelocation = 0;
 	donpcevent "#AirshipWarp-1::OnUnhide";
 	donpcevent "#AirshipWarp-2::OnUnhide";
-	mapannounce("airplane", _("Welcome to Juno. Have a safe trip."), bc_map, "0xff8200");
+	mapannounce("airplane", _("Welcome to Juno. Have a safe trip."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer470000:
-	mapannounce("airplane", _("Currently we are in Juno. The Airship will leave shortly."), bc_map, "0xff8200");
+	mapannounce("airplane", _("Currently we are in Juno. The Airship will leave shortly."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer480000:
 	donpcevent "#AirshipWarp-1::OnHide";
 	donpcevent "#AirshipWarp-2::OnHide";
-	mapannounce("airplane", _("The Airship is leaving the ground. Our next destination is Einbroch."), bc_map, "0x00ff00");
+	mapannounce("airplane", _("The Airship is leaving the ground. Our next destination is Einbroch."), bc_map, C_LIME);
 	stopnpctimer;
 	initnpctimer;
 }
@@ -698,64 +698,64 @@ OnEnable:
 	initnpctimer;
 	end;
 OnTimer25000:
-	mapannounce("airplane_01", _("We are heading to Izlude."), bc_map, "0x00ff00");
+	mapannounce("airplane_01", _("We are heading to Izlude."), bc_map, C_LIME);
 	end;
 OnTimer50000:
-	mapannounce("airplane_01", _("We will arrive in Izlude shortly."), bc_map, "0x00ff00");
+	mapannounce("airplane_01", _("We will arrive in Izlude shortly."), bc_map, C_LIME);
 	end;
 OnTimer60000:
 	$@airplanelocation2 = 1;
 	donpcevent "#AirshipWarp-3::OnUnhide";
 	donpcevent "#AirshipWarp-4::OnUnhide";
-	mapannounce("airplane_01", _("Welcome to Izlude. Have a safe trip."), bc_map, "0x00ff00");
+	mapannounce("airplane_01", _("Welcome to Izlude. Have a safe trip."), bc_map, C_LIME);
 	end;
 OnTimer70000:
-	mapannounce("airplane_01", _("We are currently in Izlude. The Airship will take off shortly."), bc_map, "0x00ff00");
+	mapannounce("airplane_01", _("We are currently in Izlude. The Airship will take off shortly."), bc_map, C_LIME);
 	end;
 OnTimer80000:
 	donpcevent "#AirshipWarp-3::OnHide";
 	donpcevent "#AirshipWarp-4::OnHide";
-	mapannounce("airplane_01", _("The Airship is now taking off. Our next destination is Juno."), bc_map, "0x70dbdb");
+	mapannounce("airplane_01", _("The Airship is now taking off. Our next destination is Juno."), bc_map, C_VIKING);
 	end;
 OnTimer105000:
-	mapannounce("airplane_01", _("We are heading to Juno."), bc_map, "0x70dbdb");
+	mapannounce("airplane_01", _("We are heading to Juno."), bc_map, C_VIKING);
 	end;
 OnTimer130000:
-	mapannounce("airplane_01", _("We will arrive in Juno shortly."), bc_map, "0x70dbdb");
+	mapannounce("airplane_01", _("We will arrive in Juno shortly."), bc_map, C_VIKING);
 	end;
 OnTimer140000:
 	$@airplanelocation2 = 2;
 	donpcevent "#AirshipWarp-3::OnUnhide";
 	donpcevent "#AirshipWarp-4::OnUnhide";
-	mapannounce("airplane_01", _("Welcome to Juno. Have a safe trip."), bc_map, "0x70dbdb");
+	mapannounce("airplane_01", _("Welcome to Juno. Have a safe trip."), bc_map, C_VIKING);
 	end;
 OnTimer150000:
-	mapannounce("airplane_01", _("We are currently in Juno. The Airship will leave shortly."), bc_map, "0x70dbdb");
+	mapannounce("airplane_01", _("We are currently in Juno. The Airship will leave shortly."), bc_map, C_VIKING);
 	end;
 OnTimer160000:
 	donpcevent "#AirshipWarp-3::OnHide";
 	donpcevent "#AirshipWarp-4::OnHide";
-	mapannounce("airplane_01", _("The Airship is leaving the ground. Our next destination is Rachel."), bc_map, "0xFF8200");
+	mapannounce("airplane_01", _("The Airship is leaving the ground. Our next destination is Rachel."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer185000:
-	mapannounce("airplane_01", _("We are heading to Rachel."), bc_map, "0xFF8200");
+	mapannounce("airplane_01", _("We are heading to Rachel."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer210000:
-	mapannounce("airplane_01", _("We will arrive in Rachel shortly."), bc_map, "0xFF8200");
+	mapannounce("airplane_01", _("We will arrive in Rachel shortly."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer220000:
 	$@airplanelocation2 = 0;
 	donpcevent "#AirshipWarp-3::OnUnhide";
 	donpcevent "#AirshipWarp-4::OnUnhide";
-	mapannounce("airplane_01", _("Welcome to Rachel. Have a safe trip."), bc_map, "0xFF8200");
+	mapannounce("airplane_01", _("Welcome to Rachel. Have a safe trip."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer230000:
-	mapannounce("airplane_01", _("We are currently in Rachel. The Airship will take off shortly."), bc_map, "0xFF8200");
+	mapannounce("airplane_01", _("We are currently in Rachel. The Airship will take off shortly."), bc_map, C_FLUSH_ORANGE);
 	end;
 OnTimer240000:
 	donpcevent "#AirshipWarp-3::OnHide";
 	donpcevent "#AirshipWarp-4::OnHide";
-	mapannounce("airplane_01", _("The Airship is now taking off. Our next destination is Izlude."), bc_map, "0x00ff00");
+	mapannounce("airplane_01", _("The Airship is now taking off. Our next destination is Izlude."), bc_map, C_LIME);
 	stopnpctimer;
 	++.moninv;
 	if (.moninv == 7) {

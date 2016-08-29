@@ -114,7 +114,7 @@ ecl_hub01,130,15,0	script	It is closed shut.	CLEAR_NPC,{
 						close;
 					}
 					close2;
-					mapannounce "ecl_hub01",getpartyname(.@party_id) + " Party leader " + strcharinfo(0) + " is entering " + .@md_name$,bc_map,"0x00ff99";
+					mapannounce "ecl_hub01",getpartyname(.@party_id) + " Party leader " + strcharinfo(0) + " is entering " + .@md_name$,bc_map,C_SPRING_GREEN;
 					warp "1@ecl",60,50;
 					end;
 				}
@@ -200,10 +200,10 @@ OnReset:
 	stopnpctimer;
 	end;
 OnTimer1000:
-    mapannounce instance_mapname("1@ecl"),"Warning: Abnormal occurrence in the lighting room. Abnormal occurrence in the lighting room.",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
+    mapannounce instance_mapname("1@ecl"),"Warning: Abnormal occurrence in the lighting room. Abnormal occurrence in the lighting room.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	end;
 OnTimer2000:
-    mapannounce instance_mapname("1@ecl"),"Suspicious Creature: Kerrrrr....krwahhhh!!",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
+    mapannounce instance_mapname("1@ecl"),"Suspicious Creature: Kerrrrr....krwahhhh!!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	hideoffnpc instance_npcname("Suspicious Creature#5");
 	hideoffnpc instance_npcname("Suspicious Creature#6");
 	hideoffnpc instance_npcname("Suspicious Creature#7");
@@ -218,7 +218,7 @@ OnTimer3000:
 OnMyMobDead:
 	if (mobcount(instance_mapname("1@ecl"),instance_npcname("#sndmaster")+"::OnMyMobDead") == 0) {
 		donpcevent instance_npcname("Shenime#ecl01")+"::OnEnable";
-		mapannounce instance_mapname("1@ecl"),"Shenime: Good, I got here just in time.",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
+		mapannounce instance_mapname("1@ecl"),"Shenime: Good, I got here just in time.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	}
 	end;
 

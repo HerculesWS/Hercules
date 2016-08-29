@@ -661,7 +661,7 @@ lou_fild01,175,173,3	script	Jiu Lian Bu#1-2	4_M_CHN8GUEK,{
 		input .@input$;
 		mes "["+strcharinfo(0)+"]";
 		mes .@input$;
-		mapannounce "lou_fild01","'"+strcharinfo(0)+"' shouts : "+.@input$,bc_map,"0x9CFF00";
+		mapannounce "lou_fild01","'"+strcharinfo(0)+"' shouts : "+.@input$,bc_map,C_CHARTREUSE;
 		next;
 		mes "[Jiu Lian Bu]";
 		mes "So, how do you feel?";
@@ -686,7 +686,7 @@ lou_fild01,175,173,3	script	Jiu Lian Bu#1-2	4_M_CHN8GUEK,{
 			input .@input$;
 			mes "["+strcharinfo(0)+"]";
 			mes .@input$;
-			mapannounce "lou_fild01","'"+strcharinfo(0)+"' shouts : "+.@input$,bc_map,"0x9CFF00";
+			mapannounce "lou_fild01","'"+strcharinfo(0)+"' shouts : "+.@input$,bc_map,C_CHARTREUSE;
 			next;
 			mes "[Jiu Lian Bu]";
 			mes "So, how do you feel? Don't you feel better now?";

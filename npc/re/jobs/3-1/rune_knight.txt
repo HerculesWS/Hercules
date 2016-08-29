@@ -1620,16 +1620,16 @@ OnDisable:
 	disablenpc "job_rune_edq#1st_tb";
 	end;
 OnTimer5000:
-	mapannounce "job3_rune02","I'll start the first test of the Rune Knight Job Change.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_rune02","I'll start the first test of the Rune Knight Job Change.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	end;
 OnTimer8000:
-	mapannounce "job3_rune02","The content of the test is to get rid of all the monsters for 5 minutes and survive.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_rune02","The content of the test is to get rid of all the monsters for 5 minutes and survive.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	end;
 OnTimer11000:
-	mapannounce "job3_rune02","If you fail to survive or cannot get rid of all the monsters within the time limit, I'll consider it a failure.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_rune02","If you fail to survive or cannot get rid of all the monsters within the time limit, I'll consider it a failure.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	end;
 OnTimer14000:
-	mapannounce "job3_rune02","Now let's start the test.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_rune02","Now let's start the test.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	donpcevent "job_rune_edq#1st_tc::OnEnable";
 	donpcevent "job_rune_edq#1st_tb::OnDisable";
 	end;
@@ -1652,7 +1652,7 @@ OnDisable:
 	end;
 OnTimer300000:
 	killmonster "job3_rune02","job_rune_edq#1st_tc::OnMyMobDead";
-	mapannounce "job3_rune02","You reached the limit time so I'll consider the test as a failure.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_rune02","You reached the limit time so I'll consider the test as a failure.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	end;
 OnTimer305000:
 	donpcevent "#RK Test Hidden Portal 1::OnDisable";
@@ -1759,7 +1759,7 @@ OnMyMobDead:
 		job_rune_edq = 5;
 		erasequest 3220;
 		killmonster "job3_rune02","job_rune_edq#1st_tcmc2::OnMyMobDead";
-		mapannounce "job3_rune02","Congratulations. You've passed the first test.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Congratulations. You've passed the first test.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		mapwarp "job3_rune02","job3_rune01",80,65;
 		donpcevent "job_rune_edq#1st_tb::OnDisable";
 		donpcevent "job_rune_edq#1st_tc::OnDisable";
@@ -1793,7 +1793,7 @@ OnDisable:
 	disablenpc "job_rune_edq#1st_tcnc";
 	end;
 OnUse:
-	mapannounce "job3_rune02","Captain Tigris : Gentlemen, let's watch the test for a while.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_rune02","Captain Tigris : Gentlemen, let's watch the test for a while.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	stopnpctimer;
 	$@job_rune_test2 = 0;
 	donpcevent "Captain Tigris#jrt1::OnDisable";
@@ -1803,14 +1803,14 @@ OnUse:
 	donpcevent "job_rune_edq#1st_tcnc::OnEnable";
 	end;
 OnTimer30000:
-	mapannounce "job3_rune02","Captain Tigris : Rune Knight Candidates... If you want to borrow our power talk to one of us.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_rune02","Captain Tigris : Rune Knight Candidates... If you want to borrow our power talk to one of us.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	donpcevent "Captain Tigris#jrt1::OnEnable";
 	donpcevent "Rune Knight Lunarea#jrt1::OnEnable";
 	donpcevent "Rune Knight Renoa#jrt1::OnEnable";
 	donpcevent "Rune Knight Velpino#jrt1::OnEnable";
 	end;
 OnTimer60000:
-	mapannounce "job3_rune02","Captain Tigris : It seems you don't need our help... Let's watch the test for a while.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_rune02","Captain Tigris : It seems you don't need our help... Let's watch the test for a while.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	stopnpctimer;
 	donpcevent "Captain Tigris#jrt1::OnDisable";
 	donpcevent "Rune Knight Lunarea#jrt1::OnDisable";
@@ -1827,25 +1827,25 @@ job3_rune02,34,46,5	script	Captain Tigris#jrt1	4_M_KNIGHT_SILVER,2,2,{
 	}
 	switch(rand(6)) {
 	case 0:
-		mapannounce "job3_rune02","Captain Tigris : May Beljeve bless you!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Captain Tigris : May Beljeve bless you!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		npcskill "AL_BLESSING",1,0,0;
 		break;
 	case 1:
 	case 2:
-		mapannounce "job3_rune02","Captain Tigris : The Spark of life... may flame again.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Captain Tigris : The Spark of life... may flame again.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		npcskill "AL_HEAL",8,70,99;
 		break;
 	case 3:
-		mapannounce "job3_rune02","Captain Tigris : Evil demons! I will send you back to your graves!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Captain Tigris : Evil demons! I will send you back to your graves!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		specialeffect2 EF_METEORSTORM;
 		donpcevent "job_rune_edq#1st_tcmc::OnReset";
 		break;
 	case 4:
-		mapannounce "job3_rune02","Captain Tigris : For a Rune Knight, this kind of ordeal is nothing!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Captain Tigris : For a Rune Knight, this kind of ordeal is nothing!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		sc_start SC_STUN,10000,0;
 		break;
 	case 5:
-		mapannounce "job3_rune02","Captain Tigris : For a Rune Knight, this kind of ordeal is nothing!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Captain Tigris : For a Rune Knight, this kind of ordeal is nothing!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		sc_start SC_BLOODING,10000,0;
 		break;
 	}
@@ -1873,24 +1873,24 @@ job3_rune02,43,46,3	script	Rune Knight Lunarea#jrt1	4_M_KNIGHT_GOLD,2,2,{
 	}
 	switch(rand(6)) {
 	case 0:
-		mapannounce "job3_rune02","Rune Knight Lunarea : Quickly... find and strike at the enemy's weakness!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Lunarea : Quickly... find and strike at the enemy's weakness!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		npcskill "AL_INCAGI",1,0,0;
 		break;
 	case 1:
 	case 2:
-		mapannounce "job3_rune02","Rune Knight Lunarea : It's not over... you need more power...",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Lunarea : It's not over... you need more power...",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		npcskill "AL_HEAL",8,60,90;
 		break;
 	case 3:
-		mapannounce "job3_rune02","Rune Knight Lunarea : Everything starts from the beginning!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Lunarea : Everything starts from the beginning!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		npcskill "AL_CURE",1,0,0;
 		break;
 	case 4:
-		mapannounce "job3_rune02","Rune Knight Lunarea : There can't be growth without a trial.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Lunarea : There can't be growth without a trial.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		sc_start SC_POISON,30000,0;
 		break;
 	case 5:
-		mapannounce "job3_rune02","Rune Knight Lunarea : There can't be growth without a trial.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Lunarea : There can't be growth without a trial.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		sc_start SC_CURSE,30000,0;
 		break;
 	}
@@ -1918,25 +1918,25 @@ job3_rune02,43,34,1	script	Rune Knight Renoa#jrt1	4_M_KNIGHT_GOLD,2,2,{
 	}
 	switch(rand(6)) {
 	case 0:
-		mapannounce "job3_rune02","Rune Knight Renoa : The rune of Wind! May it give you strength!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Renoa : The rune of Wind! May it give you strength!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		npcskill "AL_INCAGI",1,0,0;
 		break;
 	case 1:
 	case 2:
-		mapannounce "job3_rune02","Rune Knight Renoa : The rune of Birth! May give you the power of life!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Renoa : The rune of Birth! May give you the power of life!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		npcskill "AL_HEAL",8,60,90;
 		break;
 	case 3:
-		mapannounce "job3_rune02","Rune Knight Renoa : I am faster than all of them! Different then the others!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Renoa : I am faster than all of them! Different then the others!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		specialeffect2 EF_PIERCESELF;
 		donpcevent "job_rune_edq#1st_tcmc::OnReset";
 		break;
 	case 4:
-		mapannounce "job3_rune02","Rune Knight Renoa : For a Rune Knight, this kind of ordeal is nothing!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Renoa : For a Rune Knight, this kind of ordeal is nothing!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		sc_start SC_POISON,30000,0;
 		break;
 	case 5:
-		mapannounce "job3_rune02","Rune Knight Renoa : For a Rune Knight, this kind of ordeal is nothing!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Renoa : For a Rune Knight, this kind of ordeal is nothing!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		sc_start SC_CURSE,30000,0;
 		break;
 	}
@@ -1964,24 +1964,24 @@ job3_rune02,34,34,7	script	Rune Knight Velpino#jrt1	4_M_KNIGHT_BLACK,2,2,{
 	}
 	switch(rand(6)) {
 	case 0:
-		mapannounce "job3_rune02","Rune Knight Velpino : You are not one who gets to fall down in this kind of place.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Velpino : You are not one who gets to fall down in this kind of place.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		npcskill "AL_HEAL",8,60,90;
 		break;
 	case 1:
 	case 2:
-		mapannounce "job3_rune02","Rune Knight Velpino : Move on! There are obstacles to overcome.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Velpino : Move on! There are obstacles to overcome.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		npcskill "AL_INCAGI",1,0,0;
 		break;
 	case 3:
-		mapannounce "job3_rune02","Rune Knight Velpino : You are not alone. We are by your side.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Velpino : You are not alone. We are by your side.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		npcskill "AL_BLESSING",1,0,0;
 		break;
 	case 4:
-		mapannounce "job3_rune02","Rune Knight Velpino : Fight and win! Don't give in to the pain!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Velpino : Fight and win! Don't give in to the pain!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		sc_start SC_FREEZE,10000,0;
 		break;
 	case 5:
-		mapannounce "job3_rune02","Rune Knight Velpino : It's not a big trial for a true Rune Knight!",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Rune Knight Velpino : It's not a big trial for a true Rune Knight!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		sc_start SC_SLEEP,10000,0;
 		break;
 	}
@@ -2016,16 +2016,16 @@ OnDisable:
 	disablenpc "job_rune_edq#3rd_tb";
 	end;
 OnTimer5000:
-	mapannounce "job3_rune02","I'll start the last test of the Rune Knight Job change.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_rune02","I'll start the last test of the Rune Knight Job change.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	end;
 OnTimer8000:
-	mapannounce "job3_rune02","Get rid of monsters appearing here within 8 minutes by using the provided rune stones.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_rune02","Get rid of monsters appearing here within 8 minutes by using the provided rune stones.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	end;
 OnTimer11000:
-	mapannounce "job3_rune02","If you die or can't get rid of all the monsters within the time limit, I'll consider the try as a failure.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_rune02","If you die or can't get rid of all the monsters within the time limit, I'll consider the try as a failure.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	end;
 OnTimer14000:
-	mapannounce "job3_rune02","Now I'll start the test.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_rune02","Now I'll start the test.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	donpcevent "job_rune_edq#3rd_tc::OnEnable";
 	donpcevent "job_rune_edq#3rd_tb::OnDisable";
 	end;
@@ -2050,7 +2050,7 @@ OnDisable:
 	end;
 OnTimer480000:
 	killmonster "job3_rune02","job_rune_edq#3rd_tc::OnMyMobDead";
-	mapannounce "job3_rune02","You reached the limit time so I'll consider the test as a failure.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_rune02","You reached the limit time so I'll consider the test as a failure.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	end;
 OnTimer482000:
 	mapwarp "job3_rune02","job3_rune01",80,65;
@@ -2135,7 +2135,7 @@ OnMyMobDead:
 		changequest 3217,3218;
 		erasequest 3220;
 		killmonster "job3_rune02","job_rune_edq#3rd_tc3::OnMyMobDead";
-		mapannounce "job3_rune02","Congratulations. You've passed the test.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "job3_rune02","Congratulations. You've passed the test.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		mapwarp "job3_rune02","job3_rune01",80,65;
 		donpcevent "job_rune_edq#1st_tb::OnDisable";
 		donpcevent "job_rune_edq#1st_tc::OnDisable";

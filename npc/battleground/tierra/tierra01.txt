@@ -182,7 +182,7 @@ OnMyMobDead:
 		$@TierraBG1_Victory = 2;
 		enablenpc "Guillaume Vintenar#a01_a";
 		enablenpc "Croix Vintenar#a01_b";
-		mapannounce("bat_a01", _("Croix Vintenar Swandery: We destroyed Guillaume's Food Storage. We won that! Wow!"), bc_map, "0xFFCE00");
+		mapannounce("bat_a01", _("Croix Vintenar Swandery: We destroyed Guillaume's Food Storage. We won that! Wow!"), bc_map, C_SUPER_NOVA);
 		bg_warp $@TierraBG1_id1,"bat_a01",50,374;
 		bg_warp $@TierraBG1_id2,"bat_a01",42,16;
 	}
@@ -205,7 +205,7 @@ OnMyMobDead:
 		$@TierraBG1_Victory = 1;
 		enablenpc "Guillaume Vintenar#a01_a";
 		enablenpc "Croix Vintenar#a01_b";
-		mapannounce("bat_a01", _("Guillaume Vintenar Axl Rose : We destroyed Croix's Food Storage. We won that! Wow!"), bc_map, "0xFFCE00");
+		mapannounce("bat_a01", _("Guillaume Vintenar Axl Rose : We destroyed Croix's Food Storage. We won that! Wow!"), bc_map, C_SUPER_NOVA);
 		bg_warp $@TierraBG1_id1,"bat_a01",50,374;
 		bg_warp $@TierraBG1_id2,"bat_a01",42,16;
 	}
@@ -229,7 +229,7 @@ OnMyMobDead:
 		killmonster "bat_a01","barricade#bat_a01_a::OnMyMobDead";
 		delwall "bat_a01_c1";
 		enablenpc "Guillaume Blacksmith#a01";
-		mapannounce("bat_a01", _("Guillaume Vintenar Axl Rose : The Barricade in the valley has been destroyed! Where's the Blacksmith? We need to rebuild the Barricade!"), bc_map, "0xFFCE00");
+		mapannounce("bat_a01", _("Guillaume Vintenar Axl Rose : The Barricade in the valley has been destroyed! Where's the Blacksmith? We need to rebuild the Barricade!"), bc_map, C_SUPER_NOVA);
 	}
 	end;
 }
@@ -251,7 +251,7 @@ OnMyMobDead:
 		killmonster "bat_a01","barricade#bat_a01_b::OnMyMobDead";
 		delwall "bat_a01_g1";
 		enablenpc "Croix Blacksmith#bat_a01";
-		mapannounce("bat_a01", _("Croix Vintenar Swandery : The Barricade in the valley has been destroyed! Where's the Blacksmith? We need to rebuild the Barricade!"), bc_map, "0xFFCE00");
+		mapannounce("bat_a01", _("Croix Vintenar Swandery : The Barricade in the valley has been destroyed! Where's the Blacksmith? We need to rebuild the Barricade!"), bc_map, C_SUPER_NOVA);
 	}
 	end;
 }
@@ -270,11 +270,11 @@ OnMyMobDead:
 		bg_team_setxy getcharid(4),56,212;
 		if (getcharid(4) == $@TierraBG1_id1) {
 			donpcevent "NOBJ_mob#bat_a01_a::OnEnable";
-			mapannounce("bat_a01", _("Guillaume captured a Neutrality Flag, so they have an advantage."), bc_map, "0xFFCE00");
+			mapannounce("bat_a01", _("Guillaume captured a Neutrality Flag, so they have an advantage."), bc_map, C_SUPER_NOVA);
 		}
 		else {
 			donpcevent "NOBJ_mob#bat_a01_b::OnEnable";
-			mapannounce("bat_a01", _("Croix captured a Neutrality Flag, so they have an advantage."), bc_map, "0xFFCE00");
+			mapannounce("bat_a01", _("Croix captured a Neutrality Flag, so they have an advantage."), bc_map, C_SUPER_NOVA);
 		}
 	}
 	end;
@@ -892,31 +892,31 @@ OnStop:
 	end;
 
 OnTimer7000:
-	mapannounce("bat_a01", _("Guillaume Vintenar Axl Rose : Let's attack to burn down Croix's Food Depot!"), bc_map, "0xFF9900");
+	mapannounce("bat_a01", _("Guillaume Vintenar Axl Rose : Let's attack to burn down Croix's Food Depot!"), bc_map, C_ORANGE_PEEL);
 	end;
 
 OnTimer8000:
-	mapannounce("bat_a01", _("Croix Vintenar Swandery : Master of Valhalla! Let us be gifted with unfailing faith and courage!"), bc_map, "0xFF99CC");
+	mapannounce("bat_a01", _("Croix Vintenar Swandery : Master of Valhalla! Let us be gifted with unfailing faith and courage!"), bc_map, C_CARNATION_PINK);
 	end;
 
 OnTimer1800000:
-	mapannounce("bat_a01", _("Marollo VII : Guillaume Marollo, Croix Marollo! Marollo followers!"), bc_map, "0x99CC00");
+	mapannounce("bat_a01", _("Marollo VII : Guillaume Marollo, Croix Marollo! Marollo followers!"), bc_map, C_PISTACHIO);
 	end;
 
 OnTimer1803000:
-	mapannounce("bat_a01", _("Marollo VII : Both camps are competitive, so no camp would be destroyed easily. That means the Marollo kingdoms will never be defeated!"), bc_map, "0x99CC00");
+	mapannounce("bat_a01", _("Marollo VII : Both camps are competitive, so no camp would be destroyed easily. That means the Marollo kingdoms will never be defeated!"), bc_map, C_PISTACHIO);
 	end;
 
 OnTimer1808000:
-	mapannounce("bat_a01", _("Marollo VII : I think we'd better terminate the battle, and call it a draw."), bc_map, "0x99CC00");
+	mapannounce("bat_a01", _("Marollo VII : I think we'd better terminate the battle, and call it a draw."), bc_map, C_PISTACHIO);
 	end;
 
 OnTimer1822000:
-	mapannounce("bat_a01", _("Marollo VII : Hold your royalty and faith for a moment, and let's settle up the battle of Tierra Gorge."), bc_map, "0x99CC00");
+	mapannounce("bat_a01", _("Marollo VII : Hold your royalty and faith for a moment, and let's settle up the battle of Tierra Gorge."), bc_map, C_PISTACHIO);
 	end;
 
 OnTimer1825000:
-	mapannounce("bat_a01", _("Axl Rose, Swandery : Yes sir."), bc_map, "0x99CC00");
+	mapannounce("bat_a01", _("Axl Rose, Swandery : Yes sir."), bc_map, C_PISTACHIO);
 	end;
 
 OnTimer1830000:

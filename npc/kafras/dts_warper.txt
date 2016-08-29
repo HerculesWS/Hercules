@@ -1116,7 +1116,7 @@ OnEnable:
 OnTimer7200000:
 	stopnpctimer;
 	if (($DTS_Result == 0) || ($DTS_Result == 3)) {
-		announce "Currently, the Dungeon Teleport Service Provider Election is being held in all major cities. Your participation is appreciated.",bc_all,"0x70dbdb";
+		announce "Currently, the Dungeon Teleport Service Provider Election is being held in all major cities. Your participation is appreciated.",bc_all,C_VIKING;
 	}
 	donpcevent "Scrutiny Association#5::OnEnable";
 	end;
@@ -1128,19 +1128,19 @@ OnEnable:
 	end;
 
 OnTimer1000:
-	announce "All the votes for the Dungeon Teleport Service Provider Election have been received and counted.",bc_all,"0x70dbdb";
+	announce "All the votes for the Dungeon Teleport Service Provider Election have been received and counted.",bc_all,C_VIKING;
 	end;
 
 OnTimer5000:
-	announce "The results are now in...",bc_all,"0x70dbdb";
+	announce "The results are now in...",bc_all,C_VIKING;
 	end;
 
 OnTimer10000:
-	announce "This time, Cool Event Corp. will be the Dungeon Teleport Service Provider.",bc_all,"0x70dbdb";
+	announce "This time, Cool Event Corp. will be the Dungeon Teleport Service Provider.",bc_all,C_VIKING;
 	end;
 
 OnTimer15000:
-	announce "Many thanks to all of you who have voted and shown your support.",bc_all,"0x70dbdb";
+	announce "Many thanks to all of you who have voted and shown your support.",bc_all,C_VIKING;
 	stopnpctimer;
 	end;
 }
@@ -1151,19 +1151,19 @@ OnEnable:
 	end;
 
 OnTimer1000:
-	announce "All the votes for the Dungeon Teleport Service Provider Election have been received and counted.",bc_all,"0x70dbdb";
+	announce "All the votes for the Dungeon Teleport Service Provider Election have been received and counted.",bc_all,C_VIKING;
 	end;
 
 OnTimer5000:
-	announce "The results are now in...",bc_all,"0x70dbdb";
+	announce "The results are now in...",bc_all,C_VIKING;
 	end;
 
 OnTimer10000:
-	announce "This time, Kafra Corporation will be the Dungeon Teleport Service Provider.",bc_all,"0x70dbdb";
+	announce "This time, Kafra Corporation will be the Dungeon Teleport Service Provider.",bc_all,C_VIKING;
 	end;
 
 OnTimer15000:
-	announce "Many thanks to all of you who have voted and shown your support.",bc_all,"0x70dbdb";
+	announce "Many thanks to all of you who have voted and shown your support.",bc_all,C_VIKING;
 	stopnpctimer;
 	end;
 }

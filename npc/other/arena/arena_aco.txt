@@ -1467,15 +1467,15 @@ OnEnable:
 	end;
 
 OnTimer2000:
-	mapannounce "prt_are_in","This broadcast is to inform you about the Acolyte Class Arena.",bc_map,"0xFFCE00";
+	mapannounce "prt_are_in","This broadcast is to inform you about the Acolyte Class Arena.",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer3000:
-	mapannounce "prt_are_in","For smoother game play, the Warp Portal in the Final Waiting Room will activate in 1 minute.",bc_map,"0xFFCE00";
+	mapannounce "prt_are_in","For smoother game play, the Warp Portal in the Final Waiting Room will activate in 1 minute.",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer4000:
-	mapannounce "prt_are_in","Thank you.",bc_map,"0xFFCE00";
+	mapannounce "prt_are_in","Thank you.",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer60000:
@@ -1647,23 +1647,23 @@ OnInit:
 
 -	script	#Vendigos	FAKE_NPC,{
 OnLineRec_aco:
-	mapannounce "arena_room","Vendigos: "+$arn_acotopn$+" has made a new record in the Arena Time Force Battle - Acolyte Mode. Congratulations!",bc_map,"0xFFFF00";
+	mapannounce "arena_room","Vendigos: "+$arn_acotopn$+" has made a new record in the Arena Time Force Battle - Acolyte Mode. Congratulations!",bc_map,C_YELLOW;
 	end;
 
 OnLineRec_pri60:
-	mapannounce "arena_room","Vendigos: "+$arn_pritopn60$+" has made a new record in the Arena Time Force Battle - Priest: Level 70 or lower. Congratulations!",bc_map,"0xFFFF00";
+	mapannounce "arena_room","Vendigos: "+$arn_pritopn60$+" has made a new record in the Arena Time Force Battle - Priest: Level 70 or lower. Congratulations!",bc_map,C_YELLOW;
 	end;
 
 OnLineRec_pri70:
-	mapannounce "arena_room","Vendigos: "+$arn_pritopn70$+" has made a new record in the Arena Time Force Battle - Priest: Level 80 or lower. Congratulations!",bc_map,"0xFFFF00";
+	mapannounce "arena_room","Vendigos: "+$arn_pritopn70$+" has made a new record in the Arena Time Force Battle - Priest: Level 80 or lower. Congratulations!",bc_map,C_YELLOW;
 	end;
 
 OnLineRec_pri80:
-	mapannounce "arena_room","Vendigos: "+$arn_pritopn80$+" has made a new record in the Arena Time Force Battle - Priest: Level 90 or lower. Congratulations!",bc_map,"0xFFFF00";
+	mapannounce "arena_room","Vendigos: "+$arn_pritopn80$+" has made a new record in the Arena Time Force Battle - Priest: Level 90 or lower. Congratulations!",bc_map,C_YELLOW;
 	end;
 
 OnLineRec_pri90:
-	mapannounce "arena_room","Vendigos: "+$arn_pritopn90$+" has made a new record in the Arena Time Force Battle - Priest: Level 91~"+(RENEWAL?"160":"99")+". Congratulations!",bc_map,"0xFFFF00";
+	mapannounce "arena_room","Vendigos: "+$arn_pritopn90$+" has made a new record in the Arena Time Force Battle - Priest: Level 91~"+(RENEWAL?"160":"99")+". Congratulations!",bc_map,C_YELLOW;
 	end;
 }
 

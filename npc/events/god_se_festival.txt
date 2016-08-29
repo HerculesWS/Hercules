@@ -141,7 +141,7 @@ yuno,118,192,5	script	Rmimi Ravies#gq_fes01	4_F_HUGIRL,{
 				mes "[Rmimi Ravies]";
 				mes "Have a good time.";
 				donpcevent "Rmimi Ravies#gq_fes01::OnStart";
-				announce "["+ strcharinfo(0) +"] member of ["+ getguildname(.@GID) +"] is summoning a 'Valkyrie's Present' in 'Juno'.",bc_all,"0x70dbdb";
+				announce "["+ strcharinfo(0) +"] member of ["+ getguildname(.@GID) +"] is summoning a 'Valkyrie's Present' in 'Juno'.",bc_all,C_VIKING;
 				close;
 			}
 			else {
@@ -225,187 +225,187 @@ OnMyMobDead:
 	end;
 
 OnTimer10000:
-	announce "The summoning ceremony will start in 5 min in Juno.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will start in 5 min in Juno.",bc_all,C_VIKING;
 	end;
 
 OnTimer13000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer120000:
-	announce "The summoning ceremony will start in 3 min in Juno.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will start in 3 min in Juno.",bc_all,C_VIKING;
 	end;
 
 OnTimer123000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer240000:
-	announce "The summoning ceremony will start in 1 min in Juno.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will start in 1 min in Juno.",bc_all,C_VIKING;
 	end;
 
 OnTimer243000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer300000:
-	announce "The first 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The first 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer303000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer308000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer600000:
-	announce "The second 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The second 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer603000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer608000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer900000:
-	announce "The third 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The third 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer903000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer908000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer1200000:
-	announce "The fourth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The fourth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer1203000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer1208000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer1500000:
-	announce "The fifth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The fifth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer1503000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer1508000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer1800000:
-	announce "The sixth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The sixth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer1803000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer1808000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer2100000:
-	announce "The seventh 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The seventh 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer2103000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer2108000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer2400000:
-	announce "The eighth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The eighth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer2403000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer2408000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer2700000:
-	announce "The ninth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The ninth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer2703000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer2708000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer3000000:
-	announce "The first0 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The first0 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer3003000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer3008000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer3300000:
-	announce "The eleventh 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The eleventh 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer3303000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer3308000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer3600000:
-	announce "The twelfth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The twelfth 'Valkyrie's Present' has been summoned here in Juno by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rmimi Ravies#gq_fes01::OnCall";
 	end;
 
 OnTimer3603000:
-	announce "The final ceremony will be performed for 5 minutes.",bc_all,"0x70dbdb";
+	announce "The final ceremony will be performed for 5 minutes.",bc_all,C_VIKING;
 	end;
 
 OnTimer3608000:
-	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Juno to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer3900000:
-	announce "The entire ceremony is over now, I am sure all of you had fun.",bc_all,"0x70dbdb";
+	announce "The entire ceremony is over now, I am sure all of you had fun.",bc_all,C_VIKING;
 	donpcevent "Rmimi Ravies#gq_fes01::OnOver";
 	end;
 }
@@ -521,7 +521,7 @@ rachel,132,117,3	script	Rhehe Ravies#gq_fes03	4_F_HUGIRL,{
 				mes "[Rhehe Ravies]";
 				mes "I hope you enjoy yourself!";
 				donpcevent "Rhehe Ravies#gq_fes03::OnStart";
-				announce "["+ strcharinfo(0) +"] member of ["+ getguildname(.@GID) +"] is summoning a 'Valkyrie's Present' in 'Rachel'.",bc_all,"0x70dbdb";
+				announce "["+ strcharinfo(0) +"] member of ["+ getguildname(.@GID) +"] is summoning a 'Valkyrie's Present' in 'Rachel'.",bc_all,C_VIKING;
 				close;
 			}
 			else {
@@ -606,187 +606,187 @@ OnMyMobDead:
 	end;
 
 OnTimer10000:
-	announce "The summoning ceremony will start in 5 min in Rachel.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will start in 5 min in Rachel.",bc_all,C_VIKING;
 	end;
 
 OnTimer13000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer120000:
-	announce "The summoning of Valkyrie's Gift will begin in approximately 3 min in Rachel.",bc_all,"0x70dbdb";
+	announce "The summoning of Valkyrie's Gift will begin in approximately 3 min in Rachel.",bc_all,C_VIKING;
 	end;
 
 OnTimer123000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer240000:
-	announce "The summoning ceremony will start in 1 min in Rachel.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will start in 1 min in Rachel.",bc_all,C_VIKING;
 	end;
 
 OnTimer243000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer300000:
-	announce "The first 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The first 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer303000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer308000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer600000:
-	announce "The second 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The second 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer603000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer608000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer900000:
-	announce "The third 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The third 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer903000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer908000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer1200000:
-	announce "The fourth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The fourth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer1203000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer1208000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer1500000:
-	announce "The fifth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The fifth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer1503000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer1508000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer1800000:
-	announce "The sixth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The sixth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer1803000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer1808000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer2100000:
-	announce "The seventh 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The seventh 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer2103000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer2108000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer2400000:
-	announce "The eighth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The eighth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer2403000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer2408000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer2700000:
-	announce "The ninth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The ninth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer2703000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer2708000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer3000000:
-	announce "The tenth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The tenth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer3003000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer3008000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer3300000:
-	announce "The eleventh 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The eleventh 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer3303000:
-	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,"0x70dbdb";
+	announce "The summoning ceremony will be performed 12 times at five-minute intervals for about one hour.",bc_all,C_VIKING;
 	end;
 
 OnTimer3308000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer3600000:
-	announce "The twelfth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,"0x70dbdb";
+	announce "The twelfth 'Valkyrie's Present' has been summoned here in Rachel by the Wish maiden.",bc_all,C_VIKING;
 	donpcevent "Rhehe Ravies#gq_fes03::OnCall";
 	end;
 
 OnTimer3603000:
-	announce "The final ceremony will be performed for 5 minutes.",bc_all,"0x70dbdb";
+	announce "The final ceremony will be performed for 5 minutes.",bc_all,C_VIKING;
 	end;
 
 OnTimer3608000:
-	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,"0x70dbdb";
+	announce "Please come to Rachel to encounter the summoning ceremony.",bc_all,C_VIKING;
 	end;
 
 OnTimer3900000:
-	announce "The entire ceremony is over now, I am sure all of you had fun.",bc_all,"0x70dbdb";
+	announce "The entire ceremony is over now, I am sure all of you had fun.",bc_all,C_VIKING;
 	donpcevent "Rhehe Ravies#gq_fes03::OnOver";
 	end;
 }

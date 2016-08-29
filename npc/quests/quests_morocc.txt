@@ -730,11 +730,11 @@ OnTouch:
 que_job01,1,1,0	script	 #room1timer	CLEAR_NPC,{
 OnEnable:
 	initnpctimer;
-	mapannounce "que_job01","You will now enter the Master Zone, Area 1.",bc_map,"0x70DBDB";
+	mapannounce "que_job01","You will now enter the Master Zone, Area 1.",bc_map,C_VIKING;
 	end;
 
 OnStop:
-	mapannounce "que_job01","The security magic in the Master Zone, Area 1 is deactivated.",bc_map,"0x70DBDB";
+	mapannounce "que_job01","The security magic in the Master Zone, Area 1 is deactivated.",bc_map,C_VIKING;
 	donpcevent "#room1_warp::OnDisable";
 	donpcevent "Valdes#moc_master_1::OnDisable";
 	donpcevent "Marjana#poison::OnDisable";
@@ -753,7 +753,7 @@ OnTimer245000:
 	end;
 
 OnTimer250000:
-	mapannounce "que_job01","The security magic Master Zone, Area 1 is now activated.",bc_map,"0x70DBDB";
+	mapannounce "que_job01","The security magic Master Zone, Area 1 is now activated.",bc_map,C_VIKING;
 	donpcevent "que_job01#room_1::OnReset";
 	stopnpctimer;
 	end;
@@ -1875,15 +1875,15 @@ OnEnable:
 	end;
 
 OnTimer5000:
-	mapannounce "moc_fild21","Satan Morroc: I'm very impressed by you weaklings.",bc_map,"0xFFFF00";
+	mapannounce "moc_fild21","Satan Morroc: I'm very impressed by you weaklings.",bc_map,C_YELLOW;
 	end;
 
 OnTimer15000:
-	mapannounce "moc_fild21","Satan Morroc: You may as well deal with all your regrets now. I shall snuff out your life soon!",bc_map,"0xFFFF00";
+	mapannounce "moc_fild21","Satan Morroc: You may as well deal with all your regrets now. I shall snuff out your life soon!",bc_map,C_YELLOW;
 	end;
 
 OnTimer25000:
-	mapannounce "moc_fild21","Satan Morroc: It's only a matter of time until I get you, you worthless insects. Just a little while longer...",bc_map,"0xFFFF00";
+	mapannounce "moc_fild21","Satan Morroc: It's only a matter of time until I get you, you worthless insects. Just a little while longer...",bc_map,C_YELLOW;
 	stopnpctimer;
 	end;
 
@@ -1996,7 +1996,7 @@ OnDisable:
 OnMyMobDead:
 	$@re_moc = 3;
 	$@re_moc_time$ = gettimestr("%H%M%S",7);
-	mapannounce "moc_fild21","I'll let live just a little longer. You'll never find me through this time-space gap!",bc_map,"0xFFFF00";
+	mapannounce "moc_fild21","I'll let live just a little longer. You'll never find me through this time-space gap!",bc_map,C_YELLOW;
 	donpcevent "Time-Space Gap#edq::OnEnable";
 	donpcevent "Satan Broadcast#edq::OnDisable";
 	donpcevent "Group of Evil#edq::OnDisable";
@@ -2004,11 +2004,11 @@ OnMyMobDead:
 	end;
 
 OnTimer5400000:
-	mapannounce "moc_fild21","You weaklings can't even scratch me!",bc_map,"0xFFFF00";
+	mapannounce "moc_fild21","You weaklings can't even scratch me!",bc_map,C_YELLOW;
 	end;
 
 OnTimer5415000:
-	mapannounce "moc_fild21","I don't have time for this! Go away!",bc_map,"0xFFFF00";
+	mapannounce "moc_fild21","I don't have time for this! Go away!",bc_map,C_YELLOW;
 	stopnpctimer;
 	killmonster "moc_fild21","Satan Summon#edq::OnMyMobDead";
 	$@re_moc = 0;

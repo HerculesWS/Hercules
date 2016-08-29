@@ -134,7 +134,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 						"The party leader did not generate the dungeon yet.", .@md_name$);
 				close;
 			}
-			mapannounce("glast_01", sprintf(_$("%s, member of the party %s entered the instance %s."), strcharinfo(0), .@p_name$, .@md_name$), bc_map, C_SPRINGGREEN);
+			mapannounce("glast_01", sprintf(_$("%s, member of the party %s entered the instance %s."), strcharinfo(0), .@p_name$, .@md_name$), bc_map, C_SPRING_GREEN);
 			setquest 12317;
 			warp "1@gl_k", 150, 20;
 			end;

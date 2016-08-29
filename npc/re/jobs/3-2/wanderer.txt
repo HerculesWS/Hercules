@@ -867,13 +867,13 @@ OnTouch:
 	if (job_wan == 7) {
 		switch(rand(3)) {
 		case 0:
-			mapannounce "hu_fild05","Dancer Kim: Hey, how did you get so fast? I've only got few myself...",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
+			mapannounce "hu_fild05","Dancer Kim: Hey, how did you get so fast? I've only got few myself...",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 			break;
 		case 1:
-			mapannounce "hu_fild05","Dancer Kim: Errrgghh! Hey Novus! I'm gonna get you~",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
+			mapannounce "hu_fild05","Dancer Kim: Errrgghh! Hey Novus! I'm gonna get you~",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 			break;
 		case 2:
-			mapannounce "hu_fild05","Dancer Kim: Oh, are you tired already? Is this my victory? Ho ho ho.",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
+			mapannounce "hu_fild05","Dancer Kim: Oh, are you tired already? Is this my victory? Ho ho ho.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 			break;
 		}
 	}
@@ -999,7 +999,7 @@ xmas,147,135,5	script	Dancer Kim#xmas	4_F_WANDERER,{
 		mes "Introducing!";
 		next;
 		mes "[Dancer Kim]";
-		mapannounce "xmas","Dancer Kim: Introducing the rising Wanderer! " + strcharinfo(0) + "!",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
+		mapannounce "xmas","Dancer Kim: Introducing the rising Wanderer! " + strcharinfo(0) + "!",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		mes "This rising Wanderer star, " + strcharinfo(0) + "!";
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		job_wan = 10;

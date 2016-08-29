@@ -6494,7 +6494,7 @@ eclage,222,131,3	script	Wandering Merchant#ecl	1_M_SIGNMCNT,{
 							mes "All you need is 10,000zeny~";
 							close;
 						}
-						progressbar "0xFFFF00",3;
+						progressbar C_YELLOW,3;
 						.@nRand = rand(1,10);
 						specialeffect2 EF_ENHANCE;
 						Zeny -= 10000;
@@ -6614,7 +6614,7 @@ ecl_in04,85,104,3	script	Poppy#eclage	4_DOG01,{
 		.@nRand = rand(1,10);
 		if ((.@nRand > 0) && (.@nRand < 5)) {
 			if (select("Observe it", "Forget it")==1) {
-				progressbar "0xFFFF00",5;
+				progressbar C_YELLOW,5;
 				mes "[Poppy]";
 				mes "Grrrrrrr.... Bow Wow!!";
 				mes "Grrrrr!!!!";
@@ -6644,7 +6644,7 @@ ecl_in04,85,104,3	script	Poppy#eclage	4_DOG01,{
 			}
 		}
 		else if (select("Observe it", "Forgot it")==1) {
-			progressbar "0xFFFF00",5;
+			progressbar C_YELLOW,5;
 			mes "[Poppy]";
 			mes "Grrrrrrr.... Bow Wow!!";
 			mes "Grrrrr!!!!";
@@ -6695,7 +6695,7 @@ ecl_in04,80,112,3	script	Messy Bookshelves#eclage	HIDDEN_NPC,{
 			.@nRand = rand(1,10);
 			if ((.@nRand < 5) && (.@nRand > 0)) {
 				if (select("Examine them.", "Forget it.")==1) {
-					progressbar "0xFFFF00",5;
+					progressbar C_YELLOW,5;
 					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Let's see...";
 					mes "Physics... Science...";
@@ -6726,7 +6726,7 @@ ecl_in04,80,112,3	script	Messy Bookshelves#eclage	HIDDEN_NPC,{
 				}
 			}
 			else if (select("Examine it.", "Forget it.") == 1){
-				progressbar "0xFFFF00",5;
+				progressbar C_YELLOW,5;
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Let's see...";
 				mes "Physics... Science...";
@@ -6787,7 +6787,7 @@ ecl_in04,78,111,3	script	Damaged book#eclage	HIDDEN_NPC,{
 			.@nRand = rand(1,10);
 			if ((.@nRand > 0) && (.@nRand < 5)) {
 				if (select("Examine it.", "Forget it.")==1) {
-					progressbar "0xFFFF00",5;
+					progressbar C_YELLOW,5;
 					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Let's see...";
 					mes "This book doesn't seem";
@@ -6815,7 +6815,7 @@ ecl_in04,78,111,3	script	Damaged book#eclage	HIDDEN_NPC,{
 				}
 			}
 			else if (select("Examine it.", "Forget it.")==1) {
-				progressbar "0xFFFF00",5;
+				progressbar C_YELLOW,5;
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Let's see...";
 				mes "This book doesn't seem";
@@ -6878,7 +6878,7 @@ ecl_in04,83,111,3	script	Soda can container#ecl	HIDDEN_NPC,{
 			.@nRand = rand(1,10);
 			if ((.@nRand > 0) && (.@nRand < 5)) {
 				if (select("Examine it.", "Forget it.")==1) {
-					progressbar "0xFFFF00",5;
+					progressbar C_YELLOW,5;
 					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Let's see...";
 					mes "This container for soda cans doesn't seem all that unique.";
@@ -6919,7 +6919,7 @@ ecl_in04,83,111,3	script	Soda can container#ecl	HIDDEN_NPC,{
 				}
 			}
 			else if (select("Examine it.", "Forget it.") == 1) {
-				progressbar "0xFFFF00",5;
+				progressbar C_YELLOW,5;
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Let's see...";
 				mes "This container for soda";
@@ -6989,7 +6989,7 @@ ecl_in04,76,107,3	script	A messed up table#eclage	HIDDEN_NPC,{
 			.@nRand = rand(1,10);
 			if ((.@nRand > 0) && (.@nRand < 5)) {
 				if (select("Examine it.", "Forget it.")==1) {
-					progressbar "0xFFFF00",5;
+					progressbar C_YELLOW,5;
 					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Let's see...";
 					mes "This table";
@@ -7030,7 +7030,7 @@ ecl_in04,76,107,3	script	A messed up table#eclage	HIDDEN_NPC,{
 				}
 			}
 			else if (select("Examine it.", "Forget it.")==1) {
-				progressbar "0xFFFF00",5;
+				progressbar C_YELLOW,5;
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Let's see...";
 				mes "This table doesn't seem all that unique.";
@@ -7098,7 +7098,7 @@ ecl_in04,80,105,3	script	A foreign substance#ecl	4_SOIL,{
 			.@nRand = rand(1,10);
 			if ((.@nRand < 5) && (.@nRand > 0)) {
 				if (select("Examine it.", "Forget it.")==1) {
-					progressbar "0xFFFF00",5;
+					progressbar C_YELLOW,5;
 					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Let's see...";
 					mes "This foreign object";
@@ -7128,7 +7128,7 @@ ecl_in04,80,105,3	script	A foreign substance#ecl	4_SOIL,{
 				}
 			}
 			else if (select("Examine it.", "Forget it.")==1) {
-				progressbar "0xFFFF00",5;
+				progressbar C_YELLOW,5;
 				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Let's see!";
 				mes "This table doesn't seem all that unique.";
@@ -19067,13 +19067,13 @@ OnStop:
 	stopnpctimer;
 	end;
 OnTimer5000:
-	mapannounce "que_avan01","Welcome, Sir Avant. User certification standby for 5 minutes.",bc_map,"0xA8A8A8";
+	mapannounce "que_avan01","Welcome, Sir Avant. User certification standby for 5 minutes.",bc_map,C_SILVER_CHALICE;
 	end;
 OnTimer360000:
-	mapannounce "que_avan01","Warning: Long-term use was not certified. Restrictive magic on unauthorized personnel will automatically be executed.",bc_map,"0xA8A8A8";
+	mapannounce "que_avan01","Warning: Long-term use was not certified. Restrictive magic on unauthorized personnel will automatically be executed.",bc_map,C_SILVER_CHALICE;
 	end;
 OnTimer365000:
-	mapannounce "que_avan01","Research lab interior space has been distorted. Sweeping in process.",bc_map,"0x7b68ee";
+	mapannounce "que_avan01","Research lab interior space has been distorted. Sweeping in process.",bc_map,C_CORNFLOWER_BLUE;
 	end;
 OnTimer368000:
 	mapwarp "que_avan01","eclage",265,275;
@@ -19345,7 +19345,7 @@ OnReset:
 
 OnMyMobDead:
 	if (mobcount ("que_avan01","#avtmanager::OnMyMobDead") == 0) {
-		mapannounce "que_avan01","Hisie: This is it for you! Avant!!",bc_map,"0x7b68ee";
+		mapannounce "que_avan01","Hisie: This is it for you! Avant!!",bc_map,C_CORNFLOWER_BLUE;
 		hideonnpc "Hisie#tlspt";
 		hideoffnpc "Hisie#tlhunt";
 	}
@@ -19374,7 +19374,7 @@ OnKill:
 	end;
 
 OnTimer2000:
-	mapannounce "que_avan01","Hisie: Watch out!!!",bc_map,"0x7b68ee";
+	mapannounce "que_avan01","Hisie: Watch out!!!",bc_map,C_CORNFLOWER_BLUE;
 	end;
 
 OnTimer8000:

@@ -238,7 +238,7 @@ monk_test,306,151,3	script	Grave of Baphomet#edq	HIDDEN_NPC,{
 			mes "It's cold to the touch. It doesn't respond.";
 			close;
 		} else {
-			mapannounce "monk_test","[" + strcharinfo(0) + "] member of the [" + getpartyname(.@party_id) + "] party has entered the Sealed Shrine.",bc_map,"0x00ff99";
+			mapannounce "monk_test","[" + strcharinfo(0) + "] member of the [" + getpartyname(.@party_id) + "] party has entered the Sealed Shrine.",bc_map,C_SPRING_GREEN;
 			setquest 3040;
 			warp "1@cata",100,224;
 			end;
@@ -483,7 +483,7 @@ OnDisable:
 OnMyMobDead:
 	.@map$ = instance_mapname("1@cata");
 	if (mobcount(.@map$,instance_npcname("ins_baphomet_lotto3")+"::OnMyMobDead") < 1) {
-		mapannounce .@map$, "All apostles of Baphomet are dead!",bc_map,"0x00ff99";
+		mapannounce .@map$, "All apostles of Baphomet are dead!",bc_map,C_SPRING_GREEN;
 	}
 	getitem Token_Of_Apostle,1;
 	end;
@@ -563,7 +563,7 @@ OnMyMobDead:
 			mes "[Voice of the Gravestone]";
 			mes "Now I can substantialize my soul. I'll wait for you in front of the altar of fire located at the center of this grave. Let's meet there.";
 			next;
-			mapannounce instance_mapname("1@cata"), "Ancient Hero's Soul : I'll wait for you in front of the altar of fire located at the center",bc_map,"0xFFFF00";
+			mapannounce instance_mapname("1@cata"), "Ancient Hero's Soul : I'll wait for you in front of the altar of fire located at the center",bc_map,C_YELLOW;
 			mes "I can feel the voice becoming faint.";
 			close;
 		}
@@ -783,7 +783,7 @@ OnInstanceInit: // Temporary fix for @reloadscript.
 		mes "[Ancient Hero's Soul]";
 		mes "Go ahead, warriors.";
 		cutin "",255;
-		mapannounce instance_mapname("1@cata"), "Ancient Hero's Soul : Now you can go to the Main Altar's gate. It is located in the Southeast",bc_map,"0xFFFF00";
+		mapannounce instance_mapname("1@cata"), "Ancient Hero's Soul : Now you can go to the Main Altar's gate. It is located in the Southeast",bc_map,C_YELLOW;
 		close;
 	}
 	else if ('ins_baphomet == 4) {
@@ -951,23 +951,23 @@ OnDisable:
 	end;
 
 OnTimer1800000:
-	mapannounce instance_mapname("1@cata"), "Ancient Hero's Soul : We don't have enough time! Hurry up!",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("1@cata"), "Ancient Hero's Soul : We don't have enough time! Hurry up!",bc_map,C_YELLOW;
 	end;
 
 OnTimer2400000:
-	mapannounce instance_mapname("1@cata"), "Ancient Hero's Soul : My body is disappearing... Hurry up!",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("1@cata"), "Ancient Hero's Soul : My body is disappearing... Hurry up!",bc_map,C_YELLOW;
 	end;
 
 OnTimer3000000:
-	mapannounce instance_mapname("1@cata"), "Ancient Hero's Soul : Everything is over... There is no other way but to wait for the next chance...",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("1@cata"), "Ancient Hero's Soul : Everything is over... There is no other way but to wait for the next chance...",bc_map,C_YELLOW;
 	end;
 
 OnTimer3050000:
-	mapannounce instance_mapname("1@cata"), "Ancient Hero's Soul : We failed... However... We still have a chance. I hope you will train yourselves until the time comes.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("1@cata"), "Ancient Hero's Soul : We failed... However... We still have a chance. I hope you will train yourselves until the time comes.",bc_map,C_YELLOW;
 	end;
 
 OnTimer3100000:
-	mapannounce instance_mapname("1@cata"), "You've failed to open the seal of main altar.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("1@cata"), "You've failed to open the seal of main altar.",bc_map,C_YELLOW;
 	end;
 
 OnTimer3500000:
@@ -995,19 +995,19 @@ OnEnable:
 	end;
 
 OnTimer10000:
-	mapannounce instance_mapname("2@cata"), "Baphomet : Humans... interfering again...",bc_map,"0xdb7093";
+	mapannounce instance_mapname("2@cata"), "Baphomet : Humans... interfering again...",bc_map,C_CHARM;
 	end;
 
 OnTimer13000:
-	mapannounce instance_mapname("2@cata"), "Apostle of Baphomet : Humans! Humans have invaded our sanctum!",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Apostle of Baphomet : Humans! Humans have invaded our sanctum!",bc_map,C_YELLOW;
 	end;
 
 OnTimer16000:
-	mapannounce instance_mapname("2@cata"), "Apostle of Baphomet : Kill the humans! Do not stop the revival of our Master!",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Apostle of Baphomet : Kill the humans! Do not stop the revival of our Master!",bc_map,C_YELLOW;
 	end;
 
 OnTimer18000:
-	mapannounce instance_mapname("2@cata"), "Apostle of Baphomet : Hurry up and release the seals of the altars! Our Master's return is upon us!",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Apostle of Baphomet : Hurry up and release the seals of the altars! Our Master's return is upon us!",bc_map,C_YELLOW;
 	stopnpctimer;
 	disablenpc instance_npcname("ins_2f_enter_broad");
 	end;
@@ -1016,7 +1016,7 @@ OnTimer18000:
 2@cata,50,67,0	script	slave_left	FAKE_NPC,5,5,{
 OnTouch:
 	.@map$ = instance_mapname("2@cata");
-	mapannounce .@map$, "Apostle of Baphomet : Kill the humans! Don't let them interrupt the revival of our Master!",bc_map,"0xFFFF00";
+	mapannounce .@map$, "Apostle of Baphomet : Kill the humans! Don't let them interrupt the revival of our Master!",bc_map,C_YELLOW;
 	monster .@map$,55,67,"Apostle of Baphomet",1869,1;
 	monster .@map$,51,67,"Apostle of Baphomet",1291,1;
 	monster .@map$,58,67,"Apostle of Baphomet",1292,1;
@@ -1040,7 +1040,7 @@ OnTouch:
 2@cata,109,67,0	script	slave_right	FAKE_NPC,5,5,{
 OnTouch:
 	.@map$ = instance_mapname("2@cata");
-	mapannounce .@map$, "Apostle of Baphomet : Kill the humans! Don't let them interrupt the revival of our Master!",bc_map,"0xFFFF00";
+	mapannounce .@map$, "Apostle of Baphomet : Kill the humans! Don't let them interrupt the revival of our Master!",bc_map,C_YELLOW;
 	monster .@map$,105,67,"Apostle of Baphomet",1869,1;
 	monster .@map$,104,67,"Apostle of Baphomet",1291,1;
 	monster .@map$,107,67,"Apostle of Baphomet",1869,1;
@@ -1064,7 +1064,7 @@ OnTouch:
 2@cata,79,39,0	script	slave_down	FAKE_NPC,5,5,{
 OnTouch:
 	.@map$ = instance_mapname("2@cata");
-	mapannounce .@map$, "Apostle of Baphomet : Kill the humans! Don't let them interrupt the revival of our Master!",bc_map,"0xFFFF00";
+	mapannounce .@map$, "Apostle of Baphomet : Kill the humans! Don't let them interrupt the revival of our Master!",bc_map,C_YELLOW;
 	monster .@map$,78,41,"Apostle of Baphomet",1869,1;
 	monster .@map$,79,42,"Apostle of Baphomet",1291,1;
 	monster .@map$,78,46,"Apostle of Baphomet",1869,1;
@@ -1107,7 +1107,7 @@ OnTouch:
 	percentheal -50,0;
 	sc_start Eff_Stone,20000,0;
 	setquest 3041;
-	mapannounce .@map$, "The seal activated by putting magical power into the altar.",bc_map,"0x87ceeb";
+	mapannounce .@map$, "The seal activated by putting magical power into the altar.",bc_map,C_SEAGULL;
 	mes "I can feel the power of the altar came back by adding magical power.";
 	next;
 	mes "But you can't use your magic for 3 minutes because you used your SP on the altar.";
@@ -1197,27 +1197,27 @@ OnDisable:
 	end;
 
 OnTimer3000:
-	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : My God! The seal of the Main Altar is weakening!",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : My God! The seal of the Main Altar is weakening!",bc_map,C_YELLOW;
 	end;
 
 OnTimer6000:
-	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : My descendants... Listen carefully to what I'm going to say.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : My descendants... Listen carefully to what I'm going to say.",bc_map,C_YELLOW;
 	end;
 
 OnTimer9000:
-	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The altars that control the Main Altar's power are located in the Northeast, Southeast, Southwest and Northwest corners of this room.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The altars that control the Main Altar's power are located in the Northeast, Southeast, Southwest and Northwest corners of this room.",bc_map,C_YELLOW;
 	end;
 
 OnTimer12000:
-	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : Find these altars and activate their seals before Baphomet revives.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : Find these altars and activate their seals before Baphomet revives.",bc_map,C_YELLOW;
 	end;
 
 OnTimer15000:
-	mapannounce instance_mapname("2@cata"), "Baphomet : It's too late, weaklings... Now, you'll feel the despair of death!",bc_map,"0xdb7093";
+	mapannounce instance_mapname("2@cata"), "Baphomet : It's too late, weaklings... Now, you'll feel the despair of death!",bc_map,C_CHARM;
 	end;
 
 OnTimer17000:
-	mapannounce instance_mapname("2@cata"), "Baphomet : No one can harm me here. You will be my first sacrifice.",bc_map,"0xdb7093";
+	mapannounce instance_mapname("2@cata"), "Baphomet : No one can harm me here. You will be my first sacrifice.",bc_map,C_CHARM;
 	donpcevent instance_npcname("control_baphomet")+"::OnEnable";
 	donpcevent instance_npcname("ins_2f_hero_broad2")+"::OnEnable";
 	stopnpctimer;
@@ -1242,7 +1242,7 @@ OnMyMobDead:
 	if (mobcount(.@map$,instance_npcname("control_baphomet")+"::OnMyMobDead") < 1) {
 		'ins_baphomet = 7;
 		erasequest 3041;
-		mapannounce .@map$, "Baphomet : No! Nonono! How dare these weaklings defeat me!... No!!...",bc_map,"0xdb7093";
+		mapannounce .@map$, "Baphomet : No! Nonono! How dare these weaklings defeat me!... No!!...",bc_map,C_CHARM;
 		enablenpc instance_npcname("Ancient Hero's Soul#2F");
 		disablenpc instance_npcname("slave_down");
 		disablenpc instance_npcname("slave_left");
@@ -1272,31 +1272,31 @@ OnEnable:
 	end;
 
 OnTimer8000:
-	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : Don't be discouraged, Baphomet can still be defeated!",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : Don't be discouraged, Baphomet can still be defeated!",bc_map,C_YELLOW;
 	end;
 
 OnTimer11000:
-	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : Go to the altars and activate their seals.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : Go to the altars and activate their seals.",bc_map,C_YELLOW;
 	end;
 
 OnTimer13000:
-	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : Once the seals recover their power, Baphomet will be vulnerable.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : Once the seals recover their power, Baphomet will be vulnerable.",bc_map,C_YELLOW;
 	end;
 
 OnTimer16000:
-	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : You should lure Baphomet to the unsealed Altars. Otherwise, your efforts will be futile.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : You should lure Baphomet to the unsealed Altars. Otherwise, your efforts will be futile.",bc_map,C_YELLOW;
 	end;
 
 OnTimer19000:
-	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : We have only 1 hour to stop Baphomet. If time runs out, the power of the seals will be useless.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : We have only 1 hour to stop Baphomet. If time runs out, the power of the seals will be useless.",bc_map,C_YELLOW;
 	end;
 
 OnTimer22000:
-	mapannounce instance_mapname("2@cata"), "Baphomet : It's useless. Make more seals. I'll crush them all. None of you will survive!",bc_map,"0xdb7093";
+	mapannounce instance_mapname("2@cata"), "Baphomet : It's useless. Make more seals. I'll crush them all. None of you will survive!",bc_map,C_CHARM;
 	end;
 
 OnTimer26000:
-	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The magical power of the central seal is running out. Go to the central seal and put the magical power.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The magical power of the central seal is running out. Go to the central seal and put the magical power.",bc_map,C_YELLOW;
 	enablenpc instance_npcname("Magical Seal#0");
 	disablenpc instance_npcname("Magical Seal#2");
 	disablenpc instance_npcname("Magical Seal#4");
@@ -1384,11 +1384,11 @@ OnDisable:
 	end;
 
 OnTimer3600000:
-	mapannounce instance_mapname("2@cata"), "Baphomet : krrrr... Now you can't stop me with the seals. All you can do is wait for death!",bc_map,"0xdb7093";
+	mapannounce instance_mapname("2@cata"), "Baphomet : krrrr... Now you can't stop me with the seals. All you can do is wait for death!",bc_map,C_CHARM;
 	end;
 
 OnTimer3605000:
-	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : We can't stop Baphomet with the magical power of the seals anymore. Now everything depends on God...",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : We can't stop Baphomet with the magical power of the seals anymore. Now everything depends on God...",bc_map,C_YELLOW;
 	donpcevent instance_npcname("ins_2f_hero_pattern_c")+"::OnDisable";
 	end;
 }
@@ -1411,7 +1411,7 @@ OnDisable:
 OnTimer70000:
 	switch(rand(1,5)) {
 	case 1:
-		mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The seal of the Main Altar is running out. Strengthen the Main Altar's seal!",bc_map,"0xFFFF00";
+		mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The seal of the Main Altar is running out. Strengthen the Main Altar's seal!",bc_map,C_YELLOW;
 		enablenpc instance_npcname("Magical Seal#0");
 		disablenpc instance_npcname("Magical Seal#2");
 		disablenpc instance_npcname("Magical Seal#4");
@@ -1419,7 +1419,7 @@ OnTimer70000:
 		disablenpc instance_npcname("Magical Seal#10");
 		break;
 	case 2:
-		mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The magical power of the seal at 2 o'clock is running out. Go to 2 o'clock and put the magical power in the seal.",bc_map,"0xFFFF00";
+		mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The magical power of the seal at 2 o'clock is running out. Go to 2 o'clock and put the magical power in the seal.",bc_map,C_YELLOW;
 		disablenpc instance_npcname("Magical Seal#0");
 		enablenpc instance_npcname("Magical Seal#2");
 		disablenpc instance_npcname("Magical Seal#4");
@@ -1427,7 +1427,7 @@ OnTimer70000:
 		disablenpc instance_npcname("Magical Seal#10");
 		break;
 	case 3:
-		mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The magical power of the seal at 4 o'clock is running out. Go to 4 o'clock and put the magical power in the seal.",bc_map,"0xFFFF00";
+		mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The magical power of the seal at 4 o'clock is running out. Go to 4 o'clock and put the magical power in the seal.",bc_map,C_YELLOW;
 		disablenpc instance_npcname("Magical Seal#0");
 		disablenpc instance_npcname("Magical Seal#2");
 		enablenpc instance_npcname("Magical Seal#4");
@@ -1435,7 +1435,7 @@ OnTimer70000:
 		disablenpc instance_npcname("Magical Seal#10");
 		break;
 	case 4:
-		mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The magical power of the seal at 8 o'clock is running out. Go to 8 o'clock and put the magical power in the seal.",bc_map,"0xFFFF00";
+		mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The magical power of the seal at 8 o'clock is running out. Go to 8 o'clock and put the magical power in the seal.",bc_map,C_YELLOW;
 		disablenpc instance_npcname("Magical Seal#0");
 		disablenpc instance_npcname("Magical Seal#2");
 		disablenpc instance_npcname("Magical Seal#4");
@@ -1443,7 +1443,7 @@ OnTimer70000:
 		disablenpc instance_npcname("Magical Seal#10");
 		break;
 	case 5:
-		mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The magical power of the seal at 10 o'clock is running out. Go to 10 o'clock and put the magical power in the seal.",bc_map,"0xFFFF00";
+		mapannounce instance_mapname("2@cata"), "Ancient Hero's Soul : The magical power of the seal at 10 o'clock is running out. Go to 10 o'clock and put the magical power in the seal.",bc_map,C_YELLOW;
 		disablenpc instance_npcname("Magical Seal#0");
 		disablenpc instance_npcname("Magical Seal#2");
 		disablenpc instance_npcname("Magical Seal#4");

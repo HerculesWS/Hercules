@@ -514,7 +514,7 @@ que_ng,75,20,3	script	Artisan Tene#ko	4_M_JPN2,{
 		mes "An unknown error has occurred. Please contact customer service. *^_^*";
 		close;
 	}
-	progressbar "0xFFFF00",2;
+	progressbar C_YELLOW,2;
 	Zeny -= 100000;
 	delequip .@part;
 

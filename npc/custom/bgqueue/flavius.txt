@@ -208,7 +208,7 @@ OnKill:
 
 OnMyMobDead:
 	if (mobcount("bat_b01","OBJ#bat_b01_a::OnMyMobDead") < 1) {
-		mapannounce "bat_b01", "Guillaume's Crystal has been destroyed.",bc_map,"0xFFCE00";
+		mapannounce "bat_b01", "Guillaume's Crystal has been destroyed.",bc_map,C_SUPER_NOVA;
 		if ($@Croix_ScoreBG1 > 0) {
 			set $@FlaviusBG1_Victory,2;
 			set $@Croix_ScoreBG1,$@Croix_ScoreBG1+1;
@@ -239,7 +239,7 @@ OnKill:
 
 OnMyMobDead:
 	if (mobcount("bat_b01","OBJ#bat_b01_b::OnMyMobDead") < 1) {
-		mapannounce "bat_b01", "Croix's Crystal has been destroyed.",bc_map,"0xFFCE00";
+		mapannounce "bat_b01", "Croix's Crystal has been destroyed.",bc_map,C_SUPER_NOVA;
 		if ($@Guill_ScoreBG1 > 0) {
 			set $@FlaviusBG1_Victory,1;
 			set $@Guill_ScoreBG1,$@Guill_ScoreBG1+1;
@@ -273,7 +273,7 @@ OnKill:
 OnMyMobDead:
 	if (mobcount("bat_b01","guardian#bat_b01_a::OnMyMobDead") < 1) {
 		donpcevent "cell#bat_b01_a::OnGreen";
-		mapannounce "bat_b01", "The Guardian protecting Guillaume's Crystal has been slain.",bc_map,"0xFFCE00";
+		mapannounce "bat_b01", "The Guardian protecting Guillaume's Crystal has been slain.",bc_map,C_SUPER_NOVA;
 	}
 	end;
 }
@@ -291,7 +291,7 @@ OnKill:
 OnMyMobDead:
 	if (mobcount("bat_b01","guardian#bat_b01_b::OnMyMobDead") < 1) {
 		donpcevent "cell#bat_b01_b::OnGreen";
-		mapannounce "bat_b01", "The Guardian protecting Croix's Crystal has been slain.",bc_map,"0xFFCE00";
+		mapannounce "bat_b01", "The Guardian protecting Croix's Crystal has been slain.",bc_map,C_SUPER_NOVA;
 	}
 	end;
 }
@@ -555,31 +555,31 @@ OnStop:
 	end;
 
 OnTimer7000:
-	mapannounce "bat_b01", "Guillaume Vintenar Axl Rose : Let's attack to destroy that Crystal!",bc_map,"0xFF9900";
+	mapannounce "bat_b01", "Guillaume Vintenar Axl Rose : Let's attack to destroy that Crystal!",bc_map,C_ORANGE_PEEL;
 	end;
 
 OnTimer8000:
-	mapannounce "bat_b01", "Croix Vintenar Swandery : Even though Guillaume is struggling to win against us, the victory is ours. Let's show them our power.",bc_map,"0xFF99CC";
+	mapannounce "bat_b01", "Croix Vintenar Swandery : Even though Guillaume is struggling to win against us, the victory is ours. Let's show them our power.",bc_map,C_CARNATION_PINK;
 	end;
 
 OnTimer1800000:
-	mapannounce "bat_b01", "Marollo VII : Guillaume Marollo, Croix Marollo! And their followers!",bc_map,"0x99CC00";
+	mapannounce "bat_b01", "Marollo VII : Guillaume Marollo, Croix Marollo! And their followers!",bc_map,C_PISTACHIO;
 	end;
 
 OnTimer1803000:
-	mapannounce "bat_b01", "Marollo VII : Both camps are competitive, so it's hard to judge which team is superior.",bc_map,"0x99CC00";
+	mapannounce "bat_b01", "Marollo VII : Both camps are competitive, so it's hard to judge which team is superior.",bc_map,C_PISTACHIO;
 	end;
 
 OnTimer1808000:
-	mapannounce "bat_b01", "Marollo VII : This battle of Flavian is such a waste of time. I will decide victory and defeat by your progress.",bc_map,"0x99CC00";
+	mapannounce "bat_b01", "Marollo VII : This battle of Flavian is such a waste of time. I will decide victory and defeat by your progress.",bc_map,C_PISTACHIO;
 	end;
 
 OnTimer1822000:
-	mapannounce "bat_b01", "Marollo VII : If you can't accept the results, try again in another valley battle!",bc_map,"0x99CC00";
+	mapannounce "bat_b01", "Marollo VII : If you can't accept the results, try again in another valley battle!",bc_map,C_PISTACHIO;
 	end;
 
 OnTimer1825000:
-	mapannounce "bat_b01", "Axl Rose, Swandery : Yes, sir.",bc_map,"0x99CC00";
+	mapannounce "bat_b01", "Axl Rose, Swandery : Yes, sir.",bc_map,C_PISTACHIO;
 	end;
 
 OnTimer1830000:

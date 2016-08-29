@@ -140,55 +140,55 @@ OnEnable:
 	end;
 
 OnTimer2000:
-	mapannounce strnpcinfo(NPC_MAP),"You are now in the Waiting Room where you can check your items and prepare for the race.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You are now in the Waiting Room where you can check your items and prepare for the race.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer7000:
-	mapannounce strnpcinfo(NPC_MAP),"You will have 30 seconds before you are transported to the Starting Line.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You will have 30 seconds before you are transported to the Starting Line.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer10000:
-	mapannounce strnpcinfo(NPC_MAP),"Please make sure that you have suitable equipment and items with you.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"Please make sure that you have suitable equipment and items with you.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer15000:
-	mapannounce strnpcinfo(NPC_MAP),"The 30 second countdown will begin shortly.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"The 30 second countdown will begin shortly.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer17000:
-	mapannounce strnpcinfo(NPC_MAP),"30 seconds remaining.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"30 seconds remaining.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer27000:
-	mapannounce strnpcinfo(NPC_MAP),"20 seconds remaining.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"20 seconds remaining.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer37000:
-	mapannounce strnpcinfo(NPC_MAP),"10 seconds remaining.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"10 seconds remaining.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer42000:
-	mapannounce strnpcinfo(NPC_MAP),"5 seconds remaining.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"5 seconds remaining.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer43000:
-	mapannounce strnpcinfo(NPC_MAP),"4 seconds remaining.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"4 seconds remaining.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer44000:
-	mapannounce strnpcinfo(NPC_MAP),"3 seconds remaining.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"3 seconds remaining.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer45000:
-	mapannounce strnpcinfo(NPC_MAP),"2 seconds remaining.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"2 seconds remaining.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer46000:
-	mapannounce strnpcinfo(NPC_MAP),"1 second remaining.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"1 second remaining.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer47000:
-	mapannounce strnpcinfo(NPC_MAP),"You will be transported to the Starting Line shortly.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You will be transported to the Starting Line shortly.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer49000:
@@ -237,160 +237,160 @@ OnDisable:
 	end;
 
 OnTimer7000:
-	mapannounce strnpcinfo(NPC_MAP),"Welcome to the Turbo Track.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"Welcome to the Turbo Track.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer9000:
-	mapannounce strnpcinfo(NPC_MAP),"The game will be hosted for 15 minutes and at least one person must complete the entire course.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"The game will be hosted for 15 minutes and at least one person must complete the entire course.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer11000:
-	mapannounce strnpcinfo(NPC_MAP),"We hope you will do your best.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"We hope you will do your best.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer13000:
-	mapannounce strnpcinfo(NPC_MAP),"The game will begin after a 5 second countdown. Everyone, please take your positions behind the Starting Line.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"The game will begin after a 5 second countdown. Everyone, please take your positions behind the Starting Line.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer15000:
-	mapannounce strnpcinfo(NPC_MAP),"The countdown will commence shortly.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"The countdown will commence shortly.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer17000:
-	mapannounce strnpcinfo(NPC_MAP),"- 5 -",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"- 5 -",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer18000:
-	mapannounce strnpcinfo(NPC_MAP),"- 4 -",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"- 4 -",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer19000:
-	mapannounce strnpcinfo(NPC_MAP),"- 3 -",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"- 3 -",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer20000:
-	mapannounce strnpcinfo(NPC_MAP),"- 2 -",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"- 2 -",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer21000:
-	mapannounce strnpcinfo(NPC_MAP),"- 1 -",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"- 1 -",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer22000:
-	mapannounce strnpcinfo(NPC_MAP),"- 0 -",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"- 0 -",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer23000:
 	.@w$ = callfunc("F_tt");
-	mapannounce strnpcinfo(NPC_MAP),"Now! The race has begun! Go Go Go!!",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"Now! The race has begun! Go Go Go!!",bc_map,C_SCREAMIN_GREEN;
 	disablenpc "No_Unfair_Start#"+.@w$+"-1";
 	disablenpc "No_Unfair_Start#"+.@w$+"-2";
 	if (strnpcinfo(NPC_MAP) == "turbo_n_1") $@start_time = gettimetick(0);
 	end;
 
 OnTimer30000:
-	mapannounce strnpcinfo(NPC_MAP),"Remember that this is a 15 minute race. After 15 minutes, everyone will be transported out of the race track.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"Remember that this is a 15 minute race. After 15 minutes, everyone will be transported out of the race track.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer83000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 14 minutes left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 14 minutes left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer143000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 13 minutes left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 13 minutes left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer203000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 12 minutes left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 12 minutes left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer263000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 11 minutes left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 11 minutes left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer323000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 10 minutes left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 10 minutes left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer383000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 9 minutes left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 9 minutes left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer443000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 8 minutes left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 8 minutes left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer503000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 7 minutes left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 7 minutes left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer563000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 6 minutes left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 6 minutes left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer623000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 5 minutes left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 5 minutes left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer683000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 4 minutes left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 4 minutes left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer743000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 3 minutes left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 3 minutes left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer803000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 2 minutes left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 2 minutes left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer863000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 1 minute left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 1 minute left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer893000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 30 seconds left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 30 seconds left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer903000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 20 seconds left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 20 seconds left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer913000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 10 seconds left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 10 seconds left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer918000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 5 seconds left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 5 seconds left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer919000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 4 seconds left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 4 seconds left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer920000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 3 seconds left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 3 seconds left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer921000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 2 seconds left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 2 seconds left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer922000:
-	mapannounce strnpcinfo(NPC_MAP),"You have 1 second left.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"You have 1 second left.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer923000:
-	mapannounce strnpcinfo(NPC_MAP),"Time's up!",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"Time's up!",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer925000:
-	mapannounce strnpcinfo(NPC_MAP),"The race is over.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"The race is over.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer927000:
 	.@w$ = callfunc("F_tt");
-	mapannounce strnpcinfo(NPC_MAP),"[Everyone will be transported to a Waiting Room.]",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"[Everyone will be transported to a Waiting Room.]",bc_map,C_SCREAMIN_GREEN;
 	mapwarp strnpcinfo(NPC_MAP),"turbo_room",71,89;
 	disablenpc "Broadcast#"+.@w$;
 	donpcevent "Master#"+.@w$+"::OnDisable";
@@ -1741,18 +1741,18 @@ OnTouch:
 	.@n = charat(strnpcinfo(NPC_NAME_HIDDEN),getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1);
 	switch (.@n) {
 		case 1:
-			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Log Bridge course!",bc_map,"0x70DBDB";
+			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Log Bridge course!",bc_map,C_VIKING;
 			switch (rand(1,3)) {
 				case 1: warp strnpcinfo(NPC_MAP),210,369; end;
 				case 2: warp strnpcinfo(NPC_MAP),210,361; end;
 				case 3: warp strnpcinfo(NPC_MAP),210,354; end;
 			}
 		case 2:
-			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Cube Hills course!",bc_map,"0x70DBDB";
+			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Cube Hills course!",bc_map,C_VIKING;
 			warp strnpcinfo(NPC_MAP),316,365;
 			end;
 		case 3:
-			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Cursed Desert!",bc_map,"0x70DBDB";
+			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Cursed Desert!",bc_map,C_VIKING;
 			switch (rand(1,4)) {
 				case 1: warp strnpcinfo(NPC_MAP),46,254; end;
 				case 2: warp strnpcinfo(NPC_MAP),76,227; end;
@@ -1760,15 +1760,15 @@ OnTouch:
 				case 4: warp strnpcinfo(NPC_MAP),86,220; end;
 			}
 		case 5:
-			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Single Snail course!",bc_map,"0x70DBDB";
+			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Single Snail course!",bc_map,C_VIKING;
 			warp strnpcinfo(NPC_MAP),268,275;
 			end;
 		case 6:
-			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Snake Dice course!",bc_map,"0x70DBDB";
+			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Snake Dice course!",bc_map,C_VIKING;
 			warp strnpcinfo(NPC_MAP),5,91;
 			end;
 		case 7:
-			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Small Cave course! Hurry, you're almost at the finish!",bc_map,"0x70DBDB";
+			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Small Cave course! Hurry, you're almost at the finish!",bc_map,C_VIKING;
 			switch(rand(1,3)) {
 				case 1: warp strnpcinfo(NPC_MAP),307,52; end;
 				case 2: warp strnpcinfo(NPC_MAP),307,46; end;
@@ -1943,7 +1943,7 @@ turbo_n_1,222,65,0	duplicate(TurboHint_4#tt_main)	#n1NoWayOut7	FAKE_NPC,1,1
 OnTouch:
 	.@w$ = callfunc("F_tt");
 	if (.@w$ == "n1") $@end_time = gettimetick(0);
-	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just arrived at the Finish Line! Congratulations!",bc_map,"0xFFFF00";
+	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just arrived at the Finish Line! Congratulations!",bc_map,C_YELLOW;
 	if (.@w$ != "n1") {
 		setd "$ttnames$["+GetNumber(.@w$)+"]",strcharinfo(0);
 		donpcevent "Turbo Track Guide::OnWin_"+.@w$;
@@ -1992,7 +1992,7 @@ turbo_n_1,371,47,0	duplicate(cos_end#tt_main)	#cos_n1_end	WARPNPC,1,1
 -	script	cos_end2#tt_main	WARPNPC,1,1,{
 OnTouch:
 	.@w$ = callfunc("F_tt");
-	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" is second to reach the Finish Line! Congratulations!",bc_map,"0xFFFF00";
+	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" is second to reach the Finish Line! Congratulations!",bc_map,C_YELLOW;
 	if (.@w$ == "e8" || .@w$ == "n8") setarray .@pts, 28961,40;
 	if (.@w$ == "e16" || .@w$ == "n16") setarray .@pts, 28951,50;
 	if (tt_points < .@pts[0]) tt_point += .@pts[1];
@@ -2014,7 +2014,7 @@ turbo_n_16,371,51,0	duplicate(cos_end2#tt_main)	#cos_n16_end2	WARPNPC,1,1
 -	script	cos_end3#tt_main	FAKE_NPC,{
 OnTouch:
 	.@w$ = callfunc("F_tt");
-	mapannounce strnpcinfo(NPC_MAP),"" + strcharinfo(0) +" is third to reach the Finish Line! Congratulations!",bc_map,"0xFFFF00";
+	mapannounce strnpcinfo(NPC_MAP),"" + strcharinfo(0) +" is third to reach the Finish Line! Congratulations!",bc_map,C_YELLOW;
 	if (.@w$ == "e8" || .@w$ == "n8") setarray .@pts, 28971,30;
 	if (.@w$ == "e16" || .@w$ == "n16") setarray .@pts, 28951,50;
 	if (tt_point < .@pts[0]) tt_point += .@pts[1];
@@ -2055,7 +2055,7 @@ turbo_n_1,316,365,0	duplicate(DSwitch#tt_main)	Disposable_Switch#n1	FAKE_NPC,1,1
 
 -	script	Flasher#tt_main	FAKE_NPC,{
 OnTouch:
-	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Flasher Maze!",bc_map,"0x70DBDB";
+	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Flasher Maze!",bc_map,C_VIKING;
 	warp strnpcinfo(NPC_MAP),185,227;
 	end;
 
@@ -2390,100 +2390,100 @@ OnEnable:
 
 OnTimer4000:
 	.@w$ = callfunc("F_tt");
-	mapannounce strnpcinfo(NPC_MAP),"This is the ending broadcast for Turbo Track "+RName(.@w$)+".",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"This is the ending broadcast for Turbo Track "+RName(.@w$)+".",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer8000:
-	mapannounce strnpcinfo(NPC_MAP),"For smooth game play, the game will end in approximately 1 minute.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"For smooth game play, the game will end in approximately 1 minute.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer12000:
-	mapannounce strnpcinfo(NPC_MAP),"At that time, a Warp portal will open.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"At that time, a Warp portal will open.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer16000:
 	.@w$ = callfunc("F_tt");
-	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Players in the arena must be ready to leave through the Warp Portal.",bc_map,"0x33FF66";
+	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Players in the arena must be ready to leave through the Warp Portal.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer20000:
 	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4"))
-		mapannounce strnpcinfo(NPC_MAP),"In the meantime, winners must proceed to receive their rewards as soon as possible.",bc_map,"0x33FF66";
+		mapannounce strnpcinfo(NPC_MAP),"In the meantime, winners must proceed to receive their rewards as soon as possible.",bc_map,C_SCREAMIN_GREEN;
 	else
-		mapannounce strnpcinfo(NPC_MAP),"Players within the arena must be in ready to enter the warp.",bc_map,"0x33FF66";
+		mapannounce strnpcinfo(NPC_MAP),"Players within the arena must be in ready to enter the warp.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer24000:
 	.@w$ = callfunc("F_tt");
-	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Thank you for visiting Al De Baran Turbo Track.",bc_map,"0x33FF66";
+	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Thank you for visiting Al De Baran Turbo Track.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer25000:
 	.@w$ = callfunc("F_tt");
-	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"In the meantime, winners must procceed to receive their rewards as soon as possible.",bc_map,"0x33FF66";
+	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"In the meantime, winners must procceed to receive their rewards as soon as possible.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer28000:
 	.@w$ = callfunc("F_tt");
-	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Al De Baran Turbo Track is brought to you by...",bc_map,"0x33FF66";
+	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Al De Baran Turbo Track is brought to you by...",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer30000:
 	.@w$ = callfunc("F_tt");
-	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Thank you for visiting Al De Baran Turbo Track.",bc_map,"0x33FF66";
+	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Thank you for visiting Al De Baran Turbo Track.",bc_map,C_SCREAMIN_GREEN;
 
 OnTimer32000:
 	.@w$ = callfunc("F_tt");
-	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"[Al De Baran Kafra Corporation Headquarters]",bc_map,"0x33FF66";
+	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"[Al De Baran Kafra Corporation Headquarters]",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer35000:
 	.@w$ = callfunc("F_tt");
-	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Al De Baran Turbo Track is brought to you by...",bc_map,"0x33FF66";
+	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Al De Baran Turbo Track is brought to you by...",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer36000:
 	.@w$ = callfunc("F_tt");
-	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"[Al De Baran Guild Castle Management Luina]",bc_map,"0x33FF66";
+	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"[Al De Baran Guild Castle Management Luina]",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer40000:
 	.@w$ = callfunc("F_tt");
 	if (compare(.@w$,"4"))
-		mapannounce strnpcinfo(NPC_MAP),"[Blacksmith Union]",bc_map,"0x33FF66";
+		mapannounce strnpcinfo(NPC_MAP),"[Blacksmith Union]",bc_map,C_SCREAMIN_GREEN;
 	else
-		mapannounce strnpcinfo(NPC_MAP),"[Al De Baran Kafra Corporation Headquarters]",bc_map,"0x33FF66";
+		mapannounce strnpcinfo(NPC_MAP),"[Al De Baran Kafra Corporation Headquarters]",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer44000:
 	.@w$ = callfunc("F_tt");
-	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"And [Comodo Casino].",bc_map,"0x33FF66";
+	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"And [Comodo Casino].",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer45000:
 	.@w$ = callfunc("F_tt");
-	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"[Al De Baran Guild Castle Management Luina]",bc_map,"0x33FF66";
+	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"[Al De Baran Guild Castle Management Luina]",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer48000:
 	.@w$ = callfunc("F_tt");
-	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Once again, we'd like to thank our sponsors.",bc_map,"0x33FF66";
+	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Once again, we'd like to thank our sponsors.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer50000:
 	.@w$ = callfunc("F_tt");
-	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"[Blacksmith Union]",bc_map,"0x33FF66";
+	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"[Blacksmith Union]",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer52000:
 	.@w$ = callfunc("F_tt");
-	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Have a good day.",bc_map,"0x33FF66";
+	if (compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Have a good day.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer55000:
 	.@w$ = callfunc("F_tt");
-	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"And [Comodo Casino].",bc_map,"0x33FF66";
+	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"And [Comodo Casino].",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer58000:
@@ -2509,13 +2509,13 @@ OnTimer60000:
 		enablenpc "#cos_"+.@w$+"_end";
 		stopnpctimer;
 	} else {
-		mapannounce strnpcinfo(NPC_MAP),"Once again, we'd like to thank our sponsors.",bc_map,"0x33FF66";
+		mapannounce strnpcinfo(NPC_MAP),"Once again, we'd like to thank our sponsors.",bc_map,C_SCREAMIN_GREEN;
 	}
 	end;
 
 OnTimer65000:
 	.@w$ = callfunc("F_tt");
-	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Have a good day.",bc_map,"0x33FF66";
+	if (!compare(.@w$,"4")) mapannounce strnpcinfo(NPC_MAP),"Have a good day.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer70000:
@@ -2700,55 +2700,55 @@ OnEnable:
 	end;
 
 OnTimer4000:
-	mapannounce strnpcinfo(NPC_MAP),"This is the ending broadcast of Turbo Track Solo Mode.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"This is the ending broadcast of Turbo Track Solo Mode.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer8000:
-	mapannounce strnpcinfo(NPC_MAP),"For smooth game play, the game will end in approximately 1 minute from now.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"For smooth game play, the game will end in approximately 1 minute from now.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer12000:
-	mapannounce strnpcinfo(NPC_MAP),"At this time, the warp portal will open.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"At this time, the warp portal will open.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer16000:
-	mapannounce strnpcinfo(NPC_MAP),"Players within the arena must be ready for this.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"Players within the arena must be ready for this.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer20000:
-	mapannounce strnpcinfo(NPC_MAP),"In the meantime, the winner must procceed to receive rewards as soon as possible.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"In the meantime, the winner must procceed to receive rewards as soon as possible.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer24000:
-	mapannounce strnpcinfo(NPC_MAP),"Thank you for visiting Al De Baran Turbo Track.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"Thank you for visiting Al De Baran Turbo Track.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer28000:
-	mapannounce strnpcinfo(NPC_MAP),"Al De Baran Turbo Track is brought to you by...",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"Al De Baran Turbo Track is brought to you by...",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer32000:
-	mapannounce strnpcinfo(NPC_MAP),"[Al De Baran Kafra Corporation Headquarters]",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"[Al De Baran Kafra Corporation Headquarters]",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer36000:
-	mapannounce strnpcinfo(NPC_MAP),"[Al De Baran Guild Castle Management Luina]",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"[Al De Baran Guild Castle Management Luina]",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer40000:
-	mapannounce strnpcinfo(NPC_MAP),"[Blacksmith Union]",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"[Blacksmith Union]",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer44000:
-	mapannounce strnpcinfo(NPC_MAP),"And [Comodo Casino].",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"And [Comodo Casino].",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer48000:
-	mapannounce strnpcinfo(NPC_MAP),"Once again, we'd like to thank our sponsors.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"Once again, we'd like to thank our sponsors.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer52000:
-	mapannounce strnpcinfo(NPC_MAP),"Have a good day.",bc_map,"0x33FF66";
+	mapannounce strnpcinfo(NPC_MAP),"Have a good day.",bc_map,C_SCREAMIN_GREEN;
 	end;
 
 OnTimer56000:
@@ -2782,7 +2782,7 @@ OnInit:
 -	script	NMaker1#tt_main	FAKE_NPC,{
 OnTouch:
 	.@w$ = callfunc("F_tt");
-	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" is now entering the Small Cave! " + strcharinfo(0) +" is now in the lead!",bc_map,"0xFFFF00";
+	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" is now entering the Small Cave! " + strcharinfo(0) +" is now in the lead!",bc_map,C_YELLOW;
 	donpcevent "Turbo Track Guide::OnEnd_"+.@w$;
 	disablenpc "Notice_Maker1#TBT_"+.@w$;
 	end;
@@ -2803,7 +2803,7 @@ turbo_n_1,11,91,0	duplicate(NMaker1#tt_main)	Notice_Maker1#TBT_n1	FAKE_NPC,3,3
 -	script	NMaker3#tt_main	FAKE_NPC,{
 OnTouch:
 	.@w$ = callfunc("F_tt");
-	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" is now entering the Single Snail! " + strcharinfo(0) +" is now in the lead!",bc_map,"0xFFFF00";
+	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" is now entering the Single Snail! " + strcharinfo(0) +" is now in the lead!",bc_map,C_YELLOW;
 	disablenpc "Notice_Maker3#TBT_"+.@w$;
 	end;
 
@@ -2823,7 +2823,7 @@ turbo_n_1,234,223,0	duplicate(NMaker3#tt_main)	Notice_Maker3#TBT_n1	FAKE_NPC,3,3
 -	script	NMaker4#tt_main	FAKE_NPC,{
 OnTouch:
 	.@w$ = callfunc("F_tt");
-	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" is currently in First Place!",bc_map,"0xFFFF00";
+	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" is currently in First Place!",bc_map,C_YELLOW;
 	disablenpc "Notice_Maker4#TBT_"+.@w$;
 	end;
 
@@ -3921,75 +3921,75 @@ OnInit:
 	end;
 
 OnEnd_n1:
-	mapannounce "turbo_room","A [Normal Mode - Solo] game will end shortly.",bc_map,"0xadff2f";
+	mapannounce "turbo_room","A [Normal Mode - Solo] game will end shortly.",bc_map,C_GREEN_YELLOW;
 	end;
 
 OnEnd_n4:
-	mapannounce "turbo_room","A [Normal Mode - 4 Person] game will end shortly.",bc_map,"0xadff2f";
+	mapannounce "turbo_room","A [Normal Mode - 4 Person] game will end shortly.",bc_map,C_GREEN_YELLOW;
 	end;
 
 OnEnd_n8:
-	mapannounce "turbo_room","A [Normal Mode - 8 Person] game will end shortly.",bc_map,"0xadff2f";
+	mapannounce "turbo_room","A [Normal Mode - 8 Person] game will end shortly.",bc_map,C_GREEN_YELLOW;
 	end;
 
 OnEnd_n16:
-	mapannounce "turbo_room","A [Normal Mode - 16 Person] game will end shortly.",bc_map,"0xadff2f";
+	mapannounce "turbo_room","A [Normal Mode - 16 Person] game will end shortly.",bc_map,C_GREEN_YELLOW;
 	end;
 
 OnEnd_e4:
-	mapannounce "turbo_room","A [Expert Mode - 4 Person] game will end shortly.",bc_map,"0xadff2f";
+	mapannounce "turbo_room","A [Expert Mode - 4 Person] game will end shortly.",bc_map,C_GREEN_YELLOW;
 	end;
 
 OnEnd_e8:
-	mapannounce "turbo_room","A [Expert Mode - 8 Person] game will end shortly.",bc_map,"0xadff2f";
+	mapannounce "turbo_room","A [Expert Mode - 8 Person] game will end shortly.",bc_map,C_GREEN_YELLOW;
 	end;
 
 OnEnd_e16:
-	mapannounce "turbo_room","A [Expert Mode - 16 Person] game will end shortly.",bc_map,"0xadff2f";
+	mapannounce "turbo_room","A [Expert Mode - 16 Person] game will end shortly.",bc_map,C_GREEN_YELLOW;
 	end;
 
 OnNew_Top1:
-	mapannounce "turbo_room","Congratulations! " + $ttnames$[9] + " has ranked Number One in the Turbo Track Hall of Honor!",bc_map,"0x00ff00";
+	mapannounce "turbo_room","Congratulations! " + $ttnames$[9] + " has ranked Number One in the Turbo Track Hall of Honor!",bc_map,C_LIME;
 	end;
 
 OnNew_Top2:
-	mapannounce "turbo_room","Congratulations! " + $ttnames$[10] + " has ranked Second in the Turbo Track Hall of Honor!",bc_map,"0x00ff00";
+	mapannounce "turbo_room","Congratulations! " + $ttnames$[10] + " has ranked Second in the Turbo Track Hall of Honor!",bc_map,C_LIME;
 	end;
 
 OnNew_Top3:
-	mapannounce "turbo_room","Congratulations! " + $ttnames$[11] + " has ranked Third in the Turbo Track Hall of Honor!",bc_map,"0x00ff00";
+	mapannounce "turbo_room","Congratulations! " + $ttnames$[11] + " has ranked Third in the Turbo Track Hall of Honor!",bc_map,C_LIME;
 	end;
 
 OnNew_Top4:
-	mapannounce "turbo_room","Congratulations! " + $ttnames$[12] + " has ranked Fourth in the Turbo Track Hall of Honor!",bc_map,"0x00ff00";
+	mapannounce "turbo_room","Congratulations! " + $ttnames$[12] + " has ranked Fourth in the Turbo Track Hall of Honor!",bc_map,C_LIME;
 	end;
 
 OnNew_Top5:
-	mapannounce "turbo_room","Congratulations! " + $ttnames$[13] + " has ranked Fifth in the Turbo Track Hall of Honor!",bc_map,"0x00ff00";
+	mapannounce "turbo_room","Congratulations! " + $ttnames$[13] + " has ranked Fifth in the Turbo Track Hall of Honor!",bc_map,C_LIME;
 	end;
 
 OnWin_n4:
-	mapannounce "turbo_room","Congratulations! " + $ttnames$[1] + " just won a [Normal Mode - 4 Person] game!",bc_map,"0x70DBDB";
+	mapannounce "turbo_room","Congratulations! " + $ttnames$[1] + " just won a [Normal Mode - 4 Person] game!",bc_map,C_VIKING;
 	end;
 
 OnWin_n8:
-	mapannounce "turbo_room","Congratulations! " + $ttnames$[2] + " just won a [Normal Mode - 8 Person] game!",bc_map,"0x70DBDB";
+	mapannounce "turbo_room","Congratulations! " + $ttnames$[2] + " just won a [Normal Mode - 8 Person] game!",bc_map,C_VIKING;
 	end;
 
 OnWin_n16:
-	mapannounce "turbo_room","Congratulations! " + $ttnames$[3] + " just won a [Normal Mode - 16 Person] game!",bc_map,"0x70DBDB";
+	mapannounce "turbo_room","Congratulations! " + $ttnames$[3] + " just won a [Normal Mode - 16 Person] game!",bc_map,C_VIKING;
 	end;
 
 OnWin_e4:
-	mapannounce "turbo_room","Congratulations! " + $ttnames$[4] + " just won an [Expert Mode - 4 Person] game!",bc_map,"0x70DBDB";
+	mapannounce "turbo_room","Congratulations! " + $ttnames$[4] + " just won an [Expert Mode - 4 Person] game!",bc_map,C_VIKING;
 	end;
 
 OnWin_e8:
-	mapannounce "turbo_room","Congratulations! " + $ttnames$[5] + " just won an [Expert Mode - 8 Person] game!",bc_map,"0x70DBDB";
+	mapannounce "turbo_room","Congratulations! " + $ttnames$[5] + " just won an [Expert Mode - 8 Person] game!",bc_map,C_VIKING;
 	end;
 
 OnWin_e16:
-	mapannounce "turbo_room","Congratulations! " + $ttnames$[6] + " just won an [Expert Mode - 16 Person] game!",bc_map,"0x70DBDB";
+	mapannounce "turbo_room","Congratulations! " + $ttnames$[6] + " just won an [Expert Mode - 16 Person] game!",bc_map,C_VIKING;
 	end;
 }
 
