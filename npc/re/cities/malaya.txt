@@ -184,16 +184,16 @@ OnBingx2:
 	end;
 OnTouch:
 	if (getcharid(1)) {
-		if ($ma_name04$ == strcharinfo(0) || $ma_name05$ == strcharinfo(0) || $ma_name06$ == strcharinfo(0)) {
+		if ($ma_name04$ == strcharinfo(PC_NAME) || $ma_name05$ == strcharinfo(PC_NAME) || $ma_name06$ == strcharinfo(PC_NAME)) {
 			donpcevent strnpcinfo(NPC_NAME)+"::OnBingx2";
 			mes "The unidentified creature gets a glimpse of you, blushes and then disappears.";
 			close;
 		}
 		if (rand(1,5)%2) {
 			switch(atoi(strnpcinfo(NPC_NAME_HIDDEN))) {
-				case 1: $ma_name04$ = strcharinfo(0); break;
-				case 5: $ma_name05$ = strcharinfo(0); break;
-				case 9: $ma_name06$ = strcharinfo(0); break;
+				case 1: $ma_name04$ = strcharinfo(PC_NAME); break;
+				case 5: $ma_name05$ = strcharinfo(PC_NAME); break;
+				case 9: $ma_name06$ = strcharinfo(PC_NAME); break;
 			}
 		}
 		donpcevent strnpcinfo(NPC_NAME)+"::OnBingx2";
@@ -246,7 +246,7 @@ OnTouch:
 			.@pass = 1;
 	}
 	if (.@pass) {
-		if ($ma_name04$ == strcharinfo(0) || $ma_name05$ == strcharinfo(0) || $ma_name06$ == strcharinfo(0)) {
+		if ($ma_name04$ == strcharinfo(PC_NAME) || $ma_name05$ == strcharinfo(PC_NAME) || $ma_name06$ == strcharinfo(PC_NAME)) {
 			donpcevent strnpcinfo(NPC_NAME)+"::OnBingx2";
 			mes "The unidentified creature gets a glimpse of you, blushes and then disappears.";
 			close;
@@ -256,16 +256,16 @@ OnTouch:
 			case 2:
 			case 3:
 			case 4:
-				$ma_name04$ = strcharinfo(0);
+				$ma_name04$ = strcharinfo(PC_NAME);
 				break;
 			case 6:
 			case 7:
 			case 8:
-				$ma_name05$ = strcharinfo(0);
+				$ma_name05$ = strcharinfo(PC_NAME);
 				break;
 			case 10:
 			case 11:
-				$ma_name06$ = strcharinfo(0);
+				$ma_name06$ = strcharinfo(PC_NAME);
 				break;
 			}
 		}

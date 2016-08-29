@@ -992,7 +992,7 @@ dewata,109,262,4	script	Memo#dew_drink	4_M_DEWOLDMAN,{
 				.@j |= (1<<.@i);
 		if (.@j == 0) {
 			mes "[Memo]";
-			mes strcharinfo(0)+", to what do I owe the pleasure?";
+			mes strcharinfo(PC_NAME)+", to what do I owe the pleasure?";
 			next;
 			switch(select("Just came by to say hello.", "I will help you.")) {
 			case 1:
@@ -1276,7 +1276,7 @@ dew_fild01,114,275,4	script	Lero#dew_drink	4_M_DEWMAN,{
 		mes "What did Mr. Memo say?";
 		emotion e_what;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		emotion e_loud,1;
 		mes "... ... ... ...";
 		next;
@@ -1457,7 +1457,7 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 		close;
 	} else if (dew_drink == 10) {
 		mes "[Poby]";
-		mes "Oh! "+strcharinfo(0)+", we meet again. What's going on?";
+		mes "Oh! "+strcharinfo(PC_NAME)+", we meet again. What's going on?";
 
 		if (questprogress(5047))
 			.@count = 10;
@@ -1490,7 +1490,7 @@ dew_fild01,259,48,4	script	Poby#dew_drink	4_M_DEWBOY,{
 			getitem Palm_O,.@new_count;
 			next;
 			mes "[Poby]";
-			mes "Please~ "+strcharinfo(0)+".";
+			mes "Please~ "+strcharinfo(PC_NAME)+".";
 			close;
 		}
 		next;
@@ -1708,7 +1708,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		next;
 		input .@island_name$;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "It's called "+ .@island_name$ +". What's wrong?";
 		next;
 		if (.@island_name$ == "Dewata Island") {
@@ -1748,13 +1748,13 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "[Gatti]";
 		mes "I found a mysterious Weapon blueprint, but I don't remember exactly when I acquired it.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Weapon Blueprint?";
 		next;
 		mes "[Gatti]";
 		mes "Yes! I traveled all around to find the materials for the weapon, but...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "But?";
 		next;
 		mes "[Gatti]";
@@ -1766,7 +1766,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "[Gatti]";
 		mes "I don't know why somebody put such an important thing in fine print. Anyway, after reading that, I invested all my fortunes to find that Island.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Oh... Is that so?";
 		next;
 		mes "[Gatti]";
@@ -1776,7 +1776,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "Last week was so hard, but you saved me by telling me this is Dewata Island.";
 		mes "Thank you for telling me, and thank you for passing here at just the right time.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Uh... No problem.";
 		next;
 		mes "[Gatti]";
@@ -1792,7 +1792,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 			mes "[Gatti]";
 			mes "Ah! the material that I am looking for is Comodo Leather.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Comodo Leather?";
 			next;
 			mes "[Gatti]";
@@ -1801,7 +1801,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 			mes "[Gatti]";
 			mes "In order to fight the Comodo Dragon, you have to get recognized by the natives. I assume it'll be hard to get the recognition.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Of course, it must be...";
 			next;
 			mes "[Gatti]";
@@ -1930,7 +1930,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		dew_weapon = 5;
 		close;
 	} else if (dew_weapon == 5) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Well... Gatti?";
 		next;
 		mes "[Gatti]";
@@ -1942,7 +1942,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "[Gatti]";
 		mes ".... .... .... ....";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hilt?";
 		next;
 		mes "[Gatti]";
@@ -1953,7 +1953,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		mes "[Gatti]";
 		mes "I tried making it like what's written in the blueprint, but I need more material.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Really?";
 		next;
 		mes "[Gatti]";
@@ -2024,7 +2024,7 @@ dew_fild01,127,240,4	script	Gatti#weapon	2_M_OLDBLSMITH,{
 		close;
 	} else if (dew_weapon >= 7) {
 		mes "[Gatti]";
-		mes "You're "+strcharinfo(0)+",";
+		mes "You're "+strcharinfo(PC_NAME)+",";
 		mes "So, how's the Caress that I made you?";
 		switch(select("It's great!", "I need another Caress.", "Can I make it stronger?")) {
 		case 1:

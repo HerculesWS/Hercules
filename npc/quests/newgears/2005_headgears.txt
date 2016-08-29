@@ -1136,8 +1136,8 @@ lighthalzen,182,89,0	script	Relaxed-Looking Lady	4_F_02,{
 				mes "That is, if you don't";
 				mes "mind me asking you.";
 				next;
-				mes "[" + strcharinfo(0) + "]";
-				mes "My name is " + strcharinfo(0) + "";
+				mes "[" + strcharinfo(PC_NAME) + "]";
+				mes "My name is " + strcharinfo(PC_NAME) + "";
 				mes "and I'm an adventurer~";
 				next;
 				mes "[Achiha]";
@@ -1553,11 +1553,11 @@ gl_prison1,137,138,5	script	Zealotus#LhzHat	ZHERLTHSH,{
 					mes "Forbidden Red Candle.";
 					next;
 					mes "[Zealotus]";
-					mes "" + strcharinfo(0) + " will";
+					mes "" + strcharinfo(PC_NAME) + " will";
 					mes "forever have a share";
 					mes "in my power. Those that";
 					mes "bow to me must also bow";
-					mes "to " + strcharinfo(0) + ". It shall be done.";
+					mes "to " + strcharinfo(PC_NAME) + ". It shall be done.";
 					specialeffect EF_DEVIL;
 					specialeffect EF_POISONHIT;
 					next;
@@ -1571,7 +1571,7 @@ gl_prison1,137,138,5	script	Zealotus#LhzHat	ZHERLTHSH,{
 					delitem 7263,1;
 					delitem 660,1;
 					delitem 7099,30;
-					getnameditem 5121,strcharinfo(0);
+					getnameditem 5121,strcharinfo(PC_NAME);
 					ZLMASKQ = 8;
 					close;
 			}
@@ -1656,7 +1656,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 			close; // no whip equipped or in inventory
 
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "You're pathetic!";
 		mes "Aren't you supposed";
 		mes "to be a monster? You know";
@@ -1671,7 +1671,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 		mes "^3355FFYou nonchalantly^000000";
 		mes "^3355FFbrandish your Whip.^000000";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "That's right.";
 		next;
 		mes "^3355FF*Snap!*";
@@ -1751,7 +1751,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 					delitem 7315,369;
 					close;
 				case 2:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "So what happens";
 					mes "if I don't decide not";
 					mes "to hurt you? Whatcha";
@@ -1793,7 +1793,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 		mes "me or make me eat those";
 		mes "weird crystals again, are you?";
 		next;
-		mes "^3131FF[" + strcharinfo(0) + "]^000000";
+		mes "^3131FF[" + strcharinfo(PC_NAME) + "]^000000";
 		switch( select( "Rybio", "Injustice", "Zealotus" ) )
 		{
 			case 1:
@@ -1886,7 +1886,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 		switch( select( "Insult him.", "Apologize." ) )
 		{
 			case 1:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "First of all,";
 				mes "what exactly sets";
 				mes "you apart from all the";
@@ -1901,7 +1901,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 				switch( select( "Break his pride.", "Tell him you were joking." ) )
 				{
 					case 1:
-						mes "^3131FF[" + strcharinfo(0) + "]^000000";
+						mes "^3131FF[" + strcharinfo(PC_NAME) + "]^000000";
 						mes "I mean, there are guys";
 						mes "like Bloody Murderer out";
 						mes "there who are more evil";
@@ -1911,7 +1911,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 						switch( select( "Go for the low blow.", "Try to salvage his confidence." ) )
 						{
 							case 1:
-								mes "[" + strcharinfo(0) + "]";
+								mes "[" + strcharinfo(PC_NAME) + "]";
 								mes "You know, me and Zealotus";
 								mes "were actually talking about";
 								mes "you recently. She told me that";
@@ -1919,7 +1919,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 								mes "feel sick! I mean, what kind";
 								mes "of monster is afraid of humans?";
 								next;
-								mes "[" + strcharinfo(0) + "]";
+								mes "[" + strcharinfo(PC_NAME) + "]";
 								mes "Now you've reached the";
 								mes "point where even Injustice";
 								mes "is manlier than you now,";
@@ -1956,7 +1956,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 								emotion e_an;
 								close;
 							case 2:
-								mes "^3131FF[" + strcharinfo(0) + "]^000000";
+								mes "^3131FF[" + strcharinfo(PC_NAME) + "]^000000";
 								mes "But know that I think";
 								mes "about it, maybe you look";
 								mes "much tougher than that";
@@ -1969,12 +1969,12 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 								mes "...";
 								mes "......";
 								next;
-								mes "[" + strcharinfo(0) + "]";
+								mes "[" + strcharinfo(PC_NAME) + "]";
 								mes "...Yeeeeeah.";
 								close;
 						}
 					case 2:
-						mes "[" + strcharinfo(0) + "]";
+						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "But now that I think";
 						mes "about it, you actually";
 						mes "are much better than all";
@@ -1989,7 +1989,7 @@ gl_prison1,97,104,1	script	Phendark#LhzHat	PHENDARK,{
 						close;
 				}
 			case 2:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "I...";
 				mes "I was just kidding!";
 				mes "How could she hate";

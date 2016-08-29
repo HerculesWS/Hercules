@@ -65,7 +65,7 @@ moc_para01,17,95,5	script	Mingmin#1	4_F_GENETIC,{
 		mes "[Mingmin]";
 		mes "^0000ffA question: Art thou my servant?^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "(What's this lady talking about?)";
 		emotion e_dot,1;
 		next;
@@ -106,7 +106,7 @@ moc_para01,17,95,5	script	Mingmin#1	4_F_GENETIC,{
 		cutin "min02",0;
 		mes "^0C0CF2Pop quiz hot shot: Art thou my servant?^000000";
 		next;
-		select("No~ I'm "+ strcharinfo(0) +" remember?");
+		select("No~ I'm "+ strcharinfo(PC_NAME) +" remember?");
 		mes "[Mingmin]";
 		mes "Oh I have met you before, living in a house full of fungus seems to cause memory loss.";
 		emotion e_gasp;
@@ -141,7 +141,7 @@ moc_para01,17,95,5	script	Mingmin#1	4_F_GENETIC,{
 	}
 	else if (para_110lv01 == 2) {
 		cutin "min02",0;
-		mes "Oh, "+ strcharinfo(0) +" its you... it is good you have ed, I was bored.";
+		mes "Oh, "+ strcharinfo(PC_NAME) +" its you... it is good you have ed, I was bored.";
 		next;
 		mes "[Mingmin]";
 		mes "Where was I? I just finished talking about the Eden Group's duty to protect others from danger.";
@@ -160,7 +160,7 @@ moc_para01,17,95,5	script	Mingmin#1	4_F_GENETIC,{
 	}
 	else if (para_110lv01 == 3) {
 		cutin "min02",0;
-		mes "Question "+ strcharinfo(0) +"! I was practising because new servant is coming soon.";
+		mes "Question "+ strcharinfo(PC_NAME) +"! I was practising because new servant is coming soon.";
 		next;
 		select("Waddya mean new servant?");
 		mes "[Mingmin]";
@@ -206,15 +206,15 @@ moc_para01,17,95,5	script	Mingmin#1	4_F_GENETIC,{
 		mes "Enough dilly-dallying, I want to make a contract with someone who really craves adventure.";
 		next;
 		mes "[Mingmin]";
-		mes "Maybe "+ strcharinfo(0) +" I'll let you be my servant if you are interested in doing this Eden Group request for my research.";
+		mes "Maybe "+ strcharinfo(PC_NAME) +" I'll let you be my servant if you are interested in doing this Eden Group request for my research.";
 		para_110lv01 = 4;
 	}
 	else if (para_110lv01 > 3) {
 		cutin "min01",0;
 		if (para_110lv01 == 5)
-			mes "Welcome! "+ strcharinfo(0) +"...";
+			mes "Welcome! "+ strcharinfo(PC_NAME) +"...";
 		else
-			mes "Hello "+ strcharinfo(0) +".";
+			mes "Hello "+ strcharinfo(PC_NAME) +".";
 			next;
 		switch( select( "Request to research monsters", "Make small-talk" ) ) {
 		case 1:
@@ -962,7 +962,7 @@ moc_para01,17,95,5	script	Mingmin#1	4_F_GENETIC,{
 			}
 			else {
 				cutin "min01",0;
-				mes "Contract is terminated. "+ strcharinfo(0) +" reward for completed research. ^FF0000I will delete incompleted research from your quest list.^000000";
+				mes "Contract is terminated. "+ strcharinfo(PC_NAME) +" reward for completed research. ^FF0000I will delete incompleted research from your quest list.^000000";
 				para_110lv01 = 6;
 				next;
 				callsub S_Hunting,
@@ -989,7 +989,7 @@ moc_para01,17,95,5	script	Mingmin#1	4_F_GENETIC,{
 				mes "It is a little bit inconvenient. I will read to you politely ^FF0000again^000000 in public.";
 				next;
 				mes "[Mingmin]";
-				mes "Anyway "+ strcharinfo(0) +" thank you for helping me start my research.";
+				mes "Anyway "+ strcharinfo(PC_NAME) +" thank you for helping me start my research.";
 				next;
 				cutin "min03",0;
 				mes "[Mingmin]";

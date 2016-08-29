@@ -334,7 +334,7 @@ comodo,236,164,0	script	Hat Girl#Hair_Brush	1_F_04,{
 				mes "- after emptying some of it. -";
 				close;
 			}
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I got the Hair Brush.";
 			mes "...but it makes me sad.";
 			delitem Mixture,1; //Mixture
@@ -450,10 +450,10 @@ alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
 			mes "See you again, my angel~!";
 			emotion e_thx;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "... ...";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hmm... I guess I was fooled by that little kid.";
 			close;
 		}
@@ -474,10 +474,10 @@ alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
 	mes "Are you a real angel? Have you been to heaven?";
 	next;
 	if (select("What a bullshit!", "Let's keep the childhood innocence!") == 1) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Angel and heaven? It's all made up! ";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "There's nothing. Everything is lie!";
 		emotion e_gg,1;
 		next;
@@ -486,7 +486,7 @@ alberta,151,78,0	script	Bebete#Baby_Angel_Status	4W_KID,{
 		emotion e_sigh;
 		close;
 	}
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Of course. I used to dance with the dragon and zebra";
 	mes "on the vanilla-taste clouds.";
 	next;
@@ -522,7 +522,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		mes "Hmm..Hm..";
 		mes "It seems my transformation into the child's appearance is succeessful.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "... ... ... ...";
 		next;
 		mes "[???]";
@@ -550,10 +550,10 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		mes "I need your help!";
 		next;
 		if (select("Just ignore it.", "Let's help him.") == 1) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Talking frog...";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Now I've seen everything.";
 			next;
 			mes "[King Froggie Vll]";
@@ -562,7 +562,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 			donpcevent "Roda Frog#Frog_Cap::OnDisable";
 			end;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What can I help you?";
 		next;
 		mes "[King Froggie Vll]";
@@ -570,7 +570,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		setquest 5000;
 		2009_hat = 1;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Sure, I will.";
 		next;
 		mes "[King Froggie Vll]";
@@ -592,7 +592,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		mes "Oh, you brought all of them!";
 		next;
 		mes "[King Froggie Vll]";
-		mes "Thank you so much, " + strcharinfo(0) + ".";
+		mes "Thank you so much, " + strcharinfo(PC_NAME) + ".";
 		emotion e_thx;
 		next;
 		mes "[King Froggie Vll]";
@@ -601,7 +601,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		mes "[King Froggie Vll]";
 		mes "Frogs are healthy food to the snakes.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I know well.";
 		next;
 		mes "[King Froggie Vll]";
@@ -630,7 +630,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 			end;
 		}
 		else if (questprogress(5001,HUNTING) == 2) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I'm back.";
 			next;
 			mes "[King Froggie Vll]";
@@ -648,7 +648,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 			changequest 5001,5002;
 			2009_hat = 3;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I'm happy to be added in the history book. I'll go and get them.";
 			next;
 			mes "[King Froggie Vll]";
@@ -671,7 +671,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		mes "[King Froggie Vll]";
 		mes "Oh, you brought Poisonous Canines! Now, I'm able to put you in the frog history book officially.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "That's good for me.";
 		next;
 		mes "[King Froggie Vll]";
@@ -711,7 +711,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 		mes "[King Froggie Vll]";
 		mes "You are already the hero for our frogs! If I have a child, I would marry you up with my child.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Ah.. No, thanks.";
 		mes "^FF0000(Are you telling me to marry with A Frog???)^000000";
 		next;
@@ -765,7 +765,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 			}
 			mes "[King Froggie Vll]";
 			mes "Frogs, do you have any objection";
-			mes "to give our hero, " + strcharinfo(0) + "";
+			mes "to give our hero, " + strcharinfo(PC_NAME) + "";
 			mes "a Frog Hat which is one of our precious treasures?";
 			next;
 			mes "[Sounds from somewhere]";
@@ -777,7 +777,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 			mes "Hmm, there is no objection.";
 			next;
 			mes "[King Froggie Vll]";
-			mes "I hearby give " + strcharinfo(0) + ", our hero, this Frog Hat.";
+			mes "I hearby give " + strcharinfo(PC_NAME) + ", our hero, this Frog Hat.";
 			specialeffect2 EF_MAPPILLAR2;
 			specialeffect2 EF_BLESSING;
 			erasequest 5004;
@@ -794,7 +794,7 @@ gef_fild07,108,161,4	script	Roda Frog#Frog_Cap	RODA_FROG,1,1,{
 	}
 	else if (2009_hat == 6) {
 		mes "[King Froggie Vll]";
-		mes "All the frogs in the world, praise " + strcharinfo(0) + ", our eternal hero!";
+		mes "All the frogs in the world, praise " + strcharinfo(PC_NAME) + ", our eternal hero!";
 		emotion e_thx;
 		close2;
 		donpcevent "Roda Frog#Frog_Cap::OnDisable";
@@ -836,13 +836,13 @@ OnTouch:
 	donpcevent "Roda Frog#Frog_Cap::OnEnable";
 	if (2009_hat > 0) {
 		emotion e_dots,1;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "It's so amazing to see";
 		mes "the frog which transforms itself.";
 		close;
 	}
 	emotion e_omg,1;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Oh my.. the frog transformed into a child...";
 	close;
 }

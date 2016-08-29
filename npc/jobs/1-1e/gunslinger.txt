@@ -231,7 +231,7 @@ payon,184,65,3	script	Wise Bull Horn	4_M_LGTGRAND,{
 		mes "What business has";
 		mes "brought you before me?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Mr. Miller sent me to";
 		mes "deliver this letter to you.";
 		mes "Actually, I'm interested in";

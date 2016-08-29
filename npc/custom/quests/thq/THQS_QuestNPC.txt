@@ -18,11 +18,11 @@
 
 yuno_in01,112,151,6	script	Quest Manager	1_M_SIZ,{
 	mes "[Guy]";
-	mes "Welcome to the Treasure Hunters Guild "+strcharinfo(0)+".";
+	mes "Welcome to the Treasure Hunters Guild "+strcharinfo(PC_NAME)+".";
 	next;
 	if (On_Quest == 0) goto N_NewQuest;
 	mes "[Guy]";
-	mes "Look " +strcharinfo(0)+ ", you can only 1 quest at a time, you should finish the quest unless you have given up.";
+	mes "Look " +strcharinfo(PC_NAME)+ ", you can only 1 quest at a time, you should finish the quest unless you have given up.";
 	mes "Giving up will cost you ^FF00002500z^000000.";
 	next;
 	if (select("No, never would I leave a quest!", "Yah I'm pathetic... Pay 2500z") == 1) {

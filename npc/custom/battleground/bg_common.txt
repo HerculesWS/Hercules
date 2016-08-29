@@ -204,7 +204,7 @@ bat_room,156,178,5	script	Tierra Valley Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
@@ -274,7 +274,7 @@ bat_room,156,121,1	script	Tierra Valley Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
@@ -344,7 +344,7 @@ bat_room,164,178,5	script	Tierra Valley Officer#3	4_M_KY_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
@@ -414,7 +414,7 @@ bat_room,164,121,1	script	Tierra Valley Officer#4	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
@@ -485,7 +485,7 @@ bat_room,172,178,5	script	Flavius Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
@@ -556,7 +556,7 @@ bat_room,172,121,1	script	Flavius Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
@@ -627,7 +627,7 @@ bat_room,148,178,5	script	Flavius Officer#3	4_M_KY_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
@@ -698,7 +698,7 @@ bat_room,148,121,1	script	Flavius Officer#4	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
@@ -766,7 +766,7 @@ bat_room,140,178,5	script	KVM [80-99] Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
@@ -834,7 +834,7 @@ bat_room,140,121,1	script	KVM [80-99] Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
@@ -902,7 +902,7 @@ bat_room,132,178,5	script	KVM [60-79] Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
@@ -970,7 +970,7 @@ bat_room,132,121,1	script	KVM [60-79] Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
@@ -1038,7 +1038,7 @@ bat_room,124,178,5	script	KVM [1-59] Officer#1	4_M_KY_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Guillaume Army to those stinky Croixs!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;
@@ -1106,7 +1106,7 @@ bat_room,124,121,1	script	KVM [1-59] Officer#2	4_M_CRU_KNT,{
 		close;
 	}
 
-	mes "Hello " + strcharinfo(0) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
+	mes "Hello " + strcharinfo(PC_NAME) + ", let's show the power of the Croix Army to those stinky Guillaumes!";
 	next;
 	if( select("I want to join your army!", "End Conversation") == 2 )
 		close;

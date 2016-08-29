@@ -906,12 +906,12 @@ aldeba_in,24,245,4	script	Kafra Jasmine#alde	4_F_KAFRA3,{
 	next;
 	switch(select("What?! I can't believe that!", "Ahh~ Shut Up!", "Your service is great!")) {
 	case 1:
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "What?!";
 		mes "I can't";
 		mes "believe that!";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "FIVE THOUSAND AND EIGHT HUNDRED YEARS?! THAT'S INSANE!";
 		next;
 		mes "[Kafra Jasmine]";
@@ -1058,7 +1058,7 @@ aldeba_in,91,244,4	script	Kafra Service#4alde	4_F_KAFRA6,{
 aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	mes "[Kafra]";
-	mes "Welcome, ^6666FF" + strcharinfo(0) + "^000000.  This is where you can trade in your special reserve points for useful items and cool prizes.";
+	mes "Welcome, ^6666FF" + strcharinfo(PC_NAME) + "^000000.  This is where you can trade in your special reserve points for useful items and cool prizes.";
 	next;
 	mes "[Kafra]";
 	mes "Each Kafra will allow you to trade in reserve points of varying amounts.  I can trade in reserve points starting from ^2222FF100 pts up to 3000 pts^000000.";
@@ -1142,7 +1142,7 @@ aldeba_in,79,161,6	script	Kafra#04	4_F_KAFRA3,{
 aldeba_in,88,161,3	script	Kafra#05	4_F_KAFRA3,{
 	cutin "kafra_03",2;
 	mes "[Kafra]";
-	mes "Welcome ^5577FF"+strcharinfo(0)+"^000000.  We are currently having a special event for our customers.";
+	mes "Welcome ^5577FF"+strcharinfo(PC_NAME)+"^000000.  We are currently having a special event for our customers.";
 	mes "You can get free gifts by using your ^FF5533special reserve points^000000 in the ^3355FFSpecial Kafra Gift Event^000000!!";
 	next;
 	mes "[Kafra]";

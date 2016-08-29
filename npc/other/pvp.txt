@@ -347,7 +347,7 @@ pvp_room,54,85,4	script	Registration Staff#1	8W_SOLDIER,{
 	}
 	if (select("Combat Square one", "Cancel") == 1) {
 		mes "[PVP Combat Square Register Staff]";
-		mes "'"+ strcharinfo(0) +"'";
+		mes "'"+ strcharinfo(PC_NAME) +"'";
 		mes "Are you ready?!";
 		next;
 		if (select("Yes!", "No!") == 1) {

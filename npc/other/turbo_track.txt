@@ -1741,18 +1741,18 @@ OnTouch:
 	.@n = charat(strnpcinfo(NPC_NAME_HIDDEN),getstrlen(strnpcinfo(NPC_NAME_HIDDEN))-1);
 	switch (.@n) {
 		case 1:
-			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Log Bridge course!",bc_map,"0x70DBDB";
+			mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" has just passed the Log Bridge course!",bc_map,"0x70DBDB";
 			switch (rand(1,3)) {
 				case 1: warp strnpcinfo(NPC_MAP),210,369; end;
 				case 2: warp strnpcinfo(NPC_MAP),210,361; end;
 				case 3: warp strnpcinfo(NPC_MAP),210,354; end;
 			}
 		case 2:
-			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Cube Hills course!",bc_map,"0x70DBDB";
+			mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" has just passed the Cube Hills course!",bc_map,"0x70DBDB";
 			warp strnpcinfo(NPC_MAP),316,365;
 			end;
 		case 3:
-			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Cursed Desert!",bc_map,"0x70DBDB";
+			mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" has just passed the Cursed Desert!",bc_map,"0x70DBDB";
 			switch (rand(1,4)) {
 				case 1: warp strnpcinfo(NPC_MAP),46,254; end;
 				case 2: warp strnpcinfo(NPC_MAP),76,227; end;
@@ -1760,15 +1760,15 @@ OnTouch:
 				case 4: warp strnpcinfo(NPC_MAP),86,220; end;
 			}
 		case 5:
-			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Single Snail course!",bc_map,"0x70DBDB";
+			mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" has just passed the Single Snail course!",bc_map,"0x70DBDB";
 			warp strnpcinfo(NPC_MAP),268,275;
 			end;
 		case 6:
-			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Snake Dice course!",bc_map,"0x70DBDB";
+			mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" has just passed the Snake Dice course!",bc_map,"0x70DBDB";
 			warp strnpcinfo(NPC_MAP),5,91;
 			end;
 		case 7:
-			mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Small Cave course! Hurry, you're almost at the finish!",bc_map,"0x70DBDB";
+			mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" has just passed the Small Cave course! Hurry, you're almost at the finish!",bc_map,"0x70DBDB";
 			switch(rand(1,3)) {
 				case 1: warp strnpcinfo(NPC_MAP),307,52; end;
 				case 2: warp strnpcinfo(NPC_MAP),307,46; end;
@@ -1943,9 +1943,9 @@ turbo_n_1,222,65,0	duplicate(TurboHint_4#tt_main)	#n1NoWayOut7	FAKE_NPC,1,1
 OnTouch:
 	.@w$ = callfunc("F_tt");
 	if (.@w$ == "n1") $@end_time = gettimetick(0);
-	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just arrived at the Finish Line! Congratulations!",bc_map,"0xFFFF00";
+	mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" has just arrived at the Finish Line! Congratulations!",bc_map,"0xFFFF00";
 	if (.@w$ != "n1") {
-		setd "$ttnames$["+GetNumber(.@w$)+"]",strcharinfo(0);
+		setd "$ttnames$["+GetNumber(.@w$)+"]",strcharinfo(PC_NAME);
 		donpcevent "Turbo Track Guide::OnWin_"+.@w$;
 	}
 	warp strnpcinfo(NPC_MAP),384,161;
@@ -1992,7 +1992,7 @@ turbo_n_1,371,47,0	duplicate(cos_end#tt_main)	#cos_n1_end	WARPNPC,1,1
 -	script	cos_end2#tt_main	WARPNPC,1,1,{
 OnTouch:
 	.@w$ = callfunc("F_tt");
-	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" is second to reach the Finish Line! Congratulations!",bc_map,"0xFFFF00";
+	mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" is second to reach the Finish Line! Congratulations!",bc_map,"0xFFFF00";
 	if (.@w$ == "e8" || .@w$ == "n8") setarray .@pts, 28961,40;
 	if (.@w$ == "e16" || .@w$ == "n16") setarray .@pts, 28951,50;
 	if (tt_points < .@pts[0]) tt_point += .@pts[1];
@@ -2014,7 +2014,7 @@ turbo_n_16,371,51,0	duplicate(cos_end2#tt_main)	#cos_n16_end2	WARPNPC,1,1
 -	script	cos_end3#tt_main	FAKE_NPC,{
 OnTouch:
 	.@w$ = callfunc("F_tt");
-	mapannounce strnpcinfo(NPC_MAP),"" + strcharinfo(0) +" is third to reach the Finish Line! Congratulations!",bc_map,"0xFFFF00";
+	mapannounce strnpcinfo(NPC_MAP),"" + strcharinfo(PC_NAME) +" is third to reach the Finish Line! Congratulations!",bc_map,"0xFFFF00";
 	if (.@w$ == "e8" || .@w$ == "n8") setarray .@pts, 28971,30;
 	if (.@w$ == "e16" || .@w$ == "n16") setarray .@pts, 28951,50;
 	if (tt_point < .@pts[0]) tt_point += .@pts[1];
@@ -2055,7 +2055,7 @@ turbo_n_1,316,365,0	duplicate(DSwitch#tt_main)	Disposable_Switch#n1	FAKE_NPC,1,1
 
 -	script	Flasher#tt_main	FAKE_NPC,{
 OnTouch:
-	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" has just passed the Flasher Maze!",bc_map,"0x70DBDB";
+	mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" has just passed the Flasher Maze!",bc_map,"0x70DBDB";
 	warp strnpcinfo(NPC_MAP),185,227;
 	end;
 
@@ -2093,17 +2093,17 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 				my_point = tt_point;
 				mes "You now have a total of";
 				mes tt_point + " Turbo Track points,";
-				mes strcharinfo(0) +".";
+				mes strcharinfo(PC_NAME) +".";
 			}
 			mes "Unfortunately, I can't give";
 			mes "you any Turbo Track Points";
 			mes "since you would exceed the";
 			mes "maximum limit. Sorry,";
-			mes strcharinfo(0) +"...";
+			mes strcharinfo(PC_NAME) +"...";
 		} else {
 			mes "As the winner, your reward";
 			mes "is "+((compare(.@w$,"8"))?"50":"40")+" Turbo Track Points,";
-			mes strcharinfo(0) +"~";
+			mes strcharinfo(PC_NAME) +"~";
 			next;
 			mes "[Guide]";
 			mes "However, you cannot receive";
@@ -2114,7 +2114,7 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 		next;
 		if (tt_rank > $ttranks[1]) {
 			setarray $ttranks[0],$ttranks[0],tt_rank,$ttranks[1],$ttranks[2],$ttranks[3],$ttranks[4];
-			setarray $ttnames$[9],strcharinfo(0);
+			setarray $ttnames$[9],strcharinfo(PC_NAME);
 			mes "[Guide]";
 			mes "Congratulations!";
 			mes "You are ranked as";
@@ -2123,22 +2123,22 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			donpcevent "Turbo Track Guide::OnNew_Top1";
 			if (tt_rank == 29999) {
 				if ($ttnames$[7] == "Breezy Havana") {
-					$ttnames$[7] = strcharinfo(0);
+					$ttnames$[7] = strcharinfo(PC_NAME);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
-					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
+					announce strcharinfo(PC_NAME) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 				else if ($ttnames$[8] == "RS125") {
-					$ttnames$[8] = strcharinfo(0);
+					$ttnames$[8] = strcharinfo(PC_NAME);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
-					if (compare(.@w$,"4")) announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
+					if (compare(.@w$,"4")) announce strcharinfo(PC_NAME) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 			}
 		}
 		else if (tt_rank > $ttranks[2]) {
 			setarray $ttranks[0],$ttranks[0],$ttranks[1],tt_rank,$ttranks[3],$ttranks[4],$ttranks[5];
-			setarray $ttnames$[10],strcharinfo(0);
+			setarray $ttnames$[10],strcharinfo(PC_NAME);
 			mes "[Guide]";
 			mes "Congratulations!";
 			mes "You've ranked Second";
@@ -2147,22 +2147,22 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			donpcevent "Turbo Track Guide::OnNew_Top2";
 			if (tt_rank == 29999) {
 				if ($ttnames$[7] == "Breezy Havana") {
-					$ttnames$[7] = strcharinfo(0);
+					$ttnames$[7] = strcharinfo(PC_NAME);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
-					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
+					announce strcharinfo(PC_NAME) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 				else if ($ttnames$[8] == "RS125") {
-					$ttnames$[8] = strcharinfo(0);
+					$ttnames$[8] = strcharinfo(PC_NAME);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
-					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
+					announce strcharinfo(PC_NAME) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 			}
 		}
 		else if (tt_rank > $ttranks[3]) {
 			setarray $ttranks[0],$ttranks[0],$ttranks[1],$ttranks[2],tt_rank,$ttranks[4],$ttranks[5];
-			setarray $ttnames$[11],strcharinfo(0);
+			setarray $ttnames$[11],strcharinfo(PC_NAME);
 			mes "[Guide]";
 			mes "Congratulations!";
 			mes "You've ranked Third";
@@ -2171,22 +2171,22 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			donpcevent "Turbo Track Guide::OnNew_Top3";
 			if (tt_rank == 29999) {
 				if ($ttnames$[7] == "Breezy Havana") {
-					$ttnames$[7] = strcharinfo(0);
+					$ttnames$[7] = strcharinfo(PC_NAME);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
-					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
+					announce strcharinfo(PC_NAME) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 				else if ($ttnames$[8] == "RS125") {
-					$ttnames$[8] = strcharinfo(0);
+					$ttnames$[8] = strcharinfo(PC_NAME);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
-					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
+					announce strcharinfo(PC_NAME) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 			}
 		}
 		else if (tt_rank > $ttranks[4]) {
 			setarray $ttranks[0],$ttranks[0],$ttranks[1],$ttranks[2],$ttranks[3],tt_rank,$ttranks[5];
-			setarray $ttnames$[12],strcharinfo(0);
+			setarray $ttnames$[12],strcharinfo(PC_NAME);
 			mes "[Guide]";
 			mes "Congratulations!";
 			mes "You've ranked Fourth";
@@ -2195,22 +2195,22 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			donpcevent "Turbo Track Guide::OnNew_Top4";
 			if (tt_rank == 29999) {
 				if ($ttnames$[7] == "Breezy Havana") {
-					$ttnames$[7] = strcharinfo(0);
+					$ttnames$[7] = strcharinfo(PC_NAME);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
-					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
+					announce strcharinfo(PC_NAME) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 				else if ($ttnames$[8] == "RS125") {
-					$ttnames$[8] = strcharinfo(0);
+					$ttnames$[8] = strcharinfo(PC_NAME);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
-					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
+					announce strcharinfo(PC_NAME) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 			}
 		}
 		else if (tt_rank > $ttranks[5]) {
 			setarray $ttranks[0],$ttranks[0],$ttranks[1],$ttranks[2],$ttranks[3],$ttranks[4],tt_rank;
-			setarray $ttnames$[13],strcharinfo(0);
+			setarray $ttnames$[13],strcharinfo(PC_NAME);
 			mes "[Guide]";
 			mes "Congratulations!";
 			mes "You've ranked Fifth";
@@ -2219,16 +2219,16 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			donpcevent "Turbo Track Guide::OnNew_Top5";
 			if (tt_rank == 29999) {
 				if ($ttnames$[7] == "Breezy Havana") {
-					$ttnames$[7] = strcharinfo(0);
+					$ttnames$[7] = strcharinfo(PC_NAME);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
-					announce "" + strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
+					announce "" + strcharinfo(PC_NAME) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 				else if ($ttnames$[8] == "RS125") {
-					$ttnames$[8] = strcharinfo(0);
+					$ttnames$[8] = strcharinfo(PC_NAME);
 					mes "You've secured your place in";
 					mes "the Turbo Track Hall of Honor!";
-					announce strcharinfo(0) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
+					announce strcharinfo(PC_NAME) + " has joined the Turbo Track Hall of Honor!",bc_all,"FF0000";
 				}
 			}
 		}
@@ -2241,7 +2241,7 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 			next;
 			mes "[Guide]";
 			mes "What do you";
-			mes "think, " + strcharinfo(0) +"?";
+			mes "think, " + strcharinfo(PC_NAME) +"?";
 			mes "Glory can be yours if";
 			mes "you can achieve victory!";
 		}
@@ -2257,7 +2257,7 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 		end;
 	}
 	else {
-		if ($ttnames$[7] == strcharinfo(0)) {
+		if ($ttnames$[7] == strcharinfo(PC_NAME)) {
 			if (compare(.@w$,"4")) {
 				mes "[Guide]";
 				mes "Oh wow!";
@@ -2279,14 +2279,14 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 					mes "you any Turbo Track Points";
 					mes "since you would exceed the";
 					mes "maximum limit. Sorry,";
-					mes strcharinfo(0) +"...";
+					mes strcharinfo(PC_NAME) +"...";
 				}
 			} else {
 				mes "Oh, I'm sorry! You're";
 				mes "here so that I can tell you";
 				mes "how many Turbo Track Points";
 				my_point = tt_point;
-				mes "you have, right? You've got a total of " + my_point + " Turbo Track Points, "+ strcharinfo(0) +".";
+				mes "you have, right? You've got a total of " + my_point + " Turbo Track Points, "+ strcharinfo(PC_NAME) +".";
 			}
 				next;
 				mes "[Guide]";
@@ -2298,7 +2298,7 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 				warp "turbo_room",72,89;
 				end;
 		}
-		else if ($ttnames$[8] == strcharinfo(0)) {
+		else if ($ttnames$[8] == strcharinfo(PC_NAME)) {
 			mes "[Guide]";
 			mes "Hey, aren't you";
 			mes "in our Hall of Honor?";
@@ -2327,7 +2327,7 @@ turbo_n_1,114,190,0	duplicate(Flasher#tt_main)	Flasher_Exit_2#n1	WARPNPC,1,1
 				mes "Turbo Track Point total!";
 				mes "You've got a total of";
 				mes my_point + " Turbo Track points,";
-				mes strcharinfo(0) + ".";
+				mes strcharinfo(PC_NAME) + ".";
 			}
 			next;
 			mes "[Guide]";
@@ -2600,7 +2600,7 @@ turbo_n_1,384,167,1	script	Guide#TBT_n1	1_M_01,{
 			mes "you any Turbo Track Points";
 			mes "since you would exceed the";
 			mes "maximum limit. Sorry,";
-			mes strcharinfo(0) +"...";
+			mes strcharinfo(PC_NAME) +"...";
 		}
 		next;
 		mes "[Guide]";
@@ -2639,7 +2639,7 @@ turbo_n_1,384,167,1	script	Guide#TBT_n1	1_M_01,{
 				mes "you any Turbo Track Points";
 				mes "since you would exceed the";
 				mes "maximum limit. Sorry,";
-				mes strcharinfo(0) +"...";
+				mes strcharinfo(PC_NAME) +"...";
 			}
 			next;
 			mes "[Guide]";
@@ -2658,9 +2658,9 @@ turbo_n_1,384,167,1	script	Guide#TBT_n1	1_M_01,{
 			mes "You ranked as the";
 			mes "top player in Solo Mode!";
 			mes "Your name will be entered";
-			mes "into our records, "+ strcharinfo(0) +"~";
+			mes "into our records, "+ strcharinfo(PC_NAME) +"~";
 			setarray $ttranks[0],.@record_time;
-			setarray $ttnames$[0],strcharinfo(0);
+			setarray $ttnames$[0],strcharinfo(PC_NAME);
 			next;
 			if (tt_point < 28961) {
 				mes "[Guide]";
@@ -2678,7 +2678,7 @@ turbo_n_1,384,167,1	script	Guide#TBT_n1	1_M_01,{
 				mes "you any Turbo Track Points";
 				mes "since you would exceed the";
 				mes "maximum limit. Sorry,";
-				mes strcharinfo(0) +"...";
+				mes strcharinfo(PC_NAME) +"...";
 			}
 			next;
 			mes "[Guide]";
@@ -2782,7 +2782,7 @@ OnInit:
 -	script	NMaker1#tt_main	FAKE_NPC,{
 OnTouch:
 	.@w$ = callfunc("F_tt");
-	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" is now entering the Small Cave! " + strcharinfo(0) +" is now in the lead!",bc_map,"0xFFFF00";
+	mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" is now entering the Small Cave! " + strcharinfo(PC_NAME) +" is now in the lead!",bc_map,"0xFFFF00";
 	donpcevent "Turbo Track Guide::OnEnd_"+.@w$;
 	disablenpc "Notice_Maker1#TBT_"+.@w$;
 	end;
@@ -2803,7 +2803,7 @@ turbo_n_1,11,91,0	duplicate(NMaker1#tt_main)	Notice_Maker1#TBT_n1	FAKE_NPC,3,3
 -	script	NMaker3#tt_main	FAKE_NPC,{
 OnTouch:
 	.@w$ = callfunc("F_tt");
-	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" is now entering the Single Snail! " + strcharinfo(0) +" is now in the lead!",bc_map,"0xFFFF00";
+	mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" is now entering the Single Snail! " + strcharinfo(PC_NAME) +" is now in the lead!",bc_map,"0xFFFF00";
 	disablenpc "Notice_Maker3#TBT_"+.@w$;
 	end;
 
@@ -2823,7 +2823,7 @@ turbo_n_1,234,223,0	duplicate(NMaker3#tt_main)	Notice_Maker3#TBT_n1	FAKE_NPC,3,3
 -	script	NMaker4#tt_main	FAKE_NPC,{
 OnTouch:
 	.@w$ = callfunc("F_tt");
-	mapannounce strnpcinfo(NPC_MAP),strcharinfo(0) +" is currently in First Place!",bc_map,"0xFFFF00";
+	mapannounce strnpcinfo(NPC_MAP),strcharinfo(PC_NAME) +" is currently in First Place!",bc_map,"0xFFFF00";
 	disablenpc "Notice_Maker4#TBT_"+.@w$;
 	end;
 
@@ -4063,7 +4063,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 	if (tt_point < 10) {
 		mes "[Item Exchange Helper]";
 		mes "Good day,";
-		mes "" + strcharinfo(0) + ".";
+		mes "" + strcharinfo(PC_NAME) + ".";
 		mes "You've got a total of";
 		mes "" + tt_point + " Turbo Track Points.";
 		next;
@@ -4103,7 +4103,7 @@ turbo_room,93,117,5	script	Point Exchange Helper	4_M_TELEPORTER,{
 	else {
 		mes "[Item Exchange Helper]";
 		mes "Good day,";
-		mes "" + strcharinfo(0) + ".";
+		mes "" + strcharinfo(PC_NAME) + ".";
 		mes "You've got a total of";
 		mes "" + tt_point + " Turbo Track Points.";
 		mes "Would you like to exchange";
@@ -4474,14 +4474,14 @@ turbo_room,106,117,3	script	Point Manager#tt	4_M_ZONDAOYAJI,{
 	switch(select("Check Points", "Convert Points", "^660000Conversion Info^000000")) {
 	case 1:
 		mes "[Turbo Track Point Manager]";
-		mes "" + strcharinfo(0) + ",";
+		mes "" + strcharinfo(PC_NAME) + ",";
 		mes "you currently have";
 		mes "" + tt_point + " Turbo Track Points";
 		mes "and " + arena_point + " Arena Points.";
 		close;
 	case 2:
 		mes "[Turbo Track Point Manager]";
-		mes "" + strcharinfo(0) + ",";
+		mes "" + strcharinfo(PC_NAME) + ",";
 		mes "you currently have";
 		mes "" + tt_point + " Turbo Track Points";
 		mes "and " + arena_point + " Arena Points.";
@@ -4552,7 +4552,7 @@ turbo_room,106,117,3	script	Point Manager#tt	4_M_ZONDAOYAJI,{
 					tt_point = .@my_turbo_all;
 					next;
 					mes "[Turbo Track Point Manager]";
-					mes "" + strcharinfo(0) + ",";
+					mes "" + strcharinfo(PC_NAME) + ",";
 					mes "you now have";
 					mes "^00688B" + tt_point + "^000000 Turbo Track Points";
 					mes "and ^4682B4" + arena_point + "^000000 Arena Points.";
@@ -4592,7 +4592,7 @@ S_ExchangePoints:
 		tt_point += getarg(2);
 		next;
 		mes "[Turbo Track Point Manager]";
-		mes "" + strcharinfo(0) + ",";
+		mes "" + strcharinfo(PC_NAME) + ",";
 		mes "you now have";
 		mes "^00688B" + tt_point + "^000000 Turbo Track Points";
 		mes "and ^4682B4" + arena_point + "^000000 Arena Points.";

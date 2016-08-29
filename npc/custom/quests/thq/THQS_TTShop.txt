@@ -154,7 +154,7 @@ function	script	ths_menu_weapons	{
 // Main script
 prt_in,164,174,1	script	Treasure Hunter's Shop	1_M_YOUNGKNIGHT,{
 	mes "[Ash]";
-	mes "Ahh, "+strcharinfo(0)+"! Welcome to the Offical Treasure Hunter's Guild Shop.";
+	mes "Ahh, "+strcharinfo(PC_NAME)+"! Welcome to the Offical Treasure Hunter's Guild Shop.";
 	mes "You currently have ^FF0000"+#Treasure_Token+"^000000 treasure tokens!!!";
 	next;
 	switch( select("How does this place work?","What do you have in stock?","Nevermind") ) {

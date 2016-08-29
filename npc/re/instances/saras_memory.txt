@@ -188,7 +188,7 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 			.@instance = instance_create(.@md_name$, .@party_id);
 			if (.@instance < 0) {
 				mesf("Party Name: %s", .@p_name$);
-				mesf("Party Leader: %s", strcharinfo(0));
+				mesf("Party Leader: %s", strcharinfo(PC_NAME));
 				mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
 				close;
 			}
@@ -207,7 +207,7 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 					"The party leader did not generate the dungeon yet.", .@md_name$);
 				close;
 			}
-			mapannounce("dali", sprintf(_$("%s, member of the party %s entered the instance %s."), strcharinfo(0), .@p_name$, .@md_name$), bc_map, C_SPRINGGREEN);
+			mapannounce("dali", sprintf(_$("%s, member of the party %s entered the instance %s."), strcharinfo(PC_NAME), .@p_name$, .@md_name$), bc_map, C_SPRINGGREEN);
 			setquest 15002;
 			warp "1@sara", 250, 155;
 			end;
@@ -221,7 +221,7 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 1@sara,261,156,5	script	A girl#sarains	4_F_SARAH_BABY,{
 	if (getcharid(0) != getpartyleader(getcharid(1), 2))
 		end;
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Where am I?");
 	unittalk(getcharid(3), _("Where am I?"));
 	next;
@@ -230,7 +230,7 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 	mes("Hello! This is the village of Payon. You don't seem to be from around here...");
 	npctalk(_("A girl : Hello! This is the village of Payon. You don't seem to be from around here..."));
 	next;
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Are you from here? You don't seem to quite match the locals either.");
 	unittalk(getcharid(3), _("Are you from here? You don't seem to quite match to locals either."));
 	next;
@@ -242,7 +242,7 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 	mes("My father is doyen of this village! I just take after my mother.");
 	donpcevent instance_npcname("Sara Irene#saratalk")+"::OnChat1";
 	next;
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Oh! I am sorry! Uh... Why are you standing out here all alone?");
 	unittalk(getcharid(3), _("Oh! I am sorry! Uh... Why are you standing out here all alone?"));
 	next;
@@ -1091,7 +1091,7 @@ OnMyMobDead:
 	mes("I have been looking for you Sara. Please come with daddy it is very dangerous here!");
 	donpcevent instance_npcname("Doyen Irene#sarains2")+"::OnChat2";
 	next;
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("I won't let you take Sara!");
 	unittalk(getcharid(3), _("I won't let you take Sara!"));
 	next;
@@ -1100,7 +1100,7 @@ OnMyMobDead:
 	mes("The murderer is here! Guards! We will finish him once and for all!");
 	donpcevent instance_npcname("Doyen Irene#sarains2")+"::OnChat3";
 	next;
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Sara... run! Save yourself!");
 	unittalk(getcharid(3), _("Sara... run! Save yourself!"));
 	next;
@@ -1233,7 +1233,7 @@ OnMyMobDead:
 	mes("Why.. *hack* are you trying to kill my wife and daughter?");
 	npctalk(_("Why.. *hack* are you trying to kill my wife and daughter?"));
 	next;
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("What are you talking about? We saw you standing over Sara's mother with your sword COVERED in blood!");
 	unittalk(getcharid(3), _("What are you talking about? We saw you standing over Sara's mother with your sword COVERED in blood!"));
 	next;
@@ -1257,7 +1257,7 @@ OnMyMobDead:
 	mes("If.. you are not the assassin sent to kill my wife and daughter, who are you?");
 	npctalk(_("If.. you are not the assassin sent to kill my wife and daughter, who are you?"));
 	next;
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("I am just an adventurer who was passing through. I heard some men plotting their deaths and needed to intervene.");
 	unittalk(getcharid(3), _("I am just an adventurer who was passing through. I heard some men plotting their deaths and needed to intervene."));
 	next;
@@ -1270,11 +1270,11 @@ OnMyMobDead:
 	mes("Strange men... I bet they were some of the village elders. Ugh...");
 	npctalk(_("Strange men... I bet they were some of the village elders. Ugh..."));
 	next;
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("There might be more assassins so we have to find Sara as fast as we can.");
 	unittalk(getcharid(3), _("There might be more assassins so we have to find Sara as fast as we can."));
 	next;
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Sara believes that you killed her mother. We need to tell her the truth.");
 	unittalk(getcharid(3), _("Sara believes that you killed her mother. We need to tell her the truth."));
 	next;

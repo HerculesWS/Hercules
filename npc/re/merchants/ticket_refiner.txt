@@ -174,7 +174,7 @@ prontera,184,177,6	script	Refine Master	4_M_REPAIR,{
 	emotion e_ho;
 	mes "[Refine Master]";
 	mes "Alright, here it is~";
-	mes "Well, ^0000FF"+strcharinfo(0)+"^000000!";
+	mes "Well, ^0000FF"+strcharinfo(PC_NAME)+"^000000!";
 	mes "Congratulations on your shining "+.@type$+".";
 	mes "You look GREAT!";
 	mes "Farewell~!";

@@ -951,7 +951,7 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 					mes "[Librarian Jekan]";
 					mes "Hmm. I'm not really allowed to disclose any information related to that file. I'm sorry about that.";
 					next;
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "But isn't";
 					mes "the file about...";
 					input @str$;
@@ -1005,10 +1005,10 @@ prt_in,172,106,0	script	Librarian#megin	4_M_ZONDAOYAJI,{
 				mes "[Librarian Jekan]";
 				mes "Hmm... I am not supposed to reveal anything related to the file.";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Isn't the file...";
 				input @str$;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "^0000FF" + @str$ + "?";
 				next;
 				mes "[Librarian Jekan]";
@@ -1819,7 +1819,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 			next;
 			input @str$;
 			if (@str$ == "Cuaque Donon" || @str$ == "Cuaque" || @str$ == "Donon") {
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Do you happen to know a person named " + @str$ + " ...?";
 				if (god_eremes == 18) {
 					mes "[Inn Employee]";
@@ -2997,7 +2997,7 @@ niflheim,109,254,0	script	Egnigem	4_M_NFDEADSWDMAN,{
 			else {
 				mes "[Egnigem]";
 				mes "Greetings...";
-				mes ""+ strcharinfo(0) +".";
+				mes ""+ strcharinfo(PC_NAME) +".";
 				mes "I've been watching you in the";
 				mes "world of the living. I see you've been busy looking for the truth about the 1st Squad, haven't you?";
 				next;

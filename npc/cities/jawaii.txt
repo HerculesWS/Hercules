@@ -849,7 +849,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 		}
 		mes "....Hmm...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hey...!";
 		mes "Bartender...";
 		mes "Gimmie one more.";
@@ -859,7 +859,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 		mes "It's on me.";
 		mes "Have a drink.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Thank you.";
 		close2;
 		percentheal -100,0;
@@ -876,7 +876,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				mes "had enough to drink.";
 				mes "Are you sure you'll be okay?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Bartender,";
 				mes "I'm so depressed";
 				mes "because of...";
@@ -889,7 +889,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 				mes "a ^0000FF'Special J&Z'^000000 for you.";
 				mes "And this is on me.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Thank you...";
 				mes "So much...";
 				close2;
@@ -1010,7 +1010,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 			mes "^3355FFYou slowly drank some";
 			mes "of your Gunslinger drink.^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Yeeehaw~!";
 			mes "I'm a cowboy hero!";
 			mes "Bang Bang Bang!";
@@ -1036,7 +1036,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 			mes "with a luxurious, sweet and";
 			mes "sour flavor.^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Aaaaaahhhhhh~!";
 			mes "This drink is really good!";
 			specialeffect2 EF_SANCTUARY;
@@ -1087,7 +1087,7 @@ jawaii_in,28,124,0	script	Bartender#jaw	1_ETC_01,{
 			break;
 		}
 
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Master...";
 		mes "One more please...";
 		next;
@@ -1099,7 +1099,7 @@ S_KillChar:
 		mes "[Bartender]";
 		mes "It's on me.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Thank you...";
 		mes "Mr. Bartender...";
 		close2;
@@ -1148,7 +1148,7 @@ jawaii_in,43,115,0	script	Customer#jaw_1	4W_M_01,{
 		next;
 		mes "^3355FFHe ordered a JJ special for me.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Damn...!";
 		mes "Damn! I will be";
 		mes "the one who laughs last!";

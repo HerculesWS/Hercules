@@ -106,7 +106,7 @@ alberta_in,53,43,6	script	Merchant#mer	4_M_04,{
 	else if (job_merchant_q == 9) {
 		mes "[Chief Mahnsoo]";
 		mes "Hello there,";
-		mes ""+ strcharinfo(0) +".";
+		mes ""+ strcharinfo(PC_NAME) +".";
 		job_merchant_q = 0;
 		job_merchant_q2 = 0;
 		quest_alb_01 = 0;
@@ -119,7 +119,7 @@ alberta_in,53,43,6	script	Merchant#mer	4_M_04,{
 	else if (job_merchant_q == 8 || job_merchant_q == 7) {
 		mes "[Chief Mahnsoo]";
 		mes "Hello there,";
-		mes ""+ strcharinfo(0) +".";
+		mes ""+ strcharinfo(PC_NAME) +".";
 		mes "I'm pleased to tell you";
 		mes "that I have good news!";
 		next;
@@ -335,7 +335,7 @@ alberta_in,53,43,6	script	Merchant#mer	4_M_04,{
 				next;
 				mes "[Chief Mahnsoo]";
 				mes "Hmm... ";
-				mes "" + strcharinfo(0) + "...";
+				mes "" + strcharinfo(PC_NAME) + "...";
 				mes "That's a nice name.";
 				next;
 				mes "[Chief Mahnsoo]";
@@ -543,7 +543,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 	}
 	else if (job_merchant_q == 6 || job_merchant_q == 5) {
 		mes " [Union Staff Kay] ";
-		mes "Oh, yeah? Okay, lemme check. Your name is " + strcharinfo(0) + "? Alright, your destination was...";
+		mes "Oh, yeah? Okay, lemme check. Your name is " + strcharinfo(PC_NAME) + "? Alright, your destination was...";
 		next;
 		mes "[Union Staff Kay]";
 		if (job_merchant_q2 == 1 || job_merchant_q2 == 2)
@@ -680,7 +680,7 @@ alberta_in,28,29,2	script	Merchant Guildsman#mer	4_M_01,{
 			mes "Alright.";
 			mes "So what's";
 			mes "your name?";
-			mes "" + strcharinfo(0) + "...?";
+			mes "" + strcharinfo(PC_NAME) + "...?";
 			next;
 			if (job_merchant_q == 0) {
 				mes "[Union Staff Kay]";

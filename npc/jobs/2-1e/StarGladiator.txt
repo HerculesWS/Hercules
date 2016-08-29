@@ -53,8 +53,8 @@ payon,215,102,3	script	Moohyun#job_star	4_M_ROGUE,3,3,{
 				mes "Alright, kid.";
 				mes "What's your name?";
 				next;
-				mes "[" + strcharinfo(0) + "]";
-				mes "" + strcharinfo(0) + ".";
+				mes "[" + strcharinfo(PC_NAME) + "]";
+				mes "" + strcharinfo(PC_NAME) + ".";
 				next;
 				mes "[Moohyun]";
 				mes "Geez, you're so direct.";
@@ -69,7 +69,7 @@ payon,215,102,3	script	Moohyun#job_star	4_M_ROGUE,3,3,{
 				mes "set on it, why don't you become";
 				mes "a ^4D4DFFwarrior of the Sun, the Moon,^FFFFFF ^4D4DFF and the Stars^000000? Just consider it.";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Warrior of the wha--?";
 				mes "I've never heard of that";
 				mes "job. But I do know I can";
@@ -222,7 +222,7 @@ payon,215,102,3	script	Moohyun#job_star	4_M_ROGUE,3,3,{
 			mes "your life seems hopeless?";
 			next;
 			if (select("I will not give up!", "I... I don't know?") == 1) {
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "I will not give up!";
 				mes "I'll make my dreams";
 				mes "come true, no matter";
@@ -376,7 +376,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 	if (Class == Job_Taekwon) {
 		if (STGL_Q == 1) {
 			mes "[Moogang]";
-			mes ""+ strcharinfo(0) + "...";
+			mes ""+ strcharinfo(PC_NAME) + "...";
 			mes "I have been expecting you.";
 			mes "Moohyun has told me about";
 			mes "your arrival and your desire";
@@ -656,21 +656,21 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 			mes "Yes, I can see it in your eyes.";
 			mes "So tell me, what did you learn?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I can feel the bond between";
 			mes "the Sun, the Moon and the";
 			mes "Stars. They all give light,";
 			mes "but their different shades";
 			mes "bestow different gifts.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "The sun gives glorious";
 			mes "warmth and is the wellspring";
 			mes "of life. Moonlight is gentle and gives comfort. The twinkling";
 			mes "of stars gives hope in even";
 			mes "the darkest of nights.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I also know the Sun's";
 			mes "scorching, destructive";
 			mes "heat, the loneliness of";
@@ -678,7 +678,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 			mes "of the Stars. I now understand";
 			mes "the spectrum of the cosmos!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "The combined rage of the";
 			mes "cosmos can summon a ";
 			mes "demon of utter darkness.";
@@ -733,7 +733,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 		mes "considered becoming...";
 		mes "Um... No. Wait. Hmmm...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh...?";
 		next;
 		mes "[Moogang]";
@@ -784,7 +784,7 @@ comodo,172,230,3	script	Wandering Master#job_sta	4_M_JOB_ASSASSIN,{
 			mes "feel like going to any of";
 			mes "those places, just come";
 			mes "and talk to me. Goodbye";
-			mes "for now, "+strcharinfo(0)+"~";
+			mes "for now, "+strcharinfo(PC_NAME)+"~";
 			close;
 		case 2:
 			mes "[Moogang]";

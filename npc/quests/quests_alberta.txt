@@ -381,7 +381,7 @@ alberta,117,135,0	script	Elin	4W_KID,{
 				close;
 			}
 		case 10:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I'm as adorable as a doll...";
 			next;
 			mes "[Elin]";
@@ -969,7 +969,7 @@ alberta,91,70,4	script	Kinsey#tur	4_M_ORIENT02,{
 		mes "'Tur-tle";
 		mes "Is-land.'";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "^3333FF*ting!*^000000";
 		next;
 		mes "[Kinsey]";
@@ -2004,7 +2004,7 @@ tur_dun03,105,76,4	script	Knight Leader#tur	4_M_MINISTER,5,5,{
 	mes "Finally, another person.";
 	mes "Tell me who you are!";
 	next;
-	switch(select("Who are you to ask?", ""+ strcharinfo(0) +"!", "What are you doing here?", "First, tell me who you are.")) {
+	switch(select("Who are you to ask?", ""+ strcharinfo(PC_NAME) +"!", "What are you doing here?", "First, tell me who you are.")) {
 	case 1:
 		mes "[Takuyaka]";
 		mes "How dare you speak to me in that tone! Don't you know who I am?! I'm Takuyaka, leader of the Security Knights of Alberta! Kobolds and Porings quiver in fear when they hear my name...";
@@ -2014,7 +2014,7 @@ tur_dun03,105,76,4	script	Knight Leader#tur	4_M_MINISTER,5,5,{
 		close;
 	case 2:
 		mes "[Takuyaka]";
-		mes "" + strcharinfo(0) + "?";
+		mes "" + strcharinfo(PC_NAME) + "?";
 		mes "Well, your name sounds better than mine. And you have more hair on your head as well. Hmmm...";
 		next;
 		mes "[Takuyaka]";
@@ -2342,7 +2342,7 @@ alberta_in,131,95,5	script	Iromo#ep3_2	4_M_KID1,{
 		next;
 		mes "-Silent pause-";
 		next;
-		mes "-"+strcharinfo(0)+" starts to speak-";
+		mes "-"+strcharinfo(PC_NAME)+" starts to speak-";
 		mes "-And tells him of the journeys-";
 		mes "-Adventures, joy, sorrow, and loss-";
 		mes "-One by one to the boy-";

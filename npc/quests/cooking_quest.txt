@@ -2226,7 +2226,7 @@ payon,209,127,3	script	Servant	4_M_ORIENT01,{
 
 		case 3:
 			if (countitem(Food_Package) > 0) {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Actually, Madeleine";
 				mes "sent me here to find";
 				mes "you. She said that you'd";
@@ -2308,14 +2308,14 @@ payon,209,127,3	script	Servant	4_M_ORIENT01,{
 				mes "I should apologize to Sir Charles. ";
 				close;
 			}
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Actually, Madeleine";
 			mes "sent me here to find";
 			mes "you. She said that you'd";
 			mes "be willing to taste test";
 			mes "the food in this bundle...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Wait, wait...";
 			mes "I don't have it!";
 			mes "Where did I put";

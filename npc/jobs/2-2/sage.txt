@@ -330,9 +330,9 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 				mes "Very well. Let's complete your application form.";
 				mes "Please put your signature here.";
 				next;
-				select(strcharinfo(0));
+				select(strcharinfo(PC_NAME));
 				mes "[Metheus Sylphe]";
-				mes "Your name is ... " + strcharinfo(0) + ". It's a very nice name.";
+				mes "Your name is ... " + strcharinfo(PC_NAME) + ". It's a very nice name.";
 				next;
 				if (JobLevel == 50) {
 					mes "[Metheus Sylphe]";
@@ -411,9 +411,9 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 					mes "Okay, let's complete the application form.";
 					mes "Please put your signature here.";
 					next;
-					select(strcharinfo(0));
+					select(strcharinfo(PC_NAME));
 					mes "[Metheus Sylphe]";
-					mes "Your name is ... " + strcharinfo(0) + ". It's a very nice name.";
+					mes "Your name is ... " + strcharinfo(PC_NAME) + ". It's a very nice name.";
 					next;
 					mes "[Metheus Sylphe]";
 					mes "Yes, everything's ready.";
@@ -596,12 +596,12 @@ yuno_in03,154,35,4	script	Staff of the Academy#a	2_M_SAGE_B,{
 		mes "Let's complete the application form.";
 		mes "Please put your signature here.";
 		next;
-		select(strcharinfo(0));
+		select(strcharinfo(PC_NAME));
 		mes "[Metheus Sylphe]";
 		switch (.@SAGE_Q_T) {
-		case 1: mes "Your name is ... " + strcharinfo(0) + ". It's a very nice name."; break;
-		case 2: mes "Your name is ... " + strcharinfo(0) + ". It sounds very sagacious."; break;
-		case 3: mes "Your name is ... " + strcharinfo(0) + ". Interesting name."; break;
+		case 1: mes "Your name is ... " + strcharinfo(PC_NAME) + ". It's a very nice name."; break;
+		case 2: mes "Your name is ... " + strcharinfo(PC_NAME) + ". It sounds very sagacious."; break;
+		case 3: mes "Your name is ... " + strcharinfo(PC_NAME) + ". Interesting name."; break;
 		}
 		next;
 		mes "[Metheus Sylphe]";
@@ -710,7 +710,7 @@ yuno_in03,105,177,5	script	Written Test Professor#s	4_M_SAGE_A,{
 		mes "You applied for this test already, didn't you?";
 		next;
 		mes "[Claytos Verdo]";
-		mes "Let's see, your name is " + strcharinfo(0) + "...";
+		mes "Let's see, your name is " + strcharinfo(PC_NAME) + "...";
 		mes "Okay, let's get started!";
 		next;
 		mes "[Claytos Verdo]";
@@ -1309,7 +1309,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 	}
 	if (SAGE_Q == 9) {
 		if (SAGE_Q2 == 0) {
-			mes "Welcome, " + strcharinfo(0) + ". I am glad to meet you.";
+			mes "Welcome, " + strcharinfo(PC_NAME) + ". I am glad to meet you.";
 			mes "My name is Saphien Layless, I will be in charge of your class for a while.";
 			next;
 			mes "[Saphien Layless]";
@@ -1325,7 +1325,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				switch(select("It's a name of a health item.", "It's the source of life in the world.", "Suckah, I lied.")) {
 				case 1:
 					mes "[Saphien Layless]";
-					mes "Wrong. " + strcharinfo(0) + ", you got - 10 points.";
+					mes "Wrong. " + strcharinfo(PC_NAME) + ", you got - 10 points.";
 					mes "That's just one of the gifts from Yggdrasil.";
 					next;
 					mes "[Saphien Layless]";
@@ -1339,7 +1339,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				case 3:
 					mes "[Saphien Layless]";
 					mes "Great Schott...If you don't know, just say so.";
-					mes "By the way, " + strcharinfo(0) + ", you just got - 10 points for lying and for being wrong.";
+					mes "By the way, " + strcharinfo(PC_NAME) + ", you just got - 10 points for lying and for being wrong.";
 					break;
 				}
 				next;
@@ -1394,7 +1394,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 				next;
 				mes "[Saphien Layless]";
 				mes "You can purchase this item from the town of Al De Baran! You didn't show any effort.";
-				mes "So, I must give you - 10 points, " + strcharinfo(0) + ".";
+				mes "So, I must give you - 10 points, " + strcharinfo(PC_NAME) + ".";
 				next;
 				mes "[Saphien Layless]";
 				mes "Okay, now I am starting the class.";
@@ -1584,7 +1584,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			next;
 			if (.@w_point > 0) {
 				mes "[Saphien Layless]";
-				mes "..." + strcharinfo(0) + ", have you lost your mind?";
+				mes "..." + strcharinfo(PC_NAME) + ", have you lost your mind?";
 				mes "Your work is too poor to be considered as a thesis!";
 				next;
 				mes "[Saphien Layless]";
@@ -1650,7 +1650,7 @@ yuno_in03,62,176,2	script	History Professor#sa	4_M_MANAGER,{
 			next;
 			if (.@w_point > 0) {
 				mes "[Saphien Layless]";
-				mes "..." + strcharinfo(0) + ", have you lost your mind?";
+				mes "..." + strcharinfo(PC_NAME) + ", have you lost your mind?";
 				mes "Your work is too poor to be considered as a thesis!";
 				next;
 				mes "[Saphien Layless]";
@@ -1753,7 +1753,7 @@ yuno_in03,32,102,1	script	Biology Professor#sa	4_M_SAGE_C,{
 			mes "Huh...how rude of you! You're expected to introduce yourself to me as soon as I greet you!";
 			mes "What is your name, young one?";
 			next;
-			select(strcharinfo(0));
+			select(strcharinfo(PC_NAME));
 			mes "[Lucius Celsus]";
 			mes "A fine name. It's nice to meet you.";
 			mes "So, are you aware of the subject you're studying?";
@@ -2624,7 +2624,7 @@ OnReset:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "job_sage"," " + strcharinfo(0) + ", successfully defeat all the monsters.",bc_map;
+		mapannounce "job_sage"," " + strcharinfo(PC_NAME) + ", successfully defeat all the monsters.",bc_map;
 		donpcevent "Arena#2::OnEnable";
 		stopnpctimer;
 	}
@@ -2730,7 +2730,7 @@ OnReset:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "job_sage"," " + strcharinfo(0) + ", successfully defeat all the monsters.",bc_map;
+		mapannounce "job_sage"," " + strcharinfo(PC_NAME) + ", successfully defeat all the monsters.",bc_map;
 		donpcevent "Arena#Doorkeeper::OnEnable";
 		donpcevent "Arena#3::OnEnable";
 		stopnpctimer;
@@ -2815,7 +2815,7 @@ OnDisable:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "job_sage","Congratulations, " + strcharinfo(0) + ". You passed the test.",bc_map;
+		mapannounce "job_sage","Congratulations, " + strcharinfo(PC_NAME) + ". You passed the test.",bc_map;
 		SAGE_Q = 8;
 		donpcevent "Test Helper#sg::OnEnable";
 		disablenpc "Arena#Doorkeeper";

@@ -2135,7 +2135,7 @@ gon_dun03,62,222,0	script	Strange dead body#gnbs	HIDDEN_NPC,{
 			mes "He probably couldn't take it any longer...^000000";
 			close;
 		}
-		mes "[ ^6699FF" + strcharinfo(0) + "^000000 ]";
+		mes "[ ^6699FF" + strcharinfo(PC_NAME) + "^000000 ]";
 		mes "Eew, no!";
 		mes " ";
 		mes "Yucky yucky YUCKY!";
@@ -2181,10 +2181,10 @@ gonryun,139,142,7	script	Girl##gnbs1	4_F_TWMASKGIRL,{
 		mes "I'm sure whoever found my father's sword is a great person.";
 		close;
 	}
-	mes "[ ^6699FF" + strcharinfo(0) + "^000000 ]";
+	mes "[ ^6699FF" + strcharinfo(PC_NAME) + "^000000 ]";
 	mes "That would be me!";
 	next;
-	mes "[ ^6699FF" + strcharinfo(0) + "^000000 ]";
+	mes "[ ^6699FF" + strcharinfo(PC_NAME) + "^000000 ]";
 	mes "I AM YOUR HERO!";
 	next;
 	emotion e_heh;

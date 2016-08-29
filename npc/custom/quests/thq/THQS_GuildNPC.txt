@@ -20,7 +20,7 @@ yuno_in01,124,164,6	script	Guild Leader	1_M_PRON_KING,{
 		if (Event_THQS==1)
 			goto N_AlreadyReg;
 		mes "[Keegan]";
-		mes "Well "+strcharinfo(0)+" if you want to be a Treasure Hunter first you must.";
+		mes "Well "+strcharinfo(PC_NAME)+" if you want to be a Treasure Hunter first you must.";
 		mes " ";
 		mes "^FF00001.^000000 You well be changed ^FF000025,000z^000000 for basic training and your proof of being a member.";
 		mes " ";
@@ -49,13 +49,13 @@ yuno_in01,124,164,6	script	Guild Leader	1_M_PRON_KING,{
 		if (Event_THQS!=1)
 			goto A_NeedReg;
 		mes "[Keegan]";
-		mes "Well "+strcharinfo(0)+" if you wish to take a quest go talk to the fellow Treasure Hunter in the other room there.";
+		mes "Well "+strcharinfo(PC_NAME)+" if you wish to take a quest go talk to the fellow Treasure Hunter in the other room there.";
 		close;
 	case 3:
 		if (Event_THQS!=1)
 			goto N_NeedMem;
 		mes "[Keegan]";
-		mes "Yes "+strcharinfo(0)+" I will take you to our shop right away!";
+		mes "Yes "+strcharinfo(PC_NAME)+" I will take you to our shop right away!";
 		next;
 		warp "prt_in",166,171;
 		close;
@@ -66,7 +66,7 @@ yuno_in01,124,164,6	script	Guild Leader	1_M_PRON_KING,{
 	}
 N_NoZeny:
 	mes "[Keegan]";
-	mes "Hmmm you don't seem to have ^FF000025,000z^000000 "+strcharinfo(0)+". Please come back when you do.";
+	mes "Hmmm you don't seem to have ^FF000025,000z^000000 "+strcharinfo(PC_NAME)+". Please come back when you do.";
 	close;
 N_AlreadyReg:
 	mes "[Keegan]";

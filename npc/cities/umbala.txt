@@ -1022,11 +1022,11 @@ OnTouch:
 	switch(rand(1,3)) {
 	case 1:
 		percentheal -100,0;
-		mapannounce "umbala","Bungee Jump: "+strcharinfo(0)+" : Kyaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~~~~~~~",bc_map;
+		mapannounce "umbala","Bungee Jump: "+strcharinfo(PC_NAME)+" : Kyaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~~~~~~~",bc_map;
 		end;
 	case 2:
 		percentheal -50,0;
-		mapannounce "umbala","Bungee Jump: "+strcharinfo(0)+" : Wooooooaaaaaaaaaaaaaahhhhhhhhhhhh~~~~~~!",bc_map;
+		mapannounce "umbala","Bungee Jump: "+strcharinfo(PC_NAME)+" : Wooooooaaaaaaaaaaaaaahhhhhhhhhhhh~~~~~~!",bc_map;
 		end;
 	case 3:
 		if (rand(1,2) == 2) {

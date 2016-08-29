@@ -662,7 +662,7 @@ moc_para01,38,162,2	script	Code the Redeemer#Give1	4_M_YOUNGKNIGHT,{
 		close;
 	}
 	mes "[Code the Redeemer]";
-	mes "Welcome, "+strcharinfo(0)+"!";
+	mes "Welcome, "+strcharinfo(PC_NAME)+"!";
 	mes "I've been expecting you.";
 	next;
 	mes "[Code the Redeemer]";
@@ -896,7 +896,7 @@ moc_para01,174,33,3	script	Bathory#2012spirits	BATHORY,{
 		warp "niflheim",194,185;
 		end;
 	case 2:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "No thanks, maybe later.";
 		close;
 	}

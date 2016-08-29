@@ -640,7 +640,7 @@ prt_church,103,76,0	script	Garnet#pront	1_F_02,{
 			next;
 			break;
 		case 7:
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Alright, I've";
 			mes "heard enough.";
 			close2;

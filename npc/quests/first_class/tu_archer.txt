@@ -258,7 +258,7 @@ payon_in02,54,13,3	script	Master Kavaruk	1_M_JOBTESTER,{
 		if(Class == Job_Archer || Class == Job_Baby_Archer || Class == Job_Archer_High){
 			if(tu_archer02 == 0){
 				mes "Oh, it's a good thing";
-				mes "you're here, "+strcharinfo(0)+".";
+				mes "you're here, "+strcharinfo(PC_NAME)+".";
 				mes "I've just received request for support from the Alchemist";
 				mes "Guild in Al De Baran.";
 				next;
@@ -401,7 +401,7 @@ payon_in02,54,13,3	script	Master Kavaruk	1_M_JOBTESTER,{
 			close;
 
 		} else if(tu_archer01 == 3){
-			mes "So "+strcharinfo(0)+",";
+			mes "So "+strcharinfo(PC_NAME)+",";
 			mes "Did you have a good experience? Learning theory alone is never too enjoyable, but it is necessary.";
 			next;
 			mes "[Master Kavaruk]";
@@ -855,7 +855,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 			next;
 			.@eagle = getskilllv("AC_DOUBLE");
 			if(.@eagle > 2){
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I...";
 				mes "I already know";
 				mes "about Double Strafe.";
@@ -915,7 +915,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				mes "Bring all of that and you pass~";
 				next;
 				mes "[Reidin Corse]";
-				mes "It's easier to find them if you pass by the southern gate of Prontera and then head west. Alright, off you go, " + strcharinfo(0) + "~";
+				mes "It's easier to find them if you pass by the southern gate of Prontera and then head west. Alright, off you go, " + strcharinfo(PC_NAME) + "~";
 			} else {
 				mes "Now, I've taught you a lot of stuff and I wanna make sure you retain all of it. That's why I want you to take this midterm. Your mission: ^FF0000Attack the Rockers^000000!";
 				emotion e_no1;
@@ -933,7 +933,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 				mes "Bring all of that and you pass~";
 				next;
 				mes "[Reidin Corse]";
-				mes "It's easier to find Izlude if you pass by Prontera, so head towards the fields near Prontera. Alright, off you go, " + strcharinfo(0) + "~";
+				mes "It's easier to find Izlude if you pass by Prontera, so head towards the fields near Prontera. Alright, off you go, " + strcharinfo(PC_NAME) + "~";
 			}
 			tu_archer01 = 11;
 			close;
@@ -1114,7 +1114,7 @@ pay_arche,103,165,5	script	Reidin Corse#tu	4_M_REIDIN_KURS,{
 			emotion e_pif;
 			next;
 			mes "[Reidin Corse]";
-			mes "Well, "+ strcharinfo(0) +",";
+			mes "Well, "+ strcharinfo(PC_NAME) +",";
 			mes "It'd make me really happy if you get to the point where you develop a true love for the art of archery. I'll see you sometime, okay?";
 			emotion e_no1;
 			close;
@@ -1734,7 +1734,7 @@ prontera,126,335,5	script	Arthail	1_M_BARD,{
 		mes "^3355FFArthail of the Wind";
 		mes "has fallen fast asleep.^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ah...";
 		mes "So peaceful~";
 		next;
@@ -1745,7 +1745,7 @@ prontera,126,335,5	script	Arthail	1_M_BARD,{
 		mes "...";
 		soundeffectall "se_littlewaves02.wav",0;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Huh?";
 		mes "What was";
 		mes "that noise?";
@@ -1755,7 +1755,7 @@ prontera,126,335,5	script	Arthail	1_M_BARD,{
 		emotion e_omg;
 		soundeffectall "se_scream_w01.wav",0;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What the--?!";
 		mes "That sounds like";
 		mes "screams coming from";
@@ -1765,7 +1765,7 @@ prontera,126,335,5	script	Arthail	1_M_BARD,{
 		mes "but he's deeply asleep";
 		mes "and won't budge at all.^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I can't help it then.";
 		mes "I'd better go check";
 		mes "this out on my own.";
@@ -1866,7 +1866,7 @@ prt_castle,76,165,6	script	Minister#tu	1_M_JOBTESTER,{
 	mes "our nation's administration.";
 	if(tu_archer02 == 5){
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I heard screams";
 		mes "from outside! Did";
 		mes "something happen?";
@@ -1887,7 +1887,7 @@ prt_castle,76,165,6	script	Minister#tu	1_M_JOBTESTER,{
 		close;
 	} else if(tu_acolyte01 == 25){
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Um...";
 		mes "I hear that";
 		mes "the royal family";

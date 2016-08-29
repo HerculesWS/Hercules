@@ -237,7 +237,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 			}
 			if (.@loop) break;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I see that you are worried that the performance is going down the drain.";
 		mes "You wanted to make a successful performance to meet the fan's expectations.";
 		next;
@@ -250,7 +250,7 @@ xmas,132,143,5	script	Performance Manager#wnd	4_M_06,{
 		mes "Why is <Nollio> taking this kind of attitude towards me?";
 		mes "Did I make any mistakes? After making a contract with them, I did everything they demanded of me!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "It's because...";
 		input .@inputstr$;
 		mes "^3131FF" + .@inputstr$ + "^000000";
@@ -382,7 +382,7 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 		job_wan = 3;
 		close;
 	} else if (job_wan == 3) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "(Would it be possible for me to make him tell me what happened with Nollio?)";
 		next;
 		switch(select("Use Dazzler", "Use Lullaby", "Use Lucky Luck")) {
@@ -390,10 +390,10 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 			if (getskilllv("DC_UGLYDANCE") == 5 || rand(100) >= 80) {
 				mes "- You get closer to Song's ear. -";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Okay-";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Oi-!!!!!";
 				specialeffect EF_STUNATTACK;
 				next;
@@ -402,22 +402,22 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 				mes "You almost damaged my eardrum.";
 				emotion e_an;
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Hey, cheer up!!!";
 				next;
 				mes "[Guitar Song]";
 				mes "What are you talking about?";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "You should know, people are addicted to your music?";
 				mes "So many people are supporting you with anticipation.";
 				mes "Would you break your promise and let people down? Not giving people any reason?";
 				next;
 			} else {
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Okay-";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Aaaaahhh!!!!!";
 				next;
 				mes "[Guitar Song]";
@@ -436,7 +436,7 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 				mes "- You cannot use this skill without learning it. -";
 				close;
 			}
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Looks like I will not get answer even if I force him.";
 			close;
 		case 3:
@@ -445,43 +445,43 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 				close;
 			}
 			emotion e_what,1;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Ah, ah my Guitar Song~";
 			next;
 			mes "[Guitar Song]";
 			mes "What? I've got goose bumps.";
 			next;
 			emotion e_what,1;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I've been watching <Nollio> for years.";
 			next;
 			mes "[Guitar Song]";
 			mes "I know that we are that popular! Ha ha ha!";
 			next;
 			emotion e_what,1;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I've seen other Maestro's performances but there was no one better then Guitar Song.";
 			next;
 			mes "[Guitar Song]";
 			mes "He he he! Yes, I know I am super great!";
 			next;
 			emotion e_no1,1;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Oh... When I hear Guitar Song's performance for the first time I has a crush on you immediately.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "It felt like hearing mommy's lullaby~ It was so beautiful and moving... You are the best artist of our time.";
 			next;
 			specialeffect EF_STEAL;
 			mes "[Guitar Song]";
 			mes "Ha ha ha. I know that well, but it feels good to hear a compliment from you!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "So I was looking forward to seeing your performance in Lutie this time.";
 			mes "But after I heard the performance got cancelled, I felt so sad.";
 			next;
 			emotion e_sob,1;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Now I can't hear Guitar Song's melody~~";
 			mes "I wanted to dance to your music like a beautiful butterfly.";
 			mes "Is there no way for my dream to be true now? Sob sob...";
@@ -490,11 +490,11 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 			mes "Huh huh! No, that is not...";
 			next;
 			emotion e_sob,1;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I am really happy to meet you in person, but I hope to see your performance in the beautiful snowy town, Lutie.. Sob sob...";
 			next;
 			emotion e_sob,1;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Why in the world don't you show us the performance, Guitar Song?";
 			mes "Don't you like me? Sob sob..";
 			next;
@@ -502,7 +502,7 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 			mes "[Guitar Song]";
 			mes "No, it's not that kind of reason!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Then please tell me, I really love your music... but now I feel so blue...";
 			emotion e_what;
 			next;
@@ -522,7 +522,7 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 		mes "[Guitar Song]";
 		mes "Pshaw.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Why did she get mad so suddenly?";
 		next;
 		emotion e_swt;
@@ -531,7 +531,7 @@ comodo,140,86,5	script	Cheerless Maestro	4_M_MINSTREL,{
 		mes "That's what she's like.";
 		mes "She suddenly disappeared and sent me a letter telling me that the team would be disbanded.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Where is Dancer Kim now?";
 		next;
 		mes "[Guitar Song]";
@@ -645,7 +645,7 @@ hu_in01,305,251,5	script	Vacant Looking Lady#wnd	4_F_CAPEGIRL,{
 		mes "[Vacant Looking Lady]";
 		mes "Are you also ignoring my wounded self-respect as a woman?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "No! He is really a caring man!";
 		mes "But I don't think you disbanded your precious team just because of that.";
 		next;
@@ -714,7 +714,7 @@ hu_in01,305,251,5	script	Vacant Looking Lady#wnd	4_F_CAPEGIRL,{
 		mes "But in this situation...";
 		mes "Do I really have a way to change it?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Exercise is the best way!";
 		mes "If you work hard, your bossy will be lighter than before!";
 		next;
@@ -999,8 +999,8 @@ xmas,147,135,5	script	Dancer Kim#xmas	4_F_WANDERER,{
 		mes "Introducing!";
 		next;
 		mes "[Dancer Kim]";
-		mapannounce "xmas","Dancer Kim: Introducing the rising Wanderer! " + strcharinfo(0) + "!",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
-		mes "This rising Wanderer star, " + strcharinfo(0) + "!";
+		mapannounce "xmas","Dancer Kim: Introducing the rising Wanderer! " + strcharinfo(PC_NAME) + "!",bc_map,"0xffff00"; //FW_NORMAL 12 0 0
+		mes "This rising Wanderer star, " + strcharinfo(PC_NAME) + "!";
 		jobchange roclass(eaclass()|EAJL_THIRD);
 		job_wan = 10;
 		getitem Green_Apple_Ring,1;
@@ -1017,7 +1017,7 @@ xmas,147,135,5	script	Dancer Kim#xmas	4_F_WANDERER,{
 		mes "The goddess must be jealous to see your beauty.";
 		next;
 		mes "[Dancer Kim]";
-		mes "" + strcharinfo(0) + "! I hope to see your beautiful exploits in the future.";
+		mes "" + strcharinfo(PC_NAME) + "! I hope to see your beautiful exploits in the future.";
 		mes "Also, I hope you to meet your precious Maestro.";
 		mes "Let's perform together later, shall we? Ha ha.";
 		next;

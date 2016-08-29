@@ -72,7 +72,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 			mes "content you couldn't possibly";
 			mes "fathom. The popular novels and picture books are someplace else.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "...";
 			mes "......";
 			next;
@@ -84,7 +84,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 			mes "interest. Well, depending on";
 			mes "your actual attention span...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "(What's her damage?!";
 			mes "Does she have an attitude problem or is she just stuck-up?)";
 			close;
@@ -109,7 +109,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 			mes "Hmpf.";
 			close;
 		case 2:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "By any chance...";
 			mes "Are you conducting";
 			mes "research about Juperos?";
@@ -120,7 +120,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 			mes "you come to learn about";
 			mes "my current research project?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Oh, I managed to read";
 			mes "a thesis paper entitled,";
 			mes "''The Fall of Juperos,'' and";
@@ -133,7 +133,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 			mes "thesis? So what did";
 			mes "you think about it?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "So far, it's alright, but";
 			mes "quite frankly it's incomplete.";
 			mes "I mean, you don't have much in";
@@ -149,8 +149,8 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 			mes "Fayruz Khrhiyha. May I ask";
 			mes "what your name might be?";
 			next;
-			mes "["+strcharinfo(0)+"]";
-			mes "I'm "+strcharinfo(0)+",";
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes "I'm "+strcharinfo(PC_NAME)+",";
 			mes "a brave adventurer in the";
 			mes "service of his royal majesty,";
 			mes "the wise and benevolent";
@@ -158,7 +158,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 			yuno_hist = 2;
 			next;
 			mes "[Fayruz]";
-			mes "Well, "+strcharinfo(0)+",";
+			mes "Well, "+strcharinfo(PC_NAME)+",";
 			mes "I understand that my thesis";
 			mes "still requires more evidence.";
 			mes "But I'd need some ancient";
@@ -219,7 +219,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 		next;
 		switch(select("I found something in Juperos.", "Nothing much.")) {
 		case 1:
-			mes "[" +strcharinfo(0)+"]";
+			mes "[" +strcharinfo(PC_NAME)+"]";
 			mes "I went to Juperos like";
 			mes "you asked and found that";
 			mes "stone statue you were talking";
@@ -288,7 +288,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 		}
 	case 4:
 		mes "[Fayruz]";
-		mes "Oh hello, "+strcharinfo(0)+".";
+		mes "Oh hello, "+strcharinfo(PC_NAME)+".";
 		mes "So what brings you to";
 		mes "the Juno Library today?";
 		next;
@@ -378,7 +378,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 		}
 	case 5:
 		mes "[Fayruz]";
-		mes "Oh, "+strcharinfo(0)+"!";
+		mes "Oh, "+strcharinfo(PC_NAME)+"!";
 		mes "Have you come back with";
 		mes "something from Juperos?";
 		mes "I've been hoping you'd come";
@@ -413,7 +413,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 		}
 	case 6:
 		mes "[Fayruz]";
-		mes "Oh, "+strcharinfo(0)+"!";
+		mes "Oh, "+strcharinfo(PC_NAME)+"!";
 		mes "The Transparent Plate";
 		mes "that you brought for me";
 		mes "last time is really helping me";
@@ -431,7 +431,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 		close;
 	case 7:
 		mes "[Fayruz]";
-		mes "Hello, "+strcharinfo(0)+"~";
+		mes "Hello, "+strcharinfo(PC_NAME)+"~";
 		mes "Oh, were you able to look";
 		mes "in Juperos for anything that";
 		mes "might help me in my research?";
@@ -458,7 +458,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 		}
 	case 8:
 		mes "[Fayruz]";
-		mes ""+strcharinfo(0)+"...";
+		mes ""+strcharinfo(PC_NAME)+"...";
 		mes "I'm having great difficulty in";
 		mes "translating that Transparent";
 		mes "Plate you brought for me that";
@@ -481,7 +481,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 	case 9:
 		mes "[Fayruz]";
 		mes "Ah, I've been";
-		mes "expecting you, "+strcharinfo(0)+".";
+		mes "expecting you, "+strcharinfo(PC_NAME)+".";
 		mes "So did you have been to Juperos again? I'm really hoping that you";
 		mes "were able to find something new that would help in my research...";
 		next;
@@ -513,7 +513,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 		}
 	case 10:
 		mes "[Fayruz]";
-		mes "Oh hello, "+strcharinfo(0)+"...";
+		mes "Oh hello, "+strcharinfo(PC_NAME)+"...";
 		mes "So what exactly brings you";
 		mes "to the Juno Library this time?";
 		next;
@@ -534,7 +534,7 @@ yuno_in04,190,125,4	script	Scholar	8_F_GIRL,{
 				mes "to help me. Please, would";
 				mes "you take this as my way";
 				mes "saying ''Thanks?'' You've been";
-				mes "great, "+strcharinfo(0)+"...";
+				mes "great, "+strcharinfo(PC_NAME)+"...";
 				if (countitem(Transparent_Plate01)) delitem 7352,1;
 				else if (countitem(Transparent_Plate02)) delitem 7353,1;
 				else if (countitem(Transparent_Plate03)) delitem 7354,1;
@@ -681,7 +681,7 @@ function	script	Func_JupHist	{
 			mes "these Transparent";
 			mes "Plates in Juperos, I'd be";
 			mes "very happy to share another";
-			mes "story with you, "+strcharinfo(0)+".";
+			mes "story with you, "+strcharinfo(PC_NAME)+".";
 			close;
 		}
 		else if (countitem(getarg(3))) {
@@ -707,7 +707,7 @@ function	script	Func_JupHist	{
 			mes "me, I need to go back";
 			mes "to compiling my research...";
 			mes "Thank you so much for";
-			mes "your help, "+strcharinfo(0)+".";
+			mes "your help, "+strcharinfo(PC_NAME)+".";
 			close;
 		}
 		else {
@@ -822,7 +822,7 @@ function	script	Func_JupHist	{
 			mes "me, I need to go back";
 			mes "to compiling my research...";
 			mes "Thank you so much for";
-			mes "your help, "+strcharinfo(0)+".";
+			mes "your help, "+strcharinfo(PC_NAME)+".";
 			if (countitem(getarg(2))) delitem getarg(2),1;
 			else if (countitem(getarg(3))) delitem getarg(3),1;
 			getitem 644,1;
@@ -973,7 +973,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 					mes "..................^000000";
 					if (yuno_hist < 7) {
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Hmmm...";
 						mes "A whole chapter";
 						mes "dedicated to saying,";
@@ -996,7 +996,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 					mes "......";
 					mes "..........^000000";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "This is all just idle";
 					mes "conjecture! This paper";
 					mes "isn't developed enough";
@@ -1020,7 +1020,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 					mes "the destruction of any existing";
 					mes "documentation from that era.^000000";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Yes... Of course!";
 					mes "It all makes sense now!";
 					close;
@@ -1046,7 +1046,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 					mes "......";
 					mes "..........^000000";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Huh. This writer keeps";
 					mes "talking about theories,";
 					mes "but the more I read, the";
@@ -1114,7 +1114,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 				mes "the once great city of Juperos.^000000";
 				close;
 			case 4:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Ugh... My head hurts";
 				mes "too much from reading";
 				mes "a book for smarty people.";
@@ -1148,7 +1148,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 			mes "..................^000000";
 			if (!yuno_hist) yuno_hist = 1;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "This...";
 			mes "This is supposed to";
 			mes "be a research thesis?";
@@ -1156,7 +1156,7 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 			mes "research in it...";
 			close;
 		case 2:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Hmm...";
 			mes "This isn't heavy";
 			mes "enough to be a real";
@@ -1166,33 +1166,33 @@ yuno_in04,186,125,4	script	Bundle of Files	HIDDEN_NPC,{
 		}
 	case 2:
 		if (yuno_hist < 5) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Nah...";
 			mes "I'm tired of reading.";
 			mes "Ironically enough.";
 			close;
 		}
 		else if (yuno_hist < 7) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I don't feel like";
 			mes "reading this. Not";
 			mes "enough pictures...";
 			close;
 		}
 		else if (yuno_hist < 9) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "It looks very sophisticated...";
 			close;
 		}
 		else if (yuno_hist < 10) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I know this book...";
 			mes "But I don't feel like";
 			mes "reading it right now.";
 			close;
 		}
 		else {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "This thesis is";
 			mes "looking pretty good~";
 			mes "Of course, I did have";
@@ -1212,14 +1212,14 @@ yuno_in04,188,118,4	script	Book#juperos	HIDDEN_NPC,{
 		mes "Publisher:";
 		mes "Wushu Publishing, Co.^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "W-whoa!";
 		mes "This book wasn't";
 		mes "here before! It looks";
 		mes "pretty interesting...";
 		close;
 	}
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "You know what?";
 	mes "I think I'll just flip";
 	mes "through some pages";
@@ -1250,7 +1250,7 @@ yuno_in04,188,118,4	script	Book#juperos	HIDDEN_NPC,{
 	mes "''Really?! We better hurry:";
 	mes "Earth doesn't have much time!''^000000";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "...";
 	mes "......";
 	mes "Whoa. I really";
@@ -1271,7 +1271,7 @@ juperos_01,99,112,4	script	Bronze Statue#1	CLEAR_NPC,{
 		close;
 	}
 	else if (yuno_hist == 3) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I better go and";
 		mes "see Fayruz in the";
 		mes "Juno Library and tell";
@@ -1292,7 +1292,7 @@ juperos_01,99,112,4	script	Bronze Statue#1	CLEAR_NPC,{
 			mes "and making out the sounds";
 			mes "for some weird reason.^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "This is creepy!";
 			mes "I know that I'm not";
 			mes "supposed to be able";
@@ -1301,7 +1301,7 @@ juperos_01,99,112,4	script	Bronze Statue#1	CLEAR_NPC,{
 			mes "all of these letters make...";
 			next;
 			if (yuno_hist == 2) {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Then again, Fayruz did";
 				mes "say this was enchanted.";
 				mes "Okay, I guess I'll go back";
@@ -1310,7 +1310,7 @@ juperos_01,99,112,4	script	Bronze Statue#1	CLEAR_NPC,{
 				yuno_hist = 3;
 				close;
 			}
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Huh. Only a scholar,";
 			mes "maybe someone even in";
 			mes "Juno, could make sense";
@@ -1340,7 +1340,7 @@ yuno_in04,169,109,1	script	Ambitious Hollgrehenn	HIDDEN_NPC,{
 	mes "could discern which weapons";
 	mes "were the most powerful...";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "That's strange...";
 	mes "The next page";
 	mes "has been torn out.";
@@ -1356,7 +1356,7 @@ yuno_in04,174,111,1	script	Penniless Hollgrehenn	HIDDEN_NPC,{
 	mes "Publisher:";
 	mes "Muha Books, Co.^000000";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "This book looks";
 	mes "like a total piece of";
 	mes "crap. I'd have more";
@@ -1383,12 +1383,12 @@ yuno_in04,102,106,1	script	Popular Feasts	HIDDEN_NPC,{
 		mes "from live Yoyos.";
 		mes "Now, as for skinning...^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Um...";
 		mes "Barf?";
 		close;
 	case 2:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hey, this page is gone!";
 		mes "I guess Poring Salad is";
 		mes "the most popular feast";
@@ -1401,7 +1401,7 @@ yuno_in04,102,106,1	script	Popular Feasts	HIDDEN_NPC,{
 		mes "crisp. Then, pour the";
 		mes "feathers into a blender...^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hmm...";
 		mes "Sounds a little";
 		mes "too gourmet for my";
@@ -1412,7 +1412,7 @@ yuno_in04,102,106,1	script	Popular Feasts	HIDDEN_NPC,{
 }
 
 yuno_in04,111,108,1	script	Hamerun, Rat Hunter	HIDDEN_NPC,{
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "I can't...";
 	mes "reach it...!";
 	close;
@@ -1438,25 +1438,25 @@ yuno_in04,167,127,1	script	Red Book	HIDDEN_NPC,{
 		mes ".........";
 		mes "............^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "This is...";
 		mes "A compilation of";
 		mes "Shakespeare in ";
 		mes "coloring book format?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Wait...";
 		mes "Why would fans of";
 		mes "Shakespeare even";
 		mes "want a coloring book?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hmm... Well...";
 		mes "I suppose little kids who";
 		mes "read Shakespeare would";
 		mes "appreciate something like that.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hold on...";
 		mes "Do little kids who";
 		mes "are able to read the";
@@ -1464,7 +1464,7 @@ yuno_in04,167,127,1	script	Red Book	HIDDEN_NPC,{
 		mes "even exist? I hope not...";
 		close;
 	case 2:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What a strange";
 		mes "and mysterious book.";
 		mes "I'll never know what's";
@@ -1505,7 +1505,7 @@ yuno_in04,121,109,1	script	Scroll	HIDDEN_NPC,{
 		mes " ";
 		mes " ";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Wait, wait...";
 		mes "This thing IS old.";
 		mes "I mean, it's obviously";
@@ -1513,12 +1513,12 @@ yuno_in04,121,109,1	script	Scroll	HIDDEN_NPC,{
 		mes "standpoint that promotes";
 		mes "bipartisan gender roles.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm...";
 		mes "I'm so offended.";
 		close;
 	case 2:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "This scroll is far too";
 		mes "primitive. There's been";
 		mes "all sorts of technological";
@@ -1561,18 +1561,18 @@ yuno_in04,118,116,4	script	Paper	HIDDEN_NPC,{
 		mes "- Love, Fayruz^000000";
 		next;
 		if (getpartnerid()) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Ahhhhhh~";
 			mes "Love sure is nice!";
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What th--?!";
 		mes "Booooooooo!";
 		mes "Love stinks!";
 		close;
 	case 2:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I guess I better";
 		mes "not look at this.";
 		mes "I mean, I might";
@@ -1636,7 +1636,7 @@ juperos_01,100,91,0	script	jupe_goto#1	FAKE_NPC,2,2,{
 
 OnTouch:
 	initnpctimer "jupe_goto#1",1;
-	mes "^777777["+ strcharinfo(0) +"]^000000";
+	mes "^777777["+ strcharinfo(PC_NAME) +"]^000000";
 	mes "This light...";
 	mes "It feels like...";
 	mes "Its warmth is...";
@@ -1644,7 +1644,7 @@ OnTouch:
 	next;
 	switch(select("Ah, it's so nice...", "No! This is wrong!")) {
 	case 1:
-		mes "^777777["+ strcharinfo(0) +"]^000000";
+		mes "^777777["+ strcharinfo(PC_NAME) +"]^000000";
 		mes "Ahhhh...";
 		mes "It feels like";
 		mes "I'm floating...";
@@ -1654,7 +1654,7 @@ OnTouch:
 		warp "juperos_02",128,278;
 		break;
 	case 2:
-		mes "^777777["+ strcharinfo(0) +"]^000000";
+		mes "^777777["+ strcharinfo(PC_NAME) +"]^000000";
 		mes "N-No! This is";
 		mes "wrong! Something";
 		mes "weird's happening!";
@@ -1890,7 +1890,7 @@ jupe_area1,88,224,0	script	#hole#1-1	CLEAR_NPC,{
 				end;
 			}
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hmmm...";
 			mes "Do I have anything";
 			mes "that might make this";
@@ -2181,7 +2181,7 @@ jupe_area1,25,238,0	script	#hole#1-2	CLEAR_NPC,{
 			}
 			break;
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hmmm...";
 			mes "Do I have anything";
 			mes "that might make this";
@@ -2467,7 +2467,7 @@ jupe_area1,36,146,0	script	#hole#1-3	CLEAR_NPC,{
 				end;
 			}
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hmmm...";
 			mes "Do I have anything";
 			mes "that might make this";
@@ -2754,7 +2754,7 @@ jupe_area1,50,49,0	script	#hole#1-4	CLEAR_NPC,{
 			}
 			break;
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hmmm...";
 			mes "Do I have anything";
 			mes "that might make this";
@@ -2979,7 +2979,7 @@ jupe_area1,112,162,0	script	Lever#ufe	CLEAR_NPC,{
 		disablenpc "Lever#ufe";
 		close;
 	case 2:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Pull this lever?";
 		mes "I don't even know";
 		mes "what will happen...";
@@ -3089,7 +3089,7 @@ jupe_area2,74,224,0	script	#hole#2-1	CLEAR_NPC,{
 				end;
 			}
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hmmm...";
 			mes "Do I have anything";
 			mes "that might make this";
@@ -3380,7 +3380,7 @@ jupe_area2,138,238,0	script	#hole#2-2	CLEAR_NPC,{
 			}
 			break;
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hmmm...";
 			mes "Do I have anything";
 			mes "that might make this";
@@ -3666,7 +3666,7 @@ jupe_area2,127,146,0	script	#hole#2-3	CLEAR_NPC,{
 				end;
 			}
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hmmm...";
 			mes "Do I have anything";
 			mes "that might make this";
@@ -3955,7 +3955,7 @@ jupe_area2,113,49,0	script	#hole#2-4	CLEAR_NPC,{
 			}
 			break;
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hmmm...";
 			mes "Do I have anything";
 			mes "that might make this";
@@ -4182,7 +4182,7 @@ jupe_area2,51,162,0	script	Lever#ufe2	CLEAR_NPC,{
 		disablenpc "Lever#ufe2";
 		close;
 	case 2:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Pull this lever?";
 		mes "I don't even know";
 		mes "what will happen...";
@@ -4910,7 +4910,7 @@ OnTouch:
 		warp "juperos_02",130,142;
 		break;
 	case 2:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Not now!";
 		mes "I can't leave yet!";
 		close2;

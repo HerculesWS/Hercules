@@ -75,7 +75,7 @@ OnTouch:
 		mes "What is your business with the Csar?";
 		next;
 		if(select("Run away.:Explain the situation.") == 1) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I should get out of here...";
 			close2;
 			warp "mosk_dun02",100,100;
@@ -107,7 +107,7 @@ OnTouch:
 		mes "What is your business with the Csar?";
 		next;
 		if(select("Run away.:Explain the situation.") == 1) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I should get out of here...";
 			close2;
 			warp "mosk_dun02",100,100;

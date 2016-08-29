@@ -29,6 +29,6 @@
 
 // run when any character logs in, attached to them.
 -	script	HerculesMOTD	FAKE_NPC,{
-	message strcharinfo(0),"Welcome to Hercules! Enjoy! Please report any bugs you find.";
+	message strcharinfo(PC_NAME),"Welcome to Hercules! Enjoy! Please report any bugs you find.";
 	end;
 }

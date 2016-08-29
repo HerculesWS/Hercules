@@ -106,7 +106,7 @@ prt_church,184,41,4	script	Cleric#aco	1_M_PASTOR,{
 			next;
 			if (select("Yes Father, I do.", "Nope, I lied.") == 1) {
 				mes "[Father Mareusis]";
-				mes "Good. I accept " + strcharinfo(0) + "'s will to become an Acolyte. You understand that you must do penance before you can become a servant of God, right?";
+				mes "Good. I accept " + strcharinfo(PC_NAME) + "'s will to become an Acolyte. You understand that you must do penance before you can become a servant of God, right?";
 				next;
 				mes "[Father Mareusis]";
 				mes "Well, I will";
@@ -269,7 +269,7 @@ prt_fild03,365,255,2	script	Ascetic#aco	4_M_ORIENT02,{
 				mes "Oh...? You must be the one who aspires to become an Acolyte. I've already received news from the Sanctuary that you might be coming.";
 				next;
 				mes "[Father Rubalkabara]";
-				mes "Now, your name was " + strcharinfo(0) + ", right? Excellent, thank you for visiting me.";
+				mes "Now, your name was " + strcharinfo(PC_NAME) + ", right? Excellent, thank you for visiting me.";
 				next;
 				mes "[Father Rubalkabara]";
 				mes "I believe you've been told much about Acolytes from Friar Mareusis. Plus, there's plenty of helpful people in the Prontera Sanctuary.";
@@ -297,7 +297,7 @@ prt_fild03,365,255,2	script	Ascetic#aco	4_M_ORIENT02,{
 				mes "Let's see...";
 				next;
 				mes "[Father Rubalkabara]";
-				mes "Your name is " + strcharinfo(0) + "?";
+				mes "Your name is " + strcharinfo(PC_NAME) + "?";
 				mes "I don't think your name";
 				mes "is on my list. Hmmm...";
 				next;
@@ -346,10 +346,10 @@ moc_fild07,41,355,4	script	Ascetic#2aco	4_F_SISTER,{
 				mes "Ah, you must be one of the Acolyte applicants. I sincerely welcome you.";
 				next;
 				mes "[Mother Mathilda]";
-				mes "What is your name? " + strcharinfo(0) + "? Let's see... Ah, you're on my list.";
+				mes "What is your name? " + strcharinfo(PC_NAME) + "? Let's see... Ah, you're on my list.";
 				next;
 				mes "[Mother Mathilda]";
-				mes "I will send a message to the Sanctuary confirming that you, " + strcharinfo(0) + " visited me and completed your penance.";
+				mes "I will send a message to the Sanctuary confirming that you, " + strcharinfo(PC_NAME) + " visited me and completed your penance.";
 				next;
 				mes "[Mother Mathilda]";
 				mes "Please return to the Prontera Sanctuary and speak to the Priest in charge.";
@@ -366,7 +366,7 @@ moc_fild07,41,355,4	script	Ascetic#2aco	4_F_SISTER,{
 				next;
 				mes "[Mother Mathilda]";
 				mes "Now, what is your name?";
-				mes "" + strcharinfo(0) + "? Let's see...";
+				mes "" + strcharinfo(PC_NAME) + "? Let's see...";
 				next;
 				mes "[Mother Mathilda]";
 				mes "Hmm...";
@@ -423,10 +423,10 @@ prt_fild00,208,218,6	script	Ascetic#3aco	4W_M_02,{
 				mes "So what's your name?";
 				next;
 				mes "[Father Yosuke]";
-				mes "" + strcharinfo(0) + ", huh?";
+				mes "" + strcharinfo(PC_NAME) + ", huh?";
 				next;
 				mes "[Father Yosuke]";
-				mes "Okay. I'll send a message to the Sanctuary that you, " + strcharinfo(0) + ", came to visit me.";
+				mes "Okay. I'll send a message to the Sanctuary that you, " + strcharinfo(PC_NAME) + ", came to visit me.";
 				next;
 				mes "[Father Yosuke]";
 				mes "Now go back to the Santuary and finish becoming an Acolyte, kid.";
@@ -443,7 +443,7 @@ prt_fild00,208,218,6	script	Ascetic#3aco	4W_M_02,{
 				mes "Not bad at all, you've made it all the way here from Prontera. So what's your name, kid?";
 				next;
 				mes "[Father Yosuke]";
-				mes "" + strcharinfo(0) + ", huh? Why isn't your name on my list?";
+				mes "" + strcharinfo(PC_NAME) + ", huh? Why isn't your name on my list?";
 				next;
 				mes "[Father Yosuke]";
 				mes "You probably made a mistake. Go back to the Santuary, and check with the Bishop.";

@@ -112,7 +112,7 @@ geffen_in,164,124,4	script	Mage Guildsman	2_F_MAGICMASTER,{
 			next;
 			if (select("Sign Up.", "Quit.") == 1) {
 				mes "[Mage Guildsman]";
-				mes "Okay. Sign right there. Oh, you're very good at spelling. Alright. So your name is... " + strcharinfo(0) + ".";
+				mes "Okay. Sign right there. Oh, you're very good at spelling. Alright. So your name is... " + strcharinfo(PC_NAME) + ".";
 				next;
 				mes "[Mage Guildsman]";
 				mes "Now it's time for";
@@ -159,7 +159,7 @@ geffen_in,164,124,4	script	Mage Guildsman	2_F_MAGICMASTER,{
 			mes "Go back and reach Novice Job level 9 first. Don't forget that you also have to learn all of the Basic Skills before you come back.";
 			close;
 		}
-		mes "" + strcharinfo(0) + "'s test was...";
+		mes "" + strcharinfo(PC_NAME) + "'s test was...";
 		if (job_magician_q == 1)
 			mes "Making Mixed Solution No. 1.";
 		else if (job_magician_q == 2)

@@ -72,7 +72,7 @@ yuno,138,187,4	script	Hypnotist Teacher	4_F_TELEPORTER,{
 		close;
 	}
 	mes "Hello, I am the Skill Resetter.";
-	mes "Your name is ^0080FF"+strcharinfo(0)+"^000000.";
+	mes "Your name is ^0080FF"+strcharinfo(PC_NAME)+"^000000.";
 	mes "How can I help you?";
 	next;
 	switch (select("^009500Information about Reset skills.^000000","^00B6FFReset skills.^000000","^000088Nevermind^000000")) {
@@ -96,7 +96,7 @@ yuno,138,187,4	script	Hypnotist Teacher	4_F_TELEPORTER,{
 		mes "Before skill reset in starting.";
 		mes "You shall have to first tell me your Base Level.";
 		next;
-		mes "^D5A500[" + strcharinfo(0) + "]^000000";
+		mes "^D5A500[" + strcharinfo(PC_NAME) + "]^000000";
 		mes "My Base level is ^AA00AALevel " + BaseLevel + "BaseLv.^000000";
 		next;
 		@zeny = BaseLevel*20000;

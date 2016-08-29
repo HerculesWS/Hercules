@@ -77,7 +77,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	4_F_YUNYANG,{
 			mes "[Myu]";
 			mes "...It was a fruitless effort Meow...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes " (Meow again...What a weirdo.)";
 			close;
 		case 2:
@@ -168,7 +168,7 @@ gef_fild05,80,149,3	script	Myu#08_hat	4_F_YUNYANG,{
 		mes "ONE THOUSAND TIMES! -chuckles-";
 		mes "(Meow Meow Meow~)";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "(What a weirdo.. Anyways..what's with that meow meow sound?)";
 		mes "Just keep your promises.";
 		mes "after the work is done...Ok?";
@@ -246,7 +246,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 		mes "I want to challenge my skills!!";
 		next;
 		if (countitem(Fillet) > 0 || countitem(Fillet_White) > 0 || countitem(Fillet_Red) > 0 || countitem(Fillet_Blue) > 0 || countitem(Fillet_Green) > 0) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "(I have a Cute Ribbon...what should I do..?)";
 			next;
 			switch(select("Ask Elgo to dye it.", "Leave it alone.")){
@@ -743,7 +743,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 					mes "But you don't even have one.";
 					close;
 				case 6:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Ah, I'm not sure this time. I will come back next time.";
 					mes "Take Care.";
 					next;
@@ -752,7 +752,7 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 					close;
 				}
 			case 2:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Hmm, I will bring you one next time.";
 				mes "Take Care.";
 				next;
@@ -772,11 +772,11 @@ morocc_in,137,102,5	script	Trainee#2008hat01	4_KID01,{
 in_orcs01,119,106,3	script	Orc Lady#2008hat03	ORC_LADY,2,2,{
 
 OnTouch:
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "This Orc Lady is absorbed in something.";
 	mes "I don't know what she's making...but she wouldn't notice me even I walk up on her.";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Should I talk to her?...Uh..Do we even understand eachother?";
 	next;
 	mes "THe Orc Lady suddenly turns around looking surprised.";
@@ -790,7 +790,7 @@ OnTouch:
 		mes "You weirdo.";
 		mes "My name is Aite-Nah-Zir-Be.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Surprisingly the Orc Lady introduced herself to me.";
 		mes "How should I react?";
 		next;
@@ -821,18 +821,18 @@ OnTouch:
 			mes "1,000 Maneater Blossoms..";
 			mes "Bring me....";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "(^4d4dff Silk Ribbon and 1,000 Maneater Blossoms^000000, huh..)";
 			mes "Got it. I will go and bring back the materials.";
 			close;
 		case 2:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I nodded goodbye to her with a smile on my face saying nothing.";
 			mes "She nodded back to be as if she understood that was my good bye.";
 			close;
 		}
 	case 2:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Let's run away while she's still in shock.";
 		close2;
 		warp "gef_fild10",223,203;

@@ -481,7 +481,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	mes "Okay! I think this is the one for you.";
 	next;
 	mes "[Raffle Philosopher]";
-	mes strcharinfo(0)+", the quote I'm going to tell you is...";
+	mes strcharinfo(PC_NAME)+", the quote I'm going to tell you is...";
 	switch(rand(1,70)) {
 	case 1:
 		mes "Nothing is more difficult,";
@@ -954,7 +954,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		mes "leaving the travelers behind you.";
 		close;
 	}
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "What's happening here?";
 	emotion e_what,1;
 	next;
@@ -983,7 +983,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 	next;
 	switch(select("Roseten.", "Rose.", "How would I know that?")) {
 	case 1:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "The answer to the question is Roseten.";
 		mes "Why are you fighting over such a trivial matter?";
 		next;
@@ -998,7 +998,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		emotion e_an,0,"Traveler#ep14_1_2";
 		break;
 	case 2:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "The answer to the question is Rose.";
 		mes "You said Rose's mother had 10 sons.";
 		mes "So even if the other sons' names are";
@@ -1018,7 +1018,7 @@ mora,140,186,3	script	Raffle Philosopher	4_M_RAFLE_OLD,{
 		emotion e_ag,0,"Traveler#ep14_1_1";
 		break;
 	case 3:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I have no idea.";
 		mes "Try to sort it out yourselves.";
 		next;
@@ -1147,7 +1147,7 @@ mora,43,127,3	script	Innkeeper#mora_inn	4_M_RAFLE_OR,{
 		}
 	case 3:
 		input .@inputstr$;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I come from a place called "+.@inputstr$+".";
 		next;
 		mes "[Innkeeper]";

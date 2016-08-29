@@ -1876,7 +1876,7 @@ lhz_dun04,151,276,3	script	Researcher#memo	4_LGTSCIENCE,{
 							instance_init(.@instance);
 							mes "[Wolfchev]";
 							mes "Alright! I have marked lan entering system code as";
-							mes "^0000ff"+ strcharinfo(1) +"^000000 party leader's name ^0000ff"+ strcharinfo(PC_NAME) +"^000000!!.";
+							mes "^0000ff"+ strcharinfo(PC_PARTY) +"^000000 party leader's name ^0000ff"+ strcharinfo(PC_NAME) +"^000000!!.";
 							next;
 							mes "[Wolfchev]";
 							mes "Now, your party is free to pass the entrance.";
@@ -1938,7 +1938,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 			mes "You have been wounded by laboratory entrance system attack.";
 			close;
 		} else {
-			mapannounce "lhz_dun04","Laboratory entrance system ["+ strcharinfo(1) +"] member ["+ strcharinfo(PC_NAME) +"] access granted..",bc_map,"0x0DF297";
+			mapannounce "lhz_dun04","Laboratory entrance system ["+ strcharinfo(PC_PARTY) +"] member ["+ strcharinfo(PC_NAME) +"] access granted..",bc_map,"0x0DF297";
 			setquest 5112;
 			warp "1@lhz.gat", 45, 148;
 			close;
