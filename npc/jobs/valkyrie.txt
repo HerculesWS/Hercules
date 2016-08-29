@@ -89,7 +89,7 @@ valkyrie,48,86,4	script	Valkyrie#	4_F_VALKYRIE,{
 			mes "I see you've already";
 			mes "released yourself from";
 			mes "all worldy attachments,";
-			mes ""+ strcharinfo(0) +".";
+			mes ""+ strcharinfo(PC_NAME) +".";
 			next;
 			mes "[Valkyrie]";
 			mes "That's an admirable attitude for an adventurer such as yourself. Honor comes when you abandon all personal desires for the sake of mankind.";

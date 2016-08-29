@@ -91,7 +91,7 @@ morocc_in,174,30,6	script	Kid#link1	4_M_KID2,{
 			mes "...";
 			mes "Hey you.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Did you call me?";
 			next;
 			mes "[Kid]";

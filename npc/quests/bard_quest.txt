@@ -40,7 +40,7 @@
 
 geffen,132,38,3	script	Bard#2	1_M_BARD,{
 	if (BARD_Q > 5) gef_bard_q = BARD_Q;
-	@name$ = strcharinfo(0);
+	@name$ = strcharinfo(PC_NAME);
 	if (gef_bard_q > 29) {
 		cutin "bard_eland02",2;
 		mes "[Errende]";
@@ -1376,7 +1376,7 @@ S_StorySong:
 }
 
 morocc,134,111,3	script	Bard#3	2_M_BARD_ORIENT,{
-	@name$ = strcharinfo(0);
+	@name$ = strcharinfo(PC_NAME);
 	if (gef_bard_q == 31) {
 		mes "[Kino Kitty]";
 		mes "Everything will be";
@@ -2192,7 +2192,7 @@ yuno_in01,172,100,3	script	Old Man#bq1	4_M_05,{
 }
 
 yuno_in01,163,101,0	script	Old Book#bq	HIDDEN_NPC,{
-	@name$ = strcharinfo(0);
+	@name$ = strcharinfo(PC_NAME);
 	if ((gef_bard_q > 11) && (gef_bard_q < 14)) {
 		if (!rand(5)) {
 			mes "^3355FFYou opened the book. There's a crisp brittleness to the pages, and the letters are faded and barely readable. You can't even identify the author's name.^000000";
@@ -2462,7 +2462,7 @@ yuno_in01,173,92,0	script	Apple of Idun	HIDDEN_NPC,{
 }
 
 payon,181,172,3	script	Bard#4	1_M_BARD,{
-	@name$ = strcharinfo(0);
+	@name$ = strcharinfo(PC_NAME);
 	if (gef_bard_q == 2 || gef_bard_q == 22) {
 		mes "[Gunther Doubleharmony]";
 		mes "Hahaha~!";
@@ -2908,7 +2908,7 @@ yuno_in04,33,119,3	script	Adventurer#1	4_M_ROGUE,{
 		mes "Hello there~";
 		mes "My name is Pane.";
 		mes "May I ask yours?";
-		@name$ = strcharinfo(0);
+		@name$ = strcharinfo(PC_NAME);
 		input .@inputstr$;
 		next;
 		mes "[Energetic Young Man]";

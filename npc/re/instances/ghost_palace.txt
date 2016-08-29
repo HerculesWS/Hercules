@@ -94,7 +94,7 @@ dali02,44,129,5	script	Unpleasent Royal Guard	4_M_SAKRAYROYAL,{
 	.@md_name$ = "Ghost Palace";
 	if (.@instance < 0) {
 		mesf("Party Name: %s", .@p_name$);
-		mesf("Party Leader: %s", strcharinfo(0));
+		mesf("Party Leader: %s", strcharinfo(PC_NAME));
 		mesf("^0000FF%s^000000 - Reservation Failed!", .@md_name$);
 		close();
 	}
@@ -155,7 +155,7 @@ dali02,41,134,0	script	Interdimensional Device::gpportal	PORTAL,{
 		mes("^FF0000Inside the device you see a dark hole. If you wish to enter you may wish to talk to the Unpleasant Royal Guard first.^000000");
 		close();
 	}
-	mapannounce("dali", sprintf(_$("%s of the party, %s, is entering the Ghost Palace."), strcharinfo(0), getpartyname(getcharid(1))), bc_map, C_SPRINGGREEN);
+	mapannounce("dali", sprintf(_$("%s of the party, %s, is entering the Ghost Palace."), strcharinfo(PC_NAME), getpartyname(getcharid(1))), bc_map, C_SPRINGGREEN);
 	if (!questprogress(1260)) setquest 1260;
 	setquest 1261;
 	warp("1@spa", 198, 188);
@@ -548,7 +548,7 @@ OnInstanceInit:
 		"Did you see?");
 	npctalk(_("Okay, that is good. A traveler. Did you see?"), instance_npcname("Sakray#gp5"));
 	next;
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Sakray, What do you want sympathy? Or is it a trap?");
 	unittalk(getcharid(3), _("Sakray, What do you want sympathy? Or is it a trap?"));
 	next;
@@ -556,7 +556,7 @@ OnInstanceInit:
 	mes("Non...I did not need to make an effort to catch a novice.");
 	npctalk(_("Non...I did not need to make an effort to catch a novice."), instance_npcname("Sakray#gp5"));
 	next;
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("If so... then why...?");
 	unittalk(getcharid(3), _("If so... then why...?"));
 	next;
@@ -578,7 +578,7 @@ OnInstanceInit:
 	mes("[Sakray]");
 	mes("Can you set yourself free from this curse?");
 	next;
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("...");
 	unittalk(getcharid(3), _("..."));
 	next;

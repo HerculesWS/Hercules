@@ -1012,8 +1012,8 @@ prt_are_in,77,135,3	script	Staff#party-2	1_F_02,{
 	@gappt = (60 * $top_ptmin + $top_ptsec) - (60 * @record_minpt + @record_secpt);
 	mes "[Staff]";
 	mes "Wow, you did a good job~ ";
-	mes "Your name is...^3131FF" + strcharinfo(0) +"^000000, isn't it?";
-	mes "^3131FF"+ strcharinfo(0) +"^000000, total time you spent to pass the battle..";
+	mes "Your name is...^3131FF" + strcharinfo(PC_NAME) +"^000000, isn't it?";
+	mes "^3131FF"+ strcharinfo(PC_NAME) +"^000000, total time you spent to pass the battle..";
 	next;
 	mes "[Staff]";
 	mes "is "+@record_minpt+"minutes "+@record_secpt+"seconds.";

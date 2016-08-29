@@ -233,7 +233,7 @@ iCorrect:
 	deletepset 1;
 	activatepset 1;
 	getitem .Prize,.PrizeAmt;
-	announce strcharinfo(0)+" is correct! I was disguised as: "+$MonsterName$+"",bc_map | bc_blue;
+	announce strcharinfo(PC_NAME)+" is correct! I was disguised as: "+$MonsterName$+"",bc_map | bc_blue;
 	if (.RoundCount>=.Rounds) {
 		setnpcdisplay "Disguise Event", 4_M_NFDEADMAN;
 		set .RoundCount,0; set .Change,0; set .EventON,0;

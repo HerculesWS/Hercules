@@ -594,7 +594,7 @@ que_house_s,24,47,3	script	Viorel#homun_s	4_M_ALCHE_E,{
 		mes "the path that leads to it.";
 		next;
 		mes "[Viorel]";
-		mes "^0000FF" + strcharinfo(0) + "^000000,";
+		mes "^0000FF" + strcharinfo(PC_NAME) + "^000000,";
 		mes "I haven't known you";
 		mes "for a very long time,";
 		mes "but I get the feeling that";
@@ -643,7 +643,7 @@ que_house_s,80,42,3	script	Jeyna#homun_s	4_F_ALCHE_A,{
 		next;
 		mes "[Jeyna]";
 		mes "Anyways~";
-		mes "^0000FF"+strcharinfo(0)+"^000000 and ^005DFFViorel^000000 seem like two peas in a pod.";
+		mes "^0000FF"+strcharinfo(PC_NAME)+"^000000 and ^005DFFViorel^000000 seem like two peas in a pod.";
 		next;
 		emotion e_heh;
 		mes "[Jeyna]";
@@ -778,7 +778,7 @@ que_house_s,80,42,3	script	Jeyna#homun_s	4_F_ALCHE_A,{
 			next;
 			mes "[Jeyna]";
 			mes "Don't do anything like changing jobs or anything like that before the process is over.";
-			mes "If so, you, ^0000FF"+strcharinfo(0)+"^000000 might lose all the abilities you have over the Homunculus.";
+			mes "If so, you, ^0000FF"+strcharinfo(PC_NAME)+"^000000 might lose all the abilities you have over the Homunculus.";
 			next;
 			mes "[Jeyna]";
 			mes "All that concentration made me tired.";

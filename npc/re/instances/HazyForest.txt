@@ -101,7 +101,7 @@ bif_fild01,158,340,5	script	Laphine Soldier#mist	4_M_FAIRYSOLDIER,{
 		case 1:
 			mes "[Laphine Soldier]";
 			mes "Party Name "+getpartyname(.@party_id)+"...";
-			mes "Party Leader "+strcharinfo(0)+"...";
+			mes "Party Leader "+strcharinfo(PC_NAME)+"...";
 			.@instance = instance_create(.@md_name$, .@party_id);
 			if (.@instance < 0) {
 				mes "Hmm...";
@@ -177,7 +177,7 @@ bif_fild01,161,355,0	script	Log Tunnel	CLEAR_NPC,{
 	} else {
 		if (questprogress(7211,PLAYTIME) == 2) erasequest 7211;
 		if (!questprogress(7211,PLAYTIME)) setquest 7211;
-		mapannounce "bif_fild01",getpartyname(getcharid(1))+" party's "+strcharinfo(0)+" member is entering the Mistwood Maze.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+		mapannounce "bif_fild01",getpartyname(getcharid(1))+" party's "+strcharinfo(PC_NAME)+" member is entering the Mistwood Maze.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
 		warp "1@mist",89,29;
 		close;
 	}
@@ -581,12 +581,12 @@ OnTimer3000:
 		mes "That's my name.";
 		mes "And yours?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "....";
-		mes "...."+strcharinfo(0)+" sir.";
+		mes "...."+strcharinfo(PC_NAME)+" sir.";
 		next;
 		mes "[Loki]";
-		mes "I see. "+strcharinfo(0)+".";
+		mes "I see. "+strcharinfo(PC_NAME)+".";
 		mes "I'm asking you again.";
 		mes "Do you plan to pass through this forest?";
 		next;
@@ -905,7 +905,7 @@ mora,48,152,3	script	Sharp Eyed Man	4_M_ROKI2,{
 			break;
 		}
 		mes "[Nydhogg the Guardian]";
-		mes strcharinfo(0)+"...";
+		mes strcharinfo(PC_NAME)+"...";
 		mes "Thanks for listening to my long story.";
 		next;
 		mes "[Nydhogg the Guardian]";

@@ -40,7 +40,7 @@ prontera,146,92,3	script	Cellerb	1_M_MERCHANT,{
 		specialeffect EF_SANDMAN;
 		close;
 	}
-	mes "Haii......^FF8800"+strcharinfo(0)+"^000000!!";
+	mes "Haii......^FF8800"+strcharinfo(PC_NAME)+"^000000!!";
 	mes "First day of Idul Fitri has arrived.";
 	mes "Congratulation celebrate him.";
 	mes "There is event special today.";

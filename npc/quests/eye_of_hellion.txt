@@ -55,7 +55,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		mes "Rune-Midgard and I've come";
 		mes "to see and know a lot of things. Power, jealously, hardship...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "So what exactly";
 		mes "brings you here to";
 		mes "the middle of Morroc?";
@@ -465,7 +465,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "sort of pain from them.";
 			mes "Did something happen?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I learned the secret of";
 			mes "the Hellion's gem. It...";
 			mes "It turns people into";
@@ -477,7 +477,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "What...";
 			mes "What did you just say?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "The tablet had a map that";
 			mes "let me to the chamber where";
 			mes "your grandfather locked himself";
@@ -485,7 +485,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "into the Hellion Revenant.";
 			mes "It was horrible...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "At the entrance, he";
 			mes "left a message that said";
 			mes "that he wanted to be killed.";
@@ -501,7 +501,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 			mes "Thank you for finally freeing";
 			mes "his soul and giving him peace.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Here, I think you";
 			mes "should have this Eye";
 			mes "of Hellion, in case you";
@@ -706,7 +706,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		close;
 	}
 	else if (HELLIONQ == 36) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Excuse me, but are";
 		mes "you Clanux Heffron?";
 		next;
@@ -814,7 +814,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 			HELLIONQ = 39;
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Fine.";
 		mes "I don't need";
 		mes "your help!";
@@ -842,14 +842,14 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "able to find anything?";
 		next;
 		if (select("Nothing...", "In fact, I found this.") == 1) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "^333333(This guy's a real punk!";
 			mes "I better not share any new";
 			mes "information I've found, just";
 			mes "in case he doesn't already";
 			mes "know about it.)^000000";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I... I wasn't able to";
 			mes "find anything that looked";
 			mes "like a clue. I'm sorry, but";
@@ -963,7 +963,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "new in the Tool Shop?";
 		next;
 		if (select("Pretend that nothing happened.", "Share what you learned.") == 1) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Nope...";
 			mes "I couldn't find any";
 			mes "new leads. I guess";
@@ -978,7 +978,7 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 			mes "are you anyway, huh?";
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, I put that cogwheel";
 		mes "into that weird machine in";
 		mes "the Tool Shop and some kind";
@@ -1001,13 +1001,13 @@ prontera,269,326,3	script	Clanux Heffron#hellion	1_M_04,{
 		mes "machine in the Tool Shop?";
 		next;
 		if (select("Tell him just a little bit.", "Don't tell him.") == 1) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Well, I put that cogwheel";
 			mes "into that weird machine in";
 			mes "the Tool Shop and some kind";
 			mes "of number pad came out. Then...";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "^333333(Wait, I can't trust this";
 			mes "guy!)^000000 I put in every single";
 			mes "password that I could think";
@@ -1062,7 +1062,7 @@ prontera,223,82,0	script	#prt_key-1	HIDDEN_NPC,{
 		mes "that looks like it was made";
 		mes "by the thrust of a sharp sword.^000000";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Didn't Clanux mention that he";
 		mes "found a broken sword around";
 		mes "here? Maybe this was exactly";
@@ -1075,7 +1075,7 @@ prontera,223,82,0	script	#prt_key-1	HIDDEN_NPC,{
 		mes "^4d4dff''Veggie Lady N9 W3 BINGO.''^000000";
 		HELLIONQ = 40;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What the heck does this";
 		mes "even mean? A Veggie Lady?";
 		mes "Does Clanux know anything";
@@ -1093,7 +1093,7 @@ prontera,223,82,0	script	#prt_key-1	HIDDEN_NPC,{
 prontera,45,67,0	script	 #prt_key-1-1	HIDDEN_NPC,1,1,{
 OnTouch:
 	if (HELLIONQ == 40 || HELLIONQ == 41) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, according to the";
 		mes "message in that old training";
 		mes "dummy, this is where I'm";
@@ -1101,7 +1101,7 @@ OnTouch:
 		mes "north, 3 steps west. And now...";
 		mes "Veggie Lady. Okay, okay...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh. That's creepy.";
 		mes "There's one right there";
 		mes "staring at me. But after";
@@ -1111,7 +1111,7 @@ OnTouch:
 		next;
 		input .@input$;
 		if (.@input$ == "BINGO") {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Of course!";
 			mes "''BINGO!'' But";
 			mes "I don't see a hall";
@@ -1126,7 +1126,7 @@ OnTouch:
 			mes "password. Okay, here's";
 			mes "the code number you want...";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "C-code number?";
 			mes "Wait, wh-what...?";
 			next;
@@ -1138,7 +1138,7 @@ OnTouch:
 			mes "didn't get it:^4D4DFF 3847147298^000000.";
 			mes "Don't forget it, adventurer.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Wait... What does";
 			mes "this all mean? Won't";
 			mes "you tell me more?";
@@ -1154,14 +1154,14 @@ OnTouch:
 			else if (HELLIONQ == 41)
 				HELLIONQ = 43;
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Holy cow...";
 			mes "This is all";
 			mes "really cloak and";
 			mes "dagger type stuff!";
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes ""+ .@input$ + "!";
 		mes "Hmmm. No, no that couldn't";
 		mes "be it. What in the world was that word and why can't I remember it";
@@ -1187,7 +1187,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 		next;
 		if (countitem(Wheel) > 0) {
 			if (select("Insert Cogwheel.", "Ignore it.") == 1) {
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "I just know this";
 				mes "cogwheel will fit";
 				mes "into this machine!";
@@ -1204,7 +1204,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 				delitem Wheel,1;
 				HELLIONQ = 44;
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "I guess that I've got";
 				mes "to input some kind of";
 				mes "numeric password...";
@@ -1244,12 +1244,12 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 				mes "machine shuts down. You'll have to try entering the password again.";
 				close;
 			}
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Eh...";
 			mes "Forget it.";
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Uh oh...";
 		mes "Where did I put";
 		mes "the cogwheel that";
@@ -1257,7 +1257,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 		close;
 	}
 	else if (HELLIONQ == 44) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Okay, let me see";
 		mes "if I can enter the";
 		mes "right number this time...";
@@ -1289,7 +1289,7 @@ prt_in,128,79,0	script	Unknown Machine#prt_key	HIDDEN_NPC,{
 			getitem Piece_Of_Slate_1,1;
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "The machine responds to";
 		mes "the password with an abrupt,";
 		mes "screeching beep and the entire";
@@ -1327,7 +1327,7 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 		mes "and staring at me like";
 		mes "this is your turf?!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I'm sorry, but well...";
 		mes "Chilias'Tyus told me that";
 		mes "you might know something";
@@ -1498,7 +1498,7 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 			mes "fish and green herbs, wine...";
 			mes "Huh. It doesn't make sense.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "What...?";
 			mes "I could have";
 			mes "told you that!";
@@ -1622,7 +1622,7 @@ payon,182,132,3	script	Grout'he Tuccok#hellion	1_M_02,{
 payon,101,190,0	script	 #paypuzz1	FAKE_NPC,1,1,{
 OnTouch:
 	if (HELLIONQ == 48) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, this is where";
 		mes "Grout'he told me to look.";
 		mes "Ooh, there's something";
@@ -1630,7 +1630,7 @@ OnTouch:
 		mes "let's see... ''This garment";
 		mes "is one size fits all.''";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "That's it...?";
 		mes "Hopefully this will";
 		mes "make more sense once";
@@ -1643,13 +1643,13 @@ OnTouch:
 
 payon,82,109,3	script	Pile of Stone#paypuzz2	HIDDEN_NPC,{
 	if (HELLIONQ == 49) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, this is the place";
 		mes "that Grout'he told me about.";
 		mes "Let's see, there's an engraving";
 		mes "here that says, ''I used to pray for peaceful days here.'' Okay.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Man...";
 		mes "This better not be";
 		mes "one of those puzzles";
@@ -1663,7 +1663,7 @@ payon,82,109,3	script	Pile of Stone#paypuzz2	HIDDEN_NPC,{
 
 payon,239,56,3	script	Dried Fish#paypuzz3	HIDDEN_NPC,{
 	if (HELLIONQ == 50) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "So... Dried fish all";
 		mes "around me. This is getting";
 		mes "to be nonsense. Let's see,";
@@ -1671,7 +1671,7 @@ payon,239,56,3	script	Dried Fish#paypuzz3	HIDDEN_NPC,{
 		mes "Herbs are very useful for";
 		mes "getting rid of fish smells.''";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I got it...!";
 		mes "Whoever made up";
 		mes "these clues must be";
@@ -1684,7 +1684,7 @@ payon,239,56,3	script	Dried Fish#paypuzz3	HIDDEN_NPC,{
 
 payon,240,160,3	script	Vat#paypuzz4	HIDDEN_NPC,{
 	if (HELLIONQ == 51) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Alright, the last";
 		mes "place I have to check.";
 		mes "It's a big old vat with a";
@@ -1692,14 +1692,14 @@ payon,240,160,3	script	Vat#paypuzz4	HIDDEN_NPC,{
 		mes "let me see, there should";
 		mes "be a message here too. Ah--!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "This says, ''What will it be?";
 		mes "Wine or Grape Juice? Oh,";
 		mes "but I much prefer wine.'' Okay,";
 		mes "what does this have to do with";
 		mes "that Hellion's gem? Weird...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Am I missing something?";
 		mes "I think I really need help in";
 		mes "figuring this out. Hmm...";
@@ -1710,7 +1710,7 @@ payon,240,160,3	script	Vat#paypuzz4	HIDDEN_NPC,{
 
 payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 	if (HELLIONQ == 53) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hey, the floor around";
 		mes "here doesn't seem very";
 		mes "solid. Maybe there's";
@@ -1725,21 +1725,21 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 			mes "or a tablet piece.^000000";
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Oh man, there's";
 		mes "so much dust! What";
 		mes "can I do about all of";
 		mes "this nasty dirt in the air?";
 		next;
 		if (countitem(Stone_Heart) > 0 && countitem(Grape_Juice) > 0 && countitem(Green_Herb) > 0 && countitem(Skirt_Of_Virgin) > 0) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Well, there are all these";
 			mes "clues Grout'he found. It sucks,";
 			mes "but I'll use this Grape Juice";
 			mes "to sort of keep this dust from";
 			mes "kicking up. And if I put my morals^FFFFFFa^000000 on hold, I'll cover my face...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "...With this Skirt of Virgin.";
 			mes "Oh, and I can use this Stone";
 			mes "Heart to prop any floor boards";
@@ -1747,7 +1747,7 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 			mes "this floor. Oh hey! I found it!";
 			mes "It's... It's another clue!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Wait, wait...";
 			mes "I can't read the";
 			mes "engraving on this";
@@ -1776,7 +1776,7 @@ payon,159,129,3	script	Wooden Floor#paypuzz5	HIDDEN_NPC,{
 			HELLIONQ = 55;
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Where did I leave";
 		mes "all that stuff I got from";
 		mes "Grout'he? Let's see,";
@@ -1815,7 +1815,7 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 		close;
 	}
 	if (HELLIONQ == 56) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hey, here's a huge";
 		mes "stone statue. This";
 		mes "must be what Grout'he";
@@ -1825,7 +1825,7 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 		mes "^4d4dffYou must...";
 		mes "You must be...^000000";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What the--?";
 		mes "There's a voice";
 		mes "inside my head!";

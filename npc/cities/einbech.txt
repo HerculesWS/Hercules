@@ -469,7 +469,7 @@ ein_in01,277,95,7	script	Ryan Danger#air#einbech	4_M_EINMAN,{
 	mes "clothes? I'll buy you whatever";
 	mes "you want, it's on me! C'mon~";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "N-no...!";
 	mes "I-I-I-I...";
 	mes "^666666(This is the";
@@ -489,7 +489,7 @@ ein_in01,277,95,7	script	Ryan Danger#air#einbech	4_M_EINMAN,{
 	mes "Or am I?";
 	mes "Bwahahahaha!";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "(Th-this guy";
 	mes "must be drunk out";
 	mes "of his freakin' mind!)";

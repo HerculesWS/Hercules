@@ -74,7 +74,7 @@ L_Menu:
 	addtimer 2000, "Starter::OnCount2000";
 	addtimer 3000, "Starter::OnCount3000";
 	addtimer 4000, "Starter::OnCount4000";
-	announce strcharinfo(0) + "Started a countdown",1;
+	announce strcharinfo(PC_NAME) + "Started a countdown",1;
 	announce "Get ready to race!",1;
 	close;
 
@@ -135,7 +135,7 @@ pvp_y_1-5,73,247,5	script	Check Point 2	HIDDEN_NPC,6,6,{
 OnTouch:
 	if (@race != 1) goto L_Miss;
 	set @race,2;
-	announce "[" + strcharinfo(0) +"] has reached Checkpoint [1]",1;
+	announce "[" + strcharinfo(PC_NAME) +"] has reached Checkpoint [1]",1;
 	end;
 L_Miss:
 	mes "You have missed a Checkpoint. Please go back.";
@@ -148,7 +148,7 @@ pvp_y_1-5,77,44,5	script	Check Point 3	HIDDEN_NPC,6,6,{
 OnTouch:
 	if (@race != 2) goto L_Miss;
 	set @race,3;
-	announce "[" + strcharinfo(0) +"] has reached Checkpoint [2]",1;
+	announce "[" + strcharinfo(PC_NAME) +"] has reached Checkpoint [2]",1;
 	end;
 L_Miss:
 	mes "You have missed a Checkpoint. Please go back.";
@@ -161,7 +161,7 @@ pvp_y_1-5,249,60,5	script	Check Point 4	HIDDEN_NPC,6,6,{
 OnTouch:
 	if (@race != 3) goto L_Miss;
 	set @race,4;
-	announce "[" + strcharinfo(0) +"] has reached Checkpoint [3]",1;
+	announce "[" + strcharinfo(PC_NAME) +"] has reached Checkpoint [3]",1;
 	end;
 L_Miss:
 	mes "You have missed a Checkpoint. Please go back.";
@@ -174,7 +174,7 @@ pvp_y_1-5,255,256,5	script	Check Point 5	HIDDEN_NPC,6,6,{
 OnTouch:
 	if (@race != 4) goto L_Miss;
 	set @race,5;
-	announce "[" + strcharinfo(0) +"] has reached Checkpoint [4]",1;
+	announce "[" + strcharinfo(PC_NAME) +"] has reached Checkpoint [4]",1;
 	end;
 L_Miss:
 	mes "You have missed a Checkpoint. Please go back.";
@@ -189,7 +189,7 @@ OnTouch:
 	if (@race != 5) goto L_Miss;
 	set @race,6;
 	set $@position,$@position+1;
-	announce "[" + strcharinfo(0) +"] has reached The Finish line! [Position: " + $@position + "]",1;
+	announce "[" + strcharinfo(PC_NAME) +"] has reached The Finish line! [Position: " + $@position + "]",1;
 	end;
 L_Miss:
 	mes "You have missed a Checkpoint. Please go back.";

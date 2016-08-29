@@ -96,7 +96,7 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 					input .@input$;
 					next;
 					mes "[Lime Evenor]";
-					mes "Ah~ ha. You are ^3131FF"+strcharinfo(0)+"^000000.";
+					mes "Ah~ ha. You are ^3131FF"+strcharinfo(PC_NAME)+"^000000.";
 					mes "I got it right this time.";
 					next;
 					emotion e_no1;
@@ -131,11 +131,11 @@ moc_para01,27,35,5	script	Secretary Lime Evenor	4_F_EDEN_OFFICER,{
 				input .@input$;
 				next;
 				mes "[Lime Evenor]";
-				mes "^3131FF"+strcharinfo(0)+"^000000.. Is that your name?";
+				mes "^3131FF"+strcharinfo(PC_NAME)+"^000000.. Is that your name?";
 				mes "Hmm, your handwriting is not clear. I can't read. it";
 				next;
 				mes "[Lime Evenor]";
-				mes "^3131FF"+strcharinfo(0)+"^000000, tell me what you want to register. for";
+				mes "^3131FF"+strcharinfo(PC_NAME)+"^000000, tell me what you want to register. for";
 				mes "Which map should we go to?";
 				input .@input$;
 				next;

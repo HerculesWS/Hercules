@@ -1072,7 +1072,7 @@ s_atelier,167,129,3	script	Manager#sc06_yuno	1_M_SIGNART,{
 			changequest 7176,7177;
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm sorry.";
 		mes "I found one more key but I didn't bring it.";
 		mes "I'll bring it soon.";
@@ -1115,11 +1115,11 @@ s_atelier,167,129,3	script	Manager#sc06_yuno	1_M_SIGNART,{
 	mes "An assistant sells some paint and tool.";
 	close;
 L_Code:
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Paul said...";
 	next;
 	input .@inputstr$;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "Paul said...";
 	mes "'"+.@inputstr$+"' .";
 	next;
@@ -1698,12 +1698,12 @@ tur_dun03,38,209,1	script	Blue Flame#sc_f01	4_NFWISP,{
 		.@dap01$ = "blue fire in turtle island third floor";
 		.@dap02$ = "BLUE FIRE IN TURTLE ISLAND THIRD FLOOR";
 		if (.@inputstr$ != .@dap01$ && .@inputstr$ != .@dap02$) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "What was it?";
 			mes "I guess I have to make sure I don't use any capital letters.";
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "^4d4dff"+.@inputstr$+"^000000";
 		mes "It's clearly pointing to this.";
 		next;
@@ -1846,16 +1846,16 @@ niflheim,230,276,1	script	Red Flame#sc_f03	4_NFWISP,{
 		close;
 	}
 	else if (job_sha == 21) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "The poem that Haled told me was pointing to Niflheim.";
 		mes "There is a flame that looks like the one from turtle island and ice dungeon.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "The end of living tree's roots.";
 		mes "Tears of all living people.";
 		mes "Sign of all dead people.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "They are us but also not us.";
 		next;
 		mes "[Someone's voice]";
@@ -1974,7 +1974,7 @@ job3_sha01,22,78,0	script	????#keybox01	CLEAR_NPC,{
 		mes "And "+.@Codes1$[.@i]+".";
 		next;
 		select("What does it mean?");
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Is it also code.";
 		mes "It must be!";
 		mes "Ah, something is showing up again...?";
@@ -2030,13 +2030,13 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 		mes "When you touched that number, then it moved.";
 		mes "You find the empty space.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I guess I have to put the number in the empty space...";
 		mes "I have two empty squares to put two numbers.";
 		mes "What will it be good for?";
 		next;
 		select("I think it's related with the word given by Paul.");
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I got "+.@Words$[.@i]+".";
 		mes "Now I have to convert it into a number...";
 		next;
@@ -2049,12 +2049,12 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 				next;
 				mes "You got the Key of Illusion.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "It's not a treasure.";
 				mes "The Key of Illusion? Is it related with the Shadow of Illusion?";
 				mes "I got the Key of Deception after I handled Deception...";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Anyway, Paul will be disappointed.";
 				mes "Key again...";
 				mes "How can I escape from here...?";
@@ -2071,12 +2071,12 @@ job3_sha01,25,28,0	script	????#keybox02	CLEAR_NPC,{
 			mes "When you enter the number, it goes back to the first.";
 			close;
 		case 2:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Hmm.";
 			mes "I can't get it...";
 			mes "Is it the same code as the Prontera workplace...?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "According to that method...";
 			mes "A means 11 and B means 12.";
 			close;
@@ -2106,10 +2106,10 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 			mes " 19 8 1 11 5";
 			mes "-----------------";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I think it's another code.";
 		} else {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Let me think again...";
 			mes "20 21 18 14";
 			mes "1 14 4 ";
@@ -2117,14 +2117,14 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 			mes "...";
 		}
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "It's the same as before.";
 		mes "There's no code, so 1 should be A.";
 		mes "And the answer is...";
 		next;
 		input .@inputstr$;
 		if (.@inputstr$ == "turn and shake" || .@inputstr$ == "TURN AND SHAKE") {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Turn... Turn... and";
 			mes "Shake? Shake?";
 			mes "For what?";
@@ -2139,7 +2139,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 						mes "Even though you shake the roof but";
 						mes "nothing happens.";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "That's not it.";
 						mes "Hmm...";
 						next;
@@ -2148,7 +2148,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 						mes "You tried to shake the house but";
 						mes "it doesn't do anything.";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "It's wrong.";
 						mes "Put it back";
 						mes "and try it again.";
@@ -2165,7 +2165,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 						mes "Nothing happens.";
 						mes "You think there is something inside, but it won't come out.";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "That's not it.";
 						mes "Hmm...";
 						next;
@@ -2175,7 +2175,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 						mes "You can hear a noise,";
 						mes "but nothing's coming out.";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "That's not it.";
 						mes "Hmm...";
 						next;
@@ -2189,7 +2189,7 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 						next;
 						mes "- You got the Key of Pleasure. -";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "What? A key again!";
 						mes "Haled will be disappointed.";
 						mes "I better go back.";
@@ -2203,14 +2203,14 @@ job3_sha01,73,80,0	script	????#keybox03	CLEAR_NPC,{
 					mes "You tried to turn the small handle";
 					mes "but it doesn't work.";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "What should I do now?";
 					next;
 					break;
 				}
 			}
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "..."+.@inputstr$+"...?";
 		if (job_sha == 23) {
 			mes "What does that mean?";
@@ -2243,7 +2243,7 @@ job3_sha01,71,27,0	script	????#keybox04	CLEAR_NPC,{
 		next;
 		select("Place the key in the holes.");
 		if (countitem(Cheat_Key) && countitem(Virtual_Key) && countitem(Mirth_Key)) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "At first, Deception...";
 			mes "then Illusion...";
 			mes "and Pleasure...";
@@ -2260,23 +2260,23 @@ job3_sha01,71,27,0	script	????#keybox04	CLEAR_NPC,{
 			getitem Master_Brush,1;
 			changequest 7178,7179;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "What???";
 			mes "A brush!!!!";
 			mes "This isn't treasure!!!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Ahahhah!!!!";
 			mes "*sniff*";
 			mes "It's not treasure!";
 			next;
 			select("Now I'm pissed off.");
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "*Sigh*";
 			mes "Guess I should bring this to ^4d4dffVicente^000000!";
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I didn't bring all of the keys.";
 		mes "How could I be so stupid?";
 		close;

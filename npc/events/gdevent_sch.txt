@@ -123,7 +123,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 				mes "I can't live without it...";
 				next;
 				if (countitem(Pickaxe) > 0) {
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Is this the pickaxe that you've been looking for?";
 					next;
 					mes "[Morestone]";
@@ -138,7 +138,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 					mes "You are great! What guild are you from?";
 					mes "Could it be Gravity or Mercury?";
 					next;
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "I am a member of the ^3131FF"+.@chk_yourgdname$+"^.";
 					next;
 					mes "[Morestone]";
@@ -255,7 +255,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 					mes "I can't live without it...";
 					next;
 					if (countitem(Pickaxe) > 0) {
-						mes "[" + strcharinfo(0) + "]";
+						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "Is this the pickaxe that you've been looking for?";
 						next;
 						mes "[Morestone]";
@@ -270,7 +270,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 						mes "You are great! What guild are you from?";
 						mes "Could it be Gravity or Mercury?";
 						next;
-						mes "[" + strcharinfo(0) + "]";
+						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "I am a member of the ^3131FF"+.@chk_yourgdname$+"^.";
 						next;
 						mes "[Morestone]";
@@ -397,7 +397,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 					mes "I can't live without it...";
 					next;
 					if (countitem(Pickaxe) > 0) {
-						mes "[" + strcharinfo(0) + "]";
+						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "Is this the pickaxe that you've been looking for?";
 						next;
 						mes "[Morestone]";
@@ -412,7 +412,7 @@ schg_dun01,194,148,5	script	Dwarf#sch_gd	4_M_DWARF,{
 						mes "You are great! What guild are you from?";
 						mes "Could it be Gravity or Mercury?";
 						next;
-						mes "[" + strcharinfo(0) + "]";
+						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "I am a member of the ^3131FF"+.@chk_yourgdname$+"^.";
 						next;
 						mes "[Morestone]";
@@ -520,7 +520,7 @@ schg_que01,100,81,3	script	Pierrot Pier#sch_gd	4_M_PIERROT,{
 		mes "- and come back later. -";
 		close;
 	}
-	if (strcharinfo(0) == getguildmaster(getcharid(2))) {
+	if (strcharinfo(PC_NAME) == getguildmaster(getcharid(2))) {
 		if ($@gdeventv_s2 == 0) {
 			.@que_2143 = questprogress(2143,PLAYTIME);
 			if (!.@que_2143) {

@@ -418,7 +418,7 @@ function	script	F_KafInfo	{
 		if (.@m$[.@j] == "Check Special Reserve Points.") {
 			mes "[Kafra Employee]";
 			mes "Let's see...";
-			mes strcharinfo(0) + "...";
+			mes strcharinfo(PC_NAME) + "...";
 			mes "Ah, you have a total of";
 			mes RESRVPTS+ " Special Reserve Points.";
 			next;

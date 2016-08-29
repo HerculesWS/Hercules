@@ -268,7 +268,7 @@ prontera,248,212,3	script	Busy Boy#prt	4_M_KID1,3,3,{
 			mes "I can't get scared now!";
 			next;
 			if (select("Speak with him", "Ignore him") == 1) {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Say, what seems";
 				mes "to be the problem?";
 				next;
@@ -334,7 +334,7 @@ prontera,248,212,3	script	Busy Boy#prt	4_M_KID1,3,3,{
 			mes "It took me so long to";
 			mes "stack all of those!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Oh no, what a mess!";
 			mes "Here, let me help you";
 			mes "arrange these nicely";
@@ -455,7 +455,7 @@ OnTouch:
 			mes "careful?! Geeeeez!";
 			emotion e_ag;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Oops, I'm so sorry.";
 			mes "Are you alright?";
 			next;
@@ -657,7 +657,7 @@ yuno,311,195,3	script	Historian#prt01	4_M_SAGE_A,{
 			mes "Great, you're here!";
 			mes "So, where are the books?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I...";
 			mes "I don't have";
 			mes "them right now.";
@@ -1077,7 +1077,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 				mes "and begin to sing the song";
 				mes "that you heard from Karlomoff.^000000";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				input .@line$;
 				if (.@line$ == "The great serpent swallowed the sea.") {
 					.@total += 1;
@@ -1177,7 +1177,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 		mes "and figured out the lyrics of";
 		mes "that song I was looking for?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "^FF0000*The great serpent*^000000";
 		mes "^FF0000*swallowed the sea.*^000000";
 		mes "^FF0000*The eagle of the rainbow*^000000";
@@ -1191,7 +1191,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 		mes "I remember, thank you";
 		mes "so much! Ah, back to work...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "^333333(As a historian, Rodafrian";
 		mes "might be able to help me in";
 		mes "investigating the curse of the";
@@ -1240,7 +1240,7 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 			mes "for now. Then, when I reveal the secret curse of the Gaebolg royal";
 			mes "family, I'll finally outshine that Karlomoff! Bwahahahahaha!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "^333333(Drat, she didn't give me";
 			mes "any help... All I did was";
 			mes "reveal a huge secret to her";
@@ -1335,9 +1335,9 @@ morocc_in,45,126,3	script	Historian#prt02	4_F_GON,{
 
 S_GiveName:
 	next;
-	select("My name is "+strcharinfo(0)+".");
+	select("My name is "+strcharinfo(PC_NAME)+".");
 	mes "[Historian Rodafrian]";
-	mes "Ah "+strcharinfo(0)+", eh?";
+	mes "Ah "+strcharinfo(PC_NAME)+", eh?";
 	mes "Do you mind if I ask you a favor? I really need to verify the true";
 	mes "lyrics for this song. However,";
 	mes "I need to stay here in Morroc";
@@ -1382,7 +1382,7 @@ mjolnir_01,135,168,3	script	Historian#prt03	4_M_SAGE_A,{
 		mes "please leave? I have";
 		mes "research to attend to...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I'm sorry, but Ms. Rodafrian";
 		mes "wanted me to ask you for the";
 		mes "lyrics of some song describing";
@@ -1419,7 +1419,7 @@ mjolnir_01,135,168,3	script	Historian#prt03	4_M_SAGE_A,{
 		mes "Did you have a question";
 		mes "to ask me about the song?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Actually, I heard";
 		mes "a different version";
 		mes "of this song, so I was";
@@ -1513,7 +1513,7 @@ mjolnir_01,135,168,3	script	Historian#prt03	4_M_SAGE_A,{
 
 
 S_Song:
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	input .@line$;
 	if (.@line$ == "The great serpent swallowed the sea.") {
 		.@total += 1;
@@ -1541,7 +1541,7 @@ S_Song:
 	if (.@total == 4) prt_curse = 10;
 	else {
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Wait, wait...";
 		mes "I think I messed up!";
 		mes "(Those weren't the";
@@ -1878,7 +1878,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 		mes "What brings you all the";
 		mes "way over here, I wonder?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Actually, I'm just";
 		mes "trying to learn the";
 		mes "real lyrics of that";
@@ -1934,7 +1934,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 		mes "warmest regards. I would do it";
 		mes "myself, but because of what I did, I can't return to Prontera...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "^333333(Alright then. I guess";
 		mes "I should deliver these";
 		mes "herbs to Prontera Church";
@@ -1960,7 +1960,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 		mes "that pouch of herbs that";
 		mes "I gave you to Father Bamph?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Yes, I did. Actually,";
 		mes "Father Bamph sent me";
 		mes "here to ask you a few";
@@ -1975,7 +1975,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 		mes "Those poor children";
 		mes "are dead because of me...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "N-no! Not at all!";
 		mes "I just wanted to ask if there";
 		mes "was a connection between";
@@ -2018,7 +2018,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 		mes "from the Prontera Church";
 		mes "after my failure...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "A fragment from";
 		mes "a Red Gemstone?";
 		mes "Maybe... maybe it's";
@@ -2033,7 +2033,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 		mes "exorcism was sabotaged,";
 		mes "we can't turn back time...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "^333333(Hmm...";
 		mes "I better head back";
 		mes "to Prontera Church";
@@ -2085,7 +2085,7 @@ mjolnir_01,316,268,3	script	Exhausted-Looking Woman	4_F_CAPEGIRL,{
 		mes "wounds on the bodies";
 		mes "from what I remember...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Well, um, I wouldn't know";
 		mes "anything about that, but";
 		mes "Father Bamph and Father";
@@ -2183,7 +2183,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		next;
 		select("Give him the herb pouch.");
 		if (countitem(Leather_Pouch) < 1) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Ack!";
 			mes "Now, where did I put";
 			mes "that pouch with the herbs?";
@@ -2194,7 +2194,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "Why are you giving";
 		mes "me this pouch of herbs?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Well, there was this";
 		mes "lady living on Mount";
 		mes "Mjolnir who wanted me";
@@ -2208,7 +2208,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "I've seen her. How is";
 		mes "she doing, may I ask?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Oh...";
 		mes "I guess she's fine.";
 		mes "But she seems really...";
@@ -2312,7 +2312,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "the royal family's secret.";
 		emotion e_omg,1;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What...?!";
 		mes "Is this really true?!";
 		mes "Isn't there any way to";
@@ -2339,7 +2339,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "to remove this curse. In the end, ^3131FFBonnie Imbullea^000000 was chosen to";
 		mes "lead the exorcism ceremony.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Wait, but you mentioned";
 		mes "samething about an accident.";
 		mes "Does that mean that she failed";
@@ -2361,7 +2361,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "That is why she is in self";
 		mes "imposed exile from the kingdom.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What...?";
 		mes "That's...";
 		mes "That's crazy!";
@@ -2387,7 +2387,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "were growing snake scales.";
 		emotion e_gasp,1;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Wait, they grew snake";
 		mes "scales? That sounds just";
 		mes "like one of the versions of";
@@ -2410,14 +2410,14 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "Then the eagle built its nest.";
 		mes "A nest upon the swallowed sea.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hmm...";
 		mes "Well, I heard a";
 		mes "different version";
 		mes "of the same song.";
 		mes "It goes like...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "The great serpent";
 		mes "swallowed the sea.";
 		mes "The eagle of the rainbow";
@@ -2431,7 +2431,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "my father. However, your version seems to reveal the secret curse";
 		mes "of the Gaebolgs. Please tell me, where did you hear that song?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Well, I first heard this";
 		mes "version from a historian,";
 		mes "and then I found out that";
@@ -2723,7 +2723,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 	}
 	else if (prt_curse == 60) {
 		mes "[Father Bamph]";
-		mes "Oh, "+strcharinfo(0)+"~";
+		mes "Oh, "+strcharinfo(PC_NAME)+"~";
 		mes "Long time, no see.";
 		mes "Have you spoken to";
 		mes "Bonnie yet? Ah, and";
@@ -2771,7 +2771,7 @@ prt_church,185,106,3	script	Father Bamph	1_M_PASTOR,{
 		mes "of the royal family, I ask that";
 		mes "you refrain from entering the";
 		mes "secret ceremonial grounds";
-		mes "from now on. Thanks again for your help, "+strcharinfo(0)+".";
+		mes "from now on. Thanks again for your help, "+strcharinfo(PC_NAME)+".";
 		prt_curse = 61;
 		completequest 18052;
 		close;
@@ -3084,7 +3084,7 @@ prt_church,16,114,4	script	Father Bamph#tomb	1_M_PASTOR,{
 		close;
 	}
 	else if (prt_curse == 20) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "That weird mark looked";
 		mes "just like snake scales.";
 		mes "Is... Is that the mark left";
@@ -3212,7 +3212,7 @@ prt_church,21,111,5	script	#prince2	4_M_LIEMAN,{
 		mes "different in color, than the";
 		mes "marks on the first prince.^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Father Bamph...!";
 		mes "Look, these marks are";
 		mes "different on the second";
@@ -3374,7 +3374,7 @@ moc_fild16,201,295,5	script	Assassin Guildsman#poiso	4_M_ACROSS,{
 		mes "brings you here?";
 		next;
 		if (select("Poison", "Nothing") == 1) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I need to talk to";
 			mes "a poison specialist.";
 			mes "I'm investigating";
@@ -3429,7 +3429,7 @@ que_job01,10,16,5	script	Marjana#poison	4_F_ACROSS,{
 		mes "you 4 minutes to speak";
 		mes "with me, so be direct.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I want to learn";
 		mes "more about poison";
 		mes "and confirm if it was";
@@ -3442,7 +3442,7 @@ que_job01,10,16,5	script	Marjana#poison	4_F_ACROSS,{
 		mes "I doubt you'll find anyone";
 		mes "else that would. Ask away.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Is it true that an";
 		mes "Assassin's poison";
 		mes "can be so powerful,";
@@ -3457,7 +3457,7 @@ que_job01,10,16,5	script	Marjana#poison	4_F_ACROSS,{
 		mes "normal Assassins use poisons";
 		mes "that are much less potent.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Alright. Can you make";
 		mes "a poison that leaves a";
 		mes "specific mark on the body?";
@@ -3485,7 +3485,7 @@ que_job01,10,16,5	script	Marjana#poison	4_F_ACROSS,{
 		mes "of clue. What was the mark";
 		mes "on the victim's body?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "We're not sure if";
 		mes "poison was used yet,";
 		mes "but there are marks that";
@@ -3538,33 +3538,33 @@ OnEnable:
 morocc,45,103,0	script	#prtcurse	FAKE_NPC,2,2,{
 OnTouch:
 	if (prt_curse == 25) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Hm. I'd better review";
 		mes "the facts I've learned so";
 		mes "that I can better focus on";
 		mes "this investigation. Let's see~";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Long ago, the giant serpent";
 		mes "Jormungand threatened mankind.";
 		mes "7 warriors defeated Jormungand, led by Tristram III of the Gaebolg";
 		mes "family, but Jormungand cursed the Gaebolg bloodline in its defeat.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ever since, the curse kills";
 		mes "the first born prince of the";
 		mes "Gaebolg family at an early age.";
 		mes "However, all of the princes of";
 		mes "this generation were killed.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "According to what I've";
 		mes "learned from that assassin,";
 		mes "the first prince died from the";
 		mes "curse, and the other two may";
 		mes "have died from poisoning.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "It's most likely that if";
 		mes "poison was used, then the";
 		mes "person who used it was an";
@@ -3572,14 +3572,14 @@ OnTouch:
 		mes "Rune-Midgarts Kingdom. Yes,";
 		mes "that's about everything I know.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Now, that historian Rodafrian";
 		mes "has been waiting for me to tell";
 		mes "her the lyrics of that song, but Father Bamph is also waiting";
 		mes "for the info I've learned from the Assassin Guild. What should I do?";
 		next;
 		if (select("Go to Rodafrian", "Go to Father Bamph") == 1) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Well, it's easier for me";
 			mes "to visit Rodafrian now.";
 			mes "She's much closer than";
@@ -3589,7 +3589,7 @@ OnTouch:
 			changequest 18041,18042;
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Well, it's more important";
 		mes "that I go see Father Bamph";
 		mes "and investigate the princes'";

@@ -1322,11 +1322,11 @@ OnTouch:
 		}
 		um_wind = 0;
 		MISC_QUEST |= 32768;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I am not supposed to take";
 		mes "what may belong to other people.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Yeah, I'm a such good person.";
 		close2;
 		disablenpc "#unpc";

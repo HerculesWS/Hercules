@@ -41,7 +41,7 @@ prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 				if (rand(50) < 4) {
 					npctalk "WOOF!...........";
 					specialeffect2 72;
-					announce "[Cluck! Cluck! Boom!] " + strcharinfo(0) + " squeezed out the prize! Well done!",0;
+					announce "[Cluck! Cluck! Boom!] " + strcharinfo(PC_NAME) + " squeezed out the prize! Well done!",0;
 					getitem $cluck_item_id,$cluck_item_amount;
 					set .startcluck,0;
 				} else {
@@ -54,7 +54,7 @@ prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 	}
 	mes "[Cluckers]";
 	if (getgmlevel() >= .@GMAccess) {
-		mes "Cluck cluck! Cluuuuuck? ^FF0000~Hi GM " + strcharinfo(0) + ", Wanna play today?~^000000";
+		mes "Cluck cluck! Cluuuuuck? ^FF0000~Hi GM " + strcharinfo(PC_NAME) + ", Wanna play today?~^000000";
 		mes "Cluck cluck... CLUCK! ^FF0000~Just tell me what to do!~^000000";
 		next;
 		while(1) switch(select("Start Event", "Check Prize", "Set Prize", "Not today Cluckers")) {

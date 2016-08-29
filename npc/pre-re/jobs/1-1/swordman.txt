@@ -319,7 +319,7 @@ job_sword1,230,204,2	script	Test Hall Staff#2swd_3	8W_SOLDIER,{
 	callfunc "F_JobSwdStaff",1;
 }
 job_sword1,223,167,2	script	Mae#swd_1_success	4_F_03,{
-	mapannounce "job_sword1","Applicant " + strcharinfo(0) + ". You successfully passed the test.",bc_map;
+	mapannounce "job_sword1","Applicant " + strcharinfo(PC_NAME) + ". You successfully passed the test.",bc_map;
 	job_sword_q = 4;
 	mes "[Mae]";
 	mes "I sencerely congratulate you for passing the test!";
@@ -342,7 +342,7 @@ function	script	F_JobSwdStaff	{
 	mes "Do you surrender?";
 	next;
 	if (select("Yes.", "No.") == 1) {
-		mapannounce "job_sword1","Applicant " + strcharinfo(0) + " quit the test.",bc_map;
+		mapannounce "job_sword1","Applicant " + strcharinfo(PC_NAME) + " quit the test.",bc_map;
 		warp "izlude_in",65,165;
 		end;
 	}
@@ -354,10 +354,10 @@ function	script	F_JobSwdStaff	{
 function	script	F_JobSwdTestStaff	{
 OnTouch:
 	mes "[Test Hall Staff]";
-	mes "Applicant " + strcharinfo(0) + ". Do you surrender??";
+	mes "Applicant " + strcharinfo(PC_NAME) + ". Do you surrender??";
 	next;
 	if (select("Yes.", "No.") == 1) {
-		mapannounce "job_sword1","Applicant " + strcharinfo(0) + " quit the test..",bc_map;
+		mapannounce "job_sword1","Applicant " + strcharinfo(PC_NAME) + " quit the test..",bc_map;
 		warp "izlude_in",65,165;
 		end;
 	}
@@ -367,7 +367,7 @@ OnTouch:
 
 function	script	F_JobSwdTestStaff2	{
 OnTouch:
-	mapannounce "job_sword1","Applicant " + strcharinfo(0) + ". Pass the "+getarg(0)+" course.",bc_map;
+	mapannounce "job_sword1","Applicant " + strcharinfo(PC_NAME) + ". Pass the "+getarg(0)+" course.",bc_map;
 	warp "job_sword1",getarg(1),getarg(2);
 	end;
 }

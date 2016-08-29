@@ -54,7 +54,7 @@ alberta,214,77,6	script	Captain Janssen	4_M_SEAMAN,{
 		mes "Sigh... I don't know if I can ever go back to sailing the sea...";
 		close;
 	}
-	.@name$ = strcharinfo(0);
+	.@name$ = strcharinfo(PC_NAME);
 	if (in_102tower == 1) {
 		mes "^0000ffLooking incredibly excited, the old man ran into the marine shop hurriedly ordering goods. You don't have anything better to do, so you decide to ask him why he is in such a rush.^000000";
 		next;
@@ -229,7 +229,7 @@ e_tower,81,105,0	script	Tower Protection Stone	2_MONEMUS,{
 				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
 					mes "Party Name: "+.@p_name$;
-					mes "Party Leader: "+strcharinfo(0);
+					mes "Party Leader: "+strcharinfo(PC_NAME);
 					mes "^0000ff"+.@md_name$+" ^000000- Reservation Failed!";
 					close;
 				}
@@ -312,7 +312,7 @@ L_Enter:
 		mes "The party leader did not generate the dungeon yet.";
 		close;
 	} else {
-		mapannounce "e_tower", strcharinfo(0)+" of the party, " +getarg(3)+", is entering the dungeon, Endless Tower.",bc_map,"0x00ff99",FW_NORMAL,12;
+		mapannounce "e_tower", strcharinfo(PC_NAME)+" of the party, " +getarg(3)+", is entering the dungeon, Endless Tower.",bc_map,"0x00ff99",FW_NORMAL,12;
 		if (getarg(1)) {
 			etower_timer = gettimetick(2);
 			setquest 60200;
@@ -329,7 +329,7 @@ L_Enter:
 e_tower,30,30,2	script	Huge Vortex	CLEAR_NPC,2,2,{
 	end;
 OnTouch:
-	mapannounce "e_tower","[ " + strcharinfo(0) + " ], seems to be engulfed by a huge vortex",bc_map,"0x00ff99",FW_NORMAL,12;
+	mapannounce "e_tower","[ " + strcharinfo(PC_NAME) + " ], seems to be engulfed by a huge vortex",bc_map,"0x00ff99",FW_NORMAL,12;
 	warp "alberta",223,36;
 	end;
 }
@@ -1209,7 +1209,7 @@ function	script	F_Tower_Warp	{
 		close;
 	}
 	delitem Dark_Ashes,.@i;
-	mapannounce instance_mapname("1@tower"), strcharinfo(0)+". You will be warped to the "+.@level$[.@i]+" Level.",bc_map,"0x00ff99";
+	mapannounce instance_mapname("1@tower"), strcharinfo(PC_NAME)+". You will be warped to the "+.@level$[.@i]+" Level.",bc_map,"0x00ff99";
 	warp instance_mapname(.@map$[.@i]),52,354;
 	close;
 

@@ -113,7 +113,7 @@ geffen_in,164,124,4	script	Mage Guildsman#mage	2_F_MAGICMASTER,{
 				close;
 			}
 			mes "Alright.. sign the application form.... Wow~ you have good handwriting! Ahh, okay. That's enough.";
-			mes "You are... "+strcharinfo(0)+".";
+			mes "You are... "+strcharinfo(PC_NAME)+".";
 			next;
 			mes "[Mage Guildsman]";
 			mes "Hmm I can see that you've tried hard in your own way. Though it seems to be a little clumsy, but well I think it's okay!";

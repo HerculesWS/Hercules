@@ -167,7 +167,7 @@ ayothaya,171,152,5	script	Girl#Lalitha	4_F_THAIAYO,{
 		mes "You know, like the dresses and jewelry that ladies wear in other countries, whether or not the men are good looking, what kind of songs you have, what kind of girls that guys over there like...";
 		emotion e_what;
 		next;
-		mes "[" +strcharinfo(0)+ "]";
+		mes "[" +strcharinfo(PC_NAME)+ "]";
 		mes ".........";
 		next;
 		mes "[Lalitha]";
@@ -196,7 +196,7 @@ ayothaya,171,152,5	script	Girl#Lalitha	4_F_THAIAYO,{
 		mes "my Black Knight is~";
 		emotion e_lv;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Don't you mean...";
 		mes "Knight in shining armor";
 		mes "riding a white horse?";

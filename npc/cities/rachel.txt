@@ -39,7 +39,7 @@
 //== Set 1 =================================================
 ice_dun04,33,166,3	script	Frozen Boy	4_M_FROZEN,{
 	cutin "ra_sboy.bmp",2;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "This boy must be the one who Ktullanux tried to protect.";
 	next;
 	mes "- The boy was frozen inside a giant ice pole, and he looks as if he is in sleep rather than dead. -";
@@ -52,7 +52,7 @@ ice_dun04,33,166,3	script	Frozen Boy	4_M_FROZEN,{
 	mes "- You wondered why a young boy had to be confined within this isolated cave, -";
 	mes "- you instinctively knew that no mage in this world would be able to release him from the ice pole.";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "What happened to this boy?";
 	close2;
 	cutin "",255;
@@ -349,7 +349,7 @@ rachel,197,137,3	script	Bard#aru	1_M_BARD,{
 	mes "Yes, I'm talking about the pope~";
 	mes "Pope, yeah~ Pope, yeah~";
 	next;
-	mes "["+strcharinfo(0)+"]";
+	mes "["+strcharinfo(PC_NAME)+"]";
 	mes "You must be off your";
 	mes "rocker singing that";
 	mes "kind of song here";

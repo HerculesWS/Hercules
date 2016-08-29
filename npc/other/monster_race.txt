@@ -349,10 +349,10 @@ p_track01,67,45,5	script	Medal Distributor#single	4_F_RACING,{
 				mes "won! May I have your name?";
 				next;
 				input .@input$;
-				if (.@input$ == strcharinfo(0)) {
+				if (.@input$ == strcharinfo(PC_NAME)) {
 					.@insa = rand(1,1000);
 					mes "[Medal Distributor]";
-					mes "Ah, "+strcharinfo(0)+".";
+					mes "Ah, "+strcharinfo(PC_NAME)+".";
 					mes "You can exchange this";
 					mes "ticket for a Prize Medal by";
 					mes "entering your ticket exchange";
@@ -2023,7 +2023,7 @@ ein_in01,85,208,5	script	Ei'felle#repay01	4_M_EINMAN2,{
 		mes "been able to get any medals...";
 		next;
 		if (countitem(Marvelous_Medal)) {
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Oh! Are you talking";
 			mes "about the medals that";
 			mes "they give as rewards in";
@@ -2489,7 +2489,7 @@ S_Reward:
 			mes "you anything in return, so...";
 			mes "Think of something. Quick.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Er, just use the medals";
 			mes "to further your manufacturing";
 			mes "research, and then you can";
@@ -2628,7 +2628,7 @@ S_BonusReward:
 	}
 	next;
 	if (select("Decline", "Accept") == 1) {
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "W-wait, I changed my";
 		mes "mind. Would it be fine";
 		mes "if I asked you to give";
@@ -2873,7 +2873,7 @@ p_track02,32,45,5	script	Eccentric Scholar#double	4_M_SAGE_C,{
 	mes "Ah, right, 7, to account for x,";
 	mes "a value representing--";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "Excuse me, but";
 	mes "what are you doing?";
 	next;
@@ -2949,7 +2949,7 @@ p_track01,27,47,5	script	Drunkard#single	4_M_YURI,{
 	mes "Hey, you! Which number is";
 	mes "your lucky number? Huh?";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "I, er...";
 	next;
 	mes "[Familiar Drunkard]";

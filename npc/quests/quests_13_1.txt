@@ -762,7 +762,7 @@ lhz_in01,136,260,5	script	Munkenro#1	4_M_RUSMAN1,{
 		next;
 		mes "..................";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "There's no avoiding it.";
 		mes "Ok, I need to try.";
 		close;
@@ -825,7 +825,7 @@ lhz_in01,132,259,5	script	Sikaiz#1	4_M_LGTGUARD,{
 		mes "I already accept you. Just write down your name here. Go ahead.";
 		next;
 		input .@input$;
-		if (.@input$ != strcharinfo(0)) {
+		if (.@input$ != strcharinfo(PC_NAME)) {
 			mes "[Sikaiz]";
 			mes "Don't you know your own name?";
 			mes "Write it again.";
@@ -833,7 +833,7 @@ lhz_in01,132,259,5	script	Sikaiz#1	4_M_LGTGUARD,{
 		}
 		else {
 			mes "[Sikaiz]";
-			mes "Ok. I got your name, " + strcharinfo(0) + ". Great name! Registration is done!";
+			mes "Ok. I got your name, " + strcharinfo(PC_NAME) + ". Great name! Registration is done!";
 			mes "You've become a member of the three kingdoms!";
 			next;
 			mes "[Sikaiz]";
@@ -1709,7 +1709,7 @@ moc_fild22b,230,197,5	script	Munkenro#2	4_M_RUSMAN1,{
 		mes "[Munkenro]";
 		mes "Um. You're the one that";
 		mes "did some favors before...";
-		mes "Your name is " + strcharinfo(0) + "?";
+		mes "Your name is " + strcharinfo(PC_NAME) + "?";
 		mes "I remember you.";
 		next;
 		mes "[Munkenro]";
@@ -2061,7 +2061,7 @@ mid_camp,222,283,4	script	Marian#ep13bs	4_F_JOB_HUNTER,{
 		mes "What brings you here?";
 		emotion e_lv;
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "The instructor sent me.";
 		mes "He told me to get supplies from the motherland.";
 		next;
@@ -2147,14 +2147,14 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "Huuu, no time to rest.";
 		mes "When re-enforcements come.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Excuse me.";
 		next;
 		mes "[Instructor Lugen]";
 		mes "Hi!";
 		mes "What brings you here?";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Marian sent me to here.";
 		next;
 		mes "[Instructor Lugen]";
@@ -2213,7 +2213,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		next;
 		switch(select("Yes.", "No.")) {
 		case 1:
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "I will register...";
 			next;
 			mes "[Instructor Lugen]";
@@ -2285,7 +2285,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "and try not to catch a cold.";
 		next;
 		mes "[Instructor Lugen]";
-		mes "And I have a request of you, "+ strcharinfo(0) +".";
+		mes "And I have a request of you, "+ strcharinfo(PC_NAME) +".";
 		next;
 		mes "[Instructor Lugen]";
 		mes "It is to distribute supplies";
@@ -2464,7 +2464,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 	if (ep13_newbs == 20) {
 		mes "[Instructor Lugen]";
 		mes "It was really good to request";
-		mes "you, "+ strcharinfo(0) +".";
+		mes "you, "+ strcharinfo(PC_NAME) +".";
 		mes "Your work has been";
 		mes "a great help to us.";
 		mes "I really appreciate it.";
@@ -2487,14 +2487,14 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			mes "Huu...~";
 			emotion e_pif;
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "What is wrong with you?";
 			next;
 			mes "[Instructor Lugen]";
 			mes "Ah, nothing...";
 			mes "I'm just talking to myself.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "I've never seen you sigh.";
 			mes "If you have something";
 			mes "to say please tell me.";
@@ -2502,7 +2502,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			mes "[Instructor Lugen]";
 			mes "It's just a personal thing...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Tell me.";
 			mes "I think I can help you.";
 			next;
@@ -2527,13 +2527,13 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			next;
 			switch(select("Help.", "Just listen.")) {
 			case 1:
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "I will help with your problem!";
 				next;
 				mes "[Instructor Lugen]";
 				mes "No, it is ok.";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Don't say no!";
 				mes "It's not a problem at all!";
 				mes "So, I'll go to him for you";
@@ -2542,7 +2542,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 				mes "[Instructor Lugen]";
 				mes "......";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Hey, I really want to help~";
 				next;
 				mes "[Instructor Lugen]";
@@ -2551,7 +2551,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 				mes "If so, can you please";
 				mes "deliver this letter to him?";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "You can count on me!!";
 				next;
 				mes "[Instructor Lugen]";
@@ -2563,7 +2563,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 				setquest 11099;
 				close;
 			case 2:
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Ah, ya work is tough.";
 				next;
 				mes "[Instructor Lugen]";
@@ -2591,13 +2591,13 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		next;
 		switch(select("Help him.", "Just pass.")) {
 		case 1:
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "May I help you?";
 			next;
 			mes "[Instructor Lugen]";
 			mes "No, it's ok.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Don't say no!";
 			mes "It is not difficult at all!";
 			mes "So, I'm supposed to go to him and see if he's ok, right?";
@@ -2605,7 +2605,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			mes "[Instructor Lugen]";
 			mes "......";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Hey, I really want to help~";
 			next;
 			mes "[Instructor Lugen]";
@@ -2613,7 +2613,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			mes "I really appreciate that.";
 			mes "If so, can you please deliver this letter to him?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "You believe me!!";
 			next;
 			mes "[Instructor Lugen]";
@@ -2624,7 +2624,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			setquest 11099;
 			close;
 		case 2:
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Hmm...";
 			close;
 		}
@@ -2647,7 +2647,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		}
 	}
 	if (ep13_newbs == 24) {
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Instructor! I met Otto!";
 		mes "He is doing very well~";
 		next;
@@ -2657,11 +2657,11 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "being sick and far away";
 		mes "from his homeland.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "I have a letter from him, too.";
 		next;
 		if (countitem(Letter_From_Otto) < 1) {
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Huh, ehh..?!?!";
 			next;
 			mes "[Instructor Lugen]";
@@ -2677,7 +2677,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 			mes "[Instructor Lugen]";
 			mes "I don't know how to thank you.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Hehe, don't mention it.";
 			mes "And Otto said that he";
 			mes "would come to see you.";
@@ -2710,7 +2710,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		next;
 		mes "[Instructor Lugen]";
 		mes "It is good to see you,";
-		mes ""+ strcharinfo(0) +",";
+		mes ""+ strcharinfo(PC_NAME) +",";
 		mes "enjoy yourself here.";
 		mes "If you have any troubles,";
 		mes "come to see me.";
@@ -2718,7 +2718,7 @@ mid_camp,261,284,4	script	Instructor#ep13bs	4_M_YOUNGKNIGHT,{
 		mes "[Instructor Lugen]";
 		mes "I so happy that I've";
 		mes "met a person like";
-		mes "you, "+ strcharinfo(0) +".";
+		mes "you, "+ strcharinfo(PC_NAME) +".";
 		close;
 	}
 	else {
@@ -2738,13 +2738,13 @@ mid_camp,123,290,4	script	Otto#ep13bs	4_M_RUSMAN1,{
 		close;
 	}
 	if (ep13_newbs == 23) {
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Mr. Otto?!";
 		next;
 		mes "[Otto]";
 		mes "Hmm, how can I help you?";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Instructor Lugen sent me!";
 		mes "He is worrying about you getting worse.";
 		next;
@@ -2754,12 +2754,12 @@ mid_camp,123,290,4	script	Otto#ep13bs	4_M_RUSMAN1,{
 		mes "It was nothing.";
 		mes "He's still overprotective..";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "That's good to hear.";
 		mes "Ah, and he wrote this letter for you.";
 		next;
 		if (countitem(Letter_From_Lugen) < 1) {
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Eh, where is it...";
 			next;
 			mes "[Otto]";
@@ -2872,12 +2872,12 @@ mid_campin,106,122,4	script	Receptionist Brink#ep13b	4_M_ORIENT02,{
 			mes "What...your name...";
 			emotion e_swt2;
 			next;
-			mes "["+ strcharinfo(0) +"]";
-			mes "My name is "+ strcharinfo(0) +".";
+			mes "["+ strcharinfo(PC_NAME) +"]";
+			mes "My name is "+ strcharinfo(PC_NAME) +".";
 			next;
 			mes "[Brink]";
 			mes "...Ah...";
-			mes ""+ strcharinfo(0) +"...";
+			mes ""+ strcharinfo(PC_NAME) +"...";
 			mes "You...";
 			mes "...registered...Hmm...";
 			mes "...";
@@ -2894,7 +2894,7 @@ mid_campin,106,122,4	script	Receptionist Brink#ep13b	4_M_ORIENT02,{
 			mes "I mean...";
 			emotion e_swt2;
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Is it finished?";
 			next;
 			mes "[Brink]";
@@ -2955,7 +2955,7 @@ mid_camp,264,263,4	script	Diego#ep13bs	4_M_RACHMAN1,{
 			mes "Thanks.";
 			emotion e_thx;
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "What do you need?";
 			next;
 			mes "[Diego]";
@@ -2971,9 +2971,9 @@ mid_camp,264,263,4	script	Diego#ep13bs	4_M_RACHMAN1,{
 			mes "[Diego]";
 			mes "Well, let me see...";
 			mes "I'm really lucky to see you,";
-			mes "passing by here, "+ strcharinfo(0) +".";
+			mes "passing by here, "+ strcharinfo(PC_NAME) +".";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Hah!! How did you know my name?!";
 			emotion e_omg,1;
 			next;
@@ -3074,7 +3074,7 @@ mid_camp,264,263,4	script	Diego#ep13bs	4_M_RACHMAN1,{
 			mes "you came along.";
 			mes "It's got to be fate.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "No, I just...";
 			mes "I was assigned to stay";
 			mes "in these barracks.";
@@ -3122,7 +3122,7 @@ OnTouch:
 		close;
 	}
 	if (ep13_newbs == 10) {
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Haaaam~~~~~";
 		mes "what a good night!!";
 		next;
@@ -3215,7 +3215,7 @@ mid_camp,160,298,4	script	Jan#ep13bs	4_LGTSCIENCE,{
 			mes "Wawa, what is this~";
 			mes "Hey, is that for me?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Yes...";
 			emotion e_swt,1;
 			next;
@@ -3249,7 +3249,7 @@ mid_camp,160,298,4	script	Jan#ep13bs	4_LGTSCIENCE,{
 		mes "I really wanted it.";
 		mes "I really love it~~";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "What is... it~~?";
 		next;
 		mes "[Jan]";
@@ -3276,14 +3276,14 @@ mid_camp,160,298,4	script	Jan#ep13bs	4_LGTSCIENCE,{
 mid_camp,30,168,4	script	Gerard#ep13bs	4_DST_SOLDIER,{
 	if (ep13_newbs == 17) {
 		if (countitem(Supply_Box) > 0) {
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Are you Gerard?";
 			next;
 			mes "[Gerard]";
 			mes "Yes, I am.";
 			mes "What brings you here?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Instructor Lugen sent";
 			mes "me for an errand.";
 			next;
@@ -3298,7 +3298,7 @@ mid_camp,30,168,4	script	Gerard#ep13bs	4_DST_SOLDIER,{
 			mes "I really appreciate this.";
 			emotion e_rice;
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "...";
 			mes "You ran out of supplies, but";
 			mes "you didn't go back to the camp?";
@@ -3355,7 +3355,7 @@ man_fild01,80,248,4	script	Alberto#ep13bs	4_M_RASWORD,{
 			mes "[Alberto]";
 			mes "Hhh, I am cold...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Mr. Alberto, take this.";
 			mes "The Instructor sent";
 			mes "me on an errand.";
@@ -3381,7 +3381,7 @@ man_fild01,80,248,4	script	Alberto#ep13bs	4_M_RASWORD,{
 			mes "- else's stuff makes -";
 			mes "- me feel strange. -";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Here it is.";
 			mes "Hopefully it'll warm you up.";
 			next;
@@ -3482,7 +3482,7 @@ spl_fild02,348,76,0	script	Tree#ep13bs1::ep13tree	HIDDEN_NPC,{
 				mes "- Bomb, bomb~~ -";
 				mes "- This branch is decayed. -";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "This is useless.";
 				mes "I need to find others...";
 				close;
@@ -3868,7 +3868,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				next;
 				switch(select("Show loot from Nepentheses.", "Scold him.", "Comfort him.")) {
 				case 1:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Hey, take a look here...";
 					mes "These Nepentheses aren't";
 					mes "any more brutal or grotesque";
@@ -3879,7 +3879,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 					mes "Isn't this from";
 					mes "the Nepentheses?";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "That's right!";
 					mes "I took care of them.";
 					mes "It was easy, haha!";
@@ -3891,7 +3891,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 					mes "Are you a soldier?";
 					mes "Captain? Or agent?";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "No, I'm just a wandering";
 					mes "adventurer. I've come here";
 					mes "to challenge this new place";
@@ -3959,7 +3959,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 					changequest 2147,2148;
 					close;
 				case 2:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "You call yourself a monster";
 					mes "scholar, and yet you're afraid";
 					mes "of practicing your expertise.";
@@ -3970,7 +3970,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 					mes "but I can't hide my true feelings.";
 					close;
 				case 3:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Come on, you're a respected";
 					mes "monster scholar. You'll find";
 					mes "that the monsters in this world";
@@ -4167,11 +4167,11 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				mes "[Rumis Block]";
 				mes "Welcome back. Did you find out about them?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Well, let's see...";
 				next;
 				while(1) {
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "The owner of the tricorn hat";
 					mes "is a monster called...";
 					input .@input$;
@@ -4182,23 +4182,23 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 					}
 					else {
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes ""+.@input$+"...? I don't think that was the name...";
 						next;
 					}
 				}
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "The size of Tatacho is about...";
 				input .@input$;
 				mes "^3131FF"+.@input$+"^000000, I guess...";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Tatachos are usually sitting on the ground, but they roll around if their body temperature goes down too low because of the cold weather.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "About that tricorn hat, I've concluded, based on my opinion about their appearance and their movement patterns, that it is not active or productive at all:";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "They are not intelligent enough to produce a sophisticated hat like that.";
 				next;
 				mes "[Rumis Block]";
@@ -4218,7 +4218,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				mes "I shall go back home faster than anyone else in this camp. I'm tired of this world...";
 				next;
 				mes "[Rumis Block]";
-				mes "..."+strcharinfo(0)+", I thank you so much for helping me despite my self-centered behavior.";
+				mes "..."+strcharinfo(PC_NAME)+", I thank you so much for helping me despite my self-centered behavior.";
 				mes "I really appreciate it";
 				next;
 				mes "[Rumis Block]";
@@ -4237,14 +4237,14 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 		}
 		else if (ep13_animal == 15) {
 			if (countitem(Horn_Of_Tendrilion) > 0) {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Mr. Rumis! Take a look at this!";
 				next;
 				mes "[Rumis Block]";
 				mes "...Oh, hello.";
 				mes "I'm extremely frustrated. I feel helpless because I wasn't able to go back home last time...";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I've found this horn from a monster in the Splendide Area.";
 				mes "That monster was very mysterious, and its body was covered with grass.";
 				next;
@@ -4272,14 +4272,14 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				mes "I wonder if they're related,";
 				mes "or if this is an evolved Hillsrion.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Ah, and there's the possibility of mutation caused by the environment.";
 				next;
 				mes "[Rumis Block]";
 				mes "...What do you mean?";
 				mes "Are you saying the monster has been mutated by environmental causes?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Well, that's possible, isn't it? Haha!";
 				next;
 				mes "- You told Rumis what you've heard from Botanist Terris: some plants are already showing signs of mutation. -";
@@ -4291,7 +4291,7 @@ mid_camp,188,254,3	script	Monster Scholar#ep13	4_M_ALCHE_D,{
 				mes "[Rumis Block]";
 				mes "By the way, who came up with the idea of that device?";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I have no idea. Haha!";
 				next;
 				mes "[Rumis Block]";
@@ -4384,7 +4384,7 @@ mid_camp,240,270,3	script	Botanist#ep13	4_M_ALCHE_C,{
 			next;
 			switch(select("Express your displeasure.", "Agree with him.")) {
 			case 1:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Your excitement agitates me.";
 				next;
 				mes "[Botanist]";
@@ -4395,7 +4395,7 @@ mid_camp,240,270,3	script	Botanist#ep13	4_M_ALCHE_C,{
 				break;
 			case 2:
 				emotion e_lv2,1;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I agree. There's so much to see around here!";
 				next;
 				mes "[Botanist]";
@@ -4405,7 +4405,7 @@ mid_camp,240,270,3	script	Botanist#ep13	4_M_ALCHE_C,{
 				next;
 				break;
 			}
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Your brother wanted me to send this to you. Maybe it'll help with your study.";
 			next;
 			mes "- You have given the Nepenthes Specimen to the botanist. -";
@@ -4431,7 +4431,7 @@ mid_camp,240,270,3	script	Botanist#ep13	4_M_ALCHE_C,{
 			mes "Either way, I don't care.";
 			mes "I'm just happy that he cares about me...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Why do you think that?";
 			mes "Can't you just thank him for trying to help you?";
 			next;
@@ -4698,7 +4698,7 @@ mid_camp,45,148,7	script	Botanist#ep13_1	4_M_ALCHE_C,{
 		close;
 	}
 	else if (ep13_animal == 9) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "It's sprouted! That shoot looks healthy!";
 		next;
 		mes "[Botanist]";
@@ -4767,7 +4767,7 @@ OnTouch:
 
 man_fild01,92,230,3	script	Frozen Tree#evt_lumis	HIDDEN_NPC,1,1,{
 	if (ep13_animal == 11) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Knock, knock. Are you here?";
 		next;
 		mes "- Something is making loud noise near the top of the tree. -";
@@ -4787,7 +4787,7 @@ man_fild01,92,230,3	script	Frozen Tree#evt_lumis	HIDDEN_NPC,1,1,{
 		mes "...Oh, sorry.. I was just talking to myself.";
 		next;
 		mes "[Rumis Block]";
-		mes "I'll be watching the Hillsrions from this tree. "+strcharinfo(0)+", can you please go collect ^3131FFHillsrion Horns^000000 for me?";
+		mes "I'll be watching the Hillsrions from this tree. "+strcharinfo(PC_NAME)+", can you please go collect ^3131FFHillsrion Horns^000000 for me?";
 		next;
 		mes "[Rumis Block]";
 		mes "Their horns might possess a special power. And I want to have them for further research.";
@@ -4941,7 +4941,7 @@ mid_camp,212,237,5	script	Camp Guard Captain#man1	4_M_EIN_SOLDIER,{
 	mes "How may I help you?";
 	next;
 	if (questprogress(2158) == 2 && questprogress(2159) == 2) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Oh, nothing.";
 		mes "Sorry to bother you.";
 		close;
@@ -4962,7 +4962,7 @@ mid_camp,212,237,5	script	Camp Guard Captain#man1	4_M_EIN_SOLDIER,{
 			close;
 		}
 		else if (!questprogress(2158)) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Oh, nothing.";
 			mes "Sorry to bother you.";
 			close;
@@ -4983,7 +4983,7 @@ mid_camp,212,237,5	script	Camp Guard Captain#man1	4_M_EIN_SOLDIER,{
 				close;
 			}
 			else {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Oh, nothing.";
 				mes "Sorry to bother you.";
 				close;
@@ -5029,7 +5029,7 @@ OnTouch:
 			mes "- eyes as if he were -";
 			mes "- demanding for help! -";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes ".................";
 			mes ".................";
 			next;
@@ -5290,7 +5290,7 @@ OnTouch:
 			mes "Hmm, are you talking about Dusty?";
 			mes "He was expelled right after the incident and his job was taken away! I told you several times already!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Ugh... You guys, I think you should calm down... This is ridiculous.";
 			next;
 			mes "[Hansenne]";
@@ -5299,7 +5299,7 @@ OnTouch:
 			mes "[Hansenne]";
 			mes "Sorry, I was just too shocked by that thief bug and accidentally touched your cake with my finger!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "...Huh? No. Wait...";
 			next;
 			mes "[Ryosen]";
@@ -5333,7 +5333,7 @@ OnTouch:
 			close;
 		}
 		else if (ep13_1_rhea == 21) {
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Ah...";
 			next;
 			mes "[United Research Official]";
@@ -5343,16 +5343,16 @@ OnTouch:
 			mes "[United Research Official]";
 			mes "Can you think of any idea how to get those people to get along??";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "... Actually... Hansenne is not the one who ruined that cake.";
 			next;
 			mes "[United Research Official]";
 			mes "Eh? What did you say?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "But... I don't understand why Hansenne would take the blame...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "... Well, I should go now.";
 			next;
 			mes "[United Research Official]";
@@ -5362,16 +5362,16 @@ OnTouch:
 			close;
 		}
 		else if ((ep13_1_rhea > 21) && (ep13_1_rhea < 26)) {
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "... Actually... Hansenne is not the one who ruined that cake.";
 			next;
 			mes "[United Research Official]";
 			mes "Eh? What did you say?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "But... I don't understand why Hansenne would take the blame...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "... Well, I should go now.";
 			next;
 			mes "[United Research Official]";
@@ -5870,7 +5870,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			mes "[Ryosen]";
 			mes "Krrrrrrrr! Ugh...!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Uhhhh...";
 			next;
 			mes "[Ryosen]";
@@ -5883,7 +5883,7 @@ mid_camp,165,245,0	script	Ryosen#ep131_rhea01	4_M_ALCHE_A,{
 			mes "Oh, what have I done?";
 			mes "I should go an apologize.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Wait! Hue wanted me to bring this to you.";
 			next;
 			if (countitem(Neat_Report) > 0) {
@@ -6745,14 +6745,14 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 			mes "[Hansenne]";
 			mes "Huh? You again?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Why did you do that?";
 			next;
 			mes "[Hansenne]";
 			mes "Hehhhhh??? What are you talking about? If you wanna blame me for anything, tell me the reason first~";
 			mes "Haha, hahaha, hahahahahahahahaha.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "I know you're not the one who ruined the cake. I saw it. It was Hue! I saw him clearly when he pressed his hand on the cake when the Thief Bug came out.";
 			next;
 			mes "[Hansenne]";
@@ -6762,7 +6762,7 @@ mid_camp,222,218,3	script	Hansenne#ep131_rhea03	4_M_RACHMAN1,{
 			mes "[Hansenne]";
 			mes "Hmmmmm... or... I don't know. Maybe I'm thanlful that he restored my garbage looking file... ?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "But... You were blamed for it.";
 			mes "Aren't you feeling bad? It's unfair!";
 			next;
@@ -7431,7 +7431,7 @@ mid_camp,143,306,5	script	Breeder Taab#ep13_alba	4_M_DST_MASTER,{
 				mes "[Taab]";
 				mes "I don't think I need";
 				mes "any assistance for now...";
-				mes "" + strcharinfo(0) + ",";
+				mes "" + strcharinfo(PC_NAME) + ",";
 				mes "why don't you go rest?";
 				close;
 			}
@@ -8288,7 +8288,7 @@ spl_fild02,314,165,0	script	School of Fish#1::Fishinghole	CLEAR_NPC,{
 				getitem Rough_File,1;
 				ep13_1_rhea = 14;
 				specialeffect EF_BUBBLE;
-				mapannounce strcharinfo(3),strcharinfo(0) + " has caught a Messy File!!",bc_map,"0xff77ff";
+				mapannounce strcharinfo(PC_MAP),strcharinfo(PC_NAME) + " has caught a Messy File!!",bc_map,"0xff77ff";
 			}
 		}
 		.@rhea_ran = rand(1,70);
@@ -8309,15 +8309,15 @@ spl_fild02,314,165,0	script	School of Fish#1::Fishinghole	CLEAR_NPC,{
 		}
 		if (rand(1,200) == 3) {
 			getitem Gift_Box,1;
-			mapannounce strcharinfo(3),strcharinfo(0) + " has caught a Gift Box!!",bc_map,"0x00ffff";
+			mapannounce strcharinfo(PC_MAP),strcharinfo(PC_NAME) + " has caught a Gift Box!!",bc_map,"0x00ffff";
 		}
 		if (rand(1,500) == 3) {
 			getitem Old_Blue_Box,1;
-			mapannounce strcharinfo(3),strcharinfo(0) + " has caught an Old Blue Box!!",bc_map,"0x00ffff";
+			mapannounce strcharinfo(PC_MAP),strcharinfo(PC_NAME) + " has caught an Old Blue Box!!",bc_map,"0x00ffff";
 		}
 		if (rand(1,3000) == 3) {
 			getitem Old_Violet_Box,1;
-			mapannounce strcharinfo(3),strcharinfo(0) + " has caught an Old Purple Box!!",bc_map,"0x44ff44";
+			mapannounce strcharinfo(PC_MAP),strcharinfo(PC_NAME) + " has caught an Old Purple Box!!",bc_map,"0x44ff44";
 		}
 		end;
 	}
@@ -8523,7 +8523,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		mes "What is it?";
 		next;
 		mes "[Staff Officer Abidal]";
-		mes "Err? Hey, aren't you that famous adventurer," + strcharinfo(0) + "? I've heard many good things about you.";
+		mes "Err? Hey, aren't you that famous adventurer," + strcharinfo(PC_NAME) + "? I've heard many good things about you.";
 		next;
 		mes "[Instructor Igrid]";
 		mes "I don't know what you're talking about. Boss, do you know this adventurer?";
@@ -8532,7 +8532,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		mes "Stop calling me boss! Call me Commander, alright? Hey Abidal, is this adventurer really famous?";
 		next;
 		mes "[Staff Officer Abidal]";
-		mes "Commander, haven't you read the report? The adventurer who helped the expedition solve the XX case was" + strcharinfo(0)+ ".";
+		mes "Commander, haven't you read the report? The adventurer who helped the expedition solve the XX case was" + strcharinfo(PC_NAME)+ ".";
 		next;
 		mes "[Hibba Agip]";
 		mes "*Ahem Ahem* I see. I've been too busy to read all the reports. So what brings you here? A reward?";
@@ -8544,7 +8544,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 		mes "Hey Abidal, he's here to see me, not you. Remember?";
 		next;
 		mes "[Staff Officer Abidal]";
-		mes "Commander, please let me talk. " + strcharinfo(0) + "I'd like to talk to you privately. Can you come back later?";
+		mes "Commander, please let me talk. " + strcharinfo(PC_NAME) + "I'd like to talk to you privately. Can you come back later?";
 		next;
 		mes "[Hibba Agip]";
 		mes "Why do you want to talk privately?";
@@ -8565,7 +8565,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 	}
 	else if (ep13_1_edq == 2) {
 		mes "[Hibba Agip]";
-		mes "Oh yes, right... You're " + strcharinfo(0) + ", right? Abidal has told me good things about you.";
+		mes "Oh yes, right... You're " + strcharinfo(PC_NAME) + ", right? Abidal has told me good things about you.";
 		next;
 		mes "[Hibba Agip]";
 		mes "We're lucky to have you, my friend... I hope you're as good as the stories play you up to be.";
@@ -9065,7 +9065,7 @@ mid_campin,90,121,5	script	Hibba Agip	4_M_REDSWORD,{
 			mes "That's called that Kuhotanrangjigea from east. I didn't make that by myself.";
 			next;
 			mes "[Hibba Agip]";
-			mes "Whatever.. Hey, you there... your name is " + strcharinfo(0) + " right? Do you know what to do?";
+			mes "Whatever.. Hey, you there... your name is " + strcharinfo(PC_NAME) + " right? Do you know what to do?";
 			next;
 			mes "[Hibba Agip]";
 			mes "Go to one of the tribes and ask for help officially. I'll send someone to the other tribe.";
@@ -9820,7 +9820,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 	if ((ep13_1_edq == 3) && (countitem(Expedition_Report) > 0)) {
 		mes "[Expedition Messenger]";
 		mes "Welcome, I've been waiting for you.";
-		mes "You must be " + strcharinfo(0) + ". Nice to meet you.";
+		mes "You must be " + strcharinfo(PC_NAME) + ". Nice to meet you.";
 		next;
 		mes "[Expedition Messenger]";
 		mes "Let me check something quicly. You received the report directly from the commander, didn't you? May I see it?";
@@ -9830,7 +9830,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 		mes ".........";
 		next;
 		mes "[Expedition Messenger]";
-		mes "Excellent. Thank you. Then we'll go back to the mainland and let the leaders know that you, "+ strcharinfo(0) + ", have departed.";
+		mes "Excellent. Thank you. Then we'll go back to the mainland and let the leaders know that you, "+ strcharinfo(PC_NAME) + ", have departed.";
 		next;
 		mes "[Expedition Messenger]";
 		mes "Guys, it's time to go.";
@@ -9880,7 +9880,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			mes "Argh... You...";
 			next;
 			mes "[Expedition Messenger]";
-			mes "*Cough* Oh, thank god! " + strcharinfo(0) + ", please take the report and run!";
+			mes "*Cough* Oh, thank god! " + strcharinfo(PC_NAME) + ", please take the report and run!";
 			next;
 			mes "[???]";
 			mes "No... Noooo!";
@@ -9888,7 +9888,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			specialeffect2 EF_SOULBREAKER;
 			specialeffect2 EF_SONICBLOWHIT;
 			mes "[Expedition Messenger]";
-			mes "Argh... " + strcharinfo(0) + ", are you alright? The report... The report...";
+			mes "Argh... " + strcharinfo(PC_NAME) + ", are you alright? The report... The report...";
 			next;
 			delitem Expedition_Report,1;
 			ep13_1_edq = 4;
@@ -9912,7 +9912,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			next;
 			mes "[Expedition Messenger]";
 			mes "We must report this to the commander before anything else.";
-			mes ""+ strcharinfo(0) + ", please report to the commander immidiatly. Let us take care of the rest.";
+			mes ""+ strcharinfo(PC_NAME) + ", please report to the commander immidiatly. Let us take care of the rest.";
 			donpcevent "Expedition Messenger#2::OnDisable";
 			next;
 			mes "[Expedition Agent]";
@@ -9933,7 +9933,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			mes "Argh... You...";
 			next;
 			mes "[Expedition Messenger]";
-			mes "*Cough* Oh, thank god! " + strcharinfo(0) + ", please take the report and run!";
+			mes "*Cough* Oh, thank god! " + strcharinfo(PC_NAME) + ", please take the report and run!";
 			next;
 			mes "[???]";
 			mes "No... Noooo!";
@@ -9941,7 +9941,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			specialeffect2 EF_SOULBREAKER;
 			specialeffect2 EF_SONICBLOWHIT;
 			mes "[Expedition Messenger]";
-			mes "Argh... " + strcharinfo(0) + ", are you alright? The report... The report...";
+			mes "Argh... " + strcharinfo(PC_NAME) + ", are you alright? The report... The report...";
 			next;
 			mes "[Expedition Agent]";
 			mes "We lost the report. The pages are blowing away!";
@@ -9965,7 +9965,7 @@ mid_camp,206,286,3	script	Expedition Messenger	4_M_MOCASS1,{
 			next;
 			mes "[Expedition Messenger]";
 			mes "We must report this to the commander before anything else.";
-			mes ""+ strcharinfo(0) + ", please report to the commander immidiatly. Let us take care of the rest.";
+			mes ""+ strcharinfo(PC_NAME) + ", please report to the commander immidiatly. Let us take care of the rest.";
 			ep13_1_edq = 5;
 			next;
 			mes "[Expedition Agent]";
@@ -10081,7 +10081,7 @@ man_fild01,315,95,3	script	Expedition Scout#1	4_M_MOC_SOLDIER,{
 	case 1:
 		if (ep13_1_edq == 71 || ep13_1_edq == 72) {
 			mes "[Expedition Scout]";
-			mes "Oh, you must be"+strcharinfo(0)+". I heard that you'll be delivering the report.";
+			mes "Oh, you must be"+strcharinfo(PC_NAME)+". I heard that you'll be delivering the report.";
 			next;
 			if (.@playtime == 1) {
 				mes "[Expedition Scout]";
@@ -10250,7 +10250,7 @@ ra_temple,122,174,3	script	Nuria	4_F_RACHOLD,{
 lhz_in01,110,174,5	script	Gerhart	4_M_KHKYEL,{
 	mes "[Gerhart]";
 	if (ep13_1_edq == 9 || ep13_1_edq == 101 || ep13_1_edq == 111 || ep13_1_edq == 102 || ep13_1_edq == 112) {
-		mes "Welcome, " + strcharinfo(0) + ". What took you so long?";
+		mes "Welcome, " + strcharinfo(PC_NAME) + ". What took you so long?";
 		next;
 		mes "[Gerhart]";
 		mes "Oh, who am I? Let's say... That you can make ends meet because of me.";
@@ -10463,21 +10463,21 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 				mes "By the way, adventurer,";
 				mes "What's your name?";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "......";
 				mes "......";
-				mes "" + strcharinfo(0) + "...";
+				mes "" + strcharinfo(PC_NAME) + "...";
 				mes "......";
 				next;
 				mes "[Echinacea]";
 				mes "Ah, you are";
-				mes "" + strcharinfo(0) + ".";
-				mes "Well, " + strcharinfo(0) + ", I've just assigned you as Mr. Kidd's assistant.";
+				mes "" + strcharinfo(PC_NAME) + ".";
+				mes "Well, " + strcharinfo(PC_NAME) + ", I've just assigned you as Mr. Kidd's assistant.";
 				mes "Good, everything's done on this end. I just needed to get your name on record.";
 				next;
 				mes "[Echinacea]";
 				mes "What are you still doing here?";
-				mes "" + strcharinfo(0) + ", your job is to assist Mr. Kidd.";
+				mes "" + strcharinfo(PC_NAME) + ", your job is to assist Mr. Kidd.";
 				mes "Please go help him, will you?";
 				mao_morocc2 = 1;
 				setquest 7012;
@@ -10723,7 +10723,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 			next;
 			mes "[Echinacea]";
 			mes "So, tell me, what is it?";
-			mes strcharinfo(0)+", you've done a great job helping us...";
+			mes strcharinfo(PC_NAME)+", you've done a great job helping us...";
 			mes "Oh, you must have questions about that last case, is that right?";
 			next;
 			mes "[Echinacea]";
@@ -10799,7 +10799,7 @@ mid_campin,68,185,3	script	Pursuit Party Leader#1	1_F_SIGNZISK,{
 			close;
 		}
 		else {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Err? I don't have two Nice Sweet Potatoes..";
 			mes "Where can I get those?";
 			close;
@@ -11034,15 +11034,15 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			mes "I mean Rin. How is she?";
 			mes "Is she seriously wounded?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "She needs to spend some time in bed,";
 			mes "but she's conscious and still in one piece.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "She seems to have no problem taking care of herself,";
 			mes "but I'm worried because sometimes she looks extremely exhausted. She mentioned that her vision blurs when she's very tired..";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Don't worry; I don't think it's serious because she still had the strength to yell while writing that journal.";
 			next;
 			cutin "moc2_kid03",2;
@@ -11071,7 +11071,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			close2;
 		}
 		else {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "(I was supposed to give him the 'Morroc Pursuit Journal' and a 'Bloody Crystal of the Darkness'...";
 			mes "Err? Where have they gone? I need to find them.)";
 			close2;
@@ -11093,7 +11093,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			end;
 		}
 		else {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "No, nothing.";
 			mes "I'm sorry if I bothered you while you were writing your report.";
 			next;
@@ -11108,7 +11108,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 		mes "What just happened?";
 		next;
 		select("Err.. Huh?!");
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "..Err?";
 		mes "..Kidd? Someone was calling my name...";
 		mes "Rin! Where's Rin? What about Rayan?";
@@ -11118,13 +11118,13 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 		mes "What are you talking about?";
 		mes "Where the hell have you been?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What do you mean..";
 		mes "Where I've been?";
 		mes "..Oh yeah, I saw Rin fighting Rayan.";
 		mes "She was defeated by magic, and then disappeared...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Ah?! Ah! Right!";
 		mes "I heard your voice once I found a strange scroll.";
 		mes "The scroll!";
@@ -11230,7 +11230,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			mes "[Mr. Kidd]";
 			mes "You're my assistant, aren't you?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes ".... .....";
 			mes "......";
 			next;
@@ -11371,7 +11371,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			mes "..No, not at all.";
 			mes "We're just using one journal to record each other's work.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Why can't you use separate journals and then combine them later?";
 			next;
 			cutin "mocseal_kid01",2;
@@ -11498,7 +11498,7 @@ mid_camp,199,311,7	script	Mr. Kidd#ep13_dan01	4_M_ACROSS,{
 			}
 		}
 		else {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Err? I don't have two Nice Sweet Potatoes..";
 			mes "Where can I get those?";
 			close2;
@@ -11532,7 +11532,7 @@ mid_camp,205,312,0	script	#moc2_talkevent01	FAKE_NPC,1,1,{
 OnTouch:
 	if (mao_morocc2 == 11) {
 		mes "[Mr. Kidd]";
-		mes "" + strcharinfo(0) + "? " + strcharinfo(0) + "?!";
+		mes "" + strcharinfo(PC_NAME) + "? " + strcharinfo(PC_NAME) + "?!";
 		mes "Wake up!";
 		mao_morocc2 = 12;
 		close;
@@ -11675,7 +11675,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 			mes "You'll be the one using this scroll. Am I right?";
 			mes "Here, please take this.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "'To gather members...?'";
 			mes "...Right! I remember";
 			mes "Rayan mentioned a gathering somewhere!";
@@ -11704,7 +11704,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		close;
 	}
 	else if (mao_morocc2 == 101) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "....";
 		next;
 		mes "[Defaria]";
@@ -11832,7 +11832,7 @@ mid_camp,256,272,3	script	Defaria#moc2	4_M_HUGRANFA,{
 		mes "[Defaria]";
 		mes "What..?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Didn't you forget something?";
 		mes "... Dandelion? I wanted you to tell me what you knew.";
 		mes "I was hoping you'd remember something about Dandelion.";
@@ -12225,7 +12225,7 @@ OnTouch:
 		mes "Hey Master, is it okay to let this guy in?";
 		next;
 		if (prt_curse == 24) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I, um, I'm looking";
 			mes "for somebody named";
 			mes "Marjana? I learned";
@@ -12746,7 +12746,7 @@ que_job01,84,17,3	script	Rin#moc_room2_1	4_F_ACROSS,{
 	if (mao_morocc2 == 5) {
 		if (mao_request > 103) {
 			mes "[Rin]";
-			mes "..." + strcharinfo(0) + "...?";
+			mes "..." + strcharinfo(PC_NAME) + "...?";
 			mes "It's been a long time. What's going on?";
 			cutin "moc2_rin02",2;
 		}
@@ -12981,7 +12981,7 @@ que_job01,84,17,3	script	Rin#moc_room2_1	4_F_ACROSS,{
 			mes "..A bloody Crystal of the Darkness?";
 			mes "Can you show it to me?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Oh, I don't have it with me. I'll go bring it right away.";
 			mes "^4d4dff(Wait, what did I do with it? I didn't sell it or anything, did I?)^000000";
 			close2;
@@ -13045,7 +13045,7 @@ que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 			mes "- Rayan is shivering in fear.";
 			mes "He still hasn't gotten over the fact that he killed all of his comrades.-";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "What is going on?";
 			mes "He doesn't look like the Rayan I know.";
 			next;
@@ -13127,7 +13127,7 @@ que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 			mes "Wah! What's going on?";
 			mes "Why is it suddenly..?!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Is this a time-space phenomenon?!";
 			mes "Why..? There's no gap here..?";
 			next;
@@ -13172,7 +13172,7 @@ que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 			mes "....Huh...?";
 			mes "What just happened?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "...I don't know...";
 			mes "...I think he's gone...?";
 			delitem Morocc_Tracing_Log,1;
@@ -13186,14 +13186,14 @@ que_job01,144,54,3	script	Rin#moc_room2_2	4_F_ACROSS,{
 			mes "What's up?";
 			mes "I'm kind of busy right now.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "..I've brought back the journal and something else..";
 			mes "..Er, sorry. I forgot to bring the journal! I'll be right back.";
 			close2;
 		}
 	}
 	else if (mao_morocc2 == 22) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What should we do now?";
 		mes "You know, that voice.. Do you think it was Satan Morocc...?";
 		next;
@@ -13357,14 +13357,14 @@ hu_fild04,235,103,0	script	Heap of Earth#mao2_01	CLEAR_NPC,4,4,{
 		mes "There are some broken branches to the side of a set of footprints that look like they're skidding backwards...";
 		mes "Somebody must have been fallen down on the ground, or...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I've been having a strange feeling around this area...";
 		mes "It feels like faint mana.. ?!... Yes, I can barely see an aura.";
 		mes "...What is this?";
 		next;
 		switch(select("Ignore it.", "Take a careful look.")) {
 		case 1:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hmm.. This place must be where Rin fought with Rayan's gang.";
 			mes "I don't see anything that looks important.";
 			close;
@@ -13374,7 +13374,7 @@ hu_fild04,235,103,0	script	Heap of Earth#mao2_01	CLEAR_NPC,4,4,{
 			next;
 			mes "^4d4dffYou have found a 'Bloody Crystal of Darkness'.^000000";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I don't think I'll find anything else here...";
 			mes "I should go back now.";
 			mes "I hope Rin will understand.";
@@ -13506,18 +13506,18 @@ OnTouch:
 	mes "you feel your body being pulled into the space gap.";
 	mes "You remember Kidd's confused voice, screaming your name.";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "By the way, where am I?";
 	mes "Argh.. My head hurts...";
 	mapannounce "que_dan01", "Female Voice: Checkmate! You can't run away any longer!",bc_map,"0x7b68ee";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes ".. ? Wh... What's going on?";
 	mes "I can't see things.. I'm getting dizzy...";
 	mes "What just happened?";
 	mapannounce "que_dan01", "Male Voice: *Giggle Giggle* If you thought I was alone, you're mistaken! Argh!",bc_map,"0xA8A8A8";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Huh? Are they fighting?";
 	mes "I can hear a crowd of people coming...";
 	mes "Argh! It's too dark to see...!";
@@ -13532,7 +13532,7 @@ OnTouch:
 	next;
 	soundeffect "wander_man_move.wav",1;
 	sc_end SC_BLIND;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "... !!!!";
 	mes "Rin!!!!";
 	mes "Why? Why is Rin here? Wait, where am I?";
@@ -13581,7 +13581,7 @@ OnTouch:
 	donpcevent "Rayan#moc2_bt_r01::OnDisable";
 	donpcevent "Dandelion Member#moc2_1::OnDisable";
 	donpcevent "Dandelion Member#moc2_2::OnDisable";
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Rin-!!!";
 	specialeffect EF_LIGHTBOLT,AREA,"Rin#moc2_bt_rin02";
 	specialeffect EF_FIREPILLARBOMB,AREA,"Rin#moc2_bt_rin02";
@@ -13793,7 +13793,7 @@ OnTouch:
 		mes "- You hear loud thuds and thumping in the midst of their yelling and screaming.";
 		mes "It sounds like they're having a serious dispute.-";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "...Rayan? ...Morroc? ...Resurrect...?";
 		mes "I have no idea what they're talking about. Why are they fighting?";
 		next;
@@ -13803,7 +13803,7 @@ OnTouch:
 		mes "...Oh, right. I completely forgot about 'it.' It's time to take it back.";
 		mes "What do you say? *Giggle Giggle*";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What the?! Does he know I'm here?!";
 		mes "I'd better run!";
 		next;
@@ -13847,7 +13847,7 @@ que_dan02,115,53,3	script	Man#moc2_crazyR01	4_M_DSTMAN,{
 		mes "He looks kind of.. He's insane, isn't he?";
 		cutin "mocseal_kid01",0;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Woah! Where did you come from?";
 		next;
 		mes "[Mr. Kidd]";
@@ -13864,7 +13864,7 @@ que_dan02,115,53,3	script	Man#moc2_crazyR01	4_M_DSTMAN,{
 		mes "Hehehe, I just followed the will of my master.";
 		mes "Muhahahahaha!!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "No... No way!";
 		next;
 		select("Rayan?!");

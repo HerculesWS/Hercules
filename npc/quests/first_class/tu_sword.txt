@@ -2047,20 +2047,20 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 		next;
 		switch(select("Killer...", "Murderer...")) {
 		case 1:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "What happened";
 			mes "to the killer?";
 			next;
 			switch(select("Who he is...", "Who is behind...")) {
 			case 1:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Did you find";
 				mes "out who he is?";
 				mes "If you did...";
 				next;
 				switch(select("Why are we...", "What are we...")) {
 				case 1:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Why are sitting";
 					mes "around, doing nothing?!";
 					next;
@@ -2076,7 +2076,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					mes "a response...";
 					close;
 				case 2:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "What are we";
 					mes "supposed to do now?";
 					next;
@@ -2093,14 +2093,14 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					close;
 				}
 			case 2:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Did you figure out";
 				mes "who's behind all this?";
 				mes "If you did...";
 				next;
 				switch(select("Why are we...", "What are we...")) {
 				case 1:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Why are sitting";
 					mes "around, doing nothing?!";
 					next;
@@ -2116,7 +2116,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					mes "a response...";
 					close;
 				case 2:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "What are we";
 					mes "supposed to do now?";
 					next;
@@ -2135,20 +2135,20 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 			}
 			break;
 		case 2:
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "What happened";
 			mes "to the murderer?";
 			next;
 			switch(select("Who he is...", "Who is behind...")) {
 			case 1:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Did you find";
 				mes "out who he is?";
 				mes "If you did...";
 				next;
 				switch(select("Why are we...", "What are we...")) {
 				case 1:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Why are sitting";
 					mes "around, doing nothing?!";
 					next;
@@ -2167,7 +2167,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					mes "a response...";
 					close;
 				case 2:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "What are we";
 					mes "supposed to do now?";
 					next;
@@ -2213,14 +2213,14 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					close;
 				}
 			case 2:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Did you figure out";
 				mes "who's behind all this?";
 				mes "If you did...";
 				next;
 				switch(select("Why are we...", "What are we...")) {
 				case 1:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Why are sitting";
 					mes "around, doing nothing?!";
 					next;
@@ -2238,7 +2238,7 @@ geffen,154,143,3	script	Dequ'ee	4_M_JOB_KNIGHT2,{
 					mes "a response...";
 					close;
 				case 2:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "What are we";
 					mes "supposed to do now?";
 					next;

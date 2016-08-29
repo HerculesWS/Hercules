@@ -104,7 +104,7 @@ OnAgitBreak:
 	.@GID = getcharid(2);
 	// Show and log error if an unguilded player breaks the Emperium. (Should NEVER happen)
 	if (.@GID <= 0) {
-		.@notice$ = "Character "+strcharinfo(0)+" ("+getcharid(0)+") broke the Emperium in Castle: "+strnpcinfo(NPC_NAME_HIDDEN)+" while guildless. No data will be saved and Emperium respawned.";
+		.@notice$ = "Character "+strcharinfo(PC_NAME)+" ("+getcharid(0)+") broke the Emperium in Castle: "+strnpcinfo(NPC_NAME_HIDDEN)+" while guildless. No data will be saved and Emperium respawned.";
 		logmes .@notice$; debugmes .@notice$;
 		donpcevent "Agit#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnStartArena";
 		end;
@@ -609,13 +609,13 @@ OnRecvCastle:
 		mes "Brave soul... fate will guide you towards your future...";
 		close;
 	}
-	if (getguildmaster(.@GID) != strcharinfo(0)) {
+	if (getguildmaster(.@GID) != strcharinfo(PC_NAME)) {
 		mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
 		mes "No matter how much you pester me, I'll still follow my master ^ff0000"+getguildmaster(.@GID)+"^000000. Where are the Guardians?! Send these ruffians away right now!";
 		close;
 	}
 	mes "["+strnpcinfo(NPC_NAME_VISIBLE)+"]";
-	mes "Welcome. My honorable master, ^ff0000"+strcharinfo(0)+"^000000...";
+	mes "Welcome. My honorable master, ^ff0000"+strcharinfo(PC_NAME)+"^000000...";
 	mes "Your humble servant, "+strnpcinfo(NPC_NAME_VISIBLE)+", is here to serve you.";
 	next;
 	switch (select("Castle briefing", "Invest in commercial growth", "Invest in Castle Defenses", "Summon Guardian", "Hire / Fire a Kafra Employee", "Go into Master's room")) {

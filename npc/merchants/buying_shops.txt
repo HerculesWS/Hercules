@@ -203,7 +203,7 @@ alberta_in,58,52,4	script	Purchasing Team#Buying	1_M_ORIENT01,{
 			mes "That's the point of my proposal!";
 			mes "Our president was so happy to hear that we're going to make big bucks!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Please get to the point already!";
 			next;
 			mes "[Mr. Hugh]";

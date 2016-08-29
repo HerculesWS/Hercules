@@ -114,7 +114,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 			.@instance = instance_create(.@md_name$, .@party_id);
 			if (.@instance < 0) {
 				mesf("Party Name: %s", .@p_name$);
-				mesf("Party Leader: %s", strcharinfo(0));
+				mesf("Party Leader: %s", strcharinfo(PC_NAME));
 				mesf("^0000ff%s^000000 - Reservation Failed!", .@md_name$);
 				close;
 			}
@@ -134,7 +134,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 						"The party leader did not generate the dungeon yet.", .@md_name$);
 				close;
 			}
-			mapannounce("glast_01", sprintf(_$("%s, member of the party %s entered the instance %s."), strcharinfo(0), .@p_name$, .@md_name$), bc_map, C_SPRINGGREEN);
+			mapannounce("glast_01", sprintf(_$("%s, member of the party %s entered the instance %s."), strcharinfo(PC_NAME), .@p_name$, .@md_name$), bc_map, C_SPRINGGREEN);
 			setquest 12317;
 			warp "1@gl_k", 150, 20;
 			end;
@@ -179,7 +179,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 	npctalk(_("Are you the one Herico sent to help me?"));
 	next;
 	select("Oh. Well I...");
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Ah yes, I am. Herico told me to meet you.");
 	unittalk(getcharid(3), _("Ah yes, I am. Herico told me to meet you."));
 	next;
@@ -189,7 +189,7 @@ glast_01,204,273,6	script	Hugin#ghinstance	4_M_SAGE_C,{
 	npctalk(_("We don't have much time. We must report to Sir. Heinrich about Himelmez's invasion."));
 	next;
 	select("Himelmez...");
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Who is Himelmez?");
 	unittalk(getcharid(3), _("Who is Himelmez?"));
 	next;
@@ -287,7 +287,7 @@ OnEnable:
 	}
 	cutin("gl_heinrich2", 2);
 	select("Sir. Heinrich. Varmundt...");
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Sir. Heinrich. Do you know what is happening in the castle now?");
 	unittalk(getcharid(3), _("Sir. Heinrich. Do you know what is happening in the castle now?"));
 	next;
@@ -300,7 +300,7 @@ OnEnable:
 	npctalk(_("What is it? Something wrong with the castle?"));
 	next;
 	select("Himelmez's invasion...");
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Dead man's Valkyrie, Himelmez is coming to take the Ymir's Heart piece hidden inside this castle!");
 	unittalk(getcharid(3), _("Dead man's Valkyrie, Himelmez is coming to take the Ymir's Heart piece hidden inside this castle!"));
 	next;
@@ -319,7 +319,7 @@ OnEnable:
 	npctalk(_("We must hide the heart piece to a safe place before Himelmez's attack starts!"), instance_npcname("Varmundt#ghinstance2"));
 	next;
 	select("Even if you don't believe me...");
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("I can't make you believe me, but there's no time to argue!");
 	unittalk(getcharid(3), _("I can't make you believe me, but there's no time to argue!"));
 	cutin("gl_barmund2", 255);
@@ -811,7 +811,7 @@ OnMyMobDead:
 	npctalk(_("Save me! Save me!!!"));
 	next;
 	select("Hold on!Are you the only survivor?");
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Hold on!\r"
 		"Are you the only survivor?");
 	unittalk(getcharid(3), _("Hold on! Are you the only survivor?"));
@@ -828,7 +828,7 @@ OnMyMobDead:
 	npctalk(_("Altar boy Domun : All I could do was... Just hide in here... Nothing, nothing I could do..."));
 	next;
 	select("Pull it together!");
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Wake up kid! Go east and find the middle passage to the outside! That is safe!");
 	unittalk(getcharid(3), _("Wake up kid! Go east and find the middle passage to the outside! That is safe!")); // Displays 1st Letter of char name in small?
 	next;
@@ -839,7 +839,7 @@ OnMyMobDead:
 	npctalk(_("Altar boy Domun : To the east passage? Alone? How?"));
 	next;
 	select("I will give you a weapon.");
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Here's a weapon. Just close your eye and swing for those monsters.");
 	unittalk(getcharid(3), _("Here's a weapon. Just close your eye and swing for those monsters."));
 	next;
@@ -909,7 +909,7 @@ OnMyMobDead:
 	specialeffect EF_CRASHEARTH;
 	next;
 	select("Relax! I'm not a monster!");
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Relax! I am Human. Are you alone? Anyone else here?");
 	unittalk(getcharid(3), _("Relax! I am Human. Are you alone? Anyone else here?"));
 	next;
@@ -918,7 +918,7 @@ OnMyMobDead:
 	npctalk(_("Holgren the Destroyer : It's only me alive."));
 	next;
 	select("It's dangerous here...");
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("It's dangerous here. You know the way to the middle passage? Can you move?");
 	unittalk(getcharid(3), _("It's dangerous here. You know the way to the middle passage? Can you move?")); // Displays 1st Letter of char name in small?
 	next;
@@ -927,7 +927,7 @@ OnMyMobDead:
 	npctalk(_("Holgren the Destroyer : Yes, I can move. I need to get out of here."));
 	next;
 	select("Be safe...");
-	mesf("[%s]", strcharinfo(0));
+	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Sorry, I can't go with you.");
 	unittalk(getcharid(3), _("Sorry, I can't go with you."));
 	next;

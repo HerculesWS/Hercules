@@ -102,7 +102,7 @@ lighthalzen,261,112,3	script	Ruth#zen4	4_F_LGTGIRL,{
 	mes "happiness. Oh, I love";
 	mes "you so much, Oyoung.";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Whoa...";
 	mes "This couple is";
 	mes "really headed for";
@@ -126,7 +126,7 @@ lighthalzen,259,108,7	script	Oyoung#zen14	4_M_LGTMAN,{
 	mes "they got vitamin deficiency.";
 	mes "I better take care of that~";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Sweet Sister!";
 	mes "I don't know what's";
 	mes "more mind boggling--";
@@ -1049,7 +1049,7 @@ OnTouch:
 			emotion e_heh;
 			close;
 		}
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Here you go,";
 		mes "take this.";
 		Zeny -= 50;
@@ -1087,16 +1087,16 @@ OnTouch:
 			mes "with reality. Like the stars that are always there, but not visible";
 			mes "during the day, we'll always have hope, even if we can't see it.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			mes ". . . . . . . . . . . .";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			mes ". . . . . . . . . . . .";
@@ -1138,16 +1138,16 @@ OnTouch:
 			mes "you can be someone else's";
 			mes "miracle. Isn't that wonderful?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			mes ". . . . . . . . . . . .";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			mes ". . . . . . . . . . . .";
@@ -1206,16 +1206,16 @@ OnTouch:
 			mes "you a hero. Fighting with anger";
 			mes "born of frustration will make you a bully. Know the difference.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			mes ". . . . . . . . . . . .";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			emotion e_dots,1;
 			mes ". . . . . . . . . . . .";
 			mes ". . . . . . . . . . . .";
@@ -1229,7 +1229,7 @@ OnTouch:
 			close;
 		}
 	}
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "...";
 	mes "......";
 	close;
@@ -1401,14 +1401,14 @@ lhz_in01,124,28,3	script	Ellette#tre	1_F_01,{
 	mes "[Ellette]";
 	mes "...";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Excuse me.";
 	next;
 	mes "[Ellette]";
 	mes "...";
 	mes "......";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Hello?";
 	next;
 	mes "[Ellette]";
@@ -2762,7 +2762,7 @@ lhz_in02,267,22,1	script	Shop Assistant#cobo	4_F_02,{
 	mes "membership fee that's waived when you spend a certain amount every";
 	mes "month in our store. If you invite your friends, you'll receive spe--";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "N-no thank you!";
 	mes "I'm not interested!";
 	close;
@@ -3004,7 +3004,7 @@ OnTouch:
 		if (Sex == SEX_MALE) {
 			mes "^3355FF*Click*^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "What the...?";
 			mes "That sound. Did...";
 			mes "Did someone just";

@@ -165,8 +165,8 @@ iz_int,91,81,3	script	Lumin#iz_int	4_M_NOV_RUMIN,{
 		mes ".....";
 		next;
 		select("Should I introduce myself?", "My name is ~!");
-		mes "["+strcharinfo(0)+"]";
-		mes "I am "+strcharinfo(0)+"!";
+		mes "["+strcharinfo(PC_NAME)+"]";
+		mes "I am "+strcharinfo(PC_NAME)+"!";
 		next;
 		mes "[Lu]";
 		mes ".....";
@@ -203,7 +203,7 @@ izlude,198,213,3	script	Captain Carocc#iz	4_M_REINDEER,5,5,{
 		if (questprogress(4269) == 2) {
 			if (questprogress(7471) == 2 || questprogress(7472) > 0) {
 				mes "[Carocc]";
-				mes "Oh, "+strcharinfo(0)+"!";
+				mes "Oh, "+strcharinfo(PC_NAME)+"!";
 				mes "Why are you here at the wharf?";
 				mes "I guess you are doing well at the academy.";
 				next;
@@ -367,7 +367,7 @@ izlude,198,213,3	script	Captain Carocc#iz	4_M_REINDEER,5,5,{
 					close;
 				} else {
 					mes "[Carocc]";
-					mes "Oh, " + strcharinfo(0) + "!";
+					mes "Oh, " + strcharinfo(PC_NAME) + "!";
 					mes "Still being dilligent?";
 					mes "I've been busy, also.";
 					mes "I was reparing the ship.";
@@ -1211,7 +1211,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 				mes "I am OK with 6 to 4.";
 				cutin "nov_lumin02.bmp", 2;
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "This guy...";
 				next;
 			}
@@ -1219,7 +1219,7 @@ izlude,120,207,4	script	Information Staff#0	8W_SOLDIER,{
 			mes "[Information Staff]";
 			mes "Ahhh, you two calm down.";
 			mes "Lumin took them all.";
-			mes ""+ strcharinfo(0) + " I will give you one set separately.";
+			mes ""+ strcharinfo(PC_NAME) + " I will give you one set separately.";
 			next;
 			mes "[Information Staff]";
 			mes "Think of the reason, it was my fault to leave one person's but sent both of you.";
@@ -1517,7 +1517,7 @@ izlude,179,75,3	script	Airship#iz	4_BULLETIN_BOARD2,3,3,{
 					cutin "nov_lumin02.bmp", 2;
 					next;
 					cutin "", 255;
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Are you even listening to me?!";
 					setquest 7475;
 					viewpoint 2,179,75,1,0xFF0000;
@@ -1660,7 +1660,7 @@ izlude,207,167,3	script	Arena#iz	4_BULLETIN_BOARD2,3,3,{
 					cutin "nov_lumin02.bmp", 2;
 					next;
 					cutin "", 255;
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Are you even listening to me?!";
 					setquest 7476;
 					viewpoint 2,207,167,3,0xFF0000;
@@ -1811,7 +1811,7 @@ izlude,45,94,3	script	Bulletin Board#iz	4_BULLETIN_BOARD2,3,3,{
 					cutin "nov_lumin02.bmp", 2;
 					next;
 					cutin "", 255;
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Are you even listening to me?!";
 					setquest 7477;
 					viewpoint 2,45,94,2,0xFF0000;
@@ -2427,7 +2427,7 @@ iz_ac01,100,39,5	script	Academy Receptionist#1	4_F_01,{
 
 	if (questprogress(4269) == 2) {
 		mes "[Receptionist]";
-		mes "Hello, " + strcharinfo(0) +".";
+		mes "Hello, " + strcharinfo(PC_NAME) +".";
 		mes "How are you today?";
 		mes "I am in charge guiding you here in the Academy.";
 	} else {
@@ -2451,7 +2451,7 @@ iz_ac01,100,39,5	script	Academy Receptionist#1	4_F_01,{
 					close;
 				}
 				mes "[Receptionist]";
-				mes "Let me see... Your name is... " + strcharinfo(0) + ".";
+				mes "Let me see... Your name is... " + strcharinfo(PC_NAME) + ".";
 				mes "I will make a new registration for you.";
 				mes "You can choose the course freely and each course has individual features.";
 				next;
@@ -3731,8 +3731,8 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 			mes "[Dacquoise]";
 			mes "What's your name stranger?";
 			next;
-			mes "["+strcharinfo(0)+"]";
-			mes ""+strcharinfo(0)+", hello.";
+			mes "["+strcharinfo(PC_NAME)+"]";
+			mes ""+strcharinfo(PC_NAME)+", hello.";
 			next;
 			emotion e_no1;
 			mes "[Dacquoise]";
@@ -4040,7 +4040,7 @@ iz_ac01,147,50,3	script	Dacquoise#ac	4_COOK,{
 				mes "So what do you want to cook?";
 				next;
 				mes "[Mille Feuille]";
-				mes "Oh? That kid is back again. "+strcharinfo(0)+" right? So what do you want?";
+				mes "Oh? That kid is back again. "+strcharinfo(PC_NAME)+" right? So what do you want?";
 				next;
 			} else {
 				mes "[Dacquoise]";
@@ -5041,14 +5041,14 @@ new_1-3,99,169,3	script	Friendly Poring#ac	4_PORING,{
 			mes "Steady on now guv'na...";
 			mes "What did you do to Unskilled Poring!?!? Novice!!!!!!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I used the unripe apples that you gave me, then they turned into eggs.";
 			next;
 			emotion e_sob, 0, "Friendly Poring#ac";
 			mes "[Poring]";
 			mes "Oh, guess I didn't expect they'd be turned into pets so easily!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Yeah, don't worry, I'll make sure to";
 			mes "give them a good home.";
 			completequest 2296;
@@ -5297,7 +5297,7 @@ iz_ac01,95,46,5	script	Kafra Guide Trainer#ac	4_F_KAFRA1,{
 					mes "Please check your accumulated customer points~!";
 				} else {
 					mes "[Kafra Guide Trainer]";
-					mes ""+strcharinfo(0)+", your accummulated points are "+RESRVPTS+" points.";
+					mes ""+strcharinfo(PC_NAME)+", your accummulated points are "+RESRVPTS+" points.";
 					next;
 					mes "[Kafra Guide Trainer]";
 					mes "You can exchange your";
@@ -7917,11 +7917,11 @@ iz_ac02,131,82,4	script	Lusa's Desk#ac	CLEAR_NPC,{
 					next;
 				}
 			} else if (.@gun_quest_01 == 1) {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I am already doing this task currently. Lusa said if I ever wanted to abondon the assignment that I should talk to her.";
 				next;
 			} else if (.@gun_quest_01 == 2) {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I have already completed this assignment. I should talk to Lusa for my reward.";
 				next;
 			}
@@ -7938,11 +7938,11 @@ iz_ac02,131,82,4	script	Lusa's Desk#ac	CLEAR_NPC,{
 					next;
 				}
 			} else if (.@gun_quest_02 == 1) {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I am already doing this task currently. Lusa said if I ever wanted to abondon the assignment that I should talk to her.";
 				next;
 			} else if (.@gun_quest_02 == 2) {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I have already completed this assignment. I should talk to Lusa for my reward.";
 				next;
 			}
@@ -7959,11 +7959,11 @@ iz_ac02,131,82,4	script	Lusa's Desk#ac	CLEAR_NPC,{
 					next;
 				}
 			} else if (.@gun_quest_03 == 1) {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I am already doing this task currently. Lusa said if I ever wanted to abondon the assignment that I should talk to her.";
 				next;
 			} else if (.@gun_quest_03 == 2) {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I have already completed this assignment. I should talk to Lusa for my reward.";
 				next;
 			}
@@ -7980,11 +7980,11 @@ iz_ac02,131,82,4	script	Lusa's Desk#ac	CLEAR_NPC,{
 					next;
 				}
 			} else if (.@gun_quest_04 == 1) {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I am already doing this task currently. Lusa said if I ever wanted to abondon the assignment that I should talk to her.";
 				next;
 			} else if (.@gun_quest_04 == 2) {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I have already completed this assignment. I should talk to Lusa for my reward.";
 				next;
 			}
@@ -9528,7 +9528,7 @@ iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 	} else {
 		cutin "aca_salim02",2;
 		mes "[Salim Hamid]";
-		mes "Hahaha. "+strcharinfo(0)+" you have completed the Merchant theory course at the Criatura Academy.";
+		mes "Hahaha. "+strcharinfo(PC_NAME)+" you have completed the Merchant theory course at the Criatura Academy.";
 		next;
 		mes "[Salim Hamid]";
 		mes "When you want to test the other battle skills in the Merchant's Manual,";
@@ -9538,7 +9538,7 @@ iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 		mes "You can fully experience the battle related practice through him.";
 		next;
 		mes "[Salim Hamid]";
-		mes "The guide for the next course "+strcharinfo(0)+" will be serviced when you reach job level 10. Good luck.";
+		mes "The guide for the next course "+strcharinfo(PC_NAME)+" will be serviced when you reach job level 10. Good luck.";
 		close2;
 		cutin "", 255;
 		end;
@@ -9603,14 +9603,14 @@ iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 		cutin "aca_salim01.bmp", 2;
 		mes "[Salim Hamid]";
 		mes "Ummm~ Your name is...";
-		mes "^0000ff"+ strcharinfo(0) +"^000000...... right?";
+		mes "^0000ff"+ strcharinfo(PC_NAME) +"^000000...... right?";
 		next;
 		mes "[Salim Hamid]";
 		mes "First to observe the Merchant course, you need to have the Merchant mindset. A trader with less than 100 zeny could not be called a Merchant.";
 		next;
 		cutin "aca_salim02.bmp", 2;
 		mes "[Salim Hamid]";
-		mes ""+ strcharinfo(0) +"^000000 come back to me with 100 Zeny in hand before the next class.";
+		mes ""+ strcharinfo(PC_NAME) +"^000000 come back to me with 100 Zeny in hand before the next class.";
 		next;
 		mes "[Salim Hamid]";
 		mes "Of course, that money won't be taken. It is only A test to see your basic mindset to being a Merchant. Good luck.";
@@ -9683,14 +9683,14 @@ iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 		next;
 		cutin "aca_salim02",2;
 		mes "[Salim Hamid]";
-		mes "By any chance, "+strcharinfo(0)+" do you have mind to learn more about Merchants here?";
+		mes "By any chance, "+strcharinfo(PC_NAME)+" do you have mind to learn more about Merchants here?";
 		next;
 		if(select("I will look around at more jobs.", "Let me do it a little more.") == 1) {
 			mes "[Salim Hamid]";
 			mes "Yes, your open mind is good for you. As this academy has many other lecturers besides Merchants.";
 			next;
 			mes "[Salim Hamid]";
-			mes "Whenever you feel like learning again, come back to me "+strcharinfo(0)+".";
+			mes "Whenever you feel like learning again, come back to me "+strcharinfo(PC_NAME)+".";
 			close2;
 			cutin "", 255;
 			end;
@@ -9726,7 +9726,7 @@ iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 				next;
 				if(select("I already know all of them.", "Please make another explanation.") == 1) {
 					mes "[Salim Hamid]";
-					mes "Yes, you are "+strcharinfo(0)+" I am pleased to meet a quick-to-learn student like you. It also saves my time.";
+					mes "Yes, you are "+strcharinfo(PC_NAME)+" I am pleased to meet a quick-to-learn student like you. It also saves my time.";
 					next;
 				} else {
 					mes "[Salim Hamid]";
@@ -9788,7 +9788,7 @@ iz_ac02,50,169,3	script	Salim Hamid#ac	1_M_MERCHANT,{
 	}
 	if (questprogress(12306) < 1) {
 		mes "[Salim Hamid]";
-		mes "You came back again. "+strcharinfo(0)+" this time, shall we have a practical training by doing a simple errand?";
+		mes "You came back again. "+strcharinfo(PC_NAME)+" this time, shall we have a practical training by doing a simple errand?";
 		next;
 		mes "[Salim Hamid]";
 		mes "Can you see the noisy vending machine at the corner of this classroom? It was originally a soft drink vending machine but swallows coin very much...";
@@ -9927,7 +9927,7 @@ iz_ac02,53,171,3	script	Steward Aydin#ac	4_M_MANAGER,{
 					mes "It is simple to use Overcharge and Discount.";
 					next;
 					mes "[Steward Aydin]";
-					mes "These two skills are passive skills. If you become familiar with these, "+strcharinfo(0)+" these will automatically perform in trading with merchant NPC without your operation.";
+					mes "These two skills are passive skills. If you become familiar with these, "+strcharinfo(PC_NAME)+" these will automatically perform in trading with merchant NPC without your operation.";
 					next;
 					mes "[Steward Aydin]";
 					mes "Once you've learned Overcharge, when selling commodities to a merchant NPC, you can gain the sales money composed of the regular sales price plus additional money as per the Overcharge skill level.";
@@ -10017,7 +10017,7 @@ iz_ac02,52,136,3	script	Guest Lecturer Mayssel#0	4_F_MAYSEL,{
 			mes "He is also one of the students in this class.";
 			next;
 			mes "[Mayssel]";
-			mes "Hello " + strcharinfo(0) + "";
+			mes "Hello " + strcharinfo(PC_NAME) + "";
 			mes "I am Mayssel  the section chief of the Veins section of the Assassin Guild.";
 			mes "I came here to give you some information about the Thief class.";
 			next;
@@ -10082,7 +10082,7 @@ iz_ac02,52,136,3	script	Guest Lecturer Mayssel#0	4_F_MAYSEL,{
 			next;
 			mes "[Mayssel]";
 			mes "I see...";
-			mes "" + strcharinfo(0) + " Sorry but you can learn about the Shadow Chaser class from them.";
+			mes "" + strcharinfo(PC_NAME) + " Sorry but you can learn about the Shadow Chaser class from them.";
 			cutin "gc_mayssel03.bmp", 1;
 			next;
 			cutin "gc_mayssel01.bmp", 1;

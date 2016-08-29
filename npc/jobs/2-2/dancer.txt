@@ -194,7 +194,7 @@ job_duncer,43,93,4	script	Aile#da	4_F_07,{
 				cutin "job_dancer_eir01",2;
 				mes "[Aile]";
 				mes "Your name is";
-				mes "" + strcharinfo(0) + "?";
+				mes "" + strcharinfo(PC_NAME) + "?";
 				mes "Wow! What a pretty name! Just a moment, I have to show this to the director, so come back in a little bit, okay?";
 				close2;
 				cutin "",255;
@@ -560,7 +560,7 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 			mes "6. Who is the most";
 			mes "beautiful dancer?";
 			next;
-			switch(select(strcharinfo(0), "Bijou", "Aile", "Bonjour")) {
+			switch(select(strcharinfo(PC_NAME), "Bijou", "Aile", "Bonjour")) {
 			case 1:
 				mes "[Bijou]";
 				mes "...";
@@ -653,7 +653,7 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 			mes "7. Who is the most";
 			mes "graceful dancer?";
 			next;
-			switch(select(strcharinfo(0), "Bijou", "Isis", "Mercy Bokou")) {
+			switch(select(strcharinfo(PC_NAME), "Bijou", "Isis", "Mercy Bokou")) {
 			case 1:
 				mes "[Bijou]";
 				mes "...";
@@ -728,7 +728,7 @@ job_duncer,95,93,4	script	Bijou#da	4W_F_01,{
 			mes "5. Of the following,";
 			mes "who dances most beautifully?";
 			next;
-			switch(select(strcharinfo(0), "Bijou", "Isis", "Guton Tak")) {
+			switch(select(strcharinfo(PC_NAME), "Bijou", "Isis", "Guton Tak")) {
 			case 1:
 				mes "[Bijou]";
 				mes "...";
@@ -1309,7 +1309,7 @@ OnEnable:
 -	script	dancestep::StepTrigger	FAKE_NPC,1,1,{
 OnTouch:
 	donpcevent "Backdancer#1::OnOmg";
-	mapannounce "job_duncer"," " + strcharinfo(0) + ", you lack rhythm... Your timing was too late!",bc_map;
+	mapannounce "job_duncer"," " + strcharinfo(PC_NAME) + ", you lack rhythm... Your timing was too late!",bc_map;
 	DANC_Q = 8;
 	donpcevent "Bijou#dance_timer::OnDisable";
 	donpcevent "Waiting Room#dance::OnEnable";

@@ -161,7 +161,7 @@ prontera,164,174,4	script	Trader#Val09	1_M_MERCHANT,{
 			delitem 7174,1;
 			delitem 7948,1;
 			Zeny -= 500;
-			getnameditem 12744,strcharinfo(0);
+			getnameditem 12744,strcharinfo(PC_NAME);
 			mes "[Marco Bassinio]";
 			mes "Happy Valentine's Day!";
 			mes "Valentine's the reason I came back.";
@@ -397,9 +397,9 @@ prontera,154,185,5	script	Event Ring Maker#Val09	4_F_KAFRA7,{
 	Zeny -= 1000;
 	iROval09ring = 1;
 	if (Sex == SEX_MALE) {
-		getnameditem 12742,strcharinfo(0);
+		getnameditem 12742,strcharinfo(PC_NAME);
 	} else {
-		getnameditem 12743,strcharinfo(0);
+		getnameditem 12743,strcharinfo(PC_NAME);
 	}
 	mes "[Event Ring Maker]";
 	mes "Here, the most precious ring in the world!";
@@ -477,7 +477,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 					Val09Rings += .@input;
 					if (Val09Rings > $Val09votes_M) {
 						$Val09votes_M = Val09Rings;
-						$Val09name_M$ = strcharinfo(0);
+						$Val09name_M$ = strcharinfo(PC_NAME);
 					}
 					next;
 					break;
@@ -505,7 +505,7 @@ prontera,157,185,4	script	Valentine Vote Manager#v	4_F_KAFRA5,{
 					Val09Rings += .@input;
 					if (Val09Rings > $Val09votes_F) {
 						$Val09votes_F = Val09Rings;
-						$Val09name_F$ = strcharinfo(0);
+						$Val09name_F$ = strcharinfo(PC_NAME);
 					}
 					next;
 					break;

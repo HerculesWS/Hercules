@@ -85,7 +85,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			mes "[Kain Himere]";
 			mes "It's powered through just a little piece from the Heart of Ymir. This flying ship is a source of pride and joy for our nation.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Is there any other transportation?";
 			next;
 			mes "[Kain Himere]";
@@ -114,7 +114,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 				mes "have any helpful criticism about our service, feel free to leave me with your comments at any time.";
 				close;
 			} else {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes .@comment$+".";
 				next;
 				mes "[Kain Himere]";
@@ -164,7 +164,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 				mes "have any helpful criticism about our service, feel free to leave me with your comments at any time.";
 				close;
 			} else {
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes .@comment$+".";
 				next;
 				mes "[Kain Himere]";
@@ -178,7 +178,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			}
 		}
 	} else if (kain_ticket == 2) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "About the Airship...";
 		next;
 		mes "[Kain Himere]";
@@ -231,7 +231,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			mes "[Kain Himere]";
 			mes "But then, the accident happened and I couldn't use my right arm the way I used to. So I had to quit my job as a miner...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I'm sorry to hear that.";
 			next;
 			mes "[Kain Himere]";
@@ -260,7 +260,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			mes "[Kain Himere]";
 			mes "Finally, I became a crewman on this Airship. It's been twenty years... I can't even remember my daughter's name.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Where is she by now?";
 			next;
 			mes "[Kain Himere]";
@@ -278,7 +278,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			switch(select("Einbroch", "Juno")) {
 			case 1:
 				kain_ticket = 4;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I'm heading";
 				mes "to Einbroch.";
 				next;
@@ -289,7 +289,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 				close;
 			case 2:
 				kain_ticket = 3;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "I'm heading";
 				mes "to Juno.";
 				next;
@@ -308,7 +308,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 		switch(select("Einbroch", "Juno")) {
 		case 1:
 			kain_ticket = 4;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I'm heading";
 			mes "to Einbroch.";
 			next;
@@ -318,7 +318,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			mes "that thing. Hold on...";
 			close;
 		case 2:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I am heading to Juno.";
 			next;
 			mes "[Kain Himere]";
@@ -338,7 +338,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 		mes "[Kain Himere]";
 		mes "Welcome back to the Airship. So did you deliver that little box safely?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "No, unfortunately. He was away when I got there. Let me give this box back to you.";
 		next;
 		mes "[Kain Himere]";
@@ -360,7 +360,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			mes "Why is that name";
 			mes "so familiar...?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I met a little girl in Einbroch who was singing 'Miner's Song.' Apparently, her mother, Tarsha, taught it to her.";
 			next;
 			mes "[Kain Himere]";
@@ -370,7 +370,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			mes "song. What does this";
 			mes "have to do with me?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Well, Tarsha remembers her father singing her song, so it's possible that ^000066he^000000 was a miner. And since her father disappeared years ago...";
 			next;
 			mes "[Kain Himere]";
@@ -384,7 +384,7 @@ airplane,47,61,7	script	Crewman	4_M_ZONDAOYAJI,{
 			mes "Sweet Christ...";
 			mes "The miner who taught Tarsha that song might have been ^0000FFme^000000.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I guess we can't be too sure for now. Do you have anything that might prove you're Tarsha's father?";
 			next;
 			mes "[Kain Himere]";
@@ -458,17 +458,17 @@ ein_in01,227,279,3	script	#door_ein	FAKE_NPC,5,5,{
 OnTouch:
 	if (kain_ticket == 5) {
 		kain_ticket = 6;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Excuse me...?";
 		next;
 		mes "^3355FFNo one's here!^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "This must be the room...";
 		mes "But where the hell is he?";
 		mes "I can't just leave this stuff here if he won't come back.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Oh well...";
 		mes "I guess I can";
 		mes "just give this";
@@ -607,7 +607,7 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 		mes "Although these contraptions aren't worth showing off, we've put a lot of work into inventing these machines.";
 		close;
 	} else if (kain_ticket == 9) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ma'am, you have a scar on your shoulder. Is that from an accident?";
 		next;
 		mes "[Tarsha Cherno]";
@@ -629,7 +629,7 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 		mes "[Tarsha Cherno]";
 		mes "In the end, I left home and studied mechanics. That's how I met my husband. Meeting him is the greating thing that's ever happened to me!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "By the way,";
 		mes "I heard your";
 		mes "daughter singing";
@@ -650,14 +650,14 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 		mes "[Tarsha Cherno]";
 		mes "I barely recall that he used to sing it while cleaning our old house. Yes, I don't remember what he looked like, but he must have been a miner.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "A miner...?";
 		mes "(Wait, that crewman, Kain Himere! He's a miner who lost his daughter!)";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes " !!!!!!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Tarsha...";
 		mes "Your father";
 		mes "may still be";
@@ -666,13 +666,13 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 		mes "[Tarsha Cherno]";
 		mes "...What?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I've got to go check something now, but hopefully I'll be back soon with good news!";
 		changequest 2080,2081;
 		kain_ticket = 10;
 		close;
 	} else if (kain_ticket == 10 || kain_ticket == 11) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I know someone who might be your father! Just wait for me, hopefully I'll bering good news soon!";
 		close;
 	} else if (kain_ticket == 12) {
@@ -681,7 +681,7 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 		mes "So did you bring";
 		mes "good news...?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Yes, speaking of which, allow me to... Check something.";
 		next;
 		switch(select("Check her neck.", "Check her hands.", "Check her legs.", "Check her forehead.")) {
@@ -702,10 +702,10 @@ ein_in01,125,99,3	script	Tarsha Cherno	4_F_EINWOMAN,{
 			mes "a burn mark on";
 			mes "her hand.^000000";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "That's it! Tarsha, your father's name is Kain. He's working for the Airship as a crewman.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "He misses you";
 			mes "a lot and hopes";
 			mes "that you can forgive";
@@ -835,7 +835,7 @@ function	script	F_Cherno	{
 		mes "Excuse me?";
 		mes "What did she say?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Well, uh...";
 		mes "She wanted to me";
 		mes "to check if her mom";
@@ -860,12 +860,12 @@ function	script	F_Cherno	{
 		mes "Kind adventurer,";
 		mes "May I ask your name?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I am called,";
-		mes strcharinfo(0)+".";
+		mes strcharinfo(PC_NAME)+".";
 		next;
 		mes "[Tarsha Cherno]";
-		mes strcharinfo(0)+",";
+		mes strcharinfo(PC_NAME)+",";
 		mes "I appreciate your concerns~ Would you please stay for a cup of tea?";
 		next;
 		mes "[Tarsha Cherno]";
@@ -874,7 +874,7 @@ function	script	F_Cherno	{
 		mes "[Tarsha Cherno]";
 		mes "If we could create a machine that could reduce the risk of mining ores, we could really help them. But we're pretty far from reaching that goal.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Ah...";
 		mes "So that's why";
 		mes "there's so many";
@@ -909,14 +909,14 @@ ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 		if (Sex == SEX_MALE) {
 			switch(rand(1,5)) {
 			case 1:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Man...";
 				mes "I didn't know";
 				mes "I was so good";
 				mes "looking! Ooh yah~";
 				break;
 			case 2:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Whoa...";
 				mes "So that's why the";
 				mes "ladies keep looking";
@@ -924,7 +924,7 @@ ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 				mes "free gun show!";
 				break;
 			case 3:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "It's a shame I can't job";
 				mes "change to Male Model.";
 				mes "Clearly, I'd be like, Job";
@@ -932,7 +932,7 @@ ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 				mes "Man, I'm beautiful...";
 				break;
 			case 4:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "This is my reflection?!";
 				mes "No one can be this good";
 				mes "looking, not without special";
@@ -940,7 +940,7 @@ ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 				mes "fair to everyone else...";
 				break;
 			case 5:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Oh wow...";
 				mes "I look pretty good.";
 				mes "No wait. Really, really";
@@ -952,7 +952,7 @@ ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 		} else {
 			switch(rand(1,5)) {
 			case 1:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Oh. Wow.";
 				mes "I never realized...";
 				mes "Everything is in";
@@ -961,7 +961,7 @@ ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 				mes "want to party with me~";
 				break;
 			case 2:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Oh my gosh~";
 				mes "How can I look this";
 				mes "good without any makeup?";
@@ -969,7 +969,7 @@ ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 				mes "girls... Wow, is this really me?";
 				break;
 			case 3:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Am I going crazy?";
 				mes "Is that girl in the";
 				mes "mirror really me...?";
@@ -977,7 +977,7 @@ ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 				mes "how gorgeous I look?";
 				break;
 			case 4:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "So...";
 				mes "What did you do with";
 				mes "this mirror? Because I'm";
@@ -992,7 +992,7 @@ ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 				mes "of our inventions.";
 				mes "It's just a normal mirror...";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Well now...!";
 				mes "Are you sure?";
 				mes "Because my face looks";
@@ -1000,7 +1000,7 @@ ein_in01,121,99,3	script	Mirror#ein	HIDDEN_NPC,{
 				mes "it's like, I'm almost too sexy!";
 				break;
 			case 5:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Oh wow...";
 				mes "I look pretty good.";
 				mes "No wait. Really, really";
@@ -1139,7 +1139,7 @@ einbech,53,94,5	duplicate(Tree)	Tree#t1-4	HIDDEN_NPC
 //- Expert Repairman -
 ein_in01,117,80,5	script	Unidentified Machine#as	HIDDEN_NPC,{
 	if (kain_ticket > 12) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "This is the";
 		mes "^FF0000Expert Repairman^000000?!";
 		mes "It looks like it";
@@ -2062,7 +2062,7 @@ airplane,236,163,5	script	Airship Captain#03	4_M_REINDEER,{
 		}
 	} else if (lght_air == 7 && lhz_heart == 12) {
 		mes "[Ferlock]";
-		mes "Now, "+strcharinfo(0)+",";
+		mes "Now, "+strcharinfo(PC_NAME)+",";
 		mes "you must be wondering";
 		mes "why I'm telling you all";
 		mes "this. I believe that some";
@@ -2677,7 +2677,7 @@ airplane,236,63,4	script	Hallen	4_M_KID1,{
 		mes "game for Apples!";
 		next;
 		if (Shinokas_Quest > 9) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "(^333333Wait, I met that guy when";
 			mes "I was helping Shinokas. He";
 			mes "was one of the directors of";
@@ -2930,7 +2930,7 @@ L_Ask:
 		close;
 	} else if (lhz_heart == 8) {
 		mes "[Kaci]";
-		mes "Hello, "+strcharinfo(0)+".";
+		mes "Hello, "+strcharinfo(PC_NAME)+".";
 		mes "It's nice to see you again.";
 		mes "So is there anything I can";
 		mes "help you with today?";
@@ -2958,7 +2958,7 @@ L_Ask:
 		mes "he's drunk, and a poor gambler,";
 		mes "I don't know much about him.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "(^333333Einbroch Laboratory...";
 		mes "It's so suspicious. That";
 		mes "director knows about Ymir's";
@@ -2966,7 +2966,7 @@ L_Ask:
 		mes "keeping something really";
 		mes "important over there.^000000)";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "(^333333I better investigate";
 		mes "that laboratory in Einbroch";
 		mes "as soon as I can, even if it's";
@@ -2990,7 +2990,7 @@ ein_in01,279,25,0	script	#lab01_heart	HIDDEN_WARP_NPC,1,1,{
 OnTouch:
 	if (lhz_heart == 9)
 	{
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "(^333333I've... I've just";
 		mes "got to investigate";
 		mes "that laboratory and";
@@ -3005,7 +3005,7 @@ ein_in01,264,17,0	script	#lab02_heart	HIDDEN_WARP_NPC,1,1,{
 OnTouch:
 	if (lhz_heart == 9)
 	{
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What the...";
 		mes "It's some sort of";
 		mes "weird device. The label";
@@ -3107,7 +3107,7 @@ L_Retry:
 			}
 			++@retry;
 			mes "[Security System]";
-			mes "^ff0000"+strcharinfo(0)+"^000000";
+			mes "^ff0000"+strcharinfo(PC_NAME)+"^000000";
 			mes "has entered the following:";
 			mes "^0000ff"+@input100+"^000000 - ^0000ff"+@input10+"^000000 - ^0000ff"+@input1+"^000000.";
 			mes "Please wait for authorization to complete.";

@@ -90,7 +90,7 @@ que_ng,182,85,3	script	Garrison	4_M_MANAGER,{
 					mes "Hmm~ You look like you're wandering around without a mission.";
 					mes "If you've got the time, will you do me a favor?";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "What is it?";
 					next;
 					mes "[Garrison]";
@@ -159,17 +159,17 @@ que_ng,182,85,3	script	Garrison	4_M_MANAGER,{
 			mes "[Garrison]";
 			mes "While you are on delivery, I will make preparations to slot your Garrison, as promised.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "-Hmm, I don't want to do it, but I'll do it anyway.-";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Ok.";
 			next;
 			mes "[Garrison]";
 			mes "Oh, thanks a lot.";
 			mes "Then deliver this to a person called Ravey. He lives in the slums of Lighthalzen.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "You receive the delivery goods from Garrison.";
 			mes "Let's deliver them to a person named Ravey, who lives in the slums of Lighthalzen.";
 			delitem 999,10;
@@ -181,7 +181,7 @@ que_ng,182,85,3	script	Garrison	4_M_MANAGER,{
 			close;
 
 		case 2:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "You receive the delivery goods from Garrison.";
 			mes "Let's deliver them to a person named Ravey, who lives in the slums of Lighthalzen.";
 			close;
@@ -190,7 +190,7 @@ que_ng,182,85,3	script	Garrison	4_M_MANAGER,{
 			mes "[Garrison]";
 			mes "Oh~ How was your trip?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Gyah~";
 			mes "I nearly died!!!";
 			mes "That man tried to attack me when he saw me. I barely escaped death!";
@@ -398,7 +398,7 @@ lighthalzen,322,247,6	script	Ravey	4_M_04,{
 
 	if(gun_gs == 2)
 	{
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Excuse me. Hello.";
 		mes "I'm here to give you replacement parts for defective Gunslin...";
 		next;
@@ -410,22 +410,22 @@ lighthalzen,322,247,6	script	Ravey	4_M_04,{
 		percentheal 100,0;
 		percentheal -90,0;
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "- The man called Ravey suddenly attacks, as if he was waiting for the word Gunslinger...-";
 		mes "You nearly died.-";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "You run away without looking back.";
 		mes "Let's hurry back to Garrison.-";
 		close;
 	}
 	if(gun_gs == 3)
 	{
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "- The man called Ravey suddenly attacks, as if he was waiting for the word Gunslinger...-";
 		mes "You nearly died.-";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Let's hurry back to Garrison.-";
 		close;
 	}
@@ -476,7 +476,7 @@ que_ng,187,163,3	script	Ingrid	4_F_ALCHE,{
 			mes "It's a weapon worthy of being called the ultimate weapon for any Gunslinger.";
 			mes "huff huff...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "You know quite a lot about it";
 			mes ".....";
 			next;
@@ -484,7 +484,7 @@ que_ng,187,163,3	script	Ingrid	4_F_ALCHE,{
 			mes "Ah. Of course~";
 			mes "I am the person who designed this weapon..";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Wooow~ That's incredible~";
 			next;
 			mes "[Ingrid]";
@@ -508,7 +508,7 @@ que_ng,187,163,3	script	Ingrid	4_F_ALCHE,{
 			mes "Haha~ Look at me telling you all these things when you didn't even ask.";
 			mes "Sorry.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "No, it's ok.";
 			mes "You may not have become a Gunslinger, but I think you've become a great person.";
 			next;
@@ -645,7 +645,7 @@ que_ng,185,180,3	script	Vanessa	4_F_JOB_BLACKSMITH,{
 			mes "my exercises and me";
 			mes "standing beside me?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "It's just watching exercise";
 			mes "looks good...";
 			mes ".............";
@@ -655,7 +655,7 @@ que_ng,185,180,3	script	Vanessa	4_F_JOB_BLACKSMITH,{
 			mes "Come here~ I'll lock";
 			mes "you in an arm-bar~";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "N~ No thanks~";
 			mes "it's okay~";
 			next;
@@ -664,7 +664,7 @@ que_ng,185,180,3	script	Vanessa	4_F_JOB_BLACKSMITH,{
 			mes "Come here~!";
 			mes "-Bam!Bam!-";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Aah~Ugh~ Don't do that~";
 			mes "Aa..Aaaahhhh~~!!";
 			mes "Argh~";
@@ -676,7 +676,7 @@ que_ng,185,180,3	script	Vanessa	4_F_JOB_BLACKSMITH,{
 			mes "Hmm...Did I do it too strong.";
 			mes "Mm~";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Well obviously!";
 			mes "Idiot!Idiot!!";
 			mes "*sobs*~";
@@ -687,19 +687,19 @@ que_ng,185,180,3	script	Vanessa	4_F_JOB_BLACKSMITH,{
 			mes "Okay, okay,";
 			mes "Don't cry.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "*sob*~";
 			next;
 			mes "[Vanessa]";
 			mes "Okay~ okay..";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "*sob*~";
 			next;
 			mes "[Vanessa]";
 			mes "Stop! Arrgh!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "........";
 			next;
 			mes "[Vanessa]";
@@ -727,7 +727,7 @@ que_ng,185,180,3	script	Vanessa	4_F_JOB_BLACKSMITH,{
 			mes "Hehe~";
 			mes "Take this~!Destroyer~";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "*sob*~ Please~Stop~";
 			next;
 			mes "[Vanessa]";

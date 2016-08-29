@@ -20,7 +20,7 @@
 
 	if (@HD > gettimetick(2)) end;
 	if (.@price) {
-		message strcharinfo(0),"Healing costs "+.@price+" Zeny.";
+		message strcharinfo(PC_NAME),"Healing costs "+.@price+" Zeny.";
 		if (Zeny < .@price) end;
 		if(select("^0055FFHeal^000000", "^777777Cancel^000000") == 2) close;
 		Zeny -= .@price;

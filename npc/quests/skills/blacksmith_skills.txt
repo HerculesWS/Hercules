@@ -94,7 +94,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				mes "the amount of zeny spent to";
 				mes "cast Mammonite by 10%. This";
 				mes "Passive skill might come in";
-				mes "handy for you, "+ strcharinfo(0) +".";
+				mes "handy for you, "+ strcharinfo(PC_NAME) +".";
 				next;
 				mes "[Akkie]";
 				mes "Although I'm new at";
@@ -103,7 +103,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				mes "Dubious Salesmanship?";
 				next;
 				if (select("Sure.", "No, thanks.") == 1) {
-					mes "["+ strcharinfo(0) +"]";
+					mes "["+ strcharinfo(PC_NAME) +"]";
 					mes "Sure. I'll try learning this";
 					mes "new skill. Who knows?";
 					mes "It might be really useful.";
@@ -145,7 +145,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 					mes "L-let me start all";
 					mes "over again. Uh...";
 					next;
-					mes "["+ strcharinfo(0) +"]";
+					mes "["+ strcharinfo(PC_NAME) +"]";
 					mes "............";
 					next;
 					mes "[Akkie]";
@@ -156,7 +156,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 					mes "^0000FF1 Detrimindexta^000000. Would";
 					mes "you bring those, please?";
 					next;
-					mes "["+ strcharinfo(0) +"]";
+					mes "["+ strcharinfo(PC_NAME) +"]";
 					mes "Sure, sure.";
 					mes "But are you actually";
 					mes "able to teach me this";
@@ -259,7 +259,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				mes "Hmm. How should";
 				mes "I tell you this?";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "...";
 				mes "......";
 				mes ".........";
@@ -279,7 +279,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				mes "Please d-don't be angry with";
 				mes "me, it was just an accident!";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Okay, okay...";
 				mes "Are you sure that's";
 				mes "all you need me to get?";
@@ -322,10 +322,10 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				mes ".........";
 				mes "............";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "...?";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Oh no...";
 				mes "Did... Did you...";
 				mes "Did something happen?";
@@ -336,7 +336,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				mes "me! I c-can't finish forging";
 				mes "this without one! Waaah~";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "^333333(I guess I should";
 				mes "really bring her a new";
 				mes "^FF0000Iron Hammer^333333, or else";
@@ -451,7 +451,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 		else {
 			mes "[Akkie]";
 			if (Upper == 1) {
-				mes "Hello, "+ strcharinfo(0) +",";
+				mes "Hello, "+ strcharinfo(PC_NAME) +",";
 				mes "I'm here on behalf of the";
 				mes "Blacksmith Guild to teach you";
 				mes "a new skill. However, your Job";
@@ -474,7 +474,7 @@ geffen,178,72,3	script	Akkie#qsk_bs	4_F_JOB_BLACKSMITH,{
 				mes "like your Job Level is too low...";
 				next;
 				mes "[Akkie]";
-				mes "I'm sorry, "+ strcharinfo(0) +",";
+				mes "I'm sorry, "+ strcharinfo(PC_NAME) +",";
 				mes "But you'll qualify for the";
 				mes "skill I teach after you";
 				mes "raise your Job Level.";

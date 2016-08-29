@@ -82,11 +82,11 @@ prt_church,100,123,4	script	Vomars	1_M_PASTOR,{
 		close;
 	} // End official iRO dialog
 
-	if (strcharinfo(0) == $wed_groom$) {
+	if (strcharinfo(PC_NAME) == $wed_groom$) {
 		SF_Groom();
 		end;
 	}
-	if (strcharinfo(0) == $wed_bride$) {
+	if (strcharinfo(PC_NAME) == $wed_bride$) {
 		SF_Bride();
 		end;
 	}
@@ -102,11 +102,11 @@ prt_church,100,123,4	script	Vomars	1_M_PASTOR,{
 	mes "I am going to wed "+$wed_groom$+" and "+$wed_bride$+", do you have an objection to it?";
 	if (select("Sorry, please go on.","Yes, I actually do.") == 2) {
 		//Abort
-		npctalk "Ladies and gentlemen, "+strcharinfo(0)+" has an objection to the wedding!";
+		npctalk "Ladies and gentlemen, "+strcharinfo(PC_NAME)+" has an objection to the wedding!";
 		SF_wed_end();
 		mes "Why should they not be wed?";
 		input $@msg$;
-		npctalk strcharinfo(0)+"'s objection is: "+$@msg$;
+		npctalk strcharinfo(PC_NAME)+"'s objection is: "+$@msg$;
 		emotion e_sob;
 		mes "I see...";
 	} else
@@ -319,7 +319,7 @@ function SF_StartCeremony {
 	set $wed_bride_progress,5;
 	set $wed_groom_progress,5;
 	set $@msg$,$wed_groom$;
-	if (strcharinfo(0) == $wed_groom$)
+	if (strcharinfo(PC_NAME) == $wed_groom$)
 		set $@msg$,$wed_bride$;
 	if (marriage($@msg$) == 0) {
 		next;
@@ -531,7 +531,7 @@ function SF_Register {
 }
 
 function SF_WedProgress {
-	if (strcharinfo(0) == $wed_groom$) {
+	if (strcharinfo(PC_NAME) == $wed_groom$) {
 		mes "["+@name$+"]";
 		if ($wed_bride_progress > 0)
 			mes "The Priest will handle the rest of the ceremony.";
@@ -539,7 +539,7 @@ function SF_WedProgress {
 			mes "Tell your bride to register, what is taking so long? Time is running out.";
 		close;
 	}
-	if (strcharinfo(0) == $wed_bride$) {
+	if (strcharinfo(PC_NAME) == $wed_bride$) {
 		mes "["+@name$+"]";
 		if ($wed_groom_progress > 0)
 			mes "The Priest will handle the rest of the ceremony.";
@@ -720,13 +720,13 @@ function SF_TryRegister {
 	sc_start SC_WEDDING,3600000,1; //Start Wedding Effect (SC_WEDDING)
 	if (@bride) {
 		set $wed_bride_progress,1;
-		set $wed_bride$,strcharinfo(0);
+		set $wed_bride$,strcharinfo(PC_NAME);
 		$wed_bride_sex = Sex;
 		if ($@wedding_effect == 1) //Store account id for effect.
 			set $wedding_effect_id, getcharid(3);
 	} else {
 		set $wed_groom_progress,1;
-		set $wed_groom$,strcharinfo(0);
+		set $wed_groom$,strcharinfo(PC_NAME);
 		$wed_groom_sex = Sex;
 		if ($@wedding_effect == 2) //Store account id for effect.
 			set $wedding_effect_id, getcharid(3);
@@ -867,7 +867,7 @@ prt_church,94,99,4	script	Sister Lisa	1_F_PRIEST,{
 			}
 			mes "["+@name$+"]";
 			set $@divorcee,getpartnerid();
-			set $@divorcer$,strcharinfo(0);
+			set $@divorcer$,strcharinfo(PC_NAME);
 			set $@divorce_progress,1;
 			initnpctimer;
 			mes "Very well, get your partner to confirm, and I will collect the fee for filing the divorce then.";
@@ -877,7 +877,7 @@ prt_church,94,99,4	script	Sister Lisa	1_F_PRIEST,{
 end;
 
 function SF_InProgress {
-	if (strcharinfo(0) == $@divorcer$) {
+	if (strcharinfo(PC_NAME) == $@divorcer$) {
 		mes "["+@name$+"]";
 		mes "...I am still waiting for your partner to confirm the divorce procedure.";
 		close;
@@ -912,7 +912,7 @@ function SF_InProgress {
 		close;
 	}
 	Zeny -= $@wed_divorce_fee;
-	announce $@divorcer$+" has just divorced "+strcharinfo(0)+"...", 8;
+	announce $@divorcer$+" has just divorced "+strcharinfo(PC_NAME)+"...", 8;
 	mes "["+@name$+"]";
 	mes "Your divorce has been filed. You are no longer wed.";
 	emotion e_sob;

@@ -145,7 +145,7 @@ prt_castle,45,169,5	script	Senior Crusader	4_M_CRU_OLD,{
 				next;
 				mes "[Michael Halig]";
 				mes "Your name is";
-				mes "" + strcharinfo(0) + "...?";
+				mes "" + strcharinfo(PC_NAME) + "...?";
 				mes "Let's see...";
 				next;
 				if (countitem(Patriotism_Marks) && countitem(Sacred_Marks)) {
@@ -368,7 +368,7 @@ prt_castle,164,32,1	script	Man in Anguish	4_M_JOB_KNIGHT1,{
 			next;
 			mes "[Murnak Mijoul]";
 			mes "Your name is";
-			mes "" + strcharinfo(0) + "...?";
+			mes "" + strcharinfo(PC_NAME) + "...?";
 			mes "Let me take";
 			mes "a look at your face.";
 			next;
@@ -732,7 +732,7 @@ prt_church,95,127,3	script	Crusader	4_F_CRU,{
 		mes "look at your results.";
 		next;
 		mes "[Gabriel Valentine]";
-		mes " " + strcharinfo(0) + "'s score";
+		mes " " + strcharinfo(PC_NAME) + "'s score";
 		mes "is " + .@cru_t + " points...";
 		if(.@cru_t == 100) {
 			CRUS_Q = 8;
@@ -1384,7 +1384,7 @@ OnInit:
 	end;
 
 OnTouch:
-	monster "job_cru",168,150,strcharinfo(0),1036,1,"Monster Summon#cr4-a::OnDead";
+	monster "job_cru",168,150,strcharinfo(PC_NAME),1036,1,"Monster Summon#cr4-a::OnDead";
 	donpcevent "Monster Summon#cr4::OnEnd";
 	end;
 

@@ -252,7 +252,7 @@ lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 			mes "on my nerves! What could";
 			mes "you possibly want from me?!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Nothing really.";
 			mes "I just feel like";
 			mes "watching you work.";
@@ -265,7 +265,7 @@ lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 			mes "be so uptight about you looking";
 			mes "at what I'm doing, now would I?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Nah...";
 			mes "I just think";
 			mes "you're uptight";
@@ -286,7 +286,7 @@ lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 			mes "ticking me off! Why";
 			mes "don't you go away?!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Well, I was also";
 			mes "wondering why you're";
 			mes "working in a place that's";
@@ -308,7 +308,7 @@ lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 			mes "Hell, I could even get you";
 			mes "into that Laboratory...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "W-wait!";
 			mes "Laboratory?!";
 			mes "Are you serious?";
@@ -323,7 +323,7 @@ lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 			mes "stubborn, kid. But I don't trust";
 			mes "or serve strangers, period.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "But isn't there";
 			mes "anything I can do";
 			mes "so you can help me";
@@ -340,7 +340,7 @@ lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 			close;
 		}
 		else if (lhz_sincube == 3) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Please...";
 			mes "Please tell me";
 			mes "how I can get inside";
@@ -356,7 +356,7 @@ lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 			close;
 		}
 		else if (lhz_sincube == 4) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Why won't you";
 			mes "heeeeelp meee?";
 			mes "Pleeeeeeeease~";
@@ -370,7 +370,7 @@ lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 			mes "final. How many times do";
 			mes "you gotta make me spell it out?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "But there's gotta";
 			mes "be something I can";
 			mes "do so you'll help me?";
@@ -393,7 +393,7 @@ lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 			mes "you need. Alright, good luck";
 			mes "to you, brave adventurer.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "You're joking right?!";
 			mes "There's no way I can ever";
 			mes "get that much zeny! I'd...";
@@ -590,7 +590,7 @@ lighthalzen,341,224,3	script	Fishbone	4_M_LGTGUARD,{
 			mes "you wanted over there?";
 			completequest 12014;
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Yeah...";
 			mes "I hope so,";
 			mes "anyway.";
@@ -1734,7 +1734,7 @@ OnTouch:
 			Zeny -= 100;
 		}
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh...?";
 		mes "I sense something...";
 		mes "No. It might just";
@@ -1750,7 +1750,7 @@ OnTouch:
 			Zeny -= 200;
 		}
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh...?";
 		mes "I could have sworn";
 		mes "that these pockets full";
@@ -1767,7 +1767,7 @@ OnTouch:
 			Zeny -= 10;
 		}
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh...?";
 		mes "What the?!";
 		mes "That guy, did he just...?";
@@ -1807,7 +1807,7 @@ OnTouch:
 			Zeny -= 100;
 		}
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh...?";
 		mes "I sense something...";
 		mes "No. It might just";
@@ -1823,7 +1823,7 @@ OnTouch:
 			Zeny -= 200;
 		}
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh...?";
 		mes "I could have sworn";
 		mes "that these pockets full";
@@ -1840,7 +1840,7 @@ OnTouch:
 			Zeny -= 10;
 		}
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh...?";
 		mes "What the?!";
 		mes "That guy, did he just...?";
@@ -1880,7 +1880,7 @@ OnTouch:
 			Zeny -= 100;
 		}
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh...?";
 		mes "I sense something...";
 		mes "No. It might just";
@@ -1897,7 +1897,7 @@ OnTouch:
 			Zeny -= 200;
 		}
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh...?";
 		mes "I could have sworn";
 		mes "that these pockets full";
@@ -1914,7 +1914,7 @@ OnTouch:
 			Zeny -= 10;
 		}
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh...?";
 		mes "What the?!";
 		mes "That guy, did he just...?";
@@ -1926,7 +1926,7 @@ OnTouch:
 		mes "Gotta scram!";
 		mes "Eat my dust, good gu--!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Oh no, you don't!";
 		mes "I'm turning you in,";
 		mes "you pickpocket!";
@@ -1938,7 +1938,7 @@ OnTouch:
 		mes "let me go! Crap!";
 		emotion e_sob;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Alright, fine,";
 		mes "but you better quit";
 		mes "this life of crime!";
@@ -2078,7 +2078,7 @@ lhz_in02,201,210,5	script	Digotz	4_M_LGTMAN,{
 		mes "by a knife that is still";
 		mes "embedded in his belly.^000000";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Digotz...?";
 		mes "Oh no, let me";
 		mes "get you some help!";
@@ -2303,7 +2303,7 @@ lhz_in02,201,210,5	script	Digotz	4_M_LGTMAN,{
 		mes "to Maku? Now when I think";
 		mes "about it, I was kind of--";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "I delivered your message";
 		mes "word for word, and Maku";
 		mes "got angry, called you names";
@@ -2379,7 +2379,7 @@ lhz_in02,201,210,5	script	Digotz	4_M_LGTMAN,{
 		mes "you visited the poor district?";
 		next;
 		select("Yes, I did already...");
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Yes, I did already...";
 		mes "And I met someone";
 		mes "named Maku there.";
@@ -2680,7 +2680,7 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 		mes "Well, if he apologizes first,";
 		mes "I guess I better forgive him.";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Good...";
 		mes "Because Digotz said";
 		mes "that he'll be coming";
@@ -2816,7 +2816,7 @@ lighthalzen,337,232,3	script	Maku	4_M_LGTPOOR,{
 		mes "totally prickish Digotz.";
 		next;
 		select("Speaking of which...");
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Speaking of which...";
 		mes "I spoke to Digotz again.";
 		mes "He told me to give you a";
@@ -3284,7 +3284,7 @@ yuno_in04,96,106,5	script	Passionate Student	4_M_SAGE_A,{
 		mes "mentioned by Maku and Digotz!^000000";
 		next;
 		select("Excuse me...");
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Excuse me...";
 		mes "Benkaistein?";
 		next;
@@ -3297,7 +3297,7 @@ yuno_in04,96,106,5	script	Passionate Student	4_M_SAGE_A,{
 		mes "Hmm, this here might help...";
 		next;
 		select("Hey...");
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Hey...";
 		mes "Over here.";
 		mes "Benkaistein!";
@@ -3311,7 +3311,7 @@ yuno_in04,96,106,5	script	Passionate Student	4_M_SAGE_A,{
 		mes "would look much more solid...";
 		next;
 		select("HEY YOU...!");
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "HEY YOU...!";
 		mes "BENKAISTEIN~!";
 		next;
@@ -3524,7 +3524,7 @@ OnTouch_:
 			mes "............";
 			next;
 			emotion e_what,1;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Those voices weren't";
 			mes "just in my head, were they?";
 			mes "Hello...? Anybody there...?";
@@ -3602,7 +3602,7 @@ OnTouch_:
 			mes "............";
 			next;
 			emotion e_what,1;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I'm hearing things";
 			mes "again! Where are all of";
 			mes "these voices coming from?";
@@ -3648,7 +3648,7 @@ OnTouch_:
 			next;
 			mes "............";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "This is...";
 			mes "This is insane!";
 			mes "I must be hallucinating!";
@@ -3709,7 +3709,7 @@ OnTouch_:
 			next;
 			mes "............";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "............";
 			close2;
 			soundeffect "tao_gunka_stand.wav",0;
@@ -4803,7 +4803,7 @@ lighthalzen,346,263,3	script	Elder#lhz	4_F_EINOLD,{
 lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 	if (lhz_curse == 23) {
 		if (countitem(Worn_Out_Pendant) > 0) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Hey there, are";
 			mes "you feeling alright?";
 			next;
@@ -4812,7 +4812,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 			mes "I'm fine. But...";
 			mes "Have we met before?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Yeah, we did.";
 			mes "You should know who";
 			mes "I am by now. Hey, you";
@@ -4826,7 +4826,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 			mes "everything that's happened";
 			mes "in the past few weeks...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Oh... Oh. I'm so";
 			mes "sorry. But maybe this";
 			mes "is for the best? Here,";
@@ -4840,11 +4840,11 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 			specialeffect2 EF_FORESTLIGHT4;
 			mes "...............";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "...";
 			mes "......";
 			next;
-			mes "[Possessed "+strcharinfo(0)+"]";
+			mes "[Possessed "+strcharinfo(PC_NAME)+"]";
 			mes "^3131FFSetsu, please remember";
 			mes "that I'd never do anything";
 			mes "to hurt you. Forgive me for";
@@ -4852,7 +4852,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 			mes "that one day we'll meet";
 			mes "again, little princess.^000000";
 			next;
-			mes "[Possessed "+strcharinfo(0)+"]";
+			mes "[Possessed "+strcharinfo(PC_NAME)+"]";
 			mes "^3131FFUntil then, I want";
 			mes "you to be happy, okay?";
 			mes "Your brother's always";
@@ -4864,7 +4864,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 			mes "That's my brother's";
 			mes "voice! Brother!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Eh? What? Whoa...";
 			mes "What came over me?";
 			mes "The last thing I reme--";
@@ -4873,7 +4873,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 			mes "...";
 			mes "......";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Well...";
 			mes "This is awkward.";
 			delitem Worn_Out_Pendant,1;
@@ -4881,7 +4881,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 			close;
 		}
 		else {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Hey there, are";
 			mes "you feeling alright?";
 			next;
@@ -4890,7 +4890,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 			mes "I'm fine. But...";
 			mes "Have we met before?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Yeah, we did.";
 			mes "You should know who";
 			mes "I am by now. Hey, you";
@@ -4945,7 +4945,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 				mes "bye-bye...";
 				close;
 			}
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Um, would you have";
 			mes "any idea who might";
 			mes "have owned this pendant?";
@@ -4963,7 +4963,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 			mes "sort of business trip. You must";
 			mes "be his friend, is that right?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Actually, um,";
 			mes "you know what...?";
 			next;
@@ -4972,7 +4972,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 				mes "...";
 				mes "......";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "...So basically, your";
 				mes "brother's @lhz_ghost, oh right,";
 				mes "did I mention he was dead?";
@@ -4992,7 +4992,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 				mes "and the-- Leave me alone!";
 				mes "Oh god, get the hell away!";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "...";
 				mes "......";
 				mes "Sheesh.";
@@ -5015,10 +5015,10 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 					mes "nothing could happen";
 					mes "to him.";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Um... yes. So...";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Sure, your big brother must be happy.";
 					mes "He'll come back sometime.";
 					mes "You should sleep to be healthy";
@@ -5036,10 +5036,10 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 					specialeffect2 EF_FORESTLIGHT4;
 					mes "......";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "...............";
 					next;
-					mes "[Possessed "+strcharinfo(0)+"]";
+					mes "[Possessed "+strcharinfo(PC_NAME)+"]";
 					mes "^3131FFSetsu, please remember";
 					mes "that I'd never do anything";
 					mes "to hurt you. Forgive me for";
@@ -5047,7 +5047,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 					mes "that one day we'll meet";
 					mes "again, little princess.^000000";
 					next;
-					mes "[Possessed "+strcharinfo(0)+"]";
+					mes "[Possessed "+strcharinfo(PC_NAME)+"]";
 					mes "^3131FFUntil then, I want";
 					mes "you to be happy, okay?";
 					mes "Your brother's always";
@@ -5059,7 +5059,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 					mes "That's my brother's";
 					mes "voice! Brother!";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Eh? What? Whoa...";
 					mes "What came over me?";
 					mes "The last thing I reme--";
@@ -5069,7 +5069,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 					next;
 					switch(select("Distract her", "Comfort her")) {
 					case 1:
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Oh, all of this was a play...";
 						mes "Y-yes a play, I was practising.";
 						mes "Ha ha~ Is it okay, isn't it?";
@@ -5079,7 +5079,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 						mes "Even though I didn't think";
 						mes "it was really my brother, you know?";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Excuse me...";
 						next;
 						mes "[Setsu]";
@@ -5088,13 +5088,13 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 						mes "He'll be very proud of me.";
 						mes "Heh heh~";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Yes, I'm sure of that.";
 						delitem Worn_Out_Pendant,1;
 						lhz_curse = 25;
 						close;
 					case 2:
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Crying have no use!";
 						mes "You're a very pretty";
 						mes "girl to be ruining your";
@@ -5103,7 +5103,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 						mes "[Setsu]";
 						mes "............";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "You should do your best";
 						mes "to be healthy for the time";
 						mes "your big brother return.";
@@ -5111,7 +5111,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 						mes "[Setsu]";
 						mes "Yes...";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Listen, when your brother";
 						mes "return you'll celebrate in";
 						mes "a beautiful place.";
@@ -5120,7 +5120,7 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 						mes "Really?";
 						mes "It's a promise then! Heh heh~";
 						next;
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "I hope it'll be soon!";
 						mes "When I return I want you to be";
 						mes "able to walk. See you soon, then!";
@@ -5144,10 +5144,10 @@ lhz_in03,32,162,3	script	Crippled Girl#li_tre	1_M_INNKEEPER,{
 					mes "nothing could happen";
 					mes "to him.";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Um... yes. So...";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Sure, your big brother must be happy.";
 					mes "He'll come back sometime.";
 					mes "You should sleep to be healthy";
@@ -5213,14 +5213,14 @@ OnTouch_:
 		mes "......I appreciate";
 		mes "that you.............^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "H-huh?!";
 		mes "What was that?";
 		mes "That can't be the";
 		mes "wind, I must be";
 		mes "hearing things again...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Wait. I thought I was";
 		mes "rid of those thoughts";
 		mes "or spirits, whatever was";
@@ -5228,7 +5228,7 @@ OnTouch_:
 		mes "they still want me to do";
 		mes "something for them. Hmmm...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I get the feeling that";
 		mes "all of their suffering";
 		mes "is tied to the ^FF0000Rekenber";
@@ -6483,7 +6483,7 @@ lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 		switch( select( "Yes, I'm sure of it!","Well..." ) )
 		{
 			case 1:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Yes, I'm sure of it!";
 				mes "That was definitely you!";
 				mes "Your voice, your way of";
@@ -6505,7 +6505,7 @@ lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 				switch( select( "I'm not interrogating...","Sorry about that." ) )
 				{
 					case 1:
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "I'm not interrogating";
 						mes "you. No, not at all.";
 						mes "It's, um, it's just...";
@@ -6513,7 +6513,7 @@ lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 						switch( select( "Who are you dealing with?","I was just curious." ) )
 						{
 							case 1:
-								mes "["+strcharinfo(0)+"]";
+								mes "["+strcharinfo(PC_NAME)+"]";
 								mes "Who are you dealing";
 								mes "with? I heard something";
 								mes "about some organization";
@@ -6521,7 +6521,7 @@ lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 								mes "powerful and I'm starting";
 								mes "to get really concerned.";
 								next;
-								mes "["+strcharinfo(0)+"]";
+								mes "["+strcharinfo(PC_NAME)+"]";
 								mes "I don't think I can";
 								mes "ignore hearing about";
 								mes "any kind of dangerous";
@@ -6562,7 +6562,7 @@ lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 								close;
 						}
 					case 2:
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Sorry about that.";
 						mes "I didn't mean to";
 						mes "stick my nose into";
@@ -6579,7 +6579,7 @@ lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 				}
 
 			case 2:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "Well...";
 				mes "Now I don't know.";
 				mes "I suppose I could";
@@ -6622,7 +6622,7 @@ lighthalzen,179,170,4	script	Ordinary Man	4W_M_02,{
 			case 1:
 				break;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "How can I cooperate?";
 		mes "Um, what exactly is it";
 		mes "that you want me to do?";
@@ -7049,7 +7049,7 @@ OnTouch:
 		mes "^333333Hurry up, before";
 		mes "the others see you...^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "(Wait a second...";
 		mes "That voice is";
 		mes "awfully familiar.)";
@@ -7057,13 +7057,13 @@ OnTouch:
 		switch( select( "Ignore it.","Keep listening." ) )
 		{
 			case 1:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "(That voice is";
 				mes "awfully familiar...";
 				mes "But what do I care?)";
 				close;
 			case 2:
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "(This is too weird.";
 				mes "I guess I better keep";
 				mes "listening to see what";
@@ -7335,13 +7335,13 @@ yuno_pre,69,20,4	script	Secretary#1	4_F_LGTGIRL,{
 						mes "name so that I can look";
 						mes "it up in today's schedule?";
 						next;
-						switch( select( ""+strcharinfo(0)+"" ) )
+						switch( select( ""+strcharinfo(PC_NAME)+"" ) )
 						{
 							case 1:
 								break;
 						}
 						mes "[Hes O'Neil]";
-						mes ""+strcharinfo(0)+"?";
+						mes ""+strcharinfo(PC_NAME)+"?";
 						mes "I'm sorry, but I can't find";
 						mes "your name on the list. You";
 						mes "can only visit the president";
@@ -7427,13 +7427,13 @@ yuno_pre,69,20,4	script	Secretary#1	4_F_LGTGIRL,{
 						mes "name so that I can look";
 						mes "it up in today's schedule?";
 						next;
-						switch( select( ""+strcharinfo(0)+"" ) )
+						switch( select( ""+strcharinfo(PC_NAME)+"" ) )
 						{
 							case 1:
 								break;
 						}
 						mes "[Hes O'Neil]";
-						mes ""+strcharinfo(0)+"?";
+						mes ""+strcharinfo(PC_NAME)+"?";
 						mes "I'm sorry, but I can't find";
 						mes "your name on the list. You";
 						mes "can only visit the president";
@@ -7522,14 +7522,14 @@ yuno_pre,69,20,4	script	Secretary#1	4_F_LGTGIRL,{
 		mes "The President has given the order that ";
 		mes "nobody is allowed to enter this place.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "However, you will change your mind after listening to my explanation.";
 		next;
 		mes "[Hes O'Neil]";
 		mes "...............";
 		mes "Is it something very important?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "It is the most important thing.";
 		next;
 		mes "[Hes O'Neil]";
@@ -7608,8 +7608,8 @@ yuno_pre,95,71,5	script	Guard	4_M_EIN_SOLDIER,{
 			next;
 			mes "[Guard]";
 			mes "Mr. Keshnaar,";
-			mes "I present "+strcharinfo(0)+".";
-			mes ""+strcharinfo(0)+", allow me";
+			mes "I present "+strcharinfo(PC_NAME)+".";
+			mes ""+strcharinfo(PC_NAME)+", allow me";
 			mes "to introduce Eridan Keshnaar.";
 			next;
 			mes "[Keshnaar]";
@@ -7646,11 +7646,11 @@ yuno_pre,95,71,5	script	Guard	4_M_EIN_SOLDIER,{
 		{
 			case 1:
 				if (Sex == SEX_MALE)
-					mes "A Mister " + strcharinfo(0);
+					mes "A Mister " + strcharinfo(PC_NAME);
 				else if (getpartnerid())
-					mes "A Missis " + strcharinfo(0);
+					mes "A Missis " + strcharinfo(PC_NAME);
 				else
-					mes "A Miss " + strcharinfo(0);
+					mes "A Miss " + strcharinfo(PC_NAME);
 				mes "has arrived to see you now.";
 				next;
 				mes ".....";
@@ -8085,7 +8085,7 @@ L_Mission:
 		mes "must find Shinokas and";
 		mes "see what you can learn!";
 		mes "Your efforts will not go";
-		mes "unrecognized, "+strcharinfo(0)+".";
+		mes "unrecognized, "+strcharinfo(PC_NAME)+".";
 		close2;
 		cutin "",255;
 		end;
@@ -8512,7 +8512,7 @@ L_Mission:
 	{
 		if(!countitem(File01))
 		{
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Ah, where did I put the record?";
 			close;
 		}
@@ -8520,7 +8520,7 @@ L_Mission:
 		mes "It's you.....!";
 		mes "It's really been a long time.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "So, are you still having the idea to go against Rekenber?";
 		next;
 		mes "[Karl]";
@@ -8530,7 +8530,7 @@ L_Mission:
 		mes "I'm not sure.";
 		mes "The Secret Wing has been disbanded and I am just another puppet they have, just like the previous presidents.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Not long ago, the scientists of Regenschrim have stolen the research record and destroyed the machines that they used for research purposes.";
 		next;
 		emotion e_gasp,0;
@@ -8545,7 +8545,7 @@ L_Mission:
 		mes "Oh! Can you give me the record?";
 		mes "It will be a big trouble to them.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "If you insist to go against them, I will give you the record.";
 		next;
 		mes "[Karl]";
@@ -8556,7 +8556,7 @@ L_Mission:
 		mes "You remind me of the day I made up my mind to rebuild this country.";
 		mes "How could I forgot such important responsibilities of mine.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "That's great.";
 		mes "Here's the record.";
 		mes "I hope you will make good use of it. ";
@@ -8567,7 +8567,7 @@ L_Mission:
 		mes "[Karl]";
 		mes "Oh! That's some interesting information.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I have another good news. The Secret Wing has not given up yet. They are still working on the project and I hope that you won't be giving up on it too.";
 		next;
 		mes "[Karl]";
@@ -9040,7 +9040,7 @@ lhz_fild02,228,214,0	script	Wounded Man	4_M_DIEMAN,{
 		next;
 		mes "^3355FFIt's a wounded man...!^000000";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "H-hey...!";
 		mes "Are you hurt?";
 		mes "Do you need any he--";
@@ -10385,7 +10385,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "into those thugs again?";
 		mes "Why don't you take a rest?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Kazien...";
 		mes "While I was fighting";
 		mes "those thugs, one of the";
@@ -10401,7 +10401,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "............";
 		cutin "lhz_kaz08",2;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Wh-why are you supplying";
 		mes "those things? If we let those";
 		mes "packages get imported by";
@@ -10415,7 +10415,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "I don't want to";
 		mes "hear anymore.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hold it, I deserve an";
 		mes "answer! How can you turn";
 		mes "a blind eye and provide just";
@@ -10423,7 +10423,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "and guardians^000000? It's like you're";
 		mes "promoting war and violence!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "And what about your little";
 		mes "brother Lyozien? He has";
 		mes "no idea what he's doing!";
@@ -10440,7 +10440,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "You don't know what it's like";
 		mes "to live in Lighthalzen's slums!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes ".................";
 		next;
 		cutin "lhz_kaz04",2;
@@ -10477,7 +10477,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "of this job, even if I'm dirtying my hands, making money";
 		mes "off of other people's deaths.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "But that still isn't right.";
 		mes "You're selling weapons so";
 		mes "that people can kill each other! Even if it's for the sake of";
@@ -10558,7 +10558,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "that. Lyozien's waiting for";
 		mes "you, so get to it, okay?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "W-wait! During the last";
 		mes "delivery, I was attacked";
 		mes "by a group of thugs that";
@@ -10574,7 +10574,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "more for this job since";
 		mes "you're risking your life?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I understand that the";
 		mes "customer's confidentiality";
 		mes "is important, but I'd feel a";
@@ -10627,7 +10627,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "you like working with Lyozien?";
 		mes "He's one of my best men.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Wait, aren't you and";
 		mes "Lyozien supposed";
 		mes "to be brothers?";
@@ -10649,7 +10649,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "Luckily, I got another";
 		mes "delivery for you to work on...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Actually, Kazien...";
 		mes "I was curious. What";
 		mes "exactly are we delivering?";
@@ -10807,7 +10807,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "contact Garins? Or did";
 		mes "you encounter any problems?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, I came back to";
 		mes "let you know that I haven't";
 		mes "been able to find a way inside";
@@ -10823,7 +10823,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "told him that you had";
 		mes "to talk to Garins, right?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "But...";
 		mes "I thought you said";
 		mes "I'm not supposed to";
@@ -10838,7 +10838,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "Great! I'm happy to say,";
 		mes "buddy, you passed the test!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "H-huh? But I never";
 		mes "even got to see Garins...";
 		mes "I didn't finish the task";
@@ -10853,7 +10853,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "trustworthiness, is all.";
 		mes "Now do you understand?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I... I guess.";
 		mes "Still, you just tricked";
 		mes "me! How am I supposed";
@@ -10878,7 +10878,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "contact Garins? Or did";
 		mes "you encounter any problems?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, I wasn't able to";
 		mes "find him. In fact, I don't";
 		mes "think that Garins even works";
@@ -10891,7 +10891,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "Well, how'd you";
 		mes "find that out?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I happened to ask the";
 		mes "Laboratory Guard, but";
 		mes "he wouldn't even let me in.";
@@ -10905,7 +10905,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "I'm sorry, pal, but";
 		mes "you failed the test.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "H-huh? What?";
 		mes "What do you mean?";
 		next;
@@ -11009,7 +11009,7 @@ lhz_in01,174,258,3	script	Young Man#reken	4_M_LGTGUARD,{
 		mes "back? It's just that you're";
 		mes "blocking my view is all.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Wait, did you just say";
 		mes "that you need help?";
 		mes "I'd like to help solve";
@@ -11149,7 +11149,7 @@ einbroch,55,52,3	script	Laboratory Guard#reken	4_M_EIN_SOLDIER,{
 				switch( select( "I need to see Mr. Garins...","I'll... come back later." ) )
 				{
 					case 1:
-						mes "[" + strcharinfo(0) + "]";
+						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "I need to see Mr. Garins";
 						mes "and confirm that he received";
 						mes "a package that was sent to him.";
@@ -11174,7 +11174,7 @@ einbroch,55,52,3	script	Laboratory Guard#reken	4_M_EIN_SOLDIER,{
 						close;
 
 					case 2:
-						mes "[" + strcharinfo(0) + "]";
+						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "I'll... come back later.";
 						mes "(^333333I better speak to Kazien";
 						mes "and let him know I'm having";
@@ -11186,7 +11186,7 @@ einbroch,55,52,3	script	Laboratory Guard#reken	4_M_EIN_SOLDIER,{
 						close;
 				}
 			case 2:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Whoa, I'm leaving!";
 				mes "(^333333I better speak to Kazien";
 				mes "and let him know I'm having";
@@ -11266,7 +11266,7 @@ airplane_01,96,48,3	script	Man#Lyozien	4_M_LGTGUARD,{
 		mes "dispatched them. Great job!";
 		next;
 		cutin "lhz_ryo01",2;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Thanks, but...";
 		mes "Now I'm really worried";
 		mes "about what could be in";
@@ -11504,7 +11504,7 @@ airplane_01,96,48,3	script	Man#Lyozien	4_M_LGTGUARD,{
 		mes "ready for another job, just";
 		mes "ask to my brother Kazien, okay?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Lyozien, do you know";
 		mes "what kinds of things";
 		mes "we're delivering?";
@@ -11565,7 +11565,7 @@ airplane_01,96,48,3	script	Man#Lyozien	4_M_LGTGUARD,{
 		mes "these are all pretty fragile.";
 		mes "Thanks, I appreciate it.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Excuse me, but";
 		mes "are you Lyozien?";
 		next;
@@ -11579,7 +11579,7 @@ airplane_01,96,48,3	script	Man#Lyozien	4_M_LGTGUARD,{
 		mes "all of these packages here.";
 		next;
 		cutin "lhz_ryo14",2;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Wait, Kazien is";
 		mes "your brother? That's";
 		mes "weird, you figure he";
@@ -11714,7 +11714,7 @@ OnStop:
 		mes "my packages have arrived";
 		mes "safely. Is that right?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Yes, that's right.";
 		mes "Actually, this time we ";
 		mes "were attacked by a group";
@@ -11769,7 +11769,7 @@ OnStop:
 		mes "you agree? Still, I kind of";
 		mes "enjoy sitting around here.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Excuse me, but do";
 		mes "you know where I can";
 		mes "find a man named Ahman?";
@@ -11781,7 +11781,7 @@ OnStop:
 		mes "tell me that my packages";
 		mes "have arrived. Am I correct?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Y-yes. That's right.";
 		mes "Your packages have";
 		mes "arrived and they're";
@@ -11795,7 +11795,7 @@ OnStop:
 		mes "I don't believe I've seen you";
 		mes "around before. Have they finally started hiring part timers?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Yes, that's right.";
 		mes "Actually, I'm working for";
 		mes "them part time. I heard";
@@ -11934,7 +11934,7 @@ OnTouch:
 		mes "that is covering one";
 		mes "of the packages.^000000";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Oh... my God!";
 		mes "These are... These are";
 		mes "weapons of mass destruction.";
@@ -11969,7 +11969,7 @@ OnTouch:
 		next;
 		lhz_rekenber = 23;
 		cutin "",255;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes ".............Damn it.";
 		close;
 	}
@@ -12005,7 +12005,7 @@ OnTouch:
 		next;
 		lhz_rekenber = 23;
 		cutin "",255;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "......";
 		mes ".........";
 		mes "Damn it!";

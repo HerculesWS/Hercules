@@ -2616,7 +2616,7 @@ L_Supplies:
 	mes "You will now";
 	mes "be teleported.";
 	mes "Good luck,";
-	mes "^A62A2A"+strcharinfo(0)+"^000000";
+	mes "^A62A2A"+strcharinfo(PC_NAME)+"^000000";
 	mes "and farewell.";
 	close2;
 	return;
@@ -2691,7 +2691,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 		case 2:
 			mes "[Lark]";
 			mes "I will ask you a few simple questions.";
-			mes "Through this test, we will check "+strcharinfo(0)+"'s personality and propensity so that we can find the most appropriate job for you.";
+			mes "Through this test, we will check "+strcharinfo(PC_NAME)+"'s personality and propensity so that we can find the most appropriate job for you.";
 			next;
 			mes "[Lark]";
 			mes "There are 3 different types of tests and a total of 30 questions.";
@@ -3312,7 +3312,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	1_ETC_01
 		break;
 	}
 	callfunc "F_NvErase",1;
-	.@str$ = "^A62A2A'"+strcharinfo(0)+"^000000'! Take care and may Freya bless you on your journey.";
+	.@str$ = "^A62A2A'"+strcharinfo(PC_NAME)+"^000000'! Take care and may Freya bless you on your journey.";
 	switch(.@who_job) {
 	case 1:
 		mes "[Lark]";

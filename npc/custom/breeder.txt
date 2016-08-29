@@ -14,7 +14,7 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 	/* TODO: This can be optimized with just setmount(), as it can
 		 auto-detect the proper mount for the class/skills. */
 	if (hascashmount()) {
-		message strcharinfo(0),"You must first remove your mount.";
+		message strcharinfo(PC_NAME),"You must first remove your mount.";
 		end;
 	} else if ((eaclass()&EAJ_THIRDMASK) == EAJ_RANGER && !countitem(Wolf's_Flute)) {
 		if (!checkfalcon() && getskilllv(HT_FALCON) && !checkwug()) {
@@ -48,7 +48,7 @@ prontera,124,201,1	script	Universal Rental NPC	4_F_JOB_BLACKSMITH,{
 	} else if (checkmount() != MOUNT_MADO && getskilllv(NC_MADOLICENCE)) {
 		setmount(MOUNT_MADO);
 	} else {
-		message strcharinfo(0),"You do not meet requirements to rent.";
+		message strcharinfo(PC_NAME),"You do not meet requirements to rent.";
 		end;
 	}
 	specialeffect2 EF_TEIHIT3;

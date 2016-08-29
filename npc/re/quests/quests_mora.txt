@@ -69,7 +69,7 @@ mid_camp,148,222,4	script	Theore#ep14_1_bs	4_F_SCIENCE,3,3,{
 			mes "I'll keep it down.";
 			close;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Sir... Are you okay?";
 		mes "You will lose all your hair like that.";
 		mes "Calm down.";
@@ -1641,7 +1641,7 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 			if (!questprogress(7206)) {
 				mes "[Cheshire]";
 				mes "...Hmm? Huh?";
-				mes "It's "+strcharinfo(0)+"!";
+				mes "It's "+strcharinfo(PC_NAME)+"!";
 				mes "What are you doing here?";
 				next;
 				select("Huh? Cheshire?");
@@ -1662,7 +1662,7 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 				next;
 				switch(select("I guess I have no choice.", "I have a lot of things to do!")) {
 				case 1:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "(He will be suspicious if I refuse to do it... I guess I should play along for now.)";
 					mes "Okay.";
 					mes "I'll do anything for Ahat's pleasure.";
@@ -1736,7 +1736,7 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 				mes "They will grow suspicious.";
 				mes "But you humans are free from such troubles, so that's why you're the right one for the job.";
 				next;
-				mes "["+strcharinfo(0)+"]";
+				mes "["+strcharinfo(PC_NAME)+"]";
 				mes "(... I don't buy his story, but he believes I'm on his side, so I guess I should play along.)";
 				mes "What happens to this Bradium, then?";
 				next;
@@ -1788,7 +1788,7 @@ bif_fild01,335,168,3	script	Cheshire#ep14_1_xq04	4_M_CATMAN1,{
 		mes "[Cheshire]";
 		mes "... Huh? I think I've seen you somewhere...";
 		mes "..........Oh!";
-		mes strcharinfo(0)+"...?!";
+		mes strcharinfo(PC_NAME)+"...?!";
 		mes "What brings you here?";
 		next;
 		mes "[Cheshire]";
@@ -2055,7 +2055,7 @@ mora,117,66,3	script	Euridi#pa	4_F_MORAFINE2,{
 		mes "If you find the rest of ^0000FFLope's Clues^000000,";
 		mes "you'll be able to find out";
 		mes "where he is.";
-		mes "I'm counting on you, "+strcharinfo(0)+".";
+		mes "I'm counting on you, "+strcharinfo(PC_NAME)+".";
 		changequest 1110,1111;
 		ep14_1_rope = 3;
 		close;
@@ -2381,7 +2381,7 @@ mora,65,145,3	script	Pitt#pa	4_M_LYINGDOG,{
 		mes "I'll give you the ring back,";
 		mes "so please leave me alone!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Then where could Lope...?";
 		next;
 		mes "[Pitt]";
@@ -2421,7 +2421,7 @@ bif_fild01,132,338,3	script	Lope#pa	4_M_FAIRYSOLDIER2,2,2,{
 		mes "Who's there?";
 		mes "Answer, or I'll take you as an enemy and kill you.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Euridi is looking for you.";
 		next;
 		mes "[Suspicious Man]";
@@ -2432,7 +2432,7 @@ bif_fild01,132,338,3	script	Lope#pa	4_M_FAIRYSOLDIER2,2,2,{
 		mes "I asked you to wipe the name off my mind";
 		mes "in return for bearing the curse!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Will you please calm down and listen to...";
 		next;
 		mes "[Lope]";
@@ -3325,7 +3325,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		}
 		mes "[Raffle Researcher]";
 		mes "The best research assistant in my life...";
-		mes "is you, "+strcharinfo(0)+"!!!";
+		mes "is you, "+strcharinfo(PC_NAME)+"!!!";
 		ep14_1_muk = 15;
 		completequest 5028;
 		getexp 1000000,4000000;
@@ -3383,7 +3383,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 		case 2:
 			mes "[Raffle Researcher]";
 			mes "Oh, You came to say hi. I see.";
-			mes "Long time no see, "+strcharinfo(0)+".";
+			mes "Long time no see, "+strcharinfo(PC_NAME)+".";
 			next;
 			mes "[Raffle Researcher]";
 			mes "I've been telling you that I lucked out in picking you as my research assistant.";
@@ -3402,7 +3402,7 @@ mora,31,138,6	script	Raffle Researcher#ep14	4_M_RAFLE_OR,{
 L_ShowReport:
 	mes "[Experimental Results]";
 	mes "*** Researcher - Inffle";
-	mes "*** Research Assistant - "+strcharinfo(0);
+	mes "*** Research Assistant - "+strcharinfo(PC_NAME);
 	mes " ";
 	mes "<Research topic>";
 	mes "*** Bath of Mora Village";
@@ -3637,7 +3637,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 		case 1: // Weapon
 			.@p_damage = 10;
 			.@pc_attack = rand(1,10);
-			mes "["+strcharinfo(0)+"'s Attack]";
+			mes "["+strcharinfo(PC_NAME)+"'s Attack]";
 			switch(.@pc_attack) {
 			// Miss.
 			case 3:
@@ -3671,7 +3671,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			.@p_damage = 20;
 			.@pc_attack = rand(1,6);
 			.@skillname$ = .@skills$[rand(5)];
-			mes "["+strcharinfo(0)+"'s Attack]";
+			mes "["+strcharinfo(PC_NAME)+"'s Attack]";
 			switch(.@pc_attack) {
 			// Miss.
 			case 2:
@@ -3700,7 +3700,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 		case 3: // Tooth
 			.@p_damage = 50;
 			.@pc_attack = rand(1,10);
-			mes "["+strcharinfo(0)+"'s Attack]";
+			mes "["+strcharinfo(PC_NAME)+"'s Attack]";
 			if (.@pc_attack == 4 || .@pc_attack == 7) {
 				specialeffect EF_HIT1;
 				.@npc_hp -= .@p_damage;
@@ -3712,7 +3712,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 		case 4: // Run
 			mes "You get scared of the unidentified creature, and attempt to run.";
 			next;
-			mes "["+strcharinfo(0)+"'s Escape]";
+			mes "["+strcharinfo(PC_NAME)+"'s Escape]";
 			if (rand(1,2) == 1) {
 				mes "Fortunately, the unidentified creature did not come after you.";
 				close;
@@ -3813,7 +3813,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 			}
 		}
 		mes "[ Current Progress ]";
-		mes strcharinfo(0)+" HP = "+.@pc_hp;
+		mes strcharinfo(PC_NAME)+" HP = "+.@pc_hp;
 		mes "Unidentified Creature HP = "+.@npc_hp;
 		next;
 		mes "[Attack of the unidentified creature]";
@@ -3965,7 +3965,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 				} else
 					specialeffect2 EF_ICEARROW;
 				.@pc_hp -= .@n_damage;
-				mes "[Defense of "+strcharinfo(0)+"]";
+				mes "[Defense of "+strcharinfo(PC_NAME)+"]";
 				switch(.@defend) {
 					// Blocked.
 					case 3: .@str$ = "You block the stream of water with your strong butt. Feels refreshing. HP reduced only by half."; break;
@@ -3990,7 +3990,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 				} else
 					specialeffect2 EF_BASH;
 				.@pc_hp -= .@n_damage;
-				mes "[Defense of "+strcharinfo(0)+"]";
+				mes "[Defense of "+strcharinfo(PC_NAME)+"]";
 				switch(.@defend) {
 					// Blocked.
 					case 1: .@str$ = "You block the dash attack with your fat butt. Your butt is world class. HP reduced only by half."; break;
@@ -4014,7 +4014,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 					specialeffect2 EF_GUARD;
 				}
 				.@pc_hp -= .@n_damage;
-				mes "[Defense of "+strcharinfo(0)+"]";
+				mes "[Defense of "+strcharinfo(PC_NAME)+"]";
 				switch(.@defend) {
 					// Blocked.
 					case 2: .@str$ = "but you block its attack with a branch nearby. HP reduced only by half."; break;
@@ -4037,7 +4037,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 		case 4:
 			mes "You get scared of the unidentified creature, and attempt to run.";
 			next;
-			mes "["+strcharinfo(0)+"'s Escape]";
+			mes "["+strcharinfo(PC_NAME)+"'s Escape]";
 			if (rand(1,2) == 1) {
 				mes "Fortunately ^BF2C15Unidentified creature^000000";
 				mes "did not come after you.";
@@ -4054,7 +4054,7 @@ mora,114,79,0	script	Black Shadow#ep14_muk	CLEAR_NPC,{
 		}
 		callsub L_CheckPCAlive, .@pc_hp;
 		mes "[ Current Progress ]";
-		mes strcharinfo(0)+" HP = "+.@pc_hp;
+		mes strcharinfo(PC_NAME)+" HP = "+.@pc_hp;
 		mes "Unidentified Creature HP = "+.@npc_hp;
 		next;
 	}
@@ -4296,7 +4296,7 @@ mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 		mes "You arrived at the puddle to the "+.@dir$[0]+".";
 		mes "You should look for the unidentified creature's family.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Fish~ Fish~";
 		next;
 		mes "When you called out, an answer came";
@@ -4359,7 +4359,7 @@ mora,118,86,0	duplicate(???#mora)	???#ep14_muk05	CLEAR_NPC,2,2
 		mes "You arrived at the puddle to the "+.@dir$[0]+".";
 		mes "You should look for the unidentified creature's family.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Fish~ Fish~";
 		next;
 		mes "You yelled out loud for fish,";
@@ -4555,7 +4555,7 @@ mora,115,98,0	script	Hotcha#pa0829	4_ELEPHANT,{
 	}
 
 	mes "[Hotcha]";
-	mes "Hmm... "+strcharinfo(0)+".";
+	mes "Hmm... "+strcharinfo(PC_NAME)+".";
 	mes "It may be a documentation error, but according to the documents, you have nothing to do with the tasks.";
 	close;
 }
@@ -4730,7 +4730,7 @@ mora,119,118,4	script	General Good Dealer#pa0	4_M_RAFLE_GR,{
 	callsub L_CheckQuest,12235,932,3; //Skel_Bone
 
 	mes "[General Good Dealer]";
-	mes "Hmm... "+strcharinfo(0)+".";
+	mes "Hmm... "+strcharinfo(PC_NAME)+".";
 	mes "It may be a documentation error, but according to the documents, you have nothing to do with the tasks.";
 	close;
 
@@ -4926,7 +4926,7 @@ mora,127,112,4	script	Commodities Dealer#pa08	4_F_RAFLE_PK,{
 	callsub L_CheckQuest,12240,938,5; //Sticky_Mucus
 
 	mes "[Commodities Dealer]";
-	mes "Hmm... "+strcharinfo(0)+".";
+	mes "Hmm... "+strcharinfo(PC_NAME)+".";
 	mes "It may be a documentation error, but according to the documents, you have nothing to do with the tasks.";
 	close;
 
@@ -5216,7 +5216,7 @@ mora,116,165,5	script	Knights Boss#mo	4_M_RAFLE_VI,{
 	switch(select("Yes, sir!", "I challenge you to a duel!")) {
 	case 1:
 		mes "[Order of the Knights Boss]";
-		mes "Good attitude, "+strcharinfo(0)+" Soldier!";
+		mes "Good attitude, "+strcharinfo(PC_NAME)+" Soldier!";
 		mes "I'll reward you handsomely when you get back.";
 		next;
 		mes "[Other Bosses]";
@@ -5290,7 +5290,7 @@ mora,114,163,5	script	Knights Head#mo	4_M_RAFLE_OR,{
 		case 2:
 			mes "[Order of the Knights Head]";
 			mes "It was worthwhile to have trained you after all.";
-			mes "I'm proud of you,"+strcharinfo(0)+" Soldier!";
+			mes "I'm proud of you,"+strcharinfo(PC_NAME)+" Soldier!";
 			next;
 			mes "[Other Heads]";
 			mes "I think you'll make a great right-hand man, the Chief.";

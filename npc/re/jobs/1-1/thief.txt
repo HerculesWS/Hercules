@@ -158,7 +158,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	}
 	mes "[Thief Guildsman]";
 	mes "Alright, tell me your name. Huh? What?";
-	mes ""+strcharinfo(0)+". So "+strcharinfo(0)+", right...?";
+	mes ""+strcharinfo(PC_NAME)+". So "+strcharinfo(PC_NAME)+", right...?";
 	next;
 	if (getskilllv("NV_BASIC") < 9) {
 		mes "[Thief Guildsman]";
@@ -169,7 +169,7 @@ moc_prydb1,39,129,2	script	Thief Guide#thief	1_F_04,{
 	}
 	mes "[Thief Guildsman]";
 	mes "Hmm.... I found your interesting criminal records from the data of the detective agency. Well you seem to have what it takes to be a good thief.";
-	mes ""+strcharinfo(0)+". I now declare that you have passed the job interview!";
+	mes ""+strcharinfo(PC_NAME)+". I now declare that you have passed the job interview!";
 	next;
 	mes "[Thief Guildsman]";
 	mes "Well, I'm not in charge of making you a Thief. I just accept applications, get it?";
@@ -186,7 +186,7 @@ moc_prydb1,42,133,2	script	Thief Guildsman#thief	2_M_THIEFMASTER,{
 		mes "Let's begin the job-changing ceremony of our guild!";
 		next;
 		mes "[Commander of Thief Guild]";
-		mes "'"+strcharinfo(0)+".'";
+		mes "'"+strcharinfo(PC_NAME)+".'";
 		mes "'For those who are ready, the moonlight shall open the way. Now you are fully ready, I now officially allow you to become a member of the Thief Guild.'";
 		callfunc "Job_Change",Job_Thief;
 		q_job_thief = 0;

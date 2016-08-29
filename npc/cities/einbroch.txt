@@ -338,7 +338,7 @@ einbroch,40,116,1	script	Airship Engineer#ein-1	4_M_EINMAN,{
 		next;
 		switch(select("Ah~", "Uh huh...")) {
 		case 1:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Ah~";
 			mes "I see, so you're";
 			mes "working on restoring";
@@ -352,7 +352,7 @@ einbroch,40,116,1	script	Airship Engineer#ein-1	4_M_EINMAN,{
 			mes "fixing up Burielle...";
 			close;
 		case 2:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Uh huh...";
 			mes "Right. For a second";
 			mes "there, I thought you were";
@@ -360,7 +360,7 @@ einbroch,40,116,1	script	Airship Engineer#ein-1	4_M_EINMAN,{
 			mes "then I also assumed that you";
 			mes "weren't, you know, a nutcase.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Oh, did you say,";
 			mes "''prettiest model?''";
 			mes "All Airships look the";
