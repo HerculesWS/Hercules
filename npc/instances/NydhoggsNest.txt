@@ -2013,78 +2013,78 @@ OnEnable:
 
 2@nyd,115,278,0	script	nyd_2f_red	FAKE_NPC,5,5,{
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
-	donpcevent instance_npcname(strnpcinfo(0)+"_warp1")+"::OnEnable";
-	donpcevent instance_npcname(strnpcinfo(0)+"_warp2")+"::OnEnable";
-	donpcevent instance_npcname(strnpcinfo(0)+"_warp3")+"::OnEnable";
-	donpcevent instance_npcname(strnpcinfo(0)+"_c")+"::OnEnable";
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME)+"_warp1")+"::OnEnable";
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME)+"_warp2")+"::OnEnable";
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME)+"_warp3")+"::OnEnable";
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME)+"_c")+"::OnEnable";
 	initnpctimer;
 	end;
 
 OnDisable:
-	donpcevent instance_npcname(strnpcinfo(0)+"_warp1")+"::OnDisable";
-	donpcevent instance_npcname(strnpcinfo(0)+"_warp2")+"::OnDisable";
-	donpcevent instance_npcname(strnpcinfo(0)+"_warp3")+"::OnDisable";
-	disablenpc instance_npcname(strnpcinfo(0));
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME)+"_warp1")+"::OnDisable";
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME)+"_warp2")+"::OnDisable";
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME)+"_warp3")+"::OnDisable";
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnTouch:
-	if (compare(strnpcinfo(0),"red")) {
+	if (compare(strnpcinfo(NPC_NAME),"red")) {
 		percentheal -50,0;
 		percentheal -30,0;
 		sc_start SC_BLOODING,60000,0;
-	} else if (compare(strnpcinfo(0),"white")) {
+	} else if (compare(strnpcinfo(NPC_NAME),"white")) {
 		percentheal -50,0;
 		sc_start SC_FREEZE,20000,0;
-	} else if (compare(strnpcinfo(0),"yellow")) {
+	} else if (compare(strnpcinfo(NPC_NAME),"yellow")) {
 		percentheal 0,-50;
 		sc_start SC_SLEEP,20000,0;
 		sc_start SC_CONFUSION,60000,0;
-	} else if (compare(strnpcinfo(0),"green")) {
+	} else if (compare(strnpcinfo(NPC_NAME),"green")) {
 		percentheal -50,-50;
 		sc_start SC_POISON,60000,0;
 	}
 	end;
 
 OnTimer10000:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	stopnpctimer;
 	end;
 }
 
 2@nyd,6,6,0	script	nyd_2f_red_c	FAKE_NPC,{
 OnInstanceInit:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	initnpctimer;
 	.@map$ = instance_mapname("2@nyd");
-	.@label$ = instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
-	if (compare(strnpcinfo(0),"red")) {
+	.@label$ = instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
+	if (compare(strnpcinfo(NPC_NAME),"red")) {
 		monster .@map$,120,285,"Nidhoggur's Guardian#1",2020,1,.@label$;
 		monster .@map$,119,286,"Nidhoggur's Guardian#2",2020,1,.@label$;
 		monster .@map$,120,270,"Nidhoggur's Guardian#3",2020,1,.@label$;
 		monster .@map$,119,269,"Nidhoggur's Guardian#4",2021,1,.@label$;
 		monster .@map$,118,270,"Nidhoggur's Guardian#5",2021,1,.@label$;
-	} else if (compare(strnpcinfo(0),"white")) {
+	} else if (compare(strnpcinfo(NPC_NAME),"white")) {
 		monster .@map$,120,380,"Nidhoggur's Guardian#1",2020,1,.@label$;
 		monster .@map$,119,381,"Nidhoggur's Guardian#2",2020,1,.@label$;
 		monster .@map$,120,367,"Nidhoggur's Guardian#3",2020,1,.@label$;
 		monster .@map$,119,366,"Nidhoggur's Guardian#4",2021,1,.@label$;
 		monster .@map$,118,365,"Nidhoggur's Guardian#5",2021,1,.@label$;
-	} else if (compare(strnpcinfo(0),"yellow")) {
+	} else if (compare(strnpcinfo(NPC_NAME),"yellow")) {
 		monster .@map$,282,284,"Nidhoggur's Guardian#1",2020,1,.@label$;
 		monster .@map$,283,283,"Nidhoggur's Guardian#2",2020,1,.@label$;
 		monster .@map$,280,275,"Nidhoggur's Guardian#3",2020,1,.@label$;
 		monster .@map$,281,276,"Nidhoggur's Guardian#4",2021,1,.@label$;
 		monster .@map$,281,277,"Nidhoggur's Guardian#5",2021,1,.@label$;
-	} else if (compare(strnpcinfo(0),"green")) {
+	} else if (compare(strnpcinfo(NPC_NAME),"green")) {
 		monster .@map$,282,378,"Nidhoggur's Guardian#1",2020,1,.@label$;
 		monster .@map$,283,377,"Nidhoggur's Guardian#2",2020,1,.@label$;
 		monster .@map$,280,368,"Nidhoggur's Guardian#3",2020,1,.@label$;
@@ -2095,30 +2095,30 @@ OnEnable:
 
 OnMyMobDead:
 	.@map$ = instance_mapname("2@nyd");
-	if (mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
+	if (mobcount(.@map$,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
 		mapannounce .@map$, "Nidhoggur's Shadow : You're not bad... but I will be your opponent this time.",bc_map,"0x00ff99";
 		donpcevent instance_npcname("nyd_2f_boss_enter_logic")+"::OnEnable";
-		donpcevent instance_npcname(strnpcinfo(0))+"::OnDisable";
+		donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable";
 		end;
 	}
 	end;
 
 /*
 OnReset:	// Label not called.
-	killmonster instance_mapname("2@nyd"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
-	donpcevent instance_npcname(strnpcinfo(0))+"::OnDisable";
+	killmonster instance_mapname("2@nyd"),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
+	donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable";
 	end;
 */
 
 OnDisable:
 	stopnpctimer;
-	killmonster instance_mapname("2@nyd"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead"; //custom
-	donpcevent instance_npcname(substr(strnpcinfo(0),0,getstrlen(strnpcinfo(0))-3))+"::OnDisable";
-	disablenpc instance_npcname(strnpcinfo(0));
+	killmonster instance_mapname("2@nyd"),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead"; //custom
+	donpcevent instance_npcname(substr(strnpcinfo(NPC_NAME),0,getstrlen(strnpcinfo(NPC_NAME))-3))+"::OnDisable";
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnTimer180000:
-	killmonster instance_mapname("2@nyd"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	killmonster instance_mapname("2@nyd"),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 	stopnpctimer;
 	donpcevent instance_npcname("nyd_2f_boss_enter_call")+"::OnWarpColor";
 	end;
@@ -2127,21 +2127,21 @@ OnTimer180000:
 2@nyd,130,298,0	script	nyd_2f_red_warp1	FAKE_NPC,6,6,{
 OnInstanceInit:
 OnDisable:
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnTouch:
-	if (compare(strnpcinfo(0),"red"))
+	if (compare(strnpcinfo(NPC_NAME),"red"))
 		warp instance_mapname("2@nyd"),115,278;
-	else if (compare(strnpcinfo(0),"white"))
+	else if (compare(strnpcinfo(NPC_NAME),"white"))
 		warp instance_mapname("2@nyd"),115,373;
-	else if (compare(strnpcinfo(0),"yellow"))
+	else if (compare(strnpcinfo(NPC_NAME),"yellow"))
 		warp instance_mapname("2@nyd"),284,278;
-	else if (compare(strnpcinfo(0),"green"))
+	else if (compare(strnpcinfo(NPC_NAME),"green"))
 		warp instance_mapname("2@nyd"),284,374;
 	end;
 }

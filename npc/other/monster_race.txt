@@ -240,15 +240,15 @@ OnInit:
 
 OnEnable:
 	emotion e_gasp;
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	getmapxy(.@m$, .@x, .@y, UNITTYPE_NPC);
 	setarray .@mob[1], R_PORING,R_LUNATIC,R_SAVAGE_BABE,R_DESERT_WOLF_B,R_DEVIRUCHI,R_BAPHOMET_;
-	monster "p_track01",58,.@y,"The "+ F_Ord() +" Racer", .@mob[F_Num()],1,strnpcinfo(0)+"::OnMyMobDead";
+	monster "p_track01",58,.@y,"The "+ F_Ord() +" Racer", .@mob[F_Num()],1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 
 OnDisable:
-	disablenpc strnpcinfo(0);
-	killmonster "p_track01",strnpcinfo(0)+"::OnMyMobDead";
+	disablenpc strnpcinfo(NPC_NAME);
+	killmonster "p_track01",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 
 OnTouchNPC:
@@ -268,12 +268,12 @@ OnTouchNPC:
 	mapannounce "p_track01","Please remember that we can distribute Prize Medals for only 5 minutes after each race.",bc_map,"0x33FF66";
 	sleep 1000;
 	donpcevent "Medal Distributor#single::OnEnable";
-	donpcevent strnpcinfo(0)+"::OnDisable";
-	killmonster "p_track01",strnpcinfo(0)+"::OnMyMobDead";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
+	killmonster "p_track01",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 
 	function	F_Num	{
-		return atoi(strnpcinfo(2));
+		return atoi(strnpcinfo(NPC_NAME_HIDDEN));
 	}
 
 	function	F_Ord	{
@@ -288,8 +288,8 @@ OnTouchNPC:
 	}
 
 OnInit:
-	if (strnpcinfo(2) != "" )
-		disablenpc strnpcinfo(0);
+	if (strnpcinfo(NPC_NAME_HIDDEN) != "" )
+		disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 p_track01,30,38,0	duplicate(Runner_main)	Runner No. 1#1	FAKE_NPC,1,0
@@ -845,7 +845,7 @@ OnTouchNPC:
 	end;
 
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
@@ -861,7 +861,7 @@ OnTouchNPC:
 	end;
 
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
@@ -876,7 +876,7 @@ OnTouchNPC:
 	end;
 
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
@@ -891,7 +891,7 @@ OnTouchNPC:
 	end;
 
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
@@ -1748,11 +1748,11 @@ p_track02,76,38,1	script	Exit Guide#double	4_M_NFMAN,{
 -	script	mob1#main	FAKE_NPC,{
 	function	MN;
 OnEnable:
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	setarray .@mob[1], R_PORING,R_LUNATIC,R_SAVAGE_BABE,R_DESERT_WOLF_B,R_DEVIRUCHI,R_BAPHOMET_;
 	getmapxy(.@m$, .@x, .@y, UNITTYPE_NPC);
 	.@num = MN();
-	monster "p_track02",58,.@y,"Monster "+.@num,.@mob[.@num],1,strnpcinfo(0)+"::OnMyMobDead";
+	monster "p_track02",58,.@y,"Monster "+.@num,.@mob[.@num],1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 
 OnTouchNPC:
@@ -1762,7 +1762,7 @@ OnTouchNPC:
 		specialeffect EF_MVP;
 		mapannounce "p_track02","Monster "+.@i+" has reached the Finish Line!",bc_map,"0x66FFCC";
 		$@mon_race_2_1 = .@i;
-		donpcevent strnpcinfo(0)+"::OnDisable";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	} else {
 		emotion e_lv;
 		specialeffect EF_MVP;
@@ -1784,19 +1784,19 @@ OnMyMobDead:
 	end;
 
 OnDisable:
-	killmonster "p_track02",strnpcinfo(0)+"::OnMyMobDead";
-	disablenpc strnpcinfo(0);
+	killmonster "p_track02",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnInit:
-	if (strnpcinfo(2) != "main")
-		disablenpc strnpcinfo(0);
+	if (strnpcinfo(NPC_NAME_HIDDEN) != "main")
+		disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 	function	MN	{
 		setarray .@n$[1], "poring","lunatic","savagebebe","desertwolf","deviruchi","baphomet";
 		for (.@i = 1; .@i <= getarraysize(.@n$); ++.@i) {
-			if (compare(strnpcinfo(0),.@n$[.@i]))
+			if (compare(strnpcinfo(NPC_NAME),.@n$[.@i]))
 				break;
 		}
 		return .@i;
@@ -1894,14 +1894,14 @@ OnTouchNPC:
 
 OnDisable:
 	for(.@i = 1; .@i < 7; ++.@i) {
-		disablenpc "Luk#"+strnpcinfo(2)+"_"+.@i;
-		disablenpc "Tire#"+strnpcinfo(2)+"_"+.@i;
+		disablenpc "Luk#"+strnpcinfo(NPC_NAME_HIDDEN)+"_"+.@i;
+		disablenpc "Tire#"+strnpcinfo(NPC_NAME_HIDDEN)+"_"+.@i;
 	}
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 

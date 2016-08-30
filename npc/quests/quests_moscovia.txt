@@ -2569,14 +2569,14 @@ OnTimer300000:
 
 -	script	Baehideun#main	FAKE_NPC,{
 OnInit:
-	if (compare(strnpcinfo(0),"main")) end;
-	disablenpc strnpcinfo(0);
+	if (compare(strnpcinfo(NPC_NAME),"main")) end;
+	disablenpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 
 OnEnable:
-	enablenpc strnpcinfo(0);
-	.@c = charat(strnpcinfo(0),9);
+	enablenpc strnpcinfo(NPC_NAME);
+	.@c = charat(strnpcinfo(NPC_NAME),9);
 	switch (.@c) {
 		case 1: setarray .@m, 89,112,1425,85,110,1425; break;
 		case 2: setarray .@m, 89,112,1425,80,110,1426,83,114,1426,85,110,1425; break;
@@ -2584,39 +2584,39 @@ OnEnable:
 		case 4: setarray .@m, 85,111,1451,89,112,1543,90,106,1543; break;
 	}
 	for (.@i = 0; .@i < getarraysize(.@m); .@i += 3)
-		monster "mosk_ship",.@m[.@i],.@m[.@i+1],"Sea Monster",.@m[.@i+2],1,strnpcinfo(0)+"::OnMyMobDead";
+		monster "mosk_ship",.@m[.@i],.@m[.@i+1],"Sea Monster",.@m[.@i+2],1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	initnpctimer;
 	end;
 
 OnDisable:
 	$@mos1_edq = 0;
 	stopnpctimer;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnMyMobDead:
-	if (!mobcount("mosk_ship",strnpcinfo(0)+"::OnMyMobDead")) {
+	if (!mobcount("mosk_ship",strnpcinfo(NPC_NAME)+"::OnMyMobDead")) {
 		$@mos1_edq = 0;
 		mes "[Mr. Ibanoff]";
 		mes "Now that all the monsters are gone,";
 		mes "we can start sailing again";
 		mes "normally.";
-		.@c = charat(strnpcinfo(0),9);
+		.@c = charat(strnpcinfo(NPC_NAME),9);
 		switch (.@c) {
 			case 1: break;
 			case 2: break;
 			case 3: mos_whale_edq = 11; break;
 			case 4: mos_whale_edq = 26; break;
 		}
-		donpcevent strnpcinfo(0)+"::OnDisable";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 		close;
 	}
 	end;
 
 OnTimer300000:
-	killmonster "mosk_ship",strnpcinfo(0)+"::OnMyMobDead";
+	killmonster "mosk_ship",strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	$@mos1_edq = 0;
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 }
 mosk_ship,2,2,4	duplicate(Baehideun#main)	Baehideun1#ship	FAKE_NPC
@@ -3992,7 +3992,7 @@ moscovia,208,182,7	script	Acorn Dealer#mos	4_M_RUSMAN1,{
 
 //- Big Squirrel - Trade Acorns for Gems -
 -	script	Squirrel#mos_main	FAKE_NPC,{
-	if (compare(strnpcinfo(0),"mos_sq")) end;
+	if (compare(strnpcinfo(NPC_NAME),"mos_sq")) end;
 OnTouch:
 	if ((MaxWeight-Weight) < 2000) {
 		mes "- Please stop here!! -";
@@ -7371,23 +7371,23 @@ OnTimer300000:
 -	script	mos_rus#main	FAKE_NPC,{
 	end;
 OnInit:
-	if (compare(strnpcinfo(0),"main")) end;
-	disablenpc strnpcinfo(0);
+	if (compare(strnpcinfo(NPC_NAME),"main")) end;
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnEnable:
 	initnpctimer;
-	enablenpc strnpcinfo(0);
+	enablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnDisable:
 	stopnpctimer;
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 
 OnTimer120000:
 	stopnpctimer;
-	donpcevent strnpcinfo(0)+"::OnDisable";
+	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	end;
 }
 mosk_dun01,50,256,3	duplicate(mos_rus#main)	Gray Wolf#rus05	4_RUS_DWOLF

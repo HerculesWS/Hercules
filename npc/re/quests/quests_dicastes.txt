@@ -204,7 +204,7 @@ sec_in02,16,43,5	script	Scaraba Dungeon Entrance	4_MAN_BENKUNI,{
 
 //== Vigilantes ============================================
 -	script	Vigilante#main	FAKE_NPC,{
-	if (compare(strnpcinfo(0),"ep133_26")) {
+	if (compare(strnpcinfo(NPC_NAME),"ep133_26")) {
 		if (!isequipped(2782)) {
 			mes "[Vigilante]";
 			mes sprintf("¡ô¡ó¡ö ¡÷ ¡þ¡ù¡ó?");
@@ -348,11 +348,11 @@ OnTouch:
 mid_camp,218,250,3	script	Suspicious Guy#ep133_	4_M_ROKI,{
 	mes "[Suspicious Guy]";
 	mes ".....";
-	hideonnpc strnpcinfo(0);
+	hideonnpc strnpcinfo(NPC_NAME);
 	close;
 OnInit:
 OnDisable:
-	hideonnpc strnpcinfo(0);
+	hideonnpc strnpcinfo(NPC_NAME);
 OnEnable:
 	hideoffnpc "Suspicious Guy#ep133_";
 	end;
@@ -413,7 +413,7 @@ OnEnable:
 		end;
 	}
 	mes "[Capital City Guard]";
-	mes "Unknown situation occurred. Case " + strnpcinfo(2);
+	mes "Unknown situation occurred. Case " + strnpcinfo(NPC_NAME_HIDDEN);
 	mes "Please inquiry with a GM.";
 	close;
 }
@@ -4798,7 +4798,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 		mes "- You can too many items to proceed with the quest. -";
 		close;
 	}
-	.@n$ = strnpcinfo(1);
+	.@n$ = strnpcinfo(NPC_NAME_VISIBLE);
 	setarray .@npc$, 	"Rock Pile",	"Dirt Pile",	"Split Earth";
 	setarray .@item, 	6307,			6306,			6305;
 	.@size = getarraysize(.@npc$);
@@ -4825,7 +4825,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 			if (.@npc$[.@type] == "Rock Pile") mes "Knock down the pebbles that make up the pile of rocks and spread them out.";
 			else if (.@npc$[.@type] == "Dirt Pile") mes "You step on the dug up dirt pile and make the ground flat.";
 			else if (.@npc$[.@type] == "Split Earth") mes "You step on the dry, split surface and make the ground flat.";
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			close;
 		}
 		if (.@npc$[.@type] == "Rock Pile") {
@@ -4849,7 +4849,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 		getitem .@item[.@type], 1;
 		erasequest 7193;
 		setquest 7194;
-		donpcevent strnpcinfo(0)+"::OnDisable";
+		donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 		next;
 		mes "[" + strcharinfo(0) + "]";
 		mes "Hmm.. I may need to discuss these with Shay.";
@@ -4882,7 +4882,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 				mes "There is something stuck by the frost on the sharp, crack surface.";
 			}
 			getitem .@item[.@type], 1;
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			next;
 			if (.@npc$[.@type] == "Rock Pile") mes "You collect stone fragments.";
 			else if (.@npc$[.@type] == "Dirt Pile") mes "Collect bloodstains.";
@@ -4911,7 +4911,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 			else if (.@npc$[.@type] == "Dirt Pile") mes "You collect another clotted bloodstain from a dirt pile.";
 			else if (.@npc$[.@type] == "Split Earth") mes "You collect another piece of skin frozen in the frost in the crack of the split earth.";
 			getitem .@item[.@type], 1;
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			close;
 		}
 		mes "No need to collect more.";
@@ -4931,7 +4931,7 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 				mes "You collect the frozen piece of skin and then step on the ground to leave no trace.";
 			}
 			getitem .@item[.@type], 1;
-			donpcevent strnpcinfo(0)+"::OnDisable";
+			donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 			close;
 		}
 		setarray .@str$, "stone fragments","bloodstains","pieces of skin";
@@ -4942,14 +4942,14 @@ dic_fild01,231,174,5	script	BK#ep133_18	4_M_MERCAT2,{
 	mes "Was arranged neatly.";
 	close;
 OnEnable:
-	hideoffnpc strnpcinfo(0);
+	hideoffnpc strnpcinfo(NPC_NAME);
 	end;
 OnDisable:
-	hideonnpc strnpcinfo(0);
+	hideonnpc strnpcinfo(NPC_NAME);
 	initnpctimer;
 	end;
 OnReset:
-	hideoffnpc strnpcinfo(0);
+	hideoffnpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 OnTimer60000:
@@ -4957,13 +4957,13 @@ OnTimer120000:
 OnTimer180000:
 OnTimer240000:
 	if (!rand(2)) {
-		hideoffnpc strnpcinfo(0);
+		hideoffnpc strnpcinfo(NPC_NAME);
 		stopnpctimer;
 	}
 	end;
 
 OnTimer300000:
-	hideoffnpc strnpcinfo(0);
+	hideoffnpc strnpcinfo(NPC_NAME);
 	stopnpctimer;
 	end;
 }
@@ -6105,7 +6105,7 @@ dic_in01,349,129,5	script	Bouy#13_3	4_MAN_BENKUNI,{
 //== Sapha's Visit =========================================
 -	script	Expedition#ep133_is	FAKE_NPC,{
 	if (ep13_3_invite) {
-		if (compare(strnpcinfo(1),"Maha")) {
+		if (compare(strnpcinfo(NPC_NAME_VISIBLE),"Maha")) {
 			mes "[Maha]";
 			mes "But I do think the Sapha race is overly kind, almost unnaturally.";
 			mes "Guess it'll be fine.";
@@ -6667,7 +6667,7 @@ mid_campin,165,127,5	script	Hibba Agip#ep133_is07	4_M_REDSWORD,{
 	mes "I should go now.";
 	close2;
 OnInit:
-	disablenpc strnpcinfo(0);
+	disablenpc strnpcinfo(NPC_NAME);
 	end;
 }
 
@@ -6951,7 +6951,7 @@ dic_in01,42,264,3	script	Adventurer Clerk#ep133	4_MAN_NITT,{
 }
 //== Enchantment NPCs ======================================
 -	script	dic_enc#main	FAKE_NPC,{
-	.@re$ = strnpcinfo(1);
+	.@re$ = strnpcinfo(NPC_NAME_VISIBLE);
 	.@n$ = "["+.@re$+"]";
 	if (!checkweight (1201,1)) {
 		mes "You have too many kinds of items. Let's try again after you reduce the number of items.";

@@ -1140,12 +1140,12 @@ function	script	F_KO_Survival_rps	{
 
 //- Templates -
 -	script	Sight#ko_trap	FAKE_NPC,{
-	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(2),3,4));
+	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	end;
 OnTouch:
 	mes "There are tiny letters on the sign.";
 	next;
-	switch (atoi(substr(strnpcinfo(2),3,4))) {
+	switch (atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4))) {
 		case  2: set .@id,0; break;
 		case  7: set .@id,5; break;
 		case 11: set .@id,9; break;
@@ -1161,10 +1161,10 @@ OnTouch:
 }
 
 -	script	Sight#ko_trap2	FAKE_NPC,{
-	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(2),3,4));
+	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	end;
 OnTouch:
-	set .@id, atoi(substr(strnpcinfo(2),3,4));
+	set .@id, atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	switch (.@id) {
 		case 10: set .@var$, "$20110808_vko01"; break;
 		case 28: set .@var$, "$20110808_vko03"; break;
@@ -1206,10 +1206,10 @@ OnTouch:
 }
 
 -	script	Sight#ko_heal	FAKE_NPC,{
-	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(2),3,4));
+	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	end;
 OnTouch:
-	set .@id, atoi(substr(strnpcinfo(2),3,4));
+	set .@id, atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	mes "There are tiny letters on the sign.";
 	next;
 	mes "This block is blessed.";
@@ -1224,10 +1224,10 @@ OnTouch:
 }
 
 -	script	Sight#ko_curse	FAKE_NPC,{
-	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(2),3,4));
+	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	end;
 OnTouch:
-	set .@id, atoi(substr(strnpcinfo(2),3,4));
+	set .@id, atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	set .@playtime, questprogress(5141,PLAYTIME);
 	if (!.@playtime) {
 		mes "There are tiny letters on the sign.";
@@ -1269,10 +1269,10 @@ OnTouch:
 }
 
 -	script	Sight#ko_gravity	FAKE_NPC,{
-	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(2),3,4));
+	callfunc "F_KO_Survival_mes", atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	end;
 OnTouch:
-	set .@id, atoi(substr(strnpcinfo(2),3,4));
+	set .@id, atoi(substr(strnpcinfo(NPC_NAME_HIDDEN),3,4));
 	mes "There are tiny letters on the sign.";
 	next;
 	mes "Area cursed with 10 times the normal gravity. You will need 10 ^FD0260LP^000000 to roll the dice.";

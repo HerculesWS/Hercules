@@ -19,7 +19,7 @@
 
 OnInit:
 	getmapxy(.map$, .x, .y, 1);
-	debugmes strnpcinfo(0);
+	debugmes strnpcinfo(NPC_NAME);
 	end;
 
 OnTouch:

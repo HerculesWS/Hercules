@@ -6768,7 +6768,7 @@ OnReset:
 kh_kiehl02,49,55,6	script	Mitchell#KiehlRoom	4_F_JOB_HUNTER,{
 	end;
 OnInit:
-	hideonnpc strnpcinfo(0);
+	hideonnpc strnpcinfo(NPC_NAME);
 	end;
 }
 kh_kiehl02,53,52,4	duplicate(Mitchell#KiehlRoom)	Agent#KHAgent1	4_M_MASKMAN

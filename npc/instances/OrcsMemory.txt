@@ -686,22 +686,22 @@ OnTimer23910:
 2@orcs,26,164,0	script	Torch#1-1	CLEAR_NPC,{
 	if(getpartyleader(getcharid(1),2) != getcharid(0)) end;
 	progressbar "ffff00",5;
-	setarray .@id[0], atoi(charat(strnpcinfo(2),0)), atoi(charat(strnpcinfo(2),2));
+	setarray .@id[0], atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),0)), atoi(charat(strnpcinfo(NPC_NAME_HIDDEN),2));
 	if (.@id[1] == 4)
 		donpcevent instance_npcname("#Warp2-"+.@id[0])+"::OnEnable";
 	else
 		donpcevent instance_npcname("Torch#"+.@id[0]+"-"+(.@id[1]+1))+"::OnEnable";
 	initnpctimer;
-	disablenpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnInstanceInit:
-	if (strnpcinfo(0) != "Torch#2-1" && strnpcinfo(0) != "Torch#3-1")
-		disablenpc instance_npcname(strnpcinfo(0));
+	if (strnpcinfo(NPC_NAME) != "Torch#2-1" && strnpcinfo(NPC_NAME) != "Torch#3-1")
+		disablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnEnable:
-	enablenpc instance_npcname(strnpcinfo(0));
+	enablenpc instance_npcname(strnpcinfo(NPC_NAME));
 	end;
 
 OnTimer100:
