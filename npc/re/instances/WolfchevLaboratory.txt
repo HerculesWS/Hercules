@@ -1981,15 +1981,15 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		donpcevent instance_npcname("Manual Sheet#1_1")+"::OnEnable";
 		donpcevent instance_npcname("Valve#1_2")+"::OnEnable";
 		donpcevent instance_npcname("Valve#1_3")+"::OnEnable";
-		mapannounce instance_mapname("1@lhz"),"[Security System] the persons concerned, access with the emergency access method.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] the persons concerned, access with the emergency access method.",bc_map,C_VIVID_TANGERINE_2;
 		end;
 
 	OnTimer1000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] This is a warning notice! Warning notice! Intruder Detected.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] This is a warning notice! Warning notice! Intruder Detected.",bc_map,C_VIVID_TANGERINE_2;
 		end;
 
 	OnTimer2000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, The Lab No.1's security system will be activated.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, The Lab No.1's security system will be activated.",bc_map,C_VIVID_TANGERINE_2;
 		end;
 
 	OnTimer7000:
@@ -2003,7 +2003,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 
 	OnEnable:
 		.@map$ = instance_mapname("1@lhz");
-		mapannounce .@map$,"[Security System] Security system Activated !! Experimental animals are released. The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE;
+		mapannounce .@map$,"[Security System] Security system Activated !! Experimental animals are released. The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE_2;
 		areamonster .@map$,35,159,50,169,"Starving Lab animal",MD_DESERT_WOLF,rand(10,15),instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead";
 		initnpctimer;
 		end;
@@ -2016,7 +2016,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		stopnpctimer;
 		if(mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
 			donpcevent instance_npcname("Lab1#1_1")+"::OnType_02";
-			mapannounce instance_mapname("1@lhz"),"[Security System] The Lab No.1's security system has been stopped.",bc_map,C_VIVID_TANGERINE;
+			mapannounce instance_mapname("1@lhz"),"[Security System] The Lab No.1's security system has been stopped.",bc_map,C_VIVID_TANGERINE_2;
 		} else {
 			initnpctimer;
 		}
@@ -2025,7 +2025,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 	OnMyMobDead:
 		if(mobcount(instance_mapname("1@lhz"), instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
 			donpcevent instance_npcname("Lab1#1_1")+"::OnType_02";
-			mapannounce instance_mapname("1@lhz"),"[Security System] The Lab No.1's security system has been stopped.",bc_map,C_VIVID_TANGERINE;
+			mapannounce instance_mapname("1@lhz"),"[Security System] The Lab No.1's security system has been stopped.",bc_map,C_VIVID_TANGERINE_2;
 			stopnpctimer;
 		}
 		end;
@@ -2243,7 +2243,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 
 	OnEnable:
-		mapannounce instance_mapname("1@lhz"),"[Management System] The door which connects to the Lab No.2 is now open.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Management System] The door which connects to the Lab No.2 is now open.",bc_map,C_VIVID_TANGERINE_2;
 		enablenpc instance_npcname("#potal_01");
 		end;
 
@@ -2284,11 +2284,11 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 
 	OnTimer1000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] This is a warning notice! Warning notice! Intruder Detected in The Lab No.2!!",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] This is a warning notice! Warning notice! Intruder Detected in The Lab No.2!!",bc_map,C_VIVID_TANGERINE_2;
 		end;
 
 	OnTimer3000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, The Lab No.2 Security system will start working.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, The Lab No.2 Security system will start working.",bc_map,C_VIVID_TANGERINE_2;
 		end;
 
 	OnTimer5000:
@@ -2296,7 +2296,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 
 	OnTimer8000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] First security system activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] First security system activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE_2;
 		donpcevent instance_npcname("MobCtrl2#mob02")+"::On01";
 		end;
 
@@ -2311,11 +2311,11 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 
 	OnTimer303000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, Second Security system will start working.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, Second Security system will start working.",bc_map,C_VIVID_TANGERINE_2;
 		end;
 
 	OnTimer308000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] Second security system activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] Second security system activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE_2;
 		donpcevent instance_npcname("MobCtrl2#mob02")+"::On02";
 		end;
 
@@ -2330,11 +2330,11 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 
 	OnTimer603000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, Third Security system will start working.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, Third Security system will start working.",bc_map,C_VIVID_TANGERINE_2;
 		end;
 
 	OnTimer608000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] Third security system activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] Third security system activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE_2;
 		donpcevent instance_npcname("MobCtrl2#mob02")+"::On03";
 		end;
 
@@ -2344,11 +2344,11 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 
 	OnTimer903000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, Fourth Security system will start working.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, Fourth Security system will start working.",bc_map,C_VIVID_TANGERINE_2;
 		end;
 
 	OnTimer908000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] Fourth security system activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] Fourth security system activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE_2;
 		donpcevent instance_npcname("MobCtrl2#mob02")+"::On04";
 		end;
 
@@ -2363,11 +2363,11 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 
 	OnTimer1203000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, Fifth Security system will start working.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, Fifth Security system will start working.",bc_map,C_VIVID_TANGERINE_2;
 		end;
 
 	OnTimer1208000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] Fifth security system activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] Fifth security system activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE_2;
 		donpcevent instance_npcname("MobCtrl2#mob02")+"::On05";
 		end;
 
@@ -2555,7 +2555,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		if (mobcount(instance_mapname("1@lhz"),instance_npcname("MobCtrl2#mob02")+"::OnMyMobDead") < 1) {
 		  donpcevent instance_npcname("#potal_02")+"::OnEnable";
 		  donpcevent instance_npcname("Lab2#2_1")+"::OnDisable";
-		  mapannounce instance_mapname("1@lhz"),"[Security System] The Security system of The Lab No.2 has been stopped.",bc_map,C_VIVID_TANGERINE;
+		  mapannounce instance_mapname("1@lhz"),"[Security System] The Security system of The Lab No.2 has been stopped.",bc_map,C_VIVID_TANGERINE_2;
 		}
 		end;
 }
@@ -2649,40 +2649,40 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		end;
 
 	OnTimer1000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] This is a warning notice! Warning notice!",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] This is a warning notice! Warning notice!",bc_map,C_VIVID_TANGERINE_2;
 		donpcevent instance_npcname("MobCtrl3#mob03")+"::OnDisable";
 		end;
 
 	OnTimer5000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] Intruder Detected in The Lab No.3!!",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] Intruder Detected in The Lab No.3!!",bc_map,C_VIVID_TANGERINE_2;
 		end;
 
 	OnTimer7000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, The Security system of The Lab No.3 will start working.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] In 5 seconds, The Security system of The Lab No.3 will start working.",bc_map,C_VIVID_TANGERINE_2;
 		end;
 
 	OnTimer12000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] First security system of The Lab No.3 activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] First security system of The Lab No.3 activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE_2;
 		donpcevent instance_npcname("MobCtrl3#mob03")+"::On01";
 		end;
 
 	OnTimer192000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] Second security system of The Lab No.3 activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] Second security system of The Lab No.3 activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE_2;
 		donpcevent instance_npcname("MobCtrl3#mob03")+"::On02";
 		end;
 
 	OnTimer372000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] Third security system of The Lab No.3 activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] Third security system of The Lab No.3 activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE_2;
 		donpcevent instance_npcname("MobCtrl3#mob03")+"::On03";
 		end;
 
 	OnTimer552000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] Fourth security system of The Lab No.3activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] Fourth security system of The Lab No.3activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE_2;
 		donpcevent instance_npcname("MobCtrl3#mob03")+"::On04";
 		end;
 
 	OnTimer732000:
-		mapannounce instance_mapname("1@lhz"),"[Security System] Fifth security system of The Lab No.3 activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE;
+		mapannounce instance_mapname("1@lhz"),"[Security System] Fifth security system of The Lab No.3 activated !! The persons concerned have to evacuate.",bc_map,C_VIVID_TANGERINE_2;
 		donpcevent instance_npcname("MobCtrl3#mob03")+"::On05";
 		stopnpctimer;
 		end;
@@ -2789,7 +2789,7 @@ lhz_dun04,147,279,0	script	Laboratory Entrance#memo	CLEAR_NPC,{
 		if (mobcount(instance_mapname("1@lhz"),instance_npcname("MobCtrl3#mob03")+"::OnMyMobDead") < 1) {
 			donpcevent instance_npcname("#potal_03")+"::OnEnable";
 			donpcevent instance_npcname("Lab3#3_1")+"::OnDisable";
-			mapannounce instance_mapname("1@lhz"),"[Security System] The Security system of The Lab No.3 has been stopped.",bc_map,C_VIVID_TANGERINE;
+			mapannounce instance_mapname("1@lhz"),"[Security System] The Security system of The Lab No.3 has been stopped.",bc_map,C_VIVID_TANGERINE_2;
 		}
 		end;
 }
