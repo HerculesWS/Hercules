@@ -1720,11 +1720,11 @@ OnTimer5000:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs == 2)
-		mapannounce "juperos_02","Who are you to come here?",bc_map,"0xFF0000";
+		mapannounce "juperos_02","Who are you to come here?",bc_map,C_RED;
 	else if (.MyMobs == 1)
-		mapannounce "juperos_02","Have you come seeking Juperos?! It no longer exists...",bc_map,"0xFF0000";
+		mapannounce "juperos_02","Have you come seeking Juperos?! It no longer exists...",bc_map,C_RED;
 	else if (.MyMobs == 0) {
-		mapannounce "juperos_02","Have you come to see me? Fine! Find me first!",bc_map,"0xFF0000";
+		mapannounce "juperos_02","Have you come to see me? Fine! Find me first!",bc_map,C_RED;
 		specialeffect2 563;
 		soundeffectall "earth_quake.wav",0;
 		disablenpc "3F Gate Switch#jupe";
@@ -1745,15 +1745,15 @@ OnEnable:
 	end;
 
 OnTimer5000:
-	mapannounce "juperos_02","Vroom! Vroom!",bc_map,"0xE559A2";
+	mapannounce "juperos_02","Vroom! Vroom!",bc_map,C_DEEP_BLUSH;
 	end;
 
 OnTimer7000:
-	mapannounce "juperos_02","Attention, visitors.",bc_map,"0xE559A2";
+	mapannounce "juperos_02","Attention, visitors.",bc_map,C_DEEP_BLUSH;
 	end;
 
 OnTimer9000:
-	mapannounce "juperos_02","You are allowed to enter the next zone for a short period of time. Please use the portal in the center of the map.",bc_map,"0xE559A2";
+	mapannounce "juperos_02","You are allowed to enter the next zone for a short period of time. Please use the portal in the center of the map.",bc_map,C_DEEP_BLUSH;
 	end;
 
 OnTimer9001:
@@ -1783,11 +1783,11 @@ OnTimer552000:
 	end;
 
 OnTimer556000:
-	mapannounce "juperos_02","Attention, visitors. The gate to the next zone will close shortly.",bc_map,"0xE559A2";
+	mapannounce "juperos_02","Attention, visitors. The gate to the next zone will close shortly.",bc_map,C_DEEP_BLUSH;
 	end;
 
 OnTimer561000:
-	mapannounce "juperos_02","1 minute remaining until Gate Closure. ",bc_map,"0xE559A2";
+	mapannounce "juperos_02","1 minute remaining until Gate Closure. ",bc_map,C_DEEP_BLUSH;
 	end;
 
 OnTimer598000:
@@ -1795,11 +1795,11 @@ OnTimer598000:
 	end;
 
 OnTimer600000:
-	mapannounce "juperos_02","The gate is being closed...",bc_map,"0xE559A2";
+	mapannounce "juperos_02","The gate is being closed...",bc_map,C_DEEP_BLUSH;
 	end;
 
 OnTimer603000:
-	mapannounce "juperos_02"," Switches will reactivate shortly.",bc_map,"0xE559A2";
+	mapannounce "juperos_02"," Switches will reactivate shortly.",bc_map,C_DEEP_BLUSH;
 	end;
 
 OnTimer621000:
@@ -1972,22 +1972,22 @@ OnEnable:
 	end;
 
 OnTimer1000:
-	mapannounce "jupe_area1","Those of you who have come here...",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Those of you who have come here...",bc_map,C_RED;
 	end;
 
 OnTimer3000:
-	mapannounce "jupe_area1","I do not intend to stop you.",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","I do not intend to stop you.",bc_map,C_RED;
 	soundeffectall "jupe_warning.wav",0,"jupe_area1";
 	soundeffectall "jupe_warning.wav",0,"jupe_area1";
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_area1","But I assume you are prepared for a few obstacles...",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","But I assume you are prepared for a few obstacles...",bc_map,C_RED;
 	donpcevent "Monster1#1-1::OnEnable";
 	end;
 
 OnTimer7000:
-	mapannounce "jupe_area1","After all, you are venturing through a forbidden area!",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","After all, you are venturing through a forbidden area!",bc_map,C_RED;
 	end;
 
 OnTimer8000:
@@ -2023,7 +2023,7 @@ OnEnable:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area1","Do you realize this is a hallucination?",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Do you realize this is a hallucination?",bc_map,C_RED;
 	$@JupreArea1InUse = 0;
 	end;
 
@@ -2059,17 +2059,17 @@ OnEnable:
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_area1","How about now?",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","How about now?",bc_map,C_RED;
 	soundeffectall "jupe_warning.wav",0,"jupe_area1";
 	soundeffectall "jupe_warning.wav",0,"jupe_area1";
 	end;
 
 OnTimer4000:
-	mapannounce "jupe_area1","Let me see...",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Let me see...",bc_map,C_RED;
 	end;
 
 OnTimer7000:
-	mapannounce "jupe_area1","Just how strong you are!",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Just how strong you are!",bc_map,C_RED;
 	soundeffectall "jupe_warning.wav",0,"jupe_area1";
 	soundeffectall "jupe_warning.wav",0,"jupe_area1";
 	.MyMobs = 8;
@@ -2084,7 +2084,7 @@ OnTimer7000:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area1","Bwahaha! You're only good at running away!",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Bwahaha! You're only good at running away!",bc_map,C_RED;
 	$@JupreArea1InUse = 0;
 	end;
 
@@ -2097,7 +2097,7 @@ OnTimer300002:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "jupe_area1","Zzzzt. Zzzzt..... ",bc_map,"0xFF0000";
+		mapannounce "jupe_area1","Zzzzt. Zzzzt..... ",bc_map,C_RED;
 		disablenpc "Monster2#1-1";
 		enablenpc "#hole#1-1";
 		$@JupreArea1InUse = 0;
@@ -2262,20 +2262,20 @@ OnEnable:
 	end;
 
 OnTimer1000:
-	mapannounce "jupe_area1","Come on, come on!",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Come on, come on!",bc_map,C_RED;
 	end;
 
 OnTimer3000:
-	mapannounce "jupe_area1","Yes. Run... Right into my hands!",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Yes. Run... Right into my hands!",bc_map,C_RED;
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_area1","Do you want to know who I am?",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Do you want to know who I am?",bc_map,C_RED;
 	donpcevent "Monster1#1-2::OnEnable";
 	end;
 
 OnTimer7000:
-	mapannounce "jupe_area1","You will know, once you defeat all of my minions!",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","You will know, once you defeat all of my minions!",bc_map,C_RED;
 	end;
 
 OnTimer8000:
@@ -2309,7 +2309,7 @@ OnEnable:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area1","I can't believe how cowardly you really are...",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","I can't believe how cowardly you really are...",bc_map,C_RED;
 	$@JupreArea1InUse = 0;
 	end;
 
@@ -2345,15 +2345,15 @@ OnEnable:
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_area1","I was the head of this underground laboratory.",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","I was the head of this underground laboratory.",bc_map,C_RED;
 	end;
 
 OnTimer4000:
-	mapannounce "jupe_area1","But that was a long time ago, back when I was merely a human.",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","But that was a long time ago, back when I was merely a human.",bc_map,C_RED;
 	end;
 
 OnTimer6000:
-	mapannounce "jupe_area1","I was called Vesper Newton. Hahah, they called me a mad man back then.",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","I was called Vesper Newton. Hahah, they called me a mad man back then.",bc_map,C_RED;
 	.MyMobs = 13;
 	monster "jupe_area1",30,152,"Security Guard",1669,1,"Monster2#1-2::OnMyMobDead";
 	monster "jupe_area1",31,152,"Security Guard",1675,1,"Monster2#1-2::OnMyMobDead";
@@ -2371,7 +2371,7 @@ OnTimer6000:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area1","...Not yet.",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","...Not yet.",bc_map,C_RED;
 	$@JupreArea1InUse = 0;
 	end;
 
@@ -2384,7 +2384,7 @@ OnTimer300002:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "jupe_area1","Not yet!",bc_map,"0xFF0000";
+		mapannounce "jupe_area1","Not yet!",bc_map,C_RED;
 		disablenpc "Monster2#1-2";
 		enablenpc "#hole#1-2";
 		$@JupreArea1InUse = 0;
@@ -2547,20 +2547,20 @@ OnEnable:
 	end;
 
 OnTimer1000:
-	mapannounce "jupe_area1","These security systems...",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","These security systems...",bc_map,C_RED;
 	end;
 
 OnTimer3000:
-	mapannounce "jupe_area1","They're not really for protection.",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","They're not really for protection.",bc_map,C_RED;
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_area1","It's sort of just a hobby to pass the time...",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","It's sort of just a hobby to pass the time...",bc_map,C_RED;
 	donpcevent "Monster1#1-3::OnEnable";
 	end;
 
 OnTimer7000:
-	mapannounce "jupe_area1","Being immortal, I have a lot of time on my hands...",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Being immortal, I have a lot of time on my hands...",bc_map,C_RED;
 	end;
 
 OnTimer8000:
@@ -2594,7 +2594,7 @@ OnEnable:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area1","Zzzzt...Zzzzt....",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Zzzzt...Zzzzt....",bc_map,C_RED;
 	$@JupreArea1InUse = 0;
 	end;
 
@@ -2629,15 +2629,15 @@ OnEnable:
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_area1","Why have you come?",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Why have you come?",bc_map,C_RED;
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_area1","Were you hoping to find something wonderful? Something miraculous?",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Were you hoping to find something wonderful? Something miraculous?",bc_map,C_RED;
 	end;
 
 OnTimer8000:
-	mapannounce "jupe_area1","You're wrong! Welcome to Hell!",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","You're wrong! Welcome to Hell!",bc_map,C_RED;
 	.MyMobs = 15;
 	monster "jupe_area1",42,64,"Security Guard",1669,1,"Monster2#1-3::OnMyMobDead";
 	monster "jupe_area1",43,64,"Security Guard",1675,1,"Monster2#1-3::OnMyMobDead";
@@ -2657,7 +2657,7 @@ OnTimer8000:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area1","Do you still have your courage? Come. Prove it.",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Do you still have your courage? Come. Prove it.",bc_map,C_RED;
 	$@JupreArea1InUse = 0;
 	end;
 
@@ -2670,7 +2670,7 @@ OnTimer300002:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "jupe_area1","Do you still have your courage? Come. Prove it.",bc_map,"0xFF0000";
+		mapannounce "jupe_area1","Do you still have your courage? Come. Prove it.",bc_map,C_RED;
 		disablenpc "Monster2#1-3";
 		enablenpc "#hole#1-3";
 		$@JupreArea1InUse = 0;
@@ -2838,20 +2838,20 @@ OnEnable:
 	end;
 
 OnTimer1000:
-	mapannounce "jupe_area1","I've been waiting for someone strong enough to compete with me.",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","I've been waiting for someone strong enough to compete with me.",bc_map,C_RED;
 	end;
 
 OnTimer3000:
-	mapannounce "jupe_area1","If you hear this, I wish you will be the one...",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","If you hear this, I wish you will be the one...",bc_map,C_RED;
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_area1","Perhaps, a mere shadow of my former self...",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Perhaps, a mere shadow of my former self...",bc_map,C_RED;
 	donpcevent "Monster1#1-4::OnEnable";
 	end;
 
 OnTimer7000:
-	mapannounce "jupe_area1","Is somewhere down here, wandering...",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Is somewhere down here, wandering...",bc_map,C_RED;
 	end;
 
 OnTimer8000:
@@ -2885,7 +2885,7 @@ OnEnable:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area1","Zzzzt...Zzzzt....",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","Zzzzt...Zzzzt....",bc_map,C_RED;
 	$@JupreArea1InUse = 0;
 	end;
 
@@ -2921,15 +2921,15 @@ OnEnable:
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_area1","I can never rest in peace...",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","I can never rest in peace...",bc_map,C_RED;
 	end;
 
 OnTimer4000:
-	mapannounce "jupe_area1","I'll wait forever or until someone can put me out of my misery...",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","I'll wait forever or until someone can put me out of my misery...",bc_map,C_RED;
 	end;
 
 OnTimer6000:
-	mapannounce "jupe_area1","I will be waiting for you!",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","I will be waiting for you!",bc_map,C_RED;
 	.MyMobs = 10;
 	monster "jupe_area1",104,161,"Security Guard",1675,1,"Monster2#1-4::OnMyMobDead";
 	monster "jupe_area1",108,161,"Security Guard",1669,1,"Monster2#1-4::OnMyMobDead";
@@ -2945,7 +2945,7 @@ OnTimer6000:
 
 OnTimer300000:
 	$@JupreArea1InUse = 0;
-	mapannounce "jupe_area1","It's funny... Isn't it?",bc_map,"0xFF0000";
+	mapannounce "jupe_area1","It's funny... Isn't it?",bc_map,C_RED;
 	end;
 
 OnTimer300002:
@@ -2956,7 +2956,7 @@ OnTimer300002:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "jupe_area1","It's funny... Isn't it?",bc_map,"0xFF0000";
+		mapannounce "jupe_area1","It's funny... Isn't it?",bc_map,C_RED;
 		disablenpc "Monster2#1-4";
 		enablenpc "#hole#1-4";
 		$@JupreArea1InUse = 0;
@@ -3171,22 +3171,22 @@ OnEnable:
 	end;
 
 OnTimer1000:
-	mapannounce "jupe_area2","Those of you who have come here...",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Those of you who have come here...",bc_map,C_RED;
 	end;
 
 OnTimer3000:
-	mapannounce "jupe_area2","I do not intend to stop you.",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","I do not intend to stop you.",bc_map,C_RED;
 	soundeffectall "jupe_warning.wav",0,"jupe_area2";
 	soundeffectall "jupe_warning.wav",0,"jupe_area2";
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_area2","But I assume you are prepared for a few obstacles...",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","But I assume you are prepared for a few obstacles...",bc_map,C_RED;
 	donpcevent "Monster1#2-1::OnEnable";
 	end;
 
 OnTimer7000:
-	mapannounce "jupe_area2","After all, you are venturing through a forbidden area!",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","After all, you are venturing through a forbidden area!",bc_map,C_RED;
 	end;
 
 OnTimer8000:
@@ -3222,7 +3222,7 @@ OnEnable:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area2","Do you realize this is a hallucination?",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Do you realize this is a hallucination?",bc_map,C_RED;
 	$@JupreArea2InUse = 0;
 	end;
 
@@ -3258,17 +3258,17 @@ OnEnable:
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_area2","How about now?",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","How about now?",bc_map,C_RED;
 	soundeffectall "jupe_warning.wav",0,"jupe_area2";
 	soundeffectall "jupe_warning.wav",0,"jupe_area2";
 	end;
 
 OnTimer4000:
-	mapannounce "jupe_area2","Let me see...",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Let me see...",bc_map,C_RED;
 	end;
 
 OnTimer7000:
-	mapannounce "jupe_area2","Just how strong you are!",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Just how strong you are!",bc_map,C_RED;
 	soundeffectall "jupe_warning.wav",0,"jupe_area2";
 	soundeffectall "jupe_warning.wav",0,"jupe_area2";
 	.MyMobs = 8;
@@ -3283,7 +3283,7 @@ OnTimer7000:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area2","Bwahaha! You're only good at running away!",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Bwahaha! You're only good at running away!",bc_map,C_RED;
 	$@JupreArea2InUse = 0;
 	end;
 
@@ -3296,7 +3296,7 @@ OnTimer300002:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "jupe_area2","Zzzzt. Zzzzt..... ",bc_map,"0xFF0000";
+		mapannounce "jupe_area2","Zzzzt. Zzzzt..... ",bc_map,C_RED;
 		disablenpc "Monster2#2-1";
 		enablenpc "#hole#2-1";
 		$@JupreArea2InUse = 0;
@@ -3461,20 +3461,20 @@ OnEnable:
 	end;
 
 OnTimer1000:
-	mapannounce "jupe_area2","Come on, come on!",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Come on, come on!",bc_map,C_RED;
 	end;
 
 OnTimer3000:
-	mapannounce "jupe_area2","Yes. Run... Right into my hands!",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Yes. Run... Right into my hands!",bc_map,C_RED;
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_area2","Do you want to know who I am?",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Do you want to know who I am?",bc_map,C_RED;
 	donpcevent "Monster1#2-2::OnEnable";
 	end;
 
 OnTimer7000:
-	mapannounce "jupe_area2","You will know, once you defeat all of my minions!",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","You will know, once you defeat all of my minions!",bc_map,C_RED;
 	end;
 
 OnTimer8000:
@@ -3508,7 +3508,7 @@ OnEnable:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area2","I can't believe how cowardly you really are...",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","I can't believe how cowardly you really are...",bc_map,C_RED;
 	$@JupreArea2InUse = 0;
 	end;
 
@@ -3544,15 +3544,15 @@ OnEnable:
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_area2","I was the head of this underground laboratory.",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","I was the head of this underground laboratory.",bc_map,C_RED;
 	end;
 
 OnTimer4000:
-	mapannounce "jupe_area2","But that was a long time ago, back when I was merely a human.",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","But that was a long time ago, back when I was merely a human.",bc_map,C_RED;
 	end;
 
 OnTimer6000:
-	mapannounce "jupe_area2","I was called Vesper Newton. Hahah, they called me a mad man back then.",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","I was called Vesper Newton. Hahah, they called me a mad man back then.",bc_map,C_RED;
 	.MyMobs = 13;
 	monster "jupe_area2",126,156,"Security Guard",1675,1,"Monster2#2-2::OnMyMobDead";
 	monster "jupe_area2",127,156,"Security Guard",1669,1,"Monster2#2-2::OnMyMobDead";
@@ -3570,7 +3570,7 @@ OnTimer6000:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area2","...Not yet.",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","...Not yet.",bc_map,C_RED;
 	$@JupreArea2InUse = 0;
 	end;
 
@@ -3583,7 +3583,7 @@ OnTimer300002:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "jupe_area2","Not yet!",bc_map,"0xFF0000";
+		mapannounce "jupe_area2","Not yet!",bc_map,C_RED;
 		disablenpc "Monster2#2-2";
 		enablenpc "#hole#2-2";
 		$@JupreArea2InUse = 0;
@@ -3746,21 +3746,21 @@ OnEnable:
 	end;
 
 OnTimer1000:
-	mapannounce "jupe_area2","These security systems...",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","These security systems...",bc_map,C_RED;
 	end;
 
 OnTimer3000:
-	mapannounce "jupe_area2","They're not really for protection.",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","They're not really for protection.",bc_map,C_RED;
 	disablenpc "#hole#2-3";
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_area2","It's sort of just a hobby to pass the time...",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","It's sort of just a hobby to pass the time...",bc_map,C_RED;
 	donpcevent "Monster1#2-3::OnEnable";
 	end;
 
 OnTimer7000:
-	mapannounce "jupe_area2","Being immortal, I have a lot of time on my hands...",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Being immortal, I have a lot of time on my hands...",bc_map,C_RED;
 	end;
 
 OnTimer8000:
@@ -3794,7 +3794,7 @@ OnEnable:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area2","Zzzzt...Zzzzt....",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Zzzzt...Zzzzt....",bc_map,C_RED;
 	$@JupreArea2InUse = 0;
 	end;
 
@@ -3829,15 +3829,15 @@ OnEnable:
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_area2","Why have you come?",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Why have you come?",bc_map,C_RED;
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_area2","Were you hoping to find something wonderful? Something miraculous?",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Were you hoping to find something wonderful? Something miraculous?",bc_map,C_RED;
 	end;
 
 OnTimer8000:
-	mapannounce "jupe_area2","You're wrong! Welcome to Hell!",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","You're wrong! Welcome to Hell!",bc_map,C_RED;
 	.MyMobs = 16;
 	monster "jupe_area2",114,64,"Security Guard",1675,1,"Monster2#2-3::OnMyMobDead";
 	monster "jupe_area2",115,64,"Security Guard",1669,1,"Monster2#2-3::OnMyMobDead";
@@ -3858,7 +3858,7 @@ OnTimer8000:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area2","Do you still have your courage? Come. Prove it.",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Do you still have your courage? Come. Prove it.",bc_map,C_RED;
 	$@JupreArea2InUse = 0;
 	end;
 
@@ -3871,7 +3871,7 @@ OnTimer300002:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "jupe_area2","Do you still have your courage? Come. Prove it.",bc_map,"0xFF0000";
+		mapannounce "jupe_area2","Do you still have your courage? Come. Prove it.",bc_map,C_RED;
 		disablenpc "Monster2#2-3";
 		enablenpc "#hole#2-3";
 		$@JupreArea2InUse = 0;
@@ -4039,20 +4039,20 @@ OnEnable:
 	end;
 
 OnTimer1000:
-	mapannounce "jupe_area2","I've been waiting for someone strong enough to compete with me.",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","I've been waiting for someone strong enough to compete with me.",bc_map,C_RED;
 	end;
 
 OnTimer3000:
-	mapannounce "jupe_area2","If you hear this, I wish you will be the one...",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","If you hear this, I wish you will be the one...",bc_map,C_RED;
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_area2","Perhaps, a mere shadow of my former self...",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Perhaps, a mere shadow of my former self...",bc_map,C_RED;
 	donpcevent "Monster1#2-4::OnEnable";
 	end;
 
 OnTimer7000:
-	mapannounce "jupe_area2","Is somewhere down here, wandering...",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Is somewhere down here, wandering...",bc_map,C_RED;
 	end;
 
 OnTimer8000:
@@ -4086,7 +4086,7 @@ OnEnable:
 	end;
 
 OnTimer300000:
-	mapannounce "jupe_area2","Zzzzt...Zzzzt....",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","Zzzzt...Zzzzt....",bc_map,C_RED;
 	$@JupreArea2InUse = 0;
 	end;
 
@@ -4122,15 +4122,15 @@ OnEnable:
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_area2","I can never rest in peace...",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","I can never rest in peace...",bc_map,C_RED;
 	end;
 
 OnTimer4000:
-	mapannounce "jupe_area2","I'll wait forever or until someone can put me out of my misery...",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","I'll wait forever or until someone can put me out of my misery...",bc_map,C_RED;
 	end;
 
 OnTimer6000:
-	mapannounce "jupe_area2","I will be waiting for you!",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","I will be waiting for you!",bc_map,C_RED;
 	.MyMobs = 12;
 	monster "jupe_area2",63,161,"Security Guard",1675,1,"Monster2#2-4::OnMyMobDead";
 	monster "jupe_area2",61,161,"Security Guard",1669,1,"Monster2#2-4::OnMyMobDead";
@@ -4148,7 +4148,7 @@ OnTimer6000:
 
 OnTimer300000:
 	$@JupreArea2InUse = 0;
-	mapannounce "jupe_area2","It's funny... Isn't it?",bc_map,"0xFF0000";
+	mapannounce "jupe_area2","It's funny... Isn't it?",bc_map,C_RED;
 	end;
 
 OnTimer300002:
@@ -4159,7 +4159,7 @@ OnTimer300002:
 OnMyMobDead:
 	--.MyMobs;
 	if (.MyMobs < 1) {
-		mapannounce "jupe_area2","It's funny... Isn't it?",bc_map,"0xFF0000";
+		mapannounce "jupe_area2","It's funny... Isn't it?",bc_map,C_RED;
 		disablenpc "Monster2#2-4";
 		enablenpc "#hole#2-4";
 		$@JupreArea2InUse = 0;
@@ -4336,36 +4336,36 @@ jupe_ele_r,51,98,0	script	Switch#ufe	CLEAR_NPC,{
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_ele_r","My descendents...",bc_map,"0x66FF00";
+	mapannounce "jupe_ele_r","My descendents...",bc_map,C_BRIGHT_GREEN;
 	end;
 
 OnTimer3000:
-	mapannounce "jupe_ele_r","Do you want to know why this city was buried beneath the earth...?",bc_map,"0x66FF00";
+	mapannounce "jupe_ele_r","Do you want to know why this city was buried beneath the earth...?",bc_map,C_BRIGHT_GREEN;
 	end;
 
 OnTimer7000:
-	mapannounce "jupe_ele_r","If so, follow my voice...",bc_map,"0x66FF00";
+	mapannounce "jupe_ele_r","If so, follow my voice...",bc_map,C_BRIGHT_GREEN;
 	end;
 
 OnTimer10000:
-	mapannounce "jupe_ele_r","I shall let you see for yourself what you desire to know...",bc_map,"0x66FF00";
+	mapannounce "jupe_ele_r","I shall let you see for yourself what you desire to know...",bc_map,C_BRIGHT_GREEN;
 	end;
 
 OnTimer17000:
-	mapannounce "jupe_ele_r","Overcome all the hallucinations.",bc_map,"0xCC6600";
+	mapannounce "jupe_ele_r","Overcome all the hallucinations.",bc_map,C_TENN;
 	end;
 
 OnTimer20000:
-	mapannounce "jupe_ele_r","Open your eyes and see past all of the lies.",bc_map,"0xFF0000";
+	mapannounce "jupe_ele_r","Open your eyes and see past all of the lies.",bc_map,C_RED;
 	end;
 
 OnTimer23000:
-	mapannounce "jupe_ele_r","I can only maintain this vision for you for 20 minutes.",bc_map,"0xFF0000";
+	mapannounce "jupe_ele_r","I can only maintain this vision for you for 20 minutes.",bc_map,C_RED;
 	donpcevent "Elevator Guard1#ufe::OnEnable";
 	end;
 
 OnTimer27000:
-	mapannounce "jupe_ele_r","Look! And remember!",bc_map,"0xFF0000";
+	mapannounce "jupe_ele_r","Look! And remember!",bc_map,C_RED;
 	stopnpctimer;
 	end;
 }
@@ -4430,7 +4430,7 @@ OnTimer2600:
 	end;
 
 OnTimer120000:
-	mapannounce "jupe_ele_r","It is disappointing to see that you are too weak to even defeat a hallucination...",bc_map,"0x66FF00";
+	mapannounce "jupe_ele_r","It is disappointing to see that you are too weak to even defeat a hallucination...",bc_map,C_BRIGHT_GREEN;
 	enablenpc "Switch#ufe";
 	disablenpc "Switch On#ufe";
 	donpcevent "Annihilation#ufe::OnEnable";
@@ -4462,7 +4462,7 @@ OnEnable:
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_ele_r","Those of you who have defeated the hallucination, step forward.",bc_map,"0x66FF00";
+	mapannounce "jupe_ele_r","Those of you who have defeated the hallucination, step forward.",bc_map,C_BRIGHT_GREEN;
 	soundeffectall "earth_quake.wav",0;
 	end;
 
@@ -4568,31 +4568,31 @@ OnTimer120000:
 	donpcevent "Guard-2#ufe::OnDisable";
 	donpcevent "Guard-3#ufe::OnDisable";
 	donpcevent "Guard-4#ufe::OnDisable";
-	mapannounce "jupe_ele","In the end, you can't even overcome your inner fear...",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","In the end, you can't even overcome your inner fear...",bc_map,C_RED;
 	end;
 
 OnTimer122000:
-	mapannounce "jupe_ele","You have never encountered your inner fears, have you?",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","You have never encountered your inner fears, have you?",bc_map,C_RED;
 	end;
 
 OnTimer125000:
-	mapannounce "jupe_ele","Did you expect this would be the end of the hallucination?",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","Did you expect this would be the end of the hallucination?",bc_map,C_RED;
 	end;
 
 OnTimer127000:
-	mapannounce "jupe_ele","What if the voice you're hearing is also a hallucination?",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","What if the voice you're hearing is also a hallucination?",bc_map,C_RED;
 	end;
 
 OnTimer129000:
-	mapannounce "jupe_ele","What if you're just dreaming all of this?",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","What if you're just dreaming all of this?",bc_map,C_RED;
 	end;
 
 OnTimer131000:
-	mapannounce "jupe_ele","What if the existence of this city is a lie?",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","What if the existence of this city is a lie?",bc_map,C_RED;
 	end;
 
 OnTimer133000:
-	mapannounce "jupe_ele","Are you even real?",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","Are you even real?",bc_map,C_RED;
 	end;
 
 OnTimer134000:
@@ -4622,15 +4622,15 @@ OnDisable:
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_ele","I admire your patience.",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","I admire your patience.",bc_map,C_RED;
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_ele","Let's see if everything you have experienced",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","Let's see if everything you have experienced",bc_map,C_RED;
 	end;
 
 OnTimer8000:
-	mapannounce "jupe_ele","were traps for intruders...",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","were traps for intruders...",bc_map,C_RED;
 	end;
 
 OnTimer12000:
@@ -4677,19 +4677,19 @@ OnDisable:
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_ele","This city was not",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","This city was not",bc_map,C_RED;
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_ele","as magnificient as you thought.",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","as magnificient as you thought.",bc_map,C_RED;
 	end;
 
 OnTimer8000:
-	mapannounce "jupe_ele","This is a place where all the fears of humans flourish.",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","This is a place where all the fears of humans flourish.",bc_map,C_RED;
 	end;
 
 OnTimer11000:
-	mapannounce "jupe_ele","Yes. Nobody leaves alive!",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","Yes. Nobody leaves alive!",bc_map,C_RED;
 	end;
 
 OnTimer12000:
@@ -4736,15 +4736,15 @@ OnDisable:
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_ele","What do you see?",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","What do you see?",bc_map,C_RED;
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_ele","Are your eyes actually seeing something?",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","Are your eyes actually seeing something?",bc_map,C_RED;
 	end;
 
 OnTimer8000:
-	mapannounce "jupe_ele","Or do you just believe you are seeing?",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","Or do you just believe you are seeing?",bc_map,C_RED;
 	end;
 
 OnTimer12000:
@@ -4792,11 +4792,11 @@ OnDisable:
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_ele","Do not forget. That which limits you is nothing but yourself.",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","Do not forget. That which limits you is nothing but yourself.",bc_map,C_RED;
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_ele","Nothing is what you fear and you have nothing to fear...",bc_map,"0xFF0000";
+	mapannounce "jupe_ele","Nothing is what you fear and you have nothing to fear...",bc_map,C_RED;
 	end;
 
 OnTimer8000:
@@ -4840,28 +4840,28 @@ OnDisable:
 	end;
 
 OnTimer2000:
-	mapannounce "jupe_ele","I am not going to tell you anything.",bc_map,"0x66FF00";
+	mapannounce "jupe_ele","I am not going to tell you anything.",bc_map,C_BRIGHT_GREEN;
 	end;
 
 OnTimer5000:
-	mapannounce "jupe_ele","My city, my people are now but a memory.",bc_map,"0x66FF00";
+	mapannounce "jupe_ele","My city, my people are now but a memory.",bc_map,C_BRIGHT_GREEN;
 	end;
 
 OnTimer8000:
-	mapannounce "jupe_ele","Everything was a mistake. We were not supposed to be here.",bc_map,"0x66FF00";
+	mapannounce "jupe_ele","Everything was a mistake. We were not supposed to be here.",bc_map,C_BRIGHT_GREEN;
 	end;
 
 OnTimer11000:
-	mapannounce "jupe_ele","Is this a place where humans are forbidden?",bc_map,"0x66FF00";
+	mapannounce "jupe_ele","Is this a place where humans are forbidden?",bc_map,C_BRIGHT_GREEN;
 	end;
 
 OnTimer12000:
-	mapannounce "jupe_ele","You want to know, don't you? Go ahead... Go deeper.",bc_map,"0x66FF00";
+	mapannounce "jupe_ele","You want to know, don't you? Go ahead... Go deeper.",bc_map,C_BRIGHT_GREEN;
 	enablenpc "4F Enter#ufe";
 	end;
 
 OnTimer22000:
-	mapannounce "jupe_ele","It's not real anyway. All of it's safe, it can't hurt you...",bc_map,"0x66FF00";
+	mapannounce "jupe_ele","It's not real anyway. All of it's safe, it can't hurt you...",bc_map,C_BRIGHT_GREEN;
 	soundeffectall "earth_quake.wav",0;
 	disablenpc "4F Enter#ufe";
 	end;

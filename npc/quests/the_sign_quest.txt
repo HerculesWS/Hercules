@@ -5068,81 +5068,81 @@ OnDisableAll:
 	return;
 
 OnTimer2000:
-	mapannounce "cmd_in01","The test will be begin shortly. Please do your best~",bc_map,"0xFFFF00";
+	mapannounce "cmd_in01","The test will be begin shortly. Please do your best~",bc_map,C_YELLOW;
 	end;
 
 OnTimer4000:
-	mapannounce "cmd_in01"," UP LEFT",bc_map,"0xFFFF00";
+	mapannounce "cmd_in01"," UP LEFT",bc_map,C_YELLOW;
 	donpcevent "s_dance#up::OnUp";
 	donpcevent "s_dance#up::OnEnable";
 	end;
 
 OnTimer6000:
 	callsub OnDisableAll;
-	mapannounce "cmd_in01"," DOWN RIGHT",bc_map,"0xFFFF00";
+	mapannounce "cmd_in01"," DOWN RIGHT",bc_map,C_YELLOW;
 	donpcevent "s_dance#down::OnUp";
 	donpcevent "s_dance#down::OnEnable";
 	end;
 
 OnTimer8000:
 	callsub OnDisableAll;
-	mapannounce "cmd_in01"," DOWN LEFT & UP RIGHT",bc_map,"0xFFFF00";
+	mapannounce "cmd_in01"," DOWN LEFT & UP RIGHT",bc_map,C_YELLOW;
 	donpcevent "s_dance#left::OnUp";
 	donpcevent "s_dance#left::OnEnable";
 	end;
 
 OnTimer11000:
 	callsub OnDisableAll;
-	mapannounce "cmd_in01"," DOWN RIGHT",bc_map,"0xFFFF00";
+	mapannounce "cmd_in01"," DOWN RIGHT",bc_map,C_YELLOW;
 	donpcevent "s_dance#down::OnUp";
 	donpcevent "s_dance#down::OnEnable";
 	end;
 
 OnTimer13000:
 	callsub OnDisableAll;
-	mapannounce "cmd_in01"," DOWN LEFT & UP RIGHT & UP LEFT & STAY CENTER",bc_map,"0xFFFF00";
+	mapannounce "cmd_in01"," DOWN LEFT & UP RIGHT & UP LEFT & STAY CENTER",bc_map,C_YELLOW;
 	donpcevent "s_dance#left::OnUp";
 	donpcevent "s_dance#left::OnEnable";
 	end;
 
 OnTimer18000:
 	callsub OnDisableAll;
-	mapannounce "cmd_in01"," DOWN LEFT & DOWN RIGHT & DOWN LEFT",bc_map,"0xFFFF00";
+	mapannounce "cmd_in01"," DOWN LEFT & DOWN RIGHT & DOWN LEFT",bc_map,C_YELLOW;
 	donpcevent "s_dance#left::OnUp";
 	donpcevent "s_dance#left::OnEnable";
 	end;
 
 OnTimer21000:
 	callsub OnDisableAll;
-	mapannounce "cmd_in01"," DOWN RIGHT & CENTER & DOWN RIGHT",bc_map,"0xFFFF00";
+	mapannounce "cmd_in01"," DOWN RIGHT & CENTER & DOWN RIGHT",bc_map,C_YELLOW;
 	donpcevent "s_dance#down::OnUp";
 	donpcevent "s_dance#down::OnEnable";
 	end;
 
 OnTimer24000:
 	callsub OnDisableAll;
-	mapannounce "cmd_in01"," DOWN LEFT & UP LEFT & UP RIGHT & DOWN RIGHT & CENTER",bc_map,"0xFFFF00";
+	mapannounce "cmd_in01"," DOWN LEFT & UP LEFT & UP RIGHT & DOWN RIGHT & CENTER",bc_map,C_YELLOW;
 	donpcevent "s_dance#left::OnUp";
 	donpcevent "s_dance#left::OnEnable";
 	end;
 
 OnTimer30000:
 	callsub OnDisableAll;
-	mapannounce "cmd_in01"," DOWN LEFT & UP RIGHT & UP LEFT & DOWN RIGHT",bc_map,"0xFFFF00";
+	mapannounce "cmd_in01"," DOWN LEFT & UP RIGHT & UP LEFT & DOWN RIGHT",bc_map,C_YELLOW;
 	donpcevent "s_dance#left::OnUp";
 	donpcevent "s_dance#left::OnEnable";
 	end;
 
 OnTimer34000:
 	callsub OnDisableAll;
-	mapannounce "cmd_in01"," UP RIGHT & DOWN RIGHT & UP RIGHT & DOWN RIGHT",bc_map,"0xFFFF00";
+	mapannounce "cmd_in01"," UP RIGHT & DOWN RIGHT & UP RIGHT & DOWN RIGHT",bc_map,C_YELLOW;
 	donpcevent "s_dance#right::OnUp";
 	donpcevent "s_dance#right::OnEnable";
 	end;
 
 OnTimer38000:
 	callsub OnDisableAll;
-	mapannounce "cmd_in01"," UP LEFT & UP RIGHT & CENTER & UP RIGHT & DOWN LEFT & DOWN RIGHT",bc_map,"0xFFFF00";
+	mapannounce "cmd_in01"," UP LEFT & UP RIGHT & CENTER & UP RIGHT & DOWN LEFT & DOWN RIGHT",bc_map,C_YELLOW;
 	donpcevent "s_dance#up::OnUp";
 	donpcevent "s_dance#up::OnEnable";
 	end;
@@ -5154,7 +5154,7 @@ OnTimer44000:
 	donpcevent "s_dance#left::OnReset";
 	donpcevent "s_dance#right::OnReset";
 	donpcevent "s_dance#cen::OnReset";
-	mapannounce "cmd_in01","Well done.",bc_map,"0xFFFF00";
+	mapannounce "cmd_in01","Well done.",bc_map,C_YELLOW;
 	enablenpc "Examiner#sd";
 	donpcevent "Standby Room#sign::OnReset";
 	end;
@@ -12277,7 +12277,7 @@ OnTimer40000:
 
 OnTimer45000:
 	donpcevent "Geffenia Warp::OnDisable";
-	mapannounce "geffen","The portal to Geffenia is now closed.",bc_map,"0x9CFF00";
+	mapannounce "geffen","The portal to Geffenia is now closed.",bc_map,C_CHARTREUSE;
 	stopnpctimer;
 	end;
 }
@@ -12293,7 +12293,7 @@ geffen,119,48,0	script	Fountain#s	HIDDEN_NPC,{
 		next;
 		switch(select("Throw Lucifer's Lament into the fountain.", "Ignore the light.")) {
 		case 1:
-			mapannounce "geffen","With a flash of light from Geffen Fountain, the door to Geffenia has opened.",bc_map,"0x9CFF00";
+			mapannounce "geffen","With a flash of light from Geffen Fountain, the door to Geffenia has opened.",bc_map,C_CHARTREUSE;
 			mes "^3355FFOnce the Lucifer's Lament";
 			mes "splashes into the water, the";
 			mes "light reveals a peculiar warp";

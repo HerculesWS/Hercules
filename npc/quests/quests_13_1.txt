@@ -7012,17 +7012,17 @@ OnStop:
 OnTimer1000:
 	$@PartTimeSlots = 0;
 	$@PartTimeOn = 1;
-	mapannounce "mid_camp", "Breeder Taab: Attention adventurers in the camp! I'm recruiting 5 part-timers for my breeding farm. Only the first to arrive here will be hired!",bc_map,"0x00ff00";
+	mapannounce "mid_camp", "Breeder Taab: Attention adventurers in the camp! I'm recruiting 5 part-timers for my breeding farm. Only the first to arrive here will be hired!",bc_map,C_LIME;
 	end;
 
 OnTimer180000:
 OnTimer360000:
-	if ($@PartTimeOn < 5) mapannounce "mid_camp", "Breeder Taab: I'm looking for a part-timer who can work for my breeding farm. If you're interested, please visit me at the farm.",bc_map,"0x00ff00";
-	else mapannounce "mid_camp", "Breeder Taab: The recruitment for my breeding farm has ended. I'll see you next time. Thanks!",bc_map,"0x00ff00";
+	if ($@PartTimeOn < 5) mapannounce "mid_camp", "Breeder Taab: I'm looking for a part-timer who can work for my breeding farm. If you're interested, please visit me at the farm.",bc_map,C_LIME;
+	else mapannounce "mid_camp", "Breeder Taab: The recruitment for my breeding farm has ended. I'll see you next time. Thanks!",bc_map,C_LIME;
 	end;
 
 OnTimer600000:
-	mapannounce "mid_camp", "Breeder Taab: The recruitment for my breeding farm has ended. I'll see you next time. Thanks!",bc_map,"0x00ff00";
+	mapannounce "mid_camp", "Breeder Taab: The recruitment for my breeding farm has ended. I'll see you next time. Thanks!",bc_map,C_LIME;
 	$@PartTimeOn = 0;
 	end;
 
@@ -7532,24 +7532,24 @@ OnTimer3600000:
 	.@monster = rand(1,3);
 	if (.@monster == 1) {
 		monster "mid_camp",149,291,"Escaped Tatacho",1986,1,"#monster_master::OnMyMobDead";
-		mapannounce "mid_camp", "Breeder Taab: Argh! My Tatacho ran away!",bc_map,"0x00ff00";
+		mapannounce "mid_camp", "Breeder Taab: Argh! My Tatacho ran away!",bc_map,C_LIME;
 		donpcevent "Tatacho#alba02::OnDisable";
 	}
 	else if (.@monster == 2) {
 		monster "mid_camp",154,273,"Escaped Hillsrion",1989,1,"#monster_master::OnMyMobDead";
-		mapannounce "mid_camp", "Breeder Taab: Argh! My Hillsrion ran away!",bc_map,"0x00ff00";
+		mapannounce "mid_camp", "Breeder Taab: Argh! My Hillsrion ran away!",bc_map,C_LIME;
 		donpcevent "Hillsrion#alba01::OnDisable";
 	}
 	else {
 		monster "mid_camp",184,246,"Escaped Cornus",1992,1,"#monster_master::OnMyMobDead";
-		mapannounce "mid_camp", "Breeder Taab: Argh! My Cornus ran away!",bc_map,"0x00ff00";
+		mapannounce "mid_camp", "Breeder Taab: Argh! My Cornus ran away!",bc_map,C_LIME;
 		donpcevent "Cornus#alba03::OnDisable";
 	}
 	end;
 
 OnTimer3960000:
 	killmonster "mid_camp","#monster_master::OnMyMobDead";
-	mapannounce "mid_camp", "Breeder Taab: I've captured an escaped creature safely. Sorry for yelling so loud.",bc_map,"0x00ff00";
+	mapannounce "mid_camp", "Breeder Taab: I've captured an escaped creature safely. Sorry for yelling so loud.",bc_map,C_LIME;
 	donpcevent "Hillsrion#alba01::OnEnable";
 	donpcevent "Tatacho#alba02::OnEnable";
 	donpcevent "Cornus#alba03::OnEnable";
@@ -7557,7 +7557,7 @@ OnTimer3960000:
 	end;
 
 OnMyMobDead:
-	mapannounce "mid_camp", "Breeder Taab: I've captured an escaped creature safely. Sorry for yelling so loud.",bc_map,"0x00ff00";
+	mapannounce "mid_camp", "Breeder Taab: I've captured an escaped creature safely. Sorry for yelling so loud.",bc_map,C_LIME;
 	donpcevent "Hillsrion#alba01::OnEnable";
 	donpcevent "Tatacho#alba02::OnEnable";
 	donpcevent "Cornus#alba03::OnEnable";
@@ -8288,7 +8288,7 @@ spl_fild02,314,165,0	script	School of Fish#1::Fishinghole	CLEAR_NPC,{
 				getitem Rough_File,1;
 				ep13_1_rhea = 14;
 				specialeffect EF_BUBBLE;
-				mapannounce strcharinfo(3),strcharinfo(0) + " has caught a Messy File!!",bc_map,"0xff77ff";
+				mapannounce strcharinfo(3),strcharinfo(0) + " has caught a Messy File!!",bc_map,C_BLUSHPINK;
 			}
 		}
 		.@rhea_ran = rand(1,70);
@@ -8309,15 +8309,15 @@ spl_fild02,314,165,0	script	School of Fish#1::Fishinghole	CLEAR_NPC,{
 		}
 		if (rand(1,200) == 3) {
 			getitem Gift_Box,1;
-			mapannounce strcharinfo(3),strcharinfo(0) + " has caught a Gift Box!!",bc_map,"0x00ffff";
+			mapannounce strcharinfo(3),strcharinfo(0) + " has caught a Gift Box!!",bc_map,C_AQUA;
 		}
 		if (rand(1,500) == 3) {
 			getitem Old_Blue_Box,1;
-			mapannounce strcharinfo(3),strcharinfo(0) + " has caught an Old Blue Box!!",bc_map,"0x00ffff";
+			mapannounce strcharinfo(3),strcharinfo(0) + " has caught an Old Blue Box!!",bc_map,C_AQUA;
 		}
 		if (rand(1,3000) == 3) {
 			getitem Old_Violet_Box,1;
-			mapannounce strcharinfo(3),strcharinfo(0) + " has caught an Old Purple Box!!",bc_map,"0x44ff44";
+			mapannounce strcharinfo(3),strcharinfo(0) + " has caught an Old Purple Box!!",bc_map,C_SCREAMIN_GREEN_2;
 		}
 		end;
 	}
@@ -12483,11 +12483,11 @@ OnTouch:
 que_job01,1,1,0	script	 #room1timer	CLEAR_NPC,{
 OnEnable:
 	initnpctimer;
-	mapannounce "que_job01", "You will now enter the Master Zone, Area 1.",bc_map,"0x70DBDB";
+	mapannounce "que_job01", "You will now enter the Master Zone, Area 1.",bc_map,C_VIKING;
 	end;
 
 OnStop:
-	mapannounce "que_job01", "The security magic in the Master Zone, Area 1 is deactivated.",bc_map,"0x70DBDB";
+	mapannounce "que_job01", "The security magic in the Master Zone, Area 1 is deactivated.",bc_map,C_VIKING;
 	donpcevent "#room1_warp13::OnDisable";
 	donpcevent "Valdes#moc_master_1::OnDisable";
 	donpcevent "Marjana#poison::OnDisable";
@@ -12506,7 +12506,7 @@ OnTimer245000:
 	end;
 
 OnTimer250000:
-	mapannounce "que_job01", "The security magic Master Zone, Area 1 is now activated.",bc_map,"0x70DBDB";
+	mapannounce "que_job01", "The security magic Master Zone, Area 1 is now activated.",bc_map,C_VIKING;
 	donpcevent "que_job01#room_1::OnReset";
 	stopnpctimer;
 }
@@ -12661,11 +12661,11 @@ OnTouch:
 que_job01,1,2,0	script	 #room2timer	CLEAR_NPC,{
 OnEnable:
 	initnpctimer;
-	mapannounce "que_job01", "Master Zone 2 is now under surveillance.",bc_map,"0x70DBDB";
+	mapannounce "que_job01", "Master Zone 2 is now under surveillance.",bc_map,C_VIKING;
 	end;
 
 OnStop:
-	mapannounce "que_job01", "The magic shield of Master Zone 2 has been reset.",bc_map,"0x70DBDB";
+	mapannounce "que_job01", "The magic shield of Master Zone 2 has been reset.",bc_map,C_VIKING;
 	donpcevent "#room2_1_warp::OnDisable";
 	donpcevent "#room2_2_warp::OnDisable";
 	donpcevent "Rin#moc_room2_2::OnDisable";
@@ -12689,7 +12689,7 @@ OnTimer245000:
 	end;
 
 OnTimer250000:
-	mapannounce "que_job01", "Master Zone 2 has been released from surveillance.",bc_map,"0x70DBDB";
+	mapannounce "que_job01", "Master Zone 2 has been released from surveillance.",bc_map,C_VIKING;
 	donpcevent "que_job01#room_2::OnReset";
 	stopnpctimer;
 }
@@ -13458,11 +13458,11 @@ OnTouch:
 	end;
 
 OnTimer300000:
-	mapannounce "que_dan01", "...Hey-!!... Where are you?!!.... Hey-!",bc_map,"0xdda0dd";
+	mapannounce "que_dan01", "...Hey-!!... Where are you?!!.... Hey-!",bc_map,C_LIGHT_ORCHID;
 	end;
 
 OnTimer303000:
-	mapannounce "que_dan01", "...Isn't this voice...? ...Kidd?",bc_map,"0xdda0dd";
+	mapannounce "que_dan01", "...Isn't this voice...? ...Kidd?",bc_map,C_LIGHT_ORCHID;
 	end;
 
 OnTimer306000:
@@ -13509,13 +13509,13 @@ OnTouch:
 	mes "[" + strcharinfo(0) + "]";
 	mes "By the way, where am I?";
 	mes "Argh.. My head hurts...";
-	mapannounce "que_dan01", "Female Voice: Checkmate! You can't run away any longer!",bc_map,"0x7b68ee";
+	mapannounce "que_dan01", "Female Voice: Checkmate! You can't run away any longer!",bc_map,C_CORNFLOWER_BLUE;
 	next;
 	mes "[" + strcharinfo(0) + "]";
 	mes ".. ? Wh... What's going on?";
 	mes "I can't see things.. I'm getting dizzy...";
 	mes "What just happened?";
-	mapannounce "que_dan01", "Male Voice: *Giggle Giggle* If you thought I was alone, you're mistaken! Argh!",bc_map,"0xA8A8A8";
+	mapannounce "que_dan01", "Male Voice: *Giggle Giggle* If you thought I was alone, you're mistaken! Argh!",bc_map,C_SILVER_CHALICE;
 	next;
 	mes "[" + strcharinfo(0) + "]";
 	mes "Huh? Are they fighting?";
@@ -13568,7 +13568,7 @@ OnTouch:
 	next;
 	specialeffect EF_FREEZED,AREA,"Rin#moc2_bt_rin02";
 	emotion e_gasp;
-	mapannounce "que_dan01", "Rin: When.. When did you...!?!",bc_map,"0x7b68ee";
+	mapannounce "que_dan01", "Rin: When.. When did you...!?!",bc_map,C_CORNFLOWER_BLUE;
 	mes "[Rayan]";
 	mes "I'm sorry that I have to do this.";
 	mes "...";
@@ -13577,7 +13577,7 @@ OnTouch:
 	specialeffect EF_BEGINSPELL2,AREA,"Dandelion Member#moc2_4";
 	specialeffect EF_BEGINSPELL2,AREA,"Dandelion Member#moc2_5";
 	next;
-	mapannounce "que_dan01", "Rayan: Follow me as soon as you take care of her. Our next meeting place is the usual place. I'm leaving.",bc_map,"0xA8A8A8";
+	mapannounce "que_dan01", "Rayan: Follow me as soon as you take care of her. Our next meeting place is the usual place. I'm leaving.",bc_map,C_SILVER_CHALICE;
 	donpcevent "Rayan#moc2_bt_r01::OnDisable";
 	donpcevent "Dandelion Member#moc2_1::OnDisable";
 	donpcevent "Dandelion Member#moc2_2::OnDisable";
@@ -13679,7 +13679,7 @@ OnReset:
 	end;
 
 OnTimer4000:
-	mapannounce "que_dan01", "...Hey!... Where are you?!... Where did you go?!!!",bc_map,"0xdda0dd";
+	mapannounce "que_dan01", "...Hey!... Where are you?!... Where did you go?!!!",bc_map,C_LIGHT_ORCHID;
 	end;
 
 OnTimer7000:

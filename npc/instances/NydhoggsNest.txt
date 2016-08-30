@@ -224,7 +224,7 @@ L_Enter:
 		mes "You did not request for entrance. Please let your leader request entrance.";
 		close;
 	} else {
-		mapannounce "nyd_dun02", getpartyname(getcharid(1))+"'s party member "+strcharinfo(0)+" has entered Nidhoggur's Nest.",bc_map,"0x00ff99";
+		mapannounce "nyd_dun02", getpartyname(getcharid(1))+"'s party member "+strcharinfo(0)+" has entered Nidhoggur's Nest.",bc_map,C_SPRING_GREEN;
 		if (!questprogress(3135)) setquest 3135;
 		if (!questprogress(3136)) setquest 3136;
 		warp "1@nyd",32,37;
@@ -1702,7 +1702,7 @@ OnEnable:
 	monster .@map$,255,255,"Nidhoggur's Guardian#10",2021,1,instance_npcname("nyd_call_mon_1")+"::OnMyMobDead";
 	monster .@map$,225,245,"Nidhoggur's Guardian#11",2021,1,instance_npcname("nyd_call_mon_1")+"::OnMyMobDead";
 	monster .@map$,230,280,"Nidhoggur's Guardian#12",2021,1,instance_npcname("nyd_call_mon_1")+"::OnMyMobDead";
-	mapannounce .@map$, "Nidhoggur's Guardian : Protect the Guardian's Sanctuary. Get rid of the intruders.",bc_map,"0x00ff99";
+	mapannounce .@map$, "Nidhoggur's Guardian : Protect the Guardian's Sanctuary. Get rid of the intruders.",bc_map,C_SPRING_GREEN;
 	end;
 
 OnDisable:
@@ -1714,7 +1714,7 @@ OnMyMobDead:
 	.@map$ = instance_mapname("1@nyd");
 	.@mob_dead_num = mobcount(.@map$, instance_npcname("nyd_call_mon_1")+"::OnMyMobDead");
 	if (.@mob_dead_num < 1) {
-		mapannounce .@map$, "All of Nidhoggur's Guardians have been defeated!",bc_map,"0x00ff99";
+		mapannounce .@map$, "All of Nidhoggur's Guardians have been defeated!",bc_map,C_SPRING_GREEN;
 		donpcevent instance_npcname("ins_nyd_1f_timer")+"::OnDisable";
 		donpcevent instance_npcname("nyd_to2f_warp")+"::OnEnable";
 		'ins_nyd2 = 2;
@@ -1739,23 +1739,23 @@ OnDisable:
 	end;
 
 OnTimer900000:
-	mapannounce instance_mapname("1@nyd"), "World Tree Yggdrasil : There's not much time left. Please hurry.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("1@nyd"), "World Tree Yggdrasil : There's not much time left. Please hurry.",bc_map,C_YELLOW;
 	end;
 
 OnTimer1200000:
-	mapannounce instance_mapname("1@nyd"), "World Tree Yggdrasil : My powers are slowly disappearing. Please hurry.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("1@nyd"), "World Tree Yggdrasil : My powers are slowly disappearing. Please hurry.",bc_map,C_YELLOW;
 	end;
 
 OnTimer1500000:
-	mapannounce instance_mapname("1@nyd"), "World Tree Yggdrasil : I'm... almost at my limit... please hurry up.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("1@nyd"), "World Tree Yggdrasil : I'm... almost at my limit... please hurry up.",bc_map,C_YELLOW;
 	end;
 
 OnTimer1800000:
-	mapannounce instance_mapname("1@nyd"), "World Tree Yggdrasil : You've failed... but I will use what power I have left... to send you out of here.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("1@nyd"), "World Tree Yggdrasil : You've failed... but I will use what power I have left... to send you out of here.",bc_map,C_YELLOW;
 	end;
 
 OnTimer1830000:
-	mapannounce instance_mapname("1@nyd"), "Opening of the Gate has failed.",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("1@nyd"), "Opening of the Gate has failed.",bc_map,C_YELLOW;
 	end;
 
 OnTimer1850000:
@@ -1833,15 +1833,15 @@ OnEnable:
 	end;
 
 OnTimer12000:
-	mapannounce instance_mapname("2@nyd"), "Nidhoggur's Shadow : No more... I can't stand this anymore...",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@nyd"), "Nidhoggur's Shadow : No more... I can't stand this anymore...",bc_map,C_YELLOW;
 	end;
 
 OnTimer15000:
-	mapannounce instance_mapname("2@nyd"), "Nidhoggur's Shadow : I need... I need the World Tree Yggdrasil's powers...",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@nyd"), "Nidhoggur's Shadow : I need... I need the World Tree Yggdrasil's powers...",bc_map,C_YELLOW;
 	end;
 
 OnTimer18000:
-	mapannounce instance_mapname("2@nyd"), "Nidhoggur's Shadow : Destroy... everything...",bc_map,"0xFFFF00";
+	mapannounce instance_mapname("2@nyd"), "Nidhoggur's Shadow : Destroy... everything...",bc_map,C_YELLOW;
 	stopnpctimer;
 	disablenpc instance_npcname("nyd_2f_enter_broad");
 	end;
@@ -1877,7 +1877,7 @@ OnEnable:
 	enablenpc instance_npcname("nyd_2f_boss_enter_call");
 	.@map$ = instance_mapname("2@nyd");
 	monster .@map$,199,327,"Nidhoggur's Shadow",2022,1,instance_npcname("nyd_2f_boss_enter_call")+"::OnMyMobDead";
-	mapannounce .@map$, "Nidhoggur's Shadow : I will devour all of you... you and the World Tree Yggdrasil.",bc_map,"0x00ff99";
+	mapannounce .@map$, "Nidhoggur's Shadow : I will devour all of you... you and the World Tree Yggdrasil.",bc_map,C_SPRING_GREEN;
 	//donpcevent instance_npcname("nyd_2f_boss_enter_call")+"::OnGo";
 	initnpctimer;
 	end;
@@ -1893,7 +1893,7 @@ OnWarpColor:
 	.@map$ = instance_mapname("2@nyd");
 	switch(rand(1,4)) {
 	case 1:
-		mapannounce .@map$, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,"0xFFFF00";
+		mapannounce .@map$, "Nidhoggur's Shadow : In this chaos... your blood is just what I need.",bc_map,C_YELLOW;
 		donpcevent instance_npcname("nyd_2f_white")+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow")+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green")+"::OnDisable";
@@ -1901,7 +1901,7 @@ OnWarpColor:
 		instance_warpall .@map$,115,278;
 		end;
 	case 2:
-		mapannounce .@map$, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,"0xFFFF00";
+		mapannounce .@map$, "Nidhoggur's Shadow : I will freeze every last drop of your blood.",bc_map,C_YELLOW;
 		donpcevent instance_npcname("nyd_2f_red")+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow")+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green")+"::OnDisable";
@@ -1909,7 +1909,7 @@ OnWarpColor:
 		instance_warpall .@map$,115,373;
 		end;
 	case 3:
-		mapannounce .@map$, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,"0xFFFF00";
+		mapannounce .@map$, "Nidhoggur's Shadow : Sleep for eternity in an empty illusion.",bc_map,C_YELLOW;
 		donpcevent instance_npcname("nyd_2f_red")+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white")+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_green")+"::OnDisable";
@@ -1917,7 +1917,7 @@ OnWarpColor:
 		instance_warpall .@map$,284,278;
 		end;
 	case 4:
-		mapannounce .@map$, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,"0xFFFF00";
+		mapannounce .@map$, "Nidhoggur's Shadow : I'll let you enjoy the pain of dying slowly.",bc_map,C_YELLOW;
 		donpcevent instance_npcname("nyd_2f_red")+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_white")+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_yellow")+"::OnDisable";
@@ -1930,7 +1930,7 @@ OnWarpColor:
 OnMyMobDead:
 	.@map$ = instance_mapname("2@nyd");
 	if (mobcount(.@map$,instance_npcname("nyd_2f_boss_enter_call")+"::OnMyMobDead") < 1) {
-		mapannounce .@map$, "Nidhoggur's Shadow : World Tree Yggdrasil's guardian... his powers are disappearing...",bc_map,"0x00ff99";
+		mapannounce .@map$, "Nidhoggur's Shadow : World Tree Yggdrasil's guardian... his powers are disappearing...",bc_map,C_SPRING_GREEN;
 		donpcevent instance_npcname("World Tree Yggdrasil#2F")+"::OnEnable";
 		donpcevent instance_npcname("nyd_2f_boss_enter_call")+"::OnDisable";
 		donpcevent instance_npcname("nyd_2f_boss_enter_logic")+"::OnDisable";
@@ -2007,7 +2007,7 @@ OnDisable:
 
 OnEnable:
 	enablenpc instance_npcname("World Tree Yggdrasil#2F");
-	mapannounce instance_mapname("2@nyd"), "World Tree Yggdrasil : You did good. Have everyone go to the Magic Circle in the middle, and get ready for the destruction of the nest.",bc_map,"0x00ff99";
+	mapannounce instance_mapname("2@nyd"), "World Tree Yggdrasil : You did good. Have everyone go to the Magic Circle in the middle, and get ready for the destruction of the nest.",bc_map,C_SPRING_GREEN;
 	end;
 }
 
@@ -2096,7 +2096,7 @@ OnEnable:
 OnMyMobDead:
 	.@map$ = instance_mapname("2@nyd");
 	if (mobcount(.@map$,instance_npcname(strnpcinfo(NPC_NAME))+"::OnMyMobDead") < 1) {
-		mapannounce .@map$, "Nidhoggur's Shadow : You're not bad... but I will be your opponent this time.",bc_map,"0x00ff99";
+		mapannounce .@map$, "Nidhoggur's Shadow : You're not bad... but I will be your opponent this time.",bc_map,C_SPRING_GREEN;
 		donpcevent instance_npcname("nyd_2f_boss_enter_logic")+"::OnEnable";
 		donpcevent instance_npcname(strnpcinfo(NPC_NAME))+"::OnDisable";
 		end;
@@ -2289,7 +2289,7 @@ OnTimer1000:
 	enablenpc "Purification Stone#nyd2";
 	end;
 OnTimer1740000:
-	mapannounce "nyd_dun02","The Purification Stone will be destroyed in one minute.",bc_map,"0x00FF99",FW_NORMAL,12;
+	mapannounce "nyd_dun02","The Purification Stone will be destroyed in one minute.",bc_map,C_SPRING_GREEN,FW_NORMAL,12;
 	end;
 OnTimer1800000:
 	disablenpc "Purification Stone#nyd2";

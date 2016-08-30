@@ -155,7 +155,7 @@ dali02,41,134,0	script	Interdimensional Device::gpportal	PORTAL,{
 		mes("^FF0000Inside the device you see a dark hole. If you wish to enter you may wish to talk to the Unpleasant Royal Guard first.^000000");
 		close();
 	}
-	mapannounce("dali", sprintf(_$("%s of the party, %s, is entering the Ghost Palace."), strcharinfo(0), getpartyname(getcharid(1))), bc_map, C_SPRINGGREEN);
+	mapannounce("dali", sprintf(_$("%s of the party, %s, is entering the Ghost Palace."), strcharinfo(0), getpartyname(getcharid(1))), bc_map, C_SPRING_GREEN);
 	if (!questprogress(1260)) setquest 1260;
 	setquest 1261;
 	warp("1@spa", 198, 188);

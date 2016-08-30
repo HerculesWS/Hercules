@@ -6435,7 +6435,7 @@ kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 		mes "to hell with me... Well,";
 		mes "if robots can go there~";
 		next;
-		mapannounce "kh_kiehl02","*Jeeeezzzgggg~ Geezzz~ Grrrr~ Clank~*",bc_map,"0xFF0000";
+		mapannounce "kh_kiehl02","*Jeeeezzzgggg~ Geezzz~ Grrrr~ Clank~*",bc_map,C_RED;
 		mes "[Mitchell]";
 		mes "No...! We're locked";
 		mes "in the room! We're...";
@@ -6453,7 +6453,7 @@ kh_kiehl02,50,52,4	script	Kiehl#Original	4_M_KHKIEL,{
 		mes "Kiehl's power supply!";
 		mes "Hurry, use it right now!";
 		next;
-		mapannounce "kh_kiehl02","*Gzzzz~ Gzzzz~*",bc_map,"0xFF0000";
+		mapannounce "kh_kiehl02","*Gzzzz~ Gzzzz~*",bc_map,C_RED;
 		mes "[Kiehl]";
 		mes "Wh-what? I c-can't";
 		mes "move! This day is just";

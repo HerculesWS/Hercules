@@ -4084,7 +4084,7 @@ OnEnable:
 OnDisable:
 	disablenpc "Black Shadow#ep14_muk";
 	donpcevent "Black Shadow#ep14_muk::OnFullon";
-	mapannounce "mora","You can now use the mysterious power of bath water.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+	mapannounce "mora","You can now use the mysterious power of bath water.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 	end;
 OnFullon:
 	donpcevent "???#ep14_muk01::OnReset";
@@ -4223,7 +4223,7 @@ OnTouch:
 		erasequest 5029;
 		end;
 	} else {
-		mapannounce "mora","You can no longer use the mysterious power of the bath water.",bc_map,"0xFFFF00"; //FW_NORMAL 12 0 0
+		mapannounce "mora","You can no longer use the mysterious power of the bath water.",bc_map,C_YELLOW; //FW_NORMAL 12 0 0
 		mes "^FF0000Something appeared.^000000";
 		mes "^FFFF00You cannot use the mysterious power of the bath water.^000000";
 		close2;

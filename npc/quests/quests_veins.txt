@@ -5351,39 +5351,39 @@ OnEnable:
 	end;
 
 OnTimer10000:
-	mapannounce "ra_temin","Guard Karlum: Lamir! It's Karlum! Your love is here!",bc_map,"0xFFCE00";
+	mapannounce "ra_temin","Guard Karlum: Lamir! It's Karlum! Your love is here!",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer15000:
-	mapannounce "ra_temin","Lamir: Karlum? What are you doing here?",bc_map,"0xFFCE00";
+	mapannounce "ra_temin","Lamir: Karlum? What are you doing here?",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer20000:
-	mapannounce "ra_temin","Guard Karlum: Lamir, you can stop pretending now. I've come to realize that your coldness masks your love~",bc_map,"0xFFCE00";
+	mapannounce "ra_temin","Guard Karlum: Lamir, you can stop pretending now. I've come to realize that your coldness masks your love~",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer30000:
-	mapannounce "ra_temin","Lamir: What are you talking about? Sorry, Karlum, but I don't have any special feelings for you.",bc_map,"0xFFCE00";
+	mapannounce "ra_temin","Lamir: What are you talking about? Sorry, Karlum, but I don't have any special feelings for you.",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer35000:
-	mapannounce "ra_temin","Guard Karlum: I know, it's embarrassing to confess your true feelings~",bc_map,"0xFFCE00";
+	mapannounce "ra_temin","Guard Karlum: I know, it's embarrassing to confess your true feelings~",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer40000:
-	mapannounce "ra_temin","Guard Karlum: However, I can't deny that your shyness is breaking my heart.",bc_map,"0xFFCE00";
+	mapannounce "ra_temin","Guard Karlum: However, I can't deny that your shyness is breaking my heart.",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer45000:
-	mapannounce "ra_temin","Lamir: Karlum, when will you realize that I haven't, and won't ever fall in love with you?",bc_map,"0xFFCE00";
+	mapannounce "ra_temin","Lamir: Karlum, when will you realize that I haven't, and won't ever fall in love with you?",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer50000:
-	mapannounce "ra_temin","Guard Karlum: .............",bc_map,"0xFFCE00";
+	mapannounce "ra_temin","Guard Karlum: .............",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer55000:
-	mapannounce "ra_temin","Guard Karlum: Wha--? But I thought...? Huh, sorry. I should get going...",bc_map,"0xFFCE00";
+	mapannounce "ra_temin","Guard Karlum: Wha--? But I thought...? Huh, sorry. I should get going...",bc_map,C_SUPER_NOVA;
 	stopnpctimer;
 	disablenpc "Rachel Guard#vol1_1";
 	enablenpc "Rachel Guard#vol1";
@@ -5415,7 +5415,7 @@ OnEnable:
 	end;
 
 OnTimer30000:
-	mapannounce "ra_temin","Guard Krodger: Phew~, now I'm done cleaning up this mess.",bc_map,"0xFFCE00";
+	mapannounce "ra_temin","Guard Krodger: Phew~, now I'm done cleaning up this mess.",bc_map,C_SUPER_NOVA;
 	stopnpctimer;
 	disablenpc "Rachel Guard#vol2_1";
 	enablenpc "Rachel Guard#vol2";

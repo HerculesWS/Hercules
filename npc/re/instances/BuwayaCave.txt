@@ -159,7 +159,7 @@ OnTouch:
 			mes "The party leader did not generate the dungeon yet.";
 			close;
 		} else {
-			mapannounce "ma_fild02",getpartyname(getcharid(1))+" party's "+strcharinfo(0)+" member began hunting Buwaya in Buwaya Cave.",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+			mapannounce "ma_fild02",getpartyname(getcharid(1))+" party's "+strcharinfo(0)+" member began hunting Buwaya in Buwaya Cave.",bc_map,C_SPRING_GREEN; //FW_NORMAL 12 0 0
 			setquest 4229;
 			warp "1@ma_c",35,57;
 			end;
@@ -305,7 +305,7 @@ OnInstanceInit:
 	initnpctimer;
 	end;
 OnTimer30000:
-	mapannounce instance_mapname("1@ma_c"),"Buwaya : I will put you in my treasure box!",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@ma_c"),"Buwaya : I will put you in my treasure box!",bc_map,C_SPRING_GREEN; //FW_NORMAL 12 0 0
 	// Should execute OnTimer33000, but client doesn't render the effect fast enough.
 	for(.@i = 1; .@i<=9; ++.@i)
 		donpcevent instance_npcname("#yunobi"+.@i)+"::OnEnable";
@@ -358,19 +358,19 @@ OnInstanceInit:
 	initnpctimer;
 	end;
 OnTimer58000:
-	mapannounce instance_mapname("1@ma_c"),"Buwaya : I had enough with this, let's go till the end!",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@ma_c"),"Buwaya : I had enough with this, let's go till the end!",bc_map,C_SPRING_GREEN; //FW_NORMAL 12 0 0
 	end;
 OnTimer61000:
-	mapannounce instance_mapname("1@ma_c"),"Buwaya : This is!",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@ma_c"),"Buwaya : This is!",bc_map,C_SPRING_GREEN; //FW_NORMAL 12 0 0
 	end;
 OnTimer62000:
-	mapannounce instance_mapname("1@ma_c"),"Buwaya : This is...MY!",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@ma_c"),"Buwaya : This is...MY!",bc_map,C_SPRING_GREEN; //FW_NORMAL 12 0 0
 	end;
 OnTimer63000:
-	mapannounce instance_mapname("1@ma_c"),"Buwaya : This is...MY...Deadly!",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@ma_c"),"Buwaya : This is...MY...Deadly!",bc_map,C_SPRING_GREEN; //FW_NORMAL 12 0 0
 	end;
 OnTimer64000:
-	mapannounce instance_mapname("1@ma_c"),"Buwaya : This is...MY...Deadly... ATTACK!",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@ma_c"),"Buwaya : This is...MY...Deadly... ATTACK!",bc_map,C_SPRING_GREEN; //FW_NORMAL 12 0 0
 	end;
 OnTimer65000:
 	.@label$ = instance_npcname("#bunshin")+"::OnMyMobDead";
@@ -381,7 +381,7 @@ OnTimer65000:
 	areamonster .@map$,72,89,82,99,"Buwaya",2332,1,.@label$;
 	end;
 OnTimer66000:
-	mapannounce instance_mapname("1@ma_c"),"Buwaya : Are you scared?",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+	mapannounce instance_mapname("1@ma_c"),"Buwaya : Are you scared?",bc_map,C_SPRING_GREEN; //FW_NORMAL 12 0 0
 	end;
 OnTimer105000:
 	killmonster instance_mapname("1@ma_c"),instance_npcname("#bunshin")+"::OnMyMobDead";
@@ -413,7 +413,7 @@ OnMyMobDead:
 		donpcevent instance_npcname("#bunshin")+"::OnDisable";
 		donpcevent instance_npcname("#exit_mob")+"::OnDisable";
 		donpcevent instance_npcname("#cave_out")+"::OnEnable";
-		mapannounce .@map$,"Guard : You did great work. Please hurry up and escape to the way you came in!",bc_map,"0x00ff99"; //FW_NORMAL 12 0 0
+		mapannounce .@map$,"Guard : You did great work. Please hurry up and escape to the way you came in!",bc_map,C_SPRING_GREEN; //FW_NORMAL 12 0 0
 	}
 	end;
 }

@@ -1077,19 +1077,19 @@ OnDisable:
 	end;
 
 OnTimer1000:
-	mapannounce "prt_are01","Welcome to the Close Confine Training Ground. You will be automatically teleported outside in 5 minutes.",bc_map,"0x00ff00";
+	mapannounce "prt_are01","Welcome to the Close Confine Training Ground. You will be automatically teleported outside in 5 minutes.",bc_map,C_LIME;
 	end;
 
 OnTimer290000:
-	mapannounce "prt_are01","You will be teleported outside in 20 seconds.",bc_map,"0x00ff00";
+	mapannounce "prt_are01","You will be teleported outside in 20 seconds.",bc_map,C_LIME;
 	end;
 
 OnTimer310000:
-	mapannounce "prt_are01","You will be teleported outside in 5 seconds.",bc_map,"0x00ff00";
+	mapannounce "prt_are01","You will be teleported outside in 5 seconds.",bc_map,C_LIME;
 	end;
 
 OnTimer315000:
-	mapannounce "prt_are01","You are now being teleported outside.",bc_map,"0x00ff00";
+	mapannounce "prt_are01","You are now being teleported outside.",bc_map,C_LIME;
 	disablenpc "Kienna#1st";
 	disablenpc "Kienna#2nd";
 	disablenpc "Kienna#3rd";
@@ -1117,7 +1117,7 @@ OnEnable:
 	end;
 
 OnTimer3000:
-	mapannounce "prt_are01","Kienna will appear in 1 second. Please approach her as closely as possible.",bc_map,"0x00ff00";
+	mapannounce "prt_are01","Kienna will appear in 1 second. Please approach her as closely as possible.",bc_map,C_LIME;
 	end;
 
 OnTimer5000:

@@ -47,33 +47,33 @@ OnInit:
 	end;
 
 OnTimer10000:
-	mapannounce "hugel","The Single Monster Race will soon begin. We hope to see many of you participate!",bc_map,"0x87ceeb";
+	mapannounce "hugel","The Single Monster Race will soon begin. We hope to see many of you participate!",bc_map,C_SEAGULL;
 	end;
 
 OnTimer30000:
-	mapannounce "hugel","The Single Monster Race Arena has just opened.",bc_map,"0x87ceeb";
+	mapannounce "hugel","The Single Monster Race Arena has just opened.",bc_map,C_SEAGULL;
 	$@mon_time_1_1 = 1;
 	donpcevent "Race Progress Timer::OnEnable";
 	end;
 
 OnTimer90000:
-	mapannounce "hugel","The Single Monster Race arena is now open. Participants should enter the Arena as soon as they can.",bc_map,"0x87ceeb";
+	mapannounce "hugel","The Single Monster Race arena is now open. Participants should enter the Arena as soon as they can.",bc_map,C_SEAGULL;
 	end;
 
 OnTimer210000:
-	mapannounce "hugel","The entrance to the Single Monster Race Arena will close shortly. Participants, please enter the arena now.",bc_map,"0x87ceeb";
+	mapannounce "hugel","The entrance to the Single Monster Race Arena will close shortly. Participants, please enter the arena now.",bc_map,C_SEAGULL;
 	end;
 
 OnTimer270000:
-	mapannounce "hugel","The Single Monster Race Arena's entrance will soon close.",bc_map,"0x87ceeb";
+	mapannounce "hugel","The Single Monster Race Arena's entrance will soon close.",bc_map,C_SEAGULL;
 	end;
 
 OnTimer272000:
-	mapannounce "hugel","Participants, please enter the Arena before the doors close.",bc_map,"0x87ceeb";
+	mapannounce "hugel","Participants, please enter the Arena before the doors close.",bc_map,C_SEAGULL;
 	end;
 
 OnTimer330000:
-	mapannounce "hugel","The race is now starting. If you missed your chance to enter this race, please try again next time~!",bc_map,"0x87ceeb";
+	mapannounce "hugel","The race is now starting. If you missed your chance to enter this race, please try again next time~!",bc_map,C_SEAGULL;
 	$@mon_time_1_1 = 0;
 	disablenpc "#race_timer1-1";
 	stopnpctimer;
@@ -138,31 +138,31 @@ OnTimer1000:
 	end;
 
 OnTimer7000:
-	mapannounce "p_track01","Welcome to the Monster Race Arena.",bc_map,"0xffb6c1";
+	mapannounce "p_track01","Welcome to the Monster Race Arena.",bc_map,C_LIGHT_PINK;
 	end;
 
 OnTimer10000:
-	mapannounce "p_track01","Feel free to inquire at the help desk whenever you have questions.",bc_map,"0xffb6c1";
+	mapannounce "p_track01","Feel free to inquire at the help desk whenever you have questions.",bc_map,C_LIGHT_PINK;
 	end;
 
 OnTimer120000:
-	mapannounce "p_track01","The Single Monster Race will start in 3 minutes.",bc_map,"0xffb6c1";
+	mapannounce "p_track01","The Single Monster Race will start in 3 minutes.",bc_map,C_LIGHT_PINK;
 	end;
 
 OnTimer123000:
-	mapannounce "p_track01","Please ask a Ticket Helper if you wish to wager on the race.",bc_map,"0xffb6c1";
+	mapannounce "p_track01","Please ask a Ticket Helper if you wish to wager on the race.",bc_map,C_LIGHT_PINK;
 	end;
 
 OnTimer240000:
-	mapannounce "p_track01","The Single Monster Race will start shortly.",bc_map,"0xffb6c1";
+	mapannounce "p_track01","The Single Monster Race will start shortly.",bc_map,C_LIGHT_PINK;
 	end;
 
 OnTimer243000:
-	mapannounce "p_track01","Please ask a Ticket Helper if you wish to wager on the race.",bc_map,"0xffb6c1";
+	mapannounce "p_track01","Please ask a Ticket Helper if you wish to wager on the race.",bc_map,C_LIGHT_PINK;
 	end;
 
 OnTimer300000:
-	mapannounce "p_track01","The Monster Race has already begun. Good luck to all the participants.",bc_map,"0xffb6c1";
+	mapannounce "p_track01","The Monster Race has already begun. Good luck to all the participants.",bc_map,C_LIGHT_PINK;
 	$@monster_race = 0;
 	disablenpc "Ticket Helper#single";
 	for (.@i = 1; .@i <= 6; ++.@i)
@@ -259,13 +259,13 @@ OnTouchNPC:
 		donpcevent "Runner No. "+.@i+"#"+.@i+"::OnDisable";
 	}
 	sleep 1000;
-	mapannounce "p_track01","We have a winner...!",bc_map,"0x33FF66";
+	mapannounce "p_track01","We have a winner...!",bc_map,C_SCREAMIN_GREEN;
 	sleep 1000;
-	mapannounce "p_track01","Monster "+.@n+" is the winner of this race!",bc_map,"0x33FF66";
+	mapannounce "p_track01","Monster "+.@n+" is the winner of this race!",bc_map,C_SCREAMIN_GREEN;
 	sleep 4000;
-	mapannounce "p_track01","If you wagered on Monster "+.@n+" in this race, talk to the Medal Distributor to receive your prize!",bc_map,"0x33FF66";
+	mapannounce "p_track01","If you wagered on Monster "+.@n+" in this race, talk to the Medal Distributor to receive your prize!",bc_map,C_SCREAMIN_GREEN;
 	sleep 2000;
-	mapannounce "p_track01","Please remember that we can distribute Prize Medals for only 5 minutes after each race.",bc_map,"0x33FF66";
+	mapannounce "p_track01","Please remember that we can distribute Prize Medals for only 5 minutes after each race.",bc_map,C_SCREAMIN_GREEN;
 	sleep 1000;
 	donpcevent "Medal Distributor#single::OnEnable";
 	donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
@@ -432,43 +432,43 @@ OnEnable:
 	end;
 
 OnTimer1000:
-	mapannounce "p_track01","The Monster Race is finished! Congratulations to all the winners!",bc_map,"0xFFFF00";
+	mapannounce "p_track01","The Monster Race is finished! Congratulations to all the winners!",bc_map,C_YELLOW;
 	end;
 
 OnTimer4000:
-	mapannounce "p_track01","Please give your Racing Ticket to the Medal Distributor if you bet on the winning monster.",bc_map,"0xFFFF00";
+	mapannounce "p_track01","Please give your Racing Ticket to the Medal Distributor if you bet on the winning monster.",bc_map,C_YELLOW;
 	end;
 
 OnTimer7000:
-	mapannounce "p_track01","You have 5 minutes to exchange a winning ticket for Prize Medals from the Medal Distributor.",bc_map,"0xFFFF00";
+	mapannounce "p_track01","You have 5 minutes to exchange a winning ticket for Prize Medals from the Medal Distributor.",bc_map,C_YELLOW;
 	end;
 
 OnTimer10000:
-	mapannounce "p_track01","All tickets become void after this 5 minute period, so winners should claim their prize now.",bc_map,"0xFFFF00";
+	mapannounce "p_track01","All tickets become void after this 5 minute period, so winners should claim their prize now.",bc_map,C_YELLOW;
 	end;
 
 OnTimer13000:
-	mapannounce "p_track01","Please leave the Race Arena before this 5 minute period elapses. Thank you.",bc_map,"0xFFFF00";
+	mapannounce "p_track01","Please leave the Race Arena before this 5 minute period elapses. Thank you.",bc_map,C_YELLOW;
 	end;
 
 OnTimer240000:
-	mapannounce "p_track01","Attention. We will being preparing for the next race shortly...",bc_map,"0xFFFF00";
+	mapannounce "p_track01","Attention. We will being preparing for the next race shortly...",bc_map,C_YELLOW;
 	end;
 
 OnTimer243000:
-	mapannounce "p_track01","We will close the Racing Arena in 1 minute to prepare for the next race.",bc_map,"0xFFFF00";
+	mapannounce "p_track01","We will close the Racing Arena in 1 minute to prepare for the next race.",bc_map,C_YELLOW;
 	end;
 
 OnTimer246000:
-	mapannounce "p_track01","Participants in the last race should leave the arena as soon as possible.",bc_map,"0xFFFF00";
+	mapannounce "p_track01","Participants in the last race should leave the arena as soon as possible.",bc_map,C_YELLOW;
 	end;
 
 OnTimer249000:
-	mapannounce "p_track01","Thank you for your cooperation.",bc_map,"0xFFFF00";
+	mapannounce "p_track01","Thank you for your cooperation.",bc_map,C_YELLOW;
 	end;
 
 OnTimer252000:
-	mapannounce "p_track01","We hope that you enjoyed the Monster Race arena. Come back again soon~",bc_map,"0xFFFF00";
+	mapannounce "p_track01","We hope that you enjoyed the Monster Race arena. Come back again soon~",bc_map,C_YELLOW;
 	for (.@i = 1; .@i <= 6; ++.@i) {
 		for (.@j = 2; .@j <= 6; ++.@j) {
 			disablenpc "Tire"+.@j+"#"+.@i;
@@ -987,11 +987,11 @@ OnInit:
 	end;
 
 OnTimer10000:
-	mapannounce "hugel","The Dual Monster Race will soon begin. We hope to see many of you participate!",bc_map,"0xffb6c1";
+	mapannounce "hugel","The Dual Monster Race will soon begin. We hope to see many of you participate!",bc_map,C_LIGHT_PINK;
 	end;
 
 OnTimer30000:
-	mapannounce "hugel","The Dual Monster Race Arena has just opened.",bc_map,"0xffb6c1";
+	mapannounce "hugel","The Dual Monster Race Arena has just opened.",bc_map,C_LIGHT_PINK;
 	$@mon_time_2_1 = 1;
 	donpcevent "#race_timer2-2::OnEnable";
 	donpcevent "TrapGlobal#race02::OnEnable";
@@ -999,23 +999,23 @@ OnTimer30000:
 	end;
 
 OnTimer90000:
-	mapannounce "hugel","The Dual Monster Race arena is now open. Participants should enter the Arena as soon as they can.",bc_map,"0xffb6c1";
+	mapannounce "hugel","The Dual Monster Race arena is now open. Participants should enter the Arena as soon as they can.",bc_map,C_LIGHT_PINK;
 	end;
 
 OnTimer210000:
-	mapannounce "hugel","The entrance to the Dual Monster Race Arena will close shortly. Participants, please enter the arena now.",bc_map,"0xffb6c1";
+	mapannounce "hugel","The entrance to the Dual Monster Race Arena will close shortly. Participants, please enter the arena now.",bc_map,C_LIGHT_PINK;
 	end;
 
 OnTimer270000:
-	mapannounce "hugel","The Dual Monster Race Arena's entrance will soon close.",bc_map,"0xffb6c1";
+	mapannounce "hugel","The Dual Monster Race Arena's entrance will soon close.",bc_map,C_LIGHT_PINK;
 	end;
 
 OnTimer272000:
-	mapannounce "hugel","Participants, please enter the Arena before the doors close.",bc_map,"0xffb6c1";
+	mapannounce "hugel","Participants, please enter the Arena before the doors close.",bc_map,C_LIGHT_PINK;
 	end;
 
 OnTimer330000:
-	mapannounce "hugel","The race is now starting. If you missed your chance to enter this race, please try again next time~!",bc_map,"0xffb6c1";
+	mapannounce "hugel","The race is now starting. If you missed your chance to enter this race, please try again next time~!",bc_map,C_LIGHT_PINK;
 	$@mon_time_2_1 = 0;
 	disablenpc "#race_timer2-1";
 	stopnpctimer;
@@ -1030,31 +1030,31 @@ OnEnable:
 	end;
 
 OnTimer5000:
-	mapannounce "p_track02","Welcome to the Monster Race Arena.",bc_map,"0x87ceeb";
+	mapannounce "p_track02","Welcome to the Monster Race Arena.",bc_map,C_SEAGULL;
 	end;
 
 OnTimer7000:
-	mapannounce "p_track02","Feel free to inquire at the help desk whenever you have questions.",bc_map,"0x87ceeb";
+	mapannounce "p_track02","Feel free to inquire at the help desk whenever you have questions.",bc_map,C_SEAGULL;
 	end;
 
 OnTimer120000:
-	mapannounce "p_track02","The Dual Monster Race will start in 3 minutes.",bc_map,"0x87ceeb";
+	mapannounce "p_track02","The Dual Monster Race will start in 3 minutes.",bc_map,C_SEAGULL;
 	end;
 
 OnTimer122000:
-	mapannounce "p_track02","Please ask a Ticket Helper if you wish to wager on the race.",bc_map,"0x87ceeb";
+	mapannounce "p_track02","Please ask a Ticket Helper if you wish to wager on the race.",bc_map,C_SEAGULL;
 	end;
 
 OnTimer240000:
-	mapannounce "p_track02","The Dual Monster Race will start shortly.",bc_map,"0x87ceeb";
+	mapannounce "p_track02","The Dual Monster Race will start shortly.",bc_map,C_SEAGULL;
 	end;
 
 OnTimer242000:
-	mapannounce "p_track02","Please ask a Ticket Helper if you wish to wager on the race.",bc_map,"0x87ceeb";
+	mapannounce "p_track02","Please ask a Ticket Helper if you wish to wager on the race.",bc_map,C_SEAGULL;
 	end;
 
 OnTimer300000:
-	mapannounce "p_track02","The Monster Race is starting now. Good luck, everybody!",bc_map,"0x87ceeb";
+	mapannounce "p_track02","The Monster Race is starting now. Good luck, everybody!",bc_map,C_SEAGULL;
 	$@mon_time_2_2 = 1;
 	disablenpc "Ticket Helper#2";
 	donpcevent "#poring1::OnEnable";
@@ -1080,43 +1080,43 @@ OnEnable:
 	end;
 
 OnTimer3000:
-	mapannounce "p_track02","The Monster Race is finished! Congratulations to all the winners!",bc_map,"0xFFFF00";
+	mapannounce "p_track02","The Monster Race is finished! Congratulations to all the winners!",bc_map,C_YELLOW;
 	end;
 
 OnTimer6000:
-	mapannounce "p_track02","Please give your Racing Ticket to the Medal Distributor if you bet on the winning monster.",bc_map,"0xFFFF00";
+	mapannounce "p_track02","Please give your Racing Ticket to the Medal Distributor if you bet on the winning monster.",bc_map,C_YELLOW;
 	end;
 
 OnTimer9000:
-	mapannounce "p_track02","You have 5 minutes to exchange a winning ticket for Prize Medals from the Medal Distributor.",bc_map,"0xFFFF00";
+	mapannounce "p_track02","You have 5 minutes to exchange a winning ticket for Prize Medals from the Medal Distributor.",bc_map,C_YELLOW;
 	end;
 
 OnTimer12000:
-	mapannounce "p_track02","All tickets become void after this 5 minute period, so winners should claim their prize now.",bc_map,"0xFFFF00";
+	mapannounce "p_track02","All tickets become void after this 5 minute period, so winners should claim their prize now.",bc_map,C_YELLOW;
 	end;
 
 OnTimer15000:
-	mapannounce "p_track02","Please leave the Race Arena before this 5 minute period elapses. Thank you.",bc_map,"0xFFFF00";
+	mapannounce "p_track02","Please leave the Race Arena before this 5 minute period elapses. Thank you.",bc_map,C_YELLOW;
 	end;
 
 OnTimer240000:
-	mapannounce "p_track02","Attention. We will being preparing for the next race shortly...",bc_map,"0xFFFF00";
+	mapannounce "p_track02","Attention. We will being preparing for the next race shortly...",bc_map,C_YELLOW;
 	end;
 
 OnTimer243000:
-	mapannounce "p_track02","We will close the Racing Arena in 1 minute to prepare for the next race.",bc_map,"0xFFFF00";
+	mapannounce "p_track02","We will close the Racing Arena in 1 minute to prepare for the next race.",bc_map,C_YELLOW;
 	end;
 
 OnTimer246000:
-	mapannounce "p_track02","Participants in the last race should leave the arena as soon as possible.",bc_map,"0xFFFF00";
+	mapannounce "p_track02","Participants in the last race should leave the arena as soon as possible.",bc_map,C_YELLOW;
 	end;
 
 OnTimer249000:
-	mapannounce "p_track02","Thank you for your cooperation.",bc_map,"0xFFFF00";
+	mapannounce "p_track02","Thank you for your cooperation.",bc_map,C_YELLOW;
 	end;
 
 OnTimer252000:
-	mapannounce "p_track02","We hope that you enjoyed the Monster Race arena. Come back again soon~",bc_map,"0xFFFF00";
+	mapannounce "p_track02","We hope that you enjoyed the Monster Race arena. Come back again soon~",bc_map,C_YELLOW;
 	end;
 
 OnTimer300000:
@@ -1760,13 +1760,13 @@ OnTouchNPC:
 	if (!$@mon_race_2_1) {
 		emotion e_lv;
 		specialeffect EF_MVP;
-		mapannounce "p_track02","Monster "+.@i+" has reached the Finish Line!",bc_map,"0x66FFCC";
+		mapannounce "p_track02","Monster "+.@i+" has reached the Finish Line!",bc_map,C_AQUAMARINE;
 		$@mon_race_2_1 = .@i;
 		donpcevent strnpcinfo(NPC_NAME)+"::OnDisable";
 	} else {
 		emotion e_lv;
 		specialeffect EF_MVP;
-		mapannounce "p_track02","The race is over! Monster "+.@i+" has reached the Finish Line!",bc_map,"0x66FFCC";
+		mapannounce "p_track02","The race is over! Monster "+.@i+" has reached the Finish Line!",bc_map,C_AQUAMARINE;
 		$@mon_race_2_2 = .@i;
 		donpcevent "#poring1::OnDisable";
 		donpcevent "#lunatic1::OnDisable";

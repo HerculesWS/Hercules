@@ -2413,11 +2413,11 @@ OnTouch:
 	}
 	end;
 OnTimer295000:
-	mapannounce "job3_guil02","Dandelion: ...Ha, you are strong and sticky!",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil02","Dandelion: ...Ha, you are strong and sticky!",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	donpcevent "A man with black clothes::OnReset";
 	end;
 OnTimer296000:
-	mapannounce "job3_guil02","The Dandelion ran away.",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil02","The Dandelion ran away.",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	end;
 OnTimer298000:
 	mapwarp "job3_guil02","veins",186,65;
@@ -2788,7 +2788,7 @@ OnTouch:
 	}
 	end;
 OnTimer900000:
-	mapannounce "job3_guil03","Renzak : Withdraw!",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Renzak : Withdraw!",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	end;
 OnTimer901000:
 	mapwarp "job3_guil03","ve_fild02",330,379;	//Pre-RE: ve_fild05 (341,303)
@@ -2879,17 +2879,17 @@ OnStop:
 	stopnpctimer;
 	end;
 OnTouch:
-	mapannounce "job3_guil03","Man's voice : Umm? Is that a shadow in the window?",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Man's voice : Umm? Is that a shadow in the window?",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	initnpctimer;
 	end;
 OnTimer2000:
 	monster "job3_guil03",97,49,"Guard",1985,1,"#3rdgc_hide01::OnMyMobDead";
 	monster "job3_guil03",98,49,"Guard",1985,1,"#3rdgc_hide01::OnMyMobDead";
 	monster "job3_guil03",99,49,"Guard Dog",1866,1,"#3rdgc_hide01::OnMyMobDead";
-	mapannounce "job3_guil03","Guards : An invader!!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : An invader!!",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	end;
 OnTimer60000:
-	mapannounce "job3_guil03","Guards : Keep strict watch!!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : Keep strict watch!!",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	donpcevent "#3rdgc_guard::OnEnable";
 	stopnpctimer;
 	end;
@@ -2906,17 +2906,17 @@ OnStop:
 	stopnpctimer;
 	end;
 OnTouch:
-	mapannounce "job3_guil03","Man's voice : There is something outside!",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Man's voice : There is something outside!",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	initnpctimer;
 	end;
 OnTimer2000:
 	monster "job3_guil03",97,57,"Guard",1985,1,"#3rdgc_hide02::OnMyMobDead";
 	monster "job3_guil03",98,57,"Guard",1985,1,"#3rdgc_hide02::OnMyMobDead";
 	monster "job3_guil03",99,57,"Guard Dog",1866,1,"#3rdgc_hide02::OnMyMobDead";
-	mapannounce "job3_guil03","Guards : An invader!!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : An invader!!",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	end;
 OnTimer60000:
-	mapannounce "job3_guil03","Guards : Keep strict watch!!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : Keep strict watch!!",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	donpcevent "#3rdgc_guard::OnEnable";
 	stopnpctimer;
 	end;
@@ -2933,17 +2933,17 @@ OnStop:
 	stopnpctimer;
 	end;
 OnTouch:
-	mapannounce "job3_guil03","Man's voice : What is that?",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Man's voice : What is that?",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	initnpctimer;
 	end;
 OnTimer2000:
 	monster "job3_guil03",97,67,"Guard",1985,1,"#3rdgc_hide03::OnMyMobDead";
 	monster "job3_guil03",98,67,"Guard",1985,1,"#3rdgc_hide03::OnMyMobDead";
 	monster "job3_guil03",99,67,"Guard Dog",1866,1,"#3rdgc_hide03::OnMyMobDead";
-	mapannounce "job3_guil03","Guards : An invader!!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : An invader!!",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	end;
 OnTimer60000:
-	mapannounce "job3_guil03","Guards : Keep strict watch!!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : Keep strict watch!!",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	donpcevent "#3rdgc_guard::OnEnable";
 	stopnpctimer;
 	end;
@@ -2962,7 +2962,7 @@ OnStop:
 	stopnpctimer;
 	end;
 OnTimer5000:
-	mapannounce "job3_guil03","Guards : Take strict precaution outside!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : Take strict precaution outside!",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	donpcevent "Exterior Guard#g01::OnEnable";
 	donpcevent "Exterior Guard#g02::OnEnable";
 	donpcevent "Exterior Guard#g03::OnEnable";
@@ -2971,21 +2971,21 @@ OnTimer5000:
 	donpcevent "Exterior Guard#g06::OnEnable";
 	end;
 OnTimer8000:
-	mapannounce "job3_guil03","Guards : Take strict precaution of the front gate!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : Take strict precaution of the front gate!",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	donpcevent "Front Gate Guard#g01::OnEnable";
 	donpcevent "Front Gate Guard#g03::OnEnable";
 	donpcevent "Front Gate Guard#g04::OnEnable";
 	donpcevent "Front Gate Guard#g05::OnEnable";
 	end;
 OnTimer13000:
-	mapannounce "job3_guil03","Guards : Take strict precaution of the back gate!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : Take strict precaution of the back gate!",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	donpcevent "Back Gate Guard#g01::OnEnable";
 	donpcevent "Back Gate Guard#g03::OnEnable";
 	donpcevent "Back Gate Guard#g04::OnEnable";
 	donpcevent "Back Gate Guard#g05::OnEnable";
 	end;
 OnTimer16000:
-	mapannounce "job3_guil03","Guards : Take strict precaution of the interior!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : Take strict precaution of the interior!",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	donpcevent "Interior Guard#g01::OnEnable";
 	donpcevent "Interior Guard#g03::OnEnable";
 	donpcevent "Interior Guard#g04::OnEnable";
@@ -3030,10 +3030,10 @@ OnReset:
 	donpcevent "Exterior Guard#g06::OnReset";
 	end;
 OnTimer1000:
-	mapannounce "job3_guil03","Guards : Umm? I'm imagining things.",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : Umm? I'm imagining things.",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	end;
 OnTimer4000:
-	mapannounce "job3_guil03","Guards : Let's go back.",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : Let's go back.",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	end;
 OnTimer5000:
 	donpcevent "Front Gate Guard#g01::OnDisable";
@@ -3175,7 +3175,7 @@ OnReset:
 	killmonster "job3_guil03","Exterior Guard#g01::OnMyMobDead";
 	end;
 OnTouch:
-	mapannounce "job3_guil03","Guards : Who are you?!",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : Who are you?!",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	disablenpc "Exterior Guard#g01";
 	monster "job3_guil03",88,44,"Exterior Guard",1985,1,"Exterior Guard#g01::OnMyMobDead";
 	monster "job3_guil03",88,43,"Exterior Guard",1985,1,"Exterior Guard#g01::OnMyMobDead";
@@ -3198,7 +3198,7 @@ OnReset:
 	killmonster "job3_guil03","Exterior Guard#g02::OnMyMobDead";
 	end;
 OnTouch:
-	mapannounce "job3_guil03","Guards : Enemy?!",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : Enemy?!",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	disablenpc "Exterior Guard#g02";
 	monster "job3_guil03",88,55,"Exterior Guard",1985,1,"Exterior Guard#g02::OnMyMobDead";
 	monster "job3_guil03",88,54,"Exterior Guard",1985,1,"Exterior Guard#g02::OnMyMobDead";
@@ -3221,7 +3221,7 @@ OnReset:
 	killmonster "job3_guil03","Exterior Guard#g03::OnMyMobDead";
 	end;
 OnTouch:
-	mapannounce "job3_guil03","Guards : An invader, remove!",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : An invader, remove!",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	disablenpc "Exterior Guard#g03";
 	monster "job3_guil03",88,64,"Exterior Guard",1985,1,"Exterior Guard#g03::OnMyMobDead";
 	monster "job3_guil03",88,63,"Exterior Guard",1985,1,"Exterior Guard#g03::OnMyMobDead";
@@ -3244,7 +3244,7 @@ OnReset:
 	killmonster "job3_guil03","Exterior Guard#g04::OnMyMobDead";
 	end;
 OnTouch:
-	mapannounce "job3_guil03","Guards : Who are you?!",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : Who are you?!",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	disablenpc "Exterior Guard#g04";
 	monster "job3_guil03",73,62,"Exterior Guard",1985,1,"Exterior Guard#g04::OnMyMobDead";
 	monster "job3_guil03",73,61,"Exterior Guard",1985,1,"Exterior Guard#g04::OnMyMobDead";
@@ -3267,7 +3267,7 @@ OnReset:
 	killmonster "job3_guil03","Exterior Guard#g05::OnMyMobDead";
 	end;
 OnTouch:
-	mapannounce "job3_guil03","Guards : Who are you?!",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guards : Who are you?!",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	disablenpc "Exterior Guard#g05";
 	monster "job3_guil03",77,51,"Exterior Guards",1985,1,"Exterior Guard#g05::OnMyMobDead";
 	monster "job3_guil03",77,50,"Exterior Guards",1985,1,"Exterior Guard#g05::OnMyMobDead";
@@ -3290,7 +3290,7 @@ OnReset:
 	killmonster "job3_guil03","Exterior Guard#g06::OnMyMobDead";
 	end;
 OnTouch:
-	mapannounce "job3_guil03","Guard : Who are you?!",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guard : Who are you?!",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	disablenpc "Exterior Guard#g06";
 	monster "job3_guil03",73,34,"Exterior Guards",1985,1,"Exterior Guard#g06::OnMyMobDead";
 	monster "job3_guil03",73,33,"Exterior guards",1985,1,"Exterior Guard#g06::OnMyMobDead";
@@ -3312,7 +3312,7 @@ OnReset:
 	killmonster "job3_guil03","Guard Dog#dog01::OnMyMobDead";
 	end;
 OnTouch:
-	mapannounce "job3_guil03","You have been detected by the guard dog.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","You have been detected by the guard dog.",bc_map,C_LIME; //FW_NORMAL 12 0 0
 	disablenpc "Guard Dog#dog01";
 	monster "job3_guil03",110,27,"Guard Dog",1866,1,"Guard Dog#dog01::OnMyMobDead";
 	monster "job3_guil03",103,27,"Dog Trainer",1985,1,"Guard Dog#dog01::OnMyMobDead";
@@ -3335,7 +3335,7 @@ OnReset:
 	killmonster "job3_guil03","Guard Dog#dog02::OnMyMobDead";
 	end;
 OnTouch:
-	mapannounce "job3_guil03","You have been detected by the guard dog.",bc_map,"0x00ff00"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","You have been detected by the guard dog.",bc_map,C_LIME; //FW_NORMAL 12 0 0
 	disablenpc "Guard Dog#dog02";
 	monster "job3_guil03",124,27,"Guard Dog",1866,1,"Guard Dog#dog02::OnMyMobDead";
 	monster "job3_guil03",126,27,"Dog Trainer",1985,1,"Guard Dog#dog02::OnMyMobDead";
@@ -3392,7 +3392,7 @@ OnEnable:
 	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	end;
 OnStop:
-	mapannounce "job3_guil03","Guard : Am I imagining things? I just heard something...",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guard : Am I imagining things? I just heard something...",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	stopnpctimer;
 	end;
 OnReset:
@@ -3402,13 +3402,13 @@ OnMyMobDead:
 	initnpctimer;
 	end;
 OnTimer3000:
-	mapannounce "job3_guil03","Guard : Huh? What's that sound. Hey, what's going on?",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guard : Huh? What's that sound. Hey, what's going on?",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	end;
 OnTimer70000:
-	mapannounce "job3_guil03","Guard : What's the matter?",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guard : What's the matter?",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	end;
 OnTimer10000:
-	mapannounce "job3_guil03","Guard : Something's wrong, take caution!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guard : Something's wrong, take caution!",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	donpcevent "#3rdgc_guard::OnEnable";
 	stopnpctimer;
 	end;
@@ -3425,7 +3425,7 @@ OnDisable:
 	disablenpc strnpcinfo(NPC_NAME);
 	end;
 OnStop:
-	mapannounce "job3_guil03","Guard : Am I imagining things? I just heard something.",bc_map,"0xA8A8A8"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guard : Am I imagining things? I just heard something.",bc_map,C_SILVER_CHALICE; //FW_NORMAL 12 0 0
 	stopnpctimer;
 	end;
 OnReset:
@@ -3435,7 +3435,7 @@ OnTouch:
 	.@i = atoi(charat(strnpcinfo(NPC_NAME),19));
 	setarray .@x[1],64,86,83;
 	setarray .@y[1],68,63,36;
-	mapannounce "job3_guil03","Guard : Who are you?!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guard : Who are you?!",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	disablenpc strnpcinfo(NPC_NAME);
 	monster "job3_guil03",.@x[.@i],.@y[.@i],"Guard",1985,1,strnpcinfo(NPC_NAME)+"::OnMyMobDead";
 	initnpctimer;
@@ -3446,7 +3446,7 @@ OnMyMobDead:
 OnTimer5000:
 	if (strnpcinfo(NPC_NAME) == "#3rdgc_gojung_kill03") end;
 OnTimer10000:
-	mapannounce "job3_guil03","Guard : I need support! Take caution!",bc_map,"0x7b68ee"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Guard : I need support! Take caution!",bc_map,C_CORNFLOWER_BLUE; //FW_NORMAL 12 0 0
 	donpcevent "#3rdgc_guard::OnEnable";
 	stopnpctimer;
 	end;
@@ -3523,15 +3523,15 @@ OnReset:
 	end;
 OnMyMobDead:
 	donpcevent "Renzak#3rdgc16::OnEnable";
-	mapannounce "job3_guil03","I... I can't die in vain...",bc_map,"0xFF0000"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","I... I can't die in vain...",bc_map,C_RED; //FW_NORMAL 12 0 0
 	donpcevent "#3rdgc_event01::OnStop";
 	initnpctimer;
 	end;
 OnTimer3000:
-	mapannounce "job3_guil03","Renzak : Hey! Come out!",bc_map,"0x4d4dff"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Renzak : Hey! Come out!",bc_map,C_DODGER_BLUE; //FW_NORMAL 12 0 0
 	end;
 OnTimer40000:
-	mapannounce "job3_guil03","Renzak : Don't lag!",bc_map,"0x4d4dff"; //FW_NORMAL 12 0 0
+	mapannounce "job3_guil03","Renzak : Don't lag!",bc_map,C_DODGER_BLUE; //FW_NORMAL 12 0 0
 	end;
 OnTimer60000:
 	mapwarp "job3_guil03","ve_fild02",330,379;	//Pre-RE: ve_fild05 (341,303)

@@ -638,7 +638,7 @@ OnStartArena:
 	disablenpc "Kafra Employee#"+strnpcinfo(NPC_NAME_HIDDEN);
 
 	announce "The ["+getguildname(.@GID)+"] guild conquered the ["+.@region$+" "+charat(strnpcinfo(NPC_NAME_HIDDEN),3)+"] stronghold of "+getcastlename(strnpcinfo(NPC_MAP))+"!",bc_all|bc_woe;
-	mapannounce strnpcinfo(NPC_MAP),"The emperium has been shattered!",bc_map,"0x00FF00",FW_NORMAL,20,0,40;
+	mapannounce strnpcinfo(NPC_MAP),"The emperium has been shattered!",bc_map,C_LIME,FW_NORMAL,20,0,40;
 	donpcevent "Manager#"+strnpcinfo(NPC_MAP)+"::OnReset";
 	maprespawnguildid strnpcinfo(NPC_MAP),getcastledata(strnpcinfo(NPC_MAP),1),2;
 	donpcevent "Manager#"+strnpcinfo(NPC_MAP)+"::OnRecvCastle2";
@@ -646,7 +646,7 @@ OnStartArena:
 	sleep 10000;
 	if (agitcheck2()) {
 		donpcevent "Manager#"+strnpcinfo(NPC_MAP)+"::OnChange";
-		mapannounce strnpcinfo(NPC_MAP),"Rebuild this stronghold's Guardian Stones and Fortress Gates to secure your guild's new aquisition!",bc_map,"0x00FF00",FW_NORMAL,20,0,40;
+		mapannounce strnpcinfo(NPC_MAP),"Rebuild this stronghold's Guardian Stones and Fortress Gates to secure your guild's new aquisition!",bc_map,C_LIME,FW_NORMAL,20,0,40;
 	}
 	end;
 }
@@ -1073,10 +1073,10 @@ OnInit:
 						setd .@var$+"["+(.@num-1)+"]",0;
 						.@df_all = getd(.@var$+"[0]")+getd(.@var$+"[1]");
 						if (!.@df_all) {
-							mapannounce strnpcinfo(NPC_MAP),"Both Guardian Stones have been erected, bolstering this stronghold's defenses!",bc_map,"0x00ff00";
+							mapannounce strnpcinfo(NPC_MAP),"Both Guardian Stones have been erected, bolstering this stronghold's defenses!",bc_map,C_LIME;
 							donpcevent "RL0#"+strnpcinfo(NPC_MAP)+"::OnEnable";
 						}
-						else mapannounce strnpcinfo(NPC_MAP),"The "+strnpcinfo(NPC_NAME_VISIBLE)+" has been repaired successfully.",bc_map,"0x00ff00";
+						else mapannounce strnpcinfo(NPC_MAP),"The "+strnpcinfo(NPC_NAME_VISIBLE)+" has been repaired successfully.",bc_map,C_LIME;
 						if (getd(.@var$+"[5]") == 1)
 							donpcevent "gard"+.@num+"#"+strnpcinfo(NPC_MAP)+"::OnEnable";
 						end;
@@ -1314,7 +1314,7 @@ OnEnable:
 							if (.@num == 1) .@str$ = "1st";
 							else if (.@num == 2) .@str$ = "2nd";
 							else if (.@num == 3) .@str$ = "3rd";
-							mapannounce strnpcinfo(NPC_MAP),"The "+.@str$+" Fortress Gate has been reconstructed!",bc_map,"0x00ff00";
+							mapannounce strnpcinfo(NPC_MAP),"The "+.@str$+" Fortress Gate has been reconstructed!",bc_map,C_LIME;
 							if (.@num == 1) setd .@var$+"[2]",0;
 							else {
 								setarray getd(.@var$+"["+.@num+"]"),2,0;
@@ -1433,7 +1433,7 @@ OnTimer3600000:
 	set getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN)),getd(".MyMobCount_"+charat(strnpcinfo(NPC_NAME_VISIBLE),4)+strnpcinfo(NPC_NAME_HIDDEN))+1;
 	callsub OnSummon,getd(.@var$);
 	setarray .count$[5],"1st","2nd","3rd","4th","5th";
-	mapannounce strnpcinfo(NPC_NAME_HIDDEN),"The "+.count$[getd(.@var$)]+" Guardian has been summoned from the Gate House.",bc_map,"0xff4500";
+	mapannounce strnpcinfo(NPC_NAME_HIDDEN),"The "+.count$[getd(.@var$)]+" Guardian has been summoned from the Gate House.",bc_map,C_VERMILION_3;
 	if (getd(.@var$) == 9) {
 		setd .@var$,0;
 		stopnpctimer;
@@ -1513,10 +1513,10 @@ OnGuardianStoneDied:
 		++.@destroyed;
 	}
 	if (.@destroyed == 2) {
-		mapannounce strnpcinfo(NPC_NAME_HIDDEN),"All of the Guardian Stones have been destroyed!",bc_map,"0x00ff00";
+		mapannounce strnpcinfo(NPC_NAME_HIDDEN),"All of the Guardian Stones have been destroyed!",bc_map,C_LIME;
 		donpcevent "RL0#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnDisable";
 	}
-	else mapannounce strnpcinfo(NPC_NAME_HIDDEN),"The "+((.@num == 1)?"1st":"2nd")+" Guardian Stone has been destroyed!",bc_map,"0x00ff00";
+	else mapannounce strnpcinfo(NPC_NAME_HIDDEN),"The "+((.@num == 1)?"1st":"2nd")+" Guardian Stone has been destroyed!",bc_map,C_LIME;
 	donpcevent "gard"+.@num+"#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnReset";
 	initnpctimer;
 	end;
@@ -1694,7 +1694,7 @@ OnBarrierDestroyed:
 		.@var$ = substr(strnpcinfo(NPC_NAME_HIDDEN),0,1)+substr(strnpcinfo(NPC_NAME_HIDDEN),8,9);
 		setd "$agit_"+.@var$+"["+(.@num+1)+"]",1;
 		setarray .@count$[0],"1st","2nd","3rd";
-		mapannounce strnpcinfo(NPC_NAME_HIDDEN),"The "+.@count$[.@num-1]+" Fortress Gate is destroyed.",bc_map,"0x00ff00";
+		mapannounce strnpcinfo(NPC_NAME_HIDDEN),"The "+.@count$[.@num-1]+" Fortress Gate is destroyed.",bc_map,C_LIME;
 		delwall .@var$+"_"+strnpcinfo(NPC_NAME_VISIBLE);
 	}
 	end;

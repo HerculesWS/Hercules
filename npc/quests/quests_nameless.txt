@@ -3156,47 +3156,47 @@ OnTouch:
 	end;
 
 OnTimer4000:
-	mapannounce "rachel","Pope: Citizens of Arunafeltz. High Priests and Priestesses.",bc_map,"0xFFCE00";
+	mapannounce "rachel","Pope: Citizens of Arunafeltz. High Priests and Priestesses.",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer7000:
-	mapannounce "rachel","Pope: I appreciate you all for coming to the Sky Garden as I've asked.",bc_map,"0xFFCE00";
+	mapannounce "rachel","Pope: I appreciate you all for coming to the Sky Garden as I've asked.",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer10000:
-	mapannounce "rachel","Pope: As the chosen vessel of Goddess Freya, I hereby announce the words I received from her yesterday.",bc_map,"0xFFCE00";
+	mapannounce "rachel","Pope: As the chosen vessel of Goddess Freya, I hereby announce the words I received from her yesterday.",bc_map,C_SUPER_NOVA;
 	end;
 
 OnTimer15000:
-	mapannounce "rachel","Pope: I have observed all that is happening in Arunafeltz.",bc_map,"0x66CCCC";
+	mapannounce "rachel","Pope: I have observed all that is happening in Arunafeltz.",bc_map,C_DOWNY;
 	end;
 
 OnTimer19000:
-	mapannounce "rachel","Pope: I am aware of the factioning between the High Priests, their selfish fighting, their failure to achieve solidarity.",bc_map,"0x66CCCC";
+	mapannounce "rachel","Pope: I am aware of the factioning between the High Priests, their selfish fighting, their failure to achieve solidarity.",bc_map,C_DOWNY;
 	end;
 
 OnTimer23000:
-	mapannounce "rachel","Pope: However, I did not intervene for the sake of those that still pray for peace in Arunafeltz.",bc_map,"0x66CCCC";
+	mapannounce "rachel","Pope: However, I did not intervene for the sake of those that still pray for peace in Arunafeltz.",bc_map,C_DOWNY;
 	end;
 
 OnTimer30000:
-	mapannounce "rachel","Pope: High Priest Zhed and High Priestess Niren, both of you must do your best to assist my vessel until the day of my arrival.",bc_map,"0x66CCCC";
+	mapannounce "rachel","Pope: High Priest Zhed and High Priestess Niren, both of you must do your best to assist my vessel until the day of my arrival.",bc_map,C_DOWNY;
 	end;
 
 OnTimer35000:
-	mapannounce "rachel","Pope: As for the other high priests, you have forgotten your duty to serve me, to enlighten my followers with my teachings. For pursuing your selfish desires, you will be all under Zhed and Niren's command.",bc_map,"0x66CCCC";
+	mapannounce "rachel","Pope: As for the other high priests, you have forgotten your duty to serve me, to enlighten my followers with my teachings. For pursuing your selfish desires, you will be all under Zhed and Niren's command.",bc_map,C_DOWNY;
 	end;
 
 OnTimer43000:
-	mapannounce "rachel","Pope: My followers in Arunafeltz, keep your faith in me, and keep your country strong.",bc_map,"0x66CCCC";
+	mapannounce "rachel","Pope: My followers in Arunafeltz, keep your faith in me, and keep your country strong.",bc_map,C_DOWNY;
 	end;
 
 OnTimer47000:
-	mapannounce "rachel","Pope: Then, paradise will surely be yours.",bc_map,"0x66CCCC";
+	mapannounce "rachel","Pope: Then, paradise will surely be yours.",bc_map,C_DOWNY;
 	end;
 
 OnTimer53000:
-	mapannounce "rachel","Citizens: Hail Freya! Hail to the Pope!",bc_map,"0x99CC00";
+	mapannounce "rachel","Citizens: Hail Freya! Hail to the Pope!",bc_map,C_PISTACHIO;
 	stopnpctimer;
 	enablenpc "#em_end";
 	end;
@@ -8795,35 +8795,35 @@ OnDisable:
 
 OnTimer3000:
 	killmonster "z_agit","#ZGuard::OnMyMobDead";
-	mapannounce "z_agit","Catfoii: Err? I heard something, meow! We must be under attack, meow!",bc_map,"0xFFFF00";
+	mapannounce "z_agit","Catfoii: Err? I heard something, meow! We must be under attack, meow!",bc_map,C_YELLOW;
 	end;
 
 OnTimer5000:
-	mapannounce "z_agit","Louis: Hey, Martha! Are you the one who just got in?",bc_map,"0xFFFF00";
+	mapannounce "z_agit","Louis: Hey, Martha! Are you the one who just got in?",bc_map,C_YELLOW;
 	end;
 
 OnTimer7000:
-	mapannounce "z_agit","Martha: Louis, are you blind? I've been next to you this whole time! We'd better hide first.",bc_map,"0xFFFF00";
+	mapannounce "z_agit","Martha: Louis, are you blind? I've been next to you this whole time! We'd better hide first.",bc_map,C_YELLOW;
 	end;
 
 OnTimer9000:
-	mapannounce "z_agit","Louis: We have an intruder! Hey, Catfoii, what happened? Did you leave the entrance open?",bc_map,"0xFFFF00";
+	mapannounce "z_agit","Louis: We have an intruder! Hey, Catfoii, what happened? Did you leave the entrance open?",bc_map,C_YELLOW;
 	end;
 
 OnTimer11000:
-	mapannounce "z_agit","Catfoii: No, impossible, meow~! I have a photographic memory!",bc_map,"0xFFFF00";
+	mapannounce "z_agit","Catfoii: No, impossible, meow~! I have a photographic memory!",bc_map,C_YELLOW;
 	end;
 
 OnTimer13000:
-	mapannounce "z_agit","Martha: Shut up, both of you! I don't know who you are, but you must have a lot of guts to mess with the Z Gang!",bc_map,"0xFFFF00";
+	mapannounce "z_agit","Martha: Shut up, both of you! I don't know who you are, but you must have a lot of guts to mess with the Z Gang!",bc_map,C_YELLOW;
 	end;
 
 OnTimer15000:
-	mapannounce "z_agit","Louis: Catfoii, summon the soldiers! This is an emergency! Stop the intruder!",bc_map,"0xFFFF00";
+	mapannounce "z_agit","Louis: Catfoii, summon the soldiers! This is an emergency! Stop the intruder!",bc_map,C_YELLOW;
 	end;
 
 OnTimer18000:
-	mapannounce "z_agit","Catfoii: I haven't seen how strong they are, but... Meowkay. Guys, go out and fight!",bc_map,"0xFFFF00";
+	mapannounce "z_agit","Catfoii: I haven't seen how strong they are, but... Meowkay. Guys, go out and fight!",bc_map,C_YELLOW;
 	end;
 
 OnTimer21000:

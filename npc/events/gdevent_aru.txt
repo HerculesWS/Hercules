@@ -42,8 +42,8 @@ OnInit:
 
 OnTimer3600000:
 	donpcevent "Monster Controler1#aru::OnEnable";
-	mapannounce "arug_dun01", "Kublin: Aargh!",bc_map,"0x99CC00";
-	mapannounce "arug_dun01", "Morestone: Stop righ there! You thief!",bc_map,"0x99CC00";
+	mapannounce "arug_dun01", "Kublin: Aargh!",bc_map,C_PISTACHIO;
+	mapannounce "arug_dun01", "Morestone: Stop righ there! You thief!",bc_map,C_PISTACHIO;
 	stopnpctimer;
 	end;
 }
@@ -71,8 +71,8 @@ OnKill:
 
 OnMyMobDead:
 	if (mobcount("arug_dun01","Monster Controler1#aru::OnMyMobDead") == 0) {
-		mapannounce "arug_dun01", "Kublin: Aargh!",bc_map,"0x99CC00";
-		mapannounce "arug_dun01", "Morestone: I thought I heard Kublin screaming!! Who is there? What happened to Kublin? Hey you!",bc_map,"0x99CC00";
+		mapannounce "arug_dun01", "Kublin: Aargh!",bc_map,C_PISTACHIO;
+		mapannounce "arug_dun01", "Morestone: I thought I heard Kublin screaming!! Who is there? What happened to Kublin? Hey you!",bc_map,C_PISTACHIO;
 		donpcevent "Dwarf#aru_gd::OnEnable";
 	}
 	end;
@@ -535,46 +535,46 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				mes "[Pierrot Pier]";
 				mes "Beep beep beep.";
 				mes "Hello, my friends!";
-				mapannounce "arug_que01", "Pierrot Pier: Beep beep beep! Hello, my friends!",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Beep beep beep! Hello, my friends!",bc_map,C_PISTACHIO;
 				next;
 				mes "[Pierrot Pier]";
 				mes "I am the loyal servant of Gergath, and I have finally received my orders.";
 				mes "I am happy to hear all the laughter, but without my master's permission, I can't do anything.";
-				mapannounce "arug_que01", "Pierrot Pier: I am happy to hear all the laughter, but without my master's permission, I can't do anything.",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: I am happy to hear all the laughter, but without my master's permission, I can't do anything.",bc_map,C_PISTACHIO;
 				next;
 				mes "[Pierrot Pier]";
 				mes "Did you get permission from Gergath?";
-				mapannounce "arug_que01", "Pierrot Pier: Did you get permission from Gergath?",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Did you get permission from Gergath?",bc_map,C_PISTACHIO;
 				next;
 				switch(select("I need to check that.", "No.")) {
 				case 1:
 					mes "[Pierrot Pier]";
 					mes "Please give me the palm of your hand.";
-					mapannounce "arug_que01", "Pierrot Pier: Please give me the palm of your hand.",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: Please give me the palm of your hand.",bc_map,C_PISTACHIO;
 					next;
 					mes "[Pierrot Pier]";
 					mes "Let me see...";
-					mapannounce "arug_que01", "Pierrot Pier: Let me see...",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: Let me see...",bc_map,C_PISTACHIO;
 					next;
 					emotion e_dots;
 					mes "[Pierrot Pier]";
 					mes "Hm...";
-					mapannounce "arug_que01", "Pierrot Pier: Hm...",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: Hm...",bc_map,C_PISTACHIO;
 					next;
 					emotion e_dots;
 					mes "[Pierrot Pier]";
 					mes "Okay, I see...";
-					mapannounce "arug_que01", "Pierrot Pier: Okay, I see...",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: Okay, I see...",bc_map,C_PISTACHIO;
 					next;
 					emotion e_dots;
 					mes "[Pierrot Pier]";
 					mes "Indeed...";
-					mapannounce "arug_que01", "Pierrot Pier: Indeed...",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: Indeed...",bc_map,C_PISTACHIO;
 					next;
 					emotion e_bzz;
 					mes "[Pierrot Pier]";
 					mes "Verification completed!";
-					mapannounce "arug_que01", "Pierrot Pier: Verification completed!",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: Verification completed!",bc_map,C_PISTACHIO;
 					next;
 					break;
 				case 2:
@@ -585,18 +585,18 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				}
 				mes "[Pierrot Pier]";
 				mes "^3131FF<You're someone who can only think about nonsense everyday, you have no focus at all.>^000000";
-				mapannounce "arug_que01", "Pierrot Pier: <You're someone who can only think about nonsense everyday, you have no focus at all.>",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: <You're someone who can only think about nonsense everyday, you have no focus at all.>",bc_map,C_PISTACHIO;
 				next;
 				emotion e_ho;
 				mes "[Pierrot Pier]";
 				mes "Hm? You don't think so?";
-				mapannounce "arug_que01", "Pierrot Pier: Hm? You don't think so?",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Hm? You don't think so?",bc_map,C_PISTACHIO;
 				next;
 				emotion e_heh;
 				mes "[Pierrot Pier]";
 				mes "Haha, I'm just kidding. Beep beep.";
 				mes "Ah, you are the one my master speaks of.";
-				mapannounce "arug_que01", "Pierrot Pier: Haha, I'm just kidding. Beep beep. You are the one my master speaks of.",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Haha, I'm just kidding. Beep beep. You are the one my master speaks of.",bc_map,C_PISTACHIO;
 				next;
 				mes "[Pierrot Pier]";
 				mes "Come, the Gergath has left a message for you.";
@@ -624,22 +624,22 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				case 1:
 					mes "[Pierrot Pier]";
 					mes "The game prepared by my master is very unique, yet simple and fun!";
-					mapannounce "arug_que01", "Pierrot Pier: The game prepared by my lord is very unique, yet simple and fun!",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: The game prepared by my lord is very unique, yet simple and fun!",bc_map,C_PISTACHIO;
 					next;
 					mes "[Pierrot Pier]";
 					mes "It's called \"Find the Treasure Map\"!!";
-					mapannounce "arug_que01", "Pierrot Pier: It's called \"Find the Treasure Map\"!!",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: It's called \"Find the Treasure Map\"!!",bc_map,C_PISTACHIO;
 					next;
 					mes "[Pierrot Pier]";
 					mes "Do you see this large and green field? Beep, beep?";
 					mes "I will show you the most incredible magic here.";
 					mes "I will turn this place very white. Veeery white!";
-					mapannounce "arug_que01", "Pierrot Pier: I will turn this place very white. Veeery white!",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: I will turn this place very white. Veeery white!",bc_map,C_PISTACHIO;
 					next;
 					mes "[Pierrot Pier]";
 					mes "The game instruction is just to find the treasure map within the time limit.";
 					mes "Sounds easy, right?";
-					mapannounce "arug_que01", "Pierrot Pier: The game instruction is just to find the treasure map within the time limit. ounds easy, right?",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: The game instruction is just to find the treasure map within the time limit. ounds easy, right?",bc_map,C_PISTACHIO;
 					next;
 					break;
 				case 2:
@@ -665,19 +665,19 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 					next;
 					mes "[Pierrot Pier]";
 					mes "Ladies, and gentlemen.";
-					mapannounce "arug_que01", "Pierrot Pier: Ladies, and gentlemen.",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: Ladies, and gentlemen.",bc_map,C_PISTACHIO;
 					next;
 					mes "[Pierrot Pier]";
 					mes "Who will find the treasure map in this white world?";
-					mapannounce "arug_que01", "Pierrot Pier: Who will find the treasure map in this white world?",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: Who will find the treasure map in this white world?",bc_map,C_PISTACHIO;
 					next;
 					mes "[Pierrot Pier]";
 					mes "Amongst all of you, who shall be the lucky one?";
-					mapannounce "arug_que01", "Pierrot Pier: Amongst all of you, who shall be the lucky one?",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: Amongst all of you, who shall be the lucky one?",bc_map,C_PISTACHIO;
 					next;
 					mes "[Pierrot Pier]";
 					mes "Let the game.. Begin!";
-					mapannounce "arug_que01", "Pierrot Pier: Let the game.. Begin!",bc_map,"0x99CC00";
+					mapannounce "arug_que01", "Pierrot Pier: Let the game.. Begin!",bc_map,C_PISTACHIO;
 					$@gdeventv_a2 = 1;
 					donpcevent "Controller#gdevent_a::OnGame_start";
 					erasequest 2143;
@@ -701,7 +701,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				mes "Wow~~!!";
 				mes "Success~!!";
 				mes "What a success~!!";
-				mapannounce "arug_que01", "Pierrot Pier: Wow~~!! Success~!! What a success~!!",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Wow~~!! Success~!! What a success~!!",bc_map,C_PISTACHIO;
 				delitem Glitering_PaperB,1;
 				close;
 			}
@@ -744,17 +744,17 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			}
 			mes "[Pierrot Pier]";
 			mes "I, Pierrot Piere, am not a heartless clown! Beep beep.";
-			mapannounce "arug_que01", "Pierrot Pier: I, Pierrot Piere, am not a heartless clown! Beep beep.",bc_map,"0x99CC00";
+			mapannounce "arug_que01", "Pierrot Pier: I, Pierrot Piere, am not a heartless clown! Beep beep.",bc_map,C_PISTACHIO;
 			next;
 			mes "[Pierrot Pier]";
 			mes "Your success is my happiness!";
 			mes "I'll give you one more chance. How's that? Beep?";
-			mapannounce "arug_que01", "Pierrot Pier: I'll give you one more chance. How's that? Beep?",bc_map,"0x99CC00";
+			mapannounce "arug_que01", "Pierrot Pier: I'll give you one more chance. How's that? Beep?",bc_map,C_PISTACHIO;
 			next;
 			mes "[Pierrot Pier]";
 			mes "Okay, I'm ready to begin.";
 			mes "Shall we start? Beep, beep?";
-			mapannounce "arug_que01", "Pierrot Pier: Okay, I'm ready to begin. Shall we start? Beep, beep?",bc_map,"0x99CC00";
+			mapannounce "arug_que01", "Pierrot Pier: Okay, I'm ready to begin. Shall we start? Beep, beep?",bc_map,C_PISTACHIO;
 			next;
 			switch(select("No.", "Start.")) {
 			case 1:
@@ -767,19 +767,19 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				next;
 				mes "[Pierrot Pier]";
 				mes "Ladies, and gentlemen.";
-				mapannounce "arug_que01", "Pierrot Pier: Ladies, and gentlemen.",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Ladies, and gentlemen.",bc_map,C_PISTACHIO;
 				next;
 				mes "[Pierrot Pier]";
 				mes "Who will find the treasure map in this white world?";
-				mapannounce "arug_que01", "Pierrot Pier: Who will find the treasure map in this white world?",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Who will find the treasure map in this white world?",bc_map,C_PISTACHIO;
 				next;
 				mes "[Pierrot Pier]";
 				mes "Amongst all of you, who shall be the lucky one?";
-				mapannounce "arug_que01", "Pierrot Pier: Amongst all of you, who shall be the lucky one?",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Amongst all of you, who shall be the lucky one?",bc_map,C_PISTACHIO;
 				next;
 				mes "[Pierrot Pier]";
 				mes "Let the game.. Begin!";
-				mapannounce "arug_que01", "Pierrot Pier: Let the game.. Begin!",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Let the game.. Begin!",bc_map,C_PISTACHIO;
 				$@gdeventv_a2 = 10;
 				donpcevent "Controller#gdevent_a::OnGame_start";
 				close;
@@ -791,17 +791,17 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			}
 			mes "[Pierrot Pier]";
 			mes "How did you do it?";
-			mapannounce "arug_que01", "Pierrot Pier: How did you do it?",bc_map,"0x99CC00";
+			mapannounce "arug_que01", "Pierrot Pier: How did you do it?",bc_map,C_PISTACHIO;
 			next;
 			mes "[Pierrot Pier]";
 			mes "You managed to find a needle in a haystack!";
 			mes "Amazing!";
-			mapannounce "arug_que01", "Pierrot Pier: You managed to find a needle in a haystack! Amazing!!",bc_map,"0x99CC00";
+			mapannounce "arug_que01", "Pierrot Pier: You managed to find a needle in a haystack! Amazing!!",bc_map,C_PISTACHIO;
 			next;
 			mes "[Pierrot Pier]";
 			mes "You've completeled an unbelievable task, I will give you the wonderful gift master has prepared!! Ha!";
-			mapannounce "arug_que01", "Pierrot Pier: You've completeled an unbelievable task, I will give you the wonderful gift my master has prepared!! Ha!",bc_map,"0x99CC00";
-			mapannounce "arug_que01", "Pierrot Pier: Here, take Pierre's Treasure Boxes.",bc_map,"0x99CC00";
+			mapannounce "arug_que01", "Pierrot Pier: You've completeled an unbelievable task, I will give you the wonderful gift my master has prepared!! Ha!",bc_map,C_PISTACHIO;
+			mapannounce "arug_que01", "Pierrot Pier: Here, take Pierre's Treasure Boxes.",bc_map,C_PISTACHIO;
 			donpcevent "eff_mvp#aru_gd::OnMVP";
 			$@gdeventv_a2 = 5;
 			getitem Pierre_Treasurebox,10;
@@ -813,7 +813,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			close;
 		}
 		else if ($@gdeventv_a2 == 5) {
-			mapannounce "arug_que01", "Pierrot Pier: Seeing your smiles, makes Pierrot feel very happy~ See you next time!",bc_map,"0x99CC00";
+			mapannounce "arug_que01", "Pierrot Pier: Seeing your smiles, makes Pierrot feel very happy~ See you next time!",bc_map,C_PISTACHIO;
 			mes "[Pierrot Pier]";
 			mes "Did you have fun?";
 			next;
@@ -873,46 +873,46 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 			mes "[Pierrot Pier]";
 			mes "Beep beep beep.";
 			mes "Hello, my friends!";
-			mapannounce "arug_que01", "Pierrot Pier: Beep beep beep! Hello, my friends!",bc_map,"0x99CC00";
+			mapannounce "arug_que01", "Pierrot Pier: Beep beep beep! Hello, my friends!",bc_map,C_PISTACHIO;
 			next;
 			mes "[Pierrot Pier]";
 			mes "I am the loyal servant of Gergath, and I have finally received my orders.";
 			mes "I am happy to hear all the laughter, but without my master's permission, I can't do anything.";
-			mapannounce "arug_que01", "Pierrot Pier: I am happy to hear all the laughter, but without my master's permission, I can't do anything.",bc_map,"0x99CC00";
+			mapannounce "arug_que01", "Pierrot Pier: I am happy to hear all the laughter, but without my master's permission, I can't do anything.",bc_map,C_PISTACHIO;
 			next;
 			mes "[Pierrot Pier]";
 			mes "Did you get permission from the Gergath?";
-			mapannounce "arug_que01", "Pierrot Pier: Did you get permission from Gergath?",bc_map,"0x99CC00";
+			mapannounce "arug_que01", "Pierrot Pier: Did you get permission from Gergath?",bc_map,C_PISTACHIO;
 			next;
 			switch(select("I need to check that.", "No.")) {
 			case 1:
 				mes "[Pierrot Pier]";
 				mes "Please give me the palm of your hand.";
-				mapannounce "arug_que01", "Pierrot Pier: Please give me the palm of your hand.",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Please give me the palm of your hand.",bc_map,C_PISTACHIO;
 				next;
 				mes "[Pierrot Pier]";
 				mes "Let me see...";
-				mapannounce "arug_que01", "Pierrot Pier: Let me see...",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Let me see...",bc_map,C_PISTACHIO;
 				next;
 				emotion e_dots;
 				mes "[Pierrot Pier]";
 				mes "Hm...";
-				mapannounce "arug_que01", "Pierrot Pier: Hm...",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Hm...",bc_map,C_PISTACHIO;
 				next;
 				emotion e_dots;
 				mes "[Pierrot Pier]";
 				mes "Okay, I see...";
-				mapannounce "arug_que01", "Pierrot Pier: Okay, I see...",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Okay, I see...",bc_map,C_PISTACHIO;
 				next;
 				emotion e_dots;
 				mes "[Pierrot Pier]";
 				mes "Indeed...";
-				mapannounce "arug_que01", "Pierrot Pier: Indeed...",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Indeed...",bc_map,C_PISTACHIO;
 				next;
 				emotion e_bzz;
 				mes "[Pierrot Pier]";
 				mes "Verification completed!";
-				mapannounce "arug_que01", "Pierrot Pier: Verification completed!",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Verification completed!",bc_map,C_PISTACHIO;
 				next;
 				break;
 			case 2:
@@ -952,7 +952,7 @@ arug_que01,100,81,3	script	Pierrot Pier#aru_gd	4_M_PIERROT,{
 				mes "Wow~~!!";
 				mes "Success~!!";
 				mes "What a success~!!";
-				mapannounce "arug_que01", "Pierrot Pier: Wow~~!! Success~!! What a success~!!",bc_map,"0x99CC00";
+				mapannounce "arug_que01", "Pierrot Pier: Wow~~!! Success~!! What a success~!!",bc_map,C_PISTACHIO;
 				delitem Glitering_PaperB,1;
 				close;
 			}
@@ -1092,11 +1092,11 @@ OnStop:
 	end;
 
 OnTimer40000:
-	mapannounce "arug_que01", "Pierrot Pier: Time is running out, hurry up!",bc_map,"0x99CC00";
+	mapannounce "arug_que01", "Pierrot Pier: Time is running out, hurry up!",bc_map,C_PISTACHIO;
 	end;
 
 OnTimer60000:
-	mapannounce "arug_que01", "Pierrot Pier: Time is up!",bc_map,"0x99CC00";
+	mapannounce "arug_que01", "Pierrot Pier: Time is up!",bc_map,C_PISTACHIO;
 	mapwarp "arug_que01","arug_que01",100,79;
 	enablenpc "removepp_aru_gd";
 	$@gdeventv_a2 = 2;
@@ -1396,43 +1396,43 @@ OnEnable:
 	end;
 
 OnTimer5000:
-	mapannounce "arug_que01", "Gergath : My dear friend, how have you been? This is something I prepared for you.",bc_map,"0xFFFF00";
+	mapannounce "arug_que01", "Gergath : My dear friend, how have you been? This is something I prepared for you.",bc_map,C_YELLOW;
 	end;
 
 OnTimer10000:
-	mapannounce "arug_que01", "Gergath : Do you still remember when we were young? We fought everyday like we were sworn enemies.",bc_map,"0xFFFF00";
+	mapannounce "arug_que01", "Gergath : Do you still remember when we were young? We fought everyday like we were sworn enemies.",bc_map,C_YELLOW;
 	end;
 
 OnTimer15000:
-	mapannounce "arug_que01", "Gergath : No matter how hard the adults tried, we had no intentions to change. Haha.",bc_map,"0xFFFF00";
+	mapannounce "arug_que01", "Gergath : No matter how hard the adults tried, we had no intentions to change. Haha.",bc_map,C_YELLOW;
 	end;
 
 OnTimer20000:
-	mapannounce "arug_que01", "Gergath : But I believe that deep inside, we valued our friendship with each other.",bc_map,"0xFFFF00";
+	mapannounce "arug_que01", "Gergath : But I believe that deep inside, we valued our friendship with each other.",bc_map,C_YELLOW;
 	end;
 
 OnTimer25000:
-	mapannounce "arug_que01", "Gergath : After I lost my mother's remnants in Mt. Mjolnir, you came to find me.",bc_map,"0xFFFF00";
+	mapannounce "arug_que01", "Gergath : After I lost my mother's remnants in Mt. Mjolnir, you came to find me.",bc_map,C_YELLOW;
 	end;
 
 OnTimer30000:
-	mapannounce "arug_que01", "Gergath : When you, handed me my mother's remnants, I couldn't even say thank you.",bc_map,"0xFFFF00";
+	mapannounce "arug_que01", "Gergath : When you, handed me my mother's remnants, I couldn't even say thank you.",bc_map,C_YELLOW;
 	end;
 
 OnTimer35000:
-	mapannounce "arug_que01", "Gergath : I couldn't say it even as I became an old man.",bc_map,"0xFFFF00";
+	mapannounce "arug_que01", "Gergath : I couldn't say it even as I became an old man.",bc_map,C_YELLOW;
 	end;
 
 OnTimer40000:
-	mapannounce "arug_que01", "Gergath : I found out about your whereabouts not long ago. I heard you were taking care of orphaned children?",bc_map,"0xFFFF00";
+	mapannounce "arug_que01", "Gergath : I found out about your whereabouts not long ago. I heard you were taking care of orphaned children?",bc_map,C_YELLOW;
 	end;
 
 OnTimer45000:
-	mapannounce "arug_que01", "Gergath : Please accept this as a gift from a useless friend to you and your beloved children. I hope you will like it, haha.",bc_map,"0xFFFF00";
+	mapannounce "arug_que01", "Gergath : Please accept this as a gift from a useless friend to you and your beloved children. I hope you will like it, haha.",bc_map,C_YELLOW;
 	end;
 
 OnTimer50000:
-	mapannounce "arug_que01", "Gergath : Pierrot Pier will help you. I hope you can use this chance to return to the past and enjoy yourself with your children.",bc_map,"0xFFFF00";
+	mapannounce "arug_que01", "Gergath : Pierrot Pier will help you. I hope you can use this chance to return to the past and enjoy yourself with your children.",bc_map,C_YELLOW;
 	disablenpc "Gergath#aru_gd";
 	stopnpctimer;
 	end;
@@ -1458,7 +1458,7 @@ OnEnable:
 
 OnMyMobDead:
 	if (mobcount("arug_que01","treg#aru_gd::OnMyMobDead") == 0) {
-		mapannounce "arug_que01", "Pierrot Pier: Beep! Oh, you already opened the gift? You sure are fast now, beep!",bc_map,"0x99CC00";
+		mapannounce "arug_que01", "Pierrot Pier: Beep! Oh, you already opened the gift? You sure are fast now, beep!",bc_map,C_PISTACHIO;
 		$@gdeventv_a2 = 5;
 	}
 	end;

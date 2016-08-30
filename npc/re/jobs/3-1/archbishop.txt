@@ -987,7 +987,7 @@ job3_arch01,29,34,3	script	Valkyrie#arch	4_F_VALKYRIE2,{
 	end;
 OnBc:
 	$@archbs = 0;
-	mapannounce "job3_arch01","Valkyrie: I think someone fell down in the shrine. I can hear the devil's unpleasant laugh.",bc_map,"0xFFCE00";
+	mapannounce "job3_arch01","Valkyrie: I think someone fell down in the shrine. I can hear the devil's unpleasant laugh.",bc_map,C_SUPER_NOVA;
 	hideoffnpc "Valkyrie#arch";
 	end;
 }
@@ -996,7 +996,7 @@ job3_arch02,119,49,0	script	#arch_1_start	HIDDEN_WARP_NPC,6,6,{
 OnTouch:
 	if (countitem(ValkyrieA_Scroll) == 0)
 		getitem ValkyrieA_Scroll,1;
-	mapannounce "job3_arch02","Whispering of an impersonation: I feel heavy! Set me free!",bc_map,"0xFFCE00";
+	mapannounce "job3_arch02","Whispering of an impersonation: I feel heavy! Set me free!",bc_map,C_SUPER_NOVA;
 	disablenpc "#arch_1_start";
 	end;
 }
@@ -1011,12 +1011,12 @@ OnTouch:
 			viewpoint 1,113,327,1,0xFF9900;
 		.@randht = rand(1,10);
 		if (.@randht < 8)
-			mapannounce "job3_arch02","Whispering of an impersonation: I can feel the devil's spirits! Be careful!",bc_map,"0xFFCE00";
+			mapannounce "job3_arch02","Whispering of an impersonation: I can feel the devil's spirits! Be careful!",bc_map,C_SUPER_NOVA;
 		else if ((.@randht == 8) || (.@randht == 9))
-			mapannounce "job3_arch02","Whispering of an impersonation: They are coming!",bc_map,"0xFFCE00";
+			mapannounce "job3_arch02","Whispering of an impersonation: They are coming!",bc_map,C_SUPER_NOVA;
 		end;
 	}
-	mapannounce "job3_arch02","Whispering of an impersonation: You can't do anything by yourself! Let's go back!",bc_map,"0xFFCE00";
+	mapannounce "job3_arch02","Whispering of an impersonation: You can't do anything by yourself! Let's go back!",bc_map,C_SUPER_NOVA;
 	mapwarp "job3_arch02","job3_arch01",29,29;
 	end;
 }
@@ -1039,11 +1039,11 @@ OnTouch:
 		delitem ValkyrieA_Scroll,1;
 		// fall through
 	} else if (getmercinfo(1) == 2037) {
-		mapannounce "job3_arch02","Valkyrie's Nightmare: An incompetent illusion of Valkyrie came here with the assistance of humans. You wanna have that nightmare?",bc_map,"0xFF0000";
+		mapannounce "job3_arch02","Valkyrie's Nightmare: An incompetent illusion of Valkyrie came here with the assistance of humans. You wanna have that nightmare?",bc_map,C_RED;
 		donpcevent "mob#arch_1::OnKill";
 		end;
 	}
-	mapannounce "job3_arch02","Whispering of an impersonation: You can't do anything by yourself! Let's go back!",bc_map,"0xFFCE00";
+	mapannounce "job3_arch02","Whispering of an impersonation: You can't do anything by yourself! Let's go back!",bc_map,C_SUPER_NOVA;
 	mapwarp "job3_arch02","job3_arch01",29,29;
 	end;
 }
@@ -1071,7 +1071,7 @@ OnEnable:
 OnMyMobDead:
 	if (mobcount("job3_arch02","#arch_val01::OnMyMobDead") < 1) {
 		donpcevent "#arch_redcell::OnGreen";
-		mapannounce "job3_arch02","Valkyrie's Nightmare: Your win is only a false image! hahahaha!",bc_map,"0xFF0000";
+		mapannounce "job3_arch02","Valkyrie's Nightmare: Your win is only a false image! hahahaha!",bc_map,C_RED;
 		hideoffnpc "Valkyrie#arch_01";
 		disablenpc "#arch_1_start";
 		disablenpc "#arch_1_01";
@@ -1101,7 +1101,7 @@ OnEnable:
 	end;
 OnMyMobDead:
 	if (mobcount("job3_arch02","#arch_val02::OnMyMobDead") < 1) {
-		mapannounce "job3_arch02","Valkyrie's Nightmare: You are so childish. I invite you to a devil's party. I'll make sure you have a fun!",bc_map,"0xFF0000";
+		mapannounce "job3_arch02","Valkyrie's Nightmare: You are so childish. I invite you to a devil's party. I'll make sure you have a fun!",bc_map,C_RED;
 		hideoffnpc "Valkyrie#arch_02";
 		disablenpc "#arch_2_boss";
 		viewpoint 1,279,234,1,0xFFFF99;
@@ -1358,14 +1358,14 @@ OnTouch:
 	} else if (getmercinfo(1) == 2038) {
 		.@randht = rand(1,10);
 		if (.@randht < 8)
-			mapannounce "job3_arch02","Whispering of an impersonation: I can feel the devil's spirits. Can you hear? The sound of gathering in crowds.",bc_map,"0xFFCE00";
+			mapannounce "job3_arch02","Whispering of an impersonation: I can feel the devil's spirits. Can you hear? The sound of gathering in crowds.",bc_map,C_SUPER_NOVA;
 		else if ((.@randht == 8) || (.@randht == 9))
-			mapannounce "job3_arch02","Whispering of an impersonation: Combat readiness!",bc_map,"0xFFCE00";
+			mapannounce "job3_arch02","Whispering of an impersonation: Combat readiness!",bc_map,C_SUPER_NOVA;
 		else
-			mapannounce "job3_arch02","Whispering of an impersonation: I can't leave you. Die!",bc_map,"0xFFCE00";
+			mapannounce "job3_arch02","Whispering of an impersonation: I can't leave you. Die!",bc_map,C_SUPER_NOVA;
 		end;
 	}
-	mapannounce "job3_arch02","Whispering of an impersonation: You can't do anything by yourself! Let's go back!",bc_map,"0xFFCE00";
+	mapannounce "job3_arch02","Whispering of an impersonation: You can't do anything by yourself! Let's go back!",bc_map,C_SUPER_NOVA;
 	mapwarp "job3_arch02","job3_arch01",29,29;
 	end;
 }
@@ -1384,13 +1384,13 @@ job3_arch02,190,146,0	duplicate(archbjcq2)	#arch_2_11	HIDDEN_WARP_NPC,5,5
 // Not in official script.
 job3_arch02,252,267,0	script	#arch_2_12	HIDDEN_WARP_NPC,5,5,{
 OnTouch:
-	mapannounce "job3_arch02","Whispering of an impersonation: It's a crossroad. Let's go to the left side. I have to find my pipe.",bc_map,"0xFFCE00";
+	mapannounce "job3_arch02","Whispering of an impersonation: It's a crossroad. Let's go to the left side. I have to find my pipe.",bc_map,C_SUPER_NOVA;
 	end;
 }
 
 job3_arch02,250,290,0	script	#arch_2_13	HIDDEN_WARP_NPC,5,5,{
 OnTouch:
-	mapannounce "job3_arch02","Whispering of an impersonation: I can see a ruined shrine. Take a rest in there.",bc_map,"0xFFCE00";
+	mapannounce "job3_arch02","Whispering of an impersonation: I can see a ruined shrine. Take a rest in there.",bc_map,C_SUPER_NOVA;
 	end;
 }
 */
@@ -1401,10 +1401,10 @@ OnTouch:
 		delitem ValkyrieB_Scroll,1;
 		// fall through
 	} else if (getmercinfo(1) == 2038) {
-		mapannounce "job3_arch02","A shout of devil: You are so childish. I invite you a party of devil. I'll make you have a fun!",bc_map,"0xFF0000";
+		mapannounce "job3_arch02","A shout of devil: You are so childish. I invite you a party of devil. I'll make you have a fun!",bc_map,C_RED;
 		end;
 	}
-	mapannounce "job3_arch02","Whispering of an impersonation: You can't do anything by yourself! Let's go back!",bc_map,"0xFFCE00";
+	mapannounce "job3_arch02","Whispering of an impersonation: You can't do anything by yourself! Let's go back!",bc_map,C_SUPER_NOVA;
 	mapwarp "job3_arch02","job3_arch01",29,29;
 	end;
 }
@@ -1412,7 +1412,7 @@ OnTouch:
 job3_arch02,284,159,0	script	#arch_3_01	HIDDEN_WARP_NPC,20,20,{
 OnTouch:
 	if (Class != Job_Priest) {
-		mapannounce "job3_arch02","Frus: Do you want to see God? Okay, I'll send you to the land of the dead by myself!",bc_map,"0xFF0000";
+		mapannounce "job3_arch02","Frus: Do you want to see God? Okay, I'll send you to the land of the dead by myself!",bc_map,C_RED;
 		areamonster "job3_arch02",242,44,246,48,"Frus",1762,1,"#arch_3_01::OnMyMobDead";
 	}
 	disablenpc "#arch_3_01";
@@ -1430,7 +1430,7 @@ OnKill:
 job3_arch02,307,200,0	script	#arch_3_02	HIDDEN_WARP_NPC,5,5,{
 OnTouch:
 	if (BaseJob == Job_Priest) {
-		mapannounce "job3_arch02","Skogul: You are my guest!",bc_map,"0xFF0000";
+		mapannounce "job3_arch02","Skogul: You are my guest!",bc_map,C_RED;
 		monster "job3_arch02",307,200,"Skogul",1761,1,"#arch_3_02::OnMyMobDead";
 	}
 	disablenpc "#arch_3_02";
@@ -1447,7 +1447,7 @@ OnKill:
 
 job3_arch02,296,216,0	script	#arch_3_03	HIDDEN_WARP_NPC,5,5,{
 OnTouch:
-	mapannounce "job3_arch02","Frus: I like your face... Can I steal it?",bc_map,"0xFF0000";
+	mapannounce "job3_arch02","Frus: I like your face... Can I steal it?",bc_map,C_RED;
 	monster "job3_arch02",296,216,"Frus",1762,1,"#arch_3_03::OnMyMobDead";
 	disablenpc "#arch_3_03";
 	end;
@@ -1583,10 +1583,10 @@ OnTimer540000:
 	}
 	end;
 OnTimer600000:
-	mapannounce "job3_arch02","Valkyrie's Nightmare: I can't stand anymore!",bc_map,"0xFF0000";
+	mapannounce "job3_arch02","Valkyrie's Nightmare: I can't stand anymore!",bc_map,C_RED;
 	end;
 OnTimer605000:
-	mapannounce "job3_arch02","Whispering of Valkyrie: No way! I can't let you guys do that. Go back!",bc_map,"0xFFCE00";
+	mapannounce "job3_arch02","Whispering of Valkyrie: No way! I can't let you guys do that. Go back!",bc_map,C_SUPER_NOVA;
 	mapwarp "job3_arch02","job3_arch01",29,29;
 	donpcevent "Valkyrie#arch::OnBc";
 	stopnpctimer;
