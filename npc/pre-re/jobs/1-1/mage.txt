@@ -117,7 +117,7 @@ geffen_in,164,124,4	script	Mage Guildsman	2_F_MAGICMASTER,{
 				mes "[Mage Guildsman]";
 				mes "Now it's time for";
 				mes "me to give you the test.";
-				switch(rand(3)) {
+				switch(rand(0,3)) {
 				case 1:
 					mes "Make me a ^3355FFMixed Solution No. 1^000000";
 					mes "and bring it back to me.";
@@ -220,9 +220,6 @@ geffen_in,164,124,4	script	Mage Guildsman	2_F_MAGICMASTER,{
 		mes "Congratulations!";
 		mes "You are now a Mage!";
 		next;
-		callfunc "Job_Change",Job_Mage;
-		callfunc "F_ClearJobVar";
-		Zeny += 50;
 		if (questprogress(1005)) {
 			completequest 1005;
 		}
@@ -235,6 +232,9 @@ geffen_in,164,124,4	script	Mage Guildsman	2_F_MAGICMASTER,{
 		else {
 			completequest 1008;
 		}
+		callfunc "Job_Change",Job_Mage;
+		callfunc "F_ClearJobVar";
+		Zeny += 50;
 		mes "[Mage Guildsman]";
 		mes "'Welcome to My World~'";
 		mes "Heh heh, I just wanted to say that. You know, it's a quote from a well-known movie~";
