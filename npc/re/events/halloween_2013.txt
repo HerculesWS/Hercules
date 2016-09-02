@@ -314,7 +314,7 @@ niflheim,181,173,5	script	Chef Candycon#2013HE	4_M_NFDEADSWDMAN,{
 			mes "O.....ver....but....";
 			mes "ca...me......a...gain....";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Why don't you speak normally.";
 			next;
 			mes "[Chef Candycon]";

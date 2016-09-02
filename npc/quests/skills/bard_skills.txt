@@ -57,7 +57,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 			mes "done anything to you!";
 			mes "J-just s-stay away!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Um...";
 			mes "I'm not really trying";
 			mes "to do anything. Why";
@@ -81,7 +81,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 			mes "J-just s-stay away!";
 			next;
 			if (select("Offer him a drink.", "Reassure him that you're safe.") == 1) {
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Look, I don't know what";
 				mes "you've got against me, but";
 				mes "you really need to relax.";
@@ -114,7 +114,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 						mes "w-w-weird skill, d-did you?";
 						mes "Wait, no. You couldn't have...";
 						next;
-						mes "[" + strcharinfo(0) + "]";
+						mes "[" + strcharinfo(PC_NAME) + "]";
 						mes "Oh, please~";
 						mes "You know, I think";
 						mes "that maybe you";
@@ -184,7 +184,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 							mes "having any control over your";
 							mes "body is so overwhelming!";
 							next;
-							mes "[" + strcharinfo(0) + "]";
+							mes "[" + strcharinfo(PC_NAME) + "]";
 							mes "Wait, you're saying";
 							mes "a Bard did this to you?";
 							mes "I've never heard of a song";
@@ -278,7 +278,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 							mes "having any control over your";
 							mes "body is so overwhelming!";
 							next;
-							mes "[" + strcharinfo(0) + "]";
+							mes "[" + strcharinfo(PC_NAME) + "]";
 							mes "Wait, you're saying";
 							mes "a Bard did this to you?";
 							mes "I've never heard of a song";
@@ -342,7 +342,7 @@ prontera,174,328,3	script	Young Man#bard_q1	4_M_ORIENT02,3,3,{
 					close;
 				}
 			}
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Don't worry,";
 			mes "I won't hurt you.";
 			next;
@@ -665,7 +665,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 			mes "Eh heh heh heh!";
 			emotion e_gg;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Um...";
 			mes "What's so funny?";
 			next;
@@ -693,7 +693,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 				mes "at those two drunks";
 				mes "all the way over there.";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Yeah, I can see them.";
 				mes "But what's so special";
 				mes "about those two guys?";
@@ -741,7 +741,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 				mes "to gesticulate and move";
 				mes "wildly without direction.";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Those two...";
 				mes "Those two probably";
 				mes "had way too much to drink.";
@@ -754,7 +754,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 				mes "scrambles their minds.";
 				next;
 				if (qskill_bard == 1) {
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Mind scrambling?";
 					mes "Wait, are you the same";
 					mes "Bard who made someone";
@@ -811,7 +811,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 					mes "seasoned adventurer like you.";
 					close;
 				}
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Wha...?";
 				mes "I can't believe you.";
 				mes "Mind scrambling? That";
@@ -850,7 +850,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 		mes "Eh heh heh heh!";
 		emotion e_gg;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Um...";
 		mes "What's so funny?";
 		next;
@@ -878,7 +878,7 @@ morocc_in,169,72,7	script	Spiteful-Looking Bard#bs	2_M_BARD_ORIENT,3,3,{
 			mes "at those two drunks";
 			mes "all the way over there.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Yeah, I can see";
 			mes "together. But what";
 			mes "about them?";

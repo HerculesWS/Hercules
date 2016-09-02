@@ -115,7 +115,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			close;
 		}
 		if (NINJ_Q == 0) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Excuse me.";
 			mes "H-hello?";
 			next;
@@ -123,7 +123,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "...............................";
 			mes "How did you do that?";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Do what? I didn't";
 			mes "do anything, I don't think...";
 			next;
@@ -134,7 +134,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "Ah, now I get it. Wildcat Joe";
 			mes "must have sent you to kill me! I won't fall for your tricks! Die!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "W-wait! I-I don't even";
 			mes "know who Wildcat Joe is!";
 			mes "Calm down, there's no";
@@ -147,7 +147,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "You've got some talent,";
 			mes "I'll give you that.";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "...............................";
 			mes "I came here hoping";
 			mes "to change my job";
@@ -262,7 +262,7 @@ que_ng,30,65,3	script	Cougar#nq	4_M_JOB_ASSASSIN,{
 			mes "Please get those";
 			mes "as quickly as you can!";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Huh? That's funny,";
 			mes "Wildcat Joe actually";
 			mes "asked me to gather";
@@ -403,7 +403,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "buildings in my hometown";
 		mes "are tiny in comparison...";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Oh, are you from";
 		mes "Amatsu? I'm looking";
 		mes "for someone named";
@@ -416,7 +416,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "minerals. Tell me, why are";
 		mes "you looking for this Wildcat Joe?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Well, I need to deliver";
 		mes "this letter to him and";
 		mes "get his response so that";
@@ -429,7 +429,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "in this town. Though, he prefers to be called ''Red Leopard Joe,''";
 		mes "instead of ''Wildcat Joe.''";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I really want to help you";
 		mes "find him, but first I need";
 		mes "to find the minerals that";
@@ -474,13 +474,13 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "help you now. Here,";
 		mes "let me see that letter.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "?????!!";
 		next;
 		mes "[Suspicious Man]";
 		mes "Why? Didn't you bring Cougar's letter for me?";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Are you...";
 		mes "Are you Wildcat Joe?";
 		next;
@@ -506,7 +506,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "shadows is really our";
 		mes "ultimate power.";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "I see...";
 		mes "...........";
 		next;
@@ -532,7 +532,7 @@ einbroch,184,194,3	script	Suspicious Man#nq	4_M_SITDOWN,{
 		mes "Ninja, even if I did trick you";
 		mes "just earlier. Heh heh heh!";
 		next;
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "......";
 		mes ".........";
 		mes "............";

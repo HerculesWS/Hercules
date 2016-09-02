@@ -50,7 +50,7 @@ niflheim,52,147,3	script	Keedz#nif	4_M_NFDEADSWDMAN,{
 
 niflheim,195,211,6	script	Gigantia#nif	4_M_NFDEADSWDMAN,3,3,{
 	if (isequipped(5038) || isequipped(2257) || isequipped(2256)) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What's up?";
 		next;
 		mes "[Gigantia]";
@@ -88,7 +88,7 @@ nif_in,16,27,1	script	Undead Chicken#nif	4_NFCOCK,{
 	mes "[Undead Chicken]";
 	mes "I lived a peaceful life as a normal chicken. But then came the day I was tragically killed and eaten by humans. Well... Heh heh~! Now it's my turn! *Cackles*";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "Ouch...!";
 	mes "A chicken...";
 	mes "It bit me!";
@@ -110,7 +110,7 @@ nif_in,16,30,4	script	Undead Familiar#nif	4_NFBAT,{
 	mes "always tasty...! I think I'll just";
 	mes "take a liiittle sip.";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Ow! My vein!";
 	mes "Did you just";
 	mes "suck my blood?!";

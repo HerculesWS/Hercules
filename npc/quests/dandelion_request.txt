@@ -67,7 +67,7 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 		if ((BaseJob == Job_Novice) || (BaseJob == Job_SuperNovice))
 		{
 			mes "[Guildsman]";
-			mes "Excuse me? "+strcharinfo(0)+"?";
+			mes "Excuse me? "+strcharinfo(PC_NAME)+"?";
 			mes "Hi there, I've been waiting for";
 			mes "you to wander past me for such";
 			mes "a long time, you know that?";
@@ -102,7 +102,7 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 		else if((BaseJob == Job_Swordman) || (BaseJob == Job_Swordman_High))
 		{
 			mes "[Guildsman]";
-			mes "Hey, " + strcharinfo(0) + "!";
+			mes "Hey, " + strcharinfo(PC_NAME) + "!";
 			mes "Great, I knew you'd";
 			mes "show up sooner or later.";
 			mes "Listen, I'm working here";
@@ -116,7 +116,7 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 			mes "Swordman Association has ever";
 			mes "been involved in. Pack your bags and head to Morroc right now!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "All the way to Morroc...?";
 			mes "Why, what's going on?";
 			next;
@@ -141,18 +141,18 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 		else if((Class == Job_Knight) || (Class == Job_Lord_Knight))
 		{
 			mes "[Guildsman]";
-			mes "" + strcharinfo(0) +"...?";
+			mes "" + strcharinfo(PC_NAME) +"...?";
 			mes "I knew you'd show up if";
 			mes "Listen, I have a notice for";
 			mes "you from the Prontera Chivalry.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "For me? That sounds";
 			mes "strange, but would you";
 			mes "please read it to me?";
 			next;
 			mes "[Guildsman]";
-			mes "''RE: "+ strcharinfo(0) +"";
+			mes "''RE: "+ strcharinfo(PC_NAME) +"";
 			mes "As leader of the Prontera";
 			mes "Chivalry, I formally request";
 			mes "you to represent the Knights of";
@@ -182,13 +182,13 @@ izlude,103,106,3	script	Guildsman#1	1_M_02,3,3,{
 		{
 			mes "[Guildsman]";
 			mes "Excuse me...?";
-			mes ""+strcharinfo(0)+"...?";
+			mes ""+strcharinfo(PC_NAME)+"...?";
 			mes "I'm sorry to bother you, but";
 			mes "I've got an urgent communique";
 			mes "for you from Sir Michael Halig";
 			mes "of the Crusaders...";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "They usually don't";
 			mes "send messages. I guess";
 			mes "whatever he has to say";
@@ -315,7 +315,7 @@ OnTouch:
 			if ((BaseJob == Job_Novice) || (BaseJob == Job_SuperNovice))
 			{
 				mes "[Guildsman]";
-				mes "Excuse me? "+strcharinfo(0)+"?";
+				mes "Excuse me? "+strcharinfo(PC_NAME)+"?";
 				mes "Hi there, I've been waiting for";
 				mes "you to wander past me for such";
 				mes "a long time, you know that?";
@@ -350,7 +350,7 @@ OnTouch:
 			else if((BaseJob == Job_Swordman) || (BaseJob == Job_Swordman_High))
 			{
 				mes "[Guildsman]";
-				mes "Hey, " + strcharinfo(0) + "!";
+				mes "Hey, " + strcharinfo(PC_NAME) + "!";
 				mes "Great, I knew you'd";
 				mes "show up sooner or later.";
 				mes "Listen, I'm working here";
@@ -364,7 +364,7 @@ OnTouch:
 				mes "Swordman Association has ever";
 				mes "been involved in. Pack your bags and head to Morroc right now!";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "All the way to Morroc...?";
 				mes "Why, what's going on?";
 				next;
@@ -389,18 +389,18 @@ OnTouch:
 			else if((Class == Job_Knight) || (Class == Job_Lord_Knight))
 			{
 				mes "[Guildsman]";
-				mes "" + strcharinfo(0) +"...?";
+				mes "" + strcharinfo(PC_NAME) +"...?";
 				mes "I knew you'd show up if";
 				mes "Listen, I have a notice for";
 				mes "you from the Prontera Chivalry.";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "For me? That sounds";
 				mes "strange, but would you";
 				mes "please read it to me?";
 				next;
 				mes "[Guildsman]";
-				mes "''RE: "+ strcharinfo(0) +"";
+				mes "''RE: "+ strcharinfo(PC_NAME) +"";
 				mes "As leader of the Prontera";
 				mes "Chivalry, I formally request";
 				mes "you to represent the Knights of";
@@ -430,13 +430,13 @@ OnTouch:
 			{
 				mes "[Guildsman]";
 				mes "Excuse me...?";
-				mes ""+strcharinfo(0)+"...?";
+				mes ""+strcharinfo(PC_NAME)+"...?";
 				mes "I'm sorry to bother you, but";
 				mes "I've got an urgent communique";
 				mes "for you from Sir Michael Halig";
 				mes "of the Crusaders...";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "They usually don't";
 				mes "send messages. I guess";
 				mes "whatever he has to say";
@@ -507,7 +507,7 @@ prontera,237,313,3	script	Nun#moc	1_F_PRIEST,3,3,{
 	if(!mao_request)
 	{
 		mes "[Nun]";
-		mes "Oh, " + strcharinfo(0) + "!";
+		mes "Oh, " + strcharinfo(PC_NAME) + "!";
 		mes "It must be an act of";
 		mes "divine providence that";
 		mes "we finally meet. Actually,";
@@ -613,7 +613,7 @@ OnTouch:
 			if(BaseClass == Job_Acolyte)
 			{
 				mes "[Nun]";
-				mes "Oh, " + strcharinfo(0) + "!";
+				mes "Oh, " + strcharinfo(PC_NAME) + "!";
 				mes "It must be an act of";
 				mes "divine providence that";
 				mes "we finally meet. Actually,";
@@ -707,7 +707,7 @@ alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 			mes "my freaking body! Look,";
 			mes "just gimme a little control!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I... I can sense two";
 			mes "different souls within";
 			mes "your body. I don't mind";
@@ -761,7 +761,7 @@ alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 		{
 			mes "[Guildsman]";
 			mes "Well, if it isn't";
-			mes ""+ strcharinfo(0) +". Hey,";
+			mes ""+ strcharinfo(PC_NAME) +". Hey,";
 			mes "would you wait a minute?";
 			mes "I've got a message for you";
 			mes "from the Merchant Guild.";
@@ -788,7 +788,7 @@ alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 		else if((Class == Job_Blacksmith) || (Class == Job_Whitesmith))
 		{
 			mes "[Guildsman]";
-			mes "Oh, "+ strcharinfo(0) +"...!";
+			mes "Oh, "+ strcharinfo(PC_NAME) +"...!";
 			mes "I'm so glad that I finally";
 			mes "ran into you. I know this is";
 			mes "sudden, but the Blacksmith";
@@ -816,7 +816,7 @@ alberta,129,59,3	script	Guildsman#2	1_M_03,3,3,{
 		else if((Class == Job_Alchemist) || (Class == Job_Creator))
 		{
 			mes "[Guildsman]";
-			mes "Hey, " + strcharinfo(0) + "?";
+			mes "Hey, " + strcharinfo(PC_NAME) + "?";
 			mes "I've got a message for";
 			mes "you from the Alchemist";
 			mes "Guild. Well, they're more";
@@ -1047,7 +1047,7 @@ OnTouch:
 				mes "my freaking body! Look,";
 				mes "just gimme a little control!";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "I... I can sense two";
 				mes "different souls within";
 				mes "your body. I don't mind";
@@ -1101,7 +1101,7 @@ OnTouch:
 			{
 				mes "[Guildsman]";
 				mes "Well, if it isn't";
-				mes ""+ strcharinfo(0) +". Hey,";
+				mes ""+ strcharinfo(PC_NAME) +". Hey,";
 				mes "would you wait a minute?";
 				mes "I've got a message for you";
 				mes "from the Merchant Guild.";
@@ -1128,7 +1128,7 @@ OnTouch:
 			else if((Class == Job_Blacksmith) || (Class == Job_Whitesmith))
 			{
 				mes "[Guildsman]";
-				mes "Oh, "+ strcharinfo(0) +"...!";
+				mes "Oh, "+ strcharinfo(PC_NAME) +"...!";
 				mes "I'm so glad that I finally";
 				mes "ran into you. I know this is";
 				mes "sudden, but the Blacksmith";
@@ -1156,7 +1156,7 @@ OnTouch:
 			else if((Class == Job_Alchemist) || (Class == Job_Creator))
 			{
 				mes "[Guildsman]";
-				mes "Hey, " + strcharinfo(0) + "?";
+				mes "Hey, " + strcharinfo(PC_NAME) + "?";
 				mes "I've got a message for";
 				mes "you from the Alchemist";
 				mes "Guild. Well, they're more";
@@ -1239,7 +1239,7 @@ geffen,123,109,3	script	Academy Staff	2_M_SAGE_B,3,3,{
 		mes "involving missing children...";
 		next;
 		mes "[Academy Staff]";
-		mes "" + strcharinfo(0) + "...";
+		mes "" + strcharinfo(PC_NAME) + "...";
 		mes "I'd like you to represent";
 		mes "the magic community by";
 		mes "assisting the Assassins";
@@ -1331,7 +1331,7 @@ OnTouch:
 				mes "involving missing children...";
 				next;
 				mes "[Academy Staff]";
-				mes "" + strcharinfo(0) + "...";
+				mes "" + strcharinfo(PC_NAME) + "...";
 				mes "I'd like you to represent";
 				mes "the magic community by";
 				mes "assisting the Assassins";
@@ -1405,7 +1405,7 @@ morocc,155,56,3	script	Miya	4_F_04,3,3,{
 			mes "He wrote this letter for you.";
 			next;
 			mes "[Miya]";
-			mes "Listen, "+ strcharinfo(0) +"...";
+			mes "Listen, "+ strcharinfo(PC_NAME) +"...";
 			mes "He's asking you to help";
 			mes "the Assassin Guild on a";
 			mes "special mission. I think";
@@ -1425,7 +1425,7 @@ morocc,155,56,3	script	Miya	4_F_04,3,3,{
 		else if((BaseJob == Job_Thief) || (BaseJob == Job_Thief_High) || (Class == Job_Rogue) || (Class == Job_Stalker))
 		{
 			mes "[Miya]";
-			mes "Hey, " + strcharinfo(0) + ",";
+			mes "Hey, " + strcharinfo(PC_NAME) + ",";
 			mes "I've got some important";
 			mes "work for you. The Assassin";
 			mes "Guild actually asked the Thief";
@@ -1445,12 +1445,12 @@ morocc,155,56,3	script	Miya	4_F_04,3,3,{
 		else if((Class == Job_Assassin) || (Class == Job_Assassin_Cross))
 		{
 			mes "[Miya]";
-			mes "" + strcharinfo(0) + "!";
+			mes "" + strcharinfo(PC_NAME) + "!";
 			mes "The Assassin Guild Master";
 			mes "wants you right away. Do you";
 			mes "know where the secret pub is?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Ah, h-hi, Miya,";
 			mes "it's been a while.";
 			mes "What secret pub?";
@@ -1570,7 +1570,7 @@ OnTouch:
 				mes "He wrote this letter for you.";
 				next;
 				mes "[Miya]";
-				mes "Listen, "+ strcharinfo(0) +"...";
+				mes "Listen, "+ strcharinfo(PC_NAME) +"...";
 				mes "He's asking you to help";
 				mes "the Assassin Guild on a";
 				mes "special mission. I think";
@@ -1590,7 +1590,7 @@ OnTouch:
 			else if((BaseJob == Job_Thief) || (BaseJob == Job_Thief_High) || (Class == Job_Rogue) || (Class == Job_Stalker))
 			{
 				mes "[Miya]";
-				mes "Hey, " + strcharinfo(0) + ",";
+				mes "Hey, " + strcharinfo(PC_NAME) + ",";
 				mes "I've got some important";
 				mes "work for you. The Assassin";
 				mes "Guild actually asked the Thief";
@@ -1610,12 +1610,12 @@ OnTouch:
 			else if((Class == Job_Assassin) || (Class == Job_Assassin_Cross))
 			{
 				mes "[Miya]";
-				mes "" + strcharinfo(0) + "!";
+				mes "" + strcharinfo(PC_NAME) + "!";
 				mes "The Assassin Guild Master";
 				mes "wants you right away. Do you";
 				mes "know where the secret pub is?";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Ah, h-hi, Miya,";
 				mes "it's been a while.";
 				mes "What secret pub?";
@@ -1684,7 +1684,7 @@ payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 			mes "Another practitioner";
 			mes "of Taekwon Do! You're...";
 			mes "Let's see... You must";
-			mes "be " + strcharinfo(0) + ", yes?";
+			mes "be " + strcharinfo(PC_NAME) + ", yes?";
 			next;
 			mes "[Guildsman]";
 			mes "Mr. Phoenix has charged";
@@ -1713,7 +1713,7 @@ payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 		else if((BaseJob == Job_Archer) || (BaseJob == Job_Archer_High) || (Class == Job_Hunter) || (Class == Job_Sniper))
 		{
 			mes "[Guildsman]";
-			mes "" + strcharinfo(0) + "...?";
+			mes "" + strcharinfo(PC_NAME) + "...?";
 			mes "Oh, wow, I'm so lucky to";
 			mes "have finally found you!";
 			mes "Listen, I've got a message";
@@ -1741,13 +1741,13 @@ payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 		else if((Class == Job_Bard) || (Class == Job_Clown))
 		{
 			mes "[Guildsman]";
-			mes "Hey, " + strcharinfo(0) + "!";
+			mes "Hey, " + strcharinfo(PC_NAME) + "!";
 			mes "I've been looking all over";
 			mes "for you! I've got a message";
 			mes "for you from Lalo. You...";
 			mes "You remember him, right?";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Sure, I do! I owe";
 			mes "Lalo so much... If it";
 			mes "weren't for him, I'd never";
@@ -1778,11 +1778,11 @@ payon,231,323,3	script	Guildsman#3	1_M_ORIENT01,3,3,{
 			mes "[Guildsman]";
 			mes "Hey... Th-That face!";
 			mes "Just like Aile described!";
-			mes "You're " + strcharinfo(0) + ", right?";
+			mes "You're " + strcharinfo(PC_NAME) + ", right?";
 			mes "This is great, I've been";
 			mes "looking all over for you!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Aile? Oh, that's right,";
 			mes "she was there during my";
 			mes "job change test and helped";
@@ -1957,7 +1957,7 @@ OnTouch:
 				mes "Another practitioner";
 				mes "of Taekwon Do! You're...";
 				mes "Let's see... You must";
-				mes "be " + strcharinfo(0) + ", yes?";
+				mes "be " + strcharinfo(PC_NAME) + ", yes?";
 				next;
 				mes "[Guildsman]";
 				mes "Mr. Phoenix has charged";
@@ -1986,7 +1986,7 @@ OnTouch:
 			else if((BaseJob == Job_Archer) || (BaseJob == Job_Archer_High) || (Class == Job_Hunter) || (Class == Job_Sniper))
 			{
 				mes "[Guildsman]";
-				mes "" + strcharinfo(0) + "...?";
+				mes "" + strcharinfo(PC_NAME) + "...?";
 				mes "Oh, wow, I'm so lucky to";
 				mes "have finally found you!";
 				mes "Listen, I've got a message";
@@ -2014,13 +2014,13 @@ OnTouch:
 			else if((Class == Job_Bard) || (Class == Job_Clown))
 			{
 				mes "[Guildsman]";
-				mes "Hey, " + strcharinfo(0) + "!";
+				mes "Hey, " + strcharinfo(PC_NAME) + "!";
 				mes "I've been looking all over";
 				mes "for you! I've got a message";
 				mes "for you from Lalo. You...";
 				mes "You remember him, right?";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Sure, I do! I owe";
 				mes "Lalo so much... If it";
 				mes "weren't for him, I'd never";
@@ -2051,11 +2051,11 @@ OnTouch:
 				mes "[Guildsman]";
 				mes "Hey... Th-That face!";
 				mes "Just like Aile described!";
-				mes "You're " + strcharinfo(0) + ", right?";
+				mes "You're " + strcharinfo(PC_NAME) + ", right?";
 				mes "This is great, I've been";
 				mes "looking all over for you!";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Aile? Oh, that's right,";
 				mes "she was there during my";
 				mes "job change test and helped";
@@ -2283,7 +2283,7 @@ OnTouch:
 		next;
 		if(prt_curse == 24)
 		{
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I, um, I'm looking";
 			mes "for somebody named";
 			mes "Marjana? I learned";
@@ -2860,7 +2860,7 @@ OnTouch:
 	{
 		if(mao_request == 121)
 		{
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "I can't go back to";
 			mes "Lin yet... I still need";
 			mes "to fully investigate";
@@ -2897,7 +2897,7 @@ OnTouch:
 		if(mao_request > 102 && mao_request < 122)
 		{
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hey, R! It's me!";
 			mes "Would you please";
 			mes "open the door?";
@@ -3213,7 +3213,7 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 		mes "Considering all the unknowns,";
 		mes "we did surprisingly well.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "W-wait; a minute...";
 		mes "Are you saying we stopped";
 		mes "Satan Morroc's revival, but";
@@ -3226,7 +3226,7 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 		mes "that confusion.";
 		cutin "mocseal_rin01.bmp",2;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "L-Lin...?";
 		next;
 		mes "[Lin]";
@@ -3262,7 +3262,7 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 		next;
 		cutin "mocseal_rin01.bmp",255;
 		donpcevent "Lin#1::OnInit";
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "She seems upset....";
 		next;
 		mes "[Valdes]";
@@ -3368,7 +3368,7 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 		mes "I should have caught him,";
 		mes "but he had help. I failed you.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Lin...";
 		next;
 		mes "[Kidd]";
@@ -3440,7 +3440,7 @@ que_job01,16,21,5	script	Valdes#1	1_M_JOBTESTER,{
 		mes "[Lin]";
 		mes "Valdes...";
 		mes "I'm leaving now.";
-		mes "Wish me luck, "+ strcharinfo(0) +".";
+		mes "Wish me luck, "+ strcharinfo(PC_NAME) +".";
 		next;
 		cutin "mocseal_rin01.bmp",255;
 		donpcevent "Lin#1::OnInit";
@@ -3585,7 +3585,7 @@ que_job01,19,18,3	script	Lin#1	4_F_ACROSS,{
 		mes "I hear that";
 		mes "Kidd saved you.";
 		mes "...............................";
-		mes "Sorry, "+ strcharinfo(0) +"...";
+		mes "Sorry, "+ strcharinfo(PC_NAME) +"...";
 		mes "I l-let you down...";
 		next;
 		mes "^3355FFLin seems extremely";
@@ -3634,13 +3634,13 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		mes "for the Juno Library...";
 		cutin "mocseal_dan01.bmp",0;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Excuse me, but";
 		mes "what are you guys";
 		mes "talking about...?";
 		next;
 		mes "[Lin]";
-		mes "Ah, this is "+ strcharinfo(0) +",";
+		mes "Ah, this is "+ strcharinfo(PC_NAME) +",";
 		mes "my partner for this assignment.";
 		if (Sex == SEX_MALE)
 			mes "Don't worry, you can trust him.";
@@ -3664,7 +3664,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 	}
 	else if(mao_request == 104)
 	{
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Um...";
 		mes "What was that?";
 		mes "Mr. R just took out";
@@ -3709,7 +3709,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		switch( select( "Wait!","Won't they attack again?" ) )
 		{
 			case 1:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Wait! It's too risky!";
 				mes "What if Mr. R is attacked";
 				mes "again? I mean, isn't that";
@@ -3725,7 +3725,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 				mes "find his research documents.";
 				break;
 			case 2:
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Won't they attack";
 				mes "again? Shouldn't both";
 				mes "of us guard Mr. R here?";
@@ -3738,7 +3738,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 				mes "doing all that we can to save";
 				mes "those missing children.";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "I think you're right.";
 				mes "But I think we should";
 				mes "see if that's alright";
@@ -3768,7 +3768,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		mes "you. This place is also shielded";
 		mes "with security magic, so you'll";
 		mes "be just fine. Now, as for you,";
-		mes ""+ strcharinfo(0) +"...";
+		mes ""+ strcharinfo(PC_NAME) +"...";
 		next;
 		mes "[Lin]";
 		mes "Your priority is to go";
@@ -3821,7 +3821,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		mes "find Yunia? Wait a sec,";
 		mes "did you bring the documents?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Uh oh...";
 		mes "I guess I better";
 		mes "go back and talk";
@@ -3932,13 +3932,13 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		next;
 		cutin "mocseal_dan01.bmp",0;
 		mes "[R. Moore]";
-		mes "Say, " + strcharinfo(0) + ",";
+		mes "Say, " + strcharinfo(PC_NAME) + ",";
 		mes "were you about to leave?";
 		mes "I had another reques--";
 		next;
 		cutin "mocseal_rin01.bmp",2;
 		mes "[Lin]";
-		mes "I'm sending "+ strcharinfo(0) +"";
+		mes "I'm sending "+ strcharinfo(PC_NAME) +"";
 		mes "on a snack errand and it won't";
 		if (Sex == SEX_MALE)
 			mes "take too long. Did you want him";
@@ -3955,7 +3955,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		next;
 		cutin "mocseal_rin01.bmp",2;
 		mes "[Lin]";
-		mes "Well, "+ strcharinfo(0) +",";
+		mes "Well, "+ strcharinfo(PC_NAME) +",";
 		mes "you heard the ^A9A9A9GO^000000 man.";
 		mes "^A9A9A9TO^000000 Come back ^A9A9A9THE^000000 as soon";
 		mes "as ^A9A9A9HISTORIAN^000000 can, ^A9A9A9NOW^000000 alright?";
@@ -3986,7 +3986,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 	}
 	else if(mao_request == 117)
 	{
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, I'm back...";
 		next;
 		cutin "mocseal_rin01.bmp",2;
@@ -3998,7 +3998,7 @@ que_job01,84,17,3	script	Lin#2-1	4_F_ACROSS,{
 		mes "^A9A9A9THE^000000 get me a glass of, um...";
 		mes "^A9A9A9STAIRS^000000 Vermilion on the Beach?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Snack? Um... That's";
 		mes "more of a drink, isn't it?";
 		mes "But if that's what you want,";
@@ -4182,13 +4182,13 @@ que_job01,79,15,1	script	R	4_M_MASKMAN,{
 		mes "for the Juno Library...";
 		cutin "mocseal_dan01.bmp",0;
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Excuse me, but";
 		mes "what are you guys";
 		mes "talking about...?";
 		next;
 		mes "[Lin]";
-		mes "Ah, this is "+ strcharinfo(0) +",";
+		mes "Ah, this is "+ strcharinfo(PC_NAME) +",";
 		mes "my partner for this assignment.";
 		if (Sex == SEX_MALE)
 			mes "Don't worry, you can trust him.";
@@ -4261,7 +4261,7 @@ que_job01,79,15,1	script	R	4_M_MASKMAN,{
 	}
 	else if(mao_request == 107)
 	{
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "These are the documents";
 		mes "that I received from Yunia.";
 		mes "Is this what you needed?";
@@ -4421,7 +4421,7 @@ que_job01,79,15,1	script	R	4_M_MASKMAN,{
 		mes "true, I suppose...";
 		next;
 		cutin "mocseal_dan01.bmp",255;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, I guess I'll go out";
 		mes "and try to activate those";
 		mes "other elemental crests";
@@ -4445,7 +4445,7 @@ que_job01,79,15,1	script	R	4_M_MASKMAN,{
 		next;
 		mes "[R. Moore]";
 		mes "Oh nothing...";
-		mes "Just giving " + strcharinfo(0) + "";
+		mes "Just giving " + strcharinfo(PC_NAME) + "";
 		mes "due credit. That's all.";
 		close2;
 	}
@@ -4465,7 +4465,7 @@ que_job01,79,15,1	script	R	4_M_MASKMAN,{
 		mes "talk to you alone. It's";
 		mes "a very urgent issue that";
 		mes "I need to discuss here";
-		mes "with "+ strcharinfo(0) +".";
+		mes "with "+ strcharinfo(PC_NAME) +".";
 		next;
 		cutin "mocseal_dan01.bmp",0;
 		mes "[R. Moore]";
@@ -4504,7 +4504,7 @@ que_job01,79,15,1	script	R	4_M_MASKMAN,{
 		mes "^A9A9A9THE^000000 get me a glass of, um...";
 		mes "^A9A9A9STAIRS^000000 Vermilion on the Beach?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Snack? Um... That's";
 		mes "more of a drink, isn't it?";
 		mes "But if that's what you want,";
@@ -4805,7 +4805,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 	}
 	else if(mao_request == 4)
 	{
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "(^333333Kidd? What...";
 		mes "What is he doing";
 		mes "with that pendant?^000000)";
@@ -4905,7 +4905,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 	}
 	else if(mao_request == 9)
 	{
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "So...";
 		mes "How should we go";
 		mes "about investigating the";
@@ -4958,7 +4958,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "the south part of Morroc.";
 		mes "It was full of Earth magic...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Really? I actually found the";
 		mes "Wind elemental crest west";
 		mes "of Morroc. Do you think this";
@@ -5057,7 +5057,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "Well, you know.";
 		mes "In my usual way...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I just came back";
 		mes "from stabilizing those";
 		mes "elemental crests. Wait,";
@@ -5084,7 +5084,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "visit our historian?";
 		mes "He, um, refused to see me...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What...?!";
 		mes "Why would he do";
 		mes "something like that?";
@@ -5099,7 +5099,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		next;
 		if (Class == Job_Assassin || Class == Job_Assassin_Cross)
 		{
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Wait a second.";
 			mes "I'm an Assassin too!";
 			next;
@@ -5110,7 +5110,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 			mes "You know, wear one of";
 			mes "those cute hats or whatever.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Alright, alright.";
 			mes "I'll try talking";
 			mes "to him for you...";
@@ -5119,7 +5119,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		}
 		else
 		{
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Alright, alright.";
 			mes "I'll try talking";
 			mes "to him for you...";
@@ -5153,7 +5153,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "So were you able to";
 		mes "talk to the historian?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Say, what's that";
 		mes "you're drinking?";
 		next;
@@ -5192,7 +5192,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "did you figure out why";
 		mes "he didn't wanna talk to me?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Oh, that? I never got to";
 		mes "speak to the historian, but";
 		mes "I did talk to his assistant.";
@@ -5208,14 +5208,14 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "hardcore, huh? Damn babies...";
 		mes "So what else did you learn?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, those elemental crests";
 		mes "are supposed to protect some";
 		mes "seal beneath Morroc Castle";
 		mes "that keeps this monster, Satan";
 		mes "Morroc, from invading our world. It might be just a legend, but...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "The assistant told me that";
 		mes "Thanatos Tower was actually";
 		mes "a place originally used by";
@@ -5229,7 +5229,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "this have to do with";
 		mes "the missing children?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well... Let's say that";
 		mes "Raiyan Moore's goal is to";
 		mes "revive Satan Morroc, if it";
@@ -5304,14 +5304,14 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 			case 1:
 				if(thana_quest > 1)
 				{
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Well, I found some old log";
 					mes "entries about Satan Morroc.";
 					mes "They pretty much confirm that";
 					mes "Satan Morroc is real, and that";
 					mes "it's sealed under Morroc Castle. ";
 					next;
-					mes "["+ strcharinfo(0) +"]";
+					mes "["+ strcharinfo(PC_NAME) +"]";
 					mes "The Rekenber Corporation";
 					mes "is also responsible for the";
 					mes "tower's reconstruction, and";
@@ -5381,7 +5381,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		mes "you find any trace of Raiyan";
 		mes "Moore over at Thanatos Tower?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Not at all. I've been";
 		mes "asking around, but haven't";
 		mes "been able to get any clue as";
@@ -5430,7 +5430,7 @@ que_job01,91,83,3	script	Kidd#hall	4_M_ACROSS,{
 		cutin "mocseal_kid01.bmp",2;
 		mes "[Kidd]";
 		mes "What, Lin's client?!";
-		mes "Wait, "+ strcharinfo(0) +", do you recall";
+		mes "Wait, "+ strcharinfo(PC_NAME) +", do you recall";
 		mes "what Lin's assignent was?";
 		next;
 		switch( select( "Well, um...","Bodyguard, right?" ) )
@@ -5796,7 +5796,7 @@ que_job01,89,85,5	script	Dandelion Member	4_M_MASKMAN,{
 		mes "Well, you know.";
 		mes "In my usual way...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I just came back";
 		mes "from stabilizing those";
 		mes "elemental crests. Wait,";
@@ -5854,7 +5854,7 @@ que_job01,89,85,5	script	Dandelion Member	4_M_MASKMAN,{
 		mes "were gone, I've been helping";
 		mes "myself to some of these drinks~";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Say, what's that";
 		mes "you're drinking?";
 		next;
@@ -6045,7 +6045,7 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 
 	if (mao_request == 5)
 	{
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Excuse me, but may I ask";
 		mes "you a question? I'm hoping";
 		mes "that you might be able to";
@@ -6076,7 +6076,7 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 				mes "heads or tails out of whatever";
 				mes "he's been studying, though...";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Great, when was the";
 				mes "last time you've seen";
 				mes "him? You see, we're";
@@ -6139,7 +6139,7 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 	}
 	else if(mao_request == 6)
 	{
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I was wondering if";
 		mes "I could look through";
 		mes "that Mr. Moore was studying...";
@@ -6158,7 +6158,7 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 		mes "she quickly vanished before";
 		mes "I could ask her for her name or Mr. Moore's contact information.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Damn! That information";
 		mes "would have been really";
 		mes "helpful! (^333333I better not let";
@@ -6187,7 +6187,7 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 	}
 	else if(mao_request == 105)
 	{
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Excuse me, but I'm";
 		mes "looking for a Ms. Yunia?";
 		next;
@@ -6206,7 +6206,7 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 				mes "strange men attacked him";
 				mes "right here in Juno Library!";
 				next;
-				mes "[" + strcharinfo(0) + "]";
+				mes "[" + strcharinfo(PC_NAME) + "]";
 				mes "Oh, he's perfectly safe.";
 				mes "We've got a professional to";
 				mes "ensure nothing happens to him.";
@@ -6263,7 +6263,7 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 		mes "quickly to make sure that";
 		mes "I gave you the right ones.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Let's see here...";
 		mes "Some of these sentences";
 		mes "are underlined... Ah, and here";
@@ -6277,7 +6277,7 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 		mes "monster was sealed, and a";
 		mes "castle and town was built over^FFFFFF ^4d4dff its prison. This place is Morroc.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Whoa, that's actually";
 		mes "pretty interesting. But";
 		mes "I need to do my job first.";
@@ -6295,7 +6295,7 @@ yuno_in04,180,106,3	script	Reading Girl	1_F_MERCHANT_01,{
 	}
 	else
 	{
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Excuse me...";
 		mes "But what are";
 		mes "you reading?";
@@ -6339,7 +6339,7 @@ yuno_in04,175,129,0	script	Workbook#mao	HIDDEN_NPC,{
 			mes "Apparently, this was ripped";
 			mes "from Moore's journal.^000000";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Nuts...";
 			mes "I came all the";
 			mes "way to Juno to look";
@@ -6355,7 +6355,7 @@ yuno_in04,175,129,0	script	Workbook#mao	HIDDEN_NPC,{
 			mes "look! Don't throw it away yet!";
 			donpcevent "Kidd#book::OnEnter";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Holy--!";
 			mes "You just came";
 			mes "out of nowhere!";
@@ -6367,7 +6367,7 @@ yuno_in04,175,129,0	script	Workbook#mao	HIDDEN_NPC,{
 			mes "both take a careful look at";
 			mes "this paper from Moore's desk.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "...Morroc...";
 			mes "Were summoned...";
 			mes "Through the tower...?";
@@ -6489,7 +6489,7 @@ que_job01,8,77,1	script	#linstairs	HIDDEN_WARP_NPC,3,3,{
 		mes "about this assignment.";
 		donpcevent "Lin#stairs::OnEnter";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Waaa-!";
 		mes "You came out";
 		mes "of nowhere!";
@@ -6548,7 +6548,7 @@ que_job01,8,77,1	script	#linstairs	HIDDEN_WARP_NPC,3,3,{
 		mes "We need to know how they're";
 		mes "linked to the missing kids.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I guess since he hasn't";
 		mes "met me yet, maybe he'll";
 		mes "talk to me. Alright, I'll do it. ";
@@ -6567,7 +6567,7 @@ que_job01,8,77,1	script	#linstairs	HIDDEN_WARP_NPC,3,3,{
 	else if(mao_request == 117)
 	{
 		cutin "mocseal_rin01.bmp",2;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "L-Lin...?";
 		mes "You there?";
 		donpcevent "Lin#stairs::OnEnter";
@@ -6578,14 +6578,14 @@ que_job01,8,77,1	script	#linstairs	HIDDEN_WARP_NPC,3,3,{
 		mes "to find that historian?";
 		mes "What exactly did you learn?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, I was only able to";
 		mes "speak to the historian's";
 		mes "asssistant. Let's see...";
 		mes "I found out about the";
 		mes "origin of this city's name...";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Thanatos Tower was used";
 		mes "by Morroc Satan to summon";
 		mes "his own monsters into our";
@@ -6601,7 +6601,7 @@ que_job01,8,77,1	script	#linstairs	HIDDEN_WARP_NPC,3,3,{
 		mes "some reason. Hm. What else";
 		mes "did you manage to learn?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, Satan Morroc, if it";
 		mes "exists, might be able to";
 		mes "come back into our world";
@@ -6637,14 +6637,14 @@ que_job01,8,77,1	script	#linstairs	HIDDEN_WARP_NPC,3,3,{
 		mes "about Thanatos Tower?";
 		donpcevent "Lin#stairs::OnEnter";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well, I found some old log";
 		mes "entries about Satan Morroc.";
 		mes "They pretty much confirm that";
 		mes "Satan Morroc is real, and that";
 		mes "it's sealed under Morroc Castle. ";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "The Rekenber Corporation";
 		mes "is also responsible for the";
 		mes "tower's reconstruction, and";
@@ -6720,7 +6720,7 @@ moc_fild10,281,148,1	script	Upturned Spot#water	HIDDEN_NPC,{
 			delitem 996,1;
 			mao_request = 15;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Alright...";
 			mes "Now I should look for";
 			mes "the crest hidden in the";
@@ -6765,7 +6765,7 @@ moc_fild10,281,148,1	script	Upturned Spot#water	HIDDEN_NPC,{
 			delitem 995,1;
 			mao_request = 114;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Alright...";
 			mes "Now I should look for";
 			mes "the crest hidden in the";
@@ -6803,7 +6803,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 		mes "you can feel the wind blowing";
 		mes "strongly against your skin.^000000";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "This must be what";
 		mes "Raiyan Moore is so";
 		mes "interested in. Well,";
@@ -6821,7 +6821,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 		mes "you can feel the wind blowing";
 		mes "strongly against your skin.^000000";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Great, now that I found";
 		mes "this, I really need to tell";
 		mes "Kidd about it. Hopefully, he";
@@ -6839,7 +6839,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 			mes "you can feel the wind blowing";
 			mes "strongly against your skin.^000000";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Okay, the power of the";
 			mes "Earth counteracts the ";
 			mes "Wind. I'll just pull out this";
@@ -6860,7 +6860,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 			delitem 997,1;
 			mao_request = 13;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Great, now that I'm done";
 			mes "with this crest, I need to";
 			mes "find the next one. Let's see,";
@@ -6877,7 +6877,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 			mes "you can feel the wind blowing";
 			mes "strongly against your skin.^000000";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Wind, wind, wind...";
 			mes "What do I use to counteract";
 			mes "the Wind property? It was...";
@@ -6885,7 +6885,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 			switch( select( "Fire","Ice","Wind","Earth" ) )
 			{
 				case 1:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Fire...? No, that's...";
 					mes "Wind and Fire sort of";
 					mes "go together, don't they?";
@@ -6893,7 +6893,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 					break;
 
 				case 2:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Ice...? No...";
 					mes "The power of Wind, of";
 					mes "lightning, supercedes";
@@ -6902,7 +6902,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 					break;
 
 				case 3:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "I got it...!";
 					mes "I'll fight Wind";
 					mes "with Wind! No...";
@@ -6911,7 +6911,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 					break;
 
 				case 4:
-					mes "[" + strcharinfo(0) + "]";
+					mes "[" + strcharinfo(PC_NAME) + "]";
 					mes "Earth...?";
 					mes "That's it! I need a";
 					mes "Great Nature to use";
@@ -6939,7 +6939,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 		mes "the Wind. However, the air";
 		mes "flow around it seems weak.^000000";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "This must be what I'm looking";
 		mes "for. It looks like an artifact of the Wind element, but the wind";
 		mes "around here isn't as strong as it should be. I think I might need";
@@ -6952,7 +6952,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 		if (countitem(Rough_Wind))
 		{
 			cutin "mocseal_wind02.bmp",2;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Let's see...";
 			mes "Hopefully this";
 			mes "Rough Wind will do";
@@ -6969,7 +6969,7 @@ moc_fild19,21,33,1	script	Unturned Spot#wind	HIDDEN_NPC,{
 			mao_request = 112;
 			next;
 			cutin "mocseal_wind01.bmp",2;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Well, I guess that's that.";
 			mes "Now I need to talk to Lin";
 			mes "and figure out if there are";
@@ -7012,7 +7012,7 @@ moc_fild12,280,36,1	script	Unturned Spot#earth	HIDDEN_NPC,{
 			mes "the power of the Earth.^000000";
 			cutin "mocseal_earth01.bmp",2;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Let's see...";
 			mes "I should use this";
 			mes "Flame Heart to";
@@ -7036,7 +7036,7 @@ moc_fild12,280,36,1	script	Unturned Spot#earth	HIDDEN_NPC,{
 			delitem 994,1;
 			mao_request = 14;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "That was simple.";
 			mes "Alright, now I should";
 			mes "try to find the crest";
@@ -7087,7 +7087,7 @@ moc_fild12,280,36,1	script	Unturned Spot#earth	HIDDEN_NPC,{
 			delitem 997,1;
 			mao_request = 113;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Great, I think that actually";
 			mes "worked! Now, I should try";
 			mes "to find the crest hidden to";
@@ -7097,7 +7097,7 @@ moc_fild12,280,36,1	script	Unturned Spot#earth	HIDDEN_NPC,{
 		}
 		else
 		{
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "The next time that";
 			mes "I come here, I better";
 			mes "have a Great Nature ready...";
@@ -7126,7 +7126,7 @@ moc_fild07,192,166,1	script	Unturned Spot#fire	HIDDEN_NPC,{
 			mes "crest that symbolizes Fire.^000000";
 			cutin "mocseal_fire01.bmp",2;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "This crest must be";
 			mes "imbued with the Fire";
 			mes "element. I better see";
@@ -7150,7 +7150,7 @@ moc_fild07,192,166,1	script	Unturned Spot#fire	HIDDEN_NPC,{
 			delitem 995,1;
 			mao_request = 16;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "It looks like my work";
 			mes "here is done. Now, I better";
 			mes "go back and report to Kidd.";
@@ -7194,7 +7194,7 @@ moc_fild07,192,166,1	script	Unturned Spot#fire	HIDDEN_NPC,{
 			delitem 994,1;
 			mao_request = 115;
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Well, that's the";
 			mes "last elemental crest.";
 			mes "Now I better go back";
@@ -7547,7 +7547,7 @@ OnTouch:
 		mes "This is getting";
 		mes "too serious. Valdes,";
 		mes "wait, I'm coming with you!";
-		mes ""+ strcharinfo(0) +", come on, quickly!";
+		mes ""+ strcharinfo(PC_NAME) +", come on, quickly!";
 		mao_request = 25;
 		close2;
 		donpcevent "Kidd#2::OnInit";
@@ -7585,7 +7585,7 @@ OnTouch:
 		mes "Raiyan Moore... It's too";
 		mes "much of a coincidence...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Lin! I'm sorry to";
 		mes "interrupt, but Mr. R";
 		mes "is missing... I don't";
@@ -7603,7 +7603,7 @@ OnTouch:
 		mes "This is what";
 		mes "I feared the most...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What's...";
 		mes "What's going on?";
 		mapannounce "que_job01","...We... need... blood... of... innocence...",1,0x7B68EE;
@@ -7658,7 +7658,7 @@ OnTouch:
 		mes "^333333...........No........";
 		mes "This.........can't...^000000";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh?! That sounds";
 		mes "like Lin's voice...";
 		mes "Where are they?";
@@ -7705,7 +7705,7 @@ OnTouch:
 		mes "My head feels like";
 		mes "it's gonna split open!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "What...";
 		mes "What's happening?";
 		mapannounce "que_job01","...We... need... holier... blood... the ritual...",1,0x7B68EE;
@@ -7717,7 +7717,7 @@ OnTouch:
 		mes "Lin?! What happened to her?";
 		next;
 		mes "[Valdes]";
-		mes ""+ strcharinfo(0) +", I'm going";
+		mes ""+ strcharinfo(PC_NAME) +", I'm going";
 		mes "to call every member of the";
 		mes "Assassin Guild. You and Kidd";
 		mes "go try to find the source of";
@@ -7899,7 +7899,7 @@ OnTouch:
 	mes "echoes in your head as you";
 	mes "wake up in some strage place.^000000";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Where am I...?";
 	mes "What is this place?";
 	mes "Arrgh, my head hurts,";
@@ -7907,7 +7907,7 @@ OnTouch:
 	mes "Satan Morroc's revival...";
 	mapannounce "que_job02","...Blood... is the currency... of the soul...",1,0x7B68EE;
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "There's that voice";
 	mes "again! Kidd? Valdes?";
 	mes "Are any of you here?";
@@ -7953,7 +7953,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "What's going on?";
 	mes "Who's there? Kidd?";
 	mes "Valdes? Anybody?";
@@ -8007,7 +8007,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "...I keep hearing";
 	mes "things! Where the hell";
 	mes "is it all coming from?!";
@@ -8061,7 +8061,7 @@ OnTouch:
 	mes "............";
 	mapannounce "que_job02","...Moooore... Give me... more blood...",1,0xDDA0DD;
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "These voices...";
 	mes "They're like past";
 	mes "memories of something";
@@ -8171,7 +8171,7 @@ OnTouch:
 	mes "............";
 	mapannounce "que_job02","...Morroc Satan... needs... fresher blood...",1,0x7B68EE;
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "I can't...";
 	mes "I can't endure";
 	mes "listening to this";
@@ -8225,7 +8225,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "Where is that voice";
 	mes "coming from? Wait...";
 	mes "That's... That's happening";
@@ -8340,7 +8340,7 @@ que_job02,66,85,5	script	Dandelion Member#1_bt	4_M_MASKMAN,{
 		mes "Hey... Are";
 		mes "you alright?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Thanks...";
 		mes "I think you just";
 		mes "saved my life. What's";
@@ -8354,7 +8354,7 @@ que_job02,66,85,5	script	Dandelion Member#1_bt	4_M_MASKMAN,{
 		mes "surprised if Satan Morroc was";
 		mes "almost unsealed by now...";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Wait...";
 		mes "What about Kidd?";
 		mes "Where did he go?";
@@ -8438,7 +8438,7 @@ OnEnter:
 
 OnTouch:
 	donpcevent "#maogate1_setting::OnStop";
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Hey, what's going";
 	mes "on here? Kidd! Lin?";
 	mes "A-and who's that guy?";
@@ -8447,7 +8447,7 @@ OnTouch:
 	next;
 	cutin "mocseal_kid01.bmp",0;
 	mes "[Kidd]";
-	mes ""+ strcharinfo(0) +"...";
+	mes ""+ strcharinfo(PC_NAME) +"...";
 	mes "Stay back and don't come";
 	mes "near me! Lin, why are you";
 	mes "doing this! Give up your";
@@ -8513,7 +8513,7 @@ OnTouch:
 	donpcevent "Lin#maogate1_2::OnEnter";
 	donpcevent "#maogate1_end2::OnSpell";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Kidd! Lin!";
 	next;
 	mes "[Lin]";
@@ -8546,7 +8546,7 @@ OnTouch:
 	monster "que_job02",135,105,"Mummy",1041,1,"#maogate1_end::OnMyMobDead";
 	monster "que_job02",132,105,"Mummy",1041,1,"#maogate1_end::OnMyMobDead";
 	monster "que_job02",128,105,"Mummy",1041,1,"#maogate1_end::OnMyMobDead";
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Bastard, what";
 	mes "are you doing?";
 	mes "Holy crap, m-monsters!";
@@ -8751,7 +8751,7 @@ OnTouch:
 	{
 		cutin "mocseal_kid01.bmp",2;
 		mes "[Kidd]";
-		mes "" + strcharinfo(0) + "!";
+		mes "" + strcharinfo(PC_NAME) + "!";
 		mes "Hey, you alright?";
 		mes "Come on, let's head";
 		mes "back, the other members";
@@ -8882,7 +8882,7 @@ OnTouch:
 	mes "echoes in your head as you";
 	mes "wake up in some strage place.^000000";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Where am I...?";
 	mes "What is this place?";
 	mes "Arrgh, my head hurts,";
@@ -8890,7 +8890,7 @@ OnTouch:
 	mes "Satan Morroc's revival...";
 	mapannounce "que_job03","...Blood... is the currency... of the soul...",1,0x7B68EE;
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "There's that voice";
 	mes "again! Kidd? Valdes?";
 	mes "Are any of you here?";
@@ -8936,7 +8936,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "What's going on?";
 	mes "Who's there? Kidd?";
 	mes "Valdes? Anybody?";
@@ -8990,7 +8990,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "...I keep hearing";
 	mes "things! Where the hell";
 	mes "is it all coming from?!";
@@ -9044,7 +9044,7 @@ OnTouch:
 	mes "............";
 	mapannounce "que_job03","...Moooore... Give me... more blood...",1,0xDDA0DD;
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "These voices...";
 	mes "They're like past";
 	mes "memories of something";
@@ -9154,7 +9154,7 @@ OnTouch:
 	mes "............";
 	mapannounce "que_job03","...Morroc Satan... needs... fresher blood...",1,0x7B68EE;
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "I can't...";
 	mes "I can't endure";
 	mes "listening to this";
@@ -9208,7 +9208,7 @@ OnTouch:
 	mes ".........";
 	mes "............";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "Where is that voice";
 	mes "coming from? Wait...";
 	mes "That's... That's happening";
@@ -9324,7 +9324,7 @@ que_job03,66,85,5	script	Dandelion Member#2_bt	4_M_MASKMAN,{
 		mes "That was a pretty huge";
 		mes "explosion just now!";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Mr. R...?";
 		mes "Oh. You're not him.";
 		mes "Thanks, I think you";
@@ -9347,7 +9347,7 @@ que_job03,66,85,5	script	Dandelion Member#2_bt	4_M_MASKMAN,{
 		mes "him. It turns out that we were";
 		mes "right about Moore: he's really planning to revive Satan Morroc.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Huh? What are you";
 		mes "talking about? Wait,";
 		mes "Raiyan Moore? Do you";
@@ -9366,7 +9366,7 @@ que_job03,66,85,5	script	Dandelion Member#2_bt	4_M_MASKMAN,{
 		mes "This is all insane!";
 		emotion e_gasp,0;
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "That's... That's Lin's";
 		mes "voice! I better walk";
 		mes "through this darkness";
@@ -9431,7 +9431,7 @@ OnEnter:
 
 OnTouch:
 	donpcevent "#maogate2_setting::OnStop";
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Hey, what's going";
 	mes "on here? Kidd! Lin?";
 	mes "A-and who's that guy?";
@@ -9440,7 +9440,7 @@ OnTouch:
 	next;
 	cutin "mocseal_kid01.bmp",0;
 	mes "[Kidd]";
-	mes ""+ strcharinfo(0) +"...";
+	mes ""+ strcharinfo(PC_NAME) +"...";
 	mes "Stay back and don't come";
 	mes "near me! Lin, why are you";
 	mes "doing this! Give up your";
@@ -9506,7 +9506,7 @@ OnTouch:
 	donpcevent "Lin#maogate2_2::OnEnter";
 	donpcevent "#maogate2_end2::OnSpell";
 	next;
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Kidd! Lin!";
 	next;
 	mes "[Lin]";
@@ -9539,7 +9539,7 @@ OnTouch:
 	monster "que_job03",135,105,"Mummy",1041,1,"#maogate2_end::OnMyMobDead";
 	monster "que_job03",132,105,"Mummy",1041,1,"#maogate2_end::OnMyMobDead";
 	monster "que_job03",128,105,"Mummy",1041,1,"#maogate2_end::OnMyMobDead";
-	mes "[" + strcharinfo(0) + "]";
+	mes "[" + strcharinfo(PC_NAME) + "]";
 	mes "Bastard, what";
 	mes "are you doing?";
 	mes "Holy crap, m-monsters!";
@@ -9745,7 +9745,7 @@ OnTouch:
 	{
 		cutin "mocseal_kid01.bmp",2;
 		mes "[Kidd]";
-		mes "" + strcharinfo(0) + "...!";
+		mes "" + strcharinfo(PC_NAME) + "...!";
 		mes "Can you hear me? Oh man...";
 		mes "You don't look so hot. Come";
 		mes "on, we gotta get you back";
@@ -9804,7 +9804,7 @@ morocc,30,29,5	script	Member#mao1	4_M_MASKMAN,10,15,{
 	mes "save for tomorrow's";
 	mes "meeting. I'll see you then.";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "Is this some";
 	mes "sort of volunteer";
 	mes "service group?";
@@ -9887,7 +9887,7 @@ morocc,29,26,0	script	Member#mao2	4_M_MASKMAN,{
 	mes "save for tomorrow's";
 	mes "meeting. I'll see you then.";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "Is this some";
 	mes "sort of volunteer";
 	mes "service group?";
@@ -9924,7 +9924,7 @@ morocc,33,27,1	script	Member#mao3	4_M_MASKMAN,{
 	mes "save for tomorrow's";
 	mes "meeting. I'll see you then.";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "Is this some";
 	mes "sort of volunteer";
 	mes "service group?";
@@ -9961,7 +9961,7 @@ morocc,34,30,3	script	Member#mao4	4_M_MASKMAN,{
 	mes "save for tomorrow's";
 	mes "meeting. I'll see you then.";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "Is this some";
 	mes "sort of volunteer";
 	mes "service group?";
@@ -10218,7 +10218,7 @@ que_job01,68,88,5	script	Simon#mao	4_M_SITDOWN,{
 	mes "Shut up! Shut up!";
 	mes "Come back to us!";
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "I have no idea what's";
 	mes "going on, but it seems";
 	mes "pretty bad. Sometimes it's";

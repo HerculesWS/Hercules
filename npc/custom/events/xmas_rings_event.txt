@@ -128,7 +128,7 @@ louyang,224,249,4	script	Sneewy	4_F_KID3,{
 		}
 		set Q_XMSRINGS,2;
 		delitem 644,4;
-		getnameditem 2637,strcharinfo(0);
+		getnameditem 2637,strcharinfo(PC_NAME);
 		emotion e_kis2;
 		mes "Thank you! Here's my li'l something for you!";
 		next;
@@ -178,7 +178,7 @@ izlu2dun,133,160,2	script	Snoowy	4_F_06,{
 		}
 		set Q_XMSRINGS,3;
 		delitem 644,3;
-		getnameditem 2636,strcharinfo(0);
+		getnameditem 2636,strcharinfo(PC_NAME);
 		emotion e_kis;
 		mes "Thaank yoouu! Have this magic ring!";
 		close;

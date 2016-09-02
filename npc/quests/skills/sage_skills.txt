@@ -178,7 +178,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		mes "you would. Very well then,";
 		mes "I hope you adeptly use these";
 		mes "talents for the right purposes.";
-		mes "Farewell for now, "+strcharinfo(0)+".";
+		mes "Farewell for now, "+strcharinfo(PC_NAME)+".";
 		close;
 	}
 	else if(SAG_SK == 0) {
@@ -190,7 +190,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		next;
 		select("I seek new knowledge.");
 		mes "[Mishuna]";
-		mes "Ah, you must be "+strcharinfo(0)+".";
+		mes "Ah, you must be "+strcharinfo(PC_NAME)+".";
 		mes "I've looked forward to meeting";
 		mes "you. In the noble pursuit of";
 		mes "knowledge, might I suggest";
@@ -342,7 +342,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 			skill "SA_CREATECON",1,0;
 			next;
 			mes "[Mishuna]";
-			mes "Wow, "+strcharinfo(0)+"!";
+			mes "Wow, "+strcharinfo(PC_NAME)+"!";
 			mes "You learned that skill";
 			mes "really quickly! No wonder";
 			mes "people say that you're one";
@@ -455,7 +455,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		mes "skill. So be aware of that.";
 		next;
 		mes "[Mishuna]";
-		mes "Now, "+strcharinfo(0)+",";
+		mes "Now, "+strcharinfo(PC_NAME)+",";
 		mes "I'm going to cast a spell";
 		mes "that will help you memorize";
 		mes "the "+.@skill$[.@i]+" Elemental Change";
@@ -478,7 +478,7 @@ yuno_in03,176,24,3	script	Mischna	4_M_SAGE_C,{
 		skill .@skill[.@i],1,0;
 		next;
 		mes "[Mishuna]";
-		mes strcharinfo(0)+"...";
+		mes strcharinfo(PC_NAME)+"...";
 		mes "I'm happy to say that you've";
 		mes "successfully memorized the";
 		mes .@skill$[.@i]+" Elemental Change skill.";

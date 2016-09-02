@@ -143,7 +143,7 @@ job_ko,25,115,4	script	Old Man#ko	4_M_KAGE_OLD,{
 			cutin "",255;
 			end;
 		}
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Excuse me...";
 		next;
 		mes "^1A95E6You tried to talk to the old man but there is no response. Just when you are about to turn away...^1A95E6";
@@ -1398,8 +1398,8 @@ OnTouch:
 			mes "< Used 5 LP >";
 			set job_kagero_lp, job_kagero_lp - 5;
 			next;
-			set $20110808_sko01$, strcharinfo(0);
-			mes strcharinfo(0)+" was here.";
+			set $20110808_sko01$, strcharinfo(PC_NAME);
+			mes strcharinfo(PC_NAME)+" was here.";
 			mes "You left your name.";
 			next;
 		} else {
@@ -1969,7 +1969,7 @@ job_ko,127,125,4	script	Red Leopard Joe#ko	4_M_JOB_ASSASSIN,{
 		mes "Don't like it that I'm not the first one you visited but that is not important.";
 		next;
 		mes "[Red Leopard Joe]";
-		mes "Alright, " + strcharinfo(0) + "!";
+		mes "Alright, " + strcharinfo(PC_NAME) + "!";
 		mes "Welcome to the workshop where weapons are created for the family.";
 		next;
 		mes "[Red Leopard Joe]";
@@ -2158,7 +2158,7 @@ job_ko,127,125,4	script	Red Leopard Joe#ko	4_M_JOB_ASSASSIN,{
 		if (questprogress(5143) == 1) completequest 5143;
 		if (questprogress(5144) == 1) completequest 5144;
 		mes "[Red Leopard Joe]";
-		mes "'" + strcharinfo(0) + "'";
+		mes "'" + strcharinfo(PC_NAME) + "'";
 		mes "Passed the weapon test!!";
 		close2;
 		enable_items;
@@ -2555,9 +2555,9 @@ job_ko,148,46,4	script	Guide Gion#ko2	4_M_KAGE_OLD,{
 		mes "[Guide Gion]";
 		mes "The Test of Battle will be put off for a while. Don't worry because this does not have affect to other tests.";
 		next;
-		mapannounce "job_ko","[Gion] My Friend " + strcharinfo(0) + " made it to " + (Sex == SEX_MALE ? "Kagerou" : "Oboro") + " Path. Congratulations!!",bc_map;
+		mapannounce "job_ko","[Gion] My Friend " + strcharinfo(PC_NAME) + " made it to " + (Sex == SEX_MALE ? "Kagerou" : "Oboro") + " Path. Congratulations!!",bc_map;
 		mes "[Guide Gion]";
-		mes "My friend " + strcharinfo(0) + " made it to " + (Sex == SEX_MALE ? "Kagerou" : "Oboro") + " Path. Congratulations!!";
+		mes "My friend " + strcharinfo(PC_NAME) + " made it to " + (Sex == SEX_MALE ? "Kagerou" : "Oboro") + " Path. Congratulations!!";
 		next;
 		cutin "job_ko02",2;
 		mes "[Guide Gion]";
@@ -2570,14 +2570,14 @@ job_ko,148,46,4	script	Guide Gion#ko2	4_M_KAGE_OLD,{
 		donpcevent "Red Leopard Joe#ko2::OnEnable";
 		cutin "job_ko04",2;
 		mes "[Guide Gion]";
-		mes "I'm sorry I almost forgot about you two. Do you have anything to share with " + strcharinfo(0) + "?";
+		mes "I'm sorry I almost forgot about you two. Do you have anything to share with " + strcharinfo(PC_NAME) + "?";
 		next;
 		cutin "",255;
 		mes "[Cougar]";
 		mes "Hmm... Embarrassing... to speak so suddenly...";
 		next;
 		mes "[Cougar]";
-		mes strcharinfo(0) + ", you are now a proud member of our family. Always hold your head high and...";
+		mes strcharinfo(PC_NAME) + ", you are now a proud member of our family. Always hold your head high and...";
 		next;
 		mes "[Cougar]";
 		mes "^777777(Gai's voice fades out.)^000000.";
@@ -2620,7 +2620,7 @@ job_ko,148,46,4	script	Guide Gion#ko2	4_M_KAGE_OLD,{
 		for (set .@i,5131; .@i<=5146; set .@i,.@i+1)
 			if (questprogress(.@i)) erasequest .@i;
 		set job_kagero,9;
-		getnameditem .@item,strcharinfo(0);
+		getnameditem .@item,strcharinfo(PC_NAME);
 		jobchange(Sex == SEX_MALE ? Job_Kagerou : Job_Oboro);
 		donpcevent "Summon Target#ko::OnEnable";
 		mes "[Guide Gion]";

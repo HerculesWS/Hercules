@@ -703,7 +703,7 @@ bat_a02,53,377,3	script	Guillaume Vintenar#a02_a	4_M_KY_HEAD,{
 				mes("[Axl Rose]");
 				mes("Blessed Guillaume!");
 				mes("Let's enjoy our glorious victory!");
-				mesf("%s, it's a sign reflecting victory.", strcharinfo(0));
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
 				getitem BF_Badge1,3;
 			}
@@ -711,7 +711,7 @@ bat_a02,53,377,3	script	Guillaume Vintenar#a02_a	4_M_KY_HEAD,{
 				mes("[Axl Rose]");
 				mes("Blessed Guillaume!");
 				mes("Let's enjoy our glorious victory!");
-				mesf("%s, it's a sign reflecting victory.", strcharinfo(0));
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
 				getitem BF_Badge1,.@medal_gap;
 			}
@@ -765,7 +765,7 @@ bat_a02,53,377,3	script	Guillaume Vintenar#a02_a	4_M_KY_HEAD,{
 				mes("[Axl Rose]");
 				mes("Blessed Guillaume!");
 				mes("Let's enjoy our glorious victory!");
-				mesf("%s, it's a sign reflecting victory.", strcharinfo(0));
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
 				getitem BF_Badge1,3;
 			}
@@ -773,7 +773,7 @@ bat_a02,53,377,3	script	Guillaume Vintenar#a02_a	4_M_KY_HEAD,{
 				mes("[Axl Rose]");
 				mes("Blessed Guillaume!");
 				mes("Let's enjoy our glorious victory!");
-				mesf("%s, it's a sign of victory.", strcharinfo(0));
+				mesf("%s, it's a sign of victory.", strcharinfo(PC_NAME));
 				close2;
 				getitem BF_Badge1,.@medal_gap;
 			}
@@ -797,7 +797,7 @@ bat_a02,45,19,3	script	Croix Vintenar#a02_b	4_M_CRU_HEAD,{
 				mes("[Swandery]");
 				mes("Blessed Croix!");
 				mes("Let's enjoy our glorious victory!");
-				mesf("%s, it's a sign reflecting victory.", strcharinfo(0));
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
 				getitem BF_Badge1,3;
 			}
@@ -805,7 +805,7 @@ bat_a02,45,19,3	script	Croix Vintenar#a02_b	4_M_CRU_HEAD,{
 				mes("[Swandery]");
 				mes("Blessed Croix!");
 				mes("Let's enjoy our glorious victory!");
-				mesf("%s, it's a sign reflecting victory.", strcharinfo(0));
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
 				getitem BF_Badge1,.@medal_gap;
 			}
@@ -815,7 +815,7 @@ bat_a02,45,19,3	script	Croix Vintenar#a02_b	4_M_CRU_HEAD,{
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 0) {
 				mes("[Swandery]");
-				mesf("Oh, %s Don't be sad.", strcharinfo(0));
+				mesf("Oh, %s Don't be sad.", strcharinfo(PC_NAME));
 				mes("Even though we didn't win, we did our best.");
 				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
@@ -823,7 +823,7 @@ bat_a02,45,19,3	script	Croix Vintenar#a02_b	4_M_CRU_HEAD,{
 			}
 			else {
 				mes("[Swandery]");
-				mesf("Oh, %s Don't be sad.", strcharinfo(0));
+				mesf("Oh, %s Don't be sad.", strcharinfo(PC_NAME));
 				mes("Even though we didn't win, we did our best.");
 				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
@@ -837,7 +837,7 @@ bat_a02,45,19,3	script	Croix Vintenar#a02_b	4_M_CRU_HEAD,{
 			.@medal_gap = 500 - .@your_medal;
 			if (.@medal_gap > 0) {
 				mes("[Swandery]");
-				mesf("Oh, %s Don't be sad.", strcharinfo(0));
+				mesf("Oh, %s Don't be sad.", strcharinfo(PC_NAME));
 				mes("Even though we didn't win, we did our best.");
 				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
@@ -845,7 +845,7 @@ bat_a02,45,19,3	script	Croix Vintenar#a02_b	4_M_CRU_HEAD,{
 			}
 			else {
 				mes("[Swandery]");
-				mesf("Oh, %s Don't be sad.", strcharinfo(0));
+				mesf("Oh, %s Don't be sad.", strcharinfo(PC_NAME));
 				mes("Even though we didn't win, we did our best.");
 				mes("This is a Royal gift from Croix, and please don't forget this battle. We will win the next one.");
 				close2;
@@ -859,7 +859,7 @@ bat_a02,45,19,3	script	Croix Vintenar#a02_b	4_M_CRU_HEAD,{
 				mes("[Swandery]");
 				mes("Blessed Croix!");
 				mes("Let's enjoy our glorious victory!");
-				mesf("%s, it's a sign reflecting victory.", strcharinfo(0));
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
 				getitem BF_Badge1,3;
 			}
@@ -867,7 +867,7 @@ bat_a02,45,19,3	script	Croix Vintenar#a02_b	4_M_CRU_HEAD,{
 				mes("[Swandery]");
 				mes("Blessed Croix!");
 				mes("Let's enjoy our glorious victory!");
-				mesf("%s, it's a sign reflecting victory.", strcharinfo(0));
+				mesf("%s, it's a sign reflecting victory.", strcharinfo(PC_NAME));
 				close2;
 				getitem BF_Badge1,.@medal_gap;
 			}

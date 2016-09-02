@@ -115,7 +115,7 @@ in_rogue,363,122,4	script	Rogue Guildsman#rg	4_F_ROGUE,{
 				mes "Eh, nice meetin' you, I guess. I'm Markie, and I do work for the Rogue Guild, a philanthro-- *ahem* a ^800000feelanthropist^000000 group, as you can see. So what's your name?";
 				next;
 				mes "[Markie]";
-				mes "..." + strcharinfo(0) + "?";
+				mes "..." + strcharinfo(PC_NAME) + "?";
 				mes "Heh heh! Cool name.";
 				mes "If it was dorky, we'd";
 				mes "make you change it,";
@@ -585,10 +585,10 @@ in_rogue,376,23,1	script	Mr. Smith#rg	1_M_LIBRARYMASTER,{
 			mapannounce "in_rogue","What the--?! What's with this chat filter?! Stop #*!@$ing me! you stupid F#$%*! Let me talk!!!",bc_map;
 			next;
 			mes "[Mr. Smith]";
-			mes "What the f#@k you looking at...? " + strcharinfo(0) + "? That's your name!?";
-			mapannounce "in_rogue","What the f#@k you looking at...? " + strcharinfo(0) + "? That's your name!?",bc_map;
+			mes "What the f#@k you looking at...? " + strcharinfo(PC_NAME) + "? That's your name!?";
+			mapannounce "in_rogue","What the f#@k you looking at...? " + strcharinfo(PC_NAME) + "? That's your name!?",bc_map;
 			mes " ";
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Umm...";
 			mes "Sir...?";
 			mes "I didn't mean to make you upset. I just came here to so I could become a Rogue.";
@@ -1037,20 +1037,20 @@ OnTouch:
 	next;
 	switch(select("My father", "Aragham", "Aragon", "Legolas")) {
 	case 1:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "My father";
 		break;
 	case 2:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Aragham";
 		.@rogue_t += 10;
 		break;
 	case 3:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Aragon";
 		break;
 	case 4:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Legolas";
 		break;
 	}
@@ -1107,20 +1107,20 @@ OnTouch:
 	next;
 	switch(select("My father", "Aragham", "Aragon", "Legolas")) {
 	case 1:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "My father";
 		.@rogue_t += 10;
 		break;
 	case 2:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Aragham";
 		break;
 	case 3:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Aragon";
 		break;
 	case 4:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Legolas";
 		break;
 	}
@@ -1177,20 +1177,20 @@ OnTouch:
 	next;
 	switch(select("Anntonio", "Aragham", "Antonio", "Hollgrehenn")) {
 	case 1:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Anntonio";
 		break;
 	case 2:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Aragham";
 		break;
 	case 3:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Antonio";
 		.@rogue_t += 10;
 		break;
 	case 4:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Hollgrehenn";
 		break;
 	}

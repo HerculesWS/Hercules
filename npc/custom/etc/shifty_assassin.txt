@@ -116,7 +116,7 @@ morocc,148,86,5	script	Shifty Assassin	4_F_JOB_ASSASSIN,{
 				set #ninjasr,@number-@ninjasurvived;
 				mes "Your attack failed and only ^FF0000" + #ninjasr + "^000000 Ninjas survived.";
 
-				announce @name$+" has survived " + strcharinfo(0) +"'s Ninja attack.",8;
+				announce @name$+" has survived " + strcharinfo(PC_NAME) +"'s Ninja attack.",8;
 				close;
 			}
 			// SUCCESSFUL ATTACK //
@@ -127,8 +127,8 @@ morocc,148,86,5	script	Shifty Assassin	4_F_JOB_ASSASSIN,{
 			set #ninjasr,@number-@ninjasurvived;
 			mes "Your attack succeeded but only ^FF0000" + #ninjasr + "^000000 Ninjas survived.";
 
-			atcommand strcharinfo(0) + "@kill "+@name$;
-			announce @name$+" has been assassinated by " + strcharinfo(0) +"'s Ninjas.",bc_npc;
+			atcommand strcharinfo(PC_NAME) + "@kill "+@name$;
+			announce @name$+" has been assassinated by " + strcharinfo(PC_NAME) +"'s Ninjas.",bc_npc;
 			close;
 		case 3:
 			mes "[Shifty Assassin]";

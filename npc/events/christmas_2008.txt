@@ -159,7 +159,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 							next;
 							emotion e_heh;
 							delitem 6092,6;
-							getnameditem 12354,"+strcharinfo(0)+";
+							getnameditem 12354,"+strcharinfo(PC_NAME)+";
 							mes "[Caroller]";
 							mes "Let's care about others around you on this Christmas season!";
 							close;
@@ -213,7 +213,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 					mes "[Caroller]";
 					mes "And just stay there, every Christmas, for your whole life?";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "What? What do you mean?";
 					next;
 					mes "[Caroller]";
@@ -441,7 +441,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 			next;
 			emotion e_ok;
 			getitem 2784,1;
-			getnameditem 12354,"+strcharinfo(0)+";
+			getnameditem 12354,"+strcharinfo(PC_NAME)+";
 			delitem 1019,10;
 			delitem 1005,1;
 			delitem 7312,1;
@@ -577,21 +577,21 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 			next;
 			switch(select("Poring", "Angeling", "Ghostring")) {
 				case 1:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Um...I choose Poring!";
 					.@SantaCardP = 1;
 					next;
 					break;
 
 				case 2:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Um...I choose Angeling!";
 					.@SantaCardP = 2;
 					next;
 					break;
 
 				case 3:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Um...I choose Ghostring!";
 					.@SantaCardP = 3;
 					next;
@@ -634,7 +634,7 @@ prontera,226,306,4	script	Caroller#iROxmas08	1_F_PRIEST,{
 			}
 		}
 		if (.@SantaCardWins < 3) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "This is just luck.";
 			mes "Let me try again!!";
 			next;

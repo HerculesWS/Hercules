@@ -317,7 +317,7 @@ bat_c03,51,130,5	script	Guillaume Vintenar::VintenarKvM03a	4_M_KY_HEAD,{
 			mes "[Swandery]";
 			mes "Blessed Guillaume!!";
 			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
+			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
 			close2;
 		} else {
 			set .@reward, 0;
@@ -353,12 +353,12 @@ bat_c03,148,53,1	script	Croix Vintenar::VintenarKvM03b	4_M_CRU_HEAD,{
 			mes "[Swandery]";
 			mes "Blessed Croax!!";
 			mes "Let's enjoy our glorious victory!";
-			mes "" + strcharinfo(0) + ", its a sign reflecting victory";
+			mes "" + strcharinfo(PC_NAME) + ", its a sign reflecting victory";
 			close2;
 		} else {
 			set .@reward, 0;
 			mes "[Swandery]";
-			mes "Oh, " + strcharinfo(0) + ". Don't be sad.";
+			mes "Oh, " + strcharinfo(PC_NAME) + ". Don't be sad.";
 			mes "Even though we didn't win, we did our best.";
 			mes "Please don't forget this battle. We can win the next.";
 			close2;

@@ -165,11 +165,11 @@ poring_w01,100,97,3	script	Poring Vending Machine#w	4_PORING,{
 							close;
 						}
 					}
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "... Maybe next time...";
 					close;
 				case 9:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "... Maybe next time...";
 					close;
 				}
@@ -299,7 +299,7 @@ poring_w01,96,97,3	script	Sweet Devi#wop	4_DEVIRUCHI,{
 		mes "And you need to make sure you know who's in which party.";
 		close;
 	case 3:
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "hmm, I see.";
 		close;
 	case 4:

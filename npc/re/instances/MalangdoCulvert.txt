@@ -422,7 +422,7 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
 					mes "Party name: "+getpartyname(.@party_id);
-					mes "Party leader: "+strcharinfo(0);
+					mes "Party leader: "+strcharinfo(PC_NAME);
 					mes "^0000ff"+.@md_name$+"^000000 - Reservation Failed!";
 					close;
 				}
@@ -468,7 +468,7 @@ L_Enter:
 		mes "The party leader has not reserved entrance to the dungeon yet.";
 		close;
 	}
-	mapannounce "mal_in01", strcharinfo(0)+" of the party "+getpartyname(.@party_id)+" is entering the Culvert.",bc_map,"0x00ff99";
+	mapannounce "mal_in01", strcharinfo(PC_NAME)+" of the party "+getpartyname(.@party_id)+" is entering the Culvert.",bc_map,"0x00ff99";
 	if (!questprogress(12254)) setquest 12254;
 	warp "1@pump",63,98;
 	end;
@@ -761,7 +761,7 @@ OnEnable:
 	copyarray .@partymemberaid[0],$@partymemberaid[0],$@partymembercount;
 	for(.@i = 0; .@i<$@partymembercount; ++.@i) {
 		if (attachrid(.@partymemberaid[.@i])) {
-			if (strcharinfo(3) == .@map$)
+			if (strcharinfo(PC_MAP) == .@map$)
 				viewpoint 0,.@x,.@y,.@index,0xFFFF00;
 			detachrid;
 		}

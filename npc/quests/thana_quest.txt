@@ -98,7 +98,7 @@ hu_fild01,140,163,5	script	Tower Keeper	4_M_EIN_SOLDIER,3,3,{
 		case 1:
 			if (thana_tower > 0) {
 				mes "[Gatei]";
-				mes "Oh, "+strcharinfo(0)+"!";
+				mes "Oh, "+strcharinfo(PC_NAME)+"!";
 				mes "Welcome back! Since you've";
 				mes "got a temporary Rekenber";
 				mes "work contract, your entrance";
@@ -327,7 +327,7 @@ L_Contract:
 		mes "out this employment";
 		mes "agreement first? Let's";
 		mes "see. Your name is...";
-		mes strcharinfo(0) + ", right?";
+		mes strcharinfo(PC_NAME) + ", right?";
 		next;
 		select("Yes");
 		mes "[Ditze]";
@@ -345,7 +345,7 @@ L_Contract:
 		mes " ";
 		mes "1. This employment agreement";
 		mes "is effective between Rekenber";
-		mes "Corporation (''Employer'') and "+strcharinfo(0)+"(''Employee'').";
+		mes "Corporation (''Employer'') and "+strcharinfo(PC_NAME)+"(''Employee'').";
 		mes "1-1. This employment agreement";
 		mes "is classified as a Mercernary";
 		mes "contract between both parties.";
@@ -469,7 +469,7 @@ tha_t01,140,78,4	script	Guide#reward	4_F_ZONDAGIRL,{
 		close;
 	}
 	mes "[Liei]";
-	mes "You're "+strcharinfo(0)+", yes?";
+	mes "You're "+strcharinfo(PC_NAME)+", yes?";
 	mes "Let me check our temp";
 	mes "employee records for--ah.";
 	mes "Here it is. Alright, so would";
@@ -550,7 +550,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 		mes "Oh, alright. Let me";
 		mes "check and see if you're";
 		mes "on our temp list. Hmmm...";
-		mes "Ah, you're "+strcharinfo(0)+", right?";
+		mes "Ah, you're "+strcharinfo(PC_NAME)+", right?";
 		next;
 		mes "[Burled]";
 		if (getareausers("tha_t02",226,156,236,166) < 5) {
@@ -725,7 +725,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 				case 1:
 					callsub L_Request;
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "(What's the accident...?";
 					mes "He might let me know later...)";
 					close;
@@ -805,13 +805,13 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "This is supposed to theirs, but...";
 			next;
 			mes "[Burled]";
-			mes "How would you like to keep this, "+strcharinfo(0)+"?";
+			mes "How would you like to keep this, "+strcharinfo(PC_NAME)+"?";
 			mes "Definitely this should be a secret.";
 			mes "...um, this is a little revenge for them.";
 			next;
 			mes "[Burled]";
 			mes "I can guess that there are several secrets in this tower through this note.";
-			mes "This secret should be disclosed by you, "+strcharinfo(0)+", before Rekenber does.";
+			mes "This secret should be disclosed by you, "+strcharinfo(PC_NAME)+", before Rekenber does.";
 			next;
 			mes "[Burled]";
 			mes "No matter how much power they obtain... they won't get to know about this tower...";
@@ -824,7 +824,7 @@ tha_t02,231,161,5	script	Entrance Guide	4_M_ZONDAMAN,{
 			mes "This isn't much, but here's a return present.";
 			next;
 			mes "[Burled]";
-			mes "I hope that these will be useful for you, "+strcharinfo(0)+".";
+			mes "I hope that these will be useful for you, "+strcharinfo(PC_NAME)+".";
 			next;
 			mes "- Burled gives you the note and an Old Violet Box. -";
 			mes " ";
@@ -918,7 +918,7 @@ tha_t03,67,70,0	script	Rune Device#tt1	HIDDEN_NPC,4,4,{
 		next;
 		switch(select("Investigate it.", "I don't care about it.")) {
 		case 1:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "This seems mysterious...";
 			mes "Let me investigate.";
 			next;
@@ -1191,7 +1191,7 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 			close;
 		}
 		if ((countitem(Key_Red) > 0) && (countitem(Key_Yellow) > 0)) {
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "I'll try the left wing first.";
 			mes "What key should I put in?";
 			next;
@@ -1203,7 +1203,7 @@ tha_t05,62,179,0	script	Brilliant Statue#tt3	HIDDEN_NPC,3,3,{
 			mes "The key fits and makes a click.";
 			mes "You feel the magical power growing stronger...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Now the right side...";
 			next;
 			input .@inputstr$;
@@ -1490,7 +1490,7 @@ tha_t06,226,230,0	script	Brilliant Statue#tt4	HIDDEN_NPC,3,3,{
 					mes "but it was incomplete...";
 					mes "the guard of the gate was...^000000";
 					next;
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "It is hard to read.";
 					next;
 					mes "^b22222...So I changed the location";

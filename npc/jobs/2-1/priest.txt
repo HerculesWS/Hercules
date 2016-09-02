@@ -63,9 +63,9 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 			mes "[Bishop Paul]";
 			mes "Ah...";
 			if (Sex == SEX_MALE)
-				mes "It is good to see you again, Brother " + strcharinfo(0) + ". Once again, God's grace has caused our paths to cross.";
+				mes "It is good to see you again, Brother " + strcharinfo(PC_NAME) + ". Once again, God's grace has caused our paths to cross.";
 			else
-				mes "It is good to see you once again, Sister " + strcharinfo(0) + ". The grace of God has brought you once more before me.";
+				mes "It is good to see you once again, Sister " + strcharinfo(PC_NAME) + ". The grace of God has brought you once more before me.";
 			next;
 			mes "[Bishop Paul]";
 			mes "I'm pleased to see that you are continuing to lead the children of God on the right path. Is there anything I can help you with today?";
@@ -258,9 +258,9 @@ prt_church,16,41,4	script	High Bishop#prst	1_M_PASTOR,{
 				setquest 8009;
 					mes "[Bishop Paul]";
 				if (Sex == SEX_MALE)
-					mes "Now I will explain the Three Trials of Priesthood. These tribulations will bring you much suffering, but I hope you can complete them, Brother " + strcharinfo(0) + ".";
+					mes "Now I will explain the Three Trials of Priesthood. These tribulations will bring you much suffering, but I hope you can complete them, Brother " + strcharinfo(PC_NAME) + ".";
 				else
-					mes "Now I will explain the Three Trials of Priesthood. These tribulations will bring you much suffering, but I hope you can complete them, Sister " + strcharinfo(0) + ".";
+					mes "Now I will explain the Three Trials of Priesthood. These tribulations will bring you much suffering, but I hope you can complete them, Sister " + strcharinfo(PC_NAME) + ".";
 				next;
 				mes "[Bishop Paul]";
 				mes "For the First Trial, you will make a pilgrimage, and visit three acscetic Priests in a specific order.";
@@ -672,9 +672,9 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		next;
 		mes "[Sister Cecilia]";
 		if (Sex == SEX_MALE)
-			mes "Brother "+ strcharinfo(0) +"...";
+			mes "Brother "+ strcharinfo(PC_NAME) +"...";
 		else
-			mes "Sister "+ strcharinfo(0) +"...";
+			mes "Sister "+ strcharinfo(PC_NAME) +"...";
 		mes "The spiritual training is much more difficult than the pilgrimage, but I believe in you.";
 		next;
 		mes "[Sister Cecilia]";
@@ -718,16 +718,16 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		next;
 		mes "[Sister Cecilia]";
 		if (Sex == SEX_MALE)
-			mes "Brother "+ strcharinfo(0) +"...";
+			mes "Brother "+ strcharinfo(PC_NAME) +"...";
 		else
-			mes "Sister "+ strcharinfo(0) +"...";
+			mes "Sister "+ strcharinfo(PC_NAME) +"...";
 		mes "We will now begin your formal oath for the Priesthood. Make yourself comfortable, and just answer with your heart.";
 		next;
 		mes "[Sister Cecilia]";
 		if (Sex == SEX_MALE)
-			mes "Brother "+ strcharinfo(0) +",";
+			mes "Brother "+ strcharinfo(PC_NAME) +",";
 		else
-			mes "Sister "+ strcharinfo(0) +",";
+			mes "Sister "+ strcharinfo(PC_NAME) +",";
 		mes "Are you willing";
 		mes "to give your life to God?";
 		next;
@@ -816,9 +816,9 @@ prt_church,27,24,1	script	Sister Cecilia	1_F_PRIEST,{
 		}
 		mes "[Sister Cecilia]";
 		if (Sex == SEX_MALE)
-			mes "Brother "+ strcharinfo(0) +"...";
+			mes "Brother "+ strcharinfo(PC_NAME) +"...";
 		else
-			mes "Sister "+ strcharinfo(0) +"...";
+			mes "Sister "+ strcharinfo(PC_NAME) +"...";
 		mes "You have demonstrated your devotion to God. Will you swear to adhere to his teachings for the rest of your days?";
 		next;
 		if (select("I do.", "No.") == 1) {
@@ -861,9 +861,9 @@ job_prist,24,187,4	script	Peter S. Alberto	4_M_MINISTER,{
 	if (BaseJob == Job_Priest) {
 		mes "Welcome!";
 		if (Sex == SEX_MALE)
-			mes "Brother "+ strcharinfo(0) +"!";
+			mes "Brother "+ strcharinfo(PC_NAME) +"!";
 		else
-			mes "Sister "+ strcharinfo(0) +"!";
+			mes "Sister "+ strcharinfo(PC_NAME) +"!";
 		mes "So good to see you again!";
 		next;
 		mes "[Father Peter]";
@@ -1049,9 +1049,9 @@ job_prist,23,187,1	script	Peter S. Alberto#2	4_M_MINISTER,{
 	if (BaseJob == Job_Priest) {
 		mes "Welcome!";
 		if (Sex == SEX_MALE)
-			mes "Brother "+ strcharinfo(0) +"!";
+			mes "Brother "+ strcharinfo(PC_NAME) +"!";
 		else
-			mes "Sister "+ strcharinfo(0) +"!";
+			mes "Sister "+ strcharinfo(PC_NAME) +"!";
 		mes "So good to see you!";
 		next;
 		mes "[Father Peter]";
@@ -1562,7 +1562,7 @@ OnTouch:
 		mes "Greetings.";
 		next;
 		mes "[Baphomet]";
-		mes "..."+ strcharinfo(0) +".";
+		mes "..."+ strcharinfo(PC_NAME) +".";
 		next;
 		mes "[Baphomet]";
 		mes "Yes, human,";

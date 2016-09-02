@@ -267,7 +267,7 @@ L_Enter:
 		mes "appeared again.";
 		next;
 		mes "[Nurse Maenne]";
-		mes strcharinfo(0) + "'s help";
+		mes strcharinfo(PC_NAME) + "'s help";
 		mes "is needed again.";
 		mes "Please, could you give me";
 		mes "one more chance?";
@@ -312,7 +312,7 @@ L_Enter:
 			mes "The party leader did not generate the dungeon yet.";
 			close;
 		} else {
-			mapannounce "ma_dun01", getpartyname(getcharid(1))+" party's "+strcharinfo(0)+" member entered "+.@md_name$+".",bc_map,"0x00ff99";
+			mapannounce "ma_dun01", getpartyname(getcharid(1))+" party's "+strcharinfo(PC_NAME)+" member entered "+.@md_name$+".",bc_map,"0x00ff99";
 			if (getarg(1)) {
 				if (questprogress(9223)) {
 					completequest 9223;
@@ -382,7 +382,7 @@ sec_in02,27,30,0	script	Bangungot Gate	2_MONEMUS,{
 	end;
 OnTouch:
 	.@map$ = instance_mapname("1@ma_h");
-	mapannounce .@map$,"Bangungot: You silly "+strcharinfo(0)+" ....",bc_map,"0xFF82FF";
+	mapannounce .@map$,"Bangungot: You silly "+strcharinfo(PC_NAME)+" ....",bc_map,"0xFF82FF";
 	mapannounce .@map$,"Bangungot: Get out before you die...",bc_map,"0xFF82FF";
 	areamonster .@map$,44,156,46,158,"Bangungot's Mangkukulam",2339,1,instance_npcname("#Memorial Start")+"::OnMyMobDead";
 	donpcevent instance_npcname("#Memorial Start_time")+"::OnEnable";

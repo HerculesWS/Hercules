@@ -70,7 +70,7 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 				.@instance = instance_create(.@md_name$,.@party_id);
 				if (.@instance < 0) {
 					mes "Party Name: "+.@p_name$;
-					mes "Party Leader: "+strcharinfo(0);
+					mes "Party Leader: "+strcharinfo(PC_NAME);
 					mes "^0000ff"+.@md_name$+" ^000000 - Reservation Failed.";
 					close;
 				}
@@ -108,7 +108,7 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	2_MONEMUS,{
 		close;
 	}
 
-	mapannounce "gef_fild10", strcharinfo(0) + " of the party, " + .@p_name$ + " is entering the "+.@md_name$+".",bc_map,"0x00ff99";
+	mapannounce "gef_fild10", strcharinfo(PC_NAME) + " of the party, " + .@p_name$ + " is entering the "+.@md_name$+".",bc_map,"0x00ff99";
 	if (!questprogress(12059)) setquest 12059;
 	warp "1@orcs",179,15;
 	end;
@@ -876,9 +876,9 @@ OnTouch:
 	if (yong_odun < 2) {
 		mes "[Kruger]";
 		mes "*Coughing*";
-		mes ""+strcharinfo(0)+", it's you...";
+		mes ""+strcharinfo(PC_NAME)+", it's you...";
 		next;
-		mes "["+strcharinfo(0)+"] ";
+		mes "["+strcharinfo(PC_NAME)+"] ";
 		mes "Don't move! You are wounded!";
 		next;
 		mes "[Kruger]";
@@ -886,7 +886,7 @@ OnTouch:
 		mes "....";
 		mes "The Shaman? What about the Shaman?";
 		next;
-		mes "["+strcharinfo(0)+"] ";
+		mes "["+strcharinfo(PC_NAME)+"] ";
 		mes "The Shaman's dead now. Who was that Shaman really?";
 		next;
 		mes "Kruger seemed to be relieved as he hears of the death of the Shaman, but you notice the bitter expression on his face.";

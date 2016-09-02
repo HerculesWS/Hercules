@@ -108,7 +108,7 @@ mal_dun01,151,235,5	script	Starfish	4_ASTER,{
 				if (.@instance < 0) {
 					mes "[Starfish]";
 					mes "Party name is... "+getpartyname(.@party_id)+".";
-					mes "Party leader is... "+strcharinfo(0)+".";
+					mes "Party leader is... "+strcharinfo(PC_NAME)+".";
 					mes "^0000ff"+.@md_name$+"^000000, I cannot open now, hehe.";
 					mes "Now is not the time, please wait.";
 					close;
@@ -161,7 +161,7 @@ mal_dun01,153,237,5	script	Weird Entrance	CLEAR_NPC,{
 				mes "Big trouble is waiting, if you go in now.";
 				close;
 			}
-			mapannounce "mal_dun01", getpartyname(getcharid(1))+" party's "+strcharinfo(0)+" member started to hunt the Octopus!",bc_map,"0x00ff99";
+			mapannounce "mal_dun01", getpartyname(getcharid(1))+" party's "+strcharinfo(PC_NAME)+" member started to hunt the Octopus!",bc_map,"0x00ff99";
 			if (!questprogress(4197)) setquest 4197;
 			warp "1@cash",199,99;
 			end;

@@ -192,13 +192,13 @@ OnReward:
 	return;
 
 OnPCLoadMapEvent:
-	if (!compare(strcharinfo(3),"g_cas")) end;
-	if (((.AutoKick && .Active[0]) || (.NoOwner && !getcastledata(strcharinfo(3),1))) && !(.Active[0]&(1<<getd("."+strcharinfo(3))))) {
-		if (getcharid(2) && getcastledata(strcharinfo(3),1) == getcharid(2)) end;
+	if (!compare(strcharinfo(PC_MAP),"g_cas")) end;
+	if (((.AutoKick && .Active[0]) || (.NoOwner && !getcastledata(strcharinfo(PC_MAP),1))) && !(.Active[0]&(1<<getd("."+strcharinfo(PC_MAP))))) {
+		if (getcharid(2) && getcastledata(strcharinfo(PC_MAP),1) == getcharid(2)) end;
 		sleep2 1000;
-		message strcharinfo(0), getcastlename(strcharinfo(3))+" is currently inactive.";
+		message strcharinfo(PC_NAME), getcastlename(strcharinfo(PC_MAP))+" is currently inactive.";
 		sleep2 5000;
-		if (compare(strcharinfo(3),"g_cas")) warp "SavePoint",0,0;
+		if (compare(strcharinfo(PC_MAP),"g_cas")) warp "SavePoint",0,0;
 	}
 	end;
 

@@ -230,7 +230,7 @@ OnTreasureDied:
 		mes "to conquer this stronghold?";
 		close;
 	}
-	if (getcharid(2) != .@GID || strcharinfo(0) != getguildmaster(.@GID)) {
+	if (getcharid(2) != .@GID || strcharinfo(PC_NAME) != getguildmaster(.@GID)) {
 		mes "[ Steward ]";
 		mes "Hmpf. Your threats don't";
 		mes "scare me! Guardians, drive";
@@ -664,7 +664,7 @@ OnStartArena:
 		close;
 	}
 	if (getcharid(2) == .@GID) {
-		if (strcharinfo(0) != getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) != getguildmaster(.@GID)) {
 			mes .@n$;
 			mes "As guardian of this";
 			mes "stronghold, I answer only";
@@ -781,7 +781,7 @@ OnStartArena:
 			}
 			else {
 				mes .@n$;
-				mes "Greetings, "+strcharinfo(0)+".";
+				mes "Greetings, "+strcharinfo(PC_NAME)+".";
 				mes "What are your orders?";
 				next;
 				switch(select("Increase Stronghold Defense", "Situational Briefing", "Cancel")) {
@@ -1121,7 +1121,7 @@ OnEnable:
 	.@num = atoi(charat(strnpcinfo(NPC_NAME_VISIBLE),15));
 	.@var$ = "$agit_"+strnpcinfo(NPC_NAME_HIDDEN);
 	if (getcharid(2) == .@GID) {
-		if (strcharinfo(0) == getguildmaster(.@GID)) {
+		if (strcharinfo(PC_NAME) == getguildmaster(.@GID)) {
 			if (getd(.@var$+"["+(.@num+1)+"]") == 2) {
 				mes "^3355FFDemolished Fortress";
 				mes "Gates can be repaired,";

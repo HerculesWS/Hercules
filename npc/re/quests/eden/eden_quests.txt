@@ -2047,7 +2047,7 @@ moc_para01,112,96,5	script	Administrator Michael	4_M_RUSMAN1,{
 		if (para_suv02 == 4) {
 			mes "Umm, didn't you upgrade this already?";
 			mes "According to the records";
-			mes ""+strcharinfo(0)+": Has already upgraded their Hat.";
+			mes ""+strcharinfo(PC_NAME)+": Has already upgraded their Hat.";
 			next;
 			mes "[Michael]";
 			mes "We can only offer 1 upgrade.";
@@ -2673,7 +2673,7 @@ moc_para01,23,35,5	script	Instructor Ur#2nd01	4_M_KNIGHT_BLACK,{
 	}
 	else if (para_2nd01 == 11) {
 		if (BaseLevel > 79) {
-			mes "Ah, ever so improving "+ strcharinfo(0) +"?";
+			mes "Ah, ever so improving "+ strcharinfo(PC_NAME) +"?";
 			mes "To what do I owe this pleasure?";
 			next;
 			switch( select( "I came for more training.", "I'm just visiting." ) ) {

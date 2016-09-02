@@ -58,7 +58,7 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 			mes "arrived! Quick, show me";
 			mes "the ^FF0000report^000000 you've brought!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Excuse me...?";
 			mes "Oh, you must have";
 			mes "mistaken me for someone";
@@ -76,12 +76,12 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 			else
 				mes "were dressed like a Crusader...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "I'm sorry...";
 			mes "What's happening?";
 			mes "Is something the matter?";
 			mes "I'm an adventurer that";
-			mes "goes by the name, "+ strcharinfo(0) +".";
+			mes "goes by the name, "+ strcharinfo(PC_NAME) +".";
 			next;
 			mes "[Ford]";
 			mes "Well, I'm Leslie Ford,";
@@ -164,7 +164,7 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 			mes "So how is Sloutii?";
 			mes "Is everything all right?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Here, I've brought";
 			mes "this report as soon as";
 			mes "I could! You better read";
@@ -178,7 +178,7 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 			mes "situation! I need to report this to Sir Arga and request for";
 			mes "backup immediately!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Wait, we need to do";
 			mes "something about Sloutii.";
 			mes "He was wounded by the";
@@ -263,7 +263,7 @@ geffen,110,117,3	script	Ford#11	4_M_CRU_OLD,{
 			mes "Thanks once again,";
 			mes "and I hope to that you";
 			mes "travel in safety. For now,";
-			mes "this is farewell, "+ strcharinfo(0) +".";
+			mes "this is farewell, "+ strcharinfo(PC_NAME) +".";
 			close;
 			}
 		else if (CRUS_SK == 10) {
@@ -319,7 +319,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 				mes "Hopefully, it's saved your";
 				mes "life as many times as it's";
 				mes "saved mine. Anyway, I'll";
-				mes "see you around, "+ strcharinfo(0) +"~";
+				mes "see you around, "+ strcharinfo(PC_NAME) +"~";
 				close;
 			}
 		}
@@ -331,7 +331,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 			mes "have they done";
 			mes "to my legs?!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Wh-what happened?";
 			mes "Were you attacked?";
 			next;
@@ -343,7 +343,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 			mes "I've got to warn my superiors!";
 			mes "They're going to raid Geffen!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "I actually spoke to";
 			mes "Sir Ford! You must be";
 			mes "Sloutii, right? He sent me";
@@ -357,7 +357,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 			mes "urgent request for backup.";
 			mes "U-ugh! We don't have time!";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Wait...!";
 			mes "But what about";
 			mes "you? You're hurt...";
@@ -370,7 +370,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 			mes "Now, if I can just get that";
 			mes "report out of my-- OW! N-no...";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "^333333(He's writhing in pain";
 			mes "so much that he can't even";
 			mes "give me his report. I better";
@@ -381,7 +381,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 		}
 		else if (CRUS_SK == 2) {
 			if (countitem(Red_Potion) > 0) {
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Here, please take";
 				mes "this Red Potion.";
 				mes "It just might help...";
@@ -418,7 +418,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 				mes "Arrrrgh! I-I can't move!";
 				mes "It... It just hurts so much!";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "^333333(I better bring him";
 				mes "a Red Potion, otherwise";
 				mes "I have no hope of getting";
@@ -505,7 +505,7 @@ gef_fild13,297,242,3	script	Soldier#277	4_M_CRU,{
 				mes "saved my life! I thought";
 				mes "I was going to die for sure!";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Well, it's a good thing";
 				mes "I came in time. Sir Ford";
 				mes "had me visit Father Arthur to";
@@ -635,7 +635,7 @@ prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 			mes "How may I be of";
 			mes "service to you today?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Someone was wounded";
 			mes "by Goblins, and I was told";
 			mes "by Sir Ford that you're the";
@@ -650,7 +650,7 @@ prt_church,87,127,3	script	Pastor#1011	4_M_SAGE_C,{
 			mes "out of Goblin Poison Antidote";
 			mes "and must make it from scratch.";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Tell me what you";
 			mes "need to make it, and";
 			mes "I'll bring you all of the";

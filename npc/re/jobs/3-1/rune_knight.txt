@@ -146,7 +146,7 @@ prt_in,162,24,3	script	Splendid-Looking Knight	4_M_KNIGHT_SILVER,2,2,{
 glast_01,44,363,3	script	Guide, Jungberg	4_M_KNIGHT_BLACK,2,2,{
 	mes "[Guide, Jungberg]";
 	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
-		mes "Oh, you must be "+strcharinfo(0)+".";
+		mes "Oh, you must be "+strcharinfo(PC_NAME)+".";
 		mes "Welcome.";
 		next;
 		mes "[Guide, Jungberg]";
@@ -217,7 +217,7 @@ glast_01,44,363,3	script	Guide, Jungberg	4_M_KNIGHT_BLACK,2,2,{
 				mes "Um... Are you the Rune Knight candidate that Manuel talked about?";
 				next;
 				mes "[Guide, Jungberg]";
-				mes "Your name is "+strcharinfo(0)+", right? I can see clearly that you are qualified to become our comrade.";
+				mes "Your name is "+strcharinfo(PC_NAME)+", right? I can see clearly that you are qualified to become our comrade.";
 				next;
 				mes "[Guide, Jungberg]";
 				mes "Good. I don't have to ask any more about your qualification to join our brethren....1.S... Now I'll give you your first assignment.";
@@ -270,7 +270,7 @@ glast_01,44,363,3	script	Guide, Jungberg	4_M_KNIGHT_BLACK,2,2,{
 gl_knt02,150,55,3	script	Rune Knight Staff	4_M_01,2,2,{
 	mes "[Rune Knight Staff]";
 	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
-		mes "Welcome, "+strcharinfo(0)+". Are you going to the gathering place?";
+		mes "Welcome, "+strcharinfo(PC_NAME)+". Are you going to the gathering place?";
 		next;
 		switch(select("Yes, take me there.", "I'm on other business.", "Cancel.")) {
 		case 1:
@@ -348,7 +348,7 @@ job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
 			job_rune_edq = 24;
 			close;
 		}
-		mes "Hey, long time no see, "+strcharinfo(0)+". I don't think you've got any important matters to discuss but make yourself comfortable.";
+		mes "Hey, long time no see, "+strcharinfo(PC_NAME)+". I don't think you've got any important matters to discuss but make yourself comfortable.";
 		close;
 	}
 	if (BaseJob == Job_Knight) {
@@ -361,7 +361,7 @@ job3_rune01,80,60,3	script	Rune Knight Captain	4_M_KNIGHT_SILVER,2,2,{
 			mes "Hey, are you the Rune Knight candidate that Manuel recommended? I am Captain Tigris from the Rune Knights, and your name is?";
 			next;
 			mes "[Captain Tigris]";
-			mes "Oh, I've heard it before but I've forgotten it. Right, were you "+strcharinfo(0)+"? I truly welcome you from the heart for coming here.";
+			mes "Oh, I've heard it before but I've forgotten it. Right, were you "+strcharinfo(PC_NAME)+"? I truly welcome you from the heart for coming here.";
 			next;
 			mes "[Captain Tigris]";
 			mes "Let's see. How many candidates have come to this room? Hey, Lunarea, which candidate is this one here?";
@@ -709,7 +709,7 @@ L_Test:
 job3_rune01,55,50,3	script	Rune Knight, Renoa	4_M_KNIGHT_GOLD,2,2,{
 	mes "[Rune Knight, Renoa]";
 	if (Class == Job_Rune_Knight || Class == Job_Rune_Knight_T || Class == Job_Baby_Rune) {
-		mes "Congratulations for becoming one of us. Junior Rune Knight, "+strcharinfo(0)+".";
+		mes "Congratulations for becoming one of us. Junior Rune Knight, "+strcharinfo(PC_NAME)+".";
 		next;
 		mes "[Rune Knight, Renoa]";
 		mes "Soon you'll see the way we need to go clearly.";

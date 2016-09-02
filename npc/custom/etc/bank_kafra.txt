@@ -20,7 +20,7 @@
 
 -	script	Bank Clerk::bankg	4_M_ZONDAOYAJI,{
 	mes"[Maniss]";
-	mes strcharinfo(0)+", welcome to the 2nd Bank of Prontera!";
+	mes strcharinfo(PC_NAME)+", welcome to the 2nd Bank of Prontera!";
 
 	set @kb_int,(gettime(GETTIME_MONTH)*31)+gettime(GETTIME_DAYOFMONTH); //today's number
 	set @income,0;

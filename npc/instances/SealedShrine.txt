@@ -120,7 +120,7 @@ monk_test,309,146,3	script	Friar Patrick#edq	4_M_OLDFRIAR,{
 				if (getpartyleader(.@party_id,2) == getcharid(0) && instance_check_party(.@party_id,2,75)) {
 					mes "[Friar Patrick]";
 					mes "Party name is "+getpartyname(.@party_id)+"...";
-					mes "Name of the leader is "+strcharinfo(0)+"...";
+					mes "Name of the leader is "+strcharinfo(PC_NAME)+"...";
 					.@instance = instance_create("Sealed Catacomb",.@party_id);
 					if (.@instance < 0) {
 						mes "Umm... But it seems that there is a problem here... I'll check quickly. Please wait.";
@@ -238,7 +238,7 @@ monk_test,306,151,3	script	Grave of Baphomet#edq	HIDDEN_NPC,{
 			mes "It's cold to the touch. It doesn't respond.";
 			close;
 		} else {
-			mapannounce "monk_test","[" + strcharinfo(0) + "] member of the [" + getpartyname(.@party_id) + "] party has entered the Sealed Shrine.",bc_map,"0x00ff99";
+			mapannounce "monk_test","[" + strcharinfo(PC_NAME) + "] member of the [" + getpartyname(.@party_id) + "] party has entered the Sealed Shrine.",bc_map,"0x00ff99";
 			setquest 3040;
 			warp "1@cata",100,224;
 			end;
@@ -843,7 +843,7 @@ OnInstanceInit:
 		'ins_baphomet = 2;
 		mes "A small object is shining under a leaning grave.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "I think this is the pendant...";
 		close;
 	}
@@ -1134,7 +1134,7 @@ OnInstanceInit:
 		next;
 		specialeffect EF_METEORSTORM;
 		specialeffect EF_METEORSTORM;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Watch out! Something... Something is coming.";
 		'ins_baphomet = 6;
 		donpcevent instance_npcname("ins_2f_hero_broad")+"::OnEnable";

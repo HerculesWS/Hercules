@@ -597,7 +597,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 		mes "back with good news.";
 		mes "So did it work?";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Actually...";
 		mes "Nothing happened....";
 		next;
@@ -650,7 +650,7 @@ morocc,131,26,5	script	Secret Corps#egg	4_M_MASKMAN,{
 
 pay_dun00,22,127,0	script	Trace#egg1	CLEAR_NPC,{
 	if (easter2008 == 5) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well...";
 		mes "This is the place";
 		mes "the Corps Member";
@@ -659,21 +659,21 @@ pay_dun00,22,127,0	script	Trace#egg1	CLEAR_NPC,{
 		mes "these Holy Eggs.";
 		next;
 		if (countitem(Holy_Egg) > 32) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Here we go...";
 			mes "Will this really bring";
 			mes "this ancient hero";
 			mes "back to life? I'm...";
 			mes "I'm kind of scared!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "...............................";
 			mes "...............................";
 			mes "...............................";
 			mes "...............................";
 			mes "...............................";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "^333333*Whew!*^000000 Nothing happened!";
 			mes "I guess I better go back to";
 			mes "that Corps Member and let";
@@ -684,7 +684,7 @@ pay_dun00,22,127,0	script	Trace#egg1	CLEAR_NPC,{
 			end;
 		}
 		else {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Huh? Where did I put";
 			mes "those 33 Holy Eggs";
 			mes "that I needed for this?";
@@ -692,7 +692,7 @@ pay_dun00,22,127,0	script	Trace#egg1	CLEAR_NPC,{
 		}
 	}
 	else {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "There was something";
 		mes "here, but I can't tell";
 		mes "for sure what it was...";
@@ -702,7 +702,7 @@ pay_dun00,22,127,0	script	Trace#egg1	CLEAR_NPC,{
 
 iz_dun02,340,346,0	script	Trace#egg	CLEAR_NPC,{
 	if (easter2008 == 6) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well...";
 		mes "This is the place";
 		mes "the Corps Member";
@@ -711,21 +711,21 @@ iz_dun02,340,346,0	script	Trace#egg	CLEAR_NPC,{
 		mes "these Holy Eggs.";
 		next;
 		if (countitem(Holy_Egg) > 32) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Here we go...";
 			mes "Will this really bring";
 			mes "this ancient hero";
 			mes "back to life? I'm...";
 			mes "I'm kind of scared!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "...............................";
 			mes "...............................";
 			mes "...............................";
 			mes "...............................";
 			mes "...............................";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "^333333*Whew!*^000000 Nothing happened!";
 			mes "I guess I better go back to";
 			mes "that Corps Member and let";
@@ -736,7 +736,7 @@ iz_dun02,340,346,0	script	Trace#egg	CLEAR_NPC,{
 			end;
 		}
 		else {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Huh? Where did I put";
 			mes "those 33 Holy Eggs";
 			mes "that I needed for this?";
@@ -744,7 +744,7 @@ iz_dun02,340,346,0	script	Trace#egg	CLEAR_NPC,{
 		}
 	}
 	else {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "There was something";
 		mes "here, but I can't tell";
 		mes "for sure what it was...";
@@ -754,7 +754,7 @@ iz_dun02,340,346,0	script	Trace#egg	CLEAR_NPC,{
 
 mjo_dun03,308,256,0	script	Trace#egg2	CLEAR_NPC,{
 	if (easter2008 == 7) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well...";
 		mes "This is the place";
 		mes "the Corps Member";
@@ -763,21 +763,21 @@ mjo_dun03,308,256,0	script	Trace#egg2	CLEAR_NPC,{
 		mes "these Holy Eggs.";
 		next;
 		if (countitem(Holy_Egg) > 32) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Here we go...";
 			mes "Will this really bring";
 			mes "this ancient hero";
 			mes "back to life? I'm...";
 			mes "I'm kind of scared!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "...............................";
 			mes "...............................";
 			mes "...............................";
 			mes "...............................";
 			mes "...............................";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "^333333*Whew!*^000000 Nothing happened!";
 			mes "I guess I better go back to";
 			mes "that Corps Member and let";
@@ -788,7 +788,7 @@ mjo_dun03,308,256,0	script	Trace#egg2	CLEAR_NPC,{
 			end;
 		}
 		else {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Huh? Where did I put";
 			mes "those 33 Holy Eggs";
 			mes "that I needed for this?";
@@ -796,7 +796,7 @@ mjo_dun03,308,256,0	script	Trace#egg2	CLEAR_NPC,{
 		}
 	}
 	else {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "There was something";
 		mes "here, but I can't tell";
 		mes "for sure what it was...";
@@ -806,7 +806,7 @@ mjo_dun03,308,256,0	script	Trace#egg2	CLEAR_NPC,{
 
 gl_prison,157,176,0	script	Trace#egg3	CLEAR_NPC,{
 	if (easter2008 == 8) {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Well...";
 		mes "This is the place";
 		mes "the Corps Member";
@@ -815,21 +815,21 @@ gl_prison,157,176,0	script	Trace#egg3	CLEAR_NPC,{
 		mes "these Holy Eggs.";
 		next;
 		if (countitem(Holy_Egg) > 32) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Here we go...";
 			mes "Will this really bring";
 			mes "this ancient hero";
 			mes "back to life? I'm...";
 			mes "I'm kind of scared!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "...............................";
 			mes "...............................";
 			mes "...............................";
 			mes "...............................";
 			mes "...............................";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "^333333*Whew!*^000000 Nothing happened!";
 			mes "I guess I better go back to";
 			mes "that Corps Member and let";
@@ -840,7 +840,7 @@ gl_prison,157,176,0	script	Trace#egg3	CLEAR_NPC,{
 			end;
 		}
 		else {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Huh? Where did I put";
 			mes "those 33 Holy Eggs";
 			mes "that I needed for this?";
@@ -848,7 +848,7 @@ gl_prison,157,176,0	script	Trace#egg3	CLEAR_NPC,{
 		}
 	}
 	else {
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "There was something";
 		mes "here, but I can't tell";
 		mes "for sure what it was...";

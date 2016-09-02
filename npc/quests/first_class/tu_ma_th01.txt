@@ -317,13 +317,13 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 					next;
 					switch(select("Don't investigate.", "Investigate.")){
 					case 1:
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "A piece of cloth";
 						mes "is nothing to be";
 						mes "concerned about.";
 						close;
 					case 2:
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Hey... There's";
 						mes "blood on this cloth";
 						mes "and some writing on";
@@ -338,7 +338,7 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 						close;
 					}
 				case 2:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Hmm...";
 					mes "It'll probably be";
 					mes "faster if I follow this";
@@ -386,13 +386,13 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 					next;
 					switch(select("Don't investigate.", "Investigate.")){
 					case 1:
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "A piece of cloth";
 						mes "is nothing to be";
 						mes "concerned about.";
 						close;
 					case 2:
-						mes "["+strcharinfo(0)+"]";
+						mes "["+strcharinfo(PC_NAME)+"]";
 						mes "Hey... There's";
 						mes "blood on this cloth";
 						mes "and some writing on";
@@ -407,7 +407,7 @@ moc_fild11,205,52,0	script	Trace of Battle#5	CLEAR_NPC,{
 						close;
 					}
 				case 2:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "Hmm...";
 					mes "It'll probably be";
 					mes "faster if I follow this";
@@ -996,7 +996,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 						close;
 					}
 				case 2:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "I guess...";
 					mes "I'll try investigating";
 					mes "this area a little more?";
@@ -1150,7 +1150,7 @@ moc_fild18,109,197,0	script	Trace of Battle#15	CLEAR_NPC,{
 						close;
 					}
 				case 2:
-					mes "["+strcharinfo(0)+"]";
+					mes "["+strcharinfo(PC_NAME)+"]";
 					mes "I guess...";
 					mes "I'll try investigating";
 					mes "this area a little more?";

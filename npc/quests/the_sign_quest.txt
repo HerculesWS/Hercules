@@ -121,7 +121,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 					next;
 					mes "[Metz]";
 					mes "Oh right, would you tell";
-					mes "me your name? "+ strcharinfo(0) +"?";
+					mes "me your name? "+ strcharinfo(PC_NAME) +"?";
 					mes "Okay then, I'll remember that.";
 					mes "Talk to you later, alright?";
 					sign_q = 2;
@@ -330,7 +330,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 			mes "the information that I have";
 			mes "to give you for now. You'll";
 			mes "have to investigate this lead";
-			mes "on your own, "+ strcharinfo(0) +".";
+			mes "on your own, "+ strcharinfo(PC_NAME) +".";
 		}
 		else {
 			mes "Although I've made";
@@ -502,7 +502,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "Franklin translate the";
 		mes "message in the Record of";
 		mes "Ancient Language. Keep up";
-		mes "the good work, "+ strcharinfo(0) +".";
+		mes "the good work, "+ strcharinfo(PC_NAME) +".";
 	}
 	else if (sign_q == 82) {
 		mes "I get it now!";
@@ -779,7 +779,7 @@ prt_in,227,45,0	script	Archeologist#sign	1_M_SIGN1,{
 		mes "Well then...";
 		mes "Good luck on";
 		mes "your journeys,";
-		mes "brave "+ strcharinfo(0) +".";
+		mes "brave "+ strcharinfo(PC_NAME) +".";
 	}
 	close2;
 	cutin "mets_alpha",255;
@@ -822,7 +822,7 @@ prt_in,228,26,5	script	Steward#sign	1_M_JOBTESTER,{
 		}
 	}
 	else if (sign_q < 14) {
-		mes "Ah, Master "+ strcharinfo(0) +".";
+		mes "Ah, Master "+ strcharinfo(PC_NAME) +".";
 		mes "Welcome. How may I be";
 		mes "of service today?";
 		next;
@@ -993,7 +993,7 @@ prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
 	}
 	else if (sign_q < 14) {
 		mes "Oh...?";
-		mes ""+ strcharinfo(0) +"?";
+		mes ""+ strcharinfo(PC_NAME) +"?";
 		mes "Is there anything that";
 		mes "I can help you with?";
 		next;
@@ -1013,7 +1013,7 @@ prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
 				mes "to go out with you or";
 				mes "not? Hm, maybe if";
 				mes "you're really nice";
-				mes "to me, , "+ strcharinfo(0) +".";
+				mes "to me, , "+ strcharinfo(PC_NAME) +".";
 				close;
 			case 2:
 				mes "[Elle]";
@@ -1040,7 +1040,7 @@ prt_in,248,23,0	script	Maid#sign2	HIDDEN_NPC,{
 				mes "Maybe it's because";
 				mes "I don't go out too";
 				mes "often. You have nice";
-				mes "I don't go out too, "+ strcharinfo(0) +"~";
+				mes "I don't go out too, "+ strcharinfo(PC_NAME) +"~";
 				close;
 			case 2:
 				mes "[Elle]";
@@ -1237,7 +1237,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		mes "Who the hell";
 		mes "are you, jerkface?";
 		next;
-		switch(select("Metz sent me here.", "^0000FF"+ strcharinfo(0) +"^000000.", "Who are you then?")) {
+		switch(select("Metz sent me here.", "^0000FF"+ strcharinfo(PC_NAME) +"^000000.", "Who are you then?")) {
 		case 1:
 			mes "[Arian]";
 			mes "Oh yeah...?";
@@ -1250,7 +1250,7 @@ morocc_in,115,154,5	script	Rogue#sign	1_M_SIGNROGUE,{
 		case 2:
 			mes "[Arian]";
 			mes "Wha...?";
-			mes "^0000FF"+ strcharinfo(0) +"^000000?";
+			mes "^0000FF"+ strcharinfo(PC_NAME) +"^000000?";
 			mes "Yeah, okay. Metz did";
 			mes "mention something about";
 			mes "about you. You're here";
@@ -1912,7 +1912,7 @@ payon_in03,11,31,4	script	Daewoon#sign	1_M_SIGNMONK2,{
 		next;
 		if (countitem(Part_Of_Star's_Sob) > 0) {
 			.@pay_point = 1;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Sure...";
 			mes "But first, would you";
 			mes "take a look at this?";
@@ -2586,7 +2586,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 	callfunc "F_UpdateSignVars";
 	if (gettime(GETTIME_HOUR) > 16 && gettime(GETTIME_HOUR) < 22) {
 		if (sign_q == 15) {
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Excuse me...";
 			next;
 			emotion e_omg;
@@ -2636,7 +2636,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 				mes "Er. Then, what...";
 				mes "W-what's your name?";
 				next;
-				select(strcharinfo(0) +", thanks.");
+				select(strcharinfo(PC_NAME) +", thanks.");
 				mes "[Sir Jore]";
 				mes "N-nice to meet you.";
 				mes "My name is Jore. Just";
@@ -2729,7 +2729,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 				mes "Now, for your assignment.";
 				mes "Have you ever heard about";
 				mes "the ^CE3131Stone of Sage^000000? Rumors about";
-				mes "it have been spreading around, but no one has confirmed the truth about it, "+ strcharinfo(0) +".";
+				mes "it have been spreading around, but no one has confirmed the truth about it, "+ strcharinfo(PC_NAME) +".";
 				next;
 				mes "[Sir Jore]";
 				mes "Although I have no clue";
@@ -2801,7 +2801,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 			mes "So, did you learn what";
 			mes "exactly is the Stone of Sage?";
 			next;
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Well, I'm not sure,";
 			mes "but I was told that it's";
 			mes "red and can cure people.";
@@ -2845,7 +2845,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 				mes "Good luck getting";
 				mes "all the pieces of ";
 				mes "Sobbing Starlight,";
-				mes ""+ strcharinfo(0) +". Farewell~";
+				mes ""+ strcharinfo(PC_NAME) +". Farewell~";
 				close;
 			}
 			else {
@@ -2883,7 +2883,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 		next;
 		switch(select("Speak to him.", "Ignore him.")) {
 		case 1:
-			mes "["+ strcharinfo(0) +"]";
+			mes "["+ strcharinfo(PC_NAME) +"]";
 			mes "Excuse me...";
 			next;
 			mes "[Sir Jore]";
@@ -2896,7 +2896,7 @@ aldeba_in,155,101,3	script	Sir Jore#sign	1_M_SIGNALCHE,7,7,{
 			next;
 			switch(select("Try again.", "Ignore him.")) {
 			case 1:
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "EXCUSE ME!";
 				next;
 				mes "[Sir Jore]";
@@ -3217,7 +3217,7 @@ prt_maze02,14,183,4	script	Gordon#sign	1_M_BARD,{
 				mes "here in the middle of";
 				mes "this forest?";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Actually, I think";
 				mes "I've been looking for";
 				mes "you. I've been sent on";
@@ -3323,7 +3323,7 @@ prt_maze02,14,183,4	script	Gordon#sign	1_M_BARD,{
 		mes "animal! What do you";
 		mes "think you were doing?";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "Actually, I think";
 		mes "I've been looking for";
 		mes "you. I've been sent on";
@@ -3557,7 +3557,7 @@ geffen_in,59,74,4	script	Jesqurienne#sign	1_F_SIGNZISK,{
 				mes "your little insult! It's time";
 				mes "for a Quiz Challenge!";
 				next;
-				mes "["+ strcharinfo(0) +"]";
+				mes "["+ strcharinfo(PC_NAME) +"]";
 				mes "Quiz... Challenge?";
 				mes "Like a trivia game?";
 				mes "But who's going to";
@@ -4350,7 +4350,7 @@ geffen_in,61,72,7	script	Aaron#sign	4_M_SAGE_A,{
 		next;
 		mes "[Aaron]";
 		mes "Umm...";
-		mes ""+ strcharinfo(0) +":";
+		mes ""+ strcharinfo(PC_NAME) +":";
 		mes ""+.@user_p+" points!";
 		next;
 		mes "[Aaron]";
@@ -4953,7 +4953,7 @@ cmd_in01,33,25,5	script	Examiner#sign	4_F_07,{
 	}
 	else if (sign_q == 32) {
 		mes "Let's see...";
-		mes "You're "+ strcharinfo(0) +"?";
+		mes "You're "+ strcharinfo(PC_NAME) +"?";
 		mes "Oh, what a shame!";
 		mes "You failed this time.";
 		mes "But don't you worry...";
@@ -4968,7 +4968,7 @@ cmd_in01,33,25,5	script	Examiner#sign	4_F_07,{
 	}
 	else if (sign_q == 33) {
 		mes "Let's see...";
-		mes "You're "+ strcharinfo(0) +"?";
+		mes "You're "+ strcharinfo(PC_NAME) +"?";
 		mes "Congratulations!";
 		mes "You passed the test!";
 		next;
@@ -4981,7 +4981,7 @@ cmd_in01,33,25,5	script	Examiner#sign	4_F_07,{
 	}
 	else if (sign_q == 34) {
 		mes "Let's see...";
-		mes "You're "+ strcharinfo(0) +"?";
+		mes "You're "+ strcharinfo(PC_NAME) +"?";
 		mes "Congratulations!";
 		mes "You got a perfect";
 		mes "score on this test!";
@@ -6499,7 +6499,7 @@ alberta_in,114,178,5	script	Refined Steward	4_M_MANAGER,{
 		mes "a unique stone that has";
 		mes "your name attached to it.^000000";
 		sign_q = 38;
-		getnameditem 7049,strcharinfo(0);
+		getnameditem 7049,strcharinfo(PC_NAME);
 		close;
 	}
 	else if (sign_q == 38 || (sign_q == 39 && countitem(Receipt_01) < 1)) {
@@ -6837,7 +6837,7 @@ yuno,330,100,4	script	Knight#ss	4_M_JOB_KNIGHT2,{
 			}
 		}
 		else {
-			.@signid = getcharid(0,strcharinfo(0));
+			.@signid = getcharid(0,strcharinfo(PC_NAME));
 			.@sign3 = .@signid & 65535;
 			.@sign4 = .@signid >> 16;
 			.@sign1 = 254;
@@ -6945,7 +6945,7 @@ geffen_in,159,48,5	script	Lonely-looking Woman	4_F_05,{
 		mes "enter someone's house without";
 		mes "being invited? Besides, I don't have the time to help strangers while I'm busy making dinner...";
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "W-wait!";
 		mes "I'm here to see...";
 		next;
@@ -8164,7 +8164,7 @@ gef_fild07,182,241,0	script	#Valkyrie Warp	HIDDEN_NPC,1,1,{
 
 OnTouch:
 	if ((sign_q == 80) && (countitem(Resin) > 3) && (countitem(Stone_Heart) > 11) && (countitem(Coral_Reef) > 364)) {
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "What the...?";
 		mes "What's happening?!";
 		specialeffect2 EF_BEGINSPELL6;
@@ -8218,7 +8218,7 @@ himinn,48,86,5	script	Valkyrie#sign	4_F_VALKYRIE,{
 		end;
 	}
 	else if (sign_q == 81) {
-		mes "Welcome, "+strcharinfo(0)+",";
+		mes "Welcome, "+strcharinfo(PC_NAME)+",";
 		mes "to this realm of holiness.";
 		mes "You have endured great difficulty and tested your courage to obtain the Sobbing Starlight, which will be the certificate for your test.";
 		next;
@@ -8326,7 +8326,7 @@ himinn,48,86,5	script	Valkyrie#sign	4_F_VALKYRIE,{
 		next;
 		mes "[Valkyrie Sandra]";
 		mes "Congratulations,";
-		mes ""+ strcharinfo(0) +". Verily,";
+		mes ""+ strcharinfo(PC_NAME) +". Verily,";
 		mes "you are an honorable";
 		mes "hero worthy of praise!";
 		sign_q = 137;
@@ -8796,7 +8796,7 @@ que_sign01,197,195,4	script	Serin#witch	4_F_01,{
 		mes "pity my situation since you've";
 		mes "never been bound to Niflheim,";
 		mes "but I'm begging you. Don't get";
-		mes "in my way, "+strcharinfo(0)+".";
+		mes "in my way, "+strcharinfo(PC_NAME)+".";
 		next;
 		switch(select("I can't let you do this!", "Okay, have it your way.")) {
 		case 1:
@@ -9265,7 +9265,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 	}
 	else if (sign_q < 92) {
 		mes "[Serin]";
-		mes "Hello, "+strcharinfo(0)+",";
+		mes "Hello, "+strcharinfo(PC_NAME)+",";
 		mes "I'm surprised that";
 		mes "you've managed to survive";
 		mes "here all this time. It's no small feat for a mortal to be able to remain alive in Niflheim...";
@@ -9274,7 +9274,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 	else if (sign_q == 92) {
 		if (countitem(Serin's_Gold_Ring) > 0) {
 			mes "[Serin]";
-			mes "Ah, "+strcharinfo(0)+"~";
+			mes "Ah, "+strcharinfo(PC_NAME)+"~";
 			mes "How is everything?";
 			mes "Once again, I want to";
 			mes "thank you for helping the";
@@ -9290,7 +9290,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		}
 		else {
 			mes "[Serin]";
-			mes "Ah, "+strcharinfo(0)+"~";
+			mes "Ah, "+strcharinfo(PC_NAME)+"~";
 			mes "How is everything?";
 			next;
 			mes "[Serin]";
@@ -9461,7 +9461,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 		mes "If you obtain the";
 		mes "Symbol of Nine Realms,";
 		mes "please bring it to me";
-		mes "right away, "+strcharinfo(0)+".";
+		mes "right away, "+strcharinfo(PC_NAME)+".";
 		close;
 	}
 	else if (sign_q == 118) {
@@ -9541,7 +9541,7 @@ niflheim,313,70,4	script	Pleasant-Featured Lady#s	4_F_01,{
 				mes ".............";
 				next;
 				mes "[Serin]";
-				mes "...."+strcharinfo(0)+".....";
+				mes "...."+strcharinfo(PC_NAME)+".....";
 				mes "I don't want to forget you.";
 				mes "I can forget my obsession with";
 				mes "life and all my other memories,";
@@ -9776,7 +9776,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 		mes "You must be here to";
 		mes "help your friend take";
 		mes "care of Serin. Are you";
-		mes "ready to go, "+strcharinfo(0)+"?";
+		mes "ready to go, "+strcharinfo(PC_NAME)+"?";
 		next;
 		switch(select("Yes.", "Not yet...")) {
 		case 1:
@@ -10288,7 +10288,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 				mes "[Kirkena]";
 				mes "Okay then.";
 				mes "Good luck,";
-				mes ""+strcharinfo(0)+"...";
+				mes ""+strcharinfo(PC_NAME)+"...";
 				close2;
 				warp "que_sign02",35,313;
 				end;
@@ -10324,7 +10324,7 @@ que_sign01,122,141,4	script	Witch#s	4_F_NFDEADMGCIAN,{
 				mes "Once again, thank";
 				mes "you so much for your";
 				mes "help. Once you finish here,";
-				mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason, "+strcharinfo(0)+"...";
+				mes "please visit our queen, Lady Hell. I believe she wants to see you for some reason, "+strcharinfo(PC_NAME)+"...";
 				delitem Seal_Of_Witch,5;
 				sign_q = 129;
 				getexp RENEWAL_EXP?50000:500000,0;
@@ -10662,7 +10662,7 @@ OnTouch:
 				mes "and take the ^FF0000secret passage";
 				mes "through the right side of the";
 				mes "portrait on the second floor^000000";
-				mes "of this castle, "+strcharinfo(0)+".";
+				mes "of this castle, "+strcharinfo(PC_NAME)+".";
 				sign_q = 92;
 				next;
 				mes "[Kirkena]";
@@ -10826,7 +10826,7 @@ que_sign01,45,227,4	script	Queen of the Dead	2_F_SIGN1,{
 		mes "^8C1717Ah.";
 		mes "You are the";
 		mes "mortal called";
-		mes ""+strcharinfo(0)+", are you not?";
+		mes ""+strcharinfo(PC_NAME)+", are you not?";
 		mes "Yes, you are known to me.^000000";
 		next;
 		mes "[Lady Hell]";
@@ -11835,7 +11835,7 @@ OnTouch:
 			mes "your point of view.";
 			close;
 		case 2:
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "What do I need";
 			mes "to do to become one";
 			mes "of the chosen warriors?";

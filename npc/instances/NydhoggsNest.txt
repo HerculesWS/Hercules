@@ -224,7 +224,7 @@ L_Enter:
 		mes "You did not request for entrance. Please let your leader request entrance.";
 		close;
 	} else {
-		mapannounce "nyd_dun02", getpartyname(getcharid(1))+"'s party member "+strcharinfo(0)+" has entered Nidhoggur's Nest.",bc_map,"0x00ff99";
+		mapannounce "nyd_dun02", getpartyname(getcharid(1))+"'s party member "+strcharinfo(PC_NAME)+" has entered Nidhoggur's Nest.",bc_map,"0x00ff99";
 		if (!questprogress(3135)) setquest 3135;
 		if (!questprogress(3136)) setquest 3136;
 		warp "1@nyd",32,37;
@@ -427,7 +427,7 @@ mid_camp,271,299,3	script	Historian Magnifier#edq	4_M_SAGE_C,3,3,{
 
 prt_in,171,94,3	script	Assistant Naomi#edq	4_F_HUWOMAN,3,3,{
 	mes "[Assistant Naomi]";
-	.@name$ = strcharinfo(0);
+	.@name$ = strcharinfo(PC_NAME);
 	if (ins_nyd == 3) {
 		mes "The doctor never ever tries to come back, and there're too many things to do... How can I do it all...";
 		next;

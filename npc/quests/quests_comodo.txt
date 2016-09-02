@@ -1404,7 +1404,7 @@ comodo,163,280,4	script	Magatu#cmd	1_M_JOBTESTER,{
 cmd_in02,189,99,4	script	Manzi#cmd	4_M_03,{
 	switch (dmdswrd_Q) {
 	case 9:
-		mes "["+strcharinfo(0)+"]";
+		mes "["+strcharinfo(PC_NAME)+"]";
 		mes "Excuse, but I'm";
 		mes "looking for someone";
 		mes "named Manzi. Do you";
@@ -1526,7 +1526,7 @@ comodo,187,153,4	script	Hullaris#cmd	4_F_GODEMOM,{
 			mes "oldest elders, I know more";
 			mes "about this village than most...";
 			next;
-			mes "["+strcharinfo(0)+"]";
+			mes "["+strcharinfo(PC_NAME)+"]";
 			mes "Actually, I was hoping";
 			mes "you can tell me about";
 			mes "Comodo Cheese. If it really";

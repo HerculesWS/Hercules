@@ -80,7 +80,7 @@ prontera,164,69,3	script	Cool Devi#06_hw	4_DEVIRUCHI,{
 		mes "I just can guess what he will say next. So what do you say?";
 		next;
 		if (select("What will he say?", "I also know about it.") == 1) {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "What will he say?";
 			next;
 			mes "[Cool Devi]";
@@ -96,7 +96,7 @@ prontera,164,69,3	script	Cool Devi#06_hw	4_DEVIRUCHI,{
 			mes "Why don't you give him back the 'Pumpkin Mojo'.";
 			mes "Don't worry he will compensate you.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Compensate?With what?";
 			next;
 			mes "[Cool Devi]";
@@ -235,7 +235,7 @@ prontera,164,69,3	script	Cool Devi#06_hw	4_DEVIRUCHI,{
 		mes "Why don't you give him back the 'Pumpkin Mojo'.";
 		mes "Don't worry he will compensate you.";
 		next;
-		mes "[" + strcharinfo(0) + "]";
+		mes "[" + strcharinfo(PC_NAME) + "]";
 		mes "Compensate? With what?";
 		next;
 		mes "[Cool Devi]";
@@ -296,7 +296,7 @@ geffen,145,132,3	script	Hoirin#06_hw	4_F_NOVICE,{
 			mes "You'll get addicted to it.";
 			mes "Don't be surprised after trying it.";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "......................";
 			mes "You seem to be such a passionate person.";
 			mes "So, what's the ingredient anyway.?";
@@ -470,7 +470,7 @@ nif_in,19,32,3	script	Deviruchi#06_hw	4_DEVIRUCHI,{
 			mes "[Deviruchi]";
 			mes "Says she..Huh?!!Me?!!";
 			next;
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Poor Devi~";
 			mes "You shouldn't have lied~";
 			mes "Wish you a luck.";
@@ -679,7 +679,7 @@ nif_fild01,167,113,3	script	Masta's chicken#06_hw01	4_NFCOCK,{
 			end;
 		}
 		else {
-			mes "[" + strcharinfo(0) + "]";
+			mes "[" + strcharinfo(PC_NAME) + "]";
 			mes "Hm...I must have misspelled.";
 			close;
 		}

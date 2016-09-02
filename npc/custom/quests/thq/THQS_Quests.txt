@@ -433,7 +433,7 @@ N_QuestComp:
 	mes "[Czhore]";
 	mes "Thank god!";
 	mes " ";
-	mes "I'm so happy to see one of these Emperiums! Thank you "+strcharinfo(0)+".";
+	mes "I'm so happy to see one of these Emperiums! Thank you "+strcharinfo(PC_NAME)+".";
 	next;
 	mes "[Czhore]";
 	mes "Here have these 2 Treasure Tokens.";
@@ -668,7 +668,7 @@ prontera,123,208,6	script	Little Girl#thq	4_F_KID3,{
 	if (seven_qset == 1) goto N_QuestStart;
 	if (eight_qset == 1) goto N_QuestStart2;
 	mes "[Girl]";
-	mes "Hello mister "+strcharinfo(0)+".";
+	mes "Hello mister "+strcharinfo(PC_NAME)+".";
 	close;
 N_QuestComp:
 	mes "[Girl]";
@@ -694,7 +694,7 @@ alberta,101,84,6	script	Charles	1_M_02,{
 	if (seven_qset == 2 && countitem(Merchant_Box_2) > 0) goto N_QuestComp;
 	if (seven_qset == 2) goto N_QuestStart;
 	mes "[Charles]";
-	mes "Hello "+strcharinfo(0)+" welcome to Alberta.";
+	mes "Hello "+strcharinfo(PC_NAME)+" welcome to Alberta.";
 	close;
 N_QuestComp:
 	mes "[Charles]";
@@ -782,7 +782,7 @@ morocc,165,55,6	script	Klye	1_M_02,{
 	if (eight_qset == 2 && countitem(Merchant_Box_1) > 0) goto N_QuestComp;
 	if (eight_qset == 2) goto N_QuestStart;
 	mes "[Klye]";
-	mes "Hello "+strcharinfo(0)+".";
+	mes "Hello "+strcharinfo(PC_NAME)+".";
 	close;
 N_QuestComp:
 	mes "[Klye]";
@@ -858,7 +858,7 @@ geffen_in,168,124,6	script	Mage	1_M_02,{
 	if (nine_qset == 1 && countitem(Merchant_Box_2) > 0) goto N_QuestComp;
 	if (nine_qset == 1) goto N_QuestStart;
 	mes "[Mage]";
-	mes "Hello "+strcharinfo(0)+" welcome to the Mage Guild.";
+	mes "Hello "+strcharinfo(PC_NAME)+" welcome to the Mage Guild.";
 	close;
 N_QuestComp:
 	mes "[Mage]";
@@ -873,7 +873,7 @@ N_QuestComp:
 	close;
 N_QuestStart:
 	mes "[Mage]";
-	mes "Hello "+strcharinfo(0)+", Where is my box of Toad Tounges?.";
+	mes "Hello "+strcharinfo(PC_NAME)+", Where is my box of Toad Tounges?.";
 	close;
 }
 //9-2;
@@ -955,7 +955,7 @@ morocc,193,51,6	script	Kreg	1_M_02,{
 	if (ten_qset == 1 && countitem(Merchant_Box_2) > 0) goto N_QuestComp;
 	if (ten_qset == 1) goto N_QuestStart;
 	mes "[Kreg]";
-	mes "Hello "+strcharinfo(0)+" welcome to Morroc.";
+	mes "Hello "+strcharinfo(PC_NAME)+" welcome to Morroc.";
 	close;
 N_QuestComp:
 	mes "[Kreg]";

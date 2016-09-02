@@ -56,7 +56,7 @@ niflheim,224,243,3	script	Alreg#nif	4_M_NFDEADMAN,{
 	if (nif_esc == 0 && (MISC_QUEST & 32) == 0) {
 		percentheal -60,0;
 		next;
-		mes "["+ strcharinfo(0) +"]";
+		mes "["+ strcharinfo(PC_NAME) +"]";
 		mes "NooOOoOOoOoO~!";
 		next;
 		mes "[Alreg]";
@@ -71,7 +71,7 @@ niflheim,224,243,3	script	Alreg#nif	4_M_NFDEADMAN,{
 	}
 	percentheal -30,0;
 	next;
-	mes "["+ strcharinfo(0) +"]";
+	mes "["+ strcharinfo(PC_NAME) +"]";
 	mes "Ow~! What are you";
 	mes "trying to do, kill me?!";
 	next;

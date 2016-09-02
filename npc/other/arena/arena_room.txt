@@ -73,10 +73,10 @@ arena_room,94,93,5	script	Vendigos	4W_M_01,{
 			break;
 		case 3:
 			mes "[Vendigos]";
-			mes "Let me check "+strcharinfo(0)+"'s current arena points.";
+			mes "Let me check "+strcharinfo(PC_NAME)+"'s current arena points.";
 			next;
 			mes "[Vendigos]";
-			mes ""+strcharinfo(0)+" has total ^3131FF"+arena_point+"^000000 points.";
+			mes ""+strcharinfo(PC_NAME)+" has total ^3131FF"+arena_point+"^000000 points.";
 			next;
 			mes "[Vendigos]";
 			mes "If you wish to know how to use arena points, please refer to the 2nd menu ^3131FF'About Arena Points'^000000.";
@@ -728,10 +728,10 @@ prt_are_in,98,14,3	script	Givu#arena	4_F_JOB_KNIGHT,{
 		}
 	case 4:
 		mes "[Givu]";
-		mes "Let me check "+strcharinfo(0)+"'s current arena points.";
+		mes "Let me check "+strcharinfo(PC_NAME)+"'s current arena points.";
 		next;
 		mes "[Givu]";
-		mes ""+strcharinfo(0)+" has total ^3131FF"+arena_point+"^000000 points.";
+		mes ""+strcharinfo(PC_NAME)+" has total ^3131FF"+arena_point+"^000000 points.";
 		close;
 	}
 }

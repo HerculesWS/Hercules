@@ -40,7 +40,7 @@
 
 payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 	mes "[Lhimetorra]";
-	mes "You're an adventurer of this world... " +strcharinfo(0)+ ", right? So, what can an old person like me do for you?";
+	mes "You're an adventurer of this world... " +strcharinfo(PC_NAME)+ ", right? So, what can an old person like me do for you?";
 	next;
 	switch(select("I would like a tarot card reading.", "What's a tarot card reading?")) {
 	case 1:
@@ -2760,7 +2760,7 @@ payon_in03,117,128,5	script	Fortune Teller	4_M_BIBI,{
 
 payon_in03,75,129,5	script	Poring Fortune Teller	4_M_BIBI,{
 	mes "[Chocarle]";
-	mes " Welcome, welcome~!! " +strcharinfo(0)+ "~!";
+	mes " Welcome, welcome~!! " +strcharinfo(PC_NAME)+ "~!";
 	mes " What brings you here today!? ";
 	next;
 	switch(select(" I would like a Poring card reading. ", " What is a Poring card reading? ")) {
