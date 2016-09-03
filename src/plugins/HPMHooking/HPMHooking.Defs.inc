@@ -6508,6 +6508,12 @@ typedef void (*HPMHOOK_pre_skill_validate_additional_fields) (struct config_sett
 typedef void (*HPMHOOK_post_skill_validate_additional_fields) (struct config_setting_t *conf, struct s_skill_db *sk);
 typedef bool (*HPMHOOK_pre_skill_validate_skilldb) (struct s_skill_db **skt, const char **source);
 typedef bool (*HPMHOOK_post_skill_validate_skilldb) (bool retVal___, struct s_skill_db *skt, const char *source);
+typedef int (*HPMHOOK_pre_skill_validate_weapontype_sub) (const char **type, bool *on, struct s_skill_db **sk);
+typedef int (*HPMHOOK_post_skill_validate_weapontype_sub) (int retVal___, const char *type, bool on, struct s_skill_db *sk);
+typedef int (*HPMHOOK_pre_skill_validate_ammotype_sub) (const char **type, bool *on, struct s_skill_db **sk);
+typedef int (*HPMHOOK_post_skill_validate_ammotype_sub) (int retVal___, const char *type, bool on, struct s_skill_db *sk);
+typedef int (*HPMHOOK_pre_skill_validate_unit_flag_sub) (const char **type, bool *on, struct s_skill_db **sk);
+typedef int (*HPMHOOK_post_skill_validate_unit_flag_sub) (int retVal___, const char *type, bool on, struct s_skill_db *sk);
 typedef bool (*HPMHOOK_pre_skill_read_skilldb) (const char **filename);
 typedef bool (*HPMHOOK_post_skill_read_skilldb) (bool retVal___, const char *filename);
 typedef void (*HPMHOOK_pre_skill_config_set_level) (struct config_setting_t **conf, int **arr);
