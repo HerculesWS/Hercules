@@ -2056,6 +2056,9 @@ struct skill_interface {
 	void (*validate_unit_flag) (struct config_setting_t *conf,  struct s_skill_db *sk);
 	void (*validate_additional_fields) (struct config_setting_t *conf, struct s_skill_db *sk);
 	bool (*validate_skilldb) (struct s_skill_db *skt, const char *source);
+	int (*validate_weapontype_sub) (const char *type, bool on, struct s_skill_db *sk);
+	int (*validate_ammotype_sub) (const char *type, bool on, struct s_skill_db *sk);
+	int (*validate_unit_flag_sub) (const char *type, bool on, struct s_skill_db *sk);
 	bool (*read_skilldb) (const char *filename);
 	void (*config_set_level) (struct config_setting_t *conf, int *arr);
 	void (*level_set_value) (int *arr, int value);

@@ -19417,7 +19417,7 @@ void skill_validate_castnodex(struct config_setting_t *conf, struct s_skill_db *
  * @param   *sk      struct, pointer to s_skill_db
  * @return void
  */
-int skill_validate_weapontype_sub(const char *type, bool on, struct s_skill_db *sk )
+int skill_validate_weapontype_sub(const char *type, bool on, struct s_skill_db *sk)
 {
 	if (strcmpi(type, "NoWeapon") == 0) {
 		if (on) {
@@ -19628,11 +19628,11 @@ void skill_validate_weapontype(struct config_setting_t *conf, struct s_skill_db 
 		int j = 0;
 		struct config_setting_t *wpt = NULL;
 		while ((wpt = libconfig->setting_get_elem(tt, j++)) != NULL) {
-			if (skill_validate_weapontype_sub(config_setting_name(wpt), libconfig->setting_get_bool_real(wpt), sk))
+			if (skill->validate_weapontype_sub(config_setting_name(wpt), libconfig->setting_get_bool_real(wpt), sk))
 				skilldb_invalid_error(config_setting_name(wpt), config_setting_name(tt), sk->nameid);
 		}
 	} else if (libconfig->setting_lookup_string(conf, "WeaponTypes", &type)) {
-		if (skill_validate_weapontype_sub(type, true, sk))
+		if (skill->validate_weapontype_sub(type, true, sk))
 			skilldb_invalid_error(type, "WeaponTypes", sk->nameid);
 	}
 }
@@ -19730,11 +19730,11 @@ void skill_validate_ammotype(struct config_setting_t *conf, struct s_skill_db *s
 		int j = 0;
 		struct config_setting_t *amt = { 0 };
 		while ((amt = libconfig->setting_get_elem(tt, j++))) {
-			if (skill_validate_ammotype_sub(config_setting_name(amt), libconfig->setting_get_bool_real(amt), sk))
+			if (skill->validate_ammotype_sub(config_setting_name(amt), libconfig->setting_get_bool_real(amt), sk))
 				skilldb_invalid_error(config_setting_name(amt), config_setting_name(tt), sk->nameid);
 		}
 	} else if( libconfig->setting_lookup_string(conf, "AmmoTypes", &tstr)) {
-		if (skill_validate_ammotype_sub(tstr, true, sk))
+		if (skill->validate_ammotype_sub(tstr, true, sk))
 			skilldb_invalid_error(tstr, "AmmoTypes", sk->nameid);
 	}
 }
@@ -19967,7 +19967,7 @@ void skill_validate_unit_flag(struct config_setting_t *conf, struct s_skill_db *
 		while ((tt = libconfig->setting_get_elem(t, j++))) {
 			const char *name = config_setting_name(tt);
 
-			if (skill_validate_unit_flag_sub(name, libconfig->setting_get_bool_real(tt), sk))
+			if (skill->validate_unit_flag_sub(name, libconfig->setting_get_bool_real(tt), sk))
 				skilldb_invalid_error(name, config_setting_name(t), sk->nameid);
 		}
 	}
@@ -20605,6 +20605,9 @@ void skill_defaults(void) {
 	skill->validate_unit_flag = skill_validate_unit_flag;
 	skill->validate_additional_fields = skill_validate_additional_fields;
 	skill->validate_skilldb = skill_validate_skilldb;
+	skill->validate_weapontype_sub = skill_validate_weapontype_sub;
+	skill->validate_ammotype_sub = skill_validate_ammotype_sub;
+	skill->validate_unit_flag_sub = skill_validate_unit_flag_sub;
 	skill->read_skilldb = skill_read_skilldb;
 	skill->config_set_level = skill_config_set_level;
 	skill->level_set_value = skill_level_set_value;
