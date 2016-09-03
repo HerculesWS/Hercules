@@ -34,14 +34,6 @@
 //Caps values to min/max
 #define cap_value(a, min, max) (((a) >= (max)) ? (max) : ((a) <= (min)) ? (min) : (a))
 
-#ifdef HERCULES_CORE
-// generate a hex dump of the first 'length' bytes of 'buffer'
-void WriteDump(FILE* fp, const void* buffer, size_t length);
-void ShowDump(const void* buffer, size_t length);
-
-void findfile(const char *p, const char *pat, void (func)(const char*));
-bool exists(const char* filename);
-
 /// calculates the value of A / B, in percent (rounded down)
 unsigned int get_percentage(const unsigned int A, const unsigned int B);
 
@@ -49,6 +41,14 @@ int64 apply_percentrate64(int64 value, int rate, int maxrate);
 int apply_percentrate(int value, int rate, int maxrate);
 
 const char* timestamp2string(char* str, size_t size, time_t timestamp, const char* format);
+
+#ifdef HERCULES_CORE
+// generate a hex dump of the first 'length' bytes of 'buffer'
+void WriteDump(FILE* fp, const void* buffer, size_t length);
+void ShowDump(const void* buffer, size_t length);
+
+void findfile(const char *p, const char *pat, void (func)(const char*));
+bool exists(const char* filename);
 
 //////////////////////////////////////////////////////////////////////////
 // byte word dword access [Shinomori]
