@@ -3186,7 +3186,7 @@ Valid types are:
 		if = 0, then monsters don't drop it at all (rare or a quest item)
 		if = 10000, then this item is sold in NPC shops only
 	4 - sex; 5 - equip; 6 - weight; 7 - atk; 8 - def; 9 - range;
-	10 - slot; 11 - look; 12 - elv; 13 - wlv; 14 - view id
+	10 - slot; 11 - subtype; 12 - elv; 13 - wlv; 14 - view id
 	
 	If RENEWAL is defined, 15 - matk
 
@@ -8251,7 +8251,7 @@ Valid types are:
 		if = 0, then monsters don't drop it at all (rare or a quest item)
 		if = 10000, then this item is sold in NPC shops only
 	4 - sex; 5 - equip; 6 - weight; 7 - atk; 8 - def; 9 - range;
-	10 - slot; 11 - look; 12 - elv; 13 - wlv; 14 - view id
+	10 - slot; 11 - subtype; 12 - elv; 13 - wlv; 14 - view id
 
 Example:
 
