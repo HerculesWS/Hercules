@@ -1062,6 +1062,7 @@ enum ammo_type {
 	A_KUNAI,       //7
 	A_CANNONBALL,  //8
 	A_THROWWEAPON, //9
+	MAX_AMMO_TYPE
 };
 
 enum e_char_server_type {

@@ -2584,7 +2584,7 @@ void clif_item_equip(short idx, struct EQUIPITEM_INFO *p, struct item *i, struct
 #endif
 
 #if PACKETVER >= 20100629
-	p->wItemSpriteNumber = (id->equip&EQP_VISIBLE) ? id->look : 0;
+	p->wItemSpriteNumber = (id->equip&EQP_VISIBLE) ? id->view_sprite : 0;
 #endif
 
 #if PACKETVER >= 20120925
@@ -3509,7 +3509,7 @@ void clif_equipitemack(struct map_session_data *sd,int n,int pos,enum e_EQUIP_IT
 	p.wearLocation = pos;
 #if PACKETVER >= 20100629
 	if (result == EIA_SUCCESS && sd->inventory_data[n]->equip&EQP_VISIBLE)
-		p.wItemSpriteNumber = sd->inventory_data[n]->look;
+		p.wItemSpriteNumber = sd->inventory_data[n]->view_sprite;
 	else
 		p.wItemSpriteNumber = 0;
 #endif

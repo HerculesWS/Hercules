@@ -4575,8 +4575,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 
 	if(!skill_id) {
 		//Skills ALWAYS use ONLY your right-hand weapon (tested on Aegis 10.2)
-		if (sd && sd->weapontype1 == 0 && sd->weapontype2 > 0)
-		{
+		if (sd && sd->weapontype1 == W_FIST && sd->weapontype2 != W_FIST) {
 			flag.rh=0;
 			flag.lh=1;
 		}
@@ -6102,7 +6101,7 @@ bool battle_check_arrows(struct map_session_data *sd)
 	if (sd->inventory_data[index]) {
 		switch (sd->status.weapon) {
 			case W_BOW:
-				if (sd->inventory_data[index]->look != A_ARROW) {
+				if (sd->inventory_data[index]->subtype != A_ARROW) {
 					clif->arrow_fail(sd, 0);
 					return false;
 				}
@@ -6111,13 +6110,13 @@ bool battle_check_arrows(struct map_session_data *sd)
 			case W_RIFLE:
 			case W_GATLING:
 			case W_SHOTGUN:
-				if (sd->inventory_data[index]->look != A_BULLET) {
+				if (sd->inventory_data[index]->subtype != A_BULLET) {
 					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
 					return false;
 				}
 				break;
 			case W_GRENADE:
-				if (sd->inventory_data[index]->look != A_GRENADE) {
+				if (sd->inventory_data[index]->subtype != A_GRENADE) {
 					clif->skill_fail(sd, 0, USESKILL_FAIL_NEED_MORE_BULLET, 0);
 					return false;
 				}

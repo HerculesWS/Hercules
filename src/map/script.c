@@ -13663,7 +13663,7 @@ BUILDIN(getiteminfo)
 		script_pushint(st, it->slot);
 		break;
 	case 11:
-		script_pushint(st, it->look);
+		script_pushint(st, it->subtype);
 		break;
 	case 12:
 		script_pushint(st, it->elv);
@@ -13732,7 +13732,7 @@ BUILDIN(setiteminfo)
 		it->slot = value;
 		break;
 	case 11:
-		it->look = value;
+		it->subtype = value;
 		break;
 	case 12:
 		it->elv = value;

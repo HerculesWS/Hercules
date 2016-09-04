@@ -763,9 +763,9 @@ int pc_equippoint(struct map_session_data *sd,int n)
 		return 0; //Not equippable by players.
 
 	ep = sd->inventory_data[n]->equip;
-	if (sd->inventory_data[n]->look == W_DAGGER
-	 || sd->inventory_data[n]->look == W_1HSWORD
-	 || sd->inventory_data[n]->look == W_1HAXE
+	if (sd->inventory_data[n]->subtype == W_DAGGER
+	 || sd->inventory_data[n]->subtype == W_1HSWORD
+	 || sd->inventory_data[n]->subtype == W_1HAXE
 	) {
 		if (pc->checkskill(sd,AS_LEFT) > 0
 		 || (sd->job & MAPID_UPPERMASK) == MAPID_ASSASSIN
@@ -808,7 +808,7 @@ int pc_calcweapontype(struct map_session_data *sd)
 		return 1;
 	}
 	// dual-wield
-	sd->status.weapon = 0;
+	sd->status.weapon = W_FIST;
 	switch (sd->weapontype1){
 		case W_DAGGER:
 			switch (sd->weapontype2) {
@@ -832,7 +832,7 @@ int pc_calcweapontype(struct map_session_data *sd)
 			}
 	}
 	// unknown, default to right hand type
-	if (!sd->status.weapon)
+	if (sd->status.weapon == W_FIST)
 		sd->status.weapon = sd->weapontype1;
 
 	return 2;
@@ -855,20 +855,18 @@ int pc_setequipindex(struct map_session_data *sd)
 				if(sd->status.inventory[i].equip & pc->equip_pos[j])
 					sd->equip_index[j] = i;
 
-			if(sd->status.inventory[i].equip & EQP_HAND_R)
-			{
-				if(sd->inventory_data[i])
-					sd->weapontype1 = sd->inventory_data[i]->look;
+			if (sd->status.inventory[i].equip & EQP_HAND_R) {
+				if (sd->inventory_data[i])
+					sd->weapontype1 = sd->inventory_data[i]->subtype;
 				else
-					sd->weapontype1 = 0;
+					sd->weapontype1 = W_FIST;
 			}
 
-			if( sd->status.inventory[i].equip & EQP_HAND_L )
-			{
-				if( sd->inventory_data[i] && sd->inventory_data[i]->type == IT_WEAPON )
-					sd->weapontype2 = sd->inventory_data[i]->look;
+			if (sd->status.inventory[i].equip & EQP_HAND_L) {
+				if (sd->inventory_data[i] != NULL && sd->inventory_data[i]->type == IT_WEAPON)
+					sd->weapontype2 = sd->inventory_data[i]->subtype;
 				else
-					sd->weapontype2 = 0;
+					sd->weapontype2 = W_FIST;
 			}
 		}
 	}
@@ -1059,13 +1057,13 @@ int pc_isequip(struct map_session_data *sd,int n)
 				return 1; //Can equip all helms
 
 			if (sd->status.base_level > 96 && item->equip & EQP_ARMS && item->type == IT_WEAPON)
-				switch(item->look) { //In weapons, the look determines type of weapon.
-					case W_DAGGER: //Level 4 Knives are equippable.. this means all knives, I'd guess?
-					case W_1HSWORD: //All 1H swords
-					case W_1HAXE: //All 1H Axes
-					case W_MACE: //All 1H Maces
-					case W_STAFF: //All 1H Staves
-						return 1;
+				switch (item->subtype) { //In weapons, the look determines type of weapon.
+				case W_DAGGER: //Level 4 Knives are equippable.. this means all knives, I'd guess?
+				case W_1HSWORD: //All 1H swords
+				case W_1HAXE: //All 1H Axes
+				case W_MACE: //All 1H Maces
+				case W_STAFF: //All 1H Staves
+					return 1;
 				}
 		}
 	}
@@ -5914,7 +5912,7 @@ int pc_checkallowskill(struct map_session_data *sd)
 			status_change_end(&sd->bl, scw_list[i], INVALID_TIMER);
 	}
 
-	if(sd->sc.data[SC_STRUP] && sd->status.weapon)
+	if(sd->sc.data[SC_STRUP] && sd->status.weapon != W_FIST)
 		// Spurt requires bare hands (feet, in fact xD)
 		status_change_end(&sd->bl, SC_STRUP, INVALID_TIMER);
 
@@ -9692,25 +9690,27 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, 
 	nullpo_retv(sd);
 	if ((!map_no_view(sd->bl.m,EQP_SHADOW_WEAPON) && pos & EQP_SHADOW_WEAPON) ||
 		 (pos & EQP_HAND_R)) {
-		if(id)
-			sd->weapontype1 = id->look;
+		if (id != NULL)
+			sd->weapontype1 = id->subtype;
 		else
-			sd->weapontype1 = 0;
+			sd->weapontype1 = W_FIST;
 		pc->calcweapontype(sd);
 		clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
 	}
 	if ((!map_no_view(sd->bl.m,EQP_SHADOW_SHIELD) && pos & EQP_SHADOW_SHIELD) ||
 		 (pos & EQP_HAND_L)) {
-		if (id) {
-			if(id->type == IT_WEAPON) {
+		if (id != NULL) {
+			if (id->type == IT_WEAPON) {
 				sd->status.shield = 0;
-				sd->weapontype2 = id->look;
-			} else if(id->type == IT_ARMOR) {
-				sd->status.shield = id->look;
-				sd->weapontype2 = 0;
+				sd->weapontype2 = id->subtype;
+			} else if (id->type == IT_ARMOR) {
+				sd->status.shield = id->view_sprite;
+				sd->weapontype2 = W_FIST;
 			}
-		} else
-			sd->status.shield = sd->weapontype2 = 0;
+		} else {
+			sd->status.shield = 0;
+			sd->weapontype2 = W_FIST;
+		}
 		pc->calcweapontype(sd);
 		clif->changelook(&sd->bl,LOOK_SHIELD,sd->status.shield);
 	}
@@ -9718,42 +9718,42 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, 
 	//causes client to redraw item on top of itself. (suggested by Lupus)
 	if (!map_no_view(sd->bl.m,EQP_HEAD_LOW) && pos & EQP_HEAD_LOW && pc->checkequip(sd,EQP_COSTUME_HEAD_LOW) == -1) {
 		if (id && !(pos&(EQP_HEAD_TOP|EQP_HEAD_MID)))
-			sd->status.head_bottom = id->look;
+			sd->status.head_bottom = id->view_sprite;
 		else
 			sd->status.head_bottom = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_BOTTOM,sd->status.head_bottom);
 	}
 	if (!map_no_view(sd->bl.m,EQP_HEAD_TOP) && pos & EQP_HEAD_TOP && pc->checkequip(sd,EQP_COSTUME_HEAD_TOP) == -1) {
 		if (id)
-			sd->status.head_top = id->look;
+			sd->status.head_top = id->view_sprite;
 		else
 			sd->status.head_top = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_TOP,sd->status.head_top);
 	}
 	if (!map_no_view(sd->bl.m,EQP_HEAD_MID) && pos & EQP_HEAD_MID && pc->checkequip(sd,EQP_COSTUME_HEAD_MID) == -1) {
 		if (id && !(pos&EQP_HEAD_TOP))
-			sd->status.head_mid = id->look;
+			sd->status.head_mid = id->view_sprite;
 		else
 			sd->status.head_mid = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_MID,sd->status.head_mid);
 	}
 	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_TOP) && pos & EQP_COSTUME_HEAD_TOP) {
 		if (id){
-			sd->status.head_top = id->look;
+			sd->status.head_top = id->view_sprite;
 		} else
 			sd->status.head_top = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_TOP,sd->status.head_top);
 	}
 	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_MID) && pos & EQP_COSTUME_HEAD_MID) {
 		if(id && !(pos&EQP_HEAD_TOP)){
-			sd->status.head_mid = id->look;
+			sd->status.head_mid = id->view_sprite;
 		} else
 			sd->status.head_mid = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_MID,sd->status.head_mid);
 	}
 	if (!map_no_view(sd->bl.m,EQP_COSTUME_HEAD_LOW) && pos & EQP_COSTUME_HEAD_LOW) {
 		if (id && !(pos&(EQP_HEAD_TOP|EQP_HEAD_MID))){
-			sd->status.head_bottom = id->look;
+			sd->status.head_bottom = id->view_sprite;
 		} else
 			sd->status.head_bottom = 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_BOTTOM,sd->status.head_bottom);
@@ -9762,12 +9762,12 @@ void pc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int n, 
 	if (!map_no_view(sd->bl.m,EQP_SHOES) && pos & EQP_SHOES)
 		clif->changelook(&sd->bl,LOOK_SHOES,0);
 	if (!map_no_view(sd->bl.m,EQP_GARMENT) && pos&EQP_GARMENT && pc->checkequip(sd,EQP_COSTUME_GARMENT) == -1) {
-		sd->status.robe = id ? id->look : 0;
+		sd->status.robe = id ? id->view_sprite : 0;
 		clif->changelook(&sd->bl, LOOK_ROBE, sd->status.robe);
 	}
 
 	if (!map_no_view(sd->bl.m,EQP_COSTUME_GARMENT) && pos & EQP_COSTUME_GARMENT) {
-		sd->status.robe = id ? id->look : 0;
+		sd->status.robe = id ? id->view_sprite : 0;
 		clif->changelook(&sd->bl,LOOK_ROBE,sd->status.robe);
 	}
 }
@@ -9922,7 +9922,7 @@ void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
 {
 	nullpo_retv(sd);
 	if (pos & EQP_HAND_R) {
-		sd->weapontype1 = 0;
+		sd->weapontype1 = W_FIST;
 		sd->status.weapon = sd->weapontype2;
 		pc->calcweapontype(sd);
 		clif->changelook(&sd->bl,LOOK_WEAPON,sd->status.weapon);
@@ -9930,7 +9930,8 @@ void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
 			status_change_end(&sd->bl, SC_DANCING, INVALID_TIMER); // Unequipping => stop dancing.
 	}
 	if (pos & EQP_HAND_L) {
-		sd->status.shield = sd->weapontype2 = 0;
+		sd->status.shield = 0;
+		sd->weapontype2 = W_FIST;
 		pc->calcweapontype(sd);
 		clif->changelook(&sd->bl,LOOK_SHIELD,sd->status.shield);
 	}
@@ -9948,17 +9949,17 @@ void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
 	}
 
 	if (pos & EQP_COSTUME_HEAD_TOP) {
-		sd->status.head_top = ( pc->checkequip(sd,EQP_HEAD_TOP) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_TOP)]->look : 0;
+		sd->status.head_top = ( pc->checkequip(sd,EQP_HEAD_TOP) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_TOP)]->view_sprite : 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_TOP,sd->status.head_top);
 	}
 
 	if (pos & EQP_COSTUME_HEAD_MID) {
-		sd->status.head_mid = ( pc->checkequip(sd,EQP_HEAD_MID) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_MID)]->look : 0;
+		sd->status.head_mid = ( pc->checkequip(sd,EQP_HEAD_MID) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_MID)]->view_sprite : 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_MID,sd->status.head_mid);
 	}
 
 	if (pos & EQP_COSTUME_HEAD_LOW) {
-		sd->status.head_bottom = ( pc->checkequip(sd,EQP_HEAD_LOW) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_LOW)]->look : 0;
+		sd->status.head_bottom = ( pc->checkequip(sd,EQP_HEAD_LOW) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_HEAD_LOW)]->view_sprite : 0;
 		clif->changelook(&sd->bl,LOOK_HEAD_BOTTOM,sd->status.head_bottom);
 	}
 
@@ -9971,7 +9972,7 @@ void pc_unequipitem_pos(struct map_session_data *sd, int n, int pos)
 	}
 
 	if (pos & EQP_COSTUME_GARMENT) {
-		sd->status.robe = ( pc->checkequip(sd,EQP_GARMENT) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_GARMENT)]->look : 0;
+		sd->status.robe = ( pc->checkequip(sd,EQP_GARMENT) >= 0 ) ? sd->inventory_data[pc->checkequip(sd,EQP_GARMENT)]->view_sprite : 0;
 		clif->changelook(&sd->bl,LOOK_ROBE,sd->status.robe);
 	}
 }
@@ -10026,7 +10027,7 @@ int pc_unequipitem(struct map_session_data *sd,int n,int flag)
 	clif->unequipitemack(sd,n,pos,UIA_SUCCESS);
 
 	if((pos & EQP_ARMS) &&
-		sd->weapontype1 == 0 && sd->weapontype2 == 0 && (!sd->sc.data[SC_TK_SEVENWIND] || sd->sc.data[SC_ASPERSIO])) //Check for seven wind (but not level seven!)
+		sd->weapontype1 == W_FIST && sd->weapontype2 == W_FIST && (!sd->sc.data[SC_TK_SEVENWIND] || sd->sc.data[SC_ASPERSIO])) //Check for seven wind (but not level seven!)
 		skill->enchant_elemental_end(&sd->bl,-1);
 
 	if(pos & EQP_ARMOR) {
