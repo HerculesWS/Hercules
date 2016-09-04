@@ -408,6 +408,8 @@ ecl_hub01	mapflag	nobranch
 // Episode 14.3 ===========
 c_tower2_	mapflag	nobranch
 c_tower3_	mapflag	nobranch
+gl_chyard_	mapflag	nobranch
+gl_cas02_	mapflag	nobranch
 
 // Ghost Palace ===========
 1@spa	mapflag	nobranch

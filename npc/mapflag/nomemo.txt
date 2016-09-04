@@ -785,6 +785,8 @@ moc_prydn1	mapflag	nomemo
 moc_prydn2	mapflag	nomemo
 c_tower2_	mapflag	nomemo
 c_tower3_	mapflag	nomemo
+gl_chyard_	mapflag	nomemo
+gl_cas02_	mapflag	nomemo
 
 //Orc's Memory ===================
 1@orcs	mapflag	nomemo
