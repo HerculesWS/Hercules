@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C) 2012-2016  Hercules Dev Team
 //= Copyright (C)  Epoque
 //= Copyright (C)  eAthena Dev Team
 //= Copyright (C)  Gepard
@@ -33,7 +33,7 @@
 //=========================================================================
 //= Mapflag: Disable Warp Portal memory.
 //================= Current Version =======================================
-//= 1.8b
+//= 1.8.1
 //================= Description ===========================================
 //= Prevents players from using /memo on a map.
 //= Also disables marriage warp skills.
@@ -783,6 +783,8 @@ ecl_tdun04	mapflag	nomemo
 ecl_hub01	mapflag	nomemo
 moc_prydn1	mapflag	nomemo
 moc_prydn2	mapflag	nomemo
+c_tower2_	mapflag	nomemo
+c_tower3_	mapflag	nomemo
 
 //Orc's Memory ===================
 1@orcs	mapflag	nomemo
