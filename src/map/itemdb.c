@@ -1638,9 +1638,9 @@ int itemdb_gendercheck(struct item_data *id)
 		return 1;
 	if (id->nameid == WEDDING_RING_F) //Bride Ring
 		return 0;
-	if (id->look == W_MUSICAL && id->type == IT_WEAPON) //Musical instruments are always male-only
+	if (id->subtype == W_MUSICAL && id->type == IT_WEAPON) //Musical instruments are always male-only
 		return 1;
-	if (id->look == W_WHIP && id->type == IT_WEAPON) //Whips are always female-only
+	if (id->subtype == W_WHIP && id->type == IT_WEAPON) //Whips are always female-only
 		return 0;
 
 	return (battle_config.ignore_items_gender) ? 2 : id->sex;
@@ -1788,10 +1788,14 @@ int itemdb_validate_entry(struct item_data *entry, int n, const char *source) {
 		memset(&entry->stack, '\0', sizeof(entry->stack));
 	}
 
-	if (entry->type == IT_WEAPON && (entry->look < 0 || entry->look >= MAX_SINGLE_WEAPON_TYPE)) {
-		ShowWarning("itemdb_validate_entry: Invalid View for weapon items. View value %d for item %d (%s) in '%s', defaulting to 1.\n",
-		            entry->look, entry->nameid, entry->jname, source);
-		entry->look = 1;
+	if (entry->type == IT_WEAPON && (entry->subtype <= 0 || entry->subtype >= MAX_SINGLE_WEAPON_TYPE)) {
+		ShowWarning("itemdb_validate_entry: Invalid View for weapon items. View value %d for item %d (%s) in '%s', defaulting to W_DAGGER.\n",
+		            entry->subtype, entry->nameid, entry->jname, source);
+		entry->subtype = W_DAGGER;
+	} else if (entry->type == IT_AMMO && (entry->subtype <= 0 || entry->subtype >= MAX_AMMO_TYPE)) {
+		ShowWarning("itemdb_validate_entry: Invalid View for ammunition items. View value %d for item %d (%s) in '%s', defaulting to A_ARROW.\n",
+		            entry->subtype, entry->nameid, entry->jname, source);
+		entry->subtype = A_ARROW;
 	}
 
 	entry->wlv = cap_value(entry->wlv, REFINE_TYPE_ARMOR, REFINE_TYPE_MAX);
@@ -1986,6 +1990,14 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 	else if( !inherit )
 		id.type = IT_ETC;
 
+	if (itemdb->lookup_const(it, "Subtype", &i32) && i32 >= 0) {
+		if (id.type == IT_WEAPON || id.type == IT_AMMO)
+			id.subtype = i32;
+		else
+			ShowWarning("itemdb_readdb_libconfig_sub: Field 'Subtype' is only allowed for IT_WEAPON or IT_AMMO (Item #%d: %s). Ignoring.\n",
+					id.nameid, id.name);
+	}
+
 	if( itemdb->lookup_const(it, "Buy", &i32) )
 		id.value_buy = i32;
 	else if( !inherit )
@@ -2058,8 +2070,23 @@ int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *
 	if ((t = libconfig->setting_get_member(it, "DisableOptions")))
 		id.flag.no_options = libconfig->setting_get_bool(t) ? 1 : 0;
 
-	if( itemdb->lookup_const(it, "View", &i32) && i32 >= 0 )
-		id.look = i32;
+	if (itemdb->lookup_const(it, "ViewSprite", &i32) && i32 >= 0)
+		id.view_sprite = i32;
+
+	if (itemdb->lookup_const(it, "View", &i32) && i32 >= 0) { // TODO: Remove (Deprecated - 2016-09-04 [Haru])
+		if ((id.type == IT_WEAPON || id.type == IT_AMMO) && id.subtype == 0) {
+			ShowWarning("itemdb_readdb_libconfig_sub: The 'View' field is deprecated. Please rename it to 'Subtype' (or 'ViewSprite'). (Item #%d: %s)\n",
+					id.nameid, id.name);
+			id.subtype = i32;
+		} else if ((id.type != IT_WEAPON && id.type != IT_AMMO) && id.view_sprite == 0) {
+			ShowWarning("itemdb_readdb_libconfig_sub: The 'View' field is deprecated. Please rename it to 'ViewSprite' (or 'Subtype'). (Item #%d: %s)\n",
+					id.nameid, id.name);
+			id.view_sprite = i32;
+		} else {
+			ShowWarning("itemdb_readdb_libconfig_sub: The 'View' field is deprecated. Please rename it to 'Subtype' or 'ViewSprite'. (Item #%d: %s)\n",
+					id.nameid, id.name);
+		}
+	}
 
 	if( (t = libconfig->setting_get_member(it, "BindOnEquip")) )
 		id.flag.bindonequip = libconfig->setting_get_bool(t) ? 1 : 0;
