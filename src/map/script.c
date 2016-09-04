@@ -13982,43 +13982,70 @@ BUILDIN(getitemslots)
 	return true;
 }
 
-// TODO: add matk here if needed/once we get rid of RENEWAL
+// TODO: add matk here if needed
 
 /*==========================================
  * Returns some values of an item [Lupus]
  * Price, Weight, etc...
- * getiteminfo(itemID,n), where n
- * 0 value_buy;
- * 1 value_sell;
- * 2 type;
- * 3 maxchance = Max drop chance of this item e.g. 1 = 0.01% , etc..
- * if = 0, then monsters don't drop it at all (rare or a quest item)
- * if = -1, then this item is sold in NPC shops only
- * 4 sex;
- * 5 equip;
- * 6 weight;
- * 7 atk;
- * 8 def;
- * 9 range;
- * 10 slot;
- * 11 look;
- * 12 elv;
- * 13 wlv;
- * 14 view id
  *------------------------------------------*/
 BUILDIN(getiteminfo)
 {
-	int item_id,n;
-	struct item_data *i_data;
+	int item_id = script_getnum(st, 2);
+	int n = script_getnum(st, 3);
+	struct item_data *it = itemdb->exists(item_id);
 
-	item_id = script_getnum(st,2);
-	n       = script_getnum(st,3);
-	i_data  = itemdb->exists(item_id);
+	if (it == NULL) {
+		script_pushint(st, -1);
+		return true;
+	}
 
-	if (i_data && n>=0 && n<=14) {
-		int *item_arr =  (int*)&i_data->value_buy;
-		script_pushint(st,item_arr[n]);
-	} else {
+	switch (n) {
+	case 0:
+		script_pushint(st, it->value_buy);
+		break;
+	case 1:
+		script_pushint(st, it->value_sell);
+		break;
+	case 2:
+		script_pushint(st, it->type);
+		break;
+	case 3:
+		script_pushint(st, it->maxchance);
+		break;
+	case 4:
+		script_pushint(st, it->sex);
+		break;
+	case 5:
+		script_pushint(st, it->equip);
+		break;
+	case 6:
+		script_pushint(st, it->weight);
+		break;
+	case 7:
+		script_pushint(st, it->atk);
+		break;
+	case 8:
+		script_pushint(st, it->def);
+		break;
+	case 9:
+		script_pushint(st, it->range);
+		break;
+	case 10:
+		script_pushint(st, it->slot);
+		break;
+	case 11:
+		script_pushint(st, it->look);
+		break;
+	case 12:
+		script_pushint(st, it->elv);
+		break;
+	case 13:
+		script_pushint(st, it->wlv);
+		break;
+	case 14:
+		script_pushint(st, it->view_id);
+		break;
+	default:
 		script_pushint(st,-1);
 	}
 	return true;
@@ -14211,43 +14238,71 @@ BUILDIN(setequipoption)
 /*==========================================
  * Set some values of an item [Lupus]
  * Price, Weight, etc...
- * setiteminfo(itemID,n,Value), where n
- * 0 value_buy;
- * 1 value_sell;
- * 2 type;
- * 3 maxchance = Max drop chance of this item e.g. 1 = 0.01% , etc..
- * if = 0, then monsters don't drop it at all (rare or a quest item)
- * if = -1, then this item is sold in NPC shops only
- * 4 sex;
- * 5 equip;
- * 6 weight;
- * 7 atk;
- * 8 def;
- * 9 range;
- * 10 slot;
- * 11 look;
- * 12 elv;
- * 13 wlv;
- * 14 view id
- * Returns Value or -1 if the wrong field's been set
  *------------------------------------------*/
 BUILDIN(setiteminfo)
 {
-	int item_id,n,value;
-	struct item_data *i_data;
+	// TODO: Validate data in a similar way as during database load
+	int item_id = script_getnum(st, 2);
+	int n = script_getnum(st, 3);
+	int value = script_getnum(st,4);
+	struct item_data *it = itemdb->exists(item_id);
 
-	item_id = script_getnum(st,2);
-	n       = script_getnum(st,3);
-	value   = script_getnum(st,4);
-	i_data  = itemdb->exists(item_id);
-
-	if (i_data && n>=0 && n<=14) {
-		int *item_arr = (int*)&i_data->value_buy;
-		item_arr[n] = value;
-		script_pushint(st,value);
-	} else {
-		script_pushint(st,-1);
+	if (it == NULL) {
+		script_pushint(st, -1);
+		return true;
 	}
+
+	switch (n) {
+	case 0:
+		it->value_buy = value;
+		break;
+	case 1:
+		it->value_sell = value;
+		break;
+	case 2:
+		it->type = value;
+		break;
+	case 3:
+		it->maxchance = value;
+		break;
+	case 4:
+		it->sex = value;
+		break;
+	case 5:
+		it->equip = value;
+		break;
+	case 6:
+		it->weight = value;
+		break;
+	case 7:
+		it->atk = value;
+		break;
+	case 8:
+		it->def = value;
+		break;
+	case 9:
+		it->range = value;
+		break;
+	case 10:
+		it->slot = value;
+		break;
+	case 11:
+		it->look = value;
+		break;
+	case 12:
+		it->elv = value;
+		break;
+	case 13:
+		it->wlv = value;
+		break;
+	case 14:
+		it->view_id = value;
+		break;
+	default:
+		script_pushint(st,-1);
+		return true;
+	}
+	script_pushint(st,value);
 	return true;
 }
 
