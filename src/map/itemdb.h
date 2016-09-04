@@ -466,7 +466,6 @@ struct item_data {
 	uint16 nameid;
 	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
 
-	//Do not add stuff between value_buy and view_id (see how getiteminfo works)
 	int value_buy;
 	int value_sell;
 	int type;
@@ -486,8 +485,6 @@ struct item_data {
 	int elvmax;/* maximum level for this item */
 
 	int delay;
-//Lupus: I rearranged order of these fields due to compatibility with ITEMINFO script command
-//       some script commands should be revised as well...
 	uint64 class_base[3]; ///< Specifies if the base can wear this item (split in 3 indexes per type: 1-1, 2-1, 2-2)
 	unsigned class_upper : 6;   ///< Specifies if the upper-type can equip it (bitfield, 0x01: normal, 0x02: upper, 0x04: baby normal, 0x08: third normal, 0x10: third upper, 0x20: third baby)
 	struct {
