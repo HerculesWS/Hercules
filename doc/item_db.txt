@@ -65,7 +65,8 @@ item_db: (
 	EquipLv: Equip required level (int, defaults to 0)
 	EquipLv: [min, max]           (alternative syntax with min / max level)
 	Refine: Refineable            (boolean, defaults to true)
-	View: View ID                 (int, defaults to 0)
+	Subtype: Item Subtype         (int, defaults to 0)
+	ViewSprite: Sprite view ID    (int, defaults to 0)
 	BindOnEquip: true/false       (boolean, defaults to false)
 	ForceSerial: true/false       (boolean, defaults to false)
 	BuyingStore: true/false       (boolean, defaults to false)
@@ -239,9 +240,10 @@ EquipLv: Base level required to be able to equip. It is possible to specify
 Refineable: true if the item can be refined, false otherwise. If no value is
             specified, it defaults to true.
 
-View: For normal items, defines a replacement view-sprite for the item (eg:
-      Making apples look like apple juice). The special case are weapons
-      and ammo where this value indicates the weapon-class of the item.
+ViewSprite: Defines a replacement view-sprite for the item (eg:
+      Making apples look like apple juice).
+
+Subtype: For weapons and ammo, indicates the weapon-class of the item.
 
 	For weapons, the types are:
 		W_FIST      0: Bare fist

@@ -457,6 +457,7 @@ struct item_data {
 	int value_buy;
 	int value_sell;
 	int type;
+	int subtype;
 	int maxchance; //For logs, for external game info, for scripts: Max drop chance of this item (e.g. 0.01% , etc.. if it = 0, then monsters don't drop it, -1 denotes items sold in shops only) [Lupus]
 	int sex;
 	int equip;
@@ -465,7 +466,7 @@ struct item_data {
 	int def;
 	int range;
 	int slot;
-	int look;
+	int view_sprite;
 	int elv;
 	int wlv;
 	int view_id;
@@ -521,7 +522,8 @@ struct item_data {
 #define itemdb_type(n)        (itemdb->search(n)->type)
 #define itemdb_atk(n)         (itemdb->search(n)->atk)
 #define itemdb_def(n)         (itemdb->search(n)->def)
-#define itemdb_look(n)        (itemdb->search(n)->look)
+#define itemdb_subtype(n)     (itemdb->search(n)->subtype)
+#define itemdb_sprite(n)      (itemdb->search(n)->view_sprite)
 #define itemdb_weight(n)      (itemdb->search(n)->weight)
 #define itemdb_equip(n)       (itemdb->search(n)->equip)
 #define itemdb_usescript(n)   (itemdb->search(n)->script)
