@@ -33,7 +33,7 @@
 //=========================================================================
 //= Mapflag: Disable Warp Portal memory.
 //================= Current Version =======================================
-//= 1.8.1
+//= 1.8.2
 //================= Description ===========================================
 //= Prevents players from using /memo on a map.
 //= Also disables marriage warp skills.
