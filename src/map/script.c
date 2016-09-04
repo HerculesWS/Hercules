@@ -21666,6 +21666,43 @@ void script_hardcoded_constants(void)
 	script->set_constant("NAV_KAFRA_AND_SCROLL", NAV_KAFRA_AND_SCROLL, false, false);
 	script->set_constant("NAV_ALL", NAV_ALL, false, false);
 
+	script->constdb_comment("Item Subtypes (Weapon types)");
+	script->set_constant("W_FIST", W_FIST, false, false);
+	script->set_constant("W_DAGGER", W_DAGGER, false, false);
+	script->set_constant("W_1HSWORD", W_1HSWORD, false, false);
+	script->set_constant("W_2HSWORD", W_2HSWORD, false, false);
+	script->set_constant("W_1HSPEAR", W_1HSPEAR, false, false);
+	script->set_constant("W_2HSPEAR", W_2HSPEAR, false, false);
+	script->set_constant("W_1HAXE", W_1HAXE, false, false);
+	script->set_constant("W_2HAXE", W_2HAXE, false, false);
+	script->set_constant("W_MACE", W_MACE, false, false);
+	script->set_constant("W_2HMACE", W_2HMACE, false, false);
+	script->set_constant("W_STAFF", W_STAFF, false, false);
+	script->set_constant("W_BOW", W_BOW, false, false);
+	script->set_constant("W_KNUCKLE", W_KNUCKLE, false, false);
+	script->set_constant("W_MUSICAL", W_MUSICAL, false, false);
+	script->set_constant("W_WHIP", W_WHIP, false, false);
+	script->set_constant("W_BOOK", W_BOOK, false, false);
+	script->set_constant("W_KATAR", W_KATAR, false, false);
+	script->set_constant("W_REVOLVER", W_REVOLVER, false, false);
+	script->set_constant("W_RIFLE", W_RIFLE, false, false);
+	script->set_constant("W_GATLING", W_GATLING, false, false);
+	script->set_constant("W_SHOTGUN", W_SHOTGUN, false, false);
+	script->set_constant("W_GRENADE", W_GRENADE, false, false);
+	script->set_constant("W_HUUMA", W_HUUMA, false, false);
+	script->set_constant("W_2HSTAFF", W_2HSTAFF, false, false);
+
+	script->constdb_comment("Item Subtypes (Ammunition types)");
+	script->set_constant("A_ARROW", A_ARROW, false, false);
+	script->set_constant("A_DAGGER", A_DAGGER, false, false);
+	script->set_constant("A_BULLET", A_BULLET, false, false);
+	script->set_constant("A_SHELL", A_SHELL, false, false);
+	script->set_constant("A_GRENADE", A_GRENADE, false, false);
+	script->set_constant("A_SHURIKEN", A_SHURIKEN, false, false);
+	script->set_constant("A_KUNAI", A_KUNAI, false, false);
+	script->set_constant("A_CANNONBALL", A_CANNONBALL, false, false);
+	script->set_constant("A_THROWWEAPON", A_THROWWEAPON, false, false);
+
 	script->constdb_comment("Renewal");
 #ifdef RENEWAL
 	script->set_constant("RENEWAL", 1, false, false);

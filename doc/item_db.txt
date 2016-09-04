@@ -243,40 +243,41 @@ View: For normal items, defines a replacement view-sprite for the item (eg:
       and ammo where this value indicates the weapon-class of the item.
 
 	For weapons, the types are:
-		0: bare fist
-		1: Daggers
-		2: One-handed swords
-		3: Two-handed swords
-		4: One-handed spears
-		5: Two-handed spears
-		6: One-handed axes
-		7: Two-handed axes
-		8: Maces
-		9: Unused
-		10: Staves
-		11: Bows
-		12: Knuckles
-		13: Musical Instruments
-		14: Whips
-		15: Books
-		16: Katars
-		17: Revolvers
-		18: Rifles
-		19: Gatling guns
-		20: Shotguns
-		21: Grenade launchers
-		22: Fuuma Shurikens
+		W_FIST      0: Bare fist
+		W_DAGGER    1: Daggers
+		W_1HSWORD   2: One-handed swords
+		W_2HSWORD   3: Two-handed swords
+		W_1HSPEAR   4: One-handed spears
+		W_2HSPEAR   5: Two-handed spears
+		W_1HAXE     6: One-handed axes
+		W_2HAXE     7: Two-handed axes
+		W_MACE      8: Maces
+		W_2HMACE    9: Unused
+		W_STAFF    10: Staves
+		W_BOW      11: Bows
+		W_KNUCKLE  12: Knuckles
+		W_MUSICAL  13: Musical instruments
+		W_WHIP     14: Whips
+		W_BOOK     15: Books
+		W_KATAR    16: Katars
+		W_REVOLVER 17: Reveolvers
+		W_RIFLE    18: Rifles
+		W_GATLING  19: Gatling guns
+		W_SHOTGUN  20: Shotguns
+		W_GRENADE  21: Grenade launchers
+		W_HUUMA    22: Fuuma shurikens
+		W_2HSTAFF  23: Two-handed staves
 
 	For ammo, the types are:
-		1: Arrows
-		2: Throwable daggers
-		3: Bullets
-		4: Shells
-		5: Grenades
-		6: Shuriken
-		7: Kunai
-		8: Cannonballs
-		9: Throwable Items (Sling Item)
+		A_ARROW       1: Arrows
+		A_DAGGER      2: Throwable daggers
+		A_BULLET      3: Bullets
+		A_SHELL       4: Shells
+		A_GRENADE     5: Grenades
+		A_SHURIKEN    6: Shuriken
+		A_KUNAI       7: Kunai
+		A_CANNONBALL  8: Cannon balls
+		A_THROWWEAPON 9: Throwable items (Sling Item)
 
 BindOnEquip: Whether the item will automatically bind to the character when it
              is equipped for the first time. An item that has this field set,
