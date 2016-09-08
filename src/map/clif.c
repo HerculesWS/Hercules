@@ -6428,20 +6428,32 @@ void clif_openvending(struct map_session_data* sd, int id, struct s_vending* ven
 #endif
 }
 
-/// Inform merchant that someone has bought an item (ZC_DELETEITEM_FROM_MCSTORE).
-/// 0137 <index>.W <amount>.W
-void clif_vendingreport(struct map_session_data* sd, int index, int amount)
+/// Inform merchant that someone has bought an item.
+/// 0137 <index>.W <amount>.W (ZC_DELETEITEM_FROM_MCSTORE).
+/// 09e5 <index>.W <amount>.W <GID>.L <Date>.L <zeny>.L (ZC_DELETEITEM_FROM_MCSTORE2).
+void clif_vendingreport(struct map_session_data* sd, int index, int amount, uint32 char_id, int zeny)
 {
 	int fd;
+#if PACKETVER < 20141016  // TODO : not sure for client date [Napster]
+	const int cmd = 0x137;
+#else
+	const int cmd = 0x9e5;
+#endif
+	const int len = packet_len(cmd);
 
 	nullpo_retv(sd);
 
 	fd = sd->fd;
-	WFIFOHEAD(fd,packet_len(0x137));
-	WFIFOW(fd,0) = 0x137;
-	WFIFOW(fd,2) = index+2;
-	WFIFOW(fd,4) = amount;
-	WFIFOSET(fd,packet_len(0x137));
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = cmd;
+	WFIFOW(fd, 2) = index + 2;
+	WFIFOW(fd, 4) = amount;
+#if PACKETVER >= 20141016
+	WFIFOL(fd,6) = char_id; // GID
+	WFIFOL(fd,10) = (int)time(NULL); // Date
+	WFIFOL(fd,14) = zeny;   // zeny
+#endif
+	WFIFOSET(fd, len);
 }
 
 /// Result of organizing a party (ZC_ACK_MAKE_GROUP).

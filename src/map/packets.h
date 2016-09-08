@@ -2820,6 +2820,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0936,36,clif->pStoragePassword,0);
 	packet(0x09DF,7);
 	packet(0x0a00,269);
+	packet(0x09e5,18); // ZC_DELETEITEM_FROM_MCSTORE2
 #endif
 
 /* Roulette System [Yommy/Hercules] */
