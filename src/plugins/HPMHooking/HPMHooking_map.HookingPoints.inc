@@ -723,6 +723,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(clif->comparemergeitem, HP_clif_comparemergeitem) },
 	{ HP_POP(clif->ackmergeitems, HP_clif_ackmergeitems) },
 	{ HP_POP(clif->isdisguised, HP_clif_isdisguised) },
+	{ HP_POP(clif->navigate_to, HP_clif_navigate_to) },
 	{ HP_POP(clif->bl_type, HP_clif_bl_type) },
 	{ HP_POP(clif->pWantToConnection, HP_clif_pWantToConnection) },
 	{ HP_POP(clif->pLoadEndAck, HP_clif_pLoadEndAck) },
