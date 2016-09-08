@@ -16181,28 +16181,46 @@ void clif_readbook(int fd, int book_id, int page)
 /// Battlegrounds
 ///
 
-/// Updates HP bar of a camp member (ZC_BATTLEFIELD_NOTIFY_HP).
-/// 02e0 <account id>.L <name>.24B <hp>.W <max hp>.W
+/// Updates HP bar of a camp member.
+/// 02e0 <account id>.L <name>.24B <hp>.W <max hp>.W (ZC_BATTLEFIELD_NOTIFY_HP).
+/// 0a0e <account id>.L <hp>.L <max hp>.L (ZC_BATTLEFIELD_NOTIFY_HP2)
 void clif_bg_hp(struct map_session_data *sd)
 {
 	unsigned char buf[34];
+
+// packet version can be wrong, because inconsistend data in other servers.
+#if PACKETVER < 20140613
 	const int cmd = 0x2e0;
 	nullpo_retv(sd);
 
-	WBUFW(buf,0) = cmd;
-	WBUFL(buf,2) = sd->status.account_id;
-	memcpy(WBUFP(buf,6), sd->status.name, NAME_LENGTH);
+	WBUFW(buf, 0) = cmd;
+	WBUFL(buf, 2) = sd->status.account_id;
+	memcpy(WBUFP(buf, 6), sd->status.name, NAME_LENGTH);
 
-	if( sd->battle_status.max_hp > INT16_MAX )
+	if (sd->battle_status.max_hp > INT16_MAX)
 	{ // To correctly display the %hp bar. [Skotlex]
-		WBUFW(buf,30) = sd->battle_status.hp/(sd->battle_status.max_hp/100);
-		WBUFW(buf,32) = 100;
+		WBUFW(buf, 30) = sd->battle_status.hp / (sd->battle_status.max_hp / 100);
+		WBUFW(buf, 32) = 100;
 	}
 	else
 	{
-		WBUFW(buf,30) = sd->battle_status.hp;
-		WBUFW(buf,32) = sd->battle_status.max_hp;
+		WBUFW(buf, 30) = sd->battle_status.hp;
+		WBUFW(buf, 32) = sd->battle_status.max_hp;
 	}
+#else
+	const int cmd = 0xa0e;
+	nullpo_retv(sd);
+
+	WBUFW(buf, 0) = cmd;
+	WBUFL(buf, 2) = sd->status.account_id;
+	if (sd->battle_status.max_hp > INT32_MAX) {
+		WBUFL(buf, 6) = sd->battle_status.hp / (sd->battle_status.max_hp / 100);
+		WBUFL(buf, 10) = 100;
+	} else {
+		WBUFL(buf, 6) = sd->battle_status.hp;
+		WBUFL(buf, 10) = sd->battle_status.max_hp;
+	}
+#endif
 
 	clif->send(buf, packet_len(cmd), &sd->bl, BG_AREA_WOS);
 }

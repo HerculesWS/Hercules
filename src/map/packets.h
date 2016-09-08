@@ -2787,6 +2787,10 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x09DF,7);
 #endif
 
+#if PACKETVER >= 20140613
+	packet(0x0a0e,14);
+#endif
+
 // 2014-10-16aRagexe - YomRawr
 #if PACKETVER >= 20141016
 	packet(0x0369,7,clif->pActionRequest,2,6);
