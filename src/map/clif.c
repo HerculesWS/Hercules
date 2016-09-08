@@ -5208,33 +5208,46 @@ int clif_skill_damage2(struct block_list *src, struct block_list *dst, int64 tic
 }
 #endif // 0
 
-/// Non-damaging skill effect (ZC_USE_SKILL).
-/// 011a <skill id>.W <skill lv>.W <dst id>.L <src id>.L <result>.B
-int clif_skill_nodamage(struct block_list *src,struct block_list *dst,uint16 skill_id,int heal,int fail)
+/// Non-damaging skill effect.
+/// 011a <skill id>.W <skill lv>.W <dst id>.L <src id>.L <result>.B (ZC_USE_SKILL)
+/// 09cb <skill id>.W <skill lv>.L <dst id>.L <src id>.L <result>.B (ZC_USE_SKILL2)
+int clif_skill_nodamage(struct block_list *src, struct block_list *dst, uint16 skill_id, int heal, int fail)
 {
 	unsigned char buf[32];
+	short offset = 0;
+#if PACKETVER < 20131223
+	short cmd = 0x11a;
+#else
+	short cmd = 0x9cb;
+#endif
+	int len = packet_len(cmd);
 
 	nullpo_ret(dst);
 
-	WBUFW(buf,0)=0x11a;
-	WBUFW(buf,2)=skill_id;
-	WBUFW(buf,4)=min(heal, INT16_MAX);
-	WBUFL(buf,6)=dst->id;
-	WBUFL(buf,10)=src?src->id:0;
-	WBUFB(buf,14)=fail;
+	WBUFW(buf, 0) = cmd;
+	WBUFW(buf, 2) = skill_id;
+#if PACKETVER < 20131223
+	WBUFW(buf, 4) = min(heal, INT16_MAX);
+#else
+	WBUFL(buf, 4) = min(heal, INT_MAX);
+	offset += 2;
+#endif
+	WBUFL(buf, 6 + offset) = dst->id;
+	WBUFL(buf, 10 + offset) = src ? src->id : 0;
+	WBUFB(buf, 14 + offset) = fail;
 
 	if (clif->isdisguised(dst)) {
-		clif->send(buf,packet_len(0x11a),dst,AREA_WOS);
-		WBUFL(buf,6)=-dst->id;
-		clif->send(buf,packet_len(0x11a),dst,SELF);
+		clif->send(buf, len, dst, AREA_WOS);
+		WBUFL(buf, 6 + offset) = -dst->id;
+		clif->send(buf, len, dst, SELF);
 	} else
-		clif->send(buf,packet_len(0x11a),dst,AREA);
+		clif->send(buf, len, dst, AREA);
 
 	if (src && clif->isdisguised(src)) {
-		WBUFL(buf,10)=-src->id;
+		WBUFL(buf, 10 + offset) = -src->id;
 		if (clif->isdisguised(dst))
-			WBUFL(buf,6)=dst->id;
-		clif->send(buf,packet_len(0x11a),src,SELF);
+			WBUFL(buf, 6 + offset) = dst->id;
+		clif->send(buf, len, src, SELF);
 	}
 
 	return fail;

@@ -2580,6 +2580,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0361,5,clif->pHomMenu,2,4);
 	packet(0x08A4,36,clif->pStoragePassword,0);
 	packet(0x09df,7);
+	packet(0x09cb,17);
 #endif
 
 // 2013-12-30aRagexe - Yommy
