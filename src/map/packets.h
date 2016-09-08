@@ -2915,6 +2915,7 @@ packet(0x96e,-1,clif->ackmergeitems);
 	packet(0x0A2E,6,clif->pDull); // TITLE
 	packet(0x0A02,4); // ZC_DRESSROOM_OPEN
 	packet(0x0A35,4,clif->pOneClick_ItemIdentify,2);
+	packet(0x0a27,8); // ZC_RECOVERY2
 #endif
 
 #if PACKETVER >= 20150805 // RagexeRE

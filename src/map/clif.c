@@ -5721,13 +5721,24 @@ void clif_broadcast2(struct block_list *bl, const char *mes, int len, unsigned i
 ///     5 = HP (SP_HP)
 ///     7 = SP (SP_SP)
 ///     ? = ignored
-void clif_heal(int fd,int type,int val)
+void clif_heal(int fd, int type, int val)
 {
-	WFIFOHEAD(fd,packet_len(0x13d));
-	WFIFOW(fd,0)=0x13d;
-	WFIFOW(fd,2)=type;
-	WFIFOW(fd,4)=cap_value(val,0,INT16_MAX);
-	WFIFOSET(fd,packet_len(0x13d));
+#if PACKETVER < 20150513
+	short cmd = 0x13d;
+#else
+	short cmd = 0xa27;
+#endif
+	int len = packet_len(cmd);
+
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = 0x13d;
+	WFIFOW(fd, 2) = type;
+#if PACKETVER < 20150513
+	WFIFOW(fd, 4) = cap_value(val, 0, INT16_MAX);
+#else
+	WFIFOL(fd, 4) = cap_value(val, 0, INT_MAX);
+#endif
+	WFIFOSET(fd, len);
 }
 
 /// Displays resurrection effect (ZC_RESURRECTION).
