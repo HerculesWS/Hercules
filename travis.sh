@@ -31,10 +31,10 @@ function foo {
 
 function usage {
 	echo "usage:"
-	echo "    $0 createdb <dbname> [dbuser] [dbpassword]"
-	echo "    $0 importdb <dbname> [dbuser] [dbpassword]"
+	echo "    $0 createdb <dbname> [dbuser] [dbpassword] [dbhost]"
+	echo "    $0 importdb <dbname> [dbuser] [dbpassword] [dbhost]"
 	echo "    $0 build [configure args]"
-	echo "    $0 test <dbname> [dbuser] [dbpassword]"
+	echo "    $0 test <dbname> [dbuser] [dbpassword] [dbhost]"
 	echo "    $0 getplugins"
 	exit 1
 }
@@ -62,21 +62,29 @@ function run_server {
 	fi
 }
 
+# Defaults
+DBNAME=ragnarok
+DBUSER=ragnarok
+DBPASS=ragnarok
+DBHOST=127.0.0.1
+
 case "$MODE" in
 	createdb|importdb|test)
-		DBNAME="$1"
-		DBUSER="$2"
-		DBPASS="$3"
-		if [ -z "$DBNAME" ]; then
+		if [ -z "$1" ]; then
 			usage
 		fi
-		if [ "$MODE" != "test" ]; then
-			if [ -n "$DBUSER" ]; then
-				DBUSER="-u $DBUSER"
-			fi
-			if [ -n "$DBPASS" ]; then
-				DBPASS="-p$DBPASS"
-			fi
+		DBNAME="$1"
+		if [ -n "$2" ]; then
+			DBUSER_ARG="-u $2"
+			DBUSER="$2"
+		fi
+		if [ -n "$3" ]; then
+			DBPASS_ARG="-p$3"
+			DBPASS="$3"
+		fi
+		if [ -n "$4" ]; then
+			DBHOST_ARG="-h $4"
+			DBHOST="$4"
 		fi
 		;;
 esac
@@ -84,12 +92,12 @@ esac
 case "$MODE" in
 	createdb)
 		echo "Creating database $DBNAME..."
-		mysql $DBUSER $DBPASS -e "create database $DBNAME;" || aborterror "Unable to create database."
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG -e "create database $DBNAME;" || aborterror "Unable to create database."
 		;;
 	importdb)
 		echo "Importing tables into $DBNAME..."
-		mysql $DBUSER $DBPASS $DBNAME < sql-files/main.sql || aborterror "Unable to import main database."
-		mysql $DBUSER $DBPASS $DBNAME < sql-files/logs.sql || aborterror "Unable to import logs database."
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG $DBNAME < sql-files/main.sql || aborterror "Unable to import main database."
+		mysql $DBUSER_ARG $DBPASS_ARG $DBHOST_ARG $DBNAME < sql-files/logs.sql || aborterror "Unable to import logs database."
 		;;
 	build)
 		(cd tools && ./validateinterfaces.py silent) || aborterror "Interface validation error."
@@ -103,7 +111,7 @@ case "$MODE" in
 sql_connection: {
 	//default_codepage: ""
 	//case_sensitive: false
-	db_hostname: "localhost"
+	db_hostname: "$DBHOST"
 	db_username: "$DBUSER"
 	db_password: "$DBPASS"
 	db_database: "$DBNAME"
