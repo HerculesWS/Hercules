@@ -1,0 +1,639 @@
+services:
+  - mysql:latest
+
+variables: &base_vars
+  # Configure mysql service (https://hub.docker.com/_/mysql/)
+  MYSQL_DATABASE: 'ragnarok'
+  MYSQL_USER: 'ragnarok'
+  MYSQL_PASSWORD: 'ragnarok'
+  MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+  GIT_DEPTH: '3'
+  DEBIAN_COMMON_PACKAGES: make zlib1g-dev libpcre3-dev git python
+
+.prerequisites: &prerequisites
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
+    - ./tools/ci/travis.sh getplugins || true
+
+.branch_exceptions: &branch_exceptions
+  only:
+    - branches
+  except:
+    - rathena
+    - coverity_scan
+
+# Compilers
+
+pre_re:clang-3.9:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: clang-3.9 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=clang-3.9 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:clang-3.9:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: clang-3.9 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=clang-3.9 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:gcc-4.6:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:oldstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-4.6 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-4.6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:gcc-4.6:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:oldstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-4.6 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-4.6 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:gcc-4.7:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:oldstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-4.7 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-4.7 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:gcc-4.7:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:oldstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-4.7 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-4.7 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:gcc-4.8:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:stable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-4.8 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-4.8 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:gcc-4.8:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:stable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-4.8 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-4.8 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:gcc-4.9:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:stable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-4.9 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-4.9 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:gcc-4.9:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:stable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-4.9 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-4.9 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:gcc-5:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-5 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-5 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:gcc-5:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-5 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-5 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:gcc-6:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-6 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:gcc-6:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-6 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:gcc-6_i386:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: vicamo/debian:sid-i386
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-6 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:gcc-6_i386:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: vicamo/debian:sid-i386
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-6 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:gcc-6_sanitize:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-6 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal --disable-manager --enable-sanitize=full
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:gcc-6_sanitize:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-6 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:gcc-6_i386_sanitize:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: vicamo/debian:sid-i386
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-6 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal --disable-manager --enable-sanitize=full
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:gcc-6_i386_sanitize:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: vicamo/debian:sid-i386
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-6 mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-manager --enable-sanitize=full
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:gcc-6_cov:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-6 gcovr mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal CFLAGS="-coverage" LDFLAGS="-coverage"
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+    - gcovr -r . --gcov-executable=gcov-6
+    - gcovr -r . --gcov-executable=gcov-6 --html -o gcov_pre.html
+  artifacts:
+    paths:
+      - gcov_re.html
+
+re:gcc-6_cov:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc-6 gcovr mysql-client
+  script:
+    - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot CFLAGS="-coverage" LDFLAGS="-coverage"
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+    - gcovr -r . --gcov-executable=gcov-6
+    - gcovr -r . --gcov-executable=gcov-6 --html -o gcov_re.html
+  artifacts:
+    paths:
+      - gcov_re.html
+
+# Distributions
+
+pre_re:debian-oldstable:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:wheezy
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:debian-oldstable:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:wheezy
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:debian-stable:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:jessie
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:debian-stable:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:jessie
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:debian-testing:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:stretch
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:debian-testing:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:stretch
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:centos-previous:
+  <<: *branch_exceptions
+  image: centos:6
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - yum -y update
+    - yum install -y make mysql-devel pcre-devel git zlib-devel mysql
+    - yum install -y centos-release-scl
+    - yum install -y yum install devtoolset-3-toolchain
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
+    - ./tools/ci/travis.sh getplugins || true
+  variables:
+    <<: *base_vars
+  script:
+    - scl enable devtoolset-3 './tools/ci/travis.sh build CFLAGS="-Wno-cast-qual" --enable-debug --enable-Werror --enable-buildbot --disable-renewal'
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:centos-previous:
+  <<: *branch_exceptions
+  image: centos:6
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - yum -y update
+    - yum install -y make mysql-devel pcre-devel git zlib-devel mysql
+    - yum install -y centos-release-scl
+    - yum install -y yum install devtoolset-3-toolchain
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
+    - ./tools/ci/travis.sh getplugins || true
+  variables:
+    <<: *base_vars
+  variables:
+    <<: *base_vars
+  script:
+    - scl enable devtoolset-3  './tools/ci/travis.sh build CFLAGS="-Wno-cast-qual" --enable-debug --enable-Werror --enable-buildbot'
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:centos-current:
+  <<: *branch_exceptions
+  image: centos:7
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - yum -y update
+    - yum install -y gcc make mysql-devel pcre-devel git zlib-devel mysql
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
+    - ./tools/ci/travis.sh getplugins || true
+  variables:
+    <<: *base_vars
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:centos-current:
+  <<: *branch_exceptions
+  image: centos:7
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - yum -y update
+    - yum install -y gcc make mysql-devel pcre-devel git zlib-devel mysql
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
+    - ./tools/ci/travis.sh getplugins || true
+  variables:
+    <<: *base_vars
+  variables:
+    <<: *base_vars
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:ubuntu-xenial:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: ubuntu:16.04
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:ubuntu-xenial:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: ubuntu:16.04
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+# SQL servers
+
+pre_re:mysql-5.5:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:stable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client-5.5
+  services:
+    - mysql:5.5
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:mysql-5.5:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:stable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client-5.5
+  services:
+    - mysql:5.5
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:mysql-5.6:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client-5.6
+  services:
+    - mysql:5.6
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:mysql-5.6:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client-5.6
+  services:
+    - mysql:5.6
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:mysql-5.7:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    # mysql-client-5.7 is not available
+    INSTALL_PACKAGES: gcc mysql-client
+  services:
+    - mysql:5.7
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+re:mysql-5.7:
+  <<: *branch_exceptions
+  <<: *prerequisites
+  image: debian:unstable
+  variables:
+    <<: *base_vars
+    # mysql-client-5.7 is not available
+    INSTALL_PACKAGES: gcc mysql-client
+  services:
+    - mysql:5.7
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
+
+pre_re:mariadb-10:
+  <<: *branch_exceptions
+  image: debian:stable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mariadb-client-10.0
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mariadb
+    - ./tools/ci/travis.sh getplugins || true
+  services:
+    - mariadb:10.0
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mariadb
+
+re:mariadb-10:
+  <<: *branch_exceptions
+  image: debian:stable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mariadb-client-10.0
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mariadb
+    - ./tools/ci/travis.sh getplugins || true
+  services:
+    - mariadb:10.0
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mariadb
+
+pre_re:mariadb-latest:
+  <<: *branch_exceptions
+  image: debian:stable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mariadb-client-10.0
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mariadb
+    - ./tools/ci/travis.sh getplugins || true
+  services:
+    - mariadb:latest
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mariadb
+
+re:mariadb-latest:
+  <<: *branch_exceptions
+  image: debian:stable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mariadb-client-10.0
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mariadb
+    - ./tools/ci/travis.sh getplugins || true
+  services:
+    - mariadb:latest
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mariadb
+
+pre_re:percona:
+  <<: *branch_exceptions
+  image: debian:stable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok percona
+    - ./tools/ci/travis.sh getplugins || true
+  services:
+    - percona:latest
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot --disable-renewal
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok percona
+
+re:percona:
+  <<: *branch_exceptions
+  image: debian:stable
+  variables:
+    <<: *base_vars
+    INSTALL_PACKAGES: gcc mysql-client
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
+    - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok percona
+    - ./tools/ci/travis.sh getplugins || true
+  services:
+    - percona:latest
+  script:
+    - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
+    - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok percona
