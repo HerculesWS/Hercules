@@ -81,3 +81,6 @@
 
 // Ghost Palace ===========
 1@spa	mapflag	partylock
+
+// Sara's Memory Instance ===========
+1@sara	mapflag	partylock

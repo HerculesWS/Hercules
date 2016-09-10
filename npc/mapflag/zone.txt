@@ -103,6 +103,9 @@ prt_are_in	mapflag	zone	Izlude Battle Arena
 // Ghost Palace ===========
 1@spa	mapflag	zone	Memorial Dungeon
 
+// Sara's Memory Instance ===========
+1@sara	mapflag	zone	Memorial Dungeon
+
 //Towns
 alberta	mapflag	zone	Towns
 aldebaran	mapflag	zone	Towns

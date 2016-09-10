@@ -203,6 +203,9 @@ nguild_prt	mapflag	noicewall
 // Ghost Palace ===========
 1@spa	mapflag	noicewall
 
+// Sara's Memory Instance ===========
+1@sara	mapflag	noicewall
+
 // Poring War ====================
 poring_w01	mapflag	noicewall
 poring_w02	mapflag	noicewall
