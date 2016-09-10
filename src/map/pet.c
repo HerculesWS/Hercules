@@ -91,6 +91,7 @@ void pet_set_intimate(struct pet_data *pd, int value)
 int pet_create_egg(struct map_session_data *sd, int item_id)
 {
 	int pet_id = pet->search_petDB_index(item_id, PET_EGG);
+	nullpo_ret(sd);
 	if (pet_id < 0) return 0; //No pet egg here.
 	if (!pc->inventoryblank(sd)) return 0; // Inventory full
 	sd->catch_target_class = pet->db[pet_id].class_;
@@ -117,6 +118,7 @@ int pet_unlocktarget(struct pet_data *pd)
  * Pet Attack Skill [Skotlex]
  *------------------------------------------*/
 int pet_attackskill(struct pet_data *pd, int target_id) {
+	nullpo_ret(pd);
 	if (!battle_config.pet_status_support || !pd->a_skill ||
 		(battle_config.pet_equip_required && !pd->pet.equip))
 		return 0;
@@ -148,6 +150,7 @@ int pet_target_check(struct map_session_data *sd,struct block_list *bl,int type)
 	struct pet_data *pd;
 	int rate;
 
+	nullpo_ret(sd);
 	pd = sd->pd;
 
 	Assert_ret(pd->msd == 0 || pd->msd->pd == pd);
@@ -291,6 +294,7 @@ int pet_performance(struct map_session_data *sd, struct pet_data *pd)
 {
 	int val;
 
+	nullpo_retr(1, pd);
 	if (pd->pet.intimate > 900)
 		val = (pd->petDB->s_perfor > 0)? 4:3;
 	else if(pd->pet.intimate > 750) //TODO: this is way too high
@@ -309,6 +313,8 @@ int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 	struct item tmp_item;
 	int flag;
 
+	nullpo_retr(1, sd);
+	nullpo_retr(1, pd);
 	pet->lootitem_drop(pd,sd);
 	memset(&tmp_item,0,sizeof(tmp_item));
 	tmp_item.nameid = pd->petDB->EggID;
@@ -336,6 +342,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 	int i=0,interval=0;
 
 	nullpo_retr(1, sd);
+	nullpo_retr(1, petinfo);
 	Assert_retr(1, sd->status.pet_id == 0 || sd->pd == 0 || sd->pd->msd == sd);
 
 	if(sd->status.account_id != petinfo->account_id || sd->status.char_id != petinfo->char_id) {
@@ -407,6 +414,7 @@ int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 {
 	nullpo_retr(1, sd);
+	nullpo_retr(1, petinfo);
 	Assert_retr(1, sd->status.pet_id == 0 || sd->pd == 0 || sd->pd->msd == sd);
 
 	if(sd->status.pet_id && petinfo->incubate == 1) {
@@ -443,6 +451,7 @@ int pet_birth_process(struct map_session_data *sd, struct s_pet *petinfo)
 int pet_recv_petdata(int account_id,struct s_pet *p,int flag) {
 	struct map_session_data *sd;
 
+	nullpo_retr(1, p);
 	sd = map->id2sd(account_id);
 	if(sd == NULL)
 		return 1;
@@ -651,6 +660,7 @@ int pet_change_name(struct map_session_data *sd, const char *name)
 	int i;
 	struct pet_data *pd;
 	nullpo_retr(1, sd);
+	nullpo_retr(1, name);
 
 	pd = sd->pd;
 	if((pd == NULL) || (pd->pet.rename_flag == 1 && !battle_config.pet_rename))
@@ -666,9 +676,12 @@ int pet_change_name(struct map_session_data *sd, const char *name)
 
 int pet_change_name_ack(struct map_session_data *sd, const char *name, int flag)
 {
-	struct pet_data *pd = sd->pd;
+	struct pet_data *pd;
 	char *newname = NULL;
-	if (!pd) return 0;
+	nullpo_ret(sd);
+	nullpo_ret(name);
+	pd = sd->pd;
+	if (pd == NULL) return 0;
 
 	newname = aStrndup(name, NAME_LENGTH-1);
 	normalize_name(newname, " ");//bugreport:3032 // FIXME[Haru]: This should be normalized by the inter-server (so that it's const here)
@@ -724,6 +737,8 @@ int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd) {
 	struct item tmp_item;
 	int nameid,flag;
 
+	nullpo_retr(1, sd);
+	nullpo_retr(1, pd);
 	if(pd->pet.equip == 0)
 		return 1;
 
@@ -762,6 +777,7 @@ int pet_unequipitem(struct map_session_data *sd, struct pet_data *pd) {
 int pet_food(struct map_session_data *sd, struct pet_data *pd) {
 	int i, food_id;
 
+	nullpo_retr(1, pd);
 	food_id = pd->petDB->FoodID;
 	i = pc->search_inventory(sd, food_id);
 	if(i == INDEX_NOT_FOUND) {
@@ -847,6 +863,7 @@ int pet_randomwalk(struct pet_data *pd, int64 tick)
 
 int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int64 tick) {
 	struct block_list *target = NULL;
+	nullpo_ret(pd);
 
 	if(pd->bl.prev == NULL || sd == NULL || sd->bl.prev == NULL)
 		return 0;
@@ -959,6 +976,7 @@ int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int64 tick
 
 int pet_ai_sub_foreachclient(struct map_session_data *sd,va_list ap) {
 	int64 tick = va_arg(ap,int64);
+	nullpo_ret(sd);
 	if(sd->status.pet_id && sd->pd)
 		pet->ai_sub_hard(sd->pd,sd,tick);
 
@@ -1114,7 +1132,8 @@ int pet_recovery_timer(int tid, int64 tick, int id, intptr_t data) {
 	if(sd==NULL || sd->pd == NULL || sd->pd->recovery == NULL)
 		return 1;
 
-	pd=sd->pd;
+	pd = sd->pd;
+	nullpo_retr(1, pd);
 
 	if(pd->recovery->timer != tid) {
 		ShowError("pet_recovery_timer %d != %d\n",pd->recovery->timer,tid);
@@ -1146,6 +1165,7 @@ int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data) {
 		return 1;
 
 	pd=sd->pd;
+	nullpo_retr(1, pd);
 
 	if(pd->s_skill->timer != tid) {
 		ShowError("pet_skill_support_timer %d != %d\n",pd->s_skill->timer,tid);

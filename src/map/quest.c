@@ -81,6 +81,7 @@ int quest_pc_login(struct map_session_data *sd)
 	int i;
 #endif
 
+	nullpo_retr(1, sd);
 	if(sd->avail_quests == 0)
 		return 1;
 
@@ -111,6 +112,7 @@ int quest_add(struct map_session_data *sd, int quest_id)
 	int n;
 	struct quest_db *qi = quest->db(quest_id);
 
+	nullpo_retr(-1, sd);
 	if( qi == &quest->dummy ) {
 		ShowError("quest_add: quest %d not found in DB.\n", quest_id);
 		return -1;
@@ -122,6 +124,7 @@ int quest_add(struct map_session_data *sd, int quest_id)
 	}
 
 	n = sd->avail_quests; // Insertion point
+	Assert_retr(-1, sd->avail_quests <= sd->num_quests);
 
 	sd->num_quests++;
 	sd->avail_quests++;
@@ -163,6 +166,7 @@ int quest_change(struct map_session_data *sd, int qid1, int qid2)
 	int i;
 	struct quest_db *qi = quest->db(qid2);
 
+	nullpo_retr(-1, sd);
 	if( qi == &quest->dummy ) {
 		ShowError("quest_change: quest %d not found in DB.\n", qid2);
 		return -1;
@@ -213,6 +217,7 @@ int quest_delete(struct map_session_data *sd, int quest_id)
 {
 	int i;
 
+	nullpo_retr(-1, sd);
 	//Search for quest
 	ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
 
@@ -283,6 +288,7 @@ void quest_update_objective(struct map_session_data *sd, int mob_id)
 {
 	int i,j;
 
+	nullpo_retv(sd);
 	for (i = 0; i < sd->avail_quests; i++) {
 		struct quest_db *qi = NULL;
 
@@ -338,6 +344,7 @@ int quest_update_status(struct map_session_data *sd, int quest_id, enum quest_st
 {
 	int i;
 
+	nullpo_retr(-1, sd);
 	ARR_FIND(0, sd->avail_quests, i, sd->quest_log[i].quest_id == quest_id);
 	if( i == sd->avail_quests ) {
 		ShowError("quest_update_status: Character %d doesn't have quest %d.\n", sd->status.char_id, quest_id);
@@ -388,6 +395,7 @@ int quest_check(struct map_session_data *sd, int quest_id, enum quest_check_type
 {
 	int i;
 
+	nullpo_retr(-1, sd);
 	ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
 	if (i == sd->num_quests)
 		return -1;
@@ -431,6 +439,7 @@ struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, const cha
 	struct config_setting_t *t = NULL;
 	int i32 = 0, quest_id;
 	const char *str = NULL;
+	nullpo_retr(NULL, cs);
 	/*
 	 * Id: Quest ID                    [int]
 	 * Name: Quest Name                [string]

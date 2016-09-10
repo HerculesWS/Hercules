@@ -310,6 +310,7 @@ static void read_config(void) {
  */
 bool pc_group_has_permission(GroupSettings *group, unsigned int permission)
 {
+	nullpo_retr(false, group);
 	return ((group->e_permissions&permission) != 0);
 }
 
@@ -319,6 +320,7 @@ bool pc_group_has_permission(GroupSettings *group, unsigned int permission)
  */
 bool pc_group_should_log_commands(GroupSettings *group)
 {
+	nullpo_retr(true, group);
 	return group->log_commands;
 }
 
@@ -348,6 +350,7 @@ GroupSettings* pc_group_id2group(int group_id)
  */
 const char* pc_group_get_name(GroupSettings *group)
 {
+	nullpo_retr(NULL, group);
 	return group->name;
 }
 
@@ -359,6 +362,7 @@ const char* pc_group_get_name(GroupSettings *group)
  */
 int pc_group_get_level(GroupSettings *group)
 {
+	nullpo_ret(group);
 	return group->level;
 }
 
@@ -370,6 +374,7 @@ int pc_group_get_level(GroupSettings *group)
  */
 int pc_group_get_idx(GroupSettings *group)
 {
+	nullpo_ret(group);
 	return group->index;
 }
 
@@ -380,6 +385,7 @@ int pc_group_get_idx(GroupSettings *group)
 unsigned int pc_groups_add_permission(const char *name) {
 	uint64 key = 0x1;
 	unsigned char i;
+	nullpo_ret(name);
 
 	for(i = 0; i < pcg->permission_count; i++) {
 		if( strcmpi(name,pcg->permissions[i].name) == 0 ) {
@@ -468,6 +474,7 @@ void do_init_pc_groups(void) {
 static int group_db_clear_sub(union DBKey key, struct DBData *data, va_list args)
 {
 	GroupSettings *group = DB->data2ptr(data);
+	nullpo_ret(group);
 	if (group->name)
 		aFree(group->name);
 	return 0;
