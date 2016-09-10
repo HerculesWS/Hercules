@@ -9490,7 +9490,7 @@ BUILDIN(guildskill) {
 	skill_id = ( script_isstringtype(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	level = script_getnum(st,3);
 
-	if (skill_id < GD_SKILLBASE || skill_id > GD_MAX)
+	if (skill_id < GD_SKILLBASE || skill_id >= GD_MAX)
 		return true;  // not guild skill
 
 	id = skill_id - GD_SKILLBASE;
