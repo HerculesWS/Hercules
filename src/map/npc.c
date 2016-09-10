@@ -2173,6 +2173,9 @@ int npc_selllist(struct map_session_data *sd, struct itemlist *item_list)
 
 	z = 0;
 
+	if (sd->status.zeny == MAX_ZENY && !nd->master_nd)
+		return 1;
+
 	// verify the sell list
 	for (i = 0; i < VECTOR_LENGTH(*item_list); i++) {
 		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, i);
