@@ -9,7 +9,7 @@
 //= This file is part of Hercules.
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
-//= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C) 2012-2016  Hercules Dev Team
 //= Copyright (C)  rAthena Dev Team
 //= Copyright (C)  eAthena Dev Team
 //= Copyright (C)  L0ne_W0lf
@@ -31,7 +31,7 @@
 //=========================================================================
 //= Mapflag: Disable Dead Branch use.
 //================= Current Version =======================================
-//= 1.8
+//= 1.8.1
 //================= Description ===========================================
 //= Disables the following items:
 //=   Dead Branch (604), Bloody Branch (12103),
@@ -404,6 +404,12 @@ ecl_in03	mapflag	nobranch
 ecl_in04	mapflag	nobranch
 1@ecl	mapflag	nobranch
 ecl_hub01	mapflag	nobranch
+
+// Episode 14.3 ===========
+c_tower2_	mapflag	nobranch
+c_tower3_	mapflag	nobranch
+gl_chyard_	mapflag	nobranch
+gl_cas02_	mapflag	nobranch
 
 // Ghost Palace ===========
 1@spa	mapflag	nobranch
