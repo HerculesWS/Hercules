@@ -11,6 +11,7 @@
 //=
 //= Copyright (C) 2016  Hercules Dev Team
 //= Copyright (C) 2016  Ridley
+//= Copyright (C) 2016  Aleos
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -29,7 +30,7 @@
 //================= Description ===========================================
 //= NPCs related to Aldebaran Clock Tower (Nightmare)
 //================= Current Version =======================================
-//= 1.0
+//= 1.1
 //=========================================================================
 c_tower1,232,222,5	script	Belljamin Button#ct	4_M_RUSMAN2,{
 	mes("[Belljamin Button]");
@@ -43,43 +44,21 @@ c_tower1,232,222,5	script	Belljamin Button#ct	4_M_RUSMAN2,{
 	mes("[Belljamin Button]");
 	mes("I'm begging you not to ask more about it. It might put your life in danger.");
 	next;
-	switch (select("Don't ask", "Go to 2nd floor of warped tower", "Go to 3rd floor of warped tower")) {
+	.@menu = select("Don't ask", "Go to 2nd floor of warped tower", "Go to 3rd floor of warped tower");
+	switch (.@menu) {
 	case 1:
-		mes("[Belljamin Button]");
-		mes("Phew...You've made good choice. The place is so brutal so you should probably get back to a safe area.");
-		close;
-	case 2:
-		mes("[Belljamin Button]");
-		mes("Be careful with your choice.");
-		next;
-		mes("[Belljamin Button]");
-		mes("I need ^0000FF10,000z^000000 to let you in. It's a pretty dangerous place to be.");
-		next;
-		switch (select("Quit", "Pay 10,000z", "Why do you need money?")) {
-		case 1:
-			mes("[Belljamin Button]");
-			mes("Phew...You've made good choice. The place is so brutal so you should probably get back to a safe area.");
-			close;
-		case 2:
-			if (Zeny < 10000) {
-				mes("[Belljamin Button]");
-				mes("Really? You don't have money and asked me to take you there?");
-				close;
-			}
-			Zeny -= 10000;
-			mes("[Belljamin Button]");
-			mes("I'm not sure how you'll keep track of time in there but be as careful as you can.");
-			close2;
-			warp "c_tower2_", 268, 26;
-			end;
-		case 3:
-			mes("[Belljamin Button]");
-			mes("I am here all day for the safety of adventurers. I always alert them about the danger. That's why I need some pay.");
-			emotion e_swt;
-			close;
-		}
 		break;
+	case 2:
 	case 3:
+		if (.@menu == 2) {
+			.@map$ = "c_tower2_";
+			.@x = 268;
+			.@y = 26;
+		} else {
+			.@map$ = "c_tower3_";
+			.@x = 65;
+			.@y = 147;
+		}
 		mes("[Belljamin Button]");
 		mes("Be careful with your choice.");
 		next;
@@ -88,9 +67,7 @@ c_tower1,232,222,5	script	Belljamin Button#ct	4_M_RUSMAN2,{
 		next;
 		switch (select("Quit", "Pay 10,000z", "Why do you need money?")) {
 		case 1:
-			mes("[Belljamin Button]");
-			mes("Phew...You've made good choice. The place is so brutal so you should probably get back to a safe area.");
-			close;
+			break;
 		case 2:
 			if (Zeny < 10000) {
 				mes("[Belljamin Button]");
@@ -101,7 +78,7 @@ c_tower1,232,222,5	script	Belljamin Button#ct	4_M_RUSMAN2,{
 			mes("[Belljamin Button]");
 			mes("I'm not sure how you'll keep track of time in there but be as careful as you can.");
 			close2;
-			warp "c_tower3_", 65, 147;
+			warp .@map$, .@x, .@y;
 			end;
 			break;
 		case 3:
@@ -110,7 +87,11 @@ c_tower1,232,222,5	script	Belljamin Button#ct	4_M_RUSMAN2,{
 			emotion e_swt;
 			close;
 		}
+		break;
 	}
+	mes("[Belljamin Button]");
+	mes("Phew...You've made good choice. The place is so brutal so you should probably get back to a safe area.");
+	close;
 }
 
 c_tower2_,274,26,3	script	Belljamin Button#nct1	4_M_RUSCHILD,{
