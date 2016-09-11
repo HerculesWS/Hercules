@@ -13447,14 +13447,14 @@ void HP_clif_openvending(struct map_session_data *sd, int id, struct s_vending *
 	}
 	return;
 }
-void HP_clif_vendingreport(struct map_session_data *sd, int index, int amount) {
+void HP_clif_vendingreport(struct map_session_data *sd, int index, int amount, uint32 char_id, int zeny) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_vendingreport_pre ) {
-		void (*preHookFunc) (struct map_session_data **sd, int *index, int *amount);
+		void (*preHookFunc) (struct map_session_data **sd, int *index, int *amount, uint32 *char_id, int *zeny);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_vendingreport_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_clif_vendingreport_pre[hIndex].func;
-			preHookFunc(&sd, &index, &amount);
+			preHookFunc(&sd, &index, &amount, &char_id, &zeny);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -13462,13 +13462,13 @@ void HP_clif_vendingreport(struct map_session_data *sd, int index, int amount) {
 		}
 	}
 	{
-		HPMHooks.source.clif.vendingreport(sd, index, amount);
+		HPMHooks.source.clif.vendingreport(sd, index, amount, char_id, zeny);
 	}
 	if( HPMHooks.count.HP_clif_vendingreport_post ) {
-		void (*postHookFunc) (struct map_session_data *sd, int index, int amount);
+		void (*postHookFunc) (struct map_session_data *sd, int index, int amount, uint32 char_id, int zeny);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_vendingreport_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_vendingreport_post[hIndex].func;
-			postHookFunc(sd, index, amount);
+			postHookFunc(sd, index, amount, char_id, zeny);
 		}
 	}
 	return;
@@ -17200,14 +17200,14 @@ void HP_clif_buyingstore_trade_failed_buyer(struct map_session_data *sd, short r
 	}
 	return;
 }
-void HP_clif_buyingstore_update_item(struct map_session_data *sd, unsigned short nameid, unsigned short amount) {
+void HP_clif_buyingstore_update_item(struct map_session_data *sd, unsigned short nameid, unsigned short amount, uint32 char_id, int zeny) {
 	int hIndex = 0;
 	if( HPMHooks.count.HP_clif_buyingstore_update_item_pre ) {
-		void (*preHookFunc) (struct map_session_data **sd, unsigned short *nameid, unsigned short *amount);
+		void (*preHookFunc) (struct map_session_data **sd, unsigned short *nameid, unsigned short *amount, uint32 *char_id, int *zeny);
 		*HPMforce_return = false;
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_buyingstore_update_item_pre; hIndex++ ) {
 			preHookFunc = HPMHooks.list.HP_clif_buyingstore_update_item_pre[hIndex].func;
-			preHookFunc(&sd, &nameid, &amount);
+			preHookFunc(&sd, &nameid, &amount, &char_id, &zeny);
 		}
 		if( *HPMforce_return ) {
 			*HPMforce_return = false;
@@ -17215,13 +17215,13 @@ void HP_clif_buyingstore_update_item(struct map_session_data *sd, unsigned short
 		}
 	}
 	{
-		HPMHooks.source.clif.buyingstore_update_item(sd, nameid, amount);
+		HPMHooks.source.clif.buyingstore_update_item(sd, nameid, amount, char_id, zeny);
 	}
 	if( HPMHooks.count.HP_clif_buyingstore_update_item_post ) {
-		void (*postHookFunc) (struct map_session_data *sd, unsigned short nameid, unsigned short amount);
+		void (*postHookFunc) (struct map_session_data *sd, unsigned short nameid, unsigned short amount, uint32 char_id, int zeny);
 		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_buyingstore_update_item_post; hIndex++ ) {
 			postHookFunc = HPMHooks.list.HP_clif_buyingstore_update_item_post[hIndex].func;
-			postHookFunc(sd, nameid, amount);
+			postHookFunc(sd, nameid, amount, char_id, zeny);
 		}
 	}
 	return;
@@ -18245,6 +18245,32 @@ bool HP_clif_isdisguised(struct block_list *bl) {
 		}
 	}
 	return retVal___;
+}
+void HP_clif_navigate_to(struct map_session_data *sd, const char *mapname, uint16 x, uint16 y, uint8 flag, bool hideWindow, uint16 mob_id) {
+	int hIndex = 0;
+	if( HPMHooks.count.HP_clif_navigate_to_pre ) {
+		void (*preHookFunc) (struct map_session_data **sd, const char **mapname, uint16 *x, uint16 *y, uint8 *flag, bool *hideWindow, uint16 *mob_id);
+		*HPMforce_return = false;
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_navigate_to_pre; hIndex++ ) {
+			preHookFunc = HPMHooks.list.HP_clif_navigate_to_pre[hIndex].func;
+			preHookFunc(&sd, &mapname, &x, &y, &flag, &hideWindow, &mob_id);
+		}
+		if( *HPMforce_return ) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.clif.navigate_to(sd, mapname, x, y, flag, hideWindow, mob_id);
+	}
+	if( HPMHooks.count.HP_clif_navigate_to_post ) {
+		void (*postHookFunc) (struct map_session_data *sd, const char *mapname, uint16 x, uint16 y, uint8 flag, bool hideWindow, uint16 mob_id);
+		for(hIndex = 0; hIndex < HPMHooks.count.HP_clif_navigate_to_post; hIndex++ ) {
+			postHookFunc = HPMHooks.list.HP_clif_navigate_to_post[hIndex].func;
+			postHookFunc(sd, mapname, x, y, flag, hideWindow, mob_id);
+		}
+	}
+	return;
 }
 unsigned char HP_clif_bl_type(struct block_list *bl) {
 	int hIndex = 0;

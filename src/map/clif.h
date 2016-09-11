@@ -896,7 +896,7 @@ struct clif_interface {
 	void (*vendinglist) (struct map_session_data* sd, unsigned int id, struct s_vending* vending_list);
 	void (*buyvending) (struct map_session_data* sd, int index, int amount, int fail);
 	void (*openvending) (struct map_session_data* sd, int id, struct s_vending* vending_list);
-	void (*vendingreport) (struct map_session_data* sd, int index, int amount);
+	void (*vendingreport) (struct map_session_data* sd, int index, int amount, uint32 char_id, int zeny);
 	/* storage handling */
 	void (*storagelist) (struct map_session_data* sd, struct item* items, int items_length);
 	void (*updatestorageamount) (struct map_session_data* sd, int amount, int max_amount);
@@ -1058,7 +1058,7 @@ struct clif_interface {
 	void (*buyingstore_disappear_entry_single) (struct map_session_data* sd, struct map_session_data* pl_sd);
 	void (*buyingstore_itemlist) (struct map_session_data* sd, struct map_session_data* pl_sd);
 	void (*buyingstore_trade_failed_buyer) (struct map_session_data* sd, short result);
-	void (*buyingstore_update_item) (struct map_session_data* sd, unsigned short nameid, unsigned short amount);
+	void (*buyingstore_update_item) (struct map_session_data* sd, unsigned short nameid, unsigned short amount, uint32 char_id, int zeny);
 	void (*buyingstore_delete_item) (struct map_session_data* sd, short index, unsigned short amount, int price);
 	void (*buyingstore_trade_failed_seller) (struct map_session_data* sd, short result, unsigned short nameid);
 	/* search store-related */
@@ -1111,6 +1111,7 @@ struct clif_interface {
 	void (*ackmergeitems) (int fd, struct map_session_data *sd);
 	/* */
 	bool (*isdisguised) (struct block_list* bl);
+	void (*navigate_to) (struct map_session_data *sd, const char* mapname, uint16 x, uint16 y, uint8 flag, bool hideWindow, uint16 mob_id);
 	unsigned char (*bl_type) (struct block_list *bl);
 	/*------------------------
 	 *- Parse Incoming Packet

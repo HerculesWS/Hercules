@@ -1495,6 +1495,15 @@ void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int flag) 
 	struct status_data *hstatus;
 	unsigned char buf[128];
 	enum homun_type htype;
+	int offset = 0;
+
+// probably can works also for < 20141223, but in 3CeaM packet size defined only for 20150513
+#if PACKETVER < 20150513
+	int cmd = 0x22e;
+#else
+	int cmd = 0x9f7;
+#endif
+	int len = packet_len(cmd);
 
 	nullpo_retv(sd);
 	nullpo_retv(hd);
@@ -1502,65 +1511,75 @@ void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int flag) 
 	hstatus  = &hd->battle_status;
 	htype = homun->class2type(hd->homunculus.class_);
 
-	memset(buf,0,packet_len(0x22e));
-	WBUFW(buf,0)=0x22e;
-	memcpy(WBUFP(buf,2),hd->homunculus.name,NAME_LENGTH);
+	memset(buf, 0, len);
+	WBUFW(buf, 0) = cmd;
+	memcpy(WBUFP(buf, 2), hd->homunculus.name, NAME_LENGTH);
 	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
-	WBUFB(buf,26)=(battle_config.hom_rename && hd->homunculus.rename_flag ? 0x1 : 0x0) | (hd->homunculus.vaporize == HOM_ST_REST ? 0x2 : 0) | (hd->homunculus.hp > 0 ? 0x4 : 0);
-	WBUFW(buf,27)=hd->homunculus.level;
-	WBUFW(buf,29)=hd->homunculus.hunger;
-	WBUFW(buf,31)=(unsigned short) (hd->homunculus.intimacy / 100) ;
-	WBUFW(buf,33)=0; // equip id
+	WBUFB(buf, 26) = (!battle_config.hom_rename && hd->homunculus.rename_flag ? 0x1 : 0x0) | (hd->homunculus.vaporize == HOM_ST_REST ? 0x2 : 0) | (hd->homunculus.hp > 0 ? 0x4 : 0);
+	WBUFW(buf, 27) = hd->homunculus.level;
+	WBUFW(buf, 29) = hd->homunculus.hunger;
+	WBUFW(buf, 31) = (unsigned short) (hd->homunculus.intimacy / 100) ;
+	WBUFW(buf, 33) = 0; // equip id
 #ifdef RENEWAL
 	WBUFW(buf, 35) = cap_value(hstatus->rhw.atk2, 0, INT16_MAX);
 #else
-	WBUFW(buf,35)=cap_value(hstatus->rhw.atk2+hstatus->batk, 0, INT16_MAX);
+	WBUFW(buf,35) = cap_value(hstatus->rhw.atk2 + hstatus->batk, 0, INT16_MAX);
 #endif
-	WBUFW(buf,37)=cap_value(hstatus->matk_max, 0, INT16_MAX);
-	WBUFW(buf,39)=hstatus->hit;
+	WBUFW(buf,37) = cap_value(hstatus->matk_max, 0, INT16_MAX);
+	WBUFW(buf,39) = hstatus->hit;
 	if (battle_config.hom_setting&0x10)
-		WBUFW(buf,41)=hstatus->luk/3 + 1; //crit is a +1 decimal value! Just display purpose.[Vicious]
+		WBUFW(buf, 41) = hstatus->luk / 3 + 1; //crit is a +1 decimal value! Just display purpose.[Vicious]
 	else
-		WBUFW(buf,41)=hstatus->cri/10;
+		WBUFW(buf, 41) = hstatus->cri / 10;
 #ifdef RENEWAL
 	WBUFW(buf, 43) = hstatus->def + hstatus->def2;
 	WBUFW(buf, 45) = hstatus->mdef + hstatus->mdef2;
 #else
-	WBUFW(buf,43)=hstatus->def + hstatus->vit ;
+	WBUFW(buf, 43) =hstatus->def + hstatus->vit ;
 	WBUFW(buf, 45) = hstatus->mdef;
 #endif
-	WBUFW(buf,47)=hstatus->flee;
-	WBUFW(buf,49)=(flag)?0:hstatus->amotion;
+	WBUFW(buf, 47) = hstatus->flee;
+	WBUFW(buf, 49) = (flag) ? 0 : hstatus->amotion;
+
+// probably can works also for < 20141223, but in 3CeaM packet size defined only for 20150513
+#if PACKETVER < 20150513
 	if (hstatus->max_hp > INT16_MAX) {
-		WBUFW(buf,51) = hstatus->hp/(hstatus->max_hp/100);
-		WBUFW(buf,53) = 100;
+		WBUFW(buf, 51) = hstatus->hp / (hstatus->max_hp / 100);
+		WBUFW(buf, 53) = 100;
 	} else {
-		WBUFW(buf,51)=hstatus->hp;
-		WBUFW(buf,53)=hstatus->max_hp;
+		WBUFW(buf, 51) = hstatus->hp;
+		WBUFW(buf, 53) = hstatus->max_hp;
 	}
+#else
+	WBUFL(buf, 51) = hstatus->hp;
+	WBUFL(buf, 55) = hstatus->max_hp;
+	offset = 4;
+#endif
+
 	if (hstatus->max_sp > INT16_MAX) {
-		WBUFW(buf,55) = hstatus->sp/(hstatus->max_sp/100);
-		WBUFW(buf,57) = 100;
+		WBUFW(buf, 55 + offset) = hstatus->sp / (hstatus->max_sp / 100);
+		WBUFW(buf, 57 + offset) = 100;
 	} else {
-		WBUFW(buf,55)=hstatus->sp;
-		WBUFW(buf,57)=hstatus->max_sp;
+		WBUFW(buf, 55 + offset) = hstatus->sp;
+		WBUFW(buf, 57 + offset) = hstatus->max_sp;
 	}
-	WBUFL(buf,59)=hd->homunculus.exp;
-	WBUFL(buf,63)=hd->exp_next;
-	switch( htype ) {
+	WBUFL(buf, 59 + offset) = hd->homunculus.exp;
+	WBUFL(buf, 63 + offset) = hd->exp_next;
+	switch (htype) {
 		case HT_REG:
 		case HT_EVO:
-			if( hd->homunculus.level >= battle_config.hom_max_level )
-				WBUFL(buf,63)=0;
+			if (hd->homunculus.level >= battle_config.hom_max_level)
+				WBUFL(buf, 63 + offset) = 0;
 			break;
 		case HT_S:
-			if( hd->homunculus.level >= battle_config.hom_S_max_level )
-				WBUFL(buf,63)=0;
+			if (hd->homunculus.level >= battle_config.hom_S_max_level)
+				WBUFL(buf, 63 + offset) = 0;
 			break;
 	}
-	WBUFW(buf,67)=hd->homunculus.skillpts;
-	WBUFW(buf,69)=status_get_range(&hd->bl);
-	clif->send(buf,packet_len(0x22e),&sd->bl,SELF);
+	WBUFW(buf, 67 + offset) = hd->homunculus.skillpts;
+	WBUFW(buf, 69 + offset) = status_get_range(&hd->bl);
+
+	clif->send(buf, len, &sd->bl, SELF);
 }
 
 /// Notification about a change in homunuculus' state (ZC_CHANGESTATE_MER).
@@ -5208,33 +5227,46 @@ int clif_skill_damage2(struct block_list *src, struct block_list *dst, int64 tic
 }
 #endif // 0
 
-/// Non-damaging skill effect (ZC_USE_SKILL).
-/// 011a <skill id>.W <skill lv>.W <dst id>.L <src id>.L <result>.B
-int clif_skill_nodamage(struct block_list *src,struct block_list *dst,uint16 skill_id,int heal,int fail)
+/// Non-damaging skill effect.
+/// 011a <skill id>.W <skill lv>.W <dst id>.L <src id>.L <result>.B (ZC_USE_SKILL)
+/// 09cb <skill id>.W <skill lv>.L <dst id>.L <src id>.L <result>.B (ZC_USE_SKILL2)
+int clif_skill_nodamage(struct block_list *src, struct block_list *dst, uint16 skill_id, int heal, int fail)
 {
 	unsigned char buf[32];
+	short offset = 0;
+#if PACKETVER < 20131223
+	short cmd = 0x11a;
+#else
+	short cmd = 0x9cb;
+#endif
+	int len = packet_len(cmd);
 
 	nullpo_ret(dst);
 
-	WBUFW(buf,0)=0x11a;
-	WBUFW(buf,2)=skill_id;
-	WBUFW(buf,4)=min(heal, INT16_MAX);
-	WBUFL(buf,6)=dst->id;
-	WBUFL(buf,10)=src?src->id:0;
-	WBUFB(buf,14)=fail;
+	WBUFW(buf, 0) = cmd;
+	WBUFW(buf, 2) = skill_id;
+#if PACKETVER < 20131223
+	WBUFW(buf, 4) = min(heal, INT16_MAX);
+#else
+	WBUFL(buf, 4) = min(heal, INT_MAX);
+	offset += 2;
+#endif
+	WBUFL(buf, 6 + offset) = dst->id;
+	WBUFL(buf, 10 + offset) = src ? src->id : 0;
+	WBUFB(buf, 14 + offset) = fail;
 
 	if (clif->isdisguised(dst)) {
-		clif->send(buf,packet_len(0x11a),dst,AREA_WOS);
-		WBUFL(buf,6)=-dst->id;
-		clif->send(buf,packet_len(0x11a),dst,SELF);
+		clif->send(buf, len, dst, AREA_WOS);
+		WBUFL(buf, 6 + offset) = -dst->id;
+		clif->send(buf, len, dst, SELF);
 	} else
-		clif->send(buf,packet_len(0x11a),dst,AREA);
+		clif->send(buf, len, dst, AREA);
 
 	if (src && clif->isdisguised(src)) {
-		WBUFL(buf,10)=-src->id;
+		WBUFL(buf, 10 + offset) = -src->id;
 		if (clif->isdisguised(dst))
-			WBUFL(buf,6)=dst->id;
-		clif->send(buf,packet_len(0x11a),src,SELF);
+			WBUFL(buf, 6 + offset) = dst->id;
+		clif->send(buf, len, src, SELF);
 	}
 
 	return fail;
@@ -5708,13 +5740,24 @@ void clif_broadcast2(struct block_list *bl, const char *mes, int len, unsigned i
 ///     5 = HP (SP_HP)
 ///     7 = SP (SP_SP)
 ///     ? = ignored
-void clif_heal(int fd,int type,int val)
+void clif_heal(int fd, int type, int val)
 {
-	WFIFOHEAD(fd,packet_len(0x13d));
-	WFIFOW(fd,0)=0x13d;
-	WFIFOW(fd,2)=type;
-	WFIFOW(fd,4)=cap_value(val,0,INT16_MAX);
-	WFIFOSET(fd,packet_len(0x13d));
+#if PACKETVER < 20150513
+	short cmd = 0x13d;
+#else
+	short cmd = 0xa27;
+#endif
+	int len = packet_len(cmd);
+
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = 0x13d;
+	WFIFOW(fd, 2) = type;
+#if PACKETVER < 20150513
+	WFIFOW(fd, 4) = cap_value(val, 0, INT16_MAX);
+#else
+	WFIFOL(fd, 4) = cap_value(val, 0, INT_MAX);
+#endif
+	WFIFOSET(fd, len);
 }
 
 /// Displays resurrection effect (ZC_RESURRECTION).
@@ -6385,20 +6428,32 @@ void clif_openvending(struct map_session_data* sd, int id, struct s_vending* ven
 #endif
 }
 
-/// Inform merchant that someone has bought an item (ZC_DELETEITEM_FROM_MCSTORE).
-/// 0137 <index>.W <amount>.W
-void clif_vendingreport(struct map_session_data* sd, int index, int amount)
+/// Inform merchant that someone has bought an item.
+/// 0137 <index>.W <amount>.W (ZC_DELETEITEM_FROM_MCSTORE).
+/// 09e5 <index>.W <amount>.W <GID>.L <Date>.L <zeny>.L (ZC_DELETEITEM_FROM_MCSTORE2).
+void clif_vendingreport(struct map_session_data* sd, int index, int amount, uint32 char_id, int zeny)
 {
 	int fd;
+#if PACKETVER < 20141016  // TODO : not sure for client date [Napster]
+	const int cmd = 0x137;
+#else
+	const int cmd = 0x9e5;
+#endif
+	const int len = packet_len(cmd);
 
 	nullpo_retv(sd);
 
 	fd = sd->fd;
-	WFIFOHEAD(fd,packet_len(0x137));
-	WFIFOW(fd,0) = 0x137;
-	WFIFOW(fd,2) = index+2;
-	WFIFOW(fd,4) = amount;
-	WFIFOSET(fd,packet_len(0x137));
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = cmd;
+	WFIFOW(fd, 2) = index + 2;
+	WFIFOW(fd, 4) = amount;
+#if PACKETVER >= 20141016
+	WFIFOL(fd,6) = char_id; // GID
+	WFIFOL(fd,10) = (int)time(NULL); // Date
+	WFIFOL(fd,14) = zeny;   // zeny
+#endif
+	WFIFOSET(fd, len);
 }
 
 /// Result of organizing a party (ZC_ACK_MAKE_GROUP).
@@ -16126,28 +16181,46 @@ void clif_readbook(int fd, int book_id, int page)
 /// Battlegrounds
 ///
 
-/// Updates HP bar of a camp member (ZC_BATTLEFIELD_NOTIFY_HP).
-/// 02e0 <account id>.L <name>.24B <hp>.W <max hp>.W
+/// Updates HP bar of a camp member.
+/// 02e0 <account id>.L <name>.24B <hp>.W <max hp>.W (ZC_BATTLEFIELD_NOTIFY_HP).
+/// 0a0e <account id>.L <hp>.L <max hp>.L (ZC_BATTLEFIELD_NOTIFY_HP2)
 void clif_bg_hp(struct map_session_data *sd)
 {
 	unsigned char buf[34];
+
+// packet version can be wrong, because inconsistend data in other servers.
+#if PACKETVER < 20140613
 	const int cmd = 0x2e0;
 	nullpo_retv(sd);
 
-	WBUFW(buf,0) = cmd;
-	WBUFL(buf,2) = sd->status.account_id;
-	memcpy(WBUFP(buf,6), sd->status.name, NAME_LENGTH);
+	WBUFW(buf, 0) = cmd;
+	WBUFL(buf, 2) = sd->status.account_id;
+	memcpy(WBUFP(buf, 6), sd->status.name, NAME_LENGTH);
 
-	if( sd->battle_status.max_hp > INT16_MAX )
+	if (sd->battle_status.max_hp > INT16_MAX)
 	{ // To correctly display the %hp bar. [Skotlex]
-		WBUFW(buf,30) = sd->battle_status.hp/(sd->battle_status.max_hp/100);
-		WBUFW(buf,32) = 100;
+		WBUFW(buf, 30) = sd->battle_status.hp / (sd->battle_status.max_hp / 100);
+		WBUFW(buf, 32) = 100;
 	}
 	else
 	{
-		WBUFW(buf,30) = sd->battle_status.hp;
-		WBUFW(buf,32) = sd->battle_status.max_hp;
+		WBUFW(buf, 30) = sd->battle_status.hp;
+		WBUFW(buf, 32) = sd->battle_status.max_hp;
 	}
+#else
+	const int cmd = 0xa0e;
+	nullpo_retv(sd);
+
+	WBUFW(buf, 0) = cmd;
+	WBUFL(buf, 2) = sd->status.account_id;
+	if (sd->battle_status.max_hp > INT32_MAX) {
+		WBUFL(buf, 6) = sd->battle_status.hp / (sd->battle_status.max_hp / 100);
+		WBUFL(buf, 10) = 100;
+	} else {
+		WBUFL(buf, 6) = sd->battle_status.hp;
+		WBUFL(buf, 10) = sd->battle_status.max_hp;
+	}
+#endif
 
 	clif->send(buf, packet_len(cmd), &sd->bl, BG_AREA_WOS);
 }
@@ -16856,18 +16929,31 @@ void clif_buyingstore_trade_failed_buyer(struct map_session_data* sd, short resu
 
 /// Updates the zeny limit and an item in the buying store item list (ZC_UPDATE_ITEM_FROM_BUYING_STORE).
 /// 081b <name id>.W <amount>.W <limit zeny>.L
-void clif_buyingstore_update_item(struct map_session_data* sd, unsigned short nameid, unsigned short amount)
+void clif_buyingstore_update_item(struct map_session_data* sd, unsigned short nameid, unsigned short amount, uint32 char_id, int zeny)
 {
 	int fd;
+#if PACKETVER < 20141016  // TODO : not sure for client date [Napster]
+	const int cmd = 0x81b;
+#else
+	const int cmd = 0x9e6;
+#endif
+	const int len = packet_len(cmd);
 
 	nullpo_retv(sd);
 	fd = sd->fd;
-	WFIFOHEAD(fd,packet_len(0x81b));
-	WFIFOW(fd,0) = 0x81b;
-	WFIFOW(fd,2) = nameid;
-	WFIFOW(fd,4) = amount;  // amount of nameid received
-	WFIFOL(fd,6) = sd->buyingstore.zenylimit;
-	WFIFOSET(fd,packet_len(0x81b));
+	WFIFOHEAD(fd, len);
+	WFIFOW(fd, 0) = cmd;
+	WFIFOW(fd, 2) = nameid;
+	WFIFOW(fd, 4) = amount;  // amount of nameid received
+#if PACKETVER < 20141016
+	WFIFOL(fd, 6) = sd->buyingstore.zenylimit;
+#else
+	WFIFOL(fd, 6) = zeny;  // zeny
+	WFIFOL(fd, 10) = sd->buyingstore.zenylimit;
+	WFIFOL(fd, 14) = char_id;  // GID
+	WFIFOL(fd, 18) = (int)time(NULL);  // date
+#endif
+	WFIFOSET(fd, len);
 }
 
 /// Deletes item from inventory, that was sold to a buying store (ZC_ITEM_DELETE_BUYING_STORE).
@@ -18793,6 +18879,47 @@ void clif_selectcart(struct map_session_data *sd)
 #endif
 }
 
+/// Starts navigation to the given target on client side
+void clif_navigate_to(struct map_session_data *sd, const char* mapname, uint16 x, uint16 y, uint8 flag, bool hideWindow, uint16 mob_id)
+{
+#if PACKETVER >= 20111010
+	int fd;
+
+	nullpo_retv(sd);
+	nullpo_retv(mapname);
+	fd = sd->fd;
+	WFIFOHEAD(fd, 27);
+	WFIFOW(fd, 0) = 0x8e2;
+
+	// How detailed will our navigation be?
+	if (mob_id > 0) {
+		x = 0;
+		y = 0;
+		WFIFOB(fd, 2) = 3; // monster with destination field
+	} else if (x > 0 && y > 0) {
+		WFIFOB(fd, 2) = 0; // with coordinates
+	} else {
+		x = 0;
+		y = 0;
+		WFIFOB(fd, 2) = 1; // without coordinates(will fail if you are already on the map)
+	}
+
+	// Which services can be used for transportation?
+	WFIFOB(fd, 3) = flag;
+	// If this flag is set, the navigation window will not be opened up
+	WFIFOB(fd, 4) = hideWindow;
+	// Target map
+	safestrncpy((char*)WFIFOP(fd, 5), mapname, MAP_NAME_LENGTH_EXT);
+	// Target x
+	WFIFOW(fd, 21) = x;
+	// Target y
+	WFIFOW(fd, 23) = y;
+	// Target monster ID
+	WFIFOW(fd, 25) = mob_id;
+	WFIFOSET(fd, 27);
+#endif
+}
+
 /**
  * Returns the name of the given bl, in a client-friendly format.
  *
@@ -19636,6 +19763,7 @@ void clif_defaults(void) {
 	clif->selectcart = clif_selectcart;
 	/* */
 	clif->isdisguised = clif_isdisguised;
+	clif->navigate_to = clif_navigate_to;
 	clif->bl_type = clif_bl_type;
 
 	/*------------------------
