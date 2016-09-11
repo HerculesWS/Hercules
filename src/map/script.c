@@ -2970,17 +2970,18 @@ const void *get_val2(struct script_state *st, int64 uid, struct reg_db *ref)
  **/
 void script_array_ensure_zero(struct script_state *st, struct map_session_data *sd, int64 uid, struct reg_db *ref) {
 	const char *name = script->get_str(script_getvarid(uid));
-	// is here st can be null pointer and st->rid is wrong?
-	struct reg_db *src;
+	struct reg_db *src = NULL;
 	bool insert = false;
 
-	nullpo_retv(st);
-	src = script->array_src(st, sd ? sd : st->rid ? map->id2sd(st->rid) : NULL, name, ref);
-
-	if (sd && !st) {
-		/* when sd comes, st isn't available */
+	if (st == NULL) {
+		// Special case with no st available, only sd
+		nullpo_retv(sd);
+		src = script->array_src(NULL, sd, name, ref);
 		insert = true;
 	} else {
+		if (sd == NULL && st->rid != 0)
+			sd = map->id2sd(st->rid); // Retrieve the missing sd
+		src = script->array_src(st, sd, name, ref);
 		if( is_string_variable(name) ) {
 			const char *str = script->get_val2(st, uid, ref);
 			if (str != NULL && *str != '\0')
@@ -3121,10 +3122,12 @@ struct reg_db *script_array_src(struct script_state *st, struct map_session_data
 			src = &mapreg->regs;
 			break;
 		case '.':/* npc/script */
-			if( ref )
+			if (ref != NULL) {
 				src = ref;
-			else
+			} else {
+				nullpo_retr(NULL, st);
 				src = (name[1] == '@') ? &st->stack->scope : &st->script->local;
+			}
 			break;
 		case '\'':/* instance */
 			nullpo_retr(NULL, st);
@@ -9490,7 +9493,7 @@ BUILDIN(guildskill) {
 	skill_id = ( script_isstringtype(st,2) ? skill->name2id(script_getstr(st,2)) : script_getnum(st,2) );
 	level = script_getnum(st,3);
 
-	if (skill_id < GD_SKILLBASE || skill_id > GD_MAX)
+	if (skill_id < GD_SKILLBASE || skill_id >= GD_MAX)
 		return true;  // not guild skill
 
 	id = skill_id - GD_SKILLBASE;
