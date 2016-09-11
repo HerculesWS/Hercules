@@ -3773,6 +3773,17 @@
 - `EQP_SHADOW_ACC_R`: 1048576
 - `EQP_SHADOW_ACC_L`: 2097152
 
+### Navigation constants, use with *navigateto*
+
+- `NAV_NONE`: 0
+- `NAV_AIRSHIP_ONLY`: 1
+- `NAV_SCROLL_ONLY`: 10
+- `NAV_AIRSHIP_AND_SCROLL`: 11
+- `NAV_KAFRA_ONLY`: 100
+- `NAV_KAFRA_AND_AIRSHIP`: 101
+- `NAV_KAFRA_AND_SCROLL`: 110
+- `NAV_ALL`: 111
+
 ### Renewal
 
 - `RENEWAL`: 1
