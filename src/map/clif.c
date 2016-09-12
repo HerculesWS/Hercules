@@ -1360,6 +1360,7 @@ void clif_spiritball_single(int fd, struct map_session_data *sd) {
  *------------------------------------------*/
 void clif_charm_single(int fd, struct map_session_data *sd)
 {
+#if PACKETVER >= 20120410
 	nullpo_retv(sd);
 	WFIFOHEAD(fd, packet_len(0x08cf));
 	WFIFOW(fd,0) = 0x08cf;
@@ -1367,6 +1368,7 @@ void clif_charm_single(int fd, struct map_session_data *sd)
 	WFIFOW(fd,6) = sd->charm_type;
 	WFIFOW(fd,8) = sd->charm_count;
 	WFIFOSET(fd, packet_len(0x08cf));
+#endif
 }
 
 /*==========================================
@@ -16679,6 +16681,7 @@ void clif_elemental_info(struct map_session_data *sd) {
 /// 0810 <slots>.B
 void clif_buyingstore_open(struct map_session_data* sd)
 {
+#if PACKETVER >= 20100303
 	int fd;
 
 	nullpo_retv(sd);
@@ -16687,6 +16690,7 @@ void clif_buyingstore_open(struct map_session_data* sd)
 	WFIFOW(fd,0) = 0x810;
 	WFIFOB(fd,2) = sd->buyingstore.slots;
 	WFIFOSET(fd,packet_len(0x810));
+#endif
 }
 
 void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
@@ -16740,6 +16744,7 @@ void clif_parse_ReqOpenBuyingStore(int fd, struct map_session_data* sd) {
 ///     ? = nothing
 void clif_buyingstore_open_failed(struct map_session_data* sd, unsigned short result, unsigned int weight)
 {
+#if PACKETVER >= 20100420
 	int fd;
 
 	nullpo_retv(sd);
@@ -16749,6 +16754,7 @@ void clif_buyingstore_open_failed(struct map_session_data* sd, unsigned short re
 	WFIFOW(fd,2) = result;
 	WFIFOL(fd,4) = weight;
 	WFIFOSET(fd,packet_len(0x812));
+#endif
 }
 
 /// Notification, that the requested buying store was created (ZC_MYITEMLIST_BUYING_STORE).
@@ -16781,6 +16787,7 @@ void clif_buyingstore_myitemlist(struct map_session_data* sd)
 /// 0814 <account id>.L <store name>.80B
 void clif_buyingstore_entry(struct map_session_data* sd)
 {
+#if PACKETVER >= 20100420
 	uint8 buf[86];
 
 	nullpo_retv(sd);
@@ -16789,9 +16796,11 @@ void clif_buyingstore_entry(struct map_session_data* sd)
 	memcpy(WBUFP(buf,6), sd->message, MESSAGE_SIZE);
 
 	clif->send(buf, packet_len(0x814), &sd->bl, AREA_WOS);
+#endif
 }
 void clif_buyingstore_entry_single(struct map_session_data* sd, struct map_session_data* pl_sd)
 {
+#if PACKETVER >= 20100420
 	int fd;
 
 	nullpo_retv(sd);
@@ -16801,6 +16810,7 @@ void clif_buyingstore_entry_single(struct map_session_data* sd, struct map_sessi
 	WFIFOL(fd,2) = pl_sd->bl.id;
 	memcpy(WFIFOP(fd,6), pl_sd->message, MESSAGE_SIZE);
 	WFIFOSET(fd,packet_len(0x814));
+#endif
 }
 
 void clif_parse_ReqCloseBuyingStore(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
@@ -16814,6 +16824,7 @@ void clif_parse_ReqCloseBuyingStore(int fd, struct map_session_data* sd) {
 /// 0816 <account id>.L
 void clif_buyingstore_disappear_entry(struct map_session_data* sd)
 {
+#if PACKETVER >= 20100309
 	uint8 buf[6];
 
 	nullpo_retv(sd);
@@ -16821,9 +16832,12 @@ void clif_buyingstore_disappear_entry(struct map_session_data* sd)
 	WBUFL(buf,2) = sd->bl.id;
 
 	clif->send(buf, packet_len(0x816), &sd->bl, AREA_WOS);
+#endif
 }
+
 void clif_buyingstore_disappear_entry_single(struct map_session_data* sd, struct map_session_data* pl_sd)
 {
+#if PACKETVER >= 20100309
 	int fd;
 
 	nullpo_retv(sd);
@@ -16833,6 +16847,7 @@ void clif_buyingstore_disappear_entry_single(struct map_session_data* sd, struct
 	WFIFOW(fd,0) = 0x816;
 	WFIFOL(fd,2) = pl_sd->bl.id;
 	WFIFOSET(fd,packet_len(0x816));
+#endif
 }
 
 /// Request to open someone else's buying store (CZ_REQ_CLICK_TO_BUYING_STORE).
@@ -16917,6 +16932,7 @@ void clif_parse_ReqTradeBuyingStore(int fd, struct map_session_data* sd) {
 ///     ? = nothing
 void clif_buyingstore_trade_failed_buyer(struct map_session_data* sd, short result)
 {
+#if PACKETVER >= 20100420
 	int fd;
 
 	nullpo_retv(sd);
@@ -16925,6 +16941,7 @@ void clif_buyingstore_trade_failed_buyer(struct map_session_data* sd, short resu
 	WFIFOW(fd,0) = 0x81a;
 	WFIFOW(fd,2) = result;
 	WFIFOSET(fd,packet_len(0x81a));
+#endif
 }
 
 /// Updates the zeny limit and an item in the buying store item list (ZC_UPDATE_ITEM_FROM_BUYING_STORE).
@@ -16964,6 +16981,7 @@ void clif_buyingstore_update_item(struct map_session_data* sd, unsigned short na
 /// NOTE:   This function has to be called _instead_ of clif_delitem/clif_dropitem.
 void clif_buyingstore_delete_item(struct map_session_data* sd, short index, unsigned short amount, int price)
 {
+#if PACKETVER >= 20100420
 	int fd;
 
 	nullpo_retv(sd);
@@ -16974,6 +16992,7 @@ void clif_buyingstore_delete_item(struct map_session_data* sd, short index, unsi
 	WFIFOW(fd,4) = amount;
 	WFIFOL(fd,6) = price;  // price per item, client calculates total Zeny by itself
 	WFIFOSET(fd,packet_len(0x81c));
+#endif
 }
 
 /// Notifies the seller, that a buying store trade failed (ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER).
@@ -16985,6 +17004,7 @@ void clif_buyingstore_delete_item(struct map_session_data* sd, short index, unsi
 ///     ? = nothing
 void clif_buyingstore_trade_failed_seller(struct map_session_data* sd, short result, unsigned short nameid)
 {
+#if PACKETVER >= 20100420
 	int fd;
 
 	nullpo_retv(sd);
@@ -16994,6 +17014,7 @@ void clif_buyingstore_trade_failed_seller(struct map_session_data* sd, short res
 	WFIFOW(fd,2) = result;
 	WFIFOW(fd,4) = nameid;
 	WFIFOSET(fd,packet_len(0x824));
+#endif
 }
 
 void clif_parse_SearchStoreInfo(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
@@ -17113,6 +17134,7 @@ void clif_search_store_info_ack(struct map_session_data* sd)
 ///     4 = "No sale (purchase) information available." (0x705)
 void clif_search_store_info_failed(struct map_session_data* sd, unsigned char reason)
 {
+#if PACKETVER >= 20100601
 	int fd;
 
 	nullpo_retv(sd);
@@ -17121,6 +17143,7 @@ void clif_search_store_info_failed(struct map_session_data* sd, unsigned char re
 	WFIFOW(fd,0) = 0x837;
 	WFIFOB(fd,2) = reason;
 	WFIFOSET(fd,packet_len(0x837));
+#endif
 }
 
 void clif_parse_SearchStoreInfoNextPage(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
@@ -17138,6 +17161,7 @@ void clif_parse_SearchStoreInfoNextPage(int fd, struct map_session_data* sd)
 ///     1 = Search Stores (Cash), asks for confirmation, when clicking a store
 void clif_open_search_store_info(struct map_session_data* sd)
 {
+#if PACKETVER >= 20100608
 	int fd;
 
 	nullpo_retv(sd);
@@ -17149,6 +17173,7 @@ void clif_open_search_store_info(struct map_session_data* sd)
 	WFIFOB(fd,4) = (unsigned char)min(sd->searchstore.uses, UINT8_MAX);
 #endif
 	WFIFOSET(fd,packet_len(0x83a));
+#endif
 }
 
 void clif_parse_CloseSearchStoreInfo(int fd, struct map_session_data* sd) __attribute__((nonnull (2)));
@@ -17179,6 +17204,7 @@ void clif_parse_SearchStoreInfoListItemClick(int fd, struct map_session_data* sd
 /// 083d <xPos>.W <yPos>.W
 void clif_search_store_info_click_ack(struct map_session_data* sd, short x, short y)
 {
+#if PACKETVER >= 20100608
 	int fd;
 
 	nullpo_retv(sd);
@@ -17188,6 +17214,7 @@ void clif_search_store_info_click_ack(struct map_session_data* sd, short x, shor
 	WFIFOW(fd,2) = x;
 	WFIFOW(fd,4) = y;
 	WFIFOSET(fd,packet_len(0x83d));
+#endif
 }
 
 /// Parse function for packet debugging.
@@ -17456,6 +17483,7 @@ void clif_parse_SkillSelectMenu(int fd, struct map_session_data *sd) {
  *------------------------------------------*/
 void clif_charm(struct map_session_data *sd)
 {
+#if PACKETVER >= 20120410
 	unsigned char buf[10];
 
 	nullpo_retv(sd);
@@ -17465,6 +17493,7 @@ void clif_charm(struct map_session_data *sd)
 	WBUFW(buf,6) = sd->charm_type;
 	WBUFW(buf,8) = sd->charm_count;
 	clif->send(buf,packet_len(0x08cf),&sd->bl,AREA);
+#endif
 }
 
 void clif_parse_MoveItem(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -17566,6 +17595,7 @@ void clif_cashshop_db(void) {
 /// Items that are in favorite tab of inventory (ZC_ITEM_FAVORITE).
 /// 0900 <index>.W <favorite>.B
 void clif_favorite_item(struct map_session_data* sd, unsigned short index) {
+#if PACKETVER >= 20120410
 	int fd;
 
 	nullpo_retv(sd);
@@ -17575,9 +17605,11 @@ void clif_favorite_item(struct map_session_data* sd, unsigned short index) {
 	WFIFOW(fd,2) = index+2;
 	WFIFOB(fd,4) = (sd->status.inventory[index].favorite == 1) ? 0 : 1;
 	WFIFOSET(fd,packet_len(0x908));
+#endif
 }
 
 void clif_snap( struct block_list *bl, short x, short y ) {
+#if PACKETVER >= 20111005
 	unsigned char buf[10];
 
 	nullpo_retv(bl);
@@ -17587,6 +17619,7 @@ void clif_snap( struct block_list *bl, short x, short y ) {
 	WBUFW(buf,8) = y;
 
 	clif->send(buf,packet_len(0x8d2),bl,AREA);
+#endif
 }
 
 void clif_monster_hp_bar( struct mob_data* md, struct map_session_data *sd ) {
@@ -18846,6 +18879,7 @@ void clif_cancelmergeitem (int fd, struct map_session_data *sd)
 
 void clif_dressroom_open(struct map_session_data *sd, int view)
 {
+#if PACKETVER >= 20150513
 	int fd;
 
 	nullpo_retv(sd);
@@ -18855,6 +18889,7 @@ void clif_dressroom_open(struct map_session_data *sd, int view)
 	WFIFOW(fd,0)=0xa02;
 	WFIFOW(fd,2)=view;
 	WFIFOSET(fd,packet_len(0xa02));
+#endif
 }
 
 /// Request to select cart's visual look for new cart design (ZC_SELECTCART).
