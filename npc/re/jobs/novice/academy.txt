@@ -50,10 +50,10 @@ OnTouch:
 	}
 	end;
 }
-iz_int01,18,27,0	duplicate(startpoint)	startpoint#01	HIDDEN_WARP_NPC
-iz_int02,18,27,0	duplicate(startpoint)	startpoint#02	HIDDEN_WARP_NPC
-iz_int03,18,27,0	duplicate(startpoint)	startpoint#03	HIDDEN_WARP_NPC
-iz_int04,18,27,0	duplicate(startpoint)	startpoint#04	HIDDEN_WARP_NPC
+iz_int01,18,27,0	duplicate(startpoint)	startpoint#01	HIDDEN_WARP_NPC,1,1
+iz_int02,18,27,0	duplicate(startpoint)	startpoint#02	HIDDEN_WARP_NPC,1,1
+iz_int03,18,27,0	duplicate(startpoint)	startpoint#03	HIDDEN_WARP_NPC,1,1
+iz_int04,18,27,0	duplicate(startpoint)	startpoint#04	HIDDEN_WARP_NPC,1,1
 
 //== Wounded Swordsman (iz_int) =================================
 iz_int,56,32,3	script	Wounded Swordsman#izint	4_TOWER_01,8,8,{
@@ -110,10 +110,10 @@ OnTouch_:
 	end;
 }
 
-iz_int01,56,32,3	duplicate(Wounded Swordsman#izint)	Wounded Swordsman#izinta	4_TOWER_01
-iz_int02,56,32,3	duplicate(Wounded Swordsman#izint)	Wounded Swordsman#izintb	4_TOWER_01
-iz_int03,56,32,3	duplicate(Wounded Swordsman#izint)	Wounded Swordsman#izintc	4_TOWER_01
-iz_int04,56,32,3	duplicate(Wounded Swordsman#izint)	Wounded Swordsman#izintd	4_TOWER_01
+iz_int01,56,32,3	duplicate(Wounded Swordsman#izint)	Wounded Swordsman#izinta	4_TOWER_01,8,8
+iz_int02,56,32,3	duplicate(Wounded Swordsman#izint)	Wounded Swordsman#izintb	4_TOWER_01,8,8
+iz_int03,56,32,3	duplicate(Wounded Swordsman#izint)	Wounded Swordsman#izintc	4_TOWER_01,8,8
+iz_int04,56,32,3	duplicate(Wounded Swordsman#izint)	Wounded Swordsman#izintd	4_TOWER_01,8,8
 
 int_land,58,69,5	script	Sailor#int_land	4W_SAILOR,{
 	if (!questprogress(21002) || questprogress(21002) == 2) {
