@@ -127,7 +127,7 @@ OnTouch:
 		erasequest 21001;
 	if (questprogress(21002))
 		erasequest 21002;
-	warp("izlude"+strnpcinfo(NPC_NAME_HIDDEN)+"", 196, 209);
+	warp("izlude"+strnpcinfo(NPC_NAME_HIDDEN), 196, 209);
 	end;
 }
 

@@ -4693,13 +4693,13 @@ iz_ac01,59,83,3	script	Battle Instructor#08	4_M_NOV_HUNT,{
 			}
 			mes("[Battle Instructor Subino]");
 			if (getarg(0) == 11342) {
-				mesf("%ss %s in ^ff0000West field of Prontera^000000.", getarg(5), getarg(6) );
+				mesf("%ss %s in ^ff0000West field of Prontera^000000.", getarg(5), getarg(6));
 				mesf("%ss are difficult to catch for a Novice... But if you gather more Novices, you can do it.", getarg(5));
 				next();
 				mes("[Battle Instructor Subino]");
 			} else
-			mesf("%s ^ff0000 %d %ss^000000 and bring ^ff0000%d %s^000000.", getarg(7), getarg(0)==11344?"5":"10", getarg(0)==11344?"5":"10", getarg(5), getarg(4), getarg(8));
-				mesf("%ss %s at the ^ff0000West field of Izlude^000000.", getarg(5), getarg(6));
+			mesf("%s ^ff0000 %d %ss^000000 and bring ^ff0000%d %s^000000.", getarg(7), getarg(0)==11344?"5":"10", getarg(5), getarg(4), getarg(8));
+			mesf("%ss %s at the ^ff0000West field of Izlude^000000.", getarg(5), getarg(6));
 			mes("You can check received quests by pressing ^ff0000Alt + U^000000.");
 			setquest(getarg(0));
 			close();
