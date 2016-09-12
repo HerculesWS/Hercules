@@ -206,7 +206,7 @@ int_land,78,103,5	script	Captain Carocc#int_land	4_M_REINDEER,{
 		mes("Ah! Speaking of it, those ^4d4dffPorings^000000 on this island drop several material we could need for reparation.");
 		next();
 		mes("[Captain Carocc]");
-		mes("^4d4dffKill the Porings and bring 2 Lumber to the southern crew^000000".);
+		mes("^4d4dffKill the Porings and bring 2 Lumber to the southern crew^000000.");
 		next();
 		mes("[Captain Carocc]");
 		mes("It is hard, but you look tough enough for this task.");
