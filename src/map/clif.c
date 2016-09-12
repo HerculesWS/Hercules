@@ -15254,10 +15254,10 @@ void clif_Auction_message(int fd, unsigned char flag)
 ///     2 = Auction ID is incorrect
 void clif_Auction_close(int fd, unsigned char flag)
 {
-	WFIFOHEAD(fd,packet_len(0x25e));
+	WFIFOHEAD(fd, 4);
 	WFIFOW(fd,0) = 0x25d;  // BUG: The client identifies this packet as 0x25d (CZ_AUCTION_REQ_MY_SELL_STOP)
 	WFIFOW(fd,2) = flag;
-	WFIFOSET(fd,packet_len(0x25e));
+	WFIFOSET(fd, 4);
 }
 
 void clif_parse_Auction_register(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
