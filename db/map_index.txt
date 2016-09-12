@@ -884,6 +884,11 @@ izlude_d
 izlude_c
 izlude_b
 izlude_a
+int_land
+int_land01
+int_land02
+int_land03
+int_land04
 prt_fild08d
 prt_fild08c
 prt_fild08b
