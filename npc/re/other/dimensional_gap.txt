@@ -36,7 +36,7 @@
 
 mid_camp,207,290,6	script	Expedition Guide#01	4_M_EIN_SOLDIER,{
 	mes("[Expedition Guide]");
-	mes("Are you going to enter the ^0000FFDimensional Gap^000000?  Please use this Transport Device you see here.");
+	mes("Are you going to enter the ^0000FFDimensional Gap^000000? Please use this Transport Device you see here.");
 	next();
 	if (select("What is the Dimensional Gap?", "End Conversation.") == 2) {
 		mes("[Expedition Guide]");
@@ -44,7 +44,7 @@ mid_camp,207,290,6	script	Expedition Guide#01	4_M_EIN_SOLDIER,{
 		close();
 	}
 	mes("[Expedition Guide]");
-	mes("As you know we've already entered through the Dimensional Rift to get to Ash Vacuum right?  The Dimensional Gap is an expansion of that initial discovery.");
+	mes("As you know we've already entered through the Dimensional Rift to get to Ash Vacuum right? The Dimensional Gap is an expansion of that initial discovery.");
 	next();
 	mes("[Expedition Guide]");
 	mes("A member of the Expedition team found these backdoor passages to get through the Dimensional Rifts.");
@@ -53,7 +53,7 @@ mid_camp,207,290,6	script	Expedition Guide#01	4_M_EIN_SOLDIER,{
 	mes("This is like a Rune Midgard Alliance version of the Bifrost bridge so it can connect us to different parts of the New World.");
 	next();
 	mes("[Expedition Guide]");
-	mes("Time and space is distorted in the Dimensional Gap.  Not all passageways have been discovered so please be sure to use caution when entering an unverified area.");
+	mes("Time and space is distorted in the Dimensional Gap. Not all passageways have been discovered so please be sure to use caution when entering an unverified area.");
 	next();
 	mes("[Expedition Guide]");
 	mes("Anyone who has become lost here has yet to return.");
@@ -62,7 +62,7 @@ mid_camp,207,290,6	script	Expedition Guide#01	4_M_EIN_SOLDIER,{
 
 mid_camp,212,290,4	script	Expedition Guide#02	4_M_EIN_SOLDIER,{
 	mes("[Expedition Guide]");
-	mes("Please use a ^0000FFTransport Device^000000 if you wish to travel through the dimensional rift.  The insides have not been fully explored yet so please be careful in there.");
+	mes("Please use a ^0000FFTransport Device^000000 if you wish to travel through the dimensional rift. The insides have not been fully explored yet so please be careful in there.");
 	close();
 }
 
@@ -87,25 +87,25 @@ dali,122,60,4	script	Morroc Soldier	4_M_MOC_SOLDIER,{
 	mes("This dimensional rift is connected to ^0000FFMorroc^000000 back in Rune Midgard.");
 	next();
 	mes("[Morroc Soldier]");
-	mes("This is the fastest gateway back to our world.  The area is still destroyed but restoration efforts will soon be on the way.");
+	mes("This is the fastest gateway back to our world. The area is still destroyed but restoration efforts will soon be on the way.");
 	close();
 }
 
 dali,51,104,6	script	Spledide Soldier	4_M_FAIRYSOLDIER2,{
 	mes("[Spledide Soldier]");
-	mes("This dimensional rift is connected to the south of ^0000FFBifrost^000000.  It enables quick travel to the Splendide frontline.");
+	mes("This dimensional rift is connected to the south of ^0000FFBifrost^000000. It enables quick travel to the Splendide frontline.");
 	next();
 	mes("[Spledide Soldier]");
 	mes("If we use it properly, it enables us to advance more easily to the capital of the Sapha.");
 	next();
 	mes("[Spledide Soldier]");
-	mes("The Mayor has asked us to cooperate as best we can instead of fighting, so I'm under orders not to do anything.  Since we have a common enemy we won't fight the Sapha... for now...");
+	mes("The Mayor has asked us to cooperate as best we can instead of fighting, so I'm under orders not to do anything. Since we have a common enemy we won't fight the Sapha... for now...");
 	close();
 }
 
 dali,56,126,4	script	Dispatched Sapha	4_MAN_BENKUNI,{
 	mes("[Dispatched Sapha]");
-	mes("This dimensional rift is connected to the southern area of the ^0000FFKamidal Mountains^000000 in El Dicastes.  I just dropped by for my research, but it is incredible.");
+	mes("This dimensional rift is connected to the southern area of the ^0000FFKamidal Mountains^000000 in El Dicastes. I just dropped by for my research, but it is incredible.");
 	next();
 	mes("[Dispatched Sapha]");
 	mes("Moreover it is next to the Laphine capital..... Hmm... Do not worry, I do not want to fight in such a place.");
@@ -121,7 +121,7 @@ OnInit:
 
 dali,112,95,4	script	Logistics Manager	4_M_MERCAT2,{
 	mes("[Logistics Manager]");
-	mes("Welcome.  I am in charge of logistics to take care of your items in this weird place.  Do you need to access your storage?");
+	mes("Welcome. I am in charge of logistics to take care of your items in this weird place. Do you need to access your storage?");
 	next();
 	if (select("Open Storage 200 Zeny.", "No Thanks.") == 2) {
 		mes("[Logistics Manager]");
@@ -148,16 +148,16 @@ dali,115,85,5	script	Party Leader#dali	2_M_SWORDMASTER,{
 	.dalichatactive = 1;
 	end;
 OnTimer10:
-	npctalk(_("Attention!!!"), "Party Leader#dali2");
+	npctalk(_("Attention!!!"), "Party Leader#dali");
 	end;
 OnTimer2000:
-	npctalk(_("Here, here. Everybody be quiet and line up!"), "Party Leader#dali2");
+	npctalk(_("Here, here. Everybody be quiet and line up!"), "Party Leader#dali");
 	end;
 OnTimer3000:
-	npctalk(_("We have now entered the inside of the Dimensional Crack. Where should be go first?"), "Party Leader#dali2");
+	npctalk(_("We have now entered the inside of the Dimensional Crack. Where should be go first?"), "Party Leader#dali");
 	end;
 OnTimer4000:
-	npctalk(_("Anyone has an opinion?"), "Party Leader#dali2");
+	npctalk(_("Anyone has an opinion?"), "Party Leader#dali");
 	end;
 OnTimer6000:
 	npctalk(_("I heard rumors about some magic swordman. Let's go find him."), "Party Member#MONK");
@@ -266,7 +266,7 @@ OnTimer46500:
 	npctalk(_("What? You, we gotta talk! I've been too nice to you!"), "Party Member#EINOLD");
 	end;
 OnTimer48000:
-	npctalk(_("Excuse me..... everyone.............?"), "Party Leader#dali2");
+	npctalk(_("Excuse me..... everyone.............?"), "Party Leader#dali");
 	end;
 OnTimer49500:
 	emotion(e_ag, 0, "Party Member#GUILL");
@@ -274,22 +274,14 @@ OnTimer49500:
 	npctalk(_("Whatever~"), "Party Member#MONK");
 	end;
 OnTimer51000:
-	emotion(e_sob, 0, "Party Leader#dali2");
-	npctalk(_("Please listen to me...."), "Party Leader#dali2");
+	emotion(e_sob, 0, "Party Leader#dali");
+	npctalk(_("Please listen to me...."), "Party Leader#dali");
 	npctalk(_("He's angry all right...."), "Party Member#WANDERER");
 	npctalk(_("Take a nap. I am sleepy too, so we'll take shifts."), "Party Member#SHADOW");
 	end;
 OnTimer52500:
 	.dalichatactive = 0;
 	stopnpctimer();
-	end;
-}
-
-dali,115,85,5	script	Party Leader#dali2	2_M_SWORDMASTER,{
-	end;
-	
-OnInit:
-	hideonnpc("Party Leader#dali2");
 	end;
 }
 
