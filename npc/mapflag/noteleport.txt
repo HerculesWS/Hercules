@@ -13,6 +13,7 @@
 //= Copyright (C)  rAthena Dev Team
 //= Copyright (C)  eAthena Dev Team
 //= Copyright (C)  Lupus
+//= Copyright (C)  Nova
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -29,7 +30,7 @@
 //=========================================================================
 //= Mapflag: Disable teleportation.
 //================= Current Version =======================================
-//= 1.6a
+//= 1.6.2
 //================= Description ===========================================
 //= Disables all means of teleportation within a map.
 //= Script commands 'warp', 'areawarp', 'warpchar',
@@ -451,6 +452,8 @@ ecl_in04	mapflag	noteleport
 1@ecl	mapflag	noteleport
 1@ecl	mapflag	monster_noteleport
 ecl_hub01	mapflag	noteleport
+dali	mapflag	noteleport
+dali02	mapflag	noteleport
 
 //Orc's Memory ===================
 1@orcs	mapflag	noteleport
