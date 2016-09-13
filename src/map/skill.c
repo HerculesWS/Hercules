@@ -18995,7 +18995,7 @@ void skill_config_set_level(struct config_setting_t *conf, int *arr)
 
 	if (config_setting_is_group(conf)) {
 		for (i=0; i<MAX_SKILL_LEVEL; i++) {
-			char level[5];
+			char level[6]; // enough to contain "Lv100" in case of custom MAX_SKILL_LEVEL
 			sprintf(level, "Lv%d", i+1);
 			libconfig->setting_lookup_int(conf, level, &arr[i]);
 		}
@@ -19259,7 +19259,7 @@ void skill_validate_element(struct config_setting_t *conf, struct s_skill_db *sk
 
 	if ((t=libconfig->setting_get_member(conf, "Element")) && config_setting_is_group(t)) {
 		int j = 0;
-		char lv[5];
+		char lv[6]; // enough to contain "Lv100" in case of custom MAX_SKILL_LEVEL
 
 		for (j=0; j < MAX_SKILL_LEVEL; j++) {
 			sprintf(lv, "Lv%d",j+1);
