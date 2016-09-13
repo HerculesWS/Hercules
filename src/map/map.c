@@ -3996,7 +3996,7 @@ bool map_config_read_map_list(const char *filename, struct config_t *config, boo
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
 
-	deleted_maps = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY, MAP_NAME_LENGTH);
+	deleted_maps = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY|DB_OPT_ALLOW_NULL_DATA, MAP_NAME_LENGTH);
 
 	// Remove maps
 	if ((setting = libconfig->lookup(config, "map_configuration/map_removed")) != NULL) {
