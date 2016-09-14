@@ -5930,17 +5930,16 @@ Examples:
 
 ---------------------------------------
 
-*pcblock(<type>,<option>{,<account ID>});
+*setpcblock(<type>,<option>)
 
 Prevents the player from doing the following action when the <option> is
 true(1), and false(0) will allow those actions again. If there is no
 account ID given, the script will run for the current attached player.
 
-@return 
-	* true  upon success.
-	* false upon failure.
+Returns 0 if the specified type is not valid and non-zero otherwise.
 
-The <type> listed are :-
+The <type> listed are a bit mask of the following:
+	PCBLOCK_NONE (only used by checkpcblock)
 	PCBLOCK_MOVE
 	PCBLOCK_ATTACK
 	PCBLOCK_SKILL
@@ -5953,31 +5952,37 @@ The <type> listed are :-
 Examples:
 
 // Make the current attached player invulnerable, same as @monsterignore
-	pcblock(BLOCK_IMMUNE, true);
+	setpcblock(PCBLOCK_IMMUNE, true);
 
-// Prevents the current char from attacking
-	pcblock(BLOCK_ATTACK, true, getcharid(3));
+// Prevents the current char from attacking or using skills
+	setpcblock(PCBLOCK_ATTACK | PCBLOCK_SKILL, true);
+
+// Re-enables attack, skills and item use
+	setpcblock(PCBLOCK_ATTACK | PCBLOCK_SKILL | PCBLOCK_ITEM, false);
 
 ---------------------------------------
 
-*getpcblock(<type>, {<account ID>})
+*checkpcblock()
 
-This command will return the status of the block type of the current attached player used by
-'pcblock' command. Additionally, you may insert account ID within the bracket
-to check on another player.
+This command will return the enabled blocks on the currently attached
+player, as configured by the setpcblock command.
 
-@return 
-	* false if given block type is not enabled
-	* any positive value if block type is enabled
-	* -1 if function fails
+The returned value is a bit mask of the currently enabled block flags
+(or PCBLOCK_NONE when none is set).
 
 Examples:
 
-	if (getpcblock(PCBLOCK_IMMUNE) > 0)
+	if ((checkpcblock() & PCBLOCK_IMMUNE) != 0)
 		mes "You are invulnerable!";
 
-	if (getpcblock(PCBLOCK_ATTACK) == 0)
-		mes "You are able to attack";
+	if ((checkpcblock() & (PCBLOCK_MOVE | PCBLOCK_SITSTAND)) == (PCBLOCK_MOVE | PCBLOCK_SITSTAND))
+		mes "You can't walk or sit";
+
+	if ((gcheckpcblock() & (PCBLOCK_ATTACK | PCBLOCK_SKILL)) == PCBLOCK_NONE)
+		mes "You can attack and use skills";
+
+	if ((gcheckpcblock() & PCBLOCK_CHAT) == PCBLOCK_NONE)
+		mes "You can't chat";
 
 ---------------------------------------
 //=====================================

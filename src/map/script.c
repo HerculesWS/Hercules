@@ -16934,92 +16934,90 @@ BUILDIN(pcblockmove) {
 	return true;
 }
 
-BUILDIN(pcblock) {
-	int flag = (script_getnum(st, 3) > 0) ? 1 : 0;
-	enum block_action_flag type = script_getnum(st, 2);
+BUILDIN(setpcblock)
+{
 	struct map_session_data *sd = script->rid2sd(st);
+	enum pcblock_action_flag type = script_getnum(st, 2);
+	int state = (script_getnum(st, 3) > 0) ? 1 : 0;
+	int retval = PCBLOCK_NONE;
 
 	if (sd == NULL) {
-		script_pushint(st, 0);
+		script_pushint(st, PCBLOCK_NONE);
 		return true;
 	}
 
-	switch (type) {
-	case PCBLOCK_MOVE:
-		sd->block_action.move = flag;
-		break;
-	case PCBLOCK_ATTACK:
-		sd->block_action.attack = flag;
-		break;
-	case PCBLOCK_SKILL:
-		sd->block_action.skill = flag;
-		break;
-	case PCBLOCK_USEITEM:
-		sd->block_action.useitem = flag;
-		break;
-	case PCBLOCK_CHAT:
-		sd->block_action.chat = flag;
-		break;
-	case PCBLOCK_IMMUNE:
-		sd->block_action.immune = flag;
-		break;
-	case PCBLOCK_SITSTAND:
-		sd->block_action.sitstand = flag;
-		break;
-	case PCBLOCK_COMMANDS:
-		sd->block_action.commands = flag;
-		break;
-	default:
-		ShowError("buildin_pcblock: unknow block type passed (%d) \n", type);
-		script_pushint(st, 0);
-		return false;
-		break;
+	if ((type & PCBLOCK_MOVE) != 0) {
+		sd->block_action.move = state;
+		retval |= PCBLOCK_MOVE;
+	}
+	if ((type & PCBLOCK_ATTACK) != 0) {
+		sd->block_action.attack = state;
+		retval |= PCBLOCK_ATTACK;
+	}
+	if ((type & PCBLOCK_SKILL) != 0) {
+		sd->block_action.skill = state;
+		retval |= PCBLOCK_SKILL;
+	}
+	if ((type & PCBLOCK_USEITEM) != 0) {
+		sd->block_action.useitem = state;
+		retval |= PCBLOCK_USEITEM;
+	}
+	if ((type & PCBLOCK_CHAT) != 0) {
+		sd->block_action.chat = state;
+		retval |= PCBLOCK_CHAT;
+	}
+	if ((type & PCBLOCK_IMMUNE) != 0) {
+		sd->block_action.immune = state;
+		retval |= PCBLOCK_IMMUNE;
+	}
+	if ((type & PCBLOCK_SITSTAND) != 0) {
+		sd->block_action.sitstand = state;
+		retval |= PCBLOCK_SITSTAND;
+	}
+	if ((type & PCBLOCK_COMMANDS) != 0) {
+		sd->block_action.commands = state;
+		retval |= PCBLOCK_COMMANDS;
 	}
 
-	script_pushint(st, 1);
+	script_pushint(st, retval);
 	return true;
 }
 
-BUILDIN(getpcblock) {
+BUILDIN(checkpcblock)
+{
 	struct map_session_data *sd = script->rid2sd(st);
-	enum block_action_flag type = script_getnum(st, 2);
+	int retval = PCBLOCK_NONE;
 
 	if (sd == NULL) {
-		script_pushint(st, 0);
+		script_pushint(st, PCBLOCK_NONE);
 		return true;
 	}
 
-	switch (type) {
-	case PCBLOCK_MOVE:
-		script_pushint(st, sd->block_action.move);
-		break;
-	case PCBLOCK_ATTACK:
-		script_pushint(st, sd->block_action.attack);
-		break;
-	case PCBLOCK_SKILL:
-		script_pushint(st, sd->block_action.skill);
-		break;
-	case PCBLOCK_USEITEM:
-		script_pushint(st, sd->block_action.useitem);
-		break;
-	case PCBLOCK_CHAT:
-		script_pushint(st, sd->block_action.chat);
-		break;
-	case PCBLOCK_IMMUNE:
-		script_pushint(st, sd->block_action.immune);
-		break;
-	case PCBLOCK_SITSTAND:
-		script_pushint(st, sd->block_action.sitstand);
-		break;
-	case PCBLOCK_COMMANDS:
-		script_pushint(st, sd->block_action.commands);
-		break;
-	default:
-		ShowError("buildin_getpcblock: unknow block type passed (%d) \n", type);
-		script_pushint(st, -1);
-		return false;
-		break;
-	}
+	if (sd->block_action.move != 0)
+		retval |= PCBLOCK_MOVE;
+
+	if (sd->block_action.attack != 0)
+		retval |= PCBLOCK_ATTACK;
+
+	if (sd->block_action.skill != 0)
+		retval |= PCBLOCK_SKILL;
+
+	if (sd->block_action.useitem != 0)
+		retval |= PCBLOCK_USEITEM;
+
+	if (sd->block_action.chat != 0)
+		retval |= PCBLOCK_CHAT;
+
+	if (sd->block_action.immune != 0)
+		retval |= PCBLOCK_IMMUNE;
+
+	if (sd->block_action.sitstand != 0)
+		retval |= PCBLOCK_SITSTAND;
+
+	if (sd->block_action.commands != 0)
+		retval |= PCBLOCK_COMMANDS;
+
+	script_pushint(st, retval);
 	return true;
 }
 
@@ -21143,8 +21141,8 @@ void script_parse_builtin(void) {
 		BUILDIN_DEF(pcfollow,"ii"),
 		BUILDIN_DEF(pcstopfollow,"i"),
 		BUILDIN_DEF_DEPRECATED(pcblockmove,"ii"), // Deprecated 2016-09-12 [Hemagx]
-		BUILDIN_DEF(pcblock,"ii"),
-		BUILDIN_DEF(getpcblock,"i"),
+		BUILDIN_DEF(setpcblock, "ii"),
+		BUILDIN_DEF(checkpcblock, ""),
 		// <--- [zBuffer] List of player cont commands
 		// [zBuffer] List of mob control commands --->
 		BUILDIN_DEF(getunittype,"i"),
@@ -21480,7 +21478,8 @@ void script_hardcoded_constants(void)
 	script->set_constant("NAV_KAFRA_AND_SCROLL", NAV_KAFRA_AND_SCROLL, false, false);
 	script->set_constant("NAV_ALL", NAV_ALL, false, false);
 
-	script->constdb_comment("pc block constants, use with *pcblock* and *getpcblock*");
+	script->constdb_comment("pc block constants, use with *setpcblock* and *checkpcblock*");
+	script->set_constant("PCBLOCK_NONE",     PCBLOCK_NONE,     false, false);
 	script->set_constant("PCBLOCK_MOVE",     PCBLOCK_MOVE,     false, false);
 	script->set_constant("PCBLOCK_ATTACK",   PCBLOCK_ATTACK,   false, false);
 	script->set_constant("PCBLOCK_SKILL",    PCBLOCK_SKILL,    false, false);
