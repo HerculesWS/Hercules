@@ -3249,10 +3249,7 @@ void clif_changelook(struct block_list *bl,int type,int val)
 		#endif
 			break;
 			case LOOK_BODY2:
-				if (val && (
-					sd->sc.option&OPTION_WEDDING || sd->sc.option&OPTION_XMAS ||
-					sd->sc.option&OPTION_SUMMER || sd->sc.option&OPTION_HANBOK ||
-					sd->sc.option&OPTION_OKTOBERFEST))
+				if (sd != NULL && (sd->sc.option&OPTION_COSTUME) != OPTION_NOTHING)
 					val = 0;
 				vd->body_style = val;
 			break;

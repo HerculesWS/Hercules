@@ -5482,8 +5482,6 @@ bool script_sprintf(struct script_state *st, int start, struct StringBuf *out)
 			safestrncpy(buf, p, len);
 			StrBuf->AppendStr(out, buf);
 		}
-
-		p = np;
 		np++;
 
 		// placeholder = "%%" ; (special case)
