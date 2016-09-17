@@ -4212,7 +4212,7 @@ bool map_read_npclist(const char *filename, bool imported)
 void map_reloadnpc(bool clear) {
 	int i;
 	if (clear)
-		npc->addsrcfile("clear"); // this will clear the current script list
+		npc->clearsrcfile();
 
 #ifdef RENEWAL
 	map->read_npclist("npc/re/scripts_main.conf", false);
