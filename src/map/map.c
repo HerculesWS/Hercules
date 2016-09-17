@@ -4128,6 +4128,7 @@ bool map_read_npclist(const char *filename, bool imported)
 	struct config_setting_t *setting = NULL;
 	const char *import = NULL;
 	bool retval = true;
+	bool remove_all = false;
 
 	struct DBMap *deleted_npcs;
 
@@ -4147,10 +4148,13 @@ bool map_read_npclist(const char *filename, bool imported)
 			if ((scriptname = libconfig->setting_get_string_elem(setting, i)) == NULL || scriptname[0] == '\0')
 				continue;
 
-			strdb_put(deleted_npcs, scriptname, NULL);
-
-			if (imported) // NPC list is empty on the first run, only do this for imported files.
+			if (strcmp(scriptname, "all") == 0) {
+				remove_all = true;
+				npc->clearsrcfile();
+			} else {
+				strdb_put(deleted_npcs, scriptname, NULL);
 				npc->delsrcfile(scriptname);
+			}
 		}
 	}
 
@@ -4168,7 +4172,7 @@ bool map_read_npclist(const char *filename, bool imported)
 			if ((scriptname = libconfig->setting_get_string_elem(setting, i)) == NULL || scriptname[0] == '\0')
 				continue;
 
-			if (strdb_exists(deleted_npcs, scriptname))
+			if (remove_all || strdb_exists(deleted_npcs, scriptname))
 				continue;
 
 			npc->addsrcfile(scriptname);
