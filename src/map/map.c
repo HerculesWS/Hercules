@@ -3996,7 +3996,7 @@ bool map_config_read_map_list(const char *filename, struct config_t *config, boo
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
 
-	deleted_maps = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY|DB_OPT_ALLOW_NULL_DATA, MAP_NAME_LENGTH);
+	deleted_maps = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, MAP_NAME_LENGTH);
 
 	// Remove maps
 	if ((setting = libconfig->lookup(config, "map_configuration/map_removed")) != NULL) {
@@ -4136,9 +4136,9 @@ bool map_read_npclist(const char *filename, bool imported)
 	if (!libconfig->load_file(&config, filename))
 		return false;
 
-	deleted_npcs = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY, MAP_NAME_LENGTH);
+	deleted_npcs = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, MAP_NAME_LENGTH);
 
-	// Remove maps
+	// Remove NPCs
 	if ((setting = libconfig->lookup(&config, "npc_removed_list")) != NULL) {
 		int i, del_count = libconfig->setting_length(setting);
 		for (i = 0; i < del_count; i++) {
@@ -4149,7 +4149,7 @@ bool map_read_npclist(const char *filename, bool imported)
 
 			strdb_put(deleted_npcs, scriptname, NULL);
 
-			if (imported) // Map list is empty on the first run, only do this for imported files.
+			if (imported) // NPC list is empty on the first run, only do this for imported files.
 				npc->delsrcfile(scriptname);
 		}
 	}
