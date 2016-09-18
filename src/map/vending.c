@@ -44,14 +44,16 @@ struct vending_interface vending_s;
 struct vending_interface *vending;
 
 /// Returns an unique vending shop id.
-static inline unsigned int getid(void) {
+static inline unsigned int getid(void)
+{
 	return vending->next_id++;
 }
 
 /*==========================================
  * Close shop
  *------------------------------------------*/
-void vending_closevending(struct map_session_data* sd) {
+void vending_closevending(struct map_session_data* sd)
+{
 	nullpo_retv(sd);
 
 	if( sd->state.vending ) {
@@ -64,7 +66,8 @@ void vending_closevending(struct map_session_data* sd) {
 /*==========================================
  * Request a shop's item list
  *------------------------------------------*/
-void vending_vendinglistreq(struct map_session_data* sd, unsigned int id) {
+void vending_vendinglistreq(struct map_session_data* sd, unsigned int id)
+{
 	struct map_session_data* vsd;
 	nullpo_retv(sd);
 
@@ -86,13 +89,15 @@ void vending_vendinglistreq(struct map_session_data* sd, unsigned int id) {
 /*==========================================
  * Purchase item(s) from a shop
  *------------------------------------------*/
-void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid, const uint8* data, int count) {
+void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid, const uint8* data, int count)
+{
 	int i, j, cursor, w, new_ = 0, blank, vend_list[MAX_VENDING];
 	int64 z;
 	struct s_vending vend[MAX_VENDING]; // against duplicate packets
 	struct map_session_data* vsd = map->id2sd(aid);
 
 	nullpo_retv(sd);
+	nullpo_retv(data);
 	if( vsd == NULL || !vsd->state.vending || vsd->bl.id == sd->bl.id )
 		return; // invalid shop
 
@@ -240,7 +245,8 @@ void vending_purchasereq(struct map_session_data* sd, int aid, unsigned int uid,
  * Open shop
  * data := {<index>.w <amount>.w <value>.l}[count]
  *------------------------------------------*/
-void vending_openvending(struct map_session_data* sd, const char* message, const uint8* data, int count) {
+void vending_openvending(struct map_session_data* sd, const char* message, const uint8* data, int count)
+{
 	int i, j;
 	int vending_skill_lvl;
 	nullpo_retv(sd);
@@ -309,9 +315,11 @@ void vending_openvending(struct map_session_data* sd, const char* message, const
 
 
 /// Checks if an item is being sold in given player's vending.
-bool vending_search(struct map_session_data* sd, unsigned short nameid) {
+bool vending_search(struct map_session_data* sd, unsigned short nameid)
+{
 	int i;
 
+	nullpo_retr(false, sd);
 	if( !sd->state.vending ) { // not vending
 		return false;
 	}
@@ -327,11 +335,14 @@ bool vending_search(struct map_session_data* sd, unsigned short nameid) {
 
 /// Searches for all items in a vending, that match given ids, price and possible cards.
 /// @return Whether or not the search should be continued.
-bool vending_searchall(struct map_session_data* sd, const struct s_search_store_search* s) {
+bool vending_searchall(struct map_session_data* sd, const struct s_search_store_search* s)
+{
 	int i, c, slot;
 	unsigned int idx, cidx;
 	struct item* it;
 
+	nullpo_retr(false, sd);
+	nullpo_retr(false, s);
 	if( !sd->state.vending ) // not vending
 		return true;
 
@@ -377,16 +388,20 @@ bool vending_searchall(struct map_session_data* sd, const struct s_search_store_
 
 	return true;
 }
-void final(void) {
+
+void final(void)
+{
 	db_destroy(vending->db);
 }
 
-void init(bool minimal) {
+void init(bool minimal)
+{
 	vending->db = idb_alloc(DB_OPT_BASE);
 	vending->next_id = 0;
 }
 
-void vending_defaults(void) {
+void vending_defaults(void)
+{
 	vending = &vending_s;
 
 	vending->init = init;
