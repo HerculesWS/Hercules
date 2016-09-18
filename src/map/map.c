@@ -3996,7 +3996,7 @@ bool map_config_read_map_list(const char *filename, struct config_t *config, boo
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
 
-	deleted_maps = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY|DB_OPT_ALLOW_NULL_DATA, MAP_NAME_LENGTH);
+	deleted_maps = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, MAP_NAME_LENGTH);
 
 	// Remove maps
 	if ((setting = libconfig->lookup(config, "map_configuration/map_removed")) != NULL) {
@@ -4128,6 +4128,7 @@ bool map_read_npclist(const char *filename, bool imported)
 	struct config_setting_t *setting = NULL;
 	const char *import = NULL;
 	bool retval = true;
+	bool remove_all = false;
 
 	struct DBMap *deleted_npcs;
 
@@ -4136,9 +4137,9 @@ bool map_read_npclist(const char *filename, bool imported)
 	if (!libconfig->load_file(&config, filename))
 		return false;
 
-	deleted_npcs = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_KEY, MAP_NAME_LENGTH);
+	deleted_npcs = strdb_alloc(DB_OPT_DUP_KEY|DB_OPT_ALLOW_NULL_DATA, MAP_NAME_LENGTH);
 
-	// Remove maps
+	// Remove NPCs
 	if ((setting = libconfig->lookup(&config, "npc_removed_list")) != NULL) {
 		int i, del_count = libconfig->setting_length(setting);
 		for (i = 0; i < del_count; i++) {
@@ -4147,10 +4148,13 @@ bool map_read_npclist(const char *filename, bool imported)
 			if ((scriptname = libconfig->setting_get_string_elem(setting, i)) == NULL || scriptname[0] == '\0')
 				continue;
 
-			strdb_put(deleted_npcs, scriptname, NULL);
-
-			if (imported) // Map list is empty on the first run, only do this for imported files.
+			if (strcmp(scriptname, "all") == 0) {
+				remove_all = true;
+				npc->clearsrcfile();
+			} else {
+				strdb_put(deleted_npcs, scriptname, NULL);
 				npc->delsrcfile(scriptname);
+			}
 		}
 	}
 
@@ -4168,7 +4172,7 @@ bool map_read_npclist(const char *filename, bool imported)
 			if ((scriptname = libconfig->setting_get_string_elem(setting, i)) == NULL || scriptname[0] == '\0')
 				continue;
 
-			if (strdb_exists(deleted_npcs, scriptname))
+			if (remove_all || strdb_exists(deleted_npcs, scriptname))
 				continue;
 
 			npc->addsrcfile(scriptname);
@@ -4208,7 +4212,7 @@ bool map_read_npclist(const char *filename, bool imported)
 void map_reloadnpc(bool clear) {
 	int i;
 	if (clear)
-		npc->addsrcfile("clear"); // this will clear the current script list
+		npc->clearsrcfile();
 
 #ifdef RENEWAL
 	map->read_npclist("npc/re/scripts_main.conf", false);

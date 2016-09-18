@@ -2432,24 +2432,22 @@ void npc_clearsrcfile(void)
 	npc->src_files = NULL;
 }
 
-/// Adds a npc source file (or removes all)
-void npc_addsrcfile(const char* name)
+/**
+ * Adds a npc source file.
+ *
+ * @param name The file name to add.
+ */
+void npc_addsrcfile(const char *name)
 {
 	struct npc_src_list* file;
 	struct npc_src_list* file_prev = NULL;
 
 	nullpo_retv(name);
-	if( strcmpi(name, "clear") == 0 )
-	{
-		npc->clearsrcfile();
-		return;
-	}
 
 	// prevent multiple insert of source files
 	file = npc->src_files;
-	while( file != NULL )
-	{
-		if( strcmp(name, file->name) == 0 )
+	while (file != NULL) {
+		if (strcmp(name, file->name) == 0)
 			return;// found the file, no need to insert it again
 		file_prev = file;
 		file = file->next;
@@ -2464,24 +2462,21 @@ void npc_addsrcfile(const char* name)
 		file_prev->next = file;
 }
 
-/// Removes a npc source file (or all)
-void npc_delsrcfile(const char* name)
+/**
+ * Removes a npc source file.
+ *
+ * @param name The file name to remove.
+ */
+void npc_delsrcfile(const char *name)
 {
 	struct npc_src_list* file = npc->src_files;
 	struct npc_src_list* file_prev = NULL;
 
 	nullpo_retv(name);
-	if( strcmpi(name, "all") == 0 )
-	{
-		npc->clearsrcfile();
-		return;
-	}
 
-	while( file != NULL )
-	{
-		if( strcmp(file->name, name) == 0 )
-		{
-			if( npc->src_files == file )
+	while (file != NULL) {
+		if (strcmp(file->name, name) == 0) {
+			if (npc->src_files == file)
 				npc->src_files = file->next;
 			else
 				file_prev->next = file->next;
