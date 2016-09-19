@@ -80,12 +80,9 @@ iz_int,27,30,0	script	noviship#room1-1	WARPNPC,2,2,{
 OnTouch:
 	warp(strnpcinfo(NPC_MAP), 51, 30);
 	end;
+
 OnInit:
-	while (true) {
-		emotion e_gasp, 0;
-		sleep 8000;
-	}
-	end;
+	questinfo(21001, QTYPE_QUEST, 1, Job_Novice);
 }
 
 iz_int,47,30,3	script	noviship#room1-2	WARPNPC,2,2,{
