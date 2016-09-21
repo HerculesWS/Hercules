@@ -1073,8 +1073,8 @@ int unit_can_move(struct block_list *bl)
 		// Prevent moving while casting
 		if (sd == NULL)
 			return 0; // Only players are affected by SA_FREECAST and similar
-		if ((skill->get_inf2(ud->skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) != 0) {
-			// Skills with an explicit free cast setting always allow walking
+		if ((skill->get_inf2(ud->skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) == 0) {
+			// Skills with an explicit free cast setting always allow walking regardless of SA_FREECAST
 			if ((skill->get_inf2(ud->skill_id) & INF2_GUILD_SKILL) != 0)
 				return 0; // SA_FREECAST doesn't affect guild skills
 			if (pc->checkskill(sd, SA_FREECAST) == 0)
