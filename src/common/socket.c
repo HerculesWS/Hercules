@@ -892,13 +892,12 @@ int do_sockets(int next)
 #ifdef SEND_SHORTLIST
 	send_shortlist_do_sends();
 #else  // SEND_SHORTLIST
-	for (i = 1; i < sockt->fd_max; i++)
-	{
-		if(!sockt->session[fd]
+	for (i = 1; i < sockt->fd_max; i++) {
+		if (sockt->session[i] == NULL)
 			continue;
 
-		if(sockt->session[fd]>wdata_size)
-			sockt->session[fd]>func_send(i);
+		if (sockt->session[i]->wdata_size > 0)
+			sockt->session[i]->func_send(i);
 	}
 #endif  // SEND_SHORTLIST
 
