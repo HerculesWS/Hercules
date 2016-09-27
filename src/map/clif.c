@@ -7107,21 +7107,31 @@ void clif_devotion(struct block_list *src, struct map_session_data *tsd)
 	if( src->type == BL_MER )
 	{
 		struct mercenary_data *md = BL_CAST(BL_MER,src);
+		int skill_lvl;
 		if( md && md->master && md->devotion_flag )
 			WBUFL(buf,6) = md->master->bl.id;
 
-		WBUFW(buf,26) = skill->get_range2(src, ML_DEVOTION, mercenary->checkskill(md, ML_DEVOTION));
+		skill_lvl = mercenary->checkskill(md, ML_DEVOTION);
+		if (skill_lvl > 0)
+			WBUFW(buf, 26) = skill->get_range2(src, ML_DEVOTION, skill_lvl);
+		else
+			WBUFW(buf, 26) = 0;
 	}
 	else
 	{
 		int i;
 		struct map_session_data *sd = BL_CAST(BL_PC,src);
+		int skill_lvl;
 		if( sd == NULL )
 			return;
 
 		for( i = 0; i < MAX_PC_DEVOTION; i++ )
 			WBUFL(buf,6+4*i) = sd->devotion[i];
-		WBUFW(buf,26) = skill->get_range2(src, CR_DEVOTION, pc->checkskill(sd, CR_DEVOTION));
+		skill_lvl = pc->checkskill(sd, CR_DEVOTION);
+		if (skill_lvl > 0)
+			WBUFW(buf, 26) = skill->get_range2(src, CR_DEVOTION, skill_lvl);
+		else
+			WBUFW(buf, 26) = 0;
 	}
 
 	if( tsd )
