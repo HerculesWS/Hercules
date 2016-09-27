@@ -100,7 +100,8 @@ struct core_interface *core = &core_s;
 #ifndef POSIX
 #define compat_signal(signo, func) signal((signo), (func))
 #else
-sigfunc *compat_signal(int signo, sigfunc *func) {
+sigfunc *compat_signal(int signo, sigfunc *func)
+{
 	struct sigaction sact, oact;
 
 	sact.sa_handler = func;
@@ -121,7 +122,8 @@ sigfunc *compat_signal(int signo, sigfunc *func) {
  * CORE : Console events for Windows
  *--------------------------------------*/
 #ifdef _WIN32
-static BOOL WINAPI console_handler(DWORD c_event) {
+static BOOL WINAPI console_handler(DWORD c_event)
+{
 	switch(c_event) {
 		case CTRL_CLOSE_EVENT:
 		case CTRL_LOGOFF_EVENT:
@@ -137,7 +139,8 @@ static BOOL WINAPI console_handler(DWORD c_event) {
 	return TRUE;
 }
 
-static void cevents_init(void) {
+static void cevents_init(void)
+{
 	if (SetConsoleCtrlHandler(console_handler,TRUE)==FALSE)
 		ShowWarning ("Unable to install the console handler!\n");
 }
@@ -146,7 +149,8 @@ static void cevents_init(void) {
 /*======================================
  * CORE : Signal Sub Function
  *--------------------------------------*/
-static void sig_proc(int sn) {
+static void sig_proc(int sn)
+{
 	static int is_called = 0;
 
 	switch (sn) {
@@ -179,7 +183,8 @@ static void sig_proc(int sn) {
 	}
 }
 
-void signals_init (void) {
+void signals_init (void)
+{
 	compat_signal(SIGTERM, sig_proc);
 	compat_signal(SIGINT, sig_proc);
 #ifndef _DEBUG // need unhandled exceptions to debug on Windows
@@ -245,7 +250,8 @@ bool usercheck(void)
 	return true;
 }
 
-void core_defaults(void) {
+void core_defaults(void)
+{
 	nullpo_defaults();
 #ifndef MINICORE
 	hpm_defaults();
@@ -271,16 +277,20 @@ void core_defaults(void) {
 	thread_defaults();
 #endif
 }
+
 /**
  * Returns the source (core or plugin name) for the given command-line argument
  */
-const char *cmdline_arg_source(struct CmdlineArgData *arg) {
+const char *cmdline_arg_source(struct CmdlineArgData *arg)
+{
 #ifdef MINICORE
 	return "core";
 #else // !MINICORE
+	nullpo_retr(NULL, arg);
 	return HPM->pid2name(arg->pluginID);
 #endif // MINICORE
 }
+
 /**
  * Defines a command line argument.
  *
@@ -292,9 +302,12 @@ const char *cmdline_arg_source(struct CmdlineArgData *arg) {
  * @param options   options associated to the command-line argument. @see enum cmdline_options.
  * @return the success status.
  */
-bool cmdline_arg_add(unsigned int pluginID, const char *name, char shortname, CmdlineExecFunc func, const char *help, unsigned int options) {
+bool cmdline_arg_add(unsigned int pluginID, const char *name, char shortname, CmdlineExecFunc func, const char *help, unsigned int options)
+{
 	struct CmdlineArgData *data = NULL;
 
+	nullpo_retr(false, name);
+	nullpo_retr(false, help);
 	VECTOR_ENSURE(cmdline->args_data, 1, 1);
 	VECTOR_PUSHZEROED(cmdline->args_data);
 	data = &VECTOR_LAST(cmdline->args_data);
@@ -310,6 +323,7 @@ bool cmdline_arg_add(unsigned int pluginID, const char *name, char shortname, Cm
 
 	return true;
 }
+
 /**
  * Help screen to be displayed by '--help'.
  */
@@ -333,6 +347,7 @@ static CMDLINEARG(help)
 	}
 	return false;
 }
+
 /**
  * Info screen to be displayed by '--version'.
  */
@@ -343,6 +358,7 @@ static CMDLINEARG(version)
 	ShowInfo("Open "CL_WHITE"readme.txt"CL_RESET" for more information.\n");
 	return false;
 }
+
 /**
  * Checks if there is a value available for the current argument
  *
@@ -360,6 +376,7 @@ bool cmdline_arg_next_value(const char *name, int current_arg, int argc)
 
 	return true;
 }
+
 /**
  * Executes the command line arguments handlers.
  *
@@ -381,6 +398,8 @@ bool cmdline_arg_next_value(const char *name, int current_arg, int argc)
 int cmdline_exec(int argc, char **argv, unsigned int options)
 {
 	int count = 0, i;
+
+	nullpo_ret(argv);
 	for (i = 1; i < argc; i++) {
 		int j;
 		struct CmdlineArgData *data = NULL;
@@ -423,6 +442,7 @@ int cmdline_exec(int argc, char **argv, unsigned int options)
 	}
 	return count;
 }
+
 /**
  * Defines the global command-line arguments.
  */
@@ -466,10 +486,12 @@ void cmdline_defaults(void)
 	cmdline->arg_next_value = cmdline_arg_next_value;
 	cmdline->arg_source = cmdline_arg_source;
 }
+
 /*======================================
  * CORE : MAINROUTINE
  *--------------------------------------*/
-int main (int argc, char **argv) {
+int main (int argc, char **argv)
+{
 	int retval = EXIT_SUCCESS;
 	{// initialize program arguments
 		char *p1 = SERVER_NAME = argv[0];
