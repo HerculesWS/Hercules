@@ -25,6 +25,7 @@
 #include "common/cbasetypes.h"
 #include "common/db.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
 
@@ -37,11 +38,14 @@ struct mapindex_interface *mapindex;
 
 /// Retrieves the map name from 'string' (removing .gat extension if present).
 /// Result gets placed either into 'buf' or in a static local buffer.
-const char* mapindex_getmapname(const char* string, char* output) {
+const char* mapindex_getmapname(const char* string, char* output)
+{
 	static char buf[MAP_NAME_LENGTH];
 	char* dest = (output != NULL) ? output : buf;
 
-	size_t len = strnlen(string, MAP_NAME_LENGTH_EXT);
+	size_t len;
+	nullpo_retr(buf, string);
+	len = strnlen(string, MAP_NAME_LENGTH_EXT);
 	if (len == MAP_NAME_LENGTH_EXT) {
 		ShowWarning("(mapindex_normalize_name) Map name '%*s' is too long!\n", 2*MAP_NAME_LENGTH_EXT, string);
 		len--;
@@ -58,11 +62,14 @@ const char* mapindex_getmapname(const char* string, char* output) {
 
 /// Retrieves the map name from 'string' (adding .gat extension if not already present).
 /// Result gets placed either into 'buf' or in a static local buffer.
-const char* mapindex_getmapname_ext(const char* string, char* output) {
+const char* mapindex_getmapname_ext(const char* string, char* output)
+{
 	static char buf[MAP_NAME_LENGTH_EXT];
 	char* dest = (output != NULL) ? output : buf;
 
 	size_t len;
+
+	nullpo_retr(buf, string);
 
 	safestrncpy(buf,string, sizeof(buf));
 	sscanf(string, "%*[^#]%*[#]%15s", buf);
@@ -87,7 +94,8 @@ const char* mapindex_getmapname_ext(const char* string, char* output) {
 
 /// Adds a map to the specified index
 /// Returns 1 if successful, 0 otherwise
-int mapindex_addmap(int index, const char* name) {
+int mapindex_addmap(int index, const char* name)
+{
 	char map_name[MAP_NAME_LENGTH];
 
 	if (index == -1){
@@ -128,7 +136,8 @@ int mapindex_addmap(int index, const char* name) {
 	return index;
 }
 
-unsigned short mapindex_name2id(const char* name) {
+unsigned short mapindex_name2id(const char* name)
+{
 	int i;
 	char map_name[MAP_NAME_LENGTH];
 
@@ -141,7 +150,8 @@ unsigned short mapindex_name2id(const char* name) {
 	return 0;
 }
 
-const char *mapindex_id2name_sub(uint16 id, const char *file, int line, const char *func) {
+const char *mapindex_id2name_sub(uint16 id, const char *file, int line, const char *func)
+{
 	if (id >= MAX_MAPINDEX || !mapindex_exists(id)) {
 		ShowDebug("mapindex_id2name: Requested name for non-existant map index [%d] in cache. %s:%s:%d\n", id,file,func,line);
 		return mapindex->list[0].name; // dummy empty string so that the callee doesn't crash
@@ -149,7 +159,8 @@ const char *mapindex_id2name_sub(uint16 id, const char *file, int line, const ch
 	return mapindex->list[id].name;
 }
 
-int mapindex_init(void) {
+int mapindex_init(void)
+{
 	FILE *fp;
 	char line[1024];
 	int last_index = -1;
@@ -196,16 +207,20 @@ bool mapindex_check_default(void)
 	return true;
 }
 
-void mapindex_removemap(int index){
+void mapindex_removemap(int index)
+{
+	Assert_retv(index < MAX_MAPINDEX);
 	strdb_remove(mapindex->db, mapindex->list[index].name);
 	mapindex->list[index].name[0] = '\0';
 }
 
-void mapindex_final(void) {
+void mapindex_final(void)
+{
 	db_destroy(mapindex->db);
 }
 
-void mapindex_defaults(void) {
+void mapindex_defaults(void)
+{
 	mapindex = &mapindex_s;
 
 	/* TODO: place it in inter-server.conf? */
