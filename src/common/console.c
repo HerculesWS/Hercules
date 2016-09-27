@@ -68,7 +68,8 @@ struct {
 /*======================================
  * CORE : Display title
  *--------------------------------------*/
-void display_title(void) {
+void display_title(void)
+{
 	const char *vcstype = sysinfo->vcstype();
 
 	ShowMessage("\n");
@@ -130,21 +131,24 @@ int console_parse_key_pressed(void)
 /**
  * Stops server
  **/
-CPCMD_C(exit,server) {
+CPCMD_C(exit, server)
+{
 	core->runflag = 0;
 }
 
 /**
  * Displays ERS-related statistics (Entry Reusage System)
  **/
-CPCMD_C(ers_report,server) {
+CPCMD_C(ers_report, server)
+{
 	ers_report();
 }
 
 /**
  * Displays memory usage
  **/
-CPCMD_C(mem_report,server) {
+CPCMD_C(mem_report, server)
+{
 #ifdef USE_MEMMGR
 	memmgr_report(line?atoi(line):0);
 #endif
@@ -171,7 +175,8 @@ CPCMD(help)
  * [Ind/Hercules]
  * Displays current malloc usage
  */
-CPCMD_C(malloc_usage,server) {
+CPCMD_C(malloc_usage, server)
+{
 	unsigned int val = (unsigned int)iMalloc->usage();
 	ShowInfo("malloc_usage: %.2f MB\n",(double)(val)/1024);
 }
@@ -180,7 +185,8 @@ CPCMD_C(malloc_usage,server) {
  * Skips an sql update
  * Usage: sql update skip UPDATE-FILE.sql
  **/
-CPCMD_C(skip,update) {
+CPCMD_C(skip, update)
+{
 	if( !line ) {
 		ShowDebug("usage example: sql update skip 2013-02-14--16-15.sql\n");
 		return;
@@ -311,6 +317,7 @@ void console_parse_create(char *name, CParseFunc func)
 	char sublist[CP_CMD_LENGTH * 5];
 	struct CParseEntry *cmd;
 
+	nullpo_retv(name);
 	safestrncpy(sublist, name, CP_CMD_LENGTH * 5);
 	tok = strtok(sublist,":");
 
@@ -364,6 +371,7 @@ void console_parse_list_subs(struct CParseEntry *cmd, unsigned char depth)
 {
 	int i;
 	char msg[CP_CMD_LENGTH * 2];
+	nullpo_retv(cmd);
 	Assert_retv(cmd->type == CPET_CATEGORY);
 	for (i = 0; i < VECTOR_LENGTH(cmd->u.children); i++) {
 		struct CParseEntry *child = VECTOR_INDEX(cmd->u.children, i);
@@ -391,6 +399,7 @@ void console_parse_sub(char *line)
 	char sublist[CP_CMD_LENGTH * 5];
 	int i;
 
+	nullpo_retv(line);
 	memcpy(bline, line, 200);
 	tok = strtok(line, " ");
 
@@ -444,9 +453,12 @@ void console_parse_sub(char *line)
 	}
 	ShowError("Is only a category, type '"CL_WHITE"%s help"CL_RESET"' to list its subcommands\n",sublist);
 }
-void console_parse(char* line) {
+
+void console_parse(char *line)
+{
 	int c, i = 0, len = MAX_CONSOLE_INPUT - 1;/* we leave room for the \0 :P */
 
+	nullpo_retv(line);
 	while( (c = fgetc(stdin)) != EOF ) {
 		if( --len == 0 )
 			break;
@@ -458,7 +470,9 @@ void console_parse(char* line) {
 
 	line[i++] = '\0';
 }
-void *cThread_main(void *x) {
+
+void *cThread_main(void *x)
+{
 	while( console->input->ptstate ) {/* loopx */
 		if( console->input->key_pressed() ) {
 			char input[MAX_CONSOLE_INPUT];
@@ -483,7 +497,9 @@ void *cThread_main(void *x) {
 
 	return NULL;
 }
-int console_parse_timer(int tid, int64 tick, int id, intptr_t data) {
+
+int console_parse_timer(int tid, int64 tick, int id, intptr_t data)
+{
 	int i;
 	EnterSpinLock(console->input->ptlock);
 	for(i = 0; i < cinput.count; i++) {
@@ -494,7 +510,9 @@ int console_parse_timer(int tid, int64 tick, int id, intptr_t data) {
 	mutex->cond_signal(console->input->ptcond);
 	return 0;
 }
-void console_parse_final(void) {
+
+void console_parse_final(void)
+{
 	if( console->input->ptstate ) {
 		InterlockedDecrement(&console->input->ptstate);
 		mutex->cond_signal(console->input->ptcond);
@@ -506,7 +524,9 @@ void console_parse_final(void) {
 		mutex->destroy(console->input->ptmutex);
 	}
 }
-void console_parse_init(void) {
+
+void console_parse_init(void)
+{
 	cinput.count = 0;
 
 	console->input->ptstate = 1;
@@ -524,6 +544,7 @@ void console_parse_init(void) {
 	timer->add_func_list(console->input->parse_timer, "console_parse_timer");
 	timer->add_interval(timer->gettick() + 1000, console->input->parse_timer, 0, 0, 500);/* start listening in 1s; re-try every 0.5s */
 }
+
 void console_setSQL(struct Sql *SQL_handle)
 {
 	console->input->SQL = SQL_handle;
