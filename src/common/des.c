@@ -23,6 +23,7 @@
 #include "des.h"
 
 #include "common/cbasetypes.h"
+#include "common/nullpo.h"
 
 /** @file
  * Implementation of the des interface.
@@ -54,6 +55,7 @@ static void des_IP(struct des_bit64 *src)
 	struct des_bit64 tmp = {{0}};
 	int i;
 
+	nullpo_retv(src);
 	for(i = 0; i < ARRAYLENGTH(ip_table); ++i) {
 		uint8_t j = ip_table[i] - 1;
 		if (src->b[(j >> 3) & 7] &  mask[j & 7])
@@ -81,6 +83,7 @@ static void des_FP(struct des_bit64 *src)
 	struct des_bit64 tmp = {{0}};
 	int i;
 
+	nullpo_retv(src);
 	for (i = 0; i < ARRAYLENGTH(fp_table); ++i) {
 		uint8_t j = fp_table[i] - 1;
 		if (src->b[(j >> 3) & 7] &  mask[j & 7])
@@ -119,6 +122,7 @@ static void des_E(struct des_bit64 *src)
 			tmp.b[i / 6 + 0] |= mask[i % 6];
 	}
 #endif
+	nullpo_retv(src);
 	// optimized
 	tmp.b[0] = ((src->b[7]<<5) | (src->b[4]>>3)) & 0x3f; // ..0 vutsr
 	tmp.b[1] = ((src->b[4]<<1) | (src->b[5]>>7)) & 0x3f; // ..srqpo n
@@ -150,6 +154,7 @@ static void des_TP(struct des_bit64 *src)
 	struct des_bit64 tmp = {{0}};
 	int i;
 
+	nullpo_retv(src);
 	for (i = 0; i < ARRAYLENGTH(tp_table); ++i) {
 		uint8_t j = tp_table[i] - 1;
 		if (src->b[(j >> 3) + 0] &  mask[j & 7])
@@ -194,6 +199,7 @@ static void des_SBOX(struct des_bit64 *src)
 	struct des_bit64 tmp = {{0}};
 	int i;
 
+	nullpo_retv(src);
 	for (i = 0; i < ARRAYLENGTH(s_table); ++i) {
 		tmp.b[i] = (s_table[i][src->b[i*2+0]] & 0xf0)
 		         | (s_table[i][src->b[i*2+1]] & 0x0f);
@@ -214,6 +220,7 @@ static void des_RoundFunction(struct des_bit64 *src)
 	des_SBOX(&tmp);
 	des_TP(&tmp);
 
+	nullpo_retv(src);
 	src->b[0] ^= tmp.b[4];
 	src->b[1] ^= tmp.b[5];
 	src->b[2] ^= tmp.b[6];
