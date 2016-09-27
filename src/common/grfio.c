@@ -86,11 +86,13 @@ struct grfio_interface *grfio;
 // little endian char array to uint conversion
 static unsigned int getlong(unsigned char *p)
 {
+	nullpo_ret(p);
 	return (p[0] << 0 | p[1] << 8 | p[2] << 16 | p[3] << 24);
 }
 
 static void NibbleSwap(unsigned char *src, int len)
 {
+	nullpo_retv(src);
 	while (len > 0) {
 		*src = (*src >> 4) | (*src << 4);
 		++src;
@@ -135,6 +137,7 @@ static void grf_shuffle_enc(struct des_bit64 *src)
 {
 	struct des_bit64 out;
 
+	nullpo_retv(src);
 	out.b[0] = src->b[3];
 	out.b[1] = src->b[4];
 	out.b[2] = src->b[5];
@@ -152,6 +155,7 @@ static void grf_shuffle_dec(struct des_bit64 *src)
 {
 	struct des_bit64 out;
 
+	nullpo_retv(src);
 	out.b[0] = src->b[3];
 	out.b[1] = src->b[4];
 	out.b[2] = src->b[6];
@@ -175,6 +179,7 @@ static void grf_decode_header(unsigned char *buf, size_t len)
 	struct des_bit64 *p = (struct des_bit64 *)buf;
 	size_t nblocks = len / sizeof(struct des_bit64);
 	size_t i;
+	nullpo_retv(buf);
 
 	// first 20 blocks are all des-encrypted
 	for (i = 0; i < 20 && i < nblocks; ++i)
@@ -197,6 +202,7 @@ static void grf_decode_full(unsigned char *buf, size_t len, int cycle)
 	int dcycle, scycle;
 	size_t i, j;
 
+	nullpo_retv(buf);
 	// first 20 blocks are all des-encrypted
 	for (i = 0; i < 20 && i < nblocks; ++i)
 		des->decrypt_block(&p[i]);
@@ -314,6 +320,7 @@ static void hashinit(void)
 static int grf_filehash(const char *fname)
 {
 	uint32 hash = 0;
+	nullpo_ret(fname);
 	while (*fname != '\0') {
 		hash = (hash<<1) + (hash>>7)*9 + TOLOWER(*fname);
 		fname++;
@@ -396,7 +403,9 @@ static struct grf_filelist *grfio_filelist_add(struct grf_filelist *entry)
  */
 static struct grf_filelist *grfio_filelist_modify(struct grf_filelist *entry)
 {
-	struct grf_filelist *fentry = grfio_filelist_find(entry->fn);
+	struct grf_filelist *fentry;
+	nullpo_retr(NULL, entry);
+	fentry = grfio_filelist_find(entry->fn);
 	if (fentry != NULL) {
 		int tmp = fentry->next;
 		memcpy(fentry, entry, sizeof(struct grf_filelist));
@@ -434,6 +443,7 @@ static void grfio_localpath_create(char *buffer, size_t size, const char *filena
 	int i;
 	size_t len;
 
+	nullpo_retv(buffer);
 	len = strlen(data_dir);
 
 	if (data_dir[0] == '\0' || data_dir[len-1] == '/' || data_dir[len-1] == '\\')
@@ -553,6 +563,7 @@ void *grfio_reads(const char *fname, int *size)
 static char *grfio_decode_filename(unsigned char *buf, int len)
 {
 	int i;
+	nullpo_retr(NULL, buf);
 	for (i = 0; i < len; i += 8) {
 		NibbleSwap(&buf[i],8);
 		des->decrypt(&buf[i],8);
@@ -568,7 +579,9 @@ static char *grfio_decode_filename(unsigned char *buf, int len)
  */
 static bool grfio_is_full_encrypt(const char *fname)
 {
-	const char *ext = strrchr(fname, '.');
+	const char *ext;
+	nullpo_retr(false, fname);
+	ext = strrchr(fname, '.');
 	if (ext != NULL) {
 		static const char *extensions[] = { ".gnd", ".gat", ".act", ".str" };
 		int i;
@@ -594,8 +607,10 @@ static int grfio_entryread(const char *grfname, int gentry)
 	unsigned char grf_header[0x2e] = { 0 };
 	int entry,entrys,ofs,grf_version;
 	unsigned char *grf_filelist;
+	FILE *fp;
 
-	FILE *fp = fopen(grfname, "rb");
+	nullpo_retr(1, grfname);
+	fp = fopen(grfname, "rb");
 	if (fp == NULL) {
 		ShowWarning("GRF data file not found: '%s'\n", grfname);
 		return 1; // 1:not found error
@@ -764,6 +779,7 @@ static bool grfio_parse_restable_row(const char *row)
 	char local[256];
 	struct grf_filelist *entry = NULL;
 
+	nullpo_retr(false, row);
 	if (sscanf(row, "%255[^#\r\n]#%255[^#\r\n]#", w1, w2) != 2)
 		return false;
 
@@ -854,6 +870,7 @@ static void grfio_resourcecheck(void)
  */
 static int grfio_add(const char *fname)
 {
+	nullpo_retr(1, fname);
 	if (gentry_entrys >= gentry_maxentry) {
 #define GENTRY_ADDS 4 // The number increment of gentry_table entries
 		gentry_maxentry += GENTRY_ADDS;
@@ -899,6 +916,7 @@ void grfio_init(const char *fname)
 	FILE *data_conf;
 	int grf_num = 0;
 
+	nullpo_retv(fname);
 	hashinit(); // hash table initialization
 
 	data_conf = fopen(fname, "r");
