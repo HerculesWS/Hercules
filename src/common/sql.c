@@ -144,6 +144,7 @@ int Sql_GetColumnNames(struct Sql *self, const char *table, char *out_buf, size_
 	size_t len;
 	size_t off = 0;
 
+	nullpo_retr(SQL_ERROR, out_buf);
 	if( self == NULL || SQL_ERROR == SQL->Query(self, "EXPLAIN `%s`", table) )
 		return SQL_ERROR;
 
@@ -377,7 +378,8 @@ void Sql_ShowDebug_(struct Sql *self, const char *debug_file, const unsigned lon
 }
 
 /// Frees a Sql handle returned by Sql_Malloc.
-void Sql_Free(struct Sql *self) {
+void Sql_Free(struct Sql *self)
+{
 	if( self )
 	{
 		SQL->FreeResult(self);
@@ -414,6 +416,7 @@ static enum enum_field_types Sql_P_SizeToMysqlIntType(int sz)
 /// @private
 static int Sql_P_BindSqlDataType(MYSQL_BIND* bind, enum SqlDataType buffer_type, void* buffer, size_t buffer_len, unsigned long* out_length, int8* out_is_null)
 {
+	nullpo_retr(SQL_ERROR, bind);
 	memset(bind, 0, sizeof(MYSQL_BIND));
 	switch( buffer_type )
 	{
@@ -494,7 +497,8 @@ static int Sql_P_BindSqlDataType(MYSQL_BIND* bind, enum SqlDataType buffer_type,
 /// Prints debug information about a field (type and length).
 ///
 /// @private
-static void Sql_P_ShowDebugMysqlFieldInfo(const char* prefix, enum enum_field_types type, int is_unsigned, unsigned long length, const char* length_postfix) {
+static void Sql_P_ShowDebugMysqlFieldInfo(const char* prefix, enum enum_field_types type, int is_unsigned, unsigned long length, const char* length_postfix)
+{
 	const char *sign = (is_unsigned ? "UNSIGNED " : "");
 	const char *type_string = NULL;
 	switch (type) {
@@ -535,6 +539,7 @@ static void SqlStmt_P_ShowDebugTruncatedColumn(struct SqlStmt *self, size_t i)
 	MYSQL_FIELD* field;
 	MYSQL_BIND* column;
 
+	nullpo_retv(self);
 	meta = mysql_stmt_result_metadata(self->stmt);
 	field = mysql_fetch_field_direct(meta, (unsigned int)i);
 	ShowSQL("DB error - data of field '%s' was truncated.\n", field->name);
@@ -874,8 +879,10 @@ void SqlStmt_Free(struct SqlStmt *self)
 		aFree(self);
 	}
 }
+
 /* receives mysql error codes during runtime (not on first-time-connects) */
-void hercules_mysql_error_handler(unsigned int ecode) {
+void hercules_mysql_error_handler(unsigned int ecode)
+{
 	switch( ecode ) {
 	case 2003:/* Can't connect to MySQL (this error only happens here when failing to reconnect) */
 		if( mysql_reconnect_type == 1 ) {
@@ -1041,10 +1048,13 @@ void Sql_HerculesUpdateSkip(struct Sql *self, const char *filename)
 	return;
 }
 
-void Sql_Init(void) {
+void Sql_Init(void)
+{
 	Sql_inter_server_read("conf/common/inter-server.conf", false); // FIXME: Hardcoded path
 }
-void sql_defaults(void) {
+
+void sql_defaults(void)
+{
 	SQL = &sql_s;
 
 	SQL->Connect = Sql_Connect;
