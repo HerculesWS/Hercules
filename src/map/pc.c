@@ -11504,7 +11504,7 @@ void pc_autotrade_update(struct map_session_data *sd, enum e_pc_autotrade_update
 										))
 				Sql_ShowDebug(map->mysql_handle);
 		}
-			/* yes we want it to fall */
+		FALLTHROUGH
 		case PAUC_REFRESH:
 			for( i = 0; i < sd->vend_num; i++ ) {
 				if( sd->vending[i].amount == 0 )

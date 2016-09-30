@@ -1376,7 +1376,7 @@ void itemdb_read_combos(void)
 	char filepath[256];
 	FILE* fp;
 
-	sprintf(filepath, "%s/%s", map->db_path, DBPATH"item_combo_db.txt");
+	snprintf(filepath, 256, "%s/%s", map->db_path, DBPATH"item_combo_db.txt");
 
 	if ((fp = fopen(filepath, "r")) == NULL) {
 		ShowError("itemdb_read_combos: File not found \"%s\".\n", filepath);
