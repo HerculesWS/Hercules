@@ -1215,7 +1215,7 @@ void homunculus_read_db(void) {
 		if( i > 0 ) {
 			char filepath[256];
 
-			sprintf(filepath, "%s/%s", map->db_path, filename[i]);
+			snprintf(filepath, 256, "%s/%s", map->db_path, filename[i]);
 
 			if( !exists(filepath) ) {
 				continue;

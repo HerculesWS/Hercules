@@ -2418,6 +2418,7 @@ enum DBOptions db_fix_options(enum DBType type, enum DBOptions options)
 
 		default:
 			ShowError("db_fix_options: Unknown database type %u with options %x\n", type, options);
+			__attribute__ ((fallthrough));
 		case DB_STRING:
 		case DB_ISTRING: // String databases, no fix required
 			return options;

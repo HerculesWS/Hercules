@@ -862,11 +862,11 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 					count++;
 				}
 				if ( count < arena->min_team_players ) {
-					char response[117];
+					char response[121];
 					if( count != sd->guild->connect_member && sd->guild->connect_member >= arena->min_team_players )
-						sprintf(response, "Can't apply: not enough members in your team/guild that have not entered the queue in individual mode, minimum is %d",arena->min_team_players);
+						sprintf(response, "Can't apply: not enough members in your team/guild that have not entered the queue in individual mode, minimum is %d", arena->min_team_players);
 					else
-						sprintf(response, "Can't apply: not enough members in your team/guild, minimum is %d",arena->min_team_players);
+						sprintf(response, "Can't apply: not enough members in your team/guild, minimum is %d", arena->min_team_players);
 					clif->messagecolor_self(sd->fd, COLOR_RED, response);
 					return BGQA_FAIL_TEAM_COUNT;
 				}
@@ -894,9 +894,9 @@ enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, struct bg_
 						return BGQA_NOT_PARTY_GUILD_LEADER;
 
 					if( count < arena->min_team_players ) {
-						char response[117];
+						char response[121];
 						if( count != p->party.count && p->party.count >= arena->min_team_players )
-							sprintf(response, "Can't apply: not enough members in your team/party that have not entered the queue in individual mode, minimum is %d",arena->min_team_players);
+							sprintf(response, "Can't apply: not enough members in your team/party that have not entered the queue in individual mode, minimum is %d", arena->min_team_players);
 						else
 							sprintf(response, "Can't apply: not enough members in your team/party, minimum is %d",arena->min_team_players);
 						clif->messagecolor_self(sd->fd, COLOR_RED, response);
