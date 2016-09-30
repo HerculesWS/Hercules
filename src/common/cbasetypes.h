@@ -298,6 +298,13 @@ typedef uintptr_t uintptr;
 #define PRAGMA_GCC45(str)
 #endif // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40500)
 
+// fallthrough attribute only enabled on gcc >= 7.0
+#if defined(__GNUC__) && (GCC_VERSION >= 70000)
+#define FALLTHROUGH __attribute__ ((fallthrough));
+#else // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
+#define FALLTHROUGH
+#endif // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
+
 // boolean types for C
 #if !defined(_MSC_VER) || _MSC_VER >= 1800
 // MSVC doesn't have stdbool.h yet as of Visual Studio 2012 (MSVC version 17.00)

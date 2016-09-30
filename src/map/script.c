@@ -2291,7 +2291,7 @@ void read_constdb(void)
 	struct config_setting_t *t;
 	int i = 0;
 
-	sprintf(filepath, "%s/constants.conf", map->db_path);
+	snprintf(filepath, 256, "%s/constants.conf", map->db_path);
 
 	if (!libconfig->load_file(&constants_conf, filepath))
 		return;
@@ -9269,7 +9269,7 @@ BUILDIN(bonus) {
 				val1 = skill->name2id(script_getstr(st, 3));
 				break;
 			}
-			// else fall through
+			FALLTHROUGH
 		default:
 			val1 = script_getnum(st,3);
 			break;

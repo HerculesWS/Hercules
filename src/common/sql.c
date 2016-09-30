@@ -422,39 +422,48 @@ static int Sql_P_BindSqlDataType(MYSQL_BIND* bind, enum SqlDataType buffer_type,
 		break;
 		// fixed size
 	case SQLDT_UINT8: bind->is_unsigned = 1;
+		FALLTHROUGH
 	case SQLDT_INT8: bind->buffer_type = MYSQL_TYPE_TINY;
 		buffer_len = 1;
 		break;
 	case SQLDT_UINT16: bind->is_unsigned = 1;
+		FALLTHROUGH
 	case SQLDT_INT16: bind->buffer_type = MYSQL_TYPE_SHORT;
 		buffer_len = 2;
 		break;
 	case SQLDT_UINT32: bind->is_unsigned = 1;
+		FALLTHROUGH
 	case SQLDT_INT32: bind->buffer_type = MYSQL_TYPE_LONG;
 		buffer_len = 4;
 		break;
 	case SQLDT_UINT64: bind->is_unsigned = 1;
+		FALLTHROUGH
 	case SQLDT_INT64: bind->buffer_type = MYSQL_TYPE_LONGLONG;
 		buffer_len = 8;
 		break;
 		// platform dependent size
 	case SQLDT_UCHAR: bind->is_unsigned = 1;
+		FALLTHROUGH
 	case SQLDT_CHAR: bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(char));
 		buffer_len = sizeof(char);
 		break;
 	case SQLDT_USHORT: bind->is_unsigned = 1;
+		FALLTHROUGH
 	case SQLDT_SHORT: bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(short));
 		buffer_len = sizeof(short);
 		break;
 	case SQLDT_UINT: bind->is_unsigned = 1;
+		FALLTHROUGH
 	case SQLDT_INT: bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(int));
 		buffer_len = sizeof(int);
 		break;
 	case SQLDT_ULONG: bind->is_unsigned = 1;
+		FALLTHROUGH
 	case SQLDT_LONG: bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(long));
 		buffer_len = sizeof(long);
 		break;
 	case SQLDT_ULONGLONG: bind->is_unsigned = 1;
+		FALLTHROUGH
 	case SQLDT_LONGLONG: bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(int64));
 		buffer_len = sizeof(int64);
 		break;

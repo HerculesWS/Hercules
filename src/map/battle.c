@@ -693,6 +693,7 @@ int64 battle_addmastery(struct map_session_data *sd,struct block_list *target,in
 			#ifdef RENEWAL
 				if((skill_lv = pc->checkskill(sd,AM_AXEMASTERY)) > 0)
 					damage += (skill_lv * 3);
+				FALLTHROUGH
 			#endif
 		case W_DAGGER:
 			if((skill_lv = pc->checkskill(sd,SM_SWORD)) > 0)
@@ -737,6 +738,7 @@ int64 battle_addmastery(struct map_session_data *sd,struct block_list *target,in
 			if((skill_lv = pc->checkskill(sd,TK_RUN)) > 0)
 				damage += (skill_lv * 10);
 			// No break, fall through to Knuckles
+			FALLTHROUGH
 		case W_KNUCKLE:
 			if((skill_lv = pc->checkskill(sd,MO_IRONHAND)) > 0)
 				damage += (skill_lv * 3);
@@ -3005,6 +3007,7 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 					case W_WHIP:
 						if(!t_sd->state.arrow_atk)
 							break;
+						FALLTHROUGH
 					case W_BOW:
 					case W_REVOLVER:
 					case W_RIFLE:
@@ -4256,7 +4259,9 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 	switch( skill_id ) {
 		case RA_FIRINGTRAP:
 		case RA_ICEBOUNDTRAP:
-			if( md.damage == 1 ) break;
+			if (md.damage == 1)
+				break;
+			FALLTHROUGH
 		case RA_CLUSTERBOMB:
 			{
 				struct Damage wd;
@@ -4556,16 +4561,19 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 							wd.div_ = 5;
 							break;
 						}
+						FALLTHROUGH
 					case 4:
 						if( chance < 7){// 6 % chance to attack 4 times.
 							wd.div_ = 4;
 							break;
 						}
+						FALLTHROUGH
 					case 3:
 						if( chance < 10){// 9 % chance to attack 3 times.
 							wd.div_ = 3;
 							break;
 						}
+						FALLTHROUGH
 					case 2:
 					case 1:
 						if( chance < 13){// 12 % chance to attack 2 times.
@@ -4619,6 +4627,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				if(!(sc && sc->data[SC_AUTOCOUNTER]))
 					break;
 				status_change_end(src, SC_AUTOCOUNTER, INVALID_TIMER);
+				FALLTHROUGH
 			case KN_AUTOCOUNTER:
 				if(battle_config.auto_counter_type &&
 					(battle_config.auto_counter_type&src->type))
@@ -5074,7 +5083,7 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 					wd.damage = battle->calc_masteryfix(src, target, skill_id, skill_lv, wd.damage, wd.div_, 0, flag.weapon);
 					wd.damage = battle->calc_cardfix2(src, target, wd.damage, s_ele, nk, wd.flag);
 				}
-				/* Fall through */
+				FALLTHROUGH
 	#endif
 			default:
 				ATK_RATE(battle->calc_skillratio(BF_WEAPON, src, target, skill_id, skill_lv, skillratio, wflag));
@@ -6546,6 +6555,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 					case RK_DRAGONBREATH_WATER:
 						if( !map->list[m].flag.pvp && !map->list[m].flag.gvg )
 							break;
+						FALLTHROUGH
 					case 0://you can hit them without skills
 					case MA_REMOVETRAP:
 					case HT_REMOVETRAP:
