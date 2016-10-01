@@ -104,6 +104,8 @@ Thumbs.db
 /tools/*.pdb
 /tools/HPMHookGen/Makefile
 /tools/HPMHookGen/doxyoutput
+/tools/doxygen/Makefile
+/tools/doxygen/docs
 
 # /vcproj-*
 /vcproj-*/*.user
