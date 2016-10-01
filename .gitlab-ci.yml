@@ -5,6 +5,7 @@ stages:
   - primary
   - secondary
   - platforms
+  - extras
 
 variables: &base_vars
   # Configure mysql service (https://hub.docker.com/_/mysql/)
@@ -306,6 +307,7 @@ re:gcc-6_cov:
   artifacts:
     paths:
       - gcov_re.html
+    when: on_success
 
 # Distributions
 
@@ -688,3 +690,25 @@ re:percona:
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok percona
+
+# Documentation
+pages:
+  <<: *branch_exceptions
+  stage: extras
+  image: debian:unstable
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -y -qq doxygen graphviz
+  script:
+    - make docs
+    - mkdir public
+    - mv tools/doxygen/docs/html public/docs
+    - mv gcov*.html public/
+  dependencies:
+    - re:gcc-6_cov
+    - pre_re:gcc-6_cov
+  artifacts:
+    paths:
+      - public
