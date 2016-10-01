@@ -66,7 +66,7 @@ function run_server {
 DBNAME=ragnarok
 DBUSER=ragnarok
 DBPASS=ragnarok
-DBHOST=127.0.0.1
+DBHOST=localhost
 
 case "$MODE" in
 	createdb|importdb|test)
