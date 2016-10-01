@@ -1,10 +1,8 @@
-services:
-  - mysql:latest
-
 stages:
   - primary
   - secondary
   - platforms
+  - extras
 
 variables: &base_vars
   # Configure mysql service (https://hub.docker.com/_/mysql/)
@@ -23,6 +21,8 @@ variables: &base_vars
     - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
     - ./tools/ci/travis.sh getplugins || true
+  services:
+    - mysql:latest
 
 .branch_exceptions: &branch_exceptions
   only:
@@ -284,11 +284,13 @@ pre_re:gcc-6_cov:
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal CFLAGS="-coverage" LDFLAGS="-coverage"
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
-    - gcovr -r . --gcov-executable=gcov-6
+    - gcovr -r . --gcov-executable=gcov-6 -o gcov_pre.txt
     - gcovr -r . --gcov-executable=gcov-6 --html -o gcov_pre.html
+    - cat gcov_pre.txt
   artifacts:
     paths:
-      - gcov_re.html
+      - gcov_pre.*
+    when: on_success
 
 re:gcc-6_cov:
   <<: *branch_exceptions
@@ -301,11 +303,13 @@ re:gcc-6_cov:
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot CFLAGS="-coverage" LDFLAGS="-coverage"
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
-    - gcovr -r . --gcov-executable=gcov-6
+    - gcovr -r . --gcov-executable=gcov-6 -o gcov_re.txt
     - gcovr -r . --gcov-executable=gcov-6 --html -o gcov_re.html
+    - cat gcov_re.txt
   artifacts:
     paths:
-      - gcov_re.html
+      - gcov_re.*
+    when: on_success
 
 # Distributions
 
@@ -394,6 +398,8 @@ pre_re:centos-previous:
     - yum install -y yum install devtoolset-3-toolchain
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
     - ./tools/ci/travis.sh getplugins || true
+  services:
+    - mysql:latest
   variables:
     <<: *base_vars
   script:
@@ -413,8 +419,8 @@ re:centos-previous:
     - yum install -y yum install devtoolset-3-toolchain
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
     - ./tools/ci/travis.sh getplugins || true
-  variables:
-    <<: *base_vars
+  services:
+    - mysql:latest
   variables:
     <<: *base_vars
   script:
@@ -432,6 +438,8 @@ pre_re:centos-current:
     - yum install -y gcc make mysql-devel pcre-devel git zlib-devel mysql
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
     - ./tools/ci/travis.sh getplugins || true
+  services:
+    - mysql:latest
   variables:
     <<: *base_vars
   script:
@@ -449,8 +457,8 @@ re:centos-current:
     - yum install -y gcc make mysql-devel pcre-devel git zlib-devel mysql
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
     - ./tools/ci/travis.sh getplugins || true
-  variables:
-    <<: *base_vars
+  services:
+    - mysql:latest
   variables:
     <<: *base_vars
   script:
@@ -462,6 +470,8 @@ pre_re:ubuntu-xenial:
   <<: *prerequisites
   stage: platforms
   image: ubuntu:16.04
+  services:
+    - mysql:latest
   variables:
     <<: *base_vars
     INSTALL_PACKAGES: gcc mysql-client
@@ -474,6 +484,8 @@ re:ubuntu-xenial:
   <<: *prerequisites
   stage: platforms
   image: ubuntu:16.04
+  services:
+    - mysql:latest
   variables:
     <<: *base_vars
     INSTALL_PACKAGES: gcc mysql-client
@@ -688,3 +700,28 @@ re:percona:
   script:
     - ./tools/ci/travis.sh build --enable-debug --enable-Werror --enable-buildbot
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok percona
+
+# Documentation
+pages:
+  only:
+    - master
+  stage: extras
+  image: debian:unstable
+  before_script:
+    - echo "Building $CI_BUILD_NAME"
+    - uname -a
+    - ./tools/ci/retry.sh apt-get update
+    - ./tools/ci/retry.sh apt-get install -y -qq gcc $DEBIAN_COMMON_PACKAGES libmysqlclient-dev doxygen graphviz
+  script:
+    - ./configure
+    - make docs
+    - mkdir public
+    - mv tools/doxygen/docs/html public/docs
+    - mv gcov_*.* public/
+    - cp tools/doxygen/pages_index.html public/index.html
+  dependencies:
+    - re:gcc-6_cov
+    - pre_re:gcc-6_cov
+  artifacts:
+    paths:
+      - public
