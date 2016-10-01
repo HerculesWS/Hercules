@@ -285,11 +285,13 @@ pre_re:gcc-6_cov:
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot --disable-renewal CFLAGS="-coverage" LDFLAGS="-coverage"
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
-    - gcovr -r . --gcov-executable=gcov-6
+    - gcovr -r . --gcov-executable=gcov-6 -o gcov_pre.txt
     - gcovr -r . --gcov-executable=gcov-6 --html -o gcov_pre.html
+    - cat gcov_pre.txt
   artifacts:
     paths:
-      - gcov_re.html
+      - gcov_pre.*
+    when: on_success
 
 re:gcc-6_cov:
   <<: *branch_exceptions
@@ -302,11 +304,12 @@ re:gcc-6_cov:
   script:
     - ./tools/ci/travis.sh build CC=gcc-6 --enable-debug --enable-Werror --enable-buildbot CFLAGS="-coverage" LDFLAGS="-coverage"
     - ./tools/ci/travis.sh test ragnarok ragnarok ragnarok mysql
-    - gcovr -r . --gcov-executable=gcov-6
+    - gcovr -r . --gcov-executable=gcov-6 -o gcov_re.txt
     - gcovr -r . --gcov-executable=gcov-6 --html -o gcov_re.html
+    - cat gcov_re.txt
   artifacts:
     paths:
-      - gcov_re.html
+      - gcov_re.*
     when: on_success
 
 # Distributions
@@ -705,7 +708,7 @@ pages:
     - make docs
     - mkdir public
     - mv tools/doxygen/docs/html public/docs
-    - mv gcov*.html public/
+    - mv gcov_*.* public/
   dependencies:
     - re:gcc-6_cov
     - pre_re:gcc-6_cov
