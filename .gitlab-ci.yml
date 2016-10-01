@@ -1,6 +1,3 @@
-services:
-  - mysql:latest
-
 stages:
   - primary
   - secondary
@@ -24,6 +21,8 @@ variables: &base_vars
     - ./tools/ci/retry.sh apt-get install -y -qq $INSTALL_PACKAGES $DEBIAN_COMMON_PACKAGES libmysqlclient-dev
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
     - ./tools/ci/travis.sh getplugins || true
+  services:
+    - mysql:latest
 
 .branch_exceptions: &branch_exceptions
   only:
@@ -399,6 +398,8 @@ pre_re:centos-previous:
     - yum install -y yum install devtoolset-3-toolchain
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
     - ./tools/ci/travis.sh getplugins || true
+  services:
+    - mysql:latest
   variables:
     <<: *base_vars
   script:
@@ -418,8 +419,8 @@ re:centos-previous:
     - yum install -y yum install devtoolset-3-toolchain
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
     - ./tools/ci/travis.sh getplugins || true
-  variables:
-    <<: *base_vars
+  services:
+    - mysql:latest
   variables:
     <<: *base_vars
   script:
@@ -437,6 +438,8 @@ pre_re:centos-current:
     - yum install -y gcc make mysql-devel pcre-devel git zlib-devel mysql
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
     - ./tools/ci/travis.sh getplugins || true
+  services:
+    - mysql:latest
   variables:
     <<: *base_vars
   script:
@@ -454,8 +457,8 @@ re:centos-current:
     - yum install -y gcc make mysql-devel pcre-devel git zlib-devel mysql
     - ./tools/ci/travis.sh importdb ragnarok ragnarok ragnarok mysql
     - ./tools/ci/travis.sh getplugins || true
-  variables:
-    <<: *base_vars
+  services:
+    - mysql:latest
   variables:
     <<: *base_vars
   script:
@@ -467,6 +470,8 @@ pre_re:ubuntu-xenial:
   <<: *prerequisites
   stage: platforms
   image: ubuntu:16.04
+  services:
+    - mysql:latest
   variables:
     <<: *base_vars
     INSTALL_PACKAGES: gcc mysql-client
@@ -479,6 +484,8 @@ re:ubuntu-xenial:
   <<: *prerequisites
   stage: platforms
   image: ubuntu:16.04
+  services:
+    - mysql:latest
   variables:
     <<: *base_vars
     INSTALL_PACKAGES: gcc mysql-client
@@ -703,7 +710,7 @@ pages:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
     - ./tools/ci/retry.sh apt-get update
-    - ./tools/ci/retry.sh apt-get install -y -qq doxygen graphviz
+    - ./tools/ci/retry.sh apt-get install -y -qq doxygen graphviz make
   script:
     - make docs
     - mkdir public
