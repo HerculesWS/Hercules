@@ -10559,7 +10559,7 @@
 - `New_Year_Rice_Cake`: 6005
 - `Rice_Cake_Delivery_Box`: 6006
 - `New_Year_Rice_Cake_Soup`: 6007
-- `Wood`: 6008
+- `Lumber`: 6008
 - `Large_Magical_Fan`: 6009
 - `Pickaxe`: 6010
 - `Blue_Card_B`: 6011
