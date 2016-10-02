@@ -1427,6 +1427,9 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		case SU_SV_STEMSPEAR:
 			sc_start2(src, bl, SC_BLOODING, 10, skill_lv, src->id, skill->get_time(skill_id, skill_lv));
 			break;
+		case SU_CN_METEOR:
+			sc_start(src, bl, SC_CURSE, 10, skill_lv, skill->get_time2(skill_id, skill_lv)); // TODO: What's the chance/time?
+			break;
 		default:
 			skill->additional_effect_unknown(src, bl, &skill_id, &skill_lv, &attack_type, &dmg_lv, &tick);
 			break;
@@ -3457,7 +3460,8 @@ int skill_timerskill(int tid, int64 tick, int id, intptr_t data) {
 				break;
 			switch( skl->skill_id ) {
 				case WZ_METEOR:
-					if( skl->type >= 0 ) {
+				case SU_CN_METEOR:
+					if (skl->type >= 0) {
 						int x = skl->type>>16, y = skl->type&0xFFFF;
 						if( path->search_long(NULL, src, src->m, src->x, src->y, x, y, CELL_CHKWALL) )
 							skill->unitsetting(src,skl->skill_id,skl->skill_lv,x,y,skl->flag);
@@ -10403,6 +10407,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case HW_GANBANTEIN:
 		case LG_EARTHDRIVE:
 		case SC_ESCAPE:
+		case SU_CN_METEOR:
 			break; //Effect is displayed on respective switch case.
 		default:
 			skill->castend_pos2_effect_unknown(src, &x, &y, &skill_id, &skill_lv, &tick, &flag);
@@ -10645,10 +10650,23 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			break;
 
 		case WZ_METEOR:
+		case SU_CN_METEOR:
 			{
 				int area = skill->get_splash(skill_id, skill_lv);
 				short tmpx = 0, tmpy = 0, x1 = 0, y1 = 0;
 				int i;
+
+#if 0
+				// The Meteor should inflict curse if Catnip fruit is consumed.
+				// Currently Catnip fruit is added as requirement.
+				if (sd && skill_id == SU_CN_METEOR) {
+					short item_idx = pc->search_inventory(sd, ITEMID_CATNIP_FRUIT);
+					if (item_idx >= 0) {
+						pc->delitem(sd, item_idx, 1, 0, 1, LOG_TYPE_SKILL);
+						flag |= 1;
+					}
+				}
+#endif
 
 				for( i = 0; i < 2 + (skill_lv>>1); i++ ) {
 					// Creates a random Cell in the Splash Area
@@ -11297,7 +11315,7 @@ struct skill_unit_group* skill_unitsetting(struct block_list *src, uint16 skill_
 	nullpo_retr(NULL, st);
 	sc = status->get_sc(src); // for traps, firewall and fogwall - celest
 
-	switch( skill_id ) {
+	switch (skill_id) {
 		case SO_ELEMENTAL_SHIELD:
 			val2 = 300 * skill_lv + 65 * (st->int_ + status->get_lv(src)) + st->max_sp;
 			break;
@@ -12243,12 +12261,12 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 						tsc->sg_counter++; //SG hit counter.
 					if (skill->attack(skill->get_type(sg->skill_id),ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0) <= 0 && tsc)
 						tsc->sg_counter=0; //Attack absorbed.
-				break;
+					break;
 		#endif
 				case GS_DESPERADO:
 					if (rnd()%100 < src->val1)
 						skill->attack(BF_WEAPON,ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
-				break;
+					break;
 				default:
 					skill->attack(skill->get_type(sg->skill_id),ss,&src->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
 			}
