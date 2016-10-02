@@ -1544,7 +1544,7 @@ int char_check_char_name(char * name, char * esc_name)
  *  -5: 'Symbols in Character Names are forbidden'
  *  char_id: Success
  **/
-int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style)
+int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int str, int agi, int vit, int int_, int dex, int luk, int slot, int hair_color, int hair_style, short starting_job)
 {
 	char name[NAME_LENGTH];
 	char esc_name[NAME_LENGTH*2+1];
@@ -1559,6 +1559,14 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 	flag = chr->check_char_name(name,esc_name);
 	if( flag < 0 )
 		return flag;
+
+	switch(starting_job) {
+		case JOB_SUMMONER:
+		case JOB_NOVICE:
+			break;
+		default:
+			return -2;	// Char Creation Denied
+	}
 
 	//check other inputs
 #if PACKETVER >= 20120307
@@ -1580,11 +1588,11 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 		return -2; /* character account limit exceeded */
 
 #if PACKETVER >= 20120307
-	//Insert the new char entry to the database
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `zeny`, `status_point`,`str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
+	// Insert the new char entry to the database
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `status_point`,`str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
 		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`) VALUES ("
 		"'%d', '%d', '%s', '%d',  '%d','%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
-		char_db, sd->account_id , slot, esc_name, start_zeny, 48, str, agi, vit, int_, dex, luk,
+		char_db, sd->account_id , slot, esc_name, starting_job, start_zeny, 48, str, agi, vit, int_, dex, luk,
 		(40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
 		mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y) )
 	{
@@ -1593,10 +1601,10 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 	}
 #else
 	//Insert the new char entry to the database
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `zeny`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
 							   "`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`) VALUES ("
 							   "'%d', '%d', '%s', '%d',  '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d')",
-							   char_db, sd->account_id , slot, esc_name, start_zeny, str, agi, vit, int_, dex, luk,
+							   char_db, sd->account_id , slot, esc_name, starting_job, start_zeny, str, agi, vit, int_, dex, luk,
 							   (40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
 							   mapindex_id2name(start_point.map), start_point.x, start_point.y, mapindex_id2name(start_point.map), start_point.x, start_point.y) )
 	{
@@ -1613,9 +1621,9 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 	// Validation success, log result
 	if (chr->enable_logs) {
 		if (SQL_ERROR == SQL->Query(inter->sql_handle,
-					"INSERT INTO `%s` (`time`, `char_msg`,`account_id`,`char_id`,`char_num`,`name`,`str`,`agi`,`vit`,`int`,`dex`,`luk`,`hair`,`hair_color`)"
+					"INSERT INTO `%s` (`time`, `char_msg`, `account_id`, `char_id`, `char_num`, `class`, `name`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `hair`, `hair_color`)"
 					"VALUES (NOW(), '%s', '%d', '%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
-					charlog_db, "make new char", sd->account_id, char_id, slot, esc_name, str, agi, vit, int_, dex, luk, hair_style, hair_color))
+					charlog_db, "make new char", sd->account_id, char_id, slot, starting_job, esc_name, str, agi, vit, int_, dex, luk, hair_style, hair_color))
 			Sql_ShowDebug(inter->sql_handle);
 	}
 
@@ -4621,10 +4629,12 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 		//turn character creation on/off [Kevin]
 		result = -2;
 	} else {
-	#if PACKETVER >= 20120307
-		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26),RFIFOW(fd,27),RFIFOW(fd,29));
+	#if PACKETVER >= 20151001
+		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26), RFIFOW(fd,27), RFIFOW(fd,29), RFIFOW(fd, 31));
+	#elif PACKETVER >= 20120307
+		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), 1, 1, 1, 1, 1, 1, RFIFOB(fd,26), RFIFOW(fd,27), RFIFOW(fd,29), JOB_NOVICE);
 	#else
-		result = chr->make_new_char_sql(sd, RFIFOP(fd,2),RFIFOB(fd,26),RFIFOB(fd,27),RFIFOB(fd,28),RFIFOB(fd,29),RFIFOB(fd,30),RFIFOB(fd,31),RFIFOB(fd,32),RFIFOW(fd,33),RFIFOW(fd,35));
+		result = chr->make_new_char_sql(sd, RFIFOP(fd,2), RFIFOB(fd,26), RFIFOB(fd,27), RFIFOB(fd,28), RFIFOB(fd,29), RFIFOB(fd,30), RFIFOB(fd,31), RFIFOB(fd,32), RFIFOW(fd,33), RFIFOW(fd,35), JOB_NOVICE);
 	#endif
 	}
 
@@ -4640,11 +4650,13 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 		// add new entry to the chars list
 		sd->found_char[char_dat.slot] = result; // the char_id of the new char
 	}
-	#if PACKETVER >= 20120307
-	RFIFOSKIP(fd,31);
-	#else
-	RFIFOSKIP(fd,37);
-	#endif
+#if PACKETVER >= 20151001
+	RFIFOSKIP(fd, 36);
+#if PACKETVER >= 20120307
+	RFIFOSKIP(fd, 31);
+#else
+	RFIFOSKIP(fd, 37);
+#endif
 }
 
 // flag:
@@ -5022,17 +5034,22 @@ int char_parse_char(int fd)
 			break;
 
 			// create new char
-	#if PACKETVER >= 20120307
+#if PACKETVER >= 20151001
+			// S 0a39 <name>.24B <slot>.B <hair color>.W <hair style>.W <starting job ID>.W <Unknown>.(W or 2 B's)??? <sex>.B
+			case 0xa39:
+			{
+				FIFOSD_CHECK(36);	
+#elif PACKETVER >= 20120307
 			// S 0970 <name>.24B <slot>.B <hair color>.W <hair style>.W
 			case 0x970:
 			{
 				FIFOSD_CHECK(31);
-	#else
+#else
 			// S 0067 <name>.24B <str>.B <agi>.B <vit>.B <int>.B <dex>.B <luk>.B <slot>.B <hair color>.W <hair style>.W
 			case 0x67:
 			{
 				FIFOSD_CHECK(37);
-	#endif
+#endif
 
 				chr->parse_char_create_new_char(fd, sd);
 			}
