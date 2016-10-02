@@ -437,6 +437,9 @@ void itemdb_jobid2mapid(uint64 *bclass, int job_id, bool enable)
 		case JOB_REBELLION:
 			mask[1] = 1ULL << MAPID_GUNSLINGER;
 			break;
+		case JOB_SUMMONER:
+			mask[0] = 1ULL << MAPID_SUMMONER;
+			break;
 		// Other Classes
 		case JOB_GANGSI: //Bongun/Munak
 			mask[0] = 1ULL << MAPID_GANGSI;
@@ -538,6 +541,8 @@ void itemdb_jobmask2mapid(uint64 *bclass, uint64 jobmask)
 		bclass[1] |= 1ULL<<MAPID_NINJA;
 	if (jobmask & 1ULL<<30) //Rebellion
 		bclass[1] |= 1ULL<<MAPID_GUNSLINGER;
+	if (jobmask & 1ULL<<31) //Summoner
+		bclass[0] |= 1ULL<<MAPID_SUMMONER;
 }
 
 void create_dummy_data(void)
