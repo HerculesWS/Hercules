@@ -1898,6 +1898,9 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case SU_SV_STEMSPEAR:
 					skillratio += 600;
 					break;
+				case SU_CN_METEOR:
+					skillratio += 100 + 100 * skill_lv;
+					break;
 				default:
 					battle->calc_skillratio_magic_unknown(&attack_type, src, target, &skill_id, &skill_lv, &skillratio, &flag);
 					break;
