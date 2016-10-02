@@ -1127,6 +1127,7 @@ int unit_can_move(struct block_list *bl)
 		    ||  sc->data[SC_VACUUM_EXTREME]
 		    || (sc->data[SC_FEAR] && sc->data[SC_FEAR]->val2 > 0)
 			|| sc->data[SC_NETHERWORLD]
+			|| sc->data[SC_SUHIDE]
 		    || (sc->data[SC_SPIDERWEB] && sc->data[SC_SPIDERWEB]->val1)
 		    || (sc->data[SC_CLOAKING] && sc->data[SC_CLOAKING]->val1 < 3 && !(sc->data[SC_CLOAKING]->val4&1)) //Need wall at level 1-2
 		    || (
@@ -2464,6 +2465,7 @@ int unit_remove_map(struct block_list *bl, clr_type clrtype, const char* file, i
 		status_change_end(bl, SC_VACUUM_EXTREME, INVALID_TIMER);
 		status_change_end(bl, SC_CURSEDCIRCLE_ATKER, INVALID_TIMER); //callme before warp
 		status_change_end(bl, SC_NETHERWORLD, INVALID_TIMER);
+		status_change_end(bl, SC_SUHIDE, INVALID_TIMER);
 	}
 
 	if (bl->type&(BL_CHAR|BL_PET)) {
