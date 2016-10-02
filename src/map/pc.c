@@ -4965,6 +4965,7 @@ int pc_useitem(struct map_session_data *sd,int n) {
 		sd->sc.data[SC_DEEP_SLEEP] ||
 		sd->sc.data[SC_SATURDAY_NIGHT_FEVER] ||
 		sd->sc.data[SC_COLD] ||
+		sd->sc.data[SC_SUHIDE] ||
 		pc_ismuted(&sd->sc, MANNER_NOITEM)
 	    ))
 		return 0;

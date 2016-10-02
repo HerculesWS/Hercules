@@ -719,6 +719,11 @@ void initChangeTables(void)
 	status->set_sc( GN_FIRE_EXPANSION_TEAR_GAS    , SC_FIRE_EXPANSION_TEAR_GAS     , SI_FIRE_EXPANSION_TEAR_GAS    , SCB_NONE );
 	status->set_sc( GN_MANDRAGORA                 , SC_MANDRAGORA  , SI_MANDRAGORA                 , SCB_INT );
 
+	/**
+	 * Summoner
+	 */
+	status->set_sc(SU_HIDE, SC_SUHIDE, SI_SUHIDE, SCB_SPEED);
+
 	// Elemental Spirit summoner's 'side' status changes.
 	status->set_sc( EL_CIRCLE_OF_FIRE  , SC_CIRCLE_OF_FIRE_OPTION, SI_CIRCLE_OF_FIRE_OPTION, SCB_NONE );
 	status->set_sc( EL_FIRE_CLOAK      , SC_FIRE_CLOAK_OPTION    , SI_FIRE_CLOAK_OPTION    , SCB_ALL );
@@ -1347,6 +1352,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, 
 			status_change_end(target, SC_CLOAKING, INVALID_TIMER);
 			status_change_end(target, SC_CHASEWALK, INVALID_TIMER);
 			status_change_end(target, SC_CAMOUFLAGE, INVALID_TIMER);
+			status_change_end(target, SC_SUHIDE, INVALID_TIMER);
 			if ((sce=sc->data[SC_ENDURE]) && !sce->val4 && !sc->data[SC_LKCONCENTRATION]) {
 				//Endure count is only reduced by non-players on non-gvg maps.
 				//val4 signals infinite endure. [Skotlex]
@@ -1802,6 +1808,7 @@ int status_check_skilluse(struct block_list *src, struct block_list *target, uin
 			(sc->data[SC_TRICKDEAD] && skill_id != NV_TRICKDEAD)
 			|| (sc->data[SC_AUTOCOUNTER] && !flag && skill_id)
 			|| (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF && skill_id != PA_GOSPEL)
+			|| (sc->data[SC_SUHIDE] && skill_id != SU_HIDE)
 			)
 			return 0;
 
@@ -9978,6 +9985,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_CAMOUFLAGE:
 		case SC_SIREN:
 		case SC_ALL_RIDING:
+		case SC_SUHIDE:
 			unit->stop_attack(bl);
 			break;
 		case SC_SILENCE:

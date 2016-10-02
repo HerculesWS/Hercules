@@ -9822,7 +9822,7 @@ void clif_parse_QuitGame(int fd, struct map_session_data *sd) __attribute__((non
 void clif_parse_QuitGame(int fd, struct map_session_data *sd)
 {
 	/* Rovert's prevent logout option fixed [Valaris] */
-	if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC__INVISIBILITY] &&
+	if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC__INVISIBILITY] && !sd->sc.data[SC_SUHIDE] &&
 		(!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout) )
 	{
 		sockt->eof(fd);
@@ -10118,7 +10118,8 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 			sd->sc.data[SC_TRICKDEAD] ||
 			(sd->sc.data[SC_AUTOCOUNTER] && action_type != 0x07) ||
 			 sd->sc.data[SC_BLADESTOP] ||
-			 sd->sc.data[SC_DEEP_SLEEP] )
+			 sd->sc.data[SC_DEEP_SLEEP] ||
+			 sd->sc.data[SC_SUHIDE] )
 			 )
 		return;
 
@@ -10243,7 +10244,7 @@ void clif_parse_Restart(int fd, struct map_session_data *sd) {
 		case 0x01:
 			/* Rovert's Prevent logout option - Fixed [Valaris] */
 			if (!sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK]
-			 && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC__INVISIBILITY]
+			 && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC__INVISIBILITY] && !sd->sc.data[SC_SUHIDE]
 			 && (!battle_config.prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle_config.prevent_logout)
 			) {
 				//Send to char-server for character selection.
@@ -10431,6 +10432,7 @@ void clif_parse_TakeItem(int fd, struct map_session_data *sd)
 				 sd->sc.data[SC_TRICKDEAD] ||
 				 sd->sc.data[SC_BLADESTOP] ||
 				 sd->sc.data[SC_CLOAKINGEXCEED] ||
+				 sd->sc.data[SC_SUHIDE] ||
 				 pc_ismuted(&sd->sc, MANNER_NOITEM)
 			) )
 			break;

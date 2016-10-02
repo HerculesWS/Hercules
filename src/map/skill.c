@@ -9458,6 +9458,17 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			clif->skill_damage(src,bl,tick, status_get_amotion(src), 0, 0, 1, skill_id, -2, BDT_SKILL);
 			break;
 
+		case SU_HIDE:
+			if (tsce) {
+				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+				status_change_end(bl, type, INVALID_TIMER);
+				map->freeblock_unlock();
+				return 0;
+			}
+			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+			sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+			break;
+
 		case GM_SANDMAN:
 			if( tsc ) {
 				if( tsc->opt1 == OPT1_SLEEP )
@@ -13348,7 +13359,8 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 		case SG_FUSION:
 		case RA_WUGDASH:
 		case KO_YAMIKUMO:
-			if( sc && sc->data[status->skill2sc(skill_id)] )
+		case SU_HIDE:
+			if (sc && sc->data[status->skill2sc(skill_id)])
 				return 1;
 			FALLTHROUGH
 		default:
@@ -14560,7 +14572,8 @@ struct skill_condition skill_get_requirement(struct map_session_data* sd, uint16
 		case TK_READYTURN:
 		case SG_FUSION:
 		case KO_YAMIKUMO:
-			if( sc && sc->data[status->skill2sc(skill_id)] )
+		case SU_HIDE:
+			if (sc && sc->data[status->skill2sc(skill_id)])
 				return req;
 			/* Fall through */
 		default:
