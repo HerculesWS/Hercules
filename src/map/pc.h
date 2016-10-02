@@ -654,6 +654,9 @@ END_ZEROED_BLOCK;
 /// Rune Knight Dragon
 #define pc_isridingdragon(sd) ( (sd)->sc.option&OPTION_DRAGON )
 
+/// Basic Skils Check
+#define pc_basicskillcheck(sd, level) ( pc->checkskill((sd), NV_BASIC) >= (level) || pc->checkskill((sd), SU_BASIC_SKILL) )
+
 #define pc_stop_walking(sd, type) (unit->stop_walking(&(sd)->bl, (type)))
 #define pc_stop_attack(sd)        (unit->stop_attack(&(sd)->bl))
 

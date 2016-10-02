@@ -10058,7 +10058,7 @@ void clif_parse_Emotion(int fd, struct map_session_data *sd)
 {
 	int emoticon = RFIFOB(fd,packet_db[RFIFOW(fd,0)].pos[0]);
 
-	if (battle_config.basic_skill_check == 0 || pc->checkskill(sd, NV_BASIC) >= 2) {
+	if (battle_config.basic_skill_check == 0 || pc_basicskillcheck(sd, 2)) {
 		if (emoticon == E_MUTE) {// prevent use of the mute emote [Valaris]
 			clif->skill_fail(sd, 1, USESKILL_FAIL_LEVEL, 1);
 			return;
@@ -10158,7 +10158,7 @@ void clif_parse_ActionRequest_sub(struct map_session_data *sd, int action_type, 
 		}
 		break;
 		case 0x02: // sitdown
-			if (battle_config.basic_skill_check && pc->checkskill(sd, NV_BASIC) < 3) {
+			if (battle_config.basic_skill_check && !pc_basicskillcheck(sd, 3)) {
 				clif->skill_fail(sd, 1, USESKILL_FAIL_LEVEL, 2);
 				break;
 			}
@@ -10763,7 +10763,7 @@ void clif_parse_CreateChatRoom(int fd, struct map_session_data* sd)
 
 	if (pc_ismuted(&sd->sc, MANNER_NOROOM))
 		return;
-	if(battle_config.basic_skill_check && pc->checkskill(sd,NV_BASIC) < 4) {
+	if(battle_config.basic_skill_check && !pc_basicskillcheck(sd, 4)) {
 		clif->skill_fail(sd,1,USESKILL_FAIL_LEVEL,3);
 		return;
 	}
@@ -10880,7 +10880,7 @@ void clif_parse_TradeRequest(int fd,struct map_session_data *sd) {
 		return;
 	}
 
-	if( battle_config.basic_skill_check && pc->checkskill(sd,NV_BASIC) < 1) {
+	if( battle_config.basic_skill_check && !pc_basicskillcheck(sd, 1)) {
 		clif->skill_fail(sd,1,USESKILL_FAIL_LEVEL,0);
 		return;
 	}
@@ -11926,7 +11926,7 @@ void clif_parse_CreateParty(int fd, struct map_session_data *sd)
 		clif->message(fd, msg_fd(fd,227)); // Party modification is disabled in this map.
 		return;
 	}
-	if( battle_config.basic_skill_check && pc->checkskill(sd,NV_BASIC) < 7 ) {
+	if (battle_config.basic_skill_check && !pc_basicskillcheck(sd, 7)) {
 		clif->skill_fail(sd,1,USESKILL_FAIL_LEVEL,4);
 		return;
 	}
@@ -11948,7 +11948,7 @@ void clif_parse_CreateParty2(int fd, struct map_session_data *sd)
 		clif->message(fd, msg_fd(fd,227)); // Party modification is disabled in this map.
 		return;
 	}
-	if( battle_config.basic_skill_check && pc->checkskill(sd,NV_BASIC) < 7 ) {
+	if (battle_config.basic_skill_check && !pc_basicskillcheck(sd, 7)) {
 		clif->skill_fail(sd,1,USESKILL_FAIL_LEVEL,4);
 		return;
 	}
