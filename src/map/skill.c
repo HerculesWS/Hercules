@@ -1415,6 +1415,12 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		case MH_XENO_SLASHER:
 			sc_start2(src, bl, SC_BLOODING, 10 * skill_lv, skill_lv, src->id, skill->get_time(skill_id,skill_lv));
 			break;
+		/**
+		 * Summoner
+		 */
+		case SU_SCRATCH:
+			sc_start2(src, bl, SC_BLOODING, (skill_lv * 3), skill_lv, src->id, skill->get_time(skill_id, skill_lv)); // TODO: What's the chance/time?
+			break;
 		default:
 			skill->additional_effect_unknown(src, bl, &skill_id, &skill_lv, &attack_type, &dmg_lv, &tick);
 			break;
@@ -4020,7 +4026,8 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case KO_BAKURETSU:
 		case GN_ILLUSIONDOPING:
 		case MH_XENO_SLASHER:
-			if( flag&1 ) {//Recursive invocation
+		case SU_SCRATCH:
+			if (flag&1) { //Recursive invocation
 				// skill->area_temp[0] holds number of targets in area
 				// skill->area_temp[1] holds the id of the original target
 				// skill->area_temp[2] counts how many targets have already been processed
@@ -4035,15 +4042,18 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					break;
 
 				heal = skill->attack(skill->get_type(skill_id), src, src, bl, skill_id, skill_lv, tick, sflag);
-				if( skill_id == NPC_VAMPIRE_GIFT && heal > 0 ) {
+				if (skill_id == NPC_VAMPIRE_GIFT && heal > 0) {
 					clif->skill_nodamage(NULL, src, AL_HEAL, heal, 1);
 					status->heal(src,heal,0,0);
 				}
+				if (skill_id == SU_SCRATCH && status->get_lv(src) >= 30 && (rnd() % 100 < (int)(status->get_lv(src) / 30) + 10)) // TODO: Need activation chance.
+					skill->addtimerskill(src, tick + skill->get_delay(skill_id, skill_lv), bl->id, 0, 0, skill_id, skill_lv, BF_WEAPON, flag);
 			} else {
 				switch ( skill_id ) {
 					case NJ_BAKUENRYU:
 					case LG_EARTHDRIVE:
 					case GN_CARTCANNON:
+					case SU_SCRATCH:
 						clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 						break;
 					case SR_TIGERCANNON:
