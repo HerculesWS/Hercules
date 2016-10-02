@@ -1666,8 +1666,14 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					break;
 			#endif
 				/**
-					* Arch Bishop
-					**/
+				 * Summoner
+				 **/
+				case SU_BITE:
+					skillratio += 100;
+					break;
+				/**
+				 * Arch Bishop
+				**/
 				case AB_JUDEX:
 					skillratio = 300 + 20 * skill_lv;
 					RE_LVL_DMOD(100);
