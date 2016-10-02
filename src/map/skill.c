@@ -1424,6 +1424,9 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		case SU_SCRATCH:
 			sc_start2(src, bl, SC_BLOODING, (skill_lv * 3), skill_lv, src->id, skill->get_time(skill_id, skill_lv)); // TODO: What's the chance/time?
 			break;
+		case SU_SV_STEMSPEAR:
+			sc_start2(src, bl, SC_BLOODING, 10, skill_lv, src->id, skill->get_time(skill_id, skill_lv));
+			break;
 		default:
 			skill->additional_effect_unknown(src, bl, &skill_id, &skill_lv, &attack_type, &dmg_lv, &tick);
 			break;
@@ -4901,6 +4904,12 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					clif->skill_nodamage(src,bl,skill_id,skill_lv,
 				sc_start4(src,bl,SC_RG_CCONFINE_S,100,skill_lv,src->id,0,0,skill->get_time(skill_id,skill_lv)));
 					skill->attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
+			break;
+
+		case SU_SV_STEMSPEAR:
+			skill->attack(skill->get_type(skill_id), src, src, bl, skill_id, skill_lv, tick, flag);
+			if (status->get_lv(src) >= 30 && (rnd() % 100 < (int)(status->get_lv(src) / 30) + 10)) // TODO: Need activation chance.
+				skill->addtimerskill(src, tick + skill->get_delay(skill_id, skill_lv), bl->id, 0, 0, skill_id, skill_lv, (skill_id == SU_SV_STEMSPEAR) ? BF_MAGIC : BF_WEAPON, flag);
 			break;
 
 		case 0:/* no skill - basic/normal attack */
