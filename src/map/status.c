@@ -723,6 +723,7 @@ void initChangeTables(void)
 	 * Summoner
 	 */
 	status->set_sc(SU_HIDE, SC_SUHIDE, SI_SUHIDE, SCB_SPEED);
+	add_sc(SU_SCRATCH, SC_BLOODING);
 
 	// Elemental Spirit summoner's 'side' status changes.
 	status->set_sc( EL_CIRCLE_OF_FIRE  , SC_CIRCLE_OF_FIRE_OPTION, SI_CIRCLE_OF_FIRE_OPTION, SCB_NONE );
