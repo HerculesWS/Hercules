@@ -1895,6 +1895,9 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 						pc->del_charm(sd, sd->charm_count, sd->charm_type);
 					}
 					break;
+				case SU_SV_STEMSPEAR:
+					skillratio += 600;
+					break;
 				default:
 					battle->calc_skillratio_magic_unknown(&attack_type, src, target, &skill_id, &skill_lv, &skillratio, &flag);
 					break;
