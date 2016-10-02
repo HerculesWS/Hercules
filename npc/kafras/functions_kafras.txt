@@ -10,6 +10,7 @@
 //= http://herc.ws - http://github.com/HerculesWS/Hercules
 //=
 //= Copyright (C) 2012-2015  Hercules Dev Team
+//= Copyright (C)  Dastgir
 //= Copyright (C)  Haru
 //= Copyright (C)  rAthena Dev Team
 //= Copyright (C)  Euphy
@@ -47,7 +48,7 @@
 //= These functions handle save, storage, cart rental, teleport, and Free
 //= Teleport/Warp/Rent Cart options for all Kafra NPCs.
 //================= Current Version =======================================
-//= 6.8
+//= 6.9
 //=========================================================================
 
 //== Main Function =========================================
@@ -210,7 +211,7 @@ function	script	F_KafStor	{
 		close;
 	}
 	// Unable to access Normal Storage (Insufficient Basic Skills)
-	if (basicskillcheck() && getskilllv(NV_BASIC) < 6) {
+	if (basicskillcheck() && getskilllv(NV_BASIC) < 6 && getskilllv(SU_BASIC_SKILL) == 0) {
 		mes getarg(3);
 		// Niflheim Specific Message
 		if (getarg(2) == 1) {

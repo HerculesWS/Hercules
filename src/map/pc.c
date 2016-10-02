@@ -7428,7 +7428,9 @@ int pc_resetskill(struct map_session_data* sd, int flag)
 		}
 
 		// do not reset basic skill
-		if( skill_id == NV_BASIC && (sd->class_&(MAPID_BASEMASK|JOBL_2)) != MAPID_NOVICE )
+		if (skill_id == NV_BASIC && (sd->class_&(MAPID_BASEMASK|JOBL_2)) != MAPID_NOVICE)
+			continue;
+		if (skill_id == SU_BASIC_SKILL && (sd->class_&MAPID_BASEMASK) != MAPID_SUMMONER)
 			continue;
 
 		if( sd->status.skill[i].flag == SKILL_FLAG_PERM_GRANTED )
@@ -11669,6 +11671,18 @@ int pc_have_magnifier(struct map_session_data *sd)
 }
 
 /**
+ * Checks if player have basic skills learned.
+ * @param  sd Player Data
+ * @param  level Required Level of Novice Skill
+ * @return bool true, if requirement is satisfied
+ */
+bool pc_check_basicskill(struct map_session_data *sd, int level) {
+	if (pc->checkskill(sd, NV_BASIC) >= level || pc->checkskill(sd, SU_BASIC_SKILL))
+		return true;
+	return false;
+}
+
+/**
  * Verifies a chat message, searching for atcommands, checking if the sender
  * character can chat, and updating the idle timer.
  *
@@ -12124,4 +12138,6 @@ void pc_defaults(void) {
 	pc->update_idle_time = pc_update_idle_time;
 
 	pc->have_magnifier = pc_have_magnifier;
+
+	pc->check_basicskill = pc_check_basicskill;
 }
