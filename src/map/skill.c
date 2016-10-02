@@ -2141,6 +2141,9 @@ int skill_blown(struct block_list* src, struct block_list* target, int count, in
 		dy = -diry[dir];
 	}
 
+	if (tsc && tsc->data[SC_SU_STOOP]) // Any knockback will cancel it.
+		status_change_end(target, SC_SU_STOOP, INVALID_TIMER);
+
 	return unit->blown(target, dx, dy, count, flag); // send over the proper flag
 }
 
@@ -6022,6 +6025,13 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case ALL_ODINS_POWER:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,
 				sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv)));
+			break;
+		// Works just like the above list of skills, except animation caused by
+		// status must trigger AFTER the skill cast animation or it will cancel
+		// out the status's animation.
+		case SU_STOOP:
+			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+			sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
 			break;
 		case KN_AUTOCOUNTER:
 				sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
