@@ -1094,6 +1094,7 @@ END_ZEROED_BLOCK; /* End */
 
 	bool (*process_chat_message) (struct map_session_data *sd, const char *message);
 	void (*check_supernovice_call) (struct map_session_data *sd, const char *message);
+	bool (*check_basicskill) (struct map_session_data *sd, int level);
 };
 
 #ifdef HERCULES_CORE
