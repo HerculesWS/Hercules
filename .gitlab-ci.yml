@@ -710,8 +710,9 @@ pages:
     - echo "Building $CI_BUILD_NAME"
     - uname -a
     - ./tools/ci/retry.sh apt-get update
-    - ./tools/ci/retry.sh apt-get install -y -qq doxygen graphviz make
+    - ./tools/ci/retry.sh apt-get install -y -qq gcc $DEBIAN_COMMON_PACKAGES libmysqlclient-dev doxygen graphviz
   script:
+    - ./configure
     - make docs
     - mkdir public
     - mv tools/doxygen/docs/html public/docs
