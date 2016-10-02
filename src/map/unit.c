@@ -1544,7 +1544,7 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 		}
 	break;
 	case GD_EMERGENCYCALL: //Emergency Call double cast when the user has learned Leap [Daegaladh]
-		if( sd && pc->checkskill(sd,TK_HIGHJUMP) )
+		if (sd && (pc->checkskill(sd,TK_HIGHJUMP) || pc->checkskill(sd,SU_LOPE) >= 3))
 			casttime *= 2;
 		break;
 	case RA_WUGDASH:
