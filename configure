@@ -2196,6 +2196,8 @@ ac_config_files="$ac_config_files src/test/Makefile"
 
 ac_config_files="$ac_config_files tools/HPMHookGen/Makefile"
 
+ac_config_files="$ac_config_files tools/doxygen/Makefile"
+
 
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
@@ -10220,6 +10222,7 @@ do
     "src/tool/Makefile") CONFIG_FILES="$CONFIG_FILES src/tool/Makefile" ;;
     "src/test/Makefile") CONFIG_FILES="$CONFIG_FILES src/test/Makefile" ;;
     "tools/HPMHookGen/Makefile") CONFIG_FILES="$CONFIG_FILES tools/HPMHookGen/Makefile" ;;
+    "tools/doxygen/Makefile") CONFIG_FILES="$CONFIG_FILES tools/doxygen/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

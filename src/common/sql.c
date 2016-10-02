@@ -664,8 +664,8 @@ int SqlStmt_BindParam(struct SqlStmt *self, size_t idx, enum SqlDataType buffer_
 	if (idx >= self->max_params)
 		return SQL_SUCCESS; // out of range - ignore
 
-PRAGMA_GCC45(GCC diagnostic push)
-PRAGMA_GCC45(GCC diagnostic ignored "-Wcast-qual")
+PRAGMA_GCC46(GCC diagnostic push)
+PRAGMA_GCC46(GCC diagnostic ignored "-Wcast-qual")
 	/*
 	 * MySQL uses the same struct with a non-const buffer for both
 	 * parameters (input) and columns (output).
@@ -673,7 +673,7 @@ PRAGMA_GCC45(GCC diagnostic ignored "-Wcast-qual")
 	 * dropping a const qualifier here.
 	 */
 	return Sql_P_BindSqlDataType(self->params+idx, buffer_type, (void *)buffer, buffer_len, NULL, NULL);
-PRAGMA_GCC45(GCC diagnostic pop)
+PRAGMA_GCC46(GCC diagnostic pop)
 }
 
 /// Executes the prepared statement.

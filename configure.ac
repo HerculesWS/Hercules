@@ -30,6 +30,7 @@ AC_CONFIG_FILES([src/char/Makefile src/login/Makefile])
 AC_CONFIG_FILES([src/map/Makefile src/plugins/Makefile src/tool/Makefile])
 AC_CONFIG_FILES([src/test/Makefile])
 AC_CONFIG_FILES([tools/HPMHookGen/Makefile])
+AC_CONFIG_FILES([tools/doxygen/Makefile])
 
 dnl AC_USE_SYSTEM_EXTENSIONS requires autoconf 2.60 or newer. Fall back to AC_GNU_SOURCE otherwise.
 m4_ifdef([AC_USE_SYSTEM_EXTENSIONS],

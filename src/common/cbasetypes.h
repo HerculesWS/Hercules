@@ -291,12 +291,12 @@ typedef uintptr_t uintptr;
 #define GCC_VERSION 0
 #endif
 
-// Pragma macro only enabled on gcc >= 4.5 or clang - borrowed from Mana Plus
-#if defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40500)
-#define PRAGMA_GCC45(str) _Pragma(#str)
-#else // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40500)
-#define PRAGMA_GCC45(str)
-#endif // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40500)
+// Pragma macro only enabled on gcc >= 4.6 or clang - borrowed from Mana Plus
+#if defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
+#define PRAGMA_GCC46(str) _Pragma(#str)
+#else // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
+#define PRAGMA_GCC46(str)
+#endif // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
 
 // fallthrough attribute only enabled on gcc >= 7.0
 #if defined(__GNUC__) && (GCC_VERSION >= 70000)
