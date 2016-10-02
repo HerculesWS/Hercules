@@ -3077,6 +3077,9 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				damage -= 50 * damage / 100;//50% reduction to physical ranged attacks
 		}
 
+		if (sc->data[SC_SU_STOOP])
+			damage -= damage * 90 / 100;
+
 		// Compressed code, fixed by map.h [Epoque]
 		if (src->type == BL_MOB) {
 			const struct mob_data *md = BL_UCCAST(BL_MOB, src);
