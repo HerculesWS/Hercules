@@ -5049,6 +5049,7 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 				ud->skilltimer=tid;
 				return skill->castend_pos(tid,tick,id,data);
 			case GN_WALLOFTHORN:
+			case SU_CN_POWDERING:
 				ud->skillx = target->x;
 				ud->skilly = target->y;
 				ud->skilltimer = tid;
@@ -10590,7 +10591,8 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case SO_ELEMENTAL_SHIELD:
 		case RL_B_TRAP:
 		case MH_XENO_SLASHER:
-			flag|=1;//Set flag to 1 to prevent deleting ammo (it will be deleted on group-delete).
+		case SU_CN_POWDERING:
+			flag |= 1; // Set flag to 1 to prevent deleting ammo (it will be deleted on group-delete).
 			FALLTHROUGH
 		case GS_GROUNDDRIFT: //Ammo should be deleted right away.
 			if ( skill_id == WM_SEVERE_RAINSTORM )
