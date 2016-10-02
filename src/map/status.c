@@ -725,6 +725,7 @@ void initChangeTables(void)
 	status->set_sc(SU_HIDE, SC_SUHIDE, SI_SUHIDE, SCB_SPEED);
 	add_sc(SU_SCRATCH, SC_BLOODING);
 	status->set_sc(SU_STOOP, SC_SU_STOOP, SI_SU_STOOP, SCB_NONE);
+	status->set_sc(SU_FRESHSHRIMP, SC_FRESHSHRIMP, SI_FRESHSHRIMP, SCB_NONE);
 
 	// Elemental Spirit summoner's 'side' status changes.
 	status->set_sc( EL_CIRCLE_OF_FIRE  , SC_CIRCLE_OF_FIRE_OPTION, SI_CIRCLE_OF_FIRE_OPTION, SCB_NONE );
@@ -7807,7 +7808,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			// Other Effects
 			case SC_VACUUM_EXTREME:
 			case SC_NETHERWORLD:
-
+			case SC_FRESHSHRIMP:
 				return 0;
 		}
 	}
@@ -9775,6 +9776,15 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				 * val2 = <OUT>attack addition
 				 **/
 				val2 = 20+(20*val1);
+				break;
+			/**
+			 * Summoner
+			 */
+			case SC_FRESHSHRIMP:
+				val4 = tick / (10000 - ((val1 - 1) * 1000));
+				tick_time = 10000 - ((val1 - 1) * 1000);
+				if (val4 <= 0) // Prevents a negeative value from happening
+					val4 = 0;
 				break;
 			default:
 				if (calc_flag == SCB_NONE && status->dbs->SkillChangeTable[type] == 0 && status->dbs->IconChangeTable[type] == 0) {
@@ -12039,6 +12049,12 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				status->heal(bl, sce->val3, 0, 0);
 				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				return 0;
+			}
+			break;
+		case SC_FRESHSHRIMP:
+			if (--(sce->val4) >= 0) {
+				status_heal(bl, st->max_hp / 100, 0, 2);
+				sc_timer_next((10000 - ((sce->val1 - 1) * 1000)) + tick, status->change_timer, bl->id, data);
 			}
 			break;
 	}
