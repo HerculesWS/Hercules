@@ -2709,6 +2709,8 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		bstatus->dex += skill_lv;
 	if((skill_lv = pc->checkskill(sd,RA_RESEARCHTRAP))>0)
 		bstatus->int_ += skill_lv;
+	if ((pc->checkskill(sd,SU_POWEROFLAND)) > 0)
+		bstatus->int_ += 20;
 
 	// Bonuses from cards and equipment as well as base stat, remember to avoid overflows.
 	i = bstatus->str + sd->status.str + sd->param_bonus[0] + sd->param_equip[0];
@@ -12245,6 +12247,10 @@ void status_get_matk_sub(struct block_list *bl, int flag, unsigned short *matk_m
 	//  Any +MATK you get from skills and cards, including cards in weapon, is added here.
 	if ( sd && sd->bonus.ematk > 0 && flag != 3 )
 		*matk_min += sd->bonus.ematk;
+	if (sd && pc->checkskill(sd, SU_POWEROFLAND) > 0) {
+		if (pc->checkskill(sd, SU_SV_STEMSPEAR) == 5 && pc->checkskill(sd, SU_CN_POWDERING) == 5 && pc->checkskill(sd, SU_CN_METEOR) == 5 && pc->checkskill(sd, SU_SV_ROOTTWIST) == 5)
+			*matk_min += *matk_min * 20 / 100;
+	}
 	if ( flag != 3 )
 		*matk_min = status->calc_ematk(bl, sc, *matk_min);
 
