@@ -1430,6 +1430,9 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		case SU_CN_METEOR:
 			sc_start(src, bl, SC_CURSE, 10, skill_lv, skill->get_time2(skill_id, skill_lv)); // TODO: What's the chance/time?
 			break;
+		case SU_SCAROFTAROU:
+			sc_start(src, bl, SC_STUN, 10, skill_lv, skill->get_time2(skill_id, skill_lv)); // TODO: What's the chance/time?
+			break;
 		default:
 			skill->additional_effect_unknown(src, bl, &skill_id, &skill_lv, &attack_type, &dmg_lv, &tick);
 			break;
@@ -4914,6 +4917,9 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 			skill->attack(skill->get_type(skill_id), src, src, bl, skill_id, skill_lv, tick, flag);
 			if (status->get_lv(src) >= 30 && (rnd() % 100 < (int)(status->get_lv(src) / 30) + 10)) // TODO: Need activation chance.
 				skill->addtimerskill(src, tick + skill->get_delay(skill_id, skill_lv), bl->id, 0, 0, skill_id, skill_lv, (skill_id == SU_SV_STEMSPEAR) ? BF_MAGIC : BF_WEAPON, flag);
+			break;
+		case SU_SCAROFTAROU:
+			sc_start(src, bl, status->skill2sc(skill_id), 10, skill_lv, skill->get_time(skill_id, skill_lv)); // TODO: What's the activation chance for the effect?
 			break;
 
 		case 0:/* no skill - basic/normal attack */
