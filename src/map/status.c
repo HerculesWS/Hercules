@@ -730,6 +730,8 @@ void initChangeTables(void)
 	status->set_sc(SU_CN_POWDERING, SC_CATNIPPOWDER, SI_CATNIPPOWDER, SCB_WATK | SCB_SPEED | SCB_REGEN);
 	add_sc(SU_CN_METEOR, SC_CURSE);
 	set_sc_with_vfx(SU_SV_ROOTTWIST, SC_SV_ROOTTWIST, SI_SV_ROOTTWIST, SCB_NONE);
+	add_sc(SU_SCAROFTAROU, SC_STUN );
+	status->set_sc(SU_SCAROFTAROU, SC_BITESCAR, SI_BITESCAR, SCB_NONE);
 
 	// Elemental Spirit summoner's 'side' status changes.
 	status->set_sc( EL_CIRCLE_OF_FIRE  , SC_CIRCLE_OF_FIRE_OPTION, SI_CIRCLE_OF_FIRE_OPTION, SCB_NONE );
