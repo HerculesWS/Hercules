@@ -2116,6 +2116,7 @@ int skill_strip_equip(struct block_list *bl, unsigned short where, int rate, int
 int skill_blown(struct block_list* src, struct block_list* target, int count, int8 dir, int flag)
 {
 	int dx = 0, dy = 0;
+	struct status_change *tsc = status->get_sc(target);
 
 	nullpo_ret(src);
 
@@ -2163,7 +2164,7 @@ int skill_blown(struct block_list* src, struct block_list* target, int count, in
 		dy = -diry[dir];
 	}
 
-	if (tsc && tsc->data[SC_SU_STOOP]) // Any knockback will cancel it.
+	if (tsc != NULL && tsc->data[SC_SU_STOOP]) // Any knockback will cancel it.
 		status_change_end(target, SC_SU_STOOP, INVALID_TIMER);
 
 	return unit->blown(target, dx, dy, count, flag); // send over the proper flag
@@ -12323,8 +12324,8 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 				}
 				break;
 		case WZ_HEAVENDRIVE:
-+			status_change_end(bl, SC_SV_ROOTTWIST, INVALID_TIMER);
-+			break;
+			status_change_end(bl, SC_SV_ROOTTWIST, INVALID_TIMER);
+			break;
 		/**
 		 * The storm gust counter was dropped in renewal
 		 **/
