@@ -2404,7 +2404,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	//Give them all modes except these (useful for clones)
 	bstatus->mode = MD_MASK&~(MD_BOSS|MD_PLANT|MD_DETECTOR|MD_ANGRY|MD_TARGETWEAK);
 
-	bstatus->size = (sd->class_&JOBL_BABY)?SZ_SMALL:SZ_MEDIUM;
+	bstatus->size = (sd->class_&JOBL_BABY || (sd->class_&MAPID_BASEMASK) == MAPID_SUMMONER)?SZ_SMALL:SZ_MEDIUM;
 	if (battle_config.character_size && (pc_isridingpeco(sd) || pc_isridingdragon(sd))) { //[Lupus]
 		if (sd->class_&JOBL_BABY) {
 			if (battle_config.character_size&SZ_BIG)
@@ -2416,7 +2416,7 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 	}
 	bstatus->aspd_rate = 1000;
 	bstatus->ele_lv = 1;
-	bstatus->race = RC_PLAYER;
+	bstatus->race = ((sd->class_&MAPID_BASEMASK) == MAPID_SUMMONER)?RC_BRUTE:RC_PLAYER;
 
 	// Autobonus
 	pc->delautobonus(sd,sd->autobonus,ARRAYLENGTH(sd->autobonus),true);
