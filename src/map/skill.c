@@ -1434,6 +1434,10 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		case SU_SCAROFTAROU:
 			sc_start(src, bl, SC_STUN, 10, skill_lv, skill->get_time2(skill_id, skill_lv)); // TODO: What's the chance/time?
 			break;
+		case SU_LUNATICCARROTBEAT:
+			if (skill->area_temp[3] == 1)
+				sc_start(src, bl, SC_STUN, 10, skill_lv, skill_get_time(skill_id, skill_lv)); // TODO: What's the chance/time?
+			break;
 		default:
 			skill->additional_effect_unknown(src, bl, &skill_id, &skill_lv, &attack_type, &dmg_lv, &tick);
 			break;
@@ -4048,6 +4052,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 		case GN_ILLUSIONDOPING:
 		case MH_XENO_SLASHER:
 		case SU_SCRATCH:
+		case SU_LUNATICCARROTBEAT:
 			if (flag&1) { //Recursive invocation
 				// skill->area_temp[0] holds number of targets in area
 				// skill->area_temp[1] holds the id of the original target
@@ -4075,6 +4080,7 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 					case LG_EARTHDRIVE:
 					case GN_CARTCANNON:
 					case SU_SCRATCH:
+					case SU_LUNATICCARROTBEAT:
 						clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 						break;
 					case SR_TIGERCANNON:
@@ -4093,13 +4099,19 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 				skill->area_temp[0] = 0;
 				skill->area_temp[1] = bl->id;
 				skill->area_temp[2] = 0;
-				if( skill_id == WL_CRIMSONROCK ) {
+				if (skill_id == WL_CRIMSONROCK) {
 					skill->area_temp[4] = bl->x;
 					skill->area_temp[5] = bl->y;
 				}
+				if (skill_id == SU_LUNATICCARROTBEAT) {
+					skill->area_temp[3] = 0;
+				}
 
-				if( skill_id == NC_VULCANARM )
-					if (sd) pc->overheat(sd,1);
+				if (skill_id == NC_VULCANARM) {
+					if (sd != NULL) {
+						pc->overheat(sd,1);
+					}
+				}
 
 				// if skill damage should be split among targets, count them
 				//SD_LEVEL -> Forced splash damage for Auto Blitz-Beat -> count targets
@@ -4109,6 +4121,15 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 
 				// recursive invocation of skill->castend_damage_id() with flag|1
 				map->foreachinrange(skill->area_sub, bl, skill->get_splash(skill_id, skill_lv), skill->splash_target(src), src, skill_id, skill_lv, tick, flag|BCT_ENEMY|SD_SPLASH|1, skill->castend_damage_id);
+
+				if (sd && skill_id == SU_LUNATICCARROTBEAT) {
+					short item_idx = pc->search_inventory(sd, ITEMID_CARROT);
+
+					if (item_idx >= 0) {
+						pc->delitem(sd, item_idx, 1, 0, 1, LOG_TYPE_CONSUME);
+						skill->area_temp[3] = 1;
+					}
+				}
 			}
 			break;
 
