@@ -365,7 +365,10 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 sk
 
 	nullpo_ret(src);
 
-	switch( skill_id ) {
+	switch (skill_id) {
+		case SU_TUNABELLY:
+			hp = status_get_max_hp(target) * ((20 * skill_lv) - 10) / 100;
+			break;
 		case BA_APPLEIDUN:
 #ifdef RENEWAL
 			hp = 100+5*skill_lv+5*(status_get_vit(src)/10); // HP recovery
@@ -5553,6 +5556,10 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		 * Arch Bishop
 		 **/
 		case AB_HIGHNESSHEAL:
+		/**
+		 * Summoner
+		 */
+		case SU_TUNABELLY:
 			{
 				int heal = skill->calc_heal(src, bl, (skill_id == AB_HIGHNESSHEAL)?AL_HEAL:skill_id, (skill_id == AB_HIGHNESSHEAL)?10:skill_lv, true);
 				int heal_get_jobexp;
@@ -9545,7 +9552,6 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
 			break;
-
 		case GM_SANDMAN:
 			if( tsc ) {
 				if( tsc->opt1 == OPT1_SLEEP )
