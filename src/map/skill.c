@@ -5583,6 +5583,9 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 					else if (tsc->data[SC_BERSERK])
 						heal = 0; //Needed so that it actually displays 0 when healing.
 				}
+				if (skill_id == AL_HEAL) {
+					status_change_end(bl, SC_BITESCAR, INVALID_TIMER);
+				}
 				clif->skill_nodamage (src, bl, skill_id, heal, 1);
 				if( tsc && tsc->data[SC_AKAITSUKI] && heal && skill_id != HLIF_HEAL )
 					heal = ~heal + 1;
@@ -6745,7 +6748,8 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			status_change_end(bl, SC_SILENCE, INVALID_TIMER);
 			status_change_end(bl, SC_BLIND, INVALID_TIMER);
 			status_change_end(bl, SC_CONFUSION, INVALID_TIMER);
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+			status_change_end(bl, SC_BITESCAR, INVALID_TIMER);
+			clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 			break;
 
 		case TF_DETOXIFY:
