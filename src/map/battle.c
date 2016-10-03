@@ -7320,6 +7320,7 @@ static const struct battle_data {
 	{ "save_body_style",                    &battle_config.save_body_style,                 0,      0,      1,              },
 	{ "player_warp_keep_direction",         &battle_config.player_warp_keep_direction,      0,      0,      1,              },
 	{ "atcommand_levelup_events",	        &battle_config.atcommand_levelup_events,	    0,      0,      1,				},
+	{ "max_summoner_parameter",             &battle_config.max_summoner_parameter,          120,    10,     10000,          },
 };
 #ifndef STATS_OPT_OUT
 /**
