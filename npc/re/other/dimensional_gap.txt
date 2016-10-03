@@ -527,7 +527,7 @@ dali02,65,119,5	script	Tourist#ra	4_M_RAFLE_GR,{
 	mes("No no this has to be Thanatos Tower... I sense dark magic here.");
 	next();
 	mes("[Guide]");
-	mes("Oh, we're back here again. I cannot find a way out!	 We are trapped in this maze!");
+	mes("Oh, we're back here again. I cannot find a way out! We are trapped in this maze!");
 	next();
 	mes("[Traveller]");
 	mes("I hear a ticking clock. This place must be Geffen!");
