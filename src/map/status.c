@@ -2863,6 +2863,8 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		sd->critical_rate = 0;
 	if(sd->critical_rate != 100)
 		bstatus->cri = bstatus->cri * sd->critical_rate/100;
+	if (pc->checkskill(sd, SU_POWEROFLIFE) > 0)
+		bstatus->cri += 20;
 
 	if(sd->flee2_rate < 0)
 		sd->flee2_rate = 0;
@@ -2895,6 +2897,8 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		bstatus->hit += 3*skill_lv;
 	if((sd->status.weapon == W_MACE || sd->status.weapon == W_2HMACE) && (skill_lv = pc->checkskill(sd,NC_TRAININGAXE)) > 0)
 		bstatus->hit += 2*skill_lv;
+	if (pc->checkskill(sd, SU_POWEROFLIFE) > 0)
+		bstatus->hit += 20;
 
 	// ----- FLEE CALCULATION -----
 
@@ -2903,6 +2907,8 @@ int status_calc_pc_(struct map_session_data* sd, enum e_status_calc_opt opt)
 		bstatus->flee += skill_lv*(sd->class_&JOBL_2 && (sd->class_&MAPID_BASEMASK) == MAPID_THIEF? 4 : 3);
 	if((skill_lv=pc->checkskill(sd,MO_DODGE))>0)
 		bstatus->flee += (skill_lv*3)>>1;
+	if (pc->checkskill(sd, SU_POWEROFLIFE) > 0)
+		bstatus->flee += 20;
 	// ----- EQUIPMENT-DEF CALCULATION -----
 
 	// Apply relative modifiers from equipment

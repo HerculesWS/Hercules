@@ -5217,7 +5217,15 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 				if (hd != NULL)
 					ATK_ADD(hd->homunculus.spiritball * 3);
 			}
+			if ((wd.flag&(BF_LONG|BF_MAGIC)) == BF_LONG) {
+				if (sd != NULL && pc->checkskill(sd, SU_POWEROFLIFE) > 0) {
+					if (pc->checkskill(sd, SU_SCAROFTAROU) == 5 && pc->checkskill(sd, SU_PICKYPECK) == 5 && pc->checkskill(sd, SU_ARCLOUSEDASH) == 5 && pc->checkskill(sd, SU_LUNATICCARROTBEAT) == 5) {
+						ATK_ADDRATE(20);
+					}
+				}
+			}
 		}
+
 
 		switch (skill_id) {
 			case AS_SONICBLOW:
