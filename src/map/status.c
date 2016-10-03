@@ -3626,6 +3626,10 @@ void status_calc_regen_rate(struct block_list *bl, struct regen_data *regen, str
 		regen->rate.hp += regen->rate.hp * sc->data[SC_BUCHEDENOEL]->val1 / 100;
 		regen->rate.sp += regen->rate.sp * sc->data[SC_BUCHEDENOEL]->val2 / 100;
 	}
+	if (sc->data[SC_CATNIPPOWDER]) {
+		regen->rate.hp *= 2;
+		regen->rate.sp *= 2;
+	}
 }
 
 #define status_get_homstr(st, hd) ((st)->str + (hd)->homunculus.str_value)
@@ -5056,6 +5060,8 @@ unsigned short status_calc_watk(struct block_list *bl, struct status_change *sc,
 		watk += watk * sc->data[SC_ANGRIFFS_MODUS]->val2/100;
 	if( sc->data[SC_FLASHCOMBO] )
 		watk += sc->data[SC_FLASHCOMBO]->val2;
+	if (sc->data[SC_CATNIPPOWDER])
+		watk -= watk * sc->data[SC_CATNIPPOWDER]->val2 / 100;
 
 	return (unsigned short)cap_value(watk,0,USHRT_MAX);
 }
@@ -5771,6 +5777,8 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 						if (sc->data[SC_DEC_AGI] || sc->data[SC_QUAGMIRE] || sc->data[SC_DONTFORGETME])
 							return 0;
 					}
+					if (sc->data[SC_CATNIPPOWDER])
+						val = max(val, sc->data[SC_CATNIPPOWDER]->val3);
 
 					if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate > 0 ) // permanent item-based speedup
 						val = max( val, sd->bonus.speed_rate + sd->bonus.speed_add_rate );
@@ -9836,6 +9844,10 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_SHRIMP:
 				val2 = 10; // BATK%, MATK%
 				break;
+			case SC_CATNIPPOWDER:
+				val2 = 50; // WATK%, MATK%
+				val3 = 25 * val1; // Move speed reduction
+				break;
 			default:
 				if (calc_flag == SCB_NONE && status->dbs->SkillChangeTable[type] == 0 && status->dbs->IconChangeTable[type] == 0) {
 					//Status change with no calc, no icon, and no skill associated...?
@@ -12317,6 +12329,8 @@ void status_get_matk_sub(struct block_list *bl, int flag, unsigned short *matk_m
 			if ( (st->rhw.matk + st->lhw.matk) > 0 ) {
 				int wMatk = st->rhw.matk + st->lhw.matk; // Left and right matk stacks
 				int variance = wMatk * st->rhw.wlv / 10; // Only use right hand weapon level
+				if (sc != NULL && sc->data[SC_CATNIPPOWDER])
+					wMatk -= wMatk * sc->data[SC_CATNIPPOWDER]->val2 / 100;
 				*matk_min += wMatk - variance;
 				*matk_max += wMatk + variance;
 			}
