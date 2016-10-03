@@ -9546,6 +9546,16 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
 			break;
+		case SU_TUNABELLY: {
+			int heal = 0;
+			if (dstmd != NULL || dstmd->class_ != MOBID_EMPELIUM || !mob_is_battleground(dstmd)) {
+				heal = ((2 * skill_lv - 1) * 10) * status_get_max_hp(bl) / 100;
+				status->heal(bl, heal, 0, 0);
+			}
+
+			clif->skill_nodamage(src, bl, skill_id, heal, 1);
+			}
+			break;
 
 		case GM_SANDMAN:
 			if( tsc ) {
