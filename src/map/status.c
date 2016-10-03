@@ -735,6 +735,7 @@ void initChangeTables(void)
 	status->set_sc(SU_ARCLOUSEDASH, SC_ARCLOUSEDASH, SI_ARCLOUSEDASH, SCB_AGI | SCB_SPEED);
 	add_sc(SU_LUNATICCARROTBEAT, SC_STUN);
 	status->set_sc(SU_TUNAPARTY, SC_TUNAPARTY, SI_TUNAPARTY, SCB_NONE);
+	status->set_sc(SU_BUNCHOFSHRIMP, SC_SHRIMP, SI_SHRIMP, SCB_BATK | SCB_MATK);
 
 	// Elemental Spirit summoner's 'side' status changes.
 	status->set_sc( EL_CIRCLE_OF_FIRE  , SC_CIRCLE_OF_FIRE_OPTION, SI_CIRCLE_OF_FIRE_OPTION, SCB_NONE );
