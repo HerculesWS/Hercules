@@ -131,7 +131,7 @@
 #define MAX_FAME 1000000000
 #define MAX_CART 100
 #ifndef MAX_SKILL
-#define MAX_SKILL 1478
+#define MAX_SKILL 1510
 #endif
 #ifndef MAX_SKILL_ID
 #define MAX_SKILL_ID 10015   // [Ind/Hercules] max used skill ID
