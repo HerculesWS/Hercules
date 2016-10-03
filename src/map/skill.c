@@ -3990,6 +3990,10 @@ int skill_castend_damage_id(struct block_list* src, struct block_list *bl, uint1
 				skill->addtimerskill(src, tick + skill->get_delay(skill_id, skill_lv), bl->id, 0, 0, skill_id, skill_lv, BF_WEAPON, flag);
 			break;
 
+		case SU_PICKYPECK:
+			clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
+			break;
+
 		// Splash attack skills.
 		case AS_GRIMTOOTH:
 		case MC_CARTREVOLUTION:

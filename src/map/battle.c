@@ -1677,6 +1677,12 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 				case SU_SCAROFTAROU:
 					skillratio += -100 + 100 * skill_lv;
 					break;
+				case SU_PICKYPECK:
+				case SU_PICKYPECK_DOUBLE_ATK:
+					skillratio += 100 + 100 * skill_lv;
+					if ((status_get_max_hp(target) / 100) <= 50)
+						skillratio *= 2;
+					break;
 				/**
 				 * Arch Bishop
 				**/
