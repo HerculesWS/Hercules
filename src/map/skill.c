@@ -397,6 +397,11 @@ int skill_calc_heal(struct block_list *src, struct block_list *target, uint16 sk
 				hp += hp * skill2_lv * 2 / 100;
 			else if (src->type == BL_HOM && (skill2_lv = homun->checkskill(BL_UCAST(BL_HOM, src), HLIF_BRAIN)) > 0)
 				hp += hp * skill2_lv * 2 / 100;
+			if (sd != NULL && ((skill2_lv = pc->checkskill(sd, SU_POWEROFSEA)) > 0)) {
+				hp += hp * 10 / 100;
+				if (pc->checkskill(sd, SU_TUNABELLY) == 5 && pc->checkskill(sd, SU_TUNAPARTY) == 5 && pc->checkskill(sd, SU_BUNCHOFSHRIMP) == 5 && pc->checkskill(sd, SU_FRESHSHRIMP) == 5)
+					hp += hp * 20 / 100;
+			}
 			break;
 	}
 
