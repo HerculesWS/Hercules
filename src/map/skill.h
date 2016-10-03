@@ -1696,6 +1696,9 @@ enum {
 	UNT_B_TRAP,
 	UNT_FIRE_RAIN,
 
+	UNT_CATNIPPOWDER,
+	UNT_SV_ROOTTWIST,
+
 	/**
 	 * Guild Auras
 	 **/
