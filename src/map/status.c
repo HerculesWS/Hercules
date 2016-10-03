@@ -729,6 +729,7 @@ void initChangeTables(void)
 	add_sc(SU_SV_STEMSPEAR, SC_BLOODING);
 	status->set_sc(SU_CN_POWDERING, SC_CATNIPPOWDER, SI_CATNIPPOWDER, SCB_WATK | SCB_SPEED | SCB_REGEN);
 	add_sc(SU_CN_METEOR, SC_CURSE);
+	set_sc_with_vfx(SU_SV_ROOTTWIST, SC_SV_ROOTTWIST, SI_SV_ROOTTWIST, SCB_NONE);
 
 	// Elemental Spirit summoner's 'side' status changes.
 	status->set_sc( EL_CIRCLE_OF_FIRE  , SC_CIRCLE_OF_FIRE_OPTION, SI_CIRCLE_OF_FIRE_OPTION, SCB_NONE );
@@ -7805,12 +7806,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_OBLIVIONCURSE:
 			case SC_LEECHESEND:
 
-				// Ranger Effects
+			// Ranger Effects
 			case SC_WUGBITE:
 			case SC_ELECTRICSHOCKER:
 			case SC_MAGNETICFIELD:
 
-				// Masquerades
+			// Masquerades
 			case SC__ENERVATION:
 			case SC__GROOMY:
 			case SC__LAZINESS:
@@ -7822,6 +7823,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_VACUUM_EXTREME:
 			case SC_NETHERWORLD:
 			case SC_FRESHSHRIMP:
+			case SC_SV_ROOTTWIST:
 				return 0;
 		}
 	}
@@ -10011,6 +10013,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 		case SC_NEEDLE_OF_PARALYZE:
 		case SC_DEATHBOUND:
 		case SC_NETHERWORLD:
+		case SC_SV_ROOTTWIST:
 			unit->stop_walking(bl, STOPWALKING_FLAG_FIXPOS);
 			break;
 		case SC_ANKLESNARE:
@@ -10869,10 +10872,11 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			break;
 		case SC_NEUTRALBARRIER_MASTER:
 		case SC_STEALTHFIELD_MASTER:
-			if( sce->val2 ) {
+		case SC_SV_ROOTTWIST:
+			if (sce->val2) {
 				struct skill_unit_group* group = skill->id2group(sce->val2);
 				sce->val2 = 0;
-				if( group ) /* might have been cleared before status ended, e.g. land protector */
+				if (group) /* might have been cleared before status ended, e.g. land protector */
 					skill->del_unitgroup(group,ALC_MARK);
 			}
 			break;

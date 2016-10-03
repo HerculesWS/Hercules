@@ -3694,6 +3694,12 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 				//Damage calculation from iRO wiki. [Jobbie]
 				ad.damage = status->get_lv(src) * 10 + sstatus->int_;
 				break;
+			/**
+			 * Summoner
+			 */
+			case SU_SV_ROOTTWIST_ATK:
+				ad.damage = 100;
+				break;
 			default: {
 				unsigned int skillratio = 100; //Skill dmg modifiers.
 				MATK_ADD( status->get_matk(src, 2) );
