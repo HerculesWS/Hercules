@@ -12113,6 +12113,13 @@ int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int64 tick
 				sc_start(ss, bl, SC_VOLCANIC_ASH, 100, sg->skill_lv, skill->get_time(MH_VOLCANIC_ASH, sg->skill_lv));
 			break;
 
+		case UNT_CATNIPPOWDER:
+			if (sg->src_id == bl->id || (status_get_mode(bl)&MD_BOSS))
+				break; // Does not affect the caster or Boss.
+			if (sce == NULL && battle->check_target(&src->bl, bl, BCT_ENEMY) > 0)
+				sc_start(ss, bl, type, 100, sg->skill_lv, skill->get_time(sg->skill_id, sg->skill_lv));
+			break;
+
 		case UNT_GD_LEADERSHIP:
 		case UNT_GD_GLORYWOUNDS:
 		case UNT_GD_SOULCOLD:
