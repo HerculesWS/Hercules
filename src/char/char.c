@@ -4652,7 +4652,7 @@ void char_parse_char_create_new_char(int fd, struct char_session_data* sd)
 	}
 #if PACKETVER >= 20151001
 	RFIFOSKIP(fd, 36);
-#if PACKETVER >= 20120307
+#elif PACKETVER >= 20120307
 	RFIFOSKIP(fd, 31);
 #else
 	RFIFOSKIP(fd, 37);
