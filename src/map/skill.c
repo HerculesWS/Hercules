@@ -5054,6 +5054,7 @@ int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 				return skill->castend_pos(tid,tick,id,data);
 			case GN_WALLOFTHORN:
 			case SU_CN_POWDERING:
+			case SU_SV_ROOTTWIST:
 				ud->skillx = target->x;
 				ud->skilly = target->y;
 				ud->skilltimer = tid;
@@ -8967,6 +8968,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 		case LG_TRAMPLE:
 			clif->skill_damage(src,bl,tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, BDT_SKILL);
 			map->foreachinrange(skill->destroy_trap,bl,skill->get_splash(skill_id,skill_lv),BL_SKILL,tick);
+			status_change_end(bl, SC_SV_ROOTTWIST, INVALID_TIMER);
 			break;
 
 		case LG_REFLECTDAMAGE:
@@ -10597,6 +10599,7 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		case RL_B_TRAP:
 		case MH_XENO_SLASHER:
 		case SU_CN_POWDERING:
+		case SU_SV_ROOTTWIST:
 			flag |= 1; // Set flag to 1 to prevent deleting ammo (it will be deleted on group-delete).
 			FALLTHROUGH
 		case GS_GROUNDDRIFT: //Ammo should be deleted right away.
@@ -12252,6 +12255,9 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 					map->freeblock_unlock();
 				}
 				break;
+		case WZ_HEAVENDRIVE:
++			status_change_end(bl, SC_SV_ROOTTWIST, INVALID_TIMER);
++			break;
 		/**
 		 * The storm gust counter was dropped in renewal
 		 **/
@@ -12835,6 +12841,30 @@ int skill_unit_onplace_timer(struct skill_unit *src, struct block_list *bl, int6
 			skill->attack(BF_MAGIC, ss, &src->bl, bl, sg->skill_id, sg->skill_lv, tick, 0);
 			status->change_start(ss, bl, SC_BLIND, rnd() % 100 > sg->skill_lv * 10, sg->skill_lv, sg->skill_id, 0, 0,
 			                     skill->get_time2(sg->skill_id, sg->skill_lv), SCFLAG_FIXEDTICK|SCFLAG_FIXEDRATE);
+			break;
+		case UNT_SV_ROOTTWIST:
+			if (status_get_mode(bl)&MD_BOSS) {
+				break;
+			}
+			if (tsc) {
+				if (!sg->val2) {
+					int sec = skill->get_time(sg->skill_id, sg->skill_lv);
+
+					if (sc_start2(ss, bl, type, 100, sg->skill_lv, sg->group_id, sec)) {
+						const struct TimerData* td = ((tsc->data[type])? timer->get(tsc->data[type]->timer) : NULL);
+
+						if (td != NULL)
+							sec = DIFF_TICK32(td->tick, tick);
+						clif->fixpos(bl);
+						sg->val2 = bl->id;
+					} else { // Couldn't trap it?
+						sec = 7000;
+					}
+					sg->limit = DIFF_TICK32(tick, sg->tick) + sec;
+				} else if (tsc->data[type] && bl->id == sg->val2) {
+					skill->attack(skill->get_type(SU_SV_ROOTTWIST_ATK), ss, &src->bl, bl, SU_SV_ROOTTWIST_ATK, sg->skill_lv, tick, SD_LEVEL|SD_ANIMATION);
+				}
+			}
 			break;
 		default:
 			skill->unit_onplace_timer_unknown(src, bl, &tick);
