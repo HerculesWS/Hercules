@@ -3806,13 +3806,15 @@ void status_calc_bl_main(struct block_list *bl, /*enum scb_flag*/int flag)
 	}
 
 	if(flag&SCB_CRI && bst->cri) {
-		if (st->luk == bst->luk)
+		if (st->luk == bst->luk) {
 			st->cri = status->calc_critical(bl, sc, bst->cri, true);
-		else
+		} else {
 			st->cri = status->calc_critical(bl, sc, bst->cri + 3*(st->luk - bst->luk), true);
+		}
+		if (battle_config.show_katar_crit_bonus && bl->type == BL_PC && BL_UCAST(BL_PC, bl)->status.weapon == W_KATAR) {
+			st->cri <<= 1;
+		}
 	}
-	if (battle_config.show_katar_crit_bonus && bl->type == BL_PC && BL_UCAST(BL_PC, bl)->status.weapon == W_KATAR)
-		st->cri <<= 1;
 
 	if(flag&SCB_FLEE2 && bst->flee2) {
 		if (st->luk == bst->luk)
