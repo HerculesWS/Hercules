@@ -6723,13 +6723,16 @@ BUILDIN(percentheal)
 	}
 
 	sd = script->rid2sd(st);
-	if( sd == NULL )
+	if (sd == NULL)
 		return true;
 #ifdef RENEWAL
 	if( sd->sc.data[SC_EXTREMITYFIST2] )
 		sp = 0;
 #endif
-	pc->percentheal(sd,hp,sp);
+	if (sd->sc.data[SC_BITESCAR]) {
+		hp = 0;
+	}
+	pc->percentheal(sd, hp, sp);
 	return true;
 }
 

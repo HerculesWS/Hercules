@@ -8408,6 +8408,9 @@ int pc_itemheal(struct map_session_data *sd,int itemid, int hp,int sp)
 		if( sd->sc.data[SC_EXTREMITYFIST2] )
 			sp = 0;
 #endif
+		if (sd->sc.data[SC_BITESCAR]) {
+			hp = 0;
+		}
 	}
 
 	return status->heal(&sd->bl, hp, sp, 1);
