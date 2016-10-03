@@ -17,6 +17,7 @@
 //= Copyright (C)  L0ne_W0lf
 //= Copyright (C)  Samuray22
 //= Copyright (C)  Lupus
+//= Copyright (C)  Nova
 //=
 //= Hercules is free software: you can redistribute it and/or modify
 //= it under the terms of the GNU General Public License as published by
@@ -33,7 +34,7 @@
 //=========================================================================
 //= Mapflag: Disable Warp Portal memory.
 //================= Current Version =======================================
-//= 1.8.2
+//= 1.8.3
 //================= Description ===========================================
 //= Prevents players from using /memo on a map.
 //= Also disables marriage warp skills.
@@ -783,6 +784,8 @@ ecl_tdun04	mapflag	nomemo
 ecl_hub01	mapflag	nomemo
 moc_prydn1	mapflag	nomemo
 moc_prydn2	mapflag	nomemo
+dali	mapflag	nomemo
+dali02	mapflag	nomemo
 c_tower2_	mapflag	nomemo
 c_tower3_	mapflag	nomemo
 gl_chyard_	mapflag	nomemo
