@@ -1749,7 +1749,7 @@ int pc_calc_skilltree_normalize_job(struct map_session_data *sd)
 	sd->sktree.second = sd->sktree.third = 0;
 
 	// limit 1st class and above to novice job levels
-	if(skill_point < novice_skills) {
+	if(skill_point < novice_skills && (sd->class_&MAPID_BASEMASK) != MAPID_SUMMONER) {
 		c = MAPID_NOVICE;
 	}
 	// limit 2nd class and above to first class job levels (super novices are exempt)
