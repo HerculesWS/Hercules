@@ -9553,6 +9553,16 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
 			sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
 			break;
+			break;
+
+		case SU_BUNCHOFSHRIMP:
+			if (sd == NULL || sd->status.party_id == 0 || flag&1) {
+				clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv)));
+			} else if (sd != NULL) {
+				party->foreachsamemap(skill->area_sub, sd, skill->get_splash(skill_id, skill_lv), src, skill_id, skill_lv, tick, flag|BCT_PARTY|1, skill->castend_nodamage_id);
+			}
+			break;
+
 		case GM_SANDMAN:
 			if( tsc ) {
 				if( tsc->opt1 == OPT1_SLEEP )
