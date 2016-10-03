@@ -732,6 +732,7 @@ void initChangeTables(void)
 	set_sc_with_vfx(SU_SV_ROOTTWIST, SC_SV_ROOTTWIST, SI_SV_ROOTTWIST, SCB_NONE);
 	add_sc(SU_SCAROFTAROU, SC_STUN );
 	status->set_sc(SU_SCAROFTAROU, SC_BITESCAR, SI_BITESCAR, SCB_NONE);
+	status->set_sc(SU_ARCLOUSEDASH, SC_ARCLOUSEDASH, SI_ARCLOUSEDASH, SCB_AGI | SCB_SPEED);
 
 	// Elemental Spirit summoner's 'side' status changes.
 	status->set_sc( EL_CIRCLE_OF_FIRE  , SC_CIRCLE_OF_FIRE_OPTION, SI_CIRCLE_OF_FIRE_OPTION, SCB_NONE );
@@ -4619,8 +4620,11 @@ unsigned short status_calc_agi(struct block_list *bl, struct status_change *sc, 
 	if (sc->data[SC_2011RWC])
 		agi += sc->data[SC_2011RWC]->val1;
 
-	if(sc->data[SC_MARSHOFABYSS])
+	if (sc->data[SC_MARSHOFABYSS])
 		agi -= agi * sc->data[SC_MARSHOFABYSS]->val2 / 100;
+
+	if (sc->data[SC_ARCLOUSEDASH])
+		agi += sc->data[SC_ARCLOUSEDASH]->val2;
 
 	return (unsigned short)cap_value(agi,0,USHRT_MAX);
 }
@@ -5809,6 +5813,8 @@ unsigned short status_calc_speed(struct block_list *bl, struct status_change *sc
 				val = max(val, sc->data[SC_MOVHASTE_HORSE]->val1);
 			if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate < 0 ) // permanent item-based speedup
 				val = max( val, -(sd->bonus.speed_rate + sd->bonus.speed_add_rate) );
+			if (sc->data[SC_ARCLOUSEDASH])
+				val = max(val, sc->data[SC_ARCLOUSEDASH]->val3);
 
 			speed_rate -= val;
 		}
@@ -9803,6 +9809,12 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				if (val4 <= 0) // Prevents a negeative value from happening
 					val4 = 0;
 				break;
+			case SC_ARCLOUSEDASH:
++				val2 = 15 + 5 * val1; // AGI
++				val3 = 25; // Move speed increase
++				if (sd && (sd->class_&MAPID_BASEMASK) == MAPID_SUMMONER)
++					val4 = 10; // Ranged ATK increase
++				break;
 			default:
 				if (calc_flag == SCB_NONE && status->dbs->SkillChangeTable[type] == 0 && status->dbs->IconChangeTable[type] == 0) {
 					//Status change with no calc, no icon, and no skill associated...?
