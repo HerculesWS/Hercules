@@ -4959,6 +4959,9 @@ unsigned short status_calc_batk(struct block_list *bl, struct status_change *sc,
 	if (sc->data[SC_STEAMPACK])
 		batk += sc->data[SC_STEAMPACK]->val1;
 
+	if (sc->data[SC_SHRIMP])
+		batk += batk * sc->data[SC_SHRIMP]->val2 / 100;
+
 	return (unsigned short)cap_value(batk,0,USHRT_MAX);
 }
 
@@ -5078,6 +5081,8 @@ unsigned short status_calc_ematk(struct block_list *bl, struct status_change *sc
 		matk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1; //70 lvl1, 100lvl2
 	if(sc->data[SC_IZAYOI])
 		matk += 25 * sc->data[SC_IZAYOI]->val1;
+	if (sc->data[SC_SHRIMP])
+		matk += matk * sc->data[SC_SHRIMP]->val2 / 100;
 	return (unsigned short)cap_value(matk,0,USHRT_MAX);
 #else
 	return 0;
@@ -9826,6 +9831,9 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				val2 = 2 * val1; // MHP% damage
 				val4 = tick / 1000;
 				tick_time = 1000;
+				break;
+			case SC_SHRIMP:
+				val2 = 10; // BATK%, MATK%
 				break;
 			default:
 				if (calc_flag == SCB_NONE && status->dbs->SkillChangeTable[type] == 0 && status->dbs->IconChangeTable[type] == 0) {
