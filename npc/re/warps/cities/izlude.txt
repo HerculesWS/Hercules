@@ -83,6 +83,7 @@ OnTouch:
 
 OnInit:
 	questinfo(21001, QTYPE_QUEST, 1, Job_Novice);
+	end;
 }
 
 iz_int,47,30,3	script	noviship#room1-2	WARPNPC,2,2,{
@@ -100,30 +101,31 @@ iz_int,56,15,0	script	noviship	WARPNPC,2,2,{
 OnTouch:
 	savepoint("int_land"+strnpcinfo(NPC_NAME_HIDDEN), 77, 101);
 	warp("int_land"+strnpcinfo(NPC_NAME_HIDDEN), 85, 107);
+	end;
 }
 
 int_land,49,57,0	script	noviship#izlude	WARPNPC,2,2,{
 	end;
 
 OnTouch:
-	mes "^4d4dffOnce you left this island there is no way back.";
-	mes "Are you sure you want to go directly to Izlude?^000000";
-	next;
-	mes "^4d4dffIf you do, the quest got deleted from your Quest Log.^000000";
-	next;
+	mes("^4d4dffOnce you left this island there is no way back.");
+	mes("Are you sure you want to go directly to Izlude?^000000");
+	next();
+	mes("^4d4dffIf you do, the quest got deleted from your Quest Log.^000000");
+	next();
 	if (select("Do not go to Izlude yet", "Sail to Izlude!") == 1) {
-		mes "[Sailor]";
-		mes "You want to stay here longer?";
-		mes "Good, then I wait until you're ready~";
+		mes("[Sailor]");
+		mes("You want to stay here longer?");
+		mes("Good, then I wait until you're ready~");
 		close();
 	}
-	mes "[Sailor]";
-	mes "Lets head toward Izlude!";
-	close2;
+	mes("[Sailor]");
+	mes("Lets head toward Izlude!");
+	close2();
 	if (questprogress(21001))
-		erasequest 21001;
+		erasequest(21001);
 	if (questprogress(21002))
-		erasequest 21002;
+		erasequest(21002);
 	warp("izlude"+strnpcinfo(NPC_NAME_HIDDEN), 196, 209);
 	end;
 }
