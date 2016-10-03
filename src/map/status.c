@@ -734,6 +734,7 @@ void initChangeTables(void)
 	status->set_sc(SU_SCAROFTAROU, SC_BITESCAR, SI_BITESCAR, SCB_NONE);
 	status->set_sc(SU_ARCLOUSEDASH, SC_ARCLOUSEDASH, SI_ARCLOUSEDASH, SCB_AGI | SCB_SPEED);
 	add_sc(SU_LUNATICCARROTBEAT, SC_STUN);
+	status->set_sc(SU_TUNAPARTY, SC_TUNAPARTY, SI_TUNAPARTY, SCB_NONE);
 
 	// Elemental Spirit summoner's 'side' status changes.
 	status->set_sc( EL_CIRCLE_OF_FIRE  , SC_CIRCLE_OF_FIRE_OPTION, SI_CIRCLE_OF_FIRE_OPTION, SCB_NONE );
@@ -7552,6 +7553,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				return 0;
 			break;
 		case SC_KYRIE:
+		case SC_TUNAPARTY:
 			if (bl->type == BL_MOB)
 				return 0;
 			break;
@@ -9811,11 +9813,14 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 					val4 = 0;
 				break;
 			case SC_ARCLOUSEDASH:
-+				val2 = 15 + 5 * val1; // AGI
-+				val3 = 25; // Move speed increase
-+				if (sd && (sd->class_&MAPID_BASEMASK) == MAPID_SUMMONER)
-+					val4 = 10; // Ranged ATK increase
-+				break;
+				val2 = 15 + 5 * val1; // AGI
+				val3 = 25; // Move speed increase
+				if (sd && (sd->class_&MAPID_BASEMASK) == MAPID_SUMMONER)
+					val4 = 10; // Ranged ATK increase
+				break;
+			case SC_TUNAPARTY:
+				val2 = (st->max_hp * (val1 * 10) / 100); // %Max HP to absorb
+				break;
 			default:
 				if (calc_flag == SCB_NONE && status->dbs->SkillChangeTable[type] == 0 && status->dbs->IconChangeTable[type] == 0) {
 					//Status change with no calc, no icon, and no skill associated...?
