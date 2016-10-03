@@ -5304,6 +5304,9 @@ struct Damage battle_calc_weapon_attack(struct block_list *src,struct block_list
 			if( sc && sc->data[SC_MTF_RANGEATK] )
 				ATK_ADDRATE(sc->data[SC_MTF_RANGEATK]->val1);// temporary it should be 'bonus.long_attack_atk_rate'
 	#endif
+			if (sc != NULL && sc->data[SC_ARCLOUSEDASH] != NULL && sc->data[SC_ARCLOUSEDASH]->val4 != 0) {
+				ATK_ADDRATE(sc->data[SC_ARCLOUSEDASH]->val4);
+			}
 			if( (i=pc->checkskill(sd,AB_EUCHARISTICA)) > 0 &&
 				(tstatus->race == RC_DEMON || tstatus->def_ele == ELE_DARK) )
 				ATK_ADDRATE(-i);
