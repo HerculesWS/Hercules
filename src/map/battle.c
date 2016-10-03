@@ -1683,6 +1683,9 @@ int battle_calc_skillratio(int attack_type, struct block_list *src, struct block
 					if ((status_get_max_hp(target) / 100) <= 50)
 						skillratio *= 2;
 					break;
+				case SU_LUNATICCARROTBEAT:
+					skillratio += 100 + 100 * skill_lv;
+					break;
 				/**
 				 * Arch Bishop
 				**/
