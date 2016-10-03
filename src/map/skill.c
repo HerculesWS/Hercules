@@ -5968,6 +5968,7 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case PR_KYRIE:
 		case MER_KYRIE:
+		case SU_TUNAPARTY:
 			clif->skill_nodamage(bl, bl, skill_id, -1,
 				sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv)));
 			break;
