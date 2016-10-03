@@ -7836,6 +7836,7 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 			case SC_NETHERWORLD:
 			case SC_FRESHSHRIMP:
 			case SC_SV_ROOTTWIST:
+			case SC_BITESCAR:
 				return 0;
 		}
 	}
@@ -9821,6 +9822,11 @@ int status_change_start(struct block_list *src, struct block_list *bl, enum sc_t
 				break;
 			case SC_TUNAPARTY:
 				val2 = (st->max_hp * (val1 * 10) / 100); // %Max HP to absorb
+				break;
+			case SC_BITESCAR:
+				val2 = 2 * val1; // MHP% damage
+				val4 = tick / 1000;
+				tick_time = 1000;
 				break;
 			default:
 				if (calc_flag == SCB_NONE && status->dbs->SkillChangeTable[type] == 0 && status->dbs->IconChangeTable[type] == 0) {
@@ -12093,6 +12099,13 @@ int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			if (--(sce->val4) >= 0) {
 				status_heal(bl, st->max_hp / 100, 0, 2);
 				sc_timer_next((10000 - ((sce->val1 - 1) * 1000)) + tick, status->change_timer, bl->id, data);
+			}
+			break;
+		case SC_BITESCAR:
+			if (--(sce->val4) >= 0) {
+				status_percent_damage(bl, bl, -(sce->val2), 0, 0);
+				sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
+				return 0;
 			}
 			break;
 	}
