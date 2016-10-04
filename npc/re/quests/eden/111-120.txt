@@ -41,7 +41,7 @@
 
 moc_para01,17,95,5	script	Mingmin#1	4_F_GENETIC,{
 	mes "[Mingmin]";
-	if (!countitem(Para_Team_Mark)) {// Para_Team_Mark
+	if (!countitem(Para_Team_Mark) && !countitem(Para_Team_Mark_)) {
 		cutin "min02",0;
 		mes "A stranger. This place is supposed to be for Eden Group Members only.";
 		mes "I'm in need base level ^FF0000111 - 120^000000 adventurers to help my research.";

@@ -52,7 +52,7 @@ moc_para01,37,95,5	script	Gelkah#1	4_F_GELKA,{
 		end;
 	}
 	mes "[Gelkah]";
-	if (!countitem(Para_Team_Mark)) {
+	if (!countitem(Para_Team_Mark) && !countitem(Para_Team_Mark_)) {
 		mes "- You need to have an -";
 		mes "- ^4d4dff'Eden Group Mark'^000000 -";
 		mes "- to receive these missions. -";
@@ -1047,7 +1047,7 @@ S_Hunting:
 
 moc_para01,41,95,5	script	Rohtert#12	4_M_ROTERT,{
 	mes "[Rohtert]";
-	if (!countitem(Para_Team_Mark)) {// Para_Team_Mark
+	if (!countitem(Para_Team_Mark) && !countitem(Para_Team_Mark_)) {
 		cutin "rote01",2;
 		mes "You are not even a member of Eden Group. What are you doing here?";
 		mes "I'm only dealing with base level ^FF0000100 - 110^000000 adventurers.";

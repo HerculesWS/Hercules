@@ -42,7 +42,7 @@
 moc_para01,41,76,3	script	Ragi#1	4_M_RAGI,{
 	cutin "ragi01",0;
 	mes "[Ragi]";
-	if (!countitem(Para_Team_Mark)) {// Para_Team_Mark
+	if (!countitem(Para_Team_Mark) && !countitem(Para_Team_Mark_)) {
 		mes "Only adventurers from Eden Group are welcome here.";
 		mes "I'm giving requests to base level ^FF0000130-140^000000 adventurers only.";
 	}
