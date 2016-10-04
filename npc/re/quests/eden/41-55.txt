@@ -35,7 +35,7 @@
 //=========================================================================
 
 moc_para01,40,38,3	script	Mission [41 - 55]	4_BOARD3,{
-	if (countitem(Para_Team_Mark) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "You are not an Eden group member. You are not qualified to access the bulletin board.";
 		close;
 	}

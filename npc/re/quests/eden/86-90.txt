@@ -41,7 +41,7 @@
 //=========================================================================
 
 moc_para01,48,175,3	script	86-90 Mission Board	4_BOARD3,{
-	if (countitem(Para_Team_Mark) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "Wait a minute!";
 		mes "-You need to have an-";
 		mes "-^4d4dff'Eden Group Mark'^000000-";

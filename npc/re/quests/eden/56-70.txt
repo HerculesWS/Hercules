@@ -36,7 +36,7 @@
 //=========================================================================
 
 moc_para01,42,38,3	script	Mission [56 - 70]	4_BOARD3,{
-	if (countitem(Para_Team_Mark) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "To get these missions, I need to Join the Eden Group first. I must find Secretary Lime Evenor and become a member.";
 		close;
 	}
