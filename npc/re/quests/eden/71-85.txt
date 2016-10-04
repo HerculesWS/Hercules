@@ -35,7 +35,7 @@
 //=========================================================================
 
 moc_para01,44,38,3	script	Mission [71 - 85]	4_BOARD3,{
-	if (countitem(Para_Team_Mark) < 1) {
+	if (countitem(Para_Team_Mark) < 1 && countitem(Para_Team_Mark_) < 1) {
 		mes "- Only members of the -";
 		mes "- Eden Group can read -";
 		mes "- this bulletin board. -";
