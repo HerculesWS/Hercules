@@ -520,7 +520,8 @@ void flush_fifos(void)
 /*======================================
  * CORE : Connection functions
  *--------------------------------------*/
-int connect_client(int listen_fd) {
+int connect_client(int listen_fd)
+{
 	int fd;
 	struct sockaddr_in client_address;
 	socklen_t len;
@@ -647,7 +648,8 @@ int make_listen_bind(uint32 ip, uint16 port)
 	return fd;
 }
 
-int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt) {
+int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt)
+{
 	struct sockaddr_in remote_address = { 0 };
 	int fd;
 	int result;
@@ -817,9 +819,12 @@ int rfifoskip(int fd, size_t len)
 int wfifoset(int fd, size_t len)
 {
 	size_t newreserve;
-	struct socket_data* s = sockt->session[fd];
+	struct socket_data* s;
 
-	if (!sockt->session_is_valid(fd) || s->wdata == NULL)
+	if (!sockt->session_is_valid(fd))
+		return 0;
+	s = sockt->session[fd];
+	if (s == NULL || s->wdata == NULL)
 		return 0;
 
 	// we have written len bytes to the buffer already before calling WFIFOSET
@@ -1199,7 +1204,8 @@ static int connect_check_(uint32 ip)
 
 /// Timer function.
 /// Deletes old connection history records.
-static int connect_check_clear(int tid, int64 tick, int id, intptr_t data) {
+static int connect_check_clear(int tid, int64 tick, int id, intptr_t data)
+{
 	int clear = 0;
 	int list  = 0;
 	struct connect_history *hist = NULL;
@@ -1234,6 +1240,9 @@ int access_ipmask(const char *str, struct access_control *acc)
 {
 	uint32 ip;
 	uint32 mask;
+
+	nullpo_ret(str);
+	nullpo_ret(acc);
 
 	if( strcmp(str,"all") == 0 ) {
 		ip   = 0;
@@ -1736,9 +1745,11 @@ bool session_is_active(int fd)
 }
 
 // Resolves hostname into a numeric ip.
-uint32 host2ip(const char* hostname)
+uint32 host2ip(const char *hostname)
 {
-	struct hostent* h = gethostbyname(hostname);
+	struct hostent* h;
+	nullpo_ret(hostname);
+	h = gethostbyname(hostname);
 	return (h != NULL) ? ntohl(*(uint32*)h->h_addr) : 0;
 }
 
@@ -1771,7 +1782,8 @@ uint16 ntows(uint16 netshort)
 }
 
 /* [Ind/Hercules] - socket_datasync */
-void socket_datasync(int fd, bool send) {
+void socket_datasync(int fd, bool send)
+{
 	struct {
 		unsigned int length;/* short is not enough for some */
 	} data_list[] = {
@@ -2055,7 +2067,8 @@ void socket_net_config_read(const char *filename)
 	return;
 }
 
-void socket_defaults(void) {
+void socket_defaults(void)
+{
 	sockt = &sockt_s;
 
 	sockt->fd_max = 0;

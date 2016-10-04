@@ -629,6 +629,7 @@ int sv_parse(const char* str, int len, int startoff, char delim, int* out_pos, i
 	svstate.delim = delim;
 	svstate.done = false;
 	svstate.start = 0;
+	svstate.end = 0;
 
 	// parse
 	count = 0;
