@@ -1557,10 +1557,10 @@ int char_make_new_char_sql(struct char_session_data *sd, const char *name_, int 
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, name, strnlen(name, NAME_LENGTH));
 
 	flag = chr->check_char_name(name,esc_name);
-	if( flag < 0 )
+	if (flag < 0)
 		return flag;
 
-	switch(starting_job) {
+	switch (starting_job) {
 		case JOB_SUMMONER:
 		case JOB_NOVICE:
 			break;

@@ -9549,14 +9549,14 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 			break;
 
 		case SU_HIDE:
-			if (tsce) {
-				clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+			if (tsce != NULL) {
+				clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
 				status_change_end(bl, type, INVALID_TIMER);
 				map->freeblock_unlock();
 				return 0;
 			}
-			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-			sc_start(src,bl,type,100,skill_lv,skill->get_time(skill_id,skill_lv));
+			clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
+			sc_start(src, bl, type, 100, skill_lv, skill->get_time(skill_id, skill_lv));
 			break;
 			break;
 
