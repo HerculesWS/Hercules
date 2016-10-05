@@ -1945,11 +1945,15 @@ int char_mmo_char_tobuf(uint8* buffer, struct mmo_charstatus* p) {
 }
 
 /* Made Possible by Yommy~! <3 */
-void char_mmo_char_send099d(int fd, struct char_session_data *sd) {
+void char_mmo_char_send099d(int fd, struct char_session_data *sd)
+{
+// support added for client between 20121010 and 20130320
+#if PACKETVER > 20120418
 	WFIFOHEAD(fd,4 + (MAX_CHARS*MAX_CHAR_BUF));
 	WFIFOW(fd,0) = 0x99d;
 	WFIFOW(fd,2) = chr->mmo_chars_fromsql(sd, WFIFOP(fd,4)) + 4;
 	WFIFOSET(fd,WFIFOW(fd,2));
+#endif
 }
 
 /* Sends character ban list */
