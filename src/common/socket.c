@@ -1023,10 +1023,6 @@ int do_sockets(int next)
 			}
 		}
 
-#ifdef __clang_analyzer__
-		// Let Clang's static analyzer know this never happens (it thinks it might because of a NULL check in session_is_valid)
-		if (!sockt->session[i]) continue;
-#endif // __clang_analyzer__
 		sockt->session[i]->func_parse(i);
 
 		if(!sockt->session[i])

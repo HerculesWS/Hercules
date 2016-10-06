@@ -6008,20 +6008,18 @@ int battle_damage_area(struct block_list *bl, va_list ap) {
 	if (bl->type == BL_MOB && BL_UCCAST(BL_MOB, bl)->class_ == MOBID_EMPELIUM)
 		return 0;
 	if( bl != src && battle->check_target(src,bl,BCT_ENEMY) > 0 ) {
-		struct map_session_data *sd = NULL;
 		nullpo_ret(src);
 
 		map->freeblock_lock();
-		sd = BL_CAST(BL_PC, src);
 
 		if (src->type == BL_PC)
-			battle->drain(sd, bl, damage, damage, status_get_race(bl), is_boss(bl));
+			battle->drain(BL_UCAST(BL_PC, src), bl, damage, damage, status_get_race(bl), is_boss(bl));
 		if( amotion )
 			battle->delay_damage(tick, amotion,src,bl,0,CR_REFLECTSHIELD,0,damage,ATK_DEF,0,true);
 		else
 			status_fix_damage(src,bl,damage,0);
 		clif->damage(bl,bl,amotion,dmotion,damage,1,BDT_ENDURE,0);
-		if (src->type != BL_PC || !sd->state.autocast)
+		if (src->type != BL_PC || !BL_UCCAST(BL_PC, src)->state.autocast)
 			skill->additional_effect(src, bl, CR_REFLECTSHIELD, 1, BF_WEAPON|BF_SHORT|BF_NORMAL,ATK_DEF,tick);
 		map->freeblock_unlock();
 	}
