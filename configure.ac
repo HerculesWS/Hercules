@@ -44,7 +44,7 @@ case $host_os in
 CYGWIN*)
 	;;
 *)
-	if type id >/dev/null 2>&1; then
+	if type id >/dev/null 2>&1 && test -n "$CI"; then
 		euid="`id -u`"
 		if test "$euid" == "0"; then
 			echo ""
