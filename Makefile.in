@@ -80,7 +80,7 @@ all: $(ALL_DEPENDS)
 
 sql: $(SQL_DEPENDS)
 
-$(MF_TARGETS): %: %.in
+$(MF_TARGETS): %: %.in config.status
 	@echo "	CONFIGURE"
 	@if [ -x config.status ]; then \
 		echo "Reconfiguring with options: $$(./config.status --config)"; \
