@@ -38,7 +38,7 @@
  * line, by passing --disable-renewal to the configure script:
  * ./configure --disable-renewal
  */
-//#define DISABLE_RENEWAL
+#define DISABLE_RENEWAL
 
 
 #ifndef DISABLE_RENEWAL // Do not change this line
