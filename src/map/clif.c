@@ -5749,7 +5749,7 @@ void clif_heal(int fd, int type, int val)
 	int len = packet_len(cmd);
 
 	WFIFOHEAD(fd, len);
-	WFIFOW(fd, 0) = 0x13d;
+	WFIFOW(fd, 0) = cmd;
 	WFIFOW(fd, 2) = type;
 #if PACKETVER < 20150513
 	WFIFOW(fd, 4) = cap_value(val, 0, INT16_MAX);
