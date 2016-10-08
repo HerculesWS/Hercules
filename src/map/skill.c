@@ -6826,10 +6826,15 @@ int skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, uin
 
 		case AL_HOLYWATER:
 			if(sd) {
-				if (skill->produce_mix(sd, skill_id, ITEMID_HOLY_WATER, 0, 0, 0, 1))
-					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-				else
-					clif->skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+				if (skill->produce_mix(sd, skill_id, ITEMID_HOLY_WATER, 0, 0, 0, 1)) {
+ 					struct skill_unit *su;
+					if ((su = map->find_skill_unit_oncell(bl, bl->x, bl->y, NJ_SUITON, NULL, 0)) != NULL) {
+						skill->delunit(su);
+					}
+					clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
+				} else {
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
+				}
 			}
 			break;
 
@@ -14005,6 +14010,12 @@ int skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_id
 			if (sd->charm_type == CHARM_TYPE_NONE || sd->charm_count <= 0) {
 				clif->skill_fail(sd,skill_id,USESKILL_FAIL_SUMMON,0);
 				return 0;
+			}
+			break;
+		case AL_HOLYWATER:
+			if (map->getcell(sd->bl.m, &sd->bl, sd->bl.x, sd->bl.y, CELL_CHKLANDPROTECTOR)) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0);
+				return false; // Aqua Benedicta will not cast on LP [secretdataz]
 			}
 			break;
 		default:
