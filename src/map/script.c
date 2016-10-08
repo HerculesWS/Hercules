@@ -18405,72 +18405,90 @@ BUILDIN(has_instance)
 	const char *str;
 	int16 m;
 	int instance_id = -1;
+	int i = 0, j = 0;
 	bool type = strcmp(script->getfuncname(st),"has_instance2") == 0 ? true : false;
 
 	str = script_getstr(st, 2);
 
-	if( (m = map->mapname2mapid(str)) < 0 ) {
-		if( type )
+	if ((m = map->mapname2mapid(str)) < 0) {
+		if (type) {
 			script_pushint(st, -1);
-		else
+		} else {
 			script_pushconststr(st, "");
+		}
 		return true;
 	}
 
-	if( script_hasdata(st, 3) )
+	if (script_hasdata(st, 3))
 		instance_id = script_getnum(st, 3);
-	else if( st->instance_id >= 0 )
+	else if (st->instance_id >= 0)
 		instance_id = st->instance_id;
-	else if( (sd = script->rid2sd(st)) != NULL ) {
+	else if ((sd = script->rid2sd(st)) != NULL) {
 		struct party_data *p;
-		int i = 0, j = 0;
-		if( sd->instances ) {
-			for( i = 0; i < sd->instances; i++ ) {
-				if( sd->instance[i] >= 0 ) {
+		if (sd->instances) {
+			for (i = 0; i < sd->instances; i++) {
+				if (sd->instance[i] >= 0) {
 					ARR_FIND(0, instance->list[sd->instance[i]].num_map, j, map->list[instance->list[sd->instance[i]].map[j]].instance_src_map == m);
-					if( j != instance->list[sd->instance[i]].num_map )
+					if (j != instance->list[sd->instance[i]].num_map)
 						break;
 				}
 			}
-			if( i != sd->instances )
+			if (i != sd->instances) {
 				instance_id = sd->instance[i];
+			}
 		}
 		if (instance_id == -1 && sd->status.party_id && (p = party->search(sd->status.party_id)) != NULL && p->instances) {
-			for( i = 0; i < p->instances; i++ ) {
-				if( p->instance[i] >= 0 ) {
+			for (i = 0; i < p->instances; i++) {
+				if (p->instance[i] >= 0) {
 					ARR_FIND(0, instance->list[p->instance[i]].num_map, j, map->list[instance->list[p->instance[i]].map[j]].instance_src_map == m);
-					if( j != instance->list[p->instance[i]].num_map )
+					if (j != instance->list[p->instance[i]].num_map)
 						break;
 				}
 			}
-			if( i != p->instances )
+			if (i != p->instances) {
 				instance_id = p->instance[i];
+			}
 		}
-		if( instance_id == -1 && sd->guild && sd->guild->instances ) {
-			for( i = 0; i < sd->guild->instances; i++ ) {
-				if( sd->guild->instance[i] >= 0 ) {
+		if (instance_id == -1 && sd->guild && sd->guild->instances) {
+			for (i = 0; i < sd->guild->instances; i++) {
+				if (sd->guild->instance[i] >= 0) {
 					ARR_FIND(0, instance->list[sd->guild->instance[i]].num_map, j, map->list[instance->list[sd->guild->instance[i]].map[j]].instance_src_map == m);
-					if( j != instance->list[sd->guild->instance[i]].num_map )
+					if (j != instance->list[sd->guild->instance[i]].num_map)
 						break;
 				}
 			}
-			if( i != sd->guild->instances )
+			if (i != sd->guild->instances)
 				instance_id = sd->guild->instance[i];
 		}
 	}
 
-	if( !instance->valid(instance_id) || (m = instance->map2imap(m, instance_id)) < 0 ) {
-		if( type )
+	if (instance_id == -1) {
+		for (i = 0; i < instance->instances; i++) {
+			if (instance->list[i].state != INSTANCE_FREE && instance->list[i].owner_type == IOT_NONE && instance->list[i].num_map > 0) {
+				ARR_FIND(0, instance->list[i].num_map, j, map->list[instance->list[i].map[j]].instance_src_map == m);
+				if (j != instance->list[i].num_map)
+					break;
+			}
+		}
+		if (i != instance->instances) {
+			instance_id = instance->list[i].id;
+		}
+	}
+
+	if (!instance->valid(instance_id) || (m = instance->map2imap(m, instance_id)) < 0) {
+		if (type) {
 			script_pushint(st, -1);
-		else
+		} else {
 			script_pushconststr(st, "");
+		}
 		return true;
 	}
 
-	if( type )
+	if (type) {
 		script_pushint(st, instance_id);
-	else
+	} else {
 		script_pushconststr(st, map->list[m].name);
+	}
 	return true;
 }
 
