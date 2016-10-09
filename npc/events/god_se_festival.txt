@@ -66,7 +66,7 @@ yuno,1,1,0	script	Festival Manager#gq_fes0	4_F_HUGIRL,{
 }
 
 yuno,118,192,5	script	Rmimi Ravies#gq_fes01	4_F_HUGIRL,{
-	.@GID = getcharid(2);
+	.@GID = getcharid(CHAR_ID_GUILD);
 	if (countitem(Valkyrie_Gift) > 0) {
 		mes "[Rmimi Ravies]";
 		mes "This is the flower.";
@@ -442,7 +442,7 @@ rachel,1,1,0	script	Festival Manager#gq_fes2	4_F_HUGIRL,{
 }
 
 rachel,132,117,3	script	Rhehe Ravies#gq_fes03	4_F_HUGIRL,{
-	.@GID = getcharid(2);
+	.@GID = getcharid(CHAR_ID_GUILD);
 	if (countitem(Valkyrie_Gift) > 0) {
 		mes "[Rhehe Ravies]";
 		mes "A flower!!";

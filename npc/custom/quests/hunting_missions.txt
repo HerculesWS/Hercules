@@ -50,7 +50,7 @@ function Chk; function Cm;
 			mes "You've started a mission";
 			mes "on another character.";
 			if ( !@hm_char_del_check ) {
-				if ( !query_sql( "SELECT 1 FROM `char_reg_num_db` WHERE `key` = 'Mission0' AND `char_id` IN ( SELECT `char_id` FROM `char` WHERE `account_id` = "+ getcharid(3) +" )", .@dummy ) ) {
+				if ( !query_sql( "SELECT 1 FROM `char_reg_num_db` WHERE `key` = 'Mission0' AND `char_id` IN ( SELECT `char_id` FROM `char` WHERE `account_id` = "+ getcharid(CHAR_ID_ACCOUNT) +" )", .@dummy ) ) {
 					next;
 					mes "[Hunting Missions]";
 					mes "I can't seem to find any records";
@@ -198,8 +198,8 @@ Mission_Status:
 	set #Mission_Count,0;
 	if (.Delay) set #Mission_Delay, gettimetick(2)+(.Delay*3600);
 	set Mission_Total, Mission_Total+1;
-	if (Mission_Total == 1) query_sql("INSERT INTO `char_reg_num_db` (`char_id`,`key`,`index`,`value`) VALUES ("+getcharid(0)+",'Mission_Total','0',1)");
-	else query_sql("UPDATE `char_reg_num_db` SET `value` = "+Mission_Total+" WHERE `char_id` = "+getcharid(0)+" AND `key` = 'Mission_Total'");
+	if (Mission_Total == 1) query_sql("INSERT INTO `char_reg_num_db` (`char_id`,`key`,`index`,`value`) VALUES ("+getcharid(CHAR_ID_CHAR)+",'Mission_Total','0',1)");
+	else query_sql("UPDATE `char_reg_num_db` SET `value` = "+Mission_Total+" WHERE `char_id` = "+getcharid(CHAR_ID_CHAR)+" AND `key` = 'Mission_Total'");
 	close;
 
 Mission_Info:
@@ -258,7 +258,7 @@ OnBuyItem:
 	close;
 
 OnNPCKillEvent:
-	if (!getcharid(1) || !.Party) {
+	if (!getcharid(CHAR_ID_PARTY) || !.Party) {
 		if (!#Mission_Count || !Mission0) end;
 		for (set .@i, 0; .@i<.Quests; set .@i,.@i+1) {
 			if (strmobinfo(1,killedrid) == strmobinfo(1,getd("Mission"+.@i))) {
@@ -271,8 +271,8 @@ OnNPCKillEvent:
 	} else if (.Party) {
 		set .@mob, killedrid;
 		getmapxy(.@map1$, .@x1, .@y1, UNITTYPE_PC);
-		getpartymember getcharid(1),1;
-		getpartymember getcharid(1),2;
+		getpartymember getcharid(CHAR_ID_PARTY),1;
+		getpartymember getcharid(CHAR_ID_PARTY),2;
 		for(set .@i,0; .@i<$@partymembercount; set .@i,.@i+1) {
 			if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i])) {
 				attachrid $@partymemberaid[.@i];

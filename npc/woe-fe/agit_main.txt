@@ -101,10 +101,10 @@ OnStartArena:
 
 // The Emperium has been broken.
 OnAgitBreak:
-	.@GID = getcharid(2);
+	.@GID = getcharid(CHAR_ID_GUILD);
 	// Show and log error if an unguilded player breaks the Emperium. (Should NEVER happen)
 	if (.@GID <= 0) {
-		.@notice$ = "Character "+strcharinfo(PC_NAME)+" ("+getcharid(0)+") broke the Emperium in Castle: "+strnpcinfo(NPC_NAME_HIDDEN)+" while guildless. No data will be saved and Emperium respawned.";
+		.@notice$ = "Character "+strcharinfo(PC_NAME)+" ("+getcharid(CHAR_ID_CHAR)+") broke the Emperium in Castle: "+strnpcinfo(NPC_NAME_HIDDEN)+" while guildless. No data will be saved and Emperium respawned.";
 		logmes .@notice$; debugmes .@notice$;
 		donpcevent "Agit#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnStartArena";
 		end;
@@ -342,7 +342,7 @@ OnRecvCastle:
 	}
 
 	cutin "kafra_01",2;
-	if (getcharid(2) == .@GID) {
+	if (getcharid(CHAR_ID_GUILD) == .@GID) {
 		mes "[Kafra Employee]";
 		mes "Welcome. ^ff0000" + getguildname(.@GID) + "^000000 Member.";
 		mes "The Kafra Corporation will stay with you wherever you go.";
@@ -969,7 +969,7 @@ OnRecvCastle:
 	mes "There's a small lever. Will you pull it?";
 	next;
 	if(select("Pull.", "Don't pull.") == 1) {
-		if (getcharid(2) == .@GID) {
+		if (getcharid(CHAR_ID_GUILD) == .@GID) {
 			close2;
 			warp .@destination$,.@coordinates[0],.@coordinates[1];
 			end;

@@ -6837,7 +6837,7 @@ yuno,330,100,4	script	Knight#ss	4_M_JOB_KNIGHT2,{
 			}
 		}
 		else {
-			.@signid = getcharid(0,strcharinfo(PC_NAME));
+			.@signid = getcharid(CHAR_ID_CHAR,strcharinfo(PC_NAME));
 			.@sign3 = .@signid & 65535;
 			.@sign4 = .@signid >> 16;
 			.@sign1 = 254;

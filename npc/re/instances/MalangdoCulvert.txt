@@ -399,7 +399,7 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 		mes "You don't look like you have Seagod Protection. I can't open door at the moment!";
 		close;
 	}
-	.@party_id = getcharid(1);
+	.@party_id = getcharid(CHAR_ID_PARTY);
 	.@md_name$ = "Culvert";
 	if (!.@party_id) {
 		mes "^0000ffYou have to organize a party of";
@@ -409,7 +409,7 @@ mal_in01,160,34,4	script	Missing, the Cleaner	4_CAT_SAILOR2,{
 	}
 	.@playtime = questprogress(12254,PLAYTIME);
 	if (!.@playtime) {
-		if (getcharid(0) == getpartyleader(.@party_id,2)) {
+		if (getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2)) {
 			mes "[Missing, the Cleaner]";
 			mes "Ummm? What's up? Tell me the password if you're the leader!";
 			next;
@@ -476,7 +476,7 @@ L_Enter:
 
 //== Instance: Common Scripts ==============================
 1@pump,63,100,4	script	Missing, the Cleaner#0	4_CAT_SAILOR2,{
-	if (getcharid(0) != getpartyleader(getcharid(1),2)) {
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY),2)) {
 		mes "[Missing, the Cleaner]";
 		mes "I am trying to have a conversation with your leader now. Please don't disturb and wait!";
 		close;
@@ -497,7 +497,7 @@ L_Enter:
 			mes "Huh? Not ready yet? Talk to me again when you're ready.";
 			close;
 		}
-		'party_id = getcharid(1);
+		'party_id = getcharid(CHAR_ID_PARTY);
 		mapannounce instance_mapname("1@pump"),"Missing: Move toward the 3 o'clock direction and wait for my next order!",bc_map,"0xff88ff",FW_NORMAL,15;
 		disablenpc instance_npcname("Missing, the Cleaner#0");
 		enablenpc instance_npcname("Missing, the Cleaner#n");
@@ -519,7 +519,7 @@ L_Enter:
 			mes "Hmm? Talk to me again when you're ready.";
 			close;
 		}
-		'party_id = getcharid(1);
+		'party_id = getcharid(CHAR_ID_PARTY);
 		mapannounce instance_mapname("1@pump"),"Missing: I'll go in first, so follow me! I'll open up a gate at the 3 o'clock direction!",bc_map,"0xff88ff",FW_NORMAL,15;
 		disablenpc instance_npcname("Missing, the Cleaner#0");
 		enablenpc instance_npcname("Culvert Entrance#i");
@@ -566,7 +566,7 @@ function	script	F_mal_missing	{
 	mes "[Missing, the Cleaner]";
 	mes "I don't care if you get help from your friends or not. I want you to clean up all culverts! Don't forget! I will watch you and give you instructions. Just do what I said!!";
 	next;
-	if (getcharid(0) != getpartyleader(getcharid(1),2)) {
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY),2)) {
 		mes "[Missing, the Cleaner]";
 		mes "Once your leader finishes preparing, it will begin, so get your hearts ready for it!!";
 		close;
@@ -594,7 +594,7 @@ function	script	F_mal_missing	{
 	mes "[Missing, the Cleaner]";
 	mes "I see seaweed everywhere because you're wiggling! All the culverts will be blocked with seaweed!";
 	next;
-	if (getcharid(0) != getpartyleader(getcharid(1),2)) {
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY),2)) {
 		mes "[Missing, the Cleaner]";
 		mes "Once your leader finishes preparing, settlement will be decided so get your hearts ready for it!!";
 		close;

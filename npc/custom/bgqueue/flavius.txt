@@ -170,12 +170,12 @@ OnReset:
 	end;
 
 OnCroixQuit:
-	queueremove($@Croix_QueueBG1,getcharid(3));
+	queueremove($@Croix_QueueBG1,getcharid(CHAR_ID_ACCOUNT));
 	callsub L_OnPlayerQuit;
 	end;
 
 OnGuillaumeQuit:
-	queueremove($@Guill_QueueBG1,getcharid(3));
+	queueremove($@Guill_QueueBG1,getcharid(CHAR_ID_ACCOUNT));
 	callsub L_OnPlayerQuit;
 	end;
 
@@ -437,7 +437,7 @@ OnTouch:
 }
 
 bat_b01,10,294,3	script	Guillaume Vintenar#b01_a	4_M_RASWORD,{
-	if ($@FlaviusBG1_id1 == getcharid(4)) {
+	if ($@FlaviusBG1_id1 == getcharid(CHAR_ID_BG)) {
 		if ($@FlaviusBG1_Victory == 1) {
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
@@ -489,7 +489,7 @@ OnInit:
 }
 
 bat_b01,389,14,3	script	Croix Vintenar#b01_b	4_M_RASWORD,{
-	if ($@FlaviusBG1_id2 == getcharid(4)) {
+	if ($@FlaviusBG1_id2 == getcharid(CHAR_ID_BG)) {
 		if ($@FlaviusBG1_Victory == 2) {
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
@@ -623,7 +623,7 @@ bat_b01,389,16,3	script	Croix Camp#flag31	1_FLAG_EAGLE,{ end; }
 
 bat_b01,10,294,3	script	Vintenar#bat_b01_aover	4_M_KY_HEAD,{
 	set .@A_B_gap,$@Guill_ScoreBG1 - $@Croix_ScoreBG1;
-	if ($@FlaviusBG1_id1 == getcharid(4)) {
+	if ($@FlaviusBG1_id1 == getcharid(CHAR_ID_BG)) {
 		if (.@A_B_gap > 0) {
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;
@@ -701,7 +701,7 @@ OnInit:
 
 bat_b01,389,14,3	script	Vintenar#bat_b01_bover	4_M_CRU_HEAD,{
 	set .@A_B_gap,$@Guill_ScoreBG1 - $@Croix_ScoreBG1;
-	if ($@FlaviusBG1_id2 == getcharid(4)) {
+	if ($@FlaviusBG1_id2 == getcharid(CHAR_ID_BG)) {
 		if (.@A_B_gap > 0) {
 			set .@your_medal,countitem(BF_Badge2);
 			set .@medal_gap,500 - .@your_medal;

@@ -59,13 +59,13 @@ dali02,44,129,5	script	Unpleasent Royal Guard	4_M_SAKRAYROYAL,{
 			"I will be right behind you!");
 		close();
 	}
-	.@party_id = getcharid(1);
+	.@party_id = getcharid(CHAR_ID_PARTY);
 	if (!.@party_id) {
 		mes("[Unpleasent Royal Guard]");
 		mes("This is a solo instance. Please form a solo party before continuing.");
 		close();
 	}
-	if (getcharid(0) != getpartyleader(.@party_id,2)) {
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(.@party_id,2)) {
 		mes("[Unpleasent Royal Guard]");
 		mes("I'm looking for adventurers to help me!\r"
 			"I want to talk to the team leader, can I?");
@@ -134,7 +134,7 @@ dali02,41,134,0	script	Interdimensional Device::gpportal	PORTAL,{
 		mes("The monsters that attacked the palace are wandering around the secret entrance. It would be very bad if they spotted us... Please wait until the time limit for re-entrance passed.");
 		close();
 	}
-	if (getcharid(0) == getpartyleader(.@party_id,2) && !questprogress(1260)) {
+	if (getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2) && !questprogress(1260)) {
 		mes("[Unpleasent Royal Guard]");
 		mes("I'm looking for adventurers to help me!\r"
 			"I want to talk to the team leader, can I?");
@@ -155,7 +155,7 @@ dali02,41,134,0	script	Interdimensional Device::gpportal	PORTAL,{
 		mes("^FF0000Inside the device you see a dark hole. If you wish to enter you may wish to talk to the Unpleasant Royal Guard first.^000000");
 		close();
 	}
-	mapannounce("dali", sprintf(_$("%s of the party, %s, is entering the Ghost Palace."), strcharinfo(PC_NAME), getpartyname(getcharid(1))), bc_map, C_SPRINGGREEN);
+	mapannounce("dali", sprintf(_$("%s of the party, %s, is entering the Ghost Palace."), strcharinfo(PC_NAME), getpartyname(getcharid(CHAR_ID_PARTY))), bc_map, C_SPRINGGREEN);
 	if (!questprogress(1260)) setquest 1260;
 	setquest 1261;
 	warp("1@spa", 198, 188);
@@ -550,7 +550,7 @@ OnInstanceInit:
 	next;
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Sakray, What do you want sympathy? Or is it a trap?");
-	unittalk(getcharid(3), _("Sakray, What do you want sympathy? Or is it a trap?"));
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("Sakray, What do you want sympathy? Or is it a trap?"));
 	next;
 	mes("[Sakray]");
 	mes("Non...I did not need to make an effort to catch a novice.");
@@ -558,7 +558,7 @@ OnInstanceInit:
 	next;
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("If so... then why...?");
-	unittalk(getcharid(3), _("If so... then why...?"));
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("If so... then why...?"));
 	next;
 	cutin("cry-b", 3);
 	mes("[Sakray]");
@@ -580,7 +580,7 @@ OnInstanceInit:
 	next;
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("...");
-	unittalk(getcharid(3), _("..."));
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("..."));
 	next;
 	mes("[Sakray]");
 	mes("Heh heh... I will keep watching you until the day you grow up enough.");

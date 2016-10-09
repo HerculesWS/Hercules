@@ -267,8 +267,8 @@ OnKill:
 
 OnMyMobDead:
 	if (mobcount("bat_a02","OBJ#bat_a02_n::OnMyMobDead") < 17) {
-		bg_team_setxy getcharid(4),56,212;
-		if (getcharid(4) == $@TierraBG2_id1) {
+		bg_team_setxy getcharid(CHAR_ID_BG),56,212;
+		if (getcharid(CHAR_ID_BG) == $@TierraBG2_id1) {
 			donpcevent "NOBJ_mob#bat_a02_a::OnEnable";
 			mapannounce("bat_a02", _("Guillaume captured a Neutrality Flag, so they have an advantage."), bc_map, "0xFFCE00");
 		}
@@ -313,7 +313,7 @@ OnMyMobDead:
 }
 
 bat_a02,185,270,1	script	Guillaume Blacksmith#a02	4_M_REPAIR,{
-	if (getcharid(4) == $@TierraBG2_id1) {
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id1) {
 		mes("[Guillaume Blacksmith]");
 		mes("We are in urgency! The Barricade has been destroyed!");
 		mes("We can repair the Barricade with ^3131FF50 Stones, 3 Sinew of Bear, 500 Metal Fragments, 30 Rough Elunium and 100 Gold.^000000");
@@ -397,7 +397,7 @@ OnInit:
 }
 
 bat_a02,170,121,5	script	Croix Blacksmith#bat_a02	4_M_REPAIR,{
-	if (getcharid(4) == $@TierraBG2_id2) {
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id2) {
 		mes("[Croix Blacksmith]");
 		mes("We are in urgency! The Barricade has been destroyed!");
 		mes("We can repair the Barricade with ^3131FF50 Stones, 3 Sinew of Bear, 500 Metal Fragments, 30 Rough Elunium and 100 Gold.^000000");
@@ -622,28 +622,28 @@ OnTouch:
 
 bat_a02,194,267,0	script	barri_warp_up#bat_a02_a	FAKE_NPC,7,0,{
 OnTouch:
-	if (getcharid(4) == $@TierraBG2_id1)
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id1)
 		warp "bat_a02",194,261;
 	end;
 }
 
 bat_a02,194,265,0	script	barri_warp_down#bat_a02a	FAKE_NPC,7,0,{
 OnTouch:
-	if (getcharid(4) == $@TierraBG2_id1)
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id1)
 		warp "bat_a02",194,270;
 	end;
 }
 
 bat_a02,177,130,0	script	barri_warp_up#bat_a02_b	FAKE_NPC,7,0,{
 OnTouch:
-	if (getcharid(4) == $@TierraBG2_id2)
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id2)
 		warp "bat_a02",178,125;
 	end;
 }
 
 bat_a02,177,128,0	script	barri_warp_down#bat_a02b	FAKE_NPC,7,0,{
 OnTouch:
-	if (getcharid(4) == $@TierraBG2_id2)
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id2)
 		warp "bat_a02",178,134;
 	end;
 }
@@ -695,7 +695,7 @@ bat_a02,357,74,3	script	Croix Camp#flag18	1_FLAG_EAGLE,{ end; }
 bat_a02,348,74,3	script	Croix Camp#flag19	1_FLAG_EAGLE,{ end; }
 
 bat_a02,53,377,3	script	Guillaume Vintenar#a02_a	4_M_KY_HEAD,{
-	if (getcharid(4) == $@TierraBG2_id1) {
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id1) {
 		if ($@TierraBG2_Victory == 1) {
 			.@your_medal = countitem(BF_Badge1);
 			.@medal_gap = 500 - .@your_medal;
@@ -789,7 +789,7 @@ OnInit:
 }
 
 bat_a02,45,19,3	script	Croix Vintenar#a02_b	4_M_CRU_HEAD,{
-	if (getcharid(4) == $@TierraBG2_id2) {
+	if (getcharid(CHAR_ID_BG) == $@TierraBG2_id2) {
 		if ($@TierraBG2_Victory == 2) {
 			.@your_medal = countitem(BF_Badge1);
 			.@medal_gap = 500 - .@your_medal;

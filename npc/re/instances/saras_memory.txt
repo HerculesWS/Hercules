@@ -168,7 +168,7 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 		erasequest 15002;
 		end;
 	} else if (!.@sara_time) {
-		.@party_id = getcharid(1);
+		.@party_id = getcharid(CHAR_ID_PARTY);
 		.@p_name$ = getpartyname(.@party_id);
 		.@md_name$ = "Sara's Memory";
 		if (!instance_check_party(.@party_id)) {
@@ -177,13 +177,13 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 				"can use quotes to put spaces in a party name.");
 			close;
 		}
-		if (getcharid(0) == getpartyleader(.@party_id, 2))
+		if (getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id, 2))
 			.@menu1$ = "Boot up the dimensional device";
 		else
 			.@menu1$ = "";
 		switch (select(.@menu1$, "Use the dimensional device", "Cancel")) {
 		case 1:
-			if (getcharid(0) != getpartyleader(.@party_id, 2))
+			if (getcharid(CHAR_ID_CHAR) != getpartyleader(.@party_id, 2))
 				end;
 			.@instance = instance_create(.@md_name$, .@party_id);
 			if (.@instance < 0) {
@@ -219,11 +219,11 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 }
 
 1@sara,261,156,5	script	A girl#sarains	4_F_SARAH_BABY,{
-	if (getcharid(0) != getpartyleader(getcharid(1), 2))
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY), 2))
 		end;
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Where am I?");
-	unittalk(getcharid(3), _("Where am I?"));
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("Where am I?"));
 	next;
 	cutin "sara_9sara1.bmp", 2;
 	mes("[A girl]");
@@ -232,7 +232,7 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 	next;
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Are you from here? You don't seem to quite match the locals either.");
-	unittalk(getcharid(3), _("Are you from here? You don't seem to quite match to locals either."));
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("Are you from here? You don't seem to quite match to locals either."));
 	next;
 	mes("[A girl]");
 	mes("Yes! I was born here! My name is Sara. Sara Irene!");
@@ -244,7 +244,7 @@ dali,138,118,0	script	Dimensional Device#dimen	PORTAL,{
 	next;
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Oh! I am sorry! Uh... Why are you standing out here all alone?");
-	unittalk(getcharid(3), _("Oh! I am sorry! Uh... Why are you standing out here all alone?"));
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("Oh! I am sorry! Uh... Why are you standing out here all alone?"));
 	next;
 	mes("[Sara Irene]");
 	mes("I am waiting for my father. He said that he will be here soon.");
@@ -523,7 +523,7 @@ OnEnable:
 OnTouch:
 	.@map$ = instance_mapname("1@sara");
 	warp .@map$, 89, 175;
-	if (getcharid(0) == getpartyleader(getcharid(1),2))
+	if (getcharid(CHAR_ID_CHAR) == getpartyleader(getcharid(CHAR_ID_PARTY),2))
 		viewpoint 1, 39, 142, 1, C_GREEN;
 	end;
 }
@@ -546,7 +546,7 @@ OnTouch:
 }
 
 1@sara,107,325,5	script	Sara Irene#sarains1	4_F_SARAH_BABY,{
-	if (getcharid(0) != getpartyleader(getcharid(1), 2))
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY), 2))
 		end;
 	cutin "sara_9sara1.bmp", 2;
 	mes("[Sara Irene]");
@@ -1007,7 +1007,7 @@ OnMyMobDead:
 }
 
 1@sara,152,233,5	script	Sara Irene#sarains2	4_F_SARAH_BABY,{
-	if (getcharid(0) != getpartyleader(getcharid(1), 2))
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY), 2))
 		end;
 	cutin "sara_9sara2.bmp", 2;
 	mes("[Sara Irene]");
@@ -1031,7 +1031,7 @@ OnMyMobDead:
 	next;
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("I won't let you take Sara!");
-	unittalk(getcharid(3), _("I won't let you take Sara!"));
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("I won't let you take Sara!"));
 	next;
 	cutin "sara_elder_irine3.bmp", 2;
 	mes("[Doyen Irene]");
@@ -1040,7 +1040,7 @@ OnMyMobDead:
 	next;
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Sara... run! Save yourself!");
-	unittalk(getcharid(3), _("Sara... run! Save yourself!"));
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("Sara... run! Save yourself!"));
 	next;
 	cutin "sara_9sara2.bmp", 2;
 	mes("[Sara Irene]");
@@ -1151,7 +1151,7 @@ OnMyMobDead:
 }
 
 1@sara,156,236,3	script	Doyen Irene#sarains3	4_M_CHIEF_IRIN,{
-	if (getcharid(0) != getpartyleader(getcharid(1), 2))
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY), 2))
 		end;
 	cutin "sara_elder_irine4.bmp", 2;
 	mes("[Doyen Irene]");
@@ -1164,7 +1164,7 @@ OnMyMobDead:
 	next;
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("What are you talking about? We saw you standing over Sara's mother with your sword COVERED in blood!");
-	unittalk(getcharid(3), _("What are you talking about? We saw you standing over Sara's mother with your sword COVERED in blood!"));
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("What are you talking about? We saw you standing over Sara's mother with your sword COVERED in blood!"));
 	next;
 	mes("[Doyen Irene]");
 	mes("You.. think I killed Sara's mother?");
@@ -1188,7 +1188,7 @@ OnMyMobDead:
 	next;
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("I am just an adventurer who was passing through. I heard some men plotting their deaths and needed to intervene.");
-	unittalk(getcharid(3), _("I am just an adventurer who was passing through. I heard some men plotting their deaths and needed to intervene."));
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("I am just an adventurer who was passing through. I heard some men plotting their deaths and needed to intervene."));
 	next;
 	mes("[Doyen Irene]");
 	mes("If.. you are telling the truth...\r"
@@ -1201,11 +1201,11 @@ OnMyMobDead:
 	next;
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("There might be more assassins so we have to find Sara as fast as we can.");
-	unittalk(getcharid(3), _("There might be more assassins so we have to find Sara as fast as we can."));
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("There might be more assassins so we have to find Sara as fast as we can."));
 	next;
 	mesf("[%s]", strcharinfo(PC_NAME));
 	mes("Sara believes that you killed her mother. We need to tell her the truth.");
-	unittalk(getcharid(3), _("Sara believes that you killed her mother. We need to tell her the truth."));
+	unittalk(getcharid(CHAR_ID_ACCOUNT), _("Sara believes that you killed her mother. We need to tell her the truth."));
 	next;
 	mes("[Doyen Irene]");
 	mes("We must do our best to find her. Let's split up and search for her.\r"
@@ -1233,7 +1233,7 @@ OnDisable:
 }
 
 1@sara,39,142,3	script	Sara Irene#sarains3	4_F_SARAH_BABY,{
-	if (getcharid(0) != getpartyleader(getcharid(1), 2))
+	if (getcharid(CHAR_ID_CHAR) != getpartyleader(getcharid(CHAR_ID_PARTY), 2))
 		end;
 	mes("^FF0000As you are about to call out to Sara a sudden blow knocks you down from behind.^000000");
 	dispbottom(_("As you are about to call out to Sara a sudden blow knocks you down from behind."));

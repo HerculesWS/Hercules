@@ -194,7 +194,7 @@ OnReward:
 OnPCLoadMapEvent:
 	if (!compare(strcharinfo(PC_MAP),"g_cas")) end;
 	if (((.AutoKick && .Active[0]) || (.NoOwner && !getcastledata(strcharinfo(PC_MAP),1))) && !(.Active[0]&(1<<getd("."+strcharinfo(PC_MAP))))) {
-		if (getcharid(2) && getcastledata(strcharinfo(PC_MAP),1) == getcharid(2)) end;
+		if (getcharid(CHAR_ID_GUILD) && getcastledata(strcharinfo(PC_MAP),1) == getcharid(CHAR_ID_GUILD)) end;
 		sleep2 1000;
 		message strcharinfo(PC_NAME), getcastlename(strcharinfo(PC_MAP))+" is currently inactive.";
 		sleep2 5000;

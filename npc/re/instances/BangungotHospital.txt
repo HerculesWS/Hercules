@@ -39,7 +39,7 @@
 ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 	if (BaseLevel < 100) end;
 
-	.@party_id = getcharid(1);
+	.@party_id = getcharid(CHAR_ID_PARTY);
 	cutin "malaya_nurseB",2;
 	if (!questprogress(9223)) {
 		.@quest = questprogress(9222);
@@ -60,7 +60,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 					else if (malaya_bang == 31)
 						callsub L_Closed,0;
 					else if (malaya_bang > 39)
-						callsub L_Enter,(getcharid(0) == getpartyleader(.@party_id,2))?1:0,0,0;
+						callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,0,0;
 					else {
 						mes "[Nurse Maenne]";
 						mes "..........";
@@ -104,7 +104,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 					} else {
 						//if (!.@party_id) goto L_NoParty; //unneeded
 						if (malaya_bang > 39)
-							callsub L_Enter,(getcharid(0) == getpartyleader(.@party_id,2))?1:0,1,1;
+							callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 						else {
 							mes "[Nurse Maenne]";
 							mes ".......";
@@ -136,7 +136,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 					} else if (.@playtime == 2) {
 						//if (!.@party_id) goto L_NoParty; //unneeded
 						if (malaya_bang > 39)
-							callsub L_Enter,(getcharid(0) == getpartyleader(.@party_id,2))?1:0,1,1;
+							callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 						else {
 							mes "[Nurse Maenne]";
 							mes ".......";
@@ -215,7 +215,7 @@ ma_dun01,147,10,5	script	Nurse#ma_dun01	4_F_NURSE,{
 		} else {
 			if (!.@party_id) goto L_NoParty;
 			if (malaya_bang > 39)
-				callsub L_Enter,(getcharid(0) == getpartyleader(.@party_id,2))?1:0,1,1;
+				callsub L_Enter,(getcharid(CHAR_ID_CHAR) == getpartyleader(.@party_id,2))?1:0,1,1;
 			else {
 				mes "[Nurse Maenne]";
 				mes ".......";
@@ -275,7 +275,7 @@ L_Enter:
 	next;
 	switch(select(((getarg(0))?"Prepare to enter the second floor.":""), "Enter the second floor.", "Do not enter.")) {
 	case 1:
-		.@instance = instance_create(.@md_name$,getcharid(1));
+		.@instance = instance_create(.@md_name$,getcharid(CHAR_ID_PARTY));
 		if (.@instance < 0) {
 			mes "[Nurse Maenne]";
 			mes "A critical situation has happened.";
@@ -312,7 +312,7 @@ L_Enter:
 			mes "The party leader did not generate the dungeon yet.";
 			close;
 		} else {
-			mapannounce "ma_dun01", getpartyname(getcharid(1))+" party's "+strcharinfo(PC_NAME)+" member entered "+.@md_name$+".",bc_map,"0x00ff99";
+			mapannounce "ma_dun01", getpartyname(getcharid(CHAR_ID_PARTY))+" party's "+strcharinfo(PC_NAME)+" member entered "+.@md_name$+".",bc_map,"0x00ff99";
 			if (getarg(1)) {
 				if (questprogress(9223)) {
 					completequest 9223;

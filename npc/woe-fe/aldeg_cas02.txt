@@ -52,14 +52,14 @@
 		mes "ownership of this castle.";
 		close;
 	}
-	if (getcharid(2) == .@GID) {
+	if (getcharid(CHAR_ID_GUILD) == .@GID) {
 		mes "[ Echoing Voice ]";
 		mes "Brave ones...";
 		mes "Do you wish to return to your honorable place?";
 		next;
 		if(select("Return to the guild castle.", "Quit.") == 1) {
 			close2;
-			if (getcharid(2) == getcastledata("aldeg_cas02",1)) {
+			if (getcharid(CHAR_ID_GUILD) == getcastledata("aldeg_cas02",1)) {
 				warp "aldeg_cas02",220,190;
 				end;
 			}

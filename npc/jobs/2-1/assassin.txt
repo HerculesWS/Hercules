@@ -1103,7 +1103,7 @@ OnStartArena:
 	warpwaitingpc "in_moc_16", 66, 151;
 	attachrid($@warpwaitingpc[0]);
 	if (ASSIN_Q2 < 5) {
-		warpchar "in_moc_16",20,145,getcharid(0);
+		warpchar "in_moc_16",20,145,getcharid(CHAR_ID_CHAR);
 		end;
 	}
 	donpcevent "Beholder#ASNTEST::OnEnable";

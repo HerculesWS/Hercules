@@ -23,20 +23,20 @@ prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 	if (.startcluck) {
 		specialeffect2 2;
 		switch(rand(15)) {
-			case 0: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
+			case 0: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; emotion 23; break;
 			case 1: npctalk "Cluuuuuck!~"; break;
-			case 2: unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; break;
+			case 2: unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; break;
 			case 3: sc_start SC_FREEZE,10000,0; break;
-			case 4: npctalk "CLUUUUUUUUUCK!!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
+			case 4: npctalk "CLUUUUUUUUUCK!!!"; unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; emotion 23; break;
 			case 5: sc_start SC_SLEEP,10000,0; break;
 			case 6: sc_start SC_STONE,10000,0; emotion 29; break;
-			case 7: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
-			case 8: npctalk "Cluck! CLUUUCK!!"; unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; emotion 23; break;
+			case 7: npctalk "CLUUUUUUCK!!!"; unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; emotion 23; break;
+			case 8: npctalk "Cluck! CLUUUCK!!"; unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; emotion 23; break;
 			case 9: sc_start SC_STUN,10000,0; break;
 			case 10: sc_start SC_SLEEP,10000,0; emotion 29; break;
 			case 11: npctalk "Cluck! Cluck!"; break;
 			case 12: sc_start SC_STUN,10000,0; break;
-			case 13: unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1; break;
+			case 13: unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1; break;
 			default:
 				if (rand(50) < 4) {
 					npctalk "WOOF!...........";
@@ -46,7 +46,7 @@ prontera,156,219,4	script	Cluckers	4_NFCOCK,{
 					set .startcluck,0;
 				} else {
 					npctalk "Cluck! CLUUUCK!!";
-					unitskilluseid getcharid(3),"NPC_SELFDESTRUCTION",1;
+					unitskilluseid getcharid(CHAR_ID_ACCOUNT),"NPC_SELFDESTRUCTION",1;
 				}
 				break;
 		}

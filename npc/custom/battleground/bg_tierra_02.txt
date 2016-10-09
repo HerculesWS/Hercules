@@ -99,13 +99,13 @@ OnReadyCheck:
 	end;
 
 OnNeutralBreak:
-	if( getcharid(4) == $@TierraBG2_id1 )
+	if( getcharid(CHAR_ID_BG) == $@TierraBG2_id1 )
 	{
 		mapannounce "bat_a02","Guillaume obtained a neurality banner, so they have an advantage.",1,0x0000FF;
 		bg_team_setxy $@TierraBG2_id2,42,16;
 		areawarp "bat_a02",52,208,61,217,"bat_a02",42,16;
 	}
-	else if( getcharid(4) == $@TierraBG2_id2 )
+	else if( getcharid(CHAR_ID_BG) == $@TierraBG2_id2 )
 	{
 		mapannounce "bat_a02","Croix obtained a neutrality banner, so they have an advantage.",1,0xFF0000;
 		bg_team_setxy $@TierraBG2_id1,50,374;
@@ -113,7 +113,7 @@ OnNeutralBreak:
 	}
 	else end;
 
-	set .Neutral_Base, getcharid(4);
+	set .Neutral_Base, getcharid(CHAR_ID_BG);
 	bg_team_setxy .Neutral_Base,56,212;
 
 	if( .Guardian_1 == 0 )
