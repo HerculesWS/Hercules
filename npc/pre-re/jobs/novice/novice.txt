@@ -2523,11 +2523,11 @@ new_1-2,38,182,3	script	Entrance Guard#nv	4_F_03,{
 				nov_2nd_cos = 29;
 			}
 			getitem Wing_Of_Butterfly,30;
-			getitem Wing_Of_Fly,200;
+			getitem N_Fly_Win,200;
 			getitem Novice_Knife,1;
 			getitem Novice_Guard,1;
 			getitem Spectacles,2;
-			getitem Novice_Potion,800;
+			getitem Novice_Potion,588;
 			close2;
 			savepoint "new_1-2",23,188;
 			warp "new_1-3",96,21;
