@@ -1898,6 +1898,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 							mes "knocks you out~^000000";
 							close2;
 							percentheal -100,0;
+							end;
 						}
 						else {
 							mes "[Ms. Scary Inn Employee]";

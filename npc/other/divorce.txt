@@ -211,7 +211,8 @@ nif_in,190,112,5	script	Deviruchi#divorce	4_DEVIRUCHI,{
 		specialeffect2 EF_DEVIL;
 		wedding_sign = 0;
 		Zeny -= 2500000;
-		percentheal -100,-100;
+		percentheal -0,-100;
+		Hp -= Hp-1;
 		divorce;
 		mes "[Deviruchi]";
 		mes "Bwahhahahaha~!";

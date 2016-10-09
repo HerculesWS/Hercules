@@ -4484,9 +4484,8 @@ cmd_in02,88,51,4	script	Strange Guy#sign	1_M_SIGNART,{
 				mes "I'll freakin' beat you to near";
 				mes "freakin' death! Bam bam bam!";
 				close2;
-				percentheal -100,0;
 				soundeffect "effect\\sign_noise.wav",1;
-				percentheal -99,0;
+				Hp -= Hp-1;
 				warp "comodo",122,100;
 				end;
 			case 2:
