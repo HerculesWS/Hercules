@@ -2523,7 +2523,9 @@ new_1-2,38,182,3	script	Entrance Guard#nv	4_F_03,{
 				nov_2nd_cos = 29;
 			}
 			getitem Wing_Of_Butterfly,30;
-			getitem N_Fly_Win,200;
+			getitem N_Fly_Wing,200;
+			getitem Warp_Free_Ticket,30;
+			getitem Cargo_Free_Ticket,30;
 			getitem Novice_Knife,1;
 			getitem Novice_Guard,1;
 			getitem Spectacles,2;
