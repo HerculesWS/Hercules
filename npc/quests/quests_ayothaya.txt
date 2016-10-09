@@ -1947,7 +1947,7 @@ ayo_dun01,272,26,0	duplicate(AyoTrap1)	 #th_dun1_1_4	HIDDEN_NPC
 
 ayo_dun01,26,27,0	script	 #th_dun1_1::AyoTrap2	FAKE_NPC,1,1,{
 OnTouch:
-	percentheal -100,0;
+	unitkill getcharid(3);
 	end;
 }
 
