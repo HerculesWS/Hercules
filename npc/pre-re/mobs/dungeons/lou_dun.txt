@@ -47,8 +47,8 @@ lou_dun01,0,0,0,0	monster	Shining Plant	1083,5,0,0,0
 
 //== lou_dun02 - Inside the Royal Tomb =====================
 lou_dun02,0,0,0,0	monster	Yao Jun	1512,40,300000,120000,0
-lou_dun02,0,0,0,0	monster	Munak	1026,25,0,0,0
-lou_dun02,0,0,0,0	monster	Zhu Po Long	1514,5,0,0,0
+lou_dun02,0,0,0,0	monster	Munak	1026,35,0,0,0
+lou_dun02,0,0,0,0	monster	Zhu Po Long	1514,15,0,0,0
 lou_dun02,0,0,0,0	monster	Mimic	1191,5,0,0,0
 
 //== lou_dun03 - Suei Long Gon =============================

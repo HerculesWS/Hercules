@@ -34,8 +34,8 @@
 //=========================================================================
 
 //== cmd_fild01 - Papuchicha Forest ========================
-cmd_fild01,0,0,0,0	monster	Alligator	1271,60,0,0,0
-cmd_fild01,0,0,0,0	monster	Savage	1166,30,0,0,0
+cmd_fild01,0,0,0,0	monster	Alligator	1271,100,0,0,0
+cmd_fild01,0,0,0,0	monster	Savage	1166,70,0,0,0
 cmd_fild01,0,0,0,0	monster	Poporing	1031,30,0,0,0
 cmd_fild01,0,0,0,0	monster	Poison Spore	1077,20,0,0,0
 cmd_fild01,313,213,10,10	monster	Shining Plant	1083,1,1800000,900000,1
@@ -56,7 +56,7 @@ cmd_fild02,95,89,40,80	monster	Cornutus	1067,5,180000,0,0
 cmd_fild02,279,78,100,20	monster	Cornutus	1067,10,60000,0,0
 cmd_fild02,0,0,0,0	monster	Shellfish	1074,35,0,0,0
 cmd_fild02,93,82,40,80	monster	Shellfish	1074,5,180000,0,0
-cmd_fild02,0,0,0,0	monster	Mobster	1313,1,0,0,0
+cmd_fild02,0,0,0,0	monster	Mobster	1313,3,0,0,0
 cmd_fild02,200,130,150,40	monster	Seal	1317,18,0,0,0
 cmd_fild02,93,82,40,80	monster	Seal	1317,2,180000,0,0
 cmd_fild02,0,0,0,0	monster	Galapago	1391,20,0,0,0
@@ -76,6 +76,8 @@ cmd_fild04,221,120,120,40	monster	Aster	1266,45,0,0,0
 cmd_fild04,0,0,0,0	monster	Alligator	1271,40,0,0,0
 cmd_fild04,0,0,0,0	monster	Crab	1073,20,0,0,0
 cmd_fild04,0,0,0,0	monster	Raggler	1254,20,0,0,0
+cmd_fild04,0,0,0,0	monster	Aster	1266,20,0,0,0
+cmd_fild04,0,0,0,0	monster	Sea Otter	1323,20,0,0,0
 cmd_fild04,0,0,0,0	monster	Shellfish	1074,20,0,0,0
 cmd_fild04,221,120,120,40	monster	Sea Otter	1323,20,0,0,0
 
@@ -84,7 +86,6 @@ cmd_fild05,0,0,0,0	monster	Frilldora	1119,45,0,0,0
 cmd_fild05,0,0,0,0	monster	Alligator	1271,20,0,0,0
 cmd_fild05,0,0,0,0	monster	Stem Worm	1215,5,0,0,0
 cmd_fild05,0,0,0,0	monster	Poporing	1031,10,0,0,0
-cmd_fild05,0,0,0,0	monster	Pest	1256,5,0,0,0
 cmd_fild05,63,158,10,10	monster	Shining Plant	1083,1,1800000,900000,1
 cmd_fild05,318,277,10,10	monster	Yellow Plant	1081,3,1800000,900000,1
 cmd_fild05,282,49,20,20	monster	Yellow Plant	1081,3,1800000,900000,1
@@ -125,11 +126,11 @@ cmd_fild06,293,235,5,5	monster	Yellow Plant	1081,2,1800000,900000,1
 cmd_fild06,84,375,10,10	monster	Yellow Plant	1081,3,1800000,900000,1
 
 //== cmd_fild07 - Beacon Island, Pharos ====================
-cmd_fild07,242,108,40,90	monster	Aster	1266,2,60000,0,0
-cmd_fild07,102,177,60,90	monster	Aster	1266,3,60000,0,0
-cmd_fild07,240,107,40,90	monster	Crab	1073,3,60000,0,0
+cmd_fild07,242,108,40,90	monster	Aster	1266,15,60000,0,0
+cmd_fild07,102,177,60,90	monster	Aster	1266,10,60000,0,0
+cmd_fild07,240,107,40,90	monster	Crab	1073,15,60000,0,0
 cmd_fild07,100,175,60,90	monster	Crab	1073,2,60000,0,0
-cmd_fild07,101,176,60,90	monster	Raggler	1254,1,180000,0,0
+cmd_fild07,101,176,60,90	monster	Raggler	1254,20,180000,0,0
 cmd_fild07,241,106,40,90	monster	Raggler	1254,1,180000,0,0
 cmd_fild07,204,317,60,60	monster	Raggler	1254,1,60000,0,0
 cmd_fild07,323,310,60,60	monster	Raggler	1254,1,60000,0,0
@@ -200,5 +201,5 @@ cmd_fild09,0,0,0,0	monster	Steel Chonchon	1042,20,0,0,0
 cmd_fild09,0,0,0,0	monster	Drops	1113,20,0,0,0
 cmd_fild09,0,0,0,0	monster	Anacondaq	1030,60,0,0,0
 cmd_fild09,0,0,0,0	monster	Condor	1009,20,0,0,0
-cmd_fild09,142,325,40,50	monster	Hode	1127,3,150000,0,0
+cmd_fild09,0,0,0,0	monster	Hode	1127,30,0,0,0
 cmd_fild09,140,323,40,50	monster	Gargoyle	1253,2,150000,0,0

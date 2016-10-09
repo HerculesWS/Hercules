@@ -35,8 +35,9 @@
 //=========================================================================
 
 //== moc_pryd01 - Inside Pyramid F1 ========================
-moc_pryd01,0,0,0,0	monster	Familiar	1005,50,0,0,0
+moc_pryd01,0,0,0,0	monster	Familiar	1005,10,0,0,0
 moc_pryd01,0,0,0,0	monster	Poporing	1031,20,0,0,0
+moc_pryd01,0,0,0,0	monster	Spore	1014,50,0,0,0
 
 //== moc_pryd02 - Inside Pyramid F2 =========================
 moc_pryd02,0,0,0,0	monster	Poporing	1031,20,0,0,0
@@ -48,10 +49,8 @@ moc_pryd02,0,0,0,0	monster	Archer Skeleton	1016,30,0,0,0
 
 //== moc_pryd03 - Inside Pyramid F3 ========================
 moc_pryd03,0,0,0,0	monster	Drainliar	1111,5,0,0,0
-moc_pryd03,0,0,0,0	monster	Mimic	1191,5,0,0,0
-moc_pryd03,0,0,0,0	monster	Matyr	1146,10,0,0,0
+moc_pryd03,0,0,0,0	monster	Mimic	1191,5,0,0,00
 moc_pryd03,0,0,0,0	monster	Mummy	1041,70,0,0,0
-moc_pryd03,0,0,0,0	monster	Verit	1032,20,600000,300000,1
 
 //== moc_pryd04 - Inside Pyramid F4 ========================
 moc_pryd04,0,0,0,0	monster	Mummy	1041,25,0,0,0

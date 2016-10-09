@@ -42,6 +42,7 @@ mjo_dun01,0,0,0,0	monster	Martin	1145,20,0,0,0
 mjo_dun02,0,0,0,0	monster	Martin	1145,60,0,0,0
 mjo_dun02,0,0,0,0	monster	Drainliar	1111,20,0,0,0
 mjo_dun02,0,0,0,0	monster	Skeleton Worker	1169,20,0,0,0
+mjo_dun02,0,0,0,0	monster	Cramp	1209,5,0,0,0
 mjo_dun02,0,0,0,0	monster	Giearth	1121,35,30000,10000,0
 
 //== mjo_dun03 - Mjolnir Dead Pit F3 =======================
@@ -49,5 +50,4 @@ mjo_dun03,0,0,0,0	monster	Martin	1145,5,0,0,0
 mjo_dun03,0,0,0,0	monster	Skeleton Worker	1169,70,0,0,0
 mjo_dun03,0,0,0,0	monster	Giearth	1121,5,0,0,0
 mjo_dun03,0,0,0,0	monster	Myst	1151,35,0,0,0
-mjo_dun03,0,0,0,0	monster	Cramp	1209,2,300000,150000,0
-mjo_dun03,0,0,0,0	monster	Cramp	1209,1,50000,25000,0
+mjo_dun03,0,0,0,0	monster	Evil Druid	1117,5,0,0,0

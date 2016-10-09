@@ -57,4 +57,4 @@ orcsdun02,0,0,0,0	monster	Zenorc	1177,20,60000,30000,0
 orcsdun02,0,0,0,0	monster	Orc Archer	1189,5,1800000,900000,1
 orcsdun02,0,0,0,0	monster	Black Mushroom	1084,5,180000,90000,1
 orcsdun02,105,37,10,10	monster	White Plant	1082,2,180000,90000,1
-orcsdun02,37,44,10,10	monster	White Plant	1082,3,180000,90000,1
+orcsdun02,0,0,0,0	boss_monster	Orc Lord	1190,1,7200000,600000,1

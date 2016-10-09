@@ -34,11 +34,11 @@
 //=========================================================================
 
 //== mjolnir_01 - Mt.Mjolnir ===============================
-mjolnir_01,0,0,0,0	monster	Horn	1128,20,0,0,0
+mjolnir_01,0,0,0,0	monster	Hornet	1004,65,0,0,0
 mjolnir_01,0,0,0,0	monster	Creamy	1018,20,0,0,0
-mjolnir_01,0,0,0,0	monster	Coco	1104,70,0,0,0
-mjolnir_01,0,0,0,0	monster	Stainer	1174,20,0,0,0
-mjolnir_01,0,0,0,0	monster	Caramel	1103,40,0,0,0
+mjolnir_01,0,0,0,0	monster	Chonchon	1011,40,0,0,0
+mjolnir_01,0,0,0,0	monster	Mandragora	1020,30,0,0,0
+mjolnir_01,0,0,0,0	monster	Steel Chonchon	1042,15,0,0,0
 mjolnir_01,75,85,25,25	monster	Shining Plant	1083,1,1800000,900000,1
 mjolnir_01,78,219,25,25	monster	Shining Plant	1083,1,1800000,900000,1
 mjolnir_01,75,85,25,25	monster	Green Plant	1080,5,180000,90000,1
@@ -46,11 +46,10 @@ mjolnir_01,78,219,25,25	monster	Green Plant	1080,5,180000,90000,1
 mjolnir_01,311,271,25,25	monster	Blue Plant	1079,5,360000,180000,1
 
 //== mjolnir_02 - Mt.Mjolnir ===============================
-mjolnir_02,0,0,0,0	monster	Hornet	1004,30,0,0,0
+mjolnir_02,0,0,0,0	monster	Fabre	1007,50,0,0,0
 mjolnir_02,0,0,0,0	monster	Creamy	1018,20,0,0,0
-mjolnir_02,0,0,0,0	monster	Petite	1155,50,0,0,0
-mjolnir_02,0,0,0,0	monster	Poporing	1031,10,0,0,0
-mjolnir_02,0,0,0,0	monster	Flora	1118,30,0,0,0
+mjolnir_02,0,0,0,0	monster	Pupa	1018,30,0,0,0
+mjolnir_02,0,0,0,0	monster	Dustiness	1114,55,0,0,0
 mjolnir_02,86,270,0,0	monster	Green Plant	1080,1,180000,90000,1
 mjolnir_02,80,211,0,0	monster	Green Plant	1080,1,180000,90000,1
 mjolnir_02,86,270,0,0	monster	Green Plant	1080,1,180000,90000,1
@@ -87,12 +86,11 @@ mjolnir_02,289,276,0,0	monster	Green Plant	1080,1,180000,90000,1
 mjolnir_02,188,192,10,10	monster	Blue Plant	1079,2,360000,180000,1
 
 //== mjolnir_03 - Mt.Mjolnir ===============================
-mjolnir_03,0,0,0,0	monster	Mantis	1139,30,0,0,0
-mjolnir_03,0,0,0,0	monster	Creamy	1018,10,0,0,0
-mjolnir_03,0,0,0,0	monster	Petite	1156,70,0,0,0
+mjolnir_03,0,0,0,0	monster	Smokie	1056,30,0,0,0
+mjolnir_03,0,0,0,0	monster	Bigfoot	1060,15,0,0,0
+mjolnir_03,0,0,0,0	monster	Caramal	1103,70,0,0,0
 mjolnir_03,0,0,0,0	monster	Poporing	1031,10,0,0,0
-mjolnir_03,0,0,0,0	monster	Flora	1118,10,0,0,0
-mjolnir_03,0,0,0,0	monster	Argos	1100,20,0,0,0
+mjolnir_03,0,0,0,0	monster	Dustiness	1114,20,0,0,0
 mjolnir_03,211,216,10,10	monster	Shining Plant	1083,1,1800000,900000,1
 mjolnir_03,280,252,10,10	monster	Shining Plant	1083,1,1800000,900000,1
 mjolnir_03,135,94,0,0	monster	Green Plant	1080,1,180000,90000,1
@@ -110,12 +108,10 @@ mjolnir_03,66,219,0,0	monster	Green Plant	1080,1,180000,90000,1
 mjolnir_03,91,161,0,0	monster	Green Plant	1080,1,180000,90000,1
 
 //== mjolnir_04 - Mt.Mjolnir ===============================
-mjolnir_04,0,0,0,0	monster	Mantis	1139,20,0,0,0
-mjolnir_04,0,0,0,0	monster	Hornet	1004,70,0,0,0
+mjolnir_04,0,0,0,0	monster	Bigfoot	1060,50,0,0,0
+mjolnir_04,0,0,0,0	monster	Argos	1100,70,0,0,0
 mjolnir_04,0,0,0,0	monster	Poporing	1031,10,0,0,0
-mjolnir_04,0,0,0,0	monster	Flora	1118,30,0,0,0
-mjolnir_04,0,0,0,0	monster	Argiope	1099,20,0,0,0
-mjolnir_04,0,0,0,0	boss_monster	Mistress	1059,1,7200000,600000,1
+mjolnir_04,0,0,0,0	monster	Caramel	1103,70,0,0,0
 mjolnir_04,200,200,30,30	monster	Shining Plant	1083,3,1800000,900000,1
 mjolnir_04,177,34,0,0	monster	Green Plant	1080,1,180000,90000,1
 mjolnir_04,122,28,0,0	monster	Green Plant	1080,1,180000,90000,1
@@ -136,11 +132,12 @@ mjolnir_04,269,39,0,0	monster	Green Plant	1080,1,180000,90000,1
 mjolnir_04,205,33,0,0	monster	Green Plant	1080,1,180000,90000,1
 
 //== mjolnir_05 - Mt.Mjolnir ===============================
-mjolnir_05,0,0,0,0	monster	Mantis	1139,40,0,0,0
-mjolnir_05,0,0,0,0	monster	Poporing	1031,10,0,0,0
+mjolnir_05,0,0,0,0	monster	Hornet	1004,60,0,0,0
+mjolnir_05,0,0,0,0	boss_monster	Mistress	1059,1,7200000,600000,1
 mjolnir_05,0,0,0,0	monster	Flora	1118,20,0,0,0
 mjolnir_05,0,0,0,0	monster	Argiope	1099,70,0,0,0
 mjolnir_05,0,0,0,0	monster	Argos	1100,20,0,0,0
+mjolnir_05,0,0,0,0	monster	Mantis	1139,50,0,0,0
 mjolnir_05,200,240,40,40	monster	Blue Plant	1079,3,360000,180000,1
 mjolnir_05,200,240,40,40	monster	Shining Plant	1083,1,1800000,900000,1
 mjolnir_05,134,103,20,20	monster	Blue Plant	1079,3,360000,180000,1
@@ -183,11 +180,11 @@ mjolnir_07,97,210,0,0	monster	Green Plant	1080,1,180000,90000,1
 mjolnir_07,249,214,0,0	monster	Blue Plant	1079,2,360000,180000,1
 
 //== mjolnir_08 - Mt.Mjolnir ===============================
-mjolnir_08,0,0,0,0	monster	Mantis	1139,60,0,0,0
-mjolnir_08,0,0,0,0	monster	Argiope	1099,30,0,0,0
-mjolnir_08,0,0,0,0	monster	Argos	1100,20,0,0,0
-mjolnir_08,0,0,0,0	monster	Poporing	1031,20,0,0,0
-mjolnir_08,0,0,0,0	monster	Poring	1002,10,0,0,0
+mjolnir_08,0,0,0,0	monster	Yoyo	1057,50,0,0,0
+mjolnir_08,0,0,0,0	monster	Lunatic	1063,40,0,0,0
+mjolnir_08,0,0,0,0	monster	Horn	1128,40,0,0,0
+mjolnir_08,0,0,0,0	monster	Poporing	1031,30,0,0,0
+mjolnir_08,0,0,0,0	monster	Stainer	1174,55,0,0,0
 mjolnir_08,280,280,20,40	monster	Blue Plant	1079,2,360000,180000,1
 mjolnir_08,207,83,0,0	monster	Green Plant	1080,1,180000,90000,1
 mjolnir_08,176,153,0,0	monster	Green Plant	1080,1,180000,90000,1
@@ -215,18 +212,18 @@ mjolnir_09,139,84,0,0	monster	Red Mushroom	1085,1,180000,90000,1
 mjolnir_09,125,82,0,0	monster	Red Mushroom	1085,1,180000,90000,1
 
 //== mjolnir_10 - Mt.Mjolnir ===============================
-mjolnir_10,0,0,0,0	monster	Mantis	1139,20,0,0,0
-mjolnir_10,0,0,0,0	monster	Flora	1118,30,0,0,0
-mjolnir_10,0,0,0,0	monster	Argos	1100,60,0,0,0
-mjolnir_10,0,0,0,0	monster	Poporing	1031,20,0,0,0
-mjolnir_10,0,0,0,0	monster	Petite	1155,10,0,0,0
+mjolnir_10,0,0,0,0	monster	Poring	1002,40,0,0,0
+mjolnir_10,0,0,0,0	monster	Mastering	1090,1,1800000,200000,1
+mjolnir_10,0,0,0,0	monster	Argos	1100,70,0,0,0
+mjolnir_10,0,0,0,0	monster	Angeling	1096,1,3600000,600000,1
+mjolnir_10,0,0,0,0	monster	Argiope	1099,70,0,0,0
 mjolnir_10,123,331,10,10	monster	Shining Plant	1083,1,1800000,900000,1
 mjolnir_10,0,0,0,0	monster	Green Plant	1080,10,180000,90000,1
 
 //== mjolnir_11 - Mt.Mjolnir ===============================
 mjolnir_11,0,0,0,0	monster	Argiope	1099,10,0,0,0
 mjolnir_11,0,0,0,0	monster	Mandragora	1020,50,0,0,0
-mjolnir_11,0,0,0,0	monster	Flora	1118,60,0,0,0
+mjolnir_11,0,0,0,0	monster	Flora	1118,70,0,0,0
 mjolnir_11,0,0,0,0	monster	Poporing	1031,10,0,0,0
 mjolnir_11,0,0,0,0	monster	Thief Bug Male	1054,30,0,0,0
 mjolnir_11,112,276,0,0	monster	Green Plant	1080,1,180000,90000,1
@@ -244,6 +241,9 @@ mjolnir_11,282,300,0,0	monster	Green Plant	1080,1,180000,90000,1
 mjolnir_11,295,271,0,0	monster	Green Plant	1080,1,180000,90000,1
 
 //== mjolnir_12 - Mt.Mjolnir ===============================
+mjolnir_12,0,0,0,0	monster	Steel Chonchon	1042,15,0,0,0
+mjolnir_12,0,0,0,0	monster	Metaller	1058,20,0,0,0
+mjolnir_12,0,0,0,0	monster	Ambernite	1094,40,0,0,0
 mjolnir_12,0,0,0,0	monster	Stem Worm	1215,20,0,0,0
 mjolnir_12,0,0,0,0	monster	Dustiness	1114,50,0,0,0
-mjolnir_12,0,0,0,0	monster	Thief Bug Female	1053,20,0,0,0
+mjolnir_12,0,0,0,0	monster	Mantis	1139,45,0,0,0
