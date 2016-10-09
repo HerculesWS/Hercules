@@ -395,7 +395,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		mes "you now before you are";
 		mes "consumed by its darkness!";
 		close2;
-		percentheal -100,0;
+		unitkill getcharid(3);
 		end;
 	}
 	else if (HELLIONQ > 57 && HELLIONQ < 66) {
@@ -435,7 +435,7 @@ morocc_in,116,101,3	script	Old Scholar Tyus#hellion	4_M_JOB_WIZARD,3,3,{
 		mes "you now before you are";
 		mes "consumed by its darkness!";
 		close;
-		percentheal -100,0;
+		unitkill getcharid(3);
 		end;
 	}
 	else if (HELLIONQ == 67) {
@@ -1853,7 +1853,7 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 			mes "to your answer. However...";
 			mes "You have chosen poorly.";
 			close2;
-			percentheal -100,0;
+			unitkill getcharid(3);
 			end;
 		case 2:
 			mes "[Echoing Voice]";
@@ -1863,7 +1863,7 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 			mes "where is the respect for your";
 			mes "own life? If you are that willing to throw it away, you are no hero.";
 			close2;
-			percentheal -100,0;
+			unitkill getcharid(3);
 			end;
 		case 3:
 			mes "[Echoing Voice]";
@@ -1889,7 +1889,7 @@ pay_arche,142,28,0	script	Buddha Statue#paypuzz6	HIDDEN_NPC,5,5,{
 			mes "your own cowardice. You have";
 			mes "chosen extremely poorly...";
 			close2;
-			percentheal -100,0;
+			unitkill getcharid(3);
 			end;
 		}
 	}

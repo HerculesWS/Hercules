@@ -13912,7 +13912,7 @@ que_dan02,115,53,3	script	Man#moc2_crazyR01	4_M_DSTMAN,{
 		mes "Are you his enemy?";
 		mes "DIE!";
 		close2;
-		percentheal -100,0;
+		unitkill getcharid(3);
 		end;
 	}
 	cutin "mocseal_kid01",255;

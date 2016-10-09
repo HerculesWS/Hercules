@@ -8624,10 +8624,10 @@ OnTouch:
 			mes "- You hear a splashing as -";
 			mes "- something gleaming -";
 			mes "- seems to stare at you!! -";
-			next;
+			close2;
 			specialeffect2 EF_FLASHER;
-			percentheal -100,0;
-			close;
+			unitkill getcharid(3);
+			end;
 		}
 	} else if (rhea_rus_hair > 2 && rhea_rus_hair < 7) {
 		mes "[Lusalka's Voice]";
@@ -8646,9 +8646,10 @@ OnTouch:
 				close;
 			}
 			mes "-You seem to hear the splash but something gleaming raids on you!!-";
+			close2;
 			specialeffect2 EF_FLASHER;
-			percentheal -100,0;
-			close;
+			unitkill getcharid(3);
+			end;
 		}
 	} else if (rhea_rus_hair == 8) {
 		mes "["+ strcharinfo(PC_NAME) +"]";
@@ -8884,10 +8885,11 @@ mosk_fild02,124,202,3	script	Lusalka#rus23	4_F_RUSGREEN,{
 		end;
 	}
 	mes "-When Lusalka watches you, you are blacked out-";
+	close2;
 	specialeffect2 EF_FLASHER;
-	percentheal -100,0;
+	unitkill getcharid(3);
 	donpcevent "Lusalka#rus23::OnDisable";
-	close;
+	end;;
 
 OnInit:
 	disablenpc "Lusalka#rus23";

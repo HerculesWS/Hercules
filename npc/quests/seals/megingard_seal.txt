@@ -1859,7 +1859,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 							mes "^3355FFThe Inn Employee";
 							mes "knocks you out~^000000";
 							close2;
-							percentheal -100,0;
+							unitkill getcharid(3);
 							end;
 						}
 						else {
@@ -1897,7 +1897,8 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 							mes "^3355FFThe Inn Employee";
 							mes "knocks you out~^000000";
 							close2;
-							percentheal -100,0;
+							unitkill getcharid(3);
+							end;
 						}
 						else {
 							mes "[Ms. Scary Inn Employee]";
@@ -1937,7 +1938,7 @@ morocc_in,146,179,0	script	Employee#megin1	1_F_01,{
 							mes "^3355FFThe Inn Employee";
 							mes "knocks you out~^000000";
 							close2;
-							percentheal -100,0;
+							unitkill getcharid(3);
 							end;
 						}
 						else {
