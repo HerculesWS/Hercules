@@ -45,7 +45,7 @@ alberta,245,69,3	duplicate(Kunlun_Envoy_gonryun)	Kunlun Envoy#gon	4_M_TWMIDMAN
 alberta,245,45,3	duplicate(Girl_louyang)	Girl#0lou	4_F_CHNDRESS1
 
 //== cities/moscovia.txt ===================================
-alberta,245,66,4	duplicate(PR_Officer_moscovia)	Moscovia P.R. Officer#1	4_F_RUSWOMAN2
+//alberta,245,66,4	duplicate(PR_Officer_moscovia)	Moscovia P.R. Officer#1	4_F_RUSWOMAN2
 
 //== quests/quests_alberta.txt =============================
 alberta,247,122,4	duplicate(Sailor_alberta)	Sailor#tur	4_M_SEAMAN
